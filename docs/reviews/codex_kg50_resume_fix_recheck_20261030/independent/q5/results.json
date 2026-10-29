@@ -1,0 +1,624 @@
+{
+  "scope": "Production Python only; no Bash/AWK, scheduler, helper, DEM, WSL, or actual run",
+  "wrapper_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8",
+  "embedded_python_sha256": "35f6c52e183ee115f2b918292c5b2364541a3f3198b663773e9812505c7209f4",
+  "source_hashes": {
+    "scripts/kg50_q5_branches.py": "201234b6d003f597aef246cde20efdc533938d134e4a00d42c28ad8f9d0b8d77",
+    "scripts/kg50_q5_verdict.py": "ffedec9668efb3506ad07561f806b0bc6e3f362fd626c411fcdd4cf289cc33a8",
+    "docs/50kg/kg50_q5_dt_damping_registration_draft_20261027.md": "951053d34b899594d74f737870bb7f2a4cb7b66bc36a3e2a8ecf165472fdc6a0"
+  },
+  "registration": {
+    "generator": [
+      true,
+      []
+    ],
+    "verdict": [
+      true,
+      []
+    ]
+  },
+  "cases": {
+    "W1_A": {
+      "verify": [],
+      "static": {
+        "rc": 1,
+        "problems": [
+          "체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 35 개 ↔ 재개 덱 37 개 — 재개 덱에만 [dump dq5a all custom 66667 post_kg50_d07_b50/q5atom_*.liggghts id type x y z radius vx vy vz] [dump dq5c all local 200001 post_kg50_d07_b50/q5contact_*.liggghts c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] c_cpl[25] c_cpl[26]]",
+          "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 27 개 ↔ 재개 덱 2 개 — 바뀜 [print \"====== PHASE 3: COMPRESSION (Speed 0.01) ======\"] [dump dmp_atom all custom 50000 post_kg50_d07_b50/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke] → [undump dq5a] [undump dq5c]",
+          "재개 덱 준비 구간 상태 명령이 본 덱 체크포인트 앞에 글자 그대로 없음 (10-28 사전 공격 A · LIGGGHTS 는 ${x} 를 그 자리에서 치환한다 — 끝 상태만 같아서는 안 된다): [restart 0]",
+          "재개 지점 restart 다름: 본 덱 [restart 50000 restart_kg50_d07_b50/restart_settling_*.bin] ↔ 재개 덱 [restart 0]"
+        ],
+        "notes": [
+          "첫 긴 run 같음 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] = 재개 덱 read_restart 뒤",
+          "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix · variable n_am_ins · variable n_ins · variable n_se_ins"
+        ],
+        "tool": "scripts/resume_ckpt.sh",
+        "tool_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8"
+      },
+      "runs": [
+        1,
+        200000
+      ],
+      "end_step": 400002,
+      "dt": 1e-06
+    },
+    "W1_B": {
+      "verify": [],
+      "static": null,
+      "runs": [
+        2,
+        400000
+      ],
+      "end_step": 600003,
+      "dt": 5e-07
+    },
+    "W1_C": {
+      "verify": [],
+      "static": null,
+      "runs": [
+        1,
+        200000
+      ],
+      "end_step": 400002,
+      "dt": 1e-06
+    },
+    "W1_F": {
+      "verify": [],
+      "static": {
+        "rc": 1,
+        "problems": [
+          "체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 35 개 ↔ 재개 덱 37 개 — 재개 덱에만 [dump dq5a all custom 66667 post_kg50_d07_b50/q5atom_*.liggghts id type x y z radius vx vy vz] [dump dq5c all local 200001 post_kg50_d07_b50/q5contact_*.liggghts c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] c_cpl[25] c_cpl[26]]",
+          "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 27 개 ↔ 재개 덱 2 개 — 바뀜 [print \"====== PHASE 3: COMPRESSION (Speed 0.01) ======\"] [dump dmp_atom all custom 50000 post_kg50_d07_b50/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke] → [undump dq5a] [undump dq5c]",
+          "재개 덱 준비 구간 상태 명령이 본 덱 체크포인트 앞에 글자 그대로 없음 (10-28 사전 공격 A · LIGGGHTS 는 ${x} 를 그 자리에서 치환한다 — 끝 상태만 같아서는 안 된다): [restart 0]",
+          "재개 지점 restart 다름: 본 덱 [restart 50000 restart_kg50_d07_b50/restart_settling_*.bin] ↔ 재개 덱 [restart 0]"
+        ],
+        "notes": [
+          "첫 긴 run 같음 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] = 재개 덱 read_restart 뒤",
+          "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix · variable n_am_ins · variable n_ins · variable n_se_ins"
+        ],
+        "tool": "scripts/resume_ckpt.sh",
+        "tool_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8"
+      },
+      "runs": [
+        1,
+        200000
+      ],
+      "end_step": 400002,
+      "dt": 1e-06
+    },
+    "W1_A3": {
+      "verify": [],
+      "static": {
+        "rc": 1,
+        "problems": [
+          "체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 35 개 ↔ 재개 덱 37 개 — 재개 덱에만 [dump dq5a all custom 66667 post_kg50_d3_b50_s1/q5atom_*.liggghts id type x y z radius vx vy vz] [dump dq5c all local 200001 post_kg50_d3_b50_s1/q5contact_*.liggghts c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] c_cpl[25] c_cpl[26]]",
+          "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 27 개 ↔ 재개 덱 2 개 — 바뀜 [print \"====== PHASE 3: COMPRESSION (Speed 0.01) ======\"] [dump dmp_atom all custom 50000 post_kg50_d3_b50_s1/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke] → [undump dq5a] [undump dq5c]",
+          "재개 덱 준비 구간 상태 명령이 본 덱 체크포인트 앞에 글자 그대로 없음 (10-28 사전 공격 A · LIGGGHTS 는 ${x} 를 그 자리에서 치환한다 — 끝 상태만 같아서는 안 된다): [restart 0]",
+          "재개 지점 restart 다름: 본 덱 [restart 50000 restart_kg50_d3_b50_s1/restart_settling_*.bin] ↔ 재개 덱 [restart 0]"
+        ],
+        "notes": [
+          "첫 긴 run 같음 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] = 재개 덱 read_restart 뒤",
+          "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix · variable n_am_ins · variable n_ins · variable n_se_ins"
+        ],
+        "tool": "scripts/resume_ckpt.sh",
+        "tool_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8"
+      },
+      "runs": [
+        1,
+        200000
+      ],
+      "end_step": 400002,
+      "dt": 1e-06
+    },
+    "W1_C3": {
+      "verify": [],
+      "static": null,
+      "runs": [
+        1,
+        200000
+      ],
+      "end_step": 400002,
+      "dt": 1e-06
+    },
+    "W1_F3": {
+      "verify": [],
+      "static": {
+        "rc": 1,
+        "problems": [
+          "체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 35 개 ↔ 재개 덱 37 개 — 재개 덱에만 [dump dq5a all custom 66667 post_kg50_d3_b50_s1/q5atom_*.liggghts id type x y z radius vx vy vz] [dump dq5c all local 200001 post_kg50_d3_b50_s1/q5contact_*.liggghts c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] c_cpl[25] c_cpl[26]]",
+          "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 27 개 ↔ 재개 덱 2 개 — 바뀜 [print \"====== PHASE 3: COMPRESSION (Speed 0.01) ======\"] [dump dmp_atom all custom 50000 post_kg50_d3_b50_s1/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke] → [undump dq5a] [undump dq5c]",
+          "재개 덱 준비 구간 상태 명령이 본 덱 체크포인트 앞에 글자 그대로 없음 (10-28 사전 공격 A · LIGGGHTS 는 ${x} 를 그 자리에서 치환한다 — 끝 상태만 같아서는 안 된다): [restart 0]",
+          "재개 지점 restart 다름: 본 덱 [restart 50000 restart_kg50_d3_b50_s1/restart_settling_*.bin] ↔ 재개 덱 [restart 0]"
+        ],
+        "notes": [
+          "첫 긴 run 같음 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] = 재개 덱 read_restart 뒤",
+          "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix · variable n_am_ins · variable n_ins · variable n_se_ins"
+        ],
+        "tool": "scripts/resume_ckpt.sh",
+        "tool_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8"
+      },
+      "runs": [
+        1,
+        200000
+      ],
+      "end_step": 400002,
+      "dt": 1e-06
+    },
+    "W2_A": {
+      "verify": [],
+      "static": {
+        "rc": 1,
+        "problems": [
+          "압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_800000.bin (이름 restart_compress_*)",
+          "첫 긴 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50R-01): 본 덱 [run 5000] ↔ 재개 덱 [run 300000]",
+          "재개 덱에 본 덱 체크포인트 뒤 첫 명령 [label loop_press] 이 없음 — 준비 구간 경계를 못 정함 (10-28 KG50R-03 · 준비 구간 · 상태 대조 건너뜀)",
+          "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 19 개 ↔ 재개 덱 2 개 — 바뀜 [variable current_press equal \"abs(f_top_mesh[3]) / 0.0025 / 1000000\"] [print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"] → [undump dq5a] [undump dq5c]"
+        ],
+        "notes": [],
+        "tool": "scripts/resume_ckpt.sh",
+        "tool_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8"
+      },
+      "s0": 800000,
+      "runs": [
+        300000
+      ],
+      "dt": 1e-06,
+      "end_step": 1100000,
+      "amendment": {
+        "section": "§12-2",
+        "status": "개정 초안 · 비준 전"
+      },
+      "operator_commands": [
+        "# ── ibb · q5w2_kg50_d07_b50_A (가지 A · 창 W2 · NP 56 · 시작 step 800000 = 본 런 첫 접촉 step 712000 뒤 첫 restart_compress · §12-2 (라)) ──",
+        "# ⛔ §12-2 = 개정 초안 · 비준 전 — 실행 금지 (비준 뒤 생성기로 다시 만든다 · 아래 제출 줄은 막혀 있다)",
+        "# 본 런 (kg50_d07_b50) 이 restart_compress_800000.bin 을 쓴 뒤 멈춘 (scancel) 뒤에만 (§8-3 5) · cpu-60 = 가지는 차례로",
+        "cd ~/dem_test/q5w2_kg50_d07_b50_A && sha256sum -c SHA256SUMS",
+        "mkdir -p ~/dem_test/q5w2_kg50_d07_b50_A/restart_kg50_d07_b50 && cp ~/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_800000.bin ~/dem_test/q5w2_kg50_d07_b50_A/restart_kg50_d07_b50/",
+        "sha256sum ~/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_800000.bin ~/dem_test/q5w2_kg50_d07_b50_A/restart_kg50_d07_b50/restart_compress_800000.bin > ~/dem_test/q5w2_kg50_d07_b50_A/ckpt_sha256.txt && cat ~/dem_test/q5w2_kg50_d07_b50_A/ckpt_sha256.txt",
+        "cp ~/dem_test/kg50_d07_b50/post_kg50_d07_b50/mesh_800000.stl ~/dem_test/q5w2_kg50_d07_b50_A/plate_kg50_d07_b50.stl",
+        "sha256sum ~/dem_test/kg50_d07_b50/post_kg50_d07_b50/mesh_800000.stl ~/dem_test/q5w2_kg50_d07_b50_A/plate_kg50_d07_b50.stl > ~/dem_test/q5w2_kg50_d07_b50_A/plate_sha256.txt && cat ~/dem_test/q5w2_kg50_d07_b50_A/plate_sha256.txt",
+        "echo \"⛔ §12-2 개정 초안 · 비준 전 — 제출 안 함 (비준 뒤 생성기로 다시 만든다)\""
+      ],
+      "verdict_refusal": "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\q5\\generated_w2_draft\\q5w2_kg50_d07_b50_A: W2 가지가 등록 §12-2 비준 전 판 (개정 초안 · 비준 전) 으로 만들어졌다 — 판정 없음 (비준 뒤 생성기로 다시 만든다)"
+    },
+    "W2_B": {
+      "verify": [],
+      "static": null,
+      "s0": 800000,
+      "runs": [
+        600000
+      ],
+      "dt": 5e-07,
+      "end_step": 1400000,
+      "amendment": {
+        "section": "§12-2",
+        "status": "개정 초안 · 비준 전"
+      },
+      "operator_commands": [
+        "# ── ibb · q5w2_kg50_d07_b50_B (가지 B · 창 W2 · NP 56 · 시작 step 800000 = 본 런 첫 접촉 step 712000 뒤 첫 restart_compress · §12-2 (라)) ──",
+        "# ⛔ §12-2 = 개정 초안 · 비준 전 — 실행 금지 (비준 뒤 생성기로 다시 만든다 · 아래 제출 줄은 막혀 있다)",
+        "# 본 런 (kg50_d07_b50) 이 restart_compress_800000.bin 을 쓴 뒤 멈춘 (scancel) 뒤에만 (§8-3 5) · cpu-60 = 가지는 차례로",
+        "cd ~/dem_test/q5w2_kg50_d07_b50_B && sha256sum -c SHA256SUMS",
+        "mkdir -p ~/dem_test/q5w2_kg50_d07_b50_B/restart_kg50_d07_b50 && cp ~/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_800000.bin ~/dem_test/q5w2_kg50_d07_b50_B/restart_kg50_d07_b50/",
+        "sha256sum ~/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_800000.bin ~/dem_test/q5w2_kg50_d07_b50_B/restart_kg50_d07_b50/restart_compress_800000.bin > ~/dem_test/q5w2_kg50_d07_b50_B/ckpt_sha256.txt && cat ~/dem_test/q5w2_kg50_d07_b50_B/ckpt_sha256.txt",
+        "cp ~/dem_test/kg50_d07_b50/post_kg50_d07_b50/mesh_800000.stl ~/dem_test/q5w2_kg50_d07_b50_B/plate_kg50_d07_b50.stl",
+        "sha256sum ~/dem_test/kg50_d07_b50/post_kg50_d07_b50/mesh_800000.stl ~/dem_test/q5w2_kg50_d07_b50_B/plate_kg50_d07_b50.stl > ~/dem_test/q5w2_kg50_d07_b50_B/plate_sha256.txt && cat ~/dem_test/q5w2_kg50_d07_b50_B/plate_sha256.txt",
+        "echo \"⛔ §12-2 개정 초안 · 비준 전 — 제출 안 함 (비준 뒤 생성기로 다시 만든다)\""
+      ],
+      "verdict_refusal": "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\q5\\generated_w2_draft\\q5w2_kg50_d07_b50_B: W2 가지가 등록 §12-2 비준 전 판 (개정 초안 · 비준 전) 으로 만들어졌다 — 판정 없음 (비준 뒤 생성기로 다시 만든다)"
+    },
+    "W2_C": {
+      "verify": [],
+      "static": null,
+      "s0": 800000,
+      "runs": [
+        300000
+      ],
+      "dt": 1e-06,
+      "end_step": 1100000,
+      "amendment": {
+        "section": "§12-2",
+        "status": "개정 초안 · 비준 전"
+      },
+      "operator_commands": [
+        "# ── ibb · q5w2_kg50_d07_b50_C (가지 C · 창 W2 · NP 56 · 시작 step 800000 = 본 런 첫 접촉 step 712000 뒤 첫 restart_compress · §12-2 (라)) ──",
+        "# ⛔ §12-2 = 개정 초안 · 비준 전 — 실행 금지 (비준 뒤 생성기로 다시 만든다 · 아래 제출 줄은 막혀 있다)",
+        "# 본 런 (kg50_d07_b50) 이 restart_compress_800000.bin 을 쓴 뒤 멈춘 (scancel) 뒤에만 (§8-3 5) · cpu-60 = 가지는 차례로",
+        "cd ~/dem_test/q5w2_kg50_d07_b50_C && sha256sum -c SHA256SUMS",
+        "mkdir -p ~/dem_test/q5w2_kg50_d07_b50_C/restart_kg50_d07_b50 && cp ~/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_800000.bin ~/dem_test/q5w2_kg50_d07_b50_C/restart_kg50_d07_b50/",
+        "sha256sum ~/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_800000.bin ~/dem_test/q5w2_kg50_d07_b50_C/restart_kg50_d07_b50/restart_compress_800000.bin > ~/dem_test/q5w2_kg50_d07_b50_C/ckpt_sha256.txt && cat ~/dem_test/q5w2_kg50_d07_b50_C/ckpt_sha256.txt",
+        "cp ~/dem_test/kg50_d07_b50/post_kg50_d07_b50/mesh_800000.stl ~/dem_test/q5w2_kg50_d07_b50_C/plate_kg50_d07_b50.stl",
+        "sha256sum ~/dem_test/kg50_d07_b50/post_kg50_d07_b50/mesh_800000.stl ~/dem_test/q5w2_kg50_d07_b50_C/plate_kg50_d07_b50.stl > ~/dem_test/q5w2_kg50_d07_b50_C/plate_sha256.txt && cat ~/dem_test/q5w2_kg50_d07_b50_C/plate_sha256.txt",
+        "echo \"⛔ §12-2 개정 초안 · 비준 전 — 제출 안 함 (비준 뒤 생성기로 다시 만든다)\""
+      ],
+      "verdict_refusal": "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\q5\\generated_w2_draft\\q5w2_kg50_d07_b50_C: W2 가지가 등록 §12-2 비준 전 판 (개정 초안 · 비준 전) 으로 만들어졌다 — 판정 없음 (비준 뒤 생성기로 다시 만든다)"
+    },
+    "W2_F": {
+      "verify": [],
+      "static": {
+        "rc": 1,
+        "problems": [
+          "압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_800000.bin (이름 restart_compress_*)",
+          "첫 긴 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50R-01): 본 덱 [run 5000] ↔ 재개 덱 [run 300000]",
+          "재개 덱에 본 덱 체크포인트 뒤 첫 명령 [label loop_press] 이 없음 — 준비 구간 경계를 못 정함 (10-28 KG50R-03 · 준비 구간 · 상태 대조 건너뜀)",
+          "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 19 개 ↔ 재개 덱 2 개 — 바뀜 [variable current_press equal \"abs(f_top_mesh[3]) / 0.0025 / 1000000\"] [print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"] → [undump dq5a] [undump dq5c]"
+        ],
+        "notes": [],
+        "tool": "scripts/resume_ckpt.sh",
+        "tool_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8"
+      },
+      "s0": 800000,
+      "runs": [
+        300000
+      ],
+      "dt": 1e-06,
+      "end_step": 1100000,
+      "amendment": {
+        "section": "§12-2",
+        "status": "개정 초안 · 비준 전"
+      },
+      "operator_commands": [
+        "# ── ibb · q5w2_kg50_d07_b50_F (가지 F · 창 W2 · NP 28 · 시작 step 800000 = 본 런 첫 접촉 step 712000 뒤 첫 restart_compress · §12-2 (라)) ──",
+        "# ⛔ §12-2 = 개정 초안 · 비준 전 — 실행 금지 (비준 뒤 생성기로 다시 만든다 · 아래 제출 줄은 막혀 있다)",
+        "# 본 런 (kg50_d07_b50) 이 restart_compress_800000.bin 을 쓴 뒤 멈춘 (scancel) 뒤에만 (§8-3 5) · cpu-60 = 가지는 차례로",
+        "cd ~/dem_test/q5w2_kg50_d07_b50_F && sha256sum -c SHA256SUMS",
+        "mkdir -p ~/dem_test/q5w2_kg50_d07_b50_F/restart_kg50_d07_b50 && cp ~/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_800000.bin ~/dem_test/q5w2_kg50_d07_b50_F/restart_kg50_d07_b50/",
+        "sha256sum ~/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_800000.bin ~/dem_test/q5w2_kg50_d07_b50_F/restart_kg50_d07_b50/restart_compress_800000.bin > ~/dem_test/q5w2_kg50_d07_b50_F/ckpt_sha256.txt && cat ~/dem_test/q5w2_kg50_d07_b50_F/ckpt_sha256.txt",
+        "cp ~/dem_test/kg50_d07_b50/post_kg50_d07_b50/mesh_800000.stl ~/dem_test/q5w2_kg50_d07_b50_F/plate_kg50_d07_b50.stl",
+        "sha256sum ~/dem_test/kg50_d07_b50/post_kg50_d07_b50/mesh_800000.stl ~/dem_test/q5w2_kg50_d07_b50_F/plate_kg50_d07_b50.stl > ~/dem_test/q5w2_kg50_d07_b50_F/plate_sha256.txt && cat ~/dem_test/q5w2_kg50_d07_b50_F/plate_sha256.txt",
+        "echo \"⛔ §12-2 개정 초안 · 비준 전 — 제출 안 함 (비준 뒤 생성기로 다시 만든다)\""
+      ],
+      "verdict_refusal": "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\q5\\generated_w2_draft\\q5w2_kg50_d07_b50_F: W2 가지가 등록 §12-2 비준 전 판 (개정 초안 · 비준 전) 으로 만들어졌다 — 판정 없음 (비준 뒤 생성기로 다시 만든다)"
+    }
+  },
+  "mutations": {
+    "extra_velocity_before_run": {
+      "static": {
+        "rc": 1,
+        "problems": [
+          "압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_800000.bin (이름 restart_compress_*)",
+          "첫 긴 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50R-01): 본 덱 [run 5000] ↔ 재개 덱 [run 300000]",
+          "재개 덱에 본 덱 체크포인트 뒤 첫 명령 [label loop_press] 이 없음 — 준비 구간 경계를 못 정함 (10-28 KG50R-03 · 준비 구간 · 상태 대조 건너뜀)",
+          "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 19 개 ↔ 재개 덱 2 개 — 바뀜 [variable current_press equal \"abs(f_top_mesh[3]) / 0.0025 / 1000000\"] [print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"] → [undump dq5a] [undump dq5c]"
+        ],
+        "notes": [],
+        "tool": "scripts/resume_ckpt.sh",
+        "tool_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8",
+        "stdout": "  ✗ 압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_800000.bin (이름 restart_compress_*)\n  ✗ 첫 긴 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50R-01): 본 덱 [run 5000] ↔ 재개 덱 [run 300000]\n  ✗ 재개 덱에 본 덱 체크포인트 뒤 첫 명령 [label loop_press] 이 없음 — 준비 구간 경계를 못 정함 (10-28 KG50R-03 · 준비 구간 · 상태 대조 건너뜀)\n  ✗ 첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 19 개 ↔ 재개 덱 2 개 — 바뀜 [variable current_press equal \"abs(f_top_mesh[3]) / 0.0025 / 1000000\"] [print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"] → [undump dq5a] [undump dq5c]\n  재개 덱 정적 대조: 실패 (문제 4)\n",
+        "stderr": ""
+      },
+      "static_identical_to_registered": true,
+      "allowlist_problems": [
+        "허용 목록 밖 (insert): 기대 [] ↔ 가지 ['velocity all set 1.0 0.0 0.0']",
+        "가지 덱 줄이 본 덱에 (그 순서로) 없다: [velocity all set 1.0 0.0 0.0]"
+      ]
+    },
+    "damping_double": {
+      "static": {
+        "rc": 1,
+        "problems": [
+          "압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_800000.bin (이름 restart_compress_*)",
+          "첫 긴 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50R-01): 본 덱 [run 5000] ↔ 재개 덱 [run 300000]",
+          "재개 덱에 본 덱 체크포인트 뒤 첫 명령 [label loop_press] 이 없음 — 준비 구간 경계를 못 정함 (10-28 KG50R-03 · 준비 구간 · 상태 대조 건너뜀)",
+          "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 19 개 ↔ 재개 덱 2 개 — 바뀜 [variable current_press equal \"abs(f_top_mesh[3]) / 0.0025 / 1000000\"] [print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"] → [undump dq5a] [undump dq5c]"
+        ],
+        "notes": [],
+        "tool": "scripts/resume_ckpt.sh",
+        "tool_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8",
+        "stdout": "  ✗ 압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_800000.bin (이름 restart_compress_*)\n  ✗ 첫 긴 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50R-01): 본 덱 [run 5000] ↔ 재개 덱 [run 300000]\n  ✗ 재개 덱에 본 덱 체크포인트 뒤 첫 명령 [label loop_press] 이 없음 — 준비 구간 경계를 못 정함 (10-28 KG50R-03 · 준비 구간 · 상태 대조 건너뜀)\n  ✗ 첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 19 개 ↔ 재개 덱 2 개 — 바뀜 [variable current_press equal \"abs(f_top_mesh[3]) / 0.0025 / 1000000\"] [print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"] → [undump dq5a] [undump dq5c]\n  재개 덱 정적 대조: 실패 (문제 4)\n",
+        "stderr": ""
+      },
+      "static_identical_to_registered": true,
+      "allowlist_problems": [
+        "허용 목록 밖 (replace): 기대 ['fix damp all viscous 0.5'] ↔ 가지 ['fix damp all viscous 1.0']",
+        "가지 덱 줄이 본 덱에 (그 순서로) 없다: [fix damp all viscous 1.0]"
+      ]
+    },
+    "speed_double": {
+      "static": {
+        "rc": 1,
+        "problems": [
+          "압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_800000.bin (이름 restart_compress_*)",
+          "첫 긴 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50R-01): 본 덱 [run 5000] ↔ 재개 덱 [run 300000]",
+          "재개 덱에 본 덱 체크포인트 뒤 첫 명령 [label loop_press] 이 없음 — 준비 구간 경계를 못 정함 (10-28 KG50R-03 · 준비 구간 · 상태 대조 건너뜀)",
+          "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 19 개 ↔ 재개 덱 2 개 — 바뀜 [variable current_press equal \"abs(f_top_mesh[3]) / 0.0025 / 1000000\"] [print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"] → [undump dq5a] [undump dq5c]"
+        ],
+        "notes": [],
+        "tool": "scripts/resume_ckpt.sh",
+        "tool_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8",
+        "stdout": "  ✗ 압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_800000.bin (이름 restart_compress_*)\n  ✗ 첫 긴 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50R-01): 본 덱 [run 5000] ↔ 재개 덱 [run 300000]\n  ✗ 재개 덱에 본 덱 체크포인트 뒤 첫 명령 [label loop_press] 이 없음 — 준비 구간 경계를 못 정함 (10-28 KG50R-03 · 준비 구간 · 상태 대조 건너뜀)\n  ✗ 첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 19 개 ↔ 재개 덱 2 개 — 바뀜 [variable current_press equal \"abs(f_top_mesh[3]) / 0.0025 / 1000000\"] [print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"] → [undump dq5a] [undump dq5c]\n  재개 덱 정적 대조: 실패 (문제 4)\n",
+        "stderr": ""
+      },
+      "static_identical_to_registered": true,
+      "allowlist_problems": [
+        "허용 목록 밖 (replace): 기대 ['variable press_speed equal 0.01'] ↔ 가지 ['variable press_speed equal 0.02']",
+        "가지 덱 줄이 본 덱에 (그 순서로) 없다: [variable press_speed equal 0.02]"
+      ]
+    },
+    "early_variable_restore": {
+      "static": {
+        "rc": 1,
+        "problems": [
+          "압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_800000.bin (이름 restart_compress_*)",
+          "첫 긴 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50R-01): 본 덱 [run 5000] ↔ 재개 덱 [run 300000]",
+          "재개 덱에 본 덱 체크포인트 뒤 첫 명령 [label loop_press] 이 없음 — 준비 구간 경계를 못 정함 (10-28 KG50R-03 · 준비 구간 · 상태 대조 건너뜀)",
+          "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 19 개 ↔ 재개 덱 2 개 — 바뀜 [variable current_press equal \"abs(f_top_mesh[3]) / 0.0025 / 1000000\"] [print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"] → [undump dq5a] [undump dq5c]"
+        ],
+        "notes": [],
+        "tool": "scripts/resume_ckpt.sh",
+        "tool_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8",
+        "stdout": "  ✗ 압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_800000.bin (이름 restart_compress_*)\n  ✗ 첫 긴 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50R-01): 본 덱 [run 5000] ↔ 재개 덱 [run 300000]\n  ✗ 재개 덱에 본 덱 체크포인트 뒤 첫 명령 [label loop_press] 이 없음 — 준비 구간 경계를 못 정함 (10-28 KG50R-03 · 준비 구간 · 상태 대조 건너뜀)\n  ✗ 첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 19 개 ↔ 재개 덱 2 개 — 바뀜 [variable current_press equal \"abs(f_top_mesh[3]) / 0.0025 / 1000000\"] [print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"] → [undump dq5a] [undump dq5c]\n  재개 덱 정적 대조: 실패 (문제 4)\n",
+        "stderr": ""
+      },
+      "static_identical_to_registered": true,
+      "allowlist_problems": [
+        "허용 목록 밖 (insert): 기대 [] ↔ 가지 ['variable press_speed equal 0.02']",
+        "허용 목록 밖 (insert): 기대 [] ↔ 가지 ['variable press_speed equal 0.01']",
+        "가지 덱 줄이 본 덱에 (그 순서로) 없다: [variable press_speed equal 0.02]"
+      ]
+    },
+    "swap_damping_order": {
+      "static": {
+        "rc": 1,
+        "problems": [
+          "압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_800000.bin (이름 restart_compress_*)",
+          "첫 긴 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50R-01): 본 덱 [run 5000] ↔ 재개 덱 [run 300000]",
+          "재개 덱에 본 덱 체크포인트 뒤 첫 명령 [label loop_press] 이 없음 — 준비 구간 경계를 못 정함 (10-28 KG50R-03 · 준비 구간 · 상태 대조 건너뜀)",
+          "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 19 개 ↔ 재개 덱 2 개 — 바뀜 [variable current_press equal \"abs(f_top_mesh[3]) / 0.0025 / 1000000\"] [print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"] → [undump dq5a] [undump dq5c]"
+        ],
+        "notes": [],
+        "tool": "scripts/resume_ckpt.sh",
+        "tool_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8",
+        "stdout": "  ✗ 압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_800000.bin (이름 restart_compress_*)\n  ✗ 첫 긴 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50R-01): 본 덱 [run 5000] ↔ 재개 덱 [run 300000]\n  ✗ 재개 덱에 본 덱 체크포인트 뒤 첫 명령 [label loop_press] 이 없음 — 준비 구간 경계를 못 정함 (10-28 KG50R-03 · 준비 구간 · 상태 대조 건너뜀)\n  ✗ 첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 19 개 ↔ 재개 덱 2 개 — 바뀜 [variable current_press equal \"abs(f_top_mesh[3]) / 0.0025 / 1000000\"] [print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"] → [undump dq5a] [undump dq5c]\n  재개 덱 정적 대조: 실패 (문제 4)\n",
+        "stderr": ""
+      },
+      "static_identical_to_registered": true,
+      "allowlist_problems": [
+        "허용 목록 밖 (insert): 기대 [] ↔ 가지 ['fix damp all viscous 0.5']",
+        "허용 목록 밖 (delete): 기대 ['fix damp all viscous 0.5'] ↔ 가지 []",
+        "가지 덱 줄이 본 덱에 (그 순서로) 없다: [# RVE 면적: 0.05 × 0.05 = 0.0025 m²]"
+      ]
+    }
+  },
+  "independent_registration_body": {
+    "W1_A": {
+      "equal": true,
+      "independent_sha256": "e687d39c814d88cff7c04807a4422c54a91f0d8fcf4583941ac2277b6224eade",
+      "body_sha256": "e687d39c814d88cff7c04807a4422c54a91f0d8fcf4583941ac2277b6224eade",
+      "delta": []
+    },
+    "W1_B": {
+      "equal": true,
+      "independent_sha256": "3234262784392c986a099d870bd361cda65cb563127b2c2768b2ca9c6bb9aba6",
+      "body_sha256": "3234262784392c986a099d870bd361cda65cb563127b2c2768b2ca9c6bb9aba6",
+      "delta": []
+    },
+    "W1_C": {
+      "equal": true,
+      "independent_sha256": "74ec218b1990a692844cc1504b0dab956d71a313093c18deb08e5aec6b166a20",
+      "body_sha256": "74ec218b1990a692844cc1504b0dab956d71a313093c18deb08e5aec6b166a20",
+      "delta": []
+    },
+    "W1_F": {
+      "equal": true,
+      "independent_sha256": "e687d39c814d88cff7c04807a4422c54a91f0d8fcf4583941ac2277b6224eade",
+      "body_sha256": "e687d39c814d88cff7c04807a4422c54a91f0d8fcf4583941ac2277b6224eade",
+      "delta": []
+    },
+    "W2_A": {
+      "equal": true,
+      "independent_sha256": "3837768746a473aa1e37c5ebf7e9ee191e6d6c69a8a3bae411348ce68677d764",
+      "body_sha256": "3837768746a473aa1e37c5ebf7e9ee191e6d6c69a8a3bae411348ce68677d764",
+      "delta": []
+    },
+    "W2_B": {
+      "equal": true,
+      "independent_sha256": "5cead9e9b013c1e72941b99cc13c3cb9518b7ffd9d865a343e3c8c7e0732b485",
+      "body_sha256": "5cead9e9b013c1e72941b99cc13c3cb9518b7ffd9d865a343e3c8c7e0732b485",
+      "delta": []
+    },
+    "W2_C": {
+      "equal": true,
+      "independent_sha256": "788b1eb1b5227e50fc59248c8c3ab193bd4f59ffb722d03e93c5a7ff2c4bfbde",
+      "body_sha256": "788b1eb1b5227e50fc59248c8c3ab193bd4f59ffb722d03e93c5a7ff2c4bfbde",
+      "delta": []
+    },
+    "W2_F": {
+      "equal": true,
+      "independent_sha256": "3837768746a473aa1e37c5ebf7e9ee191e6d6c69a8a3bae411348ce68677d764",
+      "body_sha256": "3837768746a473aa1e37c5ebf7e9ee191e6d6c69a8a3bae411348ce68677d764",
+      "delta": []
+    }
+  },
+  "d2": {
+    "archive_sha256": "b0d376a6ffa97f81d2e9feb41aa8c53010915e0e19c483247503f7b9a6474635",
+    "archive_size": 7150,
+    "members": [
+      {
+        "member": "resume_r4_1028_0942.md",
+        "size": 2045,
+        "sha256": "d0d9f3f02ff4b5b4fc4f9f0236ea2ced830e2b14e3d3b3dd1718954b616e97dc",
+        "local_equal": true
+      },
+      {
+        "member": "kg50_d2_b50/input_kg50_d2_b50.liggghts",
+        "size": 12785,
+        "sha256": "f8ac9932a6cb4a0b45c9b6cb846bc637dd746ccf036f32590036c70ab6508825",
+        "local_equal": true
+      },
+      {
+        "member": "kg50_d2_b50/input_kg50_d2_b50_r4.liggghts",
+        "size": 12451,
+        "sha256": "eacc23e60ae5981496091d3bab02084f8aae4ea180752b2b687750935316c3c6",
+        "local_equal": true
+      },
+      {
+        "member": "kg50_d2_b50/input_kg50_d2_b50_r4t.liggghts",
+        "size": 8019,
+        "sha256": "aac7debc81029acfa4f7619aab8a2358741095b4f5e833cedac0a8f9f29c044b",
+        "local_equal": true
+      },
+      {
+        "member": "kg50_d2_b50/run_kg50_d2_b50_r4.sh",
+        "size": 463,
+        "sha256": "830655571b9a94055f468e697f67c4dbc35b78dfe1df6bb7462b030b209d3236",
+        "local_equal": true
+      },
+      {
+        "member": "kg50_d2_b50/plan_r4.txt",
+        "size": 1156,
+        "sha256": "8225d43957bc03327d308c59f5a50d006b5a05a912f88aa7eadc520c758fe98a",
+        "local_equal": true
+      },
+      {
+        "member": "kg50_d2_b50/fixrun_r4.txt",
+        "size": 246,
+        "sha256": "d9238fcba08ea5c82a8f1d468b1b660b620c0ab25973b664b522455eb2b635ac",
+        "local_equal": true
+      },
+      {
+        "member": "kg50_d2_b50/deckcheck_r4.txt",
+        "size": 82,
+        "sha256": "d87bd5f6016ace38982364d984e61819f065bf13ce04fa2d276ab8b652d715dc",
+        "local_equal": true
+      },
+      {
+        "member": "kg50_d2_b50/mode_r4.txt",
+        "size": 68,
+        "sha256": "eff2fcc88e873604ef2dc1691161caf4f76b82b1b072e6f16d60934a54e1202c",
+        "local_equal": true
+      },
+      {
+        "member": "kg50_d2_b50/job_r4t.txt",
+        "size": 7,
+        "sha256": "8d1404f83560bec48c479809b9d84232d570cd5d0334ba749c3de1c48d02eb00",
+        "local_equal": true
+      }
+    ],
+    "main_sha256": "f8ac9932a6cb4a0b45c9b6cb846bc637dd746ccf036f32590036c70ab6508825",
+    "main_matches_registered": true,
+    "command_counts": [
+      129,
+      123,
+      59
+    ],
+    "suffix_equal": true,
+    "run_commands_resume": [
+      "run 180000",
+      "run 1",
+      "run 200000",
+      "run 5000",
+      "run 100000",
+      "run 0"
+    ],
+    "trial_runs": [
+      2000
+    ],
+    "trial_expected_end": 22001,
+    "remaining": 180000,
+    "new_prefix": [
+      "read_restart restart_kg50_d2_b50/restart_settling_20001.bin",
+      "shell mkdir -p post_kg50_d2_b50",
+      "shell mkdir -p restart_kg50_d2_b50"
+    ],
+    "production_static": {
+      "rc": 0,
+      "problems": [],
+      "notes": [
+        "남은 step 같음: 끝 200001",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 46 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix"
+      ],
+      "tool": "scripts/resume_ckpt.sh",
+      "tool_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8",
+      "stdout": "  · 남은 step 같음: 끝 200001\n  · 첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)\n  · 재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 46 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+      "stderr": ""
+    },
+    "current_producer_cut": {
+      "rc": 0,
+      "stdout": "180000 2000 0 157\n",
+      "stderr": "",
+      "byte_equal_to_received_trial": true,
+      "sha256": "aac7debc81029acfa4f7619aab8a2358741095b4f5e833cedac0a8f9f29c044b"
+    }
+  },
+  "extra_echo_provenance": {
+    "accepted": true,
+    "baseline_a": {
+      "result": "합격",
+      "why": "X = B · 결정 관측량 중 나쁜 쪽"
+    },
+    "baseline_b": {
+      "result": "합격",
+      "why": "두 침대 중 나쁜 쪽 (불합격 > 판정 불가 > 합격)",
+      "per_bed": {
+        "D0.7-50": "합격",
+        "D3-50 s1": "합격"
+      },
+      "qualifier": "\"안정화 창에서 감쇠 민감도 τ 안\" 까지만 — 압축 구간 감쇠 교란이 없다는 뜻이 아니다 (§1-2 · W2 나 감시가 닫는다)"
+    },
+    "modified_a": {
+      "result": "합격",
+      "why": "X = B · 결정 관측량 중 나쁜 쪽"
+    },
+    "modified_b": {
+      "result": "합격",
+      "why": "두 침대 중 나쁜 쪽 (불합격 > 판정 불가 > 합격)",
+      "per_bed": {
+        "D0.7-50": "합격",
+        "D3-50 s1": "합격"
+      },
+      "qualifier": "\"안정화 창에서 감쇠 민감도 τ 안\" 까지만 — 압축 구간 감쇠 교란이 없다는 뜻이 아니다 (§1-2 · W2 나 감시가 닫는다)"
+    },
+    "repo_verify": {
+      "A": "ok",
+      "A3": "ok",
+      "B": "ok",
+      "C": "ok",
+      "C3": "ok",
+      "F": "ok",
+      "F3": "ok"
+    },
+    "input_delta": "One added line before run 200000 in A/log.liggghts: velocity all set 1.0 0.0 0.0. Deck/manifest/dump files unchanged.",
+    "baseline_A_log_sha256": "0a0edd3d494288e878edd89b26eb346b3f4ec2a8a206cb5cf00cea0bd04ef4a4",
+    "mutated_A_log_sha256": "0cd3bb8294a1bef9484f485918e769bbc48e258686a8f283a2b2dc125ed881cd"
+  },
+  "repo_sources_unchanged": {
+    "scripts/kg50_q5_branches.py": true,
+    "scripts/kg50_q5_verdict.py": true,
+    "docs/50kg/kg50_q5_dt_damping_registration_draft_20261027.md": true
+  },
+  "independent_arithmetic": {
+    "W1": {
+      "start": 200001,
+      "end_a": 400002,
+      "end_b": 600003,
+      "window_a": "0.200001",
+      "window_b": "0.200001",
+      "atom_count_a": 4,
+      "atom_count_b": 7,
+      "contact_count_a": 2,
+      "contact_count_b": 3,
+      "a_atom_times_subset_of_b": true
+    },
+    "W2": {
+      "start": 800000,
+      "end_a": 1100000,
+      "end_b": 1400000,
+      "window_a": "0.300000",
+      "window_b": "0.300000",
+      "atom_count_a": 31,
+      "atom_count_b": 61,
+      "contact_count_a": 4,
+      "contact_count_b": 7,
+      "a_atom_times_subset_of_b": true,
+      "O3": {
+        "count_a": 51,
+        "count_b": 51,
+        "times_equal": true,
+        "first": "0.250000",
+        "last": "0.300000"
+      }
+    }
+  }
+}

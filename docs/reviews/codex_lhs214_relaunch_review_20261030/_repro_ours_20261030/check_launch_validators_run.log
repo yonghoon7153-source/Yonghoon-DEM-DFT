@@ -1,0 +1,155 @@
+{
+  "python": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]",
+  "review_pin": "bf8cf21c6466cdb9411f9320711b871c2d1c651e",
+  "launch_pin": "35f0327377a4213774010a090df4d224e50d29e1",
+  "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+  "source_sha256": {
+    "scripts/run_network_194_parallel.py": "3220be53fb89cd16c81f0273c8b9f7444f262c5311d02b2017756fd94fd66ac8",
+    "scripts/supp20_input_receipt.py": "3d6110be24d24bf91ad1e71232a2e5dad580cf95178d6135b13aa6ca6de6f950"
+  },
+  "scope": "synthetic data; real imported pure validators; no launch, solver, WSL, Bash, or git call",
+  "note": "F2 is false because the 70-file source archive omits harvest folders; no end-to-end receipt rc is asserted.",
+  "rows": [
+    {
+      "name": "exact_full",
+      "manifest_sha": "'35f0327377a4213774010a090df4d224e50d29e1'",
+      "approved_sha": "35f0327377a4213774010a090df4d224e50d29e1",
+      "eligibility": "current",
+      "F1": true,
+      "F7_present": true,
+      "F7": true,
+      "all_failed_checks": [
+        "F2"
+      ]
+    },
+    {
+      "name": "lf_full",
+      "manifest_sha": "'35f0327377a4213774010a090df4d224e50d29e1\\n'",
+      "approved_sha": "35f0327377a4213774010a090df4d224e50d29e1",
+      "eligibility": "current",
+      "F1": true,
+      "F7_present": true,
+      "F7": false,
+      "all_failed_checks": [
+        "F2",
+        "F7"
+      ]
+    },
+    {
+      "name": "lf_none",
+      "manifest_sha": "'35f0327377a4213774010a090df4d224e50d29e1\\n'",
+      "approved_sha": null,
+      "eligibility": "current",
+      "F1": true,
+      "F7_present": false,
+      "F7": null,
+      "all_failed_checks": [
+        "F2"
+      ]
+    },
+    {
+      "name": "lf_short",
+      "manifest_sha": "'35f0327377a4213774010a090df4d224e50d29e1\\n'",
+      "approved_sha": "35f0327",
+      "eligibility": "current",
+      "F1": true,
+      "F7_present": true,
+      "F7": false,
+      "all_failed_checks": [
+        "F2",
+        "F7"
+      ]
+    },
+    {
+      "name": "wrong_full",
+      "manifest_sha": "'35f0327377a4213774010a090df4d224e50d29e0'",
+      "approved_sha": "35f0327377a4213774010a090df4d224e50d29e1",
+      "eligibility": "current",
+      "F1": true,
+      "F7_present": true,
+      "F7": false,
+      "all_failed_checks": [
+        "F2",
+        "F7"
+      ]
+    },
+    {
+      "name": "wrong_none",
+      "manifest_sha": "'35f0327377a4213774010a090df4d224e50d29e0'",
+      "approved_sha": null,
+      "eligibility": "current",
+      "F1": true,
+      "F7_present": false,
+      "F7": null,
+      "all_failed_checks": [
+        "F2"
+      ]
+    },
+    {
+      "name": "wrong_short",
+      "manifest_sha": "'35f0327377a4213774010a090df4d224e50d29e0'",
+      "approved_sha": "35f0327",
+      "eligibility": "current",
+      "F1": true,
+      "F7_present": true,
+      "F7": true,
+      "all_failed_checks": [
+        "F2"
+      ]
+    },
+    {
+      "name": "empty_approval",
+      "manifest_sha": "'35f0327377a4213774010a090df4d224e50d29e0'",
+      "approved_sha": "",
+      "eligibility": "current",
+      "F1": true,
+      "F7_present": false,
+      "F7": null,
+      "all_failed_checks": [
+        "F2"
+      ]
+    },
+    {
+      "name": "missing_sha",
+      "manifest_sha": "None",
+      "approved_sha": "35f0327377a4213774010a090df4d224e50d29e1",
+      "eligibility": "invalid",
+      "F1": false,
+      "F7_present": true,
+      "F7": false,
+      "all_failed_checks": [
+        "F1",
+        "F2",
+        "F7"
+      ]
+    },
+    {
+      "name": "sha_7chars",
+      "manifest_sha": "'35f0327'",
+      "approved_sha": "35f0327377a4213774010a090df4d224e50d29e1",
+      "eligibility": "invalid",
+      "F1": false,
+      "F7_present": true,
+      "F7": false,
+      "all_failed_checks": [
+        "F1",
+        "F2",
+        "F7"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "name": "no_completion_fields",
+      "eligibility": "current"
+    },
+    {
+      "name": "retry_dirty_override",
+      "eligibility": "current"
+    },
+    {
+      "name": "all_cases_pending",
+      "eligibility": "current"
+    }
+  ]
+}

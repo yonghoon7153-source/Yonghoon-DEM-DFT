@@ -1,0 +1,74 @@
+{
+  "python": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]",
+  "platform": "linux",
+  "source_file_count": 282,
+  "scope": "CPU review reproduction only; no Bash, MPI, LIGGGHTS, SLURM or network",
+  "runs": [
+    {
+      "script": "independent/program/probe_program.py",
+      "argv": [
+        "/usr/local/bin/python3",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/codex_kg50rf_1030/repro_out/independent/program/probe_program.py"
+      ],
+      "rc": 0,
+      "seconds": 2.539
+    },
+    {
+      "script": "independent/launch/probe_launch.py",
+      "argv": [
+        "/usr/local/bin/python3",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/codex_kg50rf_1030/repro_out/independent/launch/probe_launch.py"
+      ],
+      "rc": 0,
+      "seconds": 0.096
+    },
+    {
+      "script": "independent/q5/probe_q5.py",
+      "argv": [
+        "/usr/local/bin/python3",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/codex_kg50rf_1030/repro_out/independent/q5/probe_q5.py"
+      ],
+      "rc": 0,
+      "seconds": 4.124
+    },
+    {
+      "script": "independent/q5/finish_evidence.py",
+      "argv": [
+        "/usr/local/bin/python3",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/codex_kg50rf_1030/repro_out/independent/q5/finish_evidence.py"
+      ],
+      "rc": 0,
+      "seconds": 0.213
+    }
+  ],
+  "observations_reproduced": true,
+  "source_files_unchanged": true,
+  "production_go": false,
+  "observations": {
+    "program_inputs": 43,
+    "q5_generated_branches": 11,
+    "q5_independent_bodies_equal": 8,
+    "w2_mutations_rejected": 5,
+    "new_findings": [
+      "KG50RF-01",
+      "KG50RF-02",
+      "KG50RF-03"
+    ]
+  }
+}

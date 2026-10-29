@@ -1,0 +1,7 @@
+{
+  "chunk_id": "497a33",
+  "wall_time_seconds": 0.5134558,
+  "exit_code": 1,
+  "original_token_count": 44,
+  "output": "      0 [main] bash (46164) C:\\Program Files\\Git\\bin\\..\\usr\\bin\\bash.exe: *** fatal error - NtCreateDirectoryObject(\\BaseNamedObjects\\msys-2.0S5-1888ae32e00d56aa): 0xC0000022\n"
+}

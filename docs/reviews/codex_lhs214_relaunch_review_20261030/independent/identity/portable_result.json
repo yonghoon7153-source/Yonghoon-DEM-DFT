@@ -1,0 +1,46 @@
+{
+  "returncode": 0,
+  "stdout": "{\n  \"tree_hash_checks\": 15,\n  \"archive\": {\n    \"files\": 70,\n    \"verified\": 70\n  },\n  \"core\": {\n    \"B7\": 40,\n    \"review\": 40\n  },\n  \"core_equal\": true,\n  \"closure\": {\n    \"B7\": 78,\n    \"review\": 78\n  },\n  \"closure_equal\": true,\n  \"input16_equal\": true,\n  \"missing\": 0,\n  \"missing_files\": [],\n  \"code_fp\": \"2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb\",\n  \"changed_py\": 11,\n  \"gate_counts\": {\n    \"scripts/check_all.sh\": {\n      \"added_count\": 25,\n      \"removed_count\": 0\n    },\n    \"docs/reviews/selftest_inventory.tsv\": {\n      \"added_count\": 2,\n      \"removed_count\": 0,\n      \"lhs_rows_equal\": true\n    }\n  }\n}\n",
+  "stderr": "",
+  "summary": {
+    "tree_hash_checks": 15,
+    "archive": {
+      "files": 70,
+      "verified": 70
+    },
+    "core": {
+      "B7": 40,
+      "review": 40
+    },
+    "core_equal": true,
+    "closure": {
+      "B7": 78,
+      "review": 78
+    },
+    "closure_equal": true,
+    "input16_equal": true,
+    "missing": 0,
+    "missing_files": [],
+    "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    "changed_py": 11,
+    "gate_counts": {
+      "scripts/check_all.sh": {
+        "added_count": 25,
+        "removed_count": 0
+      },
+      "docs/reviews/selftest_inventory.tsv": {
+        "added_count": 2,
+        "removed_count": 0,
+        "lhs_rows_equal": true
+      }
+    }
+  },
+  "external_prior_cache_used": false,
+  "copied_inputs": [
+    "repo/",
+    "independent/identity/metadata/",
+    "independent/identity/sources/",
+    "independent/identity/gate_inputs/",
+    "independent/identity/audit_identity.py"
+  ]
+}

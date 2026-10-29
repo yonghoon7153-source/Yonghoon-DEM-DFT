@@ -1,0 +1,70 @@
+[
+  {
+    "path": "scripts/resume_ckpt.sh",
+    "sha": "347cc507aa50737bfaf262d2bd12247bcf2336e0",
+    "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/bf8cf21c6466cdb9411f9320711b871c2d1c651e/scripts/resume_ckpt.sh",
+    "sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8",
+    "blob_matches_remote": true,
+    "base64_character_count": 120325,
+    "decoded_file_bytes": 88763
+  },
+  {
+    "path": "scripts/test_resume_ckpt.py",
+    "sha": "e93ec1ed307bf1e4b4065cc68ebd3bfcf627a7ab",
+    "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/bf8cf21c6466cdb9411f9320711b871c2d1c651e/scripts/test_resume_ckpt.py",
+    "sha256": "cabfc94afea7ef7ebb476130e969476b82636f53a315f93d91f7a7272bacbb8d",
+    "blob_matches_remote": true,
+    "base64_character_count": 147263,
+    "decoded_file_bytes": 108635
+  },
+  {
+    "path": "scripts/kg50_q5_branches.py",
+    "sha": "770250dd12972986f5f9b5458b1037d9cbac771c",
+    "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/bf8cf21c6466cdb9411f9320711b871c2d1c651e/scripts/kg50_q5_branches.py",
+    "sha256": "201234b6d003f597aef246cde20efdc533938d134e4a00d42c28ad8f9d0b8d77",
+    "blob_matches_remote": true,
+    "base64_character_count": 215790,
+    "decoded_file_bytes": 159188
+  },
+  {
+    "path": "scripts/kg50_q5_verdict.py",
+    "sha": "f1fbd104bd92807d925bc176d68b90072474adf6",
+    "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/bf8cf21c6466cdb9411f9320711b871c2d1c651e/scripts/kg50_q5_verdict.py",
+    "sha256": "ffedec9668efb3506ad07561f806b0bc6e3f362fd626c411fcdd4cf289cc33a8",
+    "blob_matches_remote": true,
+    "base64_character_count": 149121,
+    "decoded_file_bytes": 110006
+  },
+  {
+    "path": "docs/reviews/codex_kg50_resume_fix_recheck_request_20261028.md",
+    "sha": "3d7c3cf96e26b632d0e40b21e60c4a7570c39020",
+    "sha256": "0b59327db2c16bf4767c5d4752ac2abcbaf57f467b22d0738a58d4247174f1ac",
+    "decoded_file_bytes": 14794,
+    "blob_matches_remote": true,
+    "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/bf8cf21c6466cdb9411f9320711b871c2d1c651e/docs/reviews/codex_kg50_resume_fix_recheck_request_20261028.md"
+  },
+  {
+    "path": "docs/50kg/kg50_q5_dt_damping_registration_draft_20261027.md",
+    "sha": "de73d5e55118eaec7d0e5e00e891bd3a84ef8368",
+    "sha256": "951053d34b899594d74f737870bb7f2a4cb7b66bc36a3e2a8ecf165472fdc6a0",
+    "decoded_file_bytes": 54669,
+    "blob_matches_remote": true,
+    "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/bf8cf21c6466cdb9411f9320711b871c2d1c651e/docs/50kg/kg50_q5_dt_damping_registration_draft_20261027.md"
+  },
+  {
+    "path": "docs/resume_ckpt_procedure_20260927.md",
+    "sha": "c6d9c1764d9d2cd9def1f9cf6f0fab24002b7cdc",
+    "sha256": "08e116818b21cb6bc4f14e8e8c7d5c50949e32ae08f324402f2126e8471c3f12",
+    "decoded_file_bytes": 72152,
+    "blob_matches_remote": true,
+    "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/bf8cf21c6466cdb9411f9320711b871c2d1c651e/docs/resume_ckpt_procedure_20260927.md"
+  },
+  {
+    "path": "docs/reviews/kg50r_fix_evidence_20261028/README.md",
+    "sha": "8ca6127986d958713cdf6d85a1902c0301a29db7",
+    "sha256": "181d4590ec6258741f8fdfb0db677adce566e80028d9b52718c9991d1db2a14f",
+    "decoded_file_bytes": 3772,
+    "blob_matches_remote": true,
+    "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/bf8cf21c6466cdb9411f9320711b871c2d1c651e/docs/reviews/kg50r_fix_evidence_20261028/README.md"
+  }
+]

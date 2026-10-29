@@ -1,0 +1,1327 @@
+{
+  "source_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "scope": "unmodified embedded Python only; no Bash, SLURM, LIGGGHTS or WSL",
+  "cases": [
+    {
+      "name": "baseline",
+      "expected": "accept",
+      "static_rc": 0,
+      "problems": [],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\baseline\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\baseline\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\baseline"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "drop_intermediate_variable_definition",
+      "expected": "reject changed timestep",
+      "static_rc": 0,
+      "problems": [],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 7\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\drop_intermediate_variable_definition\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\drop_intermediate_variable_definition\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\drop_intermediate_variable_definition"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {
+        "main_timestep": 2e-06,
+        "resume_timestep": 1e-06
+      }
+    },
+    {
+      "name": "runtime_dependent_eager_variable",
+      "expected": "reject indeterminate dynamic setup substitution",
+      "static_rc": 0,
+      "problems": [],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\runtime_dependent_eager_variable\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\runtime_dependent_eager_variable\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\runtime_dependent_eager_variable"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {
+        "main_evaluation_step": 0,
+        "resume_evaluation_step": 50,
+        "main_timestep": 1e-06,
+        "resume_timestep": 5.1e-05
+      }
+    },
+    {
+      "name": "suffix_velocity",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 1 개 ↔ 재개 덱 2 개 — 재개 덱에만 [velocity all set 1 0 0]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\suffix_velocity\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\suffix_velocity\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\suffix_velocity"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "suffix_set",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 1 개 ↔ 재개 덱 2 개 — 재개 덱에만 [set group all density 1]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\suffix_set\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\suffix_set\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\suffix_set"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "suffix_delete_atoms",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 1 개 ↔ 재개 덱 2 개 — 재개 덱에만 [delete_atoms group all]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\suffix_delete_atoms\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\suffix_delete_atoms\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\suffix_delete_atoms"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "suffix_include",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "다룰 수 없는 구문 (재개 덱 · include · 10-28 KG50R-03): [include extra.in]",
+        "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 1 개 ↔ 재개 덱 2 개 — 재개 덱에만 [include extra.in]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\suffix_include\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\suffix_include\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\suffix_include"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "resume_first_run_every",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부): [run 50 every 10 \"velocity all set 1 0 0\"]"
+      ],
+      "notes": [
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 1,
+      "cut_stdout": "재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부): [run 50 every 10 \"velocity all set 1 0 0\"]\n",
+      "trial_rc": null,
+      "trial_stdout": null,
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_every\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_every\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_every"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "main_first_run_every",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "본 덱 체크포인트 run 에 꼬리가 있음 (every · pre · post · start · stop · upto · 10-28 사전 공격 B — 재개 덱 첫 긴 run (꼬리 없는 run N 한 줄) 으로는 같은 동작을 낼 수 없다): [run 100 every 10 \"velocity all set 1 0 0\"]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_every\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_every\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_every"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "resume_first_run_pre",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부): [run 50 pre no]"
+      ],
+      "notes": [
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 1,
+      "cut_stdout": "재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부): [run 50 pre no]\n",
+      "trial_rc": null,
+      "trial_stdout": null,
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_pre\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_pre\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_pre"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "main_first_run_pre",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "본 덱 체크포인트 run 에 꼬리가 있음 (every · pre · post · start · stop · upto · 10-28 사전 공격 B — 재개 덱 첫 긴 run (꼬리 없는 run N 한 줄) 으로는 같은 동작을 낼 수 없다): [run 100 pre no]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_pre\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_pre\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_pre"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "resume_first_run_post",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부): [run 50 post no]"
+      ],
+      "notes": [
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 1,
+      "cut_stdout": "재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부): [run 50 post no]\n",
+      "trial_rc": null,
+      "trial_stdout": null,
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_post\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_post\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_post"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "main_first_run_post",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "본 덱 체크포인트 run 에 꼬리가 있음 (every · pre · post · start · stop · upto · 10-28 사전 공격 B — 재개 덱 첫 긴 run (꼬리 없는 run N 한 줄) 으로는 같은 동작을 낼 수 없다): [run 100 post no]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_post\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_post\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_post"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "resume_first_run_start",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부): [run 50 start 0]"
+      ],
+      "notes": [
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 1,
+      "cut_stdout": "재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부): [run 50 start 0]\n",
+      "trial_rc": null,
+      "trial_stdout": null,
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_start\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_start\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_start"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "main_first_run_start",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "본 덱 체크포인트 run 에 꼬리가 있음 (every · pre · post · start · stop · upto · 10-28 사전 공격 B — 재개 덱 첫 긴 run (꼬리 없는 run N 한 줄) 으로는 같은 동작을 낼 수 없다): [run 100 start 0]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_start\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_start\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_start"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "resume_first_run_stop",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부): [run 50 stop 100]"
+      ],
+      "notes": [
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 1,
+      "cut_stdout": "재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부): [run 50 stop 100]\n",
+      "trial_rc": null,
+      "trial_stdout": null,
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_stop\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_stop\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_stop"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "main_first_run_stop",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "본 덱 체크포인트 run 에 꼬리가 있음 (every · pre · post · start · stop · upto · 10-28 사전 공격 B — 재개 덱 첫 긴 run (꼬리 없는 run N 한 줄) 으로는 같은 동작을 낼 수 없다): [run 100 stop 100]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_stop\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_stop\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_stop"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "resume_first_run_upto",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부): [run 50 upto]"
+      ],
+      "notes": [
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 1,
+      "cut_stdout": "재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부): [run 50 upto]\n",
+      "trial_rc": null,
+      "trial_stdout": null,
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_upto\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_upto\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\resume_first_run_upto"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "main_first_run_upto",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "본 덱 체크포인트 run 에 꼬리가 있음 (every · pre · post · start · stop · upto · 10-28 사전 공격 B — 재개 덱 첫 긴 run (꼬리 없는 run N 한 줄) 으로는 같은 동작을 낼 수 없다): [run 100 upto]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_upto\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_upto\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\main_first_run_upto"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "continued_first_run",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "재개 덱 첫 긴 run 이 & 로 이어진 여러 줄 (원 줄 6–7 · 10-28 KG50R-05 · 시험 덱을 한 줄로 못 자른다): [run 50]"
+      ],
+      "notes": [
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 1,
+      "cut_stdout": "재개 덱 첫 긴 run 이 & 로 이어진 여러 줄 (원 줄 6–7 · 10-28 KG50R-05 · 시험 덱을 한 줄로 못 자른다): [run 50]\n",
+      "trial_rc": null,
+      "trial_stdout": null,
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\continued_first_run\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\continued_first_run\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\continued_first_run"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "changed_timestep_literal",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "재개 덱 준비 구간 상태 명령이 본 덱 체크포인트 앞에 글자 그대로 없음 (10-28 사전 공격 A · LIGGGHTS 는 ${x} 를 그 자리에서 치환한다 — 끝 상태만 같아서는 안 된다): [timestep 2e-6]",
+        "재개 지점 timestep 다름: 본 덱 [timestep ${dt}] ↔ 재개 덱 [timestep 2e-6]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\changed_timestep_literal\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\changed_timestep_literal\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\changed_timestep_literal"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "missing_variable",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "재개 덱이 정의 전 변수를 씀 (10-28 KG50R-03 · ${x} · $x · v_x): dt — 3 번째 명령 [timestep ${dt}]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 3 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): variable dt"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 5\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\missing_variable\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\missing_variable\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\missing_variable"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "compress_named",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_50.bin (이름 restart_compress_*)"
+      ],
+      "notes": [
+        "체크포인트 뒤 ~ 첫 긴 run 앞 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 2 항목 · 재개 덱 2 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "100 10 0 5\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\compress_named\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\compress_named\\resume.liggghts",
+        "restart_compress_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\compress_named"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "compress_renamed",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_other_50.bin (본 덱 반복 (label · jump) 안 restart 체크포인트)"
+      ],
+      "notes": [
+        "체크포인트 뒤 ~ 첫 긴 run 앞 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 2 항목 · 재개 덱 2 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "100 10 0 5\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\compress_renamed\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\compress_renamed\\resume.liggghts",
+        "restart_other_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\compress_renamed"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "checkpoint_basename_alias",
+      "expected": "known bounded acceptance: checkpoint identified by basename",
+      "static_rc": 0,
+      "problems": [],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\checkpoint_basename_alias\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\checkpoint_basename_alias\\resume.liggghts",
+        "different/restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\checkpoint_basename_alias"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "d2_received_baseline",
+      "expected": "accept received original fixture",
+      "static_rc": 0,
+      "problems": [],
+      "notes": [
+        "남은 step 같음: 끝 200001",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 46 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "180000 2000 0 157\n",
+      "trial_rc": 0,
+      "trial_stdout": "2000 1 [run 2000]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\d2_received_baseline\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\d2_received_baseline\\resume.liggghts",
+        "restart_kg50_d2_b50/restart_settling_20001.bin",
+        "20001",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\d2_received_baseline"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {}
+    },
+    {
+      "name": "d2_drop_intermediate_variable_definition",
+      "expected": "reject changed consumed gravity value",
+      "static_rc": 0,
+      "problems": [],
+      "notes": [
+        "남은 step 같음: 끝 200001",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 49 항목 · 재개 덱 47 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "180000 2000 0 159\n",
+      "trial_rc": 0,
+      "trial_stdout": "2000 1 [run 2000]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\d2_drop_intermediate_variable_definition\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\d2_drop_intermediate_variable_definition\\resume.liggghts",
+        "restart_kg50_d2_b50/restart_settling_20001.bin",
+        "20001",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\d2_drop_intermediate_variable_definition"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {
+        "main_gravity": 196.2,
+        "resume_gravity": 98.1,
+        "synthetic_derivative": true
+      }
+    },
+    {
+      "name": "d2_runtime_dependent_eager_variable",
+      "expected": "reject indeterminate dynamic setup substitution",
+      "static_rc": 0,
+      "problems": [],
+      "notes": [
+        "남은 step 같음: 끝 200001",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 49 항목 · 재개 덱 47 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "180000 2000 0 158\n",
+      "trial_rc": 0,
+      "trial_stdout": "2000 1 [run 2000]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\d2_runtime_dependent_eager_variable\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\d2_runtime_dependent_eager_variable\\resume.liggghts",
+        "restart_kg50_d2_b50/restart_settling_20001.bin",
+        "20001",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\d2_runtime_dependent_eager_variable"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {
+        "main_evaluation_step": 1,
+        "resume_evaluation_step": 20001,
+        "main_gravity": 196.2,
+        "resume_gravity": 1962196.2,
+        "synthetic_derivative": true
+      }
+    },
+    {
+      "name": "archived_baseline",
+      "expected": "accept",
+      "static_rc": 0,
+      "problems": [],
+      "notes": [
+        "남은 step 같음: 끝 200001",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): thermo · thermo_style · variable n_am_ins · variable n_ins · variable n_se_ins"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "180000 2000 0 129\n",
+      "trial_rc": 0,
+      "trial_stdout": "2000 1 [run 2000]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_baseline\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_baseline\\resume.liggghts",
+        "restart_kg50_d07_b40/restart_settling_20001.bin",
+        "20001",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_baseline"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {}
+    },
+    {
+      "name": "archived_suffix_velocity",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 64 개 ↔ 재개 덱 65 개 — 재개 덱에만 [velocity all set 1.0 0.0 0.0]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 200001",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): thermo · thermo_style · variable n_am_ins · variable n_ins · variable n_se_ins"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "180000 2000 0 129\n",
+      "trial_rc": 0,
+      "trial_stdout": "2000 1 [run 2000]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_suffix_velocity\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_suffix_velocity\\resume.liggghts",
+        "restart_kg50_d07_b40/restart_settling_20001.bin",
+        "20001",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_suffix_velocity"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {}
+    },
+    {
+      "name": "archived_suffix_density",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 64 개 ↔ 재개 덱 65 개 — 재개 덱에만 [set group all density 1.0]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 200001",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): thermo · thermo_style · variable n_am_ins · variable n_ins · variable n_se_ins"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "180000 2000 0 129\n",
+      "trial_rc": 0,
+      "trial_stdout": "2000 1 [run 2000]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_suffix_density\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_suffix_density\\resume.liggghts",
+        "restart_kg50_d07_b40/restart_settling_20001.bin",
+        "20001",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_suffix_density"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {}
+    },
+    {
+      "name": "archived_suffix_delete",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 64 개 ↔ 재개 덱 65 개 — 재개 덱에만 [delete_atoms group all]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 200001",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): thermo · thermo_style · variable n_am_ins · variable n_ins · variable n_se_ins"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "180000 2000 0 129\n",
+      "trial_rc": 0,
+      "trial_stdout": "2000 1 [run 2000]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_suffix_delete\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_suffix_delete\\resume.liggghts",
+        "restart_kg50_d07_b40/restart_settling_20001.bin",
+        "20001",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_suffix_delete"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {}
+    },
+    {
+      "name": "archived_suffix_include",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "다룰 수 없는 구문 (재개 덱 · include · 10-28 KG50R-03): [include extra.in]",
+        "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 64 개 ↔ 재개 덱 65 개 — 재개 덱에만 [include extra.in]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 200001",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): thermo · thermo_style · variable n_am_ins · variable n_ins · variable n_se_ins"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "180000 2000 0 129\n",
+      "trial_rc": 0,
+      "trial_stdout": "2000 1 [run 2000]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_suffix_include\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_suffix_include\\resume.liggghts",
+        "restart_kg50_d07_b40/restart_settling_20001.bin",
+        "20001",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_suffix_include"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {}
+    },
+    {
+      "name": "archived_first_run_every",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부): [run 180000 every 1000 \"velocity all set 1.0 0.0 0.0\"]"
+      ],
+      "notes": [
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): thermo · thermo_style · variable n_am_ins · variable n_ins · variable n_se_ins"
+      ],
+      "cut_rc": 1,
+      "cut_stdout": "재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부): [run 180000 every 1000 \"velocity all set 1.0 0.0 0.0\"]\n",
+      "trial_rc": null,
+      "trial_stdout": null,
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_first_run_every\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_first_run_every\\resume.liggghts",
+        "restart_kg50_d07_b40/restart_settling_20001.bin",
+        "20001",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_first_run_every"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {}
+    },
+    {
+      "name": "archived_duplicate_loop_label",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "재개 덱 준비 구간 명령 허용 안 됨 (10-28 KG50R-03 · 상태 명령 · 본 덱 체크포인트 앞에 글자 그대로 있는 print · if (print · quit 만) · group type · shell mkdir 만): [label loop_press]",
+        "재개 덱 label 이 겹침 (10-28 KG50R-03 · jump SELF 는 처음 만나는 같은 이름 label 로 간다): loop_press"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 200001",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): thermo · thermo_style · variable n_am_ins · variable n_ins · variable n_se_ins"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "180000 2000 0 130\n",
+      "trial_rc": 0,
+      "trial_stdout": "2000 1 [run 2000]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_duplicate_loop_label\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_duplicate_loop_label\\resume.liggghts",
+        "restart_kg50_d07_b40/restart_settling_20001.bin",
+        "20001",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_duplicate_loop_label"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {}
+    },
+    {
+      "name": "archived_missing_target_variable",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "재개 덱이 정의 전 변수를 씀 (10-28 KG50R-03 · ${x} · $x · v_x): target_press — 94 번째 명령 [print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"]",
+        "재개 덱이 정의 전 변수를 씀 (10-28 KG50R-03 · ${x} · $x · v_x): target_press — 95 번째 명령 [if \"${current_press} < ${target_press}\" then \"jump SELF loop_press\"]"
+      ],
+      "notes": [
+        "남은 step 같음: 끝 200001",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 42 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): thermo · thermo_style · variable n_am_ins · variable n_ins · variable n_se_ins · variable target_press"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "180000 2000 0 128\n",
+      "trial_rc": 0,
+      "trial_stdout": "2000 1 [run 2000]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_missing_target_variable\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_missing_target_variable\\resume.liggghts",
+        "restart_kg50_d07_b40/restart_settling_20001.bin",
+        "20001",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_missing_target_variable"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {}
+    },
+    {
+      "name": "archived_after_settling_baseline",
+      "expected": "accept",
+      "static_rc": 0,
+      "problems": [],
+      "notes": [
+        "첫 긴 run 같음 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] = 재개 덱 read_restart 뒤",
+        "체크포인트 뒤 ~ 첫 긴 run 앞 명령 같음 (10-28 KG50R-03 · 명령 하나하나 35 개)",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 27 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): thermo · thermo_style · variable n_am_ins · variable n_ins · variable n_se_ins"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "200000 2000 1 173\n",
+      "trial_rc": 0,
+      "trial_stdout": "2001 2 [run 1] [run 2000]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_after_settling_baseline\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_after_settling_baseline\\resume.liggghts",
+        "restart_kg50_d07_b40/restart_after_settling.bin",
+        "200001",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_after_settling_baseline"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {}
+    },
+    {
+      "name": "archived_after_settling_first_long_changed_300000",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "첫 긴 run 다름 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] ↔ 재개 덱 read_restart 뒤 [run 1] [run 300000]"
+      ],
+      "notes": [
+        "체크포인트 뒤 ~ 첫 긴 run 앞 명령 같음 (10-28 KG50R-03 · 명령 하나하나 35 개)",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 27 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): thermo · thermo_style · variable n_am_ins · variable n_ins · variable n_se_ins"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "300000 2000 1 173\n",
+      "trial_rc": 0,
+      "trial_stdout": "2001 2 [run 1] [run 2000]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_after_settling_first_long_changed_300000\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_after_settling_first_long_changed_300000\\resume.liggghts",
+        "restart_kg50_d07_b40/restart_after_settling.bin",
+        "200001",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_after_settling_first_long_changed_300000"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {}
+    },
+    {
+      "name": "archived_after_settling_damp_mismatch",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 1 곳 · 첫 차이 32 번째 — 본 덱 [fix damp all viscous 0.5] ↔ 재개 덱 [fix damp all viscous 1.0e-5]"
+      ],
+      "notes": [
+        "첫 긴 run 같음 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] = 재개 덱 read_restart 뒤",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 27 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): thermo · thermo_style · variable n_am_ins · variable n_ins · variable n_se_ins"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "200000 2000 1 173\n",
+      "trial_rc": 0,
+      "trial_stdout": "2001 2 [run 1] [run 2000]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_after_settling_damp_mismatch\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_after_settling_damp_mismatch\\resume.liggghts",
+        "restart_kg50_d07_b40/restart_after_settling.bin",
+        "200001",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_after_settling_damp_mismatch"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {}
+    },
+    {
+      "name": "archived_compress_r075",
+      "expected": "reject",
+      "static_rc": 1,
+      "problems": [
+        "압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_1500000.bin (이름 restart_compress_*)",
+        "재개 덱 준비 구간 명령 순서가 본 덱 체크포인트 앞 순서와 다름 (10-28 사전 공격 A · 순서 보존 부분열이어야 — 같은 변수 다시 정의 · fix 순서): [fix top_mesh all mesh/surface/stress file plate_pse_r075_a_r30.stl type 1 scale 1.0 reference_point 0 0 0] 는 본 덱에서 [fix damp all viscous 0.5] 보다 앞에만 있다"
+      ],
+      "notes": [
+        "체크포인트 뒤 ~ 첫 긴 run 앞 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 10 개)",
+        "판 메시 파일만 다름 (재개 지점 fix top_mesh): plate_pse_r075_a_r30.stl",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 53 항목 · 재개 덱 45 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): compute zmax · fix pdd_mix · fix pts1 · fix pts2 · region reg_box · region reg_mix · variable plate_z · variable z_max"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "5000 2000 0 90\n",
+      "trial_rc": 0,
+      "trial_stdout": "2000 1 [run 2000]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_compress_r075\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_compress_r075\\resume.liggghts",
+        "restart_pse_r075_a/restart_compress_1500000.bin",
+        "1500000",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\archived_compress_r075"
+      ],
+      "trial_steps_requested": 2000,
+      "metadata": {}
+    },
+    {
+      "name": "parser_nbsp",
+      "expected": "known parser mismatch: static accepts; no engine execution",
+      "static_rc": 0,
+      "problems": [],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\parser_nbsp\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\parser_nbsp\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\parser_nbsp"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "parser_continuation_no_separator",
+      "expected": "known parser mismatch: static accepts; no engine execution",
+      "static_rc": 0,
+      "problems": [],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 7\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\parser_continuation_no_separator\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\parser_continuation_no_separator\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\parser_continuation_no_separator"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    },
+    {
+      "name": "mesh_empty_existing_file",
+      "expected": "known bounded acceptance: file existence only",
+      "static_rc": 0,
+      "problems": [],
+      "notes": [
+        "남은 step 같음: 끝 100",
+        "판 메시 파일만 다름 (첫 긴 run 뒤 명령): replacement.stl",
+        "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 2 개)",
+        "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목"
+      ],
+      "cut_rc": 0,
+      "cut_stdout": "50 10 0 6\n",
+      "trial_rc": 0,
+      "trial_stdout": "10 1 [run 10]\n",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\extracted_deckcheck.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\mesh_empty_existing_file\\main.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\mesh_empty_existing_file\\resume.liggghts",
+        "restart_settling_50.bin",
+        "50",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50_fix30\\independent\\program\\cases\\mesh_empty_existing_file"
+      ],
+      "trial_steps_requested": 10,
+      "metadata": {}
+    }
+  ]
+}

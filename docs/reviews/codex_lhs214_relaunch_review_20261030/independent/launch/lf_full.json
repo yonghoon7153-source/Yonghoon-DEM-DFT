@@ -1,0 +1,162 @@
+{
+  "schema": "network_parallel_launcher/v1",
+  "launch_format": "network_parallel_launch/v3",
+  "seal": {
+    "schema": "launch_seal/v3",
+    "launch_format": "network_parallel_launch/v3",
+    "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    "files": 32,
+    "expected_network_generation": "g2"
+  },
+  "expected_network_generation": "g2",
+  "generation_probe": {
+    "generation": "g2",
+    "problems": [],
+    "error": ""
+  },
+  "code_hashes": {
+    "scripts/network_conductivity.py": "a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e",
+    "scripts/plastic_coverage.py": "cce27a34c0bf2e4f5c122e43d983aa3414a825ab461a00abd408dba02e151348",
+    "scripts/audit_constriction_deleted.py": "180287be199ea60e6a50ba6cd0baf854c18a18568c476f7e0200c2caca3faf9d",
+    "scripts/extract_se_network_diagnostics.py": "db7151b51252e60c42c2bc2a2b3173ae6f4b97a94226b51a97b1e357e028ea9a",
+    "scripts/dem_analysis_core.py": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+    "scripts/analyze_contacts.py": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9",
+    "scripts/analyze_contacts_bimodal.py": "8afcc76030b747d8632014fa5b6cae1c1f066007b9247902caefb05288cf1ca5",
+    "scripts/coverage_physics_vs_hertzian.py": "1bf4ee8c0061e69760596b05318e0b750605e85ad16f34176e74f31db80b6253",
+    "scripts/parse_liggghts.py": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425",
+    "scripts/se_material.py": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+    "scripts/metrics_json.py": "baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702",
+    "scripts/tau_flux.py": "c0a7da6e1b73bea97136f06803810dbe159bf5c4395d8d218a90217a58ef0f78",
+    "scripts/lhs_webapp_batch.py": "b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668",
+    "scripts/lhs_harvest_batch.py": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e",
+    "scripts/lhs_descriptor_harvest.py": "96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e",
+    "webapp/app.py": "3e82140f47c7e87b138f8a6f24b8f8575bc7476e91b8369b20cdf698b69b4bc1",
+    "webapp/pipeline_service.py": "8026169f61e8bddcceea3dfb42758bb6a4e599a28271d8159c387dfc2a79d4ef",
+    "scripts/export_master_csv.py": "2899dc2410ad8840dadf41993511c225d60f29f77edfdb2fac6703b25ccf767b",
+    "scripts/type_map_resolve.py": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5",
+    "scripts/lens_geometry.py": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77",
+    "scripts/lhs_perc_extract.py": "0750d0964d006e64934e42e83b98fe0786115440f024fc5215d5d2aaf6396a16",
+    "scripts/press_units.py": "493fcc42f2ed4b880362c81766004cf96d0f3a3ed8514aeff9cfe6ed387842dd",
+    "scripts/grade_engine.py": "9a4d27ea9e937298ab84c0cf1bcd4c4f4957317e783247fd047923758dc96efc",
+    "webapp/ledger_view.py": "ce445f36e01258fb2d46cc8c384b50c7545f87a97e5c1eb4785a0db64a8a7930",
+    "webapp/mpm_lab_register.py": "3b8318fb3980f1466ad2bb642f61924de3fb4d55c539690691cc86540f490967",
+    "webapp/predictor_engine.py": "9b341d4e1bf74e071888213656afb8dde4de985081d704818ba5d6b629555c2d",
+    "webapp/security.py": "6f9e98d8748bdd420e73f1db19df50ede1c5f9ce7fb60a25cdea582583de770f",
+    "webapp/storage_sync.py": "352314ffb1908998f51c1ec25289846b3644e736d2d8df5e145c41646edf811a",
+    "webapp/structure_predictor.py": "e468d6dfe18db338a6d6afc7ec10fb867464b80a02d17d475ee4ee8068392064",
+    "scripts/fracture_model.py": "3cd8dabb3ebaea3950f53951f776fceabc82f9431633587fc7bd85a8dd9d8170",
+    "scripts/lhs_union_webapp.py": "3f06e9d36060a366d79e1abb76b5fe07e23b51d63666f51ba3afeabf64211408",
+    "scripts/ml_design_structure.py": "35378c5eedae36a75074279066db1db81617c02c334b5d0e4c7f19a76d0bf628"
+  },
+  "code_dependency_closure": [
+    "scripts/network_conductivity.py"
+  ],
+  "handover_code_hashes": {
+    "scripts/lhs_design_dataset.py": "d1815155142e909200053c2d8e9de8c0a88c2dc6d3d9462ad18614a42845e1f0",
+    "scripts/g2_network_reread.py": "0e2ec7ef37571268b85b0d17b71f7a2858aa2a7e6bcfadf4be1c6b5416dd5cd8"
+  },
+  "git": {
+    "sha": "35f0327377a4213774010a090df4d224e50d29e1\n",
+    "dirty": false
+  },
+  "plan": {
+    "cohorts": [
+      {
+        "name": "lhss"
+      }
+    ],
+    "queue": [
+      {
+        "case": "lhss_001",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_002",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_003",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_004",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_005",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_006",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_007",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_008",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_009",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_010",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_011",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_012",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_013",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_014",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_015",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_016",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_017",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_018",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_019",
+        "cohort": "lhss"
+      },
+      {
+        "case": "lhss_020",
+        "cohort": "lhss"
+      }
+    ]
+  },
+  "input_digest": {
+    "n": 20,
+    "ids_sha256": "991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694",
+    "raw_sha256_table_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "missing_raw_sha": [],
+    "cohort_tsv_sha256": {
+      "lhss": "2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  },
+  "observe_imports": true,
+  "import_obs_run_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}

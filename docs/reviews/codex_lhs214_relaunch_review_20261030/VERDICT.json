@@ -1,0 +1,42 @@
+{
+  "schema": "codex_review_scope/v1",
+  "date": "2026-10-30",
+  "review_pin": "bf8cf21c6466cdb9411f9320711b871c2d1c651e",
+  "launch_pin": "35f0327377a4213774010a090df4d224e50d29e1",
+  "decision": "GO",
+  "scope": "registered manual LHS214 relaunch readiness: 194 -> completion/audit checks -> supp20",
+  "Q1": {
+    "i": "closed",
+    "ii": "closed",
+    "iii": "closed under explicit revised criterion; original B15 not satisfied",
+    "iv": "closed as supplied evidence; immediate operational checks remain"
+  },
+  "new_findings": [],
+  "new_P1": 0,
+  "new_P2": 0,
+  "known_open": [
+    {
+      "id": "L214P-02",
+      "severity": "P3",
+      "status": "open",
+      "mitigation": "full40 approval at F7/G7; does not repair launch_eligibility"
+    }
+  ],
+  "next_existing_steps": [
+    "author launch authorization",
+    "immediate B7/environment/dirty/new ROOT checks",
+    "registered manual completion/audit between batches",
+    "actual two-manifest receipt with full40 B7 approval"
+  ],
+  "automatic_paste_all_script_certified": false,
+  "production_executed": false,
+  "simulation_executed": false,
+  "wsl_executed": false,
+  "author_launch_authorization_created": false,
+  "product_code_modified": false,
+  "git_refs_modified": false,
+  "model_physics_validity_reviewed": false,
+  "v13_or_S3_status_changed": false,
+  "input_zip_sha256": "f784b6b7352ba1336afc3dfabf069100e08641f008e40ce255a1fd007e36aadf",
+  "report": "codex_review_lhs214_relaunch_20261030.md"
+}

@@ -1,0 +1,43 @@
+## d2_received_baseline (체크포인트 restart_kg50_d2_b50/restart_settling_20001.bin · S0 20001)
+  · 남은 step 같음: 끝 200001
+  · 첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)
+  · 재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 46 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix
+  재개 덱 정적 대조: 통과 (문제 0)
+rc=0
+
+## d2_drop_intermediate_variable_definition (체크포인트 restart_kg50_d2_b50/restart_settling_20001.bin · S0 20001)
+  · 남은 step 같음: 끝 200001
+  · 첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)
+  · 재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 49 항목 · 재개 덱 47 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix
+  재개 덱 정적 대조: 통과 (문제 0)
+rc=0
+
+## d2_runtime_dependent_eager_variable (체크포인트 restart_kg50_d2_b50/restart_settling_20001.bin · S0 20001)
+  · 남은 step 같음: 끝 200001
+  · 첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)
+  · 재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 49 항목 · 재개 덱 47 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix
+  재개 덱 정적 대조: 통과 (문제 0)
+rc=0
+
+## archived_after_settling_baseline (체크포인트 restart_kg50_d07_b40/restart_after_settling.bin · S0 200001)
+  · 첫 긴 run 같음 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] = 재개 덱 read_restart 뒤
+  · 체크포인트 뒤 ~ 첫 긴 run 앞 명령 같음 (10-28 KG50R-03 · 명령 하나하나 35 개)
+  · 첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 27 개)
+  · 재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): thermo · thermo_style · variable n_am_ins · variable n_ins · variable n_se_ins
+  재개 덱 정적 대조: 통과 (문제 0)
+rc=0
+
+## drop_intermediate_variable_definition (체크포인트 restart_settling_50.bin · S0 50)
+  · 남은 step 같음: 끝 100
+  · 첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)
+  · 재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목
+  재개 덱 정적 대조: 통과 (문제 0)
+rc=0
+
+## runtime_dependent_eager_variable (체크포인트 restart_settling_50.bin · S0 50)
+  · 남은 step 같음: 끝 100
+  · 첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 1 개)
+  · 재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 4 항목 · 재개 덱 4 항목
+  재개 덱 정적 대조: 통과 (문제 0)
+rc=0
+

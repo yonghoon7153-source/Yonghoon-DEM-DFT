@@ -1,0 +1,95 @@
+{
+  "scripts/check_all.sh": {
+    "added_count": 25,
+    "removed_count": 0,
+    "added": [
+      "#  ★ 2026-10-27 (non-Rint 통합 · 대응표 `docs/collab/claude_to_codex/20261027-0220_nonrint-merge-sha-map.md` §6 2) — 믹서 D2 소비자 ·",
+      "#    D3 유한 격자 후보 판독기 직접 시험 (합성 덱 · 합성 계약만 · 시뮬레이터 없음).  Codex 가지에서 반입된 뒤 이 파일 · CI · 등재 어디에도 없었다",
+      "#    (통합 때는 손으로만 돌림 · 13 · 28 unittest OK).  unittest 라 `--selftest` 플래그가 없어 등재 (`selftest_inventory.tsv`) 대상이 아니고",
+      "#    드라이버 (`--run-fast`) 도 못 돈다 → 이름으로 건다 (CI 에도 같이).  실측 (10-27 · 컨테이너 · 두 번) D2 1.47 · 1.27 s · D3 0.42 · 0.40 s.",
+      "run 'mixer D2 소비자 (합성 덱 · 결속 검증 · unittest)' python3 scripts/test_mixer_d2_consumers.py",
+      "run 'mixer D3 후보 판독기 (합성 계약 · unittest)'      python3 scripts/test_mixer_d3_candidates.py",
+      "#  ★ 2026-10-27 (non-Rint 통합 · 같은 대응표 §6 3) — 언로딩 키트 (ULPRI · `docs/data/ps45_unload_20261009/`) 직접 검사 다섯.  통합 뒤 이 트리의",
+      "#    키트 폴더 = 수용 핀 4c29705fa 와 같다 (`git diff` 0) 인데 이 파일 · CI 어디에도 없었다 (통합 때도 돌리지 않음).  키트는 `scripts/` · `webapp/`",
+      "#    밖이라 등재 (`selftest_inventory.tsv`) 가 보지 않는다 → 이름으로 건다 (CI 에도 같이).  꼴 = 키트 README · 인계 색인 §6 그대로 `python3 -I`",
+      "#    (봉인 키트 · 표준 라이브러리 + 같은 폴더 모듈 · 러너 모의 = bash + 가짜 mpirun · lmp · 임시 폴더 · LIGGGHTS 없음 · 물리 실행 아님).",
+      "#    실측 (10-27 · 컨테이너 · 두 번) ul_reader 14.44 · 15.54 s · ul_gates 0.27 · 0.13 s · ul_runner_test 42.20 · 39.94 s ·",
+      "#    make_unload_decks --check 1.69 · 1.73 s · seal_kit --check 1.13 · 1.16 s.",
+      "run 'ULPRI ul_reader         --selftest (언로딩 판독기)'      python3 -I docs/data/ps45_unload_20261009/ul_reader.py --selftest",
+      "run 'ULPRI ul_gates          --selftest (관문)'               python3 -I docs/data/ps45_unload_20261009/ul_gates.py --selftest",
+      "run 'ULPRI ul_runner_test    --selftest (러너 모의 · 가짜 lmp)' python3 -I docs/data/ps45_unload_20261009/ul_runner_test.py --selftest",
+      "run 'ULPRI make_unload_decks --check (덱 = 생성 결과)'        python3 -I docs/data/ps45_unload_20261009/make_unload_decks.py --check",
+      "run 'ULPRI seal_kit          --check (봉인 · 활성 규칙)'      python3 -I docs/data/ps45_unload_20261009/seal_kit.py --check",
+      "#  ★ 2026-10-27 (Rint ② 묶음 C2b · author 10-27 approved bundle C) — 첫 풀이 끝 표지 감싸개 (scripts/rint_first_result.py) 단위 시험 F01–F09 ·",
+      "#    실제 러너 · payload 경로는 ca_ext_runner N12 · rint_r_chain_e2e E1u · E13 이 본다.",
+      "run 'rint_first_result (Rint ② 첫 풀이 끝 표지 감싸개 · 묶음 C2b · 시험 먼저)' python3 scripts/test_rint_first_result.py",
+      "#  ★ 2026-10-28 (50kg Q5 dt · 감쇠 가지 · 등록 Q11 · 시험 먼저) — 가지 덱 생성기: 등록 문서 고정 줄 대조 · 본 덱 sha256 · 허용 목록",
+      "#    대조 (명령 + 줄) · A · F = resume_ckpt.sh -C 문제 정확히 하나 · 러너 -n ↔ -np · 변이 12.  판독기: selftest 첫 항목 = 등록 §7 판정",
+      "#    순서 ① ② ③ ④ (문장 + 행동 + 순서 변이) · O1 · O2 · O3 · T0 · 거부 · 변이 34 · 실측 < 5 s (구현 전 4/36 · 1/13).",
+      "run 'kg50_q5_branches      --selftest' python3 scripts/kg50_q5_branches.py --selftest",
+      "run 'kg50_q5_verdict       --selftest' python3 scripts/kg50_q5_verdict.py --selftest"
+    ],
+    "removed": [],
+    "fast_driver_lines": {
+      "B7": [
+        {
+          "line": 428,
+          "text": "run 'fast 자기검사 전수     (등재 기반 드라이버)' python3 scripts/check_selftest_inventory.py --run-fast"
+        }
+      ],
+      "review": [
+        {
+          "line": 453,
+          "text": "run 'fast 자기검사 전수     (등재 기반 드라이버)' python3 scripts/check_selftest_inventory.py --run-fast"
+        }
+      ]
+    }
+  },
+  "docs/reviews/selftest_inventory.tsv": {
+    "added_count": 2,
+    "removed_count": 0,
+    "added": [
+      "scripts/kg50_q5_branches.py\t--selftest\tfast\tcheck_all\tclaude\t초록 150/150 · 2.3 s (실측 2026-10-28 밤 · 3.11 · 통합 트리 · 3.8 = 에이전트 실측 150/150 · 10-28 Q5 §12 W2 · D3 로컬 직렬 포함) — 50kg Q5 가지 덱 생성기 (등록 docs/50kg/kg50_q5_dt_damping_registration_draft_20261027.md Q11 · W1 · W2 = 거부 §5 · Q12).  시험 먼저: 구현 전 스텁 4/36 (통과 4 = 등록 대조 2 · 원본 그대로 · 거부 뒤 파일 0) → 71/71.  ⓪ 등록 고정 줄 = 상수 · ⓪b LIGGGHTS 3d5c00f restart 원문 (dt 저장 없음) · A · B · C · F · A3 · C3 · F3 실제 본 덱으로 생성 (A · F · A3 · F3 = resume_ckpt.sh -C 문제 정확히 하나 · B = 명령 여섯 · C = 하나 · F = A 바이트) · 거부 12 · 허용 목록 반례 15 · 변이 12 (관문 하나를 끄면 겨눈 시험 실패).  외부 의존: bash (resume_ckpt.sh -C) · numpy (make_se_size_decks 러너 렌더)",
+      "scripts/kg50_q5_verdict.py\t--selftest\tfast\tcheck_all\tclaude\t초록 98/98 · 5.6 s (실측 2026-10-28 밤 · 3.11 · 통합 트리 · 3.8 = 에이전트 실측 98/98 · 10-28 Q5 §12 NP · grid · 이탈 포함) — 50kg Q5 판독기 (읽기 전용 · O1 · O2 · O3 · R1–R6 · §7 ①–④).  시험 먼저: 구현 전 스텁 1/13 → 75/75.  첫 항목 ⓪ = 등록 §7 판정 순서 · (a) · (b) 묶기 · W1 한정어 · Q3 · Q4 문턱 줄 대조 (결과 뒤 문턱 이동 차단) · ⓪b–⓪d 순서 행동 + 순서 변이 · ⓪e 줄 규칙 사본 = 생성기 · 합성 침대 (생성기 진짜 가지 폴더) V1–V8 (경계 |X−A| = τ 합격 · 바닥 먼저 · 침대 나쁜 쪽 · T0 → 판정 불가 (기술) · W2 O3 · R5 · combine · CLI · --main-log) · 거부 6 (유니코드 숫자 · JSON true · NaN · 빈 로그) · 변이 36 (덤프 ↔ 로그 결합 포함).  외부 의존: 판정 경로 = 표준 라이브러리만 · selftest = 생성기로 진짜 가지 폴더를 만든다 (bash · numpy)"
+    ],
+    "removed": [],
+    "lhs_rows": {
+      "B7": [
+        "scripts/lhs_design_dataset.py\t--selftest\tfast\tnone\tclaude\t초록 391/391 (실측 10-12 · ★ SUP20-02 ㉛j 원천 슬롯 열 w_AM_P · w_AM_S 의 mono 규약 문구 (고치기 전 390/391 = ㉛j 만 실패) · ㉛j2 어댑터 CSV 실제 값 (lhsx 64 · lhss 20) · 그 전 389/389 = Codex 보충 검토 핀) · 옛 277/277 (실측 2026-10-05 · ㉖a–i RGL-03 network 배치 · ㉗ RGL-05 관문 순서 — 옛 코드 241/277) · 옛 207/207 (2026-10-01 · ㉔a–r = v1.1 ①②③ 관문 D1–D5 · C1–C3 — 옛 코드 189/207) · ⑳ J20-g 확인된 열만 · ⑯d–d10 · ⑳b · h · y–af J20-k (B) mono 설계 상 칸 (수확 · 웹앱 · QC · 열 사전 · 반례 9) · ⑳g–l J20-h 접촉 0 쌍 = 0 · ⑳m–r J20-i SE–SE CN 두 열 + 항등식 관문 · ⑳s–x J20-j AM–AM 세 열 + 관문 둘 (137 건)",
+        "scripts/supp20_input_receipt.py\t--selftest\tfast\tnone\tclaude\t초록 40/40 · 5.5s (실측 10-12 · 반례 먼저: 같은 시험을 accept-all 스텁 (계산만 · 판정 늘 같음) 에 = 6/40 → 구현 40/40) — 보충 20 입력 지문 영수증 (읽기 전용 · Codex 보충 20 지원 검토 Q6 · 수정 계획 sup20_fix_plan_20261012 §3): 등록 §2 raw sha 표 · 코호트 TSV 한 바이트 · ID 하나 · 등록 값 오타 (raw · ids · TSV · code_fp · 값 둘) · 일반 계획 강등 (후막 하나 더 · 등록 집합 불성립) = rc 1 · r3 묶음 · harvest_head · r2 대조 (값 · union) 변조 · 진짜 print_preflight 화면 (grep 판 포함) 변이 8 · 실제 발사 manifest 꼴 (launch_eligibility current) 변이 9 · 읽기 전용 · ★ 10-14 SUPR-01 · 02: 88/88 · 12 s (실측 · 반례 먼저 = 고치기 전 32/88) — 진짜 실행기 dry-run 완료 영수증 반례 (a)–(i) · 등록 명령 밖 인자 · 승인 SHA (사전 점검 · manifest) · Codex 반례 로그 다섯 (텍스트 · 위조 포장) · 옛 텍스트 화면 판 (grep 포함) = 이제 E0 거부 · ★ 10-15 (나′): 99/99 · 17 s (실측 · 시험 먼저 = 고치기 전 81/99 · 상태 pending) — 봉인 지문 대기 선언 `code_fp_pending` (발사 대조 D1 · E2 · F5 · G5 = 등록 값만) · 시험 안 상태 판정 (registered · pending · undeclared) · pending 기대 실패 집합 정확히 (컨테이너 {D1} · 사전 점검 {D1 · E2} · 발사 manifest 둘 {D1 · F5 · G5}) · 음성 대조 판별력 (오타 = D1 상세 값 · E2 · F5 = 비준 쌍둥이) · 반례 ⓐ–ⓕ (옛 초안 꼴 · 대기 값 둘 · 대기 = 등록 · 대기 + 체크아웃 = 대기 · 선언 없음 · 비준 쌍둥이 rc 0) · ★ 10-16 L214R-04: 111/111 · 11 s (실측 · 시험 먼저 = 고치기 전 100/111 · 상태 pending) — 파서 = 활성 §3 (`## 3.` 절) 의 code_fp 만 · 비준 전환 사본 (Codex minimal_activate_section3 — 대기 선언 삭제 · §3 갱신 · 역사 표 보존) rc 0 (컨테이너 · 사전 점검 · 발사 manifest) · §3 밖 옛 초안 꼴 = 읽지 않음 ({D1}) · 대기 + 역사 토큰 = 발사 불허 ({D1} · {D1 · E2} · {D1 · F5 · G5}) · 상충 대기 = {R0} · §3 제목 없음 · 둘 = R0 · 울타리 지킴 · S11a 둘째 값 = §3 안으로 · ★ 10-19 L214R-S01: 118/118 (실측 · 시험 먼저 = 고치기 전 114/118) — 울타리 들여쓰기 = 열 수 (탭 4 열) · 닫는 줄 꼬리 space/tab 만 · Codex 32 꼴 · 탭 여는 줄 · §3 안 코드 블록 값 (Q2) · ★ 10-19 L214R-S06: 122/122 (실측 · 시험 먼저 = 고치기 전 120/122) — 빈 ATX 제목 경계 (`#` · `##` · `## ` + space/tab 뿐 · 내용 NBSP/U+2003 뿐도 제목 = CommonMark §4.2 · 활성 §3 식별 규칙 그대로) · Codex 12 꼴 거부 · 정상 값 → 빈 제목 → 역사 값 2 꼴 수용 · 대조 5 · 지킴 24 · ★ 10-21 S0b (1저자 10-21 Q1 · LHS214 다시 발사 묶음 §6 Q3): 123/123 (실측 · 시험 먼저 = 고치기 전 122/123 · 상태 pending / 비준 사본 121/123 → 123/123) — S0b 봉인 지문 기대 = 상태가 정한 지문 (registered = 등록 §3 · pending = 대기 선언) = 체크아웃 code_fp 64 자리 · registered 면 대기 없음 · 보충 = 194 등록 (같은 함수) · 지문 앞자리 상수 삭제 · S11g 일곱 꼴 · 변이 넷 = S11g 실패 · 증거 docs/reviews/lhs214_relaunch_s0b_evidence_20261021/",
+        "scripts/lhs_release_build.py\t--selftest\tfast\tnone\tclaude\t초록 8/8 (실측 2026-10-01) — LHS 배포 표 = 인계표 열 부분집합: 만들기 · 대조 (행 · 순서 · 값 · 열 사전) · 없는 열 · 중복 열 · 첫 열 거부 · 값 · 행 · 사전 변조 검출 · 배포 v1 바이트 재현 (Codex 최종 리뷰 Q5 · HND-04 \"배포를 만드는 도구가 리포에 없다\")",
+        "scripts/run_network_194_parallel.py\t--selftest\tfast\tnone\tclaude\t초록 13.4s (실측 · 10-05 29 건 — 194 망 배치 병렬 실행기: 동적 큐 · 레인 20 × 1 스레드 · 케이스별 TMPDIR network lock · cwd = 케이스 폴더 · pyc · 메모리 예산 입장 · merge = 배치 writer 바이트 대조 · 실패 기록 · manifest; 실제 배치는 WSL) · ★ 10-07 Codex 세대 2 재검증 2 (G2RR2-01 · 02 · 03): 82/82 · 76–86 s (실측 · 실제 파이프라인 import 관측 ㉟d · ㉟e 포함 — 초 단위 등급 그대로 · 재분류 = 별건) — 실행 형식 자격 ㉝ · 역사 ROOT ㉞ · 봉인 32 · 닫힘 · 지연 import 분류 · 누락 모듈 변이 · 관측 ㉟a–㉟e · 후속 명령 등록 집합 ㉛b · ★ 10-14 SUPR-01 · 02: 139/139 · 86 s (실측 · 반례 먼저 = 고치기 전 130/139) — 사전 점검 INPUT_DIGEST_JSON · 완료 영수증 (정상 · 중단 · LaunchError) · 거부 셋 · 대조 함수 · preflight-verify · 필수 세 검사 명시 값 ㊲a–㊲i · ★ 10-15 Q5 (1저자 *\"권고대로\"*): fast 레인 기본 180 s 경계 — 혼자 166–169 s (10-14 실측 86 s 의 약 두 배 · 같은 코드 · 이 컨테이너 CPU) · 게이트 세 번 시간 초과 (rc 124 · 시험 실패 아님) → 이 등재만 7번째 칸 timeout=300 (시험 내용 · 레인 · 등급 그대로)\ttimeout=300",
+        "scripts/wsl_network_smoke.py\t--selftest\tfast\tnone\tclaude\t초록 12.5s (실측 · 10-08 16/16 — 합성 · 판정 함수 묶음: 판정 C1 · C2 · C3 · 참조 침대 두기 (real14 · case15 원자료 sha256 = README 표 · 상 매핑) · case15 음성 대조 판정 변별 · ★ G2RR5-02 실제 망 시도 판정 (합성 변이 10 — 실행 실패 = TECH · 다른 결과 · 증거 없음 = FAIL) · 기록기 그대로 통과 · ★ G2RR5-03 한 곳 (CASE15_NEGCTL = 인계 도구 · 안정 ID · 미등록 표지 FAIL) · 합성 침대 실제 파이프라인 (일반 경로 실 Stage E ↔ 망 정지 · 대조 C1 · C1b · C2 · C3 · 격리 · ROOT 거부) · 커밋된 case15 원자료 실제 묶음은 --selftest-real 로 나눔 (10-08 · 나눔 전 125–136 s · 10-05 실측 17.5 s 10/10); 실제 소형 통합 시험은 WSL)",
+        "scripts/wsl_network_smoke.py\t--selftest-real\tslow\tnone\tclaude\t초록이지만 118.7 s (10-08 실측 · 4/4 · 단독 PASS · 이 컨테이너) — 커밋된 case15 원자료의 실제 묶음: 원자료 직접 6 조합 (G2RR4-03 · ≈ 19 s) · 실제 파이프라인 두 판 (G2RR5-02 — child_case + 망 CLI 만 PermissionError → 실제 시도 검사 TECH · 스모크 rc 1 / 주입 없음 run_smoke → case15 검사 7/7 · 고정 토큰) · (b) ROOT → 인계 도구 --smoke-root rc 0 (G2RR5-03) · 실제 판 ≈ 120 s (WSL ≈ 46 s) 라 fast 레인 밖 (fast 제한 180 s · 병렬 6) — WSL 사전 점검에서 돌린다",
+        "scripts/g2_network_reread.py\t--selftest\tfast\tcheck_all\tclaude\t초록 1.9s (실측 · 10-07 9/9 — 세대 2 읽기 전용 재검산기: 게시 폴더를 게시 · 인계와 같은 함수로 다시 읽음 — 증서 (가지 · 역할 결합) · 도장 ↔ 레코드 · 정지 계약 · 열 역할 · 인계 원천 관문 + 기대 세대 · smoke / launcher ROOT 두 입력) · ★ 10-07 G2RR2-02 · 05: 15/15 (실측 ~5 s) — 등록 집합 (pilot3 · 합성 production194 194 케이스) · 반례 여덟 (plan · cohorts · queue 삭제 · 빈 cohorts · 누락 · 중복 · 비등록) · 등록 없는 launcher-root rc 2 · JSON 집합 필드 · symlink 거부 환경 (하드링크 대체) · K7 = 공용 가지 표"
+      ],
+      "review": [
+        "scripts/lhs_design_dataset.py\t--selftest\tfast\tnone\tclaude\t초록 391/391 (실측 10-12 · ★ SUP20-02 ㉛j 원천 슬롯 열 w_AM_P · w_AM_S 의 mono 규약 문구 (고치기 전 390/391 = ㉛j 만 실패) · ㉛j2 어댑터 CSV 실제 값 (lhsx 64 · lhss 20) · 그 전 389/389 = Codex 보충 검토 핀) · 옛 277/277 (실측 2026-10-05 · ㉖a–i RGL-03 network 배치 · ㉗ RGL-05 관문 순서 — 옛 코드 241/277) · 옛 207/207 (2026-10-01 · ㉔a–r = v1.1 ①②③ 관문 D1–D5 · C1–C3 — 옛 코드 189/207) · ⑳ J20-g 확인된 열만 · ⑯d–d10 · ⑳b · h · y–af J20-k (B) mono 설계 상 칸 (수확 · 웹앱 · QC · 열 사전 · 반례 9) · ⑳g–l J20-h 접촉 0 쌍 = 0 · ⑳m–r J20-i SE–SE CN 두 열 + 항등식 관문 · ⑳s–x J20-j AM–AM 세 열 + 관문 둘 (137 건)",
+        "scripts/supp20_input_receipt.py\t--selftest\tfast\tnone\tclaude\t초록 40/40 · 5.5s (실측 10-12 · 반례 먼저: 같은 시험을 accept-all 스텁 (계산만 · 판정 늘 같음) 에 = 6/40 → 구현 40/40) — 보충 20 입력 지문 영수증 (읽기 전용 · Codex 보충 20 지원 검토 Q6 · 수정 계획 sup20_fix_plan_20261012 §3): 등록 §2 raw sha 표 · 코호트 TSV 한 바이트 · ID 하나 · 등록 값 오타 (raw · ids · TSV · code_fp · 값 둘) · 일반 계획 강등 (후막 하나 더 · 등록 집합 불성립) = rc 1 · r3 묶음 · harvest_head · r2 대조 (값 · union) 변조 · 진짜 print_preflight 화면 (grep 판 포함) 변이 8 · 실제 발사 manifest 꼴 (launch_eligibility current) 변이 9 · 읽기 전용 · ★ 10-14 SUPR-01 · 02: 88/88 · 12 s (실측 · 반례 먼저 = 고치기 전 32/88) — 진짜 실행기 dry-run 완료 영수증 반례 (a)–(i) · 등록 명령 밖 인자 · 승인 SHA (사전 점검 · manifest) · Codex 반례 로그 다섯 (텍스트 · 위조 포장) · 옛 텍스트 화면 판 (grep 포함) = 이제 E0 거부 · ★ 10-15 (나′): 99/99 · 17 s (실측 · 시험 먼저 = 고치기 전 81/99 · 상태 pending) — 봉인 지문 대기 선언 `code_fp_pending` (발사 대조 D1 · E2 · F5 · G5 = 등록 값만) · 시험 안 상태 판정 (registered · pending · undeclared) · pending 기대 실패 집합 정확히 (컨테이너 {D1} · 사전 점검 {D1 · E2} · 발사 manifest 둘 {D1 · F5 · G5}) · 음성 대조 판별력 (오타 = D1 상세 값 · E2 · F5 = 비준 쌍둥이) · 반례 ⓐ–ⓕ (옛 초안 꼴 · 대기 값 둘 · 대기 = 등록 · 대기 + 체크아웃 = 대기 · 선언 없음 · 비준 쌍둥이 rc 0) · ★ 10-16 L214R-04: 111/111 · 11 s (실측 · 시험 먼저 = 고치기 전 100/111 · 상태 pending) — 파서 = 활성 §3 (`## 3.` 절) 의 code_fp 만 · 비준 전환 사본 (Codex minimal_activate_section3 — 대기 선언 삭제 · §3 갱신 · 역사 표 보존) rc 0 (컨테이너 · 사전 점검 · 발사 manifest) · §3 밖 옛 초안 꼴 = 읽지 않음 ({D1}) · 대기 + 역사 토큰 = 발사 불허 ({D1} · {D1 · E2} · {D1 · F5 · G5}) · 상충 대기 = {R0} · §3 제목 없음 · 둘 = R0 · 울타리 지킴 · S11a 둘째 값 = §3 안으로 · ★ 10-19 L214R-S01: 118/118 (실측 · 시험 먼저 = 고치기 전 114/118) — 울타리 들여쓰기 = 열 수 (탭 4 열) · 닫는 줄 꼬리 space/tab 만 · Codex 32 꼴 · 탭 여는 줄 · §3 안 코드 블록 값 (Q2) · ★ 10-19 L214R-S06: 122/122 (실측 · 시험 먼저 = 고치기 전 120/122) — 빈 ATX 제목 경계 (`#` · `##` · `## ` + space/tab 뿐 · 내용 NBSP/U+2003 뿐도 제목 = CommonMark §4.2 · 활성 §3 식별 규칙 그대로) · Codex 12 꼴 거부 · 정상 값 → 빈 제목 → 역사 값 2 꼴 수용 · 대조 5 · 지킴 24 · ★ 10-21 S0b (1저자 10-21 Q1 · LHS214 다시 발사 묶음 §6 Q3): 123/123 (실측 · 시험 먼저 = 고치기 전 122/123 · 상태 pending / 비준 사본 121/123 → 123/123) — S0b 봉인 지문 기대 = 상태가 정한 지문 (registered = 등록 §3 · pending = 대기 선언) = 체크아웃 code_fp 64 자리 · registered 면 대기 없음 · 보충 = 194 등록 (같은 함수) · 지문 앞자리 상수 삭제 · S11g 일곱 꼴 · 변이 넷 = S11g 실패 · 증거 docs/reviews/lhs214_relaunch_s0b_evidence_20261021/",
+        "scripts/lhs_release_build.py\t--selftest\tfast\tnone\tclaude\t초록 8/8 (실측 2026-10-01) — LHS 배포 표 = 인계표 열 부분집합: 만들기 · 대조 (행 · 순서 · 값 · 열 사전) · 없는 열 · 중복 열 · 첫 열 거부 · 값 · 행 · 사전 변조 검출 · 배포 v1 바이트 재현 (Codex 최종 리뷰 Q5 · HND-04 \"배포를 만드는 도구가 리포에 없다\")",
+        "scripts/run_network_194_parallel.py\t--selftest\tfast\tnone\tclaude\t초록 13.4s (실측 · 10-05 29 건 — 194 망 배치 병렬 실행기: 동적 큐 · 레인 20 × 1 스레드 · 케이스별 TMPDIR network lock · cwd = 케이스 폴더 · pyc · 메모리 예산 입장 · merge = 배치 writer 바이트 대조 · 실패 기록 · manifest; 실제 배치는 WSL) · ★ 10-07 Codex 세대 2 재검증 2 (G2RR2-01 · 02 · 03): 82/82 · 76–86 s (실측 · 실제 파이프라인 import 관측 ㉟d · ㉟e 포함 — 초 단위 등급 그대로 · 재분류 = 별건) — 실행 형식 자격 ㉝ · 역사 ROOT ㉞ · 봉인 32 · 닫힘 · 지연 import 분류 · 누락 모듈 변이 · 관측 ㉟a–㉟e · 후속 명령 등록 집합 ㉛b · ★ 10-14 SUPR-01 · 02: 139/139 · 86 s (실측 · 반례 먼저 = 고치기 전 130/139) — 사전 점검 INPUT_DIGEST_JSON · 완료 영수증 (정상 · 중단 · LaunchError) · 거부 셋 · 대조 함수 · preflight-verify · 필수 세 검사 명시 값 ㊲a–㊲i · ★ 10-15 Q5 (1저자 *\"권고대로\"*): fast 레인 기본 180 s 경계 — 혼자 166–169 s (10-14 실측 86 s 의 약 두 배 · 같은 코드 · 이 컨테이너 CPU) · 게이트 세 번 시간 초과 (rc 124 · 시험 실패 아님) → 이 등재만 7번째 칸 timeout=300 (시험 내용 · 레인 · 등급 그대로)\ttimeout=300",
+        "scripts/wsl_network_smoke.py\t--selftest\tfast\tnone\tclaude\t초록 12.5s (실측 · 10-08 16/16 — 합성 · 판정 함수 묶음: 판정 C1 · C2 · C3 · 참조 침대 두기 (real14 · case15 원자료 sha256 = README 표 · 상 매핑) · case15 음성 대조 판정 변별 · ★ G2RR5-02 실제 망 시도 판정 (합성 변이 10 — 실행 실패 = TECH · 다른 결과 · 증거 없음 = FAIL) · 기록기 그대로 통과 · ★ G2RR5-03 한 곳 (CASE15_NEGCTL = 인계 도구 · 안정 ID · 미등록 표지 FAIL) · 합성 침대 실제 파이프라인 (일반 경로 실 Stage E ↔ 망 정지 · 대조 C1 · C1b · C2 · C3 · 격리 · ROOT 거부) · 커밋된 case15 원자료 실제 묶음은 --selftest-real 로 나눔 (10-08 · 나눔 전 125–136 s · 10-05 실측 17.5 s 10/10); 실제 소형 통합 시험은 WSL)",
+        "scripts/wsl_network_smoke.py\t--selftest-real\tslow\tnone\tclaude\t초록이지만 118.7 s (10-08 실측 · 4/4 · 단독 PASS · 이 컨테이너) — 커밋된 case15 원자료의 실제 묶음: 원자료 직접 6 조합 (G2RR4-03 · ≈ 19 s) · 실제 파이프라인 두 판 (G2RR5-02 — child_case + 망 CLI 만 PermissionError → 실제 시도 검사 TECH · 스모크 rc 1 / 주입 없음 run_smoke → case15 검사 7/7 · 고정 토큰) · (b) ROOT → 인계 도구 --smoke-root rc 0 (G2RR5-03) · 실제 판 ≈ 120 s (WSL ≈ 46 s) 라 fast 레인 밖 (fast 제한 180 s · 병렬 6) — WSL 사전 점검에서 돌린다",
+        "scripts/g2_network_reread.py\t--selftest\tfast\tcheck_all\tclaude\t초록 1.9s (실측 · 10-07 9/9 — 세대 2 읽기 전용 재검산기: 게시 폴더를 게시 · 인계와 같은 함수로 다시 읽음 — 증서 (가지 · 역할 결합) · 도장 ↔ 레코드 · 정지 계약 · 열 역할 · 인계 원천 관문 + 기대 세대 · smoke / launcher ROOT 두 입력) · ★ 10-07 G2RR2-02 · 05: 15/15 (실측 ~5 s) — 등록 집합 (pilot3 · 합성 production194 194 케이스) · 반례 여덟 (plan · cohorts · queue 삭제 · 빈 cohorts · 누락 · 중복 · 비등록) · 등록 없는 launcher-root rc 2 · JSON 집합 필드 · symlink 거부 환경 (하드링크 대체) · K7 = 공용 가지 표"
+      ]
+    },
+    "lhs_rows_equal": true,
+    "lhs7_sha256": {
+      "B7": "89a2506d087560334c4bd8ca031d2eda3920b3e4805e65a57a734a2528a8bb99",
+      "review": "89a2506d087560334c4bd8ca031d2eda3920b3e4805e65a57a734a2528a8bb99"
+    },
+    "lhs7_first4_sha256": {
+      "B7": "518404403cd14882969565c0803b25fc5b408782a49cb43b9c2c9650e4274f0e",
+      "review": "518404403cd14882969565c0803b25fc5b408782a49cb43b9c2c9650e4274f0e"
+    }
+  },
+  "fast_driver_blob": [
+    {
+      "path": "scripts/check_selftest_inventory.py",
+      "B7_sha": "3c46ec20fa44baeefb09b1de318bb9bcdad8bfff",
+      "review_sha": "3c46ec20fa44baeefb09b1de318bb9bcdad8bfff",
+      "type": "blob",
+      "equal": true
+    }
+  ]
+}

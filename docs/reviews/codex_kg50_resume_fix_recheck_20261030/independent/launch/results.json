@@ -1,0 +1,79 @@
+{
+  "tool_sha256": "77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8",
+  "execution_scope": {
+    "exact_embedded_python": "EXECUTED",
+    "grep_sed_sha_predicates": "INDEPENDENT_PYTHON_TRANSCRIPTION",
+    "bash_fake_scheduler": "NOT_EXECUTED",
+    "slurm_mpi_liggghts": "NOT_EXECUTED"
+  },
+  "runner_suffix_false_green": {
+    "checked_deck_problems": [],
+    "checked_deck_notes": [
+      "남은 step 같음: 끝 200001",
+      "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)",
+      "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 46 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix"
+    ],
+    "checked_cut": {
+      "rc": 0,
+      "stdout": "180000 2000 0 157\n"
+    },
+    "checked_trial_steps": {
+      "rc": 0,
+      "stdout": "2000 1 [run 2000]\n"
+    },
+    "runner_gate_predicates": {
+      "SBATCH_n_exact_line": true,
+      "main_mpirun_substring": true,
+      "trial_in_substring": true
+    },
+    "checked_deck": "input_kg50_d2_b50_r56.liggghts",
+    "actual_main_in": "input_kg50_d2_b50_r56.liggghts.bak",
+    "checked_trial": "input_kg50_d2_b50_r56t.liggghts",
+    "actual_trial_in": "input_kg50_d2_b50_r56t.liggghts.bak",
+    "actual_main_if_checked_problems": [
+      "첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 64 개 ↔ 재개 덱 65 개 — 재개 덱에만 [velocity all set 1.0 0.0 0.0]"
+    ],
+    "actual_trial_identical_to_checked_trial": true,
+    "manifest_matches": true,
+    "actual_main_covered_by_manifest": false,
+    "new_main_submission_observed": false,
+    "interpretation": "Exact Python static validation passes checked input. The shell predicates also pass, but actual main runner selects an unchecked .bak deck with changed suffix behavior. Trial .bak is byte-identical to the validated trial. This is a source-path proof, not a Bash/scheduler execution."
+  },
+  "checkpoint_receipt_gap": {
+    "before_sha": "8250eff03190d972b17d942227a5e8e0eaa7603a77e29194eec0481af5c06fe4",
+    "after_sha": "aad32dfe9a4c18e5f11defc6624a0cd2b3855da70ea9770420b09c21f19c5cc5",
+    "main_manifest_still_matches": true,
+    "classification": "receipt/integrity limitation; no P1 claimed from file mutation alone"
+  },
+  "queue_name_scope": {
+    "kg50_d2_b50": true,
+    "kg50_d2_b50_ins": true,
+    "kg50_d2_b50_r56": true,
+    "kg50_d2_b50_r56t": true,
+    "kg50_d2_b50_r4": true,
+    "kg50_d2_b50_r4t": true,
+    "kg50_d2_b50_other": false
+  },
+  "numeric_token_grammar": {
+    "0.0955": {
+      "fin_regex": true,
+      "python_float": "0.0955"
+    },
+    "nan": {
+      "fin_regex": false,
+      "python_float": "nan"
+    },
+    "+nan": {
+      "fin_regex": false,
+      "python_float": "nan"
+    },
+    "inf": {
+      "fin_regex": false,
+      "python_float": "inf"
+    },
+    "1e9999": {
+      "fin_regex": true,
+      "python_float": "inf"
+    }
+  }
+}

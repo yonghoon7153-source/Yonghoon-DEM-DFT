@@ -1,0 +1,33 @@
+{
+  "tree_hash_checks": 15,
+  "archive": {
+    "files": 70,
+    "verified": 70
+  },
+  "core": {
+    "B7": 40,
+    "review": 40
+  },
+  "core_equal": true,
+  "closure": {
+    "B7": 78,
+    "review": 78
+  },
+  "closure_equal": true,
+  "input16_equal": true,
+  "missing": 0,
+  "missing_files": [],
+  "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+  "changed_py": 11,
+  "gate_counts": {
+    "scripts/check_all.sh": {
+      "added_count": 25,
+      "removed_count": 0
+    },
+    "docs/reviews/selftest_inventory.tsv": {
+      "added_count": 2,
+      "removed_count": 0,
+      "lhs_rows_equal": true
+    }
+  }
+}

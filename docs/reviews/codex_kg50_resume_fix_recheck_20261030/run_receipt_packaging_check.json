@@ -1,0 +1,74 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "win32",
+  "source_file_count": 282,
+  "scope": "CPU review reproduction only; no Bash, MPI, LIGGGHTS, SLURM or network",
+  "runs": [
+    {
+      "script": "independent/program/probe_program.py",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50rfrun\\independent\\program\\probe_program.py"
+      ],
+      "rc": 0,
+      "seconds": 3.5
+    },
+    {
+      "script": "independent/launch/probe_launch.py",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50rfrun\\independent\\launch\\probe_launch.py"
+      ],
+      "rc": 0,
+      "seconds": 0.141
+    },
+    {
+      "script": "independent/q5/probe_q5.py",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50rfrun\\independent\\q5\\probe_q5.py"
+      ],
+      "rc": 0,
+      "seconds": 1.906
+    },
+    {
+      "script": "independent/q5/finish_evidence.py",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg50rfrun\\independent\\q5\\finish_evidence.py"
+      ],
+      "rc": 0,
+      "seconds": 0.219
+    }
+  ],
+  "observations_reproduced": true,
+  "source_files_unchanged": true,
+  "production_go": false,
+  "observations": {
+    "program_inputs": 43,
+    "q5_generated_branches": 11,
+    "q5_independent_bodies_equal": 8,
+    "w2_mutations_rejected": 5,
+    "new_findings": [
+      "KG50RF-01",
+      "KG50RF-02",
+      "KG50RF-03"
+    ]
+  }
+}

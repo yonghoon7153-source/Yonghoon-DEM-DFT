@@ -1,0 +1,14 @@
+{
+  "archive_files": 18,
+  "verified_cache_inputs": 232,
+  "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+  "preflight_checks": [
+    11,
+    11
+  ],
+  "supp20_checks": 24,
+  "S0b_cases": 12,
+  "S0b_parser_cases": 7,
+  "S0b_mutants_caught": 4,
+  "saved_results": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/codex_lhs214rel_1030/run/rerun_evidence/evidence_results.json"
+}
