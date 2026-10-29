@@ -1467,6 +1467,199 @@ rej(){ echo "  ⛔ $2"; { echo; echo "## $C — 시험 전 거부 (10-28 Q9 · K
   [ -n "$AD" ] && [ -d "$AD" ] && printf '단계: %s\n이유: %s%s\n시도: %s\n' "$1" "$2" "${3:+ · $3}" "$ATT" > $AD/reject.txt; }
 # 그 케이스 잡 이름 (정확 일치) — C · C_ins · C_<SFX>[t] · C_r<N>[t]
 qre(){ printf '%s(_ins|_%s|_r[0-9]+t?)?' "$(rx $1)" "$(rx $SFX)t?"; }
+# 10-30 (KG50R-F02 · Codex 재확인 KG50RF-02 P1 · 1저자 Q2 "권고대로"): 헬퍼 러너 엄격 대조 → 본 · 시험 러너를 도구가 한 틀로 쓴다
+#   예전 = 러너 검사가 부분 글자 grep 셋 (-in …liggghts.bak · 주석 속 정상 줄 · 다른 cd · 둘째 mpirun 이 통과) · 시험 러너 = 헬퍼 러너 sed 사본 →
+#   정적 대조 · 시험 예산이 본 덱 ($D) · 시험 덱 ($TD) 은 봤는데 잡이 읽는 덱은 묶이지 않았다 (Codex: .bak 본 덱 = 검사 안 한 덱 · 영수증 일치).
+#   헬퍼 러너 (아래 -n · -np 고침 뒤 · 원본 바이트는 시도 폴더 helper_run_<C>_<SFX>.sh.orig) 를 줄마다 받는 꼴만:
+#     첫 줄 #!/bin/bash · #SBATCH --job-name=<C>_<SFX> · --output=logs/output_<C>_<SFX>_%j.out · -n NP · --time=<낱말> (각 한 번 · 꼭) ·
+#     --qos= · --partition= (한 번까지 · 낱말 A-Z a-z 0-9 _ . : , + -) · #SBATCH 는 첫 명령 줄 앞 (SLURM 이 그 뒤는 안 읽는다) · 빈 줄 ·
+#     환경 줄 (source ~/.bashrc · conda activate <이름> · export (OMP|MKL|OPENBLAS|NUMEXPR)_NUM_THREADS=1 · cd 앞) ·
+#     cd <절대 경로> 한 번 (실제 경로 = 작업 폴더 실제 경로 · . .. 마디 · 따옴표 · $ · 공백 없음) ·
+#     그 다음 mpirun --oversubscribe --bind-to none -np NP lmp_mpi -in <재개 덱 이름 = $D 의 basename> 한 번
+#   그 밖 (주석 줄 · 다른 명령 · ; && || | 리디렉션 $( ` · 둘째 mpirun · 두 cd · CR · NUL) = 거부 — 러너 안 씀 · 아래 ng (시험 · 본 제출 없음)
+#   통과 = 본 run_<C>_<SFX>.sh · 시험 run_<C>_<SFX>t.sh 를 같은 틀로 씀: 대조한 #SBATCH 값 (시험 = 이름 끝 t · --time=01:00:00) · 환경 줄
+#     (순서 그대로) · cd "<작업 폴더 실제 경로>" · 잡 안 lmp_mpi · 덱 sha256 기록 줄 하나 (LMP_IDENTITY · 기록만 · 관문 아님) ·
+#     mpirun --oversubscribe --bind-to none -np NP lmp_mpi -in "<검사한 덱 절대 경로>" 한 줄 (본 = $D · 시험 = $TD)
+#   작업 폴더 실제 경로 · 덱 이름에 A-Z a-z 0-9 _ . + - / 밖 글자 = 거부 (러너의 "…" 안에서 $ ` \ 가 펼쳐진다) · NP = 1 이상 정수
+#   인자: 헬퍼 러너 · C · SFX · NP · 작업 폴더 · 그 실제 경로 · 재개 덱 · 시험 덱 · 본 러너 쓸 곳 · 시험 러너 쓸 곳 —
+#   stdout 한 줄 · 종료 코드 0 = 통과 (두 러너 씀) / 1 = 거부 (안 씀) / 2 = 인자 · 쓰기 오류
+runnerck(){ python3 -I - "$@" <<'PY'
+import os, re, sys
+
+SAFE = re.compile(r'/[A-Za-z0-9_.+-]+(?:/[A-Za-z0-9_.+-]+)*')
+TOK = re.compile(r'[A-Za-z0-9][A-Za-z0-9_.:,+-]*')
+ENVL = re.compile(r'source ~/\.bashrc|conda activate [A-Za-z0-9_.-]+|export (?:OMP|MKL|OPENBLAS|NUMEXPR)_NUM_THREADS=1')
+TASKS = re.compile(r'#SBATCH[ \t]+(?:-n|-N|-c|--ntasks|--nodes|--cpus-per-task|--ntasks-per-[a-z]+)')
+KEYS = (('--job-name=', 1), ('--output=', 1), ('--qos=', 0), ('--partition=', 0), ('-n ', 1), ('--time=', 1))
+META = set(';&|<>$`()\\\'"*?[]{}!~')
+F02 = '10-30 KG50R-F02'
+
+
+def safe_abs(p):
+    # 절대 경로 · 글자 A-Z a-z 0-9 _ . + - / · 빈 마디 · . · .. 없음 (bash 논리 cd 와 실제 경로 풀이가 갈리지 않게)
+    return bool(SAFE.fullmatch(p)) and all(x not in ('.', '..') for x in p.split('/')[1:])
+
+
+def cut(s):
+    return s if len(s) <= 120 else s[:117] + '...'
+
+
+def check(rn, C, SFX, NP, W, WR, D, TD, OM, OT):
+    P = []
+    if not re.fullmatch(r'[1-9][0-9]{0,5}', NP):
+        P.append('NP [%s] 가 1 이상 정수가 아님' % NP)
+    if not WR or not os.path.isdir(WR) or os.path.realpath(W) != WR:
+        P.append('작업 폴더 %s 의 실제 경로를 못 얻음 ([%s])' % (W, WR))
+    elif not safe_abs(WR):
+        P.append('작업 폴더 실제 경로 [%s] 에 러너에 못 넣는 글자 (A-Z a-z 0-9 _ . + - / 만 · cd "…" · -in "…" 에 그대로 들어간다)' % WR)
+    ab = {}
+    for nm, p in (('재개 덱', D), ('시험 덱', TD), ('본 러너', OM), ('시험 러너', OT)):
+        ab[nm] = '%s/%s' % (WR, os.path.basename(p))
+        if WR and safe_abs(WR) and not safe_abs(ab[nm]):
+            P.append('%s 절대 경로 [%s] 에 러너에 못 넣는 글자 (A-Z a-z 0-9 _ . + - 만)' % (nm, ab[nm]))
+    try:
+        with open(rn, 'rb') as f:
+            raw = f.read()
+    except OSError as e:
+        return P + ['헬퍼 러너 %s 를 못 읽음 (%s)' % (rn, e.strerror)], None
+    try:
+        txt = raw.decode('utf-8')
+    except UnicodeDecodeError:
+        return P + ['헬퍼 러너가 UTF-8 이 아님'], None
+    fp = ['헬퍼 러너에 %s' % nm for ch, nm in (('\r', 'CR 글자 (윈도 줄 끝)'), ('\x00', 'NUL 글자')) if ch in txt]
+    if fp:
+        return P + fp, None
+    L = txt.split('\n')
+    if L and L[-1] == '':
+        L.pop()
+    base = os.path.basename(D)
+    mpok = 'mpirun --oversubscribe --bind-to none -np %s lmp_mpi -in %s' % (NP, base)
+    mpre = 'mpirun --oversubscribe --bind-to none -np %s lmp_mpi -in ' % NP
+    sb, env, pr = {}, [], []
+    ncd = nmp = ph = 0          # ph: 0 #SBATCH 구간 · 1 환경 줄 · 2 cd 뒤 · 3 mpirun 뒤
+
+    def bad(i, s, why):
+        pr.append('줄 %d [%s] — %s' % (i, cut(s), why))
+    if not L or L[0] != '#!/bin/bash':
+        bad(1, L[0] if L else '', '첫 줄이 #!/bin/bash 가 아님')
+    for i, s in enumerate(L[1:], 2):
+        if re.fullmatch(r'[ \t]*', s):
+            continue
+        if s.startswith('#SBATCH'):
+            if ph:
+                bad(i, s, '#SBATCH 줄이 명령 줄 뒤 (SLURM 은 첫 명령 뒤 #SBATCH 를 안 읽는다)')
+                continue
+            key = next((k for k, _ in KEYS if s.startswith('#SBATCH ' + k)), None)
+            if key is None:
+                bad(i, s, '작업 수 · 노드 지시 (#SBATCH -n NP 한 줄만 받는다)' if TASKS.match(s) else
+                    '허용 안 되는 #SBATCH 키 (--job-name= · --output= · --qos= · --partition= · -n · --time= 만)')
+                continue
+            v, kn = s[len('#SBATCH ' + key):], key.strip()
+            if key in sb:
+                bad(i, s, '#SBATCH %s 가 두 번' % kn)
+                continue
+            sb[key] = v
+            want = {'--job-name=': '%s_%s' % (C, SFX), '--output=': 'logs/output_%s_%s_%%j.out' % (C, SFX), '-n ': NP}.get(key)
+            if want is not None and v != want:
+                bad(i, s, '#SBATCH %s 값 [%s] ≠ 정해진 값 [%s]' % (kn, v, want))
+            elif want is None and not TOK.fullmatch(v):
+                bad(i, s, '#SBATCH %s 값 [%s] 이 안전한 낱말이 아님 (A-Z a-z 0-9 _ . : , + - 만)' % (kn, v))
+            continue
+        if ENVL.fullmatch(s):
+            if ph >= 2:
+                bad(i, s, '환경 줄이 cd 뒤 (cd 앞에만)')
+            else:
+                ph = 1
+                env.append(s)
+            continue
+        if s.startswith('cd '):
+            ncd += 1
+            if ncd > 1:
+                bad(i, s, 'cd 가 두 번 (하나만)')
+            elif not safe_abs(s[3:]):
+                bad(i, s, 'cd 경로가 안전한 절대 경로가 아님 (A-Z a-z 0-9 _ . + - / 만 · . .. 마디 · 따옴표 · $ · ~ · 공백 없음)')
+            elif os.path.realpath(s[3:]) != WR:
+                bad(i, s, 'cd 실제 경로 [%s] ≠ 작업 폴더 실제 경로 [%s]' % (os.path.realpath(s[3:]), WR))
+            ph = max(ph, 2)
+            continue
+        if s == mpok:
+            nmp += 1
+            if nmp > 1:
+                bad(i, s, 'MPI 실행 줄이 두 번 (하나만)')
+            elif ph != 2:
+                bad(i, s, 'MPI 실행 줄이 cd 앞 (cd 다음에만)')
+            ph = 3
+            continue
+        if s.startswith('#'):
+            bad(i, s, '주석 줄 (#!/bin/bash · #SBATCH 말고는 안 받는다)')
+        elif 'mpirun' in s or 'lmp_mpi' in s:
+            if set(s) & META:
+                bad(i, s, '셸 연결 · 치환 · 리디렉션 글자가 든 MPI 실행 줄')
+            elif s.startswith(mpre):
+                bad(i, s, 'MPI 실행 줄 -in [%s] ≠ 검사한 재개 덱 [%s]' % (s[len(mpre):], base))
+            else:
+                bad(i, s, 'MPI 실행 줄이 정해진 꼴이 아님 (%s)' % mpok)
+        elif set(s) & META:
+            bad(i, s, '셸 연결 · 치환 · 리디렉션 글자 (; & | < > $ ` ( ) 따위)')
+        else:
+            bad(i, s, '허용 목록에 없는 명령 줄 (빈 줄 · 환경 줄 · cd · mpirun 한 줄만)')
+    for key, need in KEYS:
+        if need and key not in sb:
+            pr.append('#SBATCH %s 줄 없음' % key.strip())
+    if not ncd:
+        pr.append('cd 줄 없음')
+    if not nmp:
+        pr.append('MPI 실행 줄 없음 (%s)' % mpok)
+    return P + pr, dict(sb=sb, env=env, ab=ab)
+
+
+def render(C, SFX, NP, WR, info, trial):
+    # 본 · 시험 러너 한 틀 — 다른 곳은 이름 끝 t · --time · -in 덱 뿐
+    nm = '%s_%s%s' % (C, SFX, 't' if trial else '')
+    sb, deck = info['sb'], info['ab']['시험 덱' if trial else '재개 덱']
+    out = ['#!/bin/bash', '#SBATCH --job-name=' + nm, '#SBATCH --output=logs/output_%s_%%j.out' % nm]
+    out += ['#SBATCH %s%s' % (k, sb[k]) for k in ('--qos=', '--partition=') if k in sb]
+    out += ['#SBATCH -n ' + NP, '#SBATCH --time=' + ('01:00:00' if trial else sb['--time='])]
+    if info['env']:
+        out += [''] + info['env']
+    out += ['', 'cd "%s"' % WR,
+            'echo "LMP_IDENTITY record-only (not a gate, 10-30 KG50R-F02): lmp_mpi=$(command -v lmp_mpi || echo none) '
+            'sha256=$(sha256sum 2>/dev/null < "$(command -v lmp_mpi)" | cut -c1-64) deck=%s sha256=$(sha256sum 2>/dev/null < "%s" | cut -c1-64)"'
+            % (deck, deck),
+            'mpirun --oversubscribe --bind-to none -np %s lmp_mpi -in "%s"' % (NP, deck)]
+    return '\n'.join(out) + '\n'
+
+
+def main():
+    a = sys.argv[1:]
+    if len(a) != 10:
+        print('runnerck 인자 %d 개 (10 개여야 · %s)' % (len(a), F02))
+        return 2
+    rn, C, SFX, NP, W, WR, D, TD, OM, OT = a
+    probs, info = check(*a)
+    if probs:
+        print('헬퍼 러너 엄격 대조 실패 (%s · 1저자 Q2 · 러너 안 씀 · 시험 · 본 제출 안 함) — 문제 %d: %s'
+              % (F02, len(probs), ' | '.join(probs)))
+        return 1
+    for path, trial in ((OM, False), (OT, True)):
+        tmp = '%s.tmp%d' % (path, os.getpid())
+        with open(tmp, 'w', encoding='utf-8', newline='\n') as f:
+            f.write(render(C, SFX, NP, WR, info, trial))
+        os.chmod(tmp, 0o755)
+        os.replace(tmp, path)
+    print('헬퍼 러너 엄격 대조 통과 (%s) — #SBATCH %d · 환경 줄 %d · cd 실제 경로 = 작업 폴더 %s → 본 · 시험 러너를 도구 틀로 씀 '
+          '(cd "작업 폴더 실제 경로" · -in "검사한 덱 절대 경로" · 실행 줄 하나 · LMP_IDENTITY 기록 줄은 기록만)'
+          % (F02, len(info['sb']), len(info['env']), WR))
+    return 0
+
+
+try:
+    sys.exit(main())
+except Exception as e:       # 끝까지 한 줄 (bash 가 ng 로 넘긴다) — 러너를 안 썼거나 반쯤 썼다 = 거부와 같게 (시험 · 본 제출 없음)
+    print('헬퍼 러너 대조 · 러너 쓰기 오류 (%s): %s: %s' % (F02, type(e).__name__, e))
+    sys.exit(2)
+PY
+}
 echo "# LIGGGHTS 체크포인트 재개 기록 — $SFX ($NP MPI) · $(date '+%F %H:%M')" > $REP
 echo "명령: bash resume_ckpt.sh -n $NP -s $SUF -r $L -x $SFX -t $TS$([ $TONLY = 1 ] && echo ' -T')$([ $STRIP = 1 ] && echo ' -c') $CASES" >> $REP
 echo "- 도구 신원 (10-28 Q4 · Codex Q7 · KG50R): resume_ckpt.sh sha256 $TSHA ($SELF) · dem_restart.py sha256 ${HSHA:-없음} ($HELPER) · 승인 -A ${APT:-없음} · -H ${APH:-없음} ($([ -n "$APT" ] && [ "$APT" = "$TSHA" ] && [ "$APH" = "$HSHA" ] && echo '실제와 같음' || echo '없음 · 다름'))" >> $REP
@@ -1527,17 +1720,28 @@ for C in "${CASEA[@]}"; do
   # 10-27 (1저자 Q1 (가)): dem_restart.py 의 settling 잔여가 1 step 짧은 꼴 (본 덱 정착 run 이 삽입 run 1 뒤 step 1 에서 시작) 만
   # 재개 덱 첫 긴 run 한 줄을 본 덱 일정으로 고친다 — 시험 덱은 고친 덱에서 만들고, 아래 정적 대조가 처음부터 다시 판정한다
   deckcheck --fix-run $W/input_$C.liggghts $D "$RR" "${S0:-0}" $W > $W/fixrun_$SFX.txt 2>&1; cat $W/fixrun_$SFX.txt
-  sed -i "s/^#SBATCH -n .*/#SBATCH -n $NP/; s/mpirun \(--oversubscribe \)\{0,1\}\(--bind-to none \)\{0,1\}-np [0-9]*/mpirun --oversubscribe --bind-to none -np $NP/" $RN
+  # 10-30 (KG50R-F02): 헬퍼 러너 원본 바이트 = 시도 폴더 helper_run_<C>_<SFX>.sh.orig (아래 -n · -np 고침 전 · 기록만 — 러너는 runnerck 가 다시 쓴다)
+  [ -f $RN ] && cp -p $RN $AD/helper_run_${C}_$SFX.sh.orig
+  # 10-30 (KG50R-F02): -n · -np 고침 = 정해진 꼴만 (줄 전체 '#SBATCH -n <숫자>' · 줄 첫머리 'mpirun [--oversubscribe ][--bind-to none ]-np <숫자> lmp_mpi -in ')
+  #   — 예전 = '#SBATCH -n ' 로 시작하는 줄 전체 · 줄 어디든 'mpirun … -np [숫자 0 개 이상]' 을 고쳐 아래 엄격 대조 전에 어긋남이 지워졌다
+  #   (#SBATCH -n 1 --nodes=2 → -n NP · -np 숫자 없음 → 정상 꼴).  그 밖 꼴은 고치지 않고 그대로 엄격 대조가 거부한다
+  sed -i "s/^#SBATCH -n [0-9][0-9]*\$/#SBATCH -n $NP/; s/^mpirun \(--oversubscribe \)\{0,1\}\(--bind-to none \)\{0,1\}-np [0-9][0-9]* lmp_mpi -in /mpirun --oversubscribe --bind-to none -np $NP lmp_mpi -in /" $RN
   # 10-28 밤 (KG50R-02 · 05 · 1저자 Q2 (가)): 시험 덱 = 정적 대조와 같은 논리 명령 파서로 자름 (예전 = 원 줄 awk — & 이음 · run 꼬리를 못 봤다)
   TD=$W/input_${C}_${SFX}t.liggghts; rm -f $TD
   CUT=$(deckcheck --cut-trial $D $TS $TD 2>&1); CUTC=$?; printf '%s\n' "$CUT" > $W/cut_$SFX.txt
-  sed -e "s/${C}_$SFX/${C}_${SFX}t/g" -e "s/^#SBATCH --time=.*/#SBATCH --time=01:00:00/" $RN > $W/run_${C}_${SFX}t.sh
+  # 10-30 (KG50R-F02 · 1저자 Q2): 시험 러너를 헬퍼 러너의 sed 사본으로 만들지 않는다 (예전 = s/<C>_<SFX>/<C>_<SFX>t/g — .bak · 다른 cd · 둘째
+  #   실행 줄이 그대로 따라왔다) — 헬퍼 러너 (위 -n · -np 고침 뒤) 엄격 대조 → 통과면 본 $RN · 시험 $TR 을 도구 틀로 씀 (runnerck 머리 주석) ·
+  #   거부 = 아래 ng (러너 안 씀 · 시험 · 본 제출 없음) · 대조 기록 = 시도 폴더 runner_check.txt · WR = 작업 폴더 실제 경로 (러너 cd · -in · 영수증 ·
+  #   cd -P = 링크 먼저 풀고 .. 도 실제로 — 논리 cd 는 .. 를 글자로 지워 파일이 실제로 있는 곳과 갈릴 수 있다)
+  TR=$W/run_${C}_${SFX}t.sh; rm -f $TR; WR=$(cd -P "$W" 2>/dev/null && pwd -P)
+  RCK=$(runnerck $RN "$C" "$SFX" "$NP" "$W" "$WR" $D $TD $RN $TR 2>&1); RCKC=$?; printf '%s\n' "$RCK" > $AD/runner_check.txt
   EX=$(comm -13 <(awk '$1=="fix"||$1=="dump"{print $1,$2}' $W/input_$C.liggghts | sort -u) <(awk '$1=="fix"||$1=="dump"{print $1,$2}' $D | sort -u) | tr '\n' ' ')
   OK=1; WHY=""
   ng(){ OK=0; WHY="$WHY · $1"; echo "  ✗ $1"; }
   [ -s $W/$RR ] || ng "$RR 없음"
   [ -z "$EX" ] || ng "원 덱에 없는 fix/dump ID: $EX"
-  { grep -qE "^#SBATCH -n $NP\$" $RN && grep -q -- "--oversubscribe --bind-to none -np $NP lmp_mpi" $RN && grep -q -- "-np $NP lmp_mpi -in input_${C}_${SFX}t.liggghts" $W/run_${C}_${SFX}t.sh; } || ng "러너 $NP"
+  # 10-30 (KG50R-F02): 예전 러너 관문 = grep 셋 (#SBATCH -n · mpirun 부분 글자 · 시험 러너 -in 부분 글자) → runnerck 결과 (엄격 대조 + 도구 틀)
+  if [ $RCKC = 0 ]; then echo "  · $RCK"; else ng "$(printf '%s' "$RCK" | tr '\n' ' ')"; fi
   CRE='^([0-9]+) ([0-9]+) ([0-9]+|-) ([0-9]+)$'
   if [ $CUTC = 0 ] && [[ "$CUT" =~ $CRE ]]; then CN=${BASH_REMATCH[1]}; CTN=${BASH_REMATCH[2]}; CPS=${BASH_REMATCH[3]}; CLN=${BASH_REMATCH[4]}
     echo "  · 시험 덱 (10-28 KG50R-02 · 05 · 같은 논리 명령 파서): 재개 덱 첫 긴 run [run $CN] (원 줄 $CLN) → [run $CTN] · 시험 예산 = 첫 긴 run 앞 run 합 $CPS + $CTN"
@@ -1565,28 +1769,37 @@ for C in "${CASEA[@]}"; do
     [ $STRIP = 1 ] && cp -p $W/strip_$SFX.txt $AD/
     # 10-28 밤 2 (사전 공격 C · Codex §10-5): 실행 영수증 — 본 제출이 낼 재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트 · lmp_mpi (이 셸
     #   PATH 에서 찾은 것 · 잡 환경은 다를 수 있다) 의 sha256 · 본 제출 직전 재개 덱 · 러너 sha256 을 main_inputs.sha256 과 다시 대조
+    # 10-30 (KG50R-F02 · 1저자 Q2 (3)): main_inputs.sha256 = 러너가 실제로 읽는 자리 (작업 폴더 실제 경로 $WR · 러너의 cd · -in 과 같은 절대 경로)
+    #   의 다섯 — 재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트 (예전 = 재개 덱 · 러너 둘 · 체크포인트 sha256 은 tool.txt 기록만) · 다섯 다 못 쓰면
+    #   시험 안 냄 · 그 파일 sha256 = 이 호출 메모리 (SUBMITTED) 에도 — 본 제출 바로 전 둘 다 대조 (sha256sum -c 는 줄이 빠지거나 덧붙어도 통과한다)
     LMP=$(command -v lmp_mpi 2>/dev/null); LMS=""; [ -n "$LMP" ] && LMS=$(sha256sum < "$LMP" 2>/dev/null | cut -c1-64)
-    sha256sum $D $RN > $AD/main_inputs.sha256
+    CKP=$RR; [ "${RR#/}" = "$RR" ] && CKP=$WR/$RR
+    if ! sha256sum "$WR/${D##*/}" "$WR/${RN##*/}" "$WR/${TD##*/}" "$WR/${TR##*/}" "$CKP" > $AD/main_inputs.sha256 2>/dev/null \
+       || [ "$(grep -c . $AD/main_inputs.sha256)" != 5 ]; then
+      rej "실행 영수증" "실행 입력 영수증 (재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트 다섯) 을 못 씀 — 시험 · 본 제출 안 함 (10-30 KG50R-F02)"; continue; fi
+    MIS=$(sha256sum < $AD/main_inputs.sha256 | cut -c1-64)
     printf '재개 덱 sha256 %s (%s)\n러너 sha256 %s (%s)\n시험 덱 sha256 %s\n시험 러너 sha256 %s\n체크포인트 %s sha256 %s\nlmp_mpi %s\n' \
       "$(sha256sum < $D | cut -c1-64)" "${D##*/}" "$(sha256sum < $RN | cut -c1-64)" "${RN##*/}" "$(sha256sum < $TD | cut -c1-64)" \
       "$(sha256sum < $W/run_${C}_${SFX}t.sh | cut -c1-64)" "$RR" "$(sha256sum < $W/$RR 2>/dev/null | cut -c1-64)" \
       "$([ -n "$LMP" ] && echo "$LMP sha256 ${LMS:-못 읽음}" || echo '없음 (이 셸 PATH · 잡 환경은 다를 수 있다)')" >> $AD/tool.txt
+    printf '실행 입력 영수증 main_inputs.sha256 sha256 %s (10-30 KG50R-F02 · 다섯 = 러너가 읽는 절대 경로 · 작업 폴더 실제 경로 %s)\n잡 안 lmp_mpi · 덱 신원 = 시험 · 본 잡 로그의 LMP_IDENTITY 줄 (기록만 · 관문 아님 · 위 lmp_mpi 줄 = 제출 셸 PATH · 10-30 KG50R-F02)\n' \
+      "$MIS" "$WR" >> $AD/tool.txt
     echo "모드 $M · S0 $S0 · 체크포인트 $RR · 시험 덱 첫 긴 run [run $CN] → [run $CTN] · 시험 예산 $NT" >> $AD/tool.txt
     J=$(sbatch --parsable $W/run_${C}_${SFX}t.sh); JR=$?
     # 10-28 밤 (KG50R-04): 시험 job = sbatch 성공 · 숫자 job 번호 (--parsable 'id' 또는 'id;cluster') 일 때만 — 이번 호출 목록 SUBMITTED 에 넣는다
     if [ $JR = 0 ] && [[ "$J" =~ ^([0-9]+)(;[^[:space:]]*)?$ ]]; then J=${BASH_REMATCH[1]}
       echo $J > $W/job_${SFX}t.txt; EXP=$((10#$S0 + 10#$NT)); echo "$M $S0 $RR $EXP$([ "$TNR" = 1 ] || echo " $NT $TDS")" > $W/mode_$SFX.txt
       cp -p $W/job_${SFX}t.txt $AD/job_t.txt; cp -p $W/mode_$SFX.txt $AD/mode.txt; echo "$CTN" > $AD/lastrun_n.txt
-      SUBMITTED="$SUBMITTED $C|$J"
+      SUBMITTED="$SUBMITTED $C|$J|$MIS"     # 10-30 (KG50R-F02): 셋째 칸 = 이 시도 실행 입력 영수증의 sha256 (본 제출 바로 전 대조)
       [ "$TNR" = 1 ] || echo "  · 시험 기대 끝 step = S0 + 시험 덱 read_restart 뒤 run 합 $NT ($TDS · 10-28 KG50-18)"
       echo "  ▶ 시험 job $J ($(tail -1 $TD) · 기대 끝 step $EXP)"
     else rej "시험 제출" "시험 제출 실패 (sbatch 출력 없음)" "sbatch 종료 코드 $JR · 출력 [$J] (10-28 KG50R-04)"; fi
-  else rej "정적 대조 · 시험 덱" "시험 제출 안 함" "${WHY# · }"; fi
+  else rej "정적 대조 · 시험 덱 · 러너" "시험 제출 안 함" "${WHY# · }"; fi
 done
 echo; echo "── 시험 잡 끝날 때까지 대기 (끝나면 대조 → 맞으면 본 제출)"
 # 10-28 밤 (KG50R-04): 이번 호출이 낸 시험 (SUBMITTED) 만 — 작업 폴더의 job · mode 파일로 자격을 다시 만들지 않는다
 for ENT in $SUBMITTED; do
-  C=${ENT%|*}; J=${ENT##*|}; W=$L/$C; S=$L/$C.$SUF; AD=$W/$ATT
+  IFS='|' read -r C J MIS <<< "$ENT"; W=$L/$C; S=$L/$C.$SUF; AD=$W/$ATT     # 10-30 (KG50R-F02): 케이스|시험 job|영수증 sha256
   # 끝 상태 (sacct State · ExitCode) — 조회 실패는 다시 묻고, 끝까지 못 얻으면 TO=1 (제출 안 함)
   ST=""; EC=""; TO=1; QF=0
   for i in $(seq 360); do
@@ -1636,12 +1849,16 @@ for ENT in $SUBMITTED; do
   elif [ -n "$MISS" ]; then G3=0; G3T="원 로그에 있는 비교 줄이 시험에 없음 (결손): $MISS"
   elif sane "$a2" "$b2"; then G3=1; G3T="5 % 안"; else [ $? = 2 ] && G3T="비교 칸이 유한한 수가 아님 · 칸 이름 다름 (10-28 사전 공격 E)" || G3T="5 % 넘음"; G3=0; fi
   [ -f $W/log.liggghts ] && mv $W/log.liggghts $W/log.liggghts.${SFX}t
+  # 10-30 (KG50R-F02): 잡 안 신원 기록 줄 (러너 틀의 LMP_IDENTITY · 잡 안 PATH 의 lmp_mpi · 잡 시작 때 읽은 덱 sha256) — 보고에 옮기기만 (관문 아님)
+  LID=$(grep -a -m1 '^LMP_IDENTITY' $T 2>/dev/null | cut -c1-500)
   { echo; echo "## $C"
     echo "- 시도 (10-28 KG50R-04): $ATT · 이번 호출이 낸 시험 job $J 만 승격 대상 (기록 $AD)"
     echo "- 멈춘 폴더: ${C}.$SUF (손대지 않음) · 멈춘 곳 $(grep -a '^======' $S/log.liggghts | tail -1)"
     echo "- 작업 폴더: $W (= 멈춘 폴더 cp -a) · 원 로그 → log.liggghts.$SUF · 체크포인트 뒤 덤프 → old_post_after${S0}_$SUF/"
     [ $STRIP = 1 ] && { echo "- 주석 줄 빼기 (-c · 작업 폴더 덱만): $(tail -1 $W/strip_$SFX.txt | sed 's/^ *주석 줄 빼기 (-c): //') (strip_$SFX.txt)"; sed -n 's/^  · /    /p' $W/strip_$SFX.txt; }
     echo "- 재개: $M 체크포인트 \`read_restart $RR\` (step $S0) · 덱 input_${C}_$SFX.liggghts · 러너 run_${C}_$SFX.sh (#SBATCH -n $NP · mpirun --oversubscribe --bind-to none -np $NP)"
+    echo "- 러너 (10-30 KG50R-F02 · 1저자 Q2): $(head -1 $AD/runner_check.txt 2>/dev/null) · 헬퍼 러너 원본 = $ATT/helper_run_${C}_$SFX.sh.orig · 실행 입력 영수증 $ATT/main_inputs.sha256 (다섯)"
+    echo "- 시험 잡 안 lmp_mpi · 덱 신원 (10-30 KG50R-F02 · 기록만 · 관문 아님): ${LID:-없음 (시험 로그에 LMP_IDENTITY 줄 없음)}"
     echo "- 템플릿 재선언: $(cat $W/tp_$SFX.txt)"
     echo "- 첫 긴 run (10-27 · 1저자 Q1 (가)): $(tail -1 $W/fixrun_$SFX.txt 2>/dev/null | sed 's/^ *· //') (fixrun_$SFX.txt)"
     echo "- 재개 덱 정적 대조: $(tail -1 $W/deckcheck_$SFX.txt | sed 's/^ *재개 덱 정적 대조: //') (deckcheck_$SFX.txt)"
@@ -1665,9 +1882,14 @@ for ENT in $SUBMITTED; do
       T2=$(sha256sum < "$SELF" 2>/dev/null | cut -c1-64); H2=$(sha256sum < $HELPER 2>/dev/null | cut -c1-64)
       [ -z "$BLK" ] && { [ "$T2" != "$APT" ] || [ "$H2" != "$APH" ]; } && BLK="도구 sha256 이 승인값과 다름 — 지금 resume_ckpt.sh ${T2:-없음} · dem_restart.py ${H2:-없음}"
       [ -z "$BLK" ] && [ -e $AD/main_job.txt ] && BLK="이 시도는 이미 본 제출함 (job $(cat $AD/main_job.txt))"
-      [ -z "$BLK" ] && ! sha256sum -c --status $AD/main_inputs.sha256 2>/dev/null && BLK="작업 폴더 재개 덱 · 러너가 시험 때와 다름 (sha256 ≠ $ATT/main_inputs.sha256 · 10-28 사전 공격 C)"
+      # 10-30 (KG50R-F02 · 1저자 Q2 (3)): 실행 입력 다섯 (재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트) 전부 다시 + 영수증 파일 자체가 시험 전에
+      #   이 호출이 쓴 그것 (메모리 sha256 · sha256sum -c 만으로는 줄이 빠지거나 덧붙은 영수증도 통과) — 하나라도 다르면 본 제출 안 함
+      [ -z "$BLK" ] && [ "$(sha256sum < $AD/main_inputs.sha256 2>/dev/null | cut -c1-64)" != "$MIS" ] \
+        && BLK="실행 입력 영수증 $ATT/main_inputs.sha256 이 시험 전에 이 호출이 쓴 것과 다름 (10-30 KG50R-F02 · 메모리 sha256 ${MIS:-없음})"
+      [ -z "$BLK" ] && ! CKO=$(sha256sum -c --quiet $AD/main_inputs.sha256 2>&1) \
+        && BLK="실행 입력 (재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트) 이 시험 때와 다름 (sha256 ≠ $ATT/main_inputs.sha256 · 10-28 사전 공격 C · 10-30 KG50R-F02): $(printf '%s' "$CKO" | tr '\n' ' ' | cut -c1-600)"
       if [ -n "$BLK" ]; then echo "- ⛔ 본 제출 안 함 (10-28 KG50R-04) — $BLK" >> $REP; echo "결정: 본 제출 안 함 — $BLK" >> $AD/result.txt
-      else echo "- 본 제출 직전 다시 확인 (10-28 KG50R-04 · Q4): 큐에 그 케이스 잡 없음 (이번 시험 $J 뺌) · 도구 sha256 = 승인값" >> $REP
+      else echo "- 본 제출 직전 다시 확인 (10-28 KG50R-04 · Q4): 큐에 그 케이스 잡 없음 (이번 시험 $J 뺌) · 도구 sha256 = 승인값 · 실행 입력 다섯 sha256 = 영수증 · 영수증 = 이 호출이 쓴 것 (10-30 KG50R-F02)" >> $REP
         # 10-28 밤 2 (사전 공격 D): 본 sbatch 도 시험 쪽 (Q9d) 과 같은 규칙 — 종료 코드 0 · 숫자 job 번호 ('id' 또는 'id;cluster') 일 때만 ✅
         JM=$(sbatch --parsable $W/run_${C}_$SFX.sh); JMR=$?
         if [ $JMR = 0 ] && [[ "$JM" =~ ^([0-9]+)(;[^[:space:]]*)?$ ]]; then JM=${BASH_REMATCH[1]}
