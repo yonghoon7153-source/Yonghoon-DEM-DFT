@@ -7,7 +7,7 @@
  "card": "db/properties/cei_product_gap_card_2026_10_27.json",
  "decision": "D-2026-10-27-cei-product-gaps (active · 10-27 '권고대로해 ㅇㅇ') + 개정 1 D-2026-10-27-cei-product-gaps-amend1 (active · 10-28 '그냥 이대로 비준하자')",
  "citable": false,
- "status": "kgy 실행 중 (정식 · 두 결정 active) — 대조 잡 통과 · 5 / 11 끝 · NiP2O6 vc-relax BFGS 6 (10-28 20:11 · 스텝당 ≈ 1 h)",
+ "status": "kgy 실행 중 — 7 / 12 끝 · NiP2O6 갭은 도구 오류로 무효 판정 (고침 커밋 · kgy 재추출 대기) · MnP2O6 vc-relax BFGS 13 (10-30 06:15)",
  "단계": [
   {
    "step": "① gabia 조회 (검사용 · MP API · PP 파일 복사 · QE 안 돈다)",
@@ -104,6 +104,16 @@
    "속도": "이온 스텝당 ≈ 60–70 분 (570 분 / SCF 8–9) — 닫힌 껍질 다섯 (상 전체 0.26–2.46 h) 보다 훨씬 무겁다: nspin 2 · DFT+U (Ni 6.2 · ortho-atomic — 스텝마다 힘 · 응력) · SCF 16 회 · 36 원자 · k 4×4×3",
    "어림_정정": "카드 어림 '새 9 종 0.5–3 h 씩 (TM 2 배)' · open_items 'CEI 끝 ≈ 10-29' 는 TM+U 상에서 너무 이르다 — 남은 BFGS 스텝 수는 예측하지 않는다 (BFGS) · MnP2O6 은 U + 90/1080 Ry 라 더 무겁다 · 남은 체인은 며칠 단위로 본다 → cascade v7 재개 (cv7main 대기) 도 그만큼 밀린다",
    "이상": "없음 — 멈춘 게 아니다 (출력 3.8 분 전 갱신 · SCF 수렴 중) · 설정 변경 없음 (카드 그대로)"
+  },
+  "관측_2026_10_30_0615": {
+   "출처": "사용자 붙여넣기 2026-10-30 06:15 KST (watch_gabia.py --sei_only · 읽기만)",
+   "완주": "7 / 12 — NiP2O6 01–06 끝 (21.60 h · M 8.00 μB)",
+   "NiP2O6_갭": "gap.json = −4.894 eV (VBM 8.489 · CBM 3.595) · 판정 '⛔ 무효 — 스핀 점유수 불일치' — 숫자는 막혔다",
+   "원인_진단_결과_전": "extract_gap.py 가 채널별 점유수를 `total magnetization … Bohr mag/cell` 줄에서만 읽고 없으면 조용히 M = 0 (그 줄은 scf 출력에만 있고 nscf 03 에는 없다) → 두 채널 다 nelec/2 로 읽어 ↓ 빈 밴드를 VBM · ↑ 찬 밴드를 CBM 으로 잡음. 계산 (02 수렴 M 8.00 · 03 tot_magnetization 8) 은 정상으로 본다 — kgy 출력의 머리말 up/down · QE 자체 HOMO/LUMO 줄로 확인 대기",
+   "고침": "extract_gap.gap_from_text — 머리말 `number of electrons = N (up: a, down: b)` → 없으면 scf 마지막 total magnetization → 스핀분극인데 둘 다 없으면 멈춤 · QE `highest occupied, lowest unoccupied level` 과 0.002 eV 대조 (어긋나면 무효) · selftest 띠 읽기 5 (음성 3) · 옛 동작으로 깨면 빨강 (−2.4 eV 재현)",
+   "다음": "kgy 블록: 체인 worktree (~/wt_ceigap) 의 extract_gap.py 만 새 판으로 · 끝난 7 상 다시 뽑아 옛 값과 대조 (닫힌 껍질 6 은 같아야 한다) · NiP2O6 은 QE 줄과 일치하고 양수면 gap.json 교체 (옛 것은 .bad_1029 로 보관) · MnP2O6 (스핀분극 · M 20) 은 03 부터 새 판으로 자동",
+   "MnP2O6": "01_vcrelax BFGS 13 · SCF 15 · P +0.58 kbar · |F| 0.0056 · M 20.00 μB (Mn²⁺ 고스핀 ×4) · 시작 10-29 08:20 · '▸ 조용함 20.7 분' = 힘·응력 계산 구간으로 봄 (GPU 80 % · 13.8 GB 사용 중)",
+   "디스크": "kgy 735 / 916 GB (85 % · 여유 135 GB) — 남은 상의 04 DOS (nosym) 가 크면 확인"
   }
  }
 }

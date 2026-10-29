@@ -52,6 +52,165 @@ def control_gate(card_path, work):
     return ok, rows
 
 
+def gap_from_text(t):
+    """QE nscf (fixed occupations) 출력 글자 → VBM/CBM/gap 과 판정. 못 읽으면 ValueError.
+
+    ⛔⛔ 2026-10-29 고침 — 스핀분극에서 채널별 점유 밴드 수를 `total magnetization … Bohr mag/cell`
+      줄에서만 읽고, **그 줄이 없으면 조용히 M = 0** 으로 셌다. 그 줄은 **scf 출력에만** 찍히고
+      nscf 출력에는 없다. 그래서 스핀분극 nscf 는 늘 두 채널 다 nelec/2 로 읽혀 ↓ 채널의 빈 밴드를
+      VBM 으로, ↑ 채널의 찬 밴드를 CBM 으로 잡았다 → 큰 음수 '갭' (NiP2O6 −4.894 eV · 10-29 kgy).
+      아래 −0.5 eV 게이트가 숫자를 막았지만 원인을 '점유수가 밀도와 어긋남' 으로 잘못 짚었다.
+      ⇒ 순서: ① 머리말의 `number of electrons = N (up: a, down: b)` (tot_magnetization 을 준 계산이
+         찍는다) ② 없으면 scf 의 **마지막** `total magnetization` ③ 스핀분극인데 둘 다 없으면 **멈춘다**.
+      ⇒ 대조: QE 가 스스로 찍는 `highest occupied, lowest unoccupied level` 과 0.002 eV 안에서 같아야
+         한다 (QE 도 같은 채널별 점유수로 센다). 어긋나면 이 도구의 해석이 틀린 것이라 무효로 둔다.
+    ⛔ 못 하는 것: 스핀분극 계에서 '이 M 이 바닥상태인가' 는 모른다 — 주어진 점유수의 갭만 낸다.
+    """
+    notes = []
+    m = re.search(r"number of electrons\s*=\s*([\d.]+)", t)
+    if not m:
+        raise ValueError("number of electrons 를 못 읽었다")
+    nelec = float(m.group(1))
+    ms = re.search(r"number of Kohn-Sham states\s*=\s*(\d+)", t)
+    nbnd = int(ms.group(1)) if ms else None
+    # nspin=2 는 두 스핀 채널이 **각자** 점유 밴드 수를 갖는다 (nocc_up = (nelec+M)/2 · nocc_dn = (nelec−M)/2).
+    #   QE 출력은 `------ SPIN UP ------` 뒤에 전 k 점 블록, 그 다음 SPIN DOWN 이 온다.
+    #   두 채널을 각자 nocc 로 읽고 VBM = max(양쪽), CBM = min(양쪽) 으로 합친다 (갭은 계 전체의 것).
+    spin = "SPIN UP" in t
+    ud = re.search(r"number of electrons\s*=\s*[\d.]+\s*\(up:\s*([\d.]+),\s*down:\s*([\d.]+)\)", t)
+    mags = re.findall(r"total magnetization\s*=\s*(-?[\d.]+)\s*Bohr mag/cell", t)
+    if not spin:
+        nocc_up = nocc_dn = int(round(nelec / 2)); magn = 0.0; src = "no spin"
+    elif ud:
+        nocc_up, nocc_dn = int(round(float(ud.group(1)))), int(round(float(ud.group(2))))
+        magn = float(ud.group(1)) - float(ud.group(2)); src = "header up/down"
+    elif mags:
+        magn = float(mags[-1])
+        nocc_up = int(round((nelec + magn) / 2)); nocc_dn = int(round((nelec - magn) / 2))
+        src = "last total magnetization"
+    else:
+        raise ValueError("스핀분극인데 채널별 전자 수를 못 읽었다 (머리말 up/down · total magnetization 둘 다 없음) "
+                         "— M = 0 으로 가정하지 않는다")
+
+    # k 점별 밴드 블록 — 줄 단위로 판다 (QE 판 · verbosity 에 따라 빈 줄 · 들여쓰기가 달라진다)
+    blocks, lines, i, chan = [], t.splitlines(), 0, 0   # chan: 0=up(또는 무스핀) · 1=down
+    while i < len(lines):
+        if "SPIN DOWN" in lines[i]:
+            chan = 1
+        if "bands (ev)" in lines[i]:
+            i += 1
+            vals = []
+            while i < len(lines):
+                ln = lines[i].strip()
+                if not ln:
+                    if vals:
+                        break
+                    i += 1; continue
+                try:
+                    vals += [float(x) for x in ln.split()]
+                except ValueError:
+                    break
+                i += 1
+            if vals:
+                blocks.append((chan, vals))
+        else:
+            i += 1
+    if not blocks:
+        raise ValueError("밴드 블록을 못 찾았다 — 출력에 'bands (ev)' 가 있는지 확인할 것")
+    vbm, cbm, short = -1e9, 1e9, 0
+    for ch, e in blocks:
+        no = nocc_dn if ch else nocc_up
+        if no < 1 or len(e) < no + 1:
+            short += 1
+            continue
+        vbm = max(vbm, e[no - 1])
+        cbm = min(cbm, e[no])
+    if vbm < -1e8 or cbm > 1e8:
+        raise ValueError("VBM/CBM 을 못 잡았다 — nbnd 가 점유 밴드보다 크지 않다. nbnd 를 늘릴 것.")
+    if short:
+        notes.append(f"    ⚠ 밴드가 모자란 k 블록 {short}/{len(blocks)}개를 건너뛰었다 — nbnd 확인")
+    gap = cbm - vbm
+    verdict = ("금속/반금속 (겹침)" if gap <= 0.02 else
+               "좁은 갭" if gap < 1.0 else "절연체")
+    # QE 자신의 HOMO/LUMO 줄 (fixed occupations 에서 찍힌다) 과 대조
+    qe = re.findall(r"highest occupied, lowest unoccupied level \(ev\):\s*(-?[\d.]+)\s+(-?[\d.]+)", t)
+    qe_h = qe_l = None
+    qe_check = "QE 줄 없음"
+    if qe:
+        qe_h, qe_l = float(qe[-1][0]), float(qe[-1][1])
+        if abs(vbm - qe_h) <= 0.002 and abs(cbm - qe_l) <= 0.002:
+            qe_check = "일치"
+        else:
+            qe_check = f"어긋남 (QE {qe_h:.4f}/{qe_l:.4f} · 여기 {vbm:.4f}/{cbm:.4f})"
+            verdict = "⛔ 무효 — QE 자체 HOMO/LUMO 와 어긋남 (점유수 해석 오류)"
+            notes.append(f"  ⛔ QE 가 찍은 HOMO/LUMO 와 다르다: {qe_check}")
+    if spin and gap < -0.5 and not verdict.startswith("⛔"):
+        # 점유수를 바로 읽고도 VBM 이 CBM 보다 크게 위면, 주어진 tot_magnetization 이 그 밀도와 안 맞는 것이다
+        verdict = "⛔ 무효 — 스핀 점유수 불일치 (겹침 아님)"
+        notes.append(f"  ⛔ VBM 이 CBM 보다 {-gap:.3f} eV 위다 (점유수 출처: {src}). 02_scf 의 수렴 모멘트와 "
+                     f"03 의 tot_magnetization 이 같은지 본다: python3 tools/sei/sync_magnetization.py <작업폴더>")
+    if nbnd and max(nocc_up, nocc_dn) >= nbnd:
+        notes.append("    ⚠ nbnd 가 점유 밴드 수와 같거나 작다 — CBM 을 못 봤다. nbnd 를 늘릴 것.")
+    return {"vbm": vbm, "cbm": cbm, "gap": gap, "verdict": verdict, "nelec": nelec,
+            "nbnd": nbnd, "nk": len(blocks), "spin_polarized": spin,
+            "total_magnetization_bohr": magn, "n_occ_up": nocc_up, "n_occ_dn": nocc_dn,
+            "occ_source": src, "qe_homo": qe_h, "qe_lumo": qe_l, "qe_check": qe_check,
+            "notes": notes}
+
+
+def _qe_text(spin, header, blocks_up, blocks_dn=None, qe_line=None, mags=()):
+    """selftest 용 가짜 QE 출력."""
+    L = [header, "     number of Kohn-Sham states=            8"]
+    L += [f"     total magnetization       =     {m:.2f} Bohr mag/cell" for m in mags]
+    L.append("     End of band structure calculation")
+    if spin:
+        L.append(" ------ SPIN UP ------------")
+    for b in blocks_up:
+        L += ["", "          k = 0.0000 0.0000 0.0000 (  100 PWs)   bands (ev):", "",
+              "   " + "  ".join(f"{x:8.4f}" for x in b), ""]
+    if spin:
+        L.append(" ------ SPIN DOWN ----------")
+        for b in blocks_dn:
+            L += ["", "          k = 0.0000 0.0000 0.0000 (  100 PWs)   bands (ev):", "",
+                  "   " + "  ".join(f"{x:8.4f}" for x in b), ""]
+    if qe_line:
+        L.append(f"     highest occupied, lowest unoccupied level (ev):    {qe_line[0]:.4f}   {qe_line[1]:.4f}")
+    return "\n".join(L) + "\n"
+
+
+def _selftest_bands():
+    """띠 읽기 — 스핀분극 nscf (total magnetization 줄 없음) 가 핵심이다 (2026-10-29 NiP2O6)."""
+    bad = []
+    up = [[-6, -5, -4, -1, 3, 4], [-6, -5, -4, -1.2, 3.5, 4]]
+    dn = [[-6, -5, 1, 2, 5, 6], [-6, -5, 1.2, 2, 5, 6]]
+    hdr_ud = "     number of electrons       =         6.00 (up:   4.00, down:   2.00)"
+    # ① 무스핀 — nelec 4 → 2 개 점유
+    r = gap_from_text(_qe_text(False, "     number of electrons       =         4.00",
+                               [[-5, -1, 2, 3], [-4.5, -0.5, 2.5, 3.5]], qe_line=(-0.5, 2.0)))
+    if abs(r["gap"] - 2.5) > 1e-9 or r["qe_check"] != "일치":
+        bad.append(f"무스핀 갭 {r['gap']} · {r['qe_check']}")
+    # ② 스핀분극 nscf — 머리말 up/down 만 있고 total magnetization 줄 없음 (실제 nscf 출력 꼴)
+    r = gap_from_text(_qe_text(True, hdr_ud, up, dn, qe_line=(-1.0, 1.0)))
+    if abs(r["gap"] - 2.0) > 1e-9 or r["occ_source"] != "header up/down" or r["qe_check"] != "일치":
+        bad.append(f"[실측회귀] 스핀 nscf 갭 {r['gap']} ({r['occ_source']} · {r['qe_check']}) — 2.0 이어야 한다")
+    # ③ [음성] 스핀분극인데 채널별 전자 수 정보가 없다 → 멈춰야 한다 (M = 0 가정 금지)
+    try:
+        gap_from_text(_qe_text(True, "     number of electrons       =         6.00", up, dn))
+        bad.append("[음성] 채널 정보 없이 숫자를 냈다 (M = 0 가정)")
+    except ValueError:
+        pass
+    # ④ [음성] QE 자체 HOMO/LUMO 와 어긋나면 무효
+    r = gap_from_text(_qe_text(True, hdr_ud, up, dn, qe_line=(-1.0, 3.0)))
+    if not r["verdict"].startswith("⛔"):
+        bad.append(f"[음성] QE 줄과 어긋났는데 판정이 {r['verdict']}")
+    # ⑤ scf 꼴 — 반복마다 찍힌 total magnetization 중 **마지막** 을 쓴다 (첫 줄 0.50 은 미수렴 값)
+    r = gap_from_text(_qe_text(True, "     number of electrons       =         6.00", up, dn,
+                               mags=(0.50, 1.80, 2.00)))
+    if (r["n_occ_up"], r["n_occ_dn"]) != (4, 2):
+        bad.append(f"[음성] 첫 total magnetization 을 썼다 (점유 {r['n_occ_up']}/{r['n_occ_dn']})")
+    return bad
+
+
 def _selftest():
     import tempfile
     bad = []
@@ -82,7 +241,8 @@ def _selftest():
         json.dump({"6_대조_잡_결과_전_문턱": {"기준값": {}, "tol_eV": 0.02}}, open(card, "w"))
         if control_gate(card, T)[0]:
             bad.append("[음성] 기준값이 비었는데 통과시켰다")
-    print("\n".join("⛔ " + b for b in bad) if bad else "✓ selftest 통과 (6 · 음성 5)")
+    bad += _selftest_bands()
+    print("\n".join("⛔ " + b for b in bad) if bad else "✓ selftest 통과 (대조 잡 6 · 음성 5 · 띠 읽기 5 · 음성 3)")
     return 1 if bad else 0
 
 
@@ -128,94 +288,24 @@ def main():
                   open(a.json, "w"), ensure_ascii=False, indent=2)
         return 0
     t = open(a.nscf, errors="ignore").read()
-
-    m = re.search(r"number of electrons\s*=\s*([\d.]+)", t)
-    if not m:
-        sys.exit("⛔ number of electrons 를 못 읽었다")
-    nelec = float(m.group(1))
-    ms = re.search(r"number of Kohn-Sham states\s*=\s*(\d+)", t)
-    nbnd = int(ms.group(1)) if ms else None
-    # ⚠⚠ 스핀분극 계에서 `nocc = nelec` 은 틀렸다 (2026-08-07 Nd 재계산 준비 중 발견).
-    #   nspin=2 는 두 스핀 채널이 **각자** 점유 밴드 수를 갖는다:
-    #       nocc_up = (nelec + M)/2 ,  nocc_dn = (nelec − M)/2   (M = tot_magnetization)
-    #   QE 출력은 `------ SPIN UP ------` 뒤에 전 k 점 블록, 그 다음 SPIN DOWN 이 온다.
-    #   두 채널을 각자 nocc 로 읽고 VBM = max(양쪽), CBM = min(양쪽) 으로 합친다.
-    #   (합치는 게 맞는 이유: 갭은 계 전체의 것이지 채널별이 아니다.)
-    spin = "SPIN UP" in t
-    mm = re.search(r"total magnetization\s*=\s*(-?[\d.]+)\s*Bohr mag/cell", t)
-    magn = float(mm.group(1)) if mm else 0.0
-    nocc_up = int(round((nelec + magn) / 2)) if spin else int(round(nelec / 2))
-    nocc_dn = int(round((nelec - magn) / 2)) if spin else nocc_up
-    nocc = nocc_up          # 아래 진단 출력·JSON 용 (스핀 없으면 nelec/2 그대로)
-
-    # k 점별 밴드 블록
-    # ⚠ 정규식으로 한 방에 잡으려다 실패했다(2026-08-06). QE 판·verbosity 에 따라
-    #   "bands (ev):" 뒤 빈 줄 수와 들여쓰기가 달라진다. 형식에 안 휘둘리게
-    #   **줄 단위로** 판다: 표식을 만나면 그 뒤로 '숫자만 있는 줄'을 계속 모은다.
-    blocks, lines, i, chan = [], t.splitlines(), 0, 0   # chan: 0=up(또는 무스핀) · 1=down
-    while i < len(lines):
-        if "SPIN DOWN" in lines[i]:
-            chan = 1
-        if "bands (ev)" in lines[i]:
-            i += 1
-            vals = []
-            while i < len(lines):
-                ln = lines[i].strip()
-                if not ln:
-                    if vals:
-                        break          # 값을 모은 뒤의 빈 줄 = 블록 끝
-                    i += 1; continue   # 표식 직후의 빈 줄은 건너뛴다
-                try:
-                    vals += [float(x) for x in ln.split()]
-                except ValueError:
-                    break              # 숫자가 아닌 줄 = 블록 끝
-                i += 1
-            if vals:
-                blocks.append((chan, vals))
-        else:
-            i += 1
-    if not blocks:
-        sys.exit("⛔ 밴드 블록을 못 찾았다 — scf.out 에 'bands (ev)' 가 있는지 확인할 것")
-    vbm, cbm, short = -1e9, 1e9, 0
-    for ch, e in blocks:
-        no = nocc_dn if ch else nocc_up
-        if no < 1 or len(e) < no + 1:
-            short += 1
-            continue
-        vbm = max(vbm, e[no - 1])
-        cbm = min(cbm, e[no])
-    if vbm < -1e8 or cbm > 1e8:
-        sys.exit("⛔ VBM/CBM 을 못 잡았다 — nbnd 가 점유 밴드보다 크지 않다. nbnd 를 늘릴 것.")
-    if short:
-        print(f"    ⚠ 밴드가 모자란 k 블록 {short}/{len(blocks)}개를 건너뛰었다 — nbnd 확인")
-    gap = cbm - vbm
-    verdict = ("금속/반금속 (겹침)" if gap <= 0.02 else
-               "좁은 갭" if gap < 1.0 else "절연체")
-    # ⚠⚠ 스핀분극 fixed-occ 에서 VBM 이 CBM 보다 **크게** 위면 그건 밴드 겹침이 아니라
-    #   **점유수가 전하밀도와 어긋난 것**이다 (2026-08-07 nd2o3: −6.460 eV, VBM 16.159 >
-    #   CBM 9.700). scf 는 모멘트를 자유롭게 찾는데 nscf 가 다른 tot_magnetization 을
-    #   강제하면 정확히 이 꼴이 난다. 숫자를 그대로 내보내면 "반금속" 으로 오독된다.
-    if spin and gap < -0.5:
-        verdict = "⛔ 무효 — 스핀 점유수 불일치 (겹침 아님)"
-        print(f"  ⛔ VBM 이 CBM 보다 {-gap:.3f} eV 위다. 물리적 겹침이 아니라 "
-              f"↑/↓ 점유수가 전하밀도와 어긋난 것이다.")
-        print(f"     02_scf.out 의 수렴 모멘트를 03 에 옮기고 다시 돌릴 것:")
-        print(f"       python3 tools/sei/sync_magnetization.py <작업폴더>")
-        print(f"       TAG=<tag> bash tools/sei/redo_stages.sh 03 04 05 06")
-    print(f"  VBM {vbm:.3f} · CBM {cbm:.3f} · **gap {gap:.3f} eV** ({verdict})")
-    print(f"    (전자 {nelec:.0f} · 점유 밴드 "
-          + (f"↑{nocc_up}/↓{nocc_dn} (M={magn:.2f} μB)" if spin else str(nocc))
-          + f" · nbnd {nbnd} · 블록 {len(blocks)}"
-          + (" · spin-polarized" if spin else "") + ")")
-    if nbnd and max(nocc_up, nocc_dn) >= nbnd:
-        print("    ⚠ nbnd 가 점유 밴드 수와 같거나 작다 — CBM 을 못 봤다. nbnd 를 늘릴 것.")
-    json.dump({"tag": a.tag, "vbm": vbm, "cbm": cbm, "gap": gap, "verdict": verdict,
-               "nelec": nelec, "n_occ_bands": nocc, "nbnd": nbnd, "nk": len(blocks),
-               "spin_polarized": spin, "total_magnetization_bohr": magn,
-               "n_occ_up": nocc_up, "n_occ_dn": nocc_dn,
-               "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
-               "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators"},
-              open(a.json, "w"), ensure_ascii=False, indent=2)
+    try:
+        r = gap_from_text(t)
+    except ValueError as e:
+        sys.exit(f"⛔ {e}")
+    for msg in r["notes"]:
+        print(msg)
+    print(f"  VBM {r['vbm']:.3f} · CBM {r['cbm']:.3f} · **gap {r['gap']:.3f} eV** ({r['verdict']})")
+    print(f"    (전자 {r['nelec']:.0f} · 점유 밴드 "
+          + (f"↑{r['n_occ_up']}/↓{r['n_occ_dn']} (M={r['total_magnetization_bohr']:.2f} μB · {r['occ_source']})"
+             if r["spin_polarized"] else str(r["n_occ_up"]))
+          + f" · nbnd {r['nbnd']} · 블록 {r['nk']}"
+          + (" · spin-polarized" if r["spin_polarized"] else "") + ")")
+    out = {"tag": a.tag}
+    out.update({k: v for k, v in r.items() if k != "notes"})
+    out.update({"n_occ_bands": r["n_occ_up"],
+                "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+                "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators"})
+    json.dump(out, open(a.json, "w"), ensure_ascii=False, indent=2)
     return 0
 
 
