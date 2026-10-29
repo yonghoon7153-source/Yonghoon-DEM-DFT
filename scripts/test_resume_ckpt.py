@@ -19,8 +19,14 @@ Codex probe_stale_trial.py 두 장면을 옮김 — 승인값 · 가짜 dem_rest
 10-28 밤 2 (독립 사전 공격 리뷰 · 고친 판 fb334928) — Y = 반례 A (준비 구간 변수 다시 정의 · 순서) · B (본 덱 체크포인트 run 꼬리 ·
 run every 안 include) · C (시험 뒤 덱 · 러너 바뀜 · 실행 영수증) · D (본 sbatch 출력) · E (G3 유한 수) · F (케이스 이름 · 시도 기록 읽기) ·
 시험 빈틈 셋 (재삽입 · G1 만 · G3 결손만 — 리뷰어 변이 py_reinsert · sh_g1 · sh_miss 가 살아남던 자리).
+10-30 (Codex 재확인 KG50RF-02 · 원장 KG50R-F02 · 1저자 Q2 *"권고대로"*) — RB = 러너 결속: 검사한 덱 ↔ 잡이 실제로 읽는 덱.  가짜 sbatch 가
+제출된 러너를 실제로 돌리고 (예전 = 제공 로그 복사만) 가짜 mpirun 이 cwd · 인자 · -in sha256 을 적는다 · 가짜 dem_restart.py 의 러너 = 실제
+헬퍼 꼴 (--output · cd = 작업 폴더 실제 경로).  Codex 반례 (.bak · 다른 cd · 주석 속 정상 줄 · 둘째 MPI 실행) + 같은 부류는 sbatch 0 회 ·
+실제 D2 헬퍼 러너 꼴 (ibb /home → /lustre 별칭) 은 시험 1 · 본 1 + 기록된 cwd · -in · 바이트 · 영수증 다섯 (재개 덱 · 러너 · 시험 덱 · 시험 러너 ·
+체크포인트).  Codex 반례 폴더 (independent/launch/) 는 읽기만 — 같은 꼴을 여기서 만든다.
 
   python3 scripts/test_resume_ckpt.py                 # 고친 스크립트 (기본)
+  python3 scripts/test_resume_ckpt.py --only RB       # RB 묶음만 (변이 시험용)
   python3 scripts/test_resume_ckpt.py --script <경로>  # 다른 판 (고치기 전 판 실패 확인용)
   python3 scripts/test_resume_ckpt.py --compare-old <옛 판>
       # 장면마다 옛 판도 같은 입력으로 돌려 stdout · 보고 · 작업 폴더 파일 · 제출 여부를 대조 (임시 경로 · 날짜 시각만 맞춤 ·
@@ -66,21 +72,49 @@ NEW_MARK = 'KG50R'               # 10-28 밤 새로 더한 출력 줄의 표지 
 #   FAKE_SBATCH_TRIAL_EMPTY = 시험 제출이 빈 출력 · FAKE_TOUCH_HELPER = 시험 제출 때 그 파일 (dem_restart.py) 에 한 줄 덧붙임
 #   10-28 밤 2 (사전 공격 C · D): FAKE_EDIT_AFTER_TRIAL = 시험 제출 때 그 파일 (작업 폴더 재개 덱 · 러너) 끝에 주석 한 줄 ·
 #   FAKE_SBATCH_MAIN_TEXT = 본 제출이 그 글을 내고 종료 코드 1 · FAKE_SBATCH_MAIN_SUFFIX = 본 job 번호 뒤에 그 꼬리 (--parsable 'id;cluster')
+#   10-30 (KG50R-F02 · Codex KG50RF-02 · 1저자 Q2): 제출된 러너를 실제로 돈다 — 예전 = 제공 로그만 logs/ 로 복사 (러너가 어느 cwd · 어느 -in 을
+#     읽는지 못 봤다).  SLURM 처럼 제출 폴더에서 bash <러너> · stdout+stderr = 러너의 #SBATCH --output (%j = job · 없으면 slurm-%j.out) ·
+#     SLURM_JOB_ID · FAKE_JOB_KIND (trial · main) 를 넘긴다 · 러너 안 mpirun = 아래 가짜 mpirun (stub 폴더가 PATH 맨 앞).
+#     제출 실패 (FAKE_SBATCH_MAIN_TEXT · _TRIAL_TEXT · _TRIAL_EMPTY) = 잡이 없으니 안 돈다 · 시험 로그 고정물 없음 (FAKE_TRIAL_LOG 빈 값) 인 시험 =
+#     출력 파일을 안 만든 잡 (예전 S6 '시험 로그 없음' 장면 그대로).  FAKE_EDIT_GLOB = 시험 제출 때 그 글로브의 파일마다 끝에 주석 한 줄 ·
+#     FAKE_DROP_LAST_GLOB = 시험 제출 때 그 글로브의 파일마다 마지막 줄 지움 (시도 폴더 영수증처럼 이름에 시각이 든 파일용)
 STUB_SBATCH = r'''#!/bin/sh
 f=""; for a in "$@"; do f="$a"; done
 b=$(basename "$f" .sh); n=${b#run_}
-if [ "${b%t}" = "$b" ] && [ -n "$FAKE_SBATCH_MAIN_TEXT" ]; then echo "main $f" >> "$CAPTURE"; echo "$FAKE_SBATCH_MAIN_TEXT"; exit 1; fi
-if [ "${b%t}" = "$b" ] && [ -n "$FAKE_SBATCH_MAIN_SUFFIX" ]; then echo "main $f" >> "$CAPTURE"; echo "$((9000 + $(grep -c '^main' "$CAPTURE")))$FAKE_SBATCH_MAIN_SUFFIX"; exit 0; fi
-case "$b" in
-  *t) echo "trial $f" >> "$CAPTURE"
-      [ -n "$FAKE_TOUCH_HELPER" ] && echo "# 시험 제출 뒤 바뀜" >> "$FAKE_TOUCH_HELPER"
-      [ -n "$FAKE_EDIT_AFTER_TRIAL" ] && echo "# 시험 제출 뒤 바뀜 (사전 공격 C)" >> "$FAKE_EDIT_AFTER_TRIAL"
-      [ -n "$FAKE_SBATCH_TRIAL_EMPTY" ] && exit 0
-      [ -n "$FAKE_SBATCH_TRIAL_TEXT" ] && { echo "$FAKE_SBATCH_TRIAL_TEXT"; exit 1; }
-      j=$((7000 + $(grep -c '^trial' "$CAPTURE")))
-      [ -n "$FAKE_TRIAL_LOG" ] && cp "$FAKE_TRIAL_LOG" "logs/output_${n}_$j.out"; echo $j;;
-  *) echo "main $f" >> "$CAPTURE"; echo $((9000 + $(grep -c '^main' "$CAPTURE")));;
-esac
+case "$b" in *t) kind=trial;; *) kind=main;; esac
+if [ $kind = main ] && [ -n "$FAKE_SBATCH_MAIN_TEXT" ]; then echo "main $f" >> "$CAPTURE"; echo "$FAKE_SBATCH_MAIN_TEXT"; exit 1; fi
+if [ $kind = trial ]; then
+  echo "trial $f" >> "$CAPTURE"
+  [ -n "$FAKE_TOUCH_HELPER" ] && echo "# 시험 제출 뒤 바뀜" >> "$FAKE_TOUCH_HELPER"
+  [ -n "$FAKE_EDIT_AFTER_TRIAL" ] && echo "# 시험 제출 뒤 바뀜 (사전 공격 C)" >> "$FAKE_EDIT_AFTER_TRIAL"
+  if [ -n "$FAKE_EDIT_GLOB" ]; then for p in $FAKE_EDIT_GLOB; do echo "# 시험 제출 뒤 바뀜 (10-30 KG50R-F02)" >> "$p"; done; fi
+  if [ -n "$FAKE_DROP_LAST_GLOB" ]; then for p in $FAKE_DROP_LAST_GLOB; do sed -i '$d' "$p"; done; fi
+  [ -n "$FAKE_SBATCH_TRIAL_EMPTY" ] && exit 0
+  [ -n "$FAKE_SBATCH_TRIAL_TEXT" ] && { echo "$FAKE_SBATCH_TRIAL_TEXT"; exit 1; }
+  j=$((7000 + $(grep -c '^trial' "$CAPTURE")))
+else
+  echo "main $f" >> "$CAPTURE"; j=$((9000 + $(grep -c '^main' "$CAPTURE")))
+fi
+if [ $kind = main ] || [ -n "$FAKE_TRIAL_LOG" ]; then
+  o=$(sed -n 's/^#SBATCH --output=//p' "$f" | tail -1); [ -n "$o" ] || o="slurm-%j.out"
+  o=$(printf '%s' "$o" | sed "s/%j/$j/g")
+  SLURM_JOB_ID=$j FAKE_JOB_KIND=$kind bash "$f" > "$o" 2>&1 < /dev/null
+fi
+if [ $kind = main ]; then echo "$j$FAKE_SBATCH_MAIN_SUFFIX"; else echo $j; fi
+'''
+# 10-30 (KG50R-F02): 가짜 mpirun — 실제 cwd (pwd -P) · 인자 하나하나 · -in 파일 sha256 (그 cwd 기준 · 없으면 MISSING) 을 $FAKE_MPIRUN_REC 에
+#   한 묶음씩 (begin <종류> <job> … end) 적고, 시험 = 시험 로그 고정물 (FAKE_TRIAL_LOG) 을 stdout 으로 (가짜 sbatch 가 #SBATCH --output 으로 보낸다
+#   = 도구가 읽는 logs/output_<C>_<SFX>t_<job>.out) · 본 = 표지 한 줄.  실제 LIGGGHTS · MPI 0
+STUB_MPIRUN = r'''#!/bin/sh
+in=""; prev=""
+for a in "$@"; do [ "$prev" = "-in" ] && in="$a"; prev="$a"; done
+{ printf 'begin %s %s\n' "${FAKE_JOB_KIND:-?}" "${SLURM_JOB_ID:-?}"
+  printf 'cwd %s\n' "$(pwd -P)"
+  for a in "$@"; do printf 'arg %s\n' "$a"; done
+  if [ -n "$in" ] && [ -f "$in" ]; then printf 'in_sha256 %s\n' "$(sha256sum < "$in" | cut -c1-64)"; else printf 'in_sha256 MISSING\n'; fi
+  printf 'end\n'; } >> "$FAKE_MPIRUN_REC"
+if [ "$FAKE_JOB_KIND" = trial ]; then [ -n "$FAKE_TRIAL_LOG" ] && cat "$FAKE_TRIAL_LOG"; else echo "FAKE MAIN RUN (가짜 mpirun)"; fi
+exit 0
 '''
 #   10-28 밤 2 (사전 공격 F): FAKE_RM_MODE = 그 작업 폴더의 시도 폴더 mode.txt 를 지운다 (둘째 고리가 읽기 전 · sacct 를 처음 부를 때)
 STUB_SACCT = ('#!/bin/sh\n[ -n "$FAKE_RM_MODE" ] && rm -f "$FAKE_RM_MODE"/attempt_*/mode.txt\n'
@@ -96,6 +130,13 @@ if [ "$c" -ge 2 ] && [ -n "$FAKE_SQUEUE_SECOND" ]; then out="$FAKE_SQUEUE_2"; rc
 [ -n "$out" ] && printf '%s\n' "$out" | awk -v f="$fmt" '{ if (f == "%i %j") { if (NF == 1) print "0", $1; else print } else print $NF }'
 exit $rc
 '''
+# 가짜 dem_restart.py 의 러너 (10-30 KG50R-F02) — 실제 dem_restart.py 꼴 (ibb D2 r4 · 09-27 r075 r30 러너: #SBATCH --output · cd = 작업 폴더
+#   실제 경로 /lustre/… · 도구가 -n · -np 를 NP 로 고친다).  예전 가짜 러너 = cd $HOME/dem_test/<케이스> (가짜 루트의 작업 폴더가 아님 · --output 없음) —
+#   러너를 실제로 돌리지 않던 때라 안 보였다 · 10-30 엄격 대조 (cd 실제 경로 = 작업 폴더) 에 맞게 바꿈.
+#   {W} = 작업 폴더 실제 경로 · {CS} = <케이스>_<접미사> · {C} = 케이스 · {ROOT} = --root 그대로
+RB_BASE = ('#!/bin/bash\n#SBATCH --job-name={CS}\n#SBATCH --output=logs/output_{CS}_%j.out\n#SBATCH -n 1\n'
+           '#SBATCH --time=5-00:00:00\ncd {W}\nmpirun -np 1 lmp_mpi -in input_{CS}.liggghts\n')
+#   FAKE_RUNNER = 그 파일 바이트 (위 자리표만 바꿈 · 줄 끝 · NUL · UTF-8 아닌 바이트 그대로) 를 러너로 (RB 묶음) · 없으면 RB_BASE
 FAKE_DEM_RESTART = r'''#!/usr/bin/env python3
 import os, shutil, sys
 a = sys.argv
@@ -105,11 +146,16 @@ if os.environ.get('FAKE_DEM_FAIL'):
     print('  제외: %s (가짜 · 체크포인트 없음)' % case)
     sys.exit(0)
 shutil.copy(os.environ['FAKE_RES'], os.path.join(W, 'input_%s_%s.liggghts' % (case, sfx)))
-with open(os.path.join(W, 'run_%s_%s.sh' % (case, sfx)), 'w') as f:
-    f.write('#!/bin/bash\n#SBATCH --job-name=%s_%s\n#SBATCH -n 1\n#SBATCH --time=5-00:00:00\n'
-            'cd $HOME/dem_test/%s\nmpirun -np 1 lmp_mpi -in input_%s_%s.liggghts\n' % (case, sfx, case, case, sfx))
+t = __RB_BASE__.encode()
+if os.environ.get('FAKE_RUNNER'):
+    with open(os.environ['FAKE_RUNNER'], 'rb') as f:
+        t = f.read()
+for k, v in (('{W}', os.path.realpath(W)), ('{CS}', '%s_%s' % (case, sfx)), ('{C}', case), ('{ROOT}', root)):
+    t = t.replace(k.encode(), v.encode())
+with open(os.path.join(W, 'run_%s_%s.sh' % (case, sfx)), 'wb') as f:
+    f.write(t)
 print('  %s  %s  %s' % (case, os.environ.get('FAKE_MODE', 'settling'), os.environ.get('FAKE_CKPT', '')))
-'''
+'''.replace('__RB_BASE__', repr(RB_BASE))
 # 엄격판 = ibb dem_restart.py 의 덱 검사 흉내 (10-27 실측 plan_r56.txt: "kg50_d07_b40 덱 검증 실패: 다른 케이스명 혼입: ['real_4']").
 # 작업 폴더의 맨 위 input*.liggghts 어느 줄에든 (주석 줄 · 인라인 주석 포함) 다른 케이스 이름 (FAKE_FOREIGN) 이 있으면
 # 재개 덱 · 러너 · 계획 줄 없이 끝낸다.  ⚠ 실제 도구가 어느 덱 · 어떤 이름 목록을 보는지는 리포에 없어 모른다 — 가정.
@@ -388,9 +434,12 @@ def norm(s, tmp):
 
 def tree_cmp(d, tmp):
     # --compare-old 대조용 작업 폴더 지도 — 10-28 밤 새 파일 (시도 폴더 attempt_* · cut_*.txt) 빼고 · .txt 는 새 줄 뺀 내용의 sha256
+    #   10-30 (KG50R-F02): 러너 run_*.sh 도 뺀다 — 고친 판은 본 · 시험 러너를 도구 틀로 쓴다 (헬퍼 러너 sed 사본 아님 · 옛 판과 바이트가 다른 게 정상 ·
+    #   러너 내용은 RB 묶음이 따로 본다)
     out = {}
     for rel, v in tree_sha(d).items():
-        if rel.startswith('attempt_') or os.path.basename(rel).startswith('cut_'):
+        base = os.path.basename(rel)
+        if rel.startswith('attempt_') or base.startswith('cut_') or (base.startswith('run_') and base.endswith('.sh')):
             continue
         p = os.path.join(d, rel)
         if rel.endswith('.txt') and not os.path.islink(p):
@@ -452,11 +501,14 @@ def make_root(fake=FAKE_DEM_RESTART, main_bytes=None, more_decks=(), main_link=F
     os.makedirs(os.path.dirname(os.path.join(S, ckpt)), exist_ok=True)
     with open(os.path.join(S, ckpt), 'wb') as f:
         f.write(b'\x00' * 64)
-    for name, body in (('sbatch', STUB_SBATCH), ('sacct', STUB_SACCT), ('squeue', STUB_SQUEUE), ('sleep', '#!/bin/sh\nexit 0\n')):
+    # 10-30 (KG50R-F02): 러너를 실제로 돌리므로 가짜 mpirun · 아무것도 안 하는 conda · 빈 ~/.bashrc (실제 헬퍼 러너의 환경 줄 꼴)
+    for name, body in (('sbatch', STUB_SBATCH), ('sacct', STUB_SACCT), ('squeue', STUB_SQUEUE), ('sleep', '#!/bin/sh\nexit 0\n'),
+                       ('mpirun', STUB_MPIRUN), ('conda', '#!/bin/sh\nexit 0\n')):
         p = os.path.join(stub, name)
         with open(p, 'w') as f:
             f.write(body)
         os.chmod(p, 0o755)
+    open(os.path.join(home, '.bashrc'), 'w').close()
     helper = os.path.join(home, 'dem_test', 'dem_restart.py')
     with open(helper, 'w') as f:
         f.write(fake)
@@ -469,11 +521,37 @@ def snap_reports(L):
     return {p: (os.stat(p).st_mtime_ns, os.stat(p).st_size) for p in glob.glob(os.path.join(L, 'resume_%s_*.md' % SFX))}
 
 
+def mp_records(path):
+    # 10-30 (KG50R-F02): 가짜 mpirun 기록 → [{kind · job · cwd · args · in_sha}] (begin <종류> <job> · cwd · arg … · in_sha256 · end)
+    out, cur = [], None
+    if not os.path.isfile(path):
+        return out
+    with open(path, encoding='utf-8', errors='replace') as f:
+        lines = f.read().split('\n')
+    for l in lines:
+        if l.startswith('begin '):
+            k = l.split(' ')
+            cur = dict(kind=k[1], job=k[2] if len(k) > 2 else '', cwd=None, args=[], in_sha=None)
+        elif cur is None:
+            continue
+        elif l.startswith('cwd '):
+            cur['cwd'] = l[4:]
+        elif l.startswith('arg '):
+            cur['args'].append(l[4:])
+        elif l.startswith('in_sha256 '):
+            cur['in_sha'] = l[10:]
+        elif l == 'end':
+            out.append(cur)
+            cur = None
+    return out
+
+
 def invoke(ctx, script, res_text, trial_text, sacct='COMPLETED|0:0', sacct_rc=0, squeue='', squeue_rc=0, squeue2=None,
-           squeue_rc2=0, extra=(), mode='settling', ckpt=CKPT, approve='auto', suf=SUF, env_more=None, cases=None):
+           squeue_rc2=0, extra=(), mode='settling', ckpt=CKPT, approve='auto', suf=SUF, env_more=None, cases=None, root=None):
     # 한 번 호출 — 이 호출에서 생긴 sbatch 호출 · 보고 · stdout · 작업 폴더 상태만 돌려준다
     # approve: 'auto' = 새 판 · -T 없음이면 실제 sha256 둘 (-A 이 스크립트 · -H 가짜 dem_restart.py) · None = 안 줌 ·
     #   'badA' · 'badH' = 하나만 틀린 값 · squeue2 = 둘째 squeue 호출부터 (본 제출 직전 다시 조회) 의 출력
+    # 10-30 (KG50R-F02): root = -r 에 줄 경로 (기본 루트 L · RB 묶음의 별칭 링크) · env_more 값의 {L} = 루트 · mp = 이 호출의 가짜 mpirun 기록
     tmp, L, cap = ctx['tmp'], ctx['L'], ctx['cap']
     res = os.path.join(tmp, 'res.liggghts')
     with open(res, 'w', newline='') as f:
@@ -483,19 +561,21 @@ def invoke(ctx, script, res_text, trial_text, sacct='COMPLETED|0:0', sacct_rc=0,
         tl = os.path.join(tmp, 'trial.out')
         with open(tl, 'w') as f:
             f.write(trial_text)
+    mprec = cap + '.mp'
     env = dict(os.environ, HOME=ctx['home'], PATH=ctx['stub'] + ':' + os.environ['PATH'], USER='tester', CAPTURE=cap,
                FAKE_SACCT=sacct, FAKE_SACCT_RC=str(sacct_rc), FAKE_SQUEUE=squeue, FAKE_SQUEUE_RC=str(squeue_rc),
-               FAKE_TRIAL_LOG=tl, FAKE_RES=res, FAKE_CKPT=ckpt, FAKE_MODE=mode)
+               FAKE_TRIAL_LOG=tl, FAKE_RES=res, FAKE_CKPT=ckpt, FAKE_MODE=mode, FAKE_MPIRUN_REC=mprec)
     for x in ('FAKE_SQUEUE_SECOND', 'FAKE_SQUEUE_2', 'FAKE_SQUEUE_RC_2', 'FAKE_SBATCH_TRIAL_EMPTY', 'FAKE_SBATCH_TRIAL_TEXT',
               'FAKE_TOUCH_HELPER', 'FAKE_DEM_FAIL', 'FAKE_EDIT_AFTER_TRIAL', 'FAKE_SBATCH_MAIN_TEXT', 'FAKE_SBATCH_MAIN_SUFFIX',
-              'FAKE_RM_MODE'):
+              'FAKE_RM_MODE', 'FAKE_RUNNER', 'FAKE_EDIT_GLOB', 'FAKE_DROP_LAST_GLOB', 'SLURM_JOB_ID', 'FAKE_JOB_KIND'):
         env.pop(x, None)
     if squeue2 is not None:
         env.update(FAKE_SQUEUE_SECOND='1', FAKE_SQUEUE_2=squeue2, FAKE_SQUEUE_RC_2=str(squeue_rc2))
-    env.update(dict((k, v.replace('{helper}', ctx['helper'])) for k, v in (env_more or {}).items()))
-    if os.path.exists(cap + '.sq'):
-        os.remove(cap + '.sq')
-    args = ['bash', script, '-n', str(NP), '-s', suf, '-r', L] + list(extra)
+    env.update(dict((k, v.replace('{helper}', ctx['helper']).replace('{L}', L)) for k, v in (env_more or {}).items()))
+    for p in (cap + '.sq', mprec):
+        if os.path.exists(p):
+            os.remove(p)
+    args = ['bash', script, '-n', str(NP), '-s', suf, '-r', L if root is None else root] + list(extra)
     if approve and supports_approval(script):
         ta, ha = sha256f(script), sha256f(ctx['helper'])
         if approve == 'auto' and '-T' not in extra:
@@ -536,7 +616,7 @@ def invoke(ctx, script, res_text, trial_text, sacct='COMPLETED|0:0', sacct_rc=0,
                 calls=calls, rep=rep, out=out, rc=p.returncode, s_before=s_before, s_after=s_after, w_decks=w_decks,
                 att=att, plan=plan, out_n=norm(out, tmp), rep_n=norm(rep, tmp),
                 w_files=tree_sha(W) if os.path.isdir(W) else {}, w_cmp=tree_cmp(W, tmp) if os.path.isdir(W) else {},
-                s_same=s_before == s_after, w_exists=os.path.isdir(W))
+                s_same=s_before == s_after, w_exists=os.path.isdir(W), mp=mp_records(mprec))
 
 
 def run_case1(script, res_kind, trial, sacct='COMPLETED|0:0', sacct_rc=0, squeue='', squeue_rc=0, extra=(),
@@ -584,6 +664,222 @@ def write_tmp(d, name, text):
     return p
 
 
+# ═══ RB: 러너 결속 (10-30 KG50R-F02 · Codex KG50RF-02 P1 · 1저자 Q2 "권고대로") ═══
+#   검사한 덱 ↔ 잡이 실제로 읽는 덱.  헬퍼 러너 (dem_restart.py 산출) 를 줄마다 엄격 대조 — 받는 꼴 밖이면 시험 전 거부 (sbatch 0 회) ·
+#   통과면 본 · 시험 러너 = 도구 틀 (cd "작업 폴더 실제 경로" · -in "검사한 덱 절대 경로" · 실행 줄 하나 · LMP_IDENTITY 기록 줄) ·
+#   실행 입력 영수증 다섯 (재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트) + 영수증 파일 자체 (이 호출 메모리 sha256) 를 본 제출 바로 전 다시.
+#   가짜 sbatch 가 제출된 러너를 실제로 돌리고 가짜 mpirun 이 cwd · 인자 · -in sha256 을 적는다 (실제 LIGGGHTS · SLURM 0).
+#   ibb 꼴 (-r /home/yonghoon/dem_test · 헬퍼 cd /lustre/home/…) = 루트 별칭 링크.  Codex 반례 폴더 (independent/launch/) 는 읽기만 — 같은 꼴을 여기서 만든다.
+CS = '%s_%s' % (C, SFX)
+D2RUN = os.path.join(ROOT, 'docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/run_kg50_d2_b50_r4.sh')
+RB_IDENT = ('echo "LMP_IDENTITY record-only (not a gate, 10-30 KG50R-F02): lmp_mpi=$(command -v lmp_mpi || echo none) '
+            'sha256=$(sha256sum 2>/dev/null < "$(command -v lmp_mpi)" | cut -c1-64) deck=%s sha256=$(sha256sum 2>/dev/null < "%s" | cut -c1-64)"')
+
+
+def sha(b):
+    return hashlib.sha256(b).hexdigest()
+
+
+def rb_expect(name, wr, sb, env, trial):
+    """시험 쪽에서 따로 쓴 기대 러너 바이트 — 도구 틀과 같아야.  name = <C>_<SFX>[t] · sb = (qos, partition, time) · env = 환경 줄 (순서 그대로)."""
+    qos, part, tm = sb
+    deck = '%s/input_%s.liggghts' % (wr, name)
+    out = ['#!/bin/bash', '#SBATCH --job-name=' + name, '#SBATCH --output=logs/output_%s_%%j.out' % name]
+    if qos:
+        out.append('#SBATCH --qos=' + qos)
+    if part:
+        out.append('#SBATCH --partition=' + part)
+    out += ['#SBATCH -n %d' % NP, '#SBATCH --time=' + ('01:00:00' if trial else tm)]
+    if env:
+        out += [''] + list(env)
+    out += ['', 'cd "%s"' % wr, RB_IDENT % (deck, deck), 'mpirun --oversubscribe --bind-to none -np %d lmp_mpi -in "%s"' % (NP, deck)]
+    return ('\n'.join(out) + '\n').encode()
+
+
+def group_rb(script, chk, grp):
+    grp('RB')
+    good = res_variant('good')
+    ok_log = trial_log('ok')
+    nd, nt, rm, rt = 'input_%s.liggghts' % CS, 'input_%st.liggghts' % CS, 'run_%s.sh' % CS, 'run_%st.sh' % CS
+    F02 = 'KG50R-F02'
+    g_deck = with_tmpl(good)          # 도구가 만든 재개 덱 (템플릿 재선언 뒤) = 정적 대조가 읽는 덱
+    g_trial = subprocess.run(['awk', '-v', 't=2000', OLD_CUT], input=g_deck.encode(), stdout=subprocess.PIPE).stdout   # 시험 덱 (G5 와 같은 절단)
+    assert g_deck.count('run 180000\n') == 1 and g_trial.endswith(b'\nrun 2000\n')
+    VEL = 'velocity all set 1.0 0.0 0.0\n'
+    bak_main = g_deck.replace('run 180000\n', 'run 180000\n' + VEL).encode()     # Codex: 첫 긴 run 뒤 물리 명령 하나 (시험 구간 밖)
+    bak_trial2 = g_trial.replace(b'\nrun 2000\n', ('\n' + VEL + 'run 2000\n').encode())
+
+    def rb(runner=None, more_decks=(), extra=(), env_more=None, alias=None, real_name=None):
+        # alias 'r' = -r 루트 별칭 링크 · 헬퍼 cd = 실제 경로 (ibb: -r /home/yonghoon/dem_test · cd /lustre/home/…) · 'cd' = -r 실제 루트 ·
+        #   러너 글의 {ALIAS} = 별칭 링크 · real_name = 실제 루트 폴더 이름 (ctx 루트 L 은 그 폴더를 가리키는 링크가 된다)
+        ctx = make_root(more_decks=more_decks)
+        try:
+            tmp, L = ctx['tmp'], ctx['L']
+            if real_name:
+                real = os.path.join(tmp, real_name)
+                os.rename(L, real)
+                os.symlink(real, L)
+            al = os.path.join(tmp, 'alias')
+            if alias:
+                os.symlink(L, al)
+            em = dict(env_more or {})
+            if runner is not None:
+                p = os.path.join(tmp, 'runner.tmpl')
+                data = runner if isinstance(runner, bytes) else runner.encode()
+                with open(p, 'wb') as f:
+                    f.write(data.replace(b'{ALIAS}', al.encode()))
+                em['FAKE_RUNNER'] = p
+            r = invoke(ctx, script, good, ok_log, extra=extra, env_more=em, root=al if alias == 'r' else None)
+            if not r['rep']:      # -x · -n 으로 접미사가 바뀐 장면 — 보고 이름 resume_<접미사>_* (새 루트라 하나뿐)
+                reps = sorted(glob.glob(os.path.join(L, 'resume_*.md')))
+                r['rep'] = open(reps[-1], encoding='utf-8', errors='replace').read() if reps else ''
+            W = os.path.join(L, C)
+            r['wr'] = os.path.realpath(W)
+            r['files'] = {}
+            for n in (nd, nt, rm, rt):
+                q = os.path.join(W, n)
+                r['files'][n] = open(q, 'rb').read() if os.path.isfile(q) else None
+            q = os.path.join(L, 'logs', 'output_%st_7001.out' % CS)
+            r['tlog'] = open(q, encoding='utf-8', errors='replace').read() if os.path.isfile(q) else ''
+            q = os.path.join(W, CKPT)
+            r['ck_sha'] = sha256f(q) if os.path.isfile(q) else ''
+            r['alias'] = al
+            return r
+        finally:
+            shutil.rmtree(ctx['tmp'], ignore_errors=True)
+
+    def ran(r):
+        # 실패 기록 끝 (잘려도 남게) — 실제로 낸 sbatch · 돈 잡마다 cwd · -in · 읽은 바이트 sha256 앞 12 자 ↔ 검사한 덱 · 시험 덱
+        hd, ht = (sha(r['files'][n])[:12] if r['files'].get(n) else '-' for n in (nd, nt))
+        js = ['%s:%s cwd=%s -in=%s sha=%s' % (x['kind'], x['job'], x['cwd'], x['args'][-1] if x['args'] else '-', (x['in_sha'] or '-')[:12])
+              for x in r['mp']]
+        return ' ‖ sbatch=%s ‖ 돈 잡=%s ‖ 검사한 재개 덱 %s · 시험 덱 %s' % ([c.split(' ')[0] for c in r['calls']], js, hd, ht)
+
+    STAGE = '단계: 정적 대조 · 시험 덱 · 러너 · 이유: 시험 제출 안 함 · 헬퍼 러너 엄격 대조 실패 (10-30 KG50R-F02'
+
+    def neg(tag, r, phrase):
+        # 거부 자리 = 정적 대조 · 시험 덱 · 러너 관문 (ng) — 실행 영수증 단계에서 우연히 막힌 것 (시험 러너를 안 써서) 과 가른다
+        chk('RB%s → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · %s 이유 [%s] · 보고 시험 전 거부 절 (러너 관문)' % (tag, F02, phrase),
+            r['calls'] == [] and r['mp'] == [] and F02 in r['out'] and phrase in r['out']
+            and ('## %s — 시험 전 거부' % C) in r['rep'] and STAGE in r['rep'] and phrase in r['rep'], r['out'][-500:] + r['rep'][-300:] + ran(r))
+
+    # ── 음성: 받는 꼴 밖의 헬퍼 러너 = 시험 전 거부 (Codex KG50RF-02 반례 넷 + 같은 부류) ──
+    B, MP, CD, T5 = RB_BASE, 'mpirun -np 1 lmp_mpi -in input_{CS}.liggghts\n', 'cd {W}\n', '#SBATCH --time=5-00:00:00\n'
+
+    def sub(old, new):
+        assert B.count(old) == 1, old
+        return B.replace(old, new)
+    bakrun = sub(MP, 'mpirun -np 1 lmp_mpi -in input_{CS}.liggghts.bak\n')
+    bakmsg = 'MPI 실행 줄 -in [%s.bak] ≠ 검사한 재개 덱 [%s]' % (nd, nd)
+    for tag, runner, decks, phrase in (
+            ('1 Codex .bak — 본 러너 -in …%s.bak · 본 .bak 덱 = 첫 긴 run 뒤 velocity · 시험 .bak 덱 = 검사한 시험 덱과 바이트 같음' % nd,
+             bakrun, ((nd + '.bak', bak_main), (nt + '.bak', g_trial)), bakmsg),
+            ('2 .bak 가 시험 쪽에만 닿음 — 작업 폴더에 시험 .bak 덱만 (검사한 시험 덱과 다름 · 본 .bak 없음)', bakrun, ((nt + '.bak', bak_trial2),), bakmsg),
+            ('3 cd = 멈춘 폴더 (작업 폴더 아님)', sub(CD, 'cd {ROOT}/%s.%s\n' % (C, SUF)), (), 'cd 실제 경로 ['),
+            ('4 주석 속 정상 mpirun 줄 + 다른 실제 줄 (처음부터 덱 input_<C>.liggghts)',
+             sub(MP, '# ' + MP + 'mpirun -np 1 lmp_mpi -in input_{C}.liggghts\n'), (), '주석 줄'),
+            ('4b 주석 줄 하나 (나머지 정상)', sub(CD, '# resume runner\n' + CD), (), '주석 줄'),
+            ('5 MPI 실행 줄 두 번 (같은 줄)', sub(MP, MP + MP), (), 'MPI 실행 줄이 두 번'),
+            ('6 다른 명령 줄 (cp 처음부터 덱 → 재개 덱)', sub(MP, 'cp input_{C}.liggghts input_{CS}.liggghts\n' + MP), (), '허용 목록에 없는 명령 줄'),
+            ('7a MPI 실행 줄 ; 이음', sub(MP, MP[:-1] + '; mpirun -np 1 lmp_mpi -in input_{C}.liggghts\n'), (), '셸 연결 · 치환 · 리디렉션 글자가 든 MPI 실행 줄'),
+            ('7b MPI 실행 줄 && 이음', sub(MP, MP[:-1] + ' && cp input_{C}.liggghts input_{CS}.liggghts\n'), (), '셸 연결 · 치환 · 리디렉션 글자가 든 MPI 실행 줄'),
+            ('8 cd 없음', sub(CD, ''), (), 'cd 줄 없음'),
+            ('9 cd 두 번', sub(CD, CD + 'cd {ROOT}\n'), (), 'cd 가 두 번'),
+            ('9b cd 두 번 (둘 다 작업 폴더)', sub(CD, CD + CD), (), 'cd 가 두 번'),
+            ('25 MPI 실행 줄 없음', sub(MP, ''), (), 'MPI 실행 줄 없음'),
+            ('26 NUL 바이트', B + '\x00\n', (), 'NUL 글자'),
+            ('27 UTF-8 아닌 바이트', B.encode() + b'\xff\n', (), 'UTF-8 이 아님'),
+            # 도구의 -n · -np 고침 (sed) 이 엄격 대조 전에 어긋남을 지우면 안 된다 — 예전 sed = '#SBATCH -n ' 로 시작하는 줄 전체 · 줄 어디든
+            #   'mpirun … -np [숫자 0 개 이상]' 을 고쳐 아래 셋이 정상 꼴로 바뀌었다 (그 자리는 시도 폴더 원본에만 남았다)
+            ('28 #SBATCH -n 줄에 다른 지시가 붙음 (-n 1 --nodes=2)', sub('#SBATCH -n 1\n', '#SBATCH -n 1 --nodes=2\n'), (), '#SBATCH -n 값'),
+            ('29 MPI 실행 줄 -np 숫자 없음', sub(MP, 'mpirun -np  lmp_mpi -in input_{CS}.liggghts\n'), (), 'MPI 실행 줄이 정해진 꼴이 아님'),
+            ('30 #SBATCH -n 값이 숫자 아님', sub('#SBATCH -n 1\n', '#SBATCH -n x\n'), (), '#SBATCH -n 값'),
+            ('10 -n 어긋남 (#SBATCH -n 1 뒤 --ntasks=8 · SLURM 은 뒤 지시 = 8 작업)', sub('#SBATCH -n 1\n', '#SBATCH -n 1\n#SBATCH --ntasks=8\n'), (),
+             '작업 수 · 노드 지시'),
+            ('11 같은 #SBATCH 키 두 번 (--time)', sub(T5, T5 + '#SBATCH --time=00:10:00\n'), (), '#SBATCH --time= 가 두 번'),
+            ('12 #SBATCH 가 명령 줄 뒤 (SLURM 이 안 읽는 자리)', sub(T5, T5 + 'source ~/.bashrc\n#SBATCH --qos=cpu-60\n'), (), '#SBATCH 줄이 명령 줄 뒤'),
+            ('13 환경 줄이 cd 뒤', sub(CD, CD + 'export OMP_NUM_THREADS=1\n'), (), '환경 줄이 cd 뒤'),
+            ('14 cd 경로에 .. 마디 (실제 경로는 작업 폴더와 같음)', sub(CD, 'cd {W}/../{C}\n'), (), 'cd 경로가 안전한 절대 경로가 아님'),
+            ('15 MPI 실행 줄이 cd 앞', sub(CD + MP, MP + CD), (), 'MPI 실행 줄이 cd 앞'),
+            ('16 CRLF 줄 끝', B.replace('\n', '\r\n'), (), 'CR 글자'),
+            ('17 --job-name 다름 (큐 검사 이름 밖)', sub('#SBATCH --job-name={CS}\n', '#SBATCH --job-name=other_job\n'), (), '#SBATCH --job-name= 값'),
+            ('18 --output 다름 (도구가 읽는 시험 로그 자리 밖)', sub('#SBATCH --output=logs/output_{CS}_%j.out\n', '#SBATCH --output=out.log\n'), (),
+             '#SBATCH --output= 값'),
+            ('20 --qos 값에 공백', sub(T5, T5 + '#SBATCH --qos=cpu-60 bad\n'), (), '안전한 낱말이 아님'),
+            ('22 첫 줄 #!/bin/sh', sub('#!/bin/bash\n', '#!/bin/sh\n'), (), '첫 줄이 #!/bin/bash 가 아님'),
+            ('23 --time 없음', sub(T5, ''), (), '#SBATCH --time= 줄 없음')):
+        neg(tag, rb(runner, decks), phrase)
+    neg('19 작업 폴더 실제 경로에 $ (루트 = 그 폴더를 가리키는 링크 · 헬퍼 cd = 링크 경로 · 러너 cd "…" 안에서 펼쳐질 글자)',
+        rb(sub(CD, 'cd {ROOT}/{C}\n'), real_name='ro$x'), '작업 폴더 실제 경로 [')
+    neg('21 NP 0 (-n 0)', rb(extra=('-n', '0')), 'NP [0]')
+    neg('24 접미사에 $ (-x r5$x · 덱 · 러너 이름에 그대로)', rb(extra=('-x', 'r5$x')), '재개 덱 절대 경로 [')
+
+    # ── 양성: 실제 D2 헬퍼 러너 꼴 (ibb run_kg50_d2_b50_r4.sh) · -r = 루트 별칭 링크 · 헬퍼 cd = 실제 경로 (ibb /home → /lustre 꼴) ──
+    with open(D2RUN, encoding='utf-8') as f:
+        d2 = f.read()
+    d2cd = 'cd /lustre/home/yonghoon/dem_test/kg50_d2_b50\n'
+    assert d2.count(d2cd) == 1 and d2.count('kg50_d2_b50_r4') == 3 and d2.count('kg50_d2_b50') == 4
+    d2t = d2.replace(d2cd, 'cd {W}\n').replace('kg50_d2_b50_r4', '{CS}')
+    assert 'kg50_d2_b50' not in d2t
+    d2env = ('source ~/.bashrc', 'conda activate myenv', 'export OMP_NUM_THREADS=1', 'export MKL_NUM_THREADS=1',
+             'export OPENBLAS_NUM_THREADS=1', 'export NUMEXPR_NUM_THREADS=1')
+
+    def pos(tag, r, sbv, env, helper_bytes):
+        wr = r['wr']
+        mt = [x for x in r['mp'] if x['kind'] == 'trial']
+        mm = [x for x in r['mp'] if x['kind'] == 'main']
+        fd, ft, fm, fr = (r['files'][n] for n in (nd, nt, rm, rt))
+
+        def want(name):
+            return ['--oversubscribe', '--bind-to', 'none', '-np', str(NP), 'lmp_mpi', '-in', '%s/input_%s.liggghts' % (wr, name)]
+        chk('RB%s a → 시험 1 · 본 1 · 러너가 실제로 돈 기록 둘 (시험 7001 → 본 9001)' % tag,
+            r['ntrial'] == 1 and r['nmain'] == 1 and [(x['kind'], x['job']) for x in r['mp']] == [('trial', '7001'), ('main', '9001')],
+            r['out'] + r['rep'] + ' mp=%s' % r['mp'])
+        chk('RB%s b → 시험 잡: cwd = 작업 폴더 실제 경로 · 인자 = mpirun … -in <작업 폴더 실제 경로>/%s · 읽은 바이트 = 검사한 시험 덱' % (tag, nt),
+            len(mt) == 1 and mt[0]['cwd'] == wr and mt[0]['args'] == want(CS + 't') and ft == g_trial and mt[0]['in_sha'] == sha(ft),
+            'mp=%s wr=%s' % (mt, wr))
+        chk('RB%s c → 본 잡: cwd = 작업 폴더 실제 경로 · 인자 = mpirun … -in <작업 폴더 실제 경로>/%s · 읽은 바이트 = 검사한 재개 덱' % (tag, nd),
+            len(mm) == 1 and mm[0]['cwd'] == wr and mm[0]['args'] == want(CS) and fd == g_deck.encode() and mm[0]['in_sha'] == sha(fd),
+            'mp=%s wr=%s' % (mm, wr))
+        chk('RB%s d → 본 · 시험 러너 = 도구 틀 (시험 쪽에서 따로 쓴 기대 바이트와 같음 · 환경 줄 순서 · qos · partition · 시험 --time=01:00:00)' % tag,
+            fm == rb_expect(CS, wr, sbv, env, False) and fr == rb_expect(CS + 't', wr, sbv, env, True),
+            '%r\n%r' % (fm, fr))
+        rc_ = next((v for k, v in r['att'].items() if k.endswith('/main_inputs.sha256')), '')
+        exp = ''.join('%s  %s\n' % (h, p) for h, p in ((sha(fd), wr + '/' + nd), (sha(fm), wr + '/' + rm), (sha(ft), wr + '/' + nt),
+                                                       (sha(fr), wr + '/' + rt), (r['ck_sha'], wr + '/' + CKPT)))
+        chk('RB%s e → 실행 입력 영수증 = 다섯 (재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트) · 러너가 읽는 절대 경로 · 실제 sha256' % tag,
+            rc_ == exp and len(r['ck_sha']) == 64, '%r\n%r' % (rc_, exp))
+        orig = next((v for k, v in r['att'].items() if k.endswith('/helper_run_%s.sh.orig' % CS)), None)
+        chk('RB%s f → 시도 폴더에 헬퍼 러너 원본 바이트 (-n · -np 고치기 전) · 보고에 러너 대조 통과 줄 · 잡 안 신원 줄' % tag,
+            orig == helper_bytes.decode() and '헬퍼 러너 엄격 대조 통과' in r['rep'] and F02 in r['rep'] and 'LMP_IDENTITY' in r['rep'],
+            '%r\n%s' % (orig, r['rep']))
+        chk('RB%s g → 시험 로그 LMP_IDENTITY 기록 줄 (기록만 · 관문 아님) 의 덱 sha256 = 검사한 시험 덱' % tag,
+            ('deck=%s/%s sha256=%s' % (wr, nt, sha(ft))) in r['tlog'], r['tlog'][:600])
+
+    r = rb(d2t, alias='r')
+    pos('P1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로)', r, ('cpu-60', 'cpu', '5-00:00:00'), d2env,
+        d2t.replace('{W}', r['wr']).replace('{CS}', CS).encode())
+    rp2 = sub(CD, 'cd {ALIAS}/{C}\n')
+    r = rb(rp2, alias='cd')
+    pos('P2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로)', r, (None, None, '5-00:00:00'), (),
+        rp2.replace('{ALIAS}', r['alias']).replace('{CS}', CS).replace('{C}', C).encode())
+
+    # ── 영수증: 시험 뒤 다섯 실행 입력 중 하나 · 영수증 파일 자체가 바뀌면 본 제출 안 함 (시험은 낸다) ──
+    TDP, TRP, CKP = '{L}/%s/%s' % (C, nt), '{L}/%s/%s' % (C, rt), '{L}/%s/%s' % (C, CKPT)
+    RCG = '{L}/%s/attempt_*/main_inputs.sha256' % C
+    for tag, em, phrase in (
+            ('R1 시험 제출 뒤 시험 덱이 바뀜', {'FAKE_EDIT_AFTER_TRIAL': TDP}, nt + ': FAILED'),
+            ('R2 시험 제출 뒤 시험 러너가 바뀜', {'FAKE_EDIT_AFTER_TRIAL': TRP}, rt + ': FAILED'),
+            ('R3 시험 제출 뒤 체크포인트가 바뀜', {'FAKE_EDIT_AFTER_TRIAL': CKP}, CKPT.split('/')[-1] + ': FAILED'),
+            ('R4 시험 제출 뒤 영수증 파일 끝에 줄 하나 (sha256sum -c 는 그대로 통과하는 꼴)', {'FAKE_EDIT_GLOB': RCG}, '실행 입력 영수증'),
+            ('R5 시험 제출 뒤 영수증 마지막 줄 (체크포인트) 지움 (sha256sum -c 는 남은 넷만 보고 통과하는 꼴)', {'FAKE_DROP_LAST_GLOB': RCG},
+             '실행 입력 영수증')):
+        r = rb(env_more=em)
+        chk('RB%s → 시험 1 · 본 제출 0 · 보고에 그 사유 (%s · %s)' % (tag, F02, phrase),
+            r['ntrial'] == 1 and r['nmain'] == 0 and '⛔ 본 제출 안 함' in r['rep'] and F02 in r['rep'] and phrase in r['rep'],
+            r['rep'][-700:] + ran(r))
+
+
 def main():
     script = SCRIPT
     if '--script' in sys.argv:
@@ -603,6 +899,12 @@ def main():
         else:
             fail += 1
             print('FAIL', name, '·', detail[-1500:].replace('\n', ' | '))
+
+    # 10-30 (KG50R-F02): --only RB = 러너 결속 묶음만 (변이 시험용 · 다른 묶음 안 돎)
+    if '--only' in sys.argv and sys.argv[sys.argv.index('--only') + 1] == 'RB':
+        group_rb(script, chk, grp)
+        print('%d PASS · %d FAIL' % (ok, fail))
+        return 0 if fail == 0 else 1
 
     # ── Codex §3 반례 다섯 (step 20001 재개로 옮김) ──
     grp('K')
@@ -1592,6 +1894,8 @@ def main():
                 r['trial'] and not r['main'] and '재개 덱 정적 대조: 통과' in r['out'], r['out'])
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+    # ── RB: 러너 결속 (10-30 KG50R-F02) — 위 group_rb ──
+    group_rb(script, chk, grp)
 
     print('%d PASS · %d FAIL' % (ok, fail))
     if CMP['old'] is not None:
