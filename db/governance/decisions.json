@@ -10295,6 +10295,77 @@
     "근거_발화": "AskUserQuestion 답 (2026-10-28 · 이 세션): '빼 둔 채 · 예외 기록 (권고)' — 질문에 두 갈래 (예외 기록 → 원고 안에서 그림과 SI 가 안 어긋남 · 꼬리 복원 → 원장과 맞지만 1저자가 SI 와 Fig. 3f,g 의 어긋남을 보게 됨) 를 적었다.",
     "decision_digest": "sha256:e85c23c976df9816797b22dd7385700668d6098a1b632665161631e452b3032e"
    }
+  },
+  {
+   "id": "D-2026-10-30-li2s-444-after-12p",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "sei_neb.li2s.cell_convergence",
+   "slot": "li2s_444_gabia_order_and_handoff",
+   "applies_to": {
+    "systems": [
+     "li2s"
+    ],
+    "tasks": [
+     "point_defect_neb"
+    ],
+    "methods": [
+     "ci_neb",
+     "qe-7.4.1-pbe-uspp"
+    ],
+    "use_cases": [
+     "diagnostic"
+    ]
+   },
+   "title": "Li₂S 4×4×4 순서 개정 — 탄성 12_p 먼저 (10-30 06:31 풀림) · 12_p 의 pw.x 가 끝나는 순간 자동으로 붙들어 Li₂S 를 돌리고, 어떻게 끝나든 탄성 러너를 푼다",
+   "statement": "D-2026-10-09-li2s-neb-cellconv 의 cost_cap 순서 (13_m → Li₂S → 12_p) 를 13_m → 12_p → Li₂S → 나머지 탄성 점으로 바꾼다. 실행은 db/inputs/li2s_neb_cellconv_2026_10_09/run_li2s444_chain_gabia.sh 한 개가 한다: ① strain_12_p.in 의 pw.x 를 확인 ② pause_relax_at_bfgs.sh --hold 로 12_p 가 스스로 끝날 때까지 기다리고 러너를 언 채 둔다 ③ GPU 가 비었는지 (≤ 2,000 MiB · 계산 프로세스 0 · 두 번) ④ P1 — david → ppcg → paro 순서로 scf_probe (electron_maxstep 3 · 값 아님) · 통과 = 끝까지 돎 ∧ 오류 줄 없음 ∧ VRAM 최고치 ≤ 46,000 MiB · **처음 통과한 손잡이**를 끝점 · NEB 에 그대로 쓴다 · 비용 어림 = 반복당 시간 × 3,275 반복 > 30 일이면 멈춤 ⑤ run_chain_kgy.sh (min_l 14 · 그 손잡이) — 끝점 이완 G1 → no-CI G2a → CI G2b ⑥ **붙든 뒤에는 성공 · 실패 · 신호 어느 쪽이든 러너를 딱 한 번 푼다**. P1 모두 불통과 · 비용 초과 · 사슬 실패는 설정을 바꿔 다시 돌지 않고 멈춘다 (다음은 사용자 결정). 부모 결정의 판정 (카드 C1 30 meV · C2 · C3 · §3b) · 규약 · G3–G5 (회수 뒤) 는 그대로다.",
+   "rationale": "10-27 에 붙듦만 걸고 Li₂S 실행기를 13_m 이 끝나기 전에 주지 못해서, 13_m 이 끝난 10-28 23:07:54 부터 10-30 06:31:11 풀 때까지 탄성 러너가 언 채 gabia GPU 가 ≈ 31 h 비었다. 사용자 10-30: '탄성 지금 풀기 · Li₂S 는 12_p 뒤' · '이번에는 확실하게 해' — 사람이 이어 줘야 하는 이음매를 없앤다.",
+   "decision_state": "active",
+   "record_kind": "policy",
+   "results_seen": false,
+   "results_seen_note": "Li₂S 4×4×4 결과 0 건 · P1 기준은 이 결정과 실행 기록에 결과 전에 적었다",
+   "card": "db/properties/li2s_cellconv_card_2026_09_01.json",
+   "record": "db/properties/li2s_neb_cellconv_runlog_2026_10_09.json",
+   "depends_on": [
+    "D-2026-10-09-li2s-neb-cellconv"
+   ],
+   "supersedes": [],
+   "amends": "D-2026-10-09-li2s-neb-cellconv",
+   "evidence": [
+    "db/inputs/li2s_neb_cellconv_2026_10_09/run_li2s444_chain_gabia.sh (selftest 13 · 깨기 4/4)",
+    "gabia hold.log 10-28 23:07:54 · 풀기 10-30 06:31:11 (사용자 붙여넣기)"
+   ],
+   "reopen_criteria": [
+    "P1 모두 불통과 · 비용 초과 · 사슬 실패 — 사용자 결정 (다른 손잡이 · disk_io · 셀 · 중단)",
+    "사용자가 순서를 바꾸면"
+   ],
+   "enforcement": "run_li2s444_chain_gabia.sh — 점검에서 두 결정 active 확인 · 붙듦 도구 selftest · 잠금 · 붙든 뒤 trap EXIT 풀기 · P1 기록 p1.json",
+   "proposed_by": "claude-session-2026-10-30 (friendly)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-30",
+     "state": "proposed",
+     "by": "agent",
+     "note": "GPU 31 h 비움 보고 · 두 갈래 (지금 풀고 12_p 뒤 · 순서 유지하고 비워 두기) 중 지금 풀기 권고"
+    },
+    {
+     "at": "2026-10-30",
+     "state": "active",
+     "by": "사용자 (SEI 트랙 1저자)",
+     "note": "비준 — AskUserQuestion 답 '탄성 지금 풀기 · Li₂S 는 12_p 뒤 (권고)' · 이어서 '이번에는 확실하게 해'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-29T21:42:42Z",
+    "commit": "3235c84e85704a79bb6ab369909fa0385d716cad",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "AskUserQuestion 답 (2026-10-30 KST · 이 세션): '탄성 지금 풀기 · Li₂S 는 12_p 뒤 (권고)' · 이어서 '이번에는 확실하게 해'.",
+    "decision_digest": "sha256:6bc2fba6b2e1d0c7421dc8c30363f937a227ed202d22dc08a50ecfbef782b891"
+   }
   }
  ]
 }

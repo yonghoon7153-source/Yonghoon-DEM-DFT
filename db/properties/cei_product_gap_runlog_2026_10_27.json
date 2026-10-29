@@ -7,7 +7,7 @@
  "card": "db/properties/cei_product_gap_card_2026_10_27.json",
  "decision": "D-2026-10-27-cei-product-gaps (active · 10-27 '권고대로해 ㅇㅇ') + 개정 1 D-2026-10-27-cei-product-gaps-amend1 (active · 10-28 '그냥 이대로 비준하자')",
  "citable": false,
- "status": "kgy 실행 중 — 7 / 12 끝 · NiP2O6 갭은 도구 오류로 무효 판정 (고침 커밋 · kgy 재추출 대기) · MnP2O6 vc-relax BFGS 13 (10-30 06:15)",
+ "status": "kgy 실행 중 — 7 / 12 끝 (NiP2O6 갭 재추출 끝 · 판독 전) · MnP2O6 vc-relax (10-30)",
  "단계": [
   {
    "step": "① gabia 조회 (검사용 · MP API · PP 파일 복사 · QE 안 돈다)",
@@ -115,7 +115,8 @@
    "MnP2O6": "01_vcrelax BFGS 13 · SCF 15 · P +0.58 kbar · |F| 0.0056 · M 20.00 μB (Mn²⁺ 고스핀 ×4) · 시작 10-29 08:20 · '▸ 조용함 20.7 분' = 힘·응력 계산 구간으로 봄 (GPU 80 % · 13.8 GB 사용 중)",
    "디스크": "kgy 735 / 916 GB (85 % · 여유 135 GB) — 남은 상의 04 DOS (nosym) 가 크면 확인",
    "원인_확정_10_30_kgy_출력": "kgy 재추출 (새 판 88936f7f) 출력: 닫힌 껍질 6 / 6 같음 (도구 고침이 옛 값을 재현) · NiP2O6 은 새 판이 '채널 정보 없음' 으로 멈춤 · 03 머리말 'number of electrons = 256.00' (up/down 없음) · QE 자체 'highest occupied, lowest unoccupied level 8.4891 3.5953' — QE 도 두 채널을 128/128 로 채웠다. ⇒ 원인은 도구가 아니라 **nscf 가 점유 설정을 scf 저장본에서 다시 읽어 입력의 tot_magnetization 8 을 버린 것** (scf 는 smearing · 자유 모멘트). 고유값은 scf 의 M 8 스핀 밀도로 만든 퍼텐셜에서 나와 멀쩡하다 — 틀린 것은 채움뿐. 08-07 nd2o3 −6.46 eV 수수께끼 (모멘트가 맞는데도 음수) 와 같은 꼴로 보인다.",
-   "고침_2": "extract_gap: 머리말 up/down · total magnetization 이 없으면 옆 02_scf.out (끝난 scf 의 마지막 모멘트) 와 03 입력 tot_magnetization 이 0.2 μB 안에서 맞을 때 그 값으로 채널별 채움 (132/124) · 그 경우 QE HOMO/LUMO 대조는 안 함 (M=0 채움이라) · 채널별 가장자리 기록 · selftest 띠 읽기 8 (음성 5) · 일부러 깬 두 경우 빨강"
+   "고침_2": "extract_gap: 머리말 up/down · total magnetization 이 없으면 옆 02_scf.out (끝난 scf 의 마지막 모멘트) 와 03 입력 tot_magnetization 이 0.2 μB 안에서 맞을 때 그 값으로 채널별 채움 (132/124) · 그 경우 QE HOMO/LUMO 대조는 안 함 (M=0 채움이라) · 채널별 가장자리 기록 · selftest 띠 읽기 8 (음성 5) · 일부러 깬 두 경우 빨강",
+   "재추출_결과_10_30": "kgy 붙여넣기 (새 판 3235c84e): 닫힌 껍질 6 / 6 같음 · NiP2O6 −4.8938 → 4.2728 eV (절연체 · 채움 ↑132/↓124 · 02 scf 8.00 = 03 tot_magnetization 8 · ↑ VBM/CBM 4.0719/9.0547 · ↓ 3.8888/8.3447 → VBM ↑ · CBM ↓) · gap.json 교체 (옛 것 gap.json.bad_1029) · 값은 판독 (R1–R6) 전 — 11 종 끝난 뒤 같이 읽는다 · MnP2O6 은 chain worktree 의 새 판이 자동으로 읽는다"
   }
  }
 }

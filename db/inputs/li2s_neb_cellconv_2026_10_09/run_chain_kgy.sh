@@ -15,7 +15,9 @@ export WORK PW NEB MPIRUN OMP_NUM_THREADS=1
 mkdir -p "$WORK" && cd "$W" || exit 2
 L=$WORK/li2s
 st(){ echo "[$(date '+%F %T')] ■ $*"; }
-B(){ "$UPY" tools/sei/build_neb_inputs.py --work "$WORK" --pseudo_dir "$W/$D/pseudo" --relaxed_from "$W/$D/relaxed" --only li2s --min_l 8 "$@"; }
+# 2026-10-30 — gabia 4x4x4 reuses this chain (run_li2s444_chain_gabia.sh): MIN_L (default 8 = the 2x2x2 control) and
+#   EXTRA_BUILD (e.g. "--diagonalization ppcg", the knob chosen by P1) are passed to every build. Defaults keep the 2x2x2 behaviour.
+B(){ "$UPY" tools/sei/build_neb_inputs.py --work "$WORK" --pseudo_dir "$W/$D/pseudo" --relaxed_from "$W/$D/relaxed" --only li2s --min_l "${MIN_L:-8}" ${EXTRA_BUILD:-} "$@"; }
 st "start · HEAD $(git -C "$W" rev-parse --short HEAD) · GPU $(nvidia-smi --query-gpu=memory.used --format=csv,noheader)"
 st "0 build endpoint inputs"; B > "$WORK/build_ep.log" 2>&1
 for e in ep_initial ep_final; do [ -f "$L/$e/relax.in" ] || { st "STOP: no $e/relax.in after build"; tail -5 "$WORK/build_ep.log"; exit 10; }; done
