@@ -52,7 +52,7 @@ def control_gate(card_path, work):
     return ok, rows
 
 
-def gap_from_text(t):
+def gap_from_text(t, magn_hint=None):
     """QE nscf (fixed occupations) 출력 글자 → VBM/CBM/gap 과 판정. 못 읽으면 ValueError.
 
     ⛔⛔ 2026-10-29 고침 — 스핀분극에서 채널별 점유 밴드 수를 `total magnetization … Bohr mag/cell`
@@ -64,6 +64,12 @@ def gap_from_text(t):
          찍는다) ② 없으면 scf 의 **마지막** `total magnetization` ③ 스핀분극인데 둘 다 없으면 **멈춘다**.
       ⇒ 대조: QE 가 스스로 찍는 `highest occupied, lowest unoccupied level` 과 0.002 eV 안에서 같아야
          한다 (QE 도 같은 채널별 점유수로 센다). 어긋나면 이 도구의 해석이 틀린 것이라 무효로 둔다.
+    ⛔⛔ 2026-10-30 덧붙임 (kgy NiP2O6 실측) — nscf 는 점유 설정을 **scf 저장본에서 다시 읽는다**. scf 가 smearing ·
+      자유 모멘트였으면 nscf 입력의 tot_magnetization 은 먹지 않고 (머리말에 up/down 이 없다) 두 채널을 nelec/2 씩
+      채운다 — QE 가 찍는 HOMO/LUMO 줄도 그 점유로 센 것이라 **대조 기준이 못 된다** (NiP2O6: 8.4891 > 3.5953).
+      고유값은 멀쩡하다 (nscf 는 scf 의 스핀 밀도로 만든 퍼텐셜을 그대로 쓴다) — 틀린 것은 '몇 번째 밴드까지 찼나' 뿐이다.
+      ⇒ 머리말 up/down 도 total magnetization 도 없으면 magn_hint (02_scf 의 수렴 모멘트 · 03 입력의 tot_magnetization 과
+         맞춘 값 · main 의 spin_hint_from_dir) 로 채널별 점유를 정한다. 그 경우 QE HOMO/LUMO 대조는 하지 않는다 (M=0 점유라서).
     ⛔ 못 하는 것: 스핀분극 계에서 '이 M 이 바닥상태인가' 는 모른다 — 주어진 점유수의 갭만 낸다.
     """
     notes = []
@@ -88,6 +94,10 @@ def gap_from_text(t):
         magn = float(mags[-1])
         nocc_up = int(round((nelec + magn) / 2)); nocc_dn = int(round((nelec - magn) / 2))
         src = "last total magnetization"
+    elif magn_hint is not None:
+        magn = float(magn_hint)
+        nocc_up = int(round((nelec + magn) / 2)); nocc_dn = int(round((nelec - magn) / 2))
+        src = "02_scf converged moment (nscf kept M=0 filling)"
     else:
         raise ValueError("스핀분극인데 채널별 전자 수를 못 읽었다 (머리말 up/down · total magnetization 둘 다 없음) "
                          "— M = 0 으로 가정하지 않는다")
@@ -118,6 +128,7 @@ def gap_from_text(t):
     if not blocks:
         raise ValueError("밴드 블록을 못 찾았다 — 출력에 'bands (ev)' 가 있는지 확인할 것")
     vbm, cbm, short = -1e9, 1e9, 0
+    edge = {0: [-1e9, 1e9], 1: [-1e9, 1e9]}          # 채널별 (VBM, CBM) — 진단용
     for ch, e in blocks:
         no = nocc_dn if ch else nocc_up
         if no < 1 or len(e) < no + 1:
@@ -125,6 +136,7 @@ def gap_from_text(t):
             continue
         vbm = max(vbm, e[no - 1])
         cbm = min(cbm, e[no])
+        edge[ch][0] = max(edge[ch][0], e[no - 1]); edge[ch][1] = min(edge[ch][1], e[no])
     if vbm < -1e8 or cbm > 1e8:
         raise ValueError("VBM/CBM 을 못 잡았다 — nbnd 가 점유 밴드보다 크지 않다. nbnd 를 늘릴 것.")
     if short:
@@ -136,7 +148,10 @@ def gap_from_text(t):
     qe = re.findall(r"highest occupied, lowest unoccupied level \(ev\):\s*(-?[\d.]+)\s+(-?[\d.]+)", t)
     qe_h = qe_l = None
     qe_check = "QE 줄 없음"
-    if qe:
+    if qe and src.startswith("02_scf"):
+        qe_h, qe_l = float(qe[-1][0]), float(qe[-1][1])
+        qe_check = "QE 줄은 M=0 점유라 대조 안 함"
+    elif qe:
         qe_h, qe_l = float(qe[-1][0]), float(qe[-1][1])
         if abs(vbm - qe_h) <= 0.002 and abs(cbm - qe_l) <= 0.002:
             qe_check = "일치"
@@ -155,7 +170,31 @@ def gap_from_text(t):
             "nbnd": nbnd, "nk": len(blocks), "spin_polarized": spin,
             "total_magnetization_bohr": magn, "n_occ_up": nocc_up, "n_occ_dn": nocc_dn,
             "occ_source": src, "qe_homo": qe_h, "qe_lumo": qe_l, "qe_check": qe_check,
+            "edges_by_spin": ({"up": [round(edge[0][0], 4), round(edge[0][1], 4)],
+                               "down": [round(edge[1][0], 4), round(edge[1][1], 4)]} if spin else None),
             "notes": notes}
+
+
+def spin_hint_from_dir(d):
+    """03 nscf 옆의 02_scf.out (끝난 scf 의 **마지막** total magnetization) 과 03_nscf_gap.in 의 tot_magnetization.
+
+    둘 다 있고 |M_scf − tot_mag| ≤ 0.2 면 tot_mag (정수) 를 준다 · 02 가 안 끝났거나 없으면 None ·
+    어긋나면 ValueError (sync_magnetization 이 안 돌았거나 scf 가 다른 모멘트로 갔다 — 갭을 내지 않는다).
+    """
+    scf, inp = os.path.join(d, "02_scf.out"), os.path.join(d, "03_nscf_gap.in")
+    if not (os.path.isfile(scf) and os.path.isfile(inp)):
+        return None
+    t = open(scf, errors="ignore").read()
+    if "JOB DONE" not in t:
+        return None
+    mv = re.findall(r"total magnetization\s*=\s*(-?[\d.]+)\s*Bohr mag/cell", t)
+    tm = re.search(r"tot_magnetization\s*=\s*(-?[\d.]+)", open(inp, errors="ignore").read())
+    if not mv or not tm:
+        return None
+    m_scf, m_in = float(mv[-1]), float(tm.group(1))
+    if abs(m_scf - m_in) > 0.2:
+        raise ValueError(f"02_scf 수렴 모멘트 {m_scf:.3f} 와 03 입력 tot_magnetization {m_in:g} 가 어긋난다 (> 0.2 μB)")
+    return m_in
 
 
 def _qe_text(spin, header, blocks_up, blocks_dn=None, qe_line=None, mags=()):
@@ -203,6 +242,30 @@ def _selftest_bands():
     r = gap_from_text(_qe_text(True, hdr_ud, up, dn, qe_line=(-1.0, 3.0)))
     if not r["verdict"].startswith("⛔"):
         bad.append(f"[음성] QE 줄과 어긋났는데 판정이 {r['verdict']}")
+    # ②b [실측회귀 10-30] nscf 가 M=0 으로 채운 꼴 — 머리말 up/down 없음 · QE 줄도 3/3 점유값 (1.2 / −1.2)
+    #     02_scf 의 모멘트 2 를 힌트로 주면 4/2 점유로 갭 2.0 이 나와야 하고, QE 줄 때문에 무효로 만들면 안 된다
+    r = gap_from_text(_qe_text(True, "     number of electrons       =         6.00", up, dn, qe_line=(1.2, -1.2)),
+                      magn_hint=2.0)
+    if abs(r["gap"] - 2.0) > 1e-9 or not r["occ_source"].startswith("02_scf") or r["verdict"].startswith("⛔"):
+        bad.append(f"[실측회귀] M=0 채움 nscf + 02 힌트: 갭 {r['gap']} · {r['occ_source']} · {r['verdict']}")
+    # ②c spin_hint_from_dir — 끝난 02 · 맞는 03 입력 → 정수 · 안 끝난 02 → None · 어긋남 → ValueError
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as D:
+        def _w(n, s_):
+            open(os.path.join(D, n), "w").write(s_)
+        _w("02_scf.out", "     total magnetization       =     0.50 Bohr mag/cell\n"
+                         "     total magnetization       =     8.00 Bohr mag/cell\n   JOB DONE.\n")
+        _w("03_nscf_gap.in", "    tot_magnetization = 8\n")
+        if spin_hint_from_dir(D) != 8.0:
+            bad.append(f"spin_hint_from_dir 정상 경우 {spin_hint_from_dir(D)}")
+        _w("02_scf.out", "     total magnetization       =     8.00 Bohr mag/cell\n")
+        if spin_hint_from_dir(D) is not None:
+            bad.append("[음성] 안 끝난 02_scf 의 모멘트를 썼다")
+        _w("02_scf.out", "     total magnetization       =     7.40 Bohr mag/cell\n   JOB DONE.\n")
+        try:
+            spin_hint_from_dir(D); bad.append("[음성] 02 (7.40) 와 03 (8) 이 어긋났는데 힌트를 줬다")
+        except ValueError:
+            pass
     # ⑤ scf 꼴 — 반복마다 찍힌 total magnetization 중 **마지막** 을 쓴다 (첫 줄 0.50 은 미수렴 값)
     r = gap_from_text(_qe_text(True, "     number of electrons       =         6.00", up, dn,
                                mags=(0.50, 1.80, 2.00)))
@@ -242,7 +305,7 @@ def _selftest():
         if control_gate(card, T)[0]:
             bad.append("[음성] 기준값이 비었는데 통과시켰다")
     bad += _selftest_bands()
-    print("\n".join("⛔ " + b for b in bad) if bad else "✓ selftest 통과 (대조 잡 6 · 음성 5 · 띠 읽기 5 · 음성 3)")
+    print("\n".join("⛔ " + b for b in bad) if bad else "✓ selftest 통과 (대조 잡 6 · 음성 5 · 띠 읽기 8 · 음성 5)")
     return 1 if bad else 0
 
 
@@ -289,7 +352,8 @@ def main():
         return 0
     t = open(a.nscf, errors="ignore").read()
     try:
-        r = gap_from_text(t)
+        hint = spin_hint_from_dir(os.path.dirname(os.path.abspath(a.nscf))) if "SPIN UP" in t else None
+        r = gap_from_text(t, magn_hint=hint)
     except ValueError as e:
         sys.exit(f"⛔ {e}")
     for msg in r["notes"]:

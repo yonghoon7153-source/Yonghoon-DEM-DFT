@@ -113,7 +113,9 @@
    "고침": "extract_gap.gap_from_text — 머리말 `number of electrons = N (up: a, down: b)` → 없으면 scf 마지막 total magnetization → 스핀분극인데 둘 다 없으면 멈춤 · QE `highest occupied, lowest unoccupied level` 과 0.002 eV 대조 (어긋나면 무효) · selftest 띠 읽기 5 (음성 3) · 옛 동작으로 깨면 빨강 (−2.4 eV 재현)",
    "다음": "kgy 블록: 체인 worktree (~/wt_ceigap) 의 extract_gap.py 만 새 판으로 · 끝난 7 상 다시 뽑아 옛 값과 대조 (닫힌 껍질 6 은 같아야 한다) · NiP2O6 은 QE 줄과 일치하고 양수면 gap.json 교체 (옛 것은 .bad_1029 로 보관) · MnP2O6 (스핀분극 · M 20) 은 03 부터 새 판으로 자동",
    "MnP2O6": "01_vcrelax BFGS 13 · SCF 15 · P +0.58 kbar · |F| 0.0056 · M 20.00 μB (Mn²⁺ 고스핀 ×4) · 시작 10-29 08:20 · '▸ 조용함 20.7 분' = 힘·응력 계산 구간으로 봄 (GPU 80 % · 13.8 GB 사용 중)",
-   "디스크": "kgy 735 / 916 GB (85 % · 여유 135 GB) — 남은 상의 04 DOS (nosym) 가 크면 확인"
+   "디스크": "kgy 735 / 916 GB (85 % · 여유 135 GB) — 남은 상의 04 DOS (nosym) 가 크면 확인",
+   "원인_확정_10_30_kgy_출력": "kgy 재추출 (새 판 88936f7f) 출력: 닫힌 껍질 6 / 6 같음 (도구 고침이 옛 값을 재현) · NiP2O6 은 새 판이 '채널 정보 없음' 으로 멈춤 · 03 머리말 'number of electrons = 256.00' (up/down 없음) · QE 자체 'highest occupied, lowest unoccupied level 8.4891 3.5953' — QE 도 두 채널을 128/128 로 채웠다. ⇒ 원인은 도구가 아니라 **nscf 가 점유 설정을 scf 저장본에서 다시 읽어 입력의 tot_magnetization 8 을 버린 것** (scf 는 smearing · 자유 모멘트). 고유값은 scf 의 M 8 스핀 밀도로 만든 퍼텐셜에서 나와 멀쩡하다 — 틀린 것은 채움뿐. 08-07 nd2o3 −6.46 eV 수수께끼 (모멘트가 맞는데도 음수) 와 같은 꼴로 보인다.",
+   "고침_2": "extract_gap: 머리말 up/down · total magnetization 이 없으면 옆 02_scf.out (끝난 scf 의 마지막 모멘트) 와 03 입력 tot_magnetization 이 0.2 μB 안에서 맞을 때 그 값으로 채널별 채움 (132/124) · 그 경우 QE HOMO/LUMO 대조는 안 함 (M=0 채움이라) · 채널별 가장자리 기록 · selftest 띠 읽기 8 (음성 5) · 일부러 깬 두 경우 빨강"
   }
  }
 }
