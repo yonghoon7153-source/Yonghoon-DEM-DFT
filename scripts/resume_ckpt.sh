@@ -118,6 +118,12 @@ IFOK = {'print', 'quit'}
 
 def words(s):
     # LIGGGHTS 입력 줄의 낱말 — " · ' 로 시작하면 같은 따옴표까지 한 낱말 (따옴표는 뺀다 · 닫는 따옴표 뒤는 공백이어야) · 못 읽으면 None
+    w = wpos(s)
+    return None if w is None else [t for _, _, t in w]
+
+
+def wpos(s):
+    # words() 의 낱말과 원 줄 자리 — [(시작, 끝, 낱말)] · 따옴표 낱말의 자리 = 따옴표까지 (10-30 KG50R-F01 · 치환 자리 ↔ 인자 대조)
     out, i, n = [], 0, len(s)
     while True:
         while i < n and s[i] in ' \t':
@@ -128,13 +134,13 @@ def words(s):
             j = s.find(s[i], i + 1)
             if j < 0 or (j + 1 < n and s[j + 1] not in ' \t'):
                 return None
-            out.append(s[i + 1:j])
+            out.append((i, j + 1, s[i + 1:j]))
             i = j + 1
         else:
             j = i
             while j < n and s[j] not in ' \t':
                 j += 1
-            out.append(s[i:j])
+            out.append((i, j, s[i:j]))
             i = j
 
 
@@ -206,6 +212,8 @@ def plain(lst):
 #     10-28 밤 2 (사전 공격 A): 상태 명령 줄도 본 덱 체크포인트 앞에 글자 그대로 있어야 하고, 준비 구간 명령 순서 = 본 덱 체크포인트 앞
 #     명령의 순서 보존 부분열 (같은 변수를 두 번 정의하면 본 덱과 같은 순서 · 같은 정의만 — LIGGGHTS 는 ${x} 를 그 자리에서 치환한다)
 #   상태 — 준비 구간 끝의 상태 표 (마지막 정의) = 본 덱 체크포인트 시점 상태 표 (즉시 치환의 그 자리 값은 위 글자 · 순서 대조가 본다).
+#     10-30 (KG50R-F01 · Codex KG50RF-01 · 1저자 Q1): 글자 · 순서만으로는 모자라다 — 준비 구간 명령의 그 자리 치환 값 = 두 덱에서 펼쳐
+#     글자 같고 상수 · 끝 상태 = 정의 자리 치환을 펼친 줄로 대조 (setup_values · xstate 머리 주석)
 #     꼭 있어야 (빠짐 = 거부): fix · fix_modify · 전역 설정 · pair · restart · atom/neigh/comm_modify.  재개 덱이 선언하면 같아야 (빠짐 =
 #     허용 · 쓰는 곳은 아래 참조 검사 · c_/f_ 검사가 본다): compute · 변수 · dump · region · thermo · 템플릿 fix.  재개 덱에만 있는 것 = 거부
 #   허용 차이 (목록 고정 · 시험): 첫 긴 run 남은 수 (restart 체크포인트) · 판 메시 fix 의 file 이름 (그 파일이 작업 폴더에 있을 때) ·
@@ -282,59 +290,70 @@ def first_run_form(res, R, ir):
     return ''
 
 
-def run_state(L, where, probs):
+def run_state(L, where, probs, src=None):
     # 명령 목록이 끝에서 남기는 상태 (10-28 KG50R-03) — 키 → 줄 (… _modify · 쌓이는 꼴은 줄 묶음)
-    st = {}
-    for l in L:
+    #   src (10-30 KG50R-F01) = 키 → 그 줄의 L 번호 (쌓이는 꼴은 번호 묶음) — 끝 상태 줄을 정의 자리 치환으로 펼치려고
+    st, sx = {}, ({} if src is None else src)
+
+    def put(k, l, i):
+        st[k], sx[k] = l, i
+
+    def add(k, l, i):
+        st[k], sx[k] = st.get(k, ()) + (l,), sx.get(k, ()) + (i,)
+
+    def drop(k):
+        st.pop(k, None)
+        sx.pop(k, None)
+    for i, l in enumerate(L):
         w = words(l)
         if not w:
             continue
         c, n = w[0], len(w)
         if c == 'fix' and n >= 4:
-            st[('fix', w[1])] = l
-            st.pop(('fix_modify', w[1]), None)
+            put(('fix', w[1]), l, i)
+            drop(('fix_modify', w[1]))
         elif c == 'unfix' and n >= 2:
-            st.pop(('fix', w[1]), None)
-            st.pop(('fix_modify', w[1]), None)
+            drop(('fix', w[1]))
+            drop(('fix_modify', w[1]))
         elif c in ('fix_modify', 'compute_modify', 'dump_modify') and n >= 2:
-            st[(c, w[1])] = st.get((c, w[1]), ()) + (l,)
+            add((c, w[1]), l, i)
         elif c == 'compute' and n >= 4:
-            st[('compute', w[1])] = l
-            st.pop(('compute_modify', w[1]), None)
+            put(('compute', w[1]), l, i)
+            drop(('compute_modify', w[1]))
         elif c == 'uncompute' and n >= 2:
-            st.pop(('compute', w[1]), None)
-            st.pop(('compute_modify', w[1]), None)
+            drop(('compute', w[1]))
+            drop(('compute_modify', w[1]))
         elif c == 'dump' and n >= 2:
-            st[('dump', w[1])] = l
-            st.pop(('dump_modify', w[1]), None)
+            put(('dump', w[1]), l, i)
+            drop(('dump_modify', w[1]))
         elif c == 'undump' and n >= 2:
-            st.pop(('dump', w[1]), None)
-            st.pop(('dump_modify', w[1]), None)
+            drop(('dump', w[1]))
+            drop(('dump_modify', w[1]))
         elif c == 'variable' and n >= 3:
             if w[2] == 'delete':
-                st.pop(('variable', w[1]), None)
+                drop(('variable', w[1]))
             elif w[2] in VAR_OK:
-                st[('variable', w[1])] = l
+                put(('variable', w[1]), l, i)
             else:
                 probs.append('%s 에 다룰 수 없는 변수 꼴 %s (equal · atom · string · delete 만 · 10-28 KG50R-03): [%s]' % (where, w[2], l))
         elif c == 'region' and n >= 3:
             if w[2] == 'delete':
-                st.pop(('region', w[1]), None)
+                drop(('region', w[1]))
             else:
-                st[('region', w[1])] = l
+                put(('region', w[1]), l, i)
         elif c == 'thermo_style':
-            st[('thermo_style',)] = l
-            st.pop(('thermo_modify',), None)
+            put(('thermo_style',), l, i)
+            drop(('thermo_modify',))
         elif c == 'thermo':
-            st[('thermo',)] = l
+            put(('thermo',), l, i)
         elif c == 'thermo_modify':
-            st[('thermo_modify',)] = st.get(('thermo_modify',), ()) + (l,)
+            add(('thermo_modify',), l, i)
         elif c in GLOB1:
-            st[('glob', c)] = l
+            put(('glob', c), l, i)
         elif c in MODS:
-            st[('mods', c)] = st.get(('mods', c), ()) + (l,)
+            add(('mods', c), l, i)
         elif c == 'pair_coeff' and n >= 3:
-            st[('pair_coeff', w[1], w[2])] = l
+            put(('pair_coeff', w[1], w[2]), l, i)
     return st
 
 
@@ -429,12 +448,14 @@ def setup_check(Rs, Mp, probs):
                      'if (print · quit 만) · group type · shell mkdir 만): [%s]' % l)
 
 
-def setup_order(Rs, Mp, probs):
+def setup_order(Rs, Mp, probs, ri=None):
     # 10-28 밤 2 (독립 사전 공격 A · KG50R-03 부류): 준비 구간 (read_restart 빼고) = 본 덱 체크포인트 앞 명령의 순서 보존 부분열.
     #   상태 명령 줄은 본 덱 체크포인트 앞에 글자 그대로 있어야 하고 명령 순서 (상태 + 동작) 도 본 덱과 같아야 한다 — LIGGGHTS 는
     #   ${x} 를 그 자리에서 치환하므로 끝 상태 표만 같아서는 안 된다 (변수를 바꿨다 되돌리면 끝 표는 같은데 timestep 은 2 배).
     #   허용 차이 줄: 템플릿 fix (④ · 도구가 read_restart 바로 뒤에 넣는다) = 빼고 본다 · shell mkdir ↔ mkdir -p (③) · 판 메시 fix 의
     #   file 이름 (② · 파일이 있는지는 상태 대조가 본다) = 같은 명령으로 본다
+    #   10-30 (KG50R-F01): 돌려주는 값 = 맞춘 짝 [(재개 덱 번호 (ri[n] · 없으면 Rs 번호), 본 덱 번호 (Mp 번호))] — 순서가 깨진 곳 뒤는 없음 ·
+    #   그 자리 치환 값 대조 (setup_values) 가 이 짝의 본 덱 자리에서 펼친다 (순서 보존 부분열만으로는 중간 정의를 뺀 덱을 못 막는다)
     def tmpl(l):
         w = words(l) or []
         return len(w) >= 4 and w[0] == 'fix' and bool(TMPL.match(w[3]))
@@ -447,25 +468,27 @@ def setup_order(Rs, Mp, probs):
             return True
         return mesh_file(m, r) is not None
 
-    Mq = [l for l in Mp if not tmpl(l)]
-    j, prev = 0, None
-    for l in Rs:
+    Mq = [(x, l) for x, l in enumerate(Mp) if not tmpl(l)]
+    j, prev, pairs = 0, None, []
+    for n, l in enumerate(Rs):
         w = words(l)
         if not w or tmpl(l):
             continue                      # 따옴표 = 다룰 수 없는 구문 · 템플릿 = 상태 대조 (선언하면 같아야)
-        if not any(eq(l, m) for m in Mq):
+        if not any(eq(l, m) for _, m in Mq):
             if w[0] in STATE_CMD:
                 probs.append('재개 덱 준비 구간 상태 명령이 본 덱 체크포인트 앞에 글자 그대로 없음 (10-28 사전 공격 A · LIGGGHTS 는 '
                              '${x} 를 그 자리에서 치환한다 — 끝 상태만 같아서는 안 된다): [%s]' % l)
             continue                      # 동작 줄은 setup_check 가 이미 거부
         k = j
-        while k < len(Mq) and not eq(l, Mq[k]):
+        while k < len(Mq) and not eq(l, Mq[k][1]):
             k += 1
         if k == len(Mq):
             probs.append('재개 덱 준비 구간 명령 순서가 본 덱 체크포인트 앞 순서와 다름 (10-28 사전 공격 A · 순서 보존 부분열이어야 — '
                          '같은 변수 다시 정의 · fix 순서): [%s] 는 본 덱에서 [%s] 보다 앞에만 있다' % (l, prev or '(처음)'))
-            return
+            return pairs
+        pairs.append((ri[n] if ri is not None else n, Mq[k][0]))
         j, prev = k + 1, l
+    return pairs
 
 
 def mprefix_check(Mp, probs):
@@ -479,23 +502,377 @@ def mprefix_check(Mp, probs):
             probs.append('본 덱 체크포인트 앞 if 에 print · quit · jump 말고 다른 명령 — 그 시점 상태를 정할 수 없음 (10-28 KG50R-03): [%s]' % l)
 
 
-def state_cmp(stM, stR, W, notes, probs):
+def state_cmp(stM, stR, W, notes, probs, xM=None, xR=None):
     # 재개 지점 상태 (10-28 KG50R-03 · 예전 C 를 넓힘) — 본 덱 체크포인트 시점 ↔ 재개 덱 준비 구간 끝
+    #   xM · xR (10-30 KG50R-F01 · 1저자 Q1 (3)) = 같은 키의 줄을 정의 자리의 그 자리 치환으로 펼친 글 (xstate) — 글자가 같아도 펼친 글이
+    #   다르면 거부 (변수 · fix · timestep … 상태 표 전부 · 같은 글자 줄이 본 덱에 둘이면 끝 상태 = 뒤 것)
     skip = []
     for k in sorted(set(stM) | set(stR), key=lambda x: tuple(str(y) for y in x)):
         a, b = stM.get(k), stR.get(k)
-        if a == b:
-            continue
         what = '재개 지점 ' + kname(k)
+        if a == b:
+            if xM is not None and xR is not None and xM.get(k) != xR.get(k):
+                probs.append('%s 다름 — 그 자리 치환을 펼치면 (%s · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 %s ↔ '
+                             '재개 덱 %s' % (what, F01, xfmt(xM.get(k)), xfmt(xR.get(k))))
+            continue
         if b is None and not need(k, a):
             skip.append(kname(k))
             continue
         if isinstance(a, tuple) or isinstance(b, tuple):
             probs.append('%s 다름 (10-28 KG50R-03): 본 덱 %s ↔ 재개 덱 %s' % (what, fmt(list(a or ())), fmt(list(b or ()))))
+        elif (xM is not None and xR is not None and a and b and mesh_file(a, b) is not None and (isubs(a) or isubs(b))
+              and mesh_file(xM.get(k) or '', xR.get(k) or '') is None):
+            # 10-30 (KG50R-F01): 판 메시 file 이름만 다름 허용 = 그 자리 치환을 펼친 줄도 file 이름만 다를 때만
+            probs.append('%s 다름 — 판 메시 fix 에 그 자리 치환 (%s · file 이름만 다름 허용은 펼친 줄도 file 이름만 다를 때): 본 덱 %s ↔ '
+                         '재개 덱 %s (원 줄 [%s] ↔ [%s])' % (what, F01, xfmt(xM.get(k)), xfmt(xR.get(k)), a, b))
         else:
             same_or_mesh(a, b, W, notes, probs, what)
     notes.append('재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 %d 항목 · 재개 덱 %d 항목%s' % (
         len(stM), len(stR), (' · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): ' + ' · '.join(skip)) if skip else ''))
+
+
+# ── 10-30 (KG50R-F01 · Codex KG50RF-01 · P1 · 1저자 Q1 "권고대로") 준비 구간이 그 자리에서 쓰는 변수 값 ──
+#   LIGGGHTS 는 따옴표 밖 ${x} · $x 를 그 줄을 읽는 순간 x 의 그때 값으로 바꾸고 (equal = 그때 계산한 수 · string = 글) equal 수식 안
+#   v_y 는 그 수식을 계산할 때 y 의 그때 정의로 계산한다 (고정판 doc/variable.txt · src/input.cpp Input::substitute ·
+#   src/variable.cpp Variable::retrieve).  순서 보존 부분열 · 끝 상태 글자만으로는 중간 정의를 뺀 덱 (본 덱 g 98.1 → 196.2 → fix ${g}
+#   → 98.1 · 재개 덱은 196.2 만 뺌 = fix 196.2 ↔ 98.1) · 실행 상태에 따라 바뀌는 수식 (두 덱 같은 98.1*(step+1) = step 1 ↔ 20001) 을
+#   못 막는다.
+#   ① setup_values — 준비 구간 명령마다 (템플릿 fix · variable 포함 · print · if · shell mkdir 빼고 = 효과가 출력 · 닫힌 실패 quit) 그
+#     자리 치환 변수를 두 덱에서 펼친다: 본 덱 = 순서 대조가 맞춘 체크포인트 앞 명령 자리 (템플릿 fix = 본 덱 끝 상태의 그 fix 자리) ·
+#     재개 덱 = 그 명령 자리.  펼침 = 그 자리 정의 (정의 안 ${} · $c = 정의 줄 자리 값 · equal 수식의 v_y = 쓰는 자리 정의).  두 펼침의
+#     글자가 같고 상수일 때만 통과.  상수 = 수 · + - * / % ^ · == != < <= > >= · 괄호 · 쉼표 · 공백 · sqrt exp ln log abs sin cos tan
+#     asin acos atan atan2 ceil floor round · 상수 변수 · string 글.  그 밖 (step · time · dt · atoms 같은 thermo 낱말 · count() ·
+#     bound() 같은 group · region 함수 · 원자 값 · c_ · f_ · random · normal · ramp · stagger · logfreq · stride · vdisplace · swiggle ·
+#     cwiggle · PI · && || !) = 실행 상태에 따라 바뀌거나 등록 목록 밖 → 거부
+#   ② xstate → state_cmp — 끝 상태 대조를 정의 자리 치환으로 펼친 줄로 (변수 · fix · timestep … 상태 표 전부) · 끝 자리 앞에 ③ 의
+#     흐름 · 변수 바꾸는 줄이 있으면 끝 상태 변수 표 = 못 정함 (재개 덱이 다시 선언한 변수 = 거부)
+#   ③ 펼칠 수 없음 = 거부 (닫힌 실패): $(...) · } 없는 ${ · $ 뒤 이름 글자 아님 · equal · string 밖 변수 꼴 · 정의 없음 · 순환 ·
+#     string 값에 공백 · 따옴표 · v_ 로 쓰는 string 이 수 글 아님 · 그 자리 앞의 흐름 · 변수 바꾸는 줄 (label · jump · next · python ·
+#     partition · if · run every 안 (겹친 것까지) 그런 줄 · variable · 못 읽는 variable 줄 · variable 이름 · 꼴 자리 치환 — 그 자리
+#     값을 줄 순서로 못 정한다)
+#   예외 (체크포인트 step 에서 돈 본 덱 명령의 실행 상태 값) 는 두지 않는다 — after_settling 판 높이 블록 (variable plate_z equal
+#     ${z_max}+…) 은 write_restart 뒤 = 뒤 구간 (명령 하나하나 대조 · 두 덱 같은 step) 이라 준비 구간이 아니다
+#   표기: ⟦…⟧ = equal 값 (그 수식) · ⟨…⟩ = 정의 때 실행 상태 값 · 못 펼침 (두 덱에서 늘 다름)
+F01 = '10-30 KG50R-F01'
+VAL0, VAL1, RT0, RT1 = '\x1c', '\x1d', '\x1e', '\x1f'   # 펼친 글의 표지 — deck() 명령에는 없는 글자 (str.split() 이 공백으로 지움)
+MATHF = {'sqrt', 'exp', 'ln', 'log', 'abs', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'atan2', 'ceil', 'floor', 'round'}
+NUMS = re.compile(r'[0-9.]+([eE][+-]?[0-9]*)?')    # LIGGGHTS Variable::evaluate 의 수 읽기 (숫자 · 점 → e · E [+-] 숫자)
+NUMLIT = re.compile(r'[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)([eE][+-]?[0-9]+)?')   # v_ 로 쓰는 string 값 = 이 꼴의 수 글만 (LIGGGHTS atof)
+FLOWV = {'label', 'jump', 'next', 'python', 'partition'}   # partition yes|no N <명령> = 그 명령을 실행 (파티션 하나면 늘)
+
+
+def isubs(l):
+    # 그 줄을 읽을 때 치환되는 자리 — LIGGGHTS Input::substitute 와 같게 (" · ' 를 따로 뒤집어 둘 다 밖일 때의 $ 만 · 치환한 글은 다시
+    #   읽지 않음) → [(시작, 끝, 꼴, 이름)] · 꼴 'v' = ${이름} · $c · '(' = $(...) · 'x' = 못 읽음 (} 없음 · ) 없음 · $ 뒤 이름 글자 아님)
+    out, i, n, dq, sq = [], 0, len(l), False, False
+    while i < n:
+        ch = l[i]
+        if ch == '$' and not dq and not sq:
+            nx = l[i + 1] if i + 1 < n else ''
+            if nx == '{':
+                j = l.find('}', i + 2)
+                if j < 0:
+                    out.append((i, n, 'x', l[i:]))
+                    return out
+                out.append((i, j + 1, 'v', l[i + 2:j]))
+                i = j + 1
+            elif nx == '(':
+                j, d = i + 2, 0
+                while j < n and not (l[j] == ')' and d == 0):
+                    d += (l[j] == '(') - (l[j] == ')')
+                    j += 1
+                if j >= n:
+                    out.append((i, n, 'x', l[i:]))
+                    return out
+                out.append((i, j + 1, '(', l[i:j + 1]))
+                i = j + 1
+            elif re.fullmatch(r'[A-Za-z0-9_]', nx):
+                out.append((i, i + 2, 'v', nx))
+                i += 2
+            else:
+                out.append((i, min(i + 2, n), 'x', l[i:i + 2]))
+                i += 2
+            continue
+        if ch == '"':
+            dq = not dq
+        elif ch == "'":
+            sq = not sq
+        i += 1
+    return out
+
+
+def show(t):
+    return t.replace(VAL0, '⟦').replace(VAL1, '⟧').replace(RT0, '⟨').replace(RT1, '⟩')
+
+
+def xfmt(v):
+    return '(없음)' if v is None else ' '.join('[%s]' % show(x) for x in (v if isinstance(v, tuple) else (v,)))
+
+
+def mark_end(t, i):
+    # t[i] = VAL0 · RT0 → 짝 표지 다음 자리 (VAL 은 겹칠 수 있음 · RT 안에는 표지 없음)
+    if t[i] == RT0:
+        return t.index(RT1, i) + 1
+    j, d = i + 1, 1
+    while d:
+        d += (t[j] == VAL0) - (t[j] == VAL1)
+        j += 1
+    return j
+
+
+def word_end(t, i):
+    j = i
+    while j < len(t) and t[j].isascii() and (t[j].isalnum() or t[j] == '_'):
+        j += 1
+    return j
+
+
+def bare(t):
+    # 표지 (⟦…⟧ · ⟨…⟩) 밖 글자만 — 표지 안 = LIGGGHTS 가 넣는 수 · 실행 상태 값 (공백 · 따옴표 없음)
+    out, i = [], 0
+    while i < len(t):
+        if t[i] in (VAL0, RT0):
+            i = mark_end(t, i)
+        else:
+            out.append(t[i])
+            i += 1
+    return ''.join(out)
+
+
+def fwhy(t):
+    # 펼친 equal 값이 상수인가 — '' = 상수 · 아니면 첫 까닭 (LIGGGHTS Variable::evaluate 의 읽기: 공백 · 괄호 · 수 · 이름 · 연산자)
+    i, n = 0, len(t)
+    while i < n:
+        ch = t[i]
+        if ch == RT0:
+            return t[i + 1:mark_end(t, i) - 1]
+        if ch == VAL0:
+            j = mark_end(t, i)
+            w = fwhy(t[i + 1:j - 1])
+            if w:
+                return w
+            i = j
+        elif ch in ' ()+-*/%^,':
+            i += 1
+        elif t[i:i + 2] in ('==', '!=', '<=', '>='):
+            i += 2
+        elif ch in '<>':
+            i += 1
+        elif ch in '&|!':
+            return '논리 연산자 %s (등록 상수 목록 밖)' % ch
+        elif ch.isascii() and (ch.isdigit() or ch == '.'):
+            i = NUMS.match(t, i).end()
+        elif ch.isascii() and ch.isalpha():
+            j = word_end(t, i)
+            if t[i:j] in MATHF and t[j:j + 1] == '(':
+                i = j
+                continue
+            return '%s%s (실행 상태 낱말 · 함수 · 등록 상수 목록 밖)' % (t[i:j], '()' if t[j:j + 1] == '(' else '')
+        else:
+            return '모르는 글자 %r' % ch
+    return ''
+
+
+def expand(x, env, seen=()):
+    # 변수 x 의 그 자리 값 (env = 그 자리 변수 표) — (글, 상수가 아니면 그 까닭) · 못 펼치면 (None, 까닭)
+    #   string = 정의 글 그대로 (LIGGGHTS 는 그 글을 넣는다) · equal = ⟦수식⟧ (v_y = 이 자리 y 정의로 펼침 · string y 는 수 글만 ·
+    #   LIGGGHTS 는 계산한 수를 %.15g 로 넣는다 — 같은 상수 수식이면 같은 수)
+    d = env.get(x)
+    if d is None:
+        return None, '%s 정의 없음' % x
+    st, body = d
+    if st == 'bad':
+        return None, body
+    if st == 'string':
+        return body, (body[body.index(RT0) + 1:mark_end(body, body.index(RT0)) - 1] if RT0 in body else '')
+    if st != 'equal':
+        return None, '%s 변수 %s 는 ${} · v_ 로 값 하나가 안 나온다' % (st, x)
+    if x in seen or len(seen) > 64:
+        return None, '%s 순환 참조' % x
+    out, i, n = [], 0, len(body)
+    while i < n:
+        ch = body[i]
+        if ch in (VAL0, RT0):
+            j = mark_end(body, i)               # 정의 때 넣은 값 — 다시 읽지 않는다
+        elif ch.isascii() and (ch.isdigit() or ch == '.'):
+            j = NUMS.match(body, i).end()
+        elif ch.isascii() and ch.isalpha():
+            j = word_end(body, i)
+            if body.startswith('v_', i):
+                y = body[i + 2:j]
+                if body[j:j + 1] == '[':
+                    return None, 'v_%s[…] (atom 변수 원자 하나 값 · 지원 안 함)' % y
+                dy = env.get(y)
+                if dy is not None and dy[0] == 'string':
+                    if dy[1][:1] == VAL0 and mark_end(dy[1], 0) == len(dy[1]):
+                        out.append(dy[1])           # 정의 때 넣은 equal 값 하나 (수)
+                    elif NUMLIT.fullmatch(dy[1]):
+                        out.append(VAL0 + dy[1] + VAL1)
+                    else:
+                        return None, 'v_%s — string 값 [%s] 이 수 글이 아님 (LIGGGHTS 는 atof)' % (y, show(dy[1]))
+                else:
+                    t, w = expand(y, env, seen + (x,))
+                    if t is None:
+                        return None, w
+                    out.append(t)
+                i = j
+                continue
+        else:
+            j = i + 1
+        out.append(body[i:j])
+        i = j
+    t = VAL0 + ''.join(out) + VAL1
+    return t, fwhy(t)
+
+
+def sub_text(k, x, raw, env, why0, nm, i):
+    # 그 자리 치환 하나 (꼴 k · 이름 x · 원 글 raw) 를 이 자리 (env · 못 정하는 까닭 why0) 에서 펼친 글 — (글, '') · 상수가 아니면 실행
+    #   상태 값 표지 (그 덱 · 자리를 담아 두 덱에서 늘 다르다) · 못 펼치면 (None, 까닭)
+    if why0:
+        return None, why0
+    if k == '(':
+        return None, '%s 그 자리 식 = 지원 안 함' % raw
+    if k == 'x':
+        return None, '%s — 치환 이름을 못 읽음 (} · ) 없음 · $ 뒤 이름 글자 아님)' % raw
+    t, why = expand(x, env)
+    if t is None:
+        return None, why
+    if why:
+        return RT0 + '실행 상태 값 · %s %d 번째 명령의 %s = %s · %s' % (nm, i + 1, raw, show(t), why) + RT1, ''
+    if env[x][0] == 'string' and re.search('[ \t"\']', bare(t)):
+        return None, '%s — string 값에 공백 · 따옴표 (치환 뒤 낱말이 갈린다 · 지원 안 함)' % raw
+    return t, ''
+
+
+def nested(w):
+    # if · run every 안 명령 (겹친 것까지 · unsupported() 와 같은 길) — [낱말 목록] (맨 위 명령은 빼고)
+    out, todo, n = [], [w], 0
+    while todo and n < 64:
+        cw = todo.pop()
+        n += 1
+        if not cw:
+            continue
+        cs = []
+        if cw[0] == 'if':
+            cs = if_cmds(cw) or []
+        elif cw[0] == 'run' and 'every' in cw[2:]:
+            cs = [x for x in cw[cw.index('every', 2) + 2:] if x != 'NULL']
+        for x in cs:
+            xw = words(x) or ['']
+            out.append(xw)
+            todo.append(xw)
+    return out
+
+
+def var_env(L, nm):
+    # 명령 목록 L 을 앞에서부터 — [(명령 i 바로 앞 변수 표, 그 자리 펼침을 못 정하는 까닭)] (길이 len(L) + 1 · 끝 = 목록 끝 자리)
+    #   표 = 이름 → (꼴, 정의 때 그 자리 치환을 펼친 본문) · 꼴 = equal · string · atom · 'bad' (본문 = 까닭)
+    #   까닭 = 그 앞의 흐름 · 변수 바꾸는 줄 (label · jump · next · python · partition · if · run every 안 (겹친 것까지) 그런 줄 ·
+    #   variable) · 못 읽는 variable 줄 · 이름 · 꼴 자리 치환 — 그 자리 뒤 전부 (자리 값을 바꾸는 반복은 그 자리 앞 label · 앞으로
+    #   건너뛰기는 그 앞 jump 가 있다 · 끝 자리의 까닭 = 끝 상태 변수 표를 못 정함)
+    out, env, why = [], {}, ''
+    for i, l in enumerate(L):
+        out.append((dict(env), why))
+        w = words(l)
+        if w is None:
+            if l.split()[0] == 'variable':
+                why = why or '%s %d 번째 명령 variable 줄을 못 읽음 [%s]' % (nm, i + 1, l)
+            continue
+        if not w:
+            continue
+        if w[0] in FLOWV or any(x[0] in FLOWV | {'variable'} for x in nested(w)):
+            why = why or ('%s 체크포인트 앞 %d 번째 명령이 흐름 줄 · 변수를 바꾸는 줄 [%s] — 그 자리 변수 값을 줄 순서로 정할 수 없음'
+                          % (nm, i + 1, l))
+        if w[0] != 'variable':
+            continue
+        wp, subs = wpos(l), isubs(l)
+        if len(wp) < 3 or any(s < wp[2][1] for s, _, _, _ in subs):
+            why = why or '%s %d 번째 명령 variable 이름 · 꼴 자리를 못 정함 [%s]' % (nm, i + 1, l)
+            continue
+        x, st = w[1], w[2]
+        old = env.get(x)
+        if st == 'delete':
+            env.pop(x, None)
+        elif old is not None and old[0] == 'bad':
+            pass                                  # 못 펼치는 변수는 delete 전까지 그대로
+        elif st not in ('equal', 'string', 'atom'):
+            env[x] = ('bad', '%s 변수 꼴 %s (equal · string 만 펼친다)' % (x, st))
+        elif old is not None and old[0] != st:
+            env[x] = ('bad', '%s 를 다른 꼴 %s 로 다시 정의 (LIGGGHTS 오류)' % (x, st))
+        elif len(wp) != 4:
+            env[x] = ('bad', '%s 정의 인자가 %d 개 (하나여야)' % (x, len(wp) - 3))
+        elif l[wp[3][0]] in '"\'':
+            env[x] = (st, wp[3][2]) if not subs else ('bad', '%s 정의의 따옴표 낱말 안 치환 자리 (낱말 규칙이 LIGGGHTS 와 다름)' % x)
+        else:
+            body, p, bad = [], wp[3][0], ''
+            for s, e, k, y in subs:
+                t, bad = sub_text(k, y, l[s:e], env, '', nm, i)
+                if t is None:
+                    break
+                body += [l[p:s], t]
+                p = e
+            env[x] = ('bad', '%s 정의의 %s' % (x, bad)) if bad else (st, ''.join(body) + l[p:wp[3][1]])
+    out.append((dict(env), why))
+    return out
+
+
+def xline(l, ew, nm, i):
+    # 줄 l 을 그 자리 (ew = (변수 표, 까닭)) 의 치환으로 펼친 글 — 치환 자리가 없으면 l 그대로 · 못 펼치면 그 자리에 늘 다른 표지
+    subs = isubs(l)
+    if not subs:
+        return l
+    out, p = [], 0
+    for s, e, k, x in subs:
+        t, why = sub_text(k, x, l[s:e], ew[0], ew[1], nm, i)
+        out += [l[p:s], t if t is not None else RT0 + '못 펼침 · %s %d 번째 명령의 %s — %s' % (nm, i + 1, l[s:e], show(why)) + RT1]
+        p = e
+    return ''.join(out) + l[p:]
+
+
+def xstate(L, src, envs, nm):
+    # 끝 상태 표 (run_state 의 src = 키 → 줄 번호) 의 줄을 정의 자리 치환으로 펼친 글 — 키 → 글 (쌓이는 꼴 = 글 묶음)
+    #   변수는 끝 자리 (envs[-1]) 에 까닭이 있으면 (그 앞 run every · if · partition 안 variable · 흐름 줄 …) 끝 상태 표를 줄 순서로 못 정한다
+    #   → 늘 다른 표지 (재개 덱이 다시 선언하면 거부 · 뒤 구간이 쓰는 값이 달라질 수 있다)
+    def one(i):
+        return xline(L[i], envs[i], nm, i)
+    endwhy = envs[-1][1]
+    return dict((k, (RT0 + '못 정함 · %s 끝 상태 변수 표를 줄 순서로 정할 수 없음 — %s' % (nm, show(endwhy)) + RT1)
+                 if (k[0] == 'variable' and endwhy) else (tuple(one(i) for i in v) if isinstance(v, tuple) else one(v)))
+                for k, v in src.items())
+
+
+def setup_values(R, ri, pairs, tpl, eM, eR, notes, probs):
+    # ① 준비 구간 명령의 그 자리 치환 값 (규칙 = 위 머리 주석) — ri = 재개 덱 준비 구간 명령 번호 · pairs = 순서 대조가 맞춘
+    #   (재개 번호, 본 번호) · tpl = 템플릿 fix 재개 번호 → 본 덱 끝 상태의 그 fix 번호 · eM · eR = var_env
+    mp, n0 = dict(pairs), len(probs)
+    mp.update(tpl)
+    nc = ns = 0
+    for i in ri:
+        l = R[i]
+        w = words(l)
+        if not w or w[0] in ('print', 'if') or mkdir_key(w) is not None:
+            continue                      # print · if (print · quit 만) · shell mkdir = 값 대조 밖 (효과 = 출력 · 닫힌 실패 quit)
+        subs = isubs(l)
+        if not subs or mp.get(i) is None:
+            continue                      # 본 덱에 맞춘 명령이 없으면 = 순서 · 상태 대조가 이미 거부
+        mi = mp[i]
+        nc += 1
+        for s, e, k, x in subs:
+            ns += 1
+            raw = l[s:e]
+            em, wm = sub_text(k, x, raw, eM[mi][0], eM[mi][1], '본 덱', mi)
+            er, wr = sub_text(k, x, raw, eR[i][0], eR[i][1], '재개 덱', i)
+            if em is None or er is None:
+                probs.append('준비 구간 그 자리 치환을 펼칠 수 없음 (%s · 닫힌 실패): [%s] 의 %s — %s' % (
+                    F01, l, raw, ('본 덱: ' + show(wm)) if em is None else ('재개 덱: ' + show(wr))))
+            elif RT0 in er or RT0 in em:
+                probs.append('준비 구간 그 자리 치환 값이 상수가 아님 — 실행 상태에 따라 바뀜 · 등록 상수 목록 밖 (%s · 상수 = 수 · 연산자 · 괄호 · '
+                             '정해진 수학 함수 · 상수 변수 · string 글): [%s] 의 %s — 본 덱 %s ↔ 재개 덱 %s' % (F01, l, raw, show(em), show(er)))
+            elif em != er:
+                probs.append('준비 구간 그 자리 치환 값이 본 덱과 다름 (%s · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [%s] 의 %s — '
+                             '본 덱 (%d 번째 명령 자리) %s ↔ 재개 덱 (%d 번째 명령 자리) %s' % (F01, l, raw, mi + 1, show(em), i + 1, show(er)))
+    if nc and len(probs) == n0:
+        notes.append('그 자리 치환 대조 (%s): 명령 %d 개 · 치환 %d 곳 = 두 덱 같은 상수 값' % (F01, nc, ns))
 
 
 def var_refs(R, probs):
@@ -739,9 +1116,21 @@ def check(main, res, ckpt, s0, W):
     # 준비 구간 · 상태 (10-28 KG50R-03 · 예전 C 를 넓힘) — 재개 덱 q 앞 (read_restart 빼고) ↔ 본 덱 pM 앞
     if q is not None:
         mprefix_check(M[:pM], probs)
-        setup_check([l for i, l in enumerate(R[:q]) if i != rs[0]], M[:pM], probs)
-        setup_order([l for i, l in enumerate(R[:q]) if i != rs[0]], M[:pM], probs)
-        state_cmp(run_state(M[:pM], '본 덱 체크포인트 앞', probs), run_state(R[:q], '재개 덱 준비 구간', probs), W, notes, probs)
+        ri = [i for i in range(q) if i != rs[0]]
+        setup_check([R[i] for i in ri], M[:pM], probs)
+        pairs = setup_order([R[i] for i in ri], M[:pM], probs, ri)
+        sM, sR = {}, {}
+        stM, stR = run_state(M[:pM], '본 덱 체크포인트 앞', probs, sM), run_state(R[:q], '재개 덱 준비 구간', probs, sR)
+        # 10-30 (KG50R-F01 · 1저자 Q1): 그 자리 치환 값 — 템플릿 fix (순서 대조 밖) 의 본 덱 자리 = 본 덱 끝 상태의 그 fix 줄 (글자 같을 때만)
+        tpl = {}
+        for i in ri:
+            w = words(R[i]) or []
+            mi = sM.get(('fix', w[1])) if len(w) >= 4 and w[0] == 'fix' and TMPL.match(w[3]) else None
+            if isinstance(mi, int) and M[mi] == R[i]:
+                tpl[i] = mi
+        eM, eR = var_env(M[:pM], '본 덱'), var_env(R[:q], '재개 덱')
+        setup_values(R, ri, pairs, tpl, eM, eR, notes, probs)
+        state_cmp(stM, stR, W, notes, probs, xstate(M, sM, eM, '본 덱'), xstate(R, sR, eR, '재개 덱'))
     var_refs(R, probs)
     label_check(M, R, pM, probs)
     return probs, notes
