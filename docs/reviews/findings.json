@@ -14217,6 +14217,54 @@
       "evidence_tests": [
         "docs/reviews/codex_mixer_d2_review_20261027/README_import.md · docs/reviews/codex_mixer_d3_review_20261027/README_import.md (재현 표)"
       ]
+    },
+    {
+      "id": "D07S-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-30 D0.7 한 건 범위 판정 (리뷰 핀 09ae533d0 · 독립 반례 new_call_duration_change · 실제 deckcheck · cut_trial 호출)",
+      "opened_in": "docs/reviews/codex_kg50_d07_scoped_go_20261030/codex_review_kg50_d07_scoped_go_20261030.md",
+      "title": "(Codex D07S-01 = PAI-02 재현) 새 호출 영수증이 검토 영수증 29ff619a… 와 자동 대조되지 않음 — 원 덱 정착 run 200000 → 210000 + 재개 덱 180000 → 190000 을 같이 바꾸면 정적 대조 문제 0 (끝 210001) · cut_trial 이 같은 시험 덱 94db4187… · 본 제출 직전 비교 = 이번 호출이 쓴 새 영수증뿐",
+      "note": "판정문 §5 · 자리 scripts/resume_ckpt.sh:1584–1588 · :1879–1893 · :1970–1990 · :2092–2104 · :2118.  새 P1 아님 · 제공 덱은 200001 이 맞다.  이 한 건 = §6 수동 대조 → 지킴이 docs/50kg/d07_guard/ ② (10-30 본 호출 시도 attempt_r56_1030_152123_2568313 통과 · 본 job 333911).  일반 종결 = 승인 영수증 입력 관문 (PAI-02 최소 고침 -R) 또는 준비 / 제출 분리."
+    },
+    {
+      "id": "D07S-02",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-30 D0.7 한 건 범위 판정 (재개 덱 157–164 · 190–215 행 · 등록 Q6)",
+      "opened_in": "docs/reviews/codex_kg50_d07_scoped_go_20261030/codex_review_kg50_d07_scoped_go_20261030.md",
+      "title": "(Codex D07S-02) '정착 끝 200001 에서 멈춤' 은 자동 종료가 아닌 운영 지시 — write_restart restart_after_settling.bin 뒤 run 1 (200002) · 안정화 run 200000 (400002) · 압축 run 5000 루프가 이어진다",
+      "note": "등록 Q6 = 수동 중단 · 안정화 일부 진행 허용 → 새 P1 · HOLD 아님.  이 한 건 = 지킴이 ⑤ (판 STL 완성 = after_settling 다 씀 → 본 job scancel) · 보고 문구 = 판정문 §5 권장 문장 (자동 종료 덱 아님 · 중단까지 진행된 후속 구간 = 검토 · 결과 수용 범위 밖).  닫힘 = 정지 기록 (마지막 step · after_settling sha256 · sacct) 반입 뒤."
+    },
+    {
+      "id": "SELF-142",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "codex 10-30 (D0.7 한 건 범위 요청 검토 중 질문 — 원 삽입 로그 경로)",
+      "opened_in": "docs/reviews/codex_kg50_d07_scoped_go_20261030/README_import.md",
+      "title": "D0.7 한 건 범위 요청서 §2-4 의 G1 · G3 '원 로그' 값 = 도구 보고 전사 · 원 로그를 요청 ZIP 에 안 넣음 (5 파일 영수증에도 없음) — 비교 기준 원자료 없이 일치를 주장",
+      "note": "사전 공격 ① (숫자 · 전칭 대조) 이 도구 보고 수치를 출력으로 받아들여 원자료 동봉을 묻지 않았다.  고침 = 1저자 ibb 원 로그 (13,475 B · b1b298bb…) 보충 → Codex 원 로그 직접 되읽기 · 반입 evidence/input · 우리 독립 대조 (_repro_ours_20261030/g13_*) · 다음부터 비교 기준 원자료 (원 로그 등) 를 요청 ZIP 에 넣는다.",
+      "claimed_fixed_sha": "f2e101182",
+      "evidence_tests": [
+        "docs/reviews/codex_kg50_d07_scoped_go_20261030/README_import.md · docs/reviews/codex_kg50_d07_scoped_go_20261030/_repro_ours_20261030/g13_main_deck_1-166.json (G1 · G3 · 덱 메아리)"
+      ]
+    },
+    {
+      "id": "SELF-143",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "codex 10-30 D0.7 한 건 범위 판정 §5 (포장 집계) · 메인 10-30 (원 덱 첫 긴 run 행 대조)",
+      "opened_in": "docs/reviews/codex_kg50_d07_scoped_go_20261030/README_import.md",
+      "title": "D0.7 요청서 표기 둘 — '시도 폴더 18 파일' (실제 17 · tgz 41 멤버 = 고유 23 + 같은 바이트 중복 17 + 폴더 1) · '원 줄 157' (도구 fixrun 문구를 옮김 = 재개 덱 줄 번호 · 원 덱 첫 긴 run = 167 행)",
+      "note": "판정 영향 없음 (판정문 §5).  도구 문구 '원 줄' 은 재개 덱 줄 번호 — 도구를 고칠 때 표기 정리 후보.  고침 = 반입 기록에 정정.",
+      "claimed_fixed_sha": "f2e101182",
+      "evidence_tests": [
+        "docs/reviews/codex_kg50_d07_scoped_go_20261030/README_import.md · docs/reviews/codex_kg50_d07_scoped_go_20261030/_repro_ours_20261030/g13_main_deck_1-167_negative.json (167 행 = 로그에 없음)"
+      ]
     }
   ]
 }
