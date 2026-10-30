@@ -118,5 +118,11 @@
    "고침_2": "extract_gap: 머리말 up/down · total magnetization 이 없으면 옆 02_scf.out (끝난 scf 의 마지막 모멘트) 와 03 입력 tot_magnetization 이 0.2 μB 안에서 맞을 때 그 값으로 채널별 채움 (132/124) · 그 경우 QE HOMO/LUMO 대조는 안 함 (M=0 채움이라) · 채널별 가장자리 기록 · selftest 띠 읽기 8 (음성 5) · 일부러 깬 두 경우 빨강",
    "재추출_결과_10_30": "kgy 붙여넣기 (새 판 3235c84e): 닫힌 껍질 6 / 6 같음 · NiP2O6 −4.8938 → 4.2728 eV (절연체 · 채움 ↑132/↓124 · 02 scf 8.00 = 03 tot_magnetization 8 · ↑ VBM/CBM 4.0719/9.0547 · ↓ 3.8888/8.3447 → VBM ↑ · CBM ↓) · gap.json 교체 (옛 것 gap.json.bad_1029) · 값은 판독 (R1–R6) 전 — 11 종 끝난 뒤 같이 읽는다 · MnP2O6 은 chain worktree 의 새 판이 자동으로 읽는다"
   }
+ },
+ "재시작_2026_10_30_정전_뒤": {
+  "정전": "10-30 오후 kgy 정전 (부팅 13:49:48 · 시계 정상) · tmux ceigap · cv7main 사라짐",
+  "끊긴_곳": "MnP2O6 01_vcrelax BFGS 16 (JOB DONE 없음) → 01_vcrelax.out.cut_1030 으로 복사 보관",
+  "다시": "15:36:52 tmux ceigap (새 worktree ~/wt_ceigap_1030 · HEAD 027e049e · 점검 ✓ 전부 · 결정 active · 개정 1 active · 12 상 이어 돌리기 · ndq3p 없음 → 바로 시작) — 끝난 단계는 지문으로 건너뜀 · MnP2O6 01 은 처음 기하부터 (끊긴 vc-relax 의 셀 승계는 splice_relaxed 가 안 함 · 어림 하루 더)",
+  "by": "agent · 2026-10-30"
  }
 }
