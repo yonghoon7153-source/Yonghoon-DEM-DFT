@@ -3,16 +3,16 @@
 > 수업 과제(Problem–Solution–Business–Vision, 8–10분 PPT 발표 + mp4)용 산출물.
 > **이 폴더는 연구 프로젝트(`degradation-degeneracy/`, `bms-balancing/` 등)와 무관하며, `claude/namul-platform` 브랜치는 `namul-platform/` 경로만 다룬다.**
 
-## 제출용 (v4)
+## 제출용 (v4.1)
 
 | 파일 | 내용 |
 |---|---|
 | `02_발표자료_나물로.pptx` | 본문 12장 + 부록 2장. 슬라이드 노트에 대본, 6번 장표에 시연 영상 내장 |
 | `02_발표자료_나물로_미리보기.pdf` | LibreOffice 렌더 미리보기 (글꼴 대체로 줄바꿈이 PowerPoint와 조금 다를 수 있음) |
-| `03_발표대본_나물로.md` | 장표별 대본, 시간표(사람 속도 추정 약 8분 17초), 녹화해서 mp4 만드는 법, 예상 Q&A 10개 |
-| `05_발표영상_초안_AI음성.mp4` | 리허설용 초안 8분 20초 (오프라인 AI 음성 + 자막, 6번에 실제 앱 화면 녹화). 제출은 본인 녹화본으로 |
+| `03_발표대본_나물로.md` | 장표별 대본, 시간표(사람 속도 추정 약 8분 30초), 녹화해서 mp4 만드는 법, 예상 Q&A 11개 |
+| `05_발표영상_초안_AI음성.mp4` | 리허설용 초안 8분 35초 (오프라인 AI 음성 + 자막, 6번에 실제 앱 화면 녹화). 제출은 본인 녹화본으로 |
 
-발표 전에 표지·마무리의 `○○학과 ○○○` 를 바꾸고, 부록 2의 출처 원문을 한 번 열어 본다.
+발표 전에 표지·마무리의 `○○학과 ○○○` 를 바꾸고, 부록 2의 출처 링크를 한 번 열어 본다. 녹화는 8분 30초 안팎을 목표로 한다.
 
 ## 참고용
 
@@ -23,10 +23,10 @@
 | `06_발표레퍼런스_피치덱.md` | 피치덱 레퍼런스 (공식 가이드, 유튜브 강의, 실제 피칭 영상) |
 | `07_나물_도메인리서치.md` | 나물 분류·안전·원산지·가격·제철·조리 과학 |
 | `08_리뷰요청_codex.md` | Codex 리뷰 요청서 (v3 상세본 기준) |
-| `09_리뷰반영_내역.md` | 리뷰 지적과 발표자 요청을 v4에 어떻게 반영했는지 |
+| `09_리뷰반영_내역.md` | 1·2차 리뷰 지적과 발표자 요청을 어떻게 반영했는지 |
 | `10_리뷰요청_codex_2차.md` | Codex 2차 리뷰 요청서 (v4 기준: 대학원생 자료로서의 자연스러움 · 검색 가능성 · 수정 확인) |
 | `상세본_v3/` | 이전 상세본 (25장 PPT, 대본) |
-| `review/slides_text.md` | v4 PPT의 텍스트·표·노트 추출본 |
+| `review/slides_text.md` | v4.1 PPT의 텍스트·표·노트 추출본 |
 | `prototype/nm_prototype.html` | 클릭형 웹앱 프로토타입 (한 파일, 브라우저로 열면 시연 모드). 게시본: https://claude.ai/artifact/JinGR2bajKN6bz9NgK85qc |
 
 ## 다시 만들기
@@ -37,12 +37,12 @@
 # 1) 프로토타입 (Python 3) — PRETENDARD_TTF 를 주면 페이지 글자로 서브셋을 새로 만든다 (fonttools)
 python3 prototype/build.py
 
-# 2) 앱 화면 캡처 · 시연 녹화 · 점검 (Node 18+, Playwright + Chromium, ffmpeg)
-cd capture_src && npm install && npx playwright install chromium
+# 2) 앱 화면 캡처 · 시연 녹화 · 점검 (Node 18+, Playwright + Chromium, ffmpeg) — 버전은 package-lock.json 기준
+cd capture_src && npm ci && npx playwright install chromium
 node stills.js && node record.js && node check2.js && cd ..
 
 # 3) 대본 → 슬라이드 노트용 script.json + 03 문서, 그리고 덱 (pptxgenjs 4.0.1)
-cd deck_src && npm install
+cd deck_src && npm ci
 python3 make_script.py ../03_발표대본_나물로.md && node build_deck.js && cd ..
 
 # 4) 미리보기 PDF와 영상용 슬라이드 이미지 (LibreOffice, poppler)

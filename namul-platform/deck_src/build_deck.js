@@ -95,19 +95,19 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     tx(s, "60.4%", { x: 6.68, y: 2.42, w: 2.6, h: 0.7, fontSize: 38, bold: true, color: BRAND, objectName: "stat value" });
     tx(s, "처음으로 60% 넘음\n막내가 6세 이하인 가구 56.5%", { x: 6.68, y: 3.14, w: 2.75, h: 0.5, fontSize: 11.5, color: G700, objectName: "stat sub" });
     s.addShape(pres.ShapeType.line, { x: 6.68, y: 3.78, w: 2.67, h: 0, line: { color: BRAND3, width: 0.75 }, objectName: "stat rule" });
-    tx(s, "어린 자녀일수록 반찬류 편식이\n심하다는 연구 결과 (2019)", { x: 6.68, y: 3.9, w: 2.75, h: 0.5, fontSize: 11.5, color: INK, objectName: "stat research" });
-    foot(s, "자료: 국가데이터처 「2025년 하반기 지역별고용조사」 맞벌이 가구 현황(2026.06 보도), 아동 편식 연구(KoreaScience, 2019)"); }
+    tx(s, "대구 지역 유아 86명 조사에서도\n반찬류를 꺼리는 경향 (정유미, 2019)", { x: 6.68, y: 3.9, w: 2.75, h: 0.5, fontSize: 11.5, color: INK, objectName: "stat research" });
+    foot(s, "자료: 국가데이터처 「2025년 하반기 지역별고용조사」 맞벌이 가구 현황(2026.06 보도), 정유미(2019) 「유아의 나이에 따른 편식 및 식습관 실태」 한국식생활문화학회지 34(5)"); }
 
   // ================= 3. Problem: 판매자 =================
   { const s = content(3, "Problem");
-    head(s, "Problem  |  판매자", "판매자 문제", "온라인으로 사려는 수요는 있으나, 전통시장 점포는 상품 등록·재고 관리 인력이 부족함");
+    head(s, "Problem  |  판매자", "판매자 문제", "온라인 구매 수요는 보도로 확인되나, 점포의 상품 등록·주문 응대 부담은 인터뷰로 확인할 가설임");
     [["1,393곳 · 28.7조 원", "전국 전통시장 수 · 연매출 (2023)", BRAND, 20], ["−9.3%", "산나물 생산액, 전년 대비 (2024)", ACC, 26], ["+196%", "배민 전통시장 장보기 입점 점포 매출,\n1년 증가율 (2026.3 보도)", BRAND, 26]].forEach(([v, d, col, fs], i) => {
       const y = 1.72 + i * 1.06;
       box(s, 0.45, y, 3.35, 0.96, G100, "kpi box " + i);
       tx(s, v, { x: 0.65, y: y + 0.08, w: 3.0, h: 0.46, fontSize: fs, bold: true, color: col, valign: "middle", objectName: "kpi value " + i });
       tx(s, d, { x: 0.65, y: y + 0.52, w: 3.05, h: 0.4, fontSize: 10.5, color: G700, objectName: "kpi desc " + i }); });
-    tx(s, "판매자가 겪는 문제", { x: 4.15, y: 1.72, w: 5.4, h: 0.3, fontSize: 12, bold: true, color: BRAND, objectName: "pain title" });
-    [["온라인 운영 인력 부족", "사진·가격·수량을 매일 올리고 주문에 응대할 사람이 없음"], ["손질 서비스 홍보 어려움", "손질·데침으로 더 좋은 가격을 받을 수 있어도 알릴 채널이 없음"], ["제철 재고 부담", "제철에 물량이 몰려 팔지 못하고 남는 재고가 생김"]].forEach(([h, d], i) => {
+    tx(s, "예상되는 문제 (인터뷰로 확인할 가설)", { x: 4.15, y: 1.72, w: 5.4, h: 0.3, fontSize: 12, bold: true, color: BRAND, objectName: "pain title" });
+    [["온라인 운영 부담", "상품을 올리고 주문에 응대하는 일이 늘어날 것으로 예상"], ["손질 서비스 홍보", "손질해서 팔면 값을 더 받을 수 있어도 알릴 방법이 부족할 것"], ["제철 재고 부담", "제철에 물량이 몰려 남는 재고가 생길 것으로 예상"]].forEach(([h, d], i) => {
       const y = 2.1 + i * 0.94;
       badge(s, i + 1, 4.15, y + 0.03);
       tx(s, h, { x: 4.6, y, w: 4.95, h: 0.34, fontSize: 14, bold: true, color: INK, valign: "middle", objectName: "seller pain " + i });
@@ -126,7 +126,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       tx(s, d, { x: 2.5, y, w: 4.3, h: 0.74, fontSize: 12, color: INK, valign: "middle", objectName: "step desc " + i });
       if (i < 2) s.addShape(pres.ShapeType.line, { x: 2.5, y: y + 0.8, w: 4.3, h: 0, line: { color: G200, width: 0.75 }, objectName: "step rule " + i }); });
     box(s, 0.45, 4.36, 6.35, 0.56, G100, "subscription band");
-    tx(s, [{ text: "+ 정기구독   ", options: { bold: true, color: BRAND } }, { text: "매주 제철 나물 3종 + 양념 + 레시피 카드 (월 29,900원부터)", options: { color: INK } }], { x: 0.6, y: 4.36, w: 6.1, h: 0.56, fontSize: 12, valign: "middle", objectName: "subscription text" });
+    tx(s, [{ text: "+ 정기구독   ", options: { bold: true, color: BRAND } }, { text: "매주 제철 나물 3종 + 양념 + 레시피 카드 (예정 요금 월 29,900원부터)", options: { color: INK } }], { x: 0.6, y: 4.36, w: 6.1, h: 0.56, fontSize: 12, valign: "middle", objectName: "subscription text" });
     phone(s, "home", 7.45, 1.66, 3.3, "홈 화면");
     foot(s, "주: 앱 화면은 웹 프로토타입 (매장·가격·선호도는 예시 데이터)"); }
 
@@ -136,8 +136,8 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     const h = 3.3, w = h / PH;
     [["aichef", "레시피 추천 화면"], ["merchant_draft", "판매자 상품 등록안 화면"], ["merchant_forecast", "발주 추천·마감 할인 예시 화면"]].forEach(([f, alt], i) => {
       const x = 0.45 + i * (w + 0.14); phone(s, f, x, 1.66, h, alt); badge(s, i + 1, x - 0.06, 1.6); });
-    const caps = [["레시피 추천 (고객)", "프로토타입 구현", true, "아이 나이·보유 재료를 입력하면 근처 매장\n재고로 만들 수 있는 반찬을 추천"],
-      ["상품 등록 자동화 (판매자)", "프로토타입 구현", true, "메시지 한 줄을 품목·수량·가격으로 정리,\n판매자가 확인해야 앱에 반영"],
+    const caps = [["레시피 추천 (고객)", "시연 구현", true, "아이 나이·보유 재료를 입력하면 근처 매장\n재고로 만들 수 있는 반찬을 추천"],
+      ["상품 등록 자동화 (판매자)", "시연 구현", true, "메시지 한 줄을 품목·수량·가격으로 정리,\n판매자가 확인해야 앱에 반영"],
       ["발주량 추천 · 마감 할인", "개발 예정", false, "판매 이력·요일·날씨 기반, 주문 데이터가\n쌓인 뒤 도입"]];
     caps.forEach(([t, st, on, d], i) => {
       const y = 1.7 + i * 1.1, x = 5.55;
@@ -146,7 +146,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       tag(s, st, 9.55 - (0.16 + st.length * 0.115), y + 0.05, on);
       tx(s, d, { x: x + 0.42, y: y + 0.38, w: 3.6, h: 0.56, fontSize: 11.5, color: G700, objectName: "cap desc " + i });
       if (i < 2) s.addShape(pres.ShapeType.line, { x: x + 0.42, y: y + 1.0, w: 3.58, h: 0, line: { color: G200, width: 0.75 }, objectName: "cap rule " + i }); });
-    foot(s, "주: 화면 속 매장·가격·예측 수치는 예시 데이터 · AI는 야생 채취 식물의 식용 여부를 판단하지 않음"); }
+    foot(s, "주: 시연 화면의 AI 응답·매장·가격·예측 수치는 예시 데이터이며 실제 AI 호출은 검증 전 · AI는 야생 채취 식물의 식용 여부를 판단하지 않음"); }
 
   // ================= 6. Solution: 시연 =================
   { const s = pres.addSlide({ masterName: "DEMO", sectionTitle: "Solution" }); s.addNotes(note(6));
@@ -160,7 +160,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       tx(s, h, { x: 1.45, y, w: 4.9, h: 0.3, fontSize: 14, bold: true, color: INK, objectName: "demo step " + i });
       tx(s, d, { x: 1.45, y: y + 0.31, w: 4.9, h: 0.28, fontSize: 12, color: G700, objectName: "demo detail " + i }); });
     box(s, 0.45, 4.48, 5.95, 0.46, G100, "demo note band");
-    tx(s, [{ text: "결과  ", options: { bold: true, color: BRAND } }, { text: "메뉴 선택부터 픽업 예약까지 약 1분 (시연 기준)" }], { x: 0.6, y: 4.48, w: 5.7, h: 0.46, fontSize: 12, color: INK, valign: "middle", objectName: "demo result" });
+    tx(s, [{ text: "시연 범위  ", options: { bold: true, color: BRAND } }, { text: "추천 확인부터 픽업 예약, 판매자 접수까지의 흐름" }], { x: 0.6, y: 4.48, w: 5.7, h: 0.46, fontSize: 12, color: INK, valign: "middle", objectName: "demo result" });
     const vh = 4.78, vw = vh * 414 / 868, vx = 6.95, vy = 0.36;
     s.addMedia({ type: "video", path: path.join(DEMO, "demo_phone.mp4"), x: vx, y: vy, w: vw, h: vh, cover: b64(path.join(DEMO, "demo_poster.png")), objectName: "demo video" });
     tx(s, "슬라이드 쇼에서 재생 · 예시 데이터", { x: vx - 0.45, y: 5.18, w: vw + 0.9, h: 0.25, fontSize: 8.5, color: G500, align: "center", objectName: "demo caption" });
@@ -169,7 +169,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
   // ================= 7. Business: 시장 =================
   pres.addSection({ title: "Business" });
   { const s = content(7, "Business");
-    head(s, "Business", "목표 시장", "전통시장 매출 가운데 수도권 채소·나물류를 1차 목표 시장으로 설정 (비율은 가정, 파일럿에서 검증)");
+    head(s, "Business", "목표 시장", "전통시장 매출 중 수도권 채소·나물류를 1차 목표 시장으로 설정 (비율은 가정, 공개 통계로 보완)");
     [["전체 시장", "28.7조 원", 3.4, G200, INK], ["목표 시장", "약 1.7조 원", 2.6, BRAND2, "FFFFFF"], ["3년차 목표 거래액", "54억 원", 1.8, BRAND, "FFFFFF"]].forEach(([k, v, w, fill, col], i) => { const y = 1.72 + i * 0.86, cx = 2.15;
       s.addShape(pres.ShapeType.trapezoid, { x: cx - w / 2, y, w, h: 0.8, flipV: true, fill: { color: fill }, line: { color: fill, width: 0 }, objectName: "funnel " + k });
       tx(s, [{ text: k, options: { fontSize: 11, breakLine: true } }, { text: v, options: { fontSize: 16, bold: true } }], { x: cx - w / 2, y, w, h: 0.8, color: col, align: "center", valign: "middle", objectName: "funnel text " + k }); });
@@ -179,12 +179,12 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       ["3년차 목표", { t: "54억 원", o: { bold: true, align: "center", color: BRAND } }, "입점 300곳 × 월 100건\n× 1.5만 원 × 12개월"],
     ], { x: 4.1, y: 1.68, w: 5.45, colW: [1.2, 1.25, 3.0], rowH: [0.36, 0.78, 0.78, 0.78], align: ["center", "center", "left"], size: 12 });
     box(s, 0.45, 4.45, 9.1, 0.44, G100, "note band");
-    tx(s, "온라인 식품 시장(약 40조 원)은 전통시장 매출과 겹치는 부분이 있어 합산하지 않음", { x: 0.6, y: 4.45, w: 8.9, h: 0.44, fontSize: 11.5, color: INK, valign: "middle", objectName: "market note" });
+    tx(s, "온라인 식품 거래는 전통시장 매출과 겹칠 수 있어 전통시장 매출만 기준으로 잡음", { x: 0.6, y: 4.45, w: 8.9, h: 0.44, fontSize: 11.5, color: INK, valign: "middle", objectName: "market note" });
     foot(s, "자료: 소상공인시장진흥공단 전통시장 실태조사(2023 기준) / 주: 수도권·품목 비율과 3년차 목표는 가정 기반 추정"); }
 
   // ================= 8. Business: 경쟁 =================
   { const s = content(8, "Business");
-    head(s, "Business", "경쟁 현황 및 차별점", "나물 레시피·동네 매장 재고·손질 옵션·픽업 주문을 한 번의 구매 과정으로 묶는 데 집중");
+    head(s, "Business", "경쟁 현황 및 차별점", "나물 요리를 고른 고객이 필요한 재료를 동네 매장에서 손질까지 받아 살 수 있게 하는 데 집중");
     const px = 0.95, py = 1.75, pw = 4.2, ph = 2.85;
     box(s, px, py + ph / 2, pw / 2, ph / 2, BRANDL, "target quadrant");
     s.addShape(pres.ShapeType.rect, { x: px, y: py, w: pw, h: ph, fill: { type: "none" }, line: { color: G300, width: 0.75 }, objectName: "plot frame" });
@@ -192,8 +192,8 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     s.addShape(pres.ShapeType.line, { x: px, y: py + ph / 2, w: pw, h: 0, line: { color: G200, width: 0.75 }, objectName: "divider h" });
     tx(s, "콘텐츠 중심", { x: px, y: py + ph + 0.06, w: 1.6, h: 0.25, fontSize: 10.5, color: G700, objectName: "x axis left" });
     tx(s, "구매 중심", { x: px + pw - 1.6, y: py + ph + 0.06, w: 1.6, h: 0.25, fontSize: 10.5, color: G700, align: "right", objectName: "x axis right" });
-    tx(s, "전국\n배송", { x: 0.42, y: py, w: 0.45, h: 0.48, fontSize: 10.5, color: G700, align: "right", objectName: "y axis top" });
-    tx(s, "동네\n상권", { x: 0.42, y: py + ph - 0.48, w: 0.45, h: 0.48, fontSize: 10.5, color: G700, align: "right", objectName: "y axis bottom" });
+    tx(s, "전국\n대상", { x: 0.42, y: py, w: 0.45, h: 0.48, fontSize: 10.5, color: G700, align: "right", objectName: "y axis top" });
+    tx(s, "지역\n기반", { x: 0.42, y: py + ph - 0.48, w: 0.45, h: 0.48, fontSize: 10.5, color: G700, align: "right", objectName: "y axis bottom" });
     const dot = (label, cx, cy, hl = false) => { const d = hl ? 0.2 : 0.13;
       s.addShape(pres.ShapeType.ellipse, { x: cx - d / 2, y: cy - d / 2, w: d, h: d, fill: { color: hl ? ACC : G500 }, line: { color: hl ? ACC : G500, width: 0 }, objectName: "dot " + label });
       tx(s, label, { x: cx + d / 2 + 0.06, y: cy - 0.15, w: 1.6, h: 0.3, fontSize: hl ? 12 : 10.5, bold: hl, color: hl ? ACC : INK, valign: "middle", objectName: "dot label " + label }); };
@@ -228,7 +228,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       ["판매자 유료 서비스", "월 29,000원 (선택)", "발주 추천 · 상단 노출"],
       ["제휴 광고", "건별 계약", "레시피 크리에이터 · 식품 브랜드"],
     ], { x: 0.45, y: 2.92, w: 9.1, colW: [2.0, 2.4, 4.7], rowH: [0.34, 0.4, 0.4, 0.4, 0.4], align: ["left", "left", "left"], size: 12 });
-    foot(s, "판매자 부담 예시: 월 100건 × 1.5만 원 매장 → 수수료 6만 원 + 유료 서비스 2.9만 원 = 월 8.9만 원 (거래액의 약 6%)"); }
+    foot(s, "주: 요금은 예정안이며 파일럿에서 검증 · 판매자 부담 예시: 월 100건 × 1.5만 원 매장 → 수수료 6만 원 + 유료 서비스 2.9만 원 = 월 8.9만 원 (거래액의 약 6%)"); }
 
   // ================= 10. Vision: 로드맵 =================
   pres.addSection({ title: "Vision" });
@@ -252,7 +252,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     s.addChart(pres.ChartType.bar, [{ name: "거래액", labels: ["1년차", "2년차", "3년차"], values: [2.5, 15, 54] }],
       { ...chartBase(), x: 0.35, y: 1.66, w: 4.5, h: 2.35, barDir: "col", barGapWidthPct: 70, chartColors: [BRAND3, BRAND2, BRAND], title: "연도별 목표 거래액 (억 원)", valAxisMinVal: 0, valAxisMaxVal: 62, dataLabelPosition: "outEnd", objectName: "gmv chart" });
     box(s, 0.45, 4.1, 4.4, 0.82, G100, "revenue box");
-    tx(s, [{ text: "3년차 매출(기본) 약 4.9억 원", options: { bold: true, color: BRAND, breakLine: true } }, { text: "수수료 1.7 + 정기구독 2.8 + 판매자 서비스 0.4 (억 원)\n지자체·제휴 사업은 계약 근거 확보 시 추가 (최대 8.0억 원)", options: { color: INK, fontSize: 10.5 } }], { x: 0.6, y: 4.12, w: 4.2, h: 0.78, fontSize: 12, valign: "middle", objectName: "revenue text" });
+    tx(s, [{ text: "3년차 매출(기본) 약 4.9억 원", options: { bold: true, color: BRAND, breakLine: true } }, { text: "수수료 1.7 + 정기구독 2.8 + 판매자 서비스 0.4 (억 원)\n지자체·제휴 사업은 계약 확보 후 추가 (미검증)", options: { color: INK, fontSize: 10.5 } }], { x: 0.6, y: 4.12, w: 4.2, h: 0.78, fontSize: 12, valign: "middle", objectName: "revenue text" });
     tx(s, "확장 계획", { x: 5.2, y: 1.72, w: 4.3, h: 0.3, fontSize: 12, bold: true, color: BRAND, objectName: "expand title" });
     table(s, null, [["품목 확대", "나물 → 제철 농산물 전체"], ["산지 직거래", "산채 농가 → 동네 매장 → 고객"], ["해외 판매", "건조 나물 + 레시피 키트"]],
       { x: 5.2, y: 2.06, w: 4.35, colW: [1.3, 3.05], rowH: [0.42, 0.42, 0.42], align: ["center", "left"], size: 12 });
@@ -288,7 +288,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       ["정기구독", "3,000명 × 월 35,000원 × 12개월 × 플랫폼 몫 22%", v("약 2.8억 원")],
       ["판매자 유료 서비스", "120곳 × 월 29,000원 × 12개월", v("약 0.4억 원")],
       [{ t: "3년차 매출 (기본)", o: { fill: { color: BRANDL }, color: BRAND } }, { t: "위 세 항목 합계", o: { fill: { color: BRANDL } } }, v("약 4.9억 원", { color: BRAND, fill: { color: BRANDL } })],
-      ["지자체·제휴 (미확정)", "계약 근거 확보 시 추가 (기본 목표에서 제외)", v("+3.1억 원", { color: G700 })],
+      ["지자체·제휴 (확장)", "계약 확보 시 추가하는 확장 시나리오 (미검증, 기본 목표에서 제외)", v("+3.1억 원", { color: G700 })],
       ["주문당 수수료 수입", "15,000원 × 4% (변동비 차감 전, 공헌이익 아님)", v("600원")],
       ["LLM 호출비 (3년차)", "월 약 5.8만 건 기준, 캐시 적용 / 미적용", v("월 약 72만~99만 원")],
     ], { x: 0.45, y: 1.68, w: 9.1, colW: [2.15, 5.0, 1.95], rowH: [0.32, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33], align: ["left", "left", "right"], size: 11, headSize: 11, margin: [0.02, 0.1, 0.02, 0.1] });
@@ -297,12 +297,22 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
   // ================= 14. 부록 2 =================
   { const s = content(14, "부록");
     head(s, "부록", "부록 2. 참고 자료", "수치는 2026.10 웹 검색 기준 공개 통계·보도이며, 발표 전 원문 확인 권장");
-    const L = ["국가데이터처, 2025년 하반기 지역별고용조사 맞벌이 가구 현황 (2026.06 보도)", "소상공인시장진흥공단, 전통시장 실태조사 (2023 기준)", "산림청, 2024년 임산물생산조사 (2025.10)", "머니투데이, 배민 전통시장 장보기 입점 성과 (2026.03)", "아동 편식 · 혼합 요리 연구 (KoreaScience, 2000 · 2019)", "식품의약품안전처, 산나물 안전 섭취 안내", "중소벤처기업부 공고 제2026-143호, 예비창업패키지 수정공고", "통계청, 온라인쇼핑동향 (2024, 식품 거래액)"];
-    const R = ["네이버, 스마트플레이스 AI 리뷰 관리 · 톡톡 AI FAQ 발표", "쿠팡 · 컬리 · 어글리어스 · 당근 서비스 소개 및 보도 (2026.10 확인)", "Anthropic, Claude API 가격표 (2026.10)", "앱 화면: 웹 프로토타입 (매장 · 가격 · 수치는 예시 데이터)", "아이콘 Microsoft Fluent Emoji (MIT) · 글꼴 Pretendard (OFL)"];
+    const L = [["국가데이터처, 2025년 하반기 지역별고용조사 맞벌이 가구 현황 (뉴시스 2026.06.18)", "https://www.newsis.com/view/NISX20260618_0003673686"],
+      ["소상공인시장진흥공단, 전통시장 실태조사 2023 (뉴시스 2025.01.03)", "https://www.newsis.com/view/NISX20250103_0003020386"],
+      ["산림청, 2024년 임산물생산조사 (e-나라지표)", "https://www.index.go.kr/unify/idx-info.do?idxCd=1302"],
+      ["머니투데이, 배민 전통시장 장보기 입점 성과 (2026.03.18)", "https://www.mt.co.kr/tech/2026/03/18/2026031714425925652"],
+      ["정유미(2019), 유아의 나이에 따른 편식 및 식습관 실태, 한국식생활문화학회지 34(5)", "https://koreascience.or.kr/article/JAKO201931765048406.page"],
+      ["식품의약품안전처, 산나물과 독초 구별 안내 (웹진)", "https://www.mfds.go.kr/webzine/201504/pdf/main.pdf"],
+      ["중소벤처기업부 공고 제2026-143호, 예비창업패키지 수정공고", "https://hanok.gongju.go.kr/cmm/fms/FileDown.do?atchFileId=FILE_0000127870Uc2bM&fileSn=0"]];
+    const R = [["네이버, 스마트플레이스 AI 리뷰 관리 · 톡톡 AI FAQ 발표", "https://navercorp.com/media/pressReleasesDetail?seq=34203"],
+      ["쿠팡 · 컬리 · 어글리어스 · 당근 서비스 소개 (2026.10 확인, 자체 정리)", null],
+      ["Anthropic, Claude API 가격표 (2026.10)", "https://platform.claude.com/docs/en/about-claude/pricing"],
+      ["앱 화면: 웹 프로토타입 (매장 · 가격 · 수치는 예시 데이터)", null],
+      ["아이콘 Microsoft Fluent Emoji (MIT) · 글꼴 Pretendard (OFL)", "https://github.com/microsoft/fluentui-emoji"]];
     const col = (arr, start, x, h) => { tx(s, h, { x, y: 1.68, w: 4.45, h: 0.3, fontSize: 12, bold: true, color: C.accent1, objectName: "ref head " + h });
-      s.addText(arr.map((t, i) => ({ text: t, options: { bullet: { type: "number", numberStartAt: start }, breakLine: i < arr.length - 1 } })), { x, y: 2.02, w: 4.45, h: 2.95, fontSize: 10.5, color: INK, paraSpaceAfter: 4, valign: "top", margin: 0, isTextBox: true, objectName: "ref list " + h }); };
-    col(L, 1, 0.45, "통계 · 시장"); col(R, 9, 5.1, "경쟁 · 기술 · 자료");
-    foot(s, "전체 링크: 04_레퍼런스_나물로.md"); }
+      s.addText(arr.map(([t, url], i) => ({ text: t, options: { bullet: { type: "number", numberStartAt: start }, breakLine: i < arr.length - 1, ...(url ? { hyperlink: { url, tooltip: url } } : {}) } })), { x, y: 2.02, w: 4.45, h: 2.95, fontSize: 10.5, color: INK, paraSpaceAfter: 6, lineSpacingMultiple: 1.12, valign: "top", margin: 0, isTextBox: true, objectName: "ref list " + h }); };
+    col(L, 1, 0.45, "통계 · 시장 · 연구"); col(R, 8, 5.1, "경쟁 · 기술 · 자료");
+    foot(s, "밑줄 친 항목은 원문 링크 · 전체 목록과 확인 메모는 04_레퍼런스_나물로.md"); }
 
   await pres.writeFile({ fileName: OUT });
   await setTheme(OUT, "Namullo", THEME_COLORS);

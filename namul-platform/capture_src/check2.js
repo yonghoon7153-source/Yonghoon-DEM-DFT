@@ -45,6 +45,24 @@ const ROOT = path.resolve(__dirname, ".."), PAGE = "file://" + path.join(ROOT, "
   await page.click('[data-view=dogam] .icon-btn[data-go=aichef]'); await page.waitForTimeout(200);
   await page.click('[data-view=aichef] [data-back]'); await page.waitForTimeout(300);
   R.back = { afterBack1, afterBack2: await ev(() => current), histLen: await ev(() => history.length) };
+  // 8) 2차 리뷰 반례: 금액 표기 · 음수 · 긴 숫자 · '안 됩니다' · g 단위 · 느슨한 타입
+  const parse = async (msg) => ev(m => { const d = localParse(m); return d.items.map(it => `${it.name} ${it.qty}${it.unit || ""} ${it.price === null ? "?" : it.price} trim=${it.trim} issues=${it.issues.join("/") || "-"}`).join(" ; "); }, msg);
+  R.round2 = {};
+  for (const m of ["참나물 10단 3만5천원", "참나물 10단 -6000원", "참나물 10단 1000000원", "참나물 10단 3500원 손질 안 됩니다", "참나물 200g 3500원", "참나물 10단 3,500원 손질 불가", "참나물 10단 3천5백 손질 안돼요"]) R.round2[m] = await parse(m);
+  R.round2.looseTypes = await ev(() => stockData({ items: [{ name: "참나물", qty: true, unit: "단", price: [3500] }, { name: "시금치", qty: "15", unit: "단", price: "3,000" }] }).items.map(it => it.issues.join("/")));
+  // g 단위 등록안은 확인해도 재고에 반영되지 않는다
+  await ev(() => { STORES.splice(0, STORES.length, ...JSON.parse(STORES0)); st.chat = defaultChat().slice(0, 2); demo.go("merchant"); rMerchant(); });
+  await page.fill("#chatInput", "참나물 200g 3500원"); await page.click("#chatSend"); await page.waitForTimeout(1000);
+  { const b = await page.$$("[data-act=ok]"); await b.at(-1).click(); } await page.waitForTimeout(300);
+  R.round2.gramApplied = await ev(() => STORES[0].stock.chamnamul);
+  // 이미 담은 품목을 다시 고르면 그 품목 매장을 보여 준다
+  await ev(() => { st = Object.assign(st, { cart: [] }); st.namul = "sigeumchi"; demo.go("guide"); }); await page.waitForTimeout(200);
+  await page.click("#gBuy"); await page.waitForTimeout(250);
+  await ev(() => { st.namul = "chamnamul"; demo.go("guide"); }); await page.waitForTimeout(200);
+  await page.click("#gBuy"); await page.waitForTimeout(250);
+  await ev(() => { st.namul = "sigeumchi"; demo.go("guide"); }); await page.waitForTimeout(200);
+  await page.click("#gBuy"); await page.waitForTimeout(300);
+  R.round2.reselect = await page.$eval("#sListTitle", e => e.textContent) + " | cart=" + (await ev(() => st.cart.join(",")));
   // 7) phone width
   const phone = await browser.newPage({ viewport: { width: 390, height: 844 } });
   phone.on("pageerror", e => errs.push("phone pageerror: " + e.message));

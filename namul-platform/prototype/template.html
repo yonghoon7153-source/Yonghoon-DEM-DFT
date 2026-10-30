@@ -652,7 +652,7 @@ $("#rSteps").addEventListener("click", e => { const b = e.target.closest("[data-
 $("#rIngs").addEventListener("change", e => { const i = e.target.dataset.ing; if (i != null) { st.owned[st.namul + i] = e.target.checked; rRecipe(); } });
 $("#playBtn").addEventListener("click", () => { st.step = Math.max(st.step, 0); rRecipe(); toast("원래 유튜브 채널에서 재생돼요"); });
 $("#addBtn").addEventListener("click", () => { addToCart(st.namul); toast("장바구니에 담았어요 · 근처 매장 3곳"); setTimeout(() => go("stores"), 450); });
-function addToCart(k){ if (!st.cart.includes(k)) st.cart.push(k); cartBadge(); }
+function addToCart(k){ st.cart = st.cart.filter(x => x !== k); st.cart.push(k); cartBadge(); }
 
 /* ---------- stores ---------- */
 function mapSvg(){
@@ -668,7 +668,7 @@ function mapSvg(){
     <text x="183" y="121" font-size="10" font-weight="700" fill="#2C5FB8">나</text><text x="248" y="226" font-size="10" fill="#6E7A73">반경 1km</text></svg>`;
 }
 function rStores(){
-  const k = st.cart[st.cart.length - 1] || st.namul; st.namul = k;
+  const k = st.cart.includes(st.namul) ? st.namul : (st.cart[st.cart.length - 1] || st.namul); st.namul = k;
   $("#mapBox").innerHTML = mapSvg();
   $$("#storeFilters .fchip").forEach(b => b.setAttribute("aria-pressed", st.sf[b.dataset.sf] ? "true" : "false"));
   let list = STORES.filter(s => s.stock[k]);
@@ -747,7 +747,7 @@ function setAiStatus(live){
   if (SAMPLE) { try { const lim = await SAMPLE.limits(); IMG_OK = !!(lim && lim.images); } catch { IMG_OK = false; } }
   setAiStatus(!!SAMPLE);
 })();
-const STOCK_FOR_AI = () => STORES.map(s => ({store:s.name, dist:s.dist, trim:s.trim>0, items:Object.entries(s.stock).map(([k,[p,u]]) => ({name:N[k].name, unit:u, price:p}))}));
+const STOCK_FOR_AI = () => STORES.map(s => ({store:s.name, dist:s.dist, items:Object.entries(s.stock).map(([k,[p,u]]) => ({name:N[k].name, unit:u, price:p, trim:trimOk(s, k)}))}));
 const ERR = {not_granted:"AI 사용이 허락되지 않아 예시 답으로 보여 드려요.",sampling_disabled:"이 계정에서는 AI를 쓸 수 없어 예시 답으로 보여 드려요.",rate_limited:"AI 요청이 많아요. 잠시 뒤에 다시 눌러 주세요.",refused:"그 질문에는 답하기 어려워요. 다르게 물어봐 주세요.",invalid_json:"답을 정리하지 못했어요. 한 번 더 눌러 주세요.",image_rejected:"사진을 읽지 못했어요. 다른 사진으로 해 주세요."};
 
 /* AI chef */
@@ -806,21 +806,24 @@ document.addEventListener("click", e => {
 /* merchant assistant */
 const UNITS = ["단","봉","kg","g","개","팩"];
 /* AI·파서 결과를 그대로 화면에 넣지 않는다: 숫자는 범위 검사, 문자열은 이스케이프, 모르는 품목은 확인 요청 */
+/* 숫자만 받는다: number 또는 정수 문자열. true·배열·"3,500" 같은 값은 NaN → 확인 필요 */
+const asNum = v => typeof v === "number" ? v : (typeof v === "string" && /^\s*-?\d+\s*$/.test(v) ? Number(v) : NaN);
 function cleanItems(raw){
   return (Array.isArray(raw) ? raw : []).slice(0, 10).map(it => {
     it = it && typeof it === "object" ? it : {};
     const name = String(it.name || "").replace(/[^가-힣A-Za-z0-9 ]/g, "").trim().slice(0, 12);
-    const q = Number(it.qty), p = Number(it.price);
+    const q = asNum(it.qty), p = asNum(it.price);
     const qty = Number.isInteger(q) && q >= 1 && q <= 999 ? q : null;
     const price = Number.isInteger(p) && p >= 100 && p <= 300000 ? p : null;
     const unit = UNITS.includes(it.unit) ? it.unit : null;
     const key = Object.keys(N).find(k => N[k].name === name) || null;
     const issues = [];
     if (!key) issues.push("도감에 없는 품목"); if (qty === null) issues.push("수량 확인"); if (price === null) issues.push("가격 확인"); if (!unit) issues.push("단위 확인");
+    if (unit === "g" || unit === "kg") issues.push("판매 단위 확인(봉·팩·단으로)");
     return {name: name || "품목", key, qty, unit, price, trim: it.trim === true ? true : it.trim === false ? false : null, issues};
   });
 }
-function stockData(raw, extra){ const items = cleanItems(raw && raw.items); return Object.assign({items, status:"draft", reply: items.length ? "정리했어요. 내용을 보고 ‘확인’을 누르면 앱에 올라가요." : "품목을 찾지 못했어요. 예) 취나물 10단 4,000원 손질 가능", questions: items.some(i => i.issues.length) ? ["확인 필요 항목은 빼고 올라가요. ‘수정’으로 고칠 수 있어요."] : []}, extra || {}); }
+function stockData(raw, extra){ const items = cleanItems(raw && raw.items); return Object.assign({items, status:"draft", reply: items.length ? "정리했어요. 내용을 보고 ‘확인’을 누르면 앱에 올라가요." : "품목을 찾지 못했어요. 예) 취나물 10단 4,000원 손질 가능", questions: items.some(i => i.issues.length) ? ["확인 필요 항목은 빼고 올라가요. 고칠 내용은 메시지로 다시 보내 주세요."] : []}, extra || {}); }
 const FORECAST = [["참나물",[14,15,17,16],18,"단"],["시금치",[10,12,11,12],12,"단"],["콩나물",[22,24,21,26],25,"봉"]];
 function spark(a, next){ const all = [...a, next], max = Math.max(...all) * 1.15, w = 100, h = 30, step = w / (all.length - 1); const pts = all.map((v,i) => `${(i*step).toFixed(1)},${(h - v / max * h).toFixed(1)}`); return `<svg class="spark" viewBox="0 0 100 34" preserveAspectRatio="none"><polyline points="${pts.slice(0,-1).join(" ")}" fill="none" stroke="#2D7955" stroke-width="2"/><polyline points="${pts.slice(-2).join(" ")}" fill="none" stroke="#B4622A" stroke-width="2" stroke-dasharray="3 3"/><circle cx="${pts.at(-1).split(",")[0]}" cy="${pts.at(-1).split(",")[1]}" r="3" fill="#B4622A"/></svg>`; }
 function defaultChat(){ return [
@@ -852,11 +855,17 @@ function rMerchant(){
   const b = $("#chatBody"); b.scrollTop = b.scrollHeight;
 }
 function nowT(){ const d = new Date(); return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; }
-const NO_TRIM = /손질\s*(?:은|도)?\s*(?:불가|안\s*돼|안\s*됨|안\s*해|못|없|x|X|×)/;
+const NO_TRIM = /손질\s*(?:은|도|이)?\s*(?:불가|안\s*[돼되됨됩]|안\s*해|못|없|x|X|×)/;
+/* 금액 토큰 하나를 통째로 읽는다: 3,500원 · 3500 · 3천5백 · 3만5천원. 음수·순서가 이상한 표기는 NaN, 범위 밖 값은 cleanItems 가 '확인 필요'로 돌린다 */
 function toWon(seg){
   const s = seg.replace(/(\d),(?=\d{3}(?!\d))/g, "$1");
-  let m = s.match(/(\d+)\s*천\s*(?:(\d)\s*백)?/); if (m) return Number(m[1]) * 1000 + (m[2] ? Number(m[2]) * 100 : 0);
-  m = s.match(/(\d{3,6})/); return m ? Number(m[1]) : null;
+  const m = s.match(/(-\s*)?((?:\d+\s*[만천백]\s*)+\d*|\d+)\s*원?/);
+  if (!m) return null;
+  if (m[1]) return NaN;
+  let rest = m[2].replace(/\s+/g, ""), total = 0;
+  if (/^\d+$/.test(rest)) return Number(rest);
+  for (const [u, v] of [["만", 10000], ["천", 1000], ["백", 100]]) { const i = rest.indexOf(u); if (i >= 0) { total += Number(rest.slice(0, i)) * v; rest = rest.slice(i + 1); } }
+  return rest ? total + Number(rest) : total;
 }
 function localParse(text){
   const nums = {스무:20,열다섯:15,열:10,다섯:5,서른:30};
@@ -891,7 +900,7 @@ $("#chatBody").addEventListener("click", e => { const b = e.target.closest("[dat
       else { const s = STORES[0]; good.forEach(it => { s.stock[it.key] = [it.price, "1" + it.unit]; (s.left = s.left || {})[it.key] = it.qty; if (it.trim !== null) (s.trimOk = s.trimOk || {})[it.key] = it.trim; });
         s.today = `오늘 ${nowT()} 입고`; m.data.status = "ok"; m.data.reply = `${good.length}개 품목을 ${s.name} 재고에 올렸어요.` + (good.length < m.data.items.length ? " 확인 필요 항목은 뺐어요." : "");
         toast("앱에 반영했어요 · 동네 매장 목록에서 보여요"); } } }
-  if (a === "edit") toast("항목을 눌러 고칠 수 있어요 (시연)");
+  if (a === "edit") toast("고칠 내용을 메시지로 다시 보내 주세요 (시연)");
   rMerchant(); });
 $("#quickActs").addEventListener("click", async e => { const b = e.target.closest("[data-qa]"); if (!b) return; const qa = b.dataset.qa;
   if (qa === "forecast") { st.chat.push({who:"bot", t:nowT(), card:"forecast"}); rMerchant(); return; }
@@ -900,7 +909,7 @@ $("#quickActs").addEventListener("click", async e => { const b = e.target.closes
     const demo = "오늘 아침 들어온 참나물 20단, 손질까지 해 드려요.\n향긋하게 들기름에 무치면 7분 반찬 끝.\n초록나물상회 · 새벽시장 입구 · 18시 픽업 가능";
     st.chat.push({who:"wait"}); rMerchant();
     let text = demo;
-    if (SAMPLE) { try { const r = await SAMPLE(`전통시장 나물가게 '초록나물상회'의 오늘 재고(참나물 20단 3,500원 손질 가능, 시금치 15단 3,000원)로 동네 커뮤니티에 올릴 홍보글을 3줄로 써라. 과장·건강 효능 표현 없이, 이모지 없이, 줄마다 40자 이내.`, {modelTier:"quick"}); text = r.text.trim(); } catch (err) { text = demo; } }
+    if (SAMPLE) { try { const s0 = STORES[0], today = Object.entries(s0.stock).slice(0, 3).map(([k,[p,u]]) => `${N[k].name} ${u} ${won(p)}${trimOk(s0, k) ? " 손질 가능" : ""}`).join(", "); const r = await SAMPLE(`전통시장 나물가게 '${s0.name}'의 오늘 재고(${today})로 동네 커뮤니티에 올릴 홍보글을 3줄로 써라. 과장·건강 효능 표현 없이, 이모지 없이, 줄마다 40자 이내.`, {modelTier:"quick"}); text = r.text.trim(); } catch (err) { text = demo; } }
     st.chat = st.chat.filter(x => x.who !== "wait"); st.chat.push({who:"bot", t:nowT(), html:`<b>당근·인스타용 홍보글</b><br>${esc(text).replace(/\n/g,"<br>")}<br><small class="muted">눌러서 복사해 올리세요${SAMPLE ? "" : " · 예시 응답"}</small>`}); rMerchant(); }
 });
 
