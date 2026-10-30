@@ -114,7 +114,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       tx(s, d, { x: 4.6, y: y + 0.36, w: 4.95, h: 0.32, fontSize: 12, color: G700, objectName: "seller pain desc " + i });
       if (i < 2) s.addShape(pres.ShapeType.line, { x: 4.6, y: y + 0.72, w: 4.95, h: 0, line: { color: G200, width: 0.75 }, objectName: "pain rule " + i }); });
     box(s, 4.15, 4.38, 5.4, 0.42, BRANDL, "need band");
-    tx(s, [{ text: "필요  ", options: { bold: true, color: BRAND } }, { text: "적은 입력으로 상품 등록 · 손질 서비스 홍보 · 예약 주문 통로", options: { color: INK } }], { x: 4.28, y: 4.38, w: 5.2, h: 0.42, fontSize: 11.5, valign: "middle", objectName: "need text" });
+    tx(s, [{ text: "필요  ", options: { bold: true, color: BRAND } }, { text: "간단한 상품 등록과 손질·예약 주문", options: { color: INK } }], { x: 4.28, y: 4.38, w: 5.2, h: 0.42, fontSize: 11.5, valign: "middle", objectName: "need text" });
     foot(s, "자료: 소상공인시장진흥공단 전통시장 실태조사(2023 기준), 산림청 「2024년 임산물생산조사」(2025.10), 머니투데이(2026.03) / 증가율은 입점 점포 기준 보도 수치"); }
 
   // ================= 4. Solution: 서비스 개요 =================
@@ -214,7 +214,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
 
   // ================= 9. Business: 수익 모델 =================
   { const s = content(9, "Business");
-    head(s, "Business  |  수익모델", "수익 모델", "중개 수수료를 기본 수익원으로 하고 판매자 유료 서비스·제휴 광고로 확대, 배달은 마진 없이 연결");
+    head(s, "Business  |  수익모델", "수익 모델", "중개 수수료를 기본 수익원으로 하고 판매자 유료 서비스·제휴 광고로 확대, 배달은 별도 이익 없이 연결");
     const nodes = [["고객", "맞벌이 자녀 가구", 0.45, 1.75, G100, INK], ["나물로", "주문 · 배달 연결 · 정산", 4.05, 1.75, BRAND, "FFFFFF"], ["판매자", "전통시장 · 로컬푸드", 7.65, 1.75, G100, INK]];
     nodes.forEach(([t, d, x, y, fill, col]) => { box(s, x, y, 1.9, 0.92, fill, "node " + t, fill === G100 ? G300 : null);
       tx(s, [{ text: t, options: { fontSize: 15, bold: true, breakLine: true } }, { text: d, options: { fontSize: 10.5 } }], { x, y, w: 1.9, h: 0.92, color: col, align: "center", valign: "middle", objectName: "node text " + t }); });
@@ -225,8 +225,8 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     arrow(6.05, 7.55, 2.0, "order arrow"); lab("주문 전달 · 정산", 5.95, 1.7, "order label");
     arrow(7.55, 6.05, 2.42, "stock arrow"); lab("상품 등록 · 수수료", 5.95, 2.47, "stock label");
     table(s, ["수익원", "과금 방식", "비고"], [
-      ["중개 수수료", "상품·손질 금액의 4%", "배달비 제외 · 일반·예약 공통 · 전통시장 점포 첫 6개월 0%"],
-      [{ t: "배달비", o: { color: G700 } }, "시험 요금 3,500원", "매출 제외(마진 없음) · 차액은 파일럿 예산 한도 내 부담"],
+      ["중개 수수료", "상품·손질 금액의 4%", "배달비 제외 / 전통시장 첫 6개월 면제"],
+      [{ t: "배달비", o: { color: G700 } }, "시험 요금 3,500원", "매출 목표에서 제외 / 차액은 시험 예산으로 지원"],
       ["판매자 유료 서비스", "월 29,000원 (선택)", "발주 추천 · 상단 노출"],
       ["제휴 광고", "건별 계약", "레시피 크리에이터 · 식품 브랜드"],
     ], { x: 0.45, y: 2.92, w: 9.1, colW: [1.9, 2.0, 5.2], rowH: [0.34, 0.4, 0.4, 0.4, 0.4], align: ["left", "left", "left"], size: 12 });
@@ -239,8 +239,8 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     const kpi = (t) => ({ t, o: { bold: true, color: BRAND, fill: { color: BRANDL } } });
     table(s, ["구분", "1단계 파일럿\n2026.12~2027.2", "2단계 정식 출시\n2027", "3단계 확장\n2028~"], [
       ["범위", "전통시장 1곳 · 점포 2~3곳", "입점 매장 30곳", "수도권 120곳 → 300곳"],
-      ["주요 과제", "웹 프로토타입 + 수동 운영\n(배달은 단지 한정 시험)", "웹앱 출시 · 결제 연동\n명절·제철 예약 오픈", "앱 출시 · 발주 추천 도입"],
-      ["자금", "자기자본 300만 원\n(배달 차액 20만 원 한도)", "예비창업패키지 등\n정부 지원사업", "시드 투자"],
+      ["주요 과제", "웹 프로토타입\n수동 운영, 배달은 단지 한정", "웹앱 출시 · 결제 연동\n명절·제철 예약 오픈", "앱 출시 · 발주 추천 도입"],
+      ["자금", "자기자본 300만 원\n배달 지원 최대 20만 원", "예비창업패키지 등\n정부 지원사업", "시드 투자"],
       [{ t: "목표", o: { fill: { color: BRANDL }, color: BRAND } }, kpi("유료 주문 100건"), kpi("월 주문 2,000건"), kpi("3년차 거래액 54억 원")],
     ], { x: 0.45, y: 1.68, w: 9.1, colW: [1.3, 2.6, 2.6, 2.6], rowH: [0.56, 0.38, 0.52, 0.52, 0.38], align: ["center", "left", "left", "left"], size: 12, headFills: [BRAND, ACC, BRAND2, BRAND2] });
     box(s, 0.45, 4.1, 9.1, 0.84, G100, "pilot kpi band");
@@ -254,7 +254,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     s.addChart(pres.ChartType.bar, [{ name: "거래액", labels: ["1년차", "2년차", "3년차"], values: [2.5, 15, 54] }],
       { ...chartBase(), x: 0.35, y: 1.66, w: 4.5, h: 2.35, barDir: "col", barGapWidthPct: 70, chartColors: [BRAND3, BRAND2, BRAND], title: "연도별 목표 거래액 (억 원)", valAxisMinVal: 0, valAxisMaxVal: 62, dataLabelPosition: "outEnd", objectName: "gmv chart" });
     box(s, 0.45, 4.1, 4.4, 0.82, G100, "revenue box");
-    tx(s, [{ text: "3년차 매출 목표 약 2.6억 원", options: { bold: true, color: BRAND, breakLine: true } }, { text: "수수료 2.2 + 판매자 서비스 0.4 (억 원), 배달비 제외\n보수 시나리오(매장당 월 77건) 약 2.1억 원", options: { color: INK, fontSize: 10.5 } }], { x: 0.6, y: 4.12, w: 4.2, h: 0.78, fontSize: 12, valign: "middle", objectName: "revenue text" });
+    tx(s, [{ text: "3년차 매출 목표 약 2.6억 원", options: { bold: true, color: BRAND, breakLine: true } }, { text: "수수료 2.2 + 판매자 서비스 0.4 (억 원), 배달비 제외\n보수 시나리오(매장당 월 약 77건) 약 2.1억 원", options: { color: INK, fontSize: 10.5 } }], { x: 0.6, y: 4.12, w: 4.2, h: 0.78, fontSize: 12, valign: "middle", objectName: "revenue text" });
     tx(s, "확장 계획", { x: 5.2, y: 1.72, w: 4.3, h: 0.3, fontSize: 12, bold: true, color: BRAND, objectName: "expand title" });
     table(s, null, [["확장 조건", "첫 시장의 재구매·운영비 확인"], ["지역 확대", "인접 시장·주거 단지 → 수도권"], ["품목 확대", "나물 → 제철 농산물 전체"]],
       { x: 5.2, y: 2.06, w: 4.35, colW: [1.3, 3.05], rowH: [0.42, 0.42, 0.42], align: ["center", "left"], size: 12 });
@@ -286,16 +286,16 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     table(s, ["항목", "산식", "값"], [
       ["목표 시장", "28.7조 원 × 수도권 40% × 채소·나물 15%", v("약 1.7조 원")],
       ["3년차 거래액", "입점 300곳 × 월 100건(일반·명절 예약) × 15,000원 × 12개월", v("54억 원")],
-      ["중개 수수료", "54억 원 × 4% (배달비 제외, 면제·할인 전 단순 산식)", v("약 2.2억 원")],
+      ["중개 수수료", "54억 원 × 4% (배달비 제외, 면제·할인 전)", v("약 2.2억 원")],
       ["판매자 유료 서비스", "120곳 × 월 29,000원 × 12개월", v("약 0.4억 원")],
-      [{ t: "3년차 매출 목표", o: { fill: { color: BRANDL }, color: BRAND } }, { t: "수수료 + 판매자 유료 서비스 (기본 수익원으로 계산한 목표)", o: { fill: { color: BRANDL } } }, v("약 2.6억 원", { color: BRAND, fill: { color: BRANDL } })],
-      ["보수 시나리오", "매장당 월 77건 → 거래액 41.4억 원 × 4% + 0.4억 원", v("약 2.1억 원", { color: G700 })],
+      [{ t: "3년차 매출 목표", o: { fill: { color: BRANDL }, color: BRAND } }, { t: "수수료 + 판매자 유료 서비스", o: { fill: { color: BRANDL } } }, v("약 2.6억 원", { color: BRAND, fill: { color: BRANDL } })],
+      ["보수 시나리오", "거래액 41.4억 원(매장당 월 약 77건) × 4% + 판매자 서비스", v("약 2.1억 원", { color: G700 })],
       ["지자체·제휴 (확장)", "계약 확보 시 추가하는 확장 시나리오 (미검증, 기본 목표에서 제외)", v("+3.1억 원", { color: G700 })],
       ["주문당 수수료 수입", "15,000원 × 4% (변동비 차감 전, 공헌이익 아님)", v("600원")],
-      ["배달비 (시험 요금)", "마진 없이 연결(매출 제외) · 차액은 파일럿 예산 20만 원 한도 지원", v("3,500원/건", { color: G700 })],
+      ["배달비 (시험 요금)", "매출 목표 제외 / 차액 최대 20만 원 지원", v("3,500원/건", { color: G700 })],
       ["LLM 호출비 (3년차)", "월 약 5.8만 건 기준, 캐시 적용 / 미적용", v("월 약 72만~99만 원")],
     ], { x: 0.45, y: 1.68, w: 9.1, colW: [2.15, 5.0, 1.95], rowH: [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3], align: ["left", "left", "right"], size: 11, headSize: 11, margin: [0.02, 0.1, 0.02, 0.1] });
-    foot(s, "주: LLM 호출비는 Claude API 가격표(2026.10, 1달러=1,400원) 기준, 재시도·서버·검수 별도 / 배달대행 기본료 보도 사례: 2024년 일부 업체 4,900~5,800원"); }
+    foot(s, "주: LLM 호출비는 Claude API 가격표(2026.10, 1달러=1,400원) 기준, 재시도·서버·검수 별도 / 배달대행 요금은 견적으로 확인 (2024.10 일부 업체 5,400~5,800원 인상 예정 보도)"); }
 
   // ================= 14. 부록 2 =================
   { const s = content(14, "부록");
@@ -309,7 +309,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       ["중소벤처기업부 공고 제2026-143호, 예비창업패키지 수정공고", "https://hanok.gongju.go.kr/cmm/fms/FileDown.do?atchFileId=FILE_0000127870Uc2bM&fileSn=0"]];
     const R = [["네이버, 스마트플레이스 AI 리뷰 관리 · 톡톡 AI FAQ 발표", "https://navercorp.com/media/pressReleasesDetail?seq=34203"],
       ["쿠팡 · 컬리 · 어글리어스 · 당근 서비스 소개 (2026.10 확인, 자체 정리)", null],
-      ["문화일보 · 뉴데일리, 배달대행 기본료 인상 보도 (2024.10)", "https://www.munhwa.com/article/11458547"],
+      ["뉴데일리, 배달대행 기본료 인상 예정 보도 (2024.10.07)", "https://biz.newdaily.co.kr/site/data/html/2024/10/07/2024100700114.amp.html"],
       ["바이라인네트워크, 배민스토어 전통시장 합배송 (2024.01)", "https://byline.network/2024/01/30_baeminstore"],
       ["Anthropic, Claude API 가격표 (2026.10)", "https://platform.claude.com/docs/en/about-claude/pricing"],
       ["앱 화면: 웹 프로토타입 (매장 · 가격 · 수치는 예시 데이터)", null],
