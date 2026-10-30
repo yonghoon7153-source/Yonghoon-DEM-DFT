@@ -46,6 +46,12 @@
 #     (시작 때 · 본 제출 바로 전 다시) · -T = 기록 + 본 제출 명령 한 줄 (그 -T 에서 G0–G3 통과한 케이스만 · 없으면 "명령 없음").
 #   Q5 (KG50R-07) G0 = 시험 로그 마지막 thermo 줄이 최신 머리와 칸 수 같고 모든 칸이 유한한 수 · 'Loop time … for N steps' 의 N = 시험 마지막 run.
 #   Q9 시험 전 거부도 보고 케이스 절 (단계 · 이유 · 시도) — nohup 화면만이 아니라.
+# 2026-10-30 (Codex 재확인 KG50RF-01 · 02 · 1저자 Q1 · Q2 "권고대로" · 원장 KG50R-F01 · F02):
+#   F01 정적 대조 — 준비 구간 명령의 그 자리 치환 값 (setup_values) · 끝 상태 = 펼친 줄 (xstate) · 2 판 (독립 사전 공격 R1–R8): 상태 표 키
+#     자리 $ · 본 덱 체크포인트 앞 run every · partition 안 명령 (print · quit 만) · 줄 읽기 = LIGGGHTS file()/parse() (바이트 · \n · & 이음
+#     공백 없음 · 제어 글자 · 주석 밖 비 ASCII = 거부) · 재개 덱 준비 구간 print file 을 읽는 명령 (1저자 결정 대기) · write_restart 체크포인트
+#     앞 label · jump · clear · python · 판 메시 file 이름 = 펼친 이름 · 펼친 글 4096 자 넘음 = 닫힌 실패
+#   F02 러너 결속 — 헬퍼 러너 줄마다 대조 (runnerck) · 본 · 시험 러너 = 도구 틀 · 실행 입력 영수증 · 잡 안 sha256 대조 · G0 신원 관문
 NP=30; SUF=""; L=~/dem_test/lhs; SFX=""; TS=2000; TONLY=0; CHK=0; STRIP=0; APT=""; APH=""
 while getopts "n:s:r:x:t:TCcA:H:" o; do case $o in n) NP=$OPTARG;; s) SUF=$OPTARG;; r) L=$OPTARG;; x) SFX=$OPTARG;; t) TS=$OPTARG;; T) TONLY=1;; C) CHK=1;; c) STRIP=1;; A) APT=$OPTARG;; H) APH=$OPTARG;; *) exit 1;; esac; done
 shift $((OPTIND-1))
@@ -61,40 +67,80 @@ INS = re.compile(r'^insert/')
 MESH = {'mesh/surface/stress', 'mesh/surface'}
 
 
-def uncomment(s):
-    out, q = [], None
-    for ch in s:
-        if q:
-            out.append(ch)
-            if ch == q:
-                q = None
-        elif ch in '"\'':
-            q = ch
-            out.append(ch)
-        elif ch == '#':
-            break
+class DeckRead(Exception):
+    # 10-30 (KG50R-F01 2 판 · 사전 공격 R3): 덱 바이트를 LIGGGHTS 와 같게 읽을 수 없음 — 부르는 쪽이 닫힌 실패로
+    pass
+
+
+CWS = b' \t\n\v\f\r'                 # C isspace (LIGGGHTS Input::file 의 줄 끝 공백)
+
+
+def uncomment(b):
+    # LIGGGHTS 고정판 Input::parse() (input.cpp 354–364 행): 따옴표 밖 첫 # 부터 지움 — 따옴표 안에서 다른 따옴표를 만나면 그 따옴표로
+    #   바뀐다 (예전 = 같은 따옴표만 닫음 · 10-30 사전 공격 R3) · 바이트
+    q = None
+    for i, c in enumerate(b):
+        if c == 35 and q is None:
+            return b[:i]
+        if c == q:
+            q = None
+        elif c in (34, 39):
+            q = c
+    return b
+
+
+def deck_lines(path):
+    # 10-30 (KG50R-F01 2 판 · 사전 공격 R3): LIGGGHTS 고정판 Input::file() + parse() 와 같게 읽는다 (예전 = 텍스트 모드 · \r 도 줄 끝 ·
+    #   유니코드 공백 · & 이음에 공백 하나 더함 → "#\r…" · "& + NBSP" · "variab&↵le" 가 LIGGGHTS 와 다른 명령이 됐다)
+    #   원 줄 = \n 에서만 (fgets) · 줄 끝 C 공백 (" \t\n\v\f\r") 을 빼고 마지막 글자가 & 면 다음 원 줄을 그 & 자리부터 붙인다 (사이 공백 안 넣음) ·
+    #   파일 끝 원 줄에 \n 이 없거나 & 이음 중 파일이 끝나면 그 줄을 그대로 (& 도 글자 · LIGGGHTS 와 같음) · 주석 = uncomment()
+    #   거부 (DeckRead): 제어 글자 (탭 · 원 줄 끝 \r 말고 · 주석 안이어도) · 주석 밖 비 ASCII (주석 안 한글 = 받음 · 실제 덱 꼴)
+    #   → ([(명령 · 처음 원 줄 번호 · 끝 원 줄 번호)], 원 줄 글 목록 (마지막 \n 뒤 빈 줄 포함 = data.split(b'\n')))
+    with open(path, 'rb') as f:
+        data = f.read()
+    phys = data.split(b'\n')
+    for k, p in enumerate(phys):
+        for j, c in enumerate(p):
+            if (c < 32 and c != 9 and not (c == 13 and j == len(p) - 1)) or c == 127:
+                raise DeckRead('%d 번째 원 줄에 제어 글자 %r (탭 · 원 줄 끝 \\r 말고 · LIGGGHTS 와 줄 · 낱말 읽기가 갈린다)' % (k + 1, bytes([c])))
+    body = phys[:-1] if data.endswith(b'\n') else phys    # 원 줄 (\n 이 있는 것 + 끝에 \n 없는 하나)
+    nl = len(phys) - 1                                     # \n 으로 끝난 원 줄 수
+    res, line, full, b0 = [], b'', b'', None
+    for k, p in enumerate(body):
+        if b0 is None:
+            b0 = k
+        full = line + p
+        if k < nl:
+            m = len(full)
+            while m > 0 and full[m - 1] in CWS:
+                m -= 1
+            if m > 0 and full[m - 1] == 38:
+                line = full[:m - 1]
+                continue
+            cmd = full[:m]
         else:
-            out.append(ch)
-    return ''.join(out)
+            cmd = full                                     # 끝에 \n 없는 원 줄 = 이음 · 끝 공백 빼기 없음 (LIGGGHTS 와 같음)
+        line = b''
+        res.append((cmd, b0, k))
+        b0 = None
+    if line:
+        res.append((full, b0, len(body) - 1))             # & 이음 중 파일 끝 = 그 줄 그대로 (& 를 글자로)
+    out = []
+    for cmd, a, z in res:
+        c = uncomment(cmd)
+        bad = [x for x in c if x > 127]
+        if bad:
+            raise DeckRead('%d 번째 원 줄%s 주석 밖 비 ASCII 글자 (LIGGGHTS 는 공백 · 낱말로 안 읽음 · 주석 안 한글만 받는다): [%s]' % (
+                a + 1, '' if a == z else ' (–%d)' % (z + 1), cmd.decode('utf-8', 'replace')[:120]))
+        s = ' '.join(c.decode('ascii').split())
+        if s:
+            out.append((s, a, z))
+    return out, [p.decode('utf-8', 'replace') for p in phys]
 
 
 def deck(path):
-    # '&' 이어 붙이기 = 원 줄의 마지막 글자일 때 (주석을 지우기 전 · LIGGGHTS 입력 규칙) → 그 뒤 주석 · 공백 정리
-    res, buf = [], ''
-    with open(path, encoding='utf-8', errors='replace') as f:
-        for raw in f:
-            r = raw.rstrip('\n').rstrip()
-            if r.endswith('&'):
-                buf += r[:-1] + ' '
-                continue
-            s = ' '.join(uncomment(buf + r).split())
-            buf = ''
-            if s:
-                res.append(s)
-    s = ' '.join(uncomment(buf).split())
-    if s:
-        res.append(s)
-    return res
+    # 명령 목록 — deck_lines() (LIGGGHTS 줄 읽기 · 못 읽으면 DeckRead)
+    return [s for s, _, _ in deck_lines(path)[0]]
 
 
 def num(x):
@@ -231,6 +277,9 @@ GLOB1 = {'timestep', 'neighbor', 'atom_style', 'units', 'boundary', 'newton', 'd
 MODS = {'atom_modify', 'neigh_modify', 'comm_modify'}
 REQ_CAT = {'fix', 'fix_modify', 'glob', 'mods', 'pair_coeff'}
 VAR_OK = {'equal', 'atom', 'string', 'delete'}
+# 10-30 (KG50R-F01 2 판 · 사전 공격 R1): 상태 표 키 · 분류 자리 (낱말 번호) — 여기에 $ 가 있으면 닫힌 실패 (run_state)
+KEYPOS = {'fix': (1, 3), 'unfix': (1,), 'fix_modify': (1,), 'compute': (1,), 'uncompute': (1,), 'compute_modify': (1,), 'dump': (1,),
+          'undump': (1,), 'dump_modify': (1,), 'region': (1, 2), 'pair_coeff': (1, 2), 'variable': (1,)}
 Q3MSG = '압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가))'
 VREF = re.compile(r'\$\{([^}]*)\}|\$([A-Za-z0-9_])|(?<![A-Za-z0-9_])v_([A-Za-z0-9_]+)')
 
@@ -263,6 +312,8 @@ def unsupported(l):
                 if xw is None:
                     return 'run every 명령 따옴표를 못 읽음'
                 todo.append(xw)
+        if c == 'partition' and len(cw) > 3:
+            todo.append(cw[3:])                    # 10-30 (사전 공격 R2): partition yes|no N <명령> 의 명령도 (include · next · jump)
         if c == 'if':
             cs = if_cmds(cw)
             if cs is None:
@@ -309,6 +360,12 @@ def run_state(L, where, probs, src=None):
         if not w:
             continue
         c, n = w[0], len(w)
+        # 10-30 (KG50R-F01 2 판 · 사전 공격 R1): 키 · 분류 자리 (ID · 형 · fix 스타일 · region 꼴 · 변수 이름) 에 $ = 닫힌 실패 — 이 표의 키는
+        #   치환 전 글자인데 LIGGGHTS 는 펼친 뒤 읽는다 (fix gx${n} 둘이 한 키 · unfix ${u} 가 아무것도 안 지움 · fix … ${s} 의 삽입 판별)
+        kp = [w[x] for x in KEYPOS.get(c, ()) if x < n and '$' in w[x]]
+        if kp:
+            probs.append('%s 상태 표 키 자리에 그 자리 치환 %s — 끝 상태 키를 줄 순서로 정할 수 없음 (%s R1 · 닫힌 실패 · LIGGGHTS 는 ${x} · $x 를 '
+                         '펼친 뒤 ID · 형 · 스타일을 읽는다): [%s]' % (where, ' · '.join(kp), F01P, l))
         if c == 'fix' and n >= 4:
             put(('fix', w[1]), l, i)
             drop(('fix_modify', w[1]))
@@ -402,6 +459,11 @@ def seq_cmp(ml, rl, W, notes, probs, what):
                 continue
             if e:
                 nf = e[5:]
+                if '$' in nf or '$' in (mesh_file(b, a) or ''):
+                    # 10-30 (KG50R-F01 2 판 · 사전 공격 R6): 뒤 구간 판 메시 file 이름에 그 자리 치환 — 펼친 이름으로 있는지 볼 수 없음
+                    probs.append('판 메시 file 이름에 그 자리 치환 (%s · %s R6 · 뒤 구간은 펼친 이름을 안 셈 = 닫힌 실패): 본 덱 [%s] ↔ 재개 덱 [%s]'
+                                 % (what, F01P, a, b))
+                    continue
                 if os.path.isfile(os.path.join(W, nf)):
                     notes.append('판 메시 파일만 다름 (%s): %s' % (what, nf))
                 else:
@@ -491,10 +553,29 @@ def setup_order(Rs, Mp, probs, ri=None):
     return pairs
 
 
+def part_cmd(l):
+    # partition yes|no N <명령> 의 명령 (원 글 · LIGGGHTS Input::partition 은 셋째 낱말 뒤 원 줄을 one() 으로 돈다) — 못 읽으면 ''
+    wp = wpos(l)
+    return l[wp[2][1]:].strip() if wp is not None and len(wp) > 3 else ''
+
+
 def mprefix_check(Mp, probs):
     # 본 덱 체크포인트 앞 if = print · quit · jump 만 (그 밖 = 그 시점 상태를 정할 수 없다 · 10-28 KG50R-03)
+    #   10-30 (KG50R-F01 2 판 · 사전 공격 R2): run … every · partition 안 명령도 같은 규칙 (예전 = if 만 봐서 run every 안 fix · unfix ·
+    #   timestep 이 통과) — 둘 안 jump 도 거부 (restart 체크포인트의 남은 step 셈 · write_restart 의 흐름 줄 검사가 못 보는 자리)
     for l in Mp:
         w = words(l) or ['']
+        if w[0] == 'run' and 'every' in w[2:]:
+            cs = [x for x in w[w.index('every', 2) + 2:] if x != 'NULL']
+            if any((words(c) or [''])[0] not in IFOK for c in cs):
+                probs.append('본 덱 체크포인트 앞 run every 에 print · quit 말고 다른 명령 — 그 시점 상태를 정할 수 없음 (%s R2 · if 와 같은 '
+                             '규칙 · jump 도 거부): [%s]' % (F01P, l))
+            continue
+        if w[0] == 'partition':
+            if (words(part_cmd(l)) or [''])[0] not in IFOK:
+                probs.append('본 덱 체크포인트 앞 partition 에 print · quit 말고 다른 명령 — 그 시점 상태를 정할 수 없음 (%s R2 · if 와 같은 '
+                             '규칙 · jump 도 거부): [%s]' % (F01P, l))
+            continue
         if w[0] != 'if':
             continue
         cs = if_cmds(w)
@@ -520,11 +601,17 @@ def state_cmp(stM, stR, W, notes, probs, xM=None, xR=None):
             continue
         if isinstance(a, tuple) or isinstance(b, tuple):
             probs.append('%s 다름 (10-28 KG50R-03): 본 덱 %s ↔ 재개 덱 %s' % (what, fmt(list(a or ())), fmt(list(b or ()))))
-        elif (xM is not None and xR is not None and a and b and mesh_file(a, b) is not None and (isubs(a) or isubs(b))
-              and mesh_file(xM.get(k) or '', xR.get(k) or '') is None):
-            # 10-30 (KG50R-F01): 판 메시 file 이름만 다름 허용 = 그 자리 치환을 펼친 줄도 file 이름만 다를 때만
-            probs.append('%s 다름 — 판 메시 fix 에 그 자리 치환 (%s · file 이름만 다름 허용은 펼친 줄도 file 이름만 다를 때): 본 덱 %s ↔ '
-                         '재개 덱 %s (원 줄 [%s] ↔ [%s])' % (what, F01, xfmt(xM.get(k)), xfmt(xR.get(k)), a, b))
+        elif xM is not None and xR is not None and a and b and mesh_file(a, b) is not None and (isubs(a) or isubs(b)):
+            nfx = mesh_file(xM.get(k) or '', xR.get(k) or '')
+            if nfx is None:
+                # 10-30 (KG50R-F01): 판 메시 file 이름만 다름 허용 = 그 자리 치환을 펼친 줄도 file 이름만 다를 때만
+                probs.append('%s 다름 — 판 메시 fix 에 그 자리 치환 (%s · file 이름만 다름 허용은 펼친 줄도 file 이름만 다를 때): 본 덱 %s ↔ '
+                             '재개 덱 %s (원 줄 [%s] ↔ [%s])' % (what, F01, xfmt(xM.get(k)), xfmt(xR.get(k)), a, b))
+            elif any(c in nfx for c in (VAL0, VAL1, RT0, RT1)):
+                probs.append('%s — 판 메시 file 이름을 펼칠 수 없음 (%s R6 · equal 값 · 실행 상태 값 · 못 펼침 = 닫힌 실패): 재개 덱 %s'
+                             % (what, F01P, xfmt(xR.get(k))))
+            else:
+                same_or_mesh(a, b, W, notes, probs, what, nfx)   # 10-30 사전 공격 R6: 작업 폴더에 있는지 = 펼친 이름 (예전 = 치환 전 글자)
         else:
             same_or_mesh(a, b, W, notes, probs, what)
     notes.append('재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 %d 항목 · 재개 덱 %d 항목%s' % (
@@ -554,6 +641,15 @@ def state_cmp(stM, stR, W, notes, probs, xM=None, xR=None):
 #     ${z_max}+…) 은 write_restart 뒤 = 뒤 구간 (명령 하나하나 대조 · 두 덱 같은 step) 이라 준비 구간이 아니다
 #   표기: ⟦…⟧ = equal 값 (그 수식) · ⟨…⟩ = 정의 때 실행 상태 값 · 못 펼침 (두 덱에서 늘 다름)
 F01 = '10-30 KG50R-F01'
+F01P = '10-30 KG50R-F01 · 사전 공격'                      # 2 판 (독립 사전 공격 R1–R8) 문제 줄 표지
+XCAP = 4096                                               # 10-30 사전 공격 R7: 펼친 글 크기 상한 (자) — 넘으면 못 펼침 = 닫힌 실패
+
+
+def xcap_why(x):
+    return ('%s 펼친 글이 %d 자를 넘음 (%s R7 · 닫힌 실패 · LIGGGHTS 는 계산한 수를 넣지만 이 대조는 수식 글을 펼쳐 견준다 — 사슬이 깊으면 '
+            '지수로 커진다)' % (x, XCAP, F01P))
+
+
 VAL0, VAL1, RT0, RT1 = '\x1c', '\x1d', '\x1e', '\x1f'   # 펼친 글의 표지 — deck() 명령에는 없는 글자 (str.split() 이 공백으로 지움)
 MATHF = {'sqrt', 'exp', 'ln', 'log', 'abs', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'atan2', 'ceil', 'floor', 'round'}
 NUMS = re.compile(r'[0-9.]+([eE][+-]?[0-9]*)?')    # LIGGGHTS Variable::evaluate 의 수 읽기 (숫자 · 점 → e · E [+-] 숫자)
@@ -689,8 +785,10 @@ def expand(x, env, seen=()):
         return None, '%s 변수 %s 는 ${} · v_ 로 값 하나가 안 나온다' % (st, x)
     if x in seen or len(seen) > 64:
         return None, '%s 순환 참조' % x
-    out, i, n = [], 0, len(body)
+    out, i, n, size = [], 0, len(body), 0
     while i < n:
+        if size > XCAP:
+            return None, xcap_why(x)              # 10-30 사전 공격 R7: v_ 사슬 (매 단 두 갈래) 이 지수로 커지기 전에 끊는다
         ch = body[i]
         if ch in (VAL0, RT0):
             j = mark_end(body, i)               # 정의 때 넣은 값 — 다시 읽지 않는다
@@ -715,12 +813,16 @@ def expand(x, env, seen=()):
                     if t is None:
                         return None, w
                     out.append(t)
+                size += len(out[-1])
                 i = j
                 continue
         else:
             j = i + 1
         out.append(body[i:j])
+        size += j - i
         i = j
+    if size > XCAP:
+        return None, xcap_why(x)
     t = VAL0 + ''.join(out) + VAL1
     return t, fwhy(t)
 
@@ -811,7 +913,10 @@ def var_env(L, nm):
                     break
                 body += [l[p:s], t]
                 p = e
-            env[x] = ('bad', '%s 정의의 %s' % (x, bad)) if bad else (st, ''.join(body) + l[p:wp[3][1]])
+            b = ''.join(body) + l[p:wp[3][1]]
+            if not bad and len(b) > XCAP:
+                bad = xcap_why(x)                  # 10-30 사전 공격 R7: ${} 사슬 (정의 때 치환 · 매 단 두 배) 을 끊는다
+            env[x] = ('bad', '%s 정의의 %s' % (x, bad)) if bad else (st, b)
     out.append((dict(env), why))
     return out
 
@@ -942,7 +1047,9 @@ def sched_cmp(ml, R, ir, what, kind, mwhere, probs, notes):
 
 
 def mesh_file(a, b):
-    ta, tb = a.split(), b.split()
+    # 판 메시 fix 둘이 file 이름만 다르면 b 의 file 이름 · 아니면 None — 낱말 = 공백 · 탭에서만 (10-30 사전 공격 R6: 펼친 글의 표지
+    #   \x1c–\x1f 를 str.split() 은 공백으로 봐 낱말을 가른다)
+    ta, tb = re.split('[ \t]+', a.strip(' \t')), re.split('[ \t]+', b.strip(' \t'))
     if (len(ta) != len(tb) or len(ta) < 6 or ta[0] != 'fix' or ta[3] not in MESH
             or 'file' not in ta or 'file' not in tb or ta.index('file') != tb.index('file')):
         return None
@@ -952,10 +1059,11 @@ def mesh_file(a, b):
     return tb[i + 1]
 
 
-def same_or_mesh(a, b, W, notes, probs, what):
+def same_or_mesh(a, b, W, notes, probs, what, nfx=None):
+    # nfx (10-30 사전 공격 R6) = 펼친 file 이름 (그 자리 치환이 있을 때 · 작업 폴더에 있는지는 이 이름으로)
     if a == b:
         return
-    nf = mesh_file(a, b) if (a and b) else None
+    nf = nfx if nfx is not None else (mesh_file(a, b) if (a and b) else None)
     if nf is not None:
         if os.path.isfile(os.path.join(W, nf)):
             notes.append('판 메시 파일만 다름 (%s): %s' % (what, nf))
@@ -970,9 +1078,59 @@ def same_or_mesh(a, b, W, notes, probs, what):
         probs.append('%s 는 재개 덱에만 있음: [%s]' % (what, b))
 
 
+FLOW5 = {'label', 'jump', 'clear', 'python'}
+
+
+def flow_before_write(Mp, probs):
+    # 10-30 (KG50R-F01 2 판 · 사전 공격 R5): write_restart 체크포인트 앞 label · jump · clear · python (맨 위 · if · run every 안 · partition 안은
+    #   mprefix_check 가 print · quit 만 받는다) =
+    #   체크포인트 시점 상태 표를 줄 순서로 정할 수 없음 (닫힌 실패) — restart 체크포인트는 남은 step 셈이 이미 거부한다 (예전 = write_restart 꼴은
+    #   변수 표만 못 정함 · 변수 없는 상태 (fix …) 는 줄 순서대로 읽어 jump 가 건너뛴 · clear 가 지운 fix 가 남은 것으로 보였다)
+    for l in Mp:
+        w = words(l) or ['']
+        hit = [x[0] for x in [w] + nested(w) if x and x[0] in FLOW5]
+        if hit:
+            probs.append('본 덱 write_restart 체크포인트 앞 흐름 줄 %s — 체크포인트 시점 상태 표를 줄 순서로 정할 수 없음 (%s R5 · 닫힌 실패): [%s]'
+                         % (' · '.join(sorted(set(hit))), F01P, l))
+
+
+def print_file_reads(L, n, nm, probs):
+    # 10-30 (KG50R-F01 2 판 · 사전 공격 R4 · 1저자 결정 대기 — 그때까지 닫힌 실패): 재개 덱 준비 구간 (L[:n]) 의 print … file|append <이름> 으로
+    #   쓴 파일을 그 뒤 명령 (print 말고 · 준비 · 뒤 구간) 이 읽음 — print 의 그 자리 치환 값은 대조 밖 (규칙 (5)) 이라 재개 덱이 쓴 파일 글이
+    #   본 덱과 다를 수 있다 (판 STL 을 준비 구간에서 쓰고 mesh fix 가 읽는 꼴).  이름에 $ · 읽는 쪽 file 이름에 $ = 정할 수 없음 = 같은 거부.
+    #   본 덱은 보지 않는다 — 본 덱이 제 준비 구간에서 쓰고 읽는 파일 (압축 루프 체크포인트 앞 판 STL 같은) 은 본 덱 자신의 이력이다
+    seen = set()
+    for i in range(min(n, len(L))):
+        w = words(L[i]) or ['']
+        if w[0] != 'print':
+            continue
+        for t in [w[k + 1] for k in range(2, len(w) - 1) if w[k] in ('file', 'append')]:
+            if t in seen:
+                continue
+            for j in range(i + 1, len(L)):
+                wj = words(L[j]) or ['']
+                if wj[0] == 'print':
+                    continue
+                dyn = '$' in t or any(wj[k] == 'file' and '$' in wj[k + 1] for k in range(1, len(wj) - 1))
+                if t in wj[1:] or dyn:
+                    seen.add(t)
+                    probs.append('%s 준비 구간 print file/append 로 쓴 파일 %s 를 뒤 명령이 읽음 — print 의 그 자리 치환 값은 대조 밖 (%s R4 · 1저자 결정 '
+                                 '대기 · 닫힌 실패): [%s] → [%s]' % (nm, t, F01P, L[i], L[j]))
+                    break
+
+
 def check(main, res, ckpt, s0, W):
     # 10-28 밤 (KG50R-01 · 02 · 03 · 05 · 1저자 Q2 (가) · Q3 (가)) — 전체 프로그램 대조 (규칙 = 위 STATE_CMD 머리 주석)
     #   예전 B (물리 줄이 본 덱 어딘가에) · C (fix · 쌍 · 이웃 · timestep 만) · E (fix · run · if … 만 순서) = 아래 상태 · 구간 대조가 대신한다
+    #   10-30 (KG50R-F01 2 판 · 사전 공격 R3): 덱을 LIGGGHTS 와 같게 읽을 수 없으면 (제어 글자 · 주석 밖 비 ASCII) 대조 전에 닫힌 실패
+    rd = []
+    for nm, p in (('본 덱', main), ('재개 덱', res)):
+        try:
+            deck(p)
+        except DeckRead as e:
+            rd.append('덱 바이트를 LIGGGHTS 와 같게 읽을 수 없음 (%s R3 · 닫힌 실패): %s %s' % (F01P, nm, e))
+    if rd:
+        return rd, []
     M, R = deck(main), deck(res)
     probs, notes = [], []
     # 0. 다룰 수 없는 구문 (10-28 KG50R-03 (ⅵ)) — 본 덱 · 재개 덱 어디든 (if 안 명령 포함)
@@ -1095,6 +1253,7 @@ def check(main, res, ckpt, s0, W):
             sched_cmp(ml, R, ir, '첫 긴 run', 'write_restart 체크포인트', '본 덱 그 뒤', probs, notes)
         # 10-28 밤 (KG50R-03): 그 줄 다음 ~ 첫 긴 run 앞 명령 전체 (판 높이 run 1 · 판 STL · 판 fix …) = 재개 덱 첫 긴 run 앞에 그대로
         pM = ia + 1
+        flow_before_write(M[:pM], probs)          # 10-30 사전 공격 R5
     # 뒤 구간 (10-28 KG50R-03 · 예전 E 를 넓힘) — 본 덱 pM ~ 끝 = 재개 덱 q ~ 끝 (첫 긴 run 은 위 D · write 대조가 본다)
     if im > pM:
         # 준비 구간 경계 q = 재개 덱 첫 긴 run 바로 앞 같은 수 명령 (그 꼴이면) · 아니면 재개 덱 read_restart 뒤에서 본 덱 구간을 맞춰 본
@@ -1116,6 +1275,7 @@ def check(main, res, ckpt, s0, W):
     # 준비 구간 · 상태 (10-28 KG50R-03 · 예전 C 를 넓힘) — 재개 덱 q 앞 (read_restart 빼고) ↔ 본 덱 pM 앞
     if q is not None:
         mprefix_check(M[:pM], probs)
+        print_file_reads(R, q, '재개 덱', probs)  # 10-30 사전 공격 R4
         ri = [i for i in range(q) if i != rs[0]]
         setup_check([R[i] for i in ri], M[:pM], probs)
         pairs = setup_order([R[i] for i in ri], M[:pM], probs, ri)
@@ -1179,23 +1339,8 @@ def trial_steps(path):
 
 
 def deck_spans(path):
-    # deck() 와 같은 규칙으로 명령을 만들고, 명령마다 그 명령을 이룬 원 줄 번호 (처음 · 끝) 를 함께 낸다
-    res, buf, b0 = [], '', None
-    with open(path, encoding='utf-8', errors='replace') as f:
-        raw = f.read().split('\n')
-    for i, line in enumerate(raw):
-        r = line.rstrip()
-        if b0 is None:
-            b0 = i
-        if r.endswith('&'):
-            buf += r[:-1] + ' '
-            continue
-        s = ' '.join(uncomment(buf + r).split())
-        buf = ''
-        if s:
-            res.append((s, b0, i))
-        b0 = None
-    return res, raw
+    # deck() 와 같은 규칙으로 명령을 만들고, 명령마다 그 명령을 이룬 원 줄 번호 (처음 · 끝) 를 함께 낸다 (10-30 사전 공격 R3: 같은 deck_lines())
+    return deck_lines(path)
 
 
 def cut_trial(res, ts, out):
