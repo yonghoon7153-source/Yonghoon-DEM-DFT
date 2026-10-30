@@ -31,7 +31,8 @@ def num(tok):
 
 def normalize(t):
     t = t.replace("톱3", "톱 쓰리")
-    t = t.replace("Afresh", "애프레시").replace("AI", "에이아이").replace("(Why now)", "")
+    t = t.replace("O2O", "오투오").replace("Afresh", "애프레시").replace("AI", "에이아이").replace("(Why now)", "")
+    t = re.sub(r"(?<![\d.,])1만", "만", t)  # 1만 5천 → 만 오천
     t = re.sub(r"(\d+)시", lambda m: NATIVE_HOUR[int(m.group(1))] + " 시", t)
     t = re.sub(r"(\d[\d,]*(?:\.\d+)?)\s*%", lambda m: num(m.group(1)) + " 퍼센트", t)
     t = re.sub(r"(\d[\d,]*(?:\.\d+)?)\s*km", lambda m: num(m.group(1)) + " 킬로미터", t)
@@ -41,5 +42,5 @@ def normalize(t):
     return re.sub(r"\s+", " ", t).strip()
 
 if __name__ == "__main__":
-    for s in ["1인 가구 36.1%", "1,393곳", "28.7조 원", "오후 5시", "29,900원", "293만 kg", "반경 3km", "1억 5천만 끼", "2,000만 명", "0%를", "100점 만점에 50.3점", "2024년", "톱3"]:
+    for s in ["O2O 플랫폼", "18세 미만", "60.4%", "29,900원", "1만 5천 원", "1인 가구 36.1%", "1,393곳", "28.7조 원", "오후 5시", "29,900원", "293만 kg", "반경 3km", "1억 5천만 끼", "2,000만 명", "0%를", "100점 만점에 50.3점", "2024년", "톱3"]:
         print(s, "=>", normalize(s))

@@ -1,0 +1,13 @@
+{
+  "name": "namullo-deck",
+  "private": true,
+  "type": "commonjs",
+  "description": "나물로 발표자료 생성 (pptxgenjs)",
+  "scripts": {
+    "script": "python3 make_script.py ../03_발표대본_나물로.md",
+    "deck": "node build_deck.js ../02_발표자료_나물로.pptx"
+  },
+  "dependencies": {
+    "pptxgenjs": "4.0.1"
+  }
+}

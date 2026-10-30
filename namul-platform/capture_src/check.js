@@ -1,14 +1,17 @@
+// 기본 점검: 화면 전환 · AI 셰프 예시 응답 · 판매자 메시지 정리 · 390px 가로 넘침 · 콘솔 오류
 const { chromium } = require("playwright");
+const path = require("path"), os = require("os");
+const ROOT = path.resolve(__dirname, ".."), PAGE = "file://" + path.join(ROOT, "prototype/nm_prototype.html");
 (async () => {
-  const S = process.argv[2];
+  const SHOT = os.tmpdir();
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1280, height: 960 } });
   const errs = [];
   page.on("pageerror", e => errs.push("pageerror: " + e.message));
   page.on("console", m => { if (m.type() === "error") errs.push("console: " + m.text()); });
-  await page.goto("file://" + S + "/proto/nm_prototype.html");
+  await page.goto(PAGE);
   await page.waitForTimeout(1500);
-  await page.screenshot({ path: S + "/proto/shots/review_desktop.png" });
+  await page.screenshot({ path: path.join(SHOT, "namul_review_desktop.png") });
   // exercise flows quickly
   for (const v of ["dogam", "aichef", "recipe", "stores", "checkout", "done", "box", "merchant", "home"]) {
     await page.evaluate(v => window.demo.go(v), v); await page.waitForTimeout(150);
@@ -22,9 +25,9 @@ const { chromium } = require("playwright");
   // phone-width layout
   const phone = await browser.newPage({ viewport: { width: 390, height: 844 } });
   phone.on("pageerror", e => errs.push("phone pageerror: " + e.message));
-  await phone.goto("file://" + S + "/proto/nm_prototype.html#home"); await phone.waitForTimeout(800);
+  await phone.goto(PAGE + "#home"); await phone.waitForTimeout(800);
   const overflow = await phone.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-  await phone.screenshot({ path: S + "/proto/shots/review_phone.png" });
+  await phone.screenshot({ path: path.join(SHOT, "namul_review_phone.png") });
   console.log(JSON.stringify({ errs, recs, lastCard, phoneOverflowPx: overflow }, null, 1));
   await browser.close();
 })();

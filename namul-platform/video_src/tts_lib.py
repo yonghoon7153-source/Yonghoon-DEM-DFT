@@ -1,7 +1,9 @@
-import re, wave
+"""오프라인 한국어 TTS(sherpa-onnx 1.x + vits-mimic3-ko_KO-kss_low)와 받아쓰기 기반 글자 오류율(CER) 측정.
+모델 폴더는 NAMUL_TTS_MODELS 환경 변수로 지정 (기본: namul-platform/.cache/tts). 모델은 sherpa-onnx GitHub releases 의 tts-models / asr-models 에서 받는다."""
+import os, re, wave
 import numpy as np
 import sherpa_onnx
-M = "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a9086aab-2880-555b-a3e5-137ced4672cf/scratchpad/tts/models"
+M = os.environ.get("NAMUL_TTS_MODELS", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".cache", "tts"))
 _tts = _asr = None
 def tts():
     global _tts

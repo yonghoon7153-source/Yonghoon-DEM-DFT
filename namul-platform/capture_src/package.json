@@ -1,0 +1,9 @@
+{
+  "name": "namullo-capture",
+  "private": true,
+  "type": "commonjs",
+  "description": "프로토타입 화면 캡처 · 시연 녹화 · 점검 (Playwright + Chromium)",
+  "dependencies": {
+    "playwright": "1.63.0"
+  }
+}

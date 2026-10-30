@@ -1,9 +1,14 @@
+// 시연 녹화: 480×884 창에서 웹앱을 자동 조작해 녹화 → 앞 1.25초를 자르고 휴대폰 틀(414×868)만 잘라 assets/demo/ 에 저장
+// 사용: node record.js   (ffmpeg 필요)
 const { chromium } = require("playwright");
-const S = process.argv[2], URL = "file://" + S + "/proto/nm_prototype.html";
+const fs = require("fs"), { execFileSync } = require("child_process");
+const path = require("path"), os = require("os");
+const ROOT = path.resolve(__dirname, ".."), PAGE = "file://" + path.join(ROOT, "prototype/nm_prototype.html");
+const URL = PAGE, REC = fs.mkdtempSync(path.join(os.tmpdir(), "namul_rec_")), OUT = path.join(ROOT, "assets/demo");
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 (async () => {
   const browser = await chromium.launch();
-  const ctx = await browser.newContext({ viewport: { width: 480, height: 884 }, recordVideo: { dir: `${S}/proto/rec`, size: { width: 480, height: 884 } } });
+  const ctx = await browser.newContext({ viewport: { width: 480, height: 884 }, recordVideo: { dir: REC, size: { width: 480, height: 884 } } });
   const p = await ctx.newPage();
   await p.addInitScript(() => { const st = document.createElement("style"); st.textContent = ".guide{display:none!important} html,body,.stage{background:#FFFFFF!important} .stage{display:block!important;padding:8px 0!important;min-height:0!important} .device{margin:0 auto!important;box-shadow:none!important}"; document.addEventListener("DOMContentLoaded", () => document.head.append(st)); });
   await p.goto(URL + "#home"); await sleep(1200);
@@ -30,4 +35,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await pe(() => demo.tap('[data-act="accept"]')); await sleep(2200); lap("end");
   await p.close(); await ctx.close(); await browser.close();
   console.log(JSON.stringify(marks));
+  const webm = path.join(REC, fs.readdirSync(REC).find(f => f.endsWith(".webm")));
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-ss", "1.25", "-i", webm, "-vf", "crop=414:868:33:8,fps=30,format=yuv420p", "-c:v", "libx264", "-preset", "slow", "-crf", "18", "-an", "-movflags", "+faststart", path.join(OUT, "demo_phone.mp4")]);
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", path.join(OUT, "demo_phone.mp4"), "-frames:v", "1", path.join(OUT, "demo_poster.png")]);
+  console.log("wrote", path.join(OUT, "demo_phone.mp4"));
 })();
