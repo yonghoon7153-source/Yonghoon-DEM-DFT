@@ -1,0 +1,262 @@
+{
+ "checks": [
+  {
+   "detail": "",
+   "id": "R0",
+   "name": "등록 문서 §2 · §3 · 수확 묶음 README 값을 읽었다 (자리 하나 · 값 하나)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "A1",
+   "name": "실행기 등록 표 REGISTERED_ID_SETS['supp20'] = 등록 문서 §2 (케이스 수 · ids_sha256 · 코호트 lhss 수)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "A2",
+   "name": "등록 집합 supp20 성립 — 커밋된 수확 폴더 (docs/data/lhss_descriptors_cov_1e09f661d) 에서 열거 = 등록 (수 · 코호트 · 지문)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "B1",
+   "name": "계획 (실행기 build_plan · --cohorts lhss) = 등록 생산 집합 supp20 — 아니면 일반 계획 (강등 · 판정문 §4)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "B2",
+   "name": "후속 ⓪b 다시 읽기 명령 = --expect-set supp20 (실행기 print_followups) — --expect-case 나열 = 강등",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "B3",
+   "name": "입력 지문 (실행기 plan_input_digest · 반입 파일에서 다시 계산) = 등록 §2 (케이스 수 · ids · raw sha 표 · 원자료 결손 0 · 코호트 TSV)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "C1",
+   "name": "r3 묶음 sha256 = README · 항목 경로 안전 (한 폴더 · 절대 · .. · 링크 없음) · harvest_head = README 값 · 등록 수확기 판 접두",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "C2",
+   "name": "반입 파일 = r3 묶음 바이트 — 기술자 20 (ID = 등록 집합) · _batch_summary · 코호트 TSV · union",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "C3",
+   "name": "설계 CSV (보충 설계) · 어댑터 출력 CSV sha256 = 등록 §2",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "C4",
+   "name": "r2 ↔ r3 키별 대조 (README 끝) — r2 묶음 sha256 = README · 같은 케이스 · 공통 키 값 같음 (수확 체크아웃 경로 1 키만 예외) · r2 에만 = wall_near_tangent 진단 · r3 에만 0 · union 칸 차이 0",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "D1",
+   "name": "이 체크아웃의 봉인 32 code_fp = 등록 §3 (수치 봉인 무변경)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "F0",
+   "name": "supp20 발사 manifest 읽기 (/home/yonghoon71/netsupp20_35f032737_1028/manifest.json)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "F1",
+   "name": "supp20 manifest 실행 형식 자격 = current (실행기 launch_eligibility)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "F2",
+   "name": "supp20 manifest 계획 = 등록 생산 집합 supp20 (실행기 registered_production_set)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "F3",
+   "name": "supp20 manifest input_digest = 반입 파일 재계산 (= 등록 §2 — B3)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "F4",
+   "name": "supp20 import 관측 ON (observe_imports true · 관측 실행 신원 · 실행기 production_observation_problem 없음)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "F5",
+   "name": "supp20 발사 봉인 code_fp = 등록 §3 · 깨끗한 트리 (git.dirty false)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "F6",
+   "name": "supp20 manifest 인계 도구 지문 (handover_code_hashes) = 이 체크아웃 — 영수증은 발사 체크아웃에서 만든다",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "F7",
+   "name": "supp20 manifest git.sha = 승인 SHA (7–40 hex · 접두 · 1저자 Q3 — H1 은 두 manifest 의 상호 일치일 뿐)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "G0",
+   "name": "production194 발사 manifest 읽기 (/home/yonghoon71/net194_35f032737_1028/manifest.json)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "G1",
+   "name": "production194 manifest 실행 형식 자격 = current (실행기 launch_eligibility)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "G2",
+   "name": "production194 manifest 계획 = 등록 생산 집합 production194 (실행기 registered_production_set)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "G4",
+   "name": "production194 import 관측 ON (observe_imports true · 관측 실행 신원 · 실행기 production_observation_problem 없음)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "G5",
+   "name": "production194 발사 봉인 code_fp = 등록 §3 · 깨끗한 트리 (git.dirty false)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "G7",
+   "name": "production194 manifest git.sha = 승인 SHA (7–40 hex · 접두 · 1저자 Q3 — H1 은 두 manifest 의 상호 일치일 뿐)",
+   "ok": true
+  },
+  {
+   "detail": "",
+   "id": "H1",
+   "name": "새 ROOT 둘 (194 · 보충 manifest 의 폴더가 다르다) · 같은 발사 커밋 (git.sha) · 같은 발사 봉인 지문",
+   "ok": true
+  }
+ ],
+ "generated": "2026-10-30T09:17:54",
+ "inputs": {
+  "adapter": "docs/data/lhss_design_adapted_20261012.csv",
+  "approved_sha": "35f0327377a4213774010a090df4d224e50d29e1",
+  "cohort_tsv": "/home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d/_cohort.tsv",
+  "design": "docs/data/lhs_supp_design_20261006.csv",
+  "dry_run_log": null,
+  "harvest": "/home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d",
+  "manifest": "/home/yonghoon71/netsupp20_35f032737_1028/manifest.json",
+  "preflight_log": null,
+  "preflight_receipt": null,
+  "preflight_receipt_sha256": null,
+  "primary_manifest": "/home/yonghoon71/net194_35f032737_1028/manifest.json",
+  "r2_bundle": "docs/data/lhs_supp_runs_20261006/lhss_harvest_20261011_r2.tgz",
+  "r3_bundle": "docs/data/lhs_supp_runs_20261006/lhss_harvest_r3_1e09f661d.tgz",
+  "union": "/home/yonghoon71/dem-audit/docs/data/lhss_union_1e09f661d/lhss20_union.tsv"
+ },
+ "manual": [
+  {
+   "item": "사전 점검 결과 — 발사 핀 fast16 + real4 · 깨끗한 트리 (등록 §0 ⑥ · 194 등록 §1 과 같은 단계)",
+   "verified_by_tool": false
+  },
+  {
+   "item": "저자 발사 승인 (판정문 §4 ⑤ — 이 영수증 · 리뷰가 대신하지 않는다)",
+   "verified_by_tool": false
+  },
+  {
+   "item": "새 ROOT 둘 · 같은 발사 커밋 — --manifest 와 --primary-manifest 를 둘 다 주면 기계 대조 (아니면 수동)",
+   "verified_by_tool": false
+  }
+ ],
+ "notes": {},
+ "rc": 0,
+ "recomputed": {
+  "input_digest": {
+   "cohort_tsv_sha256": {
+    "lhss": "69d3f913072288b1d6b8ca8a14e43b0bc8f80e8836a8f79a9b26b2d8ed6dcaf7"
+   },
+   "ids_sha256": "991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694",
+   "missing_raw_sha": [],
+   "n": 20,
+   "raw_sha256_table_sha256": "a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e"
+  },
+  "registered_ids": [
+   "lhss_001",
+   "lhss_002",
+   "lhss_003",
+   "lhss_004",
+   "lhss_005",
+   "lhss_006",
+   "lhss_007",
+   "lhss_008",
+   "lhss_009",
+   "lhss_010",
+   "lhss_011",
+   "lhss_012",
+   "lhss_013",
+   "lhss_014",
+   "lhss_015",
+   "lhss_016",
+   "lhss_017",
+   "lhss_018",
+   "lhss_019",
+   "lhss_020"
+  ]
+ },
+ "recorded": {
+  "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+  "git": {
+   "dirty": false,
+   "porcelain": [],
+   "sha": "35f0327377a4213774010a090df4d224e50d29e1"
+  },
+  "tool_sha256": {
+   "scripts/g2_network_reread.py": "0e2ec7ef37571268b85b0d17b71f7a2858aa2a7e6bcfadf4be1c6b5416dd5cd8",
+   "scripts/lhs_design_dataset.py": "d1815155142e909200053c2d8e9de8c0a88c2dc6d3d9462ad18614a42845e1f0",
+   "scripts/lhs_release_build.py": "3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383",
+   "scripts/run_network_194_parallel.py": "3220be53fb89cd16c81f0273c8b9f7444f262c5311d02b2017756fd94fd66ac8",
+   "scripts/supp20_input_receipt.py": "3d6110be24d24bf91ad1e71232a2e5dad580cf95178d6135b13aa6ca6de6f950"
+  }
+ },
+ "registered_set": "supp20",
+ "registration": {
+  "document": "docs/reviews/lhs_network_batch_registration_20261012_supp20.md",
+  "values": {
+   "adapter_csv_sha256": "df505b79a756ee3fe2759c740bfb43282dd69035c5a9fb9354a657300117dc0c",
+   "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+   "code_fp_pending": null,
+   "cohort_tsv_sha256": "69d3f913072288b1d6b8ca8a14e43b0bc8f80e8836a8f79a9b26b2d8ed6dcaf7",
+   "design_csv_sha256": "73d9a47f76f49989ddbd2c1237007c8499601d63bd5baf0e1ad11c527f21beb0",
+   "harvest_head": "1e09f661d83edd674a1686b22552f609b61a34b6",
+   "harvest_pin": "1e09f661d",
+   "ids_sha256": "991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694",
+   "n": 20,
+   "r2_tgz_sha256": "baa03b6b65d57b7850df151a011d8102b605fc15d81aa9f58969629ac9d00aff",
+   "r3_tgz_sha256": "e4aa0b9492a48368d47ad20555cd71114da53488badedbaea330835c467b9958",
+   "raw_sha256_table_sha256": "a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e"
+  }
+ },
+ "schema": "supp20_input_receipt/v1",
+ "scope": "launch",
+ "warnings": []
+}
