@@ -108,18 +108,20 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       tx(s, d, { x: 0.65, y: y + 0.52, w: 3.05, h: 0.4, fontSize: 10.5, color: G700, objectName: "kpi desc " + i }); });
     tx(s, "예상되는 문제 (인터뷰로 확인할 가설)", { x: 4.15, y: 1.72, w: 5.4, h: 0.3, fontSize: 12, bold: true, color: BRAND, objectName: "pain title" });
     [["온라인 운영 부담", "상품을 올리고 주문에 응대하는 일이 늘어날 것으로 예상"], ["손질 서비스 홍보", "손질해서 팔면 값을 더 받을 수 있어도 알릴 방법이 부족할 것"], ["제철 재고 부담", "제철에 물량이 몰려 남는 재고가 생길 것으로 예상"]].forEach(([h, d], i) => {
-      const y = 2.1 + i * 0.94;
+      const y = 2.1 + i * 0.78;
       badge(s, i + 1, 4.15, y + 0.03);
       tx(s, h, { x: 4.6, y, w: 4.95, h: 0.34, fontSize: 14, bold: true, color: INK, valign: "middle", objectName: "seller pain " + i });
       tx(s, d, { x: 4.6, y: y + 0.36, w: 4.95, h: 0.32, fontSize: 12, color: G700, objectName: "seller pain desc " + i });
-      if (i < 2) s.addShape(pres.ShapeType.line, { x: 4.6, y: y + 0.8, w: 4.95, h: 0, line: { color: G200, width: 0.75 }, objectName: "pain rule " + i }); });
+      if (i < 2) s.addShape(pres.ShapeType.line, { x: 4.6, y: y + 0.72, w: 4.95, h: 0, line: { color: G200, width: 0.75 }, objectName: "pain rule " + i }); });
+    box(s, 4.15, 4.38, 5.4, 0.42, BRANDL, "need band");
+    tx(s, [{ text: "필요  ", options: { bold: true, color: BRAND } }, { text: "적은 입력으로 상품 등록 · 손질 서비스 홍보 · 예약 주문 통로", options: { color: INK } }], { x: 4.28, y: 4.38, w: 5.2, h: 0.42, fontSize: 11.5, valign: "middle", objectName: "need text" });
     foot(s, "자료: 소상공인시장진흥공단 전통시장 실태조사(2023 기준), 산림청 「2024년 임산물생산조사」(2025.10), 머니투데이(2026.03) / 증가율은 입점 점포 기준 보도 수치"); }
 
   // ================= 4. Solution: 서비스 개요 =================
   pres.addSection({ title: "Solution" });
   { const s = content(4, "Solution");
     head(s, "Solution  |  서비스", "서비스 개요", "레시피 탐색부터 동네 매장 주문, 픽업·저녁 배달까지 한 앱에서 처리하는 O2O 커머스");
-    [["01  레시피 탐색", "제철 나물 정보·손질법, 아이 선호 메뉴 추천,\n유튜브 레시피 영상 연동"], ["02  재료 담기", "레시피 재료 가운데 집에 없는 것만 골라\n장바구니에 담기"], ["03  주문 · 받기", "반경 3km 매장 비교, 손질·데침 옵션 선택,\n가게 픽업(무료) 또는 저녁 묶음배달(배차는 나물로)"]].forEach(([h, d], i) => {
+    [["01  레시피 탐색", "제철 나물 정보·손질법, 아이 선호 메뉴 추천,\n유튜브 레시피 영상 연동"], ["02  재료 담기", "레시피 재료 가운데 집에 없는 것만 골라\n장바구니에 담기"], ["03  주문 · 받기", "반경 3km 매장 비교, 손질·데침 옵션 선택,\n가게 픽업(무료) 또는 저녁 배달(배달대행 연결)"]].forEach(([h, d], i) => {
       const y = 1.72 + i * 0.86;
       s.addShape(pres.ShapeType.homePlate, { x: 0.45, y, w: 1.85, h: 0.74, fill: { color: i === 2 ? BRAND : BRAND2 }, line: { color: i === 2 ? BRAND : BRAND2, width: 0 }, objectName: "step " + i });
       tx(s, h, { x: 0.6, y, w: 1.6, h: 0.74, fontSize: 13, bold: true, color: "FFFFFF", valign: "middle", objectName: "step text " + i });
@@ -212,8 +214,8 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
 
   // ================= 9. Business: 수익 모델 =================
   { const s = content(9, "Business");
-    head(s, "Business  |  수익모델", "수익 모델", "중개 수수료를 기본 수익원으로 하고 판매자 유료 서비스·제휴 광고로 확대, 배달비는 고객 부담");
-    const nodes = [["고객", "맞벌이 자녀 가구", 0.45, 1.75, G100, INK], ["나물로", "주문 · 배차 · 정산", 4.05, 1.75, BRAND, "FFFFFF"], ["판매자", "전통시장 · 로컬푸드", 7.65, 1.75, G100, INK]];
+    head(s, "Business  |  수익모델", "수익 모델", "중개 수수료를 기본 수익원으로 하고 판매자 유료 서비스·제휴 광고로 확대, 배달은 마진 없이 연결");
+    const nodes = [["고객", "맞벌이 자녀 가구", 0.45, 1.75, G100, INK], ["나물로", "주문 · 배달 연결 · 정산", 4.05, 1.75, BRAND, "FFFFFF"], ["판매자", "전통시장 · 로컬푸드", 7.65, 1.75, G100, INK]];
     nodes.forEach(([t, d, x, y, fill, col]) => { box(s, x, y, 1.9, 0.92, fill, "node " + t, fill === G100 ? G300 : null);
       tx(s, [{ text: t, options: { fontSize: 15, bold: true, breakLine: true } }, { text: d, options: { fontSize: 10.5 } }], { x, y, w: 1.9, h: 0.92, color: col, align: "center", valign: "middle", objectName: "node text " + t }); });
     const arrow = (x1, x2, y, name) => s.addShape(pres.ShapeType.line, { x: Math.min(x1, x2), y, w: Math.abs(x2 - x1), h: 0, line: { color: G500, width: 1.25, endArrowType: x2 > x1 ? "triangle" : undefined, beginArrowType: x2 > x1 ? undefined : "triangle" }, objectName: name });
@@ -223,11 +225,11 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     arrow(6.05, 7.55, 2.0, "order arrow"); lab("주문 전달 · 정산", 5.95, 1.7, "order label");
     arrow(7.55, 6.05, 2.42, "stock arrow"); lab("상품 등록 · 수수료", 5.95, 2.47, "stock label");
     table(s, ["수익원", "과금 방식", "비고"], [
-      ["중개 수수료", "주문 금액의 4%", "일반·예약 주문 공통 · 전통시장 점포는 첫 6개월 0%"],
-      [{ t: "배달비", o: { color: G700 } }, "고객 부담 3,500원", "저녁 배달 선택 시 · 배달대행 비용으로 지급, 수익 아님"],
+      ["중개 수수료", "상품·손질 금액의 4%", "배달비 제외 · 일반·예약 공통 · 전통시장 점포 첫 6개월 0%"],
+      [{ t: "배달비", o: { color: G700 } }, "시험 요금 3,500원", "매출 제외(마진 없음) · 차액은 파일럿 예산 한도 내 부담"],
       ["판매자 유료 서비스", "월 29,000원 (선택)", "발주 추천 · 상단 노출"],
       ["제휴 광고", "건별 계약", "레시피 크리에이터 · 식품 브랜드"],
-    ], { x: 0.45, y: 2.92, w: 9.1, colW: [2.0, 2.3, 4.8], rowH: [0.34, 0.4, 0.4, 0.4, 0.4], align: ["left", "left", "left"], size: 12 });
+    ], { x: 0.45, y: 2.92, w: 9.1, colW: [1.9, 2.0, 5.2], rowH: [0.34, 0.4, 0.4, 0.4, 0.4], align: ["left", "left", "left"], size: 12 });
     foot(s, "주: 요금은 예정안이며 파일럿에서 검증 · 판매자 부담 예시: 월 100건 × 1.5만 원 매장 → 수수료 6만 원 + 유료 서비스 2.9만 원 = 월 8.9만 원 (거래액의 약 6%)"); }
 
   // ================= 10. Vision: 로드맵 =================
@@ -237,8 +239,8 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     const kpi = (t) => ({ t, o: { bold: true, color: BRAND, fill: { color: BRANDL } } });
     table(s, ["구분", "1단계 파일럿\n2026.12~2027.2", "2단계 정식 출시\n2027", "3단계 확장\n2028~"], [
       ["범위", "전통시장 1곳 · 점포 2~3곳", "입점 매장 30곳", "수도권 120곳 → 300곳"],
-      ["주요 과제", "웹 프로토타입 + 수동 운영\n(배달대행 수동 호출)", "웹앱 출시 · 결제 연동\n명절·제철 예약 오픈", "앱 출시 · 발주 추천 도입"],
-      ["자금", "자기자본 300만 원", "예비창업패키지 등\n정부 지원사업", "시드 투자"],
+      ["주요 과제", "웹 프로토타입 + 수동 운영\n(배달은 단지 한정 시험)", "웹앱 출시 · 결제 연동\n명절·제철 예약 오픈", "앱 출시 · 발주 추천 도입"],
+      ["자금", "자기자본 300만 원\n(배달 차액 20만 원 한도)", "예비창업패키지 등\n정부 지원사업", "시드 투자"],
       [{ t: "목표", o: { fill: { color: BRANDL }, color: BRAND } }, kpi("유료 주문 100건"), kpi("월 주문 2,000건"), kpi("3년차 거래액 54억 원")],
     ], { x: 0.45, y: 1.68, w: 9.1, colW: [1.3, 2.6, 2.6, 2.6], rowH: [0.56, 0.38, 0.52, 0.52, 0.38], align: ["center", "left", "left", "left"], size: 12, headFills: [BRAND, ACC, BRAND2, BRAND2] });
     box(s, 0.45, 4.1, 9.1, 0.84, G100, "pilot kpi band");
@@ -248,13 +250,13 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
 
   // ================= 11. Vision: 3년 목표 =================
   { const s = content(11, "Vision");
-    head(s, "Vision  |  성장 가능성", "3년 목표 및 확장 계획", "3년차 거래액 54억 원·매출 약 2.6억 원(기본 수익원 기준)을 목표로, 품목·산지·해외로 확장");
+    head(s, "Vision  |  성장 가능성", "3년 목표 및 확장 계획", "3년차 거래액 54억 원·매출 약 2.6억 원을 목표로, 첫 시장에서 재구매와 운영비를 확인한 뒤 확장");
     s.addChart(pres.ChartType.bar, [{ name: "거래액", labels: ["1년차", "2년차", "3년차"], values: [2.5, 15, 54] }],
       { ...chartBase(), x: 0.35, y: 1.66, w: 4.5, h: 2.35, barDir: "col", barGapWidthPct: 70, chartColors: [BRAND3, BRAND2, BRAND], title: "연도별 목표 거래액 (억 원)", valAxisMinVal: 0, valAxisMaxVal: 62, dataLabelPosition: "outEnd", objectName: "gmv chart" });
     box(s, 0.45, 4.1, 4.4, 0.82, G100, "revenue box");
-    tx(s, [{ text: "3년차 매출(기본) 약 2.6억 원", options: { bold: true, color: BRAND, breakLine: true } }, { text: "수수료 2.2 + 판매자 서비스 0.4 (억 원), 배달비는 제외\n지자체·제휴 사업은 계약 확보 후 추가 (미검증)", options: { color: INK, fontSize: 10.5 } }], { x: 0.6, y: 4.12, w: 4.2, h: 0.78, fontSize: 12, valign: "middle", objectName: "revenue text" });
+    tx(s, [{ text: "3년차 매출 목표 약 2.6억 원", options: { bold: true, color: BRAND, breakLine: true } }, { text: "수수료 2.2 + 판매자 서비스 0.4 (억 원), 배달비 제외\n보수 시나리오(매장당 월 77건) 약 2.1억 원", options: { color: INK, fontSize: 10.5 } }], { x: 0.6, y: 4.12, w: 4.2, h: 0.78, fontSize: 12, valign: "middle", objectName: "revenue text" });
     tx(s, "확장 계획", { x: 5.2, y: 1.72, w: 4.3, h: 0.3, fontSize: 12, bold: true, color: BRAND, objectName: "expand title" });
-    table(s, null, [["품목 확대", "나물 → 제철 농산물 전체"], ["산지 직거래", "산채 농가 → 동네 매장 → 고객"], ["해외 판매", "건조 나물 + 레시피 키트"]],
+    table(s, null, [["확장 조건", "첫 시장의 재구매·운영비 확인"], ["지역 확대", "인접 시장·주거 단지 → 수도권"], ["품목 확대", "나물 → 제철 농산물 전체"]],
       { x: 5.2, y: 2.06, w: 4.35, colW: [1.3, 3.05], rowH: [0.42, 0.42, 0.42], align: ["center", "left"], size: 12 });
     tx(s, "기대 효과", { x: 5.2, y: 3.5, w: 4.3, h: 0.3, fontSize: 12, bold: true, color: BRAND, objectName: "effect title" });
     tx(s, [{ text: "전통시장 신규 고객 유입 · 매출 증가", options: { bullet: true, breakLine: true } }, { text: "제철 재고 폐기 감소", options: { bullet: true, breakLine: true } }, { text: "아이 채소 반찬 섭취 개선", options: { bullet: true } }], { x: 5.2, y: 3.84, w: 4.35, h: 1.06, fontSize: 12, color: INK, paraSpaceAfter: 4, objectName: "effect list" });
@@ -267,7 +269,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     s.addText("나물로", { placeholder: "title" });
     s.addText("맞벌이 가정에는 동네 매장 픽업·저녁 배달을, 시장 판매자에게는 온라인 판로를 제공", { placeholder: "body" });
     tx(s, "다음 단계", { x: 0.6, y: 2.55, w: 3, h: 0.3, fontSize: 12, bold: true, color: "A9C2B3", objectName: "next steps label" });
-    [["01", "고객 인터뷰", "시장 인근 맞벌이 가정 10명\n프로토타입으로 사용성 확인"], ["02", "파일럿", "2026.12~2027.2, 시장 1곳\n유료 주문 100건 · 배달 비교"], ["03", "팀 · 지원사업", "개발·콘텐츠 파트너 모집\n2027 정부 지원사업 신청"]].forEach(([n, h, d], i) => { const x = 0.6 + i * 2.95;
+    [["01", "고객 인터뷰", "시장 인근 맞벌이 가정 10명\n프로토타입으로 사용성 확인"], ["02", "파일럿", "2026.12~2027.2, 시장 1곳\n유료 주문 100건 · 배달 비용 확인"], ["03", "팀 · 지원사업", "개발·콘텐츠 파트너 모집\n2027 정부 지원사업 신청"]].forEach(([n, h, d], i) => { const x = 0.6 + i * 2.95;
       box(s, x, 2.9, 2.8, 1.4, "214A39", "step box " + n);
       tx(s, n, { x: x + 0.2, y: 3.0, w: 0.6, h: 0.4, fontSize: 18, bold: true, color: "FFFFFF", objectName: "step num " + n });
       tx(s, h, { x: x + 0.82, y: 3.0, w: 1.9, h: 0.4, fontSize: 14, bold: true, color: "FFFFFF", valign: "middle", objectName: "step head " + n });
@@ -283,16 +285,17 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     const v = (t, o = {}) => ({ t, o: { align: "right", bold: true, ...o } });
     table(s, ["항목", "산식", "값"], [
       ["목표 시장", "28.7조 원 × 수도권 40% × 채소·나물 15%", v("약 1.7조 원")],
-      ["3년차 거래액", "입점 300곳 × 월 100건 × 15,000원 × 12개월", v("54억 원")],
-      ["중개 수수료", "54억 원 × 4% (일반·예약 주문)", v("약 2.2억 원")],
+      ["3년차 거래액", "입점 300곳 × 월 100건(일반·명절 예약) × 15,000원 × 12개월", v("54억 원")],
+      ["중개 수수료", "54억 원 × 4% (배달비 제외, 면제·할인 전 단순 산식)", v("약 2.2억 원")],
       ["판매자 유료 서비스", "120곳 × 월 29,000원 × 12개월", v("약 0.4억 원")],
-      [{ t: "3년차 매출 (기본)", o: { fill: { color: BRANDL }, color: BRAND } }, { t: "수수료 + 판매자 유료 서비스", o: { fill: { color: BRANDL } } }, v("약 2.6억 원", { color: BRAND, fill: { color: BRANDL } })],
+      [{ t: "3년차 매출 목표", o: { fill: { color: BRANDL }, color: BRAND } }, { t: "수수료 + 판매자 유료 서비스 (기본 수익원으로 계산한 목표)", o: { fill: { color: BRANDL } } }, v("약 2.6억 원", { color: BRAND, fill: { color: BRANDL } })],
+      ["보수 시나리오", "매장당 월 77건 → 거래액 41.4억 원 × 4% + 0.4억 원", v("약 2.1억 원", { color: G700 })],
       ["지자체·제휴 (확장)", "계약 확보 시 추가하는 확장 시나리오 (미검증, 기본 목표에서 제외)", v("+3.1억 원", { color: G700 })],
       ["주문당 수수료 수입", "15,000원 × 4% (변동비 차감 전, 공헌이익 아님)", v("600원")],
-      ["배달비 (고객 부담)", "배달대행 비용으로 지급, 수익 아님 · 기본료 보도 사례 건당 4,000~4,900원", v("예정 3,500원/건", { color: G700 })],
+      ["배달비 (시험 요금)", "마진 없이 연결(매출 제외) · 차액은 파일럿 예산 20만 원 한도 지원", v("3,500원/건", { color: G700 })],
       ["LLM 호출비 (3년차)", "월 약 5.8만 건 기준, 캐시 적용 / 미적용", v("월 약 72만~99만 원")],
-    ], { x: 0.45, y: 1.68, w: 9.1, colW: [2.15, 5.0, 1.95], rowH: [0.32, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33], align: ["left", "left", "right"], size: 11, headSize: 11, margin: [0.02, 0.1, 0.02, 0.1] });
-    foot(s, "주: LLM 호출비는 Claude API 가격표(2026.10, 1달러=1,400원) 기준 추정, 재시도·서버·검수 인건비 별도 / 유료 판매자 120곳·배달비는 가정, 묶음배달로 건당 원가를 배달비 이하로 맞추는 것이 파일럿 과제"); }
+    ], { x: 0.45, y: 1.68, w: 9.1, colW: [2.15, 5.0, 1.95], rowH: [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3], align: ["left", "left", "right"], size: 11, headSize: 11, margin: [0.02, 0.1, 0.02, 0.1] });
+    foot(s, "주: LLM 호출비는 Claude API 가격표(2026.10, 1달러=1,400원) 기준, 재시도·서버·검수 별도 / 배달대행 기본료 보도 사례: 2024년 일부 업체 4,900~5,800원"); }
 
   // ================= 14. 부록 2 =================
   { const s = content(14, "부록");
@@ -306,8 +309,8 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       ["중소벤처기업부 공고 제2026-143호, 예비창업패키지 수정공고", "https://hanok.gongju.go.kr/cmm/fms/FileDown.do?atchFileId=FILE_0000127870Uc2bM&fileSn=0"]];
     const R = [["네이버, 스마트플레이스 AI 리뷰 관리 · 톡톡 AI FAQ 발표", "https://navercorp.com/media/pressReleasesDetail?seq=34203"],
       ["쿠팡 · 컬리 · 어글리어스 · 당근 서비스 소개 (2026.10 확인, 자체 정리)", null],
-      ["문화일보, 배달대행 건당 기본료 인상 보도 (2024.10 무렵)", "https://www.munhwa.com/article/11458547"],
-      ["바이라인네트워크, 배민스토어 전통시장 서비스 (2024.01)", "https://byline.network/2024/01/30_baeminstore"],
+      ["문화일보 · 뉴데일리, 배달대행 기본료 인상 보도 (2024.10)", "https://www.munhwa.com/article/11458547"],
+      ["바이라인네트워크, 배민스토어 전통시장 합배송 (2024.01)", "https://byline.network/2024/01/30_baeminstore"],
       ["Anthropic, Claude API 가격표 (2026.10)", "https://platform.claude.com/docs/en/about-claude/pricing"],
       ["앱 화면: 웹 프로토타입 (매장 · 가격 · 수치는 예시 데이터)", null],
       ["아이콘 Microsoft Fluent Emoji (MIT) · 글꼴 Pretendard (OFL)", "https://github.com/microsoft/fluentui-emoji"]];

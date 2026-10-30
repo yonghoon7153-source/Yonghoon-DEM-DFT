@@ -74,6 +74,21 @@ const ROOT = path.resolve(__dirname, ".."), PAGE = "file://" + path.join(ROOT, "
   R.delivery.done = await page.$eval("#dTitle", e => e.textContent) + " / " + await page.$eval("#dSub", e => e.textContent);
   await ev(() => { st.chat = null; demo.go("merchant"); }); await page.waitForTimeout(300);
   R.delivery.merchantOrder = await page.$$eval(".mcard", els => els.find(e => e.innerText.includes("새 주문")).innerText.replace(/\n+/g, " | "));
+  // 10) 3차 리뷰: 결제한 주문은 이후 선택과 분리 · 판매자 카드 수량 · 준비 마감 · 배달 조회 안내
+  await ev(() => { STORES.splice(0, STORES.length, ...JSON.parse(STORES0)); st = Object.assign(st, { cart: ["chamnamul"], namul: "chamnamul", store: "s1", opt: "trim", qty: 3, recv: "deliver", dtime: "19:00", orderAccepted: false, order: null, chat: null }); demo.go("checkout"); }); await page.waitForTimeout(250);
+  R.order = { note: await page.$eval("#recvNote", e => e.textContent), timeTitle: await page.$eval("#timeTitle", e => e.textContent) };
+  await page.click("#payBtn"); await page.waitForTimeout(300);
+  R.order.done = await page.$eval("#dSub", e => e.textContent) + " | " + await page.$eval("#dInfo", e => e.innerText.replace(/\n+/g, " | "));
+  await page.click("#routeBtn"); await page.waitForTimeout(150);
+  R.order.routeToast = await page.$eval("#toast", e => e.textContent);
+  await ev(() => demo.go("merchant")); await page.waitForTimeout(300);
+  await page.click('[data-act="accept"]'); await page.waitForTimeout(300);
+  const orderCard = () => page.$$eval(".mcard", els => els.find(e => e.innerText.includes("새 주문")).innerText.replace(/\n+/g, " | "));
+  R.order.accepted = await orderCard();
+  await ev(() => { st.cart.push("sigeumchi"); st.namul = "sigeumchi"; st.qty = 1; st.recv = "pickup"; st.time = "18:30"; demo.go("checkout"); }); await page.waitForTimeout(250);
+  await ev(() => demo.go("merchant")); await page.waitForTimeout(300);
+  R.order.afterBrowsing = await orderCard();
+  R.order.kept = R.order.afterBrowsing === R.order.accepted;
   await ev(() => demo.go("box")); await page.waitForTimeout(250);
   R.preorder = { sets: await page.$$eval("#plans .plan", els => els.length), cta: await page.$eval("#subBtn", e => e.textContent), tab: await page.$eval('[data-tab="box"]', e => e.textContent.trim()) };
   // 7) phone width

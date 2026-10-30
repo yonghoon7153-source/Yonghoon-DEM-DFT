@@ -449,7 +449,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
           <div class="card" style="padding:14px;display:grid;gap:4px"><b id="cStore" style="font-size:16px"></b><small class="muted" id="cStoreSub"></small></div>
           <div class="card item-row"><span class="tile" id="cTile" style="width:52px;height:52px"><img src="" id="cIcon" alt=""></span><span><b id="cItem" style="font-size:15px"></b><br><small class="muted" id="cUnit"></small></span><span class="qty"><button id="qMinus" aria-label="빼기">−</button><span id="qVal">1</span><button id="qPlus" aria-label="더하기">+</button></span></div>
           <div><div class="sec-h"><h3>손질 옵션</h3><span>사장님이 직접 손질해요</span></div><div class="seg" id="optSeg"></div><small class="muted" id="optNote" style="display:block;margin-top:8px;font-size:12.5px;line-height:1.5"></small></div>
-          <div><div class="sec-h"><h3>받는 방법</h3><span>배달은 나물로가 배차해요</span></div><div class="seg seg2" id="recvSeg"></div><small class="muted" id="recvNote" style="display:block;margin-top:8px;font-size:12.5px;line-height:1.5"></small></div>
+          <div><div class="sec-h"><h3>받는 방법</h3><span>배달은 배달대행으로 연결해요</span></div><div class="seg seg2" id="recvSeg"></div><small class="muted" id="recvNote" style="display:block;margin-top:8px;font-size:12.5px;line-height:1.5"></small></div>
           <div><div class="sec-h"><h3 id="timeTitle">픽업 시간</h3><span>오늘</span></div><div class="times" id="timeSeg"></div></div>
           <div class="card sum" id="sumBox"></div>
         </div>
@@ -550,7 +550,7 @@ const MAIN = ["home","dogam","stores","box"];
 const won = n => n.toLocaleString("ko-KR") + "원";
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const fresh = () => ({namul:"chamnamul",cart:[],store:"s1",opt:"trim",qty:1,time:"18:00",recv:"pickup",dtime:"18:00",voted:false,step:-1,owned:{},plan:"seol",sf:{pickup:true,trim:false,today:false},df:"all",chef:[],chat:null,orderAccepted:false,discount:null});
+const fresh = () => ({namul:"chamnamul",cart:[],store:"s1",opt:"trim",qty:1,time:"18:00",recv:"pickup",dtime:"18:00",order:null,voted:false,step:-1,owned:{},plan:"seol",sf:{pickup:true,trim:false,today:false},df:"all",chef:[],chat:null,orderAccepted:false,discount:null});
 let st = fresh();
 
 /* ---------- icons ---------- */
@@ -686,7 +686,7 @@ $("#storeFilters").addEventListener("click", e => { const b = e.target.closest("
 $("#storeList").addEventListener("click", e => { const b = e.target.closest("[data-store]"); if (b) { st.store = b.dataset.store; const s = STORES.find(x => x.id === st.store); st.opt = trimOk(s, st.namul) ? "trim" : "raw"; st.time = (s.slots.find(t => t[1]) || ["18:00"])[0]; go("checkout"); } });
 
 /* ---------- checkout ---------- */
-/* 배달: 가게가 포장하면 나물로가 배달대행을 호출해 저녁 시간대 근처 주문을 묶어 보낸다. 배달비는 고객 부담(예정), 수익으로 잡지 않는다 */
+/* 배달: 가게가 상품을 준비하면 나물로가 배달대행에 요청한다(기사 배차는 대행사). 배달비는 시험 요금이며 마진 없이 연결해 매출 목표에서 뺀다 */
 const DELIVERY_FEE = 3500, DELIVERY_SLOTS = [["17:30",false],["18:00",true],["18:30",true],["19:00",true]];
 const trimOk = (s, k) => s.trim > 0 && !(s.trimOk && s.trimOk[k] === false);
 /* 데침 옵션: 도감에 데침·삶음 시간이 있는 품목만. 볶음·찜·충분히 삶기(고사리 등)는 매장 데침 대상에서 뺀다 */
@@ -704,11 +704,11 @@ function rCheckout(){
   $("#optSeg").innerHTML = opts.map(o => `<button data-opt="${o[0]}" aria-pressed="${st.opt === o[0]}" ${o[4] ? "" : "disabled"}>${o[1]}<small>${o[4] ? o[2] : "불가"}</small></button>`).join("");
   $("#optNote").textContent = st.opt === "trim" ? "억센 줄기 정리와 세척까지 해 드려요." : st.opt === "blanch" ? `도감 기준대로 끓는 물에 ${n.blanch} ${n.verb || "데쳐"} 물기를 빼서 담아 드려요. 오늘 안에 드세요.` : "직접 손질해서 드실 때 골라 주세요.";
   $("#recvSeg").innerHTML = [["pickup","가게 픽업","무료"],["deliver","저녁 배달",`+${won(DELIVERY_FEE)}`]].map(r => `<button data-recv="${r[0]}" aria-pressed="${st.recv === r[0]}">${r[1]}<small>${r[2]}</small></button>`).join("");
-  $("#recvNote").textContent = dlv ? "근처 주문을 저녁 시간대에 묶어 배달대행으로 보내요. 사장님은 포장만 하면 돼요. 고른 시간부터 30분 안에 도착해요." : `${s.name}에서 찾아가요. 가게에서 픽업 번호만 말하면 돼요.`;
-  $("#timeTitle").textContent = dlv ? "배달 시간" : "픽업 시간";
+  $("#recvNote").textContent = dlv ? "고른 시간에 나물로가 배달대행에 배달을 요청해요. 도착 예정 시간은 배차 후 알려 드릴 예정이에요." : `${s.name}에서 찾아가요. 가게에서 픽업 번호만 말하면 돼요.`;
+  $("#timeTitle").textContent = dlv ? "배달 요청 시간" : "픽업 시간";
   const slots = dlv ? DELIVERY_SLOTS : s.slots, cur = dlv ? st.dtime : st.time;
   $("#timeSeg").innerHTML = slots.map(t => `<button data-time="${t[0]}" aria-pressed="${cur === t[0]}" ${t[1] ? "" : "disabled"}>${t[0]}</button>`).join("");
-  $("#sumBox").innerHTML = `<div><span class="muted">상품</span><span>${won(p * st.qty)}</span></div><div><span class="muted">${st.opt === "raw" ? "손질" : st.opt === "trim" ? "손질" : "데침"}</span><span>${won(extra * st.qty)}</span></div>${dlv ? `<div><span class="muted">배달비</span><span>${won(fee)}</span></div>` : ""}<div><span class="muted">받는 방법</span><span>${dlv ? st.dtime + "부터 배달" : st.time + " 픽업"}</span></div><div class="total"><span>합계</span><span>${won(total)}</span></div>`;
+  $("#sumBox").innerHTML = `<div><span class="muted">상품</span><span>${won(p * st.qty)}</span></div><div><span class="muted">${st.opt === "raw" ? "손질" : st.opt === "trim" ? "손질" : "데침"}</span><span>${won(extra * st.qty)}</span></div>${dlv ? `<div><span class="muted">배달비</span><span>${won(fee)}</span></div>` : ""}<div><span class="muted">받는 방법</span><span>${dlv ? st.dtime + " 배달 요청" : st.time + " 픽업"}</span></div><div class="total"><span>합계</span><span>${won(total)}</span></div>`;
   $("#payBtn").textContent = dlv ? `${st.dtime} 배달 주문 · ${won(total)}` : `${st.time} 픽업 예약 · ${won(total)}`;
 }
 $("#optSeg").addEventListener("click", e => { const b = e.target.closest("[data-opt]"); if (b && !b.disabled) { st.opt = b.dataset.opt; rCheckout(); } });
@@ -716,23 +716,31 @@ $("#timeSeg").addEventListener("click", e => { const b = e.target.closest("[data
 $("#recvSeg").addEventListener("click", e => { const b = e.target.closest("[data-recv]"); if (b) { st.recv = b.dataset.recv; rCheckout(); } });
 $("#qMinus").addEventListener("click", () => { st.qty = Math.max(1, st.qty - 1); rCheckout(); });
 $("#qPlus").addEventListener("click", () => { st.qty = Math.min(5, st.qty + 1); rCheckout(); });
-$("#payBtn").addEventListener("click", () => { go("done"); });
+$("#payBtn").addEventListener("click", () => { st.order = snapOrder(); st.orderAccepted = false; go("done"); });
 
 /* ---------- done ---------- */
 function qr(seed){ let h = 2166136261; for (const c of seed) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } const cells = [];
   const finder = (x,y) => `<rect x="${x}" y="${y}" width="7" height="7" fill="#19221E"/><rect x="${x+1}" y="${y+1}" width="5" height="5" fill="#fff"/><rect x="${x+2}" y="${y+2}" width="3" height="3" fill="#19221E"/>`;
   for (let y = 0; y < 29; y++) for (let x = 0; x < 29; x++) { if ((x < 8 && y < 8) || (x > 20 && y < 8) || (x < 8 && y > 20)) continue; h ^= h << 13; h ^= h >>> 17; h ^= h << 5; if ((h >>> 0) % 100 < 46) cells.push(`<rect x="${x}" y="${y}" width="1" height="1" fill="#19221E"/>`); }
   return `<rect width="29" height="29" fill="#fff"/>${cells.join("")}${finder(0,0)}${finder(22,0)}${finder(0,22)}`; }
+/* 결제한 주문은 따로 저장해, 이후 다른 품목을 둘러봐도 완료·판매자 화면이 바뀌지 않게 한다 */
+const OPT_NAME = {raw:"생나물", trim:"손질", blanch:"데침"};
+function snapOrder(){ const {s, p, extra, fee, total} = calc(), dlv = st.recv === "deliver";
+  return {namul:st.namul, storeName:s.name, walk:s.walk, unit:s.stock[st.namul][1], opt:st.opt, qty:st.qty, recv:st.recv, time:dlv ? st.dtime : st.time, goods:(p + extra) * st.qty, fee, total}; }
+function exampleOrder(){ const s = STORES.find(x => x.id === "s1"), [p, u] = s.stock.chamnamul, opt = trimOk(s, "chamnamul") ? "trim" : "raw", goods = p + (opt === "trim" ? s.trim : 0);
+  return {namul:"chamnamul", storeName:s.name, walk:s.walk, unit:u, opt, qty:1, recv:"pickup", time:"18:00", goods, fee:0, total:goods}; }
+const curOrder = () => st.order || exampleOrder();
+function prepBy(t){ const [h, m] = t.split(":").map(Number), x = h * 60 + m - 20; return `${String(Math.floor(x / 60)).padStart(2, "0")}:${String(x % 60).padStart(2, "0")}`; }
 function rDone(){
-  const {s, fee, total} = calc(), n = N[st.namul], dlv = st.recv === "deliver";
+  const o = curOrder(), n = N[o.namul], dlv = o.recv === "deliver";
   $("#dTitle").textContent = dlv ? "주문했어요" : "예약했어요";
-  $("#dSub").textContent = dlv ? `오늘 ${st.dtime}부터 배달 · ${s.name}` : `오늘 ${st.time} · ${s.name}`;
-  $("#dCodeLabel").textContent = dlv ? "주문 번호" : "픽업 번호"; $("#dCodeNote").textContent = dlv ? "도착하면 알림으로 알려 드려요 (시연)" : "가게에서 번호만 말하면 돼요";
+  $("#dSub").textContent = dlv ? `오늘 ${o.time} 배달 요청 · ${o.storeName}` : `오늘 ${o.time} · ${o.storeName}`;
+  $("#dCodeLabel").textContent = dlv ? "주문 번호" : "픽업 번호"; $("#dCodeNote").textContent = dlv ? "배차되면 도착 예정 시간을 알려 드려요 (시연)" : "가게에서 번호만 말하면 돼요";
   $("#routeBtn").textContent = dlv ? "배달 조회" : "가는 길";
-  $("#qr").innerHTML = qr("N-2381" + st.time);
-  $("#dInfo").innerHTML = `<div><span class="muted">상품</span><span>${n.name} ${s.stock[st.namul][1]} · ${st.opt === "trim" ? "손질" : st.opt === "blanch" ? "데침" : "생나물"} × ${st.qty}</span></div>${dlv ? `<div><span class="muted">배달비</span><span>${won(fee)}</span></div>` : ""}<div><span class="muted">결제 금액</span><span>${won(total)}</span></div><div><span class="muted">매장</span><span>${s.name} · ${s.walk}</span></div>`;
+  $("#qr").innerHTML = qr("N-2381" + o.time);
+  $("#dInfo").innerHTML = `<div><span class="muted">상품</span><span>${n.name} ${o.unit} · ${OPT_NAME[o.opt]} × ${o.qty}</span></div>${dlv ? `<div><span class="muted">배달비</span><span>${won(o.fee)}</span></div>` : ""}<div><span class="muted">결제 금액</span><span>${won(o.total)}</span></div><div><span class="muted">매장</span><span>${o.storeName} · ${o.walk}</span></div>`;
 }
-$("#routeBtn").addEventListener("click", () => toast("시연용 화면이에요. 지도 앱으로 이어져요"));
+$("#routeBtn").addEventListener("click", () => toast(curOrder().recv === "deliver" ? "배달 현황 조회는 출시 버전에서 제공해요" : "시연용 화면이에요. 지도 앱으로 이어져요"));
 
 /* ---------- 명절·제철 예약 (월 구독 대신) ---------- */
 const SETS = [["seol","설 차례 삼색나물","고사리·도라지·시금치 무침 · 4인분","설 연휴 전날",28000],["boreum","정월대보름 묵은나물","9가지 · 불림·삶기 완료 · 2~3인분","대보름 전날",25000],["spring","봄 산나물 3종","두릅·취나물·냉이 · 데침 옵션","4월 토요일",18000]];
@@ -848,8 +856,8 @@ function cardHtml(m, i){
   if (m.card === "stock") { const d = m.data, ok = d.status === "ok";
     const rows = (d.items||[]).map(it => `<div><span>${esc(it.name)} ${it.qty === null ? "?" : it.qty}${esc(it.unit || "")}</span>${it.issues.length ? `<b class="warn">${esc(it.issues.join(" · "))}</b>` : `<b>${won(it.price)}${it.trim === true ? " · 손질 가능" : it.trim === false ? " · 손질 불가" : ""}</b>`}</div>`).join("");
     return `<div class="mcard"><h4><span>${ok ? "재고 등록 완료" : "재고 등록안 · 확인 필요"}</span><span class="chip-ai">AI 정리</span></h4><div class="rows">${rows}</div><div class="foot">${esc(d.reply || "")}${!ok && d.questions && d.questions.length ? "<br>" + d.questions.map(esc).join("<br>") : ""}</div><div class="acts">${ok ? `<button class="pri" disabled>앱에 반영됨</button>` : `<button data-act="edit" data-i="${i}">수정</button><button class="pri" data-act="ok" data-i="${i}">확인</button>`}</div></div>`; }
-  if (m.card === "order") { const {s, total, fee} = calc(), dlv = st.recv === "deliver", opt = st.opt === "trim" ? "손질" : st.opt === "blanch" ? "데침" : "생나물";
-    return `<div class="mcard"><h4 class="amber"><span>새 주문 · ${dlv ? st.dtime + " 배달" : st.time + " 픽업"}</span><span>N-2381</span></h4><div class="rows"><div><span>${esc(N[st.namul].name)} ${esc(s.stock[st.namul][1])} · ${opt}</span><b>${won(total - fee)}</b></div>${dlv ? `<div><span>배달</span><b>나물로 배차 · 포장만</b></div><div><span>배달비 ${won(fee)}</span><b>손님 부담</b></div>` : ""}<div><span>손님</span><b>단골 · 3번째 주문</b></div></div><div class="acts">${st.orderAccepted ? `<button class="pri" disabled>접수 완료 · 17:40까지 ${dlv ? "포장" : "손질"}</button>` : `<button data-act="soldout">품절 처리</button><button class="pri" data-act="accept">접수</button>`}</div></div>`; }
+  if (m.card === "order") { const o = curOrder(), dlv = o.recv === "deliver";
+    return `<div class="mcard"><h4 class="amber"><span>새 주문 · ${o.time} ${dlv ? "배달" : "픽업"}</span><span>N-2381</span></h4><div class="rows"><div><span>${esc(N[o.namul].name)} ${esc(o.unit)} · ${OPT_NAME[o.opt]} × ${o.qty}</span><b>${won(o.goods)}</b></div>${dlv ? `<div><span>배달</span><b>나물로가 배달대행 요청</b></div><div><span>배달비 ${won(o.fee)}</span><b>손님 부담</b></div>` : ""}<div><span>손님</span><b>단골 · 3번째 주문</b></div></div><div class="acts">${st.orderAccepted ? `<button class="pri" disabled>접수 완료 · ${prepBy(o.time)}까지 ${o.opt === "raw" ? "포장" : OPT_NAME[o.opt]}</button>` : `<button data-act="soldout">품절 처리</button><button class="pri" data-act="accept">접수</button>`}</div></div>`; }
   if (m.card === "discount") return `<div class="mcard"><h4><span>AI 마감 할인 제안</span><span class="chip-ai">AI</span></h4><div class="rows"><div><span>남은 참나물</span><b>6단</b></div><div><span>19:30부터 할인</span><b>20% (2,800원)</b></div><div><span>알림 받을 근처 손님 (예시)</span><b>310명</b></div></div><div class="foot">버리는 대신 동네 손님에게 알려요.</div><div class="acts">${st.discount === null ? `<button data-act="keep">그대로 두기</button><button class="pri" data-act="discount">할인 시작</button>` : `<button class="pri" disabled>${st.discount ? "할인 알림을 보냈어요" : "오늘은 그대로 둘게요"}</button>`}</div></div>`;
   if (m.card === "text") return `<div class="mb">${m.html}</div>`;
   return "";
