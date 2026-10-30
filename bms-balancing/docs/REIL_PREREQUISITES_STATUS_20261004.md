@@ -2228,3 +2228,46 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   - a–f 의 절차 git 은 모두 같은 셸 명령 줄에서 이 확인 뒤에만 실행한다 (`<확인> && git …`).
 - **번호:** 결과 기록은 §85 이다.
 - 이 승인은 E1-0b · E1-1–3 (identity · 읽기 경로 `add_repo` · fetch · 자료 개봉 · run) · C4-A / B · 설치 · 환경 재구축 · COMSOL 승인이 아니다.
+
+## §85 C4-E · E1-0 결과 — RED-L 27 · RED-R 11 선언대로 · GREEN 65 passed · 세 단계 runner_ok · 결과 검토 대기 (2026-10-30 KST · 덧붙임 — 위 §0–§84 는 그대로)
+
+- **대상 커밋:** 끝 기록 `b2e5fdd9` (push 뒤 원격과 일치).
+  - 고정 구현 + GREEN `f67dcc00` · RED-R 증거 `4391b3a3` · RED-L 증거 `83e727fa` · 복사 넷 + 착수 기록 (첫 시험 전 봉인) `935b52aa` · 승인 기록 §84 + 보존 규칙
+    `ae82e7d6` · 착수 전 HEAD `13b7c850`.
+  - 증거 `evidence/reil_c4e1_0_20261030/` — 24 파일 · 117,742 B.
+- **시간 (2026-10-30 UTC):** 이름 확인 a 05:15:19 · 착수 기록 05:16:13 · 끝 기록 05:20:46 — 착수 기록부터 끝 기록까지 273 s (배정 2 h). 커밋 · push · 문서는 끝 기록
+  뒤다. 재시도 · 예산 변경 0.
+- **단계:**
+
+  | 단계 | pytest 상한 | 자식 | 정리 | pytest rc | 실행기 반환 | 결과 |
+  |---|---:|---:|---:|---:|---:|---|
+  | `01_red_launcher` (골격) | 120 s | 3.778 s | 0.008 s | 1 | 1 | 27 failed in 1.09s · 통과 · 건너뜀 · 수집 오류 0 · 실패 27 절 모두 `NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안` · 선언대로 |
+  | `02_red_runner` (v2 실행기 초안) | 120 s | 1.017 s | 0.002 s | 1 | 1 | 11 failed in 0.29s · r1 `AssertionError` (`assert 'empty' == 'unknown'` — V2-01 반례 재현) · r2 · r3 · r9 · r10 `cleanup` · r4 `base_env` · r5 `source_table` · r6–r8 `run_step` · r11 `observe` (AttributeError) · 선언대로 |
+  | `03_green` (고정 구현 · `-x`) | 600 s | 22.55 s | 0.002 s | 0 | 0 | 65 passed in 21.74s — E0 21 · N1 6 · launcher 27 · 실행기 11 · 건너뜀 · xfail · 실패 0 |
+
+- **세 단계 공통 (meta):** started · timeout 없음 · `cleanup.status` empty · `deadline_hit` false · `emergency` false · problems · end_problems · errors 0 · runner_ok
+  true · HEAD 시작 = 끝 (`935b52aa` · `83e727fa` · `4391b3a3`) · 원천 해시 시작 · 끝 = EXPECT[단계] · stderr 0 B. RED 둘의 실행기 반환 1 은 pytest rc 1 때문이다
+  (반환 0 = runner_ok AND rc 0).
+- **기록:**
+  - `00_start.txt` (date · df · sha256sum — 초안 다섯 + 복사본 넷 · Git 없음).
+  - `04_end.json` — stdlib 한 번 · 배타 생성 · Git · 네트워크 0. 작성기는 저장소 밖 `SP/c4e1_tools/write_end_e1_0.py` (sha256 `4c3d2991…`) 이고, 입력은 meta 셋 ·
+    복사본 넷 · 디스크 · 시각 · 단계 f 의 이름 확인 결과 (이름만) 다.
+  - 복사본 넷 sha256 = 고정본 (`4720585c…` · `ae42d8e8…` · `2269d775…` · `f6070f97…`).
+- **절차 Git 이름 확인:** a (05:15Z) · f (05:20Z) 모두 허용 목록 밖 0 (이름만). b–f 의 절차 git 은 모두 같은 줄에서 확인 뒤에만 실행했다.
+- **자원 (사후 관측 · 강제 상한 아님):** GREEN 자식 최대 RSS 59,324 KiB · 디스크 여유 26,156,752,896 → 26,137,739,264 B · 커밋 전 비밀 검사 · URL 계정 형태 ·
+  50 MB 초과 모두 0.
+- **밝힐 것:**
+  1. **RED 근거의 위치가 요청서 문구와 다르다.** 요청서 v5 §4-3 은 "짧은 요약의 실패 줄" 의 예외를 기준으로 적었다.
+     - 실제 짧은 요약 줄 (RED-L 27 · RED-R 11) 에는 노드 이름만 있고 메시지가 없었다. pytest 는 비 TTY 기본 너비 (80 칸) 를 넘는 줄에서 메시지를 뺀다.
+     - 그래서 같은 stdout 의 실패 절 (`--tb=short`) E 줄로 확인했다: RED-L 27 절 각각 E 줄 하나가 위 메시지와 같다 (27/27). RED-R 11 절의 첫 E 줄이 선언과 같다
+       (11/11).
+     - 요청서의 정지 조건 (통과 · 다른 예외 · 수집 오류 · 잔존 · 기한 · unverified · 기록 실패 · 원천 해시 불일치 · 반환 3 / 4) 에 해당하는 것은 없어서 다음 단계로
+       갔다. 이 판단과 근거 위치의 차이를 결과 검토에서 판단받는다.
+     - N1 RED (§71 · 2026-10-14) 의 짧은 요약도 같은 형식이었다 (`evidence/reil_c4e0_fix_20261014/02_red.stdout.log` — 노드 이름만). 요청서를 쓸 때 pytest 의
+       출력 형식을 확인하지 않은 것은 이 저장소의 누락이다.
+  2. RED-R 의 행동 재현은 r1 하나이고 r2–r11 은 인터페이스 수준 RED 다 (요청서 §8 의 1).
+  3. GREEN 통과는 이 환경 · 이 바이트에서의 관측이다. 기한 · 늦은 예외 · unverified 경로는 가짜 시계 (r3 · r9 · r10) 로만 시험했다. 실제 timeout 경로는 r8 의
+     driver 인스턴스로만 시험했고, E1-0 단계 자신은 timeout 되지 않았다 (요청서 §8 의 2 · 11).
+  4. 끝 기록 작성기는 저장소에 넣지 않았다. 04_end.json 의 값은 meta 셋 · 복사본과 대조할 수 있다.
+- **다음:** 결과 검토 발송문 `docs/REIL_C4E1_0_RESULT_REVIEW_SEND_20261030.md` → 사용자 발송 결정 → 회신 → (수용되면) E1-1–3 승인 요청 (FUTURE-01 정정 · E1-0b 포함)
+  — 각각 별도 사용자 결정이다. 이 기록은 E1-0b · E1-1–3 (identity · 읽기 경로 · fetch · 자료 개봉 · run) · C4-A / B · COMSOL 의 승인이 아니다.
