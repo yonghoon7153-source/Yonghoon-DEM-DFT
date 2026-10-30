@@ -1,0 +1,17 @@
+# 사전 공격 6 회차 — 이 작업이 돌린 묶음 시험 요약 (원 로그 = 스크래치 · 리포에는 셈 · 끝 줄 · sha256 만)
+# 대상 4c69070ad · Python 3.11.15 · numpy 2.4.6 · scipy 1.17.1 · BLAS 스레드 1 · nice 10 · TMPDIR = 스크래치
+
+## scripts/test_rint_r_chain.py (전부 · 인자 없음)
+원 로그 sha256 e9d579e2186a6fd2510508801915826be29bb2b81188bb6593a179dfdf8ff896 · 410 줄
+PASS 줄 407 · FAIL 줄 0
+test_rint_r_chain: 407/407 PASS (454.0 s)
+rc=0 elapsed=454s py=python3 args=scripts/test_rint_r_chain.py
+PC 검사: PC01 PC01m PC01i PC02 PC03 PC04 PC05 PC06 PC06b PC07 PC08 PC09 PC10 PC11 PC12 PC13 PC14 PC15 PC16 PC18 PC20
+
+## scripts/test_rint_r_chain_e2e.py (전부 · 인자 없음)
+원 로그 sha256 bd42cbe8942e9b47ba385d0cddb3b7779cd0211ee1d9f3b97463cdd7bed1e603 · 78 줄
+PASS 줄 40 · FAIL 줄 0
+test_rint_r_chain_e2e: 40 PASS · 0 FAIL (529.3 s)
+rc=0 elapsed=530s py=python3 args=scripts/test_rint_r_chain_e2e.py
+검사: E1a E1b E1c E1d E1m E1g E1u E2a E2b E3 E4a E4b E7 E5 E6 E8a E8b E8c E8u E9a E9b E9c E10a E10b E11a E11b E12a E12g E12b E12c E12d E13b E13c E13d E13e E13f E14 E15 E16 E17
+
