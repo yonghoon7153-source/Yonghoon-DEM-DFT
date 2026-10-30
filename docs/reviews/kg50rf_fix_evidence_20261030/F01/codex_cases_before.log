@@ -1,0 +1,6 @@
+== d2_drop_intermediate_variable_definition  rc=0  재개 덱 정적 대조: 통과 (문제 0)
+== d2_runtime_dependent_eager_variable  rc=0  재개 덱 정적 대조: 통과 (문제 0)
+== drop_intermediate_variable_definition  rc=0  재개 덱 정적 대조: 통과 (문제 0)
+== runtime_dependent_eager_variable  rc=0  재개 덱 정적 대조: 통과 (문제 0)
+== d2_received_baseline  rc=0  재개 덱 정적 대조: 통과 (문제 0)
+== archived_after_settling_baseline  rc=0  재개 덱 정적 대조: 통과 (문제 0)

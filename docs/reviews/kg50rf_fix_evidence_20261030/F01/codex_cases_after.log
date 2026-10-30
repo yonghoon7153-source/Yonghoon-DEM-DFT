@@ -1,0 +1,16 @@
+== d2_drop_intermediate_variable_definition  rc=1  재개 덱 정적 대조: 실패 (문제 2)
+   ✗ 준비 구간 그 자리 치환 값이 본 덱과 다름 (10-30 KG50R-F01 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [fix gravi all gravity ${g_probe} vector 0.0 0.0 -1.0] 의 ${g_probe} — 본 덱 (62 번째 명령 자리) ⟦196.2⟧ ↔ 재개 덱 (55 번째 명령 자리) ⟦98.1⟧
+   ✗ 재개 지점 fix gravi 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [fix gravi all gravity ⟦196.2⟧ vector 0.0 0.0 -1.0] ↔ 재개 덱 [fix gravi all gravity ⟦98.1⟧ vector 0.0 0.0 -1.0]
+== d2_runtime_dependent_eager_variable  rc=1  재개 덱 정적 대조: 실패 (문제 2)
+   ✗ 준비 구간 그 자리 치환 값이 상수가 아님 — 실행 상태에 따라 바뀜 · 등록 상수 목록 밖 (10-30 KG50R-F01 · 상수 = 수 · 연산자 · 괄호 · 정해진 수학 함수 · 상수 변수 · string 글): [fix gravi all gravity ${g_probe} vector 0.0 0.0 -1.0] 의 ${g_probe} — 본 덱 ⟨실행 상태 값 · 본 덱 61 번째 명령의 ${g_probe} = ⟦98.1*(step+1)⟧ · step (실행 상태 낱말 · 함수 · 등록 상수 목록 밖)⟩ ↔ 재개 덱 ⟨실행 상태 값 · 재개 덱 55 번째 명령의 ${g_probe} = ⟦98.1*(step+1)⟧ · step (실행 상태 낱말 · 함수 · 등록 상수 목록 밖)⟩
+   ✗ 재개 지점 fix gravi 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [fix gravi all gravity ⟨실행 상태 값 · 본 덱 61 번째 명령의 ${g_probe} = ⟦98.1*(step+1)⟧ · step (실행 상태 낱말 · 함수 · 등록 상수 목록 밖)⟩ vector 0.0 0.0 -1.0] ↔ 재개 덱 [fix gravi all gravity ⟨실행 상태 값 · 재개 덱 55 번째 명령의 ${g_probe} = ⟦98.1*(step+1)⟧ · step (실행 상태 낱말 · 함수 · 등록 상수 목록 밖)⟩ vector 0.0 0.0 -1.0]
+== drop_intermediate_variable_definition  rc=1  재개 덱 정적 대조: 실패 (문제 2)
+   ✗ 준비 구간 그 자리 치환 값이 본 덱과 다름 (10-30 KG50R-F01 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [timestep ${dt}] 의 ${dt} — 본 덱 (4 번째 명령 자리) ⟦2e-6⟧ ↔ 재개 덱 (4 번째 명령 자리) ⟦1e-6⟧
+   ✗ 재개 지점 timestep 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [timestep ⟦2e-6⟧] ↔ 재개 덱 [timestep ⟦1e-6⟧]
+== runtime_dependent_eager_variable  rc=1  재개 덱 정적 대조: 실패 (문제 2)
+   ✗ 준비 구간 그 자리 치환 값이 상수가 아님 — 실행 상태에 따라 바뀜 · 등록 상수 목록 밖 (10-30 KG50R-F01 · 상수 = 수 · 연산자 · 괄호 · 정해진 수학 함수 · 상수 변수 · string 글): [timestep ${dt}] 의 ${dt} — 본 덱 ⟨실행 상태 값 · 본 덱 3 번째 명령의 ${dt} = ⟦1e-6*(step+1)⟧ · step (실행 상태 낱말 · 함수 · 등록 상수 목록 밖)⟩ ↔ 재개 덱 ⟨실행 상태 값 · 재개 덱 4 번째 명령의 ${dt} = ⟦1e-6*(step+1)⟧ · step (실행 상태 낱말 · 함수 · 등록 상수 목록 밖)⟩
+   ✗ 재개 지점 timestep 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [timestep ⟨실행 상태 값 · 본 덱 3 번째 명령의 ${dt} = ⟦1e-6*(step+1)⟧ · step (실행 상태 낱말 · 함수 · 등록 상수 목록 밖)⟩] ↔ 재개 덱 [timestep ⟨실행 상태 값 · 재개 덱 4 번째 명령의 ${dt} = ⟦1e-6*(step+1)⟧ · step (실행 상태 낱말 · 함수 · 등록 상수 목록 밖)⟩]
+== d2_received_baseline  rc=0  재개 덱 정적 대조: 통과 (문제 0)
+   · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+== archived_after_settling_baseline  rc=0  재개 덱 정적 대조: 통과 (문제 0)
+   · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값

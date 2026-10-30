@@ -1,0 +1,10 @@
+V2 d2_drop_intermediate_variable_definition   main   바이트 같음 False · \r 뺀 글 같음 True  · sha256 앞 16 우리 4beb88fd5985e0d8 · Codex 605dff98aa93bee9
+V2 d2_drop_intermediate_variable_definition   resume 바이트 같음 False · \r 뺀 글 같음 True  · sha256 앞 16 우리 b0f5d3d6c5d6145b · Codex e1359a23e830e688
+V3 d2_runtime_dependent_eager_variable        main   바이트 같음 False · \r 뺀 글 같음 True  · sha256 앞 16 우리 76bc2bfd155c52c6 · Codex 99b2fd574f811775
+V3 d2_runtime_dependent_eager_variable        resume 바이트 같음 False · \r 뺀 글 같음 True  · sha256 앞 16 우리 55647150d2b875ba · Codex 49541b520513e694
+V4 drop_intermediate_variable_definition      main   바이트 같음 True  · \r 뺀 글 같음 True  · sha256 앞 16 우리 40e30bc80d851b3d · Codex 40e30bc80d851b3d
+V4 drop_intermediate_variable_definition      resume 바이트 같음 True  · \r 뺀 글 같음 True  · sha256 앞 16 우리 4d4759b5240e418c · Codex 4d4759b5240e418c
+V5 runtime_dependent_eager_variable           main   바이트 같음 True  · \r 뺀 글 같음 True  · sha256 앞 16 우리 af6c7ca303a0790f · Codex af6c7ca303a0790f
+V5 runtime_dependent_eager_variable           resume 바이트 같음 True  · \r 뺀 글 같음 True  · sha256 앞 16 우리 427fbd5172138885 · Codex 427fbd5172138885
+V1 d2_received_baseline                       main   바이트 같음 False · \r 뺀 글 같음 True  · sha256 앞 16 우리 f8ac9932a6cb4a0b · Codex 727f8e8b64fe5e36
+V1 d2_received_baseline                       resume 바이트 같음 False · \r 뺀 글 같음 True  · sha256 앞 16 우리 eacc23e60ae59814 · Codex c64d9d832e503da1

@@ -1,0 +1,12 @@
+py311_mawk rc=1 219 PASS · 73 FAIL · ENOSPC 다시 0 번 · 남은 ENOSPC 줄 0
+py311_gawk rc=1 219 PASS · 73 FAIL · ENOSPC 다시 0 번 · 남은 ENOSPC 줄 0
+py38_mawk rc=1 219 PASS · 73 FAIL · ENOSPC 다시 0 번 · 남은 ENOSPC 줄 0
+py38all_mawk rc=1 219 PASS · 73 FAIL · ENOSPC 다시 0 번 · 남은 ENOSPC 줄 0
+py311_mawk rc=0 292 PASS · 0 FAIL · ENOSPC 다시 0 번 · 남은 ENOSPC 줄 0
+py311_gawk rc=0 292 PASS · 0 FAIL · ENOSPC 다시 0 번 · 남은 ENOSPC 줄 0
+py38_mawk rc=0 292 PASS · 0 FAIL · ENOSPC 다시 0 번 · 남은 ENOSPC 줄 0
+py38all_mawk rc=0 292 PASS · 0 FAIL · ENOSPC 다시 0 번 · 남은 ENOSPC 줄 0
+vverbose_old 3 PASS · 73 FAIL · ENOSPC 줄 0
+vverbose_new 76 PASS · 0 FAIL · ENOSPC 줄 0
+mutation rc=0 ── 변이 36 · 잡힘 33 · 생존 3 · ENOSPC 든 변이 로그 0
+DONE

@@ -1,0 +1,46 @@
+OK  rej  (기대 rej) A1 b = ${a} 정의 앞 a 중간 정의 뺌 (뒤 구간 print 가 씀) · 재개 덱 정적 대조: 실패 (문제 2)
+      ✗ 준비 구간 그 자리 치환 값이 본 덱과 다름 (10-30 KG50R-F01 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [variable b equal ${a}] 의 ${a} — 본 덱 (4 번째 명령 자리) ⟦2⟧ ↔ 재개 덱 (4 번째 명령 자리) ⟦1⟧
+      ✗ 재개 지점 variable b 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [variable b equal ⟦2⟧] ↔ 재개 덱 [variable b equal ⟦1⟧]
+OK  rej  (기대 rej) A3 b = ${a}*v_c · c 중간 정의 뺌 · timestep ${b} · 재개 덱 정적 대조: 실패 (문제 3)
+      ✗ 준비 구간 그 자리 치환 값이 본 덱과 다름 (10-30 KG50R-F01 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [timestep ${b}] 의 ${b} — 본 덱 (6 번째 명령 자리) ⟦⟦2⟧*⟦4⟧⟧ ↔ 재개 덱 (6 번째 명령 자리) ⟦⟦2⟧*⟦3⟧⟧
+      ✗ 재개 지점 timestep 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [timestep ⟦⟦2⟧*⟦4⟧⟧] ↔ 재개 덱 [timestep ⟦⟦2⟧*⟦3⟧⟧]
+      ✗ 재개 덱이 정의 전 변수를 씀 (10-28 KG50R-03 · ${x} · $x · v_x): c — 4 번째 명령 [variable b equal ${a}*v_c]
+BAD rej  (기대 acc) A4 같은 꼴 · c 다시 정의가 timestep 뒤 (두 덱 같음) · 재개 덱 정적 대조: 실패 (문제 1)
+      ✗ 재개 덱이 정의 전 변수를 씀 (10-28 KG50R-03 · ${x} · $x · v_x): c — 4 번째 명령 [variable b equal ${a}*v_c]
+OK  rej  (기대 rej) A5 따옴표 안 ${a} 를 담은 equal 을 ${b} 로 씀 · 재개 덱 정적 대조: 실패 (문제 2)
+      ✗ 준비 구간 그 자리 치환 값이 상수가 아님 — 실행 상태에 따라 바뀜 · 등록 상수 목록 밖 (10-30 KG50R-F01 · 상수 = 수 · 연산자 · 괄호 · 정해진 수학 함수 · 상수 변수 · string 글): [timestep ${b}] 의 ${b} — 본 덱 ⟨실행 상태 값 · 본 덱 4 번째 명령의 ${b} = ⟦${a}*2⟧ · 모르는 글자 '$'⟩ ↔ 재개 덱 ⟨실행 상태
+      ✗ 재개 지점 timestep 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [timestep ⟨실행 상태 값 · 본 덱 4 번째 명령의 ${b} = ⟦${a}*2⟧ · 모르는 글자 '$'⟩] ↔ 재개 덱 [timestep ⟨실행 상태 값 · 재개 덱 5 번째 명령의 ${b} = ⟦
+OK  rej  (기대 rej) A7 timestep ${dt} 가 본 덱에 둘 (끝 = dt 2e-6) · 재개 덱 하나 (앞 것 자리) · 재개 덱 정적 대조: 실패 (문제 1)
+      ✗ 재개 지점 timestep 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [timestep ⟦2e-6⟧] ↔ 재개 덱 [timestep ⟦1e-6⟧]
+OK  rej  (기대 rej) A17 fix ${g} → unfix → g 바꿈 → fix ${g} (재개 덱 = 앞 fix 만) · 재개 덱 정적 대조: 실패 (문제 2)
+      ✗ 재개 지점 fix gr 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [fix gr all gravity ⟦196.2⟧ vector 0 0 -1] ↔ 재개 덱 [fix gr all gravity ⟦98.1⟧ vector 0 0 -1]
+      ✗ 재개 지점 variable g 다름: 본 덱 [variable g equal 196.2] ↔ 재개 덱 [variable g equal 98.1]
+OK  rej  (기대 rej) A27 g 98.1 → delete → 196.2 → fix ${g} · 재개 덱 = g 98.1 · fix · 재개 덱 정적 대조: 실패 (문제 3)
+      ✗ 준비 구간 그 자리 치환 값이 본 덱과 다름 (10-30 KG50R-F01 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [fix gr all gravity ${g} vector 0 0 -1] 의 ${g} — 본 덱 (5 번째 명령 자리) ⟦196.2⟧ ↔ 재개 덱 (4 번째 명령 자리) ⟦98.1⟧
+      ✗ 재개 지점 fix gr 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [fix gr all gravity ⟦196.2⟧ vector 0 0 -1] ↔ 재개 덱 [fix gr all gravity ⟦98.1⟧ vector 0 0 -1]
+      ✗ 재개 지점 variable g 다름: 본 덱 [variable g equal 196.2] ↔ 재개 덱 [variable g equal 98.1]
+OK  rej  (기대 rej) A31 fix 이름 자리 치환 fix ${f} · f string 중간 정의 뺌 · 재개 덱 정적 대조: 실패 (문제 2)
+      ✗ 준비 구간 그 자리 치환 값이 본 덱과 다름 (10-30 KG50R-F01 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [fix ${f} all gravity 9.8 vector 0 0 -1] 의 ${f} — 본 덱 (4 번째 명령 자리) gb ↔ 재개 덱 (4 번째 명령 자리) ga
+      ✗ 재개 지점 fix ${f} 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [fix gb all gravity 9.8 vector 0 0 -1] ↔ 재개 덱 [fix ga all gravity 9.8 vector 0 0 -1]
+OK  acc  (기대 acc) A32 대조군 — 상수 하나 (fix ${g} · 두 덱 같은 글자 · 값 같음 · 따옴표 없음) · 재개 덱 정적 대조: 통과 (문제 0)
+OK  rej  (기대 rej) A33 neigh_modify 묶음 ${n} 중간 정의 뺌 · 재개 덱 정적 대조: 실패 (문제 2)
+      ✗ 준비 구간 그 자리 치환 값이 본 덱과 다름 (10-30 KG50R-F01 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [neigh_modify one ${n}] 의 ${n} — 본 덱 (4 번째 명령 자리) ⟦200⟧ ↔ 재개 덱 (4 번째 명령 자리) ⟦100⟧
+      ✗ 재개 지점 neigh_modify 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [neigh_modify one ⟦200⟧] ↔ 재개 덱 [neigh_modify one ⟦100⟧]
+OK  rej  (기대 rej) A34 region ${x} 중간 정의 뺌 · 재개 덱 정적 대조: 실패 (문제 2)
+      ✗ 준비 구간 그 자리 치환 값이 본 덱과 다름 (10-30 KG50R-F01 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [region rb block 0 ${x} 0 1 0 1] 의 ${x} — 본 덱 (4 번째 명령 자리) ⟦2⟧ ↔ 재개 덱 (4 번째 명령 자리) ⟦1⟧
+      ✗ 재개 지점 region rb 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [region rb block 0 ⟦2⟧ 0 1 0 1] ↔ 재개 덱 [region rb block 0 ⟦1⟧ 0 1 0 1]
+OK  rej  (기대 rej) A35 group type ${t} 중간 정의 뺌 (상태 표 밖 명령 · ① 만) · 재개 덱 정적 대조: 실패 (문제 1)
+      ✗ 준비 구간 그 자리 치환 값이 본 덱과 다름 (10-30 KG50R-F01 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [group g1 type ${t}] 의 ${t} — 본 덱 (4 번째 명령 자리) ⟦2⟧ ↔ 재개 덱 (4 번째 명령 자리) ⟦1⟧
+OK  rej  (기대 rej) A36 v_ 가 가리키는 변수가 그 자리에 없음 (재개 덱 · 본 덱은 있음) · 재개 덱 정적 대조: 실패 (문제 4)
+      ✗ 재개 덱 준비 구간 명령 순서가 본 덱 체크포인트 앞 순서와 다름 (10-28 사전 공격 A · 순서 보존 부분열이어야 — 같은 변수 다시 정의 · fix 순서): [variable c equal 3] 는 본 덱에서 [timestep ${b}] 보다 앞에만 있다
+      ✗ 준비 구간 그 자리 치환을 펼칠 수 없음 (10-30 KG50R-F01 · 닫힌 실패): [timestep ${b}] 의 ${b} — 재개 덱: c 정의 없음
+      ✗ 재개 지점 timestep 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [timestep ⟦⟦3⟧*2⟧] ↔ 재개 덱 [timestep ⟨못 펼침 · 재개 덱 4 번째 명령의 ${b} — c 정의 없음⟩]
+OK  acc  (기대 acc) A37 '…"…' (겹따옴표 하나) 뒤 ${x} — LIGGGHTS 치환 안 함 · x 중간 정의 뺌 · 재개 덱 정적 대조: 통과 (문제 0)
+OK  rej  (기대 rej) A38 '…"…"…' (겹따옴표 둘) 뒤 ${x} — LIGGGHTS 치환 · x 중간 정의 뺌 · 재개 덱 정적 대조: 실패 (문제 2)
+      ✗ 준비 구간 그 자리 치환 값이 본 덱과 다름 (10-30 KG50R-F01 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [fix pr all print 100 'say"hi"' title ${x}] 의 ${x} — 본 덱 (4 번째 명령 자리) ⟦2⟧ ↔ 재개 덱 (4 번째 명령 자리) ⟦1⟧
+      ✗ 재개 지점 fix pr 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [fix pr all print 100 'say"hi"' title ⟦2⟧] ↔ 재개 덱 [fix pr all print 100 'say"hi"' title ⟦1⟧]
+OK  acc  (기대 acc) A39 "…'…" (홑따옴표 하나) 뒤 ${x} — LIGGGHTS 치환 안 함 · x 중간 정의 뺌 · 재개 덱 정적 대조: 통과 (문제 0)
+OK  rej  (기대 rej) A40 "…'…'…" (홑따옴표 둘) 뒤 ${x} — LIGGGHTS 치환 · x 중간 정의 뺌 · 재개 덱 정적 대조: 실패 (문제 2)
+      ✗ 준비 구간 그 자리 치환 값이 본 덱과 다름 (10-30 KG50R-F01 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [fix pr all print 100 "it''s" title ${x}] 의 ${x} — 본 덱 (4 번째 명령 자리) ⟦2⟧ ↔ 재개 덱 (4 번째 명령 자리) ⟦1⟧
+      ✗ 재개 지점 fix pr 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [fix pr all print 100 "it''s" title ⟦2⟧] ↔ 재개 덱 [fix pr all print 100 "it''s" title ⟦1⟧]
+── 공격 17 · 기대와 다름 1

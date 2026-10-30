@@ -1,0 +1,9 @@
+d2r 템플릿 줄 수 (fix pts* · pdd_mix): 4
+r14 템플릿 줄 수: 4
+== V8  -C 문제 2 · 흐름 KG50R-F01 문제 3 · 흐름 줄 중 글이 -C 에도 있는 것 1
+   흐름에만: ✗ 준비 구간 그 자리 치환 값이 상수가 아님 — 실행 상태에 따라 바뀜 · 등록 상수 목록 밖 (10-30 KG50R-F01 · 상수 = 수 · 연산자 · 괄호 · 정해진 수학 함수 · 상수 변수 · string 글): [fix pts2 all particletemplate/sphere 16600009 atom_type 2 density constant 4850 radius constant ${r_AM_S}] 의 ${r_AM_S} — 본 덱 ⟨실행 상태 값 · 본 덱 36 번째 명령의 ${r_AM_S} = ⟦2.0e-3*(1+st
+   흐름에만: ✗ 재개 지점 fix pts2 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [fix pts2 all particletemplate/sphere 16600009 atom_type 2 density constant 4850 radius constant ⟨실행 상태 값 · 본 덱 36 번째 명령의 ${r_AM_S} = ⟦2.0e-3*(1+step)⟧ · step (실행 상태 낱말 · 함수 · 등록 상수 목록 밖)⟩] ↔ 재개 
+== V14  -C 문제 14 · 흐름 KG50R-F01 문제 17 · 흐름 줄 중 글이 -C 에도 있는 것 17
+   흐름에 2 번: ✗ 준비 구간 그 자리 치환을 펼칠 수 없음 (10-30 KG50R-F01 · 닫힌 실패): [fix pts1 all particletemplate/sphere 15500011 atom_type 1 density constant 4850 radius constant ${r_AM_P}] 의 ${r_AM_P} — 본 덱: 본 덱 체크포인트 앞 15 번째 명령이
+   흐름에 2 번: ✗ 준비 구간 그 자리 치환을 펼칠 수 없음 (10-30 KG50R-F01 · 닫힌 실패): [fix pts2 all particletemplate/sphere 15600001 atom_type 2 density constant 4850 radius constant ${r_AM_S}] 의 ${r_AM_S} — 본 덱: 본 덱 체크포인트 앞 15 번째 명령이
+   흐름에 2 번: ✗ 준비 구간 그 자리 치환을 펼칠 수 없음 (10-30 KG50R-F01 · 닫힌 실패): [fix pts3 all particletemplate/sphere 15700019 atom_type 3 density constant 1640 radius constant ${r_SE}] 의 ${r_SE} — 본 덱: 본 덱 체크포인트 앞 15 번째 명령이 흐름 

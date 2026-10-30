@@ -1,0 +1,37 @@
+F01-1   잡힘   72 PASS · 4 FAIL       ① 값 다름 문제 (setup_values em != er) · V2 V4 V6 V7
+F01-2   잡힘   64 PASS · 12 FAIL      ① 상수 아님 → 실행 상태 값 표지 (sub_text) · V3 V5 V8 V16 V23 V24
+F01-3   잡힘   70 PASS · 6 FAIL       ① 상수 아님 문제 줄 (setup_values) · V3 V5 V8 V16 V23 V24
+F01-4   잡힘   60 PASS · 16 FAIL      ① · ③ 펼칠 수 없음 문제 줄 (setup_values) · V9 V14 V15 V20 V21 V22 V25 V28 V29 V32 V34 V35 V37 V38 V39 V40
+F01-5   잡힘   70 PASS · 6 FAIL       ② 끝 상태 = 펼친 줄 대조 (state_cmp) · V12 V13 V36
+F01-6   잡힘   74 PASS · 2 FAIL       ② 판 메시 file 이름 허용 = 펼친 줄도 (state_cmp) · V26
+F01-7   잡힘   64 PASS · 12 FAIL      ③ 흐름 · 변수 바꾸는 줄 (var_env) · V14 V25 V28 V34 V35 V36
+F01-8   잡힘   70 PASS · 6 FAIL       ③ run every 안 명령 (nested) · V25 V35 V36
+F01-9   잡힘   74 PASS · 2 FAIL       ③ python = 흐름 (FLOWV) · V28
+F01-34  잡힘   74 PASS · 2 FAIL       ③ partition = 흐름 (FLOWV) · V34
+F01-35  잡힘   74 PASS · 2 FAIL       ③ 겹친 명령 (nested · 한 층만으로) · V35
+F01-36  잡힘   74 PASS · 2 FAIL       ② 끝 상태 변수 표 못 정함 (xstate) · V36
+F01-10  잡힘   74 PASS · 2 FAIL       ③ variable 이름 · 꼴 자리 치환 (var_env) · V29
+F01-11  잡힘   63 PASS · 13 FAIL      ① 템플릿 fix 짝 (check) · V8 V1 V1b V1c V10 V11 V17 V18 V19 V30 V31 V33 V27
+F01-12  잡힘   75 PASS · 1 FAIL       isubs 따옴표 (" · ' 뒤집기) · V18
+F01-13  잡힘   75 PASS · 1 FAIL       isubs $(...) · V9
+F01-14  잡힘   75 PASS · 1 FAIL       isubs 한 글자 $c · V7
+F01-15  잡힘   74 PASS · 2 FAIL       isubs } 없는 ${ · V15
+F01-16  잡힘   75 PASS · 1 FAIL       fwhy 수학 함수 허용 (MATHF) · V19
+F01-17  잡힘   75 PASS · 1 FAIL       fwhy 비교 연산자 허용 · V19
+F01-18  잡힘   74 PASS · 2 FAIL       fwhy 논리 연산자 거부 · V24
+F01-19  잡힘   66 PASS · 10 FAIL      fwhy 이름 낱말 (thermo · 함수 · PI) 거부 · V3 V5 V8 V16 V23
+F01-20  잡힘   74 PASS · 2 FAIL       sub_text string 값 공백 · 따옴표 거부 · V20
+F01-21  잡힘   75 PASS · 1 FAIL       sub_text bare() (표지 안 공백은 수) · V33
+F01-22  잡힘   75 PASS · 1 FAIL       expand v_ string 수 글 · V30
+F01-23  잡힘   75 PASS · 1 FAIL       expand v_ string = equal 값 하나 · V31
+F01-24  잡힘   75 PASS · 1 FAIL       expand v_ string 수 글 아님 거부 · V21
+F01-25  잡힘   74 PASS · 2 FAIL       expand equal 밖 꼴 (atom) 거부 · V22
+F01-26  잡힘   74 PASS · 2 FAIL       expand 순환 참조 · V37
+F01-27  잡힘   75 PASS · 1 FAIL       expand v_x[…] 거부 · V38
+F01-28  생존   76 PASS · 0 FAIL       var_env 못 펼치는 변수 유지 (delete 전) · 
+F01-29  잡힘   74 PASS · 2 FAIL       var_env 다른 꼴 다시 정의 · V39
+F01-30  잡힘   74 PASS · 2 FAIL       var_env 인자 수 하나 · V40
+F01-31  생존   76 PASS · 0 FAIL       var_env 따옴표 낱말 안 치환 · 
+F01-32  생존   76 PASS · 0 FAIL       var_env 못 읽는 variable 줄 · 
+F01-33  잡힘   42 PASS · 34 FAIL      ① 순서 대조 짝 (setup_order 가 돌려줌) · V2 V3 V4 V5 V6 V7 V9 V15 V16 V20 V21 V22 V23 V24 V25 V32 V35 V37 V38 V39 V40 V1 V1b V1c V1d V10 V11 V17 V18 V19 V30 V31 V33 V27
+── 변이 36 · 잡힘 33 · 생존 3
