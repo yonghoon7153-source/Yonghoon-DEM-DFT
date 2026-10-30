@@ -2,8 +2,8 @@
 
 - 무엇: 계획 3판 (`docs/50kg/kg50_report_plan_fix_plan_20261030.md` §2 · ✅ 1저자 10-30 Q1–Q7 권고대로) 의 7쪽을 생성기로 만든 첫 초안.
   1쪽 = 완성 (조건 차이표 · 같은 배율 단면 넷 · 크기비 축) · 2–7쪽 = 틀 (계획 제목 · 주 그림 칸 · 보조 칸 · 상태 표지 · 결론의 꼴 회색 줄 · §1 한계 문구) ·
-  2쪽 보조 칸 = D3 · D2 로그로 그린 초안 그림 (메인 세션 요청 · 로그는 리포 밖 사본).
-- 지위: **초안 1** — 사전 공격 리뷰 · Codex 전 (계획 §4-5).  새 해석 수치 없음 (1쪽 = 조건 · 구조, 2쪽 그림 = 로그 · 덤프의 기하 환산).
+  2쪽 보조 칸 = D3 · D2 로그로 그린 초안 그림 (메인 세션 요청 · 로그 = 10-30 반입 `docs/data/kg50_d3_cell_verdict_20261027/kg50_d3_b50_s1_log.liggghts` · `docs/data/kg50_d2_end_20261030/kg50_d2_b50_log.liggghts` · 덱 안 notes 의 *"리포 밖 · 반입 예정"* 은 초안 2 에서 고침).
+- 지위: **초안 1** — 사전 공격 리뷰 · Codex 전 (계획 §4-5).  1쪽 = 조건 · 구조 · 2쪽 보조 그림 = D2 · D3 압밀 곡선 · 판 고정 기공도 (새로 본 해석 결과 — 분석 계획 문서 (계획 Q4) **전에** 계산 · 사전 공격 P2-2 · Codex 요청서 §0 에 이탈로 공개).
 - 덱 sha256 `551312593f9c8af0…` (빌드 기록 `checks_draft1.json`) · 같은 입력이면 같은 바이트 (`--determinism` · 아래 §4).
 
 ## 1. 파일
@@ -13,7 +13,7 @@
 | `build_kg50_report_y4.py` | 생성기 — 덱 (결정적 zip) · 검사 C1–C12 · 양식 대조 T1–T5 (`--template`) · 검사기 변이 시험 (`--selftest`) · LibreOffice 렌더 + 렌더 검사 R1–R6 (`--render`) |
 | `kg50_y4_sources.py` | 원자료 읽기 — 덱 넷 (sha256 = manifest) · manifest · 끝 상태 묶음 둘 (tgz 를 풀지 않고 멤버만 · sha256 = 기록) · 계획 §2 표 · SE 영률 기록 |
 | `figs/make_figs_p1.py` | 1쪽 그림 둘 → `figs/p1_sections.{png,svg,csv}` · `figs/p1_size_ratio.{png,svg,csv}` · `figs/p1_figs_meta.json` |
-| `figs/make_fig_p2_aux.py` | 2쪽 보조 그림 초안 → `figs/p2_aux_compaction.{png,svg,csv}` · `figs/p2_aux_meta.json` (로그 경로를 인자로 받는다 · 로그는 커밋하지 않음) |
+| `figs/make_fig_p2_aux.py` | 2쪽 보조 그림 초안 → `figs/p2_aux_compaction.{png,svg,csv}` · `figs/p2_aux_meta.json` (로그 경로를 인자로 받는다 · 로그 = 10-30 반입 위 두 경로) |
 | `kg50_report_y4_draft1.pptx` · `kg50_report_y4_draft1.pdf` · `render/kg50_report_y4_draft1-{1..7}.png` | 덱 · LibreOffice PDF · 쪽 PNG (150 dpi) |
 | `checks_draft1.json` | 검사 기록 (덱 · 양식 · 변이 · 렌더) + 1쪽 숫자 출처 장부 |
 
@@ -87,6 +87,6 @@ python3 -P docs/50kg/report_y4/figs/make_fig_p2_aux.py --log D3=<kg50_d3_b50_s1 
 - 1쪽 크기비 축의 점선 = 세 AM (D6) 이 맞닿은 평면 목의 내접원 (이상화 기준선) — 실제 침대의 문턱 아님 (캡션 · notes).  단분산 대리 입도 · 4차년도 목표 0.7 µm 포함.
 - 2쪽 보조 그림 (초안): 판 높이 = 로그 `PLATE HEIGHT` − 판 속도 (덱 `press_speed` 0.01) × dt (덱 1e-6) × (압축 시작 뒤 step) · 압축 시작 = PHASE 3 첫 run 의 시작 step · 끝 = PHASE 4 직전 · 끝 mesh 와 대조 (D3 125.8773 ↔ 125.877 · D2 122.4686 ↔ 122.469 µm · 반올림 폭 안) · 이완 끝 step = 끝 덤프 step · ε = 1 − ΣV_구 / (50 × 50 µm² × 판 높이) (ΣV_구 = 끝 atom 덤프 · ε_sphere) · 판 압력 = thermo `pressMPa` × 1000 · run 마다 첫 setup 줄 뺌 (그 줄의 메시 압력은 기준이 못 된다 · CLAUDE.md 재개 체크리스트 ⑤) · (a) = 판 압력 > 1 MPa.
   고정 높이 ε = D3 18.96 % · D2 16.74 % (D3 = 칸 판정 기록의 `kg50_d3_b50_s1` 18.96 % 와 같음) · 이완 끝 판 압력 D3 291.4 · D2 279.8 MPa.
-  로그 = 리포 밖 사본 (메인 세션이 반입) · sha256 D3 `40ba638167250cd742cdbeb113f71f83851619103be36ac79eaab7572c7ffe22` (1,267,117 B) · D2 `5d6721508615f2ffbd71a5c179a394f09c46f4993ac449496166ac08509dd198` (1,102,372 B) — `figs/p2_aux_meta.json`.
+  로그 = 10-30 반입 (위 두 경로 · 같은 sha256) · sha256 D3 `40ba638167250cd742cdbeb113f71f83851619103be36ac79eaab7572c7ffe22` (1,267,117 B) · D2 `5d6721508615f2ffbd71a5c179a394f09c46f4993ac449496166ac08509dd198` (1,102,372 B) — `figs/p2_aux_meta.json`.
 - 2쪽 그림 색 = 입도 순서 한 색상 계열 (밝음 → 어두움 · 0.7 → 3) — 1쪽의 주황 (SE 상) 과 섞지 않으려고.  범례 · 캡션 = 그림 밖 글 (보고 원칙 §2).
 - 확인하지 않은 것: PowerPoint 실제 렌더 (글꼴 대체 · 줄바꿈) · 계획 덱 원본에 붙였을 때의 레이아웃 대응 (이 덱은 레이아웃 이름 `빈 화면` 을 같은 이름으로 둔다).
