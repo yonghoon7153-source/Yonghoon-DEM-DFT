@@ -21,7 +21,7 @@ print("total syllables", total_syl, "| est. human talk", mmss(t))
 for o in out: print(o["n"], o["sec"], o["syllables"], mmss(o["start"]), "%.0fs" % o["dur"])
 # ---- 대본 문서 ----
 L = []
-L.append("# 나물로 발표 대본 (제출본 v4.6, 8–10분)\n")
+L.append("# 나물로 발표 대본 (제출본 v4.7, 8–10분)\n")
 L.append("> 사람이 읽는 속도(분당 약 300음절) 기준 예상 시간 **%s** (추정치). 8–10분 조건 안이지만 사람마다 속도가 달라 **9분 안팎**을 목표로 녹화해 실제 길이를 확인한다. 슬라이드 노트에도 같은 대본이 들어 있다. 그대로 읽기보다 흐름만 익히고 자기 말투로 바꿔 말하는 편이 자연스럽다.\n" % mmss(t))
 L.append("## 녹화해서 mp4 만들기 (본인 목소리 · 제출용)\n")
 L.append("1. PowerPoint(Windows, Microsoft 365)에서 `02_발표자료_나물로.pptx` 열기 → **녹화** 탭 → **녹화 → 처음부터**. (Mac: **슬라이드 쇼 → 슬라이드 쇼 녹화**)")

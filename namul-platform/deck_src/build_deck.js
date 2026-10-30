@@ -86,8 +86,8 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
   // ================= 2. Problem: 고객 =================
   pres.addSection({ title: "Problem" });
   { const s = content(2, "Problem");
-    head(s, "Problem  |  고객의 문제와 필요", "고객 문제", "1차 타깃은 전통시장 인근 맞벌이 자녀 가구로, 장보기·손질 시간 부족과 아이 반찬 고민이 큼");
-    [["01", "시간 부족", "퇴근 후 장보기와 저녁 준비\n시간이 짧음"], ["02", "아이 반찬 고민", "아이가 채소 반찬을 잘 먹지 않아\n메뉴 정하기가 어려움"],
+    head(s, "Problem  |  고객의 문제와 필요", "고객 문제", "나물을 먹고 싶어도 장보기·손질·메뉴 고민 때문에 덜 먹는 바쁜 가구(맞벌이·1인 가구)가 주 고객");
+    [["01", "시간 부족", "퇴근 후 장보기와 저녁 준비\n시간이 짧음"], ["02", "메뉴 고민", "무엇을 해 먹을지, 아이가\n먹을지 정하기 어려움"],
      ["03", "손질 부담", "나물은 다듬기·데치기 과정이\n번거로움"], ["04", "시장 가기 어려움", "시장 나물을 사고 싶어도\n퇴근 후엔 들를 시간이 없음"]].forEach(([n, h, d], i) => {
       const x = 0.45 + (i % 2) * 2.98, y = 1.72 + Math.floor(i / 2) * 1.62;
       box(s, x, y, 2.86, 1.5, G100, "pain box " + n);
@@ -95,12 +95,14 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       tx(s, h, { x: x + 0.2, y: y + 0.44, w: 2.5, h: 0.36, fontSize: 15, bold: true, color: INK, objectName: "pain head " + n });
       tx(s, d, { x: x + 0.2, y: y + 0.84, w: 2.55, h: 0.56, fontSize: 12, color: G700, objectName: "pain desc " + n }); });
     box(s, 6.48, 1.72, 3.07, 3.12, BRANDL, "stat panel");
-    tx(s, "18세 미만 자녀를 둔 부부 가구 중\n맞벌이 비율 (2025)", { x: 6.68, y: 1.88, w: 2.75, h: 0.5, fontSize: 12, color: G700, objectName: "stat label" });
-    tx(s, "60.4%", { x: 6.68, y: 2.42, w: 2.6, h: 0.7, fontSize: 38, bold: true, color: BRAND, objectName: "stat value" });
-    tx(s, "처음으로 60% 넘음\n막내가 6세 이하인 가구 56.5%", { x: 6.68, y: 3.14, w: 2.75, h: 0.5, fontSize: 11.5, color: G700, objectName: "stat sub" });
-    s.addShape(pres.ShapeType.line, { x: 6.68, y: 3.78, w: 2.67, h: 0, line: { color: BRAND3, width: 0.75 }, objectName: "stat rule" });
-    tx(s, "대구 지역 유아 86명 조사에서도\n반찬류를 꺼리는 경향 (정유미, 2019)", { x: 6.68, y: 3.9, w: 2.75, h: 0.5, fontSize: 11.5, color: INK, objectName: "stat research" });
-    foot(s, "자료: 국가데이터처 「2025년 하반기 지역별고용조사」 맞벌이 가구 현황(2026.06 보도), 정유미(2019) 「유아의 나이에 따른 편식 및 식습관 실태」 한국식생활문화학회지 34(5)"); }
+    tx(s, "18세 미만 자녀를 둔 부부 가구\n맞벌이 비율 (2025, 처음 60% 넘음)", { x: 6.68, y: 1.84, w: 2.75, h: 0.44, fontSize: 11, color: G700, objectName: "stat label" });
+    tx(s, "60.4%", { x: 6.68, y: 2.28, w: 2.6, h: 0.54, fontSize: 30, bold: true, color: BRAND, objectName: "stat value" });
+    s.addShape(pres.ShapeType.line, { x: 6.68, y: 2.9, w: 2.67, h: 0, line: { color: BRAND3, width: 0.75 }, objectName: "stat rule 1" });
+    tx(s, "1인 가구 비중\n(2025, 824만 가구로 역대 최대)", { x: 6.68, y: 2.98, w: 2.75, h: 0.44, fontSize: 11, color: G700, objectName: "stat label 2" });
+    tx(s, "36.6%", { x: 6.68, y: 3.42, w: 2.6, h: 0.54, fontSize: 30, bold: true, color: BRAND, objectName: "stat value 2" });
+    s.addShape(pres.ShapeType.line, { x: 6.68, y: 4.04, w: 2.67, h: 0, line: { color: BRAND3, width: 0.75 }, objectName: "stat rule 2" });
+    tx(s, "대구 유아 86명 조사에서도 반찬류를\n꺼리는 경향 (정유미, 2019)", { x: 6.68, y: 4.12, w: 2.75, h: 0.44, fontSize: 10.5, color: INK, objectName: "stat research" });
+    foot(s, "자료: 국가데이터처 「2025년 하반기 지역별고용조사」(2026.06 보도)·「2025 인구주택총조사」(2026.07 발표), 정유미(2019) 「유아의 나이에 따른 편식 및 식습관 실태」 한국식생활문화학회지 34(5)"); }
 
   // ================= 3. Problem: 판매자 =================
   { const s = content(3, "Problem");
@@ -219,7 +221,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
   // ================= 9. Business: 수익 모델 =================
   { const s = content(9, "Business");
     head(s, "Business  |  수익모델", "수익 모델", "중개 수수료를 기본 수익원으로 하고 판매자 유료 서비스·제휴 광고로 확대, 배달은 별도 이익 없이 연결");
-    const nodes = [["고객", "맞벌이 자녀 가구", 0.45, 1.75, G100, INK], ["나물로", "주문 · 배달 연결 · 정산", 4.05, 1.75, BRAND, "FFFFFF"], ["판매자", "전통시장 나물 가게", 7.65, 1.75, G100, INK]];
+    const nodes = [["고객", "맞벌이·1인 가구", 0.45, 1.75, G100, INK], ["나물로", "주문 · 배달 연결 · 정산", 4.05, 1.75, BRAND, "FFFFFF"], ["판매자", "전통시장 나물 가게", 7.65, 1.75, G100, INK]];
     nodes.forEach(([t, d, x, y, fill, col]) => { box(s, x, y, 1.9, 0.92, fill, "node " + t, fill === G100 ? G300 : null);
       tx(s, [{ text: t, options: { fontSize: 15, bold: true, breakLine: true } }, { text: d, options: { fontSize: 10.5 } }], { x, y, w: 1.9, h: 0.92, color: col, align: "center", valign: "middle", objectName: "node text " + t }); });
     const arrow = (x1, x2, y, name) => s.addShape(pres.ShapeType.line, { x: Math.min(x1, x2), y, w: Math.abs(x2 - x1), h: 0, line: { color: G500, width: 1.25, endArrowType: x2 > x1 ? "triangle" : undefined, beginArrowType: x2 > x1 ? undefined : "triangle" }, objectName: name });
@@ -273,7 +275,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     s.addText("나물로", { placeholder: "title" });
     s.addText("레시피에서 우리 동네 시장 장보기까지", { placeholder: "body" });
     tx(s, "다음 단계", { x: 0.6, y: 2.55, w: 3, h: 0.3, fontSize: 12, bold: true, color: "A9C2B3", objectName: "next steps label" });
-    [["01", "고객 인터뷰", "시장 인근 맞벌이 가정 10명\n프로토타입으로 사용성 확인"], ["02", "파일럿", "2026.12~2027.2, 시장 1곳\n유료 주문 100건 · 배달 비용 확인"], ["03", "팀 · 지원사업", "개발·콘텐츠 파트너 모집\n2027 정부 지원사업 신청"]].forEach(([n, h, d], i) => { const x = 0.6 + i * 2.95;
+    [["01", "고객 인터뷰", "맞벌이·1인 가구 10명\n프로토타입으로 사용성 확인"], ["02", "파일럿", "2026.12~2027.2, 시장 1곳\n유료 주문 100건 · 배달 비용 확인"], ["03", "팀 · 지원사업", "개발·콘텐츠 파트너 모집\n2027 정부 지원사업 신청"]].forEach(([n, h, d], i) => { const x = 0.6 + i * 2.95;
       box(s, x, 2.9, 2.8, 1.4, "214A39", "step box " + n);
       tx(s, n, { x: x + 0.2, y: 3.0, w: 0.6, h: 0.4, fontSize: 18, bold: true, color: "FFFFFF", objectName: "step num " + n });
       tx(s, h, { x: x + 0.82, y: 3.0, w: 1.9, h: 0.4, fontSize: 14, bold: true, color: "FFFFFF", valign: "middle", objectName: "step head " + n });
@@ -304,8 +306,9 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
   // ================= 14. 부록 2 =================
   { const s = content(14, "부록");
     head(s, "부록", "부록 2. 참고 자료", "수치는 2026.10 웹 검색 기준 공개 통계·보도이며, 발표 전 원문 확인 권장");
-    const L = [["국가데이터처, 2025년 하반기 지역별고용조사 맞벌이 가구 현황 (뉴시스 2026.06.18)", "https://www.newsis.com/view/NISX20260618_0003673686"],
-      ["소상공인시장진흥공단, 전통시장 실태조사 2023 (뉴시스 2025.01.03)", "https://www.newsis.com/view/NISX20250103_0003020386"],
+    const L = [["국가데이터처, 맞벌이 가구 현황 2025 하반기 (뉴시스)", "https://www.newsis.com/view/NISX20260618_0003673686"],
+      ["국가데이터처, 2025 인구주택총조사 1인 가구 (YTN)", "https://www.ytn.co.kr/_ln/0102_202607281324445082"],
+      ["소상공인시장진흥공단, 전통시장 실태조사 2023 (뉴시스)", "https://www.newsis.com/view/NISX20250103_0003020386"],
       ["산림청, 2024년 임산물생산조사 (e-나라지표)", "https://www.index.go.kr/unify/idx-info.do?idxCd=1302"],
       ["머니투데이, 배민 전통시장 장보기 입점 성과 (2026.03.18)", "https://www.mt.co.kr/tech/2026/03/18/2026031714425925652"],
       ["정유미(2019), 유아의 나이에 따른 편식 및 식습관 실태, 한국식생활문화학회지 34(5)", "https://koreascience.or.kr/article/JAKO201931765048406.page"],
@@ -320,7 +323,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       ["아이콘 Fluent Emoji (MIT) · 글꼴 Pretendard (OFL)", "https://github.com/microsoft/fluentui-emoji"]];
     const col = (arr, start, x, h) => { tx(s, h, { x, y: 1.68, w: 4.45, h: 0.3, fontSize: 12, bold: true, color: C.accent1, objectName: "ref head " + h });
       s.addText(arr.map(([t, url], i) => ({ text: t, options: { bullet: { type: "number", numberStartAt: start }, breakLine: i < arr.length - 1, ...(url ? { hyperlink: { url, tooltip: url } } : {}) } })), { x, y: 2.02, w: 4.45, h: 2.95, fontSize: 10.5, color: INK, paraSpaceAfter: 6, lineSpacingMultiple: 1.12, valign: "top", margin: 0, isTextBox: true, objectName: "ref list " + h }); };
-    col(L, 1, 0.45, "통계 · 시장 · 연구"); col(R, 8, 5.1, "경쟁 · 기술 · 자료");
+    col(L, 1, 0.45, "통계 · 시장 · 연구"); col(R, L.length + 1, 5.1, "경쟁 · 기술 · 자료");
     foot(s, "밑줄 친 항목은 원문 링크 · 전체 목록과 확인 메모는 04_레퍼런스_나물로.md"); }
 
   await pres.writeFile({ fileName: OUT });
