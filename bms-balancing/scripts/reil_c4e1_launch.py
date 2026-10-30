@@ -1,0 +1,263 @@
+"""REIL C4-E · E1 단계 실행기 — v5 RED 골격 (승인 요청 `docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md` §6 · E1-0).
+
+상수 · import 는 고정 구현과 같고, 함수는 서명만 있다 (본문 = NotImplementedError). launcher 대조 27 이 모두 NotImplementedError 로 실패하는 것을 본 뒤 고정 구현으로
+바꾼다. 이 파일로는 아무 단계도 실행하지 않는다.
+"""
+from __future__ import annotations
+
+import argparse
+import datetime
+import hashlib
+import importlib.machinery
+import json
+import os
+import re
+import resource
+import shutil
+import signal
+import stat
+import subprocess
+import sys
+import time
+import zipfile
+from pathlib import Path
+
+REPO = Path("/home/user/Yonghoon-DEM-DFT")
+BMS = REPO / "bms-balancing"
+SP = Path("/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad")
+WORK = SP / "c4e1"
+VENV = SP / "reil_c4env" / "venv"
+PY = VENV / "bin" / "python"
+SEAL = BMS / "reil_c6_rebuild_20261013"
+SEAL_MANIFEST_SHA256 = "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc"
+#: C6 봉인의 lock (MANIFEST 가 덮는 항목) — 머리줄에 env_profile 의 sha256 이 적혀 있다
+C6_LOCK = "REIL_C6.lock.txt"
+C6_LOCK_SHA256 = "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa"
+#: 신뢰 소스 목록 (C4E-E0-N1 · 상태 문서 §71 · 검토 회신 §72 가 구현 커밋 61b9037e 의 바이트와 대조)
+SOURCES = BMS / "evidence" / "reil_c4e0_fix_20261014" / "04_sources" / "SOURCES.json"
+SOURCES_SHA256 = "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52"
+SOURCES_SCHEMA = "reil-c4e-sources-v1"
+MODULE_RELPATHS = ("scripts/reil_c4e_run.py", "scripts/reil_c4_e3a.py", "scripts/reil_c4_monitor.py", "scripts/reil_c5_pilot.py",
+                   "scripts/reil_p0.py")
+RUN_SCRIPT = "scripts/reil_c4e_run.py"
+#: 패키지 import (`from scripts import …` — run :48–50 · e3a :39–40 · identity helper) 로 적재되는 셋. p0 · c6_profile 은 c5 가 경로로 읽는다
+LEAVES = ("reil_c4_e3a", "reil_c4_monitor", "reil_c5_pilot")
+#: S1 — 신뢰 목록 밖에서 경로로 실행되는 저장소 파일 (REPO 기준 · 구현 커밋 61b9037e 와 같은 바이트 · env_profile = C6 봉인 lock 머리줄)
+ENV_PROFILE = "degradation-degeneracy/tools/env_profile.py"
+EXTRA_EXECUTED = {"bms-balancing/scripts/reil_c6_profile.py": {"bytes": 15_915,
+                                                              "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"},
+                  ENV_PROFILE: {"bytes": 22_333, "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"}}
+#: identity helper — E0 · N1 정정 증거와 같은 바이트를 E1 증거 폴더에 복사해 쓴다
+IDENTITY_HELPER = "00_identity_c4.py"
+IDENTITY_HELPER_SHA256 = "92bb3bca2dcd56982bd4d4ddc02bb8ed84615d5b1b6af6385d69b66c8f5df900"
+#: 원자료 출처 · 식별 (P0 고정 · 상태 문서 §20 · v3 §1) — 저장소 밖 새 폴더에만 받는다
+SOURCE_URL = "https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git"
+SOURCE_COMMIT = "1188c371e5836df4a7e5f5acf336a34ffd4027e6"
+DATA = WORK / "data"
+DATA_FILES = {"LFP_Data.xlsx": {"bytes": 10_841_377, "sha256": "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1"},
+              "util_LFP.py": {"bytes": 33_754, "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"}}
+STEPS = {"identity": "03_identity", "fetch": "04_fetch", "run": "05_run"}
+TIMEOUTS = {"identity": 60.0, "fetch": 300.0, "run": 10_800.0}
+PROBE_TIMEOUT_S = 60.0
+GIT_TIMEOUT_S = 60.0
+KILL_WAIT_S = 10.0
+GROUP_GRACE_S = 5.0
+PROC = Path("/proc")
+REQUEST = "docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md"
+EVIDENCE_NAME = re.compile(r"^reil_c4e1_20[0-9]{6}$")
+SECTION = re.compile(r"^§[0-9]{2,3}$")
+SECRET = re.compile(r"TOKEN|SECRET|PASSW|ACCESS_KEY|CREDENTIAL|COOKIE|^GIT_CONFIG_", re.I)
+GIT_KEEP = ("GIT_SSL_CAINFO",)
+DROP = ("SSH_ASKPASS",)
+ENV_SET_KEYS = ("MPLBACKEND", "MPLCONFIGDIR", "TMPDIR", "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "GIT_TERMINAL_PROMPT")
+#: N4 — 유효 출처를 바꾸거나 우회하는 Git 설정 (`git config --list` 의 소문자 키)
+GIT_CONFIG_DENY = re.compile(r"^(url\..+\.(insteadof|pushinsteadof)|https?\.proxy|https?\..+\.proxy|core\.gitproxy|core\.sshcommand|"
+                             r"credential\.helper|credential\..+\.helper)$")
+GIT_SSLVERIFY = re.compile(r"^https?\.(.+\.)?sslverify$")
+PATHFINDER = "_frozen_importlib_external.PathFinder"
+SOURCE_LOADER = "_frozen_importlib_external.SourceFileLoader"
+#: 네임스페이스 spec 의 loader 표기 (find_spec 시점에는 보통 없음 — 판에 따라 NamespaceLoader) · 일반 패키지 (SourceFileLoader · origin `__init__.py`) 는 아님
+NAMESPACE_LOADERS = (None, "_frozen_importlib_external.NamespaceLoader", "_frozen_importlib_external._NamespaceLoader")
+#: 탐침 (`-c`) — 앞에 `BMS = …` · `LEAVES = …` 두 줄을 붙여 쓴다. json · sys 만 쓰고, finder 에 find_spec 만 묻는다 (import · 실행 0)
+PROBE = '''import json, sys
+m = sys.modules.get("sitecustomize")
+def name(o):
+    t = o if isinstance(o, type) else type(o)
+    return t.__module__ + "." + t.__qualname__
+out = {"path": list(sys.path), "executable": sys.executable, "prefix": sys.prefix, "version": sys.version,
+       "isolated": sys.flags.isolated, "ignore_environment": sys.flags.ignore_environment, "no_user_site": sys.flags.no_user_site,
+       "safe_path": sys.flags.safe_path, "dont_write_bytecode": sys.flags.dont_write_bytecode, "pycache_prefix": sys.pycache_prefix,
+       "sitecustomize": getattr(m, "__file__", None), "meta_path": [name(f) for f in sys.meta_path]}
+sys.path.insert(0, BMS)
+def find(fullname, path):
+    for f in sys.meta_path:
+        fs = getattr(f, "find_spec", None)
+        s = fs(fullname, path) if fs is not None else None
+        if s is not None:
+            return name(f), s
+    return None, None
+def desc(f, s):
+    if s is None:
+        return {"finder": f, "found": False}
+    loc = s.submodule_search_locations
+    return {"finder": f, "found": True, "origin": s.origin, "loader": None if s.loader is None else name(s.loader),
+            "locations": None if loc is None else [str(x) for x in loc]}
+specs = {"scripts": desc(*find("scripts", None))}
+locs = specs["scripts"].get("locations") or []
+for leaf in LEAVES:
+    specs["scripts." + leaf] = desc(*find("scripts." + leaf, list(locs)))
+out["specs"] = specs
+print(json.dumps(out))
+'''
+
+
+def utc() -> str:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def sha256(b: bytes) -> str:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def is_sha256(v) -> bool:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def dump(obj) -> str:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def write_new(path, text: str) -> None:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def entry_exists(path) -> bool:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def read_regular(path) -> tuple:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def load_sources(path, want_sha256, *, relpaths=MODULE_RELPATHS, schema=SOURCES_SCHEMA) -> tuple:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def check_files(base, expected: dict) -> tuple:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def seal_lock_problems(seal, manifest_sha256, lock_sha256, env_profile_sha256) -> tuple:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def leaf_shadow_problems(bms=BMS, leaves=LEAVES) -> list:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def shadow_problems(entries, bms=BMS) -> list:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def spec_problems(specs, bms=BMS, leaves=LEAVES) -> list:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def interp(py, prefix) -> list:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def flag_problems(probe_doc: dict, prefix, py) -> list:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def probe(py, prefix, *, env, cwd, bms=BMS, timeout=PROBE_TIMEOUT_S) -> tuple:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def build_argv(step, evidence, section, prefix, *, py=PY, bms=BMS, venv=VENV, seal=SEAL, data=DATA, sources=SOURCES,
+               sources_sha256=SOURCES_SHA256, seal_manifest_sha256=SEAL_MANIFEST_SHA256) -> list:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def child_env(base: dict, work=WORK) -> tuple:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def git_run(args, *, env=None, cwd=None, timeout=GIT_TIMEOUT_S) -> dict:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def git_config_problems(listing: str) -> list:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def fetch_source_precheck(env, cwd, url=SOURCE_URL) -> tuple:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def fetch_source_postcheck(env, data, url=SOURCE_URL, commit=SOURCE_COMMIT) -> tuple:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def record_problems(records: dict, heads=("head_start", "head_end"), porcelains=("porcelain_start", "porcelain_end")) -> list:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def precheck(step, evidence, argv, prefix, *, env, repo=REPO, py=PY, seal=SEAL, work=WORK, data=DATA, data_files=DATA_FILES,
+             sources=SOURCES, sources_sha256=SOURCES_SHA256, seal_manifest_sha256=SEAL_MANIFEST_SHA256, lock_sha256=C6_LOCK_SHA256,
+             extra=EXTRA_EXECUTED, helper_sha256=IDENTITY_HELPER_SHA256) -> dict:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def identity_link(path, modules: dict, *, relpaths=MODULE_RELPATHS) -> list:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def postcheck(step, evidence, pre, prefix, child, *, env, repo=REPO, data=DATA, data_files=DATA_FILES, extra=EXTRA_EXECUTED,
+              records=None) -> dict:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def child_result(step, stdout_text: str) -> tuple:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def stage_verdict(*, precheck_ok, child_ok, rc, timed_out, postcheck_ok) -> dict:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def proc_members(pgid, *, proc=PROC, read=None) -> dict:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def group_status(pgid, *, grace=GROUP_GRACE_S, proc=PROC, read=None) -> dict:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def kill_group(pgid, killpg=os.killpg) -> dict:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def run_child(argv, *, cwd, env, stdout, stderr, timeout, popen=subprocess.Popen, killpg=os.killpg, kill_wait=KILL_WAIT_S,
+              grace=GROUP_GRACE_S, proc=PROC, read=None) -> dict:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def git_out(repo, *args, env) -> dict:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def launch(step, evidence, section, *, repo=REPO, py=PY, venv=VENV, seal=SEAL, work=WORK, data=DATA, data_files=DATA_FILES,
+           sources=SOURCES, sources_sha256=SOURCES_SHA256, seal_manifest_sha256=SEAL_MANIFEST_SHA256, lock_sha256=C6_LOCK_SHA256,
+           extra=EXTRA_EXECUTED, helper_sha256=IDENTITY_HELPER_SHA256, timeouts=TIMEOUTS, env_base=None, popen=subprocess.Popen,
+           killpg=os.killpg, kill_wait=KILL_WAIT_S, grace=GROUP_GRACE_S, proc=PROC, read=None) -> int:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+def main(argv=None) -> int:
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+
+
+if __name__ == "__main__":
+    sys.exit(main())
