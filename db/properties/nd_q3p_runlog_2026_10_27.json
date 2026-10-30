@@ -80,5 +80,10 @@
   "가르는_법": "MP_07 Bader SCF 를 새 폴더에서 같은 입력으로 다시 (GPU ≈ 30 분 · ELF 뒤) → 같은 후처리 → 음의 밀도 · 극대 수가 MLi_04 수준이면 ① (새 값으로 판독) · 그대로면 ② (이 방법으로는 MP_07 Bader 를 못 읽는다 — 닫거나 방법 개정 · 사용자 결정)",
   "⚠": "카드에 밀도 품질 게이트가 없었다 — 다시 돌리는 것은 진단이지 결과 보고 설정을 바꾸는 것이 아니다 (입력 · 설정 그대로 · 같은 저장소 판)",
   "by": "agent · 2026-10-30"
+ },
+ "Bader_MP_07_다시_걸림_2026_10_30": {
+  "tmux": "ndrerun — tmux ndq3p (ELF) 가 끝나면 run_force_check_scf.sh $HOME/work/runs/nd_q3p_rerun_1030/bader (MP_07 하나 · 같은 scf.in · cmp ✓ · MIN_FREE_MIB 16000) → scf_run.log",
+  "다음": "SCF 끝나면 run_bader_pp_kgy.sh R=$HOME/work/runs/nd_q3p_rerun_1030 MODELS=MP_07 → pp_ae.out 음의 밀도 · BCF 극대 수를 첫 판 (0.1885 e · 7,580) · MLi_04 (0.00064 e · 692) 와 대조",
+  "by": "agent · 2026-10-30"
  }
 }
