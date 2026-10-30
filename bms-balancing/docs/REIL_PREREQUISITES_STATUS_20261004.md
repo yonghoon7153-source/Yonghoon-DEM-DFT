@@ -2205,3 +2205,26 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
     결과 § · 결과 검토 발송문 → 멈춤.
   - 첫 예상 밖 결과에서 멈추고 재시험하지 않는다.
   - 승인은 E1-0b · E1-1–3 (identity · 읽기 경로 · fetch · 자료 개봉 · run) · C4-A / B · COMSOL 을 포함하지 않는다. 이 기록은 어느 단계의 실행 승인도 아니다.
+
+## §84 C4-E · E1-0 — 사용자 승인 (2026-10-30 KST · 착수 전 기록 · 덧붙임 — 위 §0–§83 은 그대로)
+
+- **사용자 (2026-10-30):** "승인" — §83 뒤 E1-0 한정 승인을 묻는 결정 요청 (요청서 v5 §10 의 2 · 대화에서 "진행하시려면 'E1-0 승인'이라고 답해 주세요") 에
+  대한 답이다. 승인 대상은 요청서 v5 (`docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md` · `18db9f15…` · 사전 검토 수용 §83) §4 의 E1-0 뿐이다.
+- **고정본 (요청서 v5 §1-1 · 봉인 표 15/15 — §83):** launcher `2269d775…` · 골격 `e6f72de2…` · launcher 대조 `4720585c…` · 외곽 실행기 대조 `ae42d8e8…` ·
+  외곽 실행기 `f6070f97…` (봉인 표 EXPECT 포함).
+- **순서 · 배정 (요청서 v5 §4-1 그대로):**
+  - a 이 기록 · 보존 규칙 · `<E0>` 만들기 → b 복사 넷 · `00_start.txt` · 첫 시험 전 봉인 커밋 → c RED-L (pytest 120 s) → d RED-R (120 s) → e 고정 구현 복사 ·
+    GREEN 65 (600 s · `-x`) → f `04_end.json` · 비밀 검사 · 커밋 · push · 결과 기록 §85 · 결과 검토 발송문 → 멈춤.
+  - 단계마다 정리 ≤ 15 s (공통 기한) + 기록 (별도 배정). E1-0 전체 ≤ 2 h. 재시도 0 · 예산 변경 0 · 첫 예상 밖 결과에서 멈춘다.
+- **판정 기준 (요청서 v5 §4-3):**
+  - 공통 (실행기 meta): started · timeout 없음 · `cleanup.status` empty · `deadline_hit` false · `end_problems` · `errors` 없음 · `runner_ok` true.
+  - RED-L: pytest rc 1 · 27 failed · 통과 · 건너뜀 · 수집 오류 0 · 실패 27 줄 모두 `NotImplementedError: E1-0 RED 골격`.
+  - RED-R: rc 1 · 11 failed · r1 AssertionError · r2 · r3 · r9 · r10 `cleanup` · r4 `base_env` · r5 `source_table` · r6–r8 `run_step` · r11 `observe` (AttributeError).
+  - GREEN: rc 0 · 65 passed (건너뜀 · xfail 0).
+- **증거 폴더:** `<E0>` = `evidence/reil_c4e1_0_20261030/` (착수 UTC 날짜 2026-10-30). 이 기록 시점 확인 (05:15Z): `<E0>` · `SP/c4e1_steps` 없음 · 복사 대상 셋
+  없음.
+- **절차 Git 이름 확인 (요청서 v5 §4-6 · 단계 a · 2026-10-30T05:15Z · 이름만 · 값은 읽거나 출력하지 않음):** 결과 `outside_allowlist` = [] (rc 0).
+  - 이름: `GIT_ASKPASS` · `GIT_CONFIG_COUNT` · `GIT_CONFIG_KEY_0`–`2` · `GIT_CONFIG_VALUE_0`–`2` · `GIT_EDITOR` · `GIT_SSL_CAINFO` · `GIT_TERMINAL_PROMPT`.
+  - a–f 의 절차 git 은 모두 같은 셸 명령 줄에서 이 확인 뒤에만 실행한다 (`<확인> && git …`).
+- **번호:** 결과 기록은 §85 이다.
+- 이 승인은 E1-0b · E1-1–3 (identity · 읽기 경로 `add_repo` · fetch · 자료 개봉 · run) · C4-A / B · 설치 · 환경 재구축 · COMSOL 승인이 아니다.
