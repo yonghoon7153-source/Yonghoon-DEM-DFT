@@ -1,0 +1,35 @@
+$ bash /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a966f9f6d6223c244/docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/probes/mesh_escape.sh /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai
+post-checkpoint plate mesh lines in the resume deck: 1
+=== abs : file /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/mesh_escape/elsewhere/plate_kg50_d2_b50.stl
+    diff 1c1
+    diff < 190:fix top_mesh all mesh/surface/stress file plate_kg50_d07_b50.stl type 1 scale 1.0 reference_point 0 0 0
+    diff ---
+    diff > 190:fix top_mesh all mesh/surface/stress file /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/mesh_escape/elsewhere/plate_kg50_d2_b50.stl type 1 scale 1.0 reference_point 0 0 0
+  · 판 메시 파일만 다름 (첫 긴 run 뒤 명령): /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/mesh_escape/elsewhere/plate_kg50_d2_b50.stl
+  재개 덱 정적 대조: 통과 (문제 0)
+    rc=0
+=== dotdot : file ../elsewhere/plate_kg50_d2_b50.stl
+    diff 1c1
+    diff < 190:fix top_mesh all mesh/surface/stress file plate_kg50_d07_b50.stl type 1 scale 1.0 reference_point 0 0 0
+    diff ---
+    diff > 190:fix top_mesh all mesh/surface/stress file ../elsewhere/plate_kg50_d2_b50.stl type 1 scale 1.0 reference_point 0 0 0
+  · 판 메시 파일만 다름 (첫 긴 run 뒤 명령): ../elsewhere/plate_kg50_d2_b50.stl
+  재개 덱 정적 대조: 통과 (문제 0)
+    rc=0
+=== inW_nonstl : file input_kg50_d07_b50_r56.liggghts
+    diff 1c1
+    diff < 190:fix top_mesh all mesh/surface/stress file plate_kg50_d07_b50.stl type 1 scale 1.0 reference_point 0 0 0
+    diff ---
+    diff > 190:fix top_mesh all mesh/surface/stress file input_kg50_d07_b50_r56.liggghts type 1 scale 1.0 reference_point 0 0 0
+  · 판 메시 파일만 다름 (첫 긴 run 뒤 명령): input_kg50_d07_b50_r56.liggghts
+  재개 덱 정적 대조: 통과 (문제 0)
+    rc=0
+=== missing : file plate_nonexistent.stl
+    diff 1c1
+    diff < 190:fix top_mesh all mesh/surface/stress file plate_kg50_d07_b50.stl type 1 scale 1.0 reference_point 0 0 0
+    diff ---
+    diff > 190:fix top_mesh all mesh/surface/stress file plate_nonexistent.stl type 1 scale 1.0 reference_point 0 0 0
+  ✗ 판 메시 파일 plate_nonexistent.stl 가 작업 폴더에 없음 (첫 긴 run 뒤 명령)
+  재개 덱 정적 대조: 실패 (문제 1)
+    rc=1
+[rc=0]

@@ -1,0 +1,121 @@
+$ python3 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a966f9f6d6223c244/docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/probes/e2e_d07.py /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai T
+====================================================================================================
+scene T (-T · real D0.7 command) · rc 0 · sbatch calls ['trial /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56t.sh']
+attempt files: ['cut_r56.txt', 'deckcheck_r56.txt', 'fixrun_r56.txt', 'helper_run_kg50_d07_b50_r56.sh.orig', 'input_kg50_d07_b50_r56.liggghts', 'input_kg50_d07_b50_r56t.liggghts', 'job_t.txt', 'lastrun_n.txt', 'main_inputs.sha256', 'mode.txt', 'plan_r56.txt', 'result.txt', 'run_kg50_d07_b50_r56.sh', 'run_kg50_d07_b50_r56t.sh', 'runner_check.txt', 'tool.txt', 'tp_r56.txt']
+--- runner_check.txt
+헬퍼 러너 엄격 대조 통과 (10-30 KG50R-F02) — #SBATCH 6 · 환경 줄 6 · cd 실제 경로 = 작업 폴더 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50 → 본 · 시험 러너를 도구 틀로 씀 (cd "작업 폴더 실제 경로" || exit 1 · -in "검사한 덱 절대 경로" · 잡 시작 때 덱 · 체크포인트 sha256 대조 · command mpirun 한 줄 · LMP_IDENTITY 줄 = 시험 로그에서 G0 관문)
+--- main_inputs.sha256
+8e129f421a8491975f83527f79c8418318b2af30baeedd7440cfcede2d45c5e5  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts
+c5d952ea708dcc1ee527d361f93205c5bbc91a77d63abff92fd648bdfb6d986b  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56.sh
+94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts
+ddff034aec6802ab5c8bacb8bd58ad841806842f8eca4af6c9f196464c2fc2a9  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56t.sh
+f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_settling_20001.bin
+--- result.txt
+G0 1 G1 1 G2 1 G3 1 · 시험 job 7001 · 로그 output_kg50_d07_b50_r56t_7001.out · 잡 안 덱 신원 1 (G0 에 듦)
+결정: 시험만 (-T)
+checked deck sha256 (attempt copies): {
+ "input_kg50_d07_b50_r56.liggghts": "8e129f421a8491975f83527f79c8418318b2af30baeedd7440cfcede2d45c5e5",
+ "input_kg50_d07_b50_r56t.liggghts": "94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1"
+}
+mpirun trial job 7001 cwd /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50 -in /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts read sha256 94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1 = checked? True
+OUT   · 헬퍼 러너 엄격 대조 통과 (10-30 KG50R-F02) — #SBATCH 6 · 환경 줄 6 · cd 실제 경로 = 작업 폴더 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50 → 본 · 시험 러너를 도구 틀로 씀 (cd "작업 폴더 실제 경로" || exit 1 · -in "검사한 덱 절대 경로" · 잡 시작 때 덱 · 체크포인트 sha256 대조 · command mpirun 한 줄 · LMP_IDENTITY 줄 = 시험 로그에서 G0 관문)
+OUT   · 시험 덱 (10-28 KG50R-02 · 05 · 같은 논리 명령 파서): 재개 덱 첫 긴 run [run 180000] (원 줄 157) → [run 2000] · 시험 예산 = 첫 긴 run 앞 run 합 0 + 2000
+OUT   재개 덱 정적 대조: 통과 (문제 0)
+OUT   ▶ 시험 job 7001 (run 2000 · 기대 끝 step 22001)
+OUT ── 시험 잡 끝날 때까지 대기 (끝나면 대조 → 맞으면 본 제출)
+OUT - 시도 (10-28 KG50R-04): attempt_r56_1030_024619_11484 — 이번 호출이 낸 시험만 본 제출 대상 (작업 폴더의 옛 job · mode 파일은 읽지 않는다)
+OUT - 러너 (10-30 KG50R-F02 · 1저자 Q2): 헬퍼 러너 엄격 대조 통과 (10-30 KG50R-F02) — #SBATCH 6 · 환경 줄 6 · cd 실제 경로 = 작업 폴더 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50 → 본 · 시험 러너를 도구 틀로 씀 (cd "작업 폴더 실제 경로" || exit 1 · -in "검사한 덱 절대 경로" · 잡 시작 때 덱 · 체크포인트 sha256 대조 · command mpirun 한 줄 · LMP_IDENTITY 줄 = 시험 로그에서 G0 관문) · 헬
+OUT - 재개 덱 정적 대조: 통과 (문제 0) (deckcheck_r56.txt)
+OUT - 🧪 시험만 (-T) — G0–G3 통과 · 본 제출 안 함
+OUT - 본 제출 명령 (10-28 Q4 · KG50R · -T 를 뺀 같은 명령 + 승인값 · G0–G3 통과 케이스만 · 새 시험부터 다시): `bash /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a966f9f6d6223c244/scripts/resume_ckpt.sh -n 56 -s ins1 -r /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test -x r56 -t 2000 -A 2dc7f693263708d7788ab721386182c6109a8f9278797ecc43f5165d6715f1
+REP - 시도 (10-28 KG50R-04): attempt_r56_1030_024619_11484 — 이번 호출이 낸 시험만 본 제출 대상 (작업 폴더의 옛 job · mode 파일은 읽지 않는다)
+REP - G0 시험 정상 종료: 통과 — 상태 COMPLETED · ExitCode 0:0 · 마지막 step 22001 (기대 22001) · Loop time 끝 step 뒤에 있음 · 조회 실패 0 번 · 끝 상태 얻음
+REP - G0 마지막 줄 · Loop (10-28 KG50R-07): 마지막 thermo 줄 = 최신 머리 아래 · 칸 수 같음 · 모든 칸 유한 수 (step 22001 · 줄 7) · 'Loop time … for 2000 steps' ↔ 시험 마지막 run 2000 — 같음
+REP - G0 잡 안 덱 신원 (10-30 KG50R-F02 · 관문): 통과 — 같음 (덱 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts sha256 94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1 · 체크포인트 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2
+REP     신원 줄 (10-30 KG50R-F02): LMP_IDENTITY (10-30 KG50R-F02): lmp_mpi=none sha256= deck=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts sha256=94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1 checkpoint=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b
+REP - G1 재개 첫 thermo (step 20001, setup 줄, CPU·압력 열 제외, 1e-6): 통과
+REP - G2 체크포인트 상태 덤프 대조: 통과 — 체크포인트 step 덤프 없음 (G1 의 KE 일치로 대신)
+REP - G3 원 로그 비교 구간 (step 21000 부터, 느슨한 확인): 5 % 안
+REP - 🧪 시험만 (-T) — G0–G3 통과 · 본 제출 안 함
+REP - 본 제출 명령 (10-28 Q4 · KG50R · -T 를 뺀 같은 명령 + 승인값 · G0–G3 통과 케이스만 · 새 시험부터 다시): `bash /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a966f9f6d6223c244/scripts/resume_ckpt.sh -n 56 -s ins1 -r /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test -x r56 -t 2000 -A 2dc7f693263708d7788ab721386182c6109a8f9278797ecc43f5165d6715f1
+--- work folder runner run_kg50_d07_b50.sh (sha256 a75ca484aef99a7e)
+#!/bin/bash
+#SBATCH --job-name=kg50_d07_b50
+#SBATCH --output=logs/output_kg50_d07_b50_%j.out
+#SBATCH --qos=cpu-60
+#SBATCH --partition=cpu
+#SBATCH -n 56
+#SBATCH --time=5-00:00:00
+
+source ~/.bashrc
+conda activate myenv
+
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+
+cd $HOME/dem_test/kg50_d07_b50
+mpirun --oversubscribe --bind-to none -np 56 lmp_mpi -in input_kg50_d07_b50.liggghts
+--- work folder runner run_kg50_d07_b50_insert.sh (sha256 f2b1c6090a25ce24)
+#!/bin/bash
+#SBATCH --job-name=kg50_d07_b50_ins
+#SBATCH --output=logs/output_kg50_d07_b50_ins_%j.out
+#SBATCH --qos=cpu-60
+#SBATCH --partition=cpu
+#SBATCH -n 1
+#SBATCH --time=5-00:00:00
+
+source ~/.bashrc
+conda activate myenv
+
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+
+cd $HOME/dem_test/kg50_d07_b50
+mpirun --oversubscribe --bind-to none -np 1 lmp_mpi -in input_kg50_d07_b50_insert.liggghts
+--- work folder runner run_kg50_d07_b50_r56.sh (sha256 c5d952ea708dcc1e)
+#!/bin/bash
+#SBATCH --job-name=kg50_d07_b50_r56
+#SBATCH --output=logs/output_kg50_d07_b50_r56_%j.out
+#SBATCH --qos=cpu-60
+#SBATCH --partition=cpu
+#SBATCH -n 56
+#SBATCH --time=5-00:00:00
+
+source ~/.bashrc
+conda activate myenv
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+
+cd "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50" || exit 1
+ds=$(sha256sum 2>/dev/null < "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts" | cut -c1-64); ks=$(sha256sum 2>/dev/null < "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_settling_20001.bin" | cut -c1-64)
+echo "LMP_IDENTITY (10-30 KG50R-F02): lmp_mpi=$(command -v lmp_mpi || echo none) sha256=$(sha256sum 2>/dev/null < "$(command -v lmp_mpi)" | cut -c1-64) deck=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts sha256=$ds checkpoint=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_settling_20001.bin sha256=$ks"
+[ "$ds" = "8e129f421a8491975f83527f79c8418318b2af30baeedd7440cfcede2d45c5e5" ] && [ "$ks" = "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b" ] || { echo "LMP_IDENTITY_MISMATCH (10-30 KG50R-F02): deck /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts sha256 $ds (checked 8e129f421a8491975f83527f79c8418318b2af30baeedd7440cfcede2d45c5e5) checkpoint /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_settling_20001.bin sha256 $ks (checked f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b) - mpirun not started"; exit 1; }
+command mpirun --oversubscribe --bind-to none -np 56 lmp_mpi -in "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts"
+--- work folder runner run_kg50_d07_b50_r56t.sh (sha256 ddff034aec6802ab)
+#!/bin/bash
+#SBATCH --job-name=kg50_d07_b50_r56t
+#SBATCH --output=logs/output_kg50_d07_b50_r56t_%j.out
+#SBATCH --qos=cpu-60
+#SBATCH --partition=cpu
+#SBATCH -n 56
+#SBATCH --time=01:00:00
+
+source ~/.bashrc
+conda activate myenv
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+
+cd "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50" || exit 1
+ds=$(sha256sum 2>/dev/null < "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts" | cut -c1-64); ks=$(sha256sum 2>/dev/null < "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_settling_20001.bin" | cut -c1-64)
+echo "LMP_IDENTITY (10-30 KG50R-F02): lmp_mpi=$(command -v lmp_mpi || echo none) sha256=$(sha256sum 2>/dev/null < "$(command -v lmp_mpi)" | cut -c1-64) deck=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts sha256=$ds checkpoint=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_settling_20001.bin sha256=$ks"
+[ "$ds" = "94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1" ] && [ "$ks" = "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b" ] || { echo "LMP_IDENTITY_MISMATCH (10-30 KG50R-F02): deck /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts sha256 $ds (checked 94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1) checkpoint /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_settling_20001.bin sha256 $ks (checked f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b) - mpirun not started"; exit 1; }
+command mpirun --oversubscribe --bind-to none -np 56 lmp_mpi -in "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_ke2e07ay/home/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts"
+[rc=0]

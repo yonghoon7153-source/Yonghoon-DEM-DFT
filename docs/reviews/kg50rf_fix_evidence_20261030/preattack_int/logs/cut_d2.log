@@ -1,0 +1,15 @@
+$ bash /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a966f9f6d6223c244/docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/probes/cut_d2.sh /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai
+180000 2000 0 157
+cut rc=0
+D2 r4t regenerated == received (byte-identical)
+aac7debc81029acf
+aac7debc81029acf
+180000 2000 0 157
+cut rc=0
+2000 1 [run 2000]
+trial-steps rc=0
+  157 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/d07_r56t.liggghts
+  157 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a966f9f6d6223c244/docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/input_kg50_d2_b50_r4t.liggghts
+  314 total
+run 2000
+[rc=0]

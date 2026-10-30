@@ -1,0 +1,42 @@
+$ python3 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a966f9f6d6223c244/docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/probes/pairs24.py /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai
+| 본 덱 | 재개 덱 꼴 | -C rc | 판정 | 첫 문제 |
+|---|---|---|---|---|
+| kg50_d07_b40 | settling (harness res_good + 템플릿) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d07_b40 | settling (dem_restart.py 꼴 재구성 · fix-run 뒤) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d07_b40 | after_settling (harness res_after tmpl) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d1_b40 | settling (harness res_good + 템플릿) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d1_b40 | settling (dem_restart.py 꼴 재구성 · fix-run 뒤) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d1_b40 | after_settling (harness res_after tmpl) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d2_b40 | settling (harness res_good + 템플릿) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d2_b40 | settling (dem_restart.py 꼴 재구성 · fix-run 뒤) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d2_b40 | after_settling (harness res_after tmpl) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b40_s1 | settling (harness res_good + 템플릿) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b40_s1 | settling (dem_restart.py 꼴 재구성 · fix-run 뒤) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b40_s1 | after_settling (harness res_after tmpl) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b40_s2 | settling (harness res_good + 템플릿) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b40_s2 | settling (dem_restart.py 꼴 재구성 · fix-run 뒤) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b40_s2 | after_settling (harness res_after tmpl) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b40_s3 | settling (harness res_good + 템플릿) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b40_s3 | settling (dem_restart.py 꼴 재구성 · fix-run 뒤) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b40_s3 | after_settling (harness res_after tmpl) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b50_s1 | settling (harness res_good + 템플릿) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b50_s1 | settling (dem_restart.py 꼴 재구성 · fix-run 뒤) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b50_s1 | after_settling (harness res_after tmpl) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b50_s2 | settling (harness res_good + 템플릿) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b50_s2 | settling (dem_restart.py 꼴 재구성 · fix-run 뒤) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b50_s2 | after_settling (harness res_after tmpl) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b50_s3 | settling (harness res_good + 템플릿) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b50_s3 | settling (dem_restart.py 꼴 재구성 · fix-run 뒤) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d3_b50_s3 | after_settling (harness res_after tmpl) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d07_b50 | settling (harness res_good + 템플릿) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d07_b50 | settling (dem_restart.py 꼴 재구성 · fix-run 뒤) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d07_b50 | after_settling (harness res_after tmpl) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d1_b50 | settling (harness res_good + 템플릿) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d1_b50 | settling (dem_restart.py 꼴 재구성 · fix-run 뒤) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d1_b50 | after_settling (harness res_after tmpl) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d2_b50 | settling (harness res_good + 템플릿) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d2_b50 | settling (dem_restart.py 꼴 재구성 · fix-run 뒤) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| kg50_d2_b50 | after_settling (harness res_after tmpl) | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+
+본 덱 12 개 · 쌍 36 · rc 0 = 36
+[rc=0]

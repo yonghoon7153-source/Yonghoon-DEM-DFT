@@ -1,0 +1,435 @@
+PASS K1 정상 완료 → 본 제출
+PASS K1b 보고에 G0 통과 줄
+PASS K2 FAILED · setup 줄만 → 본 제출 안 함
+PASS K3 FAILED · 21000 뒤 중단 → 본 제출 안 함
+PASS K4 정상 완료 · 21000 KE 변조 → 본 제출 안 함
+PASS K5 ERROR 줄 → 본 제출 안 함
+PASS K6 정상 완료 · 중간 WARNING 줄 → 본 제출
+PASS S1 COMPLETED 인데 ExitCode 1:0 → 본 제출 안 함
+PASS S2 COMPLETED 인데 끝 step 21000 (기대 22001) → 본 제출 안 함
+PASS S3 끝 step 맞지만 Loop time 없음 → 본 제출 안 함
+PASS S4 sacct 조회 실패 → 본 제출 안 함
+PASS S5 끝나지 않음 (대기 시간 초과) → 본 제출 안 함
+PASS S6 시험 로그 없음 → 본 제출 안 함
+PASS S7 원 로그의 비교 줄 (21000) 이 시험에 없음 → 본 제출 안 함
+PASS D 재삽입 fix → 시험 · 본 제출 안 함
+PASS D 정착 감쇠가 다른 단계 값 (0.5) → 시험 · 본 제출 안 함
+PASS D 정착 감쇠 fix 빠짐 → 시험 · 본 제출 안 함
+PASS D 남은 정착 step 이 200000 (끝 220001) → 시험 · 본 제출 안 함
+PASS D 본 덱에 없는 fix → 시험 · 본 제출 안 함
+PASS D 판 속도 변수 0.02 → 시험 · 본 제출 안 함
+PASS D 이완 run 100000 → 50000 → 시험 · 본 제출 안 함
+PASS D 판 메시 줄이 파일 말고도 다름 → 시험 · 본 제출 안 함
+PASS D 뒤에서 쓰는 compute zmax 정의 빠짐 → 시험 · 본 제출 안 함
+PASS Q1 삽입 잡 (kg50_d07_b40_ins) 이 큐에 있음 → 건너뜀
+PASS Q2 같은 케이스 재개 잡 (kg50_d07_b40_r56) 이 큐에 있음 → 건너뜀
+PASS Q3 이름이 겹치기만 하는 다른 잡 → 막지 않음
+PASS Q4 squeue 조회 실패 → 건너뜀
+PASS T1 -T 시험만 → 시험은 내고 본 제출 안 함
+PASS C1 실제 09-27 쌍 (압축 재개) → 거부 (압축 체크포인트 재개 = 지원 안 함 + 준비 구간 순서 · 10-28 밤 Q3 · 밤 2 A 로 기대 바꿈)
+PASS C2 같은 쌍 · 새 판 메시 파일 없음 → 실패
+PASS C3 같은 쌍 · 압축 감쇠 0.05 로 바꿈 → 실패
+PASS C4 체크포인트 이름이 본 덱의 restart 줄과 안 맞음 → 실패
+PASS N1 덱 머리 주석에 템플릿 이름 real_4 · -c 없음 → 재개 덱 못 만듦 · 시험 · 본 제출 안 함 · 보고에 시험 전 거부 케이스 절 (단계 · 시도 · 10-28 밤 Q9 로 기대 바꿈)
+PASS N2 -c → 작업 사본 덱 둘의 줄 전체 주석만 빠짐 (시험 쪽 정규식 계산과 바이트 같음) → 재개 덱 · 시험 · 본 제출
+PASS N2b 기록 = stdout · 보고 둘 다 덱마다 뺀 줄 수 · 비주석 줄 sha256 전 = 후 · 보고 명령 줄에 -c
+PASS N3 -c 뒤 멈춘 폴더 (원본) 의 모든 파일 sha256 그대로 · 작업 사본 덱만 바뀜
+PASS N3b 멈춘 폴더 본 덱 = 멈춘 폴더 안 파일로 가는 절대 경로 링크 (cp -a 뒤 작업 사본도 원본을 가리킴) · -c → 원본 · 링크 그대로 · 작업 사본만 새 파일
+PASS N4 -c 는 인라인 주석을 안 뺀다 (한계) — fix 줄 뒤 "# note real_4" 는 남고 줄 전체 주석만 빠짐 → 여전히 거부 · 시험 안 함
+PASS N5 -c · 줄 전체 주석 없는 덱 → 0 줄 뺌 · 덱 그대로 · 재개 덱 · 시험 · 본 제출
+PASS N6 이어 붙이기 (&) 안의 주석 줄 · -c → 빼면 LIGGGHTS 명령이 바뀜 → ⛔ 건너뜀 (dem_restart.py · 시험 · 본 제출 안 함) · 작업 사본 덱 둘 다 그대로
+PASS N6b & 로 끝나는 주석 줄 (다음 fix 줄을 삼킨다) · -c → 빼면 LIGGGHTS 명령이 바뀜 → ⛔ 건너뜀 (dem_restart.py · 시험 · 본 제출 안 함) · 작업 사본 덱 둘 다 그대로
+PASS F1 dem_restart.py 의 run 179999 (끝 200000 ↔ 본 덱 200001) → 재개 덱 그 줄만 run 180000 · 정적 대조 통과 · 시험 냄 (-T · 본 제출 안 함)
+PASS F1b 고친 재개 덱 = 정상 재개 덱 (run 180000) 과 바이트 같음 — 다른 줄은 손대지 않음
+PASS F1c 기록 = stdout · 보고 둘 다 고친 줄 (옛 run 179999 → 새 run 180000 · 본 덱 그 run 끝 200001 · 체크포인트 step 20001)
+PASS F1d 멈춘 폴더 (원본) 의 모든 파일 sha256 그대로
+PASS F2 같은 꼴 · -T 없음 · 시험 정상 → 본 제출
+PASS F3 앞 공백 · 뒤 주석이 있는 run 줄 → 숫자만 바뀜 (공백 · 주석 그대로) · 시험 냄
+PASS F4 2 step 짧음 (run 179998) → 고치지 않음 (재개 덱 바이트 그대로) · 정적 대조 실패 · 시험 · 본 제출 안 함
+PASS F4 1 step 김 (run 180001) → 고치지 않음 (재개 덱 바이트 그대로) · 정적 대조 실패 · 시험 · 본 제출 안 함
+PASS F4 1 step 짧음 + 본 덱에 없는 fix → 고치지 않음 (재개 덱 바이트 그대로) · 정적 대조 실패 · 시험 · 본 제출 안 함
+PASS F4 1 step 짧음 · run 줄이 & 로 이어짐 → 고치지 않음 (재개 덱 바이트 그대로) · 정적 대조 실패 · 시험 · 본 제출 안 함
+PASS F4 run 200000 upto (끝 200000) → 고치지 않음 (재개 덱 바이트 그대로) · 정적 대조 실패 · 시험 · 본 제출 안 함
+PASS F4 남은 정착 step 200000 (끝 220001) → 고치지 않음 (재개 덱 바이트 그대로) · 정적 대조 실패 · 시험 · 본 제출 안 함
+PASS F5 정상 재개 덱 (run 180000) → 고칠 것 없음 · 재개 덱 바이트 그대로 · 시험 냄
+PASS F6 -C (정적 대조만) 는 고치지 않는다 — run 179999 → 실패 · 남은 step 다름
+PASS A1 after_settling 정상 재개 · -T → 정적 대조 통과 · 시험 냄 · G0 통과 (마지막 step 202002 = 기대 202002) · G1–G3 통과 · 본 제출 안 함
+PASS A1b 기대 끝 = S0 + 시험 덱 read_restart 뒤 run 합 — stdout 한 줄 + ▶ 줄 · 보고 한 줄 (run 이 둘 이상일 때만)
+PASS A1c 정적 대조 = write_restart 체크포인트의 첫 긴 run 대조 (본 덱 그 뒤 [run 1] [run 200000] = 재개 덱) 통과
+PASS A2 같은 장면 · -T 없음 → 본 제출
+PASS A3 시험 로그가 1 step 짧게 끝남 (202001 · COMPLETED · Loop time 있음) → G0 실패 · 본 제출 안 함
+PASS A4 재개 덱 안정화 run 199999 → 정적 대조 실패 (첫 긴 run 다름) · 시험 · 본 제출 안 함
+PASS P run 이 든 if 가 첫 긴 run 앞에 → 시험 기대 끝 step 을 못 정함 · 시험 · 본 제출 안 함
+PASS P reset_timestep 가 첫 긴 run 앞에 → 시험 기대 끝 step 을 못 정함 · 시험 · 본 제출 안 함
+PASS P jump · label 가 첫 긴 run 앞에 → 시험 기대 끝 step 을 못 정함 · 시험 · 본 제출 안 함
+PASS P include 가 첫 긴 run 앞에 → 시험 기대 끝 step 을 못 정함 · 시험 · 본 제출 안 함
+PASS P run 1 upto 가 첫 긴 run 앞에 → 시험 기대 끝 step 을 못 정함 · 시험 · 본 제출 안 함
+PASS P run 수가 변수 가 첫 긴 run 앞에 → 시험 기대 끝 step 을 못 정함 · 시험 · 본 제출 안 함
+PASS P run every 가 첫 긴 run 앞에 → 시험 기대 끝 step 을 못 정함 · 시험 · 본 제출 안 함
+PASS P else 에 run 이 든 if 가 첫 긴 run 앞에 → 시험 기대 끝 step 을 못 정함 · 시험 · 본 제출 안 함
+PASS P 이름이 변수인 명령 가 첫 긴 run 앞에 → 시험 기대 끝 step 을 못 정함 · 시험 · 본 제출 안 함
+PASS P 두 번째 read_restart 가 첫 긴 run 앞에 → 시험 기대 끝 step 을 못 정함 · 시험 · 본 제출 안 함
+PASS P8 첫 긴 run 앞 run 0 pre no post no (본 덱에 없는 run) → 정적 대조 거부 (준비 구간 명령 허용 안 됨) · 시험 안 함 (10-28 밤 Q2 로 기대 바꿈)
+PASS P9 settling 재개 덱 첫 긴 run 앞에 run 1 (시험 합 2001 이면 G0 이 1 step 어긋남을 못 막는다) → 정적 대조 실패 · 시험 안 함
+PASS P10 print · quit 만 든 if (삽입 자기검사 꼴 · & 이어 붙임) → 막지 않음 · 기대 22001 · G0 통과 · 시험 냄
+PASS W0 실제 09-27 r075 압축 쌍 → 거부 (압축 체크포인트 재개 = 지원 안 함 · 10-28 밤 Q3 로 기대 바꿈)
+PASS W1 v3 50×50 after_settling 재개 덱 (템플릿 줄 포함) → 통과 · 첫 긴 run 같음
+PASS W2 같은 덱 · 안정화 run 200000 → 199999 → 실패 (첫 긴 run 다름)
+PASS W2 같은 덱 · 안정화 run 200000 → 100000 → 실패 (첫 긴 run 다름)
+PASS W2 같은 덱 · 안정화 run 200000 → 400000 → 실패 (첫 긴 run 다름)
+PASS W5 같은 덱 · 안정화 감쇠를 정착 값 그대로 → 실패 (재개 지점 상태 · 고치기 전에도 잡던 꼴)
+PASS W6 r075 쌍 · 루프 몸 run 5000 → 4000 → 실패 (압축 체크포인트 거부 + 첫 긴 run 다름 · 10-28 밤 Q3 로 기대 바꿈)
+PASS W7 r075 쌍 · 재개 덱에서 label loop_press 빠짐 (본 런이 jump 에서 죽는 꼴) → 실패 (압축 체크포인트 거부 + jump 목적지 없음 · 10-28 밤 Q3 로 기대 바꿈)
+PASS W8 본 덱 write_restart 뒤 run 수가 변수 (run ${n1}) · 재개 덱 같음 → 실패 (첫 긴 run 길이를 정할 수 없음)
+PASS W9 settling 체크포인트 앞에 label (남은 step 을 못 셈) · 체크포인트 뒤 루프 머리 없음 → 실패 (예전 = 확인 생략 · 통과)
+PASS W10 r075 쌍 · 본 덱 · 재개 덱 둘 다 루프 jump 빠짐 (label 뒤 run 이 루프가 아님) → 실패 (압축 체크포인트 거부 · 10-28 밤 Q3 로 기대 바꿈)
+PASS W11 settling 체크포인트 뒤 · 그 run 앞에 include (남은 step 을 못 셈 · 예전 = label · jump 만 봄) → 실패 (남은 step 을 정할 수 없음)
+PASS W12 r075 본 덱 · 체크포인트 줄과 루프 머리 사이에 변수 run (체크포인트가 그 run 에서 나왔을 수 있음) → 실패 (압축 체크포인트 거부 · 10-28 밤 Q3 로 기대 바꿈)
+PASS R1 Codex probe_stale_trial busy_queue — 옛 성공 시험 (job 7001) 이 남은 작업 폴더 · 이번 호출 큐 차단 → sbatch 0 회 (시험 · 본 제출 없음) · 작업 폴더 · 옛 시험 로그 그대로 · 보고에 시험 전 거부 절 (KG50R-04)
+PASS R1 Codex probe_stale_trial queue_query_failure — 옛 성공 시험 (job 7001) 이 남은 작업 폴더 · 이번 호출 큐 차단 → sbatch 0 회 (시험 · 본 제출 없음) · 작업 폴더 · 옛 시험 로그 그대로 · 보고에 시험 전 거부 절 (KG50R-04)
+PASS R2 A · 큐에 그 케이스 잡 → 이번 호출 새 본 제출 0 회 (시험 sbatch 0 회 · 옛 시험 job 7001 로 승격 안 함 · logs/ 옛 시험 로그 그대로 · KG50R-04)
+PASS R3 A · 첫 squeue 조회 실패 → 이번 호출 새 본 제출 0 회 (시험 sbatch 0 회 · 옛 시험 job 7001 로 승격 안 함 · logs/ 옛 시험 로그 그대로 · KG50R-04)
+PASS R4 B · 정적 거부 (정착 감쇠 0.5) → 이번 호출 새 본 제출 0 회 (시험 sbatch 0 회 · 옛 시험 job 7001 로 승격 안 함 · logs/ 옛 시험 로그 그대로 · KG50R-04)
+PASS R5 B · 시험 sbatch 빈 출력 → 이번 호출 새 본 제출 0 회 (시험 sbatch 1 회 · 옛 시험 job 7001 로 승격 안 함 · logs/ 옛 시험 로그 그대로 · KG50R-04)
+PASS R6 B · dem_restart.py 계획 없음 → 이번 호출 새 본 제출 0 회 (시험 sbatch 0 회 · 옛 시험 job 7001 로 승격 안 함 · logs/ 옛 시험 로그 그대로 · KG50R-04)
+PASS R7 A · 본 제출 직전 큐에 그 케이스 잡이 나타남 → 이번 호출 새 본 제출 0 회 (시험 sbatch 1 회 · 옛 시험 job 7001 로 승격 안 함 · logs/ 옛 시험 로그 그대로 · KG50R-04)
+PASS R8 A · 본 제출 직전 squeue 조회 실패 → 이번 호출 새 본 제출 0 회 (시험 sbatch 1 회 · 옛 시험 job 7001 로 승격 안 함 · logs/ 옛 시험 로그 그대로 · KG50R-04)
+PASS R9 A · 정상 새 시도 → 시험 1 · 본 1 (새 시험 job 7002 로 승격) · 옛 작업 폴더는 <C>.prev_<시각> 로 (옛 job 7001 그대로)
+PASS R10 B · 정상 새 시도 → 시험 1 · 본 1 · 멈춘 폴더에서 같이 온 옛 job · mode 파일은 시도 폴더 old_markers/ 로 (내용 그대로 · 승격에 안 씀)
+PASS R11 본 제출 직전 큐에 이번 시험 job (7001) 만 → 빼고 봄 → 본 제출
+PASS R12 본 제출 직전 큐에 같은 이름 다른 시험 job (7777) → 본 제출 안 함 (KG50R-04)
+PASS R13 같은 케이스를 목록에 두 번 → 시험 1 · 본 1 (두 번째는 시험 전 거부 · 예전 = 시험 2 · 본 2)
+PASS G1 -C Codex 고정물 independent/deck/baseline.liggghts → 통과 (통과)
+PASS G1 -C Codex 고정물 independent/scheduler/plain.liggghts → 통과 (통과)
+PASS G1 -C Codex 고정물 independent/deck/after_settling_baseline.liggghts → 통과 (통과)
+PASS G1 -C Codex 고정물 independent/deck/suffix_velocity.liggghts → 거부 (첫 긴 run 뒤 명령 다름)
+PASS G1 -C Codex 고정물 independent/deck/suffix_density.liggghts → 거부 (첫 긴 run 뒤 명령 다름)
+PASS G1 -C Codex 고정물 independent/deck/suffix_delete.liggghts → 거부 (첫 긴 run 뒤 명령 다름)
+PASS G1 -C Codex 고정물 independent/deck/suffix_include.liggghts → 거부 (다룰 수 없는 구문 (재개 덱 · include)
+PASS G1 -C Codex 고정물 independent/deck/velocity_after_first_long.liggghts → 거부 (첫 긴 run 뒤 명령 다름)
+PASS G1 -C Codex 고정물 independent/deck/density_after_first_long.liggghts → 거부 (첫 긴 run 뒤 명령 다름)
+PASS G1 -C Codex 고정물 independent/deck/delete_after_first_long.liggghts → 거부 (첫 긴 run 뒤 명령 다름)
+PASS G1 -C Codex 고정물 independent/deck/include_after_first_long.liggghts → 거부 (include)
+PASS G1 -C Codex 고정물 independent/deck/first_run_every.liggghts → 거부 (첫 긴 run 꼴이 지원 밖)
+PASS G1 -C Codex 고정물 independent/deck/first_run_pre_no.liggghts → 거부 (첫 긴 run 꼴이 지원 밖)
+PASS G1 -C Codex 고정물 independent/deck/run_pre_no.liggghts → 거부 (첫 긴 run 꼴이 지원 밖)
+PASS G1 -C Codex 고정물 independent/deck/run_post_no.liggghts → 거부 (첫 긴 run 꼴이 지원 밖)
+PASS G1 -C Codex 고정물 independent/deck/first_run_upto_wrong.liggghts → 거부 (첫 긴 run 꼴이 지원 밖)
+PASS G1 -C Codex 고정물 independent/deck/first_run_upto_right.liggghts → 거부 (첫 긴 run 꼴이 지원 밖)
+PASS G1 -C Codex 고정물 independent/deck/run_upto_same_end.liggghts → 거부 (첫 긴 run 꼴이 지원 밖)
+PASS G1 -C Codex 고정물 independent/deck/duplicate_loop_label.liggghts → 거부 (label 이 겹침)
+PASS G1 -C Codex 고정물 independent/deck/missing_target_variable.liggghts → 거부 (정의 전 변수를 씀)
+PASS G1 -C Codex 고정물 independent/deck/duplicate_target_later.liggghts → 거부 (정의 전 변수를 씀)
+PASS G1 -C Codex 고정물 independent/deck/missing_compute_control.liggghts → 거부 (c_zmax)
+PASS G1 -C Codex 고정물 independent/deck/missing_c_zmax_compute.liggghts → 거부 (c_zmax)
+PASS G1 -C Codex 고정물 independent/deck/changed_timestep_control.liggghts → 거부 (재개 지점 timestep 다름)
+PASS G1 -C Codex 고정물 independent/deck/reorder_velocity_before_restart.liggghts → 거부 (준비 구간 명령 허용 안 됨)
+PASS G1 -C Codex 고정물 independent/deck/rename_read_restart.liggghts → 거부 (read_restart 가 체크포인트)
+PASS G1 -C Codex 고정물 independent/scheduler/continued_first_long_run.liggghts → 거부 (& 로 이어진 여러 줄)
+PASS G1 -C Codex 고정물 independent/deck/after_settling_first_long_changed_300000.liggghts → 거부 (첫 긴 run 다름)
+PASS G1 -C Codex 고정물 independent/deck/after_settling_damp_mismatch.liggghts → 거부 (fix damp all viscous 1.0e-5)
+PASS G2 -C Codex 고정물 loop_first_numeric_remaining2 (루프 첫 run 만 run 2) → 거부 (압축 체크포인트 · Codex: 완성된 고침 아님)
+PASS G3 -C 같은 부류 · 준비 구간 velocity → 거부 (준비 구간 명령 허용 안 됨)
+PASS G3 -C 같은 부류 · 준비 구간 본 덱에 없는 print → 거부 (준비 구간 명령 허용 안 됨)
+PASS G3 -C 같은 부류 · 준비 구간 group region 꼴 → 거부 (준비 구간 명령 허용 안 됨)
+PASS G3 -C 같은 부류 · 준비 구간 shell rm → 거부 (준비 구간 명령 허용 안 됨)
+PASS G3 -C 같은 부류 · 변수 꼴 index → 거부 (다룰 수 없는 변수 꼴 index)
+PASS G3 -C 같은 부류 · 준비 구간 변수 값 다름 → 거부 (재개 지점 variable plate_margin 다름)
+PASS G3 -C 같은 부류 · 준비 구간 dump 더함 → 거부 (재개 지점 dump dx 는 재개 덱에만)
+PASS G3 -C 같은 부류 · restart 설정 빠짐 → 거부 (재개 지점 restart 가 재개 덱에 없음)
+PASS G3 -C 같은 부류 · jump 꼴 (다른 파일) → 거부 (jump 꼴)
+PASS G3 -C 같은 부류 · next → 거부 (다룰 수 없는 구문 (재개 덱 · next)
+PASS G3 -C 같은 부류 · if 안 include → 거부 (다룰 수 없는 구문 (재개 덱 · include)
+PASS G3 -C 같은 부류 · S0 가 그 run 범위 밖 → 거부 (범위)
+PASS G3 -C 같은 부류 · 본 덱 체크포인트 앞 if 가 fix 를 만든다 (그 시점 상태를 정할 수 없음) → 거부
+PASS G6 허용 차이 목록 ② after_settling 판 fix 의 file 이름만 다름 · 파일 있음 → 통과 (판 메시 파일만 다름)
+PASS G6 허용 차이 목록 ② 같은 꼴 · 파일 없음 → 거부 (판 메시 파일 plate_kg50_d07_b40_r56.stl 가 작업 폴더에 없음)
+PASS G6 허용 차이 목록 ③ shell mkdir → mkdir -p → 통과 (통과)
+PASS G6 허용 차이 목록 ③ 같은 자리 다른 디렉터리 → 거부 (준비 구간 명령 허용 안 됨)
+PASS G4 사슬 · 첫 긴 run every → 시험 · 본 제출 안 함 (시험 덱을 못 만듦)
+PASS G4 사슬 · 첫 긴 run & 이음 (Codex continued_first_long_run) → 시험 · 본 제출 안 함 (시험 덱을 못 만듦)
+PASS G4 사슬 · 첫 긴 run 뒤 velocity (Codex suffix_velocity) → 시험 · 본 제출 안 함 (첫 긴 run 뒤 명령 다름)
+PASS G5 정상 settling → 시험 냄 · 시험 덱 = 고치기 전 awk 절단기 출력과 바이트 같음 (6484 바이트)
+PASS G5 run 줄 끝 주석 (F3 꼴 · 고친 뒤) → 시험 냄 · 시험 덱 = 고치기 전 awk 절단기 출력과 바이트 같음 (6484 바이트)
+PASS G5 & 이은 print · quit if (P10 꼴) → 시험 냄 · 시험 덱 = 고치기 전 awk 절단기 출력과 바이트 같음 (6645 바이트)
+PASS G5 after_settling → 시험 냄 · 시험 덱 = 고치기 전 awk 절단기 출력과 바이트 같음 (8594 바이트)
+PASS X1 -C r075 압축 체크포인트 step 1500000 (판정 1,500,002 의 2 step 앞 (Codex §2)) → 거부 (압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)))
+PASS X1 -C r075 압축 체크포인트 step 1500002 (판정 step 그 자리) → 거부 (압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)))
+PASS X1 -C r075 압축 체크포인트 step 1505000 (재개 판정 꼴 자리) → 거부 (압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)))
+PASS X1 -C r075 압축 체크포인트 step 3300000 (이완 중 restart_compress_* (KG50-11 · 이 덱엔 restart 0 없음)) → 거부 (압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)))
+PASS X2 -C v2 본 덱 · 압축 체크포인트 이름 restart_compress_600000 → 거부 (압축 체크포인트 재개 = 지원 안 함)
+PASS X3 본 흐름 · dem_restart.py 계획 = compress → 시험 · 본 제출 안 함 · stdout · 보고 케이스 절에 거부 (단계 · 이유 · 시도 · Q9)
+PASS L1 우리 재현 bad_final.log (마지막 정상 줄 22000 뒤 한 토큰 "22001" · Loop for 1999 steps) → G0 실패 (마지막 step 22000) · 본 제출 안 함
+PASS L2 우리 재현 bad_late.log (22000 줄 Atoms 10 · KE 1e6 · 마지막 22001 줄 온전) → G0 통과 (마지막 줄만의 계약 · 22000 줄은 G3 첫 줄 수치 비교 밖 = 공개된 설계 · Codex Q6) — 범위 기록
+PASS L3 Loop for 1999 steps (마지막 run 2000) → G0 실패 · 본 제출 안 함 (KG50R-07)
+PASS L3 마지막 줄 KE nan → G0 실패 · 본 제출 안 함 (KG50R-07)
+PASS L3 마지막 줄 칸 3 (머리 4) → G0 실패 · 본 제출 안 함 (KG50R-07)
+PASS I1 -T 없음 · 승인 인자 없음 → 아무것도 하지 않음 (작업 폴더 · 시험 · 본 제출 없음 · 실제 sha256 을 찍음)
+PASS I1 -T 없음 · -A 틀림 → 아무것도 하지 않음 (작업 폴더 · 시험 · 본 제출 없음 · 실제 sha256 을 찍음)
+PASS I1 -T 없음 · -H 틀림 → 아무것도 하지 않음 (작업 폴더 · 시험 · 본 제출 없음 · 실제 sha256 을 찍음)
+PASS I2 -T → 보고에 도구 sha256 둘 (resume_ckpt.sh · dem_restart.py) · 본 제출 명령 한 줄 (-T 없이 -A · -H 승인값)
+PASS I3 시험 제출 뒤 dem_restart.py 가 바뀜 → 본 제출 직전 sha256 다시 대조 → 본 제출 안 함
+PASS I4 정상 본 제출 → 시도 폴더에 도구 신원 · 시험 job · mode · 덱 · 러너 · 본 job (tool.txt · job_t.txt 7001 · main_job.txt 9001)
+PASS I5 -T · 시험 전 거부 (큐) → 본 제출 명령 없음 (그 줄이 거부 케이스를 담지 않음)
+PASS I6 -T · 시험 G0 실패 → 본 제출 명령 없음
+PASS I7 -T · 두 케이스 중 하나만 G0–G3 통과 (다른 하나 = 멈춘 폴더 없음) → 본 제출 명령에 통과 케이스만 · 빠진 케이스 이름
+PASS Q9a 정적 대조 거부 → 보고 케이스 절 (단계 정적 대조 · 시험 덱 · 이유에 대조 문제 줄 · 시도)
+PASS Q9b 큐에 삽입 잡 → 보고 케이스 절 (단계: 큐)
+PASS Q9c 시험 sbatch 빈 출력 → 본 제출 안 함 · 보고 케이스 절 (단계: 시험 제출)
+PASS Q9d 시험 sbatch 가 job 번호 아닌 글 (종료 코드 1) → 시험 job 으로 안 받음 · 본 제출 안 함 · 보고 케이스 절 (단계: 시험 제출 · KG50R-04)
+PASS Y1 -C 준비 구간 변수 다시 정의 · read_restart 뒤 dt 2e-6 · timestep · dt 1e-6 → 거부 (글자 그대로 · 사전 공격 A)
+PASS Y1 -C 준비 구간 변수 다시 정의 · dt 정의 2e-6 · timestep 뒤 1e-6 (D2 r4 반례 꼴) → 거부 (글자 그대로 · 사전 공격 A)
+PASS Y2 -C after_settling 준비 구간 dt 바꿈 · timestep · 되돌림 → 거부 (사전 공격 A)
+PASS Y3 -C 본 덱이 dt 를 두 번 정의 · 재개 덱이 같은 순서 → 통과 (대조군)
+PASS Y3b -C 같은 줄 · dt 2e-6 이 timestep 앞 (실제 dt 2 배 · 끝 상태는 같다) → 거부 (순서 · 사전 공격 A)
+PASS Y4 -C 준비 구간 fix 순서 바꿈 (gravity ↔ nve/sphere · 줄은 같다) → 거부 (순서 · 사전 공격 J 가 A 로 닫힘)
+PASS Y5 -C 준비 구간에 본 덱에 없는 상태 줄 (쓰기 전에 되돌림 · 끝 상태 같음) → 거부 (글자 그대로 · 사전 공격 A)
+PASS Y6 본 흐름 · 준비 구간 dt 바꿈 (D2 r4 반례 꼴) → 시험 0 · 본 0 (사전 공격 A)
+PASS Y7 -C 본 덱 체크포인트 run 꼬리 (every velocity) → 거부 (사전 공격 B)
+PASS Y7 -C 본 덱 체크포인트 run 꼬리 (every include) → 거부 (사전 공격 B)
+PASS Y7 -C 본 덱 체크포인트 run 꼬리 (pre no post no) → 거부 (사전 공격 B)
+PASS Y7 -C 본 덱 체크포인트 run 꼬리 (upto) → 거부 (사전 공격 B)
+PASS Y7c -C 뒤 구간 run every 안 include (두 덱 같은 줄) → 거부 (다룰 수 없는 구문 · run every 안까지)
+PASS Y7b 본 흐름 · 본 덱 체크포인트 run every → 시험 0 · 본 0 (사전 공격 B)
+PASS Y8 시험 제출 뒤 작업 폴더 재개 덱 가 바뀜 → 본 제출 직전 sha256 ≠ 시험 때 기록 → 본 제출 안 함 (사전 공격 C)
+PASS Y8 시험 제출 뒤 작업 폴더 러너 가 바뀜 → 본 제출 직전 sha256 ≠ 시험 때 기록 → 본 제출 안 함 (사전 공격 C)
+PASS Y9 시도 폴더 tool.txt = 재개 덱 · 러너 · 체크포인트 sha256 · lmp_mpi 경로 · sha256 (실행 영수증 · 사전 공격 C · Codex §10-5)
+PASS Y10 본 sbatch 가 job 번호 아닌 글 (종료 코드 1) → ✅ 안 찍음 · ⛔ 본 제출 실패 · main_job.txt 없음 (사전 공격 D)
+PASS Y10b 본 sbatch --parsable 의 id;cluster → job 번호만 (✅ 9001 · main_job.txt 9001)
+PASS Y11 시험 21000 줄 KE = nan (G3 비교 줄) → 본 제출 안 함 (사전 공격 E)
+PASS Y11 시험 21000 줄 KE = NaN (G3 비교 줄) → 본 제출 안 함 (사전 공격 E)
+PASS Y11 시험 21000 줄 KE = +nan (G3 비교 줄) → 본 제출 안 함 (사전 공격 E)
+PASS Y11 시험 21000 줄 KE = -nan (G3 비교 줄) → 본 제출 안 함 (사전 공격 E)
+PASS Y11 시험 21000 줄 KE = inf (G3 비교 줄) → 본 제출 안 함 (사전 공격 E)
+PASS Y11 시험 21000 줄 KE = -inf (G3 비교 줄) → 본 제출 안 함 (사전 공격 E)
+PASS Y11 시험 21000 줄 KE = Infinity (G3 비교 줄) → 본 제출 안 함 (사전 공격 E)
+PASS Y12 원 로그 21000 줄 KE = nan → 본 제출 안 함 (사전 공격 E)
+PASS Y13 케이스 두 철자 (C · ./C) → 둘째 시험 전 거부 (케이스 이름) · 시험 1 · 본 1 · 첫 작업 폴더가 prev 로 안 밀림 (사전 공격 F)
+PASS Y14 케이스 이름 [.] → 시험 전 거부 (케이스 이름) · 새 폴더 없음 (사전 공격 F)
+PASS Y14 케이스 이름 [..] → 시험 전 거부 (케이스 이름) · 새 폴더 없음 (사전 공격 F)
+PASS Y14 케이스 이름 [a/b] → 시험 전 거부 (케이스 이름) · 새 폴더 없음 (사전 공격 F)
+PASS Y14 케이스 이름 [a*] → 시험 전 거부 (케이스 이름) · 새 폴더 없음 (사전 공격 F)
+PASS Y14 케이스 이름 [a b] → 시험 전 거부 (케이스 이름) · 새 폴더 없음 (사전 공격 F)
+PASS Y15 둘째 고리에서 시도 폴더 mode.txt 를 못 읽음 → 그 케이스 본 제출 안 함 · 보고에 그 사유 (사전 공격 F)
+PASS Y16 본 덱이 삽입 fix 를 unfix 안 함 · 재개 덱이 그 줄을 본 덱 순서 자리에 다시 선언 → 거부 (재삽입 · 그 문제 하나 · 빈틈 py_reinsert)
+PASS Y17 시험 setup 줄 KE 0.1000 → 0.1003 (G1 만 실패 · G0 · G3 통과) → 본 제출 안 함 (빈틈 sh_g1)
+PASS Y18 시험 로그에서 22000 줄 하나만 빠짐 (G0 · G1 · G3 첫 줄 통과) → G3 결손 → 본 제출 안 함 (빈틈 sh_miss)
+PASS V2 Codex d2_drop_intermediate_variable_definition (g 98.1 → 196.2 → fix ${g_probe} → 98.1 · 재개 덱이 196.2 만 뺌) → -C 거부 (KG50R-F01 문제 · 그 자리 치환 값이 본 덱과 다름 · ${g_probe} · 196.2 · 98.1)
+PASS V2 Codex d2_drop_intermediate_variable_definition (g 98.1 → 196.2 → fix ${g_probe} → 98.1 · 재개 덱이 196.2 만 뺌) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V3 Codex d2_runtime_dependent_eager_variable (두 덱 같은 g = 98.1*(step+1) · fix ${g_probe}) → -C 거부 (KG50R-F01 문제 · 실행 상태에 따라 바뀜 · ${g_probe} · step)
+PASS V3 Codex d2_runtime_dependent_eager_variable (두 덱 같은 g = 98.1*(step+1) · fix ${g_probe}) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V4 Codex 합성 drop_intermediate_variable_definition (dt 1e-6 → 2e-6 → timestep ${dt} → 1e-6 · 2e-6 만 뺌) → -C 거부 (KG50R-F01 문제 · 그 자리 치환 값이 본 덱과 다름 · ${dt} · 2e-6 · 1e-6)
+PASS V4 Codex 합성 drop_intermediate_variable_definition (dt 1e-6 → 2e-6 → timestep ${dt} → 1e-6 · 2e-6 만 뺌) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V5 Codex 합성 runtime_dependent_eager_variable (두 덱 같은 dt = 1e-6*(step+1) · timestep ${dt}) → -C 거부 (KG50R-F01 문제 · 실행 상태에 따라 바뀜 · ${dt} · step)
+PASS V5 Codex 합성 runtime_dependent_eager_variable (두 덱 같은 dt = 1e-6*(step+1) · timestep ${dt}) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V6 사슬 — b = ${a}*2 정의 앞 a 중간 정의 (98.1) 를 뺌 · fix 가 v_b 로 씀 → -C 거부 (KG50R-F01 문제 · 그 자리 치환 값이 본 덱과 다름 · ${a_g} · 98.1 · 49.05)
+PASS V6 사슬 — b = ${a}*2 정의 앞 a 중간 정의 (98.1) 를 뺌 · fix 가 v_b 로 씀 → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V7 한 글자 $g — g 98.1 → 196.2 → fix $g → 98.1 · 196.2 만 뺌 → -C 거부 (KG50R-F01 문제 · 그 자리 치환 값이 본 덱과 다름 · $g · 196.2)
+PASS V7 한 글자 $g — g 98.1 → 196.2 → fix $g → 98.1 · 196.2 만 뺌 → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V8 템플릿 fix 반지름 ${r_AM_S} = 실행 상태 수식 2.0e-3*(1+step) (두 덱 같은 글자) → -C 거부 (KG50R-F01 문제 · 실행 상태에 따라 바뀜 · ${r_AM_S} · pts2)
+PASS V8 템플릿 fix 반지름 ${r_AM_S} = 실행 상태 수식 2.0e-3*(1+step) (두 덱 같은 글자) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V9 $(...) 그 자리 식 — timestep $(v_dt) (두 덱 같은 글자) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · $(v_dt) · 그 자리 식 = 지원 안 함)
+PASS V9 $(...) 그 자리 식 — timestep $(v_dt) (두 덱 같은 글자) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V12 같은 글자 fix 가 본 덱에 둘 — 재개 덱 fix 는 앞 것 자리 (g 98.1) 에 맞춰지고 본 덱 끝 상태 = 뒤 것 (g 196.2) → -C 거부 (KG50R-F01 문제 · 그 자리 치환을 펼치면 · 재개 지점 fix gravi · 196.2)
+PASS V12 같은 글자 fix 가 본 덱에 둘 — 재개 덱 fix 는 앞 것 자리 (g 98.1) 에 맞춰지고 본 덱 끝 상태 = 뒤 것 (g 196.2) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V13 같은 글자 b = ${a}*2 정의가 본 덱에 둘 — 끝 상태 b = 뒤 것 (a 98.1) ↔ 재개 덱 (a 49.05) → -C 거부 (KG50R-F01 문제 · 그 자리 치환을 펼치면 · 재개 지점 variable b_g · 98.1)
+PASS V13 같은 글자 b = ${a}*2 정의가 본 덱에 둘 — 끝 상태 b = 뒤 것 (a 98.1) ↔ 재개 덱 (a 49.05) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V14 v3 after_settling — 본 덱 체크포인트 앞에 반복 (label · if jump) · 준비 구간 timestep ${dt} (줄 순서로만 읽으면 같다) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · 흐름 줄 · ${dt})
+PASS V14 v3 after_settling — 본 덱 체크포인트 앞에 반복 (label · if jump) · 준비 구간 timestep ${dt} (줄 순서로만 읽으면 같다) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V15 ${ 닫는 } 없음 — timestep ${dt (두 덱 같은 글자) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · ${dt)
+PASS V15 ${ 닫는 } 없음 — timestep ${dt (두 덱 같은 글자) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V16 string 변수 = 정의 때 실행 상태 값 (variable s_ins string ${n_ins} · n_ins = count(all) · 두 덱 같은 글자) → -C 거부 (KG50R-F01 문제 · 실행 상태에 따라 바뀜 · ${n_ins} · count)
+PASS V16 string 변수 = 정의 때 실행 상태 값 (variable s_ins string ${n_ins} · n_ins = count(all) · 두 덱 같은 글자) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V20 string 값에 공백 (variable g_s string "98.1 vector 0.0 0.0 -1.0" · fix gravity ${g_s} — 치환 뒤 낱말이 갈림 · 닫힌 실패) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · 공백)
+PASS V20 string 값에 공백 (variable g_s string "98.1 vector 0.0 0.0 -1.0" · fix gravity ${g_s} — 치환 뒤 낱말이 갈림 · 닫힌 실패) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V21 v_ 로 쓰는 string 값이 수 글 아님 (g_s string abc · g = v_g_s*2 · 닫힌 실패) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · v_g_s)
+PASS V21 v_ 로 쓰는 string 값이 수 글 아님 (g_s string abc · g = v_g_s*2 · 닫힌 실패) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V22 atom 변수를 ${} 로 씀 (닫힌 실패) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · atom)
+PASS V22 atom 변수를 ${} 로 씀 (닫힌 실패) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V23 PI (등록 상수 목록 밖 · 닫힌 실패) → -C 거부 (KG50R-F01 문제 · 실행 상태에 따라 바뀜 · PI)
+PASS V23 PI (등록 상수 목록 밖 · 닫힌 실패) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V24 논리 연산자 || (등록 상수 목록 밖 · 닫힌 실패) → -C 거부 (KG50R-F01 문제 · 실행 상태에 따라 바뀜 · 논리 연산자)
+PASS V24 논리 연산자 || (등록 상수 목록 밖 · 닫힌 실패) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V25 본 덱 체크포인트 앞 run every 안 variable (삽입 run 1 끝에 g = 196.2 · 재개 덱에는 그 run 이 없다 · 줄 순서로만 읽으면 98.1) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · run 1 every 1)
+PASS V25 본 덱 체크포인트 앞 run every 안 variable (삽입 run 1 끝에 g = 196.2 · 재개 덱에는 그 run 이 없다 · 줄 순서로만 읽으면 98.1) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V26 판 메시 fix (file 이름만 다름 허용) 가 본 덱에 둘 · 끝 상태 = 뒤 것 (scale ${msc} = 2.0) ↔ 재개 덱 (1.0) → -C 거부 (KG50R-F01 문제 · 판 메시 fix 에 그 자리 치환 · wall_kg50_r4.stl)
+PASS V26 판 메시 fix (file 이름만 다름 허용) 가 본 덱에 둘 · 끝 상태 = 뒤 것 (scale ${msc} = 2.0) ↔ 재개 덱 (1.0) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V28 v3 after_settling — 본 덱 체크포인트 앞 python 줄 (변수를 바꿀 수 있다 · 재개 덱에는 없음) · 준비 구간 timestep ${dt} → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · python pyx)
+PASS V28 v3 after_settling — 본 덱 체크포인트 앞 python 줄 (변수를 바꿀 수 있다 · 재개 덱에는 없음) · 준비 구간 timestep ${dt} → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V29 본 덱 체크포인트 앞 variable ${vn} equal 196.2 (이름 자리 치환 = g_probe 를 바꿈 · 재개 덱에는 없음 · 줄 순서로만 읽으면 98.1) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · 이름 · 꼴 자리)
+PASS V29 본 덱 체크포인트 앞 variable ${vn} equal 196.2 (이름 자리 치환 = g_probe 를 바꿈 · 재개 덱에는 없음 · 줄 순서로만 읽으면 98.1) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V32 $ 뒤 이름 글자 아님 — fix gravity 98.1$- (두 덱 같은 글자 · 닫힌 실패) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · $-)
+PASS V32 $ 뒤 이름 글자 아님 — fix gravity 98.1$- (두 덱 같은 글자 · 닫힌 실패) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V34 v3 after_settling — 본 덱 체크포인트 앞 partition yes 1 variable dt equal 2.0e-6 (파티션 하나 = 실행 · 재개 덱에는 없음) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · partition yes 1)
+PASS V34 v3 after_settling — 본 덱 체크포인트 앞 partition yes 1 variable dt equal 2.0e-6 (파티션 하나 = 실행 · 재개 덱에는 없음) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V35 본 덱 삽입 run 1 every 1 안 if 안 variable g_probe 196.2 (겹친 명령 · 재개 덱에는 그 run 이 없다) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · run 1 every 1)
+PASS V35 본 덱 삽입 run 1 every 1 안 if 안 variable g_probe 196.2 (겹친 명령 · 재개 덱에는 그 run 이 없다) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V36 본 덱 삽입 run 1 every 1 "variable dt equal 2.0e-6" (마지막 쓰는 자리 뒤 · 끝 상태 dt = 2e-6 ↔ 재개 덱 1e-6 · 뒤 구간이 ${dt} 를 쓰면 다름) → -C 거부 (KG50R-F01 문제 · 재개 지점 variable dt 다름 · 끝 상태 변수 표)
+PASS V36 본 덱 삽입 run 1 every 1 "variable dt equal 2.0e-6" (마지막 쓰는 자리 뒤 · 끝 상태 dt = 2e-6 ↔ 재개 덱 1e-6 · 뒤 구간이 ${dt} 를 쓰면 다름) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V37 순환 참조 (g = v_g+1 · fix ${g_probe} · 두 덱 같은 글자) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · 순환 참조)
+PASS V37 순환 참조 (g = v_g+1 · fix ${g_probe} · 두 덱 같은 글자) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V38 v_x[i] (atom 변수 원자 하나 값 · g = v_a_v[1] · 두 덱 같은 글자) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · 원자 하나)
+PASS V38 v_x[i] (atom 변수 원자 하나 값 · g = v_a_v[1] · 두 덱 같은 글자) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V39 string 을 equal 로 다시 정의 (LIGGGHTS 오류 꼴 · 두 덱 같은 글자) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · 다른 꼴)
+PASS V39 string 을 equal 로 다시 정의 (LIGGGHTS 오류 꼴 · 두 덱 같은 글자) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V40 equal 정의 인자 둘 (variable g_probe equal 98.1 2 · LIGGGHTS 오류 꼴 · 두 덱 같은 글자) → -C 거부 (KG50R-F01 문제 · 펼칠 수 없음 · 인자가 2 개)
+PASS V40 equal 정의 인자 둘 (variable g_probe equal 98.1 2 · LIGGGHTS 오류 꼴 · 두 덱 같은 글자) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)
+PASS V1 받은 D2 덱 그대로 (timestep ${dt} · 템플릿 반지름 셋 = 상수 · print · if 의 ${n_ins} = 값 대조 밖) → -C 통과 (문제 0 · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳)
+PASS V1b 보관 after_settling 기준선 (Codex archived_after_settling_baseline = 리포 고정물 · 판 높이 블록 = write_restart 뒤 구간) → -C 통과 (문제 0 · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳)
+PASS V1c v3 50×50 after_settling (템플릿 줄 포함) → -C 통과 (문제 0 · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳)
+PASS V1d Codex 합성 대조군 (dt 1e-6 한 번 · timestep ${dt}) → -C 통과 (문제 0 · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 1 개 · 치환 1 곳)
+PASS V10 안전한 생략 (쓰기 전에 덮인 정의 196.2 만 뺌) → -C 통과 (문제 0 · 명령 5 개 · 치환 5 곳)
+PASS V11 상수 사슬 (a 49.05 · b = ${a}*2 · fix v_b · 두 덱 같음) → -C 통과 (문제 0 · 명령 5 개 · 치환 5 곳)
+PASS V17 string 상수 글 (variable g_s string 98.1 · fix ${g_s}) → -C 통과 (문제 0 · 명령 5 개 · 치환 5 곳)
+PASS V18 따옴표 안 ${dt} (그 자리 치환 아님 · 두 덱 같은 글자 · 쓰지 않음) → -C 통과 (문제 0 · 명령 4 개 · 치환 4 곳)
+PASS V19 정해진 수학 함수 · 비교 연산자 (g = sqrt(9623.61)*(2>=1) · fix ${g_probe} · 두 덱 같음) → -C 통과 (문제 0 · 명령 5 개 · 치환 5 곳)
+PASS V30 v_ 로 쓰는 string 수 글 (g_s string 98.1 · g = v_g_s*1 · fix ${g_probe}) → -C 통과 (문제 0 · 명령 5 개 · 치환 5 곳)
+PASS V31 v_ 로 쓰는 string = 정의 때 넣은 equal 값 (a 98.1 · s = ${a} · g = v_s*1 · fix ${g_probe}) → -C 통과 (문제 0 · 명령 6 개 · 치환 6 곳)
+PASS V33 string = 띄어 쓴 equal 값 (a "49.05 * 2" · s = ${a} · fix ${g_s} — LIGGGHTS 가 넣는 것은 수 98.1) → -C 통과 (문제 0 · 명령 6 개 · 치환 6 곳)
+PASS V27 판 메시 fix 하나 (scale ${msc} = 1.0 상수 · 재개 덱 file 이름만 다름 · 파일 있음) → -C 통과 (문제 0 · 명령 5 개 · 치환 5 곳)
+PASS V1e 받은 D2 덱 그대로 · 본 흐름 (-T) → 정적 대조 통과 · 시험 냄 (값 대조가 정상 덱을 막지 않음 · 음성 장면의 대조군)
+PASS V1f Codex 합성 대조군 · 본 흐름 (-T) → 정적 대조 통과 · 시험 냄 (값 대조가 정상 덱을 막지 않음 · 음성 장면의 대조군)
+PASS V1g v3 after_settling 그대로 · 본 흐름 (-T) → 정적 대조 통과 · 시험 냄 (값 대조가 정상 덱을 막지 않음 · 음성 장면의 대조군)
+PASS VP1a R1 본 덱 fix gx${n} 둘 (n 1 → 2 = gx1 · gx2) · 재개 덱 fix gx${n} 하나 (n 2) — 키가 치환 전 글자라 한 키로 접힘 → -C 거부 (사전 공격 R1 · 키 자리 · gx${n})
+PASS VP1b R1 본 덱 fix gx · variable u string gx · unfix ${u} · 재개 덱 fix gx 만 (unfix ${u} 가 아무것도 안 지움) → -C 거부 (사전 공격 R1 · 키 자리 · ${u})
+PASS VP1c R1 본 덱 variable u string damp · unfix ${u} (생산 감쇠 fix 를 지움) · 재개 덱 그대로 (감쇠 있음) → -C 거부 (사전 공격 R1 · 키 자리 · unfix ${u})
+PASS VP1c R1 본 덱 variable u string damp · unfix ${u} (생산 감쇠 fix 를 지움) · 재개 덱 그대로 (감쇠 있음) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패)
+PASS VP1d R1 v3 after_settling — 본 덱 fix gx${n} 둘 · 재개 덱 하나 → -C 거부 (사전 공격 R1 · 키 자리 · gx${n})
+PASS VP1e R1 v3 after_settling — 본 덱 unfix ${u} (u = gx) · 재개 덱 fix gx 남김 → -C 거부 (사전 공격 R1 · 키 자리 · ${u})
+PASS VP1f R1 fix 스타일 자리 ${s} (s = insert/pack · 재삽입 판별이 치환 전 글자를 봄 · 두 덱 같은 글자) → -C 거부 (사전 공격 R1 · 키 자리 · ${s})
+PASS VP1g R1 region 이름 자리 ${r} (두 덱 같은 글자) → -C 거부 (사전 공격 R1 · 키 자리 · ${r})
+PASS VP1h R1 pair_coeff 형 자리 ${t} (두 덱 같은 글자) → -C 거부 (사전 공격 R1 · 키 자리 · ${t})
+PASS VP2a R2 본 덱 삽입 run 1 every 1 "fix gx …" (재개 덱에 gx 없음 · if 안 같은 명령은 이미 거부) → -C 거부 (사전 공격 R2 · run every · fix gx)
+PASS VP2a R2 본 덱 삽입 run 1 every 1 "fix gx …" (재개 덱에 gx 없음 · if 안 같은 명령은 이미 거부) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패)
+PASS VP2b R2 본 덱 fix gy (삽입 앞) · 삽입 run 1 every 1 "unfix gy" · 재개 덱 fix gy 남김 → -C 거부 (사전 공격 R2 · run every · unfix gy)
+PASS VP2c R2 본 덱 삽입 run 1 every 1 "timestep 2.0e-6" (재개 덱 timestep ${dt} = 1e-6) → -C 거부 (사전 공격 R2 · run every · timestep)
+PASS VP2d R2 본 덱 체크포인트 앞 partition yes 1 fix gx … (파티션 하나 = 실행) → -C 거부 (사전 공격 R2 · partition)
+PASS VP2e R2 본 덱 삽입 run 1 every 1 "jump SELF nowhere" (run every · partition 안 jump 도 거부 — restart 체크포인트 남은 step 셈이 못 봄) → -C 거부 (사전 공격 R2 · run every · jump)
+PASS VP3a R3 재개 덱 "#\rvariable g_probe equal 196.2" (LIGGGHTS = 주석 한 줄 · 예전 도구 = 정의) → 제어 글자 거부 → -C 거부 (사전 공격 R3 · 제어 글자)
+PASS VP3a R3 재개 덱 "#\rvariable g_probe equal 196.2" (LIGGGHTS = 주석 한 줄 · 예전 도구 = 정의) → 제어 글자 거부 → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패)
+PASS VP3b R3 재개 덱 "# note &<NBSP>" 다음 줄 variable g_probe equal 196.2 (LIGGGHTS = 안 이음 → 정의가 돈다 · 예전 = 주석에 붙임) → -C 거부 (196.2)
+PASS VP3b R3 재개 덱 "# note &<NBSP>" 다음 줄 variable g_probe equal 196.2 (LIGGGHTS = 안 이음 → 정의가 돈다 · 예전 = 주석에 붙임) → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패)
+PASS VP3c R3 본 덱 "variab&" ↵ "le g_probe equal 196.2" (LIGGGHTS = variable · 사이 공백 없음 · 예전 = "variab le") → -C 거부 (그 자리 치환 값이 본 덱과 다름 · 196.2)
+PASS VP3c R3 본 덱 "variab&" ↵ "le g_probe equal 196.2" (LIGGGHTS = variable · 사이 공백 없음 · 예전 = "variab le") → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패)
+PASS VP3d R3 두 덱 fix gravi 의 낱말 사이 NBSP (98.1<NBSP>vector · LIGGGHTS 는 한 낱말 · 예전 도구 = 공백) → -C 거부 (사전 공격 R3 · 주석 밖 비 ASCII)
+PASS VP3e R3 두 덱 fix gravi 의 낱말 사이 \f (제어 글자) → -C 거부 (사전 공격 R3 · 제어 글자)
+PASS VP3f R3 재개 덱 주석 안 NUL (제어 글자 · 주석 안이어도) → -C 거부 (사전 공격 R3 · 제어 글자)
+PASS VP3g R3 두 덱 print 'q"x' # 한글 (LIGGGHTS 주석 규칙 = 따옴표가 바뀜 → # 뒤도 명령 · 예전 = 주석으로 뺌) → -C 거부 (사전 공격 R3 · 주석 밖 비 ASCII)
+PASS VP4a R4 준비 구간 print file/append w.stl (${pz} · 본 덱 0.2 ↔ 재개 덱 0.5) → 준비 구간 fix mesh/surface file w.stl 이 읽음 → -C 거부 (사전 공격 R4 · w.stl)
+PASS VP4a R4 준비 구간 print file/append w.stl (${pz} · 본 덱 0.2 ↔ 재개 덱 0.5) → 준비 구간 fix mesh/surface file w.stl 이 읽음 → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패)
+PASS VP4b R4 준비 구간 print file plate_kg50_d2_b50.stl (두 덱 같은 글자) → 뒤 구간 fix top_mesh 가 그 파일을 읽음 → -C 거부 (사전 공격 R4 · plate_kg50_d2_b50.stl)
+PASS VP5a R5 합성 write_restart — 본 덱 체크포인트 앞 jump SELF sk 가 fix gx 를 건너뜀 · 재개 덱 fix gx (변수 없음) → -C 거부 (사전 공격 R5 · jump SELF sk)
+PASS VP5b R5 합성 write_restart — 본 덱 체크포인트 앞 clear (fix gx 를 지움) · 재개 덱 fix gx → -C 거부 (사전 공격 R5 · clear)
+PASS VP5c R5 합성 write_restart — 본 덱 체크포인트 앞 label 하나 (쓰이지 않아도 · 보수 쪽) → -C 거부 (사전 공격 R5 · label l0)
+PASS VP5d R5 합성 write_restart — 본 덱 체크포인트 앞 if 안 jump (겹친 흐름 줄) → -C 거부 (사전 공격 R5 · jump SELF nowhere)
+PASS VP5e R5 합성 write_restart — 본 덱 체크포인트 앞 python (상태를 바꿀 수 있다) → -C 거부 (사전 공격 R5 · python)
+PASS VP5f R5 v3 after_settling — 본 덱 jump SELF skipx 가 fix gx 를 건너뜀 · 재개 덱 fix gx → -C 거부 (사전 공격 R5 · jump SELF skipx)
+PASS VP6b R6 판 메시 fix file ${mf} ↔ ${mf}_r4 (펼치면 wall_kg50.stl_r4) — 작업 폴더에 치환 전 이름 "${mf}_r4" 만 있음 → -C 거부 (wall_kg50.stl_r4 · 작업 폴더에 없음)
+PASS VP2f R2 두 덱 끝 partition yes 1 include extra.in (partition 안 include · next = 다룰 수 없는 구문 — run every · if 안과 같은 길) → -C 거부 (다룰 수 없는 구문 · include)
+PASS VP4c R4 준비 구간 print file ${pf} (pf = w.stl · 이름에 그 자리 치환 = 정할 수 없음) → 준비 구간 fix mesh/surface file w.stl → -C 거부 (사전 공격 R4 · ${pf})
+PASS VP6c R6 판 메시 fix file w${k}.stl ↔ w${k}_r4.stl (k = equal 4 · 펼친 이름에 equal 값) — 작업 폴더에 치환 전 이름 "w${k}_r4.stl" 만 있음 → -C 거부 (사전 공격 R6 · 펼칠 수 없음)
+PASS VP6d R6 뒤 구간 판 메시 fix top_mesh file ${pf} ↔ ${pf}_r4 (pf = plate_kg50_d2_b50.stl) — 작업 폴더에 치환 전 이름 "${pf}_r4" 만 있음 → -C 거부 (사전 공격 R6 · 뒤 구간)
+PASS VP8 R8 group gsel type ${t} — 본 덱 t 1 → 3 → group → 1 · 재개 덱 3 을 뺌 (변이 M16 = group 을 값 대조에서 빼면 통과하던 자리) → -C 거부 (그 자리 치환 값이 본 덱과 다름 · ${t})
+PASS VP2z R2 대조군 — 본 덱 삽입 run 1 every 1 "print 'every ok'" (print 만) → -C 통과 (문제 0 · 그 자리 치환 대조)
+PASS VP3z R3 대조군 — 두 덱 fix gravi 줄 끝 한글 주석 → -C 통과 (문제 0 · 그 자리 치환 대조)
+PASS VP4z R4 대조군 — 두 덱 준비 구간 print file note.txt (읽는 명령 없음) → -C 통과 (문제 0 · 그 자리 치환 대조)
+PASS VP5z R5 대조군 — 합성 write_restart (흐름 줄 없음) → -C 통과 (문제 0 · 재개 지점 상태 대조)
+PASS VP6a R6 판 메시 fix file ${mf} ↔ ${mf}_r4 — 작업 폴더에 펼친 이름 wall_kg50.stl_r4 만 있음 (고치기 전 판 = 치환 전 이름으로 찾아 거짓 거부) → -C 통과 (문제 0 · 판 메시 파일만 다름 (재개 지점 fix wmesh): wall_kg50.stl_r4)
+PASS VP7z R7 대조군 — ${} 사슬 6 단 (두 덱 같음) → -C 통과 (문제 0 · 그 자리 치환 대조)
+PASS VP8z R8 대조군 — group gsel type ${t} (두 덱 같은 값) → -C 통과 (문제 0 · 그 자리 치환 대조)
+PASS VP7 R7 ${} 사슬 20 단 (정의 때 치환 · 글이 매 단 두 배) → 60 초 안에 -C 거부 (사전 공격 R7 · 자를 넘음)
+PASS VP7 R7 v_ 사슬 24 단 (쓸 때 계산 · 매 단 두 갈래) → 60 초 안에 -C 거부 (사전 공격 R7 · 자를 넘음)
+PASS VP7 R7 string ${}${} 사슬 20 단 (string 글이 매 단 두 배 · 2 MB) → 60 초 안에 -C 거부 (사전 공격 R7 · 자를 넘음)
+PASS RB1 Codex .bak — 본 러너 -in …input_kg50_d07_b40_r56.liggghts.bak · 본 .bak 덱 = 첫 긴 run 뒤 velocity · 시험 .bak 덱 = 검사한 시험 덱과 바이트 같음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [MPI 실행 줄 -in [input_kg50_d07_b40_r56.liggghts.bak] ≠ 검사한 재개 덱 [input_kg50_d07_b40_r56.liggghts]] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB2 .bak 가 시험 쪽에만 닿음 — 작업 폴더에 시험 .bak 덱만 (검사한 시험 덱과 다름 · 본 .bak 없음) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [MPI 실행 줄 -in [input_kg50_d07_b40_r56.liggghts.bak] ≠ 검사한 재개 덱 [input_kg50_d07_b40_r56.liggghts]] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB3 cd = 멈춘 폴더 (작업 폴더 아님) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [cd 실제 경로 [] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB4 주석 속 정상 mpirun 줄 + 다른 실제 줄 (처음부터 덱 input_<C>.liggghts) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [주석 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB4b 주석 줄 하나 (나머지 정상) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [주석 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB5 MPI 실행 줄 두 번 (같은 줄) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [MPI 실행 줄이 두 번] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB6 다른 명령 줄 (cp 처음부터 덱 → 재개 덱) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [허용 목록에 없는 명령 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB7a MPI 실행 줄 ; 이음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [셸 연결 · 치환 · 리디렉션 글자가 든 MPI 실행 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB7b MPI 실행 줄 && 이음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [셸 연결 · 치환 · 리디렉션 글자가 든 MPI 실행 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB8 cd 없음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [cd 줄 없음] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB9 cd 두 번 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [cd 가 두 번] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB9b cd 두 번 (둘 다 작업 폴더) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [cd 가 두 번] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB25 MPI 실행 줄 없음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [MPI 실행 줄 없음] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB26 NUL 바이트 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [NUL 글자] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB27 UTF-8 아닌 바이트 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [UTF-8 이 아님] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB28 #SBATCH -n 줄에 다른 지시가 붙음 (-n 1 --nodes=2) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH -n 값] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB29 MPI 실행 줄 -np 숫자 없음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [MPI 실행 줄이 정해진 꼴이 아님] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB30 #SBATCH -n 값이 숫자 아님 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH -n 값] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB10 -n 어긋남 (#SBATCH -n 1 뒤 --ntasks=8 · SLURM 은 뒤 지시 = 8 작업) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [작업 수 · 노드 지시] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB11 같은 #SBATCH 키 두 번 (--time) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH --time= 가 두 번] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB12 #SBATCH 가 명령 줄 뒤 (SLURM 이 안 읽는 자리) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH 줄이 명령 줄 뒤] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB13 환경 줄이 cd 뒤 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [환경 줄이 cd 뒤] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB14 cd 경로에 .. 마디 (실제 경로는 작업 폴더와 같음) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [cd 경로가 안전한 절대 경로가 아님] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB15 MPI 실행 줄이 cd 앞 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [MPI 실행 줄이 cd 앞] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB16 CRLF 줄 끝 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [CR 글자] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB17 --job-name 다름 (큐 검사 이름 밖) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH --job-name= 값] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB18 --output 다름 (도구가 읽는 시험 로그 자리 밖) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH --output= 값] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB20 --qos 값에 공백 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [안전한 낱말이 아님] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB22 첫 줄 #!/bin/sh → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [첫 줄이 #!/bin/bash 가 아님] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB23 --time 없음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH --time= 줄 없음] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB33 --output 없음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH --output= 줄 없음] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB34 --qos 값 쉼표 뒤 낱낱이 선택 꼴 (cpu-60,--exclusive) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [안전한 낱말이 아님] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB19 작업 폴더 실제 경로에 $ (루트 = 그 폴더를 가리키는 링크 · 헬퍼 cd = 링크 경로 · 러너 cd "…" 안에서 펼쳐질 글자) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [작업 폴더 실제 경로 [] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB21 NP 0 (-n 0) → 시작 거부 (종료 코드 1 · sbatch 0 · mpirun 0 · 보고 없음 · 작업 폴더 없음 · 멈춘 폴더 그대로) · 이유 [⛔ -n 0 — ]
+PASS RB24 접미사에 $ (-x r5$x · 덱 · 러너 이름에 그대로) → 시작 거부 (종료 코드 1 · sbatch 0 · mpirun 0 · 보고 없음 · 작업 폴더 없음 · 멈춘 폴더 그대로) · 이유 [⛔ -x r5$x — ]
+PASS RB32a 환경 줄 뒤 다른 명령 (export … ; mpirun …) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [[export OMP_NUM_THREADS=1; mpirun -np 1 lmp_mpi -in input_kg50_d07_b40.liggghts] — 받는 꼴이 아닌 환경 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB32b export PATH → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [[export PATH=/evil/bin] — 받는 꼴이 아닌 환경 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB32c export LD_PRELOAD → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [[export LD_PRELOAD=/x/evil.so] — 받는 꼴이 아닌 환경 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB32d export OMP_NUM_THREADS=2 (값 = 1 만) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [[export OMP_NUM_THREADS=2] — 받는 꼴이 아닌 환경 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB32e source 다른 파일 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [[source /tmp/x] — 받는 꼴이 아닌 환경 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB32f . ~/.bashrc (점 꼴) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [[. ~/.bashrc] — 받는 꼴이 아닌 환경 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB32g conda activate 뒤 ; 이음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [[conda activate myenv; mpirun -np 1 lmp_mpi -in input_kg50_d07_b40.liggghts] — 받는 꼴이 아닌 환경 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB32h conda activate . (현재 폴더 = 제출 폴더 환경) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [[conda activate .] — 받는 꼴이 아닌 환경 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB32i conda activate .. → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [[conda activate ..] — 받는 꼴이 아닌 환경 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB32j conda activate -h (선택 꼴) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [[conda activate -h] — 받는 꼴이 아닌 환경 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB37 cd 앞 다른 명령 줄에 리디렉션 (ls > /tmp/x) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [[ls > /tmp/x] — 셸 연결 · 치환 · 리디렉션 글자 (] · 보고 시험 전 거부 절 (러너 관문)
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) a → 시험 1 · 본 1 · 러너가 실제로 돈 기록 둘 (시험 7001 → 본 9001)
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) b → 시험 잡: cwd = 작업 폴더 실제 경로 · 인자 = mpirun … -in <작업 폴더 실제 경로>/input_kg50_d07_b40_r56t.liggghts · 읽은 바이트 = 검사한 시험 덱
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) c → 본 잡: cwd = 작업 폴더 실제 경로 · 인자 = mpirun … -in <작업 폴더 실제 경로>/input_kg50_d07_b40_r56.liggghts · 읽은 바이트 = 검사한 재개 덱
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) d → 본 · 시험 러너 = 도구 틀 (시험 쪽에서 따로 쓴 기대 바이트와 같음 · 환경 줄 순서 · qos · partition · 시험 --time=01:00:00 · cd … || exit 1 · 잡 안 sha256 대조 · command mpirun)
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) e → 실행 입력 영수증 = 다섯 (재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트) · 러너가 읽는 절대 경로 · 실제 sha256
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) f → 시도 폴더에 헬퍼 러너 원본 바이트 (-n · -np 고치기 전) · 보고에 러너 대조 통과 줄 · 잡 안 신원 줄
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) g → 시험 로그 신원 줄 = 하나 · 덱 = 검사한 시험 덱 경로 · sha256 · 체크포인트 경로 · sha256 (잡 시작 때 읽은 바이트) · 대조 다름 줄 없음
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) h → 보고에 G0 잡 안 덱 신원 관문 통과 줄 (10-30 KG50R-F02 · 덱 경로 · sha256 = 영수증의 시험 덱)
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) i → 본 잡 로그 신원 줄 = 하나 · 덱 = 검사한 재개 덱 경로 · sha256 · 대조 다름 줄 없음 (도구는 본 잡 출력을 안 읽는다 — 잡 로그에만)
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) a → 시험 1 · 본 1 · 러너가 실제로 돈 기록 둘 (시험 7001 → 본 9001)
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) b → 시험 잡: cwd = 작업 폴더 실제 경로 · 인자 = mpirun … -in <작업 폴더 실제 경로>/input_kg50_d07_b40_r56t.liggghts · 읽은 바이트 = 검사한 시험 덱
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) c → 본 잡: cwd = 작업 폴더 실제 경로 · 인자 = mpirun … -in <작업 폴더 실제 경로>/input_kg50_d07_b40_r56.liggghts · 읽은 바이트 = 검사한 재개 덱
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) d → 본 · 시험 러너 = 도구 틀 (시험 쪽에서 따로 쓴 기대 바이트와 같음 · 환경 줄 순서 · qos · partition · 시험 --time=01:00:00 · cd … || exit 1 · 잡 안 sha256 대조 · command mpirun)
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) e → 실행 입력 영수증 = 다섯 (재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트) · 러너가 읽는 절대 경로 · 실제 sha256
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) f → 시도 폴더에 헬퍼 러너 원본 바이트 (-n · -np 고치기 전) · 보고에 러너 대조 통과 줄 · 잡 안 신원 줄
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) g → 시험 로그 신원 줄 = 하나 · 덱 = 검사한 시험 덱 경로 · sha256 · 체크포인트 경로 · sha256 (잡 시작 때 읽은 바이트) · 대조 다름 줄 없음
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) h → 보고에 G0 잡 안 덱 신원 관문 통과 줄 (10-30 KG50R-F02 · 덱 경로 · sha256 = 영수증의 시험 덱)
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) i → 본 잡 로그 신원 줄 = 하나 · 덱 = 검사한 재개 덱 경로 · sha256 · 대조 다름 줄 없음 (도구는 본 잡 출력을 안 읽는다 — 잡 로그에만)
+PASS RB40 PA-01 -T · 시험 덱이 영수증 뒤 · 시험 잡 시작 전에 바뀜 (되돌리지 않음) → 잡 안 sha256 대조가 mpirun 을 막음 · G0 실패 (잡 안 덱 신원 = 영수증과 다름) · 시험만 통과 줄 · 본 제출 명령 없음
+PASS RB41 PA-01 시험 덱이 시험 잡 동안만 바뀌고 잡 뒤 되돌아옴 (본 제출 직전 영수증 대조는 원래 바이트를 본다) → 잡 안 대조가 mpirun 을 막음 · G0 실패 (잡 안 덱 신원 다름) · 본 제출 0
+PASS RB42 PA-02 체크포인트가 시험 잡 동안만 바뀌고 되돌아옴 → 잡 안 sha256 대조가 mpirun 을 막음 · 보고에 그 줄 · G0 실패 · 본 제출 0 (신원 줄 관문 = 덱만 · 체크포인트 = 잡 안 대조)
+PASS RB43 PA-02 본 제출 직전 대조 · 본 sbatch 뒤 · 본 잡 시작 전 (큐 대기) 재개 덱이 바뀜 → 본 잡 안 sha256 대조가 mpirun 을 막음 (도구는 본 잡 출력을 읽지 않는다 — 본 잡 로그에 LMP_IDENTITY_MISMATCH)
+PASS RB44 PA-01 -T · 시험 러너가 sbatch 가 읽기 전에 바뀜 (신원 줄 두 번 · 덱 바이트는 그대로 · mpirun 은 돎) → G0 실패 (신원 줄 2 개) · 시험만 통과 줄 없음
+PASS RB44b PA-01 -T · 시험 러너 신원 줄의 덱 경로만 재개 덱으로 바뀜 (sha256 · mpirun 은 시험 덱 그대로) → G0 실패 (덱 경로 ≠ 검사한 시험 덱) · 시험만 통과 줄 없음
+PASS RB45 PA-09 BASH_ENV 가 mpirun 함수를 정의 (마지막 인자를 다른 덱으로 바꿔 부름) → 러너 = command mpirun → 시험 · 본 잡 다 검사한 덱 경로 · 바이트
+PASS RB46 PA-08 잡 안 cd 실패 (잡에서만 cd 가 1 을 돌려주는 BASH_ENV) → cd "…" || exit 1 → mpirun 안 돎 (시험 · 본) · G0 실패 · 본 제출 0
+PASS RB47 PA-05 실제 루트 폴더 이름에 ERROR → ERROR 셈에서 신원 줄을 뺀다 → 시험 ERROR 0 · G0 · G1 통과 · 본 제출 1
+PASS RB48 PA-03 멈춘 폴더 = 다른 곳 실제 폴더를 가리키는 링크 → 복사 · 쓰기 전에 거부 (단계 멈춘 폴더) · sbatch 0 · 원 런 폴더 그대로 · 작업 폴더 안 만듦
+PASS RB49 PA-07 -n 에 sed 명령 (56/;e touch … #) — 리뷰어 np_sed · sed_e_probe → 시작 거부 (종료 코드 1 · sbatch 0 · mpirun 0 · 보고 없음 · 작업 폴더 없음 · 멈춘 폴더 그대로) · 이유 [⛔ -n 56/;e touch ]
+PASS RB49b PA-07 → GNU sed e 명령이 안 돎 (표지 파일 SED_E_RAN 없음)
+PASS RB50 PA-06 -x r56/x (덱 경로 ↔ 러너 -in 이름이 갈린다 · 리뷰어 sfx_slash 준비 그대로) → 시작 거부 (종료 코드 1 · sbatch 0 · mpirun 0 · 보고 없음 · 작업 폴더 없음 · 멈춘 폴더 그대로) · 이유 [⛔ -x r56/x — ]
+PASS RB35 시험 러너 자리에 폴더 (멈춘 폴더에서 복사됨 → runnerck 가 시험 러너를 못 씀 · 종료 코드 2) → 러너 관문에서 거부 (실행 영수증 단계 아님) · sbatch 0 · 작업 폴더에 러너 임시 파일 (.tmp) 안 남음
+PASS RB36 멈춘 폴더에서 온 옛 시험 러너 + 거부되는 헬퍼 러너 (cd 없음) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [cd 줄 없음] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB36b → 작업 폴더에 옛 시험 러너가 안 남음 (대조 전에 지운다 · 이번 호출이 쓰지 않은 시험 러너를 남기지 않는다)
+PASS RBU1 runnerck 직접 · 정상 인자 11 (헬퍼 러너 · C · SFX · NP · 작업 폴더 · 실제 경로 · 재개 덱 · 시험 덱 · 두 러너 · 체크포인트) → 0 · 두 러너 씀
+PASS RBU2 runnerck 직접 · 실제 경로 인자 ≠ 작업 폴더의 실제 경로 → 1 · 러너 안 씀
+PASS RBU3 runnerck 직접 · 체크포인트 없음 → 1 · 러너 안 씀
+PASS RBU4 runnerck 직접 · 체크포인트 경로에 $ (러너의 "…" 안에서 펼쳐질 글자) → 1 · 러너 안 씀
+PASS RBU5 runnerck 직접 · NP 0 → 1 · 러너 안 씀 (도구 흐름은 -n 시작 거부가 먼저)
+PASS RBU6 runnerck 직접 · 재개 덱 이름에 $ → 1 · 러너 안 씀 (도구 흐름은 -x · 케이스 이름 규칙이 먼저)
+PASS RBR1 시험 잡 뒤 시험 덱이 바뀜 → 시험 1 · 본 제출 0 · 보고에 그 사유 (KG50R-F02 · input_kg50_d07_b40_r56t.liggghts: FAILED)
+PASS RBR2 시험 제출 뒤 시험 러너가 바뀜 → 시험 1 · 본 제출 0 · 보고에 그 사유 (KG50R-F02 · run_kg50_d07_b40_r56t.sh: FAILED)
+PASS RBR3 시험 잡 뒤 체크포인트가 바뀜 → 시험 1 · 본 제출 0 · 보고에 그 사유 (KG50R-F02 · restart_settling_20001.bin: FAILED)
+PASS RBR4 시험 제출 뒤 영수증 파일 끝에 줄 하나 (sha256sum -c 는 그대로 통과하는 꼴) → 시험 1 · 본 제출 0 · 보고에 그 사유 (KG50R-F02 · 실행 입력 영수증)
+PASS RBR5 시험 제출 뒤 영수증 마지막 줄 (체크포인트) 지움 (sha256sum -c 는 남은 넷만 보고 통과하는 꼴) → 시험 1 · 본 제출 0 · 보고에 그 사유 (KG50R-F02 · 실행 입력 영수증)
+433 PASS · 0 FAIL
+rc=0 elapsed=217s

@@ -1,0 +1,8 @@
+$ python3 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a966f9f6d6223c244/docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/probes/make_d07_resume.py /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/d07
+T(D2 main) == D2 r4 with tool edits undone: True
+tool_edits(raw) == D2 r4 as received: True
+d2_raw_r4 576ac177d90a548cb29aff06f51e663f4ded2add076d2ac74e80fc29fbcf0278
+d07_raw_r56 71143f3eb59e6cf161d2c117bd0c9d4d20d872b745e140917c0bbf6a7ac5b8fd
+d07_tool_r56 8e129f421a8491975f83527f79c8418318b2af30baeedd7440cfcede2d45c5e5
+d07_helper_runner_r56 ab908495a5cb09aca7713bd6c02724989f8a82484e04b0a38c2e8b2d90f46f77
+[rc=0]

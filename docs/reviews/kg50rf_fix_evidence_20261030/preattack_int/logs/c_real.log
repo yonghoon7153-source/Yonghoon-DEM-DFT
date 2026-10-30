@@ -1,0 +1,25 @@
+$ bash /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a966f9f6d6223c244/docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/probes/c_real.sh /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai
+tool sha256 2dc7f693263708d7788ab721386182c6109a8f9278797ecc43f5165d6715f1e8
+  · 남은 step 같음: 끝 200001
+  · 첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)
+  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  · 재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 46 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix
+  재개 덱 정적 대조: 통과 (문제 0)
+== D2 received pair rc=0
+  · 남은 step 같음: 끝 200001
+  · 첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)
+  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  · 재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 46 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix
+  재개 덱 정적 대조: 통과 (문제 0)
+== D0.7 reconstructed pair rc=0
+files written into the -C work folders:
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/w_d07:
+total 8
+drwxr-xr-x  2 root root 4096 Oct 30 02:16 .
+drwxr-xr-x 15 root root 4096 Oct 30 02:45 ..
+
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/w_d2:
+total 8
+drwxr-xr-x  2 root root 4096 Oct 30 02:16 .
+drwxr-xr-x 15 root root 4096 Oct 30 02:45 ..
+[rc=0]

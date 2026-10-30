@@ -1,0 +1,47 @@
+R1_keypos_off                VP  caught    41 PASS · 9 FAIL | VP1a VP1b VP1c VP1c VP1d VP1e VP1f VP1g VP1h
+R2_runevery_off              VP  caught    45 PASS · 5 FAIL | VP2a VP2a VP2b VP2c VP2e
+R2_partition_off             VP  caught    49 PASS · 1 FAIL | VP2d
+R2_unsup_partition_off       VP  caught    49 PASS · 1 FAIL | VP2f
+R3_ctrl_off                  VP  caught    47 PASS · 3 FAIL | VP3a VP3e VP3f
+R3_nonascii_off              VP  caught    48 PASS · 2 FAIL | VP3d VP3g
+R3_amp_space                 VP  caught    48 PASS · 2 FAIL | VP3c VP3c
+R4_printfile_off             VP  caught    46 PASS · 4 FAIL | VP4a VP4a VP4b VP4c
+R5_flowwrite_off             VP  caught    44 PASS · 6 FAIL | VP5a VP5b VP5c VP5d VP5e VP5f
+R6_seq_dollar_off            VP  caught    49 PASS · 1 FAIL | VP6d
+R6_state_marker_off          VP  caught    49 PASS · 1 FAIL | VP6c
+R7_expand_cap_off            VP  caught    49 PASS · 1 FAIL | VP7
+R7_all_caps_off              VP  caught    47 PASS · 3 FAIL | VP7 VP7 VP7
+R7_varenv_cap_off            VP  caught    49 PASS · 1 FAIL | VP7
+F02_envlike_off              RB  caught    81 PASS · 10 FAIL | RB32a RB32b RB32c RB32d RB32e RB32f RB32g RB32h RB32i RB32j
+F02_cd_realpath_off          RB  caught    90 PASS · 1 FAIL | RB3
+F02_injob_check_off          RB  caught    86 PASS · 5 FAIL | RBP1 RBP2 RB40 RB41 RB43
+F02_g0_identity_off          RB  caught    87 PASS · 4 FAIL | RB40 RB41 RB44 RB44b
+F02_receipt_mis_off          RB  caught    89 PASS · 2 FAIL | RBR4 RBR5
+F02_receipt_c_off            RB  caught    88 PASS · 3 FAIL | RBR1 RBR2 RBR3
+F02_symlink_S_off            RB  caught    90 PASS · 1 FAIL | RB48
+F02_error_identity_excl_off  RB  caught    90 PASS · 1 FAIL | RB47
+
+| 변이 | 묶음 | 약하게 한 관문 | 결과 | 실패한 시험 (앞 12) |
+|---|---|---|---|---|
+| R1_keypos_off | VP | run_state KEYPOS $ in key positions | caught · 41 PASS · 9 FAIL · 10s | VP1a VP1b VP1c VP1c VP1d VP1e VP1f VP1g VP1h |
+| R2_runevery_off | VP | mprefix_check run … every commands | caught · 45 PASS · 5 FAIL · 9s | VP2a VP2a VP2b VP2c VP2e |
+| R2_partition_off | VP | mprefix_check partition command | caught · 49 PASS · 1 FAIL · 9s | VP2d |
+| R2_unsup_partition_off | VP | unsupported() partition inner command | caught · 49 PASS · 1 FAIL · 9s | VP2f |
+| R3_ctrl_off | VP | deck_lines control-character rejection | caught · 47 PASS · 3 FAIL · 9s | VP3a VP3e VP3f |
+| R3_nonascii_off | VP | deck_lines non-ASCII outside comments | caught · 48 PASS · 2 FAIL · 9s | VP3d VP3g |
+| R3_amp_space | VP | deck_lines & join without space (old: one space) | caught · 48 PASS · 2 FAIL · 9s | VP3c VP3c |
+| R4_printfile_off | VP | print_file_reads call | caught · 46 PASS · 4 FAIL · 8s | VP4a VP4a VP4b VP4c |
+| R5_flowwrite_off | VP | flow_before_write call | caught · 44 PASS · 6 FAIL · 9s | VP5a VP5b VP5c VP5d VP5e VP5f |
+| R6_seq_dollar_off | VP | seq_cmp $ in mesh file name | caught · 49 PASS · 1 FAIL · 9s | VP6d |
+| R6_state_marker_off | VP | state_cmp mesh file expanded with value markers | caught · 49 PASS · 1 FAIL · 9s | VP6c |
+| R7_expand_cap_off | VP | expand() size cap (both checks) | caught · 49 PASS · 1 FAIL · 69s | VP7 |
+| R7_all_caps_off | VP | expand() + var_env() size caps | caught · 47 PASS · 3 FAIL · 134s | VP7 VP7 VP7 |
+| R7_varenv_cap_off | VP | var_env() size cap | caught · 49 PASS · 1 FAIL · 14s | VP7 |
+| F02_envlike_off | RB | runnerck ENVLIKE rejection | caught · 81 PASS · 10 FAIL · 40s | RB32a RB32b RB32c RB32d RB32e RB32f RB32g RB32h RB32i RB32j |
+| F02_cd_realpath_off | RB | runnerck cd realpath = work folder | caught · 90 PASS · 1 FAIL · 41s | RB3 |
+| F02_injob_check_off | RB | rendered runner in-job sha256 check | caught · 86 PASS · 5 FAIL · 40s | RBP1 RBP2 RB40 RB41 RB43 |
+| F02_g0_identity_off | RB | G0 identity gate (GI forced 1) | caught · 87 PASS · 4 FAIL · 41s | RB40 RB41 RB44 RB44b |
+| F02_receipt_mis_off | RB | receipt file sha256 vs memory (MIS) | caught · 89 PASS · 2 FAIL · 42s | RBR4 RBR5 |
+| F02_receipt_c_off | RB | sha256sum -c of the 5 inputs before main | caught · 88 PASS · 3 FAIL · 40s | RBR1 RBR2 RBR3 |
+| F02_symlink_S_off | RB | stopped folder symlink rejection | caught · 90 PASS · 1 FAIL · 41s | RB48 |
+| F02_error_identity_excl_off | RB | ERROR count excludes identity line (revert to plain grep) | caught · 90 PASS · 1 FAIL · 41s | RB47 |

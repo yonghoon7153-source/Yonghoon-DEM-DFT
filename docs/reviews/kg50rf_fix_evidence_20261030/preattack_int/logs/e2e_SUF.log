@@ -1,0 +1,6 @@
+$ python3 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a966f9f6d6223c244/docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/probes/e2e_d07.py /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai SUF
+====================================================================================================
+-s ins1/../decoy · rc 0 · sbatch calls ['trial']
+work folder copied from the decoy (DECOY_MARKER present): True
+report head: ['명령: bash resume_ckpt.sh -n 56 -s ins1/../decoy -r /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_yevjmn3z/home/dem_test -x r56 -t 2000 -T kg50_d07_b50', '- 멈춘 폴더: kg50_d07_b50.ins1/../decoy (손대지 않음) · 멈춘 곳 ====== PHASE 1: SETTLING ======', '- 작업 폴더: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_yevjmn3z/home/dem_test/kg50_d07_b50 (= 멈춘 폴더 cp -a) · 원 로그 → log.liggghts.ins1/../decoy · 체크포인트 뒤 덤프 → old_post_after20001_ins1/../decoy/']
+[rc=0]

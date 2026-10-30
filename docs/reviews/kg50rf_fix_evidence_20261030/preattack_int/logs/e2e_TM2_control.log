@@ -1,0 +1,9 @@
+$ env PAI_NOCHANGE=1 python3 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a966f9f6d6223c244/docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/probes/e2e_d07.py /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai TM2
+====================================================================================================
+-T rc 0 calls ['trial'] · printed main command present: True
+-T receipt resume deck sha256 8e129f421a8491975f83527f79c8418318b2af30baeedd7440cfcede2d45c5e5
+main rc 0 calls ['trial', 'main'] · receipt resume deck sha256 8e129f421a8491975f83527f79c8418318b2af30baeedd7440cfcede2d45c5e5 · same as -T? True
+main deck run reads press_speed 0.02: False
+whole receipt sha256 -T 8342e4b09f2b8ddd · main 8342e4b09f2b8ddd · identical True
+main report decision: ['- ✅ 본 제출 job 9001 (run_kg50_d07_b50_r56.sh, 제출 폴더 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/pai_e2e_gkmfebfs/home/dem_test)']
+[rc=0]

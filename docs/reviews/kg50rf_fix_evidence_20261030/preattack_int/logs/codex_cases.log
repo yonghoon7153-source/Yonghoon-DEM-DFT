@@ -1,0 +1,49 @@
+$ python3 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a966f9f6d6223c244/docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/probes/codex_cases.py /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai/cxzip/data /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai
+| 사례 | Codex 기대 | Codex rc (77c24237) | 우리 rc (2dc7f693) | 판정 줄 | 첫 문제 |
+|---|---|---|---|---|---|
+| baseline | accept | 0 | 0 ✓ | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| drop_intermediate_variable_definition | reject changed timestep | 0 | 1 | 재개 덱 정적 대조: 실패 (문제 2) | ✗ 준비 구간 그 자리 치환 값이 본 덱과 다름 (10-30 KG50R-F01 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [timestep ${dt}] 의 ${dt} — |
+| runtime_dependent_eager_variable | reject indeterminate dynamic setup substitution | 0 | 1 | 재개 덱 정적 대조: 실패 (문제 2) | ✗ 준비 구간 그 자리 치환 값이 상수가 아님 — 실행 상태에 따라 바뀜 · 등록 상수 목록 밖 (10-30 KG50R-F01 · 상수 = 수 · 연산자 · 괄호 · 정해진 수학 함수 · 상수 변수 |
+| suffix_velocity | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 1 개 ↔ 재개 덱 2 개 — 재개 덱에만 [velocity all set 1 0 0] |
+| suffix_set | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 1 개 ↔ 재개 덱 2 개 — 재개 덱에만 [set group all density 1] |
+| suffix_delete_atoms | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 1 개 ↔ 재개 덱 2 개 — 재개 덱에만 [delete_atoms group all] |
+| suffix_include | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 2) | ✗ 다룰 수 없는 구문 (재개 덱 · include · 10-28 KG50R-03): [include extra.in] |
+| resume_first_run_every | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부):  |
+| main_first_run_every | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 본 덱 체크포인트 run 에 꼬리가 있음 (every · pre · post · start · stop · upto · 10-28 사전 공격 B — 재개 덱 첫 긴 run (꼬리 없는 run N |
+| resume_first_run_pre | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부):  |
+| main_first_run_pre | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 본 덱 체크포인트 run 에 꼬리가 있음 (every · pre · post · start · stop · upto · 10-28 사전 공격 B — 재개 덱 첫 긴 run (꼬리 없는 run N |
+| resume_first_run_post | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부):  |
+| main_first_run_post | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 본 덱 체크포인트 run 에 꼬리가 있음 (every · pre · post · start · stop · upto · 10-28 사전 공격 B — 재개 덱 첫 긴 run (꼬리 없는 run N |
+| resume_first_run_start | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부):  |
+| main_first_run_start | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 본 덱 체크포인트 run 에 꼬리가 있음 (every · pre · post · start · stop · upto · 10-28 사전 공격 B — 재개 덱 첫 긴 run (꼬리 없는 run N |
+| resume_first_run_stop | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부):  |
+| main_first_run_stop | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 본 덱 체크포인트 run 에 꼬리가 있음 (every · pre · post · start · stop · upto · 10-28 사전 공격 B — 재개 덱 첫 긴 run (꼬리 없는 run N |
+| resume_first_run_upto | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부):  |
+| main_first_run_upto | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 본 덱 체크포인트 run 에 꼬리가 있음 (every · pre · post · start · stop · upto · 10-28 사전 공격 B — 재개 덱 첫 긴 run (꼬리 없는 run N |
+| continued_first_run | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 재개 덱 첫 긴 run 이 & 로 이어진 여러 줄 (원 줄 6–7 · 10-28 KG50R-05 · 시험 덱을 한 줄로 못 자른다): [run 50] |
+| changed_timestep_literal | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 2) | ✗ 재개 덱 준비 구간 상태 명령이 본 덱 체크포인트 앞에 글자 그대로 없음 (10-28 사전 공격 A · LIGGGHTS 는 ${x} 를 그 자리에서 치환한다 — 끝 상태만 같아서는 안 된다):  |
+| missing_variable | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 3) | ✗ 준비 구간 그 자리 치환을 펼칠 수 없음 (10-30 KG50R-F01 · 닫힌 실패): [timestep ${dt}] 의 ${dt} — 재개 덱: dt 정의 없음 |
+| compress_named | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_50.bin (이름 restart_compress_*) |
+| compress_renamed | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_other_50.bin (본 덱 반복 (label · jump) 안 res |
+| checkpoint_basename_alias | known bounded acceptance: checkpoint identified by basename | 0 | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| d2_received_baseline | accept received original fixture | 0 | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| d2_drop_intermediate_variable_definition | reject changed consumed gravity value | 0 | 1 | 재개 덱 정적 대조: 실패 (문제 2) | ✗ 준비 구간 그 자리 치환 값이 본 덱과 다름 (10-30 KG50R-F01 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [fix gravi all gravity ${g |
+| d2_runtime_dependent_eager_variable | reject indeterminate dynamic setup substitution | 0 | 1 | 재개 덱 정적 대조: 실패 (문제 2) | ✗ 준비 구간 그 자리 치환 값이 상수가 아님 — 실행 상태에 따라 바뀜 · 등록 상수 목록 밖 (10-30 KG50R-F01 · 상수 = 수 · 연산자 · 괄호 · 정해진 수학 함수 · 상수 변수 |
+| archived_baseline | accept | 0 | 0 ✓ | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| archived_suffix_velocity | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 64 개 ↔ 재개 덱 65 개 — 재개 덱에만 [velocity all set 1.0 0.0 0.0] |
+| archived_suffix_density | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 64 개 ↔ 재개 덱 65 개 — 재개 덱에만 [set group all density 1.0] |
+| archived_suffix_delete | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 64 개 ↔ 재개 덱 65 개 — 재개 덱에만 [delete_atoms group all] |
+| archived_suffix_include | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 2) | ✗ 다룰 수 없는 구문 (재개 덱 · include · 10-28 KG50R-03): [include extra.in] |
+| archived_first_run_every | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 재개 덱 첫 긴 run 꼴이 지원 밖 (10-28 KG50R-02 · 꼬리 없는 run N 만 · every · pre · post · start · stop · upto · 변수 = 거부):  |
+| archived_duplicate_loop_label | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 8) | ✗ 재개 덱 준비 구간 명령 허용 안 됨 (10-28 KG50R-03 · 상태 명령 · 본 덱 체크포인트 앞에 글자 그대로 있는 print · if (print · quit 만) · group ty |
+| archived_missing_target_variable | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 2) | ✗ 재개 덱이 정의 전 변수를 씀 (10-28 KG50R-03 · ${x} · $x · v_x): target_press — 94 번째 명령 [print "Current Pressure: ${cur |
+| archived_after_settling_baseline | accept | 0 | 0 ✓ | 재개 덱 정적 대조: 통과 (문제 0) |  |
+| archived_after_settling_first_long_changed_300000 | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 첫 긴 run 다름 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] ↔ 재개 덱 read_restart 뒤 [run 1] |
+| archived_after_settling_damp_mismatch | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 1 곳 · 첫 차이 32 번째 — 본 덱 [fix damp all viscous 0.5] ↔ 재개 |
+| archived_compress_r075 | reject | 1 | 1 ✓ | 재개 덱 정적 대조: 실패 (문제 2) | ✗ 압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_1500000.bin (이름 restart_compress |
+| parser_nbsp | known parser mismatch: static accepts; no engine execution | 0 | 1 | 재개 덱 정적 대조: 실패 (문제 1) | ✗ 덱 바이트를 LIGGGHTS 와 같게 읽을 수 없음 (10-30 KG50R-F01 · 사전 공격 R3 · 닫힌 실패): 재개 덱 4 번째 원 줄 주석 밖 비 ASCII 글자 (LIGGGHTS 는 |
+| parser_continuation_no_separator | known parser mismatch: static accepts; no engine execution | 0 | 1 | 재개 덱 정적 대조: 실패 (문제 3) | ✗ 다룰 수 없는 구문 (재개 덱 · 명령 이름에 변수 · 10-28 KG50R-03): [timestep${dt}] |
+| mesh_empty_existing_file | known bounded acceptance: file existence only | 0 | 0 | 재개 덱 정적 대조: 통과 (문제 0) |  |
+
+기대 · 우리 통과 여부별 수: {'accept received original fixture·rc0': 1, 'accept·rc0': 3, 'known bounded acceptance: checkpoint identified by basename·rc0': 1, 'known bounded acceptance: file existence only·rc0': 1, 'known parser mismatch: static accepts; no engine execution·rc1': 2, 'reject changed consumed gravity value·rc1': 1, 'reject changed timestep·rc1': 1, 'reject indeterminate dynamic setup substitution·rc1': 2, 'reject·rc1': 31}
+[rc=0]

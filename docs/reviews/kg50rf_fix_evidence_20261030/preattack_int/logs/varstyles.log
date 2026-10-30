@@ -1,0 +1,13 @@
+$ python3 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a966f9f6d6223c244/docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/probes/varstyles.py /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai
+| 꼴 | 본 덱 준비 줄 | 재개 덱 준비 줄 | -C rc | 판정 줄 | 기대 (거부=1) |
+|---|---|---|---|---|---|
+| equal (control) | `variable g equal 98.1` | `variable g equal 98.1` | 0 | 재개 덱 정적 대조: 통과 (문제 0)  | 0 |
+| getenv | `variable g getenv KG50_G` | `variable g getenv KG50_G` | 1 | 재개 덱 정적 대조: 실패 (문제 4) ✗ 본 덱 체크포인트 앞 에 다룰 수 없는 변수 꼴 getenv (equal · atom · string · delete 만 · 10-28 KG50R-03): [variable g getenv KG50_G] | 1 |
+| index first-wins (main 98.1 then 196.2 ignored · resume 196.2 only) | `variable g index 98.1 ⏎ variable g index 196.2` | `variable g index 196.2` | 1 | 재개 덱 정적 대조: 실패 (문제 5) ✗ 본 덱 체크포인트 앞 에 다룰 수 없는 변수 꼴 index (equal · atom · string · delete 만 · 10-28 KG50R-03): [variable g index 98.1] | 1 |
+| index same | `variable g index 98.1` | `variable g index 98.1` | 1 | 재개 덱 정적 대조: 실패 (문제 4) ✗ 본 덱 체크포인트 앞 에 다룰 수 없는 변수 꼴 index (equal · atom · string · delete 만 · 10-28 KG50R-03): [variable g index 98.1] | 1 |
+| string redefined (main 98.1 → 196.2 · resume 196.2) | `variable g string 98.1 ⏎ variable g string 196.2` | `variable g string 196.2` | 0 | 재개 덱 정적 대조: 통과 (문제 0)  | 0 |
+| file | `variable g file g.txt` | `variable g file g.txt` | 1 | 재개 덱 정적 대조: 실패 (문제 4) ✗ 본 덱 체크포인트 앞 에 다룰 수 없는 변수 꼴 file (equal · atom · string · delete 만 · 10-28 KG50R-03): [variable g file g.txt] | 1 |
+| format | `variable gg equal 98.1 ⏎ variable g format gg %.1f` | `variable gg equal 98.1 ⏎ variable g format gg %.1f` | 1 | 재개 덱 정적 대조: 실패 (문제 4) ✗ 본 덱 체크포인트 앞 에 다룰 수 없는 변수 꼴 format (equal · atom · string · delete 만 · 10-28 KG50R-03): [variable g format gg %.1f] | 1 |
+| loop | `variable g loop 98` | `variable g loop 98` | 1 | 재개 덱 정적 대조: 실패 (문제 4) ✗ 본 덱 체크포인트 앞 에 다룰 수 없는 변수 꼴 loop (equal · atom · string · delete 만 · 10-28 KG50R-03): [variable g loop 98] | 1 |
+| world | `variable g world 98.1` | `variable g world 98.1` | 1 | 재개 덱 정적 대조: 실패 (문제 4) ✗ 본 덱 체크포인트 앞 에 다룰 수 없는 변수 꼴 world (equal · atom · string · delete 만 · 10-28 KG50R-03): [variable g world 98.1] | 1 |
+[rc=0]

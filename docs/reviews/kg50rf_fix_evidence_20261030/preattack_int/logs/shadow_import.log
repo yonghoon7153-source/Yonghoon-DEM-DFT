@@ -1,0 +1,6 @@
+$ bash /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a966f9f6d6223c244/docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/probes/shadow_import.sh /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pai
+SHADOW: local difflib.py imported by the static checker (cwd module)
+  재개 덱 정적 대조: 통과 (문제 0)
+--- same with python3 -I (what runnerck uses):
+difflib from /usr/lib/python3.11/difflib.py
+[rc=0]
