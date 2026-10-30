@@ -1,0 +1,25 @@
+{
+  "review_pin": "09ae533d05f6f165c9754ff4edd42cd97c7c3c06",
+  "verdict": "SCOPED_GO",
+  "case": "kg50_d07_b50",
+  "np": 56,
+  "checkpoint_step": 20001,
+  "settling_checkpoint_step": 200001,
+  "automatic_stop_at_settling": false,
+  "conditions": [
+    "reviewed receipt hash match before main submission",
+    "Q6 manual stop after settling checkpoint",
+    "record server original/copy log identity separately"
+  ],
+  "expected_receipt_sha256": "29ff619a666f29131a9d582f27e555590316e8516dcf9d0a7d2af01715bde6fa",
+  "original_log_sha256": "b1b298bbd54f77a1adf47745e6b1eed14ab2a35bbb5aea9c473b6e9ff46657f5",
+  "original_log_G1_G3_readback": true,
+  "server_original_copy_cmp_supplied": false,
+  "python_checks_passed": 55,
+  "python_checks_failed": 0,
+  "bash_submit_probe_completed": false,
+  "production_jobs_submitted_by_reviewer": 0,
+  "general_tool_closure": false,
+  "downstream_physics_qualification": false,
+  "report_sha256": "abe6dda63a44e6154093db47f211699ce09a2783455e37b62e887c333b9a536c"
+}

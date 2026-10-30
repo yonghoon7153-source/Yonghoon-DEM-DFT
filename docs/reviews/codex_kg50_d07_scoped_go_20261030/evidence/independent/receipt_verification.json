@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts",
+    "expected": "8e129f421a8491975f83527f79c8418318b2af30baeedd7440cfcede2d45c5e5",
+    "local_sha256": "8e129f421a8491975f83527f79c8418318b2af30baeedd7440cfcede2d45c5e5",
+    "available": true
+  },
+  {
+    "path": "/lustre/home/yonghoon/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56.sh",
+    "expected": "aad9ac227a3d5dec24dd0515f262299d81a4da283112dfb0cdf42e0b5e379750",
+    "local_sha256": "aad9ac227a3d5dec24dd0515f262299d81a4da283112dfb0cdf42e0b5e379750",
+    "available": true
+  },
+  {
+    "path": "/lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts",
+    "expected": "94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1",
+    "local_sha256": "94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1",
+    "available": true
+  },
+  {
+    "path": "/lustre/home/yonghoon/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56t.sh",
+    "expected": "c00746e68b8420b45d41ec2a6a20dc72161f9974cc6a30a403b994991e24146f",
+    "local_sha256": "c00746e68b8420b45d41ec2a6a20dc72161f9974cc6a30a403b994991e24146f",
+    "available": true
+  },
+  {
+    "path": "/lustre/home/yonghoon/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_settling_20001.bin",
+    "expected": "aa833368651d9bf811c7b39331149ca939bfedf1bbe0511e2d66bf329fde15a8",
+    "local_sha256": null,
+    "available": false
+  }
+]

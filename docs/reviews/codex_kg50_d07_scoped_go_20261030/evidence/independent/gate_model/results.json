@@ -1,0 +1,35 @@
+[
+  {
+    "case": "baseline",
+    "same_call_receipt": true,
+    "same_call_files": true,
+    "gate_allows_submit_MODEL_ONLY": true,
+    "reviewed_receipt_matches": true,
+    "manual_ack_recorded": false,
+    "model_expected": true,
+    "pass": true,
+    "actual_scheduler_calls": 0
+  },
+  {
+    "case": "changed_after_trial",
+    "same_call_receipt": true,
+    "same_call_files": false,
+    "gate_allows_submit_MODEL_ONLY": false,
+    "reviewed_receipt_matches": true,
+    "manual_ack_recorded": false,
+    "model_expected": false,
+    "pass": true,
+    "actual_scheduler_calls": 0
+  },
+  {
+    "case": "new_call_unreviewed_duration",
+    "same_call_receipt": true,
+    "same_call_files": true,
+    "gate_allows_submit_MODEL_ONLY": true,
+    "reviewed_receipt_matches": false,
+    "manual_ack_recorded": false,
+    "model_expected": true,
+    "pass": true,
+    "actual_scheduler_calls": 0
+  }
+]

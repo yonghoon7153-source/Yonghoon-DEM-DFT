@@ -1,0 +1,328 @@
+[
+  {
+    "name": "remote_blob:scripts/resume_ckpt.sh",
+    "actual": "e2f85b3a8e601c18f1f7228f047c8b2eb2248d83",
+    "expected": "e2f85b3a8e601c18f1f7228f047c8b2eb2248d83",
+    "pass": true
+  },
+  {
+    "name": "remote_blob:docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/input_kg50_d07_b50.liggghts",
+    "actual": "a9121f17e7367c36c6c371bcc58c1c32e0c78192",
+    "expected": "a9121f17e7367c36c6c371bcc58c1c32e0c78192",
+    "pass": true
+  },
+  {
+    "name": "remote_blob:docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/input_kg50_d07_b50_insert.liggghts",
+    "actual": "eb5fa79a154452a21784e18d7875014d77b1596b",
+    "expected": "eb5fa79a154452a21784e18d7875014d77b1596b",
+    "pass": true
+  },
+  {
+    "name": "remote_blob:docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/run_kg50_d07_b50.sh",
+    "actual": "f029b589b7a87cb865a051d6ecf8265b9ae70ed1",
+    "expected": "f029b589b7a87cb865a051d6ecf8265b9ae70ed1",
+    "pass": true
+  },
+  {
+    "name": "remote_blob:docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/run_kg50_d07_b50_insert.sh",
+    "actual": "6340b07f1f05db6cda319dadc83441f25a4911da",
+    "expected": "6340b07f1f05db6cda319dadc83441f25a4911da",
+    "pass": true
+  },
+  {
+    "name": "remote_blob:docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/input_kg50_d2_b50.liggghts",
+    "actual": "b9f074b433ce330b622b1dea2e6c5f730a5c247e",
+    "expected": "b9f074b433ce330b622b1dea2e6c5f730a5c247e",
+    "pass": true
+  },
+  {
+    "name": "remote_blob:docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/input_kg50_d2_b50_r4.liggghts",
+    "actual": "3ae532e0d920061c15fdb12566a24979c14133f9",
+    "expected": "3ae532e0d920061c15fdb12566a24979c14133f9",
+    "pass": true
+  },
+  {
+    "name": "remote_blob:docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/input_kg50_d2_b50_r4t.liggghts",
+    "actual": "81cfd052003ee2acd6e49d8dac5c53aca884492a",
+    "expected": "81cfd052003ee2acd6e49d8dac5c53aca884492a",
+    "pass": true
+  },
+  {
+    "name": "remote_blob:docs/resume_ckpt_procedure_20260927.md",
+    "actual": "c6d9c1764d9d2cd9def1f9cf6f0fab24002b7cdc",
+    "expected": "c6d9c1764d9d2cd9def1f9cf6f0fab24002b7cdc",
+    "pass": true
+  },
+  {
+    "name": "remote_blob:docs/50kg/kg50_resume_fixrecheck_plan_20261030.md",
+    "actual": "421723cfb6a605d55d024e3427142d445923a443",
+    "expected": "421723cfb6a605d55d024e3427142d445923a443",
+    "pass": true
+  },
+  {
+    "name": "remote_blob:docs/50kg/kg50_q5_dt_damping_registration_draft_20261027.md",
+    "actual": "de73d5e55118eaec7d0e5e00e891bd3a84ef8368",
+    "expected": "de73d5e55118eaec7d0e5e00e891bd3a84ef8368",
+    "pass": true
+  },
+  {
+    "name": "remote_blob:docs/reviews/codex_kg50_resume_fix_recheck_20261030/codex_review_kg50_resume_fix_recheck_20261030.md",
+    "actual": "349de25ff472ab98a061e77402fa46b6636be362",
+    "expected": "349de25ff472ab98a061e77402fa46b6636be362",
+    "pass": true
+  },
+  {
+    "name": "remote_blob:docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/PREATTACK_INT.md",
+    "actual": "60b8322d91c7276779cf45c2e82d197bd2538bac",
+    "expected": "60b8322d91c7276779cf45c2e82d197bd2538bac",
+    "pass": true
+  },
+  {
+    "name": "remote_blob:docs/reviews/kg50rf_fix_evidence_20261030/F01/r2/README.md",
+    "actual": "cfcdbc0fc3dfe527e3d0301172aa4eb284398067",
+    "expected": "cfcdbc0fc3dfe527e3d0301172aa4eb284398067",
+    "pass": true
+  },
+  {
+    "name": "remote_blob:docs/reviews/kg50rf_fix_evidence_20261030/F02/README.md",
+    "actual": "92cbb2e3c1dae26d9beea45d534dcb3c8c976f9d",
+    "expected": "92cbb2e3c1dae26d9beea45d534dcb3c8c976f9d",
+    "pass": true
+  },
+  {
+    "name": "zip manifest",
+    "actual": 22,
+    "expected": 22,
+    "pass": true
+  },
+  {
+    "name": "actual_D07_static",
+    "actual": 0,
+    "expected": 0,
+    "pass": true
+  },
+  {
+    "name": "trial_cutter_rc",
+    "actual": 0,
+    "expected": 0,
+    "pass": true
+  },
+  {
+    "name": "trial_exact_bytes",
+    "actual": "94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1",
+    "expected": "94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1",
+    "pass": true
+  },
+  {
+    "name": "gravity_res_only_rejected",
+    "actual": true,
+    "expected": true,
+    "pass": true
+  },
+  {
+    "name": "dt_res_only_rejected",
+    "actual": true,
+    "expected": true,
+    "pass": true
+  },
+  {
+    "name": "duration_res_only_rejected",
+    "actual": true,
+    "expected": true,
+    "pass": true
+  },
+  {
+    "name": "new_call_duration_change_static_pass",
+    "actual": 0,
+    "expected": 0,
+    "pass": true
+  },
+  {
+    "name": "new_call_trial_unchanged",
+    "actual": "94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1",
+    "expected": "94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1",
+    "pass": true
+  },
+  {
+    "name": "tail_commands_equal",
+    "actual": 64,
+    "expected": 64,
+    "pass": false
+  },
+  {
+    "name": "tail_command_count",
+    "actual": 64,
+    "expected": 64,
+    "pass": true
+  },
+  {
+    "name": "template:pts1",
+    "actual": [
+      "fix pts1 all particletemplate/sphere 15500011 atom_type 1 density constant 4850 radius constant ${r_AM_P}"
+    ],
+    "expected": [
+      "fix pts1 all particletemplate/sphere 15500011 atom_type 1 density constant 4850 radius constant ${r_AM_P}"
+    ],
+    "pass": true
+  },
+  {
+    "name": "template:pts2",
+    "actual": [
+      "fix pts2 all particletemplate/sphere 15600001 atom_type 2 density constant 4850 radius constant ${r_AM_S}"
+    ],
+    "expected": [
+      "fix pts2 all particletemplate/sphere 15600001 atom_type 2 density constant 4850 radius constant ${r_AM_S}"
+    ],
+    "pass": true
+  },
+  {
+    "name": "template:pts3",
+    "actual": [
+      "fix pts3 all particletemplate/sphere 15700019 atom_type 3 density constant 1640 radius constant ${r_SE}"
+    ],
+    "expected": [
+      "fix pts3 all particletemplate/sphere 15700019 atom_type 3 density constant 1640 radius constant ${r_SE}"
+    ],
+    "pass": true
+  },
+  {
+    "name": "template:pdd_mix",
+    "actual": [
+      "fix pdd_mix all particledistribution/discrete 15800017 2 pts1 0.85 pts3 0.15"
+    ],
+    "expected": [
+      "fix pdd_mix all particledistribution/discrete 15800017 2 pts1 0.85 pts3 0.15"
+    ],
+    "pass": true
+  },
+  {
+    "name": "insert_prefix_166",
+    "actual": "97980bb89f0135e97cee4e1b36120b63c95e44d174b82a5195696ec95f1bf9a1",
+    "expected": "97980bb89f0135e97cee4e1b36120b63c95e44d174b82a5195696ec95f1bf9a1",
+    "pass": true
+  },
+  {
+    "name": "receipt:input_kg50_d07_b50_r56.liggghts",
+    "actual": "8e129f421a8491975f83527f79c8418318b2af30baeedd7440cfcede2d45c5e5",
+    "expected": "8e129f421a8491975f83527f79c8418318b2af30baeedd7440cfcede2d45c5e5",
+    "pass": true
+  },
+  {
+    "name": "receipt:run_kg50_d07_b50_r56.sh",
+    "actual": "aad9ac227a3d5dec24dd0515f262299d81a4da283112dfb0cdf42e0b5e379750",
+    "expected": "aad9ac227a3d5dec24dd0515f262299d81a4da283112dfb0cdf42e0b5e379750",
+    "pass": true
+  },
+  {
+    "name": "receipt:input_kg50_d07_b50_r56t.liggghts",
+    "actual": "94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1",
+    "expected": "94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1",
+    "pass": true
+  },
+  {
+    "name": "receipt:run_kg50_d07_b50_r56t.sh",
+    "actual": "c00746e68b8420b45d41ec2a6a20dc72161f9974cc6a30a403b994991e24146f",
+    "expected": "c00746e68b8420b45d41ec2a6a20dc72161f9974cc6a30a403b994991e24146f",
+    "pass": true
+  },
+  {
+    "name": "trial_thermo_steps",
+    "actual": [
+      20001,
+      21000,
+      22000,
+      22001
+    ],
+    "expected": [
+      20001,
+      21000,
+      22000,
+      22001
+    ],
+    "pass": true
+  },
+  {
+    "name": "trial_errors",
+    "actual": 0,
+    "expected": 0,
+    "pass": true
+  },
+  {
+    "name": "trial_np_grid",
+    "actual": [
+      "8",
+      "7",
+      "1"
+    ],
+    "expected": [
+      "8",
+      "7",
+      "1"
+    ],
+    "pass": true
+  },
+  {
+    "name": "loop_evidence",
+    "actual": [
+      "211.783",
+      "56",
+      "2000",
+      "488291"
+    ],
+    "expected": [
+      "211.783",
+      "56",
+      "2000",
+      "488291"
+    ],
+    "pass": true
+  },
+  {
+    "name": "identity_line_count",
+    "actual": 1,
+    "expected": 1,
+    "pass": true
+  },
+  {
+    "name": "trial_deck_identity",
+    "actual": "94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1",
+    "expected": "94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1",
+    "pass": true
+  },
+  {
+    "name": "render_exact:run_kg50_d07_b50_r56.sh",
+    "actual": "aad9ac227a3d5dec24dd0515f262299d81a4da283112dfb0cdf42e0b5e379750",
+    "expected": "aad9ac227a3d5dec24dd0515f262299d81a4da283112dfb0cdf42e0b5e379750",
+    "pass": true
+  },
+  {
+    "name": "render_exact:run_kg50_d07_b50_r56t.sh",
+    "actual": "c00746e68b8420b45d41ec2a6a20dc72161f9974cc6a30a403b994991e24146f",
+    "expected": "c00746e68b8420b45d41ec2a6a20dc72161f9974cc6a30a403b994991e24146f",
+    "pass": true
+  },
+  {
+    "name": "author_compare_rc",
+    "actual": 0,
+    "expected": 0,
+    "pass": true
+  },
+  {
+    "name": "author_compare:diff_D07.txt",
+    "actual": "1ff2025c4793f1c3f9d5168565ef0cd4ba9b7f88a40d3804090a98a9decb883d",
+    "expected": "3e118703879e81788c5021b55840cfcd3fec4cd4320af2aa3758a3d700a815f2",
+    "pass": false
+  },
+  {
+    "name": "author_compare:diff_D2.txt",
+    "actual": "3330655b23a69665cb10d81f2f447a1b7213c7c5deb99ede273f38aa920accaa",
+    "expected": "d9fac801b0ceb35b378c176b4a00d9da55aa091ee9586c7a09efcc98622bba75",
+    "pass": false
+  },
+  {
+    "name": "author_compare:transform_compare.json",
+    "actual": "b53c270b524be3968e4da1f44cbe9ff1d21cf21b6e089fe6404d54d4c478b798",
+    "expected": "aaa1ed9a7ffbfcffb64d17bf5800fe024932eb2a0e6c20da16da06a6de726641",
+    "pass": false
+  }
+]

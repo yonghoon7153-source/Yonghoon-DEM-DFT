@@ -1,0 +1,4 @@
+D2 diff lines 40 (removed 25 · added 15 = from original 7 + new 8 )
+D07 diff lines 40 (removed 25 · added 15 = from original 7 + new 8 )
+new lines identical after tag/suffix normalization: True
+removed lines identical after number masking: True

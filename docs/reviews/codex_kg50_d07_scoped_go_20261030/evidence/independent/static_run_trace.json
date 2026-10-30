@@ -1,0 +1,49 @@
+{
+  "warning": "static straight-line first visits, NOT a simulation",
+  "runs": [
+    {
+      "line": 157,
+      "command": "run 180000",
+      "start": 20001,
+      "end": 200001,
+      "note": "first visit only; pressure loop not evaluated"
+    },
+    {
+      "line": 164,
+      "command": "run 1",
+      "start": 200001,
+      "end": 200002,
+      "note": "first visit only; pressure loop not evaluated"
+    },
+    {
+      "line": 203,
+      "command": "run 200000",
+      "start": 200002,
+      "end": 400002,
+      "note": "first visit only; pressure loop not evaluated"
+    },
+    {
+      "line": 215,
+      "command": "run 5000",
+      "start": 400002,
+      "end": 405002,
+      "note": "first visit only; pressure loop not evaluated"
+    },
+    {
+      "line": 233,
+      "command": "run 100000",
+      "start": 405002,
+      "end": 505002,
+      "note": "first visit only; pressure loop not evaluated"
+    },
+    {
+      "line": 243,
+      "command": "run 0",
+      "start": 505002,
+      "end": 505002,
+      "note": "first visit only; pressure loop not evaluated"
+    }
+  ],
+  "checkpoint_line": 160,
+  "terminal_after_checkpoint": false
+}

@@ -1,0 +1,14 @@
+{
+  "problem_count": 4,
+  "problems": [
+    "재개 덱 준비 구간 상태 명령이 본 덱 체크포인트 앞에 글자 그대로 없음 (10-28 사전 공격 A · LIGGGHTS 는 ${x} 를 그 자리에서 치환한다 — 끝 상태만 같아서는 안 된다): [variable dt equal 2.0e-6]",
+    "준비 구간 그 자리 치환 값이 본 덱과 다름 (10-30 KG50R-F01 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): [timestep ${dt}] 의 ${dt} — 본 덱 (14 번째 명령 자리) ⟦1.0e-6⟧ ↔ 재개 덱 (14 번째 명령 자리) ⟦2.0e-6⟧",
+    "재개 지점 timestep 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [timestep ⟦1.0e-6⟧] ↔ 재개 덱 [timestep ⟦2.0e-6⟧]",
+    "재개 지점 variable dt 다름: 본 덱 [variable dt equal 1.0e-6] ↔ 재개 덱 [variable dt equal 2.0e-6]"
+  ],
+  "notes": [
+    "남은 step 같음: 끝 200001",
+    "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)",
+    "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 46 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "thermo": [
+    {
+      "line": 88,
+      "step": 20001,
+      "atoms": 488291,
+      "KE": 2.2522724,
+      "CPU": 0.0
+    },
+    {
+      "line": 89,
+      "step": 21000,
+      "atoms": 488291,
+      "KE": 2.3879436,
+      "CPU": 103.72821
+    },
+    {
+      "line": 90,
+      "step": 22000,
+      "atoms": 488291,
+      "KE": 2.5217515,
+      "CPU": 211.68392
+    },
+    {
+      "line": 91,
+      "step": 22001,
+      "atoms": 488291,
+      "KE": 2.5218725,
+      "CPU": 211.783
+    }
+  ],
+  "loop": [
+    "211.783",
+    "56",
+    "2000",
+    "488291"
+  ],
+  "identity": [
+    "LMP_IDENTITY (10-30 KG50R-F02): lmp_mpi=/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi sha256=ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f deck=/lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts sha256=94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1 checkpoint=/lustre/home/yonghoon/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_settling_20001.bin sha256=aa833368651d9bf811c7b39331149ca939bfedf1bbe0511e2d66bf329fde15a8"
+  ],
+  "original_log_in_initial_bundle": false,
+  "sacct_raw_in_bundle": false
+}

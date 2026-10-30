@@ -1,0 +1,13 @@
+{
+  "problem_count": 2,
+  "problems": [
+    "재개 덱 준비 구간 상태 명령이 본 덱 체크포인트 앞에 글자 그대로 없음 (10-28 사전 공격 A · LIGGGHTS 는 ${x} 를 그 자리에서 치환한다 — 끝 상태만 같아서는 안 된다): [fix gravi all gravity 196.2 vector 0.0 0.0 -1.0]",
+    "재개 지점 fix gravi 다름: 본 덱 [fix gravi all gravity 98.1 vector 0.0 0.0 -1.0] ↔ 재개 덱 [fix gravi all gravity 196.2 vector 0.0 0.0 -1.0]"
+  ],
+  "notes": [
+    "남은 step 같음: 끝 200001",
+    "첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)",
+    "그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값",
+    "재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 46 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): region reg_box · region reg_mix"
+  ]
+}

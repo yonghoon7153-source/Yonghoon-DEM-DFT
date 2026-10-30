@@ -1,0 +1,41 @@
+[
+  {
+    "case": "baseline",
+    "returncode": 3221225794,
+    "fake_submit_calls": 0,
+    "expected": 1,
+    "pass": false,
+    "reviewed_receipt": "3377a5c53d1ee3b230390c2f931eb1c5733374eca905805d00b02c50573050dc",
+    "new_call_receipt": "3377a5c53d1ee3b230390c2f931eb1c5733374eca905805d00b02c50573050dc",
+    "same_as_reviewed": true,
+    "human_ack": false,
+    "trial_deck_same_as_zip": true,
+    "report": ""
+  },
+  {
+    "case": "changed_after_trial",
+    "returncode": 3221225794,
+    "fake_submit_calls": 0,
+    "expected": 0,
+    "pass": false,
+    "reviewed_receipt": "58d39cd2728121fcc702dc36e88578b4002ca5ed191434525a1eac6ba5900d14",
+    "new_call_receipt": "58d39cd2728121fcc702dc36e88578b4002ca5ed191434525a1eac6ba5900d14",
+    "same_as_reviewed": true,
+    "human_ack": false,
+    "trial_deck_same_as_zip": true,
+    "report": ""
+  },
+  {
+    "case": "new_call_unreviewed_duration",
+    "returncode": 3221225794,
+    "fake_submit_calls": 0,
+    "expected": 1,
+    "pass": false,
+    "reviewed_receipt": "7b845f6574142d86903b646b1d0ac7ab6866f43ec96ed1642d34a5e929860bcc",
+    "new_call_receipt": "819b6d01d3e54f88d45a90beda5897275a6797b8d908b393fd76f4befb8fba41",
+    "same_as_reviewed": false,
+    "human_ack": false,
+    "trial_deck_same_as_zip": true,
+    "report": ""
+  }
+]

@@ -1,0 +1,49 @@
+--- input_kg50_d07_b50.liggghts
++++ input_kg50_d07_b50_r56.liggghts
+@@ -0,0 +1,4 @@
++# kg50_d07_b50 RESTART (r56) — settling 체크포인트에서 이어받음
++#   read_restart : restart_kg50_d07_b50/restart_settling_20001.bin
++#   step         : 20001
++
+@@ -49,2 +53,6 @@
+-region reg_box block 0.0 0.05 0.0 0.05 -0.01 1.0 units box
+-create_box      3 reg_box
++
++read_restart    restart_kg50_d07_b50/restart_settling_20001.bin
++fix pts1 all particletemplate/sphere 15500011 atom_type 1 density constant 4850 radius constant ${r_AM_P}
++fix pts2 all particletemplate/sphere 15600001 atom_type 2 density constant 4850 radius constant ${r_AM_S}   # (이 케이스 질량분율 0 — 분포에서 제외)
++fix pts3 all particletemplate/sphere 15700019 atom_type 3 density constant 1640 radius constant ${r_SE}
++fix pdd_mix all particledistribution/discrete 15800017 2 pts1 0.85 pts3 0.15
+@@ -108,19 +116 @@
+-fix pts1 all particletemplate/sphere 15500011 atom_type 1 density constant 4850 radius constant ${r_AM_P}
+-fix pts2 all particletemplate/sphere 15600001 atom_type 2 density constant 4850 radius constant ${r_AM_S}   # (이 케이스 질량분율 0 — 분포에서 제외)
+-fix pts3 all particletemplate/sphere 15700019 atom_type 3 density constant 1640 radius constant ${r_SE}
+-
+-# 질량비: AM_P:0.85, SE:0.15
+-# AM:SE = 81.6:18.4, P:S = 7:3
+-fix pdd_mix all particledistribution/discrete 15800017 2 pts1 0.85 pts3 0.15
+-
+-# --- 7. Particle Insertion ---
+-region reg_mix block 0.0 0.05 0.0 0.05 0.005 0.322700 units box
+-
+-print "====== INSERTING PARTICLES (KG50_D07_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 0.7um, 6.5mAh/cm2, 50x50um) ====="
+-fix ins_mix all insert/pack seed 15900013 distributiontemplate pdd_mix &
+-    maxattempt 3000 insert_every once overlapcheck yes all_in no &
+-    vel constant 0.0 0.0 -0.5 &
+-    region reg_mix &
+-    volumefraction_region 0.321
+-run 1
+-unfix ins_mix
++
+@@ -153 +143 @@
+-shell mkdir post_kg50_d07_b50
++shell mkdir -p post_kg50_d07_b50
+@@ -164 +154 @@
+-shell mkdir restart_kg50_d07_b50
++shell mkdir -p restart_kg50_d07_b50
+@@ -167 +157 @@
+-run 200000
++run 180000   # 원래 200000 − 이미 20001
+@@ -170 +160 @@
+-write_restart restart_kg50_d07_b50/restart_after_settling.bin
++write_restart   restart_kg50_d07_b50/restart_after_settling.bin

@@ -1,0 +1,42 @@
+{
+  "original_sha256": "b1b298bbd54f77a1adf47745e6b1eed14ab2a35bbb5aea9c473b6e9ff46657f5",
+  "pairs": [
+    {
+      "step": 20001,
+      "original_line": 235,
+      "trial_line": 88,
+      "atoms": 488291,
+      "original_KE": 2.2522724,
+      "trial_KE": 2.2522724,
+      "relative_difference": 0.0
+    },
+    {
+      "step": 21000,
+      "original_line": 236,
+      "trial_line": 89,
+      "atoms": 488291,
+      "original_KE": 2.3879436,
+      "trial_KE": 2.3879436,
+      "relative_difference": 0.0
+    },
+    {
+      "step": 22000,
+      "original_line": 237,
+      "trial_line": 90,
+      "atoms": 488291,
+      "original_KE": 2.5217515,
+      "trial_KE": 2.5217515,
+      "relative_difference": 0.0
+    }
+  ],
+  "comparison_steps": [
+    21000,
+    22000
+  ],
+  "G1": true,
+  "G3": true,
+  "also_compared_22000_KE": true,
+  "KE_unit": "J under LIGGGHTS units si, simulation-scaled energy, not real-pellet energy",
+  "server_original_copy_cmp_verified": false,
+  "scope": "user-provided raw log; server-copy identity beyond attached bytes not attested by this review"
+}

@@ -1,0 +1,162 @@
+{
+ "orig": {
+  "path": "kg50_d07_b50_ins1_log.liggghts",
+  "sha256": "b1b298bbd54f77a1adf47745e6b1eed14ab2a35bbb5aea9c473b6e9ff46657f5",
+  "bytes": 13475,
+  "lines": 261,
+  "first_line": "LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by yonghoon, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)",
+  "n_thermo_rows": 28,
+  "last_thermo_row": {
+   "line": 239,
+   "step": "23001"
+  },
+  "n_ERROR_lines": 0,
+  "phase_markers": [
+   [
+    25,
+    "# ============================================================"
+   ],
+   [
+    28,
+    "# ============================================================"
+   ],
+   [
+    108,
+    "print \"====== INSERTING PARTICLES (KG50_D07_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 0.7um"
+   ],
+   [
+    109,
+    "====== INSERTING PARTICLES (KG50_D07_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 0.7um, 6.5mA"
+   ],
+   [
+    146,
+    "print \"====== INSERTED ${n_ins} / 488291 (floor 483408 = 99%) ======\""
+   ],
+   [
+    147,
+    "====== INSERTED 488291 / 488291 (floor 483408 = 99%) ======"
+   ],
+   [
+    154,
+    "print \"====== AM ${n_am_ins} / 1481 (gate 1474-1488) ======\""
+   ],
+   [
+    155,
+    "====== AM 1481 / 1481 (gate 1474-1488) ======"
+   ],
+   [
+    162,
+    "print \"====== SE ${n_se_ins} / 486810 (gate 484376-489244) ======\""
+   ],
+   [
+    163,
+    "====== SE 486810 / 486810 (gate 484376-489244) ======"
+   ],
+   [
+    172,
+    "print \"====== PHASE 1: SETTLING ======\""
+   ],
+   [
+    173,
+    "====== PHASE 1: SETTLING ======"
+   ]
+  ]
+ },
+ "test": {
+  "path": "output_kg50_d07_b50_r56t_333858.out",
+  "sha256": "722c753d79452455f5470e0e31fab4687a40280cee2a3faab3a01b3716215f58",
+  "bytes": 3838,
+  "lines": 112
+ },
+ "deck": {
+  "path": "input_kg50_d07_b50.liggghts",
+  "sha256": "2555640c7792df6954006392d05b8fd83f09687bd49e315ae0d8ffaa9ba65ab2",
+  "checked_lines": "1-166"
+ },
+ "orig_20001": [
+  {
+   "line": 208,
+   "Atoms": "488291",
+   "KinEng": "2.2522724",
+   "cols": [
+    "Step",
+    "Atoms",
+    "KinEng",
+    "CPU"
+   ]
+  },
+  {
+   "line": 235,
+   "Atoms": "488291",
+   "KinEng": "2.2522724",
+   "cols": [
+    "Step",
+    "Atoms",
+    "KinEng",
+    "CPU"
+   ]
+  }
+ ],
+ "test_20001": [
+  {
+   "line": 88,
+   "Atoms": "488291",
+   "KinEng": "2.2522724",
+   "cols": [
+    "Step",
+    "Atoms",
+    "KinEng",
+    "CPU"
+   ]
+  }
+ ],
+ "orig_21000": [
+  {
+   "line": 236,
+   "Atoms": "488291",
+   "KinEng": "2.3879436",
+   "cols": [
+    "Step",
+    "Atoms",
+    "KinEng",
+    "CPU"
+   ]
+  }
+ ],
+ "test_21000": [
+  {
+   "line": 89,
+   "Atoms": "488291",
+   "KinEng": "2.3879436",
+   "cols": [
+    "Step",
+    "Atoms",
+    "KinEng",
+    "CPU"
+   ]
+  }
+ ],
+ "G": {
+  "G1_test_setup_KE": "2.2522724",
+  "G1_orig_KE_rows": [
+   "2.2522724",
+   "2.2522724"
+  ],
+  "G1_rel_vs_each_orig_row": [
+   0.0,
+   0.0
+  ],
+  "G1_atoms_same": true,
+  "G3_test_KE": "2.3879436",
+  "G3_orig_KE": "2.3879436",
+  "G3_rel": 0.0,
+  "G3_atoms_same": true
+ },
+ "deck_echo": {
+  "deck_commands_checked": 111,
+  "found_in_order": 111,
+  "missing": [],
+  "first_hit_log_line": 2,
+  "last_hit_log_line": 180
+ }
+}
