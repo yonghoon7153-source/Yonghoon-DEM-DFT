@@ -1,0 +1,34 @@
+{
+  "D0.7": {
+    "r_SE_um": 0.35,
+    "r_AM_um": 3.0,
+    "dt": 1e-06,
+    "plate_speed_sim": 0.01,
+    "planned_AM": 1481,
+    "planned_SE": 486810
+  },
+  "D1": {
+    "r_SE_um": 0.5,
+    "r_AM_um": 3.0,
+    "dt": 1e-06,
+    "plate_speed_sim": 0.01,
+    "planned_AM": 1481,
+    "planned_SE": 166976
+  },
+  "D2": {
+    "r_SE_um": 1.0,
+    "r_AM_um": 3.0,
+    "dt": 1e-06,
+    "plate_speed_sim": 0.01,
+    "planned_AM": 1481,
+    "planned_SE": 20872
+  },
+  "D3": {
+    "r_SE_um": 1.5,
+    "r_AM_um": 3.0,
+    "dt": 1e-06,
+    "plate_speed_sim": 0.01,
+    "planned_AM": 1481,
+    "planned_SE": 6184
+  }
+}

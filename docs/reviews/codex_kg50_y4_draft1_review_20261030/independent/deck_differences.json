@@ -1,0 +1,224 @@
+{
+  "D0.7": [
+    {
+      "D2_line": 42,
+      "candidate_line": 42,
+      "D2": "variable r_SE equal 1e-3",
+      "candidate": "variable r_SE equal 0.35e-3"
+    },
+    {
+      "D2_line": 108,
+      "candidate_line": 108,
+      "D2": "fix pts1 all particletemplate/sphere 16500007 atom_type 1 density constant 4850 radius constant ${r_AM_P}",
+      "candidate": "fix pts1 all particletemplate/sphere 15500011 atom_type 1 density constant 4850 radius constant ${r_AM_P}"
+    },
+    {
+      "D2_line": 109,
+      "candidate_line": 109,
+      "D2": "fix pts2 all particletemplate/sphere 16600009 atom_type 2 density constant 4850 radius constant ${r_AM_S}",
+      "candidate": "fix pts2 all particletemplate/sphere 15600001 atom_type 2 density constant 4850 radius constant ${r_AM_S}"
+    },
+    {
+      "D2_line": 110,
+      "candidate_line": 110,
+      "D2": "fix pts3 all particletemplate/sphere 16700003 atom_type 3 density constant 1640 radius constant ${r_SE}",
+      "candidate": "fix pts3 all particletemplate/sphere 15700019 atom_type 3 density constant 1640 radius constant ${r_SE}"
+    },
+    {
+      "D2_line": 114,
+      "candidate_line": 114,
+      "D2": "fix pdd_mix all particledistribution/discrete 16800023 2 pts1 0.85 pts3 0.15",
+      "candidate": "fix pdd_mix all particledistribution/discrete 15800017 2 pts1 0.85 pts3 0.15"
+    },
+    {
+      "D2_line": 119,
+      "candidate_line": 119,
+      "D2": "print \"====== INSERTING PARTICLES (KG50_D2_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 2um, 6.5mAh/cm2, 50x50um) =====\"",
+      "candidate": "print \"====== INSERTING PARTICLES (KG50_D07_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 0.7um, 6.5mAh/cm2, 50x50um) =====\""
+    },
+    {
+      "D2_line": 120,
+      "candidate_line": 120,
+      "D2": "fix ins_mix all insert/pack seed 16900021 distributiontemplate pdd_mix maxattempt 3000 insert_every once overlapcheck yes all_in no vel constant 0.0 0.0 -0.5 region reg_mix volumefraction_region 0.321",
+      "candidate": "fix ins_mix all insert/pack seed 15900013 distributiontemplate pdd_mix maxattempt 3000 insert_every once overlapcheck yes all_in no vel constant 0.0 0.0 -0.5 region reg_mix volumefraction_region 0.321"
+    },
+    {
+      "D2_line": 131,
+      "candidate_line": 131,
+      "D2": "print \"====== INSERTED ${n_ins} / 22353 (floor 22129 = 99%) ======\"",
+      "candidate": "print \"====== INSERTED ${n_ins} / 488291 (floor 483408 = 99%) ======\""
+    },
+    {
+      "D2_line": 132,
+      "candidate_line": 132,
+      "D2": "if \"${n_ins} < 22129\" then \"print 'FATAL: partial insertion - bed composition differs (PS-01). aborting.'\" \"quit 1\"",
+      "candidate": "if \"${n_ins} < 483408\" then \"print 'FATAL: partial insertion - bed composition differs (PS-01). aborting.'\" \"quit 1\""
+    },
+    {
+      "D2_line": 147,
+      "candidate_line": 147,
+      "D2": "print \"====== SE ${n_se_ins} / 20872 (gate 20768-20976) ======\"",
+      "candidate": "print \"====== SE ${n_se_ins} / 486810 (gate 484376-489244) ======\""
+    },
+    {
+      "D2_line": 148,
+      "candidate_line": 148,
+      "D2": "if \"${n_se_ins} < 20768 || ${n_se_ins} > 20976\" then \"print 'FATAL: SE count off plan (SELF-70) - insert at NP 1. aborting.'\" \"quit 1\"",
+      "candidate": "if \"${n_se_ins} < 484376 || ${n_se_ins} > 489244\" then \"print 'FATAL: SE count off plan (SELF-70) - insert at NP 1. aborting.'\" \"quit 1\""
+    },
+    {
+      "D2_line": 257,
+      "candidate_line": 257,
+      "D2": "print \"====== Simulation Finished! (KG50_D2_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 2um, 6.5mAh/cm2, 50x50um) ======\"",
+      "candidate": "print \"====== Simulation Finished! (KG50_D07_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 0.7um, 6.5mAh/cm2, 50x50um) ======\""
+    }
+  ],
+  "D1": [
+    {
+      "D2_line": 42,
+      "candidate_line": 42,
+      "D2": "variable r_SE equal 1e-3",
+      "candidate": "variable r_SE equal 0.5e-3"
+    },
+    {
+      "D2_line": 108,
+      "candidate_line": 108,
+      "D2": "fix pts1 all particletemplate/sphere 16500007 atom_type 1 density constant 4850 radius constant ${r_AM_P}",
+      "candidate": "fix pts1 all particletemplate/sphere 16000057 atom_type 1 density constant 4850 radius constant ${r_AM_P}"
+    },
+    {
+      "D2_line": 109,
+      "candidate_line": 109,
+      "D2": "fix pts2 all particletemplate/sphere 16600009 atom_type 2 density constant 4850 radius constant ${r_AM_S}",
+      "candidate": "fix pts2 all particletemplate/sphere 16100027 atom_type 2 density constant 4850 radius constant ${r_AM_S}"
+    },
+    {
+      "D2_line": 110,
+      "candidate_line": 110,
+      "D2": "fix pts3 all particletemplate/sphere 16700003 atom_type 3 density constant 1640 radius constant ${r_SE}",
+      "candidate": "fix pts3 all particletemplate/sphere 16200013 atom_type 3 density constant 1640 radius constant ${r_SE}"
+    },
+    {
+      "D2_line": 114,
+      "candidate_line": 114,
+      "D2": "fix pdd_mix all particledistribution/discrete 16800023 2 pts1 0.85 pts3 0.15",
+      "candidate": "fix pdd_mix all particledistribution/discrete 16300003 2 pts1 0.85 pts3 0.15"
+    },
+    {
+      "D2_line": 119,
+      "candidate_line": 119,
+      "D2": "print \"====== INSERTING PARTICLES (KG50_D2_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 2um, 6.5mAh/cm2, 50x50um) =====\"",
+      "candidate": "print \"====== INSERTING PARTICLES (KG50_D1_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 1um, 6.5mAh/cm2, 50x50um) =====\""
+    },
+    {
+      "D2_line": 120,
+      "candidate_line": 120,
+      "D2": "fix ins_mix all insert/pack seed 16900021 distributiontemplate pdd_mix maxattempt 3000 insert_every once overlapcheck yes all_in no vel constant 0.0 0.0 -0.5 region reg_mix volumefraction_region 0.321",
+      "candidate": "fix ins_mix all insert/pack seed 16400017 distributiontemplate pdd_mix maxattempt 3000 insert_every once overlapcheck yes all_in no vel constant 0.0 0.0 -0.5 region reg_mix volumefraction_region 0.321"
+    },
+    {
+      "D2_line": 131,
+      "candidate_line": 131,
+      "D2": "print \"====== INSERTED ${n_ins} / 22353 (floor 22129 = 99%) ======\"",
+      "candidate": "print \"====== INSERTED ${n_ins} / 168457 (floor 166772 = 99%) ======\""
+    },
+    {
+      "D2_line": 132,
+      "candidate_line": 132,
+      "D2": "if \"${n_ins} < 22129\" then \"print 'FATAL: partial insertion - bed composition differs (PS-01). aborting.'\" \"quit 1\"",
+      "candidate": "if \"${n_ins} < 166772\" then \"print 'FATAL: partial insertion - bed composition differs (PS-01). aborting.'\" \"quit 1\""
+    },
+    {
+      "D2_line": 147,
+      "candidate_line": 147,
+      "D2": "print \"====== SE ${n_se_ins} / 20872 (gate 20768-20976) ======\"",
+      "candidate": "print \"====== SE ${n_se_ins} / 166976 (gate 166142-167810) ======\""
+    },
+    {
+      "D2_line": 148,
+      "candidate_line": 148,
+      "D2": "if \"${n_se_ins} < 20768 || ${n_se_ins} > 20976\" then \"print 'FATAL: SE count off plan (SELF-70) - insert at NP 1. aborting.'\" \"quit 1\"",
+      "candidate": "if \"${n_se_ins} < 166142 || ${n_se_ins} > 167810\" then \"print 'FATAL: SE count off plan (SELF-70) - insert at NP 1. aborting.'\" \"quit 1\""
+    },
+    {
+      "D2_line": 257,
+      "candidate_line": 257,
+      "D2": "print \"====== Simulation Finished! (KG50_D2_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 2um, 6.5mAh/cm2, 50x50um) ======\"",
+      "candidate": "print \"====== Simulation Finished! (KG50_D1_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 1um, 6.5mAh/cm2, 50x50um) ======\""
+    }
+  ],
+  "D3": [
+    {
+      "D2_line": 42,
+      "candidate_line": 42,
+      "D2": "variable r_SE equal 1e-3",
+      "candidate": "variable r_SE equal 1.5e-3"
+    },
+    {
+      "D2_line": 108,
+      "candidate_line": 108,
+      "D2": "fix pts1 all particletemplate/sphere 16500007 atom_type 1 density constant 4850 radius constant ${r_AM_P}",
+      "candidate": "fix pts1 all particletemplate/sphere 13000027 atom_type 1 density constant 4850 radius constant ${r_AM_P}"
+    },
+    {
+      "D2_line": 109,
+      "candidate_line": 109,
+      "D2": "fix pts2 all particletemplate/sphere 16600009 atom_type 2 density constant 4850 radius constant ${r_AM_S}",
+      "candidate": "fix pts2 all particletemplate/sphere 13100023 atom_type 2 density constant 4850 radius constant ${r_AM_S}"
+    },
+    {
+      "D2_line": 110,
+      "candidate_line": 110,
+      "D2": "fix pts3 all particletemplate/sphere 16700003 atom_type 3 density constant 1640 radius constant ${r_SE}",
+      "candidate": "fix pts3 all particletemplate/sphere 13200001 atom_type 3 density constant 1640 radius constant ${r_SE}"
+    },
+    {
+      "D2_line": 114,
+      "candidate_line": 114,
+      "D2": "fix pdd_mix all particledistribution/discrete 16800023 2 pts1 0.85 pts3 0.15",
+      "candidate": "fix pdd_mix all particledistribution/discrete 13300039 2 pts1 0.85 pts3 0.15"
+    },
+    {
+      "D2_line": 119,
+      "candidate_line": 119,
+      "D2": "print \"====== INSERTING PARTICLES (KG50_D2_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 2um, 6.5mAh/cm2, 50x50um) =====\"",
+      "candidate": "print \"====== INSERTING PARTICLES (KG50_D3_B50_S1: mono AM D6, AM:SE=85:15 wt%, SE D50 3um, 6.5mAh/cm2, 50x50um) =====\""
+    },
+    {
+      "D2_line": 120,
+      "candidate_line": 120,
+      "D2": "fix ins_mix all insert/pack seed 16900021 distributiontemplate pdd_mix maxattempt 3000 insert_every once overlapcheck yes all_in no vel constant 0.0 0.0 -0.5 region reg_mix volumefraction_region 0.321",
+      "candidate": "fix ins_mix all insert/pack seed 13400027 distributiontemplate pdd_mix maxattempt 3000 insert_every once overlapcheck yes all_in no vel constant 0.0 0.0 -0.5 region reg_mix volumefraction_region 0.321"
+    },
+    {
+      "D2_line": 131,
+      "candidate_line": 131,
+      "D2": "print \"====== INSERTED ${n_ins} / 22353 (floor 22129 = 99%) ======\"",
+      "candidate": "print \"====== INSERTED ${n_ins} / 7665 (floor 7588 = 99%) ======\""
+    },
+    {
+      "D2_line": 132,
+      "candidate_line": 132,
+      "D2": "if \"${n_ins} < 22129\" then \"print 'FATAL: partial insertion - bed composition differs (PS-01). aborting.'\" \"quit 1\"",
+      "candidate": "if \"${n_ins} < 7588\" then \"print 'FATAL: partial insertion - bed composition differs (PS-01). aborting.'\" \"quit 1\""
+    },
+    {
+      "D2_line": 147,
+      "candidate_line": 147,
+      "D2": "print \"====== SE ${n_se_ins} / 20872 (gate 20768-20976) ======\"",
+      "candidate": "print \"====== SE ${n_se_ins} / 6184 (gate 6154-6214) ======\""
+    },
+    {
+      "D2_line": 148,
+      "candidate_line": 148,
+      "D2": "if \"${n_se_ins} < 20768 || ${n_se_ins} > 20976\" then \"print 'FATAL: SE count off plan (SELF-70) - insert at NP 1. aborting.'\" \"quit 1\"",
+      "candidate": "if \"${n_se_ins} < 6154 || ${n_se_ins} > 6214\" then \"print 'FATAL: SE count off plan (SELF-70) - insert at NP 1. aborting.'\" \"quit 1\""
+    },
+    {
+      "D2_line": 257,
+      "candidate_line": 257,
+      "D2": "print \"====== Simulation Finished! (KG50_D2_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 2um, 6.5mAh/cm2, 50x50um) ======\"",
+      "candidate": "print \"====== Simulation Finished! (KG50_D3_B50_S1: mono AM D6, AM:SE=85:15 wt%, SE D50 3um, 6.5mAh/cm2, 50x50um) ======\""
+    }
+  ]
+}

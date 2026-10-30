@@ -1,0 +1,8 @@
+1쪽 출처 (빌드 때 읽음 · kg50_y4_sources.py):
+덱 — D0.7: docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/input_kg50_d07_b50.liggghts (sha256 2555640c7792…) / D1: docs/data/kg50_decks_20261027_v3_b50/kg50_d1_b50/input_kg50_d1_b50.liggghts (sha256 514afdb70561…) / D2: docs/data/kg50_decks_20261027_v3_b50/kg50_d2_b50/input_kg50_d2_b50.liggghts (sha256 f8ac9932a6cb…) / D3: docs/data/kg50_decks_20261026_v2/kg50_d3_b50_s1/input_kg50_d3_b50_s1.liggghts (sha256 7589c8ac6440…)
+끝 상태 — D2: docs/data/kg50_d2_end_20261030/kg50_d2_end_20261030_4files.tgz (sha256 ead5bed68e77…) · step 4015002 / D3: docs/data/kg50_d3_cell_verdict_20261027/kg50_d3_end_20261027.tgz (sha256 918394e1c153…) · step 4575002
+물성 — docs/sulfide_se_mechanical_anchors.md (DFT E_VRH 22.06 GPa · Bazzoun 2026 DEM 문헌 입력 22.1 GPa) · SE 영률 두 줄 = 계획 §1 KG50B-06 (모델 계열 = 선행 보고와 같음 · 입계 기전 = 실측 보고 인용만)
+NCM 140 GPa = DEM 입력 (출처 서술 없음 · CL-90)
+덱 넷 실행 줄 = 케이스 이름 · SE 반지름 · 시드 · 계획 SE 수 (검사 구간) 밖에서 같음 (생성기 대조 · normalize_deck)
+감쇠 계수 = 덱 넷 같음 (질량당 감쇠는 SE 크기에 따라 다름 · Q5 대조 전 — v2 덱 README §5 한계)
+계획 = docs/50kg/kg50_report_plan_fix_plan_20261030.md §2 1쪽 · 단면 = y = 25.0 µm 평면 · 그림 = figs/make_figs_p1.py

@@ -1,0 +1,248 @@
+[
+  {
+    "path": "docs/50kg/report_y4/README.md",
+    "sha": "fa30ad68ed21e6d813ff784e2f823ed0e55ad3ea",
+    "type": "file",
+    "size": 13955
+  },
+  {
+    "path": "docs/50kg/report_y4/build_kg50_report_y4.py",
+    "sha": "e4355c3d0e9f3f3c5809eb920f5715a1175e6aca",
+    "type": "file",
+    "size": 90441
+  },
+  {
+    "path": "docs/50kg/report_y4/checks_draft1.json",
+    "sha": "cb68a3689d8df2a78e9efed15ca8c921db1ff2f3",
+    "type": "file",
+    "size": 13019
+  },
+  {
+    "path": "docs/50kg/report_y4/kg50_report_y4_draft1.pdf",
+    "sha": "493f8213632087605298183cf2cfd1cc19b45eef",
+    "type": "file",
+    "size": 498103
+  },
+  {
+    "path": "docs/50kg/report_y4/kg50_report_y4_draft1.pptx",
+    "sha": "28332c23f787513c71b94ab19d6f35bc2fbb1912",
+    "type": "file",
+    "size": 539769
+  },
+  {
+    "path": "docs/50kg/report_y4/kg50_y4_sources.py",
+    "sha": "55dfc518700cdb8afe05fa432769e13a01b0605b",
+    "type": "file",
+    "size": 20590
+  },
+  {
+    "path": "docs/50kg/report_y4/storyline_draft1.md",
+    "sha": "9750f08f19d722ba036c36f217ca2e4ad226ea29",
+    "type": "file",
+    "size": 22725
+  },
+  {
+    "path": "docs/sulfide_se_mechanical_anchors.md",
+    "sha": "231d1befd3e536e13eb6504ebfaf1c8f1f88f8c4",
+    "type": "file",
+    "size": 9219
+  },
+  {
+    "path": "docs/reviews/claims.json",
+    "sha": "5b81ab02a07e97856679c437fbb7fade0f224dc0",
+    "type": "file",
+    "size": 484386
+  },
+  {
+    "path": "docs/50kg/dem_plan_20261026.md",
+    "sha": "4a6bc8b8150e3e4d1bec8744fdc602e81ba757fd",
+    "type": "file",
+    "size": 15174
+  },
+  {
+    "path": "docs/50kg/kg50_report_plan_fix_plan_20261030.md",
+    "sha": "e0e3f79265cdf8748a4ee3633b0b575041205233",
+    "type": "file",
+    "size": 9812
+  },
+  {
+    "path": "docs/50kg/report_y4/figs/make_fig_p2_aux.py",
+    "sha": "abd9972b4588119ce39003734b6bfb48a184491e",
+    "type": "file",
+    "size": 10663
+  },
+  {
+    "path": "docs/50kg/report_y4/figs/make_figs_p1.py",
+    "sha": "9ad9963e070b142c40c2644d31f019c819009f8c",
+    "type": "file",
+    "size": 13734
+  },
+  {
+    "path": "docs/50kg/report_y4/figs/p1_figs_meta.json",
+    "sha": "8c8d274d351a711944d697cfe8a4c30dcc0f8243",
+    "type": "file",
+    "size": 4385
+  },
+  {
+    "path": "docs/50kg/report_y4/figs/p1_sections.csv",
+    "sha": "de8aa0a0875c0cb5c4af72186f3cc5dbc11465cf",
+    "type": "file",
+    "size": 75811
+  },
+  {
+    "path": "docs/50kg/report_y4/figs/p1_sections.png",
+    "sha": "04a0db2329156a63b69df3585294332420e18547",
+    "type": "file",
+    "size": 364245
+  },
+  {
+    "path": "docs/50kg/report_y4/figs/p1_sections.svg",
+    "sha": "06f119f08dacf5f36ba199a8a0135d7ac548e617",
+    "type": "file",
+    "size": 1048790
+  },
+  {
+    "path": "docs/50kg/report_y4/figs/p1_size_ratio.csv",
+    "sha": "0fd3da75f8c7621ab3c76b0b6520b61e05cdd025",
+    "type": "file",
+    "size": 204
+  },
+  {
+    "path": "docs/50kg/report_y4/figs/p1_size_ratio.png",
+    "sha": "d7f14eb0b2aa1e84ffa619d03365d88c8b86a3da",
+    "type": "file",
+    "size": 24311
+  },
+  {
+    "path": "docs/50kg/report_y4/figs/p1_size_ratio.svg",
+    "sha": "d6078b502503d3f7351ea29f23b3a6486a187acc",
+    "type": "file",
+    "size": 10598
+  },
+  {
+    "path": "docs/50kg/report_y4/figs/p2_aux_compaction.csv",
+    "sha": "0f4a33dcb9bccf50facb4dd2faa12af2886a3cc4",
+    "type": "file",
+    "size": 471094
+  },
+  {
+    "path": "docs/50kg/report_y4/figs/p2_aux_compaction.png",
+    "sha": "890ed2db5a9cd41967f748cde26b410890f478f3",
+    "type": "file",
+    "size": 119289
+  },
+  {
+    "path": "docs/50kg/report_y4/figs/p2_aux_compaction.svg",
+    "sha": "5674ee95225399a62f8e85289955c2073532cc1e",
+    "type": "file",
+    "size": 219644
+  },
+  {
+    "path": "docs/50kg/report_y4/figs/p2_aux_meta.json",
+    "sha": "bff42b43c38ebd78b40b35e419543d037613b363",
+    "type": "file",
+    "size": 1601
+  },
+  {
+    "path": "docs/50kg/report_y4/render/kg50_report_y4_draft1-1.png",
+    "sha": "c97b78acf05c35d82d77ffeb972d020aa929ce97",
+    "type": "file",
+    "size": 492651
+  },
+  {
+    "path": "docs/50kg/report_y4/render/kg50_report_y4_draft1-2.png",
+    "sha": "ea08e2b3bf70d9be3426beaa41c29b55461c9623",
+    "type": "file",
+    "size": 237729
+  },
+  {
+    "path": "docs/50kg/report_y4/render/kg50_report_y4_draft1-3.png",
+    "sha": "8b7495a8260ee54b81f41e20263b8f78e1f7ba5b",
+    "type": "file",
+    "size": 122101
+  },
+  {
+    "path": "docs/50kg/report_y4/render/kg50_report_y4_draft1-4.png",
+    "sha": "d293fb9e6f017231f1c2a0c338673bcd8a2a2e60",
+    "type": "file",
+    "size": 140014
+  },
+  {
+    "path": "docs/50kg/report_y4/render/kg50_report_y4_draft1-5.png",
+    "sha": "bb8d34dcf498f173dbf0dc53c159d3cf72d05098",
+    "type": "file",
+    "size": 144519
+  },
+  {
+    "path": "docs/50kg/report_y4/render/kg50_report_y4_draft1-6.png",
+    "sha": "e457fd5880ce33b802152c04de2a9a5615ac6424",
+    "type": "file",
+    "size": 130187
+  },
+  {
+    "path": "docs/50kg/report_y4/render/kg50_report_y4_draft1-7.png",
+    "sha": "bfb0fd5c3b0eace54165e33ec72e76270dca7428",
+    "type": "file",
+    "size": 124799
+  },
+  {
+    "path": "docs/reviews/codex_kg50_report_plan_review_20261030/codex_review_kg50_report_plan_20261030.md",
+    "sha": "e5d0ce1652b3106677976d4e5cb198a7f8c7f26d",
+    "type": "file",
+    "size": 37617
+  },
+  {
+    "path": "docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/DECK_CHECK.md",
+    "sha": "42df100042d65c979cc0e22c2c8465edd8666400",
+    "type": "file",
+    "size": 1719
+  },
+  {
+    "path": "docs/data/kg50_decks_20261026_v2/kg50_d3_b50_s1/input_kg50_d3_b50_s1.liggghts",
+    "sha": "9a2d25fcc266161beb8347400e90aaa42850e18f",
+    "type": "file",
+    "size": 12703
+  },
+  {
+    "path": "docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/input_kg50_d07_b50.liggghts",
+    "sha": "a9121f17e7367c36c6c371bcc58c1c32e0c78192",
+    "type": "file",
+    "size": 12859
+  },
+  {
+    "path": "docs/data/kg50_decks_20261027_v3_b50/kg50_d2_b50/input_kg50_d2_b50.liggghts",
+    "sha": "b9f074b433ce330b622b1dea2e6c5f730a5c247e",
+    "type": "file",
+    "size": 12785
+  },
+  {
+    "path": "docs/data/kg50_decks_20261027_v3_b50/kg50_d1_b50/input_kg50_d1_b50.liggghts",
+    "sha": "e1c31781274ac8d112234ba72e907b3b8b8fb2e7",
+    "type": "file",
+    "size": 12812
+  },
+  {
+    "path": "docs/data/kg50_d3_cell_verdict_20261027/README.md",
+    "sha": "f9bb729787962f88a88e2f68f7acc17ae9c8555b",
+    "type": "file",
+    "size": 4886
+  },
+  {
+    "path": "docs/data/kg50_d3_cell_verdict_20261027/kg50_d3_b50_s1_log.liggghts",
+    "sha": "767269e25d201b72456e1389ed0f7934aa3d51b4",
+    "type": "file",
+    "size": 1267117
+  },
+  {
+    "path": "docs/data/kg50_d2_end_20261030/README.md",
+    "sha": "077f9a1198e2ca2642391eb20fbcc7a587634ac4",
+    "type": "file",
+    "size": 2904
+  },
+  {
+    "path": "docs/data/kg50_d2_end_20261030/kg50_d2_b50_log.liggghts",
+    "sha": "03e6fded690b20725351b88e6afa64d3fe90e355",
+    "type": "file",
+    "size": 1102372
+  }
+]

@@ -1,0 +1,102 @@
+{
+  "D2": {
+    "counts": {
+      "1": 1481,
+      "3": 20872
+    },
+    "step": 4015002,
+    "H_um": 122.469,
+    "pred_H_um": 122.46863280156498,
+    "V_spheres_um3": 254925.58307309492,
+    "eps_sphere_pct": 16.737922879064925,
+    "outside_caps_um3": 208.4783748980415,
+    "outside_caps_eps_pp": 0.06809180279027069,
+    "wall_penetration": {
+      "1": {
+        "bottom_um": 0.4420099999999998,
+        "top_um": 0.5500000000000114
+      },
+      "3": {
+        "bottom_um": 0.896746,
+        "top_um": 0.7750000000000057
+      }
+    },
+    "AM_mass_fraction": 0.8499779744689587,
+    "loading_start": 400002,
+    "stop": 3915002,
+    "loading_blocks": 703,
+    "loading_points": 4218,
+    "relaxation_points": 101,
+    "P_stop_MPa": 300.23909,
+    "P_first_relax_MPa": 287.18633,
+    "P_end_MPa": 279.79158,
+    "pressure_drop_MPa": 20.447509999999966,
+    "relax_curve_first_row_covers_fraction_of_drop": 0.6383544989096471,
+    "eps_first_positive_pct": 34.650657770729445,
+    "eps_first_gt1_pct": 34.50795405455619,
+    "setup_end_pressure_MPa": 328.94624,
+    "stop_mod_atom50000": 15002,
+    "stop_mod_mesh5000": 2,
+    "stop_mod_contact10000": 5002,
+    "earliest_regular_poststop_atom": 3950000,
+    "earliest_regular_poststop_contact": 3920000,
+    "exact_stop_dump_available_by_registered_schedule": false,
+    "fixed_dt_s": 1e-06,
+    "relax_duration_sim_s": 0.09999999999999999,
+    "member_sha": {
+      "atom": "e14fe38b2aa614dc61dd719aa6b7b2c4f5d40316c2f3a4f15877bced95861d52",
+      "mesh": "3db1e87d86b5b7df69ee94bfd4700534837734f84be85a3839e86ffb643cc9f2",
+      "log": "5d6721508615f2ffbd71a5c179a394f09c46f4993ac449496166ac08509dd198"
+    }
+  },
+  "D3": {
+    "counts": {
+      "1": 1482,
+      "3": 6184
+    },
+    "step": 4575002,
+    "H_um": 125.877,
+    "pred_H_um": 125.877278551285,
+    "V_spheres_um3": 255034.4916184194,
+    "eps_sphere_pct": 18.957556465940762,
+    "outside_caps_um3": 235.22207199236388,
+    "outside_caps_eps_pp": 0.07474664060705732,
+    "wall_penetration": {
+      "1": {
+        "bottom_um": 0.5737699999999997,
+        "top_um": 0.534000000000006
+      },
+      "3": {
+        "bottom_um": 1.187934,
+        "top_um": 1.3490000000000038
+      }
+    },
+    "AM_mass_fraction": 0.850070132530372,
+    "loading_start": 400002,
+    "stop": 4475002,
+    "loading_blocks": 815,
+    "loading_points": 4890,
+    "relaxation_points": 101,
+    "P_stop_MPa": 300.63094,
+    "P_first_relax_MPa": 295.59389000000004,
+    "P_end_MPa": 291.3744,
+    "pressure_drop_MPa": 9.25654000000003,
+    "relax_curve_first_row_covers_fraction_of_drop": 0.5441612092639312,
+    "eps_first_positive_pct": 38.47819404932816,
+    "eps_first_gt1_pct": 38.3182399489195,
+    "setup_end_pressure_MPa": 582.7488,
+    "stop_mod_atom50000": 25002,
+    "stop_mod_mesh5000": 2,
+    "stop_mod_contact10000": 5002,
+    "earliest_regular_poststop_atom": 4500000,
+    "earliest_regular_poststop_contact": 4480000,
+    "exact_stop_dump_available_by_registered_schedule": false,
+    "fixed_dt_s": 1e-06,
+    "relax_duration_sim_s": 0.09999999999999999,
+    "member_sha": {
+      "atom": "38f108c61291f40bc9df634fb4864e08ac697b71a5dc168e5bc5b64a85bb6939",
+      "mesh": "f6d6d05782a38dadf53005bbf7009c8b4d6ba987057dd7510aa734922b26e984",
+      "log": "40ba638167250cd742cdbeb113f71f83851619103be36ac79eaab7572c7ffe22"
+    }
+  }
+}

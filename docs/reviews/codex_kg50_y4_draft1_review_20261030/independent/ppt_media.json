@@ -1,0 +1,23 @@
+[
+  {
+    "ppt_member": "ppt/media/image1.png",
+    "sha256": "6efe860df3e8f9b1b20ab1f2974429d91da9f3d4514e715b17f337f0309a3803",
+    "source_matches": [
+      "p1_size_ratio.png"
+    ]
+  },
+  {
+    "ppt_member": "ppt/media/image2.png",
+    "sha256": "39c006c1c3ec7c12c5bf7b67e8375c332b194e0330838bc11ad0070b50e75e9a",
+    "source_matches": [
+      "p1_sections.png"
+    ]
+  },
+  {
+    "ppt_member": "ppt/media/image3.png",
+    "sha256": "1cd6db43518b903e37162503b665e989cb0fa7ded842ee0106809beb0c4e8b7c",
+    "source_matches": [
+      "p2_aux_compaction.png"
+    ]
+  }
+]

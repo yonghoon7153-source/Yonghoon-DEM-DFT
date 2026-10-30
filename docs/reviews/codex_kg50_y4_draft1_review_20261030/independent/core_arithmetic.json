@@ -1,0 +1,8 @@
+{
+  "ideal_throat_um": 0.9282032302755101,
+  "break_even_1um": 2.217391304347826,
+  "break_even_07um_conditional": 2.2666666666666666,
+  "gamma_over_mass_ratio_D07_vs_D3": 78.71720116618076,
+  "gamma_over_mass_ratio_D2_vs_D3": 3.375,
+  "note": "The 0.7 um material anchor is conditional; sample identity not validated."
+}

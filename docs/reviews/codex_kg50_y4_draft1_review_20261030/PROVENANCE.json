@@ -1,0 +1,14 @@
+{
+  "review_pin": "52f9e87e1049530f66aa250156d16e0b1b4f1baa",
+  "input_zip_sha256": "ebb04443794ac4b4045ae17e65ff9b2e8c5f7200d4e84c8dc5443cf9388f140b",
+  "official_liggghts_pin": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+  "official_source_paths": [
+    "src/output.cpp",
+    "src/dump.cpp",
+    "doc/dump_modify.txt"
+  ],
+  "prior_report_repository_path": "docs/report_20261001/report_20261001_draft.pptx",
+  "prior_report_git_blob": "5b63111b63badde007071a33148022d5ccd6bea4",
+  "scope": "Read-only content and arithmetic review; no DEM/network solver, WSL, scheduler, or repository mutation.",
+  "known_limit": "The two original end-state tgz containers are not included in input. Included atom/mesh members verified against pinned manifests; contact snapshots not supplied."
+}

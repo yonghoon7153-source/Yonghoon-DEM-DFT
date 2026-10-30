@@ -14265,6 +14265,46 @@
       "evidence_tests": [
         "docs/reviews/codex_kg50_d07_scoped_go_20261030/README_import.md · docs/reviews/codex_kg50_d07_scoped_go_20261030/_repro_ours_20261030/g13_main_deck_1-167_negative.json (167 행 = 로그에 없음)"
       ]
+    },
+    {
+      "id": "K50Y4-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-30 50kg Y4 초안 1 검토 (리뷰 핀 52f9e87e1 · review_probes.py 덱 출력 일정 · LIGGGHTS 3d5c00f output.cpp:228–238 · dump.cpp:112 · dump_modify first 기본 no)",
+      "opened_in": "docs/reviews/codex_kg50_y4_draft1_review_20261030/codex_review_kg50_y4_draft1_20261030.md",
+      "title": "후속 순서의 '압력 도달 순간 atom · contact · mesh 수령' 이 성립 안 함 — 압축 정지 step D2 3,915,002 · D3 4,475,002 가 atom 50,000 · mesh 5,000 · contact 10,000 (압축 끝 · 감쇠 바꾼 뒤부터) 주기의 배수가 아니고 정지 순간 dump 도 없음",
+      "note": "판정문 §4.  자리 docs/50kg/report_y4/storyline_draft1.md:134–136 · docs/50kg/kg50_report_plan_fix_plan_20261030.md:48–49 · D2 덱 217 · 237 · 245–253 행.  무너지지 않는 것 = 이완 끝 단면 · 로그 압밀 곡선 · 이완 끝 수치.  최소 해결 = 실제 파일 재고 (종류 · 내부 step · 원 로그 연결) 먼저 · 결손 = NOT_AVAILABLE · 다른 step 의 파일을 한 상태로 묶지 않음 · 이완 프레임을 300 MPa 상태로 부르지 않음 · 정확한 정지 상태 복원 = 별도 실행 승인.  수정 계획 docs/50kg/report_y4/draft2_fix_plan_20261030.md Q1."
+    },
+    {
+      "id": "K50Y4-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-30 50kg Y4 초안 1 검토 (check_prior_deck.py · storyline_draft1.md:40 대조)",
+      "opened_in": "docs/reviews/codex_kg50_y4_draft1_review_20261030/codex_review_kg50_y4_draft1_20261030.md",
+      "title": "1.35 GPa 유효 입력의 계승을 기전 · 현행 실험 보정의 증명으로 확장 — 스토리라인 1쪽 예상 답변 '입계 미끄럼 · 재배열을 DEM 에서 대신 · 기공도를 실험 수준으로 맞추는 규약값'",
+      "note": "판정문 §4.  지지 = 선행 규약 계승 (현행 네 덱 1.35 GPa · 선행 보고 9쪽).  최소 해결 문구 = 판정문 §4 (물성 기준 22 GPa (랩실 표준) · 이번 DEM 은 선행 이종기술 해석과 같은 유효 입력 1.35 GPa · 유효 입력의 계승이며 개별 변형 기전이나 이번 복합양극의 실험 기공률 일치를 검증한 결과 아님).  추가 시뮬레이션 불필요.  KG50B-06 = 이 항목과 K50Y4-03 정리 뒤 문구까지 충족."
+    },
+    {
+      "id": "K50Y4-03",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-30 50kg Y4 초안 1 검토 (check_prior_deck.py — 같은 sha256 d65796c8… 의 sldIdLst 순서)",
+      "opened_in": "docs/reviews/codex_kg50_y4_draft1_review_20261030/codex_review_kg50_y4_draft1_20261030.md",
+      "title": "선행 보고 '13 장' 인용 = 내부 XML 부품 번호 (ppt/slides/slide13.xml) 를 발표 쪽으로 씀 — 1.35 GPa 는 발표 9쪽 'DEM 기반 복합양극 압축 모델' · 요청서 §1 · ZIP 발췌 (evidence/report_20261001_slide13_text.txt = 발표 13쪽 = 바이모달 공극률 장)",
+      "note": "판정문 §4.  최소 해결 = 출처 9쪽 · 9쪽 발췌로 교체 · 파일 sha 유지 · 선행 사용 사실 철회 아님.  내 검증 누락 = SELF-144."
+    },
+    {
+      "id": "SELF-144",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-30 50kg Y4 초안 1 검토 K50Y4-03 · 메인 10-30 반입 대조",
+      "opened_in": "docs/reviews/codex_kg50_y4_draft1_review_20261030/README_import.md",
+      "title": "요청서 · 검토 ZIP 의 선행 출처 '13 장' — XML 부품 번호를 발표 쪽으로 옮겨 적었고, ZIP 검사 때 발췌문 (python-pptx slides[12] = 발표 13쪽) 에 1.35 GPa 문장이 없는 것을 못 봄",
+      "note": "같은 사건 = K50Y4-03 (Codex 지적 · 이 항목은 내 검증 누락의 기록).  교훈: 쪽 번호는 발표 순서 (sldIdLst) 로만 · 인용 문장을 발췌한 뒤 그 문장이 발췌문에 있는지 grep 으로 확인 · 검토 ZIP 빌더 (스크래치 y4zip/build_y4_zip.sh) 의 slides[12] 고정 = 다음 ZIP 에서 쪽 번호 + 문장 대조로 바꿈."
     }
   ]
 }

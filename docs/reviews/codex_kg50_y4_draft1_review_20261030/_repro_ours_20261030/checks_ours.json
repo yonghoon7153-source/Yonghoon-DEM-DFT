@@ -1,0 +1,665 @@
+[
+  {
+    "name": "remote blob docs/sulfide_se_mechanical_anchors.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/reviews/claims.json",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/reviews/codex_kg50_report_plan_review_20261030/codex_review_kg50_report_plan_20261030.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/dem_plan_20261026.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/kg50_report_plan_fix_plan_20261030.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/checks_draft1.json",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/README.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/kg50_report_y4_draft1.pptx",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/storyline_draft1.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/build_kg50_report_y4.py",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/kg50_report_y4_draft1.pdf",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/kg50_y4_sources.py",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/render/kg50_report_y4_draft1-1.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/render/kg50_report_y4_draft1-2.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/render/kg50_report_y4_draft1-5.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/render/kg50_report_y4_draft1-4.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/render/kg50_report_y4_draft1-3.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/render/kg50_report_y4_draft1-7.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/render/kg50_report_y4_draft1-6.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/figs/p2_aux_compaction.csv",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/figs/p1_sections.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/figs/p1_size_ratio.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/figs/p2_aux_compaction.svg",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/figs/p1_size_ratio.svg",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/figs/make_fig_p2_aux.py",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/figs/p1_size_ratio.csv",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/figs/p1_figs_meta.json",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/figs/p2_aux_meta.json",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/figs/p1_sections.svg",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/figs/make_figs_p1.py",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/figs/p2_aux_compaction.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/50kg/report_y4/figs/p1_sections.csv",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/DECK_CHECK.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/data/kg50_decks_20261026_v2/kg50_d3_b50_s1/input_kg50_d3_b50_s1.liggghts",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/data/kg50_d3_cell_verdict_20261027/kg50_d3_b50_s1_log.liggghts",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/data/kg50_d3_cell_verdict_20261027/README.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/input_kg50_d07_b50.liggghts",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/data/kg50_decks_20261027_v3_b50/kg50_d2_b50/input_kg50_d2_b50.liggghts",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/data/kg50_decks_20261027_v3_b50/kg50_d1_b50/input_kg50_d1_b50.liggghts",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/data/kg50_d2_end_20261030/kg50_d2_b50_log.liggghts",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "remote blob docs/data/kg50_d2_end_20261030/README.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest PIN.txt",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest codex_kg50_report_y4_draft1_request_20261030.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest evidence/end_members/D2/atom_end_4015002.liggghts",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest evidence/end_members/D2/mesh_end_4015002.stl",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest evidence/end_members/D3/atom_end_4575002.liggghts",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest evidence/end_members/D3/mesh_end_4575002.stl",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest evidence/end_members/SOURCES.txt",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest evidence/report_20261001_slide13_text.txt",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/dem_plan_20261026.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/kg50_report_plan_fix_plan_20261030.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/README.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/build_kg50_report_y4.py",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/checks_draft1.json",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/figs/make_fig_p2_aux.py",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/figs/make_figs_p1.py",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/figs/p1_figs_meta.json",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/figs/p1_sections.csv",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/figs/p1_sections.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/figs/p1_sections.svg",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/figs/p1_size_ratio.csv",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/figs/p1_size_ratio.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/figs/p1_size_ratio.svg",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/figs/p2_aux_compaction.csv",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/figs/p2_aux_compaction.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/figs/p2_aux_compaction.svg",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/figs/p2_aux_meta.json",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/kg50_report_y4_draft1.pdf",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/kg50_report_y4_draft1.pptx",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/kg50_y4_sources.py",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/render/kg50_report_y4_draft1-1.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/render/kg50_report_y4_draft1-2.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/render/kg50_report_y4_draft1-3.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/render/kg50_report_y4_draft1-4.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/render/kg50_report_y4_draft1-5.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/render/kg50_report_y4_draft1-6.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/render/kg50_report_y4_draft1-7.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/50kg/report_y4/storyline_draft1.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/data/kg50_d2_end_20261030/README.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/data/kg50_d2_end_20261030/kg50_d2_b50_log.liggghts",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/data/kg50_d3_cell_verdict_20261027/README.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/data/kg50_d3_cell_verdict_20261027/kg50_d3_b50_s1_log.liggghts",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/data/kg50_decks_20261026_v2/kg50_d3_b50_s1/input_kg50_d3_b50_s1.liggghts",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/input_kg50_d07_b50.liggghts",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/data/kg50_decks_20261027_v3_b50/kg50_d1_b50/input_kg50_d1_b50.liggghts",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/data/kg50_decks_20261027_v3_b50/kg50_d2_b50/input_kg50_d2_b50.liggghts",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/DECK_CHECK.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/reviews/claims.json",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/reviews/codex_kg50_report_plan_review_20261030/codex_review_kg50_report_plan_20261030.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "manifest repo/docs/sulfide_se_mechanical_anchors.md",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "ppt media ppt/media/image1.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "ppt media ppt/media/image2.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "ppt media ppt/media/image3.png",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "PDF 7 pages",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "planned counts D0.7",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "planned counts D1",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "planned counts D2",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "planned counts D3",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "same command count D0.7",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "12 command-pair differences D0.7",
+    "pass": true,
+    "detail": 12
+  },
+  {
+    "name": "same command count D1",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "12 command-pair differences D1",
+    "pass": true,
+    "detail": 12
+  },
+  {
+    "name": "same command count D3",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "12 command-pair differences D3",
+    "pass": true,
+    "detail": 12
+  },
+  {
+    "name": "flat mesh D2",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "actual counts D2",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "atom radius matches deck D2",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "target stop rule D2",
+    "pass": true,
+    "detail": {
+      "count": 703,
+      "last_MPa": 300.23908525181196
+    }
+  },
+  {
+    "name": "dump first override absent D2",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "no explicit pressure-stop snapshot D2",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "end height consistent with rounded mesh D2",
+    "pass": true,
+    "detail": {
+      "pred": 122.46863280156498,
+      "mesh": 122.469
+    }
+  },
+  {
+    "name": "all atom counts fixed D2",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "contiguous 5000-step compression D2",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "no final run0 setup in CSV D2",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "flat mesh D3",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "actual counts D3",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "atom radius matches deck D3",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "target stop rule D3",
+    "pass": true,
+    "detail": {
+      "count": 815,
+      "last_MPa": 300.630937406767
+    }
+  },
+  {
+    "name": "dump first override absent D3",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "no explicit pressure-stop snapshot D3",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "end height consistent with rounded mesh D3",
+    "pass": true,
+    "detail": {
+      "pred": 125.877278551285,
+      "mesh": 125.877
+    }
+  },
+  {
+    "name": "all atom counts fixed D3",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "contiguous 5000-step compression D3",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "no final run0 setup in CSV D3",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "CSV unique keys",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "CSV exact key sets",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "all 9310 CSV rows recomputed",
+    "pass": true,
+    "detail": {
+      "rows": 9310,
+      "max_abs_error": 5.000000005139782e-07
+    }
+  },
+  {
+    "name": "section exact keys",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "all 1641 section circles",
+    "pass": true,
+    "detail": {
+      "rows": 1641,
+      "max_abs_error_um": 5.000000000005e-07
+    }
+  }
+]
