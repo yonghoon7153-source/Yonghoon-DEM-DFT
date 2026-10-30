@@ -1,13 +1,16 @@
 # KG50R-F01 2 판 — 독립 사전 공격 R1–R8 고침 + KG50R-F02 통합 (10-30 · 1저자 "권고대로")
 
+> ※ 10-30 통합: 이 문서의 커밋 SHA 는 본 가지 (claude/stoic-knuth-NObVQ) 에 들어간 SHA 로 바꿔 적었다 (작업 트리 가지 SHA 는 원격에 없어서 통합 SHA 로 바꿨다).
+
+
 ## 0. 판 · 커밋 (가지 `kg50-f01r2-int` · push 없음)
 
 | 단계 | 커밋 · 도구 sha256 |
 |---|---|
-| 시작 = F01 끝 | `c24fef721` · 도구 `38e1eff5…` |
-| F02 통합 (cherry-pick 6 · 작업 가지 원래 번호 c3c67fb37 · 2107f144f · a0680e8f8 · 34b3e2cdb · 6057a6514 · d23a865a3 = 원격에 없음) | → 이 가지 `8bc406a2a` · `0b710c85d` · `aee27ba0b` · `debd23ad0` · `7920e9be8` · `4865ba895` (같은 차례) — 충돌 = 시험 파일 `main()` 끝 묶음 자리 하나 (V · RB 둘 다 둠) · 통합 도구 `12bc95ce030fbc9b…` = F01 정적 대조 heredoc + F02 그 밖 (둘 다 바이트 같음 · `compose_check.log`) · 통합 시험 383 PASS · 0 FAIL (Python 3.11 · mawk · `integrated_12bc95ce_py311_mawk.log`) |
-| 시험 먼저 | `f4142506e` — VP 묶음 50 (`--only VP`) |
-| 고침 | `65c5d6d37` — 도구 **`2dc7f693263708d7788ab721386182c6109a8f9278797ecc43f5165d6715f1e8`** (메인 세션에 알림 → ibb `-T` 에 씀 · 이 뒤 도구 안 바꿈) |
+| 시작 = F01 끝 | `59bdeb093` · 도구 `38e1eff5…` |
+| F02 통합 (cherry-pick 6 · 작업 가지 원래 번호 5c8f2e126 · 07761cf54 · c43744a34 · 221f57dbf · 48cfd2871 · b0fd6ec9f = 원격에 없음) | → 이 가지 `5c8f2e126` · `07761cf54` · `c43744a34` · `221f57dbf` · `48cfd2871` · `b0fd6ec9f` (같은 차례) — 충돌 = 시험 파일 `main()` 끝 묶음 자리 하나 (V · RB 둘 다 둠) · 통합 도구 `12bc95ce030fbc9b…` = F01 정적 대조 heredoc + F02 그 밖 (둘 다 바이트 같음 · `compose_check.log`) · 통합 시험 383 PASS · 0 FAIL (Python 3.11 · mawk · `integrated_12bc95ce_py311_mawk.log`) |
+| 시험 먼저 | `ce70f44e4` — VP 묶음 50 (`--only VP`) |
+| 고침 | `26e748af2` — 도구 **`2dc7f693263708d7788ab721386182c6109a8f9278797ecc43f5165d6715f1e8`** (메인 세션에 알림 → ibb `-T` 에 씀 · 이 뒤 도구 안 바꿈) |
 | 증거 | 이 폴더 · F01 README 정정 §13 |
 
 ## 1. R1–R8 ↔ 고친 것 ↔ 시험

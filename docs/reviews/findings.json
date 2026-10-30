@@ -13954,7 +13954,7 @@
       "severity": "P3",
       "status": "open",
       "title": "허용 차이 ② (판 메시 file 이름) = 파일이 있는지만 · 내용 (판 높이) 안 봄 · 준비 구간 fix 순서 바꿈도 통과",
-      "note": "한정 후보 — after_settling 은 G2 PLATE HEIGHT 줄이 본다 · fix 순서는 KG50P-01 고침 (순서 보존) 이 같이 막을 것 (고친 뒤 다시 봄).  10-28 밤: 준비 구간 fix 순서 바꿈 = 고친 판에서 거부 (KG50P-01 고침의 순서 보존) · 판 메시 file 내용 (판 높이) = 한정 그대로 (after_settling = G2 PLATE HEIGHT).",
+      "note": "한정 후보 — after_settling 은 G2 PLATE HEIGHT 줄이 본다 · fix 순서는 KG50P-01 고침 (순서 보존) 이 같이 막을 것 (고친 뒤 다시 봄).  10-28 밤: 준비 구간 fix 순서 바꿈 = 고친 판에서 거부 (KG50P-01 고침의 순서 보존) · 판 메시 file 내용 (판 높이) = 한정 그대로 (after_settling = G2 PLATE HEIGHT).  10-30 통합본 사전 공격 PAI-01: 같은 허용이 절대 경로 · ../ 로 작업 폴더 밖 (다른 케이스) STL 도 통과 — D0.7 덱 해당 없음 · 이 한 건 손 확인 = attempt 의 deckcheck 에 '판 메시 파일만 다름' 0 줄.",
       "owner": "claude",
       "found_by": "사전 공격 리뷰 (10-28 밤 · 독립 에이전트 · 고친 판 fb334928 · diff 만)",
       "opened_in": "docs/reviews/kg50r_fix_evidence_20261028/preattack/REPORT.md"
@@ -13962,22 +13962,33 @@
     {
       "id": "KG50R-F01",
       "severity": "P1",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-30 KG50 재개 도구 고침 재확인 (리뷰 핀 bf8cf21c6 · 내장 Python 직접 실행 · Bash · SLURM · LIGGGHTS 미실행)",
       "opened_in": "docs/reviews/codex_kg50_resume_fix_recheck_20261030/codex_review_kg50_resume_fix_recheck_20261030.md",
       "title": "(Codex KG50RF-01) 준비 구간에서 그 자리 치환 (${x} · $x) 으로 쓰는 변수의 소비 값이 두 덱에서 달라도 정적 대조 통과 — 받은 D2 덱 파생: 중간 재정의 `variable g_probe equal 196.2` 하나만 뺀 재개 덱 = fix gravi 가 받는 중력 196.2 → 98.1 인데 `-C` rc 0 · 문제 0 · 같은 `98.1*(step+1)` 즉시 평가 (step 1 ↔ 20001) 도 통과",
-      "note": "판정문 §1 · 자리 (핀 bf8cf21c6) scripts/resume_ckpt.sh:432–468 setup_order · :313–318 · :332–338 끝 문자열 저장 · :482–498 상태 대조 · :741–745 결합.  우리 트리 실제 bash 재현 = 여섯 경우 모두 `-C` rc 0 (반례 넷 + 기준 둘 · docs/reviews/codex_kg50_resume_fix_recheck_20261030/_repro_ours_20261030/bash_C_six_cases.txt).  최소 해결 = 명령이 값을 소비하는 시점까지 변수 정의 · 의존 보존 (좁은 상수 표현만 · 모르는 재정의 · 실행 상태 의존 치환 거부도 가능) · 음성 = 중간 정의 삭제 · 동적 equal · 양성 = 받은 D2 · after_settling 기준.  ✅ 1저자 10-30 Q1 *\"권고대로\"* = 펼친 값 대조 · 상수식만 · 실행 상태 식은 같은 step 소비만 (docs/50kg/kg50_resume_fixrecheck_plan_20261030.md)."
+      "note": "판정문 §1 · 자리 (핀 bf8cf21c6) scripts/resume_ckpt.sh:432–468 setup_order · :313–318 · :332–338 끝 문자열 저장 · :482–498 상태 대조 · :741–745 결합.  우리 트리 실제 bash 재현 = 여섯 경우 모두 `-C` rc 0 (반례 넷 + 기준 둘 · docs/reviews/codex_kg50_resume_fix_recheck_20261030/_repro_ours_20261030/bash_C_six_cases.txt).  최소 해결 = 명령이 값을 소비하는 시점까지 변수 정의 · 의존 보존 (좁은 상수 표현만 · 모르는 재정의 · 실행 상태 의존 치환 거부도 가능) · 음성 = 중간 정의 삭제 · 동적 equal · 양성 = 받은 D2 · after_settling 기준.  ✅ 1저자 10-30 Q1 *\"권고대로\"* = 펼친 값 대조 · 상수식만 · 실행 상태 식은 같은 step 소비만 (docs/50kg/kg50_resume_fixrecheck_plan_20261030.md).  10-30: 1 판 (1a9594b96 시험 먼저 · c419a7f92 고침 · 59bdeb093 증거) → 독립 사전 공격 = R1 P1 (상태 표 키가 치환 전 글자) · R2–R4 P2 · R5–R8 P3 → 2 판 (ce70f44e4 시험 먼저 · 26e748af2 고침 · 8ed3e26eb 증거) · R4 = 재개 덱 준비 구간만 (본 덱까지 보면 C1 압축 재개 정상 덱 거부) · 키 자리 $ · 꼬리 메시 $ = 펼치지 않고 거부 · 펼침 4096 자 상한 · 변이 38 중 31 (생존 4 = 키 자리 시험 없음 · 3 = 같은 판정) · 통합본 사전 공격 (66f68e250) = PAI-01–09.",
+      "claimed_fixed_sha": "26e748af2",
+      "evidence_tests": [
+        "scripts/test_resume_ckpt.py 433 PASS · 0 FAIL × 4 환경 (Python 3.11 + mawk · 3.11 + gawk 5.2.1 · 3.8 시험틀 · 3.8 + 도구 python3) · 도구 sha256 2dc7f693263708d7788ab721386182c6109a8f9278797ecc43f5165d6715f1e8 · docs/reviews/kg50rf_fix_evidence_20261030/F01/r2/README.md",
+        "docs/reviews/kg50rf_fix_evidence_20261030/F01/r2/README.md (Q5 selftest 151/151 · 98/98 · 실제 kg50 본 덱 24 쌍 (12 × settling · after_settling) -C rc 0 · 저장된 반례 15 개 rc 1 · compare-old 77c24237 · 5f4ffb46 rc 0)"
+      ]
     },
     {
       "id": "KG50R-F02",
       "severity": "P1",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-30 KG50 재개 도구 고침 재확인 (리뷰 핀 bf8cf21c6 · 셸 조건 전사 · 실제 파일 · 해시 · 내장 Python)",
       "opened_in": "docs/reviews/codex_kg50_resume_fix_recheck_20261030/codex_review_kg50_resume_fix_recheck_20261030.md",
       "title": "(Codex KG50RF-02) 검사한 덱과 러너가 실행할 덱이 묶이지 않는다 — 러너 관문이 부분 문자열 grep 이라 `-in input_kg50_d2_b50_r56.liggghts.bak` 가 통과 (시험 러너도 자동 치환으로 …r56t.liggghts.bak) · 검사한 덱 문제 0 ↔ .bak 덱 = 첫 run 뒤 velocity 한 줄 · main_inputs.sha256 = $D · $RN 만",
-      "note": "판정문 §2 · 자리 scripts/resume_ckpt.sh:1145 · :1151 · :1168 · :1180 · :1186 · :1279 · :1283.  우리 트리 실제 bash 재현 = 도구의 관문 줄 그대로 `.bak` 러너에 PASS (_repro_ours_20261030/rf02_runner_bak.sh · rf02_trial_runner_bak.sh).  최소 해결 = wrapper 가 제한 규격 러너를 직접 만들고 cwd · 검증 입력 절대 경로 · 단일 실행 고정 (또는 helper 러너의 정확한 구조 검사 · 모르는 꼴 거부) · 영수증 = 실제 읽을 파일 · 가짜 sbatch 가 실제 러너 cwd/argv 기록 · `.bak` · 잘못된 cwd · 주석 속 정상 명령 · 둘째 MPI 실행 거부.  ✅ 1저자 10-30 Q2 *\"권고대로\"* = 줄마다 엄격 검사 뒤 러너 둘을 도구 틀로 다시 씀 + 재대조에 체크포인트 · 시험 덱 · 시험 러너 + 가짜 실행기 시험."
+      "note": "판정문 §2 · 자리 scripts/resume_ckpt.sh:1145 · :1151 · :1168 · :1180 · :1186 · :1279 · :1283.  우리 트리 실제 bash 재현 = 도구의 관문 줄 그대로 `.bak` 러너에 PASS (_repro_ours_20261030/rf02_runner_bak.sh · rf02_trial_runner_bak.sh).  최소 해결 = wrapper 가 제한 규격 러너를 직접 만들고 cwd · 검증 입력 절대 경로 · 단일 실행 고정 (또는 helper 러너의 정확한 구조 검사 · 모르는 꼴 거부) · 영수증 = 실제 읽을 파일 · 가짜 sbatch 가 실제 러너 cwd/argv 기록 · `.bak` · 잘못된 cwd · 주석 속 정상 명령 · 둘째 MPI 실행 거부.  ✅ 1저자 10-30 Q2 *\"권고대로\"* = 줄마다 엄격 검사 뒤 러너 둘을 도구 틀로 다시 씀 + 재대조에 체크포인트 · 시험 덱 · 시험 러너 + 가짜 실행기 시험.  10-30: 고침 (5c8f2e126 시험 먼저 · 07761cf54 고침 · c43744a34 증거) → 독립 사전 공격 PA-01–10 (P2 3 · P3 7) → 고침 (221f57dbf · 48cfd2871 · b0fd6ec9f · 도구 e5a61181) → F01 2 판과 통합 (도구 2dc7f693 · 26e748af2) · 남은 한정 = 본 잡 결과 미판독 · -T 모드 영수증 재확인 없음 · PAI-02 (본 제출 명령 ↔ -T 영수증 미결합).",
+      "claimed_fixed_sha": "26e748af2",
+      "evidence_tests": [
+        "scripts/test_resume_ckpt.py RB 91/91 (433/0 × 4 환경 안) · 검토 장면 11 상주 · RBU1–6 · RB32a–j",
+        "scripts/test_resume_ckpt.py 433 PASS · 0 FAIL × 4 환경 (Python 3.11 + mawk · 3.11 + gawk 5.2.1 · 3.8 시험틀 · 3.8 + 도구 python3) · 도구 sha256 2dc7f693263708d7788ab721386182c6109a8f9278797ecc43f5165d6715f1e8 · docs/reviews/kg50rf_fix_evidence_20261030/F01/r2/README.md",
+        "docs/reviews/kg50rf_fix_evidence_20261030/F02/README.md §0 · r2/"
+      ]
     },
     {
       "id": "KG50R-F03",
@@ -13992,12 +14003,16 @@
     {
       "id": "KG50R-F04",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-30 KG50 재개 도구 고침 재확인 (§4 문서 잔여)",
       "opened_in": "docs/reviews/codex_kg50_resume_fix_recheck_20261030/codex_review_kg50_resume_fix_recheck_20261030.md",
       "title": "(Codex §4 문서 잔여) docs/data/kg50_resume_tests_20261027/README.md 16 행 *\"보고 원본 … 아직 받지 않았다\"* 가 수령 뒤에도 현재형으로 남음 · 5 행 *\"최신 e59c43e6\"* 의 시점 표지 없음",
-      "note": "판정문 §4 표 아래 · 새 원본 파일이 있다는 실질 증거를 부정하는 지적 아님 · 문구 수정만으로 최신 실제 실행 증거가 생기지 않는다.  ✅ 10-30 반입 커밋에서 두 줄 시점 표지 (역사 서술 분리)."
+      "note": "판정문 §4 표 아래 · 새 원본 파일이 있다는 실질 증거를 부정하는 지적 아님 · 문구 수정만으로 최신 실제 실행 증거가 생기지 않는다.  ✅ 10-30 반입 커밋에서 두 줄 시점 표지 (역사 서술 분리).",
+      "claimed_fixed_sha": "e46bda9ec",
+      "evidence_tests": [
+        "docs/data/kg50_resume_tests_20261027/README.md (5 · 16 행 시점 표지 · 문서 고침 — 시험 없음)"
+      ]
     },
     {
       "id": "KG50B-01",
@@ -14098,6 +14113,110 @@
       "opened_in": "docs/reviews/codex_mixer_d2_review_20261027/codex_review_mixer_d2_20261027.md",
       "title": "(Codex MXD2R-03) 파일 바이트 해시와 정규화 텍스트 해시가 뒤바뀜 — 세 CLI 가 덱을 텍스트로 읽어 (CRLF → LF) 그 UTF-8 로 해시 · 길이를 잰다: LF 정상 덱을 CRLF 바이트로 저장 (13,833 B · sha256 0b92f856…) 하고 메타는 LF 값 (13,654 B · 32033f6b…) 그대로 두면 되읽기 · 쌍 비교 · 계획 rc 0/0/0 · 실제 CRLF 바이트의 해시 · 길이를 정확히 적으면 1/1/1 로 거부",
       "note": "판정문 §5 · 자리 (핀 045e0b309) scripts/mixer_deck_readback.py:1196–1199 (text.encode('utf-8') 로 해시 · 길이) · :1358 · scripts/mixer_deck_diff.py:838 · :1798 · scripts/mixer_smoke_blind.py:985 (텍스트 읽기 = 개행 정규화).  명령 의미 · 물리 결과를 바꾸는 반례가 아니라 '이 실제 파일 바이트를 검증했다' 는 출처 보증의 결함.  우리 트리 재현 = crlf_lf_metadata 세 CLI rc 0 · crlf_crlf_metadata 세 CLI rc 1 (metadata SHA256 != actual deck) — 판정문과 같은 sha · 길이 (docs/reviews/codex_mixer_d2_review_20261027/_repro_ours_20261030/).  ⚠ 이 증거의 CRLF 덱은 반입 폴더 .gitattributes `* -text` 로 바이트 그대로 둔다.  최소 해결 = CLI 에서 read_bytes() 로 실제 바이트의 해시 · 길이를 먼저 확인하고 검증한 바이트를 디코딩해 파싱 · LF 만 지원이면 CRLF 를 구체 사유로 거부 · 정규화 해시를 쓰려면 별도 이름 · 규약으로 표시하고 물리 파일 해시도 따로 보존 · 세 CLI 양방향 회귀.  수정 계획 초안 docs/reviews/mxd2r_fix_plan_20261030.md (⬜ 1저자)."
+    },
+    {
+      "id": "PAI-01",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-30 통합본 사전 공격 (독립 에이전트 · 도구 2dc7f693 · 66f68e250)",
+      "opened_in": "docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/PREATTACK_INT.md",
+      "title": "판 메시 file 이름 허용 (KG50P-10) 이 작업 폴더 밖 (절대 경로 · ../) · 다른 케이스 STL 을 받는다 — -C 통과 → 본 제출까지 · 2,000 step 시험은 판 블록 전에 끊겨 못 잡음 · 그 파일은 5 파일 영수증 · 잡 안 해시 대조 밖",
+      "note": "D0.7 덱 해당 없음 (판 메시 줄 = 덱 안 상대 이름 · 체크포인트 뒤).  최소 고침 = 대체 파일을 작업 폴더 안 실제 경로로 한정 + 영수증 · 잡 안 대조에 포함.  이 한 건 = 손 확인 (deckcheck 0 줄)."
+    },
+    {
+      "id": "PAI-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-30 통합본 사전 공격 (독립 에이전트 · 도구 2dc7f693 · 66f68e250)",
+      "opened_in": "docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/PREATTACK_INT.md",
+      "title": "-T (검토 대상) ↔ 본 호출 입력이 결속되지 않음 — 본 제출 승인은 도구 · 헬퍼 sha256 뿐 · -T 뒤 멈춘 폴더 본 덱의 press_speed 를 바꿔도 본 호출이 새 시험 → 통과 → 제출",
+      "note": "최소 고침 = 본 명령에 -R <-T 영수증 sha256> (바뀐 것 없으면 두 영수증 바이트 같음).  이 한 건 = 손 확인 (-T 의 main_inputs.sha256 sha ↔ 본 호출 새 영수증 비교 · 다르면 scancel)."
+    },
+    {
+      "id": "PAI-03",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-30 통합본 사전 공격 (독립 에이전트 · 도구 2dc7f693 · 66f68e250)",
+      "opened_in": "docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/PREATTACK_INT.md",
+      "title": "증거 신원 — F02 증거 수는 이 이력에 없는 곁가지 도구 (5f4ffb46 · e5a61181) 에서 잰 것 · 통합 sha256 (12bc95ce · 2dc7f693) 를 적은 README 가 늦게 생김 · F01 2 판 증거가 커밋 메시지에만",
+      "note": "통합 판 증거 = docs/reviews/kg50rf_fix_evidence_20261030/F01/r2/README.md (8ed3e26eb) — 수 재확인은 사전 공격 보고 §claims."
+    },
+    {
+      "id": "PAI-04",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-30 통합본 사전 공격 (독립 에이전트 · 도구 2dc7f693 · 66f68e250)",
+      "opened_in": "docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/PREATTACK_INT.md",
+      "title": "runnerck 의 cd 실제 경로 = pwd -P 같음이 ibb /home ↔ /lustre 에서 성립하는지 미확인 (bind mount 면 시도 전 거부)",
+      "note": "10-30 1저자 ibb 화면 readlink -f ~ = /lustre/home/yonghoon → 심볼릭 꼴 · 이 한 건 해당 없음 (추정 · -T 에서 확인)."
+    },
+    {
+      "id": "PAI-05",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-30 통합본 사전 공격 (독립 에이전트 · 도구 2dc7f693 · 66f68e250)",
+      "opened_in": "docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/PREATTACK_INT.md",
+      "title": "정적 대조 Python 이 python3 - (격리 아님) — 작업 루트의 difflib.py 같은 파일이 표준 모듈을 대신할 수 있다 (runnerck 는 -I)",
+      "note": "최소 고침 = python3 -I -."
+    },
+    {
+      "id": "PAI-06",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-30 통합본 사전 공격 (독립 에이전트 · 도구 2dc7f693 · 66f68e250)",
+      "opened_in": "docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/PREATTACK_INT.md",
+      "title": "runnerck (러너에 박을 sha256) 가 정적 대조 앞에 돈다 — 외부 쓰기가 둘 사이에 바꿨다 되돌리면 검사 안 한 바이트가 돌 수 있다 (ABA · 외부 쓰기 둘 필요)",
+      "note": "외부 쓰기 없으면 없음."
+    },
+    {
+      "id": "PAI-07",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-30 통합본 사전 공격 (독립 에이전트 · 도구 2dc7f693 · 66f68e250)",
+      "opened_in": "docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/PREATTACK_INT.md",
+      "title": "기록 빈칸 — 정적 대조 기준 본 덱 sha256 미기록 · 체크포인트를 쓴 삽입 덱 미대조 · lmp_mpi 시험 ↔ 본 미대조",
+      "note": "D0.7 = 삽입 덱 ↔ 본 덱 1–166 행 같음 (사전 공격 실측)."
+    },
+    {
+      "id": "PAI-08",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-30 통합본 사전 공격 (독립 에이전트 · 도구 2dc7f693 · 66f68e250)",
+      "opened_in": "docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/PREATTACK_INT.md",
+      "title": "-s · -r 값 검사 없음 — -s ins1/../decoy = 다른 폴더를 멈춘 폴더로 복사 · 시험 제출",
+      "note": "정해진 명령이면 없음 · 최소 고침 = 접미사 · 루트 꼴 검사."
+    },
+    {
+      "id": "PAI-09",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-30 통합본 사전 공격 (독립 에이전트 · 도구 2dc7f693 · 66f68e250)",
+      "opened_in": "docs/reviews/kg50rf_fix_evidence_20261030/preattack_int/PREATTACK_INT.md",
+      "title": "하네스 정상 settling 덱 (res_good) 이 thermo_style · thermo 를 뺀다 — 실제 LIGGGHTS 라면 G0 실패할 덱이 하네스에선 양성 (추정)",
+      "note": "시험 고정물 정정 후보 · 도구 판정과 무관."
+    },
+    {
+      "id": "SELF-141",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "1저자 10-30 *\"저번에 줬던거 같은데\"* (믹서 판정 ZIP 다시 올림)",
+      "opened_in": "docs/reviews/codex_mixer_d2_review_20261027/README_import.md",
+      "title": "10-27 23:35 받은 Codex 믹서 D2 (HOLD · MXD2R-01–03) · D3 (범위 GO) 판정을 그날 밤 재현만 하고 반입 (판정문 · 원장) 을 다음 커밋으로 미뤘다가 10-28 압축 때 잃음 → 10-30 1저자에게 \"판정 대기 · 다시 보내라\" 로 잘못 보고",
+      "note": "진행 기록 10-28 새벽 줄에 \"반입 = 다음 커밋\" 만 있고 원장 0 건이었다.  고침 = 반입 (2c2c75d0c · 에이전트 · 재현 판정값 차이 0) · 받은 판정은 그 자리에서 반입 커밋 (압축 전에 끝낸다).",
+      "claimed_fixed_sha": "2c2c75d0c",
+      "evidence_tests": [
+        "docs/reviews/codex_mixer_d2_review_20261027/README_import.md · docs/reviews/codex_mixer_d3_review_20261027/README_import.md (재현 표)"
+      ]
     }
   ]
 }

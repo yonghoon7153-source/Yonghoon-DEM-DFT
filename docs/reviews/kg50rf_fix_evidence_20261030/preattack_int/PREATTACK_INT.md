@@ -1,6 +1,9 @@
 # 50kg 재개 도구 통합판 독립 사전 공격 (PAI · 10-30) — `scripts/resume_ckpt.sh` sha256 `2dc7f693…`
 
-- 대상: 커밋 `65c5d6d37` 의 `scripts/resume_ckpt.sh` (sha256 `2dc7f693263708d7788ab721386182c6109a8f9278797ecc43f5165d6715f1e8` · 처음에 확인) · 비교 기준 = Codex 가 마지막으로 본 핀 `bf8cf21c6` (도구 `77c24237…`).
+> ※ 10-30 통합: 이 문서의 커밋 SHA 는 본 가지 (claude/stoic-knuth-NObVQ) 에 들어간 SHA 로 바꿔 적었다 (작업 트리 가지 SHA 는 원격에 없어서 통합 SHA 로 바꿨다).
+
+
+- 대상: 커밋 `26e748af2` 의 `scripts/resume_ckpt.sh` (sha256 `2dc7f693263708d7788ab721386182c6109a8f9278797ecc43f5165d6715f1e8` · 처음에 확인) · 비교 기준 = Codex 가 마지막으로 본 핀 `bf8cf21c6` (도구 `77c24237…`).
 - 범위: KG50R-F01 1·2 판 (정적 대조 · 사전 공격 R1–R8) + KG50R-F02 1·2 판 (러너 결속 · 영수증 · 잡 안 대조 · G0 신원) 통합판.  실제 D0.7 (`kg50_d07_b50` · v3 50×50 · settling 체크포인트 step 20001 · NP 56) 에 쓸 수 있는지.
 - 환경: 이 리포 클라우드 컨테이너 (Linux · GNU bash 5.2.21 · Python 3.11.15 · 3.8.20 · awk = mawk 1.3.4) · 리포의 가짜 SLURM 하네스 (`scripts/test_resume_ckpt.py` — 가짜 sbatch 가 러너를 **실제로 돌리고** 가짜 mpirun 이 cwd · argv · `-in` 파일 sha256 을 적는다).  실제 ibb · SLURM · MPI · LIGGGHTS · ibb `dem_restart.py` 실행 없음.
 - D0.7 재개 덱: `dem_restart.py` 사본이 리포에 없어서 **D2 선례에서 변환을 배워** 만들었다 — 변환 T 를 D2 본 덱에 적용한 결과가 받은 D2 r4 덱 (도구가 한 두 고침 = 템플릿 줄 · 179999→180000 을 되돌린 것) 과 **바이트 같음** 을 확인한 뒤 같은 T 를 D0.7 본 덱 (같은 257 줄 틀) 에 적용 (`probes/make_d07_resume.py`).  헬퍼 러너 = D2 r4 러너 꼴 (`cd <작업 폴더 실제 경로>`).
@@ -78,8 +81,8 @@ sha256sum kg50_d07_b50/attempt_r56_*/main_inputs.sha256          # 적어 둔다
 
 ### PAI-03 (P3) — 증거 신원 (Codex 가 "도구 · 입력 신원 고정" 을 다시 볼 자리)
 
-- `docs/reviews/kg50rf_fix_evidence_20261030/F02/README.md` 의 수 (RB 91/91 · 변이 91 중 생존 3 · `--compare-old` 둘 다 정상 33 · "첫 1033 줄 sha256 = d0dc0cf4") = 곁가지 도구 `5f4ffb46` · `e5a61181` (이 이력에 없다).  이 이력의 통합 도구는 `b24cc53a` (0b710c85d) · `12bc95ce` (7920e9be8) · `2dc7f693` (65c5d6d37) — 어느 README 에도 없다.
-- F01 2 판 (R1–R8) 의 "실제 본 덱 24 쌍 rc 0" · "리뷰어 반례 덱 15 rc 1" · "VP 고치기 전 결과 = 증거 커밋" = 65c5d6d37 에 증거 파일 없음 (커밋 메시지뿐).
+- `docs/reviews/kg50rf_fix_evidence_20261030/F02/README.md` 의 수 (RB 91/91 · 변이 91 중 생존 3 · `--compare-old` 둘 다 정상 33 · "첫 1033 줄 sha256 = d0dc0cf4") = 곁가지 도구 `5f4ffb46` · `e5a61181` (이 이력에 없다).  이 이력의 통합 도구는 `b24cc53a` (07761cf54) · `12bc95ce` (48cfd2871) · `2dc7f693` (26e748af2) — 어느 README 에도 없다.
+- F01 2 판 (R1–R8) 의 "실제 본 덱 24 쌍 rc 0" · "리뷰어 반례 덱 15 rc 1" · "VP 고치기 전 결과 = 증거 커밋" = 26e748af2 에 증거 파일 없음 (커밋 메시지뿐).
 - 아래 §2 에서 2dc7f693 로 다시 쟀다 (리뷰어 덱 15 는 리포에 없어 못 잼).  고침 = 2dc7f693 을 이름으로 단 증거 README + 로그 반입.
 
 ### PAI-04 (P3 · 가용성) — runnerck cd 실제 경로 (ibb)
@@ -117,14 +120,14 @@ sha256sum kg50_d07_b50/attempt_r56_*/main_inputs.sha256          # 적어 둔다
 
 | 주장 (출처) | 다시 잰 값 | 판정 |
 |---|---|---|
-| `433 PASS · 0 FAIL (기존 383 + VP 50)` · Python 3.11 · mawk (65c5d6d37 커밋) | 433 PASS · 0 FAIL · 217 초 · 383 = 216 + V 76 + RB 91 | 맞음 |
+| `433 PASS · 0 FAIL (기존 383 + VP 50)` · Python 3.11 · mawk (26e748af2 커밋) | 433 PASS · 0 FAIL · 217 초 · 383 = 216 + V 76 + RB 91 | 맞음 |
 | (같은 시험을 3.8 에서는 주장 안 함) | Python 3.8.20 (하네스 + 도구 안 `python3`) 433 PASS · 0 FAIL · 179 초 | 더함 |
-| `실제 kg50 본 덱 12 × (settling · after_settling) 24 쌍 = rc 0 24` (65c5d6d37) | 리포 본 덱 12 (v2 9 · v3 3) × {settling (하네스) · settling (dem_restart.py 꼴 재구성) · after_settling (하네스)} = 36 쌍 rc 0 36 | 맞음 (스크립트 · 로그는 커밋에 없음 → PAI-03) |
-| `리뷰어 반례 덱 15 = 전부 rc 1` (65c5d6d37) | 덱이 리포에 없다 | 확인 불가 (PAI-03) |
-| VP 시험 먼저: `45 개 = 7 PASS · 38 FAIL (대조군 6 + VP8)` (f4142506e) | 50 개 전부를 고치기 전 통합 도구 12bc95ce 로 = 7 PASS · 43 FAIL · 통과 7 = VP8 + 대조군 6 (VP2z 3z 4z 5z 7z 8z) | 맞음 (뒤에 더한 5 개도 고치기 전 실패) |
+| `실제 kg50 본 덱 12 × (settling · after_settling) 24 쌍 = rc 0 24` (26e748af2) | 리포 본 덱 12 (v2 9 · v3 3) × {settling (하네스) · settling (dem_restart.py 꼴 재구성) · after_settling (하네스)} = 36 쌍 rc 0 36 | 맞음 (스크립트 · 로그는 커밋에 없음 → PAI-03) |
+| `리뷰어 반례 덱 15 = 전부 rc 1` (26e748af2) | 덱이 리포에 없다 | 확인 불가 (PAI-03) |
+| VP 시험 먼저: `45 개 = 7 PASS · 38 FAIL (대조군 6 + VP8)` (ce70f44e4) | 50 개 전부를 고치기 전 통합 도구 12bc95ce 로 = 7 PASS · 43 FAIL · 통과 7 = VP8 + 대조군 6 (VP2z 3z 4z 5z 7z 8z) | 맞음 (뒤에 더한 5 개도 고치기 전 실패) |
 | VP 50 · RB 91 (지금 판) | `--only VP` 50 PASS · 0 FAIL (12 초) · `--only RB` 91 PASS · 0 FAIL (44 초) | 맞음 |
-| `통합 12bc95ce → 2dc7f693` (65c5d6d37) | 이력 sha256: bf8cf21c6 `77c24237` → f4346cf69 `38e1eff5` → 0b710c85d `b24cc53a` → 7920e9be8 `12bc95ce` → 65c5d6d37 `2dc7f693` | 맞음 |
-| F02 README `정적 대조 Python (첫 1033 줄) 손대지 않음 (d0dc0cf4)` | 곁가지 주장이라 이 이력에서 그 값은 안 나온다 (2dc7f693 의 첫 1033 줄 sha256 = `01b2a951` · F01 이 바꿨다).  같은 뜻을 이 이력에서: F02 커밋들은 정적 대조 heredoc (63–1422 행) 을 안 바꿨다 (c24fef721 · 4865ba895 · f4142506e 모두 `85806a42…`) · F01 2 판은 셸 쪽 (첫 `PY` 행부터 끝) 을 안 바꿨다 (`dc3465ef…` 둘 다) | 뜻은 맞음 · 값은 곁가지 한정 |
+| `통합 12bc95ce → 2dc7f693` (26e748af2) | 이력 sha256: bf8cf21c6 `77c24237` → c419a7f92 `38e1eff5` → 07761cf54 `b24cc53a` → 48cfd2871 `12bc95ce` → 26e748af2 `2dc7f693` | 맞음 |
+| F02 README `정적 대조 Python (첫 1033 줄) 손대지 않음 (d0dc0cf4)` | 곁가지 주장이라 이 이력에서 그 값은 안 나온다 (2dc7f693 의 첫 1033 줄 sha256 = `01b2a951` · F01 이 바꿨다).  같은 뜻을 이 이력에서: F02 커밋들은 정적 대조 heredoc (63–1422 행) 을 안 바꿨다 (59bdeb093 · b0fd6ec9f · ce70f44e4 모두 `85806a42…`) · F01 2 판은 셸 쪽 (첫 `PY` 행부터 끝) 을 안 바꿨다 (`dc3465ef…` 둘 다) | 뜻은 맞음 · 값은 곁가지 한정 |
 | F01 README `Codex 사례 여섯 — 반례 넷 rc 1 · 기준 둘 rc 0` | Codex ZIP (e46bda9ec 반입) 43 사례 전부를 2dc7f693 `-C` 로: 반례 넷 rc 1 · accept 4 rc 0 · reject 31 rc 1 · "known parser mismatch" 둘 (NBSP · 이음 공백) 은 이제 rc 1 (닫힌 실패로 좋아짐) · "known bounded acceptance" 둘 (체크포인트 basename · 빈 대체 STL) rc 0 그대로 | 맞음 |
 | Codex §5 `최신 cutter 로 다시 만든 D2 시험 = 수령 r4t 바이트 같음` | 2dc7f693 cutter → `aac7debc…` = 수령 r4t | 맞음 |
 | F02 README §0-2 `-T 는 영수증 다시 대조 안 함 · 잡 안 대조 + G0 신원이 덮는다` | 코드 · 끝-끝과 같음 (`logs/e2e_T.log`) | 맞음 |
