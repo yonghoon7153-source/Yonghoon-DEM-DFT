@@ -234,3 +234,5 @@ reviews/review_reil_c4e_e1_v5_prereview_20261030/** -text
 evidence/reil_c4e1_0_20261030/** -text
 # 2026-10-30: REIL C4-E · E1-0 결과 검토 회신 (E1_0_RESULTS_ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION · 고정 HEAD a9544ee0 · 재시험 요구 없음 · 실행 승인 아님 · source/ = 검토자가 본 저장소 사본 · tools/ = 검토자 도구 사본, 실행하지 않음) — bytes 그대로
 reviews/review_reil_c4e1_0_result_20261030/** -text
+# 2026-10-30: REIL C4-E · E1-0b 사전 검토 회신 (CHANGES_REQUIRED_BEFORE_E1_0B_APPROVAL · 필수 보완 E1_0B_N1 · 고정 HEAD 90a842a9 · 실행 승인 아님 · source/ · basis/ = 검토자가 본 저장소 사본 · *.py = 검토자 도구 사본, 실행하지 않음) — bytes 그대로
+reviews/review_reil_c4e_e1_0b_prereview_20261030/** -text
