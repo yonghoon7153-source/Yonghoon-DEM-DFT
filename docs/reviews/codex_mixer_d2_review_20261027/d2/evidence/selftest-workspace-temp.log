@@ -1,0 +1,72 @@
+test_actual_command_scope (__main__.D2Consumers.test_actual_command_scope) ... C:\Users\Administrator\Documents\Codex\mx27\d2\snapshot\scripts\make_mixer_deck.py:1122: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\Administrator\\Documents\\Codex\\mx27\\d2\\snapshot\\scripts\\make_mixer_deck.py'>
+  generator_sha256=hashlib.sha256(open(os.path.abspath(__file__), 'rb').read()).hexdigest(),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_actual_common_mode_mutations (__main__.D2Consumers.test_actual_common_mode_mutations) ... ok
+test_ceiling_and_ced_meta_rebinding (__main__.D2Consumers.test_ceiling_and_ced_meta_rebinding) ... ok
+test_cli_and_duplicate_json (__main__.D2Consumers.test_cli_and_duplicate_json) ... Exception in thread Thread-2 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1599, in _readerthread
+    buffer.append(fh.read())
+                  ^^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb0 in position 535: invalid start byte
+ERROR
+test_command_lifecycle (__main__.D2Consumers.test_command_lifecycle) ... ok
+test_coordinated_density_and_gravity_vector (__main__.D2Consumers.test_coordinated_density_and_gravity_vector) ... ok
+test_counts_are_from_actual_inputs (__main__.D2Consumers.test_counts_are_from_actual_inputs) ... ok
+test_d2_pairs_and_old_contracts (__main__.D2Consumers.test_d2_pairs_and_old_contracts) ... ok
+test_dt_half_and_legacy_cli_positive (__main__.D2Consumers.test_dt_half_and_legacy_cli_positive) ... Exception in thread Thread-3 (_readerthread):
+Traceback (most recent call last):
+Exception in thread Thread-4 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\threading.py", line 1075, in _bootstrap_inner
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+    self.run()
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\threading.py", line 1012, in run
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1599, in _readerthread
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1599, in _readerthread
+    buffer.append(fh.read())
+                  ^^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xa6 in position 0: invalid start byte
+    buffer.append(fh.read())
+                  ^^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xa1 in position 298: invalid start byte
+ERROR
+test_generation_and_supported_phase_positive (__main__.D2Consumers.test_generation_and_supported_phase_positive) ... ok
+test_meta_binding_and_numeric_boundaries (__main__.D2Consumers.test_meta_binding_and_numeric_boundaries) ... ok
+test_pair_identity_and_orientation (__main__.D2Consumers.test_pair_identity_and_orientation) ... ok
+test_tokens_and_nested_schema (__main__.D2Consumers.test_tokens_and_nested_schema) ... ok
+
+======================================================================
+ERROR: test_cli_and_duplicate_json (__main__.D2Consumers.test_cli_and_duplicate_json)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\mx27\d2\snapshot\scripts\test_mixer_d2_consumers.py", line 258, in test_cli_and_duplicate_json
+    self.assertEqual(p.returncode,0,p.stdout+p.stderr)
+                                    ~~~~~~~~^~~~~~~~~
+TypeError: can only concatenate str (not "NoneType") to str
+
+======================================================================
+ERROR: test_dt_half_and_legacy_cli_positive (__main__.D2Consumers.test_dt_half_and_legacy_cli_positive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\mx27\d2\snapshot\scripts\test_mixer_d2_consumers.py", line 244, in test_dt_half_and_legacy_cli_positive
+    self.assertEqual(proc.returncode,0,proc.stdout+proc.stderr)
+                                       ~~~~~~~~~~~^~~~~~~~~~~~
+TypeError: unsupported operand type(s) for +: 'NoneType' and 'NoneType'
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.828s
+
+FAILED (errors=2)

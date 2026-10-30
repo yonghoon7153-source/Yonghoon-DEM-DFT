@@ -1,0 +1,18 @@
+[
+  {
+    "script": "test_mixer_d2_consumers.py",
+    "rc": 0
+  },
+  {
+    "script": "mixer_deck_readback.py",
+    "rc": 0
+  },
+  {
+    "script": "mixer_deck_diff.py",
+    "rc": 1
+  },
+  {
+    "script": "mixer_smoke_blind.py",
+    "rc": 1
+  }
+]

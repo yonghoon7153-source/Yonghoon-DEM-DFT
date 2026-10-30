@@ -1,0 +1,33 @@
+{
+  "schema": "mixer_d2_pair_development/1",
+  "allow": "D2",
+  "verdict": "FAIL",
+  "registered": null,
+  "execution_authorized": false,
+  "failures": [
+    "old: D2 development contract: ValueError: one persistent sphere integrator required before insertion run",
+    "new: D2 development contract: ValueError: one persistent sphere integrator required before insertion run"
+  ],
+  "table": [],
+  "old": {
+    "schema": "mixer_d2_development/1",
+    "verdict": "FAIL",
+    "failures": [
+      "D2 development contract: ValueError: one persistent sphere integrator required before insertion run"
+    ],
+    "registered": null,
+    "execution_authorized": false,
+    "scope": "D2 development deck and planned counts only; not execution evidence"
+  },
+  "new": {
+    "schema": "mixer_d2_development/1",
+    "verdict": "FAIL",
+    "failures": [
+      "D2 development contract: ValueError: one persistent sphere integrator required before insertion run"
+    ],
+    "registered": null,
+    "execution_authorized": false,
+    "scope": "D2 development deck and planned counts only; not execution evidence"
+  },
+  "scope": "same-world D2 development pair, not a cohort or launch certificate"
+}

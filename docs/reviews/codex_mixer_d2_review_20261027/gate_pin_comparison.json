@@ -1,0 +1,18 @@
+[
+  {
+    "tag": "d2",
+    "candidate": "34782a1874435e317f44c9d8f2045d53ceaf4dcc",
+    "pin": "045e0b3098e8fe5a64d6eb0da310da776e68f995",
+    "all_changed_count": 28,
+    "code_changed": [],
+    "log_tail": "i         --selftest\n  ✓ check_doc_refs          --selftest\n  ✓ check_cohort_packages  (커밋된 패키지 ↔ 원장)\n  ✓ audit_adjudication   (원시 감사 ↔ 판정 원장)\n  ✓ check_doc_refs         (문서가 가리키는 것이 실재하는가)\n  ✓ lhs_ext_materialize     --selftest\n  ✓ lhs_supp_design (보충 · 후막 설계 · 10-06)\n  ✓ lhs_supp_design (봉인 CSV ↔ 해시 · 재검증)\n  ✓ lhs_ext_submit_gate     --selftest\n  ✓ lhs_ext_design (봉인 CSV ↔ 상자 ↔ 해시)\n  ✓ selftest_inventory     (분류·레인·CI 의존)\n  ✓ fast 자기검사 전수     (등재 기반 드라이버)\n\n✓ 전부 통과 — 커밋해도 된다 (CI 가 같은 것을 다시 돈다)\n"
+  },
+  {
+    "tag": "d3",
+    "candidate": "9c2f7b47fd4559ee4c08f23e667cdae92badbb04",
+    "pin": "e0daf7b234bcc7935259d786e270268372abe2a2",
+    "all_changed_count": 54,
+    "code_changed": [],
+    "log_tail": "i         --selftest\n  ✓ check_doc_refs          --selftest\n  ✓ check_cohort_packages  (커밋된 패키지 ↔ 원장)\n  ✓ audit_adjudication   (원시 감사 ↔ 판정 원장)\n  ✓ check_doc_refs         (문서가 가리키는 것이 실재하는가)\n  ✓ lhs_ext_materialize     --selftest\n  ✓ lhs_supp_design (보충 · 후막 설계 · 10-06)\n  ✓ lhs_supp_design (봉인 CSV ↔ 해시 · 재검증)\n  ✓ lhs_ext_submit_gate     --selftest\n  ✓ lhs_ext_design (봉인 CSV ↔ 상자 ↔ 해시)\n  ✓ selftest_inventory     (분류·레인·CI 의존)\n  ✓ fast 자기검사 전수     (등재 기반 드라이버)\n\n✓ 전부 통과 — 커밋해도 된다 (CI 가 같은 것을 다시 돈다)\n"
+  }
+]

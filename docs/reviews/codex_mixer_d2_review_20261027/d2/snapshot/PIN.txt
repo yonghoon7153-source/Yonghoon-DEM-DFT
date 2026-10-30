@@ -1,0 +1,5 @@
+pin 045e0b3098e8fe5a64d6eb0da310da776e68f995
+branch origin/codex/mixer-mxd2
+request docs/reviews/codex_mixer_d2_consumers_request_20261024.md
+files 559 (= pin 의 7799a2ff6 대비 추가·수정 파일 + 요청서)
+full tree: git fetch origin codex/mixer-mxd2 && git checkout 045e0b3098e8fe5a64d6eb0da310da776e68f995

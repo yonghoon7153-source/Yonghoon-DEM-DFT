@@ -12591,7 +12591,7 @@
       "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
       "opened_in": "docs/hetero_thesis.md",
       "title": "덱 되읽기 (REG_DENSITY = gen1 전용) · 덱 비교 (D2 허용목록 · 셀 이름 없음) · 스모크 (gen1 계획 수) 가 lab 세대 · D2 규칙을 모른다 — lab 덱 표 E 되읽기 rc 1 · 같은 ρ 세계 코팅 ↔ 비코팅 짝 (CED 7 원소 다름) 비교 A·B·U·E·EB 전부 rc 1 · S1 계획 산출물 미구현",
-      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).\n2026-10-27 반입 준비 보충: 후속 lab/D2 readback·diff·smoke 소비자 수정과 독립 행렬/생명주기/변이 근거는 docs/reviews/codex_mixer_d2_consumers_request_20261024.md 및 docs/reviews/codex_review_mxd2_consumers_independent_20261024.md에 있다. 초기 생성기 패키지의 소비자 미지원 관찰과 후속 수정은 서로 다른 시점이다. 이 증거만으로 S1/등록 코호트/실제 관측 또는 MXD2 전체 종결을 선언하지 않는다. 외부 리뷰 대기, 기존 open 유지.",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).\n2026-10-27 반입 준비 보충: 후속 lab/D2 readback·diff·smoke 소비자 수정과 독립 행렬/생명주기/변이 근거는 docs/reviews/codex_mixer_d2_consumers_request_20261024.md 및 docs/reviews/codex_review_mxd2_consumers_independent_20261024.md에 있다. 초기 생성기 패키지의 소비자 미지원 관찰과 후속 수정은 서로 다른 시점이다. 이 증거만으로 S1/등록 코호트/실제 관측 또는 MXD2 전체 종결을 선언하지 않는다. 외부 리뷰 대기, 기존 open 유지.\n2026-10-30 반입: Codex 10-27 독립 재검토 (핀 045e0b309 · docs/reviews/codex_mixer_d2_review_20261027/codex_review_mixer_d2_20261027.md) = HOLD — 요청서 (docs/reviews/codex_mixer_d2_consumers_request_20261024.md §4) 가 검토를 청한 개발 소비자 하위 범위 ((1) 밀도 세대 · 실제 계획수 결합 · (2) 명시적 D2 개발 쌍 비교) 도 이 리뷰로 닫히지 않는다 — 새 MXD2R-01 · 02 (P1) · MXD2R-03 (P2).  수용된 것 = 정상 덱 산술 (밀도 · 상 · 인쇄 CED · 독립 48 조합) · `--d2-plan` 이 증서 · 실행 GO 를 만들지 않음.  (3) 새 S1 셀 · 코호트 · 정책 · 실물 입력 = 미검토 · 미완료 그대로.  status open 유지.",
       "evidence_tests": [
         "scripts/make_mixer_deck.py (--selftest)"
       ]
@@ -14068,6 +14068,36 @@
       "opened_in": "docs/50kg/kg50_report_plan_fix_plan_20261030.md",
       "title": "망 결과의 Stage-E σ_ion 은 SE 입도 계수 sigma_ionic_grain_factor_SE (scripts/run_network_full_corrections.py · r_SE 0.3–0.5 µm = 0.90 · r_SE ≥ 0.5 = 1.00 · 출처 없는 모델 가정 SELF-51) 를 곱한다 — 50kg 네 입도 중 D0.7 (r_SE 0.35 µm) 에만 10 % 감점 · 보고에 Stage-E σ 를 쓰면 가설 ('미립화 → σ 감소') 을 모형이 미리 넣는 꼴",
       "note": "아직 보고 그림 없음 (결과 오염 아님 · 계획 단계 발견) · scripts/tau_flux.py 는 원 솔버 σ 를 쓴다 (530 행 docstring) · 최소 해결 = 입도 비교 = 원 솔버 σ · f 만 · Stage-E σ_ion 은 보고에 안 씀 · 분석 계획에 명시 · 수정 계획 Q5 (⬜ 1저자)."
+    },
+    {
+      "id": "MXD2R-01",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-27 믹서 D2 개발 소비자 독립 재검토 (핀 045e0b309)",
+      "opened_in": "docs/reviews/codex_mixer_d2_review_20261027/codex_review_mixer_d2_20261027.md",
+      "title": "(Codex MXD2R-01) 명령 토큰이 같아도 시간 · 삽입 · 회전 계약이 달라진다 — 양쪽 덱에 같은 변경 (모든 `run N` → `run N upto` · 유일한 `timestep 2.373e-07` 을 마지막 run 뒤로 · 두 insert/pack 에 `start 9000000` · Front 회전 주기만 0.1 s) 을 넣고 메타 해시 · 길이를 다시 묶으면 되읽기 · 쌍 비교 · 계획 세 소비자가 API PASS · CLI rc 0",
+      "note": "판정문 §3 · 자리 (핀 045e0b309) scripts/mixer_deck_readback.py:167–171 (timestep 위치 무시 · run 은 첫 정수만) · :981–1003 · :1104–1179 (숫자 · 생명주기 검사에 run 옵션 · 실제 dt 효력 시점 · 삽입 start · 끝판 주기 값 의미 없음) · :1291–1321 (이 파싱으로 계획 시간 · step 대조) · scripts/mixer_deck_diff.py:169–204 (양쪽 되읽기 뒤 non-CED 토큰 동일성) · scripts/mixer_smoke_blind.py:245–252 (같은 되읽기).  명령 의미 (LIGGGHTS 3d5c00f run.cpp · fix_insert.cpp 소스 해석 · DEM 실행 아님): upto 실제 증분 [1, 560605, 0, 6034776] · 최종 step 7,716,595 → 6,595,382 · 둘째 정착 0 · 회전 1.5650841486 → 1.4320523448 s (2.00008713 → 1.83008017 회전) · insA/insB 는 step 560,607 · 1,121,213 에서 제거 = start 9,000,000 전에 사라져 삽입 기회 없음 · Front 0.1 s ↔ 드럼 0.782508 s (Front 15.65 회전).  정상 산술 (밀도 세대 · 상별 계획수 · 인쇄 CED 로 SE Bo · 독립 48 조합) 은 수용 — 정상 생성 덱이 잘못 실행됐다는 증거 아님.  우리 트리 재현 (기반 4c69070ad = 핀 blob · Linux) = Codex 사례 파일에 판정문 명령 그대로 네 사례 (run_upto · late_timestep · insert_start_late · front_period) 모두 세 CLI rc 0 · 탐침 rc 0 · 결과 JSON 차이 0 (docs/reviews/codex_mixer_d2_review_20261027/_repro_ours_20261030/).  최소 해결 = 개발 덱 지원 문법을 닫는다 — 생성기 문법만이면 `run <정수>` 두 토큰만 · dt 는 첫 run 전 한 번 설정 · 이후 불변 · 삽입 start · 반복 옵션은 거부 (또는 실제 활성 구간 · 스케줄 계산) · Drum/Front/Back 의 주기 · 축 · 원점 · 시작/종료 시점을 공동 회전 계약에 각각 결합 · 두 덱에 같은 변경을 넣는 상주 회귀.  수정 계획 초안 docs/reviews/mxd2r_fix_plan_20261030.md (⬜ 1저자)."
+    },
+    {
+      "id": "MXD2R-02",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-27 믹서 D2 개발 소비자 독립 재검토 (핀 045e0b309)",
+      "opened_in": "docs/reviews/codex_mixer_d2_review_20261027/codex_review_mixer_d2_20261027.md",
+      "title": "(Codex MXD2R-02) SE–SE 접촉을 꺼도 실제 접촉력 계약 PASS — 양쪽 덱에 `neigh_modify exclude type 3 3` (3 상 고정물의 type 3 = SE) 한 줄을 넣고 메타를 다시 묶으면 되읽기 · 쌍 비교 · 계획이 PASS / rc 0 · 정상 SE–SE CED · Bo 검산 결과를 그대로 낸다 (LIGGGHTS: exclude = 그 쌍을 이웃 목록에서 빼 쌍 상호작용을 계산하지 않음)",
+      "note": "판정문 §4 · 자리 (핀 045e0b309) scripts/mixer_deck_readback.py:1240 (허용 명령에 neigh_modify · 인자 의미 제한 없음) · :1248–1252 (pair/wall 모델 문자열만) · :1271–1290 (인쇄 행렬로 힘 · 겹침 계산 · 접촉 제외 확인 없음).  보조 탐침 coefficientFriction 행렬 fix 통째 삭제도 세 소비자 PASS — 바이너리 초기화 실패를 확인하지 않아 별도 finding 으로 세지 않음 (재료 fix 완비성이 검사 범위 밖이라는 증거).  인쇄 CED 의 대수적 Bo 계산은 맞다 — 무너지는 것은 PASS 를 '실제 덱에서 이 힘 척도를 적용하는 D2 쌍' 으로 읽는 결론 · 두 덱 공통 누락은 짝 비교로 못 잡는다 · 실물 STL · 둘째 난수 시드 범위 밖 문제와 다른 '같은 덱에 적힌 normal law 가 실제 어떤 접촉에 적용되는가' 의 문제.  우리 트리 재현 = exclude_SE_SE 세 CLI rc 0 · friction_missing 세 CLI rc 0 (docs/reviews/codex_mixer_d2_review_20261027/_repro_ours_20261030/cli_rc_codex_received_cases.json).  최소 해결 = 지원 neigh_modify 문법 고정 · 접촉 제외 옵션 거부 · 지원 pair/wall 모델에 필요한 재료 fix 의 완비성 · 적용 전 순서 명시 · 모르는 의미는 개발 소비자에서 명시 거부 (임의 LIGGGHTS 입력 전체를 해석할 필요 없음).  수정 계획 초안 docs/reviews/mxd2r_fix_plan_20261030.md (⬜ 1저자)."
+    },
+    {
+      "id": "MXD2R-03",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-27 믹서 D2 개발 소비자 독립 재검토 (핀 045e0b309)",
+      "opened_in": "docs/reviews/codex_mixer_d2_review_20261027/codex_review_mixer_d2_20261027.md",
+      "title": "(Codex MXD2R-03) 파일 바이트 해시와 정규화 텍스트 해시가 뒤바뀜 — 세 CLI 가 덱을 텍스트로 읽어 (CRLF → LF) 그 UTF-8 로 해시 · 길이를 잰다: LF 정상 덱을 CRLF 바이트로 저장 (13,833 B · sha256 0b92f856…) 하고 메타는 LF 값 (13,654 B · 32033f6b…) 그대로 두면 되읽기 · 쌍 비교 · 계획 rc 0/0/0 · 실제 CRLF 바이트의 해시 · 길이를 정확히 적으면 1/1/1 로 거부",
+      "note": "판정문 §5 · 자리 (핀 045e0b309) scripts/mixer_deck_readback.py:1196–1199 (text.encode('utf-8') 로 해시 · 길이) · :1358 · scripts/mixer_deck_diff.py:838 · :1798 · scripts/mixer_smoke_blind.py:985 (텍스트 읽기 = 개행 정규화).  명령 의미 · 물리 결과를 바꾸는 반례가 아니라 '이 실제 파일 바이트를 검증했다' 는 출처 보증의 결함.  우리 트리 재현 = crlf_lf_metadata 세 CLI rc 0 · crlf_crlf_metadata 세 CLI rc 1 (metadata SHA256 != actual deck) — 판정문과 같은 sha · 길이 (docs/reviews/codex_mixer_d2_review_20261027/_repro_ours_20261030/).  ⚠ 이 증거의 CRLF 덱은 반입 폴더 .gitattributes `* -text` 로 바이트 그대로 둔다.  최소 해결 = CLI 에서 read_bytes() 로 실제 바이트의 해시 · 길이를 먼저 확인하고 검증한 바이트를 디코딩해 파싱 · LF 만 지원이면 CRLF 를 구체 사유로 거부 · 정규화 해시를 쓰려면 별도 이름 · 규약으로 표시하고 물리 파일 해시도 따로 보존 · 세 CLI 양방향 회귀.  수정 계획 초안 docs/reviews/mxd2r_fix_plan_20261030.md (⬜ 1저자)."
     }
   ]
 }

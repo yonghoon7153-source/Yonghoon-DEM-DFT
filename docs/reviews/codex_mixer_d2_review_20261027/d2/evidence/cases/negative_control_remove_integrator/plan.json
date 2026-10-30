@@ -1,0 +1,10 @@
+{
+  "schema": "mixer_d2_plan_check/1",
+  "verdict": "FAIL",
+  "failures": [
+    "D2 development contract: ValueError: one persistent sphere integrator required before insertion run"
+  ],
+  "registered": null,
+  "execution_authorized": false,
+  "scope": "D2 development planned counts; no observed frames, rest/contact certificate, cohort or execution authority"
+}

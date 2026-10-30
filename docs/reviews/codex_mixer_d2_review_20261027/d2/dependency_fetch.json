@@ -1,0 +1,37 @@
+[
+  {
+    "path": "scripts/mixer_gate_reader_diff.py",
+    "blob": "cc6c94e9e44cf3acecbb8d9e2271f5af9a747981",
+    "sha256": "3fdb1511cf3898add705bfef4216d9d2068d7489f08cdea0496a0cd8bc501f72"
+  },
+  {
+    "path": "scripts/mixer_restart_phase_test.py",
+    "blob": "d11ee0702ea26d33847dc9ab8187ac96e31a6f2b",
+    "sha256": "d9093a2830e664be4dc4c4f73d5f58b0e87da29bc152ff873aaa599ee4bee24a"
+  },
+  {
+    "path": "scripts/check_contact_validity.py",
+    "blob": "21468adeb13e5f13973f6e145e06249fe2bdfde6",
+    "sha256": "738bf397821a94697069308c9d7ebe54b3dfb61bbb19bb2f0c7be6e6f6df60c1"
+  },
+  {
+    "path": "scripts/make_mixer_resume.py",
+    "blob": "7909d7fb4afee8e9e2b7c31b012854eadeb1db8d",
+    "sha256": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e"
+  },
+  {
+    "path": "scripts/measure_mixing_index.py",
+    "blob": "7b45bc5862ab81840e82109d1fd9790264183e45",
+    "sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a"
+  },
+  {
+    "path": "scripts/measure_bed_aspect.py",
+    "blob": "9daca2e7b8eca82d49c0c7b26efc56ae8d94c321",
+    "sha256": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880"
+  },
+  {
+    "path": "scripts/mixer_stage_gate.py",
+    "blob": "203a7aedc145b4170c267ff4de62a34548844251",
+    "sha256": "e62df852d6cdeb031a7d5ff6418eee2477f5e00df8fae91fdd7758f3cafb21f5"
+  }
+]

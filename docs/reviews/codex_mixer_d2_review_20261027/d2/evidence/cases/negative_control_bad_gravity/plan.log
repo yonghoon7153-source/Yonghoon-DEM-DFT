@@ -1,0 +1,2 @@
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: actual gravity != declared mixer gravity

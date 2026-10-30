@@ -1,0 +1,52 @@
+[
+  {
+    "path": "dem_scripts/mixer_20260919/Back.stl",
+    "blob": "726a7f1e0771e3755eac937b82dad7293fe9ddcf",
+    "sha256": "2e7b962d14ced968d8178456feaf2f6a4856edd4b151070c23a8ac1588a461e5"
+  },
+  {
+    "path": "dem_scripts/mixer_20260919/Drum.stl",
+    "blob": "7e3b6b153d86e103752ddf93e2ed583f945414c6",
+    "sha256": "fe821a8ab6db0d94151e9d84bf19cc1fad77abb417cd640bf4577c2f87279730"
+  },
+  {
+    "path": "dem_scripts/mixer_20260919/Front.stl",
+    "blob": "e77c287028084d2a229762f8f9cbe4ba0a8aeca0",
+    "sha256": "443f9c3c859b2562dc041cde2af712fdfc4ab0225032ebb9420267c781843c81"
+  },
+  {
+    "path": "dem_scripts/mixer_20260919/in.mixer",
+    "blob": "5aa7e07e16b0d7cdc17cef38475d8c387fe0ebd9",
+    "sha256": "23b00d6dacac31a3a4fe030ea2a5af2a3110f0d9a6da0be7b9e7445dcecac469"
+  },
+  {
+    "path": "dem_scripts/mixer_20260921/gen_all.sh",
+    "blob": "14a9b59e1124316e23f5a78f7e8e2117044f8ca4",
+    "sha256": "42d265c9dc8e8adb7900779f15226a9f1673e908f79e7d7776329d6c37a57dbc"
+  },
+  {
+    "path": "dem_scripts/mixer_20260921/launch_highbo.sh",
+    "blob": "41c1b16f52be7158b6052f38e34e49aa6ac426c1",
+    "sha256": "ed469ffad993b321563cb35e3242d0223a132f251a0ed119588f02b5b106b6fb"
+  },
+  {
+    "path": "dem_scripts/mixer_20260921/run_all.sh",
+    "blob": "7dd051316d0777e0c5f248efe17ae2c2a2eb73bb",
+    "sha256": "a77e112661d9caa7e8a25ac9cdd136b714fd7f91f89b6bc50ff2056e655e54fc"
+  },
+  {
+    "path": "dem_scripts/mixer_20260921/start_check.py",
+    "blob": "958c52adf804c531e05a2ad3eb3b386c7bc53730",
+    "sha256": "93fa907ec5098a2f8003e1a2f542dd4da7a2e128ee98f818b32aa0639f54ea40"
+  },
+  {
+    "path": "dem_scripts/mixer_20260921/test_launcher.sh",
+    "blob": "a7f6615e528982ec6f01cd3573ac3d197074faa4",
+    "sha256": "4920e840b9c17b92b3d91193f9348b395a16ffe340c04a14622163d3aaa4d204"
+  },
+  {
+    "path": "scripts/check_doc_refs.py",
+    "blob": "9a5153bfa77236b1b6a2b0e50a38663be0199487",
+    "sha256": "d3793817526505fa079b1b7ccc0a0ad05204a5f22a544d80a68c8e9b20778f38"
+  }
+]

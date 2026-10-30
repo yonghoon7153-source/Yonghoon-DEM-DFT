@@ -1,0 +1,581 @@
+{
+  "schema": "mixer_d3_decision_result/1",
+  "analysis_id": "independent",
+  "numeric_encoding": "decimal-text",
+  "contract_sha256": "cea906857227366639c2e459e9eedb3bf1ba3ec60db338e6204ac9c1846e42f1",
+  "contract_binding": "actual-input-bytes-verified",
+  "verified_artifact_sha256": {
+    "condition": "3f30fc61b7afbd7ea243c28b33e7cb067481d5e35fcce354a8da6bbebb6b8f20",
+    "data": "c41c2645e0671f2e5bb3fca3c809f87c6e1345cb826167e70ccd37f193f25d22"
+  },
+  "condition_sha256": "3f30fc61b7afbd7ea243c28b33e7cb067481d5e35fcce354a8da6bbebb6b8f20",
+  "grid": [
+    {
+      "id": "low",
+      "bo_code": "0.4",
+      "bo_po_approx": "0.059259259259259259259259259259259259259259259259259"
+    },
+    {
+      "id": "middle",
+      "bo_code": "2.75",
+      "bo_po_approx": "0.40740740740740740740740740740740740740740740740741"
+    },
+    {
+      "id": "high",
+      "bo_code": "18",
+      "bo_po_approx": "2.6666666666666666666666666666666666666666666666667"
+    }
+  ],
+  "bo_po_definition": "Bo_code / 6.75; 50 significant decimal digits",
+  "calibration": {
+    "T1": [
+      {
+        "id": "low",
+        "prediction": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "data"
+          ],
+          "unit": "u",
+          "value": "3",
+          "uncertainty": {
+            "value": "0.2",
+            "unit": "u",
+            "n": 5,
+            "df": "4",
+            "method": "synthetic explicit input"
+          }
+        },
+        "experiment": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "data"
+          ],
+          "unit": "u",
+          "value": "3",
+          "uncertainty": {
+            "value": "0.2",
+            "unit": "u",
+            "n": 5,
+            "df": "4",
+            "method": "synthetic explicit input"
+          }
+        },
+        "absolute_difference": "0",
+        "width": "1",
+        "boundary": "inclusive",
+        "status": "COMPATIBLE",
+        "reason": "explicit contract comparison"
+      },
+      {
+        "id": "middle",
+        "prediction": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "data"
+          ],
+          "unit": "u",
+          "value": "3",
+          "uncertainty": {
+            "value": "0.2",
+            "unit": "u",
+            "n": 5,
+            "df": "4",
+            "method": "synthetic explicit input"
+          }
+        },
+        "experiment": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "data"
+          ],
+          "unit": "u",
+          "value": "3",
+          "uncertainty": {
+            "value": "0.2",
+            "unit": "u",
+            "n": 5,
+            "df": "4",
+            "method": "synthetic explicit input"
+          }
+        },
+        "absolute_difference": "0",
+        "width": "1",
+        "boundary": "inclusive",
+        "status": "COMPATIBLE",
+        "reason": "explicit contract comparison"
+      },
+      {
+        "id": "high",
+        "prediction": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "data"
+          ],
+          "unit": "u",
+          "value": "3",
+          "uncertainty": {
+            "value": "0.2",
+            "unit": "u",
+            "n": 5,
+            "df": "4",
+            "method": "synthetic explicit input"
+          }
+        },
+        "experiment": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "data"
+          ],
+          "unit": "u",
+          "value": "3",
+          "uncertainty": {
+            "value": "0.2",
+            "unit": "u",
+            "n": 5,
+            "df": "4",
+            "method": "synthetic explicit input"
+          }
+        },
+        "absolute_difference": "0",
+        "width": "1",
+        "boundary": "inclusive",
+        "status": "COMPATIBLE",
+        "reason": "explicit contract comparison"
+      }
+    ],
+    "T2": [
+      {
+        "id": "low",
+        "prediction": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "data"
+          ],
+          "unit": "u",
+          "value": "3",
+          "uncertainty": {
+            "value": "0.2",
+            "unit": "u",
+            "n": 5,
+            "df": "4",
+            "method": "synthetic explicit input"
+          }
+        },
+        "experiment": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "data"
+          ],
+          "unit": "u",
+          "value": "3",
+          "uncertainty": {
+            "value": "0.2",
+            "unit": "u",
+            "n": 5,
+            "df": "4",
+            "method": "synthetic explicit input"
+          }
+        },
+        "absolute_difference": "0",
+        "width": "1",
+        "boundary": "inclusive",
+        "status": "COMPATIBLE",
+        "reason": "explicit contract comparison"
+      },
+      {
+        "id": "middle",
+        "prediction": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "data"
+          ],
+          "unit": "u",
+          "value": "3",
+          "uncertainty": {
+            "value": "0.2",
+            "unit": "u",
+            "n": 5,
+            "df": "4",
+            "method": "synthetic explicit input"
+          }
+        },
+        "experiment": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "data"
+          ],
+          "unit": "u",
+          "value": "3",
+          "uncertainty": {
+            "value": "0.2",
+            "unit": "u",
+            "n": 5,
+            "df": "4",
+            "method": "synthetic explicit input"
+          }
+        },
+        "absolute_difference": "0",
+        "width": "1",
+        "boundary": "inclusive",
+        "status": "COMPATIBLE",
+        "reason": "explicit contract comparison"
+      },
+      {
+        "id": "high",
+        "prediction": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "data"
+          ],
+          "unit": "u",
+          "value": "3",
+          "uncertainty": {
+            "value": "0.2",
+            "unit": "u",
+            "n": 5,
+            "df": "4",
+            "method": "synthetic explicit input"
+          }
+        },
+        "experiment": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "data"
+          ],
+          "unit": "u",
+          "value": "3",
+          "uncertainty": {
+            "value": "0.2",
+            "unit": "u",
+            "n": 5,
+            "df": "4",
+            "method": "synthetic explicit input"
+          }
+        },
+        "absolute_difference": "0",
+        "width": "1",
+        "boundary": "inclusive",
+        "status": "COMPATIBLE",
+        "reason": "explicit contract comparison"
+      }
+    ]
+  },
+  "S_T1": [
+    "low",
+    "middle",
+    "high"
+  ],
+  "S_T2": [
+    "low",
+    "middle",
+    "high"
+  ],
+  "S": [
+    "low",
+    "middle",
+    "high"
+  ],
+  "calibration_complete": true,
+  "empty_case": "not-empty",
+  "neighbor_groups": [
+    [
+      "low",
+      "middle",
+      "high"
+    ]
+  ],
+  "boundary": {
+    "lower_candidate": true,
+    "upper_candidate": true,
+    "lower_unassessed": false,
+    "upper_unassessed": false
+  },
+  "range_limited": true,
+  "validation": {
+    "aggregate": "incomplete",
+    "counts": {
+      "compatible": 2,
+      "incompatible": 0,
+      "unassessed": 1
+    },
+    "candidates": [
+      {
+        "id": "low",
+        "status": "compatible",
+        "items": {
+          "Vscalar": {
+            "id": "low",
+            "prediction": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "data"
+              ],
+              "unit": "u",
+              "value": "3",
+              "uncertainty": {
+                "value": "0.2",
+                "unit": "u",
+                "n": 5,
+                "df": "4",
+                "method": "synthetic explicit input"
+              }
+            },
+            "experiment": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "data"
+              ],
+              "unit": "u",
+              "value": "3",
+              "uncertainty": {
+                "value": "0.2",
+                "unit": "u",
+                "n": 5,
+                "df": "4",
+                "method": "synthetic explicit input"
+              }
+            },
+            "absolute_difference": "0",
+            "width": "1",
+            "boundary": "inclusive",
+            "status": "compatible",
+            "reason": "explicit contract comparison"
+          },
+          "Vstate": {
+            "id": "low",
+            "prediction": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "data"
+              ],
+              "unit": "state",
+              "value": "flow"
+            },
+            "experiment": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "data"
+              ],
+              "unit": "state",
+              "value": "flow"
+            },
+            "rule": "exact-match",
+            "status": "compatible",
+            "reason": "explicit contract comparison"
+          }
+        }
+      },
+      {
+        "id": "middle",
+        "status": "compatible",
+        "items": {
+          "Vscalar": {
+            "id": "middle",
+            "prediction": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "data"
+              ],
+              "unit": "u",
+              "value": "3",
+              "uncertainty": {
+                "value": "0.2",
+                "unit": "u",
+                "n": 5,
+                "df": "4",
+                "method": "synthetic explicit input"
+              }
+            },
+            "experiment": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "data"
+              ],
+              "unit": "u",
+              "value": "3",
+              "uncertainty": {
+                "value": "0.2",
+                "unit": "u",
+                "n": 5,
+                "df": "4",
+                "method": "synthetic explicit input"
+              }
+            },
+            "absolute_difference": "0",
+            "width": "1",
+            "boundary": "inclusive",
+            "status": "compatible",
+            "reason": "explicit contract comparison"
+          },
+          "Vstate": {
+            "id": "middle",
+            "prediction": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "data"
+              ],
+              "unit": "state",
+              "value": "flow"
+            },
+            "experiment": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "data"
+              ],
+              "unit": "state",
+              "value": "flow"
+            },
+            "rule": "exact-match",
+            "status": "compatible",
+            "reason": "explicit contract comparison"
+          }
+        }
+      },
+      {
+        "id": "high",
+        "status": "unassessed",
+        "items": {
+          "Vscalar": {
+            "id": "high",
+            "prediction": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "data"
+              ],
+              "unit": "u",
+              "value": "3",
+              "uncertainty": {
+                "value": "0.2",
+                "unit": "u",
+                "n": 5,
+                "df": "4",
+                "method": "synthetic explicit input"
+              }
+            },
+            "experiment": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "data"
+              ],
+              "unit": "u",
+              "value": "3",
+              "uncertainty": {
+                "value": "0.2",
+                "unit": "u",
+                "n": 5,
+                "df": "4",
+                "method": "synthetic explicit input"
+              }
+            },
+            "absolute_difference": "0",
+            "width": "1",
+            "boundary": "inclusive",
+            "status": "compatible",
+            "reason": "explicit contract comparison"
+          },
+          "Vstate": {
+            "id": "high",
+            "prediction": {
+              "eligible": false,
+              "reason": "missing observation"
+            },
+            "experiment": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "data"
+              ],
+              "unit": "state",
+              "value": "flow"
+            },
+            "status": "unassessed",
+            "reason": "prediction: missing observation; experiment: eligible declaration with verified source bytes"
+          }
+        }
+      }
+    ]
+  },
+  "seed_check": {
+    "status": "CHECKED_SUPPLIED_MANIFEST",
+    "roles": {
+      "C0": [
+        1009
+      ],
+      "C1": [
+        1013
+      ],
+      "C2": [
+        1019
+      ]
+    },
+    "reserved_confirmation_seeds": [
+      15485863,
+      86028121,
+      104395301
+    ],
+    "overlaps": [],
+    "historical_nonuse_verified": false,
+    "independent_samples_certified": false
+  },
+  "execution_ready": false,
+  "limitations": [
+    "finite-grid-only",
+    "no-continuous-interval-or-center",
+    "no-identifiability-claim",
+    "input-eligibility-and-uncertainty-declarations-not-physically-validated",
+    "artifact-hashes-do-not-prove-preregistration-or-blinding",
+    "validation-does-not-redefine-calibration-S",
+    "not-an-execution-approval"
+  ],
+  "input_sha256": {
+    "contract": "cea906857227366639c2e459e9eedb3bf1ba3ec60db338e6204ac9c1846e42f1",
+    "observations": "229c6abd2a81d3c5977302c4b402a93b419bfea2a4bf55f6385c98e39a8ea49a"
+  },
+  "reader_sha256": "ea4528156e8eb9762999fef0643985bebf0b0735691202fddb4a2c17814ee7f8"
+}

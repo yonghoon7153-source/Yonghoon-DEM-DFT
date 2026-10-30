@@ -1,0 +1,25 @@
+  PASS  ① LC → LH (B): CED 밖 차이 0 · 바뀐 쌍 = 허용 다섯 쌍 (5)
+  PASS  ② 같은 두 덱을 A (AM–AM 단독) 로 보면 AM–벽 변화가 허용목록 밖 = FAIL ([('AM_P', 'WALL'), ('AM_S', 'WALL')])
+  PASS  ③ 변이: SE–SE CED 를 바꾸면 허용목록 밖 = FAIL ([('SE', 'SE')])
+  PASS  ④ 변이: timestep 이 다르면 CED 밖 차이 = FAIL (1 건)
+  PASS  ⑤ 주석만 다르면 CED 밖 차이 0 (개입 없음 → 허용 쌍 누락으로 FAIL 이 정상)
+  PASS  ⑥ 캠페인 조건 LC_s* → LH_s* 세 시드 모두 PASS (바뀐 쌍 다섯)
+  PASS  ⑦ 시드가 다르면 CED 밖 차이 = FAIL (짝은 같은 시드끼리)
+  PASS  ⑧ 변이: 새 덱 P–S 한 방향만 ×2 (비대칭) → FAIL (기준 덱만 대칭 검사하던 구멍)
+  PASS  ⑨ 변이: 고정이어야 할 SE–SE 를 NaN 으로 → FAIL (비유한)
+  PASS  ⑩ 변이: 새 P–P 를 음수로 → FAIL (물리 범위)
+  PASS  ⑪ 변이: CED fix 의 ID/group 을 바꾸면 → FAIL (명령 머리도 비교)
+  PASS  ⑫ 변이: 허용 쌍이 바뀌었어도 **방향이 반대** (P–P 가 LC 보다 작아짐) 면 FAIL ([('AM_P', 'AM_P')])
+  PASS  ⑬ 목표 행렬 (생성기가 낸 LH) 을 주면 일치할 때만 PASS (1 % 어긋나면 FAIL)
+  PASS  ⑭ --runs: 예정 세 시드 중 하나만 있으면 1/3 로 세고 빠진 시드를 보고한다 ([49979687, 67867967])
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\mx27\d2\snapshot\scripts\mixer_deck_diff.py", line 1894, in <module>
+    main()
+  File "C:\Users\Administrator\Documents\Codex\mx27\d2\snapshot\scripts\mixer_deck_diff.py", line 1790, in main
+    raise SystemExit(_selftest())
+                     ^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\mx27\d2\snapshot\scripts\mixer_deck_diff.py", line 1113, in _selftest
+    subprocess.run([sys.executable, os.path.join(_HERE, 'make_mixer_deck.py'), '--out',
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe', 'C:\\Users\\Administrator\\Documents\\Codex\\mx27\\d2\\snapshot\\scripts\\make_mixer_deck.py', '--out', 'C:\\Users\\Administrator\\Documents\\Codex\\mx27\\tmp\\tmpy76ftro9\\gold\\LC_s32452843', '--arm', 'LC', '--seed', '32452843', '--n-total', '100000', '--cgf', '151.4', '--revolutions', '8']' returned non-zero exit status 1.

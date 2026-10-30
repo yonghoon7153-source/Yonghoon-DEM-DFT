@@ -1,0 +1,5 @@
+pin e0daf7b234bcc7935259d786e270268372abe2a2
+branch origin/codex/mixer-d3-design
+request docs/reviews/codex_mixer_d3_candidate_reader_request_20261024.md
+files 327 (= pin 의 7799a2ff6 대비 추가·수정 파일 + 요청서)
+full tree: git fetch origin codex/mixer-d3-design && git checkout e0daf7b234bcc7935259d786e270268372abe2a2

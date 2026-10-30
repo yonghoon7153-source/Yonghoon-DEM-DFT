@@ -1,0 +1,354 @@
+{
+ "label": "codex_received_cases",
+ "scripts_dir_sha256": {
+  "mixer_deck_readback.py": "bfeaf8497048360ba328cb1a01575f2c2f7573d93e7627f53e535da73b8874d3",
+  "mixer_deck_diff.py": "9a86950434b4abe852a6e3411fa809e78eef3d5ef6d7c8e125fb694cc1582877",
+  "mixer_smoke_blind.py": "83760d9d81e4b2b6cf2d4ae7eda7f140dbec87cadc836b82079b1fd64f15dd4a"
+ },
+ "python": "3.11.15",
+ "cases": {
+  "run_upto": {
+   "inputs": {
+    "old.in": {
+     "sha256": "615db88ceab797570f17a3c8d563b6aa045accc29ed8c888a2af9fb3fa8b63d8",
+     "bytes": 13674
+    },
+    "new.in": {
+     "sha256": "ab4022f853c400a1ba6901f030500526fbe9b4c8c48ad0b93ad77b7278e1debf",
+     "bytes": 13670
+    },
+    "old.meta.json": {
+     "sha256": "40cc75fb2112b26136ba0b3892a2d9bebd6a38a0a3defc4c8b70cff748ba022c",
+     "bytes": 6698
+    },
+    "new.meta.json": {
+     "sha256": "58d22351be16abcfc93485d5fcbd18bcb2f9367a1062267ee60053f3db4ab0d4",
+     "bytes": 6696
+    }
+   },
+   "rc": {
+    "readback": 0,
+    "pair": 0,
+    "plan": 0
+   },
+   "first_line": {
+    "readback": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "pair": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "plan": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님"
+   },
+   "traceback": false
+  },
+  "late_timestep": {
+   "inputs": {
+    "old.in": {
+     "sha256": "c9b6667b46d1e40963ab7674d351174fa4c0da3a51e4126d3df52fab8f9b96a4",
+     "bytes": 13654
+    },
+    "new.in": {
+     "sha256": "a52fb2b9dd1b5ce2cb3a703fce52d3254c0f23a3b42890e2f38124a24de14a11",
+     "bytes": 13650
+    },
+    "old.meta.json": {
+     "sha256": "6e669ace5e84ffa6ea1510b9977b64b6dcc99d7b0c2bb637113f04a4d590f0a5",
+     "bytes": 6698
+    },
+    "new.meta.json": {
+     "sha256": "578a5b5f1d0dc0100c8c65858b0ce69566a113402f12b0f4fb6e91cb902f737c",
+     "bytes": 6696
+    }
+   },
+   "rc": {
+    "readback": 0,
+    "pair": 0,
+    "plan": 0
+   },
+   "first_line": {
+    "readback": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "pair": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "plan": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님"
+   },
+   "traceback": false
+  },
+  "insert_start_late": {
+   "inputs": {
+    "old.in": {
+     "sha256": "997b8faeb37382bfc0fba2c6a6095fc78efeb0698eed95d5e741e0db4036ff0d",
+     "bytes": 13682
+    },
+    "new.in": {
+     "sha256": "352a45e4437b746e5bd3b900b6c9797b60dae4b5d4a22eb6c908a9448ae8df47",
+     "bytes": 13678
+    },
+    "old.meta.json": {
+     "sha256": "f874d39b2ee9a0f225f8f7bc72485ba40a0656ab1bf59ccd0e88b7d127944879",
+     "bytes": 6698
+    },
+    "new.meta.json": {
+     "sha256": "35276389669ef13733ee3b779505ec933ffc9e0a877cf4d159a0c1afc9df123c",
+     "bytes": 6696
+    }
+   },
+   "rc": {
+    "readback": 0,
+    "pair": 0,
+    "plan": 0
+   },
+   "first_line": {
+    "readback": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "pair": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "plan": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님"
+   },
+   "traceback": false
+  },
+  "front_period": {
+   "inputs": {
+    "old.in": {
+     "sha256": "8d4841bd36032c1e49707a4e43d98a87a67b5e60ba60b2bd6739431ca512eeff",
+     "bytes": 13649
+    },
+    "new.in": {
+     "sha256": "967a547989fe1839fda38bc8d9e1f20d4aeacd7a18803de7c4daee13474f8016",
+     "bytes": 13645
+    },
+    "old.meta.json": {
+     "sha256": "9cdf4ff2196a0432c36bedbea451b4f04172d5fd7f3f231093c55b7f89e014c3",
+     "bytes": 6698
+    },
+    "new.meta.json": {
+     "sha256": "8faa4dfe1e4bf1051b90284ecec0b14d54c5cfd31676473be85eb87b32a93d99",
+     "bytes": 6696
+    }
+   },
+   "rc": {
+    "readback": 0,
+    "pair": 0,
+    "plan": 0
+   },
+   "first_line": {
+    "readback": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "pair": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "plan": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님"
+   },
+   "traceback": false
+  },
+  "exclude_SE_SE": {
+   "inputs": {
+    "old.in": {
+     "sha256": "7996cf58722f7a18563edd1ad09f8d696e445948c7466d09715b9724296bd04b",
+     "bytes": 13684
+    },
+    "new.in": {
+     "sha256": "be29b0199628be82c223b8633e8ad62cf1ebca59280fd5b6885e90395d5945db",
+     "bytes": 13680
+    },
+    "old.meta.json": {
+     "sha256": "89f356bdf98c538c04da35ddeb1ee89f302c4ad7084a8ae5dac50e2f5e847d90",
+     "bytes": 6698
+    },
+    "new.meta.json": {
+     "sha256": "883732b0dc9f270bfd6e54b9c9cac2c50a795f2bbb0958911ed80ca08c10f60f",
+     "bytes": 6696
+    }
+   },
+   "rc": {
+    "readback": 0,
+    "pair": 0,
+    "plan": 0
+   },
+   "first_line": {
+    "readback": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "pair": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "plan": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님"
+   },
+   "traceback": false
+  },
+  "crlf_lf_metadata": {
+   "inputs": {
+    "old.in": {
+     "sha256": "0b92f856e224d0537b36b2c4fb2cc257e23cfbdea9528c478ef42d0dda63f015",
+     "bytes": 13833
+    },
+    "new.in": {
+     "sha256": "a26fd5e80edb7553e1f3c831286a3b153257d4cd8ffe79a83b1fb82b248ab4ae",
+     "bytes": 13829
+    },
+    "old.meta.json": {
+     "sha256": "2673b5999fd0162b2bf93277baf53cc3c42ee1ad90442236403d1d3f85ea303b",
+     "bytes": 5828
+    },
+    "new.meta.json": {
+     "sha256": "0ec79f47e928429d9a418cb2e96e6e2b745f65629eea33d9294a2c3fd042e60d",
+     "bytes": 5826
+    }
+   },
+   "rc": {
+    "readback": 0,
+    "pair": 0,
+    "plan": 0
+   },
+   "first_line": {
+    "readback": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "pair": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "plan": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님"
+   },
+   "traceback": false
+  },
+  "crlf_crlf_metadata": {
+   "inputs": {
+    "old.in": {
+     "sha256": "0b92f856e224d0537b36b2c4fb2cc257e23cfbdea9528c478ef42d0dda63f015",
+     "bytes": 13833
+    },
+    "new.in": {
+     "sha256": "a26fd5e80edb7553e1f3c831286a3b153257d4cd8ffe79a83b1fb82b248ab4ae",
+     "bytes": 13829
+    },
+    "old.meta.json": {
+     "sha256": "6dd3cefa250b5e153fd3e9fa013f14a3fe64093ef2a1e0136aad5873963aea7e",
+     "bytes": 5828
+    },
+    "new.meta.json": {
+     "sha256": "8a105e8ba0ce119ead4c0ff632ff24e93a8a8b98ef49b33ee559d6c0f667ad05",
+     "bytes": 5826
+    }
+   },
+   "rc": {
+    "readback": 1,
+    "pair": 1,
+    "plan": 1
+   },
+   "first_line": {
+    "readback": "D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님",
+    "pair": "D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님",
+    "plan": "D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님"
+   },
+   "traceback": false
+  }
+ },
+ "controls": {
+  "normal": {
+   "inputs": {
+    "old.in": {
+     "sha256": "32033f6b0e17f33ecfe70121eaee393aa6c2748151f54b073243b916c6080644",
+     "bytes": 13654
+    },
+    "new.in": {
+     "sha256": "1e92d364a25763d8722ad0812b7e618b1b51e60d0cf5efc364611164b90b20c3",
+     "bytes": 13650
+    },
+    "old.meta.json": {
+     "sha256": "dd0c9d6b5c6dab7cfe49f5945c07483f5465327200c3f8c2710b2b714b84e5bf",
+     "bytes": 6698
+    },
+    "new.meta.json": {
+     "sha256": "0e29f96815f469bca79f3f9ba0a4bcc0608856a2b953edf822f30568e7d6f2d8",
+     "bytes": 6696
+    }
+   },
+   "rc": {
+    "readback": 0,
+    "pair": 0,
+    "plan": 0
+   },
+   "first_line": {
+    "readback": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "pair": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "plan": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님"
+   },
+   "traceback": false
+  },
+  "friction_missing": {
+   "inputs": {
+    "old.in": {
+     "sha256": "579a36c4d26309b33522bcb203ab719ca1dbf93096f88ee974197d2c5b07716d",
+     "bytes": 13501
+    },
+    "new.in": {
+     "sha256": "db22374a67620938236f4a0df46e8d8a61673df3c38279b3fad23221f37efb18",
+     "bytes": 13497
+    },
+    "old.meta.json": {
+     "sha256": "73e0f64babe09b455ba6da43ec05667f09a78d7b9a9b5687bccee08e0ab267d5",
+     "bytes": 6698
+    },
+    "new.meta.json": {
+     "sha256": "8cc900ddbfad83d35ea978b9e35d0bc335429d2a56a2afa05392f8d2c0df5d3d",
+     "bytes": 6696
+    }
+   },
+   "rc": {
+    "readback": 0,
+    "pair": 0,
+    "plan": 0
+   },
+   "first_line": {
+    "readback": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "pair": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님",
+    "plan": "D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님"
+   },
+   "traceback": false
+  },
+  "negative_control_bad_gravity": {
+   "inputs": {
+    "old.in": {
+     "sha256": "175ad8aa5cbf1b5bd537698821907331db84b5caf2a66e49e1682b43926fbd79",
+     "bytes": 13653
+    },
+    "new.in": {
+     "sha256": "e527b39015e00f67cdb8df2a2d7bd4c069457b485910c70ea17c6b51d81bdd75",
+     "bytes": 13649
+    },
+    "old.meta.json": {
+     "sha256": "83cb8411493666ad457474b7c633e0753348308da87eefce2a96245f9813e439",
+     "bytes": 6698
+    },
+    "new.meta.json": {
+     "sha256": "16269a655c54f0919866a091139465a9cf55e743dba377e2220accc4783bd75e",
+     "bytes": 6696
+    }
+   },
+   "rc": {
+    "readback": 1,
+    "pair": 1,
+    "plan": 1
+   },
+   "first_line": {
+    "readback": "D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님",
+    "pair": "D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님",
+    "plan": "D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님"
+   },
+   "traceback": false
+  },
+  "negative_control_remove_integrator": {
+   "inputs": {
+    "old.in": {
+     "sha256": "fd0fc75239d783dcd64daa8763eb90845d5bd896876b24a7ed3c0d7c19b969bf",
+     "bytes": 13583
+    },
+    "new.in": {
+     "sha256": "378c1fdf23d2c799532954870017ebc69720a72e901fe5bd674cf8be5cfa5bfc",
+     "bytes": 13579
+    },
+    "old.meta.json": {
+     "sha256": "7f6e7fb45eee062e687a628623a578b60de46b74130886a92be4a2592e27aee9",
+     "bytes": 6698
+    },
+    "new.meta.json": {
+     "sha256": "f0f744f251f456c8f8e5646a50a550d5cd7890a091a53b35dfae0d778895dde7",
+     "bytes": 6696
+    }
+   },
+   "rc": {
+    "readback": 1,
+    "pair": 1,
+    "plan": 1
+   },
+   "first_line": {
+    "readback": "D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님",
+    "pair": "D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님",
+    "plan": "D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님"
+   },
+   "traceback": false
+  }
+ }
+}

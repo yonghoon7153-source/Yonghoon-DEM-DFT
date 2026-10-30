@@ -1,0 +1,28 @@
+# D3 CLI replay: ours = cli-replay-4lpos7s5 (Linux, Python 3.11.15) vs Codex cli-replay-asemvbv_ and cli/ (Windows)
+# bytes= identical bytes; log=(masked) equal after CRLF->LF and absolute-path masking
+
+== Codex cli-replay-asemvbv_
+  duplicate_json  condition.txt:bytes= contract.json:bytes= observation.txt:bytes= observations.json:bytes= process.log:log=(masked)
+  incomplete      condition.txt:bytes= contract.json:bytes= observation.txt:bytes= observations.json:bytes= process.log:log=(masked) result.json:bytes=
+  none            condition.txt:bytes= contract.json:bytes= observation.txt:bytes= observations.json:bytes= process.log:log=(masked) result.json:bytes=
+  path_escape     condition.txt:bytes= contract.json:bytes= observation.txt:bytes= observations.json:bytes= process.log:log=(masked)
+  positive        condition.txt:bytes= contract.json:bytes= observation.txt:bytes= observations.json:bytes= process.log:log=(masked) result.json:bytes=
+  tampered_raw    condition.txt:bytes= contract.json:bytes= observation.txt:bytes= observations.json:bytes= process.log:log=(masked)
+  wrong_digest    condition.txt:bytes= contract.json:bytes= observation.txt:bytes= observations.json:bytes= process.log:log=(masked)
+== Codex cli
+  duplicate_json  condition.txt:bytes= contract.json:bytes= observation.txt:bytes= observations.json:bytes= process.log:log=(masked)
+  incomplete      condition.txt:bytes= contract.json:bytes= observation.txt:bytes= observations.json:bytes= process.log:log=(masked) result.json:bytes=
+  none            condition.txt:bytes= contract.json:bytes= observation.txt:bytes= observations.json:bytes= process.log:log=(masked) result.json:bytes=
+  path_escape     condition.txt:bytes= contract.json:bytes= observation.txt:bytes= observations.json:bytes= process.log:log=(masked)
+  positive        condition.txt:bytes= contract.json:bytes= observation.txt:bytes= observations.json:bytes= process.log:log=(masked) result.json:bytes=
+  tampered_raw    condition.txt:bytes= contract.json:bytes= observation.txt:bytes= observations.json:bytes= process.log:log=(masked)
+  wrong_digest    condition.txt:bytes= contract.json:bytes= observation.txt:bytes= observations.json:bytes= process.log:log=(masked)
+
+== our process.log (paths masked)
+  duplicate_json  D3_CONTRACT_ERROR: JSON: duplicate key 'schema'
+  incomplete      {"output": "<PATH>", "candidate_count": 3, "validation": "incomplete", "execution_ready": false}
+  none            {"output": "<PATH>", "candidate_count": 0, "validation": "not-applicable", "execution_ready": false}
+  path_escape     D3_CONTRACT_ERROR: artifact.path: expected relative traversal-free path
+  positive        {"output": "<PATH>", "candidate_count": 3, "validation": "all-compatible", "execution_ready": false}
+  tampered_raw    D3_CONTRACT_ERROR: data: artifact SHA-256 mismatch
+  wrong_digest    D3_CONTRACT_ERROR: contract_sha256: contract digest does not match observation binding

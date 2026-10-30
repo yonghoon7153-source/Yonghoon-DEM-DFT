@@ -1,0 +1,3 @@
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: metadata SHA256 != actual deck
+  new: D2 development contract: ValueError: metadata SHA256 != actual deck

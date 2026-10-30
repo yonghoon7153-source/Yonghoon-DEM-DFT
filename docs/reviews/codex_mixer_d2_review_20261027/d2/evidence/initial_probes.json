@@ -1,0 +1,3350 @@
+[
+  {
+    "name": "run_upto",
+    "read": {
+      "schema": "mixer_d2_development/1",
+      "verdict": "PASS",
+      "failures": [],
+      "registered": null,
+      "execution_authorized": false,
+      "scope": "D2 development deck and planned counts only; not execution evidence",
+      "deck_sha256": "615db88ceab797570f17a3c8d563b6aa045accc29ed8c888a2af9fb3fa8b63d8",
+      "density_generation": "lab20261014",
+      "phase_names": {
+        "1": "AM_P",
+        "2": "AM_S",
+        "3": "SE",
+        "4": "WALL"
+      },
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "n_atoms_planned": 100000,
+      "Bo_SE": 0.7299906001321018,
+      "gravity": 9.81,
+      "rho_uncoated_ncm": 0.3,
+      "gamma": {
+        "AM_P": 0.3,
+        "AM_S": 0.3,
+        "SE": 1.0,
+        "WALL": 0.00768
+      },
+      "bo_se": 0.73,
+      "pairs": [
+        {
+          "pair": "AM_P-AM_P",
+          "i": 1,
+          "j": 1,
+          "F0": 5.762056386024637e-08,
+          "expected_F0": 5.761958623113774e-08,
+          "CED": 102869.0,
+          "overlap_fraction": 3.8411948264080864e-07
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "i": 1,
+          "j": 2,
+          "F0": 3.545905129851062e-08,
+          "expected_F0": 3.545820691146938e-08,
+          "CED": 120940.0,
+          "overlap_fraction": 7.351337819054406e-07
+        },
+        {
+          "pair": "AM_P-SE",
+          "i": 1,
+          "j": 3,
+          "F0": 2.104013281862581e-08,
+          "expected_F0": 2.1039698088605478e-08,
+          "CED": 102981.0,
+          "overlap_fraction": 6.304885957683845e-06
+        },
+        {
+          "pair": "AM_P-WALL",
+          "i": 1,
+          "j": 4,
+          "F0": 1.8438472695519334e-08,
+          "expected_F0": 1.8438267593964075e-08,
+          "CED": 49785.9,
+          "overlap_fraction": 1.2698778143316802e-07
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "i": 2,
+          "j": 2,
+          "F0": 2.5608841273169413e-08,
+          "expected_F0": 2.560870499161677e-08,
+          "CED": 134796.0,
+          "overlap_fraction": 6.595554435016158e-07
+        },
+        {
+          "pair": "AM_S-SE",
+          "i": 2,
+          "j": 3,
+          "F0": 1.870204897498837e-08,
+          "expected_F0": 1.87019538565382e-08,
+          "CED": 107104.0,
+          "overlap_fraction": 6.06208309259074e-06
+        },
+        {
+          "pair": "AM_S-WALL",
+          "i": 2,
+          "j": 4,
+          "F0": 8.19488259882398e-09,
+          "expected_F0": 8.194785597317367e-09,
+          "CED": 65238.0,
+          "overlap_fraction": 2.1804718674125384e-07
+        },
+        {
+          "pair": "SE-SE",
+          "i": 3,
+          "j": 3,
+          "F0": 2.1340587493013975e-08,
+          "expected_F0": 2.1340587493013975e-08,
+          "CED": 108837.0,
+          "overlap_fraction": 1.089151207006458e-05
+        },
+        {
+          "pair": "SE-WALL",
+          "i": 3,
+          "j": 4,
+          "F0": 3.740430042738864e-09,
+          "expected_F0": 3.74039077130764e-09,
+          "CED": 55973.6,
+          "overlap_fraction": 1.8559516978638765e-06
+        }
+      ],
+      "tolerances": {
+        "absolute_Bo_relative": 2e-05,
+        "pair_force_relative": 3.0000000000000004e-05
+      },
+      "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+    },
+    "pair": {
+      "schema": "mixer_d2_pair_development/1",
+      "allow": "D2",
+      "verdict": "PASS",
+      "registered": null,
+      "execution_authorized": false,
+      "failures": [],
+      "table": [
+        {
+          "pair": "AM_P-AM_P",
+          "ref": 5.762056386024637e-08,
+          "new": 1.9206901507553435e-07,
+          "ratio": 3.333341470614222,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "ref": 3.545905129851062e-08,
+          "new": 1.1819612450006176e-07,
+          "ratio": 3.3333132210738623,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_P-SE",
+          "ref": 2.104013281862581e-08,
+          "new": 3.841331182975715e-08,
+          "ratio": 1.8257162234143176,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_P-WALL",
+          "ref": 1.8438472695519334e-08,
+          "new": 3.3663870859109335e-08,
+          "ratio": 1.8257407440958964,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "ref": 2.5608841273169413e-08,
+          "new": 8.536346803507442e-08,
+          "ratio": 3.3333592537242365,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_S-SE",
+          "ref": 1.870204897498837e-08,
+          "new": 3.414529506847026e-08,
+          "ratio": 1.8257515587802857,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_S-WALL",
+          "ref": 8.19488259882398e-09,
+          "new": 1.4961767943410874e-08,
+          "ratio": 1.825745245643664,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "SE-SE",
+          "ref": 2.1340587493013975e-08,
+          "new": 2.1340587493013975e-08,
+          "ratio": 1.0,
+          "rule": 1.0
+        },
+        {
+          "pair": "SE-WALL",
+          "ref": 3.740430042738864e-09,
+          "new": 3.740430042738864e-09,
+          "ratio": 1.0,
+          "rule": 1.0
+        }
+      ],
+      "old": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "615db88ceab797570f17a3c8d563b6aa045accc29ed8c888a2af9fb3fa8b63d8",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99158
+        },
+        "n_atoms_planned": 100000,
+        "Bo_SE": 0.7299906001321018,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.3,
+        "gamma": {
+          "AM_P": 0.3,
+          "AM_S": 0.3,
+          "SE": 1.0,
+          "WALL": 0.00768
+        },
+        "bo_se": 0.73,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 5.762056386024637e-08,
+            "expected_F0": 5.761958623113774e-08,
+            "CED": 102869.0,
+            "overlap_fraction": 3.8411948264080864e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 3.545905129851062e-08,
+            "expected_F0": 3.545820691146938e-08,
+            "CED": 120940.0,
+            "overlap_fraction": 7.351337819054406e-07
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 2.104013281862581e-08,
+            "expected_F0": 2.1039698088605478e-08,
+            "CED": 102981.0,
+            "overlap_fraction": 6.304885957683845e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 1.8438472695519334e-08,
+            "expected_F0": 1.8438267593964075e-08,
+            "CED": 49785.9,
+            "overlap_fraction": 1.2698778143316802e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 2.5608841273169413e-08,
+            "expected_F0": 2.560870499161677e-08,
+            "CED": 134796.0,
+            "overlap_fraction": 6.595554435016158e-07
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 1.870204897498837e-08,
+            "expected_F0": 1.87019538565382e-08,
+            "CED": 107104.0,
+            "overlap_fraction": 6.06208309259074e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 8.19488259882398e-09,
+            "expected_F0": 8.194785597317367e-09,
+            "CED": 65238.0,
+            "overlap_fraction": 2.1804718674125384e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 2.1340587493013975e-08,
+            "expected_F0": 2.1340587493013975e-08,
+            "CED": 108837.0,
+            "overlap_fraction": 1.089151207006458e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 3.740430042738864e-09,
+            "expected_F0": 3.74039077130764e-09,
+            "CED": 55973.6,
+            "overlap_fraction": 1.8559516978638765e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "new": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "ab4022f853c400a1ba6901f030500526fbe9b4c8c48ad0b93ad77b7278e1debf",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99158
+        },
+        "n_atoms_planned": 100000,
+        "Bo_SE": 0.7299906001321018,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.3,
+        "gamma": {
+          "AM_P": 1.0,
+          "AM_S": 1.0,
+          "SE": 1.0,
+          "WALL": 0.00768
+        },
+        "bo_se": 0.73,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 1.9206901507553435e-07,
+            "expected_F0": 1.9206528743712578e-07,
+            "CED": 153666.0,
+            "overlap_fraction": 8.571421897860918e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 1.1819612450006176e-07,
+            "expected_F0": 1.1819402303823127e-07,
+            "CED": 180660.0,
+            "overlap_fraction": 1.6404026559461227e-06
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 3.841331182975715e-08,
+            "expected_F0": 3.841305748742516e-08,
+            "CED": 125864.0,
+            "overlap_fraction": 9.418160458846041e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 3.3663870859109335e-08,
+            "expected_F0": 3.3663516941768766e-08,
+            "CED": 60848.9,
+            "overlap_fraction": 1.8969447164241945e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 8.536346803507442e-08,
+            "expected_F0": 8.53623499720559e-08,
+            "CED": 201359.0,
+            "overlap_fraction": 1.4717681173316766e-06
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 3.414529506847026e-08,
+            "expected_F0": 3.414493998882236e-08,
+            "CED": 130904.0,
+            "overlap_fraction": 9.055581390651056e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 1.4961767943410874e-08,
+            "expected_F0": 1.496156308523056e-08,
+            "CED": 79734.7,
+            "overlap_fraction": 3.2571963541568235e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 2.1340587493013975e-08,
+            "expected_F0": 2.1340587493013975e-08,
+            "CED": 108837.0,
+            "overlap_fraction": 1.089151207006458e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 3.740430042738864e-09,
+            "expected_F0": 3.74039077130764e-09,
+            "CED": 55973.6,
+            "overlap_fraction": 1.8559516978638765e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "scope": "same-world D2 development pair, not a cohort or launch certificate",
+      "degenerate_same_gamma_world": false
+    },
+    "plan": {
+      "schema": "mixer_d2_plan_check/1",
+      "verdict": "PASS",
+      "failures": [],
+      "registered": null,
+      "execution_authorized": false,
+      "scope": "D2 development planned counts; no observed frames, rest/contact certificate, cohort or execution authority",
+      "deck_sha256": "615db88ceab797570f17a3c8d563b6aa045accc29ed8c888a2af9fb3fa8b63d8",
+      "density_generation": "lab20261014",
+      "phase_names": {
+        "1": "AM_P",
+        "2": "AM_S",
+        "3": "SE",
+        "4": "WALL"
+      },
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "n_atoms_planned": 100000,
+      "Bo_SE": 0.7299906001321018,
+      "gravity": 9.81,
+      "rho_uncoated_ncm": 0.3,
+      "gamma": {
+        "AM_P": 0.3,
+        "AM_S": 0.3,
+        "SE": 1.0,
+        "WALL": 0.00768
+      },
+      "bo_se": 0.73,
+      "pairs": [
+        {
+          "pair": "AM_P-AM_P",
+          "i": 1,
+          "j": 1,
+          "F0": 5.762056386024637e-08,
+          "expected_F0": 5.761958623113774e-08,
+          "CED": 102869.0,
+          "overlap_fraction": 3.8411948264080864e-07
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "i": 1,
+          "j": 2,
+          "F0": 3.545905129851062e-08,
+          "expected_F0": 3.545820691146938e-08,
+          "CED": 120940.0,
+          "overlap_fraction": 7.351337819054406e-07
+        },
+        {
+          "pair": "AM_P-SE",
+          "i": 1,
+          "j": 3,
+          "F0": 2.104013281862581e-08,
+          "expected_F0": 2.1039698088605478e-08,
+          "CED": 102981.0,
+          "overlap_fraction": 6.304885957683845e-06
+        },
+        {
+          "pair": "AM_P-WALL",
+          "i": 1,
+          "j": 4,
+          "F0": 1.8438472695519334e-08,
+          "expected_F0": 1.8438267593964075e-08,
+          "CED": 49785.9,
+          "overlap_fraction": 1.2698778143316802e-07
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "i": 2,
+          "j": 2,
+          "F0": 2.5608841273169413e-08,
+          "expected_F0": 2.560870499161677e-08,
+          "CED": 134796.0,
+          "overlap_fraction": 6.595554435016158e-07
+        },
+        {
+          "pair": "AM_S-SE",
+          "i": 2,
+          "j": 3,
+          "F0": 1.870204897498837e-08,
+          "expected_F0": 1.87019538565382e-08,
+          "CED": 107104.0,
+          "overlap_fraction": 6.06208309259074e-06
+        },
+        {
+          "pair": "AM_S-WALL",
+          "i": 2,
+          "j": 4,
+          "F0": 8.19488259882398e-09,
+          "expected_F0": 8.194785597317367e-09,
+          "CED": 65238.0,
+          "overlap_fraction": 2.1804718674125384e-07
+        },
+        {
+          "pair": "SE-SE",
+          "i": 3,
+          "j": 3,
+          "F0": 2.1340587493013975e-08,
+          "expected_F0": 2.1340587493013975e-08,
+          "CED": 108837.0,
+          "overlap_fraction": 1.089151207006458e-05
+        },
+        {
+          "pair": "SE-WALL",
+          "i": 3,
+          "j": 4,
+          "F0": 3.740430042738864e-09,
+          "expected_F0": 3.74039077130764e-09,
+          "CED": 55973.6,
+          "overlap_fraction": 1.8559516978638765e-06
+        }
+      ],
+      "tolerances": {
+        "absolute_Bo_relative": 2e-05,
+        "pair_force_relative": 3.0000000000000004e-05
+      },
+      "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+    }
+  },
+  {
+    "name": "late_timestep",
+    "read": {
+      "schema": "mixer_d2_development/1",
+      "verdict": "PASS",
+      "failures": [],
+      "registered": null,
+      "execution_authorized": false,
+      "scope": "D2 development deck and planned counts only; not execution evidence",
+      "deck_sha256": "c9b6667b46d1e40963ab7674d351174fa4c0da3a51e4126d3df52fab8f9b96a4",
+      "density_generation": "lab20261014",
+      "phase_names": {
+        "1": "AM_P",
+        "2": "AM_S",
+        "3": "SE",
+        "4": "WALL"
+      },
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "n_atoms_planned": 100000,
+      "Bo_SE": 0.7299906001321018,
+      "gravity": 9.81,
+      "rho_uncoated_ncm": 0.3,
+      "gamma": {
+        "AM_P": 0.3,
+        "AM_S": 0.3,
+        "SE": 1.0,
+        "WALL": 0.00768
+      },
+      "bo_se": 0.73,
+      "pairs": [
+        {
+          "pair": "AM_P-AM_P",
+          "i": 1,
+          "j": 1,
+          "F0": 5.762056386024637e-08,
+          "expected_F0": 5.761958623113774e-08,
+          "CED": 102869.0,
+          "overlap_fraction": 3.8411948264080864e-07
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "i": 1,
+          "j": 2,
+          "F0": 3.545905129851062e-08,
+          "expected_F0": 3.545820691146938e-08,
+          "CED": 120940.0,
+          "overlap_fraction": 7.351337819054406e-07
+        },
+        {
+          "pair": "AM_P-SE",
+          "i": 1,
+          "j": 3,
+          "F0": 2.104013281862581e-08,
+          "expected_F0": 2.1039698088605478e-08,
+          "CED": 102981.0,
+          "overlap_fraction": 6.304885957683845e-06
+        },
+        {
+          "pair": "AM_P-WALL",
+          "i": 1,
+          "j": 4,
+          "F0": 1.8438472695519334e-08,
+          "expected_F0": 1.8438267593964075e-08,
+          "CED": 49785.9,
+          "overlap_fraction": 1.2698778143316802e-07
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "i": 2,
+          "j": 2,
+          "F0": 2.5608841273169413e-08,
+          "expected_F0": 2.560870499161677e-08,
+          "CED": 134796.0,
+          "overlap_fraction": 6.595554435016158e-07
+        },
+        {
+          "pair": "AM_S-SE",
+          "i": 2,
+          "j": 3,
+          "F0": 1.870204897498837e-08,
+          "expected_F0": 1.87019538565382e-08,
+          "CED": 107104.0,
+          "overlap_fraction": 6.06208309259074e-06
+        },
+        {
+          "pair": "AM_S-WALL",
+          "i": 2,
+          "j": 4,
+          "F0": 8.19488259882398e-09,
+          "expected_F0": 8.194785597317367e-09,
+          "CED": 65238.0,
+          "overlap_fraction": 2.1804718674125384e-07
+        },
+        {
+          "pair": "SE-SE",
+          "i": 3,
+          "j": 3,
+          "F0": 2.1340587493013975e-08,
+          "expected_F0": 2.1340587493013975e-08,
+          "CED": 108837.0,
+          "overlap_fraction": 1.089151207006458e-05
+        },
+        {
+          "pair": "SE-WALL",
+          "i": 3,
+          "j": 4,
+          "F0": 3.740430042738864e-09,
+          "expected_F0": 3.74039077130764e-09,
+          "CED": 55973.6,
+          "overlap_fraction": 1.8559516978638765e-06
+        }
+      ],
+      "tolerances": {
+        "absolute_Bo_relative": 2e-05,
+        "pair_force_relative": 3.0000000000000004e-05
+      },
+      "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+    },
+    "pair": {
+      "schema": "mixer_d2_pair_development/1",
+      "allow": "D2",
+      "verdict": "PASS",
+      "registered": null,
+      "execution_authorized": false,
+      "failures": [],
+      "table": [
+        {
+          "pair": "AM_P-AM_P",
+          "ref": 5.762056386024637e-08,
+          "new": 1.9206901507553435e-07,
+          "ratio": 3.333341470614222,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "ref": 3.545905129851062e-08,
+          "new": 1.1819612450006176e-07,
+          "ratio": 3.3333132210738623,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_P-SE",
+          "ref": 2.104013281862581e-08,
+          "new": 3.841331182975715e-08,
+          "ratio": 1.8257162234143176,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_P-WALL",
+          "ref": 1.8438472695519334e-08,
+          "new": 3.3663870859109335e-08,
+          "ratio": 1.8257407440958964,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "ref": 2.5608841273169413e-08,
+          "new": 8.536346803507442e-08,
+          "ratio": 3.3333592537242365,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_S-SE",
+          "ref": 1.870204897498837e-08,
+          "new": 3.414529506847026e-08,
+          "ratio": 1.8257515587802857,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_S-WALL",
+          "ref": 8.19488259882398e-09,
+          "new": 1.4961767943410874e-08,
+          "ratio": 1.825745245643664,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "SE-SE",
+          "ref": 2.1340587493013975e-08,
+          "new": 2.1340587493013975e-08,
+          "ratio": 1.0,
+          "rule": 1.0
+        },
+        {
+          "pair": "SE-WALL",
+          "ref": 3.740430042738864e-09,
+          "new": 3.740430042738864e-09,
+          "ratio": 1.0,
+          "rule": 1.0
+        }
+      ],
+      "old": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "c9b6667b46d1e40963ab7674d351174fa4c0da3a51e4126d3df52fab8f9b96a4",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99158
+        },
+        "n_atoms_planned": 100000,
+        "Bo_SE": 0.7299906001321018,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.3,
+        "gamma": {
+          "AM_P": 0.3,
+          "AM_S": 0.3,
+          "SE": 1.0,
+          "WALL": 0.00768
+        },
+        "bo_se": 0.73,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 5.762056386024637e-08,
+            "expected_F0": 5.761958623113774e-08,
+            "CED": 102869.0,
+            "overlap_fraction": 3.8411948264080864e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 3.545905129851062e-08,
+            "expected_F0": 3.545820691146938e-08,
+            "CED": 120940.0,
+            "overlap_fraction": 7.351337819054406e-07
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 2.104013281862581e-08,
+            "expected_F0": 2.1039698088605478e-08,
+            "CED": 102981.0,
+            "overlap_fraction": 6.304885957683845e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 1.8438472695519334e-08,
+            "expected_F0": 1.8438267593964075e-08,
+            "CED": 49785.9,
+            "overlap_fraction": 1.2698778143316802e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 2.5608841273169413e-08,
+            "expected_F0": 2.560870499161677e-08,
+            "CED": 134796.0,
+            "overlap_fraction": 6.595554435016158e-07
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 1.870204897498837e-08,
+            "expected_F0": 1.87019538565382e-08,
+            "CED": 107104.0,
+            "overlap_fraction": 6.06208309259074e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 8.19488259882398e-09,
+            "expected_F0": 8.194785597317367e-09,
+            "CED": 65238.0,
+            "overlap_fraction": 2.1804718674125384e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 2.1340587493013975e-08,
+            "expected_F0": 2.1340587493013975e-08,
+            "CED": 108837.0,
+            "overlap_fraction": 1.089151207006458e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 3.740430042738864e-09,
+            "expected_F0": 3.74039077130764e-09,
+            "CED": 55973.6,
+            "overlap_fraction": 1.8559516978638765e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "new": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "a52fb2b9dd1b5ce2cb3a703fce52d3254c0f23a3b42890e2f38124a24de14a11",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99158
+        },
+        "n_atoms_planned": 100000,
+        "Bo_SE": 0.7299906001321018,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.3,
+        "gamma": {
+          "AM_P": 1.0,
+          "AM_S": 1.0,
+          "SE": 1.0,
+          "WALL": 0.00768
+        },
+        "bo_se": 0.73,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 1.9206901507553435e-07,
+            "expected_F0": 1.9206528743712578e-07,
+            "CED": 153666.0,
+            "overlap_fraction": 8.571421897860918e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 1.1819612450006176e-07,
+            "expected_F0": 1.1819402303823127e-07,
+            "CED": 180660.0,
+            "overlap_fraction": 1.6404026559461227e-06
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 3.841331182975715e-08,
+            "expected_F0": 3.841305748742516e-08,
+            "CED": 125864.0,
+            "overlap_fraction": 9.418160458846041e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 3.3663870859109335e-08,
+            "expected_F0": 3.3663516941768766e-08,
+            "CED": 60848.9,
+            "overlap_fraction": 1.8969447164241945e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 8.536346803507442e-08,
+            "expected_F0": 8.53623499720559e-08,
+            "CED": 201359.0,
+            "overlap_fraction": 1.4717681173316766e-06
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 3.414529506847026e-08,
+            "expected_F0": 3.414493998882236e-08,
+            "CED": 130904.0,
+            "overlap_fraction": 9.055581390651056e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 1.4961767943410874e-08,
+            "expected_F0": 1.496156308523056e-08,
+            "CED": 79734.7,
+            "overlap_fraction": 3.2571963541568235e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 2.1340587493013975e-08,
+            "expected_F0": 2.1340587493013975e-08,
+            "CED": 108837.0,
+            "overlap_fraction": 1.089151207006458e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 3.740430042738864e-09,
+            "expected_F0": 3.74039077130764e-09,
+            "CED": 55973.6,
+            "overlap_fraction": 1.8559516978638765e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "scope": "same-world D2 development pair, not a cohort or launch certificate",
+      "degenerate_same_gamma_world": false
+    },
+    "plan": {
+      "schema": "mixer_d2_plan_check/1",
+      "verdict": "PASS",
+      "failures": [],
+      "registered": null,
+      "execution_authorized": false,
+      "scope": "D2 development planned counts; no observed frames, rest/contact certificate, cohort or execution authority",
+      "deck_sha256": "c9b6667b46d1e40963ab7674d351174fa4c0da3a51e4126d3df52fab8f9b96a4",
+      "density_generation": "lab20261014",
+      "phase_names": {
+        "1": "AM_P",
+        "2": "AM_S",
+        "3": "SE",
+        "4": "WALL"
+      },
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "n_atoms_planned": 100000,
+      "Bo_SE": 0.7299906001321018,
+      "gravity": 9.81,
+      "rho_uncoated_ncm": 0.3,
+      "gamma": {
+        "AM_P": 0.3,
+        "AM_S": 0.3,
+        "SE": 1.0,
+        "WALL": 0.00768
+      },
+      "bo_se": 0.73,
+      "pairs": [
+        {
+          "pair": "AM_P-AM_P",
+          "i": 1,
+          "j": 1,
+          "F0": 5.762056386024637e-08,
+          "expected_F0": 5.761958623113774e-08,
+          "CED": 102869.0,
+          "overlap_fraction": 3.8411948264080864e-07
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "i": 1,
+          "j": 2,
+          "F0": 3.545905129851062e-08,
+          "expected_F0": 3.545820691146938e-08,
+          "CED": 120940.0,
+          "overlap_fraction": 7.351337819054406e-07
+        },
+        {
+          "pair": "AM_P-SE",
+          "i": 1,
+          "j": 3,
+          "F0": 2.104013281862581e-08,
+          "expected_F0": 2.1039698088605478e-08,
+          "CED": 102981.0,
+          "overlap_fraction": 6.304885957683845e-06
+        },
+        {
+          "pair": "AM_P-WALL",
+          "i": 1,
+          "j": 4,
+          "F0": 1.8438472695519334e-08,
+          "expected_F0": 1.8438267593964075e-08,
+          "CED": 49785.9,
+          "overlap_fraction": 1.2698778143316802e-07
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "i": 2,
+          "j": 2,
+          "F0": 2.5608841273169413e-08,
+          "expected_F0": 2.560870499161677e-08,
+          "CED": 134796.0,
+          "overlap_fraction": 6.595554435016158e-07
+        },
+        {
+          "pair": "AM_S-SE",
+          "i": 2,
+          "j": 3,
+          "F0": 1.870204897498837e-08,
+          "expected_F0": 1.87019538565382e-08,
+          "CED": 107104.0,
+          "overlap_fraction": 6.06208309259074e-06
+        },
+        {
+          "pair": "AM_S-WALL",
+          "i": 2,
+          "j": 4,
+          "F0": 8.19488259882398e-09,
+          "expected_F0": 8.194785597317367e-09,
+          "CED": 65238.0,
+          "overlap_fraction": 2.1804718674125384e-07
+        },
+        {
+          "pair": "SE-SE",
+          "i": 3,
+          "j": 3,
+          "F0": 2.1340587493013975e-08,
+          "expected_F0": 2.1340587493013975e-08,
+          "CED": 108837.0,
+          "overlap_fraction": 1.089151207006458e-05
+        },
+        {
+          "pair": "SE-WALL",
+          "i": 3,
+          "j": 4,
+          "F0": 3.740430042738864e-09,
+          "expected_F0": 3.74039077130764e-09,
+          "CED": 55973.6,
+          "overlap_fraction": 1.8559516978638765e-06
+        }
+      ],
+      "tolerances": {
+        "absolute_Bo_relative": 2e-05,
+        "pair_force_relative": 3.0000000000000004e-05
+      },
+      "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+    }
+  },
+  {
+    "name": "insert_start_late",
+    "read": {
+      "schema": "mixer_d2_development/1",
+      "verdict": "PASS",
+      "failures": [],
+      "registered": null,
+      "execution_authorized": false,
+      "scope": "D2 development deck and planned counts only; not execution evidence",
+      "deck_sha256": "997b8faeb37382bfc0fba2c6a6095fc78efeb0698eed95d5e741e0db4036ff0d",
+      "density_generation": "lab20261014",
+      "phase_names": {
+        "1": "AM_P",
+        "2": "AM_S",
+        "3": "SE",
+        "4": "WALL"
+      },
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "n_atoms_planned": 100000,
+      "Bo_SE": 0.7299906001321018,
+      "gravity": 9.81,
+      "rho_uncoated_ncm": 0.3,
+      "gamma": {
+        "AM_P": 0.3,
+        "AM_S": 0.3,
+        "SE": 1.0,
+        "WALL": 0.00768
+      },
+      "bo_se": 0.73,
+      "pairs": [
+        {
+          "pair": "AM_P-AM_P",
+          "i": 1,
+          "j": 1,
+          "F0": 5.762056386024637e-08,
+          "expected_F0": 5.761958623113774e-08,
+          "CED": 102869.0,
+          "overlap_fraction": 3.8411948264080864e-07
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "i": 1,
+          "j": 2,
+          "F0": 3.545905129851062e-08,
+          "expected_F0": 3.545820691146938e-08,
+          "CED": 120940.0,
+          "overlap_fraction": 7.351337819054406e-07
+        },
+        {
+          "pair": "AM_P-SE",
+          "i": 1,
+          "j": 3,
+          "F0": 2.104013281862581e-08,
+          "expected_F0": 2.1039698088605478e-08,
+          "CED": 102981.0,
+          "overlap_fraction": 6.304885957683845e-06
+        },
+        {
+          "pair": "AM_P-WALL",
+          "i": 1,
+          "j": 4,
+          "F0": 1.8438472695519334e-08,
+          "expected_F0": 1.8438267593964075e-08,
+          "CED": 49785.9,
+          "overlap_fraction": 1.2698778143316802e-07
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "i": 2,
+          "j": 2,
+          "F0": 2.5608841273169413e-08,
+          "expected_F0": 2.560870499161677e-08,
+          "CED": 134796.0,
+          "overlap_fraction": 6.595554435016158e-07
+        },
+        {
+          "pair": "AM_S-SE",
+          "i": 2,
+          "j": 3,
+          "F0": 1.870204897498837e-08,
+          "expected_F0": 1.87019538565382e-08,
+          "CED": 107104.0,
+          "overlap_fraction": 6.06208309259074e-06
+        },
+        {
+          "pair": "AM_S-WALL",
+          "i": 2,
+          "j": 4,
+          "F0": 8.19488259882398e-09,
+          "expected_F0": 8.194785597317367e-09,
+          "CED": 65238.0,
+          "overlap_fraction": 2.1804718674125384e-07
+        },
+        {
+          "pair": "SE-SE",
+          "i": 3,
+          "j": 3,
+          "F0": 2.1340587493013975e-08,
+          "expected_F0": 2.1340587493013975e-08,
+          "CED": 108837.0,
+          "overlap_fraction": 1.089151207006458e-05
+        },
+        {
+          "pair": "SE-WALL",
+          "i": 3,
+          "j": 4,
+          "F0": 3.740430042738864e-09,
+          "expected_F0": 3.74039077130764e-09,
+          "CED": 55973.6,
+          "overlap_fraction": 1.8559516978638765e-06
+        }
+      ],
+      "tolerances": {
+        "absolute_Bo_relative": 2e-05,
+        "pair_force_relative": 3.0000000000000004e-05
+      },
+      "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+    },
+    "pair": {
+      "schema": "mixer_d2_pair_development/1",
+      "allow": "D2",
+      "verdict": "PASS",
+      "registered": null,
+      "execution_authorized": false,
+      "failures": [],
+      "table": [
+        {
+          "pair": "AM_P-AM_P",
+          "ref": 5.762056386024637e-08,
+          "new": 1.9206901507553435e-07,
+          "ratio": 3.333341470614222,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "ref": 3.545905129851062e-08,
+          "new": 1.1819612450006176e-07,
+          "ratio": 3.3333132210738623,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_P-SE",
+          "ref": 2.104013281862581e-08,
+          "new": 3.841331182975715e-08,
+          "ratio": 1.8257162234143176,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_P-WALL",
+          "ref": 1.8438472695519334e-08,
+          "new": 3.3663870859109335e-08,
+          "ratio": 1.8257407440958964,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "ref": 2.5608841273169413e-08,
+          "new": 8.536346803507442e-08,
+          "ratio": 3.3333592537242365,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_S-SE",
+          "ref": 1.870204897498837e-08,
+          "new": 3.414529506847026e-08,
+          "ratio": 1.8257515587802857,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_S-WALL",
+          "ref": 8.19488259882398e-09,
+          "new": 1.4961767943410874e-08,
+          "ratio": 1.825745245643664,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "SE-SE",
+          "ref": 2.1340587493013975e-08,
+          "new": 2.1340587493013975e-08,
+          "ratio": 1.0,
+          "rule": 1.0
+        },
+        {
+          "pair": "SE-WALL",
+          "ref": 3.740430042738864e-09,
+          "new": 3.740430042738864e-09,
+          "ratio": 1.0,
+          "rule": 1.0
+        }
+      ],
+      "old": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "997b8faeb37382bfc0fba2c6a6095fc78efeb0698eed95d5e741e0db4036ff0d",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99158
+        },
+        "n_atoms_planned": 100000,
+        "Bo_SE": 0.7299906001321018,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.3,
+        "gamma": {
+          "AM_P": 0.3,
+          "AM_S": 0.3,
+          "SE": 1.0,
+          "WALL": 0.00768
+        },
+        "bo_se": 0.73,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 5.762056386024637e-08,
+            "expected_F0": 5.761958623113774e-08,
+            "CED": 102869.0,
+            "overlap_fraction": 3.8411948264080864e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 3.545905129851062e-08,
+            "expected_F0": 3.545820691146938e-08,
+            "CED": 120940.0,
+            "overlap_fraction": 7.351337819054406e-07
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 2.104013281862581e-08,
+            "expected_F0": 2.1039698088605478e-08,
+            "CED": 102981.0,
+            "overlap_fraction": 6.304885957683845e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 1.8438472695519334e-08,
+            "expected_F0": 1.8438267593964075e-08,
+            "CED": 49785.9,
+            "overlap_fraction": 1.2698778143316802e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 2.5608841273169413e-08,
+            "expected_F0": 2.560870499161677e-08,
+            "CED": 134796.0,
+            "overlap_fraction": 6.595554435016158e-07
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 1.870204897498837e-08,
+            "expected_F0": 1.87019538565382e-08,
+            "CED": 107104.0,
+            "overlap_fraction": 6.06208309259074e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 8.19488259882398e-09,
+            "expected_F0": 8.194785597317367e-09,
+            "CED": 65238.0,
+            "overlap_fraction": 2.1804718674125384e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 2.1340587493013975e-08,
+            "expected_F0": 2.1340587493013975e-08,
+            "CED": 108837.0,
+            "overlap_fraction": 1.089151207006458e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 3.740430042738864e-09,
+            "expected_F0": 3.74039077130764e-09,
+            "CED": 55973.6,
+            "overlap_fraction": 1.8559516978638765e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "new": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "352a45e4437b746e5bd3b900b6c9797b60dae4b5d4a22eb6c908a9448ae8df47",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99158
+        },
+        "n_atoms_planned": 100000,
+        "Bo_SE": 0.7299906001321018,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.3,
+        "gamma": {
+          "AM_P": 1.0,
+          "AM_S": 1.0,
+          "SE": 1.0,
+          "WALL": 0.00768
+        },
+        "bo_se": 0.73,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 1.9206901507553435e-07,
+            "expected_F0": 1.9206528743712578e-07,
+            "CED": 153666.0,
+            "overlap_fraction": 8.571421897860918e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 1.1819612450006176e-07,
+            "expected_F0": 1.1819402303823127e-07,
+            "CED": 180660.0,
+            "overlap_fraction": 1.6404026559461227e-06
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 3.841331182975715e-08,
+            "expected_F0": 3.841305748742516e-08,
+            "CED": 125864.0,
+            "overlap_fraction": 9.418160458846041e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 3.3663870859109335e-08,
+            "expected_F0": 3.3663516941768766e-08,
+            "CED": 60848.9,
+            "overlap_fraction": 1.8969447164241945e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 8.536346803507442e-08,
+            "expected_F0": 8.53623499720559e-08,
+            "CED": 201359.0,
+            "overlap_fraction": 1.4717681173316766e-06
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 3.414529506847026e-08,
+            "expected_F0": 3.414493998882236e-08,
+            "CED": 130904.0,
+            "overlap_fraction": 9.055581390651056e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 1.4961767943410874e-08,
+            "expected_F0": 1.496156308523056e-08,
+            "CED": 79734.7,
+            "overlap_fraction": 3.2571963541568235e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 2.1340587493013975e-08,
+            "expected_F0": 2.1340587493013975e-08,
+            "CED": 108837.0,
+            "overlap_fraction": 1.089151207006458e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 3.740430042738864e-09,
+            "expected_F0": 3.74039077130764e-09,
+            "CED": 55973.6,
+            "overlap_fraction": 1.8559516978638765e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "scope": "same-world D2 development pair, not a cohort or launch certificate",
+      "degenerate_same_gamma_world": false
+    },
+    "plan": {
+      "schema": "mixer_d2_plan_check/1",
+      "verdict": "PASS",
+      "failures": [],
+      "registered": null,
+      "execution_authorized": false,
+      "scope": "D2 development planned counts; no observed frames, rest/contact certificate, cohort or execution authority",
+      "deck_sha256": "997b8faeb37382bfc0fba2c6a6095fc78efeb0698eed95d5e741e0db4036ff0d",
+      "density_generation": "lab20261014",
+      "phase_names": {
+        "1": "AM_P",
+        "2": "AM_S",
+        "3": "SE",
+        "4": "WALL"
+      },
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "n_atoms_planned": 100000,
+      "Bo_SE": 0.7299906001321018,
+      "gravity": 9.81,
+      "rho_uncoated_ncm": 0.3,
+      "gamma": {
+        "AM_P": 0.3,
+        "AM_S": 0.3,
+        "SE": 1.0,
+        "WALL": 0.00768
+      },
+      "bo_se": 0.73,
+      "pairs": [
+        {
+          "pair": "AM_P-AM_P",
+          "i": 1,
+          "j": 1,
+          "F0": 5.762056386024637e-08,
+          "expected_F0": 5.761958623113774e-08,
+          "CED": 102869.0,
+          "overlap_fraction": 3.8411948264080864e-07
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "i": 1,
+          "j": 2,
+          "F0": 3.545905129851062e-08,
+          "expected_F0": 3.545820691146938e-08,
+          "CED": 120940.0,
+          "overlap_fraction": 7.351337819054406e-07
+        },
+        {
+          "pair": "AM_P-SE",
+          "i": 1,
+          "j": 3,
+          "F0": 2.104013281862581e-08,
+          "expected_F0": 2.1039698088605478e-08,
+          "CED": 102981.0,
+          "overlap_fraction": 6.304885957683845e-06
+        },
+        {
+          "pair": "AM_P-WALL",
+          "i": 1,
+          "j": 4,
+          "F0": 1.8438472695519334e-08,
+          "expected_F0": 1.8438267593964075e-08,
+          "CED": 49785.9,
+          "overlap_fraction": 1.2698778143316802e-07
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "i": 2,
+          "j": 2,
+          "F0": 2.5608841273169413e-08,
+          "expected_F0": 2.560870499161677e-08,
+          "CED": 134796.0,
+          "overlap_fraction": 6.595554435016158e-07
+        },
+        {
+          "pair": "AM_S-SE",
+          "i": 2,
+          "j": 3,
+          "F0": 1.870204897498837e-08,
+          "expected_F0": 1.87019538565382e-08,
+          "CED": 107104.0,
+          "overlap_fraction": 6.06208309259074e-06
+        },
+        {
+          "pair": "AM_S-WALL",
+          "i": 2,
+          "j": 4,
+          "F0": 8.19488259882398e-09,
+          "expected_F0": 8.194785597317367e-09,
+          "CED": 65238.0,
+          "overlap_fraction": 2.1804718674125384e-07
+        },
+        {
+          "pair": "SE-SE",
+          "i": 3,
+          "j": 3,
+          "F0": 2.1340587493013975e-08,
+          "expected_F0": 2.1340587493013975e-08,
+          "CED": 108837.0,
+          "overlap_fraction": 1.089151207006458e-05
+        },
+        {
+          "pair": "SE-WALL",
+          "i": 3,
+          "j": 4,
+          "F0": 3.740430042738864e-09,
+          "expected_F0": 3.74039077130764e-09,
+          "CED": 55973.6,
+          "overlap_fraction": 1.8559516978638765e-06
+        }
+      ],
+      "tolerances": {
+        "absolute_Bo_relative": 2e-05,
+        "pair_force_relative": 3.0000000000000004e-05
+      },
+      "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+    }
+  },
+  {
+    "name": "wall_period",
+    "read": {
+      "schema": "mixer_d2_development/1",
+      "verdict": "PASS",
+      "failures": [],
+      "registered": null,
+      "execution_authorized": false,
+      "scope": "D2 development deck and planned counts only; not execution evidence",
+      "deck_sha256": "8d4841bd36032c1e49707a4e43d98a87a67b5e60ba60b2bd6739431ca512eeff",
+      "density_generation": "lab20261014",
+      "phase_names": {
+        "1": "AM_P",
+        "2": "AM_S",
+        "3": "SE",
+        "4": "WALL"
+      },
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "n_atoms_planned": 100000,
+      "Bo_SE": 0.7299906001321018,
+      "gravity": 9.81,
+      "rho_uncoated_ncm": 0.3,
+      "gamma": {
+        "AM_P": 0.3,
+        "AM_S": 0.3,
+        "SE": 1.0,
+        "WALL": 0.00768
+      },
+      "bo_se": 0.73,
+      "pairs": [
+        {
+          "pair": "AM_P-AM_P",
+          "i": 1,
+          "j": 1,
+          "F0": 5.762056386024637e-08,
+          "expected_F0": 5.761958623113774e-08,
+          "CED": 102869.0,
+          "overlap_fraction": 3.8411948264080864e-07
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "i": 1,
+          "j": 2,
+          "F0": 3.545905129851062e-08,
+          "expected_F0": 3.545820691146938e-08,
+          "CED": 120940.0,
+          "overlap_fraction": 7.351337819054406e-07
+        },
+        {
+          "pair": "AM_P-SE",
+          "i": 1,
+          "j": 3,
+          "F0": 2.104013281862581e-08,
+          "expected_F0": 2.1039698088605478e-08,
+          "CED": 102981.0,
+          "overlap_fraction": 6.304885957683845e-06
+        },
+        {
+          "pair": "AM_P-WALL",
+          "i": 1,
+          "j": 4,
+          "F0": 1.8438472695519334e-08,
+          "expected_F0": 1.8438267593964075e-08,
+          "CED": 49785.9,
+          "overlap_fraction": 1.2698778143316802e-07
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "i": 2,
+          "j": 2,
+          "F0": 2.5608841273169413e-08,
+          "expected_F0": 2.560870499161677e-08,
+          "CED": 134796.0,
+          "overlap_fraction": 6.595554435016158e-07
+        },
+        {
+          "pair": "AM_S-SE",
+          "i": 2,
+          "j": 3,
+          "F0": 1.870204897498837e-08,
+          "expected_F0": 1.87019538565382e-08,
+          "CED": 107104.0,
+          "overlap_fraction": 6.06208309259074e-06
+        },
+        {
+          "pair": "AM_S-WALL",
+          "i": 2,
+          "j": 4,
+          "F0": 8.19488259882398e-09,
+          "expected_F0": 8.194785597317367e-09,
+          "CED": 65238.0,
+          "overlap_fraction": 2.1804718674125384e-07
+        },
+        {
+          "pair": "SE-SE",
+          "i": 3,
+          "j": 3,
+          "F0": 2.1340587493013975e-08,
+          "expected_F0": 2.1340587493013975e-08,
+          "CED": 108837.0,
+          "overlap_fraction": 1.089151207006458e-05
+        },
+        {
+          "pair": "SE-WALL",
+          "i": 3,
+          "j": 4,
+          "F0": 3.740430042738864e-09,
+          "expected_F0": 3.74039077130764e-09,
+          "CED": 55973.6,
+          "overlap_fraction": 1.8559516978638765e-06
+        }
+      ],
+      "tolerances": {
+        "absolute_Bo_relative": 2e-05,
+        "pair_force_relative": 3.0000000000000004e-05
+      },
+      "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+    },
+    "pair": {
+      "schema": "mixer_d2_pair_development/1",
+      "allow": "D2",
+      "verdict": "PASS",
+      "registered": null,
+      "execution_authorized": false,
+      "failures": [],
+      "table": [
+        {
+          "pair": "AM_P-AM_P",
+          "ref": 5.762056386024637e-08,
+          "new": 1.9206901507553435e-07,
+          "ratio": 3.333341470614222,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "ref": 3.545905129851062e-08,
+          "new": 1.1819612450006176e-07,
+          "ratio": 3.3333132210738623,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_P-SE",
+          "ref": 2.104013281862581e-08,
+          "new": 3.841331182975715e-08,
+          "ratio": 1.8257162234143176,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_P-WALL",
+          "ref": 1.8438472695519334e-08,
+          "new": 3.3663870859109335e-08,
+          "ratio": 1.8257407440958964,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "ref": 2.5608841273169413e-08,
+          "new": 8.536346803507442e-08,
+          "ratio": 3.3333592537242365,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_S-SE",
+          "ref": 1.870204897498837e-08,
+          "new": 3.414529506847026e-08,
+          "ratio": 1.8257515587802857,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_S-WALL",
+          "ref": 8.19488259882398e-09,
+          "new": 1.4961767943410874e-08,
+          "ratio": 1.825745245643664,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "SE-SE",
+          "ref": 2.1340587493013975e-08,
+          "new": 2.1340587493013975e-08,
+          "ratio": 1.0,
+          "rule": 1.0
+        },
+        {
+          "pair": "SE-WALL",
+          "ref": 3.740430042738864e-09,
+          "new": 3.740430042738864e-09,
+          "ratio": 1.0,
+          "rule": 1.0
+        }
+      ],
+      "old": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "8d4841bd36032c1e49707a4e43d98a87a67b5e60ba60b2bd6739431ca512eeff",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99158
+        },
+        "n_atoms_planned": 100000,
+        "Bo_SE": 0.7299906001321018,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.3,
+        "gamma": {
+          "AM_P": 0.3,
+          "AM_S": 0.3,
+          "SE": 1.0,
+          "WALL": 0.00768
+        },
+        "bo_se": 0.73,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 5.762056386024637e-08,
+            "expected_F0": 5.761958623113774e-08,
+            "CED": 102869.0,
+            "overlap_fraction": 3.8411948264080864e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 3.545905129851062e-08,
+            "expected_F0": 3.545820691146938e-08,
+            "CED": 120940.0,
+            "overlap_fraction": 7.351337819054406e-07
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 2.104013281862581e-08,
+            "expected_F0": 2.1039698088605478e-08,
+            "CED": 102981.0,
+            "overlap_fraction": 6.304885957683845e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 1.8438472695519334e-08,
+            "expected_F0": 1.8438267593964075e-08,
+            "CED": 49785.9,
+            "overlap_fraction": 1.2698778143316802e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 2.5608841273169413e-08,
+            "expected_F0": 2.560870499161677e-08,
+            "CED": 134796.0,
+            "overlap_fraction": 6.595554435016158e-07
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 1.870204897498837e-08,
+            "expected_F0": 1.87019538565382e-08,
+            "CED": 107104.0,
+            "overlap_fraction": 6.06208309259074e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 8.19488259882398e-09,
+            "expected_F0": 8.194785597317367e-09,
+            "CED": 65238.0,
+            "overlap_fraction": 2.1804718674125384e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 2.1340587493013975e-08,
+            "expected_F0": 2.1340587493013975e-08,
+            "CED": 108837.0,
+            "overlap_fraction": 1.089151207006458e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 3.740430042738864e-09,
+            "expected_F0": 3.74039077130764e-09,
+            "CED": 55973.6,
+            "overlap_fraction": 1.8559516978638765e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "new": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "967a547989fe1839fda38bc8d9e1f20d4aeacd7a18803de7c4daee13474f8016",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99158
+        },
+        "n_atoms_planned": 100000,
+        "Bo_SE": 0.7299906001321018,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.3,
+        "gamma": {
+          "AM_P": 1.0,
+          "AM_S": 1.0,
+          "SE": 1.0,
+          "WALL": 0.00768
+        },
+        "bo_se": 0.73,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 1.9206901507553435e-07,
+            "expected_F0": 1.9206528743712578e-07,
+            "CED": 153666.0,
+            "overlap_fraction": 8.571421897860918e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 1.1819612450006176e-07,
+            "expected_F0": 1.1819402303823127e-07,
+            "CED": 180660.0,
+            "overlap_fraction": 1.6404026559461227e-06
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 3.841331182975715e-08,
+            "expected_F0": 3.841305748742516e-08,
+            "CED": 125864.0,
+            "overlap_fraction": 9.418160458846041e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 3.3663870859109335e-08,
+            "expected_F0": 3.3663516941768766e-08,
+            "CED": 60848.9,
+            "overlap_fraction": 1.8969447164241945e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 8.536346803507442e-08,
+            "expected_F0": 8.53623499720559e-08,
+            "CED": 201359.0,
+            "overlap_fraction": 1.4717681173316766e-06
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 3.414529506847026e-08,
+            "expected_F0": 3.414493998882236e-08,
+            "CED": 130904.0,
+            "overlap_fraction": 9.055581390651056e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 1.4961767943410874e-08,
+            "expected_F0": 1.496156308523056e-08,
+            "CED": 79734.7,
+            "overlap_fraction": 3.2571963541568235e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 2.1340587493013975e-08,
+            "expected_F0": 2.1340587493013975e-08,
+            "CED": 108837.0,
+            "overlap_fraction": 1.089151207006458e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 3.740430042738864e-09,
+            "expected_F0": 3.74039077130764e-09,
+            "CED": 55973.6,
+            "overlap_fraction": 1.8559516978638765e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "scope": "same-world D2 development pair, not a cohort or launch certificate",
+      "degenerate_same_gamma_world": false
+    },
+    "plan": {
+      "schema": "mixer_d2_plan_check/1",
+      "verdict": "PASS",
+      "failures": [],
+      "registered": null,
+      "execution_authorized": false,
+      "scope": "D2 development planned counts; no observed frames, rest/contact certificate, cohort or execution authority",
+      "deck_sha256": "8d4841bd36032c1e49707a4e43d98a87a67b5e60ba60b2bd6739431ca512eeff",
+      "density_generation": "lab20261014",
+      "phase_names": {
+        "1": "AM_P",
+        "2": "AM_S",
+        "3": "SE",
+        "4": "WALL"
+      },
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "n_atoms_planned": 100000,
+      "Bo_SE": 0.7299906001321018,
+      "gravity": 9.81,
+      "rho_uncoated_ncm": 0.3,
+      "gamma": {
+        "AM_P": 0.3,
+        "AM_S": 0.3,
+        "SE": 1.0,
+        "WALL": 0.00768
+      },
+      "bo_se": 0.73,
+      "pairs": [
+        {
+          "pair": "AM_P-AM_P",
+          "i": 1,
+          "j": 1,
+          "F0": 5.762056386024637e-08,
+          "expected_F0": 5.761958623113774e-08,
+          "CED": 102869.0,
+          "overlap_fraction": 3.8411948264080864e-07
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "i": 1,
+          "j": 2,
+          "F0": 3.545905129851062e-08,
+          "expected_F0": 3.545820691146938e-08,
+          "CED": 120940.0,
+          "overlap_fraction": 7.351337819054406e-07
+        },
+        {
+          "pair": "AM_P-SE",
+          "i": 1,
+          "j": 3,
+          "F0": 2.104013281862581e-08,
+          "expected_F0": 2.1039698088605478e-08,
+          "CED": 102981.0,
+          "overlap_fraction": 6.304885957683845e-06
+        },
+        {
+          "pair": "AM_P-WALL",
+          "i": 1,
+          "j": 4,
+          "F0": 1.8438472695519334e-08,
+          "expected_F0": 1.8438267593964075e-08,
+          "CED": 49785.9,
+          "overlap_fraction": 1.2698778143316802e-07
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "i": 2,
+          "j": 2,
+          "F0": 2.5608841273169413e-08,
+          "expected_F0": 2.560870499161677e-08,
+          "CED": 134796.0,
+          "overlap_fraction": 6.595554435016158e-07
+        },
+        {
+          "pair": "AM_S-SE",
+          "i": 2,
+          "j": 3,
+          "F0": 1.870204897498837e-08,
+          "expected_F0": 1.87019538565382e-08,
+          "CED": 107104.0,
+          "overlap_fraction": 6.06208309259074e-06
+        },
+        {
+          "pair": "AM_S-WALL",
+          "i": 2,
+          "j": 4,
+          "F0": 8.19488259882398e-09,
+          "expected_F0": 8.194785597317367e-09,
+          "CED": 65238.0,
+          "overlap_fraction": 2.1804718674125384e-07
+        },
+        {
+          "pair": "SE-SE",
+          "i": 3,
+          "j": 3,
+          "F0": 2.1340587493013975e-08,
+          "expected_F0": 2.1340587493013975e-08,
+          "CED": 108837.0,
+          "overlap_fraction": 1.089151207006458e-05
+        },
+        {
+          "pair": "SE-WALL",
+          "i": 3,
+          "j": 4,
+          "F0": 3.740430042738864e-09,
+          "expected_F0": 3.74039077130764e-09,
+          "CED": 55973.6,
+          "overlap_fraction": 1.8559516978638765e-06
+        }
+      ],
+      "tolerances": {
+        "absolute_Bo_relative": 2e-05,
+        "pair_force_relative": 3.0000000000000004e-05
+      },
+      "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+    }
+  },
+  {
+    "name": "neigh_exclude",
+    "read": {
+      "schema": "mixer_d2_development/1",
+      "verdict": "PASS",
+      "failures": [],
+      "registered": null,
+      "execution_authorized": false,
+      "scope": "D2 development deck and planned counts only; not execution evidence",
+      "deck_sha256": "7996cf58722f7a18563edd1ad09f8d696e445948c7466d09715b9724296bd04b",
+      "density_generation": "lab20261014",
+      "phase_names": {
+        "1": "AM_P",
+        "2": "AM_S",
+        "3": "SE",
+        "4": "WALL"
+      },
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "n_atoms_planned": 100000,
+      "Bo_SE": 0.7299906001321018,
+      "gravity": 9.81,
+      "rho_uncoated_ncm": 0.3,
+      "gamma": {
+        "AM_P": 0.3,
+        "AM_S": 0.3,
+        "SE": 1.0,
+        "WALL": 0.00768
+      },
+      "bo_se": 0.73,
+      "pairs": [
+        {
+          "pair": "AM_P-AM_P",
+          "i": 1,
+          "j": 1,
+          "F0": 5.762056386024637e-08,
+          "expected_F0": 5.761958623113774e-08,
+          "CED": 102869.0,
+          "overlap_fraction": 3.8411948264080864e-07
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "i": 1,
+          "j": 2,
+          "F0": 3.545905129851062e-08,
+          "expected_F0": 3.545820691146938e-08,
+          "CED": 120940.0,
+          "overlap_fraction": 7.351337819054406e-07
+        },
+        {
+          "pair": "AM_P-SE",
+          "i": 1,
+          "j": 3,
+          "F0": 2.104013281862581e-08,
+          "expected_F0": 2.1039698088605478e-08,
+          "CED": 102981.0,
+          "overlap_fraction": 6.304885957683845e-06
+        },
+        {
+          "pair": "AM_P-WALL",
+          "i": 1,
+          "j": 4,
+          "F0": 1.8438472695519334e-08,
+          "expected_F0": 1.8438267593964075e-08,
+          "CED": 49785.9,
+          "overlap_fraction": 1.2698778143316802e-07
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "i": 2,
+          "j": 2,
+          "F0": 2.5608841273169413e-08,
+          "expected_F0": 2.560870499161677e-08,
+          "CED": 134796.0,
+          "overlap_fraction": 6.595554435016158e-07
+        },
+        {
+          "pair": "AM_S-SE",
+          "i": 2,
+          "j": 3,
+          "F0": 1.870204897498837e-08,
+          "expected_F0": 1.87019538565382e-08,
+          "CED": 107104.0,
+          "overlap_fraction": 6.06208309259074e-06
+        },
+        {
+          "pair": "AM_S-WALL",
+          "i": 2,
+          "j": 4,
+          "F0": 8.19488259882398e-09,
+          "expected_F0": 8.194785597317367e-09,
+          "CED": 65238.0,
+          "overlap_fraction": 2.1804718674125384e-07
+        },
+        {
+          "pair": "SE-SE",
+          "i": 3,
+          "j": 3,
+          "F0": 2.1340587493013975e-08,
+          "expected_F0": 2.1340587493013975e-08,
+          "CED": 108837.0,
+          "overlap_fraction": 1.089151207006458e-05
+        },
+        {
+          "pair": "SE-WALL",
+          "i": 3,
+          "j": 4,
+          "F0": 3.740430042738864e-09,
+          "expected_F0": 3.74039077130764e-09,
+          "CED": 55973.6,
+          "overlap_fraction": 1.8559516978638765e-06
+        }
+      ],
+      "tolerances": {
+        "absolute_Bo_relative": 2e-05,
+        "pair_force_relative": 3.0000000000000004e-05
+      },
+      "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+    },
+    "pair": {
+      "schema": "mixer_d2_pair_development/1",
+      "allow": "D2",
+      "verdict": "PASS",
+      "registered": null,
+      "execution_authorized": false,
+      "failures": [],
+      "table": [
+        {
+          "pair": "AM_P-AM_P",
+          "ref": 5.762056386024637e-08,
+          "new": 1.9206901507553435e-07,
+          "ratio": 3.333341470614222,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "ref": 3.545905129851062e-08,
+          "new": 1.1819612450006176e-07,
+          "ratio": 3.3333132210738623,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_P-SE",
+          "ref": 2.104013281862581e-08,
+          "new": 3.841331182975715e-08,
+          "ratio": 1.8257162234143176,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_P-WALL",
+          "ref": 1.8438472695519334e-08,
+          "new": 3.3663870859109335e-08,
+          "ratio": 1.8257407440958964,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "ref": 2.5608841273169413e-08,
+          "new": 8.536346803507442e-08,
+          "ratio": 3.3333592537242365,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_S-SE",
+          "ref": 1.870204897498837e-08,
+          "new": 3.414529506847026e-08,
+          "ratio": 1.8257515587802857,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_S-WALL",
+          "ref": 8.19488259882398e-09,
+          "new": 1.4961767943410874e-08,
+          "ratio": 1.825745245643664,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "SE-SE",
+          "ref": 2.1340587493013975e-08,
+          "new": 2.1340587493013975e-08,
+          "ratio": 1.0,
+          "rule": 1.0
+        },
+        {
+          "pair": "SE-WALL",
+          "ref": 3.740430042738864e-09,
+          "new": 3.740430042738864e-09,
+          "ratio": 1.0,
+          "rule": 1.0
+        }
+      ],
+      "old": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "7996cf58722f7a18563edd1ad09f8d696e445948c7466d09715b9724296bd04b",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99158
+        },
+        "n_atoms_planned": 100000,
+        "Bo_SE": 0.7299906001321018,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.3,
+        "gamma": {
+          "AM_P": 0.3,
+          "AM_S": 0.3,
+          "SE": 1.0,
+          "WALL": 0.00768
+        },
+        "bo_se": 0.73,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 5.762056386024637e-08,
+            "expected_F0": 5.761958623113774e-08,
+            "CED": 102869.0,
+            "overlap_fraction": 3.8411948264080864e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 3.545905129851062e-08,
+            "expected_F0": 3.545820691146938e-08,
+            "CED": 120940.0,
+            "overlap_fraction": 7.351337819054406e-07
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 2.104013281862581e-08,
+            "expected_F0": 2.1039698088605478e-08,
+            "CED": 102981.0,
+            "overlap_fraction": 6.304885957683845e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 1.8438472695519334e-08,
+            "expected_F0": 1.8438267593964075e-08,
+            "CED": 49785.9,
+            "overlap_fraction": 1.2698778143316802e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 2.5608841273169413e-08,
+            "expected_F0": 2.560870499161677e-08,
+            "CED": 134796.0,
+            "overlap_fraction": 6.595554435016158e-07
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 1.870204897498837e-08,
+            "expected_F0": 1.87019538565382e-08,
+            "CED": 107104.0,
+            "overlap_fraction": 6.06208309259074e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 8.19488259882398e-09,
+            "expected_F0": 8.194785597317367e-09,
+            "CED": 65238.0,
+            "overlap_fraction": 2.1804718674125384e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 2.1340587493013975e-08,
+            "expected_F0": 2.1340587493013975e-08,
+            "CED": 108837.0,
+            "overlap_fraction": 1.089151207006458e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 3.740430042738864e-09,
+            "expected_F0": 3.74039077130764e-09,
+            "CED": 55973.6,
+            "overlap_fraction": 1.8559516978638765e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "new": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "be29b0199628be82c223b8633e8ad62cf1ebca59280fd5b6885e90395d5945db",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99158
+        },
+        "n_atoms_planned": 100000,
+        "Bo_SE": 0.7299906001321018,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.3,
+        "gamma": {
+          "AM_P": 1.0,
+          "AM_S": 1.0,
+          "SE": 1.0,
+          "WALL": 0.00768
+        },
+        "bo_se": 0.73,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 1.9206901507553435e-07,
+            "expected_F0": 1.9206528743712578e-07,
+            "CED": 153666.0,
+            "overlap_fraction": 8.571421897860918e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 1.1819612450006176e-07,
+            "expected_F0": 1.1819402303823127e-07,
+            "CED": 180660.0,
+            "overlap_fraction": 1.6404026559461227e-06
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 3.841331182975715e-08,
+            "expected_F0": 3.841305748742516e-08,
+            "CED": 125864.0,
+            "overlap_fraction": 9.418160458846041e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 3.3663870859109335e-08,
+            "expected_F0": 3.3663516941768766e-08,
+            "CED": 60848.9,
+            "overlap_fraction": 1.8969447164241945e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 8.536346803507442e-08,
+            "expected_F0": 8.53623499720559e-08,
+            "CED": 201359.0,
+            "overlap_fraction": 1.4717681173316766e-06
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 3.414529506847026e-08,
+            "expected_F0": 3.414493998882236e-08,
+            "CED": 130904.0,
+            "overlap_fraction": 9.055581390651056e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 1.4961767943410874e-08,
+            "expected_F0": 1.496156308523056e-08,
+            "CED": 79734.7,
+            "overlap_fraction": 3.2571963541568235e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 2.1340587493013975e-08,
+            "expected_F0": 2.1340587493013975e-08,
+            "CED": 108837.0,
+            "overlap_fraction": 1.089151207006458e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 3.740430042738864e-09,
+            "expected_F0": 3.74039077130764e-09,
+            "CED": 55973.6,
+            "overlap_fraction": 1.8559516978638765e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "scope": "same-world D2 development pair, not a cohort or launch certificate",
+      "degenerate_same_gamma_world": false
+    },
+    "plan": {
+      "schema": "mixer_d2_plan_check/1",
+      "verdict": "PASS",
+      "failures": [],
+      "registered": null,
+      "execution_authorized": false,
+      "scope": "D2 development planned counts; no observed frames, rest/contact certificate, cohort or execution authority",
+      "deck_sha256": "7996cf58722f7a18563edd1ad09f8d696e445948c7466d09715b9724296bd04b",
+      "density_generation": "lab20261014",
+      "phase_names": {
+        "1": "AM_P",
+        "2": "AM_S",
+        "3": "SE",
+        "4": "WALL"
+      },
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "n_atoms_planned": 100000,
+      "Bo_SE": 0.7299906001321018,
+      "gravity": 9.81,
+      "rho_uncoated_ncm": 0.3,
+      "gamma": {
+        "AM_P": 0.3,
+        "AM_S": 0.3,
+        "SE": 1.0,
+        "WALL": 0.00768
+      },
+      "bo_se": 0.73,
+      "pairs": [
+        {
+          "pair": "AM_P-AM_P",
+          "i": 1,
+          "j": 1,
+          "F0": 5.762056386024637e-08,
+          "expected_F0": 5.761958623113774e-08,
+          "CED": 102869.0,
+          "overlap_fraction": 3.8411948264080864e-07
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "i": 1,
+          "j": 2,
+          "F0": 3.545905129851062e-08,
+          "expected_F0": 3.545820691146938e-08,
+          "CED": 120940.0,
+          "overlap_fraction": 7.351337819054406e-07
+        },
+        {
+          "pair": "AM_P-SE",
+          "i": 1,
+          "j": 3,
+          "F0": 2.104013281862581e-08,
+          "expected_F0": 2.1039698088605478e-08,
+          "CED": 102981.0,
+          "overlap_fraction": 6.304885957683845e-06
+        },
+        {
+          "pair": "AM_P-WALL",
+          "i": 1,
+          "j": 4,
+          "F0": 1.8438472695519334e-08,
+          "expected_F0": 1.8438267593964075e-08,
+          "CED": 49785.9,
+          "overlap_fraction": 1.2698778143316802e-07
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "i": 2,
+          "j": 2,
+          "F0": 2.5608841273169413e-08,
+          "expected_F0": 2.560870499161677e-08,
+          "CED": 134796.0,
+          "overlap_fraction": 6.595554435016158e-07
+        },
+        {
+          "pair": "AM_S-SE",
+          "i": 2,
+          "j": 3,
+          "F0": 1.870204897498837e-08,
+          "expected_F0": 1.87019538565382e-08,
+          "CED": 107104.0,
+          "overlap_fraction": 6.06208309259074e-06
+        },
+        {
+          "pair": "AM_S-WALL",
+          "i": 2,
+          "j": 4,
+          "F0": 8.19488259882398e-09,
+          "expected_F0": 8.194785597317367e-09,
+          "CED": 65238.0,
+          "overlap_fraction": 2.1804718674125384e-07
+        },
+        {
+          "pair": "SE-SE",
+          "i": 3,
+          "j": 3,
+          "F0": 2.1340587493013975e-08,
+          "expected_F0": 2.1340587493013975e-08,
+          "CED": 108837.0,
+          "overlap_fraction": 1.089151207006458e-05
+        },
+        {
+          "pair": "SE-WALL",
+          "i": 3,
+          "j": 4,
+          "F0": 3.740430042738864e-09,
+          "expected_F0": 3.74039077130764e-09,
+          "CED": 55973.6,
+          "overlap_fraction": 1.8559516978638765e-06
+        }
+      ],
+      "tolerances": {
+        "absolute_Bo_relative": 2e-05,
+        "pair_force_relative": 3.0000000000000004e-05
+      },
+      "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+    }
+  },
+  {
+    "name": "no_material_friction",
+    "read": {
+      "schema": "mixer_d2_development/1",
+      "verdict": "PASS",
+      "failures": [],
+      "registered": null,
+      "execution_authorized": false,
+      "scope": "D2 development deck and planned counts only; not execution evidence",
+      "deck_sha256": "579a36c4d26309b33522bcb203ab719ca1dbf93096f88ee974197d2c5b07716d",
+      "density_generation": "lab20261014",
+      "phase_names": {
+        "1": "AM_P",
+        "2": "AM_S",
+        "3": "SE",
+        "4": "WALL"
+      },
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "n_atoms_planned": 100000,
+      "Bo_SE": 0.7299906001321018,
+      "gravity": 9.81,
+      "rho_uncoated_ncm": 0.3,
+      "gamma": {
+        "AM_P": 0.3,
+        "AM_S": 0.3,
+        "SE": 1.0,
+        "WALL": 0.00768
+      },
+      "bo_se": 0.73,
+      "pairs": [
+        {
+          "pair": "AM_P-AM_P",
+          "i": 1,
+          "j": 1,
+          "F0": 5.762056386024637e-08,
+          "expected_F0": 5.761958623113774e-08,
+          "CED": 102869.0,
+          "overlap_fraction": 3.8411948264080864e-07
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "i": 1,
+          "j": 2,
+          "F0": 3.545905129851062e-08,
+          "expected_F0": 3.545820691146938e-08,
+          "CED": 120940.0,
+          "overlap_fraction": 7.351337819054406e-07
+        },
+        {
+          "pair": "AM_P-SE",
+          "i": 1,
+          "j": 3,
+          "F0": 2.104013281862581e-08,
+          "expected_F0": 2.1039698088605478e-08,
+          "CED": 102981.0,
+          "overlap_fraction": 6.304885957683845e-06
+        },
+        {
+          "pair": "AM_P-WALL",
+          "i": 1,
+          "j": 4,
+          "F0": 1.8438472695519334e-08,
+          "expected_F0": 1.8438267593964075e-08,
+          "CED": 49785.9,
+          "overlap_fraction": 1.2698778143316802e-07
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "i": 2,
+          "j": 2,
+          "F0": 2.5608841273169413e-08,
+          "expected_F0": 2.560870499161677e-08,
+          "CED": 134796.0,
+          "overlap_fraction": 6.595554435016158e-07
+        },
+        {
+          "pair": "AM_S-SE",
+          "i": 2,
+          "j": 3,
+          "F0": 1.870204897498837e-08,
+          "expected_F0": 1.87019538565382e-08,
+          "CED": 107104.0,
+          "overlap_fraction": 6.06208309259074e-06
+        },
+        {
+          "pair": "AM_S-WALL",
+          "i": 2,
+          "j": 4,
+          "F0": 8.19488259882398e-09,
+          "expected_F0": 8.194785597317367e-09,
+          "CED": 65238.0,
+          "overlap_fraction": 2.1804718674125384e-07
+        },
+        {
+          "pair": "SE-SE",
+          "i": 3,
+          "j": 3,
+          "F0": 2.1340587493013975e-08,
+          "expected_F0": 2.1340587493013975e-08,
+          "CED": 108837.0,
+          "overlap_fraction": 1.089151207006458e-05
+        },
+        {
+          "pair": "SE-WALL",
+          "i": 3,
+          "j": 4,
+          "F0": 3.740430042738864e-09,
+          "expected_F0": 3.74039077130764e-09,
+          "CED": 55973.6,
+          "overlap_fraction": 1.8559516978638765e-06
+        }
+      ],
+      "tolerances": {
+        "absolute_Bo_relative": 2e-05,
+        "pair_force_relative": 3.0000000000000004e-05
+      },
+      "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+    },
+    "pair": {
+      "schema": "mixer_d2_pair_development/1",
+      "allow": "D2",
+      "verdict": "PASS",
+      "registered": null,
+      "execution_authorized": false,
+      "failures": [],
+      "table": [
+        {
+          "pair": "AM_P-AM_P",
+          "ref": 5.762056386024637e-08,
+          "new": 1.9206901507553435e-07,
+          "ratio": 3.333341470614222,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "ref": 3.545905129851062e-08,
+          "new": 1.1819612450006176e-07,
+          "ratio": 3.3333132210738623,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_P-SE",
+          "ref": 2.104013281862581e-08,
+          "new": 3.841331182975715e-08,
+          "ratio": 1.8257162234143176,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_P-WALL",
+          "ref": 1.8438472695519334e-08,
+          "new": 3.3663870859109335e-08,
+          "ratio": 1.8257407440958964,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "ref": 2.5608841273169413e-08,
+          "new": 8.536346803507442e-08,
+          "ratio": 3.3333592537242365,
+          "rule": 3.3333333333333335
+        },
+        {
+          "pair": "AM_S-SE",
+          "ref": 1.870204897498837e-08,
+          "new": 3.414529506847026e-08,
+          "ratio": 1.8257515587802857,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "AM_S-WALL",
+          "ref": 8.19488259882398e-09,
+          "new": 1.4961767943410874e-08,
+          "ratio": 1.825745245643664,
+          "rule": 1.8257418583505538
+        },
+        {
+          "pair": "SE-SE",
+          "ref": 2.1340587493013975e-08,
+          "new": 2.1340587493013975e-08,
+          "ratio": 1.0,
+          "rule": 1.0
+        },
+        {
+          "pair": "SE-WALL",
+          "ref": 3.740430042738864e-09,
+          "new": 3.740430042738864e-09,
+          "ratio": 1.0,
+          "rule": 1.0
+        }
+      ],
+      "old": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "579a36c4d26309b33522bcb203ab719ca1dbf93096f88ee974197d2c5b07716d",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99158
+        },
+        "n_atoms_planned": 100000,
+        "Bo_SE": 0.7299906001321018,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.3,
+        "gamma": {
+          "AM_P": 0.3,
+          "AM_S": 0.3,
+          "SE": 1.0,
+          "WALL": 0.00768
+        },
+        "bo_se": 0.73,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 5.762056386024637e-08,
+            "expected_F0": 5.761958623113774e-08,
+            "CED": 102869.0,
+            "overlap_fraction": 3.8411948264080864e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 3.545905129851062e-08,
+            "expected_F0": 3.545820691146938e-08,
+            "CED": 120940.0,
+            "overlap_fraction": 7.351337819054406e-07
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 2.104013281862581e-08,
+            "expected_F0": 2.1039698088605478e-08,
+            "CED": 102981.0,
+            "overlap_fraction": 6.304885957683845e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 1.8438472695519334e-08,
+            "expected_F0": 1.8438267593964075e-08,
+            "CED": 49785.9,
+            "overlap_fraction": 1.2698778143316802e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 2.5608841273169413e-08,
+            "expected_F0": 2.560870499161677e-08,
+            "CED": 134796.0,
+            "overlap_fraction": 6.595554435016158e-07
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 1.870204897498837e-08,
+            "expected_F0": 1.87019538565382e-08,
+            "CED": 107104.0,
+            "overlap_fraction": 6.06208309259074e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 8.19488259882398e-09,
+            "expected_F0": 8.194785597317367e-09,
+            "CED": 65238.0,
+            "overlap_fraction": 2.1804718674125384e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 2.1340587493013975e-08,
+            "expected_F0": 2.1340587493013975e-08,
+            "CED": 108837.0,
+            "overlap_fraction": 1.089151207006458e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 3.740430042738864e-09,
+            "expected_F0": 3.74039077130764e-09,
+            "CED": 55973.6,
+            "overlap_fraction": 1.8559516978638765e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "new": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "db22374a67620938236f4a0df46e8d8a61673df3c38279b3fad23221f37efb18",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99158
+        },
+        "n_atoms_planned": 100000,
+        "Bo_SE": 0.7299906001321018,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.3,
+        "gamma": {
+          "AM_P": 1.0,
+          "AM_S": 1.0,
+          "SE": 1.0,
+          "WALL": 0.00768
+        },
+        "bo_se": 0.73,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 1.9206901507553435e-07,
+            "expected_F0": 1.9206528743712578e-07,
+            "CED": 153666.0,
+            "overlap_fraction": 8.571421897860918e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 1.1819612450006176e-07,
+            "expected_F0": 1.1819402303823127e-07,
+            "CED": 180660.0,
+            "overlap_fraction": 1.6404026559461227e-06
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 3.841331182975715e-08,
+            "expected_F0": 3.841305748742516e-08,
+            "CED": 125864.0,
+            "overlap_fraction": 9.418160458846041e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 3.3663870859109335e-08,
+            "expected_F0": 3.3663516941768766e-08,
+            "CED": 60848.9,
+            "overlap_fraction": 1.8969447164241945e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 8.536346803507442e-08,
+            "expected_F0": 8.53623499720559e-08,
+            "CED": 201359.0,
+            "overlap_fraction": 1.4717681173316766e-06
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 3.414529506847026e-08,
+            "expected_F0": 3.414493998882236e-08,
+            "CED": 130904.0,
+            "overlap_fraction": 9.055581390651056e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 1.4961767943410874e-08,
+            "expected_F0": 1.496156308523056e-08,
+            "CED": 79734.7,
+            "overlap_fraction": 3.2571963541568235e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 2.1340587493013975e-08,
+            "expected_F0": 2.1340587493013975e-08,
+            "CED": 108837.0,
+            "overlap_fraction": 1.089151207006458e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 3.740430042738864e-09,
+            "expected_F0": 3.74039077130764e-09,
+            "CED": 55973.6,
+            "overlap_fraction": 1.8559516978638765e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "scope": "same-world D2 development pair, not a cohort or launch certificate",
+      "degenerate_same_gamma_world": false
+    },
+    "plan": {
+      "schema": "mixer_d2_plan_check/1",
+      "verdict": "PASS",
+      "failures": [],
+      "registered": null,
+      "execution_authorized": false,
+      "scope": "D2 development planned counts; no observed frames, rest/contact certificate, cohort or execution authority",
+      "deck_sha256": "579a36c4d26309b33522bcb203ab719ca1dbf93096f88ee974197d2c5b07716d",
+      "density_generation": "lab20261014",
+      "phase_names": {
+        "1": "AM_P",
+        "2": "AM_S",
+        "3": "SE",
+        "4": "WALL"
+      },
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "n_atoms_planned": 100000,
+      "Bo_SE": 0.7299906001321018,
+      "gravity": 9.81,
+      "rho_uncoated_ncm": 0.3,
+      "gamma": {
+        "AM_P": 0.3,
+        "AM_S": 0.3,
+        "SE": 1.0,
+        "WALL": 0.00768
+      },
+      "bo_se": 0.73,
+      "pairs": [
+        {
+          "pair": "AM_P-AM_P",
+          "i": 1,
+          "j": 1,
+          "F0": 5.762056386024637e-08,
+          "expected_F0": 5.761958623113774e-08,
+          "CED": 102869.0,
+          "overlap_fraction": 3.8411948264080864e-07
+        },
+        {
+          "pair": "AM_P-AM_S",
+          "i": 1,
+          "j": 2,
+          "F0": 3.545905129851062e-08,
+          "expected_F0": 3.545820691146938e-08,
+          "CED": 120940.0,
+          "overlap_fraction": 7.351337819054406e-07
+        },
+        {
+          "pair": "AM_P-SE",
+          "i": 1,
+          "j": 3,
+          "F0": 2.104013281862581e-08,
+          "expected_F0": 2.1039698088605478e-08,
+          "CED": 102981.0,
+          "overlap_fraction": 6.304885957683845e-06
+        },
+        {
+          "pair": "AM_P-WALL",
+          "i": 1,
+          "j": 4,
+          "F0": 1.8438472695519334e-08,
+          "expected_F0": 1.8438267593964075e-08,
+          "CED": 49785.9,
+          "overlap_fraction": 1.2698778143316802e-07
+        },
+        {
+          "pair": "AM_S-AM_S",
+          "i": 2,
+          "j": 2,
+          "F0": 2.5608841273169413e-08,
+          "expected_F0": 2.560870499161677e-08,
+          "CED": 134796.0,
+          "overlap_fraction": 6.595554435016158e-07
+        },
+        {
+          "pair": "AM_S-SE",
+          "i": 2,
+          "j": 3,
+          "F0": 1.870204897498837e-08,
+          "expected_F0": 1.87019538565382e-08,
+          "CED": 107104.0,
+          "overlap_fraction": 6.06208309259074e-06
+        },
+        {
+          "pair": "AM_S-WALL",
+          "i": 2,
+          "j": 4,
+          "F0": 8.19488259882398e-09,
+          "expected_F0": 8.194785597317367e-09,
+          "CED": 65238.0,
+          "overlap_fraction": 2.1804718674125384e-07
+        },
+        {
+          "pair": "SE-SE",
+          "i": 3,
+          "j": 3,
+          "F0": 2.1340587493013975e-08,
+          "expected_F0": 2.1340587493013975e-08,
+          "CED": 108837.0,
+          "overlap_fraction": 1.089151207006458e-05
+        },
+        {
+          "pair": "SE-WALL",
+          "i": 3,
+          "j": 4,
+          "F0": 3.740430042738864e-09,
+          "expected_F0": 3.74039077130764e-09,
+          "CED": 55973.6,
+          "overlap_fraction": 1.8559516978638765e-06
+        }
+      ],
+      "tolerances": {
+        "absolute_Bo_relative": 2e-05,
+        "pair_force_relative": 3.0000000000000004e-05
+      },
+      "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+    }
+  }
+]

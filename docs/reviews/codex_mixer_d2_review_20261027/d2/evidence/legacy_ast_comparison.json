@@ -1,0 +1,46 @@
+[
+  {
+    "file": "mixer_deck_readback.py",
+    "old_functions": 23,
+    "changed_common": [
+      "main"
+    ],
+    "removed": [],
+    "added": [
+      "_d2_cli_report",
+      "_d2_close",
+      "_d2_counts",
+      "_d2_float_token",
+      "_d2_int_token",
+      "_d2_integer",
+      "_d2_lifecycle",
+      "_d2_need",
+      "_d2_number",
+      "_d2_numeric_tokens",
+      "load_d2_meta",
+      "read_d2"
+    ]
+  },
+  {
+    "file": "mixer_deck_diff.py",
+    "old_functions": 35,
+    "changed_common": [
+      "main"
+    ],
+    "removed": [],
+    "added": [
+      "diff_d2_decks"
+    ]
+  },
+  {
+    "file": "mixer_smoke_blind.py",
+    "old_functions": 33,
+    "changed_common": [
+      "main"
+    ],
+    "removed": [],
+    "added": [
+      "d2_plan_check"
+    ]
+  }
+]

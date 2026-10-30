@@ -1,0 +1,78 @@
+===== crlf_crlf_metadata__pair.log
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: metadata SHA256 != actual deck
+  new: D2 development contract: ValueError: metadata SHA256 != actual deck
+===== crlf_crlf_metadata__plan.log
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: metadata SHA256 != actual deck
+===== crlf_crlf_metadata__readback.log
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: metadata SHA256 != actual deck
+===== crlf_lf_metadata__pair.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== crlf_lf_metadata__plan.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== crlf_lf_metadata__readback.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== exclude_SE_SE__pair.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== exclude_SE_SE__plan.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== exclude_SE_SE__readback.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== friction_missing__pair.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== friction_missing__plan.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== friction_missing__readback.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== front_period__pair.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== front_period__plan.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== front_period__readback.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== insert_start_late__pair.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== insert_start_late__plan.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== insert_start_late__readback.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== late_timestep__pair.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== late_timestep__plan.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== late_timestep__readback.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== negative_control_bad_gravity__pair.log
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: actual gravity != declared mixer gravity
+  new: D2 development contract: ValueError: actual gravity != declared mixer gravity
+===== negative_control_bad_gravity__plan.log
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: actual gravity != declared mixer gravity
+===== negative_control_bad_gravity__readback.log
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: actual gravity != declared mixer gravity
+===== negative_control_remove_integrator__pair.log
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: one persistent sphere integrator required before insertion run
+  new: D2 development contract: ValueError: one persistent sphere integrator required before insertion run
+===== negative_control_remove_integrator__plan.log
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: one persistent sphere integrator required before insertion run
+===== negative_control_remove_integrator__readback.log
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: one persistent sphere integrator required before insertion run
+===== normal__pair.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== normal__plan.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== normal__readback.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== run_upto__pair.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== run_upto__plan.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+===== run_upto__readback.log
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님

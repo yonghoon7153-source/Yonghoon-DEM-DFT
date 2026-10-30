@@ -1,0 +1,587 @@
+{
+  "native_windows_write": {
+    "cohort": "confirm",
+    "verdict": "FAIL",
+    "dirs": {
+      "LC_soft_r8_s15485863": {
+        "name": "LC_soft_r8_s15485863",
+        "expected_sha256": "565ef913f7046df1bc833b6eed50eca8c50fd44b5cebfb2e73ed5815ee35fe62",
+        "deck_sha256": "b9ce76d8ce1a9fc34abdae8daf8870b07640d8ce9f6856d63a5ad4aba03951c5",
+        "problems": [
+          "LC_soft_r8_s15485863: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석"
+        ]
+      },
+      "LH_soft_r8_s15485863": {
+        "name": "LH_soft_r8_s15485863",
+        "expected_sha256": "63b39c9d0ee5f751913cf66863b0e81393b903d16e89c5107bb665b98cfe9179",
+        "deck_sha256": "dfa8e0caa0f735124b2c482fc407ba6f8669d3a91f95617d2ddbf41bb1b3a1ba",
+        "problems": [
+          "LH_soft_r8_s15485863: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석"
+        ]
+      },
+      "LC_ref_r8_s15485863": {
+        "name": "LC_ref_r8_s15485863",
+        "expected_sha256": "d78c369813caadcacd4af262bd07ea575fd94da7075f945157b69e1d58469d41",
+        "deck_sha256": "9b31fca84885269c989b5c4aaa1c55eeb22e070c99e4018403fb624136541869",
+        "deck_meta_sha256": "5ab979f25d2c979e56a75cccab8c6d71865c22e309dae47524199dafb5470fdc",
+        "problems": [
+          "LC_ref_r8_s15485863: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석",
+          "LC_ref_r8_s15485863: deck_meta.json 이 덱 · 이름과 맞지 않는다 ['deck_sha256']"
+        ]
+      },
+      "LH_ref_r8_s15485863": {
+        "name": "LH_ref_r8_s15485863",
+        "expected_sha256": "29684901f60cb739eb231e204687bff54c550a6a550b57eba44e767d87595275",
+        "deck_sha256": "b909d6748c028ffd9e132c470b359e6cdefa532a975dc368a7d8bec2f6c680bc",
+        "deck_meta_sha256": "d97d534dc66519b6e8b79f8dfda4ab6f3265b55151e5dbf80017abf5640815f2",
+        "problems": [
+          "LH_ref_r8_s15485863: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석",
+          "LH_ref_r8_s15485863: deck_meta.json 이 덱 · 이름과 맞지 않는다 ['deck_sha256']"
+        ]
+      },
+      "E0_soft_s15485863": {
+        "name": "E0_soft_s15485863",
+        "expected_sha256": "895af357be646fad05c6958e882338d2719ff659df1efbb994cb49269892d3d6",
+        "deck_sha256": "6fbf37df9c919f04b7737c0d2c07bb61274e6ca1bdb622d410edf2df10240823",
+        "problems": [
+          "E0_soft_s15485863: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석"
+        ]
+      },
+      "E0_ref_s15485863": {
+        "name": "E0_ref_s15485863",
+        "expected_sha256": "9874999d52061f04f732e73d50ace82d80406da8203ce04e5620dfc4bdac4c2d",
+        "deck_sha256": "473d7511a14cdd5208b1a0107f07b4247b23def187ca5aad4f570c2286f5ebcb",
+        "deck_meta_sha256": "337221b335f7b44f9de8a86b54f1a3732744bba8789005cd5481530e3f389e0c",
+        "problems": [
+          "E0_ref_s15485863: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석",
+          "E0_ref_s15485863: deck_meta.json 이 덱 · 이름과 맞지 않는다 ['deck_sha256']"
+        ]
+      },
+      "LC_soft_r8_s86028121": {
+        "name": "LC_soft_r8_s86028121",
+        "expected_sha256": "fe2879a16be96d153bbd8ffcd729aecf7d7e58624f7822e0f5e53b840089a21b",
+        "deck_sha256": "d3deb2a45ee7045f435c73665376819bbb49cda0e5bb5453b5ce50731fdea2bb",
+        "problems": [
+          "LC_soft_r8_s86028121: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석"
+        ]
+      },
+      "LH_soft_r8_s86028121": {
+        "name": "LH_soft_r8_s86028121",
+        "expected_sha256": "6076cea95e8919accf8ca32644d5233f69a7348b8d0c984e439acc4e6565cc09",
+        "deck_sha256": "b858a06c368c3195e68fcec5e7b516f7181f1ea95898639dd4458a1b98e68326",
+        "problems": [
+          "LH_soft_r8_s86028121: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석"
+        ]
+      },
+      "LC_ref_r8_s86028121": {
+        "name": "LC_ref_r8_s86028121",
+        "expected_sha256": "760a4dcba6a6e923509a2883ed1ac08742764a90d8bbdfaae8d9288b80c9697c",
+        "deck_sha256": "38b126810ebdbba9aadc57bd9ed159b2a30b7f2934df18853cdb85f0139fd98c",
+        "deck_meta_sha256": "0ef533e82f3e796d361fb41cd6dfa5ca0c40d208019873897ea15a36ae4e47b2",
+        "problems": [
+          "LC_ref_r8_s86028121: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석",
+          "LC_ref_r8_s86028121: deck_meta.json 이 덱 · 이름과 맞지 않는다 ['deck_sha256']"
+        ]
+      },
+      "LH_ref_r8_s86028121": {
+        "name": "LH_ref_r8_s86028121",
+        "expected_sha256": "7b6c28e43ff9b6264a25cd345e7da3e0a51161526a113140e6aafdd8956ce82e",
+        "deck_sha256": "46afa857e39ecfae198b31805d310f59d207c6d5694cb9e055d6c983d3a07725",
+        "deck_meta_sha256": "56ef00fb925cddf719cb24a81e50b7152775815799fbcee9dc712a2fc2edbde8",
+        "problems": [
+          "LH_ref_r8_s86028121: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석",
+          "LH_ref_r8_s86028121: deck_meta.json 이 덱 · 이름과 맞지 않는다 ['deck_sha256']"
+        ]
+      },
+      "E0_soft_s86028121": {
+        "name": "E0_soft_s86028121",
+        "expected_sha256": "15fee31d3e5104d1d3b0ba74831384de8c92f0e92fd8a2b18681c1e7f8c4e703",
+        "deck_sha256": "e510567448845662cc394ee27d3c83a89aab2e8f1ff94c793f58e8e6ea4f1f31",
+        "problems": [
+          "E0_soft_s86028121: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석"
+        ]
+      },
+      "E0_ref_s86028121": {
+        "name": "E0_ref_s86028121",
+        "expected_sha256": "9600d0b0f7f7c73171aa45f348b9e3aa97a8d87261a58eb36b594540c1d48589",
+        "deck_sha256": "4273382948f4eea2e63733460fd0388cb6fc867496449dec346e470eb95a8ae1",
+        "deck_meta_sha256": "2105dadcd37f005c66d564b95a1af87ec65766097188e1018f7290d6594d1a1f",
+        "problems": [
+          "E0_ref_s86028121: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석",
+          "E0_ref_s86028121: deck_meta.json 이 덱 · 이름과 맞지 않는다 ['deck_sha256']"
+        ]
+      },
+      "LC_soft_r8_s104395301": {
+        "name": "LC_soft_r8_s104395301",
+        "expected_sha256": "100131d7b2add80a17a088b59847106e75a5c650c3be99e9f73e8eb0e4199609",
+        "deck_sha256": "d35f1830f3f8b999230f41a9338e59f07f0f4f560ee0c8160fd7ac454f13efc7",
+        "problems": [
+          "LC_soft_r8_s104395301: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석"
+        ]
+      },
+      "LH_soft_r8_s104395301": {
+        "name": "LH_soft_r8_s104395301",
+        "expected_sha256": "9e1855fa6dd023e7ed4360dcb084d5fc393ae7e93ecee6f93702fbfc0ef0d62a",
+        "deck_sha256": "4eb8087de8c010861878be187404fbfbcbe2fe6452aa9d0417444a2e545a5c4e",
+        "problems": [
+          "LH_soft_r8_s104395301: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석"
+        ]
+      },
+      "LC_ref_r8_s104395301": {
+        "name": "LC_ref_r8_s104395301",
+        "expected_sha256": "0046e57b9491a70c98a1f5cc1c8df847a74f8341625d3ad5f6fa5938f021a686",
+        "deck_sha256": "423754474c2c9abf6bd5465b03ea15f4c573f5795ca7d7e9e3920aa2628a8950",
+        "deck_meta_sha256": "4903ce1d46d306d05da3c1d4bcf1ea6930fb4605443e18ff2c279c6d652babef",
+        "problems": [
+          "LC_ref_r8_s104395301: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석",
+          "LC_ref_r8_s104395301: deck_meta.json 이 덱 · 이름과 맞지 않는다 ['deck_sha256']"
+        ]
+      },
+      "LH_ref_r8_s104395301": {
+        "name": "LH_ref_r8_s104395301",
+        "expected_sha256": "a871abbe25580e91d473bee174581b808363f371e0cb7097a5d8128d8a75a7a1",
+        "deck_sha256": "3d9b5a97f388d7c1462442d329822d2519f5d3b13863229de5db5881ba8f536a",
+        "deck_meta_sha256": "58cc7d1fd15e7e248aa619f52936cd69f8d360abcadbcfb7038670cc9e9ddd6b",
+        "problems": [
+          "LH_ref_r8_s104395301: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석",
+          "LH_ref_r8_s104395301: deck_meta.json 이 덱 · 이름과 맞지 않는다 ['deck_sha256']"
+        ]
+      },
+      "E0_soft_s104395301": {
+        "name": "E0_soft_s104395301",
+        "expected_sha256": "9c80d21a66ed59faa8a37f18dfac5e39da11cca7c065db913304b153a0436ad4",
+        "deck_sha256": "fd45722f784ea266b189b6d3f83e695b0630c52b63b6620ddf5400cc2eceff3d",
+        "problems": [
+          "E0_soft_s104395301: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석"
+        ]
+      },
+      "E0_ref_s104395301": {
+        "name": "E0_ref_s104395301",
+        "expected_sha256": "1fa3c83d82831e1bb1fa49e21fc98a54a820613ef0cd44348d0bdb44a96ef21c",
+        "deck_sha256": "46e532f84a4b339c9c6daf7b7a5824f3d9c55db1e2c801322e47d9360dd76a4b",
+        "deck_meta_sha256": "32f848ef5ccaddad7b418068723e902f3d3f9ba6fe8522fe42e628faf61f0694",
+        "problems": [
+          "E0_ref_s104395301: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 CED 행렬 · 명령 수 · 주석",
+          "E0_ref_s104395301: deck_meta.json 이 덱 · 이름과 맞지 않는다 ['deck_sha256']"
+        ]
+      }
+    },
+    "pairs": [
+      {
+        "allow": "B",
+        "ref": "LC_soft_r8_s15485863",
+        "new": "LH_soft_r8_s15485863",
+        "verdict": "PASS",
+        "e_case": null,
+        "problems": []
+      },
+      {
+        "allow": "B",
+        "ref": "LC_ref_r8_s15485863",
+        "new": "LH_ref_r8_s15485863",
+        "verdict": "PASS",
+        "e_case": null,
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "LC_soft_r8_s15485863",
+        "new": "LC_ref_r8_s15485863",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "LH_soft_r8_s15485863",
+        "new": "LH_ref_r8_s15485863",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "EB",
+        "ref": "LC_soft_r8_s15485863",
+        "new": "LH_ref_r8_s15485863",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "E0_soft_s15485863",
+        "new": "E0_ref_s15485863",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "B",
+        "ref": "LC_soft_r8_s86028121",
+        "new": "LH_soft_r8_s86028121",
+        "verdict": "PASS",
+        "e_case": null,
+        "problems": []
+      },
+      {
+        "allow": "B",
+        "ref": "LC_ref_r8_s86028121",
+        "new": "LH_ref_r8_s86028121",
+        "verdict": "PASS",
+        "e_case": null,
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "LC_soft_r8_s86028121",
+        "new": "LC_ref_r8_s86028121",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "LH_soft_r8_s86028121",
+        "new": "LH_ref_r8_s86028121",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "EB",
+        "ref": "LC_soft_r8_s86028121",
+        "new": "LH_ref_r8_s86028121",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "E0_soft_s86028121",
+        "new": "E0_ref_s86028121",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "B",
+        "ref": "LC_soft_r8_s104395301",
+        "new": "LH_soft_r8_s104395301",
+        "verdict": "PASS",
+        "e_case": null,
+        "problems": []
+      },
+      {
+        "allow": "B",
+        "ref": "LC_ref_r8_s104395301",
+        "new": "LH_ref_r8_s104395301",
+        "verdict": "PASS",
+        "e_case": null,
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "LC_soft_r8_s104395301",
+        "new": "LC_ref_r8_s104395301",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "LH_soft_r8_s104395301",
+        "new": "LH_ref_r8_s104395301",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "EB",
+        "ref": "LC_soft_r8_s104395301",
+        "new": "LH_ref_r8_s104395301",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "E0_soft_s104395301",
+        "new": "E0_ref_s104395301",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      }
+    ],
+    "guard": null
+  },
+  "after_LF_bytes": {
+    "cohort": "confirm",
+    "verdict": "PASS",
+    "dirs": {
+      "LC_soft_r8_s15485863": {
+        "name": "LC_soft_r8_s15485863",
+        "expected_sha256": "565ef913f7046df1bc833b6eed50eca8c50fd44b5cebfb2e73ed5815ee35fe62",
+        "deck_sha256": "565ef913f7046df1bc833b6eed50eca8c50fd44b5cebfb2e73ed5815ee35fe62",
+        "problems": []
+      },
+      "LH_soft_r8_s15485863": {
+        "name": "LH_soft_r8_s15485863",
+        "expected_sha256": "63b39c9d0ee5f751913cf66863b0e81393b903d16e89c5107bb665b98cfe9179",
+        "deck_sha256": "63b39c9d0ee5f751913cf66863b0e81393b903d16e89c5107bb665b98cfe9179",
+        "problems": []
+      },
+      "LC_ref_r8_s15485863": {
+        "name": "LC_ref_r8_s15485863",
+        "expected_sha256": "d78c369813caadcacd4af262bd07ea575fd94da7075f945157b69e1d58469d41",
+        "deck_sha256": "d78c369813caadcacd4af262bd07ea575fd94da7075f945157b69e1d58469d41",
+        "deck_meta_sha256": "5ab979f25d2c979e56a75cccab8c6d71865c22e309dae47524199dafb5470fdc",
+        "problems": []
+      },
+      "LH_ref_r8_s15485863": {
+        "name": "LH_ref_r8_s15485863",
+        "expected_sha256": "29684901f60cb739eb231e204687bff54c550a6a550b57eba44e767d87595275",
+        "deck_sha256": "29684901f60cb739eb231e204687bff54c550a6a550b57eba44e767d87595275",
+        "deck_meta_sha256": "d97d534dc66519b6e8b79f8dfda4ab6f3265b55151e5dbf80017abf5640815f2",
+        "problems": []
+      },
+      "E0_soft_s15485863": {
+        "name": "E0_soft_s15485863",
+        "expected_sha256": "895af357be646fad05c6958e882338d2719ff659df1efbb994cb49269892d3d6",
+        "deck_sha256": "895af357be646fad05c6958e882338d2719ff659df1efbb994cb49269892d3d6",
+        "problems": []
+      },
+      "E0_ref_s15485863": {
+        "name": "E0_ref_s15485863",
+        "expected_sha256": "9874999d52061f04f732e73d50ace82d80406da8203ce04e5620dfc4bdac4c2d",
+        "deck_sha256": "9874999d52061f04f732e73d50ace82d80406da8203ce04e5620dfc4bdac4c2d",
+        "deck_meta_sha256": "337221b335f7b44f9de8a86b54f1a3732744bba8789005cd5481530e3f389e0c",
+        "problems": []
+      },
+      "LC_soft_r8_s86028121": {
+        "name": "LC_soft_r8_s86028121",
+        "expected_sha256": "fe2879a16be96d153bbd8ffcd729aecf7d7e58624f7822e0f5e53b840089a21b",
+        "deck_sha256": "fe2879a16be96d153bbd8ffcd729aecf7d7e58624f7822e0f5e53b840089a21b",
+        "problems": []
+      },
+      "LH_soft_r8_s86028121": {
+        "name": "LH_soft_r8_s86028121",
+        "expected_sha256": "6076cea95e8919accf8ca32644d5233f69a7348b8d0c984e439acc4e6565cc09",
+        "deck_sha256": "6076cea95e8919accf8ca32644d5233f69a7348b8d0c984e439acc4e6565cc09",
+        "problems": []
+      },
+      "LC_ref_r8_s86028121": {
+        "name": "LC_ref_r8_s86028121",
+        "expected_sha256": "760a4dcba6a6e923509a2883ed1ac08742764a90d8bbdfaae8d9288b80c9697c",
+        "deck_sha256": "760a4dcba6a6e923509a2883ed1ac08742764a90d8bbdfaae8d9288b80c9697c",
+        "deck_meta_sha256": "0ef533e82f3e796d361fb41cd6dfa5ca0c40d208019873897ea15a36ae4e47b2",
+        "problems": []
+      },
+      "LH_ref_r8_s86028121": {
+        "name": "LH_ref_r8_s86028121",
+        "expected_sha256": "7b6c28e43ff9b6264a25cd345e7da3e0a51161526a113140e6aafdd8956ce82e",
+        "deck_sha256": "7b6c28e43ff9b6264a25cd345e7da3e0a51161526a113140e6aafdd8956ce82e",
+        "deck_meta_sha256": "56ef00fb925cddf719cb24a81e50b7152775815799fbcee9dc712a2fc2edbde8",
+        "problems": []
+      },
+      "E0_soft_s86028121": {
+        "name": "E0_soft_s86028121",
+        "expected_sha256": "15fee31d3e5104d1d3b0ba74831384de8c92f0e92fd8a2b18681c1e7f8c4e703",
+        "deck_sha256": "15fee31d3e5104d1d3b0ba74831384de8c92f0e92fd8a2b18681c1e7f8c4e703",
+        "problems": []
+      },
+      "E0_ref_s86028121": {
+        "name": "E0_ref_s86028121",
+        "expected_sha256": "9600d0b0f7f7c73171aa45f348b9e3aa97a8d87261a58eb36b594540c1d48589",
+        "deck_sha256": "9600d0b0f7f7c73171aa45f348b9e3aa97a8d87261a58eb36b594540c1d48589",
+        "deck_meta_sha256": "2105dadcd37f005c66d564b95a1af87ec65766097188e1018f7290d6594d1a1f",
+        "problems": []
+      },
+      "LC_soft_r8_s104395301": {
+        "name": "LC_soft_r8_s104395301",
+        "expected_sha256": "100131d7b2add80a17a088b59847106e75a5c650c3be99e9f73e8eb0e4199609",
+        "deck_sha256": "100131d7b2add80a17a088b59847106e75a5c650c3be99e9f73e8eb0e4199609",
+        "problems": []
+      },
+      "LH_soft_r8_s104395301": {
+        "name": "LH_soft_r8_s104395301",
+        "expected_sha256": "9e1855fa6dd023e7ed4360dcb084d5fc393ae7e93ecee6f93702fbfc0ef0d62a",
+        "deck_sha256": "9e1855fa6dd023e7ed4360dcb084d5fc393ae7e93ecee6f93702fbfc0ef0d62a",
+        "problems": []
+      },
+      "LC_ref_r8_s104395301": {
+        "name": "LC_ref_r8_s104395301",
+        "expected_sha256": "0046e57b9491a70c98a1f5cc1c8df847a74f8341625d3ad5f6fa5938f021a686",
+        "deck_sha256": "0046e57b9491a70c98a1f5cc1c8df847a74f8341625d3ad5f6fa5938f021a686",
+        "deck_meta_sha256": "4903ce1d46d306d05da3c1d4bcf1ea6930fb4605443e18ff2c279c6d652babef",
+        "problems": []
+      },
+      "LH_ref_r8_s104395301": {
+        "name": "LH_ref_r8_s104395301",
+        "expected_sha256": "a871abbe25580e91d473bee174581b808363f371e0cb7097a5d8128d8a75a7a1",
+        "deck_sha256": "a871abbe25580e91d473bee174581b808363f371e0cb7097a5d8128d8a75a7a1",
+        "deck_meta_sha256": "58cc7d1fd15e7e248aa619f52936cd69f8d360abcadbcfb7038670cc9e9ddd6b",
+        "problems": []
+      },
+      "E0_soft_s104395301": {
+        "name": "E0_soft_s104395301",
+        "expected_sha256": "9c80d21a66ed59faa8a37f18dfac5e39da11cca7c065db913304b153a0436ad4",
+        "deck_sha256": "9c80d21a66ed59faa8a37f18dfac5e39da11cca7c065db913304b153a0436ad4",
+        "problems": []
+      },
+      "E0_ref_s104395301": {
+        "name": "E0_ref_s104395301",
+        "expected_sha256": "1fa3c83d82831e1bb1fa49e21fc98a54a820613ef0cd44348d0bdb44a96ef21c",
+        "deck_sha256": "1fa3c83d82831e1bb1fa49e21fc98a54a820613ef0cd44348d0bdb44a96ef21c",
+        "deck_meta_sha256": "32f848ef5ccaddad7b418068723e902f3d3f9ba6fe8522fe42e628faf61f0694",
+        "problems": []
+      }
+    },
+    "pairs": [
+      {
+        "allow": "B",
+        "ref": "LC_soft_r8_s15485863",
+        "new": "LH_soft_r8_s15485863",
+        "verdict": "PASS",
+        "e_case": null,
+        "problems": []
+      },
+      {
+        "allow": "B",
+        "ref": "LC_ref_r8_s15485863",
+        "new": "LH_ref_r8_s15485863",
+        "verdict": "PASS",
+        "e_case": null,
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "LC_soft_r8_s15485863",
+        "new": "LC_ref_r8_s15485863",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "LH_soft_r8_s15485863",
+        "new": "LH_ref_r8_s15485863",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "EB",
+        "ref": "LC_soft_r8_s15485863",
+        "new": "LH_ref_r8_s15485863",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "E0_soft_s15485863",
+        "new": "E0_ref_s15485863",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "B",
+        "ref": "LC_soft_r8_s86028121",
+        "new": "LH_soft_r8_s86028121",
+        "verdict": "PASS",
+        "e_case": null,
+        "problems": []
+      },
+      {
+        "allow": "B",
+        "ref": "LC_ref_r8_s86028121",
+        "new": "LH_ref_r8_s86028121",
+        "verdict": "PASS",
+        "e_case": null,
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "LC_soft_r8_s86028121",
+        "new": "LC_ref_r8_s86028121",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "LH_soft_r8_s86028121",
+        "new": "LH_ref_r8_s86028121",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "EB",
+        "ref": "LC_soft_r8_s86028121",
+        "new": "LH_ref_r8_s86028121",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "E0_soft_s86028121",
+        "new": "E0_ref_s86028121",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "B",
+        "ref": "LC_soft_r8_s104395301",
+        "new": "LH_soft_r8_s104395301",
+        "verdict": "PASS",
+        "e_case": null,
+        "problems": []
+      },
+      {
+        "allow": "B",
+        "ref": "LC_ref_r8_s104395301",
+        "new": "LH_ref_r8_s104395301",
+        "verdict": "PASS",
+        "e_case": null,
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "LC_soft_r8_s104395301",
+        "new": "LC_ref_r8_s104395301",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "LH_soft_r8_s104395301",
+        "new": "LH_ref_r8_s104395301",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "EB",
+        "ref": "LC_soft_r8_s104395301",
+        "new": "LH_ref_r8_s104395301",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      },
+      {
+        "allow": "E",
+        "ref": "E0_soft_s104395301",
+        "new": "E0_ref_s104395301",
+        "verdict": "PASS",
+        "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+        "problems": []
+      }
+    ],
+    "guard": null
+  }
+}

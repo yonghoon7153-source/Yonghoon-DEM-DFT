@@ -1,0 +1,14 @@
+[
+  {
+    "script": "mixer_deck_readback.py",
+    "rc": 1
+  },
+  {
+    "script": "mixer_deck_diff.py",
+    "rc": 1
+  },
+  {
+    "script": "mixer_smoke_blind.py",
+    "rc": 1
+  }
+]

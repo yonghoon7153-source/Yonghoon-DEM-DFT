@@ -1,0 +1,167 @@
+{
+  "source_sha256": "ea4528156e8eb9762999fef0643985bebf0b0735691202fddb4a2c17814ee7f8",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "oracle_combinations": {
+    "calibration": 4096,
+    "validation": 4096
+  },
+  "oracle_output_hash": "a3b776987b916e4944357b67ad40da5d687c83e814a80a17a1f0c9e9da329f6b",
+  "cli_directory": "cli-replay-asemvbv_",
+  "checks": [
+    {
+      "name": "exhaustive independent oracle",
+      "ok": true,
+      "detail": {
+        "calibration": 4096,
+        "validation": 4096
+      }
+    },
+    {
+      "name": "bad_numeric",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bad_unit",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bad_source",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bad_uncertainty",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "unknown_field",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "decimal_0.4_0.3",
+      "ok": true,
+      "detail": "COMPATIBLE"
+    },
+    {
+      "name": "decimal_1e300_1e-300",
+      "ok": true,
+      "detail": "COMPATIBLE"
+    },
+    {
+      "name": "decimal_1e300_-1e-300",
+      "ok": true,
+      "detail": "INCOMPATIBLE"
+    },
+    {
+      "name": "neighbor gap and input preservation",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "reserved_15485863",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "reserved_86028121",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "reserved_104395301",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "no manifest is not certified",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "cli_positive",
+      "ok": true,
+      "detail": {
+        "rc": 0
+      }
+    },
+    {
+      "name": "cli_binding_positive",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "cli_no_overwrite_positive",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "cli_none",
+      "ok": true,
+      "detail": {
+        "rc": 0
+      }
+    },
+    {
+      "name": "cli_binding_none",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "cli_no_overwrite_none",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "cli_incomplete",
+      "ok": true,
+      "detail": {
+        "rc": 0
+      }
+    },
+    {
+      "name": "cli_binding_incomplete",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "cli_no_overwrite_incomplete",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "cli_tampered_raw",
+      "ok": true,
+      "detail": {
+        "rc": 2
+      }
+    },
+    {
+      "name": "cli_wrong_digest",
+      "ok": true,
+      "detail": {
+        "rc": 2
+      }
+    },
+    {
+      "name": "cli_duplicate_json",
+      "ok": true,
+      "detail": {
+        "rc": 2
+      }
+    },
+    {
+      "name": "cli_path_escape",
+      "ok": true,
+      "detail": {
+        "rc": 2
+      }
+    }
+  ],
+  "all_passed": true,
+  "symlink_execution": "NOT_TESTED: Windows privilege unavailable; existing test has WinError1314",
+  "physical_runs": 0
+}
