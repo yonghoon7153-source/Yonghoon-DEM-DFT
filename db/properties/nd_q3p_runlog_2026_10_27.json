@@ -23,5 +23,15 @@
   "cascade_기록": "겹친 시간은 발사 시각 · 끝 시각을 cascade_v7_main_runlog 에 적는다 (사용자 붙여넣기 뒤)",
   "후처리": "SCF 끝난 뒤 다음 블록 — pp.x plot_num 17 → bader → bader_summary_zval.py (원래 역할 입력) · pp.x plot_num 8 → sample_elf_bonds.py"
  },
- "⏭": "사용자: 아래 kgy 블록 실행 → 출력 붙여넣기 (PAW · NC ✓ · DRY_RUN 균일성 ✓ · tmux ndq3p 시작) · 비준 여부"
+ "⏭": "사용자: kgy 블록 (START_AFTER_FILE · START_AFTER_TMUX) → 출력 붙여넣기 (PAW · NC ✓ · DRY_RUN 균일성 ✓ · '▶ tmux ndq3p … 시작 조건 대기') → MnP2O6 끝나면 자동 시작 · 비준 여부",
+ "실행_10_30_시작_조건": {
+  "사용자": "'지금 돌리자' (10-30 · 용훈 포메이션의 'Nd@P Q3′ — 🔔 비준 · 언제 돌릴지' 줄에)",
+  "왜_바로_못_올리나": "kgy 3090 (24,576 MiB) 에 CEI 띠틈 MnP2O6 vc-relax 가 13.8 GB (10-29 관측 · 힘·응력 구간) · 같은 셀 MLi_04 PAW pw.x 는 kgy 에서 ≈ 10.0 GB (EOS 때 합계 13,094 − cascade 만 3,079 MiB) → 합 ≈ 23.8 GB 로 한계. 점 러너의 MIN_FREE_MIB (16,000) 는 시작 순간만 본다 — 지금 띄우면 물러나고 (여유 ≈ 10.7 GB), 낮은 순간에 들어가면 MnP2O6 이 다시 커질 때 그쪽이 죽는다. CEI 쪽 대기 문턱은 8,000 이라 MnP2O6 의 다음 단계를 못 지킨다.",
+  "시작_조건": "run_kgy.sh START_AFTER_FILE=/home/kgy/work/runs/cei_gap_1027/CoS2_mp-aaaaadbq/01_vcrelax.out (= MnP2O6 01–06 이 다 끝나고 CEI 가 금속 넷으로 넘어감) 또는 START_AFTER_TMUX=ceigap 이 끝남 · 5 분 간격 · 최대 7 일 (넘으면 시작 안 함 · start_wait.log 에 ⛔). 점검 (PAW · NC · DRY_RUN 균일성) 은 지금 한다.",
+  "금속_옆": "CoS2 · NiS2 · Ni3S4 · MnS2 는 셀이 작아 Nd ≈ 10 GB 와 같이 들어간다 (어림 · 실측 아님). 점마다 MIN_FREE_MIB 16,000 은 그대로 · CEI 다음 단계는 자기 문턱 (8,000) 으로 기다린다.",
+  "cascade": "CEI 가 끝나면 tmux cv7main 이 cascade 를 이어받는다 — Nd 가 그때 돌고 있으면 겹친다 (UMA ≈ 3 GB · 메모리는 들어감). 겹친 시간은 cascade_v7_main_runlog 에 적는다 (상한 592 여유 ≈ 60 GPU-h · 런 단가가 오른다).",
+  "시험": "가짜 W · tmux · nvidia-smi · 점 러너로 11 항목 통과 (기본 경로 그대로 · 대기 명령 · 조건 셋 · 조건 안 되면 계산 안 던짐 · 되면 bader · elf 둘 다) · 깨기 3/3 빨강 (tmux 조건 뒤집기 · && → ; · 파일 조건 무시)",
+  "카드_상태": "D-2026-10-27-nd-q3p-same-cell 은 proposed — 실행 승인 (10-27 · 10-30 '지금 돌리자') 으로 돈다 · 비준은 따로 (권고: 비준)",
+  "by": "agent · 2026-10-30"
+ }
 }
