@@ -1,0 +1,60 @@
+{
+  "steps": [
+    {
+      "step": "01_red_launcher",
+      "child_rc": 1,
+      "runner_return_reported": 1,
+      "runner_return_evidence": "Submitted report plus return logic, not separate captured outer-shell exit status",
+      "times": {
+        "child_s": 3.778,
+        "cleanup_s": 0.008,
+        "records_s": 0.045,
+        "total_s": 3.89
+      },
+      "start_utc": "2026-10-30T05:16:39.531Z",
+      "end_utc": "2026-10-30T05:16:43.422Z",
+      "runner_ok": true,
+      "cleanup_status": "empty",
+      "source_count": 14
+    },
+    {
+      "step": "02_red_runner",
+      "child_rc": 1,
+      "runner_return_reported": 1,
+      "runner_return_evidence": "Submitted report plus return logic, not separate captured outer-shell exit status",
+      "times": {
+        "child_s": 1.017,
+        "cleanup_s": 0.002,
+        "records_s": 0.041,
+        "total_s": 1.103
+      },
+      "start_utc": "2026-10-30T05:18:35.346Z",
+      "end_utc": "2026-10-30T05:18:36.450Z",
+      "runner_ok": true,
+      "cleanup_status": "empty",
+      "source_count": 14
+    },
+    {
+      "step": "03_green",
+      "child_rc": 0,
+      "runner_return_reported": 0,
+      "runner_return_evidence": "Submitted report plus return logic, not separate captured outer-shell exit status",
+      "times": {
+        "child_s": 22.55,
+        "cleanup_s": 0.002,
+        "records_s": 0.041,
+        "total_s": 22.645
+      },
+      "start_utc": "2026-10-30T05:19:43.927Z",
+      "end_utc": "2026-10-30T05:20:06.572Z",
+      "runner_ok": true,
+      "cleanup_status": "empty",
+      "source_count": 14
+    }
+  ],
+  "evidence_files": 24,
+  "evidence_bytes": 117742,
+  "start_record_to_end_snapshot_s": 273.0,
+  "a_name_check_to_end_snapshot_reported_s": 327,
+  "timing_limit": "UTC snapshots do not certify all-process wallclock completion or tool-return time."
+}

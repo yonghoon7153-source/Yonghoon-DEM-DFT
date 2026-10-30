@@ -1,0 +1,110 @@
+REIL C4-E E1-0 결과 상세 검토 — 2026-10-30
+
+판정은 “결과 수용, 절차 차이 명시”입니다.
+대상 저장소: yonghoon7153-source/Yonghoon-DEM-DFT
+대상 브랜치: claude/14-gate-code-review-9qkx05
+고정 HEAD: a9544ee04458d9fa79b5b09b463e72ef9543c2d0
+종결 시 GitHub ref도 같은 HEAD였습니다.
+
+1. 결론과 조치
+
+Q1: 제출된 E1-0 결과를 수용합니다. RED의 예상 실패 27·11개, GREEN의 65개 통과 및 원천·하네스·기록 연결에 새 차단 결함을 발견하지 않았습니다.
+
+Q2: 결과의 예외 증거는 충분하지만, 승인된 RED 확인 위치를 바꿔 계속 진행한 절차 준수를 수용할 수는 없습니다. E1_0_N1으로 기록합니다. 기술 결과 무효·재시험 요구와 구분하며, 당시 계속 진행을 소급 승인하지 않습니다.
+
+발송문 3·10행의 무조건적인 “승인 범위대로”는 다음처럼 한정하는 것이 맞습니다:
+“E1-0 작업 범위에서 실행했으며, v5 §4-3 RED 근거 위치를 짧은 요약에서 동일 stdout의 대응 실패 절로 대체하고 계속한 절차 차이가 있다.”
+기존 승인·원문·커밋은 변경하지 않고 후속 설명에서 이 차이를 유지하면 됩니다. 이 검토 회신이 해당 판단을 기록합니다. 별도 형식 정정을 위해 시험을 다시 돌릴 필요는 없습니다.
+
+Q3: 다음 승인 요청 문서를 작성할 수 있습니다. 실제 E1-0b 및 E1-1–3의 구현·실행 범위를 이 결과가 자동 승인하지 않습니다.
+
+2. 승인 문언과 실제 결과의 차이
+
+승인 v5 162–168행은 예외를 “짧은 요약의 실패 줄”에 요구하며 하나라도 다르면 중지하도록 정합니다. 상태 §83은 사전 정적 검토이고, 실행 승인 근거는 첫 시험 이전 ae82e7d6에 저장된 §84입니다. §84 2211–2218행은 사용자 “승인”을 E1-0 한정 v5 요청에 대한 답으로 기록합니다. 원 승인 대화 자체를 별도로 인증한 것은 아닙니다.
+
+실제 RED 요약은 full nodeid만 포함합니다. 발송문 59–66행/상태 2260–2267행은 이를 발견한 뒤 대응 실패 절 E 줄을 근거로 계속했음을 공개합니다. 예상 통과·다른 예외 등이 없었다는 사실은 결과 의미를 지지하지만, 승인문이 요구한 증거 위치 조건을 사후 제외할 근거는 되지 않습니다. 과거 N1 로그가 같은 형식이었다는 사정도 사전 예외 승인이 아닙니다.
+
+pytest의 공식 출력 문서는 --tb=short 실패 보고와 -r 요약을 구분합니다. pytest 9.1.1 terminal.py는 짧은 요약에서 nodeid 뒤 가용 폭이 모자라면 메시지를 생략할 수 있고 terminalwriter.py는 폭 조회의 기본값 80을 둡니다. 관측된 형식은 이 동작과 부합합니다. 다만 이 기기의 실제 폭·TTY/CI/COLUMNS 값이나 설치 소스 바이트는 별도로 확인하지 않았으므로 “실제로 80칸 때문에 발생했다”를 독립 환경 관측으로 확정하지 않습니다. 원인 probe는 필요 없습니다.
+
+- https://docs.pytest.org/en/stable/how-to/output.html
+- https://github.com/pytest-dev/pytest/blob/9.1.1/src/_pytest/terminal.py#L1416
+- https://github.com/pytest-dev/pytest/blob/9.1.1/src/_pytest/_io/terminalwriter.py#L24
+
+PROPOSED_RED_CRITERIA_KO.txt는 다음 승인안용 제안입니다. FAILED full nodeid 집합과 각 대응 보고서의 최종 예외를 사용하며 E 줄 개수는 사용하지 않습니다. RED-R은 r1의 assertion 설명 때문에 11개 시험에 E 줄이 15개입니다.
+
+3. 원문 결과 대조
+
+RED-L:
+- 01_red_launcher.stdout.log 249–275행의 FAILED nodeid 27개는 launcher 시험 함수 27개와 일대일 대응합니다.
+- 27개 실패 보고서가 모두 고정 골격의 NotImplementedError와 선언한 메시지를 담습니다. 첫 E 줄 12행, 마지막 247행, 합계 276행입니다.
+- pytest 보고 시간 1.09초와 외곽 실행기 child_s 3.778초는 서로 다른 측정 범위입니다.
+
+RED-R:
+- 02_red_runner.stdout.log 62–72행의 FAILED nodeid 11개가 실행기 시험 함수와 일대일 대응합니다.
+- r1(6–10행)은 AssertionError 및 actual empty / expected unknown, 나머지(15–60행)는 지정된 속성 부재입니다.
+- r1은 V2-01 행동 반례이며 r2–r11은 인터페이스 RED입니다. 이를 11개의 새 행동 반례 재현으로 부르지 않습니다.
+- pytest 0.29초와 child_s 1.017초를 구분합니다.
+
+GREEN:
+- 03_green.stdout.log 68–132행의 PASSED nodeid 65개는 E0 21 + N1 6 + launcher 27 + 실행기 11의 AST 시험 함수 집합과 정확히 같습니다. 133행의 합계는 65 passed / 21.74초입니다.
+- child_s는 22.55초입니다. source/hash로 연결된 기록이며 이번 검토자가 직접 재실행한 통과가 아닙니다.
+- stdout의 CLI 오류와 timeout/incomplete/error 출력은 통과한 음성 시험의 captured output입니다. 해당 시험의 예상 SystemExit·주입 오류와 연결되며 외곽 단계 실패와 섞지 않습니다.
+- meta의 zombie 1238·1319는 reaped와 같고 alive는 비어 있습니다. runner 320–324행은 회수 전 관측 표로 zombies 필드를 구성합니다. 이 목록을 회수되지 않은 생존 자손으로 해석하지 않습니다.
+
+세 단계의 started=true, runner_ok=true, timed_out=false, cleanup empty, deadline/emergency=false, problems/end_problems/errors=[], first_error=null, stderr 0 B가 일치합니다. 기록된 skip/xfail/xpass/수집·내부 오류 결과도 없습니다.
+
+CASE_RESULT_MAP.json은 103개의 단계별 관측을 65개의 서로 다른 시험 함수에 연결합니다. 새 시험 38개가 RED와 GREEN에 반복되므로 103개의 고유 시험 또는 103개 통과가 아닙니다.
+
+4. 바이트·봉인·커밋 연결
+
+GitHub connector에서 읽은 현재 HEAD 42파일과 preseal 커밋의 골격 1파일, 총 43개 사본의 Git blob SHA-1을 로컬 실제 바이트로 재계산해 일치시켰습니다. SOURCE_IDENTITIES.json에 SHA-256도 기록했습니다. 이전 v5 검토 사본 17개는 basis/prior_v5에 바이트 그대로 넣었습니다. 이 중복 사본을 추가 원본 수로 더하지 않습니다.
+
+현재 launcher 51,957 B / 2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396
+preseal 골격 13,646 B / e6f72de2245a41a4a80e0bb7adcc7734991f0b95fb1c1764ea6bfda579849182
+launcher 대조 51,121 B / 4720585c86f555bb0f9cfea3e12aab5b283f8ee4243a3ef257f77849759b777d
+실행기 대조 36,478 B / ae42d8e8c0fb0c680d324348d2e1edc8f11865bd6bedea7cb0becf9b00fe6042
+외곽 실행기 36,189 B / f6070f9776baa7dfc9b5e26ac5e6f378dd2969e7628566e5baa3c02685814a2a
+
+위 사본과 원 승인 초안이 같습니다. 각 단계의 14개 source_start/source_end 및 두 source_sha256 텍스트가 EXPECT와 일치하고, 실행기 자신도 별도 해시로 연결됩니다. 00_start의 초안 다섯·복사본 넷 해시와 04_end의 최종 복사본 넷도 맞습니다.
+
+커밋의 선형 순서:
+13b7c850 → ae82e7d6(승인 기록/보존 규칙) → 935b52aa(복사 넷·착수)
+→ 83e727fa(RED-L) → 4391b3a3(RED-R) → f67dcc00(구현·GREEN)
+→ b2e5fdd9(끝 기록) → a9544ee0(결과 요청·상태).
+
+935b52aa는 첫 시험 시작 UTC보다 앞서며 정확히 복사 넷+착수 기록을 담습니다. 각 증거 추가 커밋의 blob이 현재 받은 증거와 같습니다. 단계별 meta의 시작/끝 HEAD는 각각 935b52aa, 83e727fa, 4391b3a3로 같습니다.
+
+13b→b2의 추적 변경 29개는 증거 24개, 새 launcher/시험 3개, .gitattributes와 상태 문서입니다. b2→현재는 결과 요청/상태 문서뿐입니다. 사전 검토 a0→착수 전13b의 문서 변경은 별도 경계이며 E1-0 실행 중 변경으로 세지 않았습니다. 관련 고정 참조 소스·기존 시험은 이전 검토 바이트와 일치합니다.
+
+STATIC_AUDIT.json의 129개 조건은 수신 바이트·JSON·AST·커밋 자료 대조입니다. 기능 시험 129회를 수행했다는 뜻이 아닙니다. 이 기록으로 미기록 임시 변경이나 원격 PC 전체 보존을 증명하지 않습니다.
+
+5. 시간·자원·반환의 증거 범위
+
+단계 child_s / cleanup_s:
+RED-L 3.778 / 0.008, RED-R 1.017 / 0.002, GREEN 22.55 / 0.002초.
+기록된 자식 120/120/600초 및 정리 공통 15초 예산 안이며, records_s는 별도입니다. evidence_bytes_before_meta 62,655 / 80,893 / 106,680 B도 수신 파일로 재구성됩니다.
+
+00_start 05:16:13Z → 04_end 05:20:46Z는 273초입니다. 보고된 절차 a 05:15:19Z부터는 327초입니다. 2시간 안의 기록 구간이나, 그 뒤 commit/push/문서 작성 또는 외곽 도구 반환까지 포함하는 전체 수명 측정은 아닙니다.
+
+runner 522·530행의 total_s/end_utc/RSS snapshot은 532행 meta 쓰기, 538행 stdout, 542행 반환보다 앞섭니다. meta rc는 자식 rc입니다. 외곽 반환 1/1/0은 제출 보고와 해당 반환식에 부합하지만 별도 shell 반환 원문은 24개 증거에 없습니다. 독립 관측으로 승격하지 않습니다.
+
+04_end 값은 meta와 파일 바이트에 일치합니다. 그러나 write_end_e1_0.py 본문은 없고 SHA도 축약형만 보고돼 배타 생성·Git 0·네트워크 0이라는 작성기 실행 세부는 독립 확인되지 않습니다. 승인된 기록 집합의 공개된 한계이며 이번 결과의 새 차단으로 세지 않습니다.
+
+RSS 59,324 KiB와 디스크 여유는 사후 관측이며 강제 상한이 아닙니다. a/f의 허용 목록 밖 Git 환경 이름 0 및 b–f 같은 명령 내 확인은 제출 기록 범위로 구분합니다. 원 명령 실행 전부를 독립 감사하거나 허용된 KEY/VALUE의 내용 격리까지 확인했다고 주장하지 않습니다.
+
+6. 다음 요청서에 유지할 사항
+
+- E1_0_N1 절차 차이를 기록하고 RED 판정 문구를 승인 전에 고정합니다.
+- FUTURE-01에 해당하는 절차 Git 환경·설정 경로 격리의 구체 변경 및 E1-0b를 별도 범위로 고정합니다. E1-0 GREEN은 이를 해결한 시험이 아닙니다.
+- 실제 launcher 운영 정리 정책, cleanup.errors/status/unverified·기록 실패의 차단 기준과 first_error 보존을 명시합니다. first_error=null 하나로 성공 판정을 대신하지 않습니다.
+- 공통 15초 정리 기한과 사전 /proc 관측·스캔·시작 전 코드의 경계를 구분합니다. lstat 검사도 원자적 경로 보호를 증명하지 않습니다.
+- 가짜 시계·주입 driver·이번 환경의 성공을 실제 OS 반환시간의 보편적 상한으로 확대하지 않습니다.
+- E1-1–3 대상 바이트·입력·명령·예상 결과·중지 조건·단계 및 전체 예산을 사용자 승인 전에 확정합니다.
+
+이번 결과에서 새 기능 차단 요건을 추가하지 않습니다. 위 항목은 기존 공개 한계와 절차 차이를 다음 승인 범위에 명확히 넣는 요구입니다. 이번에는 E1-0b, E1-1–3, 실자료 fetch/개봉/run, COMSOL 등의 실행을 시작하지 않았습니다.
+
+7. 검토자의 수행과 전달
+
+첨부 문서와 코드의 실행 절차는 검토 자료로만 읽었습니다. 받은 프로그램/import/pytest/fixture/driver/probe/COMSOL 실행은 0회입니다. 저장소 변경·commit·push·외부 발송도 없습니다. reviewer-owned 자료 처리 프로그램만 실행해 JSON/AST/텍스트/해시 및 새 검토 ZIP을 확인했습니다.
+
+전달 ZIP은 CODEX_REPLY_KO.txt, REVIEW_DECISION.json, 이 보고서, 미래 RED 문구, 원문 사본·이력·자료 대조·사례 대응표를 포함합니다. 원도구 실행을 재현하거나 새 원격 실행 감사를 했다는 의미가 아닙니다.

@@ -1,0 +1,655 @@
+{
+  "kind": "REVIEWER_DATA_AUDIT",
+  "conditions": 129,
+  "matched": 129,
+  "checks": [
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/00_start.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/00_step_runner.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/01_red_launcher.meta.json",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/01_red_launcher.porcelain_end.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/01_red_launcher.porcelain_start.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/01_red_launcher.source_sha256.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/01_red_launcher.source_sha256_end.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/01_red_launcher.stderr.log",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/01_red_launcher.stdout.log",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/02_red_runner.meta.json",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/02_red_runner.porcelain_end.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/02_red_runner.porcelain_start.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/02_red_runner.source_sha256.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/02_red_runner.source_sha256_end.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/02_red_runner.stderr.log",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/02_red_runner.stdout.log",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/03_green.meta.json",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/03_green.porcelain_end.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/03_green.porcelain_start.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/03_green.source_sha256.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/03_green.source_sha256_end.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/03_green.stderr.log",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/03_green.stdout.log",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e1_0_20261030/04_end.json",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/scripts/reil_c4e1_launch.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/tests/test_reil_c4e1_launch.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/tests/test_reil_c4e1_runner.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/.gitattributes",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/docs/REIL_C4E1_0_RESULT_REVIEW_SEND_20261030.md",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/tests/test_reil_c4e.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/tests/test_reil_c4e_fix.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/scripts/reil_c4e_run.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/scripts/reil_c4_e3a.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/scripts/reil_c4_monitor.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/scripts/reil_c5_pilot.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/scripts/reil_p0.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/scripts/reil_c6_profile.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/degradation-degeneracy/tools/env_profile.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob source/bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "captured Git blob history/935b52aa/bms-balancing/scripts/reil_c4e1_launch.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "evidence set 24 files 117742 bytes",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "approved copy bms-balancing/scripts/reil_c4e1_launch.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "approved copy bms-balancing/tests/test_reil_c4e1_launch.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "approved copy bms-balancing/tests/test_reil_c4e1_runner.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "approved copy bms-balancing/evidence/reil_c4e1_0_20261030/00_step_runner.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "historical skeleton matches approved",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "approval v5 unchanged",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "fixed current source bms-balancing/tests/test_reil_c4e1_launch.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "fixed current source bms-balancing/tests/test_reil_c4e1_runner.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "fixed current source bms-balancing/tests/test_reil_c4e.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "unchanged reference bms-balancing/tests/test_reil_c4e.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "fixed current source bms-balancing/tests/test_reil_c4e_fix.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "unchanged reference bms-balancing/tests/test_reil_c4e_fix.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "fixed current source bms-balancing/scripts/reil_c4e_run.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "unchanged reference bms-balancing/scripts/reil_c4e_run.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "fixed current source bms-balancing/scripts/reil_c4_e3a.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "unchanged reference bms-balancing/scripts/reil_c4_e3a.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "fixed current source bms-balancing/scripts/reil_c4_monitor.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "unchanged reference bms-balancing/scripts/reil_c4_monitor.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "fixed current source bms-balancing/scripts/reil_c5_pilot.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "unchanged reference bms-balancing/scripts/reil_c5_pilot.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "fixed current source bms-balancing/scripts/reil_p0.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "unchanged reference bms-balancing/scripts/reil_p0.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "fixed current source bms-balancing/scripts/reil_c6_profile.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "unchanged reference bms-balancing/scripts/reil_c6_profile.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "fixed current source degradation-degeneracy/tools/env_profile.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "unchanged reference degradation-degeneracy/tools/env_profile.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "fixed current source bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "unchanged reference bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "fixed current source bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "unchanged reference bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "01_red_launcher EXPECT tables",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "01_red_launcher text source hashes",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "01_red_launcher runner self recorded",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "01_red_launcher meta success conditions",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "01_red_launcher Git heads",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "01_red_launcher empty stderr",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "01_red_launcher recorded budget",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "01_red_launcher end summary",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "02_red_runner EXPECT tables",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "02_red_runner text source hashes",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "02_red_runner runner self recorded",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "02_red_runner meta success conditions",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "02_red_runner Git heads",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "02_red_runner empty stderr",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "02_red_runner recorded budget",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "02_red_runner end summary",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "03_green EXPECT tables",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "03_green text source hashes",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "03_green runner self recorded",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "03_green meta success conditions",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "03_green Git heads",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "03_green empty stderr",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "03_green recorded budget",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "03_green end summary",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "end copies hashes",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "start 9 hashes",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "start record -> end snapshot 273s",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit ancestry",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "preseal before first step by recorded UTC",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/00_start.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/00_step_runner.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/01_red_launcher.meta.json",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/01_red_launcher.porcelain_end.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/01_red_launcher.porcelain_start.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/01_red_launcher.source_sha256.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/01_red_launcher.source_sha256_end.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/01_red_launcher.stderr.log",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/01_red_launcher.stdout.log",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/02_red_runner.meta.json",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/02_red_runner.porcelain_end.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/02_red_runner.porcelain_start.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/02_red_runner.source_sha256.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/02_red_runner.source_sha256_end.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/02_red_runner.stderr.log",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/02_red_runner.stdout.log",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/03_green.meta.json",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/03_green.porcelain_end.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/03_green.porcelain_start.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/03_green.source_sha256.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/03_green.source_sha256_end.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/03_green.stderr.log",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/03_green.stdout.log",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "commit evidence blob bms-balancing/evidence/reil_c4e1_0_20261030/04_end.json",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "preseal commit exact 4 copies plus start",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "execution tracked diff scope",
+      "matched": true,
+      "details": null
+    }
+  ],
+  "received_program_execution": 0,
+  "functional_retests": 0,
+  "scope": "Saved bytes/JSON/AST and GitHub commit records; not independent OS execution audit."
+}

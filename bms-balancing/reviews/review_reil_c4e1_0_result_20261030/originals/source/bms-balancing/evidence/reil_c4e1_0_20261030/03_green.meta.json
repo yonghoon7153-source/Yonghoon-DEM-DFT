@@ -1,0 +1,297 @@
+{
+ "argv": [
+  "/usr/bin/env",
+  "PYTHONPATH=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/pytest_t",
+  "REIL_C4E1_RUNNER_UNDER_TEST=/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_0_20261030/00_step_runner.py",
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python",
+  "-X",
+  "pycache_prefix=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/c4e1_steps/pycache/03_green",
+  "-m",
+  "pytest",
+  "-p",
+  "no:cacheprovider",
+  "-x",
+  "tests/test_reil_c4e.py",
+  "tests/test_reil_c4e_fix.py",
+  "tests/test_reil_c4e1_launch.py",
+  "tests/test_reil_c4e1_runner.py",
+  "-q",
+  "-rA",
+  "--tb=short"
+ ],
+ "child_maxrss_kib": 59324,
+ "cleanup": {
+  "cleanup_s": 0.002,
+  "deadline_hit": false,
+  "emergency": false,
+  "errors": [],
+  "exited_after_kill": null,
+  "kills": [],
+  "rc_after_kill": null,
+  "settle": {
+   "alive": [],
+   "deadline_hit": false,
+   "errors": [],
+   "first_alive": [],
+   "first_error": null,
+   "kills": [],
+   "reaped": [
+    1238,
+    1319
+   ],
+   "status": "empty",
+   "zombies": [
+    1238,
+    1319
+   ]
+  },
+  "status": "empty",
+  "timed_out": false
+ },
+ "cleanup_s": 15.0,
+ "cwd": "/home/user/Yonghoon-DEM-DFT/bms-balancing",
+ "disk_free_end_bytes": 26137927680,
+ "disk_free_start_bytes": 26152390656,
+ "end_problems": [],
+ "end_utc": "2026-10-30T05:20:06.572Z",
+ "env_removed_names": [
+  "AWS_ACCESS_KEY_ID",
+  "AWS_SECRET_ACCESS_KEY",
+  "CLAUDE_CODE_MESSAGING_TOKEN",
+  "CLAUDE_SESSION_INGRESS_TOKEN_FILE",
+  "CLOUDSDK_AUTH_ACCESS_TOKEN",
+  "GH_TOKEN",
+  "GITHUB_TOKEN",
+  "GIT_ASKPASS",
+  "GIT_CONFIG_COUNT",
+  "GIT_CONFIG_KEY_0",
+  "GIT_CONFIG_KEY_1",
+  "GIT_CONFIG_KEY_2",
+  "GIT_CONFIG_VALUE_0",
+  "GIT_CONFIG_VALUE_1",
+  "GIT_CONFIG_VALUE_2",
+  "GIT_EDITOR",
+  "GIT_TERMINAL_PROMPT",
+  "MAX_THINKING_TOKENS"
+ ],
+ "env_set": {
+  "GIT_TERMINAL_PROMPT": "0",
+  "MKL_NUM_THREADS": "1",
+  "MPLBACKEND": "Agg",
+  "MPLCONFIGDIR": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/c4e1_steps/mpl",
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "PYTHONDONTWRITEBYTECODE": "1",
+  "REIL_C4_FIX_EVIDENCE": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_0_20261030",
+  "REIL_C4_FIX_STEP": "03_green",
+  "TMPDIR": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/c4e1_steps/tmp"
+ },
+ "errors": [],
+ "evidence_bytes_before_meta": 106680,
+ "first_error": null,
+ "kill_wait_s": 7.0,
+ "pgid": 1077,
+ "problems": [],
+ "rc": 0,
+ "records": {
+  "head_end": {
+   "argv": [
+    "git",
+    "-C",
+    "/home/user/Yonghoon-DEM-DFT",
+    "rev-parse",
+    "HEAD"
+   ],
+   "err": "",
+   "out": "4391b3a345c4e0fd17e86f7ca788576a790f758c",
+   "rc": 0
+  },
+  "head_start": {
+   "argv": [
+    "git",
+    "-C",
+    "/home/user/Yonghoon-DEM-DFT",
+    "rev-parse",
+    "HEAD"
+   ],
+   "err": "",
+   "out": "4391b3a345c4e0fd17e86f7ca788576a790f758c",
+   "rc": 0
+  },
+  "porcelain_end": {
+   "argv": [
+    "git",
+    "-C",
+    "/home/user/Yonghoon-DEM-DFT",
+    "status",
+    "--porcelain=v1",
+    "--untracked-files=all"
+   ],
+   "err": "",
+   "rc": 0
+  },
+  "porcelain_start": {
+   "argv": [
+    "git",
+    "-C",
+    "/home/user/Yonghoon-DEM-DFT",
+    "status",
+    "--porcelain=v1",
+    "--untracked-files=all"
+   ],
+   "err": "",
+   "rc": 0
+  }
+ },
+ "runner": {
+  "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_0_20261030/00_step_runner.py",
+  "sha256": "f6070f9776baa7dfc9b5e26ac5e6f378dd2969e7628566e5baa3c02685814a2a"
+ },
+ "runner_ok": true,
+ "settle_s": 3.0,
+ "source_end": {
+  "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt": {
+   "bytes": 12849,
+   "sha256": "aae2ec14c4d652ef9a9e5b1c45bf52896d2234dce16eac77942911e596669fed"
+  },
+  "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json": {
+   "bytes": 1100,
+   "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52"
+  },
+  "bms-balancing/scripts/reil_c4_e3a.py": {
+   "bytes": 32311,
+   "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+  },
+  "bms-balancing/scripts/reil_c4_monitor.py": {
+   "bytes": 21546,
+   "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+  },
+  "bms-balancing/scripts/reil_c4e1_launch.py": {
+   "bytes": 51957,
+   "sha256": "2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396"
+  },
+  "bms-balancing/scripts/reil_c4e_run.py": {
+   "bytes": 53853,
+   "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+  },
+  "bms-balancing/scripts/reil_c5_pilot.py": {
+   "bytes": 47164,
+   "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+  },
+  "bms-balancing/scripts/reil_c6_profile.py": {
+   "bytes": 15915,
+   "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"
+  },
+  "bms-balancing/scripts/reil_p0.py": {
+   "bytes": 23941,
+   "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+  },
+  "bms-balancing/tests/test_reil_c4e.py": {
+   "bytes": 57482,
+   "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e"
+  },
+  "bms-balancing/tests/test_reil_c4e1_launch.py": {
+   "bytes": 51121,
+   "sha256": "4720585c86f555bb0f9cfea3e12aab5b283f8ee4243a3ef257f77849759b777d"
+  },
+  "bms-balancing/tests/test_reil_c4e1_runner.py": {
+   "bytes": 36478,
+   "sha256": "ae42d8e8c0fb0c680d324348d2e1edc8f11865bd6bedea7cb0becf9b00fe6042"
+  },
+  "bms-balancing/tests/test_reil_c4e_fix.py": {
+   "bytes": 19506,
+   "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2"
+  },
+  "degradation-degeneracy/tools/env_profile.py": {
+   "bytes": 22333,
+   "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"
+  }
+ },
+ "source_start": {
+  "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt": {
+   "bytes": 12849,
+   "sha256": "aae2ec14c4d652ef9a9e5b1c45bf52896d2234dce16eac77942911e596669fed"
+  },
+  "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json": {
+   "bytes": 1100,
+   "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52"
+  },
+  "bms-balancing/scripts/reil_c4_e3a.py": {
+   "bytes": 32311,
+   "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+  },
+  "bms-balancing/scripts/reil_c4_monitor.py": {
+   "bytes": 21546,
+   "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+  },
+  "bms-balancing/scripts/reil_c4e1_launch.py": {
+   "bytes": 51957,
+   "sha256": "2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396"
+  },
+  "bms-balancing/scripts/reil_c4e_run.py": {
+   "bytes": 53853,
+   "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+  },
+  "bms-balancing/scripts/reil_c5_pilot.py": {
+   "bytes": 47164,
+   "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+  },
+  "bms-balancing/scripts/reil_c6_profile.py": {
+   "bytes": 15915,
+   "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"
+  },
+  "bms-balancing/scripts/reil_p0.py": {
+   "bytes": 23941,
+   "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+  },
+  "bms-balancing/tests/test_reil_c4e.py": {
+   "bytes": 57482,
+   "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e"
+  },
+  "bms-balancing/tests/test_reil_c4e1_launch.py": {
+   "bytes": 51121,
+   "sha256": "4720585c86f555bb0f9cfea3e12aab5b283f8ee4243a3ef257f77849759b777d"
+  },
+  "bms-balancing/tests/test_reil_c4e1_runner.py": {
+   "bytes": 36478,
+   "sha256": "ae42d8e8c0fb0c680d324348d2e1edc8f11865bd6bedea7cb0becf9b00fe6042"
+  },
+  "bms-balancing/tests/test_reil_c4e_fix.py": {
+   "bytes": 19506,
+   "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2"
+  },
+  "degradation-degeneracy/tools/env_profile.py": {
+   "bytes": 22333,
+   "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"
+  }
+ },
+ "start_utc": "2026-10-30T05:19:43.927Z",
+ "started": true,
+ "step": "03_green",
+ "subreaper": true,
+ "subreaper_errno": null,
+ "targets": [
+  "bms-balancing/scripts/reil_c4e1_launch.py",
+  "bms-balancing/tests/test_reil_c4e1_launch.py",
+  "bms-balancing/tests/test_reil_c4e1_runner.py",
+  "bms-balancing/tests/test_reil_c4e.py",
+  "bms-balancing/tests/test_reil_c4e_fix.py",
+  "bms-balancing/scripts/reil_c4e_run.py",
+  "bms-balancing/scripts/reil_c4_e3a.py",
+  "bms-balancing/scripts/reil_c4_monitor.py",
+  "bms-balancing/scripts/reil_c5_pilot.py",
+  "bms-balancing/scripts/reil_p0.py",
+  "bms-balancing/scripts/reil_c6_profile.py",
+  "degradation-degeneracy/tools/env_profile.py",
+  "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+  "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt"
+ ],
+ "timed_out": false,
+ "timeout_s": 600.0,
+ "times": {
+  "child_s": 22.55,
+  "cleanup_s": 0.002,
+  "records_s": 0.041,
+  "total_s": 22.645
+ }
+}

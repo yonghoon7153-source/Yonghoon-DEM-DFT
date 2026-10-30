@@ -1,0 +1,276 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFF                                              [100%]
+=================================== FAILURES ===================================
+_ test_l1_precheck_passes_only_with_fixed_list_exact_bytes_seal_binding_clean_interpreter_and_approved_specs _
+tests/test_reil_c4e1_launch.py:208: in test_l1_precheck_passes_only_with_fixed_list_exact_bytes_seal_binding_clean_interpreter_and_approved_specs
+    pre = _pre(t)
+          ^^^^^^^
+tests/test_reil_c4e1_launch.py:174: in _pre
+    env, _ = L.child_env({**os.environ, **(env_extra or {})}, t.work)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:184: in child_env
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+____ test_l2_list_sha_schema_path_set_entry_format_and_non_json_each_block _____
+tests/test_reil_c4e1_launch.py:236: in test_l2_list_sha_schema_path_set_entry_format_and_non_json_each_block
+    pre = _pre(t, sources=p, sha=sha)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_reil_c4e1_launch.py:174: in _pre
+    env, _ = L.child_env({**os.environ, **(env_extra or {})}, t.work)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:184: in child_env
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l3_changed_same_size_missing_symlinked_module_or_linked_parent_each_block _
+tests/test_reil_c4e1_launch.py:263: in test_l3_changed_same_size_missing_symlinked_module_or_linked_parent_each_block
+    pre = _pre(t)
+          ^^^^^^^
+tests/test_reil_c4e1_launch.py:174: in _pre
+    env, _ = L.child_env({**os.environ, **(env_extra or {})}, t.work)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:184: in child_env
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+___ test_l4_a_shadowing_scripts_package_module_zip_entry_or_our_init_blocks ____
+tests/test_reil_c4e1_launch.py:273: in test_l4_a_shadowing_scripts_package_module_zip_entry_or_our_init_blocks
+    assert L.shadow_problems([str(clean)], t.bms) == []
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:159: in shadow_problems
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+__ test_l5_interpreter_flags_fixed_argv_head_and_run_script_path_are_checked ___
+tests/test_reil_c4e1_launch.py:299: in test_l5_interpreter_flags_fixed_argv_head_and_run_script_path_are_checked
+    assert L.flag_problems(good, prefix, PY) == []
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:171: in flag_problems
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l6_stage_verdict_is_the_and_of_precheck_child_rc_timeout_and_postcheck __
+tests/test_reil_c4e1_launch.py:315: in test_l6_stage_verdict_is_the_and_of_precheck_child_rc_timeout_and_postcheck
+    good = L.stage_verdict(**base)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:227: in stage_verdict
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l7_child_result_reads_the_last_stdout_line_and_needs_final_complete_for_run _
+tests/test_reil_c4e1_launch.py:325: in test_l7_child_result_reads_the_last_stdout_line_and_needs_final_complete_for_run
+    assert L.child_result("run", 'noise\n{"ok": true, "final": {"complete": true, "E3a": "COMPLETE"}}\n')[0] is True
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:223: in child_result
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+____ test_l8_identity_link_binds_the_run_import_paths_to_the_checked_paths _____
+tests/test_reil_c4e1_launch.py:338: in test_l8_identity_link_binds_the_run_import_paths_to_the_checked_paths
+    mods = _pre(t)["modules"]
+           ^^^^^^^
+tests/test_reil_c4e1_launch.py:174: in _pre
+    env, _ = L.child_env({**os.environ, **(env_extra or {})}, t.work)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:184: in child_env
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false __
+tests/test_reil_c4e1_launch.py:359: in test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false
+    assert _launch(t, sources_sha256="0" * 64) == 1
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_reil_c4e1_launch.py:188: in _launch
+    return L.launch(step, t.ev, "§99", **opts)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:255: in launch
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds _
+tests/test_reil_c4e1_launch.py:371: in test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds
+    assert _launch(t, extra_env={"FAKE_TOKEN_X": "not-a-real-value", "GIT_CONFIG_COUNT": "1", "GIT_DIR": "/elsewhere"}) == 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_reil_c4e1_launch.py:188: in _launch
+    return L.launch(step, t.ev, "§99", **opts)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:255: in launch
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+____ test_l11_timeout_kills_the_whole_process_group_including_grandchildren ____
+tests/test_reil_c4e1_launch.py:390: in test_l11_timeout_kills_the_whole_process_group_including_grandchildren
+    assert _launch(t, mode="sleep", timeouts=dict(FAST, run=3.0)) == 1
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_reil_c4e1_launch.py:188: in _launch
+    return L.launch(step, t.ev, "§99", **opts)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:255: in launch
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_______ test_l12_refuses_to_overwrite_records_or_reuse_a_pycache_folder ________
+tests/test_reil_c4e1_launch.py:413: in test_l12_refuses_to_overwrite_records_or_reuse_a_pycache_folder
+    _launch(t)
+tests/test_reil_c4e1_launch.py:188: in _launch
+    return L.launch(step, t.ev, "§99", **opts)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:255: in launch
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder _
+tests/test_reil_c4e1_launch.py:427: in test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder
+    assert _launch(t, mode="mutate") == 1
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_reil_c4e1_launch.py:188: in _launch
+    return L.launch(step, t.ev, "§99", **opts)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:255: in launch
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+________ test_l14_independence_fixed_commands_constants_and_main_rules _________
+tests/test_reil_c4e1_launch.py:468: in test_l14_independence_fixed_commands_constants_and_main_rules
+    assert L.build_argv("run", ev, "§80", pre) == head + [
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:180: in build_argv
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it _
+tests/test_reil_c4e1_launch.py:495: in test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it
+    pre = _pre(t)
+          ^^^^^^^
+tests/test_reil_c4e1_launch.py:174: in _pre
+    env, _ = L.child_env({**os.environ, **(env_extra or {})}, t.work)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:184: in child_env
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+______ test_l16_a_leaf_extension_module_beside_an_approved_module_blocks _______
+tests/test_reil_c4e1_launch.py:509: in test_l16_a_leaf_extension_module_beside_an_approved_module_blocks
+    pre = _pre(t)
+          ^^^^^^^
+tests/test_reil_c4e1_launch.py:174: in _pre
+    env, _ = L.child_env({**os.environ, **(env_extra or {})}, t.work)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:184: in child_env
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+______ test_l17_extra_executed_files_and_the_seal_lock_binding_each_block ______
+tests/test_reil_c4e1_launch.py:520: in test_l17_extra_executed_files_and_the_seal_lock_binding_each_block
+    assert any(C6P in x for x in _pre(t)["problems"])
+                                 ^^^^^^^
+tests/test_reil_c4e1_launch.py:174: in _pre
+    env, _ = L.child_env({**os.environ, **(env_extra or {})}, t.work)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:184: in child_env
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l18_process_observation_errors_stay_unknown_and_only_vanished_pids_are_gone _
+tests/test_reil_c4e1_launch.py:546: in test_l18_process_observation_errors_stay_unknown_and_only_vanished_pids_are_gone
+    assert L.group_status(777, grace=0.2, proc=proc)["status"] == "alive"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:235: in group_status
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited _
+tests/test_reil_c4e1_launch.py:584: in test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited
+    rc = _launch(t, mode="sleep", timeouts=dict(FAST, run=2.0), killpg=no_kill, kill_wait=1.0, grace=0.5)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_reil_c4e1_launch.py:188: in _launch
+    return L.launch(step, t.ev, "§99", **opts)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:255: in launch
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state _
+tests/test_reil_c4e1_launch.py:610: in test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state
+    assert _launch(t) == 1
+           ^^^^^^^^^^
+tests/test_reil_c4e1_launch.py:188: in _launch
+    return L.launch(step, t.ev, "§99", **opts)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:255: in launch
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output _
+tests/test_reil_c4e1_launch.py:633: in test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output
+    assert _launch(t) == 1
+           ^^^^^^^^^^
+tests/test_reil_c4e1_launch.py:188: in _launch
+    return L.launch(step, t.ev, "§99", **opts)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:255: in launch
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l22_child_env_keeps_only_the_ca_among_git_variables_and_removes_secrets _
+tests/test_reil_c4e1_launch.py:649: in test_l22_child_env_keeps_only_the_ca_among_git_variables_and_removes_secrets
+    env, removed = L.child_env(base, tmp_path)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:184: in child_env
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+____ test_l23_fetch_precheck_refuses_url_rewrite_proxy_and_tls_off_settings ____
+tests/test_reil_c4e1_launch.py:666: in test_l23_fetch_precheck_refuses_url_rewrite_proxy_and_tls_off_settings
+    pre = _pre(t, "fetch", data=t.tmp / "fresh", env_extra={"HOME": str(home)})
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_reil_c4e1_launch.py:174: in _pre
+    env, _ = L.child_env({**os.environ, **(env_extra or {})}, t.work)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:184: in child_env
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+__ test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source __
+tests/test_reil_c4e1_launch.py:688: in test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source
+    assert _launch(t, step="fetch", mode=mode, data=t.tmp / "fresh") == 1, mode
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_reil_c4e1_launch.py:188: in _launch
+    return L.launch(step, t.ev, "§99", **opts)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:255: in launch
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git _
+tests/test_reil_c4e1_launch.py:711: in test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git
+    assert _launch(t, step="fetch", data=t.tmp / "fresh") == 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_reil_c4e1_launch.py:188: in _launch
+    return L.launch(step, t.ev, "§99", **opts)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:255: in launch
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l26_preparation_failures_are_recorded_as_phase_prepare_and_never_start_the_child _
+tests/test_reil_c4e1_launch.py:726: in test_l26_preparation_failures_are_recorded_as_phase_prepare_and_never_start_the_child
+    assert _launch(t) == 1
+           ^^^^^^^^^^
+tests/test_reil_c4e1_launch.py:188: in _launch
+    return L.launch(step, t.ev, "§99", **opts)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:255: in launch
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+_ test_l27_decode_failures_in_proc_reads_and_git_output_are_recorded_not_escaped _
+tests/test_reil_c4e1_launch.py:782: in test_l27_decode_failures_in_proc_reads_and_git_output_are_recorded_not_escaped
+    o = L.proc_members(777, proc=proc, read=reader)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e1_launch.py:231: in proc_members
+    raise NotImplementedError("E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안")
+E   NotImplementedError: E1-0 RED 골격 — 고정 구현은 승인 요청 v5 §3 의 launcher 초안
+=========================== short test summary info ============================
+FAILED tests/test_reil_c4e1_launch.py::test_l1_precheck_passes_only_with_fixed_list_exact_bytes_seal_binding_clean_interpreter_and_approved_specs
+FAILED tests/test_reil_c4e1_launch.py::test_l2_list_sha_schema_path_set_entry_format_and_non_json_each_block
+FAILED tests/test_reil_c4e1_launch.py::test_l3_changed_same_size_missing_symlinked_module_or_linked_parent_each_block
+FAILED tests/test_reil_c4e1_launch.py::test_l4_a_shadowing_scripts_package_module_zip_entry_or_our_init_blocks
+FAILED tests/test_reil_c4e1_launch.py::test_l5_interpreter_flags_fixed_argv_head_and_run_script_path_are_checked
+FAILED tests/test_reil_c4e1_launch.py::test_l6_stage_verdict_is_the_and_of_precheck_child_rc_timeout_and_postcheck
+FAILED tests/test_reil_c4e1_launch.py::test_l7_child_result_reads_the_last_stdout_line_and_needs_final_complete_for_run
+FAILED tests/test_reil_c4e1_launch.py::test_l8_identity_link_binds_the_run_import_paths_to_the_checked_paths
+FAILED tests/test_reil_c4e1_launch.py::test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false
+FAILED tests/test_reil_c4e1_launch.py::test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds
+FAILED tests/test_reil_c4e1_launch.py::test_l11_timeout_kills_the_whole_process_group_including_grandchildren
+FAILED tests/test_reil_c4e1_launch.py::test_l12_refuses_to_overwrite_records_or_reuse_a_pycache_folder
+FAILED tests/test_reil_c4e1_launch.py::test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder
+FAILED tests/test_reil_c4e1_launch.py::test_l14_independence_fixed_commands_constants_and_main_rules
+FAILED tests/test_reil_c4e1_launch.py::test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it
+FAILED tests/test_reil_c4e1_launch.py::test_l16_a_leaf_extension_module_beside_an_approved_module_blocks
+FAILED tests/test_reil_c4e1_launch.py::test_l17_extra_executed_files_and_the_seal_lock_binding_each_block
+FAILED tests/test_reil_c4e1_launch.py::test_l18_process_observation_errors_stay_unknown_and_only_vanished_pids_are_gone
+FAILED tests/test_reil_c4e1_launch.py::test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited
+FAILED tests/test_reil_c4e1_launch.py::test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state
+FAILED tests/test_reil_c4e1_launch.py::test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output
+FAILED tests/test_reil_c4e1_launch.py::test_l22_child_env_keeps_only_the_ca_among_git_variables_and_removes_secrets
+FAILED tests/test_reil_c4e1_launch.py::test_l23_fetch_precheck_refuses_url_rewrite_proxy_and_tls_off_settings
+FAILED tests/test_reil_c4e1_launch.py::test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source
+FAILED tests/test_reil_c4e1_launch.py::test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git
+FAILED tests/test_reil_c4e1_launch.py::test_l26_preparation_failures_are_recorded_as_phase_prepare_and_never_start_the_child
+FAILED tests/test_reil_c4e1_launch.py::test_l27_decode_failures_in_proc_reads_and_git_output_are_recorded_not_escaped
+27 failed in 1.09s
