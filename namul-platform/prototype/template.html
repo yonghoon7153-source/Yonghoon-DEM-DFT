@@ -296,7 +296,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   <aside class="guide" aria-label="시연 안내">
     <div class="eyebrow">NAMULLO · 시연용 웹앱</div>
     <h1>나물로 앱 프로토타입</h1>
-    <p>나물을 알고, 고르고, 가까운 전통시장 가게에서 바로 사는 흐름을 직접 눌러 볼 수 있습니다. AI 셰프와 AI 상인 비서는 이 페이지에서 Claude가 실제로 답합니다.</p>
+    <p>나물을 알고, 고르고, 가까운 전통시장 가게에서 바로 사는 흐름을 직접 눌러 볼 수 있습니다. AI 셰프와 AI 상인 비서는 AI가 연결된 환경에서는 실제 응답을, 그 밖에는 예시 응답을 보여 줍니다.</p>
     <div class="ai-status" id="aiStatus"><span class="dot" id="aiDot"></span><span id="aiText"><b>AI 연결 확인 중</b><br>잠시 후 AI 기능이 켜지거나, 예시 응답으로 시연합니다.</span></div>
     <div class="sub-h">소비자 시연 순서</div>
     <ol class="steps" id="stepList">
@@ -742,7 +742,7 @@ function rDone(){
   $("#dCodeLabel").textContent = dlv ? "주문 번호" : "픽업 번호"; $("#dCodeNote").textContent = dlv ? "배차되면 도착 예정 시간을 알려 드려요 (시연)" : "가게에서 번호만 말하면 돼요";
   $("#routeBtn").textContent = dlv ? "배달 조회" : "가는 길";
   $("#qr").innerHTML = qr("N-2381" + o.time);
-  $("#dImpact").innerHTML = `<b>우리 동네 시장에 ${won(o.goods)} 보탰어요</b><span>이 주문의 상품·손질 금액은 ${esc(o.place)} ${esc(o.storeName)}에 돌아가요 · 전통시장 첫 6개월 수수료 0% (시연)</span>`;
+  $("#dImpact").innerHTML = `<b>${esc(o.place)} ${esc(o.storeName)}에서 ${won(o.goods)}어치 주문했어요</b><span>이 금액은 그 가게의 매출이 돼요 · 상품·손질 금액, 배달비 제외 · 시연용 예시 주문</span>`;
   $("#dInfo").innerHTML = `<div><span class="muted">상품</span><span>${n.name} ${o.unit} · ${OPT_NAME[o.opt]} × ${o.qty}</span></div>${dlv ? `<div><span class="muted">배달비</span><span>${won(o.fee)}</span></div>` : ""}<div><span class="muted">결제 금액</span><span>${won(o.total)}</span></div><div><span class="muted">가게</span><span>${o.place} ${o.storeName} · ${o.walk}</span></div>`;
 }
 $("#routeBtn").addEventListener("click", () => toast(curOrder().recv === "deliver" ? "배달 현황 조회는 출시 버전에서 제공해요" : "시연용 화면이에요. 지도 앱으로 이어져요"));
