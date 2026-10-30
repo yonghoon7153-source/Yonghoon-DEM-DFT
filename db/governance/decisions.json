@@ -10366,6 +10366,70 @@
     "근거_발화": "AskUserQuestion 답 (2026-10-30 KST · 이 세션): '탄성 지금 풀기 · Li₂S 는 12_p 뒤 (권고)' · 이어서 '이번에는 확실하게 해'.",
     "decision_digest": "sha256:6bc2fba6b2e1d0c7421dc8c30363f937a227ed202d22dc08a50ecfbef782b891"
    }
+  },
+  {
+   "id": "D-2026-10-30-li2s-first-author-confirmation-waived",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "governance.li2s.first_author_confirmation",
+   "slot": "li2s_track_external_first_author_confirmation",
+   "applies_to": {
+    "systems": [
+     "lpscl",
+     "li2s",
+     "lpscl_smallcell_glass",
+     "li3ps4_glass"
+    ],
+    "tasks": [
+     "governance"
+    ],
+    "methods": [],
+    "use_cases": [
+     "internal",
+     "review_prompt",
+     "manuscript"
+    ]
+   },
+   "title": "li2s 트랙 (LPSCl@Li₂S) — 외부 1저자 확인 없이 진행한다 (사용자 위임 10-30)",
+   "statement": "li2s 트랙 (볼밀 LPSCl@Li₂S 계면상 · 소셀 유리 · 대조 계 · 모델 검증) 의 결정 · 카드 개정 · 판정 · 마감은 외부 1저자의 회신 · 동의를 기다리지 않는다. 에이전트가 정해서 진행하고, 원장에는 '사용자 (위임 10-30)' 로 적으며 '잠정 · 외부 1저자 동의 대기' 꼬리표를 새로 달지 않는다. 편지는 확인 경로가 아니다 — 보낼지는 사용자 몫이다. 바뀌지 않는 것: 논문 1저자 표기 (외부) · 이미 봉인된 기록 (외부 1저자가 확정한 판정 · 마감 파일 · 회신 원문) · 값 규율 (절대 수송값 비인용 · 상대차 정책 · 결과 전 규칙 · 재개 조건) · 정한 것은 사용자에게 보고한다. 외부 1저자 동의를 기다리던 proposed 결정 (D-2026-09-11-lpscl-li2s-interphase · D-2026-10-19-lpscl-smallcell-glass-model-check) 은 이 위임 아래 다시 읽고 비준 · 대체 · 철회를 정한다 (자동 비준 아님).",
+   "rationale": "2026-09-22 부터 li2s 는 '외부 1저자 회신 필요 · 사용자의 진행해 = 실행 승인 · 동의 아님 → 잠정' 규칙 아래 있었다. 그래서 편지 DA (10-19 초안 · 10-23 모델 검증 §6 · 질문 Q-DA-1~6) 가 발송 전 상태로 서 있었고 결정 둘이 proposed 로 남았다. 사용자가 확인 경로를 없앴다.",
+   "decision_state": "active",
+   "record_kind": "policy",
+   "results_seen": false,
+   "results_seen_note": "거버넌스 결정 — 계산 결과와 무관",
+   "card": "CLAUDE.md §소통 (1저자 줄 · li2s)",
+   "record": "kb/open_items.md ⏭-NOW-z28",
+   "depends_on": [],
+   "supersedes": [],
+   "evidence": [
+    "사용자 발화 2026-10-30 (이 세션): 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼'",
+    "CLAUDE.md §소통 1저자 줄 li2s 항목 (2026-09-22) — 이 결정으로 고침"
+   ],
+   "reopen_criteria": [
+    "사용자가 위임을 거두면",
+    "외부 1저자가 확인 절차를 다시 요구하고 사용자가 받아들이면"
+   ],
+   "enforcement": "CLAUDE.md §소통 1저자 줄 (li2s ⏩ 2026-10-30) · 이 트랙 결정의 status_history 'by' = '사용자 (위임 10-30)' + 이 결정 ID",
+   "proposed_by": "claude-session-2026-10-30 (friendly)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-30",
+     "state": "active",
+     "by": "사용자",
+     "note": "사용자 발화 그대로 — 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼' (용훈 포메이션 요청 중 · 이 세션)"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-30T01:49:34Z",
+    "commit": "94972d863440071cad831441e8b98b236a932085",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-10-30 (이 세션): 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼'",
+    "decision_digest": "sha256:b7d5b68d367e427c2f4a34c2a148f0d3a200ec6a1546830458de756cd00bbe9f"
+   }
   }
  ]
 }
