@@ -23,7 +23,7 @@
   "cascade_기록": "겹친 시간은 발사 시각 · 끝 시각을 cascade_v7_main_runlog 에 적는다 (사용자 붙여넣기 뒤)",
   "후처리": "SCF 끝난 뒤 다음 블록 — pp.x plot_num 17 → bader → bader_summary_zval.py (원래 역할 입력) · pp.x plot_num 8 → sample_elf_bonds.py"
  },
- "⏭": "kgy: tmux ndbader (run_bader_pp_kgy.sh · W=~/wt_ndbader_1030) → '■ 끝' → 회수 · ELF 는 MnP2O6 뒤 자동",
+ "⏭": "kgy 읽기만 진단 (두 모델 scf.out 의 E_F · Fermi 아래 최고 · 위 최저 고유값 · SCF negative rho) → 금속이면 카드 §3 전제 (절연체 · Q3 와 같은 설정) 가 MP_07 에서 깨진 것 → 사용자 결정 (smearing 바꾼 재계산 · MP_07 Bader 닫기) · ELF 는 MnP2O6 뒤 자동",
  "실행_10_30_시작_조건": {
   "사용자": "'지금 돌리자' (10-30 · 용훈 포메이션의 'Nd@P Q3′ — 🔔 비준 · 언제 돌릴지' 줄에)",
   "왜_바로_못_올리나": "kgy 3090 (24,576 MiB) 에 CEI 띠틈 MnP2O6 vc-relax 가 13.8 GB (10-29 관측 · 힘·응력 구간) · 같은 셀 MLi_04 PAW pw.x 는 kgy 에서 ≈ 10.0 GB (EOS 때 합계 13,094 − cascade 만 3,079 MiB) → 합 ≈ 23.8 GB 로 한계. 점 러너의 MIN_FREE_MIB (16,000) 는 시작 순간만 본다 — 지금 띄우면 물러나고 (여유 ≈ 10.7 GB), 낮은 순간에 들어가면 MnP2O6 이 다시 커질 때 그쪽이 죽는다. CEI 쪽 대기 문턱은 8,000 이라 MnP2O6 의 다음 단계를 못 지킨다.",
@@ -61,6 +61,14 @@
  "Bader_후처리_점검_2026_10_30_1554": {
   "DRY_RUN": "HEAD 02716a6e · MLi_04 · MP_07 입력 = 저장소 · SCF 수렴 · save ✓ → ⛔ bader 없음 (kgy)",
   "bader_실행파일": "gabia /data/apps/bader/bader (9 월 Q3 와 같은 파일) → kgy /home/kgy/bin/bader (scp -p · md5 4af185669044972b97b4f5aa69588509) — kgy 에서 gabia root 로 바로 scp 가 됐다 (비밀번호 안 물음 · WSL 중계 불필요) · 같은 파일이 /home/kgy/bader 에도 남음",
+  "by": "agent · 2026-10-30"
+ },
+ "Bader_회수_2026_10_30": {
+  "후처리": "kgy 15:55:45 → 16:48:56 · 끝 코드 0 · 회수 5f6d35f3 (db/raw/nd_q3p_bader_2026_10_30/ · 26 파일 · 모델별 SHA256SUMS 대조 ✓ · cube 는 kgy 에)",
+  "전자수_합": "MP_07 317.995 (가전자 합 318) · MLi_04 297.980 (298) — 적분은 맞다",
+  "⛔_MP_07_밀도_이상_사후_발견": "pp.x plot_num 17 의 AE 가전자 밀도에 음의 밀도 적분 0.1885 e (MLi_04 0.00064 e) · Bader 극대 7,580 개 = 원자당 115 (MLi_04 692 = 12 · Q3 120 원자 940 = 7.8) → 밀도가 시끄러워 Bader 분할을 믿을 수 없다. 증상: 원소 평균이 기준 (LPSCl1.6 AE Bader Li +0.883 · P +4.340 · S −1.736 · Cl −0.918) 에서 전부 크게 벗어남 — Li +0.560 · P +2.924 (PS₄ 의 P 하나 +1.67) · S −1.017 · Cl −0.619 · Li basin 부피 12.95 대 MLi_04 6.87 Å³. 구조 자체는 정상 (P 셋 모두 4 배위 · S–S 결합 없음 · 최단 Li–O 1.861 · Cl–Li 2.243 Å). MLi_04 는 정상 범위 (Li +0.840 · P +4.181 · S −1.572 · Cl −0.853).",
+  "결과_전_게이트_없음": "카드에 밀도 품질 게이트 (음의 밀도 · 극대 수) 가 없었다 — 이 판단은 결과를 본 뒤의 품질 검사다. 그래서 MP_07 값을 버리지도 쓰지도 않고 판독을 보류한다 (C1–C4 를 내지 않는다).",
+  "가설": "MP_07 이 이 설정 (PAW psl · mv 0.01 · Q1 SSSP/GBRV 이완 기하) 에서 금속으로 나왔으면 mv smearing 의 음의 점유가 음의 밀도를 만들고, 전도띠 전자가 Li 쪽 basin 으로 가 전하가 전반적으로 덜 이온적으로 보인다 — 확인 = kgy scf.out 의 Fermi 준위 대 띠 끝 (읽기만)",
   "by": "agent · 2026-10-30"
  }
 }
