@@ -1,0 +1,290 @@
+{
+  "kind": "REVIEW_PACKAGE_MANIFEST",
+  "payload_count": 47,
+  "files": [
+    {
+      "path": "basis/attachments/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "bytes": 51720,
+      "sha256": "112f033bce27cf4e8d9e942643e563a0997af9c20e9eb60f68e5fe86416cfb74",
+      "crc32": "23c6faf6"
+    },
+    {
+      "path": "basis/attachments/REIL_C4E_E1_0B_PREREVIEW_SEND_20261030.md",
+      "bytes": 11018,
+      "sha256": "5c002f06792fcab3abb28688eb203fe9b9d590f9ac342a56921ff402b3b80f1b",
+      "crc32": "dca174cd"
+    },
+    {
+      "path": "basis/prior_review/CODEX_REPLY_KO.txt",
+      "bytes": 2448,
+      "sha256": "0887056c906a6a8f4d45f7c0f95eac388e3a678e40d159b8704b4c46a2724f0c",
+      "crc32": "58c93267"
+    },
+    {
+      "path": "basis/prior_review/PROPOSED_RED_CRITERIA_KO.txt",
+      "bytes": 1915,
+      "sha256": "1d4460e934a663da8d926417db18aa87c5ad76ee82c992c2d327a984912754d5",
+      "crc32": "8fb7f338"
+    },
+    {
+      "path": "basis/prior_review/REVIEW_DECISION.json",
+      "bytes": 3385,
+      "sha256": "986eb6033ff290b7976fd4357a6c4ff6cb6c3132244136cd74780ce3899235a2",
+      "crc32": "0cab4cbf"
+    },
+    {
+      "path": "basis/unchanged_at_pin/bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "bytes": 12849,
+      "sha256": "aae2ec14c4d652ef9a9e5b1c45bf52896d2234dce16eac77942911e596669fed",
+      "crc32": "a7791874"
+    },
+    {
+      "path": "basis/unchanged_at_pin/bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "bytes": 1100,
+      "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52",
+      "crc32": "563da1de"
+    },
+    {
+      "path": "basis/unchanged_at_pin/bms-balancing/evidence/reil_c4e1_0_20261030/00_step_runner.py",
+      "bytes": 36189,
+      "sha256": "f6070f9776baa7dfc9b5e26ac5e6f378dd2969e7628566e5baa3c02685814a2a",
+      "crc32": "737f3df2"
+    },
+    {
+      "path": "basis/unchanged_at_pin/bms-balancing/scripts/reil_c4_e3a.py",
+      "bytes": 32311,
+      "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3",
+      "crc32": "1400a925"
+    },
+    {
+      "path": "basis/unchanged_at_pin/bms-balancing/scripts/reil_c4_monitor.py",
+      "bytes": 21546,
+      "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b",
+      "crc32": "21e85744"
+    },
+    {
+      "path": "basis/unchanged_at_pin/bms-balancing/scripts/reil_c4e1_launch.py",
+      "bytes": 51957,
+      "sha256": "2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396",
+      "crc32": "78a2412d"
+    },
+    {
+      "path": "basis/unchanged_at_pin/bms-balancing/scripts/reil_c4e_run.py",
+      "bytes": 53853,
+      "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9",
+      "crc32": "d212bef0"
+    },
+    {
+      "path": "basis/unchanged_at_pin/bms-balancing/scripts/reil_c5_pilot.py",
+      "bytes": 47164,
+      "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6",
+      "crc32": "54202b1e"
+    },
+    {
+      "path": "basis/unchanged_at_pin/bms-balancing/scripts/reil_c6_profile.py",
+      "bytes": 15915,
+      "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d",
+      "crc32": "31536216"
+    },
+    {
+      "path": "basis/unchanged_at_pin/bms-balancing/scripts/reil_p0.py",
+      "bytes": 23941,
+      "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a",
+      "crc32": "4456a8b7"
+    },
+    {
+      "path": "basis/unchanged_at_pin/bms-balancing/tests/test_reil_c4e.py",
+      "bytes": 57482,
+      "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e",
+      "crc32": "6e32e32e"
+    },
+    {
+      "path": "basis/unchanged_at_pin/bms-balancing/tests/test_reil_c4e1_launch.py",
+      "bytes": 51121,
+      "sha256": "4720585c86f555bb0f9cfea3e12aab5b283f8ee4243a3ef257f77849759b777d",
+      "crc32": "fa2bc0d4"
+    },
+    {
+      "path": "basis/unchanged_at_pin/bms-balancing/tests/test_reil_c4e1_runner.py",
+      "bytes": 36478,
+      "sha256": "ae42d8e8c0fb0c680d324348d2e1edc8f11865bd6bedea7cb0becf9b00fe6042",
+      "crc32": "ee6d009f"
+    },
+    {
+      "path": "basis/unchanged_at_pin/bms-balancing/tests/test_reil_c4e_fix.py",
+      "bytes": 19506,
+      "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2",
+      "crc32": "deaeb2d4"
+    },
+    {
+      "path": "basis/unchanged_at_pin/degradation-degeneracy/tools/env_profile.py",
+      "bytes": 22333,
+      "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563",
+      "crc32": "ceb95e68"
+    },
+    {
+      "path": "BRANCH_AT_CLOSE.json",
+      "bytes": 954,
+      "sha256": "cc9e42bc2f6ee1b9d6d8fbc7043b681186db717ec744cec6c6e5e1cccda9a845",
+      "crc32": "052c50e5"
+    },
+    {
+      "path": "capture_base64.json",
+      "bytes": 799393,
+      "sha256": "debf54129d4915df610d3cbb78ef70e712dae24f1ad564cc0dca4e5ddb337a69",
+      "crc32": "502f5b3e"
+    },
+    {
+      "path": "capture_decode.py",
+      "bytes": 972,
+      "sha256": "16a1c5723f2706a7b4a68d2c14fc451196ada7521a674073c1b6e7b13185341e",
+      "crc32": "bfe31bfd"
+    },
+    {
+      "path": "CAPTURE_METADATA.json",
+      "bytes": 5036,
+      "sha256": "831c7d00e6b8514f581d974b302b29907bb9e4457d5b60c287e0d1a059bc4395",
+      "crc32": "2671ad13"
+    },
+    {
+      "path": "CODEX_REPLY_KO.txt",
+      "bytes": 2870,
+      "sha256": "b9446bcf229181c20159d496484c97a91a82dd0f1fc12a8f3bdd0fadec097861",
+      "crc32": "f82b564f"
+    },
+    {
+      "path": "COMPARE_FROM_E1_0.json",
+      "bytes": 26347,
+      "sha256": "1eb5cdec65227562cf55853abc90ce96533c8c62da83b1f67800729543462875",
+      "crc32": "1c1266d8"
+    },
+    {
+      "path": "DELIVERY_INDEX.txt",
+      "bytes": 1692,
+      "sha256": "da45235c0d52c05494b7de5caae117e240511606d9c6501eac66711ec97e6ce0",
+      "crc32": "7bdb2ca4"
+    },
+    {
+      "path": "package_review.py",
+      "bytes": 4673,
+      "sha256": "d4ee2315fd66955f3fcfaff71b1e9020de25fcad18e9c0d27e15b32346eb4ce9",
+      "crc32": "65899049"
+    },
+    {
+      "path": "Q4_STATIC_REVIEW.json",
+      "bytes": 4164,
+      "sha256": "75587f192a76b1ed67649ec5e068f8fbe05560c6ec2c66c365eb64d7ed5632ca",
+      "crc32": "13c81b12"
+    },
+    {
+      "path": "RED_CAUSE_BINDING_PROPOSAL_KO.txt",
+      "bytes": 3261,
+      "sha256": "4e47d5bdb22349688920aa9423c5fa504dba066924e8448ab2db8cfdf5ac60e8",
+      "crc32": "18a79189"
+    },
+    {
+      "path": "REVIEW_DECISION.json",
+      "bytes": 2459,
+      "sha256": "125c6e0c1f739152047caac6ebef9d61496c8cd384b0616b06722488b0e3beeb",
+      "crc32": "8b502e51"
+    },
+    {
+      "path": "REVIEW_KO.txt",
+      "bytes": 11614,
+      "sha256": "4ec45650769f9b4e88f6ce982dfedf8260a080a0ffbd07349bca578209a81240",
+      "crc32": "4f8c28db"
+    },
+    {
+      "path": "REVIEWER_DATA_OPERATIONS.json",
+      "bytes": 1043,
+      "sha256": "22508164a21fa2d4af6d4aace55aacac73e0d0f5efd278f408a28f44bea82e38",
+      "crc32": "2364a174"
+    },
+    {
+      "path": "SELECTED_INPUTS_POST_REVIEW.json",
+      "bytes": 10969,
+      "sha256": "eed2a02161d00af2a26781a4c65151b6d8182ca2ff6d184b04693edbcba5e45e",
+      "crc32": "8e605a92"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E1_0B_END_WRITER_DRAFT_20261030.py.txt",
+      "bytes": 3697,
+      "sha256": "2e44f2e570b88ebd5bb88ee89b4e125d7774156a890bf01a429095aeb6fd5e44",
+      "crc32": "ec95e688"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v6_20261030.py.txt",
+      "bytes": 68212,
+      "sha256": "0482305198aa1a32b1c1753a3d8fe71a5fd7ff5926053e49607bf680d8701634",
+      "crc32": "1ba5af42"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt",
+      "bytes": 62639,
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf",
+      "crc32": "02ccef8f"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v4_20261030.py.txt",
+      "bytes": 36600,
+      "sha256": "d9880f28092e064017fd5d35f13b0f41b359ba301fca88fa5e3bc72e26d2bddd",
+      "crc32": "b23a54a3"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v6_20261030.py.txt",
+      "bytes": 36518,
+      "sha256": "3f5bdfc010cf9b84e2bc0352138b335164c3511c6c84a63eab01cef565a09cb6",
+      "crc32": "eb10d7a5"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "bytes": 51720,
+      "sha256": "112f033bce27cf4e8d9e942643e563a0997af9c20e9eb60f68e5fe86416cfb74",
+      "crc32": "23c6faf6"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_E1_1_3_SCOPE_20261030.md",
+      "bytes": 13491,
+      "sha256": "9b94a31f12637797dbeee662a0b438e111414c706e150e23c4f5814ac0c69500",
+      "crc32": "39b80b46"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_PREREVIEW_SEND_20261030.md",
+      "bytes": 11018,
+      "sha256": "5c002f06792fcab3abb28688eb203fe9b9d590f9ac342a56921ff402b3b80f1b",
+      "crc32": "dca174cd"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "bytes": 313515,
+      "sha256": "f3bdddef109541cdcfa9a2f281d7c7021f47c28c0e2d97748d81cbf0eb92020f",
+      "crc32": "122a497b"
+    },
+    {
+      "path": "SOURCE_IDENTITIES.json",
+      "bytes": 3929,
+      "sha256": "3ecfa25b509855caafe477d3a3bb1d22e84f65204ee0a5ea0544b2460d24c208",
+      "crc32": "19c6131f"
+    },
+    {
+      "path": "STATIC_AUDIT.json",
+      "bytes": 16906,
+      "sha256": "dfdfa61d1602545891fb3c2b574dcd706256e223d8447dcfed3906c1154f5f20",
+      "crc32": "fb447313"
+    },
+    {
+      "path": "STATIC_AUDIT_FIRST_PASS.json",
+      "bytes": 16906,
+      "sha256": "e1f0735e379d46d9387d32e5802bb2499a46ae9b588698dea3d142c063bf01f1",
+      "crc32": "abfb8813"
+    },
+    {
+      "path": "static_review_data.py",
+      "bytes": 6549,
+      "sha256": "d57c973b97fd5802f57c20be5d016ddcf1a7e2eb004fcbdda1466b059b1d5d1b",
+      "crc32": "660eb49e"
+    }
+  ],
+  "target_execution": 0,
+  "decision": "E1_0B_PREREVIEW_CHANGES_REQUIRED_BEFORE_APPROVAL"
+}

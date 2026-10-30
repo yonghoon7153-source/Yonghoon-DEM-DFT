@@ -1,0 +1,419 @@
+{
+  "kind": "E1_0B_REVIEWER_STATIC_DATA_AUDIT",
+  "pinned_commit": "90a842a9df9eb676c20ce1b9d4babf0cf0c5d637",
+  "attachments": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "same_bytes_at_pinned_commit": true,
+      "bytes": 51720,
+      "sha256": "112f033bce27cf4e8d9e942643e563a0997af9c20e9eb60f68e5fe86416cfb74"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_0B_PREREVIEW_SEND_20261030.md",
+      "same_bytes_at_pinned_commit": true,
+      "bytes": 11018,
+      "sha256": "5c002f06792fcab3abb28688eb203fe9b9d590f9ac342a56921ff402b3b80f1b"
+    }
+  ],
+  "draft_AST_parse_count": 5,
+  "drafts": [
+    {
+      "file": "REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt",
+      "bytes": 62639,
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+    },
+    {
+      "file": "REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v6_20261030.py.txt",
+      "bytes": 68212,
+      "sha256": "0482305198aa1a32b1c1753a3d8fe71a5fd7ff5926053e49607bf680d8701634"
+    },
+    {
+      "file": "REIL_C4E1_RUNNER_CONTROLS_DRAFT_v4_20261030.py.txt",
+      "bytes": 36600,
+      "sha256": "d9880f28092e064017fd5d35f13b0f41b359ba301fca88fa5e3bc72e26d2bddd"
+    },
+    {
+      "file": "REIL_C4E1_STEP_RUNNER_DRAFT_v6_20261030.py.txt",
+      "bytes": 36518,
+      "sha256": "3f5bdfc010cf9b84e2bc0352138b335164c3511c6c84a63eab01cef565a09cb6"
+    },
+    {
+      "file": "REIL_C4E1_0B_END_WRITER_DRAFT_20261030.py.txt",
+      "bytes": 3697,
+      "sha256": "2e44f2e570b88ebd5bb88ee89b4e125d7774156a890bf01a429095aeb6fd5e44"
+    }
+  ],
+  "fixed_seal_rows": [
+    {
+      "path": "bms-balancing/scripts/reil_c4e1_launch.py",
+      "expected": {
+        "bytes": 51957,
+        "sha256": "2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396"
+      },
+      "match": true,
+      "source": "reil_c4e1_0_result_review_20261030/source/bms-balancing/scripts/reil_c4e1_launch.py"
+    },
+    {
+      "path": "bms-balancing/tests/test_reil_c4e1_launch.py",
+      "expected": {
+        "bytes": 68212,
+        "sha256": "0482305198aa1a32b1c1753a3d8fe71a5fd7ff5926053e49607bf680d8701634"
+      },
+      "match": true,
+      "source": "reil_c4e_e1_0b_prereview_20261030/source/bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v6_20261030.py.txt"
+    },
+    {
+      "path": "bms-balancing/tests/test_reil_c4e1_runner.py",
+      "expected": {
+        "bytes": 36600,
+        "sha256": "d9880f28092e064017fd5d35f13b0f41b359ba301fca88fa5e3bc72e26d2bddd"
+      },
+      "match": true,
+      "source": "reil_c4e_e1_0b_prereview_20261030/source/bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v4_20261030.py.txt"
+    },
+    {
+      "path": "bms-balancing/tests/test_reil_c4e.py",
+      "expected": {
+        "bytes": 57482,
+        "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e"
+      },
+      "match": true,
+      "source": "reil_c4e1_0_result_review_20261030/source/bms-balancing/tests/test_reil_c4e.py"
+    },
+    {
+      "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+      "expected": {
+        "bytes": 19506,
+        "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2"
+      },
+      "match": true,
+      "source": "reil_c4e1_0_result_review_20261030/source/bms-balancing/tests/test_reil_c4e_fix.py"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4e_run.py",
+      "expected": {
+        "bytes": 53853,
+        "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+      },
+      "match": true,
+      "source": "reil_c4e1_0_result_review_20261030/source/bms-balancing/scripts/reil_c4e_run.py"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4_e3a.py",
+      "expected": {
+        "bytes": 32311,
+        "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+      },
+      "match": true,
+      "source": "reil_c4e1_0_result_review_20261030/source/bms-balancing/scripts/reil_c4_e3a.py"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4_monitor.py",
+      "expected": {
+        "bytes": 21546,
+        "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+      },
+      "match": true,
+      "source": "reil_c4e1_0_result_review_20261030/source/bms-balancing/scripts/reil_c4_monitor.py"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c5_pilot.py",
+      "expected": {
+        "bytes": 47164,
+        "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+      },
+      "match": true,
+      "source": "reil_c4e1_0_result_review_20261030/source/bms-balancing/scripts/reil_c5_pilot.py"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_p0.py",
+      "expected": {
+        "bytes": 23941,
+        "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+      },
+      "match": true,
+      "source": "reil_c4e1_0_result_review_20261030/source/bms-balancing/scripts/reil_p0.py"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c6_profile.py",
+      "expected": {
+        "bytes": 15915,
+        "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"
+      },
+      "match": true,
+      "source": "reil_c4e1_0_result_review_20261030/source/bms-balancing/scripts/reil_c6_profile.py"
+    },
+    {
+      "path": "degradation-degeneracy/tools/env_profile.py",
+      "expected": {
+        "bytes": 22333,
+        "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"
+      },
+      "match": true,
+      "source": "reil_c4e1_0_result_review_20261030/source/degradation-degeneracy/tools/env_profile.py"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "expected": {
+        "bytes": 1100,
+        "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52"
+      },
+      "match": true,
+      "source": "reil_c4e1_0_result_review_20261030/source/bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "expected": {
+        "bytes": 12849,
+        "sha256": "aae2ec14c4d652ef9a9e5b1c45bf52896d2234dce16eac77942911e596669fed"
+      },
+      "match": true,
+      "source": "reil_c4e1_0_result_review_20261030/source/bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4e1_launch.py",
+      "phase": "GREEN",
+      "expected": {
+        "bytes": 62639,
+        "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+      },
+      "match": true,
+      "source": "REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt"
+    }
+  ],
+  "fixed_seal_match_count": 15,
+  "local_current_counterparts": [
+    {
+      "path": "bms-balancing/scripts/reil_c4e1_launch.py",
+      "captured": "basis/unchanged_at_pin/bms-balancing/scripts/reil_c4e1_launch.py",
+      "bytes": 51957,
+      "sha256": "2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    },
+    {
+      "path": "bms-balancing/tests/test_reil_c4e.py",
+      "captured": "basis/unchanged_at_pin/bms-balancing/tests/test_reil_c4e.py",
+      "bytes": 57482,
+      "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    },
+    {
+      "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+      "captured": "basis/unchanged_at_pin/bms-balancing/tests/test_reil_c4e_fix.py",
+      "bytes": 19506,
+      "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4e_run.py",
+      "captured": "basis/unchanged_at_pin/bms-balancing/scripts/reil_c4e_run.py",
+      "bytes": 53853,
+      "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4_e3a.py",
+      "captured": "basis/unchanged_at_pin/bms-balancing/scripts/reil_c4_e3a.py",
+      "bytes": 32311,
+      "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4_monitor.py",
+      "captured": "basis/unchanged_at_pin/bms-balancing/scripts/reil_c4_monitor.py",
+      "bytes": 21546,
+      "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c5_pilot.py",
+      "captured": "basis/unchanged_at_pin/bms-balancing/scripts/reil_c5_pilot.py",
+      "bytes": 47164,
+      "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    },
+    {
+      "path": "bms-balancing/scripts/reil_p0.py",
+      "captured": "basis/unchanged_at_pin/bms-balancing/scripts/reil_p0.py",
+      "bytes": 23941,
+      "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c6_profile.py",
+      "captured": "basis/unchanged_at_pin/bms-balancing/scripts/reil_c6_profile.py",
+      "bytes": 15915,
+      "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    },
+    {
+      "path": "degradation-degeneracy/tools/env_profile.py",
+      "captured": "basis/unchanged_at_pin/degradation-degeneracy/tools/env_profile.py",
+      "bytes": 22333,
+      "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "captured": "basis/unchanged_at_pin/bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "bytes": 1100,
+      "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "captured": "basis/unchanged_at_pin/bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "bytes": 12849,
+      "sha256": "aae2ec14c4d652ef9a9e5b1c45bf52896d2234dce16eac77942911e596669fed",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    },
+    {
+      "path": "bms-balancing/tests/test_reil_c4e1_launch.py",
+      "captured": "basis/unchanged_at_pin/bms-balancing/tests/test_reil_c4e1_launch.py",
+      "bytes": 51121,
+      "sha256": "4720585c86f555bb0f9cfea3e12aab5b283f8ee4243a3ef257f77849759b777d",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    },
+    {
+      "path": "bms-balancing/tests/test_reil_c4e1_runner.py",
+      "captured": "basis/unchanged_at_pin/bms-balancing/tests/test_reil_c4e1_runner.py",
+      "bytes": 36478,
+      "sha256": "ae42d8e8c0fb0c680d324348d2e1edc8f11865bd6bedea7cb0becf9b00fe6042",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4e1_0_20261030/00_step_runner.py",
+      "captured": "basis/unchanged_at_pin/bms-balancing/evidence/reil_c4e1_0_20261030/00_step_runner.py",
+      "bytes": 36189,
+      "sha256": "f6070f9776baa7dfc9b5e26ac5e6f378dd2969e7628566e5baa3c02685814a2a",
+      "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+      "current_unchanged_by_complete_compare": true
+    }
+  ],
+  "unchanged_scope": "Git comparison of immutable commits + previously captured exact bytes; no remote working-tree observation",
+  "top_level_AST_comparison": {
+    "REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt": {
+      "same_including_main_if": 89,
+      "same_excluding_if": 88,
+      "changed": [
+        "assign:REQUEST",
+        "fetch_source_precheck",
+        "docstring",
+        "fetch_source_postcheck",
+        "launch",
+        "run_child",
+        "group_status",
+        "postcheck",
+        "git_config_problems"
+      ],
+      "added": [
+        "assign:CLEANUP_S",
+        "assign:FETCH_GIT_CONFIG",
+        "assign:FETCH_LOCAL_KEYS",
+        "assign:POLL_S",
+        "cleanup_group",
+        "config_source_problems",
+        "fetch_env",
+        "git_config_entries"
+      ],
+      "removed": []
+    },
+    "REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v6_20261030.py.txt": {
+      "same_including_main_if": 62,
+      "same_excluding_if": 62,
+      "changed": [
+        "test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git",
+        "test_l14_independence_fixed_commands_constants_and_main_rules",
+        "assign:FAKE_RUN",
+        "docstring"
+      ],
+      "added": [
+        "_Clock",
+        "_P",
+        "_fake_group",
+        "assign:FETCH_GIT",
+        "assign:FETCH_NAMES",
+        "test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child",
+        "test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list",
+        "test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child",
+        "test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write",
+        "test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look",
+        "test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline",
+        "test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty"
+      ],
+      "removed": [
+        "test_l23_fetch_precheck_refuses_url_rewrite_proxy_and_tls_off_settings"
+      ]
+    },
+    "REIL_C4E1_STEP_RUNNER_DRAFT_v6_20261030.py.txt": {
+      "same_including_main_if": 53,
+      "same_excluding_if": 52,
+      "changed": [
+        "run_step",
+        "assign:_FIXED",
+        "assign:EVIDENCE_NAME",
+        "assign:WORK",
+        "docstring",
+        "assign:IMPL",
+        "assign:EXPECT"
+      ],
+      "added": [
+        "assign:RED_LAUNCH"
+      ],
+      "removed": [
+        "assign:SKELETON"
+      ]
+    },
+    "REIL_C4E1_RUNNER_CONTROLS_DRAFT_v4_20261030.py.txt": {
+      "same_including_main_if": 46,
+      "same_excluding_if": 46,
+      "changed": [
+        "_rtree",
+        "if:UNDER_TEST != V2 and (not V4.fullmatch(UNDER_TEST))",
+        "assign:V4",
+        "test_r5_source_table_hashes_the_fixed_targets_and_any_difference_from_the_sealed_table_is_a_problem",
+        "if:UNDER_TEST is None",
+        "docstring"
+      ],
+      "added": [],
+      "removed": []
+    }
+  },
+  "test_function_counts": {
+    "test_reil_c4e.py": 21,
+    "test_reil_c4e_fix.py": 6,
+    "source\\bms-balancing\\docs\\REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v6_20261030.py.txt": 33,
+    "source\\bms-balancing\\docs\\REIL_C4E1_RUNNER_CONTROLS_DRAFT_v4_20261030.py.txt": 11
+  },
+  "planned_GREEN_total": 71,
+  "writer_imports": [
+    "import datetime",
+    "import hashlib",
+    "import json",
+    "import re",
+    "import shutil",
+    "import sys",
+    "from pathlib import Path"
+  ],
+  "prior_status_prefix_preserved": true,
+  "start_sha_literal_count": 10,
+  "start_sha_written_description_count": 11,
+  "functional_tests": 0,
+  "received_code_execution": 0,
+  "target_imports": 0,
+  "Git_fixture_or_probe": 0
+}

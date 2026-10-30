@@ -1,0 +1,69 @@
+{
+  "kind": "REIL_C4E1_0_RESULT_REVIEW",
+  "date": "2026-10-30",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "branch": "claude/14-gate-code-review-9qkx05",
+  "reviewed_head": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+  "branch_head_at_close": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+  "decision": "E1_0_RESULTS_ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION",
+  "q1": {
+    "result_evidence_accepted": true,
+    "red_launcher_expected_failures": 27,
+    "red_runner_expected_failures": 11,
+    "green_passed": 65,
+    "green_breakdown": {
+      "E0": 21,
+      "N1": 6,
+      "launcher": 27,
+      "runner": 11
+    },
+    "evidence_files": 24,
+    "evidence_bytes": 117742,
+    "scope": "Recorded E1-0 results at these pinned bytes and environment; not all-process or native assurance"
+  },
+  "q2": {
+    "exception_evidence_sufficient": true,
+    "full_approved_procedure_compliance": false,
+    "retroactive_continuation_approval": false,
+    "finding_id": "E1_0_N1",
+    "finding": "Approved v5 required exception details on short-summary failure lines and stop on any mismatch. The author instead used corresponding failure sections and continued.",
+    "severity": "Procedural compliance / reporting qualification; does not invalidate the recorded test outcomes",
+    "required_reporting_qualification": "E1-0 작업 범위에서 실행했으며 v5 §4-3 RED 근거 위치를 대체하고 계속한 절차 차이가 있다.",
+    "original_evidence_must_remain_unchanged": true,
+    "rerun_required_for_formatting": false,
+    "future_red_wording": "PROPOSED_RED_CRITERIA_KO.txt; prospective proposal only"
+  },
+  "q3": {
+    "approval_request_drafting_can_proceed": true,
+    "new_implementation_authorized": false,
+    "new_execution_authorized": false,
+    "E1_0b_authorized": false,
+    "E1_1_through_3_authorized": false,
+    "retain": [
+      "FUTURE-01 procedural Git environment hardening requires explicit E1-0b scope before E1-1–3",
+      "Launcher operational cleanup policy, first_error and cleanup errors/status must remain distinct",
+      "Common 15-second cleanup deadline does not cover all earlier reads/scans or prove independent watchdog",
+      "Fake-clock and injected-driver tests do not establish universal OS timing bounds",
+      "Lstat precheck does not establish atomic path protection"
+    ]
+  },
+  "evidence_limits": [
+    "Approval is preserved in pre-test repository status §84; original approval chat independently authenticated: false",
+    "Meta rc records child rc; outer 1/1/0 is reported and consistent with source logic, no separate captured outer-shell return",
+    "04_end writer body is not supplied; summary values verified, writer-specific behavior not independently audited",
+    "273s spans start record to end record; 327s includes reported procedure-a check; neither is post-push/post-return whole-lifecycle measurement",
+    "GitHub committed states and selected recorded hashes do not prove absence of unrecorded transient activity"
+  ],
+  "review_actions": {
+    "received_code_execution": 0,
+    "received_imports": 0,
+    "pytest_or_retests": 0,
+    "fixtures_or_probes": 0,
+    "COMSOL": 0,
+    "repository_mutations": 0,
+    "external_messages": 0,
+    "reviewer_data_parsing_hashing_and_packaging": true
+  },
+  "new_blocking_functional_defect_found": false,
+  "overall_project_completion_claim": false
+}

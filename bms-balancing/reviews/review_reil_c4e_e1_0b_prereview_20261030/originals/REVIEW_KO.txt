@@ -1,0 +1,90 @@
+REIL C4-E E1-0b 사전 검토
+2026-10-30 · 소스 텍스트/AST/해시 대조 · 실행 없음
+판정: E1_0B_PREREVIEW_CHANGES_REQUIRED_BEFORE_APPROVAL
+
+1. 대상과 경계
+저장소 yonghoon7153-source/Yonghoon-DEM-DFT, branch claude/14-gate-code-review-9qkx05,
+HEAD 90a842a9df9eb676c20ce1b9d4babf0cf0c5d637의 요청서·발송문·범위안·상태 문서와 비활성 초안 5개를 읽었다.
+사용자 첨부 요청서 51,720 B와 발송문 11,018 B는 이 HEAD의 바이트와 동일하다. SOURCE_IDENTITIES.json에 정확 SHA/bytes를 기록했다.
+기존 E1-0 검토 기준 a9544ee04458d9fa79b5b09b463e72ef9543c2d0와의 전체 변경 목록을 대조했다. 활성 launcher/시험/모듈/E1-0 증거는 변경 목록에 없으며 이전 수신 사본을 basis/unchanged_at_pin에 보존했다. 이전 상태 문서는 새 상태 문서의 정확한 byte prefix다.
+종결 전 branch 비교도 동일 HEAD/ahead 0/behind 0이었다. 이는 불변 commit과 수신 파일 대조이며, 작성자의 원격 작업 트리 27개 직접 재측정 주장을 독립 재현한 것은 아니다.
+
+문서 속 실행 명령은 검토 대상이다. 이를 실행 지시로 취급하지 않았다. 아래 반례는 정적 경로이며 오류 주입·실제 실패 출력 관측이 아니다.
+
+2. 필수 정정 E1_0B_N1 (P2): RED 서명과 실패 원인이 분리돼 있다
+요청서 §4-3(213–230행)은 9개 FAILED nodeid, 대응 실패 절, 경로/전체 함수명, AssertionError와 exact/prefix 메시지를 고정한다.
+이 형식 대조 자체는 이전 E1_0_N1의 근거 위치 변경 문제를 보완한다. 다만 현재 l23/l29/l30의 메시지는 기대 원인 외의 내부 오류에도 같아서, 예상 밖 실패에서 중지한다는 기준을 보장하지 않는다.
+
+2a. l29 — 가장 직접적인 반례
+controls v6 903–906행은 _launch 반환 rc != 0이면 conditional-config 실패 접두를 출력한다.
+비교 대상 v5 launcher의 launch 735행 disk_usage가 OSError를 내면 770–771행의 outer catch가 prepare error로 저장한다. meta 쓰기는 정상인 경우 788행에서 저장하고 795행에서 rc1을 반환한다.
+따라서 자식을 시작하지 않았고 URL rewrite를 관측하지 않았어도 controls 904행에서 meta를 읽은 뒤 905행이 같은 허용 접두로 실패한다. precheck/postcheck problems는 None일 수 있으나 허용 접두 뒤 부분이다.
+예외는 launcher 안에서 처리돼 pytest의 chained exception 조건으로도 자동 구별되지 않는다.
+
+2b. l30 — exact 문자열이어도 충분하지 않다
+controls 934–940행에서 rc == 1 assert는 937행, meta 읽기는 938행이다.
+예상 v5 동작은 rc0이어서 937행의 지정 tuple로 실패하는 것이다. 그러나 v5 launcher 788행 meta 기록이 실패하면 789–792행은 오류 JSON을 출력하고 rc4를 반환한다. 이 경우에도 같은 937행에서 동일 tuple/FUTURE-01/localtls로 실패한다.
+tuple에 실제 rc가 없고 meta 유효성 확인에 도달하지 않으므로 exact 문자열 일치만으로 예상 rc0을 입증할 수 없다.
+
+2c. l23 — 복합 오류가 접두 뒤에 숨는다
+controls 679–695행은 precheck ok가 거짓이면 690행의 rewrite/FUTURE-01 접두로 실패한다.
+v5 precheck 491–504행에서 interpreter probe 실패가 problems에 추가되고, 이후 예상 rewrite 문제도 추가되는 경우에도 ok=False와 같은 접두가 유지된다.
+기대 rewrite가 존재한다는 사실은 함께 발생한 probe/source 오류를 무시해도 된다는 뜻이 아니다. 현재 접두는 이 차이를 판정하지 않는다.
+
+2d. 외곽 공통 조건이 이를 막지 못하는 이유
+외곽 runner는 자신의 child pytest, 고정 소스, 정리, 기록을 판정한다. 각 pytest 안에서 처리된 launcher prepare/record 오류는 자동으로 외곽 runner.errors가 되지 않는다.
+따라서 위 경로는 동일한 예상 nodeid에서만 실패하고 나머지 24개가 정상인 경우 9 FAILED/24 PASSED/pytest rc1/outer rc1/runner_ok=true와 양립한다. 이는 가능 경로를 설명하는 것이며 그러한 실행을 관측했다는 주장이 아니다.
+총수·nodeid·메시지·외곽 rc를 함께 검사하는 현 기준은 필요하지만, 이 세 내부 실패 원인을 구별하는 추가 조건이 필요하다.
+
+3. 최소 보완
+RED_CAUSE_BINDING_PROPOSAL_KO.txt에 상세 제안을 적었다.
+- l23: precheck 정상 또는 기대한 설정 노출 원인만 허용. probe·source 읽기·파일 봉인 등에 추가 오류가 있으면 별도 UNEXPECTED 오류로 분기.
+- l29: 기대 assert 전 meta와 precheck/child/timeout/cleanup/기록을 확인. rc1이면 정상 자식 이후 기대 유효 URL mismatch만 실패 이유여야 한다. prepare 실패·미실행 child·정리/기록 오류 등은 별도 오류.
+- l30: rc를 0/1로 먼저 제한하고 meta를 먼저 읽어 검증. rc0은 실제 정상 완료, rc1은 의도한 local-key 거부로 결속한 뒤 기존 기대 assert 실행.
+동등한 구조화 원인 기록을 RED 판정에 독립 결속하는 방식도 가능하다. 메시지 접두만 더 길게 하거나 rc1만 요구하는 방식은 l29를 해결하지 못한다.
+기존 시험 함수 안 보완으로 가능하므로 새 시험 ID·예산 확대·재시험을 요구하지 않는다. 변경 후 controls SHA/bytes, runner _FIXED, 초안 자체 봉인과 요청서/발송문의 참조를 새로 결속해야 한다.
+이번 검토에서는 초안 수정이나 실행을 하지 않았다.
+
+4. Q1–Q5별 판정
+Q1 — 정적 범위 수용 가능, 기능 확인 대기.
+launcher v6 fetch_env(389–405)는 child_env 뒤 모든 GIT_CONFIG*를 제거하고 NOSYSTEM/GLOBAL 및 고정 COUNT/KEY/VALUE를 지정한다. fetch의 사전 확인과 자식 및 사후 확인에 같은 env가 연결된다(845–849, 858, 867–868, 876, 882–888). 기존 run 모듈의 fetch Git 호출(690, 698)은 이 env를 복사한다.
+config_source_problems 및 pre/post 경로(448–504)는 고정 command 출처 목록과 local 허용 키를 대조한다. 사용자/system/XDG/includeIf 차단 설계와 tmp Git 검증 목적은 맞다. 실제 환경의 local 키 9개 적합성은 미관측이며 불일치 시 중지하는 공개 범위다. FUTURE-01의 실제 해결을 이번 소스 검토로 종결하지 않는다.
+
+Q2 — 고정 basic의 채택 근거와 한계를 분리한 점은 수용 가능.
+문서가 관측한 인증 방식 이름을 고정하는 제안이며 프록시 사용 필요성·HTTPS 성공을 입증한 것은 아니다. Git 공식 문서상 proxyAuthMethod는 프록시 문자열에 username이 있을 때 유효하고 환경변수로도 override될 수 있다. 현재 child_env는 그 override 변수를 제거한다. 필요성/실제 인증 성공을 관측하지 않았다는 공개를 유지해야 한다. 이번에 설정 값이나 자격 정보를 새로 조회하지 않았다.
+
+Q3 — 정적 범위 수용 가능.
+v6 run_child(797–800)는 정리 원점과 deadline을 한 번 정한다. group_status(701–714)는 관측 전 기한을 확인하고 남은 시간만 대기한다. cleanup_group(755–773)은 늦게 끝난 관측·예외에서도 새 기한을 만들지 않고 즉시 동작/기록을 수행하며 unverified/unknown/error를 남긴다. empty만 통과하고 killed나 오류는 성공으로 바꾸지 않는다. postcheck(624–633)와 launch(899–902)가 정리·기한·기록을 각각 차단한다.
+외곽 runner의 기존 /proc·정리 관련 함수는 baseline과 동일하다. l31–33은 해당 목적을 다루며 l11/l18/l19는 AST 동일하다.
+기한 전에 시작한 /proc 관측 하나의 반환 시간이 무한히 길어질 가능성, 비원자 관측/PID 한계는 여전히 공개돼 있다. 20초를 실제 모든 실행 종료 시간의 보편적 상한으로 수용한 것이 아니다.
+
+Q4 — 필수 정정 필요.
+FAILED 9 + PASSED 24는 33개 AST 시험 함수의 정확한 분할이며 중복/누락이 없다. pytest 9.1.1의 --tb=short와 tuple assertion 포맷 정적 근거에서도 제안한 함수명/접두 대조의 결정적인 형식 불일치는 찾지 못했다. 실제 출력은 아직 생성되지 않았다.
+문제는 2절의 원인 구분이다. 형식 예상이 맞아도 이를 해결하지 못한다.
+
+Q5 — 봉인/기록/범위는 정적 타당, 전체 승인 진행은 N1 정정 뒤.
+runner 고정 테이블 15행(RED 14 + GREEN launcher 대체 1)의 bytes/SHA가 수신 원문과 모두 일치한다. 예상 시험 함수 수는 21+6+33+11=71이다.
+새 scratch 폴더는 이전 시험 tmp를 재사용하지 않게 구분한다. 같은 셸의 외부 rc 배타 기록, 사전 고정 end writer, 누락 결과의 이유 보존은 이전 근거 한계를 보완한다. 끝 기록은 이후 commit/push/문서 작성까지 포함하는 최종 총시간으로 확대하면 안 된다.
+E1-0b RED120/GREEN600, 외곽 정리15와 기록, 전체2h는 제안이다. E1-1–3/실자료 실행/후속 gate는 별도 승인이라는 구분이 명확하다. 현재 E1-0b를 승인한 것으로 해석하지 않는다.
+
+5. 비차단 문서 표기 2건
+a. 요청서 282행의 start SHA “열하나”는 실제 명령의 10개(초안5+사본4+현재v5 launcher1)와 다르다. 명령상 봉인 대상이 누락됐다는 발견은 아니다.
+b. 발송문 REIL_C4E_E1_0B_PREREVIEW_SEND_20261030.md 34행과 상태 문서 REIL_PREREQUISITES_STATUS_20261004.md 2372행의 runner controls 동일 top-level AST 47개라는 설명과 달리, 위치 속성을 제외한 AST를 노드별로 비교하면 46개 동일 + 6개 변경(전체 52)이다. 변경은 docstring, V4, _rtree, test_r5, UNDER_TEST 없음 분기의 오류 문구, V4 분기의 skip 문구다. 기준 E1-0 실제 파일과 v3 초안도 바이트가 같고, 독립 순서별 AST 대조도 같은 수를 냈다. 열거된 변경 범위를 벗어난 미선언 함수 수정으로 보지는 않는다. 두 문서의 숫자를 46으로 정정하면 된다.
+이는 N1과 별도 실행 차단을 추가하는 지적이 아니다.
+
+6. 공식 근거
+Git 2.43.0의 GLOBAL/XDG/NOSYSTEM 의미:
+https://git-scm.com/docs/git/2.43.0#Documentation/git.txt-codeGITCONFIGGLOBALcode
+런타임 config 쌍, file 값과 명시적 -c의 우선 관계, proxyAuthMethod 조건:
+https://git-scm.com/docs/git-config/2.43.0#ENVIRONMENT
+https://git-scm.com/docs/git-config/2.43.0#Documentation/git-config.txt-httpproxyAuthMethod
+pytest 9.1.1 짧은 traceback과 assertion 표현:
+https://github.com/pytest-dev/pytest/blob/9.1.1/src/_pytest/_code/code.py#L988-L1030
+https://github.com/pytest-dev/pytest/blob/9.1.1/src/_pytest/assertion/rewrite.py#L395-L424
+https://github.com/pytest-dev/pytest/blob/9.1.1/src/_pytest/_io/saferepr.py#L26-L31
+이 출처는 문서/소스 의미 대조용이며 실행 기기의 Git/pytest 실효 동작 관측이 아니다.
+
+7. 수행 및 보존
+원본 첨부 및 pinned Git blob을 읽고 새 검토 폴더에 사본/보고서를 작성했다. 자체 데이터 도구로 base64·Git blob SHA1·SHA256·AST·JSON·ZIP을 처리했다. 받은 코드 import, pytest, fixture, 대상 launcher/runner/end writer, 실자료 fetch/run/OS·COMSOL 실행은 0회다. 저장소 변경·commit/push·외부 발송도 없다.
+기존 E1-0 결과 수용 + 절차 이탈 E1_0_N1은 변경하지 않는다. 새 E1_0B_N1은 이번 사전 검토의 다른 지적이다.
+REVIEWER_DATA_OPERATIONS.json에 자체 자료 도구의 시작 실패와 계수 보강을 구분했다. target 실패나 재시험으로 세지 않는다.

@@ -1,0 +1,24 @@
+{
+  "kind": "REVIEWER_DATA_OPERATIONS",
+  "target_execution": 0,
+  "entries": [
+    {
+      "event": "Read-only local git remote discovery",
+      "result": "Not a git repository; connector used for repository reads",
+      "target_state_changed": false
+    },
+    {
+      "event": "Oversized own Base64 transport shell invocation",
+      "result": "CreateProcessW error 206 before shell process creation; own transfer changed to transport JSON plus own decoder",
+      "target_state_changed": false
+    },
+    {
+      "event": "Own AST node-key method strengthened to preserve duplicate-key occurrences",
+      "result": "First audit retained; second audit still runner-controls same count 46; no target execution",
+      "first_record": "STATIC_AUDIT_FIRST_PASS.json",
+      "final_record": "STATIC_AUDIT.json"
+    }
+  ],
+  "scope": "Read-only source retrieval; own data processing and new review artifacts only. These events are not received-program functional failures or target retries.",
+  "no_numeric_user_work_budget_inferred": true
+}

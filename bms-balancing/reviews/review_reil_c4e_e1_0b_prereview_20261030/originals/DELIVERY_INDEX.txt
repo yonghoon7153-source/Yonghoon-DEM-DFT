@@ -1,0 +1,28 @@
+REIL E1-0b 사전 검토 전달 목록
+검토 기준: 90a842a9df9eb676c20ce1b9d4babf0cf0c5d637
+필수 정정: E1_0B_N1 한 건(P2). 실행 승인 전 원인 결속 보완 필요.
+
+먼저 읽을 파일:
+CODEX_REPLY_KO.txt — 작성 담당자에게 전달할 짧은 회신
+REVIEW_KO.txt — Q1–Q5와 세 정적 반례, 비차단 숫자 정정
+RED_CAUSE_BINDING_PROPOSAL_KO.txt — 최소 보완 제안
+REVIEW_DECISION.json — 기계 판독 판정
+
+근거:
+source/ — pinned Git blob 9개
+basis/attachments/ — 사용자 첨부 두 원파일
+basis/unchanged_at_pin/ — 이전 수신 원문 중 완전 commit 비교로 변경 없음 확인한 대상
+basis/prior_review/ — E1-0 수용/절차 차이/RED 기준 회신
+SOURCE_IDENTITIES.json, CAPTURE_METADATA.json, COMPARE_FROM_E1_0.json, BRANCH_AT_CLOSE.json
+STATIC_AUDIT.json, STATIC_AUDIT_FIRST_PASS.json, Q4_STATIC_REVIEW.json
+SELECTED_INPUTS_POST_REVIEW.json — 로컬 선택 입력/사본의 기록 식별과 종결 전 재대조
+REVIEWER_DATA_OPERATIONS.json — 자체 자료 작업의 경계
+capture_base64.json 및 자체 자료 스크립트는 수신/검사 방법 보존용이다.
+source/basis의 코드는 검토용 데이터로만 다뤘으며 실행하지 않았다.
+
+검토 ZIP:
+REIL_C4E_E1_0B_PREREVIEW_20261030.zip
+PACKAGE_MANIFEST.json은 ZIP에 포함된다.
+ZIP 밖 DELIVERY_RECEIPT.json과 PACKAGE_TOOL_RETURN.json은 ZIP 작성/검사 후 생성한다.
+PACKAGE_TOOL_RETURN은 실제 도구 반환을 받은 뒤 저장하는 기록이다. 그 파일 자체의 미래 반환이나 전체 검토 소요를 인증하지 않는다.
+숫자 작업 예산이나 과거 실행의 독립 OS 감사는 주장하지 않는다.

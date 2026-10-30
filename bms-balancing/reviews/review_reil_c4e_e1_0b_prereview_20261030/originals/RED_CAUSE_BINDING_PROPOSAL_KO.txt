@@ -1,0 +1,34 @@
+E1_0B_N1 최소 보완 제안 — 비실행 검토 의견
+
+목적
+9개 RED 실패의 nodeid/AssertionError 형식과 실제 기대 결함을 결속한다. 예상 밖 내부 오류를 expected RED로 흡수하지 않는다. 기존 l23/l29/l30을 보완하는 방식이며 새 시험 수·실행·예산을 제안하지 않는다.
+
+공통
+1. 기대한 최종 assert에 도달하기 전에 시험 준비, 사용하는 raw 관측 및 내부 launcher 결과가 이 사례의 전제와 맞는지 확인한다.
+2. 예상 밖 원인은 RED 기대 표에 포함되지 않는 명백히 다른 오류 메시지(예: UNEXPECTED_RED_CAUSE)로 실패해야 한다. 같은 FUTURE-01 접두 뒤에 정보를 붙이는 것만으로는 충분하지 않다.
+3. v5의 알려진 결함만 허용하는 분기와 v6의 정상/거부 분기를 구별한다. 단순 버전 문자열이나 기능 이름 존재만으로 정상이라고 정하지 않는다.
+4. 모든 오류를 숨긴 뒤 최종 rc만 검사하거나, 예상 오류가 포함돼 있다는 이유로 추가 오류를 허용하지 않는다.
+
+l23
+- precheck.ok=True인 v6 정상 경로는 기존 기대 assert로 진행.
+- precheck.ok=False인 v5 경로는 source 관측 명령이 성공했고, 실제 유효 URL 및 설정 출처가 이 fixture의 rewrite를 드러냈으며, 그 기대 원인 이외의 문제가 없어야 한다.
+- probe 실패, source 읽기 실패, 소스/봉인·자료 폴더 등 다른 전제 오류는 별도 오류로 중지.
+- raw 기록과 문제 목록을 함께 판정해 “예상 rewrite도 있다”만으로 복합 오류를 수용하지 않는다.
+
+l29
+- _launch 뒤 meta를 읽되 정상 형식/신원과 필수 기록을 먼저 확인.
+- precheck 통과, 실제 child 실행/rc0, timeout 없음, 정상 cleanup/기록이 전제다.
+- rc0은 정상 v6 경로로, rc1은 정상 child 뒤 이 fixture의 expected effective-URL rewrite만 postcheck 오류인 v5 경로로 결속.
+- prepare error, child 미실행, source query 실패, postcheck의 추가 오류, 정리·기록 실패가 있으면 기존 기대 assert 전에 별도 오류로 중지.
+- rc1 자체를 기대 결함으로 해석하면 현재 문제는 남는다.
+
+l30
+- rc가 0/1 이외이면 즉시 별도 오류. 특히 meta 기록 실패 rc4는 expected RED가 아니다.
+- 기존 938행 meta 읽기를 기대 assert 앞으로 이동하고 필수 기록이 있는지 확인.
+- v5 rc0은 정상 pre/child/post/cleanup/기록이 완료된 통과여야 한다.
+- v6 rc1은 intended local-key 거부와 결속돼야 하며 다른 오류로 대체되면 안 된다.
+- 그 뒤 기존 rc==1의 기대 assert를 둬 v5의 잘못된 정상 통과만 고정 메시지를 내게 한다.
+
+봉인과 후속
+기존 시험 함수 이름과 총수는 유지할 수 있다. controls가 바뀌면 그 SHA/bytes, runner _FIXED와 runner 자체 SHA/bytes, 요청서·발송문 표/행번호를 서로 일치시킨 새 비활성 정정본을 제출한다. 별도 구조화 증거를 RED 수용 판정에 결속하는 동등한 설계도 가능하다.
+정정본의 원인 결속을 정적으로 재검토한 뒤 사용자 승인 절차로 이동한다. 본 제안은 시험 실행·재시험·생산 코드 변경 승인 문구가 아니다.
