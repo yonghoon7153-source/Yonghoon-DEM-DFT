@@ -2323,3 +2323,63 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   - E1-1–3 의 대상 바이트 · 입력 · 명령 · 예상 결과 · 중지 조건 · 단계 및 전체 예산을 사용자 승인 전에 확정한다.
 - **다음:** E1-0b · E1-1–3 범위안 (사용자 채택 요청) → 채택 뒤 비활성 초안 · 승인 요청 · 사전 검토 발송문. 이 기록은 E1-0b · E1-1–3 (구현 · 시험 · identity ·
   읽기 경로 · fetch · 자료 개봉 · run) · C4-A / B · COMSOL 의 승인이 아니다.
+
+## §87 C4-E · E1-0b · E1-1–3 범위 채택 (사용자 결정) — 설정 값 하나 읽기 · 비활성 초안 다섯 · E1-0b 승인 요청 · 사전 검토 발송문 (2026-10-30 KST · 정적 검사만 · Git fixture 포함 실행 0 · 덧붙임 — 위 §0–§86 은 그대로)
+
+- **사용자 (2026-10-30):** "권고대로" — 범위안 `docs/REIL_C4E_E1_0B_E1_1_3_SCOPE_20261030.md` (`9b94a31f12637797dbeee662a0b438e111414c706e150e23c4f5814ac0c69500` ·
+  커밋 `b9904cdf`) §9 의 권장 여섯을 그대로 채택했다.
+  1. 범위 채택 — E1-0b 의 비활성 초안 · 승인 요청 · 사전 검토 발송문까지 쓰고 멈춘다 (정적 검사만 · Git fixture 포함 실행 0 · 예외는 설정 값 하나의 읽기).
+  2. FUTURE-01 = A (launcher 가 fetch 자식의 설정 원천을 고정) · 프록시 인증 키 = `http.proxyAuthMethod` 값 하나를 읽어 같은 값을 넣는다.
+  3. launcher 운영 정리 정책 = A (V3-01 규칙 + 공통 절대 기한 20 s · empty 만 통과 · 차단 기준 · first_error 보존).
+  4. 오류 수용 = 무관용 · 실행 유효성과 실험 결과 (E3a COMPLETE) 를 나눠 기록 · C4-A 문은 둘 다 참일 때만.
+  5. 구조 = A (E1-0b 와 E1-1–3 을 따로 승인).
+  6. 기록 보강 = 포함 (외곽 반환 파일 · 끝 기록 작성기를 실행 전에 저장소에 고정).
+
+  이 채택은 launcher · 실행기 복사 · 시험 · Git fixture · driver · 탐침 · 읽기 경로 · fetch · 자료 개봉 · run 의 승인이 아니다.
+- **설정 값 읽기 (채택 2 · 이 범위의 유일한 실행 · 2026-10-30 06:33:43Z · 한 번):** 값이 인증 방식 이름 다섯 중 하나일 때만 출력하고, origin 은 첫 칸만
+  출력하는 명령 한 줄이다.
+
+  ```
+  v=$(git config --global --get http.proxyAuthMethod); rc=$?; case "$v" in anyauth|basic|digest|negotiate|ntlm) echo "http.proxyAuthMethod (global) = $v · rc $rc";; "") echo "http.proxyAuthMethod (global): not set · rc $rc";; *) echo "unexpected value (length ${#v}) — not printed · rc $rc";; esac; git config --global --show-origin --get-all http.proxyAuthMethod 2>/dev/null | cut -f1 | sed 's/^/origin: /'; git --version
+  ```
+
+  결과: `http.proxyAuthMethod (global) = basic · rc 0` · `origin: file:/root/.gitconfig` · `git version 2.43.0`. 다른 키의 값은 읽지 않았다. 인증 방식
+  이름이며 비밀이 아니다. launcher v6 의 고정 목록 (`FETCH_GIT_CONFIG`) 에 같은 값을 넣었다. fetch 에 이 키가 필요한지는 관측하지 않았다 (E1-2).
+- **고정한 초안 다섯 (docs · `.py.txt`):**
+
+  | 초안 | sha256 | bytes | 복사할 곳 (E1-0b 승인 뒤) |
+  |---|---|---:|---|
+  | `REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt` — launcher v6 | `2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf` | 62,639 | `scripts/reil_c4e1_launch.py` (GREEN 직전) |
+  | `REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v6_20261030.py.txt` — launcher 대조 33 | `0482305198aa1a32b1c1753a3d8fe71a5fd7ff5926053e49607bf680d8701634` | 68,212 | `tests/test_reil_c4e1_launch.py` |
+  | `REIL_C4E1_RUNNER_CONTROLS_DRAFT_v4_20261030.py.txt` — 외곽 실행기 대조 11 | `d9880f28092e064017fd5d35f13b0f41b359ba301fca88fa5e3bc72e26d2bddd` | 36,600 | `tests/test_reil_c4e1_runner.py` |
+  | `REIL_C4E1_STEP_RUNNER_DRAFT_v6_20261030.py.txt` — E1-0b 외곽 실행기 v6 (봉인 표 포함) | `3f5bdfc010cf9b84e2bc0352138b335164c3511c6c84a63eab01cef565a09cb6` | 36,518 | `<E>/00_step_runner.py` |
+  | `REIL_C4E1_0B_END_WRITER_DRAFT_20261030.py.txt` — 끝 기록 작성기 | `2e44f2e570b88ebd5bb88ee89b4e125d7774156a890bf01a429095aeb6fd5e44` | 3,697 | `<E>/00_end_writer.py` |
+
+- **정정 요지 (요청서 §2 · §3):**
+  - FUTURE-01 — fetch env (정제 env − 모든 `GIT_CONFIG*` + `GIT_CONFIG_NOSYSTEM=1` · `GIT_CONFIG_GLOBAL=/dev/null` · 고정 목록 하나) 를 fetch 단계 전체 (사전 ·
+    탐침 · 기록 git · 자식 · 사후) 에 쓴다. 사전 = 설정 원천이 command line 고정 목록뿐 · 사후 = 받은 저장소의 원천이 고정 목록 + local 허용 키 아홉뿐.
+    다섯 모듈은 그대로다 (run 의 fetch 가 env 를 물려받는다).
+  - 운영 정리 정책 — 정리 원점에서 공통 절대 기한 20 s 를 한 번 만들고 (`run_child`), `cleanup_group` 이 관측 · sleep 을 창 끝 전에만 시작한다 · 끝 상태
+    empty / killed / alive / unverified / unknown · 정리 안의 예외는 같은 기한의 비상 동작만 · 사후 대조가 `deadline_hit` 을 본다.
+  - 기록 보강 — `<단계>.outer_rc.txt` (실행기 반환 직후 셸이 `set -C` 로 배타 생성) · 끝 기록 작성기 고정본.
+  - RED 판정 — §86 의 제안 문구 + 근거 위치 · 형식 고정 (짧은 요약의 `FAILED` / `PASSED` nodeid 집합 · 실패 절 머리줄 + 첫 traceback 항목 · 예외 블록
+    머리 = 표). 다르면 대체하지 않고 멈춘다.
+- **수 · RED 선언 · 예산:** launcher 대조 33 (기존 24 본문 그대로 · 고침 l14 · l23 · l25 · 새 l28–l33) · 외곽 실행기 대조 11 (본문 그대로). RED
+  `01_red_e1_0b` = launcher 대조 33 을 v5 고정 구현 (`2269d775…`) 에서 — 9 실패 (nodeid 별 최종 예외 표 · 요청서 §4-3) · 24 통과. GREEN `02_green_e1_0b`
+  = 71 (E0 21 + N1 6 + 33 + 11). RED 120 s · GREEN 600 s · 외곽 실행기 정리 ≤ 15 s + 기록 · E1-0b ≤ 2 h · 재시도 0.
+- **정적 검사 (실행 0):** AST 파싱 다섯 · ruff `--isolated` pyflakes 규칙 다섯 0 건 · 이름 검사 (미해결은 `__file__` 뿐) · `L.*` 참조 49 가 v6 에 모두 있음 ·
+  v5 에 없는 일곱은 RED 로 정한 아홉 시험 안에서 예측 실패 줄 이후에만 쓰임 (도우미 · 나머지 24 는 쓰지 않음) · `R.*` 16 이 실행기 v6 에 모두 있음 ·
+  봉인 표 15 행 · 27 비교 불일치 0 · 최상위 노드 비교 (launcher 같음 88 · 대조 62 · 실행기 53 · 실행기 대조 47) · 끝 기록 작성기 import 는 stdlib 일곱 ·
+  설치된 pytest 9.1.1 의 단언 메시지 형식 (`_format_assertmsg` → `saferepr` · `-q` 에서 240 자) 을 소스로 읽어 접두 둘 (l23 · l29) 을 정함 · 비밀 검사 0 건.
+- **초안 단계의 자체 수정 (커밋 전 · 기록만):**
+  - 끝 기록 작성기의 첫 초안은 meta · 복사본을 못 읽으면 예외로 끝나 docstring ("사유를 남긴다") 과 맞지 않았다 → 읽기 실패를 사유로 남기고, 증거 폴더
+    이름 규칙 밖이면 쓰지 않도록 고쳤다.
+  - 외곽 실행기 v6 의 작업 폴더를 `SP/c4e1_0b_steps` 로 나눴다 — E1-0 의 `SP/c4e1_steps/tmp` 에 pytest tmp 폴더 셋이 남아 있어, 같은 TMPDIR 이면 보존 규칙이
+    그것을 지울 수 있다.
+  - 실행기 대조 v4 의 건너뜀 메시지에서 "E1-0" 을 뺐다. 세 수정 뒤 봉인 표를 다시 채우고 정적 검사를 다시 했다.
+- **문서:**
+  - 승인 요청 `docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md` (`112f033bce27cf4e8d9e942643e563a0997af9c20e9eb60f68e5fe86416cfb74` · 51,720 B · E1-0b
+    한정 · 밝힐 것 18 · E1-1–3 고정 계획 §7).
+  - 사전 검토 발송문 `docs/REIL_C4E_E1_0B_PREREVIEW_SEND_20261030.md` (`5c002f06792fcab3abb28688eb203fe9b9d590f9ac342a56921ff402b3b80f1b` · 11,018 B · 질문 5).
+- **다음:** 사전 검토 발송 (사용자 결정) → 수용 → 사용자의 E1-0b 한정 승인 → E1-0b → 결과 검토 → E1-1–3 승인 요청 → 검토 → 사용자 별도 승인. 이 기록은
+  어느 단계의 실행 승인도 아니다.
