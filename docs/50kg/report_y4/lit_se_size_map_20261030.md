@@ -96,3 +96,18 @@
 | 6 | Stavola 등, ACS Energy Lett. 2023 — thick NMC111–argyrodite 리튬화 기울기 · tortuosity factor | 아지로다이트 후막 두께 방향 실측 | p6 · p4 |
 | 7 | Calpa 등, Electrochim. Acta 2019 — small-sized Li₇P₃S₁₁ (liquid phase) | 밀링 손상 없는 미립화 — p5 교란 분리 단서 | p5 · p2 |
 | 8 | Tron 등 — Rational Optimization of Cathode Composites [미확인] | 입도만 다른 두 LPSCl 을 설계 변수와 함께 비교 | p5 · p7 |
+
+## 7. 10-30 갱신 — 1저자가 PDF 를 준 8 편 (정본 litdb 카드 반입 · "SE 입도 효과" 절)
+
+| 카드 | 바로잡은 것 · 더한 것 |
+|---|---|
+| `yano2026_se_psd_width_ionic_tortuosity_dem` | §6 의 "Ohsaki 등" = 1저자 Takeru Yano (교신 Ohsaki) · J. Energy Storage 153 (2026) 120973 · DEM 기하 tortuosity 평탄 (1.14–1.17) · 경로당 입자 수 +28 % · 밀링 펠릿 σ ÷2.78 (p5 목록) |
+| `lin2025_submicron_lpscl_cathode_li_kinetics` | "sub-µm" = SEM 모양 · 레이저 D50 **2.34 µm** (우리 D2–D3 사이 — §6 의 "D0.7 자리" 는 틀림) · 밀링 펠릿 σ ÷3.28 (p5 목록 → 덱 2.217 = 범위 중간) |
+| `calpa2019_small_li7p3s11_liquid_phase_composite_cathode` | Li₇P₃S₁₁ (LPSCl 아님) · 밀링 없는 미립화도 펠릿 σ 1.0 vs 1.9 mS/cm = 합성 경로 교란 (p5 교란이 없어지지 않음) |
+| `tron2023_rational_cathode_composite_optimization_lpscl` | 크기 정성 · AM:SE 85:15 wt% 에서 용량 −36 % (300 MPa) |
+| `yadav2021_lpscl_sieved_psd_impedance_tortuosity` | IWIS 2021 · 큰 SE 가 이긴 반례 (≥ 20 µm) · 펠릿 σ(d) × 우리 f(d) = 이중계상 위험 (p5 주의) |
+| `lei2026_se_particle_size_effects_review` | 절충 점검표 · 수치는 2 차 인용 (원문으로 인용) |
+| `kawaguchi2026_se_size_soc_dependent_cathode_resistance` | 최적 입도가 SOC 에 따라 바뀜 → p7 *"최적"* 금지 근거 · 큰 SE 이온 σ 2.33× |
+| `stavola2023_thick_nmc111_lpscl_lithiation_gradient_tortuosity` | 두께 방향 기울기 (p6) · 논문 tortuosity factor 를 표 S8 로 다시 셈 = NMC 부피분율로 계산된 것으로 보임 → 9.19 / 8.43 평탄 (카드 §) |
+
+- 다음 후보 = Jeong 2024 (Adv. Energy Mater. 14, 2304544 · SE <1 vs 3–5 µm · 두께 방향 SOC) — 카드 없음 [미확인].
