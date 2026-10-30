@@ -1,0 +1,67 @@
+No protocol specified
+
+     Program POST-PROC v.7.4.1 starts on 30Oct2026 at 16:17:59 
+
+     This program is part of the open-source Quantum ESPRESSO suite
+     for quantum simulation of materials; please cite
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 21 395502 (2009);
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 29 465901 (2017);
+         "P. Giannozzi et al., J. Chem. Phys. 152 154105 (2020);
+          URL http://www.quantum-espresso.org", 
+     in publications or presentations arising from this work. More details at
+     http://www.quantum-espresso.org/quote
+
+     Parallel version (MPI & OpenMP), running on       1 processor cores
+     Number of MPI processes:                 1
+     Threads/MPI process:                     1
+
+     MPI processes distributed on     1 nodes
+     23674 MiB available memory on the printing compute node when the environment starts
+ 
+
+     Reading xml data from directory:
+
+     /home/kgy/work/runs/nd_q3p_1027/bader/MP_07/tmp/q3p_MP_07_bader.save/
+     file P.pbe-n-kjpaw_psl.1.0.0.UPF: wavefunction(s)  3S 3P renormalized
+     file S.pbe-nl-kjpaw_psl.1.0.0.UPF: wavefunction(s)  3S renormalized
+     file Cl.pbe-nl-kjpaw_psl.1.0.0.UPF: wavefunction(s)  3S renormalized
+     file O.pbe-n-kjpaw_psl.0.1.UPF: wavefunction(s)  2P renormalized
+     file Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF: wavefunction(s)  5D renormalized
+
+     IMPORTANT: XC functional enforced from input :
+     Exchange-correlation= PBE
+                           (   1   4   3   4   0   0   0)
+     Any further DFT definition will be discarded
+     Please, verify this is what you really want
+
+ 
+     G-vector sticks info
+     --------------------
+     sticks:   dense  smooth     PW     G-vecs:    dense   smooth      PW
+     Sum        6817    3427    925              1856431   656905   91655
+ 
+     Using Slab Decomposition
+ 
+
+     negative rho (up, down):  1.885E-01 0.000E+00
+
+     Calling punch_plot, plot_num =  17
+       Reconstructing all-electron valence charge.
+     Writing data to file  ./nd_ae
+     Reading data from file  ./nd_ae
+
+     Writing data to be plotted to file nd_rho_ae.cube
+     Plot Type: 3D                     Output format: Gaussian cube
+ 
+     POST-PROC    :  30m21.50s CPU  30m35.73s WALL
+
+ 
+   This run was terminated on:  16:48:35  30Oct2026            
+
+=------------------------------------------------------------------------------=
+   JOB DONE.
+=------------------------------------------------------------------------------=
+Warning: ieee_invalid is signaling
+Warning: ieee_divide_by_zero is signaling
+Warning: ieee_inexact is signaling
+FORTRAN STOP
