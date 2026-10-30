@@ -1,0 +1,525 @@
+{
+ "deck": "kg50_report_y4_draft1.pptx",
+ "deck_sha256": "551312593f9c8af0ce9319b16b22c8ec4a9eeaad946db77a8003f770f7fbe8c1",
+ "checks": [
+  {
+   "check": "C1 slide count = 7",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C1 slide size = template (10 × 7.5 in)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C2 p1 title = plan §2 row 1",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C3 p1 grey note carries the plan conclusion words in order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C2 p2 title = plan §2 row 2",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C3 p2 grey note carries the plan conclusion words in order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C2 p3 title = plan §2 row 3",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C3 p3 grey note carries the plan conclusion words in order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C2 p4 title = plan §2 row 4",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C3 p4 grey note carries the plan conclusion words in order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C2 p5 title = plan §2 row 5",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C3 p5 grey note carries the plan conclusion words in order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C2 p6 title = plan §2 row 6",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C3 p6 grey note carries the plan conclusion words in order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C2 p7 title = plan §2 row 7",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C3 p7 grey note carries the plan conclusion words in order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C4 forbidden wording absent (plan §1 · principles §5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C4 \"Stage-E\" only inside \"Stage-E σion 은 쓰지 않음\" (KG50B-07 limit)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C4 quotation_ban patterns absent (claims.json)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C5 every text box: estimated text height ≤ box (conservative widths: Hangul 1 em · Latin DejaVu)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C5 one-line boxes (header · tabs · titles · numbers · legend · note) stay one line",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C5 no-wrap boxes: text width ≤ box",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C6 nothing (but header text) inside the template header band (y < 0.911 in)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C9 p1 R/fig1 placed at 100 % (figure size 4.4 × 2.95 in)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C9 p1 R/fig1 bytes = figs/p1_sections.png = meta sha256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C9 p1 L/fig2 placed at 100 % (figure size 4.4 × 0.86 in)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C9 p1 L/fig2 bytes = figs/p1_size_ratio.png = meta sha256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C9 p1 four section panels: same size (same µm per inch)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C10 p1 placeholder panels: label = registered status, inside its empty panel; no label on data panels",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C11 pages 2–7: main + aux boxes, each a registered status label (or a drafted figure)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C12 every run: explicit fonts from {Aptos, KoPubWorld돋움체 Medium, 맑은 고딕} · size ≥ 7 pt",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C8 every number on page 1 comes from the build-time source ledger (deck · manifest · dump · anchors · plan)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "T1 template slide size = 10 × 7.5 in",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "T2 layout \"빈 화면\" header group geometry = constants",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "T3 plan-deck slide 7 header · band · panel geometry = constants",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "T3 plan-deck slide 7 page title box (x, y, h) = constants",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "T4 plan-deck slide 7 Korean typeface includes KoPubWorld돋움체 Medium",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "T5 theme colours = constants",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "T5 theme minor latin font = 함초롬돋움",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "page1_number_ledger": {
+  "0.7": [
+   "deck kg50_d07_b50 r_SE × 2",
+   "series line = plan year 4 + deck D50 + beds per size"
+  ],
+  "0.928": [
+   "computed (2/√3 − 1) · D_AM from deck r_AM_P"
+  ],
+  "1": [
+   "beds per SE size (sources.BEDS)",
+   "deck kg50_d1_b50 r_SE × 2",
+   "formula constant (idealized planar throat)",
+   "series line = plan year 4 + deck D50 + beds per size"
+  ],
+  "1.35": [
+   "deck youngsModulus type 3 / 0.001"
+  ],
+  "1.64": [
+   "deck pts3 density"
+  ],
+  "1.670": [
+   "deck SE 검사 줄 kg50_d1_b50"
+  ],
+  "10": [
+   "deck SE 검사 줄 kg50_d07_b50",
+   "deck SE 검사 줄 kg50_d1_b50",
+   "deck SE 검사 줄 kg50_d2_b50",
+   "end dump kg50_d2_b50 type 3"
+  ],
+  "122.5": [
+   "end mesh z kg50_d2_b50"
+  ],
+  "125.9": [
+   "end mesh z kg50_d3_b50_s1"
+  ],
+  "140": [
+   "deck youngsModulus type 1 / 0.001"
+  ],
+  "1481": [
+   "deck AM 검사 줄 (네 덱 같음)",
+   "end dump kg50_d2_b50 type 1"
+  ],
+  "1482": [
+   "end dump kg50_d3_b50_s1 type 1"
+  ],
+  "15": [
+   "deck pdd_mix pts3"
+  ],
+  "2": [
+   "deck kg50_d2_b50 r_SE × 2",
+   "deck r_AM_P / r_SE (kg50_d3_b50_s1)",
+   "formula constant (idealized planar throat)",
+   "series line = plan year 4 + deck D50 + beds per size"
+  ],
+  "2.087": [
+   "deck SE 검사 줄 kg50_d2_b50",
+   "end dump kg50_d2_b50 type 3"
+  ],
+  "200": [
+   "manifest cap_mah_g"
+  ],
+  "22": [
+   "round(DFT E_VRH) · anchors doc"
+  ],
+  "22.06": [
+   "anchors doc DFT E_VRH"
+  ],
+  "25": [
+   "slice y = box_y / 2 (deck reg_box)"
+  ],
+  "3": [
+   "deck kg50_d3_b50_s1 r_SE × 2",
+   "deck r_AM_P",
+   "deck r_AM_P / r_SE (kg50_d2_b50)",
+   "formula constant (idealized planar throat)",
+   "series line = plan year 4 + deck D50 + beds per size"
+  ],
+  "300": [
+   "deck target_press / 0.001"
+  ],
+  "4": [
+   "plan §2 row 1 title (4차년도)",
+   "series line = plan year 4 + deck D50 + beds per size"
+  ],
+  "4.85": [
+   "deck pts1 density"
+  ],
+  "4.868": [
+   "deck SE 검사 줄 kg50_d07_b50"
+  ],
+  "4015002": [
+   "end dump TIMESTEP kg50_d2_b50"
+  ],
+  "4575002": [
+   "end dump TIMESTEP kg50_d3_b50_s1"
+  ],
+  "50": [
+   "deck reg_box x",
+   "deck reg_box y"
+  ],
+  "6": [
+   "deck r_AM_P / r_SE (kg50_d1_b50)",
+   "deck r_AM_P × 2"
+  ],
+  "6.5": [
+   "manifest loading_target_mah_cm2"
+  ],
+  "6184": [
+   "deck SE 검사 줄 kg50_d3_b50_s1",
+   "end dump kg50_d3_b50_s1 type 3"
+  ],
+  "8.57": [
+   "deck r_AM_P / r_SE (kg50_d07_b50)"
+  ],
+  "85": [
+   "deck pdd_mix pts1"
+  ]
+ },
+ "figs_meta": "figs/p1_figs_meta.json",
+ "decks": {
+  "D0.7": {
+   "path": "docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/input_kg50_d07_b50.liggghts",
+   "sha256": "2555640c7792df6954006392d05b8fd83f09687bd49e315ae0d8ffaa9ba65ab2"
+  },
+  "D1": {
+   "path": "docs/data/kg50_decks_20261027_v3_b50/kg50_d1_b50/input_kg50_d1_b50.liggghts",
+   "sha256": "514afdb705613dab876c9c0ff5c1f2fef3fad3e029d71778875c08b89edfde91"
+  },
+  "D2": {
+   "path": "docs/data/kg50_decks_20261027_v3_b50/kg50_d2_b50/input_kg50_d2_b50.liggghts",
+   "sha256": "f8ac9932a6cb4a0b45c9b6cb846bc637dd746ccf036f32590036c70ab6508825"
+  },
+  "D3": {
+   "path": "docs/data/kg50_decks_20261026_v2/kg50_d3_b50_s1/input_kg50_d3_b50_s1.liggghts",
+   "sha256": "7589c8ac6440cbafa41a5cc79a07d58a05708971fc4bd9e44db2d951d7728278"
+  }
+ },
+ "selftest": [
+  {
+   "mutation": "(none — the built deck)",
+   "expect": "0 failures",
+   "ok": true,
+   "failed": []
+  },
+  {
+   "mutation": "shape overlap (p1 L/s2 moved into table B)",
+   "expect": "C6 no overlapping",
+   "ok": true,
+   "failed": [
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)"
+   ]
+  },
+  {
+   "mutation": "text overflow (p1 band item desc made long)",
+   "expect": "C5 every text box",
+   "ok": true,
+   "failed": [
+    "C5 every text box: estimated text height ≤ box (conservative widths: Hangul 1 em · Latin DejaVu)"
+   ]
+  },
+  {
+   "mutation": "forbidden wording (p3 note \"최적 입도\")",
+   "expect": "C4 forbidden",
+   "ok": true,
+   "failed": [
+    "C3 p3 grey note carries the plan conclusion words in order",
+    "C4 forbidden wording absent (plan §1 · principles §5)"
+   ]
+  },
+  {
+   "mutation": "retracted value (p1 note carries a quotation_ban pattern)",
+   "expect": "C4 quotation_ban",
+   "ok": true,
+   "failed": [
+    "C3 p1 grey note carries the plan conclusion words in order",
+    "C4 quotation_ban patterns absent (claims.json)",
+    "C8 every number on page 1 comes from the build-time source ledger (deck · manifest · dump · anchors · plan)"
+   ]
+  },
+  {
+   "mutation": "Stage-E outside the limit phrase (p5)",
+   "expect": "C4 \"Stage-E\"",
+   "ok": true,
+   "failed": [
+    "C4 \"Stage-E\" only inside \"Stage-E σion 은 쓰지 않음\" (KG50B-07 limit)"
+   ]
+  },
+  {
+   "mutation": "page-1 number not from a source (table B 6184 → 6185)",
+   "expect": "C8 every number",
+   "ok": true,
+   "failed": [
+    "C8 every number on page 1 comes from the build-time source ledger (deck · manifest · dump · anchors · plan)"
+   ]
+  },
+  {
+   "mutation": "figure not at 100 % (p1 R/fig1 width + 2 %)",
+   "expect": "C9 p1 R/fig1 placed at 100 %",
+   "ok": true,
+   "failed": [
+    "C9 p1 R/fig1 placed at 100 % (figure size 4.4 × 2.95 in)"
+   ]
+  },
+  {
+   "mutation": "placeholder label off its panel (p1 D1 label moved 1 in left)",
+   "expect": "C10 p1 placeholder",
+   "ok": true,
+   "failed": [
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+    "C10 p1 placeholder panels: label = registered status, inside its empty panel; no label on data panels"
+   ]
+  },
+  {
+   "mutation": "title not the plan title (p3)",
+   "expect": "C2 p3",
+   "ok": true,
+   "failed": [
+    "C2 p3 title = plan §2 row 3"
+   ]
+  },
+  {
+   "mutation": "note without the plan conclusion (p5)",
+   "expect": "C3 p5",
+   "ok": true,
+   "failed": [
+    "C3 p5 grey note carries the plan conclusion words in order"
+   ]
+  },
+  {
+   "mutation": "font outside the set (p2 first run ea = Arial)",
+   "expect": "C12 every run",
+   "ok": true,
+   "failed": [
+    "C12 every run: explicit fonts from {Aptos, KoPubWorld돋움체 Medium, 맑은 고딕} · size ≥ 7 pt"
+   ]
+  },
+  {
+   "mutation": "shape inside the header band (p4 L/s1 at y 0.5 in)",
+   "expect": "C6 nothing",
+   "ok": true,
+   "failed": [
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide",
+    "C6 nothing (but header text) inside the template header band (y < 0.911 in)"
+   ]
+  },
+  {
+   "mutation": "status label not registered (p6 R/fig)",
+   "expect": "C11 pages 2–7",
+   "ok": true,
+   "failed": [
+    "C11 pages 2–7: main + aux boxes, each a registered status label (or a drafted figure)"
+   ]
+  },
+  {
+   "mutation": "root shape off the slide (p7 note at x 9.5 in)",
+   "expect": "C6 children inside",
+   "ok": true,
+   "failed": [
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide"
+   ]
+  }
+ ],
+ "render": {
+  "pdf": "kg50_report_y4_draft1.pdf",
+  "pngs": [
+   "kg50_report_y4_draft1-1.png",
+   "kg50_report_y4_draft1-2.png",
+   "kg50_report_y4_draft1-3.png",
+   "kg50_report_y4_draft1-4.png",
+   "kg50_report_y4_draft1-5.png",
+   "kg50_report_y4_draft1-6.png",
+   "kg50_report_y4_draft1-7.png"
+  ],
+  "checks": [
+   {
+    "check": "R1 rendered pages = 7",
+    "ok": true,
+    "detail": ""
+   },
+   {
+    "check": "R2 no two rendered words overlap by > 1 pt in both directions",
+    "ok": true,
+    "detail": ""
+   },
+   {
+    "check": "R3 every rendered word inside the page",
+    "ok": true,
+    "detail": ""
+   },
+   {
+    "check": "R4 unique words of each text box render inside that box (± 2 pt)",
+    "ok": true,
+    "detail": ""
+   },
+   {
+    "check": "R5 page titles rendered in the title box (whitespace-insensitive)",
+    "ok": true,
+    "detail": ""
+   },
+   {
+    "check": "R5 status labels rendered (whitespace-insensitive)",
+    "ok": true,
+    "detail": ""
+   },
+   {
+    "check": "R6 no slide text rendered over a figure except that figure's own status labels",
+    "ok": true,
+    "detail": ""
+   }
+  ]
+ },
+ "failed": 0
+}

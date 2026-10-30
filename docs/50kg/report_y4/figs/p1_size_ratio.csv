@@ -1,0 +1,5 @@
+bed,se_d50_um,am_d_um,d_am_over_d_se,idealized_throat_um,se_d50_below_throat
+D0.7,0.7,6,8.571429,0.928203,True
+D1,1,6,6.000000,0.928203,False
+D2,2,6,3.000000,0.928203,False
+D3,3,6,2.000000,0.928203,False

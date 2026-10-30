@@ -1,0 +1,181 @@
+{
+ "generator": "docs/50kg/report_y4/figs/make_figs_p1.py",
+ "matplotlib": "3.11.2",
+ "png_font": "Carlito",
+ "svg_font_family": [
+  "Aptos",
+  "Carlito",
+  "DejaVu Sans"
+ ],
+ "decks": {
+  "D0.7": {
+   "path": "docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/input_kg50_d07_b50.liggghts",
+   "sha256": "2555640c7792df6954006392d05b8fd83f09687bd49e315ae0d8ffaa9ba65ab2"
+  },
+  "D1": {
+   "path": "docs/data/kg50_decks_20261027_v3_b50/kg50_d1_b50/input_kg50_d1_b50.liggghts",
+   "sha256": "514afdb705613dab876c9c0ff5c1f2fef3fad3e029d71778875c08b89edfde91"
+  },
+  "D2": {
+   "path": "docs/data/kg50_decks_20261027_v3_b50/kg50_d2_b50/input_kg50_d2_b50.liggghts",
+   "sha256": "f8ac9932a6cb4a0b45c9b6cb846bc637dd746ccf036f32590036c70ab6508825"
+  },
+  "D3": {
+   "path": "docs/data/kg50_decks_20261026_v2/kg50_d3_b50_s1/input_kg50_d3_b50_s1.liggghts",
+   "sha256": "7589c8ac6440cbafa41a5cc79a07d58a05708971fc4bd9e44db2d951d7728278"
+  }
+ },
+ "sections": {
+  "size_in": [
+   4.4,
+   2.95
+  ],
+  "dpi": 300,
+  "axes": {
+   "D0.7": {
+    "box_in": [
+     0.42,
+     0.22,
+     0.9115,
+     2.37
+    ],
+    "status": "[D0.7 본 런 전]",
+    "data": false
+   },
+   "D1": {
+    "box_in": [
+     1.4295,
+     0.22,
+     0.9115,
+     2.37
+    ],
+    "status": "[D1 해석 진행 중]",
+    "data": false
+   },
+   "D2": {
+    "box_in": [
+     2.439,
+     0.22,
+     0.9115,
+     2.37
+    ],
+    "status": null,
+    "data": true,
+    "step": 4015002,
+    "plate_z_um": 122.469,
+    "n_am": 1481,
+    "n_se": 20872,
+    "n_am_in_section": 180,
+    "n_se_in_section": 825,
+    "wall_overlap": {
+     "AM": {
+      "bottom_max_um": 0.442,
+      "top_max_um": 0.55
+     },
+     "SE": {
+      "bottom_max_um": 0.8967,
+      "top_max_um": 0.775
+     }
+    },
+    "tgz": "docs/data/kg50_d2_end_20261030/kg50_d2_end_20261030_4files.tgz",
+    "tgz_sha256": "ead5bed68e770766a93e2f2c79899f88ff7150ec687409d220c05298add5cbfa",
+    "members": {
+     "kg50_d2_b50/input_kg50_d2_b50.liggghts": "f8ac9932a6cb4a0b45c9b6cb846bc637dd746ccf036f32590036c70ab6508825",
+     "kg50_d2_b50/post_kg50_d2_b50/atom_end_4015002.liggghts": "e14fe38b2aa614dc61dd719aa6b7b2c4f5d40316c2f3a4f15877bced95861d52",
+     "kg50_d2_b50/post_kg50_d2_b50/mesh_end_4015002.stl": "3db1e87d86b5b7df69ee94bfd4700534837734f84be85a3839e86ffb643cc9f2"
+    }
+   },
+   "D3": {
+    "box_in": [
+     3.4485,
+     0.22,
+     0.9115,
+     2.37
+    ],
+    "status": null,
+    "data": true,
+    "step": 4575002,
+    "plate_z_um": 125.877,
+    "n_am": 1482,
+    "n_se": 6184,
+    "n_am_in_section": 175,
+    "n_se_in_section": 358,
+    "wall_overlap": {
+     "AM": {
+      "bottom_max_um": 0.5738,
+      "top_max_um": 0.534
+     },
+     "SE": {
+      "bottom_max_um": 1.1879,
+      "top_max_um": 1.349
+     }
+    },
+    "tgz": "docs/data/kg50_d3_cell_verdict_20261027/kg50_d3_end_20261027.tgz",
+    "tgz_sha256": "918394e1c1531a7a83f793234cf56fba845d347f4f88d4724dc1434e701d2de3",
+    "members": {
+     "kg50_d3_b50_s1/input_kg50_d3_b50_s1.liggghts": "7589c8ac6440cbafa41a5cc79a07d58a05708971fc4bd9e44db2d951d7728278",
+     "kg50_d3_b50_s1/post_kg50_d3_b50_s1/atom_end_4575002.liggghts": "38f108c61291f40bc9df634fb4864e08ac697b71a5dc168e5bc5b64a85bb6939",
+     "kg50_d3_b50_s1/post_kg50_d3_b50_s1/mesh_end_4575002.stl": "f6d6d05782a38dadf53005bbf7009c8b4d6ba987057dd7510aa734922b26e984"
+    }
+   }
+  },
+  "y0_um": 25.0,
+  "x_range_um": [
+   0,
+   50.0
+  ],
+  "z_range_um": [
+   0,
+   130.0
+  ],
+  "um_per_in": 54.852321,
+  "colors": {
+   "SE": "#D2642A",
+   "AM": "#9A9A9A",
+   "wall": "#000000",
+   "placeholder_frame": "#B0B0B0"
+  },
+  "files": {
+   "p1_sections.png": "39c006c1c3ec7c12c5bf7b67e8375c332b194e0330838bc11ad0070b50e75e9a",
+   "p1_sections.svg": "e44b10c3370d2848df431b493451117db1047da3da9be972e587b6960e4beeab"
+  },
+  "csv_rows": 1641
+ },
+ "size_ratio": {
+  "size_in": [
+   4.4,
+   0.86
+  ],
+  "dpi": 300,
+  "d50_um": [
+   0.7,
+   1.0,
+   2.0,
+   3.0
+  ],
+  "ratios": [
+   8.571429,
+   6.0,
+   3.0,
+   2.0
+  ],
+  "throat_um": 0.928203,
+  "throat_factor": 0.154700538,
+  "files": {
+   "p1_size_ratio.png": "6efe860df3e8f9b1b20ab1f2974429d91da9f3d4514e715b17f337f0309a3803",
+   "p1_size_ratio.svg": "c4b0339b502d897ea3963c94928d47190e52cad4f071614e5facff56a63adff9"
+  },
+  "axis_box_in": [
+   1.12,
+   0.29999999999999993,
+   3.1800000000000006,
+   0.26000000000000006
+  ],
+  "schematic_box_in": [
+   0.02,
+   0.03,
+   0.8,
+   0.8
+  ]
+ }
+}
