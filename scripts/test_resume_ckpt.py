@@ -28,9 +28,13 @@ run every 안 include) · C (시험 뒤 덱 · 러너 바뀜 · 실행 영수증
 SLURM 처럼 제출 때 사본으로 떠서 돌리고 · 잡 앞뒤 고리 FAKE_PRE_SPOOL · _PRE_TRIAL · _POST_TRIAL · _PRE_MAIN · _POST_MAIN) · 시험 로그
 잡 안 덱 신원 관문 (-T · 본 흐름) · 잡 안 sha256 대조 (시험 · 본 잡 시작 전) · 멈춘 폴더 링크 · 환경 줄 음성 · -n · -x 시작 거부 · 잡 안 cd 실패 ·
 BASH_ENV 의 mpirun 함수 · 경로 속 ERROR · runnerck 직접 호출 (RBU).  리뷰어 장면 (attack.py) 은 같은 꼴을 여기서 만든다.
+10-30 (KG50R-F01 2 판 · 독립 사전 공격 R1–R8 · 1저자 "권고대로") — VP = 정적 대조의 남은 구멍: 상태 표 키 자리 치환 (R1) · 본 덱 체크포인트 앞
+run every · partition 안 명령 (R2) · 줄 읽기 = LIGGGHTS file()/parse() (R3) · 준비 구간 print file 을 읽는 명령 (R4) · write_restart 체크포인트 앞
+흐름 줄 (R5) · 판 메시 file 이름 = 펼친 이름 (R6) · 펼친 글 크기 상한 (R7) · group 값 대조 (R8).
 
   python3 scripts/test_resume_ckpt.py                 # 고친 스크립트 (기본)
   python3 scripts/test_resume_ckpt.py --only RB       # RB 묶음만 (변이 시험용)
+  python3 scripts/test_resume_ckpt.py --only VP       # VP 묶음만 (변이 시험용)
   python3 scripts/test_resume_ckpt.py --script <경로>  # 다른 판 (고치기 전 판 실패 확인용)
   python3 scripts/test_resume_ckpt.py --compare-old <옛 판>
       # 장면마다 옛 판도 같은 입력으로 돌려 stdout · 보고 · 작업 폴더 파일 · 제출 여부를 대조 (임시 경로 · 날짜 시각만 맞춤 ·
@@ -1150,6 +1154,247 @@ def group_rb(script, chk, grp):
             r['rep'][-700:] + ran(r))
 
 
+# ═══ VP: 10-30 (KG50R-F01 2 판 · 독립 사전 공격 R1–R8 · 1저자 "권고대로") — 정적 대조 (-C) 의 남은 구멍 ═══
+#   R1 상태 표 키 = 치환 전 글자 (fix gx${n} 둘이 한 키 · unfix ${u} 가 아무것도 안 지움) · R2 본 덱 체크포인트 앞 run every · partition 안
+#   상태 명령 · R3 줄 읽기 ↔ LIGGGHTS file()/parse() (#\r · & + NBSP · variab&↵le · 제어 글자 · 주석 밖 비 ASCII · 주석 따옴표 규칙) ·
+#   R4 준비 구간 print file/append 로 쓴 파일을 읽음 · R5 write_restart 체크포인트 앞 label · jump · clear · python · R6 판 메시 file 이름
+#   있는지 = 펼친 이름 · R7 펼친 글 크기 상한 (지수 폭발) · R8 group 그 자리 치환 값 대조 (변이 M16 이 살아남던 자리).
+#   리뷰어 장면 (스크래치 f01rev/a0*.py · 덱) 은 같은 꼴을 여기서 만든다 (받은 D2 덱 · v3 50×50 · 합성 write_restart 덱).
+F01P = 'KG50R-F01 · 사전 공격'
+
+
+def run_deckcheck_limited(script, main_text, res_text, ckpt, s0, workdir_files=(), limit=60):
+    """-C 를 새 세션으로 돌리고 limit 초 넘으면 프로세스 묶음 전체를 끝낸다 (R7 — 고치기 전 판은 몇 분 · 손자 python 이 남지 않게).
+    → (종료 코드 · stdout · 걸린 초 · 시간 초과?)"""
+    import signal
+    import time
+    tmp = tempfile.mkdtemp(prefix='rckvp7_')
+    try:
+        mp, rp = os.path.join(tmp, 'm.liggghts'), os.path.join(tmp, 'r.liggghts')
+        for p, t in ((mp, main_text), (rp, res_text)):
+            with open(p, 'w', encoding='utf-8', newline='') as f:
+                f.write(t)
+        wd = os.path.join(tmp, 'w')
+        os.makedirs(wd)
+        for n in workdir_files:
+            open(os.path.join(wd, n), 'w').close()
+        t0 = time.time()
+        p = subprocess.Popen(['bash', script, '-C', mp, rp, ckpt, str(s0), wd], stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                             start_new_session=True)
+        try:
+            out, _ = p.communicate(timeout=limit)
+            return p.returncode, out.decode('utf-8', 'replace'), time.time() - t0, False
+        except subprocess.TimeoutExpired:
+            try:
+                os.killpg(p.pid, signal.SIGKILL)
+            except OSError:
+                pass
+            p.communicate()
+            return -9, '', time.time() - t0, True
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def group_vp(script, chk, grp):
+    grp('VP')
+    tmp = tempfile.mkdtemp(prefix='rckvp_')
+    try:
+        D2D = os.path.join(ROOT, 'docs/data/kg50_resume_tests_20261027/d2_main_1028_0942')
+        with open(os.path.join(D2D, 'input_kg50_d2_b50.liggghts'), encoding='utf-8') as f:
+            d2m = f.read()
+        with open(os.path.join(D2D, 'input_kg50_d2_b50_r4.liggghts'), encoding='utf-8') as f:
+            d2r = f.read()
+        D2K = ('restart_kg50_d2_b50/restart_settling_20001.bin', 20001)
+        FG = 'fix gravi all gravity 98.1 vector 0.0 0.0 -1.0\n'
+        GX = 'fix gx all gravity 98.1 vector 0.0 0.0 -1.0\n'
+        GP = 'fix gravi all gravity ${g_probe} vector 0.0 0.0 -1.0\n'
+        DMP = FG + 'fix damp all viscous 1.0e-5\n'
+        INS1, NI = 'run 1\nunfix ins_mix\n', 'variable n_ins equal count(all)\n'
+        PLATE = 'plate_kg50_d2_b50.stl'
+        for t, n in ((FG, 1), (DMP, 1), (NI, 1), ('top_mesh all mesh/surface/stress file %s ' % PLATE, 1)):
+            assert d2m.count(t) == n and d2r.count(t) == n, t
+        assert d2m.count(INS1) == 1 and d2r.count(INS1) == 0 and d2m.count('fix ins_mix all insert/pack') == 1
+
+        def d2(mrep, rrep, old=FG):
+            return d2m.replace(old, mrep), d2r.replace(old, rrep)
+        with open(MAIN50, encoding='utf-8') as f:
+            t50 = f.read()
+        r50 = res_after('good', MAIN50, C50, tmpl=True)
+        CK50 = ('restart_%s/restart_after_settling.bin' % C50, 200001)
+        AS50 = dict(mode='after_settling', orig_log=AS_LOG)
+        FI = 'fix integr all nve/sphere\n'
+        assert t50.count(FI) == 1 and r50.count(FI) == 1
+        # 합성 write_restart 덱 (변수 없음 — 변수 표 (KG50R-F01 1 판) 가 못 보는 꼴 · 리뷰어 A7s · C1)
+        SR = 'units si\nread_restart restart_after_settling.bin\n' + GX + FI + 'run 1\nrun 50\n'
+        SK = ('restart_after_settling.bin', 100)
+
+        def sm(pre, post=''):
+            return 'units si\n' + pre + GX + post + FI + 'run 100\nwrite_restart restart_after_settling.bin\nrun 1\nrun 50\n'
+        STL = ''.join('print "%s" %s w.stl screen no\n' % (t, 'file' if k == 0 else 'append') for k, t in enumerate(
+            ('solid w', 'facet normal 0 0 -1', 'outer loop', 'vertex 0.0 0.0 ${pz}', 'vertex 0.05 0.05 ${pz}', 'vertex 0.05 0.0 ${pz}',
+             'endloop', 'endfacet', 'endsolid w')))
+        MF = 'fix wm all mesh/surface file w.stl type 1 scale 1.0\n'
+
+        def chain(depth, vref):
+            # R7: a_k = a_(k-1) + a_(k-1) — ${} (정의 때 치환 · 펼친 글이 매 단 두 배) · v_ (쓸 때 계산 · 펼치기가 매 단 두 갈래)
+            c = 'variable a0 equal 1.0\n' + ''.join('variable a%d equal %s+%s\n' % ((k,) + (vref % (k - 1),) * 2) for k in range(1, depth + 1))
+            return FG + c + 'fix gx all gravity ${a%d} vector 0.0 0.0 -1.0\n' % depth
+
+        # (꼬리표 · R · (본 덱, 재개 덱) · (체크포인트, S0) · 작업 폴더 빈 파일 · 꼭 있어야 할 문제 줄 조각 (KG50R-F01 든 문제 줄 · 다 있어야) ·
+        #   본 흐름 (-T) 도 돌릴 꾸밈 (None = -C 만))
+        neg = [
+            ('VP1a R1 본 덱 fix gx${n} 둘 (n 1 → 2 = gx1 · gx2) · 재개 덱 fix gx${n} 하나 (n 2) — 키가 치환 전 글자라 한 키로 접힘',
+             d2(FG + 'variable n equal 1\nfix gx${n} all gravity 98.1 vector 0.0 0.0 -1.0\nvariable n equal 2\n'
+                'fix gx${n} all gravity 98.1 vector 0.0 0.0 -1.0\n', FG + 'variable n equal 2\nfix gx${n} all gravity 98.1 vector 0.0 0.0 -1.0\n'),
+             D2K, (), ['사전 공격 R1', '키 자리', 'gx${n}'], None),
+            ('VP1b R1 본 덱 fix gx · variable u string gx · unfix ${u} · 재개 덱 fix gx 만 (unfix ${u} 가 아무것도 안 지움)',
+             d2(FG + GX + 'variable u string gx\nunfix ${u}\n', FG + GX), D2K, (), ['사전 공격 R1', '키 자리', '${u}'], None),
+            ('VP1c R1 본 덱 variable u string damp · unfix ${u} (생산 감쇠 fix 를 지움) · 재개 덱 그대로 (감쇠 있음)',
+             (d2m.replace(DMP, DMP + 'variable u string damp\nunfix ${u}\n'), d2r), D2K, (), ['사전 공격 R1', '키 자리', 'unfix ${u}'], {}),
+            ('VP1d R1 v3 after_settling — 본 덱 fix gx${n} 둘 · 재개 덱 하나',
+             (t50.replace(FI, FI + 'variable n equal 1\nfix gx${n} all gravity 98.1 vector 0.0 0.0 -1.0\nvariable n equal 2\n'
+                          'fix gx${n} all gravity 98.1 vector 0.0 0.0 -1.0\n'),
+              r50.replace(FI, FI + 'variable n equal 2\nfix gx${n} all gravity 98.1 vector 0.0 0.0 -1.0\n')), CK50, (),
+             ['사전 공격 R1', '키 자리', 'gx${n}'], None),
+            ('VP1e R1 v3 after_settling — 본 덱 unfix ${u} (u = gx) · 재개 덱 fix gx 남김',
+             (t50.replace(FI, FI + GX + 'variable u string gx\nunfix ${u}\n'), r50.replace(FI, FI + GX)), CK50, (),
+             ['사전 공격 R1', '키 자리', '${u}'], None),
+            ('VP1f R1 fix 스타일 자리 ${s} (s = insert/pack · 재삽입 판별이 치환 전 글자를 봄 · 두 덱 같은 글자)',
+             d2(FG + 'variable s string insert/pack\nfix ins2 all ${s} seed 123457 distributiontemplate pdd_mix\n',
+                FG + 'variable s string insert/pack\nfix ins2 all ${s} seed 123457 distributiontemplate pdd_mix\n'), D2K, (),
+             ['사전 공격 R1', '키 자리', '${s}'], None),
+            ('VP1g R1 region 이름 자리 ${r} (두 덱 같은 글자)',
+             d2(FG + 'variable r string rb\nregion ${r} block 0 1 0 1 0 1 units box\n', FG + 'variable r string rb\nregion ${r} block 0 1 0 1 0 1 units box\n'),
+             D2K, (), ['사전 공격 R1', '키 자리', '${r}'], None),
+            ('VP1h R1 pair_coeff 형 자리 ${t} (두 덱 같은 글자)',
+             d2(FG + 'variable t equal 1\npair_coeff ${t} ${t}\n', FG + 'variable t equal 1\npair_coeff ${t} ${t}\n'), D2K, (),
+             ['사전 공격 R1', '키 자리', '${t}'], None),
+            ('VP2a R2 본 덱 삽입 run 1 every 1 "fix gx …" (재개 덱에 gx 없음 · if 안 같은 명령은 이미 거부)',
+             (d2m.replace(INS1, 'run 1 every 1 "%s"\nunfix ins_mix\n' % GX.strip()), d2r), D2K, (), ['사전 공격 R2', 'run every', 'fix gx'], {}),
+            ('VP2b R2 본 덱 fix gy (삽입 앞) · 삽입 run 1 every 1 "unfix gy" · 재개 덱 fix gy 남김',
+             (d2m.replace('fix ins_mix all insert/pack', 'fix gy all gravity 98.1 vector 0.0 0.0 -1.0\nfix ins_mix all insert/pack', 1)
+              .replace(INS1, 'run 1 every 1 "unfix gy"\nunfix ins_mix\n'), d2r.replace(NI, 'fix gy all gravity 98.1 vector 0.0 0.0 -1.0\n' + NI)),
+             D2K, (), ['사전 공격 R2', 'run every', 'unfix gy'], None),
+            ('VP2c R2 본 덱 삽입 run 1 every 1 "timestep 2.0e-6" (재개 덱 timestep ${dt} = 1e-6)',
+             (d2m.replace(INS1, 'run 1 every 1 "timestep 2.0e-6"\nunfix ins_mix\n'), d2r), D2K, (), ['사전 공격 R2', 'run every', 'timestep'], None),
+            ('VP2d R2 본 덱 체크포인트 앞 partition yes 1 fix gx … (파티션 하나 = 실행)',
+             (d2m.replace(INS1, INS1 + 'partition yes 1 ' + GX), d2r), D2K, (), ['사전 공격 R2', 'partition'], None),
+            ('VP2e R2 본 덱 삽입 run 1 every 1 "jump SELF nowhere" (run every · partition 안 jump 도 거부 — restart 체크포인트 남은 step 셈이 못 봄)',
+             (d2m.replace(INS1, 'run 1 every 1 "jump SELF nowhere"\nunfix ins_mix\n'), d2r), D2K, (), ['사전 공격 R2', 'run every', 'jump'], None),
+            ('VP3a R3 재개 덱 "#\\rvariable g_probe equal 196.2" (LIGGGHTS = 주석 한 줄 · 예전 도구 = 정의) → 제어 글자 거부',
+             (d2m.replace(FG, 'variable g_probe equal 98.1\nvariable g_probe equal 196.2\n' + GP + 'variable g_probe equal 98.1\n'),
+              d2r.replace(FG, 'variable g_probe equal 98.1\n#\rvariable g_probe equal 196.2\n' + GP + 'variable g_probe equal 98.1\n')), D2K, (),
+             ['사전 공격 R3', '제어 글자'], {}),
+            ('VP3b R3 재개 덱 "# note &<NBSP>" 다음 줄 variable g_probe equal 196.2 (LIGGGHTS = 안 이음 → 정의가 돈다 · 예전 = 주석에 붙임)',
+             (d2m.replace(FG, 'variable g_probe equal 98.1\n' + GP), d2r.replace(FG, 'variable g_probe equal 98.1\n# note & \nvariable g_probe equal 196.2\n' + GP)),
+             D2K, (), ['196.2'], {}),
+            ('VP3c R3 본 덱 "variab&" ↵ "le g_probe equal 196.2" (LIGGGHTS = variable · 사이 공백 없음 · 예전 = "variab le")',
+             (d2m.replace(FG, 'variable g_probe equal 98.1\nvariab&\nle g_probe equal 196.2\n' + GP + 'variable g_probe equal 98.1\n'),
+              d2r.replace(FG, 'variable g_probe equal 98.1\n' + GP + 'variable g_probe equal 98.1\n')), D2K, (), ['그 자리 치환 값이 본 덱과 다름', '196.2'], {}),
+            ('VP3d R3 두 덱 fix gravi 의 낱말 사이 NBSP (98.1<NBSP>vector · LIGGGHTS 는 한 낱말 · 예전 도구 = 공백)',
+             d2(FG.replace(' vector', ' vector'), FG.replace(' vector', ' vector')), D2K, (), ['사전 공격 R3', '주석 밖 비 ASCII'], None),
+            ('VP3e R3 두 덱 fix gravi 의 낱말 사이 \\f (제어 글자)', d2(FG.replace(' vector', '\x0cvector'), FG.replace(' vector', '\x0cvector')), D2K, (),
+             ['사전 공격 R3', '제어 글자'], None),
+            ('VP3f R3 재개 덱 주석 안 NUL (제어 글자 · 주석 안이어도)', (d2m, d2r.replace(FG, FG + '# nul \x00 here\n')), D2K, (), ['사전 공격 R3', '제어 글자'], None),
+            ("VP3g R3 두 덱 print 'q\"x' # 한글 (LIGGGHTS 주석 규칙 = 따옴표가 바뀜 → # 뒤도 명령 · 예전 = 주석으로 뺌)",
+             d2(FG + "print 'q\"x' # 한글\n", FG + "print 'q\"x' # 한글\n"), D2K, (), ['사전 공격 R3', '주석 밖 비 ASCII'], None),
+            ('VP4a R4 준비 구간 print file/append w.stl (${pz} · 본 덱 0.2 ↔ 재개 덱 0.5) → 준비 구간 fix mesh/surface file w.stl 이 읽음',
+             d2(FG + 'variable pz equal 0.5\nvariable pz equal 0.2\n' + STL + 'variable pz equal 0.5\n' + MF,
+                FG + 'variable pz equal 0.5\n' + STL + 'variable pz equal 0.5\n' + MF), D2K, (), ['사전 공격 R4', 'w.stl'], {}),
+            ('VP4b R4 준비 구간 print file %s (두 덱 같은 글자) → 뒤 구간 fix top_mesh 가 그 파일을 읽음' % PLATE,
+             d2(FG + 'print "solid x" file %s screen no\n' % PLATE, FG + 'print "solid x" file %s screen no\n' % PLATE), D2K, (),
+             ['사전 공격 R4', PLATE], None),
+            ('VP5a R5 합성 write_restart — 본 덱 체크포인트 앞 jump SELF sk 가 fix gx 를 건너뜀 · 재개 덱 fix gx (변수 없음)',
+             (sm('jump SELF sk\n', 'label sk\n'), SR), SK, (), ['사전 공격 R5', 'jump SELF sk'], None),
+            ('VP5b R5 합성 write_restart — 본 덱 체크포인트 앞 clear (fix gx 를 지움) · 재개 덱 fix gx',
+             (sm('', 'clear\nunits si\n'), SR), SK, (), ['사전 공격 R5', 'clear'], None),
+            ('VP5c R5 합성 write_restart — 본 덱 체크포인트 앞 label 하나 (쓰이지 않아도 · 보수 쪽)', (sm('label l0\n'), SR), SK, (),
+             ['사전 공격 R5', 'label l0'], None),
+            ('VP5d R5 합성 write_restart — 본 덱 체크포인트 앞 if 안 jump (겹친 흐름 줄)', (sm('if "1 > 2" then "jump SELF nowhere"\n'), SR), SK, (),
+             ['사전 공격 R5', 'jump SELF nowhere'], None),
+            ('VP5e R5 합성 write_restart — 본 덱 체크포인트 앞 python (상태를 바꿀 수 있다)', (sm('python pf source here "pass"\n'), SR), SK, (),
+             ['사전 공격 R5', 'python'], None),
+            ('VP5f R5 v3 after_settling — 본 덱 jump SELF skipx 가 fix gx 를 건너뜀 · 재개 덱 fix gx',
+             (t50.replace(FI, FI + 'jump SELF skipx\n' + GX + 'label skipx\n'), r50.replace(FI, FI + GX)), CK50, (), ['사전 공격 R5', 'jump SELF skipx'], None),
+            ('VP6b R6 판 메시 fix file ${mf} ↔ ${mf}_r4 (펼치면 wall_kg50.stl_r4) — 작업 폴더에 치환 전 이름 "${mf}_r4" 만 있음',
+             d2(FG + 'variable mf string wall_kg50.stl\nfix wmesh all mesh/surface file ${mf} type 1 scale 1.0\n',
+                FG + 'variable mf string wall_kg50.stl\nfix wmesh all mesh/surface file ${mf}_r4 type 1 scale 1.0\n'), D2K, ('${mf}_r4',),
+             ['wall_kg50.stl_r4', '작업 폴더에 없음'], None),
+            ('VP2f R2 두 덱 끝 partition yes 1 include extra.in (partition 안 include · next = 다룰 수 없는 구문 — run every · if 안과 같은 길)',
+             (d2m + 'partition yes 1 include extra.in\n', d2r + 'partition yes 1 include extra.in\n'), D2K, (), ['다룰 수 없는 구문', 'include'], None),
+            ('VP4c R4 준비 구간 print file ${pf} (pf = w.stl · 이름에 그 자리 치환 = 정할 수 없음) → 준비 구간 fix mesh/surface file w.stl',
+             d2(FG + 'variable pf string w.stl\nprint "solid w" file ${pf} screen no\n' + MF, FG + 'variable pf string w.stl\nprint "solid w" file ${pf} screen no\n' + MF),
+             D2K, (), ['사전 공격 R4', '${pf}'], None),
+            ('VP6c R6 판 메시 fix file w${k}.stl ↔ w${k}_r4.stl (k = equal 4 · 펼친 이름에 equal 값) — 작업 폴더에 치환 전 이름 "w${k}_r4.stl" 만 있음',
+             d2(FG + 'variable k equal 4\nfix wmesh all mesh/surface file w${k}.stl type 1 scale 1.0\n',
+                FG + 'variable k equal 4\nfix wmesh all mesh/surface file w${k}_r4.stl type 1 scale 1.0\n'), D2K, ('w${k}_r4.stl',),
+             ['사전 공격 R6', '펼칠 수 없음'], None),
+            ('VP6d R6 뒤 구간 판 메시 fix top_mesh file ${pf} ↔ ${pf}_r4 (pf = %s) — 작업 폴더에 치환 전 이름 "${pf}_r4" 만 있음' % PLATE,
+             (d2m.replace(FG, FG + 'variable pf string %s\n' % PLATE).replace('top_mesh all mesh/surface/stress file %s ' % PLATE,
+                                                                             'top_mesh all mesh/surface/stress file ${pf} '),
+              d2r.replace(FG, FG + 'variable pf string %s\n' % PLATE).replace('top_mesh all mesh/surface/stress file %s ' % PLATE,
+                                                                             'top_mesh all mesh/surface/stress file ${pf}_r4 ')), D2K, ('${pf}_r4',),
+             ['사전 공격 R6', '뒤 구간'], None),
+            ('VP8 R8 group gsel type ${t} — 본 덱 t 1 → 3 → group → 1 · 재개 덱 3 을 뺌 (변이 M16 = group 을 값 대조에서 빼면 통과하던 자리)',
+             d2(FG + 'variable t equal 1\nvariable t equal 3\ngroup gsel type ${t}\nvariable t equal 1\n',
+                FG + 'variable t equal 1\ngroup gsel type ${t}\nvariable t equal 1\n'), D2K, (), ['그 자리 치환 값이 본 덱과 다름', '${t}'], None),
+        ]
+        for tag, (mt, rt), ck, wfiles, frags, flow in neg:
+            mp = os.path.join(tmp, 'vpm.liggghts')
+            with open(mp, 'w', encoding='utf-8', newline='') as f:
+                f.write(mt)
+            rp = os.path.join(tmp, 'vpr.liggghts')
+            with open(rp, 'w', encoding='utf-8', newline='') as f:
+                f.write(rt)
+            rc, out = deckcheck_only(script, mp, rp, ck[0], ck[1], wfiles)
+            bad = [l for l in out.splitlines() if l.startswith('  ✗ ')]
+            chk('%s → -C 거부 (%s)' % (tag, ' · '.join(frags)), rc != 0 and bad and all(any(x in l for l in bad) for x in frags), out)
+            if flow is not None:
+                r = run_case(script, None, None, res_text=rt, trial_text=trial_log('ok'), main_bytes=mt.encode('utf-8'), ckpt=ck[0],
+                             extra=('-T',), **flow)
+                chk('%s → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패)' % tag,
+                    not r['trial'] and not r['main'] and '✗ 재개 덱 정적 대조 실패' in r['out'], r['out'])
+        # 양성 · 대조군 — 고친 판이 정상 덱을 막지 않음 (VP6a 는 고치기 전 판이 치환 전 이름으로 찾아 거짓 거부)
+        pos = [
+            ('VP2z R2 대조군 — 본 덱 삽입 run 1 every 1 "print \'every ok\'" (print 만)',
+             (d2m.replace(INS1, 'run 1 every 1 "print \'every ok\'"\nunfix ins_mix\n'), d2r), D2K, (), '그 자리 치환 대조'),
+            ('VP3z R3 대조군 — 두 덱 fix gravi 줄 끝 한글 주석', d2(FG.replace('\n', '   # 중력 · 한글 주석\n'), FG.replace('\n', '   # 중력 · 한글 주석\n')),
+             D2K, (), '그 자리 치환 대조'),
+            ('VP4z R4 대조군 — 두 덱 준비 구간 print file note.txt (읽는 명령 없음)',
+             d2(FG + 'print "note" file note.txt screen no\n', FG + 'print "note" file note.txt screen no\n'), D2K, (), '그 자리 치환 대조'),
+            ('VP5z R5 대조군 — 합성 write_restart (흐름 줄 없음)', (sm(''), SR), SK, (), '재개 지점 상태 대조'),
+            ('VP6a R6 판 메시 fix file ${mf} ↔ ${mf}_r4 — 작업 폴더에 펼친 이름 wall_kg50.stl_r4 만 있음 (고치기 전 판 = 치환 전 이름으로 찾아 거짓 거부)',
+             d2(FG + 'variable mf string wall_kg50.stl\nfix wmesh all mesh/surface file ${mf} type 1 scale 1.0\n',
+                FG + 'variable mf string wall_kg50.stl\nfix wmesh all mesh/surface file ${mf}_r4 type 1 scale 1.0\n'), D2K, ('wall_kg50.stl_r4',),
+             '판 메시 파일만 다름 (재개 지점 fix wmesh): wall_kg50.stl_r4'),
+            ('VP7z R7 대조군 — ${} 사슬 6 단 (두 덱 같음)', d2(chain(6, '${a%d}'), chain(6, '${a%d}')), D2K, (), '그 자리 치환 대조'),
+            ('VP8z R8 대조군 — group gsel type ${t} (두 덱 같은 값)',
+             d2(FG + 'variable t equal 1\ngroup gsel type ${t}\n', FG + 'variable t equal 1\ngroup gsel type ${t}\n'), D2K, (), '그 자리 치환 대조'),
+        ]
+        for tag, (mt, rt), ck, wfiles, frag in pos:
+            mp = os.path.join(tmp, 'vpm.liggghts')
+            with open(mp, 'w', encoding='utf-8', newline='') as f:
+                f.write(mt)
+            rp = os.path.join(tmp, 'vpr.liggghts')
+            with open(rp, 'w', encoding='utf-8', newline='') as f:
+                f.write(rt)
+            rc, out = deckcheck_only(script, mp, rp, ck[0], ck[1], wfiles)
+            chk('%s → -C 통과 (문제 0 · %s)' % (tag, frag), rc == 0 and '통과 (문제 0)' in out and frag in out, out)
+        # R7 — 펼친 글 크기 상한: 깊은 사슬은 짧은 시간에 닫힌 실패 (고치기 전 판 = ${} 20 단 316 s (리뷰어 실측) · v_ 24 단은 그보다 훨씬 김)
+        SCH = FG + 'variable a0 string ab\n' + ''.join('variable a%d string ${a%d}${a%d}\n' % (k, k - 1, k - 1) for k in range(1, 21)) + \
+            'fix gx all gravity ${a20} vector 0.0 0.0 -1.0\n'
+        for tag, sch in (('${} 사슬 20 단 (정의 때 치환 · 글이 매 단 두 배)', chain(20, '${a%d}')), ('v_ 사슬 24 단 (쓸 때 계산 · 매 단 두 갈래)', chain(24, 'v_a%d')),
+                         ('string ${}${} 사슬 20 단 (string 글이 매 단 두 배 · 2 MB)', SCH)):
+            mt, rt = d2(sch, sch)
+            rc, out, sec, to = run_deckcheck_limited(script, mt, rt, D2K[0], D2K[1], limit=60)
+            bad = [l for l in out.splitlines() if l.startswith('  ✗ ')]
+            chk('VP7 R7 %s → 60 초 안에 -C 거부 (사전 공격 R7 · 자를 넘음)' % tag,
+                not to and rc != 0 and any('사전 공격 R7' in l and '자를 넘음' in l for l in bad),
+                '%.1f 초%s · rc %d · ' % (sec, ' · 시간 초과 (프로세스 묶음 끝냄)' if to else '', rc) + out[-1300:])
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def main():
     script = SCRIPT
     if '--script' in sys.argv:
@@ -1173,6 +1418,11 @@ def main():
     # 10-30 (KG50R-F02): --only RB = 러너 결속 묶음만 (변이 시험용 · 다른 묶음 안 돎)
     if '--only' in sys.argv and sys.argv[sys.argv.index('--only') + 1] == 'RB':
         group_rb(script, chk, grp)
+        print('%d PASS · %d FAIL' % (ok, fail))
+        return 0 if fail == 0 else 1
+    # 10-30 (KG50R-F01 2 판): --only VP = 사전 공격 R1–R8 묶음만 (변이 시험용)
+    if '--only' in sys.argv and sys.argv[sys.argv.index('--only') + 1] == 'VP':
+        group_vp(script, chk, grp)
         print('%d PASS · %d FAIL' % (ok, fail))
         return 0 if fail == 0 else 1
 
@@ -2164,6 +2414,8 @@ def main():
                 r['trial'] and not r['main'] and '재개 덱 정적 대조: 통과' in r['out'], r['out'])
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+    # ── VP: 정적 대조 남은 구멍 (10-30 KG50R-F01 2 판 · 사전 공격 R1–R8) — 위 group_vp ──
+    group_vp(script, chk, grp)
     # ── RB: 러너 결속 (10-30 KG50R-F02) — 위 group_rb ──
     group_rb(script, chk, grp)
 
