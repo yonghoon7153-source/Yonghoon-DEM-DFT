@@ -1,0 +1,213 @@
+{
+  "scope": "reviewer synthetic arithmetic; no campaign observations; no production-function verification",
+  "throat": {
+    "diameter_ratio": 0.15470053837925168,
+    "D_AM_um": 6,
+    "throat_um": 0.9282032302755101,
+    "D_AM_over_D_SE": [
+      2.0,
+      3.0,
+      6.0,
+      8.571428571428571
+    ]
+  },
+  "composition": {
+    "phi_SE_solid": 0.3429177468772095,
+    "phi_AM_solid": 0.6570822531227904,
+    "phi_SE_bulk_at_published_sphere_porosity_18_95pct": 0.27793483384397827,
+    "phi_implied_by_rounded_D3_table": 0.2779759,
+    "tau_from_wrong_solid_phi": 16.616915532735074,
+    "solid_phi_vs_bulk_phi_bias_pct": 23.38062924120914
+  },
+  "identity": {
+    "fixed_phi": 0.3,
+    "f": [
+      0.1,
+      0.2
+    ],
+    "transport_tortuosity": [
+      2.9999999999999996,
+      1.4999999999999998
+    ],
+    "variable_phi_counterexample": {
+      "phi": [
+        0.2,
+        0.1
+      ],
+      "f": [
+        0.04,
+        0.03
+      ],
+      "transport_tortuosity": [
+        5.0,
+        3.3333333333333335
+      ]
+    }
+  },
+  "series_current": {
+    "uniform_R_ohm": [
+      1,
+      1,
+      1
+    ],
+    "bottleneck_R_ohm": [
+      1,
+      98,
+      1
+    ],
+    "uniform_current_A": 0.3333333333333333,
+    "bottleneck_current_A": 0.01,
+    "bottleneck_all_cut_currents_A": [
+      0.01,
+      0.01,
+      0.01
+    ],
+    "both_internal_node_current_gini": 0.0,
+    "bottleneck_power_fraction": 0.98,
+    "sigma_ratio_same_geometry": 0.03
+  },
+  "edge_80pct": {
+    "chain_edges": 10,
+    "R_each_ohm": 1,
+    "terminal_V": 1,
+    "terminal_current_A": 0.1,
+    "sum_edge_magnitudes_A": 1.0,
+    "selected_edges": 8,
+    "selected_sum_fraction": 0.8,
+    "selected_subgraph_terminal_flow_A": 0.0
+  },
+  "node_weight": {
+    "before_node_currents": [
+      0.8,
+      0.2
+    ],
+    "after_second_branch_subdivision": [
+      0.8,
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+      0.2
+    ],
+    "before_gini": 0.30000000000000004,
+    "after_gini": 0.20769230769230765,
+    "terminal_current_before_after": 1.0
+  },
+  "sigma_product": {
+    "threshold_f_1_over_f_3": 2.217391304347826,
+    "threshold_f_07_over_f_3_if_sample_identity": 2.2666666666666666,
+    "threshold_f_07_over_f_1_if_sample_identity": 1.0222222222222221,
+    "pellet_reference_counterexample": {
+      "intrinsic_mScm": 10,
+      "pellet_factor": 0.5,
+      "measured_pellet_mScm": 5,
+      "same_pellet_network_fed_pellet_sigma_mScm": 2.5
+    }
+  },
+  "unknown_d2": {
+    "synthetic_f_1_2_3": [
+      0.1,
+      0.09,
+      0.08
+    ],
+    "sigma_scenario_low": [
+      2.3,
+      2.4,
+      5.1
+    ],
+    "sigma_scenario_high": [
+      2.3,
+      4.9,
+      5.1
+    ],
+    "effective_low": [
+      0.23,
+      0.216,
+      0.408
+    ],
+    "effective_high": [
+      0.23,
+      0.441,
+      0.408
+    ],
+    "max_d_low_um": 3,
+    "max_d_high_um": 2
+  },
+  "surface_map": {
+    "a_over_R": 0.8,
+    "disc_over_4piR2": 0.16000000000000003,
+    "cap_over_4piR2": 0.20000000000000007,
+    "cap_over_disc": 1.2500000000000002
+  },
+  "overlap_union_counterexample": {
+    "three_coincident_unit_spheres": true,
+    "exact_union": 4.1887902047863905,
+    "sum_spheres_minus_pair_lenses": 0.0
+  },
+  "contact_total_area_identity": {
+    "count": [
+      10,
+      20
+    ],
+    "mean_area_um2": [
+      0.1,
+      0.05
+    ],
+    "total_area_um2": [
+      1.0,
+      1.0
+    ]
+  },
+  "published_E_ratio_not_verified_deck_ratio": 16.296296296296294,
+  "hydrostatic_stress_counterexample": {
+    "pressure_MPa": [
+      10,
+      300
+    ],
+    "von_Mises_MPa": [
+      0,
+      0
+    ],
+    "axial_compression_magnitude_MPa": [
+      10,
+      300
+    ]
+  },
+  "fixed_interface_counterexample": {
+    "sigma_scale": [
+      1,
+      2
+    ],
+    "R_equals_1_over_sigma_plus_1": [
+      2,
+      1.5
+    ],
+    "conductance": [
+      0.5,
+      0.6666666666666666
+    ],
+    "conductance_ratio": 1.3333333333333333
+  },
+  "checks": {
+    "throat_between_07_and_1": true,
+    "solid_composition_closes": true,
+    "rounded_D3_phi_compatible_to_0001": true,
+    "tortuosity_identity_inverts_f": true,
+    "series_kcl_same_cuts": true,
+    "series_power_identity": true,
+    "lorenz_same_despite_33fold_resistance": true,
+    "edge_sum_not_terminal_flow": true,
+    "node_segmentation_changes_count_gini": true,
+    "unknown_d2_changes_argmax": true,
+    "both_sigma_scenarios_monotone": true,
+    "sphere_cap_not_projected_disc": true,
+    "pair_lenses_not_general_union": true,
+    "count_mean_not_independent_total": true,
+    "hydrostatic_VM_does_not_measure_load": true,
+    "fixed_interface_breaks_common_sigma_scaling": true
+  }
+}

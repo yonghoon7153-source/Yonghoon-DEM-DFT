@@ -13998,6 +13998,76 @@
       "opened_in": "docs/reviews/codex_kg50_resume_fix_recheck_20261030/codex_review_kg50_resume_fix_recheck_20261030.md",
       "title": "(Codex §4 문서 잔여) docs/data/kg50_resume_tests_20261027/README.md 16 행 *\"보고 원본 … 아직 받지 않았다\"* 가 수령 뒤에도 현재형으로 남음 · 5 행 *\"최신 e59c43e6\"* 의 시점 표지 없음",
       "note": "판정문 §4 표 아래 · 새 원본 파일이 있다는 실질 증거를 부정하는 지적 아님 · 문구 수정만으로 최신 실제 실행 증거가 생기지 않는다.  ✅ 10-30 반입 커밋에서 두 줄 시점 표지 (역사 서술 분리)."
+    },
+    {
+      "id": "KG50B-01",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-30 50kg 4차년도 DEM 7쪽 계획 검토 (요청서 2판 · 리뷰 핀 6d07cf79d · ZIP 범위)",
+      "opened_in": "docs/reviews/codex_kg50_report_plan_review_20261030/codex_review_kg50_report_plan_20261030.md",
+      "title": "(Codex KG50P-01) 보고 계획 2판 p4 *SE 이용률 곡선* · p6 *활성 AM 비율 · 두께 방향 이온 전류* — 선형 1 V 이온 망 (반응 · 전자 공급 · SoC 없음) 의 전류 · 접촉률을 SE/AM 전기화학 이용률 · 후막 반응 분포로 읽음 (직렬 [1,1,1] ↔ [1,98,1] Ω = 내부 노드 Gini 둘 다 0 인데 전도도 0.03 배 · 높이 단면 순 전류는 보존식으로 z 무관)",
+      "note": "판정문 §1 KG50P-01 · 반례 = 합성 산술 · 우리 트리 재현 (독립 재계산 13/13 · 무작위 3D 망 단면 순 전류 = 단자 전류 · 상대 차 7.2e-15) · 우리 웹앱 전류 몫 사다리 (scripts/network_current.py = 상위 |I| 접촉의 32 높이 단면 평균 순 흐름 / 단자 전류) 도 경로 보존 아님 (10 간선 직렬에서 8 간선 = 0.8125 · 단자 안 이음) · 최소 해결 = p4 '이온 망의 연결성과 병목' · p6 = z 별 SE 분율 · 전위 강하 · 소산 · 응력 · 전류 그림 = 정의 그대로의 이름 · 수정 계획 docs/50kg/kg50_report_plan_fix_plan_20261030.md Q1 (⬜ 1저자)."
+    },
+    {
+      "id": "KG50B-02",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-30 50kg 4차년도 DEM 7쪽 계획 검토 (요청서 2판 · 리뷰 핀 6d07cf79d · ZIP 범위)",
+      "opened_in": "docs/reviews/codex_kg50_report_plan_review_20261030/codex_review_kg50_report_plan_20261030.md",
+      "title": "(Codex KG50P-02) 보고 계획 2판 p5 *f(d) × 실측 σ(d) = σ_eff · 최적 입도* — 펠릿 측정 σ 를 입자 σ 로 넣은 곱은 조건부 시나리오 (펠릿 망 효율 0.5 반례: 측정 5 를 같은 망에 넣으면 2.5) · 2 µm 실측 없음 (양끝 σ 고정 · 중간 2.4 ↔ 4.9 가정에 따라 곱의 최댓값 3 ↔ 2 µm)",
+      "note": "판정문 §1 KG50P-02 · 손익분기 f(1)/f(3) > 5.1/2.3 = 2.217 · f(0.7)/f(3) > 2.267 · f(0.7)/f(1) > 1.022 (0.7 둘 = 0.66 µm 시료 대응 확인 시나리오만) · 공통 σ₀ 비례는 고정 계면저항이 없을 때만 (R = 1/σ + 1 반례 = 4/3 배) — 원 솔버 이온 망의 σ₀ 비례는 분석 계획에서 순수 함수 시험으로 확인 · 최소 해결 = 주 f(d) · 보조 손익분기선 · 결측 유지 · '최적 입도' 문장 없음 · 수정 계획 Q2."
+    },
+    {
+      "id": "KG50B-03",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-30 50kg 4차년도 DEM 7쪽 계획 검토 (요청서 2판 · 리뷰 핀 6d07cf79d · ZIP 범위)",
+      "opened_in": "docs/reviews/codex_kg50_report_plan_review_20261030/codex_review_kg50_report_plan_20261030.md",
+      "title": "(Codex KG50P-03) 가설 고리의 '수송 tortuosity 감소' 와 'σ_eff 증가' 를 독립 확인 둘로 셈 (고정 φ 0.3 에서 f 0.1 → 0.2 이면 수송 tortuosity 3 → 1.5 는 대수 귀결) · φ 분모 규약 미명시 (고체 기준 0.34292 를 넣으면 D3 수송 tortuosity 13.47 → 16.62)",
+      "note": "판정문 §1 KG50P-03 · 요청서의 수송 tortuosity 정의 (φ_SE σ₀/σ_eff · 제곱근 아님) 는 τ 규약과 맞음 · φ 가 변하면 수송 tortuosity 감소만으로 σ 증가 결론 불가 ((φ, f) = (0.2, 0.04) → (0.1, 0.03)) · 접촉 수 × 평균 면적 = 면적 합 (10 × 0.1 = 20 × 0.05) · 최소 해결 = f · 수송 tortuosity 한 묶음 · 부피 · 길이 규약 명시 · Δln f = Δln φ − Δln τ² = 산술 분해 · 수정 계획 Q4."
+    },
+    {
+      "id": "KG50B-04",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-30 50kg 4차년도 DEM 7쪽 계획 검토 (요청서 2판 · 리뷰 핀 6d07cf79d · ZIP 범위)",
+      "opened_in": "docs/reviews/codex_kg50_report_plan_review_20261030/codex_review_kg50_report_plan_20261030.md",
+      "title": "(Codex KG50P-04) 입도별 시드 1 · D3 50 × 50 은 40 × 40 기각 뒤 등록 fallback (영역 수렴 인증 아님) — AM 1,481 개 분포를 침대 간 반복으로 · D3 50 × 50 CV 1.1 % 를 다른 입도 오차막대로 쓰면 안 됨 · 결과 일부 (D3 영역) 를 본 뒤의 분석 계획을 '결과 전 등록' 이라 부르면 안 됨",
+      "note": "판정문 §1 KG50P-04 · 최소 해결 = '고정 유한 영역 · 입도별 시드 1 비교' 한정 · 본 비교 D3 = 등록된 kg50_d3_b50_s1 (영역 시험 3 시드 평균으로 바꾸지 않음) · 분석 계획 = 'D3 영역 결과 · D2 완주 열람 뒤, 네 입도 종합 지표 산출 전' 공개 · 추가 시드 · 언로딩은 이번 필수 아님 (계획 §4-1 그대로) · 수정 계획 Q4."
+    },
+    {
+      "id": "KG50B-05",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-30 50kg 4차년도 DEM 7쪽 계획 검토 (요청서 2판 · 리뷰 핀 6d07cf79d · ZIP 범위)",
+      "opened_in": "docs/reviews/codex_kg50_report_plan_review_20261030/codex_review_kg50_report_plan_20261030.md",
+      "title": "(Codex KG50P-05) 새 기하 지표 정의 미고정 — AM 껍질 SE 분율 (전체 껍질 ↔ 다른 AM 뺀 공간 분모 · AM 평균 ≠ 전극 분율 · ΣV − Σ쌍 렌즈 ≠ 합집합: 세 겹친 단위 구 = 0 ↔ 4π/3) · 구면 지도 (a/R 0.8 원판 16 % ↔ 캡 20 %) · 대표 AM 사후 선택 · 가압 ↔ 이완 압력 가지 혼합",
+      "note": "판정문 §1 KG50P-05 · 최소 해결 = V(SE 합집합 ∩ 껍질 ∩ 분석영역) / V(껍질 ∩ 분석영역) · 같은 µm 구간 주 · 경계 규칙 고정 · 기하 캡 합집합 · 등면적 투영 · 대표 AM 선택 규칙 사전 고정 · 가압 / 이완 가지 따로 · 해결 증거 = 빈 SE · 단일 구 · 중복 구 · 경계 절단 · 회전 / 평행이동 · 원판 ↔ 캡 · 해상도 반례 시험 · 수정 계획 Q4."
+    },
+    {
+      "id": "KG50B-06",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-30 50kg 4차년도 DEM 7쪽 계획 검토 (요청서 2판 · 리뷰 핀 6d07cf79d · ZIP 범위)",
+      "opened_in": "docs/reviews/codex_kg50_report_plan_review_20261030/codex_review_kg50_report_plan_20261030.md",
+      "title": "(Codex KG50P-06) 요청서 2판 p1 '모델 · 물성 = 이종기술과 같음' — 이종기술 2차년도 PDF p14 조건표는 SE Young's modulus 22 GPa · 이번 계획 = DEM 유효 E 1.35 GPa (숫자 비 16.3) · 계획 PPTX 5 장 '미립화 → 입계 증가 → 감소' 를 이번 단분산 DEM 이 입증하는 것처럼 연결 · 계획 7 장 옛 1 · 2 · 3 µm tortuosity 수치 재사용 위험",
+      "note": "판정문 §1 KG50P-06 · 입력을 바꾸라는 권고 아님 · 메인 확인 10-30: 선행 이종기술 계열 DEM 덱 (ps73 감쇠 가지 덱 docs/data/ps73_damping_branch_20261007/in.branch_A.liggghts 41 행 · 같은 폴더 가지 덱 전부) 과 kg50 D2 덱 (docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/input_kg50_d2_b50.liggghts 58 행) 모두 youngsModulus 1.4e8 1.4e8 0.135e7 (AM 140 · SE 1.35 GPa) — DEM 입력은 같고 22 GPa 는 조건표의 물성 줄 (10-13 세미나 Q1 결정) · 최소 해결 = 조건표 두 줄 (물성 · DEM 유효) · '모델 계열 = 선행 보고와 같음' · 입계 기전 = 실측 보고 인용만 (DEM 범위 밖) · 수정 계획 Q3."
+    },
+    {
+      "id": "KG50B-07",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-30 Codex 보고 계획 검토 반입 때 같은 부류 점검 (KG50P-02 · 입력 물성이 입도 비교에 섞이는 길)",
+      "opened_in": "docs/50kg/kg50_report_plan_fix_plan_20261030.md",
+      "title": "망 결과의 Stage-E σ_ion 은 SE 입도 계수 sigma_ionic_grain_factor_SE (scripts/run_network_full_corrections.py · r_SE 0.3–0.5 µm = 0.90 · r_SE ≥ 0.5 = 1.00 · 출처 없는 모델 가정 SELF-51) 를 곱한다 — 50kg 네 입도 중 D0.7 (r_SE 0.35 µm) 에만 10 % 감점 · 보고에 Stage-E σ 를 쓰면 가설 ('미립화 → σ 감소') 을 모형이 미리 넣는 꼴",
+      "note": "아직 보고 그림 없음 (결과 오염 아님 · 계획 단계 발견) · scripts/tau_flux.py 는 원 솔버 σ 를 쓴다 (530 행 docstring) · 최소 해결 = 입도 비교 = 원 솔버 σ · f 만 · Stage-E σ_ion 은 보고에 안 씀 · 분석 계획에 명시 · 수정 계획 Q5 (⬜ 1저자)."
     }
   ]
 }

@@ -1,0 +1,16 @@
+{
+ "throat_between_0.7_and_1": true,
+ "phi_bulk_matches_D3_to_1e-4": true,
+ "bottleneck_I_0.01": true,
+ "bottleneck_gini_0_and_uniform_gini_0": true,
+ "bottleneck_middle_power_0.98": true,
+ "gini_0.3_to_0.2077": true,
+ "d2_argmax_flips": true,
+ "cap_over_disc_1.25": true,
+ "net_cut_current_conserved_1e-9": true,
+ "abs_sum_per_plane_varies": true,
+ "power_identity_random_net": true,
+ "repo_ladder_0.8_but_disconnected": true,
+ "fixed_interface_4_over_3": true
+}
+all True

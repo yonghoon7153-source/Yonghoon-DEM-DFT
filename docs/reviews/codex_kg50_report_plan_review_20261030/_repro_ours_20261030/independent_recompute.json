@@ -1,0 +1,134 @@
+{
+ "scope": "independent recompute of reviewer arithmetic + two plan-specific checks; synthetic",
+ "throat_um": 0.9282032302755101,
+ "size_ratio_DAM_over_DSE": {
+  "3": 2.0,
+  "2": 3.0,
+  "1": 6.0,
+  "0.7": 8.571428571428571
+ },
+ "phi_SE_solid": 0.3429177468772095,
+ "phi_SE_bulk_at_eps_sphere_18.95": 0.27793483384397827,
+ "phi_from_D3_rounded_tau2_times_f": 0.27797590000000005,
+ "tau2_if_solid_phi_used": 16.616915532735074,
+ "tau2_bias_pct": 23.36240187628118,
+ "series_uniform": {
+  "I_terminal": 0.33333333333333337,
+  "cut_currents": [
+   0.33333333333333337,
+   0.3333333333333333,
+   0.3333333333333333
+  ],
+  "internal_node_gini": 4.1633363423443364e-17,
+  "power_frac_per_edge": [
+   0.33333333333333337,
+   0.33333333333333326,
+   0.33333333333333326
+  ],
+  "power_identity": 1.0
+ },
+ "series_bottleneck": {
+  "I_terminal": 0.009999999999999898,
+  "cut_currents": [
+   0.009999999999999898,
+   0.01,
+   0.01
+  ],
+  "internal_node_gini": 1.2576745200831883e-15,
+  "power_frac_per_edge": [
+   0.009999999999999799,
+   0.9800000000000003,
+   0.010000000000000004
+  ],
+  "power_identity": 1.00000000000001
+ },
+ "node_gini_before_after_subdivision": [
+  0.30000000000000004,
+  0.20769230769230765
+ ],
+ "sigma_break_even": {
+  "f1_over_f3": 2.217391304347826,
+  "f07_over_f3": 2.2666666666666666,
+  "f07_over_f1": 1.0222222222222221
+ },
+ "pellet_double_count_example": 2.5,
+ "unknown_d2": {
+  "low": [
+   0.23,
+   0.216,
+   0.408
+  ],
+  "high": [
+   0.23,
+   0.441,
+   0.408
+  ]
+ },
+ "cap_over_disc_at_a_over_R_0.8": 1.25,
+ "three_coincident_spheres": {
+  "union": 4.1887902047863905,
+  "sum_minus_pair_lenses": 0.0,
+  "inclusion_exclusion_with_triple": 4.1887902047863905
+ },
+ "hydrostatic_von_mises": [
+  0.0,
+  0.0
+ ],
+ "fixed_interface_conductance_ratio": 1.3333333333333333,
+ "random_3d_network": {
+  "n_nodes": 400,
+  "n_edges": 1463,
+  "I_terminal": 3.7254299421331907,
+  "net_cut_current_over_I": [
+   0.9999999999999991,
+   0.9999999999999966,
+   0.9999999999999974,
+   0.999999999999998,
+   0.9999999999999953,
+   0.9999999999999963,
+   0.9999999999999949,
+   0.9999999999999937,
+   0.9999999999999928
+  ],
+  "net_cut_max_rel_dev": 7.216449660063518e-15,
+  "sum_abs_I_over_I_per_plane": [
+   1.052122361730684,
+   1.0686836859480198,
+   1.0596178852820617,
+   1.0473899168208227,
+   1.0236647260309903,
+   1.0413204035470869,
+   1.0365857957639877,
+   1.0011303327602368,
+   1.124938264615676
+  ],
+  "power_frac_per_z_quarter": [
+   0.19700385142928897,
+   0.3142537303644032,
+   0.2630547592153752,
+   0.22568765899093268
+  ],
+  "power_identity": 0.9999999999999964
+ },
+ "repo_share_ladder_chain": {
+  "share_after_8_edges": 0.8125,
+  "sum_abs_I_fraction": 0.8,
+  "selected_edges_connect_terminals": false,
+  "identity_cut_flux_over_I": 1.0
+ },
+ "checks": {
+  "throat_between_0.7_and_1": true,
+  "phi_bulk_matches_D3_to_1e-4": true,
+  "bottleneck_I_0.01": true,
+  "bottleneck_gini_0_and_uniform_gini_0": true,
+  "bottleneck_middle_power_0.98": true,
+  "gini_0.3_to_0.2077": true,
+  "d2_argmax_flips": true,
+  "cap_over_disc_1.25": true,
+  "net_cut_current_conserved_1e-9": true,
+  "abs_sum_per_plane_varies": true,
+  "power_identity_random_net": true,
+  "repo_ladder_0.8_but_disconnected": true,
+  "fixed_interface_4_over_3": true
+ }
+}

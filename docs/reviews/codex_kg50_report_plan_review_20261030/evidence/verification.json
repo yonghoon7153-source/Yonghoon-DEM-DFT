@@ -1,0 +1,91 @@
+{
+  "review_date": "2026-10-30",
+  "declared_pin": "6d07cf79d5b696587e37fc8f4407e9419d37b1ec",
+  "scope": "user authorized ZIP-only review; no remote git-blob verification",
+  "input_zip_sha256": "893fd525ca8c74e18f091dd85efeeb76f4773bff45fc0e1f2429d9acee134bb8",
+  "pin_hash_checks": [
+    {
+      "path": "repo/docs/50kg/codex_kg50_report_plan_request_20261030.md",
+      "expected_sha256": "db03be1d60bde07d7dd72b6d0aa83ce06fccce6d1e1c8262b5e1037b31055fb0",
+      "actual_sha256": "db03be1d60bde07d7dd72b6d0aa83ce06fccce6d1e1c8262b5e1037b31055fb0",
+      "zip_equal_extracted": true
+    },
+    {
+      "path": "repo/docs/50kg/dem_plan_20261026.md",
+      "expected_sha256": "8a3cc068f4cbc244e5e2e3e507f34c431ac5d15dd05aacfcd6ba9465e5070155",
+      "actual_sha256": "8a3cc068f4cbc244e5e2e3e507f34c431ac5d15dd05aacfcd6ba9465e5070155",
+      "zip_equal_extracted": true
+    },
+    {
+      "path": "repo/docs/report_making_principles.md",
+      "expected_sha256": "c40856bdf009f60d266ede856ef3b8b457c0525689f5a0fc28d4605132612376",
+      "actual_sha256": "c40856bdf009f60d266ede856ef3b8b457c0525689f5a0fc28d4605132612376",
+      "zip_equal_extracted": true
+    },
+    {
+      "path": "repo/CLAUDE.md",
+      "expected_sha256": "5daa8a73da2160a02177cb72a1f697a0073ea4c64769f2242d82fba93e78e00e",
+      "actual_sha256": "5daa8a73da2160a02177cb72a1f697a0073ea4c64769f2242d82fba93e78e00e",
+      "zip_equal_extracted": true
+    },
+    {
+      "path": "repo/docs/data/kg50_decks_20261027_v3_b50/README.md",
+      "expected_sha256": "d1dc17f93a8acc1cf16ba603628662c68617533eb07c3132358ac6731ab10bb5",
+      "actual_sha256": "d1dc17f93a8acc1cf16ba603628662c68617533eb07c3132358ac6731ab10bb5",
+      "zip_equal_extracted": true
+    },
+    {
+      "path": "repo/docs/data/kg50_d3_cell_verdict_20261027/README.md",
+      "expected_sha256": "6ec8c603a3871f4cd32a6d18c4c087a112954df368a1bc9730955081b03a0197",
+      "actual_sha256": "6ec8c603a3871f4cd32a6d18c4c087a112954df368a1bc9730955081b03a0197",
+      "zip_equal_extracted": true
+    },
+    {
+      "path": "repo/docs/data/lhs_network214_35f032737_20261030/README.md",
+      "expected_sha256": "6a154d634e86f4626f2ff34a12edc5d0c814b70f8e697babed832f466cbd83a2",
+      "actual_sha256": "6a154d634e86f4626f2ff34a12edc5d0c814b70f8e697babed832f466cbd83a2",
+      "zip_equal_extracted": true
+    },
+    {
+      "path": "input/hetero_tech_3sub_year2_interim_v1.pdf",
+      "expected_sha256": "f3bb0eb7cdc281e16576289c1721ece68e01811f36d46edbd60867a6eb78d58c",
+      "actual_sha256": "f3bb0eb7cdc281e16576289c1721ece68e01811f36d46edbd60867a6eb78d58c",
+      "zip_equal_extracted": true
+    },
+    {
+      "path": "input/kg50_batch_year4_plan_v1.pptx",
+      "expected_sha256": "ba2df9911bc9d2a0cd3bb86887798b4bd8a9c81d4f8a877a22794af39efc1c4e",
+      "actual_sha256": "ba2df9911bc9d2a0cd3bb86887798b4bd8a9c81d4f8a877a22794af39efc1c4e",
+      "zip_equal_extracted": true
+    }
+  ],
+  "input_zip_member_count": 10,
+  "all_input_bytes_preserved": true,
+  "synthetic_arithmetic_checks_passed": 16,
+  "production_code_tests_run": false,
+  "simulations_run": false,
+  "repository_code_changes": false,
+  "visual_pages": {
+    "pdf": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "pptx": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ]
+  },
+  "renderers": {
+    "pdf": "Poppler pdftoppm 90 dpi",
+    "pptx": "artifact-tool import PNG; PowerPoint COM access denied; no layout-defect findings from renderer differences"
+  }
+}
