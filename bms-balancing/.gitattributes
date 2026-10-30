@@ -232,3 +232,5 @@ reviews/review_reil_c4e_e1_v4_prereview_20261021/** -text
 reviews/review_reil_c4e_e1_v5_prereview_20261030/** -text
 # 2026-10-30: REIL C4-E · E1-0 증거 — 단계 기록 · stdout / stderr · porcelain · 원천 해시 · 외곽 실행기 사본 · 착수 / 끝 기록 (상태 문서 §84 · §85) — bytes 그대로
 evidence/reil_c4e1_0_20261030/** -text
+# 2026-10-30: REIL C4-E · E1-0 결과 검토 회신 (E1_0_RESULTS_ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION · 고정 HEAD a9544ee0 · 재시험 요구 없음 · 실행 승인 아님 · source/ = 검토자가 본 저장소 사본 · tools/ = 검토자 도구 사본, 실행하지 않음) — bytes 그대로
+reviews/review_reil_c4e1_0_result_20261030/** -text
