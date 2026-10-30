@@ -63,6 +63,19 @@ const ROOT = path.resolve(__dirname, ".."), PAGE = "file://" + path.join(ROOT, "
   await ev(() => { st.namul = "sigeumchi"; demo.go("guide"); }); await page.waitForTimeout(200);
   await page.click("#gBuy"); await page.waitForTimeout(300);
   R.round2.reselect = await page.$eval("#sListTitle", e => e.textContent) + " | cart=" + (await ev(() => st.cart.join(",")));
+  // 9) 받는 방법: 저녁 배달 선택 시 배달비·시간·완료·판매자 카드 반영, 예약 탭
+  await ev(() => { STORES.splice(0, STORES.length, ...JSON.parse(STORES0)); st = Object.assign(st, { cart: ["chamnamul"], namul: "chamnamul", store: "s1", opt: "trim", qty: 1, recv: "pickup", orderAccepted: false }); demo.go("checkout"); }); await page.waitForTimeout(250);
+  R.delivery = { pickupBtn: await page.$eval("#payBtn", e => e.textContent) };
+  await page.click('#recvSeg [data-recv="deliver"]'); await page.waitForTimeout(200);
+  R.delivery.deliverBtn = await page.$eval("#payBtn", e => e.textContent);
+  R.delivery.timeTitle = await page.$eval("#timeTitle", e => e.textContent);
+  R.delivery.sum = await page.$eval("#sumBox", e => e.innerText.replace(/\n+/g, " | "));
+  await page.click("#payBtn"); await page.waitForTimeout(300);
+  R.delivery.done = await page.$eval("#dTitle", e => e.textContent) + " / " + await page.$eval("#dSub", e => e.textContent);
+  await ev(() => { st.chat = null; demo.go("merchant"); }); await page.waitForTimeout(300);
+  R.delivery.merchantOrder = await page.$$eval(".mcard", els => els.find(e => e.innerText.includes("새 주문")).innerText.replace(/\n+/g, " | "));
+  await ev(() => demo.go("box")); await page.waitForTimeout(250);
+  R.preorder = { sets: await page.$$eval("#plans .plan", els => els.length), cta: await page.$eval("#subBtn", e => e.textContent), tab: await page.$eval('[data-tab="box"]', e => e.textContent.trim()) };
   // 7) phone width
   const phone = await browser.newPage({ viewport: { width: 390, height: 844 } });
   phone.on("pageerror", e => errs.push("phone pageerror: " + e.message));

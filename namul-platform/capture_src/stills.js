@@ -30,7 +30,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   // 판매자: 입고 추천 · 마감 할인 (예시 데이터)
   await ev(() => { st.chat = [{ who: "day", text: "10월 30일 금요일" }, { who: "bot", t: "08:55", card: "forecast" }, { who: "bot", t: "19:05", card: "discount" }]; rMerchant(); document.getElementById("chatBody").scrollTop = 0; }); await sleep(300);
   await clock("19:06"); await snap("merchant_forecast");
-  await ev(() => demo.go("box")); await snap("box");
+  await ev(() => demo.go("box")); await snap("preorder");
   await ev(() => { demo.set({ namul: "gosari" }); demo.go("guide"); }); await sleep(300); await snap("guide_gosari");
   await b.close(); console.log("stills v4 ok");
 })();

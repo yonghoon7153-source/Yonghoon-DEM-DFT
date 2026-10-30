@@ -28,6 +28,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await tap('[data-store="s1"]', 1200); lap("checkout");
   await smooth("[data-view=checkout] .v-body", 160, 700); await sleep(300);
   await tap('#optSeg [data-opt="trim"]', 800);
+  await tap('#recvSeg [data-recv="deliver"]', 1000);
+  await tap('#recvSeg [data-recv="pickup"]', 700);
   await tap('#timeSeg [data-time="18:00"]', 900);
   await tap("#payBtn", 2200); lap("done");
   await pe(() => demo.go("merchant")); await sleep(400);
