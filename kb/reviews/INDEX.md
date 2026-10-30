@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-10-23
-updated: 2026-10-23
+date: 2026-10-30
+updated: 2026-10-30
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-10-23
+verifiedAt: 2026-10-30
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -91,7 +91,7 @@ evidenceScope: multi-source-primary
 | BQ6 | 2026-09-13 | `codex_BQ6_prompt_eprime_v51_2026_09_13.md` | `codex_BQ6_reply_eprime_v51_2026_09_13.md` | 회신됨-②미해제 | 같은 라벨 · 주제 토큰 일치 ['eprime', 'v51'] |
 | BQ7 | 2026-09-13 | `codex_BQ7_prompt_eprime_v52_2026_09_13.md` | — | 발송 대기 | — |
 | BQ | 2026-09-13 | `codex_BQ_prompt_eos_v0_disordered_2026_09_13.md` | `codex_BQ_reply_eos_v0_disordered_2026_09_13.md` | (frontmatter 없음) | 같은 라벨 · 주제 토큰 일치 ['disordered', 'eos', 'v0']; 판정 인용 16회 |
-| BR | 2026-09-14 | `codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` | `codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` | 발송됨 | 같은 라벨 · 주제 토큰 일치 ['density', 'g2', 'layer1', 'li2s']; 판정 인용 16회 |
+| BR | 2026-09-14 | `codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` | `codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` | 발송됨 | 같은 라벨 · 주제 토큰 일치 ['density', 'g2', 'layer1', 'li2s']; 판정 인용 17회 |
 | BS | 2026-09-22 | `li2s1a_BS_prompt_li2s_relax_provenance_2026_09_22.md` | `li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md` | 수신됨-회신함 | 같은 라벨 · 주제 토큰 일치 ['li2s', 'provenance', 'relax'] |
 | BT | 2026-09-22 | `li2s1a_BT_prompt_neff_window_bootstrap_2026_09_22.md` | `li2s1a_BT_reply_neff_window_bootstrap_2026_09_22.md` | 수신됨-회신함 | 같은 라벨 · 주제 토큰 일치 ['bootstrap', 'neff', 'window'] |
 | BU | 2026-09-22 | `li2s1a_BU_prompt_variance_ratio_rule_2026_09_22.md` | `li2s1a_BU_reply_variance_ratio_rule_2026_09_22.md` | 수신됨-회신함 | 같은 라벨 · 주제 토큰 일치 ['ratio', 'rule', 'variance'] |
@@ -126,7 +126,7 @@ evidenceScope: multi-source-primary
 | CX | 2026-10-14 | `li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` | `li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md` | 발송됨 (사용자 · 발송일 기록 없음 · 발송판 `kb/projects/li2s_glass_control_readout_letter_CX_send_2026_10_14.md` = 보내는 글 그대로) — ✅ 회신 CX 수령 2026-10-19 → `li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md` | 같은 라벨 · 주제 토큰 일치 ['control', 'glass', 'li2s', 'readout']; 판정 인용 1회 |
 | CY | 2026-10-15 | `codex_CY_prompt_wad_outsourcing_round2_design_2026_10_15.md` | `codex_CY_reply_wad_outsourcing_round2_design_2026_10_15.md` | 발송 2026-10-15 · ✅ 회신 수령 2026-10-15 → `codex_CY_reply_wad_outsourcing_round2_design_2026_10_15.md` (조건부 GO · 탄소 추가·은 a4 찬성 · 최소 수정 여섯 묶음 뒤 빌드 · 발송 승인은 CZ) | 같은 라벨 · 주제 토큰 일치 ['design', 'outsourcing', 'round2', 'wad'] |
 | CZ | 2026-10-17 | `codex_CZ_prompt_wad_outsourcing_round2_bundle_2026_10_17.md` | `codex_CZ_reply_wad_outsourcing_round2_bundle_2026_10_17.md` | 발송 2026-10-22 (기준 커밋 8d41e4e0 · 묶음 MANIFEST 31e47474…) · ✅ 회신 수령 2026-10-22 → `codex_CZ_reply_wad_outsourcing_round2_bundle_2026_10_17.md` (NO-GO · 발송 보류 · 구조 봉인·집계 산식 유지 · 반송 검사 경로 P0 다섯 묶음 + P1 · 해제조건 일곱 · 고친 묶음 재봉인) | 같은 라벨 · 주제 토큰 일치 ['bundle', 'outsourcing', 'round2', 'wad'] |
-| DA | 2026-10-19 | `li2s1a_DA_prompt_li2s_glass_bmeas_650k_readout_2026_10_19.md` | — | 초안 — 발송 전 (사용자가 보낸다 · 발송판 `kb/projects/li2s_glass_bmeas_650k_letter_DA_send_2026_10_19.md` = 보내는 글 그대로) | — |
+| DA | 2026-10-19 | `li2s1a_DA_prompt_li2s_glass_bmeas_650k_readout_2026_10_19.md` | — | 발송 안 함 — 2026-10-30 사용자 위임 (외부 1저자 확인 불필요 · D-2026-10-30-li2s-first-author-confirmation-waived) · Q-DA-1~7 은 편지의 우리 제안대로 정함 (Q-DA-7 = 지금 안 엶) · 트랙 마감 `db/properties/lpscl_smallcell_glass_track_closed_2026_10_30.json` | — |
 | DB | 2026-10-22 | `codex_DB_prompt_wad_outsourcing_round2_v2_2026_10_22.md` | `codex_DB_reply_wad_outsourcing_round2_v2_2026_10_22.md` | 발송 2026-10-22 (사용자 · 기준 커밋 3d684e502 · 묶음 v2 MANIFEST b9450f6f…) → 회신 수령 NO-GO (P0 1 · P1 3 — codex_DB_reply_wad_outsourcing_round2_v2_2026_10_22.md) | 같은 라벨 · 주제 토큰 일치 ['outsourcing', 'round2', 'v2', 'wad'] |
 | DC | 2026-10-22 | `codex_DC_prompt_wad_outsourcing_round2_v3_2026_10_22.md` | `codex_DC_reply_wad_outsourcing_round2_v3_2026_10_22.md` | 발송 2026-10-22 (사용자 · 기준 커밋 3e70329cb · 묶음 v3 MANIFEST bf7b2ac9…) → 회신 수령 NO-GO (P1 2 — codex_DC_reply_wad_outsourcing_round2_v3_2026_10_22.md) | 같은 라벨 · 주제 토큰 일치 ['outsourcing', 'round2', 'v3', 'wad'] |
 | DD | 2026-10-22 | `codex_DD_prompt_wad_outsourcing_round2_v4_2026_10_22.md` | `codex_DD_reply_wad_outsourcing_round2_v4_2026_10_22.md` | 발송 2026-10-22 (사용자 · 기준 커밋 1e4d113d2 · 묶음 v4 MANIFEST 39522906…) → 회신 수령 NO-GO (P1 2 — codex_DD_reply_wad_outsourcing_round2_v4_2026_10_22.md) | 같은 라벨 · 주제 토큰 일치 ['outsourcing', 'round2', 'v4', 'wad'] |

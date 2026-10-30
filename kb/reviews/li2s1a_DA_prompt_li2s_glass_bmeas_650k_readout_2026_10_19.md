@@ -3,11 +3,11 @@ title: "DA 프롬프트 — li2s B 측정 가능 조건 카드 ① 단계 판독
 tags: [review, li2s, lpscl_smallcell, glass, control-system, li3ps4, readout, 650K, branch-b2, bridge-exchange, t50, density-reference, track-closure, external-first-author, prompt, letter]
 letter: DA
 date: 2026-10-19
-updated: 2026-10-23
+updated: 2026-10-30
 track: li2s / lpscl_smallcell_glass
 channel: li2s1a
 kind: prompt
-status: 초안 — 발송 전 (사용자가 보낸다 · 발송판 `kb/projects/li2s_glass_bmeas_650k_letter_DA_send_2026_10_19.md` = 보내는 글 그대로)
+status: 발송 안 함 — 2026-10-30 사용자 위임 (외부 1저자 확인 불필요 · D-2026-10-30-li2s-first-author-confirmation-waived) · Q-DA-1~7 은 편지의 우리 제안대로 정함 (Q-DA-7 = 지금 안 엶) · 트랙 마감 `db/properties/lpscl_smallcell_glass_track_closed_2026_10_30.json`
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-10-19

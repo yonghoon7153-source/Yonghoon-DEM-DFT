@@ -3,7 +3,7 @@
  "kind": "estimand",
  "record_kind": "estimand_card",
  "date": "2026-10-19",
- "status": "draft — 사용자 실행 승인 (10-19 *'이것만 하고 합쳐서 편지 보내자'*) · 외부 1저자 동의 전 = 잠정 (편지 DA 에 같이 묻는다) · 결과 없음 · 10-21 결과 전 축소 개정 (단일점 13 잡 · 키 9_개정_2026_10_21_단일점_축소 · 사용자 *'그럼 해도 될듯'*)",
+ "status": "active — 사용자 (위임 10-30 · D-2026-10-30-li2s-first-author-confirmation-waived) · 편지 DA Q-DA-4 를 위임으로 정함 (발송 안 함) · 결과 전 커밋 셋 대조 ✓ · 두 계 p1 확정 · 트랙 마감에 실음",
  "citable": false,
  "results_seen": false,
  "results_seen_note": "모델 검증 결과는 하나도 없다 — A 구조는 아직 repo 밖 · UMA 0 K 경로 · QE · D3 · BVSE 를 이 유리 열 구조에 돌린 적이 없다. 이미 아는 것 (이 카드의 문턱을 정하는 데 쓰지 않았다): 두 계 밀도 (A 1.578–1.621 · B 1.514–1.622 g/cm³ · B 는 담금질 기계별 두 무리) · 09-16 소셀 A seed1 힘 대조 (F_RMSE 0.039 eV/Å · 그 QE 출력에 응력 블록은 있으나 읽은 적 없다) · 400 원자 g2 seed1 UMA 0 K P_virial −0.346 GPa · turbo − default 응력 max|ΔP| 0.00033 GPa · LPSCl 결정 (같은 PP) P(70) − P(52) +0.001 GPa.",
@@ -211,6 +211,12 @@
    "state": "draft",
    "by": "agent",
    "note": "결과 전 개정 10 — k 대조를 gabia A6000 에서 (kgy OOM · QE 어림 29.36 GB) · Γ 기계 대조 0.01 GPa · 판독은 k 결과 뒤 한 번 · 사용자 10-23 *'필요하면 gabia에서 잠깐 저거 stop하고 해도 되고'*"
+  },
+  {
+   "at": "2026-10-30",
+   "state": "active",
+   "by": "사용자 (위임 10-30)",
+   "note": "결정 D-2026-10-19-lpscl-smallcell-glass-model-check active — 커밋 순서 대조는 결정의 status_history"
   }
  ],
  "기계_판독_값": {

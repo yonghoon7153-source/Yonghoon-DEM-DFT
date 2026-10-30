@@ -3,7 +3,7 @@
  "kind": "estimand",
  "record_kind": "estimand_card",
  "date": "2026-10-14",
- "status": "외부 1저자 동의 (회신 CX · 2026-10-19 · 설계 (i) 그대로) — 개정 CX (결과 전 기록 보탬) 와 같이 읽는다 · 사용자 비준 2026-10-19 (결정 active) · 결과 없음 (B 650 K 다섯 런은 미열람)",
+ "status": "외부 1저자 동의 (회신 CX · 2026-10-19 · 설계 (i) 그대로) — 개정 CX (결과 전 기록 보탬) 와 같이 읽는다 · 사용자 비준 2026-10-19 (결정 active) · 결과 없음 (B 650 K 다섯 런은 미열람) ⏩ 2026-10-30 닫음 — b2 · R 없음 (b2c) · A 650 K 안 돌림 (사용자 위임 10-30 · 마감 lpscl_smallcell_glass_control_bmeasurable_closed_2026_10_30.json)",
  "citable": false,
  "results_seen": false,
  "results_seen_note": "650 K 런은 하나도 없다. 본 것: 대조 계 600 K 판독 (c2 · N_B 1/5 · 경계 넷 β 0.820–0.873 · 늦은 창 β 기록) · A v2 600 K. ⛔ 이 카드의 문턱 · 읽기 규칙은 대조 계 카드의 것을 그대로 쓴다 — 600 K 판독값으로 새 숫자를 정하지 않는다.",
@@ -119,6 +119,12 @@
    "state": "active",
    "by": "사용자 (카드 저자)",
    "note": "사용자 비준 — AskUserQuestion '셋 다 비준 (Recommended)' · 원장 active 전환 (규칙 · 판정은 외부 1저자 회신 CX) · B 650 K 결과 미열람 · 결정 D-2026-10-14-lpscl-smallcell-glass-control-bmeasurable active"
+  },
+  {
+   "at": "2026-10-30",
+   "state": "closed",
+   "by": "사용자 (위임 10-30)",
+   "note": "D-2026-10-30-lpscl-smallcell-glass-bmeasurable-closed active · 트랙 마감 D-2026-10-30-lpscl-smallcell-glass-track-closed"
   }
  ]
 }
