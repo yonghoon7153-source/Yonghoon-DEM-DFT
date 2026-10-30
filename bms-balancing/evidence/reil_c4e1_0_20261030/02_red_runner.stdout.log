@@ -1,0 +1,73 @@
+FFFFFFFFFFF                                                              [100%]
+=================================== FAILURES ===================================
+_ test_r1_an_observation_error_followed_by_a_clean_empty_observation_stays_unknown _
+tests/test_reil_c4e1_runner.py:228: in test_r1_an_observation_error_followed_by_a_clean_empty_observation_stays_unknown
+    assert res["status"] == "unknown", res
+E   AssertionError: {'status': 'empty', 'first_alive': [], 'zombies': [], 'errors': [], ...}
+E   assert 'empty' == 'unknown'
+E     
+E     - unknown
+E     + empty
+____ test_r2_observation_errors_during_the_timeout_loop_are_kept_to_the_end ____
+tests/test_reil_c4e1_runner.py:235: in test_r2_observation_errors_during_the_timeout_loop_are_kept_to_the_end
+    cleanup = R.cleanup
+              ^^^^^^^^^
+E   AttributeError: module 'runner_under_test' has no attribute 'cleanup'
+_ test_r3_cleanup_never_starts_an_observation_past_one_common_deadline_even_when_observations_take_time _
+tests/test_reil_c4e1_runner.py:259: in test_r3_cleanup_never_starts_an_observation_past_one_common_deadline_even_when_observations_take_time
+    cleanup = R.cleanup
+              ^^^^^^^^^
+E   AttributeError: module 'runner_under_test' has no attribute 'cleanup'
+_ test_r4_the_runner_cleans_inherited_git_variables_before_its_first_git_call __
+tests/test_reil_c4e1_runner.py:295: in test_r4_the_runner_cleans_inherited_git_variables_before_its_first_git_call
+    base_env = R.base_env
+               ^^^^^^^^^^
+E   AttributeError: module 'runner_under_test' has no attribute 'base_env'
+_ test_r5_source_table_hashes_the_fixed_targets_and_any_difference_from_the_sealed_table_is_a_problem _
+tests/test_reil_c4e1_runner.py:321: in test_r5_source_table_hashes_the_fixed_targets_and_any_difference_from_the_sealed_table_is_a_problem
+    source_table, source_problems = R.source_table, R.source_problems
+                                    ^^^^^^^^^^^^^^
+E   AttributeError: module 'runner_under_test' has no attribute 'source_table'
+_ test_r6_a_normal_step_writes_both_source_tables_and_records_from_the_right_repo_with_a_clean_child_env _
+tests/test_reil_c4e1_runner.py:371: in test_r6_a_normal_step_writes_both_source_tables_and_records_from_the_right_repo_with_a_clean_child_env
+    run_step = R.run_step
+               ^^^^^^^^^^
+E   AttributeError: module 'runner_under_test' has no attribute 'run_step'
+_ test_r7_preparation_failures_stop_before_the_child_and_intentional_refusals_write_nothing _
+tests/test_reil_c4e1_runner.py:402: in test_r7_preparation_failures_stop_before_the_child_and_intentional_refusals_write_nothing
+    run_step = R.run_step
+               ^^^^^^^^^^
+E   AttributeError: module 'runner_under_test' has no attribute 'run_step'
+_ test_r8_a_real_timeout_kills_the_group_and_an_orphaned_other_session_grandchild_within_the_deadline _
+tests/test_reil_c4e1_runner.py:448: in test_r8_a_real_timeout_kills_the_group_and_an_orphaned_other_session_grandchild_within_the_deadline
+    run_step = R.run_step
+               ^^^^^^^^^^
+E   AttributeError: module 'runner_under_test' has no attribute 'run_step'
+_ test_r9_an_observation_started_before_the_deadline_that_returns_after_it_is_followed_only_by_immediate_actions _
+tests/test_reil_c4e1_runner.py:466: in test_r9_an_observation_started_before_the_deadline_that_returns_after_it_is_followed_only_by_immediate_actions
+    cleanup = R.cleanup
+              ^^^^^^^^^
+E   AttributeError: module 'runner_under_test' has no attribute 'cleanup'
+_ test_r10_an_exception_late_in_cleanup_is_recorded_and_handled_under_the_same_deadline _
+tests/test_reil_c4e1_runner.py:486: in test_r10_an_exception_late_in_cleanup_is_recorded_and_handled_under_the_same_deadline
+    cleanup = R.cleanup
+              ^^^^^^^^^
+E   AttributeError: module 'runner_under_test' has no attribute 'cleanup'
+_ test_r11_proc_reads_are_bytes_and_every_per_pid_read_or_parse_error_is_recorded_without_stopping_the_scan _
+tests/test_reil_c4e1_runner.py:530: in test_r11_proc_reads_are_bytes_and_every_per_pid_read_or_parse_error_is_recorded_without_stopping_the_scan
+    observe = R.observe
+              ^^^^^^^^^
+E   AttributeError: module 'runner_under_test' has no attribute 'observe'
+=========================== short test summary info ============================
+FAILED tests/test_reil_c4e1_runner.py::test_r1_an_observation_error_followed_by_a_clean_empty_observation_stays_unknown
+FAILED tests/test_reil_c4e1_runner.py::test_r2_observation_errors_during_the_timeout_loop_are_kept_to_the_end
+FAILED tests/test_reil_c4e1_runner.py::test_r3_cleanup_never_starts_an_observation_past_one_common_deadline_even_when_observations_take_time
+FAILED tests/test_reil_c4e1_runner.py::test_r4_the_runner_cleans_inherited_git_variables_before_its_first_git_call
+FAILED tests/test_reil_c4e1_runner.py::test_r5_source_table_hashes_the_fixed_targets_and_any_difference_from_the_sealed_table_is_a_problem
+FAILED tests/test_reil_c4e1_runner.py::test_r6_a_normal_step_writes_both_source_tables_and_records_from_the_right_repo_with_a_clean_child_env
+FAILED tests/test_reil_c4e1_runner.py::test_r7_preparation_failures_stop_before_the_child_and_intentional_refusals_write_nothing
+FAILED tests/test_reil_c4e1_runner.py::test_r8_a_real_timeout_kills_the_group_and_an_orphaned_other_session_grandchild_within_the_deadline
+FAILED tests/test_reil_c4e1_runner.py::test_r9_an_observation_started_before_the_deadline_that_returns_after_it_is_followed_only_by_immediate_actions
+FAILED tests/test_reil_c4e1_runner.py::test_r10_an_exception_late_in_cleanup_is_recorded_and_handled_under_the_same_deadline
+FAILED tests/test_reil_c4e1_runner.py::test_r11_proc_reads_are_bytes_and_every_per_pid_read_or_parse_error_is_recorded_without_stopping_the_scan
+11 failed in 0.29s
