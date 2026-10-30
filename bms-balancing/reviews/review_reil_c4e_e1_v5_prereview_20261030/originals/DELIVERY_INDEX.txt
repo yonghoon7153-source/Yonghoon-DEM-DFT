@@ -1,0 +1,16 @@
+REIL E1 v5 사전 검토 전달 목록 — 2026-10-30
+
+검토 ZIP: REIL_C4E_E1_V5_PREREVIEW_20261030.zip
+읽는 순서: CODEX_REPLY_KO.txt → REVIEW_KO.txt → REVIEW_DECISION.json.
+자료 대조: SOURCE_IDENTITIES.json, CAPTURE_METADATA.json, BRANCH_REF_OBSERVATIONS.json,
+STATIC_AUDIT.json, ADDITIONAL_STATIC_CHECKS.json, DRAFT_DIFFS.txt.
+수신 원문·v4 회신 원파일: basis/ 및 LOCAL_BASIS_IDENTITIES.json.
+검토자의 자료 검사 정정: STATIC_AUDIT_FIRST_PASS.json, REVIEWER_AUDIT_CORRECTION.json.
+source/는 고정 커밋의 텍스트 사본이며 실행 지시가 아니다.
+
+ZIP은 PACKAGE_MANIFEST.json 및 그에 열거된 payload를 포함한다.
+ZIP 밖 DELIVERY_RECEIPT.json은 포장 후 생성하는 ZIP 식별·대조 기록이다.
+ZIP 밖 PACKAGE_TOOL_RETURN.json은 실제 포장 도구 반환을 받은 뒤 직렬화하는 기록이다.
+이 파일들을 Claude에게 전달할 수 있다. 외부 발송은 수행하지 않는다.
+
+E1-0 사용자 승인 권고만 해당한다. 실행 승인은 별도이며 E1-0b/E1-1–3은 제외된다.

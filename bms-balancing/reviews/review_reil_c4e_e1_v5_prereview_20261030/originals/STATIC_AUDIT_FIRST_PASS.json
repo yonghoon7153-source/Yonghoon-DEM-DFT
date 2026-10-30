@@ -1,0 +1,440 @@
+{
+  "kind": "REVIEWER_STATIC_DATA_AUDIT",
+  "source_count": 22,
+  "ast_parsed_files": 15,
+  "function_spans": 483,
+  "conditions": 58,
+  "matched": 56,
+  "case_counts": {
+    "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt": 27,
+    "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt": 11,
+    "bms-balancing/tests/test_reil_c4e.py": 21,
+    "bms-balancing/tests/test_reil_c4e_fix.py": 6
+  },
+  "checks": [
+    {
+      "name": "GitHub blob byte identity bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/docs/REIL_C4E_E1_REVISION_SCOPE_v5_20261027.md",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/docs/REIL_C4E_E1_PREREVIEW_SEND_v5_20261027.md",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/tests/test_reil_c4e.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/tests/test_reil_c4e_fix.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/scripts/reil_c4e_run.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/scripts/reil_c4_e3a.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/scripts/reil_c4_monitor.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/scripts/reil_c5_pilot.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/scripts/reil_p0.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/scripts/reil_c6_profile.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity degradation-degeneracy/tools/env_profile.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/reil_c6_rebuild_20261013/REIL_C6.lock.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "GitHub blob byte identity bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "draft seal L",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "draft seal S",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "draft seal LC",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "draft seal RC",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "draft seal R",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "approval request seal",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "TARGETS unique 14 and fixed 13",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT fixed bytes bms-balancing/tests/test_reil_c4e1_launch.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT fixed bytes bms-balancing/tests/test_reil_c4e1_runner.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT fixed bytes bms-balancing/tests/test_reil_c4e.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT fixed bytes bms-balancing/tests/test_reil_c4e_fix.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT fixed bytes bms-balancing/scripts/reil_c4e_run.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT fixed bytes bms-balancing/scripts/reil_c4_e3a.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT fixed bytes bms-balancing/scripts/reil_c4_monitor.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT fixed bytes bms-balancing/scripts/reil_c5_pilot.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT fixed bytes bms-balancing/scripts/reil_p0.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT fixed bytes bms-balancing/scripts/reil_c6_profile.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT fixed bytes degradation-degeneracy/tools/env_profile.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT fixed bytes bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT fixed bytes bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT SKELETON",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT IMPL",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "EXPECT phase mapping",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "35 skeleton signatures",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "35 skeleton NotImplementedError bodies",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "skeleton imports constants main same",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "wrapper literal decoding L",
+      "matched": true,
+      "details": {
+        "line": 380,
+        "keywords": {
+          "text": true,
+          "encoding": "utf-8",
+          "errors": "replace"
+        }
+      }
+    },
+    {
+      "name": "wrapper literal decoding R",
+      "matched": true,
+      "details": {
+        "line": 140,
+        "keywords": {
+          "text": true,
+          "encoding": "utf-8",
+          "errors": "replace"
+        }
+      }
+    },
+    {
+      "name": "no parametrize bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "no parametrize bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "no parametrize bms-balancing/tests/test_reil_c4e.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "no parametrize bms-balancing/tests/test_reil_c4e_fix.py",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "static declared case counts 27 11 21 6",
+      "matched": true,
+      "details": null
+    },
+    {
+      "name": "control target members L",
+      "matched": false,
+      "details": {
+        "count": 39,
+        "names": [
+          "C6_LOCK_SHA256",
+          "DATA",
+          "DATA_FILES",
+          "EXTRA_EXECUTED",
+          "GROUP_GRACE_S",
+          "IDENTITY_HELPER_SHA256",
+          "KILL_WAIT_S",
+          "LEAVES",
+          "MODULE_RELPATHS",
+          "PATHFINDER",
+          "PROC",
+          "PY",
+          "SEAL",
+          "SEAL_MANIFEST_SHA256",
+          "SOURCES",
+          "SOURCES_SHA256",
+          "SOURCE_COMMIT",
+          "SOURCE_LOADER",
+          "SOURCE_URL",
+          "STEPS",
+          "TIMEOUTS",
+          "VENV",
+          "WORK",
+          "__file__",
+          "build_argv",
+          "child_env",
+          "child_result",
+          "flag_problems",
+          "git_run",
+          "group_status",
+          "identity_link",
+          "launch",
+          "main",
+          "precheck",
+          "proc_members",
+          "shadow_problems",
+          "shutil",
+          "stage_verdict",
+          "write_new"
+        ]
+      }
+    },
+    {
+      "name": "control target members R",
+      "matched": false,
+      "details": {
+        "count": 16,
+        "names": [
+          "CLEANUP_S",
+          "EXPECT",
+          "KILL_WAIT_S",
+          "SETTLE_S",
+          "TARGETS",
+          "base_env",
+          "cleanup",
+          "git",
+          "observe",
+          "proc_table",
+          "run_step",
+          "settle",
+          "signal",
+          "source_problems",
+          "source_table",
+          "source_text"
+        ]
+      }
+    },
+    {
+      "name": "13 unchanged references",
+      "matched": true,
+      "details": [
+        {
+          "path": "bms-balancing/tests/test_reil_c4e.py",
+          "identical": true
+        },
+        {
+          "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+          "identical": true
+        },
+        {
+          "path": "bms-balancing/scripts/reil_c4e_run.py",
+          "identical": true
+        },
+        {
+          "path": "bms-balancing/scripts/reil_c4_e3a.py",
+          "identical": true
+        },
+        {
+          "path": "bms-balancing/scripts/reil_c4_monitor.py",
+          "identical": true
+        },
+        {
+          "path": "bms-balancing/scripts/reil_c5_pilot.py",
+          "identical": true
+        },
+        {
+          "path": "bms-balancing/scripts/reil_p0.py",
+          "identical": true
+        },
+        {
+          "path": "bms-balancing/scripts/reil_c6_profile.py",
+          "identical": true
+        },
+        {
+          "path": "degradation-degeneracy/tools/env_profile.py",
+          "identical": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+          "identical": true
+        },
+        {
+          "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+          "identical": true
+        },
+        {
+          "path": "bms-balancing/reil_c6_rebuild_20261013/REIL_C6.lock.txt",
+          "identical": true
+        },
+        {
+          "path": "bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json",
+          "identical": true
+        }
+      ]
+    }
+  ],
+  "received_program_imports_or_calls": 0,
+  "functional_tests": 0,
+  "git_fixture_commands": 0,
+  "limitation": "Source identity and AST/text checks only; not a test result or remote execution/environment audit."
+}

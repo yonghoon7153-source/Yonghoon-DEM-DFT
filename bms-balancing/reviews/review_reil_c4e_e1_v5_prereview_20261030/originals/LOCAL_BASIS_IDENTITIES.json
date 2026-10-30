@@ -1,0 +1,30 @@
+[
+  {
+    "source": "C:\\Users\\Administrator\\.codex\\attachments\\8d1c8bed-6a35-445c-85e1-5037985830c0\\붙여넣은 텍스트.txt",
+    "copy": "basis/REQUEST_RECEIVED.txt",
+    "bytes": 9006,
+    "sha256": "8db3bc861c8d0d109807b6c2c7d70c08213a50d7a168919ae813835b314b045e",
+    "original_unchanged_at_copy": true
+  },
+  {
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_v4_prereview_20261021\\REVIEW_KO.txt",
+    "copy": "basis/V4_REVIEW_KO.txt",
+    "bytes": 10250,
+    "sha256": "06fcc88cbf335cb5f80a8f89b7e6e89f1b0013e0c998ced2a7061163bad5a51f",
+    "original_unchanged_at_copy": true
+  },
+  {
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_v4_prereview_20261021\\REVIEW_DECISION.json",
+    "copy": "basis/V4_REVIEW_DECISION.json",
+    "bytes": 3069,
+    "sha256": "d2c52b37d497f8e0c145b22d204760b091555a141920ba3d1baea48dc2579903",
+    "original_unchanged_at_copy": true
+  },
+  {
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_v4_prereview_20261021\\CODEX_REPLY_KO.txt",
+    "copy": "basis/V4_CODEX_REPLY_KO.txt",
+    "bytes": 2565,
+    "sha256": "60f220454c4b41929bcb90ef7c37ede333effc3ba6122c1552e9db76fa7b2eb0",
+    "original_unchanged_at_copy": true
+  }
+]

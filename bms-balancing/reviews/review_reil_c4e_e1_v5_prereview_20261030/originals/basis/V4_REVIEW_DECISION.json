@@ -1,0 +1,94 @@
+{
+  "kind": "ULTRA_STATIC_PREREVIEW_V4",
+  "date": "2026-10-21",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "commit": "3d3ee8c198f44aa8c2f1c6358f3a1a1aaa99fc5d",
+  "decision": "CHANGES_REQUIRED_NO_EXECUTION",
+  "prior_items": {
+    "V3-01": "STATIC_CORRECTION_ACCEPTED",
+    "V3-02": "STATIC_CORRECTION_ACCEPTED",
+    "V3-03": "STATIC_CORRECTION_ACCEPTED",
+    "V3-04": "A_STATIC_SCOPE_ACCEPTED",
+    "V3-N1": "STATIC_CORRECTION_ACCEPTED"
+  },
+  "findings": [
+    {
+      "id": "V4-01",
+      "priority": 2,
+      "blocking": true,
+      "scope": "S5 test input producer, shared by l27/r11",
+      "title": "Git normalizes the invalid message bytes before log; replacement assertions lack their required input",
+      "locations": [
+        {
+          "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v4_20261021.py.txt",
+          "start": 778,
+          "end": 781
+        },
+        {
+          "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v2_20261021.py.txt",
+          "start": 549,
+          "end": 552
+        }
+      ],
+      "basis": "Static source trace under documented Git 2.43.0 default UTF-8 commit encoding and intended UTF-8 decoding. Not an observed test failure.",
+      "reproduction_executed": false
+    },
+    {
+      "id": "V4-N1",
+      "priority": 3,
+      "blocking": false,
+      "scope": "wording",
+      "title": "Distinguish operational cleanup from real process cleanup inside controls",
+      "path": "bms-balancing/docs/REIL_C4E_E1_APPROVAL_REQUEST_v4_20261021.md",
+      "start": 274,
+      "end": 275
+    }
+  ],
+  "questions": {
+    "Q1": "ACCEPT_STATIC_SHARED_DEADLINE_SCOPE",
+    "Q2": "PROC_AND_ENTRY_FIXES_ACCEPTED_S5_FIXTURE_CHANGES_REQUIRED",
+    "Q3": "ACCEPT_DECLARED_A_SCOPE",
+    "Q4": "ACCEPT_DISCLOSED_ERROR_HIERARCHY_SUBREAPER_INJECTION_NOT_COVERED",
+    "Q5": "ACCEPT_DISCLOSED_V2_INTERFACE_RED_NO_NEW_V3_STAGE_REQUIRED",
+    "Q6": "NOT_READY_FOR_E1_0_APPROVAL_RECOMMENDATION"
+  },
+  "planned": {
+    "baseline_tests": 21,
+    "fix_tests": 6,
+    "launcher_controls": 27,
+    "runner_controls": 11,
+    "green_test_functions": 65,
+    "new_controls": 38,
+    "driver_instances": 8
+  },
+  "static": {
+    "data_conditions": 105,
+    "all_matched": true,
+    "captured_sources": 21,
+    "ast_sources": 15,
+    "top_level_function_class_spans": 153,
+    "unchanged_prior_references": 13,
+    "selected_local_inputs": 23
+  },
+  "execution": {
+    "received_program": 0,
+    "target_imports": 0,
+    "target_tests": 0,
+    "git_fixture": 0,
+    "COMSOL": 0,
+    "probe": 0,
+    "optimizer": 0,
+    "remote_writes": 0,
+    "external_transmission": 0
+  },
+  "functional_status": "NOT_RUN",
+  "implementation_approval": false,
+  "execution_approval": false,
+  "E1_0_approved": false,
+  "E1_0b_approved": false,
+  "E1_1_3_approved": false,
+  "native_ready": false,
+  "scope_note": "Review recommendations only. Author-recorded scope adoption is not current execution authorization. No source/candidate/contract change.",
+  "budget_seconds": null,
+  "whole_review_elapsed_claim": null
+}

@@ -1,0 +1,70 @@
+REIL C4-E E1 승인 요청 v5 — 정적 사전 검토
+2026-10-30 KST
+
+판정
+STATIC_ACCEPTED_E1_0_USER_APPROVAL_RECOMMENDED_NO_EXECUTION.
+새 actionable 차단/비차단 결함은 발견하지 않았다. V4-01(P2)과 V4-N1(P3)은 정적 범위에서 종결한다. S6 및 E1-0 한정 실행 계획의 사전 검토를 수용한다. 사용자의 실행 승인은 별도로 남는다.
+
+범위와 식별
+저장소 yonghoon7153-source/Yonghoon-DEM-DFT, branch claude/14-gate-code-review-9qkx05.
+이번 고정 HEAD: a0e6bdee74ca0734bb43a83b19bc1aca715ed4a3. 작업 시작·종결 전 GET의 HEAD가 같았다.
+이전 v4 검토 기준: 3d3ee8c198f44aa8c2f1c6358f3a1a1aaa99fc5d.
+승인 요청 SHA256: 18db9f15cff07a0336d52bbc014f23759f82dc7fe24d0408870b3c0f746d5d69.
+세부 22개 사본의 Git blob SHA1·bytes·SHA256은 SOURCE_IDENTITIES.json에 있다. 로컬 사본을 blob header와 함께 해시하여 GitHub가 반환한 blob identity와 22개 모두 일치함을 확인했다. 원격 실행 기기의 파일/설치 엔진 상태를 관측한 것은 아니다.
+
+Q1 — V4-01 종결
+소스: launcher controls v5:787–799, runner controls v3:562–574.
+각각 정해진 바이트를 tmp 파일에 쓰고 hash-object -w --no-filters로 blob을 만든다. 같은 cat-file blob 명령을 wrapper 밖의 byte-mode subprocess로 먼저 읽고 stdout == data와 strict UTF-8에서 UnicodeDecodeError를 확인한다. 그 뒤 AST keyword 검사와 대상 wrapper 호출을 거쳐 정확한 data.decode("utf-8","replace"), rc 0, error 없음에 도달한다. 리터럴은 두 파일에서 동일하다.
+Git 2.43.0 hash-object 문서는 기본 타입 blob 및 --no-filters의 입력/개행 변환 배제를 규정한다. 해당 태그 hash-object.c는 type=blob과 no_filters일 때 path=NULL을 전달한다. cat-file.c의 명시적 blob 경로는 stream_blob을 호출하고 이는 필터 없이 stdout으로 전달한다. v4의 commit 메시지 정규화 경로를 사용하지 않는다는 정적 판단을 지지한다.
+fixture 생산자 자체가 기대와 다르면 target wrapper 전에 assertion/예외로 실패할 계획이다. 자기 확인이 실패해도 계속 진행하는 fallback은 없다.
+RED-L에서는 l27의 선행 L.proc_members, RED-R에서는 r11의 선행 R.observe에서 선언된 골격/인터페이스 오류가 먼저 나므로 Git 부분의 RED 도달을 주장하지 않는다. 이는 공개한 기존 RED 범위다.
+이 결론은 V4-01의 잘못된 입력 생산 가정 해소이며 GREEN 통과 관측이 아니다.
+
+Q2 — S6와 디코딩의 영향
+소스: launcher v5:380–388, runner v5:140–149; AST helper LC:111–118 / RC:152–159.
+두 대상 함수 모두 직접 subprocess.run 1개이며 text=True, encoding="utf-8", errors="replace"가 리터럴로 지정된다. 현재 고정 함수에 대한 AST 검사는 적정하다. 실행/동적 데이터흐름/모든 subprocess 경로의 일반적 증명으로 확대하지 않는다.
+HEAD는 ASCII 40자리 hex에 대해 기존 regex 검사가 유지된다. UTF-8 명시로 ASCII 값의 해석은 바뀌지 않는다. porcelain/config에도 같은 디코더가 적용된다. ASCII 구조 구분자와 현재 고정 URL/키 조건은 유지되며 비 UTF-8 바이트는 U+FFFD로 손실 변환된다. 따라서 이 기록을 raw bytes의 가역 보존, 비 UTF-8 경로의 정확한 복구, 모든 locale/설정에 대한 동작 검증으로 읽지 않는다. stdout/stderr 개행 정규화는 이미 text=True였으므로 v5에서 새로 생긴 동작은 아니다.
+Python 3.11 문서의 encoding/errors/text 및 binary-mode 정의와 맞는다. 이번 l27/r11의 LF-only 고정 입력은 text 개행 변환 때문에 기대값이 달라지지 않는다.
+fixture helper _git은 변경되지 않은 text=True 경로이며 소비되는 출력은 hash-object/rev-parse의 ASCII 객체 ID다. 비 UTF-8 자기 확인은 별도의 byte-mode 호출이다. 요청서 §8-26의 제한과 일치하므로 helper까지 새 범위로 바꾸라고 요구하지 않는다.
+FUTURE-01의 설정 원천 격리, 절차 Git의 KEY/VALUE 내용 검증 미포함은 S6로 닫히지 않는다.
+
+Q3 — 문구와 기존 수용 한계
+승인 요청 v5:293–295는 l11/l19가 E1-0 안에서 실제 가짜 자식을 정리함을 명시하고 E1-1–3의 실자료 운영과 구분한다.
+기존 주의 다섯의 대응:
+- 303–304: lstat는 사전 존재 확인이며 경쟁 변경까지 막는 원자적 보호가 아님.
+- 296–298: 절차 Git의 이름 확인은 KEY/VALUE 내용과 모든 설정 원천을 격리하지 않음.
+- 299–301: top-level first_error=null만으로 정리 오류 부재를 판단하지 않고 cleanup.status/errors/ledger를 확인함.
+- 266–268: fake-clock 기한 대조와 실제 /proc 지연 상한 관측을 구분함.
+- 307–308: v4 GREEN 실패/나머지 통과를 실제 관측했다는 주장 없음.
+v3의 deadline 인터페이스와 다른 바이트를 새 RED로 재현하지 않는 공개 한계, SubreaperFailed 주입 미대조도 보존한다. 이미 수용된 범위를 새로운 필수 시험으로 바꾸지 않는다.
+
+Q4 — 봉인, 사례, 예산과 권한
+5개 초안의 bytes/SHA256이 요청서와 일치한다. runner의 TARGETS는 고유 14개이고 _FIXED 13개와 launcher 슬롯 1개다. 두 RED 단계는 v5 skeleton, GREEN은 v5 implementation을 사용하도록 EXPECT에 연결되어 있다. 두 controls의 복사 위치와 고정 초안 바이트, 기존 11개 슬롯의 실제 사본, runner 자신의 외부 기록 경계가 요청과 일치한다.
+기존 참조 13개는 이전 고정 v4 검토 사본과 바이트 동일하다. SOURCES의 모듈 5개, launcher→SOURCES 및 launcher→C6 MANIFEST→lock의 해시도 일치한다.
+골격의 함수 35개 순서/서명과 함수 밖 import/상수/main 블록은 구현과 일치한다. 35개 함수 본문은 선언된 NotImplementedError prefix를 유지한다. controls가 참조하는 L.* 39개(__file__ 포함)와 R.* 16개는 정의/수입 이름에 존재한다.
+최상위 test 함수와 parametrize 부재를 AST로 확인했다: launcher 27, runner 11, 기존 E0 21, N1 6 → GREEN 65. helper와 함수 안의 복수 입력은 별도 pytest 사례로 더하지 않는다. r6/r7/r8의 _drive 호출은 1/6/1=8이다. 이는 도달 계획이며 실제 호출 관측 수가 아니다.
+RED-R은 r1 행동 반례와 r2–r11 미구현 인터페이스 실패의 구분을 유지한다. 공통 runner_ok/cleanup/deadline/기록 기준과 RED pytest rc 1의 기대를 혼동하지 않는다. 실제 결과가 기대와 다르면 중지하고 수정·재시험하지 않는 요청이다.
+예산은 RED-L 120초, RED-R 120초, GREEN 600초; cleanup은 공통 절대기한 15초, 기록은 Git 4×60초 및 해시/meta로 별도 배정; 전체 E1-0 2시간이다. 기한 전에 시작한 /proc 관측 한 번의 길이가 무상한인 공개 한계를 유지하므로 물리적 총소요의 hard bound로 수용한 것이 아니다.
+상태 문서:2100–2105의 §81은 A+S6 비활성 작성 범위 채택이다. :2149–2150 및 :2161–2164는 실행 전 별도 사용자 승인을 유지한다. l14의 §80은 문자열 형식 예시이고 실제 승인 채택 증거가 아니다.
+후속 E1-0b(FUTURE-01과 관련 대조), launcher 운영 정리 정책, E1-1–3 identity/read/fetch/run은 이번 수용/승인 대상에서 제외된다.
+
+변경 범위 확인
+DRAFT_DIFFS.txt에 고정 5개 초안의 전체 문자 diff를 보존했다. 행위 변경은 두 wrapper의 명시 디코더와 l27/r11 Git 입력/자기 확인/기대값·AST 검사다. REQUEST/l14, 봉인표, 설명/버전이 함께 갱신됐다. 문자 diff에는 _run_keywords helper 2개, runner controls의 import ast, skeleton 35개 오류 메시지 v4→v5도 포함된다. 이들은 S6 및 버전 갱신에 속한다. 요청서의 짧은 diff 목록을 문자 단위의 완전 열거로 읽지 않는다. 새로운 수정 의무로 세지 않는다.
+
+검토 방법과 한계
+GitHub connector GET, 소스/JSON/ZIP 자료 처리, reviewer-owned ast.parse와 literal-only inspection, 공식 문서·Git 2.43.0 소스 읽기, 두 독립 하위 검토를 사용했다. 15개 Python 텍스트를 AST로 읽었으며 compile/exec/import하지 않았다.
+STATIC_AUDIT는 58 조건 일치, ADDITIONAL_STATIC_CHECKS는 9 조건 일치다. 합계 67은 자료 대조 조건 수이며 기능시험 수가 아니다.
+최초 reviewer 검사에서 imported top-level 이름 shutil/signal을 정의 집합에 넣지 않아 member-presence 2건이 불일치로 나왔다. 원 결과 STATIC_AUDIT_FIRST_PASS.json을 보존하고 자체 검사기의 집합만 정정했다(REVIEWER_AUDIT_CORRECTION.json). 후보 결함/기능시험 실패/허가된 시험의 재실행이 아니다.
+제출자의 ruff/설치 엔진 관측을 이 검토에서 재실행하거나 독립 인증하지 않았다. 이 검토에 사용한 로컬 자료 처리 Python은 미래 고정 E1-0 시험 엔진과 다르다.
+대상 import/함수 호출/pytest/Git fixture/driver/probe/실자료/optimizer/COMSOL/OS Job 실험 0. 기존 소스·계약·실패·증거 수정, commit/push, 외부 발송 0.
+이번 새 검토의 수치 작업 예산이나 전체 소요 보증을 주장하지 않는다. 과거 예산을 재산출하지 않았다.
+
+공식 근거 (열람 2026-10-30; 인용은 설명을 위한 paraphrase)
+- Git hash-object 2.43.0: https://git-scm.com/docs/git-hash-object/2.43.0
+- Git v2.43.0 hash-object.c: https://github.com/git/git/blob/v2.43.0/builtin/hash-object.c#L89-L105 및 #L147-L154
+- Git v2.43.0 cat-file.c: https://github.com/git/git/blob/v2.43.0/builtin/cat-file.c#L86-L90 및 #L201-L220
+- Git v2.43.0 cat-file 문서: https://github.com/git/git/blob/v2.43.0/Documentation/git-cat-file.txt
+- Python 3.11 subprocess: https://docs.python.org/3.11/library/subprocess.html#subprocess.run 및 #frequently-used-arguments
+
+다음 단계
+이 고정 요청문에 대해 사용자가 E1-0 한정 실행 여부를 별도로 결정할 수 있다. 검토 수용은 기능 PASS도 실행 승인도 아니다. 검토자에게 이 회신을 전달한 후 실행 담당자는 사용자 승인 전 시험을 시작하지 않는다.

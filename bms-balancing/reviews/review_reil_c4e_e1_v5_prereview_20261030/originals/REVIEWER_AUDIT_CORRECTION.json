@@ -1,0 +1,12 @@
+{
+  "kind": "REVIEWER_STATIC_CHECKER_ASSUMPTION_CORRECTION",
+  "first_tool_chunk": "3fd2bb",
+  "first_tool_exit_code": 0,
+  "first_pass": "58 byte/AST conditions, 56 matched; two member-presence conditions omitted imported top-level names shutil/signal from the reviewer definition set.",
+  "preserved_record": "STATIC_AUDIT_FIRST_PASS.json",
+  "correction": "Count Import and ImportFrom bindings as top-level definitions, then repeat reviewer-owned data inspection only.",
+  "candidate_defect": false,
+  "target_test_failure": false,
+  "received_program_execution": 0,
+  "received_source_changes": 0
+}

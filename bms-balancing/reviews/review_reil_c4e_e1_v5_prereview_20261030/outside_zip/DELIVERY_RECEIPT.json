@@ -1,0 +1,33 @@
+{
+  "kind": "STATIC_REVIEW_DELIVERY_RECEIPT",
+  "observed_utc": "2026-10-30T04:54:22.634415+00:00",
+  "recipient": null,
+  "archive": {
+    "path": "REIL_C4E_E1_V5_PREREVIEW_20261030.zip",
+    "bytes": 351984,
+    "sha256": "8291451cd47e8d181435fc74b7219904f3208426c7089dca51edce36649e43ee"
+  },
+  "manifest": {
+    "path": "PACKAGE_MANIFEST.json",
+    "bytes": 7630,
+    "sha256": "edf5f3819463bdea3f3a93d35cdd02e3967b95ec98cc715665b0fe4dd493719a"
+  },
+  "payload_count": 42,
+  "entries": 43,
+  "verification": {
+    "exact_set": true,
+    "bytes_sha256_crc": true,
+    "casefold_unique": true,
+    "safe_relative_paths_no_symlinks": true
+  },
+  "source_snapshots_rechecked": 22,
+  "local_basis_originals_rechecked": 4,
+  "decision": "STATIC_ACCEPTED_E1_0_USER_APPROVAL_RECOMMENDED_NO_EXECUTION",
+  "execution_approved": false,
+  "functional_tests": 0,
+  "received_program_imports_or_calls": 0,
+  "git_fixture_execution": 0,
+  "external_transmission": 0,
+  "whole_review_elapsed_claim": null,
+  "boundary": "After archive readback and source/basis byte comparison; before this receipt write and tool return."
+}

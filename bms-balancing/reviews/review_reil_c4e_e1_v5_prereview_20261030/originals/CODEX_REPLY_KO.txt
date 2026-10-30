@@ -1,0 +1,18 @@
+REIL C4-E · E1 v5 사전 검토 회신
+2026-10-30 KST
+
+판정: STATIC_ACCEPTED_E1_0_USER_APPROVAL_RECOMMENDED_NO_EXECUTION
+
+고정 검토 커밋 a0e6bdee74ca0734bb43a83b19bc1aca715ed4a3.
+V4-01과 V4-N1을 정적 검토 범위에서 종결합니다. S6도 수용하며 새 차단 지적은 없습니다. 사용자에게 E1-0 한정 승인을 요청할 수 있습니다. 이 회신 자체는 실행 승인이 아닙니다.
+
+Q1. l27/r11의 raw blob 생성 → 독립 byte readback → 정확한 바이트와 strict UTF-8 실패 확인 → 대상 wrapper → 정확한 replacement 문자열/rc 0/error 없음 순서가 맞습니다. Git 2.43.0의 --no-filters 및 cat-file blob 공개 의미와도 맞습니다. 실제 Git fixture와 GREEN을 실행해 확인한 것은 아닙니다.
+Q2. 두 wrapper에 text=True, encoding="utf-8", errors="replace"가 있으며 대상 함수의 단일 직접 subprocess.run을 AST로 확인합니다. 현재 고정 소스에 적정합니다. fixture helper의 소비 출력은 ASCII 객체 ID/HEAD이고 raw 자기 확인은 byte-mode라 S6 범위를 확대할 필요는 없습니다. replacement 텍스트는 원시 바이트의 가역 보존 증거가 아닙니다.
+Q3. l11/l19의 실제 가짜 자식 정리와 E1-1–3 실자료 운영을 구분했습니다. lstat 경쟁, Git 설정 내용/원천, cleanup 오류 판독, fake-clock 한계, v4 미실행이라는 다섯 주의도 보존됐습니다.
+Q4. 5개 초안의 bytes/SHA, EXPECT 대상 14개의 세 단계 연결, 기존 참조 13개의 v4 동일성, SOURCES 및 C6 봉인 연결이 일치합니다. 계획은 RED-L 27 / RED-R 11 / GREEN 65와 driver 1+6+1=8입니다. 실행된 사례 수가 아닙니다.
+
+RED 120/120초, GREEN 600초, 공통 cleanup 기한 15초 및 별도 기록 배정, 전체 E1-0 2시간·첫 예상 밖 결과 중지·재시험 금지 조건을 그대로 유지합니다. cleanup 15초는 기한 전에 시작한 /proc 관측의 무상한 길이까지 제한하는 보증이 아닙니다.
+
+FUTURE-01 및 launcher 운영 정리 정책은 후속 E1-0b/E1-1–3 범위에 남습니다. 이 수용으로 identity·실자료 fetch/run·COMSOL을 허용하지 않습니다. 상태 문서 §81의 기존 채택은 비활성 정정 작성 범위였으며 별도 E1-0 실행 승인을 대신하지 않습니다.
+
+이번 수행: GitHub GET으로 고정 자료 열람·로컬 검토 사본·해시/JSON/AST 대조·공식 문서 대조·회신 작성만. 대상 import/실행, pytest, Git fixture, driver, optimizer, COMSOL 0. 원격 저장소/생산 코드/기존 증거 수정·commit/push·외부 발송 0.

@@ -1,0 +1,23 @@
+{
+  "start": {
+    "ref": "refs/heads/claude/14-gate-code-review-9qkx05",
+    "node_id": "REF_kwDORwcnfdoALHJlZnMvaGVhZHMvY2xhdWRlLzE0LWdhdGUtY29kZS1yZXZpZXctOXFreDA1",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/refs/heads/claude/14-gate-code-review-9qkx05",
+    "object": {
+      "sha": "a0e6bdee74ca0734bb43a83b19bc1aca715ed4a3",
+      "type": "commit",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/commits/a0e6bdee74ca0734bb43a83b19bc1aca715ed4a3"
+    }
+  },
+  "end": {
+    "ref": "refs/heads/claude/14-gate-code-review-9qkx05",
+    "node_id": "REF_kwDORwcnfdoALHJlZnMvaGVhZHMvY2xhdWRlLzE0LWdhdGUtY29kZS1yZXZpZXctOXFreDA1",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/refs/heads/claude/14-gate-code-review-9qkx05",
+    "object": {
+      "sha": "a0e6bdee74ca0734bb43a83b19bc1aca715ed4a3",
+      "type": "commit",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/commits/a0e6bdee74ca0734bb43a83b19bc1aca715ed4a3"
+    }
+  },
+  "method": "GitHub connector GET in this review; same ref before and after source comparison"
+}

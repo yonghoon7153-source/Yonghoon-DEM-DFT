@@ -1,0 +1,2900 @@
+[
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "utc",
+    "line": 149,
+    "end_line": 150
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "sha256",
+    "line": 153,
+    "end_line": 154
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "is_sha256",
+    "line": 157,
+    "end_line": 158
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "dump",
+    "line": 161,
+    "end_line": 162
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "write_new",
+    "line": 165,
+    "end_line": 167
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "entry_exists",
+    "line": 170,
+    "end_line": 177
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "read_regular",
+    "line": 181,
+    "end_line": 197
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "load_sources",
+    "line": 200,
+    "end_line": 225
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "check_files",
+    "line": 228,
+    "end_line": 244
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "seal_lock_problems",
+    "line": 247,
+    "end_line": 272
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "leaf_shadow_problems",
+    "line": 275,
+    "end_line": 284
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "shadow_problems",
+    "line": 287,
+    "end_line": 307
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "spec_problems",
+    "line": 310,
+    "end_line": 324
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "interp",
+    "line": 327,
+    "end_line": 329
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "flag_problems",
+    "line": 332,
+    "end_line": 335
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "probe",
+    "line": 338,
+    "end_line": 351
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "build_argv",
+    "line": 354,
+    "end_line": 367
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "child_env",
+    "line": 370,
+    "end_line": 376
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "git_run",
+    "line": 380,
+    "end_line": 389
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "git_config_problems",
+    "line": 392,
+    "end_line": 403
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "fetch_source_precheck",
+    "line": 406,
+    "end_line": 417
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "fetch_source_postcheck",
+    "line": 420,
+    "end_line": 439
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "record_problems",
+    "line": 442,
+    "end_line": 459
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "precheck",
+    "line": 463,
+    "end_line": 508
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "identity_link",
+    "line": 511,
+    "end_line": 533
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "postcheck",
+    "line": 536,
+    "end_line": 568
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "child_result",
+    "line": 571,
+    "end_line": 584
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "stage_verdict",
+    "line": 587,
+    "end_line": 592
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "proc_members",
+    "line": 596,
+    "end_line": 625
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "group_status",
+    "line": 628,
+    "end_line": 641
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "kill_group",
+    "line": 644,
+    "end_line": 654
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "run_child",
+    "line": 657,
+    "end_line": 691
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "git_out",
+    "line": 694,
+    "end_line": 696
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "launch",
+    "line": 700,
+    "end_line": 795
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt",
+    "name": "main",
+    "line": 798,
+    "end_line": 809
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "utc",
+    "line": 114,
+    "end_line": 115
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "sha256",
+    "line": 118,
+    "end_line": 119
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "is_sha256",
+    "line": 122,
+    "end_line": 123
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "dump",
+    "line": 126,
+    "end_line": 127
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "write_new",
+    "line": 130,
+    "end_line": 131
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "entry_exists",
+    "line": 134,
+    "end_line": 135
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "read_regular",
+    "line": 138,
+    "end_line": 139
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "load_sources",
+    "line": 142,
+    "end_line": 143
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "check_files",
+    "line": 146,
+    "end_line": 147
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "seal_lock_problems",
+    "line": 150,
+    "end_line": 151
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "leaf_shadow_problems",
+    "line": 154,
+    "end_line": 155
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "shadow_problems",
+    "line": 158,
+    "end_line": 159
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "spec_problems",
+    "line": 162,
+    "end_line": 163
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "interp",
+    "line": 166,
+    "end_line": 167
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "flag_problems",
+    "line": 170,
+    "end_line": 171
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "probe",
+    "line": 174,
+    "end_line": 175
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "build_argv",
+    "line": 178,
+    "end_line": 180
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "child_env",
+    "line": 183,
+    "end_line": 184
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "git_run",
+    "line": 187,
+    "end_line": 188
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "git_config_problems",
+    "line": 191,
+    "end_line": 192
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "fetch_source_precheck",
+    "line": 195,
+    "end_line": 196
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "fetch_source_postcheck",
+    "line": 199,
+    "end_line": 200
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "record_problems",
+    "line": 203,
+    "end_line": 204
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "precheck",
+    "line": 207,
+    "end_line": 210
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "identity_link",
+    "line": 213,
+    "end_line": 214
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "postcheck",
+    "line": 217,
+    "end_line": 219
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "child_result",
+    "line": 222,
+    "end_line": 223
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "stage_verdict",
+    "line": 226,
+    "end_line": 227
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "proc_members",
+    "line": 230,
+    "end_line": 231
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "group_status",
+    "line": 234,
+    "end_line": 235
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "kill_group",
+    "line": 238,
+    "end_line": 239
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "run_child",
+    "line": 242,
+    "end_line": 244
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "git_out",
+    "line": 247,
+    "end_line": 248
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "launch",
+    "line": 251,
+    "end_line": 255
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt",
+    "name": "main",
+    "line": 258,
+    "end_line": 259
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "_sha",
+    "line": 93,
+    "end_line": 94
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "_git_env",
+    "line": 97,
+    "end_line": 102
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "_git",
+    "line": 105,
+    "end_line": 108
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "_run_keywords",
+    "line": 111,
+    "end_line": 118
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "_write_list",
+    "line": 121,
+    "end_line": 125
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "_seal",
+    "line": 128,
+    "end_line": 135
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "_tree",
+    "line": 138,
+    "end_line": 168
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "_pre",
+    "line": 171,
+    "end_line": 180
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "_launch",
+    "line": 183,
+    "end_line": 188
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "_meta",
+    "line": 191,
+    "end_line": 192
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "_state",
+    "line": 195,
+    "end_line": 201
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l1_precheck_passes_only_with_fixed_list_exact_bytes_seal_binding_clean_interpreter_and_approved_specs",
+    "line": 204,
+    "end_line": 220
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l2_list_sha_schema_path_set_entry_format_and_non_json_each_block",
+    "line": 223,
+    "end_line": 239
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l3_changed_same_size_missing_symlinked_module_or_linked_parent_each_block",
+    "line": 242,
+    "end_line": 264
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l4_a_shadowing_scripts_package_module_zip_entry_or_our_init_blocks",
+    "line": 267,
+    "end_line": 289
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l5_interpreter_flags_fixed_argv_head_and_run_script_path_are_checked",
+    "line": 292,
+    "end_line": 309
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l6_stage_verdict_is_the_and_of_precheck_child_rc_timeout_and_postcheck",
+    "line": 312,
+    "end_line": 319
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l7_child_result_reads_the_last_stdout_line_and_needs_final_complete_for_run",
+    "line": 322,
+    "end_line": 331
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l8_identity_link_binds_the_run_import_paths_to_the_checked_paths",
+    "line": 334,
+    "end_line": 352
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false",
+    "line": 355,
+    "end_line": 363
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds",
+    "line": 366,
+    "end_line": 383
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l11_timeout_kills_the_whole_process_group_including_grandchildren",
+    "line": 386,
+    "end_line": 399
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l12_refuses_to_overwrite_records_or_reuse_a_pycache_folder",
+    "line": 402,
+    "end_line": 420
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder",
+    "line": 423,
+    "end_line": 438
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l14_independence_fixed_commands_constants_and_main_rules",
+    "line": 441,
+    "end_line": 485
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it",
+    "line": 488,
+    "end_line": 500
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l16_a_leaf_extension_module_beside_an_approved_module_blocks",
+    "line": 503,
+    "end_line": 512
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l17_extra_executed_files_and_the_seal_lock_binding_each_block",
+    "line": 515,
+    "end_line": 531
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l18_process_observation_errors_stay_unknown_and_only_vanished_pids_are_gone",
+    "line": 534,
+    "end_line": 571
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited",
+    "line": 574,
+    "end_line": 597
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state",
+    "line": 600,
+    "end_line": 626
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output",
+    "line": 629,
+    "end_line": 638
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l22_child_env_keeps_only_the_ca_among_git_variables_and_removes_secrets",
+    "line": 641,
+    "end_line": 653
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l23_fetch_precheck_refuses_url_rewrite_proxy_and_tls_off_settings",
+    "line": 656,
+    "end_line": 680
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source",
+    "line": 683,
+    "end_line": 691
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git",
+    "line": 694,
+    "end_line": 717
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l26_preparation_failures_are_recorded_as_phase_prepare_and_never_start_the_child",
+    "line": 720,
+    "end_line": 756
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "test_l27_decode_failures_in_proc_reads_and_git_output_are_recorded_not_escaped",
+    "line": 759,
+    "end_line": 799
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "mk",
+    "line": 539,
+    "end_line": 541
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "denied",
+    "line": 552,
+    "end_line": 556
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "vanished",
+    "line": 561,
+    "end_line": 564
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "no_kill",
+    "line": 579,
+    "end_line": 580
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "boom",
+    "line": 606,
+    "end_line": 607
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "no_start",
+    "line": 615,
+    "end_line": 616
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "no_disk",
+    "line": 731,
+    "end_line": 732
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "no_meta",
+    "line": 743,
+    "end_line": 746
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "mk",
+    "line": 767,
+    "end_line": 769
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt",
+    "name": "reader",
+    "line": 775,
+    "end_line": 780
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "_load",
+    "line": 43,
+    "end_line": 49
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "_costly",
+    "line": 126,
+    "end_line": 136
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "_git_env",
+    "line": 139,
+    "end_line": 143
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "_git",
+    "line": 146,
+    "end_line": 149
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "_run_keywords",
+    "line": 152,
+    "end_line": 159
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "_repo",
+    "line": 162,
+    "end_line": 165
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "_head",
+    "line": 168,
+    "end_line": 169
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "_sentinels",
+    "line": 172,
+    "end_line": 177
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "_rtree",
+    "line": 180,
+    "end_line": 194
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "_environ",
+    "line": 197,
+    "end_line": 201
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "_drive",
+    "line": 204,
+    "end_line": 210
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "_meta",
+    "line": 213,
+    "end_line": 214
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "test_r1_an_observation_error_followed_by_a_clean_empty_observation_stays_unknown",
+    "line": 217,
+    "end_line": 229
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "test_r2_observation_errors_during_the_timeout_loop_are_kept_to_the_end",
+    "line": 232,
+    "end_line": 251
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "test_r3_cleanup_never_starts_an_observation_past_one_common_deadline_even_when_observations_take_time",
+    "line": 254,
+    "end_line": 288
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "test_r4_the_runner_cleans_inherited_git_variables_before_its_first_git_call",
+    "line": 291,
+    "end_line": 314
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "test_r5_source_table_hashes_the_fixed_targets_and_any_difference_from_the_sealed_table_is_a_problem",
+    "line": 317,
+    "end_line": 364
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "test_r6_a_normal_step_writes_both_source_tables_and_records_from_the_right_repo_with_a_clean_child_env",
+    "line": 367,
+    "end_line": 393
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "test_r7_preparation_failures_stop_before_the_child_and_intentional_refusals_write_nothing",
+    "line": 396,
+    "end_line": 441
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "test_r8_a_real_timeout_kills_the_group_and_an_orphaned_other_session_grandchild_within_the_deadline",
+    "line": 444,
+    "end_line": 459
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "test_r9_an_observation_started_before_the_deadline_that_returns_after_it_is_followed_only_by_immediate_actions",
+    "line": 462,
+    "end_line": 478
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "test_r10_an_exception_late_in_cleanup_is_recorded_and_handled_under_the_same_deadline",
+    "line": 481,
+    "end_line": 521
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "test_r11_proc_reads_are_bytes_and_every_per_pid_read_or_parse_error_is_recorded_without_stopping_the_scan",
+    "line": 524,
+    "end_line": 574
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "__init__",
+    "line": 97,
+    "end_line": 98
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "__call__",
+    "line": 100,
+    "end_line": 101
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "sleep",
+    "line": 103,
+    "end_line": 105
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "__init__",
+    "line": 111,
+    "end_line": 112
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "poll",
+    "line": 114,
+    "end_line": 115
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "wait",
+    "line": 117,
+    "end_line": 123
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "scan",
+    "line": 129,
+    "end_line": 135
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "fake",
+    "line": 222,
+    "end_line": 224
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "fake",
+    "line": 239,
+    "end_line": 241
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "no_kill",
+    "line": 273,
+    "end_line": 274
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "tree",
+    "line": 330,
+    "end_line": 335
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "late",
+    "line": 491,
+    "end_line": 495
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "first",
+    "line": 509,
+    "end_line": 513
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "reader",
+    "line": 537,
+    "end_line": 542
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "once",
+    "line": 551,
+    "end_line": 553
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt",
+    "name": "never",
+    "line": 555,
+    "end_line": 556
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "utc",
+    "line": 103,
+    "end_line": 104
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "sha256",
+    "line": 107,
+    "end_line": 108
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "dump",
+    "line": 111,
+    "end_line": 112
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "write_new",
+    "line": 115,
+    "end_line": 117
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "entry_exists",
+    "line": 120,
+    "end_line": 127
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "base_env",
+    "line": 131,
+    "end_line": 137
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "git",
+    "line": 140,
+    "end_line": 149
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "record_problems",
+    "line": 152,
+    "end_line": 168
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "read_regular",
+    "line": 172,
+    "end_line": 189
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "source_table",
+    "line": 192,
+    "end_line": 198
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "source_problems",
+    "line": 201,
+    "end_line": 214
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "source_text",
+    "line": 217,
+    "end_line": 221
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "proc_table",
+    "line": 225,
+    "end_line": 250
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "observe",
+    "line": 253,
+    "end_line": 257
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "descendants",
+    "line": 260,
+    "end_line": 273
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "reap",
+    "line": 276,
+    "end_line": 286
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "kill",
+    "line": 289,
+    "end_line": 301
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "settle",
+    "line": 304,
+    "end_line": 349
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "cleanup",
+    "line": 352,
+    "end_line": 412
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "subreaper",
+    "line": 415,
+    "end_line": 420
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "run_step",
+    "line": 424,
+    "end_line": 542
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "main",
+    "line": 545,
+    "end_line": 555
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "watch",
+    "line": 316,
+    "end_line": 331
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "group_kill",
+    "line": 362,
+    "end_line": 370
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt",
+    "name": "finish",
+    "line": 372,
+    "end_line": 374
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_fake_ident",
+    "line": 53,
+    "end_line": 54
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_sha_file",
+    "line": 57,
+    "end_line": 58
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_has_xfg_key",
+    "line": 61,
+    "end_line": 66
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_sleep_task",
+    "line": 82,
+    "end_line": 84
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_timed_task",
+    "line": 87,
+    "end_line": 94
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_plan",
+    "line": 97,
+    "end_line": 98
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_snap",
+    "line": 101,
+    "end_line": 103
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_cost_snap",
+    "line": 106,
+    "end_line": 115
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_good_row",
+    "line": 118,
+    "end_line": 123
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_sup",
+    "line": 126,
+    "end_line": 132
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_fake_util",
+    "line": 285,
+    "end_line": 293
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_fake_p0",
+    "line": 296,
+    "end_line": 300
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_write_p0",
+    "line": 303,
+    "end_line": 307
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_expected",
+    "line": 310,
+    "end_line": 313
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "_git",
+    "line": 316,
+    "end_line": 319
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_m_1_a_rule_reason_is_a_global_stop_with_three_states",
+    "line": 323,
+    "end_line": 339
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_m_2_snapshot_coordinates_and_rule_exception_without_a_process",
+    "line": 342,
+    "end_line": 389
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_r_1_call_cap_active_late_between_samples_equal_and_reason",
+    "line": 393,
+    "end_line": 411
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_r_2_cost_projection_upper_median_returned_only_minimum_eight_and_boundary",
+    "line": 414,
+    "end_line": 432
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_r_3_the_rule_never_reads_result_values",
+    "line": 435,
+    "end_line": 462
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_r_4_rule_input_validation_raises_instead_of_dropping_or_zero_filling",
+    "line": 465,
+    "end_line": 486
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_r_5_judgment_raw_basis_has_every_key_and_no_result_values",
+    "line": 489,
+    "end_line": 505
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_r_6_call_cap_three_paths_fork_fork_and_pure_final_drain",
+    "line": 508,
+    "end_line": 556
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_t_1_nonzero_origin_prep_boundary_relative_deadline_and_no_start_after_stop",
+    "line": 560,
+    "end_line": 585
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_d_1_prepare_order_stops_before_later_steps",
+    "line": 589,
+    "end_line": 640
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_d_2_exact_p0_binding_or_stop_before_any_optimizer",
+    "line": 643,
+    "end_line": 696
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_d_3_halfcell_is_exactly_q_pe_v_pe_q_ne_v_ne_and_a_swap_fails",
+    "line": 699,
+    "end_line": 721
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_d_4_paths_inside_the_repo_pickles_notebooks_existing_outputs_and_fetch_targets_are_refused",
+    "line": 724,
+    "end_line": 749
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_d_5_fetch_takes_only_two_paths_from_the_fixed_commit_of_a_local_repo",
+    "line": 752,
+    "end_line": 792
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_d_6_identity_start_end_table_and_consumed_digests",
+    "line": 795,
+    "end_line": 825
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_s_1_the_plan_is_the_c4_0a_plan",
+    "line": 829,
+    "end_line": 835
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_s_2_complete_needs_66_returned_fields_operation_record_identity_and_the_stage_and",
+    "line": 838,
+    "end_line": 871
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_s_3_operation_and_real_finalization_failures_each_leave_incomplete",
+    "line": 874,
+    "end_line": 953
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_s_4_end_to_end_synthetic_run_complete_and_one_local_error_incomplete",
+    "line": 956,
+    "end_line": 984
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_s_5_plan_e_writes_one_plan_without_util_data_optimizer_or_network",
+    "line": 987,
+    "end_line": 1013
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "test_s_6_the_observed_tally_partitions_the_66_calls",
+    "line": 1016,
+    "end_line": 1036
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "__init__",
+    "line": 70,
+    "end_line": 71
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "put",
+    "line": 73,
+    "end_line": 74
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "is_set",
+    "line": 78,
+    "end_line": 79
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "__init__",
+    "line": 138,
+    "end_line": 139
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "__call__",
+    "line": 141,
+    "end_line": 144
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "__init__",
+    "line": 149,
+    "end_line": 150
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "put",
+    "line": 152,
+    "end_line": 153
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "get",
+    "line": 155,
+    "end_line": 158
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "__init__",
+    "line": 162,
+    "end_line": 163
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "set",
+    "line": 165,
+    "end_line": 166
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "is_set",
+    "line": 168,
+    "end_line": 169
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "__init__",
+    "line": 173,
+    "end_line": 175
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "start",
+    "line": 177,
+    "end_line": 181
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "is_alive",
+    "line": 183,
+    "end_line": 184
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "terminate",
+    "line": 186,
+    "end_line": 187
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "join",
+    "line": 189,
+    "end_line": 190
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "kill",
+    "line": 192,
+    "end_line": 193
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "__init__",
+    "line": 197,
+    "end_line": 198
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "Queue",
+    "line": 200,
+    "end_line": 201
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "Event",
+    "line": 203,
+    "end_line": 204
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "Array",
+    "line": 206,
+    "end_line": 207
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "Process",
+    "line": 209,
+    "end_line": 210
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "rule",
+    "line": 328,
+    "end_line": 331
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "rss",
+    "line": 354,
+    "end_line": 356
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "capture",
+    "line": 360,
+    "end_line": 362
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "boom",
+    "line": 379,
+    "end_line": 380
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "spy",
+    "line": 568,
+    "end_line": 570
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "ident_ok",
+    "line": 603,
+    "end_line": 605
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "ident_bad",
+    "line": 607,
+    "end_line": 609
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "spy_load",
+    "line": 611,
+    "end_line": 620
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "counting_load",
+    "line": 654,
+    "end_line": 658
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "attempt",
+    "line": 660,
+    "end_line": 664
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "bump",
+    "line": 669,
+    "end_line": 670
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "no_git",
+    "line": 740,
+    "end_line": 742
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "fin",
+    "line": 893,
+    "end_line": 896
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "slow_rehash",
+    "line": 911,
+    "end_line": 913
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "tampered",
+    "line": 942,
+    "end_line": 944
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "refuse",
+    "line": 990,
+    "end_line": 991
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "__getitem__",
+    "line": 440,
+    "end_line": 443
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "get",
+    "line": 445,
+    "end_line": 448
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "items",
+    "line": 450,
+    "end_line": 451
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "values",
+    "line": 453,
+    "end_line": 454
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e.py",
+    "name": "vis",
+    "line": 616,
+    "end_line": 618
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "_fake_ident",
+    "line": 40,
+    "end_line": 41
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "_sha_file",
+    "line": 44,
+    "end_line": 45
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "_real_entries",
+    "line": 48,
+    "end_line": 50
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "_write_sources",
+    "line": 53,
+    "end_line": 57
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "_good_row",
+    "line": 60,
+    "end_line": 65
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "_sup",
+    "line": 68,
+    "end_line": 74
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "_fake_util",
+    "line": 116,
+    "end_line": 124
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "_fake_p0",
+    "line": 127,
+    "end_line": 131
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "_write_p0",
+    "line": 134,
+    "end_line": 138
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "_setup",
+    "line": 141,
+    "end_line": 158
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "_plan_rule_sup",
+    "line": 161,
+    "end_line": 163
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "test_n1_a_a_trusted_list_binds_the_five_modules_to_start_end_and_acceptance",
+    "line": 167,
+    "end_line": 199
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "test_n1_b_missing_extra_or_malformed_entries_and_list_sha_mismatch_stop_before_util_import",
+    "line": 202,
+    "end_line": 239
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "test_n1_c_unapproved_bytes_that_stay_unchanged_from_start_to_end_are_refused",
+    "line": 242,
+    "end_line": 262
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "test_n1_d_a_module_changed_during_the_run_fails_acceptance_through_the_real_finalize",
+    "line": 265,
+    "end_line": 303
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "test_n1_e_the_run_cli_requires_the_trusted_list_and_its_sha",
+    "line": 306,
+    "end_line": 317
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "test_n1_f_seal_sources_writes_exactly_the_five_paths_and_round_trips",
+    "line": 320,
+    "end_line": 335
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "spy_load",
+    "line": 152,
+    "end_line": 154
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "ident",
+    "line": 181,
+    "end_line": 183
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "exp_of",
+    "line": 276,
+    "end_line": 277
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "rehash",
+    "line": 285,
+    "end_line": 287
+  },
+  {
+    "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+    "name": "fin",
+    "line": 289,
+    "end_line": 292
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "_utc",
+    "line": 103,
+    "end_line": 104
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "_is_int",
+    "line": 107,
+    "end_line": 108
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "_finite",
+    "line": 111,
+    "end_line": 112
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "_same",
+    "line": 115,
+    "end_line": 119
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "_tid_key",
+    "line": 122,
+    "end_line": 124
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "_stop",
+    "line": 127,
+    "end_line": 130
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "plan",
+    "line": 134,
+    "end_line": 136
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "validate",
+    "line": 140,
+    "end_line": 173
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "call_cap",
+    "line": 176,
+    "end_line": 189
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "cost_projection",
+    "line": 192,
+    "end_line": 223
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "aggregate",
+    "line": 268,
+    "end_line": 306
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "identity_table",
+    "line": 309,
+    "end_line": 319
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "identity_problems",
+    "line": 322,
+    "end_line": 337
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "identity_changed",
+    "line": 340,
+    "end_line": 342
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "pre_verdict",
+    "line": 345,
+    "end_line": 377
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "final_verdict",
+    "line": 380,
+    "end_line": 389
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "stage_verdict",
+    "line": 392,
+    "end_line": 398
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "check_paths",
+    "line": 402,
+    "end_line": 412
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "load_inputs",
+    "line": 415,
+    "end_line": 442
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "binding_problems",
+    "line": 445,
+    "end_line": 472
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "consumed",
+    "line": 475,
+    "end_line": 485
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "expected_identity",
+    "line": 488,
+    "end_line": 493
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "_module_files",
+    "line": 496,
+    "end_line": 497
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "_is_sha256",
+    "line": 500,
+    "end_line": 501
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "load_sources",
+    "line": 504,
+    "end_line": 532
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "seal_sources",
+    "line": 535,
+    "end_line": 558
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "prepare",
+    "line": 562,
+    "end_line": 608
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "record_parts",
+    "line": 611,
+    "end_line": 617
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "finalize",
+    "line": 620,
+    "end_line": 630
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "execute",
+    "line": 633,
+    "end_line": 647
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "run",
+    "line": 650,
+    "end_line": 661
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "fetch_steps",
+    "line": 665,
+    "end_line": 669
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "show_argv",
+    "line": 672,
+    "end_line": 673
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "fetch",
+    "line": 676,
+    "end_line": 716
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "_p0_record_problems",
+    "line": 720,
+    "end_line": 735
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "plan_e",
+    "line": 738,
+    "end_line": 792
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "build_parser",
+    "line": 796,
+    "end_line": 815
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "main",
+    "line": 818,
+    "end_line": 838
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "__init__",
+    "line": 230,
+    "end_line": 237
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "__call__",
+    "line": 239,
+    "end_line": 253
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "params",
+    "line": 255,
+    "end_line": 260
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "record",
+    "line": 262,
+    "end_line": 264
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4e_run.py",
+    "name": "step",
+    "line": 695,
+    "end_line": 703
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "_read",
+    "line": 73,
+    "end_line": 77
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "_json",
+    "line": 80,
+    "end_line": 84
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "_guard",
+    "line": 87,
+    "end_line": 92
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "_ours",
+    "line": 95,
+    "end_line": 96
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "algorithm_of",
+    "line": 100,
+    "end_line": 111
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "plan_calls",
+    "line": 114,
+    "end_line": 126
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "classify",
+    "line": 130,
+    "end_line": 148
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "_n_out",
+    "line": 151,
+    "end_line": 158
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "_tally",
+    "line": 161,
+    "end_line": 170
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "_rows",
+    "line": 189,
+    "end_line": 198
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "_g_violation",
+    "line": 201,
+    "end_line": 204
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "_exact",
+    "line": 207,
+    "end_line": 213
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "run_e3a_call",
+    "line": 217,
+    "end_line": 306
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "_sobol_make",
+    "line": 310,
+    "end_line": 313
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "phase_a_arrays",
+    "line": 316,
+    "end_line": 321
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "seal_arrays",
+    "line": 324,
+    "end_line": 384
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "check_arrays",
+    "line": 387,
+    "end_line": 423
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "identity",
+    "line": 427,
+    "end_line": 442
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "notebook_case_table",
+    "line": 445,
+    "end_line": 458
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "dryrun",
+    "line": 461,
+    "end_line": 520
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "main",
+    "line": 524,
+    "end_line": 560
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "__init__",
+    "line": 177,
+    "end_line": 179
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "__call__",
+    "line": 181,
+    "end_line": 186
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "counted_dv",
+    "line": 241,
+    "end_line": 244
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "name": "counted_obj",
+    "line": 246,
+    "end_line": 262
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "_norm",
+    "line": 85,
+    "end_line": 89
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "owned",
+    "line": 92,
+    "end_line": 94
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "split_dirty",
+    "line": 97,
+    "end_line": 110
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "output_bytes",
+    "line": 113,
+    "end_line": 126
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "disk_sample",
+    "line": 129,
+    "end_line": 130
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "rss_bytes",
+    "line": 133,
+    "end_line": 144
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "_jsonable",
+    "line": 148,
+    "end_line": 159
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "worker_loop",
+    "line": 162,
+    "end_line": 190
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "_states",
+    "line": 193,
+    "end_line": 212
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "rule_snapshot",
+    "line": 215,
+    "end_line": 221
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "apply_rule",
+    "line": 224,
+    "end_line": 234
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "supervise",
+    "line": 237,
+    "end_line": 367
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "_dump",
+    "line": 371,
+    "end_line": 372
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "final_record",
+    "line": 375,
+    "end_line": 410
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "__init__",
+    "line": 42,
+    "end_line": 44
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "__init__",
+    "line": 51,
+    "end_line": 55
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "observe",
+    "line": 57,
+    "end_line": 73
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "stale",
+    "line": 75,
+    "end_line": 81
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "fresh",
+    "line": 253,
+    "end_line": 255
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "handle",
+    "line": 257,
+    "end_line": 262
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "drain",
+    "line": 264,
+    "end_line": 271
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "progress",
+    "line": 175,
+    "end_line": 176
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "name": "notify",
+    "line": 178,
+    "end_line": 179
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "_sibling",
+    "line": 42,
+    "end_line": 47
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "_sha",
+    "line": 99,
+    "end_line": 100
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "frac_str",
+    "line": 103,
+    "end_line": 104
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "_jsonable",
+    "line": 107,
+    "end_line": 120
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "dump",
+    "line": 123,
+    "end_line": 124
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "model_digest",
+    "line": 127,
+    "end_line": 149
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "exact_residuals",
+    "line": 153,
+    "end_line": 160
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "witness",
+    "line": 163,
+    "end_line": 174
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "feasibility_class",
+    "line": 177,
+    "end_line": 184
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "termination_of",
+    "line": 187,
+    "end_line": 194
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "_frame_kind",
+    "line": 198,
+    "end_line": 206
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "classify_exception",
+    "line": 209,
+    "end_line": 232
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "n_out_labels",
+    "line": 256,
+    "end_line": 265
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "run_one",
+    "line": 268,
+    "end_line": 336
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "_threads",
+    "line": 340,
+    "end_line": 347
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "rss_bytes",
+    "line": 350,
+    "end_line": 361
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "disk_sample",
+    "line": 364,
+    "end_line": 367
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "_worker",
+    "line": 370,
+    "end_line": 393
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "assemble_states",
+    "line": 396,
+    "end_line": 415
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "orchestrate",
+    "line": 418,
+    "end_line": 543
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "_stats",
+    "line": 547,
+    "end_line": 551
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "summarize",
+    "line": 554,
+    "end_line": 585
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "_write_bytes",
+    "line": 589,
+    "end_line": 590
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "final_record",
+    "line": 593,
+    "end_line": 617
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "git_state",
+    "line": 620,
+    "end_line": 623
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "split_dirty",
+    "line": 626,
+    "end_line": 634
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "source_hashes",
+    "line": 637,
+    "end_line": 638
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "source_changed",
+    "line": 641,
+    "end_line": 642
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "check_options",
+    "line": 646,
+    "end_line": 655
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "env_identity",
+    "line": 658,
+    "end_line": 701
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "pilot_arrays",
+    "line": 704,
+    "end_line": 723
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "plan_runs",
+    "line": 726,
+    "end_line": 737
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "fixture_starts",
+    "line": 740,
+    "end_line": 744
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "select_cell",
+    "line": 747,
+    "end_line": 759
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "require_cell",
+    "line": 762,
+    "end_line": 766
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "guard_paths",
+    "line": 769,
+    "end_line": 772
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "load_util",
+    "line": 775,
+    "end_line": 788
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "synthetic_inputs",
+    "line": 791,
+    "end_line": 801
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "run_pilot",
+    "line": 805,
+    "end_line": 834
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "_new_out",
+    "line": 837,
+    "end_line": 841
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "cmd_identity",
+    "line": 844,
+    "end_line": 848
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "cmd_dryrun",
+    "line": 851,
+    "end_line": 868
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "load_measure_inputs",
+    "line": 871,
+    "end_line": 885
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "cmd_measure",
+    "line": 888,
+    "end_line": 913
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "main",
+    "line": 916,
+    "end_line": 939
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "__init__",
+    "line": 88,
+    "end_line": 91
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "walk",
+    "line": 131,
+    "end_line": 147
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "__init__",
+    "line": 239,
+    "end_line": 242
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "__call__",
+    "line": 244,
+    "end_line": 253
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "handle",
+    "line": 433,
+    "end_line": 446
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "drain",
+    "line": 448,
+    "end_line": 455
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "make",
+    "line": 710,
+    "end_line": 713
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "progress",
+    "line": 380,
+    "end_line": 381
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "name": "notify",
+    "line": 383,
+    "end_line": 384
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "_fr",
+    "line": 60,
+    "end_line": 61
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "_dec",
+    "line": 64,
+    "end_line": 65
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "_iv",
+    "line": 68,
+    "end_line": 69
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "_clip",
+    "line": 72,
+    "end_line": 74
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "_max_q_fraction",
+    "line": 77,
+    "end_line": 88
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "prior_compat",
+    "line": 91,
+    "end_line": 111
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "prior_table",
+    "line": 114,
+    "end_line": 116
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "sigma_v",
+    "line": 120,
+    "end_line": 130
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "combine",
+    "line": 134,
+    "end_line": 139
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "cycle_state",
+    "line": 142,
+    "end_line": 163
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "direction_state",
+    "line": 166,
+    "end_line": 170
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "sheet_set_diff",
+    "line": 174,
+    "end_line": 178
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "_is_docstring",
+    "line": 181,
+    "end_line": 182
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "util_static_check",
+    "line": 185,
+    "end_line": 204
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "_sha_file",
+    "line": 212,
+    "end_line": 214
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "_notebook_check",
+    "line": 217,
+    "end_line": 239
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "_sign",
+    "line": 242,
+    "end_line": 253
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "_their_drop",
+    "line": 256,
+    "end_line": 265
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "_raw_entry",
+    "line": 268,
+    "end_line": 304
+  },
+  {
+    "path": "bms-balancing/scripts/reil_p0.py",
+    "name": "run",
+    "line": 307,
+    "end_line": 426
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c6_profile.py",
+    "name": "_dump",
+    "line": 44,
+    "end_line": 45
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c6_profile.py",
+    "name": "_sha",
+    "line": 48,
+    "end_line": 49
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c6_profile.py",
+    "name": "_site_packages",
+    "line": 52,
+    "end_line": 58
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c6_profile.py",
+    "name": "record_index",
+    "line": 61,
+    "end_line": 68
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c6_profile.py",
+    "name": "_ident",
+    "line": 83,
+    "end_line": 85
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c6_profile.py",
+    "name": "classify_record_mismatches",
+    "line": 88,
+    "end_line": 109
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c6_profile.py",
+    "name": "lock_text",
+    "line": 112,
+    "end_line": 131
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c6_profile.py",
+    "name": "profile",
+    "line": 134,
+    "end_line": 146
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c6_profile.py",
+    "name": "cobyqa_options",
+    "line": 149,
+    "end_line": 182
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c6_profile.py",
+    "name": "sobol",
+    "line": 185,
+    "end_line": 219
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c6_profile.py",
+    "name": "emit",
+    "line": 222,
+    "end_line": 234
+  },
+  {
+    "path": "bms-balancing/scripts/reil_c6_profile.py",
+    "name": "check",
+    "line": 237,
+    "end_line": 250
+  },
+  {
+    "path": "degradation-degeneracy/tools/env_profile.py",
+    "name": "normalize",
+    "line": 80,
+    "end_line": 82
+  },
+  {
+    "path": "degradation-degeneracy/tools/env_profile.py",
+    "name": "_verify_files",
+    "line": 87,
+    "end_line": 112
+  },
+  {
+    "path": "degradation-degeneracy/tools/env_profile.py",
+    "name": "_origin",
+    "line": 115,
+    "end_line": 139
+  },
+  {
+    "path": "degradation-degeneracy/tools/env_profile.py",
+    "name": "measure",
+    "line": 142,
+    "end_line": 195
+  },
+  {
+    "path": "degradation-degeneracy/tools/env_profile.py",
+    "name": "emit_lock",
+    "line": 200,
+    "end_line": 209
+  },
+  {
+    "path": "degradation-degeneracy/tools/env_profile.py",
+    "name": "parse_lock",
+    "line": 212,
+    "end_line": 273
+  },
+  {
+    "path": "degradation-degeneracy/tools/env_profile.py",
+    "name": "_mm",
+    "line": 278,
+    "end_line": 279
+  },
+  {
+    "path": "degradation-degeneracy/tools/env_profile.py",
+    "name": "compare",
+    "line": 282,
+    "end_line": 308
+  },
+  {
+    "path": "degradation-degeneracy/tools/env_profile.py",
+    "name": "_display",
+    "line": 311,
+    "end_line": 316
+  },
+  {
+    "path": "degradation-degeneracy/tools/env_profile.py",
+    "name": "compare_lock",
+    "line": 319,
+    "end_line": 357
+  },
+  {
+    "path": "degradation-degeneracy/tools/env_profile.py",
+    "name": "_summary",
+    "line": 362,
+    "end_line": 381
+  },
+  {
+    "path": "degradation-degeneracy/tools/env_profile.py",
+    "name": "main",
+    "line": 384,
+    "end_line": 413
+  },
+  {
+    "path": "degradation-degeneracy/tools/env_profile.py",
+    "name": "bad",
+    "line": 217,
+    "end_line": 218
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+    "name": "write_new",
+    "line": 45,
+    "end_line": 47
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+    "name": "utc",
+    "line": 50,
+    "end_line": 51
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+    "name": "git",
+    "line": 54,
+    "end_line": 59
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+    "name": "proc_table",
+    "line": 62,
+    "end_line": 82
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+    "name": "descendants",
+    "line": 85,
+    "end_line": 99
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+    "name": "kill",
+    "line": 102,
+    "end_line": 112
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+    "name": "reap",
+    "line": 115,
+    "end_line": 126
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+    "name": "settle",
+    "line": 129,
+    "end_line": 155
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+    "name": "main",
+    "line": 158,
+    "end_line": 238
+  },
+  {
+    "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+    "name": "watch",
+    "line": 134,
+    "end_line": 145
+  }
+]

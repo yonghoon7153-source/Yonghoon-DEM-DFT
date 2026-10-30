@@ -1,0 +1,18 @@
+[
+  {
+    "source": "C:/Users/Administrator/.codex/attachments/8d1c8bed-6a35-445c-85e1-5037985830c0/붙여넣은 텍스트.txt",
+    "destination": "REQUEST_RECEIVED.txt"
+  },
+  {
+    "source": "outputs/reil_c4e_e1_v4_prereview_20261021/REVIEW_KO.txt",
+    "destination": "V4_REVIEW_KO.txt"
+  },
+  {
+    "source": "outputs/reil_c4e_e1_v4_prereview_20261021/REVIEW_DECISION.json",
+    "destination": "V4_REVIEW_DECISION.json"
+  },
+  {
+    "source": "outputs/reil_c4e_e1_v4_prereview_20261021/CODEX_REPLY_KO.txt",
+    "destination": "V4_CODEX_REPLY_KO.txt"
+  }
+]
