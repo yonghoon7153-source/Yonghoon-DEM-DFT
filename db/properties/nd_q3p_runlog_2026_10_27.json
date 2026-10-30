@@ -23,7 +23,7 @@
   "cascade_기록": "겹친 시간은 발사 시각 · 끝 시각을 cascade_v7_main_runlog 에 적는다 (사용자 붙여넣기 뒤)",
   "후처리": "SCF 끝난 뒤 다음 블록 — pp.x plot_num 17 → bader → bader_summary_zval.py (원래 역할 입력) · pp.x plot_num 8 → sample_elf_bonds.py"
  },
- "⏭": "kgy: Bader 후처리 DRY_RUN (새 worktree ~/wt_ndbader_1030) → bader 실행파일 없으면 gabia /data/apps/bader/bader → kgy ~/bin/bader (WSL) → tmux ndbader · ELF 는 MnP2O6 뒤 자동",
+ "⏭": "kgy: tmux ndbader (run_bader_pp_kgy.sh · W=~/wt_ndbader_1030) → '■ 끝' → 회수 · ELF 는 MnP2O6 뒤 자동",
  "실행_10_30_시작_조건": {
   "사용자": "'지금 돌리자' (10-30 · 용훈 포메이션의 'Nd@P Q3′ — 🔔 비준 · 언제 돌릴지' 줄에)",
   "왜_바로_못_올리나": "kgy 3090 (24,576 MiB) 에 CEI 띠틈 MnP2O6 vc-relax 가 13.8 GB (10-29 관측 · 힘·응력 구간) · 같은 셀 MLi_04 PAW pw.x 는 kgy 에서 ≈ 10.0 GB (EOS 때 합계 13,094 − cascade 만 3,079 MiB) → 합 ≈ 23.8 GB 로 한계. 점 러너의 MIN_FREE_MIB (16,000) 는 시작 순간만 본다 — 지금 띄우면 물러나고 (여유 ≈ 10.7 GB), 낮은 순간에 들어가면 MnP2O6 이 다시 커질 때 그쪽이 죽는다. CEI 쪽 대기 문턱은 8,000 이라 MnP2O6 의 다음 단계를 못 지킨다.",
@@ -56,6 +56,11 @@
   "요약_도구": "tools/electronic/bader_summary_zval.py --roles MANIFEST --model NAME (카드 §4 '원래 역할 입력' · Nd 이웃 = 이완 끝 기하 R_NDX 3.3 · R_NDO 2.9 · 문턱 근처 여유 < 0.15 Å 는 따로 + 뺀 평균) · selftest 27 · 깨기 5/5 빨강",
   "실행기": "db/inputs/nd_q3p_2026_10_27/run_bader_pp_kgy.sh — 입력 = 저장소 판 · SCF JOB DONE + 수렴 · save → pp.x plot_num 17 (GPU 빌드 bin · MPI 1 랭크 · VRAM 여유 ≥ 6000 MiB 일 때만) → bader → 요약 (--roles · --zval_from_upf · --sites) · selftest 11 · 깨기 7/7 빨강",
   "결과_전": "ACF.dat 는 아직 없다 (pp.x · bader 안 돌림) — 0.15 Å 문턱 근처 규칙은 카드 §4 사례 (MP_07 Nd(21) 옆 Cl 3.16 Å · 여유 0.14) 를 일반화한 것",
+  "by": "agent · 2026-10-30"
+ },
+ "Bader_후처리_점검_2026_10_30_1554": {
+  "DRY_RUN": "HEAD 02716a6e · MLi_04 · MP_07 입력 = 저장소 · SCF 수렴 · save ✓ → ⛔ bader 없음 (kgy)",
+  "bader_실행파일": "gabia /data/apps/bader/bader (9 월 Q3 와 같은 파일) → kgy /home/kgy/bin/bader (scp -p · md5 4af185669044972b97b4f5aa69588509) — kgy 에서 gabia root 로 바로 scp 가 됐다 (비밀번호 안 물음 · WSL 중계 불필요) · 같은 파일이 /home/kgy/bader 에도 남음",
   "by": "agent · 2026-10-30"
  }
 }
