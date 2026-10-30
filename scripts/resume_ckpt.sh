@@ -1430,6 +1430,11 @@ if [ $CHK = 1 ]; then [ $# = 5 ] || { echo "사용: bash resume_ckpt.sh -C <본 
 CASES="$*"; CASEA=("$@"); SFX=${SFX:-r$NP}   # 10-28 밤 2 (사전 공격 F): 케이스 = 인자 하나하나 (낱말 나누기 · 글로브 없이)
 [ -n "$SUF" ] && [ -n "$CASES" ] || { echo "사용: bash resume_ckpt.sh -n 30 -s stop15_0927 <케이스…>"; exit 1; }
 [[ "$TS" =~ ^[1-9][0-9]*$ ]] || { echo "⛔ -t $TS — 1 이상 정수여야 (시험 예산 · 10-28 KG50R-05)"; exit 1; }
+# 10-30 (KG50R-F02 · 독립 사전 공격 PA-07 · 06): -n · -x 를 쓰기 전에 (cd · 보고 · 작업 폴더 · sed 전) — 예전 = 루프 안 runnerck 가 거부했지만
+#   그 전에 -n 이 sed 프로그램에 그대로 들어갔고 (GNU sed 의 e 명령 = 셸 명령 · 실측) -x 가 덱 · 러너 · 보고 · 시도 폴더 경로에 들어갔다
+#   (/ 가 들어가면 검사한 덱 경로 · 러너 -in 이름이 갈린다)
+[[ "$NP" =~ ^[1-9][0-9]{0,5}$ ]] || { echo "⛔ -n $NP — 1 이상 정수여야 (MPI 수 · #SBATCH -n · sed · 러너에 그대로 들어간다 · 10-30 KG50R-F02)"; exit 1; }
+[[ "$SFX" =~ ^[A-Za-z0-9_]+$ ]] || { echo "⛔ -x $SFX — 글자 · 숫자 · _ 만 (접미사 = 덱 · 러너 · 잡 · 보고 · 시도 폴더 이름에 들어간다 · 10-30 KG50R-F02)"; exit 1; }
 # 10-28 밤 Q4 (Codex Q7): 본 제출 (-T 없음) = -A · -H 가 이 스크립트 · dem_restart.py 의 sha256 과 같을 때만 — 아니면 아무것도 하지 않는다
 if [ $TONLY = 0 ] && ! { [[ "$TSHA" =~ ^[0-9a-f]{64}$ ]] && [[ "$HSHA" =~ ^[0-9a-f]{64}$ ]] && [ "$APT" = "$TSHA" ] && [ "$APH" = "$HSHA" ]; }; then
   echo "⛔ 본 제출 승인 인자 (-A resume_ckpt.sh sha256 · -H dem_restart.py sha256) 가 없거나 실제 파일과 다름 — 아무것도 하지 않음 (10-28 Q4 · Codex Q7 · KG50R)"
@@ -1472,23 +1477,29 @@ qre(){ printf '%s(_ins|_%s|_r[0-9]+t?)?' "$(rx $1)" "$(rx $SFX)t?"; }
 #   정적 대조 · 시험 예산이 본 덱 ($D) · 시험 덱 ($TD) 은 봤는데 잡이 읽는 덱은 묶이지 않았다 (Codex: .bak 본 덱 = 검사 안 한 덱 · 영수증 일치).
 #   헬퍼 러너 (아래 -n · -np 고침 뒤 · 원본 바이트는 시도 폴더 helper_run_<C>_<SFX>.sh.orig) 를 줄마다 받는 꼴만:
 #     첫 줄 #!/bin/bash · #SBATCH --job-name=<C>_<SFX> · --output=logs/output_<C>_<SFX>_%j.out · -n NP · --time=<낱말> (각 한 번 · 꼭) ·
-#     --qos= · --partition= (한 번까지 · 낱말 A-Z a-z 0-9 _ . : , + -) · #SBATCH 는 첫 명령 줄 앞 (SLURM 이 그 뒤는 안 읽는다) · 빈 줄 ·
-#     환경 줄 (source ~/.bashrc · conda activate <이름> · export (OMP|MKL|OPENBLAS|NUMEXPR)_NUM_THREADS=1 · cd 앞) ·
+#     --qos= · --partition= (한 번까지 · 쉼표로 나눈 낱낱이 A-Z a-z 0-9 로 시작 · 글자 A-Z a-z 0-9 _ . : + -) · #SBATCH 는 첫 명령 줄 앞
+#     (SLURM 이 그 뒤는 안 읽는다) · 빈 줄 · 환경 줄 셋 꼴 (source ~/.bashrc · conda activate <이름 — 첫 글자 A-Z a-z 0-9 _ · 그 뒤 A-Z a-z 0-9 _ . -> ·
+#     export (OMP|MKL|OPENBLAS|NUMEXPR)_NUM_THREADS=1 · cd 앞 · 줄 하나에 명령 하나 — source · . · conda · export 로 시작하는데 이 셋이 아니면 거부) ·
 #     cd <절대 경로> 한 번 (실제 경로 = 작업 폴더 실제 경로 · . .. 마디 · 따옴표 · $ · 공백 없음) ·
 #     그 다음 mpirun --oversubscribe --bind-to none -np NP lmp_mpi -in <재개 덱 이름 = $D 의 basename> 한 번
 #   그 밖 (주석 줄 · 다른 명령 · ; && || | 리디렉션 $( ` · 둘째 mpirun · 두 cd · CR · NUL) = 거부 — 러너 안 씀 · 아래 ng (시험 · 본 제출 없음)
 #   통과 = 본 run_<C>_<SFX>.sh · 시험 run_<C>_<SFX>t.sh 를 같은 틀로 씀: 대조한 #SBATCH 값 (시험 = 이름 끝 t · --time=01:00:00) · 환경 줄
-#     (순서 그대로) · cd "<작업 폴더 실제 경로>" · 잡 안 lmp_mpi · 덱 sha256 기록 줄 하나 (LMP_IDENTITY · 기록만 · 관문 아님) ·
-#     mpirun --oversubscribe --bind-to none -np NP lmp_mpi -in "<검사한 덱 절대 경로>" 한 줄 (본 = $D · 시험 = $TD)
-#   작업 폴더 실제 경로 · 덱 이름에 A-Z a-z 0-9 _ . + - / 밖 글자 = 거부 (러너의 "…" 안에서 $ ` \ 가 펼쳐진다) · NP = 1 이상 정수
-#   인자: 헬퍼 러너 · C · SFX · NP · 작업 폴더 · 그 실제 경로 · 재개 덱 · 시험 덱 · 본 러너 쓸 곳 · 시험 러너 쓸 곳 —
+#     (순서 그대로) · cd "<작업 폴더 실제 경로>" || exit 1 · 잡 시작 때 덱 · 체크포인트 sha256 (ds · ks) · 신원 줄 하나 (LMP_IDENTITY — lmp_mpi 경로 ·
+#     sha256 = 기록만 · 덱 경로 · sha256 = 시험 로그에서 G0 관문 · 체크포인트 경로 · sha256 = 기록만) · ds · ks 가 여기서 읽은 sha256 과 다르면
+#     LMP_IDENTITY_MISMATCH 한 줄 + exit 1 (mpirun 안 함 — 영수증 · 본 제출 직전 대조 뒤 · 큐 대기 중 바뀐 덱 · 체크포인트) ·
+#     command mpirun --oversubscribe --bind-to none -np NP lmp_mpi -in "<검사한 덱 절대 경로>" 한 줄 (본 = $D · 시험 = $TD · command = 셸 함수
+#     mpirun 을 건너뜀 — ~/.bashrc · 제출 환경 BASH_ENV 는 믿는 입력)
+#   작업 폴더 실제 경로 · 덱 이름 · 체크포인트 경로에 A-Z a-z 0-9 _ . + - / 밖 글자 = 거부 (러너의 "…" 안에서 $ ` \ 가 펼쳐진다) · NP = 1 이상 정수 ·
+#     재개 덱 · 시험 덱 · 체크포인트를 못 읽으면 거부 (잡 안 대조 값을 못 정함)
+#   인자: 헬퍼 러너 · C · SFX · NP · 작업 폴더 · 그 실제 경로 · 재개 덱 · 시험 덱 · 본 러너 쓸 곳 · 시험 러너 쓸 곳 · 체크포인트 (러너가 읽는 절대 경로) —
 #   stdout 한 줄 · 종료 코드 0 = 통과 (두 러너 씀) / 1 = 거부 (안 씀) / 2 = 인자 · 쓰기 오류
 runnerck(){ python3 -I - "$@" <<'PY'
-import os, re, sys
+import hashlib, os, re, sys
 
 SAFE = re.compile(r'/[A-Za-z0-9_.+-]+(?:/[A-Za-z0-9_.+-]+)*')
-TOK = re.compile(r'[A-Za-z0-9][A-Za-z0-9_.:,+-]*')
-ENVL = re.compile(r'source ~/\.bashrc|conda activate [A-Za-z0-9_.-]+|export (?:OMP|MKL|OPENBLAS|NUMEXPR)_NUM_THREADS=1')
+TOK = re.compile(r'[A-Za-z0-9][A-Za-z0-9_.:+-]*(?:,[A-Za-z0-9][A-Za-z0-9_.:+-]*)*')
+ENVL = re.compile(r'source ~/\.bashrc|conda activate [A-Za-z0-9_][A-Za-z0-9_.-]*|export (?:OMP|MKL|OPENBLAS|NUMEXPR)_NUM_THREADS=1')
+ENVLIKE = re.compile(r'(?:source|\.|conda|export)(?:[ \t]|$)')
 TASKS = re.compile(r'#SBATCH[ \t]+(?:-n|-N|-c|--ntasks|--nodes|--cpus-per-task|--ntasks-per-[a-z]+)')
 KEYS = (('--job-name=', 1), ('--output=', 1), ('--qos=', 0), ('--partition=', 0), ('-n ', 1), ('--time=', 1))
 META = set(';&|<>$`()\\\'"*?[]{}!~')
@@ -1504,7 +1515,15 @@ def cut(s):
     return s if len(s) <= 120 else s[:117] + '...'
 
 
-def check(rn, C, SFX, NP, W, WR, D, TD, OM, OT):
+def sha256_of(p):
+    h = hashlib.sha256()
+    with open(p, 'rb') as f:
+        for b in iter(lambda: f.read(1 << 20), b''):
+            h.update(b)
+    return h.hexdigest()
+
+
+def check(rn, C, SFX, NP, W, WR, D, TD, OM, OT, CK):
     P = []
     if not re.fullmatch(r'[1-9][0-9]{0,5}', NP):
         P.append('NP [%s] 가 1 이상 정수가 아님' % NP)
@@ -1517,6 +1536,18 @@ def check(rn, C, SFX, NP, W, WR, D, TD, OM, OT):
         ab[nm] = '%s/%s' % (WR, os.path.basename(p))
         if WR and safe_abs(WR) and not safe_abs(ab[nm]):
             P.append('%s 절대 경로 [%s] 에 러너에 못 넣는 글자 (A-Z a-z 0-9 _ . + - 만)' % (nm, ab[nm]))
+    # 10-30 (사전 공격 PA-02): 체크포인트 = 러너의 "…" 안에 그대로 · 재개 덱 · 시험 덱 · 체크포인트 sha256 = 잡 시작 때 대조 값 (러너 글에 박힌다)
+    if not safe_abs(CK):
+        P.append('체크포인트 절대 경로 [%s] 에 러너에 못 넣는 글자 (A-Z a-z 0-9 _ . + - / 만 · . .. 마디 없음 · 러너 "…" 안에 그대로 들어간다)' % CK)
+    sh = {}
+    if not P:
+        for nm, p in (('재개 덱', ab['재개 덱']), ('시험 덱', ab['시험 덱']), ('체크포인트', CK)):
+            try:
+                if not os.path.isfile(p):
+                    raise OSError(0, '보통 파일이 아니거나 없음')
+                sh[nm] = sha256_of(p)
+            except OSError as e:
+                P.append('%s [%s] 를 못 읽음 (%s · 잡 시작 때 대조할 sha256 을 못 정함)' % (nm, p, e.strerror or e))
     try:
         with open(rn, 'rb') as f:
             raw = f.read()
@@ -1563,7 +1594,7 @@ def check(rn, C, SFX, NP, W, WR, D, TD, OM, OT):
             if want is not None and v != want:
                 bad(i, s, '#SBATCH %s 값 [%s] ≠ 정해진 값 [%s]' % (kn, v, want))
             elif want is None and not TOK.fullmatch(v):
-                bad(i, s, '#SBATCH %s 값 [%s] 이 안전한 낱말이 아님 (A-Z a-z 0-9 _ . : , + - 만)' % (kn, v))
+                bad(i, s, '#SBATCH %s 값 [%s] 이 안전한 낱말이 아님 (쉼표로 나눈 낱낱이 A-Z a-z 0-9 로 시작 · A-Z a-z 0-9 _ . : + - 만)' % (kn, v))
             continue
         if ENVL.fullmatch(s):
             if ph >= 2:
@@ -1571,6 +1602,11 @@ def check(rn, C, SFX, NP, W, WR, D, TD, OM, OT):
             else:
                 ph = 1
                 env.append(s)
+            continue
+        if ENVLIKE.match(s):
+            # 10-30 (사전 공격 PA-04): 환경 줄처럼 시작하는데 셋 꼴이 아님 (다른 export · 다른 source · . · conda 뒤 다른 글 · ; 이음 · conda activate . ..)
+            bad(i, s, '받는 꼴이 아닌 환경 줄 (source ~/.bashrc · conda activate <이름 — 첫 글자 A-Z a-z 0-9 _ · 그 뒤 A-Z a-z 0-9 _ . -> · '
+                      'export (OMP|MKL|OPENBLAS|NUMEXPR)_NUM_THREADS=1 셋 꼴만 · 줄 하나에 명령 하나)')
             continue
         if s.startswith('cd '):
             ncd += 1
@@ -1610,32 +1646,36 @@ def check(rn, C, SFX, NP, W, WR, D, TD, OM, OT):
         pr.append('cd 줄 없음')
     if not nmp:
         pr.append('MPI 실행 줄 없음 (%s)' % mpok)
-    return P + pr, dict(sb=sb, env=env, ab=ab)
+    return P + pr, dict(sb=sb, env=env, ab=ab, sha=sh, ckp=CK)
 
 
 def render(C, SFX, NP, WR, info, trial):
-    # 본 · 시험 러너 한 틀 — 다른 곳은 이름 끝 t · --time · -in 덱 뿐
+    # 본 · 시험 러너 한 틀 — 다른 곳은 이름 끝 t · --time · -in 덱 · 그 덱의 sha256 뿐
     nm = '%s_%s%s' % (C, SFX, 't' if trial else '')
-    sb, deck = info['sb'], info['ab']['시험 덱' if trial else '재개 덱']
+    k = '시험 덱' if trial else '재개 덱'
+    sb, deck, dsha = info['sb'], info['ab'][k], info['sha'][k]
+    ckp, ksha = info['ckp'], info['sha']['체크포인트']
     out = ['#!/bin/bash', '#SBATCH --job-name=' + nm, '#SBATCH --output=logs/output_%s_%%j.out' % nm]
-    out += ['#SBATCH %s%s' % (k, sb[k]) for k in ('--qos=', '--partition=') if k in sb]
+    out += ['#SBATCH %s%s' % (x, sb[x]) for x in ('--qos=', '--partition=') if x in sb]
     out += ['#SBATCH -n ' + NP, '#SBATCH --time=' + ('01:00:00' if trial else sb['--time='])]
     if info['env']:
         out += [''] + info['env']
-    out += ['', 'cd "%s"' % WR,
-            'echo "LMP_IDENTITY record-only (not a gate, 10-30 KG50R-F02): lmp_mpi=$(command -v lmp_mpi || echo none) '
-            'sha256=$(sha256sum 2>/dev/null < "$(command -v lmp_mpi)" | cut -c1-64) deck=%s sha256=$(sha256sum 2>/dev/null < "%s" | cut -c1-64)"'
-            % (deck, deck),
-            'mpirun --oversubscribe --bind-to none -np %s lmp_mpi -in "%s"' % (NP, deck)]
+    out += ['', 'cd "%s" || exit 1' % WR,
+            'ds=$(sha256sum 2>/dev/null < "%s" | cut -c1-64); ks=$(sha256sum 2>/dev/null < "%s" | cut -c1-64)' % (deck, ckp),
+            'echo "LMP_IDENTITY (10-30 KG50R-F02): lmp_mpi=$(command -v lmp_mpi || echo none) '
+            'sha256=$(sha256sum 2>/dev/null < "$(command -v lmp_mpi)" | cut -c1-64) deck=%s sha256=$ds checkpoint=%s sha256=$ks"' % (deck, ckp),
+            '[ "$ds" = "%s" ] && [ "$ks" = "%s" ] || { echo "LMP_IDENTITY_MISMATCH (10-30 KG50R-F02): deck %s sha256 $ds (checked %s) '
+            'checkpoint %s sha256 $ks (checked %s) - mpirun not started"; exit 1; }' % (dsha, ksha, deck, dsha, ckp, ksha),
+            'command mpirun --oversubscribe --bind-to none -np %s lmp_mpi -in "%s"' % (NP, deck)]
     return '\n'.join(out) + '\n'
 
 
 def main():
     a = sys.argv[1:]
-    if len(a) != 10:
-        print('runnerck 인자 %d 개 (10 개여야 · %s)' % (len(a), F02))
+    if len(a) != 11:
+        print('runnerck 인자 %d 개 (11 개여야 · %s)' % (len(a), F02))
         return 2
-    rn, C, SFX, NP, W, WR, D, TD, OM, OT = a
+    rn, C, SFX, NP, W, WR, D, TD, OM, OT, CK = a
     probs, info = check(*a)
     if probs:
         print('헬퍼 러너 엄격 대조 실패 (%s · 1저자 Q2 · 러너 안 씀 · 시험 · 본 제출 안 함) — 문제 %d: %s'
@@ -1643,13 +1683,17 @@ def main():
         return 1
     for path, trial in ((OM, False), (OT, True)):
         tmp = '%s.tmp%d' % (path, os.getpid())
-        with open(tmp, 'w', encoding='utf-8', newline='\n') as f:
-            f.write(render(C, SFX, NP, WR, info, trial))
-        os.chmod(tmp, 0o755)
-        os.replace(tmp, path)
+        try:
+            with open(tmp, 'w', encoding='utf-8', newline='\n') as f:
+                f.write(render(C, SFX, NP, WR, info, trial))
+            os.chmod(tmp, 0o755)
+            os.replace(tmp, path)
+        finally:                 # 쓰기 실패 (예: 그 자리가 폴더) 면 임시 파일을 남기지 않는다 · 예외는 아래 한 줄 (종료 코드 2)
+            if os.path.lexists(tmp):
+                os.remove(tmp)
     print('헬퍼 러너 엄격 대조 통과 (%s) — #SBATCH %d · 환경 줄 %d · cd 실제 경로 = 작업 폴더 %s → 본 · 시험 러너를 도구 틀로 씀 '
-          '(cd "작업 폴더 실제 경로" · -in "검사한 덱 절대 경로" · 실행 줄 하나 · LMP_IDENTITY 기록 줄은 기록만)'
-          % (F02, len(info['sb']), len(info['env']), WR))
+          '(cd "작업 폴더 실제 경로" || exit 1 · -in "검사한 덱 절대 경로" · 잡 시작 때 덱 · 체크포인트 sha256 대조 · command mpirun 한 줄 · '
+          'LMP_IDENTITY 줄 = 시험 로그에서 G0 관문)' % (F02, len(info['sb']), len(info['env']), WR))
     return 0
 
 
@@ -1672,6 +1716,9 @@ for C in "${CASEA[@]}"; do
   #   같은 케이스를 두 철자로 만든다 (C · ./C → 첫 케이스 작업 폴더를 prev 로 밀었다)
   [[ "$C" =~ ^[A-Za-z0-9_][A-Za-z0-9_.-]*$ ]] || { rej "케이스 이름" "케이스 이름 [$C] — 글자 · 숫자 · _ . - 만 (첫 글자 . - 아님 · / · 공백 없음 · 10-28 사전 공격 F) — 건너뜀"; continue; }
   case "$SEEN" in *" $C "*) rej "케이스 목록" "같은 케이스가 목록에 두 번 — 두 번째는 건너뜀 (10-28 KG50R-04)"; continue;; esac; SEEN="$SEEN$C "
+  # 10-30 (KG50R-F02 · 독립 사전 공격 PA-03 · 원인은 F02 전부터): 멈춘 폴더가 심볼릭 링크면 cp -a 가 링크를 그대로 복사해 작업 폴더 = 원 런 폴더
+  #   (아래 mv · 덱 · 러너 · 시험 · 본 잡이 원 폴더를 고친다) — 복사 · 쓰기 전에 거부
+  [ -L "$S" ] && { rej "멈춘 폴더" "$S 가 심볼릭 링크 — 건너뜀 (cp -a 가 링크를 그대로 복사해 작업 폴더가 원 런 폴더가 된다 · 실제 폴더를 이 이름으로 옮겨 둘 것 · 10-30 KG50R-F02)"; continue; }
   [ -d $S ] || { rej "멈춘 폴더" "$S 없음 (원 런 폴더를 먼저 이 이름으로 옮겨 둘 것)"; continue; }
   PH=$(grep -a '^======' $S/log.liggghts | tail -1)
   LS=$(awk '/^ *Step +Atoms/{q=1;next} q&&$1~/^[0-9]+$/{s=$1} END{print s+0}' $S/log.liggghts)
@@ -1734,7 +1781,9 @@ for C in "${CASEA[@]}"; do
   #   거부 = 아래 ng (러너 안 씀 · 시험 · 본 제출 없음) · 대조 기록 = 시도 폴더 runner_check.txt · WR = 작업 폴더 실제 경로 (러너 cd · -in · 영수증 ·
   #   cd -P = 링크 먼저 풀고 .. 도 실제로 — 논리 cd 는 .. 를 글자로 지워 파일이 실제로 있는 곳과 갈릴 수 있다)
   TR=$W/run_${C}_${SFX}t.sh; rm -f $TR; WR=$(cd -P "$W" 2>/dev/null && pwd -P)
-  RCK=$(runnerck $RN "$C" "$SFX" "$NP" "$W" "$WR" $D $TD $RN $TR 2>&1); RCKC=$?; printf '%s\n' "$RCK" > $AD/runner_check.txt
+  # 10-30 (사전 공격 PA-02): 체크포인트 = 러너가 읽는 절대 경로 (영수증 다섯째 줄과 같은 글) — runnerck 가 잡 시작 때 대조할 sha256 을 러너에 박는다
+  CKP=$RR; [ "${RR#/}" = "$RR" ] && CKP=$WR/$RR
+  RCK=$(runnerck $RN "$C" "$SFX" "$NP" "$W" "$WR" $D $TD $RN $TR "$CKP" 2>&1); RCKC=$?; printf '%s\n' "$RCK" > $AD/runner_check.txt
   EX=$(comm -13 <(awk '$1=="fix"||$1=="dump"{print $1,$2}' $W/input_$C.liggghts | sort -u) <(awk '$1=="fix"||$1=="dump"{print $1,$2}' $D | sort -u) | tr '\n' ' ')
   OK=1; WHY=""
   ng(){ OK=0; WHY="$WHY · $1"; echo "  ✗ $1"; }
@@ -1773,16 +1822,19 @@ for C in "${CASEA[@]}"; do
     #   의 다섯 — 재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트 (예전 = 재개 덱 · 러너 둘 · 체크포인트 sha256 은 tool.txt 기록만) · 다섯 다 못 쓰면
     #   시험 안 냄 · 그 파일 sha256 = 이 호출 메모리 (SUBMITTED) 에도 — 본 제출 바로 전 둘 다 대조 (sha256sum -c 는 줄이 빠지거나 덧붙어도 통과한다)
     LMP=$(command -v lmp_mpi 2>/dev/null); LMS=""; [ -n "$LMP" ] && LMS=$(sha256sum < "$LMP" 2>/dev/null | cut -c1-64)
-    CKP=$RR; [ "${RR#/}" = "$RR" ] && CKP=$WR/$RR
     if ! sha256sum "$WR/${D##*/}" "$WR/${RN##*/}" "$WR/${TD##*/}" "$WR/${TR##*/}" "$CKP" > $AD/main_inputs.sha256 2>/dev/null \
        || [ "$(grep -c . $AD/main_inputs.sha256)" != 5 ]; then
       rej "실행 영수증" "실행 입력 영수증 (재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트 다섯) 을 못 씀 — 시험 · 본 제출 안 함 (10-30 KG50R-F02)"; continue; fi
     MIS=$(sha256sum < $AD/main_inputs.sha256 | cut -c1-64)
+    # 10-30 (사전 공격 PA-01): 시험 덱 = 영수증 셋째 줄 (경로 · sha256) — 이 호출 메모리 (SUBMITTED) 에 두고 시험 로그의 신원 줄과 대조 (G0 관문)
+    TQP=$WR/${TD##*/}; TQL=$(sed -n 3p $AD/main_inputs.sha256); TQS=${TQL:0:64}
+    { [[ "$TQS" =~ ^[0-9a-f]{64}$ ]] && [ "${TQL:64}" = "  $TQP" ]; } || {
+      rej "실행 영수증" "실행 입력 영수증 셋째 줄 (시험 덱 $TQP) 을 못 읽음 — 시험 · 본 제출 안 함 (10-30 KG50R-F02)"; continue; }
     printf '재개 덱 sha256 %s (%s)\n러너 sha256 %s (%s)\n시험 덱 sha256 %s\n시험 러너 sha256 %s\n체크포인트 %s sha256 %s\nlmp_mpi %s\n' \
       "$(sha256sum < $D | cut -c1-64)" "${D##*/}" "$(sha256sum < $RN | cut -c1-64)" "${RN##*/}" "$(sha256sum < $TD | cut -c1-64)" \
       "$(sha256sum < $W/run_${C}_${SFX}t.sh | cut -c1-64)" "$RR" "$(sha256sum < $W/$RR 2>/dev/null | cut -c1-64)" \
       "$([ -n "$LMP" ] && echo "$LMP sha256 ${LMS:-못 읽음}" || echo '없음 (이 셸 PATH · 잡 환경은 다를 수 있다)')" >> $AD/tool.txt
-    printf '실행 입력 영수증 main_inputs.sha256 sha256 %s (10-30 KG50R-F02 · 다섯 = 러너가 읽는 절대 경로 · 작업 폴더 실제 경로 %s)\n잡 안 lmp_mpi · 덱 신원 = 시험 · 본 잡 로그의 LMP_IDENTITY 줄 (기록만 · 관문 아님 · 위 lmp_mpi 줄 = 제출 셸 PATH · 10-30 KG50R-F02)\n' \
+    printf '실행 입력 영수증 main_inputs.sha256 sha256 %s (10-30 KG50R-F02 · 다섯 = 러너가 읽는 절대 경로 · 작업 폴더 실제 경로 %s)\n잡 안 신원 = 시험 · 본 잡 로그의 LMP_IDENTITY 줄 (러너가 잡 시작 때 덱 · 체크포인트 sha256 을 여기서 읽은 값과 대조 · 다르면 LMP_IDENTITY_MISMATCH · mpirun 안 함 · 시험 로그의 덱 경로 · sha256 = G0 관문 · lmp_mpi = 기록만 · 위 lmp_mpi 줄 = 제출 셸 PATH · 10-30 KG50R-F02)\n' \
       "$MIS" "$WR" >> $AD/tool.txt
     echo "모드 $M · S0 $S0 · 체크포인트 $RR · 시험 덱 첫 긴 run [run $CN] → [run $CTN] · 시험 예산 $NT" >> $AD/tool.txt
     J=$(sbatch --parsable $W/run_${C}_${SFX}t.sh); JR=$?
@@ -1790,7 +1842,7 @@ for C in "${CASEA[@]}"; do
     if [ $JR = 0 ] && [[ "$J" =~ ^([0-9]+)(;[^[:space:]]*)?$ ]]; then J=${BASH_REMATCH[1]}
       echo $J > $W/job_${SFX}t.txt; EXP=$((10#$S0 + 10#$NT)); echo "$M $S0 $RR $EXP$([ "$TNR" = 1 ] || echo " $NT $TDS")" > $W/mode_$SFX.txt
       cp -p $W/job_${SFX}t.txt $AD/job_t.txt; cp -p $W/mode_$SFX.txt $AD/mode.txt; echo "$CTN" > $AD/lastrun_n.txt
-      SUBMITTED="$SUBMITTED $C|$J|$MIS"     # 10-30 (KG50R-F02): 셋째 칸 = 이 시도 실행 입력 영수증의 sha256 (본 제출 바로 전 대조)
+      SUBMITTED="$SUBMITTED $C|$J|$MIS|$TQP|$TQS"     # 10-30 (KG50R-F02): 영수증 sha256 (본 제출 바로 전 대조) · 시험 덱 경로 · sha256 (G0 신원 관문)
       [ "$TNR" = 1 ] || echo "  · 시험 기대 끝 step = S0 + 시험 덱 read_restart 뒤 run 합 $NT ($TDS · 10-28 KG50-18)"
       echo "  ▶ 시험 job $J ($(tail -1 $TD) · 기대 끝 step $EXP)"
     else rej "시험 제출" "시험 제출 실패 (sbatch 출력 없음)" "sbatch 종료 코드 $JR · 출력 [$J] (10-28 KG50R-04)"; fi
@@ -1799,7 +1851,7 @@ done
 echo; echo "── 시험 잡 끝날 때까지 대기 (끝나면 대조 → 맞으면 본 제출)"
 # 10-28 밤 (KG50R-04): 이번 호출이 낸 시험 (SUBMITTED) 만 — 작업 폴더의 job · mode 파일로 자격을 다시 만들지 않는다
 for ENT in $SUBMITTED; do
-  IFS='|' read -r C J MIS <<< "$ENT"; W=$L/$C; S=$L/$C.$SUF; AD=$W/$ATT     # 10-30 (KG50R-F02): 케이스|시험 job|영수증 sha256
+  IFS='|' read -r C J MIS TQP TQS <<< "$ENT"; W=$L/$C; S=$L/$C.$SUF; AD=$W/$ATT     # 10-30 (KG50R-F02): 케이스|시험 job|영수증 sha256|시험 덱 경로|sha256
   # 끝 상태 (sacct State · ExitCode) — 조회 실패는 다시 묻고, 끝까지 못 얻으면 TO=1 (제출 안 함)
   ST=""; EC=""; TO=1; QF=0
   for i in $(seq 360); do
@@ -1816,10 +1868,23 @@ for ENT in $SUBMITTED; do
       echo "- ⛔ 본 제출 안 함 — 시도 폴더 기록 (mode.txt · lastrun_n.txt) 을 못 읽음 (10-28 사전 공격 F · 시험 job $J 의 결과는 사람이 본다)"; } >> $REP
     echo "결정: 본 제출 안 함 — 시도 폴더 기록을 못 읽음" >> $AD/result.txt 2>/dev/null; continue
   fi
-  T=$(ls logs/output_${C}_${SFX}t_$J.out 2>/dev/null); T=${T:-/dev/null}; E=$(grep -ac ERROR $T)
+  # 10-30 (KG50R-F02 · 사전 공격 PA-05): ERROR 셈에서 러너의 신원 줄 (^LMP_IDENTITY  — 덱 · 체크포인트 경로를 적는다) 을 뺀다 — 예전 판 (5f4ffb46) 은
+  #   실제 경로에 ERROR 가 든 폴더면 그 줄로 G0 · G1 이 실패했다 (회귀).  그 밖 줄은 예전 그대로 어디든 ERROR 글자
+  T=$(ls logs/output_${C}_${SFX}t_$J.out 2>/dev/null); T=${T:-/dev/null}; E=$(grep -av '^LMP_IDENTITY ' $T | grep -ac ERROR)
   read LTS LTL LPL LPN <<< "$(lastrun $T)"
+  # 10-30 (KG50R-F02 · 사전 공격 PA-01): 잡 안 덱 신원 = G0 관문 (-T · 본 흐름 같게) — 시험 로그의 신원 줄이 정확히 하나 · 그 덱 경로 = 검사한 시험 덱
+  #   ($TQP) · 덱 sha256 = 시험 전에 쓴 영수증 셋째 줄 ($TQS · 이 호출 메모리) — 예전 = 기록만 (바뀐 시험 덱을 읽은 시험도 G0 통과 · -T 는 다시 대조도 없었다).
+  #   체크포인트 · lmp_mpi = 기록만 (체크포인트는 러너가 잡 시작 때 대조 — 다르면 LMP_IDENTITY_MISMATCH 줄 · mpirun 안 함)
+  NLID=$(grep -ac '^LMP_IDENTITY ' $T); LIDF=$(grep -a -m1 '^LMP_IDENTITY ' $T); MML=$(grep -a -m1 '^LMP_IDENTITY_MISMATCH' $T | cut -c1-600)
+  IDRE='^LMP_IDENTITY \(10-30 KG50R-F02\): lmp_mpi=.* deck=(/[^ ]*) sha256=([0-9a-f]*) checkpoint=(/[^ ]*) sha256=([0-9a-f]*)$'
+  GI=0
+  if [ "$NLID" != 1 ]; then GIT="LMP_IDENTITY 줄 $NLID 개 (하나여야)"
+  elif ! [[ "$LIDF" =~ $IDRE ]]; then GIT="LMP_IDENTITY 줄 꼴이 아님"
+  elif [ "${BASH_REMATCH[1]}" != "$TQP" ]; then GIT="덱 경로 [${BASH_REMATCH[1]}] ≠ 검사한 시험 덱 [$TQP]"
+  elif [ "${BASH_REMATCH[2]}" != "$TQS" ]; then GIT="덱 sha256 [${BASH_REMATCH[2]:-없음}] ≠ 영수증의 시험 덱 sha256 [$TQS]"
+  else GI=1; GIT="같음 (덱 $TQP sha256 $TQS · 체크포인트 ${BASH_REMATCH[3]} sha256 ${BASH_REMATCH[4]:-없음} = 기록만 · lmp_mpi = 기록만)"; fi
   # 10-28 밤 (KG50R-07): + 'Loop time … for N steps' 의 N = 시험 마지막 run (min(N, -t))
-  G0=0; [ $TO = 0 ] && [ "$ST" = COMPLETED ] && [ "$EC" = "0:0" ] && [ "$LTS" = "$EXP" ] && [ "$LPL" -gt "$LTL" ] && [ "$LPN" = "$LN" ] && [ "$E" = 0 ] && [ "$T" != /dev/null ] && G0=1
+  G0=0; [ $TO = 0 ] && [ "$ST" = COMPLETED ] && [ "$EC" = "0:0" ] && [ "$LTS" = "$EXP" ] && [ "$LPL" -gt "$LTL" ] && [ "$LPN" = "$LN" ] && [ "$E" = 0 ] && [ "$T" != /dev/null ] && [ $GI = 1 ] && G0=1
   F=$(awk '/^ *Step +Atoms/{q=1;next} q&&$1~/^[0-9]+$/{print $1; exit}' $T)
   a=$(tl "$F" $W/log.liggghts.$SUF); b=$(tl "$F" $T)
   G1=0; [ -n "$F" ] && [ "$F" = "$S0" ] && [ "$E" = 0 ] && same "$a" "$b" 1e-6 && G1=1
@@ -1849,8 +1914,6 @@ for ENT in $SUBMITTED; do
   elif [ -n "$MISS" ]; then G3=0; G3T="원 로그에 있는 비교 줄이 시험에 없음 (결손): $MISS"
   elif sane "$a2" "$b2"; then G3=1; G3T="5 % 안"; else [ $? = 2 ] && G3T="비교 칸이 유한한 수가 아님 · 칸 이름 다름 (10-28 사전 공격 E)" || G3T="5 % 넘음"; G3=0; fi
   [ -f $W/log.liggghts ] && mv $W/log.liggghts $W/log.liggghts.${SFX}t
-  # 10-30 (KG50R-F02): 잡 안 신원 기록 줄 (러너 틀의 LMP_IDENTITY · 잡 안 PATH 의 lmp_mpi · 잡 시작 때 읽은 덱 sha256) — 보고에 옮기기만 (관문 아님)
-  LID=$(grep -a -m1 '^LMP_IDENTITY' $T 2>/dev/null | cut -c1-500)
   { echo; echo "## $C"
     echo "- 시도 (10-28 KG50R-04): $ATT · 이번 호출이 낸 시험 job $J 만 승격 대상 (기록 $AD)"
     echo "- 멈춘 폴더: ${C}.$SUF (손대지 않음) · 멈춘 곳 $(grep -a '^======' $S/log.liggghts | tail -1)"
@@ -1858,7 +1921,6 @@ for ENT in $SUBMITTED; do
     [ $STRIP = 1 ] && { echo "- 주석 줄 빼기 (-c · 작업 폴더 덱만): $(tail -1 $W/strip_$SFX.txt | sed 's/^ *주석 줄 빼기 (-c): //') (strip_$SFX.txt)"; sed -n 's/^  · /    /p' $W/strip_$SFX.txt; }
     echo "- 재개: $M 체크포인트 \`read_restart $RR\` (step $S0) · 덱 input_${C}_$SFX.liggghts · 러너 run_${C}_$SFX.sh (#SBATCH -n $NP · mpirun --oversubscribe --bind-to none -np $NP)"
     echo "- 러너 (10-30 KG50R-F02 · 1저자 Q2): $(head -1 $AD/runner_check.txt 2>/dev/null) · 헬퍼 러너 원본 = $ATT/helper_run_${C}_$SFX.sh.orig · 실행 입력 영수증 $ATT/main_inputs.sha256 (다섯)"
-    echo "- 시험 잡 안 lmp_mpi · 덱 신원 (10-30 KG50R-F02 · 기록만 · 관문 아님): ${LID:-없음 (시험 로그에 LMP_IDENTITY 줄 없음)}"
     echo "- 템플릿 재선언: $(cat $W/tp_$SFX.txt)"
     echo "- 첫 긴 run (10-27 · 1저자 Q1 (가)): $(tail -1 $W/fixrun_$SFX.txt 2>/dev/null | sed 's/^ *· //') (fixrun_$SFX.txt)"
     echo "- 재개 덱 정적 대조: $(tail -1 $W/deckcheck_$SFX.txt | sed 's/^ *재개 덱 정적 대조: //') (deckcheck_$SFX.txt)"
@@ -1866,11 +1928,14 @@ for ENT in $SUBMITTED; do
     [ -z "$TDS" ] || echo "- 시험 기대 끝 step (10-28 · KG50-18): S0 $S0 + 시험 덱 read_restart 뒤 run 합 $TNT ($TDS) = $EXP"
     echo "- G0 시험 정상 종료: $([ $G0 = 1 ] && echo 통과 || echo 실패) — 상태 ${ST:-없음} · ExitCode ${EC:-없음} · 마지막 step $LTS (기대 $EXP) · Loop time $([ "$LPL" -gt "$LTL" ] && echo '끝 step 뒤에 있음' || echo 없음) · 조회 실패 $QF 번 · $([ $TO = 1 ] && echo '끝 상태 못 얻음 (대기 시간 초과 · 조회 실패)' || echo '끝 상태 얻음')"
     echo "- G0 마지막 줄 · Loop (10-28 KG50R-07): 마지막 thermo 줄 = 최신 머리 아래 · 칸 수 같음 · 모든 칸 유한 수 (step $LTS · 줄 $LTL) · 'Loop time … for $LPN steps' ↔ 시험 마지막 run $LN — $([ "$LPN" = "$LN" ] && echo 같음 || echo 다름)"
+    echo "- G0 잡 안 덱 신원 (10-30 KG50R-F02 · 관문): $([ $GI = 1 ] && echo 통과 || echo 실패) — $GIT"
+    LIDC=${LIDF:0:700}; echo "    신원 줄 (10-30 KG50R-F02): ${LIDC:-없음 (시험 로그에 LMP_IDENTITY 줄 없음)}"
+    [ -n "$MML" ] && echo "- ⛔ 잡 안 sha256 대조 다름 — mpirun 안 함 (10-30 KG50R-F02): $MML"
     echo "- G1 재개 첫 thermo (step $F, setup 줄, CPU·압력 열 제외, 1e-6): $([ $G1 = 1 ] && echo 통과 || echo 실패)"; echo "    원 로그 :$a"; echo "    재개    :$b"
     echo "- G2 체크포인트 상태 덤프 대조: $([ $G2 = 1 ] && echo 통과 || echo 실패) —$G2T"
     echo "- G3 원 로그 비교 구간 (step ${F2:--} 부터, 느슨한 확인): $G3T"; echo "    원 로그 :$a2"; echo "    재개    :$b2"
   } >> $REP
-  printf 'G0 %s G1 %s G2 %s G3 %s · 시험 job %s · 로그 %s\n' "$G0" "$G1" "$G2" "$G3" "$J" "${T##*/}" > $AD/result.txt
+  printf 'G0 %s G1 %s G2 %s G3 %s · 시험 job %s · 로그 %s · 잡 안 덱 신원 %s (G0 에 듦)\n' "$G0" "$G1" "$G2" "$G3" "$J" "${T##*/}" "$GI" > $AD/result.txt
   if [ $G0 = 1 ] && [ $G1 = 1 ] && [ $G2 = 1 ] && [ $G3 = 1 ]; then
     if [ $TONLY = 1 ]; then echo "- 🧪 시험만 (-T) — G0–G3 통과 · 본 제출 안 함" >> $REP; echo "결정: 시험만 (-T)" >> $AD/result.txt; TPASS="$TPASS $C"
     else
