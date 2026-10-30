@@ -1,0 +1,97 @@
+# KG50R-F02 변이 시험 — 고친 도구 resume_ckpt_e5a61181.sh 의 관문을 하나씩 끄고 RB 묶음 (--only RB)
+# 이름 | 결과 | RB PASS/FAIL | 실패한 시험 | 기대 (표지만)
+M01_shebang | 잡힘 | 90/1 | RB22 | RB22
+M02_sbatch_after_cmd | 잡힘 | 90/1 | RB12 | RB12
+M03_sbatch_unknown_key | 잡힘 | 90/1 | RB10 | RB10
+M04_sbatch_dup_key | 잡힘 | 90/1 | RB11 | RB11
+M05a_jobname_value | 잡힘 | 90/1 | RB17 | RB17
+M05b_output_value | 잡힘 | 90/1 | RB18 | RB18
+M05c_n_value | 잡힘 | 89/2 | RB28 RB30 | RB28 RB30
+M06_token_value | 잡힘 | 89/2 | RB20 RB34 | RB20 RB34
+M07_env_after_cd | 잡힘 | 90/1 | RB13 | RB13
+M08_cd_count | 잡힘 | 89/2 | RB9 RB9b | RB9b
+M09_cd_safe_path | 잡힘 | 90/1 | RB14 | RB14
+M10_cd_realpath | 잡힘 | 90/1 | RB3 | RB3
+M11_mpirun_count | 잡힘 | 90/1 | RB5 | RB5
+M12_mpirun_before_cd | 잡힘 | 90/1 | RB15 | RB15
+M13_comment_line | 잡힘 | 89/2 | RB4 RB4b | RB4b
+M14_mpirun_any_in | 잡힘 | 89/2 | RB1 RB2 | RB1 RB2
+M15_other_command | 잡힘 | 90/1 | RB6 | RB6
+M16_mpirun_meta_msg | 잡힘 | 89/2 | RB7a RB7b | RB7a RB7b
+M16b_meta_msg | 잡힘 | 90/1 | RB37 | RB37 (10-30 더함 · 1 판에서 살아남음)
+M17_required_keys | 잡힘 | 89/2 | RB23 RB33 | RB23 RB33
+M18_cd_missing | 잡힘 | 89/2 | RB36 RB8 | RB8
+M19_mpirun_missing | 잡힘 | 90/1 | RB25 | RB25
+M20_cr | 잡힘 | 90/1 | RB16 | RB16
+M21_nul | 잡힘 | 90/1 | RB26 | RB26
+M22_utf8 | 잡힘 | 90/1 | RB27 | RB27
+M23_np_valid | 잡힘 | 90/1 | RBU5 | RBU5 (도구 흐름은 -n 시작 거부가 먼저)
+M24_wr_safe | 잡힘 | 90/1 | RB19 | RB19
+M25_wr_consistent | 잡힘 | 90/1 | RBU2 | RBU2 (1 판에서 살아남음)
+M26_deck_path_safe | 잡힘 | 90/1 | RBU6 | RBU6 (도구 흐름은 -x 시작 거부가 먼저)
+M27_receipt_two | 잡힘 | 61/30 | RB40 RB41 RB42 RB43 RB44 RB44b RB45 RB46 RB47 RBP1 RBP2 RBR1 RBR2 RBR3 RBR4 RBR5 | RBR · RBP
+M28_receipt_memory | 잡힘 | 89/2 | RBR4 RBR5 | RBR4 RBR5
+M29_recheck_off | 잡힘 | 88/3 | RBR1 RBR2 RBR3 | RBR1 RBR2 RBR3
+M30_gate_ng_off | 잡힘 | 45/46 | RB1 RB10 RB11 RB12 RB13 RB14 RB15 RB16 RB17 RB18 RB19 RB2 RB20 RB22 RB23 RB25 RB26 RB27 RB28 RB29 RB3 RB30 RB32a RB32b RB32c RB32d RB32e RB32f RB32g RB32h RB32i RB32j RB33 RB34 RB35 RB36 RB37 RB4 RB4b RB5 RB6 RB7a RB7b RB8 RB9 RB9b | 음성 전부
+M31_old_derivation | 잡힘 | 18/73 | RB1 RB10 RB11 RB12 RB13 RB14 RB15 RB16 RB17 RB18 RB19 RB2 RB20 RB22 RB23 RB25 RB26 RB27 RB28 RB29 RB3 RB30 RB32a RB32b RB32c RB32d RB32e RB32f RB32g RB32h RB32i RB32j RB33 RB34 RB35 RB36 RB36b RB37 RB4 RB40 RB41 RB42 RB43 RB44 RB44b RB45 RB46 RB47 RB4b RB5 RB6 RB7a RB7b RB8 RB9 RB9b RBP1 RBP2 RBR1 RBR2 RBR3 | 음성 전부 · RBP
+M32_in_relative | 잡힘 | 84/7 | RB45 RBP1 RBP2 | RBP b c d
+M33_cd_logical_w | 잡힘 | 90/1 | RBP1 | RBP1 (별칭 장면)
+M34_helper_orig_off | 잡힘 | 89/2 | RBP1 RBP2 | RBP f
+M35_identity_off | 잡힘 | 69/22 | RB40 RB41 RB43 RB44 RB44b RB45 RB47 RBP1 RBP2 RBR1 RBR2 RBR3 | RBP · G0 신원 관문
+M36_rm_stale_trial | 잡힘 | 90/1 | RB36b | RB36b (1 판에서 살아남음)
+M39_loose_rewrite | 잡힘 | 86/5 | RB28 RB29 RB30 RB32a RB32g | RB28 RB29 RB30
+M38_receipt_write_check | 살아남음 | 91/0 | - | 없음 (겹 방어 · runnerck 가 다섯 중 덱 셋을 이미 읽고 러너 둘을 썼다)
+N40_np_startup | 잡힘 | 88/3 | RB21 RB49 RB49b | RB21 RB49 RB49b
+N41_np_startup_loose | 잡힘 | 88/3 | RB21 RB49 RB49b | RB21 RB49 RB49b
+N42_sfx_startup | 잡힘 | 89/2 | RB24 RB50 | RB24 RB50
+N43_sfx_startup_loose | 잡힘 | 89/2 | RB24 RB50 | RB24 RB50
+N44_symlink_off | 잡힘 | 90/1 | RB48 | RB48
+N45_envlike_off | 잡힘 | 81/10 | RB32a RB32b RB32c RB32d RB32e RB32f RB32g RB32h RB32i RB32j | RB32
+N46_conda_dot | 잡힘 | 88/3 | RB32h RB32i RB32j | RB32h RB32i RB32j
+N47_tok_comma | 잡힘 | 90/1 | RB34 | RB34
+N48_ckp_safe_off | 잡힘 | 90/1 | RBU4 | RBU4
+N49_render_no_refuse | 잡힘 | 85/6 | RB40 RB41 RB42 RB43 RBP1 RBP2 | RB40 RB41 RB42 RB43 · RBP d
+N50_render_no_ks | 잡힘 | 88/3 | RB42 RBP1 RBP2 | RB42 · RBP d
+N51_render_no_ds | 잡힘 | 86/5 | RB40 RB41 RB43 RBP1 RBP2 | RB40 RB41 RB43 · RBP d
+N52_render_cd_guard | 잡힘 | 88/3 | RB46 RBP1 RBP2 | RB46 · RBP d
+N53_render_command | 잡힘 | 88/3 | RB45 RBP1 RBP2 | RB45 · RBP d
+N54_g0_no_identity | 잡힘 | 89/2 | RB44 RB44b | RB44 RB44b
+N55_gi_path | 잡힘 | 90/1 | RB44b | RB44b
+N56_gi_sha | 잡힘 | 89/2 | RB40 RB41 | RB40 RB41
+N57_gi_count | 잡힘 | 90/1 | RB44 | RB44
+N58_error_count_old | 잡힘 | 90/1 | RB47 | RB47
+N59_tqs_check | 살아남음 | 91/0 | - | 없음 (겹 방어 · GNU sha256sum 셋째 줄 = 시험 덱 · 안전한 경로)
+N60_tmp_cleanup_off | 잡힘 | 90/1 | RB35 | RB35
+N61_isfile_off | 살아남음 | 91/0 | - | 없음 (없는 파일 · 폴더는 열 때 같은 OSError · FIFO 만 다름 = 막힘 — 시험 안 함)
+VE1_ENVL_export_any | 잡힘 | 88/3 | RB32b RB32c RB32d | RB32b RB32c RB32d
+VE2_ENVL_conda_any | 잡힘 | 87/4 | RB32g RB32h RB32i RB32j | RB32g RB32h RB32i RB32j
+VE3_ENVL_source_any | 잡힘 | 90/1 | RB32e | RB32e
+VR1_cd_realpath_dropped | 잡힘 | 90/1 | RB3 | RB3
+VR2_mpirun_prefix | 잡힘 | 87/4 | RB1 RB2 RB7a RB7b | RB1 RB2
+VR3_realpath_W_dropped | 잡힘 | 90/1 | RBU2 | RBU2
+VR4_render_in_basename | 잡힘 | 84/7 | RB45 RBP1 RBP2 | RBP
+VR5_render_cd_unquoted | 잡힘 | 89/2 | RBP1 RBP2 | RBP d
+VR6_render_no_cd | 잡힘 | 84/7 | RB46 RBP1 RBP2 | RBP
+VR7_runnerck_rc2_pass | 잡힘 | 90/1 | RB35 | RB35
+VR8_no_rm_TR | 잡힘 | 90/1 | RB36b | RB36b
+VR9_receipt_logical_D | 잡힘 | 90/1 | RBP1 | RBP e
+VR10_receipt_count_dropped | 살아남음 | 91/0 | - | 없음 (GNU sha256sum = 성공이면 파일마다 한 줄)
+VR11_sed_n_permissive | 잡힘 | 89/2 | RB28 RB30 | RB28
+VR12_CR_NUL_precheck | 잡힘 | 89/2 | RB16 RB26 | RB26
+VR13_env_after_cd | 잡힘 | 90/1 | RB13 | RB13
+VR14_premain_receipt_sha | 잡힘 | 89/2 | RBR4 RBR5 | RBR4 RBR5
+VR15_premain_recheck | 잡힘 | 88/3 | RBR1 RBR2 RBR3 | RBR1 RBR2 RBR3
+VR16_trial_uses_main_deck | 잡힘 | 67/24 | RB40 RB41 RB43 RB44 RB44b RB45 RB47 RBP1 RBP2 RBR1 RBR2 RBR3 | RBP
+VR17_output_optional | 잡힘 | 90/1 | RB33 | RB33
+VR18_jobname_want_dropped | 잡힘 | 90/1 | RB17 | RB17
+VR19_comment_skipped | 잡힘 | 89/2 | RB4 RB4b | RB4 RB4b
+VR20_receipt_no_ckpt | 잡힘 | 61/30 | RB40 RB41 RB42 RB43 RB44 RB44b RB45 RB46 RB47 RBP1 RBP2 RBR1 RBR2 RBR3 RBR4 RBR5 | RBP · RBR
+VR21_render_identity_dropped | 잡힘 | 69/22 | RB40 RB41 RB43 RB44 RB44b RB45 RB47 RBP1 RBP2 RBR1 RBR2 RBR3 | RBP · G0 신원 관문
+VR22_sbatch_after_cmd | 잡힘 | 90/1 | RB12 | RB12
+VR23_two_cd | 잡힘 | 89/2 | RB9 RB9b | RB9 RB9b
+VR24_cd_safe_abs_dropped | 잡힘 | 90/1 | RB14 | RB14
+VR25_WR_logical_pwd | 잡힘 | 81/10 | RB47 RBP1 | RBP1
+# 묶음 M: 변이 41 · 잡힘 40 · 살아남음 1 · 못 만듦 0
+# 묶음 N: 변이 22 · 잡힘 20 · 살아남음 2 · 못 만듦 0
+# 묶음 V: 변이 28 · 잡힘 27 · 살아남음 1 · 못 만듦 0
+# 합계: 변이 91 · 잡힘 87 · 살아남음 4 · 못 만듦 0 · 시험 하네스 예외 (Traceback) 든 로그 0

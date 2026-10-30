@@ -1,0 +1,4 @@
+runnerck rc 0
+runner rc 1
+/tmp/cdfail_b4vpj26y/submitdir/run_main.sh: line 7: cd: /tmp/cdfail_b4vpj26y/root/case1: No such file or directory
+

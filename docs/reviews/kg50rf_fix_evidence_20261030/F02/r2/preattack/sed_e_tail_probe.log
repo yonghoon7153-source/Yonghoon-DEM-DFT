@@ -1,0 +1,7 @@
+sh: 1: Syntax error: word unexpected (expecting ")")
+sh: 1: Syntax error: word unexpected (expecting ")")
+rc=0 NP=[56/;e touch /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/f02b/sedp/p.zRpV/M1;s/^/] file=[#SBATCH -n 56|mpirun -np 1 lmp_mpi -in x|]
+rc=0 NP=[56/;e touch /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/f02b/sedp/p.zRpV/M2 #] file=[#SBATCH -n 56|mpirun -np 1 lmp_mpi -in x|]
+rc=0 NP=[56/;e touch /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/f02b/sedp/p.zRpV/M3
+s/^/] file=[ lmp_mpi -in #SBATCH -n 56| lmp_mpi -in mpirun --oversubscribe --bind-to none -np 56x|]
+markers: M2 M3 run.sh 

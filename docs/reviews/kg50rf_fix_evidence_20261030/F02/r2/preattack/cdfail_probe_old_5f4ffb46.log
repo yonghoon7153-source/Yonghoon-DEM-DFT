@@ -1,0 +1,6 @@
+runnerck rc 0
+runner rc 0
+/tmp/cdfail_3a1iapvd/submitdir/run_main.sh: line 7: cd: /tmp/cdfail_3a1iapvd/root/case1: No such file or directory
+LMP_IDENTITY record-only (not a gate, 10-30 KG50R-F02): lmp_mpi=none sha256= deck=/tmp/cdfail_3a1iapvd/root/case1/input_case1_r4.liggghts sha256=
+FAKE mpirun cwd=/tmp/cdfail_3a1iapvd/submitdir args=--oversubscribe --bind-to none -np 4 lmp_mpi -in /tmp/cdfail_3a1iapvd/root/case1/input_case1_r4.liggghts
+

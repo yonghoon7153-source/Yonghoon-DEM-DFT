@@ -1,0 +1,8 @@
+trial/main new 0 0  old 0 0
+--- old
++++ new
+@@ -9,3 +9,3 @@
+   · 첫 긴 run 그대로 — 정적 대조 문제 1 개 (남은 step 다름 하나뿐일 때만 고친다)
+-/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/f02b/tool_5f4ffb46.sh: line 1352: [: <임시>/root/kg50_d07_b40/restart_kg50_d07_b40/restart_settling_20001.bin: binary operator expected
++/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-ab1d2d1fe4868ba68/scripts/resume_ckpt.sh: line 1401: [: <임시>/root/kg50_d07_b40/restart_kg50_d07_b40/restart_settling_20001.bin: binary operator expected
+   ✗ restart_kg50_d07_b40/restart_settling_20001.bin

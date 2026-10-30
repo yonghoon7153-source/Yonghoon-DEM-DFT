@@ -1,0 +1,48 @@
+체크포인트 (대역 · 0 바이트 64 개): restart_kg50_d2_b50/restart_settling_20001.bin sha256 f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b
+runnerck 함수 줄 수: 211 · 도구 sha256 e5a6118102dee3a8fcd28c9163d5d1868e3d9db6089365348ff937eaedae44da
+헬퍼 러너 엄격 대조 통과 (10-30 KG50R-F02) — #SBATCH 6 · 환경 줄 6 · cd 실제 경로 = 작업 폴더 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/f02b/d2sb/lustre/home/yonghoon/dem_test/kg50_d2_b50 → 본 · 시험 러너를 도구 틀로 씀 (cd "작업 폴더 실제 경로" || exit 1 · -in "검사한 덱 절대 경로" · 잡 시작 때 덱 · 체크포인트 sha256 대조 · command mpirun 한 줄 · LMP_IDENTITY 줄 = 시험 로그에서 G0 관문)
+runnerck rc=0
+===== run_kg50_d2_b50_r4.sh (모래 상자 앞머리 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/f02b/d2sb 를 지운 글 = ibb 에서 쓸 글 · 체크포인트 sha256 은 대역 값)
+#!/bin/bash
+#SBATCH --job-name=kg50_d2_b50_r4
+#SBATCH --output=logs/output_kg50_d2_b50_r4_%j.out
+#SBATCH --qos=cpu-60
+#SBATCH --partition=cpu
+#SBATCH -n 4
+#SBATCH --time=5-00:00:00
+
+source ~/.bashrc
+conda activate myenv
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+
+cd "/lustre/home/yonghoon/dem_test/kg50_d2_b50" || exit 1
+ds=$(sha256sum 2>/dev/null < "/lustre/home/yonghoon/dem_test/kg50_d2_b50/input_kg50_d2_b50_r4.liggghts" | cut -c1-64); ks=$(sha256sum 2>/dev/null < "/lustre/home/yonghoon/dem_test/kg50_d2_b50/restart_kg50_d2_b50/restart_settling_20001.bin" | cut -c1-64)
+echo "LMP_IDENTITY (10-30 KG50R-F02): lmp_mpi=$(command -v lmp_mpi || echo none) sha256=$(sha256sum 2>/dev/null < "$(command -v lmp_mpi)" | cut -c1-64) deck=/lustre/home/yonghoon/dem_test/kg50_d2_b50/input_kg50_d2_b50_r4.liggghts sha256=$ds checkpoint=/lustre/home/yonghoon/dem_test/kg50_d2_b50/restart_kg50_d2_b50/restart_settling_20001.bin sha256=$ks"
+[ "$ds" = "eacc23e60ae5981496091d3bab02084f8aae4ea180752b2b687750935316c3c6" ] && [ "$ks" = "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b" ] || { echo "LMP_IDENTITY_MISMATCH (10-30 KG50R-F02): deck /lustre/home/yonghoon/dem_test/kg50_d2_b50/input_kg50_d2_b50_r4.liggghts sha256 $ds (checked eacc23e60ae5981496091d3bab02084f8aae4ea180752b2b687750935316c3c6) checkpoint /lustre/home/yonghoon/dem_test/kg50_d2_b50/restart_kg50_d2_b50/restart_settling_20001.bin sha256 $ks (checked f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b) - mpirun not started"; exit 1; }
+command mpirun --oversubscribe --bind-to none -np 4 lmp_mpi -in "/lustre/home/yonghoon/dem_test/kg50_d2_b50/input_kg50_d2_b50_r4.liggghts"
+===== run_kg50_d2_b50_r4.sh sha256 (모래 상자 글) ae64d5ab6d743c77ac7a37dcc2c747a59697fe4b57c5e0c59dbb9ea79d61b8e3
+===== run_kg50_d2_b50_r4t.sh (모래 상자 앞머리 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/f02b/d2sb 를 지운 글 = ibb 에서 쓸 글 · 체크포인트 sha256 은 대역 값)
+#!/bin/bash
+#SBATCH --job-name=kg50_d2_b50_r4t
+#SBATCH --output=logs/output_kg50_d2_b50_r4t_%j.out
+#SBATCH --qos=cpu-60
+#SBATCH --partition=cpu
+#SBATCH -n 4
+#SBATCH --time=01:00:00
+
+source ~/.bashrc
+conda activate myenv
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+
+cd "/lustre/home/yonghoon/dem_test/kg50_d2_b50" || exit 1
+ds=$(sha256sum 2>/dev/null < "/lustre/home/yonghoon/dem_test/kg50_d2_b50/input_kg50_d2_b50_r4t.liggghts" | cut -c1-64); ks=$(sha256sum 2>/dev/null < "/lustre/home/yonghoon/dem_test/kg50_d2_b50/restart_kg50_d2_b50/restart_settling_20001.bin" | cut -c1-64)
+echo "LMP_IDENTITY (10-30 KG50R-F02): lmp_mpi=$(command -v lmp_mpi || echo none) sha256=$(sha256sum 2>/dev/null < "$(command -v lmp_mpi)" | cut -c1-64) deck=/lustre/home/yonghoon/dem_test/kg50_d2_b50/input_kg50_d2_b50_r4t.liggghts sha256=$ds checkpoint=/lustre/home/yonghoon/dem_test/kg50_d2_b50/restart_kg50_d2_b50/restart_settling_20001.bin sha256=$ks"
+[ "$ds" = "aac7debc81029acfa4f7619aab8a2358741095b4f5e833cedac0a8f9f29c044b" ] && [ "$ks" = "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b" ] || { echo "LMP_IDENTITY_MISMATCH (10-30 KG50R-F02): deck /lustre/home/yonghoon/dem_test/kg50_d2_b50/input_kg50_d2_b50_r4t.liggghts sha256 $ds (checked aac7debc81029acfa4f7619aab8a2358741095b4f5e833cedac0a8f9f29c044b) checkpoint /lustre/home/yonghoon/dem_test/kg50_d2_b50/restart_kg50_d2_b50/restart_settling_20001.bin sha256 $ks (checked f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b) - mpirun not started"; exit 1; }
+command mpirun --oversubscribe --bind-to none -np 4 lmp_mpi -in "/lustre/home/yonghoon/dem_test/kg50_d2_b50/input_kg50_d2_b50_r4t.liggghts"
+===== run_kg50_d2_b50_r4t.sh sha256 (모래 상자 글) a713a61b7a44184ac45a8a173198426c987b14bd0fc4abe72bce303b16e51054
