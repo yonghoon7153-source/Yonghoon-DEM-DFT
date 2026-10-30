@@ -2162,3 +2162,46 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   여부.
 - 이 결정은 E1-0 · E1-0b · E1-1–3 · 시험 · Git fixture · driver · 탐침 · 읽기 경로 · fetch · run 승인이 아니다. 회신이 오면 바이트 보존 → 원장 → (정정이
   요구되면 범위안) → 사용자 결정 순서로 간다.
+
+## §83 C4-E · E1 승인 요청 v5 사전 검토 회신 접수 — 정적 수용 · 새 차단 0 · E1-0 한정 사용자 승인 권고 · 실행 승인 아님 (2026-10-30 KST · 덧붙임 — 위 §0–§82 는 그대로)
+
+- **회신 (2026-10-30 작성 · 같은 날 전달):** 사용자가 §82 의 발송문을 Codex 에 보냈고, 회신 ZIP 과 함께 짧은 회신 · ZIP 밖 영수증 · 포장 도구 반환의
+  본문을 대화로 전달했다.
+  - 고정 검토 커밋 `a0e6bdee74ca0734bb43a83b19bc1aca715ed4a3` — §82 의 기록 커밋이고, 검토 대상 파일은 `5112de32` 와 같다.
+  - 검토 시작 · 끝의 원격 ref 가 같았다 (`BRANCH_REF_OBSERVATIONS.json`).
+- **보존:** `reviews/review_reil_c4e_e1_v5_prereview_20261030/REIL_C4E_E1_V5_PREREVIEW_20261030.zip` (351,984 B · sha256
+  `8291451cd47e8d181435fc74b7219904f3208426c7089dca51edce36649e43ee`). 규칙 `6ff62a64` → 보존 `7e3af856`.
+  - `originals/` 43 구성원을 안전 추출했다 (경로 이탈 · 링크 0). PACKAGE_MANIFEST 42/42 (목록 밖은 자신뿐 · 7,630 B · `edf5f381…`).
+  - `source/` 22 = 고정 커밋의 바이트 (22/22) · blob 45/45 · 비밀 검사 45 파일 0 건.
+  - ZIP 밖 영수증: 사용자가 붙인 본문을 옮긴 `outside_zip/DELIVERY_RECEIPT.json` (1,112 B · sha256 `2f022d5c…`) 이 포장 도구 반환이 밝힌 영수증 식별과
+    바이트 일치한다. 영수증의 archive · manifest 식별은 위 관측값과 같다.
+  - 포장 도구 반환 (exit 0 · `all_checks_match` true · 재포장 false) 은 대화 본문으로만 받았고 파일로 두지 않았다.
+  - 짧은 회신 `CODEX_REPLY_KO.txt` 는 대화에 붙인 본문과 같다 (눈으로 대조). 검토자 도구 `review_data_audit.py` 는 실행하지 않았다.
+- **판정 (`REVIEW_DECISION.json`):** `STATIC_ACCEPTED_E1_0_USER_APPROVAL_RECOMMENDED_NO_EXECUTION`.
+  - V4-01 · V4-N1 = 정적 종결 · S6 = 정적 수용 · 새 지적 0.
+  - Q1 `ACCEPTED_STATIC_FIXTURE_CORRECTION` · Q2 `ACCEPTED_FIXED_WRAPPER_SCOPE_WITH_LOSSY_TEXT_LIMIT` · Q3 `ACCEPTED_PREVIOUS_CAVEATS_PRESERVED` · Q4
+    `E1_0_ONLY_USER_APPROVAL_RECOMMENDED`.
+  - `execution_approved` false. 검토자 실행 0 — 대상 import · 호출 · pytest · Git fixture · driver · COMSOL.
+  - 자료 대조 67 조건 일치 (STATIC_AUDIT 58 + 추가 9) — 기능 시험 수가 아니다. 계획 수: RED-L 27 · RED-R 11 · GREEN 65 · driver 8.
+  - 검토자 자체 검사기의 첫 결과는 58 중 56 이었다 — import 된 최상위 이름 `shutil` · `signal` 을 정의 집합에서 뺀 검사기 가정. 원 결과를 보존하고 검사기
+    집합만 정정했다 (`REVIEWER_AUDIT_CORRECTION.json` — 후보 결함 아님).
+- **회신이 남긴 한계 (수용 범위 · E1-0 에서도 그대로):**
+  - 대체 문자가 든 텍스트는 원시 바이트의 가역 보존 증거가 아니다. 비 UTF-8 바이트는 U+FFFD 로 손실 변환된다 (S6 기록 해석의 한계).
+  - 정리 15 s 는 기한 전에 시작한 /proc 관측 하나의 길이까지 묶지 않는다.
+  - Git 설정 원천 · 내용의 격리 (FUTURE-01 · 절차 Git 의 KEY / VALUE) 는 S6 로 닫히지 않는다.
+  - lstat 비원자 · 최상위 `first_error` 만 보지 말 것 · 가짜 시계 · RED-R 은 대부분 인터페이스 수준 · v4 / v5 대상 시험은 관측되지 않았다.
+  - 검토자는 이 저장소 실행 기기의 파일 · 설치 엔진 상태를 관측하지 않았고, 제출자의 ruff 관측을 다시 하지 않았다.
+- **이 저장소의 정정 (문서 · 회신이 짚음):** 요청서 v5 §1-1 · §81 · 발송문 v5 의 "v4 대비 diff 가 … 자리에만 있다" 는 요약이었다.
+  - 문자 diff 에는 그 밖에 `_run_keywords` 도우미 둘 · 실행기 대조의 `import ast` · 골격 함수 35 의 오류 메시지가 있다.
+  - 오류 메시지는 `승인 요청 v4 §3` → `v5 §3` 이다 (이 저장소가 두 골격 초안을 비교해 확인했다).
+  - 회신은 이것들을 S6 · 판 갱신에 속하는 것으로 보고 새 수정 의무로 세지 않았다. RED-L 기준 (`NotImplementedError: E1-0 RED 골격` 접두) 은 그대로 맞는다.
+- **E1-0 준비 상태 (2026-10-30 · 읽기만 · 해석기 실행 0):**
+  - 있음: `/usr/bin/python3.11` · `SP/reil_c4env/venv/bin/python` · `SP/reil_c4env/pytest_t`.
+  - 없음 (정상): `SP/c4e1_steps` · `<E0>` (`evidence/reil_c4e1_0_*`) · 복사 대상 셋 (`scripts/reil_c4e1_launch.py` · `tests/test_reil_c4e1_launch.py` ·
+    `tests/test_reil_c4e1_runner.py`).
+  - 실행기 봉인 표 15/15 = HEAD `7e3af856` 의 실제 바이트.
+- **다음:** 사용자의 E1-0 한정 승인 (요청서 v5 §10 의 2).
+  - 승인이 있으면 요청서 v5 §4 를 그대로 따른다: a 승인 기록 § · 보존 규칙 → b 복사 넷 · 첫 시험 전 봉인 → c RED-L → d RED-R → e GREEN 65 → f 끝 기록 ·
+    결과 § · 결과 검토 발송문 → 멈춤.
+  - 첫 예상 밖 결과에서 멈추고 재시험하지 않는다.
+  - 승인은 E1-0b · E1-1–3 (identity · 읽기 경로 · fetch · 자료 개봉 · run) · C4-A / B · COMSOL 을 포함하지 않는다. 이 기록은 어느 단계의 실행 승인도 아니다.
