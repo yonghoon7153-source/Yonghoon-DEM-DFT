@@ -4753,3 +4753,27 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   - D1–D5 결정 · 구현 · fixture · 시험 · OS 관측 · native 실행은 각각 별도 승인이다.
   - 이 절은 어느 것의 승인도 아니다.
 - **유지:** 계약 미채택 · 세 기한 null · `JOB_CURRENT_COMMIT=OPEN` · `native_ready / approved / usable = false` · 전체 · 정상 gate INCOMPLETE.
+
+## 99. Job commit event 세부 설계 문서 검토 — 발송 · 송신 측 첫 회신 (원설계 ZIP 첨부 요청) · 보존본에서 같은 바이트 재공급 (2026-10-30 · 실행 0)
+
+- **발송 (사용자):** 사용자가 §98 의 발송문 (`134a639f…`) 과 상세 검토 (`fdbcf3e2…`) 를 송신 측 Codex 에 보냈다. 발송 시각과 발송한 바이트는 이 원장이 직접
+  보지 못했다 — 아래 회신이 "상세 검토 텍스트" 를 받았다고 적은 것이 근거다.
+- **송신 측 첫 회신 (사용자가 대화에 붙여 전달 · 2026-10-30 · 파일 없음):**
+  - 판단: 다음 단계는 JC-01–10 의 문서 정정이다. 구현 · 시험 승인은 아니다.
+  - 요청: 수정 대상 원설계 ZIP `COMSOL_S1_JOB_COMMIT_EVENT_DETAILED_DESIGN_DELIVERY_20261016.zip` (605,715 B · SHA `66fc0531…ceb957`) 이 송신 측 작업
+    폴더 · 바탕화면 · 다운로드에 없으니 그 파일 하나를 첨부해 달라.
+  - 송신 측 계획: 원설계를 받으면 지적을 해당 본문 · JSON 과 대조하고, 한정 문서 정정 승인안을 구체화한다.
+  - 송신 측 진술: 아직 파일 수정 · 시험 · COMSOL 실행 0.
+- **이 저장소의 재공급:** §98 보존본
+  `reviews/r14_repros/codex63/comsol_s1_job_commit_event_detailed_design_20261016/COMSOL_S1_JOB_COMMIT_EVENT_DETAILED_DESIGN_DELIVERY_20261016.zip` 을 사용자에게
+  파일로 보냈다. 첨부는 사용자가 한다.
+  - 확인 (2026-10-30): 605,715 B · sha256 `66fc053154476fa7d022f91ad1c28a08ae68340d6f4220bfc4472c4456ceb957`.
+    - 요청의 크기 · 해시 머리 / 꼬리와 같다.
+    - 보존 커밋 `9472f6fc` 의 Git blob · 2026-10-27 업로드 원파일과 같다 · 보존 규칙 `-text`.
+  - 바이트를 바꾸지 않았고 다시 포장하지 않았다. 동봉 코드 · 도구는 이번에도 실행하지 않았다.
+  - 동봉 문안을 대화로 드렸다: 필수 첫 줄 · 파일 이름 · 크기 · sha256 · "보존본 그대로" · "문서 정정 · 구현 · 시험 · OS 관측 · COMSOL 실행의 승인이 아님".
+- **다음:** 송신 측의 한정 문서 정정 승인안 → (요청이 있으면) 이 저장소의 검토 → 사용자 결정.
+  - 문서 정정의 승인도 사용자 몫이다.
+  - D1–D5 결정 · 구현 · fixture · 시험 · OS 관측 · native 실행은 각각 별도 승인이다.
+  - 이 절은 어느 것의 승인도 아니다.
+- **유지:** §98 과 같다 — 계약 미채택 · 세 기한 null · `JOB_CURRENT_COMMIT=OPEN` · `native_ready / approved / usable = false` · 전체 · 정상 gate INCOMPLETE.
