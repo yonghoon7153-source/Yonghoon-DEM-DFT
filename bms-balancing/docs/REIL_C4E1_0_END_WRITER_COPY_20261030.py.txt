@@ -1,0 +1,36 @@
+"""E1-0 끝 기록 04_end.json (요청서 v5 §4-5) — stdlib 한 번.
+
+    /usr/bin/python3.11 -I write_end_e1_0.py <E0> '<단계 f 의 절차 Git 이름 확인 JSON>'
+
+읽기 = 단계 셋의 meta · 복사본 넷 · 디스크 · 시각. 쓰기 = <E0>/04_end.json 배타 생성. git · 네트워크 0.
+이름 확인 결과는 이름만 담는다 (값은 처음부터 받지 않는다).
+"""
+import datetime
+import hashlib
+import json
+import shutil
+import sys
+from pathlib import Path
+
+STEPS = ("01_red_launcher", "02_red_runner", "03_green")
+
+e0 = Path(sys.argv[1])
+check = json.loads(sys.argv[2])
+repo = e0.parent.parent.parent
+copies = ("bms-balancing/tests/test_reil_c4e1_launch.py", "bms-balancing/tests/test_reil_c4e1_runner.py",
+          "bms-balancing/scripts/reil_c4e1_launch.py", f"bms-balancing/evidence/{e0.name}/00_step_runner.py")
+out = {"kind": "REIL_C4E1_0_END",
+       "utc": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+       "disk_avail_bytes": shutil.disk_usage(repo).free,
+       "copies_sha256": {c: hashlib.sha256((repo / c).read_bytes()).hexdigest() for c in copies},
+       "git_name_check_f": {"git_env_names": check["git_env_names"], "outside_allowlist": check["outside_allowlist"]},
+       "steps": {}}
+for step in STEPS:
+    m = json.loads((e0 / f"{step}.meta.json").read_text(encoding="utf-8"))
+    rec = m.get("records") or {}
+    out["steps"][step] = {"started": m.get("started"), "runner_ok": m.get("runner_ok"), "rc": m.get("rc"), "timed_out": m.get("timed_out"),
+                          "cleanup_status": (m.get("cleanup") or {}).get("status"), "times": m.get("times"),
+                          "head_start": (rec.get("head_start") or {}).get("out"), "head_end": (rec.get("head_end") or {}).get("out")}
+with open(e0 / "04_end.json", "x", encoding="utf-8") as f:
+    f.write(json.dumps(out, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
+print(json.dumps({"written": str(e0 / "04_end.json"), "steps": {s: out["steps"][s]["runner_ok"] for s in STEPS}}, ensure_ascii=False))
