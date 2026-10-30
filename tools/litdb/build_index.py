@@ -46,10 +46,51 @@ import data as D                                                   # noqa: E402
 DEM_INDEX = LITDB / "INDEX_DEM.md"
 SE_INDEX = LITDB / "INDEX.md"
 
+# ★ SE 입도 효과 · size effect (2026-10-30 신설) — **낱말이 아니라 명시 slug 집합**으로 묶는다.
+#   왜 낱말로 안 묶나: 'psd' · 'size' · 'particle_size' 는 SE 입도와 무관한 카드도 끌고 온다 (실측:
+#   `eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell` = 액체 LIB **LFP 활물질** PSD ·
+#   `jun2022_argyrodite_ion_cage_size_descriptor` = 'size' 가 이온 **케이지** 크기).  묶음의 경계는 사람이
+#   정한다 — 카드를 더하면 여기에 slug 를 더한다 (자동 추측하면 축이 섞인다).
+#   맨 앞에 둔다: 이 카드들은 아래 낱말 묶음 (미세구조 · 접촉역학 · 기타 …) 에도 걸려 뒤에 두면 흩어진다.
+#   ⚠ 생성 표는 DEM 축 (track == "dem") 만 싣는다 — 이 집합의 **SE 축** 카드는 여기 안 나오고
+#     `INDEX.md` § "SE 입도 효과 (size effect)" 에 사람이 싣는다 (그 절에 있는지는 main() 이 따로 본다 —
+#     INDEX_DEM 에 SE 축 slug 를 적으면 `check()` 가 INDEX.md 누락을 못 본다).
+SIZE_EFFECT_GROUP = "SE 입도 효과 · size effect"
+SIZE_EFFECT_SLUGS = frozenset({
+    # 2026-10-30 반입 8 편 (50 kg 4차년도 SE 입도 문헌 지도)
+    "yano2026_se_psd_width_ionic_tortuosity_dem",
+    "yadav2021_lpscl_sieved_psd_impedance_tortuosity",
+    "lin2025_submicron_lpscl_cathode_li_kinetics",
+    "calpa2019_small_li7p3s11_liquid_phase_composite_cathode",
+    "tron2023_rational_cathode_composite_optimization_lpscl",
+    "lei2026_se_particle_size_effects_review",
+    "kawaguchi2026_se_size_soc_dependent_cathode_resistance",
+    "stavola2023_thick_nmc111_lpscl_lithiation_gradient_tortuosity",
+    # 이미 정본에 있던 입도 · 크기 효과 카드
+    "schlautmann2023_se_particle_size_composite_transport",
+    "minnmann2024_microstructure_porosity_visualization",
+    "shi2019_high_am_loading_particle_size_assb",
+    "bazzoun2025_dem_parameter_sensitivity_assb_cathode",
+    "tailored_cathode_microstructure_low_pressure_assb",
+    "minnmann2021_jes_charge_transport_bottlenecks",
+    "bazzoun2026_dem_fem_rnm_ionic",
+    "cronau2022_wet_milling_particle_size_ionic_conductivity",
+    "frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure",
+    "otani2025_dem_se_dispersion_aggregation_compression",
+    "park2020_dimension_controlled_se_percolation_contact_area",
+    "kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage",
+    "faka2026_particle_size_consolidation_strain_lpscl",
+    "lee2025_heckel_argyrodite_powder_densification_nanoindentation",
+    "schneider2023_particle_size_pressure_transport",
+    "ou2026_microstructural_multiscale_fast_ion_transport",
+})
+
 # 주제 묶음 — slug/제목에 이 낱말이 있으면 그 절로. 위에서부터 먼저 맞는 것.
+#   (첫 항목만 예외 — 낱말 튜플이 아니라 **slug frozenset** 이고 slug 가 정확히 같을 때만 맞는다.)
 GROUPS = [
-    # ⚠ MPM 을 먼저 — 'snow elastoplastic'·'Drucker-Prager' 는 접촉역학 낱말도 갖고 있어
-    #   뒤에 두면 그쪽으로 샌다 (실측: stomakhin2013·klar2016).
+    (SIZE_EFFECT_GROUP, SIZE_EFFECT_SLUGS),
+    # ⚠ (낱말 묶음 중에서는) MPM 을 먼저 — 'snow elastoplastic'·'Drucker-Prager' 는 접촉역학 낱말도
+    #   갖고 있어 뒤에 두면 그쪽으로 샌다 (실측: stomakhin2013·klar2016).
     ("MPM · 연속체", ("mpm", "material point", "snow", "sand", "drucker")),
     ("접촉역학 · 소성 (DEM 이론)",
      ("contact", "adhesion", "elastoplastic", "indentation", "hertz", "densification",
@@ -74,6 +115,11 @@ GROUPS = [
 def group_of(pid, title):
     t = (pid + " " + title).lower()
     for name, keys in GROUPS:
+        if isinstance(keys, frozenset):
+            # 명시 slug 집합 — **정확히 같은 slug** 만 (부분 문자열 · 제목 낱말로는 안 들어온다)
+            if pid in keys:
+                return name
+            continue
         if any(k in t for k in keys):
             return name
     return "기타"
@@ -125,8 +171,16 @@ def build(dry=False):
         rs = by.get(g)
         if not rs:
             continue
-        L += [f"## {g} ({len(rs)}편)", "",
-              "| slug | 논문 | 유형 | digest | 그림 |", "|---|---|---|---|---|"]
+        L += [f"## {g} ({len(rs)}편)", ""]
+        if g == SIZE_EFFECT_GROUP:
+            # ⚠ SE 축 slug 는 **여기 적지 않는다** — 적으면 `check()` (부분 문자열 대조) 가
+            #   INDEX.md 의 누락을 못 본다. 편수만 생성값으로 적는다.
+            n_se = sum(1 for p in papers if p["id"] in SIZE_EFFECT_SLUGS and p["track"] != "dem")
+            L += ["> 묶음 경계 = `tools/litdb/build_index.py` 의 `SIZE_EFFECT_SLUGS` "
+                  "(명시 slug 집합 — 낱말로 묶지 않는다). 이 표는 DEM 축만 싣는다.",
+                  f"> 같은 집합의 **SE 축** 카드 {n_se}편은 `INDEX.md` § \"SE 입도 효과 (size effect)\" 에 있다.",
+                  ""]
+        L += ["| slug | 논문 | 유형 | digest | 그림 |", "|---|---|---|---|---|"]
         for r in sorted(rs, key=lambda x: x["id"]):
             n = figs.get(r["id"], 0)
             L.append(f"| `{cell(r['id'])}` | {cell(r['title'])} | {cell(r['type'])} | "
@@ -286,9 +340,69 @@ def selftest():
         check_tables("| a | b |\n|---|---|\n| " + cell("x|y|z") + " | c |\n") == [])
     chk("cell 음성④: 이스케이프를 안 하면 **잡힌다** (위 ③이 헛것이 아님을 보인다)",
         [b[1:3] for b in check_tables("| a | b |\n|---|---|\n| x|y|z | c |\n")] == [(4, 2)])
+    # ── SE 입도 효과 묶음 — **명시 slug 집합**이다 (2026-10-30). 음성 경로가 본체다 ──
+    chk("입도 묶음 양성: 집합 slug 는 제목에 다른 묶음 낱말 (MPM · microstructure) 이 있어도 첫 묶음",
+        group_of("yano2026_se_psd_width_ionic_tortuosity_dem", "MPM microstructure tortuosity")
+        == SIZE_EFFECT_GROUP)
+    chk("입도 묶음 음성①: 'psd' 낱말만으로는 안 들어온다 (LFP 활물질 PSD 카드 — 낱말로 안 묶는 이유)",
+        group_of("eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell", "LFP PSD half-cell")
+        != SIZE_EFFECT_GROUP)
+    chk("입도 묶음 음성②: slug 는 **정확히 같아야** 한다 (부분 문자열 · 앞뒤 덧붙임은 안 맞는다)",
+        group_of("yano2026_se_psd", "") != SIZE_EFFECT_GROUP
+        and group_of("x" + "yano2026_se_psd_width_ionic_tortuosity_dem", "") != SIZE_EFFECT_GROUP)
+    chk("입도 묶음 음성③: 제목에 'size effect' 가 있어도 집합 밖이면 안 들어온다",
+        group_of("foo2026_bar", "SE 입도 효과 · size effect") != SIZE_EFFECT_GROUP)
+    chk("입도 묶음 회귀: 집합 slug 가 전부 정본 papers/ 에 있다 (이름이 바뀌면 여기서 걸린다)",
+        all((ROOT / "litdb" / "papers" / f"{s}.md").exists() for s in SIZE_EFFECT_SLUGS))
+    SEC = ("## A\n| `x` |\n### 📏 SE 입도 효과 (size effect) — 묶음\n| `y` |\n#### 아래\n| `w` |\n"
+           "### 다음 절\n| `z` |\n")
+    sec = se_index_section(SEC) or ""
+    chk("입도 절 파서: 절 안 (하위 제목 포함) 만 센다 — 절 앞 · 뒤 언급은 절 안이 아니다",
+        "`y`" in sec and "`w`" in sec and "`x`" not in sec and "`z`" not in sec)
+    chk("입도 절 파서 음성: 절이 없으면 None — '없음' 을 '빈 절' 로 바꾸지 않는다",
+        se_index_section("## A\n| `x` |\n") is None)
+    if SE_INDEX.exists():
+        _d, _s, _g, _m = size_effect_status(D.list_papers(), SE_INDEX.read_text(encoding="utf-8"))
+        chk("입도 절 회귀: 실물 INDEX.md 절이 집합의 SE 축 카드를 전부 싣는다",
+            _s and not _m and not _g)
 
     print(f"\nselftest: {ok} 통과 / {fail} 실패")
     return 1 if fail else 0
+
+
+_SE_SECTION_RE = re.compile(r"^(#{2,4})\s.*SE 입도 효과 \(size effect\)")
+
+
+def se_index_section(md_text):
+    """`INDEX.md` 의 "SE 입도 효과 (size effect)" 절 본문 (다음 같은·상위 제목 전까지). 없으면 None.
+
+    왜 따로 보나: `check()` 는 slug 가 파일 **어디에든** 있으면 통과한다 — cronau2022 · ou2026 처럼
+    다른 절에 이미 있는 카드는 이 절에서 빠져도 초록이다. 절 안에 있는지는 이 함수로만 본다.
+    """
+    lines = md_text.split("\n")
+    for i, ln in enumerate(lines):
+        m = _SE_SECTION_RE.match(ln)
+        if not m:
+            continue
+        lvl, out = len(m.group(1)), []
+        for ln2 in lines[i + 1:]:
+            h = re.match(r"^(#{1,6})\s", ln2)
+            if h and len(h.group(1)) <= lvl:
+                break
+            out.append(ln2)
+        return "\n".join(out)
+    return None
+
+
+def size_effect_status(papers, se_md):
+    """명시 집합 점검 → (DEM 축 slug, SE 축 slug, 정본에 없는 slug, INDEX.md 절에 없는 SE 축 slug)."""
+    by = {p["id"]: p for p in papers}
+    dem = sorted(s for s in SIZE_EFFECT_SLUGS if s in by and by[s]["track"] == "dem")
+    se = sorted(s for s in SIZE_EFFECT_SLUGS if s in by and by[s]["track"] != "dem")
+    gone = sorted(s for s in SIZE_EFFECT_SLUGS if s not in by)
+    sec = se_index_section(se_md)
+    se_missing = [s for s in se if sec is None or f"`{s}`" not in sec]
+    return dem, se, gone, se_missing
 
 
 def check():
@@ -426,6 +540,20 @@ def main():
         print(f"   [{p['track']}] {p['id']}")
     if len(missing) > 30:
         print(f"   … 외 {len(missing)-30}편")
+
+    # ── SE 입도 효과 묶음 (명시 집합) — 낡은 slug · INDEX.md 절 누락을 조용히 넘기지 않는다 ──
+    se_md = SE_INDEX.read_text(encoding="utf-8") if SE_INDEX.exists() else ""
+    s_dem, s_se, s_gone, s_miss = size_effect_status(papers, se_md)
+    print(f"\n=== {SIZE_EFFECT_GROUP} 묶음 (명시 집합 {len(SIZE_EFFECT_SLUGS)}편): "
+          f"DEM 축 {len(s_dem)} → INDEX_DEM.md · SE 축 {len(s_se)} → INDEX.md 절")
+    if s_gone:
+        print(f"   ⚠ 정본 papers/ 에 없는 slug {len(s_gone)}편 (집합이 낡았다 — 이름이 바뀌었나): "
+              + " · ".join(s_gone))
+    if s_miss:
+        print(f"   ⚠ INDEX.md § \"SE 입도 효과 (size effect)\" 에 없는 SE 축 카드 {len(s_miss)}편: "
+              + " · ".join(s_miss))
+    if not (s_gone or s_miss):
+        print("   ✅ 집합 slug 전부 정본에 있음 · SE 축 카드 전부 INDEX.md 절에 있음")
 
     cmp_ = check_comparison(papers)
     print("\n=== 비교문서 편입 (트랙별 — 축이 다르므로 분모를 섞지 않는다)")

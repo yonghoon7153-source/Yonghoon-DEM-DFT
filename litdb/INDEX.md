@@ -203,6 +203,18 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `wang2024_hot_pressed_lpscl_pressure_invariant_conductivity` | 열간 가압 LPSCl · 1.64 무인용 · 자기 펠릿 1.66–1.69 (> 1.64) · 냉간 300 MPa 1.42 · 같은 밀도에서 σ 3.2 배 |
 | `larson2025_hot_pressing_argyrodite_low_stack_pressure_conductivity` | 같은 그룹 · 진밀도 1.83 (XRD 계산 주장 · 자기 XRD 판독 1.86) · 1.64 면 공극 음수 · 작동압 0.12–8 MPa σ |
 
+### 📏 SE 입도 효과 (size effect) — SE 축 카드 묶음 (2026-10-30)
+
+> DEM 축 입도 카드 (압밀 · DEM · tortuosity · 복합양극 수송) 는 `INDEX_DEM.md` § **SE 입도 효과 · size effect** 생성 표에 있다 — 묶음 경계 = `tools/litdb/build_index.py` 의 `SIZE_EFFECT_SLUGS` (카드를 더하면 그 집합과 이 표를 함께 고친다).
+
+| slug | 한 줄 |
+|---|---|
+| `calpa2019_small_li7p3s11_liquid_phase_composite_cathode` | 밀링 없이 만든 액상법 ≈500 nm vs 볼밀 >10 µm Li₇P₃S₁₁ (LPSCl 아님) — 펠릿 σ 는 1.9 배 낮은데 79 wt% 복합양극 첫 방전 3.35 배 |
+| `cronau2022_wet_milling_particle_size_ionic_conductivity` | 습식 저에너지 볼밀링으로 LPSC+ 가 1 µm 까지 작아지며 σ 도 떨어진다 (2 h 1.73 → 50 h 0.36 mS/cm) · σ 를 입도 함수로 분리 안 함 |
+| `tron2023_rational_cathode_composite_optimization_lpscl` | 같은 시험 규약으로 설계 변수를 차례로 최적화 — 펠릿 σ 같은 두 LPSCl 중 작은 SE 첫 방전 ≈1.18 배 · AM 85 wt% 에서 꺾임 |
+| `kawaguchi2026_se_size_soc_dependent_cathode_resistance` | LPSCl D50 ≈6 µm vs <1 µm · NCM523 복합양극 저항을 SOC 1 % 단위로 분해 — SOC 20 % 근처에서 큰 SE ↔ 작은 SE 우열이 뒤집힌다 |
+| `ou2026_microstructural_multiscale_fast_ion_transport` | 능동학습 MTP-MD + FEM 균질화로 µm 입도 다결정 Li₆PS₅X 확산 예측 — 입계는 벌크가 느리면 뚫어 주고 빠르면 막는다 |
+
 ## 🎤 학회 발표자료 (`talks/` — 논문 아님, 별도 등급)
 
 > ⚠ 발표 덱은 peer-review 미통과 + 방법 명세가 슬라이드 수준이라 **`papers/` 보다 한 단계 낮은

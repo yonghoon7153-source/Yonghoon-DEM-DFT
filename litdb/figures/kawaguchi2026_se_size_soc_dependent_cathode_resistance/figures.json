@@ -1,0 +1,301 @@
+{
+ "slug": "kawaguchi2026_se_size_soc_dependent_cathode_resistance",
+ "dpi": 200,
+ "generated": "2026-10-30",
+ "method": "200 dpi 쪽 렌더 크롭 (본문 6 + SI 그림 9 + SI 표 1 · 카드 실독 기록) — 크롭 PNG · 캡션 · bbox(pt) 는 카드 작성 때 그대로",
+ "sources": [
+  "83dadec4-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_2.pdf",
+  "2dc11202-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_1.pdf"
+ ],
+ "note_manual": "2026-10-30 정본 반입 때 목록형 (list) 색인을 정본 형식 (dict) 으로 옮겼다 — 값은 그대로: bbox_pt → bbox · pdf → src · px → w, h (PNG 실측과 같음 확인) · key/kind/label = 파일 이름에서. 목록형이면 webapp papers_with_figures · paper_figures · build_index.py · extract_figures --audit 가 .get / r['kind'] 에서 멈춘다.",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Discharge rate test results for cathode half-cells prepared using S_SE and L_SE. Charging is performed at 0.1C (CC.CV mode) and discharg- ing at 0.1C, 0.5C, 1C, and 2C (CC mode). The figure shows excerpts of the discharge curves at 0.1C and 2C.",
+   "bbox": [
+    79,
+    542,
+    259,
+    690
+   ],
+   "w": 511,
+   "h": 421,
+   "dpi": 200,
+   "src": "83dadec4-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_2.pdf"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Electrochemical impedance spectroscopy (EIS) measurement results of the cathode half-cell at a) SOC 50% and b) SOC 0%. After reaching each potential, EIS measurements are performed following a 4-h open-circuit voltage (OCV) relaxation.",
+   "bbox": [
+    123,
+    68,
+    473,
+    223
+   ],
+   "w": 983,
+   "h": 439,
+   "dpi": 200,
+   "src": "83dadec4-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_2.pdf"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. EIS measurement results of the cathode symmetric cell at a) SOC 50% and b) SOC 0%. After reaching each potential, the cell is allowed to relax for 4 h under OCV and then disassembled to create a symmetric cell. Finally, EIS measurements are conducted.",
+   "bbox": [
+    122,
+    272,
+    473,
+    427
+   ],
+   "w": 984,
+   "h": 438,
+   "dpi": 200,
+   "src": "83dadec4-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_2.pdf"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Results of discharge galvanostatic intermittent titration technique (GITT) tests for cathode half-cells prepared using S_SE and L_SE. Each discharge step corresponds to 1% SOC in terms of capacity. The measurement time is divided into three regions: Regions I, II, and III.",
+   "bbox": [
+    98,
+    473,
+    498,
+    708
+   ],
+   "w": 1122,
+   "h": 664,
+   "dpi": 200,
+   "src": "83dadec4-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_2.pdf"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Total resistance values of the cell under each SOC measured in the GITT test. b–d) Classification results of the resistances measured in the GITT test. The resistance components are classified based on the time constants of each resistance component obtained from the symmetric cell. (b) R1: contact resistance, (c) R2: charge transfer resistance, and (d) R3: diffusion resistance.",
+   "bbox": [
+    122,
+    413,
+    474,
+    699
+   ],
+   "w": 986,
+   "h": 803,
+   "dpi": 200,
+   "src": "83dadec4-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_2.pdf"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a,b) Charging test results for cathode half-cells prepared using S_SE and L_SE. c,d) Discharging test results for cathode half-cells prepared using S_SE and L_SE.",
+   "bbox": [
+    122,
+    430,
+    474,
+    708
+   ],
+   "w": 986,
+   "h": 781,
+   "dpi": 200,
+   "src": "83dadec4-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_2.pdf"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1 Schematic ofthe process of creating a",
+   "bbox": [
+    70,
+    60,
+    545,
+    393
+   ],
+   "w": 1302,
+   "h": 562,
+   "dpi": 200,
+   "src": "2dc11202-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_1.pdf"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2 Comparison of the initial charge/disch",
+   "bbox": [
+    70,
+    60,
+    545,
+    354
+   ],
+   "w": 1282,
+   "h": 498,
+   "dpi": 200,
+   "src": "2dc11202-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_1.pdf"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Charge–discharge performance of a c",
+   "bbox": [
+    70,
+    60,
+    545,
+    444
+   ],
+   "w": 728,
+   "h": 584,
+   "dpi": 200,
+   "src": "2dc11202-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_1.pdf"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4 Graph of the measurement conditions",
+   "bbox": [
+    70,
+    60,
+    545,
+    476
+   ],
+   "w": 950,
+   "h": 672,
+   "dpi": 200,
+   "src": "2dc11202-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_1.pdf"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5 Graph of the measurement conditions",
+   "bbox": [
+    70,
+    60,
+    545,
+    490
+   ],
+   "w": 974,
+   "h": 695,
+   "dpi": 200,
+   "src": "2dc11202-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_1.pdf"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Figure S6 Separation of each resistance compo",
+   "bbox": [
+    70,
+    60,
+    545,
+    488
+   ],
+   "w": 771,
+   "h": 711,
+   "dpi": 200,
+   "src": "2dc11202-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_1.pdf"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Figure S7 Correlation between the total cell res",
+   "bbox": [
+    70,
+    60,
+    545,
+    495
+   ],
+   "w": 1166,
+   "h": 529,
+   "dpi": 200,
+   "src": "2dc11202-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_1.pdf"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 10,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. (a, b) Charge rate performance: (a) ch",
+   "bbox": [
+    70,
+    60,
+    545,
+    510
+   ],
+   "w": 1071,
+   "h": 831,
+   "dpi": 200,
+   "src": "2dc11202-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_1.pdf"
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 11,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Comparison of the capacitance at",
+   "bbox": [
+    70,
+    60,
+    545,
+    489
+   ],
+   "w": 992,
+   "h": 616,
+   "dpi": 200,
+   "src": "2dc11202-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_1.pdf"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Comparison of the characteristics",
+   "bbox": [
+    70,
+    92,
+    545,
+    570
+   ],
+   "w": 1321,
+   "h": 1305,
+   "dpi": 200,
+   "src": "2dc11202-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_1.pdf"
+  }
+ ]
+}

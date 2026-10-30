@@ -1,0 +1,462 @@
+{
+ "slug": "lin2025_submicron_lpscl_cathode_li_kinetics",
+ "dpi": 200,
+ "generated": "2026-10-30",
+ "method": "pdftoppm -r 200 page render + PIL crop to embedded-image bbox (+2 pt pad, white-trim); captions = PDF text inside caption rect",
+ "sources": [
+  "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf",
+  "d697636f-2._Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Material characterization of SU-LPSC and IN-LPSC: SEM images of the (a) IN-LPSC, and (b) SU-LPSC. (c) Typical Nyquist plots of IN-LPSC and SU-LPSC. (d) XRD patterns of IN-LPSC and SU-LPSC. (e) Raman spectra of IN-LPSC and SU-LPSC. (f) Arrhenius plots of the pellets based on IN-LPSC and SU-LPSC.",
+   "bbox": [
+    311,
+    50,
+    545,
+    177
+   ],
+   "w": 660,
+   "h": 362,
+   "dpi": 200,
+   "src": "d697636f-2._Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Electrochemical performance of SU-LPSC cathode and IN-LPSC cathode: (a) the schematic of the ASSB structure. The planar view of the (b) IN-LPSC cathode and (c) SU-LPSC cathode under the 640 MPa pressure. (d) The rate performance of the ASSBs based on IN-LPSC cathode and SU-LPSC cathode. Charge–discharge voltage profiles of ASSBs based on IN-LPSC cathode and SU-LPSC cathode: (e) with 10 mg cm−2 cathode loading at 0.5C under room temperature; (g) with 20 mg cm−2 at 0.5C under room temperature; (i) with 10 mg cm−2 at 0.05C; the corresponding long-term cycling performances: (f), (h) and (j).",
+   "bbox": [
+    49,
+    50,
+    285,
+    267
+   ],
+   "w": 660,
+   "h": 610,
+   "dpi": 200,
+   "src": "d697636f-2._Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Kinetics evolution of SU-LPSC and IN-LPSC cathode: the relation- ship of (a) oxidation (O1) and (b) reduction (R1) peak current of SU-LPSC and IN-LPSC cathodes versus square root of the scanning rates (n0.5). (c) CV with a scan rate of 0.1 mV s−1 based on IN-LPSC and SU-LPSC. The dQ/ dV curves of the ASSBs based on (d) IN-LPSC and (e) SU-LPSC. Nyquist plots of the ASSBs based on (f) IN-LPSC and (g) SU-LPSC. The impedance spectra are stacked with a y-axis shift of 25 O for each spectrum. Corresponding 2D intensity color map: (h) and (i).",
+   "bbox": [
+    49,
+    50,
+    285,
+    243
+   ],
+   "w": 659,
+   "h": 542,
+   "dpi": 200,
+   "src": "d697636f-2._Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Interface contact behavior of IN-LPSC and SU-LPSC cathode: (a) cross-sectional FIB-SEM images of the composite cathodes for ASSBs based on IN-LPSC and SU-LPSC before and after cycling. Schematic diagram of SU-LPSC action mechanism: (b) and (c).",
+   "bbox": [
+    49,
+    50,
+    285,
+    470
+   ],
+   "w": 659,
+   "h": 1172,
+   "dpi": 200,
+   "src": "d697636f-2._Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Performances s of ASSBs based on SU-LPSC cathode with different cathode contents at 0.5C under room temperature (a) with 10 mg cm−2 cathode loading and (b) with 20 mg cm−2 cathode loading. (c) Rate capability performances of ASSBs with different proportions of CAM. (d) Comparison of the first cycle discharge specific capacity and capacity retention rate between the advanced ASSB.50,52–56",
+   "bbox": [
+    49,
+    50,
+    285,
+    206
+   ],
+   "w": 659,
+   "h": 439,
+   "dpi": 200,
+   "src": "d697636f-2._Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Figure S1 SEM image and EDS mappings of SU-LPSC and IN-LPSC particles.",
+   "bbox": [
+    115,
+    290,
+    530,
+    435
+   ],
+   "w": 1158,
+   "h": 411,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 1,
+   "file": "fig_S2.png",
+   "caption": "Figure S2 Results of laser particle size test. SU-LPSC：D50=2.34 μm；IN-LPSC：D50=11.88 μm.",
+   "bbox": [
+    179,
+    468,
+    416,
+    663
+   ],
+   "w": 657,
+   "h": 549,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 2,
+   "file": "fig_S3.png",
+   "caption": "Figure S3 CV curves of IN-LPSC and SU-LPSC in the potential range of 2-4 V after (a) first cycle and (b) second cycle (vs. Li+/Li-In).",
+   "bbox": [
+    128,
+    67,
+    467,
+    207
+   ],
+   "w": 855,
+   "h": 346,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 2,
+   "file": "fig_S4.png",
+   "caption": "Figure S4 CV curves of (a) IN-LPSC and (b) SU-LPSC at 0.05-0.40 mV s-1",
+   "bbox": [
+    136,
+    241.5,
+    459,
+    383
+   ],
+   "w": 868,
+   "h": 370,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 2,
+   "file": "fig_S5.png",
+   "caption": "Figure S5 Impedance fit and equivalent circuit model for Nyquist curves.",
+   "bbox": [
+    194,
+    414,
+    401,
+    568
+   ],
+   "w": 491,
+   "h": 400,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 3,
+   "file": "fig_S6.png",
+   "caption": "Figure S6 The corresponding distributions of relaxation times evaluated by the DRT of the ASSB based on (a) IN-LPSC and (b) SU-LPSC.",
+   "bbox": [
+    109,
+    67,
+    486,
+    234
+   ],
+   "w": 1021,
+   "h": 428,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 3,
+   "file": "fig_S7.png",
+   "caption": "Figure S7 SEM images and EDS mappings of the IN-LPSC cathode/LPSC.",
+   "bbox": [
+    90,
+    543,
+    505,
+    698
+   ],
+   "w": 1162,
+   "h": 440,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 4,
+   "file": "fig_S8.png",
+   "caption": "Figure S8 SEM images and EDS mappings of the SU-LPSC cathode/LPSC.",
+   "bbox": [
+    90,
+    67,
+    505,
+    216
+   ],
+   "w": 1158,
+   "h": 422,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 4,
+   "file": "fig_S9.png",
+   "caption": "Figure S9 XPS spectra of S 2p and P 2p of SU-LPSC ASSBs and IN-LPSC ASSBs with pristine ,1st cycle,200th cycle.",
+   "bbox": [
+    94,
+    247,
+    501,
+    375
+   ],
+   "w": 1034,
+   "h": 341,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 4,
+   "file": "fig_S10.png",
+   "caption": "Figure S10 Repeatability experiments of SU-LPSC and IN-LPSC based ASSBs(n=5) (a) Initial coulombic efficiency; (b) Initial discharge capacity; (c) long-cycle capacity retention rate (~200,0.5C); long-cycle performance repeatability of (d) IN-LPSC; (e) SU-LPSC.",
+   "bbox": [
+    151,
+    427,
+    444,
+    604
+   ],
+   "w": 764,
+   "h": 450,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 5,
+   "file": "fig_S11.png",
+   "caption": "Figure S11 (a)Charge/discharge curves for the 1st cycle of the assembled NCM811/LPSC/Li-In with 85SU-LPSC cathode active material. (b)Corresponding cycling performances of solid-state batteries.",
+   "bbox": [
+    94,
+    67,
+    501,
+    183
+   ],
+   "w": 1117,
+   "h": 257,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 5,
+   "file": "fig_S12.png",
+   "caption": "Figure S12 (a)Charge/discharge curves for the 1st cycle of the assembled NCM811/LPSC/Li-In with 90SU-LPSC cathode active material. (b)Corresponding cycling performances of solid-state batteries.",
+   "bbox": [
+    89,
+    268,
+    507,
+    383
+   ],
+   "w": 1153,
+   "h": 271,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 6,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Preparation of sulfide solid electrolyte by solid state method5-10",
+   "bbox": [
+    80,
+    60,
+    515,
+    330
+   ],
+   "w": 1191,
+   "h": 732,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 6,
+   "file": "tab_S2.png",
+   "caption": "Table S2 Preparation of sulfide solid electrolyte by wet-chemical method11-15",
+   "bbox": [
+    95,
+    350,
+    500,
+    575
+   ],
+   "w": 1122,
+   "h": 606,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 6,
+   "file": "tab_S3.png",
+   "caption": "Table S3 Comparison of main peak crystallinity between IN-LPSC and SU-LPSC",
+   "bbox": [
+    90,
+    592,
+    505,
+    668
+   ],
+   "w": 1138,
+   "h": 191,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 7,
+   "file": "tab_S4.png",
+   "caption": "Table S4 Weight ratio of active material particles to solid electrolyte particles, measured electrode diameter and thickness, volume of the solid phases in composite electrode and electrode porosity −void at 450 MPa",
+   "bbox": [
+    60,
+    62,
+    535,
+    200
+   ],
+   "w": 1308,
+   "h": 362,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 7,
+   "file": "tab_S5.png",
+   "caption": "Table S5 Ionic tortuosity of some cathodes16-19",
+   "bbox": [
+    100,
+    219,
+    500,
+    432
+   ],
+   "w": 1074,
+   "h": 557,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 7,
+   "file": "tab_S6.png",
+   "caption": "Table S6 Area ratio of XPS data analysis in 70IN-cathode ASSB",
+   "bbox": [
+    40,
+    436,
+    556,
+    560
+   ],
+   "w": 1445,
+   "h": 333,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 7,
+   "file": "tab_S7.png",
+   "caption": "Table S7 Area ratio of XPS data analysis in 70SU-cathode ASSB",
+   "bbox": [
+    40,
+    576,
+    556,
+    700
+   ],
+   "w": 1445,
+   "h": 333,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 8,
+   "file": "tab_S8.png",
+   "caption": "Table S8 Comparison of electrochemical performance of LPSC composite cathodes in ASSBs1, 20-26",
+   "bbox": [
+    44,
+    108,
+    552,
+    750
+   ],
+   "w": 1418,
+   "h": 1767,
+   "dpi": 200,
+   "src": "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  }
+ ]
+}

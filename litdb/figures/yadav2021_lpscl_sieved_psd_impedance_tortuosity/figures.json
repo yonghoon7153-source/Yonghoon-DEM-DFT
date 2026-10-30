@@ -1,0 +1,78 @@
+{
+ "slug": "yadav2021_lpscl_sieved_psd_impedance_tortuosity",
+ "dpi": 200,
+ "generated": "2026-10-30",
+ "method": "카드 작성자 손 크롭 — 200 dpi 쪽 렌더 · 캡션 뺀 영역 (그림 1–5 + 표 1 · 전부 래스터 · 카드 실독 기록) · bbox 미기록",
+ "sources": [
+  "efa42c8a-4._Impact_of_sulfide-based_solid_electrolyte_particle_size_distribution_on_the_electrochemistry_of_ASSB_via_impedance_study.pdf"
+ ],
+ "note_manual": "2026-10-30 정본 반입 때 색인 신설 (반입 묶음에 figures.json 이 없어 webapp 에 그림이 안 보이고 인덱스 그림 칸이 '—' 였다). 캡션 = 원 PDF 텍스트 층 그대로 (PyMuPDF · 줄바꿈 soft hyphen 만 이음 · 쪽 텍스트에 있는지 대조) · page = 캡션이 있는 PDF 쪽 (그 쪽 그림 요소 위치로 확인) · w/h = PNG 실측 · bbox 는 크롭 좌표 기록이 없어 넣지 않았다 (추정하지 않음).",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Sieved SE and their respective cathode composites.",
+   "w": 690,
+   "h": 242,
+   "src": "efa42c8a-4._Impact_of_sulfide-based_solid_electrolyte_particle_size_distribution_on_the_electrochemistry_of_ASSB_via_impedance_study.pdf"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Experimental setup used for calculation of Ionic conductivity of SE (Fig. 2.1), effective Ionic conductivity of cathode composite (Fig. 2.2) and finally the tortuosity based on Ionic conductivities.",
+   "w": 693,
+   "h": 570,
+   "src": "efa42c8a-4._Impact_of_sulfide-based_solid_electrolyte_particle_size_distribution_on_the_electrochemistry_of_ASSB_via_impedance_study.pdf"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 2,
+   "file": "fig_3.png",
+   "caption": "Fig.3. Top: EIS spectra of SE with different particle sizes.Bottom: table with the ionic conductivities calculated from the spectra.",
+   "w": 672,
+   "h": 915,
+   "src": "efa42c8a-4._Impact_of_sulfide-based_solid_electrolyte_particle_size_distribution_on_the_electrochemistry_of_ASSB_via_impedance_study.pdf"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Top: EIS spectra of respective cathode composites of different SE with different particle sizes. Bottom: table with the ionic conductivities calculated from the spectra.",
+   "w": 675,
+   "h": 987,
+   "src": "efa42c8a-4._Impact_of_sulfide-based_solid_electrolyte_particle_size_distribution_on_the_electrochemistry_of_ASSB_via_impedance_study.pdf"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Schematic representation of the ASSB assembly with SEM images of respective cathode composite, SE separator, kept constant and Li metal as anode. On the bottom: Obtained Electrochemical curve for each cell.",
+   "w": 692,
+   "h": 917,
+   "src": "efa42c8a-4._Impact_of_sulfide-based_solid_electrolyte_particle_size_distribution_on_the_electrochemistry_of_ASSB_via_impedance_study.pdf"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Summary OF OBTAINED TORTUOSITY VALUES",
+   "w": 728,
+   "h": 236,
+   "src": "efa42c8a-4._Impact_of_sulfide-based_solid_electrolyte_particle_size_distribution_on_the_electrochemistry_of_ASSB_via_impedance_study.pdf"
+  }
+ ]
+}

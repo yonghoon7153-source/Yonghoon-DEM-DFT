@@ -226,6 +226,13 @@
    "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf"
   ]
  },
+ "calpa2019_small_li7p3s11_liquid_phase_composite_cathode": {
+  "figures": 11,
+  "generated": "2026-10-30",
+  "pdfs": [
+   "e0348abf-7._Electrochemical_performance_of_bulk-type_all-solid-state_batteries_using_small-sized_Li7P3S11_solid_electrolyte_prepared_by_liquid_phase_as_the_ionic_conductor_in_the_composite_cathode.pdf"
+  ]
+ },
  "cao2026_dual_binder_18um_sulfide_electrolyte_film": {
   "figures": 32,
   "generated": "2026-10-03",
@@ -1111,6 +1118,14 @@
    "264c2375-26._Sup_Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf"
   ]
  },
+ "kawaguchi2026_se_size_soc_dependent_cathode_resistance": {
+  "figures": 16,
+  "generated": "2026-10-30",
+  "pdfs": [
+   "83dadec4-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_2.pdf",
+   "2dc11202-5._Sup_Interface_Engineering_in_Sulfide_Based_All_Solid_State_Batteries_Insights_from_Resistance_Analysis_1.pdf"
+  ]
+ },
  "ke2025_orbital_hybridization_mgclo": {
   "figures": 38,
   "generated": "2026-08-05",
@@ -1486,6 +1501,13 @@
    "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf"
   ]
  },
+ "lei2026_se_particle_size_effects_review": {
+  "figures": 9,
+  "generated": "2026-10-30",
+  "pdfs": [
+   "23704322-3._Review_of_Particle_Size_Effects_of_Solid_Electrolytes_in_All-Solid-State_Batteries.pdf"
+  ]
+ },
  "li2024_inf3_argyrodite_ultrathin_film": {
   "figures": 40,
   "generated": "2026-08-05",
@@ -1565,6 +1587,14 @@
   "generated": "2026-08-05",
   "pdfs": [
    "이용민 교수님/16. Validating the Virtual Calendering Process With3D-Reconstructed Composite Electrode An OptimizationFramework for Electrode Design.pdf"
+  ]
+ },
+ "lin2025_submicron_lpscl_cathode_li_kinetics": {
+  "figures": 25,
+  "generated": "2026-10-30",
+  "pdfs": [
+   "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf",
+   "d697636f-2._Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
   ]
  },
  "ling2026_dual_thermal_stabilization_fg_cuox": {
@@ -2526,6 +2556,14 @@
    "2e77cdde-PIIS2542435122001398.pdf"
   ]
  },
+ "stavola2023_thick_nmc111_lpscl_lithiation_gradient_tortuosity": {
+  "figures": 28,
+  "generated": "2026-10-30",
+  "pdfs": [
+   "ff909173-6._Lithiation_gradients_and_tortuosity_factors_in_thick_NMC111-argyrodite_solid-state_cathodes.pdf",
+   "f8ebd243-6._Sup_Lithiation_gradients_and_tortuosity_factors_in_thick_NMC111-argyrodite_solid-state_cathodes.pdf"
+  ]
+ },
  "stomakhin2013_mpm_snow_elastoplastic": {
   "figures": 12,
   "generated": "2026-08-05",
@@ -2653,6 +2691,13 @@
   "generated": "2026-10-14",
   "pdfs": [
    "1.Critical_Current_Density_Measurements_of_Argyrodite_Li6PS5Cl_Solid_Electrolyte_at_Ambient_Pressure.pdf"
+  ]
+ },
+ "tron2023_rational_cathode_composite_optimization_lpscl": {
+  "figures": 8,
+  "generated": "2026-10-30",
+  "pdfs": [
+   "9134a378-8._Rational_optimization_of_cathode_composites_for_sulfide-based_all-solid-state_batteries.pdf"
   ]
  },
  "tu2026_diffusion_descriptor_ml_li_sse_interface": {
@@ -2971,6 +3016,13 @@
    "122. arXiv_2026_Xu_XLSDFT_Extreme_Scale_Linear_Scaling_KS_DFT_100M_atoms_MAIN.pdf"
   ]
  },
+ "yadav2021_lpscl_sieved_psd_impedance_tortuosity": {
+  "figures": 6,
+  "generated": "2026-10-30",
+  "pdfs": [
+   "efa42c8a-4._Impact_of_sulfide-based_solid_electrolyte_particle_size_distribution_on_the_electrochemistry_of_ASSB_via_impedance_study.pdf"
+  ]
+ },
  "yang2025_lao_dualdoping_argyrodite_lacl3": {
   "figures": 5,
   "generated": "2026-08-05",
@@ -2983,6 +3035,13 @@
   "generated": "2026-08-25",
   "pdfs": [
    "e7ac4cb0-2026.08.18__________.pdf"
+  ]
+ },
+ "yano2026_se_psd_width_ionic_tortuosity_dem": {
+  "figures": 17,
+  "generated": "2026-10-30",
+  "pdfs": [
+   "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
   ]
  },
  "yoo2026_porosity_gradient_dry_electrode": {

@@ -1,0 +1,54 @@
+# yano2026_se_psd_width_ionic_tortuosity_dem - values read from the PDF vector layer (PyMuPDF get_drawings; axis = tick-line coordinates; marker = bbox centre for circles/squares, centroid for apex-up triangles)
+# x = mass fraction of comminuted LPSCl in the 30 wt% LPSCl share (NCM:pristine:comminuted = 70:(30-x):x)
+figure,quantity,x_wt_pct,value,lower,upper,unit,note
+fig7,relative_density,0,0.6508,0.6241,0.6767,-,log y axis 0.5-0.8 (ticks fit log10 to <0.1 pt)
+fig7,relative_density,10,0.6394,0.6144,0.6635,-,
+fig7,relative_density,20,0.6264,0.5983,0.6535,-,
+fig7,relative_density,30,0.6025,0.5689,0.6350,-,
+fig10,relative_density_exp,0,0.8429,0.8086,0.8786,-,linear y; = fig7 x 1.2952 (all four points and bars)
+fig10,relative_density_exp,10,0.8282,0.7963,0.8665,-,
+fig10,relative_density_exp,20,0.8114,0.7752,0.8661,-,
+fig10,relative_density_exp,30,0.7803,0.7371,0.8234,-,
+fig10,relative_density_sim,0,0.7279,,,-,DEM 400 MPa; triangle bbox centre (centroid -0.0008)
+fig10,relative_density_sim,10,0.7272,,,-,
+fig10,relative_density_sim,20,0.7244,,,-,
+fig10,relative_density_sim,30,0.7216,,,-,
+fig8a,sigma_electronic,0,9.09e-3,,,S/cm,triangle centroid; log y 1e-5..1e-1
+fig8a,sigma_electronic,10,1.163e-2,,,S/cm,
+fig8a,sigma_electronic,20,1.038e-2,,,S/cm,
+fig8a,sigma_electronic,30,1.228e-2,,,S/cm,
+fig8a,sigma_ionic,0,5.10e-4,1.55e-4,8.46e-4,S/cm,square centre; error bar ends
+fig8a,sigma_ionic,10,2.23e-4,1.24e-4,3.14e-4,S/cm,
+fig8a,sigma_ionic,20,1.73e-4,1.27e-4,2.13e-4,S/cm,
+fig8a,sigma_ionic,30,1.87e-5,1.48e-5,2.18e-5,S/cm,
+fig9,tortuosity_exp,0,2.147,,,-,log y 1-10; = sqrt(phi*sigma0/sigma) Eq.3
+fig9,tortuosity_exp,10,2.878,,,-,
+fig9,tortuosity_exp,20,2.784,,,-,
+fig9,tortuosity_exp,30,6.718,,,-,
+fig11,tortuosity_exp,0,2.131,,,-,log y 1-7
+fig11,tortuosity_exp,10,2.859,,,-,
+fig11,tortuosity_exp,20,2.770,,,-,
+fig11,tortuosity_exp,30,6.703,,,-,
+fig11,tau_geo_sim,0,1.138,,,-,triangle centroid (bbox centre 1.147)
+fig11,tau_geo_sim,10,1.144,,,-,(1.153)
+fig11,tau_geo_sim,20,1.165,,,-,(1.174)
+fig11,tau_geo_sim,30,1.146,,,-,(1.155)
+fig13,tortuosity_exp,0,2.144,,,-,log y 2-7
+fig13,tortuosity_exp,10,2.874,,,-,
+fig13,tortuosity_exp,20,2.782,,,-,
+fig13,tortuosity_exp,30,6.716,,,-,
+fig13,tau_star_sim,0,2.165,,,-,alpha(k)=1.7e-5 fitted at x=0; centroid (bbox 2.178)
+fig13,tau_star_sim,10,2.484,,,-,(2.499)
+fig13,tau_star_sim,20,2.423,,,-,(2.437)
+fig13,tau_star_sim,30,2.543,,,-,(2.558)
+fig12,mean_particles_per_path,0,20.54,,,count,resampled at integer N; mode 19; share N>=25 19.2 %; range 11-31
+fig12,mean_particles_per_path,10,23.33,,,count,mode 26; share N>=25 40.8 %; range 15-33
+fig12,mean_particles_per_path,20,23.62,,,count,mode 23; share N>=25 36.8 %; range 18-30
+fig12,mean_particles_per_path,30,26.30,,,count,mode 25; share N>=25 81.4 %; range 20-34
+fig1,D10_D50_D90_um,pristine,1.757,0.798,5.594,um,value=D50 lower=D10 upper=D90; span 2.73; CDF 0.59-12.2 um
+fig1,D10_D50_D90_um,comminuted,1.271,0.762,3.189,um,span 1.91; CDF 0.60-3.69 um
+fig1,D10_D50_D90_um,NCM,8.662,6.580,11.395,um,span 0.56; text says NCM622 D50 = 11 um
+fig2,pellet_r_ohm,pristine,146.1,,,ohm,fit-arc end on real axis
+fig2,pellet_r_ohm,comminuted,312.4,,,ohm,
+fig3,r2_ohm,0,216.3,,,ohm,arrow tip; r2 = re*rion/(re+rion)
+fig3,r3_ohm,0,309.7,,,ohm,fit end; r3 = re

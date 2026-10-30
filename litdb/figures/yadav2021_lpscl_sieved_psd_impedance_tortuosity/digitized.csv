@@ -1,0 +1,13 @@
+# yadav2021_lpscl_sieved_psd_impedance_tortuosity - Fig. 5 is a raster (757x1011 px); readings by eye on the 200-dpi render, +-5 mAh/g
+figure,cell,cycle,quantity,value,unit,note
+fig5,compA,1st,charge_capacity_at_short,~80-85,mAh/g,potential ~3.85 V then collapse to ~1.3 V and ~0.75 V ("Short circuit")
+fig5,compC,1st (C/50 label),charge_end,~152,mAh/g,to 4.3 V vs Li
+fig5,compC,1st (C/50 label),discharge_end_Q-Q0,~48,mAh/g,discharge ~104 mAh/g; CE ~68 % (our arithmetic)
+fig5,compC,165th (C/50 label),charge_end,~67,mAh/g,to 4.3 V
+fig5,compC,165th (C/50 label),discharge_end_Q-Q0,~9,mAh/g,discharge ~58 mAh/g (~56 % of 1st discharge, our arithmetic)
+fig4,compA,EIS,LF_arc_end,~595,ohm,1 Hz marker; HF arc ~30-255 ohm
+fig4,compB,EIS,LF_end,~365,ohm,
+fig4,compC,EIS,LF_end,~255,ohm,HF arc ~30-200 ohm
+fig3,<20 um pellet,EIS,HF_start_resistivity,~405,ohm.cm,native raster calibrated with ticks 0/500/1000 ohm.cm; large arc leaves plot (>1 kohm.cm); 1/sigma_reported = 2525
+fig3,20-50 um pellet,EIS,HF_start / arc_end,~630 / ~850-900,ohm.cm,1/sigma_reported = 840
+fig3,50-150 um pellet,EIS,HF_start / arc_end,~580 / ~700,ohm.cm,1/sigma_reported = 685

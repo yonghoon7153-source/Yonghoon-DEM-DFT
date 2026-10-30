@@ -699,3 +699,9 @@
 | **HAADF-STEM** | 고각환상암시야 주사투과전자현미경. 밝기 ∝ Z^≈1.7 → 중원소 자리가 밝다 | `Fig. 2b,c`·`Fig. 4` |
 | **EELS Mn L₃/L₂** | Mn 2p→3d 백선의 강도비. 비가 클수록 Mn 가수가 낮다 | `Fig. S12c,f` — 산소방출 깊이의 대리지표 |
 | **grand-potential ESW** *(우리 쪽 용어)* | Li 저장소를 연 대퍼텐셜 `Φ = E − n_Li μ_Li` 의 convex hull. `μ_Li = μ⁰_Li − eV` | 이 논문에 **없다**. 우리 2.256 V 가 여기서 온다 |
+
+---
+
+> **2026-10-30 추가 — 교차 카드 정정 메모 (§3g `Table S1` 의 Calpa 2019 행)**: §3g 표는 Du 2022 `Table S1` 을 **충실히 옮긴 것**이라 그대로 둔다.
+> 그러나 원 표의 Calpa 2019 행 (*"154 | 580 | 87 (0.1C 30)"*) 은 **두 셀의 값을 한 행에 짝지었다** — 154 mAh g⁻¹ 은 **액상법 (LP) 셀**의 첫 방전이고, 87 % 는 **볼밀 (BM) 셀 (첫 방전 46 mAh g⁻¹) 의 30 사이클 유지율**이다. Calpa 2019 원문에서 154 mAh g⁻¹ 셀 (LP) 의 30 사이클 유지율은 **81 %** 다 (원문 전류는 0.13 mA cm⁻² 로 적혀 있고 C-율 표기는 없다).
+> ⇒ 인용할 때는 짝을 맞춘다: **LP 154 mAh g⁻¹ · 81 %** / **BM 46 mAh g⁻¹ · 87 %**.  근거 = [`calpa2019_small_li7p3s11_liquid_phase_composite_cathode`](calpa2019_small_li7p3s11_liquid_phase_composite_cathode.md) §7c · §10-11 (원문 p. 477 · `Fig. 5`).

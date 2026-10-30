@@ -1,0 +1,209 @@
+{
+ "slug": "calpa2019_small_li7p3s11_liquid_phase_composite_cathode",
+ "dpi": 200,
+ "generated": "2026-10-30",
+ "method": "pdftoppm -r 200 page render + PIL crop to embedded-image bbox (+2 pt pad, white-trim); captions = PDF text inside caption rect",
+ "sources": [
+  "e0348abf-7._Electrochemical_performance_of_bulk-type_all-solid-state_batteries_using_small-sized_Li7P3S11_solid_electrolyte_prepared_by_liquid_phase_as_the_ionic_conductor_in_the_composite_cathode.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. a) XRD patterns of the sulfide solid electrolytes prepared by liquid phase and ball milling. b) and c) Spectral deconvolution of Raman spectra of the sulfide solid electrolytes prepared by the liquid phase and ball milling processes, respectively. Spectra deconvolution was performed by using a GaussianeLorentzian function.",
+   "bbox": [
+    46,
+    67,
+    290,
+    313
+   ],
+   "w": 685,
+   "h": 691,
+   "dpi": 200,
+   "src": "e0348abf-7._Electrochemical_performance_of_bulk-type_all-solid-state_batteries_using_small-sized_Li7P3S11_solid_electrolyte_prepared_by_liquid_phase_as_the_ionic_conductor_in_the_composite_cathode.pdf"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. SEM micrographs of Li7P3S11 prepared by the a) liquid phase and b) ball milling processes.",
+   "bbox": [
+    315,
+    67,
+    559,
+    443
+   ],
+   "w": 685,
+   "h": 1052,
+   "dpi": 200,
+   "src": "e0348abf-7._Electrochemical_performance_of_bulk-type_all-solid-state_batteries_using_small-sized_Li7P3S11_solid_electrolyte_prepared_by_liquid_phase_as_the_ionic_conductor_in_the_composite_cathode.pdf"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Impedance spectra of pelletized Li7P3S11 solid electrolytes prepared by the liquid phase (purple circles) and ball milling (blue squares) processes. (For interpre- tation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "bbox": [
+    36,
+    67,
+    280,
+    286
+   ],
+   "w": 669,
+   "h": 532,
+   "dpi": 200,
+   "src": "e0348abf-7._Electrochemical_performance_of_bulk-type_all-solid-state_batteries_using_small-sized_Li7P3S11_solid_electrolyte_prepared_by_liquid_phase_as_the_ionic_conductor_in_the_composite_cathode.pdf"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. SEM images and EDX elemental mappings for O, P, Mn and S of cross-section of the positive composite electrode layer using NCM as active material and Li7P3S11 prepared by the a) ball milling and b) liquid phase processes as the ionic conductor.",
+   "bbox": [
+    94,
+    413,
+    491,
+    718
+   ],
+   "w": 1111,
+   "h": 857,
+   "dpi": 200,
+   "src": "e0348abf-7._Electrochemical_performance_of_bulk-type_all-solid-state_batteries_using_small-sized_Li7P3S11_solid_electrolyte_prepared_by_liquid_phase_as_the_ionic_conductor_in_the_composite_cathode.pdf"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. a) First charge-discharge curves and b) cycle performance of the all-solid-state cells using NCM as active material and Li7P3S11 prepared by the liquid phase and ball milling processes as the ionic conductor in the composite cathode.",
+   "bbox": [
+    50,
+    67,
+    286,
+    435
+   ],
+   "w": 662,
+   "h": 1032,
+   "dpi": 200,
+   "src": "e0348abf-7._Electrochemical_performance_of_bulk-type_all-solid-state_batteries_using_small-sized_Li7P3S11_solid_electrolyte_prepared_by_liquid_phase_as_the_ionic_conductor_in_the_composite_cathode.pdf"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Nyquist plot of the impedance profiles of the all-solid-state cells using NCM as active material and Li7P3S11 prepared by the a) liquid phase and b) ball milling pro- cesses as the ionic conductor in the composite cathode, before charge and after the 30th charge. Open circles represent the measured data, and solid lines indicated the fit of the data. c) Equivalent circuit for the impedance profiles fitting.",
+   "bbox": [
+    315,
+    305,
+    559,
+    693
+   ],
+   "w": 686,
+   "h": 1086,
+   "dpi": 200,
+   "src": "e0348abf-7._Electrochemical_performance_of_bulk-type_all-solid-state_batteries_using_small-sized_Li7P3S11_solid_electrolyte_prepared_by_liquid_phase_as_the_ionic_conductor_in_the_composite_cathode.pdf"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. a) 30th, 40th and 50th discharge curves of the all-solid-state cell using NCM as active material and Li7P3S11 prepared by the liquid phase process as the ionic conductor in the composite cathode, corresponding to measurements performed with charge-end voltages of 3.8, 3.9 and 4 V, respectively. b) Cycle performance corre- sponding to the charge-discharge measurements performed with charge-end voltages of 3.9 and 4 V.",
+   "bbox": [
+    306,
+    67,
+    549,
+    457
+   ],
+   "w": 679,
+   "h": 1091,
+   "dpi": 200,
+   "src": "e0348abf-7._Electrochemical_performance_of_bulk-type_all-solid-state_batteries_using_small-sized_Li7P3S11_solid_electrolyte_prepared_by_liquid_phase_as_the_ionic_conductor_in_the_composite_cathode.pdf"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Nyquist plot of the impedance profiles of the all-solid-state cell using NCM as active material and Li7P3S11 prepared by the liquid phase process as the ionic conductor in the composite cathode, after the 40th and 50th charge. Open circles represent the measured data, and solid lines indicated the fit of the data.",
+   "bbox": [
+    43,
+    66,
+    295,
+    317
+   ],
+   "w": 685,
+   "h": 684,
+   "dpi": 200,
+   "src": "e0348abf-7._Electrochemical_performance_of_bulk-type_all-solid-state_batteries_using_small-sized_Li7P3S11_solid_electrolyte_prepared_by_liquid_phase_as_the_ionic_conductor_in_the_composite_cathode.pdf"
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Spectral deconvolution of Raman spectra of a) the as-prepared composite cathode and b) the composite cathode layer after the 50th cycles (charge-end voltage of 4 V), by using a GaussianeLorentzian function.",
+   "bbox": [
+    315,
+    67,
+    559,
+    499
+   ],
+   "w": 686,
+   "h": 1209,
+   "dpi": 200,
+   "src": "e0348abf-7._Electrochemical_performance_of_bulk-type_all-solid-state_batteries_using_small-sized_Li7P3S11_solid_electrolyte_prepared_by_liquid_phase_as_the_ionic_conductor_in_the_composite_cathode.pdf"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1 Fitting Results of the EIS Spectra of the all-solid-state cells using NCM as active material and Li7P3S11 prepared by the liquid phase and ball milling processes as ionic conductor in the composite cathode.",
+   "bbox": [
+    33,
+    64,
+    285,
+    157
+   ],
+   "w": 707,
+   "h": 254,
+   "dpi": 200,
+   "src": "e0348abf-7._Electrochemical_performance_of_bulk-type_all-solid-state_batteries_using_small-sized_Li7P3S11_solid_electrolyte_prepared_by_liquid_phase_as_the_ionic_conductor_in_the_composite_cathode.pdf"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2 Fitting Results of the EIS Spectra of the all-solid-state cell using NCM as active material and Li7P3S11 prepared by the liquid phase process as the ionic conductor in the composite cathode.",
+   "bbox": [
+    43,
+    371,
+    295,
+    446
+   ],
+   "w": 707,
+   "h": 207,
+   "dpi": 200,
+   "src": "e0348abf-7._Electrochemical_performance_of_bulk-type_all-solid-state_batteries_using_small-sized_Li7P3S11_solid_electrolyte_prepared_by_liquid_phase_as_the_ionic_conductor_in_the_composite_cathode.pdf"
+  }
+ ]
+}

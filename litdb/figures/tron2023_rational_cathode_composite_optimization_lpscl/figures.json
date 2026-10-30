@@ -1,0 +1,155 @@
+{
+ "slug": "tron2023_rational_cathode_composite_optimization_lpscl",
+ "dpi": 200,
+ "generated": "2026-10-30",
+ "method": "pdftoppm -r 200 page render + PIL crop to embedded-image bbox (+2 pt pad, white-trim); captions = PDF text inside caption rect",
+ "sources": [
+  "9134a378-8._Rational_optimization_of_cathode_composites_for_sulfide-based_all-solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic outline of the composite cathode optimization by dry- and wet-chemical processing. In addition, the testing conditions are listed.",
+   "bbox": [
+    160,
+    292,
+    458,
+    455
+   ],
+   "w": 798,
+   "h": 433,
+   "dpi": 200,
+   "src": "9134a378-8._Rational_optimization_of_cathode_composites_for_sulfide-based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Potential profiles of 1st charge/discharge cycle at C/20 using different NMC811 active materials; (b) EIS spectra before cycling (inset shows full range).",
+   "bbox": [
+    70,
+    128,
+    530,
+    318
+   ],
+   "w": 1246,
+   "h": 519,
+   "dpi": 200,
+   "src": "9134a378-8._Rational_optimization_of_cathode_composites_for_sulfide-based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Potential profiles of 1st charge/discharge cycle at C/20 using different conducting additives (C65, VGCF); (b) EIS spectra after first discharge step.",
+   "bbox": [
+    70,
+    92,
+    527,
+    288
+   ],
+   "w": 1248,
+   "h": 538,
+   "dpi": 200,
+   "src": "9134a378-8._Rational_optimization_of_cathode_composites_for_sulfide-based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Specific electronic conductivity vs. the amount of conductive additive plots for composite cathodes using (a) VGCF and (b) C65. The dashed red lines are sigmoidal fits of the data and indicate the percolation threshold.",
+   "bbox": [
+    48,
+    331,
+    551,
+    548
+   ],
+   "w": 1378,
+   "h": 596,
+   "dpi": 200,
+   "src": "9134a378-8._Rational_optimization_of_cathode_composites_for_sulfide-based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Potential profiles of 1st charge/discharge cycle at C/20 using different Li6PS5Cl materials for the composite NMC811 cathode (AM:SE:CA = 67:30:3 wt.%; 40:55:5 vol.%).",
+   "bbox": [
+    165,
+    289,
+    457,
+    470
+   ],
+   "w": 792,
+   "h": 477,
+   "dpi": 200,
+   "src": "9134a378-8._Rational_optimization_of_cathode_composites_for_sulfide-based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Potential profiles of composite cathodes using different AM:SE ratios (vol./vol.): (a) Specific charge values are given with respect to the active material and (b) with respect to the electrode material (AM+SE+CA).",
+   "bbox": [
+    40,
+    128,
+    555,
+    352
+   ],
+   "w": 1414,
+   "h": 611,
+   "dpi": 200,
+   "src": "9134a378-8._Rational_optimization_of_cathode_composites_for_sulfide-based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Potential profile of a cast composite cathode is compared with the profiles of two powder cathodes.",
+   "bbox": [
+    163,
+    90,
+    482,
+    282
+   ],
+   "w": 865,
+   "h": 506,
+   "dpi": 200,
+   "src": "9134a378-8._Rational_optimization_of_cathode_composites_for_sulfide-based_all-solid-state_batteries.pdf"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Specific charge values with respect to (a) the active material, (b) the whole electrode composite of cathodes using conventional (AM+CA+SE), and sequential mixing AM+(CA+SE) for different AM:SE ratios.",
+   "bbox": [
+    55,
+    507,
+    543,
+    734
+   ],
+   "w": 1336,
+   "h": 624,
+   "dpi": 200,
+   "src": "9134a378-8._Rational_optimization_of_cathode_composites_for_sulfide-based_all-solid-state_batteries.pdf"
+  }
+ ]
+}
