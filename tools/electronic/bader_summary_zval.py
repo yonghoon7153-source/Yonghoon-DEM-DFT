@@ -29,6 +29,13 @@
   python3 tools/electronic/bader_summary_zval.py --acf ACF.dat --struct kprobe.in --zval_from_upf \
       --sites nd_bader_sites.csv --out nd_bader_summary.json
 
+2026-10-30 확장 (Nd Q3′ · 카드 nd_q3p_same_cell_card_2026_10_27 §4 '도구: 원래 역할 입력을 더한다') — Bader 결과 전:
+  · --roles MANIFEST --model NAME (--sites 와 같이) — 원자마다 **원래 역할** (이완 전 후보에서 정한 PX4 · NdT · free · 원소) 을
+    manifest 에서 읽고, Nd 이웃은 **이완 끝 기하** 거리로 R_NDX (S·Cl) · R_NDO (O) 문턱에 건다. 원자 수 · 원소 순서가 manifest 와
+    다르면 멈춘다. 역할별 · 역할 × Nd 이웃별 평균 · 범위 · n 과, 문턱까지 여유 < NEAR_MARGIN 인 원자 목록 · 그 원자를 뺀 평균을 낸다.
+  ⛔ 이 확장이 못 하는 것: 역할이 맞는지는 manifest 를 믿는다 (거리로 다시 분류하지 않는다 — 기존 --sites 범주가 그 일을 한다) ·
+    Nd 이웃 판정은 거리 하나다.
+
 ⛔ 이 도구가 못 하는 것
   · Bader 분할을 하지 않는다 (bader 프로그램 몫) · 밀도가 plot_num 17 인지 모른다 — ZVAL 규약은 17 일 때만 맞다 (호출자 책임).
   · 자리 분류는 **거리 하나**로 한다 — 배위 각도 · 결합 차수 · 2 차 이웃은 안 본다. 문턱 근처 (±0.1 Å) 원자는 CSV 의
@@ -57,6 +64,10 @@ R_PS = 2.4     # P–S 결합 (PS₄ 모서리) — 이 안에 P 가 없으면 '
 R_PO = 1.9     # P–O 결합
 R_NDX = 3.3    # Nd–S · Nd–Cl 첫 배위권
 R_NDO = 2.9    # Nd–O 첫 배위권
+# 2026-10-30 Nd Q3′ (카드 nd_q3p_same_cell_card_2026_10_27 §4) — Nd 이웃인데 문턱까지 여유가 이보다 작으면 '문턱 근처' 로
+#   따로 적고, 그 원자를 뺀 평균도 낸다. 카드가 결과 전에 적은 사례 (MP_07 Nd(21) 옆 Cl 3.16 Å · 여유 0.14 Å) 를 일반 규칙으로
+#   쓴 것이고, Bader 결과 (ACF.dat) 를 만들기 전에 박았다.
+NEAR_MARGIN = 0.15
 
 
 def _vec(s):
@@ -221,6 +232,56 @@ def classify(sym, cart, cell):
     return out
 
 
+def load_roles(path, model, sym):
+    """원래 역할 manifest (Nd Q3′ roles_manifest.json) → 원자마다 역할 · 메타. 원자 수 · 원소 순서가 다르면 멈춘다."""
+    d = json.loads(Path(path).read_text())
+    models = d.get("models") or {}
+    if model not in models:
+        raise SystemExit(f"--roles: 모델 {model} 이 {path} 에 없다 ({sorted(models)})")
+    m = models[model]
+    roles = list(m.get("roles") or [])
+    if len(roles) != len(sym) or (m.get("nat") is not None and m["nat"] != len(sym)):
+        raise SystemExit(f"--roles: {model} 역할 {len(roles)} · nat {m.get('nat')} ≠ 구조 원자 {len(sym)}")
+    bad = [i + 1 for i, (r, s) in enumerate(zip(roles, sym)) if r.split("_")[0] != s]
+    if bad:
+        raise SystemExit(f"--roles: {model} 원자 {bad[:5]} 의 역할 원소가 구조와 다르다 — 원자 순서가 manifest 와 다르다")
+    return roles, {"manifest": str(path), "model": model, "card": d.get("card"), "decision": d.get("decision"),
+                   "R_role_A": d.get("R_role_A")}
+
+
+def role_rows(rows, sym, roles):
+    """자리 행에 원래 역할 · Nd 이웃 (이완 끝 기하 · R_NDX/R_NDO) · 문턱 여유를 붙인다 (제자리)."""
+    for r, s, role in zip(rows, sym, roles):
+        d = r["d_Nd_min_A"]
+        lim = R_NDO if s == "O" else (R_NDX if s in ("S", "Cl") else None)
+        nbr = None if lim is None else (d is not None and d <= lim)
+        r["role"] = role
+        r["nd_nbr"] = nbr
+        r["nd_margin_A"] = round(lim - d, 3) if nbr else None
+        r["near_threshold"] = bool(nbr and lim - d < NEAR_MARGIN)
+
+
+def _stats(v):
+    return {"n": len(v), "net_mean": round(sum(r["net_e"] for r in v) / len(v), 4),
+            "net_min": min(r["net_e"] for r in v), "net_max": max(r["net_e"] for r in v)}
+
+
+def role_summary(rows):
+    key = lambda r: r["role"] if r["nd_nbr"] is None else f"{r['role']}|{'Nd이웃' if r['nd_nbr'] else 'Nd아님'}"
+    by_role, by_nd = defaultdict(list), defaultdict(list)
+    for r in rows:
+        by_role[r["role"]].append(r); by_nd[key(r)].append(r)
+    near = [r for r in rows if r["near_threshold"]]
+    hit = {key(r) for r in near}
+    wo = {k: _stats([r for r in by_nd[k] if not r["near_threshold"]]) for k in sorted(hit)
+          if any(not r["near_threshold"] for r in by_nd[k])}
+    return {"per_role": {k: _stats(v) for k, v in sorted(by_role.items())},
+            "per_role_nd": {k: _stats(v) for k, v in sorted(by_nd.items())},
+            "near_threshold": [{"index": r["index"], "element": r["element"], "role": r["role"], "d_Nd_min_A": r["d_Nd_min_A"],
+                                "margin_A": r["nd_margin_A"]} for r in near],
+            "per_role_nd_without_near": wo}
+
+
 def read_acf(path):
     rows = [l.split() for l in open(path) if re.match(r"^\s*\d+\s", l)]
     return [(float(r[4]), float(r[6]) if len(r) > 6 else None) for r in rows]
@@ -236,7 +297,9 @@ def vol_factor(vols, cell_vol):
                      "진공 부피가 있거나 다른 구조의 ACF 다")
 
 
-def summarize(acf_rows, sym, zv, cart=None, cell=None, sites_csv=None):
+def summarize(acf_rows, sym, zv, cart=None, cell=None, sites_csv=None, roles=None, roles_meta=None):
+    if roles is not None and sites_csv is None:
+        raise SystemExit("--roles 에는 --sites 가 필요하다 (Nd 이웃 거리를 셀에서 잰다)")
     if len(acf_rows) != len(sym):
         raise SystemExit(f"원자 수 불일치: ACF {len(acf_rows)} vs 구조 {len(sym)} — 같은 구조로 돈 게 맞는지 확인")
     miss = sorted({s for s in sym if s not in zv})
@@ -266,6 +329,8 @@ def summarize(acf_rows, sym, zv, cart=None, cell=None, sites_csv=None):
                  "V_bader_A3": round(va, 3), "N_per_V_e_A3": round(q / va, 5) if va > 0 else None,
                  "d_Nd_min_A": round(dnd, 3) if dnd is not None else None}
             rows.append(r); byc[c].append(r)
+        if roles is not None:
+            role_rows(rows, sym, roles)
         cols = list(rows[0])
         Path(sites_csv).write_text(",".join(cols) + "\n" + "\n".join(
             ",".join("" if r[k] is None else str(r[k]) for k in cols) for r in rows) + "\n")
@@ -278,6 +343,12 @@ def summarize(acf_rows, sym, zv, cart=None, cell=None, sites_csv=None):
                                              "V_mean_A3": mean([r["V_bader_A3"] for r in v]),
                                              "N_per_V_mean_e_A3": mean([r["N_per_V_e_A3"] for r in v])}
                                          for c, v in sorted(byc.items())}}
+        if roles is not None:
+            res["roles"] = {**(roles_meta or {}),
+                            "rules": {"R_NdX": R_NDX, "R_NdO": R_NDO, "NEAR_MARGIN_A": NEAR_MARGIN,
+                                      "note": ("원래 역할 = manifest (이완 전 후보) · Nd 이웃 = 이완 끝 기하 거리 · 문턱 여유 < NEAR_MARGIN 이면 "
+                                               "문턱 근처 — 그 원자를 뺀 평균도 같이 (2026-10-30 · Bader 결과 전)")},
+                            **role_summary(rows)}
     return res
 
 
@@ -289,6 +360,8 @@ def main():
     ap.add_argument("--zval_from_upf", nargs="?", const="", default=None,
                     help="UPF 의 z_valence 로 ZVAL 을 정한다 (값 없으면 QE 입력의 pseudo_dir)")
     ap.add_argument("--sites", default=None, help="원자별 자리 분류 CSV 경로 (셀이 있는 구조 필요)")
+    ap.add_argument("--roles", default=None, help="원래 역할 manifest (Nd Q3′ roles_manifest.json) — --model · --sites 와 같이")
+    ap.add_argument("--model", default=None, help="manifest 의 모델 이름 (예 MP_07 · MLi_04)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -304,7 +377,12 @@ def main():
             raise SystemExit("--zval_from_upf: 디렉터리를 주거나 QE 입력에 pseudo_dir 이 있어야 한다")
         z2, zlog = zval_table(sym, upf, d)
         zv.update(z2)
-    res = summarize(read_acf(a.acf), sym, zv, cart, cell, a.sites)
+    roles = meta = None
+    if a.roles:
+        if not a.model:
+            raise SystemExit("--roles 에는 --model 이 필요하다")
+        roles, meta = load_roles(a.roles, a.model, sym)
+    res = summarize(read_acf(a.acf), sym, zv, cart, cell, a.sites, roles, meta)
     if zlog:
         res["zval_from_upf"] = zlog
     print("원소별 net charge (ZVAL − N_bader):")
@@ -315,6 +393,15 @@ def main():
         for c, v in res["sites"]["per_category"].items():
             print(f"  {c:16s} n={v['n']:3d}  net {v['net_mean']:+.3f} [{v['net_min']:+.3f}, {v['net_max']:+.3f}]"
                   f"  V {v['V_mean_A3']:.2f} Å³  N/V {v['N_per_V_mean_e_A3']:.4f} e/Å³")
+    if "roles" in res:
+        ro = res["roles"]
+        print(f"\n원래 역할 × Nd 이웃 ({ro.get('model')} · 문턱 S·Cl {R_NDX} · O {R_NDO} Å · 문턱 근처 여유 < {NEAR_MARGIN} Å):")
+        for c, v in ro["per_role_nd"].items():
+            print(f"  {c:18s} n={v['n']:3d}  net {v['net_mean']:+.3f} [{v['net_min']:+.3f}, {v['net_max']:+.3f}]")
+        for x in ro["near_threshold"]:
+            print(f"  ⚠ 문턱 근처 #{x['index']} {x['role']} d_Nd {x['d_Nd_min_A']} Å (여유 {x['margin_A']})")
+        for c, v in ro["per_role_nd_without_near"].items():
+            print(f"  {c + ' (문턱 근처 뺌)':18s} n={v['n']:3d}  net {v['net_mean']:+.3f} [{v['net_min']:+.3f}, {v['net_max']:+.3f}]")
     print("\n같은 방법(AE plot_num=17 + kjpaw) 비교 상대 (원소 평균):")
     for name, d in REF.items():
         print(f"  {name:9s} " + " · ".join(f"{k} {v:+.3f}" for k, v in d.items()))
@@ -416,6 +503,36 @@ def selftest():
     qbad = T / "bad.in"
     qbad.write_text(qin.read_text().replace(f"nat = {len(sym)}", f"nat = {len(sym) + 1}"))
     ck("⛔음성: nat ≠ 위치 줄 수면 멈춘다", raises(lambda: read_struct(qbad)))
+    # ⑦ 원래 역할 (Nd Q3′ · 2026-10-30) — manifest 대조 · Nd 이웃 · 문턱 근처 따로 · 뺀 평균
+    roles = ["P", "S_PX4", "S_PX4", "O_PX4", "Nd", "S_free", "Cl", "Cl", "P", "S_NdT", "O_PX4", "Li"]
+    man = T / "roles.json"
+    man.write_text(json.dumps({"card": "c", "decision": "d", "R_role_A": 2.4,
+                               "models": {"M": {"nat": len(sym), "roles": roles}}}))
+    rl, meta = load_roles(man, "M", sym)
+    cart_r = [list(r) for r in cart]
+    cart_r[7] = [5.0, 8.2, 5.0]                       # 둘째 Cl: Nd 3.2 Å — 이웃 · 여유 0.1 < 0.15 → 문턱 근처
+    acf_r = [(ZVAL[s] - (0.5 if i != 6 else 0.9), cv / BOHR3 / len(sym)) for i, s in enumerate(sym)]   # Cl#7 net 0.9
+    rr = summarize(acf_r, sym, dict(ZVAL), cart_r, cell, T / "sites_r.csv", rl, meta)["roles"]
+    ck("역할 × Nd 이웃 분류 (S_free·Cl 이웃 · S_PX4 아님 · S_NdT 이웃)",
+       set(rr["per_role_nd"]) == {"Cl|Nd이웃", "Li", "Nd", "O_PX4|Nd아님", "P", "S_NdT|Nd이웃", "S_PX4|Nd아님", "S_free|Nd이웃"},
+       f"{sorted(rr['per_role_nd'])}")
+    ck("문턱 근처 = Cl#8 (3.2 Å · 여유 0.1) 하나", [x["index"] for x in rr["near_threshold"]] == [8], f"{rr['near_threshold']}")
+    ck("문턱 근처 뺀 평균 = 나머지 Cl#7 만 (0.9)", rr["per_role_nd_without_near"].get("Cl|Nd이웃", {}).get("net_mean") == 0.9,
+       f"{rr['per_role_nd_without_near']}")
+    ck("Cl|Nd이웃 전체 평균 = (0.9 + 0.5)/2", rr["per_role_nd"]["Cl|Nd이웃"]["net_mean"] == 0.7)
+    ck("S_NdT (Nd 3.0 Å · 여유 0.3) 는 문턱 근처 아님", all(x["role"] != "S_NdT" for x in rr["near_threshold"]))
+    tr = [{"d_Nd_min_A": 3.0}, {"d_Nd_min_A": 3.0}, {"d_Nd_min_A": 2.8}, {"d_Nd_min_A": None}]
+    role_rows(tr, ["O", "S", "O", "Li"], ["O_PX4", "S_PX4", "O_PX4", "Li"])
+    ck("문턱은 원소별 — O 3.0 Å 은 아님 (2.9) · S 3.0 은 이웃 (3.3) · O 2.8 은 이웃 · Li 는 판정 없음",
+       [r["nd_nbr"] for r in tr] == [False, True, True, None], f"{[r['nd_nbr'] for r in tr]}")
+    man2 = T / "roles_bad.json"
+    man2.write_text(json.dumps({"models": {"M": {"nat": len(sym), "roles": ["S_PX4"] + roles[1:]}}}))
+    ck("⛔음성: 역할 원소 ≠ 구조 원소 (원자 순서 다름) 면 멈춘다", raises(lambda: load_roles(man2, "M", sym)))
+    man3 = T / "roles_short.json"
+    man3.write_text(json.dumps({"models": {"M": {"roles": roles[:-1]}}}))
+    ck("⛔음성: 역할 수 ≠ 원자 수면 멈춘다", raises(lambda: load_roles(man3, "M", sym)))
+    ck("⛔음성: manifest 에 없는 모델이면 멈춘다", raises(lambda: load_roles(man, "X", sym)))
+    ck("⛔음성: --roles 인데 --sites 없으면 멈춘다", raises(lambda: summarize(acf_r, sym, dict(ZVAL), cart_r, cell, None, rl, meta)))
     print(f"{'✅' if ok[1] == 0 else '⛔'} bader_summary_zval selftest {ok[0]}/{ok[0] + ok[1]} 통과")
     return 0 if ok[1] == 0 else 1
 
