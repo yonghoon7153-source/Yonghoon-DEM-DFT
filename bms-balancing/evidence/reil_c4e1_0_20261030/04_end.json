@@ -1,0 +1,74 @@
+{
+ "copies_sha256": {
+  "bms-balancing/evidence/reil_c4e1_0_20261030/00_step_runner.py": "f6070f9776baa7dfc9b5e26ac5e6f378dd2969e7628566e5baa3c02685814a2a",
+  "bms-balancing/scripts/reil_c4e1_launch.py": "2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396",
+  "bms-balancing/tests/test_reil_c4e1_launch.py": "4720585c86f555bb0f9cfea3e12aab5b283f8ee4243a3ef257f77849759b777d",
+  "bms-balancing/tests/test_reil_c4e1_runner.py": "ae42d8e8c0fb0c680d324348d2e1edc8f11865bd6bedea7cb0becf9b00fe6042"
+ },
+ "disk_avail_bytes": 26137739264,
+ "git_name_check_f": {
+  "git_env_names": [
+   "GIT_ASKPASS",
+   "GIT_CONFIG_COUNT",
+   "GIT_CONFIG_KEY_0",
+   "GIT_CONFIG_KEY_1",
+   "GIT_CONFIG_KEY_2",
+   "GIT_CONFIG_VALUE_0",
+   "GIT_CONFIG_VALUE_1",
+   "GIT_CONFIG_VALUE_2",
+   "GIT_EDITOR",
+   "GIT_SSL_CAINFO",
+   "GIT_TERMINAL_PROMPT"
+  ],
+  "outside_allowlist": []
+ },
+ "kind": "REIL_C4E1_0_END",
+ "steps": {
+  "01_red_launcher": {
+   "cleanup_status": "empty",
+   "head_end": "935b52aa507caff59123f9ae77f5112a2af2cd9e",
+   "head_start": "935b52aa507caff59123f9ae77f5112a2af2cd9e",
+   "rc": 1,
+   "runner_ok": true,
+   "started": true,
+   "timed_out": false,
+   "times": {
+    "child_s": 3.778,
+    "cleanup_s": 0.008,
+    "records_s": 0.045,
+    "total_s": 3.89
+   }
+  },
+  "02_red_runner": {
+   "cleanup_status": "empty",
+   "head_end": "83e727fa72f9b7342d6f2a8173e6de3932d1c992",
+   "head_start": "83e727fa72f9b7342d6f2a8173e6de3932d1c992",
+   "rc": 1,
+   "runner_ok": true,
+   "started": true,
+   "timed_out": false,
+   "times": {
+    "child_s": 1.017,
+    "cleanup_s": 0.002,
+    "records_s": 0.041,
+    "total_s": 1.103
+   }
+  },
+  "03_green": {
+   "cleanup_status": "empty",
+   "head_end": "4391b3a345c4e0fd17e86f7ca788576a790f758c",
+   "head_start": "4391b3a345c4e0fd17e86f7ca788576a790f758c",
+   "rc": 0,
+   "runner_ok": true,
+   "started": true,
+   "timed_out": false,
+   "times": {
+    "child_s": 22.55,
+    "cleanup_s": 0.002,
+    "records_s": 0.041,
+    "total_s": 22.645
+   }
+  }
+ },
+ "utc": "2026-10-30T05:20:46Z"
+}
