@@ -24,6 +24,7 @@
 | `07_나물_도메인리서치.md` | 나물 분류·안전·원산지·가격·제철·조리 과학 |
 | `08_리뷰요청_codex.md` | Codex 리뷰 요청서 (v3 상세본 기준) |
 | `09_리뷰반영_내역.md` | 리뷰 지적과 발표자 요청을 v4에 어떻게 반영했는지 |
+| `10_리뷰요청_codex_2차.md` | Codex 2차 리뷰 요청서 (v4 기준: 대학원생 자료로서의 자연스러움 · 검색 가능성 · 수정 확인) |
 | `상세본_v3/` | 이전 상세본 (25장 PPT, 대본) |
 | `review/slides_text.md` | v4 PPT의 텍스트·표·노트 추출본 |
 | `prototype/nm_prototype.html` | 클릭형 웹앱 프로토타입 (한 파일, 브라우저로 열면 시연 모드). 게시본: https://claude.ai/artifact/JinGR2bajKN6bz9NgK85qc |
