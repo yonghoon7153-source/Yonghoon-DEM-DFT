@@ -1,0 +1,39 @@
+도구 sha256 2dc7f693263708d7788ab721386182c6109a8f9278797ecc43f5165d6715f1e8
+R1a  잡힘   41 PASS · 9 FAIL (VP) R1 키 자리 $ 검사 끔 · VP1a VP1b VP1c VP1d VP1e VP1f VP1g VP1h
+R1b  잡힘   49 PASS · 1 FAIL (VP) R1 fix 스타일 자리 뺌 · VP1f
+R1c  잡힘   46 PASS · 4 FAIL (VP) R1 unfix 뺌 · VP1b VP1c VP1e
+R1d  잡힘   49 PASS · 1 FAIL (VP) R1 region 뺌 · VP1g
+R1e  잡힘   49 PASS · 1 FAIL (VP) R1 pair_coeff 뺌 · VP1h
+R1f  생존   433 PASS · 0 FAIL (전체) R1 compute 뺌 · 
+R1g  생존   433 PASS · 0 FAIL (전체) R1 dump 뺌 · 
+R1h  생존   433 PASS · 0 FAIL (전체) R1 *_modify 셋 뺌 · 
+R1i  생존   433 PASS · 0 FAIL (전체) R1 uncompute · undump 뺌 · 
+R1j  생존   433 PASS · 0 FAIL (전체) R1 variable 이름 뺌 · 
+R2a  잡힘   45 PASS · 5 FAIL (VP) R2 run every 검사 끔 · VP2a VP2b VP2c VP2e
+R2b  잡힘   49 PASS · 1 FAIL (VP) R2 run every 안 jump 받음 · VP2e
+R2c  잡힘   49 PASS · 1 FAIL (VP) R2 partition 검사 끔 · VP2d
+R2d  잡힘   49 PASS · 1 FAIL (VP) R2 unsupported 의 partition 안 명령 끔 · VP2f
+R3a  잡힘   47 PASS · 3 FAIL (VP) R3 제어 글자 검사 끔 · VP3a VP3e VP3f
+R3b  잡힘   49 PASS · 1 FAIL (VP) R3 \r 아무 데나 받음 · VP3a
+R3c  잡힘   48 PASS · 2 FAIL (VP) R3 주석 밖 비 ASCII 받음 · VP3d VP3g
+R3d  잡힘   49 PASS · 1 FAIL (VP) R3 주석 규칙 = 옛 규칙 (같은 따옴표만 닫음) · VP3g
+R3e  잡힘   48 PASS · 2 FAIL (VP) R3 & 이음에 공백 넣음 (옛 규칙) · VP3c
+R3f  잡힘   48 PASS · 2 FAIL (VP) R3 줄 끝 공백에 NBSP (유니코드 공백 · 옛 rstrip) · VP3b
+R3g  잡힘   45 PASS · 5 FAIL (VP) R3 check() 앞 덱 읽기 거부 끔 (도구 오류로 떨어짐) · VP3a VP3d VP3e VP3f VP3g
+R4a  잡힘   46 PASS · 4 FAIL (VP) R4 print file 검사 끔 · VP4a VP4b VP4c
+R4b  잡힘   49 PASS · 1 FAIL (VP) R4 읽는 명령 = 준비 구간 안만 · VP4b
+R4c  잡힘   49 PASS · 1 FAIL (VP) R4 이름에 $ 검사 끔 · VP4c
+R5a  잡힘   44 PASS · 6 FAIL (VP) R5 흐름 줄 검사 끔 · VP5a VP5b VP5c VP5d VP5e VP5f
+R5b  잡힘   49 PASS · 1 FAIL (VP) R5 겹친 명령 안 봄 · VP5d
+R5c  잡힘   49 PASS · 1 FAIL (VP) R5 clear 뺌 · VP5b
+R5d  잡힘   49 PASS · 1 FAIL (VP) R5 python 뺌 · VP5e
+R5e  잡힘   49 PASS · 1 FAIL (VP) R5 label 뺌 · VP5c
+R6a  잡힘   48 PASS · 2 FAIL (VP) R6 있는지 = 치환 전 이름 (옛) · VP6a VP6b
+R6b  잡힘   49 PASS · 1 FAIL (VP) R6 펼친 이름 표지 검사 끔 · VP6c
+R6c  잡힘   49 PASS · 1 FAIL (VP) R6 뒤 구간 file 이름 $ 검사 끔 · VP6d
+R6d  잡힘   49 PASS · 1 FAIL (VP) R6 mesh_file 낱말 = 모든 공백 (옛 split) · VP6c
+R7a  생존   433 PASS · 0 FAIL (전체) R7 expand 고리 안 상한 끔 · 
+R7b  생존   433 PASS · 0 FAIL (전체) R7 expand 끝 상한 끔 · 
+R7c  잡힘   49 PASS · 1 FAIL (VP) R7 var_env 정의 글 상한 끔 · VP7
+R7d  잡힘   49 PASS · 1 FAIL (VP) R7 expand 상한 둘 다 끔 · VP7
+M16  잡힘   49 PASS · 1 FAIL (VP) R8 group 을 값 대조에서 뺌 (리뷰어 M16) · VP8

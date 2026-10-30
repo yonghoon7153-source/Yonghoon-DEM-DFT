@@ -1,0 +1,4 @@
+sha256 앞 12: 기준 77c242375c40 · F01 38e1eff54d39 · F02 e5a6118102de · 통합 12bc95ce030f
+heredoc (정적 대조): 통합 == F01 True · F02 == 기준 True
+heredoc 뒤 (러너 · 제출): 통합 == F02 True · F01 == 기준 True
+heredoc 앞 (머리 주석 · 인자): 통합 == F01 == F02 == 기준 True

@@ -1,0 +1,4 @@
+새 판 거부 A9_resume.liggghts                                           151 번째 원 줄에 제어 글자 b'\r' (탭 · 원 줄 끝 \r 말고 · LIGGGHTS 와 줄 · 낱말 읽기가 갈린다) · 옛 deck() = LIGGGHTS False
+다름 A10_resume.liggghts                                          새=LIGGGHTS True · 옛=LIGGGHTS False · 새 125 명령 · LIGGGHTS 125 · 옛 124
+다름 A11_main.liggghts                                            새=LIGGGHTS True · 옛=LIGGGHTS False · 새 132 명령 · LIGGGHTS 132 · 옛 132
+{'files': 154, 'new_eq_lig': 153, 'new_rejects': 1, 'new_ne_lig': 0, 'old_eq_lig': 151, 'old_ne_lig': 3, 'new_eq_old': 151}

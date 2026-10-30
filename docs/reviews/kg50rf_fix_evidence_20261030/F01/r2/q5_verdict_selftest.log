@@ -1,0 +1,100 @@
+kg50_q5_verdict selftest
+  ✓ ⓪ 등록 §7 판정 순서 ① ② ③ ④ · (a) · (b) 묶기 · W1 한정어 · Q2 · Q3 · Q4 문턱 · Q5 NP · §6 T0 · O1 · O2 · O3 · R3 줄 · §12-1 세 자리 · §12-2 · §12-3 판독기 줄 = 판독기
+  ✓ ⓪b 순서 — T0 실패 + 바닥 + X 다 넘음 → ① 판정 불가 (기술) · 바닥 + X 넘음 → ② 판정 불가 · X 만 → ③ 불합격 · |X−A| = τ (201/200) → ④ 합격 · 바닥 = τ → 합격 · 분모 0 · 값 없음 · nan → 판정 불가
+  ✓ ⓪c 묶기 — 불합격 > 판정 불가 (기술) > 판정 불가 > 합격 · 빈 목록 = 판정 불가
+  ✓ ⓪d 순서 변이 (① ② ③ 를 바꾼 세 꼴) → ⓪b 의 기대가 깨진다 (순서 시험이 순서를 본다)
+  ✓ ⓪e LIGGGHTS 줄 규칙 사본 = 생성기 commands() (kg50_d07_b50 본 덱)
+  ✓ ⓪e LIGGGHTS 줄 규칙 사본 = 생성기 commands() (kg50_d3_b50_s1 본 덱)
+  ✓ V1 거의 같은 일곱 → (a) 합격 · (b) 합격 (D0.7 · D3 둘 다) + W1 한정어 · 결정 관측량 6 (O1 둘 · O2 넷)
+  ✓ V1b 값 — z̄ = Σρr³z/Σρr³ · cn_SE_SE = 2N/n_SE (40/8 = 5) · AM–SE = N/n_AM · AM–AM = 2N/n_AM (손 계산)
+  ✓ V1c 보고 — R1 · R2 · R3 (쌍 종류별 n = 접촉 수) · R4 (x 이동 1 · 2 · 3 · 4 µm·10⁻³ → B · C · F = 1 · 2 · 3) · R6 판 높이
+  ✓ V1d 보고 표 = 비교 셋 (D0.7 (a) · (b) · D3 (b)) · (a) · (b) 줄 · 한정어
+  ✓ V1e 허용 목록 다시 대조 = 일곱 다 ok (리포 생성기 verify_folder)
+  ✓ V2 B 의 z̄_SE +0.6 % → O1 불합격 (③) → (a) 불합격 · (b) 합격 그대로
+  ✓ V2b 바닥 F +0.6 % · B +0.7 % → ② 판정 불가 (③ 보다 먼저) → (a) 판정 불가 · (b) D0.7 도 그 항목 판정 불가
+  ✓ V2c C 의 SE–SE 접촉 하나 빠짐 (5 → 4.75 = −5 % = τ) → 합격 (경계 · |X − A| = τ 는 합격)
+  ✓ V2d C SE–SE −10 % → (b) D0.7 불합격 → 전체 (b) 불합격 (D3 합격이라도 · 나쁜 쪽) · 한정어 없음
+  ✓ V2e D3 C3 z̄_SE +0.6 % → (b) D3 불합격 · 전체 (b) 불합격 · (a) 합격 그대로
+  ✓ V3 B 로그 끝 Loop time 없음 → (a) 판정 불가 (기술) · (b) 그대로 판정
+  ✓ V3b F 로그에 ERROR 줄 → (a) · (b) D0.7 둘 다 판정 불가 (기술) · 전체 (b) 판정 불가 (기술)
+  ✓ V3c C thermo nan → (b) D0.7 판정 불가 (기술)
+  ✓ V3d A3 마지막 thermo step ≠ 창 끝 → (b) D3 판정 불가 (기술)
+  ✓ V3e T0 실패 가지 (B) 의 덤프가 없어도 거부 아님 (판정 불가 (기술))
+  ✓ V4 D0.7 만 읽음 → (a) 판정 · (b) 전체 = 판정 불가 (D3 없음 · 이유 적음) · D0.7 (b) 합격 + 한정어
+  ✓ V5 combine W1 (합격) + W2 ((a) 불합격) → (a) 불합격 · (b) 합격 (창마다 · 나쁜 쪽)
+  ✓ V5b combine W1 + W1 → 거부
+  ✓ V6 W2 (합성 manifest · 리포 대조 끔) — 결정 = O2 · O3 · O3 = 마지막 0.05 s pressMPa 평균 (손 계산) · O1 판정 안 함
+  ✓ V6a 리포 대조를 끈 사실이 결과에 남는다 (가지마다 repo_verify = skipped …)
+  ✓ V6b W2 B 압력 +6 % → O3 불합격 → (a) 불합격
+  ✓ V6c W2 보고 R5 감쇠 몫 = Σγ|v_z| / (P·면적·10⁶) (손 계산 · B γ 0.5 · C SE γ 0.5·s)
+  ✓ V7 CLI 판정 = rc 0 · JSON 기록
+  ✓ V7b CLI 거부 (같은 폴더 두 역할) = rc 2
+  ✓ V7c CLI 거부 (A · F 없이 B 만) = rc 2
+  ✓ V9 W2 실제 생성기 폴더 (§12-2 비준 판 · 리포 대조 켬 · 본 런 로그로 N 다시 계산) → 창 W2 · 결정 O2 넷 + O3 · (a) 합격 · D0.7 (b) 합격 · 전체 (b) = 판정 불가 (침대 하나 — 등록 §12-2 질문 W2-6 의 지금 꼴)
+  ✓ V9b W2 실제 폴더 = §12-2 초안 판 (비준 전) → 거부 (판정 없음)
+  ✓ V10 D3 A3 · C3 로컬 직렬 (생성기 --host wsl 폴더 · 로그 1 by 1 by 1 · on 1 procs · q5_binary.txt) + F3 hit NP 2 → 받아들임 · D3 (b) 판정 · 가지마다 host · 실행 방식 · grid · 바이너리 기록
+  ✓ V10b 이탈 기록 — A3 · C3 로컬 직렬 (등록 §12-3) 둘 + D3 바닥 F3 (hit) ↔ A3 (wsl) 기계 섞임 하나 · 보고에 이탈 절
+  ✓ V10c 등록 host 만 (D0.7 ibb) → 이탈 기록 없음
+  ✓ V11 로컬 A3 로그 on 2 procs (manifest NP 1) → 거부
+  ✓ V11b 로컬 A3 grid 2 by 1 by 1 → 거부
+  ✓ V11c 로컬 A3 q5_binary.txt 없음 → 거부
+  ✓ V11d 로컬 A3 q5_binary.txt mode mpi → 거부
+  ✓ V11e 로컬 A3 libmpi 있음 → 거부
+  ✓ V11f A3 로컬 ↔ C3 hit (X ↔ A 기계 다름) → 거부
+  ✓ V11g A3 · C3 로컬 바이너리 sha256 다름 → 거부
+  ✓ V11g2 A3 · C3 로컬 같은 바이너리 · 다른 기계 (호스트 이름) → 거부
+  ✓ V11h D0.7 F grid 7 by 7 by 1 (49 ≠ 28) → 거부
+  ✓ V11i D0.7 A grid 줄 둘 → 거부
+  ✓ V11j D0.7 B grid 줄 없음 (T0 통과) → 거부
+  ✓ V11k D0.7 C grid 14 by 2 by 2 (곱 56 · z 2 ≠ processors * * 1) → 거부
+  ✓ V11l D0.7 F manifest NP 30 · 로그 30 procs · grid 6 by 5 by 1 (리포 대조 끔) → 등록 Q5 28 아님 → 거부
+  ✓ V8 --main-log (§8-3 2) — 멈춘 본 런의 체크포인트 뒤 판 높이 run 줄 · PLATE HEIGHT ↔ A = 같음 (보고)
+  ✓ V8b 본 런 줄이 다르면 다름으로 보고 (판정은 안 바뀐다)
+  ✓ X C 창 끝 atom x 에 유니코드 숫자 (float() 은 받는다) → 거부
+  ✓ X C 창 끝 contact id 에 유니코드 숫자 → 거부
+  ✓ X B thermo CPU 열에 유니코드 숫자 → T0 실패 (판정 불가 (기술))
+  ✓ X A manifest s0 = true (JSON bool 은 정수가 아니다) → 거부
+  ✓ X F manifest area_sim = NaN (JSON NaN) → 거부
+  ✓ X F log.liggghts 비어 있음 → 거부 아님 · T0 실패 (판정 불가 (기술))
+  ✓ M manifest: B manifest 끝 step +1 (s0 + run 합 아님) (같이 끔: repo_verify) → 켜면 막음 · 끄면 통과
+  ✓ M role: 다른 F 폴더를 C 역할로 (같이 끔: np_registered) → 켜면 막음 · 끄면 통과
+  ✓ M deck_sha: B 가지 덱 머리 주석 한 글자 (sha256 만 다름) (같이 끔: repo_verify) → 켜면 막음 · 끄면 통과
+  ✓ M repo_verify: B 덱 물리 줄 바꾸고 manifest sha256 · 로그도 맞춤 (리포 허용 목록만 잡는다) → 켜면 막음 · 끄면 통과
+  ✓ M ckpt: C 체크포인트 원본 ↔ 사본 sha256 다름 → 켜면 막음 · 끄면 통과
+  ✓ M log_missing: B log.liggghts 없음 (같이 끔: dt_echo) → 켜면 막음 · 끄면 통과
+  ✓ M np_procs: F 로그 Loop time 56 procs (manifest 28) (같이 끔: np_grid) → 켜면 막음 · 끄면 통과
+  ✓ M dt_echo: B 로그 dt 치환 줄 1e-06 (B 덱 5e-07) → 켜면 막음 · 끄면 통과
+  ✓ M echo: C 로그에 scale 감쇠 명령 echo 없음 (다른 덱으로 돈 로그) → 켜면 막음 · 끄면 통과
+  ✓ M start_step: A 첫 thermo step 200000 (체크포인트 200001 아님) → 켜면 막음 · 끄면 통과
+  ✓ M t0_loop: B 끝 Loop time 없음 (덤프는 다 있음) → 켜면 막음 · 끄면 통과
+  ✓ M t0_error: B ERROR 줄 → 켜면 막음 · 끄면 통과
+  ✓ M t0_finite: B thermo nan → 켜면 막음 · 끄면 통과
+  ✓ M t0_end: B 마지막 thermo step 599000 → 켜면 막음 · 끄면 통과
+  ✓ M dump_set: B 중간 atom 덤프 하나 없음 (T0 통과) → 켜면 막음 · 끄면 통과
+  ✓ M dump_timestep: C 덤프 TIMESTEP ≠ 이름 → 켜면 막음 · 끄면 통과
+  ✓ M dump_frames: C 창 끝 atom 덤프에 프레임 둘 (같이 끔: dump_rows, dump_format, dump_dup_id, bind_atoms) → 켜면 막음 · 끄면 통과
+  ✓ M dump_rows: C 중간 atom 덤프 잘림 (줄 < NUMBER OF ATOMS) → 켜면 막음 · 끄면 통과
+  ✓ M dump_format: C 창 끝 atom 줄 하나 열 8 (id 12 · 접촉 없음) (같이 끔: bind_atoms) → 켜면 막음 · 끄면 통과
+  ✓ M dump_finite: B 창 끝 atom z = nan → 켜면 막음 · 끄면 통과
+  ✓ M dump_dup_id: F 창 끝 atom id 12 → 11 (중복 · 12 는 접촉 없음) → 켜면 막음 · 끄면 통과
+  ✓ M dump_cols: F atom 열 순서 vy ↔ vz → 켜면 막음 · 끄면 통과
+  ✓ M type_known: F type 4 (type_map 에 없음) → 켜면 막음 · 끄면 통과
+  ✓ M contact_dup: C 접촉 a–b · b–a 두 줄 → 켜면 막음 · 끄면 통과
+  ✓ M contact_self: C 접촉 자기 쌍 → 켜면 막음 · 끄면 통과
+  ✓ M contact_ids: C 접촉 id 999 (atom 덤프에 없음) → 켜면 막음 · 끄면 통과
+  ✓ M contact_finite: C 접촉 첫 열 nan → 켜면 막음 · 끄면 통과
+  ✓ M bed: C 의 본 덱 sha256 이 다른 가지와 다름 (사본 · manifest 맞춤 · 리포 대조 끔) → 켜면 막음 · 끄면 통과
+  ✓ M t0_identity: C 시작 상태 덤프 한 값 다름 → 켜면 막음 · 끄면 통과
+  ✓ M end_identity: F 끝 atom 덤프 = A 사본 → 켜면 막음 · 끄면 통과
+  ✓ M floor_np: F NP 56 = A (manifest · 로그 맞춤 · 리포 대조 끔) (같이 끔: np_registered) → 켜면 막음 · 끄면 통과
+  ✓ M same_folder: B 폴더를 B · C 두 역할에 (같이 끔: role, end_identity) → 켜면 막음 · 끄면 통과
+  ✓ M window: D0.7 = W1 · D3 = W2 (창 섞임) → 켜면 막음 · 끄면 통과
+  ✓ M thermo_times: W2 B thermo 간격 1000 (A 시각과 다른 표본) → 켜면 막음 · 끄면 통과
+  ✓ M bind_atoms: B 로그 마지막 Atoms 11 ↔ 창 끝 덤프 12 (다른 실행의 덤프) → 켜면 막음 · 끄면 통과
+  ✓ M bind_zmax: C 로그 첫 zmax 0.0056 ↔ 시작 덤프 z 최대 0.0055 → 켜면 막음 · 끄면 통과
+  ✓ M np_registered: F manifest NP 30 · 로그 30 procs · grid 6 by 5 by 1 (등록 Q5 28 아님 · 리포 대조 끔) → 켜면 막음 · 끄면 통과
+  ✓ M np_grid: F 로그 grid 7 by 7 by 1 (곱 49 ≠ NP 28) → 켜면 막음 · 끄면 통과
+  ✓ M binary_record: 로컬 A3 q5_binary.txt mode mpi (같이 끔: pair_machine) → 켜면 막음 · 끄면 통과
+  ✓ M pair_machine: A3 로컬 직렬 ↔ C3 hit (X ↔ A 기계 다름) → 켜면 막음 · 끄면 통과
+  ✓ M w2_ratified: W2 합성 가지 = §12-2 개정 초안 · 비준 전 (리포 대조 끔) → 켜면 막음 · 끄면 통과
+kg50_q5_verdict selftest: PASS (98/98)

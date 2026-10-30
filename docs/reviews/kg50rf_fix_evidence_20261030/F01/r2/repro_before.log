@@ -1,0 +1,18 @@
+tool sha256 12bc95ce030fbc9b06c06659d9593b669b50645e6fbd71f79aae1cc54aa7a747
+A1   R1  rc=0  재개 덱 정적 대조: 통과 (문제 0)   [main edceea456073 · resume b48312074e38]
+A2   R1  rc=0  재개 덱 정적 대조: 통과 (문제 0)   [main 34c68ff708a3 · resume 43c82f61f716]
+A2p  R1  rc=0  재개 덱 정적 대조: 통과 (문제 0)   [main 7943bc408e7d · resume eacc23e60ae5]
+A1as R1  rc=0  재개 덱 정적 대조: 통과 (문제 0)   [main f8b0b9b652d3 · resume cdac5753e050]
+A2as R1  rc=0  재개 덱 정적 대조: 통과 (문제 0)   [main af4e2a120d87 · resume 243e4516c2c1]
+A3   R2  rc=0  재개 덱 정적 대조: 통과 (문제 0)   [main 84a147ed3c3f · resume eacc23e60ae5]
+A4   R2  rc=0  재개 덱 정적 대조: 통과 (문제 0)   [main 9bb1fd810403 · resume 098c09904ccb]
+A5   R2  rc=0  재개 덱 정적 대조: 통과 (문제 0)   [main 73f68eaa0f16 · resume eacc23e60ae5]
+A9   R3  rc=0  재개 덱 정적 대조: 통과 (문제 0)   [main 4beb88fd5985 · resume 1aa5f9d21375]
+A10  R3  rc=0  재개 덱 정적 대조: 통과 (문제 0)   [main 78c53bd82d74 · resume 4ff9340acfc3]
+A11  R3  rc=0  재개 덱 정적 대조: 통과 (문제 0)   [main 76c569b27733 · resume b0f5d3d6c5d6]
+A8   R4  rc=0  재개 덱 정적 대조: 통과 (문제 0)   [main b52095345729 · resume e190c2da89d2]
+A7   R5  rc=1  재개 덱 정적 대조: 실패 (문제 6)   [main e685327f7cb9 · resume 243e4516c2c1]
+        ✗ 재개 지점 variable dt 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [⟨못 정함 · 본 덱 끝 상태 변수 표를 줄 순서로 정할 수 없음 — 본 덱 체크포인트 앞 60 번째 명령이 흐름 줄 · 변수를 바꾸는 줄 [jump SELF skipx] — 그 자리 변수 값을 줄 순서로 정할 수 없
+        ✗ 재개 지점 variable plate_margin 다름 — 그 자리 치환을 펼치면 (10-30 KG50R-F01 · 정의 때 값 · LIGGGHTS 는 ${x} · $x 를 그 줄을 읽을 때 치환): 본 덱 [⟨못 정함 · 본 덱 끝 상태 변수 표를 줄 순서로 정할 수 없음 — 본 덱 체크포인트 앞 60 번째 명령이 흐름 줄 · 변수를 바꾸는 줄 [jump SELF skipx] — 그 자리 변수 값을 줄 
+A7s  R5  rc=0  재개 덱 정적 대조: 통과 (문제 0)   [main 898789b42a7a · resume a68ee9f65993]
+C1   R5  rc=0  재개 덱 정적 대조: 통과 (문제 0)   [main 3461f91316f4 · resume a68ee9f65993]

@@ -1,0 +1,4 @@
+py311_mawk rc=0 433 PASS · 0 FAIL · 166 s · ENOSPC 다시 0 번 · 남은 ENOSPC 줄 0
+py311_gawk rc=0 433 PASS · 0 FAIL · 175 s · ENOSPC 다시 0 번 · 남은 ENOSPC 줄 0
+py38_mawk rc=0 433 PASS · 0 FAIL · 175 s · ENOSPC 다시 0 번 · 남은 ENOSPC 줄 0
+py38all_mawk rc=0 433 PASS · 0 FAIL · 217 s · ENOSPC 다시 0 번 · 남은 ENOSPC 줄 0

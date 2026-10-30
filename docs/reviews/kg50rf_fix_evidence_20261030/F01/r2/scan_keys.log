@@ -1,0 +1,6 @@
+('fix', 9) 23 | fix move_press all move/mesh mesh top_mesh linear 0.0 0.0 -${press_speed}
+('fix', 12) 129 | fix pts1 all particletemplate/sphere 11000027 atom_type 1 density constant 4850 radius constant ${r_AM_P}
+('if', 1) 126 | if "${n_ins} < 309380" then "print 'FATAL: partial insertion - bed composition differs (PS-01). aborting.'" "q
+('print', 1) 310 | print "====== INSERTED ${n_ins} / 312506 (floor 309380 = 99%) ======"
+('timestep', 1) 43 | timestep ${dt}
+('variable', 3) 23 | variable plate_z equal ${z_max}+${r_AM_P}+${plate_margin}

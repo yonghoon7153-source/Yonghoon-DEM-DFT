@@ -1,0 +1,26 @@
+tool /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/f01r2/old/tool_int_12bc95ce.sh sha256 12bc95ce030fbc9b06c06659d9593b669b50645e6fbd71f79aae1cc54aa7a747
+  docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts settling        rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts after_settling  rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d1_b40/input_kg50_d1_b40.liggghts settling        rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d1_b40/input_kg50_d1_b40.liggghts after_settling  rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d2_b40/input_kg50_d2_b40.liggghts settling        rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d2_b40/input_kg50_d2_b40.liggghts after_settling  rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d3_b40_s1/input_kg50_d3_b40_s1.liggghts settling        rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d3_b40_s1/input_kg50_d3_b40_s1.liggghts after_settling  rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d3_b40_s2/input_kg50_d3_b40_s2.liggghts settling        rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d3_b40_s2/input_kg50_d3_b40_s2.liggghts after_settling  rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d3_b40_s3/input_kg50_d3_b40_s3.liggghts settling        rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d3_b40_s3/input_kg50_d3_b40_s3.liggghts after_settling  rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d3_b50_s1/input_kg50_d3_b50_s1.liggghts settling        rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d3_b50_s1/input_kg50_d3_b50_s1.liggghts after_settling  rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d3_b50_s2/input_kg50_d3_b50_s2.liggghts settling        rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d3_b50_s2/input_kg50_d3_b50_s2.liggghts after_settling  rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d3_b50_s3/input_kg50_d3_b50_s3.liggghts settling        rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261026_v2/kg50_d3_b50_s3/input_kg50_d3_b50_s3.liggghts after_settling  rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/input_kg50_d07_b50.liggghts settling        rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/input_kg50_d07_b50.liggghts after_settling  rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261027_v3_b50/kg50_d1_b50/input_kg50_d1_b50.liggghts settling        rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261027_v3_b50/kg50_d1_b50/input_kg50_d1_b50.liggghts after_settling  rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261027_v3_b50/kg50_d2_b50/input_kg50_d2_b50.liggghts settling        rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  docs/data/kg50_decks_20261027_v3_b50/kg50_d2_b50/input_kg50_d2_b50.liggghts after_settling  rc=0  재개 덱 정적 대조: 통과 (문제 0)  · 그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳 = 두 덱 같은 상수 값
+  합: 24 쌍 · rc 0 = 24
