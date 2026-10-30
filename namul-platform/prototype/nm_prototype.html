@@ -208,6 +208,9 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
 .done-hero{display:grid;justify-items:center;gap:10px;text-align:center;padding-top:10px}
 .done-hero img{width:84px;height:84px}
 .done-hero h1{margin:0;font-size:26px;font-weight:800}
+.impact{padding:14px 16px;background:var(--app-tint);box-shadow:none;display:grid;gap:4px}
+.impact b{font-size:15px;color:var(--app-brand)}
+.impact span{font-size:13px;line-height:1.5;color:var(--app-sub)}
 .code{padding:18px;display:grid;grid-template-columns:1fr 92px;gap:14px;align-items:center}
 .code strong{font-size:34px;font-weight:800;letter-spacing:.04em;font-variant-numeric:tabular-nums}
 .qr{width:92px;height:92px}
@@ -293,14 +296,14 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   <aside class="guide" aria-label="시연 안내">
     <div class="eyebrow">NAMULLO · 시연용 웹앱</div>
     <h1>나물로 앱 프로토타입</h1>
-    <p>나물을 알고, 고르고, 우리 동네 가게에서 바로 사는 흐름을 직접 눌러 볼 수 있습니다. AI 셰프와 AI 상인 비서는 이 페이지에서 Claude가 실제로 답합니다.</p>
+    <p>나물을 알고, 고르고, 가까운 전통시장 가게에서 바로 사는 흐름을 직접 눌러 볼 수 있습니다. AI 셰프와 AI 상인 비서는 이 페이지에서 Claude가 실제로 답합니다.</p>
     <div class="ai-status" id="aiStatus"><span class="dot" id="aiDot"></span><span id="aiText"><b>AI 연결 확인 중</b><br>잠시 후 AI 기능이 켜지거나, 예시 응답으로 시연합니다.</span></div>
     <div class="sub-h">소비자 시연 순서</div>
     <ol class="steps" id="stepList">
       <li><button data-go="home"><span class="n">1</span>홈: 이달의 제철과 AI 셰프</button></li>
       <li><button data-go="aichef"><span class="n">2</span>AI 셰프에게 반찬 추천 받기</button></li>
       <li><button data-go="recipe"><span class="n">3</span>레시피 보고 재료 담기</button></li>
-      <li><button data-go="stores"><span class="n">4</span>반경 3km 동네 매장 고르기</button></li>
+      <li><button data-go="stores"><span class="n">4</span>가까운 시장 가게 고르기</button></li>
       <li><button data-go="checkout"><span class="n">5</span>손질 옵션 · 픽업 시간 선택</button></li>
       <li><button data-go="done"><span class="n">6</span>예약 완료 · 픽업 번호</button></li>
     </ol>
@@ -311,7 +314,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
       <li><button data-go="box"><span class="n">예</span>명절·제철 예약</button></li>
     </ol>
     <button class="reset" id="resetBtn">처음부터 다시</button>
-    <div class="note">화면 속 매장·가격·수치는 시연용 예시입니다. 3D 아이콘: Microsoft Fluent Emoji (MIT), 글꼴: Pretendard (OFL)</div>
+    <div class="note">화면 속 가게·가격·수치는 시연용 예시입니다. 3D 아이콘: Microsoft Fluent Emoji (MIT), 글꼴: Pretendard (OFL)</div>
   </aside>
 
   <div class="device">
@@ -334,7 +337,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
         <div class="v-body">
           <div style="display:grid;gap:14px">
             <p class="hello">오늘 저녁,<br>어떤 나물 할까요?</p>
-            <p class="demo-note">시연용 프로토타입 · 매장·가격·선호도는 예시 데이터</p>
+            <p class="demo-note">시연용 프로토타입 · 가게·가격·선호도는 예시 데이터</p>
             <button class="ai-banner" data-go="aichef" id="aiBanner"><img src="" data-icon="cook" alt=""><span><b>AI 셰프에게 물어보기 <span class="chip-ai">AI</span></b><small>“다섯 살 아이랑 먹을 순한 반찬 뭐 있어?”</small></span><svg width="20" height="20" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></button>
           </div>
           <div>
@@ -346,7 +349,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
             <div class="hscroll" id="seasonList"></div>
           </div>
           <div>
-            <div class="sec-h"><h3>오늘 동네 입고</h3><span>반경 3km</span></div>
+            <div class="sec-h"><h3>오늘 시장 입고</h3><span>가까운 전통시장</span></div>
             <button class="card today" data-go="stores"><span class="tile" style="width:44px;height:44px;background:#E4F0E8"><img src="" data-icon="store" alt=""></span><span><b style="font-size:15px">초록나물상회 · 새벽시장</b><br><small class="muted">600m · 오늘 09:12 입고 · 참나물, 시금치, 콩나물</small></span></button>
           </div>
           <button class="box-banner" data-go="box"><span><span class="pill">명절·제철 예약</span><br><b style="font-size:16px;display:block;margin-top:8px">설 차례 삼색나물 미리 주문</b><small class="muted">고사리·도라지·시금치 4인분 · 설 연휴 전날 픽업·배달</small></span><img src="" data-icon="package" alt=""></button>
@@ -388,14 +391,14 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
           <div><div class="sec-h"><h3>제철 달력</h3><span id="gSeasonShort"></span></div><div class="months" id="gMonths"></div></div>
           <div><div class="sec-h"><h3>어울리는 양념</h3></div><div class="pairs" id="gPairs"></div></div>
         </div>
-        <div class="cta-bar"><button class="btn ghost" data-go="recipe">레시피 보기</button><button class="btn" id="gBuy">동네에서 사기</button></div>
+        <div class="cta-bar"><button class="btn ghost" data-go="recipe">레시피 보기</button><button class="btn" id="gBuy">시장에서 사기</button></div>
       </section>
 
       <!-- AI 셰프 -->
       <section class="view" data-view="aichef" hidden>
         <div class="v-head"><button class="icon-btn" data-back aria-label="뒤로"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></button><h2>AI 셰프</h2><span class="mode" id="chefMode">예시 응답</span></div>
         <div class="v-body" id="chefBody" style="gap:14px;padding-bottom:150px">
-          <div class="bubble bot">냉장고에 있는 재료나 가족 상황을 알려 주세요. <b>오늘 동네 가게에 들어온 나물</b>로 반찬을 골라 드릴게요.</div>
+          <div class="bubble bot">냉장고에 있는 재료나 가족 상황을 알려 주세요. <b>오늘 시장 가게에 들어온 나물</b>로 반찬을 골라 드릴게요.</div>
           <div class="qchips" id="chefChips">
             <button data-q="다섯 살 아이랑 먹을 순한 반찬 추천해 줘">5살 아이가 먹을 순한 반찬</button>
             <button data-q="두부랑 계란이 있어요. 같이 먹을 나물 반찬 알려 줘">두부랑 계란이 있어요</button>
@@ -428,9 +431,9 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
         <div class="cta-bar"><button class="btn" id="addBtn">재료 담기</button></div>
       </section>
 
-      <!-- 동네 매장 -->
+      <!-- 시장 가게 -->
       <section class="view" data-view="stores" hidden>
-        <div class="v-head"><button class="icon-btn" data-back aria-label="뒤로"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></button><h2 id="sHead">동네 매장</h2><span class="pill gray">행당동</span></div>
+        <div class="v-head"><button class="icon-btn" data-back aria-label="뒤로"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></button><h2 id="sHead">시장 가게</h2><span class="pill gray">행당동</span></div>
         <div class="v-body">
           <div class="map card" id="mapBox"></div>
           <div class="filters" id="storeFilters">
@@ -462,6 +465,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
         <div class="v-body with-cta">
           <div class="done-hero"><img src="" data-icon="check" alt=""><h1 id="dTitle">예약했어요</h1><p class="muted" id="dSub" style="margin:0;font-size:15px"></p></div>
           <div class="card code"><span><small class="muted" style="font-size:12px" id="dCodeLabel">픽업 번호</small><br><strong id="dCode">N-2381</strong><br><small class="muted" style="font-size:12px" id="dCodeNote">가게에서 번호만 말하면 돼요</small></span><svg class="qr" viewBox="0 0 29 29" id="qr" aria-label="픽업 QR"></svg></div>
+          <div class="card impact" id="dImpact"></div>
           <div class="card info" id="dInfo"></div>
           <div class="card" style="padding:14px 16px;display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center"><img src="" data-icon="child" alt="" style="width:40px;height:40px"><span style="font-size:13.5px;line-height:1.5">내일 저녁, 아이가 잘 먹었는지 알려 주세요.<br><span class="muted">아이 선호도와 다음 추천에 반영돼요.</span></span></div>
         </div>
@@ -498,7 +502,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
       <nav class="tabbar" id="tabbar" aria-label="메뉴">
         <button data-tab="home" aria-current="page"><svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20H4z" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linejoin="round"/></svg>홈</button>
         <button data-tab="dogam"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4Zm0 13a3 3 0 0 1 3-3h11" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linejoin="round"/></svg>도감</button>
-        <button data-tab="stores"><svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 1 1 13 0C18.5 15.4 12 21 12 21Z" stroke="currentColor" stroke-width="1.9" fill="none"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.9" fill="none"/></svg>동네</button>
+        <button data-tab="stores"><svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 1 1 13 0C18.5 15.4 12 21 12 21Z" stroke="currentColor" stroke-width="1.9" fill="none"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.9" fill="none"/></svg>시장</button>
         <button data-tab="box"><svg viewBox="0 0 24 24"><path d="M4 8.5 12 4l8 4.5v7L12 20l-8-4.5v-7Zm0 0 8 4.5 8-4.5M12 13v7" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linejoin="round"/></svg>예약</button>
       </nav>
       <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -539,10 +543,10 @@ const TOP = ["sigeumchi","kongnamul","chamnamul"], SEASON = ["sigeumchi","baechu
 const STORES = [
   {id:"s1",name:"초록나물상회",place:"새벽시장",dist:"600m",walk:"도보 9분",rating:"4.9",reviews:218,x:150,y:92,today:"오늘 09:12 입고",trim:500,blanch:800,pickup:true,deliver:false,
     stock:{chamnamul:[3500,"200g"],sigeumchi:[3000,"1단"],kongnamul:[1500,"300g"],baechu:[2500,"1/4포기"],pyogo:[4000,"150g"],gosari:[6000,"삶은 고사리 300g · 국산"]},slots:[["17:30",false],["18:00",true],["18:30",true],["19:00",true]]},
-  {id:"s2",name:"한마음 로컬푸드 직매장",place:"직매장",dist:"1.2km",walk:"도보 18분",rating:"4.7",reviews:96,x:300,y:188,today:"산지 직송",trim:0,blanch:0,pickup:true,deliver:true,
+  {id:"s2",name:"산골나물집",place:"중앙시장",dist:"1.2km",walk:"도보 18분",rating:"4.7",reviews:96,x:300,y:188,today:"정선 산지 직송",trim:0,blanch:0,pickup:true,deliver:true,
     stock:{chamnamul:[4200,"300g"],pyogo:[3800,"150g"],sigeumchi:[3200,"1단"],oi:[2000,"2개"],gosari:[9000,"말린 고사리 100g · 국산"],durup:[8000,"200g · 냉장"]},slots:[["18:00",false],["18:30",true],["19:00",true],["19:30",true]]},
-  {id:"s3",name:"할머니손 반찬가게",place:"반찬가게",dist:"900m",walk:"도보 14분",rating:"4.8",reviews:143,x:88,y:186,today:"완제품",trim:0,blanch:0,pickup:true,deliver:false,
-    stock:{chamnamul:[5500,"무침 150g"],sigeumchi:[5000,"무침 150g"],kongnamul:[4000,"무침 200g"]},slots:[["17:30",true],["18:00",true],["18:30",true],["19:00",true]]}
+  {id:"s3",name:"순천댁 나물전",place:"새벽시장",dist:"900m",walk:"도보 14분",rating:"4.8",reviews:143,x:88,y:186,today:"한 줌씩 소량",trim:0,blanch:0,pickup:true,deliver:false,
+    stock:{chamnamul:[2000,"한 줌 100g"],sigeumchi:[1500,"한 줌"],kongnamul:[1000,"한 봉 300g"]},slots:[["17:30",true],["18:00",true],["18:30",true],["19:00",true]]}
 ];
 const STORES0 = JSON.stringify(STORES);
 const VIEW_TIME = {home:"17:00",dogam:"17:01",guide:"17:01",aichef:"17:01",recipe:"17:02",stores:"17:02",checkout:"17:03",done:"17:03",box:"20:10",merchant:"17:04"};
@@ -643,15 +647,15 @@ function rRecipe(){
   $("#rTitle").textContent = r.title; $("#rBy").textContent = r.by;
   $("#rSteps").innerHTML = r.steps.map((s,i) => `<button class="card step" data-step="${i}" aria-pressed="${st.step===i}"><span class="ts">${s[0]}</span><span><b>${i+1}. ${s[1]}</b><small>${s[2]}</small></span></button>`).join("");
   $("#rProg").style.width = st.step < 0 ? "0%" : `${[18,42,70][st.step]}%`;
-  $("#rIngs").innerHTML = r.ings.map((g,i) => { const owned = st.owned[st.namul + i] ?? !g[1]; return `<label><input type="checkbox" data-ing="${i}" ${owned ? "checked" : ""}>${g[0]}${g[1] ? '<em>동네에서 사요</em>' : '<em>집에 있어요</em>'}</label>`; }).join("");
+  $("#rIngs").innerHTML = r.ings.map((g,i) => { const owned = st.owned[st.namul + i] ?? !g[1]; return `<label><input type="checkbox" data-ing="${i}" ${owned ? "checked" : ""}>${g[0]}${g[1] ? '<em>시장에서 사요</em>' : '<em>집에 있어요</em>'}</label>`; }).join("");
   const need = r.ings.filter((g,i) => !(st.owned[st.namul + i] ?? !g[1]));
-  $("#addBtn").textContent = need.length ? `${need.map(g => g[0]).join(", ")} 동네에서 담기` : "재료가 모두 있어요";
+  $("#addBtn").textContent = need.length ? `${need.map(g => g[0]).join(", ")} 시장에서 담기` : "재료가 모두 있어요";
   $("#addBtn").disabled = need.length === 0;
 }
 $("#rSteps").addEventListener("click", e => { const b = e.target.closest("[data-step]"); if (b) { st.step = +b.dataset.step; rRecipe(); toast(`${N[st.namul].recipe.steps[st.step][0]} 장면부터 재생해요`); } });
 $("#rIngs").addEventListener("change", e => { const i = e.target.dataset.ing; if (i != null) { st.owned[st.namul + i] = e.target.checked; rRecipe(); } });
 $("#playBtn").addEventListener("click", () => { st.step = Math.max(st.step, 0); rRecipe(); toast("원래 유튜브 채널에서 재생돼요"); });
-$("#addBtn").addEventListener("click", () => { addToCart(st.namul); toast("장바구니에 담았어요 · 근처 매장 3곳"); setTimeout(() => go("stores"), 450); });
+$("#addBtn").addEventListener("click", () => { addToCart(st.namul); toast("장바구니에 담았어요 · 근처 시장 가게 3곳"); setTimeout(() => go("stores"), 450); });
 function addToCart(k){ st.cart = st.cart.filter(x => x !== k); st.cart.push(k); cartBadge(); }
 
 /* ---------- stores ---------- */
@@ -678,9 +682,9 @@ function rStores(){
   const others = st.cart.filter(x => x !== k).map(x => N[x].name);
   $("#sNote").hidden = !others.length; $("#sNote").textContent = others.length ? `시연은 한 번에 한 품목씩 주문해요 · 장바구니에 ${others.join(", ")}도 있어요` : "";
   $("#storeList").innerHTML = list.map(s => { const [p,u] = s.stock[k]; return `<button class="card scard" data-store="${s.id}" aria-pressed="${s.id === st.store}">
-    <div class="srow"><b>${s.name}</b><small>${s.dist} · ${s.walk}</small></div>
+    <div class="srow"><b>${s.name}</b><small>${s.place} · ${s.dist} · ${s.walk}</small></div>
     <div class="srow"><span class="muted" style="font-size:13px">${N[k].name} ${u}</span><span class="price">${won(p)}</span></div>
-    <div class="badges"><span class="pill ${s.today.includes("입고") ? "amber" : ""}">${s.today}</span>${trimOk(s, k) ? `<span class="pill">손질 +${won(s.trim)}</span>` : `<span class="pill gray">손질 불가</span>`}<span class="pill">픽업·배달</span><span class="pill gray">★ ${s.rating} (${s.reviews})</span></div></button>`; }).join("") || `<p class="muted">조건에 맞는 매장이 없어요. 필터를 줄여 보세요.</p>`;
+    <div class="badges"><span class="pill ${s.today.includes("입고") ? "amber" : ""}">${s.today}</span>${trimOk(s, k) ? `<span class="pill">손질 +${won(s.trim)}</span>` : `<span class="pill gray">손질 불가</span>`}<span class="pill">픽업·배달</span><span class="pill gray">★ ${s.rating} (${s.reviews})</span></div></button>`; }).join("") || `<p class="muted">조건에 맞는 가게가 없어요. 필터를 줄여 보세요.</p>`;
 }
 $("#storeFilters").addEventListener("click", e => { const b = e.target.closest("[data-sf]"); if (b) { st.sf[b.dataset.sf] = !st.sf[b.dataset.sf]; rStores(); } });
 $("#storeList").addEventListener("click", e => { const b = e.target.closest("[data-store]"); if (b) { st.store = b.dataset.store; const s = STORES.find(x => x.id === st.store); st.opt = trimOk(s, st.namul) ? "trim" : "raw"; st.time = (s.slots.find(t => t[1]) || ["18:00"])[0]; go("checkout"); } });
@@ -726,9 +730,9 @@ function qr(seed){ let h = 2166136261; for (const c of seed) { h ^= c.charCodeAt
 /* 결제한 주문은 따로 저장해, 이후 다른 품목을 둘러봐도 완료·판매자 화면이 바뀌지 않게 한다 */
 const OPT_NAME = {raw:"생나물", trim:"손질", blanch:"데침"};
 function snapOrder(){ const {s, p, extra, fee, total} = calc(), dlv = st.recv === "deliver";
-  return {namul:st.namul, storeName:s.name, walk:s.walk, unit:s.stock[st.namul][1], opt:st.opt, qty:st.qty, recv:st.recv, time:dlv ? st.dtime : st.time, goods:(p + extra) * st.qty, fee, total}; }
+  return {namul:st.namul, storeName:s.name, place:s.place, walk:s.walk, unit:s.stock[st.namul][1], opt:st.opt, qty:st.qty, recv:st.recv, time:dlv ? st.dtime : st.time, goods:(p + extra) * st.qty, fee, total}; }
 function exampleOrder(){ const s = STORES.find(x => x.id === "s1"), [p, u] = s.stock.chamnamul, opt = trimOk(s, "chamnamul") ? "trim" : "raw", goods = p + (opt === "trim" ? s.trim : 0);
-  return {namul:"chamnamul", storeName:s.name, walk:s.walk, unit:u, opt, qty:1, recv:"pickup", time:"18:00", goods, fee:0, total:goods}; }
+  return {namul:"chamnamul", storeName:s.name, place:s.place, walk:s.walk, unit:u, opt, qty:1, recv:"pickup", time:"18:00", goods, fee:0, total:goods}; }
 const curOrder = () => st.order || exampleOrder();
 function prepBy(t){ const [h, m] = t.split(":").map(Number), x = h * 60 + m - 20; return `${String(Math.floor(x / 60)).padStart(2, "0")}:${String(x % 60).padStart(2, "0")}`; }
 function rDone(){
@@ -738,7 +742,8 @@ function rDone(){
   $("#dCodeLabel").textContent = dlv ? "주문 번호" : "픽업 번호"; $("#dCodeNote").textContent = dlv ? "배차되면 도착 예정 시간을 알려 드려요 (시연)" : "가게에서 번호만 말하면 돼요";
   $("#routeBtn").textContent = dlv ? "배달 조회" : "가는 길";
   $("#qr").innerHTML = qr("N-2381" + o.time);
-  $("#dInfo").innerHTML = `<div><span class="muted">상품</span><span>${n.name} ${o.unit} · ${OPT_NAME[o.opt]} × ${o.qty}</span></div>${dlv ? `<div><span class="muted">배달비</span><span>${won(o.fee)}</span></div>` : ""}<div><span class="muted">결제 금액</span><span>${won(o.total)}</span></div><div><span class="muted">매장</span><span>${o.storeName} · ${o.walk}</span></div>`;
+  $("#dImpact").innerHTML = `<b>우리 동네 시장에 ${won(o.goods)} 보탰어요</b><span>이 주문의 상품·손질 금액은 ${esc(o.place)} ${esc(o.storeName)}에 돌아가요 · 전통시장 첫 6개월 수수료 0% (시연)</span>`;
+  $("#dInfo").innerHTML = `<div><span class="muted">상품</span><span>${n.name} ${o.unit} · ${OPT_NAME[o.opt]} × ${o.qty}</span></div>${dlv ? `<div><span class="muted">배달비</span><span>${won(o.fee)}</span></div>` : ""}<div><span class="muted">결제 금액</span><span>${won(o.total)}</span></div><div><span class="muted">가게</span><span>${o.place} ${o.storeName} · ${o.walk}</span></div>`;
 }
 $("#routeBtn").addEventListener("click", () => toast(curOrder().recv === "deliver" ? "배달 현황 조회는 출시 버전에서 제공해요" : "시연용 화면이에요. 지도 앱으로 이어져요"));
 
@@ -779,7 +784,7 @@ function nameToKey(name){ const k = Object.keys(N).find(k => N[k].name === name 
 function chefRender(){
   $("#chefLog").innerHTML = st.chef.map(m => {
     if (m.role === "me") return `<div class="bubble me">${esc(m.text)}${m.photo ? "<br><small>📷 사진 1장</small>" : ""}</div>`;
-    if (m.role === "wait") return `<div class="bubble bot"><span class="thinking"><i></i><i></i><i></i></span> 오늘 동네 재고를 보고 고르는 중…</div>`;
+    if (m.role === "wait") return `<div class="bubble bot"><span class="thinking"><i></i><i></i><i></i></span> 오늘 시장 재고를 보고 고르는 중…</div>`;
     if (m.role === "err") return `<div class="bubble bot">${esc(m.text)}</div>`;
     const d = m.data, det = d.detected && d.detected.length ? `<div class="detected">사진에서 찾은 재료 ${d.detected.map(x => `<span class="pill gray">${esc(x)}</span>`).join("")}</div>` : "";
     return `<div class="bubble bot" style="max-width:100%;display:grid;gap:10px">${det}<span>${esc(d.summary || "")}</span>${(d.items||[]).slice(0,3).map(it => { const k = nameToKey(it.namul); const s = STORES.find(x => x.name === it.store) || STORES[0]; const pr = s.stock[k] ? won(s.stock[k][0]) : ""; return `<div class="card rec"><div class="rec-top">${tile(k,48)}<span><b>${esc(it.dish || N[k].name)}</b><small>${esc(it.namul || N[k].name)} · ${Number(it.minutes) || 10}분 · ${esc(s.name)} ${pr}</small></span><span class="pill">아이 ${N[k].kid}%</span></div><span style="font-size:13.5px">${esc(it.why || "")}</span><ol>${(it.steps||[]).slice(0,3).map(x => `<li>${esc(x)}</li>`).join("")}</ol><div class="rec-actions"><button class="btn ghost small" data-chef-recipe="${k}">레시피 보기</button><button class="btn small" data-chef-buy="${k}" style="flex:1">${esc(N[k].name)} 담기</button></div></div>`; }).join("")}${m.demo ? '<small class="muted" style="font-size:11px">예시 응답 · AI가 연결되면 실제로 답해요</small>' : ""}</div>`;
@@ -794,9 +799,9 @@ async function askChef(q, photo){
   const done = (msg) => { st.chef = st.chef.filter(m => m.role !== "wait"); st.chef.push(msg); chefRender(); };
   const realPhoto = photo && typeof Blob !== "undefined" && photo instanceof Blob;
   if (!SAMPLE || (photo && !realPhoto)) { setTimeout(() => done({role:"bot", data: photo ? CHEF_PHOTO_DEMO : CHEF_DEMO, demo:true}), 900); return; }
-  const prompt = `너는 '나물로' 앱의 AI 셰프다. 아래 '오늘 동네 재고'에 있는 나물만 써서 사용자 상황에 맞는 나물 반찬을 2~3개 추천해라.
+  const prompt = `너는 '나물로' 앱의 AI 셰프다. 아래 '오늘 시장 재고'에 있는 나물만 써서 사용자 상황에 맞는 나물 반찬을 2~3개 추천해라.
 규칙: 의학적 효능이나 치료 효과는 말하지 않는다. 야생에서 직접 채취한 식물이 먹어도 되는지는 절대 판단하지 않는다(그런 질문이면 summary에 "직접 채취한 야생 식물은 독초와 헷갈릴 수 있어 판단하지 않아요. 구매한 나물만 드세요."라고 쓰고 items는 재고 기반으로만). 고사리·두릅·원추리처럼 독성분이 있는 나물은 반드시 데치거나 삶는 단계를 넣는다. 아이가 언급되면 맵지 않고 짜지 않게. 15분 안에 끝나는 조리 위주. 각 단계는 15자 안팎으로 짧게.${photo ? "\n사진이 함께 왔다. 사진 속 식재료를 먼저 알아보고 detected에 적어라. 식재료가 아니면 detected를 빈 배열로 두고 재고 기반으로만 추천해라." : ""}
-오늘 동네 재고(JSON): ${JSON.stringify(STOCK_FOR_AI())}
+오늘 시장 재고(JSON): ${JSON.stringify(STOCK_FOR_AI())}
 사용자: "${q || "사진 속 재료로 반찬 추천"}"
 JSON만 답하라. 형식: {"detected":["사진에서 찾은 재료"],"summary":"한 문장","items":[{"namul":"재고에 있는 나물 이름 그대로","dish":"반찬 이름","minutes":숫자,"why":"추천 이유 한 문장","steps":["단계1","단계2","단계3"],"store":"재고의 매장 이름 그대로"}]}`;
   try {
@@ -817,7 +822,7 @@ $("#photoBtn").addEventListener("click", () => { if (SAMPLE && IMG_OK) $("#photo
 $("#photoInput").addEventListener("change", e => { const f = e.target.files && e.target.files[0]; if (f) askChef("", f); e.target.value = ""; });
 document.addEventListener("click", e => {
   const r = e.target.closest("[data-chef-recipe]"); if (r) { st.namul = r.dataset.chefRecipe; st.step = -1; go("recipe"); return; }
-  const b = e.target.closest("[data-chef-buy]"); if (b) { st.namul = b.dataset.chefBuy; addToCart(st.namul); toast(`${N[st.namul].name} 담았어요 · 근처 매장 보기`); setTimeout(() => go("stores"), 450); }
+  const b = e.target.closest("[data-chef-buy]"); if (b) { st.namul = b.dataset.chefBuy; addToCart(st.namul); toast(`${N[st.namul].name} 담았어요 · 근처 시장 가게 보기`); setTimeout(() => go("stores"), 450); }
 });
 
 /* merchant assistant */
@@ -917,7 +922,7 @@ $("#chatBody").addEventListener("click", e => { const b = e.target.closest("[dat
       if (!good.length) toast("확인 필요 항목을 먼저 고쳐 주세요");
       else { const s = STORES[0]; good.forEach(it => { s.stock[it.key] = [it.price, "1" + it.unit]; (s.left = s.left || {})[it.key] = it.qty; if (it.trim !== null) (s.trimOk = s.trimOk || {})[it.key] = it.trim; });
         s.today = `오늘 ${nowT()} 입고`; m.data.status = "ok"; m.data.reply = `${good.length}개 품목을 ${s.name} 재고에 올렸어요.` + (good.length < m.data.items.length ? " 확인 필요 항목은 뺐어요." : "");
-        toast("앱에 반영했어요 · 동네 매장 목록에서 보여요"); } } }
+        toast("앱에 반영했어요 · 시장 가게 목록에서 보여요"); } } }
   if (a === "edit") toast("고칠 내용을 메시지로 다시 보내 주세요 (시연)");
   rMerchant(); });
 $("#quickActs").addEventListener("click", async e => { const b = e.target.closest("[data-qa]"); if (!b) return; const qa = b.dataset.qa;

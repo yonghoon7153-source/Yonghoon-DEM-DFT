@@ -73,8 +73,12 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     tx(s, "NAMULLO", { x: 0.6, y: 0.55, w: 3, h: 0.3, fontSize: 11, bold: true, color: "C7D6CC", charSpacing: 4, objectName: "wordmark" });
     tx(s, "창업 아이템 발표", { x: 0.6, y: 1.5, w: 5.5, h: 0.35, fontSize: 14, color: "A9C2B3", objectName: "kicker" });
     s.addText("나물로", { placeholder: "title" });
-    s.addText("레시피 기반 동네 나물 주문 플랫폼 (픽업 · 저녁 배달)", { placeholder: "body" });
-    tx(s, "제철 나물 레시피를 보고 동네 전통시장·로컬푸드 매장에 주문,\n가게에서 찾아가거나 저녁에 배달로 받기", { x: 0.6, y: 3.5, w: 6.0, h: 0.62, fontSize: 13, color: "C7D6CC", objectName: "one-liner" });
+    s.addText("레시피로 고르고 전통시장에서 사는 나물 장보기", { placeholder: "body" });
+    tx(s, "나물 한 봉지로 지역 상권을 돕는 가치소비 장보기", { x: 0.6, y: 3.45, w: 6.0, h: 0.32, fontSize: 13, color: "C7D6CC", objectName: "one-liner" });
+    let cx = 0.6;
+    ["나물 접근성", "지역 상권 상생", "AI 기반", "레시피 연계"].forEach((c, i) => { const w = 0.32 + [...c].reduce((a, ch) => a + (/[가-힣]/.test(ch) ? 0.165 : ch === " " ? 0.06 : 0.1), 0);
+      s.addShape(pres.ShapeType.roundRect, { x: cx, y: 3.95, w, h: 0.34, rectRadius: 0.17, fill: { color: "24503D" }, line: { color: BRAND2, width: 0.75 }, objectName: "pillar " + i });
+      tx(s, c, { x: cx, y: 3.95, w, h: 0.34, fontSize: 11.5, bold: true, color: "FFFFFF", align: "center", valign: "middle", objectName: "pillar text " + i }); cx += w + 0.12; });
     tx(s, "2026. 11.     ○○학과  ○○○", { x: 0.6, y: 4.8, w: 5, h: 0.3, fontSize: 12, color: "A9C2B3", objectName: "presenter" });
     phone(s, "home", 7.05, 0.38, 4.85, "홈 화면");
     s.addNotes(note(1)); }
@@ -84,7 +88,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
   { const s = content(2, "Problem");
     head(s, "Problem  |  고객의 문제와 필요", "고객 문제", "1차 타깃은 전통시장 인근 맞벌이 자녀 가구로, 장보기·손질 시간 부족과 아이 반찬 고민이 큼");
     [["01", "시간 부족", "퇴근 후 장보기와 저녁 준비\n시간이 짧음"], ["02", "아이 반찬 고민", "아이가 채소 반찬을 잘 먹지 않아\n메뉴 정하기가 어려움"],
-     ["03", "손질 부담", "나물은 다듬기·데치기 과정이\n번거로움"], ["04", "구매 단위", "마트·온라인몰은 한 단·한 봉지\n단위라 양이 많음"]].forEach(([n, h, d], i) => {
+     ["03", "손질 부담", "나물은 다듬기·데치기 과정이\n번거로움"], ["04", "시장 가기 어려움", "시장 나물이 싸고 믿을 만해도\n퇴근 후엔 들를 시간이 없음"]].forEach(([n, h, d], i) => {
       const x = 0.45 + (i % 2) * 2.98, y = 1.72 + Math.floor(i / 2) * 1.62;
       box(s, x, y, 2.86, 1.5, G100, "pain box " + n);
       tx(s, n, { x: x + 0.2, y: y + 0.16, w: 0.6, h: 0.28, fontSize: 12, bold: true, color: G500, objectName: "pain num " + n });
@@ -120,15 +124,15 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
   // ================= 4. Solution: 서비스 개요 =================
   pres.addSection({ title: "Solution" });
   { const s = content(4, "Solution");
-    head(s, "Solution  |  서비스", "서비스 개요", "레시피 탐색부터 동네 매장 주문, 픽업·저녁 배달까지 한 앱에서 처리하는 O2O 커머스");
-    [["01  레시피 탐색", "제철 나물 정보·손질법, 아이 선호 메뉴 추천,\n유튜브 레시피 영상 연동"], ["02  재료 담기", "레시피 재료 가운데 집에 없는 것만 골라\n장바구니에 담기"], ["03  주문 · 받기", "반경 3km 매장 비교, 손질·데침 옵션 선택,\n가게 픽업(무료) 또는 저녁 배달(배달대행 연결)"]].forEach(([h, d], i) => {
+    head(s, "Solution  |  서비스", "서비스 개요", "레시피 탐색부터 전통시장 가게 주문, 픽업·저녁 배달까지 한 앱에서 처리하는 O2O 커머스");
+    [["01  레시피 탐색", "제철 나물 정보·손질법, 아이 선호 메뉴 추천,\n유튜브 레시피 영상 연동"], ["02  재료 담기", "레시피 재료 가운데 집에 없는 것만 골라\n장바구니에 담기"], ["03  주문 · 받기", "가까운 전통시장 나물 가게 비교, 손질·데침 옵션,\n시장 픽업(무료)·저녁 배달 선택, 명절 나물은 예약"]].forEach(([h, d], i) => {
       const y = 1.72 + i * 0.86;
       s.addShape(pres.ShapeType.homePlate, { x: 0.45, y, w: 1.85, h: 0.74, fill: { color: i === 2 ? BRAND : BRAND2 }, line: { color: i === 2 ? BRAND : BRAND2, width: 0 }, objectName: "step " + i });
       tx(s, h, { x: 0.6, y, w: 1.6, h: 0.74, fontSize: 13, bold: true, color: "FFFFFF", valign: "middle", objectName: "step text " + i });
       tx(s, d, { x: 2.5, y, w: 4.3, h: 0.74, fontSize: 12, color: INK, valign: "middle", objectName: "step desc " + i });
       if (i < 2) s.addShape(pres.ShapeType.line, { x: 2.5, y: y + 0.8, w: 4.3, h: 0, line: { color: G200, width: 0.75 }, objectName: "step rule " + i }); });
     box(s, 0.45, 4.36, 6.35, 0.56, G100, "subscription band");
-    tx(s, [{ text: "+ 명절·제철 예약   ", options: { bold: true, color: BRAND } }, { text: "설 차례 삼색나물 등을 미리 주문하고 받는 날 픽업·배달", options: { color: INK } }], { x: 0.6, y: 4.36, w: 6.1, h: 0.56, fontSize: 12, valign: "middle", objectName: "subscription text" });
+    tx(s, [{ text: "+ 시장 기여 표시   ", options: { bold: true, color: BRAND } }, { text: "주문마다 그 시장 가게에 돌아간 금액을 보여 줌", options: { color: INK } }], { x: 0.6, y: 4.36, w: 6.1, h: 0.56, fontSize: 12, valign: "middle", objectName: "subscription text" });
     phone(s, "home", 7.45, 1.66, 3.3, "홈 화면");
     foot(s, "주: 앱 화면은 웹 프로토타입 (매장·가격·선호도는 예시 데이터)"); }
 
@@ -138,7 +142,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     const h = 3.3, w = h / PH;
     [["aichef", "레시피 추천 화면"], ["merchant_draft", "판매자 상품 등록안 화면"], ["merchant_forecast", "발주 추천·마감 할인 예시 화면"]].forEach(([f, alt], i) => {
       const x = 0.45 + i * (w + 0.14); phone(s, f, x, 1.66, h, alt); badge(s, i + 1, x - 0.06, 1.6); });
-    const caps = [["레시피 추천 (고객)", "시연 구현", true, "아이 나이·보유 재료를 입력하면 근처 매장\n재고로 만들 수 있는 반찬을 추천"],
+    const caps = [["레시피 추천 (고객)", "시연 구현", true, "아이 나이·보유 재료를 입력하면 근처 시장 가게\n재고로 만들 수 있는 반찬을 추천"],
       ["상품 등록 자동화 (판매자)", "시연 구현", true, "메시지 한 줄을 품목·수량·가격으로 정리,\n판매자가 확인해야 앱에 반영"],
       ["발주량 추천 · 마감 할인", "개발 예정", false, "판매 이력·요일·날씨 기반, 주문 데이터가\n쌓인 뒤 도입"]];
     caps.forEach(([t, st, on, d], i) => {
@@ -154,7 +158,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
   { const s = pres.addSlide({ masterName: "DEMO", sectionTitle: "Solution" }); s.addNotes(note(6));
     head(s, "Solution  |  시연", "프로토타입 시연", null);
     tx(s, "사용 시나리오: 맞벌이 부모의 평일 저녁 장보기", { x: 0.45, y: 1.0, w: 6.0, h: 0.32, fontSize: 13, bold: true, color: G700, objectName: "demo sub" });
-    const steps = [["17:00", "레시피 추천 요청", "‘다섯 살 아이랑 먹을 순한 반찬’"], ["17:02", "레시피 확인 · 재료 담기", "참나물 들기름무침 → 참나물 200g 담기"], ["17:03", "매장 선택 · 받는 방법", "600m 시장 가게, 손질 옵션, 18:00 픽업 (배달도 가능)"], ["17:04", "판매자 주문 접수", "판매자 화면에서 주문 확인 후 접수"]];
+    const steps = [["17:00", "레시피 추천 요청", "‘다섯 살 아이랑 먹을 순한 반찬’"], ["17:02", "레시피 확인 · 재료 담기", "참나물 들기름무침 → 참나물 200g 담기"], ["17:03", "시장 가게 선택 · 받는 방법", "600m 새벽시장 가게, 손질 옵션, 18:00 픽업"], ["17:04", "판매자 주문 접수", "판매자 화면에서 주문 확인 후 접수"]];
     s.addShape(pres.ShapeType.line, { x: 0.86, y: 1.62, w: 0, h: 2.3, line: { color: G200, width: 1.5 }, objectName: "timeline" });
     steps.forEach(([t, h, d], i) => { const y = 1.48 + i * 0.72;
       s.addShape(pres.ShapeType.roundRect, { x: 0.45, y: y + 0.04, w: 0.82, h: 0.32, rectRadius: 0.16, fill: { color: i === 3 ? MARK : BRAND }, line: { color: i === 3 ? MARK : BRAND, width: 0 }, objectName: "time pill " + i });
@@ -186,7 +190,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
 
   // ================= 8. Business: 경쟁 =================
   { const s = content(8, "Business");
-    head(s, "Business  |  차별성", "경쟁 현황 및 차별점", "나물 요리를 고른 고객이 필요한 재료를 동네 매장에서 손질까지 받아 살 수 있게 하는 데 집중");
+    head(s, "Business  |  차별성", "경쟁 현황 및 차별점", "레시피로 고른 재료를 전통시장 가게에서 싸고 믿을 수 있게 사고, 그 구매가 지역 상권을 돕게 함");
     const px = 0.95, py = 1.75, pw = 4.2, ph = 2.85;
     box(s, px, py + ph / 2, pw / 2, ph / 2, BRANDL, "target quadrant");
     s.addShape(pres.ShapeType.rect, { x: px, y: py, w: pw, h: ph, fill: { type: "none" }, line: { color: G300, width: 0.75 }, objectName: "plot frame" });
@@ -203,19 +207,19 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     dot("배민 장보기", px + 2.85, py + 1.85); dot("네이버", px + 2.4, py + 2.25); dot("당근", px + 3.15, py + 2.55); dot("나물로", px + 0.7, py + 2.2, true);
     tx(s, "기회 영역", { x: px + 0.12, y: py + ph / 2 + 0.1, w: 1.6, h: 0.26, fontSize: 10.5, bold: true, color: BRAND, objectName: "gap caption" });
     tx(s, "차별점", { x: 5.55, y: 1.72, w: 4.0, h: 0.3, fontSize: 12, bold: true, color: BRAND, objectName: "diff title" });
-    [["레시피 연동 주문", "레시피 재료를 근처 매장 재고로 바로 주문"], ["손질·데침 옵션", "판매자는 추가 매출, 고객은 조리 시간 단축"], ["메시지 상품 등록", "앱이 익숙지 않은 상인도 메시지로 등록"]].forEach(([h, d], i) => {
+    [["레시피 연동 주문", "레시피 재료를 시장 가게 재고로 바로 주문"], ["지역 상권 상생", "시장 시세로 팔고, 시장에 돌아간 금액 표시"], ["손질·데침 옵션", "판매자는 추가 매출, 고객은 조리 시간 단축"]].forEach(([h, d], i) => {
       const y = 2.06 + i * 0.8;
       badge(s, i + 1, 5.55, y + 0.02);
       tx(s, h, { x: 6.0, y, w: 3.55, h: 0.34, fontSize: 14, bold: true, color: INK, valign: "middle", objectName: "diff head " + i });
       tx(s, d, { x: 6.0, y: y + 0.35, w: 3.55, h: 0.46, fontSize: 11.5, color: G700, objectName: "diff desc " + i }); });
     box(s, 5.55, 4.52, 4.0, 0.4, BRANDL, "position band");
-    tx(s, "목표: 배민·네이버와 함께 쓰는 나물 전문 채널", { x: 5.68, y: 4.52, w: 3.8, h: 0.4, fontSize: 11, bold: true, color: BRAND, valign: "middle", objectName: "position text" });
-    foot(s, "주: 포지셔닝은 2026.10 공개 정보 기준 자체 판단 · 네이버 등은 판매자용 AI 도구(리뷰 관리·FAQ)를 이미 제공"); }
+    tx(s, "목표: 전통시장 상인과 함께 크는 나물 전문 채널", { x: 5.68, y: 4.52, w: 3.8, h: 0.4, fontSize: 11, bold: true, color: BRAND, valign: "middle", objectName: "position text" });
+    foot(s, "주: 포지셔닝은 2026.10 공개 정보 기준 자체 판단 / 가격: 한국소비자단체협의회 2026 추석 조사(서울 90곳), 채소·임산물류는 전통시장이 대형마트보다 26.0% 저렴"); }
 
   // ================= 9. Business: 수익 모델 =================
   { const s = content(9, "Business");
     head(s, "Business  |  수익모델", "수익 모델", "중개 수수료를 기본 수익원으로 하고 판매자 유료 서비스·제휴 광고로 확대, 배달은 별도 이익 없이 연결");
-    const nodes = [["고객", "맞벌이 자녀 가구", 0.45, 1.75, G100, INK], ["나물로", "주문 · 배달 연결 · 정산", 4.05, 1.75, BRAND, "FFFFFF"], ["판매자", "전통시장 · 로컬푸드", 7.65, 1.75, G100, INK]];
+    const nodes = [["고객", "맞벌이 자녀 가구", 0.45, 1.75, G100, INK], ["나물로", "주문 · 배달 연결 · 정산", 4.05, 1.75, BRAND, "FFFFFF"], ["판매자", "전통시장 나물 가게", 7.65, 1.75, G100, INK]];
     nodes.forEach(([t, d, x, y, fill, col]) => { box(s, x, y, 1.9, 0.92, fill, "node " + t, fill === G100 ? G300 : null);
       tx(s, [{ text: t, options: { fontSize: 15, bold: true, breakLine: true } }, { text: d, options: { fontSize: 10.5 } }], { x, y, w: 1.9, h: 0.92, color: col, align: "center", valign: "middle", objectName: "node text " + t }); });
     const arrow = (x1, x2, y, name) => s.addShape(pres.ShapeType.line, { x: Math.min(x1, x2), y, w: Math.abs(x2 - x1), h: 0, line: { color: G500, width: 1.25, endArrowType: x2 > x1 ? "triangle" : undefined, beginArrowType: x2 > x1 ? undefined : "triangle" }, objectName: name });
@@ -259,7 +263,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     table(s, null, [["확장 조건", "첫 시장의 재구매·운영비 확인"], ["지역 확대", "인접 시장·주거 단지 → 수도권"], ["품목 확대", "나물 → 제철 농산물 전체"]],
       { x: 5.2, y: 2.06, w: 4.35, colW: [1.3, 3.05], rowH: [0.42, 0.42, 0.42], align: ["center", "left"], size: 12 });
     tx(s, "기대 효과", { x: 5.2, y: 3.5, w: 4.3, h: 0.3, fontSize: 12, bold: true, color: BRAND, objectName: "effect title" });
-    tx(s, [{ text: "전통시장 신규 고객 유입 · 매출 증가", options: { bullet: true, breakLine: true } }, { text: "제철 재고 폐기 감소", options: { bullet: true, breakLine: true } }, { text: "아이 채소 반찬 섭취 개선", options: { bullet: true } }], { x: 5.2, y: 3.84, w: 4.35, h: 1.06, fontSize: 12, color: INK, paraSpaceAfter: 4, objectName: "effect list" });
+    tx(s, [{ text: "전통시장 신규 고객 · 지역 상권 매출 증가", options: { bullet: true, breakLine: true } }, { text: "제철 재고 폐기 감소", options: { bullet: true, breakLine: true } }, { text: "아이 채소 반찬 섭취 개선", options: { bullet: true } }], { x: 5.2, y: 3.84, w: 4.35, h: 1.06, fontSize: 12, color: INK, paraSpaceAfter: 4, objectName: "effect list" });
     foot(s, "주: 재무 수치는 가정 기반 목표치 · 손익분기 시점은 파일럿 실측 후 재산정 (산식은 부록 1)"); }
 
   // ================= 12. 마무리 =================
@@ -267,7 +271,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
   { const s = pres.addSlide({ masterName: "CLOSING", sectionTitle: "마무리" });
     tx(s, "마무리", { x: 0.6, y: 0.6, w: 3, h: 0.3, fontSize: 12, color: "A9C2B3", objectName: "closing label" });
     s.addText("나물로", { placeholder: "title" });
-    s.addText("맞벌이 가정에는 동네 매장 픽업·저녁 배달을, 시장 판매자에게는 온라인 판로를 제공", { placeholder: "body" });
+    s.addText("나물 한 봉지로 지역 상권을 돕는 장보기", { placeholder: "body" });
     tx(s, "다음 단계", { x: 0.6, y: 2.55, w: 3, h: 0.3, fontSize: 12, bold: true, color: "A9C2B3", objectName: "next steps label" });
     [["01", "고객 인터뷰", "시장 인근 맞벌이 가정 10명\n프로토타입으로 사용성 확인"], ["02", "파일럿", "2026.12~2027.2, 시장 1곳\n유료 주문 100건 · 배달 비용 확인"], ["03", "팀 · 지원사업", "개발·콘텐츠 파트너 모집\n2027 정부 지원사업 신청"]].forEach(([n, h, d], i) => { const x = 0.6 + i * 2.95;
       box(s, x, 2.9, 2.8, 1.4, "214A39", "step box " + n);
@@ -311,9 +315,9 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       ["쿠팡 · 컬리 · 어글리어스 · 당근 서비스 소개 (2026.10 확인, 자체 정리)", null],
       ["뉴데일리, 배달대행 기본료 인상 예정 보도 (2024.10.07)", "https://biz.newdaily.co.kr/site/data/html/2024/10/07/2024100700114.amp.html"],
       ["바이라인네트워크, 배민스토어 전통시장 합배송 (2024.01)", "https://byline.network/2024/01/30_baeminstore"],
+      ["한국소비자단체협의회, 2026 추석 제수용품 조사", "https://www.insight.co.kr/news/572535"],
       ["Anthropic, Claude API 가격표 (2026.10)", "https://platform.claude.com/docs/en/about-claude/pricing"],
-      ["앱 화면: 웹 프로토타입 (매장 · 가격 · 수치는 예시 데이터)", null],
-      ["아이콘 Microsoft Fluent Emoji (MIT) · 글꼴 Pretendard (OFL)", "https://github.com/microsoft/fluentui-emoji"]];
+      ["아이콘 Fluent Emoji (MIT) · 글꼴 Pretendard (OFL)", "https://github.com/microsoft/fluentui-emoji"]];
     const col = (arr, start, x, h) => { tx(s, h, { x, y: 1.68, w: 4.45, h: 0.3, fontSize: 12, bold: true, color: C.accent1, objectName: "ref head " + h });
       s.addText(arr.map(([t, url], i) => ({ text: t, options: { bullet: { type: "number", numberStartAt: start }, breakLine: i < arr.length - 1, ...(url ? { hyperlink: { url, tooltip: url } } : {}) } })), { x, y: 2.02, w: 4.45, h: 2.95, fontSize: 10.5, color: INK, paraSpaceAfter: 6, lineSpacingMultiple: 1.12, valign: "top", margin: 0, isTextBox: true, objectName: "ref list " + h }); };
     col(L, 1, 0.45, "통계 · 시장 · 연구"); col(R, 8, 5.1, "경쟁 · 기술 · 자료");
