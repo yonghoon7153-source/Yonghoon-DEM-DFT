@@ -2383,3 +2383,46 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   - 사전 검토 발송문 `docs/REIL_C4E_E1_0B_PREREVIEW_SEND_20261030.md` (`5c002f06792fcab3abb28688eb203fe9b9d590f9ac342a56921ff402b3b80f1b` · 11,018 B · 질문 5).
 - **다음:** 사전 검토 발송 (사용자 결정) → 수용 → 사용자의 E1-0b 한정 승인 → E1-0b → 결과 검토 → E1-1–3 승인 요청 → 검토 → 사용자 별도 승인. 이 기록은
   어느 단계의 실행 승인도 아니다.
+
+## §88 C4-E · E1-0b 사전 검토 회신 접수 — 정정 필요 P2 1 (E1_0B_N1 · RED 원인 결속) · Q1–Q3 · Q5 정적 수용 · 숫자 정정 둘 · 실행 승인 아님 (2026-10-30 KST · 덧붙임 — 위 §0–§87 은 그대로)
+
+- **회신 (2026-10-30):** 사용자가 §87 의 발송문 (`5c002f06…`) 을 Codex 에 보냈고, 회신 ZIP · 짧은 회신 본문 · 영수증 · 포장 반환을 대화로 전달했다. 고정 HEAD
+  `90a842a9df9eb676c20ce1b9d4babf0cf0c5d637` (검토 종결 때 원격 ref 도 같음 · ahead 0 / behind 0).
+- **보존:** `reviews/review_reil_c4e_e1_0b_prereview_20261030/REIL_C4E_E1_0B_PREREVIEW_20261030.zip` (735,110 B · sha256
+  `08fdc4587f2f95b60aa5594d2557f2a7fd792744f70f40957e7af34823e48805` = 영수증). 규칙 `cd04dbe6` → 보존 `738dd84c`.
+  - `originals/` 48 (경로 이탈 · 링크 0) · PACKAGE_MANIFEST (`43298204…` · 10,084 B) 47/47 (목록 밖 없음) · blob 49/49 · 비밀 검사 49 파일 0 건.
+  - `source/` 9 · `basis/unchanged_at_pin/` 15 · `basis/attachments/` 2 = `90a842a9` 의 blob (26/26). `basis/prior_review/` 3 = E1-0 결과 검토 회신
+    원본과 같은 바이트.
+  - 짧은 회신 `CODEX_REPLY_KO.txt` = 대화에 붙인 본문 (눈으로 대조). 검토자 도구 셋 (`capture_decode.py` · `package_review.py` · `static_review_data.py`) 은
+    실행하지 않았다.
+- **판정 (`REVIEW_DECISION.json`):** `E1_0B_PREREVIEW_CHANGES_REQUIRED_BEFORE_APPROVAL`.
+  - Q1 `STATIC_ACCEPTABLE_FUNCTIONAL_PENDING` — fetch env · 설정 원천 사전 / 사후 검사의 설계는 정적 범위에서 수용. local 허용 키 아홉의 실제 적합성은
+    미관측 (불일치하면 멈추는 공개 범위). FUTURE-01 의 실제 해결은 종결하지 않았다.
+  - Q2 `STATIC_ACCEPTABLE_OPERATIONAL_NEED_UNOBSERVED` — 고정 `basic` 의 근거와 한계를 나눈 것은 수용. 회신의 주의: git-config 문서상
+    `http.proxyAuthMethod` 는 프록시 문자열에 사용자 이름이 있을 때 의미가 있고 환경 변수 (`GIT_HTTP_PROXY_AUTHMETHOD`) 로도 바뀔 수 있다 — 지금
+    `child_env` 는 그 변수를 뺀다. 필요성 · 실제 인증 성공을 관측하지 않았다는 공개를 유지한다.
+  - Q3 `STATIC_ACCEPTABLE_DISCLOSED_LIMITS_RETAINED` — 공통 기한 · 오류 우선 · empty 만 통과는 수용. 20 s 를 모든 실행 종료 시간의 보편적 상한으로
+    수용한 것이 아니다.
+  - Q4 `CHANGES_REQUIRED_RED_CAUSE_BINDING` — 아래 E1_0B_N1. 9 + 24 분할 (33 의 정확한 분할) 과 pytest 9.1.1 형식 근거에는 결정적 불일치가 없다.
+  - Q5 `SEALS_RECORDING_SPLIT_SCOPE_STATIC_ACCEPTABLE_APPROVAL_BLOCKED_BY_N1` — 봉인 15 행 · 외곽 반환 · 끝 기록 작성기 · 작업 폴더 분리 · 승인 분리는
+    정적 타당. 끝 기록을 커밋 · push · 문서까지 포함한 전체 시간으로 넓히지 않는다.
+- **E1_0B_N1 (P2 · 정적 반례 · 실행 0):** RED 표의 nodeid · 예외 메시지가 l23 · l29 · l30 에서 기대 결함이 아닌 다른 내부 실패도 받아들인다.
+  - l23 — v5 사전 대조가 탐침 실패 이유를 기대 rewrite 이유와 함께 담아도 `ok` false · 같은 허용 접두.
+  - l29 — v5 `launch` 준비 단계의 `disk_usage` 예외 → prepare 오류 · meta 기록 성공 · 반환 1 → 자식 없이도 같은 허용 접두.
+  - l30 — v5 `launch` 의 meta 기록 실패 → 반환 4 → 기대 (반환 0) 와 정확히 같은 tuple (meta 읽기는 그 assert 뒤라 닿지 않는다).
+  - 외곽 실행기의 runner_ok · 정리 · rc 는 시험 안 launcher 의 원인을 보지 않으므로, 9 FAILED + 24 PASSED · rc 1 · runner_ok true 와 양립한다.
+  - 최소 보완 (회신 `RED_CAUSE_BINDING_PROPOSAL_KO.txt`): 세 시험의 기대 assert 앞에 원인 구분을 두고, 기대 원인 밖이면 RED 표에 없는 다른 메시지
+    (예: `UNEXPECTED_RED_CAUSE`) 로 멈춘다. l30 은 반환을 0 / 1 로 먼저 제한하고 meta 읽기 · 확인을 기대 assert 앞으로 옮긴다. 시험 수 · RED 9 + 24 ·
+    GREEN 71 · 예산을 늘리라는 지적은 아니다. 대조 sha · 실행기 봉인 · 요청서의 sha / bytes · 참조 위치를 함께 갱신한다.
+- **비차단 숫자 둘 — 이 저장소의 표기 오류:**
+  - `DOC_COUNT_01` — 요청서 §4-5 의 `00_start.txt` sha 는 "열하나" 로 적었으나 명령의 대상은 열 (초안 다섯 + 복사본 넷 + 그 시점 launcher 하나) 이다.
+    봉인 대상의 누락은 아니다 (셈을 틀렸다).
+  - `DOC_COUNT_02` — 발송문 · §87 의 "실행기 대조 같음 47" 은 실행기 대조 v4 의 건너뜀 메시지를 고치기 **전**에 센 값이다. 고친 뒤 AST 비교를 다시
+    돌리지 않았다 (외곽 실행기 v6 만 다시 돌렸다). 고친 바이트 (`d9880f28…`) 기준은 같음 46 · 바뀜 6 (docstring · `V4` · 수집 오류 문구 · 건너뜀 문구 ·
+    `_rtree` · r5) 이고, 요청서 §3-4 의 열거와 맞는다. §87 은 고치지 않고 (덧붙임 원칙) 여기에 바로잡는다.
+- **자체 확인 (회신이 지적하지 않은 여섯 RED):** l14 (첫 문장 · 메시지에 v5 의 실제 상수) · l25 (기대 assert 앞에 launch 반환 0 · HEAD 기록 · 뺀 이름 단언 —
+  정상 실행만 도달 · 메시지의 `[]` 정확) · l28 · l31 · l32 (첫 문장의 AttributeError) · l33 (기대 assert 앞에 기본 기록의 문제 0 단언 · 메시지의 `[]`
+  정확) 은 기대 원인에 묶여 있다. 정정 범위안에 근거를 적는다.
+- **유지:** E1-0 결과 수용 · 절차 이탈 `E1_0_N1` · E1-0b / E1-1–3 실행 미승인 · FUTURE-01 기능 미종결.
+- **다음:** E1_0B_N1 정정 범위안 (사용자 채택 요청) → 채택 뒤 비활성 정정본 · 승인 요청 갱신 · 재검토 발송문 → 재검토 → 사용자의 E1-0b 한정 승인. 이
+  기록은 E1-0b · E1-1–3 · 시험 · Git fixture 의 승인이 아니다.
