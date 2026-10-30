@@ -1,0 +1,133 @@
+.................................................................        [100%]
+==================================== PASSES ====================================
+_________ test_n1_e_the_run_cli_requires_the_trusted_list_and_its_sha __________
+----------------------------- Captured stderr call -----------------------------
+usage: reil_c4e_run run [-h] --venv VENV --seal SEAL --seal-manifest-sha256
+                        SEAL_MANIFEST_SHA256 --out OUT --xlsx XLSX --util UTIL
+                        --approval APPROVAL --sources SOURCES --sources-sha256
+                        SOURCES_SHA256
+reil_c4e_run run: error: the following arguments are required: --sources, --sources-sha256
+usage: reil_c4e_run run [-h] --venv VENV --seal SEAL --seal-manifest-sha256
+                        SEAL_MANIFEST_SHA256 --out OUT --xlsx XLSX --util UTIL
+                        --approval APPROVAL --sources SOURCES --sources-sha256
+                        SOURCES_SHA256
+reil_c4e_run run: error: the following arguments are required: --sources-sha256
+usage: reil_c4e_run run [-h] --venv VENV --seal SEAL --seal-manifest-sha256
+                        SEAL_MANIFEST_SHA256 --out OUT --xlsx XLSX --util UTIL
+                        --approval APPROVAL --sources SOURCES --sources-sha256
+                        SOURCES_SHA256
+reil_c4e_run run: error: the following arguments are required: --sources
+_ test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false __
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 0}
+_ test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds _
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": true, "complete": true, "rc": 0, "timed_out": false, "errors": 0}
+{"step": "run", "launched": true, "complete": false, "rc": 2, "timed_out": false, "errors": 0}
+{"step": "run", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 0}
+____ test_l11_timeout_kills_the_whole_process_group_including_grandchildren ____
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": true, "complete": false, "rc": -9, "timed_out": true, "errors": 0}
+_ test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder _
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 0}
+{"step": "fetch", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 0}
+{"step": "fetch", "launched": true, "complete": true, "rc": 0, "timed_out": false, "errors": 0}
+{"step": "fetch", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 0}
+_ test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it _
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 0}
+______ test_l16_a_leaf_extension_module_beside_an_approved_module_blocks _______
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 0}
+_ test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited _
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": true, "complete": false, "rc": null, "timed_out": true, "errors": 0}
+_ test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state _
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 1}
+{"step": "run", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 1}
+{"step": "run", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 1}
+_ test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output _
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 1}
+____ test_l23_fetch_precheck_refuses_url_rewrite_proxy_and_tls_off_settings ____
+----------------------------- Captured stdout call -----------------------------
+{"step": "fetch", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 0}
+{"step": "fetch", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 0}
+{"step": "fetch", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 0}
+__ test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source __
+----------------------------- Captured stdout call -----------------------------
+{"step": "fetch", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 0}
+{"step": "fetch", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 0}
+{"step": "fetch", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 0}
+_ test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git _
+----------------------------- Captured stdout call -----------------------------
+{"step": "fetch", "launched": true, "complete": true, "rc": 0, "timed_out": false, "errors": 0}
+=========================== short test summary info ============================
+PASSED tests/test_reil_c4e.py::test_m_1_a_rule_reason_is_a_global_stop_with_three_states
+PASSED tests/test_reil_c4e.py::test_m_2_snapshot_coordinates_and_rule_exception_without_a_process
+PASSED tests/test_reil_c4e.py::test_r_1_call_cap_active_late_between_samples_equal_and_reason
+PASSED tests/test_reil_c4e.py::test_r_2_cost_projection_upper_median_returned_only_minimum_eight_and_boundary
+PASSED tests/test_reil_c4e.py::test_r_3_the_rule_never_reads_result_values
+PASSED tests/test_reil_c4e.py::test_r_4_rule_input_validation_raises_instead_of_dropping_or_zero_filling
+PASSED tests/test_reil_c4e.py::test_r_5_judgment_raw_basis_has_every_key_and_no_result_values
+PASSED tests/test_reil_c4e.py::test_r_6_call_cap_three_paths_fork_fork_and_pure_final_drain
+PASSED tests/test_reil_c4e.py::test_t_1_nonzero_origin_prep_boundary_relative_deadline_and_no_start_after_stop
+PASSED tests/test_reil_c4e.py::test_d_1_prepare_order_stops_before_later_steps
+PASSED tests/test_reil_c4e.py::test_d_2_exact_p0_binding_or_stop_before_any_optimizer
+PASSED tests/test_reil_c4e.py::test_d_3_halfcell_is_exactly_q_pe_v_pe_q_ne_v_ne_and_a_swap_fails
+PASSED tests/test_reil_c4e.py::test_d_4_paths_inside_the_repo_pickles_notebooks_existing_outputs_and_fetch_targets_are_refused
+PASSED tests/test_reil_c4e.py::test_d_5_fetch_takes_only_two_paths_from_the_fixed_commit_of_a_local_repo
+PASSED tests/test_reil_c4e.py::test_d_6_identity_start_end_table_and_consumed_digests
+PASSED tests/test_reil_c4e.py::test_s_1_the_plan_is_the_c4_0a_plan
+PASSED tests/test_reil_c4e.py::test_s_2_complete_needs_66_returned_fields_operation_record_identity_and_the_stage_and
+PASSED tests/test_reil_c4e.py::test_s_3_operation_and_real_finalization_failures_each_leave_incomplete
+PASSED tests/test_reil_c4e.py::test_s_4_end_to_end_synthetic_run_complete_and_one_local_error_incomplete
+PASSED tests/test_reil_c4e.py::test_s_5_plan_e_writes_one_plan_without_util_data_optimizer_or_network
+PASSED tests/test_reil_c4e.py::test_s_6_the_observed_tally_partitions_the_66_calls
+PASSED tests/test_reil_c4e_fix.py::test_n1_a_a_trusted_list_binds_the_five_modules_to_start_end_and_acceptance
+PASSED tests/test_reil_c4e_fix.py::test_n1_b_missing_extra_or_malformed_entries_and_list_sha_mismatch_stop_before_util_import
+PASSED tests/test_reil_c4e_fix.py::test_n1_c_unapproved_bytes_that_stay_unchanged_from_start_to_end_are_refused
+PASSED tests/test_reil_c4e_fix.py::test_n1_d_a_module_changed_during_the_run_fails_acceptance_through_the_real_finalize
+PASSED tests/test_reil_c4e_fix.py::test_n1_e_the_run_cli_requires_the_trusted_list_and_its_sha
+PASSED tests/test_reil_c4e_fix.py::test_n1_f_seal_sources_writes_exactly_the_five_paths_and_round_trips
+PASSED tests/test_reil_c4e1_launch.py::test_l1_precheck_passes_only_with_fixed_list_exact_bytes_seal_binding_clean_interpreter_and_approved_specs
+PASSED tests/test_reil_c4e1_launch.py::test_l2_list_sha_schema_path_set_entry_format_and_non_json_each_block
+PASSED tests/test_reil_c4e1_launch.py::test_l3_changed_same_size_missing_symlinked_module_or_linked_parent_each_block
+PASSED tests/test_reil_c4e1_launch.py::test_l4_a_shadowing_scripts_package_module_zip_entry_or_our_init_blocks
+PASSED tests/test_reil_c4e1_launch.py::test_l5_interpreter_flags_fixed_argv_head_and_run_script_path_are_checked
+PASSED tests/test_reil_c4e1_launch.py::test_l6_stage_verdict_is_the_and_of_precheck_child_rc_timeout_and_postcheck
+PASSED tests/test_reil_c4e1_launch.py::test_l7_child_result_reads_the_last_stdout_line_and_needs_final_complete_for_run
+PASSED tests/test_reil_c4e1_launch.py::test_l8_identity_link_binds_the_run_import_paths_to_the_checked_paths
+PASSED tests/test_reil_c4e1_launch.py::test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false
+PASSED tests/test_reil_c4e1_launch.py::test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds
+PASSED tests/test_reil_c4e1_launch.py::test_l11_timeout_kills_the_whole_process_group_including_grandchildren
+PASSED tests/test_reil_c4e1_launch.py::test_l12_refuses_to_overwrite_records_or_reuse_a_pycache_folder
+PASSED tests/test_reil_c4e1_launch.py::test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder
+PASSED tests/test_reil_c4e1_launch.py::test_l14_independence_fixed_commands_constants_and_main_rules
+PASSED tests/test_reil_c4e1_launch.py::test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it
+PASSED tests/test_reil_c4e1_launch.py::test_l16_a_leaf_extension_module_beside_an_approved_module_blocks
+PASSED tests/test_reil_c4e1_launch.py::test_l17_extra_executed_files_and_the_seal_lock_binding_each_block
+PASSED tests/test_reil_c4e1_launch.py::test_l18_process_observation_errors_stay_unknown_and_only_vanished_pids_are_gone
+PASSED tests/test_reil_c4e1_launch.py::test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited
+PASSED tests/test_reil_c4e1_launch.py::test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state
+PASSED tests/test_reil_c4e1_launch.py::test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output
+PASSED tests/test_reil_c4e1_launch.py::test_l22_child_env_keeps_only_the_ca_among_git_variables_and_removes_secrets
+PASSED tests/test_reil_c4e1_launch.py::test_l23_fetch_precheck_refuses_url_rewrite_proxy_and_tls_off_settings
+PASSED tests/test_reil_c4e1_launch.py::test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source
+PASSED tests/test_reil_c4e1_launch.py::test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git
+PASSED tests/test_reil_c4e1_launch.py::test_l26_preparation_failures_are_recorded_as_phase_prepare_and_never_start_the_child
+PASSED tests/test_reil_c4e1_launch.py::test_l27_decode_failures_in_proc_reads_and_git_output_are_recorded_not_escaped
+PASSED tests/test_reil_c4e1_runner.py::test_r1_an_observation_error_followed_by_a_clean_empty_observation_stays_unknown
+PASSED tests/test_reil_c4e1_runner.py::test_r2_observation_errors_during_the_timeout_loop_are_kept_to_the_end
+PASSED tests/test_reil_c4e1_runner.py::test_r3_cleanup_never_starts_an_observation_past_one_common_deadline_even_when_observations_take_time
+PASSED tests/test_reil_c4e1_runner.py::test_r4_the_runner_cleans_inherited_git_variables_before_its_first_git_call
+PASSED tests/test_reil_c4e1_runner.py::test_r5_source_table_hashes_the_fixed_targets_and_any_difference_from_the_sealed_table_is_a_problem
+PASSED tests/test_reil_c4e1_runner.py::test_r6_a_normal_step_writes_both_source_tables_and_records_from_the_right_repo_with_a_clean_child_env
+PASSED tests/test_reil_c4e1_runner.py::test_r7_preparation_failures_stop_before_the_child_and_intentional_refusals_write_nothing
+PASSED tests/test_reil_c4e1_runner.py::test_r8_a_real_timeout_kills_the_group_and_an_orphaned_other_session_grandchild_within_the_deadline
+PASSED tests/test_reil_c4e1_runner.py::test_r9_an_observation_started_before_the_deadline_that_returns_after_it_is_followed_only_by_immediate_actions
+PASSED tests/test_reil_c4e1_runner.py::test_r10_an_exception_late_in_cleanup_is_recorded_and_handled_under_the_same_deadline
+PASSED tests/test_reil_c4e1_runner.py::test_r11_proc_reads_are_bytes_and_every_per_pid_read_or_parse_error_is_recorded_without_stopping_the_scan
+65 passed in 21.74s
