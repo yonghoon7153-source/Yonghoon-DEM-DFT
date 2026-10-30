@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="324pt" height="216pt" viewBox="0 0 324 216" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 216 
+L 324 216 
+L 324 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 133.92 41.554286 
+L 180.36 41.554286 
+L 180.36 28.8 
+L 133.92 28.8 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 180.36 41.554286 
+L 226.8 41.554286 
+L 226.8 28.8 
+L 180.36 28.8 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 226.8 41.554286 
+L 273.24 41.554286 
+L 273.24 28.8 
+L 226.8 28.8 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #d4e2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 273.24 41.554286 
+L 319.68 41.554286 
+L 319.68 28.8 
+L 273.24 28.8 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 133.92 54.308571 
+L 180.36 54.308571 
+L 180.36 41.554286 
+L 133.92 41.554286 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 180.36 54.308571 
+L 226.8 54.308571 
+L 226.8 41.554286 
+L 180.36 41.554286 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 226.8 54.308571 
+L 273.24 54.308571 
+L 273.24 41.554286 
+L 226.8 41.554286 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #d3e1f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 273.24 54.308571 
+L 319.68 54.308571 
+L 319.68 41.554286 
+L 273.24 41.554286 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 133.92 67.062857 
+L 180.36 67.062857 
+L 180.36 54.308571 
+L 133.92 54.308571 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 180.36 67.062857 
+L 226.8 67.062857 
+L 226.8 54.308571 
+L 180.36 54.308571 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 226.8 67.062857 
+L 273.24 67.062857 
+L 273.24 54.308571 
+L 226.8 54.308571 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #ca622f; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 273.24 67.062857 
+L 319.68 67.062857 
+L 319.68 54.308571 
+L 273.24 54.308571 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 133.92 79.817143 
+L 180.36 79.817143 
+L 180.36 67.062857 
+L 133.92 67.062857 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 180.36 79.817143 
+L 226.8 79.817143 
+L 226.8 67.062857 
+L 180.36 67.062857 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 226.8 79.817143 
+L 273.24 79.817143 
+L 273.24 67.062857 
+L 226.8 67.062857 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2d8c9; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 273.24 79.817143 
+L 319.68 79.817143 
+L 319.68 67.062857 
+L 273.24 67.062857 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 133.92 92.571429 
+L 180.36 92.571429 
+L 180.36 79.817143 
+L 133.92 79.817143 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 180.36 92.571429 
+L 226.8 92.571429 
+L 226.8 79.817143 
+L 180.36 79.817143 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 226.8 92.571429 
+L 273.24 92.571429 
+L 273.24 79.817143 
+L 226.8 79.817143 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2e4db; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 273.24 92.571429 
+L 319.68 92.571429 
+L 319.68 79.817143 
+L 273.24 79.817143 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 133.92 105.325714 
+L 180.36 105.325714 
+L 180.36 92.571429 
+L 133.92 92.571429 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 180.36 105.325714 
+L 226.8 105.325714 
+L 226.8 92.571429 
+L 180.36 92.571429 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 226.8 105.325714 
+L 273.24 105.325714 
+L 273.24 92.571429 
+L 226.8 92.571429 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2e5dd; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 273.24 105.325714 
+L 319.68 105.325714 
+L 319.68 92.571429 
+L 273.24 92.571429 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_26">
+    <path d="M 133.92 118.08 
+L 180.36 118.08 
+L 180.36 105.325714 
+L 133.92 105.325714 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_27">
+    <path d="M 180.36 118.08 
+L 226.8 118.08 
+L 226.8 105.325714 
+L 180.36 105.325714 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_28">
+    <path d="M 226.8 118.08 
+L 273.24 118.08 
+L 273.24 105.325714 
+L 226.8 105.325714 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2eeeb; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_29">
+    <path d="M 273.24 118.08 
+L 319.68 118.08 
+L 319.68 105.325714 
+L 273.24 105.325714 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_30">
+    <path d="M 133.92 130.834286 
+L 180.36 130.834286 
+L 180.36 118.08 
+L 133.92 118.08 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_31">
+    <path d="M 180.36 130.834286 
+L 226.8 130.834286 
+L 226.8 118.08 
+L 180.36 118.08 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_32">
+    <path d="M 226.8 130.834286 
+L 273.24 130.834286 
+L 273.24 118.08 
+L 226.8 118.08 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #eaa27a; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_33">
+    <path d="M 273.24 130.834286 
+L 319.68 130.834286 
+L 319.68 118.08 
+L 273.24 118.08 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_34">
+    <path d="M 133.92 143.588571 
+L 180.36 143.588571 
+L 180.36 130.834286 
+L 133.92 130.834286 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_35">
+    <path d="M 180.36 143.588571 
+L 226.8 143.588571 
+L 226.8 130.834286 
+L 180.36 130.834286 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_36">
+    <path d="M 226.8 143.588571 
+L 273.24 143.588571 
+L 273.24 130.834286 
+L 226.8 130.834286 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #7caee9; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_37">
+    <path d="M 273.24 143.588571 
+L 319.68 143.588571 
+L 319.68 130.834286 
+L 273.24 130.834286 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_38">
+    <path d="M 133.92 156.342857 
+L 180.36 156.342857 
+L 180.36 143.588571 
+L 133.92 143.588571 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_39">
+    <path d="M 180.36 156.342857 
+L 226.8 156.342857 
+L 226.8 143.588571 
+L 180.36 143.588571 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_40">
+    <path d="M 226.8 156.342857 
+L 273.24 156.342857 
+L 273.24 143.588571 
+L 226.8 143.588571 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #e2e9f2; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_41">
+    <path d="M 273.24 156.342857 
+L 319.68 156.342857 
+L 319.68 143.588571 
+L 273.24 143.588571 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_42">
+    <path d="M 133.92 169.097143 
+L 180.36 169.097143 
+L 180.36 156.342857 
+L 133.92 156.342857 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_43">
+    <path d="M 180.36 169.097143 
+L 226.8 169.097143 
+L 226.8 156.342857 
+L 180.36 156.342857 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_44">
+    <path d="M 226.8 169.097143 
+L 273.24 169.097143 
+L 273.24 156.342857 
+L 226.8 156.342857 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_45">
+    <path d="M 273.24 169.097143 
+L 319.68 169.097143 
+L 319.68 156.342857 
+L 273.24 156.342857 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_46">
+    <path d="M 133.92 181.851429 
+L 180.36 181.851429 
+L 180.36 169.097143 
+L 133.92 169.097143 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_47">
+    <path d="M 180.36 181.851429 
+L 226.8 181.851429 
+L 226.8 169.097143 
+L 180.36 169.097143 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_48">
+    <path d="M 226.8 181.851429 
+L 273.24 181.851429 
+L 273.24 169.097143 
+L 226.8 169.097143 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f1f0; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_49">
+    <path d="M 273.24 181.851429 
+L 319.68 181.851429 
+L 319.68 169.097143 
+L 273.24 169.097143 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_50">
+    <path d="M 133.92 194.605714 
+L 180.36 194.605714 
+L 180.36 181.851429 
+L 133.92 181.851429 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_51">
+    <path d="M 180.36 194.605714 
+L 226.8 194.605714 
+L 226.8 181.851429 
+L 180.36 181.851429 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_52">
+    <path d="M 226.8 194.605714 
+L 273.24 194.605714 
+L 273.24 181.851429 
+L 226.8 181.851429 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #e4eaf2; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_53">
+    <path d="M 273.24 194.605714 
+L 319.68 194.605714 
+L 319.68 181.851429 
+L 273.24 181.851429 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_54">
+    <path d="M 133.92 207.36 
+L 180.36 207.36 
+L 180.36 194.605714 
+L 133.92 194.605714 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_55">
+    <path d="M 180.36 207.36 
+L 226.8 207.36 
+L 226.8 194.605714 
+L 180.36 194.605714 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: url(#h41734e6f7a); stroke: #a6a6a6; stroke-width: 0.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_56">
+    <path d="M 226.8 207.36 
+L 273.24 207.36 
+L 273.24 194.605714 
+L 226.8 194.605714 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #cadcf1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_57">
+    <path d="M 273.24 207.36 
+L 319.68 207.36 
+L 319.68 194.605714 
+L 273.24 194.605714 
+z
+" clip-path="url(#pc2533cafb9)" style="fill: #f2f2f1; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <!-- 기공률 $\varepsilon_\mathrm{sphere}$ (%) -->
+    <g style="fill: #262626" transform="translate(79.1148 36.769008)">
+     <text>
+      <tspan x="0" y="-0.125" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">기</tspan>
+      <tspan x="6.5" y="-0.125" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">공</tspan>
+      <tspan x="13" y="-0.125" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">률</tspan>
+      <tspan x="19.5" y="-0.125" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626"> </tspan>
+      <tspan x="40.752026" y="-0.125" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626"> </tspan>
+      <tspan x="42.700757" y="-0.125" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">(</tspan>
+      <tspan x="44.649487" y="-0.125" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">%</tspan>
+      <tspan x="49.194409" y="-0.125" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">)</tspan>
+      <tspan x="21.44873" y="-0.125" style="font-style: oblique; font-size: 6.5px; font-family: 'DejaVu Sans'; fill: #262626">ε</tspan>
+      <tspan x="24.962158" y="0.94375" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">s</tspan>
+      <tspan x="27.33269" y="0.94375" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">p</tspan>
+      <tspan x="30.220874" y="0.94375" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">h</tspan>
+      <tspan x="33.104614" y="0.94375" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">e</tspan>
+      <tspan x="35.903931" y="0.94375" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">r</tspan>
+      <tspan x="37.774585" y="0.94375" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">e</tspan>
+     </text>
+    </g>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="36.975971" transform="rotate(-0 250.02 36.975971)">16.7</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="36.975971" transform="rotate(-0 296.46 36.975971)">19.0</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="130.2048" y="49.880159" transform="rotate(-0 130.2048 49.880159)">기공률 정확 합집합 (%)</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="49.730257" transform="rotate(-0 250.02 49.730257)">19.6</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="49.730257" transform="rotate(-0 296.46 49.730257)">22.4</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="130.2048" y="62.634445" transform="rotate(-0 130.2048 62.634445)">AM–SE 접촉 수 (개)</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="62.484542" transform="rotate(-0 250.02 62.484542)">24.1</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="62.484542" transform="rotate(-0 296.46 62.484542)">10.3</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="130.2048" y="75.38873" transform="rotate(-0 130.2048 75.38873)">SE–SE 접촉 수 (개)</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="75.238828" transform="rotate(-0 250.02 75.238828)">4.04</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="75.238828" transform="rotate(-0 296.46 75.238828)">3.34</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="130.2048" y="88.143016" transform="rotate(-0 130.2048 88.143016)">AM–SE 접촉 면적 / AM (µm²)</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="87.993114" transform="rotate(-0 250.02 87.993114)">22.6</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="87.993114" transform="rotate(-0 296.46 87.993114)">20.3</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="130.2048" y="100.897302" transform="rotate(-0 130.2048 100.897302)">AM 피복률 Hertz (%)</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="100.7474" transform="rotate(-0 250.02 100.7474)">21.1</text>
+   </g>
+   <g id="text_18">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="100.7474" transform="rotate(-0 296.46 100.7474)">19.1</text>
+   </g>
+   <g id="text_19">
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="130.2048" y="113.651588" transform="rotate(-0 130.2048 113.651588)">AM 피복률 Physics (%)</text>
+   </g>
+   <g id="text_20">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="113.501685" transform="rotate(-0 250.02 113.501685)">54.2</text>
+   </g>
+   <g id="text_21">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="113.501685" transform="rotate(-0 296.46 113.501685)">52.6</text>
+   </g>
+   <g id="text_22">
+    <!-- $f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz) -->
+    <g style="fill: #262626" transform="translate(79.6998 126.405873)">
+     <text>
+      <tspan x="0" y="-0.0625" style="font-style: oblique; font-size: 6.5px; font-family: 'DejaVu Sans'; fill: #262626">f</tspan>
+      <tspan x="10.267334" y="-0.0625" style="font-style: oblique; font-size: 6.5px; font-family: 'DejaVu Sans'; fill: #262626">σ</tspan>
+      <tspan x="22.758008" y="-0.0625" style="font-style: oblique; font-size: 6.5px; font-family: 'DejaVu Sans'; fill: #262626">σ</tspan>
+      <tspan x="3.554688" y="-0.0625" style="font-size: 6.5px; font-family: 'DejaVu Sans'; fill: #262626">=</tspan>
+      <tspan x="20.568066" y="-0.0625" style="font-size: 6.5px; font-family: 'DejaVu Sans'; fill: #262626">/</tspan>
+      <tspan x="14.386963" y="1.00625" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">e</tspan>
+      <tspan x="17.186279" y="1.00625" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">f</tspan>
+      <tspan x="18.78811" y="1.00625" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">f</tspan>
+      <tspan x="26.877637" y="1.00625" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">0</tspan>
+      <tspan x="29.95061" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626"> </tspan>
+      <tspan x="31.899341" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">(</tspan>
+      <tspan x="33.848071" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">H</tspan>
+      <tspan x="38.132739" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">e</tspan>
+      <tspan x="41.636646" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">r</tspan>
+      <tspan x="43.712329" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">t</tspan>
+      <tspan x="45.788013" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">z</tspan>
+      <tspan x="48.517505" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">)</tspan>
+     </text>
+    </g>
+   </g>
+   <g id="text_23">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="126.255971" transform="rotate(-0 250.02 126.255971)">0.0334</text>
+   </g>
+   <g id="text_24">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="126.255971" transform="rotate(-0 296.46 126.255971)">0.0195</text>
+   </g>
+   <g id="text_25">
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="130.2048" y="139.160159" transform="rotate(-0 130.2048 139.160159)">수송 tortuosity (Hertz)</text>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="139.010257" transform="rotate(-0 250.02 139.010257)">8.26</text>
+   </g>
+   <g id="text_27">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="139.010257" transform="rotate(-0 296.46 139.010257)">13.6</text>
+   </g>
+   <g id="text_28">
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="130.2048" y="151.914445" transform="rotate(-0 130.2048 151.914445)">기하 tortuosity</text>
+   </g>
+   <g id="text_29">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="151.764542" transform="rotate(-0 250.02 151.764542)">1.28</text>
+   </g>
+   <g id="text_30">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="151.764542" transform="rotate(-0 296.46 151.764542)">1.37</text>
+   </g>
+   <g id="text_31">
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="130.2048" y="164.66873" transform="rotate(-0 130.2048 164.66873)">SE 망 연결 AM (%)</text>
+   </g>
+   <g id="text_32">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="164.518828" transform="rotate(-0 250.02 164.518828)">100</text>
+   </g>
+   <g id="text_33">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="164.518828" transform="rotate(-0 296.46 164.518828)">100</text>
+   </g>
+   <g id="text_34">
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="130.2048" y="177.423016" transform="rotate(-0 130.2048 177.423016)">협착 소산 몫 (이온 · Hertz)</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="177.273114" transform="rotate(-0 250.02 177.273114)">0.715</text>
+   </g>
+   <g id="text_36">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="177.273114" transform="rotate(-0 296.46 177.273114)">0.710</text>
+   </g>
+   <g id="text_37">
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="130.2048" y="190.177302" transform="rotate(-0 130.2048 190.177302)">AM 입자 응력 중앙값 (MPa)</text>
+   </g>
+   <g id="text_38">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="190.0274" transform="rotate(-0 250.02 190.0274)">335</text>
+   </g>
+   <g id="text_39">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="190.0274" transform="rotate(-0 296.46 190.0274)">355</text>
+   </g>
+   <g id="text_40">
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="130.2048" y="202.931588" transform="rotate(-0 130.2048 202.931588)">SE 입자 응력 중앙값 (MPa)</text>
+   </g>
+   <g id="text_41">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="202.781685" transform="rotate(-0 250.02 202.781685)">126</text>
+   </g>
+   <g id="text_42">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="202.781685" transform="rotate(-0 296.46 202.781685)">149</text>
+   </g>
+   <g id="text_43">
+    <text style="font-size: 8px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="157.14" y="25.285295" transform="rotate(-0 157.14 25.285295)">SE 0.7 µm</text>
+   </g>
+   <g id="text_44">
+    <g id="patch_58">
+     <path d="M 162.74 136.879375 
+L 162.74 99.280625 
+L 151.54 99.280625 
+L 151.54 136.879375 
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(159.538437 135.279375) rotate(-90)">결과 대기</text>
+   </g>
+   <g id="text_45">
+    <text style="font-size: 8px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="203.58" y="25.285295" transform="rotate(-0 203.58 25.285295)">SE 1 µm</text>
+   </g>
+   <g id="text_46">
+    <g id="patch_59">
+     <path d="M 209.18 136.879375 
+L 209.18 99.280625 
+L 197.98 99.280625 
+L 197.98 136.879375 
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(205.978437 135.279375) rotate(-90)">결과 대기</text>
+   </g>
+   <g id="text_47">
+    <text style="font-size: 8px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="250.02" y="25.285295" transform="rotate(-0 250.02 25.285295)">SE 2 µm</text>
+   </g>
+   <g id="text_48">
+    <text style="font-size: 8px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="25.285295" transform="rotate(-0 296.46 25.285295)">SE 3 µm</text>
+   </g>
+  </g>
+  <g id="text_49">
+   <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #595959" x="4.32" y="9.118828" transform="rotate(-0 4.32 9.118828)">칸 글 = 값 · 색 = SE 3 µm 대비 비 (log₂ · 파랑 &lt; 1 &lt; 주황 · ±2.5 배에서 포화 · 좋고 나쁨 아님)</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pc2533cafb9">
+   <rect x="133.92" y="28.8" width="185.76" height="178.56"/>
+  </clipPath>
+ </defs>
+ <defs>
+  <pattern id="h41734e6f7a" patternUnits="userSpaceOnUse" x="0" y="0" width="72" height="72">
+   <rect x="0" y="0" width="73" height="73" fill="#ffffff"/>
+   <path d="M -36 36 
+L 36 -36 
+M -33 39 
+L 39 -33 
+M -30 42 
+L 42 -30 
+M -27 45 
+L 45 -27 
+M -24 48 
+L 48 -24 
+M -21 51 
+L 51 -21 
+M -18 54 
+L 54 -18 
+M -15 57 
+L 57 -15 
+M -12 60 
+L 60 -12 
+M -9 63 
+L 63 -9 
+M -6 66 
+L 66 -6 
+M -3 69 
+L 69 -3 
+M 0 72 
+L 72 0 
+M 3 75 
+L 75 3 
+M 6 78 
+L 78 6 
+M 9 81 
+L 81 9 
+M 12 84 
+L 84 12 
+M 15 87 
+L 87 15 
+M 18 90 
+L 90 18 
+M 21 93 
+L 93 21 
+M 24 96 
+L 96 24 
+M 27 99 
+L 99 27 
+M 30 102 
+L 102 30 
+M 33 105 
+L 105 33 
+M 36 108 
+L 108 36 
+" style="fill: #a6a6a6; stroke: #a6a6a6; stroke-width: 0.5; stroke-linecap: butt; stroke-linejoin: miter"/>
+  </pattern>
+ </defs>
+</svg>

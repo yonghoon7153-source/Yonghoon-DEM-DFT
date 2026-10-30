@@ -1,0 +1,57 @@
+metric,name,bed,status,value,ratio_to_D3
+eps_sphere_pct,기공률 $\varepsilon_\mathrm{sphere}$ (%),D0.7,결과 대기,,
+eps_sphere_pct,기공률 $\varepsilon_\mathrm{sphere}$ (%),D1,결과 대기,,
+eps_sphere_pct,기공률 $\varepsilon_\mathrm{sphere}$ (%),D2,ok,16.7379229,0.882915628
+eps_sphere_pct,기공률 $\varepsilon_\mathrm{sphere}$ (%),D3,ok,18.9575565,1
+eps_union_exact_pct,기공률 정확 합집합 (%),D0.7,결과 대기,,
+eps_union_exact_pct,기공률 정확 합집합 (%),D1,결과 대기,,
+eps_union_exact_pct,기공률 정확 합집합 (%),D2,ok,19.602275,0.874125975
+eps_union_exact_pct,기공률 정확 합집합 (%),D3,ok,22.425,1
+am_se_cn_mean,AM–SE 접촉 수 (개),D0.7,결과 대기,,
+am_se_cn_mean,AM–SE 접촉 수 (개),D1,결과 대기,,
+am_se_cn_mean,AM–SE 접촉 수 (개),D2,ok,24.0580689,2.33338076
+am_se_cn_mean,AM–SE 접촉 수 (개),D3,ok,10.3103914,1
+se_se_cn_mean,SE–SE 접촉 수 (개),D0.7,결과 대기,,
+se_se_cn_mean,SE–SE 접촉 수 (개),D1,결과 대기,,
+se_se_cn_mean,SE–SE 접촉 수 (개),D2,ok,4.04091606,1.21070857
+se_se_cn_mean,SE–SE 접촉 수 (개),D3,ok,3.33764554,1
+area_am_se_per_am_mean_um2,AM–SE 접촉 면적 / AM (µm²),D0.7,결과 대기,,
+area_am_se_per_am_mean_um2,AM–SE 접촉 면적 / AM (µm²),D1,결과 대기,,
+area_am_se_per_am_mean_um2,AM–SE 접촉 면적 / AM (µm²),D2,ok,22.551766,1.10986649
+area_am_se_per_am_mean_um2,AM–SE 접촉 면적 / AM (µm²),D3,ok,20.3193503,1
+coverage_hertz_pct,AM 피복률 Hertz (%),D0.7,결과 대기,,
+coverage_hertz_pct,AM 피복률 Hertz (%),D1,결과 대기,,
+coverage_hertz_pct,AM 피복률 Hertz (%),D2,ok,21.0519462,1.10409327
+coverage_hertz_pct,AM 피복률 Hertz (%),D3,ok,19.0671809,1
+coverage_physics_union_pct,AM 피복률 Physics (%),D0.7,결과 대기,,
+coverage_physics_union_pct,AM 피복률 Physics (%),D1,결과 대기,,
+coverage_physics_union_pct,AM 피복률 Physics (%),D2,ok,54.233,1.03041876
+coverage_physics_union_pct,AM 피복률 Physics (%),D3,ok,52.632,1
+f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D0.7,결과 대기,,
+f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D1,결과 대기,,
+f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D2,ok,0.0333861909,1.71101125
+f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D3,ok,0.019512549,1
+tau2_ion_hertz,수송 tortuosity (Hertz),D0.7,결과 대기,,
+tau2_ion_hertz,수송 tortuosity (Hertz),D1,결과 대기,,
+tau2_ion_hertz,수송 tortuosity (Hertz),D2,ok,8.25878465,0.606003898
+tau2_ion_hertz,수송 tortuosity (Hertz),D3,ok,13.6282698,1
+tau_geo_all,기하 tortuosity,D0.7,결과 대기,,
+tau_geo_all,기하 tortuosity,D1,결과 대기,,
+tau_geo_all,기하 tortuosity,D2,ok,1.27637405,0.934355939
+tau_geo_all,기하 tortuosity,D3,ok,1.36604691,1
+se_connected_am_pct,SE 망 연결 AM (%),D0.7,결과 대기,,
+se_connected_am_pct,SE 망 연결 AM (%),D1,결과 대기,,
+se_connected_am_pct,SE 망 연결 AM (%),D2,ok,100,1
+se_connected_am_pct,SE 망 연결 AM (%),D3,ok,100,1
+constriction_power_share_ion_hertz,협착 소산 몫 (이온 · Hertz),D0.7,결과 대기,,
+constriction_power_share_ion_hertz,협착 소산 몫 (이온 · Hertz),D1,결과 대기,,
+constriction_power_share_ion_hertz,협착 소산 몫 (이온 · Hertz),D2,ok,0.715362,1.00740171
+constriction_power_share_ion_hertz,협착 소산 몫 (이온 · Hertz),D3,ok,0.710106,1
+lw_am_nowall_median_MPa,AM 입자 응력 중앙값 (MPa),D0.7,결과 대기,,
+lw_am_nowall_median_MPa,AM 입자 응력 중앙값 (MPa),D1,결과 대기,,
+lw_am_nowall_median_MPa,AM 입자 응력 중앙값 (MPa),D2,ok,334.848343,0.944255424
+lw_am_nowall_median_MPa,AM 입자 응력 중앙값 (MPa),D3,ok,354.616277,1
+lw_se_nowall_median_MPa,SE 입자 응력 중앙값 (MPa),D0.7,결과 대기,,
+lw_se_nowall_median_MPa,SE 입자 응력 중앙값 (MPa),D1,결과 대기,,
+lw_se_nowall_median_MPa,SE 입자 응력 중앙값 (MPa),D2,ok,125.962408,0.84349275
+lw_se_nowall_median_MPa,SE 입자 응력 중앙값 (MPa),D3,ok,149.33431,1

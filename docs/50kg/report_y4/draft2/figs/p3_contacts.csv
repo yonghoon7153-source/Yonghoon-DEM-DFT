@@ -1,0 +1,13 @@
+panel,bed,status,value,physics
+a_am_se_cn,D0.7,결과 대기,,
+a_am_se_cn,D1,결과 대기,,
+a_am_se_cn,D2,ok,24.0580689,
+a_am_se_cn,D3,ok,10.3103914,
+b_se_se_cn,D0.7,결과 대기,,
+b_se_se_cn,D1,결과 대기,,
+b_se_se_cn,D2,ok,4.04091606,
+b_se_se_cn,D3,ok,3.33764554,
+c_am_coverage,D0.7,결과 대기,,
+c_am_coverage,D1,결과 대기,,
+c_am_coverage,D2,ok,21.0519462,54.233
+c_am_coverage,D3,ok,19.0671809,52.632

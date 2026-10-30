@@ -1,0 +1,275 @@
+{
+ "generator": "docs/50kg/report_y4/draft2/make_draft2_figs.py",
+ "matplotlib": "3.11.2",
+ "dpi": 300,
+ "beds": {
+  "D0.7": "결과 대기",
+  "D1": "결과 대기",
+  "D2": "ok",
+  "D3": "ok"
+ },
+ "metrics_sha256": {
+  "D2": "a2eb2a0c0c2fcee080ea4adb1293e551f6e1258dcdbf63f896f2748b284b1b7e",
+  "D3": "a714c9e49b6104a22b8cd7e25669747a008906867f1f81827e354af350edf1f0"
+ },
+ "colors": {
+  "AM": "#1A1A1A",
+  "SE": "#CDB650",
+  "size": {
+   "D0.7": "#86b6ef",
+   "D1": "#3987e5",
+   "D2": "#1c5cab",
+   "D3": "#0d366b"
+  },
+  "placeholder": "#A6A6A6"
+ },
+ "fonts": [
+  "Aptos",
+  "Malgun Gothic",
+  "Carlito",
+  "WenQuanYi Zen Hei",
+  "DejaVu Sans"
+ ],
+ "figures": {
+  "p1_bed_strip": {
+   "size_in": [
+    4.5,
+    2.95
+   ],
+   "px": [
+    1350,
+    885
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p1_bed_strip.png": "c7b86eafb49a58648bba8ac7cbbc8b44b8635cc2fe59846a5849166efa4a9dff",
+    "p1_bed_strip.svg": "5b99292ad17457e0468d9006d187b71b14645aa64d7e1ea4325a075e860201dc",
+    "p1_bed_strip.csv": "97a2b60b0f6e115fc288388448c9818e0df8cbc438499f54ccab79caad41c949"
+   },
+   "csv_rows": 4
+  },
+  "p2_compaction": {
+   "size_in": [
+    4.5,
+    2.7
+   ],
+   "px": [
+    1350,
+    810
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p2_compaction.png": "a2258180b78a80febba5fc47abb63d02ba175c4823025bf0b6af9fe07cb51f8a",
+    "p2_compaction.svg": "b50002502e369d34ea90e2cd857da7d3da1ed0d1df83cb3b90606e567d5222d0",
+    "p2_compaction.csv": "e9d79e3416a141125eec26c5d7e431a051b0c4283bf23c0562ac8b5518255dbb"
+   },
+   "csv_rows": 8740
+  },
+  "p2_relaxation": {
+   "size_in": [
+    4.5,
+    2.3
+   ],
+   "px": [
+    1350,
+    690
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p2_relaxation.png": "52a02b6a9d952eaf754ca1ed3ab6c2721750b6e9bcad89e56a7c5655b3f942b0",
+    "p2_relaxation.svg": "83d40669af54202b22edbcb1520114a7ce25c7c9282ead7f778e03d40ee408b4",
+    "p2_relaxation.csv": "312fed5072aac2589b4c80acf1be13cd6a4c3aa7f8826e4ae87506370763eb3d"
+   },
+   "csv_rows": 204
+  },
+  "p3_contacts": {
+   "size_in": [
+    4.5,
+    2.55
+   ],
+   "px": [
+    1350,
+    765
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p3_contacts.png": "78d57e9b68f7030fcd0033af2184cd69c179b3f470e924a8463156fa1d0bec9a",
+    "p3_contacts.svg": "88b3e883d4ed25792a98df849e4d12149c62265239dd71bcde7686673c40d5ab",
+    "p3_contacts.csv": "847fc5e6e2c1b96d33881166e57b84ea4cd78c07c1ff87b4a92cd466c80eb8a1"
+   },
+   "csv_rows": 12
+  },
+  "p3_overlap_threshold": {
+   "size_in": [
+    4.5,
+    2.55
+   ],
+   "px": [
+    1350,
+    765
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p3_overlap_threshold.png": "846cc20d78eb431183cdedb34f8c176d2f6e705ec1de796e148804ca11c11c7f",
+    "p3_overlap_threshold.svg": "f2cb22abc563c188a57b9d9b314c7961425426f15a32d0d89ab8693e20c1986f",
+    "p3_overlap_threshold.csv": "b883a650e7b0efe0bf52316bee662fa57c102a322816918433d1dc6876750b4e"
+   },
+   "csv_rows": 20
+  },
+  "p3_per_am": {
+   "size_in": [
+    4.5,
+    2.55
+   ],
+   "px": [
+    1350,
+    765
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p3_per_am.png": "485bafb0db7f5076dda19e37edb830fec8d4aa307a89159faafbac35f263661e",
+    "p3_per_am.svg": "52fd917afe1e9b330386b21010d21b9faaaf434ea5d4a00942b336a172433141",
+    "p3_per_am.csv": "2f1e838ebe0c8ecb6e180ea873466fad3a60e2a2c3ab70accaa09de994f86b84"
+   },
+   "csv_rows": 10
+  },
+  "p4_tortuosity": {
+   "size_in": [
+    4.5,
+    2.55
+   ],
+   "px": [
+    1350,
+    765
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p4_tortuosity.png": "57373083ceba93a48fcd335acf5e853816e5f5035e0b369913b8315887d5dfd2",
+    "p4_tortuosity.svg": "3c52886099f22c7478bf8f8ccdbe66b436043ad79d3fb047ec961526a1274440",
+    "p4_tortuosity.csv": "0b29d5b69bd18abd02b76cd53dd546d1a5c136166464e4916f2bdcffe57e6db8"
+   },
+   "csv_rows": 8
+  },
+  "p4_f_connect": {
+   "size_in": [
+    4.5,
+    2.55
+   ],
+   "px": [
+    1350,
+    765
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p4_f_connect.png": "3ed0a841f8a8192848f99d3bc39abea78bf4cc696347c273cfd859950fb04a99",
+    "p4_f_connect.svg": "0e991c70c50b20cfd0e9fa36103f706909d21d693700b08aa71926648c39116e",
+    "p4_f_connect.csv": "c14213ddaea6893be883bf79c6e278bfa7ddfca1285078b406d5003108dfcb20"
+   },
+   "csv_rows": 8
+  },
+  "p6_z_structure": {
+   "size_in": [
+    4.5,
+    2.8
+   ],
+   "px": [
+    1350,
+    840
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p6_z_structure.png": "8b5d48ce15edc9de5baf6cae08df87031d5852c5932eef4ee04d7cc6a6ab9bdc",
+    "p6_z_structure.svg": "054706fa0c7dabb4de42e92726a10f9458703ff79bba1690c6751ab0724cb2a4",
+    "p6_z_structure.csv": "60eea5465affc1adddd7f5ba82a2944b13b0eae0a7c263bdda11b009133159cc"
+   },
+   "csv_rows": 40
+  },
+  "p6_z_stress": {
+   "size_in": [
+    4.5,
+    2.8
+   ],
+   "px": [
+    1350,
+    840
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p6_z_stress.png": "c0f257021bc47086013455a65c5a13cab507d4751d3be55341c8ab7f69c2890c",
+    "p6_z_stress.svg": "8cc5d2ab9e5104f74a3829cb626ab5b75058673c08f89fade263cf1d57b8b3cb",
+    "p6_z_stress.csv": "1ce6ead30e83b1c87c463f8c3760c4f762dfa37885571d699ec36fa9e531593a"
+   },
+   "csv_rows": 40
+  },
+  "p7_summary_heat": {
+   "size_in": [
+    4.5,
+    3.0
+   ],
+   "px": [
+    1350,
+    900
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p7_summary_heat.png": "cbb31f19a2a640acda9bef1fdfb07cf1589ddc643ad0cb063dbc417ddf03d870",
+    "p7_summary_heat.svg": "98d90af9dcd6bc9955820cced82cdebeed3ee260591e4ee04d6cc041c991218d",
+    "p7_summary_heat.csv": "0a8526cfb4c2dc653befc9f14ada8948cd747a3413f9e71bf9c65acb5ae449b9"
+   },
+   "csv_rows": 56
+  },
+  "p7_lit_direction": {
+   "size_in": [
+    4.5,
+    3.0
+   ],
+   "px": [
+    1350,
+    900
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p7_lit_direction.png": "322c8ea05e0920c5d737c824fd97ca3895564592791db88a1fbd1a3cbcc54c13",
+    "p7_lit_direction.svg": "d04753a2fc521991a533b97d0c7426d684655ead556fa779cf5f74d1f1633d39",
+    "p7_lit_direction.csv": "e58f473bf151e4b8133ffa0ff8d7bc3a32de68bd1d5c728d76ae27458edc2eb9"
+   },
+   "csv_rows": 24
+  }
+ }
+}

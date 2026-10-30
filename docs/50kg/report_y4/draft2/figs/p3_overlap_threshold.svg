@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="324pt" height="183.6pt" viewBox="0 0 324 183.6" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 183.6 
+L 324 183.6 
+L 324 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 33.12 153.36 
+L 162.72 153.36 
+L 162.72 31.68 
+L 33.12 31.68 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1"/>
+     <g id="text_1">
+      <text style="font-size: 7px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="51.634286" y="162.458633" transform="rotate(-0 51.634286 162.458633)">0.7</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2"/>
+     <g id="text_2">
+      <text style="font-size: 7px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="82.491429" y="162.458633" transform="rotate(-0 82.491429 162.458633)">1</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3"/>
+     <g id="text_3">
+      <text style="font-size: 7px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="113.348571" y="162.458633" transform="rotate(-0 113.348571 162.458633)">2</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4"/>
+     <g id="text_4">
+      <text style="font-size: 7px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="144.205714" y="162.458633" transform="rotate(-0 144.205714 162.458633)">3</text>
+     </g>
+    </g>
+    <g id="text_5">
+     <text style="font-size: 8px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="97.92" y="172.258437" transform="rotate(-0 97.92 172.258437)">SE D50 (µm)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_5">
+      <path d="M 33.12 153.36 
+L 162.72 153.36 
+" clip-path="url(#pef9c814723)" style="fill: none; stroke: #d9d9d9; stroke-width: 0.5; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_6">
+      <defs>
+       <path id="m4b9ea9e945" d="M 0 0 
+L 2.5 0 
+" style="stroke: #262626; stroke-width: 0.7"/>
+      </defs>
+      <g>
+       <use xlink:href="#m4b9ea9e945" x="33.12" y="153.36" style="fill: #262626; stroke: #262626; stroke-width: 0.7"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 7px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="29.62" y="156.159316" transform="rotate(-0 29.62 156.159316)">0</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_7">
+      <path d="M 33.12 98.050909 
+L 162.72 98.050909 
+" clip-path="url(#pef9c814723)" style="fill: none; stroke: #d9d9d9; stroke-width: 0.5; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m4b9ea9e945" x="33.12" y="98.050909" style="fill: #262626; stroke: #262626; stroke-width: 0.7"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 7px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="29.62" y="100.850225" transform="rotate(-0 29.62 100.850225)">50</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_9">
+      <path d="M 33.12 42.741818 
+L 162.72 42.741818 
+" clip-path="url(#pef9c814723)" style="fill: none; stroke: #d9d9d9; stroke-width: 0.5; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m4b9ea9e945" x="33.12" y="42.741818" style="fill: #262626; stroke: #262626; stroke-width: 0.7"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 7px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="29.62" y="45.541135" transform="rotate(-0 29.62 45.541135)">100</text>
+     </g>
+    </g>
+    <g id="text_9">
+     <text style="font-size: 8px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="13.425" y="92.52" transform="rotate(-90 13.425 92.52)">AM–SE 접촉 AM 비율 (%)</text>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 41.451429 153.36 
+L 61.817143 153.36 
+L 61.817143 43.848 
+L 41.451429 43.848 
+z
+" clip-path="url(#pef9c814723)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 72.308571 153.36 
+L 92.674286 153.36 
+L 92.674286 43.848 
+L 72.308571 43.848 
+z
+" clip-path="url(#pef9c814723)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 104.276571 153.36 
+L 108.534857 153.36 
+L 108.534857 42.741818 
+L 104.276571 42.741818 
+z
+" clip-path="url(#pef9c814723)" style="fill: #d9d9d9"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 108.905143 153.36 
+L 113.163429 153.36 
+L 113.163429 42.741818 
+L 108.905143 42.741818 
+z
+" clip-path="url(#pef9c814723)" style="fill: #a6a6a6"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 113.533714 153.36 
+L 117.792 153.36 
+L 117.792 42.741818 
+L 113.533714 42.741818 
+z
+" clip-path="url(#pef9c814723)" style="fill: #6e6e6e"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 118.162286 153.36 
+L 122.420571 153.36 
+L 122.420571 42.741818 
+L 118.162286 42.741818 
+z
+" clip-path="url(#pef9c814723)" style="fill: #262626"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 135.133714 153.36 
+L 139.392 153.36 
+L 139.392 42.741818 
+L 135.133714 42.741818 
+z
+" clip-path="url(#pef9c814723)" style="fill: #d9d9d9"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 139.762286 153.36 
+L 144.020571 153.36 
+L 144.020571 42.741818 
+L 139.762286 42.741818 
+z
+" clip-path="url(#pef9c814723)" style="fill: #a6a6a6"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 144.390857 153.36 
+L 148.649143 153.36 
+L 148.649143 42.741818 
+L 144.390857 42.741818 
+z
+" clip-path="url(#pef9c814723)" style="fill: #6e6e6e"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 149.019429 153.36 
+L 153.277714 153.36 
+L 153.277714 42.816459 
+L 149.019429 42.816459 
+z
+" clip-path="url(#pef9c814723)" style="fill: #262626"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 33.12 153.36 
+L 33.12 31.68 
+" style="fill: none; stroke: #262626; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 33.12 153.36 
+L 162.72 153.36 
+" style="fill: none; stroke: #262626; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_10">
+    <g id="patch_15">
+     <path d="M 55.859286 113.553492 
+L 55.859286 83.654508 
+L 47.409286 83.654508 
+L 47.409286 113.553492 
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(53.583016 112.578492) rotate(-90)">결과 대기</text>
+   </g>
+   <g id="text_11">
+    <g id="patch_16">
+     <path d="M 86.716429 113.553492 
+L 86.716429 83.654508 
+L 78.266429 83.654508 
+L 78.266429 113.553492 
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(84.440159 112.578492) rotate(-90)">결과 대기</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 8px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="33.12" y="28.68" transform="rotate(-0 33.12 28.68)">(a) δ / min(r₁, r₂)</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_17">
+    <path d="M 188.64 153.36 
+L 318.24 153.36 
+L 318.24 31.68 
+L 188.64 31.68 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_3">
+    <g id="xtick_5">
+     <g id="line2d_11"/>
+     <g id="text_13">
+      <text style="font-size: 7px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="207.154286" y="162.458633" transform="rotate(-0 207.154286 162.458633)">0.7</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_12"/>
+     <g id="text_14">
+      <text style="font-size: 7px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="238.011429" y="162.458633" transform="rotate(-0 238.011429 162.458633)">1</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_13"/>
+     <g id="text_15">
+      <text style="font-size: 7px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="268.868571" y="162.458633" transform="rotate(-0 268.868571 162.458633)">2</text>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_14"/>
+     <g id="text_16">
+      <text style="font-size: 7px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="299.725714" y="162.458633" transform="rotate(-0 299.725714 162.458633)">3</text>
+     </g>
+    </g>
+    <g id="text_17">
+     <text style="font-size: 8px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="253.44" y="172.258437" transform="rotate(-0 253.44 172.258437)">SE D50 (µm)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_4">
+     <g id="line2d_15">
+      <path d="M 188.64 153.36 
+L 318.24 153.36 
+" clip-path="url(#p83d4e4a941)" style="fill: none; stroke: #d9d9d9; stroke-width: 0.5; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#m4b9ea9e945" x="188.64" y="153.36" style="fill: #262626; stroke: #262626; stroke-width: 0.7"/>
+      </g>
+     </g>
+     <g id="text_18">
+      <text style="font-size: 7px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="185.14" y="156.159316" transform="rotate(-0 185.14 156.159316)">0</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_17">
+      <path d="M 188.64 98.050909 
+L 318.24 98.050909 
+" clip-path="url(#p83d4e4a941)" style="fill: none; stroke: #d9d9d9; stroke-width: 0.5; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_18">
+      <g>
+       <use xlink:href="#m4b9ea9e945" x="188.64" y="98.050909" style="fill: #262626; stroke: #262626; stroke-width: 0.7"/>
+      </g>
+     </g>
+     <g id="text_19">
+      <text style="font-size: 7px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="185.14" y="100.850225" transform="rotate(-0 185.14 100.850225)">50</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_19">
+      <path d="M 188.64 42.741818 
+L 318.24 42.741818 
+" clip-path="url(#p83d4e4a941)" style="fill: none; stroke: #d9d9d9; stroke-width: 0.5; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_20">
+      <g>
+       <use xlink:href="#m4b9ea9e945" x="188.64" y="42.741818" style="fill: #262626; stroke: #262626; stroke-width: 0.7"/>
+      </g>
+     </g>
+     <g id="text_20">
+      <text style="font-size: 7px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="185.14" y="45.541135" transform="rotate(-0 185.14 45.541135)">100</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_18">
+    <path d="M 196.971429 153.36 
+L 217.337143 153.36 
+L 217.337143 43.848 
+L 196.971429 43.848 
+z
+" clip-path="url(#p83d4e4a941)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 227.828571 153.36 
+L 248.194286 153.36 
+L 248.194286 43.848 
+L 227.828571 43.848 
+z
+" clip-path="url(#p83d4e4a941)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 259.796571 153.36 
+L 264.054857 153.36 
+L 264.054857 42.741818 
+L 259.796571 42.741818 
+z
+" clip-path="url(#p83d4e4a941)" style="fill: #d9d9d9"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 264.425143 153.36 
+L 268.683429 153.36 
+L 268.683429 42.741818 
+L 264.425143 42.741818 
+z
+" clip-path="url(#p83d4e4a941)" style="fill: #a6a6a6"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 269.053714 153.36 
+L 273.312 153.36 
+L 273.312 42.741818 
+L 269.053714 42.741818 
+z
+" clip-path="url(#p83d4e4a941)" style="fill: #6e6e6e"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 273.682286 153.36 
+L 277.940571 153.36 
+L 277.940571 47.522077 
+L 273.682286 47.522077 
+z
+" clip-path="url(#p83d4e4a941)" style="fill: #262626"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 290.653714 153.36 
+L 294.912 153.36 
+L 294.912 42.741818 
+L 290.653714 42.741818 
+z
+" clip-path="url(#p83d4e4a941)" style="fill: #d9d9d9"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 295.282286 153.36 
+L 299.540571 153.36 
+L 299.540571 42.741818 
+L 295.282286 42.741818 
+z
+" clip-path="url(#p83d4e4a941)" style="fill: #a6a6a6"/>
+   </g>
+   <g id="patch_26">
+    <path d="M 299.910857 153.36 
+L 304.169143 153.36 
+L 304.169143 42.816459 
+L 299.910857 42.816459 
+z
+" clip-path="url(#p83d4e4a941)" style="fill: #6e6e6e"/>
+   </g>
+   <g id="patch_27">
+    <path d="M 304.539429 153.36 
+L 308.797714 153.36 
+L 308.797714 46.847081 
+L 304.539429 46.847081 
+z
+" clip-path="url(#p83d4e4a941)" style="fill: #262626"/>
+   </g>
+   <g id="patch_28">
+    <path d="M 188.64 153.36 
+L 188.64 31.68 
+" style="fill: none; stroke: #262626; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_29">
+    <path d="M 188.64 153.36 
+L 318.24 153.36 
+" style="fill: none; stroke: #262626; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_21">
+    <g id="patch_30">
+     <path d="M 211.379286 113.553492 
+L 211.379286 83.654508 
+L 202.929286 83.654508 
+L 202.929286 113.553492 
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(209.103016 112.578492) rotate(-90)">결과 대기</text>
+   </g>
+   <g id="text_22">
+    <g id="patch_31">
+     <path d="M 242.236429 113.553492 
+L 242.236429 83.654508 
+L 233.786429 83.654508 
+L 233.786429 113.553492 
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(239.960159 112.578492) rotate(-90)">결과 대기</text>
+   </g>
+   <g id="text_23">
+    <text style="font-size: 8px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="188.64" y="28.68" transform="rotate(-0 188.64 28.68)">(b) δ / (r₁ + r₂)</text>
+   </g>
+   <g id="text_24">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #262626" transform="translate(277.610257 45.862804) rotate(-90)">95.7</text>
+   </g>
+   <g id="text_25">
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #262626" transform="translate(308.4674 45.187809) rotate(-90)">96.3</text>
+   </g>
+  </g>
+  <g id="patch_32">
+   <path d="M 77.76 12.24 
+L 87.12 12.24 
+L 87.12 6.48 
+L 77.76 6.48 
+z
+" style="fill: #d9d9d9"/>
+  </g>
+  <g id="patch_33">
+   <path d="M 110.16 12.24 
+L 119.52 12.24 
+L 119.52 6.48 
+L 110.16 6.48 
+z
+" style="fill: #a6a6a6"/>
+  </g>
+  <g id="patch_34">
+   <path d="M 142.56 12.24 
+L 151.92 12.24 
+L 151.92 6.48 
+L 142.56 6.48 
+z
+" style="fill: #6e6e6e"/>
+  </g>
+  <g id="patch_35">
+   <path d="M 174.96 12.24 
+L 184.32 12.24 
+L 184.32 6.48 
+L 174.96 6.48 
+z
+" style="fill: #262626"/>
+  </g>
+  <g id="text_26">
+   <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #595959" x="33.12" y="11.30873" transform="rotate(-0 33.12 11.30873)">겹침 문턱 &gt;</text>
+  </g>
+  <g id="text_27">
+   <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="90" y="11.30873" transform="rotate(-0 90 11.30873)">0 %</text>
+  </g>
+  <g id="text_28">
+   <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="122.4" y="11.30873" transform="rotate(-0 122.4 11.30873)">2 %</text>
+  </g>
+  <g id="text_29">
+   <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="154.8" y="11.30873" transform="rotate(-0 154.8 11.30873)">5 %</text>
+  </g>
+  <g id="text_30">
+   <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="187.2" y="11.30873" transform="rotate(-0 187.2 11.30873)">10 %</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pef9c814723">
+   <rect x="33.12" y="31.68" width="129.6" height="121.68"/>
+  </clipPath>
+  <clipPath id="p83d4e4a941">
+   <rect x="188.64" y="31.68" width="129.6" height="121.68"/>
+  </clipPath>
+ </defs>
+ <defs>
+  <pattern id="hf01d2c8f13" patternUnits="userSpaceOnUse" x="0" y="0" width="72" height="72">
+   <rect x="0" y="0" width="73" height="73" fill="none"/>
+   <path d="M -36 36 
+L 36 -36 
+M -33 39 
+L 39 -33 
+M -30 42 
+L 42 -30 
+M -27 45 
+L 45 -27 
+M -24 48 
+L 48 -24 
+M -21 51 
+L 51 -21 
+M -18 54 
+L 54 -18 
+M -15 57 
+L 57 -15 
+M -12 60 
+L 60 -12 
+M -9 63 
+L 63 -9 
+M -6 66 
+L 66 -6 
+M -3 69 
+L 69 -3 
+M 0 72 
+L 72 0 
+M 3 75 
+L 75 3 
+M 6 78 
+L 78 6 
+M 9 81 
+L 81 9 
+M 12 84 
+L 84 12 
+M 15 87 
+L 87 15 
+M 18 90 
+L 90 18 
+M 21 93 
+L 93 21 
+M 24 96 
+L 96 24 
+M 27 99 
+L 99 27 
+M 30 102 
+L 102 30 
+M 33 105 
+L 105 33 
+M 36 108 
+L 108 36 
+" style="fill: #a6a6a6; stroke: #a6a6a6; stroke-width: 0.5; stroke-linecap: butt; stroke-linejoin: miter"/>
+  </pattern>
+ </defs>
+</svg>

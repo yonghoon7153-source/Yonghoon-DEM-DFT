@@ -1,0 +1,9 @@
+panel,bed,status,value,physics
+a_geometric,D0.7,결과 대기,,
+a_geometric,D1,결과 대기,,
+a_geometric,D2,ok,1.27637405,
+a_geometric,D3,ok,1.36604691,
+b_transport,D0.7,결과 대기,,
+b_transport,D1,결과 대기,,
+b_transport,D2,ok,8.25878465,4.32402415
+b_transport,D3,ok,13.6282698,7.03362428
