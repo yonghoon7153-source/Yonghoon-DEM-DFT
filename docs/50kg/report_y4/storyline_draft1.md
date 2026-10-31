@@ -146,4 +146,4 @@ SE 입도만 바꾼 네 침대를 같은 조건에 놓고, *"작은 SE 가 공�
 
 - 10-30 Codex 초안 1 판정 = **조건부 수용** (`K50Y4-01` · `02` P2 · `03` P3) → 초안 2 수정 계획 `docs/50kg/report_y4/draft2_fix_plan_20261030.md` · 반입 `docs/reviews/codex_kg50_y4_draft1_review_20261030/`.  이 문서의 1쪽 *"선행 이종기술 DEM 과 같은 규약"* 예상 답변 · 3쪽 결과 선취 문장 · §5 후속 순서와 요청서의 선행 출처 *"13 장"* (→ 발표 9쪽) 은 그 계획대로 초안 2 에서 고친다 (이 판 = 초안 1 기록).
 - 문헌 지도 (SE 미립화 논문이 보이는 것 · 우리 재현 범위 · 누락 논문 8 편) = `docs/50kg/report_y4/lit_se_size_map_20261030.md`.
-- 지배방정식 패널 가운데 그림 (단일 입도 · AM D6 : SE D2) 후보 A · B = `docs/50kg/report_y4/figs/dem_eq_monomodal/` (생성기 `docs/50kg/report_y4/figs/make_fig_dem_eq_monomodal.py` · 선택 = 1저자 · 권고 A).
+- 지배방정식 패널 가운데 그림 (단일 입도 · AM D6 : SE D2) 후보 A · B = `docs/50kg/report_y4/figs/dem_eq_monomodal/` (생성기 `docs/50kg/report_y4/figs/make_fig_dem_eq_monomodal.py` · ✅ 1저자 10-31 = **A** · 재질 = v5 무광 (원 이종기술 그림과 같게 · 1저자 10-30) · 리포 생성기 = 스크래치 v5 와 PNG 바이트 같음).

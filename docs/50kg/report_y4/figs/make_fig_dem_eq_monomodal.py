@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
-"""50kg 4차년도 보고 — DEM 지배방정식 패널의 가운데 힘 그림, 단일 입도 (monomodal) 판 (10-30).
+"""50kg 4차년도 보고 — DEM 지배방정식 패널의 가운데 힘 그림, 단일 입도 (monomodal) 판 (10-30 · v5 무광 10-30 밤 · A 안 = 1저자 10-31).
 
-1저자 10-30: 2-1 장 (세라믹 catholyte 과제 2차년도) 의 지배방정식 패널을 50kg 덱에 넣되, 가운데 그림을
-"monomodal 이니까 SE 랑 AM 의 크기 비율을 맞추고 (D 2 SE, D6 AM)" 로 바꾼다.
+1저자 10-30: 가운데 그림을 "monomodal 이니까 SE 랑 AM 의 크기 비율을 맞추고 (D 2 SE, D6 AM)" 로 · 재질은 *"AM SE 닿은 geometry 재질은 기존 이종기술이랑 같게"* (무광 · 오른쪽 위 빛 · 반사광 없음).
+1저자 10-31: A 안 (j 도 AM).  이 판이 리포 정본 (이전 v4 유광 판을 바꿈).
+
 
 좌표 = i (AM) 반지름 R = 1 인 단위.  AM D 6 µm : SE D 2 µm → SE 반지름 1/3.
-variant A = j 도 AM (D 6 µm, i 와 같은 크기 · 권고) · variant B = j 가 SE (D 2 µm).
-배치 (판 · 가압 화살 · 점선 원 · 글자 자리) = 2-1 장 원 그림에서 잰 값 (원 그림의 i 반지름 0.571 in = 캡처 1300 px 를 쪽 폭으로 어림한 배율).
-색 = 50kg 계획 덱 그림 (CAM 검정 · SE 노랑).  글꼴 = Carlito Bold Italic (Calibri 같은 폭).
-
-    python3 -P make_fig_dem_eq_monomodal.py --out dem_eq_monomodal --export             # 단독 그림 A · B (글자 포함 · 없음 · PNG 300 dpi 투명 · SVG 윤곽선)
-    python3 -P make_fig_dem_eq_monomodal.py --out <폴더> --export --preview <2-1 장 패널 2배 crop>   # 원 패널 위 비교 그림 (그 캡처는 리포 밖)
+variant A = j 도 AM (D 6 µm, i 와 같은 크기) · variant B = j 가 SE (D 2 µm).
+--preview <원 패널 2배 crop png> : 원 패널 위에 새 그림을 얹은 비교 그림 (식 · 머리글 = 원 화면 그대로).
 """
 import argparse, json, math
 from pathlib import Path
@@ -32,7 +29,8 @@ rcParams['font.family'] = 'Carlito'
 rcParams['svg.fonttype'] = 'path'           # SVG 글자 = 윤곽선 (Carlito 없는 PC 에서도 같은 모양)
 
 R_AM, R_SE = 1.0, 1.0 / 3.0                       # D 6 : 2 µm
-C = dict(am=(0.065, 0.065, 0.075), se=(0.80, 0.69, 0.29),        # 50kg 덱 CAM 검정 · SE 노랑 (#CDB650 계열)
+C = dict(am=((0x05, 0x05, 0x05), (0x1b, 0x1b, 0x1b)), gray=((0x2c, 0x2c, 0x2c), (0x5c, 0x5c, 0x5c)),   # 원 이종기술 그림 재질 (무광 · 측정 범위)
+         se=((0x74, 0x6e, 0x56), (0xb0, 0xa9, 0x83)),
          plate='#5B80B5', red='#8B1A1A', orange_arc='#C9622A', orange='#E07B39',
          green='#2E8B57', green_txt='#86E0A8', teal='#16A085', teal_txt='#43CDBB', navy='#34495E')
 
@@ -45,7 +43,7 @@ MR = (-1.69, 0.33); FT = (0.74, 0.36); FN = (0.12, -0.32); MG = (-0.12, -1.66); 
 def layout(variant):
     u = np.array([math.cos(math.radians(-45)), math.sin(math.radians(-45))])
     if variant == 'A':
-        rj, kj = R_AM, 'am'
+        rj, kj = R_AM, 'gray'
     else:
         rj, kj = R_SE, 'se'
     j = (R_AM + rj) * u
@@ -58,26 +56,21 @@ def layout(variant):
 
 
 def sphere(ax, cx, cy, r, kind, px_per_unit, z):
+    """무광 구 — 원 이종기술 그림의 공처럼 오른쪽 위에서 오는 빛 · 반사광 없음 (원 그림 대각선 밝기 측정에 맞춤)."""
     n = max(64, int(2 * r * px_per_unit * 2))
     t = np.linspace(-1, 1, n)
     X, Y = np.meshgrid(t, -t)                                       # 행 0 = 위
     d2 = X ** 2 + Y ** 2
     Z = np.sqrt(np.clip(1 - d2, 0, 1))
-    L = np.array([-0.45, 0.55, 0.70]); L /= np.linalg.norm(L)
-    H = L + np.array([0, 0, 1.0]); H /= np.linalg.norm(H)
-    diff = np.clip(X * L[0] + Y * L[1] + Z * L[2], 0, 1)
-    spec = np.clip(X * H[0] + Y * H[1] + Z * H[2], 0, 1)
-    base = np.array(C[kind])
-    if kind == 'am':
-        col = base[None, None, :] * (0.55 + 0.9 * diff[..., None]) + 0.24 * spec[..., None] ** 18 \
-              + 0.10 * ((1 - Z) ** 3)[..., None]
-    else:
-        col = base[None, None, :] * (0.50 + 0.62 * diff[..., None]) + 0.22 * spec[..., None] ** 18
-    col = np.clip(col, 0, 1)
-    edge = 2.0 / (r * px_per_unit)                                  # 가장자리 2 px 부드럽게
+    L = np.array([0.42, 0.30, 0.86]); L /= np.linalg.norm(L)
+    lam = np.clip(X * L[0] + Y * L[1] + Z * L[2], -1, 1)
+    s = np.clip(0.30 + 0.70 * lam, 0, 1) * (0.82 + 0.18 * Z)      # 바닥 밝기 + 가장자리 살짝 어둡게
+    dark, light = (np.array(c, float) / 255 for c in C[kind])
+    col = dark[None, None, :] + (light - dark)[None, None, :] * s[..., None]
+    edge = 2.0 / (r * px_per_unit)
     a = np.clip((1 - np.sqrt(d2)) / edge, 0, 1)
-    rgba = np.dstack([col, a])
-    ax.imshow(rgba, extent=(cx - r, cx + r, cy - r, cy + r), origin='upper', zorder=z, interpolation='antialiased')
+    ax.imshow(np.dstack([np.clip(col, 0, 1), a]), extent=(cx - r, cx + r, cy - r, cy + r), origin='upper', zorder=z,
+              interpolation='antialiased')
 
 
 def arrow(ax, p0, p1, color, shaft, head_w, head_l, z):
@@ -145,8 +138,8 @@ def draw(ax, variant, pt_per_unit, px_per_unit, labels=True, connectors=True):
     if labels:
         fs = 0.40 * U
         ax.text(-0.02, 0.43, r'$i$', color='white', fontsize=fs * 0.95, ha='center', va='center', zorder=8)
-        jlx, jly = (jx - 0.02, jy + 0.10) if kj == 'am' else (jx, jy - 0.02)
-        ax.text(jlx, jly, r'$j$', color='white' if kj == 'am' else '#2B2B2B', fontsize=fs * (0.95 if kj == 'am' else 0.62),
+        jlx, jly = (jx - 0.02, jy + 0.10) if kj != 'se' else (jx, jy - 0.02)
+        ax.text(jlx, jly, r'$j$', color='white' if kj != 'se' else '#2B2B2B', fontsize=fs * (0.95 if kj != 'se' else 0.62),
                 ha='center', va='center', zorder=8)
         ax.text(FT[0], FT[1] - 0.02, r'$F_t$', color=C['green_txt'], fontsize=fs, ha='center', va='center', zorder=8)
         ax.text(FN[0], FN[1] - 0.02, r'$F_n$', color=C['teal_txt'], fontsize=fs, ha='center', va='center', zorder=8)
