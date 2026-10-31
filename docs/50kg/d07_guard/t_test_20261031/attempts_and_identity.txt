@@ -1,0 +1,24 @@
+$ ls -d kg50_d07_b50/attempt_r56_*
+kg50_d07_b50/attempt_r56_1030_152123_2568313  kg50_d07_b50/attempt_r56_1031_215830_2483798
+$ for d in kg50_d07_b50/attempt_r56_*; do echo "== $d"; cat $d/main_inputs.sha256; cat $d/result.txt; cat $d/job_t.txt; done
+== kg50_d07_b50/attempt_r56_1030_152123_2568313
+8e129f421a8491975f83527f79c8418318b2af30baeedd7440cfcede2d45c5e5  /lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts
+aad9ac227a3d5dec24dd0515f262299d81a4da283112dfb0cdf42e0b5e379750  /lustre/home/yonghoon/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56.sh
+94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1  /lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts
+c00746e68b8420b45d41ec2a6a20dc72161f9974cc6a30a403b994991e24146f  /lustre/home/yonghoon/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56t.sh
+aa833368651d9bf811c7b39331149ca939bfedf1bbe0511e2d66bf329fde15a8  /lustre/home/yonghoon/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_settling_20001.bin
+G0 1 G1 1 G2 1 G3 1 · 시험 job 333908 · 로그 output_kg50_d07_b50_r56t_333908.out · 잡 안 덱 신원 1 (G0 에 듦)
+결정: 본 제출 job 333911
+333908
+== kg50_d07_b50/attempt_r56_1031_215830_2483798
+4bf5ab86f95047e4e5607bba77c4ae75b2d93e3a6a96b776c3c4fe90f04899f3  /lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts
+4ff4cf47fbffd9f27f2133a23f5893bf728e0a386ba7fdaa4a544e38020679f2  /lustre/home/yonghoon/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56.sh
+985ff18bd76e075019f895f7a79ecf1a76df077ea637912f8a945dc7bd93898c  /lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts
+374de9c2aab85cb17cb98619e132f38695bae27fe871f19a74668f55093ea8ed  /lustre/home/yonghoon/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56t.sh
+45a838c18d19e3c1399a97f5948d52ad0995490f6a55040e6a6ffec8fecd2d70  /lustre/home/yonghoon/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_after_settling.bin
+G0 1 G1 1 G2 1 G3 1 · 시험 job 335411 · 로그 output_kg50_d07_b50_r56t_335411.out · 잡 안 덱 신원 1 (G0 에 듦)
+결정: 시험만 (-T)
+335411
+$ grep -h '^LMP_IDENTITY' logs/output_kg50_d07_b50_r56t_*.out | tail -2
+LMP_IDENTITY (10-30 KG50R-F02): lmp_mpi=/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi sha256=ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f deck=/lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts sha256=94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1 checkpoint=/lustre/home/yonghoon/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_settling_20001.bin sha256=aa833368651d9bf811c7b39331149ca939bfedf1bbe0511e2d66bf329fde15a8
+LMP_IDENTITY (10-30 KG50R-F02): lmp_mpi=/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi sha256=ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f deck=/lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts sha256=985ff18bd76e075019f895f7a79ecf1a76df077ea637912f8a945dc7bd93898c checkpoint=/lustre/home/yonghoon/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_after_settling.bin sha256=45a838c18d19e3c1399a97f5948d52ad0995490f6a55040e6a6ffec8fecd2d70
