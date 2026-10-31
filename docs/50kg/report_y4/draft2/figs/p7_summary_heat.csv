@@ -27,10 +27,10 @@ coverage_physics_union_pct,AM 피복률 Physics (%),D0.7,결과 대기,,
 coverage_physics_union_pct,AM 피복률 Physics (%),D1,ok,46.769,0.888603891
 coverage_physics_union_pct,AM 피복률 Physics (%),D2,ok,54.233,1.03041876
 coverage_physics_union_pct,AM 피복률 Physics (%),D3,ok,52.632,1
-f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D0.7,결과 대기,,
-f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D1,ok,0.0468031947,2.39862022
-f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D2,ok,0.0333861909,1.71101125
-f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D3,ok,0.019512549,1
+f_ion_hertz,$f_\mathrm{mc}$ (Hertz · 두께 재척도),D0.7,결과 대기,,
+f_ion_hertz,$f_\mathrm{mc}$ (Hertz · 두께 재척도),D1,ok,0.0468031947,2.39862022
+f_ion_hertz,$f_\mathrm{mc}$ (Hertz · 두께 재척도),D2,ok,0.0333861909,1.71101125
+f_ion_hertz,$f_\mathrm{mc}$ (Hertz · 두께 재척도),D3,ok,0.019512549,1
 tau2_ion_hertz,수송 tortuosity (Hertz),D0.7,결과 대기,,
 tau2_ion_hertz,수송 tortuosity (Hertz),D1,ok,5.99813094,0.440124169
 tau2_ion_hertz,수송 tortuosity (Hertz),D2,ok,8.25878465,0.606003898

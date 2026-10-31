@@ -186,8 +186,8 @@
     299.999
    ],
    "files": {
-    "p4_f_connect.png": "c5395a275be2b22362cdf65822eaeb94e1d716dd12d20220ffeb186ea20ccdb8",
-    "p4_f_connect.svg": "7493d005f715c45572299e048beeaf06e34e50158d336734857c47418e5ab9e7",
+    "p4_f_connect.png": "b6dd869a5b18543f03f25d8db638fd8a571359706a2456ad21fed4326b4a387b",
+    "p4_f_connect.svg": "4f21a34ce7d7c6615d74653942202d8064c8987a3286f130befe892e327435d0",
     "p4_f_connect.csv": "1fec21359c2fa2c096a440b0a4b96902f312402a1442b15a19d9a9df21de4bdc"
    },
    "csv_rows": 8
@@ -246,9 +246,9 @@
     299.999
    ],
    "files": {
-    "p7_summary_heat.png": "82f48eebd55e9aa30938f8cf492b7d7845d06d51aaad7ced6bb09ee981fd5b16",
-    "p7_summary_heat.svg": "cc61ef0f325499fa5679efc9470cd16b4f65d7d502e85642378b2afbc05cc823",
-    "p7_summary_heat.csv": "74980b36471e30d157938c640da4b18492d158b958c86790a0e3ff5c1ce14ece"
+    "p7_summary_heat.png": "4bec7539df8e3d418dac5ba1ad6e3e1433aee3551f1f1ac42c67b7ca59d2d416",
+    "p7_summary_heat.svg": "acec0ad1c63f138b2e1a87e1262b7ccd4c7e7fe0498bf2d948bed52723a69d5e",
+    "p7_summary_heat.csv": "2916cb8e2f06f8bae4bf9b046824447d224822ed8a0db15abf7f450e2452e0cb"
    },
    "csv_rows": 56
   },
@@ -266,9 +266,9 @@
     299.999
    ],
    "files": {
-    "p7_lit_direction.png": "c9cd5f646e81cce281dbcf324b62839c19a09abaa1c74f96b986c1f42ecc4c9e",
-    "p7_lit_direction.svg": "718d859032b81dabc1f72da1a9e0319cc6f7d65861b512904da7f6aba255b54a",
-    "p7_lit_direction.csv": "734d43b781561606f2f1a3bf23fa3c5c343d1ac5340fe10b6335869161fe4ef2"
+    "p7_lit_direction.png": "6d83935109876d7254e558813f0c83e10b56ae531ac8c18e0987f0c4e1cd50ec",
+    "p7_lit_direction.svg": "96632a160e2693d31487f4ecddd3a97e56a37f7b0dd047667d32a0c1e02ac95a",
+    "p7_lit_direction.csv": "b5cbf5cd22ed30d0d976c093325d7a9ae9c9ad9ca217a1b81c963f8e4881d80f"
    },
    "csv_rows": 24
   },
@@ -286,8 +286,8 @@
     299.999
    ],
    "files": {
-    "diag_relax_drop_vs_N.png": "892e4278313e1d0bfcb3cc8ce2d9932cbdd8b4c77b87c3e33de04aaece8cdb0a",
-    "diag_relax_drop_vs_N.svg": "26a3769051a4be229c985104b0d701980cc226154d5ee94ea7d2c40c8aaf6ec8",
+    "diag_relax_drop_vs_N.png": "9c7279a8833ea950b33bf6bd43374f43f6682d626ce537d8a94e8051eec9b86e",
+    "diag_relax_drop_vs_N.svg": "01b83e03d3870bb3ffb1528dbc78c2b4969012694b31b27d70f11fbd7cb94e36",
     "diag_relax_drop_vs_N.csv": "575239a7e5a5aa298bcd9604d7ab5edb46757c5e5b7fb4450e9de9b95546281b"
    },
    "csv_rows": 4
@@ -390,7 +390,7 @@
     "patches": 24,
     "band_vertices": 0,
     "texts": 30,
-    "fig_texts": 5,
+    "fig_texts": 6,
     "cropped_collections": 0
    },
    "diag_relax_drop_vs_N": {

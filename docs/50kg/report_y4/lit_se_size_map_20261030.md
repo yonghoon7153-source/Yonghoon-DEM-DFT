@@ -104,7 +104,7 @@
 | `yano2026_se_psd_width_ionic_tortuosity_dem` | §6 의 "Ohsaki 등" = 1저자 Takeru Yano (교신 Ohsaki) · J. Energy Storage 153 (2026) 120973 · DEM 기하 tortuosity 평탄 (1.14–1.17) · 경로당 입자 수 +28 % · 밀링 펠릿 σ ÷2.78 (p5 목록) |
 | `lin2025_submicron_lpscl_cathode_li_kinetics` | "sub-µm" = SEM 모양 · 레이저 D50 **2.34 µm** (우리 D2–D3 사이 — §6 의 "D0.7 자리" 는 틀림) · 밀링 펠릿 σ ÷3.28 (p5 목록 → 덱 2.217 = 범위 중간) |
 | `calpa2019_small_li7p3s11_liquid_phase_composite_cathode` | Li₇P₃S₁₁ (LPSCl 아님) · 밀링 없는 미립화도 펠릿 σ 1.0 vs 1.9 mS/cm = 합성 경로 교란 (p5 교란이 없어지지 않음) |
-| `tron2023_rational_cathode_composite_optimization_lpscl` | 크기 정성 · AM:SE 85:15 wt% 에서 용량 −36 % (300 MPa) |
+| `tron2023_rational_cathode_composite_optimization_lpscl` | 크기 정성 · 별도 조성 시험에서 AM:SE 70:30→85:15 wt% 의 첫 방전 용량 약 36 % 감소 (그림 판독 · 성형 300 MPa · 측정 10 MPa) — 입도 효과 수치 아님 (10-31 문구 고침 · 외부 리뷰 K50Y4D2-08) |
 | `yadav2021_lpscl_sieved_psd_impedance_tortuosity` | IWIS 2021 · 큰 SE 가 이긴 반례 (≥ 20 µm) · 펠릿 σ(d) × 우리 f(d) = 이중계상 위험 (p5 주의) |
 | `lei2026_se_particle_size_effects_review` | 절충 점검표 · 수치는 2 차 인용 (원문으로 인용) |
 | `kawaguchi2026_se_size_soc_dependent_cathode_resistance` | 최적 입도가 SOC 에 따라 바뀜 → p7 *"최적"* 금지 근거 · 큰 SE 이온 σ 2.33× |

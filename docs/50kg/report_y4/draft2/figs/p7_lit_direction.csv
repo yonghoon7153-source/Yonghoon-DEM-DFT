@@ -11,10 +11,10 @@ coverage_hertz_pct,AM 피복률 Hertz (%),D0.7,결과 대기,,↑,
 coverage_hertz_pct,AM 피복률 Hertz (%),D1,ok,19.0429459,↑,minnmann2024_microstructure_porosity_visualization
 coverage_hertz_pct,AM 피복률 Hertz (%),D2,ok,21.0519462,↑,minnmann2024_microstructure_porosity_visualization
 coverage_hertz_pct,AM 피복률 Hertz (%),D3,ok,19.0671809,↑,minnmann2024_microstructure_porosity_visualization
-f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D0.7,결과 대기,,↑,
-f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D1,ok,0.0468031947,↑,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · minnmann2021_jes_charge_transport_bottlenecks · bazzoun2026_dem_fem_rnm_ionic
-f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D2,ok,0.0333861909,↑,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · minnmann2021_jes_charge_transport_bottlenecks · bazzoun2026_dem_fem_rnm_ionic
-f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D3,ok,0.019512549,↑,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · minnmann2021_jes_charge_transport_bottlenecks · bazzoun2026_dem_fem_rnm_ionic
+f_ion_hertz,$f_\mathrm{mc}$ (Hertz · 두께 재척도),D0.7,결과 대기,,↑,
+f_ion_hertz,$f_\mathrm{mc}$ (Hertz · 두께 재척도),D1,ok,0.0468031947,↑,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · minnmann2021_jes_charge_transport_bottlenecks · bazzoun2026_dem_fem_rnm_ionic
+f_ion_hertz,$f_\mathrm{mc}$ (Hertz · 두께 재척도),D2,ok,0.0333861909,↑,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · minnmann2021_jes_charge_transport_bottlenecks · bazzoun2026_dem_fem_rnm_ionic
+f_ion_hertz,$f_\mathrm{mc}$ (Hertz · 두께 재척도),D3,ok,0.019512549,↑,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · minnmann2021_jes_charge_transport_bottlenecks · bazzoun2026_dem_fem_rnm_ionic
 tau2_ion_hertz,수송 tortuosity (Hertz),D0.7,결과 대기,,↓,
 tau2_ion_hertz,수송 tortuosity (Hertz),D1,ok,5.99813094,↓,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · minnmann2021_jes_charge_transport_bottlenecks
 tau2_ion_hertz,수송 tortuosity (Hertz),D2,ok,8.25878465,↓,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · minnmann2021_jes_charge_transport_bottlenecks

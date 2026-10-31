@@ -409,7 +409,7 @@ L 316.8 153.36
     <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #595959" x="309.5" y="149.05873" transform="rotate(-0 309.5 149.05873)">D0.7 덱 계획 N</text>
    </g>
    <g id="text_9">
-    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #595959" x="308.5" y="33.30373" transform="rotate(-0 308.5 33.30373)">어림 488</text>
+    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #595959" x="308.5" y="33.30373" transform="rotate(-0 308.5 33.30373)">R_aff 488</text>
    </g>
    <g id="text_10">
     <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="255.870764" y="78.425682" transform="rotate(-0 255.870764 78.425682)">1 µm 144.4</text>
@@ -508,19 +508,19 @@ z
 "/>
    </defs>
    <g>
-    <use xlink:href="#m65a93d80f3" x="46.08" y="10.08" style="fill: #1c5cab"/>
+    <use xlink:href="#m65a93d80f3" x="18.72" y="10.08" style="fill: #1c5cab"/>
    </g>
   </g>
   <g id="line2d_49">
-   <path d="M 154.8 10.08 
-L 169.2 10.08 
+   <path d="M 144.72 10.08 
+L 159.12 10.08 
 " style="fill: none; stroke: #595959; stroke-width: 1.4; stroke-linecap: square"/>
   </g>
   <g id="text_13">
-   <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="52.56" y="12.02873" transform="rotate(-0 52.56 12.02873)">측정 Δp = p(t = 0⁻) − p(이완 끝)</text>
+   <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="25.2" y="12.02873" transform="rotate(-0 25.2 12.02873)">DEM 로그 Δp = p(t = 0⁻) − p(이완 끝)</text>
   </g>
   <g id="text_14">
-   <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="172.08" y="12.02873" transform="rotate(-0 172.08 12.02873)">감쇠 저항 어림 γNv/(2A) (affine · 낙폭의 상한 어림)</text>
+   <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="162" y="12.02873" transform="rotate(-0 162 12.02873)">감쇠 저항 규모 기준선 R_aff = γNv/(2A) (affine 가정)</text>
   </g>
  </g>
  <defs>

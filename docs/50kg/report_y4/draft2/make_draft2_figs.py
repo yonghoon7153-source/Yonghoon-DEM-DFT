@@ -14,7 +14,9 @@
 - 결정적 출력: PNG 메타 Software 없음 (dpi 300 기록) · SVG 날짜 없음 · hashsalt 고정.
 - 축 범위 = 전부 자료 + 값 글 · 표지 자리 (fit_axis — 고정 범위 없음) · 그릴 때마다 check_figure (자료 · 글이 축 안 · 제목 · 다른 글과
   안 겹침 · '결과 대기' 글 = 자료 없는 침대만) — `--check` = 그리고 검사만 (파일 안 씀 · 문제 있으면 rc 1).
-- 진단 diag_relax_drop_vs_N = 이완 강하 ↔ 판 정지 때 입자 수 + 어림 γNv/(2A) (affine 가정 · 덱 값) — 원장 DEMP-01 관계만.
+- 진단 diag_relax_drop_vs_N = 이완 강하 ↔ 판 정지 때 입자 수 + 감쇠 저항 규모 기준선 R_aff = γNv/(2A) (affine 가정 · 덱 값 · 낙폭
+  예측 아님) — 원장 DEMP-01 관계만.
+- f 그림 · 표지 = f_mc = f_gap × L_gap / L_mc (판 간격 망 해의 σ 비를 질량 보존 두께로 다시 잰 값 · 새 망 풀이 아님 · tau_flux 의 f_ion_*).
 """
 from __future__ import annotations
 
@@ -123,7 +125,8 @@ def fmt_tick(v):
 EPS = r'$\varepsilon_\mathrm{sphere}$'
 SIG_EFF = r'$\sigma_\mathrm{eff}$'
 TAU_TR = r'$\varphi_\mathrm{SE}\,\sigma_0/\sigma_\mathrm{eff}$'
-F_ION = r'$f = \sigma_\mathrm{eff}/\sigma_0$'
+F_MC = r'$f_\mathrm{mc}$'         # 보고하는 f = f_gap × L_gap / L_mc (두께 재척도 · 원 솔버 σ 비 그대로가 아님)
+F_MC_TAG = '두께 재척도'
 SVM = r'$\sigma_\mathrm{VM}$'
 RATIO = r'$D_\mathrm{AM}/D_\mathrm{SE}$'
 
@@ -927,8 +930,8 @@ def fig_p4_f_connect(data, meta):
     fig = plt.figure(figsize=(w, h))
     axs = frame(fig, w, h, 2, left=0.50, gap=0.46, top=0.44)
     rows = [dict(panel='a_f_ion', **r) for r in bars(axs[0], data, 'f_ion_hertz', phys_key='f_ion_physics')]
-    axs[0].set_ylabel(F_ION, labelpad=2)
-    axs[0].set_title('(a) 구조 전달계수 f', loc='left', pad=3)
+    axs[0].set_ylabel(f'{F_MC} ({F_MC_TAG})', labelpad=2)
+    axs[0].set_title(f'(a) 구조 전달계수 {F_MC}', loc='left', pad=3)
     rows += [dict(panel='b_se_connected_am', **r) for r in bars(axs[1], data, 'se_connected_am_pct')]
     axs[1].set_ylabel('SE 망과 연결된 AM (%)', labelpad=2)
     axs[1].set_title('(b) SE 망 연결 AM (연결성 기준)', loc='left', pad=3)
@@ -1012,7 +1015,7 @@ P7_ROWS = (
     ('eps_sphere_pct', f'기공률 {EPS} (%)'), ('eps_union_exact_pct', '기공률 정확 합집합 (%)'), ('am_se_cn_mean', 'AM–SE 접촉 수 (개)'),
     ('se_se_cn_mean', 'SE–SE 접촉 수 (개)'), ('area_am_se_per_am_mean_um2', 'AM–SE 접촉 면적 / AM (µm²)'),
     ('coverage_hertz_pct', 'AM 피복률 Hertz (%)'), ('coverage_physics_union_pct', 'AM 피복률 Physics (%)'),
-    ('f_ion_hertz', f'{F_ION} (Hertz)'), ('tau2_ion_hertz', '수송 tortuosity (Hertz)'), ('tau_geo_all', '기하 tortuosity'),
+    ('f_ion_hertz', f'{F_MC} (Hertz · {F_MC_TAG})'), ('tau2_ion_hertz', '수송 tortuosity (Hertz)'), ('tau_geo_all', '기하 tortuosity'),
     ('se_connected_am_pct', 'SE 망 연결 AM (%)'), ('constriction_power_share_ion_hertz', '협착 소산 몫 (이온 · Hertz)'),
     ('lw_am_nowall_median_MPa', 'AM 입자 응력 중앙값 (MPa)'), ('lw_se_nowall_median_MPa', 'SE 입자 응력 중앙값 (MPa)'),
 )
@@ -1066,13 +1069,15 @@ LIT = (
     dict(key='eps_sphere_pct', name=f'기공률 {EPS} (%)', dir='↓', cards=(1, 2, 3)),
     dict(key='area_am_se_per_am_mean_um2', name='AM–SE 접촉 면적 / AM (µm²)', dir='↑', cards=(1, 2)),
     dict(key='coverage_hertz_pct', name='AM 피복률 Hertz (%)', dir='↑', cards=(2,)),
-    dict(key='f_ion_hertz', name=f'{F_ION} (Hertz)', dir='↑', cards=(1, 2, 4, 5)),
+    dict(key='f_ion_hertz', name=f'{F_MC} (Hertz · {F_MC_TAG})', dir='↑', cards=(1, 2, 4, 5)),
     dict(key='tau2_ion_hertz', name='수송 tortuosity (Hertz)', dir='↓', cards=(1, 2, 4)),
     dict(key='se_connected_am_pct', name='SE 망 연결 AM (%)', dir='↑', cards=(6,)),
 )
 CARDS = {1: 'schlautmann2023_se_particle_size_composite_transport', 2: 'minnmann2024_microstructure_porosity_visualization',
          3: 'tailored_cathode_microstructure_low_pressure_assb', 4: 'minnmann2021_jes_charge_transport_bottlenecks',
          5: 'bazzoun2026_dem_fem_rnm_ionic', 6: 'shi2019_high_am_loading_particle_size_assb'}
+#: 화살표 방향이 모델에서 나온 카드 (실험 아님) — 범례 '(모델)' 표지: 5 = DEM–FEM–RNM 변수 연구 · 6 = 모델 연결성 지도
+MODEL_CARDS = frozenset({5, 6})
 
 
 def fig_p7_lit(data, meta):
@@ -1109,11 +1114,14 @@ def fig_p7_lit(data, meta):
                     ha='right', va='top', fontsize=NOTE_PT, color=INK,
                     bbox=dict(boxstyle='round,pad=0.22', fc='#F2F2F2', ec='#BFBFBF', lw=0.5))
     fig.text(0.5, 0.64 / h, 'SE D50 (µm)', ha='center', va='center', fontsize=LABEL_PT, color=INK)
-    fig.text(left / w, 0.47 / h, '문헌 화살표 = 작은 SE 쪽의 방향 (정본 litdb 카드) · 우리 값은 나란히만 (일치 판정 아님) · 시드 1 · 단분산 (PSD 폭 그대로)',
-             ha='left', va='center', fontsize=NOTE_PT - 0.5, color=INK2)
-    items = [f'[{j}] {s}' for j, s in CARDS.items()]
+    model_refs = ' · '.join(f'[{j}]' for j in sorted(MODEL_CARDS))
+    notes = (f'문헌 화살표 = 선택한 {len(CARDS)}편의 실험 · 모델에서 보고한 작은 SE 쪽 방향 ({model_refs} = 모델)',
+             '우리 값은 나란히만 (일치 판정 아님) · 시드 1 · 단분산 (PSD 폭 그대로)')
+    for i, s in enumerate(notes):           # 두 줄 (한 줄이면 그림 폭을 넘는다)
+        fig.text(left / w, (0.50 - 0.105 * i) / h, s, ha='left', va='center', fontsize=NOTE_PT - 0.5, color=INK2)
+    items = [f'[{j}] {s}' + (' (모델)' if j in MODEL_CARDS else '') for j, s in CARDS.items()]
     for li, k0 in enumerate(range(0, len(items), 2)):
-        fig.text(left / w, (0.32 - 0.12 * li) / h, '   '.join(items[k0:k0 + 2]), ha='left', va='center', fontsize=NOTE_PT - 1.0, color=INK2)
+        fig.text(left / w, (0.28 - 0.11 * li) / h, '   '.join(items[k0:k0 + 2]), ha='left', va='center', fontsize=NOTE_PT - 1.0, color=INK2)
     return save(fig, 'p7_lit_direction', rows, ['quantity', 'name', 'bed', 'status', 'value', 'literature_direction_small_se', 'cards'], meta)
 
 
@@ -1121,7 +1129,9 @@ def fig_p7_lit(data, meta):
 
 _NUM = r'([-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?)'
 _THERMO5 = re.compile(r'^\s*(\d+)\s+(\d+)\s+(\S+)\s+(\S+)\s+(\S+)\s*$')
-DIAG_EST_LABEL = '감쇠 저항 어림 γNv/(2A) (affine · 낙폭의 상한 어림)'
+#: 선 = affine 속도장 가정의 감쇠 저항 규모 기준선 (낙폭 예측 · 낙폭 한계가 아니다 — 판 정지 때 덱이 감쇠도 0.5 → 1e-5 로 바꾼다)
+DIAG_EST_LABEL = '감쇠 저항 규모 기준선 R_aff = γNv/(2A) (affine 가정)'
+DIAG_DP_LABEL = 'DEM 로그 Δp = p(t = 0⁻) − p(이완 끝)'
 
 
 def _one_idx(L, pattern, what, case):
@@ -1230,8 +1240,10 @@ def stop_n(bed, rec, plan):
 
 
 def fig_diag_relax_drop(data, decks, meta):
-    """진단 — 판 고정 이완 강하 Δp = p(t = 0⁻) − p(이완 끝) ↔ 판 정지 때 입자 수 N (로그 · 로그) + 어림 γNv/(2A) (affine 가정 · 덱 값) ·
-    D0.7 덱 계획 N (세로 점선) · 가압 목표 (가로 점선).  원장 DEMP-01 관계 (감쇠 저항 몫 ≈ N/300,000) — 그 이상은 주장하지 않는다."""
+    """진단 — 판 고정 이완 강하 Δp = p(t = 0⁻) − p(이완 끝) ↔ 판 정지 때 입자 수 N (로그 · 로그) + 감쇠 저항 규모 기준선
+    R_aff = γNv/(2A) (affine 가정 · 덱 값 · 낙폭 예측 아님) · D0.7 덱 계획 N (세로 점선) · 가압 목표 (가로 점선).
+    원장 DEMP-01 관계 (감쇠 저항 몫 ≈ N/300,000) — 그 이상은 주장하지 않는다.  CSV 열 dp_est_MPa · dp_over_est · est_MPa_per_particle =
+    R_aff · Δp / R_aff · 입자당 R_aff (열 이름은 그대로)."""
     w, h = W_HALF, 2.55
     fig = plt.figure(figsize=(w, h))
     ax = fig.add_axes([0.58 / w, 0.42 / h, (w - 0.58 - 0.10) / w, (h - 0.42 - 0.34) / h])
@@ -1255,7 +1267,7 @@ def fig_diag_relax_drop(data, decks, meta):
             sn = stop_n(bed, data[bed]['rec'], plans[bed])
             pts[bed] = dict(n=sn['n'], dp=m['p_t0minus_MPa'] - m['p_end_MPa'], sn=sn)
     plan_beds = [b for b in R.BED_ORDER if b not in data]
-    # 범위 (log10) = 점 · 점 글 · 어림 직선의 계획 점 · 목표 + 글 자리 — 고정 범위 없음
+    # 범위 (log10) = 점 · 점 글 · 기준선 R_aff 의 계획 점 · 목표 + 글 자리 — 고정 범위 없음
     labs = {b: f'{b[1:]} µm {p["dp"]:.1f}' for b, p in pts.items()}   # 본문 · 쪽 글과 같은 소수 한 자리 (사전 공격 R2-13)
     above = {b: p['dp'] > c * p['n'] for b, p in pts.items()}          # 직선 위 점 = 글 왼쪽 위 · 아래 점 = 오른쪽 아래
     x_hi, x_lo, y_hi, y_lo = [], [], [], []
@@ -1277,7 +1289,7 @@ def fig_diag_relax_drop(data, decks, meta):
     yl0, yl1, _ = fit_axis(ax, 'y', y_hi, y_lo, snap=False, min_n=1, max_n=99)
     ax.set_xlim(10 ** xl0, 10 ** xl1)
     ax.set_ylim(10 ** yl0, 10 ** yl1)
-    # 어림 직선 = 축 안 구간만 (끝점이 축 경계)
+    # 기준선 R_aff = 축 안 구간만 (끝점이 축 경계)
     n0, n1 = max(10 ** xl0, 10 ** yl0 / c), min(10 ** xl1, 10 ** yl1 / c)
     ax.plot([n0, n1], [c * n0, c * n1], color=INK2, lw=1.0, zorder=2)
     ax.axhline(target, color=PH, lw=0.8, ls=(0, (1.5, 1.2)), zorder=1)
@@ -1290,7 +1302,7 @@ def fig_diag_relax_drop(data, decks, meta):
         ax.annotate(f'{b} 덱 계획 N', xy=(n_plan, 10 ** yl0), xytext=(-3.0, 3.0), textcoords='offset points', fontsize=VAL_PT, color=INK2,
                     ha='right', va='bottom')
         ax.plot([n_plan], [c * n_plan], marker='o', ms=MS_PHYS, mfc='white', mec=INK2, mew=0.9, ls='none', zorder=4)
-        ax.annotate(f'어림 {fmt_v(c * n_plan, 3)}', xy=(n_plan, c * n_plan), xytext=(-4.0, 3.0), textcoords='offset points', fontsize=VAL_PT,
+        ax.annotate(f'R_aff {fmt_v(c * n_plan, 3)}', xy=(n_plan, c * n_plan), xytext=(-4.0, 3.0), textcoords='offset points', fontsize=VAL_PT,
                     color=INK2, ha='right', va='bottom')
         rows.append(dict(bed=b, status=WAIT, n_deck_plan=n_plan, dp_est_MPa=c * n_plan, n_source='덱 머리 줄 계획 (합 N)'))
     for b, p in pts.items():
@@ -1311,7 +1323,8 @@ def fig_diag_relax_drop(data, decks, meta):
     ax.set_ylabel('이완 강하 Δp (MPa)', labelpad=2)
     ax.yaxis.grid(True, which='major', color=GRID, lw=0.5)
     ax.set_axisbelow(True)
-    top_legend(fig, [('dot', SIZE_C['D2'], '측정 Δp = p(t = 0⁻) − p(이완 끝)'), ('line', INK2, DIAG_EST_LABEL)], 0.14, h, x_in=0.58)
+    # 범례 한 줄 = 그림 왼쪽 여백부터 (축 왼쪽 0.58 in 에서 시작하면 기준선 이름이 그림 폭을 넘는다)
+    top_legend(fig, [('dot', SIZE_C['D2'], DIAG_DP_LABEL), ('line', INK2, DIAG_EST_LABEL)], 0.14, h, x_in=0.20)
     cols = ['bed', 'status', 'n_particles', 'n_source', 'stop_step', 'stop_line', 'log_sha256', 'n_end_dump', 'n_deck_plan', 'n_minus_plan',
             'p_t0minus_MPa', 'p_end_MPa', 'dp_MPa', 'dp_est_MPa', 'dp_over_est', 'gamma_deck', 'gamma_relax_deck', 'press_speed_deck',
             'area_deck', 'press_divisor_deck', 'report_MPa_per_deck_MPa', 'est_MPa_per_particle', 'deck', 'deck_sha256']

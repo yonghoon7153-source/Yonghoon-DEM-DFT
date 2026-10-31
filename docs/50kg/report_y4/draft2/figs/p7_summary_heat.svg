@@ -575,26 +575,29 @@ z
     <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="296.46" y="113.501685" transform="rotate(-0 296.46 113.501685)">52.6</text>
    </g>
    <g id="outside-ok">
-    <!-- $f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz) -->
-    <g style="fill: #262626" transform="translate(79.6998 126.405873)">
+    <!-- $f_\mathrm{mc}$ (Hertz · 두께 재척도) -->
+    <g style="fill: #262626" transform="translate(60.3298 126.405873)">
      <text>
       <tspan x="0" y="-0.0625" style="font-style: oblique; font-size: 6.5px; font-family: 'DejaVu Sans'; fill: #262626">f</tspan>
-      <tspan x="10.267334" y="-0.0625" style="font-style: oblique; font-size: 6.5px; font-family: 'DejaVu Sans'; fill: #262626">σ</tspan>
-      <tspan x="22.758008" y="-0.0625" style="font-style: oblique; font-size: 6.5px; font-family: 'DejaVu Sans'; fill: #262626">σ</tspan>
-      <tspan x="3.554688" y="-0.0625" style="font-size: 6.5px; font-family: 'DejaVu Sans'; fill: #262626">=</tspan>
-      <tspan x="20.568066" y="-0.0625" style="font-size: 6.5px; font-family: 'DejaVu Sans'; fill: #262626">/</tspan>
-      <tspan x="14.386963" y="1.00625" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">e</tspan>
-      <tspan x="17.186279" y="1.00625" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">f</tspan>
-      <tspan x="18.78811" y="1.00625" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">f</tspan>
-      <tspan x="26.877637" y="1.00625" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">0</tspan>
-      <tspan x="29.95061" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626"> </tspan>
-      <tspan x="31.899341" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">(</tspan>
-      <tspan x="33.848071" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">H</tspan>
-      <tspan x="38.132739" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">e</tspan>
-      <tspan x="41.636646" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">r</tspan>
-      <tspan x="43.712329" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">t</tspan>
-      <tspan x="45.788013" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">z</tspan>
-      <tspan x="48.517505" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">)</tspan>
+      <tspan x="2.28833" y="1.00625" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">m</tspan>
+      <tspan x="6.720581" y="1.00625" style="font-size: 4.55px; font-family: 'DejaVu Sans'; fill: #262626">c</tspan>
+      <tspan x="9.400317" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626"> </tspan>
+      <tspan x="11.349048" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">(</tspan>
+      <tspan x="13.297778" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">H</tspan>
+      <tspan x="17.582446" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">e</tspan>
+      <tspan x="21.086353" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">r</tspan>
+      <tspan x="23.162036" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">t</tspan>
+      <tspan x="25.23772" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">z</tspan>
+      <tspan x="27.967212" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626"> </tspan>
+      <tspan x="29.915942" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">·</tspan>
+      <tspan x="31.471118" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626"> </tspan>
+      <tspan x="33.419849" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">두</tspan>
+      <tspan x="39.919849" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">께</tspan>
+      <tspan x="46.419849" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626"> </tspan>
+      <tspan x="48.368579" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">재</tspan>
+      <tspan x="54.868579" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">척</tspan>
+      <tspan x="61.368579" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">도</tspan>
+      <tspan x="67.868579" y="-0.0625" style="font-weight: 500; font-size: 6.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">)</tspan>
      </text>
     </g>
    </g>
