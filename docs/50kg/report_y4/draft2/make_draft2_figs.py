@@ -1121,7 +1121,7 @@ def fig_p7_lit(data, meta):
 
 _NUM = r'([-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?)'
 _THERMO5 = re.compile(r'^\s*(\d+)\s+(\d+)\s+(\S+)\s+(\S+)\s+(\S+)\s*$')
-DIAG_EST_LABEL = '어림 γNv/(2A) (affine 가정)'
+DIAG_EST_LABEL = '감쇠 저항 어림 γNv/(2A) (affine · 낙폭의 상한 어림)'
 
 
 def _one_idx(L, pattern, what, case):
@@ -1256,7 +1256,7 @@ def fig_diag_relax_drop(data, decks, meta):
             pts[bed] = dict(n=sn['n'], dp=m['p_t0minus_MPa'] - m['p_end_MPa'], sn=sn)
     plan_beds = [b for b in R.BED_ORDER if b not in data]
     # 범위 (log10) = 점 · 점 글 · 어림 직선의 계획 점 · 목표 + 글 자리 — 고정 범위 없음
-    labs = {b: f'{b[1:]} µm {fmt_v(p["dp"], 3)}' for b, p in pts.items()}
+    labs = {b: f'{b[1:]} µm {p["dp"]:.1f}' for b, p in pts.items()}   # 본문 · 쪽 글과 같은 소수 한 자리 (사전 공격 R2-13)
     above = {b: p['dp'] > c * p['n'] for b, p in pts.items()}          # 직선 위 점 = 글 왼쪽 위 · 아래 점 = 오른쪽 아래
     x_hi, x_lo, y_hi, y_lo = [], [], [], []
     for b, p in pts.items():
