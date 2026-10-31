@@ -1,0 +1,4 @@
+.cache/
+node_modules/
+video_src/windows.json
+__pycache__/

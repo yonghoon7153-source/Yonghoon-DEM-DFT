@@ -1,0 +1,44 @@
+// 시연 녹화: 480×884 창에서 웹앱을 자동 조작해 녹화 → 앞 1.25초를 자르고 휴대폰 틀(414×868)만 잘라 assets/demo/ 에 저장
+// 사용: node record.js   (ffmpeg 필요)
+const { chromium } = require("playwright");
+const fs = require("fs"), { execFileSync } = require("child_process");
+const path = require("path"), os = require("os");
+const ROOT = path.resolve(__dirname, ".."), PAGE = "file://" + path.join(ROOT, "prototype/nm_prototype.html");
+const URL = PAGE, REC = fs.mkdtempSync(path.join(os.tmpdir(), "namul_rec_")), OUT = path.join(ROOT, "assets/demo");
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+(async () => {
+  const browser = await chromium.launch();
+  const ctx = await browser.newContext({ viewport: { width: 480, height: 884 }, recordVideo: { dir: REC, size: { width: 480, height: 884 } } });
+  const p = await ctx.newPage();
+  await p.addInitScript(() => { const st = document.createElement("style"); st.textContent = ".guide{display:none!important} html,body,.stage{background:#FFFFFF!important} .stage{display:block!important;padding:8px 0!important;min-height:0!important} .device{margin:0 auto!important;box-shadow:none!important}"; document.addEventListener("DOMContentLoaded", () => document.head.append(st)); });
+  await p.goto(URL + "#home"); await sleep(1200);
+  const pe = (fn, arg) => p.evaluate(fn, arg);
+  const tap = async (sel, wait) => { await pe(s => demo.tap(s), sel); await sleep(wait); };
+  const smooth = async (sel, to, ms) => { await pe(([s, t, d]) => new Promise(res => { const el = document.querySelector(s); const from = el.scrollTop, t0 = performance.now(); (function step(now) { const k = Math.min(1, (now - t0) / d); el.scrollTop = from + (t - from) * (0.5 - Math.cos(Math.PI * k) / 2); k < 1 ? requestAnimationFrame(step) : res(); })(t0); }), [sel, to, ms]); };
+  const t0 = Date.now(); const marks = []; const lap = l => marks.push([l, ((Date.now() - t0) / 1000).toFixed(1)]);
+  lap("start"); await sleep(1800); lap("home");
+  await tap("#aiBanner", 1200); lap("aichef");
+  await tap("#chefChips button", 2200); lap("chef results");
+  await smooth("#chefBody", 420, 1600); await sleep(900);
+  await pe(() => demo.tap(document.querySelectorAll("[data-chef-recipe]")[1])); await sleep(1300); lap("recipe");
+  await tap('[data-step="1"]', 1100);
+  await smooth("[data-view=recipe] .v-body", 260, 900); await sleep(400);
+  await tap("#addBtn", 1900); lap("stores");
+  await smooth("[data-view=stores] .v-body", 150, 700); await sleep(500);
+  await tap('[data-store="s1"]', 1200); lap("checkout");
+  await smooth("[data-view=checkout] .v-body", 160, 700); await sleep(300);
+  await tap('#optSeg [data-opt="trim"]', 800);
+  await tap('#recvSeg [data-recv="deliver"]', 1000);
+  await tap('#recvSeg [data-recv="pickup"]', 700);
+  await tap('#timeSeg [data-time="18:00"]', 900);
+  await tap("#payBtn", 2200); lap("done");
+  await pe(() => demo.go("merchant")); await sleep(400);
+  await pe(() => { const b = document.getElementById("chatBody"); const cards = document.querySelectorAll(".mcard"); b.scrollTop = cards[2].offsetTop - 160; }); await sleep(1400); lap("merchant");
+  await pe(() => demo.tap('[data-act="accept"]')); await sleep(2200); lap("end");
+  await p.close(); await ctx.close(); await browser.close();
+  console.log(JSON.stringify(marks));
+  const webm = path.join(REC, fs.readdirSync(REC).find(f => f.endsWith(".webm")));
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-ss", "1.25", "-i", webm, "-vf", "crop=414:868:33:8,fps=30,format=yuv420p", "-c:v", "libx264", "-preset", "slow", "-crf", "18", "-an", "-movflags", "+faststart", path.join(OUT, "demo_phone.mp4")]);
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", path.join(OUT, "demo_phone.mp4"), "-frames:v", "1", path.join(OUT, "demo_poster.png")]);
+  console.log("wrote", path.join(OUT, "demo_phone.mp4"));
+})();

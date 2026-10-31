@@ -1,0 +1,956 @@
+<title>나물로 앱 프로토타입</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/*@FONTFACE@*/
+/* Layout: 넓은 화면은 왼쪽 시연 안내 + 오른쪽 실제 크기 휴대폰, 휴대폰 폭에서는 앱 화면만 꽉 차게 */
+:root{
+  --page-bg:#E8EDE9; --page-fg:#17201B; --page-sub:#53605A; --page-line:#CBD5CE; --page-accent:#1D5A42; --page-card:#F6F8F6; --page-chip:#DAE5DD;
+  --app-bg:#F4F6F3; --app-card:#FFFFFF; --app-ink:#19221E; --app-sub:#5D6963; --app-faint:#8E9993; --app-line:#E2E7E3;
+  --app-brand:#1D5A42; --app-brand2:#2D7955; --app-tint:#E4F0E8; --app-amber:#B4622A; --app-amber-tint:#FAECDF;
+  --app-chat:#D5E0E5; --app-me:#F2DE79; --app-dark:#0F1A15; --device:#0B0F0D;
+  --font:"Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page-bg:#0E1311;--page-fg:#E2E9E5;--page-sub:#9AA79F;--page-line:#26302B;--page-accent:#84C7A3;--page-card:#151C18;--page-chip:#1F2A24;color-scheme:dark}}
+:root[data-theme="dark"]{--page-bg:#0E1311;--page-fg:#E2E9E5;--page-sub:#9AA79F;--page-line:#26302B;--page-accent:#84C7A3;--page-card:#151C18;--page-chip:#1F2A24;color-scheme:dark}
+html,body{height:100%}
+[hidden]{display:none!important}
+body{margin:0}
+img{max-width:100%}
+body{background:var(--page-bg);color:var(--page-fg);font-family:var(--font);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--app-amber);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- page stage ---------- */
+.stage{min-height:100%;display:grid;grid-template-columns:minmax(0,380px) auto;gap:56px;justify-content:center;align-items:center;
+  padding-block:32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));box-sizing:border-box}
+.guide{display:flex;flex-direction:column;gap:18px;min-width:0}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--page-accent)}
+.guide h1{margin:0;font-size:30px;line-height:1.2;font-weight:800;text-wrap:balance}
+.guide p{margin:0;font-size:15px;line-height:1.6;color:var(--page-sub);max-width:36em}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.steps button{width:100%;display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;text-align:left;padding:10px 12px;border-radius:10px;border:1px solid var(--page-line);background:var(--page-card);font-size:14px}
+.steps button:hover{border-color:var(--page-accent)}
+.steps .n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--page-chip);color:var(--page-fg)}
+.steps button[aria-current="true"]{border-color:var(--page-accent);box-shadow:inset 0 0 0 1px var(--page-accent)}
+.steps button[aria-current="true"] .n{background:var(--page-accent);color:var(--page-bg)}
+.sub-h{font-size:13px;font-weight:700;color:var(--page-sub);margin-top:4px}
+.ai-status{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:var(--page-card);border:1px solid var(--page-line);font-size:13px;line-height:1.5;color:var(--page-sub)}
+.ai-status b{color:var(--page-fg)}
+.dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex:none;background:#B8C2BC}
+.dot.on{background:#2FA36B}
+.guide .note{font-size:12px;color:var(--page-sub)}
+.reset{align-self:flex-start;padding:8px 14px;border-radius:999px;border:1px solid var(--page-line);background:transparent;font-size:13px}
+
+/* ---------- device ---------- */
+.device{position:relative;width:390px;height:844px;padding:12px;border-radius:58px;background:var(--device);box-shadow:0 40px 80px -30px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.07);flex:none}
+.screen{position:relative;width:390px;height:844px;border-radius:46px;overflow:hidden;background:var(--app-bg);color:var(--app-ink);isolation:isolate}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:118px;height:34px;border-radius:20px;background:#000;z-index:60}
+.statusbar{position:absolute;inset:0 0 auto;height:50px;padding:15px 28px 0 34px;box-sizing:border-box;display:flex;justify-content:space-between;align-items:flex-start;font-size:15px;font-weight:600;z-index:55;pointer-events:none}
+.sb-icons{display:flex;gap:6px;align-items:center;margin-top:2px}
+@media (max-width:900px){.stage{grid-template-columns:1fr;justify-items:center}.guide{order:2;max-width:430px}}
+@media (max-width:470px){
+  .stage{display:block;padding:0;height:100%;justify-items:normal}
+  .guide{display:none}
+  .device{width:100%;justify-self:stretch;height:100%;padding:0;border-radius:0;box-shadow:none;background:none;box-sizing:border-box}
+  .screen{width:100%;height:100%;border-radius:0}
+  .island,.statusbar{display:none}
+  .view{--top:calc(env(safe-area-inset-top,0px) + 10px)}
+}
+
+/* ---------- app views ---------- */
+.view{--top:54px;position:absolute;inset:0;display:flex;flex-direction:column;background:var(--app-bg)}
+.v-head{padding:var(--top) 20px 10px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:10px;background:var(--app-bg);flex:none}
+.v-head h2{margin:0;font-size:18px;font-weight:700;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:36px;height:36px;border-radius:10px;border:0;background:transparent;display:grid;place-items:center;flex:none;position:relative}
+.icon-btn svg{width:22px;height:22px}
+.badge{position:absolute;top:2px;right:0;min-width:16px;height:16px;border-radius:8px;background:var(--app-amber);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;padding:0 4px;box-sizing:border-box}
+.v-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:4px 20px 120px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:22px;scrollbar-width:none}
+.v-body::-webkit-scrollbar{display:none}
+.v-body.with-cta{padding-bottom:132px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:10px}
+.sec-h h3{margin:0;font-size:17px;font-weight:700}
+.sec-h span{font-size:12px;color:var(--app-faint)}
+.card{background:var(--app-card);border-radius:16px;box-shadow:0 1px 2px rgba(20,40,30,.05),0 6px 18px rgba(20,40,30,.05)}
+.muted{color:var(--app-sub)}
+.view h1:focus,.view h2:focus{outline:none}
+.demo-note{margin:-6px 0 0;font-size:11.5px;color:var(--app-faint)}
+.mcard .rows b.warn{color:var(--app-amber)}
+.loc{display:flex;align-items:center;gap:4px;font-size:15px;font-weight:700;border:0;background:none;padding:0}
+.hello{font-size:24px;font-weight:800;line-height:1.3;margin:0;text-wrap:balance}
+.search{display:flex;align-items:center;gap:10px;width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--app-line);background:var(--app-card);font-size:15px;color:var(--app-faint);text-align:left}
+.ai-banner{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;padding:14px;border-radius:18px;border:0;background:var(--app-dark);color:#EAF4EE;text-align:left;width:100%}
+.ai-banner img{width:52px;height:52px}
+.ai-banner b{display:block;font-size:16px;margin-bottom:3px}
+.ai-banner small{font-size:13px;color:#A9C6B6}
+.chip-ai{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;letter-spacing:.04em;padding:3px 7px;border-radius:999px;background:#2D7955;color:#fff}
+.rank{display:grid;grid-template-columns:20px 44px 1fr auto;gap:12px;align-items:center;padding:12px 14px;border:0;background:none;width:100%;text-align:left}
+.rank+.rank{border-top:1px solid var(--app-line)}
+.rank .no{font-weight:800;color:var(--app-brand);font-size:15px;text-align:center}
+.tile{border-radius:12px;display:grid;place-items:center}
+.tile img{width:70%;height:70%}
+.bar{height:6px;border-radius:3px;background:var(--app-line);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--app-brand2);border-radius:3px}
+.hscroll{display:flex;gap:10px;overflow-x:auto;margin:0 -20px;padding:0 20px;scrollbar-width:none}
+.hscroll::-webkit-scrollbar{display:none}
+.season{flex:none;width:118px;padding:12px;border:0;text-align:left}
+.season .tile{width:100%;aspect-ratio:1;margin-bottom:10px}
+.season b{display:block;font-size:15px}
+.season small{font-size:12px;color:var(--app-sub)}
+.today{padding:14px;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;border:0;width:100%;text-align:left}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--app-tint);color:var(--app-brand)}
+.pill.amber{background:var(--app-amber-tint);color:var(--app-amber)}
+.pill.gray{background:#EEF1EF;color:var(--app-sub)}
+.box-banner{display:grid;grid-template-columns:1fr 64px;gap:10px;align-items:center;padding:16px;border:0;width:100%;text-align:left;background:var(--app-tint);border-radius:16px}
+.box-banner img{width:64px;height:64px}
+.link-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--app-sub);border:0;background:none;padding:6px 2px;width:100%}
+
+/* tab bar */
+.tabbar{position:absolute;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 10px calc(22px + env(safe-area-inset-bottom,0px));padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px));background:rgba(255,255,255,.94);border-top:1px solid var(--app-line);backdrop-filter:blur(10px)}
+.tabbar button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--app-faint);padding:4px 0}
+.tabbar svg{width:24px;height:24px}
+.tabbar button[aria-current="page"]{color:var(--app-brand);font-weight:700}
+
+/* CTA */
+.cta-bar{position:absolute;left:0;right:0;bottom:0;z-index:40;display:flex;gap:10px;padding:12px 20px calc(26px + env(safe-area-inset-bottom,0px));padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));background:linear-gradient(rgba(244,246,243,0),var(--app-bg) 30%)}
+.btn{flex:1;height:54px;border-radius:14px;border:0;font-size:16px;font-weight:700;background:var(--app-brand);color:#fff}
+.btn.ghost{background:var(--app-card);color:var(--app-ink);box-shadow:inset 0 0 0 1px var(--app-line)}
+.btn.small{height:40px;font-size:14px;border-radius:11px;flex:none;padding:0 14px}
+
+/* dogam */
+.filters{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px}
+.filters::-webkit-scrollbar{display:none}
+.fchip{flex:none;padding:8px 13px;border-radius:999px;border:1px solid var(--app-line);background:var(--app-card);font-size:13px}
+.fchip[aria-pressed="true"]{background:var(--app-ink);border-color:var(--app-ink);color:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ncard{padding:12px;border:0;text-align:left;display:flex;flex-direction:column;gap:8px}
+.ncard .tile{width:100%;aspect-ratio:1.3}
+.ncard b{font-size:16px}
+.ncard small{font-size:12px;color:var(--app-sub)}
+
+/* guide detail */
+.hero{display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:center}
+.hero .tile{width:96px;height:96px;border-radius:22px}
+.hero h1{margin:0 0 6px;font-size:26px;font-weight:800}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{padding:12px 10px;text-align:center}
+.stat small{display:block;font-size:12px;color:var(--app-sub);margin-bottom:4px}
+.stat b{font-size:16px}
+.kid{padding:16px;display:grid;gap:10px}
+.kid-top{display:flex;justify-content:space-between;align-items:center}
+.kid-top b{font-size:15px}
+.kid-top strong{font-size:22px;color:var(--app-brand)}
+.vote{border:1px solid var(--app-line);background:var(--app-card);border-radius:12px;padding:10px 12px;font-size:14px;font-weight:600;display:flex;justify-content:center;gap:6px}
+.vote[aria-pressed="true"]{background:var(--app-tint);border-color:var(--app-brand2);color:var(--app-brand)}
+.months{display:grid;grid-template-columns:repeat(12,1fr);gap:3px}
+.months i{height:26px;border-radius:5px;background:#E9EDEA;display:grid;place-items:center;font-style:normal;font-size:10px;color:var(--app-faint)}
+.months i.on{background:var(--app-brand2);color:#fff;font-weight:700}
+.pairs{display:flex;gap:8px;flex-wrap:wrap}
+.pairs span{padding:7px 11px;border-radius:999px;background:var(--app-card);box-shadow:inset 0 0 0 1px var(--app-line);font-size:13px}
+
+/* recipe */
+.video{border-radius:16px;overflow:hidden;background:#0D1A13;color:#fff;position:relative}
+.thumb{aspect-ratio:16/9;position:relative;display:grid;place-items:center;background:radial-gradient(120% 90% at 30% 20%,#2C6A4C 0%,#123826 55%,#0A1C13 100%)}
+.thumb img.big{width:42%;filter:drop-shadow(0 10px 18px rgba(0,0,0,.35))}
+.play{position:absolute;width:62px;height:62px;border-radius:50%;background:rgba(0,0,0,.55);display:grid;place-items:center;border:0}
+.dur{position:absolute;right:10px;bottom:10px;font-size:12px;font-weight:700;background:rgba(0,0,0,.65);padding:3px 6px;border-radius:5px}
+.prog{height:4px;background:rgba(255,255,255,.18)}
+.prog i{display:block;height:100%;width:0;background:#E8573F;transition:width .4s}
+.vmeta{padding:12px 14px;display:grid;gap:4px}
+.vmeta b{font-size:16px}
+.vmeta small{font-size:12px;color:#A9BDB2}
+.ai-note{display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:var(--app-tint);font-size:12.5px;line-height:1.5;color:var(--app-brand)}
+.steps-r{display:grid;gap:8px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:12px;align-items:center;padding:12px 14px;border:0;width:100%;text-align:left}
+.step .ts{font-variant-numeric:tabular-nums;font-weight:700;color:var(--app-brand2);font-size:14px;background:var(--app-tint);border-radius:8px;padding:6px 0;text-align:center}
+.step b{display:block;font-size:15px}
+.step small{font-size:13px;color:var(--app-sub)}
+.step[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--app-brand2)}
+.ing{display:grid;gap:0;padding:4px 14px}
+.ing label{display:flex;align-items:center;gap:10px;padding:12px 0;font-size:15px}
+.ing label+label{border-top:1px solid var(--app-line)}
+.ing input{width:20px;height:20px;accent-color:var(--app-brand)}
+.ing em{margin-left:auto;font-style:normal;font-size:12px;color:var(--app-faint)}
+
+/* stores */
+.map{border-radius:16px;overflow:hidden;position:relative}
+.map svg{display:block;width:100%;height:auto}
+.scard{padding:14px;border:0;width:100%;text-align:left;display:grid;gap:8px}
+.scard[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--app-brand2)}
+.srow{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.srow b{font-size:16px}
+.srow small{font-size:12px;color:var(--app-sub);white-space:nowrap}
+.price{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+
+/* checkout */
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seg.seg2{grid-template-columns:repeat(2,1fr)}
+.seg button{border:1px solid var(--app-line);background:var(--app-card);border-radius:12px;padding:12px 6px;display:grid;gap:3px;font-size:14px;font-weight:700}
+.seg button small{font-weight:500;font-size:12px;color:var(--app-sub)}
+.seg button[aria-pressed="true"]{border-color:var(--app-brand2);background:var(--app-tint);color:var(--app-brand)}
+.seg button:disabled{opacity:.45;cursor:not-allowed}
+.times{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.times button{border:1px solid var(--app-line);background:var(--app-card);border-radius:12px;padding:12px 0;font-weight:700;font-variant-numeric:tabular-nums}
+.times button[aria-pressed="true"]{background:var(--app-ink);border-color:var(--app-ink);color:#fff}
+.times button:disabled{opacity:.4;text-decoration:line-through}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:32px;height:32px;border-radius:9px;border:1px solid var(--app-line);background:var(--app-card);font-size:18px;line-height:1}
+.qty span{min-width:22px;text-align:center;font-weight:700}
+.sum{padding:14px 16px;display:grid;gap:8px;font-size:14px}
+.sum div{display:flex;justify-content:space-between}
+.sum .total{font-size:17px;font-weight:800;border-top:1px solid var(--app-line);padding-top:10px}
+.item-row{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;padding:12px 14px}
+
+/* done */
+.done-hero{display:grid;justify-items:center;gap:10px;text-align:center;padding-top:10px}
+.done-hero img{width:84px;height:84px}
+.done-hero h1{margin:0;font-size:26px;font-weight:800}
+.impact{padding:14px 16px;background:var(--app-tint);box-shadow:none;display:grid;gap:4px}
+.impact b{font-size:15px;color:var(--app-brand)}
+.impact span{font-size:13px;line-height:1.5;color:var(--app-sub)}
+.code{padding:18px;display:grid;grid-template-columns:1fr 92px;gap:14px;align-items:center}
+.code strong{font-size:34px;font-weight:800;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.qr{width:92px;height:92px}
+.info{padding:6px 16px}
+.info div{display:flex;justify-content:space-between;gap:10px;padding:11px 0;font-size:14px}
+.info div+div{border-top:1px solid var(--app-line)}
+
+/* box */
+.plans{display:grid;gap:10px}
+.plan{display:grid;grid-template-columns:22px 1fr auto;gap:12px;align-items:center;padding:16px;border:0;width:100%;text-align:left}
+.plan .r{width:20px;height:20px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--app-line)}
+.plan[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--app-brand2)}
+.plan[aria-pressed="true"] .r{box-shadow:inset 0 0 0 6px var(--app-brand2)}
+.plan b{font-size:16px}
+.plan small{display:block;font-size:12px;color:var(--app-sub);margin-top:2px}
+.contents{padding:14px;display:grid;gap:10px}
+.crow{display:flex;gap:8px}
+.crow .tile{width:56px;height:56px}
+
+/* AI chef */
+.bubble{max-width:86%;padding:12px 14px;border-radius:16px;font-size:14.5px;line-height:1.55}
+.bubble.bot{background:var(--app-card);border-top-left-radius:6px;box-shadow:0 1px 2px rgba(20,40,30,.06)}
+.bubble.me{align-self:flex-end;background:var(--app-brand);color:#fff;border-top-right-radius:6px}
+.qchips{display:flex;gap:8px;flex-wrap:wrap}
+.qchips button{border:1px solid var(--app-line);background:var(--app-card);border-radius:999px;padding:8px 12px;font-size:13px}
+.composer{position:absolute;left:0;right:0;bottom:0;z-index:40;padding:10px 14px calc(24px + env(safe-area-inset-bottom,0px));padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));background:var(--app-bg);border-top:1px solid var(--app-line);display:flex;gap:8px;align-items:flex-end}
+.composer textarea,.composer input[type=text]{flex:1;min-width:0;resize:none;height:44px;max-height:96px;box-sizing:border-box;padding:11px 14px;border-radius:22px;border:1px solid var(--app-line);background:var(--app-card);font:inherit;font-size:15px;color:var(--app-ink)}
+.round{width:44px;height:44px;border-radius:50%;border:0;display:grid;place-items:center;flex:none;background:var(--app-card);box-shadow:inset 0 0 0 1px var(--app-line)}
+.round.send{background:var(--app-brand);color:#fff;box-shadow:none}
+.round svg{width:20px;height:20px}
+.thinking{display:inline-flex;gap:4px;align-items:center}
+.thinking i{width:6px;height:6px;border-radius:50%;background:var(--app-faint);animation:blink 1.2s infinite}
+.thinking i:nth-child(2){animation-delay:.2s}.thinking i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.rec{padding:14px;display:grid;gap:10px}
+.rec-top{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center}
+.rec-top b{font-size:16px;display:block}
+.rec-top small{font-size:12px;color:var(--app-sub)}
+.rec ol{margin:0;padding-left:18px;font-size:13.5px;line-height:1.6;color:var(--app-sub)}
+.rec-actions{display:flex;gap:8px}
+.mode{font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:#EEF1EF;color:var(--app-sub);white-space:nowrap}
+.mode.live{background:#DFF3E7;color:#1E7A4A}
+.detected{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--app-sub)}
+
+/* merchant chat */
+.chat{background:var(--app-chat)}
+.chat .v-head{background:var(--app-chat)}
+.chat .v-body{gap:10px;padding-bottom:150px}
+.daychip{align-self:center;font-size:11px;padding:4px 10px;border-radius:999px;background:rgba(0,0,0,.12);color:#fff}
+.msg{display:flex;gap:6px;align-items:flex-end;max-width:88%}
+.msg.me{align-self:flex-end;flex-direction:row-reverse}
+.msg time{font-size:10px;color:#5E6C73;flex:none;margin-bottom:2px}
+.mb{padding:10px 12px;border-radius:14px;font-size:14px;line-height:1.5;background:#fff}
+.msg.me .mb{background:var(--app-me)}
+.avatar{width:34px;height:34px;border-radius:12px;background:var(--app-dark);display:grid;place-items:center;flex:none;align-self:flex-start}
+.avatar img{width:24px;height:24px}
+.mcard{background:#fff;border-radius:14px;overflow:hidden;min-width:250px}
+.mcard h4{margin:0;padding:11px 13px;font-size:13px;font-weight:700;background:var(--app-tint);color:var(--app-brand);display:flex;justify-content:space-between;gap:8px}
+.mcard h4.amber{background:var(--app-amber-tint);color:var(--app-amber)}
+.mcard .rows{padding:6px 13px;display:grid}
+.mcard .rows div{display:flex;justify-content:space-between;gap:10px;padding:6px 0;font-size:13px}
+.mcard .rows div+div{border-top:1px solid var(--app-line)}
+.mcard .foot{padding:8px 13px 12px;font-size:12px;color:var(--app-sub);line-height:1.5}
+.mcard .acts{display:flex;border-top:1px solid var(--app-line)}
+.mcard .acts button{flex:1;border:0;background:none;padding:11px 0;font-size:13px;font-weight:700}
+.mcard .acts button+button{border-left:1px solid var(--app-line)}
+.mcard .acts .pri{color:var(--app-brand)}
+.spark{display:block;width:100%;height:36px}
+.quick-acts{position:absolute;left:0;right:0;bottom:78px;z-index:41;display:flex;gap:8px;overflow-x:auto;padding:0 14px 8px;scrollbar-width:none}
+.quick-acts::-webkit-scrollbar{display:none}
+.quick-acts button{flex:none;border:0;border-radius:999px;padding:8px 12px;font-size:12.5px;font-weight:600;background:rgba(255,255,255,.92)}
+
+/* toast + demo marks */
+.toast{position:absolute;left:50%;bottom:112px;transform:translate(-50%,12px);z-index:80;background:rgba(18,26,22,.92);color:#fff;font-size:13.5px;padding:11px 16px;border-radius:12px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:80%;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.tapfx{position:absolute;z-index:90;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:rgba(232,140,60,.35);box-shadow:0 0 0 2px rgba(232,140,60,.9);pointer-events:none;animation:tap .55s ease-out forwards}
+@keyframes tap{0%{transform:scale(.4);opacity:1}100%{transform:scale(1.25);opacity:0}}
+.mark{position:absolute;z-index:91;pointer-events:none;border-radius:14px;box-shadow:0 0 0 3px #E07B2E,0 0 0 7px rgba(224,123,46,.25)}
+.mark b{position:absolute;top:-14px;left:-14px;width:28px;height:28px;border-radius:50%;background:#E07B2E;color:#fff;font-size:15px;font-weight:800;display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+</style>
+
+<div class="stage">
+  <aside class="guide" aria-label="시연 안내">
+    <div class="eyebrow">NAMULLO · 시연용 웹앱</div>
+    <h1>나물로 앱 프로토타입</h1>
+    <p>나물을 알고, 고르고, 가까운 전통시장 가게에서 바로 사는 흐름을 직접 눌러 볼 수 있습니다. AI 셰프와 AI 상인 비서는 AI가 연결된 환경에서는 실제 응답을, 그 밖에는 예시 응답을 보여 줍니다.</p>
+    <div class="ai-status" id="aiStatus"><span class="dot" id="aiDot"></span><span id="aiText"><b>AI 연결 확인 중</b><br>잠시 후 AI 기능이 켜지거나, 예시 응답으로 시연합니다.</span></div>
+    <div class="sub-h">소비자 시연 순서</div>
+    <ol class="steps" id="stepList">
+      <li><button data-go="home"><span class="n">1</span>홈: 이달의 제철과 AI 셰프</button></li>
+      <li><button data-go="aichef"><span class="n">2</span>AI 셰프에게 반찬 추천 받기</button></li>
+      <li><button data-go="recipe"><span class="n">3</span>레시피 보고 재료 담기</button></li>
+      <li><button data-go="stores"><span class="n">4</span>가까운 시장 가게 고르기</button></li>
+      <li><button data-go="checkout"><span class="n">5</span>손질 옵션 · 픽업 시간 선택</button></li>
+      <li><button data-go="done"><span class="n">6</span>예약 완료 · 픽업 번호</button></li>
+    </ol>
+    <div class="sub-h">그 밖의 화면</div>
+    <ol class="steps">
+      <li><button data-go="merchant"><span class="n">상</span>AI 상인 비서 (카톡 한 줄 재고 등록)</button></li>
+      <li><button data-go="dogam"><span class="n">도</span>나물 도감</button></li>
+      <li><button data-go="box"><span class="n">예</span>명절·제철 예약</button></li>
+    </ol>
+    <button class="reset" id="resetBtn">처음부터 다시</button>
+    <div class="note">화면 속 가게·가격·수치는 시연용 예시입니다. 3D 아이콘: Microsoft Fluent Emoji (MIT), 글꼴: Pretendard (OFL)</div>
+  </aside>
+
+  <div class="device">
+    <div class="screen" id="screen">
+      <div class="island" aria-hidden="true"></div>
+      <div class="statusbar" aria-hidden="true"><span id="clock">17:00</span>
+        <span class="sb-icons"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="currentColor"/><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 2.5c2.3 0 4.4.9 6 2.4l1.3-1.4A10.3 10.3 0 0 0 8 .5 10.3 10.3 0 0 0 .7 3.5L2 4.9a8.3 8.3 0 0 1 6-2.4Zm0 4c1.2 0 2.3.5 3.2 1.2l1.3-1.4A6.6 6.6 0 0 0 8 4.5c-1.7 0-3.3.7-4.5 1.8l1.3 1.4C5.7 7 6.8 6.5 8 6.5Zm0 4 2-2.1A3 3 0 0 0 8 7.6a3 3 0 0 0-2 .8l2 2.1Z" fill="currentColor"/></svg>
+        <svg width="26" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="currentColor" opacity=".45"/><rect x="2" y="2" width="16" height="8" rx="1.6" fill="currentColor"/><rect x="23.6" y="4" width="1.6" height="4" rx=".8" fill="currentColor" opacity=".45"/></svg></span>
+      </div>
+
+      <!-- 홈 -->
+      <section class="view" data-view="home">
+        <div class="v-head">
+          <button class="loc" id="locBtn" aria-label="동네 바꾸기">행당동 <svg width="14" height="14" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg></button>
+          <span style="flex:1"></span>
+          <button class="icon-btn" data-go="stores" aria-label="장바구니"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L21 8H6.2" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.4" fill="currentColor"/><circle cx="17" cy="20" r="1.4" fill="currentColor"/></svg><span class="badge" data-cart-badge hidden>0</span></button>
+          <button class="icon-btn" data-go="merchant" aria-label="알림"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16Zm4 4a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+        <div class="v-body">
+          <div style="display:grid;gap:14px">
+            <p class="hello">오늘 저녁,<br>어떤 나물 할까요?</p>
+            <p class="demo-note">시연용 프로토타입 · 가게·가격·선호도는 예시 데이터</p>
+            <button class="ai-banner" data-go="aichef" id="aiBanner"><img src="" data-icon="cook" alt=""><span><b>AI 셰프에게 물어보기 <span class="chip-ai">AI</span></b><small>“다섯 살 아이랑 먹을 순한 반찬 뭐 있어?”</small></span><svg width="20" height="20" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></button>
+          </div>
+          <div>
+            <div class="sec-h"><h3>아이가 잘 먹는 나물 TOP3</h3><span>투표 기준 · 예시</span></div>
+            <div class="card" id="topList"></div>
+          </div>
+          <div>
+            <div class="sec-h"><h3>11월 제철 나물</h3><span>지금 가장 맛있어요</span></div>
+            <div class="hscroll" id="seasonList"></div>
+          </div>
+          <div>
+            <div class="sec-h"><h3>오늘 시장 입고</h3><span>가까운 전통시장</span></div>
+            <button class="card today" data-go="stores"><span class="tile" style="width:44px;height:44px;background:#E4F0E8"><img src="" data-icon="store" alt=""></span><span><b style="font-size:15px">초록나물상회 · 새벽시장</b><br><small class="muted">600m · 오늘 09:12 입고 · 참나물, 시금치, 콩나물</small></span></button>
+          </div>
+          <button class="box-banner" data-go="box"><span><span class="pill">명절·제철 예약</span><br><b style="font-size:16px;display:block;margin-top:8px">설 차례 삼색나물 미리 주문</b><small class="muted">고사리·도라지·시금치 4인분 · 설 연휴 전날 픽업·배달</small></span><img src="" data-icon="package" alt=""></button>
+          <button class="link-row" data-go="merchant"><span>사장님이신가요? 카톡 한 줄로 재고 등록하기</span><span>›</span></button>
+        </div>
+      </section>
+
+      <!-- 도감 -->
+      <section class="view" data-view="dogam" hidden>
+        <div class="v-head"><h2>나물 도감</h2><button class="icon-btn" data-go="aichef" aria-label="AI 셰프"><img src="" data-icon="cook" alt="" style="width:26px;height:26px"></button></div>
+        <div class="v-body">
+          <div class="filters" id="dogamFilters">
+            <button class="fchip" aria-pressed="true" data-f="all">전체</button>
+            <button class="fchip" aria-pressed="false" data-f="kid">아이 선호</button>
+            <button class="fchip" aria-pressed="false" data-f="quick">5분 완성</button>
+            <button class="fchip" aria-pressed="false" data-f="season">11월 제철</button>
+            <button class="fchip" aria-pressed="false" data-f="san">산나물</button>
+            <button class="fchip" aria-pressed="false" data-f="safe">꼭 데쳐 먹는 나물</button>
+          </div>
+          <div class="grid2" id="dogamGrid"></div>
+        </div>
+      </section>
+
+      <!-- 도감 상세 -->
+      <section class="view" data-view="guide" hidden>
+        <div class="v-head"><button class="icon-btn" data-back aria-label="뒤로"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></button><h2 id="gTitle">참나물</h2></div>
+        <div class="v-body with-cta">
+          <div class="hero"><span class="tile" id="gTile"><img src="" id="gIcon" alt=""></span><div><h1 id="gName"></h1><div class="tags" id="gTags"></div><small class="muted" id="gSeason" style="display:block;margin-top:8px;font-size:13px"></small></div></div>
+          <div class="tags" id="gKind"></div>
+          <div class="card" id="gSafety" hidden style="padding:14px;display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:start;background:var(--app-amber-tint)"><img src="" data-icon="warning" alt="" style="width:34px;height:34px"><span style="font-size:13.5px;line-height:1.55"><b style="display:block;margin-bottom:2px;color:var(--app-amber)">안전하게 먹는 법</b><span id="gSafetyText"></span><span id="gOrigin" style="display:block;margin-top:6px;color:var(--app-sub)"></span></span></div>
+          <div class="ai-note" id="gNote" hidden></div>
+          <div class="stats"><div class="card stat"><small>손질</small><b id="gPrep"></b></div><div class="card stat"><small>데치기</small><b id="gBlanch"></b></div><div class="card stat"><small>보관</small><b id="gKeep" style="font-size:14px"></b></div></div>
+          <div class="card kid">
+            <div class="kid-top"><b>아이 선호도</b><strong id="gKid"></strong></div>
+            <div class="bar" style="height:8px"><i id="gKidBar"></i></div>
+            <small class="muted" id="gVotes" style="font-size:12px"></small>
+            <button class="vote" id="voteBtn" aria-pressed="false"><img src="" data-icon="child" alt="" style="width:20px;height:20px"> 우리 아이도 먹었어요</button>
+          </div>
+          <div><div class="sec-h"><h3>제철 달력</h3><span id="gSeasonShort"></span></div><div class="months" id="gMonths"></div></div>
+          <div><div class="sec-h"><h3>어울리는 양념</h3></div><div class="pairs" id="gPairs"></div></div>
+        </div>
+        <div class="cta-bar"><button class="btn ghost" data-go="recipe">레시피 보기</button><button class="btn" id="gBuy">시장에서 사기</button></div>
+      </section>
+
+      <!-- AI 셰프 -->
+      <section class="view" data-view="aichef" hidden>
+        <div class="v-head"><button class="icon-btn" data-back aria-label="뒤로"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></button><h2>AI 셰프</h2><span class="mode" id="chefMode">예시 응답</span></div>
+        <div class="v-body" id="chefBody" style="gap:14px;padding-bottom:150px">
+          <div class="bubble bot">냉장고에 있는 재료나 가족 상황을 알려 주세요. <b>오늘 시장 가게에 들어온 나물</b>로 반찬을 골라 드릴게요.</div>
+          <div class="qchips" id="chefChips">
+            <button data-q="다섯 살 아이랑 먹을 순한 반찬 추천해 줘">5살 아이가 먹을 순한 반찬</button>
+            <button data-q="두부랑 계란이 있어요. 같이 먹을 나물 반찬 알려 줘">두부랑 계란이 있어요</button>
+            <button data-q="10분 안에 끝나는 나물 반찬 2인분">10분 안에 끝나는 것</button>
+            <button data-q="저염으로 먹고 싶어요. 어른 2명 저녁 반찬">저염으로 2인분</button>
+          </div>
+          <div id="chefLog" style="display:grid;gap:14px"></div>
+        </div>
+        <div class="composer">
+          <button class="round" id="photoBtn" aria-label="사진으로 묻기"><svg viewBox="0 0 24 24"><path d="M4 8h3l1.6-2h6.8L17 8h3v11H4V8Z" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/><circle cx="12" cy="13.5" r="3.4" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></button>
+          <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" hidden>
+          <textarea id="chefInput" rows="1" placeholder="예) 다섯 살 아이랑 먹을 순한 반찬"></textarea>
+          <button class="round send" id="chefSend" aria-label="보내기"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </section>
+
+      <!-- 레시피 -->
+      <section class="view" data-view="recipe" hidden>
+        <div class="v-head"><button class="icon-btn" data-back aria-label="뒤로"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></button><h2 id="rHead">레시피</h2></div>
+        <div class="v-body with-cta">
+          <div class="video card">
+            <div class="thumb"><img src="" class="big" id="rIcon" alt=""><button class="play" id="playBtn" aria-label="영상 재생"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5Z" fill="#fff"/></svg></button><span class="dur" id="rDur"></span></div>
+            <div class="prog"><i id="rProg"></i></div>
+            <div class="vmeta"><b id="rTitle"></b><small id="rBy"></small></div>
+          </div>
+          <div class="ai-note"><span class="chip-ai">AI</span><span>영상 설명과 챕터를 AI가 단계·재료로 정리했어요. 영상은 원래 채널에서 재생돼요.</span></div>
+          <div><div class="sec-h"><h3>단계별로 보기</h3><span>누르면 그 장면으로 이동</span></div><div class="steps-r" id="rSteps"></div></div>
+          <div><div class="sec-h"><h3>재료</h3><span>집에 있는 것은 체크</span></div><div class="card ing" id="rIngs"></div></div>
+        </div>
+        <div class="cta-bar"><button class="btn" id="addBtn">재료 담기</button></div>
+      </section>
+
+      <!-- 시장 가게 -->
+      <section class="view" data-view="stores" hidden>
+        <div class="v-head"><button class="icon-btn" data-back aria-label="뒤로"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></button><h2 id="sHead">시장 가게</h2><span class="pill gray">행당동</span></div>
+        <div class="v-body">
+          <div class="map card" id="mapBox"></div>
+          <div class="filters" id="storeFilters">
+            <button class="fchip" aria-pressed="true" data-sf="pickup">픽업 가능</button>
+            <button class="fchip" aria-pressed="false" data-sf="trim">손질 가능</button>
+            <button class="fchip" aria-pressed="false" data-sf="today">오늘 입고</button>
+          </div>
+          <div><div class="sec-h"><h3 id="sListTitle">참나물 파는 곳</h3><span id="sCount"></span></div><p class="demo-note" id="sNote" hidden style="margin:-4px 0 8px"></p><div style="display:grid;gap:10px" id="storeList"></div></div>
+        </div>
+      </section>
+
+      <!-- 주문 -->
+      <section class="view" data-view="checkout" hidden>
+        <div class="v-head"><button class="icon-btn" data-back aria-label="뒤로"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></button><h2>주문하기</h2></div>
+        <div class="v-body with-cta">
+          <div class="card" style="padding:14px;display:grid;gap:4px"><b id="cStore" style="font-size:16px"></b><small class="muted" id="cStoreSub"></small></div>
+          <div class="card item-row"><span class="tile" id="cTile" style="width:52px;height:52px"><img src="" id="cIcon" alt=""></span><span><b id="cItem" style="font-size:15px"></b><br><small class="muted" id="cUnit"></small></span><span class="qty"><button id="qMinus" aria-label="빼기">−</button><span id="qVal">1</span><button id="qPlus" aria-label="더하기">+</button></span></div>
+          <div><div class="sec-h"><h3>손질 옵션</h3><span>사장님이 직접 손질해요</span></div><div class="seg" id="optSeg"></div><small class="muted" id="optNote" style="display:block;margin-top:8px;font-size:12.5px;line-height:1.5"></small></div>
+          <div><div class="sec-h"><h3>받는 방법</h3><span>배달은 배달대행으로 연결해요</span></div><div class="seg seg2" id="recvSeg"></div><small class="muted" id="recvNote" style="display:block;margin-top:8px;font-size:12.5px;line-height:1.5"></small></div>
+          <div><div class="sec-h"><h3 id="timeTitle">픽업 시간</h3><span>오늘</span></div><div class="times" id="timeSeg"></div></div>
+          <div class="card sum" id="sumBox"></div>
+        </div>
+        <div class="cta-bar"><button class="btn" id="payBtn">예약하기</button></div>
+      </section>
+
+      <!-- 완료 -->
+      <section class="view" data-view="done" hidden>
+        <div class="v-head"><span style="flex:1"></span><button class="icon-btn" data-go="home" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></div>
+        <div class="v-body with-cta">
+          <div class="done-hero"><img src="" data-icon="check" alt=""><h1 id="dTitle">예약했어요</h1><p class="muted" id="dSub" style="margin:0;font-size:15px"></p></div>
+          <div class="card code"><span><small class="muted" style="font-size:12px" id="dCodeLabel">픽업 번호</small><br><strong id="dCode">N-2381</strong><br><small class="muted" style="font-size:12px" id="dCodeNote">가게에서 번호만 말하면 돼요</small></span><svg class="qr" viewBox="0 0 29 29" id="qr" aria-label="픽업 QR"></svg></div>
+          <div class="card impact" id="dImpact"></div>
+          <div class="card info" id="dInfo"></div>
+          <div class="card" style="padding:14px 16px;display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center"><img src="" data-icon="child" alt="" style="width:40px;height:40px"><span style="font-size:13.5px;line-height:1.5">내일 저녁, 아이가 잘 먹었는지 알려 주세요.<br><span class="muted">아이 선호도와 다음 추천에 반영돼요.</span></span></div>
+        </div>
+        <div class="cta-bar"><button class="btn ghost" id="routeBtn">가는 길</button><button class="btn" data-go="home">홈으로</button></div>
+      </section>
+
+      <!-- 명절·제철 예약 -->
+      <section class="view" data-view="box" hidden>
+        <div class="v-head"><h2>명절·제철 예약</h2><span class="pill">미리 주문</span></div>
+        <div class="v-body with-cta" style="padding-bottom:200px">
+          <p class="demo-note" style="margin:0">주문이 몰리는 날을 미리 받아 가게가 손질할 시간을 벌어요. 상품·가격은 예시예요.</p>
+          <div class="plans" id="plans"></div>
+          <div class="card" style="padding:14px 16px;display:grid;gap:6px"><b style="font-size:15px">받는 방법</b><span class="muted" style="font-size:13.5px">가게 픽업(무료) 또는 받는 날 저녁 단지 묶음배달(+3,500원) · 받는 날 전날까지 주문</span></div>
+        </div>
+        <div class="cta-bar" style="bottom:78px"><button class="btn" id="subBtn">예약하기</button></div>
+      </section>
+
+      <!-- AI 상인 비서 -->
+      <section class="view chat" data-view="merchant" hidden>
+        <div class="v-head"><button class="icon-btn" data-back aria-label="뒤로"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></button><h2>나물로 상인 도우미</h2><span class="mode" id="merchMode">예시 응답</span></div>
+        <div class="v-body" id="chatBody"></div>
+        <div class="quick-acts" id="quickActs">
+          <button data-qa="promo">홍보글 만들기</button>
+          <button data-qa="forecast">내일 입고 추천</button>
+          <button data-qa="settle">이번 주 정산</button>
+        </div>
+        <div class="composer" style="background:#fff">
+          <button class="round" id="micBtn" aria-label="음성으로 보내기"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></button>
+          <input type="text" id="chatInput" placeholder="예) 취나물 10단 4000 손질 가능">
+          <button class="round send" id="chatSend" aria-label="보내기"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </section>
+
+      <nav class="tabbar" id="tabbar" aria-label="메뉴">
+        <button data-tab="home" aria-current="page"><svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20H4z" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linejoin="round"/></svg>홈</button>
+        <button data-tab="dogam"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4Zm0 13a3 3 0 0 1 3-3h11" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linejoin="round"/></svg>도감</button>
+        <button data-tab="stores"><svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 1 1 13 0C18.5 15.4 12 21 12 21Z" stroke="currentColor" stroke-width="1.9" fill="none"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.9" fill="none"/></svg>시장</button>
+        <button data-tab="box"><svg viewBox="0 0 24 24"><path d="M4 8.5 12 4l8 4.5v7L12 20l-8-4.5v-7Zm0 0 8 4.5 8-4.5M12 13v7" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linejoin="round"/></svg>예약</button>
+      </nav>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ICON = /*@ICONS@*/{};
+const N = {
+  sigeumchi:{name:"시금치",kind:"재배나물",cook:["숙채"],icon:"leafy",tint:"#E3F0DD",tags:["달큰함","부드러움"],season:[11,12,1,2,3],seasonNote:"제철 11~3월",prep:"5분",blanch:"40초",keep:"냉장 3일",kid:92,votes:2310,pair:["참기름","소금","다진 마늘"],
+    recipe:{title:"시금치나물 5분 무침",by:"엄마의 반찬노트 · 조회수 31만회",len:"5:40",steps:[["00:20","다듬기","뿌리 흙을 씻고 큰 것은 반으로"],["01:10","데치기","끓는 물 40초, 찬물에 헹구기"],["02:30","무치기","소금 한 꼬집, 참기름 1큰술"]],ings:[["시금치 1단",true],["참기름 1큰술",false],["소금 약간",false],["다진 마늘 조금",false]]}},
+  kongnamul:{name:"콩나물",kind:"재배나물(기른 나물)",cook:["숙채"],icon:"beans",tint:"#F2EED9",tags:["고소함","아삭함"],season:[1,2,3,4,5,6,7,8,9,10,11,12],seasonNote:"연중",prep:"3분",blanch:"5분",verb:"삶아",keep:"냉장 2일",kid:90,votes:1980,pair:["소금","참기름","대파"],
+    recipe:{title:"콩나물무침 비린내 없이",by:"자취요리 연구소 · 조회수 24만회",len:"6:05",steps:[["00:30","씻기","머리 껍질만 가볍게"],["01:40","삶기","뚜껑 닫고 5분, 열지 않기"],["03:20","무치기","소금·참기름, 대파 조금"]],ings:[["콩나물 300g",true],["참기름 1큰술",false],["소금 약간",false],["대파 조금",false]]}},
+  chamnamul:{name:"참나물",kind:"산나물 · 재배",cook:["생채","숙채","묵나물"],note:"생으로도 먹어요. 짧게 데치면 향이 더 살아요.",icon:"herb",tint:"#E2EFE4",tags:["향긋함","아삭함"],season:[3,4,5,6],seasonNote:"제철 3~6월 · 하우스 재배로 연중",prep:"5분",blanch:"30초",keep:"냉장 3일",kid:87,votes:1204,pair:["들기름","국간장","통깨"],
+    recipe:{title:"참나물 무침 7분 완성",by:"채소한끼 · 조회수 12만회",len:"7:12",steps:[["00:35","다듬기","억센 줄기 끝 2cm 정리"],["01:50","데치기","끓는 물에 소금 한 꼬집, 30초"],["03:10","무치기","국간장·들기름 1큰술, 통깨"]],ings:[["참나물 200g",true],["국간장 1큰술",false],["들기름 1큰술",false],["통깨 약간",false]]}},
+  pyogo:{name:"표고버섯",kind:"재배 버섯",cook:["볶음","묵나물(말린 표고)"],icon:"mushroom",tint:"#F0E5DA",tags:["쫄깃함","감칠맛"],season:[3,4,9,10,11],seasonNote:"제철 봄 · 가을",prep:"5분",blanch:"볶기 3분",keep:"냉장 5일",kid:64,votes:640,pair:["간장","참기름","깨"],
+    recipe:{title:"표고버섯볶음 간장 한 숟갈",by:"채소한끼 · 조회수 8만회",len:"4:50",steps:[["00:25","썰기","기둥 떼고 0.5cm 두께"],["01:30","볶기","기름 두르고 중불 3분"],["02:40","간하기","간장 1큰술, 참기름"]],ings:[["표고버섯 150g",true],["간장 1큰술",false],["참기름 약간",false]]}},
+  baechu:{name:"배추",kind:"재배나물",cook:["숙채","생채(겉절이)"],icon:"leafy",tint:"#EBF2DC",tags:["시원함","달큰함"],season:[10,11,12],seasonNote:"제철 10~12월",prep:"5분",blanch:"20초",keep:"냉장 1주",kid:71,votes:520,pair:["된장","참기름","깨"],
+    recipe:{title:"배추나물 된장무침",by:"엄마의 반찬노트 · 조회수 9만회",len:"6:20",steps:[["00:30","썰기","속잎 위주로 한입 크기"],["01:40","데치기","20초, 물기 꼭 짜기"],["03:00","무치기","된장 반 큰술, 참기름"]],ings:[["배추 1/4포기",true],["된장 반 큰술",false],["참기름 약간",false]]}},
+  oi:{name:"오이",kind:"재배 열매채소",cook:["볶음","생채"],icon:"cucumber",tint:"#E2F0E7",tags:["아삭함","시원함"],season:[4,5,6,7,8],seasonNote:"제철 4~8월",prep:"5분",blanch:"볶기 2분",keep:"냉장 3일",kid:76,votes:820,pair:["소금","참기름","깨"],
+    recipe:{title:"오이나물 볶음",by:"자취요리 연구소 · 조회수 6만회",len:"4:10",steps:[["00:20","썰기","얇게 반달썰기"],["01:00","절이기","소금 10분, 물기 짜기"],["02:30","볶기","센불 1분, 참기름"]],ings:[["오이 2개",true],["소금 약간",false],["참기름 약간",false]]}},
+  gaji:{name:"가지",kind:"재배 열매채소",cook:["숙채(찜)","묵나물(말린 가지)"],icon:"eggplant",tint:"#ECE4EF",tags:["부드러움"],season:[6,7,8,9],seasonNote:"제철 6~9월",prep:"5분",blanch:"찌기 5분",keep:"냉장 3일",kid:58,votes:410,pair:["간장","다진 마늘","참기름"],
+    recipe:{title:"가지나물 찜기로 5분",by:"채소한끼 · 조회수 15만회",len:"5:30",steps:[["00:20","썰기","길게 4등분"],["01:00","찌기","김 오른 찜기 5분"],["03:00","무치기","간장·마늘·참기름"]],ings:[["가지 2개",true],["간장 1큰술",false],["다진 마늘 조금",false]]}},
+  gosari:{name:"고사리",kind:"산나물",cook:["숙채","묵나물"],icon:"leafwind",tint:"#EFE8DA",tags:["쫄깃함","구수함"],season:[4,5],seasonNote:"제철 4~5월 · 말린 고사리 연중",prep:"불리기 반나절",blanch:"충분히 삶기",keep:"삶아서 냉장 2일",kid:55,votes:380,pair:["들기름","국간장","다진 마늘"],
+    safety:"생으로 먹지 않아요. 고유 독성분이 있어 충분히 삶고 찬물에 우려낸 뒤 조리하세요. (식약처 안내)",origin:"수입산 비중이 높은 품목이에요. 원산지 표시를 꼭 확인하세요.",
+    recipe:{title:"고사리볶음 정월대보름 묵나물",by:"엄마의 반찬노트 · 조회수 18만회",len:"8:10",steps:[["00:40","불리기","말린 고사리 반나절 불리기"],["02:10","삶기","충분히 삶고 찬물에 우리기"],["05:00","볶기","국간장·들기름, 다진 마늘"]],ings:[["삶은 고사리 300g",true],["들기름 1큰술",false],["국간장 1큰술",false],["다진 마늘 조금",false]]}},
+  durup:{name:"두릅",kind:"산나물",cook:["숙채"],icon:"seedling",tint:"#E5EFD9",tags:["쌉싸름함","향긋함"],season:[4,5],seasonNote:"제철 4~5월",prep:"5분",blanch:"1~2분",keep:"냉장 2일",kid:35,votes:190,pair:["초고추장","소금","참기름"],
+    safety:"생으로 먹지 않아요. 고유 독성분이 있어 끓는 물에 데쳐 먹어요. (식약처 안내)",
+    recipe:{title:"두릅숙회 초장 곁들이기",by:"채소한끼 · 조회수 5만회",len:"4:30",steps:[["00:20","다듬기","밑동 껍질 벗기기"],["01:10","데치기","끓는 물 1~2분, 찬물 헹굼"],["02:40","곁들이기","초고추장 또는 소금·참기름"]],ings:[["두릅 200g",true],["초고추장 2큰술",false]]}},
+  naengi:{name:"냉이",kind:"들나물",cook:["숙채","국"],icon:"seedling",tint:"#EAF2DE",tags:["향긋함"],season:[2,3,4],seasonNote:"제철 2~4월",prep:"15분",blanch:"40초",keep:"냉장 2일",kid:38,votes:210,pair:["된장","참기름","깨"],
+    note:"도시 하천변처럼 오염 우려가 있는 곳의 야생 냉이는 채취하지 마세요.",
+    recipe:{title:"냉이 된장무침",by:"엄마의 반찬노트 · 조회수 11만회",len:"5:50",steps:[["00:30","다듬기","뿌리 흙 긁어내고 씻기"],["01:50","데치기","40초, 찬물 헹굼"],["03:10","무치기","된장 반 큰술, 참기름"]],ings:[["냉이 200g",true],["된장 반 큰술",false],["참기름 약간",false]]}},
+  chwinamul:{name:"취나물",kind:"산나물",cook:["생채","숙채","묵나물"],note:"말린 취나물은 정월대보름 묵은나물의 단골이에요.",icon:"herb",tint:"#E7EEDD",tags:["쌉싸름함","향긋함"],season:[3,4,5],seasonNote:"제철 3~5월 · 말린 취나물 연중",prep:"10분",blanch:"2분",keep:"냉장 2일",kid:41,votes:300,pair:["들기름","국간장","다진 마늘"],
+    recipe:{title:"취나물볶음 들기름 향",by:"엄마의 반찬노트 · 조회수 7만회",len:"6:45",steps:[["00:40","다듬기","억센 잎 정리"],["02:00","데치기","2분, 찬물 헹굼"],["04:00","볶기","들기름·국간장 약불"]],ings:[["취나물 200g",true],["들기름 1큰술",false],["국간장 1큰술",false]]}}
+};
+const TOP = ["sigeumchi","kongnamul","chamnamul"], SEASON = ["sigeumchi","baechu","pyogo"];
+const STORES = [
+  {id:"s1",name:"초록나물상회",place:"새벽시장",dist:"600m",walk:"도보 9분",rating:"4.9",reviews:218,x:150,y:92,today:"오늘 09:12 입고",trim:500,blanch:800,pickup:true,deliver:false,
+    stock:{chamnamul:[3500,"200g"],sigeumchi:[3000,"1단"],kongnamul:[1500,"300g"],baechu:[2500,"1/4포기"],pyogo:[4000,"150g"],gosari:[6000,"삶은 고사리 300g · 국산"]},slots:[["17:30",false],["18:00",true],["18:30",true],["19:00",true]]},
+  {id:"s2",name:"산골나물집",place:"중앙시장",dist:"1.2km",walk:"도보 18분",rating:"4.7",reviews:96,x:300,y:188,today:"정선 산지 직송",trim:0,blanch:0,pickup:true,deliver:true,
+    stock:{chamnamul:[4200,"300g"],pyogo:[3800,"150g"],sigeumchi:[3200,"1단"],oi:[2000,"2개"],gosari:[9000,"말린 고사리 100g · 국산"],durup:[8000,"200g · 냉장"]},slots:[["18:00",false],["18:30",true],["19:00",true],["19:30",true]]},
+  {id:"s3",name:"순천댁 나물전",place:"새벽시장",dist:"900m",walk:"도보 14분",rating:"4.8",reviews:143,x:88,y:186,today:"한 줌씩 소량",trim:0,blanch:0,pickup:true,deliver:false,
+    stock:{chamnamul:[2000,"한 줌 100g"],sigeumchi:[1500,"한 줌"],kongnamul:[1000,"한 봉 300g"]},slots:[["17:30",true],["18:00",true],["18:30",true],["19:00",true]]}
+];
+const STORES0 = JSON.stringify(STORES);
+const VIEW_TIME = {home:"17:00",dogam:"17:01",guide:"17:01",aichef:"17:01",recipe:"17:02",stores:"17:02",checkout:"17:03",done:"17:03",box:"20:10",merchant:"17:04"};
+const MAIN = ["home","dogam","stores","box"];
+const won = n => n.toLocaleString("ko-KR") + "원";
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fresh = () => ({namul:"chamnamul",cart:[],store:"s1",opt:"trim",qty:1,time:"18:00",recv:"pickup",dtime:"18:00",order:null,voted:false,step:-1,owned:{},plan:"seol",sf:{pickup:true,trim:false,today:false},df:"all",chef:[],chat:null,orderAccepted:false,discount:null});
+let st = fresh();
+
+/* ---------- icons ---------- */
+function paintIcons(root=document){ root.querySelectorAll("img[data-icon]").forEach(i => { i.src = ICON[i.dataset.icon] || ""; }); }
+function tile(key, size){ const n = N[key]; return `<span class="tile" style="width:${size}px;height:${size}px;background:${n.tint}"><img src="${ICON[n.icon]}" alt=""></span>`; }
+
+/* ---------- routing ---------- */
+const views = Object.fromEntries($$(".view").map(v => [v.dataset.view, v]));
+let current = "home", depth = 0;
+function render(name){
+  ({home:rHome,dogam:rDogam,guide:rGuide,aichef:rChef,recipe:rRecipe,stores:rStores,checkout:rCheckout,done:rDone,box:rBox,merchant:rMerchant}[name]||(()=>{}))();
+}
+function show(name){
+  if(!views[name]) name = "home";
+  current = name;
+  for (const [k,v] of Object.entries(views)) v.hidden = k !== name;
+  render(name);
+  const body = views[name].querySelector(".v-body"); if (body && name !== "merchant" && name !== "aichef") body.scrollTop = 0;
+  $("#tabbar").hidden = !MAIN.includes(name);
+  $$("#tabbar button").forEach(b => { if (b.dataset.tab === name) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
+  $$(".steps button[data-go]").forEach(b => b.setAttribute("aria-current", b.dataset.go === name ? "true" : "false"));
+  $("#clock").textContent = VIEW_TIME[name] || "17:00";
+  clearMarks();
+  const h = views[name].querySelector("h2, h1"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({preventScroll:true}); }
+}
+/* 브라우저 이력 하나만 쓴다: 앞으로 가기는 pushState, 뒤로 가기는 history.back() */
+function go(name){
+  if (name === current) { show(name); return; }
+  depth++; try { history.pushState({v:name, d:depth}, "", "#" + name); } catch { try { location.hash = name; } catch {} }
+  show(name);
+}
+window.addEventListener("popstate", e => { depth = e.state && typeof e.state.d === "number" ? e.state.d : Math.max(0, depth - 1); show((e.state && e.state.v) || location.hash.slice(1) || "home"); });
+window.addEventListener("hashchange", () => { const v = location.hash.slice(1) || "home"; if (v !== current) show(v); });
+document.addEventListener("click", e => {
+  const g = e.target.closest("[data-go]"); if (g) { e.preventDefault(); go(g.dataset.go); return; }
+  const t = e.target.closest("[data-tab]"); if (t) { go(t.dataset.tab); return; }
+  if (e.target.closest("[data-back]")) { if (depth > 0) history.back(); else go("home"); }
+});
+
+/* ---------- toast ---------- */
+let toastT; function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2200); }
+function cartBadge(){ $$("[data-cart-badge]").forEach(b => { b.textContent = st.cart.length; b.hidden = st.cart.length === 0; }); }
+
+/* ---------- home ---------- */
+function rHome(){
+  $("#topList").innerHTML = TOP.map((k,i) => { const n = N[k]; return `<button class="rank" data-namul="${k}"><span class="no">${i+1}</span>${tile(k,44)}<span><b style="font-size:15px">${n.name}</b> <small class="muted">${n.tags.join(" · ")}</small><div class="bar"><i style="width:${n.kid}%"></i></div></span><span style="font-weight:800;color:var(--app-brand)">${n.kid}%</span></button>`; }).join("");
+  $("#seasonList").innerHTML = SEASON.map(k => { const n = N[k]; return `<button class="card season" data-namul="${k}">${tile(k,94).replace('style="','style="width:100%;height:auto;aspect-ratio:1;')}<b>${n.name}</b><small>${n.seasonNote}</small></button>`; }).join("");
+  cartBadge();
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-namul]"); if (b) { st.namul = b.dataset.namul; go("guide"); } });
+
+/* ---------- dogam ---------- */
+function rDogam(){
+  $$("#dogamFilters .fchip").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === st.df ? "true" : "false"));
+  let keys = Object.keys(N);
+  if (st.df === "kid") keys = keys.filter(k => N[k].kid >= 75).sort((a,b) => N[b].kid - N[a].kid);
+  if (st.df === "quick") keys = keys.filter(k => parseInt(N[k].prep) <= 5);
+  if (st.df === "season") keys = keys.filter(k => N[k].season.includes(11));
+  if (st.df === "san") keys = keys.filter(k => (N[k].kind || "").includes("산나물"));
+  if (st.df === "safe") keys = keys.filter(k => N[k].safety);
+  $("#dogamGrid").innerHTML = keys.map(k => { const n = N[k]; return `<button class="card ncard" data-namul="${k}">${tile(k,0).replace('width:0px;height:0px;','width:100%;')}<b>${n.name}</b><small>${n.tags.join(" · ")}<br>아이 선호 ${n.kid}% · 손질 ${n.prep}</small></button>`; }).join("");
+}
+$("#dogamFilters").addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (b) { st.df = b.dataset.f; rDogam(); } });
+
+/* ---------- guide ---------- */
+function rGuide(){
+  const n = N[st.namul];
+  $("#gTitle").textContent = n.name + " 도감"; $("#gName").textContent = n.name;
+  $("#gTile").style.background = n.tint; $("#gIcon").src = ICON[n.icon];
+  $("#gTags").innerHTML = n.tags.map(t => `<span class="pill">${t}</span>`).join("");
+  $("#gSeason").textContent = n.seasonNote; $("#gSeasonShort").textContent = n.seasonNote.split(" · ")[0];
+  $("#gPrep").textContent = n.prep; $("#gBlanch").textContent = n.blanch; $("#gKeep").textContent = n.keep;
+  const votes = n.votes + (st.voted ? 1 : 0);
+  $("#gKid").textContent = n.kid + "%"; $("#gKidBar").style.width = n.kid + "%";
+  $("#gVotes").textContent = `‘우리 아이 먹었어요’ ${votes.toLocaleString("ko-KR")}명 · 3~7세 부모 기준 (예시 데이터)`;
+  $("#voteBtn").setAttribute("aria-pressed", st.voted ? "true" : "false");
+  $("#gMonths").innerHTML = Array.from({length:12}, (_,i) => `<i class="${n.season.includes(i+1) ? "on" : ""}">${i+1}</i>`).join("");
+  $("#gPairs").innerHTML = n.pair.map(p => `<span>${p}</span>`).join("");
+  $("#gKind").innerHTML = `<span class="pill gray">${n.kind || "나물"}</span>` + (n.cook || []).map(c => `<span class="pill gray">${c}</span>`).join("");
+  $("#gSafety").hidden = !n.safety; $("#gSafetyText").textContent = n.safety || ""; $("#gOrigin").textContent = n.origin || ""; $("#gOrigin").hidden = !n.origin;
+  $("#gNote").hidden = !n.note; $("#gNote").textContent = n.note || "";
+}
+$("#voteBtn").addEventListener("click", () => { st.voted = !st.voted; rGuide(); toast(st.voted ? "투표했어요. 아이 선호도에 반영돼요" : "투표를 취소했어요"); });
+$("#gBuy").addEventListener("click", () => { addToCart(st.namul); go("stores"); });
+
+/* ---------- recipe ---------- */
+function rRecipe(){
+  const n = N[st.namul], r = n.recipe;
+  $("#rHead").textContent = n.name + " 레시피"; $("#rIcon").src = ICON[n.icon]; $("#rDur").textContent = r.len;
+  $("#rTitle").textContent = r.title; $("#rBy").textContent = r.by;
+  $("#rSteps").innerHTML = r.steps.map((s,i) => `<button class="card step" data-step="${i}" aria-pressed="${st.step===i}"><span class="ts">${s[0]}</span><span><b>${i+1}. ${s[1]}</b><small>${s[2]}</small></span></button>`).join("");
+  $("#rProg").style.width = st.step < 0 ? "0%" : `${[18,42,70][st.step]}%`;
+  $("#rIngs").innerHTML = r.ings.map((g,i) => { const owned = st.owned[st.namul + i] ?? !g[1]; return `<label><input type="checkbox" data-ing="${i}" ${owned ? "checked" : ""}>${g[0]}${g[1] ? '<em>시장에서 사요</em>' : '<em>집에 있어요</em>'}</label>`; }).join("");
+  const need = r.ings.filter((g,i) => !(st.owned[st.namul + i] ?? !g[1]));
+  $("#addBtn").textContent = need.length ? `${need.map(g => g[0]).join(", ")} 시장에서 담기` : "재료가 모두 있어요";
+  $("#addBtn").disabled = need.length === 0;
+}
+$("#rSteps").addEventListener("click", e => { const b = e.target.closest("[data-step]"); if (b) { st.step = +b.dataset.step; rRecipe(); toast(`${N[st.namul].recipe.steps[st.step][0]} 장면부터 재생해요`); } });
+$("#rIngs").addEventListener("change", e => { const i = e.target.dataset.ing; if (i != null) { st.owned[st.namul + i] = e.target.checked; rRecipe(); } });
+$("#playBtn").addEventListener("click", () => { st.step = Math.max(st.step, 0); rRecipe(); toast("원래 유튜브 채널에서 재생돼요"); });
+$("#addBtn").addEventListener("click", () => { addToCart(st.namul); toast("장바구니에 담았어요 · 근처 시장 가게 3곳"); setTimeout(() => go("stores"), 450); });
+function addToCart(k){ st.cart = st.cart.filter(x => x !== k); st.cart.push(k); cartBadge(); }
+
+/* ---------- stores ---------- */
+function mapSvg(){
+  const pins = STORES.map(s => { const sel = s.id === st.store; return `<g><path d="M${s.x} ${s.y+2}c-8-9-13-15-13-21a13 13 0 1 1 26 0c0 6-5 12-13 21z" fill="${sel ? "#1D5A42" : "#fff"}" stroke="#1D5A42" stroke-width="2"/><circle cx="${s.x}" cy="${s.y-19}" r="4.5" fill="${sel ? "#fff" : "#1D5A42"}"/><rect x="${s.x-46}" y="${s.y+6}" width="92" height="20" rx="10" fill="#fff" stroke="#D4DED8"/><text x="${s.x}" y="${s.y+20}" font-size="11" font-weight="700" text-anchor="middle" fill="#19221E">${esc(s.name.length > 8 ? s.name.slice(0,7) + "…" : s.name)}</text></g>`; }).join("");
+  return `<svg viewBox="0 0 350 240" role="img" aria-label="반경 1km 지도"><rect width="350" height="240" fill="#E7EEE8"/>
+    <path d="M-10 168 C60 150 110 188 180 172 S300 150 360 170" stroke="#C9DBE6" stroke-width="16" fill="none"/>
+    <rect x="22" y="22" width="86" height="54" rx="8" fill="#F6F9F6"/><rect x="122" y="22" width="102" height="40" rx="8" fill="#F6F9F6"/><rect x="238" y="22" width="92" height="66" rx="8" fill="#D9EBD9"/>
+    <rect x="22" y="92" width="64" height="48" rx="8" fill="#F6F9F6"/><rect x="236" y="102" width="94" height="40" rx="8" fill="#F6F9F6"/><rect x="18" y="198" width="120" height="34" rx="8" fill="#F6F9F6"/><rect x="200" y="200" width="132" height="32" rx="8" fill="#F6F9F6"/>
+    <path d="M0 84H350M114 0V240M232 0V240M0 190H350" stroke="#fff" stroke-width="9"/>
+    <circle cx="175" cy="128" r="92" fill="rgba(45,121,85,.06)" stroke="#2D7955" stroke-width="1.5" stroke-dasharray="5 5"/>
+    <text x="252" y="44" font-size="10" fill="#4F7A5E">근린공원</text><text x="262" y="164" font-size="10" fill="#6A8597">청계천</text>
+    ${pins}<circle cx="175" cy="128" r="14" fill="rgba(52,120,232,.18)"/><circle cx="175" cy="128" r="6.5" fill="#3478E8" stroke="#fff" stroke-width="2.5"/>
+    <text x="183" y="121" font-size="10" font-weight="700" fill="#2C5FB8">나</text><text x="248" y="226" font-size="10" fill="#6E7A73">반경 1km</text></svg>`;
+}
+function rStores(){
+  const k = st.cart.includes(st.namul) ? st.namul : (st.cart[st.cart.length - 1] || st.namul); st.namul = k;
+  $("#mapBox").innerHTML = mapSvg();
+  $$("#storeFilters .fchip").forEach(b => b.setAttribute("aria-pressed", st.sf[b.dataset.sf] ? "true" : "false"));
+  let list = STORES.filter(s => s.stock[k]);
+  if (st.sf.trim) list = list.filter(s => trimOk(s, k));
+  if (st.sf.today) list = list.filter(s => s.today.includes("입고"));
+  $("#sListTitle").textContent = `${N[k].name} 파는 곳`; $("#sCount").textContent = `${list.length}곳`;
+  const others = st.cart.filter(x => x !== k).map(x => N[x].name);
+  $("#sNote").hidden = !others.length; $("#sNote").textContent = others.length ? `시연은 한 번에 한 품목씩 주문해요 · 장바구니에 ${others.join(", ")}도 있어요` : "";
+  $("#storeList").innerHTML = list.map(s => { const [p,u] = s.stock[k]; return `<button class="card scard" data-store="${s.id}" aria-pressed="${s.id === st.store}">
+    <div class="srow"><b>${s.name}</b><small>${s.place} · ${s.dist} · ${s.walk}</small></div>
+    <div class="srow"><span class="muted" style="font-size:13px">${N[k].name} ${u}</span><span class="price">${won(p)}</span></div>
+    <div class="badges"><span class="pill ${s.today.includes("입고") ? "amber" : ""}">${s.today}</span>${trimOk(s, k) ? `<span class="pill">손질 +${won(s.trim)}</span>` : `<span class="pill gray">손질 불가</span>`}<span class="pill">픽업·배달</span><span class="pill gray">★ ${s.rating} (${s.reviews})</span></div></button>`; }).join("") || `<p class="muted">조건에 맞는 가게가 없어요. 필터를 줄여 보세요.</p>`;
+}
+$("#storeFilters").addEventListener("click", e => { const b = e.target.closest("[data-sf]"); if (b) { st.sf[b.dataset.sf] = !st.sf[b.dataset.sf]; rStores(); } });
+$("#storeList").addEventListener("click", e => { const b = e.target.closest("[data-store]"); if (b) { st.store = b.dataset.store; const s = STORES.find(x => x.id === st.store); st.opt = trimOk(s, st.namul) ? "trim" : "raw"; st.time = (s.slots.find(t => t[1]) || ["18:00"])[0]; go("checkout"); } });
+
+/* ---------- checkout ---------- */
+/* 배달: 가게가 상품을 준비하면 나물로가 배달대행에 요청한다(기사 배차는 대행사). 배달비는 시험 요금이며 별도 이익을 붙이지 않아 매출 목표에서 뺀다 */
+const DELIVERY_FEE = 3500, DELIVERY_SLOTS = [["17:30",false],["18:00",true],["18:30",true],["19:00",true]];
+const trimOk = (s, k) => s.trim > 0 && !(s.trimOk && s.trimOk[k] === false);
+/* 데침 옵션: 도감에 데침·삶음 시간이 있는 품목만. 볶음·찜·충분히 삶기(고사리 등)는 매장 데침 대상에서 뺀다 */
+const blanchOk = (s, k) => s.blanch > 0 && /^\d/.test(N[k].blanch) && !/볶|찌/.test(N[k].blanch) && !/삶은/.test(s.stock[k] ? s.stock[k][1] : "");
+function fixStore(){ const cur = STORES.find(x => x.id === st.store); if (!cur || !cur.stock[st.namul]) st.store = (STORES.find(x => x.stock[st.namul]) || STORES[0]).id; if (!STORES.find(x => x.id === st.store).stock[st.namul]) st.namul = "chamnamul"; }
+function calc(){ fixStore(); const s = STORES.find(x => x.id === st.store), [p] = s.stock[st.namul]; if ((st.opt === "trim" && !trimOk(s, st.namul)) || (st.opt === "blanch" && !blanchOk(s, st.namul))) st.opt = "raw";
+  const extra = st.opt === "trim" ? s.trim : st.opt === "blanch" ? s.blanch : 0; const fee = st.recv === "deliver" ? DELIVERY_FEE : 0; return {s, p, extra, fee, total:(p + extra) * st.qty + fee}; }
+function rCheckout(){
+  const {s, p, extra, fee, total} = calc(), n = N[st.namul], u = s.stock[st.namul][1], dlv = st.recv === "deliver";
+  $("#cStore").textContent = s.name; $("#cStoreSub").textContent = `${s.place} · ${s.dist} · ${s.walk} · ★ ${s.rating}`;
+  $("#cTile").style.background = n.tint; $("#cIcon").src = ICON[n.icon]; $("#cItem").textContent = `${n.name} ${u}`; $("#cUnit").textContent = won(p); $("#qVal").textContent = st.qty;
+  const canTrim = trimOk(s, st.namul), canBlanch = blanchOk(s, st.namul);
+  if ((st.opt === "trim" && !canTrim) || (st.opt === "blanch" && !canBlanch)) st.opt = "raw";
+  const opts = [["raw","생나물","그대로",0,true],["trim","손질",`+${won(s.trim)}`,s.trim,canTrim],["blanch","데침",`+${won(s.blanch)}`,s.blanch,canBlanch]];
+  $("#optSeg").innerHTML = opts.map(o => `<button data-opt="${o[0]}" aria-pressed="${st.opt === o[0]}" ${o[4] ? "" : "disabled"}>${o[1]}<small>${o[4] ? o[2] : "불가"}</small></button>`).join("");
+  $("#optNote").textContent = st.opt === "trim" ? "억센 줄기 정리와 세척까지 해 드려요." : st.opt === "blanch" ? `도감 기준대로 끓는 물에 ${n.blanch} ${n.verb || "데쳐"} 물기를 빼서 담아 드려요. 오늘 안에 드세요.` : "직접 손질해서 드실 때 골라 주세요.";
+  $("#recvSeg").innerHTML = [["pickup","가게 픽업","무료"],["deliver","저녁 배달",`+${won(DELIVERY_FEE)}`]].map(r => `<button data-recv="${r[0]}" aria-pressed="${st.recv === r[0]}">${r[1]}<small>${r[2]}</small></button>`).join("");
+  $("#recvNote").textContent = dlv ? "고른 시간에 나물로가 배달대행에 배달을 요청해요. 도착 예정 시간은 배차 후 알려 드릴 예정이에요." : `${s.name}에서 찾아가요. 가게에서 픽업 번호만 말하면 돼요.`;
+  $("#timeTitle").textContent = dlv ? "배달 요청 시간" : "픽업 시간";
+  const slots = dlv ? DELIVERY_SLOTS : s.slots, cur = dlv ? st.dtime : st.time;
+  $("#timeSeg").innerHTML = slots.map(t => `<button data-time="${t[0]}" aria-pressed="${cur === t[0]}" ${t[1] ? "" : "disabled"}>${t[0]}</button>`).join("");
+  $("#sumBox").innerHTML = `<div><span class="muted">상품</span><span>${won(p * st.qty)}</span></div><div><span class="muted">${st.opt === "raw" ? "손질" : st.opt === "trim" ? "손질" : "데침"}</span><span>${won(extra * st.qty)}</span></div>${dlv ? `<div><span class="muted">배달비</span><span>${won(fee)}</span></div>` : ""}<div><span class="muted">받는 방법</span><span>${dlv ? st.dtime + " 배달 요청" : st.time + " 픽업"}</span></div><div class="total"><span>합계</span><span>${won(total)}</span></div>`;
+  $("#payBtn").textContent = dlv ? `${st.dtime} 배달 주문 · ${won(total)}` : `${st.time} 픽업 예약 · ${won(total)}`;
+}
+$("#optSeg").addEventListener("click", e => { const b = e.target.closest("[data-opt]"); if (b && !b.disabled) { st.opt = b.dataset.opt; rCheckout(); } });
+$("#timeSeg").addEventListener("click", e => { const b = e.target.closest("[data-time]"); if (b && !b.disabled) { if (st.recv === "deliver") st.dtime = b.dataset.time; else st.time = b.dataset.time; rCheckout(); } });
+$("#recvSeg").addEventListener("click", e => { const b = e.target.closest("[data-recv]"); if (b) { st.recv = b.dataset.recv; rCheckout(); } });
+$("#qMinus").addEventListener("click", () => { st.qty = Math.max(1, st.qty - 1); rCheckout(); });
+$("#qPlus").addEventListener("click", () => { st.qty = Math.min(5, st.qty + 1); rCheckout(); });
+$("#payBtn").addEventListener("click", () => { st.order = snapOrder(); st.orderAccepted = false; go("done"); });
+
+/* ---------- done ---------- */
+function qr(seed){ let h = 2166136261; for (const c of seed) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } const cells = [];
+  const finder = (x,y) => `<rect x="${x}" y="${y}" width="7" height="7" fill="#19221E"/><rect x="${x+1}" y="${y+1}" width="5" height="5" fill="#fff"/><rect x="${x+2}" y="${y+2}" width="3" height="3" fill="#19221E"/>`;
+  for (let y = 0; y < 29; y++) for (let x = 0; x < 29; x++) { if ((x < 8 && y < 8) || (x > 20 && y < 8) || (x < 8 && y > 20)) continue; h ^= h << 13; h ^= h >>> 17; h ^= h << 5; if ((h >>> 0) % 100 < 46) cells.push(`<rect x="${x}" y="${y}" width="1" height="1" fill="#19221E"/>`); }
+  return `<rect width="29" height="29" fill="#fff"/>${cells.join("")}${finder(0,0)}${finder(22,0)}${finder(0,22)}`; }
+/* 결제한 주문은 따로 저장해, 이후 다른 품목을 둘러봐도 완료·판매자 화면이 바뀌지 않게 한다 */
+const OPT_NAME = {raw:"생나물", trim:"손질", blanch:"데침"};
+function snapOrder(){ const {s, p, extra, fee, total} = calc(), dlv = st.recv === "deliver";
+  return {namul:st.namul, storeName:s.name, place:s.place, walk:s.walk, unit:s.stock[st.namul][1], opt:st.opt, qty:st.qty, recv:st.recv, time:dlv ? st.dtime : st.time, goods:(p + extra) * st.qty, fee, total}; }
+function exampleOrder(){ const s = STORES.find(x => x.id === "s1"), [p, u] = s.stock.chamnamul, opt = trimOk(s, "chamnamul") ? "trim" : "raw", goods = p + (opt === "trim" ? s.trim : 0);
+  return {namul:"chamnamul", storeName:s.name, place:s.place, walk:s.walk, unit:u, opt, qty:1, recv:"pickup", time:"18:00", goods, fee:0, total:goods}; }
+const curOrder = () => st.order || exampleOrder();
+function prepBy(t){ const [h, m] = t.split(":").map(Number), x = h * 60 + m - 20; return `${String(Math.floor(x / 60)).padStart(2, "0")}:${String(x % 60).padStart(2, "0")}`; }
+function rDone(){
+  const o = curOrder(), n = N[o.namul], dlv = o.recv === "deliver";
+  $("#dTitle").textContent = dlv ? "주문했어요" : "예약했어요";
+  $("#dSub").textContent = dlv ? `오늘 ${o.time} 배달 요청 · ${o.storeName}` : `오늘 ${o.time} · ${o.storeName}`;
+  $("#dCodeLabel").textContent = dlv ? "주문 번호" : "픽업 번호"; $("#dCodeNote").textContent = dlv ? "배차되면 도착 예정 시간을 알려 드려요 (시연)" : "가게에서 번호만 말하면 돼요";
+  $("#routeBtn").textContent = dlv ? "배달 조회" : "가는 길";
+  $("#qr").innerHTML = qr("N-2381" + o.time);
+  $("#dImpact").innerHTML = `<b>${esc(o.place)} ${esc(o.storeName)}에서 ${won(o.goods)}어치 주문했어요</b><span>이 금액은 그 가게의 매출이 돼요 · 상품·손질 금액, 배달비 제외 · 시연용 예시 주문</span>`;
+  $("#dInfo").innerHTML = `<div><span class="muted">상품</span><span>${n.name} ${o.unit} · ${OPT_NAME[o.opt]} × ${o.qty}</span></div>${dlv ? `<div><span class="muted">배달비</span><span>${won(o.fee)}</span></div>` : ""}<div><span class="muted">결제 금액</span><span>${won(o.total)}</span></div><div><span class="muted">가게</span><span>${o.place} ${o.storeName} · ${o.walk}</span></div>`;
+}
+$("#routeBtn").addEventListener("click", () => toast(curOrder().recv === "deliver" ? "배달 현황 조회는 출시 버전에서 제공해요" : "시연용 화면이에요. 지도 앱으로 이어져요"));
+
+/* ---------- 명절·제철 예약 (월 구독 대신) ---------- */
+const SETS = [["seol","설 차례 삼색나물","고사리·도라지·시금치 무침 · 4인분","설 연휴 전날",28000],["boreum","정월대보름 묵은나물","9가지 · 불림·삶기 완료 · 2~3인분","대보름 전날",25000],["spring","봄 산나물 3종","두릅·취나물·냉이 · 데침 옵션","4월 토요일",18000]];
+function rBox(){
+  $("#plans").innerHTML = SETS.map(p => `<button class="card plan" data-plan="${p[0]}" aria-pressed="${st.plan === p[0]}"><span class="r"></span><span><b>${p[1]}</b><small>${p[2]}<br>받는 날: ${p[3]}</small></span><span class="price">${won(p[4])}</span></button>`).join("");
+  const p = SETS.find(x => x[0] === st.plan) || SETS[0]; $("#subBtn").textContent = `${p[1]} 예약 · ${won(p[4])}`;
+}
+$("#plans").addEventListener("click", e => { const b = e.target.closest("[data-plan]"); if (b) { st.plan = b.dataset.plan; rBox(); } });
+$("#subBtn").addEventListener("click", () => toast("예약은 시연용이에요. 결제는 일어나지 않아요"));
+
+/* ---------- AI (Claude via artifact runtime, offline fallback) ---------- */
+let SAMPLE = null, IMG_OK = false, AI_READY = false;
+function setAiStatus(live){
+  AI_READY = true;
+  $("#aiDot").classList.toggle("on", live);
+  $("#aiText").innerHTML = live ? "<b>AI 실시간 연결됨</b><br>AI 셰프와 상인 비서에 Claude가 실제로 답해요. 처음 한 번 사용 허락을 물어요." : "<b>시연 모드 (예시 응답)</b><br>이 화면에서는 AI가 연결되지 않아 미리 준비한 예시 답으로 보여 드려요.";
+  for (const id of ["#chefMode","#merchMode"]) { const m = $(id); m.textContent = live ? "AI 실시간" : "예시 응답"; m.classList.toggle("live", live); }
+}
+(async () => {
+  try { SAMPLE = window.claude && typeof window.claude.use === "function" ? await window.claude.use("sample") : null; } catch { SAMPLE = null; }
+  if (SAMPLE) { try { const lim = await SAMPLE.limits(); IMG_OK = !!(lim && lim.images); } catch { IMG_OK = false; } }
+  setAiStatus(!!SAMPLE);
+})();
+const STOCK_FOR_AI = () => STORES.map(s => ({store:s.name, dist:s.dist, items:Object.entries(s.stock).map(([k,[p,u]]) => ({name:N[k].name, unit:u, price:p, trim:trimOk(s, k)}))}));
+const ERR = {not_granted:"AI 사용이 허락되지 않아 예시 답으로 보여 드려요.",sampling_disabled:"이 계정에서는 AI를 쓸 수 없어 예시 답으로 보여 드려요.",rate_limited:"AI 요청이 많아요. 잠시 뒤에 다시 눌러 주세요.",refused:"그 질문에는 답하기 어려워요. 다르게 물어봐 주세요.",invalid_json:"답을 정리하지 못했어요. 한 번 더 눌러 주세요.",image_rejected:"사진을 읽지 못했어요. 다른 사진으로 해 주세요."};
+
+/* AI chef */
+const CHEF_DEMO = {
+  summary:"초록나물상회에 오늘 들어온 나물로, 맵지 않고 짜지 않은 반찬 3가지를 골랐어요.",
+  items:[
+    {namul:"시금치",dish:"시금치나물",minutes:5,why:"달큰하고 부드러워 아이 선호도가 가장 높아요.",steps:["끓는 물에 40초 데치기","찬물에 헹궈 물기 짜기","소금 한 꼬집, 참기름으로 무치기"],store:"초록나물상회"},
+    {namul:"참나물",dish:"참나물 들기름무침",minutes:7,why:"향이 은은하고 국간장을 반만 넣으면 순해요.",steps:["줄기 끝 2cm 정리","30초 데치기","국간장 반 큰술, 들기름, 통깨"],store:"초록나물상회"},
+    {namul:"콩나물",dish:"콩나물무침",minutes:8,why:"아삭한 식감이라 아이들이 좋아해요. 고춧가루는 빼요.",steps:["뚜껑 닫고 5분 삶기","한 김 식히기","소금·참기름, 대파 조금"],store:"초록나물상회"}]};
+const CHEF_PHOTO_DEMO = {detected:["두부","계란","대파"],summary:"사진 속 두부·계란과 어울리는 나물 반찬을 골랐어요.",items:[CHEF_DEMO.items[0],{namul:"콩나물",dish:"콩나물 두부국",minutes:10,why:"사진 속 두부와 대파를 함께 쓸 수 있어요.",steps:["멸치 육수에 콩나물 5분","두부 깍둑썰어 넣기","대파, 국간장으로 간"],store:"초록나물상회"}]};
+function nameToKey(name){ const k = Object.keys(N).find(k => N[k].name === name || (name && name.includes(N[k].name))); return k || "chamnamul"; }
+function chefRender(){
+  $("#chefLog").innerHTML = st.chef.map(m => {
+    if (m.role === "me") return `<div class="bubble me">${esc(m.text)}${m.photo ? "<br><small>📷 사진 1장</small>" : ""}</div>`;
+    if (m.role === "wait") return `<div class="bubble bot"><span class="thinking"><i></i><i></i><i></i></span> 오늘 시장 재고를 보고 고르는 중…</div>`;
+    if (m.role === "err") return `<div class="bubble bot">${esc(m.text)}</div>`;
+    const d = m.data, det = d.detected && d.detected.length ? `<div class="detected">사진에서 찾은 재료 ${d.detected.map(x => `<span class="pill gray">${esc(x)}</span>`).join("")}</div>` : "";
+    return `<div class="bubble bot" style="max-width:100%;display:grid;gap:10px">${det}<span>${esc(d.summary || "")}</span>${(d.items||[]).slice(0,3).map(it => { const k = nameToKey(it.namul); const s = STORES.find(x => x.name === it.store) || STORES[0]; const pr = s.stock[k] ? won(s.stock[k][0]) : ""; return `<div class="card rec"><div class="rec-top">${tile(k,48)}<span><b>${esc(it.dish || N[k].name)}</b><small>${esc(it.namul || N[k].name)} · ${Number(it.minutes) || 10}분 · ${esc(s.name)} ${pr}</small></span><span class="pill">아이 ${N[k].kid}%</span></div><span style="font-size:13.5px">${esc(it.why || "")}</span><ol>${(it.steps||[]).slice(0,3).map(x => `<li>${esc(x)}</li>`).join("")}</ol><div class="rec-actions"><button class="btn ghost small" data-chef-recipe="${k}">레시피 보기</button><button class="btn small" data-chef-buy="${k}" style="flex:1">${esc(N[k].name)} 담기</button></div></div>`; }).join("")}${m.demo ? '<small class="muted" style="font-size:11px">예시 응답 · AI가 연결되면 실제로 답해요</small>' : ""}</div>`;
+  }).join("");
+  $("#chefChips").hidden = st.chef.length > 0;
+  const b = $("#chefBody"); b.scrollTop = b.scrollHeight;
+}
+function rChef(){ chefRender(); $("#photoBtn").hidden = false; }
+async function askChef(q, photo){
+  if (!q && !photo) return;
+  st.chef.push({role:"me", text:q || "이 사진으로 반찬 추천해 줘", photo:!!photo}, {role:"wait"}); chefRender();
+  const done = (msg) => { st.chef = st.chef.filter(m => m.role !== "wait"); st.chef.push(msg); chefRender(); };
+  const realPhoto = photo && typeof Blob !== "undefined" && photo instanceof Blob;
+  if (!SAMPLE || (photo && !realPhoto)) { setTimeout(() => done({role:"bot", data: photo ? CHEF_PHOTO_DEMO : CHEF_DEMO, demo:true}), 900); return; }
+  const prompt = `너는 '나물로' 앱의 AI 셰프다. 아래 '오늘 시장 재고'에 있는 나물만 써서 사용자 상황에 맞는 나물 반찬을 2~3개 추천해라.
+규칙: 의학적 효능이나 치료 효과는 말하지 않는다. 야생에서 직접 채취한 식물이 먹어도 되는지는 절대 판단하지 않는다(그런 질문이면 summary에 "직접 채취한 야생 식물은 독초와 헷갈릴 수 있어 판단하지 않아요. 구매한 나물만 드세요."라고 쓰고 items는 재고 기반으로만). 고사리·두릅·원추리처럼 독성분이 있는 나물은 반드시 데치거나 삶는 단계를 넣는다. 아이가 언급되면 맵지 않고 짜지 않게. 15분 안에 끝나는 조리 위주. 각 단계는 15자 안팎으로 짧게.${photo ? "\n사진이 함께 왔다. 사진 속 식재료를 먼저 알아보고 detected에 적어라. 식재료가 아니면 detected를 빈 배열로 두고 재고 기반으로만 추천해라." : ""}
+오늘 시장 재고(JSON): ${JSON.stringify(STOCK_FOR_AI())}
+사용자: "${q || "사진 속 재료로 반찬 추천"}"
+JSON만 답하라. 형식: {"detected":["사진에서 찾은 재료"],"summary":"한 문장","items":[{"namul":"재고에 있는 나물 이름 그대로","dish":"반찬 이름","minutes":숫자,"why":"추천 이유 한 문장","steps":["단계1","단계2","단계3"],"store":"재고의 매장 이름 그대로"}]}`;
+  try {
+    const opts = {modelTier:"quick"}; if (realPhoto && IMG_OK) opts.images = photo;
+    const data = await SAMPLE.json(prompt, opts);
+    if (!data || !Array.isArray(data.items)) throw {code:"invalid_json"};
+    done({role:"bot", data});
+  } catch (e) {
+    const code = e && e.code;
+    if (code === "not_granted" || code === "sampling_disabled" || code === "images_unavailable") { if (code !== "images_unavailable") { SAMPLE = null; setAiStatus(false); } done({role:"bot", data: photo ? CHEF_PHOTO_DEMO : CHEF_DEMO, demo:true}); }
+    else done({role:"err", text: ERR[code] || "잠시 연결이 끊겼어요. 다시 보내 주세요."});
+  }
+}
+$("#chefChips").addEventListener("click", e => { const b = e.target.closest("[data-q]"); if (b) askChef(b.dataset.q); });
+$("#chefSend").addEventListener("click", () => { const v = $("#chefInput").value.trim(); $("#chefInput").value = ""; askChef(v); });
+$("#chefInput").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); $("#chefSend").click(); } });
+$("#photoBtn").addEventListener("click", () => { if (SAMPLE && IMG_OK) $("#photoInput").click(); else askChef("", true); });
+$("#photoInput").addEventListener("change", e => { const f = e.target.files && e.target.files[0]; if (f) askChef("", f); e.target.value = ""; });
+document.addEventListener("click", e => {
+  const r = e.target.closest("[data-chef-recipe]"); if (r) { st.namul = r.dataset.chefRecipe; st.step = -1; go("recipe"); return; }
+  const b = e.target.closest("[data-chef-buy]"); if (b) { st.namul = b.dataset.chefBuy; addToCart(st.namul); toast(`${N[st.namul].name} 담았어요 · 근처 시장 가게 보기`); setTimeout(() => go("stores"), 450); }
+});
+
+/* merchant assistant */
+const UNITS = ["단","봉","kg","g","개","팩"];
+/* AI·파서 결과를 그대로 화면에 넣지 않는다: 숫자는 범위 검사, 문자열은 이스케이프, 모르는 품목은 확인 요청 */
+/* 숫자만 받는다: number 또는 정수 문자열. true·배열·"3,500" 같은 값은 NaN → 확인 필요 */
+const asNum = v => typeof v === "number" ? v : (typeof v === "string" && /^\s*-?\d+\s*$/.test(v) ? Number(v) : NaN);
+function cleanItems(raw){
+  return (Array.isArray(raw) ? raw : []).slice(0, 10).map(it => {
+    it = it && typeof it === "object" ? it : {};
+    const name = String(it.name || "").replace(/[^가-힣A-Za-z0-9 ]/g, "").trim().slice(0, 12);
+    const q = asNum(it.qty), p = asNum(it.price);
+    const qty = Number.isInteger(q) && q >= 1 && q <= 999 ? q : null;
+    const price = Number.isInteger(p) && p >= 100 && p <= 300000 ? p : null;
+    const unit = UNITS.includes(it.unit) ? it.unit : null;
+    const key = Object.keys(N).find(k => N[k].name === name) || null;
+    const issues = [];
+    if (!key) issues.push("도감에 없는 품목"); if (qty === null) issues.push("수량 확인"); if (price === null) issues.push("가격 확인"); if (!unit) issues.push("단위 확인");
+    if (unit === "g" || unit === "kg") issues.push("판매 단위 확인(봉·팩·단으로)");
+    return {name: name || "품목", key, qty, unit, price, trim: it.trim === true ? true : it.trim === false ? false : null, issues};
+  });
+}
+function stockData(raw, extra){ const items = cleanItems(raw && raw.items); return Object.assign({items, status:"draft", reply: items.length ? "정리했어요. 내용을 보고 ‘확인’을 누르면 앱에 올라가요." : "품목을 찾지 못했어요. 예) 취나물 10단 4,000원 손질 가능", questions: items.some(i => i.issues.length) ? ["확인 필요 항목은 빼고 올라가요. 고칠 내용은 메시지로 다시 보내 주세요."] : []}, extra || {}); }
+const FORECAST = [["참나물",[14,15,17,16],18,"단"],["시금치",[10,12,11,12],12,"단"],["콩나물",[22,24,21,26],25,"봉"]];
+function spark(a, next){ const all = [...a, next], max = Math.max(...all) * 1.15, w = 100, h = 30, step = w / (all.length - 1); const pts = all.map((v,i) => `${(i*step).toFixed(1)},${(h - v / max * h).toFixed(1)}`); return `<svg class="spark" viewBox="0 0 100 34" preserveAspectRatio="none"><polyline points="${pts.slice(0,-1).join(" ")}" fill="none" stroke="#2D7955" stroke-width="2"/><polyline points="${pts.slice(-2).join(" ")}" fill="none" stroke="#B4622A" stroke-width="2" stroke-dasharray="3 3"/><circle cx="${pts.at(-1).split(",")[0]}" cy="${pts.at(-1).split(",")[1]}" r="3" fill="#B4622A"/></svg>`; }
+function defaultChat(){ return [
+  {who:"day", text:"10월 30일 금요일"},
+  {who:"bot", t:"08:55", html:"사장님, 좋은 아침이에요. 오늘 들어온 나물을 편하게 보내 주세요. <b>말하듯 써도 AI가 알아서 정리</b>해요."},
+  {who:"bot", t:"08:55", card:"forecast"},
+  {who:"me", t:"09:12", text:"참나물 스무단 들어왔어요 한단 3500 손질도 돼요 시금치는 15단 3000"},
+  {who:"bot", t:"09:12", card:"stock", data:stockData({items:[{name:"참나물",qty:20,unit:"단",price:3500,trim:true},{name:"시금치",qty:15,unit:"단",price:3000,trim:false}]}, {status:"ok", reply:"09:13 사장님 확인 후 앱에 올렸어요.", demo:true})},
+  {who:"bot", t:"17:03", card:"order"},
+  {who:"bot", t:"19:05", card:"discount"}]; }
+function cardHtml(m, i){
+  if (m.card === "forecast") return `<div class="mcard"><h4><span>AI 입고 추천 · 오늘(금)</span><span style="font-weight:500">예시 데이터</span></h4><div class="rows">${FORECAST.map(f => `<div style="display:grid;grid-template-columns:52px 1fr 54px;align-items:center"><span>${f[0]}</span>${spark(f[1], f[2])}<b style="text-align:right">${f[2]}${f[3]}</b></div>`).join("")}</div><div class="foot">지난 4주 금요일 판매·요일·날씨를 반영하는 방식의 예시예요. 실제 추천은 주문 데이터가 쌓인 뒤 시작해요.</div></div>`;
+  if (m.card === "stock") { const d = m.data, ok = d.status === "ok";
+    const rows = (d.items||[]).map(it => `<div><span>${esc(it.name)} ${it.qty === null ? "?" : it.qty}${esc(it.unit || "")}</span>${it.issues.length ? `<b class="warn">${esc(it.issues.join(" · "))}</b>` : `<b>${won(it.price)}${it.trim === true ? " · 손질 가능" : it.trim === false ? " · 손질 불가" : ""}</b>`}</div>`).join("");
+    return `<div class="mcard"><h4><span>${ok ? "재고 등록 완료" : "재고 등록안 · 확인 필요"}</span><span class="chip-ai">AI 정리</span></h4><div class="rows">${rows}</div><div class="foot">${esc(d.reply || "")}${!ok && d.questions && d.questions.length ? "<br>" + d.questions.map(esc).join("<br>") : ""}</div><div class="acts">${ok ? `<button class="pri" disabled>앱에 반영됨</button>` : `<button data-act="edit" data-i="${i}">수정</button><button class="pri" data-act="ok" data-i="${i}">확인</button>`}</div></div>`; }
+  if (m.card === "order") { const o = curOrder(), dlv = o.recv === "deliver";
+    return `<div class="mcard"><h4 class="amber"><span>${st.order ? "새 주문" : "예시 주문"} · ${o.time} ${dlv ? "배달" : "픽업"}</span><span>N-2381</span></h4><div class="rows"><div><span>${esc(N[o.namul].name)} ${esc(o.unit)} · ${OPT_NAME[o.opt]} × ${o.qty}</span><b>${won(o.goods)}</b></div>${dlv ? `<div><span>배달</span><b>나물로가 배달대행 요청</b></div><div><span>배달비 ${won(o.fee)}</span><b>손님 부담</b></div>` : ""}<div><span>손님</span><b>단골 · 3번째 주문</b></div></div><div class="acts">${st.orderAccepted ? `<button class="pri" disabled>접수 완료 · ${prepBy(o.time)}까지 ${o.opt === "raw" ? "포장" : OPT_NAME[o.opt]}</button>` : `<button data-act="soldout">품절 처리</button><button class="pri" data-act="accept">접수</button>`}</div></div>`; }
+  if (m.card === "discount") return `<div class="mcard"><h4><span>AI 마감 할인 제안</span><span class="chip-ai">AI</span></h4><div class="rows"><div><span>남은 참나물</span><b>6단</b></div><div><span>19:30부터 할인</span><b>20% (2,800원)</b></div><div><span>알림 받을 근처 손님 (예시)</span><b>310명</b></div></div><div class="foot">버리는 대신 동네 손님에게 알려요.</div><div class="acts">${st.discount === null ? `<button data-act="keep">그대로 두기</button><button class="pri" data-act="discount">할인 시작</button>` : `<button class="pri" disabled>${st.discount ? "할인 알림을 보냈어요" : "오늘은 그대로 둘게요"}</button>`}</div></div>`;
+  if (m.card === "text") return `<div class="mb">${m.html}</div>`;
+  return "";
+}
+function rMerchant(){
+  if (!st.chat) st.chat = defaultChat();
+  $("#chatBody").innerHTML = st.chat.map((m, i) => {
+    if (m.who === "day") return `<div class="daychip">${m.text}</div>`;
+    if (m.who === "me") return `<div class="msg me"><div class="mb">${esc(m.text)}</div><time>${m.t}</time></div>`;
+    if (m.who === "wait") return `<div class="msg"><span class="avatar"><img src="${ICON.cook}" alt=""></span><div class="mb"><span class="thinking"><i></i><i></i><i></i></span></div></div>`;
+    return `<div class="msg"><span class="avatar"><img src="${ICON.cook}" alt=""></span>${m.card ? cardHtml(m, i) : `<div class="mb">${m.html}</div>`}<time>${m.t}</time></div>`;
+  }).join("");
+  const b = $("#chatBody"); b.scrollTop = b.scrollHeight;
+}
+function nowT(){ const d = new Date(); return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; }
+const NO_TRIM = /손질\s*(?:은|도|이)?\s*(?:불가|안\s*[돼되됨됩]|안\s*해|못|없|x|X|×)/;
+/* 금액 토큰 하나를 통째로 읽는다: 3,500원 · 3500 · 3천5백 · 3만5천원. 음수·순서가 이상한 표기는 NaN, 범위 밖 값은 cleanItems 가 '확인 필요'로 돌린다 */
+function toWon(seg){
+  const s = seg.replace(/(\d),(?=\d{3}(?!\d))/g, "$1");
+  const m = s.match(/(-\s*)?((?:\d+\s*[만천백]\s*)+\d*|\d+)\s*원?/);
+  if (!m) return null;
+  if (m[1]) return NaN;
+  let rest = m[2].replace(/\s+/g, ""), total = 0;
+  if (/^\d+$/.test(rest)) return Number(rest);
+  for (const [u, v] of [["만", 10000], ["천", 1000], ["백", 100]]) { const i = rest.indexOf(u); if (i >= 0) { total += Number(rest.slice(0, i)) * v; rest = rest.slice(i + 1); } }
+  return rest ? total + Number(rest) : total;
+}
+function localParse(text){
+  const nums = {스무:20,열다섯:15,열:10,다섯:5,서른:30};
+  const re = /([가-힣]{2,5}?)(?:는|은|이|가|도)?\s*(\d+|스무|열다섯|열|다섯|서른)\s*(단|봉|kg|g|개|팩)/g;
+  const hits = [...text.matchAll(re)];
+  const items = hits.map((m, i) => { const end = i + 1 < hits.length ? hits[i+1].index : text.length; const seg = text.slice(m.index + m[0].length, end);
+    return {name:m[1], qty: nums[m[2]] ?? Number(m[2]), unit:m[3], price: toWon(seg), trim: NO_TRIM.test(seg) ? false : /손질/.test(seg) ? true : null}; });
+  return stockData({items}, {demo:true});
+}
+async function merchantSend(text){
+  if (!text) return;
+  st.chat.push({who:"me", t:nowT(), text}, {who:"wait"}); rMerchant();
+  const finish = (m) => { st.chat = st.chat.filter(x => x.who !== "wait"); st.chat.push(m); rMerchant(); };
+  if (!SAMPLE) { setTimeout(() => finish({who:"bot", t:nowT(), card:"stock", data:localParse(text)}), 700); return; }
+  const prompt = `너는 전통시장 나물가게 사장님의 재고 등록을 돕는 AI 비서다. 사장님 메시지에서 품목을 뽑아 JSON으로만 답하라.
+숫자 말(스무, 열다섯 등)은 숫자로 바꾼다. 가격은 쉼표 없는 원 단위 정수(예: 3,500원 → 3500). 모르면 null. 단위가 없으면 null. 손질 가능이면 trim true, 손질 불가·안 됨이면 false, 언급이 없으면 null.
+형식: {"items":[{"name":"품목","qty":숫자 또는 null,"unit":"단|봉|kg|g|개|팩 또는 null","price":숫자 또는 null,"trim":true 또는 false}],"reply":"사장님께 보낼 짧은 확인 문장(존댓말, 40자 이내)","questions":["빠진 정보가 있을 때만 확인 질문"]}
+메시지: "${text.replace(/"/g, "'")}"`;
+  try { const data = await SAMPLE.json(prompt, {modelTier:"quick"}); if (!data || !Array.isArray(data.items)) throw {code:"invalid_json"}; finish({who:"bot", t:nowT(), card:"stock", data:stockData(data)}); }
+  catch (e) { const code = e && e.code; if (code === "not_granted" || code === "sampling_disabled") { SAMPLE = null; setAiStatus(false); finish({who:"bot", t:nowT(), card:"stock", data:localParse(text)}); } else finish({who:"bot", t:nowT(), html: esc(ERR[code] || "잠시 연결이 끊겼어요. 다시 보내 주세요.")}); }
+}
+$("#chatSend").addEventListener("click", () => { const v = $("#chatInput").value.trim(); $("#chatInput").value = ""; merchantSend(v); });
+$("#chatInput").addEventListener("keydown", e => { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); $("#chatSend").click(); } });
+$("#micBtn").addEventListener("click", () => toast("음성으로 보내면 받아 적어 정리해요 (출시 버전)"));
+$("#chatBody").addEventListener("click", e => { const b = e.target.closest("[data-act]"); if (!b) return; const a = b.dataset.act;
+  if (a === "accept") { st.orderAccepted = true; toast("접수했어요 (시연 · 손님 알림은 출시 버전)"); }
+  if (a === "soldout") toast("품절 처리하면 손님에게 바로 알려요 (시연)");
+  if (a === "discount") { st.discount = true; toast("마감 할인 알림을 보냈어요 (시연 · 실제 발송 없음)"); }
+  if (a === "keep") st.discount = false;
+  if (a === "ok") { const m = st.chat[+b.dataset.i]; if (m && m.data && m.data.status !== "ok") { const good = m.data.items.filter(it => !it.issues.length);
+      if (!good.length) toast("확인 필요 항목을 먼저 고쳐 주세요");
+      else { const s = STORES[0]; good.forEach(it => { s.stock[it.key] = [it.price, "1" + it.unit]; (s.left = s.left || {})[it.key] = it.qty; if (it.trim !== null) (s.trimOk = s.trimOk || {})[it.key] = it.trim; });
+        s.today = `오늘 ${nowT()} 입고`; m.data.status = "ok"; m.data.reply = `${good.length}개 품목을 ${s.name} 재고에 올렸어요.` + (good.length < m.data.items.length ? " 확인 필요 항목은 뺐어요." : "");
+        toast("앱에 반영했어요 · 시장 가게 목록에서 보여요"); } } }
+  if (a === "edit") toast("고칠 내용을 메시지로 다시 보내 주세요 (시연)");
+  rMerchant(); });
+$("#quickActs").addEventListener("click", async e => { const b = e.target.closest("[data-qa]"); if (!b) return; const qa = b.dataset.qa;
+  if (qa === "forecast") { st.chat.push({who:"bot", t:nowT(), card:"forecast"}); rMerchant(); return; }
+  if (qa === "settle") { st.chat.push({who:"bot", t:nowT(), html:"이번 주 정산 예정 <b>182,000원</b> (예시)<br>주문 41건 · 손질 옵션 19건 · 마감 할인 3회<br><small>시연용 숫자예요. 정산 주기는 파일럿에서 정해요.</small>"}); rMerchant(); return; }
+  if (qa === "promo") {
+    const demo = "오늘 아침 들어온 참나물 20단, 손질까지 해 드려요.\n향긋하게 들기름에 무치면 7분 반찬 끝.\n초록나물상회 · 새벽시장 입구 · 18시 픽업 가능";
+    st.chat.push({who:"wait"}); rMerchant();
+    let text = demo;
+    if (SAMPLE) { try { const s0 = STORES[0], today = Object.entries(s0.stock).slice(0, 3).map(([k,[p,u]]) => `${N[k].name} ${u} ${won(p)}${trimOk(s0, k) ? " 손질 가능" : ""}`).join(", "); const r = await SAMPLE(`전통시장 나물가게 '${s0.name}'의 오늘 재고(${today})로 동네 커뮤니티에 올릴 홍보글을 3줄로 써라. 과장·건강 효능 표현 없이, 이모지 없이, 줄마다 40자 이내.`, {modelTier:"quick"}); text = r.text.trim(); } catch (err) { text = demo; } }
+    st.chat = st.chat.filter(x => x.who !== "wait"); st.chat.push({who:"bot", t:nowT(), html:`<b>당근·인스타용 홍보글</b><br>${esc(text).replace(/\n/g,"<br>")}<br><small class="muted">눌러서 복사해 올리세요${SAMPLE ? "" : " · 예시 응답"}</small>`}); rMerchant(); }
+});
+
+/* ---------- demo helpers (for walkthrough recording) ---------- */
+function clearMarks(){ $$(".mark,.tapfx").forEach(m => m.remove()); }
+function rectIn(el){ const s = $("#screen").getBoundingClientRect(), r = el.getBoundingClientRect(); return {x:r.left - s.left, y:r.top - s.top, w:r.width, h:r.height}; }
+window.demo = {
+  go, show, state:() => st,
+  set(o){ Object.assign(st, o); render(current); },
+  tap(sel){ const el = typeof sel === "string" ? $(sel) : sel; if (!el) return false; el.scrollIntoView({block:"nearest"}); const r = rectIn(el); const fx = document.createElement("div"); fx.className = "tapfx"; fx.style.left = (r.x + r.w/2) + "px"; fx.style.top = (r.y + r.h/2) + "px"; $("#screen").append(fx); setTimeout(() => fx.remove(), 700); el.click(); return true; },
+  mark(sel, n){ const el = typeof sel === "string" ? $(sel) : sel; if (!el) return false; const r = rectIn(el); const m = document.createElement("div"); m.className = "mark"; Object.assign(m.style, {left:(r.x-4)+"px", top:(r.y-4)+"px", width:(r.w+8)+"px", height:(r.h+8)+"px"}); if (n) m.innerHTML = `<b>${n}</b>`; $("#screen").append(m); return true; },
+  clearMarks, askChef, merchantSend
+};
+$("#resetBtn").addEventListener("click", () => { st = fresh(); STORES.splice(0, STORES.length, ...JSON.parse(STORES0)); cartBadge(); go("home"); show("home"); toast("처음 상태로 돌렸어요"); });
+$$(".steps button[data-go]").forEach(b => b.addEventListener("click", () => {
+  if (b.dataset.go === "recipe" && !st.cart.length) st.namul = "chamnamul";
+  if (b.dataset.go === "checkout" || b.dataset.go === "done") { if (!st.cart.includes(st.namul)) addToCart(st.namul); }
+}));
+paintIcons(); cartBadge();
+{ const v0 = views[location.hash.slice(1)] ? location.hash.slice(1) : "home"; try { history.replaceState({v:v0, d:0}, "", "#" + v0); } catch {} show(v0); }
+</script>
