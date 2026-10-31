@@ -1,0 +1,106 @@
+results.txt — d07_guard_v2.sh (fixed) through sim_guard_v2.sh (extended)
+====================================================================================================
+sha256 4124533440e5dd9bf5768571ec02185d578e5f1d0178ec3a78e2d3c8ac3fdcf4  d07_guard_v2.sh
+sha256 6af27695597c865eb2d5f64b5383d6c840b4fb3280f8df28fe6a7cfdc965e9a9  sim_guard_v2.sh
+Run: python3 harness.py scenes d07_guard_v2.sh 3   (each scene 3 times, 6 in parallel; sim = bash sim_guard_v2.sh <guard> <scene> fill)
+Match rule per run: rc == expected AND scancel list == expected AND expected key line present in the guard output.
+Summary: 26 scenes x 3 runs = 78 runs; runs matching expectation = 78/78 -> ALL MATCH
+
+scene | group | world / event | expected (rc · scancel · key line) | actual (rc · scancel · key found · runs matched) | verdict
+----------------------------------------------------------------------------------------------------
+happy | old | real main-call flow (W moved to .prev, stopped folder re-copied, new attempt, test, main job), all values approved | rc 0 · scancel - · "지킴이는 여기까지" | rc 0 · scancel - · key yes · 3/3 | match
+recdiff | old | new attempt receipt differs (runner line) | rc 1 · scancel 444444 · "영수증이 승인값과 다름" | rc 1 · scancel 444444 · key yes · 3/3 | match
+lmpdiff | old | main job identity: lmp_mpi sha differs | rc 1 · scancel 555555 · "본 job 신원 2/3" | rc 1 · scancel 555555 · key yes · 3/3 | match
+reject | old | tool decides "본 제출 안 함 (G0–G3)" -> no main job | rc 0 · scancel - · "본 job 없음" | rc 0 · scancel - · key yes · 3/3 | match
+cmpdiff | old | tool copy of the original log differs from the stopped folder original | rc 1 · scancel - · "cmp 다름" | rc 1 · scancel - · key yes · 3/3 | match
+twonew | old | two new attempt folders appear | rc 1 · scancel - · "새 시도 폴더가 2 개" | rc 1 · scancel - · key yes · 3/3 | match
+early | old | an unknown attempt folder exists before the guard starts (main call already run) | rc 1 · scancel - · "기존 시도 집합이 예상" | rc 1 · scancel - · key yes · 3/3 | match
+jobgone | old | main job gone from squeue at the 5-minute check | rc 1 · scancel - · "상태 [큐에 없음]" | rc 1 · scancel - · key yes · 3/3 | match
+unfilled | old | all four approved values left as placeholders | rc 1 · scancel - · "(OLDATT [__FILL_T_ATTEMPT__])" | rc 1 · scancel - · key yes · 3/3 | match
+deckdiff | new (R2-09) | identity deck sha differs (no MISMATCH line) | rc 1 · scancel 555555 · "본 job 신원 2/3" | rc 1 · scancel 555555 · key yes · 3/3 | match
+ckpdiff | new (R2-09) | identity checkpoint sha differs (no MISMATCH line) | rc 1 · scancel 555555 · "본 job 신원 2/3" | rc 1 · scancel 555555 · key yes · 3/3 | match
+mismatch | new (R2-09) | identity 3/3 but an LMP_IDENTITY_MISMATCH line follows | rc 1 · scancel 555555 · "본 job 신원 0/3" | rc 1 · scancel 555555 · key yes · 3/3 | match
+partialfill | new (R2-09) | OLDATT, OKR filled; OKL, OKD still placeholders | rc 1 · scancel - · "꼴이 아니다 [__FILL_LMP_SHA256__]" | rc 1 · scancel - · key yes · 3/3 | match
+partialfill_att | new (R2-09) | only OLDATT still a placeholder | rc 1 · scancel - · "(OLDATT [__FILL_T_ATTEMPT__])" | rc 1 · scancel - · key yes · 3/3 | match
+partialfill_lmp | new (R2-09) | only OKL still a placeholder | rc 1 · scancel - · "꼴이 아니다 [__FILL_LMP_SHA256__]" | rc 1 · scancel - · key yes · 3/3 | match
+partialfill_upper | new (R2-09) | OKL pasted in UPPERCASE hex (64 chars) | rc 1 · scancel - · "꼴이 아니다 [86F37FC8" | rc 1 · scancel - · key yes · 3/3 | match
+partialfill_short | new (R2-09) | OKL truncated to 63 hex chars | rc 1 · scancel - · "꼴이 아니다 [86f37fc8" | rc 1 · scancel - · key yes · 3/3 | match
+realfmt | new (R2-09) | $HOME/dem_test is a symlink; receipt + identity carry the real (/lustre-like) path and the ibb lmp_mpi path | rc 0 · scancel - · "지킴이는 여기까지" | rc 0 · scancel - · key yes · 3/3 | match
+inherit | new (R2-09) | W not moved: inherited folder (job_t 333908) + -T folder stay, 0.5 s window before the new attempt | rc 0 · scancel - · "지킴이는 여기까지" | rc 0 · scancel - · key yes · 3/3 | match
+inherit2 | new (R2-09) | inherited folder deleted from W before the guard (still in the stopped folder; main-call copy brings it back) | rc 1 · scancel - · "기존 시도 집합이 예상" | rc 1 · scancel - · key yes · 3/3 | match
+move | new (R2-09) | real main-call flow with a 0.5 s window where W holds only the re-copied inherited folder | rc 0 · scancel - · "지킴이는 여기까지" | rc 0 · scancel - · key yes · 3/3 | match
+tdeck | added (R2-17 / own) | -T receipt deck line sha != OKD (OKD mis-filled) | rc 1 · scancel - · "-T 시도 영수증이 승인값" | rc 1 · scancel - · key yes · 3/3 | match
+tckp | added (R2-17 / own) | -T receipt checkpoint line sha != OKK (checkpoint is not 45a838c1...) | rc 1 · scancel - · "-T 시도 영수증이 승인값" | rc 1 · scancel - · key yes · 3/3 | match
+trec | added (R2-17 / own) | -T receipt changed on disk after the report (sha256 != OKR) | rc 1 · scancel - · "-T 시도 영수증이 승인값" | rc 1 · scancel - · key yes · 3/3 | match
+lmpdup | added (R2-17 / own) | OKL filled with the deck sha (double paste) | rc 1 · scancel 555555 · "본 job 신원 2/3" | rc 1 · scancel 555555 · key yes · 3/3 | match
+jobfail | added (R2-17 / own) | squeue still lists the main job, state FAILED, at the 5-minute check | rc 1 · scancel - · "상태 [FAILED]" | rc 1 · scancel - · key yes · 3/3 | match
+
+Guard stop/green line per scene (fixed guard, first run):
+  happy              🟢 2026-10-31 14:07:57 본 job 555555 상태 RUNNING (신원 줄 5 분 뒤) — 출력 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0
+  recdiff            ⛔ 영수증이 승인값과 다름 — 시험 job 444444 취소 (본 제출로 못 넘어감)
+  lmpdiff            ⛔ 본 job 신원 2/3 — 본 job 555555 취소
+  reject             본 job 없음 — 위 줄을 Claude 에게
+  cmpdiff            ⛔ cmp 다름 — 창 A 실행하지 말고 Claude 에게
+  twonew             ⛔ 새 시도 폴더가 2 개 ( attempt_r56_1031_230000_4242 attempt_r56_1031_230001_9999) — 창 A Ctrl-C 하고 Claude 에게
+  early              ⛔ 기존 시도 집합이 예상 (위 두 폴더 · 그 밖 없음) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  jobgone            ⛔ 2026-10-31 14:08:01 본 job 555555 상태 [큐에 없음] — 신원 줄 5 분 뒤 RUNNING 아님 · 출력 끝 줄을 Claude 에게
+  unfilled           ⛔ 승인값이 비었거나 꼴이 아니다 (OLDATT [__FILL_T_ATTEMPT__]) — Claude 에게
+  deckdiff           ⛔ 본 job 신원 2/3 — 본 job 555555 취소
+  ckpdiff            ⛔ 본 job 신원 2/3 — 본 job 555555 취소
+  mismatch           ⛔ 본 job 신원 0/3 — 본 job 555555 취소
+  partialfill        ⛔ 승인값이 비었거나 꼴이 아니다 [__FILL_LMP_SHA256__] — Claude 에게
+  partialfill_att    ⛔ 승인값이 비었거나 꼴이 아니다 (OLDATT [__FILL_T_ATTEMPT__]) — Claude 에게
+  partialfill_lmp    ⛔ 승인값이 비었거나 꼴이 아니다 [__FILL_LMP_SHA256__] — Claude 에게
+  partialfill_upper  ⛔ 승인값이 비었거나 꼴이 아니다 [86F37FC8C05D1CB6838E18444A7905899A385948DF3CAF22AFBF9C2648A4D0BF] — Claude 에게
+  partialfill_short  ⛔ 승인값이 비었거나 꼴이 아니다 [86f37fc8c05d1cb6838e18444a7905899a385948df3caf22afbf9c2648a4d0b] — Claude 에게
+  realfmt            🟢 2026-10-31 14:08:05 본 job 555555 상태 RUNNING (신원 줄 5 분 뒤) — 출력 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0
+  inherit            🟢 2026-10-31 14:08:06 본 job 555555 상태 RUNNING (신원 줄 5 분 뒤) — 출력 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0
+  inherit2           ⛔ 기존 시도 집합이 예상 (위 두 폴더 · 그 밖 없음) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  move               🟢 2026-10-31 14:08:07 본 job 555555 상태 RUNNING (신원 줄 5 분 뒤) — 출력 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0
+  tdeck              ⛔ -T 시도 영수증이 승인값 (영수증 a56a6d8d… · 덱 d8303259… · 체크포인트 45a838c1…) 과 2/3 — 창 A 실행하지 말고 Claude 에게
+  tckp               ⛔ -T 시도 영수증이 승인값 (영수증 90bc7439… · 덱 d8303259… · 체크포인트 45a838c1…) 과 2/3 — 창 A 실행하지 말고 Claude 에게
+  trec               ⛔ -T 시도 영수증이 승인값 (영수증 79499d42… · 덱 d8303259… · 체크포인트 45a838c1…) 과 2/3 — 창 A 실행하지 말고 Claude 에게
+  lmpdup             ⛔ 본 job 신원 2/3 — 본 job 555555 취소
+  jobfail            ⛔ 2026-10-31 14:08:09 본 job 555555 상태 [FAILED] — 신원 줄 5 분 뒤 RUNNING 아님 · 출력 끝 줄을 Claude 에게
+
+Pre-fix guard (repo docs/50kg/d07_guard/d07_guard_v2.sh, read-only) through the same sim — for reference, not an expectation:
+scene | rc | scancel | stop line
+  happy              rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  recdiff            rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  lmpdiff            rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  reject             rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  cmpdiff            rc 1 · scancel -       · ⛔ cmp 다름 — 창 A 실행하지 말고 Claude 에게
+  twonew             rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  early              rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  jobgone            rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  unfilled           rc 1 · scancel -       · ⛔ 승인값이 비었다 (OLDATT) — Claude 에게
+  deckdiff           rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  ckpdiff            rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  mismatch           rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  partialfill        rc 1 · scancel -       · ⛔ 승인값이 비었거나 꼴이 아니다 [__FILL_LMP_SHA256__] — Claude 에게
+  partialfill_att    rc 1 · scancel -       · ⛔ 승인값이 비었다 (OLDATT) — Claude 에게
+  partialfill_lmp    rc 1 · scancel -       · ⛔ 승인값이 비었거나 꼴이 아니다 [__FILL_LMP_SHA256__] — Claude 에게
+  partialfill_upper  rc 1 · scancel -       · ⛔ 승인값이 비었거나 꼴이 아니다 [86F37FC8C05D1CB6838E18444A7905899A385948DF3CAF22AFBF9C2648A4D0BF] — Claude 에게
+  partialfill_short  rc 1 · scancel -       · ⛔ 승인값이 비었거나 꼴이 아니다 [86f37fc8c05d1cb6838e18444a7905899a385948df3caf22afbf9c2648a4d0b] — Claude 에게
+  realfmt            rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  inherit            rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  inherit2           rc 1 · scancel 333908  · ⛔ 영수증이 승인값과 다름 — 시험 job 333908 취소 (본 제출로 못 넘어감)
+  move               rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  tdeck              rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  tckp               rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  trec               rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  lmpdup             rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  jobfail            rc 1 · scancel -       · ⛔ 기존 시도가 예상 (-T 시도 attempt_r56_1031_220500_1111 하나) 과 다름 — 창 A 를 이미 돌렸으면 Ctrl-C · Claude 에게
+  -> R2-08 reproduced: every realistic scene (inherited folder present) false-stops at ②;
+     inherit2 (inherited folder deleted to get past ②) adopts the re-copied folder, cancels dead job 333908 and exits
+     (the real attempt is then unguarded) — 3/3 runs.
+
+Format check (verify_format.sh, against the real 10-30 -T artifacts in
+  docs/reviews/codex_kg50_d07_scoped_go_20261030/evidence/input/kg50_d07_T_1030.tgz,
+  names swapped r56t -> r56 and restart_settling_20001.bin -> restart_after_settling.bin as in the v1 sim):
+  identity line: sim = real (bytes)
+  receipt: sim = real (5 lines, bytes)
+  guard identity case lines on the real line: K=3/3
+  guard receipt case lines on the real receipt (deck line · checkpoint line): 2/2
+
+Paste safety: d07_guard_v2.sh and sim_guard_v2.sh contain 0 "!" and 0 tab characters (grep -c); bash -n passes.

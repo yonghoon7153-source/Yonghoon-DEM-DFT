@@ -46,20 +46,51 @@ nohup bash ~/d07_guard.sh > ~/d07_guard.log 2>&1 &                        # '▶
 
 - 한계: 이 한 건 전용 (경로 · 승인값 고정) · ⑤ 는 로그인 노드 백그라운드 (꺼지면 손 정지 — 판 STL 확인 줄 + `scancel`) · 일반 도구의 승인 영수증 관문 (`PAI-02` 최소 고침) 을 대신하지 않는다.
 
-## v2 — 이어 돌리기 (10-31 · 정착 끝 → 끝 · 1저자 *"0.7 은 지금 포맷으로"*)
+## v2 — 이어 돌리기 (10-31 · 정착 끝 → 끝 · 1저자 *"0.7 은 지금 포맷으로"* · 10-31 독립 리뷰 R2-08 · 09 · 10 · 17 반영판)
 
-- 무엇: `d07_guard_v2.sh` = v1 의 ① (원 로그 원본 멈춘 폴더 `kg50_d07_b50.main1031` 의 `log.liggghts` ↔ 도구 사본) · ② (새 시도 영수증 = 승인값 · 다르면 그 시험 job 만 취소) · ④ (본 job `LMP_IDENTITY` = lmp_mpi · 덱 · `restart_after_settling.bin` `45a838c1…`) 그대로 · **⑤ 없음** (이어 돌리기는 끝까지 둔다) · ④ 뒤 5 분에 본 job 이 큐에 있는지 한 번 더.
-- 승인값 네 자리 (`-T` 시도 폴더 · 영수증 · lmp_mpi · 덱 sha256) = 10-31 `-T` 보고에서 채운다 — 채우기 전 판은 아무것도 안 한다 (흉내 `unfilled`).  본 제출 = Codex 한 건 범위 GO 뒤 (요청서 `docs/50kg/report_y4/codex_kg50_y4_draft2_request_20261031.md` Q4).
-- 흉내 시험 (`bash sim_guard_v2.sh d07_guard_v2.sh <장면> fill` · 10-31 메인):
+- 지키는 범위 = **제출 단계뿐** (영수증 · 신원 · 처음 5 분):
+  - ① 원 로그 원본 멈춘 폴더 `kg50_d07_b50.main1031` 의 `log.liggghts` ↔ 도구 사본 `kg50_d07_b50/log.liggghts.main1031` sha256 · cmp.
+  - ② 기존 시도 = 정확히 두 폴더 (집합 비교 · 순서 무관 · 그 밖 없음): 물려받은 시도 `attempt_r56_1030_152123_2568313` (멈춘 폴더에 들어 있던 10-30 본 호출 시도 — 도구의 `cp -a` 로 작업 폴더에 같이 온다) + -T 시도 (OLDATT).  새 시도 = 이 두 이름이 아닌 폴더 — 본 호출이 작업 폴더를 밀고 멈춘 폴더를 다시 복사해 물려받은 시도가 다시 생겨도 새 시도로 치지 않는다 (R2-08).
+  - '이제 창 A' 전에 -T 시도 영수증 `main_inputs.sha256` ↔ 승인값 (R2-17): 파일 sha256 = OKR · 1 줄 (`…/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts`) = OKD · 5 줄 (`…/restart_kg50_d07_b50/restart_after_settling.bin`) = OKK `45a838c1…` — 하나라도 다르면 아무것도 안 하고 멈춘다.
+  - 새 시도 영수증 = OKR (다르면 그 시험 job 만 취소).
+  - ④ 본 job `LMP_IDENTITY` 세 칸 — 도구 꼴 그대로 칸 자리를 고정해 대조 (`sha256=<OKL> deck=` · `…/input_kg50_d07_b50_r56.liggghts sha256=<OKD> checkpoint=` · `…/restart_after_settling.bin sha256=<OKK>` 줄 끝) · `LMP_IDENTITY_MISMATCH` 줄이 있으면 0/3 → 본 job 취소 · 신원 줄 5 분 뒤 `squeue` 상태 = RUNNING (아니면 1 분 뒤 한 번 더 · 그래도 아니면 ⛔ · 취소 없음).
+- 지키지 않는 것 (R2-10) = 그 뒤 런 전체 (안정화 · 압축 정지 판정 · 이완 · 끝 · 물리).  머리 주석 · 끝 줄에 그렇게 적고, 읽기 전용 확인 명령 한 줄 (`squeue -j <job>` · `tail -n 3 <출력>` · `sacct -j <job> -X -o JobID,State,ExitCode,Elapsed`) 을 찍고 나간다 (오래 지켜보지 않는다).  v1 의 ⑤ (판 STL 정지) 는 없다.
+- 고정값: NP 접미사 r56 (본 명령 `-n 56`) · 물려받은 시도 이름 · OKK = 10-31 정지 기록 `45a838c1…`.
+- 승인값 네 자리 (OLDATT · OKR · OKL · OKD) = 10-31 -T 보고에서 채운다 — 채우기 전 · 일부만 채운 판 · 꼴이 틀린 값 (대문자 · 63 자) 이면 아무것도 안 한다.  본 제출 = Codex 한 건 범위 GO 뒤 (요청서 `docs/50kg/report_y4/codex_kg50_y4_draft2_request_20261031.md` Q4).  붙여넣기 블록 (md5 게이트) 은 채운 판으로 만든다.
+- 앞 판 (R2-08 지적 대상) 을 같은 흉내에 넣은 결과: 물려받은 시도가 있는 실제 세계의 장면이 전부 ② 에서 거짓 정지 · 물려받은 폴더를 지워 ② 를 넘기면 (inherit2) 본 호출 복사가 그 폴더 (시험 job 333908 기록째) 를 다시 데려와 새 시도로 잡고 333908 을 취소한 뒤 나간다 (진짜 시도는 지키는 이 없음 · 3/3).
+- 흉내 시험 (`bash sim_guard_v2.sh d07_guard_v2.sh <장면> fill` · 10-31 · 26 장면 × 3 번 = 78/78 기대와 같음): 세계 = -T 뒤 실제와 같게 (멈춘 폴더 · 작업 폴더 둘 다 물려받은 시도 · 영수증 다섯 줄 · 신원 줄 = 10-30 실제 -T 산출물과 바이트 같은 꼴 · 흉내 도구 = 실제 본 호출 흐름: 작업 폴더 밀기 → 멈춘 폴더 `cp -a` → 새 시도 → 시험 → 본 job).
 
-| 장면 | 기대 | 결과 |
-|---|---|---|
-| happy | ✅ 영수증 · ✅ 신원 3/3 · 🟢 큐에 있음 · 취소 없음 | 같음 (rc 0) |
-| recdiff (새 영수증 한 줄 다름) | 시험 job 만 취소 · 멈춤 | 같음 (scancel 444444 · rc 1) |
-| lmpdiff (lmp_mpi sha 다름) | 본 job 취소 | 같음 (scancel 555555 · rc 1) |
-| reject (도구가 G0–G3 로 본 제출 안 함) | 취소 없음 · 결정 줄 | 같음 (rc 0) |
-| cmpdiff (원 로그 사본 다름) | 아무것도 안 함 · 멈춤 | 같음 (rc 1) |
-| twonew (새 시도 폴더 둘) | 취소 없음 · 멈춤 | 같음 (rc 1) |
-| early (지킴이 전에 도구를 먼저 돌림) | 기존 시도가 예상과 다름 → 멈춤 | 같음 (rc 1) |
-| jobgone (본 job 이 신원 확인 뒤 큐에서 사라짐) | ⛔ 출력 · 취소 없음 | 같음 (rc 1 · 흉내의 사라지는 순서를 신원 줄 앞으로 고정한 판) |
-| unfilled (승인값 비움) | 아무것도 안 함 | 같음 (rc 1) |
+| 장면 | 무엇 | 기대 | 결과 |
+|---|---|---|---|
+| happy | 실제 본 호출 흐름 · 값 전부 승인값 | 🟢 RUNNING · 취소 없음 (rc 0) | 같음 |
+| recdiff | 새 시도 영수증 한 줄 다름 | 시험 job 만 취소 (rc 1) | 같음 (scancel 444444) |
+| lmpdiff | 신원 lmp_mpi sha 다름 | 본 job 취소 · 2/3 | 같음 (scancel 555555) |
+| reject | 도구가 G0–G3 로 본 제출 안 함 | 취소 없음 · 결정 줄 (rc 0) | 같음 |
+| cmpdiff | 원 로그 사본 다름 | ① 에서 멈춤 (rc 1) | 같음 |
+| twonew | 새 시도 폴더 둘 | 취소 없음 · 멈춤 (rc 1) | 같음 |
+| early | 지킴이 전에 모르는 시도 폴더 (본 호출을 먼저 돌림) | ② 에서 멈춤 (rc 1) | 같음 |
+| jobgone | 5 분 뒤 큐에 없음 | ⛔ · 취소 없음 (rc 1) | 같음 |
+| unfilled | 승인값 넷 다 비움 | 아무것도 안 함 (rc 1) | 같음 |
+| deckdiff | 신원 덱 sha 다름 (MISMATCH 줄 없이) | 본 job 취소 · 2/3 | 같음 (scancel 555555) |
+| ckpdiff | 신원 체크포인트 sha 다름 (MISMATCH 줄 없이) | 본 job 취소 · 2/3 | 같음 (scancel 555555) |
+| mismatch | 신원 3/3 + `LMP_IDENTITY_MISMATCH` 줄 | 0/3 → 본 job 취소 | 같음 (scancel 555555) |
+| partialfill | OKL · OKD 비움 | 아무것도 안 함 (rc 1) | 같음 |
+| partialfill_att | OLDATT 만 비움 | 아무것도 안 함 (rc 1) | 같음 |
+| partialfill_lmp | OKL 만 비움 | 아무것도 안 함 (rc 1) | 같음 |
+| partialfill_upper | OKL 대문자 64 자 | 아무것도 안 함 (rc 1) | 같음 |
+| partialfill_short | OKL 63 자 | 아무것도 안 함 (rc 1) | 같음 |
+| realfmt | `$HOME/dem_test` 가 링크 · 영수증 · 신원 줄 = 실제 경로 (/lustre 꼴) · ibb lmp_mpi 경로 | 🟢 (rc 0) | 같음 |
+| inherit | 작업 폴더를 밀지 않음 · 물려받은 시도 (job_t 333908) 와 -T 시도가 있는 채로 0.5 s | 🟢 (rc 0) | 같음 |
+| inherit2 | 물려받은 시도를 작업 폴더에서 지움 (멈춘 폴더엔 그대로 — 본 호출 복사가 다시 데려옴) | ② 에서 멈춤 · 취소 없음 (rc 1) | 같음 (앞 판 = 333908 취소 뒤 나감) |
+| move | 실제 흐름 + 작업 폴더에 다시 생긴 물려받은 시도만 있는 0.5 s | 🟢 (rc 0) | 같음 |
+| tdeck | -T 영수증 1 줄 ≠ OKD | '이제 창 A' 전에 멈춤 (rc 1) | 같음 |
+| tckp | -T 영수증 5 줄 ≠ OKK | '이제 창 A' 전에 멈춤 (rc 1) | 같음 |
+| trec | -T 영수증 sha256 ≠ OKR (보고 뒤 바뀜) | '이제 창 A' 전에 멈춤 (rc 1) | 같음 |
+| lmpdup | OKL 자리에 덱 sha (두 번 붙여넣기) | 본 job 취소 · 2/3 | 같음 (scancel 555555) |
+| jobfail | 5 분 뒤 squeue 에 FAILED 로 남음 | ⛔ · 취소 없음 (rc 1) | 같음 |
+
+- 변이 시험 (R2-09): 검사마다 끈 판 28 개 → 27 개가 적어도 한 장면에서 잡힘 (두 번 돌려 같음).  남은 1 개 (새 시도 판정을 고정 집합 대신 시작 목록으로) = ② 를 지난 뒤에는 같은 집합이라 같은 판 (equivalent) · 같은 판이 아닌 살아남은 변이 없음.  OLDATT 검사를 뺀 판은 문구로만 잡힌다 (② · 64 자 검사가 뒤에서 같은 값을 막는다).
+- 한계: 이 한 건 전용 (경로 · 승인값 고정) · 흉내 = 가짜 `sleep` · `scancel` · `squeue` (Slurm · LIGGGHTS 없음) · `squeue -j` 가 끝난 job 을 상태와 함께 보여 주는지는 ibb 에서 확인 안 함 (RUNNING 만 통과라 어느 쪽이든 ⛔) · 일반 도구의 승인 영수증 관문 (`PAI-02`) 을 대신하지 않는다.
+
+- 10-31 `-T` 뒤 승인값 채운 판 = `d07_guard_v2_1031.sh` (틀 `d07_guard_v2.sh` 와 다른 줄 = 네 승인값 줄뿐 · `diff` 로 확인) · 값 출처 = `t_test_20261031/README.md` · 붙여 넣기 블록 = `d07_guard_v2_block.txt` (md5 `35371e83472905553df3455a2267c501` 게이트 · 설치만 · 컨테이너에서 설치 왕복 · CRLF 왕복 = 같음) · 흉내 결과 = `sim_v2_results_20261031.txt` · 변이 = `sim_v2_mutation_20261031.txt`.
+- ⛔ 실행 = Codex 한 건 범위 GO 뒤 (요청서 `docs/50kg/report_y4/codex_kg50_y4_draft2_request_20261031.md` Q4) · 순서 = 창 B 에서 지킴이 먼저 → "이제 창 A" 뒤 창 A 에서 `-T` 보고 끝의 본 제출 명령.

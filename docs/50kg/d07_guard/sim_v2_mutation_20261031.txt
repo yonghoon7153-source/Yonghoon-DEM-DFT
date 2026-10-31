@@ -1,0 +1,54 @@
+mutation.txt — d07_guard_v2.sh (fixed): one mutant per check, run against all 26 scenes
+====================================================================================================
+Run: python3 harness.py mutate d07_guard_v2.sh  (mutant = exact single-occurrence text replacement; files in ./mutants/)
+Killed = at least one scene where (rc, scancel, key line) differs from the fixed guard's expectation.
+Kill type: behaviour = rc or scancel differs; message = only the key line differs (outcome still a safe stop).
+Stability: the whole mutation pass was run twice; kill sets identical (byte-identical output).
+
+M01 | ① cmp disabled | killed by 1 scene(s) — behaviour: cmpdiff(rc 0, scancel -)
+M02 | ② set check removed | killed by 2 scene(s) — behaviour: early(rc 0, scancel -), inherit2(rc 0, scancel -)
+M03 | ② subset only (inherited folder optional) | killed by 1 scene(s) — behaviour: inherit2(rc 0, scancel -)
+M04 | ② = pre-fix rule (exactly the -T folder) | killed by 18 scene(s) — behaviour: happy(rc 1, scancel -), recdiff(rc 1, scancel -), lmpdiff(rc 1, scancel -), reject(rc 1, scancel -), deckdiff(rc 1, scancel -), ckpdiff(rc 1, scancel -), mismatch(rc 1, scancel -), realfmt(rc 1, scancel -), inherit(rc 1, scancel -), inherit2(rc 0, scancel -), move(rc 1, scancel -), lmpdup(rc 1, scancel -); message only: twonew, jobgone, tdeck, tckp, trec, jobfail
+M05 | new-folder set lacks the inherited folder (pre-fix NEW rule) | killed by 14 scene(s) — behaviour: happy(rc 1, scancel 333908), recdiff(rc 1, scancel 333908), lmpdiff(rc 1, scancel 333908), reject(rc 1, scancel 333908), twonew(rc 1, scancel 333908), jobgone(rc 1, scancel 333908), deckdiff(rc 1, scancel 333908), ckpdiff(rc 1, scancel 333908), mismatch(rc 1, scancel 333908), realfmt(rc 1, scancel 333908), inherit(rc 1, scancel 333908), move(rc 1, scancel 333908), lmpdup(rc 1, scancel 333908), jobfail(rc 1, scancel 333908)
+M06 | new-folder set = start listing OLD instead of constant KNOWN | SURVIVED
+M07 | R2-17 OKR (-T receipt sha256) check removed | killed by 1 scene(s) — behaviour: trec(rc 0, scancel -)
+M08 | R2-17 OKD (-T receipt deck line) check removed | killed by 1 scene(s) — behaviour: tdeck(rc 1, scancel 555555)
+M09 | R2-17 OKK (-T receipt checkpoint line) check removed | killed by 1 scene(s) — behaviour: tckp(rc 1, scancel 555555)
+M10 | R2-17 whole cross-check removed | killed by 3 scene(s) — behaviour: tdeck(rc 1, scancel 555555), tckp(rc 1, scancel 555555), trec(rc 0, scancel -)
+M11 | two-new check removed | killed by 1 scene(s) — behaviour: twonew(rc 124, scancel -)
+M12 | new-attempt receipt check removed | killed by 1 scene(s) — behaviour: recdiff(rc 0, scancel -)
+M13 | receipt mismatch: no scancel of the test job | killed by 1 scene(s) — behaviour: recdiff(rc 1, scancel -)
+M14 | identity: lmp_mpi condition removed | killed by 2 scene(s) — behaviour: lmpdiff(rc 0, scancel -), lmpdup(rc 0, scancel -)
+M15 | identity: deck condition removed | killed by 1 scene(s) — behaviour: deckdiff(rc 0, scancel -)
+M16 | identity: checkpoint condition removed | killed by 1 scene(s) — behaviour: ckpdiff(rc 0, scancel -)
+M17 | LMP_IDENTITY_MISMATCH override removed | killed by 1 scene(s) — behaviour: mismatch(rc 1, scancel -)
+M18 | identity: accept 2/3 | killed by 4 scene(s) — behaviour: lmpdiff(rc 0, scancel -), deckdiff(rc 0, scancel -), ckpdiff(rc 0, scancel -), lmpdup(rc 0, scancel -)
+M19 | identity mismatch: no scancel of the main job | killed by 5 scene(s) — behaviour: lmpdiff(rc 1, scancel -), deckdiff(rc 1, scancel -), ckpdiff(rc 1, scancel -), mismatch(rc 1, scancel -), lmpdup(rc 1, scancel -)
+M20 | placeholder: OLDATT check removed | killed by 2 scene(s) — behaviour: none; message only: unfilled, partialfill_att
+M21 | placeholder: 64-hex loop removed | killed by 4 scene(s) — behaviour: partialfill_lmp(rc 1, scancel 555555), partialfill_upper(rc 1, scancel 555555), partialfill_short(rc 1, scancel 555555); message only: partialfill
+M22 | placeholder: is64 hex-character part removed (length only) | killed by 1 scene(s) — behaviour: partialfill_upper(rc 1, scancel 555555)
+M23 | placeholder: is64 length part removed (hex only) | killed by 1 scene(s) — behaviour: partialfill_short(rc 1, scancel 555555)
+M24 | 5-minute queue check removed | killed by 2 scene(s) — behaviour: jobgone(rc 0, scancel -), jobfail(rc 0, scancel -)
+M25 | 5-minute queue check = pre-fix rule (any squeue output) | killed by 1 scene(s) — behaviour: jobfail(rc 0, scancel -)
+M26 | identity lmp check unpinned (pre-fix: sha256=OKL anywhere in the line) | killed by 1 scene(s) — behaviour: lmpdup(rc 0, scancel -)
+M27 | identity deck path pinned to $W (would break when the real path differs from $HOME) | killed by 1 scene(s) — behaviour: realfmt(rc 1, scancel 555555)
+M28 | OKK constant = v1 value (restart_settling_20001.bin) | killed by 14 scene(s) — behaviour: happy(rc 1, scancel -), recdiff(rc 1, scancel -), lmpdiff(rc 1, scancel -), reject(rc 1, scancel -), deckdiff(rc 1, scancel -), ckpdiff(rc 1, scancel -), mismatch(rc 1, scancel -), realfmt(rc 1, scancel -), inherit(rc 1, scancel -), move(rc 1, scancel -), lmpdup(rc 1, scancel -); message only: twonew, jobgone, jobfail
+
+Survivors: M06
+  M06 (new-folder loop compares against the start listing OLD instead of the constant KNOWN) is EQUIVALENT:
+  the loop is reached only after ② has required that the start listing is exactly {INHERIT, OLDATT} (NS = 2),
+  so " $b " is in OLD iff it is in KNOWN for every folder name b.  KNOWN is kept so the rule does not depend on ②.
+Non-equivalent survivors: none.
+
+Notes on single-scene / message-only kills:
+  M20 (OLDATT check removed) is killed by the key line only: an unfilled OLDATT is then stopped by ② (set mismatch)
+    or by the 64-hex loop (unfilled scene) — two later barriers, so removing it alone causes no unsafe action.
+  M21 (64-hex loop removed): partialfill is stopped later by the -T receipt cross-check (message kill),
+    partialfill_lmp / _upper / _short reach the main job and cancel it (behaviour kill) — the loop is the only pre-submission check of OKL.
+  M08 / M09 (R2-17 deck / checkpoint line removed): without them the same worlds are only caught after the main call,
+    by the identity check cancelling main job 555555 — R2-17 moves that stop before anything is submitted.
+  M07 (OKR pre-check removed): trec then runs to green, because the main call writes a fresh receipt equal to OKR.
+    The pre-check is an addition (cheap consistency of the four filled values with the -T folder on disk), not a safety gap.
+  M25 (queue check = any squeue output, the pre-fix rule): only jobfail kills it — a job squeue still lists as FAILED/COMPLETED
+    would have printed green.  Whether squeue -j lists finished jobs depends on the Slurm setup (MinJobAge); not verified on ibb.
+  M26 (pre-fix unpinned lmp check) and M27 (deck path pinned to $W) are format mutants killed by lmpdup and realfmt.
