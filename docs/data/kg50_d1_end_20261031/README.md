@@ -9,11 +9,11 @@
 | 파일 | 바이트 | sha256 | 자리 |
 |---|---:|---|---|
 | `kg50_d1_end_20261031.tgz` (끝 묶음) | 62,677,207 | `a3c91af34ee57fe8ffb7326f5622cd84bcfbabef59b8df4958c9cb34587ee2d7` | **리포 밖** (크기 · 이 폴더 `.gitignore`) — Codex 검토 ZIP 에 동봉 |
-| └ `kg50_d1_b50/post_kg50_d1_b50/atom_end_2785002.liggghts` | 22,489,721 | `e55bb3f44c138cf824837f9dd17775eaea5cc1148b28a8c1d4c07c57a3aec635` | 묶음 안 |
-| └ `kg50_d1_b50/post_kg50_d1_b50/contact_end_2785002.liggghts` | 150,684,556 | `a02955585a601dccbcd222ada684d5501f94de95f73e2617f9b78634fc6eb5b5` | 묶음 안 |
-| └ `kg50_d1_b50/post_kg50_d1_b50/mesh_end_2785002.stl` | 349 | `ec99971a2e7f27e1baeedbdab72e6f3c2db52239cc318671142931d56592fe16` | 묶음 안 |
-| └ `kg50_d1_b50/input_kg50_d1_b50.liggghts` | 12,812 | `514afdb705613dab876c9c0ff5c1f2fef3fad3e029d71778875c08b89edfde91` | 묶음 안 (= 리포 v3 덱) |
-| └ `kg50_d1_b50/log.liggghts` · `log_kg50_d1_b50_ins.out` (5,318 B · 삽입 런 화면) · `log_kg50_d1_b50_rs1028.out` (610,408 B · 10-28 재개 런 화면) | — | 묶음 안 log.liggghts = 아래 리포 로그와 같은 sha256 | 묶음 안 (멤버 7 개) |
+| └ kg50_d1_b50 / post_kg50_d1_b50 / atom_end_2785002.liggghts | 22,489,721 | `e55bb3f44c138cf824837f9dd17775eaea5cc1148b28a8c1d4c07c57a3aec635` | 묶음 안 |
+| └ kg50_d1_b50 / post_kg50_d1_b50 / contact_end_2785002.liggghts | 150,684,556 | `a02955585a601dccbcd222ada684d5501f94de95f73e2617f9b78634fc6eb5b5` | 묶음 안 |
+| └ kg50_d1_b50 / post_kg50_d1_b50 / mesh_end_2785002.stl | 349 | `ec99971a2e7f27e1baeedbdab72e6f3c2db52239cc318671142931d56592fe16` | 묶음 안 |
+| └ kg50_d1_b50 / input_kg50_d1_b50.liggghts | 12,812 | `514afdb705613dab876c9c0ff5c1f2fef3fad3e029d71778875c08b89edfde91` | 묶음 안 (= 리포 v3 덱) |
+| └ kg50_d1_b50 / log.liggghts · `log_kg50_d1_b50_ins.out` (5,318 B · 삽입 런 화면) · `log_kg50_d1_b50_rs1028.out` (610,408 B · 10-28 재개 런 화면) | — | 묶음 안 log.liggghts = 아래 리포 로그와 같은 sha256 | 묶음 안 (멤버 7 개) |
 | `kg50_d1_b50_log.liggghts` (본 런 로그 20,001 → 2,785,002 · PHASE 1–4 · `Simulation Finished`) | 735,278 | `6a90f706da68e3d5041ff063d0ffd4f61e9d89a5823f29e0755a23ed679bc1b5` | 이 폴더 |
 
 - 세 덤프 = 같은 step 2,785,002 (파일 이름 · 머리 TIMESTEP) — 러너 `docs/50kg/report_y4/draft2/run_draft2_metrics.py add --bed D1` 이 검사 (같은 step 세트 · 덱 = manifest).

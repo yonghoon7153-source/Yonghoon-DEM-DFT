@@ -7,7 +7,7 @@
 | 닫는 것 (요청) | 닫지 않는 것 |
 |---|---|
 | `K50Y4-02` — 1.35 GPa 문장 = 판정문 §4 최소 문구 그대로 (쪽 글 1쪽 노트 · 예상 답변 · 대본은 짧은 꼴) | 새 지표 (AM 표면 거리별 SE 점유 · cap 합집합 지도 · z 구간 전위 · 소산) — 다음 판 (`KG50B-05`) |
-| `K50Y4-03` · `SELF-144` — 선행 출처 = 선행 보고 **9쪽** (발표 순서) · ZIP 의 그 쪽 글 발췌 (`evidence/report_20261001_page_with_1p35GPa.txt` · 발표 순서로 찾음) | `KG50B-*` 원장 처분 (그림 · 분석 계획 · 웹앱 라벨 뒤 한 번에 · 판정문 §9) |
+| `K50Y4-03` · `SELF-144` — 선행 출처 = 선행 보고 **9쪽** (발표 순서) · ZIP 의 그 쪽 글 발췌 (ZIP evidence 폴더의 report_20261001_page_with_1p35GPa.txt · 발표 순서로 찾음) | `KG50B-*` 원장 처분 (그림 · 분석 계획 · 웹앱 라벨 뒤 한 번에 · 판정문 §9) |
 | 수정 계획 §2 의 12 고침이 쪽 글에 들어갔는가 (`docs/50kg/report_y4/draft2/slide_text_draft2.md`) | `K50Y4-01` 전체 — 프레임 규칙 (이완 끝 같은 step 세트 · 압력 도달 순간 NOT_AVAILABLE · 소비자 시험 9/9) 은 이번에 보이지만, 판정문 §4 의 실제 파일 재고 · 분석 계획 고정이 없고 "같은 상태" 부분은 `KG50-20` 에 걸린다 (사전 공격 R2-07) |
 | D1 수치의 출처 · 재현 (끝 묶음 sha256 · 멤버 sha256 · 집계 ↔ 웹앱 10/10) | 입도 효과의 방향 · 비단조 판정 (네 입도 전 · 시드 1 · `KG50-20` 교란) |
 | 그림 축 결함 (D1 이 축 밖으로 잘림) 의 고침 + 자동 검사 | `KG50-20` 자체 (P1 · 추정) — 이번 회차는 **처리 방향 · 직접 확인 길** 만 묻는다 |
@@ -29,7 +29,7 @@
 | D0.7 이어 돌리기 | 정지 기록 `docs/50kg/d07_guard/README.md` ⑥ · 지킴이 v2 `docs/50kg/d07_guard/d07_guard_v2.sh` · 흉내 시험 `docs/50kg/d07_guard/sim_guard_v2.sh` · 재개 도구 `scripts/resume_ckpt.sh` (sha256 `2dc7f693…` = 10-30 GO 판) · `-T` 보고 = ⬜ (1저자 10-31 밤 ibb 실행 중 · 오면 ZIP `evidence/` 에) |
 | 문헌 지도 (새 카드 8 · 정본 litdb `c431470a1`) | `docs/50kg/report_y4/lit_se_size_map_20261030.md` §7 |
 | 배치 미리보기 (그림을 초안 1 양식 칸에 대 본 것 · 머리 글 = 초안 1) | ZIP `preview/` (리포 밖 · 검토 편의) |
-| 원장 행 (이 요청에 걸린 것) | ZIP `evidence/ledger_rows.json` (`docs/reviews/findings.json` 에서 뽑음) |
+| 원장 행 (이 요청에 걸린 것) | ZIP evidence 폴더의 ledger_rows.json (`docs/reviews/findings.json` 에서 뽑음) |
 
 ## 2. 우리가 이미 본 것 (출력 그대로)
 

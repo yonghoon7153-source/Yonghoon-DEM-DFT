@@ -48,7 +48,7 @@ nohup bash ~/d07_guard.sh > ~/d07_guard.log 2>&1 &                        # '▶
 
 ## v2 — 이어 돌리기 (10-31 · 정착 끝 → 끝 · 1저자 *"0.7 은 지금 포맷으로"*)
 
-- 무엇: `d07_guard_v2.sh` = v1 의 ① (원 로그 원본 `kg50_d07_b50.main1031/log.liggghts` ↔ 도구 사본) · ② (새 시도 영수증 = 승인값 · 다르면 그 시험 job 만 취소) · ④ (본 job `LMP_IDENTITY` = lmp_mpi · 덱 · `restart_after_settling.bin` `45a838c1…`) 그대로 · **⑤ 없음** (이어 돌리기는 끝까지 둔다) · ④ 뒤 5 분에 본 job 이 큐에 있는지 한 번 더.
+- 무엇: `d07_guard_v2.sh` = v1 의 ① (원 로그 원본 멈춘 폴더 `kg50_d07_b50.main1031` 의 `log.liggghts` ↔ 도구 사본) · ② (새 시도 영수증 = 승인값 · 다르면 그 시험 job 만 취소) · ④ (본 job `LMP_IDENTITY` = lmp_mpi · 덱 · `restart_after_settling.bin` `45a838c1…`) 그대로 · **⑤ 없음** (이어 돌리기는 끝까지 둔다) · ④ 뒤 5 분에 본 job 이 큐에 있는지 한 번 더.
 - 승인값 네 자리 (`-T` 시도 폴더 · 영수증 · lmp_mpi · 덱 sha256) = 10-31 `-T` 보고에서 채운다 — 채우기 전 판은 아무것도 안 한다 (흉내 `unfilled`).  본 제출 = Codex 한 건 범위 GO 뒤 (요청서 `docs/50kg/report_y4/codex_kg50_y4_draft2_request_20261031.md` Q4).
 - 흉내 시험 (`bash sim_guard_v2.sh d07_guard_v2.sh <장면> fill` · 10-31 메인):
 
