@@ -1,0 +1,528 @@
+{
+ "schema": "kg50_y4_draft2_metrics/v1",
+ "bed": "D1",
+ "case": "kg50_d1_b50",
+ "d50_se_um": 1.0,
+ "d_am_um": 6.0,
+ "frame": {
+  "state": "판 고정 이완 끝 (atom · contact · mesh 같은 step)",
+  "end_step": 2785002,
+  "same_step_set": {
+   "atom": 2785002,
+   "contact": 2785002,
+   "mesh_name_step": 2785002,
+   "ok": true
+  },
+  "pressure_reached_frame": "NOT_AVAILABLE (자료 없음 — 압축 정지 step 에 덤프 없음)",
+  "target_pressure_MPa": 300.0,
+  "note": "이완 끝 프레임을 300 MPa 상태로 부르지 않는다"
+ },
+ "inventory": {
+  "n_am": 1481,
+  "n_se": 166971,
+  "n_am_plan": 1481,
+  "n_se_plan": 166976
+ },
+ "metrics": {
+  "eps_sphere_pct": 16.82503015458353,
+  "eps_sphere_webapp_pct": 16.825030154240384,
+  "eps_union_exact_pct": 18.142075,
+  "eps_union_exact_se_pct": 0.01926831994942978,
+  "eps_union_pair_pct": 18.110111700869613,
+  "overlap_fraction_pct": 1.5450339795882155,
+  "wall_overhang_over_Vbox_pct": 0.025900137492824472,
+  "plate_z_um": 122.596,
+  "v_sphere_sum_um3": 254922.96507921693,
+  "thickness_mass_conserving_um": 124.5684960034199,
+  "phi_se_mass_conserving": 0.28073169048419655,
+  "phi_am_mass_conserving": 0.5378475595158034,
+  "p_end_MPa": 156.15118,
+  "p_t0minus_MPa": 300.58919000000003,
+  "p_relax_first_MPa": 199.68129000000002,
+  "am_se_cn_mean": 99.7069547602971,
+  "am_se_cn_std": 9.450779359234906,
+  "am_se_cn_median": 100.0,
+  "se_se_cn_mean": 4.975259176743267,
+  "se_se_cn_std": 1.8826780287018392,
+  "am_am_cn_mean": 3.6556380823767722,
+  "coverage_hertz_pct": 19.042945915532847,
+  "coverage_hertz_std": 4.090783130104607,
+  "coverage_physics_union_pct": 46.769,
+  "coverage_physics_union_std": 10.377,
+  "area_am_se_total_um2": 31101.48580042519,
+  "area_am_se_n_contacts": 147666,
+  "area_am_se_per_contact_mean_um2": 0.21062049354912565,
+  "area_am_se_per_am_mean_um2": 21.000327954085076,
+  "area_am_se_per_am_median_um2": 20.7737,
+  "percolation_pct": 99.35437890412108,
+  "top_reachable_pct": 99.37833515999785,
+  "se_connected_am_pct": 100.0,
+  "am_ionic_isolated_pct": 0.0,
+  "tau_geo_all": 1.2234978869025506,
+  "tau_geo_all_mean": 1.2234978869025506,
+  "tau_geo_all_median": 1.2209572379355857,
+  "tau_geo_all_std": 0.018117845531747626,
+  "tau_geo_all_n": 2012,
+  "f_ion_hertz": 0.04680319470919788,
+  "tau2_ion_hertz": 5.998130944446544,
+  "ion_net_status_hertz": "OK",
+  "f_ion_physics": 0.08063980398963973,
+  "tau2_ion_physics": 3.481304226883585,
+  "ion_net_status_physics": "OK",
+  "phi_basis": "mass_conserving",
+  "L_basis": "L_mc",
+  "ion_sigma0_solver_mScm": 3.0,
+  "sigma_ion_hertz_solver_mScm": 0.142669,
+  "constriction_power_share_ion_hertz": 0.742464,
+  "overlap_ratio_mean_pct": 11.725438133990593,
+  "overlap_ratio_max_pct": 139.8438,
+  "overlap_pct_above_5": 70.11657401433533,
+  "am_frac_overlap_gt_0_pct": 100.0,
+  "am_frac_overlap_gt_2_pct": 100.0,
+  "am_frac_overlap_gt_5_pct": 100.0,
+  "am_frac_overlap_gt_10_pct": 100.0,
+  "am_frac_overlap_card_gt_0_pct": 100.0,
+  "am_frac_overlap_card_gt_2_pct": 100.0,
+  "am_frac_overlap_card_gt_5_pct": 100.0,
+  "am_frac_overlap_card_gt_10_pct": 81.83659689399055,
+  "am_se_overlap_ratio_median_pct": 13.19176,
+  "am_se_overlap_ratio_card_median_pct": 1.884537142857143,
+  "lw_status": "OK",
+  "lw_cv_pct": 95.7001174414076,
+  "lw_ratio_am": 1.8730541461378216,
+  "lw_ratio_se": 0.9922561810707842,
+  "lw_am_nowall_median_MPa": 172.13159380116218,
+  "lw_se_nowall_median_MPa": 76.0472465846845
+ },
+ "verdict_extract": {
+  "values": {
+   "porosity": 16.825030154240384,
+   "coverage_hertz": 19.042945915532847,
+   "coverage_physics": 46.769,
+   "sigma_ion": 0.142669,
+   "tau2": 5.998130944446544
+  },
+  "notes": {},
+  "am_phase": "AM_P",
+  "code_sha": "c80225b8264ef2a83ecebae45e2b040b5c0ee368",
+  "network_run_id": "20261031T124050-fc6db64e",
+  "ion_net_electrode_hertz": "dirichlet_exact",
+  "ion_net_area_rule_hertz": "hertz_ccpl22",
+  "f_ion_hertz": 0.04680319470919788
+ },
+ "tau_flux_row": {
+  "f_ion_hertz": 0.04680319470919788,
+  "f_ion_hertz_gap": 0.04755623,
+  "tau2_ion_hertz": 5.998130944446544,
+  "tau_ion_hertz": 2.4491081936996055,
+  "ion_net_status_hertz": "OK",
+  "ion_net_status_reason_hertz": "",
+  "ion_net_area_mode_hertz": "hertz",
+  "ion_net_constriction_hertz": "maxwell_halfspace",
+  "ion_net_psi_hertz": "",
+  "ion_net_area_rule_hertz": "hertz_ccpl22",
+  "ion_net_electrode_hertz": "dirichlet_exact",
+  "ion_net_bulk_hertz": "cylinder_half_d",
+  "ion_net_band_rule_hertz": "L0",
+  "ion_net_band_frac_hertz": 0.016313745962347876,
+  "ion_net_basis_check_hertz": "ok",
+  "f_ion_physics": 0.08063980398963973,
+  "f_ion_physics_gap": 0.08193725,
+  "tau2_ion_physics": 3.481304226883585,
+  "tau_ion_physics": 1.8658253473687147,
+  "ion_net_status_physics": "OK",
+  "ion_net_status_reason_physics": "",
+  "ion_net_area_mode_physics": "physics",
+  "ion_net_constriction_physics": "mikic_psi_multiply",
+  "ion_net_psi_physics": "multiply",
+  "ion_net_area_rule_physics": "physics_g2",
+  "ion_net_electrode_physics": "dirichlet_exact",
+  "ion_net_bulk_physics": "cylinder_half_d",
+  "ion_net_band_rule_physics": "L0",
+  "ion_net_band_frac_physics": 0.016313745962347876,
+  "ion_net_basis_check_physics": "ok",
+  "f_ion_hertz_h12": 0.057830954675106815,
+  "f_ion_hertz_h12_gap": 0.05876142,
+  "tau2_ion_hertz_h12": 4.8543499249033975,
+  "tau_ion_hertz_h12": 2.203258932786475,
+  "ion_net_status_hertz_h12": "OK",
+  "ion_net_status_reason_hertz_h12": "",
+  "ion_net_area_mode_hertz_h12": "hertz",
+  "ion_net_constriction_hertz_h12": "mikic_psi_multiply",
+  "ion_net_psi_hertz_h12": "multiply",
+  "ion_net_area_rule_hertz_h12": "hertz_ccpl22",
+  "ion_net_electrode_hertz_h12": "dirichlet_exact",
+  "ion_net_bulk_hertz_h12": "sphere_segment",
+  "ion_net_band_rule_hertz_h12": "L0",
+  "ion_net_band_frac_hertz_h12": 0.016313745962347876,
+  "ion_net_basis_check_hertz_h12": "ok",
+  "ion_sigma0_mScm": 3.0,
+  "ion_sigma0_T_C": 25.0,
+  "phi_basis": "mass_conserving",
+  "L_basis": "L_mc",
+  "ion_net_generation": "g2",
+  "full_model_limit_hertz": false,
+  "full_model_limit_physics": false
+ },
+ "aggregates": {
+  "overlap_threshold": {
+   "definition": "δ / min(r₁, r₂) × 100 (calc_overlap_ratio 의 접촉별 식) · AM 하나에 AM–SE 접촉 중 문턱 초과가 하나라도 있으면 셈 · 분모 = 전체 AM",
+   "thresholds_pct": [
+    0.0,
+    2.0,
+    5.0,
+    10.0
+   ],
+   "by_threshold": {
+    "0": {
+     "n_am": 1481,
+     "frac_pct": 100.0
+    },
+    "2": {
+     "n_am": 1481,
+     "frac_pct": 100.0
+    },
+    "5": {
+     "n_am": 1481,
+     "frac_pct": 100.0
+    },
+    "10": {
+     "n_am": 1481,
+     "frac_pct": 100.0
+    }
+   },
+   "am_se_contact_ratio": {
+    "n": 147666,
+    "mean": 18.024602988922037,
+    "std": 16.764429724713175,
+    "median": 13.19176,
+    "p10": 3.00183,
+    "p90": 39.244099999999996,
+    "min": 0.000393126,
+    "max": 139.8438
+   },
+   "all_contacts": {
+    "mean": 11.725438133990593,
+    "std": 11.429098695001588,
+    "max": 139.8438,
+    "pct_above_5": 70.11657401433533
+   },
+   "definition_card": "δ / (r₁ + r₂) × 100 — Zhou 2025 카드 (tailored_cathode_microstructure_low_pressure_assb) 의 \"두 입자 반경합 대비 overlap\" · 같은 접촉 δ · 정규화만 다름 (새 물리량 아님)",
+   "by_threshold_card": {
+    "0": {
+     "n_am": 1481,
+     "frac_pct": 100.0
+    },
+    "2": {
+     "n_am": 1481,
+     "frac_pct": 100.0
+    },
+    "5": {
+     "n_am": 1481,
+     "frac_pct": 100.0
+    },
+    "10": {
+     "n_am": 1212,
+     "frac_pct": 81.83659689399055
+    }
+   },
+   "am_se_contact_ratio_card": {
+    "n": 147666,
+    "mean": 2.57494328413172,
+    "std": 2.394918532101882,
+    "median": 1.884537142857143,
+    "p10": 0.4288328571428571,
+    "p90": 5.6063,
+    "min": 5.6160857142857137e-05,
+    "max": 19.977685714285712
+   }
+  },
+  "per_am": {
+   "n_am_se": {
+    "n": 1481,
+    "mean": 99.7069547602971,
+    "std": 9.450779359234906,
+    "median": 100.0,
+    "p10": 87.0,
+    "p90": 112.0,
+    "min": 71.0,
+    "max": 136.0
+   },
+   "area_am_se_um2": {
+    "n": 1481,
+    "mean": 21.000327954085076,
+    "std": 4.612347813070819,
+    "median": 20.7737,
+    "p10": 15.2433,
+    "p90": 26.972,
+    "min": 7.4798,
+    "max": 35.5279
+   },
+   "coverage_hertz_pct": {
+    "n": 1481,
+    "mean": 19.0429446320054,
+    "std": 4.090786450001237,
+    "median": 18.845,
+    "p10": 13.83,
+    "p90": 24.306,
+    "min": 7.03,
+    "max": 31.676
+   },
+   "coverage_physics_union_pct": {
+    "n": 1481,
+    "mean": 46.76899057374283,
+    "std": 10.376751588188798,
+    "median": 46.58171172722576,
+    "p10": 33.33916389714886,
+    "p90": 60.204081632653065,
+    "min": 14.45527015057573,
+    "max": 77.1213389121339
+   },
+   "am_surface_um2": 113.09733552923255
+  },
+  "se_connected": {
+   "n_am": 1481,
+   "n_connected": 1481,
+   "pct": 100.0
+  },
+  "love_weber": {
+   "status": "OK",
+   "vm_cv": 95.7001174414076,
+   "type_stress_ratio": {
+    "AM_P": 1.8730541461378216,
+    "SE": 0.9922561810707842
+   },
+   "by_phase_MPa": {
+    "AM": {
+     "nowall": {
+      "n": 1409,
+      "mean": 187.97061267330952,
+      "std": 103.34955452871107,
+      "median": 172.13159380116218,
+      "p10": 68.77137150814629,
+      "p90": 336.0631243758289,
+      "min": 8.891988998729284,
+      "max": 803.9594886254342
+     },
+     "n_wall_excluded": 72
+    },
+    "SE": {
+     "nowall": {
+      "n": 163483,
+      "mean": 99.64512725589408,
+      "std": 95.33505320830692,
+      "median": 76.0472465846845,
+      "p10": 28.189073300069133,
+      "p90": 181.19559621230445,
+      "min": 0.0020092186771828173,
+      "max": 1037.6610052910792
+     },
+     "n_wall_excluded": 3488
+    }
+   },
+   "wall_rule": "z − r < 0 (바닥) 또는 z + r > 판 높이 (판) — calc_love_weber_stress 의 nowall 규칙 · 결측 벽 힘을 복원한 값 아님",
+   "quantity": "입자 접촉력 기반 대칭 응력의 VM (Love–Weber · 입자 중심 → 접촉점 branch ⊗ 접촉력 · 9 성분 텐서의 대칭부) — kinetic · 벽 · couple 항 미포함 (전체 동적 응력 아님)",
+   "unit": "MPa (덱 단위 Pa × 1e-3 · 덱 머리 P×0.001 규약)"
+  },
+  "zbins": {
+   "n": 10,
+   "rule": "바닥 z = 0 → 판 높이 같은 폭 · 입자 = 중심 z · 공극 = 정확 합집합 몬테카를로 점의 z",
+   "mc_n": 4000000,
+   "mc_seed": 1817760979
+  }
+ },
+ "aggregate_checks": {
+  "overlap_mean_vs_webapp": true,
+  "overlap_mean_recomputed": true,
+  "am_se_cn_mean": true,
+  "top_reachable_pct": true,
+  "se_connected_am_pct": true,
+  "coverage_hertz_mean": true,
+  "area_am_se_total": true,
+  "coverage_physics_union_mean": true,
+  "lw_cv_vs_webapp": true,
+  "union_exact_total_vs_webapp": true
+ },
+ "codex_check": {},
+ "compaction": {
+  "log": "docs/data/kg50_d1_end_20261031/kg50_d1_b50_log.liggghts",
+  "log_sha256": "6a90f706da68e3d5041ff063d0ffd4f61e9d89a5823f29e0755a23ed679bc1b5",
+  "log_bytes": 735278,
+  "compress_start_step": 400002,
+  "stop_step": 2685002,
+  "n_compress_runs": 457,
+  "plate_z0_um": 145.445726030801,
+  "z_end_pred_um": 122.595726030801,
+  "z_end_mesh_um": 122.596,
+  "p_t0minus_MPa": 300.58919000000003,
+  "p_relax_first_MPa": 199.68129000000002,
+  "p_end_MPa": 156.15118,
+  "eps_sphere_fixed_pct": 16.82503015458353,
+  "n_load_rows": 2742,
+  "n_relax_rows": 101,
+  "p_threshold_display_MPa": 1.0
+ },
+ "section": {
+  "y0_um": 25.0,
+  "n_rows": 3652
+ },
+ "ovito": {
+  "file": "docs/50kg/report_y4/draft2/ovito/D1_end_2785002_um.xyz.gz",
+  "bytes": 2574379,
+  "sha256": "5e7dcfe16abba3f368c45933fc0981958a1b5048d99c01f5c2dc26e4cbfeb1b5",
+  "raw_sha256": "a2bea2d5acfe88e859c7c084c55f8883e8332286f409da7957fc46e49d1e567c",
+  "n": 168452,
+  "columns": [
+   "species",
+   "x_um",
+   "y_um",
+   "z_um",
+   "radius_um",
+   "id",
+   "dump_type"
+  ]
+ },
+ "provenance": {
+  "end_set": {
+   "tgz": "docs/data/kg50_d1_end_20261031/kg50_d1_end_20261031.tgz",
+   "tgz_sha256": "a3c91af34ee57fe8ffb7326f5622cd84bcfbabef59b8df4958c9cb34587ee2d7",
+   "tgz_bytes": 62677207,
+   "prefix": "kg50_d1_b50/",
+   "members": {
+    "kg50_d1_b50/post_kg50_d1_b50/atom_end_2785002.liggghts": {
+     "role": "atom",
+     "bytes": 22489721,
+     "sha256": "e55bb3f44c138cf824837f9dd17775eaea5cc1148b28a8c1d4c07c57a3aec635"
+    },
+    "kg50_d1_b50/post_kg50_d1_b50/contact_end_2785002.liggghts": {
+     "role": "contact",
+     "bytes": 150684556,
+     "sha256": "a02955585a601dccbcd222ada684d5501f94de95f73e2617f9b78634fc6eb5b5"
+    },
+    "kg50_d1_b50/post_kg50_d1_b50/mesh_end_2785002.stl": {
+     "role": "mesh",
+     "bytes": 349,
+     "sha256": "ec99971a2e7f27e1baeedbdab72e6f3c2db52239cc318671142931d56592fe16"
+    },
+    "kg50_d1_b50/input_kg50_d1_b50.liggghts": {
+     "role": "deck",
+     "bytes": 12812,
+     "sha256": "514afdb705613dab876c9c0ff5c1f2fef3fad3e029d71778875c08b89edfde91"
+    }
+   },
+   "tgz_record": null,
+   "member_record": null,
+   "deck_source": "tgz member",
+   "end_step": 2785002,
+   "same_step_set": {
+    "atom": 2785002,
+    "contact": 2785002,
+    "mesh_name_step": 2785002,
+    "ok": true
+   }
+  },
+  "deck": {
+   "repo_deck": "docs/data/kg50_decks_20261027_v3_b50/kg50_d1_b50/input_kg50_d1_b50.liggghts",
+   "manifest": "docs/data/kg50_decks_20261027_v3_b50/manifest.json",
+   "sha256": "514afdb705613dab876c9c0ff5c1f2fef3fad3e029d71778875c08b89edfde91"
+  },
+  "network_provenance": {
+   "network_run_id": "20261031T124050-fc6db64e",
+   "code_sha": "c80225b8264ef2a83ecebae45e2b040b5c0ee368",
+   "stamped_at": "2026-10-31T12:45:17",
+   "solver_status": "success",
+   "solver": "network_conductivity.py",
+   "argv": {
+    "type_map": "1:AM_P,3:SE",
+    "scale": 1000,
+    "contact_mode": "both"
+   },
+   "units_contract": "sim_to_real_v1",
+   "input_digests": {
+    "atoms.csv": "3914c983e8093111",
+    "contacts.csv": "b78779c3811544bc"
+   },
+   "psi_placement_physics": "multiply",
+   "electrode_model": "dirichlet_exact",
+   "area_rule_physics": "physics_g2",
+   "hertz_h12": true
+  },
+  "pipeline": {
+   "status": "done",
+   "stopped_after": "network",
+   "network_run_id": "20261031T124050-fc6db64e",
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0
+    },
+    {
+     "step": "Coverage Physics vs Hertzian",
+     "rc": 0
+    },
+    {
+     "step": "Network Solver (both modes)",
+     "rc": 0
+    },
+    {
+     "step": "Network channel verdict (ionic/electronic/thermal)",
+     "rc": 0
+    },
+    {
+     "step": "Network stop contract (stop_after=network)",
+     "rc": 0
+    },
+    {
+     "step": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+     "rc": 0
+    },
+    {
+     "step": "Network Merge",
+     "rc": 0
+    }
+   ]
+  },
+  "webapp_case_id": "261031_123033_25eb92",
+  "meta_type_map": "1:AM_P,3:SE",
+  "git": {
+   "head": "c80225b8264ef2a83ecebae45e2b040b5c0ee368",
+   "tracked_clean": false
+  },
+  "tool_files": {
+   "scripts/dem_analysis_core.py": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+   "scripts/analyze_contacts.py": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9",
+   "scripts/parse_liggghts.py": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425",
+   "scripts/network_conductivity.py": "a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e",
+   "scripts/tau_flux.py": "c0a7da6e1b73bea97136f06803810dbe159bf5c4395d8d218a90217a58ef0f78",
+   "scripts/coverage_physics_vs_hertzian.py": "1bf4ee8c0061e69760596b05318e0b750605e85ad16f34176e74f31db80b6253",
+   "scripts/lhs_union_webapp.py": "3f06e9d36060a366d79e1abb76b5fe07e23b51d63666f51ba3afeabf64211408",
+   "scripts/kg50_d3_cell_verdict.py": "44c2577d6d0f901d0d6ae48eef049f631e82c497db1f81b4b6dabbd7eda90938",
+   "webapp/app.py": "3e82140f47c7e87b138f8a6f24b8f8575bc7476e91b8369b20cdf698b69b4bc1",
+   "webapp/pipeline_service.py": "8026169f61e8bddcceea3dfb42758bb6a4e599a28271d8159c387dfc2a79d4ef",
+   "docs/50kg/report_y4/kg50_y4_sources.py": "88b0a84ffa7c9e7499ccdd493f90f9cc692f71bfc4bd1efac488e40f671e51e5",
+   "docs/50kg/report_y4/figs/make_fig_p2_aux.py": "d6dfa88fcbb63696171948d090e13c29b50aae579bf283865d6276dd11a97afc",
+   "docs/50kg/report_y4/figs/make_figs_p1.py": "bd47da984daae31cbb8acfaff54defc85f3358bc47358d45ef0cf9b025a196e9",
+   "docs/50kg/report_y4/draft2/run_draft2_metrics.py": "674cff2128351ff607ca5f40857f5c4fda33f6dd304987c383973c47eeec81c1"
+  },
+  "tool_functions": [
+   "webapp.app./upload (Flask test client) + run_pipeline(stop_after=\"network\", figures=False, auto_db=False)",
+   "scripts/analyze_contacts.py → dem_analysis_core.run_full_analysis (calc_porosity_dual · calc_porosity_union_exact · calc_interface_area · calc_coverage · calc_percolation · calc_se_se_cn · calc_am_am_cn · calc_tortuosity_all · calc_ionic_active_am · calc_overlap_ratio · calc_am_isolation_risk · calc_love_weber_stress)",
+   "scripts/coverage_physics_vs_hertzian.py (coverage_per_am.csv · union_coverage_bed)",
+   "scripts/network_conductivity.py (hertzian · physics · hertz_h12) → tau_flux.case_row",
+   "scripts/kg50_d3_cell_verdict.extract (porosity · coverage Hertz/Physics · σ_ion · tau2 상태 검사)",
+   "dem_analysis_core.calc_love_weber_stress(return_arrays=True) · calc_overlap_ratio · get_plate_z · _get_box_xy",
+   "analyze_contacts.load_atoms_raw · load_contacts_raw",
+   "lhs_union_webapp.coverage (calc_porosity_union_exact 와 같은 씨앗 · 같은 점 · z 구간 집계)",
+   "docs/50kg/report_y4/figs/make_fig_p2_aux.parse_log · branches (로그 압밀 곡선)",
+   "docs/50kg/report_y4/figs/make_figs_p1.section_circles (y = 상자 가운데 단면)"
+  ],
+  "env": {
+   "python": "3.11.15",
+   "numpy": "2.4.6"
+  }
+ }
+}
