@@ -1,6 +1,8 @@
 // 나물로 발표자료 v4 (제출본): 본문 12장 + 부록 2장. Problem → Solution → Business → Vision.
 // 사용: NODE_PATH=<pptxgenjs가 설치된 node_modules> node build_deck.js [출력.pptx]
 const pptxgen = require("pptxgenjs");
+// 발표자 정보는 저장소에 넣지 않고 환경 변수로 받는다 (예: NAMUL_PRESENTER="○○학부  학번  이름")
+const PRESENTER = (process.env.NAMUL_PRESENTER || "").trim() || "○○학과  ○○○";
 const fs = require("fs");
 const path = require("path");
 const { setTheme } = require("./theme.js");
@@ -79,7 +81,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     ["나물 접근성", "지역 상권 상생", "AI 기반", "레시피 연계"].forEach((c, i) => { const w = 0.32 + [...c].reduce((a, ch) => a + (/[가-힣]/.test(ch) ? 0.165 : ch === " " ? 0.06 : 0.1), 0);
       s.addShape(pres.ShapeType.roundRect, { x: cx, y: 3.95, w, h: 0.34, rectRadius: 0.17, fill: { color: "24503D" }, line: { color: BRAND2, width: 0.75 }, objectName: "pillar " + i });
       tx(s, c, { x: cx, y: 3.95, w, h: 0.34, fontSize: 11.5, bold: true, color: "FFFFFF", align: "center", valign: "middle", objectName: "pillar text " + i }); cx += w + 0.12; });
-    tx(s, "2026. 11.     ○○학과  ○○○", { x: 0.6, y: 4.8, w: 5, h: 0.3, fontSize: 12, color: "A9C2B3", objectName: "presenter" });
+    tx(s, "2026. 11.     " + PRESENTER, { x: 0.6, y: 4.8, w: 5, h: 0.3, fontSize: 12, color: "A9C2B3", objectName: "presenter" });
     phone(s, "home", 7.05, 0.38, 4.85, "홈 화면");
     s.addNotes(note(1)); }
 
@@ -144,7 +146,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     const h = 3.3, w = h / PH;
     [["aichef", "레시피 추천 화면"], ["merchant_draft", "판매자 상품 등록안 화면"], ["merchant_forecast", "발주 추천·마감 할인 예시 화면"]].forEach(([f, alt], i) => {
       const x = 0.45 + i * (w + 0.14); phone(s, f, x, 1.66, h, alt); badge(s, i + 1, x - 0.06, 1.6); });
-    const caps = [["레시피 추천 (고객)", "시연 구현", true, "아이 나이·보유 재료를 입력하면 근처 시장 가게\n재고로 만들 수 있는 반찬을 추천"],
+    const caps = [["레시피 추천 (고객)", "시연 구현", true, "가족 상황·보유 재료를 입력하면 근처 시장 가게\n재고로 만들 수 있는 반찬을 추천"],
       ["상품 등록 자동화 (판매자)", "시연 구현", true, "메시지 한 줄을 품목·수량·가격으로 정리,\n판매자가 확인해야 앱에 반영"],
       ["발주량 추천 · 마감 할인", "개발 예정", false, "판매 이력·요일·날씨 기반, 주문 데이터가\n쌓인 뒤 도입"]];
     caps.forEach(([t, st, on, d], i) => {
@@ -265,7 +267,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     table(s, null, [["확장 조건", "첫 시장의 재구매·운영비 확인"], ["지역 확대", "인접 시장·주거 단지 → 수도권"], ["품목 확대", "나물 → 제철 농산물 전체"]],
       { x: 5.2, y: 2.06, w: 4.35, colW: [1.3, 3.05], rowH: [0.42, 0.42, 0.42], align: ["center", "left"], size: 12 });
     tx(s, "기대 효과", { x: 5.2, y: 3.5, w: 4.3, h: 0.3, fontSize: 12, bold: true, color: BRAND, objectName: "effect title" });
-    tx(s, [{ text: "전통시장 신규 고객 · 지역 상권 매출 증가", options: { bullet: true, breakLine: true } }, { text: "제철 재고 폐기 감소", options: { bullet: true, breakLine: true } }, { text: "아이 채소 반찬 섭취 개선", options: { bullet: true } }], { x: 5.2, y: 3.84, w: 4.35, h: 1.06, fontSize: 12, color: INK, paraSpaceAfter: 4, objectName: "effect list" });
+    tx(s, [{ text: "전통시장 신규 고객 · 지역 상권 매출 증가", options: { bullet: true, breakLine: true } }, { text: "제철 재고 폐기 감소", options: { bullet: true, breakLine: true } }, { text: "바쁜 가구의 나물·채소 반찬 섭취 개선", options: { bullet: true } }], { x: 5.2, y: 3.84, w: 4.35, h: 1.06, fontSize: 12, color: INK, paraSpaceAfter: 4, objectName: "effect list" });
     foot(s, "주: 재무 수치는 가정 기반 목표치 · 손익분기 시점은 파일럿 실측 후 재산정 (산식은 부록 1)"); }
 
   // ================= 12. 마무리 =================
@@ -281,7 +283,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       tx(s, h, { x: x + 0.82, y: 3.0, w: 1.9, h: 0.4, fontSize: 14, bold: true, color: "FFFFFF", valign: "middle", objectName: "step head " + n });
       tx(s, d, { x: x + 0.2, y: 3.5, w: 2.55, h: 0.7, fontSize: 11.5, color: "C7D6CC", objectName: "step desc " + n }); });
     tx(s, "감사합니다", { x: 0.6, y: 4.62, w: 4, h: 0.42, fontSize: 18, bold: true, color: "FFFFFF", objectName: "thanks" });
-    tx(s, "○○학과  ○○○", { x: 5.9, y: 4.62, w: 3.5, h: 0.42, fontSize: 12, color: "A9C2B3", align: "right", valign: "middle", objectName: "presenter" });
+    tx(s, PRESENTER, { x: 5.9, y: 4.62, w: 3.5, h: 0.42, fontSize: 12, color: "A9C2B3", align: "right", valign: "middle", objectName: "presenter" });
     s.addNotes(note(12)); }
 
   // ================= 13. 부록 1 =================

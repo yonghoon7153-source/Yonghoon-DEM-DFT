@@ -3,7 +3,7 @@
 import json, os, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from script_data import SLIDES, DEMO_SLIDE
+from script_data import SLIDES, DEMO_SLIDE, SPEAKER
 from ko_norm import normalize
 PACE = 5.0      # 사람 발표 속도: 초당 5음절 ≈ 분당 300음절
 GAP = 1.0       # 슬라이드 전환 여유(초)
@@ -21,7 +21,7 @@ print("total syllables", total_syl, "| est. human talk", mmss(t))
 for o in out: print(o["n"], o["sec"], o["syllables"], mmss(o["start"]), "%.0fs" % o["dur"])
 # ---- 대본 문서 ----
 L = []
-L.append("# 나물로 발표 대본 (제출본 v4.7, 8–10분)\n")
+L.append("# 나물로 발표 대본 (제출본 v4.8, 8–10분)\n")
 L.append("> 사람이 읽는 속도(분당 약 300음절) 기준 예상 시간 **%s** (추정치). 8–10분 조건 안이지만 사람마다 속도가 달라 **9분 안팎**을 목표로 녹화해 실제 길이를 확인한다. 슬라이드 노트에도 같은 대본이 들어 있다. 그대로 읽기보다 흐름만 익히고 자기 말투로 바꿔 말하는 편이 자연스럽다.\n" % mmss(t))
 L.append("## 녹화해서 mp4 만들기 (본인 목소리 · 제출용)\n")
 L.append("1. PowerPoint(Windows, Microsoft 365)에서 `02_발표자료_나물로.pptx` 열기 → **녹화** 탭 → **녹화 → 처음부터**. (Mac: **슬라이드 쇼 → 슬라이드 쇼 녹화**)")
@@ -38,9 +38,9 @@ L.append("- 8번: 첫 문장(경쟁 서비스 나열)을 \"큰 플랫폼들은 �
 L.append("- 11번: 보수 시나리오 문장을 \"보수 시나리오도 함께 계산했고, 파일럿 결과로 조정하겠습니다.\"로 줄인다 (숫자는 상자와 부록에 있다)")
 L.append("- 4번: 마지막 정리 문장 (앞 문장과 5번 장표에 같은 내용이 있다)")
 L.append("- 표지의 중심 문장(지역 상권), 5번 안전 원칙, 5·6번 예시 데이터와 미연동 범위 설명은 줄이지 않는다.\n")
-L.append("## 발표 전에 채울 것\n")
-L.append("- 표지·마무리 장표의 `○○학과 ○○○` 를 본인 정보로 바꾼다.")
-L.append("- 표지 대본 첫 문장에 이름을 넣는다. 예: \"안녕하세요, ○○학과 ○○○입니다.\"")
+L.append("## 발표 전에 확인할 것\n")
+L.append("- 발표자 정보(표지·마무리 장표, 표지 대본 첫 문장): " + ("반영됨 (" + SPEAKER + ")" if SPEAKER else "`○○학과 ○○○` 를 본인 정보로 바꾸고, 표지 대본 첫 문장에 소속과 이름을 넣는다. 생성 스크립트에서는 NAMUL_PRESENTER·NAMUL_SPEAKER 환경 변수로 넣는다"))
+L.append("- 슬라이드별로 한 페이지씩 나눈 읽기용 대본: `03_발표대본_나물로_슬라이드별.pdf`")
 L.append("- 수치 출처(부록 2)는 발표 전에 원문을 한 번 열어 확인한다.\n")
 L.append("## 시간표\n")
 L.append("| # | 구간 | 슬라이드 | 시작 | 길이 |")

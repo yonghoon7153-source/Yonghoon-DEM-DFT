@@ -4,16 +4,17 @@
 > 중심 문장: **레시피로 고른 나물을 전통시장에서 쉽게 사고, 그 장보기가 우리 동네 시장 가게의 매출이 되게 하는 서비스** (나물 접근성 · 지역 상권 상생 · AI 기반 · 레시피 연계). 주 고객은 바쁜 가구(맞벌이·1인 가구).
 > **이 폴더는 연구 프로젝트(`degradation-degeneracy/`, `bms-balancing/` 등)와 무관하며, `claude/namul-platform` 브랜치는 `namul-platform/` 경로만 다룬다.**
 
-## 제출용 (v4.7)
+## 제출용 (v4.8)
 
 | 파일 | 내용 |
 |---|---|
 | `02_발표자료_나물로.pptx` | 본문 12장 + 부록 2장 (Problem 2 · Solution 3 · Business 3 · Vision 2 + 표지·마무리). 슬라이드 노트에 대본, 6번 장표에 시연 영상 내장 |
 | `02_발표자료_나물로_미리보기.pdf` | LibreOffice 렌더 미리보기 (글꼴 대체로 줄바꿈이 PowerPoint와 조금 다를 수 있음) |
-| `03_발표대본_나물로.md` | 장표별 대본, 시간표(사람 속도 추정 약 8분 46초), 녹화해서 mp4 만드는 법, 길 때 줄일 문장, 예상 Q&A 16개 |
-| `05_발표영상_초안_AI음성.mp4` | 리허설용 초안 8분 48초 (오프라인 AI 음성 + 자막, 6번에 실제 앱 화면 녹화). 제출은 본인 녹화본으로 |
+| `03_발표대본_나물로_슬라이드별.pdf` | 발표하며 한 장씩 넘겨 읽는 대본: 슬라이드 1장 = 1페이지 (장표 그림 · 시간 · 다음 장 안내) |
+| `03_발표대본_나물로.md` | 장표별 대본, 시간표(사람 속도 추정 약 8분 50초), 녹화해서 mp4 만드는 법, 길 때 줄일 문장, 예상 Q&A 16개 |
+| `05_발표영상_초안_AI음성.mp4` | 리허설용 초안 8분 52초 (오프라인 AI 음성 + 자막, 6번에 실제 앱 화면 녹화). 제출은 본인 녹화본으로 |
 
-발표 전에 표지·마무리의 `○○학과 ○○○` 를 바꾸고, 부록 2의 출처 링크를 한 번 열어 본다. 녹화는 9분 안팎을 목표로 한다.
+공개 저장소라 표지·마무리의 발표자 정보는 `○○학과 ○○○` 로 두었다(정보가 들어간 파일은 환경 변수로 따로 만든다). 발표 전에 부록 2의 출처 링크를 한 번 열어 본다. 녹화는 9분 안팎을 목표로 한다.
 
 ## 참고용
 
@@ -30,7 +31,7 @@
 | `12_리뷰요청_codex_4차.md` | Codex 4차 리뷰 요청서 (v4.3 기준: 3차 지적 반영 판정 · 늘어난 설명 덜어내기 · 새 가정 · 제출 전 최종 점검) |
 | `13_리뷰요청_codex_5차.md` | Codex 5차 리뷰 요청서 (v4.5 기준: 중심 문장과 네 가지 축의 흐름 · 지역 상권 메시지의 설득력 · 옛 표현과 회귀 · 새 문장의 자연스러움) |
 | `상세본_v3/` | 이전 상세본 (25장 PPT, 대본). 저장소에만 있고 리뷰용 zip에는 넣지 않는다 |
-| `review/slides_text.md` | v4.7 PPT의 텍스트·표·노트 추출본 |
+| `review/slides_text.md` | v4.8 PPT의 텍스트·표·노트 추출본 |
 | `prototype/nm_prototype.html` | 클릭형 웹앱 프로토타입 (한 파일, 브라우저로 열면 시연 모드). 게시본: https://claude.ai/artifact/JinGR2bajKN6bz9NgK85qc |
 
 ## 다시 만들기
@@ -48,10 +49,15 @@ node stills.js && node record.js && node check2.js && cd ..
 # 3) 대본 → 슬라이드 노트용 script.json + 03 문서, 그리고 덱 (pptxgenjs 4.0.1)
 cd deck_src && npm ci
 python3 make_script.py ../03_발표대본_나물로.md && node build_deck.js && cd ..
+# 발표자 정보는 공개 저장소에 넣지 않는다. 넣을 때만 환경 변수로: NAMUL_PRESENTER="○○학부  학번  이름" NAMUL_SPEAKER="○○학부 이름"
 
 # 4) 미리보기 PDF와 영상용 슬라이드 이미지 (LibreOffice, poppler)
 soffice --headless --convert-to pdf 02_발표자료_나물로.pptx
 mkdir -p /tmp/namul_slides && pdftoppm -r 192 -png 02_발표자료_나물로.pdf /tmp/namul_slides/s
+
+# 4-1) 슬라이드별 읽기용 대본 PDF (Playwright + Chromium)
+mkdir -p /tmp/namul_read && pdftoppm -r 110 -png 02_발표자료_나물로.pdf /tmp/namul_read/s
+NODE_PATH=$(npm root -g) node deck_src/make_reading_pdf.js deck_src/script.json /tmp/namul_read 03_발표대본_나물로_슬라이드별.pdf
 
 # 5) AI 음성 초안 영상 (sherpa-onnx 1.13.8 — 2.x 는 한국어 음소 변환이 빠져 무음)
 pip install -r video_src/requirements.txt
@@ -63,7 +69,7 @@ NAMUL_SUB_FONT=/path/to/NanumGothic-Bold.ttf python3 video_src/make_video.py /tm
 |---|---|
 | `prototype/` | `template.html`(원본) · `build.py` · `icons.json`(Fluent Emoji PNG, base64) · `pretendard-subset.woff2` · 라이선스 |
 | `capture_src/` | `stills.js`(→ `assets/screens`) · `record.js`(→ `assets/demo`) · `check.js` · `check2.js`(리뷰 재현 시나리오) |
-| `deck_src/` | `script_data.py`(대본 단일 원천) · `make_script.py` · `ko_norm.py`(숫자 한글 읽기) · `build_deck.js` · `theme.js`(테마 색) |
+| `deck_src/` | `script_data.py`(대본 단일 원천) · `make_script.py` · `ko_norm.py`(숫자 한글 읽기) · `build_deck.js` · `theme.js`(테마 색) · `make_reading_pdf.js`(슬라이드별 읽기용 대본) |
 | `video_src/` | `make_video.py`(슬라이드 + TTS + 자막 + 시연 오버레이) · `tts_lib.py` · `requirements.txt` |
 | `assets/` | 덱에 쓴 앱 화면 PNG, 시연 녹화 |
 

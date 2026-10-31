@@ -5,7 +5,7 @@
 환경 변수
   NAMUL_TTS_MODELS  sherpa-onnx 모델 폴더 (vits-mimic3-ko_KO-kss_low 가 들어 있는 곳, 기본 namul-platform/.cache/tts)
   NAMUL_SUB_FONT    자막 글꼴 TTF (기본 NanumGothic-Bold, 시스템 경로에서 찾음)
-대본은 deck_src/script.json, 시연 영상 위치는 deck_src/demo_rect.json 에서 읽는다 (build_deck.js 가 만든다)."""
+대본은 deck_src/script.json(NAMUL_SCRIPT_JSON 으로 바꿀 수 있음), 시연 영상 위치는 deck_src/demo_rect.json 에서 읽는다 (build_deck.js 가 만든다)."""
 import glob, json, os, re, subprocess, sys, tempfile
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
@@ -23,7 +23,7 @@ def find_font():
 W, H = 1920, 1080; SW, SH = 1664, 936; SX, SY = (W - SW) // 2, 14
 BG = (20, 24, 22); FONT = ImageFont.truetype(find_font(), 38)
 LEAD, CHUNK_GAP, SENT_GAP, TAIL = 0.45, 0.2, 0.42, 0.7
-data = json.load(open(os.path.join(DECK, "script.json"), encoding="utf-8"))
+data = json.load(open(os.environ.get("NAMUL_SCRIPT_JSON") or os.path.join(DECK, "script.json"), encoding="utf-8"))
 rect = json.load(open(os.path.join(DECK, "demo_rect.json"), encoding="utf-8"))
 DEMO = os.path.join(ROOT, "assets/demo/demo_phone.mp4")
 WORK = tempfile.mkdtemp(prefix="namul_video_"); FR = os.path.join(WORK, "frames"); os.makedirs(FR)
