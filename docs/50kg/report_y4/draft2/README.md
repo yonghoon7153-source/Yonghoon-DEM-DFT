@@ -2,30 +2,33 @@
 
 - 무엇: 초안 2 쪽 그림 (PNG 300 dpi · SVG 글자 그대로 · 그린 값 CSV) + 침대별 지표 (`metrics_<침대>.json` · `metrics_all.csv`) + OVITO 사본.  1저자가 양식 (10 × 7.5 in · 4:3) 에 직접 붙인다 → 그림 = 양식 반쪽 칸 크기 · 100 % 로 붙인다 (모든 그림 같은 글자 크기 — 눈금 7 pt · 축 제목 8 pt).
 - 근거: `docs/50kg/report_y4/draft2_fix_plan_20261030.md` (§2 쪽 목록 · §3 프레임) · Codex 초안 1 판정 `docs/reviews/codex_kg50_y4_draft1_review_20261030/codex_review_kg50_y4_draft1_20261030.md` (§6–§8 문구 한계) · 문헌 지도 `docs/50kg/report_y4/lit_se_size_map_20261030.md` · 보고 원칙 `docs/report_making_principles.md`.
-- 비교 상태 = **판 고정 이완 끝 세트 하나** (atom_end · contact_end · mesh_end 같은 step · 1저자 10-30).  **압력 도달 순간 세트 = 자료 없음** (압축 정지 step 에 덤프 없음 · `K50Y4-01`) — 이완 끝 프레임을 300 MPa 상태로 부르지 않는다.  가압 목표 300 MPa · 끝 판 압력 D2 279.8 · D3 291.4 MPa.
-- 침대: SE 2 µm (D2) · 3 µm (D3) = 자료 있음 · **SE 1 µm (D1) = 오늘 끝 세트 도착 예정 (아래 한 명령)** · SE 0.7 µm (D0.7) = 결과 대기 (모든 비교 그림에 빗금 빈 칸).
+- 비교 상태 = **판 고정 이완 끝 세트 하나** (atom_end · contact_end · mesh_end 같은 step · 1저자 10-30) — ⚠ 같은 *정의* 이지 같은 *정적 압력* 이 아니다 (`KG50-20` · `SELF-145`).  **압력 도달 순간 세트 = 자료 없음** (압축 정지 step 에 덤프 없음 · `K50Y4-01`) — 이완 끝 프레임을 300 MPa 상태로 부르지 않는다.  가압 목표 300 MPa · 끝 판 압력 D2 279.8 · D3 291.4 MPa.
+- 침대: SE 1 µm (D1 · 10-31 반입) · 2 µm (D2) · 3 µm (D3) = 자료 있음 · SE 0.7 µm (D0.7) = 결과 대기 (모든 비교 그림에 빗금 빈 칸 · 정착 끝에서 멈춤 · 이어 돌리기 = Codex 한 건 범위 GO 뒤).
 - 새 지표 정의 없음 — 값 = 검토된 웹앱 파이프라인 (`run_pipeline(stop_after='network')`) · 기존 함수 · 기존 입자 · 접촉 · 점 출력의 집계 (z 구간 · AM 하나당 · 문턱별) 뿐.  새 정의가 필요한 것 = "다음 판" (§6).
 
 ## 1. 침대별 핵심 값 (이완 끝 · 입도별 시드 1)
 
-| 양 | SE 2 µm (D2) | SE 3 µm (D3) | 출처 |
-|---|---:|---:|---|
-| 끝 step (atom · contact · mesh 같음) | 4015002 | 4575002 | 끝 세트 |
-| AM · SE 수 (끝 덤프) | 1481 · 20872 | 1482 · 6184 | atom_end |
-| 판 높이 (µm) | 122.469 | 125.877 | mesh_end |
-| **ε_sphere (%)** | **16.7379229** ✓ Codex | **18.9575565** ✓ Codex | 1 − ΣV구 / (50·50·판 높이) — 웹앱 값과 3e-11 %p 안 (합산 순서) |
-| 기공률 정확 합집합 (%) | 19.60 | 22.43 | calc_porosity_union_exact (MC 4 × 10⁶ 점) |
-| **이완 끝 판 압력 (MPa)** | **279.79158** ✓ Codex | **291.37440** ✓ Codex | 로그 마지막 정규 thermo × 1000 |
-| 정지 직전 t = 0⁻ · 이완 첫 출력 (MPa) | 300.23909 · 287.18633 ✓ | 300.63094 · 295.59389 ✓ | 로그 |
-| AM–SE 접촉 수 (AM 1개당 평균) | 24.06 | 10.31 | calc_am_isolation_risk |
-| SE–SE 접촉 수 (SE 1개당 평균) | 4.04 | 3.34 | calc_se_se_cn |
-| AM 피복률 Hertz 계열 / Physics 합집합 cap (%) | 21.05 / 54.23 | 19.07 / 52.63 | calc_coverage · union_coverage_bed |
-| AM–SE 접촉 면적 / AM (µm², 평균) | 22.55 | 20.32 | coverage_per_am.csv (c_cpl[22]) |
-| f = σ_eff/σ₀ Hertz (Physics) | 0.0334 (0.0638) | 0.0195 (0.0378) | network_conductivity → tau_flux.case_row |
-| 수송 tortuosity Hertz (Physics) | 8.26 (4.32) | 13.63 (7.03) | φ_SE·σ₀/σ_eff · 제곱근 아님 · φ = 질량 보존 |
-| 기하 tortuosity | 1.276 | 1.366 | calc_tortuosity_all (최단 경로 / Δz) |
-| SE 망과 연결된 AM (%) (연결성 기준) | 100 | 100 | calc_ionic_active_am |
-| 협착 소산 몫 (이온 · Hertz) | 0.715 | 0.710 | constriction_power_share_ion_hertz |
+| 양 | SE 1 µm (D1) | SE 2 µm (D2) | SE 3 µm (D3) | 출처 |
+|---|---:|---:|---:|---|
+| 끝 step (atom · contact · mesh 같음) | 2785002 | 4015002 | 4575002 | 끝 세트 |
+| AM · SE 수 (끝 덤프) | 1481 · 166971 | 1481 · 20872 | 1482 · 6184 | atom_end |
+| 판 높이 (µm) | 122.596 | 122.469 | 125.877 | mesh_end |
+| **ε_sphere (%)** | **16.8250302** | **16.7379229** ✓ Codex | **18.9575565** ✓ Codex | 1 − ΣV구 / (50·50·판 높이) — 웹앱 값과 3e-11 %p 안 (합산 순서) |
+| 기공률 정확 합집합 (%) | 18.14 | 19.60 | 22.43 | calc_porosity_union_exact (MC 4 × 10⁶ 점) |
+| **이완 끝 판 압력 (MPa)** | **156.15118** ⚠ | **279.79158** ✓ Codex | **291.37440** ✓ Codex | 로그 마지막 정규 thermo × 1000 |
+| 정지 직전 t = 0⁻ · 이완 첫 출력 (MPa) | 300.58919 · 199.68129 | 300.23909 · 287.18633 ✓ | 300.63094 · 295.59389 ✓ | 로그 |
+| AM–SE 접촉 수 (AM 1개당 평균) | 99.71 | 24.06 | 10.31 | calc_am_isolation_risk |
+| SE–SE 접촉 수 (SE 1개당 평균) | 4.98 | 4.04 | 3.34 | calc_se_se_cn |
+| AM 피복률 Hertz 계열 / Physics 합집합 cap (%) | 19.04 / 46.77 | 21.05 / 54.23 | 19.07 / 52.63 | calc_coverage · union_coverage_bed |
+| AM–SE 접촉 면적 / AM (µm², 평균) | 21.00 | 22.55 | 20.32 | coverage_per_am.csv (c_cpl[22]) |
+| f = σ_eff/σ₀ Hertz (Physics) | 0.0468 (0.0806) | 0.0334 (0.0638) | 0.0195 (0.0378) | network_conductivity → tau_flux.case_row |
+| 수송 tortuosity Hertz (Physics) | 6.00 (3.48) | 8.26 (4.32) | 13.63 (7.03) | φ_SE·σ₀/σ_eff · 제곱근 아님 · φ = 질량 보존 |
+| 기하 tortuosity | 1.223 | 1.276 | 1.366 | calc_tortuosity_all (최단 경로 / Δz) |
+| SE 망과 연결된 AM (%) (연결성 기준) | 100 | 100 | 100 | calc_ionic_active_am |
+| 협착 소산 몫 (이온 · Hertz) | 0.742 | 0.715 | 0.710 | constriction_power_share_ion_hertz |
+
+- ⚠ **D1 = 끝 판 압력 156 MPa** (D2 280 · D3 291) — 압축 정지 판정에 감쇠 저항이 섞였다가 판이 멈추면 사라진 것으로 보인다 (추정 · 원장 `KG50-20` · `DEMP-01` · `docs/data/kg50_d1_end_20261031/README.md` §3).  같은 정의의 끝 세트이지만 **정적 압력이 같은 상태가 아니다** → D1 의 접촉 · 피복 · 수송 · 응력 값 = 판정 보류 (1저자 10-31 Q1 (가)) · ε_sphere 도 정적 압력이 다른 상태에서 굳은 값.
+- D1 = Codex 기준값 없음 (sha256 · 값만 기록 · 끝 묶음 = 리포 밖) · 도구 파일 sha256 14 개 = D2 · D3 와 같음 (`metrics_<침대>.json`).
 
 - ✓ = Codex 독립 재계산 (판정문 §3) 과 출력 자릿수까지 같음 — 러너가 대조하고 다르면 rc 3 으로 멈춘다 (`CODEX` 표).  D3 의 웹앱 다섯 값 (기공률 · 피복 두 갈래 · σ_ion · tau2) 은 10-27 칸 판정 (`docs/data/kg50_d3_cell_verdict_20261027/verdict.json` · 코드 판 `e65e92b7b`) 과 비트 같다 (현 HEAD `12227fa3c` 재실행).
 - 전체 = `metrics_all.csv` (침대 넷 행 · 없는 침대 = 결과 대기) · 침대별 원값 · 출처 = `data/<침대>/metrics_<침대>.json`.
@@ -111,7 +114,7 @@ python3 -P docs/50kg/report_y4/draft2/make_draft2_figs.py                       
 | 국소 기공률의 ε_sphere 판 (z 구간) | 안 함 | 구 · 구간 교차 부피 = 새 기하 계산 → 기존 정확 합집합 점 출력의 z 집계로 대신 (규약이 다르다고 캡션에 적음) |
 | 압력 도달 순간 프레임 | 자료 없음 | 정지 step 에 덤프 없음 (`K50Y4-01` · `dump_modify first` 기본 no) |
 | 5쪽 조건부 σ 시나리오 | 초안 1 그대로 | 새 숫자 없음 · f(1)/f(3) = D1 뒤 |
-| 문헌 방향 그림의 Lin 2025 · Ohsaki 2026 · Calpa 2019 · Tron (Rational Optimization) · Stavola 2023 | 넣지 않음 [카드 대기] | 정본 litdb (로컬 ref `8734b9e5b`) 에 카드 없음 — 서지 · 값은 카드가 생긴 뒤 (규율 ⑥) |
+| 문헌 방향 그림의 새 카드 8 편 (Yano 2026 · Lin 2025 · Calpa 2019 · Tron 2023 · Yadav 2021 · Lei 2026 · Kawaguchi 2026 · Stavola 2023) | 그림에는 넣지 않음 · 쪽 노트에만 | 정본 litdb `c431470a1` 에 카드 생김 (10-30) — 방향이 한 가지로 모이지 않는다 (SOC 의존 · PSD 폭 · 큰 SE 반례 · 이중계상 위험) → `docs/50kg/report_y4/lit_se_size_map_20261030.md` §7 · 쪽 글 `docs/50kg/report_y4/draft2/slide_text_draft2.md` |
 | 오차 막대 · 경향 판정 | 안 함 | 입도별 시드 1 · 판정 (방향 일치 · 비단조 · 보류 · 한계) = 네 입도 산출 뒤 분석 계획대로 |
 
 - `p3_overlap_threshold` (b) 의 δ/(r₁+r₂) = 같은 접촉 δ 의 정규화만 다른 문헌 카드 정의 — 새 물리량은 아니지만 기존 함수 (δ/min r) 밖의 식이므로 검토 때 명시 (쓰지 않으려면 (a) 만).
