@@ -124,5 +124,14 @@
   "끊긴_곳": "MnP2O6 01_vcrelax BFGS 16 (JOB DONE 없음) → 01_vcrelax.out.cut_1030 으로 복사 보관",
   "다시": "15:36:52 tmux ceigap (새 worktree ~/wt_ceigap_1030 · HEAD 027e049e · 점검 ✓ 전부 · 결정 active · 개정 1 active · 12 상 이어 돌리기 · ndq3p 없음 → 바로 시작) — 끝난 단계는 지문으로 건너뜀 · MnP2O6 01 은 처음 기하부터 (끊긴 vc-relax 의 셀 승계는 splice_relaxed 가 안 함 · 어림 하루 더)",
   "by": "agent · 2026-10-30"
+ },
+ "관측_2026_10_31_2052": {
+  "출처": "사용자 붙여넣기 (kgy watch_gabia --sei_only · 10-31 20:52)",
+  "MnP2O6": "01_vcrelax ▶ BFGS 22 · E −2290.87264 Ry · P +0.31 kbar · |F| 0.0031 · M 20.00 μB · 10-30 15:36 다시 시작한 뒤 1756 분 (≈ 80 분/스텝) — 정전 전 판은 BFGS 16 에서 끊겼다",
+  "완주": "7 / 12 그대로 (판독 전)",
+  "tmux": "ceigap · cv7main · ndq3p (ELF 대기) · ndrerun (MP_07 Bader SCF 다시 · ELF 뒤)",
+  "GPU": "16,841 MiB · 51–97 % · 'QE 프로세스 4' = MnP2O6 mpirun + pw.x + 명령줄에 pw.x 경로가 든 대기 셸 둘 (ndq3p · ndrerun — pgrep 이 셸까지 센다) · 실제 계산은 MnP2O6 하나",
+  "디스크": "749G / 916G (여유 121G · 87 %) — 10-30 15:36 의 134G 에서 ≈ 13 GB/일 줄어듦 · 50 GB 아래면 정리",
+  "by": "agent · 2026-10-31"
  }
 }
