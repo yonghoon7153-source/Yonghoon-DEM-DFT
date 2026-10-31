@@ -1,8 +1,9 @@
 panel,bed,status,quantity,n,p5,p25,median,p75,p95,mean
 a_area_per_am,D0.7,결과 대기,,,,,,,,
 b_coverage_per_am,D0.7,결과 대기,,,,,,,,
-a_area_per_am,D1,결과 대기,,,,,,,,
-b_coverage_per_am,D1,결과 대기,,,,,,,,
+a_area_per_am,D1,ok,"AM–SE contact area per AM (µm², c_cpl[22])",1481,13.8809,17.6304,20.7737,24.1868,28.937,21.000328
+b_coverage_per_am,D1,ok,coverage Hertz-family per AM (%),1481,12.785,16.069,18.845,21.903,26.192,19.0429446
+b_coverage_per_am,D1,ok,coverage Physics union cap per AM (%),1481,30.2383493,39.2881824,46.5817117,54.0890008,64.0840336,46.7689906
 a_area_per_am,D2,ok,"AM–SE contact area per AM (µm², c_cpl[22])",1481,12.7231,18.0342,22.2147,26.7279,32.9792,22.551766
 b_coverage_per_am,D2,ok,coverage Hertz-family per AM (%),1481,12.06,16.948,20.742,24.916,30.643,21.0519413
 b_coverage_per_am,D2,ok,coverage Physics union cap per AM (%),1481,33.226536,45.7891012,54.561161,63.0179121,73.1108099,54.2332219

@@ -1,9 +1,9 @@
 panel,bed,status,value,physics
 a_f_ion,D0.7,결과 대기,,
-a_f_ion,D1,결과 대기,,
+a_f_ion,D1,ok,0.0468031947,0.080639804
 a_f_ion,D2,ok,0.0333861909,0.063766841
 a_f_ion,D3,ok,0.019512549,0.0378072915
 b_se_connected_am,D0.7,결과 대기,,
-b_se_connected_am,D1,결과 대기,,
+b_se_connected_am,D1,ok,100,
 b_se_connected_am,D2,ok,100,
 b_se_connected_am,D3,ok,100,

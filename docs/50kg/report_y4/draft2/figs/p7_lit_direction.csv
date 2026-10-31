@@ -1,25 +1,25 @@
 quantity,name,bed,status,value,literature_direction_small_se,cards
 eps_sphere_pct,기공률 $\varepsilon_\mathrm{sphere}$ (%),D0.7,결과 대기,,↓,
-eps_sphere_pct,기공률 $\varepsilon_\mathrm{sphere}$ (%),D1,결과 대기,,↓,
+eps_sphere_pct,기공률 $\varepsilon_\mathrm{sphere}$ (%),D1,ok,16.8250302,↓,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · tailored_cathode_microstructure_low_pressure_assb
 eps_sphere_pct,기공률 $\varepsilon_\mathrm{sphere}$ (%),D2,ok,16.7379229,↓,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · tailored_cathode_microstructure_low_pressure_assb
 eps_sphere_pct,기공률 $\varepsilon_\mathrm{sphere}$ (%),D3,ok,18.9575565,↓,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · tailored_cathode_microstructure_low_pressure_assb
 area_am_se_per_am_mean_um2,AM–SE 접촉 면적 / AM (µm²),D0.7,결과 대기,,↑,
-area_am_se_per_am_mean_um2,AM–SE 접촉 면적 / AM (µm²),D1,결과 대기,,↑,
+area_am_se_per_am_mean_um2,AM–SE 접촉 면적 / AM (µm²),D1,ok,21.000328,↑,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization
 area_am_se_per_am_mean_um2,AM–SE 접촉 면적 / AM (µm²),D2,ok,22.551766,↑,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization
 area_am_se_per_am_mean_um2,AM–SE 접촉 면적 / AM (µm²),D3,ok,20.3193503,↑,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization
 coverage_hertz_pct,AM 피복률 Hertz (%),D0.7,결과 대기,,↑,
-coverage_hertz_pct,AM 피복률 Hertz (%),D1,결과 대기,,↑,
+coverage_hertz_pct,AM 피복률 Hertz (%),D1,ok,19.0429459,↑,minnmann2024_microstructure_porosity_visualization
 coverage_hertz_pct,AM 피복률 Hertz (%),D2,ok,21.0519462,↑,minnmann2024_microstructure_porosity_visualization
 coverage_hertz_pct,AM 피복률 Hertz (%),D3,ok,19.0671809,↑,minnmann2024_microstructure_porosity_visualization
 f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D0.7,결과 대기,,↑,
-f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D1,결과 대기,,↑,
+f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D1,ok,0.0468031947,↑,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · minnmann2021_jes_charge_transport_bottlenecks · bazzoun2026_dem_fem_rnm_ionic
 f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D2,ok,0.0333861909,↑,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · minnmann2021_jes_charge_transport_bottlenecks · bazzoun2026_dem_fem_rnm_ionic
 f_ion_hertz,$f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz),D3,ok,0.019512549,↑,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · minnmann2021_jes_charge_transport_bottlenecks · bazzoun2026_dem_fem_rnm_ionic
 tau2_ion_hertz,수송 tortuosity (Hertz),D0.7,결과 대기,,↓,
-tau2_ion_hertz,수송 tortuosity (Hertz),D1,결과 대기,,↓,
+tau2_ion_hertz,수송 tortuosity (Hertz),D1,ok,5.99813094,↓,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · minnmann2021_jes_charge_transport_bottlenecks
 tau2_ion_hertz,수송 tortuosity (Hertz),D2,ok,8.25878465,↓,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · minnmann2021_jes_charge_transport_bottlenecks
 tau2_ion_hertz,수송 tortuosity (Hertz),D3,ok,13.6282698,↓,schlautmann2023_se_particle_size_composite_transport · minnmann2024_microstructure_porosity_visualization · minnmann2021_jes_charge_transport_bottlenecks
 se_connected_am_pct,SE 망 연결 AM (%),D0.7,결과 대기,,↑,
-se_connected_am_pct,SE 망 연결 AM (%),D1,결과 대기,,↑,
+se_connected_am_pct,SE 망 연결 AM (%),D1,ok,100,↑,shi2019_high_am_loading_particle_size_assb
 se_connected_am_pct,SE 망 연결 AM (%),D2,ok,100,↑,shi2019_high_am_loading_particle_size_assb
 se_connected_am_pct,SE 망 연결 AM (%),D3,ok,100,↑,shi2019_high_am_loading_particle_size_assb

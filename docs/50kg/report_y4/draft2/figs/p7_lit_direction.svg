@@ -39,14 +39,6 @@ L 19.2 27
 z
 " clip-path="url(#p9c26a38bcc)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
    </g>
-   <g id="patch_4">
-    <path d="M 41.142857 64.8 
-L 52.114286 64.8 
-L 52.114286 27 
-L 41.142857 27 
-z
-" clip-path="url(#p9c26a38bcc)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
-   </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1"/>
@@ -74,6 +66,14 @@ z
     </g>
    </g>
    <g id="matplotlib.axis_2"/>
+   <g id="patch_4">
+    <path d="M 41.142857 64.8 
+L 52.114286 64.8 
+L 52.114286 36.84342 
+L 41.142857 36.84342 
+z
+" clip-path="url(#p9c26a38bcc)" style="fill: #3987e5"/>
+   </g>
    <g id="patch_5">
     <path d="M 63.085714 64.8 
 L 74.057143 64.8 
@@ -107,15 +107,7 @@ z
     <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(26.634445 52.4) rotate(-90)">대기</text>
    </g>
    <g id="text_6">
-    <g id="patch_9">
-     <path d="M 50.853571 53.375 
-L 50.853571 38.425 
-L 42.403571 38.425 
-L 42.403571 53.375 
-z
-" style="fill: #ffffff"/>
-    </g>
-    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(48.577302 52.4) rotate(-90)">대기</text>
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="46.628571" y="34.382248" transform="rotate(-0 46.628571 34.382248)">16.8</text>
    </g>
    <g id="text_7">
     <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="68.571429" y="34.526986" transform="rotate(-0 68.571429 34.526986)">16.7</text>
@@ -124,20 +116,20 @@ z
     <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="90.514286" y="30.838828" transform="rotate(-0 90.514286 30.838828)">19.0</text>
    </g>
    <g id="text_9">
-    <g id="patch_10">
-     <path d="M 63.16965 22.224 
-L 102.7584 22.224 
-Q 104.0784 22.224 104.0784 20.904 
-L 104.0784 14.904 
-Q 104.0784 13.584 102.7584 13.584 
-L 63.16965 13.584 
-Q 61.84965 13.584 61.84965 14.904 
-L 61.84965 20.904 
-Q 61.84965 22.224 63.16965 22.224 
+    <g id="patch_9">
+     <path d="M 61.59125 24.22 
+L 101.18 24.22 
+Q 102.5 24.22 102.5 22.9 
+L 102.5 16.9 
+Q 102.5 15.58 101.18 15.58 
+L 61.59125 15.58 
+Q 60.27125 15.58 60.27125 16.9 
+L 60.27125 22.9 
+Q 60.27125 24.22 61.59125 24.22 
 z
 " style="fill: #f2f2f2; stroke: #bfbfbf; stroke-width: 0.5; stroke-linejoin: miter"/>
     </g>
-    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="102.7584" y="19.702828" transform="rotate(-0 102.7584 19.702828)">문헌 ↓ [1,2,3]</text>
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="101.18" y="21.698828" transform="rotate(-0 101.18 21.698828)">문헌 ↓ [1,2,3]</text>
    </g>
    <g id="text_10">
     <!-- 기공률 $\varepsilon_\mathrm{sphere}$ (%) -->
@@ -163,7 +155,7 @@ z
    </g>
   </g>
   <g id="axes_2">
-   <g id="patch_11">
+   <g id="patch_10">
     <path d="M 119.52 64.8 
 L 211.68 64.8 
 L 211.68 14.4 
@@ -171,19 +163,11 @@ L 119.52 14.4
 z
 " style="fill: #ffffff"/>
    </g>
-   <g id="patch_12">
+   <g id="patch_11">
     <path d="M 127.2 64.8 
 L 138.171429 64.8 
 L 138.171429 27 
 L 127.2 27 
-z
-" clip-path="url(#pb40c988129)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
-   </g>
-   <g id="patch_13">
-    <path d="M 149.142857 64.8 
-L 160.114286 64.8 
-L 160.114286 27 
-L 149.142857 27 
 z
 " clip-path="url(#pb40c988129)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
    </g>
@@ -214,7 +198,15 @@ z
     </g>
    </g>
    <g id="matplotlib.axis_4"/>
-   <g id="patch_14">
+   <g id="patch_12">
+    <path d="M 149.142857 64.8 
+L 160.114286 64.8 
+L 160.114286 35.467028 
+L 149.142857 35.467028 
+z
+" clip-path="url(#pb40c988129)" style="fill: #3987e5"/>
+   </g>
+   <g id="patch_13">
     <path d="M 171.085714 64.8 
 L 182.057143 64.8 
 L 182.057143 33.3 
@@ -222,7 +214,7 @@ L 171.085714 33.3
 z
 " clip-path="url(#pb40c988129)" style="fill: #1c5cab"/>
    </g>
-   <g id="patch_15">
+   <g id="patch_14">
     <path d="M 193.028571 64.8 
 L 204 64.8 
 L 204 36.418208 
@@ -230,13 +222,13 @@ L 193.028571 36.418208
 z
 " clip-path="url(#pb40c988129)" style="fill: #0d366b"/>
    </g>
-   <g id="patch_16">
+   <g id="patch_15">
     <path d="M 119.52 64.8 
 L 211.68 64.8 
 " style="fill: none; stroke: #262626; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
    <g id="text_15">
-    <g id="patch_17">
+    <g id="patch_16">
      <path d="M 136.910714 53.375 
 L 136.910714 38.425 
 L 128.460714 38.425 
@@ -247,15 +239,7 @@ z
     <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(134.634445 52.4) rotate(-90)">대기</text>
    </g>
    <g id="text_16">
-    <g id="patch_18">
-     <path d="M 158.853571 53.375 
-L 158.853571 38.425 
-L 150.403571 38.425 
-L 150.403571 53.375 
-z
-" style="fill: #ffffff"/>
-    </g>
-    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(156.577302 52.4) rotate(-90)">대기</text>
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="154.628571" y="33.005856" transform="rotate(-0 154.628571 33.005856)">21.0</text>
    </g>
    <g id="text_17">
     <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="176.571429" y="30.838828" transform="rotate(-0 176.571429 30.838828)">22.6</text>
@@ -264,27 +248,27 @@ z
     <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="198.514286" y="33.957036" transform="rotate(-0 198.514286 33.957036)">20.3</text>
    </g>
    <g id="text_19">
-    <g id="patch_19">
-     <path d="M 176.566837 22.224 
-L 210.7584 22.224 
-Q 212.0784 22.224 212.0784 20.904 
-L 212.0784 14.904 
-Q 212.0784 13.584 210.7584 13.584 
-L 176.566837 13.584 
-Q 175.246837 13.584 175.246837 14.904 
-L 175.246837 20.904 
-Q 175.246837 22.224 176.566837 22.224 
+    <g id="patch_17">
+     <path d="M 174.988438 24.22 
+L 209.18 24.22 
+Q 210.5 24.22 210.5 22.9 
+L 210.5 16.9 
+Q 210.5 15.58 209.18 15.58 
+L 174.988438 15.58 
+Q 173.668438 15.58 173.668438 16.9 
+L 173.668438 22.9 
+Q 173.668438 24.22 174.988438 24.22 
 z
 " style="fill: #f2f2f2; stroke: #bfbfbf; stroke-width: 0.5; stroke-linejoin: miter"/>
     </g>
-    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="210.7584" y="19.702828" transform="rotate(-0 210.7584 19.702828)">문헌 ↑ [1,2]</text>
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="209.18" y="21.698828" transform="rotate(-0 209.18 21.698828)">문헌 ↑ [1,2]</text>
    </g>
    <g id="text_20">
     <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="119.52" y="12.4" transform="rotate(-0 119.52 12.4)">AM–SE 접촉 면적 / AM (µm²)</text>
    </g>
   </g>
   <g id="axes_3">
-   <g id="patch_20">
+   <g id="patch_18">
     <path d="M 227.52 64.8 
 L 319.68 64.8 
 L 319.68 14.4 
@@ -292,19 +276,11 @@ L 227.52 14.4
 z
 " style="fill: #ffffff"/>
    </g>
-   <g id="patch_21">
+   <g id="patch_19">
     <path d="M 235.2 64.8 
 L 246.171429 64.8 
 L 246.171429 27 
 L 235.2 27 
-z
-" clip-path="url(#p83adc46042)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
-   </g>
-   <g id="patch_22">
-    <path d="M 257.142857 64.8 
-L 268.114286 64.8 
-L 268.114286 27 
-L 257.142857 27 
 z
 " clip-path="url(#p83adc46042)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
    </g>
@@ -335,7 +311,15 @@ z
     </g>
    </g>
    <g id="matplotlib.axis_6"/>
-   <g id="patch_23">
+   <g id="patch_20">
+    <path d="M 257.142857 64.8 
+L 268.114286 64.8 
+L 268.114286 36.306065 
+L 257.142857 36.306065 
+z
+" clip-path="url(#p83adc46042)" style="fill: #3987e5"/>
+   </g>
+   <g id="patch_21">
     <path d="M 279.085714 64.8 
 L 290.057143 64.8 
 L 290.057143 33.3 
@@ -343,7 +327,7 @@ L 279.085714 33.3
 z
 " clip-path="url(#p83adc46042)" style="fill: #1c5cab"/>
    </g>
-   <g id="patch_24">
+   <g id="patch_22">
     <path d="M 301.028571 64.8 
 L 312 64.8 
 L 312 36.269802 
@@ -351,13 +335,13 @@ L 301.028571 36.269802
 z
 " clip-path="url(#p83adc46042)" style="fill: #0d366b"/>
    </g>
-   <g id="patch_25">
+   <g id="patch_23">
     <path d="M 227.52 64.8 
 L 319.68 64.8 
 " style="fill: none; stroke: #262626; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
    <g id="text_25">
-    <g id="patch_26">
+    <g id="patch_24">
      <path d="M 244.910714 53.375 
 L 244.910714 38.425 
 L 236.460714 38.425 
@@ -368,15 +352,7 @@ z
     <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(242.634445 52.4) rotate(-90)">대기</text>
    </g>
    <g id="text_26">
-    <g id="patch_27">
-     <path d="M 266.853571 53.375 
-L 266.853571 38.425 
-L 258.403571 38.425 
-L 258.403571 53.375 
-z
-" style="fill: #ffffff"/>
-    </g>
-    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(264.577302 52.4) rotate(-90)">대기</text>
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="262.628571" y="33.844893" transform="rotate(-0 262.628571 33.844893)">19.0</text>
    </g>
    <g id="text_27">
     <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="284.571429" y="30.838828" transform="rotate(-0 284.571429 30.838828)">21.1</text>
@@ -385,27 +361,27 @@ z
     <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="306.514286" y="33.80863" transform="rotate(-0 306.514286 33.80863)">19.1</text>
    </g>
    <g id="text_29">
-    <g id="patch_28">
-     <path d="M 289.964025 22.224 
-L 318.7584 22.224 
-Q 320.0784 22.224 320.0784 20.904 
-L 320.0784 14.904 
-Q 320.0784 13.584 318.7584 13.584 
-L 289.964025 13.584 
-Q 288.644025 13.584 288.644025 14.904 
-L 288.644025 20.904 
-Q 288.644025 22.224 289.964025 22.224 
+    <g id="patch_25">
+     <path d="M 288.385625 24.22 
+L 317.18 24.22 
+Q 318.5 24.22 318.5 22.9 
+L 318.5 16.9 
+Q 318.5 15.58 317.18 15.58 
+L 288.385625 15.58 
+Q 287.065625 15.58 287.065625 16.9 
+L 287.065625 22.9 
+Q 287.065625 24.22 288.385625 24.22 
 z
 " style="fill: #f2f2f2; stroke: #bfbfbf; stroke-width: 0.5; stroke-linejoin: miter"/>
     </g>
-    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="318.7584" y="19.702828" transform="rotate(-0 318.7584 19.702828)">문헌 ↑ [2]</text>
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="317.18" y="21.698828" transform="rotate(-0 317.18 21.698828)">문헌 ↑ [2]</text>
    </g>
    <g id="text_30">
     <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="227.52" y="12.4" transform="rotate(-0 227.52 12.4)">AM 피복률 Hertz (%)</text>
    </g>
   </g>
   <g id="axes_4">
-   <g id="patch_29">
+   <g id="patch_26">
     <path d="M 11.52 145.44 
 L 103.68 145.44 
 L 103.68 95.04 
@@ -413,19 +389,11 @@ L 11.52 95.04
 z
 " style="fill: #ffffff"/>
    </g>
-   <g id="patch_30">
+   <g id="patch_27">
     <path d="M 19.2 145.44 
 L 30.171429 145.44 
 L 30.171429 107.64 
 L 19.2 107.64 
-z
-" clip-path="url(#p979bbe8444)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
-   </g>
-   <g id="patch_31">
-    <path d="M 41.142857 145.44 
-L 52.114286 145.44 
-L 52.114286 107.64 
-L 41.142857 107.64 
 z
 " clip-path="url(#p979bbe8444)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
    </g>
@@ -456,29 +424,37 @@ z
     </g>
    </g>
    <g id="matplotlib.axis_8"/>
-   <g id="patch_32">
+   <g id="patch_28">
+    <path d="M 41.142857 145.44 
+L 52.114286 145.44 
+L 52.114286 113.94 
+L 41.142857 113.94 
+z
+" clip-path="url(#p979bbe8444)" style="fill: #3987e5"/>
+   </g>
+   <g id="patch_29">
     <path d="M 63.085714 145.44 
 L 74.057143 145.44 
-L 74.057143 113.94 
-L 63.085714 113.94 
+L 74.057143 122.970059 
+L 63.085714 122.970059 
 z
 " clip-path="url(#p979bbe8444)" style="fill: #1c5cab"/>
    </g>
-   <g id="patch_33">
+   <g id="patch_30">
     <path d="M 85.028571 145.44 
 L 96 145.44 
-L 96 127.029835 
-L 85.028571 127.029835 
+L 96 132.30745 
+L 85.028571 132.30745 
 z
 " clip-path="url(#p979bbe8444)" style="fill: #0d366b"/>
    </g>
-   <g id="patch_34">
+   <g id="patch_31">
     <path d="M 11.52 145.44 
 L 103.68 145.44 
 " style="fill: none; stroke: #262626; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
    <g id="text_35">
-    <g id="patch_35">
+    <g id="patch_32">
      <path d="M 28.910714 134.015 
 L 28.910714 119.065 
 L 20.460714 119.065 
@@ -489,37 +465,29 @@ z
     <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(26.634445 133.04) rotate(-90)">대기</text>
    </g>
    <g id="text_36">
-    <g id="patch_36">
-     <path d="M 50.853571 134.015 
-L 50.853571 119.065 
-L 42.403571 119.065 
-L 42.403571 134.015 
-z
-" style="fill: #ffffff"/>
-    </g>
-    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(48.577302 133.04) rotate(-90)">대기</text>
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="46.628571" y="111.478828" transform="rotate(-0 46.628571 111.478828)">0.0468</text>
    </g>
    <g id="text_37">
-    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="68.571429" y="111.478828" transform="rotate(-0 68.571429 111.478828)">0.0334</text>
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="68.571429" y="120.508887" transform="rotate(-0 68.571429 120.508887)">0.0334</text>
    </g>
    <g id="text_38">
-    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="90.514286" y="124.568663" transform="rotate(-0 90.514286 124.568663)">0.0195</text>
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="90.514286" y="129.846278" transform="rotate(-0 90.514286 129.846278)">0.0195</text>
    </g>
    <g id="text_39">
-    <g id="patch_37">
-     <path d="M 57.772463 102.864 
-L 102.7584 102.864 
-Q 104.0784 102.864 104.0784 101.544 
-L 104.0784 95.544 
-Q 104.0784 94.224 102.7584 94.224 
-L 57.772463 94.224 
-Q 56.452463 94.224 56.452463 95.544 
-L 56.452463 101.544 
-Q 56.452463 102.864 57.772463 102.864 
+    <g id="patch_33">
+     <path d="M 56.194063 104.86 
+L 101.18 104.86 
+Q 102.5 104.86 102.5 103.54 
+L 102.5 97.54 
+Q 102.5 96.22 101.18 96.22 
+L 56.194063 96.22 
+Q 54.874063 96.22 54.874063 97.54 
+L 54.874063 103.54 
+Q 54.874063 104.86 56.194063 104.86 
 z
 " style="fill: #f2f2f2; stroke: #bfbfbf; stroke-width: 0.5; stroke-linejoin: miter"/>
     </g>
-    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="102.7584" y="100.342828" transform="rotate(-0 102.7584 100.342828)">문헌 ↑ [1,2,4,5]</text>
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="101.18" y="102.338828" transform="rotate(-0 101.18 102.338828)">문헌 ↑ [1,2,4,5]</text>
    </g>
    <g id="text_40">
     <!-- $f = \sigma_\mathrm{eff}/\sigma_0$ (Hertz) -->
@@ -547,7 +515,7 @@ z
    </g>
   </g>
   <g id="axes_5">
-   <g id="patch_38">
+   <g id="patch_34">
     <path d="M 119.52 145.44 
 L 211.68 145.44 
 L 211.68 95.04 
@@ -555,19 +523,11 @@ L 119.52 95.04
 z
 " style="fill: #ffffff"/>
    </g>
-   <g id="patch_39">
+   <g id="patch_35">
     <path d="M 127.2 145.44 
 L 138.171429 145.44 
 L 138.171429 107.64 
 L 127.2 107.64 
-z
-" clip-path="url(#p0680b077e1)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
-   </g>
-   <g id="patch_40">
-    <path d="M 149.142857 145.44 
-L 160.114286 145.44 
-L 160.114286 107.64 
-L 149.142857 107.64 
 z
 " clip-path="url(#p0680b077e1)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
    </g>
@@ -598,7 +558,15 @@ z
     </g>
    </g>
    <g id="matplotlib.axis_10"/>
-   <g id="patch_41">
+   <g id="patch_36">
+    <path d="M 149.142857 145.44 
+L 160.114286 145.44 
+L 160.114286 131.576089 
+L 149.142857 131.576089 
+z
+" clip-path="url(#p0680b077e1)" style="fill: #3987e5"/>
+   </g>
+   <g id="patch_37">
     <path d="M 171.085714 145.44 
 L 182.057143 145.44 
 L 182.057143 126.350877 
@@ -606,7 +574,7 @@ L 171.085714 126.350877
 z
 " clip-path="url(#p0680b077e1)" style="fill: #1c5cab"/>
    </g>
-   <g id="patch_42">
+   <g id="patch_38">
     <path d="M 193.028571 145.44 
 L 204 145.44 
 L 204 113.94 
@@ -614,13 +582,13 @@ L 193.028571 113.94
 z
 " clip-path="url(#p0680b077e1)" style="fill: #0d366b"/>
    </g>
-   <g id="patch_43">
+   <g id="patch_39">
     <path d="M 119.52 145.44 
 L 211.68 145.44 
 " style="fill: none; stroke: #262626; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
    <g id="text_45">
-    <g id="patch_44">
+    <g id="patch_40">
      <path d="M 136.910714 134.015 
 L 136.910714 119.065 
 L 128.460714 119.065 
@@ -631,15 +599,7 @@ z
     <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(134.634445 133.04) rotate(-90)">대기</text>
    </g>
    <g id="text_46">
-    <g id="patch_45">
-     <path d="M 158.853571 134.015 
-L 158.853571 119.065 
-L 150.403571 119.065 
-L 150.403571 134.015 
-z
-" style="fill: #ffffff"/>
-    </g>
-    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(156.577302 133.04) rotate(-90)">대기</text>
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="154.628571" y="129.114917" transform="rotate(-0 154.628571 129.114917)">6.00</text>
    </g>
    <g id="text_47">
     <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="176.571429" y="123.889705" transform="rotate(-0 176.571429 123.889705)">8.26</text>
@@ -648,27 +608,27 @@ z
     <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="198.514286" y="111.478828" transform="rotate(-0 198.514286 111.478828)">13.6</text>
    </g>
    <g id="text_49">
-    <g id="patch_46">
-     <path d="M 171.16965 102.864 
-L 210.7584 102.864 
-Q 212.0784 102.864 212.0784 101.544 
-L 212.0784 95.544 
-Q 212.0784 94.224 210.7584 94.224 
-L 171.16965 94.224 
-Q 169.84965 94.224 169.84965 95.544 
-L 169.84965 101.544 
-Q 169.84965 102.864 171.16965 102.864 
+    <g id="patch_41">
+     <path d="M 169.59125 104.86 
+L 209.18 104.86 
+Q 210.5 104.86 210.5 103.54 
+L 210.5 97.54 
+Q 210.5 96.22 209.18 96.22 
+L 169.59125 96.22 
+Q 168.27125 96.22 168.27125 97.54 
+L 168.27125 103.54 
+Q 168.27125 104.86 169.59125 104.86 
 z
 " style="fill: #f2f2f2; stroke: #bfbfbf; stroke-width: 0.5; stroke-linejoin: miter"/>
     </g>
-    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="210.7584" y="100.342828" transform="rotate(-0 210.7584 100.342828)">문헌 ↓ [1,2,4]</text>
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="209.18" y="102.338828" transform="rotate(-0 209.18 102.338828)">문헌 ↓ [1,2,4]</text>
    </g>
    <g id="text_50">
     <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="119.52" y="93.04" transform="rotate(-0 119.52 93.04)">수송 tortuosity (Hertz)</text>
    </g>
   </g>
   <g id="axes_6">
-   <g id="patch_47">
+   <g id="patch_42">
     <path d="M 227.52 145.44 
 L 319.68 145.44 
 L 319.68 95.04 
@@ -676,19 +636,11 @@ L 227.52 95.04
 z
 " style="fill: #ffffff"/>
    </g>
-   <g id="patch_48">
+   <g id="patch_43">
     <path d="M 235.2 145.44 
 L 246.171429 145.44 
 L 246.171429 107.64 
 L 235.2 107.64 
-z
-" clip-path="url(#pa610cf8b1e)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
-   </g>
-   <g id="patch_49">
-    <path d="M 257.142857 145.44 
-L 268.114286 145.44 
-L 268.114286 107.64 
-L 257.142857 107.64 
 z
 " clip-path="url(#pa610cf8b1e)" style="fill: url(#hf01d2c8f13); stroke: #a6a6a6; stroke-width: 0.5; stroke-linejoin: miter"/>
    </g>
@@ -719,7 +671,15 @@ z
     </g>
    </g>
    <g id="matplotlib.axis_12"/>
-   <g id="patch_50">
+   <g id="patch_44">
+    <path d="M 257.142857 145.44 
+L 268.114286 145.44 
+L 268.114286 113.94 
+L 257.142857 113.94 
+z
+" clip-path="url(#pa610cf8b1e)" style="fill: #3987e5"/>
+   </g>
+   <g id="patch_45">
     <path d="M 279.085714 145.44 
 L 290.057143 145.44 
 L 290.057143 113.94 
@@ -727,7 +687,7 @@ L 279.085714 113.94
 z
 " clip-path="url(#pa610cf8b1e)" style="fill: #1c5cab"/>
    </g>
-   <g id="patch_51">
+   <g id="patch_46">
     <path d="M 301.028571 145.44 
 L 312 145.44 
 L 312 113.94 
@@ -735,13 +695,13 @@ L 301.028571 113.94
 z
 " clip-path="url(#pa610cf8b1e)" style="fill: #0d366b"/>
    </g>
-   <g id="patch_52">
+   <g id="patch_47">
     <path d="M 227.52 145.44 
 L 319.68 145.44 
 " style="fill: none; stroke: #262626; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
    <g id="text_55">
-    <g id="patch_53">
+    <g id="patch_48">
      <path d="M 244.910714 134.015 
 L 244.910714 119.065 
 L 236.460714 119.065 
@@ -752,15 +712,7 @@ z
     <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(242.634445 133.04) rotate(-90)">대기</text>
    </g>
    <g id="text_56">
-    <g id="patch_54">
-     <path d="M 266.853571 134.015 
-L 266.853571 119.065 
-L 258.403571 119.065 
-L 258.403571 134.015 
-z
-" style="fill: #ffffff"/>
-    </g>
-    <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; fill: #595959" transform="translate(264.577302 133.04) rotate(-90)">대기</text>
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="262.628571" y="111.478828" transform="rotate(-0 262.628571 111.478828)">100</text>
    </g>
    <g id="text_57">
     <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="284.571429" y="111.478828" transform="rotate(-0 284.571429 111.478828)">100</text>
@@ -769,20 +721,20 @@ z
     <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="306.514286" y="111.478828" transform="rotate(-0 306.514286 111.478828)">100</text>
    </g>
    <g id="text_59">
-    <g id="patch_55">
-     <path d="M 289.964025 102.864 
-L 318.7584 102.864 
-Q 320.0784 102.864 320.0784 101.544 
-L 320.0784 95.544 
-Q 320.0784 94.224 318.7584 94.224 
-L 289.964025 94.224 
-Q 288.644025 94.224 288.644025 95.544 
-L 288.644025 101.544 
-Q 288.644025 102.864 289.964025 102.864 
+    <g id="patch_49">
+     <path d="M 288.385625 104.86 
+L 317.18 104.86 
+Q 318.5 104.86 318.5 103.54 
+L 318.5 97.54 
+Q 318.5 96.22 317.18 96.22 
+L 288.385625 96.22 
+Q 287.065625 96.22 287.065625 97.54 
+L 287.065625 103.54 
+Q 287.065625 104.86 288.385625 104.86 
 z
 " style="fill: #f2f2f2; stroke: #bfbfbf; stroke-width: 0.5; stroke-linejoin: miter"/>
     </g>
-    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="318.7584" y="100.342828" transform="rotate(-0 318.7584 100.342828)">문헌 ↑ [6]</text>
+    <text style="font-size: 6px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="317.18" y="102.338828" transform="rotate(-0 317.18 102.338828)">문헌 ↑ [6]</text>
    </g>
    <g id="text_60">
     <text style="font-size: 6.5px; font-family: 'Aptos', 'Malgun Gothic', 'Carlito', 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: start; fill: #262626" x="227.52" y="93.04" transform="rotate(-0 227.52 93.04)">SE 망 연결 AM (%)</text>

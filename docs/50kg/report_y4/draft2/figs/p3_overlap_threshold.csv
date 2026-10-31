@@ -1,6 +1,9 @@
 panel,bed,status,threshold_pct,am_frac_pct
 (a),D0.7,결과 대기,,
-(a),D1,결과 대기,,
+(a),D1,ok,0,100
+(a),D1,ok,2,100
+(a),D1,ok,5,100
+(a),D1,ok,10,100
 (a),D2,ok,0,100
 (a),D2,ok,2,100
 (a),D2,ok,5,100
@@ -10,7 +13,10 @@ panel,bed,status,threshold_pct,am_frac_pct
 (a),D3,ok,5,100
 (a),D3,ok,10,99.9325236
 (b),D0.7,결과 대기,,
-(b),D1,결과 대기,,
+(b),D1,ok,0,100
+(b),D1,ok,2,100
+(b),D1,ok,5,100
+(b),D1,ok,10,81.8365969
 (b),D2,ok,0,100
 (b),D2,ok,2,100
 (b),D2,ok,5,100

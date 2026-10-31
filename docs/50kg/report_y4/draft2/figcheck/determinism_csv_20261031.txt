@@ -1,0 +1,23 @@
+# 결정성 · 값 보존 (10-31)
+
+## figs_meta.json — 같은 입력 · 같은 환경에서 두 번 그림 (cmp = 같음)
+cb6dea8216a336a2db459e1dc706cabe4cca9f82e1de1a0bb5c89bbb696c0e54  run A figs_meta.json
+cb6dea8216a336a2db459e1dc706cabe4cca9f82e1de1a0bb5c89bbb696c0e54  run B figs_meta.json
+
+## 그림 CSV — c80225b82 에 커밋된 CSV 의 D1 아닌 행 (D0.7 대기 · D2 · D3) 이 다시 그린 CSV 에 같은 값으로 있는가 (커밋된 열 기준)
+(비교 = 커밋 c80225b82 의 figs/ 사본 대 이 작업 트리 figs/ · 행 전체 글자 대조 · 새 열은 따로 적음)
+
+diag_relax_drop_vs_N.csv     NEW (no committed version)
+p1_bed_strip.csv             committed non-D1 rows      3 · changed/missing 0 · new cols [] · lost cols [] · rows 4 -> 4
+p2_compaction.csv            committed non-D1 rows   8739 · changed/missing 0 · new cols [] · lost cols [] · rows 8740 -> 10898
+p2_relaxation.csv            committed non-D1 rows    204 · changed/missing 0 · new cols ['panel'] · lost cols [] · rows 204 -> 306
+p3_contacts.csv              committed non-D1 rows      9 · changed/missing 0 · new cols [] · lost cols [] · rows 12 -> 12
+p3_overlap_threshold.csv     committed non-D1 rows     18 · changed/missing 0 · new cols [] · lost cols [] · rows 20 -> 26
+p3_per_am.csv                committed non-D1 rows      8 · changed/missing 0 · new cols [] · lost cols [] · rows 10 -> 11
+p4_f_connect.csv             committed non-D1 rows      6 · changed/missing 0 · new cols [] · lost cols [] · rows 8 -> 8
+p4_tortuosity.csv            committed non-D1 rows      6 · changed/missing 0 · new cols [] · lost cols [] · rows 8 -> 8
+p6_z_stress.csv              committed non-D1 rows     40 · changed/missing 0 · new cols [] · lost cols [] · rows 40 -> 60
+p6_z_structure.csv           committed non-D1 rows     40 · changed/missing 0 · new cols [] · lost cols [] · rows 40 -> 60
+p7_lit_direction.csv         committed non-D1 rows     18 · changed/missing 0 · new cols [] · lost cols [] · rows 24 -> 24
+p7_summary_heat.csv          committed non-D1 rows     42 · changed/missing 0 · new cols [] · lost cols [] · rows 56 -> 56
+TOTAL problems 0
