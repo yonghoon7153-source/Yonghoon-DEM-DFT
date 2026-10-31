@@ -3,6 +3,7 @@
 const pptxgen = require("pptxgenjs");
 // 발표자 정보는 저장소에 넣지 않고 환경 변수로 받는다 (예: NAMUL_PRESENTER="○○학부  학번  이름")
 const PRESENTER = (process.env.NAMUL_PRESENTER || "").trim() || "○○학과  ○○○";
+const PRESENT_DATE = "2026. 10. 31.";  // 발표일 (표지)
 const fs = require("fs");
 const path = require("path");
 const { setTheme } = require("./theme.js");
@@ -81,7 +82,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     ["나물 접근성", "지역 상권 상생", "AI 기반", "레시피 연계"].forEach((c, i) => { const w = 0.32 + [...c].reduce((a, ch) => a + (/[가-힣]/.test(ch) ? 0.165 : ch === " " ? 0.06 : 0.1), 0);
       s.addShape(pres.ShapeType.roundRect, { x: cx, y: 3.95, w, h: 0.34, rectRadius: 0.17, fill: { color: "24503D" }, line: { color: BRAND2, width: 0.75 }, objectName: "pillar " + i });
       tx(s, c, { x: cx, y: 3.95, w, h: 0.34, fontSize: 11.5, bold: true, color: "FFFFFF", align: "center", valign: "middle", objectName: "pillar text " + i }); cx += w + 0.12; });
-    tx(s, "2026. 11.     " + PRESENTER, { x: 0.6, y: 4.8, w: 5, h: 0.3, fontSize: 12, color: "A9C2B3", objectName: "presenter" });
+    tx(s, PRESENT_DATE + "     " + PRESENTER, { x: 0.6, y: 4.8, w: 5, h: 0.3, fontSize: 12, color: "A9C2B3", objectName: "presenter" });
     phone(s, "home", 7.05, 0.38, 4.85, "홈 화면");
     s.addNotes(note(1)); }
 
@@ -138,7 +139,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     box(s, 0.45, 4.36, 6.35, 0.56, G100, "subscription band");
     tx(s, [{ text: "+ 시장 가게 주문 내역   ", options: { bold: true, color: BRAND } }, { text: "어느 시장 가게에서 얼마를 샀는지 표시", options: { color: INK } }], { x: 0.6, y: 4.36, w: 6.1, h: 0.56, fontSize: 12, valign: "middle", objectName: "subscription text" });
     phone(s, "home", 7.45, 1.66, 3.3, "홈 화면");
-    foot(s, "주: 앱 화면은 웹 프로토타입 (매장·가격·선호도는 예시 데이터)"); }
+    foot(s, "주: 앱 화면은 웹 프로토타입 (가게·가격·선호도는 예시 데이터)"); }
 
   // ================= 5. Solution: AI 적용 =================
   { const s = content(5, "Solution");
@@ -156,7 +157,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       tag(s, st, 9.55 - (0.16 + st.length * 0.115), y + 0.05, on);
       tx(s, d, { x: x + 0.42, y: y + 0.38, w: 3.6, h: 0.56, fontSize: 11.5, color: G700, objectName: "cap desc " + i });
       if (i < 2) s.addShape(pres.ShapeType.line, { x: x + 0.42, y: y + 1.0, w: 3.58, h: 0, line: { color: G200, width: 0.75 }, objectName: "cap rule " + i }); });
-    foot(s, "주: 시연 화면의 AI 응답·매장·가격·예측 수치는 예시 데이터이며 실제 AI 호출은 검증 전 · AI는 야생 채취 식물의 식용 여부를 판단하지 않음"); }
+    foot(s, "주: 시연 화면의 AI 응답·가게·가격·예측 수치는 예시 데이터이며 실제 AI 호출은 검증 전 · AI는 야생 채취 식물의 식용 여부를 판단하지 않음"); }
 
   // ================= 6. Solution: 시연 =================
   { const s = pres.addSlide({ masterName: "DEMO", sectionTitle: "Solution" }); s.addNotes(note(6));
@@ -238,7 +239,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       ["판매자 유료 서비스", "월 29,000원 (선택)", "발주 추천 · 상단 노출"],
       ["제휴 광고", "건별 계약", "레시피 크리에이터 · 식품 브랜드"],
     ], { x: 0.45, y: 2.92, w: 9.1, colW: [1.9, 2.0, 5.2], rowH: [0.34, 0.4, 0.4, 0.4, 0.4], align: ["left", "left", "left"], size: 12 });
-    foot(s, "주: 요금은 예정안이며 파일럿에서 검증 · 판매자 부담 예시: 월 100건 × 1.5만 원 매장 → 수수료 6만 원 + 유료 서비스 2.9만 원 = 월 8.9만 원 (거래액의 약 6%)"); }
+    foot(s, "주: 요금은 예정안이며 파일럿에서 검증 · 판매자 부담 예시: 월 100건 × 1.5만 원 가게 → 수수료 6만 원 + 유료 서비스 2.9만 원 = 월 8.9만 원 (거래액의 약 6%)"); }
 
   // ================= 10. Vision: 로드맵 =================
   pres.addSection({ title: "Vision" });
@@ -246,7 +247,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     head(s, "Vision  |  사업화 계획", "사업화 로드맵", "시장 1곳 파일럿으로 실제 구매·재구매를 먼저 검증한 뒤, 정부 지원사업과 투자로 단계적 확장");
     const kpi = (t) => ({ t, o: { bold: true, color: BRAND, fill: { color: BRANDL } } });
     table(s, ["구분", "1단계 파일럿\n2026.12~2027.2", "2단계 정식 출시\n2027", "3단계 확장\n2028~"], [
-      ["범위", "전통시장 1곳 · 점포 2~3곳", "입점 매장 30곳", "수도권 120곳 → 300곳"],
+      ["범위", "전통시장 1곳 · 점포 2~3곳", "입점 가게 30곳", "수도권 120곳 → 300곳"],
       ["주요 과제", "웹 프로토타입\n수동 운영, 배달은 단지 한정", "웹앱 출시 · 결제 연동\n명절·제철 예약 오픈", "앱 출시 · 발주 추천 도입"],
       ["자금", "자기자본 300만 원\n배달 지원 최대 20만 원", "예비창업패키지 등\n정부 지원사업", "시드 투자"],
       [{ t: "목표", o: { fill: { color: BRANDL }, color: BRAND } }, kpi("유료 주문 100건"), kpi("월 주문 2,000건"), kpi("3년차 거래액 54억 원")],
@@ -262,7 +263,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
     s.addChart(pres.ChartType.bar, [{ name: "거래액", labels: ["1년차", "2년차", "3년차"], values: [2.5, 15, 54] }],
       { ...chartBase(), x: 0.35, y: 1.66, w: 4.5, h: 2.35, barDir: "col", barGapWidthPct: 70, chartColors: [BRAND3, BRAND2, BRAND], title: "연도별 목표 거래액 (억 원)", valAxisMinVal: 0, valAxisMaxVal: 62, dataLabelPosition: "outEnd", objectName: "gmv chart" });
     box(s, 0.45, 4.1, 4.4, 0.82, G100, "revenue box");
-    tx(s, [{ text: "3년차 매출 목표 약 2.6억 원", options: { bold: true, color: BRAND, breakLine: true } }, { text: "수수료 2.2 + 판매자 서비스 0.4 (억 원), 배달비 제외\n보수 시나리오(매장당 월 약 77건) 약 2.1억 원", options: { color: INK, fontSize: 10.5 } }], { x: 0.6, y: 4.12, w: 4.2, h: 0.78, fontSize: 12, valign: "middle", objectName: "revenue text" });
+    tx(s, [{ text: "3년차 매출 목표 약 2.6억 원", options: { bold: true, color: BRAND, breakLine: true } }, { text: "수수료 2.2 + 판매자 서비스 0.4 (억 원), 배달비 제외\n보수 시나리오(가게당 월 약 77건) 약 2.1억 원", options: { color: INK, fontSize: 10.5 } }], { x: 0.6, y: 4.12, w: 4.2, h: 0.78, fontSize: 12, valign: "middle", objectName: "revenue text" });
     tx(s, "확장 계획", { x: 5.2, y: 1.72, w: 4.3, h: 0.3, fontSize: 12, bold: true, color: BRAND, objectName: "expand title" });
     table(s, null, [["확장 조건", "첫 시장의 재구매·운영비 확인"], ["지역 확대", "인접 시장·주거 단지 → 수도권"], ["품목 확대", "나물 → 제철 농산물 전체"]],
       { x: 5.2, y: 2.06, w: 4.35, colW: [1.3, 3.05], rowH: [0.42, 0.42, 0.42], align: ["center", "left"], size: 12 });
@@ -297,7 +298,7 @@ const THEME_COLORS = { dk1: INK, lt1: "FFFFFF", dk2: BRAND, lt2: G100, accent1: 
       ["중개 수수료", "54억 원 × 4% (배달비 제외, 면제·할인 전)", v("약 2.2억 원")],
       ["판매자 유료 서비스", "120곳 × 월 29,000원 × 12개월", v("약 0.4억 원")],
       [{ t: "3년차 매출 목표", o: { fill: { color: BRANDL }, color: BRAND } }, { t: "수수료 + 판매자 유료 서비스", o: { fill: { color: BRANDL } } }, v("약 2.6억 원", { color: BRAND, fill: { color: BRANDL } })],
-      ["보수 시나리오", "거래액 41.4억 원(매장당 월 약 77건) × 4% + 판매자 서비스", v("약 2.1억 원", { color: G700 })],
+      ["보수 시나리오", "거래액 41.4억 원(가게당 월 약 77건) × 4% + 판매자 서비스", v("약 2.1억 원", { color: G700 })],
       ["지자체·제휴 (확장)", "계약 확보 시 추가하는 확장 시나리오 (미검증, 기본 목표에서 제외)", v("+3.1억 원", { color: G700 })],
       ["주문당 수수료 수입", "15,000원 × 4% (변동비 차감 전, 공헌이익 아님)", v("600원")],
       ["배달비 (시험 요금)", "매출 목표 제외 / 차액 최대 20만 원 지원", v("3,500원/건", { color: G700 })],
