@@ -14510,12 +14510,16 @@
     {
       "id": "SELF-146",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "외부 리뷰 (Codex 초안 2 판정 11-01 · `docs/reviews/codex_kg50_y4_draft2_review_20261101/`)",
       "opened_in": "docs/50kg/d07_guard/t_test_20261031/README.md",
       "title": "D0.7 -T 기록 '결과 = G0–G3 통과' — 도구 보고 25 줄은 G3 = 원 로그에 비교 구간 (200001, 202002] 정규 줄 없음 → 생략 · 정확히는 G0–G2 통과 + G3 생략 (도구 요약 28 줄의 'G0–G3 통과' 를 그대로 옮김)",
-      "note": "고침 = t_test README 4 줄 (G0–G2 통과 · G3 생략 · 도구 요약 줄 표기 병기) · 초안 2 요청서 41 줄 = 보낸 문서라 그대로 (이 항목이 정정) · 도구 요약 줄 표기 ('생략' 을 '통과' 에 넣음) 는 resume_ckpt.sh 문구 — 절차상 생략 허용 조건 (원 로그에 그 구간 줄이 없을 때만) 안이라 판정 결과는 같음. · 상태 = 고친 커밋 뒤 claimed_fixed 로 (다음 커밋에서 sha 기록)."
+      "note": "고침 = t_test README 4 줄 (G0–G2 통과 · G3 생략 · 도구 요약 줄 표기 병기) · 초안 2 요청서 41 줄 = 보낸 문서라 그대로 (이 항목이 정정) · 도구 요약 줄 표기 ('생략' 을 '통과' 에 넣음) 는 resume_ckpt.sh 문구 — 절차상 생략 허용 조건 (원 로그에 그 구간 줄이 없을 때만) 안이라 판정 결과는 같음.",
+      "claimed_fixed_sha": "f5a32072921119059671eb8a2642dc953c7bf9f9",
+      "evidence_tests": [
+        "docs/50kg/d07_guard/t_test_20261031/README.md 4 줄 (G0–G2 통과 · G3 생략 · 도구 보고 25 줄 대조 — 문서 고침 · 시험 없음)"
+      ]
     }
   ]
 }
