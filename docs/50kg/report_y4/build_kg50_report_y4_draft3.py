@@ -9,17 +9,19 @@
     python3 -P docs/50kg/report_y4/build_kg50_report_y4_draft3.py --check-only <deck.pptx> [--pdf <deck.pdf>]
 
 - 글 = 글 시트 `docs/50kg/report_y4/draft2/slide_text_draft3.md` (1저자 비준 쪽 계획 11-01) 를 빌드 때 읽는다 — 손으로 옮긴 글 없음.
-  쪽마다: ② 머리 메시지 = 머리의 쪽 제목 자리 · ③ 보충 한 줄 = 요약 띠 · ① 탭 글 = 점선 패널 괄호 탭 · ④ 글머리 · 캡션 · 표 = 패널 안 ·
-  ⑤ 회색 결론 줄 = 패널 아래 회색 줄 · ⑥ 화면 각주 = 쪽 아래 작은 글 · ⑥ 발표자 노트 + ⑦ 하지 않을 말 = 노트 (화면에 안 씀).
+  2판 (조정자 11-01 · 1저자 "50kg 양식 그대로"): 머리 쪽 제목 = 시트 절 제목 · 요약 띠 = 초안 1 띠 (알약 = 초안 1 띠 제목 ·
+  ① = ② 머리 메시지 · ② = ③ 보충 한 줄) · ① 탭 글 = 점선 패널 괄호 탭 · ④ 글머리 · 캡션 · 표 = 패널 안 ·
+  ⑤ 회색 결론 줄 = 패널 아래 회색 줄 · ⑥ 화면 각주 = 그 아래 작은 글 · ⑥ 발표자 노트 + ⑦ 하지 않을 말 = 노트 (화면에 안 씀) ·
+  0쪽 두 캡션 = 시트 표지 '(화면 자리 부족 → 발표자 노트)' 로 노트 · 0쪽 왼쪽 덱 값 줄 = 넣으면 패널을 넘쳐 노트 (FIT_FALLBACK).
   시트 글에서 바꾸는 것 = 줄바꿈 · markdown 표기 (` · **) 떼기 · `x_y` 아래첨자 표기를 아래첨자 글자로 (c_cpl[22] 같은 이름은 그대로) ·
   캡션의 【 】 (양식) — 검사 V 가 화면 글을 시트 글과 한 글자씩 대조한다 (아래첨자 → `_` 로 되돌려서).
-- 양식 = 초안 1 생성기 (`build_kg50_report_y4.py`) 의 상수 · 그리기 도우미 · 결정적 저장 · 검사 함수를 import 해서 그대로 쓴다
-  (초안 1 생성기는 고치지 않는다).  바꾼 자리 (README §3): 요약 띠 = 한 줄 메시지용 낮은 띠 (알약 · ① ② 항목 없음 · 같은 회색 틀 + 흰 틀) ·
-  패널 위 = 띠 아래 같은 간격 · 패널 바닥 · 회색 결론 줄 = 두 패널 폭 · 화면 각주 자리 · 쪽 번호 자리 = 글 (0–7 · 부록).
+- 양식 = 초안 1 생성기 (`build_kg50_report_y4.py`) 의 상수 · 그리기 도우미 · 패널 · 결정적 저장 · 검사 함수를 import 해서 그대로 쓴다
+  (초안 1 생성기는 고치지 않는다).  초안 1 과 다른 자리 (README §3): ① ② 글 = 여러 줄 (반 폭 칸) · 회색 결론 줄 y 6.99 · 폭 8.70 in ·
+  화면 각주 자리 (7.20 in) · 쪽 번호 = 글 (0–7 · 부록 · 오른쪽 끝 · 맞춤 = 초안 1) · 부록 표 7 pt.
   글 폭 추정 = 초안 1 추정 + 괄호 둘레 자동 간격 (seq_widths3 · 이 프로세스 안에서만 바꿔 씀).
 - 그림 = 전부 100 % (크기 = `draft2/figs/figs_meta.json` · 0쪽 = PNG 픽셀 ÷ 300 dpi) · 바이트 = meta sha256 — 패널에 100 % 로 안 들어가면
   줄이지 않고 그대로 두고 검사 · 넘침 보고 (overflow) 로 알린다 (1저자 결정).  글이 넘쳐도 줄이거나 빼지 않는다.
-- 0쪽 식 넷 = 시트 ④-2 표의 글 그대로 (글 상자 · OMML 아님 — README §6: 시트 식 넷이 모두 OMML 로 있는 리포 파일이 없다 ·
+- 0쪽 식 넷 = 시트 ④-2 표의 글 그대로 (글 상자 · OMML 아님 — README §7: 시트 식 넷이 모두 OMML 로 있는 리포 파일이 없다 ·
   세미나 3장 OMML (Codex 증거) · 10-21 보고 덱 9 장 OMML 은 넷 중 일부만 시트 꼴과 같다).
 """
 import argparse
@@ -98,49 +100,47 @@ def estimator3():
         d1.seq_widths = old
 
 
-# ───────────────────────────── 초안 3 배치 (초안 1 양식 상수에서 유도 · EMU) ─────────────────────────────
-BAND_X, BAND_Y, BAND_W = d1.BAND_OUT[0], d1.BAND_OUT[1], d1.BAND_OUT[2]
-IN_X, IN_Y, IN_W = d1.BAND_IN[0], d1.BAND_IN[1], d1.BAND_IN[2]
-IN_BOT_GAP = (d1.BAND_OUT[1] + d1.BAND_OUT[3]) - (d1.BAND_IN[1] + d1.BAND_IN[3])   # 흰 틀 아래 ↔ 회색 틀 아래 (양식)
-R_OUT = d1.BAND_OUT[4] * d1.BAND_OUT[3]                  # 회색 틀 모서리 반지름 (양식 그대로 · 높이가 바뀌어도 같은 반지름)
-R_IN = d1.BAND_IN[4] * d1.BAND_IN[3]
-TAB_GAP = d1.PANEL_TAB_Y - (d1.BAND_OUT[1] + d1.BAND_OUT[3])   # 띠 아래 ↔ 패널 탭 위 (양식)
-PANEL_DY = d1.PANEL[0][1] - d1.PANEL_TAB_Y                # 탭 위 ↔ 패널 위 (양식)
-BAND3_H = 0.70                                            # 회색 띠 높이 (in) — ③ 보충 한 줄 두 줄 (11 pt) 자리 · 9 장 같은 높이
-PANEL3_BOTTOM = 6.84                                      # 패널 바닥 (in · 초안 1 = 6.97 · 화면 각주 자리)
-NOTE3_H = 0.22
-FOOT3_Y, FOOT3_H = 7.10, 0.38
-BAND_PT, TITLE_PT, HEAD_PT, BELOW_PT, CAP_PT, NOTE_PT, FOOT_PT = 11, 14, 10, 8, 7, 9, 7
+# ───────────────────────────── 배치 = 초안 1 양식 그대로 (머리 · 요약 띠 + 알약 + ① ② · 점선 패널 둘) ─────────────────────────────
+#: 2판 (11-01 · 1저자): 머리 쪽 제목 = 시트 절 제목 · 띠 알약 = 초안 1 띠 제목 · ① = ② 머리 메시지 · ② = ③ 보충 한 줄 ·
+#: 패널 = 초안 1 (위 2.411 · 바닥 6.97 in) · ⑤ 회색 줄 · ⑥ 화면 각주 = 패널 아래 (쪽 번호 상자 왼쪽)
+PANEL3_BOTTOM = d1.PANEL_BOTTOM                           # 6.97 in (초안 1 과 같음)
+#: 쪽 번호 = 초안 1 SLDNUM 상자와 같은 오른쪽 끝 · y · 높이 · 오른쪽 맞춤 (글 자리 그대로) — 상자 왼쪽만 9.05 in 로 줄여
+#: ⑤ · ⑥ 를 8.70 in 폭으로 (3 · 4 · 5쪽 ⑤ = 9 pt 로 7.45–7.51 in · 초안 1 의 7.30 in 상자면 두 줄)
+PGNUM_X = 9.05
+PGNUM_BOX = (PGNUM_X, d1.inch(d1.SLDNUM[1]), d1.inch(d1.SLDNUM[0] + d1.SLDNUM[2]) - PGNUM_X, d1.inch(d1.SLDNUM[3]))
+NOTE3_BOX = (d1.NOTE_BOX[0], 6.99, 8.70, 0.20)            # ⑤ 회색 결론 줄 (한 줄 9 pt) — 초안 1 NOTE_BOX 의 x · y 6.99 (초안 1 7.03 · 각주 자리)
+FOOT3_BOX = (d1.NOTE_BOX[0], 7.20, 8.70, 0.29)            # ⑥ 화면 각주 (두 줄까지 7 pt)
+LINE_INS = (0.05, 0.01, 0.05, 0.01)                       # ⑤ · ⑥ 상자 여백 (위아래 0.01 in)
+ITEM_PT = 11                                              # 띠 ① ② (초안 1 항목 11 pt)
+TITLE_PT, HEAD_PT, BELOW_PT, CAP_PT, NOTE_PT, FOOT_PT = 14, 10, 8, 7, 9, 7
 TBL_PT = d1.TBL_PT
+APPX_TBL_PT = 7                                           # 부록 한계 · 규약 표만 7 pt (조정자 11-01 · 그 밖의 표 = 초안 1 8 pt)
 #: 아래첨자로 바꾸지 않는 이름 (코드 · 덤프 열 이름)
 NO_SUB = ('c_cpl[22]',)
 
 
-def band_bottom():
-    return BAND_Y + I(BAND3_H)
-
-
-def tab_y():
-    return band_bottom() + TAB_GAP
-
-
-def panel_y():
-    return tab_y() + PANEL_DY
-
-
 def content_top():
-    return inch(tab_y() + d1.PANEL_TAB_H) + 0.03
+    return d1.CONTENT_TOP
 
 
 def note_box():
-    x0 = inch(d1.PANEL[0][0])
-    x1 = inch(d1.PANEL[1][0] + d1.PANEL[2])
-    return (x0, PANEL3_BOTTOM + 0.035, x1 - x0, NOTE3_H)
+    return NOTE3_BOX
 
 
 def foot_box():
-    x0 = inch(d1.PANEL[0][0])
-    return (x0, FOOT3_Y, inch(d1.SLDNUM[0]) - 0.05 - x0, FOOT3_H)
+    return FOOT3_BOX
+
+
+def band_item_boxes():
+    """띠 ① ② 글 상자 (in) — 초안 1 band 의 항목 제목 자리 · 폭 그대로, 높이 = 흰 틀 아래까지 (여러 줄)."""
+    in_right = inch(d1.BAND_IN[0] + d1.BAND_IN[2])
+    in_bottom = inch(d1.BAND_IN[1] + d1.BAND_IN[3])
+    out = []
+    for k in range(2):
+        tx, ty = d1.ITEM_TITLE[k]
+        w = (in_right - 0.12 - inch(tx)) if k else (inch(d1.ITEM_NUM[1][0]) - 0.15 - inch(tx))
+        out.append((inch(tx), inch(ty), w, in_bottom - 0.02 - inch(ty)))
+    return out
 
 
 # ───────────────────────────── 글 시트 읽기 (빌드 때 · 구조가 다르면 멈춤) ─────────────────────────────
@@ -277,13 +277,14 @@ def screen_text(s, breaks=()):
     return ''.join(p if i % 2 else sub_markup(p) for i, p in enumerate(parts))
 
 
-#: 손으로 정한 줄바꿈 (시트 글 그대로 · 공백 하나 → 줄바꿈) — 두 줄로 넘치는 자리를 '·' 뒤에서 고르게 나눈다
+#: 손으로 정한 줄바꿈 (시트 글 그대로 · 공백 하나 → 줄바꿈) — 자동 줄바꿈이 낱말 묶음을 가르는 자리만 · 줄 수는 늘리지 않는다
+#: (띠 ① ② = 반 폭 칸 · 각 조각 폭을 추정으로 확인: 2판 측정 · 그 밖의 띠 글은 자동 줄바꿈)
 BREAKS = {
-    ('0', 'band'): ('판 고정 이완 ·',),
-    ('3', 'band'): ('21.0 µm² ·',),
-    ('4', 'band'): ('×2.40) ·',),
-    ('7', 'band'): ('최대 2.4배 ·',),
     ('0', 'L/head'): ('0.7–3 µm) ·',),
+    ('0', 'band/i1'): ('모두',), ('1', 'band/i1'): ('µm) 를',), ('2', 'band/i1'): ('(관측):',), ('4', 'band/i1'): ('2.4배 —',),
+    ('5', 'band/i1'): ('근처:',), ('6', 'band/i1'): ('몰린다 —',), ('7', 'band/i1'): ('관측 ·',),
+    ('0', 'band/i2'): ('300 MPa 가압 →',), ('1', 'band/i2'): ('시드 1) ·',), ('3', 'band/i2'): ('99.7 개 ·',),
+    ('7', 'band/i2'): ('(계면 면적 그대로) ·',),
 }
 
 
@@ -320,7 +321,25 @@ def page_content(sheet, k):
     P = dict(key=k, heading=s['heading'], title=(title, t_no), band=(band, b_no), note=(note, n_no),
              foot=(foot, foot_no) if foot else None, bullets=bullets, dont=[(r[0][0], r[0][1], r[1]) for r in d_rows],
              tabs=dict(L=(lay['왼쪽']['tab'], lay['왼쪽']['line']), R=(lay['오른쪽']['tab'], lay['오른쪽']['line'])), lay=lay)
-    P['L'], P['R'] = PAGE_ITEMS[k](B['④'], lay, k)
+    L, R = PAGE_ITEMS[k](B['④'], lay, k)
+    P['to_notes'], P['fit'] = [], []
+    for side, items in (('L', L), ('R', R)):
+        P[side] = [it for it in items if it[0] != 'cap_notes']
+        P['to_notes'] += [(side, 'cap', it[1], it[2], f'시트 표지 {CAP_TO_NOTES}') for it in items if it[0] == 'cap_notes']
+    for side in ('L', 'R'):
+        for kind in ACTIVE_FALLBACK.get((k, side), ()):
+            with estimator3():
+                b = stack_bottom(P[side], k, side)
+            if b <= PANEL3_BOTTOM:
+                break                                  # 패널 안 → 더 옮기지 않는다
+            it = next(x for x in P[side] if x[0] == kind)
+            P[side] = [x for x in P[side] if x is not it]
+            with estimator3():
+                b2 = stack_bottom(P[side], k, side)
+            P['to_notes'].append((side, kind, it[1], it[2], f'넣으면 마지막 도형 아래 {b:.3f} in > 패널 바닥 {PANEL3_BOTTOM} in'))
+            P['fit'].append(dict(side=side, moved=kind, bottom_with_in=round(b, 3), bottom_without_in=round(b2, 3), panel_bottom_in=PANEL3_BOTTOM))
+    order = {'L': 0, 'R': 1, 'head': 0, 'below': 1, 'cap': 2}
+    P['to_notes'].sort(key=lambda e: (order[e[0]], order[e[1]]))
     return P
 
 
@@ -337,24 +356,43 @@ def _cap_after(b4, anchor, k):
     return ('cap', t, no)
 
 
+#: 시트가 '그림 캡션 (작은 글)' 뒤에 이 표지를 달면 그 캡션은 화면 대신 발표자 노트로 (시트 11-01 2판 · 0쪽 두 캡션)
+CAP_TO_NOTES = '(화면 자리 부족 → 발표자 노트)'
+#: 시트 표지 없이 옮기는 자리 = 넣어 봐서 패널 바닥을 넘을 때만 · 순서대로 (조정자 11-01: 0쪽 왼쪽 덱 값 줄)
+FIT_FALLBACK = {('0', 'L'): ('below',)}
+#: --p0-heads-to-notes (평가용 · 기본 끔): 0쪽 두 글머리도 넘치면 노트로
+FIT_FALLBACK_B = {('0', 'L'): ('below', 'head'), ('0', 'R'): ('head',)}
+NOTE_LABELS = {('0', 'L', 'cap'): '④-1 그림 캡션', ('0', 'R', 'cap'): '④-2 그림 캡션',
+               ('0', 'L', 'below'): '④-1 덱 값 (2 × 2 그림 아래 한 줄)', ('0', 'L', 'head'): '④-1 글머리 (그림 위 한 줄)',
+               ('0', 'R', 'head'): '④-2 글머리'}
+ACTIVE_FALLBACK = FIT_FALLBACK
+
+
+def _cap_maybe_notes(lines, start, what):
+    """'그림 캡션 (작은 글)' 줄 (표지 있으면 노트행) 다음 인용 줄."""
+    j = _find(lines, r'^그림 캡션 \(작은 글\)', start, what)
+    rest = lines[j][1][len('그림 캡션 (작은 글)'):].strip()
+    src.need(rest in ('', CAP_TO_NOTES), f'sheet {lines[j][0]}: 캡션 표지 "{rest}" (빈칸 또는 {CAP_TO_NOTES})')
+    t, no, _ = _bq(lines, j + 1, what)
+    return ('cap_notes' if rest else 'cap'), t, no
+
+
 def items_p0(b4, lay, k):
     i1 = _find(b4, r'^④-1 왼쪽', 0, '0쪽 ④-1')
     i2 = _find(b4, r'^④-2 오른쪽', 0, '0쪽 ④-2')
     left_lines, right_lines = b4[i1:i2], b4[i2:]
     head, h_no = _bullet(left_lines, '글머리 (그림 위 한 줄)', '0쪽 ④-1')
     below, w_no = _bullet(left_lines, '덱 값 (2 × 2 그림 아래 한 줄)', '0쪽 ④-1')
-    j = _find(left_lines, r'^그림 캡션 \(작은 글\)$', 0, '0쪽 ④-1 캡션')
-    lcap, lc_no, _ = _bq(left_lines, j + 1, '0쪽 ④-1 캡션')
-    L = [('head', head, h_no), _fig('p0_process_grid_labeled', lay['왼쪽'], k, 'L'), ('below', below, w_no), ('cap', lcap, lc_no)]
+    lkind, lcap, lc_no = _cap_maybe_notes(left_lines, 0, '0쪽 ④-1 캡션')
+    L = [('head', head, h_no), _fig('p0_process_grid_labeled', lay['왼쪽'], k, 'L'), ('below', below, w_no), (lkind, lcap, lc_no)]
     rh = [(no, ln) for no, ln in right_lines[1:] if ln.startswith('- ')]
     src.need(len(rh) == 1, f'0쪽 ④-2 글머리 줄 {len(rh)}')
     eh, e_rows, _ = _table(right_lines, 0, '0쪽 ④-2 식 표')
     src.need(eh[:3] == ['식 이름', '식 (2-1장 개체 · 대조용 글)', '한 줄 뜻 (붙여 넣기)'] and len(e_rows) == 4, f'0쪽 ④-2 식 표 머리 {eh}')
-    j = _find(right_lines, r'^그림 캡션 \(작은 글\)$', 0, '0쪽 ④-2 캡션')
-    rcap, rc_no, _ = _bq(right_lines, j + 1, '0쪽 ④-2 캡션')
+    rkind, rcap, rc_no = _cap_maybe_notes(right_lines, 0, '0쪽 ④-2 캡션')
     eq = [dict(name=c[0], eq=c[1], mean=c[2], line=no) for c, no in e_rows]
-    # 순서 = 시트 ④-2 의 순서 (글머리 → 그림 → 식 넷 표 → 그림 캡션 (작은 글)) — 넘치면 작은 글이 먼저 밀린다
-    R = [('head', rh[0][1][2:].strip(), rh[0][0]), _fig('p0_contact_model_labeled', lay['오른쪽'], k, 'R'), ('eqtable', eq), ('cap', rcap, rc_no)]
+    # 순서 = 시트 ④-2 의 순서 (글머리 → 그림 → 식 넷 표 → 그림 캡션)
+    R = [('head', rh[0][1][2:].strip(), rh[0][0]), _fig('p0_contact_model_labeled', lay['오른쪽'], k, 'R'), ('eqtable', eq), (rkind, rcap, rc_no)]
     return L, R
 
 
@@ -362,7 +400,7 @@ def items_p1(b4, lay, k):
     i = _find(b4, r'^④-1 왼쪽 조건 표', 0, '1쪽 ④-1')
     hdr, rows, _ = _table(b4, i + 1, '1쪽 조건 표')
     src.need(hdr == ['항목', '조건'], f'1쪽 조건 표 머리 {hdr}')
-    L = [('table', dict(name='cond', hdr=hdr, rows=rows, col_w=(1.48, None), align=('L', 'L')))]
+    L = [('table', dict(name='cond', hdr=hdr, rows=rows, col_w=(1.48, None), align=('L', 'L'), size=TBL_PT))]
     R = [_fig('p1_bed_strip', lay['오른쪽'], k, 'R'), _cap_after(b4, r'^④-2 캡션 `p1_bed_strip`', k)]
     return L, R
 
@@ -375,12 +413,12 @@ def _two_figs(left, right):
     return f
 
 
-def _fig_table(left, col_w, align, after=None):
+def _fig_table(left, col_w, align, after=None, size=None):
     def f(b4, lay, k):
         L = [_fig(left, lay['왼쪽'], k, 'L'), _cap_after(b4, rf'^④-1 `{left}`', k)]
         i = _find(b4, r'^④-2 오른쪽 표', 0, f'{k}쪽 ④-2')
         hdr, rows, _ = _table(b4, i + 1, f'{k}쪽 ④-2 표')
-        R = [('table', dict(name='t', hdr=hdr, rows=rows, col_w=col_w, align=align))]
+        R = [('table', dict(name='t', hdr=hdr, rows=rows, col_w=col_w, align=align, size=size or TBL_PT))]
         if after:
             t, no = _bullet(b4, after, f'{k}쪽 ④-2')
             R.append(('text', t, no))
@@ -397,7 +435,8 @@ PAGE_ITEMS = {
     '5': _fig_table('p5_breakeven_sigma', (None, 0.72, 0.80, 0.72, 0.80), ('L', 'C', 'C', 'C', 'C'), after='표 아래'),
     '6': _fig_table('p6_constriction_share', (1.05, 1.36, None), ('L', 'C', 'L')),
     '7': _fig_table('p7_summary_heat', (0.34, 1.40, 1.45, None), ('C', 'L', 'L', 'L')),
-    '부록': _fig_table('diag_relax_drop_vs_N', (0.22, 0.55, 2.55, None), ('C', 'L', 'L', 'L')),
+    # 부록 표 열 폭 = 7 pt 에서 높이가 가장 낮은 조합 (0.20–0.24 · 0.40–0.75 · 1.90–2.85 in 격자 탐색 · 4.535 in)
+    '부록': _fig_table('diag_relax_drop_vs_N', (0.22, 0.48, 2.60, None), ('C', 'L', 'L', 'L'), size=APPX_TBL_PT),
 }
 
 
@@ -430,26 +469,37 @@ def sheet_size(text):
 
 # ───────────────────────────── 그리기 ─────────────────────────────
 
-def band3(slide, text):
-    h_out = I(BAND3_H)
-    d1.autoshape(slide, 'band', MSO_SHAPE.ROUNDED_RECTANGLE, (BAND_X, BAND_Y, BAND_W, h_out), fill=d1.FAINT, adj=R_OUT / h_out)
-    h_in = BAND_Y + h_out - IN_BOT_GAP - IN_Y
-    d1.autoshape(slide, 'band/in', MSO_SHAPE.ROUNDED_RECTANGLE, (IN_X, IN_Y, IN_W, h_in), fill='FFFFFF', line=d1.LINE_GRAY, line_w=1.0,
-                 adj=R_IN / h_in)
-    d1.textbox(slide, 'band/in/text', (inch(IN_X) + 0.06, inch(IN_Y) + 0.02, inch(IN_W) - 0.12, inch(h_in) - 0.04), [text], BAND_PT,
-               kind='desc', align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, wrap=True, ins=(0.05, 0.02, 0.05, 0.02))
+_SERIES = {}
 
 
-def panel3(slide, side, tab_text):
-    (x, _), w, _, adj = d1.PANEL[0 if side == 'L' else 1], d1.PANEL[2], d1.PANEL[3], d1.PANEL[4]
-    y = panel_y()
-    h = I(PANEL3_BOTTOM) - y
-    d1.autoshape(slide, side, MSO_SHAPE.ROUNDED_RECTANGLE, (x, y, w, h), fill=None, line=d1.DASH_GRAY, line_w=0.75, dash='sysDash', adj=adj)
-    tw = d1.est_text_width_in(tab_text, 12) + 0.24
-    tx = inch(x) + (inch(w) - tw) / 2
-    d1.textbox(slide, f'{side}/tab', (tx, inch(tab_y()), tw, inch(d1.PANEL_TAB_H)), [tab_text], 12, color='000000', align=PP_ALIGN.CENTER,
-               wrap=False, fill='FFFFFF', anchor=MSO_ANCHOR.MIDDLE, ins=(0.05, 0.0, 0.05, 0.0))
-    return inch(x), inch(y), inch(w), inch(h)
+def series_text():
+    """띠 알약 글 = 초안 1 과 같은 글 (초안 1 SERIES_FMT · 덱 넷의 D50 · 입도별 시드) = 초안 2 시트 §0-3 '띠 제목' (둘이 다르면 멈춤)."""
+    if 'v' not in _SERIES:
+        beds, common = src.load_all(with_end=False)
+        s = d1.SERIES_FMT.format(sizes=' · '.join(src.fmt_g(b['deck_vals']['d50_se_um']) for b in beds), seeds=common['seeds_per_size'])
+        t2 = src.rp('docs/50kg/report_y4/draft2/slide_text_draft2.md').read_text(encoding='utf-8')
+        m = re.search(r'^\| 띠 제목 \| (.+?) \|$', t2, flags=re.M)
+        src.need(m is not None and m.group(1) == s, f'띠 알약: 초안 1 글 "{s}" ≠ 초안 2 시트 띠 제목 "{m.group(1) if m else None}"')
+        _SERIES['v'] = s
+    return _SERIES['v']
+
+
+def band_tpl(slide, series, item1, item2):
+    """요약 띠 = 초안 1 band 와 같은 도형 (회색 둥근 틀 · 흰 틀 · 파란 알약 · ① ② 동그라미) — ① ② 글만 여러 줄 (반 폭 칸 · 위 맞춤).
+    ① = ② 머리 메시지 (KoPub 11 pt · 초안 1 항목 제목 글꼴) · ② = ③ 보충 한 줄 (맑은 고딕 11 pt · 초안 1 항목 설명 글꼴)."""
+    d1.autoshape(slide, 'band', MSO_SHAPE.ROUNDED_RECTANGLE, d1.BAND_OUT[:4], fill=d1.FAINT, adj=d1.BAND_OUT[4])
+    d1.autoshape(slide, 'band/in', MSO_SHAPE.ROUNDED_RECTANGLE, d1.BAND_IN[:4], fill='FFFFFF', line=d1.LINE_GRAY, line_w=1.0, adj=d1.BAND_IN[4])
+    tw = I(d1.est_text_width_in(series, 12, bold=True) + 0.30)
+    tab = d1.autoshape(slide, 'band/in/tab', MSO_SHAPE.ROUNDED_RECTANGLE,
+                       (d1.BAND_OUT[0] + (d1.BAND_OUT[2] - tw) // 2, d1.BAND_TAB[1], tw, d1.BAND_TAB[3]),
+                       fill='FFFFFF', line=d1.BLUE, line_w=1.0, adj=d1.BAND_TAB[4])
+    d1.shape_text(tab, [series], 12, color=d1.BLUE, bold=True, anchor=MSO_ANCHOR.MIDDLE, wrap=False, ins=(0.1, 0.0, 0.1, 0.0))
+    for k, (text, kind) in enumerate(((item1, 'ko'), (item2, 'desc'))):
+        (nx, ny), dd = d1.ITEM_NUM[k], d1.ITEM_NUM[2]
+        c = d1.autoshape(slide, f'band/in/i{k + 1}/num', MSO_SHAPE.OVAL, (nx, ny, dd, dd), fill='FFFFFF', line=d1.BLUE, line_w=1.0)
+        d1.shape_text(c, [str(k + 1)], 10, color=d1.BLUE, anchor=MSO_ANCHOR.MIDDLE, wrap=False, ins=(0, 0, 0, 0))
+        d1.textbox(slide, f'band/in/i{k + 1}/text', band_item_boxes()[k], [text], ITEM_PT, kind=kind, wrap=True,
+                   ins=(0.05, 0.02, 0.05, 0.02), anchor=MSO_ANCHOR.TOP)
 
 
 def cell_height(txt, size, width_in, bold=False):
@@ -557,25 +607,40 @@ def eq_rows(eq):
     return [[cells[0], cells[1]], [cells[2], cells[3]]], [TABLE_W / 2, TABLE_W / 2]
 
 
-def item_height(it, page='', side=''):
-    """패널 안 한 항목이 차지하는 높이 (in) — render_panel 과 같은 간격."""
+def item_extent(it, page='', side=''):
+    """패널 안 한 항목 → (도형 위 간격, 도형 높이, 도형 아래 간격) in — render_panel 과 같은 수 (d1.stack_text = 추정 높이 + 0.02)."""
     kind = it[0]
     br = BREAKS.get((page, f'{side}/{kind}'), ())
     if kind == 'head':
-        return d1.est_box_height([screen_text(it[1], br)], HEAD_PT, TEXT_W, 1.0) + 0.02 + 0.01
+        return 0.0, d1.est_box_height([screen_text(it[1], br)], HEAD_PT, TEXT_W, 1.0) + 0.02, 0.01
     if kind == 'fig':
-        return 0.01 + fig_info(it[1])[1][1] + 0.03
+        return 0.01, fig_info(it[1])[1][1], 0.03
     if kind in ('below', 'text'):
-        return d1.est_box_height([screen_text(it[1], br)], BELOW_PT, TEXT_W, 1.2, kind='desc') + 0.02
+        return 0.0, d1.est_box_height([screen_text(it[1], br)], BELOW_PT, TEXT_W, 1.2, kind='desc') + 0.02, 0.0
     if kind == 'cap':
-        return d1.est_box_height(['【 ' + screen_text(it[1]) + ' 】'], CAP_PT, 4.50, 1.0, kind='desc') + 0.02 + 0.04
+        return 0.0, d1.est_box_height(['【 ' + screen_text(it[1]) + ' 】'], CAP_PT, 4.50, 1.0, kind='desc') + 0.02, 0.04
     if kind == 'table':
         rows, merges, col_w = table_rows(it[1])
-        return 0.02 + sum(table_heights(col_w, rows, merges)) + 0.06
+        return 0.02, sum(table_heights(col_w, rows, merges, size=it[1]['size'])), 0.06
     if kind == 'eqtable':
         rows, cw = eq_rows(it[1])
-        return 0.02 + sum(table_heights(cw, rows, head=False)) + 0.06
+        return 0.02, sum(table_heights(cw, rows, head=False)), 0.06
     raise ValueError(kind)
+
+
+def item_height(it, page='', side=''):
+    a, h, b = item_extent(it, page, side)
+    return a + h + b
+
+
+def stack_bottom(items, page='', side=''):
+    """패널 안 마지막 도형의 아래 끝 (in) — render_panel 의 쌓기와 같다 (넘침 판단 = 이 값 > 패널 바닥)."""
+    y, bottom = content_top(), content_top()
+    for it in items:
+        a, h, b = item_extent(it, page, side)
+        bottom = y + a + h
+        y = bottom + b
+    return bottom
 
 
 def render_panel(slide, side, items, box, page=''):
@@ -599,7 +664,8 @@ def render_panel(slide, side, items, box, page=''):
             y = d1.stack_text(slide, f'{side}/text', x0, y, w0, [screen_text(it[1])], BELOW_PT, kind='desc', spacing=1.2)
         elif kind == 'table':
             rows, merges, col_w = table_rows(it[1])
-            y = table3(slide, f'{side}/table', x0 + 0.02, y + 0.02, col_w, rows, head=True, merges=merges, align=it[1]['align']) + 0.06
+            y = table3(slide, f'{side}/table', x0 + 0.02, y + 0.02, col_w, rows, head=True, merges=merges, align=it[1]['align'],
+                       size=it[1]['size']) + 0.06
         elif kind == 'eqtable':
             rows, cw = eq_rows(it[1])
             y = table3(slide, f'{side}/eqtable', x0 + 0.02, y + 0.02, cw, rows, head=False, align='LL', shade_first_col=False) + 0.06
@@ -608,35 +674,42 @@ def render_panel(slide, side, items, box, page=''):
 
 def note3(slide, text):
     d1.textbox(slide, 'note', note_box(), [text], NOTE_PT, color=d1.GRAY_TXT, kind='desc', wrap=True, anchor=MSO_ANCHOR.MIDDLE,
-               ins=(0.05, 0.02, 0.05, 0.02))
+               ins=LINE_INS)
 
 
 def foot3(slide, text):
     d1.textbox(slide, 'foot', foot_box(), [text], FOOT_PT, color=d1.GRAY_TXT, kind='desc', wrap=True, anchor=MSO_ANCHOR.TOP,
-               ins=(0.05, 0.02, 0.05, 0.02))
+               ins=LINE_INS)
 
 
 def page_number3(slide, label):
-    """쪽 번호 자리 (초안 1 page_number 와 같은 상자 · 크기 · 색 · 글꼴) — 글 = 시트 쪽 이름 (0–7 · 부록)."""
-    x, y, w, h = (inch(v) for v in d1.SLDNUM)
-    d1.textbox(slide, 'pgnum', (x, y, w, h), [label], 12, color='404040', kind='desc', align=PP_ALIGN.RIGHT, anchor=MSO_ANCHOR.MIDDLE,
+    """쪽 번호 (초안 1 page_number 와 같은 크기 · 색 · 글꼴 · 오른쪽 끝 · 오른쪽 맞춤) — 글 = 시트 쪽 이름 (0–7 · 부록) · 상자 = PGNUM_BOX."""
+    d1.textbox(slide, 'pgnum', PGNUM_BOX, [label], 12, color='404040', kind='desc', align=PP_ALIGN.RIGHT, anchor=MSO_ANCHOR.MIDDLE,
                wrap=False, ins=(0.1, 0.05, 0.1, 0.05))
 
 
 def notes_for(P):
     lines = [notes_text(b) for b, _ in P['bullets']]
     out = '발표자 노트\n' + '\n'.join('- ' + b for b in lines)
+    if P['to_notes']:
+        out += '\n\n화면 자리 부족 → 발표자 노트\n' + '\n'.join(f'- {NOTE_LABELS[(P["key"], side, kind)]}: {notes_text(t)}'
+                                                         for side, kind, t, _, _ in P['to_notes'])
     out += '\n\n하지 않을 말\n' + '\n'.join(f'- {notes_text(a)} — {notes_text(b)}' for a, b, _ in P['dont'])
     return out
+
+
+def page_title(P):
+    """머리 쪽 제목 = 시트 절 제목 ('## N쪽 — …' · '## 부록 — …' 의 뒤) — ' — ' 뒤의 고침 표지 (0쪽 '— 11-01 추가 · …') 는 뗀다."""
+    return P['heading'].split(' — ')[0]
 
 
 def build_page(prs, P):
     s = prs.slides.add_slide(prs.slide_layouts[0])
     k = P['key']
-    d1.header(s, screen_text(P['title'][0]))
-    band3(s, screen_text(P['band'][0], BREAKS.get((k, 'band'), ())))
+    d1.header(s, screen_text(page_title(P)))
+    band_tpl(s, series_text(), screen_text(P['title'][0], BREAKS.get((k, 'band/i1'), ())), screen_text(P['band'][0], BREAKS.get((k, 'band/i2'), ())))
     for side in ('L', 'R'):
-        box = panel3(s, side, screen_text(P['tabs'][side][0]))
+        box, _ = d1.panel(s, side, screen_text(P['tabs'][side][0]))
         render_panel(s, side, P[side], box, k)
     note3(s, screen_text(P['note'][0]))
     if P['foot']:
@@ -670,7 +743,7 @@ def build(out=OUT_DECK):
 
 def screen_strings(P):
     """쪽의 화면 글 (시트 꼴) 전부 — 아래첨자 목록용."""
-    out = [P['title'][0], P['band'][0], P['note'][0], P['tabs']['L'][0], P['tabs']['R'][0]] + ([P['foot'][0]] if P['foot'] else [])
+    out = [page_title(P), P['title'][0], P['band'][0], P['note'][0], P['tabs']['L'][0], P['tabs']['R'][0]] + ([P['foot'][0]] if P['foot'] else [])
     for side in ('L', 'R'):
         for it in P[side]:
             if it[0] in ('head', 'below', 'text', 'cap'):
@@ -700,35 +773,31 @@ def measure():
     sheet = read_sheet()
     pages = [page_content(sheet, k) for k in PAGES]
     ct = content_top()
-    avail = PANEL3_BOTTOM - 0.04 - ct
-    print(f'band {BAND3_H} in · tab y {inch(tab_y()):.3f} · panel y {inch(panel_y()):.3f} · content top {ct:.3f} · panel bottom {PANEL3_BOTTOM} '
-          f'· available {avail:.3f} in')
+    print(f'content top {ct:.3f} · panel bottom {PANEL3_BOTTOM} · room {PANEL3_BOTTOM - ct:.3f} in · pill "{series_text()}"')
     pw = inch(d1.PANEL[2])
+    ib = band_item_boxes()
     for P in pages:
         k = P['key']
-        tw = d1.est_text_width_in(screen_text(P['title'][0]), TITLE_PT, bold=True)
-        print(f'— {k}쪽 title width {tw:.2f} in (room {10 - inch(d1.HDR_TITLE[0]) - 0.12:.2f})')
-        bw = inch(IN_W) - 0.12
-        bt = screen_text(P['band'][0], BREAKS.get((k, 'band'), ()))
-        bh = d1.est_box_height([bt], BAND_PT, bw, 1.0, (0.05, 0.02, 0.05, 0.02), kind='desc')
-        for seg in bt.split('\n'):
-            print(f'   band line width {d1.est_text_width_in(seg, BAND_PT):.2f} in (room {bw - 0.10:.2f})')
-        print(f'   band text height {bh:.3f} (inner {inch(BAND_Y + I(BAND3_H) - IN_BOT_GAP - IN_Y) - 0.04:.3f})')
-        nw = note_box()[2]
-        nh = d1.est_box_height([screen_text(P['note'][0])], NOTE_PT, nw, 1.0, (0.05, 0.02, 0.05, 0.02), kind='desc')
-        print(f'   note height {nh:.3f} (box {NOTE3_H})')
+        tw = d1.est_text_width_in(screen_text(page_title(P)), TITLE_PT, bold=True)
+        print(f'— {k}쪽 title "{page_title(P)}" width {tw:.2f} in (room {10 - inch(d1.HDR_TITLE[0]) - 0.12:.2f})')
+        for j, (t, kind) in enumerate(((P['title'][0], 'ko'), (P['band'][0], 'desc'))):
+            st = screen_text(t, BREAKS.get((k, f'band/i{j + 1}'), ()))
+            h = d1.est_box_height([st], ITEM_PT, ib[j][2], 1.0, (0.05, 0.02, 0.05, 0.02), kind=kind)
+            print(f'   band item {j + 1} height {h:.3f} (box {ib[j][3]:.3f}) · forced lines {st.count(chr(10)) + 1}')
+        nh = d1.est_box_height([screen_text(P['note'][0])], NOTE_PT, NOTE3_BOX[2], 1.0, LINE_INS, kind='desc')
+        print(f'   note height {nh:.3f} (box {NOTE3_BOX[3]})')
         if P['foot']:
-            fh = d1.est_box_height([screen_text(P['foot'][0])], FOOT_PT, foot_box()[2], 1.0, (0.05, 0.02, 0.05, 0.02), kind='desc')
-            print(f'   foot height {fh:.3f} (box {FOOT3_H})')
+            fh = d1.est_box_height([screen_text(P['foot'][0])], FOOT_PT, FOOT3_BOX[2], 1.0, LINE_INS, kind='desc')
+            print(f'   foot height {fh:.3f} (box {FOOT3_BOX[3]})')
         for side in ('L', 'R'):
             tabw = d1.est_text_width_in(screen_text(P['tabs'][side][0]), 12) + 0.24
-            y = ct
-            parts = []
-            for it in P[side]:
-                h = item_height(it, k, side)
-                parts.append(f'{it[0]} {h:.2f}')
-                y += h
-            print(f'   {side} tab {tabw:.2f}/{pw:.2f} · ' + ' + '.join(parts) + f' → bottom {y:.3f} (limit {PANEL3_BOTTOM - 0.04:.3f})')
+            parts = [f'{it[0]} {item_height(it, k, side):.2f}' for it in P[side]]
+            print(f'   {side} tab {tabw:.2f}/{pw:.2f} · ' + ' + '.join(parts) +
+                  f' → last bottom {stack_bottom(P[side], k, side):.3f} (panel bottom {PANEL3_BOTTOM})')
+        for e in P['fit']:
+            print(f'   moved to notes: {e}')
+        for side, kind, _, _, why in P['to_notes']:
+            print(f'   notes: {side}/{kind} — {why}')
 
 
 # ───────────────────────────── 검사 (저장된 덱을 다시 읽는다) ─────────────────────────────
@@ -765,8 +834,9 @@ def _n(s):
 
 
 def expected_texts(P):
-    """화면 도형 이름 → 시트 글 (md 뗀 꼴) — 검사 V 의 기준."""
-    E = {'hdr/title': P['title'][0], 'band/in/text': P['band'][0], 'note': P['note'][0], 'L/tab': P['tabs']['L'][0], 'R/tab': P['tabs']['R'][0]}
+    """화면 도형 이름 → 시트 글 (md 뗀 꼴) — 검사 V 의 기준.  띠 알약 = 초안 1 띠 제목 (series_text) · ① ② 동그라미 = 숫자."""
+    E = {'hdr/title': page_title(P), 'band/in/i1/text': P['title'][0], 'band/in/i2/text': P['band'][0], 'band/in/tab': series_text(),
+         'band/in/i1/num': '1', 'band/in/i2/num': '2', 'note': P['note'][0], 'L/tab': P['tabs']['L'][0], 'R/tab': P['tabs']['R'][0]}
     if P['foot']:
         E['foot'] = P['foot'][0]
     for side in ('L', 'R'):
@@ -960,7 +1030,8 @@ def check_deck(path, info=None):
     for P, s in zip(pages, slides):
         sec = '\n'.join(ln for _, ln in sheet['secs'][P['key']]['lines'])
         sec_toks = set(re.findall(r'\d+(?:\.\d+)?', sec))
-        t = '\n'.join(sp.text_frame.text for sp in s.shapes if sp.has_text_frame and sp.name not in ('pgnum', 'hdr/sq/num', 'hdr/proj'))
+        skip = ('pgnum', 'hdr/sq/num', 'hdr/proj', 'band/in/tab', 'band/in/i1/num', 'band/in/i2/num')   # 양식 · 초안 1 글 (V1 이 따로 대조)
+        t = '\n'.join(sp.text_frame.text for sp in s.shapes if sp.has_text_frame and sp.name not in skip)
         t += '\n' + '\n'.join(c.text for sp in s.shapes if getattr(sp, 'has_table', False) and sp.has_table for r in sp.table.rows for c in r.cells)
         unk = sorted({tk for tk in re.findall(r'\d+(?:\.\d+)?', t) if tk not in sec_toks})
         if unk:
@@ -1200,7 +1271,8 @@ def _mut_cell(prs):
 MUTATIONS = [
     ('shape overlap (2쪽 L/cap moved onto L/fig)', lambda p: setattr(_shape(p.slides[2], 'L/cap'), 'top', _shape(p.slides[2], 'L/fig').top + I(0.5)),
      'C6 no overlapping'),
-    ('text overflow (3쪽 band text made long)', lambda p: _set_first_run(_shape(p.slides[3], 'band/in/text'), '가' * 300), 'C5 every text box'),
+    ('text overflow (3쪽 band item ② made long)', lambda p: _set_first_run(_shape(p.slides[3], 'band/in/i2/text'), '가' * 300), 'C5 every text box'),
+    ('pill text ≠ draft-1 series line (7쪽)', lambda p: _set_first_run(_shape(p.slides[7], 'band/in/tab'), '4차년도 DEM 해석'), 'V1 every screen text'),
     ('forbidden wording on screen (7쪽 note "최적 입도")', lambda p: _set_first_run(_shape(p.slides[7], 'note'), '최적 입도 = 1 µm'), 'C4 forbidden wording absent'),
     ('retracted value (1쪽 note = quotation_ban pattern)', lambda p: _set_first_run(_shape(p.slides[1], 'note'), _ban_pattern()), 'C4 quotation_ban'),
     ('Stage-E outside the limit phrase (4쪽 L/cap)', lambda p: _set_first_run(_shape(p.slides[4], 'L/cap'), 'Stage-E σ 로 비교'), 'C4 "Stage-E"'),
@@ -1256,7 +1328,12 @@ def _main():
     ap.add_argument('--selftest', action='store_true', help='검사기 변이 시험')
     ap.add_argument('--measure', action='store_true', help='패널마다 쌓은 높이 · 넘침 (덱 안 씀)')
     ap.add_argument('--json', default=str(OUT_CHECKS))
+    ap.add_argument('--render-dir', default=str(RENDER_DIR), help='쪽 PNG 폴더 (평가 덱은 리포 밖으로)')
+    ap.add_argument('--p0-heads-to-notes', action='store_true',
+                    help='평가용 (기본 끔): 0쪽 두 글머리도 넘치면 노트로 — 커밋 덱은 이 선택 없이 만든다')
     a = ap.parse_args()
+    global ACTIVE_FALLBACK
+    ACTIVE_FALLBACK = FIT_FALLBACK_B if a.p0_heads_to_notes else FIT_FALLBACK
     if a.measure:
         measure()
         return 0
@@ -1286,15 +1363,22 @@ def _main():
                 (f" · rows over {e['rows_over']}" if 'rows_over' in e else '')
         print(f"  {e['page']}쪽 {e['element']} ({e['kind']}) bottom {e['bottom_in']} > panel {e['panel_bottom_in']} = +{e['over_in']} in"
               f"{' · past slide bottom +' + str(e['slide_bottom_over_in']) if e['slide_bottom_over_in'] else ''}{extra}")
+    moved = {P['key']: [dict(side=side, kind=kind, label=NOTE_LABELS[(P['key'], side, kind)], sheet_line=no, reason=why)
+                        for side, kind, _, no, why in P['to_notes']] for P in info['pages'] if P['to_notes']}
+    for k, lst in moved.items():
+        for e in lst:
+            print(f"  → notes {k}쪽 {e['label']} (sheet line {e['sheet_line']}): {e['reason']}")
     rec = dict(deck=out.name, deck_sha256=hashlib.sha256(out.read_bytes()).hexdigest(), sheet=SHEET, sheet_sha256=info['sheet']['sha256'],
-               checks=C.items, overflow=ov, subscripts=subscript_inventory(info['pages']),
+               variant='p0-heads-to-notes' if a.p0_heads_to_notes else 'default', pill=series_text(),
+               checks=C.items, overflow=ov, moved_to_notes=moved, fit={P['key']: P['fit'] for P in info['pages'] if P['fit']},
+               subscripts=subscript_inventory(info['pages']),
                figures={f'{P["key"]}/{side}': it[1] for P in info['pages'] for side in ('L', 'R') for it in P[side] if it[0] == 'fig'})
     if a.selftest:
         st, nbad = selftest(out)
         rec['selftest'] = st
         nf += nbad
     if a.render:
-        pdf, pngs = d1.render(out, outdir=RENDER_DIR, pdf_out=out.with_suffix('.pdf'))
+        pdf, pngs = d1.render(out, outdir=Path(a.render_dir), pdf_out=out.with_suffix('.pdf'))
         R = render_checks(pdf, out)
         nf += d1.report(R, 'render checks')
         rec['render'] = dict(pdf=pdf.name, pngs=[p.name for p in pngs], checks=R.items)

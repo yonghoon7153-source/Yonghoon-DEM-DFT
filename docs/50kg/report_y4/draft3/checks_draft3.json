@@ -1,8 +1,10 @@
 {
  "deck": "kg50_report_y4_draft3.pptx",
- "deck_sha256": "9a21014dc9089e6152a6f25da85ef4fc5556270fcf7d2d67ae9a3b9565e308c2",
+ "deck_sha256": "f717d16d598c148de1aca70622130e8010c92bdfbad52975eeea66278469fcdf",
  "sheet": "docs/50kg/report_y4/draft2/slide_text_draft3.md",
- "sheet_sha256": "de0066f59246c6148ebf01ef6a85381e0e1c371aab8947e98b542391bbb0a451",
+ "sheet_sha256": "587b493aa3c35d7d34b6e23daf6b87d90276b557237a8357d8bc689b545df4f1",
+ "variant": "default",
+ "pill": "4차년도 DEM 해석 — SE 입도 0.7 · 1 · 2 · 3 µm 비교 (입도별 시드 1)",
  "checks": [
   {
    "check": "C1 slide count = 9 (0쪽 · 1–7쪽 · 부록)",
@@ -72,12 +74,12 @@
   {
    "check": "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
    "ok": false,
-   "detail": "[('0', 'L/below', 'note'), ('0', 'L/cap', 'note'), ('0', 'L/cap', 'foot'), ('0', 'R/cap', 'note'), ('0', 'R/cap', 'foot'), ('0', 'R/cap', 'pgnum'), ('부록', 'R/table', 'note'), ('부록', 'R/table', 'pgnum')]"
+   "detail": "[('0', 'L/fig', 'note'), ('0', 'R/eqtable', 'note'), ('0', 'R/eqtable', 'foot'), ('0', 'R/eqtable', 'pgnum'), ('부록', 'R/table', 'note'), ('부록', 'R/table', 'pgnum')]"
   },
   {
    "check": "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide",
    "ok": false,
-   "detail": "[('0', 'L/below', 'not inside L', 0.175), ('0', 'L/cap', 'not inside L', 0.497), ('0', 'R/cap', 'not inside R', 0.489), ('부록', 'R/table', 'not inside R', 0.776)]"
+   "detail": "[('0', 'L/fig', 'not inside L', 0.183), ('0', 'R/eqtable', 'not inside R', 0.302), ('부록', 'R/table', 'not inside R', 0.211)]"
   },
   {
    "check": "C6 nothing (but header text) inside the template header band (y < 0.911 in)",
@@ -114,71 +116,87 @@
   {
    "page": "0",
    "side": "L",
-   "element": "L/below",
-   "over_in": 0.175,
-   "top_in": 6.595,
-   "bottom_in": 7.015,
-   "panel_bottom_in": 6.84,
+   "element": "L/fig",
+   "over_in": 0.183,
+   "top_in": 3.053,
+   "bottom_in": 7.153,
+   "panel_bottom_in": 6.97,
    "slide_bottom_over_in": 0.0,
-   "kind": "text",
-   "chars_over": 36,
-   "chars_total": 97,
-   "lines_over": 1,
-   "lines_total": 2
-  },
-  {
-   "page": "0",
-   "side": "L",
-   "element": "L/cap",
-   "over_in": 0.497,
-   "top_in": 7.015,
-   "bottom_in": 7.337,
-   "panel_bottom_in": 6.84,
-   "slide_bottom_over_in": 0.0,
-   "kind": "text",
-   "chars_over": 112,
-   "chars_total": 112,
-   "lines_over": 2,
-   "lines_total": 2
+   "kind": "picture"
   },
   {
    "page": "0",
    "side": "R",
-   "element": "R/cap",
-   "over_in": 0.489,
-   "top_in": 6.744,
-   "bottom_in": 7.329,
-   "panel_bottom_in": 6.84,
+   "element": "R/eqtable",
+   "over_in": 0.302,
+   "top_in": 5.853,
+   "bottom_in": 7.272,
+   "panel_bottom_in": 6.97,
    "slide_bottom_over_in": 0.0,
-   "kind": "text",
-   "chars_over": 194,
-   "chars_total": 194,
-   "lines_over": 4,
-   "lines_total": 4
+   "kind": "table",
+   "chars_over": 212,
+   "chars_total": 390,
+   "rows_over": [
+    1
+   ]
   },
   {
    "page": "부록",
    "side": "R",
    "element": "R/table",
-   "over_in": 0.776,
-   "top_in": 2.058,
-   "bottom_in": 7.616,
-   "panel_bottom_in": 6.84,
-   "slide_bottom_over_in": 0.116,
+   "over_in": 0.211,
+   "top_in": 2.646,
+   "bottom_in": 7.181,
+   "panel_bottom_in": 6.97,
+   "slide_bottom_over_in": 0.0,
    "kind": "table",
-   "chars_over": 361,
-   "chars_total": 1261,
+   "chars_over": 91,
+   "chars_total": 1312,
    "rows_over": [
-    6,
     7
    ]
   }
  ],
+ "moved_to_notes": {
+  "0": [
+   {
+    "side": "L",
+    "kind": "below",
+    "label": "④-1 덱 값 (2 × 2 그림 아래 한 줄)",
+    "sheet_line": 101,
+    "reason": "넣으면 마지막 도형 아래 7.603 in > 패널 바닥 6.97 in"
+   },
+   {
+    "side": "L",
+    "kind": "cap",
+    "label": "④-1 그림 캡션",
+    "sheet_line": 110,
+    "reason": "시트 표지 (화면 자리 부족 → 발표자 노트)"
+   },
+   {
+    "side": "R",
+    "kind": "cap",
+    "label": "④-2 그림 캡션",
+    "sheet_line": 125,
+    "reason": "시트 표지 (화면 자리 부족 → 발표자 노트)"
+   }
+  ]
+ },
+ "fit": {
+  "0": [
+   {
+    "side": "L",
+    "moved": "below",
+    "bottom_with_in": 7.603,
+    "bottom_without_in": 7.153,
+    "panel_bottom_in": 6.97
+   }
+  ]
+ },
  "subscripts": {
   "0": [
    "(F_n,ij",
    "(R_i",
-   "(k_t",
    "F_n",
    "F_t",
    "F_t,ij",
@@ -228,6 +246,8 @@
   ],
   "부록": [
    "(f_gap",
+   "/f_gap",
+   "/f_mc",
    "/σ_eff",
    "L_gap",
    "L_mc",
@@ -237,7 +257,9 @@
    "ε_sphere",
    "σ_eff",
    "σ_ion",
-   "φ_SE"
+   "φ_SE",
+   "φ_mc",
+   "φ_sphere"
   ]
  },
  "figures": {
@@ -274,12 +296,20 @@
    ]
   },
   {
-   "mutation": "text overflow (3쪽 band text made long)",
+   "mutation": "text overflow (3쪽 band item ② made long)",
    "expect": "C5 every text box",
    "ok": true,
    "failed": [
     "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
     "C5 every text box: estimated text height ≤ box (conservative widths: Hangul 1 em · Latin DejaVu)"
+   ]
+  },
+  {
+   "mutation": "pill text ≠ draft-1 series line (7쪽)",
+   "expect": "V1 every screen text",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)"
    ]
   },
   {
@@ -359,6 +389,7 @@
    "expect": "C6 children inside",
    "ok": true,
    "failed": [
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
     "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide"
    ]
   },
@@ -402,12 +433,12 @@
    {
     "check": "R2 no two rendered words overlap by > 1 pt in both directions",
     "ok": false,
-    "detail": "[('0', 'MPa', '네', 2.5, 1.7), ('0', 'MPa', '침대', 11.1, 1.7), ('0', '에서', '침대', 2.4, 2.2), ('0', '에서', '=', 7.5, 1.9), ('0', '정지', '같은', 14.8, 2.2), ('0', '·', '절차', 1.1, 1.7), ('0', '④', '절차', 7.2, 1.7), ('0', '판', '절차', 2.8, 2.2), ('0', '고정', '같은', 11.1, 2.2), ('0', '10⁵', '같은', 2.6, 1.7), ('0', '10⁵', '접촉', 8.2, 1.7), ('0', 'step', '접촉', 7.3, 1.7), ('0', 'step', '모델', 7.4, 1.7), ('0', '(', '모델', 3.1, 1.7), ('0', '언로딩', '모델', 3.0, 2.2), ('0', '언로딩', '—', 9.0, 2.2), ('0', '언로딩', '덱에서', 6.6, 2.2), ('0', '없음', '덱에서', 16.0, 2.2), ('0', '·', '쪽', 2.2, 6.1), ('0', '위', ')', 3.5, 6.3)]"
+    "detail": "[('0', '때', '(1', 6.0, 8.0), ('0', '쪽', 'k₁', 4.6, 7.8), ('0', '쪽', '남는다', 7.9, 2.9), ('0', 'k₁', ')', 1.0, 7.5), ('0', '누를', '수', 9.0, 8.3), ('0', '수', '가', 6.5, 2.9), ('0', '(1', '남는다', 9.2, 2.4), ('0', '가', '(−γv)', 7.9, 4.2), ('0', '남는다', '(−γv)', 9.1, 4.2), ('0', '남는다', '·', 2.2, 4.2), ('0', '남는다', '접선', 6.7, 4.5)]"
    },
    {
     "check": "R3 every rendered word inside the page",
-    "ok": false,
-    "detail": "[('부록', '⑦'), ('부록', '실행'), ('부록', '차이'), ('부록', 'µm'), ('부록', '대비'), ('부록', '2'), ('부록', 'µm'), ('부록', '3.4'), ('부록', '·'), ('부록', '1'), ('부록', 'µm'), ('부록', '27'), ('부록', '배'), ('부록', '·'), ('부록', '실행'), ('부록', '이력'), ('부록', '1'), ('부록', '쪽'), ('부록', '각주')]"
+    "ok": true,
+    "detail": ""
    },
    {
     "check": "R4 unique words of each text box render inside that box (± 2 pt)",
@@ -421,8 +452,8 @@
    },
    {
     "check": "R6 no slide text rendered over a figure",
-    "ok": true,
-    "detail": ""
+    "ok": false,
+    "detail": "[('0', 'L/fig', '네'), ('0', 'L/fig', '침대'), ('0', 'L/fig', '='), ('0', 'L/fig', '같은'), ('0', 'L/fig', '절차'), ('0', 'L/fig', '·'), ('0', 'L/fig', '같은'), ('0', 'L/fig', '접촉'), ('0', 'L/fig', '모델'), ('0', 'L/fig', '—'), ('0', 'L/fig', '덱에서'), ('0', 'L/fig', '다른'), ('0', 'L/fig', '것'), ('0', 'L/fig', '='), ('0', 'L/fig', 'SE'), ('0', 'L/fig', '반지름'), ('0', 'L/fig', '·'), ('0', 'L/fig', '시드')]"
    }
   ]
  },
