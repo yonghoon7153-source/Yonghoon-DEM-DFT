@@ -2078,7 +2078,10 @@ JOURNAL_GAPS = {("2026-08-26", "2026-09-07"): "커밋 806개",
                 # 2026-10-05 실측 (KST · friendly + 대피 브랜치 합집합 · 중복 제거):
                 #   git log HEAD origin/claude/friendly-meitner-lldvar --since="2026-09-25T00:00:00+09:00"
                 #     --until="2026-10-04T23:59:59+09:00" --format=%H | sort -u | wc -l
-                ("2026-09-25", "2026-10-04"): "커밋 298개 — 그 흐름은 주간 정리 09-27 · 10-04 (/weekly) 와 kb/open_items.md ⏭-NOW-x~z6"}
+                ("2026-09-25", "2026-10-04"): "커밋 298개 — 그 흐름은 주간 정리 09-27 · 10-04 (/weekly) 와 kb/open_items.md ⏭-NOW-x~z6",
+                # 2026-11-01 실측 (KST · 이 브랜치 HEAD — 10-22 대피 세션 커밋은 fast-forward 로 이미 들어와 있다):
+                #   git log HEAD --since="2026-10-06T00:00:00+09:00" --until="2026-10-31T23:59:59+09:00" --format=%H | sort -u | wc -l
+                ("2026-10-06", "2026-10-31"): "커밋 637개 — 그 흐름은 주간 정리 10-25 · 11-01 (/weekly) 와 kb/open_items.md ⏭-NOW-z9~z28"}
 
 
 @app.route("/log")

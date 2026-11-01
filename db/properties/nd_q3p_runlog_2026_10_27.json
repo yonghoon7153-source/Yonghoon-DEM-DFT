@@ -85,5 +85,12 @@
   "tmux": "ndrerun — tmux ndq3p (ELF) 가 끝나면 run_force_check_scf.sh $HOME/work/runs/nd_q3p_rerun_1030/bader (MP_07 하나 · 같은 scf.in · cmp ✓ · MIN_FREE_MIB 16000) → scf_run.log",
   "다음": "SCF 끝나면 run_bader_pp_kgy.sh R=$HOME/work/runs/nd_q3p_rerun_1030 MODELS=MP_07 → pp_ae.out 음의 밀도 · BCF 극대 수를 첫 판 (0.1885 e · 7,580) · MLi_04 (0.00064 e · 692) 와 대조",
   "by": "agent · 2026-10-30"
+ },
+ "주석_2026_11_01_잡음_분포_정의": {
+  "무엇": "`Bader_MP_07_진단_2026_10_30` 잡음_분포 의 원소별 '원자당' 수 (MP_07 Li 164 · Nd 162 … / MLi_04 Li 5 · Nd 61 …) 는 평균이 아니라 **위쪽 중앙값** (원소의 원자별 극대 수를 정렬해 sorted[n//2] · 원자 둘이면 큰 쪽) 이다 — 10-30 진단 명령이 그 정의로 냈다 (원문은 고치지 않는다)",
+  "확인": "tools/figures/fig_weekly_2026_11_01.py — BCF.dat 'ATOM' 열로 원자별로 세어 기록과 대조 · 평균으로 대조하니 빨강 (MP_07 Li 160 · Nd 151 · Cl 90 · S 75 · O 29 · P 24) · 위쪽 중앙으로 대조하니 전부 일치 · 셀 전체 원자당 (MP_07 115 · MLi_04 12 · Q3 7.8) 은 평균이라 그대로 맞다",
+  "결론에_미치는_영향": "없음 — 평균으로 봐도 위쪽 중앙으로 봐도 MP_07 이 원소마다 MLi_04 보다 많다 (약 3–33 배 · Nd 가 가장 작고 Li 가 가장 크다) · 판독 보류 근거 그대로",
+  "그림": "docs/figures/weekly_2026_11_01/nd_q3p_bader_density_check.png · Origin CSV db/properties/weekly_nd_q3p_bader_density_check_origin_2026_11_01.csv (원자 한 줄)",
+  "by": "agent · 2026-11-01"
  }
 }
