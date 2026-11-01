@@ -44,8 +44,11 @@
       <li><a href="/seminar" class="{% if active == 'seminar' %}active{% endif %}">
         <span class="icon">&#x1F5E3;&#xFE0F;</span> 연구 세미나
       </a></li>
-      <li><a href="/worklog" class="{% if active == 'worklog' %}active{% endif %}">
-        <span class="icon">&#x1F4D3;</span> 작업일지
+      {# 11-01: 주간보고도 이 창구 (docs/worklog/weekly_YYYYMMDD.md · 최신순 자동) — 1저자 "주간보고하고 웹앱 추가하자".
+         app.py 는 봉인 32 라 새 라우트 없이 이름만 바꾼다 · 시험 webapp/test_worklog_weekly_20261101.py #}
+      <li><a href="/worklog" class="{% if active == 'worklog' %}active{% endif %}"
+             title="주 단위 진행 정리 — docs/worklog/weekly_*.md 를 최신순으로 (새 주간보고는 파일만 더하면 뜬다)">
+        <span class="icon">&#x1F4D3;</span> 작업일지 · 주간보고
       </a></li>
       <li><a href="/mixer" class="{% if active == 'mixer' %}active{% endif %}">
         <span class="icon">&#x1F300;</span> 믹서 (이력 · 침대)
