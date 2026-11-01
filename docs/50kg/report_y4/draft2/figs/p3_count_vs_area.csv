@@ -1,0 +1,13 @@
+panel,bed,status,value
+a_am_se_cn,D0.7,결과 대기,
+a_am_se_cn,D1,ok,99.7069548
+a_am_se_cn,D2,ok,24.0580689
+a_am_se_cn,D3,ok,10.3103914
+b_area_per_am,D0.7,결과 대기,
+b_area_per_am,D1,ok,21.000328
+b_area_per_am,D2,ok,22.551766
+b_area_per_am,D3,ok,20.3193503
+c_area_per_contact,D0.7,결과 대기,
+c_area_per_contact,D1,ok,0.210620494
+c_area_per_contact,D2,ok,0.937388926
+c_area_per_contact,D3,ok,1.9707641

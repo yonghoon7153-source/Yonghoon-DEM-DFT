@@ -1,0 +1,17 @@
+bed,status,kind,basis,f_d,f_3um,f_ratio_d_over_3um,sigma_3um_mScm,sigma_req_mScm,band_lo_mScm,band_hi_mScm,sigma_meas_mScm,sample_d50_um,note
+D0.7,결과 대기,required,,,,,,,,,,,f 결과 대기
+D0.7,결과 대기,measured,,,,,,,,,2.25,0.66,SE 펠릿 실측 (3차년도) · 시료 대응 미확인
+D1,ok,required,f_mc Hertz,0.0468031947,0.019512549,2.39862022,5.1,2.12622238,,,,,
+D1,ok,required,f_mc Physics,0.080639804,0.0378072915,2.13291671,5.1,2.39109196,,,,,
+D1,ok,required,f_gap Hertz,0.04755623,0.02038472,2.33293516,5.1,2.18608733,,,,,
+D1,ok,required,f_gap Physics,0.08193725,0.0394972,2.07450781,5.1,2.45841446,,,,,
+D1,ok,band,,,,,,,2.12622238,2.45841446,,,
+D1,ok,measured,,,,,,,,,2.3,1,SE 펠릿 실측 (3차년도)
+D2,ok,required,f_mc Hertz,0.0333861909,0.019512549,1.71101125,5.1,2.98069344,,,,,
+D2,ok,required,f_mc Physics,0.063766841,0.0378072915,1.68662812,5.1,3.02378452,,,,,
+D2,ok,required,f_gap Hertz,0.03457565,0.02038472,1.69615526,5.1,3.00680022,,,,,
+D2,ok,required,f_gap Physics,0.06603868,0.0394972,1.67198384,5.1,3.05026872,,,,,
+D2,ok,band,,,,,,,2.98069344,3.05026872,,,
+D2,ok,measured,,,,,,,,,,,실측 결측
+D3,ok,reference,,,,,,5.1,,,,,기준 (σ_req = 실측)
+D3,ok,measured,,,,,,,,,5.1,3,SE 펠릿 실측 (3차년도)

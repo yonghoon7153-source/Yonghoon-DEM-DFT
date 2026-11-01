@@ -1,0 +1,42 @@
+# 초안 3 (회사 보고판 · 11-01) 새 그림 셋 검사 기록
+# - make_draft2_figs.py --check 출력 (그림 16 · 앞 13 + 새 셋 p3_count_vs_area · p5_breakeven_sigma · p6_constriction_share)
+# - 결정성: 두 번 그린 figs/ 49 파일 (그림 16 × PNG · SVG · CSV + figs_meta.json) sha256 같음 · 앞 그림 13 의 39 파일 = 작업 전 커밋 c3714b547 과 바이트 같음 (git 차이 없음)
+# - 가드 변이 탐침: 메모리 안에서 입력을 바꿔 새 그림의 가드 (src.need) 가 멈추는지 · 대조 = 바꾸지 않은 입력 · 합성 = D0.7 자리에 D1 기록을 복사해 네 침대가 다 찬 꼴 (임시 스크립트 · 리포에 넣지 않음 · 출력만 아래)
+# - 검사 범위 = 현재 입력의 도형 · 문자 범위 / 겹침 검사 (입력 무결성 인증 아님)
+
+## --check (rc 0)
+p1_bed_strip             PASS     점 6 · 막대/상자 1 · 띠 꼭짓점 0 · 축 글 1 · 그림 글 12 · 자른 모음 (검사 밖) 6
+p2_compaction            PASS     점 10900 · 막대/상자 4 · 띠 꼭짓점 0 · 축 글 10 · 그림 글 5 · 자른 모음 (검사 밖) 0
+p2_relaxation            PASS     점 519 · 막대/상자 0 · 띠 꼭짓점 0 · 축 글 5 · 그림 글 5 · 자른 모음 (검사 밖) 0
+p3_contacts              PASS     점 3 · 막대/상자 12 · 띠 꼭짓점 0 · 축 글 15 · 그림 글 3 · 자른 모음 (검사 밖) 0
+p3_overlap_threshold     PASS     점 0 · 막대/상자 26 · 띠 꼭짓점 0 · 축 글 5 · 그림 글 5 · 자른 모음 (검사 밖) 0
+p3_per_am                PASS     점 63 · 막대/상자 11 · 띠 꼭짓점 0 · 축 글 5 · 그림 글 3 · 자른 모음 (검사 밖) 0
+p4_tortuosity            PASS     점 3 · 막대/상자 8 · 띠 꼭짓점 0 · 축 글 11 · 그림 글 3 · 자른 모음 (검사 밖) 0
+p4_f_connect             PASS     점 3 · 막대/상자 8 · 띠 꼭짓점 0 · 축 글 11 · 그림 글 3 · 자른 모음 (검사 밖) 0
+p6_z_structure           PASS     점 72 · 막대/상자 0 · 띠 꼭짓점 0 · 축 글 0 · 그림 글 6 · 자른 모음 (검사 밖) 0
+p6_z_stress              PASS     점 72 · 막대/상자 0 · 띠 꼭짓점 138 · 축 글 0 · 그림 글 6 · 자른 모음 (검사 밖) 0
+p7_summary_heat          PASS     점 0 · 막대/상자 56 · 띠 꼭짓점 0 · 축 글 61 · 그림 글 1 · 자른 모음 (검사 밖) 0
+p7_lit_direction         PASS     점 0 · 막대/상자 24 · 띠 꼭짓점 0 · 축 글 30 · 그림 글 6 · 자른 모음 (검사 밖) 0
+diag_relax_drop_vs_N     PASS     점 10 · 막대/상자 0 · 띠 꼭짓점 0 · 축 글 6 · 그림 글 2 · 자른 모음 (검사 밖) 0
+p3_count_vs_area         PASS     점 0 · 막대/상자 12 · 띠 꼭짓점 0 · 축 글 12 · 그림 글 3 · 자른 모음 (검사 밖) 0
+p5_breakeven_sigma       PASS     점 3 · 막대/상자 3 · 띠 꼭짓점 0 · 축 글 7 · 그림 글 4 · 자른 모음 (검사 밖) 0
+p6_constriction_share    PASS     점 0 · 막대/상자 7 · 띠 꼭짓점 0 · 축 글 7 · 그림 글 4 · 자른 모음 (검사 밖) 0
+검사: 그림 16 · 문제 0 → PASS
+
+## 가드 변이 탐침 (15 / 15)
+PASS control p3_count_vs_area 0
+PASS control p5_breakeven_sigma 0
+PASS control p6_constriction_share 0
+PASS stop  | p3 identity broken (+1 %) | D2: 접촉 하나 면적 0.9467628147617624 ≠ AM 1개당 면적 22.551766036461853 ÷ 접촉 수 24.058068872383526 — (c) = (b) ÷ (a) 글이 거짓이 된다
+PASS stop  | p3 zero contacts | D3: AM 1개당 접촉 수 0.0 · 접촉 하나 면적 1.9707640971654463 가 0 이하 — (c) = (b) ÷ (a) 를 대조할 수 없다
+PASS stop  | p5 f_mc row != metrics | D1: tau_flux_row f_ion_hertz ≠ metrics f_ion_hertz
+PASS stop  | p5 f_gap rescaling broken | D2: f_gap × L_gap / L_mc ≠ f_mc (physics)
+PASS stop  | p5 network status not OK | D3: 이온 망 상태 (physics) = HOLD
+PASS stop  | p5 L basis not L_mc | D1: tau_flux_row L_basis = L_gap (L_mc 여야 f_mc)
+PASS stop  | p5 reference bed missing | 손익분기 기준 침대 D3 자료가 없다
+PASS stop  | p5 measured sigma != plan breakeven arithmetic | (DEM 계획 §0 의 3 µm 값을 5.3 으로 바꿔 읽힘) 보고 계획 문서에 "5.3/2.3 = 2.304" 가 없다 (손익분기 비가 계획과 다르다)
+PASS stop  | p6 share > 1 | D2: 협착 소산 몫 1.2 (0 과 1 사이여야 한다)
+PASS all-beds synthetic p3_count_vs_area []
+PASS all-beds synthetic p5_breakeven_sigma []
+PASS all-beds synthetic p6_constriction_share []
+ALL PASS 15 / 15

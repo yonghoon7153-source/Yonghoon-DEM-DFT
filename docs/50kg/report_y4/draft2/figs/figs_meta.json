@@ -291,6 +291,66 @@
     "diag_relax_drop_vs_N.csv": "575239a7e5a5aa298bcd9604d7ab5edb46757c5e5b7fb4450e9de9b95546281b"
    },
    "csv_rows": 4
+  },
+  "p3_count_vs_area": {
+   "size_in": [
+    4.5,
+    2.55
+   ],
+   "px": [
+    1350,
+    765
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p3_count_vs_area.png": "1534f34a6ad9725a5251755a7bb4ec138a33885caa9141927db84ba6cc73e0d2",
+    "p3_count_vs_area.svg": "2304ba130b4800fcb5942aa52ab16008d9e56fb89cdedaa320254e3b23a271d2",
+    "p3_count_vs_area.csv": "3490c75add051b862995707530c7ae7b5b45e3fb3814fa43f79f2835efdee8f2"
+   },
+   "csv_rows": 12
+  },
+  "p5_breakeven_sigma": {
+   "size_in": [
+    4.5,
+    2.8
+   ],
+   "px": [
+    1350,
+    840
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p5_breakeven_sigma.png": "d816d6ccb0d3cec618d382297598c3f45521a8986b6bd4810a057a6db8b5d4ff",
+    "p5_breakeven_sigma.svg": "7ac26f221564c58a2fb756c4914421122d61d4a40243ec0df0d87495e6916112",
+    "p5_breakeven_sigma.csv": "3a5817a8ec90c941ff39fe7ae75df17cf54993f62c56215707cd9dc76294e0ba"
+   },
+   "csv_rows": 16
+  },
+  "p6_constriction_share": {
+   "size_in": [
+    4.5,
+    2.8
+   ],
+   "px": [
+    1350,
+    840
+   ],
+   "dpi": [
+    299.999,
+    299.999
+   ],
+   "files": {
+    "p6_constriction_share.png": "0f47595c34095482864233e48a163a88d12ff04137a6eb04d32f95981588cedf",
+    "p6_constriction_share.svg": "d67db6d29a2410a813414a4307b6d1e5f64c8a594cbbeacd98fbb3b69ede2e3b",
+    "p6_constriction_share.csv": "6f6f50c40826b367ad5acc32e7510c75faf54375f8176ead26fe00b7ab54f9a3"
+   },
+   "csv_rows": 4
   }
  },
  "check": {
@@ -399,6 +459,30 @@
     "band_vertices": 0,
     "texts": 6,
     "fig_texts": 2,
+    "cropped_collections": 0
+   },
+   "p3_count_vs_area": {
+    "points": 0,
+    "patches": 12,
+    "band_vertices": 0,
+    "texts": 12,
+    "fig_texts": 3,
+    "cropped_collections": 0
+   },
+   "p5_breakeven_sigma": {
+    "points": 3,
+    "patches": 3,
+    "band_vertices": 0,
+    "texts": 7,
+    "fig_texts": 4,
+    "cropped_collections": 0
+   },
+   "p6_constriction_share": {
+    "points": 0,
+    "patches": 7,
+    "band_vertices": 0,
+    "texts": 7,
+    "fig_texts": 4,
     "cropped_collections": 0
    }
   }

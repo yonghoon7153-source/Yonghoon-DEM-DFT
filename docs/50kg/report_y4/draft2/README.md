@@ -5,6 +5,7 @@
 - 비교 상태 = **판 고정 이완 끝 세트 하나** (atom_end · contact_end · mesh_end 같은 step · 1저자 10-30) — ⚠ 같은 *정의* 이지 같은 *이완 끝 판 압력* 이 아니다 (수렴 인증 아님 · `KG50-20` · `SELF-145`).  **압력 도달 순간 세트 = 자료 없음** (압축 정지 step 에 덤프 없음 · `K50Y4-01`) — 이완 끝 프레임을 300 MPa 상태로 부르지 않는다.  가압 목표 300 MPa · 끝 판 압력 D2 279.8 · D3 291.4 MPa.
 - 침대: SE 1 µm (D1 · 10-31 반입) · 2 µm (D2) · 3 µm (D3) = 자료 있음 · SE 0.7 µm (D0.7) = 결과 대기 (모든 비교 그림에 빗금 빈 칸 · 정착 끝에서 멈춤 · 이어 돌리기 = Codex 한 건 범위 GO 뒤).
 - 새 지표 정의 없음 — 값 = 검토된 웹앱 파이프라인 (`run_pipeline(stop_after='network')`) · 기존 함수 · 기존 입자 · 접촉 · 점 출력의 집계 (z 구간 · AM 하나당 · 문턱별) 뿐.  새 정의가 필요한 것 = "다음 판" (§6).
+- 11-01 초안 3 (회사 보고판 · 1저자 비준 쪽 계획): 쪽 글 = `slide_text_draft3.md` (쪽마다 데이터로 받친 메시지 하나 · 한정어 = 화면 각주 · 발표자 노트 · 부록 1 쪽 · 자리 대조 = 그 시트 §0-3) · 새 그림 셋 `p3_count_vs_area` · `p5_breakeven_sigma` · `p6_constriction_share` (아래 §2) · 앞 그림 13 = PNG · SVG · CSV 바이트 그대로 · 값 · CSV 변화 없음 · 초안 2 시트 (`slide_text_draft2.md`) 그대로 둠 (한정어 원문 · 질문 대비 정본).
 - 10-31 문구 고침 (외부 리뷰 조건부 수용 · K50Y4D2-01 · 02 · 03 · 06 · 07 · 08): 진단 그림의 선 = 감쇠 저항 규모 기준선 R_aff (예측 아님) · 점 = DEM 로그 Δp · "정적 압력" → "이완 끝 판 압력" (수렴 인증 아님) · f = f_mc (두께 재척도 · 아래 §1 f 줄) · 그림 검사 범위 (§5) · 문헌 화살표 = 실험 · 모델 구분 (Bazzoun 2026 · Shi 2019 = 모델) — 값 · CSV 값 변화 없음 (그림 CSV 에서 바뀐 칸 = `p7_summary_heat.csv` · `p7_lit_direction.csv` 의 `name` 글 칸 f 행뿐).
 
 ## 1. 침대별 핵심 값 (이완 끝 · 입도별 시드 1)
@@ -54,6 +55,9 @@
 | `p6_z_stress` | 6 | 4.50 × 2.80 | `zprof_*.csv` | Love–Weber 입자 응력 σ_VM (입자 접촉력 기반 대칭 응력 · kinetic · 벽 · couple 항 없음 · 프레임 미인증 · 이완 끝 가압 상태) · 선 = 구간 중앙값 · 띠 = 25–75 % · 벽 · 판에 닿은 입자 제외 (함수의 nowall 규칙 · 바닥 · 꼭대기 구간 AM 33–42 · SE 97–1751 개 (D1 SE 1731–1751)) · 같은 도구 · 같은 규약끼리만 · 반응률 · 균열 · 용량 아님 |
 | `p7_summary_heat` | 7 | 4.50 × 3.00 | `metrics_all.csv` | 칸 글 = 값 · 색 = SE 3 µm 대비 비의 log₂ (좋고 나쁨 아님 · ±2.5 배 포화) · f 행 = f_mc (두께 재척도) · 입도별 시드 1 (오차 막대 없음) · 값 표 — 방향 · 비단조 판정은 네 입도 산출 뒤 분석 계획대로 |
 | `p7_lit_direction` | 7 | 4.50 × 3.00 | metrics + 정본 litdb 카드 6 | 선택한 6편의 실험 · 모델에서 보고한 작은 SE 쪽 방향 (화살표 · 카드 번호 · [5] Bazzoun 2026 = DEM–FEM–RNM 변수 연구 · [6] Shi 2019 = 모델 연결성 지도 → 범례 "(모델)") 과 우리 값을 나란히만 — **일치 판정 아님** · 다른 SE · 다른 PSD · 우리 = 단분산 대리 입도 · 시드 1 · f 칸 = f_mc (두께 재척도) |
+| `p3_count_vs_area` (초안 3) | 3 | 4.50 × 2.55 | metrics (`am_se_cn_mean` · `area_am_se_per_am_mean_um2` · `area_am_se_per_contact_mean_um2`) | (a) AM 1개당 AM–SE 접촉 수 (b) AM 1개당 AM–SE 접촉 면적 합 (c) 접촉 하나 평균 면적 = (b) ÷ (a) (생성기가 자료로 항등 대조 · 상대 10⁻⁶) · 면적 = Hertz 계열 기하 면적 (c_cpl[22] · 전도 면적 아님) · 이중 y 축 대신 셋째 작은 칸 · 관측 (기전 아님) · D1 = 끝 판 압력 156 MPa → 비교 보류 |
+| `p5_breakeven_sigma` (초안 3) | 5 | 4.50 × 2.80 | metrics `tau_flux_row` (f_mc · f_gap × Hertz · Physics) + SE 펠릿 실측 σ (`docs/50kg/dem_plan_20261026.md` §0 표 줄 · 손익분기 비 = 보고 계획 문서와 대조) | 손익분기 고유 σ = σ(3 µm) × f(3)/f(d) (σ_eff = SE 고유 σ × f 의 조건부 시나리오 · `KG50B-02`) · 띠 = f 네 기준 최소–최대 · ◆ = 펠릿 실측 (3 µm = 기준) · ◇ = 0.66 µm 시료 (0.7 µm 침대 대응 미확인 · f 결과 대기) · 2 µm 실측 결측 · f = 모형 내부 구조 계수 (절대 σ 인증 아님) · 펠릿 σ × f = 이중계상 위험 · D1 = 끝 판 압력 156 MPa · 시드 1 |
+| `p6_constriction_share` (초안 3) | 6 | 4.50 × 2.80 | metrics (`constriction_power_share_ion_hertz`) | 이온 망 (SE–SE 간선) 저항 소산 몫 — 협착 Σ I²R_c / Σ I²R (같은 해 · 가상 전극 연결 제외) · 입자 내부 (bulk) = 1 − 협착 몫 (간선 R = R_bulk + R_c) · Hertz 계열 · 모형 내부 몫 (실측 계면 저항 몫 아님) · Physics 갈래 몫 = 자료 없음 · D1 = 끝 판 압력 156 MPa |
 
 - 범례 · 설명 = 축 밖 (그림 위 한 줄) — 더 자세한 글은 슬라이드 글로.  SVG = 글자 그대로 (`font-family: Aptos, 맑은 고딕, Carlito, WenQuanYi Zen Hei, …`) → PowerPoint 에서 편집 가능.  ⚠ 이 기계에 Aptos · 맑은 고딕이 없어 **PNG 의 영문 = Carlito · 한글 = WenQuanYi Zen Hei** 로 박혀 있다 → 양식 글꼴로 보이려면 SVG 를 넣는다.
 - 색: AM (NCM) `#1A1A1A` · SE `#CDB650` (50kg 계획 덱) · 입도 = 파랑 한 색상 밝음 → 어두움 (0.7 → 3 µm · dataviz 서열 검사 통과) · Physics = 속 빈 표지.
@@ -101,7 +105,8 @@ python3 -P docs/50kg/report_y4/draft2/make_draft2_figs.py --check               
 | 1쪽 단면 | 초안 1 `docs/50kg/report_y4/figs/p1_sections.csv` 와 행 수 · 입자 · 주기 상 같음 · 좌표 차 ≤ 5e-7 µm (초안 1 CSV 6 자리 반올림) |
 | 끝 세트 소비자 시험 (`selftest`) | 9/9 — 같은 step 세트 수락 · 덱 없음 → 리포 덱 · contact 결손 · mesh 결손 · contact step 엇갈림 · atom 둘 · 머리 TIMESTEP ≠ 이름 · 접두 밖만 = 거부 |
 | 기존 도구 자기 시험 (이 트리) | `kg50_d3_cell_verdict.py --selftest` PASS (✓ 33 · ✗ 0) · `test_tau_flux.py` 55/55 · `coverage_physics_vs_hertzian.py --selftest` PASS · `lhs_union_webapp.py --selftest` PASS (0 실패) |
-| 그림 결정성 | 두 번 그린 `figs_meta.json` 같음 |
+| 그림 결정성 | 두 번 그린 `figs_meta.json` 같음 (11-01 새 그림 셋 포함 · 앞 그림 13 파일 바이트 그대로) |
+| 그림 검사 (11-01 · 초안 3) | 그림 16 · 문제 0 → PASS (새 셋 `p3_count_vs_area` · `p5_breakeven_sigma` · `p6_constriction_share` 포함) · 새 그림 가드 변이 탐침 15/15 (항등 · f 기준 · 망 상태 · 실측 σ ↔ 계획 산술 · 몫 범위 · 네 침대 합성) · 기록 `figcheck/draft3_check_20261101.txt` · 범위 = 아래 줄과 같음 |
 | 그림 검사 (`check_figure` · 10-31) | 범위 = **현재 입력의 도형 · 문자 범위 / 겹침 검사** (입력 무결성 인증 아님 — 값 · 출처는 위 행들) · 축마다: 그린 자료 (선 · 곡선 점 · 표지 (반지름 포함) · 막대 · 상자 · 수염 · 띠 · 빈 칸 빗금) 가 축 범위 안 · 축 글이 축 안 · 그 축 제목 · 다른 축 글과 안 겹침 · 그림 글 (머리 줄) = 그림 안 · 서로 · 축 제목과 안 겹침 · "결과 대기" 글은 자료 없는 침대만 · 1쪽 단면 원 = 판 · 벽 자르기가 실제로 걸림 — 축 범위 = 전부 자료 + 값 글 자리로 정한다 (고정 범위 없음).  결과 = `figs/figs_meta.json` 의 `check` · 기록 `figcheck/` (고치기 전 FAIL 125 · 옛 고정 범위 되넣기 = FAIL · 고친 뒤 PASS).  ⚠ 글 폭 = 이 기계 글꼴 (Carlito · WenQuanYi) 로 잰다 — SVG 를 Aptos 로 열면 글 폭이 조금 다를 수 있다 (여유 2 pt) |
 | 문서 참조 (`scripts/check_doc_refs.py`) | 깨진 참조 없음 (이 폴더 포함 리포 전수) |
 | 인용 금지 (`check_review_findings.ban_sweep` 를 이 폴더 파일에만) | 게이트 글롭 안 5 파일 (md · json) = 0 건 · 글롭 밖 CSV · SVG 의 숫자 열 · 경로 좌표 안에 등록 숫자열 (CL-33 · CL-90 항목) 이 우연히 포함된 6 건 (인용 아님 · 게이트 대상 아님) · 10-31 (D1 · 진단 그림 · 바뀐 39 파일) = 글롭 안 (README · figs_meta.json) 0 건 · 글롭 밖 9 건 (SVG 경로 좌표 8 · D2 CSV 숫자 1 · 같은 부류) |
@@ -128,5 +133,6 @@ python3 -P docs/50kg/report_y4/draft2/make_draft2_figs.py --check               
 ## 7. 파일
 
 - `run_draft2_metrics.py` — 침대 러너 (`run` · `add` · `merge` · `selftest`) · `make_draft2_figs.py` — 그림.
+- `slide_text_draft2.md` — 초안 2 글 시트 (방법 검증 보고 꼴 · 한정어 원문) · `slide_text_draft3.md` — 초안 3 글 시트 (회사 보고판 · 11-01 · 숫자 출처 표 = 맨 끝 §10).
 - `data/<침대>/` — `metrics_<침대>.json` (값 · 끝 세트 · 덱 · 망 출처 · git HEAD · 도구 파일 sha256 · 함수 이름) · `per_am_*.csv` (AM 하나당: z · AM–SE 접촉 수 · 면적 · 피복 Hertz/Physics · 최대 겹침 비 둘 · SE 망 연결 · Love–Weber σ_VM · 벽 접촉) · `zprof_*.csv` (z 10 구간) · `curve_*.csv` (가압 · 이완 로그 곡선) · `section_*.csv` (1쪽 단면 원).
 - `metrics_all.csv` — 침대 넷 한 표 · `figs/` — 그림 + `figs_meta.json` (크기 · dpi · sha256) · `ovito/` · `ovito_render_spec.md`.

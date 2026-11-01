@@ -17,6 +17,9 @@
 - 진단 diag_relax_drop_vs_N = 이완 강하 ↔ 판 정지 때 입자 수 + 감쇠 저항 규모 기준선 R_aff = γNv/(2A) (affine 가정 · 덱 값 · 낙폭
   예측 아님) — 원장 DEMP-01 관계만.
 - f 그림 · 표지 = f_mc = f_gap × L_gap / L_mc (판 간격 망 해의 σ 비를 질량 보존 두께로 다시 잰 값 · 새 망 풀이 아님 · tau_flux 의 f_ion_*).
+- 초안 3 (회사 보고판 · 11-01) 새 그림 셋 — p3_count_vs_area (접촉 수 · 계면 면적 · 접촉 하나 면적 = 세 칸 · 이중 y 축 없음) ·
+  p5_breakeven_sigma (손익분기 고유 σ = σ(3 µm) × f(3)/f(d) · f 네 기준 띠 · SE 펠릿 실측 σ = DEM 계획 §0 표 줄) ·
+  p6_constriction_share (이온 망 소산 몫 = 협착 · bulk = 1 − 협착 몫).  쪽 글 = slide_text_draft3.md.
 """
 from __future__ import annotations
 
@@ -270,9 +273,10 @@ def placeholder(ax, x, width=0.62, text=WAIT, frac=0.97):
             bbox=dict(boxstyle='square,pad=0.15', fc='white', ec='none'))
 
 
-def bars(ax, data, key, phys_key=None, scale=1.0, sig=3, lab_dy=0.015):
+def bars(ax, data, key, phys_key=None, scale=1.0, sig=3, lab_dy=0.015, fmt=None):
     """입도 칸 막대 (Hertz · 주) + Physics 속 빈 표지 (민감도) — 값 글 = 막대 위 · Physics 값 글 = 표지 위 (표지가 막대 안이면 표지 아래 흰 글).
-    세로 범위 · 눈금 = 자료 + 값 글 · 표지 자리 (fit_axis — 고정 범위 없음).  반환 = CSV 행."""
+    세로 범위 · 눈금 = 자료 + 값 글 · 표지 자리 (fit_axis — 고정 범위 없음).  fmt = 막대 값 글 꼴 (없으면 유효숫자 sig 자리 · 초안 3).
+    반환 = CSV 행."""
     vals = {b: (data[b]['m'][key] * scale, data[b]['m'][phys_key] * scale if phys_key else None) for b in R.BED_ORDER if b in data}
     items = [(0.0, 0.0, 0.0)]
     for v, pv in vals.values():
@@ -292,7 +296,7 @@ def bars(ax, data, key, phys_key=None, scale=1.0, sig=3, lab_dy=0.015):
             continue
         v, pv = vals[bed]
         ax.bar(k, v, width=0.62, color=SIZE_C[bed], edgecolor='none', zorder=2)
-        ax.text(k, v + span * lab_dy, fmt_v(v, sig), ha='center', va='bottom', fontsize=VAL_PT, color=INK, zorder=5)
+        ax.text(k, v + span * lab_dy, fmt(v) if fmt else fmt_v(v, sig), ha='center', va='bottom', fontsize=VAL_PT, color=INK, zorder=5)
         r = dict(bed=bed, status='ok', value=v)
         if phys_key:
             ax.plot([k], [pv], marker='o', ms=MS_PHYS, mfc='white', mec=INK, mew=0.9, ls='none', zorder=4)
@@ -308,12 +312,23 @@ def bars(ax, data, key, phys_key=None, scale=1.0, sig=3, lab_dy=0.015):
     return rows
 
 
+def _tint(c, a=0.32):
+    """색 c (#rrggbb) 를 흰색과 섞은 불투명 색 (a = 원색 몫) — 초안 3 의 겹 막대 윗칸 · 범위 띠 (투명도 없이 PNG · SVG 같은 색)."""
+    rgb = [int(c[i:i + 2], 16) for i in (1, 3, 5)]
+    return '#' + ''.join(f'{int(round(255 - a * (255 - v))):02x}' for v in rgb)
+
+
+MS_DIAMOND_FILL = 4.4               # 채운 마름모 (초안 3 · 실측 σ) 크기 (pt) — 그림 · 머리 줄 견본 같은 크기
+
+
 def top_legend(fig, items, y_in, h, x_in=0.46, w=W_HALF, gap=0.14, right_in=0.06):
     """그림 위 한 줄 범례 (축 밖) — items = [(종류, 색, 글)] · 종류 = 'bar' | 'hollow' | 'diamond' | 'dot' | 'line' | 'dotted' | 'hatch' | 'text' ·
+    (초안 3) 'band' = 옅은 색 + 테두리 상자 (범위 띠) · 'diamond_fill' = 색 채운 마름모 (검정 테두리) ·
     gap = 항목 사이 (in) — 한 줄이 그림 폭 (오른쪽 여백 right_in) 을 넘으면 사이만 줄인다 (최소 0.05 in · 글은 줄이지 않는다)."""
     x = x_in
     sw, sh = 0.13, 0.08                       # 견본 크기 (in)
-    adv = {'bar': sw + 0.04, 'hatch': sw + 0.04, 'hollow': 0.15, 'diamond': 0.15, 'dot': 0.15, 'line': 0.24, 'dotted': 0.24, 'text': 0.0}
+    adv = {'bar': sw + 0.04, 'hatch': sw + 0.04, 'hollow': 0.15, 'diamond': 0.15, 'dot': 0.15, 'line': 0.24, 'dotted': 0.24, 'text': 0.0,
+           'band': sw + 0.04, 'diamond_fill': 0.15}
     need = sum(adv[k] + text_w_pt(fig, t, NOTE_PT + 0.5) / 72.0 for k, _, t in items)
     if len(items) > 1 and need + gap * (len(items) - 1) > w - x_in - right_in:
         gap = max(0.05, (w - x_in - right_in - need) / (len(items) - 1))
@@ -345,6 +360,14 @@ def top_legend(fig, items, y_in, h, x_in=0.46, w=W_HALF, gap=0.14, right_in=0.06
             fig.patches.append(Rectangle((x / w, yy - sh / 2 / h), sw / w, sh / h, transform=fig.transFigure, facecolor='none',
                                          edgecolor=PH, hatch='////', lw=0.5))
             x += sw + 0.04
+        elif kind == 'band':
+            fig.patches.append(Rectangle((x / w, yy - sh / 2 / h), sw / w, sh / h, transform=fig.transFigure, facecolor=_tint(color),
+                                         edgecolor=color, lw=0.6))
+            x += sw + 0.04
+        elif kind == 'diamond_fill':
+            fig.lines.append(matplotlib.lines.Line2D([(x + 0.06) / w], [yy], transform=fig.transFigure, marker='D', ms=MS_DIAMOND_FILL, mfc=color,
+                                                     mec=INK, mew=0.7, ls='none'))
+            x += 0.15
         t = fig.text(x / w, yy, text, ha='left', va='center', fontsize=NOTE_PT + 0.5, color=INK2 if kind == 'text' else INK)
         fig.canvas.draw()
         bb = t.get_window_extent()
@@ -1331,6 +1354,201 @@ def fig_diag_relax_drop(data, decks, meta):
     return save(fig, 'diag_relax_drop_vs_N', rows, cols, meta)
 
 
+# ───────────────────────────── 초안 3 (회사 보고판 · 11-01) — 새 그림 셋 ─────────────────────────────
+# 값 = 위와 같은 기록 (metrics_<침대>.json) · 5쪽 실측 σ = DEM 계획 문서 §0 표 줄 · 새 지표 정의 없음 — 그림에서 하는 계산 =
+# 몫의 나머지 (1 − 협착 몫) · 손익분기 산술 σ(3 µm) × f(3)/f(d) 뿐.  두 척도를 한 축에 겹치지 않는다 (이중 y 축 없음).
+
+def fig_p3_count_vs_area(data, meta):
+    """3쪽 — 접촉 수 · 계면 면적: (a) AM 1개당 AM–SE 접촉 수 (b) AM 1개당 AM–SE 접촉 면적 합 (c) 접촉 하나 평균 면적 = (b) ÷ (a) ·
+    면적 = Hertz 계열 기하 면적 (LIGGGHTS c_cpl[22] · 전도 면적 아님).  (c) 는 셋째 작은 칸 (이중 y 축 대신) — (b) ÷ (a) 항등을 자료로 대조한다."""
+    for bed in data:
+        m = data[bed]['m']
+        a, b, c = m['am_se_cn_mean'], m['area_am_se_per_am_mean_um2'], m['area_am_se_per_contact_mean_um2']
+        src.need(a > 0 and c > 0, f'{bed}: AM 1개당 접촉 수 {a} · 접촉 하나 면적 {c} 가 0 이하 — (c) = (b) ÷ (a) 를 대조할 수 없다')
+        src.need(abs(b / a - c) <= 1e-6 * c, f'{bed}: 접촉 하나 면적 {c} ≠ AM 1개당 면적 {b} ÷ 접촉 수 {a} — (c) = (b) ÷ (a) 글이 거짓이 된다')
+    w, h = W_HALF, 2.55
+    fig = plt.figure(figsize=(w, h))
+    axs = frame(fig, w, h, 3, left=0.40, gap=0.40, top=0.44)
+    rows = [dict(panel='a_am_se_cn', **r) for r in bars(axs[0], data, 'am_se_cn_mean')]
+    axs[0].set_title('(a) AM–SE 접촉 수', loc='left', pad=3)
+    axs[0].set_ylabel('AM 1개당 평균 (개)', labelpad=2)
+    rows += [dict(panel='b_area_per_am', **r) for r in bars(axs[1], data, 'area_am_se_per_am_mean_um2')]
+    axs[1].set_title('(b) 계면 면적 합', loc='left', pad=3)
+    axs[1].set_ylabel('AM 1개당 평균 (µm²)', labelpad=2)
+    rows += [dict(panel='c_area_per_contact', **r) for r in bars(axs[2], data, 'area_am_se_per_contact_mean_um2', fmt=lambda v: f'{v:.2f}')]
+    axs[2].set_title('(c) 접촉 하나 면적', loc='left', pad=3)
+    axs[2].set_ylabel('접촉 1개당 평균 (µm²)', labelpad=2)
+    top_legend(fig, [('bar', SIZE_C['D2'], 'Hertz 계열 기하 면적 (c_cpl[22])'), ('text', None, '(c) = (b) ÷ (a)'), ('hatch', None, WAIT)], 0.13, h,
+               x_in=0.40)
+    return save(fig, 'p3_count_vs_area', rows, ['panel', 'bed', 'status', 'value'], meta)
+
+
+#: 5쪽 SE 펠릿 실측 σ (3차년도 · 킥오프) — DEM 계획 문서 §0 표 줄 (초안 1 build_kg50_report_y4.plan_numbers 와 같은 정규식) · 손익분기 비
+#: (5.1/2.3 · 0.7 줄) 는 보고 계획 문서 (src.PLAN) 와 산술 대조 — 그림 안에 손으로 적은 σ 없음
+DEM_PLAN = 'docs/50kg/dem_plan_20261026.md'
+PELLET_RE = r'1 µm σ_ion ([\d.]+) · 3 µm ([\d.]+) mS/cm · 개발 SE \(D50 ([\d.]+) µm\) 이온전도도 ([\d.]+) mS/cm'
+#: f 네 기준 (이름, tau_flux_row 키) — f_mc = 보고 값 (판 간격 해 f_gap 의 질량 보존 두께 재척도) · Hertz 주 · Physics 민감도
+F_BASES = (('f_mc Hertz', 'f_ion_hertz'), ('f_mc Physics', 'f_ion_physics'), ('f_gap Hertz', 'f_ion_hertz_gap'),
+           ('f_gap Physics', 'f_ion_physics_gap'))
+BE_REF = 'D3'                       # 손익분기 기준 침대 (SE 3 µm · 실측 σ 있음)
+BE_W = 0.30                         # 범위 띠 폭 (입도 칸 단위)
+MS_DIAMOND = 3.8                    # 속 빈 마름모 (0.66 µm 시료) — 머리 줄 'diamond' 견본과 같은 크기
+
+
+def pellet_sigma():
+    """SE 펠릿 실측 σ (mS/cm) — DEM 계획 §0 표 줄 하나에서 1 µm · 3 µm · 개발 SE (D50 0.66 µm) 값 · 손익분기 비 = 보고 계획 문서와 같아야 한다."""
+    t = src.rp(DEM_PLAN).read_text(encoding='utf-8')
+    m = re.findall(PELLET_RE, t)
+    src.need(len(m) == 1, f'{DEM_PLAN}: 실측 σ 줄 {len(m)} 개 (정확히 하나여야 한다)')
+    s1, s3, d066, s066 = m[0]
+    plan = src.rp(src.PLAN).read_text(encoding='utf-8')
+    r13, r07 = float(s3) / float(s1), float(s3) / float(s066)
+    src.need(f'{s3}/{s1} = {r13:.3f}' in plan, f'{src.PLAN}: "{s3}/{s1} = {r13:.3f}" 가 없다 (손익분기 비가 계획과 다르다)')
+    src.need(f'0.7 = {r07:.3f}' in plan, f'{src.PLAN}: "0.7 = {r07:.3f}" 가 없다')
+    return dict(s1=float(s1), s3=float(s3), d066=float(d066), s066=float(s066), txt=dict(s1=s1, s3=s3, d066=d066, s066=s066))
+
+
+def f_bases(bed, rec):
+    """침대 기록 → f 네 기준 (tau_flux_row) — f_mc = metrics 의 f_ion_* 와 같고 · f_gap × L_gap / L_mc = f_mc (상대 1e-12) ·
+    망 상태 OK · 두께 기준 L_mc 여야 한다 (다르면 멈춘다)."""
+    tf, m = rec['tau_flux_row'], rec['metrics']
+    src.need(tf.get('L_basis') == 'L_mc', f'{bed}: tau_flux_row L_basis = {tf.get("L_basis")} (L_mc 여야 f_mc)')
+    for ch in ('hertz', 'physics'):
+        fmc, fgap = float(tf[f'f_ion_{ch}']), float(tf[f'f_ion_{ch}_gap'])
+        src.need(fmc == float(m[f'f_ion_{ch}']), f'{bed}: tau_flux_row f_ion_{ch} ≠ metrics f_ion_{ch}')
+        src.need(tf.get(f'ion_net_status_{ch}') == 'OK', f'{bed}: 이온 망 상태 ({ch}) = {tf.get(f"ion_net_status_{ch}")}')
+        src.need(abs(fgap * m['plate_z_um'] / m['thickness_mass_conserving_um'] - fmc) <= 1e-12 * fmc,
+                 f'{bed}: f_gap × L_gap / L_mc ≠ f_mc ({ch})')
+    return {name: float(tf[k]) for name, k in F_BASES}
+
+
+def fig_p5_breakeven(data, decks, meta):
+    """5쪽 — 손익분기 고유 σ: SE 입도 d 전극이 3 µm 전극과 같은 σ_eff 가 되려면 필요한 SE 고유 σ
+    σ_req(d) = σ(3 µm) × f(3)/f(d) (σ_eff = σ_SE × f 의 조건부 시나리오 · f = 모형 내부 구조 계수 · σ₀ 공통) — 띠 = f 네 기준
+    (f_mc · f_gap × Hertz · Physics) 의 최소–최대 · 마름모 = SE 펠릿 실측 σ (3차년도) · 0.66 µm 시료 = 가장 가까운 침대 자리 (대응 미확인 · 속 빈).
+    f 가 없는 침대 = 빗금 'f 결과 대기' · 실측 없는 침대 = '실측 결측'.  절대 σ 인증 아님."""
+    ps = pellet_sigma()
+    src.need(BE_REF in data, f'손익분기 기준 침대 {BE_REF} 자료가 없다')
+    d50 = {b: float(decks[b]['deck_vals']['d50_se_um']) for b in R.BED_ORDER}
+    src.need(d50[BE_REF] == 3.0, f'기준 침대 {BE_REF} D50 = {d50[BE_REF]} (3 µm 여야 한다)')
+    fb = {b: f_bases(b, data[b]['rec']) for b in data}
+    req = {b: {n: ps['s3'] * fb[BE_REF][n] / fb[b][n] for n, _ in F_BASES} for b in data}
+    # 실측 자리 = 침대 D50 이 1 · 3 µm 인 침대 · 0.66 µm 시료 = D50 가 가장 가까운 침대 (대응 미확인)
+    meas = {}
+    for b in R.BED_ORDER:
+        if d50[b] == 1.0:
+            meas[b] = dict(sigma=ps['s1'], sample_d50=1.0, filled=True, lab=f'실측 {ps["txt"]["s1"]}')
+        elif d50[b] == 3.0:
+            meas[b] = dict(sigma=ps['s3'], sample_d50=3.0, filled=True, lab=f'실측 {ps["txt"]["s3"]} (기준)')
+    b066 = min(R.BED_ORDER, key=lambda b: abs(d50[b] - ps['d066']))
+    src.need(b066 not in meas, f'0.66 µm 시료 자리 {b066} 에 이미 실측이 있다')
+    meas[b066] = dict(sigma=ps['s066'], sample_d50=ps['d066'], filled=False, lab=f'{ps["txt"]["d066"]} µm {ps["txt"]["s066"]}')
+    w, h = W_HALF, 2.80
+    fig = plt.figure(figsize=(w, h))
+    ax = fig.add_axes([0.52 / w, 0.42 / h, (w - 0.52 - 0.10) / w, (h - 0.42 - 0.58) / h])
+    size_axis(ax)                                   # 가로 범위 먼저 (띠 옆 글 자리 = 띠 반폭의 pt 환산)
+    pt_per_x = ax_len_in(ax, 'x') * 72.0 / (ax.get_xlim()[1] - ax.get_xlim()[0])
+    half_lab = lab_h_pt(VAL_PT) / 2
+    # 범위 = 띠 · 띠 위 글 · '실측 결측' 글 · 마름모 · 옆 글 (+ 기준 마름모 위 글) — 고정 범위 없음 · 0 부터 아님 (막대 아님)
+    hi_items, lo_items = [], []
+    for b in data:
+        if b == BE_REF:
+            continue
+        lo, hi = min(req[b].values()), max(req[b].values())
+        hi_items.append((hi, 0.0, 2.0 + lab_h_pt(VAL_PT)))
+        lo_items.append((lo, 0.0, LAB_PAD_PT))
+        if b not in meas:
+            hi_items.append(((lo + hi) / 2, 0.0, half_lab))
+            lo_items.append(((lo + hi) / 2, 0.0, half_lab))
+    for b, ms in meas.items():
+        r_pt = (MS_DIAMOND_FILL if ms['filled'] else MS_DIAMOND) / 2 + LAB_PAD_PT
+        if b == BE_REF or b not in data:           # 띠 없는 칸 = 마름모 위 글 · 띠 있는 칸 = 띠 오른쪽 글
+            hi_items.append((ms['sigma'], 0.0, r_pt + 2.0 + lab_h_pt(VAL_PT)))
+            lo_items.append((ms['sigma'], 0.0, r_pt))
+        else:
+            hi_items.append((ms['sigma'], 0.0, max(r_pt, half_lab)))
+            lo_items.append((ms['sigma'], 0.0, max(r_pt, half_lab)))
+    set_axis(ax, 'y', *fit_axis(ax, 'y', hi_items, lo_items))
+    y0, y1 = ax.get_ylim()
+    rows = []
+    for k, bed in enumerate(R.BED_ORDER):
+        if bed not in data:
+            ax.add_patch(Rectangle((k - 0.31, y0), 0.62, (y1 - y0) * 0.97, facecolor='none', edgecolor=PH, hatch='////', lw=0.5, zorder=1))
+            ax.text(k, y0 + (y1 - y0) * 0.97 * 0.70, 'f 결과 대기', rotation=90, ha='center', va='center', fontsize=VAL_PT, color=INK2, zorder=3,
+                    bbox=dict(boxstyle='square,pad=0.15', fc='white', ec='none'))
+            rows.append(dict(bed=bed, status=WAIT, kind='required', note='f 결과 대기'))
+        elif bed != BE_REF:
+            lo, hi = min(req[bed].values()), max(req[bed].values())
+            ax.add_patch(Rectangle((k - BE_W / 2, lo), BE_W, hi - lo, facecolor=_tint(SIZE_C[bed]), edgecolor=SIZE_C[bed], lw=0.8, zorder=2))
+            ax.annotate(f'{lo:.2f}–{hi:.2f}', xy=(k, hi), xytext=(0, 2.0), textcoords='offset points', ha='center', va='bottom', fontsize=VAL_PT,
+                        color=INK, zorder=5)
+            for n, _ in F_BASES:
+                rows.append(dict(bed=bed, status='ok', kind='required', basis=n, f_d=fb[bed][n], f_3um=fb[BE_REF][n],
+                                 f_ratio_d_over_3um=fb[bed][n] / fb[BE_REF][n], sigma_3um_mScm=ps['s3'], sigma_req_mScm=req[bed][n]))
+            rows.append(dict(bed=bed, status='ok', kind='band', band_lo_mScm=lo, band_hi_mScm=hi))
+            if bed not in meas:
+                ax.annotate('실측 결측', xy=(k + BE_W / 2, (lo + hi) / 2), xytext=(3.0, 0), textcoords='offset points', ha='left', va='center',
+                            fontsize=VAL_PT, color=INK2, zorder=5)
+                rows.append(dict(bed=bed, status='ok', kind='measured', note='실측 결측'))
+        else:
+            rows.append(dict(bed=bed, status='ok', kind='reference', sigma_req_mScm=ps['s3'], note='기준 (σ_req = 실측)'))
+        if bed in meas:
+            ms = meas[bed]
+            if ms['filled']:
+                ax.plot([k], [ms['sigma']], marker='D', ms=MS_DIAMOND_FILL, mfc=SE_C, mec=INK, mew=0.7, ls='none', zorder=4)
+            else:
+                ax.plot([k], [ms['sigma']], marker='D', ms=MS_DIAMOND, mfc='white', mec=INK, mew=0.9, ls='none', zorder=4)
+            if bed == BE_REF or bed not in data:
+                xt, ha, va = (0, (MS_DIAMOND_FILL if ms['filled'] else MS_DIAMOND) / 2 + 2.0), 'center', 'bottom'
+            else:
+                xt, ha, va = (BE_W / 2 * pt_per_x + 3.0, 0), 'left', 'center'
+            ax.annotate(ms['lab'], xy=(k, ms['sigma']), xytext=xt, textcoords='offset points', ha=ha, va=va, fontsize=VAL_PT, color=INK, zorder=5,
+                        bbox=(dict(boxstyle='square,pad=0.15', fc='white', ec='none') if bed not in data else None))
+            rows.append(dict(bed=bed, status='ok' if bed in data else WAIT, kind='measured', sigma_meas_mScm=ms['sigma'],
+                             sample_d50_um=ms['sample_d50'], note='SE 펠릿 실측 (3차년도)' + ('' if ms['filled'] else ' · 시료 대응 미확인')))
+    ygrid(ax)
+    ax.set_ylabel('SE 이온전도도 (mS/cm)', labelpad=2)
+    txt = ps['txt']
+    top_legend(fig, [('band', SIZE_C['D2'], f'필요 고유 σ = {txt["s3"]} × f(3 µm)/f(d) · f 네 기준 범위')]
+               + ([('hatch', None, 'f 결과 대기')] if any(b not in data for b in R.BED_ORDER) else []), 0.13, h, x_in=0.20)
+    top_legend(fig, [('diamond_fill', SE_C, 'SE 펠릿 실측 σ (3차년도)'), ('diamond', None, f'{txt["d066"]} µm 시료 (침대 대응 미확인)')], 0.31, h,
+               x_in=0.20)
+    cols = ['bed', 'status', 'kind', 'basis', 'f_d', 'f_3um', 'f_ratio_d_over_3um', 'sigma_3um_mScm', 'sigma_req_mScm', 'band_lo_mScm',
+            'band_hi_mScm', 'sigma_meas_mScm', 'sample_d50_um', 'note']
+    return save(fig, 'p5_breakeven_sigma', rows, cols, meta)
+
+
+def fig_p6_constriction(data, meta):
+    """6쪽 — 이온 망 (SE–SE 간선) 저항 소산 몫: 협착 = constriction_power_share_ion_hertz (같은 FULL 해의 Σ I²R_c / Σ I²R · 관통 간선만 ·
+    가상 전극 연결 제외) · 입자 내부 (bulk) = 1 − 협착 몫 (간선 R = R_bulk + R_c · build_network) · Hertz 계열 · 모형 내부 몫 (실측 계면 저항 몫 아님)."""
+    w, h = W_HALF, 2.80
+    fig = plt.figure(figsize=(w, h))
+    ax = frame(fig, w, h, 1, left=0.50, right=0.10, top=0.44)[0]
+    set_axis(ax, 'y', *fit_axis(ax, 'y', [(100.0, 0.0, 0.0)], zero=True))
+    bw = 0.50
+    rows = []
+    for k, bed in enumerate(R.BED_ORDER):
+        if bed not in data:
+            placeholder(ax, k, width=bw)
+            rows.append(dict(bed=bed, status=WAIT))
+            continue
+        s = float(data[bed]['m']['constriction_power_share_ion_hertz'])
+        src.need(0.0 < s < 1.0, f'{bed}: 협착 소산 몫 {s} (0 과 1 사이여야 한다)')
+        c, b = 100.0 * s, 100.0 * (1.0 - s)
+        ax.bar(k, c, width=bw, color=SIZE_C[bed], edgecolor='none', zorder=2)
+        ax.bar(k, b, width=bw, bottom=c, color=_tint(SIZE_C[bed]), edgecolor='none', zorder=2)
+        ax.text(k, c / 2, fmt_v(c, 3), ha='center', va='center', fontsize=VAL_PT, color='white', zorder=5)
+        ax.text(k, c + b / 2, fmt_v(b, 3), ha='center', va='center', fontsize=VAL_PT, color=INK, zorder=5)
+        rows.append(dict(bed=bed, status='ok', constriction_share_pct=c, bulk_share_pct=b, constriction_power_share_ion_hertz=s))
+    size_axis(ax)
+    ygrid(ax)
+    ax.set_ylabel('이온 망 저항 소산 몫 (%)', labelpad=2)
+    top_legend(fig, [('bar', SIZE_C['D2'], 'SE–SE 접촉 협착'), ('bar', _tint(SIZE_C['D2']), '입자 내부 (bulk)'), ('hatch', None, WAIT),
+                     ('text', None, 'Hertz 계열 · 모형 내부 몫')], 0.13, h, x_in=0.50)
+    return save(fig, 'p6_constriction_share', rows, ['bed', 'status', 'constriction_share_pct', 'bulk_share_pct',
+                                                     'constriction_power_share_ion_hertz'], meta)
+
+
 def check_report():
     """검사 결과 → (줄 목록, 문제 수)."""
     res = CHECK['results']
@@ -1365,6 +1583,9 @@ def build_all(write=True):
     fig_p7_heat(data, meta)
     fig_p7_lit(data, meta)
     fig_diag_relax_drop(data, decks, meta)
+    fig_p3_count_vs_area(data, meta)          # 초안 3 (회사 보고판) 새 그림 셋 — 뒤에 붙인다 (앞 그림 · figs_meta 순서 그대로)
+    fig_p5_breakeven(data, decks, meta)
+    fig_p6_constriction(data, meta)
     lines, n_bad = check_report()
     if not write:
         return dict(check_lines=lines, n_problems=n_bad)
