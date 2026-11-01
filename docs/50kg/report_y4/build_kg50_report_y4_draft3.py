@@ -12,7 +12,9 @@
   2판 (조정자 11-01 · 1저자 "50kg 양식 그대로"): 머리 쪽 제목 = 시트 절 제목 · 요약 띠 = 초안 1 띠 (알약 = 초안 1 띠 제목 ·
   ① = ② 머리 메시지 · ② = ③ 보충 한 줄) · ① 탭 글 = 점선 패널 괄호 탭 · ④ 글머리 · 캡션 · 표 = 패널 안 ·
   ⑤ 회색 결론 줄 = 패널 아래 회색 줄 · ⑥ 화면 각주 = 그 아래 작은 글 · ⑥ 발표자 노트 + ⑦ 하지 않을 말 = 노트 (화면에 안 씀) ·
-  0쪽 두 캡션 = 시트 표지 '(화면 자리 부족 → 발표자 노트)' 로 노트 · 0쪽 왼쪽 덱 값 줄 = 넣으면 패널을 넘쳐 노트 (FIT_FALLBACK).
+  3판 (조정자 11-01 · 화면 넘침 없음): 시트 표지 '(화면 자리 부족 → 발표자 노트)' 가 붙은 글 = 화면 대신 노트 묶음
+  '화면 자리 부족 → 발표자 노트' (0쪽 글머리 둘 · 덱 값 줄 · 캡션 둘 · 부록 표 ⑦ 줄) — 옮길 자리는 시트만 정한다
+  (생성기는 넣어 봐서 옮기지 않는다 · 넘치면 검사 C6 · 넘침 보고가 알린다 · 검사 V5 = 표지 글이 화면에 없고 노트에 있는지).
   시트 글에서 바꾸는 것 = 줄바꿈 · markdown 표기 (` · **) 떼기 · `x_y` 아래첨자 표기를 아래첨자 글자로 (c_cpl[22] 같은 이름은 그대로) ·
   캡션의 【 】 (양식) — 검사 V 가 화면 글을 시트 글과 한 글자씩 대조한다 (아래첨자 → `_` 로 되돌려서).
 - 양식 = 초안 1 생성기 (`build_kg50_report_y4.py`) 의 상수 · 그리기 도우미 · 패널 · 결정적 저장 · 검사 함수를 import 해서 그대로 쓴다
@@ -26,6 +28,7 @@
 """
 import argparse
 import contextlib
+import copy
 import datetime as _dt
 import hashlib
 import json
@@ -280,7 +283,6 @@ def screen_text(s, breaks=()):
 #: 손으로 정한 줄바꿈 (시트 글 그대로 · 공백 하나 → 줄바꿈) — 자동 줄바꿈이 낱말 묶음을 가르는 자리만 · 줄 수는 늘리지 않는다
 #: (띠 ① ② = 반 폭 칸 · 각 조각 폭을 추정으로 확인: 2판 측정 · 그 밖의 띠 글은 자동 줄바꿈)
 BREAKS = {
-    ('0', 'L/head'): ('0.7–3 µm) ·',),
     ('0', 'band/i1'): ('모두',), ('1', 'band/i1'): ('µm) 를',), ('2', 'band/i1'): ('(관측):',), ('4', 'band/i1'): ('2.4배 —',),
     ('5', 'band/i1'): ('근처:',), ('6', 'band/i1'): ('몰린다 —',), ('7', 'band/i1'): ('관측 ·',),
     ('0', 'band/i2'): ('300 MPa 가압 →',), ('1', 'band/i2'): ('시드 1) ·',), ('3', 'band/i2'): ('99.7 개 ·',),
@@ -322,24 +324,23 @@ def page_content(sheet, k):
              foot=(foot, foot_no) if foot else None, bullets=bullets, dont=[(r[0][0], r[0][1], r[1]) for r in d_rows],
              tabs=dict(L=(lay['왼쪽']['tab'], lay['왼쪽']['line']), R=(lay['오른쪽']['tab'], lay['오른쪽']['line'])), lay=lay)
     L, R = PAGE_ITEMS[k](B['④'], lay, k)
-    P['to_notes'], P['fit'] = [], []
+    # 시트 표지 (… 화면 자리 부족 → 발표자 노트 …) 가 붙은 항목 (꼴 = '<자리>_notes') → 화면에서 빼고 노트 묶음으로 (시트 순서 · 왼쪽 → 오른쪽)
+    P['to_notes'] = []
     for side, items in (('L', L), ('R', R)):
-        P[side] = [it for it in items if it[0] != 'cap_notes']
-        P['to_notes'] += [(side, 'cap', it[1], it[2], f'시트 표지 {CAP_TO_NOTES}') for it in items if it[0] == 'cap_notes']
-    for side in ('L', 'R'):
-        for kind in ACTIVE_FALLBACK.get((k, side), ()):
-            with estimator3():
-                b = stack_bottom(P[side], k, side)
-            if b <= PANEL3_BOTTOM:
-                break                                  # 패널 안 → 더 옮기지 않는다
-            it = next(x for x in P[side] if x[0] == kind)
-            P[side] = [x for x in P[side] if x is not it]
-            with estimator3():
-                b2 = stack_bottom(P[side], k, side)
-            P['to_notes'].append((side, kind, it[1], it[2], f'넣으면 마지막 도형 아래 {b:.3f} in > 패널 바닥 {PANEL3_BOTTOM} in'))
-            P['fit'].append(dict(side=side, moved=kind, bottom_with_in=round(b, 3), bottom_without_in=round(b2, 3), panel_bottom_in=PANEL3_BOTTOM))
-    order = {'L': 0, 'R': 1, 'head': 0, 'below': 1, 'cap': 2}
-    P['to_notes'].sort(key=lambda e: (order[e[0]], order[e[1]]))
+        P[side] = [it for it in items if not it[0].endswith('_notes')]
+        for it in items:
+            if not it[0].endswith('_notes'):
+                continue
+            kind = it[0][:-len('_notes')]
+            if kind == 'row':
+                d = it[1]
+                c = d['cells']
+                label = f'④-2 표 {c[0]} {c[1]}'
+                text = c[2] + ''.join(f' — {h}: {x}' for h, x in zip(d['hdr'][3:], c[3:]) if x)
+                why = f'시트 표지 ({TO_NOTES}' + (f' · {d["why"]}' if d['why'] else '') + ')'
+            else:
+                label, text, why = NOTE_LABELS[(k, side, kind)], it[1], f'시트 표지 {CAP_TO_NOTES}'
+            P['to_notes'].append(dict(side=side, kind=kind, label=label, text=text, line=it[2], why=why))
     return P
 
 
@@ -356,16 +357,17 @@ def _cap_after(b4, anchor, k):
     return ('cap', t, no)
 
 
-#: 시트가 '그림 캡션 (작은 글)' 뒤에 이 표지를 달면 그 캡션은 화면 대신 발표자 노트로 (시트 11-01 2판 · 0쪽 두 캡션)
-CAP_TO_NOTES = '(화면 자리 부족 → 발표자 노트)'
-#: 시트 표지 없이 옮기는 자리 = 넣어 봐서 패널 바닥을 넘을 때만 · 순서대로 (조정자 11-01: 0쪽 왼쪽 덱 값 줄)
-FIT_FALLBACK = {('0', 'L'): ('below',)}
-#: --p0-heads-to-notes (평가용 · 기본 끔): 0쪽 두 글머리도 넘치면 노트로
-FIT_FALLBACK_B = {('0', 'L'): ('below', 'head'), ('0', 'R'): ('head',)}
+#: 시트 표지 — 붙은 글은 화면 대신 발표자 노트의 '화면 자리 부족 → 발표자 노트' 묶음으로 (시트 11-01 2판 · 3판 · 조정자).
+#: 붙는 자리 셋: '그림 캡션 (작은 글)' 줄 뒤 · 글머리 이름 뒤 ('- 글머리 (그림 위 한 줄) (표지): …' · '④-2 오른쪽 — 글머리 한 줄 (표지) + …') ·
+#: 표 마지막 칸 끝 ('… (화면 자리 부족 → 발표자 노트 · 사유)').  다른 자리 · 다른 꼴이면 멈춘다.
+TO_NOTES = '화면 자리 부족 → 발표자 노트'
+CAP_TO_NOTES = f'({TO_NOTES})'
+ROW_TO_NOTES = re.compile(r'\s*\(' + re.escape(TO_NOTES) + r'(?: · ([^()]+))?\)$')
 NOTE_LABELS = {('0', 'L', 'cap'): '④-1 그림 캡션', ('0', 'R', 'cap'): '④-2 그림 캡션',
                ('0', 'L', 'below'): '④-1 덱 값 (2 × 2 그림 아래 한 줄)', ('0', 'L', 'head'): '④-1 글머리 (그림 위 한 줄)',
                ('0', 'R', 'head'): '④-2 글머리'}
-ACTIVE_FALLBACK = FIT_FALLBACK
+#: 0쪽 ④-2 머리 줄 (표지 = '글머리 한 줄' 바로 뒤 · ④-2 글머리 줄에는 이름이 없어서)
+P0_R_HEAD = '④-2 오른쪽 — 글머리 한 줄{} + 식 넷 (2 × 2 표 · 식 = 2-1장 수식 개체 복사)'
 
 
 def _cap_maybe_notes(lines, start, what):
@@ -377,14 +379,26 @@ def _cap_maybe_notes(lines, start, what):
     return ('cap_notes' if rest else 'cap'), t, no
 
 
+def _bullet_maybe_notes(lines, label, what):
+    """'- 이름: 글' 또는 '- 이름 (화면 자리 부족 → 발표자 노트): 글' (둘 합쳐 꼭 한 줄) → (노트행?, 글, 줄 번호)."""
+    pres = (f'- {label}: ', f'- {label} {CAP_TO_NOTES}: ')
+    hits = [(no, ln, p) for no, ln in lines for p in pres if ln.startswith(p)]
+    src.need(len(hits) == 1, f'sheet: "- {label}[ {CAP_TO_NOTES}]:" 줄 {len(hits)} 개 ({what})')
+    no, ln, p = hits[0]
+    return p == pres[1], ln[len(p):].strip(), no
+
+
 def items_p0(b4, lay, k):
     i1 = _find(b4, r'^④-1 왼쪽', 0, '0쪽 ④-1')
     i2 = _find(b4, r'^④-2 오른쪽', 0, '0쪽 ④-2')
     left_lines, right_lines = b4[i1:i2], b4[i2:]
-    head, h_no = _bullet(left_lines, '글머리 (그림 위 한 줄)', '0쪽 ④-1')
-    below, w_no = _bullet(left_lines, '덱 값 (2 × 2 그림 아래 한 줄)', '0쪽 ④-1')
+    h_n, head, h_no = _bullet_maybe_notes(left_lines, '글머리 (그림 위 한 줄)', '0쪽 ④-1')
+    w_n, below, w_no = _bullet_maybe_notes(left_lines, '덱 값 (2 × 2 그림 아래 한 줄)', '0쪽 ④-1')
     lkind, lcap, lc_no = _cap_maybe_notes(left_lines, 0, '0쪽 ④-1 캡션')
-    L = [('head', head, h_no), _fig('p0_process_grid_labeled', lay['왼쪽'], k, 'L'), ('below', below, w_no), (lkind, lcap, lc_no)]
+    L = [('head_notes' if h_n else 'head', head, h_no), _fig('p0_process_grid_labeled', lay['왼쪽'], k, 'L'),
+         ('below_notes' if w_n else 'below', below, w_no), (lkind, lcap, lc_no)]
+    hl = right_lines[0][1].strip()
+    src.need(hl in (P0_R_HEAD.format(''), P0_R_HEAD.format(' ' + CAP_TO_NOTES)), f'sheet {right_lines[0][0]}: 0쪽 ④-2 머리 줄 "{hl}"')
     rh = [(no, ln) for no, ln in right_lines[1:] if ln.startswith('- ')]
     src.need(len(rh) == 1, f'0쪽 ④-2 글머리 줄 {len(rh)}')
     eh, e_rows, _ = _table(right_lines, 0, '0쪽 ④-2 식 표')
@@ -392,7 +406,8 @@ def items_p0(b4, lay, k):
     rkind, rcap, rc_no = _cap_maybe_notes(right_lines, 0, '0쪽 ④-2 캡션')
     eq = [dict(name=c[0], eq=c[1], mean=c[2], line=no) for c, no in e_rows]
     # 순서 = 시트 ④-2 의 순서 (글머리 → 그림 → 식 넷 표 → 그림 캡션)
-    R = [('head', rh[0][1][2:].strip(), rh[0][0]), _fig('p0_contact_model_labeled', lay['오른쪽'], k, 'R'), ('eqtable', eq), (rkind, rcap, rc_no)]
+    R = [('head_notes' if CAP_TO_NOTES in hl else 'head', rh[0][1][2:].strip(), rh[0][0]),
+         _fig('p0_contact_model_labeled', lay['오른쪽'], k, 'R'), ('eqtable', eq), (rkind, rcap, rc_no)]
     return L, R
 
 
@@ -413,12 +428,29 @@ def _two_figs(left, right):
     return f
 
 
+def _split_rows(hdr, rows, what):
+    """표 줄 → (화면 줄, 노트 줄) — 마지막 칸 끝에 '(화면 자리 부족 → 발표자 노트[ · 사유])' 가 붙은 줄 = 노트 (표지는 칸에서 뗀다)."""
+    keep, moved = [], []
+    for cells, no in rows:
+        src.need(all(TO_NOTES not in c for c in cells[:-1]), f'sheet {no}: 표지는 마지막 칸 끝에만 ({what})')
+        m = ROW_TO_NOTES.search(cells[-1])
+        if m is None:
+            src.need(TO_NOTES not in cells[-1], f'sheet {no}: 표지 꼴 "{cells[-1]}" ({what})')
+            keep.append((cells, no))
+            continue
+        src.need(hdr[:3] == ['#', '항목', '내용'], f'sheet {no}: 노트로 옮기는 표 줄 = 머리 "# · 항목 · 내용 …" 표만 ({what} · {hdr})')
+        moved.append(('row_notes', dict(hdr=hdr, cells=cells[:-1] + [cells[-1][:m.start()].strip()], why=m.group(1)), no))
+    src.need(keep, f'{what}: 화면에 남는 줄 없음')
+    return keep, moved
+
+
 def _fig_table(left, col_w, align, after=None, size=None):
     def f(b4, lay, k):
         L = [_fig(left, lay['왼쪽'], k, 'L'), _cap_after(b4, rf'^④-1 `{left}`', k)]
         i = _find(b4, r'^④-2 오른쪽 표', 0, f'{k}쪽 ④-2')
         hdr, rows, _ = _table(b4, i + 1, f'{k}쪽 ④-2 표')
-        R = [('table', dict(name='t', hdr=hdr, rows=rows, col_w=col_w, align=align, size=size or TBL_PT))]
+        rows, moved = _split_rows(hdr, rows, f'{k}쪽 ④-2 표')
+        R = [('table', dict(name='t', hdr=hdr, rows=rows, col_w=col_w, align=align, size=size or TBL_PT))] + moved
         if after:
             t, no = _bullet(b4, after, f'{k}쪽 ④-2')
             R.append(('text', t, no))
@@ -435,7 +467,8 @@ PAGE_ITEMS = {
     '5': _fig_table('p5_breakeven_sigma', (None, 0.72, 0.80, 0.72, 0.80), ('L', 'C', 'C', 'C', 'C'), after='표 아래'),
     '6': _fig_table('p6_constriction_share', (1.05, 1.36, None), ('L', 'C', 'L')),
     '7': _fig_table('p7_summary_heat', (0.34, 1.40, 1.45, None), ('C', 'L', 'L', 'L')),
-    # 부록 표 열 폭 = 7 pt 에서 높이가 가장 낮은 조합 (0.20–0.24 · 0.40–0.75 · 1.90–2.85 in 격자 탐색 · 4.535 in)
+    # 부록 표 열 폭 = 7 pt 에서 높이가 가장 낮은 조합 (격자 탐색 0.20–0.26 · 0.40–0.85 · 1.80–2.95 in) — 3판 (⑦ 줄 = 노트) 추정 4.155 in ≤ 자리 4.324 in ·
+    # 8 pt 는 가장 낮은 조합도 5.264 in 라 안 들어가서 7 pt 유지 (조정자 11-01: "8 pt 에 들어가면 8 pt")
     '부록': _fig_table('diag_relax_drop_vs_N', (0.22, 0.48, 2.60, None), ('C', 'L', 'L', 'L'), size=APPX_TBL_PT),
 }
 
@@ -692,8 +725,7 @@ def notes_for(P):
     lines = [notes_text(b) for b, _ in P['bullets']]
     out = '발표자 노트\n' + '\n'.join('- ' + b for b in lines)
     if P['to_notes']:
-        out += '\n\n화면 자리 부족 → 발표자 노트\n' + '\n'.join(f'- {NOTE_LABELS[(P["key"], side, kind)]}: {notes_text(t)}'
-                                                         for side, kind, t, _, _ in P['to_notes'])
+        out += f'\n\n{TO_NOTES}\n' + '\n'.join(f'- {e["label"]}: {notes_text(e["text"])}' for e in P['to_notes'])
     out += '\n\n하지 않을 말\n' + '\n'.join(f'- {notes_text(a)} — {notes_text(b)}' for a, b, _ in P['dont'])
     return out
 
@@ -794,10 +826,8 @@ def measure():
             parts = [f'{it[0]} {item_height(it, k, side):.2f}' for it in P[side]]
             print(f'   {side} tab {tabw:.2f}/{pw:.2f} · ' + ' + '.join(parts) +
                   f' → last bottom {stack_bottom(P[side], k, side):.3f} (panel bottom {PANEL3_BOTTOM})')
-        for e in P['fit']:
-            print(f'   moved to notes: {e}')
-        for side, kind, _, _, why in P['to_notes']:
-            print(f'   notes: {side}/{kind} — {why}')
+        for e in P['to_notes']:
+            print(f'   → notes: {e["side"]}/{e["kind"]} {e["label"]} (sheet line {e["line"]}) — {e["why"]}')
 
 
 # ───────────────────────────── 검사 (저장된 덱을 다시 읽는다) ─────────────────────────────
@@ -863,6 +893,29 @@ def expected_cells(P):
     return out
 
 
+def marked_items(sheet, k):
+    """시트 절 k 에서 표지 (화면 자리 부족 → 발표자 노트 …) 가 붙은 글 — page_content 의 파서와 따로 줄을 읽는다 (검사 V5).
+    꼴 셋: '- 이름 (표지): 글' → 글 · 표 줄 (마지막 칸 끝 표지) → 셋째 칸 (내용) · 그 밖의 줄 (캡션 이름 · ④-2 머리) →
+    다음 첫 내용 줄 ('> 글' · '- 글').  → [(시트 줄 번호, 글)]"""
+    lines = sheet['secs'][k]['lines']
+    out = []
+    for i, (no, ln) in enumerate(lines):
+        if TO_NOTES not in ln:
+            continue
+        s = ln.strip()
+        if s.startswith('|'):
+            out.append((no, [c.strip() for c in s[1:-1].split('|')][2]))
+        elif s.startswith('- '):
+            j = s.find(CAP_TO_NOTES + ': ')
+            src.need(j > 2, f'sheet {no}: 표지 글머리 꼴 (V5)')
+            out.append((no, s[j + len(CAP_TO_NOTES) + 2:].strip()))
+        else:
+            nxt = next(((n2, l2.strip()) for n2, l2 in lines[i + 1:] if l2.strip()), None)
+            src.need(nxt is not None and nxt[1][:2] in ('> ', '- '), f'sheet {no}: 표지 줄 다음 내용 줄 (V5)')
+            out.append((nxt[0], nxt[1][2:].strip()))
+    return out
+
+
 FORBIDDEN = d1.FORBIDDEN
 STAGE_E_OK = 'Stage-E σ_ion 안 씀'
 NEG = ('아님', '안 함', '안 씀', '금지')
@@ -893,6 +946,10 @@ def check_deck(path, info=None):
                 v_missing.append((P['key'], nm))
                 continue
             tbl = shapes[nm].table
+            dims, want_dims = (len(tbl.rows), len(tbl.columns)), (len(want_rows), len(want_rows[0]))
+            if dims != want_dims:                      # 표 줄 · 열 수 = 시트 (넘는 줄 · 모자란 줄 둘 다 실패)
+                v_bad.append((P['key'], nm, 'table rows × columns', dims, want_dims))
+                continue
             for r, row in enumerate(want_rows):
                 for c, want in enumerate(row):
                     cell = tbl.cell(r, c)
@@ -908,7 +965,8 @@ def check_deck(path, info=None):
             has_t = (sp.has_text_frame and sp.text_frame.text.strip()) or (getattr(sp, 'has_table', False) and sp.has_table)
             if has_t and sp.name not in allowed:
                 v_extra.append((P['key'], sp.name, (sp.text_frame.text if sp.has_text_frame else '')[:60]))
-    C.add('V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as "_" · 【 】 = caption frame)', not v_bad, v_bad[:12])
+    C.add('V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as "_" · 【 】 = caption frame · '
+          'table rows × columns = sheet)', not v_bad, v_bad[:12])
     C.add('V2 every sheet slot present on its slide', not v_missing, v_missing)
     C.add('V3 no screen text outside the sheet slots (except chapter number · project · page number)', not v_extra, v_extra)
     # V4 — 노트 = 시트 발표자 노트 + 하지 않을 말
@@ -918,6 +976,27 @@ def check_deck(path, info=None):
         if got != notes_for(P):
             n_bad.append(P['key'])
     C.add('V4 notes = sheet 발표자 노트 bullets + ⑦ 하지 않을 말 (markdown removed)', not n_bad, n_bad)
+    # V5 — 시트 표지 (화면 자리 부족 → 발표자 노트 …) 가 붙은 글 = 화면에 없고 그 쪽 노트에 있다 (시트 줄을 page_content 와 따로 읽음)
+    m_bad = []
+    for P, s in zip(pages, slides):
+        marked = marked_items(sheet, P['key'])
+        if len(marked) != len(P['to_notes']):
+            m_bad.append((P['key'], 'marked in sheet', len(marked), 'moved by the builder', len(P['to_notes'])))
+        notes = _n(s.notes_slide.notes_text_frame.text if s.has_notes_slide else '')
+        screen = []
+        for sp in s.shapes:
+            if getattr(sp, 'has_table', False) and sp.has_table:
+                screen += [marked_text(c._tc) for r in sp.table.rows for c in r.cells]
+            elif sp.has_text_frame:
+                screen.append(marked_text(sp._element))
+        scr = _n('\n'.join(screen))
+        for no, t in marked:
+            want = _n(md_clean(t))
+            if want not in notes:
+                m_bad.append((P['key'], no, 'not in the notes', want[:50]))
+            if want in scr:
+                m_bad.append((P['key'], no, 'on the slide', want[:50]))
+    C.add(f'V5 every sheet item marked "({TO_NOTES} …)" is off the slide and its text is in that slide\'s notes', not m_bad, m_bad)
     # C4 금지 낱말 · Stage-E · 인용 금지
     texts = [d1.all_text(s) for s in slides]
     notes_t = [s.notes_slide.notes_text_frame.text if s.has_notes_slide else '' for s in slides]
@@ -1268,6 +1347,47 @@ def _mut_cell(prs):
     r.text = r.text + '9'
 
 
+def _moved(k, kind, side):
+    """시트 표지로 노트에 간 글 (시트 꼴) — 변이 시험이 '화면에 남은 경우' 를 흉내 낼 때 쓴다."""
+    P = page_content(read_sheet(), k)
+    return next(e for e in P['to_notes'] if e['kind'] == kind and e['side'] == side)
+
+
+def _mut_head_back(prs):
+    """0쪽 ④-1 글머리가 화면에 남은 경우 (L/head 글 상자)."""
+    tb = prs.slides[0].shapes.add_textbox(Emu(I(0.40)), Emu(I(2.65)), Emu(I(4.40)), Emu(I(0.40)))
+    tb.name = 'L/head'
+    tb.text_frame.text = md_clean(_moved('0', 'head', 'L')['text'])
+
+
+def _append_row_copy(gf):
+    tbl = gf.table._tbl
+    trs = tbl.findall(qn('a:tr'))
+    new = copy.deepcopy(trs[-1])
+    trs[-1].addnext(new)
+    return gf.table.rows[len(trs)]
+
+
+def _mut_row_back(prs):
+    """부록 표 ⑦ 줄이 표에 남은 경우 (마지막 줄 복사 → ⑦ 줄 글)."""
+    e = _moved('부록', 'row', 'R')
+    no_, item = e['label'].split(' ')[-2:]
+    row = _append_row_copy(_shape(prs.slides[8], 'R/table'))
+    for cell, t in zip(row.cells, (no_, item, e['text'].split(' — ')[0], '1쪽 각주')):
+        cell.text = t
+
+
+def _mut_row_dup(prs):
+    """표 줄이 하나 더 생긴 경우 (부록 표 마지막 줄 복사 — 글은 시트 ⑥ 줄 그대로)."""
+    _append_row_copy(_shape(prs.slides[8], 'R/table'))
+
+
+def _mut_notes_drop(prs):
+    """노트로 옮긴 부록 표 ⑦ 줄이 노트에서도 빠진 경우."""
+    tf = prs.slides[8].notes_slide.notes_text_frame
+    tf.text = '\n'.join(ln for ln in tf.text.split('\n') if not ln.startswith('- ④-2 표 ⑦'))
+
+
 MUTATIONS = [
     ('shape overlap (2쪽 L/cap moved onto L/fig)', lambda p: setattr(_shape(p.slides[2], 'L/cap'), 'top', _shape(p.slides[2], 'L/fig').top + I(0.5)),
      'C6 no overlapping'),
@@ -1285,6 +1405,11 @@ MUTATIONS = [
     ('root shape off the slide (6쪽 note at x 9.5 in)', lambda p: setattr(_shape(p.slides[6], 'note'), 'left', I(9.5)), 'C6 children inside'),
     ('number not in the sheet section (2쪽 note)', lambda p: _set_first_run(_shape(p.slides[2], 'note'), '같은 가압 규약에서 7.77 %p'), 'C8 every number'),
     ('notes ≠ sheet (6쪽 notes)', lambda p: setattr(p.slides[6].notes_slide.notes_text_frame, 'text', '노트 없음'), 'V4 notes'),
+    # 3판: 시트 표지로 노트에 간 글 (화면에 남으면 · 노트에서 빠지면) · 표 줄 수
+    ('moved item back on screen (0쪽 ④-1 글머리 as L/head)', _mut_head_back, 'V5 every sheet item marked'),
+    ('moved row back in the table (부록 ⑦ appended to R/table)', _mut_row_back, 'V5 every sheet item marked'),
+    ('moved item missing from the notes (부록 notes without ⑦)', _mut_notes_drop, 'V5 every sheet item marked'),
+    ('extra table row (부록 R/table last row duplicated)', _mut_row_dup, 'V1 every screen text'),
 ]
 
 
@@ -1329,11 +1454,7 @@ def _main():
     ap.add_argument('--measure', action='store_true', help='패널마다 쌓은 높이 · 넘침 (덱 안 씀)')
     ap.add_argument('--json', default=str(OUT_CHECKS))
     ap.add_argument('--render-dir', default=str(RENDER_DIR), help='쪽 PNG 폴더 (평가 덱은 리포 밖으로)')
-    ap.add_argument('--p0-heads-to-notes', action='store_true',
-                    help='평가용 (기본 끔): 0쪽 두 글머리도 넘치면 노트로 — 커밋 덱은 이 선택 없이 만든다')
     a = ap.parse_args()
-    global ACTIVE_FALLBACK
-    ACTIVE_FALLBACK = FIT_FALLBACK_B if a.p0_heads_to_notes else FIT_FALLBACK
     if a.measure:
         measure()
         return 0
@@ -1363,14 +1484,13 @@ def _main():
                 (f" · rows over {e['rows_over']}" if 'rows_over' in e else '')
         print(f"  {e['page']}쪽 {e['element']} ({e['kind']}) bottom {e['bottom_in']} > panel {e['panel_bottom_in']} = +{e['over_in']} in"
               f"{' · past slide bottom +' + str(e['slide_bottom_over_in']) if e['slide_bottom_over_in'] else ''}{extra}")
-    moved = {P['key']: [dict(side=side, kind=kind, label=NOTE_LABELS[(P['key'], side, kind)], sheet_line=no, reason=why)
-                        for side, kind, _, no, why in P['to_notes']] for P in info['pages'] if P['to_notes']}
+    moved = {P['key']: [dict(side=e['side'], kind=e['kind'], label=e['label'], sheet_line=e['line'], reason=e['why'])
+                        for e in P['to_notes']] for P in info['pages'] if P['to_notes']}
     for k, lst in moved.items():
         for e in lst:
             print(f"  → notes {k}쪽 {e['label']} (sheet line {e['sheet_line']}): {e['reason']}")
     rec = dict(deck=out.name, deck_sha256=hashlib.sha256(out.read_bytes()).hexdigest(), sheet=SHEET, sheet_sha256=info['sheet']['sha256'],
-               variant='p0-heads-to-notes' if a.p0_heads_to_notes else 'default', pill=series_text(),
-               checks=C.items, overflow=ov, moved_to_notes=moved, fit={P['key']: P['fit'] for P in info['pages'] if P['fit']},
+               pill=series_text(), checks=C.items, overflow=ov, moved_to_notes=moved,
                subscripts=subscript_inventory(info['pages']),
                figures={f'{P["key"]}/{side}': it[1] for P in info['pages'] for side in ('L', 'R') for it in P[side] if it[0] == 'fig'})
     if a.selftest:

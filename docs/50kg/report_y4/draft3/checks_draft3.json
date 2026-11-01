@@ -1,9 +1,8 @@
 {
  "deck": "kg50_report_y4_draft3.pptx",
- "deck_sha256": "f717d16d598c148de1aca70622130e8010c92bdfbad52975eeea66278469fcdf",
+ "deck_sha256": "a044836372e0f9c37de8e63c009117c105c5422086e0d8f50c874f218eb5348d",
  "sheet": "docs/50kg/report_y4/draft2/slide_text_draft3.md",
- "sheet_sha256": "587b493aa3c35d7d34b6e23daf6b87d90276b557237a8357d8bc689b545df4f1",
- "variant": "default",
+ "sheet_sha256": "5c9ea707a24537435264359297bb074c9656bd12114aee3c0c286f6f5f79b18e",
  "pill": "4차년도 DEM 해석 — SE 입도 0.7 · 1 · 2 · 3 µm 비교 (입도별 시드 1)",
  "checks": [
   {
@@ -17,7 +16,7 @@
    "detail": ""
   },
   {
-   "check": "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
+   "check": "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
    "ok": true,
    "detail": ""
   },
@@ -33,6 +32,11 @@
   },
   {
    "check": "V4 notes = sheet 발표자 노트 bullets + ⑦ 하지 않을 말 (markdown removed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "V5 every sheet item marked \"(화면 자리 부족 → 발표자 노트 …)\" is off the slide and its text is in that slide's notes",
    "ok": true,
    "detail": ""
   },
@@ -73,13 +77,13 @@
   },
   {
    "check": "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
-   "ok": false,
-   "detail": "[('0', 'L/fig', 'note'), ('0', 'R/eqtable', 'note'), ('0', 'R/eqtable', 'foot'), ('0', 'R/eqtable', 'pgnum'), ('부록', 'R/table', 'note'), ('부록', 'R/table', 'pgnum')]"
+   "ok": true,
+   "detail": ""
   },
   {
    "check": "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide",
-   "ok": false,
-   "detail": "[('0', 'L/fig', 'not inside L', 0.183), ('0', 'R/eqtable', 'not inside R', 0.302), ('부록', 'R/table', 'not inside R', 0.211)]"
+   "ok": true,
+   "detail": ""
   },
   {
    "check": "C6 nothing (but header text) inside the template header band (y < 0.911 in)",
@@ -112,59 +116,22 @@
    "detail": ""
   }
  ],
- "overflow": [
-  {
-   "page": "0",
-   "side": "L",
-   "element": "L/fig",
-   "over_in": 0.183,
-   "top_in": 3.053,
-   "bottom_in": 7.153,
-   "panel_bottom_in": 6.97,
-   "slide_bottom_over_in": 0.0,
-   "kind": "picture"
-  },
-  {
-   "page": "0",
-   "side": "R",
-   "element": "R/eqtable",
-   "over_in": 0.302,
-   "top_in": 5.853,
-   "bottom_in": 7.272,
-   "panel_bottom_in": 6.97,
-   "slide_bottom_over_in": 0.0,
-   "kind": "table",
-   "chars_over": 212,
-   "chars_total": 390,
-   "rows_over": [
-    1
-   ]
-  },
-  {
-   "page": "부록",
-   "side": "R",
-   "element": "R/table",
-   "over_in": 0.211,
-   "top_in": 2.646,
-   "bottom_in": 7.181,
-   "panel_bottom_in": 6.97,
-   "slide_bottom_over_in": 0.0,
-   "kind": "table",
-   "chars_over": 91,
-   "chars_total": 1312,
-   "rows_over": [
-    7
-   ]
-  }
- ],
+ "overflow": [],
  "moved_to_notes": {
   "0": [
+   {
+    "side": "L",
+    "kind": "head",
+    "label": "④-1 글머리 (그림 위 한 줄)",
+    "sheet_line": 100,
+    "reason": "시트 표지 (화면 자리 부족 → 발표자 노트)"
+   },
    {
     "side": "L",
     "kind": "below",
     "label": "④-1 덱 값 (2 × 2 그림 아래 한 줄)",
     "sheet_line": 101,
-    "reason": "넣으면 마지막 도형 아래 7.603 in > 패널 바닥 6.97 in"
+    "reason": "시트 표지 (화면 자리 부족 → 발표자 노트)"
    },
    {
     "side": "L",
@@ -175,21 +142,26 @@
    },
    {
     "side": "R",
+    "kind": "head",
+    "label": "④-2 글머리",
+    "sheet_line": 114,
+    "reason": "시트 표지 (화면 자리 부족 → 발표자 노트)"
+   },
+   {
+    "side": "R",
     "kind": "cap",
     "label": "④-2 그림 캡션",
     "sheet_line": 125,
     "reason": "시트 표지 (화면 자리 부족 → 발표자 노트)"
    }
-  ]
- },
- "fit": {
-  "0": [
+  ],
+  "부록": [
    {
-    "side": "L",
-    "moved": "below",
-    "bottom_with_in": 7.603,
-    "bottom_without_in": 7.153,
-    "panel_bottom_in": 6.97
+    "side": "R",
+    "kind": "row",
+    "label": "④-2 표 ⑦ 실행 차이",
+    "sheet_line": 623,
+    "reason": "시트 표지 (화면 자리 부족 → 발표자 노트 · 1쪽 각주와 같음)"
    }
   ]
  },
@@ -282,10 +254,7 @@
    "mutation": "(none — the built deck)",
    "expect": "-",
    "ok": true,
-   "failed": [
-    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
-    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide"
-   ]
+   "failed": []
   },
   {
    "mutation": "shape overlap (2쪽 L/cap moved onto L/fig)",
@@ -300,7 +269,7 @@
    "expect": "C5 every text box",
    "ok": true,
    "failed": [
-    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
     "C5 every text box: estimated text height ≤ box (conservative widths: Hangul 1 em · Latin DejaVu)"
    ]
   },
@@ -309,7 +278,7 @@
    "expect": "V1 every screen text",
    "ok": true,
    "failed": [
-    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)"
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)"
    ]
   },
   {
@@ -317,7 +286,7 @@
    "expect": "C4 forbidden wording absent",
    "ok": true,
    "failed": [
-    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
     "C4 forbidden wording absent on screen (plan §1 · principles §5)"
    ]
   },
@@ -326,7 +295,7 @@
    "expect": "C4 quotation_ban",
    "ok": true,
    "failed": [
-    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
     "C4 quotation_ban patterns absent (claims.json · screen + notes)",
     "C8 every number on a slide occurs in that page's sheet section"
    ]
@@ -336,7 +305,7 @@
    "expect": "C4 \"Stage-E\"",
    "ok": true,
    "failed": [
-    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
     "C4 \"Stage-E\" only in \"Stage-E σ_ion 안 씀\" (KG50B-07)"
    ]
   },
@@ -354,7 +323,7 @@
    "expect": "V1 every screen text",
    "ok": true,
    "failed": [
-    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)"
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)"
    ]
   },
   {
@@ -362,7 +331,7 @@
    "expect": "V1 every screen text",
    "ok": true,
    "failed": [
-    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
     "C8 every number on a slide occurs in that page's sheet section"
    ]
   },
@@ -398,7 +367,7 @@
    "expect": "C8 every number",
    "ok": true,
    "failed": [
-    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
     "C8 every number on a slide occurs in that page's sheet section"
    ]
   },
@@ -408,6 +377,48 @@
    "ok": true,
    "failed": [
     "V4 notes = sheet 발표자 노트 bullets + ⑦ 하지 않을 말 (markdown removed)"
+   ]
+  },
+  {
+   "mutation": "moved item back on screen (0쪽 ④-1 글머리 as L/head)",
+   "expect": "V5 every sheet item marked",
+   "ok": true,
+   "failed": [
+    "V3 no screen text outside the sheet slots (except chapter number · project · page number)",
+    "V5 every sheet item marked \"(화면 자리 부족 → 발표자 노트 …)\" is off the slide and its text is in that slide's notes",
+    "C5 every text box: estimated text height ≤ box (conservative widths: Hangul 1 em · Latin DejaVu)",
+    "C5 no-wrap boxes: text width ≤ box",
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)"
+   ]
+  },
+  {
+   "mutation": "moved row back in the table (부록 ⑦ appended to R/table)",
+   "expect": "V5 every sheet item marked",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
+    "V5 every sheet item marked \"(화면 자리 부족 → 발표자 노트 …)\" is off the slide and its text is in that slide's notes",
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide"
+   ]
+  },
+  {
+   "mutation": "moved item missing from the notes (부록 notes without ⑦)",
+   "expect": "V5 every sheet item marked",
+   "ok": true,
+   "failed": [
+    "V4 notes = sheet 발표자 노트 bullets + ⑦ 하지 않을 말 (markdown removed)",
+    "V5 every sheet item marked \"(화면 자리 부족 → 발표자 노트 …)\" is off the slide and its text is in that slide's notes"
+   ]
+  },
+  {
+   "mutation": "extra table row (부록 R/table last row duplicated)",
+   "expect": "V1 every screen text",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide"
    ]
   }
  ],
@@ -432,8 +443,8 @@
    },
    {
     "check": "R2 no two rendered words overlap by > 1 pt in both directions",
-    "ok": false,
-    "detail": "[('0', '때', '(1', 6.0, 8.0), ('0', '쪽', 'k₁', 4.6, 7.8), ('0', '쪽', '남는다', 7.9, 2.9), ('0', 'k₁', ')', 1.0, 7.5), ('0', '누를', '수', 9.0, 8.3), ('0', '수', '가', 6.5, 2.9), ('0', '(1', '남는다', 9.2, 2.4), ('0', '가', '(−γv)', 7.9, 4.2), ('0', '남는다', '(−γv)', 9.1, 4.2), ('0', '남는다', '·', 2.2, 4.2), ('0', '남는다', '접선', 6.7, 4.5)]"
+    "ok": true,
+    "detail": ""
    },
    {
     "check": "R3 every rendered word inside the page",
@@ -452,10 +463,10 @@
    },
    {
     "check": "R6 no slide text rendered over a figure",
-    "ok": false,
-    "detail": "[('0', 'L/fig', '네'), ('0', 'L/fig', '침대'), ('0', 'L/fig', '='), ('0', 'L/fig', '같은'), ('0', 'L/fig', '절차'), ('0', 'L/fig', '·'), ('0', 'L/fig', '같은'), ('0', 'L/fig', '접촉'), ('0', 'L/fig', '모델'), ('0', 'L/fig', '—'), ('0', 'L/fig', '덱에서'), ('0', 'L/fig', '다른'), ('0', 'L/fig', '것'), ('0', 'L/fig', '='), ('0', 'L/fig', 'SE'), ('0', 'L/fig', '반지름'), ('0', 'L/fig', '·'), ('0', 'L/fig', '시드')]"
+    "ok": true,
+    "detail": ""
    }
   ]
  },
- "failed": 4
+ "failed": 0
 }
