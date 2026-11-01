@@ -1,0 +1,430 @@
+{
+ "deck": "kg50_report_y4_draft3.pptx",
+ "deck_sha256": "9a21014dc9089e6152a6f25da85ef4fc5556270fcf7d2d67ae9a3b9565e308c2",
+ "sheet": "docs/50kg/report_y4/draft2/slide_text_draft3.md",
+ "sheet_sha256": "de0066f59246c6148ebf01ef6a85381e0e1c371aab8947e98b542391bbb0a451",
+ "checks": [
+  {
+   "check": "C1 slide count = 9 (0쪽 · 1–7쪽 · 부록)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C1 slide size = template (10 × 7.5 in)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "V2 every sheet slot present on its slide",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "V3 no screen text outside the sheet slots (except chapter number · project · page number)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "V4 notes = sheet 발표자 노트 bullets + ⑦ 하지 않을 말 (markdown removed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C4 forbidden wording absent on screen (plan §1 · principles §5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C4 forbidden wording in notes only negated (… 아님 · 안 함 · 안 씀) or under \"하지 않을 말\"",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C4 \"Stage-E\" only in \"Stage-E σ_ion 안 씀\" (KG50B-07)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C4 quotation_ban patterns absent (claims.json · screen + notes)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C5 every text box: estimated text height ≤ box (conservative widths: Hangul 1 em · Latin DejaVu)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C5 one-line boxes (header · tabs · page number · grey note) stay one line",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C5 no-wrap boxes: text width ≤ box",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+   "ok": false,
+   "detail": "[('0', 'L/below', 'note'), ('0', 'L/cap', 'note'), ('0', 'L/cap', 'foot'), ('0', 'R/cap', 'note'), ('0', 'R/cap', 'foot'), ('0', 'R/cap', 'pgnum'), ('부록', 'R/table', 'note'), ('부록', 'R/table', 'pgnum')]"
+  },
+  {
+   "check": "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide",
+   "ok": false,
+   "detail": "[('0', 'L/below', 'not inside L', 0.175), ('0', 'L/cap', 'not inside L', 0.497), ('0', 'R/cap', 'not inside R', 0.489), ('부록', 'R/table', 'not inside R', 0.776)]"
+  },
+  {
+   "check": "C6 nothing (but header text) inside the template header band (y < 0.911 in)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C9 every figure placed at 100 % of its figure size (no rescale)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C9 figure bytes = PNG = meta sha256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C9 figure size = sheet ① 크기 (in)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C12 every run: explicit fonts from {Aptos, KoPubWorld돋움체 Medium, 맑은 고딕} · size ≥ 7 pt",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "C8 every number on a slide occurs in that page's sheet section",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "overflow": [
+  {
+   "page": "0",
+   "side": "L",
+   "element": "L/below",
+   "over_in": 0.175,
+   "top_in": 6.595,
+   "bottom_in": 7.015,
+   "panel_bottom_in": 6.84,
+   "slide_bottom_over_in": 0.0,
+   "kind": "text",
+   "chars_over": 36,
+   "chars_total": 97,
+   "lines_over": 1,
+   "lines_total": 2
+  },
+  {
+   "page": "0",
+   "side": "L",
+   "element": "L/cap",
+   "over_in": 0.497,
+   "top_in": 7.015,
+   "bottom_in": 7.337,
+   "panel_bottom_in": 6.84,
+   "slide_bottom_over_in": 0.0,
+   "kind": "text",
+   "chars_over": 112,
+   "chars_total": 112,
+   "lines_over": 2,
+   "lines_total": 2
+  },
+  {
+   "page": "0",
+   "side": "R",
+   "element": "R/cap",
+   "over_in": 0.489,
+   "top_in": 6.744,
+   "bottom_in": 7.329,
+   "panel_bottom_in": 6.84,
+   "slide_bottom_over_in": 0.0,
+   "kind": "text",
+   "chars_over": 194,
+   "chars_total": 194,
+   "lines_over": 4,
+   "lines_total": 4
+  },
+  {
+   "page": "부록",
+   "side": "R",
+   "element": "R/table",
+   "over_in": 0.776,
+   "top_in": 2.058,
+   "bottom_in": 7.616,
+   "panel_bottom_in": 6.84,
+   "slide_bottom_over_in": 0.116,
+   "kind": "table",
+   "chars_over": 361,
+   "chars_total": 1261,
+   "rows_over": [
+    6,
+    7
+   ]
+  }
+ ],
+ "subscripts": {
+  "0": [
+   "(F_n,ij",
+   "(R_i",
+   "(k_t",
+   "F_n",
+   "F_t",
+   "F_t,ij",
+   "I_i",
+   "M_r,ij",
+   "dv_i",
+   "dω_i",
+   "m_i",
+   "n_ij",
+   "Σ_j",
+   "δ_max",
+   "δ_t",
+   "μF_n",
+   "‖F_t",
+   "−k_t"
+  ],
+  "1": [
+   "/D_SE",
+   "D_AM",
+   "ε_sphere"
+  ],
+  "2": [
+   "ε_sphere"
+  ],
+  "3": [],
+  "4": [
+   "/σ_eff",
+   "f_gap",
+   "f_mc",
+   "σ_eff",
+   "φ_SE"
+  ],
+  "5": [
+   "(f_mc",
+   "(σ_eff",
+   "f_gap",
+   "f_mc",
+   "σ_eff"
+  ],
+  "6": [
+   "f_mc",
+   "²R_c"
+  ],
+  "7": [
+   "(f_mc",
+   "f_mc"
+  ],
+  "부록": [
+   "(f_gap",
+   "/σ_eff",
+   "L_gap",
+   "L_mc",
+   "R_aff",
+   "f_gap",
+   "f_mc",
+   "ε_sphere",
+   "σ_eff",
+   "σ_ion",
+   "φ_SE"
+  ]
+ },
+ "figures": {
+  "0/L": "p0_process_grid_labeled",
+  "0/R": "p0_contact_model_labeled",
+  "1/R": "p1_bed_strip",
+  "2/L": "p2_compaction",
+  "2/R": "p6_z_structure",
+  "3/L": "p3_count_vs_area",
+  "3/R": "p3_per_am",
+  "4/L": "p4_f_connect",
+  "4/R": "p4_tortuosity",
+  "5/L": "p5_breakeven_sigma",
+  "6/L": "p6_constriction_share",
+  "7/L": "p7_summary_heat",
+  "부록/L": "diag_relax_drop_vs_N"
+ },
+ "selftest": [
+  {
+   "mutation": "(none — the built deck)",
+   "expect": "-",
+   "ok": true,
+   "failed": [
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide"
+   ]
+  },
+  {
+   "mutation": "shape overlap (2쪽 L/cap moved onto L/fig)",
+   "expect": "C6 no overlapping",
+   "ok": true,
+   "failed": [
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)"
+   ]
+  },
+  {
+   "mutation": "text overflow (3쪽 band text made long)",
+   "expect": "C5 every text box",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
+    "C5 every text box: estimated text height ≤ box (conservative widths: Hangul 1 em · Latin DejaVu)"
+   ]
+  },
+  {
+   "mutation": "forbidden wording on screen (7쪽 note \"최적 입도\")",
+   "expect": "C4 forbidden wording absent",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
+    "C4 forbidden wording absent on screen (plan §1 · principles §5)"
+   ]
+  },
+  {
+   "mutation": "retracted value (1쪽 note = quotation_ban pattern)",
+   "expect": "C4 quotation_ban",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
+    "C4 quotation_ban patterns absent (claims.json · screen + notes)",
+    "C8 every number on a slide occurs in that page's sheet section"
+   ]
+  },
+  {
+   "mutation": "Stage-E outside the limit phrase (4쪽 L/cap)",
+   "expect": "C4 \"Stage-E\"",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
+    "C4 \"Stage-E\" only in \"Stage-E σ_ion 안 씀\" (KG50B-07)"
+   ]
+  },
+  {
+   "mutation": "figure not at 100 % (1쪽 R/fig width + 2 %)",
+   "expect": "C9 every figure placed",
+   "ok": true,
+   "failed": [
+    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide",
+    "C9 every figure placed at 100 % of its figure size (no rescale)"
+   ]
+  },
+  {
+   "mutation": "title ≠ sheet ② (3쪽)",
+   "expect": "V1 every screen text",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)"
+   ]
+  },
+  {
+   "mutation": "table cell ≠ sheet (5쪽 R/table 2.13 → 2.139)",
+   "expect": "V1 every screen text",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
+    "C8 every number on a slide occurs in that page's sheet section"
+   ]
+  },
+  {
+   "mutation": "font outside the set (2쪽 first run ea = Arial)",
+   "expect": "C12 every run",
+   "ok": true,
+   "failed": [
+    "C12 every run: explicit fonts from {Aptos, KoPubWorld돋움체 Medium, 맑은 고딕} · size ≥ 7 pt"
+   ]
+  },
+  {
+   "mutation": "shape inside the header band (4쪽 L/cap at y 0.5 in)",
+   "expect": "C6 nothing",
+   "ok": true,
+   "failed": [
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide",
+    "C6 nothing (but header text) inside the template header band (y < 0.911 in)"
+   ]
+  },
+  {
+   "mutation": "root shape off the slide (6쪽 note at x 9.5 in)",
+   "expect": "C6 children inside",
+   "ok": true,
+   "failed": [
+    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide"
+   ]
+  },
+  {
+   "mutation": "number not in the sheet section (2쪽 note)",
+   "expect": "C8 every number",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame)",
+    "C8 every number on a slide occurs in that page's sheet section"
+   ]
+  },
+  {
+   "mutation": "notes ≠ sheet (6쪽 notes)",
+   "expect": "V4 notes",
+   "ok": true,
+   "failed": [
+    "V4 notes = sheet 발표자 노트 bullets + ⑦ 하지 않을 말 (markdown removed)"
+   ]
+  }
+ ],
+ "render": {
+  "pdf": "kg50_report_y4_draft3.pdf",
+  "pngs": [
+   "kg50_report_y4_draft3-1.png",
+   "kg50_report_y4_draft3-2.png",
+   "kg50_report_y4_draft3-3.png",
+   "kg50_report_y4_draft3-4.png",
+   "kg50_report_y4_draft3-5.png",
+   "kg50_report_y4_draft3-6.png",
+   "kg50_report_y4_draft3-7.png",
+   "kg50_report_y4_draft3-8.png",
+   "kg50_report_y4_draft3-9.png"
+  ],
+  "checks": [
+   {
+    "check": "R1 rendered pages = 9",
+    "ok": true,
+    "detail": ""
+   },
+   {
+    "check": "R2 no two rendered words overlap by > 1 pt in both directions",
+    "ok": false,
+    "detail": "[('0', 'MPa', '네', 2.5, 1.7), ('0', 'MPa', '침대', 11.1, 1.7), ('0', '에서', '침대', 2.4, 2.2), ('0', '에서', '=', 7.5, 1.9), ('0', '정지', '같은', 14.8, 2.2), ('0', '·', '절차', 1.1, 1.7), ('0', '④', '절차', 7.2, 1.7), ('0', '판', '절차', 2.8, 2.2), ('0', '고정', '같은', 11.1, 2.2), ('0', '10⁵', '같은', 2.6, 1.7), ('0', '10⁵', '접촉', 8.2, 1.7), ('0', 'step', '접촉', 7.3, 1.7), ('0', 'step', '모델', 7.4, 1.7), ('0', '(', '모델', 3.1, 1.7), ('0', '언로딩', '모델', 3.0, 2.2), ('0', '언로딩', '—', 9.0, 2.2), ('0', '언로딩', '덱에서', 6.6, 2.2), ('0', '없음', '덱에서', 16.0, 2.2), ('0', '·', '쪽', 2.2, 6.1), ('0', '위', ')', 3.5, 6.3)]"
+   },
+   {
+    "check": "R3 every rendered word inside the page",
+    "ok": false,
+    "detail": "[('부록', '⑦'), ('부록', '실행'), ('부록', '차이'), ('부록', 'µm'), ('부록', '대비'), ('부록', '2'), ('부록', 'µm'), ('부록', '3.4'), ('부록', '·'), ('부록', '1'), ('부록', 'µm'), ('부록', '27'), ('부록', '배'), ('부록', '·'), ('부록', '실행'), ('부록', '이력'), ('부록', '1'), ('부록', '쪽'), ('부록', '각주')]"
+   },
+   {
+    "check": "R4 unique words of each text box render inside that box (± 2 pt)",
+    "ok": true,
+    "detail": ""
+   },
+   {
+    "check": "R5 page titles rendered in the title box (whitespace-insensitive)",
+    "ok": true,
+    "detail": ""
+   },
+   {
+    "check": "R6 no slide text rendered over a figure",
+    "ok": true,
+    "detail": ""
+   }
+  ]
+ },
+ "failed": 4
+}
