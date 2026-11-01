@@ -1,0 +1,54 @@
+{
+  "kind": "read-only algebra; no DEM or transport solve",
+  "rows": [
+    {
+      "bed": "D1",
+      "N": 168457,
+      "drop_MPa": 144.43801,
+      "affine_drag_reference_MPa": 168.457,
+      "ratio": 0.8574176792890768,
+      "homogeneous_affine_elastic_drop_MPa": 112.30466666666666,
+      "spring_counterexample_alpha": 0.6547586117375918,
+      "spring_counterexample_k_top_over_bottom": 1.8965240958883185,
+      "reconstructed_drop_MPa": 144.43801000000002
+    },
+    {
+      "bed": "D2",
+      "N": 22353,
+      "drop_MPa": 20.44751,
+      "affine_drag_reference_MPa": 22.353,
+      "ratio": 0.9147546190667919,
+      "homogeneous_affine_elastic_drop_MPa": 14.902000000000001,
+      "spring_counterexample_alpha": 0.6762967614393817,
+      "spring_counterexample_k_top_over_bottom": 2.0892492903271798,
+      "reconstructed_drop_MPa": 20.447509999999998
+    },
+    {
+      "bed": "D3",
+      "N": 7666,
+      "drop_MPa": 9.25654,
+      "affine_drag_reference_MPa": 7.666,
+      "ratio": 1.2074797808505087,
+      "homogeneous_affine_elastic_drop_MPa": 5.110666666666667,
+      "spring_counterexample_alpha": 0.7770070079640559,
+      "spring_counterexample_k_top_over_bottom": 3.4844458602484263,
+      "reconstructed_drop_MPa": 9.25654
+    }
+  ],
+  "unsigned_counterexample": {
+    "vz": [
+      -0.01,
+      0.01
+    ],
+    "gamma": 0.5,
+    "signed_drag_N": -0.0,
+    "absolute_sum_N": 0.01
+  },
+  "sphere_loss": {
+    "number": 5,
+    "r_um": 0.5,
+    "volume_um3": 2.617993877991494,
+    "porosity_percentage_point_change": 0.0008541857411307038
+  },
+  "preregistration_note": "182.4/24.2/8.32 MPa are drag-force equivalents, not preregistered relaxation-drop predictions."
+}

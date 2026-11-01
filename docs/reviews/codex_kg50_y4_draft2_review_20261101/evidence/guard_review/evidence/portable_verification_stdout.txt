@@ -1,0 +1,34 @@
+{
+  "passed": 15,
+  "total": 15,
+  "timing": [
+    {
+      "scenario": "D1-shaped",
+      "compression_steps": 2285000,
+      "remaining_steps": 2585000,
+      "hours_at_31570_steps_h": 81.88153310104529,
+      "days_at_31570_steps_h": 3.411730545876887,
+      "days_compression_cost_x1.07": 3.622835497835498,
+      "days_compression_cost_x1.19": 3.9847297011931158
+    },
+    {
+      "scenario": "D2-shaped",
+      "compression_steps": 3515000,
+      "remaining_steps": 3815000,
+      "hours_at_31570_steps_h": 120.84257206208426,
+      "days_at_31570_steps_h": 5.035107169253511,
+      "days_compression_cost_x1.07": 5.359848484848484,
+      "days_compression_cost_x1.19": 5.916547883011297
+    },
+    {
+      "scenario": "D3-shaped",
+      "compression_steps": 4075000,
+      "remaining_steps": 4375000,
+      "hours_at_31570_steps_h": 138.5809312638581,
+      "days_at_31570_steps_h": 5.774205469327421,
+      "days_compression_cost_x1.07": 6.150683665927569,
+      "days_compression_cost_x1.19": 6.79607486009925
+    }
+  ],
+  "output": "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\kg50_y4_draft2_review_20261101\\evidence\\guard_review\\evidence\\verification.json"
+}

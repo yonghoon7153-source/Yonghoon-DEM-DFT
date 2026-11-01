@@ -1,0 +1,141 @@
+metrics_all.csv: D0.7=결과 대기, D1=ok, D2=결과 대기, D3=결과 대기
+metrics_all.csv: D0.7=결과 대기, D1=ok, D2=결과 대기, D3=결과 대기
+metrics_all.csv: D0.7=결과 대기, D1=ok, D2=결과 대기, D3=결과 대기
+metrics_all.csv: D0.7=결과 대기, D1=ok, D2=결과 대기, D3=결과 대기
+metrics_all.csv: D0.7=결과 대기, D1=ok, D2=결과 대기, D3=결과 대기
+{
+  "check_count": 23436,
+  "failed": [],
+  "transport": {
+    "D1": {
+      "L_gap": 122.596,
+      "L_mc": 124.5684960034199,
+      "L_gap_over_L_mc": 0.984165370324727,
+      "phi_mc": 0.28073169048419655,
+      "phi_sphere": 0.28524849476421704,
+      "phi_am_mc": 0.5378475595158034,
+      "one_minus_phi_sum": 0.18142075000000002,
+      "eps_union": 0.18142075,
+      "hertz": {
+        "f": 0.04680319470919788,
+        "f_gap": 0.04755623,
+        "tau": 5.998130944446544,
+        "calc_f": 0.04680319470919788,
+        "calc_tau_mc": 5.998130944446544,
+        "calc_tau_sphere": 5.998130944446544
+      },
+      "physics": {
+        "f": 0.08063980398963973,
+        "f_gap": 0.08193725,
+        "tau": 3.481304226883585,
+        "calc_f": 0.08063980398963973,
+        "calc_tau_mc": 3.481304226883585,
+        "calc_tau_sphere": 3.481304226883585
+      }
+    },
+    "D2": {
+      "L_gap": 122.469,
+      "L_mc": 126.83223714253283,
+      "L_gap_over_L_mc": 0.9655983585811115,
+      "phi_mc": 0.2757293606863187,
+      "phi_sphere": 0.28555284734688896,
+      "phi_am_mc": 0.5282478893136813,
+      "one_minus_phi_sum": 0.19602275000000002,
+      "eps_union": 0.19602275,
+      "hertz": {
+        "f": 0.03338619088687501,
+        "f_gap": 0.03457565,
+        "tau": 8.258784646041043,
+        "calc_f": 0.033386190886875014,
+        "calc_tau_mc": 8.258784646041043,
+        "calc_tau_sphere": 8.258784646041041
+      },
+      "physics": {
+        "f": 0.06376684101086327,
+        "f_gap": 0.06603868,
+        "tau": 4.3240241529190016,
+        "calc_f": 0.06376684101086329,
+        "calc_tau_mc": 4.3240241529190016,
+        "calc_tau_sphere": 4.324024152919001
+      }
+    },
+    "D3": {
+      "L_gap": 125.877,
+      "L_mc": 131.50344395410443,
+      "L_gap_over_L_mc": 0.9572144745040434,
+      "phi_mc": 0.26592228381365063,
+      "phi_sphere": 0.27780846497482353,
+      "phi_am_mc": 0.5098277161863494,
+      "one_minus_phi_sum": 0.22425000000000006,
+      "eps_union": 0.22425,
+      "hertz": {
+        "f": 0.019512549042712064,
+        "f_gap": 0.02038472,
+        "tau": 13.628269849908339,
+        "calc_f": 0.019512549042712064,
+        "calc_tau_mc": 13.628269849908339,
+        "calc_tau_sphere": 13.62826984990834
+      },
+      "physics": {
+        "f": 0.037807291542381105,
+        "f_gap": 0.0394972,
+        "tau": 7.033624281590176,
+        "calc_f": 0.037807291542381105,
+        "calc_tau_mc": 7.033624281590176,
+        "calc_tau_sphere": 7.033624281590177
+      }
+    },
+    "D1_D3_ratios": {
+      "hertz": {
+        "f_mc": 2.3986202216198333,
+        "f_gap": 2.332935159276164
+      },
+      "physics": {
+        "f_mc": 2.132916712619955,
+        "f_gap": 2.0745078132120756
+      }
+    }
+  },
+  "consumer_probes": [
+    {
+      "variant": "same_step_false",
+      "accepted": true,
+      "status": "ok",
+      "f": 0.04680319470919788,
+      "declared_case": "kg50_d1_b50",
+      "merged_case": "kg50_d1_b50"
+    },
+    {
+      "variant": "network_not_computed",
+      "accepted": true,
+      "status": "ok",
+      "f": 0.04680319470919788,
+      "declared_case": "kg50_d1_b50",
+      "merged_case": "kg50_d1_b50"
+    },
+    {
+      "variant": "wrong_case",
+      "accepted": true,
+      "status": "ok",
+      "f": 0.04680319470919788,
+      "declared_case": "kg50_d3_b50_s1",
+      "merged_case": "kg50_d1_b50"
+    },
+    {
+      "variant": "failed_aggregate_check",
+      "accepted": true,
+      "status": "ok",
+      "f": 0.04680319470919788,
+      "declared_case": "kg50_d1_b50",
+      "merged_case": "kg50_d1_b50"
+    },
+    {
+      "variant": "metric_only_changed",
+      "accepted": true,
+      "status": "ok",
+      "f": 0.123,
+      "declared_case": "kg50_d1_b50",
+      "merged_case": "kg50_d1_b50"
+    }
+  ]
+}

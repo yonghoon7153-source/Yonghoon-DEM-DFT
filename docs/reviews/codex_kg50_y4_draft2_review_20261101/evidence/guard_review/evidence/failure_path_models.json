@@ -1,0 +1,191 @@
+{
+  "disclaimer": "No Bash, SLURM, remote process, cancellation, or DEM execution. Models describe pinned code branches and do not substitute for end-to-end reproduction.",
+  "guard_mismatch_branch": "else\n  echo \"   ⛔ 영수증이 승인값과 다름 — 시험 job $J 취소 (본 제출로 못 넘어감)\"\n  if isnum \"$J\"; then scancel $J; else echo \"   job 번호 꼴 아님 — 창 A 를 Ctrl-C\"; fi\n  exit 1",
+  "traces": [
+    {
+      "scenario": "cancellation_failure",
+      "trace": [
+        "new receipt differs from approved OKR",
+        "guard enters lines 56-59",
+        "synthetic trial=444444 state=RUNNING",
+        "synthetic main=555555 state=NOT_SUBMITTED",
+        "mock scancel(444444) returns nonzero; no scheduler was called",
+        "guard ignores return value and exits 1; no main-job inspection",
+        "trial later completes G0-G3",
+        "resume tool checks its own new receipt MIS (not approved OKR)",
+        "resume branch may submit synthetic main 555555"
+      ],
+      "guard_exit": 1,
+      "main_final_state": "RUNNING",
+      "approval_block_guaranteed": false,
+      "evidence_level": "independent control-flow model, not actual Bash"
+    },
+    {
+      "scenario": "late_cancellation",
+      "trace": [
+        "new receipt differs from approved OKR",
+        "guard enters lines 56-59",
+        "synthetic trial=444444 state=COMPLETED",
+        "synthetic main=555555 state=RUNNING",
+        "mock scancel(444444) returns nonzero; no scheduler was called",
+        "guard ignores return value and exits 1; no main-job inspection"
+      ],
+      "guard_exit": 1,
+      "main_final_state": "RUNNING",
+      "approval_block_guaranteed": false,
+      "evidence_level": "independent control-flow model, not actual Bash"
+    },
+    {
+      "scenario": "main_terminal_before_identity",
+      "trace": [
+        {
+          "poll": 1,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 2,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 3,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 4,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 5,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 6,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 7,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 8,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 9,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 10,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 11,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 12,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 13,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 14,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 15,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 16,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 17,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 18,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 19,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        },
+        {
+          "poll": 20,
+          "grep_identity": false,
+          "job_state_in_world": "FAILED",
+          "guard_queries_job_state": false,
+          "guard_action": "sleep 15; repeat"
+        }
+      ],
+      "after_20_polls_seconds": 300,
+      "guard_still_waiting": true,
+      "invariant": "while no identity line appears, condition never exits regardless of terminal job state",
+      "evidence_level": "independent control-flow model, not actual Bash"
+    }
+  ],
+  "producer_render_executed": true,
+  "producer_output": "rendered_runner.synthetic.sh",
+  "producer_property": "cd failure exits before LMP_IDENTITY"
+}

@@ -1,0 +1,104 @@
+{
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "ref": "c431470a1",
+  "cards": [
+    {
+      "slug": "yano2026_se_psd_width_ionic_tortuosity_dem",
+      "encoding": "utf-8",
+      "sha": "a00f806450f34c22368e68db8bab9e129bd08615",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c431470a1/litdb/papers/yano2026_se_psd_width_ionic_tortuosity_dem.md",
+      "display_title": "yano2026_se_psd_width_ionic_tortuosity_dem.md"
+    },
+    {
+      "slug": "lin2025_submicron_lpscl_cathode_li_kinetics",
+      "encoding": "utf-8",
+      "sha": "4f5ca096c389ff30a5db1685f877474893468f2a",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c431470a1/litdb/papers/lin2025_submicron_lpscl_cathode_li_kinetics.md",
+      "display_title": "lin2025_submicron_lpscl_cathode_li_kinetics.md"
+    },
+    {
+      "slug": "calpa2019_small_li7p3s11_liquid_phase_composite_cathode",
+      "encoding": "utf-8",
+      "sha": "fa3ae8d551c13ee58bf494183d575932a1144864",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c431470a1/litdb/papers/calpa2019_small_li7p3s11_liquid_phase_composite_cathode.md",
+      "display_title": "calpa2019_small_li7p3s11_liquid_phase_composite_cathode.md"
+    },
+    {
+      "slug": "tron2023_rational_cathode_composite_optimization_lpscl",
+      "encoding": "utf-8",
+      "sha": "9baa0301368bcc1ff218ea8b2a15bd2a32d32e54",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c431470a1/litdb/papers/tron2023_rational_cathode_composite_optimization_lpscl.md",
+      "display_title": "tron2023_rational_cathode_composite_optimization_lpscl.md"
+    },
+    {
+      "slug": "yadav2021_lpscl_sieved_psd_impedance_tortuosity",
+      "encoding": "utf-8",
+      "sha": "24516b97e819ce138570fa9bd64390e5065cd8e3",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c431470a1/litdb/papers/yadav2021_lpscl_sieved_psd_impedance_tortuosity.md",
+      "display_title": "yadav2021_lpscl_sieved_psd_impedance_tortuosity.md"
+    },
+    {
+      "slug": "lei2026_se_particle_size_effects_review",
+      "encoding": "utf-8",
+      "sha": "6e1353520cf4d3b68dbd2e34802dbee68c89b0fe",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c431470a1/litdb/papers/lei2026_se_particle_size_effects_review.md",
+      "display_title": "lei2026_se_particle_size_effects_review.md"
+    },
+    {
+      "slug": "kawaguchi2026_se_size_soc_dependent_cathode_resistance",
+      "encoding": "utf-8",
+      "sha": "1c850aa0559111cf6ccec850564d40d42ea7f0fd",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c431470a1/litdb/papers/kawaguchi2026_se_size_soc_dependent_cathode_resistance.md",
+      "display_title": "kawaguchi2026_se_size_soc_dependent_cathode_resistance.md"
+    },
+    {
+      "slug": "stavola2023_thick_nmc111_lpscl_lithiation_gradient_tortuosity",
+      "encoding": "utf-8",
+      "sha": "1c471bdc72bd67480ae026d54c4b37d82e4a28eb",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c431470a1/litdb/papers/stavola2023_thick_nmc111_lpscl_lithiation_gradient_tortuosity.md",
+      "display_title": "stavola2023_thick_nmc111_lpscl_lithiation_gradient_tortuosity.md"
+    },
+    {
+      "slug": "schlautmann2023_se_particle_size_composite_transport",
+      "encoding": "utf-8",
+      "sha": "25c7260da91d567927535be21b6b558bf08c9ae2",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c431470a1/litdb/papers/schlautmann2023_se_particle_size_composite_transport.md",
+      "display_title": "schlautmann2023_se_particle_size_composite_transport.md"
+    },
+    {
+      "slug": "minnmann2024_microstructure_porosity_visualization",
+      "encoding": "utf-8",
+      "sha": "9dc5da9d1ea296dae20f3a3d0b25117d8f642769",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c431470a1/litdb/papers/minnmann2024_microstructure_porosity_visualization.md",
+      "display_title": "minnmann2024_microstructure_porosity_visualization.md"
+    },
+    {
+      "slug": "tailored_cathode_microstructure_low_pressure_assb",
+      "encoding": "utf-8",
+      "sha": "8c75cf863c547658469d10cfafa83427a753dd44",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c431470a1/litdb/papers/tailored_cathode_microstructure_low_pressure_assb.md",
+      "display_title": "tailored_cathode_microstructure_low_pressure_assb.md"
+    },
+    {
+      "slug": "minnmann2021_jes_charge_transport_bottlenecks",
+      "encoding": "utf-8",
+      "sha": "9b1722cec256505bca9ad678e0ff4ffb26c3e180",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c431470a1/litdb/papers/minnmann2021_jes_charge_transport_bottlenecks.md",
+      "display_title": "minnmann2021_jes_charge_transport_bottlenecks.md"
+    },
+    {
+      "slug": "bazzoun2026_dem_fem_rnm_ionic",
+      "encoding": "utf-8",
+      "sha": "118d11d70589ab44f0b4ed6dd644a647c9996729",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c431470a1/litdb/papers/bazzoun2026_dem_fem_rnm_ionic.md",
+      "display_title": "bazzoun2026_dem_fem_rnm_ionic.md"
+    },
+    {
+      "slug": "shi2019_high_am_loading_particle_size_assb",
+      "encoding": "utf-8",
+      "sha": "a89fdb43d0a0c77ce6e9d5dac553ef0346977048",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c431470a1/litdb/papers/shi2019_high_am_loading_particle_size_assb.md",
+      "display_title": "shi2019_high_am_loading_particle_size_assb.md"
+    }
+  ]
+}

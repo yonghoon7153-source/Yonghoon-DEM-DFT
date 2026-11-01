@@ -1,0 +1,5 @@
+review pin: 065ad7004c8f970243951d366e3ced8c28af9197
+branch: claude/stoic-knuth-NObVQ (remote head at build time = pin)
+repo/ = git show <pin>:<path> for every file listed in MANIFEST under repo/
+external/kg50_d1_end_20261031.tgz = D1 end bundle (not in the repo; sha256 in repo/docs/data/kg50_d1_end_20261031/README.md)
+preview/ = draft-2 figures placed into the draft-1 template panels (header text = draft 1; layout check only)

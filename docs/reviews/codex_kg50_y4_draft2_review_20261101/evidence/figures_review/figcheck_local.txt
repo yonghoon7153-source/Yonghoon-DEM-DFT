@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\kg50y4d2_1101\source\repo\docs\50kg\report_y4\draft2\make_draft2_figs.py", line 31, in <module>
+    import matplotlib
+ModuleNotFoundError: No module named 'matplotlib'

@@ -1,0 +1,106 @@
+BASELINE {'check_lines': ['p1_bed_strip             PASS     점 6 · 막대/상자 1 · 띠 꼭짓점 0 · 축 글 1 · 그림 글 12 · 자른 모음 (검사 밖) 6', 'p2_compaction            PASS     점 10900 · 막대/상자 4 · 띠 꼭짓점 0 · 축 글 10 · 그림 글 5 · 자른 모음 (검사 밖) 0', 'p2_relaxation            PASS     점 519 · 막대/상자 0 · 띠 꼭짓점 0 · 축 글 5 · 그림 글 5 · 자른 모음 (검사 밖) 0', 'p3_contacts              PASS     점 3 · 막대/상자 12 · 띠 꼭짓점 0 · 축 글 15 · 그림 글 3 · 자른 모음 (검사 밖) 0', 'p3_overlap_threshold     PASS     점 0 · 막대/상자 26 · 띠 꼭짓점 0 · 축 글 5 · 그림 글 5 · 자른 모음 (검사 밖) 0', 'p3_per_am                PASS     점 63 · 막대/상자 11 · 띠 꼭짓점 0 · 축 글 5 · 그림 글 3 · 자른 모음 (검사 밖) 0', 'p4_tortuosity            PASS     점 3 · 막대/상자 8 · 띠 꼭짓점 0 · 축 글 11 · 그림 글 3 · 자른 모음 (검사 밖) 0', 'p4_f_connect             PASS     점 3 · 막대/상자 8 · 띠 꼭짓점 0 · 축 글 11 · 그림 글 3 · 자른 모음 (검사 밖) 0', 'p6_z_structure           PASS     점 72 · 막대/상자 0 · 띠 꼭짓점 0 · 축 글 0 · 그림 글 6 · 자른 모음 (검사 밖) 0', 'p6_z_stress              PASS     점 72 · 막대/상자 0 · 띠 꼭짓점 138 · 축 글 0 · 그림 글 6 · 자른 모음 (검사 밖) 0', 'p7_summary_heat          PASS     점 0 · 막대/상자 56 · 띠 꼭짓점 0 · 축 글 61 · 그림 글 1 · 자른 모음 (검사 밖) 0', 'p7_lit_direction         FAIL 1   점 0 · 막대/상자 24 · 띠 꼭짓점 0 · 축 글 30 · 그림 글 5 · 자른 모음 (검사 밖) 0', '    ✗ p7_lit_direction · 그림 글 "문헌 화살표 = 작은 SE 쪽의 방향 (정본 litdb 카드) · 우리 값은 나란히만 (일치 판정 아님) · 시드 1 · 단분산 (PSD 폭 그대로)" 그림 밖 (오른쪽 +9.9 px · 위 -248.8 px)', 'diag_relax_drop_vs_N     PASS     점 10 · 막대/상자 0 · 띠 꼭짓점 0 · 축 글 6 · 그림 글 2 · 자른 모음 (검사 밖) 0', '검사: 그림 13 · 문제 1 → FAIL'], 'n_problems': 1}
+{
+  "baseline": {
+    "check_lines": [
+      "p1_bed_strip             PASS     점 6 · 막대/상자 1 · 띠 꼭짓점 0 · 축 글 1 · 그림 글 12 · 자른 모음 (검사 밖) 6",
+      "p2_compaction            PASS     점 10900 · 막대/상자 4 · 띠 꼭짓점 0 · 축 글 10 · 그림 글 5 · 자른 모음 (검사 밖) 0",
+      "p2_relaxation            PASS     점 519 · 막대/상자 0 · 띠 꼭짓점 0 · 축 글 5 · 그림 글 5 · 자른 모음 (검사 밖) 0",
+      "p3_contacts              PASS     점 3 · 막대/상자 12 · 띠 꼭짓점 0 · 축 글 15 · 그림 글 3 · 자른 모음 (검사 밖) 0",
+      "p3_overlap_threshold     PASS     점 0 · 막대/상자 26 · 띠 꼭짓점 0 · 축 글 5 · 그림 글 5 · 자른 모음 (검사 밖) 0",
+      "p3_per_am                PASS     점 63 · 막대/상자 11 · 띠 꼭짓점 0 · 축 글 5 · 그림 글 3 · 자른 모음 (검사 밖) 0",
+      "p4_tortuosity            PASS     점 3 · 막대/상자 8 · 띠 꼭짓점 0 · 축 글 11 · 그림 글 3 · 자른 모음 (검사 밖) 0",
+      "p4_f_connect             PASS     점 3 · 막대/상자 8 · 띠 꼭짓점 0 · 축 글 11 · 그림 글 3 · 자른 모음 (검사 밖) 0",
+      "p6_z_structure           PASS     점 72 · 막대/상자 0 · 띠 꼭짓점 0 · 축 글 0 · 그림 글 6 · 자른 모음 (검사 밖) 0",
+      "p6_z_stress              PASS     점 72 · 막대/상자 0 · 띠 꼭짓점 138 · 축 글 0 · 그림 글 6 · 자른 모음 (검사 밖) 0",
+      "p7_summary_heat          PASS     점 0 · 막대/상자 56 · 띠 꼭짓점 0 · 축 글 61 · 그림 글 1 · 자른 모음 (검사 밖) 0",
+      "p7_lit_direction         FAIL 1   점 0 · 막대/상자 24 · 띠 꼭짓점 0 · 축 글 30 · 그림 글 5 · 자른 모음 (검사 밖) 0",
+      "    ✗ p7_lit_direction · 그림 글 \"문헌 화살표 = 작은 SE 쪽의 방향 (정본 litdb 카드) · 우리 값은 나란히만 (일치 판정 아님) · 시드 1 · 단분산 (PSD 폭 그대로)\" 그림 밖 (오른쪽 +9.9 px · 위 -248.8 px)",
+      "diag_relax_drop_vs_N     PASS     점 10 · 막대/상자 0 · 띠 꼭짓점 0 · 축 글 6 · 그림 글 2 · 자른 모음 (검사 밖) 0",
+      "검사: 그림 13 · 문제 1 → FAIL"
+    ],
+    "n_problems": 1
+  },
+  "tests": {
+    "D1_per_am_from_D2": {
+      "result": {
+        "p3_per_am": {
+          "problems": [],
+          "counts": {
+            "points": 63,
+            "patches": 11,
+            "band_vertices": 0,
+            "texts": 5,
+            "fig_texts": 3,
+            "cropped_collections": 0
+          }
+        }
+      },
+      "D1_p3_contacts_coverage_Hertz": 19.042945915532847,
+      "D1_p3_per_am_mean_after_swap": 21.05194125590817
+    },
+    "D1_relax_pressure_nan": {
+      "changed_original_row": {
+        "branch": "fixed_height_relaxation",
+        "step": "2706000",
+        "plate_pressure_MPa": "159.90943",
+        "plate_gap_um": "122.596",
+        "eps_sphere_pct": "16.8250302"
+      },
+      "result": {
+        "p2_relaxation": {
+          "problems": [],
+          "counts": {
+            "points": 518,
+            "patches": 0,
+            "band_vertices": 0,
+            "texts": 5,
+            "fig_texts": 5,
+            "cropped_collections": 0
+          }
+        }
+      }
+    },
+    "nonfinite_line_vertex": {
+      "problems": [],
+      "counts": {
+        "points": 2,
+        "patches": 0,
+        "band_vertices": 0,
+        "texts": 0,
+        "fig_texts": 0,
+        "cropped_collections": 0
+      },
+      "input_points": 3
+    },
+    "outside_line_vertex": {
+      "problems": [
+        "synthetic_outside_line · 축 0 · 선 점 (x 1, y 3) 축 밖 (xlim 0–2 · ylim 0–2)"
+      ],
+      "counts": {
+        "points": 3,
+        "patches": 0,
+        "band_vertices": 0,
+        "texts": 0,
+        "fig_texts": 0,
+        "cropped_collections": 0
+      },
+      "input_points": 3
+    },
+    "section_wrong_clip_top": {
+      "result": {
+        "p1_bed_strip": {
+          "problems": [],
+          "counts": {
+            "points": 6,
+            "patches": 1,
+            "band_vertices": 0,
+            "texts": 1,
+            "fig_texts": 12,
+            "cropped_collections": 6
+          }
+        }
+      }
+    }
+  },
+  "matplotlib": "3.11.2"
+}

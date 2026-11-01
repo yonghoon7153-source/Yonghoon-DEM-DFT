@@ -14274,27 +14274,48 @@
       "found_by": "codex 10-30 50kg Y4 초안 1 검토 (리뷰 핀 52f9e87e1 · review_probes.py 덱 출력 일정 · LIGGGHTS 3d5c00f output.cpp:228–238 · dump.cpp:112 · dump_modify first 기본 no)",
       "opened_in": "docs/reviews/codex_kg50_y4_draft1_review_20261030/codex_review_kg50_y4_draft1_20261030.md",
       "title": "후속 순서의 '압력 도달 순간 atom · contact · mesh 수령' 이 성립 안 함 — 압축 정지 step D2 3,915,002 · D3 4,475,002 가 atom 50,000 · mesh 5,000 · contact 10,000 (압축 끝 · 감쇠 바꾼 뒤부터) 주기의 배수가 아니고 정지 순간 dump 도 없음",
-      "note": "판정문 §4.  자리 docs/50kg/report_y4/storyline_draft1.md:134–136 · docs/50kg/kg50_report_plan_fix_plan_20261030.md:48–49 · D2 덱 217 · 237 · 245–253 행.  무너지지 않는 것 = 이완 끝 단면 · 로그 압밀 곡선 · 이완 끝 수치.  최소 해결 = 실제 파일 재고 (종류 · 내부 step · 원 로그 연결) 먼저 · 결손 = NOT_AVAILABLE · 다른 step 의 파일을 한 상태로 묶지 않음 · 이완 프레임을 300 MPa 상태로 부르지 않음 · 정확한 정지 상태 복원 = 별도 실행 승인.  수정 계획 docs/50kg/report_y4/draft2_fix_plan_20261030.md Q1.  10-31: 이완 끝 세트 = 같은 정의이지만 정적 압력이 침대마다 다름 (D1 156 · D2 280 · D3 291 MPa · 원인 = 감쇠 저항 추정 · KG50-20) → '같은 상태 비교' 문장은 철회 (SELF-145)."
+      "note": "판정문 §4.  자리 docs/50kg/report_y4/storyline_draft1.md:134–136 · docs/50kg/kg50_report_plan_fix_plan_20261030.md:48–49 · D2 덱 217 · 237 · 245–253 행.  무너지지 않는 것 = 이완 끝 단면 · 로그 압밀 곡선 · 이완 끝 수치.  최소 해결 = 실제 파일 재고 (종류 · 내부 step · 원 로그 연결) 먼저 · 결손 = NOT_AVAILABLE · 다른 step 의 파일을 한 상태로 묶지 않음 · 이완 프레임을 300 MPa 상태로 부르지 않음 · 정확한 정지 상태 복원 = 별도 실행 승인.  수정 계획 docs/50kg/report_y4/draft2_fix_plan_20261030.md Q1.  10-31: 이완 끝 세트 = 같은 정의이지만 정적 압력이 침대마다 다름 (D1 156 · D2 280 · D3 291 MPa · 원인 = 감쇠 저항 추정 · KG50-20) → '같은 상태 비교' 문장은 철회 (SELF-145).",
+      "partial_note": "2026-11-01 Codex 초안 2 재검토 (리뷰 핀 065ad7004) §1 표 = **부분 · 열림 유지** — '프레임 규칙 방향 수용, 실제 재고·분석계획·동일 물리 상태 미종결'.  §4 Q2: 이완 끝 atom · contact · mesh 같은 step 세트와 압력 도달 프레임 NOT_AVAILABLE 은 적절 · 같은 step 이 같은 압력 · 같은 물리 상태를 보증하지 않음 (이완 끝 판 압력 D1 156.2 · D2 279.8 · D3 291.4 MPa).  남은 것 = ① 실제 파일 재고 ② 분석 계획 ③ 같은 물리 상태 ④ 후속 소비 경계 — D0.7 자료를 자동 소비하기 전 JSON + companion CSV 의 출처 · case · step · 수송 상태 · 유한성 결합 검사 (K5D2-06 · 부속 figures_review §3) ⑤ 아직 전달 안 된 압축 덤프 = '보관 여부 미확인' (없음 · 복원 불가로 쓰지 않음).  판정문 = docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md."
     },
     {
       "id": "K50Y4-02",
       "severity": "P2",
-      "status": "open",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-30 50kg Y4 초안 1 검토 (check_prior_deck.py · storyline_draft1.md:40 대조)",
       "opened_in": "docs/reviews/codex_kg50_y4_draft1_review_20261030/codex_review_kg50_y4_draft1_20261030.md",
       "title": "1.35 GPa 유효 입력의 계승을 기전 · 현행 실험 보정의 증명으로 확장 — 스토리라인 1쪽 예상 답변 '입계 미끄럼 · 재배열을 DEM 에서 대신 · 기공도를 실험 수준으로 맞추는 규약값'",
-      "note": "판정문 §4.  지지 = 선행 규약 계승 (현행 네 덱 1.35 GPa · 선행 보고 9쪽).  최소 해결 문구 = 판정문 §4 (물성 기준 22 GPa (랩실 표준) · 이번 DEM 은 선행 이종기술 해석과 같은 유효 입력 1.35 GPa · 유효 입력의 계승이며 개별 변형 기전이나 이번 복합양극의 실험 기공률 일치를 검증한 결과 아님).  추가 시뮬레이션 불필요.  KG50B-06 = 이 항목과 K50Y4-03 정리 뒤 문구까지 충족."
+      "note": "판정문 §4.  지지 = 선행 규약 계승 (현행 네 덱 1.35 GPa · 선행 보고 9쪽).  최소 해결 문구 = 판정문 §4 (물성 기준 22 GPa (랩실 표준) · 이번 DEM 은 선행 이종기술 해석과 같은 유효 입력 1.35 GPa · 유효 입력의 계승이며 개별 변형 기전이나 이번 복합양극의 실험 기공률 일치를 검증한 결과 아님).  추가 시뮬레이션 불필요.  KG50B-06 = 이 항목과 K50Y4-03 정리 뒤 문구까지 충족.",
+      "claimed_fixed_sha": "ec460457d",
+      "evidence_tests": [
+        "docs/50kg/report_y4/draft2/slide_text_draft2.md (리뷰 핀 065ad7004 판 136 행 = 판정문 §4 최소 한정문 그대로 (물성 22 GPa (랩실 표준) · 이번 DEM = 선행 이종기술 해석과 같은 유효 입력 1.35 GPa · 유효 입력의 계승 · 개별 변형 기전 · 이번 복합양극 실험 기공률 일치의 검증 아님) · 1쪽 표 두 줄 108–109 행 · 대본 132 행 — 문서 고침 · 시험 없음)",
+        "docs/50kg/report_y4/draft2/slide_text_draft3.md (§0-3 55 행 → 1쪽 표 두 줄 · 노트 · 부록 표 ⑥ 에 옮김)"
+      ],
+      "verified_sha": "065ad7004",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+      "verified_scope": "판정문 §1 표 '기존 `K50Y4-02` / 원 판정 ID `KG50Y4-02` | **닫힘** — 1.35 GPa 최소 한정문 반영' · §4 Q1 '기존 두 문구 지적은 닫을 수 있다. 최소 한정문은 쪽 글 136행에 있고 … 원 판정이 노트/질문답변 배치를 허용하므로 짧은 대본이 두 문장 전체를 반복하지 않는 것은 결함이 아니다.' — 범위 = 초안 2 글 시트 (부속 figures_review/figures_content_review.md §4: 보관된 초안 1 storyline 의 옛 문구는 draft2 산출물로 쓰지 않는 한 새 결함으로 세지 않음).",
+      "verification_note": "2026-11-01 Codex 초안 2 재검토 (리뷰 핀 065ad7004) = 닫힘 → 11-01 반입 커밋에서 상태를 옮겼다 (docs/reviews/codex_kg50_y4_draft2_review_20261101/README_import.md).  우리 확인 = 핀 판 slide_text_draft2.md 136 행 (git blame = ec460457d) · 초안 3 §0-3 55 행 자리 대조."
     },
     {
       "id": "K50Y4-03",
       "severity": "P3",
-      "status": "open",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-30 50kg Y4 초안 1 검토 (check_prior_deck.py — 같은 sha256 d65796c8… 의 sldIdLst 순서)",
       "opened_in": "docs/reviews/codex_kg50_y4_draft1_review_20261030/codex_review_kg50_y4_draft1_20261030.md",
       "title": "선행 보고 '13 장' 인용 = 내부 XML 부품 번호 (ppt/slides/slide13.xml) 를 발표 쪽으로 씀 — 1.35 GPa 는 발표 9쪽 'DEM 기반 복합양극 압축 모델' · 요청서 §1 · ZIP 발췌 (evidence/report_20261001_slide13_text.txt = 발표 13쪽 = 바이모달 공극률 장)",
-      "note": "판정문 §4.  최소 해결 = 출처 9쪽 · 9쪽 발췌로 교체 · 파일 sha 유지 · 선행 사용 사실 철회 아님.  내 검증 누락 = SELF-144."
+      "note": "판정문 §4.  최소 해결 = 출처 9쪽 · 9쪽 발췌로 교체 · 파일 sha 유지 · 선행 사용 사실 철회 아님.  내 검증 누락 = SELF-144.",
+      "claimed_fixed_sha": "ec460457d",
+      "evidence_tests": [
+        "docs/50kg/report_y4/draft2/slide_text_draft2.md (리뷰 핀 065ad7004 판 137 행 = 선행 보고 9쪽 (DEM 기반 복합양극 압축 모델) · '13 장' 아님 — 문서 고침 · 시험 없음)",
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/source/evidence/report_20261001_page_with_1p35GPa.txt (요청 ZIP 의 발표 9쪽 발췌 · sldIdLst 순서 · 부품 ppt/slides/slide13.xml · 1.35 GPa 문장 포함)"
+      ],
+      "verified_sha": "065ad7004",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+      "verified_scope": "판정문 §1 표 '기존 `K50Y4-03` / `KG50Y4-03` | **닫힘** — 발표 9쪽으로 정정, 발췌 일치' · §4 Q1 '발표 9쪽은 137행 및 evidence 발췌와 맞는다' — 범위 = 출처 쪽 번호 · 발췌 대응 (선행 사용 사실 · 파일 sha 는 그대로).",
+      "verification_note": "2026-11-01 Codex 초안 2 재검토 (리뷰 핀 065ad7004) = 닫힘 → 11-01 반입 커밋에서 상태를 옮겼다 (docs/reviews/codex_kg50_y4_draft2_review_20261101/README_import.md).  같은 사건의 내 검증 누락 기록 SELF-144 는 그대로 (교훈 항목 · 이 판정이 다루지 않음)."
     },
     {
       "id": "SELF-144",
@@ -14313,8 +14334,8 @@
       "owner": "claude",
       "found_by": "메인 10-31 D1 끝 세트 · 로그 대조 (D2 · D3 로그와 같은 자리)",
       "opened_in": "docs/data/kg50_d1_end_20261031/README.md",
-      "title": "kg50 4차년도 덱 (압축 viscous 0.5 · 판 속도 0.01 · 목표 0.30) — 이완 끝 판 압력이 입도마다 다르다: D1 156.15 · D2 279.79 · D3 291.37 MPa (정지 직전 300.59 · 300.24 · 300.63 · 낙폭 144.44 · 20.45 · 9.26 MPa) — 원인 = 압축 감쇠 저항이 정지 판정에 섞였다가 판이 멈추면 사라짐 (추정 · Q5 등록 §1-2 가 10-27 결과 전에 예측한 꼴) · affine 감쇠 저항 어림 γNv/(2A) 168.5 · 22.4 · 7.7 MPa (= 낙폭의 상한 어림 · 예측 아님) · D0.7 덱 계획 N 488,291 → 어림 488 MPa > 목표 300",
-      "note": "결과 전 예측 = Q5 등록 `docs/50kg/kg50_q5_dt_damping_registration_draft_20261027.md` §1-2 (10-27 · ps45 평균 하강 속도 0.54 배 가정: D1 61 % · D2 8.1 % · D3 2.8 % · D0.7 176 % = 182.4 · 24.2 · 8.32 MPa 상당) — 관측 낙폭 / 그 예측 = 0.79 · 0.85 · 1.11 · 관측 낙폭 / affine 어림 = 0.86 · 0.91 · 1.21.  γNv/(2A) = 판 반력 속 감쇠 저항의 상한 어림이지 낙폭 예측이 아니다 (판 고정 뒤 1D 선형 탄성 기둥이면 Δp ≈ ⅔·D/A · DEMP-01 ps45 실측 낙폭 / 저항 = 0.78) · D3 비 1.21 = 감쇠 저항만으로 설명 안 되는 1–1.6 MPa (미설명) · 접촉 감쇠 (hooke/hysteresis) 항은 어림 밖 (미확인).  D1 이완 첫 출력 운동에너지 열 0.0651 (D2 0.00102 · D3 0.000151) · 이완 2,686,000 → 2,689,000 원자 5 개 소실 (SE · 168,457 → 168,452) · 판 압력 최저 111.98 MPa.  영향: ① 이완 끝 세트 = 같은 정의 · 다른 정적 압력 → 입도 비교의 접촉 · 피복 · 수송 · 입자 응력 값 = 판정 보류 ② ε_sphere 도 정적 압력이 다른 상태에서 굳은 값 ③ D0.7 = 감쇠 저항만으로 정지 판정이 날 수 있다 (추정) — 1저자 10-31 = 지금 포맷 그대로 (등록 개정 · 요청서 Q4).  직접 확인 = 압축 중 atom 덤프 (50,000 step 마다 · vx vy vz 있음 · 정지 전 마지막 D1 atom_2650000 (294.26 MPa) · D2 atom_3900000 (297.76) · D3 atom_4450000 (296.85) · hit · ibb 보관 여부 미확인) 로 γΣv_z (DEMP-01 방법 · 등록 R5) — 정지 순간 덤프는 없다 (K50Y4-01).  자리 = 그림 docs/50kg/report_y4/draft2/figs/diag_relax_drop_vs_N.* · 요청서 docs/50kg/report_y4/codex_kg50_y4_draft2_request_20261031.md · 사전 공격 R2-03–06."
+      "title": "kg50 4차년도 덱 (압축 viscous 0.5 · 판 속도 0.01 · 목표 0.30) — 이완 끝 판 압력이 입도마다 다르다: D1 156.15 · D2 279.79 · D3 291.37 MPa (정지 직전 300.59 · 300.24 · 300.63 · 낙폭 144.44 · 20.45 · 9.26 MPa) — 판 정지와 전역 감쇠 감소 (γ 0.5 → 1e-5) 뒤 압력 하락 · 결과 전 (Q5 등록 §1-2 · 10-27) 에 제기한 감쇠 교란 가설과 정성적으로 부합 · 기전별 정량 기여 미분리 · 감쇠 저항 규모 기준선 R_aff = γNv/(2A) (affine 가정) 168.5 · 22.4 · 7.7 MPa (낙폭의 일반 상한이나 예측값 아님) · D0.7 덱 계획 N 488,291 → R_aff 488 MPa > 목표 300",
+      "note": "결과 전 가설 = Q5 등록 `docs/50kg/kg50_q5_dt_damping_registration_draft_20261027.md` §1-2 (10-27 · ps45 평균 하강 속도 0.54 배 가정: D1 61 % · D2 8.1 % · D3 2.8 % · D0.7 176 % = 182.4 · 24.2 · 8.32 MPa = 결과 전 감쇠 저항 상당 압력 · 낙폭의 수치 예측으로 등록한 값 아님) — 관측 낙폭 / 그 상당 압력 = 0.79 · 0.85 · 1.11 · 관측 낙폭 / R_aff = 0.86 · 0.91 · 1.21 (둘 다 서로 다른 양의 규모 비교 · 예측 정확도 아님).  R_aff = γNv/(2A) = 균일 입자 수 밀도 · affine 속도 가정의 감쇠 저항 규모 기준선 (drag/A) — 낙폭의 일반 상한도 예측값도 아니다 (11-01 외부 리뷰 KG50Y4D2-01 = 원장 K5D2-01 의 해석적 반례: 고정 바닥–스프링 k_b–점착 없는 입자 묶음 (총 drag γN)–스프링 k_t–등속 판에서 판 고정 뒤 낙폭 = 2α²·R_aff · α = k_t/(k_t+k_b) = 0.777 이면 D3 와 같은 9.26 MPa = R_aff 의 1.21 배 → 비가 1 을 넘는 것은 감쇠 밖 기전이 있다는 증거가 아니다) · 낙폭 ≈ ⅔·R_aff 는 균질 선형 탄성 기둥 · 균일 수 밀도 · affine 속도 · 준정적 시작 / 끝 · 양단 고정 · 접촉 이력 / 소성 없음일 때만 서는 이상화 관계 (이 덱은 판 정지와 함께 γ 를 0.5 → 1e-5 로 바꾸고, 판이 멈춰도 입자 · drag 가 즉시 0 이 되지 않는다 → 일반 관계 · 예측으로 쓰지 않음) · DEMP-01 ps45 실측 낙폭 / 저항 = 0.78 = 다른 침대의 관측 하나 (공통 환산 계수 아님) · 접촉 감쇠 (hooke/hysteresis) 항은 기준선 밖 (미확인).  D1 이완 첫 출력 운동에너지 열 0.0651 (D2 0.00102 · D3 0.000151) · 이완 2,686,000 → 2,689,000 원자 5 개 소실 (SE · 168,457 → 168,452) · 판 압력 최저 111.98 MPa — SE 5 개 소실의 ε_sphere 직접 변화 0.00085419 %p 는 구 부피 항뿐 (연결망 · 접촉 · 응력 영향의 상한 아님 · 11-01 판정문 §5 (b)).  영향: ① 이완 끝 세트 = 같은 정의 · 다른 이완 끝 판 압력 (수렴 인증 아님) → 입도 비교의 접촉 · 피복 · 수송 · 입자 응력 값 = 판정 보류 ② ε_sphere 도 이완 끝 판 압력이 다른 상태에서 굳은 값 ③ D0.7 = 감쇠 저항만으로 정지 판정이 날 수 있다 (추정) — 1저자 10-31 = 지금 포맷 그대로 (등록 개정 · 요청서 Q4).  직접 확인 = 압축 중 atom 덤프 (50,000 step 마다 · vx vy vz 있음 · 정지 전 마지막 D1 atom_2650000 (294.26 MPa) · D2 atom_3900000 (297.76) · D3 atom_4450000 (296.85) · hit · ibb 보관 여부 미확인) — 등록 R5_abs = Σγ_type|v_z| / (P·A) (절대값 합) 와 추가 진단 R_drag_signed = D_z / F_top (D_z = −Σγ_type v_z · 부호 있는 합 · DEMP-01 방법) 를 따로 낸다 (K5D2-02 · 속도 부호가 섞이면 둘이 다르다) · 말기 여러 덤프의 추세로 보고 정지 순간 값으로 바꾸지 않음 · D_z ≈ ΔP·A 만으로 원인 확정 아님 (하판력 · 운동량 변화 · 하중 분담 없이 힘 평형 · 이완 인과 미종결) — 정지 순간 덤프는 없다 (K50Y4-01).  자리 = 그림 docs/50kg/report_y4/draft2/figs/diag_relax_drop_vs_N.* · 요청서 docs/50kg/report_y4/codex_kg50_y4_draft2_request_20261031.md · 사전 공격 R2-03–06 · 11-01 외부 리뷰 판정문 docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md (§1 표 = 이 항목 기존 열림 유지 · 이번 검토로 물리 결함을 닫지 않음 · §3 · §5)."
     },
     {
       "id": "SELF-145",
@@ -14325,6 +14346,166 @@
       "opened_in": "docs/data/kg50_d1_end_20261031/README.md",
       "title": "초안 2 수정 계획 §3 의 '이완 끝 세트는 네 침대 모두 같은 정의로 생긴다 → 같은 상태 비교가 선다' — Q5 등록 §1-2 (10-27 · 비준) 가 입도 시리즈의 감쇠 몫 (D1 61 % · D0.7 176 %) 을 이미 표로 예측했는데, 그 예측을 초안 2 비교 틀 (수정 계획 §3 · 초안 2 README) 로 옮기지 않고 '같은 상태' 로 적음",
       "note": "같은 사건 = KG50-20 · 사전 공격 R2-04 가 짚음 (처음 기록의 'DEMP-01 을 입도 시리즈에 대입하지 않았다' 는 틀림 — 등록에는 대입돼 있었다).  교훈: '같은 정의 = 같은 상태' 로 쓰기 전에 침대마다 정적 압력 (이완 끝) · 원자 수 · 운동에너지를 대조한다 · 비교 틀을 쓸 때는 열린 P1 (DEMP-01) 과 비준된 등록의 예측 표를 먼저 다시 읽는다."
+    },
+    {
+      "id": "K5D2-01",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "codex 11-01 50kg Y4 초안 2 재검토 (리뷰 핀 065ad7004 · 받은 ZIP sha256 043c6207… · DEM · 수송망 solve · WSL · Slurm 제출 · 취소 · Bash 끝-끝 미실행) · 부속 physics_review PHY-01 · PHY-03 · 해석적 반례 evidence/physics_review/analytic_probe.py",
+      "opened_in": "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+      "title": "(Codex KG50Y4D2-01) affine 감쇠 저항 R_aff = γNv/(2A) 를 이완 낙폭의 상한 · D3 의 초과분 (9.25654/7.666 = 1.2075 → 1.59 MPa) 을 감쇠 밖 기전이 맡은 몫의 하한 · 등록 182.4/24.2/8.32 MPa 를 낙폭 예측으로 읽음 — 반례: 고정 바닥–스프링 k_b–점착 없는 입자 묶음 (총 drag Γ = γN)–스프링 k_t–등속 판 · α = k_t/(k_t+k_b) → 판 고정 뒤 ΔP = Γα²v/A = 2α²R_aff · α 0.777007 (k_t/k_b 3.484446) 이면 D3 와 같은 9.25654 MPa (기준선 +20.75 %) · ⅔ 는 이상화 조건 (균질 선형 탄성 · 균일 수 밀도 · affine 속도 · 준정적 · 양단 고정 · 접촉 이력 / 소성 없음) 에서만 유도",
+      "note": "판정문 §3 · 자리 (핀 065ad7004) docs/data/kg50_d1_end_20261031/README.md:41,47 · slide_text_draft2.md:204,221,685 · make_draft2_figs.py:1124 · 요청 Q3(a) · Q5(b) · 부속 PHY-01 은 원장 KG50-20 문장 (요청 ZIP ledger_rows.json) 도 지목.  덱은 판 정지와 동시에 γ 0.5 → 1e-5 (50,000 분의 1) · 판이 멈춰도 입자 · drag 가 즉시 0 이 아님 · 등록값 = 결과 전 drag 상당압 (0.79/0.85/1.11 = 예측 정확도 아님).  최소 해결 = 선 이름 '감쇠 저항 규모 기준선 R_aff=γNv/(2A) (affine 가정)' 통일 · '상한' · '감쇠만으로 설명 안 되는 1–1.6 MPa' · 숫자 표의 '어림 Δp' 삭제 · 정정 · 권장 문장 (판정문 §3).  닫힘 = 그래프 · 원장 설명 수정 (판정문 §8 1 행) · 실제 원인 규명은 별도 (KG50-20 · DEMP-01 열림).  ✅ 10-31 c3714b547 (11-01 초안 3 5a2595b54 에 옮김 · 자리 = 초안 3 §0-3) — 아래 자리에 선 이름 · 권장 문장 · ⅔ 의 조건 · '규모 비교 · 예측 정확도 아님' · 'DEM 로그 Δp' 확인 (11-01 반입 때 · 초안 2 · 3 시트 · 초안 2 README · D1 README · 그림 SVG 에서 기준선에 붙은 '상한' 은 부정문 · '하지 않을 말' 에만 · 초안 3 0쪽의 접선 마찰 상한 μF_n 은 무관한 뜻) · 원장 KG50-20 제목 · note = 11-01 반입 커밋에서 고침.  보고 · 커밋 표기 K50Y4D2-01 = 이 항목 (원장 ID 형식 때문에 K5D2-01).",
+      "claimed_fixed_sha": "c3714b547",
+      "evidence_tests": [
+        "docs/50kg/report_y4/draft2/slide_text_draft2.md (2쪽 진단 그림 캡션 205 행 · 그림 대조 207 행 · 대본 3 = 222 행 · 노트 226–227 행 · ⑦ 246 행 · 숫자 출처 699 · 702 · 703 행 — 문서 고침 · 시험 없음)",
+        "docs/50kg/report_y4/draft2/slide_text_draft3.md (§0-3 49 행 → 부록 ④-1 캡션 610 행 · 표 ② 617 행 (권장 문장 그대로) · 노트 633 행 (⅔ 조건) · ⑦ 642 행)",
+        "docs/data/kg50_d1_end_20261031/README.md (§3 표 41–42 행 · 원인 서술 46 행 · ⅔ 조건 47 행)",
+        "docs/50kg/report_y4/draft2/make_draft2_figs.py (DIAG_EST_LABEL · DIAG_DP_LABEL 1156–1157 행 · --check 그림 13 문제 0 = c3714b547 커밋 기록 · 초안 3 그림 16 문제 0 = docs/50kg/report_y4/draft2/figcheck/draft3_check_20261101.txt)",
+        "docs/50kg/report_y4/draft2/figs/diag_relax_drop_vs_N.svg (범례 '감쇠 저항 규모 기준선 R_aff = γNv/(2A) (affine 가정)' · 'DEM 로그 Δp' · '상한' 없음)"
+      ],
+      "evidence": [
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/physics_review/physics_registration_literature_review.md",
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/physics_review/analytic_probe.json"
+      ]
+    },
+    {
+      "id": "K5D2-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 11-01 50kg Y4 초안 2 재검토 (리뷰 핀 065ad7004 · 받은 ZIP sha256 043c6207… · DEM · 수송망 solve · WSL · Slurm 제출 · 취소 · Bash 끝-끝 미실행) · 부속 physics_review PHY-02 · guard_review §3 · analytic_probe.py 부호 합 / 절댓값 합 반례",
+      "opened_in": "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+      "title": "(Codex KG50Y4D2-02) 등록 R5 = Σγ_type|v_z|/(P·A) (절댓값 합) 와 직접 총 drag D_z = −Σγ_type v_z (부호 합) 를 같은 양처럼 씀 (D1 README · 요청 Q3(c) · Q4 · 원장 KG50-20 의 'γΣv_z (DEMP-01 방법 · 등록 R5)') — 두 입자 v_z = −0.01 · +0.01 · γ 0.5 이면 총 수직 drag 0 · 절댓값 합 0.01 (덱 힘 단위) · 감쇠 소산률 Σγ|v|² 는 셋째 양",
+      "note": "판정문 §3 · 자리 (핀 065ad7004) docs/50kg/kg50_q5_dt_damping_registration_draft_20261027.md:201 · D1 README :48 · 요청 Q3(c) · Q4 · 공식 fix viscous 정의 = 속도 벡터에 대한 힘 (F_i = −γv_i).  최소 해결 = 기존 R5 를 R5_abs 로 보존 + 추가 진단 R_drag_signed = D_z/F_top 를 별도 열로 · γ · N · 상별 합 · 상승 / 하강 수 · 같은 step 판력과 KE · 단위를 함께 · 판 접촉 전 분모 0 = 비율 미정의 · Q9 '정지 없이 측정' 저자 개정은 뒤집지 않음.  닫힘 조건 (판정문) = '정의가 분리되고 판독기가 두 값을 따로 출력하면 닫힘' (§8 2 행 = 정의 · 출력 분리).  보고 · 커밋 표기 K50Y4D2-02.",
+      "partial_note": "10-31 c3714b547 = 보고 글의 정의 분리만 — docs/50kg/report_y4/draft2/slide_text_draft2.md 228 행 · docs/50kg/report_y4/draft2/slide_text_draft3.md 632 행 (부록 노트) · docs/data/kg50_d1_end_20261031/README.md 48 행 · 원장 KG50-20 note 의 '부호 합 = 등록 R5' 혼용 = 11-01 반입 커밋에서 고침.  남은 것 (닫힘 조건) = 판독기 출력 분리: scripts/kg50_q5_verdict.py 는 R5_damp_share = Σγ|v_z|/(P·면적·10⁶) 하나만 낸다 (593 · 720 행 · 리뷰 핀 뒤 변경 없음) · R_drag_signed · 상별 합 · 상승 / 하강 수 · 분모 0 미정의 = 미구현 · 등록 문서 R5 행 이름 그대로 (201 행) · 압축 덤프 직접 drag 측정 미실행 (덤프 보관 여부 미확인) → status open.",
+      "evidence_tests": [
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/physics_review/analytic_probe.py (부호 합 0 ↔ 절댓값 합 0.01 · 결과 docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/physics_review/analytic_probe.json · 결함 재현 산술 · 고침 시험 아님)"
+      ],
+      "evidence": [
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/physics_review/physics_registration_literature_review.md"
+      ]
+    },
+    {
+      "id": "K5D2-03",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "codex 11-01 50kg Y4 초안 2 재검토 (리뷰 핀 065ad7004 · 받은 ZIP sha256 043c6207… · DEM · 수송망 solve · WSL · Slurm 제출 · 취소 · Bash 끝-끝 미실행) · 부속 figures_review §2 · tau_flux.py 30–32 · 1397–1404 행 · 침대별 JSON tau_flux_row",
+      "opened_in": "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+      "title": "(Codex KG50Y4D2-03) 보고 f 를 '원 솔버 σ' 로 설명 — 실제 열 f_ion_hertz · f_ion_physics = f_mc = f_gap × L_gap/L_mc (f_gap = σ_eff,gap/σ₀ · 판 간격 해의 질량보존 두께 재척도 · 새 망 해 아님) · D1/D3 비 = f_mc 기준 Hertz 2.398620 · Physics 2.132917 ↔ f_gap 기준 2.332935 · 2.074508 (L_gap/L_mc µm D1 122.596/124.568496 · D2 122.469/126.832237 · D3 125.877/131.503444)",
+      "note": "판정문 §3 · 자리 (핀 065ad7004) slide_text_draft2.md:356,415,429 · run_draft2_metrics.py:641–646 · make_draft2_figs.py:132–135 · :926–940 (부속 figures_review §2).  값 유지 (계산 규약을 새로 고르라는 요청 아님) · φ_mc/f_mc = φ_sphere/f_gap 이라 τ 수치 무효 아님 · 두 기준 모두 Hertz / Physics 가 2.217 양쪽 → 판정 보류 유지.  최소 해결 = 그림 / 본문에 f_mc (또는 '질량보존 두께로 재척도한 f') 표시 · 노트에 식 · 자기상사 가정 · τ = φ_mc/f_mc 연결 · 닫힘 = 설명 · 범례와 실제 열이 일치.  ✅ 10-31 c3714b547 (11-01 초안 3 5a2595b54 에 옮김 · 자리 = 초안 3 §0-3) — f_mc 표지 · 식 · L_gap/L_mc · 두 기준의 비 · τ 연결 확인 (11-01 반입 때 · 우리 data/<침대>/metrics_<침대>.json tau_flux_row 로 판정문 표 · 비 재현 = 판정문 자릿수에서 차이 0 · f_gap × L_gap/L_mc ↔ f_mc 상대 차 < 1e-15).  남은 것 (최소 해결 문구 중) = 시트 노트에 '자기상사 가정' 구절 없음 (scripts/tau_flux.py 32 행에만) — 닫힘 조건 (설명 · 범례 = 실제 열) 밖.  보고 · 커밋 표기 K50Y4D2-03.",
+      "claimed_fixed_sha": "c3714b547",
+      "evidence_tests": [
+        "docs/50kg/report_y4/draft2/slide_text_draft2.md (4쪽 표 352 행 · 캡션 362 행 · 노트 378–379 행 · 5쪽 표 421–422 · 428 · 435 · 439 · 445 행 · 노트 459–460 행 · 숫자 출처 680–682 행 — 문서 고침 · 시험 없음)",
+        "docs/50kg/report_y4/draft2/slide_text_draft3.md (§0-3 51 행 → 4쪽 캡션 360 행 · 노트 379–380 행 · 부록 표 ③ 618 행)",
+        "docs/50kg/report_y4/draft2/make_draft2_figs.py (F_MC · F_MC_TAG 131–132 행 → p4_f_connect (a) 축 · 제목 956–957 행 · p7 열 이름 1041 · 1095 행)",
+        "docs/50kg/report_y4/draft2/figs/p7_summary_heat.csv (f 행 이름 칸 = f_mc (Hertz · 두께 재척도) · 값 그대로)",
+        "docs/50kg/report_y4/draft2/data/D1/metrics_D1.json (tau_flux_row: f_ion_hertz_gap 0.04755623 × 122.596 / 124.568496 = f_ion_hertz 0.0468031947 · D2 · D3 같은 대조 · 11-01 반입 때 재계산)"
+      ],
+      "evidence": [
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/figures_review/figures_content_review.md"
+      ]
+    },
+    {
+      "id": "K5D2-04",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 11-01 50kg Y4 초안 2 재검토 (리뷰 핀 065ad7004 · 받은 ZIP sha256 043c6207… · DEM · 수송망 solve · WSL · Slurm 제출 · 취소 · Bash 끝-끝 미실행) · 부속 guard_review Q4G-01 · 소스 결속 독립 제어 흐름 모형 (실제 Bash · Slurm 관측 아님)",
+      "opened_in": "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+      "title": "(Codex KG50Y4D2-04 = 부속 Q4G-01) D0.7 지킴이 v2 — 승인 영수증 불일치 (또는 본 job 신원 불일치) 때 scancel 뒤 곧바로 감시 종료 · 취소 반환 코드 · 시험 끝 상태 · 같은 시도의 늦은 main_job.txt 를 확인하지 않으면서 '본 제출로 못 넘어감' 이라고 출력 — 취소가 실패해 시험이 계속되거나 이미 본 job 이 제출된 뒤 시험 job 만 취소하면 guard exit=1 인데 main=RUNNING 가능 (모형) · 도구는 지킴이 결과를 승격 조건으로 읽지 않음",
+      "note": "판정문 §3 · 자리 (핀 065ad7004) docs/50kg/d07_guard/d07_guard_v2_1031.sh:57–59 · :77 · scripts/resume_ckpt.sh:2097–2106 · 이전 한 건 GO 판정문 docs/reviews/codex_kg50_d07_scoped_go_20261030/codex_review_kg50_d07_scoped_go_20261030.md:143 ('늦은 취소면 본 job 유무 · 종료까지 확인').  한정 = 알려진 일반 관문 결함 PAI-02 의 새 P1 재발견 아님 · 저자 흉내 (sim_guard_v2.sh) 의 취소는 늘 성공하게 짜여 78/78 이 취소 실패 · 늦은 취소를 시험하지 않음 · 근거 = 독립 모형 (evidence/guard_review/probes/model_guard_failure_paths.py) 이지 실제 취소 / 제출 관측 아님 (Bash 두 런타임 = Windows 초기화 오류로 미실행).  최소 해결 = 문구 '취소 요청 · 차단 완료 미확인' · 시험과 같은 시도의 본 job 종료까지 확인 · 무인 보장을 원하면 본 제출 전 동기 관문.  이번 한 건 = 판정문 §6 (a) 2 (불일치 · 확인 지연이면 시험과 같은 시도의 본 job 유무 · 최종 종료까지 사람이 확인 · scancel 호출이나 지킴이 종료만으로 차단 완료를 선언하지 않음) · 판정문 §1 = 지킴이 v2 단독의 무인 차단 · 실패 감시 보장 HOLD.  11-01 반입 때 docs/50kg/d07_guard/ · scripts/resume_ckpt.sh = 리뷰 핀 뒤 변경 없음 (git log 065ad7004..ae1f64b93) → open.  보고 표기 K50Y4D2-04.",
+      "evidence_tests": [
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/guard_review/probes/model_guard_failure_paths.py (독립 제어 흐름 모형 · 결과 docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/guard_review/evidence/failure_path_models.json · 결함 재현 모형 · 고침 시험 아님)"
+      ],
+      "evidence": [
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/guard_review/Q4_guard_review_20261101.md"
+      ]
+    },
+    {
+      "id": "K5D2-05",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 11-01 50kg Y4 초안 2 재검토 (리뷰 핀 065ad7004 · 받은 ZIP sha256 043c6207… · DEM · 수송망 solve · WSL · Slurm 제출 · 취소 · Bash 끝-끝 미실행) · 부속 guard_review Q4G-02 · 핀의 실제 render() 로 만든 러너 텍스트 (실행 안 함)",
+      "opened_in": "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+      "title": "(Codex KG50Y4D2-05 = 부속 Q4G-02) D0.7 지킴이 v2 — 결과 줄 · 본 job 신원 줄 (LMP_IDENTITY) 을 기다리는 동안 job 끝 상태 · 대기 상한을 보지 않음 → 생성 러너가 신원 출력 앞의 'cd … || exit 1' 에서 끝나면 신원 줄이 영원히 없고 '첫 5 분' 검사에 닿지 못함 = 실패 보고가 나오지 않는 조용한 영구 대기 (잘못된 초록은 아님)",
+      "note": "판정문 §3 · 자리 (핀 065ad7004) d07_guard_v2_1031.sh:62 · :68 (실제 상태 확인은 :78–85 뿐) · scripts/resume_ckpt.sh:1808–1811 (render() 러너 순서 = 부속 evidence/guard_review/evidence/rendered_runner.synthetic.sh) · 공개된 R2-10 ('신원 확인 5 분 뒤 런 전체 감시 없음') 보다 앞 단계 · 기존 jobfail / jobgone 흉내는 신원 줄을 먼저 써서 이 경로를 덮지 않음.  최소 해결 = 결과 · 신원 대기에 끝 상태 확인 + 관측 실패 상한 · PENDING / 끝났는데 신원 없음 / 스케줄러 · 로그 조회 불가 구분.  이번 한 건 = 판정문 §6 (a) 3 (결과 / 신원 줄이 안 나와도 별도 읽기 전용 상태 확인 · 본 job 신원 · 초기 상태 보존 · 이후 런 감시는 따로 · 5 분 RUNNING = 완주 · 물리 적합성 아님).  11-01 반입 때 지킴이 · 도구 = 리뷰 핀 뒤 변경 없음 → open.  보고 표기 K50Y4D2-05.",
+      "evidence_tests": [
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/guard_review/probes/model_guard_failure_paths.py (신원 전 종료 모형 · 결과 docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/guard_review/evidence/failure_path_models.json · 러너 텍스트 docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/guard_review/evidence/rendered_runner.synthetic.sh · 결함 재현 모형 · 고침 시험 아님)"
+      ],
+      "evidence": [
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/guard_review/Q4_guard_review_20261101.md"
+      ]
+    },
+    {
+      "id": "K5D2-06",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "codex 11-01 50kg Y4 초안 2 재검토 (리뷰 핀 065ad7004 · 받은 ZIP sha256 043c6207… · DEM · 수송망 solve · WSL · Slurm 제출 · 취소 · Bash 끝-끝 미실행) · 부속 figures_review §3 (figure_checker_probes.json · figure_numeric_audit.json consumer_probes)",
+      "opened_in": "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+      "title": "(Codex KG50Y4D2-06) 그림 검사 PASS 를 입력 무결성 인증으로 확대 — 격리 변이에서 잘못된 case · step · 수송 NOT_COMPUTED · 집계 false · f 치환 5 개가 load/merge 에 수락 (status=ok) · D1 per-AM CSV 를 D2 것으로 바꿔도 (피복 평균 19.042946 ↔ 21.051941 %) p3_per_am 검사 PASS · 이완점 하나 NaN = 519 점 대신 518 점만 검사하고 PASS · clip 높이 128 µm (실제 판 아님) 도 PASS · 유한점의 실제 축 초과는 검출",
+      "note": "판정문 §3 · 자리 (핀 065ad7004) run_draft2_metrics.py:708–735 · make_draft2_figs.py:88–101 · :394–456.  현재 공급 값은 맞음 · 현재 그림 오염 지적 · 기존 축 수정 철회 아님.  최소 해결 = 검사 표현을 '현재 입력의 도형 · 문자 범위 / 겹침 검사' 로 한정 · D0.7 자료를 자동 소비하기 전 JSON 과 companion CSV 의 출처 · case · step · 상태 · 유한성 결합 검사.  닫힘 범위 = 판정문 §8 5 행 (검사 보증 범위 정정).  ✅ 10-31 c3714b547 (11-01 초안 3 5a2595b54 에 옮김 · 자리 = 초안 3 §0-3) = 표현 한정.  남은 것 = D0.7 자동 소비 전 결합 검사 미구현 (그 소비의 선행 조건 · K50Y4-01 의 후속 소비 경계와 같은 자리) · 검토 PC 글꼴에서 p7 하단 한 줄 9.9 px 넘침 = 판정문이 글꼴 범위 밖으로 처리 (공급 PNG 에는 없음).  보고 · 커밋 표기 K50Y4D2-06.",
+      "claimed_fixed_sha": "c3714b547",
+      "evidence_tests": [
+        "docs/50kg/report_y4/draft2/README.md (§5 그림 검사 행 110 행 = '현재 입력의 도형 · 문자 범위 / 겹침 검사 (입력 무결성 인증 아님)' — 문서 고침 · 시험 없음)",
+        "docs/50kg/report_y4/draft2/slide_text_draft2.md (2쪽 그림 대조 201 행)",
+        "docs/50kg/report_y4/draft2/slide_text_draft3.md (§0-3 52 행 · 부록 노트 635 행 · §8 660 행)",
+        "docs/50kg/report_y4/draft2/figcheck/draft3_check_20261101.txt (5 행 검사 범위 표기)"
+      ],
+      "evidence": [
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/figures_review/figures_content_review.md"
+      ]
+    },
+    {
+      "id": "K5D2-07",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "codex 11-01 50kg Y4 초안 2 재검토 (리뷰 핀 065ad7004 · 받은 ZIP sha256 043c6207… · DEM · 수송망 solve · WSL · Slurm 제출 · 취소 · Bash 끝-끝 미실행) · 부속 physics_review LIT-01",
+      "opened_in": "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+      "title": "(Codex KG50Y4D2-07) 문헌 방향 화살표를 전부 '실험' 으로 표기 — Bazzoun 2026 의 σ 입도 방향 = DEM–FEM–RNM 파라미터 연구 · Shi 2019 의 연결 CAM 지도 = 모델 결과",
+      "note": "판정문 §3 · 자리 (핀 065ad7004) slide_text_draft2.md:573,583 · p7_lit_direction.csv (부속 LIT-01: f_ion_hertz · se_connected_am_pct 행).  최소 해결 = '선택한 6편의 실험 · 모델에서 보고한 방향' · 두 행에 모델 표지 · 여섯 편을 14 편 전체의 합의 · 모든 입도 구간의 단조 방향으로 확대하지 않음.  ✅ 10-31 c3714b547 (11-01 초안 3 5a2595b54 에 옮김 · 자리 = 초안 3 §0-3) — 그림 범례 '[5] … (모델)' · '[6] … (모델)' · 그림 글 '화살표 = 선택한 6편의 실험 · 모델에서 보고한 작은 SE 쪽 방향 ([5] · [6] = 모델)' (p7_lit_direction.svg) · CSV 는 cards 칸 그대로 (모델 표지 = 범례 · 그림 글 · 시트).  보고 · 커밋 표기 K50Y4D2-07.",
+      "claimed_fixed_sha": "c3714b547",
+      "evidence_tests": [
+        "docs/50kg/report_y4/draft2/slide_text_draft2.md (7쪽 표 580 행 · 캡션 590 행 · 대본 601 행 · ⑦ 631 행 — 문서 고침 · 시험 없음)",
+        "docs/50kg/report_y4/draft2/slide_text_draft3.md (§0-3 53 행 → 부록 표 ⑤ 620 행 · ⑦ 646 행)",
+        "docs/50kg/report_y4/draft2/make_draft2_figs.py (MODEL_CARDS 1103 행 · 범례 1140 · 1145 행)",
+        "docs/50kg/report_y4/draft2/figs/p7_lit_direction.svg (범례 · 그림 글의 (모델) 표지)",
+        "docs/50kg/report_y4/draft2/README.md (57 행)"
+      ],
+      "evidence": [
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/physics_review/physics_registration_literature_review.md"
+      ]
+    },
+    {
+      "id": "K5D2-08",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "codex 11-01 50kg Y4 초안 2 재검토 (리뷰 핀 065ad7004 · 받은 ZIP sha256 043c6207… · DEM · 수송망 solve · WSL · Slurm 제출 · 취소 · Bash 끝-끝 미실행) · 부속 physics_review LIT-02",
+      "opened_in": "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+      "title": "(Codex KG50Y4D2-08) Tron 2023 의 −36 % 를 입도 쪽 수치처럼 씀 — 카드의 −36 % = AM:SE 70:30→85:15 wt% 조성 비교의 첫 방전 약 160 → 102 mAh/g_NMC · 입도 비교는 별도 67:30:3 조건",
+      "note": "판정문 §3 · 자리 (핀 065ad7004) 문헌지도 :107 · slide_text_draft2.md:609,730 (부속 LIT-02).  최소 문구 = '별도 조성 시험에서 AM:SE 70:30→85:15 wt% 의 첫 방전 용량 약 36 % 감소 (그림 판독 · 성형 300 MPa · 측정 10 MPa) · 입도 효과 수치 아님' · 검토자는 원 그림을 새로 digitize 하지 않음 (그 한계도 남김).  ✅ 10-31 c3714b547 (11-01 초안 3 5a2595b54 에 옮김 · 자리 = 초안 3 §0-3).  보고 · 커밋 표기 K50Y4D2-08.",
+      "claimed_fixed_sha": "c3714b547",
+      "evidence_tests": [
+        "docs/50kg/report_y4/lit_se_size_map_20261030.md (§7 107 행 — 문서 고침 · 시험 없음)",
+        "docs/50kg/report_y4/draft2/slide_text_draft2.md (616 · 632 · 745 행)",
+        "docs/50kg/report_y4/draft2/slide_text_draft3.md (§0-3 54 행 → 부록 표 ⑤ 620 행 · ⑦ 646 행 · §10 774 행)"
+      ],
+      "evidence": [
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+        "docs/reviews/codex_kg50_y4_draft2_review_20261101/evidence/physics_review/physics_registration_literature_review.md"
+      ]
     }
   ]
 }

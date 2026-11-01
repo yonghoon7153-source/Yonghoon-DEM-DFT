@@ -1,0 +1,63 @@
+{
+  "archive_sha256": "a3c91af34ee57fe8ffb7326f5622cd84bcfbabef59b8df4958c9cb34587ee2d7",
+  "members": {
+    "kg50_d1_b50/input_kg50_d1_b50.liggghts": {
+      "bytes": 12812,
+      "sha256": "514afdb705613dab876c9c0ff5c1f2fef3fad3e029d71778875c08b89edfde91"
+    },
+    "kg50_d1_b50/post_kg50_d1_b50/atom_end_2785002.liggghts": {
+      "bytes": 22489721,
+      "sha256": "e55bb3f44c138cf824837f9dd17775eaea5cc1148b28a8c1d4c07c57a3aec635"
+    },
+    "kg50_d1_b50/post_kg50_d1_b50/contact_end_2785002.liggghts": {
+      "bytes": 150684556,
+      "sha256": "a02955585a601dccbcd222ada684d5501f94de95f73e2617f9b78634fc6eb5b5"
+    },
+    "kg50_d1_b50/post_kg50_d1_b50/mesh_end_2785002.stl": {
+      "bytes": 349,
+      "sha256": "ec99971a2e7f27e1baeedbdab72e6f3c2db52239cc318671142931d56592fe16"
+    },
+    "kg50_d1_b50/log.liggghts": {
+      "bytes": 735278,
+      "sha256": "6a90f706da68e3d5041ff063d0ffd4f61e9d89a5823f29e0755a23ed679bc1b5"
+    },
+    "kg50_d1_b50/log_kg50_d1_b50_ins.out": {
+      "bytes": 5318,
+      "sha256": "a83ee39e902e43abe9fca663d26e15d397992f0433980fa3d0a14868177278da"
+    },
+    "kg50_d1_b50/log_kg50_d1_b50_rs1028.out": {
+      "bytes": 610408,
+      "sha256": "d57778ee8eea21178af0c6d03d5c1fbd9991ef2520c1890d4922af25680af28c"
+    }
+  },
+  "duplicate_unordered_pairs": 0,
+  "metrics": {
+    "n_am": 1481,
+    "n_se": 166971,
+    "plate_z_um": 122.596,
+    "v_sphere_sum_um3": 254922.96507921693,
+    "eps_sphere_pct": 16.82503015458353,
+    "am_se_cn_mean": 99.7069547602971,
+    "se_se_cn_mean": 4.975259176743267,
+    "am_am_cn_mean": 3.6556380823767722,
+    "coverage_hertz_pct": 19.042945915532847,
+    "area_am_se_total_um2": 31101.485800425427,
+    "area_am_se_n_contacts": 147666,
+    "area_am_se_per_contact_mean_um2": 0.21062049354912726,
+    "area_am_se_per_am_mean_um2": 21.000328021894283,
+    "am_se_overlap_ratio_median_pct": 13.19176,
+    "am_se_overlap_ratio_card_median_pct": 1.884537142857143,
+    "overlap_ratio_mean_pct": 11.725438133990593,
+    "overlap_ratio_max_pct": 139.8438,
+    "am_frac_overlap_gt_10_pct": 100.0,
+    "am_frac_overlap_card_gt_10_pct": 81.83659689399055
+  },
+  "contact_counts": {
+    "AM_SE": 147666,
+    "AM_AM": 2707,
+    "SE_SE": 415362
+  },
+  "SE_lost_eps_pp": 0.0008541857411307037,
+  "end_gamma_vz_signed_sim": 0.0007186234246229297,
+  "end_gamma_abs_vz_sim": 0.0008149921030892762
+}

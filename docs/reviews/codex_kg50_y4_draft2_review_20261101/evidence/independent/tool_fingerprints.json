@@ -1,0 +1,58 @@
+{
+  "n": {
+    "D1": 14,
+    "D2": 14,
+    "D3": 14
+  },
+  "equal": true,
+  "files": {
+    "D1": {
+      "scripts/dem_analysis_core.py": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+      "scripts/analyze_contacts.py": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9",
+      "scripts/parse_liggghts.py": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425",
+      "scripts/network_conductivity.py": "a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e",
+      "scripts/tau_flux.py": "c0a7da6e1b73bea97136f06803810dbe159bf5c4395d8d218a90217a58ef0f78",
+      "scripts/coverage_physics_vs_hertzian.py": "1bf4ee8c0061e69760596b05318e0b750605e85ad16f34176e74f31db80b6253",
+      "scripts/lhs_union_webapp.py": "3f06e9d36060a366d79e1abb76b5fe07e23b51d63666f51ba3afeabf64211408",
+      "scripts/kg50_d3_cell_verdict.py": "44c2577d6d0f901d0d6ae48eef049f631e82c497db1f81b4b6dabbd7eda90938",
+      "webapp/app.py": "3e82140f47c7e87b138f8a6f24b8f8575bc7476e91b8369b20cdf698b69b4bc1",
+      "webapp/pipeline_service.py": "8026169f61e8bddcceea3dfb42758bb6a4e599a28271d8159c387dfc2a79d4ef",
+      "docs/50kg/report_y4/kg50_y4_sources.py": "88b0a84ffa7c9e7499ccdd493f90f9cc692f71bfc4bd1efac488e40f671e51e5",
+      "docs/50kg/report_y4/figs/make_fig_p2_aux.py": "d6dfa88fcbb63696171948d090e13c29b50aae579bf283865d6276dd11a97afc",
+      "docs/50kg/report_y4/figs/make_figs_p1.py": "bd47da984daae31cbb8acfaff54defc85f3358bc47358d45ef0cf9b025a196e9",
+      "docs/50kg/report_y4/draft2/run_draft2_metrics.py": "674cff2128351ff607ca5f40857f5c4fda33f6dd304987c383973c47eeec81c1"
+    },
+    "D2": {
+      "scripts/dem_analysis_core.py": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+      "scripts/analyze_contacts.py": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9",
+      "scripts/parse_liggghts.py": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425",
+      "scripts/network_conductivity.py": "a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e",
+      "scripts/tau_flux.py": "c0a7da6e1b73bea97136f06803810dbe159bf5c4395d8d218a90217a58ef0f78",
+      "scripts/coverage_physics_vs_hertzian.py": "1bf4ee8c0061e69760596b05318e0b750605e85ad16f34176e74f31db80b6253",
+      "scripts/lhs_union_webapp.py": "3f06e9d36060a366d79e1abb76b5fe07e23b51d63666f51ba3afeabf64211408",
+      "scripts/kg50_d3_cell_verdict.py": "44c2577d6d0f901d0d6ae48eef049f631e82c497db1f81b4b6dabbd7eda90938",
+      "webapp/app.py": "3e82140f47c7e87b138f8a6f24b8f8575bc7476e91b8369b20cdf698b69b4bc1",
+      "webapp/pipeline_service.py": "8026169f61e8bddcceea3dfb42758bb6a4e599a28271d8159c387dfc2a79d4ef",
+      "docs/50kg/report_y4/kg50_y4_sources.py": "88b0a84ffa7c9e7499ccdd493f90f9cc692f71bfc4bd1efac488e40f671e51e5",
+      "docs/50kg/report_y4/figs/make_fig_p2_aux.py": "d6dfa88fcbb63696171948d090e13c29b50aae579bf283865d6276dd11a97afc",
+      "docs/50kg/report_y4/figs/make_figs_p1.py": "bd47da984daae31cbb8acfaff54defc85f3358bc47358d45ef0cf9b025a196e9",
+      "docs/50kg/report_y4/draft2/run_draft2_metrics.py": "674cff2128351ff607ca5f40857f5c4fda33f6dd304987c383973c47eeec81c1"
+    },
+    "D3": {
+      "scripts/dem_analysis_core.py": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+      "scripts/analyze_contacts.py": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9",
+      "scripts/parse_liggghts.py": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425",
+      "scripts/network_conductivity.py": "a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e",
+      "scripts/tau_flux.py": "c0a7da6e1b73bea97136f06803810dbe159bf5c4395d8d218a90217a58ef0f78",
+      "scripts/coverage_physics_vs_hertzian.py": "1bf4ee8c0061e69760596b05318e0b750605e85ad16f34176e74f31db80b6253",
+      "scripts/lhs_union_webapp.py": "3f06e9d36060a366d79e1abb76b5fe07e23b51d63666f51ba3afeabf64211408",
+      "scripts/kg50_d3_cell_verdict.py": "44c2577d6d0f901d0d6ae48eef049f631e82c497db1f81b4b6dabbd7eda90938",
+      "webapp/app.py": "3e82140f47c7e87b138f8a6f24b8f8575bc7476e91b8369b20cdf698b69b4bc1",
+      "webapp/pipeline_service.py": "8026169f61e8bddcceea3dfb42758bb6a4e599a28271d8159c387dfc2a79d4ef",
+      "docs/50kg/report_y4/kg50_y4_sources.py": "88b0a84ffa7c9e7499ccdd493f90f9cc692f71bfc4bd1efac488e40f671e51e5",
+      "docs/50kg/report_y4/figs/make_fig_p2_aux.py": "d6dfa88fcbb63696171948d090e13c29b50aae579bf283865d6276dd11a97afc",
+      "docs/50kg/report_y4/figs/make_figs_p1.py": "bd47da984daae31cbb8acfaff54defc85f3358bc47358d45ef0cf9b025a196e9",
+      "docs/50kg/report_y4/draft2/run_draft2_metrics.py": "674cff2128351ff607ca5f40857f5c4fda33f6dd304987c383973c47eeec81c1"
+    }
+  }
+}

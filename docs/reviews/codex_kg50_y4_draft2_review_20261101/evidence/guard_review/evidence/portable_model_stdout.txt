@@ -1,0 +1,1 @@
+3 source-bound failure traces saved; actual pure-Python render() ordering verified. No shell or scheduler invoked.

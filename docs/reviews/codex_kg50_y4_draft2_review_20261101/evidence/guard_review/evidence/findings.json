@@ -1,0 +1,35 @@
+{
+  "pin": "065ad7004c8f970243951d366e3ced8c28af9197",
+  "findings": [
+    {
+      "id": "Q4G-01",
+      "priority": "P2",
+      "title": "취소 요청 뒤 같은 시도의 실제 종료·본 제출 여부 미확인",
+      "file": "docs/50kg/d07_guard/d07_guard_v2_1031.sh",
+      "lines": [57, 58, 59, 77],
+      "related_producer": "scripts/resume_ckpt.sh:2097-2106",
+      "prior_required_condition": "docs/reviews/codex_kg50_d07_scoped_go_20261030/codex_review_kg50_d07_scoped_go_20261030.md:143",
+      "counterexample": "scancel가 실패하거나 시험이 이미 완료된 경우 guard는 exit 1 하지만 동일 시도의 main job은 계속 또는 새로 실행될 수 있다.",
+      "status": "기존 PAI-02의 자동화 대체 경계; 일반 결함을 새 P1로 중복 집계하지 않음",
+      "evidence_level": "정적 소스 + 독립 제어 흐름 모형; 실제 Bash 실행 불가",
+      "minimum_fix": "차단 미확인 메시지로 바꾸고 취소 반환/시험 종료/동일시도 main job 유무와 종료까지 확인; 한건은 이전 GO의 수동감독조건 유지"
+    },
+    {
+      "id": "Q4G-02",
+      "priority": "P2",
+      "title": "신원 줄 이전 종료 시 영구 대기",
+      "file": "docs/50kg/d07_guard/d07_guard_v2_1031.sh",
+      "lines": [62, 68],
+      "related_producer": "scripts/resume_ckpt.sh:1808-1811",
+      "counterexample": "생성 러너가 cd ... || exit 1에서 종료하면 LMP_IDENTITY가 없고 guard:68은 FAILED 상태도 보지 않으며 5분 상태확인에 진입하지 않음.",
+      "status": "R2-10의 신원 후 5분 이후 감시제외와 다른 제출 확인 범위 내 실패",
+      "evidence_level": "정적 소스 + 실제 순수Python render 함수 생성 + 독립 제어 흐름 모형; 실제 Bash 실행 불가",
+      "minimum_fix": "대기 단계에서 끝 상태·조회 실패·시간 상한 확인 및 명시적 확인불가 종료; 현재판 한건은 별도 읽기전용 수동 상태감시"
+    }
+  ],
+  "recommendation": {
+    "Q4a": "기존 수동 감독조건 유지 한건 조건부 GO; v2 단독 자동 차단·고장감시 보장 해석 HOLD",
+    "Q4b": "수령 전사/파일 사이 승인값 일치 15/15; 원 -T 출력/생성덱/러너/바이너리/체크포인트 미제공 한정",
+    "Q4c": "TIMEOUT을 미완주로 보존하고 압축 재개 우회 금지; 장기할당 after_settling 재시작 또는 별도 압축재개 자격화 선택"
+  }
+}

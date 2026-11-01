@@ -1,0 +1,17 @@
+2026-11-01 independent Q4 review, Windows sandbox.
+
+Attempt 1, only command body: printf "mock-only bash available\n"
+Executable: C:/Program Files/Git/bin/bash.exe --noprofile --norc
+Observed diagnostic:
+fatal error - NtCreateDirectoryObject(\BaseNamedObjects\msys-2.0S5-1888ae32e00d56aa): 0xC0000022
+
+Attempt 2, only command body: printf "mock-only bash available\n"
+Executable: C:/Users/Administrator/Documents/Codex/2026-08-24/claude-stoic-knuth-nobvq-x20/work/r3_ed9ea6b4/portablegit/app/bin/bash.exe --noprofile --norc
+Observed diagnostic:
+fatal error - NtCreateDirectoryObject(\BaseNamedObjects\msys-2.0S5-b59b373c75f2f7a2): 0xC0000022
+
+Neither runtime reached the printf body. No guard Bash simulation was executed.
+No WSL, scheduler, cancellation, submission, remote access, or DEM process was invoked.
+failure_path_models.json is explicitly a source-bound control-flow model,
+not an executed Bash/SLURM result. The actual embedded Python render() function
+was invoked to generate text only; rendered_runner.synthetic.sh was not run.

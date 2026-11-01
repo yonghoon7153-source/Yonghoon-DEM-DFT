@@ -1,0 +1,178 @@
+{
+  "pin": "review pin: 065ad7004c8f970243951d366e3ced8c28af9197\nbranch: claude/stoic-knuth-NObVQ (remote head at build time = pin)\nrepo/ = git show <pin>:<path> for every file listed in MANIFEST under repo/\nexternal/kg50_d1_end_20261031.tgz = D1 end bundle (not in the repo; sha256 in repo/docs/data/kg50_d1_end_20261031/README.md)\npreview/ = draft-2 figures placed into the draft-1 template panels (header text = draft 1; layout check only)",
+  "checks": [
+    {
+      "name": "receipt attempt_r56_1030_152123_2568313",
+      "pass": true,
+      "details": {
+        "actual": "29ff619a666f29131a9d582f27e555590316e8516dcf9d0a7d2af01715bde6fa",
+        "expected": "29ff619a666f29131a9d582f27e555590316e8516dcf9d0a7d2af01715bde6fa"
+      }
+    },
+    {
+      "name": "receipt attempt_r56_1031_215830_2483798",
+      "pass": true,
+      "details": {
+        "actual": "a22a9b9fa18782f1a02b5728c05272ef735f46fd3dba8f2441b0213b2b6a94c9",
+        "expected": "a22a9b9fa18782f1a02b5728c05272ef735f46fd3dba8f2441b0213b2b6a94c9"
+      }
+    },
+    {
+      "name": "filled receipt",
+      "pass": true,
+      "details": "a22a9b9fa18782f1a02b5728c05272ef735f46fd3dba8f2441b0213b2b6a94c9"
+    },
+    {
+      "name": "filled deck",
+      "pass": true,
+      "details": "4bf5ab86f95047e4e5607bba77c4ae75b2d93e3a6a96b776c3c4fe90f04899f3"
+    },
+    {
+      "name": "filled checkpoint",
+      "pass": true,
+      "details": "45a838c18d19e3c1399a97f5948d52ad0995490f6a55040e6a6ffec8fecd2d70"
+    },
+    {
+      "name": "filled lmp from trial identity",
+      "pass": true,
+      "details": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f"
+    },
+    {
+      "name": "checkpoint receipt = trial identity",
+      "pass": true,
+      "details": "45a838c18d19e3c1399a97f5948d52ad0995490f6a55040e6a6ffec8fecd2d70"
+    },
+    {
+      "name": "trial deck receipt = trial identity",
+      "pass": true,
+      "details": "985ff18bd76e075019f895f7a79ecf1a76df077ea637912f8a945dc7bd93898c"
+    },
+    {
+      "name": "template differences exactly approvals",
+      "pass": true,
+      "details": [
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "name": "block payload byte equality LF",
+      "pass": true,
+      "details": {
+        "payload_md5": "35371e83472905553df3455a2267c501"
+      }
+    },
+    {
+      "name": "block md5 gate",
+      "pass": true,
+      "details": "35371e83472905553df3455a2267c501"
+    },
+    {
+      "name": "block CRLF normalization",
+      "pass": true,
+      "details": "text normalization only; installer Bash was not executed"
+    },
+    {
+      "name": "resume_ckpt.sh full bytes",
+      "pass": true,
+      "details": "2dc7f693263708d7788ab721386182c6109a8f9278797ecc43f5165d6715f1e8"
+    },
+    {
+      "name": "decision written after main_job",
+      "pass": true,
+      "details": "no result/main_job ordering race in the shown production branch"
+    },
+    {
+      "name": "compression mode rejects",
+      "pass": true,
+      "details": "resume_ckpt.sh:1898"
+    }
+  ],
+  "passed": 15,
+  "total": 15,
+  "approval_values": {
+    "INHERIT": "attempt_r56_1030_152123_2568313",
+    "OLDATT": "attempt_r56_1031_215830_2483798",
+    "OKR": "a22a9b9fa18782f1a02b5728c05272ef735f46fd3dba8f2441b0213b2b6a94c9",
+    "OKL": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f",
+    "OKD": "4bf5ab86f95047e4e5607bba77c4ae75b2d93e3a6a96b776c3c4fe90f04899f3",
+    "OKK": "45a838c18d19e3c1399a97f5948d52ad0995490f6a55040e6a6ffec8fecd2d70"
+  },
+  "receipts": {
+    "attempt_r56_1030_152123_2568313": {
+      "sha256": "29ff619a666f29131a9d582f27e555590316e8516dcf9d0a7d2af01715bde6fa",
+      "lines": [
+        "8e129f421a8491975f83527f79c8418318b2af30baeedd7440cfcede2d45c5e5  /lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts",
+        "aad9ac227a3d5dec24dd0515f262299d81a4da283112dfb0cdf42e0b5e379750  /lustre/home/yonghoon/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56.sh",
+        "94db4187093b417468ac7a2da6a0b43e5312e04507539251be45cbe2b8011ea1  /lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts",
+        "c00746e68b8420b45d41ec2a6a20dc72161f9974cc6a30a403b994991e24146f  /lustre/home/yonghoon/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56t.sh",
+        "aa833368651d9bf811c7b39331149ca939bfedf1bbe0511e2d66bf329fde15a8  /lustre/home/yonghoon/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_settling_20001.bin"
+      ],
+      "evidence_type": "reconstructed from received transcript, not server file"
+    },
+    "attempt_r56_1031_215830_2483798": {
+      "sha256": "a22a9b9fa18782f1a02b5728c05272ef735f46fd3dba8f2441b0213b2b6a94c9",
+      "lines": [
+        "4bf5ab86f95047e4e5607bba77c4ae75b2d93e3a6a96b776c3c4fe90f04899f3  /lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts",
+        "4ff4cf47fbffd9f27f2133a23f5893bf728e0a386ba7fdaa4a544e38020679f2  /lustre/home/yonghoon/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56.sh",
+        "985ff18bd76e075019f895f7a79ecf1a76df077ea637912f8a945dc7bd93898c  /lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts",
+        "374de9c2aab85cb17cb98619e132f38695bae27fe871f19a74668f55093ea8ed  /lustre/home/yonghoon/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56t.sh",
+        "45a838c18d19e3c1399a97f5948d52ad0995490f6a55040e6a6ffec8fecd2d70  /lustre/home/yonghoon/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_after_settling.bin"
+      ],
+      "evidence_type": "reconstructed from received transcript, not server file"
+    }
+  },
+  "received_T_inventory": [
+    {
+      "path": "docs/50kg/d07_guard/t_test_20261031/attempts_and_identity.txt",
+      "bytes": 3126,
+      "sha256": "4f7f25e4b63be6c714465c65d4ce0f1096f0f6d5670a4a8149f0bc3e5eb99a25"
+    },
+    {
+      "path": "docs/50kg/d07_guard/t_test_20261031/README.md",
+      "bytes": 2312,
+      "sha256": "6102ebc4ed5d752f3ad2fb4ee4f42863249968cefdc76a65e7539f418e999b36"
+    },
+    {
+      "path": "docs/50kg/d07_guard/t_test_20261031/report_resume_r56_1031_215830.md",
+      "bytes": 4976,
+      "sha256": "ffa61cedc409463f2cbc6c448b3f5451cbc900dbbb1c2653a7888a784dc69a7e"
+    }
+  ],
+  "timing": [
+    {
+      "scenario": "D1-shaped",
+      "compression_steps": 2285000,
+      "remaining_steps": 2585000,
+      "hours_at_31570_steps_h": 81.88153310104529,
+      "days_at_31570_steps_h": 3.411730545876887,
+      "days_compression_cost_x1.07": 3.622835497835498,
+      "days_compression_cost_x1.19": 3.9847297011931158
+    },
+    {
+      "scenario": "D2-shaped",
+      "compression_steps": 3515000,
+      "remaining_steps": 3815000,
+      "hours_at_31570_steps_h": 120.84257206208426,
+      "days_at_31570_steps_h": 5.035107169253511,
+      "days_compression_cost_x1.07": 5.359848484848484,
+      "days_compression_cost_x1.19": 5.916547883011297
+    },
+    {
+      "scenario": "D3-shaped",
+      "compression_steps": 4075000,
+      "remaining_steps": 4375000,
+      "hours_at_31570_steps_h": 138.5809312638581,
+      "days_at_31570_steps_h": 5.774205469327421,
+      "days_compression_cost_x1.07": 6.150683665927569,
+      "days_compression_cost_x1.19": 6.79607486009925
+    }
+  ],
+  "limitations": [
+    "10-31 raw trial stdout, generated main/trial decks, runners, checkpoint binary and dem_restart.py are absent from this received T folder.",
+    "Hashes of those absent files are transcript consistency checks only, not independent file-byte hashes.",
+    "Bash guard simulation was not run by this script. No scheduler or DEM calls occur."
+  ]
+}

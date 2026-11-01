@@ -1,0 +1,152 @@
+{
+  "D1": {
+    "start_step": 400002,
+    "stop": {
+      "line": 17567,
+      "Step": 2685002.0,
+      "Atoms": 168457.0,
+      "KinEng": 1.8265428e-05,
+      "CPU": 457.97668,
+      "pressMPa": 0.30058919
+    },
+    "first_relax": {
+      "line": 17609,
+      "Step": 2686000.0,
+      "Atoms": 168457.0,
+      "KinEng": 0.065144394,
+      "CPU": 89.471701,
+      "pressMPa": 0.19968129
+    },
+    "end": {
+      "line": 17709,
+      "Step": 2785002.0,
+      "Atoms": 168452.0,
+      "KinEng": 2.3187018e-07,
+      "CPU": 9195.7973,
+      "pressMPa": 0.15615118
+    },
+    "compression_runs": 457,
+    "p_stop_MPa": 300.58919000000003,
+    "p_end_MPa": 156.15118,
+    "drop_MPa": 144.43801000000002,
+    "lost_atoms": 5,
+    "minimum_relax_MPa": 111.97709,
+    "inventory_transitions": [
+      {
+        "step": 400002,
+        "N": 168457,
+        "line": 689
+      },
+      {
+        "step": 2687000,
+        "N": 168456,
+        "line": 17610
+      },
+      {
+        "step": 2688000,
+        "N": 168455,
+        "line": 17611
+      },
+      {
+        "step": 2689000,
+        "N": 168452,
+        "line": 17612
+      }
+    ],
+    "excluded_export_run0_readout_MPa": [
+      161.24159
+    ],
+    "plate_height_pred_um": 122.59572603080102,
+    "curve_rows": 2843
+  },
+  "D2": {
+    "start_step": 400002,
+    "stop": {
+      "line": 26669,
+      "Step": 3915002.0,
+      "Atoms": 22353.0,
+      "KinEng": 1.544838e-05,
+      "CPU": 72.193022,
+      "pressMPa": 0.30023909
+    },
+    "first_relax": {
+      "line": 26711,
+      "Step": 3916000.0,
+      "Atoms": 22353.0,
+      "KinEng": 0.0010207656,
+      "CPU": 14.266559,
+      "pressMPa": 0.28718633
+    },
+    "end": {
+      "line": 26811,
+      "Step": 4015002.0,
+      "Atoms": 22353.0,
+      "KinEng": 1.0072604e-06,
+      "CPU": 1436.8891,
+      "pressMPa": 0.27979158
+    },
+    "compression_runs": 703,
+    "p_stop_MPa": 300.23909,
+    "p_end_MPa": 279.79158,
+    "drop_MPa": 20.44751,
+    "lost_atoms": 0,
+    "minimum_relax_MPa": 277.56712,
+    "inventory_transitions": [
+      {
+        "step": 400002,
+        "N": 22353,
+        "line": 689
+      }
+    ],
+    "excluded_export_run0_readout_MPa": [
+      328.94624
+    ],
+    "plate_height_pred_um": 122.46863280156498,
+    "curve_rows": 4319
+  },
+  "D3": {
+    "start_step": 400002,
+    "stop": {
+      "line": 30859,
+      "Step": 4475002.0,
+      "Atoms": 7666.0,
+      "KinEng": 1.5625308e-05,
+      "CPU": 53.171911,
+      "pressMPa": 0.30063094
+    },
+    "first_relax": {
+      "line": 30901,
+      "Step": 4476000.0,
+      "Atoms": 7666.0,
+      "KinEng": 0.00015059285,
+      "CPU": 10.665394,
+      "pressMPa": 0.29559389
+    },
+    "end": {
+      "line": 31001,
+      "Step": 4575002.0,
+      "Atoms": 7666.0,
+      "KinEng": 1.432648e-07,
+      "CPU": 1023.2881,
+      "pressMPa": 0.2913744
+    },
+    "compression_runs": 815,
+    "p_stop_MPa": 300.63094,
+    "p_end_MPa": 291.3744,
+    "drop_MPa": 9.256540000000035,
+    "lost_atoms": 0,
+    "minimum_relax_MPa": 291.3744,
+    "inventory_transitions": [
+      {
+        "step": 400002,
+        "N": 7666,
+        "line": 735
+      }
+    ],
+    "excluded_export_run0_readout_MPa": [
+      582.7488
+    ],
+    "plate_height_pred_um": 125.877278551285,
+    "curve_rows": 4991
+  }
+}
