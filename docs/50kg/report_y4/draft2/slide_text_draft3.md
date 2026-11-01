@@ -15,7 +15,7 @@
 |---|---|---|
 | 꼴 | 방법 검증 보고 — 쪽 머리에 한정어 | 회사 보고 — 쪽마다 메시지 하나 · 한정어 = 각주 · 노트 · 부록 |
 | 쪽 수 | 7 | 방법 1 (0쪽 · 11-01 추가) + 7 + 부록 1 |
-| 방법 쪽 (DEM 개요 · 지배방정식) | 7쪽 밖 (지배방정식 그림 A 안 · 검토 대상 아님) | 0쪽 = 선행 2-1장 꼴 — 왼쪽 기존 insertion 그림 · 오른쪽 그림 A + 식 넷 |
+| 방법 쪽 (DEM 해석 절차 · 접촉 모델) | 7쪽 밖 (지배방정식 그림 A 안 · 검토 대상 아님) | 0쪽 (2판) = 새 그림 둘 (2D 모식 계산 — 해석 절차 · 접촉 모델) + 식 넷 2 × 2 표 · 2-1장 그림 · 그림 A 쓰지 않음 |
 | 결론 쪽 | 5쪽 손익분기 표 둘 · "판정 보류" | 5쪽 = 손익분기 고유 σ 그림 (핵심 결론) · "손익분기 근처" + 각주 (보류 사유 그대로) |
 | 새 그림 | — | `p3_count_vs_area` · `p5_breakeven_sigma` · `p6_constriction_share` |
 | 진단 그림 `diag_relax_drop_vs_N` | 2쪽 오른쪽 | 부록 왼쪽 (R_aff 문구 그대로) |
@@ -26,7 +26,7 @@
 
 | 쪽 | 머리 메시지 (줄임) | 왼쪽 | 오른쪽 | 백업 |
 |---|---|---|---|---|
-| 0 | DEM 해석 방법 — 같은 절차 (충전 → 300 MPa 가압 → 판 고정 이완) | 기존 그림 (insertion 부분 · 2-1장 왼쪽) + 글 | `kg50_dem_force_A_labeled` + 식 넷 (2-1장 수식) | — |
+| 0 | DEM 해석 방법 — 같은 절차 · 같은 접촉 모델 | `p0_process_grid_labeled` (2 × 2) + 글 두 줄 | `p0_contact_model_labeled` + 식 넷 표 | `p0_process_labeled` (1 × 4 띠) |
 | 1 | 비교 조건 | 글 — 조건 표 | `p1_bed_strip` | — |
 | 2 | 미립화 → 치밀화 (관측) | `p2_compaction` | `p6_z_structure` | `p2_relaxation` |
 | 3 | 접촉 수는 약 10배, 계면 면적은 그대로 | `p3_count_vs_area` (새) | `p3_per_am` | `p3_contacts` · `p3_overlap_threshold` |
@@ -66,73 +66,73 @@
 | Stage-E σ_ion 안 씀 | `KG50B-07` | 4 · 5쪽 노트 · 부록 표 ⑥ |
 | 지배방정식 = 대표식 (문헌형) — 전역 감쇠 · 접선 감쇠 · 점착 · 포화 가지 생략 · 회전식 팔 길이 = 작은 겹침 근사 · 구현식 = 보고서 | 10-09 1저자 결정 · 세미나 덱 외부 리뷰 `SEM32-01` (verified) | 0쪽 각주 · 노트 · ⑦ |
 | 판 압력 300 MPa 정지 = 판 반력 ÷ 면적 (가압 중 감쇠 저항 포함) | `DEMP-01` · `KG50-20` | 0쪽 각주 · ⑦ · 부록 |
-| 0쪽 왼쪽 그림 = 절차 예시 (이번 네 침대 아님) | — | 0쪽 각주 · ⑦ |
+| 0쪽 그림 둘 = 2D 모식 계산 (그림용 · 실제 3D 침대 아님 · 판 정지 뒤 판 힘 방향은 씨앗마다 다름) | 11-01 생성기 `--scan` | 0쪽 각주 · 노트 · ⑦ |
 
 ---
 
-## 0쪽 — DEM 해석 방법 (개요 · 지배방정식) — 11-01 추가
+## 0쪽 — DEM 해석 방법 (해석 절차 · 접촉 모델) — 11-01 추가 · 2판 (그림 새로)
 
-- 1저자 11-01 *"여기에 그게 들어가야지 dem 설명 페이지 / 그 insertion 페이지랑 지배방정식"* · 10-30 *"전에 넣었던 그 그림을 넣고 (insertion 부분) / 저 지배방정식을 설명하는 부분은 monomodal 이니까 … (D 2 SE, D6 AM)인 그림으로 바꾸고"* → 선행 이종기술 보고 2-1장 꼴 그대로 (왼쪽 = DEM 시뮬레이션 개요 · 오른쪽 = DEM 지배 방정식) · 1–7쪽 번호는 그대로 둔다 (외부 리뷰 · 각주의 쪽 번호와 맞춤).
+- 1저자 11-01 *"여기에 그게 들어가야지 dem 설명 페이지 / 그 insertion 페이지랑 지배방정식"* → 1판 (2-1장 insertion 그림 그대로 + 지배방정식 그림 A) → 1저자 *"더 자연스럽게 만들고 근데 너무 이종기술이랑 너무 그림이 비슷하다 다른 느낌으로 다시 만들어줘"* → **2판**: 그림 둘을 새로 그림 (2D 모식 계산으로 실제 침강 · 가압 · 이완시킨 모양 · 손으로 놓은 배치 아님) · 2-1장 그림 · 그림 A 는 쓰지 않음 · 1–7쪽 번호 그대로.
 
 **① 배치**
 
 | 칸 | 넣을 것 | 크기 (in) | 탭 글 |
 |---|---|---|---|
-| 왼쪽 | 기존 그림 (insertion 부분) — 2-1장 왼쪽 "Particle packing → Compression → Stress relaxation" 그대로 (대안 = 50kg 계획 덱 4차년도 개발 계획 쪽 "Random packing → Compression → Composite cathode") + 글 ④-1 | 원본 그대로 | ( DEM 시뮬레이션 개요 ) |
-| 오른쪽 | `kg50_dem_force_A_labeled` (가운데) + 식 넷 (2-1장 수식 개체 그대로 복사) + 글 ④-2 | 3.21 × 2.73 (100 %) | ( DEM 지배 방정식 ) |
+| 왼쪽 | 글머리 한 줄 ④-1 + `p0_process_grid_labeled` (2 × 2 · 단계 이름 포함 · 권고) + 덱 값 한 줄 ④-1 — 대안 = `p0_process_labeled` (1 × 4 띠) + 단계 글 표 ④-1 | 4.50 × 4.10 (`_nolabel` 4.50 × 3.70) · 띠 4.50 × 1.55 (`_nolabel` 4.50 × 1.22) | ( 해석 절차 ) |
+| 오른쪽 | `p0_contact_model_labeled` (또는 `_nolabel`) + 식 넷 표 ④-2 | 4.50 × 2.75 | ( 접촉 모델 · 지배방정식 ) |
 
-- 그림 파일 = `docs/50kg/report_y4/figs/dem_eq_monomodal/` — `kg50_dem_force_A_labeled.png` · `.svg` (글자 포함) · `kg50_dem_force_A_nolabel.png` · `.svg` (2-1장 글상자 M_r · F_t · F_n · m_i g · i · j · Applied pressure 를 그대로 쓸 때) · PNG = 투명 배경 300 dpi · 생성기 `docs/50kg/report_y4/figs/make_fig_dem_eq_monomodal.py` · 1저자 10-31 = A 안 · 무광 (2-1장 원 그림과 같은 재질).
-- 식 ↔ 그림 연결선 (점선 원 → 식) = 2-1장 선 그대로 (그림 파일에 넣지 않음).
-- 왼쪽 그림 = 1저자 덱의 기존 그림 (이 시트 · 그림 묶음에 없음 · 새로 그리지 않음).
+- 그림 = `docs/50kg/report_y4/figs/p0_dem_method/` (PNG 300 dpi 투명 배경 · SVG = 글자 그대로) · 생성기 `docs/50kg/report_y4/figs/make_fig_p0_dem_method.py` (`--check` PASS) · 모식 계산 상태 `toy2d_seed23.json` · 값 기록 `p0_figs_meta.json`.
+- 그림 둘 다 **2D 모식 계산 (그림용)** — 단일 입도 활물질 (지름 6) 과 고체전해질 (지름 2) 을 다이에 넣고 침강 · 가압 · 이완시킨 2D 계산의 모양 · 힘 · 길이 · 시간 = 임의 단위 · 실제 3D 침대 결과 아님.
+- 식 넷 = 2-1장 수식 개체를 그대로 복사해 2 × 2 표 (④-2) 로 놓는다 — 그림과 식을 선으로 잇지 않는다 (2-1장과 다른 배치).
 
 **② 머리 메시지**
 
-> SE 입도만 바꾼 네 침대를 같은 DEM 절차로 생성 — 입자 충전 → 300 MPa 가압 → 판 고정 이완
+> SE 입도만 바꾸고, 네 전극 모두 같은 절차 · 같은 접촉 모델로 계산
 
 **③ 보충 한 줄**
 
-> 입자 운동 = 병진 · 회전 운동방정식 · 접촉력 = 이력 스프링 (법선) + 쿨롱 마찰 (접선) — 선행 이종기술 해석과 같은 접촉 모델 · 탄성 · 마찰 입력
+> 입자 생성 → 중력 침강 → 300 MPa 가압 → 판 고정 이완 · 입자마다 운동방정식을 풀고, 접촉력은 이력 스프링 (법선) 과 쿨롱 마찰 (접선) 로 계산
 
 **④ 글**
 
-④-1 왼쪽 글머리 (2-1장 꼴 · 붙여 넣기)
+④-1 왼쪽 (붙여 넣기)
 
-- 활물질 (NCM · D6) 과 고체전해질 (LPSCl · D50 0.7–3 µm) 입자의 무작위 배치 및 중력 침강을 통한 초기 충전 구조 형성 (50 × 50 µm · 85:15 wt%)
-- 가압판 하강을 통해 판 압력 300 MPa 까지 복합양극 가압
-- 가압판 높이 고정 후, 입자 재배열 및 내부 응력 완화 → 이 끝 상태 (판 고정 이완 끝) 를 입도별로 비교
+- 글머리 (그림 위 한 줄): 활물질 (NCM D6) · 고체전해질 (LPSCl D50 0.7–3 µm) · 50 × 50 µm · 85:15 wt% — 네 단계로 전극 구조를 만든다
+- 덱 값 (2 × 2 그림 아래 한 줄): ② 침강 · 안정화 2 × 10⁵ + 2 × 10⁵ step · ③ 판 0.01 mm/s → 판 압력 300 MPa 에서 정지 · ④ 판 고정 10⁵ step (언로딩 없음)
+- 1 × 4 띠를 쓸 때 = 아래 단계 글 표 (그림 네 칸 아래)
 
-그림 아래 단계 글 (2-1장 꼴 · 붙여 넣기)
+| ① 입자 생성 | ② 중력 침강 | ③ 가압 | ④ 판 고정 · 이완 |
+|---|---|---|---|
+| 활물질 (NCM D6) · 고체전해질 (LPSCl D50 0.7–3 µm) 을 겹치지 않게 무작위 배치 (50 × 50 µm · 85:15 wt%) | 중력으로 쌓은 뒤 가압판 설치 (2 × 10⁵ + 2 × 10⁵ step) | 판을 일정 속도로 내려 판 압력 300 MPa 에서 정지 | 판 높이 고정 · 입자 재배열 · 응력 완화 (10⁵ step) → 이 끝 상태를 입도별로 비교 |
 
-| Particle packing | Compression | Stress relaxation |
-|---|---|---|
-| ▪ 활물질/고체전해질 입자 충전 ▪ 중력에 의한 입자 침강 | ▪ 복합양극 가압 ▪ 판 압력 300 MPa 에서 정지 | ▪ 가압판 높이 고정 ▪ 내부 응력 완화 |
+그림 캡션 (작은 글)
 
-④-2 오른쪽 글머리 (2-1장 그대로)
+> 2D 모식 계산 (그림용) · 활물질 검정 (지름 6) · 고체전해질 노랑 (지름 2) · 빨간 선 = 접촉 힘 사슬 (굵기 ∝ 법선력 · ③ 기준) · 회색 = 다이 벽 · 파란 판 = 가압판
 
-- 입자 간 접촉력 · 마찰 및 병진 · 회전 운동을 고려한 복합양극의 가압 거동 모사
+④-2 오른쪽 — 글머리 한 줄 + 식 넷 (2 × 2 표 · 식 = 2-1장 수식 개체 복사)
 
-식 넷 — 2-1장 수식 개체를 그대로 복사 (아래 = 대조용 글 · 표기 = 2-1장 그대로)
+- 입자 하나하나의 병진 · 회전 운동을 접촉력 · 마찰 · 중력으로 풀어 복합양극의 가압 거동을 계산
 
-| 자리 | 이름 | 식 |
-|---|---|---|
-| 왼쪽 위 | Rotational motion (Angular momentum balance) | I_i dω_i/dt = Σ_j (R_i n_ij × F_t,ij + M_r,ij) |
-| 오른쪽 위 | Tangential contact force (Coulomb friction) | F_t = −k_t δ_t , ‖F_t‖ ≤ μ F_n |
-| 왼쪽 아래 | Translational motion (Newton's second law) | m_i dv_i/dt = Σ_j (F_n,ij + F_t,ij) + m_i g |
-| 오른쪽 아래 | Normal contact force (Hysteretic spring model) | F_n = k₁δ (loading) · k₂(δ − δ₀) (unloading) · δ₀ = (1 − k₁/k₂) δ_max |
+| 식 이름 | 식 (2-1장 개체 · 대조용 글) | 한 줄 뜻 (붙여 넣기) | 그림 자리 |
+|---|---|---|---|
+| 병진 운동 (Newton's second law) | m_i dv_i/dt = Σ_j (F_n,ij + F_t,ij) + m_i g | 접촉력의 합과 중력이 입자를 움직인다 | 위 왼쪽 (F_n,ij · F_t,ij · m_i g) |
+| 회전 운동 (Angular momentum balance) | I_i dω_i/dt = Σ_j (R_i n_ij × F_t,ij + M_r,ij) | 접선력과 구름 저항이 입자를 돌린다 | 위 왼쪽 (M_r,ij) |
+| 법선 접촉력 (Hysteretic spring model) | F_n = k₁δ (loading) · k₂(δ − δ₀) (unloading) · δ₀ = (1 − k₁/k₂) δ_max | 누를 때 k₁ · 뗄 때 k₂ — 뗀 뒤 겹침 δ₀ 가 남는다 | 위 오른쪽 (δ · k₁ · k₂) · 아래 왼쪽 |
+| 접선 접촉력 (Coulomb friction) | F_t = −k_t δ_t , ‖F_t‖ ≤ μ F_n | 접선 스프링 힘이 μF_n 에 닿으면 미끄러진다 | 위 오른쪽 (k_t · μ) · 아래 오른쪽 |
 
-가운데 그림 캡션 (넣을 때만 · 작은 글)
+그림 캡션 (작은 글)
 
-> i · j = 활물질 (D6 · 단일 입도) · 작은 구 = 고체전해질 (D2 · 지름비 3:1 = 2 µm 침대)
+> 2D 모식 계산 (그림용) · 위 왼쪽 = 가압 중 판 아래 활물질 i 와 이웃 j 의 접촉력 · 중력 · 구름 저항 · 위 오른쪽 = 접촉 i–j 의 겹침 δ (과장) · 법선 스프링 (k₁ · k₂) · 접선 스프링 + 미끄럼 요소 (k_t · μ) · 아래 = 법선 이력 (누름 k₁ · 뗌 k₂ · 잔류 δ₀) · 접선 힘 상한 μF_n
 
 **⑤ 회색 결론 줄**
 
-> 네 침대 = 같은 절차 · 같은 접촉 모델 — 덱 차이 = SE 반지름 · 시드 · 입자 수 (1쪽)
+> 네 침대 = 같은 절차 · 같은 접촉 모델 — 덱에서 다른 것 = SE 반지름 · 시드 · 입자 수 (1쪽)
 
 **⑥ 노트**
 
 화면 각주 (붙여 넣기 · 작은 글):
 
-> 식 = 대표식 (문헌형 · Luding 2008) — 전역 감쇠 (−γv) · 접선 감쇠 · 점착 · 포화 가지 생략 (구현식 = LIGGGHTS-PUBLIC 3.8.0) · 판 압력 = 판 반력 ÷ 면적 (가압 중 전역 감쇠 저항 포함 · 부록) · 왼쪽 그림 = 절차 예시 (이번 네 침대 아님 · 끝 상태 단면 = 1쪽)
+> 그림 = 2D 모식 계산 (그림용 · 실제 3D 침대 아님) · 식 = 대표식 (문헌형 · Luding 2008) — 전역 감쇠 (−γv) · 접선 감쇠 · 점착 · 포화 가지 생략 · 판 압력 = 판 반력 ÷ 면적 (가압 중 감쇠 저항 포함 · 부록)
 
 발표자 노트:
 - 덱 절차 (네 덱 같음 · 다른 줄 = SE 반지름 · 시드 · 입자 수 · 이름): 입자 삽입 (무작위 배치 · 겹침 검사) → ① 정착 2 × 10⁵ step (중력 98.1 · 전역 감쇠 1 × 10⁻⁵ · 덱 단위) → ② 안정화 2 × 10⁵ step (가압판 설치 · 중력 9.81 · 감쇠 0.5) → ③ 가압 (판 속도 0.01 mm/s · 5000 step 마다 판 압력 검사 · 300 MPa 이상인 첫 검사에서 판 정지) → ④ 이완 10⁵ step (판 고정 · 감쇠 1 × 10⁻⁵) → 끝 상태 한 장 (언로딩 없음) · dt 1 × 10⁻⁶ (덱 단위).
@@ -140,7 +140,7 @@
 - 선행 이종기술 덱 (ps45 `in.ps_7_3_r45`) 과 대조 (11-01): 접촉 모델 · 재료 계수 아홉 줄 (영률 … 특성 속도) · dt · 판 속도 · 목표 · 중력 · 감쇠 · 단계 step 수 = 같음 · 다른 것 = 진밀도 · AM 단일 D6 (선행 = 두 크기 · 반지름 4.5 · 2 µm) · 조성 · 삽입 높이 · 입자 수 · 끝 상태 한 장 (`run 0`) · 영역 50 × 50 µm 와 판 압력 면적은 같음.
 - 식 한정 (세미나 덱 3장과 같은 한정): 회전식 팔 길이 R_i n_ij = 작은 겹침 근사 (구현 = R_i − δ/2) · F_n = 비포화 가지 (포화 가지 · 점착 가지 생략) · F_t = 스프링 부분 (접선 감쇠 생략) · 이 모델에서 k_t = k_n · 구름 토크 = CDT · k₁ 은 E* · R* · m* · 특성 속도 V 로 정함 (V 가 강성 입력).
 - 전역 감쇠: 가압 중 전역 감쇠 (γ 0.5) 의 저항이 판 반력에 섞인다 → 정지 판정 = 그 합 (`DEMP-01` 열림) · 정지 뒤 판 압력 낙폭 = 부록 (1 µm 144 MPa).
-- 가운데 그림: AM 두 개 같은 크기 = 단일 입도 · 반지름 3:1 = 2 µm 침대 비 (1 µm = 6:1 · 3 µm = 2:1 · 0.7 µm = 8.57:1).
+- 2D 모식 계산 (그림용 · `make_fig_p0_dem_method.py`): 활물질 20 · 고체전해질 94 개 (85:15 wt% 를 면적비로 · 진밀도 4.85 · 1.64) · 다이 폭 48 · 삽입 영역 면적 분율 0.40 · 선형 스프링 (활물질 강성 = 고체전해질의 50 배) · 마찰 상한 μ 0.5 · 회전 생략 · 판 일정 속도 → 판 힘 목표에서 정지 → 판 고정 이완 · 씨앗 23 = 판 정지 뒤 판 힘이 내려가는 예 (1192 → 738 · 임의 단위) — 같은 계산 네 씨앗 (11 · 13 · 17 · 23) 중 둘 (11 · 17) 은 판 힘이 올랐다 → 그림의 힘 사슬 굵기 변화는 설명용이지 결과가 아니다 · 실제 3D 침대의 이완 끝 판 압력 = 1쪽 · 부록 (156 · 280 · 291 MPa).
 - 출처: 식 ↔ 구현식 · 소스 줄 = `docs/dem_governing_equations_report_20261009.md` · 배경 = `docs/dem_governing_equations_background_20261011.md` · Luding 2008 = litdb 정본 카드.
 
 **⑦ 하지 않을 말**
@@ -152,7 +152,7 @@
 | "판 압력 = 입자망이 받는 압력" | 판 반력 ÷ 면적 · 가압 중 감쇠 저항 포함 (부록) |
 | "모든 조건이 같다" | 절차 · 접촉 모델 · 입력이 같음 — 질량당 감쇠 · 실행 이력 다름 (1쪽 · 부록) |
 | "SE 영률이 1.35 GPa" | 유효 입력 (물성 22 GPa · 1쪽) |
-| "왼쪽 그림 = 이번 침대" | 절차 예시 그림 (이번 침대 단면 = 1쪽) |
+| "그림 = 우리 침대 계산 결과" · "힘 사슬 · 판 힘 변화 = 결과" | 2D 모식 계산 (그림용) — 이완 뒤 판 힘 방향도 씨앗마다 다름 |
 
 ---
 
@@ -659,7 +659,7 @@
 - 색 · 글꼴 · 크기 = 앞 그림과 같음 (입도 = 파랑 한 색상 밝음 → 어두움 · SE 노랑 = 펠릿 실측 마름모 · 옅은 칸 · 띠 = 같은 색의 옅은 불투명 색 · 눈금 7 pt · 축 제목 8 pt · 범례 = 그림 위).
 - 검사 (`python3 -P docs/50kg/report_y4/draft2/make_draft2_figs.py --check`): 그림 16 · 문제 0 → PASS — 새 셋 = `p3_count_vs_area` PASS (막대/상자 12 · 축 글 12 · 그림 글 3) · `p5_breakeven_sigma` PASS (점 3 · 막대/상자 3 · 축 글 7 · 그림 글 4) · `p6_constriction_share` PASS (막대/상자 7 · 축 글 7 · 그림 글 4).  검사 범위 = 현재 입력의 도형 · 문자 범위 / 겹침 검사 (입력 무결성 인증 아님).
 - 결정성: 두 번 그린 `figs/` 49 파일 (그림 16 × PNG · SVG · CSV + `figs_meta.json`) sha256 같음 · 앞 그림 13 의 PNG · SVG · CSV = 바이트 그대로 (git 차이 없음) · `figs_meta.json` 차이 = 새 그림 셋의 항목 · 검사 수만.
-- 0쪽 그림 (11-01 추가) = `docs/50kg/report_y4/figs/dem_eq_monomodal/kg50_dem_force_A_labeled` · `_nolabel` (PNG · SVG · 10-31 생성 · 1저자 A 안) — 이 폴더 `figs/` 밖 · `make_draft2_figs.py --check` 의 그림 16 에 들지 않음 (검사 대상 아님) · 반지름 비 AM : SE = 1 : 1/3 (`layout.json` A 안 `j` · `se` 반지름) · 0쪽 왼쪽 그림 = 1저자 덱 기존 그림 (리포에 없음).
+- 0쪽 그림 (11-01 2판) = `docs/50kg/report_y4/figs/p0_dem_method/` — `p0_process_grid_labeled` 4.50 × 4.10 · `_nolabel` 4.50 × 3.70 (2 × 2) · `p0_process_labeled` 4.50 × 1.55 · `_nolabel` 4.50 × 1.22 (1 × 4) · `p0_contact_model_*` 4.50 × 2.75 (PNG · SVG) · 생성기 `docs/50kg/report_y4/figs/make_fig_p0_dem_method.py` `--check` PASS (입자 수 · 삽입 겹침 없음 · 삽입 영역 · 정지 판정 힘 ≥ 목표 · 판 하강 · 판 정지 뒤 판 힘 하락 · 이완 중 판 높이 같음 · 그림 12 파일) · 이 폴더 `figs/` 밖 · 그림 16 검사 대상 아님 · 1판 그림 A (`docs/50kg/report_y4/figs/dem_eq_monomodal/`) = 쓰지 않음.
 - 가드 변이 탐침 15/15 (메모리 안에서 입력을 바꿈 — (c) 항등 깨짐 · 접촉 수 0 · f_mc 행 ≠ metrics · f_gap 재척도 깨짐 · 망 상태 HOLD · L 기준 L_gap · 기준 침대 없음 · 실측 σ ↔ 계획 산술 어긋남 · 몫 > 1 = 모두 멈춤 · 대조 셋 · 네 침대 합성 셋 = PASS) · 기록 `docs/50kg/report_y4/draft2/figcheck/draft3_check_20261101.txt`.
 
 ## 9. 안 쓴 것 · 붙이기 전 대조
@@ -672,11 +672,11 @@
 | 2쪽 · 6쪽 오른쪽 짝 | 1저자 선택 (§0-2 대안) |
 | 1 µm 의 머리 숫자 (3 · 4 · 5 · 7쪽) | 1저자 쪽 계획대로 머리에 씀 — 이완 끝 판 압력 156 MPa 보류는 각주 · 부록 ① (머리에 넣지 않음) |
 | 그림 붙이기 | 모든 그림 100 % (같은 글자 크기) · 양식 글꼴로 보이려면 SVG (PNG 글꼴 = Carlito · WenQuanYi Zen Hei) |
-| 0쪽 | 왼쪽 그림 · 식 넷 · 연결선 = 1저자 덱 (2-1장) 에서 복사 · 오른쪽 가운데 그림만 그림 A 로 바꿈 · 글자 있는 판 (`_labeled`) 과 2-1장 글상자를 같이 쓰면 글자가 두 번 보인다 → 둘 중 하나 |
+| 0쪽 | 식 넷 = 2-1장 수식 개체 복사 (2 × 2 표) · 그림 = 새 2D 모식 그림 둘 (2-1장 그림 · 그림 A 쓰지 않음) · `p0_process_labeled` 와 PPT 단계 이름을 같이 쓰면 이름이 두 번 → 둘 중 하나 |
 
 ## 10. 숫자 출처
 
-- 파일 줄임: **M** = `docs/50kg/report_y4/draft2/metrics_all.csv` (D1 · D2 · D3 행) · **MJ** = `docs/50kg/report_y4/draft2/data/<침대>/metrics_<침대>.json` (`tau_flux_row` · `metrics`) · **Z** = `docs/50kg/report_y4/draft2/data/<침대>/zprof_<침대>.csv` · **G** = `docs/50kg/report_y4/draft2/figs/` 의 그림 CSV (이름 병기) · **DP** = `docs/50kg/dem_plan_20261026.md` · **PL** = `docs/50kg/kg50_report_plan_fix_plan_20261030.md` · **L1** = `docs/data/kg50_d1_end_20261031/kg50_d1_b50_log.liggghts` · **D1R** = `docs/data/kg50_d1_end_20261031/README.md` · **LM** = `docs/50kg/report_y4/lit_se_size_map_20261030.md` · **RD** = `docs/50kg/report_y4/draft2/README.md` · **S2** = `docs/50kg/report_y4/draft2/slide_text_draft2.md` §8 (초안 2 숫자 출처 표 · 원 출처 병기) · **NC** = `scripts/network_conductivity.py` · **FG** = `docs/50kg/report_y4/draft2/make_draft2_figs.py` · **DK** = 네 덱 `docs/data/kg50_decks_20261027_v3_b50/<침대>/input_<침대>.liggghts` (D0.7 · D1 · D2) · `docs/data/kg50_decks_20261026_v2/kg50_d3_b50_s1/input_kg50_d3_b50_s1.liggghts` (D3) — 절차 · 재료 줄 같음 (11-01 대조: D2 ↔ D3 주석 뺀 명령 차이 = `r_SE` · 시드 · 입자 수 · 이름 표시뿐) · **PS** = 선행 이종기술 덱 `docs/reviews/codex_ps45_porosity_evidence_20261001/reference/dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts` · **EQ** = `docs/50kg/report_y4/figs/dem_eq_monomodal/layout.json`.
+- 파일 줄임: **M** = `docs/50kg/report_y4/draft2/metrics_all.csv` (D1 · D2 · D3 행) · **MJ** = `docs/50kg/report_y4/draft2/data/<침대>/metrics_<침대>.json` (`tau_flux_row` · `metrics`) · **Z** = `docs/50kg/report_y4/draft2/data/<침대>/zprof_<침대>.csv` · **G** = `docs/50kg/report_y4/draft2/figs/` 의 그림 CSV (이름 병기) · **DP** = `docs/50kg/dem_plan_20261026.md` · **PL** = `docs/50kg/kg50_report_plan_fix_plan_20261030.md` · **L1** = `docs/data/kg50_d1_end_20261031/kg50_d1_b50_log.liggghts` · **D1R** = `docs/data/kg50_d1_end_20261031/README.md` · **LM** = `docs/50kg/report_y4/lit_se_size_map_20261030.md` · **RD** = `docs/50kg/report_y4/draft2/README.md` · **S2** = `docs/50kg/report_y4/draft2/slide_text_draft2.md` §8 (초안 2 숫자 출처 표 · 원 출처 병기) · **NC** = `scripts/network_conductivity.py` · **FG** = `docs/50kg/report_y4/draft2/make_draft2_figs.py` · **DK** = 네 덱 `docs/data/kg50_decks_20261027_v3_b50/<침대>/input_<침대>.liggghts` (D0.7 · D1 · D2) · `docs/data/kg50_decks_20261026_v2/kg50_d3_b50_s1/input_kg50_d3_b50_s1.liggghts` (D3) — 절차 · 재료 줄 같음 (11-01 대조: D2 ↔ D3 주석 뺀 명령 차이 = `r_SE` · 시드 · 입자 수 · 이름 표시뿐) · **PS** = 선행 이종기술 덱 `docs/reviews/codex_ps45_porosity_evidence_20261001/reference/dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts` · **P0** = `docs/50kg/report_y4/figs/p0_dem_method/p0_figs_meta.json` (+ 생성기 상수 · `--scan` 출력).
 - 침대 = D1 · D2 · D3 = SE 1 · 2 · 3 µm · 시트 글의 순서 = 3 → 2 → 1 µm (원값 열 = D3 · D2 · D1 순).  반올림 = 표시 자릿수까지 · [산술] = 이 시트에서 계산 (식 병기).
 
 | 숫자 (시트 표기) | 쪽 | 출처 · 열 / 줄 | 원값 (D3 · D2 · D1) | 계산 |
@@ -690,7 +690,7 @@
 | 반발 0.3 · 마찰 0.5 · 구름 0.2 (AM–AM) · 0.1 (SE 가 낀 쌍) · 특성 속도 2.0 | 0 | DK `fix m3` · `m4` · `m5` · `m9` | — | — |
 | 진밀도 AM 4.85 · SE 1.64 g/cm³ · 선행 4.8 · 2.0 | 0 | DK `fix pts1` 4850 · `fix pts3` 1640 · 덱 머리 ③ · PS `fix pts1` 4800 · `fix pts3` 2000 | — | ÷ 1000 |
 | 선행 덱과 같은 것 (접촉 모델 · 재료 계수 아홉 줄 · dt · 판 속도 · 목표 · 중력 · 감쇠 · step 수) | 0 | PS ↔ DK (D2) 의 `pair_style` · `fix m1`–`m9` (연속 줄 포함) · `variable dt` · `press_speed` · `target_press` · `fix gravi` · `fix damp` · `run` · `region reg_box` 줄 대조 (11-01) | — | 이 줄들의 차이 = `variable r_AM_P` (4.5e-3 ↔ 3e-3) · DK 끝 `run 0` |
-| 지름비 3:1 (가운데 그림) · 1 µm 6:1 · 3 µm 2:1 · 0.7 µm 8.57:1 | 0 | EQ A 안 (`j` 반지름 1.0 · `se` 반지름 0.3333) · G `p1_bed_strip.csv` `d_am_over_d_se` | 6 · 2 · 8.57142857 | 1 / 0.3333 = 3 [산술] |
+| 2D 모식 계산: 활물질 20 · 고체전해질 94 · 다이 폭 48 · 삽입 영역 면적 분율 0.40 · 강성비 50 · μ 0.5 · 씨앗 23 · 판 힘 1192 → 738 · 네 씨앗 중 둘 (11 · 17) 오름 | 0 | P0 (`n_am` · `n_se` · `width` · `insert_height` · `k_am` · `k_se` · `mu` · `f_plate_at_stop` · `f_plate_relax_end`) · 생성기 `--scan` | 1191.9027 · 738.1621 | 면적 분율 = (20 × 9π + 94 × π) / (48 × 45) = 860.8 / 2160 = 0.3985 · 고체전해질 수 = 0.5219 × 20 × 9 = 93.9 → 94 (면적비 0.5219 = (0.15/1.64) / (0.85/4.85)) · 강성비 = 30000 / 600 = 50 [산술] |
 | 1 µm 낙폭 144 MPa (0쪽 노트) | 0 · 부록 | G `diag_relax_drop_vs_N.csv` `dp_MPa` | 144.43801 | — |
 | 0.7 µm 결과 대기 | 전 쪽 | M `status` (D0.7 행) | 결과 대기 | — |
 | 0.7 µm 런 진행 중 | 1 · 7 | 1저자 쪽 계획 (11-01) — 리포 기록 = RD 6 줄 (정착 끝에서 멈춤 · 이어 돌리기 = Codex 한 건 범위 GO 뒤) · `docs/50kg/d07_guard/` (리포에서 현재 진행 단계는 확인 안 함) | — | — |

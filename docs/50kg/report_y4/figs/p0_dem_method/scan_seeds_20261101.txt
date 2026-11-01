@@ -1,0 +1,4 @@
+{"seed": 11, "f_stop": 1186.139, "f_relax": 1278.001, "drop": false}
+{"seed": 13, "f_stop": 1228.487, "f_relax": 940.088, "drop": true}
+{"seed": 17, "f_stop": 1193.224, "f_relax": 1319.931, "drop": false}
+{"seed": 23, "f_stop": 1191.903, "f_relax": 738.162, "drop": true}
