@@ -68,6 +68,7 @@ COLORS = {'thickness': '#7030A0', 'velocity': '#4FBDFF', 'pressure': '#F14040'} 
 OGS_RGB = {'thickness': '112,48,160', 'velocity': '79,189,255', 'pressure': '241,64,64'}
 XTICK_MAJOR = 500             # ms — 슬라이드와 같은 눈금 (0 … 2500 · 축 끝 2800 = 런 끝 2,785.002 를 덮는다)
 THICK_YLIM = (115, 155)       # µm — 위쪽에 가로 단계 이름 자리
+PK_GAP_PT = 1.0               # pt — Particle packing 이름 ↔ 왼쪽 축선 · 200 ms 점선 사이 틈
 SRC = {'noplate': 'no plate (0 by definition)', 'thermo': 'measured (thermo pressMPa)',
        'placed': 'plate placed (log PLATE HEIGHT)', 'stab': 'plate fixed (stabilization · deck)',
        'c_start': 'compression start (deck press_speed)', 'comp': 'compression (deck press_speed · computed)',
@@ -438,11 +439,11 @@ def draw_preview(tser, vser, pser, bounds_ms, arrows, stem):
         k = max(i for i in range(len(ts) - 1) if ts[i] <= x) if x < ts[-1] else len(ts) - 2
         return zs[k] + (zs[k + 1] - zs[k]) * (x - ts[k]) / (ts[k + 1] - ts[k])
     kw = dict(fontsize=9, color=LIGHT)
-    ax.text(X0 + 20, hi - 0.04 * (hi - lo), 'Particle packing', ha='left', va='top', **kw)
-    ax.text(b2 + 15, zline(b2) + 0.8, 'Stabilization', ha='left', va='bottom', **kw)          # 경계 바로 오른쪽 · 평평한 선 위
+    mask = dict(boxstyle='square,pad=0.05', facecolor='white', edgecolor='none')   # 단계 경계 점선이 글 뒤로 가려진다 (글 ↔ 선 겹침 없음)
+    st = ax.text(b2 + 15, zline(b2) + 0.8, 'Stabilization', ha='left', va='bottom', bbox=mask, zorder=3, **kw)   # 경계 바로 오른쪽 · 평평한 선 위
     xc = (b3 + b4) / 2
-    ax.text(xc, zline(xc - 300) + 1.5, 'Compression', ha='center', va='bottom', **kw)          # 기운 선 위 (글 왼쪽 끝에서도 선 위)
-    ax.text(X1 - 12, zline(ts[-1]) + 6.0, 'Relaxation', ha='right', va='bottom', **kw)         # 끝 근처 · 아래 화살표
+    cp = ax.text(xc, zline(xc - 300) + 1.5, 'Compression', ha='center', va='bottom', **kw)     # 기운 선 위 (글 왼쪽 끝에서도 선 위)
+    rl = ax.text(X1 - 12, zline(ts[-1]) + 6.0, 'Relaxation', ha='right', va='bottom', bbox=mask, zorder=3, **kw)  # 끝 근처 · 아래 화살표
     for x, y, xt, yt in arrows:
         ax.annotate('', xy=(x, y), xytext=(xt, yt), textcoords='data',
                     arrowprops=dict(arrowstyle='-|>', color=RED, lw=1.2, shrinkA=0, shrinkB=1.5, mutation_scale=8))
@@ -452,6 +453,26 @@ def draw_preview(tser, vser, pser, bounds_ms, arrows, stem):
     axs[-1].set_xlabel(XLABEL)
     fig.align_ylabels(axs)
     fig.tight_layout(pad=0.4, h_pad=0.6)
+    # Particle packing = 두 줄 · 0–200 ms 칸 안 · 왼쪽 맞춤 · 위쪽 (11-02 — 칸 폭 ≈ 18.6 pt 라 글자 크기를 칸에 맞춘다 · 다른 이름은 9 pt 그대로)
+    fig.canvas.draw()
+    r = fig.canvas.get_renderer()
+    pt = fig.dpi / 72.0
+    px_ms = ax.get_window_extent(r).width / (X1 - X0)
+    pk = ax.text(X0, hi - 0.04 * (hi - lo), 'Particle\npacking', ha='left', va='top', linespacing=1.0, **kw)
+    w9 = pk.get_window_extent(r).width
+    left_px, right_px = (0.5 + PK_GAP_PT) * pt, (0.45 + PK_GAP_PT) * pt      # 왼쪽 축선 반폭 · 점선 반폭 (0.9 pt) + 틈
+    size = math.floor(min(9.0, 9.0 * ((b2 - X0) * px_ms - left_px - right_px) / w9) * 10) / 10
+    pk.set_fontsize(size)
+    pk.set_x(X0 + left_px / px_ms)
+    fig.canvas.draw()
+    boxes = {t.get_text(): t.get_window_extent(r) for t in (pk, st, cp, rl)}
+    x_b2 = ax.transData.transform((b2, 0.0))[0]
+    if boxes['Particle\npacking'].x1 > x_b2 - 0.45 * pt or boxes['Particle\npacking'].x0 < ax.get_window_extent(r).x0:
+        raise ValueError(f'Particle packing 이름이 0–{b2:g} ms 칸 밖으로 나간다 (글자 {size} pt)')
+    names = list(boxes)
+    hit = [(a, c) for i, a in enumerate(names) for c in names[i + 1:] if boxes[a].overlaps(boxes[c])]
+    if hit:
+        raise ValueError(f'단계 이름끼리 겹친다: {hit}')
     fig.savefig(PREV / f'{stem}.png', dpi=300)
     fig.savefig(PREV / f'{stem}.svg', metadata={'Date': None})
     plt.close(fig)
