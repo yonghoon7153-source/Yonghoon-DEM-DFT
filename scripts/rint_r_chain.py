@@ -2355,7 +2355,9 @@ _DEAD_STATES = (b'Z', b'X', b'x')
 
 
 def proc_stat(pid, task=None):
-    """/proc/<pid>[/task/<tid>]/stat → (상태 bytes, 시작 시각 (부팅 뒤 클럭 틱 · 22 째 칸) int | None) · 없음 (사라짐) = None · 그 밖 못 읽음 = OSError."""
+    """/proc/<pid>[/task/<tid>]/stat → (상태 bytes, 시작 시각 (부팅 뒤 클럭 틱 · 22 째 칸), 부모 pid (4 째), 프로세스 그룹 (5 째), 세션 (6 째)) — 숫자 칸 =
+    int | None (못 읽음) · 이름 칸 (괄호 · 빈칸 포함) = 마지막 ')' 뒤부터 · 없음 (사라짐) = None · 그 밖 못 읽음 = OSError.  ★ 11-02 PC6-01 — 부모 · 그룹 ·
+    세션 칸 (environ 없이 누구나 읽는 칸 · 그룹 원 찾기의 러너 세션 · 계보)."""
     p = Path(PROC_DIR, str(pid)) if task is None else Path(PROC_DIR, str(pid), 'task', str(task))
     try:
         st = (p / 'stat').read_bytes()
@@ -2364,11 +2366,13 @@ def proc_stat(pid, task=None):
     fl = st[st.rfind(b')') + 2:].split()
     if not fl:
         return None
-    try:
-        start = int(fl[19])
-    except (IndexError, ValueError):
-        start = None
-    return fl[0], start
+
+    def num(i):
+        try:
+            return int(fl[i]) if fl[i].isdigit() else None
+        except IndexError:
+            return None
+    return fl[0], num(19), num(1), num(2), num(3)
 
 
 def boot_ticks():
@@ -2394,26 +2398,89 @@ def _proc_ruid(base):
 #: ★ 10-28 밤 PC5-07 — 그룹 표지 → 그룹 시작 틱 (`run_in_group` · `recover_group` 가 정리 동안 넣고 뺀다 · 한 인자 `group_members(token)` 자리를 그대로
 #:   두어 시험이 바꿔 끼우는 자리가 같다)
 GROUP_SINCE = {}
+#: ★ 11-02 PC6-01 (사전 공격 6 회차) — 그룹 표지 → 러너 세션 {'pid': 러너 pid (start_new_session = 세션 번호 = 그룹 번호), 'start': 러너 시작 틱 | None}
+#:   (`run_in_group` = 띄운 러너 · `recover_group` = 시작 기록의 pid · runner_start) · 마지막 셈 {'members': 찾은 표지 프로세스, 'unsure': 확인 불가 pid}
+#:   (`group_members` 가 쓴다 · `group_settle` · 끝 기록이 읽는다).  둘 다 GROUP_SINCE 와 같은 자리 (부르는 쪽이 정리 동안 넣고 뺀다).
+GROUP_RUN = {}
+GROUP_SCAN = {}
+#: 계보 (ppid) 를 거슬러 보는 깊이 상한 (넘으면 확인 불가 · 보수 — 구현 상수 · 판정 무관)
+GROUP_KIN_DEPTH = 64
 
 
-def group_members(token, since=None, uid=None):
+def _run_session_ours(run):
+    """러너 세션 번호 (`run['pid']`) 가 이 런의 것인가 → False = 그 번호의 지금 지도자가 다른 (뒤에 생긴) 프로세스 (시작 시각 ≠ 러너 시작 · pid 다시 쓰임) |
+    True = 러너 자신 · 지도자 없음 (러너는 끝났다 · 세션 원이 남아 있는 동안 그 번호는 새 프로세스에 다시 주어지지 않는다) · 시작 시각 모름 · 못 읽음 (보수)."""
+    try:
+        ld = proc_stat(run['pid'])
+    except OSError:
+        return True
+    st0 = run.get('start')
+    return not (ld is not None and type(st0) is int and ld[1] is not None and ld[1] != st0)
+
+
+def _run_kin(ps, run, needle, me, ours):
+    """environ 을 못 읽는 프로세스 (stat = ps) 가 이 런의 자손일 수 있나 (★ 11-02 PC6-01) → True = 러너 세션 · 그룹 안 (세션 · 그룹은 물려받기로만 들어간다) ·
+    계보 (ppid) 위에 이 런 프로세스 (러너 세션 · 그룹 안 · 표지 env) · 계보를 끝까지 못 봄 (부모 stat 못 읽음 · 고리 · 깊이 상한 = 보수) | False = 러너 세션 ·
+    그룹 밖이고 계보가 이 런 프로세스 없이 init (pid ≤ 1) · 부른 사슬 자신 (me) · 사라진 부모에서 끝남 (ssh 로그인 세션 · setuid 프로그램 · agent 꼴 —
+    러너가 띄우지 않은 프로세스).  ours = `_run_session_ours(run)` (False = 그 세션 번호는 다른 세션의 것 · 세션 · 그룹 칸을 증거로 쓰지 않는다)."""
+    sid = run['pid']
+
+    def inside(st):
+        return ours and (st[4] == sid or st[3] == sid)
+
+    if inside(ps):
+        return True
+    a, seen = ps[2], set()
+    for _ in range(GROUP_KIN_DEPTH):
+        if a is None or a <= 1 or a == me:
+            return False
+        if a in seen:
+            return True
+        seen.add(a)
+        try:
+            st = proc_stat(a)
+        except OSError:
+            return True
+        if st is None:
+            return False
+        if inside(st):
+            return True
+        try:
+            if needle in Path(PROC_DIR, str(a), 'environ').read_bytes().split(b'\0'):
+                return True
+        except OSError:
+            pass
+        a = st[2]
+    return True
+
+
+def group_members(token, since=None, uid=None, run=None):
     """/proc 에서 env 그룹 표지 (`RINT_RUN_TOKEN=token`) 를 가진 살아 있는 프로세스 pid 목록 (이 프로세스 뺌) | None (확인 불가).  러너 · bash 부분 셸 ·
     payload · 그 자식은 env 를 물려받는다 (setsid 로 그룹을 벗어나도 표지는 남는다) — env 를 지운 자식은 못 찾는다 (한정 · 러너 · payload 는 env 를
     지우지 않는다).  ★ 10-28 밤 PC5-07 (사전 공격 5 회차 PC-07):
       · 상태 Z (주 스레드만 끝남) 라도 산 스레드 (`task/<tid>` 상태 Z · X 아님) 가 있으면 산 프로세스 — 그 스레드의 environ 으로 표지를 본다 (지도자의
         environ = ESRCH) · 스레드가 다 끝났으면 (Z 만) 끝난 프로세스
-      · environ 을 못 읽는 프로세스 (사라짐 = ENOENT · ESRCH 뺌) = 그룹 원일 수 있으면 **확인 불가 (None)** — 그룹 원일 수 있다 = 같은 실 uid (root 면
-        다) · 그룹 시작 (`since` = 부팅 뒤 틱 · 없으면 모두) 뒤에 생긴 프로세스 (시작 전 프로세스는 이 그룹의 자손이 될 수 없다 · 다른 실 uid 프로세스 =
-        셈 밖 — 한정: 그룹 원이 su · sudo -u 로 실 uid 를 바꾸면 못 본다 · 러너 · payload 는 그러지 않는다 · 다른 터미널의 sudo 같은 프로세스로 확인이 늘
-        막히지 않게) · pid 1 (이 pid 이름공간의 init — 컨테이너에서 root 도 environ 을 못 읽는 일이 있다 · 그룹보다 먼저 있었고 pid 1 은 다시 쓰이지
-        않는다) 뺌 · uid = 셈하는 쪽 uid (기본 이 프로세스)."""
+      · environ 을 못 읽는 프로세스 (사라짐 = ENOENT · ESRCH 뺌) = 그룹 원일 수 있으면 **확인 불가 (None)** — 셈 밖 = 다른 실 uid (셈하는 쪽이 root 가
+        아닐 때 · 한정: 그룹 원이 su · sudo -u 로 실 uid 를 바꾸면 못 본다 · 러너 · payload 는 그러지 않는다) · 그룹 시작 (`since` = 부팅 뒤 틱 · 없으면
+        모두) 전에 생긴 프로세스 (이 그룹의 자손이 될 수 없다) · pid 1 (이 pid 이름공간의 init — 컨테이너에서 root 도 environ 을 못 읽는 일이 있다 · 그룹보다
+        먼저 있었고 다시 쓰이지 않는다) · uid = 셈하는 쪽 uid (기본 이 프로세스).
+    ★ 11-02 PC6-01 (사전 공격 6 회차 — 같은 실 uid 이고 environ 을 못 읽는 무관 프로세스 (ssh 로그인 세션 `sshd: user@pts/N` · setuid 프로그램 · ssh-agent
+    꼴) 하나가 끝난 런을 GROUP_UNCONFIRMED · recover rc 3 으로 막던 것): 러너 세션 (`run` · 없으면 `GROUP_RUN[token]`) 을 알면 environ 을 못 읽는 프로세스는
+    러너 세션 · 그룹 안이거나 계보 (ppid) 위에 이 런 프로세스가 있을 때만 확인 불가 (`_run_kin`) — 그 밖 (러너가 띄우지 않은 프로세스) = 셈 밖.  러너 세션을
+    모르면 (옛 시작 기록 · 직접 부름) = 위 옛 규칙 그대로.  한정: 그룹 원이 setsid 로 세션을 벗어나고 부모까지 끝났으며 environ 도 못 읽으면 못 본다 (러너 ·
+    payload 는 그러지 않는다) · stat 을 못 읽는 프로세스 (/proc hidepid 등) = 확인 불가 그대로.  셈한 결과 (찾은 표지 프로세스 · 확인 불가 pid) =
+    `GROUP_SCAN[token]` (확인 불가여도 찾은 표지 프로세스를 `group_settle` 이 죽인다 · 끝 기록 · recover 사유에 pid)."""
     try:
         names = os.listdir(PROC_DIR)
     except OSError:
         return None
-    me, out, unsure = os.getpid(), [], False
+    me, out, unsure = os.getpid(), [], []
     uid = os.getuid() if uid is None else uid
     since = GROUP_SINCE.get(token) if since is None else since
+    run = GROUP_RUN.get(token) if run is None else run
+    if not (isinstance(run, dict) and type(run.get('pid')) is int and run['pid'] > 1):
+        run = None
+    ours = _run_session_ours(run) if run is not None else False
     needle = f'{GROUP_TOKEN_ENV}={token}'.encode('ascii')
     for e in names:
         if not e.isdigit() or int(e) == me:
@@ -2446,13 +2513,16 @@ def group_members(token, since=None, uid=None):
                 if (int(e) == 1 or (uid != 0 and ru is not None and ru != uid)
                         or (since is not None and ps[1] is not None and ps[1] < since)):
                     continue                                   # 이 그룹의 자손일 수 없다 (pid 1 = 이 pid 이름공간의 init — 그룹보다 먼저 있었고 다시 쓰이지 않는다)
-                unsure = True
+                if run is not None and not _run_kin(ps, run, needle, me, ours):
+                    continue                                   # ★ 11-02 PC6-01 — 러너 세션 · 그룹 밖 · 계보에 이 런 프로세스 없음 = 이 런의 자손일 수 없다
+                unsure.append(int(e))
                 continue
         except OSError:
-            unsure = True
+            unsure.append(int(e))
             continue
         if needle in env.split(b'\0'):
             out.append(int(e))
+    GROUP_SCAN[token] = {'members': sorted(out), 'unsure': sorted(unsure)}
     return None if unsure else sorted(out)
 
 
@@ -2486,12 +2556,24 @@ def group_kill_pids(pids):
 
 def group_settle(token, limit=None):
     """그룹 (표지 프로세스) 이 다 끝날 때까지 SIGKILL 하고 기다린다 (대기 상한 `GROUP_GONE_WAIT_S`) → (확인 bool, 남은 pid 목록 | None (못 읽음),
-    죽인 프로세스 수).  ★ 10-28 밤 PC5-07 — 그룹 시작 틱 = `GROUP_SINCE[token]` (부르는 쪽이 넣는다 · `group_members` 가 못 읽는 프로세스를 거를 때)."""
+    죽인 프로세스 수).  ★ 10-28 밤 PC5-07 — 그룹 시작 틱 = `GROUP_SINCE[token]` (부르는 쪽이 넣는다 · `group_members` 가 못 읽는 프로세스를 거를 때).
+    ★ 11-02 PC6-01 — 러너 세션 = `GROUP_RUN[token]` (부르는 쪽) · 확인 불가 (None) = 대기 상한을 쓰지 않고 곧바로 미확인이되 그때 찾은 표지 프로세스는 먼저
+    죽인다 (`GROUP_SCAN[token]['members']` · 1저자 10-24 Q2 프로세스 그룹 kill · 옛 = 아무도 안 죽이고 반환)."""
     limit = GROUP_GONE_WAIT_S if limit is None else limit
     t_end = time.time() + limit
     killed = set()
-    while True:
+
+    def scan():
+        GROUP_SCAN.pop(token, None)                            # 이번 셈 결과만 (바꿔 끼운 group_members = 기록 없음 → 죽이지 않음)
         m = group_members(token)
+        if m is None:
+            found = [p for p in ((GROUP_SCAN.get(token) or {}).get('members') or []) if type(p) is int]
+            if found:
+                killed.update(found)
+                group_kill_pids(found)
+        return m
+    while True:
+        m = scan()
         if m is None:
             return False, None, len(killed)
         if not m:
@@ -2499,7 +2581,7 @@ def group_settle(token, limit=None):
         killed |= set(m)
         group_kill_pids(m)
         if time.time() >= t_end:
-            m = group_members(token)
+            m = scan()
             return m == [], m, len(killed)
         time.sleep(GROUP_POLL_S)
 
@@ -2549,8 +2631,10 @@ def run_in_group(argv, cwd, env, logf, timeout, gdir, name, by='chain'):
     """러너를 새 세션 (프로세스 그룹 · env 그룹 표지) 으로 띄우고 끝까지 → (rc, 원인, 끝 기록).  원인 = None (스스로 끝남) · 'timeout' · 'signal' (SIGTERM ·
     SIGHUP — 사슬이 받음) · 'exception' (그 밖 · 기록 뒤 다시 올린다) · 'signal_after' (러너가 스스로 끝난 뒤 정리 중 받은 신호 — 정리 · 끝 기록을 끊지 않고
     미뤘다 · 디스크 끝 기록의 원인은 None 그대로 · 돌려주는 dict 에 `signal_after` · 부르는 쪽 = 그 런을 멈춤).  멈출 때 그룹 전체를 SIGKILL (지도자 회수 전 = 그룹 번호가 이 그룹 것) · 스스로
-    끝났어도 남은 표지 프로세스를 죽인다 · 끝 기록 (`<name>.end.json`) = 표지 프로세스가 0 임을 확인한 뒤 (대기 상한 안에 못 하면 confirmed False) ·
-    시작 기록 (`<name>.launch.json`) = Popen 전 (표지 · 호스트) 과 뒤 (pid · pgid).  ⚠ 한정: 사슬 부모 자신이 SIGKILL 되면 이 함수는 끝 기록을 못 쓴다 →
+    끝났어도 남은 표지 프로세스를 죽인다 · 끝 기록 (`<name>.end.json`) = 표지 프로세스가 0 임을 확인한 뒤 (대기 상한 안에 못 하면 confirmed False · 확인
+    불가 프로세스 (러너 세션 · 계보 안에서 environ 을 못 읽음 · ★ 11-02 PC6-01) 가 있으면 대기 상한을 쓰지 않고 곧바로 confirmed False · 끝 기록 `unsure` =
+    그 pid · 찾은 표지 프로세스는 먼저 죽인다) · 시작 기록 (`<name>.launch.json`) = Popen 전 (표지 · 호스트) 과 뒤 (pid · pgid · 러너 시작 틱
+    `runner_start` — recover 가 러너 세션 번호의 다시 쓰임을 가른다 · ★ 11-02 PC6-01).  ⚠ 한정: 사슬 부모 자신이 SIGKILL 되면 이 함수는 끝 기록을 못 쓴다 →
     `--stage recover` (Codex ② · 끝 기록 없는 시작 기록 = 미확인 · 부모 사망 + 지금 표지 없음을 종료 증거로 쓰지 않는다).  ⚠ 한정: 처리기를 거는 · 바꾸는
     몇 바이트코드 사이 (기다림 처리기 → 미룸) 에 신호가 두 번 겹치면 이 함수가 끝 기록 없이 빠질 수 있다 — 그 경우도 recover 몫 (시작 기록 · 끝 기록 없음 =
     미확인).  처리기 = 주 스레드에서만 (다른 스레드에서 부르면 신호 처리 없음 · 기본 동작)."""
@@ -2567,7 +2651,7 @@ def run_in_group(argv, cwd, env, logf, timeout, gdir, name, by='chain'):
     since = (bt - 2 * os.sysconf('SC_CLK_TCK')) if bt is not None else None
     launch = {'schema': GROUP_SCHEMA, 'name': name, 'token': token, 'pid': None, 'pgid': None, 'argv': [str(a) for a in argv],
               'host': host_ident(), 'started_utc': _utc(), 'by': by, 'chain_pid': os.getpid(),
-              'chain_start': (me_stat[1] if me_stat else None), 'since_ticks': since}
+              'chain_start': (me_stat[1] if me_stat else None), 'since_ticks': since, 'runner_start': None}
     write_json_atomic(gdir / f'{name}.launch.json', launch)
     rc, cause, exc, p, sig = None, None, None, None, None
     pending = []
@@ -2584,7 +2668,11 @@ def run_in_group(argv, cwd, env, logf, timeout, gdir, name, by='chain'):
                     pg = os.getpgid(p.pid)                 # 실제 그룹 번호 (새 세션 = pid · 기록 = 잰 값)
                 except OSError:
                     pg = None
-                launch.update(pid=p.pid, pgid=pg)
+                try:
+                    rs = proc_stat(p.pid)                  # ★ 11-02 PC6-01 — 러너 시작 틱 (회수 전 = 끝났어도 zombie 의 stat 이 남는다)
+                except OSError:
+                    rs = None
+                launch.update(pid=p.pid, pgid=pg, runner_start=(rs[1] if rs else None))
                 write_json_atomic(gdir / f'{name}.launch.json', launch)
                 rc = p.wait(timeout=timeout)
             except subprocess.TimeoutExpired:
@@ -2611,13 +2699,18 @@ def run_in_group(argv, cwd, env, logf, timeout, gdir, name, by='chain'):
             except subprocess.TimeoutExpired:
                 rc = None
         GROUP_SINCE[token] = since
+        if p is not None:                                  # ★ 11-02 PC6-01 — 러너 세션 (못 읽는 프로세스 = 이 세션 · 계보 안일 때만 확인 불가)
+            GROUP_RUN[token] = {'pid': p.pid, 'start': launch.get('runner_start')}
         try:
             confirmed, left, n_killed = group_settle(token)
+            unsure = (GROUP_SCAN.get(token) or {}).get('unsure') if left is None else None
         finally:
             GROUP_SINCE.pop(token, None)
+            GROUP_RUN.pop(token, None)
+            GROUP_SCAN.pop(token, None)
         end = {'schema': GROUP_SCHEMA, 'name': name, 'token': token, 'rc': rc, 'cause': cause, 'signal': (signal_name(sig) if sig else None),
                'confirmed': bool(confirmed), 'left': left, 'left_after_exit': (n_killed if cause is None else None), 'killed': n_killed,
-               'by': by, 'ended_utc': _utc()}
+               'unsure': unsure, 'by': by, 'ended_utc': _utc()}
         write_json_atomic(gdir / f'{name}.end.json', end)
     finally:
         _signal_restore(old)
@@ -2686,6 +2779,12 @@ RESOURCE_WORDS = ('OutOfMemoryError', 'CUDA_ERROR_OUT_OF_MEMORY', 'cudaErrorMemo
 #:   PC5-06 — 시간 초과 · 신호 · 그룹 미확인 · 사슬 부모 사망 원인이어도 그 런 로그에 이 낱말이 있으면 runner_rc (같은 낱말 규칙 · 코드 결함 꼴을 신호 ·
 #:   부모 사망으로 비켜 재실행하지 않는다).  (✅ 10-28 등록 R §10-5 다 ⑧ 의 뜻 = 자동 재시도 안 함 · 시험 AL19c · PC08 · PC11).
 NOT_RESOURCE_WORDS = ('CUDA_ERROR_ILLEGAL_ADDRESS', 'cudaErrorIllegalAddress')
+#: ★ 11-02 PC6-02 (사전 공격 6 회차) — 그 밖 CUDA 오류 표지 (1저자 10-28 Q2 "그 밖 CUDA 오류 (cupy 클래스 이름만 있는 줄 포함) = 자동 재실행 없음 (runner_rc)")
+#:   = 드라이버 오류 이름 (`CUDA_ERROR_…`) · 런타임 오류 이름 (`cudaError…`) · cupy 오류 클래스 이름 둘.  `words_cause` 가 자원 낱말 **뒤에** 본다 (메모리 부족
+#:   줄 `CUDADriverError: CUDA_ERROR_OUT_OF_MEMORY` · `CUDARuntimeError: cudaErrorMemoryAllocation` = resource 그대로 · 잘못된 주소만 먼저 = Q2 차례) · 길 무관
+#:   (요약 있는 길 러너 rc · 시간 초과 · 신호 · 그룹 미확인 · 요약 없는 길 = 같은 함수 — 옛 = 러너 rc 길에서만 기본값 runner_rc 로 섰다).  한정: cupy 라이브러리
+#:   상태 오류 (`CUBLAS_STATUS_…` · `CUSPARSE_STATUS_…` 등) · 다른 꼴 (`CUDA error:`) 은 표에 없다 (Q2 의 낱말이 아님 · 러너 rc 길에서만 runner_rc).
+CUDA_ERROR_WORDS = ('CUDA_ERROR_', 'cudaError', 'CUDARuntimeError', 'CUDADriverError')
 #: ★ 10-28 밤 PC5-06 ② — 사슬 예외 (Stop 아님 · 원장 시도 꼴 단계 안) = 멈춤 이름 · 결과 줄 원인 (재실행 불가)
 CHAIN_EXCEPTION = 'CHAIN_EXCEPTION'
 #: ★ 10-28 밤 PC5-01 — 결과 줄에서 폴더 증거로 다시 세는 칸 (utc · by · 폴더 · 요약 sha 뺌 — 폴더 · 요약 sha 는 따로 대조)
@@ -3472,13 +3571,23 @@ def check_trace(folder, od=None):
 
 
 def words_cause(txt, default):
-    """런 로그 글 → 원인 (★ 10-28 밤 PC5-02 · 06 같은 낱말 규칙): 잘못된 주소 (`NOT_RESOURCE_WORDS` · 먼저) = runner_rc · 자원 낱말 (`RESOURCE_WORDS` ·
-    메모리 · 디스크 다섯) = resource · 없음 = default."""
+    """런 로그 글 → 원인 (★ 10-28 밤 PC5-02 · 06 같은 낱말 규칙 · ★ 11-02 PC6-02 = 모든 길의 한 규칙): ① 잘못된 주소 (`NOT_RESOURCE_WORDS` · 먼저) =
+    runner_rc ② 자원 낱말 (`RESOURCE_WORDS` · 메모리 · 디스크 다섯) = resource ③ 그 밖 CUDA 오류 표지 (`CUDA_ERROR_WORDS` · 1저자 10-28 Q2) = runner_rc ④ 없음 =
+    default."""
     if any(w in txt for w in NOT_RESOURCE_WORDS):
         return 'runner_rc'
     if any(w in txt for w in RESOURCE_WORDS):
         return 'resource'
+    if any(w in txt for w in CUDA_ERROR_WORDS):
+        return 'runner_rc'
     return default
+
+
+def words_keep(txt, base):
+    """재실행 자격 원인 (시간 초과 · 신호 · 그룹 미확인) 의 런 로그 → `words_cause` 가 runner_rc (잘못된 주소 · 그 밖 CUDA 오류) 면 runner_rc · 아니면 base
+    (자원 낱말 = base 그대로 — 둘 다 재실행 자격 · 기록 칸 옛 판과 같게).  ★ 11-02 PC6-02 — 요약 있는 길 (`stop_cause`) · 요약 없는 길 (`orphan_cause`) 이 같은
+    함수 (옛 = 잘못된 주소 두 낱말만 따로 셌다 → 그 밖 CUDA 오류가 이 길에서 재실행 자격)."""
+    return 'runner_rc' if words_cause(txt, None) == 'runner_rc' else base
 
 
 def run_log_text(base, run):
@@ -3494,7 +3603,7 @@ def stop_cause(s, folder):
     """멈춘 단계 요약 → 원인 이름 (기록 · 재실행 자격) — timeout · signal · group_unconfirmed · resource (러너 rc · 그 런 로그에 자원 낱말) · runner_rc ·
     gate (런 없이 멈춤) · check (팔을 읽은 뒤의 멈춤 · 등록 결과) · ★ 10-28 밤 chain_exception (사슬 예외 · PC5-06 ②).  ★ 10-28 밤 PC5-06 (같은 낱말
     규칙) — 재실행 자격 원인 (시간 초과 · 신호 · 그룹 미확인) 이어도 멈춘 런 로그에 잘못된 주소 낱말이 있으면 runner_rc (코드 결함 꼴을 신호 · 시간 초과로
-    비켜 재실행하지 않는다)."""
+    비켜 재실행하지 않는다) · ★ 11-02 PC6-02 그 밖 CUDA 오류 표지도 (`words_keep` = `words_cause` 한 규칙)."""
     code = (s.get('stop') or {}).get('code') or s.get('status')
     txt = run_log_text(folder, (s.get('stop') or {}).get('run'))
     if code == CHAIN_EXCEPTION:
@@ -3514,7 +3623,7 @@ def stop_cause(s, folder):
         base = 'group_unconfirmed'
     else:
         return 'gate' if not s.get('runs') else 'check'
-    return 'runner_rc' if any(w in txt for w in NOT_RESOURCE_WORDS) else base
+    return words_keep(txt, base)
 
 
 def orphan_cause(folder):
@@ -3522,8 +3631,8 @@ def orphan_cause(folder):
     기록 (시작 · 끝 · 봉인 원천 graph_src 포함) 과 그 런 로그 (`<그룹 폴더의 부모>/logs/<런>.log`) · 러너 rc 를 요약 있는 길과 같은 낱말 규칙으로 (옛 =
     늘 parent_dead):
       · 끝 기록 by chain · 원인 None · rc 0 = 끝난 런 (건너뜀)
-      · by chain · 원인 None · 그 밖 rc (러너가 끝난 뒤 요약 전 사망) = 낱말 (없음 = runner_rc) · 시간 초과 · 신호 = timeout · signal (로그에 잘못된 주소 =
-        runner_rc) · exception (기다림 중 사슬 예외) = chain_exception
+      · by chain · 원인 None · 그 밖 rc (러너가 끝난 뒤 요약 전 사망) = 낱말 (없음 = runner_rc) · 시간 초과 · 신호 = timeout · signal (로그에 잘못된 주소 ·
+        ★ 11-02 PC6-02 그 밖 CUDA 오류 표지 = runner_rc · `words_keep`) · exception (기다림 중 사슬 예외) = chain_exception
       · by recover (그 런 도중 사슬 부모 사망) = 낱말 (없음 = parent_dead)
     런 여럿 = 재실행 불가 원인이 하나라도 있으면 그것 (시작 차례 첫) · 아니면 마지막 · 끝나지 않은 런이 없으면 parent_dead (런 사이 사망) · 그룹 기록이 하나도
     없음 · 기록 · 그 런 로그를 못 읽음 · 모르는 꼴 = 읽음 False (재실행 자격 없음 · 보수)."""
@@ -3560,7 +3669,7 @@ def orphan_cause(folder):
         elif gc is None:
             c = words_cause(txt, 'runner_rc')
         elif gc in ('timeout', 'signal', 'signal_after'):
-            c = 'runner_rc' if any(w in txt for w in NOT_RESOURCE_WORDS) else ('timeout' if gc == 'timeout' else 'signal')
+            c = words_keep(txt, 'timeout' if gc == 'timeout' else 'signal')   # ★ 11-02 PC6-02 — 요약 있는 길과 같은 함수 (그 밖 CUDA 오류 포함)
         elif gc == 'exception':
             c = 'chain_exception'
         else:
@@ -6249,7 +6358,9 @@ def recover_group(lp, me, operator=None):
     호스트 규칙 (★ 10-28 밤 PC5-03 · 04 · 1저자 Q3):
       · 같은 부팅 (boot_id) · 같은 pid 이름공간 · 같은 machine_id (값 비교 · 둘 다 모름 = 같음) — 사슬 부모 (시작 기록 chain_pid · chain_start) 가
         살아 있으면 **건드리지 않는다** (끝 기록을 쓰지 않음 · 미확인 · 그 사슬이 그룹을 정리하고 끝 기록 · 결과 줄을 쓴다 · 살았는지 모름 = 같게 · 옛 =
-        살아 있는 사슬의 러너 그룹을 죽였다) · 아니면 /proc 의 env 표지로 찾아 SIGKILL · 다 끝날 때까지 (`group_settle` · 그룹 시작 틱 = since_ticks)
+        살아 있는 사슬의 러너 그룹을 죽였다) · 아니면 /proc 의 env 표지로 찾아 SIGKILL · 다 끝날 때까지 (`group_settle` · 그룹 시작 틱 = since_ticks ·
+        ★ 11-02 PC6-01 러너 세션 = 시작 기록의 pid · runner_start — environ 을 못 읽는 무관 프로세스 (운영자의 ssh 세션 · setuid · agent) 는 셈 밖 · 끝 기록
+        `unsure` · 사유 = 확인 불가 pid)
       · 그 밖 (다른 · 모르는 부팅 · 다른 · 모르는 pid 이름공간 · 다른 machine_id) = **미확인** (여기서 그 프로세스를 볼 수 없다 · machine_id 는 기계 정체가 아니다 —
         복제 디스크 이미지 · 같은 이미지의 컨테이너가 같은 값 · 옛 = 같은 machine_id 의 다른 부팅 = 재부팅 확인) · operator (운영자 확인 표지 {attempt ·
         why} · 그 시도 폴더의 그룹만) 가 있으면 그 기록 (사유 · 시각 · 이 호스트 · 시작 기록 호스트) 과 함께 확인."""
@@ -6259,7 +6370,7 @@ def recover_group(lp, me, operator=None):
     except (OSError, UnicodeDecodeError, ValueError):
         L = None
     tok = (L or {}).get('token') if isinstance(L, dict) else None
-    confirmed, left, killed, why, op_rec = False, None, 0, None, None
+    confirmed, left, killed, why, op_rec, unsure = False, None, 0, None, None, None
     if not (isinstance(tok, str) and re.fullmatch(r'[0-9a-f]{32}', tok)):
         why = '시작 기록 꼴 (그룹 표지) 을 못 읽는다'
     else:
@@ -6274,11 +6385,19 @@ def recover_group(lp, me, operator=None):
                               f'그룹을 정리한다 · 건드리지 않음 (끝 기록 · 결과 줄 없음 · 사슬이 끝난 뒤 다시 recover)')
             since = L.get('since_ticks')
             GROUP_SINCE[tok] = since if type(since) is int else None
+            rp, rs = L.get('pid'), L.get('runner_start')     # ★ 11-02 PC6-01 — 시작 기록의 러너 pid = 러너 세션 · 러너 시작 틱 (없음 = 옛 기록 · 옛 규칙)
+            if type(rp) is int and rp > 1:
+                GROUP_RUN[tok] = {'pid': rp, 'start': rs if type(rs) is int else None}
             try:
                 confirmed, left, killed = group_settle(tok)
+                unsure = (GROUP_SCAN.get(tok) or {}).get('unsure') if left is None else None
             finally:
                 GROUP_SINCE.pop(tok, None)
-            why = None if confirmed else ('/proc 를 못 읽는다 · environ 을 못 읽는 그룹 원 후보' if left is None else '표지 프로세스가 대기 상한 안에 남았다')
+                GROUP_RUN.pop(tok, None)
+                GROUP_SCAN.pop(tok, None)
+            why = None if confirmed else (
+                ('/proc 를 못 읽는다 · environ 을 못 읽는 그룹 원 후보' + (f' (러너 세션 · 계보 안 pid {unsure[:8]})' if unsure else ''))
+                if left is None else '표지 프로세스가 대기 상한 안에 남았다')
         else:
             what = ' · '.join(x for x, bad in (('다른 부팅 (boot_id · 모름)', not same_boot), ('다른 pid 이름공간 (모름)', not same_ns),
                                                 ('machine_id 다름', not same_mid))
@@ -6291,7 +6410,7 @@ def recover_group(lp, me, operator=None):
                 why = (f'{what} — 여기서 그 프로세스를 볼 수 없다 (machine_id 는 기계 정체가 아니다 — 복제 이미지 · 컨테이너) · 운영자가 그 그룹이 끝났음을 '
                        f'확인했으면 --ledger 와 --operator-confirm <시도 번호> --operator-why "<사유>"')
     end = {'schema': GROUP_SCHEMA, 'name': nm, 'token': tok, 'rc': None, 'cause': 'parent_dead', 'signal': None, 'confirmed': bool(confirmed),
-           'left': left, 'left_after_exit': None, 'killed': killed, 'by': 'recover', 'why': why, 'host': me, 'ended_utc': _utc()}
+           'left': left, 'left_after_exit': None, 'killed': killed, 'unsure': unsure, 'by': 'recover', 'why': why, 'host': me, 'ended_utc': _utc()}
     if op_rec is not None:
         end['operator'] = op_rec
     return end, None
