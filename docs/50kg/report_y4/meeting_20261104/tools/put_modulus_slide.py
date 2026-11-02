@@ -85,20 +85,24 @@ def mono(k):
     return 1 if all(v > 0 for v in d) else (-1 if all(v < 0 for v in d) else 0)
 
 
-# 글머리 · 노트 = 값의 방향을 확인한 문장만 (어긋나면 멈춘다 — 문장을 바꿀지 사람이 정한다)
-want = dict(por=1, cov=-1, sig=-1, amam=-1, svm=-1, cp=1)
-bad = {k: mono(k) for k, w in want.items() if mono(k) != w}
-assert not bad, f'방향이 문장과 다르다 {bad} (영률 차례 {have})'
+# 글머리 둘 · 노트 = 값의 방향을 확인한 문장만 (어긋나면 멈춘다 — 문장을 바꿀지 사람이 정한다) · 좋은 쪽 · 나쁜 쪽 방향을 다 쓴다
+#   글머리 1 = 기공도 감소 · 피복률 · 유효 이온전도도 증가 (영률이 낮을수록) · 글머리 2 = 접촉점 압력 감소 · 활물질 입자 응력 · 활물질끼리 하중 몫 증가
+for n_b, want in ((1, dict(por=1, cov=-1, sig=-1)), (2, dict(cp=1, svm=-1, amam=-1))):
+    bad = {k: mono(k) for k, w in want.items() if mono(k) != w}
+    assert not bad, f'글머리 {n_b}: 방향이 문장과 다르다 {bad} (+1 = 영률과 함께 증가 · 영률 차례 {have})'
 cp_lo, cp_hi = V[have[0]]['cp'], V[have[-1]]['cp']
 assert cp_hi / cp_lo > 1.5, (cp_lo, cp_hi)                  # '크게' 낮음
 svm_lo, svm_hi = V[have[-1]]['svm'], V[have[0]]['svm']
 assert 1.0 < svm_hi / svm_lo < 1.2, (svm_lo, svm_hi)        # '약간' 높음
 HEAD = f'  고체전해질 영률에 따른 변화 (2 µm: {gtxt[0]} · {gtxt[1]} · {gtxt[2]} GPa)'
-BULLET = '영률이 낮을수록 기공도 감소, 피복률 · 유효 이온전도도 증가, 접촉점 압력 감소'
+BULLETS = ('영률이 낮을수록 기공도 감소, 활물질 표면 피복률 · 유효 이온전도도 증가',
+           '활물질–전해질 접촉점 압력은 감소, 활물질 입자 응력 · 활물질끼리의 하중 몫은 증가')
 egs = ', '.join(f'{E[b]:g}' for b in have)
 NOTE = (f'2 µm 전해질의 영률을 {egs} GPa로 바꾼 계산에서, 영률이 낮을수록 기공도는 낮고 활물질 표면 피복률과 유효 이온전도도는 높으며, '
         '가압 하중을 활물질–활물질 접촉이 더 많이 지고 활물질 응력도 약간 높아지는 반면, 활물질–전해질 접촉점 압력은 크게 낮아집니다.')
 CAP = ('【 고체전해질 영률별 2 µm 복합양극 해석 결과 (유효 이온전도도: ', f' = {SIGMA0:g} mS/cm 기준) 】')
+for t_ in (HEAD, *BULLETS, NOTE, *CAP):
+    assert ' ,' not in t_, f'쉼표 앞 공백: {t_!r}'                 # 글자 그대로 공백 + 쉼표 금지 (렌더의 " , " 는 대체 글꼴 간격)
 I_, SUB, SUP = {'i': '1'}, {'baseline': '-25000'}, {'baseline': '30000'}
 ROWS = [
     ([('고체전해질 영률', {})], [(f'{g} GPa', {}) for g in gtxt]),
@@ -161,18 +165,25 @@ def put_runs(p, segs, tmpl):
         (end.addprevious(r) if end is not None else p.append(r))
 
 
-# ── 머리 글 · 글머리 (결론 장 꼴 · 셋째 · 넷째 문단 지움) ──────────────
+# ── 머리 글 · 글머리 둘 (결론 장 둘째 문단 꼴 = 빨강 없는 글머리 · 셋째 · 넷째 문단 지우고 둘째 문단 사본 하나) ──
 rect = shape(s, 'Rectangle 23')
 P = rect.text_frame.paragraphs
 assert len(P) == 4 and len(P[0].runs) == 1 and len(P[1].runs) == 1, [len(p.runs) for p in P]
 P[0].runs[0].text = HEAD
-P[1].runs[0].text = BULLET
+P[1].runs[0].text = BULLETS[0]
 c = P[1].runs[0]._r.find(A('rPr')).find(A('solidFill') + '/' + A('srgbClr'))
 assert c is None or c.get('val') != 'FF5050'
 txb = rect.text_frame._txBody
-for p in txb.findall(A('p'))[2:]:
+ps = txb.findall(A('p'))
+for p in ps[2:]:
     txb.remove(p)
-rect.height = Inches(1.25)
+p2 = copy.deepcopy(ps[1])
+ps[1].addnext(p2)
+r2 = p2.findall(A('r'))
+assert len(r2) == 1
+r2[0].find(A('t')).text = BULLETS[1]
+assert [''.join(r.text for r in p.runs) for p in rect.text_frame.paragraphs] == [HEAD, *BULLETS]
+rect.height = Inches(1.7)
 
 # ── 표 (결론 장 결과 표 꼴 12 pt · 2 열 → 4 열 · 5 줄 → 8 줄) ─────────
 fr = shape(s, '결과 요약 표')
@@ -214,7 +225,7 @@ for tr, (label_segs, vals) in zip(trs, ROWS):
             segs = [v] if isinstance(v, tuple) else [(v, {})]
         put_runs(ps[0], segs, tmpl)
 row_h = int(trs[0].get('h'))
-fr.top = Inches(2.75)                                         # 글머리가 두 줄이 돼도 겹치지 않게 · 표 끝 6.11 in < 캡션 6.45 in
+fr.top = Inches(2.9)                                          # 글머리 두 줄 아래 · 표 끝 6.26 in < 캡션 6.45 in
 fr.height = row_h * len(trs)
 
 # ── 캡션 (부록 장 캡션 꼴 · σ0 = 이탤릭 σ + 아래첨자 0) ────────────────

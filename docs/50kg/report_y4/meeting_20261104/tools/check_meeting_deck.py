@@ -13,7 +13,9 @@
   F  글꼴 = KoPubWorld돋움체
   M  MPM 장: MPM 기공도 (리포 묶음 docs/data/kg50_mpm_20261102) 숫자 · MPM 피복률 숫자 없음 (1저자 11-02 Q4 · 원장 MPMC-01 – 03)
   E  영률 장 (선택 · 2 µm 전해질 영률 0.675 · 1.35 · 2.025 GPa): 머리 글 영률 셋 · 표 머리 = 영률 차례 · 일곱 줄 칸 = 기록에서 다시 만든 글
-     (draft2 metrics_<침대>.json · tools/modulus_load_share.py 출력 · 묶음 sha256 결합 · 기록 없는 침대 = '—') · 표 안 σ 이탤릭/첨자 · 글꼴
+     (draft2 metrics_<침대>.json · tools/modulus_load_share.py 출력 · 묶음 sha256 결합 · 기록 없는 침대 = '—') · 표 안 σ 이탤릭/첨자 · 글꼴 ·
+     글머리 둘 다 있음 (좋은 쪽 · 나쁜 쪽 방향 — 한쪽만 쓰지 않음) · 각 글머리의 방향 = 기록 값의 단조 방향
+  S  쉼표 앞 공백 (글자 그대로 ' ,') 이 화면 · 표 · 노트에 없는가 (렌더의 ' , ' 는 대체 글꼴 간격 — 글자가 아니다)
 사용:
   python3 -I check_meeting_deck.py <deck.pptx> --repo <리포> [--json out.json]
       [--modulus-data-root <draft2 출력 뿌리 · 기본 리포 draft2>] [--modulus-load-share <modulus_load_share.json · 기본 values/modulus/>]
@@ -70,6 +72,25 @@ MOD_ROWS = (('기공도', 'eps_union_exact_pct · .1f'), ('활물질 표면 피�
             ('유효 이온전도도', 'f_ion_hertz × σ0 1.5 · .3f'), ('활물질 응력', 'lw_am_nowall_median_MPa ÷ p_end_MPa · .2f'),
             ('가압 하중 중 활물질–활물질 몫', 'plane21 contribution AM–AM · .1f'), ('활물질–전해질 접촉점 압력', 'AM–SE |Fn|/면적 평균 · .0f'),
             ('끝 판 압력', 'p_end_MPa · .1f'))
+
+
+#: 영률 장 글머리 둘 (글 그대로) · 방향 (+1 = 영률과 함께 증가) — 둘 다 있어야 한다 (좋은 쪽만 쓰지 않음)
+MOD_BULLETS = (('영률이 낮을수록 기공도 감소, 활물질 표면 피복률 · 유효 이온전도도 증가', dict(por=1, cov=-1, sig=-1)),
+               ('활물질–전해질 접촉점 압력은 감소, 활물질 입자 응력 · 활물질끼리의 하중 몫은 증가', dict(cp=1, svm=-1, amam=-1)))
+
+
+def modulus_raw(mod):
+    """기록 있는 침대 (영률 차례) → 원값 dict (방향 검사용)."""
+    out = {}
+    for b in MOD_BEDS:
+        r, e = mod['rec'][b], mod['ls'][b]
+        if r is None or e is None:
+            continue
+        m = r['metrics']
+        out[b] = dict(por=m['eps_union_exact_pct'], cov=m['coverage_physics_union_pct'], sig=SIGMA0 * m['f_ion_hertz'],
+                      svm=m['lw_am_nowall_median_MPa'] / m['p_end_MPa'], amam=e['plane21']['contribution_sigma_zz_pct']['AM–AM'],
+                      cp=e['am_se_contact_pressure']['mean_MPa'])
+    return out
 
 
 def load_modulus(repo, data_root=None, load_share=None):
@@ -169,6 +190,27 @@ def check_modulus(prs, i, mod, szz):
             prob.append(f'E {i + 1}장 표 "{key}" {got} ≠ 기록 {vals}')
     if len(t.rows) != 1 + len(rows):
         prob.append(f'E {i + 1}장 표 줄 {len(t.rows)} ≠ {1 + len(rows)}')
+    paras = [''.join(r.text for r in p_.runs) for sh in s.shapes if sh.name == 'Rectangle 23' for p_ in sh.text_frame.paragraphs]
+    raw = modulus_raw(mod)
+    have = [b for b in MOD_BEDS if b in raw]
+    for n_b, (txt, want) in enumerate(MOD_BULLETS, 1):
+        if paras.count(txt) != 1:
+            prob.append(f'E {i + 1}장 글머리 {n_b} "{txt}" {paras.count(txt)} 개 (하나여야 함 — 좋은 쪽 · 나쁜 쪽 방향 둘 다)')
+            continue
+        if len(have) < 2:
+            prob.append(f'E {i + 1}장 글머리 {n_b}: 기록 있는 침대 {have} — 방향 확인 불가')
+            continue
+        bad = {}
+        for k, w in want.items():
+            xs = [raw[b][k] for b in have]
+            d = [y - x for x, y in zip(xs, xs[1:])]
+            got = 1 if all(v > 0 for v in d) else (-1 if all(v < 0 for v in d) else 0)
+            if got != w:
+                bad[k] = got
+        if bad:
+            prob.append(f'E {i + 1}장 글머리 {n_b} 방향 ≠ 기록 {bad} (+1 = 영률과 함께 증가)')
+        else:
+            ok += 1
     for r_ in t.rows:                          # 표 안 글자 규칙 (표는 아래 공통 I · F 검사 밖이라 여기서)
         for c_ in r_.cells:
             for p_ in c_.text_frame.paragraphs:
@@ -322,6 +364,8 @@ def run_checks(prs, rows, meas, req, szz, mod=None):
         for where, s in t.items():
             for m in re.finditer(BANNED, s):
                 prob.append(f'W {n}장 {where}: 금지 "{m.group(0)}" …{s[max(0, m.start() - 15):m.end() + 15]}…')
+            for m in re.finditer(r' ,', s):
+                prob.append(f'S {n}장 {where}: 쉼표 앞 공백 …{s[max(0, m.start() - 15):m.end() + 10]}…')
     for n, s in enumerate(prs.slides, 1):
         for sh in s.shapes:
             if sh.name == 'Text Box 36' and sh.has_text_frame and re.search('왼쪽|오른쪽', sh.text_frame.text):
@@ -399,6 +443,17 @@ def mutate(prs_bytes, kind):
         p = s[roles['mpm']].notes_slide.notes_text_frame.paragraphs[0]
         p.runs[-1].text += ' 1 µm 피복률은 80 %입니다.'
         return prs
+    if kind == 'space_comma':               # 4장 노트 끝에 ' ,' (S 규칙)
+        p = s[3].notes_slide.notes_text_frame.paragraphs[0]
+        p.runs[-1].text += ' , 끝'
+        return prs
+    if kind == 'modulus_bullet':            # 영률 장 둘째 글머리 (나쁜 쪽 방향) 지움 — 좋은 쪽만 남기면 FAIL
+        roles, _ = slide_roles(prs)
+        rect = [sh for sh in s[roles['modulus']].shapes if sh.name == 'Rectangle 23'][0]
+        ps = rect.text_frame._txBody.findall(qn('a:p'))
+        if len(ps) >= 3:
+            rect.text_frame._txBody.remove(ps[2])
+            return prs
     if kind == 'modulus_value':               # 영률 장 표의 기공도 줄 마지막 칸 (2.025 GPa) 숫자 끝자리 하나 바꿈
         roles, _ = slide_roles(prs)
         t = [sh for sh in s[roles['modulus']].shapes if getattr(sh, 'has_table', False) and sh.has_table][0].table
@@ -430,7 +485,8 @@ def main():
                             beds_with_record=[b for b in MOD_BEDS if mod['rec'][b] is not None]) if mod else None)}
     if a.selftest:
         st = {}
-        for kind in ('number', 'caption', 'red', 'italic', 'banned', 'mpm_cov') + (('modulus_value',) if has_mod else ()):
+        for kind in ('number', 'caption', 'red', 'italic', 'banned', 'mpm_cov', 'space_comma') + \
+                (('modulus_value', 'modulus_bullet') if has_mod else ()):
             _, pb = run_checks(mutate(raw, kind), rows, meas, req, szz, mod)
             st[kind] = len(pb) > len(prob)
         res['selftest_mutations_detected'] = st
