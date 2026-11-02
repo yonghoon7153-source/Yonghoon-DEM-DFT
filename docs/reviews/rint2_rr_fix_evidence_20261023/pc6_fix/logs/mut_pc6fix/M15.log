@@ -1,0 +1,3 @@
+  FAIL  PD11p ★ 11-02 PC6-11 (변이 생존 M15 · PC10 의 예측 쪽) 사슬 예외 (Stop 아님 · 예측 단계 팔 읽기 중 KeyError) — 원장 예측 시도 → 예측 요약 (STOPPED · 멈춤 CHAIN_EXCEPTION · 사유에 예외 이름) · 결과 줄 by chain · stopped · 원인 chain_exception · 재실행 자격 False · 예외는 다시 올린다 → --add --resume = rc 3 (변이 M15 = 요약 · 결과 줄 없이 다시 올림 → recover → parent_dead · 자격)   ("KeyError('시험: 예측 팔 읽기 중 사슬 결함 (Stop 아님)')", None, None, {'by': None, 'status': None, 'cause': None, 'resume_ok': None}, 3)
+
+test_rint_r_chain: 0/1 PASS (6.3 s)   FAILED: ['PD11p']

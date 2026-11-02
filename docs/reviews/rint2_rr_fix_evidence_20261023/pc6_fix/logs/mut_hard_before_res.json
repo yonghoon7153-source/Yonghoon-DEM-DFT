@@ -1,0 +1,106 @@
+[
+ {
+  "id": "N01k",
+  "why": "PC6-01 계보 깊이 상한 = 셈 밖 (보수 반대)",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 2/2 PASS (2.2 s)",
+  "fails": [],
+  "seconds": 2.7
+ },
+ {
+  "id": "N01p",
+  "why": "PC6-01 시작 기록 runner_start 안 적음",
+  "only": "PD01r",
+  "expect": "killed",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 1/1 PASS (2.1 s)",
+  "fails": [],
+  "seconds": 2.5
+ },
+ {
+  "id": "N01q",
+  "why": "PC6-01 run_in_group 끝 기록 unsure (확인 불가 pid) 안 적음",
+  "only": "PD01r",
+  "expect": "killed",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 1/1 PASS (2.1 s)",
+  "fails": [],
+  "seconds": 2.6
+ },
+ {
+  "id": "N02f",
+  "why": "PC6-02 표지 CUDA_ERROR_ 뺌",
+  "only": "PD02",
+  "expect": "killed",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 2/2 PASS (3.8 s)",
+  "fails": [],
+  "seconds": 4.3
+ },
+ {
+  "id": "N02g",
+  "why": "PC6-02 표지 cudaError 뺌",
+  "only": "PD02",
+  "expect": "killed",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 2/2 PASS (3.5 s)",
+  "fails": [],
+  "seconds": 4.0
+ },
+ {
+  "id": "N02h",
+  "why": "PC6-02 표지 CUDARuntimeError 뺌",
+  "only": "PD02",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (3.6 s)   FAILED: ['PD02']",
+  "fails": [
+   {
+    "cid": "PD02",
+    "line": "e · 나머지 = 그 길의 원인) · OOM + launch failed = 자원 차례 그대로 (Q2 = 잘못된 주소만 먼저) · OOM + 잘못된 주소 = runner_rc   {'n': 167, 'bad_n': 9, 'bad': {'class_only/group_unconfirmed': (('group_unconfirmed', 'post', True), ('runner_rc', 'post', False)), 'class_only/orphan_recover': (('parent_dead', 'post', True), ('runner_rc', 'post', False)), 'class_only/orphan_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'class_only/orphan_signal_after': (('signal', 'post', True), ('runner_rc', 'post', False)), 'class_only/orphan_timeout': (('timeout', 'post', True), ('runner_rc', 'post', False)), 'class_only/rc_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'class_only/rc_signal_after'"
+   }
+  ],
+  "seconds": 4.0
+ },
+ {
+  "id": "N02i",
+  "why": "PC6-02 표지 CUDADriverError 뺌",
+  "only": "PD02",
+  "expect": "killed",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 2/2 PASS (3.4 s)",
+  "fails": [],
+  "seconds": 3.9
+ },
+ {
+  "id": "N09b",
+  "why": "PC6-09 이 항목 판정에서 시작 커밋 원장 조상 대조 뺌",
+  "only": "PD09",
+  "expect": "killed",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 1/1 PASS (2.4 s)",
+  "fails": [],
+  "seconds": 2.8
+ },
+ {
+  "id": "N09c",
+  "why": "PC6-09 이 항목 판정에서 대상 · 기계 · 재실행 원 시도 대조 뺌",
+  "only": "PD09",
+  "expect": "killed",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 1/1 PASS (2.5 s)",
+  "fails": [],
+  "seconds": 2.9
+ }
+]

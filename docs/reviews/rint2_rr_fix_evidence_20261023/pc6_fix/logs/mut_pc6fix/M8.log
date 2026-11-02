@@ -1,0 +1,3 @@
+  FAIL  PD11m ★ 11-02 PC6-11 (변이 생존 M8) — 합친 예측 판정 (사다리 둘 사본 · 합친 예측 · 원장 clone) 뒤 같은 바탕에 합친 단위 대상 (unit:P0_c0_R_j_lo) 의 뒤 시도 흔적 (손 항목 · 시도 폴더) → --reverify = REVERIFY_DIFF · rc 1 (PC5-10 너그러움 = 판정 입력 대상 · 합친 예측의 단위 · 점 대상 밖만 · 변이 M8 = 합친 단위 대상도 너그럽게 = REVERIFY_SAME)   (0, 0, 'REVERIFY_SAME — 판정 JSON · 결과 JSON 바이트 같음 (3 입력 · 판정 PASS_INFORMATIVE)\n', 0, 'REVERIFY_SAME — 판정 JSON · 결과 JSON 바이트 같음 (3 입력 · 판정 PASS_INFORMATIVE)\n')
+
+test_rint_r_chain: 0/1 PASS (13.8 s)   FAILED: ['PD11m']

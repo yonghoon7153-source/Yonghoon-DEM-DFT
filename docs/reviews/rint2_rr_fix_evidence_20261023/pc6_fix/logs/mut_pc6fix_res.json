@@ -1,0 +1,828 @@
+[
+ {
+  "id": "P02b2",
+  "why": "PC5-02 낱말 규칙 — 잘못된 주소를 자원 낱말 뒤에 봄 (P02b 의 같은 가드 · 이번 고침이 옛 글을 옮김)",
+  "only": "PC03",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.3 s)   FAILED: ['PC03']",
+  "fails": [
+   {
+    "cid": "PC03",
+    "line": "★ 10-28 밤 PC5-02 (1저자 Q2 · 사전 공격 5 회차 U1) 자원 낱말 = 메모리 · 디스크 다섯만 (OutOfMemoryError · CUDA_ERROR_OUT_OF_MEMORY · cudaErrorMemoryAllocation · MemoryError · No space left on device) — 러너 rc 1 · 표지 뒤 로그 한 줄마다 결과 줄 원인: cupy 꼴 device-side assert · misaligned · illegal instruction · launch failed (드라이버 · 런타임) · invalid value · 클래스 이름만 · 잘못된 주소 · 파이썬 결함 = runner_rc · 재실행 자격 False (옛 = 클래스 이름 CUDARuntimeError · CUDADriverError 가 표에 있어 resource) · 메모리 · 디스크 = resource · True · OOM + 잘못된 주소 = runner_rc   ({'oom_and_illegal': (('resource', 'post', True), ('runner_rc', 'post', False))}, ('OutOfMemoryError', 'CUDA_ERROR_OUT_OF_MEMORY', 'cudaErrorMemoryAllocation', 'MemoryError', 'No space left on device'))"
+   }
+  ],
+  "seconds": 1.8
+ },
+ {
+  "id": "P06b2",
+  "why": "PC5-06 요약 있는 길 — 신호 · 시간 초과 · 그룹 미확인의 낱말 규칙 끔 (P06b 의 같은 가드 · 옛 글 옮김)",
+  "only": "PC11",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (2.0 s)   FAILED: ['PC11']",
+  "fails": [
+   {
+    "cid": "PC11",
+    "line": "★ 10-28 밤 PC5-06 같은 부류 (같은 낱말 규칙 · 요약 있는 길) — 표지 뒤 러너 로그에 잘못된 주소를 찍은 뒤 사슬이 SIGTERM (기다림 중 · 신호 원인) → 결과 줄 원인 runner_rc · 재실행 자격 False → --add --resume 1 = rc 3 (옛 = signal · 자격 True · 코드 결함 꼴을 신호로 비켜 재실행)   ('RUNNER_RC', {'status': 'stopped', 'side': 'post', 'cause': 'signal', 'resume_ok': True, 'by': 'chain'}, 0, False, [])"
+   }
+  ],
+  "seconds": 2.4
+ },
+ {
+  "id": "P07b2",
+  "why": "PC5-07 그룹 원 — environ 못 읽음 = 건너뜀 (P07b 의 같은 가드 · 옛 글 옮김)",
+  "only": "PC14",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (4.7 s)   FAILED: ['PC14']",
+  "fails": [
+   {
+    "cid": "PC14",
+    "line": "★ 10-28 밤 PC5-07 (사전 공격 5 회차 U3) 그룹 원 찾기 — ⓐ 실경로: 러너 (rc 0) 가 띄운 자식의 주 스레드만 끝남 (상태 Z · 다른 스레드 삶 · 2 s 뒤 파일) → 사슬이 그 프로세스를 찾아 죽인다 (끝 기록 확인 · left_after_exit ≥ 1 · 늦은 파일 없음 · 옛 = 못 봄 · 파일 생김) ⓑ 가짜 /proc: environ 을 못 읽는 같은 사용자 프로세스 = 미확인 (None) · Z 지도자 + 산 스레드의 environ 에 표지 = 그룹 원 · 다 끝난 Z = 아님 · 그룹 시작 전에 생긴 못 읽는 프로세스 · 다른 사용자 (root 아님) · pid 1 (이름공간 init · 못 읽음) = 셈 밖   ({'rc': 0, 'cause': None, 'end': {'confirmed': True, 'left_after_exit': 1, 'killed': 1}, 'late': False}, {'unread': [], 'zlive': [900002], 'zdead': [], 'member': [900005], 'old_since': [], 'other_uid_nonroot': [], 'same_uid_nonroot': [], 'pid1': []})"
+   }
+  ],
+  "seconds": 5.2
+ },
+ {
+  "id": "N01a",
+  "why": "PC6-01 못 읽는 프로세스의 러너 세션 · 계보 거름 끔 (옛 = 같은 실 uid 면 확인 불가)",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/2 PASS (2.8 s)   FAILED: ['PD01', 'PD01r']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "1 (사전 공격 6 회차 · 가짜 /proc) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · 러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = 확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'outside': (None, []), 'outside_odd_name': (None, []), 'session_reused': (None, []), 'member_and_outside': (None, [950000]), 'recover_out': ((None, False, 0), (None, True, 0))}"
+   },
+   {
+    "cid": "PD01r",
+    "line": " 회차 probe6_uid 꼴 · 실제 /proc · 포크한 자식 · root 면 자식을 uid 65534 로 내려서) — 사슬과 같은 실 uid 이고 environ 을 못 읽는 무관 프로세스 (prctl dumpable 0 · 표지 env 없음 · 러너 세션 밖) 가 사는 동안: run_in_group (bash sleep 1 · rc 0) = 끝 기록 확인 · 남음 [] (옛 = 확인 False · left None → GROUP_UNCONFIRMED) · 사슬 부모가 죽은 시작 기록의 recover = rc 0 · 확인 (옛 = rc 3) · 러너가 띄운 environ 못 읽는 자식 (러너 세션 안 · 표지 물려받음) = 확인 False 그대로 (보수) · proc_stat 의 부모 · 그룹 · 세션 칸 = 실제 값   {'bystander_environ': 'errno 13', 'bystander_ready': True, 'in_session': [0, None, False, None], 'in_unsure': False, 'recover': [3, False, 'recover'], 'run': [0, None, False, None], 'runner_start_recorded': True, 'stat_fields': [[18938, 18494, 18493], [18938, 18494, 18493]], 'uid': 65534}"
+   }
+  ],
+  "seconds": 3.5
+ },
+ {
+  "id": "N01b",
+  "why": "PC6-01 _run_kin 늘 False (러너 세션 안도 셈 밖 = 거짓 확인)",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/2 PASS (33.1 s)   FAILED: ['PD01', 'PD01r']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "(옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'in_session': ([], None), 'in_pgrp': ([], None), 'child_of_member': ([910400], None), 'child_of_session': ([], None), 'grandchild_of_session': ([], None), 'leader_gone': ([], None), 'start_unknown': ([], None), 'cycle': ([], None), 'deep_lineage': ([], None), 'settle': (((False, [970000], 1), [970000, 970000, 970000, 970000, 970000]), ((False, None, 1), [970000])), 'recover_in': ((None, False, 1, None, False, [980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 980000, 9"
+   },
+   {
+    "cid": "PD01r",
+    "line": "사전 공격 6 회차 probe6_uid 꼴 · 실제 /proc · 포크한 자식 · root 면 자식을 uid 65534 로 내려서) — 사슬과 같은 실 uid 이고 environ 을 못 읽는 무관 프로세스 (prctl dumpable 0 · 표지 env 없음 · 러너 세션 밖) 가 사는 동안: run_in_group (bash sleep 1 · rc 0) = 끝 기록 확인 · 남음 [] (옛 = 확인 False · left None → GROUP_UNCONFIRMED) · 사슬 부모가 죽은 시작 기록의 recover = rc 0 · 확인 (옛 = rc 3) · 러너가 띄운 environ 못 읽는 자식 (러너 세션 안 · 표지 물려받음) = 확인 False 그대로 (보수) · proc_stat 의 부모 · 그룹 · 세션 칸 = 실제 값   {'bystander_environ': 'errno 13', 'bystander_ready': True, 'in_session': [0, None, True, []], 'in_unsure': False, 'recover': [0, True, 'recover'], 'run': [0, None, True, []], 'runner_start_recorded': True, 'stat_fields': [[19082, 18494, 18493], [19082, 18494, 18493]], 'uid': 65534}"
+   }
+  ],
+  "seconds": 33.6
+ },
+ {
+  "id": "N01c",
+  "why": "PC6-01 러너 세션 칸 (세션 번호) 무시 — 그룹 번호만",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (3.0 s)   FAILED: ['PD01']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "★ 11-02 PC6-01 (사전 공격 6 회차 · 가짜 /proc) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · 러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = 확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'in_session': ([], None), 'child_of_session': ([], None), 'grandchild_of_session': ([], None), 'leader_gone': ([], None)}"
+   }
+  ],
+  "seconds": 3.7
+ },
+ {
+  "id": "N01d",
+  "why": "PC6-01 러너 그룹 번호 무시 — 세션 번호만",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.5 s)   FAILED: ['PD01']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "★ 11-02 PC6-01 (사전 공격 6 회차 · 가짜 /proc) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · 러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = 확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'in_pgrp': ([], None)}"
+   }
+  ],
+  "seconds": 2.9
+ },
+ {
+  "id": "N01e",
+  "why": "PC6-01 계보 위 표지 env 프로세스 대조 끔",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.5 s)   FAILED: ['PD01']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "★ 11-02 PC6-01 (사전 공격 6 회차 · 가짜 /proc) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · 러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = 확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'child_of_member': ([910400], None)}"
+   }
+  ],
+  "seconds": 3.0
+ },
+ {
+  "id": "N01f",
+  "why": "PC6-01 계보 (ppid) 거슬러 보기 끔 (세션 · 그룹 칸만)",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.2 s)   FAILED: ['PD01']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "★ 11-02 PC6-01 (사전 공격 6 회차 · 가짜 /proc) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · 러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = 확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'child_of_member': ([910400], None), 'child_of_session': ([], None), 'grandchild_of_session': ([], None), 'cycle': ([], None), 'deep_lineage': ([], None)}"
+   }
+  ],
+  "seconds": 2.6
+ },
+ {
+  "id": "N01g",
+  "why": "PC6-01 러너 세션 번호 다시 쓰임 대조 끔 (지도자 시작 시각)",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.1 s)   FAILED: ['PD01']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "★ 11-02 PC6-01 (사전 공격 6 회차 · 가짜 /proc) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · 러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = 확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'session_reused': (None, [])}"
+   }
+  ],
+  "seconds": 2.6
+ },
+ {
+  "id": "N01h",
+  "why": "PC6-01 지도자 없음 = 다른 세션으로 (보수 반대)",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/2 PASS (2.3 s)   FAILED: ['PD01', 'PD01r']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "★ 11-02 PC6-01 (사전 공격 6 회차 · 가짜 /proc) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · 러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = 확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'in_session': ([], None), 'in_pgrp': ([], None), 'child_of_session': ([], None), 'grandchild_of_session': ([], None), 'leader_gone': ([], None)}"
+   },
+   {
+    "cid": "PD01r",
+    "line": "사전 공격 6 회차 probe6_uid 꼴 · 실제 /proc · 포크한 자식 · root 면 자식을 uid 65534 로 내려서) — 사슬과 같은 실 uid 이고 environ 을 못 읽는 무관 프로세스 (prctl dumpable 0 · 표지 env 없음 · 러너 세션 밖) 가 사는 동안: run_in_group (bash sleep 1 · rc 0) = 끝 기록 확인 · 남음 [] (옛 = 확인 False · left None → GROUP_UNCONFIRMED) · 사슬 부모가 죽은 시작 기록의 recover = rc 0 · 확인 (옛 = rc 3) · 러너가 띄운 environ 못 읽는 자식 (러너 세션 안 · 표지 물려받음) = 확인 False 그대로 (보수) · proc_stat 의 부모 · 그룹 · 세션 칸 = 실제 값   {'bystander_environ': 'errno 13', 'bystander_ready': True, 'in_session': [0, None, True, []], 'in_unsure': False, 'recover': [0, True, 'recover'], 'run': [0, None, True, []], 'runner_start_recorded': True, 'stat_fields': [[20613, 18494, 18493], [20613, 18494, 18493]], 'uid': 65534}"
+   }
+  ],
+  "seconds": 2.8
+ },
+ {
+  "id": "N01i",
+  "why": "PC6-01 러너 시작 시각 모름 = 다른 세션으로 (보수 반대)",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.2 s)   FAILED: ['PD01']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "★ 11-02 PC6-01 (사전 공격 6 회차 · 가짜 /proc) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · 러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = 확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'start_unknown': ([], None)}"
+   }
+  ],
+  "seconds": 2.8
+ },
+ {
+  "id": "N01j",
+  "why": "PC6-01 계보 고리 = 셈 밖 (보수 반대)",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.4 s)   FAILED: ['PD01']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "★ 11-02 PC6-01 (사전 공격 6 회차 · 가짜 /proc) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · 러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = 확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'cycle': ([], None)}"
+   }
+  ],
+  "seconds": 2.8
+ },
+ {
+  "id": "N01k",
+  "why": "PC6-01 계보 깊이 상한 = 셈 밖 (보수 반대)",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.2 s)   FAILED: ['PD01']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "★ 11-02 PC6-01 (사전 공격 6 회차 · 가짜 /proc) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · 러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = 확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'deep_lineage': ([], None)}"
+   }
+  ],
+  "seconds": 2.7
+ },
+ {
+  "id": "N01l",
+  "why": "PC6-01 부모 stat 못 읽음 = 셈 밖 (보수 반대)",
+  "only": "PD01",
+  "expect": "survived:결정 동등 (주 루프가 같은 프로세스의 stat 못 읽음을 이미 확인 불가로 센다 — 부모는 /proc 의 한 항목이다 · 사이 경합만 다름)",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 2/2 PASS (2.4 s)",
+  "fails": [],
+  "seconds": 2.9
+ },
+ {
+  "id": "N01m",
+  "why": "PC6-01 확인 불가여도 찾은 표지 프로세스 죽이기 끔 (옛)",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.4 s)   FAILED: ['PD01']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "★ 11-02 PC6-01 (사전 공격 6 회차 · 가짜 /proc) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · 러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = 확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'settle': (((False, None, 0), []), ((False, None, 1), [970000])), 'recover_in': ((None, False, 0, [980001], True, []), (None, False, 1, [980001], True, [980000]))}"
+   }
+  ],
+  "seconds": 2.8
+ },
+ {
+  "id": "N01n",
+  "why": "PC6-01 run_in_group 이 러너 세션 (GROUP_RUN) 을 넣지 않음",
+  "only": "PD01r",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (2.0 s)   FAILED: ['PD01r']",
+  "fails": [
+   {
+    "cid": "PD01r",
+    "line": "6 회차 probe6_uid 꼴 · 실제 /proc · 포크한 자식 · root 면 자식을 uid 65534 로 내려서) — 사슬과 같은 실 uid 이고 environ 을 못 읽는 무관 프로세스 (prctl dumpable 0 · 표지 env 없음 · 러너 세션 밖) 가 사는 동안: run_in_group (bash sleep 1 · rc 0) = 끝 기록 확인 · 남음 [] (옛 = 확인 False · left None → GROUP_UNCONFIRMED) · 사슬 부모가 죽은 시작 기록의 recover = rc 0 · 확인 (옛 = rc 3) · 러너가 띄운 environ 못 읽는 자식 (러너 세션 안 · 표지 물려받음) = 확인 False 그대로 (보수) · proc_stat 의 부모 · 그룹 · 세션 칸 = 실제 값   {'bystander_environ': 'errno 13', 'bystander_ready': True, 'in_session': [0, None, False, None], 'in_unsure': False, 'recover': [0, True, 'recover'], 'run': [0, None, False, None], 'runner_start_recorded': True, 'stat_fields': [[21282, 18494, 18493], [21282, 18494, 18493]], 'uid': 65534}"
+   }
+  ],
+  "seconds": 2.4
+ },
+ {
+  "id": "N01o",
+  "why": "PC6-01 recover_group 이 시작 기록의 러너 세션을 넣지 않음",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/2 PASS (2.4 s)   FAILED: ['PD01', 'PD01r']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "★ 11-02 PC6-01 (사전 공격 6 회차 · 가짜 /proc) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · 러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = 확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'recover_out': ((None, False, 0), (None, True, 0))}"
+   },
+   {
+    "cid": "PD01r",
+    "line": "공격 6 회차 probe6_uid 꼴 · 실제 /proc · 포크한 자식 · root 면 자식을 uid 65534 로 내려서) — 사슬과 같은 실 uid 이고 environ 을 못 읽는 무관 프로세스 (prctl dumpable 0 · 표지 env 없음 · 러너 세션 밖) 가 사는 동안: run_in_group (bash sleep 1 · rc 0) = 끝 기록 확인 · 남음 [] (옛 = 확인 False · left None → GROUP_UNCONFIRMED) · 사슬 부모가 죽은 시작 기록의 recover = rc 0 · 확인 (옛 = rc 3) · 러너가 띄운 environ 못 읽는 자식 (러너 세션 안 · 표지 물려받음) = 확인 False 그대로 (보수) · proc_stat 의 부모 · 그룹 · 세션 칸 = 실제 값   {'bystander_environ': 'errno 13', 'bystander_ready': True, 'in_session': [0, None, False, None], 'in_unsure': True, 'recover': [3, False, 'recover'], 'run': [0, None, True, []], 'runner_start_recorded': True, 'stat_fields': [[21352, 18494, 18493], [21352, 18494, 18493]], 'uid': 65534}"
+   }
+  ],
+  "seconds": 2.9
+ },
+ {
+  "id": "N01p",
+  "why": "PC6-01 시작 기록 runner_start 안 적음",
+  "only": "PD01r",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (2.1 s)   FAILED: ['PD01r']",
+  "fails": [
+   {
+    "cid": "PD01r",
+    "line": "공격 6 회차 probe6_uid 꼴 · 실제 /proc · 포크한 자식 · root 면 자식을 uid 65534 로 내려서) — 사슬과 같은 실 uid 이고 environ 을 못 읽는 무관 프로세스 (prctl dumpable 0 · 표지 env 없음 · 러너 세션 밖) 가 사는 동안: run_in_group (bash sleep 1 · rc 0) = 끝 기록 확인 · 남음 [] (옛 = 확인 False · left None → GROUP_UNCONFIRMED) · 사슬 부모가 죽은 시작 기록의 recover = rc 0 · 확인 (옛 = rc 3) · 러너가 띄운 environ 못 읽는 자식 (러너 세션 안 · 표지 물려받음) = 확인 False 그대로 (보수) · proc_stat 의 부모 · 그룹 · 세션 칸 = 실제 값   {'bystander_environ': 'errno 13', 'bystander_ready': True, 'in_session': [0, None, False, None], 'in_unsure': True, 'recover': [0, True, 'recover'], 'run': [0, None, True, []], 'runner_start_recorded': False, 'stat_fields': [[21463, 18494, 18493], [21463, 18494, 18493]], 'uid': 65534}"
+   }
+  ],
+  "seconds": 2.5
+ },
+ {
+  "id": "N01q",
+  "why": "PC6-01 run_in_group 끝 기록 unsure (확인 불가 pid) 안 적음",
+  "only": "PD01r",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (2.1 s)   FAILED: ['PD01r']",
+  "fails": [
+   {
+    "cid": "PD01r",
+    "line": "공격 6 회차 probe6_uid 꼴 · 실제 /proc · 포크한 자식 · root 면 자식을 uid 65534 로 내려서) — 사슬과 같은 실 uid 이고 environ 을 못 읽는 무관 프로세스 (prctl dumpable 0 · 표지 env 없음 · 러너 세션 밖) 가 사는 동안: run_in_group (bash sleep 1 · rc 0) = 끝 기록 확인 · 남음 [] (옛 = 확인 False · left None → GROUP_UNCONFIRMED) · 사슬 부모가 죽은 시작 기록의 recover = rc 0 · 확인 (옛 = rc 3) · 러너가 띄운 environ 못 읽는 자식 (러너 세션 안 · 표지 물려받음) = 확인 False 그대로 (보수) · proc_stat 의 부모 · 그룹 · 세션 칸 = 실제 값   {'bystander_environ': 'errno 13', 'bystander_ready': True, 'in_session': [0, None, False, None], 'in_unsure': False, 'recover': [0, True, 'recover'], 'run': [0, None, True, []], 'runner_start_recorded': True, 'stat_fields': [[21597, 18494, 18493], [21597, 18494, 18493]], 'uid': 65534}"
+   }
+  ],
+  "seconds": 2.5
+ },
+ {
+  "id": "N01r",
+  "why": "PC6-01 recover 사유의 확인 불가 pid 뺌",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.4 s)   FAILED: ['PD01']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "★ 11-02 PC6-01 (사전 공격 6 회차 · 가짜 /proc) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · 러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = 확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'recover_in': ((None, False, 1, [980001], False, [980000]), (None, False, 1, [980001], True, [980000]))}"
+   }
+  ],
+  "seconds": 2.8
+ },
+ {
+  "id": "N01s",
+  "why": "PC6-01 proc_stat 부모 · 그룹 칸 바꿔 읽음",
+  "only": "PD01",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/2 PASS (2.3 s)   FAILED: ['PD01', 'PD01r']",
+  "fails": [
+   {
+    "cid": "PD01",
+    "line": "c) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · 러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = 확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = 확인 불가 pid · 무관 프로세스뿐이면 확인   {'outside': (None, []), 'outside_odd_name': (None, []), 'in_pgrp': ([], None), 'session_reused': (None, []), 'member_and_outside': (None, [950000]), 'recover_out': ((None, False, 0), (None, True, 0))}"
+   },
+   {
+    "cid": "PD01r",
+    "line": " 회차 probe6_uid 꼴 · 실제 /proc · 포크한 자식 · root 면 자식을 uid 65534 로 내려서) — 사슬과 같은 실 uid 이고 environ 을 못 읽는 무관 프로세스 (prctl dumpable 0 · 표지 env 없음 · 러너 세션 밖) 가 사는 동안: run_in_group (bash sleep 1 · rc 0) = 끝 기록 확인 · 남음 [] (옛 = 확인 False · left None → GROUP_UNCONFIRMED) · 사슬 부모가 죽은 시작 기록의 recover = rc 0 · 확인 (옛 = rc 3) · 러너가 띄운 environ 못 읽는 자식 (러너 세션 안 · 표지 물려받음) = 확인 False 그대로 (보수) · proc_stat 의 부모 · 그룹 · 세션 칸 = 실제 값   {'bystander_environ': 'errno 13', 'bystander_ready': True, 'in_session': [0, None, False, None], 'in_unsure': False, 'recover': [3, False, 'recover'], 'run': [0, None, False, None], 'runner_start_recorded': True, 'stat_fields': [[18494, 21828, 18493], [21828, 18494, 18493]], 'uid': 65534}"
+   }
+  ],
+  "seconds": 2.8
+ },
+ {
+  "id": "N02a",
+  "why": "PC6-02 그 밖 CUDA 오류 표지 끔 (옛 = 러너 rc 길의 기본값만)",
+  "only": "PD02",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/2 PASS (3.6 s)   FAILED: ['PD02', 'PD02r']",
+  "fails": [
+   {
+    "cid": "PD02",
+    "line": "e · 나머지 = 그 길의 원인) · OOM + launch failed = 자원 차례 그대로 (Q2 = 잘못된 주소만 먼저) · OOM + 잘못된 주소 = runner_rc   {'n': 200, 'bad_n': 92, 'bad': {'assert_runtime/group_unconfirmed': (('group_unconfirmed', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/group_unconfirmed_rc1': (('group_unconfirmed', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/orphan_recover': (('parent_dead', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/orphan_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/orphan_signal_after': (('signal', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/orphan_timeout': (('timeout', 'post', True), ('runner_rc"
+   },
+   {
+    "cid": "PD02r",
+    "line": "11-02 PC6-02 실경로 (사전 공격 6 회차 R1 · R2 꼴) — ⓐ 표지 뒤 러너 로그에 cupy 꼴 launch failed (드라이버) 를 본 뒤 사슬 부모 SIGKILL → recover --ledger = 결과 줄 interrupted · 결과 뒤 · runner_rc · 재실행 자격 False → --add --resume 1 = rc 3 RESUME_NOT_ALLOWED · 원장 무변경 (옛 = parent_dead · 자격 True · rc 0 → 재실행 CALIBRATED) ⓑ device-side assert (런타임) 뒤 사슬이 SIGTERM (기다림 중 · 신호 원인) → stopped · 결과 뒤 · runner_rc · False → rc 3 · 시험의 지킴 처리기 불리지 않음 (옛 = signal · True · rc 0)   {'kill': (True, 0, {'status': 'interrupted', 'side': 'post', 'cause': 'parent_dead', 'resume_ok': True, 'by': 'recover'}, 0, False, False), 'term': ('RUNNER_RC', {'status': 'stopped', 'side': 'post', 'cause': 'signal', 'resume_ok': True, 'by': 'chain'}, 0, False, [])}"
+   }
+  ],
+  "seconds": 4.1
+ },
+ {
+  "id": "N02b",
+  "why": "PC6-02 CUDA 표지를 자원 낱말 앞에 봄 (OOM 줄의 클래스 이름 = runner_rc · Q2 차례 반대)",
+  "only": "PD02",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (3.6 s)   FAILED: ['PD02']",
+  "fails": [
+   {
+    "cid": "PD02",
+    "line": "e · 나머지 = 그 길의 원인) · OOM + launch failed = 자원 차례 그대로 (Q2 = 잘못된 주소만 먼저) · OOM + 잘못된 주소 = runner_rc   {'n': 200, 'bad_n': 33, 'bad': {'oom_and_launch/group_unconfirmed': (('runner_rc', 'post', False), ('group_unconfirmed', 'post', True)), 'oom_and_launch/orphan_rc1': (('runner_rc', 'post', False), ('resource', 'post', True)), 'oom_and_launch/orphan_recover': (('runner_rc', 'post', False), ('resource', 'post', True)), 'oom_and_launch/orphan_signal': (('runner_rc', 'post', False), ('signal', 'post', True)), 'oom_and_launch/orphan_signal_after': (('runner_rc', 'post', False), ('signal', 'post', True)), 'oom_and_launch/orphan_timeout': (('runner_rc', 'post', False), ('timeout', 'post', True)), 'oo"
+   }
+  ],
+  "seconds": 4.1
+ },
+ {
+  "id": "N02c",
+  "why": "PC6-02 words_keep = 늘 그 길 원인 (낱말 규칙 끔)",
+  "only": "PD02,PC11",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/3 PASS (4.2 s)   FAILED: ['PC11', 'PD02', 'PD02r']",
+  "fails": [
+   {
+    "cid": "PC11",
+    "line": "★ 10-28 밤 PC5-06 같은 부류 (같은 낱말 규칙 · 요약 있는 길) — 표지 뒤 러너 로그에 잘못된 주소를 찍은 뒤 사슬이 SIGTERM (기다림 중 · 신호 원인) → 결과 줄 원인 runner_rc · 재실행 자격 False → --add --resume 1 = rc 3 (옛 = signal · 자격 True · 코드 결함 꼴을 신호로 비켜 재실행)   ('RUNNER_RC', {'status': 'stopped', 'side': 'post', 'cause': 'signal', 'resume_ok': True, 'by': 'chain'}, 0, False, [])"
+   },
+   {
+    "cid": "PD02",
+    "line": "e · 나머지 = 그 길의 원인) · OOM + launch failed = 자원 차례 그대로 (Q2 = 잘못된 주소만 먼저) · OOM + 잘못된 주소 = runner_rc   {'n': 200, 'bad_n': 90, 'bad': {'assert_runtime/group_unconfirmed': (('group_unconfirmed', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/group_unconfirmed_rc1': (('group_unconfirmed', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/orphan_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/orphan_signal_after': (('signal', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/orphan_timeout': (('timeout', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/rc_signal': (('signal', 'post', True), ('runner_rc', 'post',"
+   },
+   {
+    "cid": "PD02r",
+    "line": "★ 11-02 PC6-02 실경로 (사전 공격 6 회차 R1 · R2 꼴) — ⓐ 표지 뒤 러너 로그에 cupy 꼴 launch failed (드라이버) 를 본 뒤 사슬 부모 SIGKILL → recover --ledger = 결과 줄 interrupted · 결과 뒤 · runner_rc · 재실행 자격 False → --add --resume 1 = rc 3 RESUME_NOT_ALLOWED · 원장 무변경 (옛 = parent_dead · 자격 True · rc 0 → 재실행 CALIBRATED) ⓑ device-side assert (런타임) 뒤 사슬이 SIGTERM (기다림 중 · 신호 원인) → stopped · 결과 뒤 · runner_rc · False → rc 3 · 시험의 지킴 처리기 불리지 않음 (옛 = signal · True · rc 0)   {'kill': (True, 0, {'status': 'interrupted', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'recover'}, 3, True, True), 'term': ('RUNNER_RC', {'status': 'stopped', 'side': 'post', 'cause': 'signal', 'resume_ok': True, 'by': 'chain'}, 0, False, [])}"
+   }
+  ],
+  "seconds": 4.6
+ },
+ {
+  "id": "N02d",
+  "why": "PC6-02 orphan_cause 시간 초과 · 신호 = 잘못된 주소만 (옛)",
+  "only": "PD02",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (3.8 s)   FAILED: ['PD02']",
+  "fails": [
+   {
+    "cid": "PD02",
+    "line": "e · 나머지 = 그 길의 원인) · OOM + launch failed = 자원 차례 그대로 (Q2 = 잘못된 주소만 먼저) · OOM + 잘못된 주소 = runner_rc   {'n': 200, 'bad_n': 30, 'bad': {'assert_runtime/orphan_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/orphan_signal_after': (('signal', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/orphan_timeout': (('timeout', 'post', True), ('runner_rc', 'post', False)), 'class_only/orphan_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'class_only/orphan_signal_after': (('signal', 'post', True), ('runner_rc', 'post', False)), 'class_only/orphan_timeout': (('timeout', 'post', True), ('runner_rc', 'post', False)), 'drv_class_only/orphan_s"
+   }
+  ],
+  "seconds": 4.2
+ },
+ {
+  "id": "N02e",
+  "why": "PC6-02 stop_cause 재실행 자격 원인 = 잘못된 주소만 (옛)",
+  "only": "PD02",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/2 PASS (4.0 s)   FAILED: ['PD02', 'PD02r']",
+  "fails": [
+   {
+    "cid": "PD02",
+    "line": "e · 나머지 = 그 길의 원인) · OOM + launch failed = 자원 차례 그대로 (Q2 = 잘못된 주소만 먼저) · OOM + 잘못된 주소 = runner_rc   {'n': 200, 'bad_n': 52, 'bad': {'assert_runtime/group_unconfirmed': (('group_unconfirmed', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/group_unconfirmed_rc1': (('group_unconfirmed', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/rc_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/rc_signal_after': (('signal', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/rc_timeout': (('timeout', 'post', True), ('runner_rc', 'post', False)), 'assert_runtime/time_limit': (('timeout', 'post', True), ('runner_rc', 'post', False)), "
+   },
+   {
+    "cid": "PD02r",
+    "line": "★ 11-02 PC6-02 실경로 (사전 공격 6 회차 R1 · R2 꼴) — ⓐ 표지 뒤 러너 로그에 cupy 꼴 launch failed (드라이버) 를 본 뒤 사슬 부모 SIGKILL → recover --ledger = 결과 줄 interrupted · 결과 뒤 · runner_rc · 재실행 자격 False → --add --resume 1 = rc 3 RESUME_NOT_ALLOWED · 원장 무변경 (옛 = parent_dead · 자격 True · rc 0 → 재실행 CALIBRATED) ⓑ device-side assert (런타임) 뒤 사슬이 SIGTERM (기다림 중 · 신호 원인) → stopped · 결과 뒤 · runner_rc · False → rc 3 · 시험의 지킴 처리기 불리지 않음 (옛 = signal · True · rc 0)   {'kill': (True, 0, {'status': 'interrupted', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'recover'}, 3, True, True), 'term': ('RUNNER_RC', {'status': 'stopped', 'side': 'post', 'cause': 'signal', 'resume_ok': True, 'by': 'chain'}, 0, False, [])}"
+   }
+  ],
+  "seconds": 4.4
+ },
+ {
+  "id": "N02f",
+  "why": "PC6-02 표지 CUDA_ERROR_ 뺌",
+  "only": "PD02",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (3.6 s)   FAILED: ['PD02']",
+  "fails": [
+   {
+    "cid": "PD02",
+    "line": "e · 나머지 = 그 길의 원인) · OOM + launch failed = 자원 차례 그대로 (Q2 = 잘못된 주소만 먼저) · OOM + 잘못된 주소 = runner_rc   {'n': 200, 'bad_n': 9, 'bad': {'drv_code_only/group_unconfirmed': (('group_unconfirmed', 'post', True), ('runner_rc', 'post', False)), 'drv_code_only/orphan_recover': (('parent_dead', 'post', True), ('runner_rc', 'post', False)), 'drv_code_only/orphan_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'drv_code_only/orphan_signal_after': (('signal', 'post', True), ('runner_rc', 'post', False)), 'drv_code_only/orphan_timeout': (('timeout', 'post', True), ('runner_rc', 'post', False)), 'drv_code_only/rc_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'drv_code_"
+   }
+  ],
+  "seconds": 4.1
+ },
+ {
+  "id": "N02g",
+  "why": "PC6-02 표지 cudaError 뺌",
+  "only": "PD02",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (3.7 s)   FAILED: ['PD02']",
+  "fails": [
+   {
+    "cid": "PD02",
+    "line": "e · 나머지 = 그 길의 원인) · OOM + launch failed = 자원 차례 그대로 (Q2 = 잘못된 주소만 먼저) · OOM + 잘못된 주소 = runner_rc   {'n': 200, 'bad_n': 9, 'bad': {'rt_code_only/group_unconfirmed': (('group_unconfirmed', 'post', True), ('runner_rc', 'post', False)), 'rt_code_only/orphan_recover': (('parent_dead', 'post', True), ('runner_rc', 'post', False)), 'rt_code_only/orphan_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'rt_code_only/orphan_signal_after': (('signal', 'post', True), ('runner_rc', 'post', False)), 'rt_code_only/orphan_timeout': (('timeout', 'post', True), ('runner_rc', 'post', False)), 'rt_code_only/rc_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'rt_code_only/rc"
+   }
+  ],
+  "seconds": 4.1
+ },
+ {
+  "id": "N02h",
+  "why": "PC6-02 표지 CUDARuntimeError 뺌",
+  "only": "PD02",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (3.9 s)   FAILED: ['PD02']",
+  "fails": [
+   {
+    "cid": "PD02",
+    "line": "e · 나머지 = 그 길의 원인) · OOM + launch failed = 자원 차례 그대로 (Q2 = 잘못된 주소만 먼저) · OOM + 잘못된 주소 = runner_rc   {'n': 200, 'bad_n': 9, 'bad': {'class_only/group_unconfirmed': (('group_unconfirmed', 'post', True), ('runner_rc', 'post', False)), 'class_only/orphan_recover': (('parent_dead', 'post', True), ('runner_rc', 'post', False)), 'class_only/orphan_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'class_only/orphan_signal_after': (('signal', 'post', True), ('runner_rc', 'post', False)), 'class_only/orphan_timeout': (('timeout', 'post', True), ('runner_rc', 'post', False)), 'class_only/rc_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'class_only/rc_signal_after'"
+   }
+  ],
+  "seconds": 4.3
+ },
+ {
+  "id": "N02i",
+  "why": "PC6-02 표지 CUDADriverError 뺌",
+  "only": "PD02",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (3.8 s)   FAILED: ['PD02']",
+  "fails": [
+   {
+    "cid": "PD02",
+    "line": "e · 나머지 = 그 길의 원인) · OOM + launch failed = 자원 차례 그대로 (Q2 = 잘못된 주소만 먼저) · OOM + 잘못된 주소 = runner_rc   {'n': 200, 'bad_n': 9, 'bad': {'drv_class_only/group_unconfirmed': (('group_unconfirmed', 'post', True), ('runner_rc', 'post', False)), 'drv_class_only/orphan_recover': (('parent_dead', 'post', True), ('runner_rc', 'post', False)), 'drv_class_only/orphan_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'drv_class_only/orphan_signal_after': (('signal', 'post', True), ('runner_rc', 'post', False)), 'drv_class_only/orphan_timeout': (('timeout', 'post', True), ('runner_rc', 'post', False)), 'drv_class_only/rc_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'drv"
+   }
+  ],
+  "seconds": 4.3
+ },
+ {
+  "id": "N09a",
+  "why": "PC6-09 이 항목 시도 폴더 = 화면만 끔 (옛 = 옆 거부 기록 + rejected 결과 줄)",
+  "only": "PD09",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.6 s)   FAILED: ['PD09']",
+  "fails": [
+   {
+    "cid": "PD09",
+    "line": "★ 11-02 PC6-09 (사전 공격 6 회차 마무리 R6) — 사슬 부모 SIGKILL (표지 뒤 · 러너 그룹 삶) 뒤 recover 대신 같은 --attempt 명령을 다시 → rc 3 · 화면만 거부 (안내 = --stage recover) · 원장 무변경 (그 시도 결과 줄 없음) · 옆 거부 기록 없음 · 시도 폴더 요약 sha 그대로 (옛 = 옆 거부 기록 + rejected · 결과 전 결과 줄 → 같은 대상 새 시도 열림 · 고아 런과 동시) → 같은 대상 --add = rc 3 ATTEMPT_ORDER_MISMATCH → recover --ledger = 결과 줄 interrupted · 결과 뒤 (그룹 정리) → 같은 대상 새 --add = rc 3 ATTEMPT_AFTER_ADOPTED (남의 폴더 = attempt.json 없음 → 옆 거부 기록 그대로 = AL07)   (True, 'post', (3, False, True, True, False), (0, False), 0, {'status': 'rejected', 'side': 'pre', 'by': 'chain'}, (3, False))"
+   }
+  ],
+  "seconds": 3.1
+ },
+ {
+  "id": "N09b",
+  "why": "PC6-09 이 항목 판정에서 시작 커밋 원장 조상 대조 뺌",
+  "only": "PD09",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.8 s)   FAILED: ['PD09b']",
+  "fails": [
+   {
+    "cid": "PD09b",
+    "line": "★ 11-02 PC6-09 남의 폴더 (변이 보강 · 가드가 넘치지 않는지) — 시도 폴더 attempt_1 이 이미 있고 attempt.json 이 ⓐ 이 항목과 칸은 같지만 시작 커밋이 원장 조상이 아님 (다른 원장 역사) ⓑ 시작 커밋은 원장 HEAD 인데 대상이 다름 → 옆 거부 기록 (OUTDIR_NOT_EMPTY) + rejected · 결과 전 결과 줄 그대로 (화면만 아님 · 러너 0 회 · 고치기 전과 같음)   {'history': (3, False, None, None, None, 0), 'target': (3, True, 'rejected', 'pre', 'OUTDIR_NOT_EMPTY', 0)}"
+   }
+  ],
+  "seconds": 3.3
+ },
+ {
+  "id": "N09c",
+  "why": "PC6-09 이 항목 판정에서 대상 · 기계 · 재실행 원 시도 대조 뺌",
+  "only": "PD09",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.7 s)   FAILED: ['PD09b']",
+  "fails": [
+   {
+    "cid": "PD09b",
+    "line": "★ 11-02 PC6-09 남의 폴더 (변이 보강 · 가드가 넘치지 않는지) — 시도 폴더 attempt_1 이 이미 있고 attempt.json 이 ⓐ 이 항목과 칸은 같지만 시작 커밋이 원장 조상이 아님 (다른 원장 역사) ⓑ 시작 커밋은 원장 HEAD 인데 대상이 다름 → 옆 거부 기록 (OUTDIR_NOT_EMPTY) + rejected · 결과 전 결과 줄 그대로 (화면만 아님 · 러너 0 회 · 고치기 전과 같음)   {'history': (3, True, 'rejected', 'pre', 'OUTDIR_NOT_EMPTY', 0), 'target': (3, False, None, None, None, 0)}"
+   }
+  ],
+  "seconds": 3.1
+ },
+ {
+  "id": "N12a",
+  "why": "PC6-12 판정 (ledger_verdict_check) 의 찾은 시도 폴더 대조 끔",
+  "only": "PD12",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 2/3 PASS (17.9 s)   FAILED: ['PD12']",
+  "fails": [
+   {
+    "cid": "PD12",
+    "line": "der:P0:FIBRE 로 바꾼 줄 (결과 줄 그대로 · 없음 두 꼴 · 원장만 고침 · 시도 1 폴더 그대로) → 새 시도 2 (ladder:P0) CALIBRATED 뒤 판정 = 멈춤 ATTEMPT_LEDGER_MISMATCH (사유 = attempt_1 의 attempt.json ≠ 원장 항목 1) (옛 = 원장 대조 통과 · 시도 2 채택) · 예측 입력 대조도 사다리 바탕의 시도 1 폴더를 본다 (예측 = ATTEMPT_LEDGER_MISMATCH · 러너 0 회 · 결과 전 · 옛 = 통과)   ({'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'chain'}, 3, {'entry_and_result': {'add2_rc': 0, 'b_status': 'CALIBRATED', 'verdict': 'INPUT_MISSING', 'why_names_attempt1': False, 'predict': 'ATTEMPT_LEDGER_MISMATCH', 'predict_calls': 0, 'predict_side': 'pre'}, 'entry_only': {'add2_rc': 0, 'b_status': 'CALIBRATED', 'verdict': 'INPUT_MISSING', 'why_names_attempt1': False}})"
+   }
+  ],
+  "seconds": 18.3
+ },
+ {
+  "id": "N12b",
+  "why": "PC6-12 예측 입력 (ledger_inputs_check) 의 사다리 바탕 대조 끔",
+  "only": "PD12",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 2/3 PASS (19.9 s)   FAILED: ['PD12']",
+  "fails": [
+   {
+    "cid": "PD12",
+    "line": "dder:P0:FIBRE 로 바꾼 줄 (결과 줄 그대로 · 없음 두 꼴 · 원장만 고침 · 시도 1 폴더 그대로) → 새 시도 2 (ladder:P0) CALIBRATED 뒤 판정 = 멈춤 ATTEMPT_LEDGER_MISMATCH (사유 = attempt_1 의 attempt.json ≠ 원장 항목 1) (옛 = 원장 대조 통과 · 시도 2 채택) · 예측 입력 대조도 사다리 바탕의 시도 1 폴더를 본다 (예측 = ATTEMPT_LEDGER_MISMATCH · 러너 0 회 · 결과 전 · 옛 = 통과)   ({'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'chain'}, 3, {'entry_and_result': {'add2_rc': 0, 'b_status': 'CALIBRATED', 'verdict': 'ATTEMPT_LEDGER_MISMATCH', 'why_names_attempt1': True, 'predict': None, 'predict_calls': 24, 'predict_side': 'post'}, 'entry_only': {'add2_rc': 0, 'b_status': 'CALIBRATED', 'verdict': 'ATTEMPT_LEDGER_MISMATCH', 'why_names_attempt1': True}})"
+   }
+  ],
+  "seconds": 20.4
+ },
+ {
+  "id": "N12c",
+  "why": "PC6-12 합치기 (--merge 경로) 대조 끔",
+  "only": "PD12m",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (13.0 s)   FAILED: ['PD12m']",
+  "fails": [
+   {
+    "cid": "PD12m",
+    "line": "★ 11-02 PC6-12 합치기 길 — 단위 시도 (unit:P0_c0_R_j_lo · 표지 뒤 잘못된 주소 · 결과 뒤 · runner_rc) 의 원장 clone 에서 끝 두 커밋 reset + 그 항목의 대상만 다른 단위 (unit:P1_c1_R_j_hi · 같은 변이) 로 바꾼 줄 + 결과 줄 그대로 → 같은 단위 새 시도 (UNIT_DONE) → 그 바탕을 --merge = 멈춤 ATTEMPT_LEDGER_MISMATCH (런 0 · 옛 = 새 시도 채택 · 다음 단위 UNIT_MISSING 까지 감)   (('RUNNER_RC', 'runner_rc', 'post', 0, 'UNIT_DONE', 'UNIT_MISSING', 1), '계 kgy · 러너 0 회 · 팔 1 사본 다시 대조)\\n멈춤 [UNIT_MISSING] 합치기 다시 계산이 요청한 단위의 채택 시도가 없다 · 그 시도에 요청한 런이 없다 (넘침 점이 없으면 상태 EXPANSION_NEEDED · Q9 §3-2) — unit:P0_c1_R_j_lo: 채택 시도가 없다 (원장 시도 [] — 없음 · 결과 전 · 거부뿐) (런 P02_corner)\\n합친 예측 = STOPPED\\n요약 → /tmp/rint_r_chain_t_p5g2fucu/runs/PD12m/pred/predict_summary.json\\n')"
+   }
+  ],
+  "seconds": 13.5
+ },
+ {
+  "id": "N12d",
+  "why": "PC6-12 합친 예측 판정 (merged_ledger_check · 사본) 대조 끔",
+  "only": "PD12,UM08",
+  "expect": "survived:결정 동등에 가까움 (사본 = 결과 줄 요약 sha 로 묶이고 자리 units/<대상> 이 대상을 묶는다 — attempt.json 을 바꾸면 요약 sha 가 먼저 어긋난다 · 미시험)",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 4/4 PASS (39.1 s)",
+  "fails": [],
+  "seconds": 39.6
+ },
+ {
+  "id": "N12e",
+  "why": "PC6-12 대조 칸에서 대상 뺌",
+  "only": "PD12",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/3 PASS (20.2 s)   FAILED: ['PD12', 'PD12m', 'PD12u']",
+  "fails": [
+   {
+    "cid": "PD12",
+    "line": "et + 항목 1 의 대상만 ladder:P0:FIBRE 로 바꾼 줄 (결과 줄 그대로 · 없음 두 꼴 · 원장만 고침 · 시도 1 폴더 그대로) → 새 시도 2 (ladder:P0) CALIBRATED 뒤 판정 = 멈춤 ATTEMPT_LEDGER_MISMATCH (사유 = attempt_1 의 attempt.json ≠ 원장 항목 1) (옛 = 원장 대조 통과 · 시도 2 채택) · 예측 입력 대조도 사다리 바탕의 시도 1 폴더를 본다 (예측 = ATTEMPT_LEDGER_MISMATCH · 러너 0 회 · 결과 전 · 옛 = 통과)   ({'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'chain'}, 3, {'entry_and_result': {'add2_rc': 0, 'b_status': 'CALIBRATED', 'verdict': 'INPUT_MISSING', 'why_names_attempt1': False, 'predict': None, 'predict_calls': 24, 'predict_side': 'post'}, 'entry_only': {'add2_rc': 0, 'b_status': 'CALIBRATED', 'verdict': 'INPUT_MISSING', 'why_names_attempt1': False}})"
+   },
+   {
+    "cid": "PD12m",
+    "line": "★ 11-02 PC6-12 합치기 길 — 단위 시도 (unit:P0_c0_R_j_lo · 표지 뒤 잘못된 주소 · 결과 뒤 · runner_rc) 의 원장 clone 에서 끝 두 커밋 reset + 그 항목의 대상만 다른 단위 (unit:P1_c1_R_j_hi · 같은 변이) 로 바꾼 줄 + 결과 줄 그대로 → 같은 단위 새 시도 (UNIT_DONE) → 그 바탕을 --merge = 멈춤 ATTEMPT_LEDGER_MISMATCH (런 0 · 옛 = 새 시도 채택 · 다음 단위 UNIT_MISSING 까지 감)   (('RUNNER_RC', 'runner_rc', 'post', 0, 'UNIT_DONE', 'UNIT_MISSING', 1), '계 kgy · 러너 0 회 · 팔 1 사본 다시 대조)\\n멈춤 [UNIT_MISSING] 합치기 다시 계산이 요청한 단위의 채택 시도가 없다 · 그 시도에 요청한 런이 없다 (넘침 점이 없으면 상태 EXPANSION_NEEDED · Q9 §3-2) — unit:P0_c1_R_j_lo: 채택 시도가 없다 (원장 시도 [] — 없음 · 결과 전 · 거부뿐) (런 P02_corner)\\n합친 예측 = STOPPED\\n요약 → /tmp/rint_r_chain_t_tid0fx2j/runs/PD12m/pred/predict_summary.json\\n')"
+   },
+   {
+    "cid": "PD12u",
+    "line": "★ 11-02 PC6-12 단위 — 찾은 시도 폴더 ↔ 원장 항목 (found_attempts_problem · 판정 · 합치기 · 합친 예측 · 예측 입력 공용): 꼴 맞는 attempt.json 의 대상 · 기계 · 재실행 원 시도 하나라도 원장 항목과 다르면 사유 (폴더 이름 · 항목 번호) · 같으면 None · attempt.json 없는 폴더 (남의 폴더 · 옆 거부 기록의 까닭) · 옆 거부 기록 파일 · 원장에 없는 번호 = 이 함수 몫 아님 (None)   {'same': None, 'target': None, 'machine': \"attempt_1: attempt.json (machine 'gabia') ≠ 원장 항목 1 (machine 'kgy') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)\", 'resume_of': 'attempt_2: attempt.json (resume_of None) ≠ 원장 항목 2 (resume_of 1) — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)', 'no_attempt_json': None, 'side_file': None, 'not_in_ledger': None}"
+   }
+  ],
+  "seconds": 20.6
+ },
+ {
+  "id": "N12f",
+  "why": "PC6-12 대조 칸에서 기계 뺌",
+  "only": "PD12",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 2/3 PASS (18.3 s)   FAILED: ['PD12u']",
+  "fails": [
+   {
+    "cid": "PD12u",
+    "line": "★ 11-02 PC6-12 단위 — 찾은 시도 폴더 ↔ 원장 항목 (found_attempts_problem · 판정 · 합치기 · 합친 예측 · 예측 입력 공용): 꼴 맞는 attempt.json 의 대상 · 기계 · 재실행 원 시도 하나라도 원장 항목과 다르면 사유 (폴더 이름 · 항목 번호) · 같으면 None · attempt.json 없는 폴더 (남의 폴더 · 옆 거부 기록의 까닭) · 옆 거부 기록 파일 · 원장에 없는 번호 = 이 함수 몫 아님 (None)   {'same': None, 'target': \"attempt_1: attempt.json (target 'ladder:P0:FIBRE') ≠ 원장 항목 1 (target 'ladder:P0') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)\", 'machine': None, 'resume_of': 'attempt_2: attempt.json (resume_of None) ≠ 원장 항목 2 (resume_of 1) — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)', 'no_attempt_json': None, 'side_file': None, 'not_in_ledger': None}"
+   }
+  ],
+  "seconds": 18.7
+ },
+ {
+  "id": "N12g",
+  "why": "PC6-12 대조 칸에서 재실행 원 시도 뺌",
+  "only": "PD12",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 2/3 PASS (18.0 s)   FAILED: ['PD12u']",
+  "fails": [
+   {
+    "cid": "PD12u",
+    "line": "★ 11-02 PC6-12 단위 — 찾은 시도 폴더 ↔ 원장 항목 (found_attempts_problem · 판정 · 합치기 · 합친 예측 · 예측 입력 공용): 꼴 맞는 attempt.json 의 대상 · 기계 · 재실행 원 시도 하나라도 원장 항목과 다르면 사유 (폴더 이름 · 항목 번호) · 같으면 None · attempt.json 없는 폴더 (남의 폴더 · 옆 거부 기록의 까닭) · 옆 거부 기록 파일 · 원장에 없는 번호 = 이 함수 몫 아님 (None)   {'same': None, 'target': \"attempt_1: attempt.json (target 'ladder:P0:FIBRE') ≠ 원장 항목 1 (target 'ladder:P0') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)\", 'machine': \"attempt_1: attempt.json (machine 'gabia') ≠ 원장 항목 1 (machine 'kgy') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)\", 'resume_of': None, 'no_attempt_json': None, 'side_file': None, 'not_in_ledger': None}"
+   }
+  ],
+  "seconds": 18.4
+ },
+ {
+  "id": "N12h",
+  "why": "PC6-12 대조 늘 통과",
+  "only": "PD12",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/3 PASS (21.2 s)   FAILED: ['PD12', 'PD12m', 'PD12u']",
+  "fails": [
+   {
+    "cid": "PD12",
+    "line": "et + 항목 1 의 대상만 ladder:P0:FIBRE 로 바꾼 줄 (결과 줄 그대로 · 없음 두 꼴 · 원장만 고침 · 시도 1 폴더 그대로) → 새 시도 2 (ladder:P0) CALIBRATED 뒤 판정 = 멈춤 ATTEMPT_LEDGER_MISMATCH (사유 = attempt_1 의 attempt.json ≠ 원장 항목 1) (옛 = 원장 대조 통과 · 시도 2 채택) · 예측 입력 대조도 사다리 바탕의 시도 1 폴더를 본다 (예측 = ATTEMPT_LEDGER_MISMATCH · 러너 0 회 · 결과 전 · 옛 = 통과)   ({'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'chain'}, 3, {'entry_and_result': {'add2_rc': 0, 'b_status': 'CALIBRATED', 'verdict': 'INPUT_MISSING', 'why_names_attempt1': False, 'predict': None, 'predict_calls': 24, 'predict_side': 'post'}, 'entry_only': {'add2_rc': 0, 'b_status': 'CALIBRATED', 'verdict': 'INPUT_MISSING', 'why_names_attempt1': False}})"
+   },
+   {
+    "cid": "PD12m",
+    "line": "★ 11-02 PC6-12 합치기 길 — 단위 시도 (unit:P0_c0_R_j_lo · 표지 뒤 잘못된 주소 · 결과 뒤 · runner_rc) 의 원장 clone 에서 끝 두 커밋 reset + 그 항목의 대상만 다른 단위 (unit:P1_c1_R_j_hi · 같은 변이) 로 바꾼 줄 + 결과 줄 그대로 → 같은 단위 새 시도 (UNIT_DONE) → 그 바탕을 --merge = 멈춤 ATTEMPT_LEDGER_MISMATCH (런 0 · 옛 = 새 시도 채택 · 다음 단위 UNIT_MISSING 까지 감)   (('RUNNER_RC', 'runner_rc', 'post', 0, 'UNIT_DONE', 'UNIT_MISSING', 1), '계 kgy · 러너 0 회 · 팔 1 사본 다시 대조)\\n멈춤 [UNIT_MISSING] 합치기 다시 계산이 요청한 단위의 채택 시도가 없다 · 그 시도에 요청한 런이 없다 (넘침 점이 없으면 상태 EXPANSION_NEEDED · Q9 §3-2) — unit:P0_c1_R_j_lo: 채택 시도가 없다 (원장 시도 [] — 없음 · 결과 전 · 거부뿐) (런 P02_corner)\\n합친 예측 = STOPPED\\n요약 → /tmp/rint_r_chain_t_u0lgg1hl/runs/PD12m/pred/predict_summary.json\\n')"
+   },
+   {
+    "cid": "PD12u",
+    "line": "★ 11-02 PC6-12 단위 — 찾은 시도 폴더 ↔ 원장 항목 (found_attempts_problem · 판정 · 합치기 · 합친 예측 · 예측 입력 공용): 꼴 맞는 attempt.json 의 대상 · 기계 · 재실행 원 시도 하나라도 원장 항목과 다르면 사유 (폴더 이름 · 항목 번호) · 같으면 None · attempt.json 없는 폴더 (남의 폴더 · 옆 거부 기록의 까닭) · 옆 거부 기록 파일 · 원장에 없는 번호 = 이 함수 몫 아님 (None)   {'same': None, 'target': None, 'machine': None, 'resume_of': None, 'no_attempt_json': None, 'side_file': None, 'not_in_ledger': None}"
+   }
+  ],
+  "seconds": 21.6
+ },
+ {
+  "id": "M2e",
+  "why": "PC5-01 다시 셈 칸에서 resume_ok 뺌",
+  "only": "PD11",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 4/5 PASS (23.4 s)   FAILED: ['PD11']",
+  "fails": [
+   {
+    "cid": "PD11",
+    "line": ") cause · resume_ok → resource · True → 재실행 3 = 풀기 전 거부 (러너 0 · 사유 cause · 변이 M9 = 원 시도만 다시 세어 돎)   {'e': ({'status': 'stopped', 'side': 'post', 'cause': 'resource', 'resume_ok': False, 'by': 'chain'}, {'add_rc': 0, 'calls': 14, 'rejected': None, 'why': 'None', 'verdict': 'INPUT_MISSING', 'vwhy': '주 사다리 P0 · P1 둘이 다 있어야 한다'}), 'PD11c': ({'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'chain'}, {'add_rc': 0, 'calls': 0, 'rejected': 'ATTEMPT_LEDGER_MISMATCH', 'why': \"attempt_2: 결과 줄 2 의 side 'pre' ≠ 폴더 증거 (거부 기록 · 단계 요약 · 그룹 기록 · 런 로그 · .unchecked/) 에서 다시 센 값 (side 'post') — 끝 줄 바꿔치기 · 손 고침 · 다른 규칙 판의 결과 줄 (★ 10-28 밤 PC5-01)\", 'verdict': 'ATTEMPT_LEDGER_MI"
+   }
+  ],
+  "seconds": 23.9
+ },
+ {
+  "id": "M2c",
+  "why": "PC5-01 다시 셈 칸에서 side 뺌",
+  "only": "PD11",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 4/5 PASS (23.0 s)   FAILED: ['PD11']",
+  "fails": [
+   {
+    "cid": "PD11",
+    "line": ") cause · resume_ok → resource · True → 재실행 3 = 풀기 전 거부 (러너 0 · 사유 cause · 변이 M9 = 원 시도만 다시 세어 돎)   {'e': ({'status': 'stopped', 'side': 'post', 'cause': 'resource', 'resume_ok': False, 'by': 'chain'}, {'add_rc': 0, 'calls': 0, 'rejected': 'ATTEMPT_LEDGER_MISMATCH', 'why': '1: 결과 줄 1 의 resume_ok True ≠ 폴더 증거 (거부 기록 · 단계 요약 · 그룹 기록 · 런 로그 · .unchecked/) 에서 다시 센 값 (resume_ok False) — 끝 줄 바꿔치기 · 손 고침 · 다른 규칙 판의 결과 줄 (★ 10-28 밤 PC5-01)', 'verdict': 'ATTEMPT_LEDGER_MISMATCH', 'vwhy': '1: 결과 줄 1 의 resume_ok True ≠ 폴더 증거 (거부 기록 · 단계 요약 · 그룹 기록 · 런 로그 · .unchecked/) 에서 다시 센 값 (resume_ok False) — 끝 줄 바꿔치기 · 손 고침 · 다른 규칙 판의 결과 줄 (★ 10-28 밤 PC5-01)'}), 'PD11c': ({'status': 'stopped', 'side': 'post', 'c"
+   }
+  ],
+  "seconds": 23.5
+ },
+ {
+  "id": "M9",
+  "why": "PC5-01 재실행 풀기 전 다시 셈 = 원 시도만 (앞 재실행 뺌)",
+  "only": "PD11",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 4/5 PASS (23.1 s)   FAILED: ['PD11']",
+  "fails": [
+   {
+    "cid": "PD11",
+    "line": ") cause · resume_ok → resource · True → 재실행 3 = 풀기 전 거부 (러너 0 · 사유 cause · 변이 M9 = 원 시도만 다시 세어 돎)   {'e': ({'status': 'stopped', 'side': 'post', 'cause': 'resource', 'resume_ok': False, 'by': 'chain'}, {'add_rc': 0, 'calls': 0, 'rejected': 'ATTEMPT_LEDGER_MISMATCH', 'why': '1: 결과 줄 1 의 resume_ok True ≠ 폴더 증거 (거부 기록 · 단계 요약 · 그룹 기록 · 런 로그 · .unchecked/) 에서 다시 센 값 (resume_ok False) — 끝 줄 바꿔치기 · 손 고침 · 다른 규칙 판의 결과 줄 (★ 10-28 밤 PC5-01)', 'verdict': 'ATTEMPT_LEDGER_MISMATCH', 'vwhy': '1: 결과 줄 1 의 resume_ok True ≠ 폴더 증거 (거부 기록 · 단계 요약 · 그룹 기록 · 런 로그 · .unchecked/) 에서 다시 센 값 (resume_ok False) — 끝 줄 바꿔치기 · 손 고침 · 다른 규칙 판의 결과 줄 (★ 10-28 밤 PC5-01)'}), 'PD11c': ({'status': 'stopped', 'side': 'post', 'c"
+   }
+  ],
+  "seconds": 23.5
+ },
+ {
+  "id": "M8",
+  "why": "PC5-10 다시 판정 keep — 합친 예측의 단위 · 점 대상 뺌",
+  "only": "PD11m",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (13.8 s)   FAILED: ['PD11m']",
+  "fails": [
+   {
+    "cid": "PD11m",
+    "line": "★ 11-02 PC6-11 (변이 생존 M8) — 합친 예측 판정 (사다리 둘 사본 · 합친 예측 · 원장 clone) 뒤 같은 바탕에 합친 단위 대상 (unit:P0_c0_R_j_lo) 의 뒤 시도 흔적 (손 항목 · 시도 폴더) → --reverify = REVERIFY_DIFF · rc 1 (PC5-10 너그러움 = 판정 입력 대상 · 합친 예측의 단위 · 점 대상 밖만 · 변이 M8 = 합친 단위 대상도 너그럽게 = REVERIFY_SAME)   (0, 0, 'REVERIFY_SAME — 판정 JSON · 결과 JSON 바이트 같음 (3 입력 · 판정 PASS_INFORMATIVE)\\n', 0, 'REVERIFY_SAME — 판정 JSON · 결과 JSON 바이트 같음 (3 입력 · 판정 PASS_INFORMATIVE)\\n')"
+   }
+  ],
+  "seconds": 14.2
+ },
+ {
+  "id": "M11",
+  "why": "PC5-07 group_members — stat 못 읽음 = 건너뜀 (이번 고침이 옛 글을 옮김: unsure = True → unsure.append)",
+  "only": "PD11s",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (0.9 s)   FAILED: ['PD11s']",
+  "fails": [
+   {
+    "cid": "PD11s",
+    "line": "★ 11-02 PC6-11 (변이 생존 M11) — 그룹 원 찾기: stat 을 못 읽는 프로세스 (가짜 /proc · stat = 폴더) = 확인 불가 (None) — 러너 세션 기록이 있어도 · 없어도 (stat 이 없으면 세션 · 계보로 가를 수 없다 · 보수 · 변이 M11 = 건너뜀 → [] = 거짓 확인)   ([], [])"
+   }
+  ],
+  "seconds": 1.4
+ },
+ {
+  "id": "M12",
+  "why": "PC5-03 chain_parent_alive — chain_pid 칸 없음 · 꼴 틀림 = 죽은 것으로",
+  "only": "PD11g",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.0 s)   FAILED: ['PD11g']",
+  "fails": [
+   {
+    "cid": "PD11g",
+    "line": "★ 11-02 PC6-11 (변이 생존 M12) — 사슬 부모 칸 (chain_pid) 이 없는 시작 기록 (옛 기록 · 꼴 틀림 · 끝 기록 없음) 의 recover = rc 3 · 끝 기록을 쓰지 않는다 (사슬 부모가 살았는지 확인할 수 없다 = 산 것과 같이 · 보수 · 변이 M12 = 죽은 것으로 → 끝 기록 · rc 0)   (0, True, '  recover PD11g/L01_floor: 종료 확인 · 죽인 프로세스 0\\nrecover — 그룹 기록 1 개 정리 · 미확인 0\\n')"
+   }
+  ],
+  "seconds": 1.5
+ },
+ {
+  "id": "M15",
+  "why": "PC5-06 ② 사슬 예외 — 요약 · 결과 줄 없이 다시 올림 (예측 단계)",
+  "only": "PD11p",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (6.3 s)   FAILED: ['PD11p']",
+  "fails": [
+   {
+    "cid": "PD11p",
+    "line": "★ 11-02 PC6-11 (변이 생존 M15 · PC10 의 예측 쪽) 사슬 예외 (Stop 아님 · 예측 단계 팔 읽기 중 KeyError) — 원장 예측 시도 → 예측 요약 (STOPPED · 멈춤 CHAIN_EXCEPTION · 사유에 예외 이름) · 결과 줄 by chain · stopped · 원인 chain_exception · 재실행 자격 False · 예외는 다시 올린다 → --add --resume = rc 3 (변이 M15 = 요약 · 결과 줄 없이 다시 올림 → recover → parent_dead · 자격)   (\"KeyError('시험: 예측 팔 읽기 중 사슬 결함 (Stop 아님)')\", None, None, {'by': None, 'status': None, 'cause': None, 'resume_ok': None}, 3)"
+   }
+  ],
+  "seconds": 6.7
+ }
+]

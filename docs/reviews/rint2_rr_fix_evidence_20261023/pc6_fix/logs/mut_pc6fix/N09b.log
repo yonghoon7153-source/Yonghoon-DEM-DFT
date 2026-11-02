@@ -1,0 +1,4 @@
+  PASS  PD09 ★ 11-02 PC6-09 (사전 공격 6 회차 마무리 R6) — 사슬 부모 SIGKILL (표지 뒤 · 러너 그룹 삶) 뒤 recover 대신 같은 --attempt 명령을 다시 → rc 3 · 화면만 거부 (안내 = --stage recover) · 원장 무변경 (그 시도 결과 줄 없음) · 옆 거부 기록 없음 · 시도 폴더 요약 sha 그대로 (옛 = 옆 거부 기록 + rejected · 결과 전 결과 줄 → 같은 대상 새 시도 열림 · 고아 런과 동시) → 같은 대상 --add = rc 3 ATTEMPT_ORDER_MISMATCH → recover --ledger = 결과 줄 interrupted · 결과 뒤 (그룹 정리) → 같은 대상 새 --add = rc 3 ATTEMPT_AFTER_ADOPTED (남의 폴더 = attempt.json 없음 → 옆 거부 기록 그대로 = AL07)
+  FAIL  PD09b ★ 11-02 PC6-09 남의 폴더 (변이 보강 · 가드가 넘치지 않는지) — 시도 폴더 attempt_1 이 이미 있고 attempt.json 이 ⓐ 이 항목과 칸은 같지만 시작 커밋이 원장 조상이 아님 (다른 원장 역사) ⓑ 시작 커밋은 원장 HEAD 인데 대상이 다름 → 옆 거부 기록 (OUTDIR_NOT_EMPTY) + rejected · 결과 전 결과 줄 그대로 (화면만 아님 · 러너 0 회 · 고치기 전과 같음)   {'history': (3, False, None, None, None, 0), 'target': (3, True, 'rejected', 'pre', 'OUTDIR_NOT_EMPTY', 0)}
+
+test_rint_r_chain: 1/2 PASS (2.8 s)   FAILED: ['PD09b']

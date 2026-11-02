@@ -1,0 +1,3 @@
+  FAIL  PC03 ★ 10-28 밤 PC5-02 (1저자 Q2 · 사전 공격 5 회차 U1) 자원 낱말 = 메모리 · 디스크 다섯만 (OutOfMemoryError · CUDA_ERROR_OUT_OF_MEMORY · cudaErrorMemoryAllocation · MemoryError · No space left on device) — 러너 rc 1 · 표지 뒤 로그 한 줄마다 결과 줄 원인: cupy 꼴 device-side assert · misaligned · illegal instruction · launch failed (드라이버 · 런타임) · invalid value · 클래스 이름만 · 잘못된 주소 · 파이썬 결함 = runner_rc · 재실행 자격 False (옛 = 클래스 이름 CUDARuntimeError · CUDADriverError 가 표에 있어 resource) · 메모리 · 디스크 = resource · True · OOM + 잘못된 주소 = runner_rc   ({'oom_and_illegal': (('resource', 'post', True), ('runner_rc', 'post', False))}, ('OutOfMemoryError', 'CUDA_ERROR_OUT_OF_MEMORY', 'cudaErrorMemoryAllocation', 'MemoryError', 'No space left on device'))
+
+test_rint_r_chain: 0/1 PASS (1.3 s)   FAILED: ['PC03']

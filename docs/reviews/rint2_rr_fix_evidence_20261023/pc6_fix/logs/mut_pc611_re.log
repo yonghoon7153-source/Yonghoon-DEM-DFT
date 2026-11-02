@@ -1,0 +1,4 @@
+BASE PC03,PC11,PC14,PD01,PD01r,PD02,PD09,PD11,PD11g,PD11m,PD11p,PD11s,PD12,PD12m,UM08 BASE-OK (기대 pass) test_rint_r_chain: 18/18 PASS (53.2 s) fails= []
+M2e PD11 killed (기대 killed) test_rint_r_chain: 4/5 PASS (21.2 s)   FAILED: ['PD11'] fails= ['PD11']
+M2c PD11 killed (기대 killed) test_rint_r_chain: 4/5 PASS (20.6 s)   FAILED: ['PD11'] fails= ['PD11']
+M9 PD11 killed (기대 killed) test_rint_r_chain: 4/5 PASS (22.5 s)   FAILED: ['PD11'] fails= ['PD11']

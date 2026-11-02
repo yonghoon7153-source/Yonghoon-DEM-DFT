@@ -1,0 +1,3 @@
+  FAIL  PD12m ★ 11-02 PC6-12 합치기 길 — 단위 시도 (unit:P0_c0_R_j_lo · 표지 뒤 잘못된 주소 · 결과 뒤 · runner_rc) 의 원장 clone 에서 끝 두 커밋 reset + 그 항목의 대상만 다른 단위 (unit:P1_c1_R_j_hi · 같은 변이) 로 바꾼 줄 + 결과 줄 그대로 → 같은 단위 새 시도 (UNIT_DONE) → 그 바탕을 --merge = 멈춤 ATTEMPT_LEDGER_MISMATCH (런 0 · 옛 = 새 시도 채택 · 다음 단위 UNIT_MISSING 까지 감)   (('RUNNER_RC', 'runner_rc', 'post', 0, 'UNIT_DONE', 'UNIT_MISSING', 1), '계 kgy · 러너 0 회 · 팔 1 사본 다시 대조)\n멈춤 [UNIT_MISSING] 합치기 다시 계산이 요청한 단위의 채택 시도가 없다 · 그 시도에 요청한 런이 없다 (넘침 점이 없으면 상태 EXPANSION_NEEDED · Q9 §3-2) — unit:P0_c1_R_j_lo: 채택 시도가 없다 (원장 시도 [] — 없음 · 결과 전 · 거부뿐) (런 P02_corner)\n합친 예측 = STOPPED\n요약 → /tmp/rint_r_chain_t_p5g2fucu/runs/PD12m/pred/predict_summary.json\n')
+
+test_rint_r_chain: 0/1 PASS (13.0 s)   FAILED: ['PD12m']

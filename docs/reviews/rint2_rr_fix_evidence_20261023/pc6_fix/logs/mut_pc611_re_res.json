@@ -1,0 +1,61 @@
+[
+ {
+  "id": "BASE",
+  "why": "변이 없음",
+  "only": "PC03,PC11,PC14,PD01,PD01r,PD02,PD09,PD11,PD11g,PD11m,PD11p,PD11s,PD12,PD12m,UM08",
+  "expect": "pass",
+  "rc": 0,
+  "killed": null,
+  "summary": "test_rint_r_chain: 18/18 PASS (53.2 s)",
+  "fails": [],
+  "seconds": 53.6
+ },
+ {
+  "id": "M2e",
+  "why": "PC5-01 다시 셈 칸에서 resume_ok 뺌",
+  "only": "PD11",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 4/5 PASS (21.2 s)   FAILED: ['PD11']",
+  "fails": [
+   {
+    "cid": "PD11",
+    "line": ") ⓑ 원 시도 OOM (자격) → 재실행 2 = 잘못된 주소 (runner_rc · 자격 False) → 끝 줄 (항목 2) side 만 pre → 재실행 3 = 풀기 전 거부 (러너 0 · 사유 side · 변이 M2c = 돎) ⓒ 같은 사슬 → 끝 줄 (항목 2) cause · resume_ok → resource · True → 재실행 3 = 풀기 전 거부 (러너 0 · 사유 cause · 변이 M9 = 원 시도만 다시 세어 돎)   {'e': ('resource', False, 0, 14, None, 'INPUT_MISSING', 'None', '주 사다리 P0 · P1 둘이 다 있어야 한다'), 'PD11c': ('runner_rc', False, 0, 0, 'ATTEMPT_LEDGER_MISMATCH', 'ATTEMPT_LEDGER_MISMATCH', \"attempt_2: 결과 줄 2 의 side 'pre' ≠ 폴더 증거 (\", 'attempt_2: 결과 줄 2 의 결과 pre ≠ 폴더 (post — '), 'PD11n': ('runner_rc', False, 0, 0, 'ATTEMPT_LEDGER_MISMATCH', 'ATTEMPT_LEDGER_MISMATCH', \"attempt_2: 결과 줄 2 의 cause 'resource' ≠ 폴\", \"attempt_2: 결과 줄 2 의 cause 'resource' ≠ 폴\")}"
+   }
+  ],
+  "seconds": 21.6
+ },
+ {
+  "id": "M2c",
+  "why": "PC5-01 다시 셈 칸에서 side 뺌",
+  "only": "PD11",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 4/5 PASS (20.6 s)   FAILED: ['PD11']",
+  "fails": [
+   {
+    "cid": "PD11",
+    "line": " = 잘못된 주소 (runner_rc · 자격 False) → 끝 줄 (항목 2) side 만 pre → 재실행 3 = 풀기 전 거부 (러너 0 · 사유 side · 변이 M2c = 돎) ⓒ 같은 사슬 → 끝 줄 (항목 2) cause · resume_ok → resource · True → 재실행 3 = 풀기 전 거부 (러너 0 · 사유 cause · 변이 M9 = 원 시도만 다시 세어 돎)   {'e': ('resource', False, 0, 0, 'ATTEMPT_LEDGER_MISMATCH', 'ATTEMPT_LEDGER_MISMATCH', 'attempt_1: 결과 줄 1 의 resume_ok True ≠ 폴더 ', 'attempt_1: 결과 줄 1 의 resume_ok True ≠ 폴더 '), 'PD11c': ('runner_rc', False, 0, 14, None, 'ATTEMPT_LEDGER_MISMATCH', 'None', 'attempt_2: 결과 줄 2 의 결과 pre ≠ 폴더 (post — '), 'PD11n': ('runner_rc', False, 0, 0, 'ATTEMPT_LEDGER_MISMATCH', 'ATTEMPT_LEDGER_MISMATCH', \"attempt_2: 결과 줄 2 의 cause 'resource', re\", \"attempt_2: 결과 줄 2 의 cause 'resource', re\")}"
+   }
+  ],
+  "seconds": 21.0
+ },
+ {
+  "id": "M9",
+  "why": "PC5-01 재실행 풀기 전 다시 셈 = 원 시도만 (앞 재실행 뺌)",
+  "only": "PD11",
+  "expect": "killed",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 4/5 PASS (22.5 s)   FAILED: ['PD11']",
+  "fails": [
+   {
+    "cid": "PD11",
+    "line": ") (변이 M2e = 재실행 돎 · 판정 원장 대조 통과) ⓑ 원 시도 OOM (자격) → 재실행 2 = 잘못된 주소 (runner_rc · 자격 False) → 끝 줄 (항목 2) side 만 pre → 재실행 3 = 풀기 전 거부 (러너 0 · 사유 side · 변이 M2c = 돎) ⓒ 같은 사슬 → 끝 줄 (항목 2) cause · resume_ok → resource · True → 재실행 3 = 풀기 전 거부 (러너 0 · 사유 cause · 변이 M9 = 원 시도만 다시 세어 돎)   {'e': ('resource', False, 0, 0, 'ATTEMPT_LEDGER_MISMATCH', 'ATTEMPT_LEDGER_MISMATCH', 'attempt_1: 결과 줄 1 의 resume_ok True ≠ 폴더 ', 'attempt_1: 결과 줄 1 의 resume_ok True ≠ 폴더 '), 'PD11c': ('runner_rc', False, 0, 14, None, 'ATTEMPT_LEDGER_MISMATCH', 'None', 'attempt_2: 결과 줄 2 의 결과 pre ≠ 폴더 (post — '), 'PD11n': ('runner_rc', False, 0, 14, None, 'ATTEMPT_LEDGER_MISMATCH', 'None', \"attempt_2: 결과 줄 2 의 cause 'resource', re\")}"
+   }
+  ],
+  "seconds": 23.0
+ }
+]
