@@ -1,0 +1,3 @@
+{"probe": "env_m2e", "recount_keys": ["status", "stop", "side", "cause"]}
+{"add_resume_rc": 0, "honest": {"cause": "resource", "resume_ok": false, "side": "post", "status": "stopped"}, "probe": "R11", "resume_attempt_rc": 0, "resume_rejected_cause": "None", "resume_rejected_code": null, "verdict_stop": "ATTEMPT_LEDGER_MISMATCH", "verdict_why": "항목 2 (ladder:P0) 의 시도 폴더 · 거부 기록 attempt_2 이 없다 (엄격 — 결과 뒤로 본다 · 그 대상 판정 없음 · 다른 곳에 둔 시도 = 판정 --attempt-dirs · 합치기 --merge 경로)"}
+rc=0 elapsed=3s cmd=python3 -I docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/final/probes/probe6f_m2e.py /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/pc6f/tmp

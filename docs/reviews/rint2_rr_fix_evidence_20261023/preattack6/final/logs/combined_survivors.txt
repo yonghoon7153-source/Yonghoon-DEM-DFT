@@ -1,0 +1,21 @@
+# 사전 공격 6 회차 마무리 — 생존 변이 15 를 한 사본에 합친 넓은 확인 (원 로그 = 스크래치 · 리포에는 끝 줄 · FAIL 줄 · sha256 만)
+# 합친 변이 = M2a · M2b · M2c · M2e (RECOUNT_KEYS = ('cause',)) + M4 · M5 · M6 · M7 · M8 · M9 · M10a · M10b · M11 · M12 · M15 (final/probes/combine_survivors.py · 옛 글 정확히 한 번 · 문법 검사)
+# Python 3.11.17 · BLAS 스레드 1 · nice 10 · TMPDIR = 스크래치 · 사본 트리 = scripts 사본 + docs · webapp 링크 + .gitignore (git 저장소 아님)
+
+## 합친 생존 15 사본 (mtreeC) · scripts/test_rint_r_chain.py 전체
+원 로그 sha256 a335dd4e7c9ecae641f70a0c13a6b252fb7531b26dde8590001f00d3976ad2e0 · 410 줄
+test_rint_r_chain: 406/407 PASS (443.1 s)   FAILED: ['Y13']
+rc=1 elapsed=444s cmd=python3 scripts/test_rint_r_chain.py
+FAIL 줄: FAIL  Y13 ★ 10-26 B″ (1저자 Q5 · 묶음 B 보고 결정 5) 저장소 뿌리의 .venv/ (러너가 찾는 venv 자리 `$SCR/../.venv`) — 이 리포 .gitignore 가 .venv/ 를 무시한다 (git check-ignore --no-index) · 고정물 clone 뿌리에 .venv/ (bin/activate · pyvenv.cfg · site-packages 의 .py) → git 신원 dirty False · 사다리 CALIBRATED (옛 .gitignore = ignore 밖 untracked = dirty → CODE_PIN_MISMATCH · 러너 0 회) · 같은 clone 에 .venv 밖 추적 안 된 파일 하나 더 → 여전히 CODE_PIN_MISMATCH (무시 범위 = .venv/ 만)   (128, {'head': 'c2e6939a23c3b733d713dee2da5df5e51f964766', 'dirty': False, 'rel': 'scripts/rint_r_chain.py', 'error': None}, 0, None, 'None', 3, 'CODE_PIN_MISMATCH')
+
+## 합친 생존 15 사본 (mtreeD) · scripts/test_rint_r_chain_e2e.py 전체
+원 로그 sha256 0d92467a162a29624859cdd6ec3ff2ddfa6e38c0fa4ca5daeb179018883fd641 · 78 줄
+test_rint_r_chain_e2e: 40 PASS · 0 FAIL (552.6 s)
+rc=0 elapsed=553s cmd=python3 scripts/test_rint_r_chain_e2e.py
+
+## 변이 없는 사본 (mtreeE · 기준) · scripts/test_rint_r_chain.py 전체
+원 로그 sha256 3d3298886683447ca1500b62be41bf35f3070e93a6949c75cddd74845c2ff695 · 410 줄
+test_rint_r_chain: 406/407 PASS (574.3 s)   FAILED: ['Y13']
+rc=1 elapsed=574s cmd=python3 scripts/test_rint_r_chain.py
+FAIL 줄: FAIL  Y13 ★ 10-26 B″ (1저자 Q5 · 묶음 B 보고 결정 5) 저장소 뿌리의 .venv/ (러너가 찾는 venv 자리 `$SCR/../.venv`) — 이 리포 .gitignore 가 .venv/ 를 무시한다 (git check-ignore --no-index) · 고정물 clone 뿌리에 .venv/ (bin/activate · pyvenv.cfg · site-packages 의 .py) → git 신원 dirty False · 사다리 CALIBRATED (옛 .gitignore = ignore 밖 untracked = dirty → CODE_PIN_MISMATCH · 러너 0 회) · 같은 clone 에 .venv 밖 추적 안 된 파일 하나 더 → 여전히 CODE_PIN_MISMATCH (무시 범위 = .venv/ 만)   (128, {'head': '3f603ae1b6e2b1851c83b47058f0822496f56ecd', 'dirty': False, 'rel': 'scripts/rint_r_chain.py', 'error': None}, 0, None, 'None', 3, 'CODE_PIN_MISMATCH')
+

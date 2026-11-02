@@ -1,0 +1,726 @@
+[
+ {
+  "id": "BASE",
+  "guard": "변이 없음",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": null,
+  "summary": "test_rint_r_chain: 94/94 PASS (180.1 s)",
+  "fails": [],
+  "seconds": 180.5
+ },
+ {
+  "id": "P01a",
+  "guard": "PC5-01 판정 · 합치기 — 결과 줄 다시 셈 (target_ledger_problem) 끔",
+  "only": "PC01,PC02",
+  "killed": true,
+  "summary": "test_rint_r_chain: 2/4 PASS (18.7 s)   FAILED: ['PC01', 'PC01m']",
+  "fails": [
+   {
+    "cid": "PC01",
+    "why": "('runner_rc', {'honest': 'INPUT_STAGE_STOPPED', 'reset': 'INPUT_STAGE_STOPPED', 'amend': 'INPUT_STAGE_STOPPED'}, {'honest': 'attempt_1: RUNNER_RC — 멈춘 주 판정 단계는 판정 입력이 아니다', 'reset': 'attempt_1: RUNNER_RC — 멈춘 주 판정 단계는 판정 입력이 아니다', 'amend': 'attempt_1: RUNNER_RC — 멈춘 주 판정 단계는 판정 입력이 아니다'}, 0, 'er-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/pc6f/tmp_mtreeA/rint_r_chain_t_hkxvod1"
+   },
+   {
+    "cid": "PC01m",
+    "why": "('TIME_LIMIT', '시험')"
+   }
+  ],
+  "seconds": 19.1
+ },
+ {
+  "id": "P01b",
+  "guard": "PC5-01 재실행 풀기 전 — 사슬 다시 셈 (resume_chain_problem) 끔",
+  "only": "PC01",
+  "killed": true,
+  "summary": "test_rint_r_chain: 2/3 PASS (18.9 s)   FAILED: ['PC01']",
+  "fails": [
+   {
+    "cid": "PC01",
+    "why": "('runner_rc', {'honest': 'INPUT_STAGE_STOPPED', 'reset': 'ATTEMPT_LEDGER_MISMATCH', 'amend': 'ATTEMPT_LEDGER_MISMATCH'}, {'honest': 'attempt_1: RUNNER_RC — 멈춘 주 판정 단계는 판정 입력이 아니다', 'reset': \"attempt_1: 결과 줄 1 의 cause 'resource', resume_ok True ≠ 폴더 증거 (거부 기록 · 단계 요약 · 그룹 기록 · 런 로그 · .unchecked/) 에서 다시 센 값 (cause 'runner_rc', resume_ok False) — 끝 줄 바\", 'amend': \"attempt_1: 결과 줄 1 의 cause 'resource'"
+   }
+  ],
+  "seconds": 19.3
+ },
+ {
+  "id": "P01c",
+  "guard": "PC5-01 입력 시도 — 결과 줄 다시 셈 (ledger_inputs_check) 끔",
+  "only": "PC0,PC1,UM,AL,RS",
+  "killed": true,
+  "summary": "test_rint_r_chain: 78/79 PASS (171.5 s)   FAILED: ['PC01i']",
+  "fails": [
+   {
+    "cid": "PC01i",
+    "why": "(2, 'completed', None, None, 'None', 24, 0)"
+   }
+  ],
+  "seconds": 172.0
+ },
+ {
+  "id": "P01d",
+  "guard": "PC5-01 원장 역사 — 첫 부모 밖 원장 커밋 (merge -s ours) 검사 끔",
+  "only": "PC02",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (2.4 s)   FAILED: ['PC02']",
+  "fails": [
+   {
+    "cid": "PC02",
+    "why": "(None, None, True, 'INPUT_MISSING', 'INPUT_MISSING', '주 사다리 P0 · P1 둘이 다 있어야 한다')"
+   }
+  ],
+  "seconds": 2.9
+ },
+ {
+  "id": "P02a",
+  "guard": "PC5-02 자원 낱말 — cupy 클래스 이름 둘 되살림",
+  "only": "PC03,PC04",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/2 PASS (1.7 s)   FAILED: ['PC03', 'PC04']",
+  "fails": [
+   {
+    "cid": "PC03",
+    "why": "({'assert_runtime': (('resource', 'post', True), ('runner_rc', 'post', False)), 'misaligned': (('resource', 'post', True), ('runner_rc', 'post', False)), 'illegal_instruction': (('resource', 'post', True), ('runner_rc', 'post', False)), 'launch_failed': (('resource', 'post', True), ('runner_rc', 'post', False)), 'launch_failure_rt': (('resource', 'post', True), ('runner_rc', 'post', False)), 'inva"
+   },
+   {
+    "cid": "PC04",
+    "why": "{'assert': ('RUNNER_RC', {'status': 'stopped', 'side': 'post', 'cause': 'resource', 'resume_ok': True, 'by': 'chain'}, 0, False, False), 'launch': ('RUNNER_RC', {'status': 'stopped', 'side': 'post', 'cause': 'resource', 'resume_ok': True, 'by': 'chain'}, 0, False, False)}"
+   }
+  ],
+  "seconds": 2.1
+ },
+ {
+  "id": "P02b",
+  "guard": "PC5-02 낱말 규칙 — 잘못된 주소 (NOT_RESOURCE) 를 자원 낱말 뒤에 봄",
+  "only": "PC03",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (0.9 s)   FAILED: ['PC03']",
+  "fails": [
+   {
+    "cid": "PC03",
+    "why": "({'oom_and_illegal': (('resource', 'post', True), ('runner_rc', 'post', False))}, ('OutOfMemoryError', 'CUDA_ERROR_OUT_OF_MEMORY', 'cudaErrorMemoryAllocation', 'MemoryError', 'No space left on device'))"
+   }
+  ],
+  "seconds": 1.2
+ },
+ {
+  "id": "P03a",
+  "guard": "PC5-03 recover — 산 사슬 부모 검사 끔",
+  "only": "PC05",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (0.9 s)   FAILED: ['PC05']",
+  "fails": [
+   {
+    "cid": "PC05",
+    "why": "{'rc': 0, 'end_after_recover': True, 'alive_after': [], 'chain_out': '{\"rc\": -9, \"cause\": null, \"confirmed\": true, \"by\": \"chain\"}', 'rc2': 0, 'rc3': 0, 'end3': {'by': 'recover', 'cause': 'parent_dead', 'confirmed': True, 'ended_utc': '2026-11-02T05:45:03Z', 'host': {'boot_id': 'd837a159-8046-4926-a313-3a02909e16da', 'machine_id': '4c398f739c8447eb99d3fe100ad1b0fa', 'pidns': 'pid:[4026531836]'}, 'k"
+   }
+  ],
+  "seconds": 1.3
+ },
+ {
+  "id": "P03b",
+  "guard": "PC5-03 사슬 부모 — 시작 시각 대조 끔 (pid 다시 쓰임 = 산 사슬)",
+  "only": "PC05",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (5.0 s)   FAILED: ['PC05']",
+  "fails": [
+   {
+    "cid": "PC05",
+    "why": "{'rc': 3, 'end_after_recover': False, 'alive_after': [1248], 'chain_out': '{\"rc\": 0, \"cause\": null, \"confirmed\": true, \"by\": \"chain\"}', 'rc2': 3, 'rc3': 3, 'end3': None, 'er': {'by': 'chain', 'cause': None, 'confirmed': True, 'ended_utc': '2026-11-02T05:45:08Z', 'killed': 0, 'left': [], 'left_after_exit': 0, 'name': 'L01_floor', 'rc': 0, 'schema': 'rint-r-group-v1', 'signal': None, 'token': 'e1f64"
+   }
+  ],
+  "seconds": 5.4
+ },
+ {
+  "id": "P03c",
+  "guard": "PC5-03 사슬 부모 — 시작 시각 칸 없음 = 죽은 사슬",
+  "only": "PC05",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (5.1 s)   FAILED: ['PC05']",
+  "fails": [
+   {
+    "cid": "PC05",
+    "why": "{'rc': 3, 'end_after_recover': False, 'alive_after': [1469], 'chain_out': '{\"rc\": 0, \"cause\": null, \"confirmed\": true, \"by\": \"chain\"}', 'rc2': 0, 'rc3': 0, 'end3': {'by': 'recover', 'cause': 'parent_dead', 'confirmed': True, 'ended_utc': '2026-11-02T05:45:14Z', 'host': {'boot_id': 'd837a159-8046-4926-a313-3a02909e16da', 'machine_id': '4c398f739c8447eb99d3fe100ad1b0fa', 'pidns': 'pid:[4026531836]'}"
+   }
+  ],
+  "seconds": 5.5
+ },
+ {
+  "id": "P04a",
+  "guard": "PC5-04 recover — 다른 부팅을 볼 수 있는 쪽으로 (옛 재부팅 확인 꼴)",
+  "only": "PC06,GR08",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/3 PASS (1.6 s)   FAILED: ['GR08', 'PC06', 'PC06b']",
+  "fails": [
+   {
+    "cid": "GR08",
+    "why": "[('reboot', False, 0, True, None), ('unknown_machine_reboot', False, 0, True, None)]"
+   },
+   {
+    "cid": "PC06",
+    "why": "{'default': (0, '  recover attempt_1/L01_floor: 종료 확인 · 죽인 프로세스 0\\nrecover — 그룹 기록 1 개 정리 · 미확인 0\\n  recover attempt_1: 결과 줄 interrupted · 결과 pre · 원인 parent_dead · 재실행 자격 False\\n'), 'end_default': {'by': 'recover', 'cause': 'parent_dead', 'confirmed': True, 'ended_utc': '2026-11-02T05:45:16Z', 'host': {'boot_id': 'd837a159-8046-4926-a313-3a02909e16da', 'machine_id': '4c398f739c8447eb99d3fe100ad1b"
+   },
+   {
+    "cid": "PC06b",
+    "why": "{'rc': 3, 'e1': {'by': 'recover', 'cause': 'parent_dead', 'confirmed': True, 'ended_utc': '2026-11-02T05:45:16Z', 'host': {'boot_id': 'd837a159-8046-4926-a313-3a02909e16da', 'machine_id': '4c398f739c8447eb99d3fe100ad1b0fa', 'pidns': 'pid:[4026531836]'}, 'killed': 0, 'left': [], 'left_after_exit': None, 'name': 'L01_floor', 'rc': None, 'schema': 'rint-r-group-v1', 'signal': None, 'token': '02d60414"
+   }
+  ],
+  "seconds": 2.1
+ },
+ {
+  "id": "P04b",
+  "guard": "PC5-04 recover — machine_id 다름 검사 끔",
+  "only": "GR08",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['GR08']",
+  "fails": [
+   {
+    "cid": "GR08",
+    "why": "[('other_machine', False, 0, True, None)]"
+   }
+  ],
+  "seconds": 1.2
+ },
+ {
+  "id": "P04c",
+  "guard": "PC5-04 운영자 표지 — 시도 폴더 범위 끔 (바탕의 모든 그룹)",
+  "only": "PC06",
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (1.5 s)   FAILED: ['PC06b']",
+  "fails": [
+   {
+    "cid": "PC06b",
+    "why": "{'rc': 0, 'e1': {'by': 'recover', 'cause': 'parent_dead', 'confirmed': True, 'ended_utc': '2026-11-02T05:45:19Z', 'host': {'boot_id': 'd837a159-8046-4926-a313-3a02909e16da', 'machine_id': '4c398f739c8447eb99d3fe100ad1b0fa', 'pidns': 'pid:[4026531836]'}, 'killed': 0, 'left': [], 'left_after_exit': None, 'name': 'L01_floor', 'operator': {'attempt': 1, 'launch_host': {'boot_id': '00000000-0000-0000-0"
+   }
+  ],
+  "seconds": 1.8
+ },
+ {
+  "id": "P04d",
+  "guard": "PC5-04 운영자 표지 — 쓰이지 않은 표지 = rc 3 끔",
+  "only": "PC06",
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (1.5 s)   FAILED: ['PC06b']",
+  "fails": [
+   {
+    "cid": "PC06b",
+    "why": "{'rc': 3, 'e1': {'by': 'recover', 'cause': 'parent_dead', 'confirmed': True, 'ended_utc': '2026-11-02T05:45:21Z', 'host': {'boot_id': 'd837a159-8046-4926-a313-3a02909e16da', 'machine_id': '4c398f739c8447eb99d3fe100ad1b0fa', 'pidns': 'pid:[4026531836]'}, 'killed': 0, 'left': [], 'left_after_exit': None, 'name': 'L01_floor', 'operator': {'attempt': 1, 'launch_host': {'boot_id': '00000000-0000-0000-0"
+   }
+  ],
+  "seconds": 1.9
+ },
+ {
+  "id": "P04e",
+  "guard": "PC5-04 운영자 표지 — 번호 · 사유 꼴 검사 끔",
+  "only": "PC06",
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (1.6 s)   FAILED: ['PC06']",
+  "fails": [
+   {
+    "cid": "PC06",
+    "why": "{'default': (3, '  recover attempt_1/L01_floor: 종료 미확인 · 죽인 프로세스 0 · 다른 부팅 (boot_id · 모름) — 여기서 그 프로세스를 볼 수 없다 (machine_id 는 기계 정체가 아니다 — 복제 이미지 · 컨테이너) · 운영자가 그 그룹이 끝났음을 확인했으면 --ledger 와 --operator-confirm <시도 번호> --operator-why \"<사유>\"\\nrecover — 그룹 기록 1 개 정리 · 미확인 1 (다음 시도 전에 사람이 본다)\\n  recover attempt_1: 그룹 attempt_1/L01_floor 종료 미확인 — 결과 줄을 쓰지 않는다 (미확인 · 다음 시도 채택을 막는다)\\n'), 'end_default': {'by"
+   }
+  ],
+  "seconds": 2.0
+ },
+ {
+  "id": "P05a",
+  "guard": "PC5-05 채택 — 결과 전 멈춘 재실행 건너뜀 끔",
+  "only": "PC07",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.7 s)   FAILED: ['PC07']",
+  "fails": [
+   {
+    "cid": "PC07",
+    "why": "('RUNNER_RC', 'NOT_REGISTERED', {'status': 'stopped', 'side': 'pre', 'cause': 'gate', 'resume_ok': False, 'by': 'chain'}, 3, '· 인프라 원인이 아님 · 검사 실패 흔적 · 기계 · 환경 지문 다름 · Q9 §3-5 개정 4 · R4-08) — 재실행 사슬 끝 attempt_2 = stopped · 원인 gate · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)\\n', None, {'attempts': [1, 2], 'adopted': 1, 'chain': [1, 2], 'effective': 2, 'problems': []}, None)"
+   }
+  ],
+  "seconds": 2.1
+ },
+ {
+  "id": "P06a",
+  "guard": "PC5-06 요약 없는 시도 — 원인 = 늘 parent_dead · 읽음 (옛)",
+  "only": "PC08,PC09",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/2 PASS (2.3 s)   FAILED: ['PC08', 'PC09']",
+  "fails": [
+   {
+    "cid": "PC08",
+    "why": "(True, None, 0, '  recover attempt_1/L01_floor: 종료 확인 · 죽인 프로세스 1\\nrecover — 그룹 기록 1 개 정리 · 미확인 0\\n  recover attempt_1: 결과 줄 interrupted · 결과 post · 원인 parent_dead · 재실행 자격 True\\n', {'status': 'interrupted', 'side': 'post', 'cause': 'parent_dead', 'resume_ok': True, 'by': 'recover'}, 0, 'ome-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/pc6f/tmp_mtreeA/rint_r_chain_t_22nffb"
+   },
+   {
+    "cid": "PC09",
+    "why": "{'rec_illegal': (('interrupted', 'parent_dead', 'post', True), ('interrupted', 'runner_rc', 'post', False)), 'rec_oom': (('interrupted', 'parent_dead', 'post', True), ('interrupted', 'resource', 'post', True)), 'chain_rc1': (('interrupted', 'parent_dead', 'post', True), ('interrupted', 'runner_rc', 'post', False)), 'chain_rc1_oom': (('interrupted', 'parent_dead', 'post', True), ('interrupted', 're"
+   }
+  ],
+  "seconds": 2.7
+ },
+ {
+  "id": "P06b",
+  "guard": "PC5-06 요약 있는 길 — 신호 · 시간 초과 · 그룹 미확인의 잘못된 주소 낱말 끔",
+  "only": "PC11",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.6 s)   FAILED: ['PC11']",
+  "fails": [
+   {
+    "cid": "PC11",
+    "why": "('RUNNER_RC', {'status': 'stopped', 'side': 'post', 'cause': 'signal', 'resume_ok': True, 'by': 'chain'}, 0, False, [])"
+   }
+  ],
+  "seconds": 2.0
+ },
+ {
+  "id": "P06c",
+  "guard": "PC5-06 ② 사슬 예외 — 요약 · 결과 줄 없이 다시 올림 (사다리)",
+  "only": "PC10",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.3 s)   FAILED: ['PC10']",
+  "fails": [
+   {
+    "cid": "PC10",
+    "why": "(\"KeyError('시험: 팔 읽기 중 사슬 결함 (Stop 아님)')\", None, {}, {}, 3, '이 아님 · 시작 커밋의 원장이 바이트 접두가 아님 · 시작 커밋에 같은 대상 앞 결과 줄이 없음 · Q9 §3-5 개정 3 · R4-07) — 같은 대상 (ladder:P0) 앞 항목 1 의 결과 줄이 아직 없다 (차례로만 · 그룹 미확인 · 시도 중 = recover · 끝 먼저)\\n')"
+   }
+  ],
+  "seconds": 1.6
+ },
+ {
+  "id": "P06d",
+  "guard": "PC5-06 요약 없는 시도 — 런 로그 못 읽음 = 읽음으로",
+  "only": "PC09",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.1 s)   FAILED: ['PC09']",
+  "fails": [
+   {
+    "cid": "PC09",
+    "why": "{'rec_nolog': (('interrupted', 'parent_dead', 'post', True), ('interrupted', 'parent_dead', 'post', False))}"
+   }
+  ],
+  "seconds": 1.5
+ },
+ {
+  "id": "P06e",
+  "guard": "PC5-06 결과 칸 — 못 읽음을 재실행 자격에서 뺌",
+  "only": "PC09",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.1 s)   FAILED: ['PC09']",
+  "fails": [
+   {
+    "cid": "PC09",
+    "why": "{'rec_nolog': (('interrupted', 'parent_dead', 'post', True), ('interrupted', 'parent_dead', 'post', False)), 'no_groups': (('interrupted', 'parent_dead', 'post', True), ('interrupted', 'parent_dead', 'post', False))}"
+   }
+  ],
+  "seconds": 1.5
+ },
+ {
+  "id": "P07a",
+  "guard": "PC5-07 그룹 원 — Z 지도자의 산 스레드 끔 (Z = 끝남 · 옛)",
+  "only": "PC14",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (4.7 s)   FAILED: ['PC14']",
+  "fails": [
+   {
+    "cid": "PC14",
+    "why": "({'rc': 0, 'cause': None, 'end': {'confirmed': True, 'left_after_exit': 0, 'killed': 0}, 'late': True}, {'unread': None, 'zlive': [], 'zdead': [], 'member': [900005], 'old_since': [], 'other_uid_nonroot': [], 'same_uid_nonroot': None, 'pid1': []})"
+   }
+  ],
+  "seconds": 5.1
+ },
+ {
+  "id": "P07b",
+  "guard": "PC5-07 그룹 원 — environ 못 읽음 = 건너뜀 (옛)",
+  "only": "PC14",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (4.5 s)   FAILED: ['PC14']",
+  "fails": [
+   {
+    "cid": "PC14",
+    "why": "({'rc': 0, 'cause': None, 'end': {'confirmed': True, 'left_after_exit': 1, 'killed': 1}, 'late': False}, {'unread': [], 'zlive': [900002], 'zdead': [], 'member': [900005], 'old_since': [], 'other_uid_nonroot': [], 'same_uid_nonroot': [], 'pid1': []})"
+   }
+  ],
+  "seconds": 5.0
+ },
+ {
+  "id": "P07c",
+  "guard": "PC5-07 그룹 원 — 그룹 시작 전 프로세스 거름 끔",
+  "only": "PC14",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (4.7 s)   FAILED: ['PC14']",
+  "fails": [
+   {
+    "cid": "PC14",
+    "why": "({'rc': 0, 'cause': None, 'end': {'confirmed': True, 'left_after_exit': 1, 'killed': 1}, 'late': False}, {'unread': None, 'zlive': [900002], 'zdead': [], 'member': [900005], 'old_since': None, 'other_uid_nonroot': [], 'same_uid_nonroot': None, 'pid1': []})"
+   }
+  ],
+  "seconds": 5.1
+ },
+ {
+  "id": "P07d",
+  "guard": "PC5-07 그룹 원 — 다른 실 uid 거름 끔",
+  "only": "PC14",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (4.7 s)   FAILED: ['PC14']",
+  "fails": [
+   {
+    "cid": "PC14",
+    "why": "({'rc': 0, 'cause': None, 'end': {'confirmed': True, 'left_after_exit': 1, 'killed': 1}, 'late': False}, {'unread': None, 'zlive': [900002], 'zdead': [], 'member': [900005], 'old_since': [], 'other_uid_nonroot': None, 'same_uid_nonroot': None, 'pid1': []})"
+   }
+  ],
+  "seconds": 5.1
+ },
+ {
+  "id": "P07e",
+  "guard": "PC5-07 그룹 원 — pid 1 셈 밖 끔",
+  "only": "PC14,PC05,GR",
+  "killed": true,
+  "summary": "test_rint_r_chain: 14/16 PASS (39.1 s)   FAILED: ['PC05', 'PC14']",
+  "fails": [
+   {
+    "cid": "PC05",
+    "why": "{'rc': 3, 'end_after_recover': False, 'alive_after': [13558], 'chain_out': '{\"rc\": 0, \"cause\": null, \"confirmed\": true, \"by\": \"chain\"}', 'rc2': 3, 'rc3': 3, 'end3': None, 'er': {'by': 'chain', 'cause': None, 'confirmed': True, 'ended_utc': '2026-11-02T05:46:30Z', 'killed': 0, 'left': [], 'left_after_exit': 0, 'name': 'L01_floor', 'rc': 0, 'schema': 'rint-r-group-v1', 'signal': None, 'token': '9625"
+   },
+   {
+    "cid": "PC14",
+    "why": "({'rc': 0, 'cause': None, 'end': {'confirmed': True, 'left_after_exit': 1, 'killed': 1}, 'late': False}, {'unread': None, 'zlive': [900002], 'zdead': [], 'member': [900005], 'old_since': [], 'other_uid_nonroot': [], 'same_uid_nonroot': None, 'pid1': None})"
+   }
+  ],
+  "seconds": 39.5
+ },
+ {
+  "id": "P08a",
+  "guard": "PC5-08 덧붙임 — 실패 뒤 되돌림 끔",
+  "only": "PC15",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (4.2 s)   FAILED: ['PC15']",
+  "fails": [
+   {
+    "cid": "PC15",
+    "why": "{'a': (3, False, False, 3, None), 'b': (['ok', 'stop'], 1, True, ['ATTEMPT_LEDGER_MISMATCH']), 'c': (3, False, 0)}"
+   }
+  ],
+  "seconds": 4.6
+ },
+ {
+  "id": "P08b",
+  "guard": "PC5-08 덧붙임 — 배타 잠금 끔",
+  "only": "PC15",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.1 s)   FAILED: ['PC15']",
+  "fails": [
+   {
+    "cid": "PC15",
+    "why": "{'a': (3, True, True, 0, 1), 'b': (['stop', 'stop'], 0, True, ['ATTEMPT_LEDGER_MISMATCH', 'ATTEMPT_LEDGER_MISMATCH']), 'c': (3, False, 0)}"
+   }
+  ],
+  "seconds": 1.5
+ },
+ {
+  "id": "P08c",
+  "guard": "PC5-08 --init — git 실패 뒤 되돌림 끔",
+  "only": "PC15",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (4.3 s)   FAILED: ['PC15']",
+  "fails": [
+   {
+    "cid": "PC15",
+    "why": "{'a': (3, True, True, 0, 1), 'b': (['ok', 'stop'], 1, True, ['ATTEMPT_LEDGER_MISMATCH']), 'c': (3, True, 3)}"
+   }
+  ],
+  "seconds": 4.7
+ },
+ {
+  "id": "P10a",
+  "guard": "PC5-10 다시 판정 — 다른 대상 시도 폴더 너그러움 끔 (옛)",
+  "only": "PC16",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (7.5 s)   FAILED: ['PC16']",
+  "fails": [
+   {
+    "cid": "PC16",
+    "why": "(0, 0, 3, 1, \"n_law', 'interval_mScm', 'ladders', 'main_R0_only', 'origin', 'p', 'ratio_dbe_sbe', 'reference', 's', 'sigma_mid_mScm', 'state', 'sv_counterfactual', 'sv_local_dissipation', 'variants'] (값 = 봉인) · 다른 환경 칸 [] — 원 판정을 덮지 않는다 · 유리한 쪽을 고르지 않는다\\n\", 1, \"e', 'reference', 's', 'sigma_mid_mScm', 'state', 'sv_counterfactual', 'sv_local_dissipation', 'variants'] (값 = 봉인) · 다른 환경 칸 [] — 원 판정을 덮지"
+   }
+  ],
+  "seconds": 7.9
+ },
+ {
+  "id": "P10b",
+  "guard": "PC5-10 다시 판정 — 같은 대상 뒤 시도도 너그럽게",
+  "only": "PC16",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (7.5 s)   FAILED: ['PC16']",
+  "fails": [
+   {
+    "cid": "PC16",
+    "why": "(0, 0, 3, 0, 'REVERIFY_SAME — 판정 JSON · 결과 JSON 바이트 같음 (3 입력 · 판정 PASS_INFORMATIVE)\\n', 0, 'REVERIFY_SAME — 판정 JSON · 결과 JSON 바이트 같음 (3 입력 · 판정 PASS_INFORMATIVE)\\n')"
+   }
+  ],
+  "seconds": 7.9
+ },
+ {
+  "id": "X09",
+  "guard": "결과 줄 꼴 — rejected 인데 결과 뒤 · 재실행 자격 검사 끔",
+  "only": "PC12",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.4 s)   FAILED: ['PC12']",
+  "fails": [
+   {
+    "cid": "PC12",
+    "why": "{'post': (0, False, False, False), 'post_ok': (0, False, False, False), 'pre_ok': (3, True, False, True), 'fine': (0, False, False, False)}"
+   }
+  ],
+  "seconds": 1.8
+ },
+ {
+  "id": "X18",
+  "guard": "recover --ledger — 거부 기록 (rejected.json) 폴더 = rejected 결과 줄 끔",
+  "only": "PC13",
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.3 s)   FAILED: ['PC13']",
+  "fails": [
+   {
+    "cid": "PC13",
+    "why": "(3, True, None, 0, 'recover — 그룹 기록 0 개 정리 · 미확인 0\\n  recover attempt_2: 결과 줄 interrupted · 결과 pre · 원인 parent_dead · 재실행 자격 False\\n', {'by': 'recover', 'cause': 'parent_dead', 'folder': 'attempt_2', 'folder_sha256': '0d9f3be5aab64ab31c22c4ffa4c47f6f931c2902ddf0f819b371a4326f4869a8', 'kind': 'result', 'n': 2, 'resume_ok': False, 'side': 'pre', 'status': 'interrupted', 'stop': None, 'utc': '2026-11"
+   }
+  ],
+  "seconds": 1.7
+ },
+ {
+  "id": "M5",
+  "guard": "PC5-08 ledger_now 공유 잠금 끔",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (200.7 s)",
+  "fails": [],
+  "seconds": 201.1
+ },
+ {
+  "id": "M6",
+  "guard": "PC5-08 ledger_append — 커밋이 됐는데 git 실패면 그 커밋 (→ 늘 되돌림 · 다시 올림)",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (195.3 s)",
+  "fails": [],
+  "seconds": 195.8
+ },
+ {
+  "id": "M7",
+  "guard": "PC5-08 _ledger_rollback — 색인 git reset 뺌",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (219.3 s)",
+  "fails": [],
+  "seconds": 219.9
+ },
+ {
+  "id": "M8",
+  "guard": "PC5-10 다시 판정 keep — 합친 예측의 단위 · 점 대상 뺌",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (210.6 s)",
+  "fails": [],
+  "seconds": 211.1
+ },
+ {
+  "id": "M9",
+  "guard": "PC5-01 재실행 풀기 전 다시 셈 = 원 시도만 (앞 재실행 뺌)",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (198.7 s)",
+  "fails": [],
+  "seconds": 199.2
+ },
+ {
+  "id": "M10a",
+  "guard": "PC5-07 run_in_group 이 GROUP_SINCE 를 넣지 않음 (since 늘 None)",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (201.8 s)",
+  "fails": [],
+  "seconds": 202.2
+ },
+ {
+  "id": "M10b",
+  "guard": "PC5-07 recover_group 이 GROUP_SINCE 를 넣지 않음 (since 늘 None)",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (193.0 s)",
+  "fails": [],
+  "seconds": 193.6
+ },
+ {
+  "id": "M15",
+  "guard": "PC5-06 ② 사슬 예외 — 요약 · 결과 줄 없이 다시 올림 (예측 단계 · P06c 의 예측 쪽)",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (194.7 s)",
+  "fails": [],
+  "seconds": 195.3
+ },
+ {
+  "id": "M16",
+  "guard": "대조 (C2b 가드) — run_in_group 끝 기록 확인 칸을 늘 True (남은 표지 · 못 읽음 무시 · 잡혀야 정상)",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": true,
+  "summary": "test_rint_r_chain: 89/94 PASS (209.9 s)   FAILED: ['GR10', 'GR11', 'AL13', 'AL13b', 'RS02']",
+  "fails": [
+   {
+    "cid": "GR10",
+    "why": "(0, None, {'by': 'chain', 'cause': None, 'confirmed': True, 'ended_utc': '2026-11-02T06:17:35Z', 'killed': 1, 'left': [999997], 'left_after_exit': 1, 'name': 'L01_floor', 'rc': 0, 'schema': 'rint-r-group-v1', 'signal': None, 'token': '929b2f6f58d10cf9bc03befbbdd15cc1'})"
+   },
+   {
+    "cid": "GR11",
+    "why": "(0, None, {'by': 'chain', 'cause': None, 'confirmed': True, 'ended_utc': '2026-11-02T06:17:38Z', 'killed': 0, 'left': None, 'left_after_exit': 0, 'name': 'L01_floor', 'rc': 0, 'schema': 'rint-r-group-v1', 'signal': None, 'token': '1ae2b8c1c6b8bfcb124aba83fff7c804'}, 3, {'by': 'recover', 'cause': 'parent_dead', 'confirmed': False, 'ended_utc': '2026-11-02T06:17:39Z', 'host': {'boot_id': 'd837a159-8"
+   },
+   {
+    "cid": "AL13",
+    "why": "(None, {'by': 'chain', 'cause': None, 'folder': 'attempt_1', 'folder_sha256': '4b7fafc7ec6b36e96e116999e59f21f5ab56c351831f21ace3949aecf4ee1f09', 'kind': 'result', 'n': 1, 'resume_ok': False, 'side': 'post', 'status': 'completed', 'stop': None, 'utc': '2026-11-02T06:18:03Z'}, 3, '를 거치지 않고 돈 흔적 · Q9 §3-4 · R4-03) — ladder:P0 은 이미 채택 시도 attempt_1 가 있다 (결과 뒤 멈춤 · 완주 = 같은 등록의 재시도가 아니다 · 재실행은 --resume)"
+   },
+   {
+    "cid": "AL13b",
+    "why": "(None, 0, 'recover — 그룹 기록 0 개 정리 · 미확인 0\\n', {'by': 'chain', 'cause': None, 'folder': 'attempt_1', 'folder_sha256': '4d9fc61b6c70c6947cacf6cca831f94fabbb8d7eb405c5a8b77ca5a1a988fc14', 'kind': 'result', 'n': 1, 'resume_ok': False, 'side': 'post', 'status': 'completed', 'stop': None, 'utc': '2026-11-02T06:18:12Z'})"
+   },
+   {
+    "cid": "RS02",
+    "why": "(None, (0, 'recover — 그룹 기록 0 개 정리 · 미확인 0\\n'), None, {}, None, {})"
+   }
+  ],
+  "seconds": 210.5
+ },
+ {
+  "id": "M1",
+  "guard": "PC5-01 원장 역사 — 숨긴 커밋 셈에서 --full-history 뺌 (기본 역사 단순화 = -s ours 의 둘째 부모를 버린다)",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": true,
+  "summary": "test_rint_r_chain: 92/94 PASS (179.9 s)   FAILED: ['AL12d', 'PC02']",
+  "fails": [
+   {
+    "cid": "AL12d",
+    "why": "(0, 0, 'INPUT_MISSING', 'ATTEMPT_ORDER_MISMATCH', 'attempt_2: 시작 커밋의 원장이 원장의 바이트 접두가 아니다 (R4-07)', 1, \"Y_DIFF — 다시 계산한 판정이 저장본과 다르다 (공개 칸 ['ledger', 'reasons', 'stop'] · 결과 같음) · 멈춤 ATTEMPT_LEDGER_MISMATCH\\n  원 판정 NOT_COMPUTED (calib) → 다시 계산 NOT_COMPUTED (calib) · 등급 다름 True · 다른 결과 칸 [] (값 = 봉인) · 다른 환경 칸 [] — 원 판정을 덮지 않는다 · 유리한 쪽을 고르지 않는다\\n\")"
+   },
+   {
+    "cid": "PC02",
+    "why": "(None, None, True, 'INPUT_MISSING', 'INPUT_MISSING', '주 사다리 P0 · P1 둘이 다 있어야 한다')"
+   }
+  ],
+  "seconds": 180.7
+ },
+ {
+  "id": "M2a",
+  "guard": "PC5-01 다시 셈 칸에서 status 뺌",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (193.2 s)",
+  "fails": [],
+  "seconds": 193.7
+ },
+ {
+  "id": "M2b",
+  "guard": "PC5-01 다시 셈 칸에서 stop 뺌",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (193.1 s)",
+  "fails": [],
+  "seconds": 193.5
+ },
+ {
+  "id": "M2c",
+  "guard": "PC5-01 다시 셈 칸에서 side 뺌",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (183.5 s)",
+  "fails": [],
+  "seconds": 183.9
+ },
+ {
+  "id": "M2d",
+  "guard": "PC5-01 다시 셈 칸에서 cause 뺌",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": true,
+  "summary": "test_rint_r_chain: 93/94 PASS (205.9 s)   FAILED: ['PC01i']",
+  "fails": [
+   {
+    "cid": "PC01i",
+    "why": "(2, 'completed', None, None, 'None', 24, 0)"
+   }
+  ],
+  "seconds": 206.4
+ },
+ {
+  "id": "M2e",
+  "guard": "PC5-01 다시 셈 칸에서 resume_ok 뺌",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (203.0 s)",
+  "fails": [],
+  "seconds": 203.5
+ },
+ {
+  "id": "M3",
+  "guard": "PC5-03 chain_parent_alive — 부른 프로세스 자신 = False → None (산 것으로)",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": true,
+  "summary": "test_rint_r_chain: 92/94 PASS (208.3 s)   FAILED: ['AL13', 'RS02']",
+  "fails": [
+   {
+    "cid": "AL13",
+    "why": "('GROUP_UNCONFIRMED', None, 3, ' 대상 앞 결과 줄이 없음 · Q9 §3-5 개정 3 · R4-07) — 같은 대상 (ladder:P0) 앞 항목 1 의 결과 줄이 아직 없다 (차례로만 · 그룹 미확인 · 시도 중 = recover · 끝 먼저)\\n', 3, ' 사슬이 그룹을 정리한다 · 건드리지 않음 (끝 기록 · 결과 줄 없음 · 사슬이 끝난 뒤 다시 recover)\\nrecover — 그룹 기록 1 개 정리 · 미확인 1 (다음 시도 전에 사람이 본다)\\n  recover attempt_1: 그룹 attempt_1/L01_floor 종료 미확인 — 결과 줄을 쓰지 않는다 (미확인 · 다음 시도 채택을 막는다)\\n', {}, 3, ' 대상 앞 결과 줄이 없음 · Q9 §3-5 개"
+   },
+   {
+    "cid": "RS02",
+    "why": "('GROUP_UNCONFIRMED', (3, '  recover attempt_1/L02_ceiling: 미확인 · 사슬 부모 (pid 13219) 가 살았는지 확인할 수 없다 (시작 기록 칸 · /proc) — 그 사슬이 그룹을 정리한다 · 건드리지 않음 (끝 기록 · 결과 줄 없음 · 사슬이 끝난 뒤 다시 recover)\\nrecover — 그룹 기록 1 개 정리 · 미확인 1 (다음 시도 전에 사람이 본다)\\n  recover attempt_1: 그룹 attempt_1/L02_ceiling 종료 미확인 — 결과 줄을 쓰지 않는다 (미확인 · 다음 시도 채택을 막는다)\\n'), None, {}, None, {})"
+   }
+  ],
+  "seconds": 208.7
+ },
+ {
+  "id": "M4",
+  "guard": "PC5-03 run_in_group 시작 기록 chain_start = None (pid 다시 쓰임을 가를 수 없음)",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (207.9 s)",
+  "fails": [],
+  "seconds": 208.4
+ },
+ {
+  "id": "M11",
+  "guard": "PC5-07 group_members — stat 못 읽음 (OSError) = 확인 불가 → 건너뜀",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (199.7 s)",
+  "fails": [],
+  "seconds": 200.2
+ },
+ {
+  "id": "M12",
+  "guard": "PC5-03 chain_parent_alive — chain_pid 칸 없음 · 꼴 틀림 = 죽은 것으로 (옛 기록 · 고정물)",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": false,
+  "summary": "test_rint_r_chain: 94/94 PASS (201.8 s)",
+  "fails": [],
+  "seconds": 202.2
+ },
+ {
+  "id": "M13",
+  "guard": "PC5-06 orphan_cause — 그룹 끝 기록 원인 exception (기다림 중 사슬 예외) → parent_dead",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": true,
+  "summary": "test_rint_r_chain: 93/94 PASS (186.2 s)   FAILED: ['PC09']",
+  "fails": [
+   {
+    "cid": "PC09",
+    "why": "{'chain_exception': (('interrupted', 'parent_dead', 'post', True), ('interrupted', 'chain_exception', 'post', False))}"
+   }
+  ],
+  "seconds": 186.7
+ },
+ {
+  "id": "M14",
+  "guard": "PC5-06 stop_cause — 멈춤 CHAIN_EXCEPTION 가지 뺌 (→ check · gate)",
+  "only": "PC,AL,RS,UM,GR",
+  "killed": true,
+  "summary": "test_rint_r_chain: 93/94 PASS (194.0 s)   FAILED: ['PC10']",
+  "fails": [
+   {
+    "cid": "PC10",
+    "why": "(\"KeyError('시험: 팔 읽기 중 사슬 결함 (Stop 아님)')\", 'STOPPED', {'cause': \"KeyError: '시험: 팔 읽기 중 사슬 결함 (Stop 아님)'\", 'code': 'CHAIN_EXCEPTION', 'reason': None, 'run': None, 'what': '사슬 자신의 예외 (Stop 아님 · 원장 시도 꼴 단계 안 · ★ 10-28 밤 PC5-06 ② — 요약 · 결과 줄 (원인 chain_exception · 재실행 불가) 을 쓴 뒤 예외를 다시 올린다)'}, {'by': 'chain', 'cause': 'check', 'folder': 'attempt_1', 'folder_sha256': '24f5029508bff7fb9821483e0c53f949a687"
+   }
+  ],
+  "seconds": 194.5
+ }
+]

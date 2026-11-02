@@ -1,0 +1,35 @@
+# 사전 공격 6 회차 마무리 — 이 회차가 돌린 묶음 시험 (원 로그 = 스크래치 · 리포에는 끝 줄 · sha256 만)
+# Python 3.11.17 · numpy 2.4.6 · scipy 1.17.1 · BLAS 스레드 1 · nice 10 · TMPDIR = 스크래치 · 메인 세션 시험과 같은 때 (부하 3–4)
+
+## scripts/test_rint_first_result.py (작업 트리 = d6e8d1b44)
+원 로그 sha256 55c891bb1f0f7eadd35c5ac38a973b01fede2900a87a40d2f47bb9998f264326 · 12 줄
+test_rint_first_result: 9/9 PASS
+rc=0 elapsed=0s cmd=python3 scripts/test_rint_first_result.py
+
+## webapp/test_rint_explainer_page.py
+원 로그 sha256 f2242082f90b15155f9e3dbe6399e006591361a947b052c8f0f3917475582349 · 108 줄
+== test_rint_explainer_page: 91/91 PASS
+rc=0 elapsed=1s cmd=python3 webapp/test_rint_explainer_page.py
+
+## scripts/test_ca_s0_census.py
+원 로그 sha256 5b70f51030af62bcca7574d29b28f1302dda4267a111d66362650eb22438f77e · 180 줄
+167 PASS · 0 FAIL
+rc=0 elapsed=22s cmd=python3 scripts/test_ca_s0_census.py
+
+## scripts/test_ca_ext_runner.py
+원 로그 sha256 02e35af78b804a6d7b4f2261c2bc4fbc14d7f543b2067478ec108099cf66b425 · 185 줄
+151 PASS · 0 FAIL
+rc=0 elapsed=131s cmd=python3 scripts/test_ca_ext_runner.py
+
+## 고치기 전 판 b9fd47d7b 사본 · scripts/test_rint_r_chain.py --only PC,GR08,AL12,RS06,K01
+원 로그 sha256 25b106692de1487325b2beeef114e6cad01e379d8a97a5743d07f1822ea5dcca · 29 줄
+test_rint_r_chain: 7/26 PASS (32.1 s)   FAILED: ['GR08', 'AL12d', 'K01', 'PC01', 'PC02', 'PC03', 'PC04', 'PC05', 'PC06', 'PC07', 'PC08', 'PC09', 'PC10', 'PC11', 'PC14', 'PC15', 'PC16', 'PC18', 'PC20']
+rc=1 elapsed=32s cmd=python3 scripts/test_rint_r_chain.py --only PC,GR08,AL12,RS06,K01
+FAIL 줄 19: GR08 | AL12d | K01 | PC01 | PC02 | PC03 | PC04 | PC05 | PC06 | PC07 | PC08 | PC09 | PC10 | PC11 | PC14 | PC15 | PC16 | PC18 | PC20
+
+## B 커밋 판 6bb3c064f 사본 · scripts/test_rint_r_chain.py --only PC,GR,AL,RS,EP,K01,UM19
+원 로그 sha256 98706e5746f9af55c85c2a54611688992687ffeb5377482dcf52d78cb494d658 · 87 줄
+test_rint_r_chain: 82/84 PASS (135.4 s)   FAILED: ['K01', 'PC20']
+rc=1 elapsed=136s cmd=python3 scripts/test_rint_r_chain.py --only PC,GR,AL,RS,EP,K01,UM19
+FAIL 줄 2: K01 | PC20
+
