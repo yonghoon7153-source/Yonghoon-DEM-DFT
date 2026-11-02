@@ -3692,6 +3692,21 @@ def chain_end_failed(er):
     return isinstance(ce, dict) and ce.get('cause') is None and runner_rc_failed(ce.get('rc'))
 
 
+#: ★ 11-02 PC7-03 (사전 공격 7 회차 · 1저자 11-02 "권고대로") — 사슬이 쓴 그룹 끝 기록의 원인 칸 하나로 결과 줄 원인이 정해지는 행 (낱말 규칙 앞) —
+#:   by chain 끝 기록 (`orphan_cause` by chain 가지) 과 recover 끝 기록이 품은 사슬 끝 기록 요약 (`chain_end`) 이 **같은 표** 를 읽는다.  exception (기다림
+#:   중 사슬 예외 · KeyboardInterrupt = 전경 Ctrl-C 포함) = chain_exception (재실행 불가).  옛 = recover 길에서만 chain_end 원인 exception 을 낱말 · 기본
+#:   parent_dead 로 (그룹 미확인 여부만으로 재실행 자격이 갈렸다 · PC7-03).  그 밖 chain_end 행 (원인 None · timeout · signal · signal_after · 모르는 원인)
+#:   = 그대로 (recover 길 = 낱말 · 원인 None + 실패 rc 면 기본 runner_rc · 아니면 parent_dead — by chain 표를 그대로 쓰면 timeout · signal · rc 0 행도
+#:   바뀐다 = 결정 밖 · 한정).
+CHAIN_END_FIXED = {'exception': 'chain_exception'}
+
+
+def chain_end_fixed(er):
+    """recover 끝 기록 (by recover) 이 품은 chain_end 의 원인이 `CHAIN_END_FIXED` 행이면 그 원인 · 아니면 None (★ 11-02 PC7-03)."""
+    ce = er.get('chain_end') if isinstance(er, dict) else None
+    return CHAIN_END_FIXED.get(ce.get('cause')) if isinstance(ce, dict) and isinstance(ce.get('cause'), str) else None
+
+
 def run_log_text(base, run):
     """<base>/logs/<run>.log 글 — 런 이름 없음 · 파일 없음 · 못 읽음 = '' (요약 있는 길 · 그 런 로그가 없으면 낱말 없음)."""
     lp = Path(base) / 'logs' / f'{run}.log' if run else None
@@ -3742,7 +3757,8 @@ def orphan_cause(folder):
         ★ 11-02 PC6-02 그 밖 CUDA 오류 표지 = runner_rc · `words_keep`) · exception (기다림 중 사슬 예외) = chain_exception
       · by recover (그 런 도중 사슬 부모 사망) = 낱말 (없음 = parent_dead) · ★ 11-02 PC6-13 — 그 끝 기록이 사슬의 옛 미확인 끝 기록 요약 (`chain_end` ·
         `recover_group` · 사슬이 끝 기록을 쓴 뒤 · 단계 요약 전에 죽은 창) 을 품고 러너 스스로의 실패 rc (`chain_end_failed`) 가 있으면 낱말 (없음 = runner_rc ·
-        요약 있는 길 `stop_cause` 의 그룹 미확인 + 러너 rc 와 같은 규칙) · chain_end 없음 (사슬이 끝 기록 전에 죽음 = 러너 rc 를 모름) = 옛 그대로
+        요약 있는 길 `stop_cause` 의 그룹 미확인 + 러너 rc 와 같은 규칙) · ★ 11-02 PC7-03 — chain_end 원인 exception (기다림 중 사슬 예외 · 그룹 미확인) =
+        by chain 길과 같은 표 (`CHAIN_END_FIXED` · chain_exception · 낱말 앞) · chain_end 없음 (사슬이 끝 기록 전에 죽음 = 러너 rc 를 모름) = 옛 그대로
     런 여럿 = 재실행 불가 원인이 하나라도 있으면 그것 (시작 차례 첫) · 아니면 마지막 · 끝나지 않은 런이 없으면 parent_dead (런 사이 사망) · 그룹 기록이 하나도
     없음 · 기록 · 그 런 로그를 못 읽음 · 모르는 꼴 = 읽음 False (재실행 자격 없음 · 보수)."""
     folder = Path(folder)
@@ -3772,15 +3788,15 @@ def orphan_cause(folder):
         except OSError:
             txt, ok = '', False
         if by == 'recover':
-            c = words_cause(txt, 'runner_rc' if chain_end_failed(er) else 'parent_dead')   # ★ 11-02 PC6-13 — 사슬 끝 기록이 남긴 러너 rc
+            c = chain_end_fixed(er) or words_cause(txt, 'runner_rc' if chain_end_failed(er) else 'parent_dead')   # ★ 11-02 PC7-03 · PC6-13
         elif by != 'chain':
             c, ok = 'parent_dead', False
         elif gc is None:
             c = words_cause(txt, 'runner_rc')
         elif gc in ('timeout', 'signal', 'signal_after'):
             c = words_keep(txt, 'timeout' if gc == 'timeout' else 'signal')   # ★ 11-02 PC6-02 — 요약 있는 길과 같은 함수 (그 밖 CUDA 오류 포함)
-        elif gc == 'exception':
-            c = 'chain_exception'
+        elif isinstance(gc, str) and gc in CHAIN_END_FIXED:
+            c = CHAIN_END_FIXED[gc]                           # ★ 11-02 PC7-03 — recover 의 chain_end 와 같은 표 (exception = chain_exception)
         else:
             c, ok = 'parent_dead', False
         causes.append(c)
