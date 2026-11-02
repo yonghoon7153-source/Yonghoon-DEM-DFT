@@ -3,6 +3,7 @@
 
     python3 tools/reports/gpu_runtime_tally.py --since 2026-09-01 --until 2026-10-01            # 기본 루트 /data/work/runs · /root/work/runs
     python3 tools/reports/gpu_runtime_tally.py --roots /data/work/runs --since … --until … --keys 3
+    python3 tools/reports/gpu_runtime_tally.py --since 2026-10-01 --until 2026-11-01 --tracks tools/reports/tracks_2026_10.json
     python3 tools/reports/gpu_runtime_tally.py --selftest
 
 읽는 것 (파일 안의 시간만 쓴다 — 추측하지 않는다):
@@ -16,6 +17,8 @@
   · UMA 이완 (relax_uma_d3): relax_meta.json 의 wall_s · calculator.device
 기간: 잡의 [시작, 끝] 이 [since, until) 와 겹치면 센다. 시간 합은 기간 안으로 자른 값이다. 'GPU 점유' 는 GPU 잡 구간의 합집합이다.
 트랙: 루트 바로 아래 폴더 이름을 TRACKS 정규식으로 나눈다 (못 맞추면 '기타' — 버리지 않고 목록에 남긴다).
+  기본 TRACKS 는 9 월 용도설명서 트랙이다 (9 월 결과지를 다시 내도 같게). 다른 달은 --tracks JSON ([[이름, 정규식], …] ·
+  위에서부터 처음 맞는 것) 으로 바꿔 끼운다 (2026-11-02 · 10 월판). 형식이 틀리거나 정규식이 안 되면 시작하지 않는다.
 
 ⛔ 못 하는 것: 스케줄러 회계(sacct)가 아니다 — 파일에 박힌 시간이다 · 지운 출력은 못 센다 · 복사로 mtime 이 바뀐 파일은 기간이 틀릴 수 있다 ·
   같은 GPU 에 동시에 돈 잡은 잡-시간이 겹쳐 더해진다 (그래서 점유를 합집합으로 따로 낸다) · 랭크·스레드 수를 모르면 1 로 세고 그 수를 밝힌다 ·
@@ -232,6 +235,28 @@ def track_of(top):
         if re.search(pat, top):
             return name
     return OTHER
+
+
+def load_tracks(path):
+    """--tracks JSON → [(이름, 정규식)]. 형식 · 정규식 · 이름 중복 · '기타' 이름과 겹침을 검사한다 (틀리면 ValueError)."""
+    raw = json.load(open(path, encoding="utf-8"))
+    if isinstance(raw, dict):
+        raw = raw.get("tracks")
+    if not isinstance(raw, list) or not raw:
+        raise ValueError(f"{path}: 비어 있지 않은 [[이름, 정규식], …] 목록이어야 한다")
+    out, seen = [], set()
+    for i, t in enumerate(raw):
+        if not (isinstance(t, (list, tuple)) and len(t) == 2 and all(isinstance(x, str) and x for x in t)):
+            raise ValueError(f"{path}: {i} 번째 항목이 [이름, 정규식] 꼴이 아니다 — {t!r}")
+        name, pat = t
+        if name in seen or name == OTHER:
+            raise ValueError(f"{path}: 트랙 이름 '{name}' 이 겹친다 (기타 이름 '{OTHER}' 도 못 쓴다)")
+        try:
+            re.compile(pat)
+        except re.error as e:
+            raise ValueError(f"{path}: '{name}' 의 정규식이 틀렸다 — {e}")
+        seen.add(name); out.append((name, pat))
+    return out
 
 
 def union_hours(intervals):
@@ -484,6 +509,31 @@ def _selftest():
         ck("메모리 프로브 (추정 줄만 · SCF 반복 0 · 끝 줄 없음) = probe", j3.get("wad_probe/V5_far/probe.out", {}).get("status") == "probe", j3.get("wad_probe/V5_far/probe.out"))
         ck("⛔음성 SCF 반복이 있으면 probe 가 아니라 running/cut", j3.get("wad_probe/V5_cut/pw.out", {}).get("status") == "running/cut", j3.get("wad_probe/V5_cut/pw.out"))
         ck("sei_* · li2s_layer 는 이름 붙은 묶음 (기타 아님)", track_of("sei_control").startswith("SEI") and track_of("g1_li2s_layer1").startswith("LPSCl@Li2S") and track_of("misc") == OTHER)
+    # ── --tracks (2026-11-02 · 10 월판) — 바꿔 끼운 지도가 실제로 쓰이는가 · 틀린 지도는 거부하는가 ─────────
+    import tempfile
+    global TRACKS
+    keep = TRACKS
+    with tempfile.TemporaryDirectory() as td:
+        good = os.path.join(td, "t.json")
+        json.dump([["① glass", "^(lpscl_glass|li2s_k222)"], ["③ SEI", "^(sei_|li2s_neb|li2s444)"]], open(good, "w"))
+        try:
+            TRACKS = load_tracks(good)
+            ck("--tracks: 바꾼 지도로 나눈다 (li2s_k222 → ① · li2s444 → ③ · elastic → 기타)",
+               track_of("li2s_k222_gabia_2026_10_23") == "① glass" and track_of("li2s444_memprobe_1027") == "③ SEI"
+               and track_of("elastic_modelc_2x") == OTHER)
+            s3 = summarize([], 0, 1)
+            ck("--tracks: 요약의 트랙 목록도 바꾼 지도를 따른다", list(s3["tracks"]) == ["① glass", "③ SEI", OTHER], list(s3["tracks"]))
+        finally:
+            TRACKS = keep
+        ck("--tracks 를 안 주면 9 월 기본 지도 그대로 (li2s_layer → LPSCl@Li2S)", track_of("li2s_layer1").startswith("LPSCl@Li2S"))
+        for nm, body in (("bad_re", [["x", "("]]), ("bad_shape", [["only-name"]]), ("dup", [["a", "^a"], ["a", "^b"]]),
+                         ("other", [[OTHER, "^z"]]), ("empty", [])):
+            bp = os.path.join(td, nm + ".json"); json.dump(body, open(bp, "w"))
+            try:
+                load_tracks(bp); refused = False
+            except ValueError:
+                refused = True
+            ck(f"⛔음성 --tracks {nm} 는 거부", refused)
     print(f"{'✅' if bad == 0 else '⛔'} gpu_runtime_tally selftest {ok}/{ok + bad} 통과")
     return 0 if bad == 0 else 1
 
@@ -498,9 +548,16 @@ def main():
     ap.add_argument("--title", default="GABIA GPU SERVER (RTX A6000)")
     ap.add_argument("--json", help="잡 목록을 JSON 으로도 저장")
     ap.add_argument("--all-owners", action="store_true", help="파일 주인이 달라도(다른 기계에서 옮겨 온 산출물) 센다 — 기본은 뺀다")
+    ap.add_argument("--tracks", help="트랙 지도 JSON ([[이름, 정규식], …]) — 없으면 9 월 기본 TRACKS")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
+    if a.tracks:
+        global TRACKS
+        try:
+            TRACKS = load_tracks(a.tracks)
+        except (OSError, ValueError) as e:
+            ap.error(f"--tracks: {e}")
     if not (a.since and a.until):
         ap.error("--since · --until 이 필요하다")
     since, until = _day(a.since), _day(a.until)
