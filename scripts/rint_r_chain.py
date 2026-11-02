@@ -3348,8 +3348,9 @@ def attempt_reject(repo, raw, n, where, stop, head):
 
 def attempt_open(a, stage):
     """★ 10-27 묶음 C1b — 시도 꼴 입구 (--ledger · --attempt) → None (시도 꼴 아님) | int (rc · 화면만 거부 또는 거부 기록을 쓴 거부) | Attempt.
-    화면만 (원장 · 폴더 무변경): 원장 꼴 · 저장소 · 커밋 안 한 고침 · 원장에 없는 번호 · 이미 결과 줄이 있는 번호 (Q9 R4-13).  그 밖 풀기 전 대조 실패 =
-    거부 기록 + 결과 줄 (결과 전 · 다음 시도 가능)."""
+    화면만 (원장 · 폴더 무변경): 원장 꼴 · 저장소 · 커밋 안 한 고침 · 원장에 없는 번호 · 이미 결과 줄이 있는 번호 (Q9 R4-13) · ★ 11-02 PC6-09 이 항목의 시도
+    폴더 (attempt.json) 가 이미 있는데 결과 줄이 없음 (사슬 부모 사망 · 도는 중 = --stage recover 먼저).  그 밖 풀기 전 대조 실패 = 거부 기록 + 결과 줄
+    (결과 전 · 다음 시도 가능)."""
     if a.ledger is None and a.attempt is None:
         return None
     if a.ledger is None or a.attempt is None or getattr(a, 'dry_run', False):
@@ -3377,6 +3378,22 @@ def attempt_open(a, stage):
         base.mkdir(parents=True, exist_ok=True)
         folder.mkdir()
     except FileExistsError:
+        #  ★ 11-02 PC6-09 (사전 공격 6 회차 마무리 R6) — 이미 있는 폴더가 **이 항목의** 시도 폴더 (attempt.json = 이 번호 · 대상 · 기계 · 재실행 원 시도 ·
+        #    시작 커밋 = 원장 조상) 인데 결과 줄이 없음 = 사슬 부모 사망 · 아직 도는 시도 → 화면만 거부 (원장 · 폴더 무변경 · recover 먼저 · Codex ② 결과 줄 =
+        #    그룹 종료 확인 뒤 · 옛 = 남의 폴더처럼 옆 거부 기록 + rejected · 결과 전 결과 줄 → 결과 뒤 시도에 결과 전 줄 · 고아 런과 새 시도 동시) · 옆 거부
+        #    기록 = 남의 폴더 (attempt.json 없음 · 다른 번호 · 다른 대상 · 다른 원장 역사) 일 때만 (그대로 · AL07)
+        try:
+            own = read_attempt(folder)
+            mine = (own is not None and own['n'] == n and all(own[k] == e[k] for k in ('target', 'machine', 'resume_of'))
+                    and ledger_is_ancestor(repo, own['ledger_commit'], head))
+        except Stop as ex:
+            print_stop(ex)
+            return 3
+        if mine:
+            print_stop(Stop('ATTEMPT_LEDGER_MISMATCH', f'{folder} 는 이 항목 {n} 의 시도 폴더 (attempt.json · 시작 커밋 {own["ledger_commit"][:12]}) 인데 원장에 '
+                                                       f'결과 줄이 없다 — 사슬 부모 사망 · 아직 도는 시도: 같은 명령을 다시 치지 말고 --stage recover --out '
+                                                       f'{folder} --ledger {repo} 먼저 (원장 · 폴더 무변경 · ★ 11-02 PC6-09)'))
+            return 3
         return attempt_reject(repo, raw, n, base / f'attempt_{n}{REJECTED_SIDE}',
                               Stop('OUTDIR_NOT_EMPTY', f'{folder} 가 이미 있다 — 시도 폴더는 시도마다 새로'), head)
     except OSError as ex:
@@ -3760,6 +3777,32 @@ def attempt_close(att, s):
     return None
 
 
+def found_attempts_problem(st, found):
+    """★ 11-02 PC6-12 (사전 공격 6 회차 마무리 R10 · PC5-01 다시 셈의 범위) — 찾은 시도 폴더 전부 (입력 대상 밖 포함 · found {n: [경로]}) 의 attempt.json ↔
+    원장 항목 (st = 대조하는 커밋의 원장): 그 번호의 원장 항목이 있고 폴더에 꼴 맞는 attempt.json (`read_attempt`) 이 있으면 대상 · 기계 · 재실행 원 시도가 원장
+    항목과 같아야 → 사유 | None.  다름 = 원장 항목 줄 (대상) 을 바꾼 역사 고침 (끝 두 커밋 reset + 대상만 다른 항목 — 결과 본 시도를 입력 대상 밖으로 숨겨 새
+    시도를 채택 · PC5-01 다시 셈은 입력 대상 항목에만 돈다) · 다른 원장의 시도 폴더.  이 함수 몫 아님: attempt.json 없는 폴더 (남의 폴더 = 옆 거부 기록의 까닭 ·
+    입력 대상이면 `target_ledger_problem` 이 멈춘다) · 옆 거부 기록 파일 · 원장에 없는 번호 (부르는 쪽 규칙 — 판정 = 멈춤 · 다시 판정 = PC5-10 · 합치기 = 멈춤).
+    항목 칸은 한 번 쓰면 바뀌지 않는다 (다시 판정의 옛 커밋 원장에서도 같다 — 시작 커밋 조상 대조는 입력 대상만 · 그대로).  한정: 찾는 범위 = 부르는 쪽이 훑은
+    바탕 (판정 = 입력의 부모 폴더 · --attempt-dirs · 합치기 = --merge 경로 · 합친 예측 = 사본 · 예측 입력 = 사다리의 부모 폴더) — 그 밖에 옮겨 둔 폴더와 원장
+    항목 고침을 함께 한 손은 못 본다 (Q-D 한정)."""
+    for k, ps in sorted(found.items()):
+        e = st['entries'].get(k)
+        if e is None:
+            continue
+        for p in ps:
+            a = read_attempt(p) if Path(p).is_dir() else None
+            if a is None:
+                continue
+            diff = [f for f in ('target', 'machine', 'resume_of') if a[f] != e[f]]
+            if a['n'] != k or diff:
+                got = ', '.join(f'{f} {a[f]!r}' for f in diff) or f'n {a["n"]}'
+                want = ', '.join(f'{f} {e[f]!r}' for f in diff) or f'n {k}'
+                return (f'{Path(p).name}: attempt.json ({got}) ≠ 원장 항목 {k} ({want}) — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 '
+                        f'다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)')
+    return None
+
+
 def ledger_inputs_check(dirs, repo, commit, st, want_prefix=None):
     """예측의 사다리 입력 (원장 시도) — 폴더마다 attempt.json · 이 원장의 시작 커밋 (조상) · 항목 · 결과 줄 · 폴더 요약 sha · 채택 (effective) 이어야 →
     {폴더: 번호} · 아니면 Stop ATTEMPT_LEDGER_MISMATCH (원장 판정의 대조 = `ledger_verdict_check`)."""
@@ -3787,6 +3830,9 @@ def ledger_inputs_check(dirs, repo, commit, st, want_prefix=None):
         if ad['effective'] != n:
             raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: {a["target"]} 의 채택 시도가 아니다 (채택 = attempt_{ad["effective"]})')
         out[str(Path(d).resolve())] = n
+    why = found_attempts_problem(st, _attempt_folders([Path(d).resolve().parent for d in dirs]))   # ★ 11-02 PC6-12 — 사다리 바탕의 다른 시도 폴더도
+    if why:
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', why)
     return out
 
 
@@ -3914,6 +3960,9 @@ def ledger_verdict_check(dirs, repo, attempt_dirs=(), commit=None):
         if commit != head and en is not None and en['target'] not in keep:
             continue
         raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장에 없는 시도 폴더 {[p.name for p in found[k]]} (항목 {k})')
+    why = found_attempts_problem(st, found)                 # ★ 11-02 PC6-12 — 입력 대상 밖 시도 폴더의 attempt.json 도 원장 항목과
+    if why:
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', why)
     pub = {'path': str(repo.resolve()), 'commit': commit, 'sha256': hashlib.sha256(raw).hexdigest(),
            'attempt_dirs': [str(Path(x).resolve()) for x in attempt_dirs], 'targets': {}}
     for target, (n_in, d_in) in sorted(want.items()):
@@ -3959,6 +4008,9 @@ def merged_ledger_check(d, s, repo, st, raw, commit):
         tp = target_parts(e['target']) if e else None
         if e is None or tp is None or tp[1] != variant or any(p.parent.name != target_dir(e['target']) for p in ps):
             raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{d.name}: 사본 {[str(p.relative_to(d)) for p in ps][:2]} ≠ 원장 항목 {k} (원장에 없는 · 다른 대상 · 다른 변이)')
+    why = found_attempts_problem(st, found)                 # ★ 11-02 PC6-12 — 사본의 attempt.json (대상 · 기계 · 재실행 원 시도) 도 원장 항목과
+    if why:
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{d.name}: {why}')
     want = merge_want(s)
     ex = mg.get('expansion')
     dsha = None
@@ -5684,6 +5736,9 @@ def stage_merge(a, contract):
             tp = target_parts(e['target'])
             if tp is None or tp[1] != a.variant:
                 raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{ps[0]}: 대상 {e["target"]} 는 이 합치기 (변이 {a.variant!r}) 의 단위 · 넘침 점이 아니다 (합칠 대상이 아님)')
+        why = found_attempts_problem(st, found)             # ★ 11-02 PC6-12 — 합칠 시도 폴더의 attempt.json 도 원장 항목과 (원장만 고친 대상 바꿈)
+        if why:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', why)
         out.mkdir(parents=True, exist_ok=True)
         deadline = time.time() + a.max_hours * 3600.0
         gsrc = RunnerGraphSource(a.runner, a.root, out / GRAPH_SRC_DIR, deadline=deadline)
