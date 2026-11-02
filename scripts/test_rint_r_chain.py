@@ -10759,6 +10759,151 @@ def t_PD02r():
     return out == want, out
 
 
+# ── ★ 11-02 사전 공격 6 회차 마무리 (PC6-09 · PC6-12 · 보고 preattack6/PREATTACK_C2_final.md · 탐침 final/probes/probe6f_real.py R6 · R10) ──
+@check('PD09', '★ 11-02 PC6-09 (사전 공격 6 회차 마무리 R6) — 사슬 부모 SIGKILL (표지 뒤 · 러너 그룹 삶) 뒤 recover 대신 같은 --attempt 명령을 다시 → rc 3 · '
+               '화면만 거부 (안내 = --stage recover) · 원장 무변경 (그 시도 결과 줄 없음) · 옆 거부 기록 없음 · 시도 폴더 요약 sha 그대로 (옛 = 옆 거부 기록 + '
+               'rejected · 결과 전 결과 줄 → 같은 대상 새 시도 열림 · 고아 런과 동시) → 같은 대상 --add = rc 3 ATTEMPT_ORDER_MISMATCH → recover --ledger = 결과 '
+               '줄 interrupted · 결과 뒤 (그룹 정리) → 같은 대상 새 --add = rc 3 ATTEMPT_AFTER_ADOPTED (남의 폴더 = attempt.json 없음 → 옆 거부 기록 그대로 = AL07)')
+def t_PD09():
+    import signal as _sig
+
+    def go():
+        d, _rc, _so = led_new('PD09')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        base = Path(TD) / 'runs' / 'PD09'
+        w = world('PD09', dict(PW, faults=[{'do': 'msg_sleep_after_mark', 'msg': '[p2] solving (PD09)', 's': 25.0, 'match': {'rj': 'inf'}}]))
+        pr = gr_spawn_chain('PD09', ladder_argv(base) + ['--ledger', str(d), '--attempt', str(n1)], w)
+        f1 = base / f'attempt_{n1}'
+        t_end, seen = time.time() + 30, False
+        while time.time() < t_end and not seen:
+            try:
+                seen = 'solving (PD09)' in (f1 / 'logs' / 'L01_floor.log').read_text(encoding='utf-8', errors='replace')
+            except OSError:
+                pass
+            time.sleep(0.05)
+        time.sleep(0.2)
+        os.kill(pr.pid, _sig.SIGKILL)
+        pr.wait()
+        side1, dg1, raw = RR.folder_side(f1), RR.folder_digest(f1), led_raw(d)
+        again = lad_att('PD09', world('PD09_again'), d, n1, base=base)
+        rerun = (again['rc'], led_raw(d) == raw, (base / f'attempt_{n1}{RR.REJECTED_SIDE}').exists(), RR.folder_digest(f1) == dg1,
+                 '--stage recover' in again['so'])
+        add2 = led_add(d, 'ladder:P0')
+        rc_rec, _so_rec = call(['--stage', 'recover', '--out', str(f1), '--ledger', str(d)], w)
+        r1 = pc_res(d, n1, keys=('status', 'side', 'by'))
+        add3 = led_add(d, 'ladder:P0')
+        return seen, side1, rerun, (add2[0], 'ATTEMPT_ORDER_MISMATCH' in add2[2]), rc_rec, r1, (add3[0], 'ATTEMPT_AFTER_ADOPTED' in add3[2])
+    got = scen('PD09', go)
+    want = (True, 'post', (3, True, False, True, True), (3, True), 0, {'status': 'interrupted', 'side': 'post', 'by': 'recover'}, (3, True))
+    return got == want, got
+
+
+@check('PD12', '★ 11-02 PC6-12 (사전 공격 6 회차 마무리 R10 · PC5-01 다시 셈의 범위) — 정직한 원장 (항목 1 ladder:P0 · 결과 줄 stopped · 결과 뒤 · 잘못된 '
+               '주소 runner_rc · 재실행 자격 False = 채택) 에서 같은 대상 --add = rc 3 (대조) · 원장 clone 에서 끝 두 커밋 reset + 항목 1 의 대상만 '
+               'ladder:P0:FIBRE 로 바꾼 줄 (결과 줄 그대로 · 없음 두 꼴 · 원장만 고침 · 시도 1 폴더 그대로) → 새 시도 2 (ladder:P0) CALIBRATED 뒤 판정 = 멈춤 '
+               'ATTEMPT_LEDGER_MISMATCH (사유 = attempt_1 의 attempt.json ≠ 원장 항목 1) (옛 = 원장 대조 통과 · 시도 2 채택) · 예측 입력 대조도 사다리 바탕의 시도 '
+               '1 폴더를 본다 (예측 = ATTEMPT_LEDGER_MISMATCH · 러너 0 회 · 결과 전 · 옛 = 통과)')
+def t_PD12():
+    def go():
+        d, _rc, _so = led_new('PD12')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        a = lad_att('PD12', world('PD12_a', dict(PW, faults=[{'do': 'illegal_driver_after_mark', 'match': {'rj': 'inf'}}])), d, n1)
+        honest = pc_res(d, n1)
+        ctl = led_add(led_clone(d, 'PD12_ctl'), 'ladder:P0')
+        lines = led_lines(d)
+        e1 = [x for x in lines if x.get('kind') == 'entry' and x.get('n') == n1][0]
+        r1 = [x for x in lines if x.get('kind') == 'result' and x.get('n') == n1][0]
+        rows = {}
+        for tag, with_result in (('entry_and_result', True), ('entry_only', False)):
+            dr = led_clone(d, f'PD12_{tag}')
+            git_(dr, 'reset', '-q', '--hard', 'HEAD~2')
+            led_hand(dr, dict(e1, target='ladder:P0:FIBRE'), msg='항목 1 대상만 바꿈 (시험 · PC6-12)')
+            if with_result:
+                led_hand(dr, r1, msg='결과 줄 1 그대로 (시험 · PC6-12)')
+            add2 = led_add(dr, 'ladder:P0')
+            base = pc_copy_base(a['base'], f'PD12_{tag}_base')
+            b = lad_att(f'PD12_{tag}_b', world(f'PD12_{tag}_b'), dr, add2[1], base=base) if add2[1] else None
+            v = ver_led(f'PD12_{tag}_v', [b['out']], dr) if b else None
+            row = {'add2_rc': add2[0], 'b_status': ((b or {}).get('sum') or {}).get('status'), 'verdict': stop_code(v) if v else None,
+                   'why_names_attempt1': 'attempt_1' in str((((v or {}).get('v') or {}).get('stop') or {}).get('cause'))}
+            if with_result:
+                _r3, n3, _s3 = led_add(dr, 'ladder:P1')
+                c = lad_att(f'PD12_{tag}_P1', world(f'PD12_{tag}_c'), dr, n3, law='P1')
+                _r4, n4, _s4 = led_add(dr, 'predict')
+                wp = world(f'PD12_{tag}_p')
+                p = pred_att(f'PD12_{tag}_pred', wp, dr, n4, [b['out'], c['out']]) if b else None
+                row.update(predict=stop_code(p) if p else None, predict_calls=n_calls(wp), predict_side=(led_result(dr, n4) or {}).get('side'))
+            rows[tag] = row
+        return honest, ctl[0], rows
+    honest, ctl_rc, rows = scen('PD12', go)
+    want_row = {'add2_rc': 0, 'b_status': 'CALIBRATED', 'verdict': 'ATTEMPT_LEDGER_MISMATCH', 'why_names_attempt1': True}
+    want = ({'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'chain'}, 3,
+            {'entry_and_result': dict(want_row, predict='ATTEMPT_LEDGER_MISMATCH', predict_calls=0, predict_side='pre'), 'entry_only': want_row})
+    return (honest, ctl_rc, rows) == want, (honest, ctl_rc, rows)
+
+
+@check('PD12m', '★ 11-02 PC6-12 합치기 길 — 단위 시도 (unit:P0_c0_R_j_lo · 표지 뒤 잘못된 주소 · 결과 뒤 · runner_rc) 의 원장 clone 에서 끝 두 커밋 reset + 그 항목의 '
+                '대상만 다른 단위 (unit:P1_c1_R_j_hi · 같은 변이) 로 바꾼 줄 + 결과 줄 그대로 → 같은 단위 새 시도 (UNIT_DONE) → 그 바탕을 --merge = 멈춤 '
+                'ATTEMPT_LEDGER_MISMATCH (런 0 · 옛 = 새 시도 채택 · 다음 단위 UNIT_MISSING 까지 감)')
+def t_PD12m():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_main()
+
+    def go():
+        d2 = led_reset_after(r['d'], 'PD12m', 'rint-r attempt 2 result completed')
+        _ra, n, _sa = led_add(d2, 'unit:P0_c0_R_j_lo')
+        base = Path(TD) / 'runs' / 'PD12m_u'
+        u = unit_att(world('PD12m_u', dict(PW, faults=[{'do': 'illegal_driver_after_mark', 'match': {'kit_has': 'DBE', 'arms': '1'}}])), d2, n,
+                     'P0_c0_R_j_lo', r['lads'], base)
+        res_u = pc_res(d2, n)
+        lines = led_lines(d2)
+        e = [x for x in lines if x.get('kind') == 'entry' and x.get('n') == n][0]
+        rr = [x for x in lines if x.get('kind') == 'result' and x.get('n') == n][0]
+        dr = led_clone(d2, 'PD12m_forged')
+        git_(dr, 'reset', '-q', '--hard', 'HEAD~2')
+        led_hand(dr, dict(e, target='unit:P1_c1_R_j_hi'), msg='단위 항목 대상만 바꿈 (시험 · PC6-12)')
+        led_hand(dr, rr, msg='결과 줄 그대로 (시험 · PC6-12)')
+        add2 = led_add(dr, 'unit:P0_c0_R_j_lo')
+        base2 = pc_copy_base(base, 'PD12m_u2')
+        u2 = unit_att(world('PD12m_u2'), dr, add2[1], 'P0_c0_R_j_lo', r['lads'], base2) if add2[1] else None
+        m = merge_run('PD12m', dr, r['lads'], [base2])
+        return stop_code(u), res_u, add2[0], ((u2 or {}).get('sum') or {}).get('status'), m
+    u_stop, res_u, add2_rc, u2_status, m = scen('PD12m', go)
+    ms = m['sum'] or {}
+    got = (u_stop, res_u.get('cause'), res_u.get('side'), add2_rc, u2_status, stop_code(m), len(ms.get('runs') or []))
+    return got == ('RUNNER_RC', 'runner_rc', 'post', 0, 'UNIT_DONE', 'ATTEMPT_LEDGER_MISMATCH', 0), (got, m['so'][-300:])
+
+
+@check('PD12u', '★ 11-02 PC6-12 단위 — 찾은 시도 폴더 ↔ 원장 항목 (found_attempts_problem · 판정 · 합치기 · 합친 예측 · 예측 입력 공용): 꼴 맞는 attempt.json 의 '
+                '대상 · 기계 · 재실행 원 시도 하나라도 원장 항목과 다르면 사유 (폴더 이름 · 항목 번호) · 같으면 None · attempt.json 없는 폴더 (남의 폴더 · 옆 '
+                '거부 기록의 까닭) · 옆 거부 기록 파일 · 원장에 없는 번호 = 이 함수 몫 아님 (None)')
+def t_PD12u():
+    f = getattr(RR, 'found_attempts_problem', None)
+    if f is None:
+        return False, '사슬에 found_attempts_problem 이 없다'
+    root = Path(TD) / 'pd' / 'PD12u'
+
+    def mk(tag, n, valid=True, **kw):
+        p = root / tag / f'attempt_{n}'
+        p.mkdir(parents=True)
+        if valid:
+            a = dict({'schema': 'rint-r-attempt-v1', 'n': n, 'target': 'ladder:P0', 'machine': MACH, 'resume_of': None, 'ledger_commit': 'a' * 40}, **kw)
+            (p / 'attempt.json').write_text(json.dumps(a), encoding='utf-8')
+        return p
+    st = {'entries': {1: {'target': 'ladder:P0', 'machine': MACH, 'resume_of': None}, 2: {'target': 'ladder:P0', 'machine': MACH, 'resume_of': 1}}}
+    side = root / 'side' / 'attempt_1.rejected.json'
+    side.parent.mkdir(parents=True)
+    side.write_text('{}', encoding='utf-8')
+    got = {'same': f(st, {1: [mk('same', 1)]}), 'target': f(st, {1: [mk('target', 1, target='ladder:P0:FIBRE')]}),
+           'machine': f(st, {1: [mk('machine', 1, machine='gabia')]}), 'resume_of': f(st, {2: [mk('resume', 2, resume_of=None)]}),
+           'no_attempt_json': f(st, {1: [mk('noaj', 1, valid=False)]}), 'side_file': f(st, {1: [side]}),
+           'not_in_ledger': f(st, {7: [mk('n7', 7)]})}
+    ok = (got['same'] is None and got['no_attempt_json'] is None and got['side_file'] is None and got['not_in_ledger'] is None
+          and all(isinstance(got[k], str) and 'attempt_' in got[k] for k in ('target', 'machine', 'resume_of')))
+    return ok, got
+
+
 # ═════════════════════════ 실행 ═════════════════════════
 def main(argv=None):
     global RR, TD
