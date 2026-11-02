@@ -1,12 +1,5 @@
 {
- "deck": "kg50_meeting_dem8_20261104.pptx",
+ "deck": "u6_repo.pptx",
  "n_number_checks_ok": 36,
- "problems": [],
- "selftest_mutations_detected": {
-  "number": true,
-  "caption": true,
-  "red": true,
-  "italic": true,
-  "banned": true
- }
+ "problems": []
 }
