@@ -323,6 +323,9 @@
 - ⛔ **붙여넣기 블록에서 저장소 위치를 `git rev-parse --git-common-dir` 로 유도하지 마라** (2026-10-12 gabia) — 메인 저장소에서는 **상대경로(`.git`)** 를 줘서
   사용자 셸의 현재 폴더가 다르면 `cd .git/..` 가 깨진다 (linked worktree 에서만 절대경로). 10-11 블록은 사용자가 마침 `/data/work/repo` 에 있어서 우연히 맞았다.
   ⇒ 메인 저장소 경로를 **직접** 쓴다: gabia `/data/work/repo` · kgy `~/lldvar` (`git -C <그 경로> fetch … && git -C <그 경로> worktree add …`).
+  ⛔ **`FETCH_HEAD` 는 worktree 마다 따로다** (2026-11-02 gabia) — 메인에서 `fetch` 하고 다른 worktree 에서 `checkout --detach FETCH_HEAD` 하면
+  그 worktree 엔 FETCH_HEAD 가 없어 `--detach does not take a path argument 'FETCH_HEAD'` 로 멈춘다. ⇒ **있는 worktree 를 올릴 때는 `git -C $W fetch … && git -C $W checkout --detach FETCH_HEAD`** (받기와 쓰기를 같은 worktree 에서) ·
+  새로 만들 때만 `git -C <메인> fetch … && git -C <메인> worktree add --detach $W FETCH_HEAD` (그 FETCH_HEAD 는 메인 것이라 맞다).
   ⚠ kgy 의 `~/lldvar` 는 메인이 아니라 **`/home/kgy/Yonghoon-DEM-DFT` 의 linked worktree** 다 (`.git` 이 **파일**) — 가드는 `[ -d ~/lldvar/.git ]` 말고 `git -C ~/lldvar rev-parse --git-dir` 로 묻는다 (2026-10-12 `-d` 가드가 kgy 업로드를 막았다). gabia `/data/work/repo` 는 메인 (`.git` 폴더). push 는 두 기계 다 자격 증명을 묻는다.
 - ⛔ **tmux 창의 셸(pane pid)을 `kill -STOP` 하면 tmux 가 곧바로 그 프로세스 그룹을 CONT 한다** (2026-09-26 gabia 에서 두 번 헛발질 ·
   tmux 3.4 로 재현). 러너를 얼려 다음 점을 못 띄우게 하려면 **러너 스크립트 bash(창 셸의 자식)만** STOP 하고 `ps -o stat=` 가 `T` 인지 본다 —
