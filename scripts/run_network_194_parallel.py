@@ -1137,7 +1137,7 @@ def launch_eligibility(man) -> dict:
     if not isinstance(hh, dict) or sorted(hh) != sorted(HANDOVER_FILES) or not all(isinstance(v, str) and _HEX64.match(v) for v in hh.values()):
         p.append(f'handover_code_hashes (인계 도구 지문) 없음 · 꼴이 다르다 ({sorted(hh) if isinstance(hh, dict) else hh!r})')
     g = man.get('git') if isinstance(man.get('git'), dict) else {}
-    if not (isinstance(g.get('sha'), str) and _HEX40.match(g['sha'])):
+    if not (isinstance(g.get('sha'), str) and _HEX40.fullmatch(g['sha'])):
         p.append(f'git.sha {g.get("sha")!r} — 발사 커밋 신원이 없다')
     pp = plan_problems(man.get('plan'))
     p += pp
