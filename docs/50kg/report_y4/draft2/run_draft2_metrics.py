@@ -61,6 +61,7 @@ for p in (REPO / 'scripts', REPO / 'webapp', HERE.parent, HERE.parent / 'figs', 
 import kg50_y4_sources as src  # noqa: E402
 
 SCHEMA = 'kg50_y4_draft2_metrics/v1'
+ROOT = HERE                       # 출력 뿌리 (data/ · ovito/ · 표 csv) — `--data-root` 로 바꾼다 (대역 시험 · 리포 밖 실행)
 DATA = HERE / 'data'
 OVITO = HERE / 'ovito'
 #: 침대 순서 = 비교 순서 0.7 → 1 → 2 → 3 (분석 계획 Q4) · 덱 · manifest = kg50_y4_sources.BEDS 와 같다
@@ -80,6 +81,28 @@ CODEX = {
                p_t0minus_MPa=('300.23909', 5), p_relax_first_MPa=('287.18633', 5), n_am=1481, n_se=20872),
     'D3': dict(eps_sphere_pct=('18.9575565', 7), p_end_MPa=('291.37440', 5), end_step=4575002, stop_step=4475002,
                p_t0minus_MPa=('300.63094', 5), p_relax_first_MPa=('295.59389', 5), n_am=1482, n_se=6184),
+}
+#: SE 영률 변형 침대 (2 µm · 1저자 11-02) — 기준 D2 의 정착 끝 체크포인트 (restart_after_settling.bin · step 200001) 에서 이어 돈 런 둘.
+#:   덱 = r4 재개 덱 (R4_DECK · sha256 R4_DECK_SHA256) + 네 고침만: ① read_restart → restart_after_settling.bin ② `run 180000` 뺌
+#:   ③ 정착 끝 write_restart 뺌 ④ SE youngsModulus 0.135e7 → 변형 값 — 다른 차이 = 거부 (e_deck_check).
+#:   덱 머리 · 로그 = KG50_D2_B50 (case 'kg50_d2_b50' · 로그 판독) · 덤프 폴더 = post_kg50_d2_b50 · 묶음 접두 = <런 이름>/ · 덱 멤버 필수.
+#:   이 침대들은 BED_ORDER (입도 비교 · 그림 · metrics_all.csv) 밖 — 표 = metrics_modulus.csv.
+E_BEDS = {
+    'D2E05': dict(run='kg50_d2_b50_e05', se_E_sim=0.0675e7),
+    'D2E15': dict(run='kg50_d2_b50_e15', se_E_sim=0.2025e7),
+}
+EXTRA_BEDS = tuple(E_BEDS)
+ALL_BEDS = BED_ORDER + EXTRA_BEDS
+CASE.update({b: 'kg50_d2_b50' for b in E_BEDS})
+R4_DECK = 'docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/input_kg50_d2_b50_r4.liggghts'
+R4_DECK_SHA256 = 'eacc23e60ae5981496091d3bab02084f8aae4ea180752b2b687750935316c3c6'
+BASE_SE_E_SIM = 0.135e7
+#: 기준 D2 기록 (변형 침대의 시작 상태 대조 — 판 시작 높이 · 입자 수) — 늘 리포 기록 (--data-root 와 무관)
+BASE_D2_RECORD = HERE / 'data' / 'D2' / 'metrics_D2.json'
+#: 받은 변형 끝 묶음 (메인 세션 sha256) — 이름이 같은데 sha256 · 크기가 다르면 거부
+E_TGZ_KNOWN = {
+    'D2E05': dict(name='kg50_d2_b50_e05_end.tgz', sha256='ed47c5a26158d2dab3d5d8779547a386f3c855a81a987a69da687b5b76d20a00', bytes=9170747),
+    'D2E15': dict(name='kg50_d2_b50_e15_end.tgz', sha256='afc925d741d32af4179e3e64bf725b288506dd945b1a731516ca901dfa41947a', bytes=8551463),
 }
 N_ZBINS = 10                      # z 구간 수 (바닥 0 → 판 높이 · 같은 폭) — 기존 입자 · 점 출력을 중심 z 로 묶는다
 OVERLAP_THRESHOLDS = (0.0, 2.0, 5.0, 10.0)   # % · Zhou 2025 표 1 의 문턱 (카드 tailored_cathode_microstructure_low_pressure_assb)
@@ -148,8 +171,14 @@ def git_state():
 _SAFE = re.compile(r'^[A-Za-z0-9_.\-/]+$')
 
 
-def pick_members(tf, case, prefix):
+def deck_name(bed):
+    """묶음 안 덱 파일 이름 — 변형 침대 = input_<런 이름>.liggghts · 나머지 = input_<case>.liggghts."""
+    return f'input_{E_BEDS[bed]["run"]}.liggghts' if bed in E_BEDS else f'input_{CASE[bed]}.liggghts'
+
+
+def pick_members(tf, case, prefix, deck=None):
     """묶음 안에서 이 침대의 덱 · atom_end · contact_end · mesh_end 를 고른다 — 같은 S 가 아니면 거부 (K50Y4-01 소비자 규칙)."""
+    deck = deck or f'input_{case}.liggghts'
     names = [m for m in tf.getmembers() if m.name.startswith(prefix)]
     need(names, f'묶음에 접두 {prefix!r} 로 시작하는 멤버가 없다')
     pat = {'atom': re.compile(r'(?:^|/)atom_end_(\d+)\.liggghts$'), 'contact': re.compile(r'(?:^|/)contact_end_(\d+)\.liggghts$'),
@@ -164,8 +193,8 @@ def pick_members(tf, case, prefix):
         need(len(v) == 1, f'{k}_end 멤버가 정확히 하나여야 한다 — {len(v)} 개 ({[m.name for m, _ in v]}) · 결손 세트 거부')
     steps = {k: v[0][1] for k, v in found.items()}
     need(len(set(steps.values())) == 1, f'끝 세트 step 이 다르다 {steps} — 같은 step 세트만 받는다 (K50Y4-01)')
-    decks = [m for m in names if re.search(rf'(?:^|/)input_{re.escape(case)}\.liggghts$', m.name)]
-    need(len(decks) <= 1, f'덱 input_{case}.liggghts 멤버가 여럿이다 ({[m.name for m in decks]})')
+    decks = [m for m in names if re.search(rf'(?:^|/){re.escape(deck)}$', m.name)]
+    need(len(decks) <= 1, f'덱 {deck} 멤버가 여럿이다 ({[m.name for m in decks]})')
     out = dict(atom=found['atom'][0][0], contact=found['contact'][0][0], mesh=found['mesh'][0][0])
     if decks:                                # 없으면 리포 덱 (manifest deck_sha256 대조) — read_end_set 이 채운다
         out['deck'] = decks[0]
@@ -187,17 +216,23 @@ def read_end_set(bed, tgz, prefix, work, record=None, member_record=None):
     tgz = Path(tgz)
     info = dict(tgz=relpath(tgz), tgz_sha256=sha256_path(tgz), tgz_bytes=tgz.stat().st_size, prefix=prefix, members={},
                 tgz_record=None, member_record=None)
+    known = E_TGZ_KNOWN.get(bed)
+    if known and tgz.name == known['name']:
+        need(info['tgz_sha256'] == known['sha256'] and info['tgz_bytes'] == known['bytes'],
+             f'{tgz}: sha256 {info["tgz_sha256"][:12]}… · {info["tgz_bytes"]} B ≠ 받은 묶음 기록 {known["sha256"][:12]}… · {known["bytes"]} B')
+        info['tgz_record'] = dict(file='run_draft2_metrics.E_TGZ_KNOWN', match=True)
     if record:
         rec_sha = src._recorded_tgz_sha(relpath(record), tgz.name)
         need(rec_sha == info['tgz_sha256'], f'{tgz}: sha256 {info["tgz_sha256"][:12]}… ≠ 기록 {rec_sha[:12]}…')
         info['tgz_record'] = dict(file=relpath(record), match=True)
     with tarfile.open(tgz, 'r:gz') as tf:
-        mem, step = pick_members(tf, case, prefix)
+        mem, step = pick_members(tf, case, prefix, deck_name(bed))
         blobs = {k: tf.extractfile(m).read() for k, m in mem.items()}
     for k, m in mem.items():
         info['members'][m.name] = dict(role=k, bytes=len(blobs[k]), sha256=sha256_bytes(blobs[k]))
     info['deck_source'] = 'tgz member'
     if 'deck' not in blobs:                  # 묶음에 덱이 없다 → 리포 덱 (deck_check 가 manifest deck_sha256 와 대조)
+        need(bed not in E_BEDS, f'{bed}: 묶음에 덱 멤버 {prefix}{deck_name(bed)} 가 없다 — 변형 침대는 리포 덱으로 대신하지 않는다')
         b = next(x for x in src.BEDS if x['case'] == case)
         blobs['deck'] = src.rp(b['deck']).read_bytes()
         info['deck_source'] = f'repo {b["deck"]} (묶음에 덱 멤버 없음)'
@@ -215,7 +250,7 @@ def read_end_set(bed, tgz, prefix, work, record=None, member_record=None):
     indir.mkdir(parents=True, exist_ok=False)
     paths = {}
     for k in ('deck', 'atom', 'contact', 'mesh'):
-        p = indir / (Path(mem[k].name).name if k in mem else f'input_{case}.liggghts')
+        p = indir / (Path(mem[k].name).name if k in mem else deck_name(bed))
         p.write_bytes(blobs[k])
         paths[k] = p
     info['end_step'] = step
@@ -226,7 +261,9 @@ def read_end_set(bed, tgz, prefix, work, record=None, member_record=None):
 # ───────────────────────────── 2. 덱 · 덤프 · ε_sphere · 로그 ─────────────────────────────
 
 def deck_check(bed, blob):
-    """묶음 안 덱 = 리포 덱 = manifest deck_sha256 (kg50_y4_sources.BEDS 와 같은 자리)."""
+    """묶음 안 덱 = 리포 덱 = manifest deck_sha256 (kg50_y4_sources.BEDS 와 같은 자리) · 변형 침대 = e_deck_check."""
+    if bed in E_BEDS:
+        return e_deck_check(bed, blob)
     b = next(x for x in src.BEDS if x['case'] == CASE[bed])
     text = blob.decode('utf-8')
     sha = sha256_bytes(blob)
@@ -235,6 +272,111 @@ def deck_check(bed, blob):
     need(sha == repo_sha == mc['deck_sha256'], f'{bed}: 묶음 덱 {sha[:12]}… · 리포 덱 {repo_sha[:12]}… · manifest {mc["deck_sha256"][:12]}… 가 같지 않다')
     d = src.parse_deck(text, b['case'])
     return d, dict(repo_deck=b['deck'], manifest=b['manifest'], sha256=sha)
+
+
+_E_RR_OLD = 'read_restart    restart_kg50_d2_b50/restart_settling_20001.bin'
+_E_RR_NEW = re.compile(r'read_restart\s+restart_kg50_d2_b50/restart_after_settling\.bin(?:\s+#.*)?\s*')
+_E_RUN_OLD = 'run 180000   # 원래 200000 − 이미 20001'
+_E_WR_OLD = 'write_restart   restart_kg50_d2_b50/restart_after_settling.bin'
+_E_YM_OLD = 'fix m1 all property/global youngsModulus peratomtype 1.4e8 1.4e8 0.135e7'
+_E_YM_NEW = re.compile(r'fix m1 all property/global youngsModulus peratomtype 1\.4e8 1\.4e8 (\S+)(?:\s+#.*)?\s*')
+_E_EDITS = ('read_restart restart_settling_20001.bin → restart_after_settling.bin', '`run 180000` 뺌 (정착 다시 안 돎)',
+            '정착 끝 write_restart restart_after_settling.bin 뺌', 'SE youngsModulus 0.135e7 → 변형 값')
+
+
+def _gpa(e_sim):
+    return e_sim * src.E_SIM_TO_PA / 1e9
+
+
+def e_deck_check(bed, blob):
+    """변형 덱 = r4 재개 덱 + 네 고침만 (그 밖 줄은 바이트 같음 · 줄 수 = r4 − 2) — 다른 차이 · 침대와 다른 SE 영률 = 거부.
+
+    → (d, info).  d = 리포 기준 D2 덱 (manifest 대조 · deck_check('D2')) 에 SE 영률 한 줄만 바꾼 '웹앱 매개 덱' 의 parse_deck 값 —
+    E 덱은 재개 덱이라 region block 이 없어 parse_deck · 웹앱 parse_input_script 가 상자를 못 읽는다 (웹앱은 상자가 없으면 합집합 피복이 빈칸).
+    웹앱에는 이 매개 덱을 올린다 (webapp_param_check 가 실제 E 덱 parse 값과 상자 키 말고 같은지 대조).
+    """
+    info = dict(kind='SE youngsModulus variant', run=E_BEDS[bed]['run'], end_set_deck_sha256=sha256_bytes(blob))
+    r4b = (REPO / R4_DECK).read_bytes()
+    need(sha256_bytes(r4b) == R4_DECK_SHA256, f'r4 덱 {R4_DECK} sha256 {sha256_bytes(r4b)[:12]}… ≠ 기록 {R4_DECK_SHA256[:12]}…')
+    try:
+        e = blob.decode('utf-8').split('\n')
+    except UnicodeDecodeError as ex:
+        raise RunError(f'{bed}: 덱이 UTF-8 이 아니다 ({ex})')
+    r4 = r4b.decode('utf-8').split('\n')
+    idx = {}
+    for key, line in (('rr', _E_RR_OLD), ('run', _E_RUN_OLD), ('wr', _E_WR_OLD), ('ym', _E_YM_OLD)):
+        hits = [i for i, l in enumerate(r4) if l == line]
+        need(len(hits) == 1, f'r4 덱에 {line!r} 줄이 정확히 하나가 아니다 ({len(hits)})')
+        idx[key] = hits[0]
+    exp = [('rr' if i == idx['rr'] else 'ym' if i == idx['ym'] else 'same', i, l) for i, l in enumerate(r4)
+           if i not in (idx['run'], idx['wr'])]
+    problems, e_text = [], None
+    if len(e) != len(exp):
+        problems.append(f'줄 수 {len(e)} ≠ 기대 {len(exp)} (r4 {len(r4)} 줄 − 2)')
+    else:
+        for k, ((kind, i, l), el) in enumerate(zip(exp, e)):
+            if kind == 'same':
+                if el != l:
+                    problems.append(f'{k + 1}행 (r4 {i + 1}행) 다름: {l[:70]!r} → {el[:70]!r}')
+            elif kind == 'rr':
+                if not _E_RR_NEW.fullmatch(el):
+                    problems.append(f'{k + 1}행 read_restart 가 restart_after_settling.bin 이 아니다: {el[:90]!r}')
+            else:
+                m = _E_YM_NEW.fullmatch(el)
+                if not m:
+                    problems.append(f'{k + 1}행 youngsModulus 줄 꼴 (AM 값 · 형식) 이 r4 와 다르다: {el[:90]!r}')
+                    continue
+                try:
+                    val = float(m.group(1))
+                except ValueError:
+                    problems.append(f'{k + 1}행 SE youngsModulus {m.group(1)!r} — 숫자가 아니다')
+                    continue
+                want = E_BEDS[bed]['se_E_sim']
+                if not (math.isfinite(val) and val == want):
+                    problems.append(f'{k + 1}행 SE youngsModulus {m.group(1)} (= {_gpa(val):g} GPa) ≠ {bed} 기대 {want:g} (= {_gpa(want):g} GPa)'
+                                    + (' — 기준 D2 값 그대로' if val == BASE_SE_E_SIM else ''))
+                e_text = m.group(1)
+    if problems:
+        import difflib
+        diff = [l for l in difflib.unified_diff(r4, e, 'r4', bed, n=0, lineterm='') if not l.startswith(('---', '+++'))][:14]
+        raise RunError(f'{bed}: 덱 ≠ r4 + 네 고침 — ' + ' | '.join(problems[:6]) + ('' if len(problems) <= 6 else f' | … ({len(problems)} 곳)')
+                       + f' || 허용 고침 = {" · ".join(_E_EDITS)} || diff (r4 → {bed}): ' + ' / '.join(x[:80] for x in diff))
+    # 리포 기준 D2 덱 (manifest 대조) → SE 영률 한 줄만 E 덱 값으로 = 웹앱 매개 덱
+    b = next(x for x in src.BEDS if x['case'] == CASE[bed])
+    base_blob = src.rp(b['deck']).read_bytes()
+    d_base, base_info = deck_check('D2', base_blob)
+    base_text = base_blob.decode('utf-8')
+    need(base_text.split('\n').count(_E_YM_OLD) == 1, f'기준 D2 덱에 {_E_YM_OLD!r} 줄이 정확히 하나가 아니다')
+    w_text = '\n'.join((_E_YM_OLD[:-len('0.135e7')] + e_text) if l == _E_YM_OLD else l for l in base_text.split('\n'))
+    w_blob = w_text.encode('utf-8')
+    d = src.parse_deck(w_text, CASE[bed])
+    need(d['E_sim'] == (d_base['E_sim'][0], d_base['E_sim'][1], E_BEDS[bed]['se_E_sim']), f'웹앱 매개 덱 영률 {d["E_sim"]}')
+    diff_keys = sorted(k for k in d if k not in ('E_sim', 'E_se_GPa') and d[k] != d_base[k])
+    need(not diff_keys, f'웹앱 매개 덱 parse 값이 기준 D2 와 영률 말고도 다르다: {diff_keys}')
+    info.update(r4_deck=R4_DECK, r4_sha256=R4_DECK_SHA256, edits=list(_E_EDITS), se_E_text=e_text, se_E_GPa=d['E_se_GPa'],
+                base_se_E_GPa=d_base['E_se_GPa'], base_deck=base_info,
+                webapp_deck=dict(source=f'리포 기준 D2 덱 {b["deck"]} (manifest 대조) + SE youngsModulus 한 줄 = E 덱 값 {e_text}',
+                                 sha256=sha256_bytes(w_blob),
+                                 why='E 덱 = 재개 덱이라 region block 이 없다 → 웹앱 input_params 에 상자 box_x · box_y 가 없으면 합집합 피복이 '
+                                     '빈칸 (coverage_physics_vs_hertzian.read_box_xy) · 상자 · 반지름 · 질량분율 · 목표 압력 = r4 · 기준 덱과 같다 '
+                                     '(webapp_param_check = 실제 E 덱 parse_input_script 값과 상자 키 말고 같음)'),
+                webapp_deck_blob=w_blob)
+    return d, info
+
+
+def webapp_param_check(e_deck_path, webapp_deck_path):
+    """웹앱 parse_input_script 값: 실제 E 덱 ⊆ 웹앱 매개 덱 · 같은 키는 같은 값 · 매개 덱에만 있는 키 = 상자 (box_x · box_y · box_z) 뿐."""
+    import parse_liggghts as PL
+    pe = PL.parse_input_script(str(e_deck_path))
+    pw = PL.parse_input_script(str(webapp_deck_path))
+    box = {'box_x', 'box_y', 'box_z'}
+    missing = sorted(set(pe) - set(pw))
+    differ = sorted(k for k in set(pe) & set(pw) if pe[k] != pw[k])
+    extra = sorted(set(pw) - set(pe) - box)
+    need(not missing and not differ and not extra and {'box_x', 'box_y'} <= set(pw),
+         f'웹앱 매개 덱 ↔ E 덱 parse_input_script 다름 — 없음 {missing} · 값 다름 {differ} · 상자 밖 더함 {extra} · 상자 {pw.get("box_x")} {pw.get("box_y")}')
+    return dict(n_keys_equal=len(pe), keys_equal=sorted(pe), webapp_only=sorted(set(pw) - set(pe)), box_x=pw['box_x'], box_y=pw['box_y'],
+                youngs_modulus_sim=pe.get('youngs_modulus_sim'))
 
 
 def eps_sphere(atoms, d, plate_z_um):
@@ -565,10 +707,12 @@ def pick(fm, *keys):
 
 
 def run_bed(bed, tgz, log, prefix=None, record=None, member_record=None, work=None, keep_work=False):
-    need(bed in CASE, f'모르는 침대 {bed!r} (가능: {", ".join(BED_ORDER)})')
+    need(bed in CASE, f'모르는 침대 {bed!r} (가능: {", ".join(ALL_BEDS)})')
     need(log or bed not in CODEX, f'{bed}: Codex 대조 침대는 로그가 필요하다 (--log)')
+    need(log or bed not in E_BEDS, f'{bed}: 영률 변형 침대는 로그가 필요하다 (--log · 끝 판 압력 · 시작 상태 대조)')
     case = CASE[bed]
-    prefix = f'{case}/' if prefix is None else prefix
+    if prefix is None:
+        prefix = f'{E_BEDS[bed]["run"]}/' if bed in E_BEDS else f'{case}/'
     known = RECORDS.get(bed, {})
     if record is None and known and relpath(tgz) == known['tgz']:
         record, member_record = REPO / known['record'], (REPO / known['member_record']) if known.get('member_record') else None
@@ -579,6 +723,14 @@ def run_bed(bed, tgz, log, prefix=None, record=None, member_record=None, work=No
     try:
         blobs, paths, info = read_end_set(bed, tgz, prefix, work, record, member_record)
         d, deck_info = deck_check(bed, blobs['deck'])
+        w_blob = deck_info.pop('webapp_deck_blob', None)
+        if bed in E_BEDS:                    # 웹앱에 올리는 덱 = 매개 덱 (상자 있음) · 실제 E 덱 parse 값과 대조
+            wdir = Path(work) / 'in_webapp'
+            wdir.mkdir(parents=True, exist_ok=False)
+            wp = wdir / paths['deck'].name
+            wp.write_bytes(w_blob)
+            deck_info['webapp_param_check'] = webapp_param_check(paths['deck'], wp)
+            paths = dict(paths, deck=wp, deck_end_set=paths['deck'])
         atoms = src.parse_atom_dump(blobs['atom'])
         need(atoms['step'] == info['end_step'], 'atom step ≠ 끝 세트 step')
         plate_z_sim = src.parse_mesh_z(blobs['mesh'])
@@ -597,6 +749,18 @@ def run_bed(bed, tgz, log, prefix=None, record=None, member_record=None, work=No
             need(abs(curve['eps_sphere_fixed_pct'] - eps) < 1e-9, '로그 판 고정 ε ≠ 끝 덤프 ε_sphere')
             print(f'[{bed}] 로그: 정지 step {curve["stop_step"]} · t=0⁻ {curve["p_t0minus_MPa"]:.5f} · 이완 첫 {curve["p_relax_first_MPa"]:.5f} · '
                   f'끝 {curve["p_end_MPa"]:.5f} MPa', flush=True)
+        start_check = None
+        if bed in E_BEDS:                    # 시작 = 기준 D2 정착 끝 체크포인트 → 판 시작 높이 · 입자 수가 기준 D2 기록과 같아야 한다
+            need(BASE_D2_RECORD.exists(), f'기준 D2 기록 {relpath(BASE_D2_RECORD)} 이 없다')
+            base = json.loads(BASE_D2_RECORD.read_text(encoding='utf-8'))
+            bz0 = base['compaction']['plate_z0_um']
+            #  같은 체크포인트라도 read_restart 뒤 `run 1` 한 step 의 z_max 가 반올림 수준 (E15 실측 1.8e-8 µm) 으로 다를 수 있다 —
+            #  다른 정착 (시드 · 침대) 이면 µm 단위로 다르다 → 문턱 1e-5 µm
+            need(abs(curve['plate_z0_um'] - bz0) <= 1e-5, f'{bed}: 로그 판 시작 높이 {curve["plate_z0_um"]!r} µm ≠ 기준 D2 {bz0!r} µm — 다른 체크포인트?')
+            need(n_am == base['inventory']['n_am'] and n_se == base['inventory']['n_se'],
+                 f'{bed}: 입자 수 AM {n_am} · SE {n_se} ≠ 기준 D2 {base["inventory"]["n_am"]} · {base["inventory"]["n_se"]}')
+            start_check = dict(base_record=relpath(BASE_D2_RECORD), plate_z0_um=curve['plate_z0_um'], base_plate_z0_um=bz0,
+                               plate_z0_diff_um=curve['plate_z0_um'] - bz0, tol_um=1e-5, n_am=n_am, n_se=n_se, match=True)
         vals = dict(eps_sphere_pct=eps, end_step=info['end_step'], n_am=n_am, n_se=n_se)
         if curve:
             vals.update(p_end_MPa=curve['p_end_MPa'], stop_step=curve['stop_step'], p_t0minus_MPa=curve['p_t0minus_MPa'],
@@ -672,6 +836,10 @@ def run_bed(bed, tgz, log, prefix=None, record=None, member_record=None, work=No
                        same_step_set=info['same_step_set'], pressure_reached_frame='NOT_AVAILABLE (자료 없음 — 압축 정지 step 에 덤프 없음)',
                        target_pressure_MPa=d['target_MPa'], note='이완 끝 프레임을 300 MPa 상태로 부르지 않는다'),
             inventory=dict(n_am=n_am, n_se=n_se, n_am_plan=d['n_am_plan'], n_se_plan=d['n_se_plan']),
+            **({'variant': dict(kind='SE youngsModulus', run=E_BEDS[bed]['run'], base_bed='D2', se_E_GPa=d['E_se_GPa'],
+                                base_se_E_GPa=deck_info['base_se_E_GPa'], se_E_text=deck_info['se_E_text'],
+                                start='기준 D2 정착 끝 체크포인트 restart_after_settling.bin (step 200001)', start_check=start_check)}
+               if bed in E_BEDS else {}),
             metrics=metrics,
             verdict_extract=dict(values=ex['values'], notes=ex['notes'], am_phase=am_lbl, code_sha=ex['code_sha'],
                                  network_run_id=ex['network_run_id'], ion_net_electrode_hertz=ex['ion_net_electrode_hertz'],
@@ -732,8 +900,42 @@ def merge():
         else:
             r['status'] = '결과 대기'
         rows.append(r)
-    write_csv(HERE / 'metrics_all.csv', rows, list(MERGE_COLS))
+    write_csv(ROOT / 'metrics_all.csv', rows, list(MERGE_COLS))
     print('metrics_all.csv:', ', '.join(f'{r["bed"]}={r["status"]}' for r in rows))
+    return rows
+
+
+MODULUS_COLS = ('bed', 'run', 'status', 'se_E_GPa', 'end_step', 'n_am', 'n_se', 'plate_z_um', 'eps_union_exact_pct', 'eps_sphere_pct',
+                'coverage_physics_union_pct', 'coverage_hertz_pct', 'am_se_cn_mean', 'se_se_cn_mean', 'f_ion_hertz', 'tau2_ion_hertz',
+                'f_ion_physics', 'tau2_ion_physics', 'constriction_power_share_ion_hertz', 'lw_am_nowall_median_MPa', 'lw_se_nowall_median_MPa',
+                'p_end_MPa', 'p_t0minus_MPa', 'tgz_sha256')
+
+
+def merge_modulus():
+    """기준 D2 + 영률 변형 침대 → metrics_modulus.csv (없는 침대 = 결과 대기) — BED_ORDER 표 · 그림과 섞지 않는다."""
+    rows = []
+    b2 = next(x for x in src.BEDS if x['case'] == CASE['D2'])
+    base_E = src.parse_deck(src.rp(b2['deck']).read_text(encoding='utf-8'), b2['case'])['E_se_GPa']
+    for bed in ('D2',) + EXTRA_BEDS:
+        r = {c: None for c in MODULUS_COLS}
+        r.update(bed=bed, run=E_BEDS[bed]['run'] if bed in E_BEDS else CASE[bed],
+                 se_E_GPa=_gpa(E_BEDS[bed]['se_E_sim']) if bed in E_BEDS else base_E)
+        pth = (BASE_D2_RECORD if bed == 'D2' else DATA / bed / f'metrics_{bed}.json')
+        if pth.exists():
+            rec = json.loads(pth.read_text(encoding='utf-8'))
+            need(rec.get('schema') == SCHEMA and rec.get('bed') == bed, f'{pth}: schema · 침대 이름이 다르다')
+            m = rec['metrics']
+            r.update({k: m.get(k) for k in MODULUS_COLS if k in m})
+            r.update(status='ok', end_step=rec['frame']['end_step'], n_am=rec['inventory']['n_am'], n_se=rec['inventory']['n_se'],
+                     tgz_sha256=rec['provenance']['end_set']['tgz_sha256'])
+            if bed in E_BEDS:
+                need(abs(rec['variant']['se_E_GPa'] - r['se_E_GPa']) < 1e-12, f'{pth}: 영률 {rec["variant"]["se_E_GPa"]} ≠ {r["se_E_GPa"]}')
+        else:
+            r['status'] = '결과 대기'
+        rows.append(r)
+    out = ROOT / 'metrics_modulus.csv'
+    write_csv(out, rows, list(MODULUS_COLS))
+    print(f'{relpath(out)}:', ', '.join(f'{r["bed"]}={r["status"]}' for r in rows))
     return rows
 
 
@@ -780,8 +982,122 @@ def selftest():
             res = 'PASS' if got == want else 'FAIL'
             ok += res == 'PASS'
             print(f'  [{res}] {name} → {"수락" if got else "거부"}' + ('' if got else f' ({str(info)[:70]})'))
-    print(f'selftest {ok}/{len(cases)}')
-    return 0 if ok == len(cases) else 1
+    n_all = len(cases)
+    ok_e, n_e = e_selftest()
+    print(f'selftest {ok + ok_e}/{n_all + n_e}')
+    return 0 if (ok == n_all and ok_e == n_e) else 1
+
+
+def e_selftest():
+    """SE 영률 변형 침대 (D2E05 · D2E15) 시험 — 덱 = r4 재개 덱 + 네 고침만 · 묶음 접두 · 덱 멤버 필수 · 웹앱 매개 덱 대조."""
+    r4 = (REPO / R4_DECK).read_text(encoding='utf-8')
+    edits = {
+        'rr': ('read_restart    restart_kg50_d2_b50/restart_settling_20001.bin\n',
+               'read_restart    restart_kg50_d2_b50/restart_after_settling.bin\n'),
+        'run': ('run 180000   # 원래 200000 − 이미 20001\n', ''),
+        'wr': ('write_restart   restart_kg50_d2_b50/restart_after_settling.bin\n', ''),
+        'E': ('youngsModulus peratomtype 1.4e8 1.4e8 0.135e7\n', None),
+    }
+
+    def e_deck(E_text, skip=(), extra=None):
+        t = r4
+        for k, (a, b) in edits.items():
+            if k in skip:
+                continue
+            assert t.count(a) == 1, k
+            t = t.replace(a, b if b is not None else f'youngsModulus peratomtype 1.4e8 1.4e8 {E_text}\n')
+        if extra:
+            t = extra(t)
+        return t.encode('utf-8')
+
+    deck_cases = [
+        ('E05 덱 = r4 + 네 고침 (양성)', 'D2E05', e_deck('0.0675e7'), True),
+        ('E15 덱 = r4 + 네 고침 (양성)', 'D2E15', e_deck('0.2025e7'), True),
+        ('E15 덱 · 같은 값 다른 표기 2.025e6 (양성)', 'D2E15', e_deck('2.025e6'), True),
+        ('다섯째 고침 (dt 값)', 'D2E15', e_deck('0.2025e7', extra=lambda t: t.replace('variable dt', 'variable dt_x', 1)), False),
+        ('다섯째 고침 (끝에 run 1000 한 줄)', 'D2E15', e_deck('0.2025e7', extra=lambda t: t + 'run 1000\n'), False),
+        ('다섯째 고침 (주석 한 줄 더함)', 'D2E05', e_deck('0.0675e7', extra=lambda t: '# x\n' + t), False),
+        ('다섯째 고침 (AM 영률 1.4e8 → 1.5e8)', 'D2E15',
+         e_deck('0.2025e7', extra=lambda t: t.replace('peratomtype 1.4e8 1.4e8 0.2025e7', 'peratomtype 1.5e8 1.4e8 0.2025e7')), False),
+        ('침대와 다른 영률 (E15 덱을 D2E05 로)', 'D2E05', e_deck('0.2025e7'), False),
+        ('침대와 다른 영률 (E05 덱을 D2E15 로)', 'D2E15', e_deck('0.0675e7'), False),
+        ('영률 그대로 0.135e7 (고침 셋)', 'D2E15', e_deck('0.135e7', skip=('E',)), False),
+        ('run 180000 남음 (고침 셋)', 'D2E15', e_deck('0.2025e7', skip=('run',)), False),
+        ('정착 끝 write_restart 남음 (고침 셋)', 'D2E05', e_deck('0.0675e7', skip=('wr',)), False),
+        ('read_restart 그대로 settling_20001 (고침 셋)', 'D2E15', e_deck('0.2025e7', skip=('rr',)), False),
+        ('기준 r4 덱 그대로', 'D2E15', r4.encode('utf-8'), False),
+    ]
+    ok = n = 0
+    for name, bed, blob, want in deck_cases:
+        try:
+            deck_check(bed, blob)
+            got, why = True, ''
+        except RunError as e:
+            got, why = False, str(e)
+        res = 'PASS' if got == want else 'FAIL'
+        ok += res == 'PASS'
+        n += 1
+        print(f'  [{res}] {name} → {"수락" if got else "거부"}' + ('' if got else f' ({why[:90]})'))
+
+    # 묶음: 접두 = 런 이름 · 덤프 폴더 = post_kg50_d2_b50 · 덱 멤버 필수 (리포 덱 대체 없음)
+    def dump(step):
+        return f'ITEM: TIMESTEP\n{step}\nITEM: NUMBER OF ATOMS\n0\n'.encode()
+
+    def tgz(path, members):
+        with tarfile.open(path, 'w:gz') as tf:
+            for nm, blob in members.items():
+                ti = tarfile.TarInfo(nm)
+                ti.size = len(blob)
+                tf.addfile(ti, io.BytesIO(blob))
+    S = 3665002
+    run = E_BEDS['D2E15']['run']
+    base = {f'{run}/input_{run}.liggghts': e_deck('0.2025e7'), f'{run}/log.liggghts': b'x\n',
+            f'{run}/post_kg50_d2_b50/atom_end_{S}.liggghts': dump(S),
+            f'{run}/post_kg50_d2_b50/contact_end_{S}.liggghts': dump(S),
+            f'{run}/post_kg50_d2_b50/mesh_end_{S}.stl': b'solid x\nendsolid x\n'}
+    tar_cases = [
+        ('E15 묶음 (접두 · post_kg50_d2_b50 · 덱 멤버) 수락', base, True),
+        ('E15 묶음에 덱 멤버 없음 → 거부 (리포 덱 대체 없음)', {k: v for k, v in base.items() if 'input_' not in k}, False),
+        ('E15 묶음 덱 이름 = 기준 이름 input_kg50_d2_b50 → 거부',
+         {(k.replace(f'input_{run}', 'input_kg50_d2_b50') if 'input_' in k else k): v for k, v in base.items()}, False),
+    ]
+    with tempfile.TemporaryDirectory(prefix='kg50y4d2_eselftest_') as td:
+        for i, (name, mem, want) in enumerate(tar_cases):
+            p = Path(td) / f'e{i}.tgz'
+            tgz(p, mem)
+            try:
+                read_end_set('D2E15', p, f'{run}/', Path(td) / f'w{i}')
+                got, why = True, ''
+            except RunError as e:
+                got, why = False, str(e)
+            res = 'PASS' if got == want else 'FAIL'
+            ok += res == 'PASS'
+            n += 1
+            print(f'  [{res}] {name} → {"수락" if got else "거부"}' + ('' if got else f' ({why[:90]})'))
+        # 웹앱 매개 덱 (기준 D2 덱 + SE 영률) ↔ 실제 E 덱: parse_input_script 값이 상자 키 말고 같다
+        e15 = e_deck('0.2025e7')
+        _d, info = deck_check('D2E15', e15)
+        pe = Path(td) / 'e' / f'input_{run}.liggghts'
+        pw = Path(td) / 'w' / f'input_{run}.liggghts'
+        pe.parent.mkdir()
+        pw.parent.mkdir()
+        pe.write_bytes(e15)
+        pw.write_bytes(info['webapp_deck_blob'])
+        bad = Path(td) / 'b' / f'input_{run}.liggghts'
+        bad.parent.mkdir()
+        bad.write_bytes(info['webapp_deck_blob'].replace(b'1.4e8 1.4e8 0.2025e7', b'1.4e8 1.4e8 0.135e7'))
+        for name, w, want in (('웹앱 매개 덱 = E 덱 값 (상자 키만 더함) 수락', pw, True),
+                              ('웹앱 매개 덱 SE 영률 ≠ E 덱 → 거부', bad, False)):
+            try:
+                webapp_param_check(pe, w)
+                got, why = True, ''
+            except RunError as e:
+                got, why = False, str(e)
+            res = 'PASS' if got == want else 'FAIL'
+            ok += res == 'PASS'
+            n += 1
+            print(f'  [{res}] {name} → {"수락" if got else "거부"}' + ('' if got else f' ({why[:90]})'))
+    return ok, n
 
 
 def main(argv=None):
@@ -790,7 +1106,7 @@ def main(argv=None):
     sub.add_parser('selftest')
     for name in ('run', 'add'):
         s = sub.add_parser(name)
-        s.add_argument('--bed', required=True, choices=BED_ORDER)
+        s.add_argument('--bed', required=True, choices=ALL_BEDS)
         s.add_argument('--tgz', required=True, help='끝 세트 묶음 (atom_end · contact_end · mesh_end 같은 step + 덱)')
         s.add_argument('--log', default=None, help='LIGGGHTS 로그 (압밀 곡선 · 이완 끝 판 압력) — 없으면 그 칸 빈칸')
         s.add_argument('--prefix', default=None, help='묶음 안 침대 폴더 접두 (기본 <case>/)')
@@ -798,16 +1114,26 @@ def main(argv=None):
         s.add_argument('--member-record', default=None, help='멤버 sha256 목록 (sha  ./path) — D3 는 자동')
         s.add_argument('--work', default=None, help='빈 작업 폴더 (기본 = 새 임시 폴더)')
         s.add_argument('--keep-work', action='store_true')
-    sub.add_parser('merge')
+        s.add_argument('--data-root', default=None, help='출력 뿌리 (data/<침대>/ · ovito/ · 표 csv) — 기본 = 이 폴더')
+    for name in ('merge', 'merge-modulus'):
+        s = sub.add_parser(name)
+        s.add_argument('--data-root', default=None, help='출력 뿌리 — 기본 = 이 폴더')
     a = ap.parse_args(argv)
     if a.cmd == 'selftest':
         return selftest()
+    global ROOT, DATA, OVITO
+    if getattr(a, 'data_root', None):
+        ROOT = Path(a.data_root).resolve()
+        DATA, OVITO = ROOT / 'data', ROOT / 'ovito'
     try:
         if a.cmd in ('run', 'add'):
             run_bed(a.bed, a.tgz, a.log, a.prefix, a.record, a.member_record, a.work, a.keep_work)
-        if a.cmd in ('merge', 'add'):
+        e_bed = getattr(a, 'bed', None) in E_BEDS
+        if a.cmd == 'merge-modulus' or (a.cmd == 'add' and e_bed):
+            merge_modulus()                  # 영률 변형 = 그 표만 (입도 표 · 그림 안 건드림)
+        if a.cmd == 'merge' or (a.cmd == 'add' and not e_bed):
             merge()
-        if a.cmd == 'add':
+        if a.cmd == 'add' and not e_bed:
             import make_draft2_figs as F
             F.build_all()
     except RunError as e:

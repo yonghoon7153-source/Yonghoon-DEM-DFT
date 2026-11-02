@@ -80,6 +80,19 @@ python3 -P docs/50kg/report_y4/draft2/run_draft2_metrics.py add --bed D1 \
 - D0.7 도 같은 명령 (`--bed D0.7`).  큰 침대 (D1 ≈ 1.7 × 10⁵ · D0.7 ≈ 4.9 × 10⁵ 입자) 는 망 단계가 길다 (D3 ≈ 1 분 · D2 ≈ 2.5 분 · D1 ≈ 17 분 실측 · 이 컨테이너).
 - D2 · D3 다시 만들기: 같은 명령 (`run` = 그 침대만 · `merge` = 표만 · `add` = 셋 다) — 아래 §5.
 
+### 3-1. 2 µm SE 영률 변형 침대 (D2E05 · D2E15 · 11-02)
+
+- 무엇: 기준 D2 의 정착 끝 체크포인트 (`restart_after_settling.bin` · step 200001) 에서 SE 영률만 바꿔 이어 돈 두 런 (덱 단위 0.0675e7 · 0.2025e7 = 0.675 · 2.025 GPa · 기준 1.35).  입도 비교 (`BED_ORDER` · 그림 · `metrics_all.csv`) 밖 — 표 = `metrics_modulus.csv` (`merge-modulus`).
+- 덱 검사 = r4 재개 덱 (`docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/input_kg50_d2_b50_r4.liggghts` · sha256 `eacc23e6…`) + 네 고침만 (read_restart → restart_after_settling.bin · `run 180000` 뺌 · 정착 끝 write_restart 뺌 · SE youngsModulus) — 다른 차이 · 침대와 다른 영률 = 거부 (`e_deck_check` · selftest 28/28).  덱 멤버 필수 (리포 덱으로 대신하지 않음) · 묶음 접두 = `kg50_d2_b50_e05/` · `kg50_d2_b50_e15/` · 로그 판독 case = `kg50_d2_b50` · 시작 대조 = 기준 D2 기록의 판 시작 높이 (1e-5 µm 안) · 입자 수.
+- 웹앱에 올리는 덱 = 리포 기준 D2 덱 + SE 영률 한 줄 (E 덱은 재개 덱이라 상자 줄이 없어 웹앱이 합집합 피복을 빈칸으로 둔다) — 웹앱 parse 값이 실제 E 덱과 상자 키 말고 같은지 대조 (`webapp_param_check`).
+- 명령 (묶음을 새 빈 폴더에 둔 뒤 · `-I`):
+
+```bash
+python3 -I docs/50kg/report_y4/draft2/run_draft2_metrics.py add --bed D2E05 --tgz <폴더>/kg50_d2_b50_e05_end.tgz --log <폴더>/kg50_d2_b50_e05/log.liggghts
+python3 -I docs/50kg/report_y4/draft2/run_draft2_metrics.py add --bed D2E15 --tgz <폴더>/kg50_d2_b50_e15_end.tgz --log <폴더>/kg50_d2_b50_e15/log.liggghts
+#   [--data-root <출력 뿌리>]  = 리포 밖에 쓸 때 (기본 = 이 폴더의 data/<침대>/ · metrics_modulus.csv)
+```
+
 ## 4. OVITO
 
 - `ovito/D1_end_2785002_um.xyz.gz` · `ovito/D2_end_4015002_um.xyz.gz` · `ovito/D3_end_4575002_um.xyz.gz` (확장 XYZ · µm · species = AM/SE · radius · id · dump_type) — 색 · 시점 · 단면 제안 = `ovito_render_spec.md`.
