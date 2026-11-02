@@ -14706,6 +14706,76 @@
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/pc6_13_fix/REPORT_PC6_13_FIX.md",
       "title": "11-02 메인 설명 (1저자 Rint Q2) \"메모리 부족 (out of memory) 낱말을 먼저 보기 때문에 메모리 부족은 지금처럼 자원 · 재실행 대상\" — 자원 낱말 다섯 (OutOfMemoryError · CUDA_ERROR_OUT_OF_MEMORY · cudaErrorMemoryAllocation · MemoryError · No space left on device) 에 맨 \"out of memory\" 가 없어 \"CUDA error: out of memory\" · *_ALLOC_FAILED 꼴은 새 표지로 runner_rc (재실행 없음) — 코드 대조 없이 설명했다",
       "note": "영향: 지금 payload (cupy) 의 메모리 부족 줄은 자원 낱말이 함께 찍혀 그대로 resource (탐침) · 맨 꼴은 PyTorch · C++ 문구 (scripts 에 torch 없음) · 1저자에게 정정 보고 + 열린 질문 Q1 (자원 낱말에 넣을지) · 닫는 조건 = 1저자 결정 반영."
+    },
+    {
+      "id": "PC7-01",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "사전 공격 7 회차 (11-02 · 0658c0ac6 · 독립 작업 트리 · PC6 고침 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack7/PREATTACK_7.md",
+      "title": "PC6-09 범위 — 부모 사망 뒤 같은 --attempt 를 다른 --out (또는 env 같은 다른 기계) 으로 다시 치면 attempt_open 이 새 바탕 폴더를 만들고 처음부터 다시 돎 · 결과 줄 completed · 판정 원장 대조 통과 · 결과 본 첫 런이 조용히 사라짐 (원장에 시작 기록 없음 · recover_ledger 는 결과 줄이 있으면 폴더 대조 안 함)",
+      "note": "사전 공격 7 회차 §1 · P1 후보 (메인 판단 = 1저자 결정 전 P1 로 둠) · 고침 제안 ① attempt_open 이 런 전에 원장에 시작 줄 (n · 바탕 절대 경로 · host_ident · boot) 커밋 + 결과 줄 없는 같은 n 의 두 번째 입구 = 화면만 ② recover_ledger: 결과 줄의 폴더 · 요약 sha ≠ 이 폴더면 rc 3 · 탐침 probe7_real.py C · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정."
+    },
+    {
+      "id": "PC7-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "사전 공격 7 회차 (11-02 · 0658c0ac6 · 독립 작업 트리 · PC6 고침 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack7/PREATTACK_7.md",
+      "title": "PC6-12 닫힘 주장 — found_attempts_problem 이 attempt.json 없음 · 꼴 틀림 · 심볼릭 링크 폴더를 건너뜀 → R10 (끝 두 커밋 reset + 대상만 바꾼 줄) 위에 attempt.json 하나만 지우거나 칸 하나를 더하면 판정 · 예측 입력 통과 (등록 ⑦ \"찾은 시도 폴더 전부\" 거짓)",
+      "note": "사전 공격 7 회차 §1 · 고침 제안 = 원장 항목이 있는 attempt_<n> 폴더에 꼴 맞는 attempt.json 이 없으면 MISMATCH (예외 = 결과 줄 rejected + 옆 거부 기록) · 변이 K09 (엄격) 는 PD12u 하나만 깸 · 탐침 probe7_real.py A · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정."
+    },
+    {
+      "id": "PC7-03",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "사전 공격 7 회차 (11-02 · 0658c0ac6 · 독립 작업 트리 · PC6 고침 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack7/PREATTACK_7.md",
+      "title": "PC6-13 \"자리 전수\" 누락 — 러너 기다림 중 사슬 예외 (SIGINT 등) + 그룹 미확인 → recover → orphan_cause 가 chain_end 의 원인 exception 을 안 봄 → parent_dead · 재실행 자격 (그룹 확인이면 chain_exception · 불가) · 등록 ⑥ \"기다림 중 사슬 예외 = chain_exception\" 이 이 길에서 거짓",
+      "note": "사전 공격 7 회차 §1 · 고침 제안 = recover 길에서 chain_end 원인 exception 이면 chain_exception · PC6-03 (SIGINT 뜻) 과 함께 결정 · 탐침 probe7_real.py B · probe7_unit.py U2 · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정."
+    },
+    {
+      "id": "PC7-04",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "사전 공격 7 회차 (11-02 · 0658c0ac6 · 독립 작업 트리 · PC6 고침 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack7/PREATTACK_7.md",
+      "title": "recover_group 이 옛 끝 기록을 chain_end 로 옮길 때 표지 · 이름 대조 없음 — 다른 런의 끝 기록 (손 고침 · 부분 복사) rc 가 원인을 정할 수 있음",
+      "note": "사전 공격 7 회차 §1 · 고침 제안 = prev 의 token · name 이 시작 기록과 같을 때만 · 탐침 probe7_unit.py U6 · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정."
+    },
+    {
+      "id": "PC7-05",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "사전 공격 7 회차 (11-02 · 0658c0ac6 · 독립 작업 트리 · PC6 고침 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack7/PREATTACK_7.md",
+      "title": "등록 R ⑫ · ⑦ PC6-13 \"정리 중 신호 = group_unconfirmed 그대로\" — 요약 없는 길 (디스크 끝 기록 원인 None · rc 1 · 미확인) 은 runner_rc · False (보수 쪽 · 문구만 다름)",
+      "note": "사전 공격 7 회차 §1 · 고침 제안 = 등록 ⑦ 한 줄 · 탐침 probe7_unit.py U8 · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정."
+    },
+    {
+      "id": "PC7-06",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "사전 공격 7 회차 (11-02 · 0658c0ac6 · 독립 작업 트리 · PC6 고침 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack7/PREATTACK_7.md",
+      "title": "시험 공백 (변이 생존) — _run_kin 부모 없음 · ppid 없음 (K01 · K02) · recover 의 runner_start 무시 (K05) · PC6-09 mine 의 기계 · 재실행 원 시도 칸 (K07 · K08)",
+      "note": "사전 공격 7 회차 §1 · 고침 제안 = 가짜 /proc 행 셋 + PD09b 에 machine · resume_of 꼴 · 변이 mutate_pc7.py · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정."
+    },
+    {
+      "id": "PC7-07",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "사전 공격 7 회차 (11-02 · 0658c0ac6 · 독립 작업 트리 · PC6 고침 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack7/PREATTACK_7.md",
+      "title": "attempt_open 의 mkdir → attempt.json 쓰기 사이 창 — 빈 attempt_1 에서 같은 --attempt = 옆 거부 · 새 시도 뒤 판정 = 원장에 없는 시도 폴더 (보수 · 손 정리 전까지 멈춤)",
+      "note": "사전 공격 7 회차 §1 · 고침 제안 = 빈 폴더 = 이 항목 것 (화면만 + recover = interrupted · pre) 또는 빈 폴더 지우기 · 탐침 probe7_unit.py U4 · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정."
     }
   ]
 }
