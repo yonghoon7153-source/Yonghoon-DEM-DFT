@@ -1,0 +1,7 @@
+# check_review_findings --ban-sweep (문서 고친 뒤 작업 트리) · 2026-11-02
+# cmd: python3 -I scripts/check_review_findings.py --ban-sweep
+── 철회-문자열 스윕 — 등록 42 개 × 파일 9179 개 ──
+
+철회값 누수 없음 ✓
+
+rc=0 seconds=892
