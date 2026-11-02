@@ -1,0 +1,300 @@
+{
+ "schema": "s5_q1_settle_validation/v1",
+ "bed": "real_14 (docs/data/real14_reference_20260928 — 커밋된 덤프 · type map 1:AM_P,2:AM_S,3:SE · scale 1000)",
+ "cases": {
+  "cg": {
+   "fixture": "v1.2 기록 = 11fcf91e8 모듈 그대로 (real_14 관통 32,234 → CG 경로) — B 판정 안 함",
+   "verdict": "INCONCLUSIVE",
+   "rc": 4,
+   "rc_expected": 4,
+   "ok": true,
+   "checks": {
+    "A0_inputs_equal_b7_provenance": true,
+    "A0v_inputs_equal_v12_provenance": true,
+    "A_b7_reproduced": true,
+    "B_v12_reproduced_by_old_electrode": null,
+    "case_dir_untouched": true,
+    "A_code_equals_b7_seal": null,
+    "A_run_record_chain": null,
+    "v12_solver_path": "cg_rtol1e-5",
+    "v12_n_perc_approx": 32234,
+    "n_perc_rebuilt": 32234
+   },
+   "full": {
+    "sigma_b7_inprocess": 0.02102105544822831,
+    "record_b7": 0.02102106,
+    "sigma_adaptive": 0.02102060376115999,
+    "record_v12": 0.0210206,
+    "d_electrode": 2.1487825632826585e-05,
+    "d_records": 2.1882816565898084e-05,
+    "dirichlet_netsolve_vs_b7_rel": 7.105427357601002e-15
+   }
+  },
+  "inc": {
+   "fixture": "v1.2 기록 = 같은 모듈의 CG 문턱만 끈 사본 (직접해) + --assume-v12-direct",
+   "verdict": "INCLUDE",
+   "rc": 0,
+   "rc_expected": 0,
+   "ok": true,
+   "checks": {
+    "A0_inputs_equal_b7_provenance": true,
+    "A0v_inputs_equal_v12_provenance": true,
+    "A_b7_reproduced": true,
+    "B_v12_reproduced_by_old_electrode": true,
+    "case_dir_untouched": true,
+    "A_code_equals_b7_seal": null,
+    "A_run_record_chain": null,
+    "v12_solver_path": "assumed_direct (검증 픽스처 · 기록상 cg_rtol1e-5)",
+    "v12_n_perc_approx": 32234,
+    "n_perc_rebuilt": 32234
+   },
+   "full": {
+    "sigma_b7_inprocess": 0.02102105544822831,
+    "record_b7": 0.02102106,
+    "sigma_adaptive": 0.02102060376115999,
+    "record_v12": 0.0210206,
+    "d_electrode": 2.1487825632826585e-05,
+    "d_records": 2.1882816565898084e-05,
+    "dirichlet_netsolve_vs_b7_rel": 7.105427357601002e-15
+   }
+  },
+  "negA": {
+   "fixture": "B7 기록 sigma_full +3 칸 (사본)",
+   "verdict": "HOLD",
+   "rc": 3,
+   "rc_expected": 3,
+   "ok": true,
+   "checks": {
+    "A0_inputs_equal_b7_provenance": true,
+    "A0v_inputs_equal_v12_provenance": null,
+    "A_b7_reproduced": false,
+    "B_v12_reproduced_by_old_electrode": true,
+    "case_dir_untouched": true,
+    "A_code_equals_b7_seal": null,
+    "A_run_record_chain": null,
+    "v12_solver_path": "assumed_direct (검증 픽스처 · 기록상 cg_rtol1e-5)",
+    "v12_n_perc_approx": 32234,
+    "n_perc_rebuilt": 32234
+   },
+   "full": {
+    "sigma_b7_inprocess": 0.02102105544822831,
+    "record_b7": 0.02102109,
+    "sigma_adaptive": 0.02102060376115999,
+    "record_v12": 0.0210206,
+    "d_electrode": 2.1487825632826585e-05,
+    "d_records": 2.3309923510095087e-05,
+    "dirichlet_netsolve_vs_b7_rel": 7.105427357601002e-15
+   }
+  },
+  "negA0": {
+   "fixture": "B7 provenance 의 contacts.csv 지문을 0 으로 (사본)",
+   "verdict": "HOLD",
+   "rc": 3,
+   "rc_expected": 3,
+   "ok": true,
+   "checks": {
+    "A0_inputs_equal_b7_provenance": false,
+    "A0v_inputs_equal_v12_provenance": null,
+    "A_b7_reproduced": true,
+    "B_v12_reproduced_by_old_electrode": true,
+    "case_dir_untouched": true,
+    "A_code_equals_b7_seal": null,
+    "A_run_record_chain": null,
+    "v12_solver_path": "assumed_direct (검증 픽스처 · 기록상 cg_rtol1e-5)",
+    "v12_n_perc_approx": 32234,
+    "n_perc_rebuilt": 32234
+   },
+   "full": {
+    "sigma_b7_inprocess": 0.02102105544822831,
+    "record_b7": 0.02102106,
+    "sigma_adaptive": 0.02102060376115999,
+    "record_v12": 0.0210206,
+    "d_electrode": 2.1487825632826585e-05,
+    "d_records": 2.1882816565898084e-05,
+    "dirichlet_netsolve_vs_b7_rel": 7.105427357601002e-15
+   }
+  },
+  "negB": {
+   "fixture": "v1.2 기록 sigma_full +3 칸 (사본)",
+   "verdict": "HOLD",
+   "rc": 3,
+   "rc_expected": 3,
+   "ok": true,
+   "checks": {
+    "A0_inputs_equal_b7_provenance": true,
+    "A0v_inputs_equal_v12_provenance": null,
+    "A_b7_reproduced": true,
+    "B_v12_reproduced_by_old_electrode": false,
+    "case_dir_untouched": true,
+    "A_code_equals_b7_seal": null,
+    "A_run_record_chain": null,
+    "v12_solver_path": "assumed_direct (검증 픽스처 · 기록상 cg_rtol1e-5)",
+    "v12_n_perc_approx": 32234,
+    "n_perc_rebuilt": 32234
+   },
+   "full": {
+    "sigma_b7_inprocess": 0.02102105544822831,
+    "record_b7": 0.02102106,
+    "sigma_adaptive": 0.02102060376115999,
+    "record_v12": 0.02102063,
+    "d_electrode": 2.1487825632826585e-05,
+    "d_records": 2.0455676355171932e-05,
+    "dirichlet_netsolve_vs_b7_rel": 7.105427357601002e-15
+   }
+  },
+  "incfull": {
+   "fixture": "inc + --b7-manifest (받은 B7 manifest 의 code_hashes) + --b7-reread (run id · 표 값 픽스처)",
+   "verdict": "INCLUDE",
+   "rc": 0,
+   "rc_expected": 0,
+   "ok": true,
+   "checks": {
+    "A0_inputs_equal_b7_provenance": true,
+    "A0v_inputs_equal_v12_provenance": true,
+    "A_b7_reproduced": true,
+    "B_v12_reproduced_by_old_electrode": true,
+    "case_dir_untouched": true,
+    "A_code_equals_b7_seal": true,
+    "A_run_record_chain": true,
+    "v12_solver_path": "assumed_direct (검증 픽스처 · 기록상 cg_rtol1e-5)",
+    "v12_n_perc_approx": 32234,
+    "n_perc_rebuilt": 32234
+   },
+   "full": {
+    "sigma_b7_inprocess": 0.02102105544822831,
+    "record_b7": 0.02102106,
+    "sigma_adaptive": 0.02102060376115999,
+    "record_v12": 0.0210206,
+    "d_electrode": 2.1487825632826585e-05,
+    "d_records": 2.1882816565898084e-05,
+    "dirichlet_netsolve_vs_b7_rel": 7.105427357601002e-15
+   }
+  },
+  "negRun": {
+   "fixture": "incfull 에서 reread run id 만 다르게",
+   "verdict": "HOLD",
+   "rc": 3,
+   "rc_expected": 3,
+   "ok": true,
+   "checks": {
+    "A0_inputs_equal_b7_provenance": true,
+    "A0v_inputs_equal_v12_provenance": null,
+    "A_b7_reproduced": true,
+    "B_v12_reproduced_by_old_electrode": true,
+    "case_dir_untouched": true,
+    "A_code_equals_b7_seal": true,
+    "A_run_record_chain": false,
+    "v12_solver_path": "assumed_direct (검증 픽스처 · 기록상 cg_rtol1e-5)",
+    "v12_n_perc_approx": 32234,
+    "n_perc_rebuilt": 32234
+   },
+   "full": {
+    "sigma_b7_inprocess": 0.02102105544822831,
+    "record_b7": 0.02102106,
+    "sigma_adaptive": 0.02102060376115999,
+    "record_v12": 0.0210206,
+    "d_electrode": 2.1487825632826585e-05,
+    "d_records": 2.1882816565898084e-05,
+    "dirichlet_netsolve_vs_b7_rel": 7.105427357601002e-15
+   }
+  },
+  "negCode": {
+   "fixture": "incfull 에서 manifest 의 network_conductivity.py 지문만 0 으로",
+   "verdict": "HOLD",
+   "rc": 3,
+   "rc_expected": 3,
+   "ok": true,
+   "checks": {
+    "A0_inputs_equal_b7_provenance": true,
+    "A0v_inputs_equal_v12_provenance": null,
+    "A_b7_reproduced": true,
+    "B_v12_reproduced_by_old_electrode": true,
+    "case_dir_untouched": true,
+    "A_code_equals_b7_seal": false,
+    "A_run_record_chain": true,
+    "v12_solver_path": "assumed_direct (검증 픽스처 · 기록상 cg_rtol1e-5)",
+    "v12_n_perc_approx": 32234,
+    "n_perc_rebuilt": 32234
+   },
+   "full": {
+    "sigma_b7_inprocess": 0.02102105544822831,
+    "record_b7": 0.02102106,
+    "sigma_adaptive": 0.02102060376115999,
+    "record_v12": 0.0210206,
+    "d_electrode": 2.1487825632826585e-05,
+    "d_records": 2.1882816565898084e-05,
+    "dirichlet_netsolve_vs_b7_rel": 7.105427357601002e-15
+   }
+  }
+ },
+ "code_seal_detail": {
+  "checked": {
+   "scripts/analyze_contacts.py": true,
+   "scripts/dem_analysis_core.py": true,
+   "scripts/lens_geometry.py": true,
+   "scripts/metrics_json.py": true,
+   "scripts/network_conductivity.py": true,
+   "scripts/plastic_coverage.py": true,
+   "scripts/se_material.py": true,
+   "scripts/type_map_resolve.py": true
+  },
+  "not_in_seal": [
+   "docs/data/gen2_design_20261006/c1/netsolve.py",
+   "docs/data/lhs_network214_35f032737_20261030/s5_judgment/tools/s5_q1_electrode_settle.py"
+  ]
+ },
+ "rows_incfull": {
+  "full": {
+   "d_electrode": 2.1487825632826585e-05,
+   "d_records": 2.1882816565898084e-05,
+   "g_boundary": 369.3806597893845,
+   "sum_g": 14786.30781136906,
+   "g_max": 0.5253804959909721,
+   "n_perc": 32234,
+   "n_bot": 2862,
+   "n_top": 1141,
+   "b7_method": "spsolve"
+  },
+  "bulk_only": {
+   "d_electrode": 2.251593172930555e-05,
+   "d_records": 2.2575807529885178e-05,
+   "g_boundary": 1547.583707193394,
+   "sum_g": 61949.77579895157,
+   "g_max": 1.421327005685155,
+   "n_perc": 32234,
+   "n_bot": 2862,
+   "n_top": 1141,
+   "b7_method": "spsolve"
+  },
+  "constriction_only": {
+   "d_electrode": 2.1082938276295593e-05,
+   "d_records": 2.1171599153966168e-05,
+   "g_boundary": 515.2713855305086,
+   "sum_g": 20626.313562786258,
+   "g_max": 0.8334621309782401,
+   "n_perc": 32234,
+   "n_bot": 2862,
+   "n_top": 1141,
+   "b7_method": "spsolve"
+  }
+ },
+ "b7_cli_on_fixture": {
+  "sigma_full": 0.02102106,
+  "sigma_bulk_net": 0.11073801,
+  "sigma_constr_net": 0.02692286
+ },
+ "v12_module_on_fixture": {
+  "old": {
+   "sigma_full": 0.0210206,
+   "sigma_bulk_net": 0.11073551,
+   "sigma_constr_net": 0.02692229
+  },
+  "oldd": {
+   "sigma_full": 0.0210206,
+   "sigma_bulk_net": 0.11073551,
+   "sigma_constr_net": 0.02692229
+  }
+ },
+ "design_record_reference": "docs/reviews/gen2_network_design_20261006.md §3 — Hertz H0 옛 전극 → Dirichlet 0.0210206 → 0.02102106 (×1.0000219) · docs/data/gen2_design_20261006/c1/net_beds_real14.json H0_full dirichlet_over_adaptive − 1 = 2.1488e-05",
+ "all_ok": true
+}

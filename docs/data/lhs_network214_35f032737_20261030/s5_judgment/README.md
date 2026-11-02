@@ -158,6 +158,8 @@ cp ~/net194_35f032737_v13handover_$D.tar.gz ~/netsupp20_35f032737_v13handover_$D
 | `regression_v12_summary.json` · `regression_v12_nonnet_diffs.tsv` | §5-7 망 밖 열 대조 · 다른 칸 전부 (337 = 217 + 120) |
 | `tau_vs_v12_summary.json` · `reg_detail.json` · `warning_cause.json` · `blank_rule.txt` | H0 이온 배포값 · 새 열 범주 · 부호 · 경고 원인 · §9-8 ④ 규칙 |
 | `tools/` | 위 산출을 만든 도구 일곱 (읽기 전용 · 리포 함수 호출) |
+| `q1_records_summary.json` · `q1_electrode_by_case.tsv` (§11-1 · `tools/s5_q1_records.py`) | 입력 · 띠 · 풀이 경로 같음 · 저장 칸 · 가지 동조 · 띠 비율 관계 · 두 행 (TSV = 상대 차 · 칸만 — σ 값 칸 없음) |
+| `q1_settle_validation.json` (§11-1 (g) · `tools/s5_q1_validate_real14.sh` + `tools/s5_q1_validate_fixtures.py`) | 확정 도구 `tools/s5_q1_electrode_settle.py` 의 real_14 여덟 경우 (기대 rc 와 같음 8/8) |
 
 ```bash
 X=$(mktemp -d); mkdir "$X/x194" "$X/xsupp"; F=docs/data/lhs_network214_35f032737_20261030
@@ -170,4 +172,101 @@ python3 -I $T/s5_reg_detail.py --repo "$PWD" --root194 "$X/x194" > "$O/reg_detai
 python3 -I $T/s5_warning_cause.py --repo "$PWD" --root194 "$X/x194" > "$O/warning_cause.json"
 python3 -I $T/s5_blank_rule.py --root194 "$X/x194" --rootsupp "$X/xsupp" > "$O/blank_rule.txt"
 python3 -I $T/s5_followups.py --repo "$PWD" --root194 "$X/x194" --rootsupp "$X/xsupp"      # §6 명령의 원천 (cd 줄 · python3 는 WSL 에 맞게)
+Y=$(mktemp -d); tar xzf docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/net194_tau_sources_20261006.tar.gz -C "$Y"
+python3 -I $T/s5_q1_records.py --repo "$PWD" --root194 "$X/x194" --v12src "$Y" --out "$O"          # §11-1 (b) (c)
+bash $T/s5_q1_validate_real14.sh "$PWD" "$(mktemp -d)/v" "$X/x194/manifest.json"                   # §11-1 (g) — 여덟 경우 · 수 분
 ```
+
+## 11. 1저자 11-02 *"다 권고대로 해봐"* — Q1–Q5 처리
+
+§8 의 Q1–Q5 = 권고대로 비준 (1저자 11-02).  배포 HOLD 그대로 · 받은 자료는 읽기만 · 원장 (`docs/reviews/findings.json`) · CLAUDE.md 는 이 묶음에서 건드리지 않는다 (등재 = 메인).
+
+### 11-1. Q1 — H0 이온 1.5e-4 초과 두 행: 기록으로 가를 수 있는 데까지
+
+**(a) 1.5e-4 의 출처 = 설계 침대 둘의 관측 최댓값을 반올림한 수 — 유도한 상한도 194 행 계산도 아니다**
+
+| 자리 | 글자 · 값 |
+|---|---|
+| 194 등록 §5-7 (`docs/reviews/lhs_network_batch_registration_20261007_g2.md` 294 행) | *"전극 정확 Dirichlet (H0 σ 상대 ≤ 1.5e-4 · 설계 기록 §1)"* |
+| 설계 기록 §1 (`docs/reviews/gen2_network_design_20261006.md` 15 행) = 원본 요약 `docs/data/gen2_design_20261006/c1/DECISIONS_C1.md` 5 행 | *"배포값 변화 ≤ 1.5e-4 (194 행 5–6 째 자리)"* |
+| 인계 생성기 열 사전 `CAVEAT_TAU_NET` (`scripts/lhs_design_dataset.py` 1737 행 · 봉인 인계 도구 · 세대 2 구현 커밋 a0a24c538 에서 들어옴) | *"배포값 변화 ≤ 1.5e-4 = 5–6 째 자리"* |
+| 설계 근거 숫자 = 두 침대의 `dirichlet_over_adaptive` − 1 (`docs/data/gen2_design_20261006/c1/net_beds_case15.json` · `net_beds_real14.json`) | case15 (얇은 모서리 침대 · n_top 45): H0 FULL 7.66e-5 · CF0 **1.545e-4** · CF2 1.532e-4 / real_14: H0 FULL 2.15e-5 · CF0 2.25e-5 |
+| 194 행 전극 효과 계산 | 리포에 없음 — `docs/data/gen2_design_20261006/c1/lhs194_estimates.py` 머리글 *"raw contacts are not in the repo"* · 그 도구는 H1 · H12 추정만 (전극 없음) |
+| git 이력 (문구 `≤ 1.5e-4` 를 넣은 커밋) | 같은 날 (10-06) 셋 — 생성기 문구 a0a24c538 · 설계 기록 c13da95a3 · 194 등록 9d25757dc · 근거 자료 폴더 (`docs/data/gen2_design_20261006/`) 에 194 침대 전극 계산 없음 |
+
+- 최댓값 1.5447e-4 (case15 CF0) 자체가 1.5e-4 보다 크다 · H0 FULL 만 보면 설계 최댓값은 7.66e-5 였다.
+
+**(b) 받은 기록이 말하는 것** (도구 `tools/s5_q1_records.py` · 산출 `q1_records_summary.json` · `q1_electrode_by_case.tsv` — σ 값 칸 없음 · 상대 차 · 저장 칸만)
+
+| 검사 | 결과 | 뜻 |
+|---|---|---|
+| 입력 같음 — 원 덤프 sha256 (atom · contact · mesh · deck) · type_map · contact_scan (v1.2 merged status ↔ B7) | 194/194 같음 | 같은 원자료 · 구문 분석 도구 (`scripts/parse_liggghts.py` · `scripts/analyze_contacts.py`) 도 v1.2 커밋 ↔ B7 바이트 같음 |
+| 띠 같음 — 이온 Hertz 띠 규칙 · 띠 비율 (v1.2 dual ↔ B7 row_cells) | 170/170 같음 (L0) | 경계 집합 크기 같음 |
+| 풀이 경로 — v1.2 옛 모듈 (관통 N + 2 > 30,000 → CG) · B7 증서 method | v1.2 직접해 104 · CG 66 (문턱 근처 0) / B7 직접해 116 · CG 54 | 두 행은 두 배치 모두 직접해 (v1.2 관통 ≈ 11,228 · 11,613 · B7 spsolve) |
+| 저장 해상도 | σ_ratio = 소수 8 자리 (두 배치 · 칸 격자 어긋남 최대 1.75e-8 칸) | 기록 차 k 칸 → 참 차 ∈ ((k−1), (k+1)) 칸 |
+| FULL 방향 (170) | 증가 167 · 같음 3 · 감소 0 | |
+| 가지 동조 (세 가지 모두 3 칸 이상인 135 행) | 부호 셋 같음 135/135 · CF/FULL 중앙 0.982 (p05 0.968 · p95 1.109 · 범위 0.845–2.71) · 협착-only/FULL 중앙 1.007 (0.72–1.016) | 셋이 같이 움직인다 = 공통 경계층 (전극) 의 꼴 · 협착만 바뀌면 CF 가, bulk 만 바뀌면 협착-only 가 가만있어야 한다 |
+| 띠 비율과의 관계 (FULL 3 칸 이상 164 행) | Spearman +0.892 · log–log 기울기 2.14 · R² 0.836 · 잔차 sd 0.256 (자연로그) | 옛 가상 전극의 경계 저항 몫이 얇은 침대 (띠 비율 큼) 에서 큰 것과 맞다 — 일관성 (원인 확정 아님) |
+
+**(c) 두 행**
+
+| 행 | 기록 (v1.2 → B7 · H0 이온 σ_ratio) | 저장 칸 (FULL · CF · 협착-only) | 읽음 |
+|---|---|---|---|
+| lhs00_123 (lhs · 띠 0.0638 · n_bottom 1,385 · n_top 165) | FULL 6.553e-05 → 6.554e-05 · CF 0.00086916 → 0.00086918 · 협착-only 7.102e-05 → 7.102e-05 | **1** · 2 · 0 | 1.5258e-4 = 저장 **한 칸**의 크기 (1e-8 / 6.554e-5) — 참 차 ∈ (0, 3.05e-4) · 같은 침대 CF ∈ (1.15e-5, 3.45e-5) · 협착-only < 1.41e-4 · 다른 행의 가지 비 범위를 빌리면 FULL ≤ 4.1e-5 · 띠 적합 예측 1.8e-5 (**추정** — 측정 아님) |
+| lhsx_026 (lhsx · 띠 0.157 = lhsx 64 중 1 위 · n_bottom 1,024 · n_top 994) | FULL 0.42381246 → 0.42387701 · CF 1.30440817 → 1.30460134 · 협착-only 0.64031046 → 0.64040901 | 6,455 · 19,317 · 9,855 | 실제 변화 1.5228e-4 (해상도 위) · 세 가지 1.52 · 1.48 · 1.54e-4 같은 부호 · lhsx 에서 Δ 1 위 = 띠 비율 1 위 · 띠 적합 예측 1.24e-4 · 잔차 +0.21 (z +0.82 · 164 중 14 위) = 흩어짐 안 |
+
+**(d) 판정** — 기록으로 닫힌 것: 입력 · 띠 · 풀이 경로가 같다 · lhs00_123 의 1.5258e-4 는 저장 해상도 (한 칸) 다 · lhsx_026 의 1.5228e-4 는 실제 변화이고 전극 변경의 꼴 (세 가지 동조 · 띠 비율 추세 안) 이다.  기록으로 못 닫는 것: **H0 간선 · 노드가 두 세대에서 같은지** (설계 기록의 주장 · 194 침대 실측 없음) — 그래서 *"차이 = 전극뿐"* 은 아직 **추정**이다.  → 아래 WSL 확정 명령.
+
+**(e) WSL 확정 명령** (읽기 전용 · 쓰기 = `<새 빈 폴더>` 안만 · 경로 = 자리표시 · 침대당 수 초) — 파일로 저장 → 자리표시를 바꾼 뒤 `bash 파일` (자리표시가 남으면 문법 오류로 아무것도 돌지 않는다 · 셸에 붙여 넣지 않는다 — `exit` 가 셸을 닫는다)
+
+```bash
+B7=<발사 체크아웃 — 승인 핀 B7 · 깨끗>
+MAIN=<이 판정 문서가 있는 리포 체크아웃>
+R=<194 배치 ROOT>
+PY=<B7 manifest 의 python — 3.12.3 · numpy 2.5.2 · scipy 1.18.1>
+Q=<새 빈 폴더>
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+test "$(git -C "$B7" rev-parse HEAD)" = 35f0327377a4213774010a090df4d224e50d29e1 || { echo '⛔ B7 체크아웃 아님'; exit 1; }
+test "$(git -C "$B7" status --porcelain --untracked-files=no | wc -l)" -eq 0 || { echo '⛔ dirty'; exit 1; }
+test ! -e "$Q" || { echo '⛔ Q 가 이미 있다'; exit 1; }
+mkdir -p "$Q/v12" && tar -xzf "$MAIN/docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/net194_tau_sources_20261006.tar.gz" -C "$Q/v12"
+cd "$Q" || exit 1
+for C in lhs00_123 lhsx_026; do
+  V12="$Q/v12/cases/$C/work/results/$C"
+  "$PY" -I "$MAIN/docs/data/lhs_network214_35f032737_20261030/s5_judgment/tools/s5_q1_electrode_settle.py" \
+      --repo "$B7" --case-dir "$R/cases/$C/work/results/$C" \
+      --v12-dual "$V12/network_conductivity_dual.json" --v12-prov "$V12/network_provenance.json" \
+      --b7-manifest "$R/manifest.json" --b7-reread "$R/reread.json" --case "$C" --out "$Q/out_$C"
+  echo "$C rc=$?"
+done
+tar czf "$Q/q1_settle_$(date +%Y%m%d).tar.gz" -C "$Q" out_lhs00_123 out_lhsx_026      # 이 묶음 + 화면을 메인에 반입
+```
+
+- 도구가 하는 일: B7 실행 자신의 입력 (`atoms.csv` · `contacts.csv` · `mesh_info.json` · `input_params.json`) 으로 B7 코드 (`_run_all_networks(contact_mode='hertzian')`) 를 안에서 부르고, H0 이온 망의 세 가지 풀이마다 **같은 망 · 같은 간선 저항**을 옛 전극 (`docs/data/gen2_design_20261006/c1/netsolve.py` `solve_adaptive` — 옛 g_b 규칙 재구현) 과 새 전극 (B7 값 + `solve_dirichlet` 교차 확인) 으로 푼다.  검사: A0 입력 지문 = B7 provenance · A 안에서 부른 값 = B7 기록 (저장 반폭 0.5e-8 안) · A_code 불러온 리포 모듈 sha256 = 봉인 code_hashes · A_run provenance run id = reread run id ∧ reread 표 값 = dual 기록 · B 같은 망의 옛 전극 값 = v1.2 기록 · case-dir 안 바뀜.
+- 결과 전 기대 (**추정**): 두 행 INCLUDE · lhs00_123 Δ_전극 ≈ 1e-5–4e-5 · lhsx_026 Δ_전극 ∈ (1.5226e-4, 1.5231e-4) (기록 차 ± 한 칸).
+
+**(f) 결과의 뜻 — 싣는가 · 보류하는가**
+
+| 도구 결과 (`settle_<case>.json` · rc) | 뜻 | 처리 |
+|---|---|---|
+| INCLUDE (rc 0) — A0 · A · A_code · A_run · B 모두 참 | 같은 입력 · 같은 봉인 코드 · 같은 망에서 v1.2 → B7 차이 = 전극 모형뿐 · 정확한 Δ = `rows.full.d_electrode` | **싣는다** — 등록 §5-7 *"그 밖의 차이는 보고하고 원인을 밝힌 뒤에만 싣는다"* 의 원인 = 선언된 전극 변경 (Δ 와 1.5e-4 대비를 결과 칸에 적는다 · lhsx_026 은 전극만이어도 1.5e-4 를 넘는다 → (h) 문구 정정) |
+| HOLD (rc 3) — A0 · A · A_code · A_run 중 거짓 | B7 기록을 그 입력 · 코드로 다시 만들지 못한다 = 원인을 가를 바탕이 없다 | **보류** — 입력 자리 · 체크아웃을 확인하고 다시 (화면 그대로 보고) |
+| HOLD (rc 3) — B 거짓 | 같은 망을 옛 전극으로 풀어도 v1.2 값이 안 나온다 = 전극 밖의 차이 (간선 · 노드 · 띠) 가 있다 | **보류** — 원인 조사 (간선 대조) · 1저자 보고 |
+| INCONCLUSIVE (rc 4) | v1.2 가 CG 경로 (옛 반복해 오차) — B 를 판정하지 않는다 | 두 행은 해당 없음 (관통 < 30,000) |
+| rc 2 | 입력 결손 · `--out` 이 비어 있지 않음 | 자리 확인 |
+
+**(g) 도구 검증 (이 컨테이너 · 커밋된 real_14 덤프)** — `tools/s5_q1_validate_real14.sh` (`tools/s5_q1_validate_fixtures.py` 보조) · 산출 `q1_settle_validation.json`
+
+| 경우 | 픽스처 | 결과 (기대) |
+|---|---|---|
+| cg | v1.2 기록 = 11fcf91e8 모듈 그대로 (real_14 관통 32,234 → CG 경로) | INCONCLUSIVE rc 4 (4) |
+| inc · incfull | 같은 모듈의 CG 문턱만 끈 사본 (직접해) + `--assume-v12-direct` (검증 전용) · incfull = + 받은 B7 manifest 의 code_hashes · reread 픽스처 | INCLUDE rc 0 (0) · A_code = 불러온 봉인 모듈 8 개 모두 = B7 manifest |
+| negA · negA0 · negB · negRun · negCode | B7 기록 +3 칸 · 입력 지문 0 · v1.2 기록 +3 칸 · run id 다름 · 망 코드 지문 0 (사본) | HOLD rc 3 (3) 다섯 |
+
+- 값: B7 CLI = 0.02102106 · 안에서 부른 B7 = 0.0210210554 (기록과 같은 칸) · 옛 모듈 기록 (CG · 직접해 사본 둘 다) = 0.0210206 · 같은 망 옛 전극 = 0.0210206038 · Δ_전극 FULL **2.1488e-5** = 설계 기록 §3 (×1.0000219) · `net_beds_real14.json` 과 같다 · netsolve Dirichlet ↔ B7 상대 7e-15.
+
+**(h) 관찰 · 1저자 확인**
+
+- 열 사전 문구 반례: 인계 생성기 `CAVEAT_TAU_NET` 의 *"배포값 변화 ≤ 1.5e-4"* 는 lhsx_026 (1.5228e-4 · 해상도 위) 에서 원인과 무관하게 틀린다 (배포값 변화를 말하는 문장이다).  고치면 봉인 인계 도구 지문 (`scripts/lhs_design_dataset.py` d1815155…) 이 바뀌어 단계 A 의 manifest 대조가 막힌다 → **1저자 결정 (§11-6 Q6)**.
+- v1.2 의 CG 66 행: 옛 모듈의 `cg(…, tol=1e-8)` 이 scipy 1.18.1 (두 배치 manifest) 에서 TypeError (`tol` 은 1.14 에서 빠짐) → `cg(…, atol=1e-8)` (기본 rtol 1e-5) 로 풀렸다.  크기: 설계 침대 module_check real_14 −3.1e-9 · case15 −1.3e-7 · 이 컨테이너 real_14 = 직접해 사본과 같은 칸 → 1.5e-4 판단에 영향 없음 · 두 행은 직접해 · B7 은 rtol 1e-10 + 증서 (관찰 · 결정 불요).
+
