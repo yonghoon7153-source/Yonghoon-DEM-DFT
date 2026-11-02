@@ -11990,6 +11990,44 @@ def t_PE01c():
     return got == (0, 0, 3, True, False, True), got
 
 
+@check('PE01f', '★ 11-02 PC7-01 시작 기록을 못 쓴 입구 (구현과 함께 · 변이 F14) — 시작 기록 덧붙임이 멈춤 (원장 잠금 · git 실패 흉내) → rc 3 · 러너 0 회 · 원장 '
+                '무변경 (시작 기록 · 결과 줄 없음) · 시도 폴더 = attempt.json 만 · 같은 명령 = 화면만 (PC6-09 · recover 안내) → recover --ledger = 결과 줄 '
+                'interrupted · 결과 전 (원인 기록 없음 = 재실행 자격 False) → 같은 대상 새 --add = rc 0 (결과 전 시도 = 다음 시도)')
+def t_PE01f():
+    def go():
+        d, _rc, _so = led_new('PE01f')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        base = Path(TD) / 'runs' / 'PE01f'
+        raw0 = led_raw(d)
+        old = RR.ledger_append
+
+        def refuse_start(repo, obj, msg, expect=None, _old=old):
+            if isinstance(obj, dict) and obj.get('kind') == 'start':
+                raise RR.Stop('ATTEMPT_LEDGER_MISMATCH', '시험 — 원장 잠금을 대기 상한 안에 못 잡았다 (흉내)')
+            return _old(repo, obj, msg, expect=expect)
+        RR.ledger_append = refuse_start
+        try:
+            w = world('PE01f')
+            a = lad_att('PE01f', w, d, n1, base=base)
+        finally:
+            RR.ledger_append = old
+        f1 = base / f'attempt_{n1}'
+        files = sorted(x.name for x in f1.iterdir()) if f1.is_dir() else None
+        row_a = (a['rc'], n_calls(w), led_raw(d) == raw0, files, '시작 기록을 못 썼다' in a['so'])
+        w2 = world('PE01f_again')
+        b = lad_att('PE01f_b', w2, d, n1, base=base)
+        row_b = (b['rc'], n_calls(w2), led_raw(d) == raw0, '--stage recover' in b['so'])
+        rc_r, _so_r = call(['--stage', 'recover', '--out', str(f1), '--ledger', str(d)])
+        r1 = pc_res(d, n1)
+        add2 = led_add(d, 'ladder:P0')
+        return row_a, row_b, rc_r, r1, add2[0], [x.get('kind') for x in led_lines(d)]
+    got = scen('PE01f', go)
+    want = ((3, 0, True, ['attempt.json'], True), (3, 0, True, True), 0,
+            {'status': 'interrupted', 'side': 'pre', 'cause': 'parent_dead', 'resume_ok': False, 'by': 'recover'}, 0,
+            ['header', 'entry', 'result', 'entry'])
+    return got == want, got
+
+
 # ═════════════════════════ 실행 ═════════════════════════
 def main(argv=None):
     global RR, TD
