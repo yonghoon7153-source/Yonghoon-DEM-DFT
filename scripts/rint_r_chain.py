@@ -139,6 +139,9 @@
   판정 · 합치기 · 입력 시도 · 재실행 풀기 전 · 원장 역사 = 첫 부모 위) · 자원 낱말 = 메모리 · 디스크 다섯 · 요약 없는 시도 원인 (`orphan_cause` · 같은 낱말
   규칙) · 사슬 예외 = `CHAIN_EXCEPTION` · 산 사슬은 recover 하지 않음 (`chain_parent_alive`) · 다른 부팅 = 미확인 + `--operator-confirm` · `--operator-why` ·
   Z 지도자의 산 스레드 · 못 읽는 environ = 미확인 · 원장 잠금 · 되돌림 (`ledger_lock`) · 다시 판정 = 판정 입력 밖 다른 대상 시도에 흔들리지 않음
+★ 11-02 사전 공격 6 회차 (PC6-01 · 02 · 09 · 12 · 13 · 1저자 11-02 "권고대로해요" · 규칙 정본 = 등록 R §10-5 아 ② · ⑥ · ⑦): 그룹 원 = 러너 세션 · 계보 ·
+  CUDA 표지 (`CUDA_ERROR_WORDS` · 라이브러리 상태 문자열 · `CUDA error:`) = 모든 길 · 같은 --attempt 재입력 = 화면만 · 찾은 시도 폴더 ↔ 원장 항목
+  (`found_attempts_problem`) · 그룹 미확인 + 러너 실패 rc = 러너 rc 길의 낱말 규칙 (`runner_rc_failed` · recover 끝 기록 `chain_end`)
 """
 import argparse
 import contextlib
@@ -429,7 +432,8 @@ STOPS = {
                            'C6 #15 · Q11 · Q9 §3-4)',
     'PLAN_DOC_MISMATCH': '등록 R 의 계획 숫자 블록 ≠ 계획 JSON 에서 생성한 블록 (없음 · 둘 · 값 다름 · 표지 하나만 · ★ 10-27 묶음 C1a · 판정문 C6 #30)',
     'GROUP_UNCONFIRMED': '러너 프로세스 그룹이 다 끝났는지 확인하지 못했다 (그룹 표지 프로세스가 대기 상한 안에 남음 · /proc 를 못 읽음 · ★ 10-28 밤 PC5-07 '
-                         'environ 을 못 읽는 그룹 원 후보 · ★ 10-27 묶음 C2b · Codex 회차 ① ② — 그 런의 팔을 읽지 않는다 · 사람이 보고 --stage recover)',
+                         'environ 을 못 읽는 그룹 원 후보 · ★ 10-27 묶음 C2b · Codex 회차 ① ② — 그 런의 팔을 읽지 않는다 · 사람이 보고 --stage recover · '
+                         '★ 11-02 PC6-13 러너가 스스로 0 아닌 rc 로 끝났으면 원인 = 러너 rc 길과 같은 낱말 규칙 · 기본 runner_rc)',
     'CHAIN_EXCEPTION': '사슬 자신의 예외 (Stop 아님 · 원장 시도 꼴 단계 안 · ★ 10-28 밤 PC5-06 ② — 요약 · 결과 줄 (원인 chain_exception · 재실행 불가) 을 쓴 뒤 '
                        '예외를 다시 올린다)',
     #  ★ 10-27 묶음 C1b (RCA2-05 · Q4 (가) · Q9 설계 §3-2 · §3-4 · §3-5 · §7 의 이름 · author 10-27 approved bundle C) — 시도 원장 · 시도 폴더
@@ -2767,7 +2771,8 @@ EXPANSION_KEYS = frozenset({'schema', 'variant', 'points', 'overflow', 'attempts
 RC_EXPANSION_NEEDED = 4
 #: 재실행 자격 원인 (Q9 §3-5 개정 4 — 자원 · 인프라 = 시간 초과 · 사슬이 받은 신호 · 사슬 부모 사망 (원인 기록 없음) · 그룹 종료 미확인 · 자원 낱말).
 #:   그 밖 원인 (gate = 런 전 관문 · check = 팔을 읽은 뒤 검사 · 수치 · 물리 · runner_rc = 낱말 없는 러너 rc · ★ 10-28 밤 PC5-06 chain_exception = 사슬
-#:   자신의 예외 (Stop 아님) · 그룹 끝 기록의 사슬 예외) = 재실행 불가 (보수 쪽).
+#:   자신의 예외 (Stop 아님) · 그룹 끝 기록의 사슬 예외) = 재실행 불가 (보수 쪽).  ★ 11-02 PC6-13 — 그룹 미확인 · 사슬 부모 사망이어도 러너가 스스로 0 아닌
+#:   rc 로 끝난 기록이 있으면 그 런 = 러너 rc 길의 낱말 규칙 (`stop_cause` · `orphan_cause` · 기본 runner_rc).
 RESUME_CAUSES = frozenset({'timeout', 'signal', 'parent_dead', 'group_unconfirmed', 'resource'})
 #: 런 로그의 자원 낱말 (정확한 글자) — ★ 10-28 밤 PC5-02 (1저자 Q2 · 등록 R §10-5 PC5 블록) = **메모리 · 디스크 다섯만** (GPU 메모리 · 호스트 메모리 ·
 #:   디스크 부족).  옛 아홉 (10-28 낮) 의 cupy 오류 **클래스 이름** `CUDARuntimeError` · `CUDADriverError` 는 모든 CUDA 오류 줄에 들어 있어 device-side
@@ -2782,9 +2787,14 @@ NOT_RESOURCE_WORDS = ('CUDA_ERROR_ILLEGAL_ADDRESS', 'cudaErrorIllegalAddress')
 #: ★ 11-02 PC6-02 (사전 공격 6 회차) — 그 밖 CUDA 오류 표지 (1저자 10-28 Q2 "그 밖 CUDA 오류 (cupy 클래스 이름만 있는 줄 포함) = 자동 재실행 없음 (runner_rc)")
 #:   = 드라이버 오류 이름 (`CUDA_ERROR_…`) · 런타임 오류 이름 (`cudaError…`) · cupy 오류 클래스 이름 둘.  `words_cause` 가 자원 낱말 **뒤에** 본다 (메모리 부족
 #:   줄 `CUDADriverError: CUDA_ERROR_OUT_OF_MEMORY` · `CUDARuntimeError: cudaErrorMemoryAllocation` = resource 그대로 · 잘못된 주소만 먼저 = Q2 차례) · 길 무관
-#:   (요약 있는 길 러너 rc · 시간 초과 · 신호 · 그룹 미확인 · 요약 없는 길 = 같은 함수 — 옛 = 러너 rc 길에서만 기본값 runner_rc 로 섰다).  한정: cupy 라이브러리
-#:   상태 오류 (`CUBLAS_STATUS_…` · `CUSPARSE_STATUS_…` 등) · 다른 꼴 (`CUDA error:`) 은 표에 없다 (Q2 의 낱말이 아님 · 러너 rc 길에서만 runner_rc).
-CUDA_ERROR_WORDS = ('CUDA_ERROR_', 'cudaError', 'CUDARuntimeError', 'CUDADriverError')
+#:   (요약 있는 길 러너 rc · 시간 초과 · 신호 · 그룹 미확인 · 요약 없는 길 = 같은 함수 — 옛 = 러너 rc 길에서만 기본값 runner_rc 로 섰다).  ~~한정: cupy 라이브러리
+#:   상태 오류 (`CUBLAS_STATUS_…` · `CUSPARSE_STATUS_…` 등) · 다른 꼴 (`CUDA error:`) 은 표에 없다 (Q2 의 낱말이 아님 · 러너 rc 길에서만 runner_rc).~~
+#:   ★ 11-02 (1저자 11-02 "권고대로해요" · 원장 PC6-02 decision_note) — CUDA 라이브러리 상태 문자열 `CUBLAS_STATUS_` · `CUSOLVER_STATUS_` · `CUSPARSE_STATUS_` ·
+#:   `CUFFT_` · 다른 꼴 `CUDA error:` 도 표지 (모든 길 · 차례 그대로 = 잘못된 주소 → 자원 낱말 → 표지).  ⚠ 한정 (⬜ 1저자): 자원 낱말 다섯이 없는 메모리 실패 꼴
+#:   (`*_ALLOC_FAILED` · `CUSPARSE_STATUS_INSUFFICIENT_RESOURCES` · 맨 `CUDA error: out of memory` (PyTorch · C++ 꼴 — 지금 payload 는 cupy · torch 없음)) = 이제
+#:   runner_rc (자동 재실행 없음 · 보수 쪽) · 부분 문자열 · 대소문자 그대로 (`CUDA Error:` 는 아님 · 무해한 언급도 재실행을 막음 = 보수 쪽).
+CUDA_ERROR_WORDS = ('CUDA_ERROR_', 'cudaError', 'CUDARuntimeError', 'CUDADriverError', 'CUBLAS_STATUS_', 'CUSOLVER_STATUS_', 'CUSPARSE_STATUS_', 'CUFFT_',
+                    'CUDA error:')
 #: ★ 10-28 밤 PC5-06 ② — 사슬 예외 (Stop 아님 · 원장 시도 꼴 단계 안) = 멈춤 이름 · 결과 줄 원인 (재실행 불가)
 CHAIN_EXCEPTION = 'CHAIN_EXCEPTION'
 #: ★ 10-28 밤 PC5-01 — 결과 줄에서 폴더 증거로 다시 세는 칸 (utc · by · 폴더 · 요약 sha 뺌 — 폴더 · 요약 sha 는 따로 대조)
@@ -3607,6 +3617,20 @@ def words_keep(txt, base):
     return 'runner_rc' if words_cause(txt, None) == 'runner_rc' else base
 
 
+def runner_rc_failed(rc):
+    """★ 11-02 PC6-13 (1저자 11-02 "권고대로해요" = 선택지 A) — 런 기록 · 사슬 끝 기록의 러너 rc 가 실패 = 정확한 정수 0 도 None (모름 · 사슬이 죽인 런) 도
+    아님 → True.  꼴 틀린 값 (bool · 실수 · 글) 도 0 이 아님 = True (보수 쪽 — 낱말 규칙 · 기본 runner_rc = 자동 재실행 없음).  사슬이 쓰는 값 = int | None
+    (`Runner._execute` · `run_in_group`)."""
+    return rc is not None and not (type(rc) is int and rc == 0)
+
+
+def chain_end_failed(er):
+    """★ 11-02 PC6-13 — recover 가 갈아 쓴 끝 기록 (by recover) 이 품은 사슬의 옛 끝 기록 요약 (`chain_end` · `recover_group`) 에 러너 스스로의 실패 rc 가
+    있나 = 원인 None (러너가 스스로 끝남 · 디스크의 정리 중 신호 포함 — 사슬이 죽인 런 = 원인 timeout · signal · rc −9 는 아님) + `runner_rc_failed`."""
+    ce = er.get('chain_end') if isinstance(er, dict) else None
+    return isinstance(ce, dict) and ce.get('cause') is None and runner_rc_failed(ce.get('rc'))
+
+
 def run_log_text(base, run):
     """<base>/logs/<run>.log 글 — 런 이름 없음 · 파일 없음 · 못 읽음 = '' (요약 있는 길 · 그 런 로그가 없으면 낱말 없음)."""
     lp = Path(base) / 'logs' / f'{run}.log' if run else None
@@ -3620,7 +3644,9 @@ def stop_cause(s, folder):
     """멈춘 단계 요약 → 원인 이름 (기록 · 재실행 자격) — timeout · signal · group_unconfirmed · resource (러너 rc · 그 런 로그에 자원 낱말) · runner_rc ·
     gate (런 없이 멈춤) · check (팔을 읽은 뒤의 멈춤 · 등록 결과) · ★ 10-28 밤 chain_exception (사슬 예외 · PC5-06 ②).  ★ 10-28 밤 PC5-06 (같은 낱말
     규칙) — 재실행 자격 원인 (시간 초과 · 신호 · 그룹 미확인) 이어도 멈춘 런 로그에 잘못된 주소 낱말이 있으면 runner_rc (코드 결함 꼴을 신호 · 시간 초과로
-    비켜 재실행하지 않는다) · ★ 11-02 PC6-02 그 밖 CUDA 오류 표지도 (`words_keep` = `words_cause` 한 규칙)."""
+    비켜 재실행하지 않는다) · ★ 11-02 PC6-02 그 밖 CUDA 오류 표지도 (`words_keep` = `words_cause` 한 규칙).  ★ 11-02 PC6-13 (1저자 11-02 선택지 A) — 그룹
+    미확인이어도 멈춘 런 기록의 러너 rc 가 실패 (`runner_rc_failed` · 런 기록 rc = 러너가 스스로 끝났을 때만 · 사슬이 죽인 런 · 정리 중 신호 = None) 면 러너 rc
+    길과 같은 낱말 규칙 (`words_cause` · 기본 runner_rc — 파이썬 traceback 런을 그룹 미확인으로 비켜 재실행하지 않는다 · 옛 = group_unconfirmed · 재실행 자격)."""
     code = (s.get('stop') or {}).get('code') or s.get('status')
     txt = run_log_text(folder, (s.get('stop') or {}).get('run'))
     if code == CHAIN_EXCEPTION:
@@ -3637,6 +3663,9 @@ def stop_cause(s, folder):
     elif code == 'TIME_LIMIT':
         base = 'timeout'
     elif code == 'GROUP_UNCONFIRMED':
+        rr, _od = _stopped_run(s, folder)
+        if runner_rc_failed((rr or {}).get('rc')):            # ★ 11-02 PC6-13 — 러너 rc 길과 같은 규칙 (그룹 미확인이 러너 rc ≠ 0 을 가리지 않는다)
+            return words_cause(txt, 'runner_rc')
         base = 'group_unconfirmed'
     else:
         return 'gate' if not s.get('runs') else 'check'
@@ -3650,7 +3679,9 @@ def orphan_cause(folder):
       · 끝 기록 by chain · 원인 None · rc 0 = 끝난 런 (건너뜀)
       · by chain · 원인 None · 그 밖 rc (러너가 끝난 뒤 요약 전 사망) = 낱말 (없음 = runner_rc) · 시간 초과 · 신호 = timeout · signal (로그에 잘못된 주소 ·
         ★ 11-02 PC6-02 그 밖 CUDA 오류 표지 = runner_rc · `words_keep`) · exception (기다림 중 사슬 예외) = chain_exception
-      · by recover (그 런 도중 사슬 부모 사망) = 낱말 (없음 = parent_dead)
+      · by recover (그 런 도중 사슬 부모 사망) = 낱말 (없음 = parent_dead) · ★ 11-02 PC6-13 — 그 끝 기록이 사슬의 옛 미확인 끝 기록 요약 (`chain_end` ·
+        `recover_group` · 사슬이 끝 기록을 쓴 뒤 · 단계 요약 전에 죽은 창) 을 품고 러너 스스로의 실패 rc (`chain_end_failed`) 가 있으면 낱말 (없음 = runner_rc ·
+        요약 있는 길 `stop_cause` 의 그룹 미확인 + 러너 rc 와 같은 규칙) · chain_end 없음 (사슬이 끝 기록 전에 죽음 = 러너 rc 를 모름) = 옛 그대로
     런 여럿 = 재실행 불가 원인이 하나라도 있으면 그것 (시작 차례 첫) · 아니면 마지막 · 끝나지 않은 런이 없으면 parent_dead (런 사이 사망) · 그룹 기록이 하나도
     없음 · 기록 · 그 런 로그를 못 읽음 · 모르는 꼴 = 읽음 False (재실행 자격 없음 · 보수)."""
     folder = Path(folder)
@@ -3680,7 +3711,7 @@ def orphan_cause(folder):
         except OSError:
             txt, ok = '', False
         if by == 'recover':
-            c = words_cause(txt, 'parent_dead')
+            c = words_cause(txt, 'runner_rc' if chain_end_failed(er) else 'parent_dead')   # ★ 11-02 PC6-13 — 사슬 끝 기록이 남긴 러너 rc
         elif by != 'chain':
             c, ok = 'parent_dead', False
         elif gc is None:
@@ -4158,8 +4189,10 @@ class Runner:
         rec['rc'], rec['seconds'] = (rc if cause is None else None), round(time.time() - t0, 3)
         rec['group_cause'] = cause           # ★ 10-27 묶음 C1b — 그룹 원인 (None · timeout · signal · signal_after · 원장 결과 줄의 원인 · 재실행 자격)
         if not end['confirmed']:
-            raise Stop('GROUP_UNCONFIRMED', f'{name}: 러너 그룹 종료 미확인 (남은 표지 프로세스 {end["left"]} · 원인 {cause}) — 그 런의 팔을 읽지 '
-                                            f'않는다', name)
+            #  ★ 11-02 PC6-13 — 멈춤 이름 = GROUP_UNCONFIRMED 그대로 (recover 먼저 · 팔을 읽지 않음) · 원인 · 재실행 자격 = `stop_cause` 가 런 기록 rc (위 줄 =
+            #    러너가 스스로 끝났을 때만 · 사슬이 죽인 런 · 정리 중 신호 = None) 로 가른다 (실패 rc = 러너 rc 길과 같은 낱말 규칙 · 기본 runner_rc) · 문장에 러너 rc
+            raise Stop('GROUP_UNCONFIRMED', f'{name}: 러너 그룹 종료 미확인 (남은 표지 프로세스 {end["left"]} · 원인 {cause} · 러너 rc {rec["rc"]}) — 그 런의 '
+                                            f'팔을 읽지 않는다', name)
         if cause == 'timeout':
             raise Stop('TIME_LIMIT', f'{name}: 시간 상한 안에 끝나지 않았다 (러너 그룹을 죽이고 종료를 확인했다)', name)
         if cause == 'signal':
@@ -6418,12 +6451,25 @@ def recover_group(lp, me, operator=None):
         `unsure` · 사유 = 확인 불가 pid)
       · 그 밖 (다른 · 모르는 부팅 · 다른 · 모르는 pid 이름공간 · 다른 machine_id) = **미확인** (여기서 그 프로세스를 볼 수 없다 · machine_id 는 기계 정체가 아니다 —
         복제 디스크 이미지 · 같은 이미지의 컨테이너가 같은 값 · 옛 = 같은 machine_id 의 다른 부팅 = 재부팅 확인) · operator (운영자 확인 표지 {attempt ·
-        why} · 그 시도 폴더의 그룹만) 가 있으면 그 기록 (사유 · 시각 · 이 호스트 · 시작 기록 호스트) 과 함께 확인."""
+        why} · 그 시도 폴더의 그룹만) 가 있으면 그 기록 (사유 · 시각 · 이 호스트 · 시작 기록 호스트) 과 함께 확인.
+    ★ 11-02 PC6-13 — 갈아 쓰는 옛 끝 기록이 사슬의 것 (by chain · 미확인) 이면 새 끝 기록에 그 요약 `chain_end` = {rc · cause · confirmed · ended_utc} (러너
+    스스로의 rc 를 잃지 않는다 — `orphan_cause` 가 `chain_end_failed` 로 읽는다 · 옛 = 덮어써 잃음 → 파이썬 결함 런도 parent_dead · 재실행 자격) · 옛 끝 기록이
+    recover 의 것 (미확인) 이고 chain_end 가 있으면 그대로 이어받음 · 옛 끝 기록 없음 · 못 읽음 · 그 밖 = 칸 없음 (옛 모양 · 러너 rc 를 모름 = 옛 규칙).
+    새 끝 기록의 rc 는 None 그대로 (재실행 원천의 "끝난 런" = rc 0 판정 `ResumeRunner._src_done` 을 흔들지 않는다)."""
     nm = lp.name[:-len('.launch.json')]
     try:
         L = json.loads(lp.read_text(encoding='utf-8'))
     except (OSError, UnicodeDecodeError, ValueError):
         L = None
+    try:
+        prev = json.loads(lp.with_name(nm + '.end.json').read_text(encoding='utf-8'))
+    except (OSError, UnicodeDecodeError, ValueError):
+        prev = None
+    chain_end = None
+    if isinstance(prev, dict) and prev.get('by') == 'chain':
+        chain_end = {k: prev.get(k) for k in ('rc', 'cause', 'confirmed', 'ended_utc')}
+    elif isinstance(prev, dict) and prev.get('by') == 'recover' and isinstance(prev.get('chain_end'), dict):
+        chain_end = prev['chain_end']
     tok = (L or {}).get('token') if isinstance(L, dict) else None
     confirmed, left, killed, why, op_rec, unsure = False, None, 0, None, None, None
     if not (isinstance(tok, str) and re.fullmatch(r'[0-9a-f]{32}', tok)):
@@ -6468,6 +6514,8 @@ def recover_group(lp, me, operator=None):
            'left': left, 'left_after_exit': None, 'killed': killed, 'unsure': unsure, 'by': 'recover', 'why': why, 'host': me, 'ended_utc': _utc()}
     if op_rec is not None:
         end['operator'] = op_rec
+    if chain_end is not None:
+        end['chain_end'] = chain_end                       # ★ 11-02 PC6-13
     return end, None
 
 
