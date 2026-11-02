@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-02 · managed-files: 553
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-02 · managed-files: 554
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 344건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 345건)
+- 2026-11-02 · `kb/reports/server_usage_gabia_2026_10.md` — 서버 용도 설명서 2026-10 (GABIA GPU SERVER · RTX A6000) · 초안 (2026-11-02 · 사용자 양식 '3. 서버 용도 설명서.…
 - 2026-11-01 · `kb/reports/weekly_2026_11_01.md` — 주간 정리 2026-10-26 ~ 11-01 (주간보고 초안) · 초안 (2026-11-01 · 도는 계산은 마지막 실측 기준 — kg…
 - 2026-10-30 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-10-30 · `kb/reviews/li2s1a_DA_prompt_li2s_glass_bmeas_650k_readout_2026_10_19.md` — DA 프롬프트 — li2s B 측정 가능 조건 카드 ① 단계 판독: N_B 5/5 · 골격 이동 2 (이량체 다리 교환) · R 집합 3 → R 불가 · A 650 K 여부 · 모델 검증 (UMA–PBE p1 · p1 · BVSE) · 트랙 마감 제안 · 새 트랙 여부 · 발송 안 함 — 2026-10-30 사용자 위임 (외부 1저자 확인 …
@@ -26,7 +27,6 @@
 - 2026-10-22 · `kb/reviews/codex_DD_reply_wad_outsourcing_round2_v4_2026_10_22.md` — DD 회신 — W_ad 외주 2차 묶음 v4 (1e4d113d2 · MANIFEST 39522906…): NO-GO · P1 2 (run_aborted 루트 감사 불가 기록을 봉인 필터가 버림 — 새 fail-open · 뺀 bash rc 검사는 awk -v 이스케이프 해석 때문에 awk 검사와 동등하지 않음) · P2 2 (미등록 흔적 보장 범위 = 반송물에 도착한 흔적 · rc=-0 설명 정정) · Q-DD-2 · 3 GO · 재승인 최소조건 셋 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-10-22 · `kb/reviews/codex_DE_prompt_wad_outsourcing_round2_v5_2026_10_22.md` — DE 프롬프트 — W_ad 외주 2차 묶음 v5 확인: DD 재승인 최소조건 셋 (봉인 필터의 루트 감사 불가 · rc 원문 검증 · 결박 갱신) + 같은 종류 (INCAR 이스케이프 · ENCUT 숫자 꼴) · 발송 승인 여부 · 발송 2026-10-22 (사용자 · 기준 커밋 9ddfbe448 ·…
 - 2026-10-22 · `kb/reviews/codex_DE_reply_wad_outsourcing_round2_v5_2026_10_22.md` — DE 회신 — W_ad 외주 2차 묶음 v5 (9ddfbe448 · MANIFEST 714324cc…): GO · 발송 동의 · P0/P1 없음 · 비차단 P2 1 (selftest 시험 이름의 -0 설명) · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…
-- 2026-10-22 · `kb/projects/handoff_2026_10_22_evacuation.md` — 대피 인계 — 2026-10-22 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · W_ad 외주 2차 CZ 고침 설계 포함) · 진행
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -435,10 +435,11 @@
 - `kb/reviews/vasp_bundle_codex_request_2026_08_11.md` — Codex 검토 요청 — VASP 외주 원샷 번들 (자리 선호 + E_ads)  (2026-08-11 · 회신 대기)
 - `kb/reviews/vasp_bundle_v2_rereview_request_2026_08_11.md` — Codex 재검토 요청 — VASP 번들 v2 (HOLD 10항 반영 완료 · 발송 GO/NO-GO)  (2026-08-11 · 회신 대기 (GO/NO-GO))
 
-## reports/ (9)
+## reports/ (10)
 - `kb/reports/paper_first_author_requests_2026_08.md` — 논문 1저자 요청 — 답변 누적 (2026-08~)
 - `kb/reports/sdcp_preliminary_final_2026_08_03.md` — SDCP 예비 최종 보고서 (2026-08-03)
 - `kb/reports/sdcp_review_action_plan_2026_08_03.md` — SDCP 파이프라인 — 리뷰 2건 통합 실행계획 (2026-08-03)
+- `kb/reports/server_usage_gabia_2026_10.md` — 서버 용도 설명서 2026-10 (GABIA GPU SERVER · RTX A6000)  (2026-11-02 · 초안 (2026-11-02 · 사용자 양식 '3. 서버 용도 설명서.…)
 - `kb/reports/weekly_2026_09_14.md` — 주간 정리 2026-09-07 ~ 09-13 (주간보고 초안)  (2026-09-14 · 완료 (2026-09-14 · 다음 주 문서는 새 파일))
 - `kb/reports/weekly_2026_09_20.md` — 주간 정리 2026-09-14 ~ 09-20 (주간보고 초안)  (2026-09-20 · 완료 (2026-09-20 · 다음 주 문서는 새 파일))
 - `kb/reports/weekly_2026_09_27.md` — 주간 정리 2026-09-21 ~ 09-27 (주간보고 초안)  (2026-09-28 · 완료 (2026-09-28 · 다음 주 문서는 새 파일))
