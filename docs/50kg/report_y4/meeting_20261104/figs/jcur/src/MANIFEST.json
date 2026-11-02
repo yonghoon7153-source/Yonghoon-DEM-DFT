@@ -1,0 +1,46 @@
+{
+ "what": "7장 이온 전류 3D 원 캡처 (1저자 11-02 웹앱 · ionic.zip) — 3D PNG 셋은 크기 (13.5 MB) 때문에 리포에 안 두고 sha256 만 · 잘라 낸 그림 = ../jcur3d_{3,2,1}um.png (put_jcur_s7.py 에 다시 넣어도 같은 그림)",
+ "zip_sha256": "fec2f781029293ac529239d24d248756d5312f2915a07501b027e670687bc77d",
+ "webapp_view": "이온 (SE–SE) · Hertz FULL · 1 V · 전류 = 전체 · 선형 눈금 · 색 위쪽 = 고른 접촉 j 의 p50",
+ "beds": {
+  "D3": {
+   "label": "3 µm",
+   "current_carrying_contacts": 8874,
+   "colorbar_ticks_A_cm2": [
+    "7.5×10⁻⁷",
+    "0.047",
+    "0.094"
+   ],
+   "raw_3d": "D3_ionic.png",
+   "raw_3d_sha256": "d4a3d89dee583a9e17704e0677cae84ae8c138ed22d7c95c832eed757488bfc6",
+   "raw_colorbar": "colorbar_net_current_ionic_hertzian_1V_linear_p50_D3.png",
+   "raw_colorbar_sha256": "da15a0d8ee0056edaf2f25a36a7e3e8e43a4eb6f61e917dbd3ac04729d979fd7"
+  },
+  "D2": {
+   "label": "2 µm",
+   "current_carrying_contacts": 39402,
+   "colorbar_ticks_A_cm2": [
+    "2.7×10⁻⁶",
+    "0.07",
+    "0.14"
+   ],
+   "raw_3d": "D2_ionic.png",
+   "raw_3d_sha256": "648109fa7183799e81697af67130d6dccc4a32ac3afde5f149da8b9b1dda3513",
+   "raw_colorbar": "colorbar_net_current_ionic_hertzian_1V_linear_p50_D2.png",
+   "raw_colorbar_sha256": "cd7952cd4746e971e62909b9c73548d91905c70619866581a3e21cac75c7013d"
+  },
+  "D1": {
+   "label": "1 µm",
+   "current_carrying_contacts": 407118,
+   "colorbar_ticks_A_cm2": [
+    "1.2×10⁻¹⁰",
+    "0.11",
+    "0.22"
+   ],
+   "raw_3d": "D1_ionic.png",
+   "raw_3d_sha256": "b6b218c7f20ce96e5d661c2f934fc12744d9251307e1ccdb6e271d061677972a",
+   "raw_colorbar": "colorbar_net_current_ionic_hertzian_1V_linear_p50_D1.png",
+   "raw_colorbar_sha256": "d2a975577fde27745eb741cdfadec6f1af23e2bd4909ea4c9ce8c2d8152bdc1f"
+  }
+ }
+}

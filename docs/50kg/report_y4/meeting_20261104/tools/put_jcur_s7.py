@@ -2,6 +2,7 @@
   - 웹앱 설정 (1저자 화면): 이온 (SE–SE) · 전류 = 전체 · 주 갈래 · 굵기 ×1 · 선형 눈금 · 위쪽 p50
   - 웹앱 색 위쪽 = 침대마다 백분위 (p50) → 색 눈금이 전극마다 다르다 → 그림마다 자기 컬러바 · 눈금 (0 과 위쪽 끝)
   - 컬러바 = 웹앱 그림의 막대만 잘라 쓴다 (웹앱 제목 줄의 내부 용어 · 작은 숫자는 화면에 안 둔다) · 눈금 · 제목 = 편집 가능한 글 상자
+  - 투명 배경 컬러바 (웹앱 PNG) = 흰 바탕에 합성한 뒤 자른다 · 3D = 높이 1000 px 상한으로 줄인다 (약 450 dpi · 덱 크기)
   - 왼쪽 끝 눈금 = 0 (웹앱 최솟값 10⁻¹⁰–10⁻⁶ A cm⁻² = 위쪽 끝의 10⁻⁵ 미만 · 이 눈금에서 0 으로 반올림)
 usage: python3 -I put_jcur_s7.py in.pptx out.pptx FIGDIR SEL 3d_3um cb_3um top_3um 3d_2um cb_2um top_2um 3d_1um cb_1um top_1um
   SEL = all | 95 (웹앱 "전류" 칸) · top = 웹앱 컬러바 오른쪽 끝 숫자 (예: 0.094)
@@ -25,6 +26,7 @@ for b in BEDS:
     float(PANEL[b][2])
 FONT = 'KoPubWorld돋움체 Medium'
 HMAX, CBW = 2.20, 1.20
+HPX = 1000  # 3D 잘라 낸 그림 높이 상한 (px) = 2.20 in 에서 약 450 dpi — 웹앱 고해상 PNG (6516 × 3900) 를 덱 크기에 맞게 줄인다
 os.makedirs(FIG, exist_ok=True)
 E = 914400
 
@@ -37,19 +39,24 @@ def crop_alpha(src, dst, pad=14):
         raise SystemExit(f'{src}: 배경이 투명하지 않다 (웹앱 PNG/WebP 투명 캡처여야 한다)')
     cols, rows = np.where(m.any(0))[0], np.where(m.any(1))[0]
     box = (max(cols[0] - pad, 0), max(rows[0] - pad, 0), min(cols[-1] + pad, a.shape[1] - 1) + 1, min(rows[-1] + pad, a.shape[0] - 1) + 1)
-    im.crop(box).save(dst, 'PNG')
+    im = im.crop(box)
+    if im.size[1] > HPX:
+        im = im.resize((round(im.size[0] * HPX / im.size[1]), HPX), Image.LANCZOS)
+    im.save(dst, 'PNG')
     return Image.open(dst).size
 
 
 def crop_bar(src, dst):
     """막대 (채도 높은 줄) 위아래 4 px 만 — 웹앱 제목 · 눈금 숫자 · 설명 글은 뺀다."""
-    a = np.asarray(Image.open(src).convert('RGB')).astype(int)
+    rgba = Image.open(src).convert('RGBA')
+    rgb = Image.alpha_composite(Image.new('RGBA', rgba.size, (255, 255, 255, 255)), rgba).convert('RGB')
+    a = np.asarray(rgb).astype(int)
     sat = a.max(2) - a.min(2)
     bar = np.where((sat > 60).mean(1) > 0.3)[0]
     top, bot = bar.min(), bar.max()
     cols = np.where((sat[top:bot + 1] > 60).mean(0) > 0.3)[0]
     box = (max(cols[0] - 4, 0), top - 4, min(cols[-1] + 4, a.shape[1] - 1) + 1, bot + 5)
-    Image.open(src).convert('RGB').crop(box).save(dst, 'PNG')
+    rgb.crop(box).save(dst, 'PNG')
     return Image.open(dst).size
 
 
