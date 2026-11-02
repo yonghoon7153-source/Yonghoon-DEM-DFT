@@ -6889,11 +6889,12 @@ sys.exit(RR.main(cfg['argv']))
 '''
 
 
-def gr_spawn_chain(tag, argv, wpath):
-    """사슬을 따로 프로세스로 (부모 SIGKILL 시험) → Popen.  env = 이 시험 프로세스 env + 가짜 세계 (call() 과 같은 꼴 · SV 원천 없음 = 사다리)."""
-    drv = Path(TD) / 'gr_driver.py'
+def gr_spawn_chain(tag, argv, wpath, driver=None, dname='gr_driver.py'):
+    """사슬을 따로 프로세스로 (부모 SIGKILL 시험) → Popen.  env = 이 시험 프로세스 env + 가짜 세계 (call() 과 같은 꼴 · SV 원천 없음 = 사다리).
+    ★ 11-02 PC6-13 — driver (구동기 글 · 기본 = GR_DRIVER) · dname (파일 이름) = 사슬 함수를 바꿔 끼운 구동기 (PD13d)."""
+    drv = Path(TD) / dname
     if not drv.exists():
-        drv.write_text(GR_DRIVER, encoding='utf-8')
+        drv.write_text(GR_DRIVER if driver is None else driver, encoding='utf-8')
     cfg = Path(TD) / f'{tag}_cfg.json'
     cfg.write_text(json.dumps({'scripts': str(SCRIPTS), 'here': str(RR.HERE), 'env': {'FAKE_WORLD': str(wpath)},
                                'argv': [str(a) for a in argv]}), encoding='utf-8')
@@ -11105,6 +11106,279 @@ def t_PD11s():
     finally:
         RR.PROC_DIR = old
     return no_ref is None and with_ref is None, (no_ref, with_ref)
+
+
+# ── ★ 11-02 PC6-13 · PC6-02 라이브러리 표지 (1저자 11-02 "권고대로해요" · 원장 PC6-13 · PC6-02 decision_note · 보고 preattack6/PREATTACK_C2_final.md
+#    §2 PC6-02 · §4 U4 · 탐침 final/probes/probe6f_unit.py U4) ──
+#: 러너 로그 한 줄 → 러너 rc 가 실패 (0 · None 아님) 일 때 기대 원인 (러너 rc 길과 같은 낱말 규칙 · 기본 runner_rc)
+PD13_LOGS = {'plain': ('', 'runner_rc'), 'python_bug': (PC_MSGS['python_bug'][0], 'runner_rc'), 'oom_cupy': (PC_MSGS['oom_cupy'][0], 'resource'),
+             'disk_full': (PC_MSGS['disk_full'][0], 'resource'), 'illegal_driver': (PC_MSGS['illegal_driver'][0], 'runner_rc'),
+             'launch_failed': (PC_MSGS['launch_failed'][0], 'runner_rc')}
+#: 실패 rc = 러너가 스스로 0 아닌 값으로 끝남 (1 · 2 · −9 = 밖에서 SIGKILL · 137) + 꼴 틀린 값 (bool · 실수 · 글 = 정확한 정수 0 이 아님 = 보수 쪽)
+PD13_FAIL_RCS = (1, 2, -9, 137, True, False, 0.0, '0')
+#: 실패 아님 (그룹 원인, 런 기록 rc) — 러너 rc 0 · 사슬이 죽인 런 (시간 초과 · 신호) · 정리 중 신호 = 런 기록 rc None (Runner._execute)
+PD13_OK = ((None, 0), (None, None), ('timeout', None), ('signal', None), ('signal_after', None))
+#: ★ 1저자 11-02 — CUDA 라이브러리 상태 문자열 · "CUDA error:" (cupy 라이브러리 오류 꼴 · 다른 꼴)
+PD02C_MSGS = {'cublas': 'cupy_backends.cuda.libs.cublas.CUBLASError: CUBLAS_STATUS_EXECUTION_FAILED',
+              'cusolver': 'cupy_backends.cuda.libs.cusolver.CUSOLVERError: CUSOLVER_STATUS_INTERNAL_ERROR',
+              'cusparse': 'cupy_backends.cuda.libs.cusparse.CuSparseError: CUSPARSE_STATUS_INTERNAL_ERROR',
+              'cufft': 'cupy.cuda.cufft.CuFFTError: CUFFT_EXEC_FAILED',
+              'cuda_error_assert': 'RuntimeError: CUDA error: device-side assert triggered',
+              'cuda_error_illegal': 'RuntimeError: CUDA error: an illegal memory access was encountered'}
+PD02C_WORDS9 = ('CUDA_ERROR_', 'cudaError', 'CUDARuntimeError', 'CUDADriverError', 'CUBLAS_STATUS_', 'CUSOLVER_STATUS_', 'CUSPARSE_STATUS_', 'CUFFT_',
+                'CUDA error:')
+PD13_DRIVER = r'''
+import json, os, signal, sys
+from pathlib import Path
+cfg = json.load(open(sys.argv[1], encoding='utf-8'))
+sys.path.insert(0, cfg['scripts'])
+import rint_r_chain as RR
+RR.HERE = Path(cfg['here'])
+os.environ.update(cfg['env'])
+_settle, _rig = RR.group_settle, RR.run_in_group
+
+
+def settle(token, limit=None):
+    # 진짜 정리 (남은 표지 프로세스를 죽이고 기다림) 뒤 미확인으로 알린다 (PC6-01 구경꾼 · GPU 결함 뒤 D 상태 흉내)
+    _c, _left, n = _settle(token, limit)
+    return False, [999989], n
+
+
+def rig(*a, **k):
+    # 끝 기록을 쓴 바로 뒤 · 단계 요약 전 사슬 부모 사망 (요약 없는 길의 창)
+    r = _rig(*a, **k)
+    os.kill(os.getpid(), signal.SIGKILL)
+    return r
+
+
+RR.group_settle, RR.run_in_group = settle, rig
+sys.exit(RR.main(cfg['argv']))
+'''
+
+
+@check('PD13', '★ 11-02 PC6-13 (사전 공격 6 회차 U4 · 1저자 11-02 "권고대로해요" = 선택지 A) — 요약 있는 길 · 멈춤 GROUP_UNCONFIRMED: 런 기록의 러너 rc 가 '
+               '0 · None 이 아니면 (1 · 2 · −9 · 137 · 꼴 틀린 True · False · 0.0 · "0" = 보수) 러너 rc 길과 같은 낱말 규칙 (잘못된 주소 → 자원 → CUDA 표지 → 기본 '
+               'runner_rc): 낱말 없음 · 파이썬 KeyError traceback = runner_rc · 재실행 자격 False (옛 = group_unconfirmed · True) · 메모리 · 디스크 = resource · '
+               'True · 잘못된 주소 · CUDA 표지 = runner_rc · False · 넘치지 않음: rc 0 · None (사슬이 죽인 런 · 시간 초과 · 신호 · 정리 중 신호 = 런 기록 rc None) = '
+               'group_unconfirmed · True 그대로 (잘못된 주소 · CUDA 표지만 runner_rc = PC6-02)')
+def t_PD13():
+    rows, bad, k = {}, {}, 0
+    for nm, (msg, c_fail) in PD13_LOGS.items():
+        log = '[p2] run\n' + (msg + '\n' if msg else '')
+        for gc, rc, failing in [(None, r, True) for r in PD13_FAIL_RCS] + [(g, r, False) for g, r in PD13_OK]:
+            k += 1
+            got = pd_cause(f'PD13_{k}', log, ('gu', ('GROUP_UNCONFIRMED', gc, rc), None, None))
+            c = c_fail if failing else ('runner_rc' if nm in ('illegal_driver', 'launch_failed') else 'group_unconfirmed')
+            want = (c, 'post', c in RR.RESUME_CAUSES)
+            key = f'{nm}/{gc}/{rc!r}'
+            rows[key] = got
+            if got != want:
+                bad[key] = (got, want)
+    return not bad, {'n': len(rows), 'bad_n': len(bad), 'bad': dict(sorted(bad.items())[:12])}
+
+
+@check('PD13o', '★ 11-02 PC6-13 요약 없는 길 (recover) — 사슬이 쓴 미확인 끝 기록 (러너 rc ≠ 0 · 원인 None) 을 recover 가 갈아 쓴 끝 기록의 칸 chain_end '
+                '(recover_group) 에 러너 스스로의 0 아닌 rc 가 있으면 같은 낱말 규칙 · 기본 runner_rc: 낱말 없음 · 파이썬 KeyError · rc −9 = runner_rc · False '
+                '(옛 = parent_dead · True) · 메모리 = resource · True · 잘못된 주소 = runner_rc · 넘치지 않음: chain_end rc 0 · None · 원인 timeout (사슬이 '
+                '죽인 런 · rc −9) = parent_dead · True · chain_end 없음 (사슬이 끝 기록 전에 죽음 = 러너 rc 를 모름 · 한정) = 옛 그대로 parent_dead · True '
+                '(파이썬 traceback 이 있어도)')
+def t_PD13o():
+    rec = {'by': 'recover', 'cause': 'parent_dead'}
+    ce1 = {'rc': 1, 'cause': None, 'confirmed': False, 'ended_utc': '2026-11-02T00:00:00Z'}
+    py, oom, ill = PC_MSGS['python_bug'][0], PC_MSGS['oom_cupy'][0], PC_MSGS['illegal_driver'][0]
+    cases = {   # 이름: (끝 칸, 로그 한 줄, 기대 (원인, 자격))
+        'ce1_plain': (dict(rec, chain_end=ce1), '', ('runner_rc', False)),
+        'ce1_python': (dict(rec, chain_end=ce1), py, ('runner_rc', False)),
+        'ce1_oom': (dict(rec, chain_end=ce1), oom, ('resource', True)),
+        'ce1_illegal': (dict(rec, chain_end=ce1), ill, ('runner_rc', False)),
+        'ce_neg9_plain': (dict(rec, chain_end=dict(ce1, rc=-9)), '', ('runner_rc', False)),
+        'ce0_plain': (dict(rec, chain_end=dict(ce1, rc=0)), '', ('parent_dead', True)),
+        'ce0_python': (dict(rec, chain_end=dict(ce1, rc=0)), py, ('parent_dead', True)),
+        'ce_none_rc': (dict(rec, chain_end=dict(ce1, rc=None)), '', ('parent_dead', True)),
+        'ce_timeout': (dict(rec, chain_end=dict(ce1, rc=-9, cause='timeout')), '', ('parent_dead', True)),
+        'ce_signal': (dict(rec, chain_end=dict(ce1, rc=-9, cause='signal')), '', ('parent_dead', True)),
+        'no_ce_plain': (rec, '', ('parent_dead', True)),
+        'no_ce_python': (rec, py, ('parent_dead', True)),
+    }
+    got, bad = {}, {}
+    for nm, (end, msg, (c, ok)) in cases.items():
+        f = pc_folder(f'PD13o_{nm}', {PC_MARK: '{}\n'})
+        pc_group(f, 'L01_floor', end, '[p2] run\n' + (msg + '\n' if msg else ''))
+        r = RR.attempt_result_line(1, f, None, 'recover')
+        got[nm] = (r['status'], r['cause'], r['side'], r['resume_ok'])
+        if got[nm] != ('interrupted', c, 'post', ok):
+            bad[nm] = (got[nm], ('interrupted', c, 'post', ok))
+    return not bad, {'n': len(got), 'bad': bad}
+
+
+@check('PD13g', '★ 11-02 PC6-13 recover 가 사슬의 미확인 끝 기록을 갈아 쓸 때 — 새 끝 기록 (by recover · rc None · 원인 parent_dead 그대로) 에 칸 chain_end = 옛 '
+                '끝 기록의 rc · 원인 · 확인 · 시각 (러너 rc 를 잃지 않는다 · 옛 = 덮어써 잃음) · 앞 recover 끝 기록 (미확인) 의 chain_end = 그대로 이어받음 · 끝 '
+                '기록 없음 · 못 읽음 = 칸 없음 (옛 모양 그대로)')
+def t_PD13g():
+    ce = {'rc': 1, 'cause': None, 'confirmed': False, 'ended_utc': '2026-11-02T00:00:01Z'}
+    prevs = {'chain_rc1': {'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'rc': 1, 'cause': None, 'signal': None, 'confirmed': False,
+                           'left': [999989], 'left_after_exit': 0, 'killed': 0, 'unsure': None, 'by': 'chain', 'ended_utc': '2026-11-02T00:00:01Z'},
+             'chain_timeout': {'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'rc': -9, 'cause': 'timeout', 'confirmed': False, 'left': [999989],
+                               'by': 'chain', 'ended_utc': '2026-11-02T00:00:02Z'},
+             'recover_carry': {'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'rc': None, 'cause': 'parent_dead', 'confirmed': False,
+                               'left': [999989], 'by': 'recover', 'chain_end': ce, 'ended_utc': '2026-11-02T00:00:03Z'},
+             'recover_plain': {'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'rc': None, 'cause': 'parent_dead', 'confirmed': False,
+                               'left': [999989], 'by': 'recover', 'ended_utc': '2026-11-02T00:00:04Z'},
+             'none': None, 'garbage': 'not json {'}
+    want = {'chain_rc1': ce, 'chain_timeout': {'rc': -9, 'cause': 'timeout', 'confirmed': False, 'ended_utc': '2026-11-02T00:00:02Z'},
+            'recover_carry': ce, 'recover_plain': '(없음)', 'none': '(없음)', 'garbage': '(없음)'}
+    got, bad = {}, {}
+    for nm, prev in prevs.items():
+        out, _tok = gr_fake_launch(f'PD13g_{nm}')
+        lp = out / 'groups' / 'L01_floor.launch.json'
+        if prev is not None:
+            lp.with_name('L01_floor.end.json').write_text(prev if isinstance(prev, str) else json.dumps(prev), encoding='utf-8')
+        end, held = RR.recover_group(lp, RR.host_ident())
+        e = end or {}
+        got[nm] = (held, e.get('by'), e.get('rc'), e.get('cause'), e.get('confirmed'), e.get('chain_end', '(없음)'))
+        if got[nm] != (None, 'recover', None, 'parent_dead', True, want[nm]):
+            bad[nm] = got[nm]
+    return not bad, {'n': len(got), 'bad': bad}
+
+
+@check('PD13r', '★ 11-02 PC6-13 실경로 (요약 있는 길) — 원장 시도 · 표지 뒤 러너가 파이썬 KeyError traceback 을 찍고 rc 1 · 그룹 종료 미확인 (group_settle = 진짜 '
+                '정리 뒤 미확인으로 알림 · PC6-01 구경꾼 · D 상태 흉내) → 사다리 STOPPED GROUP_UNCONFIRMED (런 기록 rc 1 · 멈춤 문장에 러너 rc 1) · 결과 줄 없음 → '
+                'recover --ledger = 결과 줄 stopped · 결과 뒤 · runner_rc · 재실행 자격 False → --add --resume 1 = rc 3 RESUME_NOT_ALLOWED · 원장 무변경 (옛 = '
+                'group_unconfirmed · True · rc 0 = 파이썬 결함 런 자동 재실행) · 대조 = 같은 꼴 + 메모리 부족 줄 = resource · True · --add --resume rc 0')
+def t_PD13r():
+    def go():
+        out = {}
+        for tag, msg in (('bug', PC_MSGS['python_bug'][0]), ('oom', PC_MSGS['oom_cupy'][0])):
+            d, _rc, _so = led_new(f'PD13r_{tag}')
+            _r, n1, _s = led_add(d, 'ladder:P0')
+            old = RR.group_settle
+
+            def gs(token, limit=None, _old=old):
+                _c, _left, nk = _old(token, limit)
+                return False, [999990], nk
+            RR.group_settle = gs
+            try:
+                a = lad_att(f'PD13r_{tag}', world(f'PD13r_{tag}', dict(PW, faults=[{'do': 'msg_after_mark', 'msg': msg, 'match': {'rj': 'inf'}}])), d, n1)
+            finally:
+                RR.group_settle = old
+            st = (a['sum'] or {}).get('stop') or {}
+            runs = [(x.get('name'), x.get('rc'), x.get('group_cause')) for x in (a['sum'] or {}).get('runs') or []]
+            res0 = led_result(d, n1)
+            rc_rec, _so_rec = call(['--stage', 'recover', '--out', str(a['out']), '--ledger', str(d)])
+            r1 = pc_res(d, n1)
+            raw = led_raw(d)
+            rc_add, _n2, so_add = led_add(d, 'ladder:P0', resume=n1)
+            out[tag] = (st.get('code'), '러너 rc 1' in str(st.get('cause')), runs, res0, rc_rec, r1, rc_add, 'RESUME_NOT_ALLOWED' in so_add,
+                        led_raw(d) == raw)
+        return out
+    out = scen('PD13r', go)
+    want = {'bug': ('GROUP_UNCONFIRMED', True, [('L01_floor', 1, None)], None, 0,
+                    {'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'recover'}, 3, True, True),
+            'oom': ('GROUP_UNCONFIRMED', True, [('L01_floor', 1, None)], None, 0,
+                    {'status': 'stopped', 'side': 'post', 'cause': 'resource', 'resume_ok': True, 'by': 'recover'}, 0, False, False)}
+    return out == want, out
+
+
+@check('PD13d', '★ 11-02 PC6-13 실경로 (요약 없는 길 · 창) — 사슬 (따로 프로세스) 이 표지 뒤 러너 rc 1 (파이썬 KeyError) · 그룹 미확인 끝 기록 (by chain · rc 1 · '
+                '확인 False) 을 쓴 바로 뒤 · 단계 요약 전 SIGKILL → recover --ledger = 끝 기록 by recover · 확인 True · rc None · chain_end (rc 1 · 원인 None · '
+                '확인 False) · 결과 줄 interrupted · 결과 뒤 · runner_rc · 재실행 자격 False → --add --resume 1 = rc 3 · 원장 무변경 (옛 = 사슬 끝 기록을 덮어써 '
+                'parent_dead · True · rc 0) · 대조 = 러너 rc 0 (고장 없음) = chain_end rc 0 · parent_dead · True · --add --resume rc 0')
+def t_PD13d():
+    def go():
+        out = {}
+        for tag, faults in (('bug', [{'do': 'msg_after_mark', 'msg': PC_MSGS['python_bug'][0], 'match': {'rj': 'inf'}}]), ('ok', [])):
+            d, _rc, _so = led_new(f'PD13d_{tag}')
+            _r, n1, _s = led_add(d, 'ladder:P0')
+            base = Path(TD) / 'runs' / f'PD13d_{tag}'
+            w = world(f'PD13d_{tag}', dict(PW, faults=faults))
+            pr = gr_spawn_chain(f'PD13d_{tag}', ladder_argv(base) + ['--ledger', str(d), '--attempt', str(n1)], w, driver=PD13_DRIVER,
+                                dname='pd13_driver.py')
+            prc = pr.wait(timeout=180)
+            f = base / f'attempt_{n1}'
+            ep = f / 'groups' / 'L01_floor.end.json'
+            e0 = json.loads(ep.read_text(encoding='utf-8')) if ep.exists() else {}
+            had_sum = (f / 'ladder_summary.json').exists()
+            res0 = led_result(d, n1)
+            rc_rec, _so_rec = call(['--stage', 'recover', '--out', str(f), '--ledger', str(d)])
+            e1 = json.loads(ep.read_text(encoding='utf-8')) if ep.exists() else {}
+            r1 = pc_res(d, n1)
+            raw = led_raw(d)
+            rc_add, _n2, so_add = led_add(d, 'ladder:P0', resume=n1)
+            ks = ('by', 'rc', 'cause', 'confirmed')
+            out[tag] = (prc, tuple(e0.get(x) for x in ks), had_sum, res0, rc_rec, tuple(e1.get(x) for x in ks),
+                        tuple((e1.get('chain_end') or {}).get(x) for x in ('rc', 'cause', 'confirmed')), r1, rc_add, 'RESUME_NOT_ALLOWED' in so_add,
+                        led_raw(d) == raw)
+        return out
+    out = scen('PD13d', go)
+    want = {'bug': (-9, ('chain', 1, None, False), False, None, 0, ('recover', None, 'parent_dead', True), (1, None, False),
+                    {'status': 'interrupted', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'recover'}, 3, True, True),
+            'ok': (-9, ('chain', 0, None, False), False, None, 0, ('recover', None, 'parent_dead', True), (0, None, False),
+                   {'status': 'interrupted', 'side': 'post', 'cause': 'parent_dead', 'resume_ok': True, 'by': 'recover'}, 0, False, False)}
+    return out == want, out
+
+
+@check('PD02c', '★ 11-02 PC6-02 (1저자 11-02 "권고대로해요") CUDA 라이브러리 상태 문자열 · "CUDA error:" 도 CUDA 표지 — cupy 꼴 CUBLAS_STATUS_ · '
+                'CUSOLVER_STATUS_ · CUSPARSE_STATUS_ · CUFFT_ · "CUDA error:" (device-side assert · 잘못된 주소 글) 줄 × 길 열하나 = runner_rc · 재실행 자격 False '
+                '(옛 = 러너 rc 1 두 길만 · 나머지 아홉 = 그 길의 원인 · True) · 차례 그대로: 자원 낱말이 함께 있으면 resource (CUBLAS_STATUS_ALLOC_FAILED + '
+                'OutOfMemoryError · "CUDA error: out of memory (CUDA_ERROR_OUT_OF_MEMORY)" = 자원 차례 · rc 1 · recover · 사슬 rc 1 = resource · 나머지 = 그 길의 '
+                '원인) · 잘못된 주소가 함께 있으면 runner_rc · 표지 표 = 아홉 · 자원 낱말 다섯 · 잘못된 주소 둘 그대로')
+def t_PD02c():
+    rows, bad = {}, {}
+    oom = PC_MSGS['oom_cupy'][0]
+    cases = [(nm, msg, 'q2') for nm, msg in PD02C_MSGS.items()] + [
+        ('cublas_alloc_and_oom', 'cupy_backends.cuda.libs.cublas.CUBLASError: CUBLAS_STATUS_ALLOC_FAILED\n' + oom, 'res'),
+        ('cuda_error_oom_drvcode', 'RuntimeError: CUDA error: out of memory (CUDA_ERROR_OUT_OF_MEMORY)', 'res'),
+        ('cusparse_and_illegal', PD02C_MSGS['cusparse'] + '\n' + PC_MSGS['oom_and_illegal'][0], 'q2')]
+    for nm, msg, kind in cases:
+        for path in PD_PATHS:
+            got = pd_cause(f'PD02c_{nm}_{path[0]}', '[p2] run\n' + msg + '\n', path)
+            if kind == 'q2':
+                c = 'runner_rc'
+            elif path[0] in ('rc1', 'orphan_recover', 'orphan_rc1'):
+                c = 'resource'
+            else:
+                c = path[3]
+            want = (c, 'post', c in RR.RESUME_CAUSES)
+            rows[f'{nm}/{path[0]}'] = got
+            if got != want:
+                bad[f'{nm}/{path[0]}'] = (got, want)
+    tab = {'cuda9': sorted(getattr(RR, 'CUDA_ERROR_WORDS', ())) == sorted(PD02C_WORDS9),
+           'res5': sorted(getattr(RR, 'RESOURCE_WORDS', ())) == sorted(PC_WORDS5),
+           'addr2': sorted(getattr(RR, 'NOT_RESOURCE_WORDS', ())) == sorted(('CUDA_ERROR_ILLEGAL_ADDRESS', 'cudaErrorIllegalAddress'))}
+    return not bad and all(tab.values()), {'n': len(rows), 'bad_n': len(bad), 'bad': dict(sorted(bad.items())[:12]), 'tab': tab,
+                                           'cuda_words': list(getattr(RR, 'CUDA_ERROR_WORDS', ()))}
+
+
+@check('PD02cr', '★ 11-02 PC6-02 라이브러리 표지 실경로 (PD02r ⓐ 꼴) — 표지 뒤 러너 로그에 cupy 꼴 CUSPARSE_STATUS_INTERNAL_ERROR 를 본 뒤 사슬 부모 SIGKILL → '
+                 'recover --ledger = 결과 줄 interrupted · 결과 뒤 · runner_rc · 재실행 자격 False → --add --resume 1 = rc 3 RESUME_NOT_ALLOWED · 원장 무변경 '
+                 '(옛 = parent_dead · 자격 True · rc 0)')
+def t_PD02cr():
+    import signal as _sig
+
+    def go():
+        d, _rc, _so = led_new('PD02cr')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        base = Path(TD) / 'runs' / 'PD02cr'
+        w = world('PD02cr', dict(PW, faults=[{'do': 'msg_sleep_after_mark', 'msg': PD02C_MSGS['cusparse'], 's': 8.0, 'match': {'rj': 'inf'}}]))
+        pr = gr_spawn_chain('PD02cr', ladder_argv(base) + ['--ledger', str(d), '--attempt', str(n1)], w)
+        logp = base / f'attempt_{n1}' / 'logs' / 'L01_floor.log'
+        t_end, seen = time.time() + 30, False
+        while time.time() < t_end and not seen:
+            try:
+                seen = 'CUSPARSE_STATUS_' in logp.read_text(encoding='utf-8', errors='replace')
+            except OSError:
+                pass
+            time.sleep(0.05)
+        os.kill(pr.pid, _sig.SIGKILL)
+        pr.wait()
+        rc_rec, _so_rec = call(['--stage', 'recover', '--out', str(base / f'attempt_{n1}'), '--ledger', str(d)])
+        r1 = pc_res(d, n1)
+        raw = led_raw(d)
+        rc_add, _n2, so_add = led_add(d, 'ladder:P0', resume=n1)
+        return seen, rc_rec, r1, rc_add, 'RESUME_NOT_ALLOWED' in so_add, led_raw(d) == raw
+    out = scen('PD02cr', go)
+    want = (True, 0, {'status': 'interrupted', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'recover'}, 3, True, True)
+    return out == want, out
 
 
 # ═════════════════════════ 실행 ═════════════════════════
