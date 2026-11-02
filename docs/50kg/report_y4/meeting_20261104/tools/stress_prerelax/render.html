@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>html,body{margin:0;padding:0;background:transparent;overflow:hidden}</style>
+<script type="importmap">{"imports":{"three":"./vendor/pkg/package/build/three.module.js"}}</script>
+</head><body>
+<script type="module">
+// 웹앱 3D 뷰어 (webapp/static/js/viewer3d.js) 와 같은 판 · 같은 재질 · 같은 빛 · 같은 jetColor · 같은 선형 눈금 (lwLinT) · 같은 벽 회색 (0x9ca3af)
+import * as THREE from 'three';
+function jetColor(t) {
+  const r = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 3)));
+  const g = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 2)));
+  const b = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 1)));
+  return (Math.round(r * 255) << 16) | (Math.round(g * 255) << 8) | Math.round(b * 255);
+}
+function lwLinT(v, lo, hi) {
+  const x = +v; if (!Number.isFinite(x)) return 0;
+  const span = hi - lo; if (!(span > 0)) return 1;
+  return Math.max(0, Math.min(1, (x - lo) / span));
+}
+window.render = async (s) => {
+  const buf = await (await fetch(s.bin)).arrayBuffer();
+  const a = new Float32Array(buf); const n = a.length / 6;
+  const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: true });
+  renderer.setPixelRatio(1); renderer.setSize(s.W, s.H); renderer.setClearColor(0x000000, 0);
+  document.body.appendChild(renderer.domElement);
+  const scene = new THREE.Scene();
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+  const dl = new THREE.DirectionalLight(0xffffff, 0.8); dl.position.set(1, 1.5, 1); scene.add(dl);
+  const geo = new THREE.SphereGeometry(1, s.seg, s.seg);
+  const mat = new THREE.MeshPhongMaterial({ color: 0xffffff, transparent: false, opacity: 1.0, depthWrite: true, side: THREE.FrontSide });
+  const mesh = new THREE.InstancedMesh(geo, mat, n);
+  const d = new THREE.Object3D(); const c = new THREE.Color();
+  for (let i = 0; i < n; i++) {
+    const o = 6 * i;
+    d.position.set(a[o] - s.cx, a[o + 2] - s.cz, a[o + 1] - s.cy);   // Z-up: swap Y↔Z (웹앱과 같은 교환)
+    d.scale.setScalar(a[o + 3]); d.updateMatrix(); mesh.setMatrixAt(i, d.matrix);
+    mesh.setColorAt(i, c.setHex(a[o + 5] > 0.5 ? 0x9ca3af : jetColor(lwLinT(a[o + 4], s.lo, s.hi))));
+  }
+  mesh.instanceMatrix.needsUpdate = true; if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  scene.add(mesh);
+  const cam = new THREE.PerspectiveCamera(50, s.W / s.H, 0.1, 10000);
+  const dir = new THREE.Vector3(1.2, 0.8, 1.2).normalize();          // 웹앱 기본 시점 방향 (maxDim × (1.2, 0.8, 1.2))
+  cam.position.copy(dir.multiplyScalar(s.dist)); cam.position.y += s.ty;
+  cam.lookAt(0, s.ty, 0);
+  renderer.render(scene, cam);
+  return renderer.domElement.toDataURL('image/png');
+};
+window.ready = true;
+</script></body></html>
