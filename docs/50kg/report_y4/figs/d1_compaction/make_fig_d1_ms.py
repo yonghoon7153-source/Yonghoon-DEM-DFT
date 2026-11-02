@@ -4,6 +4,7 @@
 key_numbers_d1_ms.json · 오른쪽 3D 단계 프레임 표 (1저자 11-02 *"이 그림도 50Kg_D1 기준으로 만들면 좋을듯"*).
 
     python3 -I docs/50kg/report_y4/figs/d1_compaction/make_fig_d1_ms.py             # 산출 (결정적 — 다시 돌려도 같은 바이트)
+    python3 -I docs/50kg/report_y4/figs/d1_compaction/make_fig_d1_ms.py --atomtop   # + 원자 기준 그림 (raw/kg50_d1_atomtop.csv 없으면 거부)
     python3 -I docs/50kg/report_y4/figs/d1_compaction/make_fig_d1_ms.py --selftest  # 반례 시험 (합성 로그 · 리포 자료 안 읽음)
 
 본보기 = ps73 ms 판 (`docs/data/ps73_compaction_curve_20261006/make_fig_ms.py` · `make_fig_velocity_ms.py` · 그 README §5 · §7 · §8) 의
@@ -20,7 +21,10 @@ key_numbers_d1_ms.json · 오른쪽 3D 단계 프레임 표 (1저자 11-02 *"이
   두께 (µm) = 판 위치 (덱으로 계산 — 메시 덤프는 리포에 없다): 안정화 = `PLATE HEIGHT` 고정 · 압축 = press_speed 등속 하강 ·
              이완 = 고정 → 끝 값을 mesh_end (6 유효숫자) 와 대조 (반올림 반폭 안이어야 한다)
   판 속도 (µm/s) = press_speed (덱 m/s) × 1e6 / r 배율 · 압력 (MPa) = thermo `pressMPa` / P 배율 (Scale 머리 r×1000 · P×0.001)
-정착 (Particle packing) 구간 두께 = 원자 위치가 필요한데 리포에 없다 → 그리지 않는다 (README §4 = 필요한 클러스터 파일 · ps73 방법).
+정착 (Particle packing) 구간 두께 = 원자 위치가 필요한데 리포에 없다 → 판 기준 그림에는 그리지 않는다 (README §4).
+1저자 11-02 밤 (ps73 옛 그림과 대조): ① 정착 구간을 0 ms 부터 · 끊긴 y 축 · 시작 빨간 화살표 ② 한 곡선 = 원자 기준 (모든 원자의 max(z + r)) ·
+Origin 꼴 ③ 압력 슬라이드판 (판 정지 뒤 = ps73 README §5 의 모식 감쇠 · 원값판은 따로) — ③ = 바로 (README §7) · ①② = D1 런 기계에서
+`cluster/d1_atomtop_cluster.py` 가 만든 CSV 를 `raw/kg50_d1_atomtop.csv` 에 넣은 뒤 (README §8 · 검사 ①–⑪ 통과해야 그린다 · 없으면 지어내지 않는다).
 """
 import csv
 import hashlib
@@ -32,6 +36,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+sys.dont_write_bytecode = True   # 리포 모듈 (scripts · ps73 · cluster) 을 읽기만 한다 — 남의 폴더에 __pycache__ 를 쓰지 않는다
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[4]
 sys.path.insert(0, str(ROOT / 'scripts'))
@@ -40,6 +45,7 @@ import compaction_curve as CC  # noqa: E402  ps73 생성기와 같은 로그 읽
 LOG = ROOT / 'docs/data/kg50_d1_end_20261031/kg50_d1_b50_log.liggghts'
 D1_README = ROOT / 'docs/data/kg50_d1_end_20261031/README.md'
 DECK = ROOT / 'docs/data/kg50_decks_20261027_v3_b50/kg50_d1_b50/input_kg50_d1_b50.liggghts'
+INSERT_DECK = ROOT / 'docs/data/kg50_decks_20261027_v3_b50/kg50_d1_b50/input_kg50_d1_b50_insert.liggghts'
 METRICS = ROOT / 'docs/50kg/report_y4/draft2/data/D1/metrics_D1.json'
 CURVE_D1 = ROOT / 'docs/50kg/report_y4/draft2/data/D1/curve_D1.csv'
 #: D1 README §1 표 · §2 표의 기록 — 생성기가 README 글에 같은 글자가 있는지 확인한다 (README 와 상수가 갈리면 멈춘다)
@@ -73,6 +79,40 @@ SRC = {'noplate': 'no plate (0 by definition)', 'thermo': 'measured (thermo pres
        'c_start': 'compression start (deck press_speed)', 'comp': 'compression (deck press_speed · computed)',
        'stop': 'plate stop (loop exit)', 'relax': 'plate fixed (relaxation · deck)', 'end': 'end of run (= mesh_end check)'}
 _NUM = r'[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?'
+
+
+def _load(name, path):
+    """리포 안 모듈을 경로로 읽는다 (`python3 -I` = 스크립트 폴더가 sys.path 에 없다) — 사본 대신 그 파일을 쓴다."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+#: 원자 기준 두께 (1저자 11-02 밤 *"첫번째부터 예전처럼 particle packing 도"*) — D1 런 기계에서 `cluster/d1_atomtop_cluster.py` 가 만든 CSV.
+#: step 목록 · 머리 · 런 폴더 sha256 = 그 스크립트의 상수 그대로 (사본 금지) · PCHIP = ps73 생성기 함수 그대로.
+CLUSTER = _load('d1_atomtop_cluster', HERE / 'cluster' / 'd1_atomtop_cluster.py')
+PS73 = _load('ps73_make_fig_ms', ROOT / 'docs/data/ps73_compaction_curve_20261006/make_fig_ms.py')
+ATOMTOP_CSV = HERE / 'raw' / 'kg50_d1_atomtop.csv'
+ATOMTOP_HEAD = list(CLUSTER.HEAD)
+ATOMTOP_EARLY = list(CLUSTER.REPLAY_STEPS) + [s for s, _ in CLUSTER.CKPTS]
+ATOMTOP_DUMPS = list(CLUSTER.DUMP_STEPS)
+ATOMTOP_SHA = dict(CLUSTER.SHA)
+#: 원 삽입 런 화면 (끝 묶음 멤버 `kg50_d1_b50/log_kg50_d1_b50_ins.out` · sha256 a83ee39e… = ATOMTOP_SHA · 묶음 sha256 = D1 README §1) 의 값
+REPLAY_REF = {1: (168457, '0.11946798'), 1000: (168457, '0.17034351'), 2000: (168457, '0.23018355'), 3000: (168457, '0.29890105'), 4000: (168457, '0.37462336'), 5000: (168457, '0.45695706'), 6000: (168457, '0.54772567'), 7000: (168457, '0.64616151'), 8000: (168457, '0.75103338'), 9000: (168457, '0.86357835'), 10000: (168457, '0.98082832'), 11000: (168457, '1.104255'), 12000: (168457, '1.2338527'), 13000: (168457, '1.3650701'), 14000: (168457, '1.499203'), 15000: (168457, '1.6376978'), 16000: (168457, '1.7822583'), 17000: (168457, '1.9289022'), 18000: (168457, '2.079641'), 19000: (168457, '2.2333726'), 20000: (168457, '2.3892872')}
+INSERT_REF = ('inserted 168457 particle templates', '(mass 9.557438e-01) at step 1')
+KE_RTOL = 1e-6                # 재개 G1 규칙 (ps73 과 같다) — 체크포인트 · 재현 KE ↔ 원 로그 (상대)
+OUTLIER_MIN_UM = 20.0         # 뺄 점 = 튀어 오른 입자 하나 (윗면 − p99.9 ≥ 20 µm) 일 때만 (ps73 규칙 · 기본은 아무것도 안 뺀다)
+INTERP_DT_MS = 1.0            # 앞 구간 (첫 점 → 첫 원 덤프) PCHIP 채움 간격 (ps73 과 같다)
+SLIDE_TAU_STEP = 15000        # 압력 슬라이드판 모식 감쇠 시간 상수 (ps73 make_fig.py 값 · 그림용 — 자료에서 정한 값 아님)
+HI_SPAN_UM = 20.0             # 끊긴 y 축 위 범위 높이 (아래 범위와 같은 µm/높이 축척)
+GAP_FRAC = 0.06               # 끊긴 자리 높이 (아래 범위 높이의 몫)
+SRC_REPLAY, SRC_CKPT, SRC_DUMP = 'replay (insertion · NP 1)', 'checkpoint (run 0)', 'atom dump'
+SRC_INTERP = 'interpolated (PCHIP between measured points)'
+SRC_SCHEMATIC = 'schematic relaxation (모식 · not measured)'
+FIG_SLIDE, FIG_AT, FIG_AT_SLIDE = FIG_NAME + '_slide', FIG_NAME + '_atomtop', FIG_NAME + '_atomtop_slide'
+CSV_SLIDE, CSV_AT = 'd1_ms_pressure_slide', 'd1_ms_thickness_atomtop'
 
 
 # ───────────────────────────── 덱 설정 (로그 안 명령 되풀이 · 또는 덱 글) ─────────────────────────────
@@ -331,6 +371,211 @@ def cluster_command(steps, end, post_dir, atoms_at, parent=RUN_PARENT, case=RUN_
             'EOF')
 
 
+# ───────────────────────────── 압력 슬라이드판 (ps73 README §5 선례 — 이완 = 모식 감쇠) ─────────────────────────────
+def slide_series(px, b4, end, ms_per_step, tau_step=None):
+    """ps73 `make_fig_ms.slide_series` 와 같은 식 — 판 정지 (b4) 까지 thermo 원값 · 그 뒤 p_end + (p_c − p_end)·exp(−(s − b4)/τ) 를
+    1,000 step 마다 (τ = 15,000 step = 그림용 · 자료에서 정한 값 아님 · 끝 값 p_end 만 계산값).  원값판은 따로 둔다 (`pressure_series`).
+    ps73 보다 엄격한 곳 하나: 마지막 압력 줄 = 런 끝 · 정지 → 끝 = 1,000 step 의 배수 (모식 마지막 점이 런 끝에 선다) — 아니면 거부.
+    → ([(ms, MPa, 출처)], [(step, 모식 MPa)])."""
+    tau = SLIDE_TAU_STEP if tau_step is None else tau_step
+    comp = [(s, p) for s, p in px if s <= b4]
+    if not comp or comp[-1][0] != b4:
+        raise ValueError('판 정지 step 의 압력 줄이 없다')
+    if px[-1][0] != end:
+        raise ValueError(f'마지막 압력 줄 step {px[-1][0]} ≠ 런 끝 {end}')
+    if end <= b4 or (end - b4) % 1000:
+        raise ValueError(f'판 정지 {b4} → 런 끝 {end} 이 1,000 step 의 배수가 아니다 (모식 마지막 점이 런 끝에 서지 않는다)')
+    p_c, p_end = comp[-1][1], px[-1][1]
+    sch = [(s, p_end + (p_c - p_end) * math.exp(-(s - b4) / tau)) for s in range(b4 + 1000, end + 1, 1000)]
+    return ([(0.0, 0.0, SRC['noplate'])] + [(s * ms_per_step, p, SRC['thermo']) for s, p in comp]
+            + [(s * ms_per_step, p, SRC_SCHEMATIC) for s, p in sch]), sch
+
+
+# ───────────────────────────── 원자 기준 두께 (클러스터 CSV — 1저자 11-02 밤 · README §8) ─────────────────────────────
+_AT_INT = ('step', 'dump_timestep', 'n_header', 'n_rows', 'n_bad_lines', 'bytes')
+_AT_FLT = ('ztop_um', 'zc_max_um', 'ztop_radius_um', 'ztop_p999_um')
+_AT_SRC = {'replay': SRC_REPLAY, 'checkpoint': SRC_CKPT, 'atom dump': SRC_DUMP}
+
+
+def require_atomtop(path):
+    """정착 (Particle packing) 구간은 원자 위치에서만 그린다 — CSV 가 없으면 거부 (모형 곡선 · 판 높이 · 덱 투입 높이로 지어내지 않는다)."""
+    if path is None or not Path(path).is_file():
+        raise ValueError(f'원자 기준 두께 CSV 가 없다 ({path}) — 정착 구간을 지어내지 않는다.  README §8 의 명령으로 D1 런 기계에서 만든 '
+                         f'kg50_d1_atomtop.csv 를 {rel(ATOMTOP_CSV)} 에 넣은 뒤 다시 돌린다')
+    return Path(path)
+
+
+def read_atomtop(path):
+    """클러스터 CSV → (행들, 메타).  머리 = 클러스터 스크립트 HEAD · 끝의 `#insertion` · `#insertion_orig` · `#sha256` 줄 = 메타 (겹치면 거부)."""
+    with open(path, newline='', encoding='utf-8') as f:
+        rd = csv.reader(f)
+        head = next(rd, None)
+        if head != ATOMTOP_HEAD:
+            raise ValueError(f'원자 기준 두께 CSV 머리가 다르다: {head}')
+        rows, meta = [], {'sha256': {}}
+        for r in rd:
+            if not r:
+                continue
+            if r[0].startswith('#'):
+                key = r[0][1:]
+                if key in ('insertion', 'insertion_orig', 'script_sha256') and len(r) == 2 and key not in meta:
+                    meta[key] = r[1]
+                elif key == 'sha256' and len(r) == 3 and r[1] not in meta['sha256']:
+                    meta['sha256'][r[1]] = r[2]
+                else:
+                    raise ValueError(f'메타 줄을 모르거나 겹친다: {r[:2]}')
+                continue
+            if len(r) != len(head):
+                raise ValueError(f'열 수 {len(r)} ≠ {len(head)}: {r[:2]}')
+            d = dict(zip(head, r))
+            try:
+                for k in _AT_INT:
+                    d[k] = int(d[k])
+                for k in _AT_FLT:
+                    d[k] = float(d[k])
+            except ValueError as e:
+                raise ValueError(f'step {d.get("step")}: 숫자가 아니다 ({e})') from None
+            if not all(math.isfinite(d[k]) for k in _AT_FLT):
+                raise ValueError(f'step {d["step"]}: 비유한 값')
+            rows.append(d)
+    return rows, meta
+
+
+def _int_or_none(v):
+    try:
+        return int(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def _ke_same(a, b):
+    try:
+        fa, fb = float(a), float(b)
+    except (TypeError, ValueError):
+        return False
+    return math.isfinite(fa) and math.isfinite(fb) and abs(fa - fb) <= KE_RTOL * abs(fb)
+
+
+def check_atomtop(rows, meta, main_ke, radii_um, ms_per_step=1e-3, replay_ref=None, sha_ref=None, script_ref=None):
+    """ps73 `check_scan` · `check_early` 의 D1 판 — 문제 목록 (빈 목록 = 통과).
+    ① step = 계획 (재현 1 · 1,000 → 체크포인트 → 원 atom 덤프) 그대로 · 출처 열 · time_ms = step × dt  ② 덤프 TIMESTEP = step
+    ③ 머리 원자 수 = 줄 · 깨진 줄 0  ④ 원 덤프 파일 시각이 step 순서 (궤적 잇기)  ⑤ 재현 · 체크포인트 덤프 원자 수 = 그 런 로그 ·
+    원 덤프 원자 수 = 본 로그 그 step  ⑥ p99.9 ≤ 윗면 · 중심 ≤ 윗면  ⑦ 맨 위 입자 반경 = 덱 반경
+    ⑧ KE (상대 1e-6) — 재현 = 원 삽입 로그 (같은 궤적) · 체크포인트 = 본 로그 (원 런 상태) · 클러스터가 읽은 원 로그 값 = 리포 기록
+    ⑨ 재현 · 원 삽입 줄 = 168,457 개 · 질량 9.557438e-01  ⑩ 런 폴더 파일 sha256 = 리포 기록 (같은 런)
+    ⑪ CSV 를 만든 스크립트 sha256 = 리포의 cluster/d1_atomtop_cluster.py.
+    원자 수 감소 · 맨 위가 판보다 높은 것 = 거부가 아니라 기록 (원자 기준 값 그대로 · ps73 1저자 *"하나의 기준"*).
+    replay_ref · sha_ref · script_ref = 시험용 (기본 = 리포 기록 REPLAY_REF · ATOMTOP_SHA · 리포 클러스터 스크립트 sha256)."""
+    replay_ref = REPLAY_REF if replay_ref is None else replay_ref
+    sha_ref = ATOMTOP_SHA if sha_ref is None else sha_ref
+    script_ref = sha256_file(HERE / 'cluster' / 'd1_atomtop_cluster.py') if script_ref is None else script_ref
+    prob = []
+    steps = [int(r['step']) for r in rows]
+    want = ATOMTOP_EARLY + ATOMTOP_DUMPS
+    if steps != want:
+        prob.append(f'① step 목록 ≠ 계획 (빠짐 {sorted(set(want) - set(steps))[:5]} · 남음 {sorted(set(steps) - set(want))[:5]} · '
+                    f'중복 {len(steps) - len(set(steps))})')
+    for r in rows:
+        s, n = int(r['step']), int(r['n_header'])
+        kind = 'replay' if s in replay_ref else ('checkpoint' if s in ATOMTOP_EARLY else 'atom dump')
+        if r['source'] != kind:
+            prob.append(f'① {s}: 출처 {r["source"]!r} ≠ {kind!r}')
+        if str(r['time_ms']) != f'{s * ms_per_step:.3f}':
+            prob.append(f'① {s}: time_ms {r["time_ms"]} ≠ step × dt')
+        if int(r['dump_timestep']) != s:
+            prob.append(f'② {s}: 덤프 TIMESTEP {r["dump_timestep"]}')
+        if n != int(r['n_rows']) or int(r['n_bad_lines']):
+            prob.append(f'③ {s}: 원자 수 머리 {n} · 줄 {r["n_rows"]} · 깨진 줄 {r["n_bad_lines"]}')
+        zt, zc, zp = float(r['ztop_um']), float(r['zc_max_um']), float(r['ztop_p999_um'])
+        if not (zp <= zt and zc <= zt):
+            prob.append(f'⑥ {s}: p99.9 {zp} · 중심 {zc} · 윗면 {zt}')
+        if not any(abs(float(r['ztop_radius_um']) - v) <= 1e-9 * max(1.0, v) for v in radii_um):
+            prob.append(f'⑦ {s}: 맨 위 입자 반경 {r["ztop_radius_um"]} µm ∉ 덱 반경 {sorted(radii_um)}')
+        if kind == 'atom dump':
+            ref = main_ke.get(s)
+            if ref is None or int(ref[0]) != n:
+                prob.append(f'⑤ {s}: 원 덤프 원자 수 {n} ≠ 본 로그 {ref[0] if ref else "없음"}')
+            continue
+        ref = replay_ref.get(s) if kind == 'replay' else main_ke.get(s)
+        if _int_or_none(r['run_log_atoms']) != n:
+            prob.append(f'⑤ {s}: 덤프 원자 수 {n} ≠ 그 런 로그 {r["run_log_atoms"]}')
+        if ref is None:
+            prob.append(f'⑧ {s}: 참고 KE 없음')
+            continue
+        if not _ke_same(r['run_log_ke'], ref[1]):
+            prob.append(f'⑧ {s}: KE {r["run_log_ke"]} ≠ 원 로그 {ref[1]}')
+        if not _ke_same(r['orig_log_ke'], ref[1]) or _int_or_none(r['orig_log_atoms']) != int(ref[0]):
+            prob.append(f'⑧ {s}: 클러스터가 읽은 원 로그 ({r["orig_log_atoms"]} · {r["orig_log_ke"]}) ≠ 리포 기록 ({ref[0]} · {ref[1]})')
+        if int(ref[0]) != n:
+            prob.append(f'⑧ {s}: 원자 수 {n} ≠ 원 로그 {ref[0]}')
+    dumps = [r for r in rows if r['source'] == 'atom dump']
+    back = [(int(a['step']), a['mtime'], b['mtime']) for a, b in zip(dumps, dumps[1:]) if b['mtime'] < a['mtime']]
+    if back:
+        prob.append(f'④ 원 덤프 파일 시각이 거꾸로 가는 곳 {len(back)} — 처음 {back[:3]}')
+    for key in ('insertion', 'insertion_orig'):
+        line = meta.get(key) or ''
+        if not all(x in line for x in INSERT_REF):
+            prob.append(f'⑨ {key} 줄이 원 삽입 기록과 다르다: {line!r}')
+    if meta.get('sha256') != sha_ref:
+        prob.append(f'⑩ 런 폴더 sha256 ≠ 리포 기록: {meta.get("sha256")}')
+    if meta.get('script_sha256') != script_ref:
+        prob.append(f'⑪ CSV 를 만든 스크립트 sha256 {meta.get("script_sha256")} ≠ 리포 cluster/d1_atomtop_cluster.py')
+    return prob
+
+
+def atomtop_series(rows, ms_per_step=1e-3, interp=True, drop=None):
+    """(ms, µm, 출처) — 원자 기준 하나 (ps73 `thickness_series` 와 같은 규칙): 재현 → 체크포인트 → 원 덤프 (값 = max(z + r)) ·
+    앞 구간 (첫 점 → 첫 원 덤프) 만 측정점 사이를 PCHIP 로 1 ms 마다 채운다 (채운 점 = 측정 아님 · 출처 열에 표시).
+    drop = 뺄 step (기본 없음) — 그 점이 외톨이 (윗면 − p99.9 ≥ 20 µm) 일 때만 빼고 아니면 거부한다."""
+    drop = drop or {}
+    have = {int(r['step']) for r in rows}
+    if set(drop) - have:
+        raise ValueError(f'뺄 점이 자료에 없다: {sorted(set(drop) - have)}')
+    for r in rows:
+        if int(r['step']) in drop and float(r['ztop_um']) - float(r['ztop_p999_um']) < OUTLIER_MIN_UM:
+            raise ValueError(f'뺄 점 {r["step"]} 이 외톨이가 아니다 (윗면 − p99.9 = {float(r["ztop_um"]) - float(r["ztop_p999_um"]):.3f} µm)')
+    out = []
+    for r in rows:
+        s = int(r['step'])
+        if s in drop:
+            continue
+        if r['source'] not in _AT_SRC:
+            raise ValueError(f'{s}: 모르는 출처 {r["source"]!r}')
+        out.append((s, float(r['ztop_um']), _AT_SRC[r['source']]))
+    if interp:
+        n_knot = sum(1 for p in out if p[2] != SRC_DUMP) + 1
+        if not 2 <= n_knot <= len(out):
+            raise ValueError('앞 구간 매듭이 모자란다 (재현 · 체크포인트 · 첫 원 덤프)')
+        knots = out[:n_knot]
+        every = round(INTERP_DT_MS / ms_per_step)
+        known = {s for s, _, _ in knots}
+        s0, s1 = knots[0][0], knots[-1][0]
+        q = [k * every for k in range(s0 // every + 1, s1 // every + 1) if s0 < k * every < s1 and k * every not in known]
+        vals = PS73.pchip([s * ms_per_step for s, _, _ in knots], [z for _, z, _ in knots], [s * ms_per_step for s in q])
+        out = sorted(out + [(s, v, SRC_INTERP) for s, v in zip(q, vals)], key=lambda p: p[0])
+    ser = [(s * ms_per_step, z, src) for s, z, src in out]
+    if any(b[0] <= a[0] for a, b in zip(ser, ser[1:])):
+        raise ValueError('두께 점의 시각이 엄격히 증가하지 않는다')
+    return ser
+
+
+def broken_ranges(series, b2_ms, tick=5.0):
+    """끊긴 y 축 두 범위 ((위 아래끝, 위 위끝), (아래 아래끝, 아래 위끝)) — 아래 = 판 놓은 뒤 모든 점 (+ 위쪽 단계 이름 자리 10 µm) ·
+    위 = 시작 (투입 높이) 을 담는 HI_SPAN_UM 높이 (같은 µm/높이 축척).  위 범위가 시작을 못 담거나 아래 범위와 겹치면 (끊을 틈 없음) 거부."""
+    after = [z for t, z, _ in series if t >= b2_ms]
+    if not series or not after:
+        raise ValueError('판 놓은 뒤 두께 점이 없다')
+    lo = (tick * math.floor((min(after) - 5.0) / tick), tick * math.ceil((max(after) + 10.0) / tick))
+    hi1 = tick * math.ceil((max(z for _, z, _ in series) + 5.0) / tick)
+    hi = (hi1 - HI_SPAN_UM, hi1)
+    y0 = series[0][1]
+    if not hi[0] < y0 < hi[1]:
+        raise ValueError(f'시작 높이 {y0:.3f} µm 가 위 범위 {hi} 밖 (시작보다 높은 점이 있다)')
+    if not hi[0] > lo[1]:
+        raise ValueError(f'위 범위 {hi} 가 아래 범위 {lo} 와 겹친다 — 끊을 틈이 없다')
+    return hi, lo
+
+
 # ───────────────────────────── 대조 (초안 2) ─────────────────────────────
 def crosscheck_draft2(metrics, curve_rows, ours):
     """초안 2 (make_fig_p2_aux.branches 경로) ↔ 이 생성기 — 같은 로그를 다른 코드로 읽은 값이 같아야 한다.  (문제 목록, 통계)."""
@@ -399,15 +644,11 @@ def ogs_text(name, what, color, y_from, y_to, y_inc, ylabel, bounds_ms, target=N
             f'layer.y.from = {y_from:g}; layer.y.to = {y_to:g}; layer.y.inc = {y_inc:g}; layer.y.minor = 1;\nlabel -yl {ylabel};\n' + vb + tgt)
 
 
-def draw_preview(tser, vser, pser, bounds_ms, arrows, stem):
-    """세 패널 왼쪽 열 미리보기 (ps73 서식 · 이 기계에 Aptos 가 없어 Liberation Sans — Origin 결과로 바꿔 끼운다).
-    1저자 슬라이드 배치 (11-02): 단계 이름 가로 · Particle packing 왼쪽 위 (그 구간 자료 없음 → 화살표 없음) · Stabilization = 경계 바로 오른쪽 ·
-    평평한 선 위 · Compression = 기운 선 위 · Relaxation = 끝 근처 + 빨간 화살표가 끝 구간을 아래로 가리킴 · 목표 300 MPa 점선 없음 · 압력 원값 그대로.
-    arrows = [(x_tip, y_tip, x_tail, y_tail)] 데이터 좌표 — 자료가 있는 점만 가리킨다."""
+def _mpl_setup():
+    """미리보기 공통 서식 (ps73 서식 · 이 기계에 Aptos 가 없어 Liberation Sans — Origin 결과로 바꿔 끼운다)."""
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
-    from matplotlib.ticker import FuncFormatter, MultipleLocator
     plt.rcParams.update({'font.family': 'Liberation Sans', 'font.size': 11, 'axes.edgecolor': GRAY, 'axes.labelcolor': GRAY,
                          'xtick.color': GRAY, 'ytick.color': GRAY, 'axes.linewidth': 1.0, 'xtick.direction': 'out',
                          'ytick.direction': 'out', 'xtick.major.size': 5, 'ytick.major.size': 5, 'xtick.minor.size': 2.5,
@@ -415,7 +656,47 @@ def draw_preview(tser, vser, pser, bounds_ms, arrows, stem):
                          'axes.labelsize': 12, 'svg.hashsalt': 'd1ms', 'mathtext.fontset': 'custom',   # s⁻¹ (U+207B 없는 글꼴)
                          'mathtext.rm': 'Liberation Sans', 'mathtext.it': 'Liberation Sans:italic', 'mathtext.bf': 'Liberation Sans:bold',
                          'mathtext.sf': 'Liberation Sans', 'mathtext.cal': 'Liberation Sans', 'mathtext.tt': 'Liberation Mono'})
-    fig, axs = plt.subplots(3, 1, sharex=True, figsize=(4.3, 7.2))
+    return plt
+
+
+def _line_at(series, x):
+    """점 사이 직선 (그린 선과 같다) 의 x 에서의 값."""
+    ts, zs = [p[0] for p in series], [p[1] for p in series]
+    k = max(i for i in range(len(ts) - 1) if ts[i] <= x) if x < ts[-1] else len(ts) - 2
+    return zs[k] + (zs[k + 1] - zs[k]) * (x - ts[k]) / (ts[k + 1] - ts[k])
+
+
+def _break_scale(lo, hi, gap=GAP_FRAC):
+    """끊긴 y 축 변환 (matplotlib `function` 축척) — 아래 범위 → 0–1 · 끊긴 자리 → 1–1+gap · 위 범위 → 아래와 같은 µm/높이 축척."""
+    import numpy as np
+    (lo0, lo1), hi0 = lo, hi[0]             # 위 범위 위끝은 변환에 필요 없다 (아래와 같은 축척)
+    span = lo1 - lo0
+
+    def fwd(y):
+        y = np.asarray(y, dtype=float)
+        return np.where(y <= lo1, (y - lo0) / span, np.where(y >= hi0, 1 + gap + (y - hi0) / span, 1 + gap * (y - lo1) / (hi0 - lo1)))
+
+    def inv(u):
+        u = np.asarray(u, dtype=float)
+        return np.where(u <= 1, lo0 + u * span, np.where(u >= 1 + gap, hi0 + (u - 1 - gap) * span, lo1 + (u - 1) / gap * (hi0 - lo1)))
+    return fwd, inv
+
+
+def draw_preview(tser, vser, pser, bounds_ms, arrows, stem, ranges=None, start_arrow=None, outdir=None):
+    """세 패널 왼쪽 열 미리보기 (ps73 서식 · 이 기계에 Aptos 가 없어 Liberation Sans — Origin 결과로 바꿔 끼운다).
+    1저자 슬라이드 배치 (11-02): 단계 이름 가로 · Particle packing 왼쪽 위 (그 구간 자료 없음 → 화살표 없음) · Stabilization = 경계 바로 오른쪽 ·
+    평평한 선 위 · Compression = 기운 선 위 · Relaxation = 끝 근처 + 빨간 화살표가 끝 구간을 아래로 가리킴 · 목표 300 MPa 점선 없음 · 압력 원값 그대로.
+    arrows = [(x_tip, y_tip, x_tail, y_tail)] 데이터 좌표 — 자료가 있는 점만 가리킨다.
+    ranges = 끊긴 y 축 ((위 범위), (아래 범위)) — 원자 기준 판 (두께 패널 하나에 두 범위 · 같은 µm/높이 축척 · 끊긴 자리 = 흰 띠 + 빗금 ·
+    단계 이름 높이 = 이름 폭 안 곡선 최댓값 위) · start_arrow = 정착 시작 (첫 자료 점) 을 가리키는 빨간 화살표 (원자 기준 판만)."""
+    plt = _mpl_setup()
+    from matplotlib.ticker import FixedLocator, FuncFormatter, MultipleLocator
+    if ranges is None:
+        fig, axs = plt.subplots(3, 1, sharex=True, figsize=(4.3, 7.2))
+    else:
+        (hi0, hi1), (lo0, lo1) = ranges
+        top = 1 + GAP_FRAC + (hi1 - hi0) / (lo1 - lo0)        # 아래 범위 = 다른 두 패널과 같은 높이
+        fig, axs = plt.subplots(3, 1, sharex=True, figsize=(4.3, 7.2 * (2 + top) / 3), gridspec_kw={'height_ratios': [top, 1, 1]})
     b2, b3, b4 = bounds_ms
     spec = [(tser, 'thickness', 'Thickness (µm)', THICK_YLIM, 10),
             (vser, 'velocity', r'Plate velocity (µm s$^{-1}$)', (0, 15), 5),
@@ -425,48 +706,87 @@ def draw_preview(tser, vser, pser, bounds_ms, arrows, stem):
         ax.plot([t for t, _, _ in ser], [y for _, y, _ in ser], '-', color=COLORS[key], lw=1.6)
         for t in bounds_ms:
             ax.axvline(t, color=LIGHT, lw=0.9, ls=':')
-        ax.set_ylim(*ylim)
-        ax.yaxis.set_major_locator(MultipleLocator(ystep))
-        ax.yaxis.set_minor_locator(MultipleLocator(ystep / 2))
+        if key == 'thickness' and ranges is not None:
+            ax.set_yscale('function', functions=_break_scale((lo0, lo1), (hi0, hi1)))
+            ax.set_ylim(lo0, hi1)
+            half = ystep / 2
+            grid = [k * half for r0, r1 in ((lo0, lo1), (hi0, hi1)) for k in range(math.ceil(r0 / half), math.floor(r1 / half) + 1)]
+            ax.yaxis.set_major_locator(FixedLocator([y for y in grid if y % ystep == 0]))
+            ax.yaxis.set_minor_locator(FixedLocator([y for y in grid if y % ystep != 0]))
+        else:
+            ax.set_ylim(*ylim)
+            ax.yaxis.set_major_locator(MultipleLocator(ystep))
+            ax.yaxis.set_minor_locator(MultipleLocator(ystep / 2))
         ax.yaxis.set_major_formatter(FuncFormatter(lambda y, _p: '0' if abs(y) < 1e-12 else f'{y:g}'))   # 보고 원칙 "0.0 → 0"
         ax.set_ylabel(ylabel)
     ax = axs[0]                                           # 단계 이름 · 화살표 = 두께 패널만 (모두 가로)
-    lo, hi = ax.get_ylim()
-    ts, zs = [t for t, _, _ in tser], [z for _, z, _ in tser]
+    ts = [t for t, _, _ in tser]
 
     def zline(x):                                         # 두께 선의 높이 (점 사이 직선 — 그린 선과 같다)
-        k = max(i for i in range(len(ts) - 1) if ts[i] <= x) if x < ts[-1] else len(ts) - 2
-        return zs[k] + (zs[k + 1] - zs[k]) * (x - ts[k]) / (ts[k + 1] - ts[k])
+        return _line_at(tser, x)
     kw = dict(fontsize=9, color=LIGHT)
     mask = dict(boxstyle='square,pad=0.05', facecolor='white', edgecolor='none')   # 단계 경계 점선이 글 뒤로 가려진다 (글 ↔ 선 겹침 없음)
     st = ax.text(b2 + 15, zline(b2) + 0.8, 'Stabilization', ha='left', va='bottom', bbox=mask, zorder=3, **kw)   # 경계 바로 오른쪽 · 평평한 선 위
     xc = (b3 + b4) / 2
     cp = ax.text(xc, zline(xc - 300) + 1.5, 'Compression', ha='center', va='bottom', **kw)     # 기운 선 위 (글 왼쪽 끝에서도 선 위)
     rl = ax.text(X1 - 12, zline(ts[-1]) + 6.0, 'Relaxation', ha='right', va='bottom', bbox=mask, zorder=3, **kw)  # 끝 근처 · 아래 화살표
+    arrowprops = dict(arrowstyle='-|>', color=RED, lw=1.2, shrinkA=0, shrinkB=1.5, mutation_scale=8)
     for x, y, xt, yt in arrows:
-        ax.annotate('', xy=(x, y), xytext=(xt, yt), textcoords='data',
-                    arrowprops=dict(arrowstyle='-|>', color=RED, lw=1.2, shrinkA=0, shrinkB=1.5, mutation_scale=8))
+        ax.annotate('', xy=(x, y), xytext=(xt, yt), textcoords='data', arrowprops=arrowprops)
+    sa = None if start_arrow is None else ax.annotate('', xy=start_arrow[:2], xytext=start_arrow[2:], textcoords='data', arrowprops=arrowprops)
     axs[-1].set_xlim(X0, X1)
     axs[-1].xaxis.set_major_locator(MultipleLocator(XTICK_MAJOR))
     axs[-1].xaxis.set_minor_locator(MultipleLocator(XTICK_MAJOR / 2))
     axs[-1].set_xlabel(XLABEL)
     fig.align_ylabels(axs)
-    # Particle packing = 9 pt 가로 · 위 패널 테두리 위 (축 밖) · x = 0 ms 왼쪽 맞춤 · 화살표 없음 (1저자 슬라이드 11-02 — 그 구간 자료 없음)
+    # Particle packing = 9 pt 가로 · 위 패널 테두리 위 (축 밖) · x = 0 ms 왼쪽 맞춤 (1저자 슬라이드 11-02) — 판 기준 그림 = 화살표 없음 (그 구간 자료 없음) ·
+    # 원자 기준 그림 = start_arrow 가 첫 자료 점 (재현 step 1) 을 가리킨다
     pk = ax.annotate('Particle packing', xy=(X0, 1.0), xycoords=('data', 'axes fraction'), xytext=(0, 3), textcoords='offset points',
                      ha='left', va='bottom', annotation_clip=False, **kw)
     fig.tight_layout(pad=0.4, h_pad=0.6)                  # 축 밖 이름 자리를 위 여백으로 잡는다 (그림 크기 그대로)
     fig.canvas.draw()
     r = fig.canvas.get_renderer()
+    if ranges is not None:                                # 원자 기준 곡선은 평평하지 않다 — 이름 폭 안의 곡선 최댓값 위로 (이름 ↔ 곡선 겹침 없음)
+        inv = ax.transData.inverted()
+        for txt, gap_um in ((st, 0.8), (cp, 1.5), (rl, 6.0)):
+            bb = txt.get_window_extent(r)
+            xa, xb = sorted(inv.transform([(bb.x0, bb.y0), (bb.x1, bb.y0)])[:, 0])
+            inside = [z for t, z, _ in tser if xa <= t <= xb]
+            txt.set_y(max([zline(min(max(xa, ts[0]), ts[-1])), zline(min(max(xb, ts[0]), ts[-1]))] + inside) + gap_um)
+        import matplotlib.patches as mpatches
+        u_lo, u_hi = 1.0 / top, (1.0 + GAP_FRAC) / top     # 끊긴 자리 (축 높이 몫)
+        ax.add_patch(mpatches.Rectangle((-0.02, u_lo), 1.04, u_hi - u_lo, transform=ax.transAxes, facecolor='white', edgecolor='none',
+                                        zorder=4, clip_on=False))
+        for xe in (0.0, 1.0):
+            for ue in (u_lo, u_hi):
+                ax.plot([xe - 0.015, xe + 0.015], [ue - 0.012, ue + 0.012], transform=ax.transAxes, color=GRAY, lw=1.0, clip_on=False, zorder=5)
+        fig.canvas.draw()
     boxes = {t.get_text(): t.get_window_extent(r) for t in (pk, st, cp, rl)}
     if boxes['Particle packing'].y0 < ax.get_window_extent(r).y1 or boxes['Particle packing'].y1 > fig.bbox.y1:
         raise ValueError('Particle packing 이름이 위 패널 테두리 위 (그림 안) 에 있지 않다')
     names = list(boxes)
     hit = [(a, c) for i, a in enumerate(names) for c in names[i + 1:] if boxes[a].overlaps(boxes[c])]
+    if sa is not None:
+        hit += [('start arrow', n) for n in names if sa.arrow_patch.get_window_extent(r).overlaps(boxes[n])]
     if hit:
         raise ValueError(f'단계 이름끼리 겹친다: {hit}')
-    fig.savefig(PREV / f'{stem}.png', dpi=300)
-    fig.savefig(PREV / f'{stem}.svg', metadata={'Date': None})
+    out = PREV if outdir is None else Path(outdir)
+    fig.savefig(out / f'{stem}.png', dpi=300)
+    fig.savefig(out / f'{stem}.svg', metadata={'Date': None})
     plt.close(fig)
+
+
+def draw_preview_broken(tser, vser, pser, bounds_ms, ranges, stem, outdir=None):
+    """원자 기준 판 (정착 구간 포함 · 끊긴 y 축) — 정착 시작 빨간 화살표 = 첫 자료 점 (투입 재현 step 1) 을 위 오른쪽에서 가리킨다 ·
+    이완 화살표 = 이완 구간 가운데의 원자 기준 값을 위에서 가리킨다 (둘 다 자료 점 · 화살표 좌표를 돌려준다 → key JSON)."""
+    (_, hi1), _ = ranges
+    t0, y0 = tser[0][0], tser[0][1]
+    start = (t0, y0, t0 + 170.0, y0 + 0.55 * (hi1 - y0))
+    x_rel = (bounds_ms[2] + tser[-1][0]) / 2
+    y_rel = _line_at(tser, x_rel)
+    arrows = [(x_rel, y_rel, x_rel, y_rel + 5.6)]
+    draw_preview(tser, vser, pser, bounds_ms, arrows, stem, ranges=ranges, start_arrow=start, outdir=outdir)
+    return {'packing_start': list(start), 'relaxation_end_segment': list(arrows[0])}
 
 
 def sha256_file(p):
@@ -481,7 +801,40 @@ def rel(p):
     return Path(p).resolve().relative_to(ROOT).as_posix()
 
 
-def main():
+def atomtop_summary(at, arrows, zfn, um):
+    """원자 기준 두께 기록 (key JSON) — 측정 · 채움 수 · 끊긴 자리에 가려진 측정점 · 외톨이 후보 (빼지 않는다 — 1저자 결정) ·
+    판과의 관계 (맨 위가 판에 닿은 첫 덤프 · 중심이 판 위인 덤프) · 원자 수 변화 · KE 대조."""
+    rows, ser, ((h0, h1), (l0, l1)) = at['rows'], at['ser'], at['ranges']
+    dumps = [r for r in rows if r['source'] == 'atom dump']
+    plate = {r['step']: zfn(r['step']) * um for r in dumps}
+    over = [(round(r['ztop_um'] - plate[r['step']], 3), r['step']) for r in dumps]
+    esc = [r['step'] for r in dumps if r['zc_max_um'] > plate[r['step']]]
+    counts = [[rows[0]['step'], rows[0]['n_header']]] + [[r2['step'], r2['n_header']] for r1, r2 in zip(rows, rows[1:])
+                                                         if r2['n_header'] != r1['n_header']]
+    return {
+        'status': 'SUPPLIED — checks passed (check_atomtop ①–⑪)',
+        'csv_in': {'path': rel(ATOMTOP_CSV), 'sha256': sha256_file(ATOMTOP_CSV), 'run_folder_sha256': at['meta']['sha256'],
+                   'insertion_line': at['meta'].get('insertion')},
+        'definition': 'max(z + r) over all atoms (µm) — not filtered by the plate · one criterion from t = 0 (ps73 README §7)',
+        'n_points': len(ser), 'n_measured': sum(1 for p in ser if p[2] != SRC_INTERP),
+        'n_interpolated': sum(1 for p in ser if p[2] == SRC_INTERP),
+        'early_measured': [[r['step'], r['source'], r['ztop_um'], r['ztop_p999_um']] for r in rows if r['source'] != 'atom dump'],
+        'first': list(ser[0]), 'end': list(ser[-1]),
+        'ranges_um': {'upper': [h0, h1], 'lower': [l0, l1], 'scale': 'same µm per height in both ranges'},
+        'hidden_in_break': {'measured': [[round(t, 3), round(z, 3), s] for t, z, s in ser if l1 < z < h0 and s != SRC_INTERP],
+                            'n_interpolated': sum(1 for _, z, s in ser if l1 < z < h0 and s == SRC_INTERP)},
+        'outlier_candidates_top_minus_p999_ge_20um': [[r['step'], round(r['ztop_um'] - r['ztop_p999_um'], 3)] for r in rows
+                                                      if r['ztop_um'] - r['ztop_p999_um'] >= OUTLIER_MIN_UM],
+        'outlier_note': 'not dropped — drawn as measured (ps73 dropped one bounced particle only after the 1st author asked)',
+        'first_dump_top_reaches_plate': next((r['step'] for r in dumps if r['ztop_um'] >= plate[r['step']]), None),
+        'dumps_top_center_above_plate': {'n': len(esc), 'first': esc[0] if esc else None},
+        'max_top_minus_plate_um': list(max(over)) if over else None,
+        'atom_count_changes': counts,
+        'ke_checks': [[r['step'], r['source'], r['run_log_ke'], r['orig_log_ke']] for r in rows if r['source'] != 'atom dump'],
+        'arrows': arrows, 'csv_out': f'origin/{CSV_AT}.csv', 'previews': [f'previews/{FIG_AT}.png', f'previews/{FIG_AT_SLIDE}.png']}
+
+
+def main(require_packing=False):
     if sha256_file(LOG) != LOG_SHA256 or sha256_file(DECK) != DECK_SHA256:
         raise SystemExit(f'⛔ 로그 · 리포 덱 sha256 ≠ D1 README 기록 ({rel(LOG)} · {rel(DECK)})')
     readme = D1_README.read_text(encoding='utf-8')
@@ -528,6 +881,36 @@ def main():
             raise ValueError('초안 2 대조 실패 — ' + ' | '.join(xprob[:6]))
         dumps = dump_steps(b['3'], end, dk['atom_dump_every'])
         stages = stage_table(px, cv['bounds'], dumps, end, zfn, um, atoms_at, ms_per_step)
+        sser, sch = slide_series(px, b['4'], end, ms_per_step)
+        # 원자 기준 두께 — 클러스터 스크립트의 계획 (step · sha256) 이 이 로그 · 덱과 같은지 (CSV 가 오기 전에도 확인한다)
+        deck_body = '\n'.join(ln.split('#', 1)[0].rstrip() for ln in DECK.read_text(encoding='utf-8').splitlines())
+        every_rs = int(_one(r'^\s*restart\s+(\d+)\s+\S+/restart_settling_\*\.bin\s*$', deck_body, '정착 restart 간격'))
+        radii_um = {float(_one(rf'^\s*variable\s+{v}\s+equal\s+({_NUM})\s*$', deck_body, v)) * um for v in ('r_AM_P', 'r_AM_S', 'r_SE')}
+        early_want = (sorted(REPLAY_REF) + [cv['first_step']] + list(range(every_rs, b['2'], every_rs)) + [b['2'] - 1]
+                      + list(range((b['2'] // every_rs + 1) * every_rs, b['3'], every_rs)))
+        if early_want != ATOMTOP_EARLY or dumps != ATOMTOP_DUMPS:
+            raise ValueError(f'클러스터 스크립트 step 계획 ≠ 이 로그 · 덱 일정 ({early_want} · 덤프 {len(dumps)})')
+        no_ke = [s for s in ATOMTOP_EARLY[len(REPLAY_REF):] + ATOMTOP_DUMPS if s not in cv['ke']]
+        if no_ke:
+            raise ValueError(f'본 로그에 KE · 원자 수 줄이 없는 step: {no_ke[:5]}')
+        sha_repo = {'log.liggghts': LOG_SHA256, 'input_kg50_d1_b50.liggghts': DECK_SHA256,
+                    'input_kg50_d1_b50_insert.liggghts': sha256_file(INSERT_DECK)}
+        if any(ATOMTOP_SHA[k] != v for k, v in sha_repo.items()):
+            raise ValueError('클러스터 스크립트 sha256 ≠ 리포 로그 · 덱')
+        at = None
+        if require_packing or ATOMTOP_CSV.is_file():
+            require_atomtop(ATOMTOP_CSV)
+            at_rows, at_meta = read_atomtop(ATOMTOP_CSV)
+            at_prob = check_atomtop(at_rows, at_meta, cv['ke'], radii_um, ms_per_step)
+            if at_prob:
+                raise ValueError('원자 기준 두께 CSV 검사 실패 — ' + ' | '.join(at_prob[:6]))
+            aser = atomtop_series(at_rows, ms_per_step)
+            at = {'rows': at_rows, 'meta': at_meta, 'ser': aser, 'ranges': broken_ranges(aser, b['2'] * ms_per_step)}
+        else:
+            stale = [p for p in (ORIGIN / f'{CSV_AT}.csv', ORIGIN / f'{CSV_AT}.ogs', PREV / f'{FIG_AT}.png', PREV / f'{FIG_AT_SLIDE}.png')
+                     if p.exists()]
+            if stale:
+                raise ValueError(f'원자 기준 산출물이 있는데 CSV ({rel(ATOMTOP_CSV)}) 가 없다 — 낡은 그림을 두지 않는다: {[rel(p) for p in stale]}')
     except ValueError as e:
         raise SystemExit(f'⛔ {e}')
     eps_d2 = {int(r['step']): float(r['eps_sphere_pct']) for r in crow}
@@ -558,6 +941,23 @@ def main():
         (ORIGIN / f'{CSV_NAMES[key]}.ogs').write_text(ogs_text(CSV_NAMES[key], what, OGS_RGB[key], y0, y1, yi, ylab, bounds_ms),
                                                       encoding='utf-8')
     draw_preview(tser, vser, pser, bounds_ms, arrows, FIG_NAME)
+    # 압력 슬라이드판 (1저자 11-02 밤 *"pressure 도 저 진동 안 생기게"* — ps73 README §5 선례 · 원값판은 위에 그대로)
+    write_origin_csv(ORIGIN / f'{CSV_SLIDE}.csv', ['Time', 'Measured pressure', 'Source'], ['ms', 'MPa', ''],
+                     [(f'{t:.3f}', f'{p:.8g}', s) for t, p, s in sser])
+    (ORIGIN / f'{CSV_SLIDE}.ogs').write_text(ogs_text(CSV_SLIDE, '시간 (ms)–판 압력 슬라이드판 (판 정지까지 thermo 원값 · 그 뒤 이완 = 모식 감쇠)',
+                                                      OGS_RGB['pressure'], 0, 330, 100, 'Measured pressure (MPa)', bounds_ms), encoding='utf-8')
+    draw_preview(tser, vser, sser, bounds_ms, arrows, FIG_SLIDE)
+    at_arrows = None
+    if at is not None:                                   # 원자 기준 두께 (정착 구간부터 한 곡선 · 끊긴 y 축) — 원값 압력판 · 슬라이드판
+        (h0, h1), (l0, l1) = at['ranges']
+        write_origin_csv(ORIGIN / f'{CSV_AT}.csv', ['Time', 'Thickness', 'Source'], ['ms', 'µm', ''],
+                         [(f'{t:.3f}', f'{z:.3f}', s) for t, z, s in at['ser']])
+        (ORIGIN / f'{CSV_AT}.ogs').write_text(
+            ogs_text(CSV_AT, f'시간 (ms)–두께 (원자 기준 = 모든 원자의 max(z + r) · 0 ms 부터) · y 축 끊기 = GUI 한 번: Y 축 대화상자 Breaks 탭에서 '
+                             f'끊기를 켜고 From {l1:g} To {h0:g}', OGS_RGB['thickness'], l0, h1, 10, 'Thickness (\\g(m)m)', bounds_ms),
+            encoding='utf-8')
+        at_arrows = draw_preview_broken(at['ser'], vser, pser, bounds_ms, at['ranges'], FIG_AT)
+        draw_preview_broken(at['ser'], vser, sser, bounds_ms, at['ranges'], FIG_AT_SLIDE)
     with open(STAGE_CSV, 'w', newline='', encoding='utf-8') as f:
         w = csv.writer(f, lineterminator='\n')
         w.writerow(['stage', 'event_step', 'event_pressure_MPa', 'role', 'dump_step', 'delta_steps', 'dump_phase', 'pressure_MPa',
@@ -581,6 +981,7 @@ def main():
                                                                  if r2['atoms'] != r1['atoms']]
     ke_steps = sorted({cv['first_step'], b['2'] - 1} | set(range(50000, b['3'], 50000)))
     fnz = next(((s, p) for s, p in load if p != 0.0), None)      # 판이 침대에 처음 닿은 때 (압력 첫 0 아닌 thermo 줄)
+    p_stop_v, p_end_v = pmap[b['4']], px[-1][1]
     key = {
         'what': '50kg D1 (kg50_d1_b50 · SE D50 1 µm) compaction curve — left column of the ps73-style slide (thickness · plate velocity · '
                 'measured pressure) · stage frames for the right-side 3D pore renders',
@@ -609,7 +1010,8 @@ def main():
                       'stop_um': zfn(b['4']) * um, 'end_um_computed': z_end * um, 'end_um_mesh_end': mesh_end_um,
                       'residual_um': res_um, 'tolerance_um': tol_um, 'descent_um': round((dk['plate_z0_deck'] - z_end) * um, 9),
                       'n_points': len(tser), 'grid': f'mesh-dump steps (every {dk["mesh_dump_every"]}) + four phase corners',
-                      'packing_segment': 'NOT DRAWN — needs atom positions during settling (not in the repository · README §4)'},
+                      'packing_segment': 'NOT DRAWN in the plate figures (no plate before step '
+                                         f'{b["2"]}) — the atom-top figures draw it from the cluster CSV (one criterion · README §8)'},
         'velocity': {'deck_m_per_s': dk['press_speed_deck_m_s'], 'um_per_s': v_um_s, 'mm_per_s': v_um_s / 1000.0,
                      'note': 'real length per simulation second (ps73 README §8)', 'series': [list(p) for p in vser]},
         'pressure': {'source': 'thermo pressMPa × 1000 (setup line of every run dropped · scripts/compaction_curve.py rule)',
@@ -625,18 +1027,42 @@ def main():
                    'mesh_dumps': 'not in the repository — plate position checked only at the end (mesh_end)'},
         'arrows': {'relaxation_end_segment': {'x_ms': arrows[0][0], 'y_um': arrows[0][1], 'drawn': True,
                                               'note': 'points down to the fixed-plate relaxation segment (1st author slide layout)'},
-                   'packing_start': {'drawn': False, 'why': 'no thickness data before plate placement (packing segment not drawn)'}},
+                   'packing_start': {'drawn': False, 'why': 'plate figures: no thickness data before plate placement (packing segment not '
+                                                            'drawn) — drawn in the atom-top figures (atomtop.arrows)'}},
+        'figures': {'plate_raw': f'previews/{FIG_NAME}.png', 'plate_slide': f'previews/{FIG_SLIDE}.png',
+                    'atomtop_raw': f'previews/{FIG_AT}.png' if at else None, 'atomtop_slide': f'previews/{FIG_AT_SLIDE}.png' if at else None,
+                    'rule': 'one criterion per figure — plate figures = plate position · atom-top figures = max(z + r) of all atoms (never mixed)'},
+        'pressure_slide': {
+            'what': 'slide version (1st author 11-02 night: no post-stop ringing) — measured thermo up to the plate stop, then a schematic '
+                    'decay (모식 · not measured) to the end value · ps73 README §5 precedent · raw version kept (d1_ms_pressure.csv)',
+            'formula': f'p(s) = {p_end_v:.8g} + ({p_stop_v:.8g} − {p_end_v:.8g})·exp(−(s − {b["4"]})/{SLIDE_TAU_STEP}) every 1,000 steps after the stop',
+            'tau_step': SLIDE_TAU_STEP, 'tau_ms': SLIDE_TAU_STEP * ms_per_step,
+            'tau_note': 'figure-only constant (ps73 make_fig.py value) — not from the data; only the end value is computed',
+            'p_stop_mpa': p_stop_v, 'p_end_mpa_computed': p_end_v, 'schematic_end_mpa': sch[-1][1],
+            'schematic_end_minus_computed_mpa': sch[-1][1] - p_end_v, 'n_points': len(sser), 'n_schematic': len(sch),
+            'raw_relaxation_replaced': {'n_rows': len(relax), 'first': list(relax[0]), 'min': list(min(relax, key=lambda t: t[1])),
+                                        'max': list(max(relax, key=lambda t: t[1])), 'end': list(relax[-1])},
+            'csv': f'origin/{CSV_SLIDE}.csv', 'ogs': f'origin/{CSV_SLIDE}.ogs', 'preview': f'previews/{FIG_SLIDE}.png'},
+        'atomtop': atomtop_summary(at, at_arrows, zfn, um) if at else {
+            'status': 'NOT_SUPPLIED — the packing segment is not drawn (generator refuses to invent it; `--atomtop` exits)',
+            'csv_expected': rel(ATOMTOP_CSV), 'cluster_script': rel(HERE / 'cluster' / 'd1_atomtop_cluster.py'),
+            'cluster_script_sha256': sha256_file(HERE / 'cluster' / 'd1_atomtop_cluster.py'),
+            'plan_steps': {'replay': sorted(REPLAY_REF), 'checkpoints_run0': ATOMTOP_EARLY[len(REPLAY_REF):], 'atom_dumps': len(ATOMTOP_DUMPS)},
+            'ke_reference': {'replay_from_insertion_log': {str(k): list(v) for k, v in REPLAY_REF.items()},
+                             'checkpoints_from_main_log': {str(s): list(cv['ke'][s]) for s in ATOMTOP_EARLY[len(REPLAY_REF):]}},
+            'insertion_decision': 'full insertion replay (1st author 11-02 night: from insertion) — the insert-only deck at NP 1 (same as the '
+                                  'original insertion run) for its whole run 20000 with atom dumps every 1,000 steps (21 points 0.001 → 20 ms, '
+                                  'KE checked against the original insertion log at every 1,000 steps); original timing 4,584 s ≈ 76 min · '
+                                  'ps73 replayed only to 1,000 steps and PCHIP-filled 1 → 50 ms'},
         'stage_frames': stages,
         'cluster_tar': {'steps': tar_steps, 'run_dir': f'{RUN_PARENT}/{RUN_CASE}', 'bundle': f'$HOME/{TAR_TAG}.tgz', 'command': cmd},
         'packing_segment_requirements': {
-            'checkpoints_run0': [f'{RUN_CASE}/restart_{RUN_CASE}/restart_settling_{cv["first_step"]}.bin'] +
-                                [f'{RUN_CASE}/restart_{RUN_CASE}/restart_settling_{s}.bin' for s in range(50000, b['2'], 50000)] +
-                                [f'{RUN_CASE}/restart_{RUN_CASE}/restart_after_settling.bin'],
-            'checkpoints_stabilization_expected': [f'{RUN_CASE}/restart_{RUN_CASE}/restart_settling_{s}.bin' for s in range(250000, b['3'], 50000)],
+            'checkpoints_run0': [f'{RUN_CASE}/restart_{RUN_CASE}/{ck}' for _, ck in CLUSTER.CKPTS],
             'ke_reference_from_log': {str(s): list(cv['ke'][s]) for s in ke_steps if s in cv['ke']},
             'insertion_replay': 'input_kg50_d1_b50_insert.liggghts at NP 1 (same as the insertion run) + atom dump; check inserted counts '
-                                'and KE against log_kg50_d1_b50_ins.out (end bundle, outside the repository)',
+                                'and KE against log_kg50_d1_b50_ins.out (end bundle member · sha256 in the cluster script)',
             'atom_dumps_for_one_criterion': f'{len(dumps) - 1} compression/relaxation dumps (every {dk["atom_dump_every"]}) + atom_end',
+            'how': 'cluster/d1_atomtop_cluster.py (README §8)',
         },
     }
     KEY_JSON.write_text(json.dumps(key, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
@@ -867,6 +1293,189 @@ def selftest():
                                                                                 rows_ok, ours)[0], [])))
         chk('X4 초안 2 대조: 행 하나 빠짐 = 문제', bool(safe(lambda: crosscheck_draft2(met, rows_ok[:1], ours)[0], [])))
         chk('X5 초안 2 대조: 압력 NaN = 문제', bool(safe(lambda: crosscheck_draft2(met, [dict(rows_ok[0], plate_pressure_MPa='nan'), rows_ok[1]], ours)[0], [])))
+
+        # ── 압력 슬라이드판 (ps73 README §5 선례: 판 정지까지 원값 · 그 뒤 끝 값으로 가는 모식 감쇠 · 원값판은 따로) ──
+        b4s, ends = 2685002, 2785002
+        px_s = [(400002, 0.0)] + [(s, 0.3 * (s - 400002) / (b4s - 400002) * 1000.0) for s in range(401000, b4s, 1000)] + [(b4s, 300.58919)] + \
+               [(s, 156.0 + (s % 7)) for s in range(2686000, ends, 1000)] + [(ends, 156.15118)]
+        px_copy = list(px_s)
+        sl = safe(lambda: slide_series(px_s, b4s, ends, 1e-3, tau_step=15000))
+        if sl is not None:
+            ser, sch = sl
+            comp = [p for p in ser if p[2] != SRC_SCHEMATIC]
+            chk('R1 슬라이드: 정지까지 원값 그대로 (앞 0 ms 점 포함) · 원값 목록은 안 바뀜',
+                comp[0] == (0.0, 0.0, SRC['noplate']) and [(round(t / 1e-3), p) for t, p, _ in comp[1:]] == [(s, p) for s, p in px_s if s <= b4s]
+                and px_s == px_copy)
+            chk('R2 슬라이드: 정지 뒤 1,000 step 마다 p_end + (p_c − p_end)·exp(−Δ/τ) · 마지막 = 런 끝 · 출처 = 모식',
+                len(sch) == 100 and sch[0][0] == b4s + 1000 and sch[-1][0] == ends
+                and abs(sch[0][1] - (156.15118 + (300.58919 - 156.15118) * math.exp(-1000 / 15000))) < 1e-12
+                and all(p[2] == SRC_SCHEMATIC for p in ser if p[0] > b4s * 1e-3 + 1e-9) and '모식' in SRC_SCHEMATIC)
+        else:
+            chk('R1 슬라이드 (구현 없음)', False)
+            chk('R2 슬라이드 (구현 없음)', False)
+        chk('R3 슬라이드: 정지 step 압력 줄 없음 = 거부', raises(lambda: slide_series([p for p in px_s if p[0] != b4s], b4s, ends, 1e-3, tau_step=15000)))
+        chk('R4 슬라이드: 정지 → 끝이 1,000 step 배수가 아님 (끝 값이 계산값이 아니게 됨) = 거부',
+            raises(lambda: slide_series(px_s + [(ends + 500, 156.0)], b4s, ends + 500, 1e-3, tau_step=15000)))
+
+        # ── 원자 기준 두께 (클러스터 CSV) — 새 구간 · 검사 · 끊긴 y 축 · CSV 없으면 정착 구간 거부 ──
+        chk('A0 클러스터 CSV 없음 = 정착 구간 거부 (지어내지 않는다)', raises(lambda: require_atomtop(None))
+            and raises(lambda: require_atomtop(Path(tmp) / 'nope.csv')))
+        ckpt_steps = [s for s in ATOMTOP_EARLY if s not in REPLAY_REF]
+        main_ke = {s: (168457, f'{1e-5 * (i + 1):.8g}') for i, s in enumerate(ckpt_steps)}
+        main_ke.update({s: (168457 if s < 2689000 else 168452, '1e-07') for s in ATOMTOP_DUMPS})
+
+        def synth_rows():
+            zck = {20001: 200.0, 50000: 150.0, 100000: 143.0, 150000: 142.6, 200000: 142.5, 200001: 142.5, 250000: 142.6, 300000: 142.7,
+                   350000: 142.8, 400000: 142.9}
+            out = []
+            for s in ATOMTOP_EARLY:
+                zt = 325.0 - 120.0 * (s - 1) / 19999 if s in REPLAY_REF else zck[s]      # 재현 = 325 → 205 µm 낙하 (합성)
+                rep = s in REPLAY_REF
+                ref = REPLAY_REF[s] if rep else main_ke[s]
+                out.append({'step': s, 'time_ms': f'{s * 1e-3:.3f}', 'ztop_um': zt, 'source': 'replay' if rep else 'checkpoint',
+                            'dump_file': f'work:dump/atom_{s}.liggghts', 'dump_timestep': s, 'n_header': ref[0], 'n_rows': ref[0],
+                            'n_bad_lines': 0, 'zc_max_um': zt - 0.5, 'ztop_id': '7', 'ztop_type': '3', 'ztop_radius_um': 0.5,
+                            'ztop_p999_um': zt - 0.3, 'bytes': 1000, 'mtime': '2026-11-03T00:00:00',
+                            'run_log': 'log.replay' if rep else f'log.ckpt_{s}', 'run_log_atoms': ref[0], 'run_log_ke': ref[1],
+                            'orig_log': 'log_kg50_d1_b50_ins.out' if rep else 'log.liggghts', 'orig_log_atoms': ref[0], 'orig_log_ke': ref[1]})
+            for i, s in enumerate(ATOMTOP_DUMPS):
+                zt = 142.9 - 19.2 * i / (len(ATOMTOP_DUMPS) - 1)
+                n = main_ke[s][0]
+                out.append({'step': s, 'time_ms': f'{s * 1e-3:.3f}', 'ztop_um': zt, 'source': 'atom dump',
+                            'dump_file': f'run:post_kg50_d1_b50/atom_{s}.liggghts', 'dump_timestep': s, 'n_header': n, 'n_rows': n,
+                            'n_bad_lines': 0, 'zc_max_um': zt - 0.5, 'ztop_id': '9', 'ztop_type': '3', 'ztop_radius_um': 0.5,
+                            'ztop_p999_um': zt - 0.3, 'bytes': 2000, 'mtime': f'2026-10-30T{i // 60:02d}:{i % 60:02d}:00',
+                            'run_log': '', 'run_log_atoms': '', 'run_log_ke': '', 'orig_log': 'log.liggghts', 'orig_log_atoms': n,
+                            'orig_log_ke': '1e-07'})
+            return out
+        meta_ok = {'insertion': 'INFO: Particle insertion ins_mix: inserted 168457 particle templates (mass 9.557438e-01) at step 1',
+                   'insertion_orig': 'INFO: Particle insertion ins_mix: inserted 168457 particle templates (mass 9.557438e-01) at step 1',
+                   'sha256': dict(ATOMTOP_SHA), 'script_sha256': sha256_file(HERE / 'cluster' / 'd1_atomtop_cluster.py')}
+
+        def write_at(rows, meta=meta_ok, head=None):
+            p = Path(tmp) / f'atomtop_{next(counter)}.csv'
+            with open(p, 'w', newline='', encoding='utf-8') as f:
+                w = csv.writer(f, lineterminator='\n')
+                w.writerow(head or ATOMTOP_HEAD)
+                for r in rows:
+                    w.writerow([r.get(k, '') for k in ATOMTOP_HEAD])
+                w.writerow(['#insertion', meta['insertion']])
+                w.writerow(['#insertion_orig', meta['insertion_orig']])
+                for k in sorted(meta['sha256']):
+                    w.writerow(['#sha256', k, meta['sha256'][k]])
+                w.writerow(['#script_sha256', meta['script_sha256']])
+            return p
+        radii = {3.0, 2.0, 0.5}
+        rd = safe(lambda: read_atomtop(write_at(synth_rows())))
+        chk('A1 클러스터 CSV 읽기 · 검사: 정상 합성 = 문제 없음',
+            rd is not None and len(rd[0]) == len(ATOMTOP_EARLY) + len(ATOMTOP_DUMPS) and safe(lambda: check_atomtop(rd[0], rd[1], main_ke, radii)) == [])
+        chk('A2 머리 다름 = 거부', raises(lambda: read_atomtop(write_at(synth_rows(), head=ATOMTOP_HEAD[:-1] + ['x']))))
+        at_i = lambda rows, st: next(i for i, r in enumerate(rows) if r['step'] == st)  # noqa: E731  행을 step 으로 찾는다 (계획 길이와 무관)
+        for name, mut in [('A3 체크포인트 하나 빠짐', lambda r: r.pop(at_i(r, 100000))),
+                          ('A4 덤프 TIMESTEP ≠ step', lambda r: r[at_i(r, 650000)].update(dump_timestep=1)),
+                          ('A5 머리 원자 수 ≠ 줄 수', lambda r: r[at_i(r, 1150000)].update(n_rows=168456)),
+                          ('A6 체크포인트 KE ≠ 본 로그 (원 런 상태 아님)', lambda r: r[at_i(r, 50000)].update(run_log_ke='0.5')),
+                          ('A7 재현 1,000 step KE ≠ 원 삽입 로그 (궤적 갈림)', lambda r: r[at_i(r, 1000)].update(run_log_ke='0.1704')),
+                          ('A7b 재현 20,000 step KE ≠ 원 삽입 로그 (끝에서 갈림)', lambda r: r[at_i(r, 20000)].update(run_log_ke='2.3893')),
+                          ('A8 덤프 원자 수 ≠ 본 로그', lambda r: r[at_i(r, 1650000)].update(n_header=5, n_rows=5)),
+                          ('A9 덤프 파일 시각 거꾸로', lambda r: r[at_i(r, 1050000)].update(mtime='2026-10-29T00:00:00')),
+                          ('A10 덱에 없는 반경', lambda r: r[at_i(r, 20001)].update(ztop_radius_um=1.0)),
+                          ('A11 윗면 < 중심 · p99.9 > 윗면', lambda r: r[at_i(r, 600000)].update(ztop_p999_um=999.0)),
+                          ('A12 time_ms ≠ step × dt', lambda r: r[at_i(r, 20001)].update(time_ms='20.000')),
+                          ('A13 깨진 줄', lambda r: r[at_i(r, 1250000)].update(n_bad_lines=2))]:
+            rows = synth_rows()
+            mut(rows)
+            got = safe(lambda: check_atomtop(rows, meta_ok, main_ke, radii))
+            chk(name + ' = 문제', bool(got))
+        got = safe(lambda: check_atomtop(synth_rows(), dict(meta_ok, insertion='inserted 168000 particle templates'), main_ke, radii))
+        chk('A14 재현 삽입 줄 ≠ 원 로그 = 문제', bool(got))
+        got = safe(lambda: check_atomtop(synth_rows(), dict(meta_ok, sha256=dict(ATOMTOP_SHA, **{'log.liggghts': '0' * 64})), main_ke, radii))
+        chk('A16 런 폴더 sha256 ≠ 리포 기록 (다른 런 · 바뀐 로그) = 문제', bool(got))
+        got = safe(lambda: check_atomtop(synth_rows(), dict(meta_ok, script_sha256='0' * 64), main_ke, radii))
+        chk('A20 CSV 를 만든 스크립트 ≠ 리포 클러스터 스크립트 (고친 사본 · 옛 판) = 문제', bool(got))
+        # ── 이음 시험: 클러스터 스크립트 scan() 이 쓴 CSV 를 이 생성기가 그대로 읽고 검사한다 (가짜 런 · work 폴더 · 원자 3 개 덤프) ──
+        import contextlib
+        import io
+        run_d, work_d = Path(tmp) / 'run', Path(tmp) / 'work'
+        (run_d / f'post_{CLUSTER.CASE}').mkdir(parents=True)
+        (work_d / 'dump').mkdir(parents=True)
+        ins_line = 'INFO: Particle insertion ins_mix: inserted 168457 particle templates (mass 9.557438e-01) at step 1'
+        thermo = lambda pairs: '    Step    Atoms         KinEng            CPU \n' + ''.join(f'{st:>8} {na:>8} {ke_:>14} 0.0 \n' for st, na, ke_ in pairs) + 'Loop time\n'  # noqa: E731
+
+        def dump(path, step, top):
+            path.write_text(f'ITEM: TIMESTEP\n{step}\nITEM: NUMBER OF ATOMS\n3\nITEM: BOX BOUNDS pp pp ff\n0 0.05\n0 0.05\n-0.01 1\n'
+                            f'ITEM: ATOMS id type x y z radius vx\n1 1 0 0 0.05 0.003 0\n2 3 0 0 {top - 0.0005:.6f} 0.0005 0\n3 3 0 0 0.02 0.0005 0\n',
+                            encoding='utf-8')
+        ke_of = {st: f'{1e-4 * (i + 1):.8g}' for i, st in enumerate(ATOMTOP_EARLY + ATOMTOP_DUMPS)}
+        (run_d / 'log_kg50_d1_b50_ins.out').write_text(ins_line + '\n' + thermo([(st, 3, ke_of[st]) for st in sorted(REPLAY_REF)]), encoding='utf-8')
+        (run_d / 'log.liggghts').write_text(thermo([(st, 3, ke_of[st]) for st in ATOMTOP_EARLY[2:] + ATOMTOP_DUMPS]), encoding='utf-8')
+        for nm in ('input_kg50_d1_b50.liggghts', 'input_kg50_d1_b50_insert.liggghts'):
+            (run_d / nm).write_text('# fake deck\n', encoding='utf-8')
+        (work_d / 'log.replay').write_text(ins_line + '\n' + thermo([(st, 3, ke_of[st]) for st in sorted(REPLAY_REF)]), encoding='utf-8')
+        for i, st in enumerate(ATOMTOP_EARLY):
+            dump(work_d / 'dump' / f'atom_{st}.liggghts', st, 0.300 - 0.001 * i)
+            if st not in REPLAY_REF:
+                (work_d / f'log.ckpt_{st}').write_text(thermo([(st, 3, ke_of[st])]), encoding='utf-8')
+        for st in ATOMTOP_DUMPS:
+            nm = f'atom_end_{st}.liggghts' if st == CLUSTER.END_STEP else f'atom_{st}.liggghts'
+            dump(run_d / f'post_{CLUSTER.CASE}' / nm, st, 0.142 - 1e-8 * st)
+        with contextlib.redirect_stdout(io.StringIO()) as so:
+            csv_out = safe(lambda: CLUSTER.scan(str(run_d), str(work_d)))
+        ri = safe(lambda: read_atomtop(csv_out)) if csv_out else None
+        sha_fake = {nm: sha256_file(run_d / nm) for nm in ATOMTOP_SHA}
+        pr = safe(lambda: check_atomtop(ri[0], ri[1], {st: (3, ke_of[st]) for st in ATOMTOP_EARLY[2:] + ATOMTOP_DUMPS}, {3.0, 0.5},
+                                        replay_ref={st: (3, ke_of[st]) for st in REPLAY_REF}, sha_ref=sha_fake), ['ERR']) if ri else ['ERR']
+        chk('I1 이음: 클러스터 scan() CSV (머리 · 값 꼴 · 메타 줄) = 생성기 read_atomtop · check_atomtop 통과 · 곡선 시작 300 µm · KE_CHECK 줄',
+            pr == [] and abs(ri[0][0]['ztop_um'] - 300.0) < 1e-6 and len(safe(lambda: atomtop_series(ri[0]), [])) > 60
+            and f'KE_CHECK {len(ATOMTOP_EARLY)}/{len(ATOMTOP_EARLY)}' in so.getvalue())
+        pr2 = safe(lambda: check_atomtop(ri[0], ri[1], {st: (3, ke_of[st]) for st in ATOMTOP_EARLY[2:] + ATOMTOP_DUMPS}, {3.0, 0.5},
+                                         replay_ref={st: (3, ke_of[st]) for st in REPLAY_REF}), []) if ri else []
+        chk('I2 이음: 가짜 런 폴더 sha256 ≠ 리포 기록 = 문제 (⑩)', any(x.startswith('⑩') for x in pr2))
+        rows_m = synth_rows()
+        rows_m[at_i(rows_m, 150000)].update(orig_log_ke='3e-05')
+        chk('A18 클러스터가 읽은 원 로그 KE ≠ 리포 기록 (런 KE 는 같아도) = 문제', bool(safe(lambda: check_atomtop(rows_m, meta_ok, main_ke, radii))))
+        rows_m = synth_rows()
+        rows_m[at_i(rows_m, 200000)].update(run_log_atoms=168400)
+        chk('A19 체크포인트 덤프 원자 수 ≠ 그 run 0 로그 = 문제', bool(safe(lambda: check_atomtop(rows_m, meta_ok, main_ke, radii))))
+        pdup = write_at(synth_rows())
+        with open(pdup, 'a', encoding='utf-8') as f:
+            f.write('#insertion,dup\n')
+        chk('A16b 메타 줄 겹침 (#insertion 둘) = 거부', raises(lambda: read_atomtop(pdup)))
+        rows_o = synth_rows()
+        chk('A17 뺄 점이 외톨이가 아니면 거부 (ps73 규칙: 윗면 − p99.9 ≥ 20 µm 일 때만)', raises(lambda: atomtop_series(rows_o, drop={50000: 'x'})))
+        rows_o[at_i(rows_o, 50000)].update(ztop_p999_um=124.0)
+        ser_o = safe(lambda: atomtop_series(rows_o, drop={50000: 'bounced'}), [])
+        chk('A17b 외톨이 점은 빼고 앞뒤 측정점을 잇는다 (50 ms 점 없음 · 채움으로 메움)',
+            bool(ser_o) and not any(abs(t - 50.0) < 1e-9 and s != SRC_INTERP for t, _, s in ser_o)
+            and any(abs(t - 50.0) < 1e-9 and s == SRC_INTERP for t, _, s in ser_o))
+        ser = safe(lambda: atomtop_series(synth_rows()), [])
+        meas = [p for p in ser if p[2] != SRC_INTERP]
+        n_fill = sum(1 for k in range(1, 450) if k * 1000 not in set(ATOMTOP_EARLY))      # 1 ms 격자 중 측정점이 아닌 자리
+        chk(f'A15 새 구간: 0.001 ms 재현점 (325 µm) 부터 · 측정점 그대로 · 0–450 ms 사이만 PCHIP 채움 {n_fill} · 시각 엄격 증가',
+            bool(ser) and ser[0] == (0.001, 325.0, SRC_REPLAY) and len(meas) == len(ATOMTOP_EARLY) + len(ATOMTOP_DUMPS)
+            and sum(1 for p in ser if p[2] == SRC_INTERP) == n_fill and all(0.001 < t < 450.0 for t, _, s in ser if s == SRC_INTERP)
+            and all(b[0] > a[0] for a, b in zip(ser, ser[1:])) and ser[-1][2] == SRC_DUMP and abs(ser[-1][0] - 2785.002) < 1e-9)
+        br = safe(lambda: broken_ranges(ser, 200.002)) if ser else None
+        chk('B1 끊긴 y 축: 위 = 시작점 · 아래 = 판 놓은 뒤 전부 · 위 아래 사이 틈',
+            br is not None and br[0][0] < 325.0 < br[0][1] and br[1][0] <= min(z for t, z, _ in ser if t >= 200.002)
+            and br[1][1] >= max(z for t, z, _ in ser if t >= 200.002) and br[0][0] > br[1][1])
+        flat = [(t, 145.0 if t < 1.5 else z, s) for t, z, s in ser]
+        chk('B2 시작이 아래 범위와 겹침 (끊을 틈 없음) = 거부', bool(ser) and raises(lambda: broken_ranges(flat, 200.002)))
+        rows_low = synth_rows()
+        for i, r in enumerate(rows_low):                              # 시작이 낮은 침대 (160 µm) — 곡선 전체를 다시 만든다 (채운 점도 새 매듭에서)
+            if r['step'] <= 50000:
+                zv = 160.0 - 0.25 * i
+                r.update(ztop_um=zv, zc_max_um=zv - 0.5, ztop_p999_um=zv - 0.3)
+        low = safe(lambda: atomtop_series(rows_low), [])
+        chk('B2b 시작 (160 µm) 이 위 범위 안이지만 위 범위가 아래 범위 (115–155) 와 겹침 = 거부',
+            bool(low) and max(z for _, z, _ in low) == 160.0 and raises(lambda: broken_ranges(low, 200.002)))
+        if ser and br is not None and sl is not None:
+            vs_t = velocity_series((200002, 400002, 2685002, 2785002), 10.0, 1e-3)
+            res = safe(lambda: draw_preview_broken(ser, vs_t, sl[0], [200.002, 400.002, 2685.002], br, 'selftest_broken', outdir=Path(tmp)), 'ERR')
+            chk('B3 끊긴 축 그림 (합성 · 슬라이드판 압력) 이 그려진다 · 이름 · 화살표 겹침 검사 통과',
+                res != 'ERR' and (Path(tmp) / 'selftest_broken.png').is_file())
+        else:
+            chk('B3 끊긴 축 그림 (구현 없음)', False)
     print(f'make_fig_d1_ms selftest: {ok} PASS · {fail} FAIL')
     return fail == 0
 
@@ -874,4 +1483,4 @@ def selftest():
 if __name__ == '__main__':
     if '--selftest' in sys.argv[1:]:
         sys.exit(0 if selftest() else 1)
-    main()
+    main(require_packing='--atomtop' in sys.argv[1:])

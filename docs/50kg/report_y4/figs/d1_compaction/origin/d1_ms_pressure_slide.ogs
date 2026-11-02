@@ -1,0 +1,23 @@
+// d1_ms_pressure_slide.ogs — 50kg D1 (kg50_d1_b50 · SE D50 1 µm) 압밀 곡선 (시간 (ms)–판 압력 슬라이드판 (판 정지까지 thermo 원값 · 그 뒤 이완 = 모식 감쇠))
+// 사용: d1_ms_pressure_slide.csv 를 가져온 워크북을 활성으로 두고 Script Window 에 붙여 넣기 → Enter.
+// 결과: 새 그래프 + BML 서식 · 단계 경계 점선 셋 (200.002 · 400.002 · 2685.002 ms = 판 놓음 · 압축 시작 · 판 정지).  C 열 (Source) 은 그리지 않는다.
+string bk$ = %H;
+plotxy iy:=[%(bk$)]1!(1,2) plot:=200 ogl:=<new>;
+set %C -c color(241,64,64); set %C -w 1500;
+layer.unit = 3; layer.width = 10; layer.height = 8;
+layer.x.color = color(64,64,64); layer.x.thickness = 1; layer.x.ticks = 10;
+layer.x.ticklength = 6; layer.x.tickthickness = 1; layer.x.mticklength = 3; layer.x.mtickthickness = 1;
+layer.x.label.font = font(Aptos); layer.x.label.pt = 28; layer.x.label.color = color(64,64,64);
+layer.y.color = color(64,64,64); layer.y.thickness = 1; layer.y.ticks = 10;
+layer.y.ticklength = 6; layer.y.tickthickness = 1; layer.y.mticklength = 3; layer.y.mtickthickness = 1;
+layer.y.label.font = font(Aptos); layer.y.label.pt = 28; layer.y.label.color = color(64,64,64);
+layer.x2.showAxes = 3; layer.x2.color = color(64,64,64); layer.x2.thickness = 1; layer.x2.ticks = 0; layer.x2.showLabels = 0;
+layer.y2.showAxes = 3; layer.y2.color = color(64,64,64); layer.y2.thickness = 1; layer.y2.ticks = 0; layer.y2.showLabels = 0;
+layer.x.from = 0; layer.x.to = 2800; layer.x.inc = 500; layer.x.minor = 1;
+page.margincontrol = 1;
+label -xb Time (ms);
+layer.y.from = 0; layer.y.to = 330; layer.y.inc = 100; layer.y.minor = 1;
+label -yl Measured pressure (MPa);
+draw -n b2 -l -v 200.002; b2.linetype = 3; b2.color = color(154,160,168);
+draw -n b3 -l -v 400.002; b3.linetype = 3; b3.color = color(154,160,168);
+draw -n b4 -l -v 2685.002; b4.linetype = 3; b4.color = color(154,160,168);

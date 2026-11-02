@@ -104,7 +104,7 @@
   "descent_um": 22.85,
   "n_points": 521,
   "grid": "mesh-dump steps (every 5000) + four phase corners",
-  "packing_segment": "NOT DRAWN — needs atom positions during settling (not in the repository · README §4)"
+  "packing_segment": "NOT DRAWN in the plate figures (no plate before step 200002) — the atom-top figures draw it from the cluster CSV (one criterion · README §8)"
  },
  "velocity": {
   "deck_m_per_s": 0.01,
@@ -260,8 +260,225 @@
   },
   "packing_start": {
    "drawn": false,
-   "why": "no thickness data before plate placement (packing segment not drawn)"
+   "why": "plate figures: no thickness data before plate placement (packing segment not drawn) — drawn in the atom-top figures (atomtop.arrows)"
   }
+ },
+ "figures": {
+  "plate_raw": "previews/d1_ms_compaction_3panel.png",
+  "plate_slide": "previews/d1_ms_compaction_3panel_slide.png",
+  "atomtop_raw": null,
+  "atomtop_slide": null,
+  "rule": "one criterion per figure — plate figures = plate position · atom-top figures = max(z + r) of all atoms (never mixed)"
+ },
+ "pressure_slide": {
+  "what": "slide version (1st author 11-02 night: no post-stop ringing) — measured thermo up to the plate stop, then a schematic decay (모식 · not measured) to the end value · ps73 README §5 precedent · raw version kept (d1_ms_pressure.csv)",
+  "formula": "p(s) = 156.15118 + (300.58919 − 156.15118)·exp(−(s − 2685002)/15000) every 1,000 steps after the stop",
+  "tau_step": 15000,
+  "tau_ms": 15.0,
+  "tau_note": "figure-only constant (ps73 make_fig.py value) — not from the data; only the end value is computed",
+  "p_stop_mpa": 300.58919000000003,
+  "p_end_mpa_computed": 156.15118,
+  "schematic_end_mpa": 156.33499669372426,
+  "schematic_end_minus_computed_mpa": 0.18381669372425335,
+  "n_points": 3044,
+  "n_schematic": 100,
+  "raw_relaxation_replaced": {
+   "n_rows": 101,
+   "first": [
+    2686000,
+    199.68129000000002
+   ],
+   "min": [
+    2689000,
+    111.97709
+   ],
+   "max": [
+    2692000,
+    209.25931
+   ],
+   "end": [
+    2785002,
+    156.15118
+   ]
+  },
+  "csv": "origin/d1_ms_pressure_slide.csv",
+  "ogs": "origin/d1_ms_pressure_slide.ogs",
+  "preview": "previews/d1_ms_compaction_3panel_slide.png"
+ },
+ "atomtop": {
+  "status": "NOT_SUPPLIED — the packing segment is not drawn (generator refuses to invent it; `--atomtop` exits)",
+  "csv_expected": "docs/50kg/report_y4/figs/d1_compaction/raw/kg50_d1_atomtop.csv",
+  "cluster_script": "docs/50kg/report_y4/figs/d1_compaction/cluster/d1_atomtop_cluster.py",
+  "cluster_script_sha256": "d60dbdfaf53216a777bfc186e0711f17864895cda64ea413684b81ea2c25f227",
+  "plan_steps": {
+   "replay": [
+    1,
+    1000,
+    2000,
+    3000,
+    4000,
+    5000,
+    6000,
+    7000,
+    8000,
+    9000,
+    10000,
+    11000,
+    12000,
+    13000,
+    14000,
+    15000,
+    16000,
+    17000,
+    18000,
+    19000,
+    20000
+   ],
+   "checkpoints_run0": [
+    20001,
+    50000,
+    100000,
+    150000,
+    200000,
+    200001,
+    250000,
+    300000,
+    350000,
+    400000
+   ],
+   "atom_dumps": 48
+  },
+  "ke_reference": {
+   "replay_from_insertion_log": {
+    "1": [
+     168457,
+     "0.11946798"
+    ],
+    "1000": [
+     168457,
+     "0.17034351"
+    ],
+    "2000": [
+     168457,
+     "0.23018355"
+    ],
+    "3000": [
+     168457,
+     "0.29890105"
+    ],
+    "4000": [
+     168457,
+     "0.37462336"
+    ],
+    "5000": [
+     168457,
+     "0.45695706"
+    ],
+    "6000": [
+     168457,
+     "0.54772567"
+    ],
+    "7000": [
+     168457,
+     "0.64616151"
+    ],
+    "8000": [
+     168457,
+     "0.75103338"
+    ],
+    "9000": [
+     168457,
+     "0.86357835"
+    ],
+    "10000": [
+     168457,
+     "0.98082832"
+    ],
+    "11000": [
+     168457,
+     "1.104255"
+    ],
+    "12000": [
+     168457,
+     "1.2338527"
+    ],
+    "13000": [
+     168457,
+     "1.3650701"
+    ],
+    "14000": [
+     168457,
+     "1.499203"
+    ],
+    "15000": [
+     168457,
+     "1.6376978"
+    ],
+    "16000": [
+     168457,
+     "1.7822583"
+    ],
+    "17000": [
+     168457,
+     "1.9289022"
+    ],
+    "18000": [
+     168457,
+     "2.079641"
+    ],
+    "19000": [
+     168457,
+     "2.2333726"
+    ],
+    "20000": [
+     168457,
+     "2.3892872"
+    ]
+   },
+   "checkpoints_from_main_log": {
+    "20001": [
+     168457,
+     2.3894425
+    ],
+    "50000": [
+     168457,
+     3.2480619
+    ],
+    "100000": [
+     168457,
+     0.0073460391
+    ],
+    "150000": [
+     168457,
+     0.00081993853
+    ],
+    "200000": [
+     168457,
+     1.9866698e-05
+    ],
+    "200001": [
+     168457,
+     1.9881675e-05
+    ],
+    "250000": [
+     168457,
+     4.4168899e-07
+    ],
+    "300000": [
+     168457,
+     3.8465837e-07
+    ],
+    "350000": [
+     168457,
+     3.4737142e-07
+    ],
+    "400000": [
+     168457,
+     3.1955678e-07
+    ]
+   }
+  },
+  "insertion_decision": "full insertion replay (1st author 11-02 night: from insertion) — the insert-only deck at NP 1 (same as the original insertion run) for its whole run 20000 with atom dumps every 1,000 steps (21 points 0.001 → 20 ms, KE checked against the original insertion log at every 1,000 steps); original timing 4,584 s ≈ 76 min · ps73 replayed only to 1,000 steps and PCHIP-filled 1 → 50 ms"
  },
  "stage_frames": [
   {
@@ -466,9 +683,7 @@
    "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_100000.bin",
    "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_150000.bin",
    "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_200000.bin",
-   "kg50_d1_b50/restart_kg50_d1_b50/restart_after_settling.bin"
-  ],
-  "checkpoints_stabilization_expected": [
+   "kg50_d1_b50/restart_kg50_d1_b50/restart_after_settling.bin",
    "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_250000.bin",
    "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_300000.bin",
    "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_350000.bin",
@@ -516,7 +731,8 @@
     3.1955678e-07
    ]
   },
-  "insertion_replay": "input_kg50_d1_b50_insert.liggghts at NP 1 (same as the insertion run) + atom dump; check inserted counts and KE against log_kg50_d1_b50_ins.out (end bundle, outside the repository)",
-  "atom_dumps_for_one_criterion": "47 compression/relaxation dumps (every 50000) + atom_end"
+  "insertion_replay": "input_kg50_d1_b50_insert.liggghts at NP 1 (same as the insertion run) + atom dump; check inserted counts and KE against log_kg50_d1_b50_ins.out (end bundle member · sha256 in the cluster script)",
+  "atom_dumps_for_one_criterion": "47 compression/relaxation dumps (every 50000) + atom_end",
+  "how": "cluster/d1_atomtop_cluster.py (README §8)"
  }
 }
