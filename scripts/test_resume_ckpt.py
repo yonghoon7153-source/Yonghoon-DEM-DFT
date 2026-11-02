@@ -1170,6 +1170,7 @@ def group_rb(script, chk, grp):
 #   run min(TS − r, N) (TS ≤ r 이면 run TS 하나 · 판정 전).  덱 · 로그 · 덤프는 합성 — 실제 dem_restart.py compress 산출 꼴 = 09-27 r075
 #   (docs/data/pure_se_r075_20260927/input_pse_r075_a_r30.liggghts · 그 도구 소스는 리포에 없다).
 QB_MARK = 'q3b_done_loop_press'
+QB_REORD = '준비 구간 순서 고침 (11-02'
 QB_NO = '압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함'
 QB_TRIAL_IF = 'if "${current_press} < ${target_press}" then "print \'q3b trial - below target, loop continues\'" else "quit"'
 QB_LOOP = ('label loop_press\n    run 5000\n    variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"\n'
@@ -1201,7 +1202,9 @@ def qb_raw(main_text, case, ckpt_rel, order='main', stl=None):
     """dem_restart.py compress 재개 덱 꼴 (합성 · 09-27 r075 실제 산출의 꼴): 머리 주석 · 설정 · 변수 · processors 뒤 read_restart · 이웃 · 재료 ·
     접촉 · compute · 바닥 벽 · 삽입 자기검사 (D2 settling 실제 산출처럼 남김) · shell mkdir -p post · thermo · Phase 1/2 상태 fix · PHASE 3 부터 끝까지 그대로.
     order 'main' = 상태 fix 를 본 덱 순서로 (integr · gravi 98.1 · damp 1e-5 · 판 메시 · 벽 · mesh 덤프 · gravi 9.81 · unfix damp · damp 0.5) ·
-    'r075' = 09-27 실제 산출 순서 (integr · gravi 9.81 · damp 0.5 를 판 메시 fix 앞에 — 정적 대조 순서 규칙 (10-28 사전 공격 A) 이 거부)"""
+    'r075' = 09-27 실제 산출 순서 (integr · gravi 9.81 · damp 0.5 를 판 메시 fix 앞에 — 정적 대조 순서 규칙 (10-28 사전 공격 A) 이 거부) ·
+    'r075sorted' = 같은 명령을 본 덱 자리 순으로 (11-02 도구 순서 고침의 기대 — 시험 쪽에서 따로: integr · 판 메시 · 벽 · mesh 덤프 ·
+    gravi 9.81 (다시 정의 = 본 덱 뒤 자리) · damp 0.5) · 'main_gswap' = 'main' 에서 gravi 98.1 ↔ 9.81 두 줄을 맞바꿈"""
     L = main_text.split('\n')
 
     def at(pred, start=0):
@@ -1227,11 +1230,15 @@ def qb_raw(main_text, case, ckpt_rel, order='main', stl=None):
     walls = [mesh, L[at(lambda l: l.startswith('fix zwall_top'))], L[at(lambda l: l.startswith('dump dmp_mesh'))]]
     tail3 = [L[at(lambda l: l.startswith('variable pressMPa'))], L[at(lambda l: l.startswith('thermo_style    custom step atoms ke cpu v_pressMPa'))],
              L[at(lambda l: l.startswith('thermo 1000'), imesh)]]
+    g98, g981 = 'fix gravi all gravity 98.1 vector 0.0 0.0 -1.0', 'fix gravi all gravity 9.81 vector 0.0 0.0 -1.0'
     if order == 'r075':
-        out += ['fix integr all nve/sphere', 'fix gravi all gravity 9.81 vector 0.0 0.0 -1.0', 'fix damp all viscous 0.5', ''] + walls + [''] + tail3
+        out += ['fix integr all nve/sphere', g981, 'fix damp all viscous 0.5', ''] + walls + [''] + tail3
+    elif order == 'r075sorted':
+        out += ['fix integr all nve/sphere', ''] + walls + ['', g981, 'fix damp all viscous 0.5'] + tail3
     else:
-        out += (['fix integr all nve/sphere', 'fix gravi all gravity 98.1 vector 0.0 0.0 -1.0', 'fix damp all viscous 1.0e-5', ''] + walls
-                + ['', 'fix gravi all gravity 9.81 vector 0.0 0.0 -1.0', 'unfix damp', 'fix damp all viscous 0.5'] + tail3)
+        ga, gb = (g981, g98) if order == 'main_gswap' else (g98, g981)
+        out += (['fix integr all nve/sphere', ga, 'fix damp all viscous 1.0e-5', ''] + walls
+                + ['', gb, 'unfix damp', 'fix damp all viscous 0.5'] + tail3)
     out += [''] + L[at(lambda l: l.startswith('# --- 11. Phase 3')):]
     t = '\n'.join(out)
     return t if t.endswith('\n') else t + '\n'
@@ -1309,12 +1316,12 @@ QB_ATOM = ('ITEM: TIMESTEP\n%d\nITEM: NUMBER OF ATOMS\n3\nITEM: BOX BOUNDS pp pp
            '2 3 0.01 0.02 0.03 0.00035 0 0 -1e-3 0 0 0 0\n1 1 0.02 0.01 0.04 0.003 1e-4 0 0 0 0 0 0\n3 3 0.03 0.03 0.02 0.00035 0 2e-4 0 0 0 0 0\n')
 
 
-def qb_flow(script, main_text, raw_text, s0, trial_text, E, N, extra=('-T',), rewrite=True, **more):
+def qb_flow(script, main_text, raw_text, s0, trial_text, E, N, extra=('-T',), rewrite=True, stl_more=(), **more):
     """본 흐름 (가짜 SLURM · 계획 compress) — 멈춘 폴더 = 본 덱 · 원 로그 (합성) · 체크포인트 · S0 덤프 (atom · mesh) · 판 STL.
     rewrite = 시험 잡이 끝날 때 S0 덤프를 작업 폴더에 다시 쓴 꼴 (가짜 sbatch 고리 FAKE_POST_TRIAL · 시험 덱보다 새것) — G2"""
     ck = 'restart_%s/restart_compress_%d.bin' % (C, s0)
     ctx = make_root(main_bytes=main_text.encode('utf-8'), ckpt=ck, orig_log=qb_orig_log(E, N, s0),
-                    more_decks=(('plate_%s.stl' % C, b'solid plate\nendsolid plate\n'),))
+                    more_decks=(('plate_%s.stl' % C, b'solid plate\nendsolid plate\n'),) + tuple((x, b'solid plate\nendsolid plate\n') for x in stl_more))
     try:
         dd = os.path.join(ctx['tmp'], 'dumps')
         os.makedirs(dd)
@@ -1461,7 +1468,7 @@ def group_qb(script, chk, grp):
     chk('QB10 (a) 본 흐름 -T · 계획 compress · 체크포인트 1,000,000 → 도구가 Q3 (나) 꼴을 넣음 (작업 폴더 재개 덱 = 시험 쪽 기대 · 주석 한 줄 뺌) · '
         '정적 대조 통과 · 시험 냄',
         r['trial'] and not r['main'] and nocomment(wd) == nocomment(qb_pre(raw, 2)) and '압축 루프 재개 준비 (Q3 (나)' in r['out']
-        and '재개 덱 정적 대조: 통과' in r['out'], r['out'] + r['rep'])
+        and '재개 덱 정적 대조: 통과' in r['out'] and QB_REORD not in r['out'], r['out'] + r['rep'])
     chk('QB10b (a) 시험 덱 = 준비 구간 + run 2 + 몸 (variable · print) + if "같은 조건" then print else quit + run 1998 (루프 run 을 2000 − 2 로) · '
         '이완 명령 없음',
         nocomment(td) == setup + ['run 2'] + body3 + [QB_TRIAL_IF, 'run 1998'] and 'unfix move_press' not in td and 'PHASE 4' not in td
@@ -1500,11 +1507,45 @@ def group_qb(script, chk, grp):
     r = qb_flow(script, mf, raw, 1000000, qb_trial_log(1000000, [2, 1998]), 400002, 5000, extra=(), rewrite=False)
     chk('QB16 (a) 시험이 S0 덤프 (atom · mesh) 를 다시 안 씀 → G2 실패 · 본 제출 안 함 (압축 G2 = 덤프 대조 · 대신할 것 없음)',
         r['trial'] and not r['main'] and 'G2 체크포인트 상태 덤프 대조: 실패' in r['rep'] and '시험이 다시 안 씀' in r['rep'], r['out'] + r['rep'])
-    r = qb_flow(script, mf, qb_raw(mf, C, ck, order='r075'), 1000000, qb_trial_log(1000000, [2, 1998]), 400002, 5000)
-    chk('QB17 (a) dem_restart.py 산출이 09-27 r075 순서 (상태 fix 를 판 메시 앞에) → Q3 (나) 꼴은 넣지만 정적 대조가 순서로 거부 · 시험 안 냄 '
-        '(실제 dem_restart.py compress 산출이 이 꼴이면 ibb -T 도 여기서 멈춘다 · 닫힌 실패)',
-        not r['trial'] and not r['main'] and '압축 루프 재개 준비 (Q3 (나)' in r['out'] and '순서가 본 덱 체크포인트 앞 순서와 다름' in r['out'],
-        r['out'] + r['rep'])
+    # 11-02 (ibb 실제 -T · job 없음 = 시험 전 거부 · 1저자): 실제 dem_restart.py compress 산출이 r075 꼴 (끝 상태 fix 를 판 메시 fix 앞에) 이라 순서
+    #   규칙 (10-28 사전 공격 A) 이 거부했다 → 도구 쪽 순서 고침 (순서 규칙은 그대로): 준비 구간 (read_restart 뒤 ~ 루프 머리 앞) 명령을 본 덱 체크포인트
+    #   앞 같은 명령 (정적 대조와 같은 규칙 · 판 메시 file 이름 · mkdir -p) 의 마지막 자리 순으로 안정 정렬 · 같은 명령이 없으면 제자리 (정적 대조가 거부)
+    st17 = 'plate_%s_%s.stl' % (C, SFX)          # 실제 ibb 거부 줄의 판 메시 = dem_restart.py 새 STL 이름 (허용 차이 ② · 작업 폴더에 있음)
+    raw17 = qb_raw(mf, C, ck, order='r075', stl=st17)
+    r = qb_flow(script, mf, raw17, 1000000, qb_trial_log(1000000, [2, 1998]), 400002, 5000, stl_more=(st17,))
+    wd = r['w_decks'].get(rk, b'').decode('utf-8', 'replace')
+    nw = nocomment(wd)
+    pos = [nw.index(x) if x in nw else -1 for x in ('fix integr all nve/sphere', 'fix top_mesh all mesh/surface/stress file %s type 1 scale 1.0 '
+                                                     'reference_point 0 0 0' % st17, 'dump dmp_mesh all mesh/stl 5000 post_%s/mesh_*.stl top_mesh' % C,
+                                                     'fix gravi all gravity 9.81 vector 0.0 0.0 -1.0', 'fix damp all viscous 0.5')]
+    chk('QB17 (a) dem_restart.py 산출이 09-27 r075 순서 (integr · gravi 9.81 · damp 0.5 를 판 메시 fix 앞에 · 11-02 ibb 실제 거부 꼴) → 도구가 준비 구간 '
+        '순서를 본 덱 자리로 고침 (integr · 판 메시 · 벽 · mesh 덤프 · gravi 9.81 = 다시 정의한 뒤 자리 · damp 0.5 · 같은 thermo 1000 두 줄은 본 덱 두 자리로) '
+        '→ 정적 대조 통과 (순서 규칙 그대로) · 시험 · G0–G3 통과 · 보고에 순서 고침 줄 · 명령 집합 그대로',
+        r['trial'] and not r['main'] and QB_REORD in r['out'] and '재개 덱 정적 대조: 통과' in r['out']
+        and '순서가 본 덱 체크포인트 앞 순서와 다름' not in r['out'] and nw == nocomment(qb_pre(qb_raw(mf, C, ck, order='r075sorted', stl=st17), 2))
+        and sorted(nw) == sorted(nocomment(qb_pre(raw17, 2))) and -1 not in pos and pos == sorted(pos)
+        and '🧪 시험만 (-T)' in r['rep'] and 'G0 시험 정상 종료: 통과' in r['rep'] and '- 준비 구간 순서 고침 (11-02' in r['rep'],
+        r['out'] + r['rep'] + wd)
+    for tag, extra_l, at_l, frag in (('본 덱에 없는 상태 명령 (fix extra all viscous 0.7)', 'fix extra all viscous 0.7', 'fix integr all nve/sphere',
+                                      'fix extra all viscous 0.7'),
+                                     ('값이 다른 같은 fix (fix damp all viscous 0.05)', None, 'fix damp all viscous 0.5', 'fix damp all viscous 0.05')):
+        if extra_l:
+            raw18 = raw17.replace(at_l + '\n', extra_l + '\n' + at_l + '\n', 1)
+        else:
+            raw18 = raw17.replace(at_l + '\n', frag + '\n', 1)
+        assert raw18 != raw17
+        r = qb_flow(script, mf, raw18, 1000000, qb_trial_log(1000000, [2, 1998]), 400002, 5000, stl_more=(st17,))
+        chk('QB18 r075 꼴 + %s → 같은 명령 없는 그 줄은 제자리 · 나머지만 본 덱 자리로 → 정적 대조가 그 줄을 거부 (글자 그대로 없음 · 순서 거부 아님) · '
+            '시험 · 본 제출 없음' % tag,
+            not r['trial'] and not r['main'] and QB_REORD in r['out'] and '글자 그대로 없음' in r['out'] and frag in r['out']
+            and '순서가 본 덱 체크포인트 앞 순서와 다름' not in r['out'] and '단계: 정적 대조' in r['rep'], r['out'] + r['rep'])
+    raw19 = qb_raw(mf, C, ck, order='main_gswap')
+    r = qb_flow(script, mf, raw19, 1000000, qb_trial_log(1000000, [2, 1998]), 400002, 5000)
+    nw = nocomment(r['w_decks'].get(rk, b'').decode('utf-8', 'replace'))
+    chk('QB19 같은 fix ID 를 두 번 정의 (본 덱 gravi 98.1 → 판 메시 · 벽 → gravi 9.81) · 재개 덱이 두 줄을 맞바꿔 냄 (9.81 앞 · 98.1 뒤 = 끝 상태 98.1) → '
+        '각 줄을 본 덱의 그 줄 자리로 (98.1 = 앞 · 9.81 = 뒤 자리) → 본 덱 순서 · 정적 대조 통과 · 시험',
+        r['trial'] and not r['main'] and QB_REORD in r['out'] and '재개 덱 정적 대조: 통과' in r['out']
+        and nw == nocomment(qb_pre(raw, 2)), r['out'] + r['rep'])
 
 
 # ═══ VP: 10-30 (KG50R-F01 2 판 · 독립 사전 공격 R1–R8 · 1저자 "권고대로") — 정적 대조 (-C) 의 남은 구멍 ═══
