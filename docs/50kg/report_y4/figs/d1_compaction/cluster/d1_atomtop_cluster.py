@@ -3,18 +3,18 @@
 """D1 (kg50_d1_b50) 원자 기준 두께 — D1 런 기계에서 돌리는 준비 · 훑기 (1저자 11-02 밤 *"첫번째부터 예전처럼 particle packing도 넣어야지"*).
 
 방법 = ps73 (`docs/data/ps73_compaction_curve_20261006/README.md` §7 · `early_ckpt/make_early_decks.py` · `atom_top_scan.py`):
-  ① 삽입 재현 `in.replay_0_20000` = 삽입 전용 덱 처음 → `unfix ins_mix` 그대로 + 정착 블록 (shell · restart 줄 뺌) + 원자 덤프 (step 1 ·
-     1,000 마다 → 20,000) + run 20000 = 삽입 런 전체 (0 → 20 ms · 1저자 11-02 밤 *"삽입부터"*) · NP 1 (원 삽입 런과 같은 코어 수 —
-     KE 가 원 로그와 1,000 step 마다 같아야 같은 궤적) · 원 삽입 화면 실측 4,584 s ≈ 76 분
-  ② 체크포인트 `in.ckpt_<step>` = 본 덱 머리 + read_restart (런 폴더 원본 · 읽기만) + 이웃 · 재료 · 접촉 · 벽 · 템플릿 (덱 줄 그대로) +
-     원자 덤프 + run 0 (움직이지 않음 — setup KE · 원자 수 = 원 로그)
-  ③ 훑기 = ①② 덤프 + 원 런 atom 덤프 (450,000 … 2,750,000 · atom_end_2785002 · 읽기만) → 모든 원자의 max(z + r) (µm) · 검사 열 →
-     `kg50_d1_atomtop.csv` 하나 (앞 네 열 = step · time_ms · ztop_um · source)
+  ① 체크포인트 `in.ckpt_<step>` = 본 덱 머리 + read_restart (런 폴더 원본 · 읽기만) + 이웃 · 재료 · 접촉 · 벽 · 템플릿 (덱 줄 그대로) +
+     원자 덤프 + run 0 (움직이지 않음 — setup KE · 원자 수 = 원 로그) · 20,001 (삽입 런 끝) … 400,000 의 10 개
+  ② (`--with-replay` 일 때만) 삽입 재현 `in.replay_0_20000` = 삽입 전용 덱 처음 → `unfix ins_mix` 그대로 + 정착 블록 (shell · restart
+     줄 뺌) + 원자 덤프 (step 1 · 1,000 마다 → 20,000) + run 20000 · NP 1 (원 삽입 런과 같은 코어 수) · 원 삽입 화면 실측 4,584 s ≈ 76 분.
+     기본은 안 돌린다 (1저자 11-02 밤 — 0 → 20 ms 는 첫 측정점 (20,001) 에서 중력 98.1 · 초속 0.5 의 자유 낙하 모식으로 잇는다 · 리포 생성기)
+  ③ 훑기 = ①(②) 덤프 + 원 런 atom 덤프 (450,000 … 2,750,000 · atom_end_2785002 · 읽기만) → 모든 원자의 max(z + r) (µm) · 검사 열 →
+     `kg50_d1_atomtop.csv` 하나 (앞 네 열 = step · time_ms · ztop_um · source · 끝 줄 #mode = ckpt | replay)
 런 폴더는 읽기만 (덱 · 로그 sha256 대조 — 리포 기록과 다르면 아무것도 만들지 않는다) · 새 work 폴더에만 쓴다 (있으면 거부).
 
-    python3 -I d1_atomtop_cluster.py prepare [--run DIR] [--work DIR] [--lmp BIN]
+    python3 -I d1_atomtop_cluster.py prepare [--run DIR] [--work DIR] [--lmp BIN] [--with-replay]
     cd <work> && setsid nohup bash run_atomtop.sh > run_atomtop.log 2>&1 < /dev/null &     # 끝 줄 = ATOMTOP_DONE <csv>
-    python3 -I d1_atomtop_cluster.py scan [--run DIR] [--work DIR]                          # run_atomtop.sh 가 끝에 부른다
+    python3 -I d1_atomtop_cluster.py scan [--run DIR] [--work DIR] [--with-replay]          # run_atomtop.sh 가 끝에 부른다
     python3 -I d1_atomtop_cluster.py --selftest
 """
 import csv
@@ -63,7 +63,7 @@ def one(lines, pred, what, start=0):
     return hit[0]
 
 
-def build_decks(main_deck, insert_deck, run_dir):
+def build_decks(main_deck, insert_deck, run_dir, with_replay=False):
     """덱 글 → {파일 이름: 덱 글} (ps73 make_early_decks.build 와 같은 자르기 · 줄은 덱에서 그대로)."""
     M, I = main_deck.splitlines(), insert_deck.splitlines()
     out = {}
@@ -72,12 +72,13 @@ def build_decks(main_deck, insert_deck, run_dir):
     if not runs or I[runs[0]].split()[1] != '20000':
         raise ValueError('삽입 덱의 정착 run 이 run 20000 이 아니다')
     settle = [ln for ln in I[i_unfix + 1:runs[0]] if not ln.split('#', 1)[0].strip().startswith(('shell', 'restart'))]
-    out['in.replay_0_%d.liggghts' % REPLAY_RUN] = '\n'.join(
-        ['# D1 삽입 재현 — 삽입 전용 덱 처음 → unfix ins_mix 그대로 · 정착 블록 (shell · restart 뺌) · 원자 덤프 step 1 · 1000 마다 · '
-         'run %d = 삽입 런 전체 (NP 1 = 원 삽입 런)' % REPLAY_RUN]
-        + I[:i_unfix + 1] + settle
-        + ['dump dE all custom 1000 dump/atom_*.liggghts ' + DUMP_COLS, 'dump_modify dE first yes', 'run %d' % REPLAY_RUN,
-           'print "EARLY_REPLAY_DONE"', ''])
+    if with_replay:
+        out['in.replay_0_%d.liggghts' % REPLAY_RUN] = '\n'.join(
+            ['# D1 삽입 재현 — 삽입 전용 덱 처음 → unfix ins_mix 그대로 · 정착 블록 (shell · restart 뺌) · 원자 덤프 step 1 · 1000 마다 · '
+             'run %d = 삽입 런 전체 (NP 1 = 원 삽입 런)' % REPLAY_RUN]
+            + I[:i_unfix + 1] + settle
+            + ['dump dE all custom 1000 dump/atom_*.liggghts ' + DUMP_COLS, 'dump_modify dE first yes', 'run %d' % REPLAY_RUN,
+               'print "EARLY_REPLAY_DONE"', ''])
     i_box = one(M, lambda s: s.startswith('region reg_box block'), 'region reg_box block')
     i_cb = one(M, lambda s: s.startswith('create_box'), 'create_box')
     i_mix = one(M, lambda s: s.startswith('region reg_mix block'), 'region reg_mix block')
@@ -95,7 +96,7 @@ def build_decks(main_deck, insert_deck, run_dir):
 
 
 RUNNER = r'''#!/bin/bash
-# D1 원자 기준 두께 — 체크포인트 run 0 (NP 1 · 몇 분 · 먼저 = 덱 문제면 일찍 멈춘다) → 삽입 재현 (NP 1 · ≈ 76 분) → 훑기.
+# D1 원자 기준 두께 — 체크포인트 run 0 (NP 1 · 몇 분) [→ 삽입 재현 (NP 1 · ≈ 76 분 · 재현판으로 준비했을 때만)] → 훑기.
 # 런 폴더는 읽기만 · 이 폴더에만 쓴다.
 set -u
 cd "$(dirname "$0")"
@@ -105,13 +106,21 @@ for S in __STEPS__; do
   mpirun --oversubscribe --bind-to none -np 1 "$LMP" -in in.ckpt_$S.liggghts -log log.ckpt_$S > screen.ckpt_$S 2>&1 || { echo "ATOMTOP_FAIL ckpt $S"; exit 1; }
   grep -q EARLY_CKPT_DONE log.ckpt_$S || { echo "ATOMTOP_FAIL ckpt $S (끝 표지 없음)"; exit 1; }
 done
-echo "replay start $(date +%T)"
+__REPLAY_BLOCK__python3 -I "__SCRIPT__" scan --run "__RUN__" --work "$(pwd)"__SCANFLAG__ || { echo "ATOMTOP_FAIL scan"; exit 1; }
+echo "ATOMTOP_DONE $(pwd)/kg50_d1_atomtop.csv"
+'''
+RUNNER_REPLAY = r'''echo "replay start $(date +%T)"
 mpirun --oversubscribe --bind-to none -np 1 "$LMP" -in __REPLAY__ -log log.replay > screen.replay 2>&1 || { echo "ATOMTOP_FAIL replay"; exit 1; }
 grep -q EARLY_REPLAY_DONE log.replay || { echo "ATOMTOP_FAIL replay (끝 표지 없음)"; exit 1; }
 echo "replay done $(date +%T)"
-python3 -I "__SCRIPT__" scan --run "__RUN__" --work "$(pwd)" || { echo "ATOMTOP_FAIL scan"; exit 1; }
-echo "ATOMTOP_DONE $(pwd)/kg50_d1_atomtop.csv"
 '''
+
+
+def runner_text(lmp, script, run_dir, with_replay=False):
+    """run_atomtop.sh 글 — 체크포인트 run 0 → (재현) → 훑기."""
+    return (RUNNER.replace('__REPLAY_BLOCK__', RUNNER_REPLAY if with_replay else '').replace('__LMP__', lmp)
+            .replace('__STEPS__', ' '.join(str(s) for s, _ in CKPTS)).replace('__REPLAY__', 'in.replay_0_%d.liggghts' % REPLAY_RUN)
+            .replace('__SCRIPT__', script).replace('__RUN__', run_dir).replace('__SCANFLAG__', ' --with-replay' if with_replay else ''))
 
 
 def thermo_ke(path):
@@ -189,14 +198,14 @@ def fmt(v):
     return '%.9g' % v if isinstance(v, float) else str(v)
 
 
-def scan(run_dir, work):
-    """work 의 재현 · 체크포인트 덤프 + 런 폴더 atom 덤프 → kg50_d1_atomtop.csv (+ #insertion · #sha256 줄)."""
+def scan(run_dir, work, with_replay=False):
+    """work 의 (재현 ·) 체크포인트 덤프 + 런 폴더 atom 덤프 → kg50_d1_atomtop.csv (+ #mode · #insertion · #sha256 줄)."""
     ins_ref = os.path.join(run_dir, 'log_kg50_d1_b50_ins.out')
     main_ref = os.path.join(run_dir, 'log.liggghts')
     k_ins, k_main = thermo_ke(ins_ref), thermo_ke(main_ref)
     rows = []
-    rep = thermo_ke(os.path.join(work, 'log.replay'))
-    for s in REPLAY_STEPS:
+    rep = thermo_ke(os.path.join(work, 'log.replay')) if with_replay else {}
+    for s in (REPLAY_STEPS if with_replay else []):
         d = scan_dump(os.path.join(work, 'dump', 'atom_%d.liggghts' % s))
         rows.append(dict(d, step=s, source='replay', dump_file='work:dump/atom_%d.liggghts' % s, run_log='log.replay',
                          run_log_atoms=rep.get(s, ('', ''))[0], run_log_ke=rep.get(s, ('', ''))[1],
@@ -220,7 +229,9 @@ def scan(run_dir, work):
         for r in rows:
             r['time_ms'] = '%.3f' % (r['step'] * MS_PER_STEP)
             w.writerow([fmt(r[k]) for k in HEAD])
-        w.writerow(['#insertion', insertion_line(os.path.join(work, 'log.replay'))])
+        w.writerow(['#mode', 'replay' if with_replay else 'ckpt'])
+        if with_replay:
+            w.writerow(['#insertion', insertion_line(os.path.join(work, 'log.replay'))])
         w.writerow(['#insertion_orig', insertion_line(ins_ref)])
         for name in sorted(SHA):
             w.writerow(['#sha256', name, sha256(os.path.join(run_dir, name))])
@@ -246,7 +257,7 @@ def same_ke(a, b, rtol=1e-6):
     return abs(fa - fb) <= rtol * abs(fb)
 
 
-def prepare(run_dir, work, lmp):
+def prepare(run_dir, work, lmp, with_replay=False):
     prob = check_inputs(run_dir)
     if prob:
         raise SystemExit('⛔ 런 폴더 확인 실패 — 아무것도 만들지 않았다:\n  ' + '\n  '.join(prob))
@@ -257,7 +268,7 @@ def prepare(run_dir, work, lmp):
     with open(os.path.join(run_dir, 'input_kg50_d1_b50_insert.liggghts'), errors='replace') as f:
         insert_deck = f.read()
     try:
-        decks = build_decks(main_deck, insert_deck, run_dir)
+        decks = build_decks(main_deck, insert_deck, run_dir, with_replay)
     except ValueError as e:
         raise SystemExit('⛔ ' + str(e))
     os.makedirs(os.path.join(work, 'dump'))
@@ -265,10 +276,9 @@ def prepare(run_dir, work, lmp):
         with open(os.path.join(work, k), 'w') as f:
             f.write(v)
     with open(os.path.join(work, 'run_atomtop.sh'), 'w') as f:
-        f.write(RUNNER.replace('__LMP__', lmp).replace('__STEPS__', ' '.join(str(s) for s, _ in CKPTS))
-                .replace('__REPLAY__', 'in.replay_0_%d.liggghts' % REPLAY_RUN)
-                .replace('__SCRIPT__', os.path.abspath(__file__)).replace('__RUN__', run_dir))
-    print('덱 %d · run_atomtop.sh → %s (런 폴더 sha256 4 개 · 체크포인트 %d · 덤프 %d 확인)' % (len(decks), work, len(CKPTS), len(DUMP_STEPS)))
+        f.write(runner_text(lmp, os.path.abspath(__file__), run_dir, with_replay))
+    print('덱 %d · run_atomtop.sh → %s (런 폴더 sha256 4 개 · 체크포인트 %d · 덤프 %d 확인 · 삽입 재현 %s)'
+          % (len(decks), work, len(CKPTS), len(DUMP_STEPS), '있음 (≈ 76 분)' if with_replay else '없음 (기본)'))
     print('다음: cd %s && setsid nohup bash run_atomtop.sh > run_atomtop.log 2>&1 < /dev/null &' % work)
 
 
@@ -280,6 +290,12 @@ def selftest():
         nonlocal ok, fail
         ok, fail = ok + bool(cond), fail + (not cond)
         print(('PASS ' if cond else 'FAIL ') + name)
+
+    def safe_call(fn, default):
+        try:
+            return fn()
+        except Exception:          # noqa: BLE001  (기능을 뺀 판이 시험을 통과하지 못하게 — 예외 = 실패)
+            return default
 
     with tempfile.TemporaryDirectory() as tmp:
         p = os.path.join(tmp, 'atom_5.liggghts')
@@ -306,14 +322,24 @@ def selftest():
             'region reg_mix block 0.0 0.05 0.0 0.05 0.005 0.3227 units box\n')
     ins = (main + 'fix ins_mix all insert/pack seed 1 &\n    region reg_mix\nrun 1\nunfix ins_mix\nshell mkdir post\nthermo 1000\n'
            'fix gravi all gravity 98.1 vector 0.0 0.0 -1.0\nrestart 50000 r/restart_settling_*.bin\nrun 20000\n')
-    dk = build_decks(main, ins, '/RUN')
-    rp = dk['in.replay_0_%d.liggghts' % REPLAY_RUN]
+    dk = safe_call(lambda: build_decks(main, ins, '/RUN', with_replay=True), {})
+    d0 = safe_call(lambda: build_decks(main, ins, '/RUN'), {'x': 1})
+    chk('S8 기본 (재현 없음 · 1저자 11-02 밤) = 체크포인트 덱만 · --with-replay 일 때만 재현 덱',
+        bool(d0) and not any(k.startswith('in.replay') for k in d0) and len(d0) == len(CKPTS)
+        and ('in.replay_0_%d.liggghts' % REPLAY_RUN) in dk)
+    r0 = safe_call(lambda: runner_text('/LMP', '/S.py', '/RUN'), '')
+    r1 = safe_call(lambda: runner_text('/LMP', '/S.py', '/RUN', with_replay=True), '')
+    chk('S9 러너: 기본 = 체크포인트 run 0 → 훑기 (재현 줄 · --with-replay 없음) · 재현판 = 체크포인트 → 재현 → scan --with-replay',
+        'in.ckpt_$S.liggghts' in r0 and 'in.replay' not in r0 and '--with-replay' not in r0 and 'scan --run "/RUN"' in r0
+        and 'in.replay_0_%d.liggghts' % REPLAY_RUN in r1 and r1.index('in.ckpt_$S') < r1.index('in.replay_0_')
+        and '--with-replay' in r1 and r0.rstrip().endswith('kg50_d1_atomtop.csv"'))
+    rp = dk.get('in.replay_0_%d.liggghts' % REPLAY_RUN, '')
     lines = [ln.strip() for ln in rp.splitlines()]
     chk('S5 재현 덱: 삽입까지 그대로 · shell · restart 뺌 · 덤프 first yes 뒤 run 20000 하나 (원 정착 run 은 뺌) · 끝 표지',
         'unfix ins_mix' in lines and not any(ln.startswith(('shell', 'restart', 'write_restart')) for ln in lines)
         and lines.count('run %d' % REPLAY_RUN) == 1 and lines.index('dump_modify dE first yes') < lines.index('run %d' % REPLAY_RUN)
         and rp.rstrip().endswith('print "EARLY_REPLAY_DONE"') and REPLAY_STEPS[:3] == [1, 1000, 2000] and REPLAY_STEPS[-1] == 20000)
-    ck = dk['in.ckpt_20001.liggghts']
+    ck = dk.get('in.ckpt_20001.liggghts', '')
     chk('S6 체크포인트 덱: 머리 + read_restart (런 폴더) + 재료 · 템플릿 · reg_box · create_box · reg_mix 없음 · run 0',
         'read_restart    /RUN/restart_kg50_d1_b50/restart_settling_20001.bin' in ck and 'fix pts1' in ck and 'create_box' not in ck
         and 'region reg_mix' not in ck and 'run 0' in ck and len([x for x in dk if x.startswith('in.ckpt_')]) == len(CKPTS))
@@ -337,9 +363,9 @@ def main():
     if not a or a[0] not in ('prepare', 'scan'):
         raise SystemExit(__doc__)
     if a[0] == 'prepare':
-        prepare(run_dir, work, opt('--lmp', LMP))
+        prepare(run_dir, work, opt('--lmp', LMP), '--with-replay' in a)
     else:
-        scan(run_dir, work)
+        scan(run_dir, work, '--with-replay' in a)
 
 
 if __name__ == '__main__':

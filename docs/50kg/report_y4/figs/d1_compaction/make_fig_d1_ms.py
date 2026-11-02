@@ -111,6 +111,8 @@ GAP_FRAC = 0.06               # 끊긴 자리 높이 (아래 범위 높이의 �
 SRC_REPLAY, SRC_CKPT, SRC_DUMP = 'replay (insertion · NP 1)', 'checkpoint (run 0)', 'atom dump'
 SRC_INTERP = 'interpolated (PCHIP between measured points)'
 SRC_SCHEMATIC = 'schematic relaxation (모식 · not measured)'
+SRC_FREEFALL = 'schematic free fall from insertion (모식 · not measured)'
+CKPT_STEPS = [s for s, _ in CLUSTER.CKPTS]   # 기본판 (1저자 11-02 밤 — 재현 없음) 의 앞 구간 측정점 = 체크포인트 run 0 열 개
 FIG_SLIDE, FIG_AT, FIG_AT_SLIDE = FIG_NAME + '_slide', FIG_NAME + '_atomtop', FIG_NAME + '_atomtop_slide'
 CSV_SLIDE, CSV_AT = 'd1_ms_pressure_slide', 'd1_ms_thickness_atomtop'
 
@@ -418,7 +420,7 @@ def read_atomtop(path):
                 continue
             if r[0].startswith('#'):
                 key = r[0][1:]
-                if key in ('insertion', 'insertion_orig', 'script_sha256') and len(r) == 2 and key not in meta:
+                if key in ('mode', 'insertion', 'insertion_orig', 'script_sha256') and len(r) == 2 and key not in meta:
                     meta[key] = r[1]
                 elif key == 'sha256' and len(r) == 3 and r[1] not in meta['sha256']:
                     meta['sha256'][r[1]] = r[2]
@@ -470,8 +472,11 @@ def check_atomtop(rows, meta, main_ke, radii_um, ms_per_step=1e-3, replay_ref=No
     sha_ref = ATOMTOP_SHA if sha_ref is None else sha_ref
     script_ref = sha256_file(HERE / 'cluster' / 'd1_atomtop_cluster.py') if script_ref is None else script_ref
     prob = []
+    mode = meta.get('mode')
+    if mode not in ('ckpt', 'replay'):
+        prob.append(f'⑫ #mode {mode!r} — ckpt (기본 · 재현 없음) 또는 replay 여야 한다')
     steps = [int(r['step']) for r in rows]
-    want = ATOMTOP_EARLY + ATOMTOP_DUMPS
+    want = (ATOMTOP_EARLY if mode == 'replay' else CKPT_STEPS) + ATOMTOP_DUMPS
     if steps != want:
         prob.append(f'① step 목록 ≠ 계획 (빠짐 {sorted(set(want) - set(steps))[:5]} · 남음 {sorted(set(steps) - set(want))[:5]} · '
                     f'중복 {len(steps) - len(set(steps))})')
@@ -512,10 +517,12 @@ def check_atomtop(rows, meta, main_ke, radii_um, ms_per_step=1e-3, replay_ref=No
     back = [(int(a['step']), a['mtime'], b['mtime']) for a, b in zip(dumps, dumps[1:]) if b['mtime'] < a['mtime']]
     if back:
         prob.append(f'④ 원 덤프 파일 시각이 거꾸로 가는 곳 {len(back)} — 처음 {back[:3]}')
-    for key in ('insertion', 'insertion_orig'):
+    for key in (('insertion', 'insertion_orig') if mode == 'replay' else ('insertion_orig',)):
         line = meta.get(key) or ''
         if not all(x in line for x in INSERT_REF):
             prob.append(f'⑨ {key} 줄이 원 삽입 기록과 다르다: {line!r}')
+    if mode != 'replay' and 'insertion' in meta:
+        prob.append('⑨ 재현 없는 판 (#mode ckpt) 에 재현 삽입 줄이 있다')
     if meta.get('sha256') != sha_ref:
         prob.append(f'⑩ 런 폴더 sha256 ≠ 리포 기록: {meta.get("sha256")}')
     if meta.get('script_sha256') != script_ref:
@@ -557,6 +564,52 @@ def atomtop_series(rows, ms_per_step=1e-3, interp=True, drop=None):
     if any(b[0] <= a[0] for a, b in zip(ser, ser[1:])):
         raise ValueError('두께 점의 시각이 엄격히 증가하지 않는다')
     return ser
+
+
+def free_fall_h(t_ms, h20_um, t20_ms, g, v0, um_per_m):
+    """정착 구간 첫 측정점 (t20 · h20) 에서 거꾸로 이은 윗면 높이 — 감쇠 무시 자유 낙하 (1저자 11-02 밤 *"10g 로 그린 다음 이으면"*):
+    h(t) = h20 + v0·(t20 − t) + ½·g·(t20² − t²)  (덱 단위 — t s · v0 m/s · g m/s² · 길이 덱 m → µm).  t = t20 이면 정확히 h20."""
+    t, t20 = t_ms * 1e-3, t20_ms * 1e-3
+    return h20_um + (v0 * (t20 - t) + 0.5 * g * (t20 * t20 - t * t)) * um_per_m
+
+
+def free_fall_series(h20_um, t20_ms, g, v0, um_per_m, dt_ms=INTERP_DT_MS):
+    """0 ms 부터 dt 마다 t20 앞까지 (t20 = 측정점이라 뺀다) 모식 점 (ms, µm, 출처 = 모식)."""
+    return [(k * dt_ms, free_fall_h(k * dt_ms, h20_um, t20_ms, g, v0, um_per_m), SRC_FREEFALL)
+            for k in range(int(t20_ms // dt_ms) + 1) if k * dt_ms < t20_ms]
+
+
+def free_fall_check(h0_um, region_top_um, r_max_um):
+    """h(0) ↔ 투입 영역 위끝 (중심이 놓이는 한계) · 윗면 한계 (위끝 + 최대 반경) — 넘어도 자르지 않고 표지만 (1저자 11-02 밤)."""
+    return {'h0_um': h0_um, 'region_top_um': region_top_um, 'h0_le_region_top': h0_um <= region_top_um,
+            'surface_bound_um': region_top_um + r_max_um, 'h0_le_surface_bound': h0_um <= region_top_um + r_max_um, 'clipped': False}
+
+
+def packing_series(rows, mode, ms_per_step, g, v0, um_per_m, drop=None):
+    """원자 기준 한 곡선 — replay 판 = 측정 그대로 (atomtop_series) · ckpt 판 (기본) = 0 → 첫 체크포인트 (20,001) 를 자유 낙하 모식으로 앞에 잇는다."""
+    ser = atomtop_series(rows, ms_per_step, drop=drop)
+    if mode == 'replay':
+        return ser
+    if mode != 'ckpt' or not ser or ser[0][2] != SRC_CKPT:
+        raise ValueError(f'#mode {mode!r} · 첫 점 {ser[:1]} — 기본판은 첫 측정점이 체크포인트여야 한다')
+    return free_fall_series(ser[0][1], ser[0][0], g, v0, um_per_m) + ser
+
+
+def deck_free_fall(insert_text, um_per_m):
+    """삽입 덱 → 자유 낙하 모식의 상수 (중력 · 투입 초속 · 투입 영역 위끝) + 무시한 감쇠의 크기 (γ · 상별 m/γ · SE 감쇠 낙하 거리)."""
+    body = '\n'.join(ln.split('#', 1)[0].rstrip() for ln in insert_text.splitlines())
+    g = float(_one(rf'^\s*fix\s+gravi\s+all\s+gravity\s+({_NUM})\s+vector\s+0(?:\.0)?\s+0(?:\.0)?\s+-1(?:\.0)?\s*$', body, '중력'))
+    vx, vy, vz = (float(v) for v in _one(rf'^\s*vel\s+constant\s+({_NUM})\s+({_NUM})\s+({_NUM})\s*&?\s*$', body, '투입 초속'))
+    if vx != 0.0 or vy != 0.0 or vz >= 0.0:
+        raise ValueError(f'투입 초속 {vx} {vy} {vz} — 아래 방향 하나여야 한다')
+    zb = _one(rf'^\s*region\s+reg_mix\s+block\s+{_NUM}\s+{_NUM}\s+{_NUM}\s+{_NUM}\s+({_NUM})\s+({_NUM})\s+units\s+box\s*$', body, '투입 영역')
+    gamma = float(_one(rf'^\s*fix\s+damp\s+all\s+viscous\s+({_NUM})\s*$', body, '감쇠'))
+    rvar = {k: float(v) for k, v in re.findall(rf'^\s*variable\s+(r_\w+)\s+equal\s+({_NUM})\s*$', body, re.M)}
+    tmpl = re.findall(r'^\s*fix\s+pts\d\s+all\s+particletemplate/sphere\s+\d+\s+atom_type\s+(\d)\s+density\s+constant\s+'
+                      rf'({_NUM})\s+radius\s+constant\s+\$\{{(r_\w+)\}}', body, re.M)
+    tau = {f'type{t}_r{rvar[rv] * um_per_m:g}um': (float(rho) * 4.0 / 3.0 * math.pi * rvar[rv] ** 3) / gamma for t, rho, rv in tmpl}
+    return {'g': g, 'v0': -vz, 'region_z_um': [float(zb[0]) * um_per_m, float(zb[1]) * um_per_m], 'region_top_um': float(zb[1]) * um_per_m,
+            'r_max_um': max(rvar[rv] for _, _, rv in tmpl) * um_per_m, 'gamma_viscous': gamma, 'tau_damp_s': tau}
 
 
 def broken_ranges(series, b2_ms, tick=5.0):
@@ -801,6 +854,29 @@ def rel(p):
     return Path(p).resolve().relative_to(ROOT).as_posix()
 
 
+def free_fall_record(at, um):
+    """key JSON atomtop.free_fall — 기본판 (ckpt) 만: 식 · 상수 · h(0) 대조 · 무시한 감쇠의 크기 (SE 감쇠 낙하 거리 어림)."""
+    if at['meta']['mode'] != 'ckpt':
+        return None
+    ffp, ser = at['ffp'], at['ser']
+    h20, t20 = next((t, z) for t, z, s in ser if s == SRC_CKPT)[::-1]
+    g, v0, gam = ffp['g'], ffp['v0'], ffp['gamma_viscous']
+    t20s = t20 * 1e-3
+    damped = {}
+    for k, tau in ffp['tau_damp_s'].items():           # 선형 끌림 v' = g − v/τ (v0 아래 방향) 의 t20 동안 낙하 ↔ 감쇠 없는 낙하
+        vt = g * tau
+        fall = vt * t20s + (v0 - vt) * tau * (1 - math.exp(-t20s / tau))
+        damped[k] = {'tau_s': tau, 'fall_um_damped': fall * um, 'fall_um_undamped': (v0 * t20s + 0.5 * g * t20s ** 2) * um}
+    return {'what': 'schematic (모식) — 0 → 20 ms drawn backwards from the first measured top (checkpoint 20,001) as a free fall; '
+                    'not measured · marked only in CSV Source / README (not on the figure)',
+            'formula': f'h(t) = {h20:.6g} + {v0:g}·({t20s:g} − t) + ½·{g:g}·({t20s:g}² − t²)  [deck units: s · m/s · m/s²; ×{um:g} µm per deck m]',
+            'g_deck_m_s2': g, 'v0_deck_m_s': v0, 't20_ms': t20, 'h20_um_measured': h20, 'h0_um': ser[0][1], 'fall_um': ser[0][1] - h20,
+            'check': at['ffcheck'], 'damping_neglected': {'fix_viscous_gamma': gam, 'per_phase': damped,
+                                                          'note': 'fix viscous F = −γ·v on every particle — m/γ is short for SE (τ ≈ 0.09 s) '
+                                                                  'so an SE top particle would fall less than the drawn curve; AM (τ ≈ 55 s) is undamped'},
+            'source_label': SRC_FREEFALL}
+
+
 def atomtop_summary(at, arrows, zfn, um):
     """원자 기준 두께 기록 (key JSON) — 측정 · 채움 수 · 끊긴 자리에 가려진 측정점 · 외톨이 후보 (빼지 않는다 — 1저자 결정) ·
     판과의 관계 (맨 위가 판에 닿은 첫 덤프 · 중심이 판 위인 덤프) · 원자 수 변화 · KE 대조."""
@@ -812,17 +888,19 @@ def atomtop_summary(at, arrows, zfn, um):
     counts = [[rows[0]['step'], rows[0]['n_header']]] + [[r2['step'], r2['n_header']] for r1, r2 in zip(rows, rows[1:])
                                                          if r2['n_header'] != r1['n_header']]
     return {
-        'status': 'SUPPLIED — checks passed (check_atomtop ①–⑪)',
+        'status': 'SUPPLIED — checks passed (check_atomtop ①–⑫)', 'mode': at['meta']['mode'],
         'csv_in': {'path': rel(ATOMTOP_CSV), 'sha256': sha256_file(ATOMTOP_CSV), 'run_folder_sha256': at['meta']['sha256'],
                    'insertion_line': at['meta'].get('insertion')},
         'definition': 'max(z + r) over all atoms (µm) — not filtered by the plate · one criterion from t = 0 (ps73 README §7)',
-        'n_points': len(ser), 'n_measured': sum(1 for p in ser if p[2] != SRC_INTERP),
-        'n_interpolated': sum(1 for p in ser if p[2] == SRC_INTERP),
+        'n_points': len(ser), 'n_measured': sum(1 for p in ser if p[2] in (SRC_REPLAY, SRC_CKPT, SRC_DUMP)),
+        'n_interpolated': sum(1 for p in ser if p[2] == SRC_INTERP), 'n_schematic_free_fall': sum(1 for p in ser if p[2] == SRC_FREEFALL),
         'early_measured': [[r['step'], r['source'], r['ztop_um'], r['ztop_p999_um']] for r in rows if r['source'] != 'atom dump'],
         'first': list(ser[0]), 'end': list(ser[-1]),
         'ranges_um': {'upper': [h0, h1], 'lower': [l0, l1], 'scale': 'same µm per height in both ranges'},
-        'hidden_in_break': {'measured': [[round(t, 3), round(z, 3), s] for t, z, s in ser if l1 < z < h0 and s != SRC_INTERP],
-                            'n_interpolated': sum(1 for _, z, s in ser if l1 < z < h0 and s == SRC_INTERP)},
+        'hidden_in_break': {'measured': [[round(t, 3), round(z, 3), s] for t, z, s in ser
+                                         if l1 < z < h0 and s in (SRC_REPLAY, SRC_CKPT, SRC_DUMP)],
+                            'n_interpolated_or_schematic': sum(1 for _, z, s in ser if l1 < z < h0 and s in (SRC_INTERP, SRC_FREEFALL))},
+        'free_fall': free_fall_record(at, um),
         'outlier_candidates_top_minus_p999_ge_20um': [[r['step'], round(r['ztop_um'] - r['ztop_p999_um'], 3)] for r in rows
                                                       if r['ztop_um'] - r['ztop_p999_um'] >= OUTLIER_MIN_UM],
         'outlier_note': 'not dropped — drawn as measured (ps73 dropped one bounced particle only after the 1st author asked)',
@@ -904,8 +982,13 @@ def main(require_packing=False):
             at_prob = check_atomtop(at_rows, at_meta, cv['ke'], radii_um, ms_per_step)
             if at_prob:
                 raise ValueError('원자 기준 두께 CSV 검사 실패 — ' + ' | '.join(at_prob[:6]))
-            aser = atomtop_series(at_rows, ms_per_step)
-            at = {'rows': at_rows, 'meta': at_meta, 'ser': aser, 'ranges': broken_ranges(aser, b['2'] * ms_per_step)}
+            ffp = deck_free_fall(INSERT_DECK.read_text(encoding='utf-8'), um)
+            aser = packing_series(at_rows, at_meta['mode'], ms_per_step, ffp['g'], ffp['v0'], um)
+            at = {'rows': at_rows, 'meta': at_meta, 'ser': aser, 'ranges': broken_ranges(aser, b['2'] * ms_per_step), 'ffp': ffp,
+                  'ffcheck': free_fall_check(aser[0][1], ffp['region_top_um'], ffp['r_max_um']) if at_meta['mode'] == 'ckpt' else None}
+            if at['ffcheck'] and not at['ffcheck']['h0_le_region_top']:
+                print(f'⚠ 자유 낙하 모식 h(0) {aser[0][1]:.3f} µm > 투입 영역 위끝 {ffp["region_top_um"]:g} µm — 자르지 않았다 '
+                      f'(윗면 한계 = 위끝 + 최대 반경 {at["ffcheck"]["surface_bound_um"]:g} µm · key JSON atomtop.free_fall)')
         else:
             stale = [p for p in (ORIGIN / f'{CSV_AT}.csv', ORIGIN / f'{CSV_AT}.ogs', PREV / f'{FIG_AT}.png', PREV / f'{FIG_AT_SLIDE}.png')
                      if p.exists()]
@@ -1047,13 +1130,16 @@ def main(require_packing=False):
             'status': 'NOT_SUPPLIED — the packing segment is not drawn (generator refuses to invent it; `--atomtop` exits)',
             'csv_expected': rel(ATOMTOP_CSV), 'cluster_script': rel(HERE / 'cluster' / 'd1_atomtop_cluster.py'),
             'cluster_script_sha256': sha256_file(HERE / 'cluster' / 'd1_atomtop_cluster.py'),
-            'plan_steps': {'replay': sorted(REPLAY_REF), 'checkpoints_run0': ATOMTOP_EARLY[len(REPLAY_REF):], 'atom_dumps': len(ATOMTOP_DUMPS)},
+            'plan_steps': {'default_no_replay': {'checkpoints_run0': CKPT_STEPS, 'atom_dumps': len(ATOMTOP_DUMPS)},
+                           'with_replay_option': sorted(REPLAY_REF)},
             'ke_reference': {'replay_from_insertion_log': {str(k): list(v) for k, v in REPLAY_REF.items()},
                              'checkpoints_from_main_log': {str(s): list(cv['ke'][s]) for s in ATOMTOP_EARLY[len(REPLAY_REF):]}},
-            'insertion_decision': 'full insertion replay (1st author 11-02 night: from insertion) — the insert-only deck at NP 1 (same as the '
-                                  'original insertion run) for its whole run 20000 with atom dumps every 1,000 steps (21 points 0.001 → 20 ms, '
-                                  'KE checked against the original insertion log at every 1,000 steps); original timing 4,584 s ≈ 76 min · '
-                                  'ps73 replayed only to 1,000 steps and PCHIP-filled 1 → 50 ms'},
+            'insertion_decision': 'no insertion replay by default (1st author 11-02 night: draw 0 → 20 ms as a free fall at the packing '
+                                  'gravity and join it) — cluster = 10 checkpoint run-0 dumps + scan (≈10 min); 0 → 20.001 ms = schematic '
+                                  'free fall (모식) h(t) = h20 + v0·(t20 − t) + ½·g·(t20² − t²) anchored at the measured 20,001-step top, '
+                                  'g · v0 from the insert deck, damping neglected; the full insertion replay (4,584 s ≈ 76 min) stays '
+                                  'behind --with-replay',
+            'free_fall_constants': deck_free_fall(INSERT_DECK.read_text(encoding='utf-8'), um)},
         'stage_frames': stages,
         'cluster_tar': {'steps': tar_steps, 'run_dir': f'{RUN_PARENT}/{RUN_CASE}', 'bundle': f'$HOME/{TAR_TAG}.tgz', 'command': cmd},
         'packing_segment_requirements': {
@@ -1324,11 +1410,11 @@ def selftest():
         main_ke = {s: (168457, f'{1e-5 * (i + 1):.8g}') for i, s in enumerate(ckpt_steps)}
         main_ke.update({s: (168457 if s < 2689000 else 168452, '1e-07') for s in ATOMTOP_DUMPS})
 
-        def synth_rows():
+        def synth_rows(mode='replay'):
             zck = {20001: 200.0, 50000: 150.0, 100000: 143.0, 150000: 142.6, 200000: 142.5, 200001: 142.5, 250000: 142.6, 300000: 142.7,
                    350000: 142.8, 400000: 142.9}
             out = []
-            for s in ATOMTOP_EARLY:
+            for s in (ATOMTOP_EARLY if mode == 'replay' else [x for x in ATOMTOP_EARLY if x not in REPLAY_REF]):
                 zt = 325.0 - 120.0 * (s - 1) / 19999 if s in REPLAY_REF else zck[s]      # 재현 = 325 → 205 µm 낙하 (합성)
                 rep = s in REPLAY_REF
                 ref = REPLAY_REF[s] if rep else main_ke[s]
@@ -1348,7 +1434,8 @@ def selftest():
                             'run_log': '', 'run_log_atoms': '', 'run_log_ke': '', 'orig_log': 'log.liggghts', 'orig_log_atoms': n,
                             'orig_log_ke': '1e-07'})
             return out
-        meta_ok = {'insertion': 'INFO: Particle insertion ins_mix: inserted 168457 particle templates (mass 9.557438e-01) at step 1',
+        meta_ok = {'mode': 'replay',
+                   'insertion': 'INFO: Particle insertion ins_mix: inserted 168457 particle templates (mass 9.557438e-01) at step 1',
                    'insertion_orig': 'INFO: Particle insertion ins_mix: inserted 168457 particle templates (mass 9.557438e-01) at step 1',
                    'sha256': dict(ATOMTOP_SHA), 'script_sha256': sha256_file(HERE / 'cluster' / 'd1_atomtop_cluster.py')}
 
@@ -1359,8 +1446,9 @@ def selftest():
                 w.writerow(head or ATOMTOP_HEAD)
                 for r in rows:
                     w.writerow([r.get(k, '') for k in ATOMTOP_HEAD])
-                w.writerow(['#insertion', meta['insertion']])
-                w.writerow(['#insertion_orig', meta['insertion_orig']])
+                for key in ('mode', 'insertion', 'insertion_orig'):
+                    if key in meta:
+                        w.writerow(['#' + key, meta[key]])
                 for k in sorted(meta['sha256']):
                     w.writerow(['#sha256', k, meta['sha256'][k]])
                 w.writerow(['#script_sha256', meta['script_sha256']])
@@ -1420,7 +1508,7 @@ def selftest():
             nm = f'atom_end_{st}.liggghts' if st == CLUSTER.END_STEP else f'atom_{st}.liggghts'
             dump(run_d / f'post_{CLUSTER.CASE}' / nm, st, 0.142 - 1e-8 * st)
         with contextlib.redirect_stdout(io.StringIO()) as so:
-            csv_out = safe(lambda: CLUSTER.scan(str(run_d), str(work_d)))
+            csv_out = safe(lambda: CLUSTER.scan(str(run_d), str(work_d), with_replay=True))
         ri = safe(lambda: read_atomtop(csv_out)) if csv_out else None
         sha_fake = {nm: sha256_file(run_d / nm) for nm in ATOMTOP_SHA}
         pr = safe(lambda: check_atomtop(ri[0], ri[1], {st: (3, ke_of[st]) for st in ATOMTOP_EARLY[2:] + ATOMTOP_DUMPS}, {3.0, 0.5},
@@ -1431,6 +1519,44 @@ def selftest():
         pr2 = safe(lambda: check_atomtop(ri[0], ri[1], {st: (3, ke_of[st]) for st in ATOMTOP_EARLY[2:] + ATOMTOP_DUMPS}, {3.0, 0.5},
                                          replay_ref={st: (3, ke_of[st]) for st in REPLAY_REF}), []) if ri else []
         chk('I2 이음: 가짜 런 폴더 sha256 ≠ 리포 기록 = 문제 (⑩)', any(x.startswith('⑩') for x in pr2))
+        # ── 기본판 (1저자 11-02 밤: 재현 없음 · 체크포인트 + 훑기) — 0 → 20 ms = 첫 측정점 (20,001) 에서 거꾸로 잇는 자유 낙하 모식 ──
+        with contextlib.redirect_stdout(io.StringIO()) as so3:
+            csv3 = safe(lambda: CLUSTER.scan(str(run_d), str(work_d)))
+        r3 = safe(lambda: read_atomtop(csv3)) if csv3 else None
+        pr3 = safe(lambda: check_atomtop(r3[0], r3[1], {st: (3, ke_of[st]) for st in CKPT_STEPS + ATOMTOP_DUMPS}, {3.0, 0.5},
+                                         sha_ref=sha_fake), ['ERR']) if r3 else ['ERR']
+        chk('I3 이음 (기본판): 클러스터 scan() 재현 없이 = #mode ckpt · #insertion 없음 · 체크포인트 10 + 덤프 48 · 생성기 검사 통과 · KE_CHECK 10/10',
+            pr3 == [] and r3[1].get('mode') == 'ckpt' and 'insertion' not in r3[1] and len(r3[0]) == len(CKPT_STEPS) + len(ATOMTOP_DUMPS)
+            and f'KE_CHECK {len(CKPT_STEPS)}/{len(CKPT_STEPS)}' in so3.getvalue())
+        meta_ck = {k: v for k, v in meta_ok.items() if k != 'insertion'}
+        meta_ck['mode'] = 'ckpt'
+        rc = safe(lambda: read_atomtop(write_at(synth_rows('ckpt'), meta=meta_ck)))
+        chk('C1 기본판 CSV (체크포인트 10 + 덤프 48 · #mode ckpt) 읽기 · 검사 = 문제 없음',
+            rc is not None and safe(lambda: check_atomtop(rc[0], rc[1], main_ke, radii)) == [])
+        chk('C2 #mode ckpt 인데 재현 행이 있다 = 문제', bool(safe(lambda: check_atomtop(synth_rows('replay'), meta_ck, main_ke, radii))))
+        chk('C3 #mode replay 인데 재현 삽입 줄 없음 = 문제',
+            bool(safe(lambda: check_atomtop(synth_rows('replay'), dict(meta_ck, mode='replay'), main_ke, radii))))
+        chk('C4 #mode 없음 · 모르는 값 = 문제', bool(safe(lambda: check_atomtop(synth_rows('ckpt'), {k: v for k, v in meta_ck.items() if k != 'mode'},
+                                                                               main_ke, radii)))
+            and bool(safe(lambda: check_atomtop(synth_rows('ckpt'), dict(meta_ck, mode='both'), main_ke, radii))))
+        ffs = safe(lambda: free_fall_series(290.0, 20.001, 98.1, 0.5, 1000.0), [])
+        d_um = (0.5 * 0.020001 + 0.5 * 98.1 * 0.020001 ** 2) * 1000.0
+        chk('F1 자유 낙하 모식: h(t) = h20 + v0·(t20 − t) + ½g(t20² − t²) · 0 ms 부터 1 ms 마다 20 ms 까지 (20.001 = 측정점이라 뺌) · '
+            'h(0) = h20 + 29.62 µm · 아래로만 · 출처 = 모식 · 20.001 에서 정확히 h20',
+            len(ffs) == 21 and ffs[0][0] == 0.0 and abs(ffs[0][1] - (290.0 + d_um)) < 1e-9 and abs(d_um - 29.622) < 1e-3
+            and all(t < 20.001 for t, _, _ in ffs) and all(b[1] < a[1] for a, b in zip(ffs, ffs[1:]))
+            and all('모식' in src for _, _, src in ffs)
+            and safe(lambda: free_fall_h(20.001, 290.0, 20.001, 98.1, 0.5, 1000.0)) == 290.0)
+        fc = safe(lambda: free_fall_check(325.4, 322.7, 3.0), {})
+        chk('F2 h(0) 대조: 투입 영역 위끝 322.7 µm 를 넘으면 표지 (자르지 않음 · 값 그대로) · 윗면 한계 = 위끝 + 최대 반경',
+            fc.get('h0_um') == 325.4 and fc.get('h0_le_region_top') is False and fc.get('h0_le_surface_bound') is True
+            and abs(fc.get('surface_bound_um', 0) - 325.7) < 1e-9 and safe(lambda: free_fall_check(300.0, 322.7, 3.0), {}).get('h0_le_region_top') is True)
+        ps = safe(lambda: packing_series(synth_rows('ckpt'), 'ckpt', 1e-3, 98.1, 0.5, 1000.0), [])
+        chk('F3 기본판 곡선: 0 ms 모식 h(0) → … → 20 ms 모식 → 20.001 측정점 (= h20) · 20.001 전 채움 없음 · 시각 엄격 증가 · 끝 = 원 덤프',
+            bool(ps) and ps[0][0] == 0.0 and '모식' in ps[0][2] and abs(ps[0][1] - (200.0 + d_um)) < 1e-9
+            and next(p for p in ps if '모식' not in p[2]) == (20.001, 200.0, SRC_CKPT)
+            and not any(src == SRC_INTERP and t < 20.001 for t, _, src in ps) and all(b[0] > a[0] for a, b in zip(ps, ps[1:]))
+            and ps[-1][2] == SRC_DUMP and safe(lambda: packing_series(synth_rows('replay'), 'replay', 1e-3, 98.1, 0.5, 1000.0), [])[0][2] == SRC_REPLAY)
         rows_m = synth_rows()
         rows_m[at_i(rows_m, 150000)].update(orig_log_ke='3e-05')
         chk('A18 클러스터가 읽은 원 로그 KE ≠ 리포 기록 (런 KE 는 같아도) = 문제', bool(safe(lambda: check_atomtop(rows_m, meta_ok, main_ke, radii))))

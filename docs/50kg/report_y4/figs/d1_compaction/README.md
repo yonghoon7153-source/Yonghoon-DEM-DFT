@@ -7,8 +7,8 @@
   ② *"관련해서 이어지게 다시 만들고 origin 으로도 맞게"* — 한 곡선 (원자 기준 하나) · Origin CSV · .ogs · ③ *"pressure 도 저 진동 안 생기게"* — 압력 슬라이드판 (ps73 README §5 선례) ·
   ⇒ ③ = 바로 만들었다 (§7) · ①② = D1 런 기계에서 원자 위치를 훑어야 한다 → 스크립트 · 명령 = §8 (CSV 가 오면 같은 생성기가 그린다 · 그 전에는 정착 구간을 그리지 않는다).
 - **다시 만들기**: `python3 -I docs/50kg/report_y4/figs/d1_compaction/make_fig_d1_ms.py` (결정적 — 두 번 돌려 산출 14 개 sha256 같음) ·
-  원자 기준 그림 = 같은 명령 + `--atomtop` (raw 폴더에 `kg50_d1_atomtop.csv` 가 있어야 한다 — 없으면 멈춘다) · 시험 `… --selftest` (82/82) ·
-  클러스터 스크립트 시험 `python3 -I docs/50kg/report_y4/figs/d1_compaction/cluster/d1_atomtop_cluster.py --selftest` (7/7).
+  원자 기준 그림 = 같은 명령 + `--atomtop` (raw 폴더에 `kg50_d1_atomtop.csv` 가 있어야 한다 — 없으면 멈춘다) · 시험 `… --selftest` (90/90) ·
+  클러스터 스크립트 시험 `python3 -I docs/50kg/report_y4/figs/d1_compaction/cluster/d1_atomtop_cluster.py --selftest` (9/9).
 - **본보기**: `docs/data/ps73_compaction_curve_20261006/` (README §5 · §7 · §8 · `make_fig_ms.py` · `make_fig_velocity_ms.py` · `atom_top_scan.py` · `docs/data/ps73_compaction_curve_20261006/early_ckpt/make_early_decks.py`) ·
   단계 고르기 = `docs/data/ps73_compaction_curve_20261006/stages_20261012/README.md` §6.  로그 읽기 = ps73 생성기와 같은 `scripts/compaction_curve.py`
   (thermo 블록 · run 마다 첫 줄 = 설정 줄 버림 · 단계 표지 · 판정 줄) · 앞 구간 곡선 채움 = ps73 `make_fig_ms.pchip` 그대로 (사본 없이 그 파일에서 읽는다).
@@ -21,8 +21,8 @@
 
 | 파일 | 무엇 |
 |---|---|
-| `make_fig_d1_ms.py` | 생성기 (`--selftest` = 합성 시험 82 · §6 · `--atomtop` = 원자 기준 그림 요구) |
-| `cluster/d1_atomtop_cluster.py` | D1 런 기계에서 돌리는 원자 기준 두께 준비 · 훑기 (표준 라이브러리만 · `--selftest` 7 · §8) |
+| `make_fig_d1_ms.py` | 생성기 (`--selftest` = 합성 시험 90 · §6 · `--atomtop` = 원자 기준 그림 요구) |
+| `cluster/d1_atomtop_cluster.py` | D1 런 기계에서 돌리는 원자 기준 두께 준비 · 훑기 (표준 라이브러리만 · `--selftest` 9 · §8) |
 | `origin/d1_ms_thickness_plate.csv` · `.ogs` | A Time (ms) · B Thickness (µm) · C Source — 판 위치 521 점 (메시 덤프 자리 5,000 step 마다 517 + 단계 모서리 4) |
 | `origin/d1_ms_plate_velocity.csv` · `.ogs` | A Time (ms) · B Plate velocity (µm/s) · C Source — 계단 7 점 |
 | `origin/d1_ms_pressure.csv` · `.ogs` | 압력 **원값판** — A Time (ms) · B Measured pressure (MPa) · C Source — 3,045 점 (0 ms 판 없음 0 MPa 하나 + thermo 원값 3,044) |
@@ -106,7 +106,7 @@ EOF
 - **1저자 11-02 밤 = 넣는다** → 그림 전체를 원자 기준 하나로 바꾼다 (판 기준 · 원자 기준을 한 그림에 섞지 않는다) → 방법 · 스크립트 · 명령 = §8.
 - ⚠ **정정 (11-02 밤)**: 이 절의 앞 판 표에 적었던 삽입 재현 비용 *"≈ 2 시간 (추정 — D0.7-40 삽입 런 실측을 원자 수 · step 수로 비례)"* 은 다른 덱 비례 추정이었다.
   D1 원 삽입 런 화면 (`log_kg50_d1_b50_ins.out` · 끝 묶음 멤버 · sha256 `a83ee39e…`) 실측 = 투입 (step 1) 17.8 s · 1 → 1,000 step 178.5 s · **1 → 20,001 step 4,584 s (≈ 76 분)** — NP 1.
-  §8 은 삽입 런 전체 (1 → 20,001) 를 다시 돌린다 (1저자 11-02 밤 · 삽입부터 · ≈ 76 분).
+  ⇒ 1저자 11-02 밤 *"첫번째 넣은 거에서 10g 로 중력가속도 그림 그린 다음에 이으면 되잖아"* — §8 기본 = 재현 없음 (0–20 ms = 10 g 자유 낙하 모식) · 삽입 런 전체 재현 (≈ 76 분) 은 `--with-replay` 일 때만.
 
 ## 5. 한정어 (그림 · 캡션에 같이)
 
@@ -125,7 +125,7 @@ EOF
 
 ## 6. 검사
 
-- `--selftest` 82/82 (합성 · 리포 자료 안 읽음) = 앞 판 48 (덱 14 · 로그 11 · 판 궤적 · 끝 대조 · 두께 점 8 · 판 속도 1 · 압력 2 · 단계 표 4 · 명령 · CSV 3 · 초안 2 대조 5) +
+- `--selftest` 90/90 (11-03 낙하판 · 합성 · 리포 자료 안 읽음 — 아래 내역은 82 판 기준 · 낙하판에서 8 개 추가 · 목록 = selftest 출력) · 82 판 = 앞 판 48 (덱 14 · 로그 11 · 판 궤적 · 끝 대조 · 두께 점 8 · 판 속도 1 · 압력 2 · 단계 표 4 · 명령 · CSV 3 · 초안 2 대조 5) +
   11-02 밤 34: 압력 슬라이드판 4 (R1 정지까지 원값 그대로 · 원값 목록 안 바뀜 · R2 식 · 1,000 step 간격 · 마지막 = 런 끝 · 출처 "모식" · R3 정지 줄 없음 거부 · R4 정지 → 끝이 1,000 배수 아님 거부) ·
   원자 기준 CSV 24 (A0 CSV 없음 = 거부 · A1 정상 합성 통과 · A2 머리 · A3 step 빠짐 · A4 TIMESTEP · A5 원자 수 머리 ≠ 줄 · A6 체크포인트 KE · A7 · A7b 재현 KE (1,000 · 20,000 step) · A8 덤프 원자 수 ≠ 본 로그 ·
   A9 파일 시각 거꾸로 · A10 반경 · A11 p99.9 · 중심 > 윗면 · A12 time_ms · A13 깨진 줄 · A14 삽입 줄 · A15 새 구간 (0.001 ms 부터 · 측정점 그대로 · 채움 440 · 시각 증가) · A16 런 폴더 sha256 ·
@@ -138,7 +138,7 @@ EOF
 - 원자 기준 갈래 건식 실행 (1 회 · 커밋 안 함): 합성 CSV (z 값 = 지어낸 것 · KE · 원자 수 = 실제 본 로그 · 원 삽입 화면 값) 를 `raw/` 에 두고 `--atomtop` →
   실제 로그 대조 통과 (체크포인트 10 · 덤프 48 의 KE · 원자 수 줄이 본 로그에 있음 · 클러스터 스크립트 step 계획 = 이 로그 · 덱 일정 · 스크립트 sha256 4 = 리포 로그 · 덱) · 그림 두 장 · CSV · .ogs · JSON 생성 →
   합성 CSV 와 산출을 지우고 다시 돌려 산출 sha256 이 건식 실행 전과 같음.  원자 기준 산출이 남았는데 CSV 가 없으면 생성기가 멈춘다 (낡은 그림 방지 · 확인함).
-- 클러스터 스크립트: `--selftest` 7/7 · 실제 D1 덱 (리포) 로 덱 자르기 확인 (재현 덱 = 삽입 덱 처음 → `unfix ins_mix` 그대로 + 정착 블록 · `shell` · `restart` 줄 뺌 ·
+- 클러스터 스크립트: `--selftest` 9/9 (11-03 낙하판) · 실제 D1 덱 (리포) 로 덱 자르기 확인 (재현 덱 = 삽입 덱 처음 → `unfix ins_mix` 그대로 + 정착 블록 · `shell` · `restart` 줄 뺌 ·
   체크포인트 덱 = 본 덱 머리 + `read_restart` + 이웃 · 재료 · 접촉 · 벽 · 템플릿 · `run 0`) · 실제 끝 덤프 훑기 (`atom_end_2785002` · 168,452 · 깨진 줄 0 · 윗면 123.72 µm) ·
   원 삽입 화면 KE 읽기 (1 · 1,000 · 20,001 = 0.11946798 · 0.17034351 · 2.3894425) · 삽입 줄 읽기.
 - pyflakes (생성기 · 클러스터 스크립트) 깨끗.  리포 모듈 (scripts · ps73 · cluster) 을 읽을 때 `__pycache__` 를 쓰지 않는다 (`sys.dont_write_bytecode`).
@@ -155,57 +155,61 @@ EOF
 - 생성기 `slide_series` = ps73 `make_fig_ms.slide_series` 와 같은 식 · ps73 보다 엄격한 곳 하나: 마지막 압력 줄 = 런 끝 · 정지 → 끝 = 1,000 step 배수가 아니면 거부 (모식 마지막 점이 런 끝에 서야 끝 값과 같은 자리).
 - Origin: `d1_ms_pressure_slide.csv` + `d1_ms_pressure_slide.ogs` (원값판과 같은 서식 · y 0–330 · 100 간격) · 실선 하나 (모식 구간도 같은 선 · 표지 없음).
 
-## 8. 원자 기준 두께 — Particle packing 을 삽입부터 · 한 곡선 (D1 런 기계에서 한 번 · 약 85 분)
+## 8. 원자 기준 두께 — Particle packing 을 0 ms 부터 · 한 곡선 (D1 런 기계에서 한 번 · 약 10 분)
 
-**0–20 ms (삽입) 구간 = 삽입 런 전체를 다시 돌린다** (1저자 11-02 밤 — 삽입부터 원한다):
-- 삽입 전용 덱 (`input_kg50_d1_b50_insert.liggghts`) 을 원 삽입 런과 같은 **NP 1** 로 그 덱의 정착 `run 20000` 끝까지 (step 1 → 20,001) + 원자 덤프 **1,000 step 마다** (step 1 · 1,000 · … · 20,000 = 21 점 · 0.001 → 20 ms) ·
-  KE = 원 삽입 화면 (`log_kg50_d1_b50_ins.out` · 끝 묶음 멤버 · sha256 `a83ee39e…`) 의 1,000 step 마다 값과 같아야 같은 궤적 (21 개 · 리포 생성기 `REPLAY_REF` 에 그 값 그대로 · 원 화면에서 다시 읽어 대조함).
-  비용 = 원 삽입 화면 실측 **4,584 s ≈ 76 분** (NP 1 · 같은 기계 · 같은 빌드면 비슷).
-- 다음 측정점 = 삽입 런이 끝에 쓴 체크포인트 `restart_settling_20001.bin` (20.001 ms · `run 0`) → 정착 체크포인트 (50 ms 마다) → 원 atom 덤프 (450 ms 부터).
-- 옛 그림 (ps73 · 그 README §7 · §7-2) 은 투입 재현을 **1,000 step 까지만** 돌려 (0.001 · 1 ms 두 점) 1 → 50 ms 를 측정점 사이 PCHIP 곡선으로 채웠다 (50,000 step 까지 재현 = 선택 · 미실행) —
-  D1 은 삽입 구간 전체가 1 ms 마다 측정점이다 (PCHIP 채움은 20 → 450 ms 의 측정점 사이만).
+**0–20 ms (삽입) 구간 = 재현하지 않고 자유 낙하 모식으로 잇는다** (1저자 11-02 밤 *"첫번째 넣은 거에서 10g 로 중력가속도 그림 그린 다음에 이으면 되잖아"* · 76 분 재현 안 함):
+- 측정은 삽입 런 끝 체크포인트 `restart_settling_20001.bin` (20.001 ms) 부터 — 그 윗면 h20 (측정) 에서 거꾸로 **h(t) = h20 + v0·(t20 − t) + ½·g·(t20² − t²)** 을 0 → 20 ms 1 ms 마다 (21 점) 그려 잇는다 —
+  20.001 ms 에서 정확히 h20 (측정점과 맞닿는다).
+- 상수 = 삽입 덱에서 읽는다 (생성기 `deck_free_fall`): **g = 98.1 m/s²** (`fix gravi all gravity 98.1` = 정착 중 10 g) · **v0 = 0.5 m/s** (`insert/pack … vel constant 0.0 0.0 -0.5`) · 덱 단위 (길이 ×1000 → 1 µm = 덱 1 mm · dt 1e-6 s) ·
+  t20 = 20,001 step = 0.020001 s ⇒ **낙하 = (0.5 × 0.020001 + ½ × 98.1 × 0.020001²) × 1000 = 29.62 µm** ⇒ h(0) = h20 + 29.62 µm.
+- **h(0) 대조 (자르지 않는다)**: 투입 영역 위끝 **322.7 µm** (`region reg_mix … 0.005 0.322700` — 입자 **중심** 이 놓이는 한계) 를 넘으면 생성기가 ⚠ 를 찍고 JSON `atomtop.free_fall.check` 에 적는다 ·
+  윗면 (max(z + r)) 한계 = 위끝 + 최대 반경 3 µm = 325.7 µm 도 함께 적는다.  값은 그대로 그린다.
+- **감쇠 무시 (`fix damp all viscous 1.0e-5` · F = −γ·v)**: m/γ = AM 55 s · SE (반경 0.5 µm) 0.086 s → 20 ms 동안 감쇠를 넣은 낙하 = AM 29.62 µm (차 0) · **SE 27.10 µm (모식보다 2.5 µm 덜)** —
+  맨 위 입자가 SE 이면 실제 낙하가 모식보다 조금 작다 (어림 · JSON `damping_neglected`).  입자끼리 부딪힘도 넣지 않았다 (맨 위 = 구름 위쪽이 함께 떨어지는 동안만 맞는 그림).
+- **모식 표기**: CSV Source 열 = `schematic free fall from insertion (모식 · not measured)` · 이 README · JSON 에만 — **그림에는 적지 않는다** (1저자).
+- 삽입 런 전체 재현 (NP 1 · 1 → 20,000 step · 1,000 마다 덤프 21 장 · 원 화면 실측 4,584 s ≈ 76 분) 은 `prepare --with-replay` 로만 (그때는 0–20 ms 가 측정이고 모식이 없다 · CSV `#mode replay`).
 
-**방법 = ps73 과 같은 세 갈래 · 같은 검사** (스크립트 `cluster/d1_atomtop_cluster.py` · 표준 라이브러리만 · 런 폴더는 읽기만 · 쓰기 = 새 work 폴더 · 있으면 거부):
+**방법 = ps73 과 같은 갈래 · 같은 검사** (스크립트 `cluster/d1_atomtop_cluster.py` · 표준 라이브러리만 · 런 폴더는 읽기만 · 쓰기 = 새 work 폴더 · 있으면 거부):
 
-| 갈래 (러너 순서) | step | 무엇 | 맞춰 볼 값 (리포 기록 · 생성기 검사) |
+| 갈래 | step | 무엇 | 맞춰 볼 값 (리포 기록 · 생성기 검사) |
 |---|---|---|---|
-| ① 체크포인트 `run 0` (NP 1 · 먼저 = 덱 문제면 몇 분 안에 멈춘다) | 20,001 · 50,000 · 100,000 · 150,000 · 200,000 · 200,001 (`restart_after_settling`) · 250,000 · 300,000 · 350,000 · 400,000 | `in.ckpt_<step>` = 본 덱 머리 + `read_restart` (런 폴더 원본) + 이웃 · 재료 · 접촉 · 벽 · 템플릿 + 원자 덤프 + `run 0` (움직이지 않음) | 본 로그 KE: 2.3894425 · 3.2480619 · 0.0073460391 · 0.00081993853 · 1.9866698e-05 · 1.9881675e-05 · 4.4168899e-07 · 3.8465837e-07 · 3.4737142e-07 · 3.1955678e-07 · 원자 168,457 |
-| ② 삽입 재현 (NP 1 · ≈ 76 분) | 1 · 1,000 · 2,000 · … · 20,000 | `in.replay_0_20000` = 삽입 덱 처음 → `unfix ins_mix` 그대로 + 정착 블록 (`shell` · `restart` 줄 뺌) + 원자 덤프 (`id type x y z radius` · 1,000 마다) + `run 20000` | 원 삽입 화면 KE 0.11946798 (1) · 0.17034351 (1,000) · … · 2.3892872 (20,000) · 원자 168,457 · 삽입 줄 (168,457 개 · 질량 9.557438e-01) |
-| ③ 원 atom 덤프 (읽기만) | 450,000 … 2,750,000 (50,000 마다 47) · `atom_end_2785002` | 그대로 훑기 | 머리 TIMESTEP = step · 원자 수 = 본 로그 그 step · 깨진 줄 0 · 파일 시각이 step 순서 |
+| ① 체크포인트 `run 0` (NP 1) | 20,001 · 50,000 · 100,000 · 150,000 · 200,000 · 200,001 (`restart_after_settling`) · 250,000 · 300,000 · 350,000 · 400,000 | `in.ckpt_<step>` = 본 덱 머리 + `read_restart` (런 폴더 원본) + 이웃 · 재료 · 접촉 · 벽 · 템플릿 + 원자 덤프 (`id type x y z radius`) + `run 0` (움직이지 않음) | 본 로그 KE: 2.3894425 · 3.2480619 · 0.0073460391 · 0.00081993853 · 1.9866698e-05 · 1.9881675e-05 · 4.4168899e-07 · 3.8465837e-07 · 3.4737142e-07 · 3.1955678e-07 · 원자 168,457 |
+| ② 원 atom 덤프 (읽기만) | 450,000 … 2,750,000 (50,000 마다 47) · `atom_end_2785002` | 그대로 훑기 | 머리 TIMESTEP = step · 원자 수 = 본 로그 그 step · 깨진 줄 0 · 파일 시각이 step 순서 |
+| (`--with-replay` 일 때만) 삽입 재현 (NP 1 · ≈ 76 분) | 1 · 1,000 · … · 20,000 | `in.replay_0_20000` = 삽입 덱 처음 → `unfix ins_mix` 그대로 + 정착 블록 (`shell` · `restart` 줄 뺌) + 원자 덤프 + `run 20000` | 원 삽입 화면 KE (1,000 마다 21 개) · 삽입 줄 (168,457 개 · 질량 9.557438e-01) |
 
 값 = 모든 원자의 **max(z + r)** (µm) · 열 = step · time_ms · ztop_um · source + 검사 열 (중심 최댓값 · 맨 위 입자 id · type · 반경 · p99.9 · 로그 원자 · KE · 파일 크기 · 시각) ·
-끝 줄 = `#insertion` (재현 · 원) · `#sha256` (런 폴더 덱 둘 · 로그 둘) · `#script_sha256` (이 스크립트).
+끝 줄 = `#mode` (ckpt · replay) · `#insertion_orig` (원 삽입 줄) · `#sha256` (런 폴더 덱 둘 · 로그 둘) · `#script_sha256` (이 스크립트).
 
 **1저자가 붙여 넣을 명령** (D1 런 기계 · 런 폴더 = 리포 기록상 `~/simulation/kg50_d1_b50` (`docs/data/kg50_decks_20261027_v3_b50/README.md` §3) — 다르면 `prepare --run <폴더>` ·
 LIGGGHTS = 같은 §3 의 삽입 런 명령과 같은 `~/LIGGGHTS-PUBLIC/src/lmp_auto` — 다르면 `prepare --lmp <경로>` · 주소 · 포트는 적지 않는다):
 
 ```bash
 # ⓪ 리포 파일 docs/50kg/report_y4/figs/d1_compaction/cluster/d1_atomtop_cluster.py 를 D1 런 기계 홈으로 가져간다 (평소 방법)
-echo "d60dbdfaf53216a777bfc186e0711f17864895cda64ea413684b81ea2c25f227  $HOME/d1_atomtop_cluster.py" | sha256sum -c -   # → OK (리포 파일과 같다)
-python3 -I ~/d1_atomtop_cluster.py --selftest           # 끝 줄 = 7 PASS · 0 FAIL  (몇 초)
-python3 -I ~/d1_atomtop_cluster.py prepare              # 런 폴더 확인 (sha256 4 · 체크포인트 10 · 덤프 48) → ~/kg50_d1_atomtop_20261102 에 덱 11 + run_atomtop.sh  (몇 초 · 런 폴더 sha256 읽기)
+echo "8a9fe00fc86ba7b11d8d27d626bbebcf258d2aae1e64db1af8a8207998a57210  $HOME/d1_atomtop_cluster.py" | sha256sum -c -   # → OK (리포 파일과 같다)
+python3 -I ~/d1_atomtop_cluster.py --selftest           # 끝 줄 = 9 PASS · 0 FAIL  (몇 초)
+python3 -I ~/d1_atomtop_cluster.py prepare              # 런 폴더 확인 (sha256 4 · 체크포인트 10 · 덤프 48) → ~/kg50_d1_atomtop_20261102 에 덱 10 + run_atomtop.sh  (몇 초 · "삽입 재현 없음 (기본)")
 cd ~/kg50_d1_atomtop_20261102 && setsid nohup bash run_atomtop.sh > run_atomtop.log 2>&1 < /dev/null &
-tail -3 ~/kg50_d1_atomtop_20261102/run_atomtop.log      # 진행: ckpt <step> 시각 … · replay start → (≈ 76 분) → replay done → KE_CHECK 31/31 같음 · ATOMTOP_DONE …/kg50_d1_atomtop.csv
+tail -3 ~/kg50_d1_atomtop_20261102/run_atomtop.log      # 진행: ckpt <step> 시각 … → ≈ 10 분 뒤 KE_CHECK 10/10 같음 · ATOMTOP_DONE …/kg50_d1_atomtop.csv
 sha256sum ~/kg50_d1_atomtop_20261102/kg50_d1_atomtop.csv
 ```
 
-- 중간 확인 (선택 · 재현 시작 ≈ 4 분 뒤 — 1,000 step KE 가 원 화면과 같으면 같은 궤적):
-  `awk '$1==1000 && $2==168457 {print "step 1000 KE", $3, "(원 0.17034351)"; exit}' ~/kg50_d1_atomtop_20261102/log.replay` — 다르면 기다리지 말고 멈추고 (`pkill -f in.replay_0_20000`) 그 줄을 보내 준다.
 - 첫 대조가 `FAILED` 면: Windows 를 거치며 줄 끝이 CRLF 로 바뀐 경우가 흔하다 → `sed -i 's/\r$//' ~/d1_atomtop_cluster.py` 뒤 다시 대조 (그래도 다르면 다른 판 — 쓰지 않는다 ·
   CSV 끝 줄 `#script_sha256` 을 생성기가 리포 파일과 다시 대조한다 ⑪).
-- **돌려받을 것** = `kg50_d1_atomtop.csv` 하나 (79 줄 + 메타 · 수십 KB) 와 그 sha256 → 이 폴더 아래 `raw` 폴더에 `kg50_d1_atomtop.csv` 이름 그대로 넣고
-  `python3 -I docs/50kg/report_y4/figs/d1_compaction/make_fig_d1_ms.py --atomtop` → 검사 ①–⑪ (step 계획 · TIMESTEP · 원자 수 · 파일 시각 · 반경 · KE 상대 1e-6 · 삽입 줄 · 런 폴더 sha256 · 만든 스크립트 sha256) 가
-  하나라도 어긋나면 그리지 않고 멈춘다 → 통과하면 원자 기준 그림 두 장 (압력 원값판 · 슬라이드판) · CSV · .ogs · JSON `atomtop` (측정 · 채움 수 · 끊긴 자리에 가려진 측정점 · 외톨이 후보 ·
-  맨 위가 판에 닿은 첫 덤프 · 판 위 중심 덤프 수 · 원자 수 변화 · KE 대조).
-- `prepare` 가 거부하면 (런 폴더 파일 없음 · sha256 다름) 아무것도 만들지 않는다 → 그 줄을 보내 주면 된다.  재현 KE 가 갈리면 (다른 LIGGGHTS 빌드 — 원 삽입 화면 머리 = compiled 2026-07-25-00:07:05) `KE_CHECK` 줄에 표시되고 생성기가 거부한다.
-- 쓰는 곳 = `~/kg50_d1_atomtop_20261102` 만 (덱 11 · 러너 · 로그 · 덤프 31 장 ≈ 0.3 GB 추정 · CSV) · 런 폴더 = `read_restart` · 덤프 읽기만 (재현 덱에서 `shell mkdir` · `restart` 줄을 뺐다).
-- 시간: 체크포인트 10 × `run 0` (읽기 + 이웃 목록 · 각 수십 초 추정 · 합 ≈ 5 분 추정) + **삽입 재현 ≈ 76 분** (원 삽입 화면 실측 4,584 s) + 훑기 79 장 (원 덤프 48 × ≈ 22.5 MB + work 덤프 31 ≈ 1.4 GB 읽기 · 1–3 분 추정) ≈ **85 분**.
+- **돌려받을 것** = `kg50_d1_atomtop.csv` 하나 (58 줄 + 메타 · 수십 KB) 와 그 sha256 → 이 폴더 아래 `raw` 폴더에 `kg50_d1_atomtop.csv` 이름 그대로 넣고
+  `python3 -I docs/50kg/report_y4/figs/d1_compaction/make_fig_d1_ms.py --atomtop` → 검사 ①–⑫ (step 계획 · TIMESTEP · 원자 수 · 파일 시각 · 반경 · KE 상대 1e-6 · 삽입 줄 · 런 폴더 sha256 · 만든 스크립트 sha256 · #mode) 가
+  하나라도 어긋나면 그리지 않고 멈춘다 → 통과하면 원자 기준 그림 두 장 (압력 원값판 · 슬라이드판) · CSV · .ogs · JSON `atomtop` (측정 · 채움 · 모식 수 · 자유 낙하 식 · h(0) 대조 · 무시한 감쇠 ·
+  끊긴 자리에 가려진 측정점 · 외톨이 후보 · 맨 위가 판에 닿은 첫 덤프 · 판 위 중심 덤프 수 · 원자 수 변화 · KE 대조).
+- `prepare` 가 거부하면 (런 폴더 파일 없음 · sha256 다름) 아무것도 만들지 않는다 → 그 줄을 보내 주면 된다.  체크포인트 KE 가 갈리면 `KE_CHECK` 줄에 표시되고 생성기가 거부한다.
+- 쓰는 곳 = `~/kg50_d1_atomtop_20261102` 만 (덱 10 · 러너 · 로그 · 덤프 10 장 ≈ 0.1 GB 추정 · CSV) · 런 폴더 = `read_restart` · 덤프 읽기만.
+- 시간 (추정): 체크포인트 10 × `run 0` (읽기 + 이웃 목록 · 각 수십 초 · 합 ≈ 5 분) + 훑기 58 장 (원 덤프 48 × ≈ 22.5 MB + 체크포인트 덤프 10 ≈ 1.2 GB 읽기 · 1–3 분) ≈ **10 분**.
 
 **그림 꼴** (CSV 가 오면 · 합성 자료로 배치만 미리 확인 — 값은 아직 없다):
-- 두께 패널 = **끊긴 y 축** — 아래 범위 = 판 놓은 뒤 모든 점 (+ 위쪽 단계 이름 자리 10 µm · 5 µm 단위 · 판 기준 그림과 같은 115–155 µm 예상) · 위 범위 = 시작 (투입 높이) 을 담는 20 µm
-  (같은 µm/높이 축척 · 시작 ≈ 투입 영역 위 끝 322.7 µm + 입자 반경 — 덱 기준 예상 · 측정은 재현 step 1) · 끊긴 자리 = 흰 띠 + 양쪽 빗금.
-- 빨간 화살표 둘 — 정착 시작 = 첫 자료 점 (재현 step 1) 을 위 오른쪽에서 · 이완 = 이완 구간 가운데의 원자 기준 값을 위에서 · 단계 이름 높이 = 이름 폭 안의 곡선 최댓값 위 (원자 기준 곡선은 평평하지 않다) ·
-  "Particle packing" = 위 패널 테두리 위 (전과 같음).
-- ⚠ 끊긴 자리 (아래 위끝 ~ 위 아래끝) 에 든 측정점은 보이지 않는다 (낙하 도중 점들) → JSON `atomtop.hidden_in_break` 에 적는다 · 위 범위를 넓히려면 `HI_SPAN_UM` (1저자 결정).
-- ⚠ 외톨이 (튀어 오른 입자 하나 — 윗면 − p99.9 ≥ 20 µm) 는 **빼지 않는다** — JSON 에 후보로만 적는다 · 빼라고 하면 ps73 규칙 그대로 (`atomtop_series(drop=…)` · 외톨이일 때만 빼고 앞뒤 측정점을 잇는다).
+- 두께 패널 = **끊긴 y 축** — 아래 범위 = 판 놓은 뒤 모든 점 (+ 위쪽 단계 이름 자리 10 µm · 5 µm 단위 · 판 기준 그림과 같은 115–155 µm 예상) · 위 범위 = 시작 h(0) 을 담는 20 µm
+  (같은 µm/높이 축척) · 끊긴 자리 = 흰 띠 + 양쪽 빗금.
+- 빨간 화살표 둘 — 정착 시작 = 첫 점 (0 ms · 모식 h(0)) 을 위 오른쪽에서 · 이완 = 이완 구간 가운데의 원자 기준 값을 위에서 · 단계 이름 높이 = 이름 폭 안의 곡선 최댓값 위 · "Particle packing" = 위 패널 테두리 위.
+- 20 → 450 ms = 측정점 (체크포인트 · 첫 원 덤프) 사이 PCHIP 채움 (측정 아님 · ps73 과 같다) · CSV Source 열에 표시.
+- ⚠ 끊긴 자리 (아래 위끝 ~ 위 아래끝) 에 든 측정점은 보이지 않는다 (예: 20.001 · 50 ms 체크포인트가 그 사이면) → JSON `atomtop.hidden_in_break` 에 적는다 · 위 범위를 넓히려면 `HI_SPAN_UM` (1저자 결정).
+- ⚠ 외톨이 (튀어 오른 입자 하나 — 윗면 − p99.9 ≥ 20 µm) 는 **빼지 않는다** — JSON 에 후보로만 적는다 · 빼라고 하면 ps73 규칙 그대로 (`atomtop_series(drop=…)` · 외톨이일 때만).
 - Origin: 원자 기준 두께 CSV + .ogs (origin 폴더 · `d1_ms_thickness_atomtop` 이름 · y = 아래 범위 아래끝 … 위 범위 위끝) · **끊기 = GUI 한 번** (.ogs 머리 주석에 From · To 값 — LabTalk 끊기 속성은 확인하지 않아 스크립트에 넣지 않았다).
+
+- **1저자에게 준 명령 (11-03)**: 같은 스크립트 (sha256 `8a9fe00f…`) 를 파일 이름 `d1_atomtop_ff.py` 로 받아 `prepare --work ~/kg50_d1_atomtop_ff` (예전 재현판으로 만든 `~/kg50_d1_atomtop_20261102` 와 겹치지 않게) · 돌려받을 것은 같다 (`kg50_d1_atomtop.csv` + sha256).
