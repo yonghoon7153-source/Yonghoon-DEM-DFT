@@ -1,0 +1,6 @@
+F11 rc 1 test_rint_r_chain: 4/6 PASS (8.9 s)   FAILED: ['PE01', 'PE01c'] ['PE01', 'PE01c'] 9.3s
+F13 rc 1 test_rint_r_chain: 6/7 PASS (18.5 s)   FAILED: ['PE01s'] ['PE01s'] 18.9s
+G04 rc 1 test_rint_r_chain: 9/10 PASS (27.8 s)   FAILED: ['PD12u'] ['PD12u'] 28.2s
+EXIT=0
+F14 rc 1 test_rint_r_chain: 6/7 PASS (10.9 s)   FAILED: ['PE01f'] ['PE01f'] 11.4s
+EXIT=0

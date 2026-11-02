@@ -1,0 +1,5 @@
+  PASS  PD12u ★ 11-02 PC6-12 단위 — 찾은 시도 폴더 ↔ 원장 항목 (found_attempts_problem · 판정 · 합치기 · 합친 예측 · 예측 입력 공용): 꼴 맞는 attempt.json 의 대상 · 기계 · 재실행 원 시도 하나라도 원장 항목과 다르면 사유 (폴더 이름 · 항목 번호) · 같으면 None · 옆 거부 기록 파일 · 원장에 없는 번호 = 이 함수 몫 아님 (None) · ★ 11-02 PC7-02 (1저자 11-02 — 바뀐 설계 단언 · 옛 = attempt.json 없는 폴더 None) 원장 항목이 있는 attempt_<n> 폴더에 꼴 맞는 attempt.json 이 없으면 (없음 · 꼴 틀림 (칸 하나 더) · 심볼릭 링크) 사유 — 예외 하나 = 그 번호의 결과 줄 rejected 이고 그 바탕에 옆 거부 기록 attempt_<n>.rejected.json 이 있을 때 (AL07 남의 폴더 · None) · 결과 줄 rejected 인데 그 바탕에 옆 거부 기록 없음 · 결과 줄 stopped 인데 옆 거부 기록 있음 = 사유
+  PASS  PE01s ★ 11-02 PC7-01 시작 기록의 바탕 = resolve (변이 보강 · F13 생존 → 잡힘) — --out = 심볼릭 링크 바탕 (실제 폴더를 가리킴) 인 원장 시도 (완주) → 시작 기록 바탕 = 실제 경로 · 실제 경로로 recover --ledger = rc 0 · 링크 경로로 recover --ledger = rc 0 (resolve 뒤 같은 바탕 · 결과 줄 폴더 · 요약 sha 같음)
+  PASS  PE01c ★ 11-02 PC7-01 recover 의 결과 줄 폴더 요약 sha 대조 (변이 보강 · F11 = 바탕 대조와 따로 · rc 로) — 원장 시도 완주 (결과 줄 · 시작 기록 = 같은 바탕) 뒤 recover --ledger = rc 0 → 그 시도 폴더의 파일 하나를 바꿈 → recover --ledger (같은 바탕) = rc 3 (결과 줄 폴더 요약 sha ≠ 이 폴더 · 바탕 사유 없음 · 원장 무변경 · 옛 = 결과 줄이 있으면 넘어감 rc 0)
+
+test_rint_r_chain: 3/3 PASS (3.7 s)

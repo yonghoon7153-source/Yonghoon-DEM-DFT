@@ -1,0 +1,5 @@
+HEAD = 작업 트리 가지 끝 (실행 때 넘긴 커밋 SHA 를 지움 — cherry-pick 뒤 바뀐다 · SELF-116 · 커밋 SHA = 보고에만 · 시험한 파일 = tested_code_sha256.txt) · Python 3.11.17 · 2026-11-02T13:15:43Z
+full rc=0
+e2e rc=0
+py38 rc=0
+done 2026-11-02T13:55:43Z

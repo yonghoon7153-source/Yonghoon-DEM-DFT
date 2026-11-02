@@ -1,0 +1,13 @@
+rows 44 bad 12
+  ('exception_neg9', 'plain', 'parent_dead', 'chain_exception')
+  ('exception_neg9', 'python', 'parent_dead', 'chain_exception')
+  ('exception_neg9', 'oom', 'resource', 'chain_exception')
+  ('exception_neg9', 'illegal', 'runner_rc', 'chain_exception')
+  ('exception_rc1', 'plain', 'parent_dead', 'chain_exception')
+  ('exception_rc1', 'python', 'parent_dead', 'chain_exception')
+  ('exception_rc1', 'oom', 'resource', 'chain_exception')
+  ('exception_rc1', 'illegal', 'runner_rc', 'chain_exception')
+  ('exception_rcNone', 'plain', 'parent_dead', 'chain_exception')
+  ('exception_rcNone', 'python', 'parent_dead', 'chain_exception')
+  ('exception_rcNone', 'oom', 'resource', 'chain_exception')
+  ('exception_rcNone', 'illegal', 'runner_rc', 'chain_exception')

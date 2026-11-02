@@ -1,0 +1,11 @@
+  PASS  C07 R 계획 len_law len_scaled_v1 ≠ 등록 v0 길이 법칙 (carbon_junction.CJUNC_LEN_LAW) → PLAN_CROSS_MISMATCH
+  PASS  OR06 ★ 10-27 묶음 C2a — 넘침 있는 주 예측 (P05 세계 · 네 모서리 넘침) 의 판정 = 다시 계산이 같은 새 순서 · 같은 이른 · 끝 검사 기록 (REPLAY 통과 · rc 0) · 예측 요청 순서 = 모서리 12 → origin 12 → origin8 12 (법칙 → c → R)
+  PASS  RS01 ★ 10-27 묶음 C1b-2 — 사다리 재실행: 천장 런 (둘째) 첫 풀이 끝 표지 뒤 GPU 메모리 부족 (결과 뒤 · resource · 재실행 자격) → --add --resume 1 (rc 0) → 재실행 시도 = 바닥 런 복사 (러너 0 회) · 천장 런부터 새로 · 끝까지 · CALIBRATED · 사다리 칸 = 끊김 없는 주 사다리와 같다 · resume 칸 (원 시도 · 복사 런 · 새로 돈 런 · 남은 payload 없음 = 결정성 가정) · 원장 채택 사슬 [1, 2] · 판정 (사다리 하나 · 원장) = 재실행 시도 통과 · 원 시도 = ATTEMPT_LEDGER_MISMATCH
+  PASS  RS02 ★ 10-27 묶음 C1b-2 (Q-J · Q9 R4-08 (a)) — 천장 런의 payload 는 남았는데 (OUTDIR) 그룹 미확인 → recover (결과 줄 · group_unconfirmed · 자격 True) → 재실행 = 천장 런부터 새로 · 새 payload = 남은 payload 바이트 같음 (resume 칸 compared · 같음) → CALIBRATED · 같은 판에서 천장 σ 만 1e-12 다른 세계 = RESUME_MISMATCH (결정성 위반 = 멈춤 · 결과 줄 stopped · 재실행 자격 없음)
+  PASS  RS03 ★ 10-27 묶음 C1b-2 (Q9 §3-5 재실행 자격 · R4-08 (c) (d)) — 재실행 거부 (--add = rc 3 RESUME_NOT_ALLOWED · 원장 무변경): 다른 기계 · 환경 지문 한 칸 다름 · 결과 전 원 시도 (러너 rc 2) · 완주한 사슬 끝 (RS01 재실행 뒤 또 재실행) · 재실행을 가리키는 재실행 (원 시도가 아님) · 손으로 덧붙인 재실행 항목 · 원천 폴더가 바뀜 = 풀기 전 거부 (RESUME_NOT_ALLOWED · 러너 0 회)
+  PASS  RS04 ★ 10-27 묶음 C1b-2 (Q9 §3-5 R4-03 (c) 재실행 사슬) — 원 시도 OOM (천장) → 재실행 1 OOM (점 1e6 · 자격) → 재실행 2 (원 시도를 가리킴) → 완주 · 채택 사슬 [1, 2, 3] · effective 3 · 재실행 2 = 재실행 1 의 끝난 런까지 복사 · 판정 (사다리 하나) = attempt_3 통과 · attempt_2 = ATTEMPT_LEDGER_MISMATCH
+  PASS  RS05 ★ 10-27 묶음 C1b-2 — 예측 재실행: 주 사다리 둘 (원장) · 예측 시도 = DBE 다섯째 런 표지 뒤 OOM → 재실행 → PREDICTED · 검사 · origin · 런 요청 = 끊김 없는 주 예측과 같다 · 원장 판정 (사다리 둘 + 재실행 예측) rc 0 · 판정 = 원장 없는 주 판정과 같은 판정
+  PASS  RS06 ★ 10-27 묶음 C1b-2 (구현과 함께 · 변이로 검증) — 완주한 재실행 사슬 (RS01 · [1, 2]) 뒤 풀기 전 대조를 거치지 않고 돈 재실행 흔적 (손 항목 resume_of 1 · 결과 줄 · 표지 있는 폴더) → 판정 RESUME_NOT_ALLOWED (자격 없는 재실행 · 사슬에 넣지 않는다)
+  PASS  RV03 ★ 10-27 묶음 C2e (Codex 회차 ① ③ "넘침 목록 · 시도 sha · 원장 접두가 같아도 최종 등급이 다르면 REVERIFY_DIFF") — 합친 예측 (C2d · 원장 판정) 을 다시 판정할 때만 등급이 뒤집히는 꼴 → rc 1 REVERIFY_DIFF (원장 · 사본 · 합친 런 대조는 그대로 통과 = 멈춤 없음 · grade_differ True) · 뒤집지 않은 다시 판정 = REVERIFY_SAME
+
+test_rint_r_chain: 9/9 PASS (34.5 s)

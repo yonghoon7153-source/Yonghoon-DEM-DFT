@@ -1,0 +1,380 @@
+[
+ {
+  "id": "BASE",
+  "why": "변이 없음",
+  "only": "AL01,AL07,AL12,PC10,PD11p,PD12u,PE01,PE01p,PE02,PE03,PE04",
+  "rc": 0,
+  "killed": null,
+  "tail": "test_rint_r_chain: 20/20 PASS (40.8 s)",
+  "fails": [],
+  "seconds": 41.2
+ },
+ {
+  "id": "F01",
+  "why": "PC7-01 두 번째 입구 거부 끔 (시작 기록이 있어도 들어감)",
+  "only": "PE01",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 1/4 PASS (6.1 s)   FAILED: ['PE01', 'PE01h', 'PE01r']",
+  "fails": [
+   {
+    "cid": "PE01",
+    "line": ": True, 'row_copy': (3, True, True), 'rc_r': 0, 'r1': {'status': 'interrupted', 'side': 'post', 'by': 'recover', 'folder': 'attempt_1'}, 'row_copy2': (3, True, True), 'rc_r2': 0, 'led_after': True, 'kinds': ['header', 'entry', 'start', 'result'], 'alive_after': False}, ['멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — 시작 기록을 못 썼다 — 러너 없음 · 시도 폴더 /tmp/rint_"
+   },
+   {
+    "cid": "PE01h",
+    "line": "'status': 'interrupted', 'side': 'post', 'by': 'recover'}}, ['멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — 시작 기록을 못 썼다 — 러너 없음 · 시도 폴더 /tmp/rint_r_chain_t_ben987jy/runs/PE01h_b3/attempt_1 = attempt.json 만: --stage recover --out /tmp/rint_r_chain_t_ben987jy/runs/PE01h_b3/attempt_1 --ledger /tmp/rint_r_chain_t_ben987jy/ledgers/PE01h 뒤 다음 시도 (★ 11-02 PC7-0"
+   },
+   {
+    "cid": "PE01r",
+    "line": "c_add': 0, 'seen': True, 'row': (3, True, True, True, True, 0, True), 'rc_r': 0, 'r2': {'status': 'interrupted', 'side': 'post', 'by': 'recover'}}, ['멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — 시작 기록을 못 썼다 — 러너 없음 · 시도 폴더 /tmp/rint_r_chain_t_ben987jy/runs/PE01r_b2/attempt_2 = attempt.json 만: --stage recover --out /tmp/rint_r_chain_t_ben987jy/runs/PE01r"
+   }
+  ],
+  "seconds": 6.6
+ },
+ {
+  "id": "F02",
+  "why": "PC7-01 시작 기록을 커밋하지 않음 (덧붙임 · raw 갱신 둘 다 뺌)",
+  "only": "PE01,AL01",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 1/5 PASS (18.3 s)   FAILED: ['AL01', 'PE01', 'PE01h', 'PE01r']",
+  "fails": [
+   {
+    "cid": "AL01",
+    "line": ", 'entry', 'result', 'entry', 'result', 'entry', 'result']), ('start', 1, []), ('start', 2, [])], True, 0, {'ladder:P0': 1, 'ladder:P1': 2, 'predict': 3}, 'PASS_INFORMATIVE', 'PASS_INFORMATIVE', \"VE (상태 positive) · 표지 ['FIBRE_UNCHECKED', 'GRID_UNCHECKED', 'SVORDER_UNCHECKED', 'UNREG_UNCHECKED'] · 차단 ['FIBRE_UNCHECKED', 'GRID_UNCHECKED', 'SVORDER_UNCHECKED', 'UNREG_UNCHECKED'] · §7-1 문장 금지 · 사다리 {'P0': 'CALIBRATED', 'P1': 'CALIBRATED'}\\n판정 → /tmp/rint_r_chain_t_cg28rbf6/runs/LM_v/verdict.json\\n\")"
+   },
+   {
+    "cid": "PE01",
+    "line": " · 원 바탕 recover 다시 = rc 0 · 원장 줄 = 머리 · 항목 · 시작 · 결과   ({'seen': True, 'start': (0, False), 'row_out': (0, False, False, False, False, False, True, 14), 'alive': True, 'row_copy': (3, False, False), 'rc_r': 3, 'r1': {'status': 'completed', 'side': 'post', 'by': 'chain', 'folder': 'attempt_1'}, 'row_copy2': (3, True, True), 'rc_r2': 3, 'led_after': True, 'kinds': ['header', 'entry', 'result'], 'alive_after': False}, ['요약 → /tmp/rint_r_chain_t_cg28rbf6/runs/PE01_b2/attempt_1/ladder_summary.json'])"
+   },
+   {
+    "cid": "PE01h",
+    "line": "y · 같은 원장 · 그 기계의 새 바탕) — 원 시도 사슬 부모 SIGKILL 뒤 그 기계에서 같은 --attempt → rc 3 · 화면만 ATTEMPT_LEDGER_MISMATCH (기록된 바탕 · --stage recover) · 원장 무변경 · 새 바탕 안 만듦 · 러너 0 회 (옛 = 그 기계에서 처음부터 다시 · 결과 줄 completed) · 원 그룹 삶 → 원 바탕 recover = rc 0 · 결과 줄 interrupted · 결과 뒤   ({'seen': True, 'row_host': (0, False, False, False, False, True, 14), 'alive': True, 'rc_r': 3, 'r1': {'status': 'completed', 'side': 'post', 'by': 'chain'}}, ['요약 → /tmp/rint_r_chain_t_cg28rbf6/runs/PE01h_b3/attempt_1/ladder_summary.json'])"
+   },
+   {
+    "cid": "PE01r",
+    "line": " interrupted · 결과 뒤   ({'a_rc': 3, 'r1': {'status': 'stopped', 'side': 'post', 'cause': 'resource', 'resume_ok': True}, 'rc_add': 0, 'seen': True, 'row': (3, True, False, True, True, 0, True), 'rc_r': 0, 'r2': {'status': 'interrupted', 'side': 'post', 'by': 'recover'}}, ['멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — 원장이 읽은 뒤 바뀌었다 (다른 손이 커밋했다) — 다시 시작'])"
+   }
+  ],
+  "seconds": 18.9
+ },
+ {
+  "id": "F03",
+  "why": "PC7-01 두 번째 입구 거부 = 같은 기계 신원일 때만",
+  "only": "PE01",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 3/4 PASS (5.6 s)   FAILED: ['PE01h']",
+  "fails": [
+   {
+    "cid": "PE01h",
+    "line": "'status': 'interrupted', 'side': 'post', 'by': 'recover'}}, ['멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — 시작 기록을 못 썼다 — 러너 없음 · 시도 폴더 /tmp/rint_r_chain_t_jwg8ja67/runs/PE01h_b3/attempt_1 = attempt.json 만: --stage recover --out /tmp/rint_r_chain_t_jwg8ja67/runs/PE01h_b3/attempt_1 --ledger /tmp/rint_r_chain_t_jwg8ja67/ledgers/PE01h 뒤 다음 시도 (★ 11-02 PC7-0"
+   }
+  ],
+  "seconds": 6.0
+ },
+ {
+  "id": "F04",
+  "why": "PC7-01 두 번째 입구 거부 = 같은 바탕일 때만",
+  "only": "PE01",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 1/4 PASS (5.9 s)   FAILED: ['PE01', 'PE01h', 'PE01r']",
+  "fails": [
+   {
+    "cid": "PE01",
+    "line": ": True, 'row_copy': (3, True, True), 'rc_r': 0, 'r1': {'status': 'interrupted', 'side': 'post', 'by': 'recover', 'folder': 'attempt_1'}, 'row_copy2': (3, True, True), 'rc_r2': 0, 'led_after': True, 'kinds': ['header', 'entry', 'start', 'result'], 'alive_after': False}, ['멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — 시작 기록을 못 썼다 — 러너 없음 · 시도 폴더 /tmp/rint_"
+   },
+   {
+    "cid": "PE01h",
+    "line": "'status': 'interrupted', 'side': 'post', 'by': 'recover'}}, ['멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — 시작 기록을 못 썼다 — 러너 없음 · 시도 폴더 /tmp/rint_r_chain_t_7bywalhm/runs/PE01h_b3/attempt_1 = attempt.json 만: --stage recover --out /tmp/rint_r_chain_t_7bywalhm/runs/PE01h_b3/attempt_1 --ledger /tmp/rint_r_chain_t_7bywalhm/ledgers/PE01h 뒤 다음 시도 (★ 11-02 PC7-0"
+   },
+   {
+    "cid": "PE01r",
+    "line": "c_add': 0, 'seen': True, 'row': (3, True, True, True, True, 0, True), 'rc_r': 0, 'r2': {'status': 'interrupted', 'side': 'post', 'by': 'recover'}}, ['멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — 시작 기록을 못 썼다 — 러너 없음 · 시도 폴더 /tmp/rint_r_chain_t_7bywalhm/runs/PE01r_b2/attempt_2 = attempt.json 만: --stage recover --out /tmp/rint_r_chain_t_7bywalhm/runs/PE01r"
+   }
+  ],
+  "seconds": 6.4
+ },
+ {
+  "id": "F05",
+  "why": "PC7-01 원장 해석 — 같은 번호 시작 기록 둘 받음",
+  "only": "PE01p",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 0/1 PASS (1.0 s)   FAILED: ['PE01p']",
+  "fails": [
+   {
+    "cid": "PE01p",
+    "line": "ool) · 시작 기록 없는 결과 줄 = 지금처럼 받는다 · 시작 기록은 시도 · 결과로 세지 않는다 (같은 원장에서 시작 줄만 뺀 판과 채택 · 사슬 · 최대 시도 수 · 차례 · 다음 항목 번호가 같다)   {'ok': {'start_then_result': (None, 1), 'start_only': (None, 1), 'result_without_start': (None, 0), 'side_rejected_without_start': (None, 0), 'start_after_other_entry': (None, 2)}, 'bad': {'start_twice': None}, 'same': {'adoption ladder:P0': True, 'limit ladder:P0': True, 'adoption ladder:P1': True, 'limit ladder:P1': True, 'order': True, 'entries_results': True, 'next_n': True}}"
+   }
+  ],
+  "seconds": 1.5
+ },
+ {
+  "id": "F06",
+  "why": "PC7-01 원장 해석 — 결과 줄 뒤 시작 기록 받음",
+  "only": "PE01p",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['PE01p']",
+  "fails": [
+   {
+    "cid": "PE01p",
+    "line": "시작 기록 없는 결과 줄 = 지금처럼 받는다 · 시작 기록은 시도 · 결과로 세지 않는다 (같은 원장에서 시작 줄만 뺀 판과 채택 · 사슬 · 최대 시도 수 · 차례 · 다음 항목 번호가 같다)   {'ok': {'start_then_result': (None, 1), 'start_only': (None, 1), 'result_without_start': (None, 0), 'side_rejected_without_start': (None, 0), 'start_after_other_entry': (None, 2)}, 'bad': {'start_after_result': None}, 'same': {'adoption ladder:P0': True, 'limit ladder:P0': True, 'adoption ladder:P1': True, 'limit ladder:P1': True, 'order': True, 'entries_results': True, 'next_n': True}}"
+   }
+  ],
+  "seconds": 1.2
+ },
+ {
+  "id": "F07",
+  "why": "PC7-01 원장 해석 — 항목 없는 번호의 시작 기록 받음",
+  "only": "PE01p",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 0/1 PASS (0.9 s)   FAILED: ['PE01p']",
+  "fails": [
+   {
+    "cid": "PE01p",
+    "line": "받는다 · 시작 기록은 시도 · 결과로 세지 않는다 (같은 원장에서 시작 줄만 뺀 판과 채택 · 사슬 · 최대 시도 수 · 차례 · 다음 항목 번호가 같다)   {'ok': {'start_then_result': (None, 1), 'start_only': (None, 1), 'result_without_start': (None, 0), 'side_rejected_without_start': (None, 0), 'start_after_other_entry': (None, 2)}, 'bad': {'start_no_entry': None, 'start_missing_n': None}, 'same': {'adoption ladder:P0': True, 'limit ladder:P0': True, 'adoption ladder:P1': True, 'limit ladder:P1': True, 'order': True, 'entries_results': True, 'next_n': True}}"
+   }
+  ],
+  "seconds": 1.3
+ },
+ {
+  "id": "F08",
+  "why": "PC7-01 시작 기록 꼴 — 폴더 이름 대조 뺌",
+  "only": "PE01p",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['PE01p']",
+  "fails": [
+   {
+    "cid": "PE01p",
+    "line": " 기록은 시도 · 결과로 세지 않는다 (같은 원장에서 시작 줄만 뺀 판과 채택 · 사슬 · 최대 시도 수 · 차례 · 다음 항목 번호가 같다)   {'ok': {'start_then_result': (None, 1), 'start_only': (None, 1), 'result_without_start': (None, 0), 'side_rejected_without_start': (None, 0), 'start_after_other_entry': (None, 2)}, 'bad': {'start_folder_other_n': None, 'start_folder_side': None}, 'same': {'adoption ladder:P0': True, 'limit ladder:P0': True, 'adoption ladder:P1': True, 'limit ladder:P1': True, 'order': True, 'entries_results': True, 'next_n': True}}"
+   }
+  ],
+  "seconds": 1.2
+ },
+ {
+  "id": "F09",
+  "why": "PC7-01 시작 기록 꼴 — 바탕 절대 경로 대조 뺌",
+  "only": "PE01p",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['PE01p']",
+  "fails": [
+   {
+    "cid": "PE01p",
+    "line": "시작 기록은 시도 · 결과로 세지 않는다 (같은 원장에서 시작 줄만 뺀 판과 채택 · 사슬 · 최대 시도 수 · 차례 · 다음 항목 번호가 같다)   {'ok': {'start_then_result': (None, 1), 'start_only': (None, 1), 'result_without_start': (None, 0), 'side_rejected_without_start': (None, 0), 'start_after_other_entry': (None, 2)}, 'bad': {'start_base_relative': None, 'start_base_empty': None}, 'same': {'adoption ladder:P0': True, 'limit ladder:P0': True, 'adoption ladder:P1': True, 'limit ladder:P1': True, 'order': True, 'entries_results': True, 'next_n': True}}"
+   }
+  ],
+  "seconds": 1.2
+ },
+ {
+  "id": "F10",
+  "why": "PC7-01 시작 기록 꼴 — 기계 신원 꼴 대조 뺌",
+  "only": "PE01p",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['PE01p']",
+  "fails": [
+   {
+    "cid": "PE01p",
+    "line": "다 (같은 원장에서 시작 줄만 뺀 판과 채택 · 사슬 · 최대 시도 수 · 차례 · 다음 항목 번호가 같다)   {'ok': {'start_then_result': (None, 1), 'start_only': (None, 1), 'result_without_start': (None, 0), 'side_rejected_without_start': (None, 0), 'start_after_other_entry': (None, 2)}, 'bad': {'start_host_str': None, 'start_host_missing': None, 'start_host_num': None}, 'same': {'adoption ladder:P0': True, 'limit ladder:P0': True, 'adoption ladder:P1': True, 'limit ladder:P1': True, 'order': True, 'entries_results': True, 'next_n': True}}"
+   }
+  ],
+  "seconds": 1.3
+ },
+ {
+  "id": "F11",
+  "why": "PC7-01 recover — 결과 줄 폴더 · 요약 sha 대조 뺌",
+  "only": "PE01",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 3/4 PASS (5.4 s)   FAILED: ['PE01']",
+  "fails": [
+   {
+    "cid": "PE01",
+    "line": " True, 'row_copy': (3, True, True), 'rc_r': 0, 'r1': {'status': 'interrupted', 'side': 'post', 'by': 'recover', 'folder': 'attempt_1'}, 'row_copy2': (3, True, False), 'rc_r2': 0, 'led_after': True, 'kinds': ['header', 'entry', 'start', 'result'], 'alive_after': False}, ['멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — 항목 1 은 이미 시작 기록이 있는데 결과 줄이 없다 (바탕 /tmp"
+   }
+  ],
+  "seconds": 5.9
+ },
+ {
+  "id": "F12",
+  "why": "PC7-01 recover — 시작 기록 바탕 대조 뺌",
+  "only": "PE01",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 3/4 PASS (5.6 s)   FAILED: ['PE01']",
+  "fails": [
+   {
+    "cid": "PE01",
+    "line": " True, 'row_copy': (0, False, False), 'rc_r': 3, 'r1': {'status': 'interrupted', 'side': 'post', 'by': 'recover', 'folder': 'attempt_1'}, 'row_copy2': (0, True, False), 'rc_r2': 3, 'led_after': True, 'kinds': ['header', 'entry', 'start', 'result'], 'alive_after': False}, ['멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — 항목 1 은 이미 시작 기록이 있는데 결과 줄이 없다 (바탕 /t"
+   }
+  ],
+  "seconds": 6.0
+ },
+ {
+  "id": "F13",
+  "why": "PC7-01 시작 기록 바탕 = resolve 안 함 (str(base))",
+  "only": "PE01,AL01",
+  "rc": 0,
+  "killed": false,
+  "tail": "test_rint_r_chain: 5/5 PASS (15.8 s)",
+  "fails": [],
+  "seconds": 16.3
+ },
+ {
+  "id": "G01",
+  "why": "PC7-02 attempt.json 없는 · 꼴 틀린 · 링크 찾은 폴더 = 건너뜀 (옛 너그러움 · K09 의 반대)",
+  "only": "PE02,PD12u",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 0/3 PASS (18.6 s)   FAILED: ['PD12u', 'PE02', 'PE02x']",
+  "fails": [
+   {
+    "cid": "PD12u",
+    "line": "er:P0') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)\", 'machine': \"attempt_1: attempt.json (machine 'gabia') ≠ 원장 항목 1 (machine 'kgy') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)\", 'resume_of': 'attempt_2: attempt.json (resume_of None) ≠ 원장 항목 2 (resume_of 1) — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)', 'no_attempt_json': None, 'extra_key': None, 'attempt_json_symlink': None, 'rejected_side': None, 'r"
+   },
+   {
+    "cid": "PE02",
+    "line": "tempt1': False, 'predict': None, 'predict_calls': 24, 'predict_side': 'post', 'p_names_attempt1': False}, 'extra_key': {'add2_rc': 0, 'b_status': 'CALIBRATED', 'verdict': 'INPUT_MISSING', 'v_names_attempt1': False, 'predict': None, 'predict_calls': 24, 'predict_side': 'post', 'p_names_attempt1': False}, 'symlink': {'add2_rc': 0, 'b_status': 'CALIBRATED', 'verdict': 'INPUT_MISSING', 'v_names_attempt1': False, 'predict': None, 'predict_calls': 24, 'predict_side': 'post', 'p_names_attempt1': False}"
+   },
+   {
+    "cid": "PE02x",
+    "line": " 하나 (AL07 남의 폴더 · 지금 동작 그대로 · 실경로) — 바탕에 이미 있던 attempt_1 (attempt.json 없음 · 옛 파일) 때문에 항목 1 (ladder:P1) = 옆 거부 기록 attempt_1.rejected.json + 결과 줄 rejected · 같은 바탕의 항목 2 (ladder:P0) 완주 → 판정 (입력 = 시도 2) = 원장 대조 통과 (INPUT_MISSING · 찾은 attempt_1 = 결과 줄 rejected + 그 바탕에 옆 거부 기록) · 그 옆 거부 기록을 지운 사본 = ATTEMPT_LEDGER_MISMATCH (사유 = attempt_1 · 옛 = 통과)   ((3, {'status': 'rejected', 'side': 'pre', 'folder': 'attempt_1.rejected.json'}, 0, 'INPUT_MISSING', 'INPUT_MISSING', False), '주 사다리 P0 · P1 둘이 다 있어야 한다')"
+   }
+  ],
+  "seconds": 19.0
+ },
+ {
+  "id": "G02",
+  "why": "PC7-02 예외에서 옆 거부 기록 대조 뺌",
+  "only": "PE02,PD12u",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 1/3 PASS (13.3 s)   FAILED: ['PD12u', 'PE02x']",
+  "fails": [
+   {
+    "cid": "PD12u",
+    "line": "er:P0') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)\", 'machine': \"attempt_1: attempt.json (machine 'gabia') ≠ 원장 항목 1 (machine 'kgy') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)\", 'resume_of': 'attempt_2: attempt.json (resume_of None) ≠ 원장 항목 2 (resume_of 1) — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)', 'no_attempt_json': 'attempt_2: 원장 항목 2 (ladder:P0) 의 시도 폴더 자리인데 꼴 맞는 attempt.json 이 없다 (없음 · 꼴 틀림 ·"
+   },
+   {
+    "cid": "PE02x",
+    "line": " 하나 (AL07 남의 폴더 · 지금 동작 그대로 · 실경로) — 바탕에 이미 있던 attempt_1 (attempt.json 없음 · 옛 파일) 때문에 항목 1 (ladder:P1) = 옆 거부 기록 attempt_1.rejected.json + 결과 줄 rejected · 같은 바탕의 항목 2 (ladder:P0) 완주 → 판정 (입력 = 시도 2) = 원장 대조 통과 (INPUT_MISSING · 찾은 attempt_1 = 결과 줄 rejected + 그 바탕에 옆 거부 기록) · 그 옆 거부 기록을 지운 사본 = ATTEMPT_LEDGER_MISMATCH (사유 = attempt_1 · 옛 = 통과)   ((3, {'status': 'rejected', 'side': 'pre', 'folder': 'attempt_1.rejected.json'}, 0, 'INPUT_MISSING', 'INPUT_MISSING', False), '주 사다리 P0 · P1 둘이 다 있어야 한다')"
+   }
+  ],
+  "seconds": 13.7
+ },
+ {
+  "id": "G03",
+  "why": "PC7-02 예외에서 결과 줄 rejected 대조 뺌",
+  "only": "PE02,PD12u",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 2/3 PASS (25.1 s)   FAILED: ['PD12u']",
+  "fails": [
+   {
+    "cid": "PD12u",
+    "line": "er:P0') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)\", 'machine': \"attempt_1: attempt.json (machine 'gabia') ≠ 원장 항목 1 (machine 'kgy') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)\", 'resume_of': 'attempt_2: attempt.json (resume_of None) ≠ 원장 항목 2 (resume_of 1) — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)', 'no_attempt_json': 'attempt_2: 원장 항목 2 (ladder:P0) 의 시도 폴더 자리인데 꼴 맞는 attempt.json 이 없다 (없음 · 꼴 틀림 ·"
+   }
+  ],
+  "seconds": 25.5
+ },
+ {
+  "id": "G04",
+  "why": "PC7-02 옆 거부 기록 파일 건너뜀 뺌 (파일도 read_attempt)",
+  "only": "PE02,PD12u,AL07,AL12",
+  "rc": 0,
+  "killed": false,
+  "tail": "test_rint_r_chain: 10/10 PASS (30.5 s)",
+  "fails": [],
+  "seconds": 30.9
+ },
+ {
+  "id": "H01",
+  "why": "PC7-03 recover 길에서 chain_end 원인 표 안 봄 (옛)",
+  "only": "PE03",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 0/2 PASS (4.7 s)   FAILED: ['PE03', 'PE03u']",
+  "fails": [
+   {
+    "cid": "PE03",
+    "line": "se (두 길이 같은 답)   {'unconf': (True, True, ('chain', -9, 'exception', False), False, None, 0, ('recover', None, 'parent_dead', True), 'exception', {'status': 'interrupted', 'side': 'post', 'cause': 'parent_dead', 'resume_ok': True, 'by': 'recover'}, 0, False, False), 'conf': (True, True, ('chain', -9, 'exception', True), False, None, 0, ('chain', -9, 'exception', True), None, {'status': 'interrupted', 'side': 'post', 'cause': 'chain_exception', 'resume_ok': False, 'by': 'recover'}, 3, True, True)}"
+   },
+   {
+    "cid": "PE03u",
+    "line": "terrupted', 'post', 'chain_exception', False, True)), 'exception_neg9/oom': (('interrupted', 'post', 'resource', True, True), ('interrupted', 'post', 'chain_exception', False, True)), 'exception_neg9/plain': (('interrupted', 'post', 'parent_dead', True, True), ('interrupted', 'post', 'chain_exception', False, True)), 'exception_neg9/python': (('interrupted', 'post', 'parent_dead', True, True), ('interrupted', 'post', 'chain_exception', False, True)), 'exception_rc1/illegal': (('interrupted', 'po"
+   }
+  ],
+  "seconds": 5.2
+ },
+ {
+  "id": "H02",
+  "why": "PC7-03 같은 표를 비움 (by chain exception 도 표 밖)",
+  "only": "PE03,PC10,PD11p",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 2/4 PASS (11.0 s)   FAILED: ['PE03', 'PE03u']",
+  "fails": [
+   {
+    "cid": "PE03",
+    "line": " False (두 길이 같은 답)   {'unconf': (True, True, ('chain', -9, 'exception', False), False, None, 0, ('recover', None, 'parent_dead', True), 'exception', {'status': 'interrupted', 'side': 'post', 'cause': 'parent_dead', 'resume_ok': True, 'by': 'recover'}, 0, False, False), 'conf': (True, True, ('chain', -9, 'exception', True), False, None, 0, ('chain', -9, 'exception', True), None, {'status': 'interrupted', 'side': 'post', 'cause': 'parent_dead', 'resume_ok': False, 'by': 'recover'}, 3, True, True)}"
+   },
+   {
+    "cid": "PE03u",
+    "line": ", False), 'exception_neg9/illegal': (('interrupted', 'post', 'runner_rc', False, True), ('interrupted', 'post', 'chain_exception', False, True)), 'exception_neg9/oom': (('interrupted', 'post', 'resource', True, True), ('interrupted', 'post', 'chain_exception', False, True)), 'exception_neg9/plain': (('interrupted', 'post', 'parent_dead', True, True), ('interrupted', 'post', 'chain_exception', False, True)), 'exception_neg9/python': (('interrupted', 'post', 'parent_dead', True, True), ('interrupt"
+   }
+  ],
+  "seconds": 11.5
+ },
+ {
+  "id": "J01",
+  "why": "PC7-04 표지 대조 뺌",
+  "only": "PE04",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 0/1 PASS (1.2 s)   FAILED: ['PE04']",
+  "fails": [
+   {
+    "cid": "PE04",
+    "line": "9, 1, False), 'name_chain': (True, True, True, -9, None, True), 'same': (False, False, True, -9, 1, False)}, 'stage': (0, False, False), 'ledger': (0, False, False), 'bad': {'token_chain': ((False, False, True, -9, 0, False), (True, True, True, -9, None, True)), 'token_recover': ((False, False, True, -9, 1, False), (True, True, True, -9, None, True)), 'stage': ((0, False, False), '  recover PE04_stage/L01_floor: 종료 확인 · 죽인 프로세스 0\\nrecover — 그룹 기록 1 개 정리 · 미확인 0\\n'), 'ledger': ((0, False, False),"
+   }
+  ],
+  "seconds": 1.7
+ },
+ {
+  "id": "J02",
+  "why": "PC7-04 이름 대조 뺌",
+  "only": "PE04",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 0/1 PASS (1.2 s)   FAILED: ['PE04']",
+  "fails": [
+   {
+    "cid": "PE04",
+    "line": " · 원장 시도 폴더 + --ledger = 결과 줄 안 씀 (원장 무변경 · 옛 = 다른 런의 rc 를 chain_end 로 옮겨 원인을 정하고 결과 줄 · rc 0) · 대조 = 같은 표지 · 이름 = chain_end 옮김 (PD13g 그대로)   {'rows': {'token_chain': (True, True, True, -9, None, True), 'token_recover': (True, True, True, -9, None, True), 'name_chain': (False, False, True, -9, 1, False), 'same': (False, False, True, -9, 1, False)}, 'stage': (3, True, True), 'ledger': (3, True, True), 'bad': {'name_chain': ((False, False, True, -9, 1, False), (True, True, True, -9, None, True))}}"
+   }
+  ],
+  "seconds": 1.6
+ },
+ {
+  "id": "J03",
+  "why": "PC7-04 다르면 chain_end 만 버리고 끝 기록은 씀 (미확인으로 두지 않음)",
+  "only": "PE04",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 0/1 PASS (1.3 s)   FAILED: ['PE04']",
+  "fails": [
+   {
+    "cid": "PE04",
+    "line": ", -9, None, False), 'name_chain': (False, False, True, -9, None, False), 'same': (False, False, True, -9, 1, False)}, 'stage': (0, False, False), 'ledger': (0, False, False), 'bad': {'token_chain': ((False, False, True, -9, None, False), (True, True, True, -9, None, True)), 'token_recover': ((False, False, True, -9, None, False), (True, True, True, -9, None, True)), 'name_chain': ((False, False, True, -9, None, False), (True, True, True, -9, None, True)), 'stage': ((0, False, False), '  recover "
+   }
+  ],
+  "seconds": 1.7
+ }
+]

@@ -1,0 +1,66 @@
+[
+ {
+  "id": "F11",
+  "why": "PC7-01 recover — 결과 줄 폴더 · 요약 sha 대조 뺌",
+  "only": "PE01",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 4/6 PASS (8.9 s)   FAILED: ['PE01', 'PE01c']",
+  "fails": [
+   {
+    "cid": "PE01",
+    "line": " True, 'row_copy': (3, True, True), 'rc_r': 0, 'r1': {'status': 'interrupted', 'side': 'post', 'by': 'recover', 'folder': 'attempt_1'}, 'row_copy2': (3, True, False), 'rc_r2': 0, 'led_after': True, 'kinds': ['header', 'entry', 'start', 'result'], 'alive_after': False}, ['멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — 항목 1 은 이미 시작 기록이 있는데 결과 줄이 없다 (바탕 /tmp"
+   },
+   {
+    "cid": "PE01c",
+    "line": "★ 11-02 PC7-01 recover 의 결과 줄 폴더 요약 sha 대조 (변이 보강 · F11 = 바탕 대조와 따로 · rc 로) — 원장 시도 완주 (결과 줄 · 시작 기록 = 같은 바탕) 뒤 recover --ledger = rc 0 → 그 시도 폴더의 파일 하나를 바꿈 → recover --ledger (같은 바탕) = rc 3 (결과 줄 폴더 요약 sha ≠ 이 폴더 · 바탕 사유 없음 · 원장 무변경 · 옛 = 결과 줄이 있으면 넘어감 rc 0)   (0, 0, 0, False, False, True)"
+   }
+  ],
+  "seconds": 9.3
+ },
+ {
+  "id": "F13",
+  "why": "PC7-01 시작 기록 바탕 = resolve 안 함 (str(base))",
+  "only": "PE01,AL01",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 6/7 PASS (18.5 s)   FAILED: ['PE01s']",
+  "fails": [
+   {
+    "cid": "PE01s",
+    "line": "★ 11-02 PC7-01 시작 기록의 바탕 = resolve (변이 보강 · F13 생존 → 잡힘) — --out = 심볼릭 링크 바탕 (실제 폴더를 가리킴) 인 원장 시도 (완주) → 시작 기록 바탕 = 실제 경로 · 실제 경로로 recover --ledger = rc 0 · 링크 경로로 recover --ledger = rc 0 (resolve 뒤 같은 바탕 · 결과 줄 폴더 · 요약 sha 같음)   ((0, False, 3, 3), ['/tmp/rint_r_chain_t_e0xj6trm/runs/PE01s_link'], '/tmp/rint_r_chain_t_e0xj6trm/runs/PE01s_real')"
+   }
+  ],
+  "seconds": 18.9
+ },
+ {
+  "id": "G04",
+  "why": "PC7-02 옆 거부 기록 파일 건너뜀 뺌 (파일도 read_attempt)",
+  "only": "PE02,PD12u,AL07,AL12",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 9/10 PASS (27.8 s)   FAILED: ['PD12u']",
+  "fails": [
+   {
+    "cid": "PD12u",
+    "line": "er:P0') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)\", 'machine': \"attempt_1: attempt.json (machine 'gabia') ≠ 원장 항목 1 (machine 'kgy') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)\", 'resume_of': 'attempt_2: attempt.json (resume_of None) ≠ 원장 항목 2 (resume_of 1) — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)', 'no_attempt_json': 'attempt_2: 원장 항목 2 (ladder:P0) 의 시도 폴더 자리인데 꼴 맞는 attempt.json 이 없다 (없음 · 꼴 틀림 ·"
+   }
+  ],
+  "seconds": 28.2
+ },
+ {
+  "id": "F14",
+  "why": "PC7-01 시작 기록을 못 써도 러너로 감 (rc 3 대신 계속)",
+  "only": "PE01",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 6/7 PASS (10.9 s)   FAILED: ['PE01f']",
+  "fails": [
+   {
+    "cid": "PE01f",
+    "line": "02_ceiling_arm1', 'L03_point_arm1', 'L04_point_arm1', 'L05_point_arm1', 'L06_point_arm1', 'L07_point_arm1', 'L08_confirm_arm1', 'L09_end_confirm_arm1', 'L10_end_origin_arm2_arml1-2', 'L11_end_confirm_arm1', 'L12_end_origin_arm2_arml1-2', 'L13_origin_arm2_arml1-2', 'L14_sbe_noop_arm1', 'attempt.json', 'groups', 'ladder_summary.json', 'logs'], True), (3, 0, False, False), 0, {'status': 'completed', 'side': 'post', 'cause': None, 'resume_ok': False, 'by': 'chain'}, 3, ['header', 'entry', 'result'])"
+   }
+  ],
+  "seconds": 11.4
+ }
+]
