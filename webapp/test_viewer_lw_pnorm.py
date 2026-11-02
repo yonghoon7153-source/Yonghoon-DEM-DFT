@@ -18,7 +18,10 @@
   [A] P_ref — 합성 기둥 침대 (손 계산 −Σ (z_id2 − z_id1) F_z / V_상자 · 정본 텐서 Σ V σzz · 상태: mesh 없음 · 예산 · 인장 침대).
   [B] SE 값 — id 구간 (오름차순 연속 · 틈) · 유효 4 자리 = 정본 배열 · 벽 표지 (LW 규칙) · ⟨σ_VM⟩ · 기존 키 그대로 (새 묶음 둘만 더함).
   [R] 50kg D2 · D3 끝 세트 (리포 tgz · 로그 끝 정규 thermo 줄) — ⟨σzz⟩ / 판 압력 (±5 % 안 = 출하 관문 · 기록값) · AM σ_VM ÷ P_ref
-      중앙값 · 평균 (벽 제외) · SE 값 수 = SE 수.
+      중앙값 · 평균 (벽 제외) · SE 값 수 = SE 수 · ★ 접촉 압력 요약 (AM–SE · AM–AM · 1저자 쪽 도구 D2 평균 ≈ 369.6 · 중앙 ≈ 385.7 MPa) ·
+      보낸 행의 p_MPa = 압축 행만 (R5–R7).
+  [JP] ★ 접촉마다 압력 (같은 묶음) — p_MPa = |Fn| / A · 양 contact_p · contact_se_p · 고정 0 … 800 (선형) · 진짜 cap 그리기 (THREE 흉내) · 힘 양 그대로 ·
+      고정 범위 밖 수 (AM–AM 압력 ≈ 4000 MPa 는 기본 0 … 800 에서 다 잘린다 — 화면이 그 수를 적는다 · JP18 · JP19).
   [J] 뷰어 (node) — 드롭다운 se_only · applyViewMode 분기 · 걷기 · 양 lw_p (= lw_vm_MPa / P_ref) · 고정 범위 (선형 · 0 … 3 · 저장 · 깨진 저장 ·
       막힌 저장 · 없는 저장) · 기본 그림 = 옛 알고리즘 색 그대로 · 고정 색 = 선형 jet · SE 만 (AM 숨김 · SE 색 · 벽 회색 · 값 0 · log) ·
       범례 (P_ref 정의 · MPa) · 컬러바 (선형 눈금 0 · 1 · 2 · 3 · 기본 컬러바 글 그대로) · 조작 배선 (범위 · lo · hi → 저장 · 다시 그림).
@@ -300,13 +303,17 @@ def section_se(tmp, lv, ref):
 # ══════════════════════════════════════════════════════════════════════════════
 #  기록값 (11-02 · 이 코드 · 끝 세트 sha256 = 각 README) — D1 (묶음 리포 밖 · 62.7 MB): P_ref 153.02496 MPa · 로그 156.15118 · 비 0.97998 ·
 #  AM σ_VM ÷ P_ref 중앙값 1.12486 · 평균 1.22837 (벽 제외 1409 개 · ÷ 로그 판 압력 중앙값 1.10234)
+#  ★ 11-02 (같은 묶음) 접촉 압력 |Fn|/A — 압축 AM–SE · AM–AM 평균 · 중앙 (같은 압축 행 규칙 · 이 코드로 잰 값) · D2 AM–SE 는 1저자 쪽 오프라인
+#  도구 값 (평균 ≈ 369.6 · 중앙 ≈ 385.7 MPa) 과 맞춰 본다 · D1 (리포 밖) AM–SE 321.8047 · 337.1103 · AM–AM 3895.034 · 4074.546 (n 142519 · 2676)
 KG50 = {
     'D2': dict(tgz='docs/data/kg50_d2_end_20261030/kg50_d2_end_20261030_4files.tgz', case='kg50_d2_b50', step=4015002,
                log='docs/data/kg50_d2_end_20261030/kg50_d2_b50_log.liggghts', p_log=279.79158, pzz=271.36632420059635,
-               am_med=1.23393477052794, am_mean=1.2972342310707643, am_med_log=1.1967777693005395, n_am=1481, n_se=20872),
+               am_med=1.23393477052794, am_mean=1.2972342310707643, am_med_log=1.1967777693005395, n_am=1481, n_se=20872,
+               p_se=(34833, 369.5820, 385.6721), p_am=(3293, 4140.6865, 4242.2487)),
     'D3': dict(tgz='docs/data/kg50_d3_cell_verdict_20261027/kg50_d3_end_20261027.tgz', case='kg50_d3_b50_s1', step=4575002,
                log='docs/data/kg50_d3_cell_verdict_20261027/kg50_d3_b50_s1_log.liggghts', p_log=291.3744, pzz=282.10228692713997,
-               am_med=1.2570485725641372, am_mean=1.3296172186350599, am_med_log=1.217046786192747, n_am=1482, n_se=6184),
+               am_med=1.2570485725641372, am_mean=1.3296172186350599, am_med_log=1.217046786192747, n_am=1482, n_se=6184,
+               p_se=(15054, 398.0276, 414.7896), p_am=(3389, 4166.0750, 4252.5255)),
 }
 
 
@@ -382,6 +389,20 @@ def section_kg50(tmp):
         chk(f'R4 {bed} SE 값 {len(se.get("lw_vm_MPa") or [])} 개 = SE {sp["n_se"]} 개 · id 구간 {len(se.get("id_runs") or [])} 개 · '
             f'펼친 id 오름차순 · 중복 없음', se.get('n_se') == sp['n_se'] and len(ids) == sp['n_se']
             and len(se.get('lw_vm_MPa') or []) == sp['n_se'] and ids == sorted(set(ids)))
+        cs, ca = am.get('contacts_se') or {}, am.get('contacts') or {}
+        ps_, pa_ = cs.get('p_MPa_stats') or {}, ca.get('p_MPa_stats') or {}
+        chk(f'R5 {bed} ★ 접촉 압력 |Fn|/A (압축 · 상한과 무관) — AM–SE n {ps_.get("n")} · 평균 {ps_.get("mean")} · 중앙 {ps_.get("median")} · '
+            f'AM–AM n {pa_.get("n")} · 평균 {pa_.get("mean")} · 중앙 {pa_.get("median")} MPa = 기록 {sp["p_se"]} · {sp["p_am"]} (서버 = 유효 6 자리)',
+            ps_.get('n') == sp['p_se'][0] == cs.get('n_compressive') and rel(ps_.get('mean'), sp['p_se'][1]) < 1e-5
+            and rel(ps_.get('median'), sp['p_se'][2]) < 1e-5 and pa_.get('n') == sp['p_am'][0] == ca.get('n_compressive')
+            and rel(pa_.get('mean'), sp['p_am'][1]) < 1e-5 and rel(pa_.get('median'), sp['p_am'][2]) < 1e-5)
+        if bed == 'D2':
+            chk(f'R6 D2 AM–SE 압축 접촉 압력 평균 ≈ 369.6 · 중앙 ≈ 385.7 MPa (1저자 쪽 오프라인 도구 · 반올림 ±0.05) ({ps_.get("mean")} · {ps_.get("median")})',
+                abs(ps_.get('mean', 0) - 369.6) <= 0.05 and abs(ps_.get('median', 0) - 385.7) <= 0.05)
+        rows = [dict(zip(cs.get('fields') or [], r)) for r in cs.get('rows') or []]
+        chk(f'R7 {bed} AM–SE 보낸 행 {len(rows)} (상한 {cs.get("cap")}) — 압축 행만 p_MPa 양수 · 나머지 null · 보낸 압축 행 수 = {cs.get("n_compressive_sent")}',
+            bool(rows) and all((r.get('p_MPa') is not None and r['p_MPa'] > 0) == (int(r['flag']) == 1) for r in rows)
+            and sum(1 for r in rows if r.get('p_MPa') is not None) == cs.get('n_compressive_sent'))
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -394,7 +415,9 @@ JS_NAMES = ('netCurrentFmtJ', 'netCurrentT', 'netCurrentTicks', 'jeEscH', 'jetCo
             'lwIsLwMetric', 'lwRangeValid', 'lwRangeKey', 'lwRangeLoad', 'lwRangeSave', 'lwRangeSync', 'lwRangeRemember', 'lwRangeSetLim',
             'lwFixedLim', 'lwFin', 'lwLinT', 'lwLinTicks', 'lwPref', 'lwPrefNote', 'lwLimInputsHtml', 'seLwExpand', 'seWallSet',
             'loadViewSeMetric', 'applySeOnlyView', '_seOnlyTeardown', 'seOnlyLegendHtml', 'seOnlyMissingHtml', 'seOnlyColorbarSpec',
-            '_seOnlyWireLegend')
+            '_seOnlyWireLegend',
+            # ★ 11-02 접촉마다 압력 (같은 묶음) — applyAmOnlyView · amOnlyLegendHtml · lwRangeSync 가 부르는 갈래 도우미
+            'lwFixedCapable', 'amOnlyContactKind')
 JS_CONSTS = ('COL', 'OPA', 'AMONLY_CONTACT_OPT', 'LW_RANGE_DEFAULT')
 
 JS_SHIM = r"""
@@ -734,6 +757,199 @@ console.log(JSON.stringify(out));
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+#  [JP] ★ 11-02 (같은 묶음) 접촉마다 압력 — 뷰어 (node · THREE 흉내로 진짜 cap 그리기를 돌린다)
+#    자료 = 10-07 합성 침대 (test_viewer_load_view.synth_bed) — AM–SE 압축 3–17 = 150 · 1–11 = 80 MPa · AM–AM 1–2 · 4–5 = 100 MPa
+# ══════════════════════════════════════════════════════════════════════════════
+JP_NAMES = JS_NAMES + ('renderAmOnlyContactCaps', 'netCurrentPct', 'amOnlyContactPressureColorbarSpec')
+JP_SHIM = r"""
+const THREE = {
+  Color: class { constructor(h) { this.hex = (h === undefined ? 0 : h); } setHex(h) { this.hex = h; return this; } },
+  SphereGeometry: class { constructor() { this.attributes = { position: { count: 3, array: [0, 1, 0, 0.3, 0.97, 0, 0, 0.96, 0.3] } }; }
+                          setAttribute(k, v) { this.attributes[k] = v; } dispose() {} },
+  BufferAttribute: class { constructor(a, n) { this.array = a; this.itemSize = n; } },
+  Group: class { constructor() { this.children = []; this.userData = {}; } add(c) { this.children.push(c); }
+                 traverse(fn) { fn(this); this.children.forEach(c => fn(c)); } },
+  MeshBasicMaterial: class { constructor(o) { Object.assign(this, o); } dispose() {} },
+  InstancedMesh: class { constructor(g, m, n) { this.geometry = g; this.material = m; this.count = n; this.cols = new Array(n).fill(null);
+                         this.instanceMatrix = {}; this.instanceColor = {}; this.isInstancedMesh = true; }
+                         setMatrixAt() {} setColorAt(i, c) { this.cols[i] = c.hex; } dispose() {} },
+  Vector3: class { constructor(x, y, z) { this.x = x || 0; this.y = y || 0; this.z = z || 0; } set(x, y, z) { this.x = x; this.y = y; this.z = z; return this; }
+                   lengthSq() { return this.x * this.x + this.y * this.y + this.z * this.z; } normalize() { return this; } },
+  Quaternion: class { setFromUnitVectors() { return this; } },
+  Matrix4: class { compose() { return this; } },
+  FrontSide: 0,
+};
+const EL = {};
+const LEG = { innerHTML: '', querySelector: sel => (EL[sel] || (EL[sel] = { sel: sel, h: {}, addEventListener(ev, fn) { this.h[ev] = fn; } })) };
+const document = { getElementById: id => (id === 'view-mode-legend' ? LEG : null), querySelector: () => null };
+const EXPORTS = [];
+function exportColorbarPNG(spec, fname) { EXPORTS.push({ fname: fname, title: spec.title }); }
+function mkMesh(parts) {
+  return { visible: true, material: { opacity: 0.85, transparent: true }, instanceColor: { needsUpdate: false },
+           userData: { particles: parts }, cols: parts.map(() => null), setColorAt(i, c) { this.cols[i] = c.hex; } };
+}
+function fire(sel, ev, value) { const e = EL[sel]; if (!e || !e.h[ev]) return false; e.h[ev]({ target: { value: value } }); return true; }
+"""
+
+
+def section_js_pressure(tmp):
+    print('[JP] 접촉마다 압력 (AM–SE · AM–AM · MPa) — 뷰어 양 · 고정 0 … 800 (선형) · 진짜 cap 그리기 · 힘 양 그대로 (node)')
+    import viewer3d_data as V
+    from test_viewer_load_view import synth_bed, write_bed as write_bed_lv, RAD as RAD_LV, TYPE as TYPE_LV
+    P, rows = synth_bed()
+    d = os.path.join(tmp, 'jp_synth')
+    write_bed_lv(d, P, rows)
+    lv = V.particle_load_view_for_case(d, TM, SCALE)
+    js = open(VIEWER_JS, encoding='utf-8').read()
+    parts, miss = [], []
+    for n in JS_CONSTS:
+        try:
+            parts.append(js_const(js, n))
+        except (ValueError, AssertionError):
+            miss.append(n)
+    for n in JP_NAMES:
+        try:
+            parts.append(js_fn(js, n))
+        except (ValueError, AssertionError):
+            miss.append(n)
+    if not chk(f'JP0 viewer3d.js 에서 함수 · 상수를 잘라 냈다 (없음 {miss})', not miss):
+        return
+    parts_js = [{'id': i, 'type': TM[TYPE_LV[i]], 'r': RAD_LV[i] * SCALE} for i in sorted(P)]
+    idx = {i: {'x': P[i][0] * SCALE, 'y': P[i][1] * SCALE, 'z': P[i][2] * SCALE, 'r': RAD_LV[i] * SCALE} for i in P}
+    script = JP_SHIM + '\n'.join(parts) + '\n' + r"""
+const LV = __LV__, PARTS = __PARTS__, IDX = __IDX__;
+const out = {};
+function mkState() {
+  const by = t => PARTS.filter(p => p.type === t);
+  return { data: { aux: { load_view: LV } }, meshes: { AM_P: mkMesh(by('AM_P')), AM_S: mkMesh(by('AM_S')), SE: mkMesh(by('SE')) },
+           idIndex: IDX, scene: { add(g) { this.g = g; }, remove() {} } };
+}
+const capCols = s => (s.amOnlyCapGroup && s.amOnlyCapGroup.children[0]) ? s.amOnlyCapGroup.children[0].cols.slice() : null;
+out.kinds = ['lw', 'lw_p', 'fn', 'contact', 'contact_se', 'contact_p', 'contact_se_p'].map(m => amOnlyContactKind(m));
+out.cap = ['lw', 'lw_p', 'fn', 'contact', 'contact_se', 'contact_p', 'contact_se_p'].map(m => lwFixedCapable(m));
+out.clSP = loadViewAmContacts(LV, 'contact_se_p', 'all');
+out.clS = loadViewAmContacts(LV, 'contact_se', 'all');
+out.clAP = loadViewAmContacts(LV, 'contact_p', 'all');
+out.clSP1 = loadViewAmContacts(LV, 'contact_se_p', 1);
+const old14 = JSON.parse(JSON.stringify(LV));
+['contacts', 'contacts_se'].forEach(k => { const c = old14.am[k]; c.fields = c.fields.slice(0, 7); c.rows = c.rows.map(r => r.slice(0, 7)); delete c.p_MPa_stats; });
+out.clOldP = loadViewAmContacts(old14, 'contact_se_p', 'all');
+out.clOldF = loadViewAmContacts(old14, 'contact_se', 'all');
+out.limSP = lwFixedLim({ metric: 'contact_se_p' });
+out.limAP = lwFixedLim({ metric: 'contact_p' });
+out.rSPall = amOnlyContactRange(out.clSP, 'p5p95', 'all');
+out.rSPallMM = amOnlyContactRange(out.clSP, 'minmax', 'all');
+out.rSPdrawnMM = amOnlyContactRange(out.clSP, 'minmax', 'drawn');
+// AM–SE 압력 · 고정 0 … 800 (선형) — 진짜 cap 그리기
+const s1 = mkState();
+s1._amOnlyUi = { metric: 'contact_se_p', range: 'fixed', wall: true, top: 'all', basis: 'drawn' };
+applyAmOnlyView(s1);
+out.capsSP = { cols: capCols(s1), st: Object.assign({}, s1._amOnlyLast.st), leg: LEG.innerHTML, amSE: s1.meshes.SE.visible,
+               amCols: s1.meshes.AM_S.cols.slice() };
+fire('#amonly-cbar', 'click');
+// AM–SE 힘 (옛 양) · 최소–최대 log — 옛 알고리즘 (그린 압축 |Fn| 의 최소–최대 · 약한 것 먼저 · log jet)
+const s2 = mkState();
+s2._amOnlyUi = { metric: 'contact_se', range: 'minmax', wall: true, top: 'all', basis: 'drawn' };
+applyAmOnlyView(s2);
+const r2 = amOnlyContactRange(out.clS, 'minmax', 'drawn');
+out.capsS = { cols: capCols(s2), want: out.clS.rows.map(r => r.f).sort((a, b) => a - b).map(f => jetColor(netCurrentT(f, r2[0], r2[1]))),
+              st: Object.assign({}, s2._amOnlyLast.st), leg: LEG.innerHTML };
+fire('#amonly-cbar', 'click');
+// AM–AM 압력 · 최소–최대 log (넷 다 100 MPa → 한 점 범위 = 맨 위 색)
+const s3 = mkState();
+s3._amOnlyUi = { metric: 'contact_p', range: 'minmax', wall: true, top: 'all', basis: 'drawn' };
+applyAmOnlyView(s3);
+out.capsAP = { cols: capCols(s3), st: Object.assign({}, s3._amOnlyLast.st), leg: LEG.innerHTML };
+// 옛 캐시 (스키마 14 · 압력 열 없음) — 압력 양 = 사유 · 칠하지 않는다
+const s4 = mkState(); s4.data.aux.load_view = old14;
+s4._amOnlyUi = { metric: 'contact_se_p', range: 'fixed', wall: true, top: 'all', basis: 'drawn' };
+applyAmOnlyView(s4);
+out.capsOld = { cols: capCols(s4), leg: LEG.innerHTML };
+// AM–AM 압력 · 고정 0 … 90 (이 화면에서 고친 값) — 넷 다 100 MPa = hi 위 (맨 위 색으로 잘림) · 범례가 범위 밖 수를 적는다
+const s5 = mkState(); s5._lwRange = { lim: { contact_p: [0, 90] }, mode: { contact_p: 'fixed' } };
+s5._amOnlyUi = { metric: 'contact_p', range: 'fixed', wall: true, top: 'all', basis: 'drawn' };
+applyAmOnlyView(s5);
+out.capsAPclip = { cols: capCols(s5), st: Object.assign({}, s5._amOnlyLast.st), leg: LEG.innerHTML };
+out.specSP = amOnlyColorbarSpec(LV, { metric: 'contact_se_p', range: 'fixed', wall: true, top: 'all', basis: 'drawn' }, 0, 800, out.clSP);
+out.specS = amOnlyColorbarSpec(LV, { metric: 'contact_se', range: 'minmax', wall: true, top: 'all', basis: 'drawn' }, r2[0], r2[1], out.clS);
+out.exports = EXPORTS;
+out.jet = { a: jetColor(80 / 800), b: jetColor(150 / 800), one: jetColor(1) };
+console.log(JSON.stringify(out));
+""".replace('__LV__', json.dumps(lv, ensure_ascii=False)).replace('__PARTS__', json.dumps(parts_js)).replace('__IDX__', json.dumps(idx))
+    res = run_node(script)
+    if not chk('JP1 node 실행', res is not None):
+        return
+    kinds = res['kinds']
+    chk(f'JP2 양 갈래 — 접촉마다 넷 (contact · contact_se · contact_p · contact_se_p) · AM–SE 둘 · 압력 둘 · 고정 범위 = lw · lw_p · 압력 둘 ({kinds} · {res["cap"]})',
+        kinds[:3] == [None, None, None] and kinds[3] == {'se': False, 'press': False} and kinds[4] == {'se': True, 'press': False}
+        and kinds[5] == {'se': False, 'press': True} and kinds[6] == {'se': True, 'press': True}
+        and res['cap'] == [True, True, False, False, False, True, True])
+    sp, sf = res['clSP'] or {}, res['clS'] or {}
+    rsp = [(r['a'], r['b'], r['f'], r['fn']) for r in sp.get('rows') or []]
+    chk(f'JP3 AM–SE 압력 목록 — 그릴 행 = 힘 양과 같은 행 (압축 · |Fn| 큰 순 · 같은 방향) · 색 값 f = p_MPa (150 · 80 MPa) · fn = |Fn| µN ({rsp})',
+        sp.get('ok') is True and rsp == [(3, 17, 150.0, 6.0), (1, 11, 80.0, 4.0)]
+        and [(r['a'], r['b'], r['u']) for r in sp.get('rows') or []] == [(r['a'], r['b'], r['u']) for r in sf.get('rows') or []]
+        and sp.get('capsPerContact') == 1 and sp.get('nComp') == 2 and abs((sp.get('share') or 0) - 1.0) < 1e-12 and sp.get('press') is True)
+    q = sp.get('q') or {}
+    chk(f'JP4 압력 백분위 (범위 기준 = 압축 전체) = 서버 p_MPa_stats (p5 · p95 · 최소 80 · 최대 150) · 평균 115 · 중앙 115 ({q})',
+        q.get('p5') == 80.0 and q.get('p95') == 80.0 and q.get('min') == 80.0 and q.get('max') == 150.0 and q.get('mean') == 115.0
+        and q.get('median') == 115.0 and sp.get('fSent') == [150.0, 80.0])
+    ap = res['clAP'] or {}
+    chk(f'JP5 AM–AM 압력 목록 — 1–2 · 4–5 = 100 MPa · cap 둘 (두 AM 표면) ({[(r["a"], r["b"], r["f"]) for r in ap.get("rows") or []]})',
+        ap.get('ok') is True and [(r['a'], r['b'], r['f']) for r in ap.get('rows') or []] == [(1, 2, 100.0), (4, 5, 100.0)]
+        and ap.get('capsPerContact') == 2 and (res['clSP1'] or {}).get('nDrawn') == 1)
+    chk(f'JP6 옛 캐시 (스키마 14 · 압력 열 없음) → 압력 양 ok false + 사유 (캐시 스키마 15) · 힘 양은 그대로 산다 ({(res["clOldP"] or {}).get("reason")})',
+        (res['clOldP'] or {}).get('ok') is False and '15' in str((res['clOldP'] or {}).get('reason'))
+        and (res['clOldF'] or {}).get('ok') is True and len((res['clOldF'] or {}).get('rows') or []) == 2)
+    chk(f'JP7 고정 범위 기본 (압력) = 0 … 800 MPa (AM–SE · AM–AM) ({res["limSP"]} · {res["limAP"]})', res['limSP'] == [0, 800] and res['limAP'] == [0, 800])
+    a, b, c_ = res['rSPall'], res['rSPallMM'], res['rSPdrawnMM']
+    chk(f'JP8 압력 log 범위 — 압축 전체 기준 = 서버 백분위 (p5–p95 = log 80 · 80 · 최소–최대 = log 80 · 150) · 그린 것 기준 = 그린 값 ({a} · {b} · {c_})',
+        bool(a) and abs(a[0] - math.log10(80)) < 1e-12 and abs(a[1] - math.log10(80)) < 1e-12 and bool(b)
+        and abs(b[0] - math.log10(80)) < 1e-12 and abs(b[1] - math.log10(150)) < 1e-12 and bool(c_) and abs(c_[1] - math.log10(150)) < 1e-12)
+    cs1 = res['capsSP']
+    want1 = [res['jet']['a'], res['jet']['b']]
+    chk(f'JP9 AM–SE 압력 cap (진짜 그리기 · 고정 0 … 800 선형) = jet(80/800) · jet(150/800) (약한 것 먼저) · AM 기본색 · SE 숨김 ({cs1["cols"]} · {want1})',
+        cs1['cols'] == want1 and cs1['st'].get('lin') is True and cs1['st'].get('lo') == 0 and cs1['st'].get('hi') == 800
+        and cs1['st'].get('nCaps') == 2 and cs1['amSE'] is False and set(cs1['amCols']) == {0x888888})
+    lg = cs1['leg']
+    chk('JP10 범례 (AM–SE 압력 · 고정) — 접촉 압력 |Fn|/A · MPa · 고정 0 … 800 · 선형 · 평균 · 중앙 (압축 전체) · k/(2πR*) · 하중이 아니다 · lo · hi 입력 · 고정 선택',
+        all(x in lg for x in ('접촉 압력', '|Fn|/A', 'MPa', '고정 0 … 800', '선형', '평균 115', '중앙 115', 'k/(2πR*)', '하중이 아니다',
+                              'id="amonly-lo"', 'id="amonly-hi"'))
+        and re.search(r'<option value="fixed" selected>', lg) is not None and re.search(r'<option value="contact_se_p" selected>', lg) is not None,
+        lg[:700])
+    chk('JP11 양 고르기에 압력 둘 — AM–AM 접촉마다 (접촉 압력 MPa) · AM–SE 접촉마다 (접촉 압력 MPa)',
+        re.search(r'<option value="contact_p"[^>]*>AM–AM 접촉마다 \(접촉 압력 MPa\)</option>', lg) is not None
+        and re.search(r'<option value="contact_se_p"[^>]*>AM–SE 접촉마다 \(접촉 압력 MPa\)</option>', lg) is not None)
+    cs2 = res['capsS']
+    chk(f'JP12 힘 양 (AM–SE 접촉마다 µN) 그대로 — cap 색 = 옛 알고리즘 (그린 |Fn| 최소–최대 · log jet · 약한 것 먼저) · st 에 lin 없음 · 범례에 압력 한정어 없음 '
+        f'({cs2["cols"]} · {cs2["want"]})', cs2['cols'] == cs2['want'] and 'lin' not in cs2['st']
+        and '법선력 |Fn| · µN' in cs2['leg'] and 'k/(2πR*)' not in cs2['leg'] and 'value="fixed"' not in cs2['leg'])
+    cs3 = res['capsAP']
+    chk(f'JP13 AM–AM 압력 cap (log 최소–최대 · 넷 다 100 MPa = 한 점 범위 → 맨 위 색) · cap 4 개 ({cs3["cols"]})',
+        cs3['cols'] == [res['jet']['one']] * 4 and cs3['st'].get('nCaps') == 4 and 'lin' not in cs3['st'])
+    co = res['capsOld']
+    chk('JP14 옛 캐시 압력 양 → cap 없음 · 사유 (캐시 스키마 15) · 칠하지 않는다', co['cols'] is None and '15' in co['leg'], co['leg'][:300])
+    ss, sfs = res['specSP'] or {}, res['specS'] or {}
+    chk(f'JP15 컬러바 (AM–SE 압력 · 고정) — 제목 contact pressure |Fn|/A (MPa) · 눈금 0 · 200 · 400 · 600 · 800 (선형) · 부제 Linear · k/(2πR*) · not a load '
+        f'({ss.get("title")})', 'contact pressure |Fn|/A (MPa)' in str(ss.get('title')) and 'AM–SE' in str(ss.get('title'))
+        and [t['label'] for t in ss.get('ticks') or []] == ['0', '200', '400', '600', '800'] and 'Linear colour scale' in str(ss.get('sub'))
+        and 'k/(2πR*)' in str(ss.get('sub')) and 'not a load' in str(ss.get('sub')))
+    chk(f'JP16 힘 컬러바 글 그대로 — 제목 AM only — AM–SE contact normal force |Fn| (µN) · 끝 Log colour scale. ({sfs.get("title")})',
+        sfs.get('title') == 'AM only — AM–SE contact normal force |Fn| (µN)' and str(sfs.get('sub')).endswith('Log colour scale.')
+        and 'Colour range = min–max of the 2 drawn contacts (top 2 by |Fn| of 2 compressive; loaded rows capped at' in str(sfs.get('sub')))
+    cc = res['capsAPclip']
+    chk(f'JP18 AM–AM 압력 · 고정 0 … 90 (이 화면 값) — 넷 다 100 MPa → cap 4 개 = 맨 위 색 (잘림) · 범례 = 범위 밖 hi 위 2 개 접촉 · lo 아래 0 '
+        f'(AM–AM 압력은 실침대 ≈ 4000 MPa — 고정 기본 0 … 800 이면 다 잘린다는 것을 화면이 말한다) ({cc["cols"]})',
+        cc['cols'] == [res['jet']['one']] * 4 and cc['st'].get('lin') is True and cc['st'].get('hi') == 90
+        and '범위 밖' in cc['leg'] and 'hi 90 MPa 위 2 개' in cc['leg'] and 'lo 0 MPa 아래 0 개' in cc['leg'], cc['leg'][:900])
+    chk('JP19 범위 안이면 (AM–SE 압력 · 고정 0 … 800 · 80 · 150 MPa) 범위 밖 줄 = 0 · 0 개 (그대로 적는다)',
+        'hi 800 MPa 위 0 개' in res['capsSP']['leg'] and 'lo 0 MPa 아래 0 개' in res['capsSP']['leg'])
+    ex = [e['fname'] for e in res['exports']]
+    chk(f'JP17 컬러바 파일 이름 — 압력 고정 = …_contact_se_p_topall_drawn_fixed.png · 힘 = 옛 꼴 …_contact_se_topall_drawn.png ({ex})',
+        ex == ['colorbar_am_only_contact_se_p_topall_drawn_fixed.png', 'colorbar_am_only_contact_se_topall_drawn.png'])
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 #  [P] webapp/app.py — 발사 뒤 패치 + 캐시 스키마 15
 # ══════════════════════════════════════════════════════════════════════════════
 DRIVER = r'''
@@ -851,6 +1067,10 @@ def main():
             section_js(tmp, lv, P or column_bed()[0])
         except Exception as e:                                   # noqa: BLE001
             chk('section_js 실행', False, f'{type(e).__name__}: {e}')
+        try:
+            section_js_pressure(tmp)
+        except Exception as e:                                   # noqa: BLE001
+            chk('section_js_pressure 실행', False, f'{type(e).__name__}: {e}')
         try:
             section_app(tmp)
         except Exception as e:                                   # noqa: BLE001

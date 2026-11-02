@@ -5878,7 +5878,8 @@ function _amOnlyControlsHtml(ui, show, pre) {
     + '</select>';
   const metrics = (show && show.metrics) || [['lw', 'Love–Weber 입자 응력 (σ_VM / ⟨σ_VM⟩)'], ['lw_p', 'Love–Weber 입자 응력 (σ_VM ÷ P_ref)'],
                                               ['fn', '최대 AM–AM 접촉 힘 (µN)'], ['contact', 'AM–AM 접촉마다 (법선력 µN)'],
-                                              ['contact_se', 'AM–SE 접촉마다 (법선력 µN)']];
+                                              ['contact_se', 'AM–SE 접촉마다 (법선력 µN)'], ['contact_p', 'AM–AM 접촉마다 (접촉 압력 MPa)'],
+                                              ['contact_se_p', 'AM–SE 접촉마다 (접촉 압력 MPa)']];
   const ranges = [['p5p95', '범위 p5–p95'], ['minmax', '범위 최소–최대']].concat(show && show.fixed ? [['fixed', '고정 (모든 케이스 공통)']] : []);
   let h = '<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin:3px 0">'
     + sel(P + '-metric', ui.metric, metrics)
@@ -5900,7 +5901,7 @@ function _amOnlyControlsHtml(ui, show, pre) {
 /* AM 만 범례 — 양 · 범위 · 벽 표지 조작 · 컬러바 · 수 · 한정어.  st = {n, nColored, nWall, nNoValue, lo, hi} ·
  * 접촉마다 (contact · contact_se) 는 amOnlyContactLegendHtml (st = {nCaps, nSkipped, lo, hi}) */
 function amOnlyLegendHtml(lv, ui, st) {
-  if (ui.metric === 'contact' || ui.metric === 'contact_se') return amOnlyContactLegendHtml(lv, ui, st);
+  if (amOnlyContactKind(ui.metric)) return amOnlyContactLegendHtml(lv, ui, st);       // 접촉마다 넷 (힘 둘 · 압력 둘)
   const esc = jeEscH, fj = netCurrentFmtJ;
   const f3 = v => ((+v >= 0.01 && +v < 1000) ? String(Number((+v).toPrecision(3))) : fj(v));   // ⟨σ_VM⟩ — 유효 3 자리
   const m = loadViewAmMetric(lv, ui.metric);
@@ -5952,7 +5953,7 @@ function amOnlyLegendHtml(lv, ui, st) {
 
 /* 논문용 컬러바 스펙 (영문) — jet · log₁₀ (lo · hi) · 눈금 = netCurrentTicks + netCurrentFmtJ · 접촉마다 = amOnlyContactColorbarSpec (cl) */
 function amOnlyColorbarSpec(lv, ui, lo, hi, cl) {
-  if (ui.metric === 'contact' || ui.metric === 'contact_se') {
+  if (amOnlyContactKind(ui.metric)) {                                                  // 접촉마다 넷 (힘 둘 · 압력 둘)
     return amOnlyContactColorbarSpec(cl || loadViewAmContacts(lv, ui.metric, ui.top), ui, lo, hi);
   }
   const fn = ui.metric === 'fn';
@@ -6010,15 +6011,18 @@ function applyAmOnlyView(state) {
     if (m.instanceColor) m.instanceColor.needsUpdate = true;
   });
   if (!lv || lv.status !== 'OK') { base(); setLegend(state, amOnlyMissingHtml(lv)); return; }
-  if (ui.metric === 'contact' || ui.metric === 'contact_se') {
+  if (amOnlyContactKind(ui.metric)) {
     // ★ 10-08 접촉마다 — AM 은 기본색 (칠하지 않는다) · 색은 접촉 cap 에만 (Brittle surface 꼴) · AM–AM 과 AM–SE 는 따로 (색 범위 = 그 목록) ·
     //   범위 = 그린 것 (기본 · 상위 N 을 바꾸면 다시 계산) 또는 압축 접촉 전체 (옛 · AM–SE 에서 고름) — 10-08 저녁 1저자 "(1) 권고 사항으로"
+    // ★ 11-02 접촉마다 압력 (contact_p · contact_se_p · MPa) — 같은 행 · 같은 cap · 색 = p_MPa · 고정 범위 (선형 · 기본 0 … 800) 를 받는다
     base();
     const cl = loadViewAmContacts(lv, ui.metric, ui.top);
-    const crng = cl.ok ? amOnlyContactRange(cl, ui.range, _amOnlyBasis(ui)) : null;
+    const cfixed = ui.range === 'fixed' && lwFixedCapable(ui.metric);
+    const crng = cl.ok ? (cfixed ? lwFixedLim(ui) : amOnlyContactRange(cl, ui.range, _amOnlyBasis(ui))) : null;
     const cst = { nCaps: 0, nSkipped: 0, lo: crng ? crng[0] : 0, hi: crng ? crng[1] : 1, noRange: cl.ok && !crng };
+    if (cfixed) cst.lin = true;
     if (cl.ok && crng) {
-      const r = renderAmOnlyContactCaps(state, cl, cst.lo, cst.hi);
+      const r = renderAmOnlyContactCaps(state, cl, cst.lo, cst.hi, cfixed);
       cst.nCaps = r.nCaps; cst.nSkipped = r.nSkipped;
     }
     state._amOnlyLast = { lv: lv, ui: ui, st: cst, cl: cl };
@@ -6080,7 +6084,8 @@ function _amOnlyWireLegend(state, ui) {
   on('amonly-cbar', 'click', () => {
     const l = state._amOnlyLast;
     if (!l) return;
-    const tail = l.ui.metric === 'contact_se' ? '_top' + l.ui.top + '_' + _amOnlyBasis(l.ui) : (l.st && l.st.lin ? '_fixed' : '');
+    const kd = amOnlyContactKind(l.ui.metric);
+    const tail = (kd && kd.se ? '_top' + l.ui.top + '_' + _amOnlyBasis(l.ui) : '') + (l.st && l.st.lin ? '_fixed' : '');   // 고정 = '_fixed'
     exportColorbarPNG(amOnlyColorbarSpec(l.lv, l.ui, l.st.lo, l.st.hi, l.cl), 'colorbar_am_only_' + l.ui.metric + tail + '.png');
   });
 }
@@ -6093,12 +6098,26 @@ function _amOnlyWireLegend(state, ui) {
  *   ② 색 범위 'fixed' (고정 · 모든 케이스 공통 · 선형 · lo · hi · 기본 0 … 3 · 양마다 localStorage — 케이스를 바꿔도 같은 눈금 · 모든 접근 try/catch) ·
  *   ③ View Mode 'se_only' (같은 양 · 같은 고정 범위 · AM 숨김 · 벽 접촉 SE 회색 · 값 = load_view.se).
  * 기존 양 (lw · fn · 접촉마다) · 기본값 (lw · p5p95 · log) · 색 = 그대로 — 저장된 선택이 없으면 오늘과 같은 그림.
- * ⚠ 고정 범위는 σ_VM 비 (lw · lw_p) 만 — 최대 AM–AM 힘 (µN) 은 모델 단위라 케이스 공통 눈금을 주지 않는다 (조성 비교 절대값 금지). */
-const LW_RANGE_DEFAULT = { lw: [0, 3], lw_p: [0, 3] };
+ * ⚠ 고정 범위는 σ_VM 비 (lw · lw_p) · 접촉마다 압력 (contact_p · contact_se_p · MPa · 기본 0 … 800 — 같은 묶음 1저자 11-02) 만 — 힘 (µN) 양은
+ *   모델 단위라 케이스 공통 눈금을 주지 않는다 (조성 비교 절대값 금지). */
+const LW_RANGE_DEFAULT = { lw: [0, 3], lw_p: [0, 3], contact_p: [0, 800], contact_se_p: [0, 800] };   // 접촉 압력 = MPa (같은 묶음 · 1저자 11-02)
 
-/* 고정 범위를 받는 양 — 'lw' (σ_VM / ⟨σ_VM⟩) · 'lw_p' (σ_VM ÷ P_ref) */
+/* σ_VM 비 양 — 'lw' (σ_VM / ⟨σ_VM⟩) · 'lw_p' (σ_VM ÷ P_ref) */
 function lwIsLwMetric(metric) {
   return metric === 'lw' || metric === 'lw_p';
+}
+
+/* 고정 범위 (모든 케이스 공통 · 선형) 를 받는 양 — σ_VM 비 둘 + 접촉마다 압력 둘 (contact_p · contact_se_p · MPa) ·
+ * 힘 (µN) 양은 모델 단위라 받지 않는다 (조성 비교 절대값 금지) */
+function lwFixedCapable(metric) {
+  return lwIsLwMetric(metric) || metric === 'contact_p' || metric === 'contact_se_p';
+}
+
+/* 접촉마다 양 갈래 → {se, press} | null — contact (AM–AM 힘) · contact_se (AM–SE 힘) · contact_p (AM–AM 압력) · contact_se_p (AM–SE 압력) */
+function amOnlyContactKind(metric) {
+  const T = { contact: [false, false], contact_se: [true, false], contact_p: [false, true], contact_se_p: [true, true] };
+  if (!Object.prototype.hasOwnProperty.call(T, metric)) return null;
+  return { se: T[metric][0], press: T[metric][1] };
 }
 
 /* 고정 범위 lo · hi 를 쓸 수 있나 — 유한 수 · hi > lo */
@@ -6146,11 +6165,11 @@ function lwFixedLim(ui) {
   return [d[0], d[1]];
 }
 
-/* 보기를 그릴 때 — σ_VM 비 양이면 고른 범위 모드를 맞춘다 (이 화면 → 저장값 — 다른 보기 · 다른 케이스에서 고른 것과 같은 눈금 · 없으면 그대로) ·
- * 고정을 받지 않는 양 (최대 AM–AM 힘 · 접촉마다) 에서 'fixed' 면 p5p95 */
+/* 보기를 그릴 때 — 고정 범위를 받는 양 (lwFixedCapable) 이면 고른 범위 모드를 맞춘다 (이 화면 → 저장값 — 다른 보기 · 다른 케이스에서 고른 것과
+ * 같은 눈금 · 없으면 그대로) · 받지 않는 양 (최대 AM–AM 힘 · 접촉마다 힘) 에서 'fixed' 면 p5p95 */
 function lwRangeSync(ui) {
   if (!ui) return ui;
-  if (lwIsLwMetric(ui.metric)) {
+  if (lwFixedCapable(ui.metric)) {
     const mine = ui.lwr && ui.lwr.mode ? ui.lwr.mode[ui.metric] : null;
     const st = mine ? null : lwRangeLoad(ui.metric);
     const mode = mine || (st && st.mode);
@@ -6161,9 +6180,9 @@ function lwRangeSync(ui) {
   return ui;
 }
 
-/* 범위 모드를 기억 (σ_VM 비 양만) — 이 화면 (ui.lwr.mode) + 저장 (모드 · 지금 lo · hi) → 저장했으면 true */
+/* 범위 모드를 기억 (고정 범위를 받는 양만) — 이 화면 (ui.lwr.mode) + 저장 (모드 · 지금 lo · hi) → 저장했으면 true */
 function lwRangeRemember(ui) {
-  if (!ui || !lwIsLwMetric(ui.metric)) return false;
+  if (!ui || !lwFixedCapable(ui.metric)) return false;
   if (ui.lwr && ui.lwr.mode) ui.lwr.mode[ui.metric] = ui.range;
   const lim = lwFixedLim(ui);
   return lwRangeSave(ui.metric, ui.range, lim[0], lim[1]);
@@ -6171,7 +6190,7 @@ function lwRangeRemember(ui) {
 
 /* 고정 lo · hi 입력 (null = 그대로) → 쓸 수 있으면 (유한 · hi > lo · 빈칸 아님) 이 화면 값 · 저장 → true · 아니면 아무것도 안 바꾸고 false */
 function lwRangeSetLim(ui, lo, hi) {
-  if (!ui || !lwIsLwMetric(ui.metric)) return false;
+  if (!ui || !lwFixedCapable(ui.metric)) return false;
   const num = x => ((x === null || x === undefined) ? null : (String(x).trim() === '' ? NaN : +x));
   const cur = lwFixedLim(ui);
   const a = num(lo), b = num(hi);
@@ -6486,7 +6505,7 @@ const AMONLY_CONTACT_OPT = {
 
 /* 색 범위 기준 — AM–SE 만 고른다 ('drawn' 기본 · 'all' = 옛 압축 접촉 전체) · AM–AM 은 늘 'drawn' (= 압축 전부 → 두 기준 같은 값) */
 function _amOnlyBasis(ui) {
-  return (ui && ui.metric === 'contact_se' && ui.basis === 'all') ? 'all' : 'drawn';
+  return (ui && (ui.metric === 'contact_se' || ui.metric === 'contact_se_p') && ui.basis === 'all') ? 'all' : 'drawn';   // ★ 11-02 AM–SE 압력도
 }
 
 /* 접촉마다 목록 (순수 함수 · node 시험) → {ok, reason, pair, capsPerContact (AM–AM 2 · AM–SE 1), rows [{a (host AM), b, f (µN), u [x, y, z]}]
@@ -6495,12 +6514,13 @@ function _amOnlyBasis(ui) {
  *   nDrawn, nComp (전체 압축), nCompSent (실은 압축), fSent (실은 압축 |Fn|),
  *   nTension, nOther, nTotal, nSent, truncated, compComplete, share (그린 Σ|Fn| / 전체 압축 Σ|Fn|), q (서버 백분위 µN), cap} */
 function loadViewAmContacts(lv, metric, top) {
-  const se = metric === 'contact_se';
+  const kd = amOnlyContactKind(metric);                // ★ 11-02 — 압력 둘 (contact_p · contact_se_p) 도 같은 목록 · 같은 행 (색 값만 p_MPa)
+  const se = !!(kd && kd.se), press = !!(kd && kd.press);
   const pair = se ? 'AM–SE' : 'AM–AM';
   const fail = reason => ({ ok: false, reason: reason, pair: pair, capsPerContact: se ? 1 : 2, rows: [], nDrawn: 0, nComp: 0, nCompSent: 0,
                             fSent: [], nTension: 0, nOther: 0, nTotal: 0, nSent: 0, truncated: false, compComplete: false, share: null,
-                            q: null, cap: null });
-  if (metric !== 'contact' && metric !== 'contact_se') return fail('접촉마다 양이 아니다');
+                            q: null, cap: null, press: press });
+  if (!kd) return fail('접촉마다 양이 아니다');
   if (!lv || lv.status !== 'OK') return fail((lv && lv.status) || '입자 하중 자료 없음');
   const c = (lv.am || {})[se ? 'contacts_se' : 'contacts'];
   if (!c || !Array.isArray(c.rows) || !Array.isArray(c.fields)) {
@@ -6508,18 +6528,24 @@ function loadViewAmContacts(lv, metric, top) {
                 + '적용하면 다시 계산한다 · 칠하지 않는다');
   }
   const k = n => c.fields.indexOf(n);
-  const i1 = k('id1'), i2 = k('id2'), iF = k('fn_uN'), iG = k('flag'), ix = k('ux'), iy = k('uy'), iz = k('uz');
-  const comp = c.rows.filter(r => r[iG] === 1 && r[iF] > 0);           // 서버가 압축 (|Fn| 큰 순) 을 먼저 실었다
+  const i1 = k('id1'), i2 = k('id2'), iF = k('fn_uN'), iG = k('flag'), ix = k('ux'), iy = k('uy'), iz = k('uz'), iP = k('p_MPa');
+  if (press && iP < 0) {
+    return fail('3D 데이터의 ' + pair + ' 접촉마다 목록에 접촉 압력 열 (p_MPa) 이 없다 — 옛 캐시 (스키마 14) — 페이지를 새로 열면 캐시 스키마 15 로 '
+                + '다시 계산한다 · 칠하지 않는다');
+  }
+  const comp = c.rows.filter(r => r[iG] === 1 && r[iF] > 0 && (!press || r[iP] > 0));   // 서버가 압축 (|Fn| 큰 순) 을 먼저 실었다
   const lim = (se && top !== 'all' && +top > 0) ? Math.min(comp.length, Math.floor(+top)) : comp.length;
-  const rows = comp.slice(0, lim).map(r => ({ a: r[i1], b: r[i2], f: r[iF], u: [r[ix], r[iy], r[iz]] }));
+  const rows = comp.slice(0, lim).map(r => (press
+    ? { a: r[i1], b: r[i2], f: r[iP], u: [r[ix], r[iy], r[iz]], fn: r[iF], p: r[iP] }      // 색 값 f = 접촉 압력 (MPa) · fn = |Fn| µN
+    : { a: r[i1], b: r[i2], f: r[iF], u: [r[ix], r[iy], r[iz]] }));
   let sDrawn = 0;
-  rows.forEach(r => { sDrawn += r.f; });
+  rows.forEach(r => { sDrawn += press ? r.fn : r.f; });                                     // 힘 몫 = 그린 Σ|Fn| / 압축 전체 Σ|Fn| (두 양 같다)
   const sAll = +c.sum_fn_compressive_uN;
   return { ok: true, reason: '', pair: pair, capsPerContact: se ? 1 : 2, rows: rows, nDrawn: rows.length,
-           nComp: +c.n_compressive || 0, nCompSent: comp.length, fSent: comp.map(r => r[iF]),
+           nComp: +c.n_compressive || 0, nCompSent: comp.length, fSent: comp.map(r => (press ? r[iP] : r[iF])),
            nTension: +c.n_tension || 0, nOther: +c.n_other || 0, nTotal: +c.n_total || 0, nSent: c.rows.length,
            truncated: !!c.truncated, compComplete: !!c.compressive_complete, share: sAll > 0 ? sDrawn / sAll : null,
-           q: c.q_uN || null, cap: c.cap };
+           q: press ? (c.p_MPa_stats || null) : (c.q_uN || null), cap: c.cap, press: press };
 }
 
 /* 색 범위 (log₁₀) — basis (10-08 저녁 · 1저자 "(1) 권고 사항으로"):
@@ -6540,12 +6566,16 @@ function amOnlyContactRange(cl, mode, basis) {
 /* 접촉마다 범례 — st = {nCaps, nSkipped, lo, hi, noRange} */
 function amOnlyContactLegendHtml(lv, ui, st) {
   const esc = jeEscH, fj = netCurrentFmtJ;
-  const se = ui.metric === 'contact_se';
+  const kd = amOnlyContactKind(ui.metric) || { se: false, press: false };
+  const se = kd.se, press = kd.press;                 // ★ 11-02 press = 접촉 압력 (MPa) 양
+  const lin = !!(st && st.lin);                       // ★ 11-02 고정 범위 (선형 · 압력 양만)
+  const f4 = v => ((+v >= 0.01 && +v < 1e5) ? String(Number((+v).toPrecision(4))) : fj(v));   // 압력 평균 · 중앙 — 유효 4 자리
   const basis = _amOnlyBasis(ui);
   const cl = loadViewAmContacts(lv, ui.metric, ui.top);
   const L = [];
-  L.push('<b>AM 만 — ' + cl.pair + ' 접촉마다 (법선력 |Fn| · µN)</b> <span style="color:#9ca3af">(SE 숨김 · AM 기본색 · 색 = 접촉 cap 만)</span>');
-  L.push(_amOnlyControlsHtml(ui, { wall: false, top: se, basis: se }));
+  L.push('<b>AM 만 — ' + cl.pair + ' 접촉마다 (' + (press ? '접촉 압력 |Fn|/A · MPa' : '법선력 |Fn| · µN')
+    + ')</b> <span style="color:#9ca3af">(SE 숨김 · AM 기본색 · 색 = 접촉 cap 만)</span>');
+  L.push(_amOnlyControlsHtml(ui, { wall: false, top: se, basis: se && !lin, fixed: press }));
   if (!cl.ok) {
     L.push('<span style="color:#fbbf24">⚠ ' + esc(cl.reason) + '</span>');
     return L.join('<br>');
@@ -6556,10 +6586,24 @@ function amOnlyContactLegendHtml(lv, ui, st) {
   }
   const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
   L.push('<div style="margin:3px 0 1px 0;height:9px;border-radius:3px;background:linear-gradient(90deg,' + stops.join(',') + ')"></div>');
-  L.push('<b>' + cl.pair + ' 접촉 법선력 |Fn|</b>: ' + fj(Math.pow(10, st.lo)) + ' … ' + fj(Math.pow(10, st.hi)) + ' µN (jet · log)');
+  if (press) {
+    const lo = lin ? st.lo : Math.pow(10, st.lo), hi = lin ? st.hi : Math.pow(10, st.hi);
+    const q = cl.q || {};
+    L.push('<b>' + cl.pair + ' 접촉 압력 |Fn|/A</b>: ' + fj(lo) + ' … ' + fj(hi) + ' MPa (jet · ' + (lin ? '선형' : 'log') + ')');
+    L.push('압축 ' + cl.pair + ' 전체 ' + (q.n || cl.nComp) + ' 개 (상한과 무관): 평균 ' + f4(q.mean) + ' · 중앙 ' + f4(q.median) + ' MPa · p5 ' + f4(q.p5)
+      + ' · p95 ' + f4(q.p95) + ' · 최소 ' + fj(q.min) + ' · 최대 ' + fj(q.max));
+  } else {
+    L.push('<b>' + cl.pair + ' 접촉 법선력 |Fn|</b>: ' + fj(Math.pow(10, st.lo)) + ' … ' + fj(Math.pow(10, st.hi)) + ' µN (jet · log)');
+  }
   const rngTxt = ui.range === 'minmax' ? '최소–최대' : 'p5–p95';
   let basisTxt;
-  if (!se) {
+  if (lin) {
+    // 범위 밖 수 (그린 접촉 · 접촉 단위) — 고정 눈금은 침대에 맞추지 않으니 잘린 몫을 적는다 (AM–AM 압력 ≈ 4000 MPa 는 기본 0 … 800 에서 다 잘린다)
+    const nHi = cl.rows.filter(r => r.f > st.hi).length, nLo = cl.rows.filter(r => r.f < st.lo).length;
+    basisTxt = '색 범위 = 고정 ' + fj(st.lo) + ' … ' + fj(st.hi) + ' MPa (선형 · 모든 케이스 공통 · 양마다 이 브라우저에 저장) · 그린 ' + cl.nDrawn
+      + ' 개 (|Fn| 상위 · 압축 ' + cl.nComp + ') · 범위 밖: hi ' + fj(st.hi) + ' MPa 위 ' + nHi + ' 개 (맨 위 색) · lo ' + fj(st.lo) + ' MPa 아래 '
+      + nLo + ' 개 (맨 아래 색)' + (nHi + nLo > 0 ? ' — 잘렸다 · lo · hi 를 고치면 이 브라우저에 저장된다' : '');
+  } else if (!se) {
     basisTxt = '색 범위 = 그린 ' + cl.nDrawn + ' 개 (' + (cl.nDrawn === cl.nComp ? '압축 전부' : '압축 ' + cl.nComp + ' 중 · 실은 행 상한 ' + cl.cap)
       + ') 의 ' + rngTxt;
   } else if (basis === 'all') {
@@ -6581,15 +6625,25 @@ function amOnlyContactLegendHtml(lv, ui, st) {
   }
   L.push('당김 ' + cl.nTension + ' 개 (접착) · 그 밖 ' + cl.nOther + ' 개 (δ ≤ 0 · 면적 0 · 힘 0 · 부호 판정 불가) — 칠하지 않고 뺐다'
     + (st.nSkipped ? ' · 입자를 못 찾은 cap ' + st.nSkipped + ' 개' : ''));
-  L.push('<span style="color:#9ca3af;font-size:11px">patch = 접촉 위치 표지 (반각 ' + AMONLY_CONTACT_OPT.halfAngleDeg + '° 고정 · Brittle surface 꼴 — 접촉 면적이 아니다) · '
-    + '|Fn| × 1e6 / scale = µN (calc_contact_force_distribution · 최대 AM–AM 힘과 같은 환산 · 같은 부호 규칙) · 모델 접촉력 (덱 축척 환산 — '
-    + '조성 비교 절대값에 쓰지 않는다) · 하중 분담이 아니다 · 입자–벽 접촉은 이 목록에 없다</span>');
+  if (press) {                                        // ★ 11-02 — 압력 한정어 (WEB-06 · Max contact pressure 보기와 같은 정의)
+    L.push('<span style="color:#9ca3af;font-size:11px">patch = 접촉 위치 표지 (반각 ' + AMONLY_CONTACT_OPT.halfAngleDeg + '° 고정 · Brittle surface 꼴 — 접촉 면적이 아니다) · '
+      + 'p = |Fn| / A (A = 덤프 접촉 면적 c_cpl[22] · × scale / 1e6 = MPa — Max contact pressure 보기와 같은 환산 · 같은 압축 접촉 · 같은 부호 규칙) · '
+      + 'hooke/hysteresis 에서 압축 접촉의 p 는 쌍 유형마다 거의 일정 (p ≈ k/(2πR*) — 그 쌍의 접촉 강성을 따른다 · 50kg D1–D3 압축 중앙 AM–SE 337–415 · '
+      + 'AM–AM 4075–4253 MPa) = 접촉 유형 · 강성 표지에 가깝고 '
+      + '하중이 아니다 (WEB-06 · 하중 (z 차이) 은 입자 응력 (LW) 보기로) · 그린 접촉 = |Fn| 상위 (힘 양과 같은 행) · 입자–벽 접촉은 이 목록에 없다</span>');
+  } else {
+    L.push('<span style="color:#9ca3af;font-size:11px">patch = 접촉 위치 표지 (반각 ' + AMONLY_CONTACT_OPT.halfAngleDeg + '° 고정 · Brittle surface 꼴 — 접촉 면적이 아니다) · '
+      + '|Fn| × 1e6 / scale = µN (calc_contact_force_distribution · 최대 AM–AM 힘과 같은 환산 · 같은 부호 규칙) · 모델 접촉력 (덱 축척 환산 — '
+      + '조성 비교 절대값에 쓰지 않는다) · 하중 분담이 아니다 · 입자–벽 접촉은 이 목록에 없다</span>');
+  }
   L.push('<button id="amonly-cbar" class="data-modal-btn" title="이 그림의 색 눈금을 논문용 6× PNG 로">컬러바 ⬇</button>');
   return L.join('<br>');
 }
 
-/* 접촉마다 컬러바 스펙 (영문 · 보고자료 원칙 — 천 단위 콤마 없음) */
+/* 접촉마다 컬러바 스펙 (영문 · 보고자료 원칙 — 천 단위 콤마 없음) · ★ 11-02 압력 (contact_p · contact_se_p) = amOnlyContactPressureColorbarSpec */
 function amOnlyContactColorbarSpec(cl, ui, lo, hi) {
+  const kd = amOnlyContactKind(ui.metric);
+  if (kd && kd.press) return amOnlyContactPressureColorbarSpec(cl, ui, lo, hi, kd.se);
   const se = ui.metric === 'contact_se';
   const basis = _amOnlyBasis(ui);
   const rng = ui.range === 'minmax' ? 'min–max' : 'p5–p95';
@@ -6617,6 +6671,39 @@ function amOnlyContactColorbarSpec(cl, ui, lo, hi) {
   };
 }
 
+/* 접촉마다 압력 컬러바 스펙 (영문 · ★ 11-02 · 1저자) — p = |Fn| / A (MPa · Max contact pressure 보기와 같은 환산) · 고정 (선형 · 모든 케이스 공통) 또는
+ * p5–p95 · 최소–최대 (log) · 그린 접촉 = |Fn| 상위 (힘 양과 같은 행) · WEB-06 한정어 (쌍 유형마다 거의 일정 = 하중 아님) */
+function amOnlyContactPressureColorbarSpec(cl, ui, lo, hi, se) {
+  const lin = ui.range === 'fixed' && lwFixedCapable(ui.metric);
+  const basis = _amOnlyBasis(ui);
+  const rng = ui.range === 'minmax' ? 'min–max' : 'p5–p95';
+  const drawn = se ? 'top ' + cl.nDrawn + ' by |Fn| of ' + cl.nComp + ' compressive; loaded rows capped at ' + cl.cap
+    : (cl.nDrawn === cl.nComp ? 'all ' + cl.nComp + ' compressive AM–AM contacts' : 'of ' + cl.nComp + ' compressive; loaded rows capped at ' + cl.cap);
+  let range;
+  if (lin) {
+    range = 'Colour range = fixed ' + netCurrentFmtJ(lo) + '–' + netCurrentFmtJ(hi) + ' MPa, linear, common to all cases (' + cl.nDrawn
+      + ' drawn contacts, ' + drawn + ').  ';
+  } else if (se && basis === 'all') {
+    range = 'Colour range = ' + rng + ' of all ' + cl.nComp + ' compressive AM–SE contacts (independent of top-N; loaded rows capped at '
+      + cl.cap + ').  ';
+  } else {
+    range = 'Colour range = ' + rng + ' of the ' + cl.nDrawn + ' drawn contacts (' + drawn + ').  ';
+  }
+  return {
+    map: 'jet',
+    title: 'AM only — ' + cl.pair + ' contact pressure |Fn|/A (MPa)',
+    ticks: lin ? lwLinTicks(lo, hi) : netCurrentTicks(lo, hi, netCurrentFmtJ),
+    sub: 'Per contact: p = |Fn| / A with A = dump contact area (c_cpl[22]), × scale / 1e6 = MPa (same conversion as the max contact pressure view), '
+      + 'compressive contacts only (attractive · δ ≤ 0 excluded).  ' + range
+      + (se ? 'Drawn / total compressive = ' + cl.nDrawn + ' / ' + cl.nComp + ', patch on the AM surface only.  '
+            : 'One patch on each AM surface of the contact.  ')
+      + 'Patch = contact location marker (fixed ' + AMONLY_CONTACT_OPT.halfAngleDeg + '° cap, not the contact area).  '
+      + 'Under hooke/hysteresis the pressure of a compressive contact is nearly constant per pair type (p ≈ k/(2πR*), set by the contact '
+      + 'stiffness) — a contact-type / stiffness marker, not a load (WEB-06; load differences = particle stress view).  '
+      + (lin ? 'Linear colour scale.' : 'Log colour scale.'),
+  };
+}
+
 function _amOnlyCapDispose(state) {
   const g = state.amOnlyCapGroup;
   if (g) {
@@ -6630,8 +6717,9 @@ function _amOnlyCapDispose(state) {
   state.amOnlyCapGroup = null;
 }
 
-/* 접촉 cap 그리기 — InstancedMesh 하나 (단위 구 단면 · 인스턴스 축척 = host 입자 반경 · 색 = jet) · 센 접촉을 나중에 (겹치면 위) */
-function renderAmOnlyContactCaps(state, cl, lo, hi) {
+/* 접촉 cap 그리기 — InstancedMesh 하나 (단위 구 단면 · 인스턴스 축척 = host 입자 반경 · 색 = jet) · 센 접촉을 나중에 (겹치면 위) ·
+ * lin (★ 11-02 · 접촉 압력 고정 범위) = 선형 색 축 (lwLinT · lo · hi = 값 그대로) · 아니면 log₁₀ (netCurrentT · 옛 그대로) */
+function renderAmOnlyContactCaps(state, cl, lo, hi, lin) {
   _amOnlyCapDispose(state);
   const idx = state.idIndex || {};
   const ha = AMONLY_CONTACT_OPT.halfAngleDeg * Math.PI / 180;
@@ -6673,7 +6761,7 @@ function renderAmOnlyContactCaps(state, cl, lo, hi) {
       sc.set(p.r, p.r, p.r);
       m4.compose(c, q, sc);
       mesh.setMatrixAt(i, m4);
-      col.setHex(jetColor(netCurrentT(x[4], lo, hi)));
+      col.setHex(jetColor(lin ? lwLinT(x[4], lo, hi) : netCurrentT(x[4], lo, hi)));
       mesh.setColorAt(i, col);
     });
     mesh.instanceMatrix.needsUpdate = true;

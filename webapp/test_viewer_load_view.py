@@ -42,6 +42,9 @@
       같은 값 · 그리고 AM–AM 은 상위 N 을 받지 않는다 (고침 — ps45 0:10 AM–AM 8970 이 AM–SE 기본 상위 5000 에 조용히 잘리던 결함).
       발사 뒤 패치 · 봉인 파일 · app.py · test_viewer_coordination.py 는 그대로 (뷰어 · 시험만).
   [P] 발사 뒤 패치 — 진짜 app.py 에 적용됨 (11-02) · /3d-data (live · archive · 캐시 HIT · 옛 스키마 12 · 13 · 14 → 다시 계산 · 스키마 15).
+  [K-P] ★ 11-02 (1저자 · 같은 묶음 · 같은 캐시 스키마 15) 접촉마다 압력 — 행에 p_MPa = |Fn| / A (덤프 면적 c_cpl[22] · × scale / 1e6 = MPa ·
+      최대 접촉 압력 (pressure.max_MPa) 과 같은 환산 · 같은 압축 행) · 압축 아닌 행 = null (0 아님) · 유효 4 자리 · 압축 전체 요약
+      p_MPa_stats (n · 평균 · 중앙 · 가장 가까운 순위 p5 · p95 · 최소 · 최대 — 상한과 무관) · 입자별 최대 = pressure.max_MPa.
   [X] check_all 배선.
 
   python3 webapp/test_viewer_load_view.py        # 종료코드 0 = PASS
@@ -321,7 +324,7 @@ def section_synth(tmp):
 # ══════════════════════════════════════════════════════════════════════════════
 #  [K] AM–AM 접촉마다 — 합성 침대 (손 계산)
 # ══════════════════════════════════════════════════════════════════════════════
-CONTACT_FIELDS = ['id1', 'id2', 'fn_uN', 'flag', 'ux', 'uy', 'uz']
+CONTACT_FIELDS = ['id1', 'id2', 'fn_uN', 'flag', 'ux', 'uy', 'uz', 'p_MPa']   # ★ 11-02 p_MPa (접촉 압력) 을 끝에 더함 — 옛 일곱 열 · 순서 그대로
 
 
 def contact_rows(lv, key='contacts'):
@@ -389,6 +392,12 @@ def section_contacts_synth(tmp, lv):
     chk(f'K9 전체 압축 합 · 백분위 (색 범위 · 가장 가까운 순위) — 합 30 µN · q = 10 · 10 · 10 · 20 ({c.get("sum_fn_compressive_uN")} · '
         f'{c.get("q_uN")})', rel(c.get('sum_fn_compressive_uN'), 30.0) < 1e-12
         and q_close(c.get('q_uN'), {'p5': 10.0, 'p95': 10.0, 'min': 10.0, 'max': 20.0}, 1e-12))
+    pp = [r.get('p_MPa') for r in R]
+    chk(f'K10 ★ 11-02 접촉 압력 p_MPa = |Fn| / A × scale / 1e6 (압축 행만 · 손 계산 1–2 = 0.02 / 2e-7 × 1e-3 = 100 · 4–5 = 100 MPa) · 당김 · δ = 0 '
+        f'행 = null (0 아님) ({pp})', pp[:2] == [100.0, 100.0] and pp[2] is None and pp[3] is None)
+    ps = c.get('p_MPa_stats') or {}
+    chk(f'K11 압축 AM–AM 압력 요약 (상한과 무관) — n 2 · 평균 100 · 중앙 100 · p5 · p95 · 최소 · 최대 100 ({ps})',
+        ps.get('n') == 2 and all(rel(ps.get(k), 100.0) < 1e-12 for k in ('mean', 'median', 'p5', 'p95', 'min', 'max')))
 
     print('[K-SE] AM–SE 접촉마다 (합성 침대) — id1 = AM 으로 뒤집기 · 표지 · 방향 · 상한 · 합 · 백분위 (AM–AM 과 따로)')
     cs = ((lv or {}).get('am') or {}).get('contacts_se')
@@ -415,6 +424,23 @@ def section_contacts_synth(tmp, lv):
     chk('KS7 규칙 문구 — AM–SE · id1 = AM · |Fn| × 1e6 / scale · 압축 · 당김 · 접촉점 · 최소영상 · 상위 (상한) · 하중 분담 아님',
         all(x in str(cs.get('rule')) for x in ('AM–SE', 'id1 = AM', '1e6 / scale', '압축', '당김', '접촉점', '최소영상', '상위', '하중 분담')))
     chk(f'KS8 상한 기본값 ≥ 20000 (AM–SE {cs.get("cap")} · AM–AM {c.get("cap")})', (cs.get('cap') or 0) >= 20000 and (c.get('cap') or 0) >= 20000)
+    pps = [r.get('p_MPa') for r in RS]
+    pss = cs.get('p_MPa_stats') or {}
+    chk(f'KS11 ★ 11-02 AM–SE 접촉 압력 — 3–17 = 0.006 / 4e-8 × 1e-3 = 150 · 1–11 = 0.004 / 5e-8 × 1e-3 = 80 MPa · 당김 · 힘 0 행 = null · 요약 n 2 · '
+        f'평균 115 · 중앙 115 · p5 = p95 = 최소 80 (가장 가까운 순위) · 최대 150 ({pps} · {pss})',
+        pps == [150.0, 80.0, None, None] and pss.get('n') == 2 and rel(pss.get('mean'), 115.0) < 1e-12 and rel(pss.get('median'), 115.0) < 1e-12
+        and all(rel(pss.get(k), 80.0) < 1e-12 for k in ('p5', 'p95', 'min')) and rel(pss.get('max'), 150.0) < 1e-12)
+    pmax = ikeys((lv.get('pressure') or {}).get('max_MPa'))
+    rowmax = {}
+    for r in R + RS:
+        if r.get('p_MPa') is not None:
+            for i in (int(r['id1']), int(r['id2'])):
+                if 'AM' in TM[TYPE[i]]:
+                    rowmax[i] = max(rowmax.get(i, 0.0), float(r['p_MPa']))
+    chk(f'KS12 AM 입자마다 행 압력 최대 (AM–AM · AM–SE 압축 행 · 유효 4 자리) = 최대 접촉 압력 pressure.max_MPa (같은 환산 · 같은 압축 행 · 목록이 다 실렸을 때) '
+        f'({rowmax})', bool(rowmax) and all(rel(v, pmax.get(i)) < 5e-4 for i, v in rowmax.items()))
+    chk('KS13 규칙 문구 — p_MPa · |Fn| / A · c_cpl[22] · scale / 1e6 · 압축 행만 · null · 쌍 유형마다 거의 일정 (k/(2πR*)) · 하중이 아니다',
+        all(x in str(cs.get('rule')) for x in ('p_MPa', '|Fn| / A', 'c_cpl[22]', 'scale / 1e6', 'null', 'k/(2πR*)', '하중이 아니다')))
     import viewer3d_data as V
     d = os.path.join(tmp, 'synth')
     try:
@@ -429,6 +455,8 @@ def section_contacts_synth(tmp, lv):
         g1 == [(3, 17, 6.0, 1)] and cs1.get('n_rows') == 1 and cs1.get('cap') == 1 and cs1.get('truncated') is True
         and cs1.get('n_compressive_sent') == 1 and cs1.get('compressive_complete') is False and cs1.get('n_total') == 4
         and cs1.get('n_compressive') == 2 and cs1.get('q_uN') == cs.get('q_uN') and cs1.get('sum_fn_compressive_uN') == cs.get('sum_fn_compressive_uN'))
+    chk(f'KS9b ★ 11-02 압력 요약 p_MPa_stats 도 상한과 무관 (상한 1 = 기본 상한) · 보낸 1 행의 압력 = 150 ({cs1.get("p_MPa_stats")})',
+        cs1.get('p_MPa_stats') == cs.get('p_MPa_stats') and [r.get('p_MPa') for r in contact_rows(lv1, 'contacts_se')] == [150.0])
     g2 = [(int(r['id1']), int(r['id2']), round(float(r['fn_uN']), 6), int(r['flag'])) for r in contact_rows(lv1)]
     chk(f'KS10 AM–AM 도 같은 상한 (1–2 1 행) · 입자별 최대 (fn_max_uN) 는 상한과 무관 (전 행으로 계산) ({g2})',
         g2 == [(1, 2, 20.0, 1)] and c1.get('truncated') is True
@@ -562,8 +590,16 @@ def section_contacts_budget(tmp):
     g = len(gzip.compress(raw, 6))
     per_row = len(raw) / max(len(rows), 1)
     full_est = per_row * m
-    chk(f'KB7 AM–SE 목록 JSON {len(raw) / 1e6:.2f} MB ≤ 1.5 MB · gzip {g / 1e6:.3f} MB ≤ 0.6 MB (상한 없이 {m} 행 전부면 ≈ {full_est / 1e6:.1f} MB · '
-        f'gzip ≈ {g / max(len(rows), 1) * m / 1e6:.1f} MB 추정 — 상한을 둔 까닭)', len(raw) <= 1_500_000 and g <= 600_000)
+    chk(f'KB7 AM–SE 목록 JSON {len(raw) / 1e6:.2f} MB ≤ 1.7 MB · gzip {g / 1e6:.3f} MB ≤ 0.6 MB (11-02 접촉 압력 열 p_MPa · 유효 4 자리 — 행당 ≈ +6 B · '
+        f'JSON 옛 예산 1.5 MB 는 일곱 열 기준 · gzip 예산은 그대로) (상한 없이 {m} 행 전부면 ≈ {full_est / 1e6:.1f} MB · '
+        f'gzip ≈ {g / max(len(rows), 1) * m / 1e6:.1f} MB 추정 — 상한을 둔 까닭)', len(raw) <= 1_700_000 and g <= 600_000)
+    ps2 = cs.get('p_MPa_stats') or {}
+    pw = sorted(f * 10.0 for f in comp_f)                                  # 이 합성 침대: 면적 1e-7 → p (MPa) = |Fn| (µN) × 10
+    import statistics
+    chk(f'KB9 ★ 11-02 압력 요약 = 압축 전체 (상한과 무관 · {ps2.get("n")} 개) — 평균 · 중앙 = 독립 계산 (|Fn| µN × 10) · 가장 가까운 순위 p5 · p95 · 최소 · 최대 '
+        '(서버 = 유효 6 자리 — q_uN 과 같은 반올림)',
+        ps2.get('n') == len(comp_f) and rel(ps2.get('mean'), sum(pw) / len(pw)) < 1e-5 and rel(ps2.get('median'), statistics.median(pw)) < 1e-5
+        and q_close(ps2, nearest_rank_q(pw), 1e-5))
     share = sum(fs) / float(sum(comp_f)) if len(comp_f) else 0.0
     chk(f'KB8 보낸 상위 {cap} 의 힘 몫 = {share:.3f} (0 < 몫 < 1 — 범례가 그린 것의 힘 몫을 적는다)', 0.0 < share < 1.0)
 
@@ -672,6 +708,18 @@ def section_real14(tmp):
     comp_aa = [float(r['fn_uN']) for r in contact_rows(lv) if int(r['flag']) == 1]
     chk(f'R12b AM–AM — 서버 백분위 (압축 전체) = 실은 압축 행 {len(comp_aa)} 개 (= 그린 것 · 압축 전부) 의 가장 가까운 순위 → 두 기준이 같은 범위 '
         f'(10-08 저녁 · AM–AM 결과 그대로)', len(comp_aa) == c.get('n_compressive') and q_close(c.get('q_uN'), nearest_rank_q(comp_aa)))
+    area_all = cdf['contact_area'].to_numpy(float)
+    p_all = np.linalg.norm(fn, axis=1) / np.where(area_all > 0, area_all, 1.0) * SCALE / 1e6
+    for nm, m_, blk in (('AM–SE', ase, cs), ('AM–AM', aa, c)):
+        v = p_all[m_ & use & (s > 0)]
+        st_ = blk.get('p_MPa_stats') or {}
+        chk(f'R14 ★ 11-02 {nm} 압력 요약 = 독립 |Fn| / A × scale/1e6 (압축 {v.size} 개 · 평균 {v.mean():.4f} · 중앙 {np.median(v):.4f} MPa) '
+            f'({st_.get("n")} · {st_.get("mean")} · {st_.get("median")})',
+            st_.get('n') == v.size == blk.get('n_compressive') and rel(st_.get('mean'), float(v.mean())) < 1e-5
+            and rel(st_.get('median'), float(np.median(v))) < 1e-5)
+    rows_all = RS + contact_rows(lv)
+    chk(f'R15 ★ 11-02 보낸 행 {len(rows_all)} 개 — 압축 행만 p_MPa (양수) · 당김 · 그 밖 행 = null (0 아님)',
+        bool(rows_all) and all((r.get('p_MPa') is not None and r['p_MPa'] > 0) == (int(r['flag']) == 1) for r in rows_all))
     blob = json.dumps({'contacts': c, 'contacts_se': cs}, separators=(',', ':')).encode()
     g = len(gzip.compress(blob, 6))
     top = sorted(comp_rows, reverse=True)
@@ -689,7 +737,9 @@ JS_NAMES = ('netCurrentFmtJ', 'netCurrentT', 'netCurrentTicks', 'netCurrentPct',
             'pressureLegendHtml', 'loadViewAmContacts', 'amOnlyContactRange', 'amOnlyContactLegendHtml', 'amOnlyContactColorbarSpec',
             '_amOnlyControlsHtml', '_amOnlyBasis',
             # ★ 11-02 — 위 함수들이 부르는 σ_VM ÷ P_ref · 고정 범위 도우미 (시험은 webapp/test_viewer_lw_pnorm.py)
-            'lwIsLwMetric', 'lwRangeValid', 'lwRangeKey', 'lwRangeLoad', 'lwFixedLim', 'lwLimInputsHtml', 'lwLinTicks', 'lwPref', 'lwPrefNote')
+            'lwIsLwMetric', 'lwRangeValid', 'lwRangeKey', 'lwRangeLoad', 'lwFixedLim', 'lwLimInputsHtml', 'lwLinTicks', 'lwPref', 'lwPrefNote',
+            # ★ 11-02 접촉마다 압력 (같은 묶음) — 범례 · 컬러바가 부르는 갈래 도우미 (시험은 webapp/test_viewer_lw_pnorm.py [JP])
+            'lwFixedCapable', 'amOnlyContactKind', 'amOnlyContactPressureColorbarSpec')
 JS_CONSTS = ('AMONLY_CONTACT_OPT', 'LW_RANGE_DEFAULT')
 
 
@@ -955,8 +1005,9 @@ console.log(JSON.stringify(out));
         '(SE 를 숨기지 않았어도) · 다시 그릴 때 (applyAmOnlyView 머리) 도',
         i_cap >= 0 and (i_ret < 0 or i_cap < i_ret) and 'amOnlyCapGroup' in cd and 'dispose' in cd
         and '_amOnlyCapDispose(state)' in ao2[:900], td[:400])
-    chk('J39b 접촉마다 가지 — AM 은 기본색 (base) · 색은 cap 에만 · SE 숨김 · 두 목록 = 따로 고른 양 (ui.metric)',
-        re.search(r"ui\.metric === 'contact' \|\| ui\.metric === 'contact_se'\) \{[^}]*base\(\);", ao2) is not None
+    # ★ 11-02 — 접촉마다 갈래 = amOnlyContactKind (힘 둘 + 압력 둘 · 같은 그리기) — 옛 꼴 (contact || contact_se) 을 그 판별로 바꿨다
+    chk('J39b 접촉마다 가지 — AM 은 기본색 (base) · 색은 cap 에만 · SE 숨김 · 두 목록 = 따로 고른 양 (ui.metric) · 갈래 = amOnlyContactKind (11-02)',
+        re.search(r"if \(amOnlyContactKind\(ui\.metric\)\) \{[^}]*base\(\);", ao2) is not None
         and 'renderAmOnlyContactCaps(state, cl' in ao2 and re.search(r'SE\.visible\s*=\s*false', ao2) is not None, ao2[:300])
     chk('J40 자료 없음 안내 — 캐시 스키마 14 (옛 패치의 13 캐시는 다시 계산)', '캐시 스키마 14' in res['miss'], res['miss'][:400])
 
@@ -1026,7 +1077,8 @@ console.log(JSON.stringify(out));
         ao3 = wl = ''
     chk('J54 그리기 경로 — applyAmOnlyView 가 ui.top 으로 목록을 만들고 그 목록 · ui.basis 로 범위 (상위 N · 기준을 바꾸면 다시 그린다 = 다시 계산) · '
         '기준 고르기 배선 · 컬러바 파일 이름에 기준',
-        re.search(r'loadViewAmContacts\(lv, ui\.metric, ui\.top\);\s*const crng = cl\.ok \? amOnlyContactRange\(cl, ui\.range, _amOnlyBasis\(ui\)\)', ao3)
+        re.search(r"loadViewAmContacts\(lv, ui\.metric, ui\.top\);\s*const cfixed = ui\.range === 'fixed' && lwFixedCapable\(ui\.metric\);\s*"
+                  r"const crng = cl\.ok \? \(cfixed \? lwFixedLim\(ui\) : amOnlyContactRange\(cl, ui\.range, _amOnlyBasis\(ui\)\)\)", ao3)
         is not None and "on('amonly-basis'" in wl and "on('amonly-topn'" in wl and '_amOnlyBasis(l.ui)' in wl, wl[:300])
 
 

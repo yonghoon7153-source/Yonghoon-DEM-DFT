@@ -1082,19 +1082,28 @@ WALL_RULE = ('벽 표지 = calc_love_weber_stress 와 같은 규칙: 바닥 = z 
 
 # ── 10-08 접촉마다 (1저자 *"그 버전도 좋을거 같은데"* · *"ㄱㄱ해봐"*) — AM 만 보기의 접촉 cap (Brittle surface 꼴) 자료 ─────────────
 #  AM–AM (am.contacts) · AM–SE (am.contacts_se) 두 목록 — 뷰어는 둘을 따로 고르는 양으로 그리고 한 색 눈금에 섞지 않는다.
-#  행 = [id1, id2, |Fn| µN (유효 6 자리), flag, ux, uy, uz] · 정렬 = 압축 (|Fn| 큰 순) → 당김 → 그 밖 · 상한 LOAD_VIEW_CONTACT_CAP 행.
+#  행 = [id1, id2, |Fn| µN (유효 6 자리), flag, ux, uy, uz, p_MPa (11-02 · 압축 행만 · 유효 4 자리 · 그 밖 null)] · 정렬 = 압축 (|Fn| 큰 순) →
+#  당김 → 그 밖 · 상한 LOAD_VIEW_CONTACT_CAP 행.
 #  셈 · 합 · 백분위 (색 범위 · 힘 몫) 는 상한과 무관하게 그 목록의 전 행 (압축 전체) 으로 낸다.
 #  크기 (10-08 실측): 행당 JSON ≈ 40 B · gzip ≈ 15 B — real14 AM–SE 31299 행 = 1.27 MB · gzip 0.47 MB · ps45 0:10 AM–SE 194558 행
 #  (full_metrics area_AM전체_SE_n) 이면 ≈ 7.9 MB · gzip ≈ 2.9 MB 라 3D 데이터 (캐시) 에 다 싣지 않고 상위 30000 행 (≈ 1.2 MB ·
 #  gzip ≈ 0.45 MB) 만 싣는다 — 따로 부르는 길 (새 경로) 은 봉인 파일 app.py 에 경로를 더해야 해서 쓰지 않았다 (더 큰 위험).
+#  ★ 11-02 (1저자 · σ_VM ÷ P_ref 묶음 · 같은 캐시 스키마 15) — 행 끝에 p_MPa (접촉 압력 |Fn| / A · 압축 행만 · 유효 4 자리 · 그 밖 null) ·
+#  목록마다 p_MPa_stats (압축 전체 · 상한과 무관).  크기 (11-02 실측): 행당 ≈ +6 B — 50kg D2 두 목록 33314 행 = JSON +0.21 MB · gzip +0.05 MB ·
+#  D1 32707 행 = +0.20 MB · gzip +0.04 MB.
 LOAD_VIEW_CONTACT_CAP = 30000
-CONTACT_LIST_FIELDS = ['id1', 'id2', 'fn_uN', 'flag', 'ux', 'uy', 'uz']
+CONTACT_LIST_FIELDS = ['id1', 'id2', 'fn_uN', 'flag', 'ux', 'uy', 'uz', 'p_MPa']
 _CONTACT_COMMON_RULE = ('|Fn| = 덤프 법선력 (c_cpl[13–15]) 의 크기 × 1e6 / scale = µN (calc_contact_force_distribution · fn_max_uN 과 같은 환산 · '
                         '유효 6 자리) · flag 1 = 압축 (δ > 0 · 면적 > 0 · |Fn| > 0 · 밀어냄 — fn_max_uN · Max contact pressure 와 같은 행 · '
                         '이것만 칠한다) · −1 = 당김 (접착 — 칠하지 않고 센다) · 0 = 그 밖 (δ ≤ 0 · 면적 0 · 힘 0 · 부호 판정 불가) · '
                         '방향 u = id1 중심 → 접촉점 (최소영상 · |x_c − x_id1| ≤ 1.05 r) · 접촉점이 없거나 멀면 id1 중심 → id2 중심 (최소영상) · '
                         '셈 · 합 (sum_fn_compressive_uN) · 백분위 (q_uN = 가장 가까운 순위 p5 · p95 · 최소 · 최대 — 뷰어 amOnlyRange 와 같은 규칙) = '
-                        '상한과 무관한 압축 전체 · 모델 접촉력 (덱 축척 환산 — 조성 비교 절대값에 쓰지 않는다) · 하중 분담이 아니다')
+                        '상한과 무관한 압축 전체 · 모델 접촉력 (덱 축척 환산 — 조성 비교 절대값에 쓰지 않는다) · 하중 분담이 아니다 · '
+                        '★ 11-02 p_MPa = 접촉 압력 |Fn| / A (A = 덤프 접촉 면적 c_cpl[22] · × scale / 1e6 = MPa — 최대 접촉 압력 pressure.max_MPa 와 같은 '
+                        '환산 · 같은 압축 행) · 압축 행 (flag 1) 만 · 그 밖 행 = null (0 아님) · 유효 4 자리 · p_MPa_stats = 그 목록의 압축 전체 (상한과 '
+                        '무관) n · 평균 · 중앙 (np.median) · 가장 가까운 순위 p5 · p95 · 최소 · 최대 (유효 6 자리) · hooke/hysteresis 에서 압축 접촉의 p 는 '
+                        '쌍 유형마다 거의 일정 (p ≈ k/(2πR*) — 그 쌍의 접촉 강성을 따른다 · 50kg D1–D3 압축 중앙 AM–SE 337–415 · AM–AM 4075–4253 MPa) = '
+                        '접촉 유형 · 강성 표지에 가깝고 하중이 아니다 (WEB-06)')
 AM_AM_CONTACTS_RULE = ('AM–AM 접촉마다 = 접촉 덤프의 AM–AM 행 (덤프 순서 id1 · id2 — 뷰어는 두 AM 표면에 cap 을 하나씩: id1 은 u · id2 는 −u) · '
                        + _CONTACT_COMMON_RULE)
 AM_SE_CONTACTS_RULE = ('AM–SE 접촉마다 = 접촉 덤프의 AM–SE 행 (id1 = AM · id2 = SE — 덤프가 SE 먼저면 뒤집는다 · 뷰어는 AM 표면에만 cap · SE 는 숨김) · '
@@ -1235,14 +1244,16 @@ def _sig6(x):
     return float(f'{v:.6g}') if v is not None else None
 
 
-def _contact_list(sel, flip, k1, k2, ids, pos, rad, f_uN, flag, cp, box_xy, cap, rule):
+def _contact_list(sel, flip, k1, k2, ids, pos, rad, f_uN, flag, cp, box_xy, cap, rule, p_MPa=None):
     """접촉마다 목록 (load_view.am.contacts · contacts_se) — sel = 그 쌍 유형의 행 (bool) · flip = 그 행에서 id2 를 id1 (host) 로
-    뒤집을지 (AM–SE 의 SE 먼저 행) · f_uN = |Fn| µN · flag = 1 압축 · −1 당김 · 0 그 밖 · cp = 접촉점 (n, 3) 또는 None."""
+    뒤집을지 (AM–SE 의 SE 먼저 행) · f_uN = |Fn| µN · flag = 1 압축 · −1 당김 · 0 그 밖 · cp = 접촉점 (n, 3) 또는 None ·
+    ★ 11-02 p_MPa = 행마다 |Fn| / A × scale / 1e6 (최대 접촉 압력과 같은 배열 — 압축 행 (flag 1) 의 값만 싣고 그 밖은 null)."""
     import numpy as np
     j = np.flatnonzero(sel)
     a = np.where(flip[j], k2[j], k1[j])
     b = np.where(flip[j], k1[j], k2[j])
     f, fl = f_uN[j], flag[j]
+    pj = np.asarray(p_MPa, dtype=float)[j] if p_MPa is not None else np.full(len(j), np.nan)
     rank = np.where(fl == 1, 0, np.where(fl == -1, 1, 2))
     order = np.lexsort((-f, rank))                     # 압축 (큰 순) → 당김 (큰 순) → 그 밖 (큰 순) · 같은 값은 덤프 순서
     cap = max(0, int(cap))
@@ -1263,8 +1274,11 @@ def _contact_list(sel, flip, k1, k2, ids, pos, rad, f_uN, flag, cp, box_xy, cap,
         nc = np.linalg.norm(cv, axis=1)
     src_c = ~src_cp & np.isfinite(nc) & (nc > 0)
     u[src_c] = cv[src_c] / nc[src_c, None]
+    def _p_row(i):                                          # ★ 11-02 압축 행만 (양수 유한) · 유효 4 자리 · 그 밖 null (0 으로 채우지 않는다)
+        v = pj[o[i]]
+        return _sig4(v) if (int(fl[o[i]]) == 1 and math.isfinite(v) and v > 0) else None
     rows = [[int(ids[ha[i]]), int(ids[hb[i]]), _sig6(f[o[i]]) or 0.0, int(fl[o[i]]),
-             round(float(u[i, 0]), 3) + 0.0, round(float(u[i, 1]), 3) + 0.0, round(float(u[i, 2]), 3) + 0.0] for i in range(len(o))]
+             round(float(u[i, 0]), 3) + 0.0, round(float(u[i, 1]), 3) + 0.0, round(float(u[i, 2]), 3) + 0.0, _p_row(i)] for i in range(len(o))]
     comp = f[fl == 1]
     comp = comp[np.isfinite(comp) & (comp > 0)]
     q = None
@@ -1272,12 +1286,20 @@ def _contact_list(sel, flip, k1, k2, ids, pos, rad, f_uN, flag, cp, box_xy, cap,
         v = np.sort(comp)
         pct = (lambda p: float(v[max(0, min(len(v) - 1, int(math.floor(p * (len(v) - 1)))))]))
         q = {'p5': _sig6(pct(0.05)), 'p95': _sig6(pct(0.95)), 'min': _sig6(v[0]), 'max': _sig6(v[-1])}
+    pc = pj[fl == 1]                                        # ★ 11-02 압력 요약 — 그 목록의 압축 전체 (상한과 무관)
+    pc = pc[np.isfinite(pc) & (pc > 0)]
+    pq = None
+    if len(pc):
+        v = np.sort(pc)
+        pct = (lambda p: float(v[max(0, min(len(v) - 1, int(math.floor(p * (len(v) - 1)))))]))
+        pq = {'n': int(len(v)), 'mean': _sig6(float(v.mean())), 'median': _sig6(float(np.median(v))),
+              'p5': _sig6(pct(0.05)), 'p95': _sig6(pct(0.95)), 'min': _sig6(v[0]), 'max': _sig6(v[-1])}
     n_comp_sent = int((fl[o] == 1).sum())
     return {'fields': list(CONTACT_LIST_FIELDS), 'rows': rows, 'cap': cap,
             'n_total': int(len(j)), 'n_rows': int(len(o)), 'truncated': bool(len(o) < len(j)),
             'n_compressive': int((fl == 1).sum()), 'n_tension': int((fl == -1).sum()), 'n_other': int((fl == 0).sum()),
             'n_compressive_sent': n_comp_sent, 'compressive_complete': bool(n_comp_sent == int((fl == 1).sum())),
-            'sum_fn_compressive_uN': float(comp.sum()) if len(comp) else 0.0, 'q_uN': q,
+            'sum_fn_compressive_uN': float(comp.sum()) if len(comp) else 0.0, 'q_uN': q, 'p_MPa_stats': pq,
             'n_dir_contact_point': int(src_cp.sum()), 'n_dir_centres': int(src_c.sum()),
             'n_dir_none': int((~src_cp & ~src_c).sum()), 'rule': rule}
 
@@ -1390,9 +1412,9 @@ def particle_load_view(cdf, atoms_raw, type_map, *, scale=1000.0, box_xy=None, b
     no_flip = np.zeros(len(k1), dtype=bool)
     am.update(
         contacts=_contact_list(is_am[k1] & is_am[k2], no_flip, k1, k2, ids, pos, rad, f_uN, flag, cp, box_xy, contact_cap,
-                               AM_AM_CONTACTS_RULE),
+                               AM_AM_CONTACTS_RULE, p_MPa=p),
         contacts_se=_contact_list((is_am[k1] & is_se[k2]) | (is_se[k1] & is_am[k2]), is_se[k1], k1, k2, ids, pos, rad, f_uN, flag, cp,
-                                  box_xy, contact_cap, AM_SE_CONTACTS_RULE))
+                                  box_xy, contact_cap, AM_SE_CONTACTS_RULE, p_MPa=p))
 
     # ── 벽 표지 (calc_love_weber_stress 의 규칙)
     pz = _fin(plate_z)
