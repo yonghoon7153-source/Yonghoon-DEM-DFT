@@ -107,6 +107,7 @@ def main():
 
     atoms_raw, _ = AC.load_atoms_raw(str(out / 'atoms.csv'))
     contacts_raw, _ = AC.load_contacts_raw(str(out / 'contacts.csv'))
+    (out / 'atoms.csv').unlink(); (out / 'contacts.csv').unlink()          # 중간 CSV (덤프 그대로 옮긴 것) — 디스크 아끼기
     type_map = {t: TYPE_LABEL[t] for t in sorted({v['type'] for v in atoms_raw.values()})}
     lw = DAC.calc_love_weber_stress(atoms_raw, contacts_raw, type_map, pz, box_x=Lx, box_y=Ly,
                                     plate_z_source='mesh', return_arrays=True)
