@@ -1,0 +1,12 @@
+규칙 위반 0 []
+  27 hertz NOT_PERCOLATING '' 값 칸 빈칸 (f · f_gap · tau2 · tau) = (False, False, True, True)
+  187 hertz OK '' 값 칸 빈칸 (f · f_gap · tau2 · tau) = (False, False, False, False)
+  18 hertz_h12 MODEL_BELOW_CONTINUUM_BOUND '' 값 칸 빈칸 (f · f_gap · tau2 · tau) = (False, False, False, False)
+  27 hertz_h12 NOT_PERCOLATING '' 값 칸 빈칸 (f · f_gap · tau2 · tau) = (False, False, True, True)
+  169 hertz_h12 OK '' 값 칸 빈칸 (f · f_gap · tau2 · tau) = (False, False, False, False)
+  62 physics MODEL_BELOW_CONTINUUM_BOUND '' 값 칸 빈칸 (f · f_gap · tau2 · tau) = (False, False, False, False)
+  14 physics NOT_COMPUTED 'full_over_conduction' 값 칸 빈칸 (f · f_gap · tau2 · tau) = (True, True, True, True)
+  27 physics NOT_PERCOLATING '' 값 칸 빈칸 (f · f_gap · tau2 · tau) = (False, False, True, True)
+  111 physics OK '' 값 칸 빈칸 (f · f_gap · tau2 · tau) = (False, False, False, False)
+lhsx sigma_full_reason_physics {'': 56, 'full_over_conduction': 8}
+lhsx sigma_full_status_physics {'computed': 56, 'not_computed': 8}

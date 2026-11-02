@@ -1,0 +1,338 @@
+dataset	case	column	b7	v12	rel
+lhs	lhs00_000	physics_solver_at	2026-10-30 07:25:18	2026-10-05 22:36:10	
+lhs	lhs00_001	physics_solver_at	2026-10-30 07:21:13	2026-10-05 22:35:09	
+lhs	lhs00_002	physics_solver_at	2026-10-30 07:07:41	2026-10-05 22:46:47	
+lhs	lhs00_002	warning_count	3	2	0.3333333333333333
+lhs	lhs00_003	physics_solver_at	2026-10-30 07:20:26	2026-10-05 22:24:13	
+lhs	lhs00_003	warning_count	2	1	0.5
+lhs	lhs00_004	physics_solver_at	2026-10-30 07:21:28	2026-10-05 22:31:05	
+lhs	lhs00_004	warning_count	3	2	0.3333333333333333
+lhs	lhs00_005	physics_solver_at	2026-10-30 07:28:47	2026-10-05 22:37:08	
+lhs	lhs00_005	warning_count	2	1	0.5
+lhs	lhs00_006	physics_solver_at	2026-10-30 07:21:19	2026-10-05 22:35:37	
+lhs	lhs00_006	warning_count	1	0	1.0
+lhs	lhs00_007	physics_solver_at	2026-10-30 07:13:22	2026-10-05 22:15:34	
+lhs	lhs00_007	warning_count	1	0	1.0
+lhs	lhs00_008	physics_solver_at	2026-10-30 07:12:26	2026-10-05 22:17:59	
+lhs	lhs00_009	physics_solver_at	2026-10-30 07:23:09	2026-10-05 22:33:10	
+lhs	lhs00_009	warning_count	2	1	0.5
+lhs	lhs00_010	physics_solver_at	2026-10-30 07:23:26	2026-10-05 22:35:49	
+lhs	lhs00_010	warning_count	1	0	1.0
+lhs	lhs00_011	physics_solver_at	2026-10-30 07:27:05	2026-10-05 22:18:03	
+lhs	lhs00_011	warning_count	2	1	0.5
+lhs	lhs00_012	physics_solver_at	2026-10-30 07:05:14	2026-10-05 22:15:31	
+lhs	lhs00_013	physics_solver_at	2026-10-30 07:22:50	2026-10-05 22:32:17	
+lhs	lhs00_013	warning_count	1	0	1.0
+lhs	lhs00_014	physics_solver_at	2026-10-30 07:11:43	2026-10-05 22:26:41	
+lhs	lhs00_014	warning_count	4	3	0.25
+lhs	lhs00_015	physics_solver_at	2026-10-30 07:26:00	2026-10-05 22:41:04	
+lhs	lhs00_015	warning_count	1	0	1.0
+lhs	lhs00_016	physics_solver_at	2026-10-30 07:07:52	2026-10-05 22:22:19	
+lhs	lhs00_016	warning_count	3	2	0.3333333333333333
+lhs	lhs00_017	physics_solver_at	2026-10-30 07:29:08	2026-10-05 22:36:57	
+lhs	lhs00_017	warning_count	3	2	0.3333333333333333
+lhs	lhs00_018	physics_solver_at	2026-10-30 07:14:56	2026-10-05 22:18:55	
+lhs	lhs00_019	physics_solver_at	2026-10-30 07:04:56	2026-10-05 22:18:30	
+lhs	lhs00_020	physics_solver_at	2026-10-30 07:11:51	2026-10-05 22:17:17	
+lhs	lhs00_021	physics_solver_at	2026-10-30 07:13:16	2026-10-05 22:21:31	
+lhs	lhs00_021	warning_count	4	3	0.25
+lhs	lhs00_022	physics_solver_at	2026-10-30 07:31:42	2026-10-05 22:47:24	
+lhs	lhs00_022	warning_count	2	1	0.5
+lhs	lhs00_023	physics_solver_at	2026-10-30 07:30:43	2026-10-05 22:42:38	
+lhs	lhs00_024	physics_solver_at	2026-10-30 07:33:17	2026-10-05 22:46:49	
+lhs	lhs00_024	warning_count	3	2	0.3333333333333333
+lhs	lhs00_025	physics_solver_at	2026-10-30 07:29:45	2026-10-05 22:37:12	
+lhs	lhs00_025	warning_count	2	1	0.5
+lhs	lhs00_026	physics_solver_at	2026-10-30 07:12:43	2026-10-05 22:21:05	
+lhs	lhs00_027	physics_solver_at	2026-10-30 07:24:12	2026-10-05 22:34:12	
+lhs	lhs00_027	warning_count	2	1	0.5
+lhs	lhs00_028	physics_solver_at	2026-10-30 07:20:35	2026-10-05 22:36:24	
+lhs	lhs00_028	warning_count	2	1	0.5
+lhs	lhs00_029	physics_solver_at	2026-10-30 07:09:54	2026-10-05 22:16:18	
+lhs	lhs00_030	physics_solver_at	2026-10-30 07:17:32	2026-10-05 22:28:53	
+lhs	lhs00_031	physics_solver_at	2026-10-30 07:28:45	2026-10-05 22:26:46	
+lhs	lhs00_031	warning_count	2	1	0.5
+lhs	lhs00_032	physics_solver_at	2026-10-30 07:20:15	2026-10-05 22:34:14	
+lhs	lhs00_032	warning_count	2	1	0.5
+lhs	lhs00_033	physics_solver_at	2026-10-30 07:29:49	2026-10-05 22:37:39	
+lhs	lhs00_033	warning_count	2	1	0.5
+lhs	lhs00_034	physics_solver_at	2026-10-30 07:14:43	2026-10-05 22:23:26	
+lhs	lhs00_034	warning_count	1	0	1.0
+lhs	lhs00_035	physics_solver_at	2026-10-30 07:32:53	2026-10-05 22:43:23	
+lhs	lhs00_035	warning_count	2	1	0.5
+lhs	lhs00_036	physics_solver_at	2026-10-30 07:26:21	2026-10-05 22:36:03	
+lhs	lhs00_036	warning_count	2	1	0.5
+lhs	lhs00_037	physics_solver_at	2026-10-30 07:13:12	2026-10-05 22:16:01	
+lhs	lhs00_038	physics_solver_at	2026-10-30 07:10:52	2026-10-05 22:22:15	
+lhs	lhs00_038	warning_count	2	1	0.5
+lhs	lhs00_039	physics_solver_at	2026-10-30 07:22:03	2026-10-05 22:32:38	
+lhs	lhs00_039	warning_count	2	1	0.5
+lhs	lhs00_040	physics_solver_at	2026-10-30 07:33:34	2026-10-05 22:47:53	
+lhs	lhs00_041	physics_solver_at	2026-10-30 07:05:17	2026-10-05 22:15:35	
+lhs	lhs00_042	physics_solver_at	2026-10-30 07:13:20	2026-10-05 22:21:56	
+lhs	lhs00_042	warning_count	2	1	0.5
+lhs	lhs00_043	physics_solver_at	2026-10-30 07:17:52	2026-10-05 22:46:56	
+lhs	lhs00_043	warning_count	2	1	0.5
+lhs	lhs00_044	physics_solver_at	2026-10-30 07:24:36	2026-10-05 22:31:28	
+lhs	lhs00_044	warning_count	1	0	1.0
+lhs	lhs00_045	physics_solver_at	2026-10-30 07:15:45	2026-10-05 22:16:10	
+lhs	lhs00_045	warning_count	1	0	1.0
+lhs	lhs00_046	physics_solver_at	2026-10-30 07:30:18	2026-10-05 22:38:24	
+lhs	lhs00_047	physics_solver_at	2026-10-30 07:11:30	2026-10-05 22:16:51	
+lhs	lhs00_048	physics_solver_at	2026-10-30 07:21:47	2026-10-05 22:31:39	
+lhs	lhs00_048	warning_count	2	1	0.5
+lhs	lhs00_049	physics_solver_at	2026-10-30 07:14:01	2026-10-05 22:20:04	
+lhs	lhs00_049	warning_count	1	0	1.0
+lhs	lhs00_050	physics_solver_at	2026-10-30 07:14:15	2026-10-05 22:44:50	
+lhs	lhs00_050	warning_count	2	1	0.5
+lhs	lhs00_051	physics_solver_at	2026-10-30 07:28:49	2026-10-05 22:46:46	
+lhs	lhs00_051	warning_count	2	1	0.5
+lhs	lhs00_052	physics_solver_at	2026-10-30 07:09:03	2026-10-05 22:27:56	
+lhs	lhs00_052	warning_count	1	0	1.0
+lhs	lhs00_053	physics_solver_at	2026-10-30 07:25:05	2026-10-05 22:35:22	
+lhs	lhs00_054	physics_solver_at	2026-10-30 07:09:59	2026-10-05 22:18:52	
+lhs	lhs00_054	warning_count	2	1	0.5
+lhs	lhs00_055	physics_solver_at	2026-10-30 07:05:05	2026-10-05 22:18:33	
+lhs	lhs00_056	physics_solver_at	2026-10-30 07:33:16	2026-10-05 22:44:42	
+lhs	lhs00_056	warning_count	2	1	0.5
+lhs	lhs00_057	physics_solver_at	2026-10-30 07:28:40	2026-10-05 22:33:51	
+lhs	lhs00_057	warning_count	2	1	0.5
+lhs	lhs00_058	physics_solver_at	2026-10-30 07:09:24	2026-10-05 22:17:19	
+lhs	lhs00_059	physics_solver_at	2026-10-30 07:19:36	2026-10-05 22:40:54	
+lhs	lhs00_059	warning_count	2	1	0.5
+lhs	lhs00_060	physics_solver_at	2026-10-30 07:11:41	2026-10-05 22:17:04	
+lhs	lhs00_060	warning_count	3	2	0.3333333333333333
+lhs	lhs00_061	physics_solver_at	2026-10-30 07:12:47	2026-10-05 22:21:26	
+lhs	lhs00_061	warning_count	2	1	0.5
+lhs	lhs00_062	physics_solver_at	2026-10-30 07:15:10	2026-10-05 22:21:52	
+lhs	lhs00_063	physics_solver_at	2026-10-30 07:11:04	2026-10-05 22:15:38	
+lhs	lhs00_063	warning_count	2	1	0.5
+lhs	lhs00_064	physics_solver_at	2026-10-30 07:27:58	2026-10-05 22:37:04	
+lhs	lhs00_064	warning_count	2	1	0.5
+lhs	lhs00_065	physics_solver_at	2026-10-30 07:25:31	2026-10-05 22:23:51	
+lhs	lhs00_065	warning_count	2	1	0.5
+lhs	lhs00_066	physics_solver_at	2026-10-30 07:21:27	2026-10-05 22:31:03	
+lhs	lhs00_066	warning_count	2	1	0.5
+lhs	lhs00_067	physics_solver_at	2026-10-30 07:18:41	2026-10-05 22:28:40	
+lhs	lhs00_067	warning_count	2	1	0.5
+lhs	lhs00_068	physics_solver_at	2026-10-30 07:08:16	2026-10-05 22:36:38	
+lhs	lhs00_068	warning_count	2	1	0.5
+lhs	lhs00_069	physics_solver_at	2026-10-30 07:33:43	2026-10-05 22:47:48	
+lhs	lhs00_069	warning_count	2	1	0.5
+lhs	lhs00_070	physics_solver_at	2026-10-30 07:33:02	2026-10-05 22:43:58	
+lhs	lhs00_070	warning_count	2	1	0.5
+lhs	lhs00_071	physics_solver_at	2026-10-30 07:22:24	2026-10-05 22:33:07	
+lhs	lhs00_071	warning_count	2	1	0.5
+lhs	lhs00_072	physics_solver_at	2026-10-30 07:14:12	2026-10-05 22:19:13	
+lhs	lhs00_072	warning_count	1	0	1.0
+lhs	lhs00_073	physics_solver_at	2026-10-30 07:14:09	2026-10-05 22:48:22	
+lhs	lhs00_073	warning_count	2	1	0.5
+lhs	lhs00_074	physics_solver_at	2026-10-30 07:22:51	2026-10-05 22:32:40	
+lhs	lhs00_075	physics_solver_at	2026-10-30 07:16:15	2026-10-05 22:20:11	
+lhs	lhs00_076	physics_solver_at	2026-10-30 07:11:16	2026-10-05 22:30:35	
+lhs	lhs00_076	warning_count	2	1	0.5
+lhs	lhs00_077	physics_solver_at	2026-10-30 07:15:24	2026-10-05 22:18:12	
+lhs	lhs00_077	warning_count	3	2	0.3333333333333333
+lhs	lhs00_078	physics_solver_at	2026-10-30 07:13:48	2026-10-05 22:27:58	
+lhs	lhs00_078	warning_count	2	1	0.5
+lhs	lhs00_079	physics_solver_at	2026-10-30 07:14:42	2026-10-05 22:19:23	
+lhs	lhs00_080	physics_solver_at	2026-10-30 07:19:26	2026-10-05 22:28:42	
+lhs	lhs00_081	physics_solver_at	2026-10-30 07:26:17	2026-10-05 22:36:41	
+lhs	lhs00_081	warning_count	2	1	0.5
+lhs	lhs00_082	physics_solver_at	2026-10-30 07:14:38	2026-10-05 22:21:40	
+lhs	lhs00_083	physics_solver_at	2026-10-30 07:12:59	2026-10-05 22:19:24	
+lhs	lhs00_084	physics_solver_at	2026-10-30 07:17:52	2026-10-05 22:27:15	
+lhs	lhs00_084	warning_count	1	0	1.0
+lhs	lhs00_085	physics_solver_at	2026-10-30 07:16:44	2026-10-05 22:35:54	
+lhs	lhs00_085	warning_count	2	1	0.5
+lhs	lhs00_086	physics_solver_at	2026-10-30 07:21:04	2026-10-05 22:31:00	
+lhs	lhs00_087	physics_solver_at	2026-10-30 07:16:46	2026-10-05 22:18:20	
+lhs	lhs00_088	physics_solver_at	2026-10-30 07:23:43	2026-10-05 22:33:05	
+lhs	lhs00_088	warning_count	3	2	0.3333333333333333
+lhs	lhs00_089	physics_solver_at	2026-10-30 07:12:50	2026-10-05 22:21:32	
+lhs	lhs00_089	warning_count	2	1	0.5
+lhs	lhs00_090	physics_solver_at	2026-10-30 07:13:40	2026-10-05 22:21:09	
+lhs	lhs00_090	warning_count	2	1	0.5
+lhs	lhs00_091	physics_solver_at	2026-10-30 07:04:51	2026-10-05 22:18:27	
+lhs	lhs00_092	physics_solver_at	2026-10-30 07:08:51	2026-10-05 22:16:28	
+lhs	lhs00_093	physics_solver_at	2026-10-30 07:13:36	2026-10-05 22:31:52	
+lhs	lhs00_094	physics_solver_at	2026-10-30 07:25:26	2026-10-05 22:35:45	
+lhs	lhs00_094	warning_count	1	0	1.0
+lhs	lhs00_095	physics_solver_at	2026-10-30 07:17:35	2026-10-05 22:32:48	
+lhs	lhs00_095	warning_count	1	0	1.0
+lhs	lhs00_096	physics_solver_at	2026-10-30 07:24:19	2026-10-05 22:34:20	
+lhs	lhs00_097	physics_solver_at	2026-10-30 07:16:39	2026-10-05 22:20:00	
+lhs	lhs00_097	warning_count	1	0	1.0
+lhs	lhs00_098	physics_solver_at	2026-10-30 07:10:01	2026-10-05 22:18:16	
+lhs	lhs00_098	warning_count	3	2	0.3333333333333333
+lhs	lhs00_099	physics_solver_at	2026-10-30 07:10:36	2026-10-05 22:15:16	
+lhs	lhs00_099	warning_count	2	1	0.5
+lhs	lhs00_100	physics_solver_at	2026-10-30 07:30:15	2026-10-05 22:37:16	
+lhs	lhs00_100	warning_count	2	1	0.5
+lhs	lhs00_101	physics_solver_at	2026-10-30 07:32:48	2026-10-05 22:37:06	
+lhs	lhs00_101	warning_count	1	0	1.0
+lhs	lhs00_102	physics_solver_at	2026-10-30 07:18:59	2026-10-05 22:32:59	
+lhs	lhs00_102	warning_count	1	0	1.0
+lhs	lhs00_103	physics_solver_at	2026-10-30 07:12:41	2026-10-05 22:21:16	
+lhs	lhs00_103	warning_count	2	1	0.5
+lhs	lhs00_104	physics_solver_at	2026-10-30 07:23:02	2026-10-05 22:34:33	
+lhs	lhs00_104	warning_count	3	2	0.3333333333333333
+lhs	lhs00_105	physics_solver_at	2026-10-30 07:04:46	2026-10-05 22:18:25	
+lhs	lhs00_106	physics_solver_at	2026-10-30 07:25:01	2026-10-05 22:35:46	
+lhs	lhs00_106	warning_count	2	1	0.5
+lhs	lhs00_107	physics_solver_at	2026-10-30 07:15:25	2026-10-05 22:21:26	
+lhs	lhs00_108	physics_solver_at	2026-10-30 07:15:35	2026-10-05 22:22:29	
+lhs	lhs00_109	physics_solver_at	2026-10-30 07:19:38	2026-10-05 22:19:57	
+lhs	lhs00_109	warning_count	2	1	0.5
+lhs	lhs00_110	physics_solver_at	2026-10-30 07:31:21	2026-10-05 22:47:06	
+lhs	lhs00_110	warning_count	3	2	0.3333333333333333
+lhs	lhs00_111	physics_solver_at	2026-10-30 07:05:10	2026-10-05 22:15:27	
+lhs	lhs00_112	physics_solver_at	2026-10-30 07:29:22	2026-10-05 22:38:19	
+lhs	lhs00_113	physics_solver_at	2026-10-30 07:21:42	2026-10-05 22:35:35	
+lhs	lhs00_113	warning_count	1	0	1.0
+lhs	lhs00_114	physics_solver_at	2026-10-30 07:15:45	2026-10-05 22:48:06	
+lhs	lhs00_114	warning_count	2	1	0.5
+lhs	lhs00_115	physics_solver_at	2026-10-30 07:12:15	2026-10-05 22:17:45	
+lhs	lhs00_115	warning_count	1	0	1.0
+lhs	lhs00_116	physics_solver_at	2026-10-30 07:11:18	2026-10-05 22:16:36	
+lhs	lhs00_116	warning_count	2	1	0.5
+lhs	lhs00_117	physics_solver_at	2026-10-30 07:30:21	2026-10-05 22:36:45	
+lhs	lhs00_118	physics_solver_at	2026-10-30 07:25:02	2026-10-05 22:46:58	
+lhs	lhs00_118	warning_count	2	1	0.5
+lhs	lhs00_119	physics_solver_at	2026-10-30 07:15:46	2026-10-05 22:16:19	
+lhs	lhs00_119	warning_count	1	0	1.0
+lhs	lhs00_120	physics_solver_at	2026-10-30 07:10:04	2026-10-05 22:29:10	
+lhs	lhs00_120	warning_count	1	0	1.0
+lhs	lhs00_121	physics_solver_at	2026-10-30 07:29:11	2026-10-05 22:38:18	
+lhs	lhs00_121	warning_count	2	1	0.5
+lhs	lhs00_122	physics_solver_at	2026-10-30 07:13:00	2026-10-05 22:15:44	
+lhs	lhs00_123	physics_solver_at	2026-10-30 07:12:03	2026-10-05 22:17:29	
+lhs	lhs00_124	physics_solver_at	2026-10-30 07:07:43	2026-10-05 22:18:27	
+lhs	lhs00_124	warning_count	3	2	0.3333333333333333
+lhs	lhs00_125	physics_solver_at	2026-10-30 07:15:32	2026-10-05 22:22:03	
+lhs	lhs00_125	warning_count	2	1	0.5
+lhs	lhs00_126	physics_solver_at	2026-10-30 07:05:00	2026-10-05 22:18:31	
+lhs	lhs00_127	physics_solver_at	2026-10-30 07:14:24	2026-10-05 22:20:34	
+lhs	lhs00_128	physics_solver_at	2026-10-30 07:05:20	2026-10-05 22:15:38	
+lhs	lhs00_129	physics_solver_at	2026-10-30 07:16:03	2026-10-05 22:24:58	
+lhs	lhs00_129	warning_count	2	1	0.5
+lhsx	lhsx_001	physics_solver_at	2026-10-30 07:19:34	2026-10-05 22:29:40	
+lhsx	lhsx_001	warning_count	2	1	0.5
+lhsx	lhsx_002	physics_solver_at	2026-10-30 07:27:57	2026-10-05 22:24:43	
+lhsx	lhsx_002	warning_count	2	1	0.5
+lhsx	lhsx_003	physics_solver_at	2026-10-30 07:24:21	2026-10-05 22:34:27	
+lhsx	lhsx_003	warning_count	2	1	0.5
+lhsx	lhsx_004	physics_solver_at	2026-10-30 07:16:06	2026-10-05 22:21:27	
+lhsx	lhsx_004	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_005	physics_solver_at	2026-10-30 07:33:03	2026-10-05 22:39:41	
+lhsx	lhsx_005	warning_count	2	1	0.5
+lhsx	lhsx_006	physics_solver_at	2026-10-30 07:20:03	2026-10-05 22:30:07	
+lhsx	lhsx_006	warning_count	2	1	0.5
+lhsx	lhsx_007	physics_solver_at	2026-10-30 07:07:51	2026-10-05 22:20:32	
+lhsx	lhsx_007	warning_count	2	1	0.5
+lhsx	lhsx_008	physics_solver_at	2026-10-30 07:15:39	2026-10-05 22:24:27	
+lhsx	lhsx_008	warning_count	2	1	0.5
+lhsx	lhsx_009	physics_solver_at	2026-10-30 07:25:05	2026-10-05 22:47:46	
+lhsx	lhsx_009	warning_count	2	1	0.5
+lhsx	lhsx_010	physics_solver_at	2026-10-30 07:17:58	2026-10-05 22:27:16	
+lhsx	lhsx_010	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_011	physics_solver_at	2026-10-30 07:17:51	2026-10-05 22:26:13	
+lhsx	lhsx_011	warning_count	2	1	0.5
+lhsx	lhsx_012	physics_solver_at	2026-10-30 07:23:56	2026-10-05 22:25:36	
+lhsx	lhsx_012	warning_count	2	1	0.5
+lhsx	lhsx_013	physics_solver_at	2026-10-30 07:12:41	2026-10-05 22:24:53	
+lhsx	lhsx_013	warning_count	2	1	0.5
+lhsx	lhsx_014	physics_solver_at	2026-10-30 07:33:00	2026-10-05 22:27:47	
+lhsx	lhsx_014	warning_count	2	1	0.5
+lhsx	lhsx_015	physics_solver_at	2026-10-30 07:33:02	2026-10-05 22:47:01	
+lhsx	lhsx_015	warning_count	2	1	0.5
+lhsx	lhsx_016	physics_solver_at	2026-10-30 07:23:58	2026-10-05 22:34:07	
+lhsx	lhsx_016	warning_count	2	1	0.5
+lhsx	lhsx_017	physics_solver_at	2026-10-30 07:16:06	2026-10-05 22:31:50	
+lhsx	lhsx_017	warning_count	2	1	0.5
+lhsx	lhsx_018	physics_solver_at	2026-10-30 07:29:16	2026-10-05 22:23:11	
+lhsx	lhsx_018	warning_count	2	1	0.5
+lhsx	lhsx_019	physics_solver_at	2026-10-30 07:32:35	2026-10-05 22:44:40	
+lhsx	lhsx_019	warning_count	2	1	0.5
+lhsx	lhsx_020	physics_solver_at	2026-10-30 07:22:59	2026-10-05 22:34:14	
+lhsx	lhsx_020	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_021	physics_solver_at	2026-10-30 07:15:34	2026-10-05 22:24:31	
+lhsx	lhsx_021	warning_count	2	1	0.5
+lhsx	lhsx_022	physics_solver_at	2026-10-30 07:32:50	2026-10-05 22:44:35	
+lhsx	lhsx_022	warning_count	2	1	0.5
+lhsx	lhsx_023	physics_solver_at	2026-10-30 07:10:23	2026-10-05 22:18:23	
+lhsx	lhsx_023	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_024	physics_solver_at	2026-10-30 07:26:14	2026-10-05 22:27:09	
+lhsx	lhsx_024	warning_count	2	1	0.5
+lhsx	lhsx_025	physics_solver_at	2026-10-30 07:12:53	2026-10-05 22:46:48	
+lhsx	lhsx_025	warning_count	2	1	0.5
+lhsx	lhsx_026	physics_solver_at	2026-10-30 07:28:04	2026-10-05 22:43:13	
+lhsx	lhsx_026	warning_count	2	1	0.5
+lhsx	lhsx_027	physics_solver_at	2026-10-30 07:12:18	2026-10-05 22:18:41	
+lhsx	lhsx_027	warning_count	2	1	0.5
+lhsx	lhsx_028	physics_solver_at	2026-10-30 07:33:46	2026-10-05 22:45:11	
+lhsx	lhsx_028	warning_count	2	1	0.5
+lhsx	lhsx_029	physics_solver_at	2026-10-30 07:32:45	2026-10-05 22:47:20	
+lhsx	lhsx_029	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_030	physics_solver_at	2026-10-30 07:18:06	2026-10-05 22:27:31	
+lhsx	lhsx_030	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_031	physics_solver_at	2026-10-30 07:19:25	2026-10-05 22:27:21	
+lhsx	lhsx_031	warning_count	2	1	0.5
+lhsx	lhsx_032	physics_solver_at	2026-10-30 07:12:27	2026-10-05 22:31:55	
+lhsx	lhsx_032	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_033	physics_solver_at	2026-10-30 07:32:36	2026-10-05 22:20:23	
+lhsx	lhsx_033	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_034	physics_solver_at	2026-10-30 07:16:34	2026-10-05 22:30:48	
+lhsx	lhsx_034	warning_count	2	1	0.5
+lhsx	lhsx_035	physics_solver_at	2026-10-30 07:18:50	2026-10-05 22:22:55	
+lhsx	lhsx_035	warning_count	2	1	0.5
+lhsx	lhsx_036	physics_solver_at	2026-10-30 07:33:00	2026-10-05 22:44:28	
+lhsx	lhsx_036	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_037	physics_solver_at	2026-10-30 07:09:00	2026-10-05 22:38:12	
+lhsx	lhsx_037	warning_count	2	1	0.5
+lhsx	lhsx_038	physics_solver_at	2026-10-30 07:17:16	2026-10-05 22:24:56	
+lhsx	lhsx_038	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_039	physics_solver_at	2026-10-30 07:20:18	2026-10-05 22:28:53	
+lhsx	lhsx_039	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_040	physics_solver_at	2026-10-30 07:08:09	2026-10-05 22:15:58	
+lhsx	lhsx_040	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_041	physics_solver_at	2026-10-30 07:07:30	2026-10-05 22:18:10	
+lhsx	lhsx_041	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_042	physics_solver_at	2026-10-30 07:29:36	2026-10-05 22:39:36	
+lhsx	lhsx_042	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_043	physics_solver_at	2026-10-30 07:22:13	2026-10-05 22:28:51	
+lhsx	lhsx_043	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_044	physics_solver_at	2026-10-30 07:24:31	2026-10-05 22:34:19	
+lhsx	lhsx_044	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_045	physics_solver_at	2026-10-30 07:10:07	2026-10-05 22:14:48	
+lhsx	lhsx_045	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_046	physics_solver_at	2026-10-30 07:19:51	2026-10-05 22:30:32	
+lhsx	lhsx_046	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_047	physics_solver_at	2026-10-30 07:29:45	2026-10-05 22:47:56	
+lhsx	lhsx_047	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_048	physics_solver_at	2026-10-30 07:30:13	2026-10-05 22:39:32	
+lhsx	lhsx_048	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_049	physics_solver_at	2026-10-30 07:07:33	2026-10-05 22:15:23	
+lhsx	lhsx_049	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_050	physics_solver_at	2026-10-30 07:24:42	2026-10-05 22:34:39	
+lhsx	lhsx_050	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_051	physics_solver_at	2026-10-30 07:17:52	2026-10-05 22:29:21	
+lhsx	lhsx_052	physics_solver_at	2026-10-30 07:11:33	2026-10-05 22:49:18	
+lhsx	lhsx_052	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_053	physics_solver_at	2026-10-30 07:18:52	2026-10-05 22:35:12	
+lhsx	lhsx_054	physics_solver_at	2026-10-30 07:15:07	2026-10-05 22:33:20	
+lhsx	lhsx_055	physics_solver_at	2026-10-30 07:32:59	2026-10-05 22:32:48	
+lhsx	lhsx_055	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_056	physics_solver_at	2026-10-30 07:10:00	2026-10-05 22:18:30	
+lhsx	lhsx_056	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_057	physics_solver_at	2026-10-30 07:07:35	2026-10-05 22:15:24	
+lhsx	lhsx_057	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_058	physics_solver_at	2026-10-30 07:07:12	2026-10-05 22:14:59	
+lhsx	lhsx_058	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_059	physics_solver_at	2026-10-30 07:20:03	2026-10-05 22:29:39	
+lhsx	lhsx_059	warning_count	3	2	0.3333333333333333
+lhsx	lhsx_060	physics_solver_at	2026-10-30 07:31:25	2026-10-05 22:45:21	
+lhsx	lhsx_061	physics_solver_at	2026-10-30 07:29:26	2026-10-05 22:39:55	
+lhsx	lhsx_062	physics_solver_at	2026-10-30 07:24:18	2026-10-05 22:35:37	
+lhsx	lhsx_063	physics_solver_at	2026-10-30 07:10:33	2026-10-05 22:40:27	
+lhsx	lhsx_064	physics_solver_at	2026-10-30 07:32:30	2026-10-05 22:49:20	

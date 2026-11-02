@@ -1,0 +1,991 @@
+{
+ "schema": "s5_records_judge/v1",
+ "batches": {
+  "production194": {
+   "manifest": {
+    "sha256": "d2d9af0335c439fc0de1f7531a3c1781f0316f151f1c172de49f21c50163cffb",
+    "launch_sha": "35f0327377a4213774010a090df4d224e50d29e1",
+    "launch_sha_len": 40,
+    "dirty": false,
+    "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    "expected_generation": "g2",
+    "observe_imports": true,
+    "argv": [
+     "scripts/run_network_194_parallel.py",
+     "run",
+     "--root",
+     "/home/yonghoon71/net194_35f032737_1028",
+     "--observe-imports"
+    ],
+    "input_digest": {
+     "n": 194,
+     "ids_sha256": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+     "raw_sha256_table_sha256": "da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784",
+     "missing_raw_sha": [],
+     "cohort_tsv_sha256": {
+      "lhs": "32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809",
+      "lhsx": "0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45"
+     }
+    },
+    "cohorts": [
+     "lhs",
+     "lhsx"
+    ],
+    "n_queue": 194
+   },
+   "s5_1": {
+    "status": {
+     "lhs:done": 130,
+     "lhsx:done": 64
+    },
+    "failures": {},
+    "stages_ok_null": {
+     "lhs:Network Merge:rc=0": 130,
+     "lhsx:Network Merge:rc=0": 64
+    },
+    "parallel_cases_attempts_seal": {
+     "lhs:attempts=1:seal=SEALED": 130,
+     "lhsx:attempts=1:seal=SEALED": 64
+    },
+    "progress_rows": 194,
+    "progress_outcomes": {
+     "done": 194
+    },
+    "progress_attempt_values": {
+     "1": 194
+    },
+    "runs": [
+     [
+      "run_001.json",
+      "run",
+      {
+       "done": 194
+      },
+      [],
+      "35f0327377a4213774010a090df4d224e50d29e1"
+     ]
+    ],
+    "worker_attempts": [
+     [
+      "n_attempts=1 outcome=done rc=0",
+      194
+     ]
+    ],
+    "merge_report": {
+     "counts": {
+      "lhs": {
+       "done": 130
+      },
+      "lhsx": {
+       "done": 64
+      }
+     },
+     "failures": [],
+     "anomalies": [],
+     "structural": [],
+     "mixed_generation": [],
+     "code_changed_since_launch": [],
+     "eligibility": {
+      "kind": "current",
+      "historical": null,
+      "note": ""
+     },
+     "seal_verdicts": {
+      "SEALED": 194
+     }
+    }
+   },
+   "s5_2_registered_snippet": {
+    "케이스": 194,
+    "판정": {
+     "SEALED": 194
+    },
+    "결합 = 완료 시도": [
+     true,
+     194,
+     194
+    ],
+    "expected ≠ observed": [],
+    "감사 문제": [],
+    "완료 아닌 시도의 미최종 영수증 (정보 · Q2)": 0,
+    "시작 · 끝맺음 (재시도 없으면 같다)": [
+     970,
+     970
+    ]
+   },
+   "s5_2_fields": {
+    "schema": "launch_seal/v3#audit",
+    "eligibility": {
+     "kind": "current",
+     "historical": null,
+     "problems": [],
+     "note": ""
+    },
+    "merged": {
+     "same": 194
+    },
+    "generation_declared": true,
+    "expected_network_generation": "g2",
+    "generation_problems": [],
+    "input_problems": [],
+    "code_root_changed_now": [],
+    "recorded_root": "/home/yonghoon71/net194_35f032737_1028",
+    "seal_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    "launch_sha": "35f0327377a4213774010a090df4d224e50d29e1",
+    "case_generations": {
+     "g2": 194
+    },
+    "obs_outside": [],
+    "obs_problems": [],
+    "obs_tmp_leftover": [],
+    "n_processes": 970
+   },
+   "s5_3_fields": {
+    "schema": "g2_network_reread/v3",
+    "n_fail": 0,
+    "expected_set": "production194",
+    "expected_n": 194,
+    "read_n": 194,
+    "set_equal": true,
+    "missing": [],
+    "extra": [],
+    "meta_all_ok": true,
+    "meta_names": [
+     "M0 manifest 기대 세대 선언 (expected_network_g",
+     "M-plan manifest plan · cohorts · queue 꼴",
+     "M-reg 계획 큐 = 등록 집합 production194 (194)",
+     "M1 lhs 케이스 집합 — 계획 큐 = 배치 기록 (130)",
+     "M2 lhs 전 케이스 done · partial",
+     "H1 lhs 인계 출처 관문 (load_tau_results · P0–P",
+     "M1 lhsx 케이스 집합 — 계획 큐 = 배치 기록 (64)",
+     "M2 lhsx 전 케이스 done · partial",
+     "H1 lhsx 인계 출처 관문 (load_tau_results · P0–",
+     "M3 읽은 고유 (케이스, 코호트) = 등록 집합 production19"
+    ],
+    "n_cases": 194,
+    "cases_with_failed_checks": [],
+    "check_ids_per_case": [
+     "K1",
+     "K2",
+     "K3",
+     "K4",
+     "K5",
+     "K6",
+     "K7"
+    ],
+    "recorded_launcher_root": "/home/yonghoon71/net194_35f032737_1028",
+    "manifest_sha256_eq_bundle_manifest": true,
+    "seal_fp_eq_manifest": true,
+    "launch_sha_eq_manifest": true,
+    "generations": {
+     "g2": 194
+    }
+   },
+   "gate_same_function": {
+    "n_problems": 2,
+    "path_binding_only": 2,
+    "other_problems": [],
+    "files": {
+     "seal_audit.json": {
+      "sha256": "a6515b1e216d3034be200902580b1358ef1c4c7d0877ac614e366f17a7cf6c69",
+      "read": "ok"
+     },
+     "reread.json": {
+      "sha256": "d6558654721020aca99679b9e84576a693d3db2d02115139d69ae064cfa028e6",
+      "read": "ok"
+     }
+    }
+   },
+   "tau": {
+    "lhs": {
+     "n": 130,
+     "status_hertz": {
+      "NOT_PERCOLATING": 24,
+      "OK": 106
+     },
+     "reason_hertz": {
+      "": 130
+     },
+     "status_physics": {
+      "MODEL_BELOW_CONTINUUM_BOUND": 7,
+      "NOT_PERCOLATING": 24,
+      "OK": 99
+     },
+     "reason_physics": {
+      "": 130
+     },
+     "status_hertz_h12": {
+      "NOT_PERCOLATING": 24,
+      "OK": 106
+     },
+     "reason_hertz_h12": {
+      "": 130
+     },
+     "model_limit_fact_hertz": [],
+     "model_limit_fact_physics_n": 0,
+     "model_limit_status_h12_n": 0,
+     "primary_model_limit_problems": [],
+     "flag_values": {
+      "full_model_limit_hertz": {
+       "False": 130
+      },
+      "full_model_limit_physics": {
+       "False": 130
+      }
+     },
+     "band_rule": {
+      "hertz": {
+       "L0": 130
+      },
+      "physics": {
+       "L0": 130
+      },
+      "hertz_h12": {
+       "L0": 130
+      }
+     },
+     "basis_check": {
+      "hertz": {
+       "ok": 130
+      },
+      "physics": {
+       "ok": 130
+      },
+      "hertz_h12": {
+       "ok": 130
+      }
+     },
+     "const": {
+      "ion_sigma0_mScm": {
+       "3.0": 130
+      },
+      "ion_sigma0_T_C": {
+       "25.0": 130
+      },
+      "phi_basis": {
+       "mass_conserving": 130
+      },
+      "L_basis": {
+       "L_mc": 130
+      },
+      "ion_net_generation": {
+       "g2": 130
+      }
+     },
+     "hertz_target_available_value_status": 106,
+     "hertz_nonperc_f_zero": 24,
+     "hertz_f_blank": [],
+     "mbcb_cases": {
+      "hertz": [],
+      "physics": [
+       "lhs00_002",
+       "lhs00_025",
+       "lhs00_031",
+       "lhs00_033",
+       "lhs00_057",
+       "lhs00_064",
+       "lhs00_121"
+      ],
+      "hertz_h12": []
+     }
+    },
+    "lhsx": {
+     "n": 64,
+     "status_hertz": {
+      "OK": 64
+     },
+     "reason_hertz": {
+      "": 64
+     },
+     "status_physics": {
+      "MODEL_BELOW_CONTINUUM_BOUND": 51,
+      "NOT_COMPUTED (full_over_conduction — FULL 모형 한계)": 8,
+      "OK": 5
+     },
+     "reason_physics": {
+      "": 56,
+      "full_over_conduction": 8
+     },
+     "status_hertz_h12": {
+      "MODEL_BELOW_CONTINUUM_BOUND": 12,
+      "OK": 52
+     },
+     "reason_hertz_h12": {
+      "": 64
+     },
+     "model_limit_fact_hertz": [],
+     "model_limit_fact_physics_n": 8,
+     "model_limit_status_h12_n": 0,
+     "primary_model_limit_problems": [],
+     "flag_values": {
+      "full_model_limit_hertz": {
+       "False": 64
+      },
+      "full_model_limit_physics": {
+       "False": 56,
+       "True": 8
+      }
+     },
+     "band_rule": {
+      "hertz": {
+       "L0": 64
+      },
+      "physics": {
+       "L0": 64
+      },
+      "hertz_h12": {
+       "L0": 64
+      }
+     },
+     "basis_check": {
+      "hertz": {
+       "ok": 64
+      },
+      "physics": {
+       "ok": 64
+      },
+      "hertz_h12": {
+       "ok": 64
+      }
+     },
+     "const": {
+      "ion_sigma0_mScm": {
+       "3.0": 64
+      },
+      "ion_sigma0_T_C": {
+       "25.0": 64
+      },
+      "phi_basis": {
+       "mass_conserving": 64
+      },
+      "L_basis": {
+       "L_mc": 64
+      },
+      "ion_net_generation": {
+       "g2": 64
+      }
+     },
+     "hertz_target_available_value_status": 64,
+     "hertz_nonperc_f_zero": 0,
+     "hertz_f_blank": [],
+     "mbcb_cases": {
+      "hertz": [],
+      "physics": [
+       "lhsx_001",
+       "lhsx_002",
+       "lhsx_003",
+       "lhsx_004",
+       "lhsx_009",
+       "lhsx_010",
+       "lhsx_011",
+       "lhsx_012",
+       "lhsx_013",
+       "lhsx_015",
+       "lhsx_016",
+       "lhsx_017",
+       "lhsx_018",
+       "lhsx_019",
+       "lhsx_020",
+       "lhsx_021",
+       "lhsx_022",
+       "lhsx_023",
+       "lhsx_024",
+       "lhsx_025",
+       "lhsx_026",
+       "lhsx_027",
+       "lhsx_028",
+       "lhsx_029",
+       "lhsx_030",
+       "lhsx_031",
+       "lhsx_032",
+       "lhsx_033",
+       "lhsx_034",
+       "lhsx_035",
+       "lhsx_036",
+       "lhsx_037",
+       "lhsx_038",
+       "lhsx_039",
+       "lhsx_040",
+       "lhsx_041",
+       "lhsx_042",
+       "lhsx_043",
+       "lhsx_044",
+       "lhsx_045",
+       "lhsx_046",
+       "lhsx_047",
+       "lhsx_048",
+       "lhsx_049",
+       "lhsx_050",
+       "lhsx_052",
+       "lhsx_055",
+       "lhsx_056",
+       "lhsx_057",
+       "lhsx_058",
+       "lhsx_059"
+      ],
+      "hertz_h12": [
+       "lhsx_048",
+       "lhsx_050",
+       "lhsx_051",
+       "lhsx_053",
+       "lhsx_054",
+       "lhsx_057",
+       "lhsx_059",
+       "lhsx_060",
+       "lhsx_061",
+       "lhsx_062",
+       "lhsx_063",
+       "lhsx_064"
+      ]
+     }
+    }
+   },
+   "branch_table": {
+    "lhs|hertz|bulk_only|computed|None": 106,
+    "lhs|hertz|bulk_only|valid_zero|no_through_path": 24,
+    "lhs|hertz|constriction_only|computed|None": 106,
+    "lhs|hertz|constriction_only|valid_zero|no_through_path": 24,
+    "lhs|hertz|full|computed|None": 106,
+    "lhs|hertz|full|valid_zero|no_through_path": 24,
+    "lhs|hertz_h12|bulk_only|computed|None": 106,
+    "lhs|hertz_h12|bulk_only|valid_zero|no_through_path": 24,
+    "lhs|hertz_h12|constriction_only|computed|None": 106,
+    "lhs|hertz_h12|constriction_only|valid_zero|no_through_path": 24,
+    "lhs|hertz_h12|full|computed|None": 106,
+    "lhs|hertz_h12|full|valid_zero|no_through_path": 24,
+    "lhs|physics|bulk_only|computed|None": 106,
+    "lhs|physics|bulk_only|valid_zero|no_through_path": 24,
+    "lhs|physics|constriction_only|not_computed|zero_resistance_requires_contraction": 106,
+    "lhs|physics|constriction_only|valid_zero|no_through_path": 24,
+    "lhs|physics|full|computed|None": 106,
+    "lhs|physics|full|valid_zero|no_through_path": 24,
+    "lhsx|hertz|bulk_only|computed|None": 35,
+    "lhsx|hertz|bulk_only|model_over_conduction|q_gt_1p5": 29,
+    "lhsx|hertz|constriction_only|computed|None": 64,
+    "lhsx|hertz|full|computed|None": 64,
+    "lhsx|hertz_h12|bulk_only|computed|None": 58,
+    "lhsx|hertz_h12|bulk_only|model_over_conduction|q_gt_1p5": 6,
+    "lhsx|hertz_h12|constriction_only|computed|None": 20,
+    "lhsx|hertz_h12|constriction_only|model_over_conduction|q_gt_1p5": 44,
+    "lhsx|hertz_h12|full|computed|None": 64,
+    "lhsx|physics|bulk_only|computed|None": 35,
+    "lhsx|physics|bulk_only|model_over_conduction|q_gt_1p5": 29,
+    "lhsx|physics|constriction_only|not_computed|zero_resistance_requires_contraction": 64,
+    "lhsx|physics|full|computed|None": 56,
+    "lhsx|physics|full|not_computed|full_over_conduction": 8
+   },
+   "metrics_flat_channels": {
+    "lhs": {
+     "ionic_channel_verdict": {
+      "ok": 130
+     },
+     "electronic_channel_verdict": {
+      "ok": 130
+     },
+     "thermal_channel_verdict": {
+      "ok": 130
+     },
+     "network_solver_status": {
+      "success": 130
+     },
+     "failed_channels": {
+      "": 130
+     },
+     "network_dual.hertzian.sigma_full_status": {
+      "computed": 106,
+      "valid_zero": 24
+     },
+     "network_dual.hertzian.sigma_full_reason": {
+      "": 106,
+      "no_through_path": 24
+     },
+     "network_dual.physics.sigma_full_status": {
+      "computed": 106,
+      "valid_zero": 24
+     },
+     "network_dual.physics.sigma_full_reason": {
+      "": 106,
+      "no_through_path": 24
+     },
+     "network_dual.hertzian.electronic_sigma_full_status": {
+      "computed": 130
+     },
+     "network_dual.hertzian.electronic_sigma_full_reason": {
+      "": 130
+     },
+     "network_dual.physics.electronic_sigma_full_status": {
+      "computed": 130
+     },
+     "network_dual.physics.electronic_sigma_full_reason": {
+      "": 130
+     },
+     "network_dual.hertzian.thermal_sigma_full_status": {
+      "computed": 130
+     },
+     "network_dual.hertzian.thermal_sigma_full_reason": {
+      "": 130
+     },
+     "network_dual.physics.thermal_sigma_full_status": {
+      "computed": 130
+     },
+     "network_dual.physics.thermal_sigma_full_reason": {
+      "": 130
+     },
+     "n_rows": 130,
+     "electronic_model_limit_cases": {
+      "hertzian": [],
+      "physics": []
+     }
+    },
+    "lhsx": {
+     "ionic_channel_verdict": {
+      "ok": 64
+     },
+     "electronic_channel_verdict": {
+      "ok": 64
+     },
+     "thermal_channel_verdict": {
+      "ok": 64
+     },
+     "network_solver_status": {
+      "success": 64
+     },
+     "failed_channels": {
+      "": 64
+     },
+     "network_dual.hertzian.sigma_full_status": {
+      "computed": 64
+     },
+     "network_dual.hertzian.sigma_full_reason": {
+      "": 64
+     },
+     "network_dual.physics.sigma_full_status": {
+      "computed": 56,
+      "not_computed": 8
+     },
+     "network_dual.physics.sigma_full_reason": {
+      "": 56,
+      "full_over_conduction": 8
+     },
+     "network_dual.hertzian.electronic_sigma_full_status": {
+      "computed": 57,
+      "valid_zero": 7
+     },
+     "network_dual.hertzian.electronic_sigma_full_reason": {
+      "": 57,
+      "no_through_path": 7
+     },
+     "network_dual.physics.electronic_sigma_full_status": {
+      "computed": 57,
+      "valid_zero": 7
+     },
+     "network_dual.physics.electronic_sigma_full_reason": {
+      "": 57,
+      "no_through_path": 7
+     },
+     "network_dual.hertzian.thermal_sigma_full_status": {
+      "computed": 64
+     },
+     "network_dual.hertzian.thermal_sigma_full_reason": {
+      "": 64
+     },
+     "network_dual.physics.thermal_sigma_full_status": {
+      "computed": 64
+     },
+     "network_dual.physics.thermal_sigma_full_reason": {
+      "": 64
+     },
+     "n_rows": 64,
+     "electronic_model_limit_cases": {
+      "hertzian": [],
+      "physics": []
+     }
+    }
+   }
+  },
+  "supp20": {
+   "manifest": {
+    "sha256": "e8c5a1202f6584e5e8f320bd064cccbb2d5cce2b203227918e7373f052cb90ac",
+    "launch_sha": "35f0327377a4213774010a090df4d224e50d29e1",
+    "launch_sha_len": 40,
+    "dirty": false,
+    "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    "expected_generation": "g2",
+    "observe_imports": true,
+    "argv": [
+     "scripts/run_network_194_parallel.py",
+     "run",
+     "--root",
+     "/home/yonghoon71/netsupp20_35f032737_1028",
+     "--cohorts",
+     "lhss",
+     "--observe-imports"
+    ],
+    "input_digest": {
+     "n": 20,
+     "ids_sha256": "991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694",
+     "raw_sha256_table_sha256": "a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e",
+     "missing_raw_sha": [],
+     "cohort_tsv_sha256": {
+      "lhss": "69d3f913072288b1d6b8ca8a14e43b0bc8f80e8836a8f79a9b26b2d8ed6dcaf7"
+     }
+    },
+    "cohorts": [
+     "lhss"
+    ],
+    "n_queue": 20
+   },
+   "s5_1": {
+    "status": {
+     "lhss:done": 20
+    },
+    "failures": {},
+    "stages_ok_null": {
+     "lhss:Network Merge:rc=0": 20
+    },
+    "parallel_cases_attempts_seal": {
+     "lhss:attempts=1:seal=SEALED": 20
+    },
+    "progress_rows": 20,
+    "progress_outcomes": {
+     "done": 20
+    },
+    "progress_attempt_values": {
+     "1": 20
+    },
+    "runs": [
+     [
+      "run_001.json",
+      "run",
+      {
+       "done": 20
+      },
+      [],
+      "35f0327377a4213774010a090df4d224e50d29e1"
+     ]
+    ],
+    "worker_attempts": [
+     [
+      "n_attempts=1 outcome=done rc=0",
+      20
+     ]
+    ],
+    "merge_report": {
+     "counts": {
+      "lhss": {
+       "done": 20
+      }
+     },
+     "failures": [],
+     "anomalies": [],
+     "structural": [],
+     "mixed_generation": [],
+     "code_changed_since_launch": [],
+     "eligibility": {
+      "kind": "current",
+      "historical": null,
+      "note": ""
+     },
+     "seal_verdicts": {
+      "SEALED": 20
+     }
+    }
+   },
+   "s5_2_registered_snippet": {
+    "케이스": 20,
+    "판정": {
+     "SEALED": 20
+    },
+    "결합 = 완료 시도": [
+     true,
+     20,
+     20
+    ],
+    "expected ≠ observed": [],
+    "감사 문제": [],
+    "완료 아닌 시도의 미최종 영수증 (정보 · Q2)": 0,
+    "시작 · 끝맺음 (재시도 없으면 같다)": [
+     100,
+     100
+    ]
+   },
+   "s5_2_fields": {
+    "schema": "launch_seal/v3#audit",
+    "eligibility": {
+     "kind": "current",
+     "historical": null,
+     "problems": [],
+     "note": ""
+    },
+    "merged": {
+     "same": 20
+    },
+    "generation_declared": true,
+    "expected_network_generation": "g2",
+    "generation_problems": [],
+    "input_problems": [],
+    "code_root_changed_now": [],
+    "recorded_root": "/home/yonghoon71/netsupp20_35f032737_1028",
+    "seal_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    "launch_sha": "35f0327377a4213774010a090df4d224e50d29e1",
+    "case_generations": {
+     "g2": 20
+    },
+    "obs_outside": [],
+    "obs_problems": [],
+    "obs_tmp_leftover": [],
+    "n_processes": 100
+   },
+   "s5_3_fields": {
+    "schema": "g2_network_reread/v3",
+    "n_fail": 0,
+    "expected_set": "supp20",
+    "expected_n": 20,
+    "read_n": 20,
+    "set_equal": true,
+    "missing": [],
+    "extra": [],
+    "meta_all_ok": true,
+    "meta_names": [
+     "M0 manifest 기대 세대 선언 (expected_network_g",
+     "M-plan manifest plan · cohorts · queue 꼴",
+     "M-reg 계획 큐 = 등록 집합 supp20 (20)",
+     "M1 lhss 케이스 집합 — 계획 큐 = 배치 기록 (20)",
+     "M2 lhss 전 케이스 done · partial",
+     "H1 lhss 인계 출처 관문 (load_tau_results · P0–",
+     "M3 읽은 고유 (케이스, 코호트) = 등록 집합 supp20 — 기대 "
+    ],
+    "n_cases": 20,
+    "cases_with_failed_checks": [],
+    "check_ids_per_case": [
+     "K1",
+     "K2",
+     "K3",
+     "K4",
+     "K5",
+     "K6",
+     "K7"
+    ],
+    "recorded_launcher_root": "/home/yonghoon71/netsupp20_35f032737_1028",
+    "manifest_sha256_eq_bundle_manifest": true,
+    "seal_fp_eq_manifest": true,
+    "launch_sha_eq_manifest": true,
+    "generations": {
+     "g2": 20
+    }
+   },
+   "gate_same_function": {
+    "n_problems": 2,
+    "path_binding_only": 2,
+    "other_problems": [],
+    "files": {
+     "seal_audit.json": {
+      "sha256": "f4ebcb4eda0eab2d01905b7d543557efe3c87420783c70073d238c0f18b1634d",
+      "read": "ok"
+     },
+     "reread.json": {
+      "sha256": "d8255f0ed07b0886fcff927e48ce09c9feb8e9c7eb99c03c6bda957698083499",
+      "read": "ok"
+     }
+    }
+   },
+   "tau": {
+    "lhss": {
+     "n": 20,
+     "status_hertz": {
+      "NOT_PERCOLATING": 3,
+      "OK": 17
+     },
+     "reason_hertz": {
+      "": 20
+     },
+     "status_physics": {
+      "MODEL_BELOW_CONTINUUM_BOUND": 4,
+      "NOT_COMPUTED (full_over_conduction — FULL 모형 한계)": 6,
+      "NOT_PERCOLATING": 3,
+      "OK": 7
+     },
+     "reason_physics": {
+      "full_over_conduction": 6,
+      "": 14
+     },
+     "status_hertz_h12": {
+      "MODEL_BELOW_CONTINUUM_BOUND": 6,
+      "NOT_PERCOLATING": 3,
+      "OK": 11
+     },
+     "reason_hertz_h12": {
+      "": 20
+     },
+     "model_limit_fact_hertz": [],
+     "model_limit_fact_physics_n": 6,
+     "model_limit_status_h12_n": 0,
+     "primary_model_limit_problems": [],
+     "flag_values": {
+      "full_model_limit_hertz": {
+       "False": 20
+      },
+      "full_model_limit_physics": {
+       "True": 6,
+       "False": 14
+      }
+     },
+     "band_rule": {
+      "hertz": {
+       "L0": 20
+      },
+      "physics": {
+       "L0": 20
+      },
+      "hertz_h12": {
+       "L0": 20
+      }
+     },
+     "basis_check": {
+      "hertz": {
+       "ok": 20
+      },
+      "physics": {
+       "ok": 20
+      },
+      "hertz_h12": {
+       "ok": 20
+      }
+     },
+     "const": {
+      "ion_sigma0_mScm": {
+       "3.0": 20
+      },
+      "ion_sigma0_T_C": {
+       "25.0": 20
+      },
+      "phi_basis": {
+       "mass_conserving": 20
+      },
+      "L_basis": {
+       "L_mc": 20
+      },
+      "ion_net_generation": {
+       "g2": 20
+      }
+     },
+     "hertz_target_available_value_status": 17,
+     "hertz_nonperc_f_zero": 3,
+     "hertz_f_blank": [],
+     "mbcb_cases": {
+      "hertz": [],
+      "physics": [
+       "lhss_002",
+       "lhss_004",
+       "lhss_010",
+       "lhss_020"
+      ],
+      "hertz_h12": [
+       "lhss_001",
+       "lhss_003",
+       "lhss_008",
+       "lhss_009",
+       "lhss_011",
+       "lhss_014"
+      ]
+     }
+    }
+   },
+   "branch_table": {
+    "lhss|hertz|bulk_only|computed|None": 9,
+    "lhss|hertz|bulk_only|model_over_conduction|q_gt_1p5": 8,
+    "lhss|hertz|bulk_only|valid_zero|no_through_path": 3,
+    "lhss|hertz|constriction_only|computed|None": 17,
+    "lhss|hertz|constriction_only|valid_zero|no_through_path": 3,
+    "lhss|hertz|full|computed|None": 17,
+    "lhss|hertz|full|valid_zero|no_through_path": 3,
+    "lhss|hertz_h12|bulk_only|computed|None": 11,
+    "lhss|hertz_h12|bulk_only|model_over_conduction|q_gt_1p5": 6,
+    "lhss|hertz_h12|bulk_only|valid_zero|no_through_path": 3,
+    "lhss|hertz_h12|constriction_only|computed|None": 7,
+    "lhss|hertz_h12|constriction_only|model_over_conduction|q_gt_1p5": 10,
+    "lhss|hertz_h12|constriction_only|valid_zero|no_through_path": 3,
+    "lhss|hertz_h12|full|computed|None": 17,
+    "lhss|hertz_h12|full|valid_zero|no_through_path": 3,
+    "lhss|physics|bulk_only|computed|None": 9,
+    "lhss|physics|bulk_only|model_over_conduction|q_gt_1p5": 8,
+    "lhss|physics|bulk_only|valid_zero|no_through_path": 3,
+    "lhss|physics|constriction_only|not_computed|zero_resistance_requires_contraction": 17,
+    "lhss|physics|constriction_only|valid_zero|no_through_path": 3,
+    "lhss|physics|full|computed|None": 11,
+    "lhss|physics|full|not_computed|full_over_conduction": 6,
+    "lhss|physics|full|valid_zero|no_through_path": 3
+   },
+   "metrics_flat_channels": {
+    "lhss": {
+     "ionic_channel_verdict": {
+      "ok": 20
+     },
+     "electronic_channel_verdict": {
+      "ok": 20
+     },
+     "thermal_channel_verdict": {
+      "ok": 20
+     },
+     "network_solver_status": {
+      "success": 20
+     },
+     "failed_channels": {
+      "": 20
+     },
+     "network_dual.hertzian.sigma_full_status": {
+      "computed": 17,
+      "valid_zero": 3
+     },
+     "network_dual.hertzian.sigma_full_reason": {
+      "": 17,
+      "no_through_path": 3
+     },
+     "network_dual.physics.sigma_full_status": {
+      "not_computed": 6,
+      "computed": 11,
+      "valid_zero": 3
+     },
+     "network_dual.physics.sigma_full_reason": {
+      "full_over_conduction": 6,
+      "": 11,
+      "no_through_path": 3
+     },
+     "network_dual.hertzian.electronic_sigma_full_status": {
+      "valid_zero": 6,
+      "computed": 14
+     },
+     "network_dual.hertzian.electronic_sigma_full_reason": {
+      "no_through_path": 6,
+      "": 14
+     },
+     "network_dual.physics.electronic_sigma_full_status": {
+      "valid_zero": 6,
+      "computed": 14
+     },
+     "network_dual.physics.electronic_sigma_full_reason": {
+      "no_through_path": 6,
+      "": 14
+     },
+     "network_dual.hertzian.thermal_sigma_full_status": {
+      "computed": 20
+     },
+     "network_dual.hertzian.thermal_sigma_full_reason": {
+      "": 20
+     },
+     "network_dual.physics.thermal_sigma_full_status": {
+      "computed": 20
+     },
+     "network_dual.physics.thermal_sigma_full_reason": {
+      "": 20
+     },
+     "n_rows": 20,
+     "electronic_model_limit_cases": {
+      "hertzian": [],
+      "physics": []
+     }
+    }
+   }
+  }
+ }
+}

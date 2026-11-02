@@ -1,0 +1,26 @@
+{
+ "lhs": {
+  "n": 130,
+  "agree": 130,
+  "disagree": 0,
+  "first_disagree": [],
+  "dw_counts": {
+   "-1": 0,
+   "0": 43,
+   "1": 87,
+   "2": 0
+  }
+ },
+ "lhsx": {
+  "n": 64,
+  "agree": 64,
+  "disagree": 0,
+  "first_disagree": [],
+  "dw_counts": {
+   "-1": 0,
+   "0": 8,
+   "1": 56,
+   "2": 0
+  }
+ }
+}
