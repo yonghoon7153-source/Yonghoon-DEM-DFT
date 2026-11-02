@@ -10514,19 +10514,39 @@ def pd_world_tmp():
     return None
 
 
-def pd01r_scene(d, agent):
+def pd_agent_exe():
+    """구경꾼 (PD01R_AGENT · ctypes · sys · time 만) 을 띄울 파이썬 — root 시험은 자식을 uid 65534 로 내리므로 sys.executable 이 그 uid 가 못 여는 자리
+    (/root 아래 uv 인터프리터 = 게이트의 kgy 판 3.8 시험 `scripts/check_kgy_py38.sh`) 이면 남 (other) 이 열 수 있는 첫 인터프리터.  시험 대상 (사슬 코드) 은
+    포크한 시험 프로세스 안에서 돈다 (구경꾼 인터프리터 무관) · root 아님 = sys.executable 그대로 · 못 찾으면 sys.executable (= 그 시험의 실패로 드러난다)."""
+    if os.getuid() != 0:
+        return sys.executable
+
+    def other_ok(p):
+        try:
+            qs = [Path(p), Path(p).resolve()]
+            return qs[1].is_file() and all(os.stat(x).st_mode & 0o001 for q in qs for x in [q] + list(q.parents))
+        except OSError:
+            return False
+    for c in (sys.executable, shutil.which('python3', path='/usr/local/bin:/usr/bin:/bin'), '/usr/bin/python3'):
+        if c and other_ok(c):
+            return str(c)
+    return sys.executable
+
+
+def pd01r_scene(d, agent, exe=None):
     """(포크한 자식 · root 면 uid 65534 로 내린 뒤) PD01r 장면 → dict — 구경꾼 (같은 실 uid · dumpable 0 · 표지 env 없음 · 이 프로세스의 자식 = 러너 세션 밖) 이
-    사는 동안 run_in_group · 사슬 부모가 죽은 시작 기록의 recover · 러너 세션 안 environ 못 읽는 자식."""
+    사는 동안 run_in_group · 사슬 부모가 죽은 시작 기록의 recover · 러너 세션 안 environ 못 읽는 자식.  exe = 구경꾼 파이썬 (`pd_agent_exe` · 내리기 전에 고른다)."""
     import signal as _sig
     import subprocess as _sp
-    res = {'uid': os.getuid()}
+    exe = exe or sys.executable
+    res = {'uid': os.getuid(), 'agent_exe_is_sys': exe == sys.executable}
     try:
         ps = RR.proc_stat(os.getpid())
         res['stat_fields'] = [list(ps[2:5]) if ps else None, [os.getppid(), os.getpgrp(), os.getsid(0)]]
     except Exception as e:                                   # noqa: BLE001 — 고치기 전 판 (칸 없음) = 기록
         res['stat_fields'] = [f'{type(e).__name__}: {e}', None]
     env = {k: v for k, v in os.environ.items() if k != RR.GROUP_TOKEN_ENV}
-    b = _sp.Popen([sys.executable, '-I', '-S', str(agent), '60'], env=env, stdin=_sp.DEVNULL, stdout=_sp.PIPE)
+    b = _sp.Popen([exe, '-I', '-S', str(agent), '60'], env=env, stdin=_sp.DEVNULL, stdout=_sp.PIPE)
     try:
         res['bystander_ready'] = b.stdout.read(1) == b'1'
         try:
@@ -10549,7 +10569,7 @@ def pd01r_scene(d, agent):
         er = json.loads((rd / 'groups' / 'L01_floor.end.json').read_text(encoding='utf-8'))
         res['recover'] = [rc_rec, er.get('confirmed'), er.get('by')]
         sh = d / 'in.sh'
-        sh.write_text(f'"{sys.executable}" -I -S "{agent}" 60 > "{d / "in_ready"}" &\necho $! > "{d / "in_pid"}"\n'
+        sh.write_text(f'"{exe}" -I -S "{agent}" 60 > "{d / "in_ready"}" &\necho $! > "{d / "in_pid"}"\n'
                       f'for i in $(seq 200); do [ -s "{d / "in_ready"}" ] && break; sleep 0.05; done\nexit 0\n', encoding='utf-8')
         with open(d / 'in.log', 'w', encoding='utf-8') as lf:
             rc2, cause2, end2 = RR.run_in_group(['bash', str(sh)], str(d), dict(os.environ), lf, 60, d / 'groups', 'PD01r_in')
@@ -10582,6 +10602,7 @@ def t_PD01r():
             for p in (d, d / 'w'):
                 os.chmod(p, 0o777)
             os.chmod(d / 'agent.py', 0o644)
+        exe = pd_agent_exe()                                 # 내리기 전에 (내린 뒤엔 uid 65534 가 /root 아래 인터프리터를 못 연다)
         r, w = os.pipe()
         pid = os.fork()
         if pid == 0:                                         # 자식 — 끝은 늘 os._exit (부모의 finally · 정리를 돌리지 않는다)
@@ -10593,7 +10614,7 @@ def t_PD01r():
                     os.setgroups([])
                     os.setresgid(65534, 65534, 65534)
                     os.setresuid(65534, 65534, 65534)
-                out = pd01r_scene(d / 'w', d / 'agent.py')
+                out = pd01r_scene(d / 'w', d / 'agent.py', exe)
             except BaseException as e:                       # noqa: BLE001
                 out = {'error': f'{type(e).__name__}: {e}'}
             try:
