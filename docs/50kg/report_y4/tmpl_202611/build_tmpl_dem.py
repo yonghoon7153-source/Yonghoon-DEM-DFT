@@ -3,10 +3,11 @@
 """50kg 4차년도 보고 덱 (2026.11 양식) — DEM 장 생성기.
 
 1저자 양식 pptx (리포 밖 · 읽기 전용) 에 DEM 장을 채운다.  양식의 글꼴 · 스타일 · 이야기는 그대로 두고 값만 바꾼다.
-  A      새 장 (양식 5장 뒤) : D_SE = 1 µm 가압 거동 — 3단 시간 그림 + 기공 렌더 4 칸 (마지막 칸 = 빈 칸)
-  B      양식 6장            : 입도 1 / 2 / 3 µm — 막대 (Origin OLE → PNG) · 경로 그림 옆 = 기하 tortuosity
-  C      양식 7장            : E_SE = 11 / 22 / 33 GPa — 렌더 칸 비움 · 두께 + 기공도 막대 · 수송 tortuosity
-  D–G    새 장 (양식 7장 뒤) : 입도 · 영률 절마다 미세구조 비교 / 지표 변화 / 응력 분포 (이완 후) / 이온전도도 변화
+  6      새 장 (양식 5장 뒤) : D_SE = 1 µm 가압 거동 — 3단 시간 그림 + 기공 렌더 4 칸 (마지막 칸 = 빈 칸)
+  7      양식 6장            : 입도 1 / 2 / 3 µm — 렌더 · 경로 그림 칸 비움 · 막대 (Origin OLE → PNG) · 기하 tortuosity
+  8–11   새 장 (입도 묶음)    : 미세구조 비교 / 지표 변화 / 응력 분포 (이완 후) / 이온전도도 변화
+  12     양식 7장            : E_SE = 11 / 22 / 33 GPa — 렌더 칸 비움 · 두께 + 기공도 막대 · 수송 tortuosity
+  13–16  새 장 (영률 묶음)    : 같은 네 장
 이미지 칸 (점선 사각형) = 1저자가 웹앱 렌더를 붙이는 자리.  막대 그림마다 Origin 용 CSV 를 함께 쓴다.
 
 사용:
@@ -60,6 +61,7 @@ MOD = dict(
     porosity=[17.5, 19.6, 21.2],
     coverage=[61.3, 54.2, 48.1],
     tau2=[7.80, 8.26, 9.05],
+    tau_geo=[1.28, 1.28, 1.30],              # tau_geo_all (metrics_D2E05 · metrics_D2 · metrics_D2E15)
     sigma=[0.0544, 0.0501, 0.0448],
     p_end=[278, 280, 280],
     am_med=[353, 335, 326], se_med=[85, 126, 152],
@@ -68,7 +70,7 @@ MOD = dict(
 D1 = dict(z0=145.45, z1=122.60, v=10, p_peak=300.6, t_peak=2685, p_relax=156.2, t_relax=2785, p_dump50=53)
 
 
-def verify(values_csv, metrics_modulus):
+def verify(values_csv, metrics_modulus, tau_geo_json=None):
     """원자료와 대조 (반올림 자리까지)."""
     bad = []
     if values_csv:
@@ -104,11 +106,17 @@ def verify(values_csv, metrics_modulus):
             got = g(k, nd, f)
             if [round(w, nd) for w in want] != got:
                 bad.append((k, want, got))
+    if tau_geo_json:              # 영률 절 기하 tortuosity — E05 · D2 · E15 순서
+        import json
+        got = [round(float(json.load(open(f))['metrics']['tau_geo_all']), 2) for f in tau_geo_json]
+        if got != [round(v, 2) for v in MOD['tau_geo']]:
+            bad.append(('tau_geo_all', MOD['tau_geo'], got))
     if bad:
         for b in bad:
             print('VALUE MISMATCH', b, file=sys.stderr)
         sys.exit(2)
-    print('values verified' if (values_csv or metrics_modulus) else 'values not verified (no source files given)')
+    print('values verified' if (values_csv or metrics_modulus or tau_geo_json) else
+          'values not verified (no source files given)')
 
 
 # --------------------------------------------------------------------------- charts
@@ -236,7 +244,7 @@ def make_charts(fig_dir):
     # B · C 오른쪽 열 (양식 OLE 자리 크기 그대로)
     TH_SIZE, TH_M = (2.290, 1.604), (0.697, 0.17, 0.10, 0.27)
     PO_SIZE, PO_M = (2.213, 1.846), (0.62, 0.17, 0.10, 0.50)
-    for sec, tag, slide in ((s, 'DSE', 'p07'), (m, 'ESE', 'p08')):
+    for sec, tag, slide in ((s, 'DSE', 'p07'), (m, 'ESE', 'p12')):
         name = '%s_thickness_%s' % (slide, tag)
         break_chart(fig_dir / (name + '.png'), TH_SIZE, TH_M, sec['cats'], sec['thickness'], 118, 135,
                     [120, 125, 130, 135], [122.5, 127.5, 132.5], 'Thickness (µm)', None,
@@ -253,7 +261,7 @@ def make_charts(fig_dir):
         out[name] = fig_dir / (name + '.png')
     # E 장 (지표 변화) · G 장 (이온전도도)
     E_SIZE, G_SIZE = (2.95, 3.40), (3.20, 3.40)
-    for sec, tag, pe, pg in ((s, 'DSE', 'p10', 'p12'), (m, 'ESE', 'p14', 'p16')):
+    for sec, tag, pe, pg in ((s, 'DSE', 'p09', 'p11'), (m, 'ESE', 'p14', 'p16')):
         xl = xlabel_math(sec)
         x0 = '%s_%s' % sec['sym']
         name = '%s_porosity_%s' % (pe, tag)
@@ -755,6 +763,14 @@ def build_B(s, ch):
         el = s.get(name)
         s.set_xfrm(el, y=s.xfrm(el)[1] + 0.10)
     s.set_xfrm(s.get('그룹 260'), y=2.985)
+    # 렌더 셋 · 경로 그림 셋 = 옛 자료 그림 → 같은 자리 · 크기의 빈 칸 (점선)
+    for name, slot in (('그림 2', 'Image slot render D1'), ('그림 3', 'Image slot path D1'),
+                       ('그림 6', 'Image slot render D2'), ('그림 7', 'Image slot path D2'),
+                       ('그림 9', 'Image slot render D3'), ('그림 11', 'Image slot path D3')):
+        el = s.get(name)
+        x, y, w, h = s.xfrm(el)
+        el.addprevious(frag(SLOT(s.nid(), slot, x, y, w, h)))
+        el.getparent().remove(el)
     s.replace_with_pic('개체 29', ch['p07_thickness_DSE'], 'kg50t_p07_thickness_DSE.png')
     s.replace_with_pic('개체 225', ch['p07_porosity_DSE'], 'kg50t_p07_porosity_DSE.png')
 
@@ -807,9 +823,9 @@ def build_C(s, ch):
     s.set_xfrm(s.get('그룹 23'), x=5.30)
     oxs = s.get('개체 22')
     x, y, w, h = s.xfrm(oxs)
-    s.add(PIC(s.nid(), 'kg50t_p08_thickness_ESE', s.media(ch['p08_thickness_ESE'], 'kg50t_p08_thickness_ESE.png'),
+    s.add(PIC(s.nid(), 'kg50t_p12_thickness_ESE', s.media(ch['p12_thickness_ESE'], 'kg50t_p12_thickness_ESE.png'),
               7.042, 3.10, 2.290, 1.604))
-    s.add(PIC(s.nid(), 'kg50t_p08_porosity_ESE', s.media(ch['p08_porosity_ESE'], 'kg50t_p08_porosity_ESE.png'),
+    s.add(PIC(s.nid(), 'kg50t_p12_porosity_ESE', s.media(ch['p12_porosity_ESE'], 'kg50t_p12_porosity_ESE.png'),
               7.120, 4.726, 2.213, 1.846))
     s.remove('개체 22')
 
@@ -845,13 +861,13 @@ def build_D(s, sec):
     head = (' 고체전해질 입도에 따른 복합양극 ' if size else ' 고체전해질 기계적 물성에 따른 복합양극 ')
     lead = '입도별 복합양극 ' if size else 'modulus별 복합양극 '
     s.rect_text(HEAD([(head, 0), ('미세구조 비교', 1)]),
-                [BUL([(lead, 0), ('구조, coverage, 기공 및 수송 tortuosity', 1), (' 비교', 0)])])
+                [BUL([(lead, 0), ('구조, coverage, 기공 및 이온 이동 경로', 1), (' 비교', 0)])])
     s.caption('【 고체전해질 %s에 따른 복합양극 미세구조 비교 】' % ('입자 크기' if size else 'modulus'))
 
     def values(nm, c):
         return {'Coverage': '%.1f %%' % sec['coverage'][c], 'Pore': '%.1f %%' % sec['porosity'][c],
-                'Transport tortuosity': '%.2f' % sec['tau2'][c]}.get(nm)
-    _frame_grid(s, sec, 2.28, 6.42, [['Structure', 'Coverage'], ['Pore', 'Transport tortuosity']], values)
+                'Geometric tortuosity': '%.2f' % sec['tau_geo'][c]}.get(nm)
+    _frame_grid(s, sec, 2.28, 6.42, [['Structure', 'Coverage'], ['Pore', 'Geometric tortuosity']], values)
 
 
 def build_E(s, sec, ch, tag, pe):
@@ -955,17 +971,19 @@ NOTES = {
           '{p_peak} MPa 에 도달한 뒤 이완 끝 ({t_relax} ms) {p_relax} MPa.\n'
           '50 MPa 기공 렌더는 {p_dump50} MPa 시점의 구조.').format(**D1),
     'B': ('D_SE = 1 / 2 / 3 µm: 질량 보존 두께 124.57 / 126.83 / 131.50 µm, 기공도 18.1 / 19.6 / 22.4 %, '
-          '경로 그림 옆 값 = 기하 tortuosity 1.22 / 1.28 / 1.37.\n'
+          '경로 그림 칸 옆 값 = 기하 tortuosity 1.22 / 1.28 / 1.37.\n'
           '수송 tortuosity 6.00 / 8.26 / 13.63, 유효 이온전도도 0.070 / 0.050 / 0.029 mS/cm (σ₀ = 1.5 mS/cm 기준).'),
     'C': ('E_SE = 11 / 22 / 33 GPa (22 GPa 의 ×0.5 / ×1 / ×1.5), DEM 유효 입력 0.675 · 1.35 · 2.025 GPa.\n'
           '질량 보존 두께 123.61 / 126.83 / 129.39 µm, 기공도 17.5 / 19.6 / 21.2 %, 수송 tortuosity 7.80 / 8.26 / 9.05.'),
-    'SD': 'D_SE = 1 / 2 / 3 µm: coverage 46.8 / 54.2 / 52.6 %, 기공도 18.1 / 19.6 / 22.4 %, 수송 tortuosity 6.00 / 8.26 / 13.63.',
+    'SD': ('D_SE = 1 / 2 / 3 µm: coverage 46.8 / 54.2 / 52.6 %, 기공도 18.1 / 19.6 / 22.4 %, '
+           '기하 tortuosity (최단 경로 / 두께) 1.22 / 1.28 / 1.37.\n수송 tortuosity 는 다음 장 (미세구조 지표 변화).'),
     'SE': 'D_SE = 1 / 2 / 3 µm: 기공도 (시뮬레이션) 18.1 / 19.6 / 22.4 %, 수송 tortuosity 6.00 / 8.26 / 13.63, coverage 46.8 / 54.2 / 52.6 %.',
     'SF': ('이완 후 von Mises 응력 중앙값 (벽 접촉 입자 제외): 활물질 172 / 335 / 355 MPa, 고체전해질 76 / 126 / 149 MPa.\n'
            '이완 끝 가압판 압력 156 / 280 / 291 MPa (D_SE = 1 / 2 / 3 µm).'),
     'SG': '유효 이온전도도 0.0702 / 0.0501 / 0.0293 mS/cm (σ₀ = 1.5 mS/cm 기준, D_SE = 1 / 2 / 3 µm).',
     'MD': ('E_SE = 11 / 22 / 33 GPa (DEM 유효 입력 0.675 · 1.35 · 2.025 GPa): coverage 61.3 / 54.2 / 48.1 %, '
-           '기공도 17.5 / 19.6 / 21.2 %, 수송 tortuosity 7.80 / 8.26 / 9.05.'),
+           '기공도 17.5 / 19.6 / 21.2 %, 기하 tortuosity (최단 경로 / 두께) 1.28 / 1.28 / 1.30.\n'
+           '수송 tortuosity 는 다음 장 (미세구조 지표 변화).'),
     'ME': 'E_SE = 11 / 22 / 33 GPa: 기공도 (시뮬레이션) 17.5 / 19.6 / 21.2 %, 수송 tortuosity 7.80 / 8.26 / 9.05, coverage 61.3 / 54.2 / 48.1 %.',
     'MF': ('이완 후 von Mises 응력 중앙값 (벽 접촉 입자 제외): 활물질 353 / 335 / 326 MPa, 고체전해질 85 / 126 / 152 MPa.\n'
            '이완 끝 가압판 압력 278 / 280 / 280 MPa (E_SE = 11 / 22 / 33 GPa).'),
@@ -1006,9 +1024,11 @@ def main():
     ap.add_argument('--out-name', default='50kg_report_DEM_slides.pptx')
     ap.add_argument('--values-csv')
     ap.add_argument('--metrics-modulus')
+    ap.add_argument('--tau-geo-json', nargs=3, metavar=('E05', 'D2', 'E15'),
+                    help='metrics_D2E05.json metrics_D2.json metrics_D2E15.json (영률 절 기하 tortuosity 대조)')
     args = ap.parse_args()
     random.seed(20261102)
-    verify(args.values_csv, args.metrics_modulus)
+    verify(args.values_csv, args.metrics_modulus, args.tau_geo_json)
     work, out = Path(args.work_dir), Path(args.out_dir)
     skill = Path(args.skill_dir)
     un = work / 'unpacked'
@@ -1034,18 +1054,19 @@ def main():
         m = re.search(r'Created ppt/slides/(slide\d+\.xml)', o)
         return m.group(1)
     new = {'A': dup('slide5.xml')}
-    prev = 'slide7.xml'
-    for k in ('SD', 'SE', 'SF', 'SG', 'MD', 'ME', 'MF', 'MG'):
-        new[k] = dup(prev)
-        prev = new[k]
+    for first, keys in (('slide6.xml', ('SD', 'SE', 'SF', 'SG')), ('slide7.xml', ('MD', 'ME', 'MF', 'MG'))):
+        prev = first          # 입도 묶음 = 양식 6장 뒤 · 영률 묶음 = 양식 7장 뒤
+        for k in keys:
+            new[k] = dup(prev)
+            prev = new[k]
 
     jobs = [('A', new['A'], lambda s: build_A(s, a)),
             ('B', 'slide6.xml', lambda s: build_B(s, charts)),
             ('C', 'slide7.xml', lambda s: build_C(s, charts)),
             ('SD', new['SD'], lambda s: build_D(s, SIZE)),
-            ('SE', new['SE'], lambda s: build_E(s, SIZE, charts, 'DSE', 'p10')),
+            ('SE', new['SE'], lambda s: build_E(s, SIZE, charts, 'DSE', 'p09')),
             ('SF', new['SF'], lambda s: build_F(s, SIZE, a)),
-            ('SG', new['SG'], lambda s: build_G(s, SIZE, charts, 'DSE', 'p12', a)),
+            ('SG', new['SG'], lambda s: build_G(s, SIZE, charts, 'DSE', 'p11', a)),
             ('MD', new['MD'], lambda s: build_D(s, MOD)),
             ('ME', new['ME'], lambda s: build_E(s, MOD, charts, 'ESE', 'p14')),
             ('MF', new['MF'], lambda s: build_F(s, MOD, a)),
