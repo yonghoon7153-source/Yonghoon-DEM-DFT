@@ -11730,6 +11730,151 @@ def t_PE02x():
     return got == want, (got, why2[:200])
 
 
+#: ★ 11-02 PC7-03 — 기다림 중 SIGINT (KeyboardInterrupt = 그룹 원인 exception) · unconf = 그룹 미확인 (진짜 정리 뒤 미확인으로 알림 · PD13 구동기 꼴 · probe7_real B)
+PE03_DRIVER = r'''
+import json, os, signal, sys
+from pathlib import Path
+signal.signal(signal.SIGINT, signal.default_int_handler)
+cfg = json.load(open(sys.argv[1], encoding='utf-8'))
+sys.path.insert(0, cfg['scripts'])
+import rint_r_chain as RR
+RR.HERE = Path(cfg['here'])
+os.environ.update(cfg['env'])
+if cfg.get('unconfirmed'):
+    _settle = RR.group_settle
+
+    def settle(token, limit=None):
+        _c, _left, n = _settle(token, limit)
+        return False, [999987], n
+    RR.group_settle = settle
+sys.exit(RR.main(cfg['argv']))
+'''
+
+
+def pe03_spawn(tag, argv, wpath, unconfirmed):
+    """PE03 구동기로 사슬을 따로 프로세스로 (gr_spawn_chain 꼴 · 설정에 unconfirmed) → Popen."""
+    drv = Path(TD) / 'pe03_driver.py'
+    if not drv.exists():
+        drv.write_text(PE03_DRIVER, encoding='utf-8')
+    cfg = Path(TD) / f'{tag}_cfg.json'
+    cfg.write_text(json.dumps({'scripts': str(SCRIPTS), 'here': str(RR.HERE), 'env': {'FAKE_WORLD': str(wpath)}, 'argv': [str(a) for a in argv],
+                               'unconfirmed': unconfirmed}), encoding='utf-8')
+    log = open(Path(TD) / f'{tag}_chain.log', 'w', encoding='utf-8')
+    import subprocess as _sp
+    return _sp.Popen([sys.executable, '-I', str(drv), str(cfg)], stdout=log, stderr=_sp.STDOUT, start_new_session=True)
+
+
+@check('PE03', '★ 11-02 PC7-03 (사전 공격 7 회차 probe7_real B · P2 · PC6-13 "자리 전수" 의 빠진 자리) — 원장 시도 · 러너 기다림 중 사슬이 SIGINT (KeyboardInterrupt '
+               '= 그룹 원인 exception) · 그룹 미확인 (진짜 정리 뒤 미확인으로 알림) → 끝 기록 by chain (exception · rc −9 · 확인 False) · 단계 요약 없음 · 결과 줄 '
+               '없음 → recover --ledger = 끝 기록 by recover (chain_end 원인 exception) · 결과 줄 interrupted · 결과 뒤 · chain_exception · 재실행 자격 False → '
+               '--add --resume 1 = rc 3 RESUME_NOT_ALLOWED · 원장 무변경 (옛 = parent_dead · True · rc 0) · 대조 = 같은 SIGINT · 그룹 확인 = 그대로 '
+               'chain_exception · False (두 길이 같은 답)')
+def t_PE03():
+    import signal as _sig
+
+    def go():
+        out = {}
+        for tag, unconfirmed in (('unconf', True), ('conf', False)):
+            d, _rc, _so = led_new(f'PE03_{tag}')
+            _r, n1, _s = led_add(d, 'ladder:P0')
+            base = Path(TD) / 'runs' / f'PE03_{tag}'
+            w = world(f'PE03_{tag}', dict(PW, faults=[{'do': 'msg_sleep_after_mark', 'msg': f'[p2] solving (PE03 {tag})', 's': 25.0, 'match': {'rj': 'inf'}}]))
+            pr = pe03_spawn(f'PE03_{tag}', ladder_argv(base) + ['--ledger', str(d), '--attempt', str(n1)], w, unconfirmed)
+            f1 = base / f'attempt_{n1}'
+            t_end, seen = time.time() + 30, False
+            while time.time() < t_end and not seen:
+                try:
+                    seen = f'solving (PE03 {tag})' in (f1 / 'logs' / 'L01_floor.log').read_text(encoding='utf-8', errors='replace')
+                except OSError:
+                    pass
+                time.sleep(0.05)
+            time.sleep(0.2)
+            os.kill(pr.pid, _sig.SIGINT)
+            try:
+                prc = pr.wait(timeout=120)
+            except Exception:                              # noqa: BLE001 — 시험 실패 기록
+                pr.kill()
+                prc = 'timeout'
+            ep = f1 / 'groups' / 'L01_floor.end.json'
+            e0 = json.loads(ep.read_text(encoding='utf-8')) if ep.exists() else {}
+            had_sum = (f1 / 'ladder_summary.json').exists()
+            res0 = led_result(d, n1)
+            rc_rec, _so_rec = call(['--stage', 'recover', '--out', str(f1), '--ledger', str(d)], w)
+            e1 = json.loads(ep.read_text(encoding='utf-8')) if ep.exists() else {}
+            r1 = pc_res(d, n1)
+            raw = led_raw(d)
+            rc_add, _n2, so_add = led_add(d, 'ladder:P0', resume=n1)
+            ks = ('by', 'rc', 'cause', 'confirmed')
+            out[tag] = (seen, prc != 'timeout', tuple(e0.get(k) for k in ks), had_sum, res0, rc_rec, tuple(e1.get(k) for k in ks),
+                        (e1.get('chain_end') or {}).get('cause'), r1, rc_add, 'RESUME_NOT_ALLOWED' in so_add, led_raw(d) == raw)
+        return out
+    out = scen('PE03', go)
+    res = {'status': 'interrupted', 'side': 'post', 'cause': 'chain_exception', 'resume_ok': False, 'by': 'recover'}
+    want = {'unconf': (True, True, ('chain', -9, 'exception', False), False, None, 0, ('recover', None, 'parent_dead', True), 'exception', res, 3,
+                       True, True),
+            'conf': (True, True, ('chain', -9, 'exception', True), False, None, 0, ('chain', -9, 'exception', True), None, res, 3, True, True)}
+    return out == want, out
+
+
+#: ★ 11-02 PC7-03 — recover 끝 기록 (by recover) 의 chain_end 원인 표 (요약 없는 길) · 로그 넷 → 기대 원인.  exception 행만 바뀐다 (chain_exception ·
+#:   by chain 길과 같은 표) · 나머지 행 = 고치기 전 값 그대로 (PD13o 와 같은 규칙: 원인 None + 실패 rc = 낱말 · 기본 runner_rc · 그 밖 = 낱말 · 기본 parent_dead)
+PE03_LOGS = {'plain': '', 'python': "Traceback (most recent call last):\nKeyError: 'sigma'",
+             'oom': 'cupy.cuda.memory.OutOfMemoryError: out of memory allocating 1024 bytes',
+             'illegal': 'cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_ILLEGAL_ADDRESS: an illegal memory access was encountered'}
+PE03_ROWS = {   # 이름: (chain_end | None, {로그: 기대 원인})
+    'no_chain_end': (None, {'plain': 'parent_dead', 'python': 'parent_dead', 'oom': 'resource', 'illegal': 'runner_rc'}),
+    'none_rc1': ({'rc': 1, 'cause': None}, {'plain': 'runner_rc', 'python': 'runner_rc', 'oom': 'resource', 'illegal': 'runner_rc'}),
+    'none_rc0': ({'rc': 0, 'cause': None}, {'plain': 'parent_dead', 'python': 'parent_dead', 'oom': 'resource', 'illegal': 'runner_rc'}),
+    'none_rcNone': ({'rc': None, 'cause': None}, {'plain': 'parent_dead', 'python': 'parent_dead', 'oom': 'resource', 'illegal': 'runner_rc'}),
+    'timeout': ({'rc': -9, 'cause': 'timeout'}, {'plain': 'parent_dead', 'python': 'parent_dead', 'oom': 'resource', 'illegal': 'runner_rc'}),
+    'signal': ({'rc': -9, 'cause': 'signal'}, {'plain': 'parent_dead', 'python': 'parent_dead', 'oom': 'resource', 'illegal': 'runner_rc'}),
+    'signal_after': ({'rc': 0, 'cause': 'signal_after'}, {'plain': 'parent_dead', 'python': 'parent_dead', 'oom': 'resource', 'illegal': 'runner_rc'}),
+    'weird': ({'rc': -9, 'cause': 'weird'}, {'plain': 'parent_dead', 'python': 'parent_dead', 'oom': 'resource', 'illegal': 'runner_rc'}),
+    'exception_neg9': ({'rc': -9, 'cause': 'exception'}, {k: 'chain_exception' for k in ('plain', 'python', 'oom', 'illegal')}),
+    'exception_rc1': ({'rc': 1, 'cause': 'exception'}, {k: 'chain_exception' for k in ('plain', 'python', 'oom', 'illegal')}),
+    'exception_rcNone': ({'rc': None, 'cause': 'exception'}, {k: 'chain_exception' for k in ('plain', 'python', 'oom', 'illegal')}),
+}
+
+
+@check('PE03u', '★ 11-02 PC7-03 단위 (probe7_unit U2 · 표) — 요약 없는 길의 recover 끝 기록 chain_end 원인 표 × 로그 넷 (없음 · 파이썬 KeyError · 메모리 · 잘못된 '
+                '주소): 원인 exception (rc −9 · 1 · None) = chain_exception · 재실행 자격 False · 읽음 True (옛 = parent_dead · resource · runner_rc) · 바뀌는 행 = '
+                'exception 하나뿐 — chain_end 없음 · 원인 None (rc 1 · 0 · None) · timeout · signal · signal_after · 모르는 원인 = 고치기 전 값 그대로 · by chain '
+                '끝 기록 (원인 exception · 확인 True · False) = 같은 chain_exception (두 길 같은 답) · recover_group 이 by chain exception 미확인 끝 기록을 갈아 '
+                '쓰면 chain_end 원인 exception 이 남는다')
+def t_PE03u():
+    bad, n = {}, 0
+    for nm, (ce, by_log) in PE03_ROWS.items():
+        for lk, want_c in by_log.items():
+            n += 1
+            end = {'by': 'recover', 'cause': 'parent_dead', 'rc': None, 'confirmed': True}
+            if ce is not None:
+                end['chain_end'] = dict(ce, confirmed=False, ended_utc='2026-11-02T00:00:00Z')
+            f = pc_folder(f'PE03u_{nm}_{lk}', {PC_MARK: '{}\n'})
+            pc_group(f, 'L01_floor', end, '[p2] run\n' + (PE03_LOGS[lk] + '\n' if PE03_LOGS[lk] else ''))
+            r = RR.attempt_result_line(1, f, None, 'recover')
+            cause, ok_read = RR.orphan_cause(f)
+            got = (r['status'], r['side'], r['cause'], r['resume_ok'], ok_read)
+            want = ('interrupted', 'post', want_c, want_c in RR.RESUME_CAUSES, True)
+            if got != want:
+                bad[f'{nm}/{lk}'] = (got, want)
+    for nm, conf in (('by_chain_exc_conf', True), ('by_chain_exc_unconf', False)):
+        f = pc_folder(f'PE03u_{nm}', {PC_MARK: '{}\n'})
+        pc_group(f, 'L01_floor', {'by': 'chain', 'cause': 'exception', 'rc': -9, 'confirmed': conf}, '[p2] run\n')
+        r = RR.attempt_result_line(1, f, None, 'recover')
+        if (r['cause'], r['resume_ok']) != ('chain_exception', False):
+            bad[nm] = (r['cause'], r['resume_ok'])
+    out_dir, _tok = gr_fake_launch('PE03u_recover')
+    lp = out_dir / 'groups' / 'L01_floor.launch.json'
+    lp.with_name('L01_floor.end.json').write_text(json.dumps({'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': _tok, 'by': 'chain',
+                                                             'cause': 'exception', 'rc': -9, 'confirmed': False, 'ended_utc': '2026-11-02T00:00:01Z'}),
+                                                 encoding='utf-8')
+    end, held = RR.recover_group(lp, RR.host_ident())
+    rw = (held, (end or {}).get('by'), ((end or {}).get('chain_end') or {}).get('cause'))
+    if rw != (None, 'recover', 'exception'):
+        bad['recover_group_rewrite'] = rw
+    return not bad, {'n': n, 'bad': dict(sorted(bad.items())[:12])}
+
+
 # ═════════════════════════ 실행 ═════════════════════════
 def main(argv=None):
     global RR, TD
