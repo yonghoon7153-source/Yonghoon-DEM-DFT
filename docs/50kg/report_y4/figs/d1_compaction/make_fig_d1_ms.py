@@ -109,6 +109,7 @@ INTERP_DT_MS = 1.0            # 앞 구간 (첫 점 → 첫 원 덤프) PCHIP �
 SLIDE_TAU_STEP = 15000        # 압력 슬라이드판 모식 감쇠 시간 상수 (ps73 make_fig.py 값 · 그림용 — 자료에서 정한 값 아님)
 HI_SPAN_UM = 20.0             # 끊긴 y 축 위 범위 높이 (아래 범위와 같은 µm/높이 축척)
 GAP_FRAC = 0.06               # 끊긴 자리 높이 (아래 범위 높이의 몫)
+HI_FRAC = None                # 위 범위 눈에 보이는 높이 (아래 범위 높이의 몫) · None = 같은 µm/높이 축척 · 1저자 11-03 ps73 옛 그림처럼 위 띠를 좁게 (--hi-frac)
 SRC_REPLAY, SRC_CKPT, SRC_DUMP = 'replay (insertion · NP 1)', 'checkpoint (run 0)', 'atom dump'
 SRC_INTERP = 'interpolated (PCHIP between measured points)'
 SRC_SCHEMATIC = 'schematic relaxation (모식 · not measured)'
@@ -726,16 +727,17 @@ def _line_at(series, x):
 def _break_scale(lo, hi, gap=GAP_FRAC):
     """끊긴 y 축 변환 (matplotlib `function` 축척) — 아래 범위 → 0–1 · 끊긴 자리 → 1–1+gap · 위 범위 → 아래와 같은 µm/높이 축척."""
     import numpy as np
-    (lo0, lo1), hi0 = lo, hi[0]             # 위 범위 위끝은 변환에 필요 없다 (아래와 같은 축척)
+    (lo0, lo1), (hi0, hi1) = lo, hi
     span = lo1 - lo0
+    k_hi = (HI_FRAC / (hi1 - hi0)) if HI_FRAC else 1.0 / span     # 위 범위 축척 (None = 아래와 같은 µm/높이)
 
     def fwd(y):
         y = np.asarray(y, dtype=float)
-        return np.where(y <= lo1, (y - lo0) / span, np.where(y >= hi0, 1 + gap + (y - hi0) / span, 1 + gap * (y - lo1) / (hi0 - lo1)))
+        return np.where(y <= lo1, (y - lo0) / span, np.where(y >= hi0, 1 + gap + (y - hi0) * k_hi, 1 + gap * (y - lo1) / (hi0 - lo1)))
 
     def inv(u):
         u = np.asarray(u, dtype=float)
-        return np.where(u <= 1, lo0 + u * span, np.where(u >= 1 + gap, hi0 + (u - 1 - gap) * span, lo1 + (u - 1) / gap * (hi0 - lo1)))
+        return np.where(u <= 1, lo0 + u * span, np.where(u >= 1 + gap, hi0 + (u - 1 - gap) / k_hi, lo1 + (u - 1) / gap * (hi0 - lo1)))
     return fwd, inv
 
 
@@ -752,7 +754,7 @@ def draw_preview(tser, vser, pser, bounds_ms, arrows, stem, ranges=None, start_a
         fig, axs = plt.subplots(3, 1, sharex=True, figsize=FIGSIZE or (4.3, 7.2))
     else:
         (hi0, hi1), (lo0, lo1) = ranges
-        top = 1 + GAP_FRAC + (hi1 - hi0) / (lo1 - lo0)        # 아래 범위 = 다른 두 패널과 같은 높이
+        top = 1 + GAP_FRAC + (HI_FRAC if HI_FRAC else (hi1 - hi0) / (lo1 - lo0))   # 아래 범위 = 다른 두 패널과 같은 높이
         fig, axs = plt.subplots(3, 1, sharex=True, figsize=FIGSIZE or (4.3, 7.2 * (2 + top) / 3),
                                 gridspec_kw={'height_ratios': [top, 1, 1]})
     b2, b3, b4 = bounds_ms
@@ -769,9 +771,15 @@ def draw_preview(tser, vser, pser, bounds_ms, arrows, stem, ranges=None, start_a
             ax.set_yscale('function', functions=_break_scale((lo0, lo1), (hi0, hi1)))
             ax.set_ylim(lo0, hi1)
             half = ystep / 2
-            grid = [k * half for r0, r1 in ((lo0, lo1), (hi0, hi1)) for k in range(math.ceil(r0 / half), math.floor(r1 / half) + 1)]
-            ax.yaxis.set_major_locator(FixedLocator([y for y in grid if y % ystep == 0]))
-            ax.yaxis.set_minor_locator(FixedLocator([y for y in grid if y % ystep != 0]))
+            if HI_FRAC:                                   # 좁힌 위 띠 = 20 µm 간격 큰 눈금만 (1저자 11-03 · 옛 ps73 그림처럼)
+                grid = [k * half for k in range(math.ceil(lo0 / half), math.floor(lo1 / half) + 1)]
+                hmaj = [k * 20.0 for k in range(math.ceil(hi0 / 20.0), math.floor(hi1 / 20.0) + 1)]
+                ax.yaxis.set_major_locator(FixedLocator([y for y in grid if y % ystep == 0] + hmaj))
+                ax.yaxis.set_minor_locator(FixedLocator([y for y in grid if y % ystep != 0]))
+            else:
+                grid = [k * half for r0, r1 in ((lo0, lo1), (hi0, hi1)) for k in range(math.ceil(r0 / half), math.floor(r1 / half) + 1)]
+                ax.yaxis.set_major_locator(FixedLocator([y for y in grid if y % ystep == 0]))
+                ax.yaxis.set_minor_locator(FixedLocator([y for y in grid if y % ystep != 0]))
         else:
             ax.set_ylim(*ylim)
             ax.yaxis.set_major_locator(MultipleLocator(ystep))
@@ -1621,4 +1629,8 @@ if __name__ == '__main__':
         FIGSIZE = (float(av[i + 1]), float(av[i + 2]))
     if '--preview-dir' in av:
         PREV = Path(av[av.index('--preview-dir') + 1])
+    if '--hi-span' in av:                                 # 끊긴 축 위 범위 높이 (µm) · 1저자 11-03 20 ms 점 (296 µm) 이 보이게
+        HI_SPAN_UM = float(av[av.index('--hi-span') + 1])
+    if '--hi-frac' in av:                                 # 위 범위 눈에 보이는 높이 (아래 범위의 몫)
+        HI_FRAC = float(av[av.index('--hi-frac') + 1])
     main(require_packing='--atomtop' in av)

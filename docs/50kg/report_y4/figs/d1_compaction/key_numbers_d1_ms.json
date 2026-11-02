@@ -266,8 +266,8 @@
  "figures": {
   "plate_raw": "previews/d1_ms_compaction_3panel.png",
   "plate_slide": "previews/d1_ms_compaction_3panel_slide.png",
-  "atomtop_raw": null,
-  "atomtop_slide": null,
+  "atomtop_raw": "previews/d1_ms_compaction_3panel_atomtop.png",
+  "atomtop_slide": "previews/d1_ms_compaction_3panel_atomtop_slide.png",
   "rule": "one criterion per figure — plate figures = plate position · atom-top figures = max(z + r) of all atoms (never mixed)"
  },
  "pressure_slide": {
@@ -306,197 +306,269 @@
   "preview": "previews/d1_ms_compaction_3panel_slide.png"
  },
  "atomtop": {
-  "status": "NOT_SUPPLIED — the packing segment is not drawn (generator refuses to invent it; `--atomtop` exits)",
-  "csv_expected": "docs/50kg/report_y4/figs/d1_compaction/raw/kg50_d1_atomtop.csv",
-  "cluster_script": "docs/50kg/report_y4/figs/d1_compaction/cluster/d1_atomtop_cluster.py",
-  "cluster_script_sha256": "8a9fe00fc86ba7b11d8d27d626bbebcf258d2aae1e64db1af8a8207998a57210",
-  "plan_steps": {
-   "default_no_replay": {
-    "checkpoints_run0": [
-     20001,
-     50000,
-     100000,
-     150000,
-     200000,
-     200001,
-     250000,
-     300000,
-     350000,
-     400000
-    ],
-    "atom_dumps": 48
+  "status": "SUPPLIED — checks passed (check_atomtop ①–⑫)",
+  "mode": "ckpt",
+  "csv_in": {
+   "path": "docs/50kg/report_y4/figs/d1_compaction/raw/kg50_d1_atomtop.csv",
+   "sha256": "6cd028374a468e4ee080077f1ec3d2706c096d318535061e0e91b58db03ca4e0",
+   "run_folder_sha256": {
+    "input_kg50_d1_b50.liggghts": "514afdb705613dab876c9c0ff5c1f2fef3fad3e029d71778875c08b89edfde91",
+    "input_kg50_d1_b50_insert.liggghts": "e5218b4dbf606215eea88212ac4796bdd405d47a1061d1184e6aff9ca0aacd5e",
+    "log.liggghts": "6a90f706da68e3d5041ff063d0ffd4f61e9d89a5823f29e0755a23ed679bc1b5",
+    "log_kg50_d1_b50_ins.out": "a83ee39e902e43abe9fca663d26e15d397992f0433980fa3d0a14868177278da"
    },
-   "with_replay_option": [
-    1,
-    1000,
-    2000,
-    3000,
-    4000,
-    5000,
-    6000,
-    7000,
-    8000,
-    9000,
-    10000,
-    11000,
-    12000,
-    13000,
-    14000,
-    15000,
-    16000,
-    17000,
-    18000,
-    19000,
-    20000
+   "insertion_line": null
+  },
+  "definition": "max(z + r) over all atoms (µm) — not filtered by the plate · one criterion from t = 0 (ps73 README §7)",
+  "n_points": 500,
+  "n_measured": 58,
+  "n_interpolated": 421,
+  "n_schematic_free_fall": 21,
+  "early_measured": [
+   [
+    20001,
+    "checkpoint",
+    296.097,
+    295.911
+   ],
+   [
+    50000,
+    "checkpoint",
+    202.331,
+    202.144
+   ],
+   [
+    100000,
+    "checkpoint",
+    204.143,
+    143.241
+   ],
+   [
+    150000,
+    "checkpoint",
+    140.727,
+    137.803
+   ],
+   [
+    200000,
+    "checkpoint",
+    140.34,
+    137.893
+   ],
+   [
+    200001,
+    "checkpoint",
+    140.34,
+    137.894
+   ],
+   [
+    250000,
+    "checkpoint",
+    140.408,
+    137.94
+   ],
+   [
+    300000,
+    "checkpoint",
+    140.461,
+    137.981
+   ],
+   [
+    350000,
+    "checkpoint",
+    140.512,
+    138.02
+   ],
+   [
+    400000,
+    "checkpoint",
+    140.561,
+    138.059
+   ]
+  ],
+  "first": [
+   0.0,
+   325.71946204905,
+   "schematic free fall from insertion (모식 · not measured)"
+  ],
+  "end": [
+   2785.002,
+   123.72,
+   "atom dump"
+  ],
+  "ranges_um": {
+   "upper": [
+    290.0,
+    335.0
+   ],
+   "lower": [
+    115.0,
+    155.0
+   ],
+   "scale": "same µm per height in both ranges"
+  },
+  "hidden_in_break": {
+   "measured": [
+    [
+     50.0,
+     202.331,
+     "checkpoint (run 0)"
+    ],
+    [
+     100.0,
+     204.143,
+     "checkpoint (run 0)"
+    ]
+   ],
+   "n_interpolated_or_schematic": 111
+  },
+  "free_fall": {
+   "what": "schematic (모식) — 0 → 20 ms drawn backwards from the first measured top (checkpoint 20,001) as a free fall; not measured · marked only in CSV Source / README (not on the figure)",
+   "formula": "h(t) = 296.097 + 0.5·(0.020001 − t) + ½·98.1·(0.020001² − t²)  [deck units: s · m/s · m/s²; ×1000 µm per deck m]",
+   "g_deck_m_s2": 98.1,
+   "v0_deck_m_s": 0.5,
+   "t20_ms": 20.001,
+   "h20_um_measured": 296.097,
+   "h0_um": 325.71946204905,
+   "fall_um": 29.62246204905,
+   "check": {
+    "h0_um": 325.71946204905,
+    "region_top_um": 322.7,
+    "h0_le_region_top": false,
+    "surface_bound_um": 325.7,
+    "h0_le_surface_bound": false,
+    "clipped": false
+   },
+   "damping_neglected": {
+    "fix_viscous_gamma": 1e-05,
+    "per_phase": {
+     "type1_r3um": {
+      "tau_s": 54.85220773167779,
+      "fall_um_damped": 29.618254267035127,
+      "fall_um_undamped": 29.622462049050004
+     },
+     "type2_r2um": {
+      "tau_s": 16.252505994571198,
+      "fall_um_damped": 29.6082643378206,
+      "fall_um_undamped": 29.622462049050004
+     },
+     "type3_r0.5um": {
+      "tau_s": 0.085870199198121,
+      "fall_um_damped": 27.104469281298087,
+      "fall_um_undamped": 29.622462049050004
+     }
+    },
+    "note": "fix viscous F = −γ·v on every particle — m/γ is short for SE (τ ≈ 0.09 s) so an SE top particle would fall less than the drawn curve; AM (τ ≈ 55 s) is undamped"
+   },
+   "source_label": "schematic free fall from insertion (모식 · not measured)"
+  },
+  "outlier_candidates_top_minus_p999_ge_20um": [
+   [
+    100000,
+    60.902
+   ]
+  ],
+  "outlier_note": "not dropped — drawn as measured (ps73 dropped one bounced particle only after the 1st author asked)",
+  "first_dump_top_reaches_plate": 850000,
+  "dumps_top_center_above_plate": {
+   "n": 34,
+   "first": 1150000
+  },
+  "max_top_minus_plate_um": [
+   1.615,
+   2650000
+  ],
+  "atom_count_changes": [
+   [
+    20001,
+    168457
+   ],
+   [
+    2700000,
+    168452
+   ]
+  ],
+  "ke_checks": [
+   [
+    20001,
+    "checkpoint",
+    "2.3894425",
+    "2.3894425"
+   ],
+   [
+    50000,
+    "checkpoint",
+    "3.2480619",
+    "3.2480619"
+   ],
+   [
+    100000,
+    "checkpoint",
+    "0.0073460391",
+    "0.0073460391"
+   ],
+   [
+    150000,
+    "checkpoint",
+    "0.00081993853",
+    "0.00081993853"
+   ],
+   [
+    200000,
+    "checkpoint",
+    "1.9866698e-05",
+    "1.9866698e-05"
+   ],
+   [
+    200001,
+    "checkpoint",
+    "1.9881675e-05",
+    "1.9881675e-05"
+   ],
+   [
+    250000,
+    "checkpoint",
+    "4.4168899e-07",
+    "4.4168899e-07"
+   ],
+   [
+    300000,
+    "checkpoint",
+    "3.8465837e-07",
+    "3.8465837e-07"
+   ],
+   [
+    350000,
+    "checkpoint",
+    "3.4737142e-07",
+    "3.4737142e-07"
+   ],
+   [
+    400000,
+    "checkpoint",
+    "3.1955678e-07",
+    "3.1955678e-07"
+   ]
+  ],
+  "arrows": {
+   "packing_start": [
+    0.0,
+    325.71946204905,
+    170.0,
+    330.8237579220725
+   ],
+   "relaxation_end_segment": [
+    2735.002,
+    123.93779296000001,
+    2735.002,
+    129.53779296000002
    ]
   },
-  "ke_reference": {
-   "replay_from_insertion_log": {
-    "1": [
-     168457,
-     "0.11946798"
-    ],
-    "1000": [
-     168457,
-     "0.17034351"
-    ],
-    "2000": [
-     168457,
-     "0.23018355"
-    ],
-    "3000": [
-     168457,
-     "0.29890105"
-    ],
-    "4000": [
-     168457,
-     "0.37462336"
-    ],
-    "5000": [
-     168457,
-     "0.45695706"
-    ],
-    "6000": [
-     168457,
-     "0.54772567"
-    ],
-    "7000": [
-     168457,
-     "0.64616151"
-    ],
-    "8000": [
-     168457,
-     "0.75103338"
-    ],
-    "9000": [
-     168457,
-     "0.86357835"
-    ],
-    "10000": [
-     168457,
-     "0.98082832"
-    ],
-    "11000": [
-     168457,
-     "1.104255"
-    ],
-    "12000": [
-     168457,
-     "1.2338527"
-    ],
-    "13000": [
-     168457,
-     "1.3650701"
-    ],
-    "14000": [
-     168457,
-     "1.499203"
-    ],
-    "15000": [
-     168457,
-     "1.6376978"
-    ],
-    "16000": [
-     168457,
-     "1.7822583"
-    ],
-    "17000": [
-     168457,
-     "1.9289022"
-    ],
-    "18000": [
-     168457,
-     "2.079641"
-    ],
-    "19000": [
-     168457,
-     "2.2333726"
-    ],
-    "20000": [
-     168457,
-     "2.3892872"
-    ]
-   },
-   "checkpoints_from_main_log": {
-    "20001": [
-     168457,
-     2.3894425
-    ],
-    "50000": [
-     168457,
-     3.2480619
-    ],
-    "100000": [
-     168457,
-     0.0073460391
-    ],
-    "150000": [
-     168457,
-     0.00081993853
-    ],
-    "200000": [
-     168457,
-     1.9866698e-05
-    ],
-    "200001": [
-     168457,
-     1.9881675e-05
-    ],
-    "250000": [
-     168457,
-     4.4168899e-07
-    ],
-    "300000": [
-     168457,
-     3.8465837e-07
-    ],
-    "350000": [
-     168457,
-     3.4737142e-07
-    ],
-    "400000": [
-     168457,
-     3.1955678e-07
-    ]
-   }
-  },
-  "insertion_decision": "no insertion replay by default (1st author 11-02 night: draw 0 → 20 ms as a free fall at the packing gravity and join it) — cluster = 10 checkpoint run-0 dumps + scan (≈10 min); 0 → 20.001 ms = schematic free fall (모식) h(t) = h20 + v0·(t20 − t) + ½·g·(t20² − t²) anchored at the measured 20,001-step top, g · v0 from the insert deck, damping neglected; the full insertion replay (4,584 s ≈ 76 min) stays behind --with-replay",
-  "free_fall_constants": {
-   "g": 98.1,
-   "v0": 0.5,
-   "region_z_um": [
-    5.0,
-    322.7
-   ],
-   "region_top_um": 322.7,
-   "r_max_um": 3.0,
-   "gamma_viscous": 1e-05,
-   "tau_damp_s": {
-    "type1_r3um": 54.85220773167779,
-    "type2_r2um": 16.252505994571198,
-    "type3_r0.5um": 0.085870199198121
-   }
-  }
+  "csv_out": "origin/d1_ms_thickness_atomtop.csv",
+  "previews": [
+   "previews/d1_ms_compaction_3panel_atomtop.png",
+   "previews/d1_ms_compaction_3panel_atomtop_slide.png"
+  ]
  },
  "stage_frames": [
   {

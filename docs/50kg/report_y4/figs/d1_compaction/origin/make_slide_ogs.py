@@ -17,10 +17,17 @@ REP = [(r'layer\.width = 10; layer\.height = 8;', 'layer.width = %.2f; layer.hei
        (r'\.mticklength = 3', '.mticklength = 6')]
 
 
-def convert(text):
+TOP = 1 + 0.06 + 0.35        # 원자 기준 두께 패널 = 아래 범위 1 + 끊김 0.06 + 위 띠 0.35 (생성기 --hi-span 45 --hi-frac 0.35)
+
+
+def convert(text, atomtop=False):
     for pat, new in REP:
         text, n = re.subn(pat, new, text)
         assert n >= 1, pat
+    if atomtop:                                                    # 두께 (원자 기준) = 끊긴 축 → 패널이 TOP 배 높다
+        a = 'layer.height = %.2f;' % H_CM
+        assert text.count(a) == 1, a
+        text = text.replace(a, 'layer.height = %.2f;' % (H_CM * TOP))
     text = re.sub(r'(label -xb [^;]*;)', r'\1 xb.font = font(Arial); xb.fsize = 34;', text)
     text = re.sub(r'(label -yl [^;]*;)', r'\1 yl.font = font(Arial); yl.fsize = 34;', text)
     return text
@@ -29,7 +36,7 @@ def convert(text):
 if __name__ == '__main__':
     OUT.mkdir(exist_ok=True)
     for f in sorted(HERE.glob('*.ogs')):
-        t = convert(f.read_text(encoding='utf-8'))
+        t = convert(f.read_text(encoding='utf-8'), atomtop='atomtop' in f.name)
         head = ('// [슬라이드 칸 3.50 × 3.85 in 판 · make_slide_ogs.py 가 %s 에서 만듦 · 그림 영역 %.2f × %.2f cm · Arial · 눈금 28 pt · 축 이름 34 pt · fixed factor 0.7]\n'
                 % (f.name, W_CM, H_CM))
         (OUT / f.name).write_text(head + t, encoding='utf-8')
