@@ -10975,6 +10975,9 @@ def t_PD12u():
     side_only = root / 'side' / 'attempt_1.rejected.json'
     side_only.parent.mkdir(parents=True)
     side_only.write_text('{}', encoding='utf-8')
+    side_only3 = root / 'side3' / 'attempt_3.rejected.json'          # ★ 11-02 PC7 변이 보강 (G04) — 옆 거부 기록 파일 = 결과 줄과 무관하게 이 함수 몫 아님
+    side_only3.parent.mkdir(parents=True)
+    side_only3.write_text('{}', encoding='utf-8')
     got = {'same': f(st, {1: mk('same', 1)}), 'target': f(st, {1: mk('target', 1, target='ladder:P0:FIBRE')}),
            'machine': f(st, {1: mk('machine', 1, machine='gabia')}), 'resume_of': f(st, {2: mk('resume', 2, resume_of=None)}),
            'no_attempt_json': f(st, {2: mk('noaj', 2, valid=False)}), 'extra_key': f(st, {1: mk('extra', 1, extra={'note': 'x'})}),
@@ -10982,8 +10985,8 @@ def t_PD12u():
            'rejected_side': f(st, {1: mk('rejside', 1, valid=False, side=True)}),
            'rejected_no_side': f(st, {1: mk('rejnoside', 1, valid=False)}),
            'stopped_side': f(st, {3: mk('stopside', 3, valid=False, side=True)}),
-           'side_file': f(st, {1: [side_only]}), 'not_in_ledger': f(st, {7: mk('n7', 7)})}
-    none_rows = ('same', 'rejected_side', 'side_file', 'not_in_ledger')
+           'side_file': f(st, {1: [side_only]}), 'side_file_stopped': f(st, {3: [side_only3]}), 'not_in_ledger': f(st, {7: mk('n7', 7)})}
+    none_rows = ('same', 'rejected_side', 'side_file', 'side_file_stopped', 'not_in_ledger')
     reason_rows = ('target', 'machine', 'resume_of', 'no_attempt_json', 'extra_key', 'attempt_json_symlink', 'rejected_no_side', 'stopped_side')
     ok = (all(got[k] is None for k in none_rows) and all(isinstance(got[k], str) and 'attempt_' in got[k] for k in reason_rows))
     return ok, got
@@ -11946,6 +11949,45 @@ def t_PE04():
     if ledger_row != (3, True, True):
         bad['ledger'] = (ledger_row, so_l[-300:])
     return not bad, {'rows': rows, 'stage': stage, 'ledger': ledger_row, 'bad': bad}
+
+
+@check('PE01s', '★ 11-02 PC7-01 시작 기록의 바탕 = resolve (변이 보강 · F13 생존 → 잡힘) — --out = 심볼릭 링크 바탕 (실제 폴더를 가리킴) 인 원장 시도 (완주) → '
+                '시작 기록 바탕 = 실제 경로 · 실제 경로로 recover --ledger = rc 0 · 링크 경로로 recover --ledger = rc 0 (resolve 뒤 같은 바탕 · 결과 줄 폴더 · 요약 '
+                'sha 같음)')
+def t_PE01s():
+    def go():
+        d, _rc, _so = led_new('PE01s')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        real = Path(TD) / 'runs' / 'PE01s_real'
+        real.mkdir(parents=True)
+        link = Path(TD) / 'runs' / 'PE01s_link'
+        link.symlink_to(real, target_is_directory=True)
+        a = lad_att('PE01s', world('PE01s'), d, n1, base=link)
+        bases = [x.get('base') for x in pe_starts(d) if x.get('n') == n1]
+        rc_real, _so1 = call(['--stage', 'recover', '--out', str(real / f'attempt_{n1}'), '--ledger', str(d)])
+        rc_link, _so2 = call(['--stage', 'recover', '--out', str(link / f'attempt_{n1}'), '--ledger', str(d)])
+        return a['rc'], bases, str(real.resolve()), rc_real, rc_link
+    a_rc, bases, real_s, rc_real, rc_link = scen('PE01s', go)
+    got = (a_rc, bases == [real_s], rc_real, rc_link)
+    return got == (0, True, 0, 0), (got, bases, real_s)
+
+
+@check('PE01c', '★ 11-02 PC7-01 recover 의 결과 줄 폴더 요약 sha 대조 (변이 보강 · F11 = 바탕 대조와 따로 · rc 로) — 원장 시도 완주 (결과 줄 · 시작 기록 = 같은 '
+                '바탕) 뒤 recover --ledger = rc 0 → 그 시도 폴더의 파일 하나를 바꿈 → recover --ledger (같은 바탕) = rc 3 (결과 줄 폴더 요약 sha ≠ 이 폴더 · '
+                '바탕 사유 없음 · 원장 무변경 · 옛 = 결과 줄이 있으면 넘어감 rc 0)')
+def t_PE01c():
+    def go():
+        d, _rc, _so = led_new('PE01c')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        a = lad_att('PE01c', world('PE01c'), d, n1)
+        rc0, _so0 = call(['--stage', 'recover', '--out', str(a['out']), '--ledger', str(d)])
+        raw = led_raw(d)
+        with open(a['out'] / 'logs' / 'L01_floor.log', 'a', encoding='utf-8') as fh:
+            fh.write('x\n')
+        rc1, so1 = call(['--stage', 'recover', '--out', str(a['out']), '--ledger', str(d)])
+        return a['rc'], rc0, rc1, '요약 sha' in so1, '시작 기록의 바탕' in so1, led_raw(d) == raw
+    got = scen('PE01c', go)
+    return got == (0, 0, 3, True, False, True), got
 
 
 # ═════════════════════════ 실행 ═════════════════════════
