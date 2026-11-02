@@ -315,7 +315,7 @@ def read_stages(path):
                  plate=float(by[k]['plate_um'])) for k in [st['stage'] for st in STAGES]]
 
 
-def measure_crop_renders(paths, dst_dir, pad=8):
+def measure_crop_renders(paths, dst_dir, pad=8, prefix='pore_render'):
     """렌더마다 침대 bbox (흰 · 투명 아닌 픽셀 · 외톨이 줄 / 열 무시) 를 재고 그 bbox + 여백으로 자른다.
     웹앱 렌더는 침대마다 화면에 맞춰 확대돼 있어서 (높이 785 / 769 / 769 px) 장에서 가압판 높이에 비례하게 다시 맞춘다."""
     out = []
@@ -329,7 +329,7 @@ def measure_crop_renders(paths, dst_dir, pad=8):
         y0, y1, x0, x1 = ys.min(), ys.max(), xs.min(), xs.max()
         cx0, cy0 = max(x0 - pad, 0), max(y0 - pad, 0)
         cx1, cy1 = min(x1 + pad + 1, im.size[0]), min(y1 + pad + 1, im.size[1])
-        d = dst_dir / ('pore_render_%d.png' % k)
+        d = dst_dir / ('%s_%d.png' % (prefix, k))
         im.crop((cx0, cy0, cx1, cy1)).save(d)
         out.append(dict(path=d, crop_w=cx1 - cx0, crop_h=cy1 - cy0, bed_w=x1 - x0 + 1, bed_h=y1 - y0 + 1,
                         pad_left=x0 - cx0, pad_top=y0 - cy0))
@@ -694,40 +694,40 @@ def build_A(s, a):
         HEAD([(' DEM 기반 복합양극 ', 0), ('가압 거동', 1), (' (', 0),
               [R('D', 1800, BLACK, F_BOLD, b=1, i=1, lang='en-US'), R('SE', 1800, BLACK, F_BOLD, b=1, base=SUB, lang='en-US')],
               (' = 1 µm)', 0)]),
-        [BUL([('가압판 속도 제어에 따른 ', 0), ('전극 두께 및 측정 압력', 1), ('의 시간 변화 확인', 0)]),
-         BUL([('가압 중 압력 300 MPa 도달, 가압판 정지 후 두께 유지 및 ', 0), ('응력 완화', 1), ('로 압력 감소', 0)]),
-         BUL([('가압에 따른 입자 재배열로 ', 0), ('기공 공간 축소', 1), (', 응력 완화 후에도 기공 분포 유지', 0)])])
+        [BUL([('가압판 속도 제어에 따른 ', 0), ('전극 두께 및 측정 압력', 1), (' 변화, ', 0), ('응력 완화', 1), ('로 압력 감소', 0)]),
+         BUL([('가압에 따른 입자 재배열로 ', 0), ('기공 공간 축소', 1), (', 응력 완화 후에도 기공 분포 유지', 0)])])   # 1저자 11-03 글머리 두 줄
     s.caption('【 고체전해질 입도 1 µm 복합양극의 가압 거동 및 기공 분포 】')
-    fw, fh = fit_box(a['d1_aspect'], 2.15, 3.42)        # 왼쪽 그림 = 상자 안에 맞춤 (다시 만든 그림도 그대로 들어감)
-    s.add(PIC(s.nid(), 'D1 compaction curves', s.media(a['d1fig'], 'kg50t_d1_compaction.png'), 0.62, 3.02, fw, fh))
-    x0, x1 = 2.85, 9.45
-    s.add(TB(s.nid(), 'Pore distribution title', x0, 3.02, x1 - x0, 0.22, LP([LAB('[ Pore distribution ]', 1100)])))
-    sw = 1.42
+    # 1저자 11-03: 왼쪽 그래프 칸 = 3.50 × 3.85 in (그래프를 이 크기로 그려 1:1 로 붙임 · 글씨 9 pt) · 오른쪽 기공 그림 약간 축소
+    fw, fh = fit_box(a['d1_aspect'], 3.50, 3.85)
+    s.add(PIC(s.nid(), 'D1 compaction curves', s.media(a['d1fig'], 'kg50t_d1_compaction.png'), 0.55, 2.62, fw, fh))
+    x0, x1 = 4.20, 9.45
+    s.add(TB(s.nid(), 'Pore distribution title', x0, 2.75, x1 - x0, 0.22, LP([LAB('[ Pore distribution ]', 1100)])))
+    sw = 1.16
     g = ((x1 - x0) - 4 * sw) / 3
-    yb, hb0 = 6.15, 2.50                                  # 집전체 쪽 바닥선 · 가압 초기 침대 높이 (in)
+    yb, hb0 = 6.10, 2.25                                  # 집전체 쪽 바닥선 · 가압 초기 침대 높이 (in)
     st = a['stages']
-    labels = ['Initial compression', '50 MPa', '300 MPa', 'After relaxation']
-    half = [0.64, 0.27, 0.31, 0.56]
+    labels = [('Initial', 'compression'), ('50 MPa',), ('300 MPa',), ('After', 'relaxation')]
+    half = [0.42, 0.27, 0.31, 0.37]
     cxs = []
     bed_w = None
     for i, lab in enumerate(labels):
         cx = x0 + i * (sw + g) + sw / 2
         cxs.append(cx)
-        s.add(TB(s.nid(), 'Stage %d' % (i + 1), cx - 0.85, 3.30, 1.70, 0.22, LP([LAB(lab, 1050)])))
+        s.add(TB(s.nid(), 'Stage %d' % (i + 1), cx - 0.60, 3.02, 1.20, 0.40, ''.join(LP([LAB(w, 1050)]) for w in lab)))
         hb = hb0 * st[i]['plate'] / st[0]['plate']        # 침대 높이 ∝ 가압판 높이 (가압 초기 기준)
-        if i < 3:
-            r = a['renders'][i]
+        if True:                                          # After relaxation = 300 MPa 원본 그림 (1저자 파일 이름 '300MPa, after relaxation')
+            r = a['renders'][min(i, 2)]
             ipp = hb / r['bed_h']
             w, h = r['crop_w'] * ipp, r['crop_h'] * ipp
             x = cx - (r['pad_left'] + r['bed_w'] / 2) * ipp
             y = yb - (r['pad_top'] + r['bed_h']) * ipp
-            rid = s.media(r['path'], 'kg50t_pore_stage%d.png' % (i + 1))
+            rid = s.media(r['path'], 'kg50t_pore_stage%d.png' % (min(i, 2) + 1))
             s.add(PIC(s.nid(), 'Pore render %d' % (i + 1), rid, x, y, w, h))
             bed_w = r['bed_w'] * ipp
         else:
             s.add(SLOT(s.nid(), 'Image slot After relaxation', cx - bed_w / 2, yb - hb, bed_w, hb))
     for i in range(3):
-        s.add(DOTARROW(s.nid(), 'Stage arrow %d' % (i + 1), cxs[i] + half[i] + 0.06, 3.41,
+        s.add(DOTARROW(s.nid(), 'Stage arrow %d' % (i + 1), cxs[i] + half[i] + 0.06, 3.22,
                        cxs[i + 1] - half[i + 1] - 0.06))
     s.add(TB(s.nid(), 'Current collector', cxs[0] - 0.85, yb + 0.06, 1.70, 0.20,
              LP([LAB('< Current collector >', 1000, MUTED)])))
@@ -762,7 +762,7 @@ def _set_run_text(el, text):
         p.remove(r)
 
 
-def build_B(s, ch):
+def build_B(s, ch, size_renders=None, path_renders=None):
     sec = SIZE
     rect = s.get('Rectangle 23')
     paras = rect.findall('.//a:p', NS)
@@ -776,24 +776,47 @@ def build_B(s, ch):
     paras[2].addprevious(b3)
     paras[2].getparent().remove(paras[2])
     s.set_xfrm(rect, h=1.733)
-    for name, v in zip(('TextBox 16', 'TextBox 19', 'TextBox 20'), sec['tau_geo']):
+    for name, v in zip(('TextBox 16', 'TextBox 19', 'TextBox 20'), sec['tau2']):      # 1저자 11-02: 수송 tortuosity
         _set_run_text(s.get(name), '%.2f' % v)
-    for name in ('TextBox 15', 'TextBox 17', 'TextBox 18'):
-        _relabel_two_lines(s, name, ('Geometric', 'tortuosity'))
-    # 글머리 셋째 줄이 범례와 겹치지 않게 — 그림 묶음을 0.10 in 내리고 범례를 글머리 아래로
-    for name in ('직사각형 261', '그림 2', '그림 3', '그림 6', '그림 7', '그림 9', '그림 11', 'TextBox 12',
-                 'TextBox 13', 'TextBox 14', 'TextBox 15', 'TextBox 16', 'TextBox 17', 'TextBox 18',
-                 'TextBox 19', 'TextBox 20'):
-        el = s.get(name)
-        s.set_xfrm(el, y=s.xfrm(el)[1] + 0.10)
-    s.set_xfrm(s.get('그룹 260'), y=2.985)
+    # 1저자 11-03: 라벨 = 템플릿 그대로 'Tortuosity' · 그림 묶음 · 범례 · 값 = 템플릿 자리 · 크기 그대로 (글머리 내용만 다름)
+    el = s.get('TextBox 19')                                   # 2 µm 값만 경로 선과 겹쳐 0.10 in 오른쪽
+    s.set_xfrm(el, x=s.xfrm(el)[0] + 0.10)
+    el = s.get('그룹 260')                                     # 글머리 셋째 줄과 겹쳐 범례만 0.10 in 아래 (틀 위)
+    s.set_xfrm(el, y=s.xfrm(el)[1] + 0.10)
     # 렌더 셋 · 경로 그림 셋 = 옛 자료 그림 → 같은 자리 · 크기의 빈 칸 (점선)
+    rboxes = [s.xfrm(s.get(nm)) for nm in ('그림 2', '그림 6', '그림 9')]       # 렌더 칸 (지우기 전에 잼)
     for name, slot in (('그림 2', 'Image slot render D1'), ('그림 3', 'Image slot path D1'),
                        ('그림 6', 'Image slot render D2'), ('그림 7', 'Image slot path D2'),
                        ('그림 9', 'Image slot render D3'), ('그림 11', 'Image slot path D3')):
         el = s.get(name)
         x, y, w, h = s.xfrm(el)
-        el.addprevious(frag(SLOT(s.nid(), slot, x, y, w, h)))
+        k = {'Image slot render D1': 0, 'Image slot render D2': 1, 'Image slot render D3': 2}.get(slot)
+        if size_renders and k is not None:
+            # 1저자 11-02 렌더 · 높이 ∝ 이완 끝 판 높이 (D1 122.60 · D2 122.47 · D3 125.88 µm) · 칸 바닥 맞춤 · 칸 가운데
+            plate = [122.60, 122.47, 125.88]
+            # 1저자 11-03: 템플릿 렌더와 같은 크기 — 가장 큰 침대 (D3) 그림 높이 = 템플릿 D3 칸 높이 · 나머지 ∝ 판 높이 ·
+            #   바닥 = 템플릿 D1 · D2 칸 바닥 (공통) · 오른쪽 끝 = 템플릿 칸 오른쪽 끝 (경로 그림을 덮지 않게 남는 폭은 왼쪽으로)
+            r = size_renders[k]
+            r3 = size_renders[2]
+            H3 = rboxes[2][3]                                   # 템플릿 D3 렌더 칸 높이 (그림 전체 높이)
+            ip3 = H3 / r3['crop_h']                             # D3 의 in/px
+            hb = r3['bed_h'] * ip3 * plate[k] / max(plate)      # 이 침대의 침대 높이 (in)
+            ipp = hb / r['bed_h']
+            pw, ph = r['crop_w'] * ipp, r['crop_h'] * ipp
+            base = rboxes[0][1] + rboxes[0][3]                  # 공통 바닥
+            px = x + w - pw
+            py = base - (r['pad_top'] + r['bed_h']) * ipp
+            rid = s.media(r['path'], 'kg50t_size_render_D%d.png' % (k + 1))
+            el.addprevious(frag(PIC(s.nid(), 'Size render D%d' % (k + 1), rid, px, py, pw, ph)))
+        elif path_renders and slot.startswith('Image slot path D'):
+            kp = int(slot[-1]) - 1                         # 1저자 11-02 경로 그림 · 칸 안에 맞춤 (비율 유지 · 가운데)
+            r = path_renders[kp]
+            sc = h / r['crop_h']                           # 1저자 11-03: 템플릿 경로 그림과 같은 높이 · 칸 가운데
+            pw, ph = r['crop_w'] * sc, r['crop_h'] * sc
+            rid = s.media(r['path'], 'kg50t_size_path_D%d.png' % (kp + 1))
+            el.addprevious(frag(PIC(s.nid(), 'Size path D%d' % (kp + 1), rid, x + (w - pw) / 2, y + (h - ph) / 2, pw, ph)))
+        else:
+            el.addprevious(frag(SLOT(s.nid(), slot, x, y, w, h)))
         el.getparent().remove(el)
     s.replace_with_pic('개체 29', ch['p07_thickness_DSE'], 'kg50t_p07_thickness_DSE.png')
     s.replace_with_pic('개체 225', ch['p07_porosity_DSE'], 'kg50t_p07_porosity_DSE.png')
@@ -1049,6 +1072,12 @@ def main():
     ap.add_argument('--render-init', required=True)
     ap.add_argument('--render-50', required=True)
     ap.add_argument('--render-300', required=True)
+    ap.add_argument('--render-d1')
+    ap.add_argument('--render-d2')
+    ap.add_argument('--render-d3')
+    ap.add_argument('--path-d1')
+    ap.add_argument('--path-d2')
+    ap.add_argument('--path-d3')
     ap.add_argument('--skill-dir', required=True, help='pptx skill folder (scripts/add_slide.py · clean.py)')
     ap.add_argument('--work-dir', required=True)
     ap.add_argument('--out-dir', required=True)
@@ -1075,6 +1104,10 @@ def main():
     stages = read_stages(args.stage_frames) if args.stage_frames else STAGES
     NOTES['A'] = note_A(stages)
     renders = measure_crop_renders([args.render_init, args.render_50, args.render_300], assets)
+    size_renders = (measure_crop_renders([args.render_d1, args.render_d2, args.render_d3], assets, prefix='size_render')
+                    if (args.render_d1 and args.render_d2 and args.render_d3) else None)
+    path_renders = (measure_crop_renders([args.path_d1, args.path_d2, args.path_d3], assets, prefix='size_path')
+                    if (args.path_d1 and args.path_d2 and args.path_d3) else None)
     colorbar_png(assets / 'colorbar_jet_h.png', True)
     colorbar_png(assets / 'colorbar_jet_v.png', False)
     d1 = Image.open(args.d1_fig)
@@ -1094,7 +1127,7 @@ def main():
             prev = new[k]
 
     jobs = [('A', new['A'], lambda s: build_A(s, a)),
-            ('B', 'slide6.xml', lambda s: build_B(s, charts)),
+            ('B', 'slide6.xml', lambda s: build_B(s, charts, size_renders, path_renders)),
             ('C', 'slide7.xml', lambda s: build_C(s, charts)),
             ('SD', new['SD'], lambda s: build_D(s, SIZE)),
             ('SE', new['SE'], lambda s: build_E(s, SIZE, charts, 'DSE', 'p09')),
