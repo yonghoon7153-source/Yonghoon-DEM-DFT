@@ -2728,8 +2728,9 @@ def run_in_group(argv, cwd, env, logf, timeout, gdir, name, by='chain'):
 # ═════════════════════════ (2c) ★ 10-27 묶음 C1b 시도 원장 · 시도 폴더 ═════════════════════════
 #   RCA2-05 · Q4 (가) · Q9 설계 §3-2 · §3-4 · §3-5 (개정 1–5) · author 10-27 approved bundle C.
 #   원장 = 실행 트리와 다른 git 저장소의 덧붙이기만 하는 파일 (`LEDGER_FILE`) — 첫 줄 = 머리 (schema · 계획 sha256) · 항목 줄 (시도 **전에** 커밋 ·
-#   `--stage ledger --add` · 대상 · 기계 · 재실행이면 원 시도 · 계획 · 코드 키 · 환경 · 침대 지문) · 결과 줄 (시도 끝 · 그룹 종료를 확인한 뒤 · 사슬 또는
-#   `--stage recover`).  한 줄 = 정준 JSON (키 차례 · 빈칸 없는 구분자 · ensure_ascii False).  시도 폴더 = <--out>/attempt_<n> (`attempt.json` = 항목 ·
+#   `--stage ledger --add` · 대상 · 기계 · 재실행이면 원 시도 · 계획 · 코드 키 · 환경 · 침대 지문) · ★ 11-02 PC7-01 시작 기록 (시도 폴더 · attempt.json
+#   뒤 · 풀기 전 대조 · 러너 전 · 번호 · 바탕 · 폴더 · 기계 신원 — 결과 줄 없는 같은 번호의 두 번째 입구 = 화면만 · 시도 · 결과로 세지 않는다) · 결과 줄 (시도
+#   끝 · 그룹 종료를 확인한 뒤 · 사슬 또는 `--stage recover`).  한 줄 = 정준 JSON (키 차례 · 빈칸 없는 구분자 · ensure_ascii False).  시도 폴더 = <--out>/attempt_<n> (`attempt.json` = 항목 ·
 #   시작 커밋) · 풀기 전 거부 = 그 안 `rejected.json` (폴더를 만들 수 없으면 옆 attempt_<n>.rejected.json) · 결과 전 · 뒤 = 첫 풀이 끝 표지 · 팔 payload 유무
 #   (원인 무관) · 채택 = 원장 차례로 처음 결과 전이 아닌 시도 + 그 재실행 사슬 · 예측 (사다리 입력) · 판정 (--ledger) 은 채택 시도만 읽는다.
 #   ⚠ 한정 (Codex 회차 ① Q-D): 원장은 원장 안 시도끼리 결과를 본 뒤 고르는 길만 막는다 — 원장 밖 그림자 런 · 모든 사본 (폴더 · 결과 줄 · 원장) 을 함께 고친 손은
@@ -2753,6 +2754,11 @@ HEADER_KEYS = frozenset({'kind', 'schema', 'plan_sha256', 'utc'})
 ENTRY_KEYS = frozenset({'kind', 'n', 'target', 'machine', 'resume_of', 'plan_sha256', 'code_key_sha256', 'env', 'bed', 'utc'})
 RESULT_KEYS = frozenset({'kind', 'n', 'status', 'stop', 'side', 'cause', 'resume_ok', 'folder', 'folder_sha256', 'by', 'utc'})
 ATTEMPT_KEYS = frozenset({'schema', 'n', 'target', 'machine', 'resume_of', 'ledger_commit'})
+#: ★ 11-02 PC7-01 (사전 공격 7 회차 · 1저자 11-02 "권고대로") — 시작 기록 (원장 줄 kind start) = 시도 폴더 + attempt.json 을 만든 뒤 · 풀기 전 대조 ·
+#:   러너 전에 커밋 (번호 · 바탕 절대 경로 (resolve) · 폴더 이름 · 기계 신원 = `host_ident` 칸 · utc) — 결과 줄 없는 같은 번호의 두 번째 입구 (다른 --out ·
+#:   다른 기계) = 화면만 거부 · recover = 바탕 대조.  시도 · 결과로 세지 않는다 (`ledger_parse` 의 'starts' · 채택 · 다시 셈 · 최대 시도 수 무관).
+START_KEYS = frozenset({'kind', 'n', 'base', 'folder', 'host', 'utc'})
+START_HOST_KEYS = frozenset({'machine_id', 'boot_id', 'pidns'})
 RESULT_STATUSES = ('completed', 'stopped', 'rejected', 'interrupted')
 #: ★ 10-27 묶음 C2d — 단위 · 넘침 점 시도의 완주 상태 (요약 이름 · 런 이름 앞자리 U · 결과 줄 completed)
 UNIT_SUMMARY = {'unit': 'unit_summary.json', 'point': 'point_summary.json'}
@@ -2998,8 +3004,28 @@ def _result_problem(r):
     return None
 
 
+def _start_problem(s):
+    """★ 11-02 PC7-01 — 시작 기록 꼴 (칸 · 바탕 = 절대 경로 · 폴더 = attempt_<번호> · 기계 신원 = host_ident 세 칸 (글 | None) · utc 글) → 사유 | None."""
+    if set(s) != START_KEYS:
+        return f'칸 {sorted(set(s) ^ START_KEYS)}'
+    b = s['base']
+    if not (isinstance(b, str) and b and os.path.isabs(b) and '\0' not in b):
+        return f'바탕 {b!r} (절대 경로여야)'
+    if s['folder'] != f'attempt_{s["n"]}':
+        return f'폴더 {s["folder"]!r} (attempt_{s["n"]} 여야)'
+    h = s['host']
+    if not (isinstance(h, dict) and set(h) == START_HOST_KEYS and all(v is None or isinstance(v, str) for v in h.values())):
+        return f'기계 신원 {h!r} (machine_id · boot_id · pidns)'
+    if not isinstance(s['utc'], str):
+        return 'utc 꼴'
+    return None
+
+
 def ledger_parse(raw):
-    """원장 바이트 → 상태 {'header', 'entries' {n: 항목}, 'results' {n: 결과 줄}} · 꼴 · 차례 · 같은 항목 결과 줄 둘 = Stop."""
+    """원장 바이트 → 상태 {'header', 'entries' {n: 항목}, 'results' {n: 결과 줄}, 'starts' {n: 시작 기록}} · 꼴 · 차례 · 같은 항목 결과 줄 둘 = Stop.
+    ★ 11-02 PC7-01 — 시작 기록 (kind start) = 항목 뒤 · 한 번호에 하나 · 그 번호의 결과 줄은 시작 기록 뒤 (결과 줄 뒤 시작 기록 = 멈춤) · 꼴 (`_start_problem`)
+    — 어기면 Stop ATTEMPT_LEDGER_MISMATCH · 시작 기록 없는 결과 줄 (옛 원장 · 폴더를 못 만든 옆 거부 · 시작 기록을 쓰기 전 창) = 그대로 받는다 · 시작 기록은
+    시도 · 결과로 세지 않는다 (entries · results 에 들지 않는다)."""
     def bad(why):
         raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장: {why}')
     try:
@@ -3008,7 +3034,7 @@ def ledger_parse(raw):
         bad('utf-8 이 아니다')
     if not txt.endswith('\n'):
         bad('비었거나 끝 줄바꿈이 없다 (덧붙이다 끊긴 꼴)')
-    st = {'header': None, 'entries': {}, 'results': {}}
+    st = {'header': None, 'entries': {}, 'results': {}, 'starts': {}}
     for i, ln in enumerate(txt[:-1].split('\n')):
         try:
             obj = _json_strict(ln.encode('utf-8'))
@@ -3039,6 +3065,17 @@ def ledger_parse(raw):
             if why:
                 bad(f'결과 줄 {n}: {why}')
             st['results'][n] = obj
+        elif kind == 'start':                                 # ★ 11-02 PC7-01 — 시작 기록 (시도 · 결과로 세지 않는다)
+            if type(n) is not int or n not in st['entries']:
+                bad(f'{i + 1} 째 줄 시작 기록의 항목 {n!r} 이 앞에 없다')
+            if n in st['starts']:
+                bad(f'항목 {n} 의 시작 기록이 둘 (한 항목 = 시작 기록 하나 · ★ 11-02 PC7-01)')
+            if n in st['results']:
+                bad(f'항목 {n} 의 시작 기록이 결과 줄 뒤에 있다 (결과 줄 = 시작 기록 뒤 · ★ 11-02 PC7-01)')
+            why = _start_problem(obj)
+            if why:
+                bad(f'시작 기록 {n}: {why}')
+            st['starts'][n] = obj
         else:
             bad(f'{i + 1} 째 줄 kind {kind!r}')
     if st['header'] is None:
@@ -3358,9 +3395,11 @@ def attempt_reject(repo, raw, n, where, stop, head):
 
 def attempt_open(a, stage):
     """★ 10-27 묶음 C1b — 시도 꼴 입구 (--ledger · --attempt) → None (시도 꼴 아님) | int (rc · 화면만 거부 또는 거부 기록을 쓴 거부) | Attempt.
-    화면만 (원장 · 폴더 무변경): 원장 꼴 · 저장소 · 커밋 안 한 고침 · 원장에 없는 번호 · 이미 결과 줄이 있는 번호 (Q9 R4-13) · ★ 11-02 PC6-09 이 항목의 시도
-    폴더 (attempt.json) 가 이미 있는데 결과 줄이 없음 (사슬 부모 사망 · 도는 중 = --stage recover 먼저).  그 밖 풀기 전 대조 실패 = 거부 기록 + 결과 줄
-    (결과 전 · 다음 시도 가능)."""
+    화면만 (원장 · 폴더 무변경): 원장 꼴 · 저장소 · 커밋 안 한 고침 · 원장에 없는 번호 · 이미 결과 줄이 있는 번호 (Q9 R4-13) · ★ 11-02 PC7-01 이미 시작
+    기록이 있는데 결과 줄이 없는 번호 (사슬 부모 사망 · 도는 중 — 바탕 · 기계와 무관 · 폴더를 만들기 전 · 기록된 바탕 · 기계 신원을 알려 주고 그 바탕에서
+    --stage recover 먼저) · ★ 11-02 PC6-09 이 항목의 시도 폴더 (attempt.json) 가 이미 있는데 결과 줄이 없음 (시작 기록을 쓰기 전 창 · 같은 바탕).  그 밖 풀기
+    전 대조 실패 = 거부 기록 + 결과 줄 (결과 전 · 다음 시도 가능).  ★ 11-02 PC7-01 — 시도 폴더 + attempt.json 을 만든 뒤 · 풀기 전 대조 · 러너 전에 원장에
+    시작 기록 한 줄을 커밋한다 (못 쓰면 러너 없이 rc 3 · 폴더 = attempt.json 만 · recover 뒤 다음 시도)."""
     if a.ledger is None and a.attempt is None:
         return None
     if a.ledger is None or a.attempt is None or getattr(a, 'dry_run', False):
@@ -3379,6 +3418,16 @@ def attempt_open(a, stage):
             raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장에 항목 {n} 이 없다 (--stage ledger --add 먼저)')
         if n in st['results']:
             raise Stop('ATTEMPT_LEDGER_MISMATCH', f'항목 {n} 은 이미 결과 줄이 있다 (Q9 R4-13 · 시도 폴더 · 거부 기록을 만들지 않는다)')
+        s0 = st['starts'].get(n)
+        if s0 is not None:
+            #  ★ 11-02 PC7-01 (사전 공격 7 회차 · P1 후보 · PC6-09 범위) — 시작 기록이 있는데 결과 줄이 없음 = 사슬 부모 사망 · 아직 도는 시도: 다른 --out ·
+            #    다른 기계에서 같은 번호를 다시 치면 (옛 = 새 바탕에 폴더를 만들고 처음부터 다시 · 결과 줄 · 판정 통과 · 옛 그룹 삶) 화면만 거부 (폴더를 만들기 전)
+            h = s0['host']
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'항목 {n} 은 이미 시작 기록이 있는데 결과 줄이 없다 (바탕 {s0["base"]} · 폴더 {s0["folder"]} · 기계 신원 '
+                                                  f'boot_id {h.get("boot_id")} · machine_id {h.get("machine_id")} · pidns {h.get("pidns")} · {s0["utc"]}) — '
+                                                  f'사슬 부모 사망 · 아직 도는 시도: 같은 --attempt 를 다른 --out · 다른 기계에서 다시 치지 말고 그 바탕 (그 '
+                                                  f'기계) 에서 --stage recover --out {Path(s0["base"]) / s0["folder"]} --ledger {repo} 먼저 (원장 · 폴더 무변경 · '
+                                                  f'★ 11-02 PC7-01)')
     except Stop as e:
         print_stop(e)
         return 3
@@ -3411,6 +3460,18 @@ def attempt_open(a, stage):
         return 3
     write_json_atomic(folder / ATTEMPT_FILE, {'schema': ATTEMPT_SCHEMA, 'n': n, 'target': e['target'], 'machine': e['machine'],
                                               'resume_of': e['resume_of'], 'ledger_commit': head})
+    #  ★ 11-02 PC7-01 — 시작 기록 (번호 · 바탕 절대 경로 · 폴더 · 기계 신원 · utc) 을 풀기 전 대조 · 러너 전에 커밋 (읽은 원장 그대로일 때만 = expect ·
+    #    덧붙인 뒤 원장 꼴 = 같은 번호 시작 기록 둘 · 결과 줄 뒤 = 멈춤) · 못 쓰면 러너 없이 rc 3 (시도 폴더 = attempt.json 만 · 같은 명령 = PC6-09 화면만 ·
+    #    recover 가 결과 줄 interrupted · 결과 전 → 다음 시도).  창 (폴더 · attempt.json 을 만든 뒤 시작 기록 커밋 전 사망) = 한정 (PC6-09 · PC7-07 꼴)
+    start = {'kind': 'start', 'n': n, 'base': str(base.resolve()), 'folder': folder.name, 'host': host_ident(), 'utc': _utc()}
+    try:
+        ledger_append(repo, start, f'rint-r attempt {n} start {e["target"]} {e["machine"]}', expect=raw)
+    except (Stop, OSError) as ex:
+        print_stop(ex if isinstance(ex, Stop) else Stop('ATTEMPT_LEDGER_MISMATCH', f'{type(ex).__name__}: {ex}'))
+        print_stop(Stop('ATTEMPT_LEDGER_MISMATCH', f'시작 기록을 못 썼다 — 러너 없음 · 시도 폴더 {folder} = attempt.json 만: --stage recover --out {folder} '
+                                                   f'--ledger {repo} 뒤 다음 시도 (★ 11-02 PC7-01)'))
+        return 3
+    raw = raw + ledger_line(start).encode('utf-8')
     try:
         prob = attempt_presolve_problem(st, e, n, target, a, stage)
         if not prob and getattr(a, 'point', None):           # ★ 10-27 묶음 C2d — 넘침 점 = 결정 기록 (점 · 변이 · 사다리 · 계획 · 원장 조상)
@@ -6583,7 +6644,9 @@ def stage_recover(a):
 def recover_ledger(root, repo):
     """★ 10-27 묶음 C1b (Q9 개정 5 ② · "supervisor / recovery 가 종료를 확인한 뒤 표지 · payload · 폴더 해시를 확정") — root (시도 폴더 · 또는 그 바탕)
     아래 시도 폴더마다: 원장 항목에 결과 줄이 없고 그 폴더의 그룹이 다 확인됐으면 결과 줄 (by recover · 단계 요약 있음 = 그 상태 · 거부 기록 = rejected ·
-    없음 = interrupted · 원인 parent_dead) → 못 쓴 수 (미확인 · 원장 불일치)."""
+    없음 = interrupted · 원인 parent_dead) → 못 쓴 수 (미확인 · 원장 불일치).  ★ 11-02 PC7-01 (사전 공격 7 회차) — 결과 줄이 이미 있는데 이 폴더의 이름 ·
+    요약 sha 가 결과 줄과 다르거나 (결과 줄 = 다른 바탕 · 다른 기계 · 손 고침의 폴더 · 옛 = 넘어감 rc 0), 시작 기록이 있는데 이 폴더의 바탕 (resolve) 이
+    시작 기록의 바탕과 다르면 (사본 · 옮긴 폴더) = 셈 (rc 3) + 사유 · 결과 줄 · 원장 무변경 (고아 그룹 찾기 · 죽이기 = `stage_recover` 그대로)."""
     root = Path(root)
     folders = [root] if read_attempt(root) is not None else [p for p in sorted(root.iterdir()) if p.is_dir() and read_attempt(p) is not None] \
         if root.is_dir() else []
@@ -6600,7 +6663,22 @@ def recover_ledger(root, repo):
             e = st['entries'].get(n)
             if e is None or e['target'] != a['target'] or not ledger_is_ancestor(repo, a['ledger_commit'], head):
                 raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{f.name}: 이 원장의 항목 {n} ({a["target"]}) 시도가 아니다')
-            if n in st['results']:
+            r0, s0 = st['results'].get(n), st['starts'].get(n)
+            odd = []                                          # ★ 11-02 PC7-01 — 결과 줄 · 시작 기록 ↔ 이 폴더
+            if r0 is not None:
+                dg = folder_digest(f)
+                if r0['folder'] != f.name or dg != r0['folder_sha256']:
+                    odd.append(f'원장 결과 줄 {n} 의 폴더 {r0["folder"]} · 요약 sha {r0["folder_sha256"][:12]} ≠ 이 폴더 ({f.name} · '
+                               f'{(dg or "못 셈")[:12]})')
+            fb = str(f.resolve().parent)
+            if s0 is not None and s0['base'] != fb:
+                odd.append(f'시작 기록의 바탕 {s0["base"]} ≠ 이 폴더의 바탕 {fb}')
+            if odd:
+                print(f'  recover {f.name}: {" · ".join(odd)} — 다른 바탕 · 다른 기계 · 사본 · 손 고침의 시도 폴더: 결과 줄 · 원장 무변경 (사람이 본다 · '
+                      f'★ 11-02 PC7-01)')
+                bad += 1
+                continue
+            if r0 is not None:
                 continue
             why = attempt_groups_problem(f)
             if why:

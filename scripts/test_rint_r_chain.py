@@ -7290,10 +7290,10 @@ def s_led_main():
     return scen('LM', go)
 
 
-@check('AL01', '★ 10-27 묶음 C1b — 원장 캠페인 (주): --init · --add 셋 (rc 0 · 번호 1 · 2 · 3) · 시도 폴더 <바탕>/attempt_<n> · 원장 줄 = 머리 · (항목 · 결과 줄) '
-               '× 3 (결과 = completed · 결과 뒤 · by chain · 폴더 이름 · 폴더 요약 sha = 시험 쪽 독립 계산) · attempt.json 의 시작 커밋 = 자기 항목이 있고 결과 줄은 '
-               '없는 커밋 · 원장 작업 트리 깨끗 · 단계 요약 attempt 칸 · 판정 (--ledger) rc 0 · 원장 칸 채택 = 1 · 2 · 3 · 판정 = 원장 없는 주 판정과 같은 판정 · '
-               '상태 · 표지')
+@check('AL01', '★ 10-27 묶음 C1b — 원장 캠페인 (주): --init · --add 셋 (rc 0 · 번호 1 · 2 · 3) · 시도 폴더 <바탕>/attempt_<n> · 원장 줄 = 머리 · (항목 · '
+               '★ 11-02 PC7-01 시작 기록 · 결과 줄) × 3 (시작 기록 = 번호 · 바탕 절대 경로 · 폴더 · 이 컨테이너 기계 신원 · 결과 = completed · 결과 뒤 · by chain · '
+               '폴더 이름 · 폴더 요약 sha = 시험 쪽 독립 계산) · attempt.json 의 시작 커밋 = 자기 항목이 있고 시작 기록 · 결과 줄은 없는 커밋 · 원장 작업 트리 깨끗 · '
+               '단계 요약 attempt 칸 · 판정 (--ledger) rc 0 · 원장 칸 채택 = 1 · 2 · 3 · 판정 = 원장 없는 주 판정과 같은 판정 · 상태 · 표지')
 def t_AL01():
     if not chain_c1b():
         return False, '사슬에 --ledger (시도 원장) 가 없다'
@@ -7303,9 +7303,12 @@ def t_AL01():
     bad = []
     if r['rcs'] != (0, 0, 0, 0) or ns != (1, 2, 3):
         bad.append(('rcs', r['rcs'], ns, [s[-160:] for s in r['so']]))
-    if kinds != ['header', 'entry', 'result', 'entry', 'result', 'entry', 'result']:
+    if kinds != ['header', 'entry', 'start', 'result', 'entry', 'start', 'result', 'entry', 'start', 'result']:   # ★ 11-02 PC7-01 — 시작 기록
         bad.append(('kinds', kinds))
     for n, res, tgt in ((1, r['l0'], 'ladder:P0'), (2, r['l1'], 'ladder:P1'), (3, r['p'], 'predict')):
+        sl = [x for x in pe_starts(d) if x.get('n') == n]
+        if len(sl) != 1 or not pe_start_ok(sl[0], n, res['base']):
+            bad.append(('start', n, sl))
         rl = led_result(d, n) or {}
         ap = res['out'] / 'attempt.json'
         att = json.loads(ap.read_text(encoding='utf-8')) if ap.exists() else {}
@@ -7315,7 +7318,7 @@ def t_AL01():
               and rl.get('folder') == f'attempt_{n}' and rl.get('folder_sha256') == tree_digest(res['out'])
               and att.get('n') == n and att.get('target') == tgt and att.get('machine') == MACH
               and any(x.get('kind') == 'entry' and x.get('n') == n for x in start)
-              and not any(x.get('kind') == 'result' and x.get('n') == n for x in start)
+              and not any(x.get('kind') in ('start', 'result') and x.get('n') == n for x in start)
               and ((res['sum'] or {}).get('attempt') or {}).get('n') == n)
         if not ok:
             bad.append((n, res['rc'], rl, att, res['so'][-200:]))
@@ -7680,13 +7683,14 @@ def t_AL12b():
         a = lad_att('AL12b_P0', world('AL12b_a', dict(PW, faults=[{'do': 'rc2', 'match': {'rj': 'inf'}}])), d, n1)
         main = git_(d, 'rev-parse', '--abbrev-ref', 'HEAD')
         r1 = led_result(d, 1)
-        git_(d, 'checkout', '-q', '-b', 'side', 'HEAD~1')            # 결과 줄 1 앞 커밋 (항목 1 만)
+        n_main = len(led_lines(d))                                    # ★ 11-02 PC7-01 — 본가지 줄 수 (머리 · 항목 1 · 시작 기록 1 · 결과 1)
+        git_(d, 'checkout', '-q', '-b', 'side', 'HEAD~1')            # 결과 줄 1 앞 커밋 (항목 1 · 시작 기록 1)
         led_hand(d, r1, msg='곁가지 자리표 (시험)')
         _rc2, n2, s2 = led_add(d, 'ladder:P0', machine='gabia')
         b = lad_att('AL12b_P0', world('AL12b_b'), d, n2, machine='gabia')
         side_lines = led_lines(d)
         git_(d, 'checkout', '-q', main)
-        for o in side_lines[3:]:                                      # 본가지 = 머리 · 항목 1 · 결과 1 · (곁가지의 항목 2 · 결과 2 를 손으로)
+        for o in side_lines[n_main:]:                                 # 본가지 = 머리 · 항목 1 · 시작 1 · 결과 1 · (곁가지의 항목 2 · 시작 2 · 결과 2 를 손으로)
             led_hand(d, o, msg='본가지에 옮김 (시험)')
         return d, a, b, n2, s2
     d, a, b, n2, s2 = scen('AL12b', go)
@@ -7892,7 +7896,9 @@ def t_AL11c():
         d2 = Path(TD) / 'ledgers' / 'AL11c'
         d2.mkdir(parents=True)
         git_(d2, 'init', '-q')
-        (d2 / LEDGER_NAME).write_bytes(b''.join(x + b'\n' for x in led_raw(r['d']).splitlines()[:5]))
+        src = led_raw(r['d']).splitlines()
+        cut = [i for i, x in enumerate(src) if json.loads(x).get('kind') == 'result' and json.loads(x).get('n') == 2][0] + 1   # ★ 11-02 PC7-01 — 시작 기록 포함 (줄 수 = 구조 무관)
+        (d2 / LEDGER_NAME).write_bytes(b''.join(x + b'\n' for x in src[:cut]))
         git_(d2, 'add', LEDGER_NAME)
         git_(d2, 'commit', '-q', '-m', '같은 줄 · 새 저장소 (시험)')
         _r, n3, s3 = led_add(d2, 'predict')
@@ -8160,8 +8166,10 @@ def t_AL12d():
         v_side = ver_led('AL12d_vside', [a['out']], d)                 # 곁가지 HEAD 에서 원장 판정 (사다리 하나 · 원장 대조 통과 뒤 INPUT_MISSING)
         git_(d, 'checkout', '-q', main)
         git_(d, 'merge', '-q', '-s', 'ours', '--no-edit', 'side')
-        led_hand(d, dict(side_lines[3], utc='2026-10-27T00:00:00Z'), msg='비슷한 항목 (시험)')
-        led_hand(d, side_lines[4], msg='결과 줄 옮김 (시험)')
+        e2 = [x for x in side_lines if x.get('kind') == 'entry' and x.get('n') == n2][0]      # ★ 11-02 PC7-01 — 줄 번호 대신 번호 (시작 기록이 끼었다)
+        r2 = [x for x in side_lines if x.get('kind') == 'result' and x.get('n') == n2][0]
+        led_hand(d, dict(e2, utc='2026-10-27T00:00:00Z'), msg='비슷한 항목 (시험)')
+        led_hand(d, r2, msg='결과 줄 옮김 (시험)')
         v_main = ver_led('AL12d_vmain', [b['out']], d)
         rc, so = call(['--stage', 'verdict', '--reverify', str(v_side['out']), '--root', FX['root']])
         return a, b, v_side, v_main, rc, so
@@ -10870,8 +10878,7 @@ def t_PD12():
         r1 = [x for x in lines if x.get('kind') == 'result' and x.get('n') == n1][0]
         rows = {}
         for tag, with_result in (('entry_and_result', True), ('entry_only', False)):
-            dr = led_clone(d, f'PD12_{tag}')
-            git_(dr, 'reset', '-q', '--hard', 'HEAD~2')
+            dr = led_reset_before(d, f'PD12_{tag}', f'rint-r attempt {n1} entry ')   # ★ 11-02 PC7-01 — 항목 1 커밋 앞 (옛 = 끝 두 커밋 · 지금 = 항목 · 시작 · 결과 셋)
             led_hand(dr, dict(e1, target='ladder:P0:FIBRE'), msg='항목 1 대상만 바꿈 (시험 · PC6-12)')
             if with_result:
                 led_hand(dr, r1, msg='결과 줄 1 그대로 (시험 · PC6-12)')
@@ -10915,8 +10922,7 @@ def t_PD12m():
         lines = led_lines(d2)
         e = [x for x in lines if x.get('kind') == 'entry' and x.get('n') == n][0]
         rr = [x for x in lines if x.get('kind') == 'result' and x.get('n') == n][0]
-        dr = led_clone(d2, 'PD12m_forged')
-        git_(dr, 'reset', '-q', '--hard', 'HEAD~2')
+        dr = led_reset_before(d2, 'PD12m_forged', f'rint-r attempt {n} entry ')   # ★ 11-02 PC7-01 — 그 항목 커밋 앞 (옛 = 끝 두 커밋)
         led_hand(dr, dict(e, target='unit:P1_c1_R_j_hi'), msg='단위 항목 대상만 바꿈 (시험 · PC6-12)')
         led_hand(dr, rr, msg='결과 줄 그대로 (시험 · PC6-12)')
         add2 = led_add(dr, 'unit:P0_c0_R_j_lo')
