@@ -5139,6 +5139,42 @@ def _selftest() -> int:
                 and '⛔ 모르는 코호트' in li_.decode('utf-8') and not Ri.exists(), repr((rc_i, ri_.get('exit_code'), ri_.get('aborted'))))
 
         _scenario('㊲ SUPR-01 · 02 사전 점검 기계 판독 줄 · 완료 영수증 시나리오', _s37)
+
+        # ═══ ㊳ ★ 11-02 L214P-02 (Codex 10-28 S1 재확인 §3 Q5 · 10-30 S2 §3-2) — launch_eligibility 의 manifest git.sha 형식 검사 (`_HEX40.match`) 가
+        #     40 hex 뒤 LF 하나를 받는다 (`$` 는 마지막 개행 앞에서도 맞는다) — 반례 먼저 (고치기 전 코드에서 ✗) · 고침 = `.fullmatch` 한 줄.
+        #     경계 7 형 = 정확한 40 hex (current) · + LF (invalid ← 결함) · + CRLF · + 공백 · + NUL · 39 hex (invalid — 고치기 전에도) ·
+        #     다른 유효 40 hex (current — 형식만 본다 · 승인 SHA 대조는 영수증 F7 · G7 의 몫).  원문 SHA 를 strip 하지 않는다.
+        def _s38():
+            hv_ = _G.get('launch_eligibility')
+            m0 = read_json(tmp / 'run_gen' / 'manifest.json') or {}
+            s0 = (m0.get('git') or {}).get('sha') or ''
+            alt = s0[:-1] + ('0' if s0[-1:] != '0' else '1')
+            rows_ = {'정확한 40 hex': (s0, 'current'), '40 hex + LF': (s0 + '\n', 'invalid'), '40 hex + CRLF': (s0 + '\r\n', 'invalid'),
+                     '40 hex + 공백': (s0 + ' ', 'invalid'), '40 hex + NUL': (s0 + '\x00', 'invalid'), '39 hex': (s0[:39], 'invalid'),
+                     '다른 유효 40 hex (형식만)': (alt, 'current')}
+            got = {}
+            for nm_, (sha_, _want) in rows_.items():
+                m_ = json.loads(json.dumps(m0))
+                m_['git']['sha'] = sha_
+                e_ = hv_(m_)
+                got[nm_] = (e_.get('kind'), sum(1 for p_ in e_.get('problems') or [] if str(p_).startswith('git.sha')))
+            bad = {k: v for k, v in got.items() if not (v[0] == rows_[k][1] and v[1] == (1 if rows_[k][1] == 'invalid' else 0))}
+            chk('㊳ ★ L214P-02 — launch_eligibility (실제 함수) 의 manifest git.sha 형식 경계 7 형: 정확한 40 hex · 다른 유효 40 hex = current · '
+                '+ LF · + CRLF · + 공백 · + NUL · 39 hex = invalid (git.sha 문제 한 줄) — 옛 코드: + LF 가 current (`_HEX40.match` 의 `$`)',
+                len(s0) == 40 and not bad, repr((len(s0), bad)))
+            r_ = tmp / 'l214p02_sha_lf'
+            shutil.copytree(tmp / 'run_gen', r_, symlinks=True)
+            m1 = read_json(r_ / 'manifest.json') or {}
+            m1['git']['sha'] = s0 + '\n'
+            write_json(r_ / 'manifest.json', m1)
+            rc_a, aj_, o_ = _audit_json(r_)
+            el_ = aj_.get('eligibility') or {}
+            chk('㊳ ★ L214P-02 — 실제 audit CLI: manifest git.sha = 40 hex + LF 인 ROOT = 실행 형식 자격 invalid (git.sha 문제) · rc 2 '
+                '(옛 코드: 자격 current)',
+                rc_a == 2 and el_.get('kind') == 'invalid' and any(str(p_).startswith('git.sha') for p_ in el_.get('problems') or []),
+                repr((rc_a, el_, o_[-200:])))
+
+        _scenario('㊳ L214P-02 manifest git.sha 끝 LF 시나리오', _s38)
     finally:
         for k, v in env_keep.items():
             if v is None:
