@@ -149,7 +149,7 @@ echo "── 리포 실물 (리포가 맞나 — selftest 가 **대신해 주지
 #    `check_all` 은 초록이었다.  돌지 않는 검사기는 없는 것과 같다 (규칙 K 의 교훈).
 run 'mutation_sweep (문법 — 배터리 자신이 도는가)' \
   python3 -c "import ast,sys; ast.parse(open('scripts/mutation_sweep_20260825.py',encoding='utf-8').read())"
-run 'check_review_findings   (원장 + 철회값 스윕)' python3 scripts/check_review_findings.py
+run 'check_review_findings   (원장 자기일관 · 철회값 스윕 = 위 selftest 21)' python3 scripts/check_review_findings.py
 run 'check_method_discipline (규칙 A~M + claims 원장)' python3 scripts/check_method_discipline.py
 #  ★★ 2026-08-30 — 원장이 "제3자가 리포만으로 재도출한 값이 이 문서와 일치한다" 고 적는데
 #    그것은 08-29 에 손으로 한 번 돌린 결과였고 **아무것도 다시 확인하지 않았다**.
