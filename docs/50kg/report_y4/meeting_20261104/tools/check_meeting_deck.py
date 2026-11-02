@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""진도점검 덱 (2026-11-04 회의 · DEM 10 장 — 11-02 이야기 보강) 검사 — 화면 · 표 · 노트의 숫자 = 원자료 · 1저자 11-02 규칙.
+"""진도점검 덱 (2026-11-04 회의 · DEM 11 장 — 11-02 이야기 보강 + MPM 장) 검사 — 화면 · 표 · 노트의 숫자 = 원자료 · 1저자 11-02 규칙.
+
+장 = 장 머리 글 (Rectangle 23 첫 문단) 의 낱말로 찾는다 (번호 고정 아님 — 11-02 MPM 장 · 영률 장 끼우기).  모든 장이 역할 하나씩 · 역할마다 장 하나.
 
 숫자 원천 (리포): docs/50kg/report_y4/draft2/metrics_all.csv · docs/50kg/report_y4/draft2/figs/p5_breakeven_sigma.csv
 검사:
@@ -9,9 +11,10 @@
   R  빨강 (FF5050) = 나쁜 결과 문구 셋에만
   I  σ = 이탤릭 · 바로 뒤 첨자 (eff · 0) = 아래첨자 · 똑바로
   F  글꼴 = KoPubWorld돋움체
+  M  MPM 장: MPM 기공도 (리포 묶음 docs/data/kg50_mpm_20261102) 숫자 · MPM 피복률 숫자 없음 (1저자 11-02 Q4 · 원장 MPMC-01 – 03)
 사용:
   python3 -I check_meeting_deck.py <deck.pptx> --repo <리포> [--json out.json]
-  python3 -I check_meeting_deck.py <deck.pptx> --repo <리포> --selftest   (덱을 메모리에서 다섯 가지로 망가뜨려 각각 FAIL 인지)
+  python3 -I check_meeting_deck.py <deck.pptx> --repo <리포> --selftest   (덱을 메모리에서 여섯 가지로 망가뜨려 각각 FAIL 인지)
 """
 import argparse
 import copy
@@ -21,6 +24,7 @@ import json
 import os
 import re
 import sys
+import tarfile
 
 from pptx import Presentation
 from pptx.oxml.ns import qn
@@ -28,6 +32,14 @@ from pptx.oxml.ns import qn
 ORDER = ('D3', 'D2', 'D1')                       # 3 → 2 → 1 µm
 RED_OK = {'전해질 이온전도도 감소 (0.45배)와 상쇄', '이온전도도 감소', '미립 전해질 이온전도도 감소 (0.45배)와 상쇄'}
 BANNED = r'(?i)hertz|physics|union|sphere|ε|합집합|수송 tortuosity|이온 이동 경로|156|재확인|빗금|D0\.7|0\.7 ?µm|0\.66'
+#: 장 역할 ← 장 머리 글 (Rectangle 23 첫 문단) 의 낱말 · 차례 = 덱 차례 · optional = 아직 없어도 됨 (영률 장 = E05 · E15 끝난 뒤)
+ROLES = (('summary', '해석 결과 요약'), ('background', '미립화 검토 배경'), ('method', '미세구조 시뮬레이션'), ('porosity', '기공도 변화'),
+         ('contact', '활물질/전해질 접촉'), ('mpm', 'MPM 소성 해석'), ('network', '전해질 접촉 망'), ('ionic', '유효 이온전도도 및 이온 전류'),
+         ('breakeven', '손익분기'), ('modulus', '영률'), ('conclusion', 'DEM 해석 결론'), ('appendix', '부록'))
+OPTIONAL = {'modulus'}
+#: 옛 번호 (10 장 판) → 역할 — expected() 의 장 번호는 이 표로 역할이 된다
+OLD_NO = {1: 'summary', 2: 'background', 4: 'porosity', 5: 'contact', 6: 'network', 7: 'ionic', 8: 'breakeven', 9: 'conclusion', 10: 'appendix'}
+MPM_KIT = {'261102_091413_c2e9a7': 'D3', '261102_091440_0845a7': 'D2', '261102_091500_598f38': 'D1'}
 
 
 def load_data(repo):
@@ -37,6 +49,14 @@ def load_data(repo):
     meas = {r['bed']: float(r['sigma_meas_mScm']) for r in be if r['kind'] == 'measured' and r['sigma_meas_mScm']}
     req = {r['bed']: float(r['sigma_req_mScm']) for r in be if r['kind'] == 'required' and r['basis'] == 'f_mc Hertz'}
     szz = json.load(open(os.path.join(repo, 'docs/50kg/report_y4/meeting_20261104/values/szz_share/plane_load.json'), encoding='utf-8'))['cases']
+    mpm = {}
+    with tarfile.open(os.path.join(repo, 'docs/data/kg50_mpm_20261102/kg50_mpm_results_slim.tgz'), 'r:gz') as tf:
+        for m in tf.getmembers():
+            if m.isfile() and m.name.endswith('/latest_run/payload_slim.json'):
+                mm = json.load(tf.extractfile(m))['mpm_metrics']
+                mpm[MPM_KIT[m.name.split('/')[0]]] = mm
+    assert set(mpm) == set(ORDER), mpm.keys()
+    rows['_mpm'] = mpm
     return rows, meas, req, szz
 
 
@@ -94,7 +114,32 @@ def expected(rows, meas, req, szz):
     E += [(10, 'table', x, 'f_ion_hertz × 1.5') for x in sig] + [(10, 'table', x, 'eps_union_exact_pct') for x in eps]
     for g in ('AM–AM', 'AM–SE', 'SE–SE'):
         E += [(10, 'table', f"{szz[lab]['contribution_sigma_zz_pct'][g]:.1f}", f'plane_load_share {lab} {g}') for lab in ('SE3um', 'SE2um', 'SE1um')]
+    # 11-02 MPM 장 (1저자 Q3 · Q4) — MPM 기공도 = 리포 묶음 payload 의 mpm_metrics.porosity_mpm_pct
+    pm = [f"{rows['_mpm'][b]['porosity_mpm_pct']:.1f}" for b in ORDER]
+    E += [('mpm', 'screen', f'{pm[0]} → {pm[1]} → {pm[2]} %', 'MPM porosity_mpm_pct')]
+    E += [('mpm', 'screen', f'기공도 {x} %', 'MPM porosity_mpm_pct') for x in pm]
+    E += [('mpm', 'notes', f'3 µm {pm[0]} %, 2 µm {pm[1]} %, 1 µm {pm[2]} %', 'MPM porosity_mpm_pct')]
     return E
+
+
+def slide_roles(prs):
+    """장 머리 글 (Rectangle 23 첫 문단) → 역할.  → (역할 → 장 index, 문제)."""
+    roles, prob = {}, []
+    for i, s in enumerate(prs.slides):
+        h = ''.join(''.join(r.text for r in sh.text_frame.paragraphs[0].runs) for sh in s.shapes
+                    if sh.name == 'Rectangle 23' and sh.has_text_frame and sh.text_frame.paragraphs)
+        hit = [r for r, key in ROLES if key in h]
+        if len(hit) != 1:
+            prob.append(f'역할 {i + 1}장: 머리 글 "{h[:40]}" → {hit or "없음"}')
+            continue
+        if hit[0] in roles:
+            prob.append(f'역할 {hit[0]} 장 둘 ({roles[hit[0]] + 1} · {i + 1})')
+        roles[hit[0]] = i
+    prob += [f'역할 {r} 장 없음' for r, _ in ROLES if r not in roles and r not in OPTIONAL]
+    order = [roles[r] for r, _ in ROLES if r in roles]
+    if order != sorted(order):
+        prob.append(f'장 차례 ≠ 역할 차례 ({order})')
+    return roles, prob
 
 
 def slide_texts(prs):
@@ -110,14 +155,29 @@ def slide_texts(prs):
 def run_checks(prs, rows, meas, req, szz):
     prob, ok = [], 0
     T = slide_texts(prs)
-    if len(T) != 10:
-        prob.append(f'장 수 {len(T)} ≠ 10')
+    roles, rprob = slide_roles(prs)
+    prob += rprob
     for n, where, txt, src in expected(rows, meas, req, szz):
-        hay = T[n - 1]['screen'] + '\n' + T[n - 1]['table'] + '\n' + T[n - 1]['notes'] if where == 'any' else T[n - 1][where]
+        role = OLD_NO[n] if isinstance(n, int) else n
+        if role not in roles:
+            prob.append(f'N {role}: 장 없음 ("{txt}")')
+            continue
+        i = roles[role]
+        hay = T[i]['screen'] + '\n' + T[i]['table'] + '\n' + T[i]['notes'] if where == 'any' else T[i][where]
         if txt in hay:
             ok += 1
         else:
-            prob.append(f'N {n}장 {where}: "{txt}" 없음 ({src})')
+            prob.append(f'N {i + 1}장 ({role}) {where}: "{txt}" 없음 ({src})')
+    if 'mpm' in roles:                      # M — MPM 피복률 숫자 없음 (Q4: 띠 정의 · 씨앗 치우침 · 주기 경계 = 원장 MPMC-01 – 03)
+        t = T[roles['mpm']]
+        hay = t['screen'] + '\n' + t['table'] + '\n' + t['notes']
+        for b in ORDER:
+            mm = rows['_mpm'][b]
+            for k in ('coverage_AM_S_hertz_pct', 'coverage_AM_S_tabor_pct', 'coverage_AM_S_rigid_hertz_pct', 'coverage_AM_S_rigid_tabor_pct'):
+                x = mm.get(k)
+                for s_ in ({f'{x:.1f}', f'{x:.0f}'} if x is not None else ()):
+                    if re.search(rf'(?<![\d.]){re.escape(s_)}(?![\d.])', hay):
+                        prob.append(f'M {roles["mpm"] + 1}장: MPM 피복률 숫자 {s_} ({b} {k}) — 1저자 Q4 = 넣지 않음')
     for n, t in enumerate(T, 1):
         for where, s in t.items():
             for m in re.finditer(BANNED, s):
@@ -194,6 +254,11 @@ def mutate(prs_bytes, kind):
         p = s[5].notes_slide.notes_text_frame.paragraphs[0]
         p.runs[-1].text += ' (hertz)'
         return prs
+    if kind == 'mpm_cov':
+        roles, _ = slide_roles(prs)
+        p = s[roles['mpm']].notes_slide.notes_text_frame.paragraphs[0]
+        p.runs[-1].text += ' 1 µm 피복률은 80 %입니다.'
+        return prs
     raise SystemExit(f'변이 자리 못 찾음: {kind}')
 
 
@@ -202,7 +267,7 @@ def main():
     ap.add_argument('deck', help='덱 PPTX')
     ap.add_argument('--repo', default='.', help='리포 뿌리 (원자료 CSV 위치)')
     ap.add_argument('--json', help='결과 JSON 저장 경로')
-    ap.add_argument('--selftest', action='store_true', help='덱을 다섯 가지로 망가뜨려 각각 FAIL 인지 확인')
+    ap.add_argument('--selftest', action='store_true', help='덱을 여섯 가지로 망가뜨려 각각 FAIL 인지 확인')
     a = ap.parse_args()
     rows, meas, req, szz = load_data(a.repo)
     raw = open(a.deck, 'rb').read()
@@ -210,7 +275,7 @@ def main():
     res = {'deck': os.path.basename(a.deck), 'n_number_checks_ok': ok, 'problems': prob}
     if a.selftest:
         st = {}
-        for kind in ('number', 'caption', 'red', 'italic', 'banned'):
+        for kind in ('number', 'caption', 'red', 'italic', 'banned', 'mpm_cov'):
             _, pb = run_checks(mutate(raw, kind), rows, meas, req, szz)
             st[kind] = len(pb) > len(prob)
         res['selftest_mutations_detected'] = st

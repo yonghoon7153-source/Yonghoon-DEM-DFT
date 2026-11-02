@@ -1,0 +1,121 @@
+{
+ "source_zip": "MPM.zip",
+ "source_zip_sha256": "175b943a8aa833287e4ce8360b31289ecc524ecad6d10322a298dbbb8a112710",
+ "note": "1저자 11-02 웹앱 MPM 보기 Screenshot (6516×3900 · 투명) · alpha 로 잘라 높이 1000 px (2.37 in 에서 약 420 dpi) · 원본 = 리포 밖",
+ "members": {
+  "D3_porosity_MPM.png": {
+   "sha256": "04972163b200729c785ca5de906386d9d6255b35241c6b5556c6da335acdc7ea",
+   "size": [
+    6516,
+    3900
+   ],
+   "crop_box": [
+    2560,
+    747,
+    3959,
+    3254
+   ],
+   "out": "mpm_pore_3um.png",
+   "out_size": [
+    558,
+    1000
+   ],
+   "out_sha256": "ba6fbba8b942521b7d87582f70776e73fb595b9bd768466739674b148305871c"
+  },
+  "D3_coverage.png": {
+   "sha256": "5bf4b12ffced1ea6ac8360d07b46f34b56c4c4f152cc714987c9b0184e4dfea8",
+   "size": [
+    6516,
+    3900
+   ],
+   "crop_box": [
+    2553,
+    705,
+    3963,
+    3242
+   ],
+   "out": "mpm_cov_3um.png",
+   "out_size": [
+    556,
+    1000
+   ],
+   "out_sha256": "f8d407815d2337a1874fad5fb6d58540d45604bdd62e064985ac55e5f2406105"
+  },
+  "D2_porosity_MPM.png": {
+   "sha256": "cece89dc2c4d32f9403dce1079b4130aba64c872a11f20b1fc572ca0900404f3",
+   "size": [
+    6516,
+    3900
+   ],
+   "crop_box": [
+    2546,
+    730,
+    3984,
+    3264
+   ],
+   "out": "mpm_pore_2um.png",
+   "out_size": [
+    567,
+    1000
+   ],
+   "out_sha256": "64f561b7efd434dbadc177cc5a96be9f858ea68860a8671f6f978a8c95e0accb"
+  },
+  "D2_coverage.png": {
+   "sha256": "b39ba309f53379abec6b86fefd46290e00e595ed884ab4400ea96e6a002e7799",
+   "size": [
+    6516,
+    3900
+   ],
+   "crop_box": [
+    2490,
+    722,
+    3972,
+    3256
+   ],
+   "out": "mpm_cov_2um.png",
+   "out_size": [
+    585,
+    1000
+   ],
+   "out_sha256": "84c591ee76a3b3969dd977488c7b95c139fbb882a22dbc655e8bbc8d4326b07e"
+  },
+  "D1_porosity_MPM.png": {
+   "sha256": "839b87b96bf7bf1498180488d3c86a95c6a454bf5c914a60be14eea4dfdb9016",
+   "size": [
+    6516,
+    3900
+   ],
+   "crop_box": [
+    2538,
+    719,
+    3976,
+    3252
+   ],
+   "out": "mpm_pore_1um.png",
+   "out_size": [
+    568,
+    1000
+   ],
+   "out_sha256": "23002a4d290a3a823d0020c2829a5b0f24ed5e91a5e00aef64709690aa21709b"
+  },
+  "D1_coverage.png": {
+   "sha256": "1c9edaac6b077b43e3e403344a10dfcd471965ecf68314542d17d3a379f84ab2",
+   "size": [
+    6516,
+    3900
+   ],
+   "crop_box": [
+    2536,
+    718,
+    3979,
+    3257
+   ],
+   "out": "mpm_cov_1um.png",
+   "out_size": [
+    568,
+    1000
+   ],
+   "out_sha256": "a95bf45a6712dbc8cf381d5fdd53b2ab032dfe15d1640ad8a08d0bf80ad2ea93"
+  }
+ }
+}

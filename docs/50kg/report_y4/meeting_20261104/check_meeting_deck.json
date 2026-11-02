@@ -1,5 +1,13 @@
 {
- "deck": "u7c_repo.pptx",
- "n_number_checks_ok": 62,
- "problems": []
+ "deck": "u7d_repo.pptx",
+ "n_number_checks_ok": 67,
+ "problems": [],
+ "selftest_mutations_detected": {
+  "number": true,
+  "caption": true,
+  "red": true,
+  "italic": true,
+  "banned": true,
+  "mpm_cov": true
+ }
 }
