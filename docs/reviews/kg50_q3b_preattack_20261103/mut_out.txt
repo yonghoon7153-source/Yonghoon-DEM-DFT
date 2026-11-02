@@ -1,0 +1,24 @@
+== M1_no_reorder → 48 PASS · 4 FAIL
+     FAIL QB17 (a) dem_restart.py 산출이 09-27 r075 순서 (integr · gravi 9.81 · damp 0.5 를 판 메시 fix 앞에 · 11-02 ibb 실제 거부 꼴) → 도구가 
+     FAIL QB18 r075 꼴 + 본 덱에 없는 상태 명령 (fix extra all viscous 0.7) → 같은 명령 없는 그 줄은 제자리 · 나머지만 본 덱 자리로 → 정적 대조가 그 줄을 거부 (글자 그대로
+     FAIL QB18 r075 꼴 + 값이 다른 같은 fix (fix damp all viscous 0.05) → 같은 명령 없는 그 줄은 제자리 · 나머지만 본 덱 자리로 → 정적 대조가 그 줄을 거부 (글자 그대로 
+     FAIL QB19 같은 fix ID 를 두 번 정의 (본 덱 gravi 98.1 → 판 메시 · 벽 → gravi 9.81) · 재개 덱이 두 줄을 맞바꿔 냄 (9.81 앞 · 98.1 뒤 = 끝 상태 98.1) →
+== M2_dups_all_last → 41 PASS · 11 FAIL
+     FAIL QB10 (a) 본 흐름 -T · 계획 compress · 체크포인트 1,000,000 → 도구가 Q3 (나) 꼴을 넣음 (작업 폴더 재개 덱 = 시험 쪽 기대 · 주석 한 줄 뺌) · 정적 대조 통과 · 
+     FAIL QB10b (a) 시험 덱 = 준비 구간 + run 2 + 몸 (variable · print) + if "같은 조건" then print else quit + run 1998 (루프 run 을 2000 −
+     FAIL QB10c (a) 기대 끝 = S0 + 2 + 1998 = 1,002,000 · G0 통과 · G1 (step 1000000) · G2 (atom · mesh 덤프 같음) · G3 (1000002 · 100
+     FAIL QB11 (a) 같은 장면 · -T 없음 (승인값) → 본 제출 (본 덱 = Q3 (나) 꼴 재개 덱) · _r56_1102_172455_21931 — 이번 호출이 낸 시험만 본 제출 대상 (작업 폴더의 옛
+     FAIL QB12 (a) 시험 안 판정에서 목표에 닿음 (Current Pressure 0.31 → quit · 이완 전 멈춤) → G0 실패 (마지막 step 1000002 · 기대 1002000) · 본 제출 안
+     FAIL QB13 (c) 판정 1 step 뒤 (남은 4,999 ≥ 시험 2,000) → 시험 덱 = 준비 구간 + run 2000 (판정 전) · 기대 끝 602,000 · G0–G3 통과 · 484376 || $
+     FAIL QB16 (a) 시험이 S0 덤프 (atom · mesh) 를 다시 안 씀 → G2 실패 · 본 제출 안 함 (압축 G2 = 덤프 대조 · 대신할 것 없음) · _r56_1102_172458_22475 — 
+     FAIL QB17 (a) dem_restart.py 산출이 09-27 r075 순서 (integr · gravi 9.81 · damp 0.5 를 판 메시 fix 앞에 · 11-02 ibb 실제 거부 꼴) → 도구가 
+     FAIL QB18 r075 꼴 + 본 덱에 없는 상태 명령 (fix extra all viscous 0.7) → 같은 명령 없는 그 줄은 제자리 · 나머지만 본 덱 자리로 → 정적 대조가 그 줄을 거부 (글자 그대로
+     FAIL QB18 r075 꼴 + 값이 다른 같은 fix (fix damp all viscous 0.05) → 같은 명령 없는 그 줄은 제자리 · 나머지만 본 덱 자리로 → 정적 대조가 그 줄을 거부 (글자 그대로 
+     FAIL QB19 같은 fix ID 를 두 번 정의 (본 덱 gravi 98.1 → 판 메시 · 벽 → gravi 9.81) · 재개 덱이 두 줄을 맞바꿔 냄 (9.81 앞 · 98.1 뒤 = 끝 상태 98.1) →
+== M3_dups_first_n → 52 PASS · 0 FAIL
+== M4_reorder_exact_only → 49 PASS · 3 FAIL
+     FAIL QB17 (a) dem_restart.py 산출이 09-27 r075 순서 (integr · gravi 9.81 · damp 0.5 를 판 메시 fix 앞에 · 11-02 ibb 실제 거부 꼴) → 도구가 
+     FAIL QB18 r075 꼴 + 본 덱에 없는 상태 명령 (fix extra all viscous 0.7) → 같은 명령 없는 그 줄은 제자리 · 나머지만 본 덱 자리로 → 정적 대조가 그 줄을 거부 (글자 그대로
+     FAIL QB18 r075 꼴 + 값이 다른 같은 fix (fix damp all viscous 0.05) → 같은 명령 없는 그 줄은 제자리 · 나머지만 본 덱 자리로 → 정적 대조가 그 줄을 거부 (글자 그대로 
+== M6_ties_reversed → 52 PASS · 0 FAIL
+== M7_extra_copies_wrap → 52 PASS · 0 FAIL

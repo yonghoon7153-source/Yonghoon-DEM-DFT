@@ -1,0 +1,61 @@
+[P1 E_log=400001] trial=True main=False
+   tool: 압축 루프 재개 준비 (Q3 (나) · KG50R-01): 체크포인트 step 1000000 · 루프 진입 400002 (루프 앞 run 합) · 판정 400002 + 5000 k · 위상 4998 → [run 2] + 루프 몸 3 개 (끝 if 까지) + [jump SELF q3b_done_loop_press] 를 [label loop_press] 앞 (원 줄 161) 에 · [label q3b_done_loop_press] 를 루프 끝 if 뒤 (원 줄 16
+    G0 시험 정상 종료: 통과 — 상태 COMPLETED · ExitCode 0:0 · 마지막 step 1002000 (기대 1002000) · Loop time 끝 step 뒤에 있음 · 조회 실패 0 번 · 끝 상태 얻음
+    G0 마지막 줄 · Loop (10-28 KG50R-07): 마지막 thermo 줄 = 최신 머리 아래 · 칸 수 같음 · 모든 칸 유한 수 (step 1002000 · 줄 12) · 'Loop time … for 1998 steps' ↔ 시험 마지막 run 1998 — 같음
+    G0 잡 안 덱 신원 (10-30 KG50R-F02 · 관문): 통과 — 같음 (덱 /tmp/rck_X/root/kg50_d07_b40/input_kg50_d07_b40_r56t.liggghts sha256 1004552ba01dc6077a32ffcc350b4cf017203e0fb85de755ed61238e8786ae17 · 체크포인트 /tmp
+    G1 재개 첫 thermo (step 1000000, setup 줄, CPU·압력 열 제외, 1e-6): 통과
+    G2 체크포인트 상태 덤프 대조: 통과 — atom_1000000.liggghts 같음 · mesh_1000000.stl 같음 ·
+    G3 원 로그 비교 구간 (step 1000001 부터, 느슨한 확인): 원 로그에 있는 비교 줄이 시험에 없음 (결손): 1000001 
+    원 로그 판정 step (Loop time 앞 줄) 끝 셋 = ['1040001', '1045001', '1050001'] · 원 런 판정 = 1,000,001 (1 step 어긋남 · 첫 긴 run off-by-one 꼴)
+[P1 E_log=397502] trial=True main=False
+   tool: 압축 루프 재개 준비 (Q3 (나) · KG50R-01): 체크포인트 step 1000000 · 루프 진입 400002 (루프 앞 run 합) · 판정 400002 + 5000 k · 위상 4998 → [run 2] + 루프 몸 3 개 (끝 if 까지) + [jump SELF q3b_done_loop_press] 를 [label loop_press] 앞 (원 줄 161) 에 · [label q3b_done_loop_press] 를 루프 끝 if 뒤 (원 줄 16
+    G0 시험 정상 종료: 통과 — 상태 COMPLETED · ExitCode 0:0 · 마지막 step 1002000 (기대 1002000) · Loop time 끝 step 뒤에 있음 · 조회 실패 0 번 · 끝 상태 얻음
+    G0 마지막 줄 · Loop (10-28 KG50R-07): 마지막 thermo 줄 = 최신 머리 아래 · 칸 수 같음 · 모든 칸 유한 수 (step 1002000 · 줄 12) · 'Loop time … for 1998 steps' ↔ 시험 마지막 run 1998 — 같음
+    G0 잡 안 덱 신원 (10-30 KG50R-F02 · 관문): 통과 — 같음 (덱 /tmp/rck_X/root/kg50_d07_b40/input_kg50_d07_b40_r56t.liggghts sha256 1004552ba01dc6077a32ffcc350b4cf017203e0fb85de755ed61238e8786ae17 · 체크포인트 /tmp
+    G1 재개 첫 thermo (step 1000000, setup 줄, CPU·압력 열 제외, 1e-6): 통과
+    G2 체크포인트 상태 덤프 대조: 통과 — atom_1000000.liggghts 같음 · mesh_1000000.stl 같음 ·
+    G3 원 로그 비교 구간 (step 1001000 부터, 느슨한 확인): 5 % 안
+    원 로그 판정 step (Loop time 앞 줄) 끝 셋 = ['1042502', '1047502', '1052502'] · 원 런 판정 = 997,502 · 1,002,502 (반 주기 어긋남 · 작업 폴더 본 덱 ≠ 실제로 돈 덱)
+[P2a 실제 D0.7 덱 꼴 (QB17 장면)] trial=True main=False
+   tool: 압축 루프 재개 준비 (Q3 (나) · KG50R-01): 체크포인트 step 1000000 · 루프 진입 400002 (루프 앞 run 합) · 판정 400002 + 5000 k · 위상 4998 → [run 2] + 루프 몸 3 개 (끝 if 까지) + [jump SELF q3b_done_loop_press] 를 [label loop_press] 앞 (원 줄 158) 에 · [label q3b_done_loop_press] 를 루프 끝 if 뒤 (원 줄 16
+    G0 시험 정상 종료: 통과 — 상태 COMPLETED · ExitCode 0:0 · 마지막 step 1002000 (기대 1002000) · Loop time 끝 step 뒤에 있음 · 조회 실패 0 번 · 끝 상태 얻음
+    G0 마지막 줄 · Loop (10-28 KG50R-07): 마지막 thermo 줄 = 최신 머리 아래 · 칸 수 같음 · 모든 칸 유한 수 (step 1002000 · 줄 12) · 'Loop time … for 1998 steps' ↔ 시험 마지막 run 1998 — 같음
+    G0 잡 안 덱 신원 (10-30 KG50R-F02 · 관문): 통과 — 같음 (덱 /tmp/rck_X/root/kg50_d07_b40/input_kg50_d07_b40_r56t.liggghts sha256 2b4177d0f59b95ec85db3c2f4701429175db6b573baf6d6cd756b1d99d7cdc5e · 체크포인트 /tmp
+    G1 재개 첫 thermo (step 1000000, setup 줄, CPU·압력 열 제외, 1e-6): 통과
+    G2 체크포인트 상태 덤프 대조: 통과 — atom_1000000.liggghts 같음 · mesh_1000000.stl 같음 ·
+    G3 원 로그 비교 구간 (step 1000002 부터, 느슨한 확인): 5 % 안
+    원 런 체크포인트 때 fix 칸 순서 : ['zwall_bot', 'integr', 'gravi', 'top_mesh', 'zwall_top', 'damp', 'move_press']
+    도구 순서 고침 뒤 재개 덱 칸 순서: ['zwall_bot', 'integr', 'top_mesh', 'zwall_top', 'gravi', 'damp', 'move_press']
+    dem_restart.py 산출 그대로 칸 순서: ['zwall_bot', 'integr', 'gravi', 'damp', 'top_mesh', 'zwall_top', 'move_press']
+[P2b + 비가환 fix setforce (본 덱 gravi 다음 칸)] trial=True main=False
+   tool: 압축 루프 재개 준비 (Q3 (나) · KG50R-01): 체크포인트 step 1000000 · 루프 진입 400002 (루프 앞 run 합) · 판정 400002 + 5000 k · 위상 4998 → [run 2] + 루프 몸 3 개 (끝 if 까지) + [jump SELF q3b_done_loop_press] 를 [label loop_press] 앞 (원 줄 159) 에 · [label q3b_done_loop_press] 를 루프 끝 if 뒤 (원 줄 16
+    G0 시험 정상 종료: 통과 — 상태 COMPLETED · ExitCode 0:0 · 마지막 step 1002000 (기대 1002000) · Loop time 끝 step 뒤에 있음 · 조회 실패 0 번 · 끝 상태 얻음
+    G0 마지막 줄 · Loop (10-28 KG50R-07): 마지막 thermo 줄 = 최신 머리 아래 · 칸 수 같음 · 모든 칸 유한 수 (step 1002000 · 줄 12) · 'Loop time … for 1998 steps' ↔ 시험 마지막 run 1998 — 같음
+    G0 잡 안 덱 신원 (10-30 KG50R-F02 · 관문): 통과 — 같음 (덱 /tmp/rck_X/root/kg50_d07_b40/input_kg50_d07_b40_r56t.liggghts sha256 2145c89c58fbed2b49e082377df46cc13ad5baac95bb0b60ebe0879947d6624d · 체크포인트 /tmp
+    G1 재개 첫 thermo (step 1000000, setup 줄, CPU·압력 열 제외, 1e-6): 통과
+    G2 체크포인트 상태 덤프 대조: 통과 — atom_1000000.liggghts 같음 · mesh_1000000.stl 같음 ·
+    G3 원 로그 비교 구간 (step 1000002 부터, 느슨한 확인): 5 % 안
+    정적 대조 통과
+    원 런 칸 순서 : ['zwall_bot', 'integr', 'gravi', 'fz', 'top_mesh', 'zwall_top', 'damp', 'move_press']
+    도구 재개 덱  : ['zwall_bot', 'integr', 'fz', 'top_mesh', 'zwall_top', 'gravi', 'damp', 'move_press']
+[P2c 원 런과 같은 칸 순서 (gravi 9.81 · fz 를 integr 뒤) 로 낸 재개 덱] trial=True main=False
+   tool: 압축 루프 재개 준비 (Q3 (나) · KG50R-01): 체크포인트 step 1000000 · 루프 진입 400002 (루프 앞 run 합) · 판정 400002 + 5000 k · 위상 4998 → [run 2] + 루프 몸 3 개 (끝 if 까지) + [jump SELF q3b_done_loop_press] 를 [label loop_press] 앞 (원 줄 159) 에 · [label q3b_done_loop_press] 를 루프 끝 if 뒤 (원 줄 16
+    G0 시험 정상 종료: 통과 — 상태 COMPLETED · ExitCode 0:0 · 마지막 step 1002000 (기대 1002000) · Loop time 끝 step 뒤에 있음 · 조회 실패 0 번 · 끝 상태 얻음
+    G0 마지막 줄 · Loop (10-28 KG50R-07): 마지막 thermo 줄 = 최신 머리 아래 · 칸 수 같음 · 모든 칸 유한 수 (step 1002000 · 줄 12) · 'Loop time … for 1998 steps' ↔ 시험 마지막 run 1998 — 같음
+    G0 잡 안 덱 신원 (10-30 KG50R-F02 · 관문): 통과 — 같음 (덱 /tmp/rck_X/root/kg50_d07_b40/input_kg50_d07_b40_r56t.liggghts sha256 6b0cd7a27f8fd262471b81993c69c4f71c09594113601d7f1b12e079e4194d06 · 체크포인트 /tmp
+    G1 재개 첫 thermo (step 1000000, setup 줄, CPU·압력 열 제외, 1e-6): 통과
+    G2 체크포인트 상태 덤프 대조: 통과 — atom_1000000.liggghts 같음 · mesh_1000000.stl 같음 ·
+    G3 원 로그 비교 구간 (step 1000002 부터, 느슨한 확인): 5 % 안
+    정적 대조 통과 · 도구 재개 덱 칸 ['zwall_bot', 'integr', 'fz', 'top_mesh', 'zwall_top', 'gravi', 'damp', 'move_press']
+[P3 체크포인트 전에 unfix 된 ins_mix 를 준비 구간에] trial=False main=False
+   tool: 압축 루프 재개 준비 (Q3 (나) · KG50R-01): 체크포인트 step 1000000 · 루프 진입 400002 (루프 앞 run 합) · 판정 400002 + 5000 k · 위상 4998 → [run 2] + 루프 몸 3 개 (끝 if 까지) + [jump SELF q3b_done_loop_press] 를 [label loop_press] 앞 (원 줄 159) 에 · [label q3b_done_loop_press] 를 루프 끝 if 뒤 (원 줄 16
+    · 준비 구간 순서 고침 (11-02 Q3 (나) · ibb 실제 -T 거부 · 1저자 — 순서 규칙 그대로 · 판정 = 뒤 정적 대조): 명령 47 개 중 20 개 자리 바꿈 = 본 덱 체크포인트 앞 같은 명령 (정적 대조 규칙 — 판 메시 file 이름 · mkdir -p) 의 마지막 자리 순 (안정 정렬 · 같은 명령 없는 0 개 = 제자리): [fi | ✗ 재개 덱에 삽입 fix (재삽입): [fix ins_mix all insert/pack seed 15900013 distributiontemplate pdd_mix maxattempt 3000 insert_every once overlapcheck yes all_in no vel constant 0.0 0.0 -0.5 region reg_mix volu | ✗ 재개 지점 fix ins_mix 는 재개 덱에만 있음: [fix ins_mix all insert/pack seed 15900013 distributiontemplate pdd_mix maxattempt 3000 insert_every once overlapcheck yes all_in no vel constant 0.0 0.0 -0.5 region r
+[P4 thermo 1000 한 번 (본 덱 두 자리)] trial=True main=False
+   tool: 압축 루프 재개 준비 (Q3 (나) · KG50R-01): 체크포인트 step 1000000 · 루프 진입 400002 (루프 앞 run 합) · 판정 400002 + 5000 k · 위상 4998 → [run 2] + 루프 몸 3 개 (끝 if 까지) + [jump SELF q3b_done_loop_press] 를 [label loop_press] 앞 (원 줄 156) 에 · [label q3b_done_loop_press] 를 루프 끝 if 뒤 (원 줄 16
+    G0 시험 정상 종료: 통과 — 상태 COMPLETED · ExitCode 0:0 · 마지막 step 1002000 (기대 1002000) · Loop time 끝 step 뒤에 있음 · 조회 실패 0 번 · 끝 상태 얻음
+    G0 마지막 줄 · Loop (10-28 KG50R-07): 마지막 thermo 줄 = 최신 머리 아래 · 칸 수 같음 · 모든 칸 유한 수 (step 1002000 · 줄 12) · 'Loop time … for 1998 steps' ↔ 시험 마지막 run 1998 — 같음
+    G0 잡 안 덱 신원 (10-30 KG50R-F02 · 관문): 통과 — 같음 (덱 /tmp/rck_X/root/kg50_d07_b40/input_kg50_d07_b40_r56t.liggghts sha256 052d7154103d01cc719198d7fc90e8e27228e45f933ea4840429659e9ed71199 · 체크포인트 /tmp
+    G1 재개 첫 thermo (step 1000000, setup 줄, CPU·압력 열 제외, 1e-6): 통과
+    G2 체크포인트 상태 덤프 대조: 통과 — atom_1000000.liggghts 같음 · mesh_1000000.stl 같음 ·
+    G3 원 로그 비교 구간 (step 1000002 부터, 느슨한 확인): 5 % 안
+    옮김: []
