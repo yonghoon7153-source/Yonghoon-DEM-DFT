@@ -1,6 +1,6 @@
 // d1_ms_thickness_atomtop.ogs — 50kg D1 (kg50_d1_b50 · SE D50 1 µm) 압밀 곡선 (시간 (ms)–두께 (원자 기준 = 모든 원자의 max(z + r) · 0 ms 부터) · y 축 끊기 = GUI 한 번: Y 축 대화상자 Breaks 탭에서 끊기를 켜고 From 155 To 290)
 // 사용: d1_ms_thickness_atomtop.csv 를 가져온 워크북을 활성으로 두고 Script Window 에 붙여 넣기 → Enter.
-// 결과: 새 그래프 + BML 서식 · 단계 경계 점선 셋 (200.002 · 400.002 · 2685.002 ms = 판 놓음 · 압축 시작 · 판 정지).  C 열 (Source) 은 그리지 않는다.
+// 결과: 새 그래프 + BML 서식 · 단계 경계 점선 셋 (200.002 · 848.000 · 2685.002 ms = 판 놓음 · 압축 시작 · 판 정지).  C 열 (Source) 은 그리지 않는다.
 string bk$ = %H;
 plotxy iy:=[%(bk$)]1!(1,2) plot:=200 ogl:=<new>;
 set %C -c color(112,48,160); set %C -w 1500;
@@ -19,5 +19,5 @@ label -xb Time (ms);
 layer.y.from = 115; layer.y.to = 335; layer.y.inc = 10; layer.y.minor = 1;
 label -yl Thickness (\g(m)m);
 draw -n b2 -l -v 200.002; b2.linetype = 3; b2.color = color(154,160,168);
-draw -n b3 -l -v 400.002; b3.linetype = 3; b3.color = color(154,160,168);
+draw -n b3 -l -v 848.000; b3.linetype = 3; b3.color = color(154,160,168);
 draw -n b4 -l -v 2685.002; b4.linetype = 3; b4.color = color(154,160,168);

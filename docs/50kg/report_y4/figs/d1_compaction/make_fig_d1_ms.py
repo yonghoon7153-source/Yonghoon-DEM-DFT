@@ -109,6 +109,7 @@ INTERP_DT_MS = 1.0            # 앞 구간 (첫 점 → 첫 원 덤프) PCHIP �
 SLIDE_TAU_STEP = 15000        # 압력 슬라이드판 모식 감쇠 시간 상수 (ps73 make_fig.py 값 · 그림용 — 자료에서 정한 값 아님)
 HI_SPAN_UM = 20.0             # 끊긴 y 축 위 범위 높이 (아래 범위와 같은 µm/높이 축척)
 GAP_FRAC = 0.06               # 끊긴 자리 높이 (아래 범위 높이의 몫)
+B3_CONTACT = False            # 가운데 점선 = 판이 침대에 처음 닿은 때 (압력 첫 0 아님) · False = 판 움직임 시작 (1저자 11-03 옛 ps73 그림처럼 --b3-contact)
 HI_FRAC = None                # 위 범위 눈에 보이는 높이 (아래 범위 높이의 몫) · None = 같은 µm/높이 축척 · 1저자 11-03 ps73 옛 그림처럼 위 띠를 좁게 (--hi-frac)
 SRC_REPLAY, SRC_CKPT, SRC_DUMP = 'replay (insertion · NP 1)', 'checkpoint (run 0)', 'atom dump'
 SRC_INTERP = 'interpolated (PCHIP between measured points)'
@@ -1019,7 +1020,12 @@ def main(require_packing=False):
                     st[role]['atom_file'], st[role]['mesh_file'] = dump_names(st[role]['step'], end, dk['post_dir'])
     tar_steps = sorted({st[r]['step'] for st in stages for r in ('nearest', 'recommended') if st[r] is not None})
     cmd = cluster_command(tar_steps, end, dk['post_dir'], atoms_at)
-    bounds_ms = [b['2'] * ms_per_step, b['3'] * ms_per_step, b['4'] * ms_per_step]
+    b3_ms = b['3'] * ms_per_step
+    if B3_CONTACT:                                                   # 옛 ps73 그림: Stabilization 끝 = 판이 침대에 닿은 때 (압축 실제 시작)
+        fz = next(((s, p) for s, p in load if p != 0.0), None)
+        assert fz is not None, '압축 구간에 0 아닌 압력이 없다'
+        b3_ms = fz[0] * ms_per_step
+    bounds_ms = [b['2'] * ms_per_step, b3_ms, b['4'] * ms_per_step]
     x_rel = (b['4'] + end) / 2 * ms_per_step                         # 이완 구간 (판 고정) 가운데 — 화살표가 끝 구간을 아래로 가리킨다
     arrows = [(x_rel, zfn(end) * um, x_rel, zfn(end) * um + 5.6)]    # 투입 시작은 자료 없음 → 화살표 없음
 
@@ -1629,6 +1635,8 @@ if __name__ == '__main__':
         FIGSIZE = (float(av[i + 1]), float(av[i + 2]))
     if '--preview-dir' in av:
         PREV = Path(av[av.index('--preview-dir') + 1])
+    if '--b3-contact' in av:
+        B3_CONTACT = True
     if '--hi-span' in av:                                 # 끊긴 축 위 범위 높이 (µm) · 1저자 11-03 20 ms 점 (296 µm) 이 보이게
         HI_SPAN_UM = float(av[av.index('--hi-span') + 1])
     if '--hi-frac' in av:                                 # 위 범위 눈에 보이는 높이 (아래 범위의 몫)
