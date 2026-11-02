@@ -1,0 +1,195 @@
+[
+ {
+  "id": "BASE",
+  "why": "변이 없음",
+  "only": "AL07,AL12,GR,PC01,PC12,PC13,PD01,PD02c,PD09,PD12,PD13,UM",
+  "rc": 0,
+  "killed": null,
+  "tail": "test_rint_r_chain: 63/63 PASS (147.8 s)",
+  "fails": [],
+  "seconds": 148.4
+ },
+ {
+  "id": "K01",
+  "why": "PC6-01 _run_kin 부모 없음 (st None · hidepid=2 · 사라짐) = 확인 불가로 (보수 쪽 · 지금 = 셈 밖)",
+  "only": "PD01",
+  "rc": 0,
+  "killed": false,
+  "tail": "test_rint_r_chain: 2/2 PASS (2.0 s)",
+  "fails": [],
+  "seconds": 2.4
+ },
+ {
+  "id": "K02",
+  "why": "PC6-01 _run_kin 부모 칸 못 읽음 (a None) = 확인 불가로 (보수 쪽 · 지금 = 셈 밖)",
+  "only": "PD01",
+  "rc": 0,
+  "killed": false,
+  "tail": "test_rint_r_chain: 2/2 PASS (2.1 s)",
+  "fails": [],
+  "seconds": 2.6
+ },
+ {
+  "id": "K03",
+  "why": "PC6-01 _run_kin 계보 고리 대조 뺌 (깊이 상한이 같은 답 = 결정 동등 후보)",
+  "only": "PD01",
+  "rc": 0,
+  "killed": false,
+  "tail": "test_rint_r_chain: 2/2 PASS (2.1 s)",
+  "fails": [],
+  "seconds": 2.6
+ },
+ {
+  "id": "K04",
+  "why": "PC6-01 _run_kin a == me (부른 사슬 자신) = 확인 불가로",
+  "only": "PD01",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 1/2 PASS (2.1 s)   FAILED: ['PD01r']",
+  "fails": [
+   {
+    "cid": "PD01r",
+    "line": " left None → GROUP_UNCONFIRMED) · 사슬 부모가 죽은 시작 기록의 recover = rc 0 · 확인 (옛 = rc 3) · 러너가 띄운 environ 못 읽는 자식 (러너 세션 안 · 표지 물려받음) = 확인 False 그대로 (보수) · proc_stat 의 부모 · 그룹 · 세션 칸 = 실제 값   {'agent_exe_is_sys': True, 'bystander_environ': 'errno 13', 'bystander_ready': True, 'in_session': [0, None, False, None], 'in_unsure': False, 'recover': [3, False, 'recover'], 'run': [0, None, False, None], 'runner_start_recorded': True, 'stat_fields': [[15452, 28842, 28841], [15452, 28842, 28841]], 'uid': 65534}"
+   }
+  ],
+  "seconds": 2.6
+ },
+ {
+  "id": "K05",
+  "why": "PC6-01 recover_group 러너 시작 틱 무시 (start None · 세션 번호 다시 쓰임 대조 끔)",
+  "only": "PD01",
+  "rc": 0,
+  "killed": false,
+  "tail": "test_rint_r_chain: 2/2 PASS (2.1 s)",
+  "fails": [],
+  "seconds": 2.5
+ },
+ {
+  "id": "K06",
+  "why": "PC6-01 group_settle scan 이 이번 셈 기록을 지우지 않음 (옛 셈의 표지 프로세스를 죽일 수 있음)",
+  "only": "PD01,PD13",
+  "rc": 0,
+  "killed": false,
+  "tail": "test_rint_r_chain: 7/7 PASS (5.4 s)",
+  "fails": [],
+  "seconds": 5.9
+ },
+ {
+  "id": "K07",
+  "why": "PC6-09 이 항목 판정에서 기계만 뺌",
+  "only": "PD09",
+  "rc": 0,
+  "killed": false,
+  "tail": "test_rint_r_chain: 2/2 PASS (2.8 s)",
+  "fails": [],
+  "seconds": 3.2
+ },
+ {
+  "id": "K08",
+  "why": "PC6-09 이 항목 판정에서 재실행 원 시도만 뺌",
+  "only": "PD09",
+  "rc": 0,
+  "killed": false,
+  "tail": "test_rint_r_chain: 2/2 PASS (2.9 s)",
+  "fails": [],
+  "seconds": 3.3
+ },
+ {
+  "id": "K09",
+  "why": "PC6-12 (정보 · 고침 방향) attempt.json 없는 · 꼴 틀린 찾은 시도 폴더 = 사유 (지금 = 건너뜀)",
+  "only": "PD12,PC01,PC12,PC13,AL07,AL12,UM,GR",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 51/52 PASS (139.9 s)   FAILED: ['PD12u']",
+  "fails": [
+   {
+    "cid": "PD12u",
+    "line": "er:P0') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)\", 'machine': \"attempt_1: attempt.json (machine 'gabia') ≠ 원장 항목 1 (machine 'kgy') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)\", 'resume_of': 'attempt_2: attempt.json (resume_of None) ≠ 원장 항목 2 (resume_of 1) — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)', 'no_attempt_json': 'attempt_1: attempt.json 없음 · 꼴 틀림 (원장 항목 1 있음)', 'side_file': None, 'not_in_led"
+   }
+  ],
+  "seconds": 140.4
+ },
+ {
+  "id": "K10",
+  "why": "PC6-13 recover_group chain_end = 옛 끝 기록 by chain 이어도 표지 (token) 대조 없이 — (정보: 지금도 대조 없음) · 대신 rc 칸 뺌",
+  "only": "PD13",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 3/5 PASS (4.2 s)   FAILED: ['PD13g', 'PD13d']",
+  "fails": [
+   {
+    "cid": "PD13g",
+    "line": "— 새 끝 기록 (by recover · rc None · 원인 parent_dead 그대로) 에 칸 chain_end = 옛 끝 기록의 rc · 원인 · 확인 · 시각 (러너 rc 를 잃지 않는다 · 옛 = 덮어써 잃음) · 앞 recover 끝 기록 (미확인) 의 chain_end = 그대로 이어받음 · 끝 기록 없음 · 못 읽음 = 칸 없음 (옛 모양 그대로)   {'n': 6, 'bad': {'chain_rc1': (None, 'recover', None, 'parent_dead', True, {'cause': None, 'confirmed': False, 'ended_utc': '2026-11-02T00:00:01Z'}), 'chain_timeout': (None, 'recover', None, 'parent_dead', True, {'cause': 'timeout', 'confirmed': False, 'ended_utc': '2026-11-02T00:00:02Z'})}}"
+   },
+   {
+    "cid": "PD13d",
+    "line": "ue · --add --resume rc 0   {'bug': (-9, ('chain', 1, None, False), False, None, 0, ('recover', None, 'parent_dead', True), (None, None, False), {'status': 'interrupted', 'side': 'post', 'cause': 'parent_dead', 'resume_ok': True, 'by': 'recover'}, 0, False, False), 'ok': (-9, ('chain', 0, None, False), False, None, 0, ('recover', None, 'parent_dead', True), (None, None, False), {'status': 'interrupted', 'side': 'post', 'cause': 'parent_dead', 'resume_ok': True, 'by': 'recover'}, 0, False, False)}"
+   }
+  ],
+  "seconds": 4.6
+ },
+ {
+  "id": "K11",
+  "why": "PC6-13 stop_cause 그룹 미확인 + 실패 rc = words_keep (자원 낱말도 runner_rc 로)",
+  "only": "PD13",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 3/5 PASS (4.3 s)   FAILED: ['PD13', 'PD13r']",
+  "fails": [
+   {
+    "cid": "PD13",
+    "line": "st', True)), 'disk_full/None/-9': (('runner_rc', 'post', False), ('resource', 'post', True)), 'disk_full/None/0.0': (('runner_rc', 'post', False), ('resource', 'post', True)), 'disk_full/None/1': (('runner_rc', 'post', False), ('resource', 'post', True)), 'disk_full/None/137': (('runner_rc', 'post', False), ('resource', 'post', True)), 'disk_full/None/2': (('runner_rc', 'post', False), ('resource', 'post', True)), 'disk_full/None/False': (('runner_rc', 'post', False), ('resource', 'post', True))"
+   },
+   {
+    "cid": "PD13r",
+    "line": "D · 원장 무변경 (옛 = group_unconfirmed · True · rc 0 = 파이썬 결함 런 자동 재실행) · 대조 = 같은 꼴 + 메모리 부족 줄 = resource · True · --add --resume rc 0   {'bug': ('GROUP_UNCONFIRMED', True, [('L01_floor', 1, None)], None, 0, {'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'recover'}, 3, True, True), 'oom': ('GROUP_UNCONFIRMED', True, [('L01_floor', 1, None)], None, 0, {'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'recover'}, 3, True, True)}"
+   }
+  ],
+  "seconds": 4.7
+ },
+ {
+  "id": "K12",
+  "why": "PC6-13 runner_rc_failed — bool · 실수 = 0 이면 성공으로 (꼴 틀린 값 보수 끔)",
+  "only": "PD13",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 4/5 PASS (4.3 s)   FAILED: ['PD13']",
+  "fails": [
+   {
+    "cid": "PD13",
+    "line": "', 'post', True)), 'disk_full/None/False': (('group_unconfirmed', 'post', True), ('resource', 'post', True)), 'oom_cupy/None/0.0': (('group_unconfirmed', 'post', True), ('resource', 'post', True)), 'oom_cupy/None/False': (('group_unconfirmed', 'post', True), ('resource', 'post', True)), 'plain/None/0.0': (('group_unconfirmed', 'post', True), ('runner_rc', 'post', False)), 'plain/None/False': (('group_unconfirmed', 'post', True), ('runner_rc', 'post', False)), 'python_bug/None/0.0': (('group_unco"
+   }
+  ],
+  "seconds": 4.7
+ },
+ {
+  "id": "K13",
+  "why": "PC6-13 _execute 멈춤 문장의 러너 rc 뺌 (화면만)",
+  "only": "PD13",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 4/5 PASS (4.3 s)   FAILED: ['PD13r']",
+  "fails": [
+   {
+    "cid": "PD13r",
+    "line": "· 원장 무변경 (옛 = group_unconfirmed · True · rc 0 = 파이썬 결함 런 자동 재실행) · 대조 = 같은 꼴 + 메모리 부족 줄 = resource · True · --add --resume rc 0   {'bug': ('GROUP_UNCONFIRMED', False, [('L01_floor', 1, None)], None, 0, {'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'recover'}, 3, True, True), 'oom': ('GROUP_UNCONFIRMED', False, [('L01_floor', 1, None)], None, 0, {'status': 'stopped', 'side': 'post', 'cause': 'resource', 'resume_ok': True, 'by': 'recover'}, 0, False, False)}"
+   }
+  ],
+  "seconds": 4.8
+ },
+ {
+  "id": "K14",
+  "why": "PC6-02 표지 CUDA error: 뺌",
+  "only": "PD02c",
+  "rc": 1,
+  "killed": true,
+  "tail": "test_rint_r_chain: 1/2 PASS (2.7 s)   FAILED: ['PD02c']",
+  "fails": [
+   {
+    "cid": "PD02c",
+    "line": " True), ('runner_rc', 'post', False)), 'cuda_error_assert/orphan_recover': (('parent_dead', 'post', True), ('runner_rc', 'post', False)), 'cuda_error_assert/orphan_signal': (('signal', 'post', True), ('runner_rc', 'post', False)), 'cuda_error_assert/orphan_signal_after': (('signal', 'post', True), ('runner_rc', 'post', False)), 'cuda_error_assert/orphan_timeout': (('timeout', 'post', True), ('runner_rc', 'post', False)), 'cuda_error_assert/rc_signal': (('signal', 'post', True), ('runner_rc', 'po"
+   }
+  ],
+  "seconds": 3.1
+ }
+]

@@ -1,0 +1,4 @@
+{"probe": "env", "python": "3.11.17", "td": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/p7/pa7_unit_yqd05o7l"}
+{"note": "signal_after 의 디스크 끝 기록 원인 = None (run_in_group 설명문) → chain_end 로는 정리 중 신호를 가를 수 없다", "probe": "U8", "rows": {"orphan_chain_end_rc1_cause_none": ["runner_rc", "post", false], "summary_gu_signal_after": ["group_unconfirmed", "post", true]}}
+{"probe": "U8_t", "seconds": 0.0}
+EXIT=0

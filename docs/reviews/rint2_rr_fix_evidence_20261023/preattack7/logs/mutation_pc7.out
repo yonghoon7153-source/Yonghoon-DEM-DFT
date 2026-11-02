@@ -1,0 +1,16 @@
+BASE rc 0 test_rint_r_chain: 63/63 PASS (147.8 s) [] 148.4s
+K01 rc 0 test_rint_r_chain: 2/2 PASS (2.0 s) [] 2.4s
+K02 rc 0 test_rint_r_chain: 2/2 PASS (2.1 s) [] 2.6s
+K03 rc 0 test_rint_r_chain: 2/2 PASS (2.1 s) [] 2.6s
+K04 rc 1 test_rint_r_chain: 1/2 PASS (2.1 s)   FAILED: ['PD01r'] ['PD01r'] 2.6s
+K05 rc 0 test_rint_r_chain: 2/2 PASS (2.1 s) [] 2.5s
+K06 rc 0 test_rint_r_chain: 7/7 PASS (5.4 s) [] 5.9s
+K07 rc 0 test_rint_r_chain: 2/2 PASS (2.8 s) [] 3.2s
+K08 rc 0 test_rint_r_chain: 2/2 PASS (2.9 s) [] 3.3s
+K09 rc 1 test_rint_r_chain: 51/52 PASS (139.9 s)   FAILED: ['PD12u'] ['PD12u'] 140.4s
+K10 rc 1 test_rint_r_chain: 3/5 PASS (4.2 s)   FAILED: ['PD13g', 'PD13d'] ['PD13g', 'PD13d'] 4.6s
+K11 rc 1 test_rint_r_chain: 3/5 PASS (4.3 s)   FAILED: ['PD13', 'PD13r'] ['PD13', 'PD13r'] 4.7s
+K12 rc 1 test_rint_r_chain: 4/5 PASS (4.3 s)   FAILED: ['PD13'] ['PD13'] 4.7s
+K13 rc 1 test_rint_r_chain: 4/5 PASS (4.3 s)   FAILED: ['PD13r'] ['PD13r'] 4.8s
+K14 rc 1 test_rint_r_chain: 1/2 PASS (2.7 s)   FAILED: ['PD02c'] ['PD02c'] 3.1s
+EXIT=0

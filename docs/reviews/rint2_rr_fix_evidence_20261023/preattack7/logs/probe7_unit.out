@@ -1,0 +1,16 @@
+{"probe": "env", "python": "3.11.17", "td": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/p7/pa7_unit_rf3zcme1"}
+{"note": "반환 (group_members, GROUP_SCAN) · None = 확인 불가 · [] = 표지 프로세스 없음 (확인)", "probe": "U1", "rows": {"a_ppid_unreadable": [[], {"members": [], "unsure": []}], "b_parent_absent": [[], {"members": [], "unsure": []}], "c_parent_zero": [[], {"members": [], "unsure": []}], "d_parent_stat_err": [null, {"members": [], "unsure": [911400, 911401]}], "e_parent_in_session": [null, {"members": [], "unsure": [911501]}]}}
+{"probe": "U1_t", "seconds": 0.0}
+{"probe": "U2", "rows": {"by_chain_exception_confirmed": {"cause": "chain_exception", "groups_problem": null, "resume_ok": false, "side": "post", "status": "interrupted"}, "by_chain_exception_unconfirmed": {"cause": "chain_exception", "groups_problem": "그룹 attempt_1/L01_floor 종료 미확인", "resume_ok": false, "side": "post", "status": "interrupted"}, "recover_chain_end_exception": {"cause": "parent_dead", "groups_problem": null, "resume_ok": true, "side": "post", "status": "interrupted"}, "recover_group_rewrite": {"by": "recover", "cause": "parent_dead", "chain_end": {"cause": "exception", "confirmed": false, "ended_utc": "2026-11-02T00:00:01Z", "rc": -9}, "chain_end_failed": false, "confirmed": true, "held": null}}}
+{"probe": "U2_t", "seconds": 0.0}
+{"probe": "U3", "table": {"'0'": true, "-9": true, "0": false, "0.0": true, "1": true, "137": true, "18446744073709551616": true, "False": true, "None": false, "True": true}}
+{"probe": "U3_t", "seconds": 0.0}
+{"add2_rc": 0, "b_status": "CALIBRATED", "ledger_changed": true, "probe": "U4", "rerun_rc": 3, "rerun_tail": "ATTEMPT_REJECTED n=1 code=OUTDIR_NOT_EMPTY — 풀기 전 거부 (결과 전 · 거부 기록 attempt_1.rejected.json · 원장 결과 줄 커밋)", "result1": {"by": "chain", "cause": "presolve", "folder": "attempt_1.rejected.json", "side": "pre", "status": "rejected"}, "side_file": true, "verdict_stop": "ATTEMPT_LEDGER_MISMATCH", "verdict_why": "원장에 없는 시도 폴더 ['attempt_1'] (항목 1 의 결과 줄 폴더 = attempt_1.rejected.json)"}
+{"probe": "U4_t", "seconds": 1.5}
+{"note": "(원인, 결과 전 · 뒤, 재실행 자격)", "probe": "U5", "rows": {"bug_only": {"group_unconfirmed_rc1": ["runner_rc", "post", false], "runner_rc_path": ["runner_rc", "post", false]}, "fallback_then_bug": {"group_unconfirmed_rc1": ["resource", "post", true], "runner_rc_path": ["resource", "post", true]}}}
+{"probe": "U5_t", "seconds": 0.0}
+{"chain_end": {"cause": null, "confirmed": false, "ended_utc": "2026-11-02T00:00:02Z", "rc": 0}, "held": null, "launch_token": "f0b4d52fb5728514c70d61e39e46cde5", "new_end_token": "f0b4d52fb5728514c70d61e39e46cde5", "prev_end_token": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "probe": "U6"}
+{"probe": "U6_t", "seconds": 0.0}
+{"probe": "U7", "rows": {"attempt_json_symlink": null, "folder_symlink": "attempt_1: attempt.json (target 'ladder:P0') ≠ 원장 항목 1 (target 'ladder:P0:FIBRE') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과", "real_folder": "attempt_1: attempt.json (target 'ladder:P0') ≠ 원장 항목 1 (target 'ladder:P0:FIBRE') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과"}}
+{"probe": "U7_t", "seconds": 0.0}
+EXIT=0
