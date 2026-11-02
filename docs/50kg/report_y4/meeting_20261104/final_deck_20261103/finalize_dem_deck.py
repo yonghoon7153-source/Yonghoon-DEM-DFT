@@ -7,7 +7,7 @@ from pptx import Presentation
 from pptx.util import Emu
 from PIL import Image
 
-SRC, OUT, CHARTS, IMGS, REPO = (Path(a) for a in sys.argv[1:6])
+SRC, OUT, CHARTS, IMGS, REPO, P06 = (Path(a) for a in sys.argv[1:7])
 FIG = REPO / 'docs/50kg/report_y4/meeting_20261104/figs'
 prs = Presentation(str(SRC))
 S = {i + 1: s for i, s in enumerate(prs.slides)}
@@ -124,12 +124,6 @@ def set_notes(slide_no, text):
     log.append(f's{slide_no}: 노트 갱신')
 
 
-# ── 6장 — 글 그대로 · 노트 (1 µm 질문 대비 · Origin 자료)
-old6 = S[6].notes_slide.notes_text_frame.text if S[6].has_notes_slide else ''
-set_notes(6, old6.rstrip() + '\n'
-          '⚠ 질문 대비 (화면에 안 씀): 1 µm 는 압축 중 판 압력의 약 65 % 가 감쇠 항력 상당 (R_drag 0.647 · 접촉망 평균 응력 158 MPa · 2 µm 0.074 · 3 µm 0.026) — 판 정지 뒤 압력 하락 원인은 확정 아님 (원장 KG50-20).\n'
-          'Origin 자료: 50kg_DEM_origin_data.xlsx 시트 p06_D1_compaction (시간 · 두께 · 압력).')
-
 # ── 7장 (입도 · 구조 · 두께 · 기공)
 relabel(7, 'Transport tortuosity', 'Tortuosity', 3)
 drop_word_before(7)
@@ -164,6 +158,23 @@ set_notes(10, old10.rstrip() + '\nOrigin 자료: 시트 p11_sigma_DSE.')
 # ── 11장 (영률 · 구조 · 두께 · 기공)
 relabel(11, 'Transport tortuosity', 'Tortuosity', 3)
 fill_slot(11, 'Image slot E22', webp_png(IMGS / '27.webp'), 'Structure E22')   # 22 GPa = D_SE 2 µm 와 같은 침대 · 11 · 33 GPa = 공백
+# 1저자 11-03 '여기에 tortuosity도 넣어주고' — 7장처럼 경로 그림 (값 아래) · 22 GPa = 31 (2 µm 같은 침대) · 11 · 33 GPa = 점선 칸
+labs = sorted([sh for sh in all_shapes(S[11]) if sh.has_text_frame and norm(sh.text_frame.text) == 'Tortuosity'], key=lambda b: b.left)
+vals = sorted([sh for sh in all_shapes(S[11]) if sh.has_text_frame and re.fullmatch(r'\d\.\d\d', norm(sh.text_frame.text))], key=lambda b: b.left)
+assert len(labs) == 3 and len(vals) == 3
+tmpl = next(sh for sh in all_shapes(S[11]) if sh.name == 'Image slot E11')
+PW, PH = Emu(int(0.76 * 914400)), Emu(int(1.38 * 914400))
+for c, (lab, val) in enumerate(zip(labs, vals), start=1):
+    cx = lab.left + lab.width // 2
+    x, y = cx - PW // 2, val.top + val.height + Emu(int(0.06 * 914400))
+    el = copy.deepcopy(tmpl._element)
+    el.xpath('.//p:cNvPr')[0].set('name', f'Image slot path {c}')
+    el.xpath('.//p:cNvPr')[0].set('id', str(5000 + c))
+    off, ext = el.xpath('.//a:off')[0], el.xpath('.//a:ext')[0]
+    off.set('x', str(int(x))); off.set('y', str(int(y))); ext.set('cx', str(int(PW))); ext.set('cy', str(int(PH)))
+    tmpl._element.getparent().append(el)
+fill_slot(11, 'Image slot path 2', webp_png(IMGS / '31.webp'), 'Tortuosity path E22')
+log.append('s11: tortuosity 경로 칸 셋 (22 GPa = 31 · 11 · 33 GPa = 점선)')
 drop_word_before(11)
 set_notes(11, 'E_SE = 11 / 22 / 33 GPa (22 GPa 의 ×0.5 / ×1 / ×1.5), DEM 유효 입력 0.675 · 1.35 · 2.025 GPa.\n'
               '질량 보존 두께 123.61 / 126.83 / 129.39 µm, 기공도 17.5 / 19.6 / 21.2 %, tortuosity 7.80 / 8.26 / 9.05 (= φ_SE·σ₀/σ_eff · 이온 수송).\n'
@@ -209,6 +220,40 @@ for i in range(4, 16):
             if re.search(r'Geometric|Transport\s*tortuosity|기하 tortuosity|수송 tortuosity', t):
                 bad.append((i, sh.name, t[:60]))
 assert not bad, bad
+def replace_slide_from(src_path, pos):
+    src = Presentation(str(src_path)).slides[0]
+    old = prs.slides[pos - 1]
+    new = prs.slides.add_slide(old.slide_layout)
+    for sh in list(new.shapes):
+        sh._element.getparent().remove(sh._element)
+    R = '{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
+    for el in src.shapes._spTree.iterchildren():
+        if el.tag.endswith('}nvGrpSpPr') or el.tag.endswith('}grpSpPr'):
+            continue
+        e2 = copy.deepcopy(el)
+        for node in e2.iter():
+            for att in (R + 'embed', R + 'link'):
+                rid = node.get(att)
+                if rid:
+                    part = src.part.related_part(rid)
+                    _, nrid = new.part.get_or_add_image_part(io.BytesIO(part.blob))
+                    node.set(att, nrid)
+        new.shapes._spTree.append(e2)
+    if src.has_notes_slide:
+        new.notes_slide.notes_text_frame.text = src.notes_slide.notes_text_frame.text
+    lst = prs.slides._sldIdLst
+    ids = list(lst)
+    new_id, old_id = ids[-1], ids[pos - 1]
+    lst.remove(new_id); lst.insert(pos - 1, new_id)
+    prs.part.drop_rel(old_id.rId); lst.remove(old_id)
+    log.append(f's{pos}: 1저자 한 장 덱 ({src_path.name}) 으로 바꿔 끼움')
+    return prs.slides[pos - 1]
+
+
+s6 = replace_slide_from(P06, 6)
+s6.notes_slide.notes_text_frame.text = s6.notes_slide.notes_text_frame.text.rstrip() + ('\n'
+    '⚠ 질문 대비 (화면에 안 씀): 1 µm 는 압축 중 판 압력의 약 65 % 가 감쇠 항력 상당 (R_drag 0.647 · 접촉망 평균 응력 158 MPa · 2 µm 0.074 · 3 µm 0.026) — 판 정지 뒤 압력 하락 원인은 확정 아님 (원장 KG50-20).\n'
+    'Origin 자료: 50kg_DEM_origin_data.xlsx 시트 p06_D1_compaction (시간 · 두께 · 압력 · 가압판 속도).')
 prs.save(str(OUT))
 print('\n'.join(log))
 print('saved', OUT)
