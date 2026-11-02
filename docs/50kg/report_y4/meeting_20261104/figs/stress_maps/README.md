@@ -7,7 +7,7 @@
 | E_SE (덱 표기) | 프레임 | 판 압력 | NCM 중앙값 | SE 중앙값 | 그림 |
 |---|---|---|---|---|---|
 | 11 GPa (E × 0.5) | atom · contact 4,485,002 (같은 step · virial 검사 checked) | 278.5 MPa | 352.75 MPa | 84.73 MPa | `modulus_11GPa_{NCM,SE}.png` |
-| 22 GPa (기본) | 4,015,002 | 279.8 MPa | 335 MPa (16쪽) | 126 MPa (16쪽) | ⬜ 이완 끝 덤프 받은 뒤 |
+| 22 GPa (기본) | atom · contact 4,015,002 (같은 step · checked) | 279.79 MPa | 334.85 MPa (16쪽 기록과 끝자리까지 같음) | 125.96 MPa | `modulus_22GPa_{NCM,SE}.png` |
 | 33 GPa (E × 1.5) | 3,665,002 (같은 step · checked) | 280.1 MPa | 325.98 MPa | 151.51 MPa | `modulus_33GPa_{NCM,SE}.png` |
 
 ## B. 입도 장 (지금 덱에서 뺌 — 나중에 넣을 때를 위한 기록 · 1저자 11-03 *"나중에 혹시 넣어야될 때를 대비해서 기록해둬"*) — 가압판 300 MPa 직전
