@@ -1,8 +1,8 @@
 {
  "deck": "kg50_report_y4_draft3.pptx",
- "deck_sha256": "a044836372e0f9c37de8e63c009117c105c5422086e0d8f50c874f218eb5348d",
+ "deck_sha256": "b498f8f0b9c4e6bce8fddaabfb921998b85401917f43158eb650d159ad923df7",
  "sheet": "docs/50kg/report_y4/draft2/slide_text_draft3.md",
- "sheet_sha256": "9f44707ead5c824cc1d4a90441865a6ed4cd22fe4e04b625e5522193b3bc1ce0",
+ "sheet_sha256": "947ea1d22dc84758a47e34552ca2b9625cdcb42080df5eafb45d9f0fb43f0080",
  "pill": "4차년도 DEM 해석 — SE 입도 0.7 · 1 · 2 · 3 µm 비교 (입도별 시드 1)",
  "checks": [
   {
@@ -106,6 +106,11 @@
    "detail": ""
   },
   {
+   "check": "C9 0쪽 left figure (author 50kg plan-deck 3D) = its README §1: sha256 · bytes · pixels · deck inch size (± 2 EMU) · aspect = pixel aspect (± 0.1 %) · no crop",
+   "ok": true,
+   "detail": ""
+  },
+  {
    "check": "C12 every run: explicit fonts from {Aptos, KoPubWorld돋움체 Medium, 맑은 고딕} · size ≥ 7 pt",
    "ok": true,
    "detail": ""
@@ -120,38 +125,17 @@
  "moved_to_notes": {
   "0": [
    {
-    "side": "L",
-    "kind": "head",
-    "label": "④-1 글머리 (그림 위 한 줄)",
-    "sheet_line": 100,
-    "reason": "시트 표지 (화면 자리 부족 → 발표자 노트)"
-   },
-   {
-    "side": "L",
-    "kind": "below",
-    "label": "④-1 덱 값 (2 × 2 그림 아래 한 줄)",
-    "sheet_line": 101,
-    "reason": "시트 표지 (화면 자리 부족 → 발표자 노트)"
-   },
-   {
-    "side": "L",
-    "kind": "cap",
-    "label": "④-1 그림 캡션",
-    "sheet_line": 110,
-    "reason": "시트 표지 (화면 자리 부족 → 발표자 노트)"
-   },
-   {
     "side": "R",
     "kind": "head",
     "label": "④-2 글머리",
-    "sheet_line": 114,
+    "sheet_line": 115,
     "reason": "시트 표지 (화면 자리 부족 → 발표자 노트)"
    },
    {
     "side": "R",
     "kind": "cap",
     "label": "④-2 그림 캡션",
-    "sheet_line": 125,
+    "sheet_line": 126,
     "reason": "시트 표지 (화면 자리 부족 → 발표자 노트)"
    }
   ],
@@ -160,7 +144,7 @@
     "side": "R",
     "kind": "row",
     "label": "④-2 표 ⑦ 실행 차이",
-    "sheet_line": 623,
+    "sheet_line": 625,
     "reason": "시트 표지 (화면 자리 부족 → 발표자 노트 · 1쪽 각주와 같음)"
    }
   ]
@@ -235,7 +219,7 @@
   ]
  },
  "figures": {
-  "0/L": "p0_process_grid_labeled",
+  "0/L": "p0_plan3d_process",
   "0/R": "p0_contact_model_labeled",
   "1/R": "p1_bed_strip",
   "2/L": "p2_compaction",
@@ -249,6 +233,216 @@
   "7/L": "p7_summary_heat",
   "부록/L": "diag_relax_drop_vs_N"
  },
+ "selftest": [
+  {
+   "mutation": "(none — the built deck)",
+   "expect": "-",
+   "ok": true,
+   "failed": []
+  },
+  {
+   "mutation": "shape overlap (2쪽 L/cap moved onto L/fig)",
+   "expect": "C6 no overlapping",
+   "ok": true,
+   "failed": [
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)"
+   ]
+  },
+  {
+   "mutation": "text overflow (3쪽 band item ② made long)",
+   "expect": "C5 every text box",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
+    "C5 every text box: estimated text height ≤ box (conservative widths: Hangul 1 em · Latin DejaVu)"
+   ]
+  },
+  {
+   "mutation": "pill text ≠ draft-1 series line (7쪽)",
+   "expect": "V1 every screen text",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)"
+   ]
+  },
+  {
+   "mutation": "forbidden wording on screen (7쪽 note \"최적 입도\")",
+   "expect": "C4 forbidden wording absent",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
+    "C4 forbidden wording absent on screen (plan §1 · principles §5)"
+   ]
+  },
+  {
+   "mutation": "retracted value (1쪽 note = quotation_ban pattern)",
+   "expect": "C4 quotation_ban",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
+    "C4 quotation_ban patterns absent (claims.json · screen + notes)",
+    "C8 every number on a slide occurs in that page's sheet section"
+   ]
+  },
+  {
+   "mutation": "Stage-E outside the limit phrase (4쪽 L/cap)",
+   "expect": "C4 \"Stage-E\"",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
+    "C4 \"Stage-E\" only in \"Stage-E σ_ion 안 씀\" (KG50B-07)"
+   ]
+  },
+  {
+   "mutation": "figure not at 100 % (1쪽 R/fig width + 2 %)",
+   "expect": "C9 every figure placed",
+   "ok": true,
+   "failed": [
+    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide",
+    "C9 every figure placed at 100 % of its figure size (no rescale)"
+   ]
+  },
+  {
+   "mutation": "title ≠ sheet ② (3쪽)",
+   "expect": "V1 every screen text",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)"
+   ]
+  },
+  {
+   "mutation": "table cell ≠ sheet (5쪽 R/table 2.13 → 2.139)",
+   "expect": "V1 every screen text",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
+    "C8 every number on a slide occurs in that page's sheet section"
+   ]
+  },
+  {
+   "mutation": "font outside the set (2쪽 first run ea = Arial)",
+   "expect": "C12 every run",
+   "ok": true,
+   "failed": [
+    "C12 every run: explicit fonts from {Aptos, KoPubWorld돋움체 Medium, 맑은 고딕} · size ≥ 7 pt"
+   ]
+  },
+  {
+   "mutation": "shape inside the header band (4쪽 L/cap at y 0.5 in)",
+   "expect": "C6 nothing",
+   "ok": true,
+   "failed": [
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide",
+    "C6 nothing (but header text) inside the template header band (y < 0.911 in)"
+   ]
+  },
+  {
+   "mutation": "root shape off the slide (6쪽 note at x 9.5 in)",
+   "expect": "C6 children inside",
+   "ok": true,
+   "failed": [
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide"
+   ]
+  },
+  {
+   "mutation": "number not in the sheet section (2쪽 note)",
+   "expect": "C8 every number",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
+    "C8 every number on a slide occurs in that page's sheet section"
+   ]
+  },
+  {
+   "mutation": "notes ≠ sheet (6쪽 notes)",
+   "expect": "V4 notes",
+   "ok": true,
+   "failed": [
+    "V4 notes = sheet 발표자 노트 bullets + ⑦ 하지 않을 말 (markdown removed)"
+   ]
+  },
+  {
+   "mutation": "moved item back on screen (0쪽 ④-2 글머리 as R/head)",
+   "expect": "V5 every sheet item marked",
+   "ok": true,
+   "failed": [
+    "V3 no screen text outside the sheet slots (except chapter number · project · page number)",
+    "V5 every sheet item marked \"(화면 자리 부족 → 발표자 노트 …)\" is off the slide and its text is in that slide's notes",
+    "C5 every text box: estimated text height ≤ box (conservative widths: Hangul 1 em · Latin DejaVu)",
+    "C5 no-wrap boxes: text width ≤ box",
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)"
+   ]
+  },
+  {
+   "mutation": "moved row back in the table (부록 ⑦ appended to R/table)",
+   "expect": "V5 every sheet item marked",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
+    "V5 every sheet item marked \"(화면 자리 부족 → 발표자 노트 …)\" is off the slide and its text is in that slide's notes",
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide"
+   ]
+  },
+  {
+   "mutation": "moved item missing from the notes (부록 notes without ⑦)",
+   "expect": "V5 every sheet item marked",
+   "ok": true,
+   "failed": [
+    "V4 notes = sheet 발표자 노트 bullets + ⑦ 하지 않을 말 (markdown removed)",
+    "V5 every sheet item marked \"(화면 자리 부족 → 발표자 노트 …)\" is off the slide and its text is in that slide's notes"
+   ]
+  },
+  {
+   "mutation": "extra table row (부록 R/table last row duplicated)",
+   "expect": "V1 every screen text",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide"
+   ]
+  },
+  {
+   "mutation": "0쪽 left figure not at its README size (L/fig height + 3 %)",
+   "expect": "C9 0쪽 left figure",
+   "ok": true,
+   "failed": [
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+    "C9 every figure placed at 100 % of its figure size (no rescale)",
+    "C9 0쪽 left figure (author 50kg plan-deck 3D) = its README §1: sha256 · bytes · pixels · deck inch size (± 2 EMU) · aspect = pixel aspect (± 0.1 %) · no crop"
+   ]
+  },
+  {
+   "mutation": "0쪽 left figure bytes ≠ README (one byte appended to the PNG)",
+   "expect": "C9 0쪽 left figure",
+   "ok": true,
+   "failed": [
+    "C9 figure bytes = PNG = meta sha256",
+    "C9 0쪽 left figure (author 50kg plan-deck 3D) = its README §1: sha256 · bytes · pixels · deck inch size (± 2 EMU) · aspect = pixel aspect (± 0.1 %) · no crop"
+   ]
+  },
+  {
+   "mutation": "0쪽 left figure cropped (srcRect left 10 %)",
+   "expect": "C9 0쪽 left figure",
+   "ok": true,
+   "failed": [
+    "C9 0쪽 left figure (author 50kg plan-deck 3D) = its README §1: sha256 · bytes · pixels · deck inch size (± 2 EMU) · aspect = pixel aspect (± 0.1 %) · no crop"
+   ]
+  },
+  {
+   "mutation": "0쪽 step-table header row (figure names) back on screen",
+   "expect": "V1 every screen text",
+   "ok": true,
+   "failed": [
+    "V1 every screen text = the sheet text for that slot (verbatim · subscript runs read back as \"_\" · 【 】 = caption frame · table rows × columns = sheet)",
+    "C6 no overlapping shapes except parent ⊃ child (names = hierarchy)",
+    "C6 children inside their parent · tabs straddle the parent top edge · roots inside the slide"
+   ]
+  }
+ ],
  "render": {
   "pdf": "kg50_report_y4_draft3.pdf",
   "pngs": [

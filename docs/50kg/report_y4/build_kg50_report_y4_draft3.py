@@ -13,16 +13,22 @@
   ① = ② 머리 메시지 · ② = ③ 보충 한 줄) · ① 탭 글 = 점선 패널 괄호 탭 · ④ 글머리 · 캡션 · 표 = 패널 안 ·
   ⑤ 회색 결론 줄 = 패널 아래 회색 줄 · ⑥ 화면 각주 = 그 아래 작은 글 · ⑥ 발표자 노트 + ⑦ 하지 않을 말 = 노트 (화면에 안 씀) ·
   3판 (조정자 11-01 · 화면 넘침 없음): 시트 표지 '(화면 자리 부족 → 발표자 노트)' 가 붙은 글 = 화면 대신 노트 묶음
-  '화면 자리 부족 → 발표자 노트' (0쪽 글머리 둘 · 덱 값 줄 · 캡션 둘 · 부록 표 ⑦ 줄) — 옮길 자리는 시트만 정한다
+  '화면 자리 부족 → 발표자 노트' (0쪽 ④-2 글머리 · 캡션 · 부록 표 ⑦ 줄) — 옮길 자리는 시트만 정한다
   (생성기는 넣어 봐서 옮기지 않는다 · 넘치면 검사 C6 · 넘침 보고가 알린다 · 검사 V5 = 표지 글이 화면에 없고 노트에 있는지).
+  4판 (1저자 11-01 "해석 절차는 기존 insertion 부터 하는 3D 저걸로 바꿔주라고"): 0쪽 왼쪽 = 1저자 50kg 계획 덱 3D 그림
+  (`figs/p0_plan3d/p0_plan3d_process.png` · 크기 · sha256 = 그 README §1 표) + 시트 ④-1 글머리 셋 (줄 그대로 '- …') + 단계 글 표의 칸 글
+  (머리 줄 = 그림 안 이름 셋 = README 이름과 대조 · 화면에 다시 안 씀 · 칸 안 '▪' 마다 문단 · ▪ = 문단 글머리) · 2D 절차 그림 = 쓰지 않음.
   시트 글에서 바꾸는 것 = 줄바꿈 · markdown 표기 (` · **) 떼기 · `x_y` 아래첨자 표기를 아래첨자 글자로 (c_cpl[22] 같은 이름은 그대로) ·
-  캡션의 【 】 (양식) — 검사 V 가 화면 글을 시트 글과 한 글자씩 대조한다 (아래첨자 → `_` 로 되돌려서).
+  캡션의 【 】 (양식) · 0쪽 단계 글 칸의 '▪ ' → 문단 글머리 (a:buChar · 칸 안 ▪ 마다 문단) — 검사 V 가 화면 글을 시트 글과 한 글자씩
+  대조한다 (아래첨자 → `_` · 문단 글머리 → '▪ ' 로 되돌려서).
 - 양식 = 초안 1 생성기 (`build_kg50_report_y4.py`) 의 상수 · 그리기 도우미 · 패널 · 결정적 저장 · 검사 함수를 import 해서 그대로 쓴다
   (초안 1 생성기는 고치지 않는다).  초안 1 과 다른 자리 (README §3): ① ② 글 = 여러 줄 (반 폭 칸) · 회색 결론 줄 y 6.99 · 폭 8.70 in ·
   화면 각주 자리 (7.20 in) · 쪽 번호 = 글 (0–7 · 부록 · 오른쪽 끝 · 맞춤 = 초안 1) · 부록 표 7 pt.
   글 폭 추정 = 초안 1 추정 + 괄호 둘레 자동 간격 (seq_widths3 · 이 프로세스 안에서만 바꿔 씀).
-- 그림 = 전부 100 % (크기 = `draft2/figs/figs_meta.json` · 0쪽 = PNG 픽셀 ÷ 300 dpi) · 바이트 = meta sha256 — 패널에 100 % 로 안 들어가면
+- 그림 = 전부 100 % (크기 = `draft2/figs/figs_meta.json` · 0쪽 오른쪽 = PNG 픽셀 ÷ 300 dpi) · 바이트 = meta sha256 — 패널에 100 % 로 안 들어가면
   줄이지 않고 그대로 두고 검사 · 넘침 보고 (overflow) 로 알린다 (1저자 결정).  글이 넘쳐도 줄이거나 빼지 않는다.
+  0쪽 왼쪽 (1저자 계획 덱 그림 · 우리 300 dpi 그림 아님) 의 "100 %" = 그 README 의 덱 크기 (폭 4.50 in 고정 · 가로세로비 = 픽셀 비) 에
+  한 번 놓기 · 바이트 = README sha256 (검사 C9 · C9 0쪽 왼쪽 그림).
 - 0쪽 식 넷 = 시트 ④-2 표의 글 그대로 (글 상자 · OMML 아님 — README §7: 시트 식 넷이 모두 OMML 로 있는 리포 파일이 없다 ·
   세미나 3장 OMML (Codex 증거) · 10-21 보고 덱 9 장 OMML 은 넷 중 일부만 시트 꼴과 같다).
 """
@@ -59,6 +65,12 @@ FIG2_META = FIG2_DIR / 'figs_meta.json'
 P0_DIR = HERE / 'figs' / 'p0_dem_method'
 P0_META = P0_DIR / 'p0_figs_meta.json'
 P0_DPI = 300
+#: 0쪽 왼쪽 = 1저자 50kg 계획 덱 3D 그림 (media 그대로) — 크기 · sha256 · 픽셀 · 그림 안 이름 = README §1 표 (빌드 때 읽음)
+P3D_NAME = 'p0_plan3d_process'
+P3D_DIR = HERE / 'figs' / 'p0_plan3d'
+P3D_README = P3D_DIR / 'README.md'
+#: 가로세로비 허용 (덱 크기 비 ↔ 픽셀 비 · 상대) · 놓은 크기 허용 (EMU)
+P3D_ASPECT_TOL, P3D_EMU_TOL = 1e-3, 2
 PAGES = ('0', '1', '2', '3', '4', '5', '6', '7', '부록')
 N_PAGES = len(PAGES)
 #: 쪽 번호 자리의 글 = 시트의 쪽 이름 (0–7 · 부록) — 글로 쓴다 (LibreOffice 는 firstSlideNum 을 무시해 번호 필드가 1 부터 나온다)
@@ -358,16 +370,25 @@ def _cap_after(b4, anchor, k):
 
 
 #: 시트 표지 — 붙은 글은 화면 대신 발표자 노트의 '화면 자리 부족 → 발표자 노트' 묶음으로 (시트 11-01 2판 · 3판 · 조정자).
-#: 붙는 자리 셋: '그림 캡션 (작은 글)' 줄 뒤 · 글머리 이름 뒤 ('- 글머리 (그림 위 한 줄) (표지): …' · '④-2 오른쪽 — 글머리 한 줄 (표지) + …') ·
-#: 표 마지막 칸 끝 ('… (화면 자리 부족 → 발표자 노트 · 사유)').  다른 자리 · 다른 꼴이면 멈춘다.
+#: 이 생성기가 읽는 자리 셋: '그림 캡션 (작은 글)' 줄 뒤 · 0쪽 ④-2 머리 줄의 '글머리 한 줄' 뒤 ('④-2 오른쪽 — 글머리 한 줄 (표지) + …') ·
+#: 표 마지막 칸 끝 ('… (화면 자리 부족 → 발표자 노트 · 사유)').  다른 자리 · 다른 꼴이면 멈춘다 (4판: 0쪽 ④-1 에는 표지 자리 없음 —
+#: 3판의 '- 이름 (표지): 글' 글머리 두 줄은 시트에서 빠졌다 · 0쪽 ④-1 에 표지가 오면 생성기가 멈추고, 다른 자리의 그 꼴은
+#: 검사 V5 가 표지 수 ≠ 옮긴 수로 잡는다).
 TO_NOTES = '화면 자리 부족 → 발표자 노트'
 CAP_TO_NOTES = f'({TO_NOTES})'
 ROW_TO_NOTES = re.compile(r'\s*\(' + re.escape(TO_NOTES) + r'(?: · ([^()]+))?\)$')
-NOTE_LABELS = {('0', 'L', 'cap'): '④-1 그림 캡션', ('0', 'R', 'cap'): '④-2 그림 캡션',
-               ('0', 'L', 'below'): '④-1 덱 값 (2 × 2 그림 아래 한 줄)', ('0', 'L', 'head'): '④-1 글머리 (그림 위 한 줄)',
-               ('0', 'R', 'head'): '④-2 글머리'}
+NOTE_LABELS = {('0', 'R', 'cap'): '④-2 그림 캡션', ('0', 'R', 'head'): '④-2 글머리'}
 #: 0쪽 ④-2 머리 줄 (표지 = '글머리 한 줄' 바로 뒤 · ④-2 글머리 줄에는 이름이 없어서)
 P0_R_HEAD = '④-2 오른쪽 — 글머리 한 줄{} + 식 넷 (2 × 2 표 · 식 = 2-1장 수식 개체 복사)'
+#: 0쪽 ④-1 (4판 · 3판 글 그대로): 머리 줄 → 글머리 셋 ('- …' 줄 그대로 화면) → 단계 글 머리 줄 → 표 (머리 = 그림 안 이름 · 칸 한 줄) →
+#: 그 뒤 '- …' = 시트 메모 (화면 · 노트에 안 씀).  다른 꼴이면 멈춘다.
+P0_L_HEAD = '④-1 왼쪽 (붙여 넣기)'
+P0_STEP_HEAD = '그림 아래 단계 글 (붙여 넣기 · 그림의 세 이름 아래)'
+P0_N_HEADS = 3
+STEP_MARK = '▪'
+#: 단계 글 칸의 ▪ = 문단 글머리 (글자 · 내어쓰기 in) · 글머리 글꼴 = 양식 영문 글꼴 (글 run 으로 두면 LibreOffice 가 한글 대체 글꼴에 없는 ▪ 를
+#: 컬러 이모지 글꼴로 그려 줄 높이 · 폭이 커진다 — 11-02 렌더 실측 R2 · R4)
+STEP_BULLET = (STEP_MARK, 0.13)
 
 
 def _cap_maybe_notes(lines, start, what):
@@ -379,24 +400,44 @@ def _cap_maybe_notes(lines, start, what):
     return ('cap_notes' if rest else 'cap'), t, no
 
 
-def _bullet_maybe_notes(lines, label, what):
-    """'- 이름: 글' 또는 '- 이름 (화면 자리 부족 → 발표자 노트): 글' (둘 합쳐 꼭 한 줄) → (노트행?, 글, 줄 번호)."""
-    pres = (f'- {label}: ', f'- {label} {CAP_TO_NOTES}: ')
-    hits = [(no, ln, p) for no, ln in lines for p in pres if ln.startswith(p)]
-    src.need(len(hits) == 1, f'sheet: "- {label}[ {CAP_TO_NOTES}]:" 줄 {len(hits)} 개 ({what})')
-    no, ln, p = hits[0]
-    return p == pres[1], ln[len(p):].strip(), no
+def split_marks(cell, no=None):
+    """단계 글 칸 '▪ 가 ▪ 나' → ['▪ 가', '▪ 나'] (칸 안 글머리 ▪ 마다 문단 · 글자는 그대로 — 사이 공백 하나만 문단 끝으로)."""
+    parts = re.split(r' (?=' + re.escape(STEP_MARK) + ' )', cell)
+    src.need(all(p.startswith(STEP_MARK + ' ') and p.strip() == p for p in parts), f'sheet {no}: 단계 글 칸 꼴 "{cell[:40]}" (▪ 로 시작 · ▪ 마다 한 공백)')
+    return parts
+
+
+def p0_left_items(lines, lay, k):
+    """0쪽 ④-1 (4판 · 3판 글) → [글머리 셋, 계획 덱 3D 그림, 단계 글 표].  lines = '④-1 왼쪽 (붙여 넣기)' 다음 줄부터 ④-2 머리 앞까지.
+    꼴: 글머리 '- …' 셋 (줄 그대로 화면 · 표지 없음) → 단계 글 머리 줄 → 표 (머리 줄 = 그림 안 이름 셋 = 그림 README · 칸 한 줄 · ▪ 글머리) →
+    '- …' (시트 메모 · 화면 · 노트에 안 씀).  다른 꼴이면 멈춘다."""
+    j = _find(lines, '^' + re.escape(P0_STEP_HEAD) + '$', 0, '0쪽 ④-1 단계 글 머리')
+    heads = []
+    for no, ln in lines[:j]:
+        if not ln.strip():
+            continue
+        src.need(ln.startswith('- ') and TO_NOTES not in ln, f'sheet {no}: 0쪽 ④-1 단계 글 머리 앞 = 글머리 "- …" 만 (표지 · 다른 줄 없음)')
+        heads.append((ln.strip(), no))
+    src.need(len(heads) == P0_N_HEADS, f'0쪽 ④-1 글머리 {len(heads)} 줄 (기대 {P0_N_HEADS})')
+    t0 = next((i for i in range(j + 1, len(lines)) if lines[i][1].strip()), None)
+    src.need(t0 is not None and lines[t0][1].startswith('|'), '0쪽 ④-1 단계 글 머리 다음 = 표')
+    hdr, rows, nxt = _table(lines, t0, '0쪽 ④-1 단계 글 표')
+    src.need(hdr == plan3d_readme()['labels'], f'0쪽 단계 글 표 머리 {hdr} ≠ 그림 안 이름 (README) {plan3d_readme()["labels"]}')
+    src.need(len(rows) == 1 and all(c for c in rows[0][0]), f'0쪽 단계 글 표 = 칸 한 줄 (빈 칸 없음) · 줄 {len(rows)}')
+    src.need(all(TO_NOTES not in c for c in rows[0][0]), f'sheet {rows[0][1]}: 0쪽 단계 글 표에 표지 (자리 아님)')
+    for c in rows[0][0]:
+        split_marks(c, rows[0][1])
+    for no, ln in lines[nxt:]:
+        src.need(not ln.strip() or (ln.startswith('- ') and TO_NOTES not in ln), f'sheet {no}: 0쪽 단계 글 표 뒤 = 시트 메모 "- …" 만')
+    return [('heads', heads), _fig(P3D_NAME, lay['왼쪽'], k, 'L'), ('steptable', dict(name='step', hdr=hdr, rows=rows))]
 
 
 def items_p0(b4, lay, k):
-    i1 = _find(b4, r'^④-1 왼쪽', 0, '0쪽 ④-1')
+    i1 = _find(b4, '^' + re.escape(P0_L_HEAD) + '$', 0, '0쪽 ④-1')
     i2 = _find(b4, r'^④-2 오른쪽', 0, '0쪽 ④-2')
-    left_lines, right_lines = b4[i1:i2], b4[i2:]
-    h_n, head, h_no = _bullet_maybe_notes(left_lines, '글머리 (그림 위 한 줄)', '0쪽 ④-1')
-    w_n, below, w_no = _bullet_maybe_notes(left_lines, '덱 값 (2 × 2 그림 아래 한 줄)', '0쪽 ④-1')
-    lkind, lcap, lc_no = _cap_maybe_notes(left_lines, 0, '0쪽 ④-1 캡션')
-    L = [('head_notes' if h_n else 'head', head, h_no), _fig('p0_process_grid_labeled', lay['왼쪽'], k, 'L'),
-         ('below_notes' if w_n else 'below', below, w_no), (lkind, lcap, lc_no)]
+    src.need(i1 < i2, '0쪽 ④-1 머리 줄이 ④-2 머리 줄 앞에 있어야 한다')
+    right_lines = b4[i2:]
+    L = p0_left_items(b4[i1 + 1:i2], lay, k)
     hl = right_lines[0][1].strip()
     src.need(hl in (P0_R_HEAD.format(''), P0_R_HEAD.format(' ' + CAP_TO_NOTES)), f'sheet {right_lines[0][0]}: 0쪽 ④-2 머리 줄 "{hl}"')
     rh = [(no, ln) for no, ln in right_lines[1:] if ln.startswith('- ')]
@@ -475,9 +516,50 @@ PAGE_ITEMS = {
 
 # ───────────────────────────── 그림 (100 % · 바이트 = meta) ─────────────────────────────
 
+P3D_ROWS = ('파일', 'sha256', '바이트', '픽셀', '덱 크기 (in)', '그림 안 이름 (왼쪽 → 오른쪽)')
+
+
+def plan3d_readme(path=None):
+    """0쪽 왼쪽 그림 README (`figs/p0_plan3d/README.md`) §1 표 → dict(sha256 · bytes · px · size_in · labels).
+    표 꼴 · 항목 (P3D_ROWS · 이 순서 · 한 번씩) 이 다르면 멈춘다 — 덱 배치 크기와 검사 C9 의 기준이 이 표 하나다."""
+    t = (path or P3D_README).read_text(encoding='utf-8')
+    m = re.search(r'^## 1\. 파일\n(.*?)^## 2\. ', t, flags=re.M | re.S)
+    src.need(m is not None, f'{P3D_README.name}: §1 파일 표 자리 (## 1. 파일 … ## 2.)')
+    rows = []
+    for ln in m.group(1).split('\n'):
+        s = ln.strip()
+        if not s.startswith('|') or re.fullmatch(r'\|(\s*:?-+:?\s*\|)+', s) or s == '| 항목 | 값 |':
+            continue
+        c = [x.strip() for x in s[1:-1].split('|')]
+        src.need(len(c) == 2, f'{P3D_README.name} §1: 표 줄 칸 수 {len(c)} ({s[:40]})')
+        rows.append(tuple(c))
+    src.need(tuple(r[0] for r in rows) == P3D_ROWS, f'{P3D_README.name} §1: 항목 {[r[0] for r in rows]} (기대 {list(P3D_ROWS)})')
+    v = dict(rows)
+    src.need(v['파일'] == f'`{P3D_NAME}.png`', f'{P3D_README.name} §1: 파일 {v["파일"]}')
+    sha = re.fullmatch(r'`([0-9a-f]{64})`', v['sha256'])
+    nb = re.fullmatch(r'\d+', v['바이트'])
+    px = re.fullmatch(r'(\d+) × (\d+)', v['픽셀'])
+    sz = re.fullmatch(r'(\d+\.\d+) × (\d+\.\d+)', v['덱 크기 (in)'])
+    labels = [x.strip() for x in v['그림 안 이름 (왼쪽 → 오른쪽)'].split(' · ')]
+    src.need(sha and nb and px and sz and len(labels) == 3 and all(labels), f'{P3D_README.name} §1: 값 꼴 {v}')
+    out = dict(sha256=sha.group(1), bytes=int(nb.group(0)), px=(int(px.group(1)), int(px.group(2))),
+               size_in=(float(sz.group(1)), float(sz.group(2))), labels=labels)
+    (W, H), (pw, ph) = out['size_in'], out['px']
+    src.need(abs((H / W) / (ph / pw) - 1) <= P3D_ASPECT_TOL, f'{P3D_README.name} §1: 덱 크기 비 {H / W:.6f} ≠ 픽셀 비 {ph / pw:.6f}')
+    return out
+
+
 def fig_info(name):
-    """그림 이름 → (PNG 경로, (폭, 높이) in, meta sha256)."""
-    if name.startswith('p0_'):
+    """그림 이름 → (PNG 경로, (폭, 높이) in, meta sha256) — 0쪽 왼쪽 계획 덱 그림 = README §1 표 값 (바이트 · 픽셀도 대조)."""
+    if name == P3D_NAME:
+        r = plan3d_readme()
+        path = P3D_DIR / f'{name}.png'
+        from PIL import Image
+        with Image.open(path) as im:
+            px = im.size
+        src.need(px == r['px'] and path.stat().st_size == r['bytes'], f'{name}.png 픽셀 {px} · 바이트 {path.stat().st_size} ≠ README {r["px"]} · {r["bytes"]}')
+        size, sha = r['size_in'], r['sha256']
+    elif name.startswith('p0_'):
         meta = json.loads(P0_META.read_text(encoding='utf-8'))
         path = P0_DIR / f'{name}.png'
         from PIL import Image
@@ -564,12 +646,16 @@ def table_heights(col_w, rows, merges=(), size=TBL_PT, row_min=0.17, head=True):
     return heights
 
 
-def table3(slide, name, x, y, col_w, rows, *, head=True, merges=(), align=None, size=TBL_PT, row_min=0.17, shade_first_col=True):
+def table3(slide, name, x, y, col_w, rows, *, head=True, merges=(), align=None, size=TBL_PT, row_min=0.17, shade_first_col=True, bullet=None):
     """rows = [[글 | 문단 목록 | None]] · 열 맞춤 L/C/R · 칸 높이 = 추정 줄 수 (초안 1 table 과 같은 꼴 · 머리 줄 + 첫 열 옅은 회색 ·
-    shade_first_col=False = 첫 열도 흰 칸 (0쪽 식 2 × 2))."""
+    shade_first_col=False = 첫 열도 흰 칸 (0쪽 식 2 × 2)) · bullet = (글자, 내어쓰기 in): 문단 목록 칸의 문단마다 글머리 (높이 추정 폭 = 칸 − 내어쓰기)."""
     nr, nc = len(rows), len(rows[0])
     al = {'L': PP_ALIGN.LEFT, 'C': PP_ALIGN.CENTER, 'R': PP_ALIGN.RIGHT}
-    heights = table_heights(col_w, rows, merges, size, row_min, head=head)
+    if bullet:
+        src.need(not head and not merges, 'table3 bullet = 머리 줄 · 합친 칸 없는 표만')
+        heights = table_heights([w - bullet[1] for w in col_w], rows, merges, size, row_min, head=head)
+    else:
+        heights = table_heights(col_w, rows, merges, size, row_min, head=head)
     gf = slide.shapes.add_table(nr, nc, Emu(I(x)), Emu(I(y)), Emu(I(sum(col_w))), Emu(I(sum(heights))))
     gf.name = name
     tbl = gf.table
@@ -600,6 +686,9 @@ def table3(slide, name, x, y, col_w, rows, *, head=True, merges=(), align=None, 
             a = al[(align or 'L' * nc)[c]] if not (head and r == 0) else PP_ALIGN.CENTER
             if isinstance(txt, list):
                 d1.fill_paras(tf, txt, size, color=d1.DARK, kind='ko', align=a)
+                if bullet:
+                    for p in tf.paragraphs:
+                        set_bullet(p, bullet[0], bullet[1], d1.EN)
             else:
                 d1.fill_paras(tf, [txt], size, color=d1.DARK, bold=(head and r == 0), kind='ko', align=a)
     return y + sum(heights)
@@ -640,12 +729,48 @@ def eq_rows(eq):
     return [[cells[0], cells[1]], [cells[2], cells[3]]], [TABLE_W / 2, TABLE_W / 2]
 
 
+def step_rows(spec):
+    """0쪽 단계 글 표 → (화면 줄 = 칸 줄만 · 머리 줄 (그림 안 이름) 은 화면에 안 씀, 열 폭 = 같은 폭) — 칸 = ▪ 마다 문단 · 문단 글 = '▪ ' 뒤
+    (▪ 는 문단 글머리 a:buChar 로 그린다 — STEP_BULLET · 검사 V1 의 marked_text 가 글머리를 '▪ ' 로 다시 읽는다)."""
+    cut = len(STEP_MARK) + 1
+    rows = [[[screen_text(p[cut:]) for p in split_marks(c, no)] for c in cells] for cells, no in spec['rows']]
+    n = len(spec['hdr'])
+    return rows, [TABLE_W / n] * n
+
+
+def step_heights(rows, cw):
+    """단계 글 표 줄 높이 — 글 폭 = 칸 폭 − 글머리 내어쓰기 (table3 의 bullet 과 같은 수)."""
+    return table_heights([w - STEP_BULLET[1] for w in cw], rows, head=False)
+
+
+def set_bullet(p, char, ind_in, face):
+    """문단 → 글머리 문단 (a:buFont · a:buChar · 내어쓰기 marL = ind · indent = −ind) — 글머리 글자는 글 run 에 넣지 않는다."""
+    pPr = p._p.get_or_add_pPr()
+    pPr.set('marL', str(I(ind_in)))
+    pPr.set('indent', str(-I(ind_in)))
+    for tag in ('buFontTx', 'buFont', 'buNone', 'buAutoNum', 'buChar', 'buBlip'):
+        for e in pPr.findall(qn('a:' + tag)):
+            pPr.remove(e)
+    after = next((e for e in pPr if e.tag in (qn('a:tabLst'), qn('a:defRPr'), qn('a:extLst'))), None)
+    els = [pPr.makeelement(qn('a:buFont'), {'typeface': face}), pPr.makeelement(qn('a:buChar'), {'char': char})]
+    for e in els:
+        if after is None:
+            pPr.append(e)
+        else:
+            after.addprevious(e)
+
+
 def item_extent(it, page='', side=''):
     """패널 안 한 항목 → (도형 위 간격, 도형 높이, 도형 아래 간격) in — render_panel 과 같은 수 (d1.stack_text = 추정 높이 + 0.02)."""
     kind = it[0]
     br = BREAKS.get((page, f'{side}/{kind}'), ())
     if kind == 'head':
         return 0.0, d1.est_box_height([screen_text(it[1], br)], HEAD_PT, TEXT_W, 1.0) + 0.02, 0.01
+    if kind == 'heads':
+        return 0.0, d1.est_box_height([screen_text(t) for t, _ in it[1]], HEAD_PT, TEXT_W, 1.0) + 0.02, 0.01
+    if kind == 'steptable':
+        rows, cw = step_rows(it[1])
+        return 0.02, sum(step_heights(rows, cw)), 0.06
     if kind == 'fig':
         return 0.01, fig_info(it[1])[1][1], 0.03
     if kind in ('below', 'text'):
@@ -686,6 +811,12 @@ def render_panel(slide, side, items, box, page=''):
         br = BREAKS.get((page, f'{side}/{kind}'), ())
         if kind == 'head':
             y = d1.stack_text(slide, f'{side}/head', x0, y, w0, [screen_text(it[1], br)], HEAD_PT) + 0.01
+        elif kind == 'heads':
+            y = d1.stack_text(slide, f'{side}/head', x0, y, w0, [screen_text(t) for t, _ in it[1]], HEAD_PT) + 0.01
+        elif kind == 'steptable':
+            rows, cw = step_rows(it[1])
+            y = table3(slide, f'{side}/table', x0 + 0.02, y + 0.02, cw, rows, head=False, align='L' * len(cw), shade_first_col=False,
+                       bullet=STEP_BULLET) + 0.06
         elif kind == 'fig':
             fx, fw, fh = place_fig(slide, f'{side}/fig', px, pw, y + 0.01, it[1])
             y += 0.01 + fh + 0.03
@@ -780,8 +911,12 @@ def screen_strings(P):
         for it in P[side]:
             if it[0] in ('head', 'below', 'text', 'cap'):
                 out.append(it[1])
+            elif it[0] == 'heads':
+                out += [t for t, _ in it[1]]
             elif it[0] == 'table':
                 out += list(it[1]['hdr']) + [c for cells, _ in it[1]['rows'] for c in cells]
+            elif it[0] == 'steptable':
+                out += [c for cells, _ in it[1]['rows'] for c in cells]
             elif it[0] == 'eqtable':
                 out += [x for e in it[1] for x in (e['name'], e['eq'], e['mean'])]
     return out
@@ -833,7 +968,7 @@ def measure():
 # ───────────────────────────── 검사 (저장된 덱을 다시 읽는다) ─────────────────────────────
 
 def marked_text(el):
-    """도형 · 표 칸 XML → 시트 꼴 글 (아래첨자 run = '_' + 글 · 줄바꿈 = 공백 · 문단 = '\n')."""
+    """도형 · 표 칸 XML → 시트 꼴 글 (아래첨자 run = '_' + 글 · 줄바꿈 = 공백 · 문단 = '\n' · 문단 글머리 a:buChar = 그 글자 + 공백)."""
     txBody = el.find('.//' + qn('p:txBody'))
     if txBody is None:
         txBody = el.find('.//' + qn('a:txBody'))
@@ -842,6 +977,10 @@ def marked_text(el):
     paras = []
     for p in txBody.findall(qn('a:p')):
         out = []
+        ppr = p.find(qn('a:pPr'))
+        bu = ppr.find(qn('a:buChar')) if ppr is not None else None
+        if bu is not None:
+            out.append(bu.get('char') + ' ')
         for r in p.iterchildren(qn('a:r'), qn('a:fld'), qn('a:br')):
             if r.tag == qn('a:br'):
                 out.append(' ')
@@ -873,6 +1012,8 @@ def expected_texts(P):
         for it in P[side]:
             if it[0] in ('head', 'below', 'text'):
                 E[f'{side}/{it[0]}'] = it[1]
+            elif it[0] == 'heads':
+                E[f'{side}/head'] = '\n'.join(t for t, _ in it[1])       # 시트 '- …' 줄 그대로 · 줄마다 문단
             elif it[0] == 'cap':
                 E[f'{side}/cap'] = '【 ' + it[1] + ' 】'
     return {k: md_clean(v) for k, v in E.items()}
@@ -886,6 +1027,8 @@ def expected_cells(P):
                 spec = it[1]
                 rows = [list(spec['hdr'])] + [list(c) for c, _ in spec['rows']]
                 out[f'{side}/table'] = [[md_clean(c) for c in r] for r in rows]
+            elif it[0] == 'steptable':                                  # 머리 줄 (그림 안 이름) 은 화면에 없다 — 칸 줄만
+                out[f'{side}/table'] = [[md_clean(c) for c in cells] for cells, _ in it[1]['rows']]
             elif it[0] == 'eqtable':
                 e = it[1]
                 cell = [md_clean(x['name']) + '\n' + md_clean(x['eq']) + '\n' + md_clean(x['mean']) for x in e]
@@ -1095,6 +1238,32 @@ def check_deck(path, info=None):
     C.add('C9 every figure placed at 100 % of its figure size (no rescale)', not pic_bad, pic_bad)
     C.add('C9 figure bytes = PNG = meta sha256', not byte_bad, byte_bad)
     C.add('C9 figure size = sheet ① 크기 (in)', not size_bad, size_bad)
+    # C9 0쪽 왼쪽 그림 (1저자 50kg 계획 덱 3D 그림) — README §1 표를 다시 읽어 저장된 그림과 대조 (fig_info 와 따로 · 덱의 그림 바이트 · 픽셀 · EMU)
+    r3, p3_bad = plan3d_readme(), []
+    k3 = [(P['key'], side) for P in pages for side in ('L', 'R') for it in P[side] if it[0] == 'fig' and it[1] == P3D_NAME]
+    if k3 != [('0', 'L')]:
+        p3_bad.append(('placements in the sheet', k3))
+    sps = [sp for sp in slides[0].shapes if sp.name == 'L/fig']
+    if len(sps) != 1 or sps[0].shape_type != 13:
+        p3_bad.append(('0쪽 L/fig picture', len(sps)))
+    else:
+        sp = sps[0]
+        blob = sp.image.blob
+        if hashlib.sha256(blob).hexdigest() != r3['sha256'] or len(blob) != r3['bytes']:
+            p3_bad.append(('bytes', hashlib.sha256(blob).hexdigest()[:16], len(blob)))
+        if tuple(sp.image.size) != r3['px']:
+            p3_bad.append(('pixels', tuple(sp.image.size), r3['px']))
+        want = (I(r3['size_in'][0]), I(r3['size_in'][1]))
+        if abs(sp.width - want[0]) > P3D_EMU_TOL or abs(sp.height - want[1]) > P3D_EMU_TOL:
+            p3_bad.append(('EMU size', (sp.width, sp.height), want))
+        asp = (sp.height / sp.width) / (r3['px'][1] / r3['px'][0])
+        if abs(asp - 1) > P3D_ASPECT_TOL:
+            p3_bad.append(('aspect / pixel aspect', round(asp, 6)))
+        src_rect = sp._element.find('.//' + qn('a:srcRect'))
+        if src_rect is not None and any(src_rect.get(a) not in (None, '0') for a in ('l', 't', 'r', 'b')):
+            p3_bad.append(('cropped', dict(src_rect.attrib)))
+    C.add('C9 0쪽 left figure (author 50kg plan-deck 3D) = its README §1: sha256 · bytes · pixels · deck inch size (± 2 EMU) · '
+          'aspect = pixel aspect (± 0.1 %) · no crop', not p3_bad, p3_bad)
     # C12 글꼴 · 크기
     f_bad = []
     allowed_f = {d1.EN, d1.KO, d1.DESC}
@@ -1354,10 +1523,31 @@ def _moved(k, kind, side):
 
 
 def _mut_head_back(prs):
-    """0쪽 ④-1 글머리가 화면에 남은 경우 (L/head 글 상자)."""
-    tb = prs.slides[0].shapes.add_textbox(Emu(I(0.40)), Emu(I(2.65)), Emu(I(4.40)), Emu(I(0.40)))
-    tb.name = 'L/head'
-    tb.text_frame.text = md_clean(_moved('0', 'head', 'L')['text'])
+    """0쪽 ④-2 글머리 (시트 표지로 노트에 간 글) 가 화면에 남은 경우 (R/head 글 상자)."""
+    tb = prs.slides[0].shapes.add_textbox(Emu(I(5.15)), Emu(I(2.65)), Emu(I(4.40)), Emu(I(0.40)))
+    tb.name = 'R/head'
+    tb.text_frame.text = md_clean(_moved('0', 'head', 'R')['text'])
+
+
+def _mut_step_header(prs):
+    """0쪽 단계 글 표에 머리 줄 (그림 안 이름 셋) 이 다시 붙은 경우 — 이름이 그림과 표에 두 번."""
+    gf = _shape(prs.slides[0], 'L/table')
+    trs = gf.table._tbl.findall(qn('a:tr'))
+    trs[0].addprevious(copy.deepcopy(trs[0]))
+    for cell, t in zip(gf.table.rows[0].cells, plan3d_readme()['labels']):
+        cell.text = t
+
+
+def _mut_plan3d_bytes(prs):
+    """0쪽 왼쪽 그림의 바이트가 README 와 다른 경우 (PNG 끝에 한 바이트 — 픽셀 · 크기는 그대로)."""
+    sp = _shape(prs.slides[0], 'L/fig')
+    part = prs.slides[0].part.related_part(sp._element.blip_rId)
+    part._blob = part.blob + b'\x00'
+
+
+def _mut_plan3d_crop(prs):
+    """0쪽 왼쪽 그림이 잘린 경우 (a:srcRect 왼쪽 10 % — 놓인 크기 · 바이트는 그대로라 다른 C9 검사는 못 본다)."""
+    _shape(prs.slides[0], 'L/fig').crop_left = 0.10
 
 
 def _append_row_copy(gf):
@@ -1406,10 +1596,16 @@ MUTATIONS = [
     ('number not in the sheet section (2쪽 note)', lambda p: _set_first_run(_shape(p.slides[2], 'note'), '같은 가압 규약에서 7.77 %p'), 'C8 every number'),
     ('notes ≠ sheet (6쪽 notes)', lambda p: setattr(p.slides[6].notes_slide.notes_text_frame, 'text', '노트 없음'), 'V4 notes'),
     # 3판: 시트 표지로 노트에 간 글 (화면에 남으면 · 노트에서 빠지면) · 표 줄 수
-    ('moved item back on screen (0쪽 ④-1 글머리 as L/head)', _mut_head_back, 'V5 every sheet item marked'),
+    ('moved item back on screen (0쪽 ④-2 글머리 as R/head)', _mut_head_back, 'V5 every sheet item marked'),
     ('moved row back in the table (부록 ⑦ appended to R/table)', _mut_row_back, 'V5 every sheet item marked'),
     ('moved item missing from the notes (부록 notes without ⑦)', _mut_notes_drop, 'V5 every sheet item marked'),
     ('extra table row (부록 R/table last row duplicated)', _mut_row_dup, 'V1 every screen text'),
+    # 4판: 0쪽 왼쪽 = 1저자 계획 덱 3D 그림 (README 크기 · 바이트) · 단계 글 표 머리 줄 (그림 안 이름) 은 화면에 없다
+    ('0쪽 left figure not at its README size (L/fig height + 3 %)',
+     lambda p: setattr(_shape(p.slides[0], 'L/fig'), 'height', int(_shape(p.slides[0], 'L/fig').height * 1.03)), 'C9 0쪽 left figure'),
+    ('0쪽 left figure bytes ≠ README (one byte appended to the PNG)', _mut_plan3d_bytes, 'C9 0쪽 left figure'),
+    ('0쪽 left figure cropped (srcRect left 10 %)', _mut_plan3d_crop, 'C9 0쪽 left figure'),
+    ('0쪽 step-table header row (figure names) back on screen', _mut_step_header, 'V1 every screen text'),
 ]
 
 
