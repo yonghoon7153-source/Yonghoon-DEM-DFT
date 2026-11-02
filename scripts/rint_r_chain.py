@@ -3873,19 +3873,28 @@ def found_attempts_problem(st, found):
     """★ 11-02 PC6-12 (사전 공격 6 회차 마무리 R10 · PC5-01 다시 셈의 범위) — 찾은 시도 폴더 전부 (입력 대상 밖 포함 · found {n: [경로]}) 의 attempt.json ↔
     원장 항목 (st = 대조하는 커밋의 원장): 그 번호의 원장 항목이 있고 폴더에 꼴 맞는 attempt.json (`read_attempt`) 이 있으면 대상 · 기계 · 재실행 원 시도가 원장
     항목과 같아야 → 사유 | None.  다름 = 원장 항목 줄 (대상) 을 바꾼 역사 고침 (끝 두 커밋 reset + 대상만 다른 항목 — 결과 본 시도를 입력 대상 밖으로 숨겨 새
-    시도를 채택 · PC5-01 다시 셈은 입력 대상 항목에만 돈다) · 다른 원장의 시도 폴더.  이 함수 몫 아님: attempt.json 없는 폴더 (남의 폴더 = 옆 거부 기록의 까닭 ·
-    입력 대상이면 `target_ledger_problem` 이 멈춘다) · 옆 거부 기록 파일 · 원장에 없는 번호 (부르는 쪽 규칙 — 판정 = 멈춤 · 다시 판정 = PC5-10 · 합치기 = 멈춤).
-    항목 칸은 한 번 쓰면 바뀌지 않는다 (다시 판정의 옛 커밋 원장에서도 같다 — 시작 커밋 조상 대조는 입력 대상만 · 그대로).  한정: 찾는 범위 = 부르는 쪽이 훑은
-    바탕 (판정 = 입력의 부모 폴더 · --attempt-dirs · 합치기 = --merge 경로 · 합친 예측 = 사본 · 예측 입력 = 사다리의 부모 폴더) — 그 밖에 옮겨 둔 폴더와 원장
-    항목 고침을 함께 한 손은 못 본다 (Q-D 한정)."""
+    시도를 채택 · PC5-01 다시 셈은 입력 대상 항목에만 돈다) · 다른 원장의 시도 폴더.  ★ 11-02 PC7-02 (사전 공격 7 회차 · 1저자 11-02 "권고대로") — 원장 항목이
+    있는 attempt_<n> 폴더에 꼴 맞는 attempt.json 이 없으면 (없음 · 꼴 틀림 · 심볼릭 링크 = `read_attempt` None) 사유 (옛 = 건너뜀 → attempt.json 하나만 지워도
+    위 대조를 비켜 갔다) · 예외 하나 = 그 번호의 결과 줄이 rejected 이고 그 바탕에 옆 거부 기록 attempt_<n>.rejected.json 이 있을 때 (AL07 남의 폴더 — 폴더를
+    만들 수 없어 옆에 거부 기록 · 지금 동작 그대로).  이 함수 몫 아님: 옆 거부 기록 파일 · 원장에 없는 번호 (부르는 쪽 규칙 — 판정 = 멈춤 · 다시 판정 = PC5-10 ·
+    합치기 = 멈춤).  항목 칸은 한 번 쓰면 바뀌지 않는다 (다시 판정의 옛 커밋 원장에서도 같다 — 시작 커밋 조상 대조는 입력 대상만 · 그대로).  한정: 찾는 범위 =
+    부르는 쪽이 훑은 바탕 (판정 = 입력의 부모 폴더 · --attempt-dirs · 합치기 = --merge 경로 · 합친 예측 = 사본 · 예측 입력 = 사다리의 부모 폴더) — 그 밖에
+    옮겨 둔 폴더 · 꼴 밖 이름으로 바꾼 폴더 (attempt_1.old 꼴 = 찾지 않음) 와 원장 항목 고침을 함께 한 손은 못 본다 (Q-D 한정)."""
     for k, ps in sorted(found.items()):
         e = st['entries'].get(k)
         if e is None:
             continue
+        r = (st.get('results') or {}).get(k)
         for p in ps:
-            a = read_attempt(p) if Path(p).is_dir() else None
+            if not Path(p).is_dir():
+                continue                                      # 옆 거부 기록 파일 (attempt_<n>.rejected.json) — 이 함수 몫 아님
+            a = read_attempt(p)
             if a is None:
-                continue
+                if r is not None and r.get('status') == 'rejected' and (Path(p).parent / f'attempt_{k}{REJECTED_SIDE}').is_file():
+                    continue                                  # AL07 남의 폴더 (결과 줄 rejected + 그 바탕의 옆 거부 기록) — 지금 동작 그대로
+                return (f'{Path(p).name}: 원장 항목 {k} ({e["target"]}) 의 시도 폴더 자리인데 꼴 맞는 attempt.json 이 없다 (없음 · 꼴 틀림 · 심볼릭 링크 — '
+                        f'결과 본 시도 폴더의 attempt.json 을 지우거나 고쳐 원장 대조를 비켜 간 꼴 · 예외 = 결과 줄 rejected + 그 바탕의 옆 거부 기록 · '
+                        f'★ 11-02 PC7-02)')
             diff = [f for f in ('target', 'machine', 'resume_of') if a[f] != e[f]]
             if a['n'] != k or diff:
                 got = ', '.join(f'{f} {a[f]!r}' for f in diff) or f'n {a["n"]}'
