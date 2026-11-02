@@ -301,27 +301,45 @@ def colorbar_png(path, horizontal):
     Image.fromarray(img).save(path)
 
 
-def crop_renders(paths, dst_dir, pad=8):
-    """흰 / 투명 여백 자르기 — 세 렌더 공통 창 (같은 카메라 배율 유지 · 칸 높이 같음)."""
-    boxes = []
-    ims = []
-    for p in paths:
+# 기공 렌더 시점 — docs/50kg/report_y4/figs/d1_compaction/stage_frames_d1.csv 의 recommended 줄 (--stage-frames 로 다시 읽음)
+STAGES = [dict(stage='initial_compression', step=450000, pressure=0.0, plate=144.9457),
+          dict(stage='p50', step=1250000, pressure=53.107941, plate=136.9457),
+          dict(stage='p300_stop', step=2650000, pressure=294.26469, plate=122.9457),
+          dict(stage='after_relaxation', step=2785002, pressure=156.15118, plate=122.5957)]
+
+
+def read_stages(path):
+    rows = [r for r in csv.DictReader(open(path, encoding='utf-8-sig')) if 'recommended' in r['role']]
+    by = {r['stage']: r for r in rows}
+    return [dict(stage=k, step=int(by[k]['dump_step']), pressure=float(by[k]['pressure_MPa']),
+                 plate=float(by[k]['plate_um'])) for k in [st['stage'] for st in STAGES]]
+
+
+def measure_crop_renders(paths, dst_dir, pad=8):
+    """렌더마다 침대 bbox (흰 · 투명 아닌 픽셀 · 외톨이 줄 / 열 무시) 를 재고 그 bbox + 여백으로 자른다.
+    웹앱 렌더는 침대마다 화면에 맞춰 확대돼 있어서 (높이 785 / 769 / 769 px) 장에서 가압판 높이에 비례하게 다시 맞춘다."""
+    out = []
+    for k, p in enumerate(paths):
         im = Image.open(p).convert('RGBA')
         a = np.array(im)
         mask = (a[..., :3].min(axis=2) < 245) & (a[..., 3] > 10)
-        ys, xs = np.where(mask)
-        boxes.append((xs.min(), ys.min(), xs.max(), ys.max()))
-        ims.append(im)
-    x0 = max(min(b[0] for b in boxes) - pad, 0)
-    y0 = max(min(b[1] for b in boxes) - pad, 0)
-    x1 = min(max(b[2] for b in boxes) + pad + 1, ims[0].size[0])
-    y1 = min(max(b[3] for b in boxes) + pad + 1, ims[0].size[1])
-    outs = []
-    for i, im in enumerate(ims):
-        d = dst_dir / ('pore_render_%d.png' % i)
-        im.crop((x0, y0, x1, y1)).save(d)
-        outs.append(d)
-    return outs, (x1 - x0) / (y1 - y0)
+        rows, cols = mask.sum(axis=1), mask.sum(axis=0)
+        ys = np.where(rows >= max(3, 0.005 * rows.max()))[0]
+        xs = np.where(cols >= max(3, 0.005 * cols.max()))[0]
+        y0, y1, x0, x1 = ys.min(), ys.max(), xs.min(), xs.max()
+        cx0, cy0 = max(x0 - pad, 0), max(y0 - pad, 0)
+        cx1, cy1 = min(x1 + pad + 1, im.size[0]), min(y1 + pad + 1, im.size[1])
+        d = dst_dir / ('pore_render_%d.png' % k)
+        im.crop((cx0, cy0, cx1, cy1)).save(d)
+        out.append(dict(path=d, crop_w=cx1 - cx0, crop_h=cy1 - cy0, bed_w=x1 - x0 + 1, bed_h=y1 - y0 + 1,
+                        pad_left=x0 - cx0, pad_top=y0 - cy0))
+        print('render %d: bed bbox %d x %d px (x %d-%d, y %d-%d)' % (k, x1 - x0 + 1, y1 - y0 + 1, x0, x1, y0, y1))
+    return out
+
+
+def fit_box(aspect, max_w, max_h):
+    w = min(max_w, max_h * aspect)
+    return w, w / aspect
 
 
 # --------------------------------------------------------------------------- pptx XML helpers
@@ -680,32 +698,38 @@ def build_A(s, a):
          BUL([('가압 중 압력 300 MPa 도달, 가압판 정지 후 두께 유지 및 ', 0), ('응력 완화', 1), ('로 압력 감소', 0)]),
          BUL([('가압에 따른 입자 재배열로 ', 0), ('기공 공간 축소', 1), (', 응력 완화 후에도 기공 분포 유지', 0)])])
     s.caption('【 고체전해질 입도 1 µm 복합양극의 가압 거동 및 기공 분포 】')
-    fh = 3.42
-    fw = fh * a['d1_aspect']
+    fw, fh = fit_box(a['d1_aspect'], 2.15, 3.42)        # 왼쪽 그림 = 상자 안에 맞춤 (다시 만든 그림도 그대로 들어감)
     s.add(PIC(s.nid(), 'D1 compaction curves', s.media(a['d1fig'], 'kg50t_d1_compaction.png'), 0.62, 3.02, fw, fh))
     x0, x1 = 2.85, 9.45
     s.add(TB(s.nid(), 'Pore distribution title', x0, 3.02, x1 - x0, 0.22, LP([LAB('[ Pore distribution ]', 1100)])))
     sw = 1.42
     g = ((x1 - x0) - 4 * sw) / 3
-    sh = sw / a['render_aspect']
-    ys = 3.62
+    yb, hb0 = 6.15, 2.50                                  # 집전체 쪽 바닥선 · 가압 초기 침대 높이 (in)
+    st = a['stages']
     labels = ['Initial compression', '50 MPa', '300 MPa', 'After relaxation']
     half = [0.64, 0.27, 0.31, 0.56]
     cxs = []
+    bed_w = None
     for i, lab in enumerate(labels):
-        xi = x0 + i * (sw + g)
-        cx = xi + sw / 2
+        cx = x0 + i * (sw + g) + sw / 2
         cxs.append(cx)
         s.add(TB(s.nid(), 'Stage %d' % (i + 1), cx - 0.85, 3.30, 1.70, 0.22, LP([LAB(lab, 1050)])))
+        hb = hb0 * st[i]['plate'] / st[0]['plate']        # 침대 높이 ∝ 가압판 높이 (가압 초기 기준)
         if i < 3:
-            rid = s.media(a['renders'][i], 'kg50t_pore_stage%d.png' % (i + 1))
-            s.add(PIC(s.nid(), 'Pore render %d' % (i + 1), rid, xi, ys, sw, sh))
+            r = a['renders'][i]
+            ipp = hb / r['bed_h']
+            w, h = r['crop_w'] * ipp, r['crop_h'] * ipp
+            x = cx - (r['pad_left'] + r['bed_w'] / 2) * ipp
+            y = yb - (r['pad_top'] + r['bed_h']) * ipp
+            rid = s.media(r['path'], 'kg50t_pore_stage%d.png' % (i + 1))
+            s.add(PIC(s.nid(), 'Pore render %d' % (i + 1), rid, x, y, w, h))
+            bed_w = r['bed_w'] * ipp
         else:
-            s.add(SLOT(s.nid(), 'Image slot After relaxation', xi, ys, sw, sh))
+            s.add(SLOT(s.nid(), 'Image slot After relaxation', cx - bed_w / 2, yb - hb, bed_w, hb))
     for i in range(3):
         s.add(DOTARROW(s.nid(), 'Stage arrow %d' % (i + 1), cxs[i] + half[i] + 0.06, 3.41,
                        cxs[i + 1] - half[i + 1] - 0.06))
-    s.add(TB(s.nid(), 'Current collector', cxs[0] - 0.85, ys + sh + 0.03, 1.70, 0.20,
+    s.add(TB(s.nid(), 'Current collector', cxs[0] - 0.85, yb + 0.06, 1.70, 0.20,
              LP([LAB('< Current collector >', 1000, MUTED)])))
 
 
@@ -967,9 +991,6 @@ def build_G(s, sec, ch, tag, pg, a):
 
 
 NOTES = {
-    'A': ('D_SE = 1 µm 복합양극: 가압판 높이 {z0:.2f} → {z1:.2f} µm, 가압판 속도 {v} µm/s, 측정 압력은 {t_peak} ms 에 '
-          '{p_peak} MPa 에 도달한 뒤 이완 끝 ({t_relax} ms) {p_relax} MPa.\n'
-          '50 MPa 기공 렌더는 {p_dump50} MPa 시점의 구조.').format(**D1),
     'B': ('D_SE = 1 / 2 / 3 µm: 질량 보존 두께 124.57 / 126.83 / 131.50 µm, 기공도 18.1 / 19.6 / 22.4 %, '
           '경로 그림 칸 옆 값 = 기하 tortuosity 1.22 / 1.28 / 1.37.\n'
           '수송 tortuosity 6.00 / 8.26 / 13.63, 유효 이온전도도 0.070 / 0.050 / 0.029 mS/cm (σ₀ = 1.5 mS/cm 기준).'),
@@ -989,6 +1010,15 @@ NOTES = {
            '이완 끝 가압판 압력 278 / 280 / 280 MPa (E_SE = 11 / 22 / 33 GPa).'),
     'MG': '유효 이온전도도 0.0544 / 0.0501 / 0.0448 mS/cm (σ₀ = 1.5 mS/cm 기준, E_SE = 11 / 22 / 33 GPa).',
 }
+
+
+def note_A(stages):
+    n = ('D_SE = 1 µm 복합양극: 가압판 높이 {z0:.2f} → {z1:.2f} µm, 가압판 속도 {v} µm/s, 측정 압력은 {t_peak} ms 에 '
+         '{p_peak} MPa 에 도달한 뒤 이완 끝 ({t_relax} ms) {p_relax} MPa.').format(**D1)
+    names = ['가압 초기', '50 MPa', '300 MPa', '이완 후']
+    parts = ['%s step %d · 가압판 %.2f µm · %.0f MPa' % (nm, st['step'], st['plate'], st['pressure'])
+             for nm, st in zip(names, stages)]
+    return n + '\n기공 렌더 시점: ' + ' / '.join(parts) + '.\n렌더 높이 = 가압판 높이에 비례 (가압 초기 기준) · 바닥 = 집전체 쪽.'
 
 
 def run(cmd, **kw):
@@ -1014,7 +1044,8 @@ def zip_dir(src, dst):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('--template', required=True)
-    ap.add_argument('--d1-fig', required=True)
+    ap.add_argument('--d1-fig', required=True, help='D1 가압 3단 그림 (다시 만든 그림 경로를 주면 그대로 바뀐다)')
+    ap.add_argument('--stage-frames', help='stage_frames_d1.csv (기공 렌더 시점 · 가압판 높이 · recommended 줄)')
     ap.add_argument('--render-init', required=True)
     ap.add_argument('--render-50', required=True)
     ap.add_argument('--render-300', required=True)
@@ -1041,11 +1072,13 @@ def main():
     with zipfile.ZipFile(args.template) as z:
         z.extractall(un)
     charts = make_charts(out / 'figs')
-    renders, r_aspect = crop_renders([args.render_init, args.render_50, args.render_300], assets)
+    stages = read_stages(args.stage_frames) if args.stage_frames else STAGES
+    NOTES['A'] = note_A(stages)
+    renders = measure_crop_renders([args.render_init, args.render_50, args.render_300], assets)
     colorbar_png(assets / 'colorbar_jet_h.png', True)
     colorbar_png(assets / 'colorbar_jet_v.png', False)
     d1 = Image.open(args.d1_fig)
-    a = dict(d1fig=args.d1_fig, d1_aspect=d1.size[0] / d1.size[1], renders=renders, render_aspect=r_aspect,
+    a = dict(d1fig=args.d1_fig, d1_aspect=d1.size[0] / d1.size[1], renders=renders, stages=stages,
              cbar_h=assets / 'colorbar_jet_h.png', cbar_v=assets / 'colorbar_jet_v.png')
 
     # 구조 먼저 (복제 · 순서) — 내용 편집 전에
