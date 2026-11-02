@@ -43,3 +43,4 @@
 - 다시 읽기 화면의 `physics NOT_COMPUTED` · `MODEL_BELOW_CONTINUUM_BOUND` 표지 = 등록된 모형 한계 표지 (레코드 게시 가능 · 194 §9-8) — 오류 아님.
 - 케이스 결과 원본 (`merged/*/results` · 작업 폴더) 은 1저자 WSL ROOT 에만 있다 (리포 미반입).
 - `L214P-02` (P3 · `launch_eligibility` 1140 행 LF) 열림 — 이번 발사는 전체 40 자리 승인으로 운영 (영수증 F7 · G7) · 한 줄 수정 = 이 발사 뒤 (1저자 10-28 밤 *"다 권고대로"*).
+- ▶ 11-02 등록 §5 판정 (받은 기록만 · 진단 · 배포 HOLD 그대로) + L214P-02 한 줄 수정 (시험 먼저) = `s5_judgment/README.md` — 1저자 결정 Q1–Q5 (§8).
