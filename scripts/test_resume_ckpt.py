@@ -31,8 +31,13 @@ BASH_ENV 의 mpirun 함수 · 경로 속 ERROR · runnerck 직접 호출 (RBU). 
 10-30 (KG50R-F01 2 판 · 독립 사전 공격 R1–R8 · 1저자 "권고대로") — VP = 정적 대조의 남은 구멍: 상태 표 키 자리 치환 (R1) · 본 덱 체크포인트 앞
 run every · partition 안 명령 (R2) · 줄 읽기 = LIGGGHTS file()/parse() (R3) · 준비 구간 print file 을 읽는 명령 (R4) · write_restart 체크포인트 앞
 흐름 줄 (R5) · 판 메시 file 이름 = 펼친 이름 (R6) · 펼친 글 크기 상한 (R7) · group 값 대조 (R8).
+11-02 (1저자 Q3 (나) · KG50R-01 · D0.7-50 본 런이 압축 중 멈춤 · restart_compress_1000000) — QB = 압축 루프 체크포인트 재개: 본 덱 run 순서로
+루프 위상을 정해 재개 덱에 준비 run (남은 r) · 판정 (루프 몸 그대로) · 건너뜀 jump/label 을 넣는다 · 판정 직전 · 판정 그 자리 · 직후 · 위상 못 정함 (d) ·
+이완 체크포인트 가능성 (e · KG50-11) · 판정 step 그 자리 (위상 0 = 거부) · 변이 · 시험 덱 예산 · 시험 안 판정에서 목표 닿음 (quit) · G2 덤프 ·
+dem_restart.py 09-27 순서 (정적 대조 순서 거부).
 
   python3 scripts/test_resume_ckpt.py                 # 고친 스크립트 (기본)
+  python3 scripts/test_resume_ckpt.py --only QB       # QB 묶음만 (변이 시험용)
   python3 scripts/test_resume_ckpt.py --only RB       # RB 묶음만 (변이 시험용)
   python3 scripts/test_resume_ckpt.py --only VP       # VP 묶음만 (변이 시험용)
   python3 scripts/test_resume_ckpt.py --script <경로>  # 다른 판 (고치기 전 판 실패 확인용)
@@ -1154,6 +1159,354 @@ def group_rb(script, chk, grp):
             r['rep'][-700:] + ran(r))
 
 
+# ═══ QB: 압축 루프 체크포인트 재개 (11-02 · 1저자 Q3 (나) · KG50R-01 · Codex 판정문 §2 최소 해결 · 수정 계획 Q3 행 (나)) ═══
+#   본 덱 루프 일정 = 덱의 run 순서에서 (짐작 아님): 루프 진입 E = 루프 앞 run 합 · 판정 = E + N k (N = 루프 run 길이 · 판정 = 그 run 뒤 if) ·
+#   체크포인트 S0 = restart <간격> 의 배수 · E 뒤 · 루프 뒤 첫 run 앞에 restart 0 (없으면 이완 중 체크포인트일 수 있다 · KG50-11).
+#   위상 p = (S0 − E) mod N · 남은 r = N − p (1 ≤ r ≤ N − 1).  p = 0 (판정 step 그 자리) = 거부 — restart 는 run 안에서 그 step 끝에 써지고
+#   (output.cpp Output::write · verlet.cpp) 판정 (if) 은 run 이 돌아온 뒤라 체크포인트 상태는 판정 앞인데, 그 판정의 판 힘은 재개 setup 에서 다시
+#   셀 수 없다 (read_restart 직후 setup 판 압력 = 0 · 절차 §1 전제 ②) → 원 런의 그 판정 결과를 정할 수 없다.
+#   재개 덱 = [준비 구간] + run r + 루프 몸 (run 뒤 ~ 끝 if · 원 줄 그대로) + jump SELF q3b_done_<루프> + 루프 그대로 +
+#   label q3b_done_<루프> (끝 if 바로 뒤) + 그 뒤 그대로.  시험 덱 = [준비 구간] + run r + 몸 + if "<같은 조건>" then "print …" else "quit" +
+#   run min(TS − r, N) (TS ≤ r 이면 run TS 하나 · 판정 전).  덱 · 로그 · 덤프는 합성 — 실제 dem_restart.py compress 산출 꼴 = 09-27 r075
+#   (docs/data/pure_se_r075_20260927/input_pse_r075_a_r30.liggghts · 그 도구 소스는 리포에 없다).
+QB_MARK = 'q3b_done_loop_press'
+QB_NO = '압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함'
+QB_TRIAL_IF = 'if "${current_press} < ${target_press}" then "print \'q3b trial - below target, loop continues\'" else "quit"'
+QB_LOOP = ('label loop_press\n    run 5000\n    variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"\n'
+           '    print "Current Pressure: ${current_press} MPa (Target: ${target_press})"\n'
+           '    if "${current_press} < ${target_press}" then "jump SELF loop_press"\n')
+QB_BODY = QB_LOOP.split('\n', 2)[2]          # 루프 몸 (run 뒤 ~ 끝 if · 원 줄 그대로)
+QB_N = 488285
+QB_H = 'Step Atoms KinEng CPU pressMPa'
+
+
+def qb_main(case=C50, stab=None, drop_restart0=False, extra=()):
+    """v3 50×50 D0.7 본 덱 (MAIN50) — case 이름 · 안정화 run (PHASE 2 뒤 run 200000) 길이 · restart 0 빼기 · (old, new) 바꿈"""
+    with open(MAIN50, encoding='utf-8') as f:
+        text = f.read()
+    if case != C50:
+        text = text.replace(C50, case).replace(C50.upper(), case.upper())
+    if stab is not None:
+        i = text.index('print "====== PHASE 2: STABILIZE ======"')
+        j = text.index('run 200000\n', i)
+        text = text[:j] + 'run %s\n' % stab + text[j + len('run 200000\n'):]
+    if drop_restart0:
+        text = mutate(text, 'restart 0   # ⑯', '# (restart 0 뺌) ⑯')
+    for old, new in extra:
+        text = mutate(text, old, new)
+    return text
+
+
+def qb_raw(main_text, case, ckpt_rel, order='main', stl=None):
+    """dem_restart.py compress 재개 덱 꼴 (합성 · 09-27 r075 실제 산출의 꼴): 머리 주석 · 설정 · 변수 · processors 뒤 read_restart · 이웃 · 재료 ·
+    접촉 · compute · 바닥 벽 · 삽입 자기검사 (D2 settling 실제 산출처럼 남김) · shell mkdir -p post · thermo · Phase 1/2 상태 fix · PHASE 3 부터 끝까지 그대로.
+    order 'main' = 상태 fix 를 본 덱 순서로 (integr · gravi 98.1 · damp 1e-5 · 판 메시 · 벽 · mesh 덤프 · gravi 9.81 · unfix damp · damp 0.5) ·
+    'r075' = 09-27 실제 산출 순서 (integr · gravi 9.81 · damp 0.5 를 판 메시 fix 앞에 — 정적 대조 순서 규칙 (10-28 사전 공격 A) 이 거부)"""
+    L = main_text.split('\n')
+
+    def at(pred, start=0):
+        for i in range(start, len(L)):
+            if pred(L[i]):
+                return i
+        raise AssertionError('qb_raw: 줄 없음')
+
+    out = ['# %s RESTART (%s) — compress 체크포인트에서 이어받음' % (case, SFX), '#   read_restart : %s' % ckpt_rel,
+           '#   step         : %s' % re.search(r'_([0-9]+)\.bin$', ckpt_rel).group(1), '']
+    for l in L[:at(lambda l: l.startswith('# --- 6. Templates'))]:
+        if l.startswith('region reg_box') or l.startswith('create_box'):
+            continue
+        out.append(l)
+        if l.startswith('processors'):
+            out.append('read_restart    %s' % ckpt_rel)
+    iu, io = at(lambda l: l.startswith('unfix ins_mix')), at(lambda l: l.startswith('# --- 8. Output'))
+    out += L[iu + 1:io + 1] + ['shell mkdir -p post_%s' % case]
+    ith = at(lambda l: l.startswith('thermo_style'), io)
+    out += [L[ith], L[ith + 1], '']
+    imesh = at(lambda l: l.startswith('fix top_mesh'))
+    mesh = L[imesh] if not stl else re.sub(r'file \S+', 'file ' + stl, L[imesh], count=1)
+    walls = [mesh, L[at(lambda l: l.startswith('fix zwall_top'))], L[at(lambda l: l.startswith('dump dmp_mesh'))]]
+    tail3 = [L[at(lambda l: l.startswith('variable pressMPa'))], L[at(lambda l: l.startswith('thermo_style    custom step atoms ke cpu v_pressMPa'))],
+             L[at(lambda l: l.startswith('thermo 1000'), imesh)]]
+    if order == 'r075':
+        out += ['fix integr all nve/sphere', 'fix gravi all gravity 9.81 vector 0.0 0.0 -1.0', 'fix damp all viscous 0.5', ''] + walls + [''] + tail3
+    else:
+        out += (['fix integr all nve/sphere', 'fix gravi all gravity 98.1 vector 0.0 0.0 -1.0', 'fix damp all viscous 1.0e-5', ''] + walls
+                + ['', 'fix gravi all gravity 9.81 vector 0.0 0.0 -1.0', 'unfix damp', 'fix damp all viscous 0.5'] + tail3)
+    out += [''] + L[at(lambda l: l.startswith('# --- 11. Phase 3')):]
+    t = '\n'.join(out)
+    return t if t.endswith('\n') else t + '\n'
+
+
+def qb_pre(raw, r):
+    """도구가 넣을 Q3 (나) 꼴 (시험 쪽에서 따로 셈) — label loop_press 앞에 run r + 몸 + jump SELF q3b_done_loop_press · 끝 if 뒤에 label"""
+    assert raw.count(QB_LOOP) == 1
+    return raw.replace(QB_LOOP, 'run %d\n%sjump SELF %s\n%slabel %s\n' % (r, QB_BODY, QB_MARK, QB_LOOP, QB_MARK))
+
+
+def qb_mark(raw):
+    # 거부 시험용 — 표지만 (도구의 Q3 (나) 대조로 들어가게) · 꼴은 안 맞음
+    return raw + 'label %s\n' % QB_MARK
+
+
+def nocomment(t):
+    # 빈 줄 · 줄 전체 주석 뺀 원 줄 (도구가 넣는 설명 주석 한 줄은 뺀다)
+    return [l for l in t.split('\n') if l.strip() and not l.lstrip().startswith('#')]
+
+
+def qb_ke(k):
+    return '%.9e' % (2.0e-6 + (k % 9973) * 1e-13)
+
+
+def qb_pr(k):
+    return '%.6f' % (0.05 + (k % 1000003) * 1e-7)
+
+
+def qb_row(k, cpu):
+    return '%10d %8d %16s %10s %10s' % (k, QB_N, qb_ke(k), cpu, qb_pr(k))
+
+
+def qb_orig_log(E, N, s0):
+    """멈춘 압축 런 원 로그 (합성): 루프 run 마다 머리 · setup 줄 (CPU 0) · 1000 배수 줄 · 판정 step 끝 줄 · Loop time · Current Pressure.
+    S0 를 품은 run 두 개 앞 판정부터 · S0 + 54,000 에서 끊김 (그 run 의 Loop time 없음 — 10-31 본 런이 압축 중 취소된 꼴)"""
+    rows = ['LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by yonghoon, git commit 3d5c00f)',
+            '====== PHASE 3: COMPRESSION (Speed 0.01) ======']
+    j, stop = E + N * max(0, (s0 - E) // N - 2), s0 + 54000
+    while j < stop:
+        e = j + N
+        rows += [QB_H, qb_row(j, '0')]
+        for k in range((j // 1000 + 1) * 1000, min(e - 1, stop) + 1, 1000):
+            rows.append(qb_row(k, '%.3f' % ((k - j) / 1000.0)))
+        if e > stop:
+            break
+        rows += [qb_row(e, '%.3f' % (N / 1000.0)), 'Loop time of %.3f on 56 procs for %d steps with %d atoms' % (N / 1000.0, N, QB_N),
+                 'Current Pressure: %s MPa (Target: 0.30)' % qb_pr(e)]
+        j = e
+    return '\n'.join(rows) + '\n'
+
+
+def qb_trial_log(s0, runs, reached=False):
+    """시험 로그 (합성): runs = [r, tn] (준비 run · 판정 · 루프 run) 또는 [TS] (판정 전) · reached = 판정에서 목표 넘음 → quit (둘째 run 없음)"""
+    rows, s = ['LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0)'], s0
+    for n_i, n in enumerate(runs):
+        e = s + n
+        rows += [QB_H, qb_row(s, '0')]
+        for k in range((s // 1000 + 1) * 1000, e, 1000):
+            rows.append(qb_row(k, '%.3f' % ((k - s) / 1000.0 + 0.001)))
+        if n > 0:
+            rows.append(qb_row(e, '%.3f' % (n / 1000.0 + 0.001)))
+        rows.append('Loop time of %.3f on 56 procs for %d steps with %d atoms' % (n / 1000.0, n, QB_N))
+        if n_i == 0 and len(runs) == 2:
+            rows.append('Current Pressure: %s MPa (Target: 0.30)' % ('0.310000' if reached else qb_pr(e)))
+            if reached:
+                break
+            rows.append('q3b trial - below target, loop continues')
+        s = e
+    return '\n'.join(rows) + '\n'
+
+
+QB_ATOM = ('ITEM: TIMESTEP\n%d\nITEM: NUMBER OF ATOMS\n3\nITEM: BOX BOUNDS pp pp ff\n0 0.05\n0 0.05\n-0.01 1\n'
+           'ITEM: ATOMS id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke\n'
+           '2 3 0.01 0.02 0.03 0.00035 0 0 -1e-3 0 0 0 0\n1 1 0.02 0.01 0.04 0.003 1e-4 0 0 0 0 0 0\n3 3 0.03 0.03 0.02 0.00035 0 2e-4 0 0 0 0 0\n')
+
+
+def qb_flow(script, main_text, raw_text, s0, trial_text, E, N, extra=('-T',), rewrite=True, **more):
+    """본 흐름 (가짜 SLURM · 계획 compress) — 멈춘 폴더 = 본 덱 · 원 로그 (합성) · 체크포인트 · S0 덤프 (atom · mesh) · 판 STL.
+    rewrite = 시험 잡이 끝날 때 S0 덤프를 작업 폴더에 다시 쓴 꼴 (가짜 sbatch 고리 FAKE_POST_TRIAL · 시험 덱보다 새것) — G2"""
+    ck = 'restart_%s/restart_compress_%d.bin' % (C, s0)
+    ctx = make_root(main_bytes=main_text.encode('utf-8'), ckpt=ck, orig_log=qb_orig_log(E, N, s0),
+                    more_decks=(('plate_%s.stl' % C, b'solid plate\nendsolid plate\n'),))
+    try:
+        dd = os.path.join(ctx['tmp'], 'dumps')
+        os.makedirs(dd)
+        names = ('atom_%d.liggghts' % s0, 'mesh_%d.stl' % s0)
+        for d in (os.path.join(ctx['S'], 'post_' + C), dd):
+            with open(os.path.join(d, names[0]), 'w') as f:
+                f.write(QB_ATOM % s0)
+            with open(os.path.join(d, names[1]), 'w') as f:
+                f.write('solid mesh %d\nendsolid\n' % s0)
+        env = dict(more.pop('env_more', {}))
+        if rewrite:
+            wp = '{L}/%s/post_%s' % (C, C)
+            env['FAKE_POST_TRIAL'] = ('cp {TMP}/dumps/%s {TMP}/dumps/%s %s/ && touch -d 2099-01-01 %s/%s %s/%s'
+                                      % (names[0], names[1], wp, wp, names[0], wp, names[1]))
+        return invoke(ctx, script, raw_text, trial_text, mode='compress', ckpt=ck, extra=extra, env_more=env, **more)
+    finally:
+        shutil.rmtree(ctx['tmp'], ignore_errors=True)
+
+
+def group_qb(script, chk, grp):
+    grp('QB')
+    tmp = tempfile.mkdtemp(prefix='rckqb_')
+    try:
+        def dc(tag, main_text, res_text, ck, s0, files=()):
+            mp, rp = write_tmp(tmp, 'qbm_%s.liggghts' % tag, main_text), write_tmp(tmp, 'qbr_%s.liggghts' % tag, res_text)
+            return deckcheck_only(script, mp, rp, ck, s0, files)
+
+        # ── 정적 대조 (-C) — 도구 꼴 재개 덱은 시험 쪽에서 따로 만든다 (qb_pre) ──
+        m50 = qb_main()
+        ck_a = 'restart_%s/restart_compress_1000000.bin' % C50
+        raw_a = qb_raw(m50, C50, ck_a)
+        good_a = qb_pre(raw_a, 2)
+        rc, out = dc('a', m50, good_a, ck_a, 1000000)
+        chk('QB1 (a) 실제 D0.7-50 v3 본 덱 · 체크포인트 1,000,000 = 판정 1,000,002 의 2 step 앞 (위상 4,998 · 루프 진입 400,002) · '
+            'Q3 (나) 꼴 재개 덱 (run 2 · 몸 · jump SELF · 루프 · label) → 통과 (문제 0)',
+            rc == 0 and '통과 (문제 0)' in out and '루프 진입 step 400002' in out and '남은 2 step' in out and '다음 판정 1000002' in out
+            and Q3MSG not in out, out)
+        ck6 = 'restart_%s/restart_compress_600000.bin' % C50
+        m_b = qb_main(stab=199998)                 # 루프 진입 400,000 → 600,000 = 판정 step 그 자리 (위상 0)
+        raw_b = qb_raw(m_b, C50, ck6)
+        for n, why in ((0, 'run 0 — 판정이 setup 판 힘 (read_restart 직후 0) 을 본다'), (5000, 'run 5000 — 그 판정을 이미 돈 것으로 침')):
+            rc, out = dc('b%d' % n, m_b, qb_pre(raw_b, n), ck6, 600000)
+            chk('QB2 (b) 체크포인트 = 판정 step 그 자리 (루프 진입 400,000 · 600,000 · 위상 0) · 재개 덱 %s → 거부 (그 판정 결과를 체크포인트로 정할 수 없음)'
+                % why, rc != 0 and QB_NO in out and '판정 step 그 자리' in out and Q3MSG not in out, out)
+        m_c = qb_main(stab=199997)                 # 루프 진입 399,999 → 600,000 = 판정 599,999 의 1 step 뒤 (위상 1)
+        raw_c = qb_raw(m_c, C50, ck6)
+        rc, out = dc('c', m_c, qb_pre(raw_c, 4999), ck6, 600000)
+        chk('QB3 (c) 체크포인트 = 판정 1 step 뒤 (루프 진입 399,999 · 위상 1) → 남은 4,999 · 통과',
+            rc == 0 and '통과 (문제 0)' in out and '남은 4999 step' in out and '다음 판정 604999' in out, out)
+        for n in (5000, 4998):
+            rc, out = dc('c%d' % n, m_c, qb_pre(raw_c, n), ck6, 600000)
+            chk('QB3b (c) 같은 자리 · run %d → 거부 (Q3 (나) 재개 뒤 구간 다름)' % n,
+                rc != 0 and 'Q3 (나) 재개 뒤 구간 다름' in out and Q3MSG not in out, out)
+        m_d = qb_main(stab=199999)                 # 루프 진입 400,001 → 600,000 = 판정 600,001 의 1 step 앞 (위상 4,999)
+        raw_d = qb_raw(m_d, C50, ck6)
+        rc, out = dc('d', m_d, qb_pre(raw_d, 1), ck6, 600000)
+        chk('QB4 경계 직전 — 판정 1 step 앞 (루프 진입 400,001 · 위상 4,999) → 남은 1 = run 1 · 통과',
+            rc == 0 and '통과 (문제 0)' in out and '남은 1 step' in out and '다음 판정 600001' in out, out)
+
+        # ── (d) 위상을 정할 수 없는 체크포인트 — 그대로 거부 (Q3 (나) 대조로 들어가게 표지만) ──
+        cases_d = (
+            ('안정화 run 수가 변수 (run ${nstab})', qb_main(stab='${nstab}'), ck_a, 1000000, '숫자 run 이 아님'),
+            ('안정화 run 200000 upto', qb_main(stab='200000 upto'), ck_a, 1000000, '숫자 run 이 아님'),
+            ('체크포인트 step 이 restart 간격 200,000 의 배수가 아님 (1,000,001)', m50,
+             'restart_%s/restart_compress_1000001.bin' % C50, 1000001, '배수가 아님'),
+            ('체크포인트 step ≤ 루프 진입 (400,000 ≤ 400,002)', m50, 'restart_%s/restart_compress_400000.bin' % C50, 400000, '루프 진입'),
+            ('루프 몸에 fix (run 뒤 · 끝 if 앞)', qb_main(extra=[('    print "Current Pressure', '    fix extra all viscous 0.1\n    print "Current Pressure')]),
+             ck_a, 1000000, '루프 몸'),
+            ('체크포인트 restart 줄과 루프 머리 사이에 run', qb_main(extra=[('label loop_press\n', 'run 100\nlabel loop_press\n')]),
+             ck_a, 1000000, '사이에'),
+            ('루프 run 에 꼬리 (run 5000 pre no post no)', qb_main(extra=[('    run 5000\n', '    run 5000 pre no post no\n')]),
+             ck_a, 1000000, '꼬리 없는 run N'),
+            ('루프 끝 if 에 else', qb_main(extra=[('then "jump SELF loop_press"', 'then "jump SELF loop_press" else "print done"')]),
+             ck_a, 1000000, '루프 끝 if'),
+            ('루프 끝 if 말고 다른 jump (루프 뒤에서 루프로)', qb_main(extra=[('unfix move_press\n', 'unfix move_press\njump SELF loop_press\n')]),
+             ck_a, 1000000, '다른 jump'),
+            ('루프 몸 변수를 루프 앞에서도 정의', qb_main(extra=[('variable press_speed equal 0.01', 'variable current_press equal 0.0\nvariable press_speed equal 0.01')]),
+             ck_a, 1000000, '루프 몸 변수'))
+        for tag, mt, ck, s0, frag in cases_d:
+            rc, out = dc('dd', mt, qb_mark(qb_raw(mt, C50, ck)), ck, s0)
+            chk('QB5 (d) %s → 거부 (%s · %s)' % (tag, QB_NO, frag), rc != 0 and QB_NO in out and frag in out and Q3MSG not in out, out)
+        # ── (e) 루프 뒤 (이완) 체크포인트 가능성 — restart 0 없음 → 거부 (KG50-11) ──
+        m_e = qb_main(drop_restart0=True)
+        rc, out = dc('e', m_e, qb_pre(qb_raw(m_e, C50, ck_a), 2), ck_a, 1000000)
+        chk('QB6 (e) 본 덱에 루프 뒤 restart 0 없음 (체크포인트가 이완 run 에서 나왔을 수 있다 · KG50-11) → Q3 (나) 꼴 덱이어도 거부',
+            rc != 0 and QB_NO in out and 'restart 0' in out and 'KG50-11' in out and Q3MSG not in out, out)
+        m075 = os.path.join(R075, 'input_pse_r075_a.liggghts')
+        with open(os.path.join(R075, 'input_pse_r075_a_r30.liggghts'), encoding='utf-8') as f:
+            t075 = f.read()
+        rc, out = deckcheck_only(script, m075, write_tmp(tmp, 'qb075.liggghts', qb_pre(t075, 2)),
+                                 'restart_pse_r075_a/restart_compress_1500000.bin', 1500000, ('plate_pse_r075_a_r30.stl',))
+        chk('QB6b (e) 실제 09-27 r075 본 덱 (이완 앞 restart 0 없음) · 재개 덱에 Q3 (나) 꼴을 넣어도 → 거부 (KG50-11)',
+            rc != 0 and QB_NO in out and 'KG50-11' in out, out)
+
+        # ── 변이 — 재개 덱의 다른 더함 · 뺌 · 바뀜은 전체 프로그램 대조가 거부 ──
+        ifq = 'if "${current_press} < ${target_press}"'
+        var1 = '    variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"\n'
+        jl, ll = 'jump SELF %s\n' % QB_MARK, 'label %s\n' % QB_MARK
+        pre_in = raw_a.replace(QB_LOOP, 'label loop_press\nrun 2\n%sjump SELF %s\n%s%s' % (QB_BODY, QB_MARK, QB_LOOP.split('\n', 1)[1], ll))
+        muts = (('a 준비 run 2 → 3', mutate(good_a, 'run 2\n', 'run 3\n'), 'Q3 (나) 재개 뒤 구간 다름'),
+                ('b 준비 run 2 → 5000 (판정 하나 건너뛰는 예전 꼴)', mutate(good_a, 'run 2\n', 'run 5000\n'), 'Q3 (나) 재개 뒤 구간 다름'),
+                ('c 준비 구간 jump SELF 건너뜀 빠짐', mutate(good_a, jl, ''), 'Q3 (나) 재개 뒤 구간 다름'),
+                ('d 건너뜀 label 빠짐', mutate(good_a, ll, ''), 'jump 목적지 label %s 가 재개 덱에 없음' % QB_MARK),
+                ('e 건너뜀 label 을 unfix move_press 뒤로', mutate(mutate(good_a, ll, ''), 'unfix move_press\n', 'unfix move_press\n' + ll),
+                 'Q3 (나) 재개 뒤 구간 다름'),
+                ('f 건너뜀 label 뒤에 fix 하나 더', mutate(good_a, ll, ll + 'fix extra all viscous 0.1\n'), 'Q3 (나) 재개 뒤 구간 다름'),
+                ('g 준비 판정 조건 < → <=', mutate(good_a, ifq, 'if "${current_press} <= ${target_press}"'), 'Q3 (나) 재개 뒤 구간 다름'),
+                ('h 루프 run 5000 → 4000 (재개 덱만)', mutate(good_a, '    run 5000\n', '    run 4000\n'), 'Q3 (나) 재개 뒤 구간 다름'),
+                ('i 준비 구간에 print 하나 더', mutate(good_a, jl, 'print "extra"\n' + jl), 'Q3 (나) 재개 뒤 구간 다름'),
+                ('j 준비 구간 variable current_press 빠짐', mutate(good_a, var1, ''), 'Q3 (나) 재개 뒤 구간 다름'),
+                ('k 준비 구간 압축 감쇠 0.5 → 0.05', mutate(good_a, 'fix damp all viscous 0.5\n', 'fix damp all viscous 0.05\n'), 'damp'),
+                ('l 상태 fix 를 09-27 r075 실제 산출 순서로 (integr · gravi 9.81 · damp 0.5 를 판 메시 앞에)',
+                 qb_pre(qb_raw(m50, C50, ck_a, order='r075'), 2), '순서가 본 덱 체크포인트 앞 순서와 다름'),
+                ('m 준비 run · 판정을 루프 머리 뒤 (루프 안) 에', pre_in, 'Q3 (나) 재개 뒤 구간 다름'),
+                ('n 건너뜀 label 두 번', mutate(good_a, ll, ll + ll), 'label 이 겹침'),
+                ('o 건너뜀 label 이름 다름 (q3b_done_x · 두 자리 다)', good_a.replace(QB_MARK, 'q3b_done_x'), 'Q3 (나) 재개 뒤 구간 다름'),
+                ('p 준비 구간 jump 목적지 = loop_press (건너뜀 아님)', mutate(good_a, jl, 'jump SELF loop_press\n'), 'Q3 (나) 재개 뒤 구간 다름'))
+        for tag, txt, frag in muts:
+            rc, out = dc('mut', m50, txt, ck_a, 1000000)
+            chk('QB7 변이 %s → 거부 (%s)' % (tag, frag), rc != 0 and frag in out and Q3MSG not in out, out)
+        rc, out = dc('raw', m50, raw_a, ck_a, 1000000)
+        chk('QB8 Q3 (나) 꼴이 아닌 압축 재개 덱 (dem_restart.py 산출 그대로 · run 5000 루프부터) → 예전 거부 그대로 (압축 체크포인트 재개 = 지원 안 함 · 문제 1)',
+            rc != 0 and Q3MSG in out and '(문제 1)' in out and '압축 루프 위상' not in out, out)
+        stl = 'plate_%s_r56.stl' % C50
+        good_s = qb_pre(qb_raw(m50, C50, ck_a, stl=stl), 2)
+        rc, out = dc('s', m50, good_s, ck_a, 1000000, (stl,))
+        chk('QB8b 판 메시 file 이름만 다름 (dem_restart.py 새 STL · 작업 폴더에 있음) → 통과 (허용 차이 ②)', rc == 0 and '판 메시 파일만 다름' in out, out)
+        rc, out = dc('s2', m50, good_s, ck_a, 1000000)
+        chk('QB8c 같은 덱 · 새 STL 이 작업 폴더에 없음 → 거부', rc != 0 and '판 메시 파일' in out, out)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+    # ── 본 흐름 (가짜 SLURM · dem_restart.py 계획 = compress · 덱 · 로그 · 덤프 합성) ──
+    mf = qb_main(case=C)
+    ck = 'restart_%s/restart_compress_1000000.bin' % C
+    raw = qb_raw(mf, C, ck)
+    rk, tk = 'input_%s_%s.liggghts' % (C, SFX), 'input_%s_%st.liggghts' % (C, SFX)
+    body3 = ['    variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"',
+             '    print "Current Pressure: ${current_press} MPa (Target: ${target_press})"']
+    setup = nocomment(raw[:raw.index('label loop_press\n')])
+    r = qb_flow(script, mf, raw, 1000000, qb_trial_log(1000000, [2, 1998]), 400002, 5000)
+    wd = r['w_decks'].get(rk, b'').decode('utf-8', 'replace')
+    td = r['w_decks'].get(tk, b'').decode('utf-8', 'replace')
+    chk('QB10 (a) 본 흐름 -T · 계획 compress · 체크포인트 1,000,000 → 도구가 Q3 (나) 꼴을 넣음 (작업 폴더 재개 덱 = 시험 쪽 기대 · 주석 한 줄 뺌) · '
+        '정적 대조 통과 · 시험 냄',
+        r['trial'] and not r['main'] and nocomment(wd) == nocomment(qb_pre(raw, 2)) and '압축 루프 재개 준비 (Q3 (나)' in r['out']
+        and '재개 덱 정적 대조: 통과' in r['out'], r['out'] + r['rep'])
+    chk('QB10b (a) 시험 덱 = 준비 구간 + run 2 + 몸 (variable · print) + if "같은 조건" then print else quit + run 1998 (루프 run 을 2000 − 2 로) · '
+        '이완 명령 없음',
+        nocomment(td) == setup + ['run 2'] + body3 + [QB_TRIAL_IF, 'run 1998'] and 'unfix move_press' not in td and 'PHASE 4' not in td
+        and 'jump' not in ''.join(nocomment(td)), td)
+    chk('QB10c (a) 기대 끝 = S0 + 2 + 1998 = 1,002,000 · G0 통과 · G1 (step 1000000) · G2 (atom · mesh 덤프 같음) · G3 (1000002 · 1001000 · 1002000) 통과 · '
+        '-T 시험만 · 보고에 Q3 (나) 줄',
+        '마지막 step 1002000 (기대 1002000)' in r['rep'] and 'G0 시험 정상 종료: 통과' in r['rep']
+        and re.search(r'G1 재개 첫 thermo \(step 1000000,[^\n]*: 통과', r['rep']) is not None
+        and 'G2 체크포인트 상태 덤프 대조: 통과 — atom_1000000.liggghts 같음 · mesh_1000000.stl 같음' in r['rep'] and '5 % 안' in r['rep']
+        and '🧪 시험만 (-T)' in r['rep'] and '- 압축 루프 재개 (11-02 Q3 (나)' in r['rep']
+        and '시험 기대 끝 step = S0 + 시험 덱 read_restart 뒤 run 합 2000 ([run 2] [run 1998] · 10-28 KG50-18)' in r['out'], r['out'] + r['rep'])
+    r = qb_flow(script, mf, raw, 1000000, qb_trial_log(1000000, [2, 1998]), 400002, 5000, extra=())
+    chk('QB11 (a) 같은 장면 · -T 없음 (승인값) → 본 제출 (본 덱 = Q3 (나) 꼴 재개 덱)', r['trial'] and r['main'], r['out'] + r['rep'])
+    r = qb_flow(script, mf, raw, 1000000, qb_trial_log(1000000, [2, 1998], reached=True), 400002, 5000, extra=())
+    chk('QB12 (a) 시험 안 판정에서 목표에 닿음 (Current Pressure 0.31 → quit · 이완 전 멈춤) → G0 실패 (마지막 step 1000002 · 기대 1002000) · 본 제출 안 함',
+        r['trial'] and not r['main'] and 'G0 시험 정상 종료: 실패' in r['rep'] and '마지막 step 1000002 (기대 1002000)' in r['rep'],
+        r['out'] + r['rep'])
+    ck6 = 'restart_%s/restart_compress_600000.bin' % C
+    mf_c = qb_main(case=C, stab=199997)
+    raw_c = qb_raw(mf_c, C, ck6)
+    r = qb_flow(script, mf_c, raw_c, 600000, qb_trial_log(600000, [2000]), 399999, 5000)
+    td = r['w_decks'].get(tk, b'').decode('utf-8', 'replace')
+    chk('QB13 (c) 판정 1 step 뒤 (남은 4,999 ≥ 시험 2,000) → 시험 덱 = 준비 구간 + run 2000 (판정 전) · 기대 끝 602,000 · G0–G3 통과',
+        r['trial'] and not r['main'] and nocomment(td) == nocomment(raw_c[:raw_c.index('label loop_press\n')]) + ['run 2000']
+        and '마지막 step 602000 (기대 602000)' in r['rep'] and '🧪 시험만 (-T)' in r['rep'], r['out'] + r['rep'] + td)
+    for tag, mt, frag in (('(b) 체크포인트 = 판정 step 그 자리 (위상 0)', qb_main(case=C, stab=199998), '판정 step 그 자리'),
+                          ('(d) 안정화 run 수가 변수', qb_main(case=C, stab='${nstab}'), '숫자 run 이 아님'),
+                          ('(e) 루프 뒤 restart 0 없음', qb_main(case=C, drop_restart0=True), 'KG50-11')):
+        s0f = 600000 if '그 자리' in frag else 1000000
+        ckf = 'restart_%s/restart_compress_%d.bin' % (C, s0f)
+        r = qb_flow(script, mt, qb_raw(mt, C, ckf), s0f, qb_trial_log(s0f, [2, 1998]), 400002, 5000)
+        wd = r['w_decks'].get(rk, b'').decode('utf-8', 'replace')
+        chk('QB15 본 흐름 %s → 시험 전 거부 (단계: 압축 체크포인트 (Q3 (나)) · %s) · 시험 · 본 제출 없음 · 재개 덱 그대로 (Q3 (나) 꼴 안 넣음)' % (tag, frag),
+            not r['trial'] and not r['main'] and '단계: 압축 체크포인트 (Q3 (나))' in r['rep'] and QB_NO in r['out'] and frag in r['out']
+            and QB_MARK not in wd and wd != '', r['out'] + r['rep'])
+    r = qb_flow(script, mf, raw, 1000000, qb_trial_log(1000000, [2, 1998]), 400002, 5000, extra=(), rewrite=False)
+    chk('QB16 (a) 시험이 S0 덤프 (atom · mesh) 를 다시 안 씀 → G2 실패 · 본 제출 안 함 (압축 G2 = 덤프 대조 · 대신할 것 없음)',
+        r['trial'] and not r['main'] and 'G2 체크포인트 상태 덤프 대조: 실패' in r['rep'] and '시험이 다시 안 씀' in r['rep'], r['out'] + r['rep'])
+    r = qb_flow(script, mf, qb_raw(mf, C, ck, order='r075'), 1000000, qb_trial_log(1000000, [2, 1998]), 400002, 5000)
+    chk('QB17 (a) dem_restart.py 산출이 09-27 r075 순서 (상태 fix 를 판 메시 앞에) → Q3 (나) 꼴은 넣지만 정적 대조가 순서로 거부 · 시험 안 냄 '
+        '(실제 dem_restart.py compress 산출이 이 꼴이면 ibb -T 도 여기서 멈춘다 · 닫힌 실패)',
+        not r['trial'] and not r['main'] and '압축 루프 재개 준비 (Q3 (나)' in r['out'] and '순서가 본 덱 체크포인트 앞 순서와 다름' in r['out'],
+        r['out'] + r['rep'])
+
+
 # ═══ VP: 10-30 (KG50R-F01 2 판 · 독립 사전 공격 R1–R8 · 1저자 "권고대로") — 정적 대조 (-C) 의 남은 구멍 ═══
 #   R1 상태 표 키 = 치환 전 글자 (fix gx${n} 둘이 한 키 · unfix ${u} 가 아무것도 안 지움) · R2 본 덱 체크포인트 앞 run every · partition 안
 #   상태 명령 · R3 줄 읽기 ↔ LIGGGHTS file()/parse() (#\r · & + NBSP · variab&↵le · 제어 글자 · 주석 밖 비 ASCII · 주석 따옴표 규칙) ·
@@ -1423,6 +1776,11 @@ def main():
     # 10-30 (KG50R-F01 2 판): --only VP = 사전 공격 R1–R8 묶음만 (변이 시험용)
     if '--only' in sys.argv and sys.argv[sys.argv.index('--only') + 1] == 'VP':
         group_vp(script, chk, grp)
+        print('%d PASS · %d FAIL' % (ok, fail))
+        return 0 if fail == 0 else 1
+    # 11-02 (Q3 (나)): --only QB = 압축 루프 체크포인트 재개 묶음만 (변이 시험용)
+    if '--only' in sys.argv and sys.argv[sys.argv.index('--only') + 1] == 'QB':
+        group_qb(script, chk, grp)
         print('%d PASS · %d FAIL' % (ok, fail))
         return 0 if fail == 0 else 1
 
@@ -1951,11 +2309,16 @@ def main():
         chk('X2 -C v2 본 덱 · 압축 체크포인트 이름 restart_compress_600000 → 거부 (압축 체크포인트 재개 = 지원 안 함)',
             rc != 0 and Q3MSG in out, out)
         r = run_case(script, 'good', 'ok', mode='compress', ckpt=ck6, extra=('-T',))
-        chk('X3 본 흐름 · dem_restart.py 계획 = compress → 시험 · 본 제출 안 함 · stdout · 보고 케이스 절에 거부 (단계 · 이유 · 시도 · Q9)',
-            not r['trial'] and not r['main'] and Q3MSG in r['out'] and '단계: 압축 체크포인트 (Q3)' in r['rep'] and Q3MSG in r['rep'],
+        # 11-02 바꿈 (1저자 Q3 (나)): 예전 기대 = 계획 compress 면 무조건 거부 (Q3 (가) 문구) — 이제 루프 위상을 덱에서 정해 Q3 (나) 꼴을 넣고,
+        #   못 정하면 거부.  이 장면은 계획만 compress 이고 재개 덱 체크포인트는 정착 (restart_settling_20001 · 루프 안 아님) → 위상 못 정함 = 거부
+        chk('X3 본 흐름 · dem_restart.py 계획 = compress 인데 체크포인트가 루프 안이 아님 (정착) → 시험 · 본 제출 안 함 · stdout · 보고 케이스 절에 거부 '
+            '(단계 · 이유 · 시도 · Q9 · 11-02 Q3 (나) 로 기대 바꿈)',
+            not r['trial'] and not r['main'] and QB_NO in r['out'] and '단계: 압축 체크포인트 (Q3 (나))' in r['rep'] and QB_NO in r['rep'],
             r['out'] + r['rep'])
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+    # ── QB: 압축 루프 체크포인트 재개 (11-02 · 1저자 Q3 (나) · KG50R-01) — 위 group_qb ──
+    group_qb(script, chk, grp)
 
     # ── L: G0 마지막 thermo 줄 · Loop step 수 (KG50R-07 · Q5) ──
     grp('L')
