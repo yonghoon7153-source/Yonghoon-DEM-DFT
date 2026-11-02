@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEM 방법 그림 (2D)</title>
+<style>
+:root{--bg:#fbfaf7;--fg:#1d1d1b;--mut:#5f5e58;--line:#dedcd3;--card:#ffffff;--acc:#2f5d8a;--warn:#9a5b00;--chip:#eef2f7;--hl:#fff4d6;--hlb:#c9932a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#17181a;--fg:#e9e7e1;--mut:#a9a69d;--line:#34363a;--card:#1f2124;--acc:#8fb4dc;--warn:#e0a54a;--chip:#263040;--hl:#2c2516;--hlb:#e0a54a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17181a;--fg:#e9e7e1;--mut:#a9a69d;--line:#34363a;--card:#1f2124;--acc:#8fb4dc;--warn:#e0a54a;--chip:#263040;--hl:#2c2516;--hlb:#e0a54a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.65 "Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;word-break:keep-all;overflow-wrap:break-word}
+main{max-width:1040px;margin:0 auto;padding:28px 16px 64px}
+h1{font-size:24px;margin:0 0 4px}
+.sub{color:var(--mut);margin:0 0 6px}
+.back{margin:0 0 18px;font-size:14px}
+a{color:var(--acc)}
+h2{font-size:18px;margin:32px 0 10px;padding-top:8px;border-top:1px solid var(--line)}
+h3{font-size:15px;margin:0 0 4px}
+p{margin:6px 0}
+code{font-family:Consolas,"D2Coding",monospace;font-size:13px;background:var(--chip);padding:0 4px;border-radius:3px;overflow-wrap:anywhere}
+.flag{background:var(--hl);border:2px solid var(--hlb);border-left-width:7px;border-radius:8px;padding:12px 16px;margin:0 0 16px}
+.flag .big{font-size:17px;margin:0 0 4px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:12px 16px;margin:0 0 16px}
+.box h2{border-top:0;margin:0 0 6px;padding-top:0}
+table{border-collapse:collapse;margin:8px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--chip);font-weight:600}
+#seeds td{text-align:right;font-variant-numeric:tabular-nums}
+#seeds td:first-child,#seeds td:last-child{text-align:left}
+td.n{white-space:nowrap}
+.wrap{overflow-x:auto}
+.note{color:var(--mut);font-size:13px}
+.pair{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+@media (min-width:860px){.pair{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.figcard{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:12px 14px;min-width:0}
+.figcard .size{color:var(--mut);font-size:13px;margin:0}
+.figcard .what{font-size:14px}
+.pv{display:block;background:#ffffff;border:1px solid var(--line);border-radius:4px;padding:8px;margin:8px 0}
+.pv img{display:block;width:100%;height:auto}
+.dl{margin:8px 0 0}
+.btn{display:inline-block;padding:3px 14px;margin:0 6px 4px 0;border:1px solid var(--acc);border-radius:14px;text-decoration:none;font-size:13px}
+.btn:hover{background:var(--chip)}
+</style>
+</head>
+<body>
+<main>
+<h1>DEM 방법 그림 (2D)</h1>
+<p class="sub">50kg 4차년도 보고 0쪽 — DEM 해석 절차 · 접촉 모델 · 그림 여섯 · PNG · SVG 내려받기 (11-02)</p>
+<p class="back"><a href="/">← 웹앱으로 (DEM/MPM Analyzer)</a></p>
+
+<div class="flag" role="note">
+<p class="big"><b>2D 모식 계산 (그림용 · 실제 3D 침대 결과 아님)</b></p>
+<p>힘 · 길이 · 시간 = 임의 단위.</p>
+</div>
+
+<div class="box" id="seed-disclosure">
+<h2>씨앗 공개</h2>
+<p>그림은 씨앗 23 으로 만들었다.  네 씨앗 (11 · 13 · 17 · 23) 중 둘 (11 · 17) 은 판 정지 뒤 판 힘이 오른다.
+그림 ④ 단계 (판 고정 · 응력 완화) 를 보이려고 내림이 큰 23 을 골랐다 — 이완 뒤 판 힘 방향은 씨앗에 따라 다르다 →
+힘 사슬 굵기 변화는 그림 설명용이지 결과가 아니다.</p>
+<div class="wrap"><table id="seeds">
+<tr><th>씨앗</th><th>판 정지 순간 판 힘</th><th>이완 끝 판 힘</th><th>방향</th></tr>
+<tr><td>11</td><td>1186.1</td><td>1278.0</td><td>오름</td></tr>
+<tr><td>13</td><td>1228.5</td><td>940.1</td><td>내림</td></tr>
+<tr><td>17</td><td>1193.2</td><td>1319.9</td><td>오름</td></tr>
+<tr><td>23</td><td>1191.9</td><td>738.2</td><td>내림</td></tr>
+</table></div>
+<p class="note">값 = <code>scan_seeds_20261101.txt</code> (생성기 <code>--scan</code> 출력) · 힘 = 임의 단위 · 소수 한 자리.</p>
+</div>
+
+<p class="note">PNG = 300 dpi · 투명 배경 · SVG = 글자 그대로 (글꼴 Carlito · WenQuanYi Zen Hei).  미리보기 바탕은 흰색이다 (PNG 가 투명 배경이라).
+크기 = 그림 한 장의 가로 × 세로 (in).</p>
+<h2>해석 절차 — 1 × 4 띠</h2>
+<div class="pair">
+<section class="figcard" id="p0_process_labeled">
+<h3><code>p0_process_labeled</code></h3>
+<p class="size">4.50 × 1.55 in</p>
+<p class="what">해석 절차 네 단계 (① 입자 생성 → ② 중력 침강 → ③ 가압 → ④ 판 고정 · 이완) · 단계 이름 포함</p>
+<a class="pv" href="files/p0_process_labeled.png" target="_blank" rel="noopener" title="새 창에서 원본 크기로 보기"><img src="files/p0_process_labeled.png" width="1350" height="465" loading="lazy" alt="p0_process_labeled 미리보기"></a>
+<p class="dl"><a class="btn" href="files/p0_process_labeled.png" download>PNG 받기</a> <a class="btn" href="files/p0_process_labeled.svg" download>SVG 받기</a></p>
+</section>
+<section class="figcard" id="p0_process_nolabel">
+<h3><code>p0_process_nolabel</code></h3>
+<p class="size">4.50 × 1.22 in</p>
+<p class="what">같은 그림 · 단계 이름 없음 (PPT 글로 붙일 때)</p>
+<a class="pv" href="files/p0_process_nolabel.png" target="_blank" rel="noopener" title="새 창에서 원본 크기로 보기"><img src="files/p0_process_nolabel.png" width="1350" height="366" loading="lazy" alt="p0_process_nolabel 미리보기"></a>
+<p class="dl"><a class="btn" href="files/p0_process_nolabel.png" download>PNG 받기</a> <a class="btn" href="files/p0_process_nolabel.svg" download>SVG 받기</a></p>
+</section>
+</div>
+<h2>해석 절차 — 2 × 2</h2>
+<div class="pair">
+<section class="figcard" id="p0_process_grid_labeled">
+<h3><code>p0_process_grid_labeled</code></h3>
+<p class="size">4.50 × 4.10 in</p>
+<p class="what">같은 네 단계 2 × 2 배치 (같은 배율 · 단계 이름 + 짧은 설명 포함) — 2판의 0쪽 왼쪽 칸 권고 (지금 = 쓰지 않음 · 대안)</p>
+<a class="pv" href="files/p0_process_grid_labeled.png" target="_blank" rel="noopener" title="새 창에서 원본 크기로 보기"><img src="files/p0_process_grid_labeled.png" width="1350" height="1230" loading="lazy" alt="p0_process_grid_labeled 미리보기"></a>
+<p class="dl"><a class="btn" href="files/p0_process_grid_labeled.png" download>PNG 받기</a> <a class="btn" href="files/p0_process_grid_labeled.svg" download>SVG 받기</a></p>
+</section>
+<section class="figcard" id="p0_process_grid_nolabel">
+<h3><code>p0_process_grid_nolabel</code></h3>
+<p class="size">4.50 × 3.70 in</p>
+<p class="what">2 × 2 · 글자 없음</p>
+<a class="pv" href="files/p0_process_grid_nolabel.png" target="_blank" rel="noopener" title="새 창에서 원본 크기로 보기"><img src="files/p0_process_grid_nolabel.png" width="1350" height="1110" loading="lazy" alt="p0_process_grid_nolabel 미리보기"></a>
+<p class="dl"><a class="btn" href="files/p0_process_grid_nolabel.png" download>PNG 받기</a> <a class="btn" href="files/p0_process_grid_nolabel.svg" download>SVG 받기</a></p>
+</section>
+</div>
+<h2>접촉 모델</h2>
+<div class="pair">
+<section class="figcard" id="p0_contact_model_labeled">
+<h3><code>p0_contact_model_labeled</code></h3>
+<p class="size">4.50 × 2.75 in</p>
+<p class="what">접촉 모델 — 위 왼쪽 = 가압 중 판 아래 활물질 i 와 이웃 j 의 접촉력 (F_n,ij · F_t,ij) · 중력 (m_i g) · 구름 저항 (M_r,ij) / 위 오른쪽 = 접촉 i–j 의 겹침 δ (과장) · 법선 스프링 (k₁ · k₂) · 접선 스프링 + 미끄럼 요소 (k_t · μ) / 아래 왼쪽 = 법선 이력 (누름 k₁ · 뗌 k₂ · 잔류 δ₀) / 아래 오른쪽 = 접선 힘 상한 μF_n</p>
+<a class="pv" href="files/p0_contact_model_labeled.png" target="_blank" rel="noopener" title="새 창에서 원본 크기로 보기"><img src="files/p0_contact_model_labeled.png" width="1350" height="825" loading="lazy" alt="p0_contact_model_labeled 미리보기"></a>
+<p class="dl"><a class="btn" href="files/p0_contact_model_labeled.png" download>PNG 받기</a> <a class="btn" href="files/p0_contact_model_labeled.svg" download>SVG 받기</a></p>
+</section>
+<section class="figcard" id="p0_contact_model_nolabel">
+<h3><code>p0_contact_model_nolabel</code></h3>
+<p class="size">4.50 × 2.75 in</p>
+<p class="what">같은 그림 · 기호 글자 없음</p>
+<a class="pv" href="files/p0_contact_model_nolabel.png" target="_blank" rel="noopener" title="새 창에서 원본 크기로 보기"><img src="files/p0_contact_model_nolabel.png" width="1350" height="825" loading="lazy" alt="p0_contact_model_nolabel 미리보기"></a>
+<p class="dl"><a class="btn" href="files/p0_contact_model_nolabel.png" download>PNG 받기</a> <a class="btn" href="files/p0_contact_model_nolabel.svg" download>SVG 받기</a></p>
+</section>
+</div>
+
+<h2>함께 받는 파일</h2>
+<div class="wrap"><table>
+<tr><th>파일</th><th>무엇</th><th>받기</th></tr>
+<tr><td><code>README.md</code></td><td>그림 설명 원본 (이 폴더의 README)</td><td class="n"><a href="files/README.md" download>받기</a></td></tr>
+<tr><td><code>p0_figs_meta.json</code></td><td>모식 계산 값 · 고른 접촉 쌍 · 파일 sha256</td><td class="n"><a href="files/p0_figs_meta.json" download>받기</a></td></tr>
+<tr><td><code>scan_seeds_20261101.txt</code></td><td>네 씨앗 판 힘 (판 정지 순간 → 이완 끝) = 생성기 --scan 출력</td><td class="n"><a href="files/scan_seeds_20261101.txt" download>받기</a></td></tr>
+<tr><td><code>toy2d_seed23.json</code></td><td>모식 계산 상태 (네 단계 입자 위치 · 접촉 법선력 · 판 높이)</td><td class="n"><a href="files/toy2d_seed23.json" download>받기</a></td></tr>
+</table></div>
+
+<p class="note">원본 = <code>docs/50kg/report_y4/figs/p0_dem_method/</code> · 생성기 = <code>docs/50kg/report_y4/figs/make_fig_p0_dem_method.py</code>.
+이 페이지의 파일 (<code>webapp/static/dem_method_figs/files/</code>) = 원본 바이트 그대로의 사본 — 그림을 다시 만들면
+<code>python3 scripts/sync_dem_method_figs_to_webapp.py</code> 로 맞추고 <code>--check</code> 로 대조한다.</p>
+</main>
+</body>
+</html>
