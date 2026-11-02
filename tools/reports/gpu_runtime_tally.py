@@ -26,6 +26,7 @@
 """
 import argparse
 import datetime as dt
+import glob
 import json
 import os
 import pwd
@@ -105,7 +106,21 @@ def parse_qe(p, head, text):
               else "done" if "JOB DONE." in text
               else "probe" if (not walls and "Estimated max dynamical RAM" in text and "iteration #" not in text)
               else "running/cut")            # probe = 메모리 추정 줄만 읽고 일부러 끝낸 출력 (SCF 반복 0)
-    return {"kind": "QE " + ("neb.x" if prog == "NEB" else "pw.x"), "gpu": "GPU acceleration is ACTIVE" in head,
+    gpu, inferred = "GPU acceleration is ACTIVE" in head, False
+    if prog == "NEB" and not gpu:
+        # ⚠ 2026-11-02 — neb.x 의 neb.out 에는 'GPU acceleration' 줄이 없다 (상 출력이 따로 안 남는다) → CPU 로 잘못 셌다
+        #   (gabia Li₂S 4×4×4 NEB 가 CPU 8.6 core·h 로 찍힘). 같은 폴더의 끝점 이완 출력 (같은 사슬 · 같은 QE 빌드) 이
+        #   GPU 면 GPU 로 세고 'gpu_inferred' 로 표시한다 — 보고서에 추정이라고 적는다. 형제 출력이 없으면 CPU 그대로.
+        d = os.path.dirname(p)
+        for sib in sorted(glob.glob(os.path.join(d, "*", "relax.out")) + glob.glob(os.path.join(d, "*", "*.out"))):
+            try:
+                with open(sib, "rb") as f:
+                    if b"GPU acceleration is ACTIVE" in f.read(HEAD):
+                        gpu = inferred = True
+                        break
+            except OSError:
+                continue
+    return {"kind": "QE " + ("neb.x" if prog == "NEB" else "pw.x"), "gpu": gpu, "gpu_inferred": inferred,
             "start": start, "end": end, "wall_s": wall, "approx": approx, "nproc": int(nproc.group(1)) if nproc else None, "status": status}
 
 
@@ -337,7 +352,11 @@ def report(jobs, since, until, keys=3, title="GABIA GPU SERVER (RTX A6000)", for
     L += [
           "> GPU (RTX A6000 · 1 card)",
           f"  GPU job-hours (in window) : {s['gpu_job_h']:,.1f} h  (jobs sharing the card are counted separately)",
-          f"  GPU occupied (union)      : {s['gpu_union_h']:,.1f} h of {s['window_h']:,.0f} h ({100 * s['gpu_union_h'] / s['window_h']:.1f} %)", "",
+          f"  GPU occupied (union)      : {s['gpu_union_h']:,.1f} h of {s['window_h']:,.0f} h ({100 * s['gpu_union_h'] / s['window_h']:.1f} %)"]
+    ninf = sum(1 for j in jobs if j.get("gpu_inferred"))
+    if ninf:
+        L.append(f"  (neb.x {ninf} 잡: neb.out 에 GPU 줄이 없어 같은 폴더 끝점 이완 출력 (GPU 빌드) 으로 GPU 로 셌다 — 추정)")
+    L += ["",
           "> CPU (MPI ranks / threads from the outputs)",
           f"  core-hours (in window)    : {s['cpu_core_h']:,.1f} core·h" + (f"  (rank count unknown → 1 : {s['cpu_nproc_unknown']} jobs)" if s["cpu_nproc_unknown"] else ""), ""]
     lg = s["longest"]
@@ -509,6 +528,18 @@ def _selftest():
         ck("메모리 프로브 (추정 줄만 · SCF 반복 0 · 끝 줄 없음) = probe", j3.get("wad_probe/V5_far/probe.out", {}).get("status") == "probe", j3.get("wad_probe/V5_far/probe.out"))
         ck("⛔음성 SCF 반복이 있으면 probe 가 아니라 running/cut", j3.get("wad_probe/V5_cut/pw.out", {}).get("status") == "running/cut", j3.get("wad_probe/V5_cut/pw.out"))
         ck("sei_* · li2s_layer 는 이름 붙은 묶음 (기타 아님)", track_of("sei_control").startswith("SEI") and track_of("g1_li2s_layer1").startswith("LPSCl@Li2S") and track_of("misc") == OTHER)
+    # ── neb.x GPU 추정 (2026-11-02) — 형제 끝점 이완이 GPU 면 GPU · 없으면 CPU 그대로 ──────────────────────
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as td:
+        nb = "     Program NEB v.7.4.1 starts on 31Oct2026 at 15:25:18\n     Number of MPI processes:                 1\n"
+        for sub, sib in (("g", "     GPU acceleration is ACTIVE.  1 visible GPUs per MPI rank\n"), ("c", "     Program PWSCF v.7.4.1 starts\n")):
+            os.makedirs(os.path.join(td, sub, "ep_initial"))
+            open(os.path.join(td, sub, "neb.out"), "w").write(nb)
+            open(os.path.join(td, sub, "ep_initial", "relax.out"), "w").write(sib)
+        rg = parse_qe(os.path.join(td, "g", "neb.out"), nb, nb)
+        rc = parse_qe(os.path.join(td, "c", "neb.out"), nb, nb)
+        ck("neb.x: 끝점 이완이 GPU 면 GPU 로 세고 추정 표시", rg["gpu"] and rg["gpu_inferred"], rg)
+        ck("⛔음성 neb.x: 형제 출력에 GPU 줄이 없으면 CPU 그대로 (추정 안 함)", (not rc["gpu"]) and not rc["gpu_inferred"], rc)
     # ── --tracks (2026-11-02 · 10 월판) — 바꿔 끼운 지도가 실제로 쓰이는가 · 틀린 지도는 거부하는가 ─────────
     import tempfile
     global TRACKS

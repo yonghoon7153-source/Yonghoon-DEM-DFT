@@ -65,11 +65,14 @@ for path in paths:
 PY
 }
 # gabia 런 폴더의 대표 파일 (최근 것부터 N 개) — 폴더가 없으면 (없음)
+#   ⚠ 2026-11-02 — 다른 기계에서 옮겨 온 파일 (주인 uid ≠ 이 계정 · kgy = 1003) 은 뺀다 (⑦ 집계와 같은 규칙) ·
+#     폴더가 걸리면 내용이 아니라 폴더 한 줄만 (ls -ld) — 첫 판은 폴더 내용을 통째로 찍었다
+ME=$(id -u)
 lsrun(){ local n=$1; shift; local found=0
   for g in "$@"; do
     for d in $ROOTS; do
-      for f in $(ls -1td $d/$g 2>/dev/null | head -"$n"); do
-        found=1; ls -l --time-style=+"%b %d %H:%M" "$f" 2>/dev/null | sed "s#$d/##; s/^/  /"
+      for f in $(ls -1td $d/$g 2>/dev/null | while read -r x; do [ "$(stat -c %u "$x" 2>/dev/null)" = "$ME" ] && echo "$x"; done | head -"$n"); do
+        found=1; ls -ld --time-style=+"%b %d %H:%M" "$f" 2>/dev/null | sed "s#$d/##; s/^/  /"
       done
     done
   done
@@ -109,14 +112,18 @@ for root in os.environ.get("ROOTS", "/data/work/runs /root/work/runs").split():
             except Exception:
                 continue
             rt = d.get("runtime_min")
-            rows.append((os.path.relpath(p, root), f"T {d.get('temperatures')} · {d.get('prod_ps')} ps · " + (f"{rt / 60:.1f} h" if rt else "진행/중단")))
+            mine = os.stat(p).st_uid == os.getuid()
+            rows.append((os.path.relpath(p, root), f"T {d.get('temperatures')} · {d.get('prod_ps')} ps · " + (f"{rt / 60:.1f} h" if rt else "진행/중단")
+                         + ("" if mine else f"  ← 다른 서버 산출을 옮겨 옴 (uid {os.stat(p).st_uid} · ⑦ 집계에서 뺌)")))
     for p in sorted(glob.glob(f"{root}/lpscl_glass_control_li3ps4_2026_10_05/**/result.json", recursive=True)):
         try:
             d = json.load(open(p, encoding="utf-8"))
         except Exception:
             continue
         w = (d.get("run") or {}).get("wall_min")
-        rows.append((os.path.relpath(p, root), "quench · " + (f"{w / 60:.1f} h" if w else "시간 없음")))
+        mine = os.stat(p).st_uid == os.getuid()
+        rows.append((os.path.relpath(p, root), "quench · " + (f"{w / 60:.1f} h" if w else "시간 없음")
+                     + ("" if mine else f"  ← 다른 서버 산출을 옮겨 옴 (uid {os.stat(p).st_uid} · ⑦ 집계에서 뺌)")))
 if not rows:
     print("  (없음: 10월 유리 런 폴더 — gabia 에서 돌릴 것)")
 for rel, info in rows:
@@ -138,7 +145,9 @@ jpath $P/nd_q2_decomp_runlog_2026_10_23.json "✅_블록_①_회수_2026_10_23/�
 sub "CEI products (11 phases) — polymorph · magnetism queried here · computed on the other server · read-out pending"
 JMAX=2 jpath $P/cei_product_gap_runlog_2026_10_27.json "①_gabia_결과/다형" "관측_2026_10_31_2052/완주"
 sub "Manuscript Methods (NdO-LPSCl1.6 · 4.5 DFT calculations · sent 10-28)"
-ls -l --time-style=+"%b %d %H:%M" kb/papers/ndo_lpscl16_methods_2026_10_28.md kb/projects/handoff_ndo_methods_2026_10_28.md 2>/dev/null | sed 's/^/  /' || miss "NdO Methods 파일"
+for f in kb/papers/ndo_lpscl16_methods_2026_10_28.md kb/projects/handoff_ndo_methods_2026_10_28.md; do   # 파일 시각은 checkout 시각이라 git 날짜로
+  [ -f "$f" ] && echo "  $f · $(wc -c < "$f") B · 처음 커밋 $(git log --diff-filter=A --format=%cd --date=format:'%F %H:%M' -- "$f" | tail -1) · 마지막 $(git log -1 --format=%cd --date=format:'%F %H:%M' -- "$f")" || miss "$f"
+done
 sub "Key output files (gabia run folders)"
 lsrun 2 'nd_q3_elf_2026_10_19/*.out' 'nd_s_vacancy_2026_10_20/*/scf.out' 'nd_anion_removal_2026_10_19/*/scf.out'
 fi
@@ -218,7 +227,7 @@ JMAX=2 jpath $P/esw_e2b_li2s_correction_2026_10_03.json "실행"
 sub "Dopant dissolution-energy demo (UMA relax · CPU on this server)"
 JMAX=2 jpath $P/cascade_dissolution_energy_demo_readout_2026_10_14.json "실행"
 sub "Key output files (gabia run folders)"
-lsrun 2 'wad_se_pairs_uma_2026_10_01/*' 'cascade_dissolution_2026_10_14/result/*'
+lsrun 2 'wad_se_pairs_uma_2026_10_01/*.log' 'wad_se_pairs_uma_2026_10_01/relax/*/*/relax_meta.json' 'cascade_dissolution_2026_10_14/result/*.json'
 fi
 
 # ═══ ⑥ 당월 기록 활동 ═════════════════════════════════════════════════════
