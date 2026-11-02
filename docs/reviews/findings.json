@@ -14558,7 +14558,8 @@
         "scripts/test_rint_r_chain.py (421/421 · 7f1d7dde3 · docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/logs/)",
         "scripts/test_rint_r_chain_e2e.py (40/40 · 같은 판)",
         "docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/REPORT_PC6_FIX.md (변이 49 중 47 잡힘 · mut_*_res.json)"
-      ]
+      ],
+      "decision_note": "1저자 11-02 *\"권고대로해요\"* = CUDA 라이브러리 상태 문자열 (CUBLAS_STATUS_ · CUSOLVER_STATUS_ · CUSPARSE_STATUS_ · CUFFT_ · \"CUDA error:\") 도 CUDA 표지에 넣는다 — 자원 낱말 (out of memory 등) 을 먼저 보므로 메모리 부족은 그대로 resource (재실행 자격).  ⬜ 고침 = 시험 먼저 (PC6-13 과 같은 묶음)."
     },
     {
       "id": "PC6-09",
@@ -14672,7 +14673,8 @@
       "owner": "claude",
       "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
-      "note": "사전 공격 6 회차 §4 U4 · PC6-01 고침으로 그룹 미확인이 크게 줄어 드묾 · ⬜ 1저자 선택: A (권고) = 그룹 미확인 + 러너 rc ≠ 0/None 이면 같은 낱말 규칙 · 기본 runner_rc (재실행 없음) / B = 지금대로 두고 등록 R 에 한정."
+      "note": "사전 공격 6 회차 §4 U4 · PC6-01 고침으로 그룹 미확인이 크게 줄어 드묾 · ⬜ 1저자 선택: A (권고) = 그룹 미확인 + 러너 rc ≠ 0/None 이면 같은 낱말 규칙 · 기본 runner_rc (재실행 없음) / B = 지금대로 두고 등록 R 에 한정.",
+      "decision_note": "1저자 11-02 *\"권고대로해요\"* = A — 그룹 미확인이어도 러너 rc 가 0 · None 이 아니면 같은 낱말 규칙 (words_cause) 으로 원인을 나누고 해당 없으면 기본 runner_rc (자동 재실행 없음).  ⬜ 고침 = 시험 먼저 (작업 트리 에이전트) → 등록 R §10-5 문구 → Codex 회차 ②."
     }
   ]
 }
