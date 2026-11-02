@@ -1240,3 +1240,10 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
 | RJ 실패 전달 기록·진단 | `codex/p1-g2c-diagnosis`의 동결 tip; `<<sha:Add bounded read-only G2c breakdown for recorded RJ failure>>`; `docs/reviews/codex_p1_g2c_diagnosis_20261027/{diagnostic-receipt.json,restore_verdict.user-relayed.json,run_manifest.user-relayed.txt,oracle-results.json,README.md}` |
 
 제목 선택자는 원본 증거 위치 설명이다. 메인 반입 뒤에는 실제 새 커밋 대응표를 별도로 기록한다. 제목만으로 이동하는 가지의 미래 tip을 선택하지 않는다.
+
+## 11-03 새벽 — 50kg 덱 · D0.7 재개 · D1 압밀 그림 (압축 전 대피)
+
+- **게이트 X 프로토콜** (1저자 11-02 밤) — 해제 전까지 전체 게이트 새로 안 띄움 · push = 빠른 점검 (`check_doc_refs` · `check_review_findings` · `--ban-sweep`).
+- **D0.7 압축 체크포인트 재개** — Q3 (나) + 준비 구간 순서 고침 (`scripts/resume_ckpt.sh` sha256 `66006239…` · push `8dc0a79fb` · 시험 485/485 = 에이전트 보고) → ibb `-T` 시험 job 337078 (56 코어 · `restart_compress_1000000` → 1,002,000) 진행 중 → G0–G3 통과 뒤 = 지킴이 v3 + **Codex 짧은 확인 (10-30 범위 GO 밖)** → 본 제출.  사전 공격 리뷰 에이전트 진행 중 (`docs/reviews/kg50_q3b_preattack_20261103/`).  watch = `~/kg50_watch.sh` (ibb · 읽기만 · DEM1 꼴).
+- **D1 압밀 그림** — bml 원자 기준 두께 (`d1_atomtop_cluster.py` sha256 `8a9fe00f…` · 파일 이름 `d1_atomtop_ff.py` · `--work ~/kg50_d1_atomtop_ff` · 11-03 01:5x 발사 · 약 10 분) → CSV 오면 `make_fig_d1_ms.py --atomtop --figsize 3.5 3.85 --preview-dir …` → 6장 왼쪽 칸.  0–20 ms = 10 g 자유 낙하 모식 (CSV Source · JSON 표기 · 그림엔 안 적음).  Origin 칸 판 = `docs/50kg/report_y4/figs/d1_compaction/origin/slide_350x385/`.
+- **덱 (2026.11 양식 · 생성기 `docs/50kg/report_y4/tmpl_202611/build_tmpl_dem.py`)** — 6장 = 글머리 2줄 · 그래프 칸 3.50 × 3.85 in · 기공 그림 약 10 % 축소 / 7장 = 템플릿 크기 · 자리 · 라벨 "Tortuosity" · 값 = 수송 tortuosity 6.00 / 8.26 / 13.63 (기하 1.22 / 1.28 / 1.37 · SE–SE 협착 몫 71–74 % — 경로 그림이 값을 보여 주지 않는다는 한정은 대본) · 전달 = 한 장씩 (1저자 11-03 *"page 다 만들지말고 이 한페이지 한슬라이드 씩만"*).
