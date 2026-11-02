@@ -14525,6 +14525,154 @@
       "evidence_tests": [
         "docs/50kg/d07_guard/t_test_20261031/README.md 4 줄 (G0–G2 통과 · G3 생략 · 도구 보고 25 줄 대조 — 문서 고침 · 시험 없음)"
       ]
+    },
+    {
+      "id": "PC6-01",
+      "severity": "P1",
+      "status": "claimed_fixed",
+      "title": "PC5-07 그룹 원 찾기 — 같은 실 uid 이고 environ · stat 을 못 읽는 무관 프로세스 (ssh 로그인 세션 · setuid · agent · 운영자 자기 ssh 세션) 가 그룹 끝에 있으면 끝난 런 GROUP_UNCONFIRMED · 보이는 고아 런 안 죽임 · recover 도 rc 3 → GPU 런이면 규칙 라로 그 대상 STOPPED (조건부 · 보수 쪽)",
+      "owner": "claude",
+      "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
+      "note": "사전 공격 6 회차 §2 · ✅ 11-02 고침 (Rint 급행 · 1저자 11-02 *\"Rint 급행\"* · 작업 트리 에이전트 · 시험 먼저 483cf413e → 고침 93d8c3d34) = 러너 세션 · 그룹 번호 + 계보 (ppid) 로 가름 · 확인 불가여도 찾은 원은 죽임.  한정: hidepid=1 이면 여전히 늘 미확인 · hidepid=2 숨은 조상 = 없어진 것 · setsid + 부모 끝남 + environ 못 읽음 = 놓침 · kgy 실제 조건 미확인.  ⬜ Codex 회차 ②.",
+      "claimed_fixed_sha": "93d8c3d34",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py PD01 · PD01r (고치기 전 판 실패 · 옳은 이유 = docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/logs/before_PD_0102)",
+        "scripts/test_rint_r_chain.py (421/421 · 7f1d7dde3 · docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/logs/)",
+        "scripts/test_rint_r_chain_e2e.py (40/40 · 같은 판)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/REPORT_PC6_FIX.md (변이 49 중 47 잡힘 · mut_*_res.json)"
+      ]
+    },
+    {
+      "id": "PC6-02",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "title": "Q2 '그 밖 CUDA 오류 = 자동 재실행 없음' 이 러너 rc 길에서만 — 시간 초과 · 신호 · 그룹 미확인 · 부모 사망 길 = 재실행 자격 (42 중 36)",
+      "owner": "claude",
+      "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
+      "note": "사전 공격 6 회차 §2 · ✅ 11-02 고침 (시험 먼저 483cf413e → 고침 93d8c3d34) = CUDA_ERROR_WORDS 표지를 words_cause 한 곳에서 · stop_cause · orphan_cause 모든 길.  같은 보고의 넓힘 U4 (그룹 미확인이 러너 rc 1 을 가림) = 나눠서 PC6-13.  한정: CUDA 라이브러리 상태 문자열 · \"CUDA error:\" = 표지 아님 (1저자 결정) · 부분 문자열 일치 = 보수 쪽.  ⬜ Codex 회차 ②.",
+      "claimed_fixed_sha": "93d8c3d34",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py PD02 · PD02r (표지 표 200 행 · 고치기 전 판 실패 = docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/logs/before_PD_0102)",
+        "scripts/test_rint_r_chain.py (421/421 · 7f1d7dde3 · docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/logs/)",
+        "scripts/test_rint_r_chain_e2e.py (40/40 · 같은 판)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/REPORT_PC6_FIX.md (변이 49 중 47 잡힘 · mut_*_res.json)"
+      ]
+    },
+    {
+      "id": "PC6-09",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "title": "사슬 부모 사망 뒤 같은 --attempt 명령을 다시 치면 attempt_open 이 이미 있는 자기 시도 폴더를 남의 폴더처럼 옆 거부 기록 + rejected · 결과 전 결과 줄 → 같은 대상 새 시도 열림 · 고아 런과 동시 · 판정은 '원장에 없는 시도 폴더' 하나로만 막힘",
+      "owner": "claude",
+      "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
+      "note": "사전 공격 6 회차 §2 · ✅ 11-02 고침 (시험 먼저 dde41fb2f → 고침 db2e1b2b4) = 이 항목 시도 폴더 재진입 = 화면만 ATTEMPT_LEDGER_MISMATCH rc 3 (원장 · 폴더 무변경 · recover 안내) · 남의 폴더 = 옛 그대로.  ⬜ 등록 R §10-5 ⑦ 문구 · Codex 회차 ②.",
+      "claimed_fixed_sha": "db2e1b2b4",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py PD09 · PD09b (고치기 전 판 실패 = docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/logs/before_PD_0912)",
+        "scripts/test_rint_r_chain.py (421/421 · 7f1d7dde3 · docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/logs/)",
+        "scripts/test_rint_r_chain_e2e.py (40/40 · 같은 판)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/REPORT_PC6_FIX.md (변이 49 중 47 잡힘 · mut_*_res.json)"
+      ]
+    },
+    {
+      "id": "PC6-12",
+      "severity": "P1",
+      "status": "claimed_fixed",
+      "title": "판정 원장 대조가 찾은 시도 폴더의 attempt.json (대상 · 시작 커밋) 을 원장 항목과 대조하지 않는다 (입력 대상 항목만) — 끝 두 커밋 reset + 항목 1 의 대상만 바꾼 줄이면 결과 본 시도 (runner_rc · 재실행 불가) 가 입력 대상 밖으로 숨고 새 시도가 채택 · 판정 통과",
+      "owner": "claude",
+      "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
+      "note": "사전 공격 6 회차 마무리 §2 (5 회차 PC-01 은 같은 부류를 P2 로 매김 — 등급 = 보고 그대로 P1) · ✅ 11-02 고침 (시험 먼저 dde41fb2f → 고침 db2e1b2b4) = found_attempts_problem 하나를 판정 · 예측 입력 · 합치기 · 합친 예측 판정 넷이 부름.  한정: 호출자가 훑는 폴더 범위 (Q-D) · N12d 이중 방어 미시험.  ⬜ Codex 회차 ②.",
+      "claimed_fixed_sha": "db2e1b2b4",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py PD12 · PD12m · PD12u (고치기 전 판 실패 = docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/logs/before_PD_0912)",
+        "scripts/test_rint_r_chain.py (421/421 · 7f1d7dde3 · docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/logs/)",
+        "scripts/test_rint_r_chain_e2e.py (40/40 · 같은 판)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/REPORT_PC6_FIX.md (변이 49 중 47 잡힘 · mut_*_res.json)"
+      ]
+    },
+    {
+      "id": "PC6-03",
+      "severity": "P3",
+      "status": "open",
+      "title": "SIGINT (Ctrl-C) = run_in_group 원인 exception → chain_exception · 재실행 불가 (SIGTERM = signal · SIGKILL = parent_dead 는 자격)",
+      "owner": "claude",
+      "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
+      "note": "사전 공격 6 회차 §2 · 이번 고침 범위 밖 (P3) · Codex 회차 ② 요청서에 한정으로."
+    },
+    {
+      "id": "PC6-04",
+      "severity": "P3",
+      "status": "open",
+      "title": "원장 덧붙임 중 SIGTERM · SIGHUP · SIGKILL = 되돌림 없음 → 색인에 커밋 안 된 줄 · 원장 멈춤 (등록 R ⑧ '신호 = 되돌림' 은 SIGINT 만)",
+      "owner": "claude",
+      "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
+      "note": "사전 공격 6 회차 §2 · 이번 고침 범위 밖 (P3) · 보수 쪽 (거짓 수용 없음) · 등록 R ⑧ 문장 고칠 것."
+    },
+    {
+      "id": "PC6-05",
+      "severity": "P3",
+      "status": "open",
+      "title": "요약 있는 길 · 멈춘 런 로그 없음 · 못 읽음 + 시간 초과 · 신호 = 재실행 자격 (요약 없는 길은 같은 꼴 = 불가)",
+      "owner": "claude",
+      "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
+      "note": "사전 공격 6 회차 §2 · 이번 고침 범위 밖 (P3) · 빈도 낮음 (사슬이 로그를 스스로 만든다)."
+    },
+    {
+      "id": "PC6-06",
+      "severity": "P3",
+      "status": "open",
+      "title": "사슬 자신의 MemoryError · ENOSPC = CHAIN_EXCEPTION · 재실행 불가 (러너의 같은 원인 = resource · 요약 쓰기 자리의 ENOSPC = parent_dead 로 갈 것 · 코드 읽기)",
+      "owner": "claude",
+      "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
+      "note": "사전 공격 6 회차 §2 · 이번 고침 범위 밖 (P3)."
+    },
+    {
+      "id": "PC6-08",
+      "severity": "P3",
+      "status": "open",
+      "title": "옆 거부 기록 attempt_<n>.rejected.json + 결과 줄 전 죽음 = recover_ledger (폴더만 훑음) 가 못 고치고 rc 0 으로 끝남 → 그 대상 영구 멈춤 (실경로 R9)",
+      "owner": "claude",
+      "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
+      "note": "사전 공격 6 회차 §2 · 이번 고침 범위 밖 (P3) · 창 = 두 쓰기 사이 죽음 (드묾)."
+    },
+    {
+      "id": "PC6-10",
+      "severity": "P3",
+      "status": "open",
+      "title": "--operator-why 꼴 검사 = \\n · \\r 만 (U+2028 · U+0085 · \\v · \\f · \\x1c · ESC 통과) · 번호 인자 = 파이썬 int (전각 숫자 · 밑줄 받음)",
+      "owner": "claude",
+      "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
+      "note": "사전 공격 6 회차 §2 · 이번 고침 범위 밖 (P3) · 결정 영향 없음 (한정)."
+    },
+    {
+      "id": "PC6-11",
+      "severity": "P3",
+      "status": "open",
+      "title": "PC5 가드 변이 생존 (시험 공백) — M2e · M8 · M11 · M12 · M15 (덜 보수 쪽) · M4 · M5 · M6 · M10a · M10b (보수 쪽) + 풀기 전 층 M2c · M9 — 가드는 지금 동작 · 생존 15 를 합쳐 꺼도 상주 사슬 시험 407 · 끝-끝 40 이 다 통과",
+      "owner": "claude",
+      "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
+      "note": "사전 공격 6 회차 §2 · ▶ 11-02 부분 (시험 ac888877d · PD11 · PD11m · PD11p · PD11g · PD11s) = M2e · M2c · M9 · M8 · M11 · M12 · M15 일곱 잡힘 (옳은 이유 · docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/REPORT_PC6_FIX.md) · 남은 것 = M4 · M5 · M6 · M10a · M10b (보수 쪽 · 작은 fixture 로 못 닿음 — chain pid 다시 쓰임 · 원장 잠금 경합 · 커밋 뒤 git 실패 · 그룹 전 시작 프로세스)."
+    },
+    {
+      "id": "PC6-13",
+      "severity": "P2",
+      "status": "open",
+      "title": "그룹 미확인 (GROUP_UNCONFIRMED) 이면 러너의 0 아닌 종료 코드를 무시 — 파이썬 traceback (KeyError 등) 도 자동 재실행 자격 (U4 · PC6-02 넓힘에서 나눔)",
+      "owner": "claude",
+      "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
+      "note": "사전 공격 6 회차 §4 U4 · PC6-01 고침으로 그룹 미확인이 크게 줄어 드묾 · ⬜ 1저자 선택: A (권고) = 그룹 미확인 + 러너 rc ≠ 0/None 이면 같은 낱말 규칙 · 기본 runner_rc (재실행 없음) / B = 지금대로 두고 등록 R 에 한정."
     }
   ]
 }
