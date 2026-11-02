@@ -1125,7 +1125,7 @@ def launch_eligibility(man) -> dict:
     if not isinstance(gp, dict) or gp.get('generation') != man.get(GEN_KEY) or gp.get('problems') or gp.get('error'):
         p.append(f'generation_probe (봉인 코드에서 기대 세대를 유도한 기록) 없음 · 다름 · 문제 ({(gp or {}).get("generation") if isinstance(gp, dict) else gp!r})')
     ch = man.get('code_hashes')
-    if not isinstance(ch, dict) or sorted(ch) != sorted(CODE_FILES) or not all(isinstance(v, str) and _HEX64.match(v) for v in ch.values()):
+    if not isinstance(ch, dict) or sorted(ch) != sorted(CODE_FILES) or not all(isinstance(v, str) and _HEX64.fullmatch(v) for v in ch.values()):
         p.append(f'code_hashes 가 봉인 대상 CODE_FILES {len(CODE_FILES)} 파일의 sha256 지도가 아니다 '
                  f'(있는 {len(ch) if isinstance(ch, dict) else ch!r} · 빠진 {sorted(set(CODE_FILES) - set(ch or {}))[:4]})')
     elif s and (s.get('code_fp') != code_fp(ch) or s.get('files') != len(CODE_FILES)):
@@ -1134,7 +1134,7 @@ def launch_eligibility(man) -> dict:
     if not isinstance(clo, list) or not clo or [f for f in clo if f not in CODE_FILES]:
         p.append(f'code_dependency_closure (전이 닫힘) 없음 · 봉인 밖 파일 {[f for f in clo or [] if f not in CODE_FILES][:4] if isinstance(clo, list) else clo!r}')
     hh = man.get('handover_code_hashes')
-    if not isinstance(hh, dict) or sorted(hh) != sorted(HANDOVER_FILES) or not all(isinstance(v, str) and _HEX64.match(v) for v in hh.values()):
+    if not isinstance(hh, dict) or sorted(hh) != sorted(HANDOVER_FILES) or not all(isinstance(v, str) and _HEX64.fullmatch(v) for v in hh.values()):
         p.append(f'handover_code_hashes (인계 도구 지문) 없음 · 꼴이 다르다 ({sorted(hh) if isinstance(hh, dict) else hh!r})')
     g = man.get('git') if isinstance(man.get('git'), dict) else {}
     if not (isinstance(g.get('sha'), str) and _HEX40.fullmatch(g['sha'])):
@@ -1156,9 +1156,9 @@ def launch_eligibility(man) -> dict:
                 p.append('input_digest.ids_sha256 ≠ 계획 큐 (case, cohort) 에서 다시 잰 지문 — 발사 뒤 계획 또는 지문이 바뀌었다')
             names = sorted(c['name'] for c in man['plan']['cohorts'])
             cts = dg.get('cohort_tsv_sha256')
-            if not isinstance(cts, dict) or sorted(cts) != names or not all(isinstance(v, str) and _HEX64.match(v) for v in cts.values()):
+            if not isinstance(cts, dict) or sorted(cts) != names or not all(isinstance(v, str) and _HEX64.fullmatch(v) for v in cts.values()):
                 p.append(f'input_digest.cohort_tsv_sha256 꼴 ({cts!r:.120}) ≠ 코호트 {names} 의 sha256')
-        if not (isinstance(dg.get('raw_sha256_table_sha256'), str) and _HEX64.match(dg['raw_sha256_table_sha256'])):
+        if not (isinstance(dg.get('raw_sha256_table_sha256'), str) and _HEX64.fullmatch(dg['raw_sha256_table_sha256'])):
             p.append(f'input_digest.raw_sha256_table_sha256 {dg.get("raw_sha256_table_sha256")!r} — 원자료 sha256 표 지문이 없다')
         if dg.get('missing_raw_sha') != []:
             p.append(f'input_digest.missing_raw_sha {dg.get("missing_raw_sha")!r} (빈 목록이어야 — 원자료 sha 결손이 있으면 발사하지 않았다)')
