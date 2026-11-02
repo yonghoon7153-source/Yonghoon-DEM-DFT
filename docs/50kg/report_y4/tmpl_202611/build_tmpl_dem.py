@@ -272,8 +272,8 @@ def make_charts(fig_dir):
         out[name] = fig_dir / (name + '.png')
         name = '%s_tortuosity_%s' % (pe, tag)
         simple_chart(fig_dir / (name + '.png'), E_SIZE, sec['cats'], sec['tau2'], RAMP,
-                     'Transport tortuosity', xl, (0, 16), [0, 4, 8, 12, 16], [2, 6, 10, 14], '{:.2f}')
-        write_csv(fig_dir / (name + '.csv'), x0, sec['unit'], 'Transport tortuosity', '-',
+                     'Tortuosity', xl, (0, 16), [0, 4, 8, 12, 16], [2, 6, 10, 14], '{:.2f}')   # 1저자 11-03: 수송 tortuosity 를 'Tortuosity' 로만
+        write_csv(fig_dir / (name + '.csv'), x0, sec['unit'], 'Tortuosity', '-',
                   sec['cats'], sec['tau2'], '{:.2f}')
         out[name] = fig_dir / (name + '.png')
         name = '%s_coverage_%s' % (pe, tag)
@@ -864,7 +864,7 @@ def build_C(s, ch):
         s.set_xfrm(lab, x=sx + sw / 2 - lw / 2)
         cx = sx + sw + 0.38
         s.add(TB(s.nid(), 'Transport tortuosity label %d' % (i + 1), cx - 0.5, sy + 0.08, 1.0, 0.36,
-                 LP([LAB('Transport', 1050)]) + LP([LAB('tortuosity', 1050)])))
+                 LP([LAB('Tortuosity', 1050)])))   # 1저자 11-03: 'Transport tortuosity' → 'Tortuosity'
         s.add(TB(s.nid(), 'Transport tortuosity value %d' % (i + 1), cx - 0.3, sy + 0.50, 0.6, 0.22,
                  LP([LAB('%.2f' % sec['tau2'][i], 1100)])))
     s.set_xfrm(s.get('그룹 23'), x=5.30)
