@@ -1060,6 +1060,7 @@ def am_contact_closeup(idx: dict, type_map: dict, am_id: int, *, scale=1000.0, b
 #  ⚠ 3D 데이터 (/3d-data aux) 에 싣는 것은 webapp/app.py (194 봉인) 의 일이다 — 봉인 중에는 그 파일을 바꾸지 않고 발사 뒤 패치
 #    docs/reviews/webapp_load_view_deferred_20261007.patch 로 aux['load_view'] = particle_load_view_for_case(…) + 캐시 스키마 14
 #    (10-08 접촉마다 목록 am.contacts · am.contacts_se — 10-07 판 (스키마 13) 캐시는 다시 계산).
+#  ★ 11-02 — 194 발사 (10-30) 뒤 그 패치를 app.py 에 적용했다 + 캐시 스키마 15 (load_view 에 p_ref · se — 아래 11-02 절).
 
 LOAD_VIEW_SCHEMA = 'particle_load_view/v1'
 #: LW 는 접촉 행을 dict 목록으로 읽는다 (생산 읽기 그대로 · 행당 ~1 kB) — 이보다 많으면 LW 만 계산하지 않는다 (압력 · 힘은 열 배열로 계산)
@@ -1098,6 +1099,78 @@ AM_AM_CONTACTS_RULE = ('AM–AM 접촉마다 = 접촉 덤프의 AM–AM 행 (덤
                        + _CONTACT_COMMON_RULE)
 AM_SE_CONTACTS_RULE = ('AM–SE 접촉마다 = 접촉 덤프의 AM–SE 행 (id1 = AM · id2 = SE — 덤프가 SE 먼저면 뒤집는다 · 뷰어는 AM 표면에만 cap · SE 는 숨김) · '
                        '보낸 행 = 상위 (압축 |Fn| 큰 순) 상한까지 — 그린 것 / 전체 · 힘 몫은 뷰어 범례 · ' + _CONTACT_COMMON_RULE)
+
+# ── 11-02 σ_VM ÷ P_ref · SE 만 보기 (1저자 11-02 비준) ────────────────────────────────────────────────────────────────────
+#  계기: AM 만 보기의 LW 는 σ_VM / ⟨σ_VM⟩ (그 침대 전 입자 평균) 을 그 침대만의 색 범위로 칠해 침대끼리 비교가 안 됐다 (D3 AM σ_VM 55–1050 MPa
+#  ↔ D1 8.9–804 MPa) · 50kg 침대는 이완 뒤 판 압력도 다르다 (로그 D1 156.15 · D2 279.79 · D3 291.37 MPa).
+#  P_ref = 그 침대 그 프레임의 축 하중 — 케이스 폴더에 로그 판 압력이 없어서 같은 접촉 자료의 ⟨σzz⟩ 상자 평균으로 낸다 (새 계산 없음:
+#  calc_love_weber_stress 텐서 × 4/3 π r³ = Σ_접촉 branch ⊗ 힘 — 입자 부피 선택과 무관).  ⚠ dem_analysis_core 는 봉인 수치 모듈 — 바꾸지 않는다.
+#  SE 값 = 같은 함수의 SE σ_VM — 뷰어 'SE 만' 보기 (같은 양 · 같은 고정 범위).  크기: id 는 오름차순 연속 구간 [시작, 개수] · 값 = 유효 4 자리
+#  (50kg D1 SE 166,971 개 — load_view JSON 증가는 11-02 보고 · 구간은 6 개).
+P_REF_RULE = ('P_ref = ⟨σzz⟩ 상자 평균 (압축 양수) = −Σ_p V_p σ_p,zz / (box_x · box_y · plate_z) · V_p σ_p = calc_love_weber_stress 텐서 × '
+              '4/3 π r³ = Σ_접촉 (x_id2 − x_id1) ⊗ F (branch ⊗ 힘 — 입자 부피 선택 · 접촉점과 무관) · 상자 = input_params box_x · box_y × '
+              'mesh 판 높이 (plate_z 가 mesh 판일 때만 — 아니면 NOT_COMPUTED) · × scale / 1e6 = MPa.  힘 평형이면 판 압력과 같다 — 다만 접촉 '
+              '덤프에 벽 (바닥 · 판) 접촉이 없어 그 항이 빠진다 (대략 벽에 닿은 입자 반경 ÷ 두께 몫만큼 작다 · 중력 몫은 반대) → 판 압력과 몇 % '
+              '다르다 (50kg 끝 상태 11-02 실측: 로그 판 압력의 0.980 (D1) · 0.970 (D2) · 0.968 (D3) 배) · 인장이면 (⟨σzz⟩ ≤ 0) UNDEFINED')
+SE_LW_DIGITS = 4
+SE_LW_RULE = ('SE 입자마다 σ_VM (MPa) = calc_love_weber_stress (AM 값과 같은 함수 · 같은 읽기 · 같은 판 · 상자) 의 SE 값 × scale / 1e6 · 유효 4 자리 '
+              '(크기 — 침대 SE 수 만큼) · 순서 = id_runs ([시작 id, 개수] — 오름차순 연속 구간) 를 펼친 순서 · 비 = ÷ lw_mean_all_MPa '
+              '(전 입자 ⟨σ_VM⟩ — AM 만 보기와 같은 분모) 또는 ÷ P_ref · 벽 (바닥 · 판) 에 닿은 입자는 벽 힘이 없다 (그 값은 불완전 · wall 목록 = '
+              'calc_love_weber_stress 의 벽 규칙)')
+
+
+def id_runs(ids):
+    """오름차순 (중복 없는) 정수 id → [[시작, 개수], …] (연속 구간 — load_view.se.id_runs) · 내림 · 중복 = ValueError (펼치면 값이 어긋난다)."""
+    out = []
+    prev = None
+    for raw in ids:
+        i = int(raw)
+        if prev is not None and i <= prev:
+            raise ValueError(f'id_runs: 오름차순 · 중복 없음이 아니다 ({prev} 다음 {i})')
+        if out and i == out[-1][0] + out[-1][1]:
+            out[-1][1] += 1
+        else:
+            out.append([i, 1])
+        prev = i
+    return out
+
+
+def _sig4(x):
+    """유한값 → 유효 4 자리 float (SE 값 · JSON 크기) · 아니면 None."""
+    v = _fin(x)
+    return float(f'{v:.{SE_LW_DIGITS}g}') if v is not None else None
+
+
+def _p_ref_block(ref, atoms_raw, s, box_xy, box_source, plate_z, plate_z_source):
+    """load_view.p_ref — ⟨σzz⟩ 상자 평균 (P_REF_RULE).  ref = calc_love_weber_stress(…, return_arrays=True) 결과 (상태 OK 일 때만 값)."""
+    import numpy as np
+    pz = _fin(plate_z)
+    out = {'status': None, 'MPa': None, 'rule': P_REF_RULE,
+           'box_xy': [float(box_xy[0]), float(box_xy[1])] if box_xy is not None else None, 'box_source': box_source,
+           'plate_z': pz, 'plate_z_source': plate_z_source, 'sum_V_sigma_zz_sim': None, 'v_box_sim': None}
+    if not ref or ref.get('status') != 'OK' or 'tensor' not in ref:
+        out['status'] = f'NOT_COMPUTED (LW 없음 — {(ref or {}).get("status")})'
+        return out
+    if plate_z_source != 'mesh':
+        out['status'] = f'NOT_COMPUTED (plate_z_source={plate_z_source} — 상자 높이 = mesh 판일 때만)'
+        return out
+    bx = _fin(box_xy[0]) if box_xy is not None else None
+    by = _fin(box_xy[1]) if box_xy is not None else None
+    if not (bx and by and pz and bx > 0 and by > 0 and pz > 0):
+        out['status'] = f'NOT_COMPUTED (상자 무효 — box_xy={box_xy} · plate_z={plate_z})'
+        return out
+    with np.errstate(over='ignore', invalid='ignore'):
+        rad = np.array([atoms_raw[a]['radius'] for a in ref['ids']], dtype=float)
+        vol = (4.0 / 3.0) * np.pi * rad ** 3                  # calc_love_weber_stress 의 V_i 와 같은 식
+        szz = float(np.sum(vol * np.asarray(ref['tensor'], dtype=float)[:, 2, 2]))
+    vbox = bx * by * pz
+    out['sum_V_sigma_zz_sim'], out['v_box_sim'] = _fin(szz), vbox
+    p = -szz / vbox * s / 1e6 if math.isfinite(szz) else math.nan
+    if not (math.isfinite(p) and p > 0):
+        out['status'] = f'UNDEFINED (⟨σzz⟩ = {p:.6g} MPa ≤ 0 · 비유한 — 압축 상태가 아니다 · 나누지 않는다)'
+        return out
+    out['status'], out['MPa'] = 'OK', p
+    return out
 
 
 def _min_image_xy(d, box_xy):
@@ -1222,7 +1295,11 @@ def particle_load_view(cdf, atoms_raw, type_map, *, scale=1000.0, box_xy=None, b
           lw_quantity · lw_vm_MPa {AM id} · lw_ratio {AM id} · lw_mean_all_MPa · lw_type_ratio {상} · lw_rule · wall {AM id: floor · plate ·
           floor+plate} · wall_rule · wall_counts {n_floor · n_plate (전 입자)} · wall_counts_match_lw ·
           contacts (AM–AM 접촉마다) · contacts_se (AM–SE 접촉마다 · id1 = AM) {fields · rows · cap · n_total · n_rows · truncated · n_compressive ·
-          n_tension · n_other · n_compressive_sent · compressive_complete · sum_fn_compressive_uN · q_uN · n_dir_* · rule} (10-08 · _contact_list)}."""
+          n_tension · n_other · n_compressive_sent · compressive_complete · sum_fn_compressive_uN · q_uN · n_dir_* · rule} (10-08 · _contact_list)} ·
+      ★ 11-02 se {n_se · lw_status (= am) · digits 4 · id_runs [[시작 id, 개수] …] · lw_vm_MPa [유효 4 자리 · id_runs 를 펼친 순서] ·
+          lw_mean_all_MPa (= am) · wall {floor [id] · plate [id] · plate_flag} · wall_rule · rule (SE_LW_RULE)} ·
+      ★ 11-02 p_ref {status (OK · NOT_COMPUTED · UNDEFINED) · MPa (⟨σzz⟩ 상자 평균 · 압축 양수) · rule (P_REF_RULE) · box_xy · box_source ·
+          plate_z · plate_z_source · sum_V_sigma_zz_sim · v_box_sim} — 둘 다 같은 LW 결과로 (새 접촉 계산 없음 · 기존 키 그대로)."""
     import numpy as np
     import pandas as pd
     s = float(scale)
@@ -1333,6 +1410,7 @@ def particle_load_view(cdf, atoms_raw, type_map, *, scale=1000.0, box_xy=None, b
     # ── #11 AM 만 — Love–Weber (정본 함수 · 생산 읽기)
     am.update(lw_rule=LW_VIEW_RULE, lw_vm_MPa={}, lw_ratio={}, lw_mean_all_MPa=None, lw_type_ratio={}, wall_counts_match_lw=None,
               lw_definition=None, lw_contract=None, lw_quantity=None)
+    ref = None
     if contacts_raw is None:
         am['lw_status'] = lw_skip_reason or 'NOT_COMPUTED (생산 읽기 접촉 목록이 없다)'
     else:
@@ -1363,6 +1441,28 @@ def particle_load_view(cdf, atoms_raw, type_map, *, scale=1000.0, box_xy=None, b
             am['lw_mean_all_MPa'] = mean_all * s / 1e6
             am['lw_type_ratio'] = {str(t): float(v['ratio']) for t, v in (ref.get('type_stress') or {}).items()}
     out['am'] = am
+
+    # ── 11-02 SE 만 보기 · P_ref (같은 LW 결과 · 새 접촉 계산 없음) — 기존 키는 그대로 · 새 묶음 둘 (se · p_ref) 만 더한다
+    se_k = np.flatnonzero(is_se)
+    se_k = se_k[np.argsort(ids[se_k], kind='stable')]                   # id 오름차순 (id_runs 의 순서)
+    se = {'n_se': int(len(se_k)), 'lw_status': am['lw_status'], 'digits': SE_LW_DIGITS, 'id_runs': [], 'lw_vm_MPa': [],
+          'lw_mean_all_MPa': am['lw_mean_all_MPa'],
+          'wall': {'floor': [int(ids[k]) for k in se_k if floor[k]],
+                   'plate': [int(ids[k]) for k in se_k if plate[k]] if plate_ok else [], 'plate_flag': bool(plate_ok)},
+          'wall_rule': WALL_RULE, 'rule': SE_LW_RULE}
+    if ref is not None and ref.get('status') == 'OK':
+        vm = ref['arrays_vm']
+        pos_lw = {int(a): j for j, a in enumerate(ref['ids'])}
+        se_ids, se_vals = [], []
+        for k in se_k:
+            j = pos_lw.get(int(ids[k]))
+            if j is None:
+                continue
+            se_ids.append(int(ids[k]))
+            se_vals.append(_sig4(float(vm[j]) * s / 1e6))
+        se['id_runs'], se['lw_vm_MPa'] = id_runs(se_ids), se_vals
+    out['se'] = se
+    out['p_ref'] = _p_ref_block(ref, atoms_raw, s, box_xy, box_source, plate_z, plate_z_source)
     out['status'] = 'OK'
     return out
 

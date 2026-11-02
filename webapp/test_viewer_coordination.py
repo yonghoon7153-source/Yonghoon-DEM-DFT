@@ -12,6 +12,8 @@
       A1 손으로 셀 수 있는 합성 접촉 · A2 같은 접촉에서 core 함수와 같은 평균 · A3 real_14 기준 상태 (커밋 덤프 → parse_liggghts →
       contacts.csv) = core = case_master 보고값.
   [C] 3D 데이터 캐시 스키마 11 → 12 (두 경로) — 옛 캐시는 다시 계산 · 새 캐시 HIT 에서도 CN 키가 살아 있다 (live · archive).
+      ★ 10-07 · 10-08 스키마 14 (입자 하중 보기 load_view + 접촉마다 목록 · 발사 뒤 패치 docs/reviews/webapp_load_view_deferred_20261007.patch) — CN 키 계약은 그대로.
+      ★ 11-02 스키마 15 (load_view 에 P_ref (⟨σzz⟩ 상자 평균) · SE 입자 응력 — 발사 뒤 패치 적용 + σ_VM ÷ P_ref · SE 만 보기) — CN 키 계약은 그대로.
   [V] viewer3d.js — DEM 드롭다운 'cn' (MPM 조작판에는 없음) · applyViewMode 'cn' 분기 · 범례 (AM_P (PC) · AM_S (SC) · SE–SE 평균 · n)
       · 이산 색 구간 (node 로 함수를 잘라 그대로 돌린다).
 """
@@ -228,13 +230,14 @@ def write_synth_case(folder, meta=True):
 
 
 def section_c_cache(tmp):
-    print('[C] 3D 데이터 캐시 — 스키마 12 · 옛 캐시 다시 계산 · HIT 에서도 CN 키 (live · archive)')
+    print('[C] 3D 데이터 캐시 — 스키마 15 · 옛 캐시 다시 계산 · HIT 에서도 CN 키 (live · archive)')
     src = open(os.path.join(HERE, 'app.py'), encoding='utf-8').read()
-    n12 = len(re.findall(r"_schema'\)\s*==\s*12\b", src))
-    w12 = len(re.findall(r"\['_schema'\]\s*=\s*12\b", src))
-    n11 = len(re.findall(r"_schema'\)\s*==\s*11\b", src)) + len(re.findall(r"\['_schema'\]\s*=\s*11\b", src))
-    chk(f'C0 두 경로 (live · archive) 모두 스키마 12 를 읽고 쓴다 · 11 은 남지 않는다 (읽기 {n12} · 쓰기 {w12} · 옛 {n11})',
-        n12 == 2 and w12 == 2 and n11 == 0)
+    n15 = len(re.findall(r"_schema'\)\s*==\s*15\b", src))
+    w15 = len(re.findall(r"\['_schema'\]\s*=\s*15\b", src))
+    n11 = sum(len(re.findall(rf"_schema'\)\s*==\s*{v}\b", src)) + len(re.findall(rf"\['_schema'\]\s*=\s*{v}\b", src)) for v in (11, 12, 13, 14))
+    chk(f'C0 두 경로 (live · archive) 모두 스키마 15 (10-07 입자 하중 보기 · 10-08 접촉마다 목록 · 11-02 P_ref · SE 입자 응력) 를 읽고 쓴다 · '
+        f'11 · 12 · 13 · 14 는 남지 않는다 (읽기 {n15} · 쓰기 {w15} · 옛 {n11})',
+        n15 == 2 and w15 == 2 and n11 == 0)
     up, rs, ar = (os.path.join(tmp, k) for k in ('uploads', 'results', 'archive'))
     for p in (up, rs, ar):
         os.makedirs(p, exist_ok=True)
@@ -261,7 +264,7 @@ def section_c_cache(tmp):
         {int(k): v for k, v in (cn1['cn_am_se'] or {}).items()} == WANT_AM_SE
         and {int(k): v for k, v in (cn1['cn_se_se'] or {}).items()} == WANT_SE_SE)
     blob = json.load(open(cache)) if os.path.exists(cache) else {}
-    chk('C1c 새 캐시는 스키마 12 로 쓰고 CN 키를 담는다', blob.get('_schema') == 12 and 'cn_summary' in blob, repr(blob.get('_schema')))
+    chk('C1c 새 캐시는 스키마 15 로 쓰고 CN 키를 담는다', blob.get('_schema') == 15 and 'cn_summary' in blob, repr(blob.get('_schema')))
     j2 = c.get(f'/results/{cid}/3d-data').get_json(silent=True) or {}
     aux2 = j2.get('aux') or {}
     chk('C2 두 번째 요청 (캐시 HIT) 도 같은 CN 값 (live)',

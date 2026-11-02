@@ -9369,6 +9369,8 @@ def serve_3d_data(case_id):
         'se_n_percolating': 0,
         'se_bn_median_norm': 0, 'se_bn_threshold_norm': 0,
         'se_n_bn_below_threshold': 0,
+        # ★ 10-07 입자 하중 보기 (WEB-06 · #11) — scripts/viewer3d_data.particle_load_view_for_case (캐시 스키마 15 — 10-08 접촉마다 목록 · 11-02 P_ref · SE 입자 응력)
+        'load_view': {},
     }
     try:
         import sys as _sys
@@ -9405,7 +9407,7 @@ def serve_3d_data(case_id):
                 try:
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 12:   # 12 = 입자별 배위수 (10-06)
+                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 15:   # 15 = load_view 에 P_ref · SE 입자 응력 (11-02) · 14 = 접촉마다 목록 (10-08) · 13 = 입자 하중 보기 load_view (10-07) · 12 = 입자별 배위수 (10-06)
                         # Restore every cached key except metadata.  Some
                         # int-keyed dicts (stress_max, dr_max, se_engagement,
                         # particle_max_fpc, particle_n_brittle) need their
@@ -9480,6 +9482,15 @@ def serve_3d_data(case_id):
                     # 입자별 배위수 + 상별 요약 (3D 뷰어 '배위수' 보기 · 10-06 · 스키마 12)
                     for _k in ('cn_se_se', 'cn_am_se', 'cn_am_am', 'cn_summary'):
                         aux[_k] = agg.get(_k, {})
+                    # ★ 10-07 입자 하중 보기 (1저자 결정 · 웹앱 묶음 #11 · WEB-06) — 압축만 최대 접촉 압력 · AM 만 (Love–Weber 입자 응력 =
+                    #   calc_love_weber_stress 그대로 · 최대 AM–AM 접촉 힘 · 벽 표지).  계산 = scripts/viewer3d_data.particle_load_view_for_case
+                    #   (생산 분석기 읽기 · 같은 판 · 상자) · 실패해도 3D 데이터는 낸다 (상태만 싣는다)
+                    try:
+                        from viewer3d_data import particle_load_view_for_case
+                        aux['load_view'] = particle_load_view_for_case(results_dir, type_map, scale)
+                    except Exception as _elv:
+                        aux['load_view'] = {'schema': 'particle_load_view/v1',
+                                             'status': f'FAILED ({type(_elv).__name__}: {_elv})'}
 
                     # Phase A5+A6 — SE network diagnostics (re-stream contacts;
                     # NetworkX-based, ~1-2 s for typical 60k SE-SE contacts).
@@ -9508,7 +9519,7 @@ def serve_3d_data(case_id):
                     # Write cache so subsequent page loads are instant.
                     try:
                         cache_blob = dict(aux)
-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 12
+                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 15
                         with open(cache_path, 'w') as _cf:
                             json.dump(cache_blob, _cf, default=str)
                         print(f'  [3d-data aux] cache WROTE → '
@@ -11842,6 +11853,8 @@ def serve_archive_3d_data(folder):
         'se_n_percolating': 0,
         'se_bn_median_norm': 0, 'se_bn_threshold_norm': 0,
         'se_n_bn_below_threshold': 0,
+        # ★ 10-07 입자 하중 보기 (WEB-06 · #11) — scripts/viewer3d_data.particle_load_view_for_case (캐시 스키마 15 — 10-08 접촉마다 목록 · 11-02 P_ref · SE 입자 응력)
+        'load_view': {},
     }
     try:
         import sys as _sys
@@ -11869,7 +11882,7 @@ def serve_archive_3d_data(folder):
                 try:
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 12:   # 12 = 입자별 배위수 (10-06)
+                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 15:   # 15 = load_view 에 P_ref · SE 입자 응력 (11-02) · 14 = 접촉마다 목록 (10-08) · 13 = 입자 하중 보기 load_view (10-07) · 12 = 입자별 배위수 (10-06)
                         for k in ('stress_max', 'dr_max', 'brittle_pairs',
                                    'se_stress_pairs', 'am_se_stress_pairs',
                                    'se_states', 'tabor_stats', 'all_se_ids_count',
@@ -11881,7 +11894,7 @@ def serve_archive_3d_data(folder):
                                                in cached[k].items()}
                                 else:
                                     aux[k] = cached[k]
-                        for k in ('cn_se_se', 'cn_am_se', 'cn_am_am', 'cn_summary'):   # 배위수 (live 경로는 전 키 복원)
+                        for k in ('cn_se_se', 'cn_am_se', 'cn_am_am', 'cn_summary', 'load_view'):   # 배위수 · 입자 하중 (live 경로는 전 키 복원)
                             if k in cached:
                                 aux[k] = cached[k]
                         cache_valid = True
@@ -11931,6 +11944,15 @@ def serve_archive_3d_data(folder):
                     # 입자별 배위수 + 상별 요약 (3D 뷰어 '배위수' 보기 · 10-06 · 스키마 12)
                     for _k in ('cn_se_se', 'cn_am_se', 'cn_am_am', 'cn_summary'):
                         aux[_k] = agg.get(_k, {})
+                    # ★ 10-07 입자 하중 보기 (1저자 결정 · 웹앱 묶음 #11 · WEB-06) — 압축만 최대 접촉 압력 · AM 만 (Love–Weber 입자 응력 =
+                    #   calc_love_weber_stress 그대로 · 최대 AM–AM 접촉 힘 · 벽 표지).  계산 = scripts/viewer3d_data.particle_load_view_for_case
+                    #   (생산 분석기 읽기 · 같은 판 · 상자) · 실패해도 3D 데이터는 낸다 (상태만 싣는다)
+                    try:
+                        from viewer3d_data import particle_load_view_for_case
+                        aux['load_view'] = particle_load_view_for_case(target, type_map, scale)
+                    except Exception as _elv:
+                        aux['load_view'] = {'schema': 'particle_load_view/v1',
+                                             'status': f'FAILED ({type(_elv).__name__}: {_elv})'}
                     # Phase A5+A6 — SE network diagnostics
                     try:
                         _plate_z_sim = box.get('z_max', 0) / max(scale, 1)
@@ -11950,7 +11972,7 @@ def serve_archive_3d_data(folder):
                         print(f'  [3d-data aux/archive] SE diag failed: {_ediag}')
                     try:
                         cache_blob = dict(aux)
-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 12
+                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 15
                         with open(cache_path, 'w') as _cf:
                             json.dump(cache_blob, _cf, default=str)
                         print(f'  [3d-data aux/archive] cache WROTE')

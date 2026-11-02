@@ -14,6 +14,8 @@
     뷰어 (`webapp/static/js/viewer3d.js`) 는 지금 넣고, app.py 변경은 **발사 뒤 패치** `docs/reviews/webapp_load_view_deferred_20261007.patch`
     로 둔다.  이 시험의 [P] 절이 그 패치를 임시 사본에 적용해 실제로 자료가 오는지 (live · archive · 캐시 HIT · 옛 스키마) 본다 —
     패치가 이미 적용된 트리에서는 진짜 app.py 를 본다.
+    ★ 11-02 — 194 발사 (10-30) 뒤 패치를 진짜 app.py 에 적용했다 (1저자 11-02 비준 · σ_VM ÷ P_ref · SE 만 보기 묶음) + 캐시 스키마 14 → 15
+    (load_view 에 p_ref · se 가 더해짐 — webapp/test_viewer_lw_pnorm.py).  [P] 는 이제 진짜 app.py 만 본다 (임시 사본 · 옛 14 기대값 없음).
 
   [S] 접촉 법선력 부호 (압축 · 당김 · 판정 불가) — 최소영상 · 접촉점 대체 · 0 힘.
   [W] 최대 접촉 압력 (압축만) — 손 계산 · 옛 stress_max (aggregate_particle_metrics) 는 바이트 그대로 · 당김 때문에 옛 값이 더 큰 입자 수.
@@ -39,7 +41,7 @@
       (그린 접촉이 위끝에 몰림) · 상위 N 을 바꾸면 다시 계산 · 범례 · 컬러바 PNG 가 기준을 적는다.  AM–AM 은 압축 전부를 그리므로 두 기준이
       같은 값 · 그리고 AM–AM 은 상위 N 을 받지 않는다 (고침 — ps45 0:10 AM–AM 8970 이 AM–SE 기본 상위 5000 에 조용히 잘리던 결함).
       발사 뒤 패치 · 봉인 파일 · app.py · test_viewer_coordination.py 는 그대로 (뷰어 · 시험만).
-  [P] 발사 뒤 패치 — 적용 확인 · 패치한 app 의 /3d-data (live · archive · 캐시 HIT · 옛 스키마 12 · 13 → 다시 계산).
+  [P] 발사 뒤 패치 — 진짜 app.py 에 적용됨 (11-02) · /3d-data (live · archive · 캐시 HIT · 옛 스키마 12 · 13 · 14 → 다시 계산 · 스키마 15).
   [X] check_all 배선.
 
   python3 webapp/test_viewer_load_view.py        # 종료코드 0 = PASS
@@ -685,8 +687,10 @@ def section_real14(tmp):
 JS_NAMES = ('netCurrentFmtJ', 'netCurrentT', 'netCurrentTicks', 'netCurrentPct', 'jeEscH', 'jetColor', 'coolwarmColor', 'loadViewAmMetric',
             'amOnlyRange', 'amOnlyLegendHtml', 'amOnlyMissingHtml', 'amOnlyColorbarSpec', 'pressureViewTip', 'pressureViewInfo',
             'pressureLegendHtml', 'loadViewAmContacts', 'amOnlyContactRange', 'amOnlyContactLegendHtml', 'amOnlyContactColorbarSpec',
-            '_amOnlyControlsHtml', '_amOnlyBasis')
-JS_CONSTS = ('AMONLY_CONTACT_OPT',)
+            '_amOnlyControlsHtml', '_amOnlyBasis',
+            # ★ 11-02 — 위 함수들이 부르는 σ_VM ÷ P_ref · 고정 범위 도우미 (시험은 webapp/test_viewer_lw_pnorm.py)
+            'lwIsLwMetric', 'lwRangeValid', 'lwRangeKey', 'lwRangeLoad', 'lwFixedLim', 'lwLimInputsHtml', 'lwLinTicks', 'lwPref', 'lwPrefNote')
+JS_CONSTS = ('AMONLY_CONTACT_OPT', 'LW_RANGE_DEFAULT')
 
 
 def ps_like_load_view(tmp):
@@ -1086,6 +1090,15 @@ blob['load_view'] = lv13
 json.dump(blob, open(cache, 'w'))
 out['live_13'] = aux_of(f'/results/{cid}/3d-data').get('load_view')
 out['cache_schema_after13'] = json.load(open(cache)).get('_schema')
+blob = json.load(open(cache))
+blob['_schema'] = 14
+lv14 = json.loads(json.dumps(blob.get('load_view') or {}))
+lv14.pop('p_ref', None)
+lv14.pop('se', None)
+blob['load_view'] = lv14
+json.dump(blob, open(cache, 'w'))
+out['live_14'] = aux_of(f'/results/{cid}/3d-data').get('load_view')
+out['cache_schema_after14'] = json.load(open(cache)).get('_schema')
 af = os.path.join(ar, 'lv_case')
 shutil.copytree(case_src, af)
 json.dump(meta, open(os.path.join(af, 'meta.json'), 'w'))
@@ -1095,49 +1108,24 @@ print('@@JSON@@' + json.dumps(out))
 '''
 
 
-def _mirror_tree(dst):
-    """ROOT 의 최상위 항목을 dst 에 심볼릭 링크 — webapp/ 만 진짜 폴더 (그 안도 링크 · app.py · test_viewer_coordination.py 는 사본)."""
-    os.makedirs(dst)
-    for n in os.listdir(ROOT):
-        if n in ('webapp', '.git'):
-            continue
-        os.symlink(os.path.join(ROOT, n), os.path.join(dst, n))
-    w = os.path.join(dst, 'webapp')
-    os.makedirs(w)
-    for n in os.listdir(HERE):
-        src = os.path.join(HERE, n)
-        if n in ('app.py', 'test_viewer_coordination.py'):
-            shutil.copy2(src, os.path.join(w, n))
-        elif n != '__pycache__':
-            os.symlink(src, os.path.join(w, n))
-
-
 def section_patch(tmp):
-    print('[P] 발사 뒤 패치 (webapp/app.py = 194 봉인 파일) — 적용 · 패치한 app 의 /3d-data')
+    print('[P] 발사 뒤 패치 (webapp/app.py) — 진짜 app.py 에 적용됨 (11-02) · /3d-data · 캐시 스키마 15')
     if not chk(f'P0 패치 파일 {os.path.relpath(PATCH, ROOT)}', os.path.exists(PATCH)):
         return
     ptxt = open(PATCH, encoding='utf-8').read()
     files = sorted(set(re.findall(r'^diff --git a/(\S+) b/', ptxt, re.M)))
     chk(f'P1 패치가 바꾸는 파일 = app.py · test_viewer_coordination.py 뿐 ({files})',
         files == ['webapp/app.py', 'webapp/test_viewer_coordination.py'])
-    applied = 'particle_load_view_for_case' in open(os.path.join(HERE, 'app.py'), encoding='utf-8').read()
-    if applied:
-        tree = ROOT
-        print('      (패치가 이미 적용된 트리 — 진짜 app.py 를 본다)')
-    else:
-        tree = os.path.join(tmp, 'tree')
-        _mirror_tree(tree)
-        r = subprocess.run(['git', 'apply', '--check', PATCH], cwd=tree, capture_output=True, text=True)
-        if not chk(f'P2 패치가 지금 app.py 에 깨끗이 맞는다 (git apply --check · rc {r.returncode})', r.returncode == 0, r.stderr[-400:]):
-            return
-        r = subprocess.run(['git', 'apply', PATCH], cwd=tree, capture_output=True, text=True)
-        chk('P3 임시 사본에 적용', r.returncode == 0, r.stderr[-400:])
-    src = open(os.path.join(tree, 'webapp', 'app.py'), encoding='utf-8').read()
-    n14 = len(re.findall(r"_schema'\)\s*==\s*14\b", src))
-    w14 = len(re.findall(r"\['_schema'\]\s*=\s*14\b", src))
-    n_old = sum(len(re.findall(rf"_schema'\)\s*==\s*{v}\b", src)) + len(re.findall(rf"\['_schema'\]\s*=\s*{v}\b", src)) for v in (12, 13))
-    chk(f'P4 패치한 app — 두 경로 캐시 스키마 14 (10-08 접촉마다 목록) 읽기 · 쓰기 · 12 · 13 은 남지 않는다 ({n14} · {w14} · {n_old})',
-        n14 == 2 and w14 == 2 and n_old == 0)
+    src = open(os.path.join(HERE, 'app.py'), encoding='utf-8').read()
+    chk(f'P2 진짜 app.py 에 패치가 들어갔다 — particle_load_view_for_case 호출 둘 (live · archive) · aux 기본값 load_view 둘 · archive 복원 목록 '
+        f'({src.count("particle_load_view_for_case(")})',
+        src.count('particle_load_view_for_case(') == 2 and src.count("'load_view': {},") == 2
+        and "for k in ('cn_se_se', 'cn_am_se', 'cn_am_am', 'cn_summary', 'load_view'):" in src)
+    n15 = len(re.findall(r"_schema'\)\s*==\s*15\b", src))
+    w15 = len(re.findall(r"\['_schema'\]\s*=\s*15\b", src))
+    n_old = sum(len(re.findall(rf"_schema'\)\s*==\s*{v}\b", src)) + len(re.findall(rf"\['_schema'\]\s*=\s*{v}\b", src)) for v in (12, 13, 14))
+    chk(f'P4 두 경로 캐시 스키마 15 (10-08 접촉마다 목록 · 11-02 P_ref · SE 입자 응력) 읽기 · 쓰기 · 12 · 13 · 14 는 남지 않는다 '
+        f'({n15} · {w15} · {n_old})', n15 == 2 and w15 == 2 and n_old == 0)
     P, rows = synth_bed()
     case_src = os.path.join(tmp, 'p_case')
     write_bed(case_src, P, rows)
@@ -1147,9 +1135,9 @@ def section_patch(tmp):
     work = os.path.join(tmp, 'p_work')
     env = dict(os.environ)
     env.pop('PYTHONPATH', None)
-    r = subprocess.run([sys.executable, drv, tree, work, case_src], capture_output=True, text=True, timeout=600, env=env, cwd=tmp)
+    r = subprocess.run([sys.executable, drv, ROOT, work, case_src], capture_output=True, text=True, timeout=600, env=env, cwd=tmp)
     m = re.search(r'@@JSON@@(.*)$', r.stdout, re.M)
-    if not chk(f'P5 패치한 app 실행 (rc {r.returncode})', r.returncode == 0 and m is not None, (r.stderr or r.stdout)[-800:]):
+    if not chk(f'P5 app 실행 (rc {r.returncode})', r.returncode == 0 and m is not None, (r.stderr or r.stdout)[-800:]):
         return
     out = json.loads(m.group(1))
     l1 = out.get('live1') or {}
@@ -1157,12 +1145,19 @@ def section_patch(tmp):
         l1.get('schema') == 'particle_load_view/v1' and bool((l1.get('pressure') or {}).get('max_MPa'))
         and (l1.get('am') or {}).get('lw_status') == 'OK' and bool((l1.get('am') or {}).get('fn_max_uN'))
         and ((l1.get('am') or {}).get('contacts') or {}).get('n_rows') == 4 and ((l1.get('am') or {}).get('contacts_se') or {}).get('n_rows') == 4)
-    chk(f'P7 캐시 = 스키마 14 · load_view 를 담는다 ({out.get("cache_schema")} · {out.get("cache_has_lv")})',
-        out.get('cache_schema') == 14 and out.get('cache_has_lv') is True)
+    chk(f'P6b load_view 에 p_ref (이 합성 침대는 축 하중이 인장 → UNDEFINED · 값 없음) · se (SE 값 · id 구간) — 11-02 '
+        f'({(l1.get("p_ref") or {}).get("status")} · {(l1.get("se") or {}).get("id_runs")})',
+        str((l1.get('p_ref') or {}).get('status', '')).startswith('UNDEFINED') and (l1.get('p_ref') or {}).get('MPa') is None
+        and (l1.get('se') or {}).get('lw_status') == 'OK' and (l1.get('se') or {}).get('id_runs') == [[10, 5], [17, 1]]
+        and len((l1.get('se') or {}).get('lw_vm_MPa') or []) == 6)
+    chk(f'P7 캐시 = 스키마 15 · load_view 를 담는다 ({out.get("cache_schema")} · {out.get("cache_has_lv")})',
+        out.get('cache_schema') == 15 and out.get('cache_has_lv') is True)
     chk('P8 두 번째 요청 (캐시 HIT) 도 같은 load_view (live)', out.get('live2') == out.get('live1') and bool(out.get('live1')))
     chk('P9 옛 캐시 (스키마 12 · load_view 없음) → 다시 계산 · load_view 산다', out.get('live_old') == out.get('live1'))
-    chk(f'P9b 옛 패치 캐시 (스키마 13 · load_view 에 접촉 목록 없음 — 1저자 :5002 의 10-07 판) → 다시 계산 · 접촉 목록 산다 · 캐시 = 14 '
-        f'({out.get("cache_schema_after13")})', out.get('live_13') == out.get('live1') and out.get('cache_schema_after13') == 14)
+    chk(f'P9b 옛 패치 캐시 (스키마 13 · load_view 에 접촉 목록 없음 — 1저자 :5002 의 10-07 판) → 다시 계산 · 접촉 목록 산다 · 캐시 = 15 '
+        f'({out.get("cache_schema_after13")})', out.get('live_13') == out.get('live1') and out.get('cache_schema_after13') == 15)
+    chk(f'P9c 옛 패치 캐시 (스키마 14 · load_view 에 p_ref · se 없음 — 10-08 판) → 다시 계산 · p_ref · se 산다 · 캐시 = 15 '
+        f'({out.get("cache_schema_after14")})', out.get('live_14') == out.get('live1') and out.get('cache_schema_after14') == 15)
     a1, a2 = out.get('arch1') or {}, out.get('arch2') or {}
     chk('P10 archive 경로도 load_view (첫 요청 = 계산 · 캐시 HIT = 같은 값 — archive 의 키 목록 복원에 더했다)',
         a1.get('schema') == 'particle_load_view/v1' and a2 == a1)

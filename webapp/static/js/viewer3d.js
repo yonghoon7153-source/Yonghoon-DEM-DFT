@@ -1123,6 +1123,7 @@ function buildControls(container, isMPM) {
       <option value="stress">Max contact pressure (|Fn|/A)</option>
       <option value="stress_brittle">Contact pressure + Brittle (overlay)</option>
       <option value="am_only">AM 만 — 입자 응력 (LW) · 최대 AM–AM 힘 · 접촉마다 (AM–AM · AM–SE)</option>
+      <option value="se_only">SE 만 — 입자 응력 (LW · σ_VM ÷ P_ref · AM 숨김)</option>
       <option value="coverage">Coverage Heat (AM)</option>
       <option value="cn">배위수 (활물질 주위 SE · SE–SE)</option>
       <option value="se_engagement">SE engagement & pore risk</option>
@@ -2223,6 +2224,7 @@ function applyViewMode(state, mode) {
   netCurrentTeardown(state);                       // ⚡ 전류 흐름 원기둥 · 늦게 오는 응답 무효 (mode 'net_current')
   if (mode !== 'net_current') netCurrentCacheLeave(state._netCurCache);   // 전류 흐름을 떠나면 큰 자료 (> NETCUR_BIG_N 접촉) 를 비운다 (1저자 10-08)
   _amOnlyTeardown(state);                         // AM 만 보기가 숨긴 SE 를 체크박스대로 되돌림 (mode 'am_only')
+  _seOnlyTeardown(state);                         // SE 만 보기가 칠한 SE 를 기본 (반투명 · 기본색 · 체크박스대로) 으로 — AM 보이기는 아래 AM 되돌림이 맡는다 (11-02 · mode 'se_only')
   if (state.brittleGlowGroup && state.scene) {
     state.scene.remove(state.brittleGlowGroup);
     state.brittleGlowGroup.traverse(obj => {
@@ -2388,6 +2390,9 @@ function applyViewMode(state, mode) {
 
   // AM 만 칠하기 — Love–Weber 입자 응력 · 최대 AM–AM 접촉 힘 (aux.load_view · SE 숨김 · 색 범위 = AM 만 · 벽 접촉 표지 · 10-07 #11)
   if (mode === 'am_only') { applyAmOnlyView(state); return; }
+
+  // SE 만 칠하기 — Love–Weber 입자 응력 (σ_VM ÷ P_ref · σ_VM / ⟨σ_VM⟩ · AM 숨김 · 고정 범위 = AM 만 보기와 같은 값 · 11-02 1저자 비준)
+  if (mode === 'se_only') { applySeOnlyView(state); return; }
 
   // Tortuosity 후보 경로 여럿 — se_clusters.json 의 저장 경로를 τ 색 관으로 한 번에 (10-07 · 자기 범례 · 그림 창)
   if (mode === 'tau_paths') { renderTauPaths(state); return; }
@@ -5831,6 +5836,15 @@ function loadViewAmMetric(lv, metric) {
              reason: n ? '' : '압축 AM–AM 접촉이 없다' };
   }
   const st = String(am.lw_status || '');
+  if (metric === 'lw_p') {                       // ★ 11-02 σ_VM ÷ P_ref — P_ref = 그 침대 그 프레임의 ⟨σzz⟩ 상자 평균 (load_view.p_ref)
+    const lab = 'Love–Weber 입자 응력 σ_VM ÷ P_ref';
+    if (st !== 'OK') return { ok: false, map: {}, label: lab, unit: '', scale: 'log', reason: st || 'LW 없음' };
+    const pr = lwPref(lv);
+    if (!pr.ok) return { ok: false, map: {}, label: lab, unit: '', scale: 'log', reason: pr.reason };
+    const src = am.lw_vm_MPa || {}, map = {};
+    Object.keys(src).forEach(k => { const v = +src[k]; if (Number.isFinite(v)) map[k] = v / pr.mpa; });
+    return { ok: true, map: map, label: lab, unit: '', scale: 'log', reason: '', mpa: am.lw_mean_all_MPa, pref: pr.mpa, prefRec: pr.p };
+  }
   if (st !== 'OK') return { ok: false, map: {}, label: 'Love–Weber 입자 응력 σ_VM / ⟨σ_VM⟩', unit: '', scale: 'log', reason: st || 'LW 없음' };
   return { ok: true, map: am.lw_ratio || {}, label: 'Love–Weber 입자 응력 σ_VM / ⟨σ_VM⟩ (전 입자)', unit: '', scale: 'log', reason: '',
            mpa: am.lw_mean_all_MPa };
@@ -5854,24 +5868,30 @@ function amOnlyMissingHtml(lv) {
     + '캐시 스키마 14 — 10-08 접촉마다 목록 · 10-07 판 (13) 캐시는 다시 계산).  그 전에는 Max contact pressure 보기 = 옛 계산 (당김 포함).</span>';
 }
 
-/* AM 만 범례의 조작 줄 — 양 (lw · fn · 접촉마다 AM–AM · AM–SE) · 범위 · (AM–SE) 상위 N · 범위 기준 · (lw · fn) 벽 표지 */
-function _amOnlyControlsHtml(ui, show) {
+/* AM 만 범례의 조작 줄 — 양 (lw · lw_p · fn · 접촉마다 AM–AM · AM–SE) · 범위 (+ σ_VM 비 양이면 고정 · lo · hi) · (AM–SE) 상위 N · 범위 기준 ·
+ * (lw · fn) 벽 표지.  pre = id 머리 (기본 'amonly' — SE 만 보기는 'seonly' · show.metrics 로 양 목록을 바꾼다 · 11-02) */
+function _amOnlyControlsHtml(ui, show, pre) {
+  const P = pre || 'amonly';
   const css = 'background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:1px 2px;font-size:11px';
   const sel = (id, cur, opts) => '<select id="' + id + '" style="' + css + '">'
     + opts.map(o => '<option value="' + o[0] + '"' + (String(o[0]) === String(cur) ? ' selected' : '') + '>' + o[1] + '</option>').join('')
     + '</select>';
+  const metrics = (show && show.metrics) || [['lw', 'Love–Weber 입자 응력 (σ_VM / ⟨σ_VM⟩)'], ['lw_p', 'Love–Weber 입자 응력 (σ_VM ÷ P_ref)'],
+                                              ['fn', '최대 AM–AM 접촉 힘 (µN)'], ['contact', 'AM–AM 접촉마다 (법선력 µN)'],
+                                              ['contact_se', 'AM–SE 접촉마다 (법선력 µN)']];
+  const ranges = [['p5p95', '범위 p5–p95'], ['minmax', '범위 최소–최대']].concat(show && show.fixed ? [['fixed', '고정 (모든 케이스 공통)']] : []);
   let h = '<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin:3px 0">'
-    + sel('amonly-metric', ui.metric, [['lw', 'Love–Weber 입자 응력 (σ_VM / ⟨σ_VM⟩)'], ['fn', '최대 AM–AM 접촉 힘 (µN)'],
-                                       ['contact', 'AM–AM 접촉마다 (법선력 µN)'], ['contact_se', 'AM–SE 접촉마다 (법선력 µN)']])
-    + sel('amonly-range', ui.range, [['p5p95', '범위 p5–p95'], ['minmax', '범위 최소–최대']]);
+    + sel(P + '-metric', ui.metric, metrics)
+    + sel(P + '-range', ui.range, ranges);
+  if (show && show.fixed && ui.range === 'fixed') h += lwLimInputsHtml(P, lwFixedLim(ui));   // ★ 11-02 고정 lo · hi (선형)
   if (show && show.top) {
-    h += sel('amonly-topn', ui.top, AMONLY_CONTACT_OPT.tops.map(n => [n, '상위 ' + n]).concat([['all', '전부 (실은 압축 행)']]));
+    h += sel(P + '-topn', ui.top, AMONLY_CONTACT_OPT.tops.map(n => [n, '상위 ' + n]).concat([['all', '전부 (실은 압축 행)']]));
   }
   if (show && show.basis) {
-    h += sel('amonly-basis', _amOnlyBasis(ui), [['drawn', '범위 기준 = 그린 것'], ['all', '범위 기준 = 압축 접촉 전체 (옛)']]);
+    h += sel(P + '-basis', _amOnlyBasis(ui), [['drawn', '범위 기준 = 그린 것'], ['all', '범위 기준 = 압축 접촉 전체 (옛)']]);
   }
   if (show && show.wall) {
-    h += '<label style="font-size:11px"><input type="checkbox" id="amonly-wall"' + (ui.wall ? ' checked' : '')
+    h += '<label style="font-size:11px"><input type="checkbox" id="' + P + '-wall"' + (ui.wall ? ' checked' : '')
       + '> 벽 접촉 입자 회색 (범위에서 뺌)</label>';
   }
   return h + '</div>';
@@ -5886,9 +5906,11 @@ function amOnlyLegendHtml(lv, ui, st) {
   const m = loadViewAmMetric(lv, ui.metric);
   const am = (lv && lv.am) || {};
   const fn = ui.metric === 'fn';
+  const pn = ui.metric === 'lw_p';                                // ★ 11-02 σ_VM ÷ P_ref
+  const lin = !!(st && st.lin);                                   // ★ 11-02 고정 범위 (선형 · 모든 케이스 공통)
   const L = [];
   L.push('<b>AM 만 — ' + (fn ? '최대 AM–AM 접촉 힘' : 'Love–Weber 입자 응력') + '</b> <span style="color:#9ca3af">(SE 숨김)</span>');
-  L.push(_amOnlyControlsHtml(ui, { wall: true, top: false }));
+  L.push(_amOnlyControlsHtml(ui, { wall: true, top: false, fixed: lwIsLwMetric(ui.metric) }));
   if (!m.ok) {
     L.push('<span style="color:#fbbf24">⚠ ' + esc(m.label || '') + ' — ' + esc(m.reason) + ' — 칠하지 않는다 (AM 기본색)</span>');
     return L.join('<br>');
@@ -5899,16 +5921,25 @@ function amOnlyLegendHtml(lv, ui, st) {
   }
   const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
   L.push('<div style="margin:3px 0 1px 0;height:9px;border-radius:3px;background:linear-gradient(90deg,' + stops.join(',') + ')"></div>');
-  const lo = Math.pow(10, st.lo), hi = Math.pow(10, st.hi);
-  L.push('<b>' + esc(m.label) + '</b>: ' + fj(lo) + ' … ' + fj(hi) + (fn ? ' µN' : ' × ⟨σ_VM⟩')
-    + (!fn && m.mpa > 0 ? ' <span style="color:#9ca3af">(⟨σ_VM⟩ = ' + f3(m.mpa) + ' MPa · 모델 단위 · ' + fj(lo * m.mpa) + ' … '
-       + fj(hi * m.mpa) + ' MPa)</span>' : '') + ' (jet · log)');
-  L.push('색 범위 = AM 만의 ' + (ui.range === 'minmax' ? '최소–최대' : 'p5–p95') + (ui.wall ? ' (벽 접촉 입자 뺌)' : ''));
+  const lo = lin ? st.lo : Math.pow(10, st.lo), hi = lin ? st.hi : Math.pow(10, st.hi);
+  const ref = pn ? m.pref : m.mpa;                                // 비의 분모 (MPa) — ⟨σ_VM⟩ 또는 P_ref
+  L.push('<b>' + esc(m.label) + '</b>: ' + fj(lo) + ' … ' + fj(hi) + (fn ? ' µN' : (pn ? ' × P_ref' : ' × ⟨σ_VM⟩'))
+    + (!fn && ref > 0 ? ' <span style="color:#9ca3af">(' + (pn ? 'P_ref' : '⟨σ_VM⟩') + ' = ' + f3(ref) + ' MPa · 모델 단위 · ' + fj(lo * ref) + ' … '
+       + fj(hi * ref) + ' MPa)</span>' : '') + (lin ? ' (jet · 선형)' : ' (jet · log)'));
+  if (pn) L.push(lwPrefNote(m));
+  L.push(lin ? ('색 범위 = 고정 ' + fj(lo) + ' … ' + fj(hi) + ' (선형 · 모든 케이스 공통 · 양마다 이 브라우저에 저장 — SE 만 보기와 같은 값)'
+                + (ui.wall ? ' · 벽 접촉 입자 = 회색' : ''))
+             : ('색 범위 = AM 만의 ' + (ui.range === 'minmax' ? '최소–최대' : 'p5–p95') + (ui.wall ? ' (벽 접촉 입자 뺌)' : '')));
   L.push('AM ' + st.n + ' 개 · 칠한 ' + st.nColored + ' · 벽 접촉 ' + st.nWall + ' 개'
-    + (ui.wall ? ' = 회색' : ' (칠함' + (fn ? '' : ' — LW 에 벽 힘 없음') + ')') + ' · 값 없음 ' + st.nNoValue + ' 개 (어두운 회색)');
+    + (ui.wall ? ' = 회색' : ' (칠함' + (fn ? '' : ' — LW 에 벽 힘 없음') + ')') + ' · 값 없음 ' + st.nNoValue + ' 개 (어두운 회색)'
+    + (lin ? ' · σ_VM = 0 (접촉 없음) ' + (st.nZero || 0) + ' 개 = 맨 아래 색' : ''));
   if (fn) {
     L.push('<span style="color:#9ca3af;font-size:11px">AM 입자마다 그 입자의 AM–AM 접촉 중 압축 접촉 (δ > 0) 의 |Fn| 최대 · 당김 (접착) · 판정 불가 · δ ≤ 0 은 뺐다 · '
       + '|Fn| × 1e6 / scale = µN (calc_contact_force_distribution · fn_&lt;쌍&gt;_mean 과 같은 환산) · 모델 단위 (덱 축척 환산 — 조성 비교 절대값에 쓰지 않는다)</span>');
+  } else if (pn) {                                                // ★ 11-02 — 분모가 P_ref (상 비 stress_ratio 는 ⟨σ_VM⟩ 분모라 여기 적지 않는다)
+    L.push('<span style="color:#9ca3af;font-size:11px">Love–Weber (calc_love_weber_stress) — full_metrics stress_ratio_&lt;상&gt;_lw 와 같은 σ_VM · '
+      + '분모 = P_ref (그 침대 그 프레임의 축 하중 · ⟨σ_VM⟩ 아님 — 판 압력이 다른 침대끼리 같은 눈금) · 벽 (바닥 · 판) 에 닿은 입자는 벽 힘이 없다 '
+      + '(접촉 덤프에 벽 접촉 없음 — 그 값은 불완전) · 응력 기준틀 미인증 (모델 내부 비교)</span>');
   } else {
     const tr = am.lw_type_ratio || {};
     const trs = Object.keys(tr).sort().map(k => esc(k) + ' ' + fj(tr[k])).join(' · ');
@@ -5925,16 +5956,27 @@ function amOnlyColorbarSpec(lv, ui, lo, hi, cl) {
     return amOnlyContactColorbarSpec(cl || loadViewAmContacts(lv, ui.metric, ui.top), ui, lo, hi);
   }
   const fn = ui.metric === 'fn';
-  const rng = (ui.range === 'minmax' ? 'min–max' : 'p5–p95') + (ui.wall ? ', wall-touching AM greyed and excluded' : '');
+  const pn = ui.metric === 'lw_p';                                // ★ 11-02 σ_VM ÷ P_ref
+  const lin = ui.range === 'fixed' && lwIsLwMetric(ui.metric);    // ★ 11-02 고정 범위 (선형) — lo · hi = 값 그대로 (log₁₀ 아님)
+  const rng = lin
+    ? ('fixed ' + netCurrentFmtJ(lo) + '–' + netCurrentFmtJ(hi) + ', linear, common to all cases' + (ui.wall ? ', wall-touching AM greyed' : ''))
+    : ((ui.range === 'minmax' ? 'min–max' : 'p5–p95') + (ui.wall ? ', wall-touching AM greyed and excluded' : ''));
+  const pr = pn ? lwPref(lv) : null;
+  const pmpa = pr && pr.ok ? ((pr.mpa >= 0.01 && pr.mpa < 1000) ? String(Number(pr.mpa.toPrecision(3))) : netCurrentFmtJ(pr.mpa)) : '—';
   return {
     map: 'jet',
-    title: fn ? 'AM only — max AM–AM contact normal force (µN)' : 'AM only — Love–Weber particle stress σ_VM / ⟨σ_VM⟩ (all particles)',
-    ticks: netCurrentTicks(lo, hi, netCurrentFmtJ),
+    title: fn ? 'AM only — max AM–AM contact normal force (µN)'
+      : (pn ? 'AM only — Love–Weber particle stress σ_VM / P_ref (P_ref = box-average ⟨σzz⟩ = ' + pmpa + ' MPa)'
+            : 'AM only — Love–Weber particle stress σ_VM / ⟨σ_VM⟩ (all particles)'),
+    ticks: lin ? lwLinTicks(lo, hi) : netCurrentTicks(lo, hi, netCurrentFmtJ),
     sub: 'Colour range = AM particles only (' + rng + ').  '
       + (fn ? 'Per AM particle: max |Fn| over its compressive AM–AM contacts (attractive · δ ≤ 0 excluded) · model units (deck-scaled) — '
               + 'not for absolute comparison.  '
-            : 'Love–Weber (same definition as stress_ratio_<phase>_lw) · wall forces absent for wall-touching particles · model contact forces.  ')
-      + 'Log colour scale.',
+            : (pn ? 'P_ref = axial load of this bed at this frame from the same pair contacts (Σ branch ⊗ force / box volume; force balance — '
+                    + 'wall contacts are not in the dump, so it reads a few % below the plate pressure).  Love–Weber (same σ_VM as '
+                    + 'stress_ratio_<phase>_lw) · wall forces absent for wall-touching particles · model contact forces.  '
+                  : 'Love–Weber (same definition as stress_ratio_<phase>_lw) · wall forces absent for wall-touching particles · model contact forces.  '))
+      + (lin ? 'Linear colour scale.' : 'Log colour scale.'),
   };
 }
 
@@ -5956,6 +5998,8 @@ function applyAmOnlyView(state) {
                                                        basis: AMONLY_CONTACT_OPT.basisDefault });
   if (ui.top === undefined) ui.top = AMONLY_CONTACT_OPT.topDefault;
   if (ui.basis === undefined) ui.basis = AMONLY_CONTACT_OPT.basisDefault;
+  ui.lwr = state._lwRange || (state._lwRange = { lim: {}, mode: {} });   // ★ 11-02 고정 범위 — AM 만 · SE 만 보기 공용 (이 화면)
+  lwRangeSync(ui);                                           // ★ 11-02 σ_VM 비 양이면 고른 범위 모드 (저장 · 선택 없으면 그대로 = 오늘과 같은 그림)
   _amOnlyCapDispose(state);                                  // 다시 그릴 때 (양 · 범위 · 상위 N 바꿈) 옛 cap 을 치운다
   if (state.meshes && state.meshes.SE) { state.meshes.SE.visible = false; state._amOnlyHidSE = true; }   // SE 숨김 (되돌림 = _amOnlyTeardown)
   const amMeshes = ['AM_P', 'AM_S'].map(t => [t, state.meshes && state.meshes[t]]).filter(x => x[1]);
@@ -5985,14 +6029,16 @@ function applyAmOnlyView(state) {
   const met = loadViewAmMetric(lv, ui.metric);
   const wall = (lv.am && lv.am.wall) || {};
   const val = p => { const v = met.map[p.id]; return v === undefined ? met.map[String(p.id)] : v; };
+  const fixed = ui.range === 'fixed' && lwIsLwMetric(ui.metric);   // ★ 11-02 고정 (선형 · 모든 케이스 공통) — lo · hi = lwFixedLim
   const vals = [];
   amMeshes.forEach(([, m]) => m.userData.particles.forEach(p => {
     if (ui.wall && wall[p.id]) return;
     const v = val(p);
     if (v > 0) vals.push(v);
   }));
-  const rng = met.ok ? amOnlyRange(vals, ui.range) : null;
+  const rng = met.ok ? (fixed ? lwFixedLim(ui) : amOnlyRange(vals, ui.range)) : null;
   const st = { n: 0, nColored: 0, nWall: 0, nNoValue: 0, lo: rng ? rng[0] : 0, hi: rng ? rng[1] : 1, noRange: met.ok && !rng };
+  if (fixed) { st.lin = true; st.nZero = 0; }
   if (!met.ok || !rng) {
     base();
     amMeshes.forEach(([, m]) => m.userData.particles.forEach(p => { st.n += 1; if (wall[p.id]) st.nWall += 1; }));
@@ -6005,7 +6051,8 @@ function applyAmOnlyView(state) {
         if (isWall) st.nWall += 1;
         const v = val(p);
         if (ui.wall && isWall) col.setHex(0x9ca3af);
-        else if (v > 0) { col.setHex(jetColor(netCurrentT(v, st.lo, st.hi))); st.nColored += 1; }
+        else if (fixed && lwFin(v)) { col.setHex(jetColor(lwLinT(v, st.lo, st.hi))); st.nColored += 1; if (+v === 0) st.nZero += 1; }   // 선형 — 0 도 값
+        else if (!fixed && v > 0) { col.setHex(jetColor(netCurrentT(v, st.lo, st.hi))); st.nColored += 1; }
         else { col.setHex(0x4b5563); st.nNoValue += 1; }
         m.setColorAt(i, col);
       });
@@ -6024,15 +6071,399 @@ function _amOnlyWireLegend(state, ui) {
   if (!el) return;
   const on = (id, ev, fn) => { const x = el.querySelector('#' + id); if (x) x.addEventListener(ev, fn); };
   on('amonly-metric', 'change', ev => { ui.metric = ev.target.value; applyAmOnlyView(state); });
-  on('amonly-range', 'change', ev => { ui.range = ev.target.value; applyAmOnlyView(state); });
+  on('amonly-range', 'change', ev => { ui.range = ev.target.value; lwRangeRemember(ui); applyAmOnlyView(state); });   // ★ 11-02 σ_VM 비 양 = 범위 모드 저장
+  on('amonly-lo', 'change', ev => { lwRangeSetLim(ui, ev.target.value, null); applyAmOnlyView(state); });           // ★ 11-02 고정 lo (깨진 입력 = 그대로)
+  on('amonly-hi', 'change', ev => { lwRangeSetLim(ui, null, ev.target.value); applyAmOnlyView(state); });           // ★ 11-02 고정 hi
   on('amonly-wall', 'change', ev => { ui.wall = ev.target.checked; applyAmOnlyView(state); });
   on('amonly-topn', 'change', ev => { ui.top = ev.target.value === 'all' ? 'all' : +ev.target.value; applyAmOnlyView(state); });
   on('amonly-basis', 'change', ev => { ui.basis = ev.target.value; applyAmOnlyView(state); });
   on('amonly-cbar', 'click', () => {
     const l = state._amOnlyLast;
     if (!l) return;
-    const tail = l.ui.metric === 'contact_se' ? '_top' + l.ui.top + '_' + _amOnlyBasis(l.ui) : '';
+    const tail = l.ui.metric === 'contact_se' ? '_top' + l.ui.top + '_' + _amOnlyBasis(l.ui) : (l.st && l.st.lin ? '_fixed' : '');
     exportColorbarPNG(amOnlyColorbarSpec(l.lv, l.ui, l.st.lo, l.st.hi, l.cl), 'colorbar_am_only_' + l.ui.metric + tail + '.png');
+  });
+}
+
+/* ── 11-02 σ_VM ÷ P_ref · 고정 색 범위 · SE 만 보기 (1저자 11-02 비준) ─────────────────────────────────────────────────────
+ * 계기: AM 만 보기의 LW 는 σ_VM / ⟨σ_VM⟩ (그 침대 전 입자 평균) 을 그 침대만의 색 범위 (p5–p95 · 최소–최대 · log) 로 칠해 침대마다 늘
+ *   파랑 → 빨강을 다 쓴다 — 침대끼리 색으로 비교할 수 없다 (1저자 "D3 도 파란 게 많다" = 범위의 인공물 · D3 AM σ_VM 55–1050 MPa (19×) ↔
+ *   D1 8.9–804 MPa (90×)) · 50kg 침대는 이완 뒤 판 압력도 다르다 (로그 D1 156 · D2 280 · D3 291 MPa).
+ * 더한 것: ① 양 'lw_p' = σ_VM ÷ P_ref (P_ref = 그 침대 그 프레임의 ⟨σzz⟩ 상자 평균 = load_view.p_ref · scripts/viewer3d_data._p_ref_block) ·
+ *   ② 색 범위 'fixed' (고정 · 모든 케이스 공통 · 선형 · lo · hi · 기본 0 … 3 · 양마다 localStorage — 케이스를 바꿔도 같은 눈금 · 모든 접근 try/catch) ·
+ *   ③ View Mode 'se_only' (같은 양 · 같은 고정 범위 · AM 숨김 · 벽 접촉 SE 회색 · 값 = load_view.se).
+ * 기존 양 (lw · fn · 접촉마다) · 기본값 (lw · p5p95 · log) · 색 = 그대로 — 저장된 선택이 없으면 오늘과 같은 그림.
+ * ⚠ 고정 범위는 σ_VM 비 (lw · lw_p) 만 — 최대 AM–AM 힘 (µN) 은 모델 단위라 케이스 공통 눈금을 주지 않는다 (조성 비교 절대값 금지). */
+const LW_RANGE_DEFAULT = { lw: [0, 3], lw_p: [0, 3] };
+
+/* 고정 범위를 받는 양 — 'lw' (σ_VM / ⟨σ_VM⟩) · 'lw_p' (σ_VM ÷ P_ref) */
+function lwIsLwMetric(metric) {
+  return metric === 'lw' || metric === 'lw_p';
+}
+
+/* 고정 범위 lo · hi 를 쓸 수 있나 — 유한 수 · hi > lo */
+function lwRangeValid(lo, hi) {
+  const a = +lo, b = +hi;
+  return Number.isFinite(a) && Number.isFinite(b) && b > a;
+}
+
+/* localStorage 키 — 양마다 (AM 만 · SE 만 두 보기가 같은 키 = 같은 눈금) */
+function lwRangeKey(metric) {
+  return 'viewer3d.lw_range.' + String(metric);
+}
+
+/* 저장된 범위 선택 → {mode, lo, hi} | null — 저장소 없음 (node · 막힌 브라우저) · 막힘 (throw) · 깨진 값 = null (예외를 밖으로 내지 않는다) ·
+ * 모드는 맞는데 lo · hi 가 깨졌으면 그 양의 기본 (0 … 3) */
+function lwRangeLoad(metric) {
+  let raw = null;
+  try { raw = localStorage.getItem(lwRangeKey(metric)); } catch (e) { return null; }
+  if (typeof raw !== 'string' || !raw) return null;
+  let o = null;
+  try { o = JSON.parse(raw); } catch (e) { return null; }
+  if (!o || typeof o !== 'object' || ['p5p95', 'minmax', 'fixed'].indexOf(o.mode) < 0) return null;
+  const d = LW_RANGE_DEFAULT[metric] || [0, 3];
+  return lwRangeValid(o.lo, o.hi) ? { mode: o.mode, lo: +o.lo, hi: +o.hi } : { mode: o.mode, lo: d[0], hi: d[1] };
+}
+
+/* 범위 선택 저장 (양마다) → true · 못 쓰면 false (사생활 창 · 막힘 · 저장소 없음 — 이 화면에서만 산다) */
+function lwRangeSave(metric, mode, lo, hi) {
+  try {
+    localStorage.setItem(lwRangeKey(metric), JSON.stringify({ mode: mode, lo: +lo, hi: +hi }));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+/* 지금 양의 고정 lo · hi → [lo, hi] — 이 화면에서 고친 값 (ui.lwr.lim · AM 만 · SE 만 공용) → 저장값 → 기본 (0 … 3) */
+function lwFixedLim(ui) {
+  const m = ui && ui.metric;
+  const mine = ui && ui.lwr && ui.lwr.lim ? ui.lwr.lim[m] : null;
+  if (mine && lwRangeValid(mine[0], mine[1])) return [+mine[0], +mine[1]];
+  const st = lwRangeLoad(m);
+  if (st) return [st.lo, st.hi];
+  const d = LW_RANGE_DEFAULT[m] || [0, 3];
+  return [d[0], d[1]];
+}
+
+/* 보기를 그릴 때 — σ_VM 비 양이면 고른 범위 모드를 맞춘다 (이 화면 → 저장값 — 다른 보기 · 다른 케이스에서 고른 것과 같은 눈금 · 없으면 그대로) ·
+ * 고정을 받지 않는 양 (최대 AM–AM 힘 · 접촉마다) 에서 'fixed' 면 p5p95 */
+function lwRangeSync(ui) {
+  if (!ui) return ui;
+  if (lwIsLwMetric(ui.metric)) {
+    const mine = ui.lwr && ui.lwr.mode ? ui.lwr.mode[ui.metric] : null;
+    const st = mine ? null : lwRangeLoad(ui.metric);
+    const mode = mine || (st && st.mode);
+    if (mode) ui.range = mode;
+  } else if (ui.range === 'fixed') {
+    ui.range = 'p5p95';
+  }
+  return ui;
+}
+
+/* 범위 모드를 기억 (σ_VM 비 양만) — 이 화면 (ui.lwr.mode) + 저장 (모드 · 지금 lo · hi) → 저장했으면 true */
+function lwRangeRemember(ui) {
+  if (!ui || !lwIsLwMetric(ui.metric)) return false;
+  if (ui.lwr && ui.lwr.mode) ui.lwr.mode[ui.metric] = ui.range;
+  const lim = lwFixedLim(ui);
+  return lwRangeSave(ui.metric, ui.range, lim[0], lim[1]);
+}
+
+/* 고정 lo · hi 입력 (null = 그대로) → 쓸 수 있으면 (유한 · hi > lo · 빈칸 아님) 이 화면 값 · 저장 → true · 아니면 아무것도 안 바꾸고 false */
+function lwRangeSetLim(ui, lo, hi) {
+  if (!ui || !lwIsLwMetric(ui.metric)) return false;
+  const num = x => ((x === null || x === undefined) ? null : (String(x).trim() === '' ? NaN : +x));
+  const cur = lwFixedLim(ui);
+  const a = num(lo), b = num(hi);
+  const nlo = a === null ? cur[0] : a, nhi = b === null ? cur[1] : b;
+  if (!lwRangeValid(nlo, nhi)) return false;
+  if (ui.lwr && ui.lwr.lim) ui.lwr.lim[ui.metric] = [nlo, nhi];
+  if (ui.lwr && ui.lwr.mode) ui.lwr.mode[ui.metric] = ui.range;
+  lwRangeSave(ui.metric, ui.range, nlo, nhi);
+  return true;
+}
+
+/* 값이 있나 — 유한 수 (0 포함) · undefined · null · 빈 문자열 · NaN = 없음 */
+function lwFin(v) {
+  return v !== undefined && v !== null && v !== '' && Number.isFinite(+v);
+}
+
+/* 선형 색 축 t ∈ [0, 1] = (v − lo) / (hi − lo) — 범위 밖은 자른다 · 범위가 한 점이면 1 · 비유한 = 0 */
+function lwLinT(v, lo, hi) {
+  const x = +v;
+  if (!Number.isFinite(x)) return 0;
+  const span = hi - lo;
+  if (!(span > 0)) return 1;
+  return Math.max(0, Math.min(1, (x - lo) / span));
+}
+
+/* 선형 컬러바 눈금 — 양 끝 (lo · hi) + 안쪽 1 · 2 · 5 × 10^k 간격 (간격 ≈ 폭 / 4 — 눈금 4–6 개 · 7–8 개는 많다) · 끝에서 0.12 이상 */
+function lwLinTicks(lo, hi) {
+  if (!(Number.isFinite(lo) && Number.isFinite(hi) && hi > lo)) return [];
+  const span = hi - lo;
+  const raw = span / 4;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const n = raw / mag;
+  const step = (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * mag;
+  const out = [{ p: 0, label: netCurrentFmtJ(lo) }];
+  for (let k = Math.ceil(lo / step - 1e-9); k * step < hi - 1e-9 * span; k++) {
+    const v = Number((k * step).toPrecision(12));
+    const p = (v - lo) / span;
+    if (p >= 0.12 && p <= 0.88) out.push({ p: p, label: netCurrentFmtJ(v) });
+  }
+  out.push({ p: 1, label: netCurrentFmtJ(hi) });
+  return out;
+}
+
+/* P_ref — 그 침대 그 프레임의 ⟨σzz⟩ 상자 평균 (load_view.p_ref · 서버 = scripts/viewer3d_data._p_ref_block) → {ok, mpa, reason, p} ·
+ * 옛 캐시 (p_ref 없음) · NOT_COMPUTED · UNDEFINED (인장) = ok false + 사유 (0 · 음수로 나누지 않는다) */
+function lwPref(lv) {
+  const p = lv && lv.p_ref;
+  if (!p) return { ok: false, mpa: null, reason: '3D 데이터에 P_ref 가 없다 (옛 캐시 — 3D 데이터 캐시 스키마 15 로 다시 계산하면 온다)', p: null };
+  const v = +p.MPa;
+  if (String(p.status) !== 'OK' || !(v > 0) || !Number.isFinite(v)) return { ok: false, mpa: null, reason: String(p.status || 'P_ref 없음'), p: p };
+  return { ok: true, mpa: v, reason: '', p: p };
+}
+
+/* P_ref 범례 줄 (AM 만 · SE 만 공용) — m = 양 결과 (pref · prefRec) · 정의 · MPa · 한정어 (툴팁 = 서버 규칙 문구) */
+function lwPrefNote(m) {
+  const esc = jeEscH;
+  const f3 = v => ((+v >= 0.01 && +v < 1000) ? String(Number((+v).toPrecision(3))) : netCurrentFmtJ(v));
+  const rec = (m && m.prefRec) || {};
+  const box = rec.box_source && rec.box_source !== 'input_params'
+    ? ' · <span style="color:#fbbf24">⚠ 상자 = ' + esc(rec.box_source) + ' (input_params 없음 — 기본 0.05 가정)</span>' : '';
+  return '<span title="' + esc(rec.rule || '') + '">P_ref = ⟨σzz⟩ 상자 평균 = 판 압력 (힘 평형 · 벽 접촉 항 제외) = <b>' + f3(m && m.pref) + ' MPa</b></span>'
+    + '<span style="color:#9ca3af;font-size:11px"> — 그 침대 그 프레임의 축 하중 (Σ 접촉 branch ⊗ 힘 ÷ 상자 x · y × 판 높이) · 바닥 · 판 접촉 힘은 '
+    + '덤프에 없어 판 압력과 몇 % 다르다 (50kg 끝 상태: 로그 판 압력의 0.97–0.98 배)' + box + '</span>';
+}
+
+/* 고정 범위 lo · hi 입력 (선형) — id = <pre>-lo · <pre>-hi */
+function lwLimInputsHtml(pre, lim) {
+  const css = 'width:52px;background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:1px 2px;font-size:11px';
+  const v = x => String(Number((+x).toPrecision(6)));
+  return '<span style="font-size:11px">lo <input type="number" step="any" id="' + pre + '-lo" value="' + v(lim[0]) + '" style="' + css + '"> '
+    + 'hi <input type="number" step="any" id="' + pre + '-hi" value="' + v(lim[1]) + '" style="' + css + '"> (선형)</span>';
+}
+
+/* SE 값 펼치기 — load_view.se (id_runs [시작, 개수] · lw_vm_MPa 유효 4 자리 · 같은 순서) → {ok, map (Map id → σ_VM MPa), n, reason} ·
+ * 옛 캐시 (se 없음) · LW 미계산 · 구간 ↔ 값 수 어긋남 · 겹친 id = ok false + 사유 */
+function seLwExpand(se) {
+  const fail = r => ({ ok: false, map: new Map(), n: 0, reason: r });
+  if (!se) return fail('3D 데이터에 SE 입자 응력이 없다 (옛 캐시 — 3D 데이터 캐시 스키마 15 로 다시 계산하면 온다)');
+  const st = String(se.lw_status || '');
+  if (st !== 'OK') return fail(st || 'LW 없음');
+  const runs = Array.isArray(se.id_runs) ? se.id_runs : [];
+  const v = Array.isArray(se.lw_vm_MPa) ? se.lw_vm_MPa : [];
+  const map = new Map();
+  let j = 0;
+  for (let r = 0; r < runs.length; r++) {
+    const a = +(runs[r] || [])[0], c = +(runs[r] || [])[1];
+    if (!Number.isInteger(a) || !Number.isInteger(c) || c < 1 || j + c > v.length) {
+      return fail('SE id 구간이 깨졌다 (구간 ' + r + ' · 값 ' + v.length + ' 개)');
+    }
+    for (let k = 0; k < c; k++) map.set(a + k, +v[j + k]);
+    j += c;
+  }
+  if (j !== v.length) return fail('SE id 구간의 수 ' + j + ' ≠ 값 수 ' + v.length);
+  if (map.size !== j) return fail('SE id 구간이 겹친다 (' + (j - map.size) + ' 개)');
+  return { ok: true, map: map, n: j, reason: '' };
+}
+
+/* SE 벽 표지 → Set (바닥 ∪ 판) — calc_love_weber_stress 의 벽 규칙 · 판 표지는 mesh 판일 때만 */
+function seWallSet(se) {
+  const w = (se && se.wall) || {};
+  const out = new Set();
+  [w.floor, w.plate].forEach(a => { if (Array.isArray(a)) a.forEach(i => out.add(+i)); });
+  return out;
+}
+
+/* SE 만 보기의 양 — 'lw_p' = σ_VM ÷ P_ref · 'lw' = σ_VM / ⟨σ_VM⟩ (전 입자 — AM 만 보기와 같은 분모 lw_mean_all_MPa) →
+ * {ok, map (Map id → 값), label, reason, mpa, pref, prefRec, n} — 못 쓰면 ok false + 사유 (0 으로 칠하지 않는다) · ex = seLwExpand 결과 (다시 펼치지 않게) */
+function loadViewSeMetric(lv, metric, ex) {
+  const pn = metric === 'lw_p';
+  const label = pn ? 'Love–Weber 입자 응력 σ_VM ÷ P_ref' : 'Love–Weber 입자 응력 σ_VM / ⟨σ_VM⟩ (전 입자)';
+  const fail = r => ({ ok: false, map: new Map(), label: label, reason: r, n: 0 });
+  if (!lv || lv.status !== 'OK') return fail((lv && lv.status) || '입자 하중 자료 없음');
+  const e = ex || seLwExpand(lv.se);
+  if (!e.ok) return fail(e.reason);
+  const am = lv.am || {};
+  const mpa = +((lv.se && lv.se.lw_mean_all_MPa != null) ? lv.se.lw_mean_all_MPa : am.lw_mean_all_MPa);
+  let den = null, pr = null;
+  if (pn) {
+    pr = lwPref(lv);
+    if (!pr.ok) return fail(pr.reason);
+    den = pr.mpa;
+  } else {
+    if (!(mpa > 0)) return fail('⟨σ_VM⟩ 없음');
+    den = mpa;
+  }
+  const map = new Map();
+  e.map.forEach((v, k) => map.set(k, v / den));
+  return { ok: true, map: map, label: label, reason: '', mpa: mpa, pref: pr ? pr.mpa : null, prefRec: pr ? pr.p : null, n: e.n };
+}
+
+/* SE 만 칠하기 — AM 숨김 (되돌림 = applyViewMode 머리의 AM 체크박스 되돌림) · SE 보이기 · 불투명 · 색 = 고른 양 (jet · 고정 = 선형 · 그 밖 = log) ·
+ * 벽 접촉 SE 회색 (범위에서 뺌) · 기본 = σ_VM ÷ P_ref · 고정 (저장된 선택이 있으면 그것 — AM 만 보기와 같은 값) */
+function applySeOnlyView(state) {
+  const aux = (state.data && state.data.aux) || {};
+  const lv = aux.load_view;
+  const ui = state._seOnlyUi || (state._seOnlyUi = { metric: 'lw_p', range: 'fixed', wall: true });
+  if (!lwIsLwMetric(ui.metric)) ui.metric = 'lw_p';
+  ui.lwr = state._lwRange || (state._lwRange = { lim: {}, mode: {} });
+  lwRangeSync(ui);
+  ['AM_P', 'AM_S'].forEach(t => { const m = state.meshes && state.meshes[t]; if (m) m.visible = false; });
+  state._seOnlyOn = true;
+  const se = state.meshes && state.meshes.SE;
+  if (!se) { setLegend(state, seOnlyMissingHtml(lv, '이 케이스에 SE 입자가 없다')); return; }
+  se.visible = true;
+  se.material.opacity = 1.0;
+  se.material.transparent = false;
+  const base = () => {
+    const c = new THREE.Color(COL.SE);
+    se.userData.particles.forEach((_, i) => se.setColorAt(i, c));
+    if (se.instanceColor) se.instanceColor.needsUpdate = true;
+  };
+  if (!lv || lv.status !== 'OK') { base(); setLegend(state, seOnlyMissingHtml(lv)); return; }
+  const c0 = state._seOnlyCache;
+  const ex = (c0 && c0.src === lv.se) ? c0.ex : seLwExpand(lv.se);         // 펼친 SE 값 (양 · 범위를 바꿀 때 다시 펼치지 않는다)
+  state._seOnlyCache = { src: lv.se, ex: ex };
+  const met = loadViewSeMetric(lv, ui.metric, ex);
+  const wall = seWallSet(lv.se);
+  const fixed = ui.range === 'fixed';
+  const vals = [];
+  if (met.ok) {
+    se.userData.particles.forEach(p => {
+      if (ui.wall && wall.has(+p.id)) return;
+      const v = met.map.get(+p.id);
+      if (v > 0) vals.push(v);
+    });
+  }
+  const rng = met.ok ? (fixed ? lwFixedLim(ui) : amOnlyRange(vals, ui.range)) : null;
+  const st = { n: 0, nColored: 0, nWall: 0, nNoValue: 0, lo: rng ? rng[0] : 0, hi: rng ? rng[1] : 1, noRange: met.ok && !rng };
+  if (fixed) { st.lin = true; st.nZero = 0; }
+  if (!met.ok || !rng) {
+    base();
+    se.userData.particles.forEach(p => { st.n += 1; if (wall.has(+p.id)) st.nWall += 1; });
+  } else {
+    const col = new THREE.Color();
+    se.userData.particles.forEach((p, i) => {
+      st.n += 1;
+      const isWall = wall.has(+p.id);
+      if (isWall) st.nWall += 1;
+      const v = met.map.get(+p.id);
+      if (ui.wall && isWall) col.setHex(0x9ca3af);
+      else if (fixed && lwFin(v)) { col.setHex(jetColor(lwLinT(v, st.lo, st.hi))); st.nColored += 1; if (+v === 0) st.nZero += 1; }
+      else if (!fixed && v > 0) { col.setHex(jetColor(netCurrentT(v, st.lo, st.hi))); st.nColored += 1; }
+      else { col.setHex(0x4b5563); st.nNoValue += 1; }
+      se.setColorAt(i, col);
+    });
+    if (se.instanceColor) se.instanceColor.needsUpdate = true;
+  }
+  state._seOnlyLast = { lv: lv, ui: ui, st: st };
+  setLegend(state, seOnlyLegendHtml(lv, ui, st, ex));
+  _seOnlyWireLegend(state, ui);
+}
+
+/* SE 만 보기를 떠날 때 (applyViewMode 머리) — SE 를 체크박스대로 보이고 반투명 (OPA.SE) · 기본색 · AM 보이기는 머리의 AM 되돌림이 맡는다 */
+function _seOnlyTeardown(state) {
+  if (!state || !state._seOnlyOn) return;
+  state._seOnlyOn = false;
+  const se = state.meshes && state.meshes.SE;
+  if (!se) return;
+  const cb = document.querySelector('.viewer-controls input[data-layer="SE"]');
+  se.visible = cb ? cb.checked : true;
+  se.material.opacity = OPA.SE;
+  se.material.transparent = true;
+  const c = new THREE.Color(COL.SE);
+  se.userData.particles.forEach((_, i) => se.setColorAt(i, c));
+  if (se.instanceColor) se.instanceColor.needsUpdate = true;
+}
+
+/* SE 만 — 자료 없음 (옛 캐시 · 접촉 덤프 없음) 안내 */
+function seOnlyMissingHtml(lv, why) {
+  const st = lv && lv.status ? '<br>자료 상태: ' + jeEscH(lv.status) : '';
+  return '<b>SE 만 — Love–Weber 입자 응력</b> <span style="color:#9ca3af">(AM 숨김)</span><br><span style="color:#fbbf24">'
+    + jeEscH(why || '3D 데이터에 입자 하중 자료 (aux.load_view) 가 없다') + '</span>' + st
+    + '<br><span style="color:#9ca3af;font-size:11px">SE 입자 응력 · P_ref 는 3D 데이터 캐시 스키마 15 (11-02) 부터 온다 — 옛 캐시는 페이지를 새로 열면 '
+    + '다시 계산한다 · 접촉 덤프가 없는 케이스 (atoms-only) 는 값이 없다.</span>';
+}
+
+/* SE 만 범례 — 양 · 범위 (고정 · lo · hi) · 벽 표지 조작 · 컬러바 · P_ref · 수 · 한정어.  st = {n, nColored, nWall, nNoValue, lo, hi, lin, nZero} */
+function seOnlyLegendHtml(lv, ui, st, ex) {
+  const esc = jeEscH, fj = netCurrentFmtJ;
+  const f3 = v => ((+v >= 0.01 && +v < 1000) ? String(Number((+v).toPrecision(3))) : fj(v));
+  const m = loadViewSeMetric(lv, ui.metric, ex);
+  const pn = ui.metric === 'lw_p';
+  const lin = !!(st && st.lin);
+  const L = [];
+  L.push('<b>SE 만 — Love–Weber 입자 응력</b> <span style="color:#9ca3af">(AM 숨김)</span>');
+  L.push(_amOnlyControlsHtml(ui, { wall: true, top: false, fixed: true,
+                                   metrics: [['lw_p', 'Love–Weber 입자 응력 (σ_VM ÷ P_ref)'], ['lw', 'Love–Weber 입자 응력 (σ_VM / ⟨σ_VM⟩)']] }, 'seonly'));
+  if (!m.ok) {
+    L.push('<span style="color:#fbbf24">⚠ ' + esc(m.label || '') + ' — ' + esc(m.reason) + ' — 칠하지 않는다 (SE 기본색)</span>');
+    return L.join('<br>');
+  }
+  if (st.noRange) {
+    L.push('<span style="color:#fbbf24">⚠ 칠할 값이 없다 (범위에 넣을 SE 값 0 개' + (ui.wall ? ' — 벽 접촉 입자를 뺐다' : '') + ') — 칠하지 않는다 (SE 기본색)</span>');
+    return L.join('<br>');
+  }
+  const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
+  L.push('<div style="margin:3px 0 1px 0;height:9px;border-radius:3px;background:linear-gradient(90deg,' + stops.join(',') + ')"></div>');
+  const lo = lin ? st.lo : Math.pow(10, st.lo), hi = lin ? st.hi : Math.pow(10, st.hi);
+  const ref = pn ? m.pref : m.mpa;
+  L.push('<b>' + esc(m.label) + '</b>: ' + fj(lo) + ' … ' + fj(hi) + (pn ? ' × P_ref' : ' × ⟨σ_VM⟩')
+    + (ref > 0 ? ' <span style="color:#9ca3af">(' + (pn ? 'P_ref' : '⟨σ_VM⟩') + ' = ' + f3(ref) + ' MPa · 모델 단위 · ' + fj(lo * ref) + ' … '
+       + fj(hi * ref) + ' MPa)</span>' : '') + (lin ? ' (jet · 선형)' : ' (jet · log)'));
+  if (pn) L.push(lwPrefNote(m));
+  L.push(lin ? ('색 범위 = 고정 ' + fj(lo) + ' … ' + fj(hi) + ' (선형 · 모든 케이스 공통 · AM 만 보기와 같은 값 · 양마다 이 브라우저에 저장)'
+                + (ui.wall ? ' · 벽 접촉 입자 = 회색' : ''))
+             : ('색 범위 = SE 만의 ' + (ui.range === 'minmax' ? '최소–최대' : 'p5–p95') + (ui.wall ? ' (벽 접촉 입자 뺌)' : '')));
+  L.push('SE ' + st.n + ' 개 · 칠한 ' + st.nColored + ' · 벽 접촉 ' + st.nWall + ' 개' + (ui.wall ? ' = 회색' : ' (칠함 — LW 에 벽 힘 없음)')
+    + ' · 값 없음 ' + st.nNoValue + ' 개 (어두운 회색' + (lin ? '' : ' — σ_VM = 0 (접촉 없음) 포함 · log') + ')'
+    + (lin ? ' · σ_VM = 0 (접촉 없음) ' + (st.nZero || 0) + ' 개 = 맨 아래 색' : ''));
+  L.push('<span style="color:#9ca3af;font-size:11px">Love–Weber (calc_love_weber_stress) — AM 만 보기와 같은 함수 · σ_VM / ⟨σ_VM⟩ 의 분모 = 전 입자 평균 (AM 만 보기와 같다) · '
+    + 'SE 값 = 유효 4 자리 · 벽 (바닥 · 판) 에 닿은 입자는 벽 힘이 없다 (접촉 덤프에 벽 접촉 없음 — 그 값은 불완전) · 응력 기준틀 미인증 (모델 내부 비교)</span>');
+  L.push('<button id="seonly-cbar" class="data-modal-btn" title="이 그림의 색 눈금을 논문용 6× PNG 로">컬러바 ⬇</button>');
+  return L.join('<br>');
+}
+
+/* SE 만 논문용 컬러바 스펙 (영문) — jet · 고정 = 선형 눈금 (lwLinTicks) · 그 밖 = log₁₀ (netCurrentTicks) */
+function seOnlyColorbarSpec(lv, ui, lo, hi) {
+  const pn = ui.metric === 'lw_p';
+  const lin = ui.range === 'fixed';
+  const pr = lwPref(lv);
+  const pmpa = pr.ok ? ((pr.mpa >= 0.01 && pr.mpa < 1000) ? String(Number(pr.mpa.toPrecision(3))) : netCurrentFmtJ(pr.mpa)) : '—';
+  const rng = lin
+    ? ('fixed ' + netCurrentFmtJ(lo) + '–' + netCurrentFmtJ(hi) + ', linear, common to all cases and the same as the AM-only view'
+       + (ui.wall ? ', wall-touching SE greyed' : ''))
+    : ('SE particles only, ' + (ui.range === 'minmax' ? 'min–max' : 'p5–p95') + (ui.wall ? ', wall-touching SE greyed and excluded' : ''));
+  return {
+    map: 'jet',
+    title: pn ? 'SE only — Love–Weber particle stress σ_VM / P_ref (P_ref = box-average ⟨σzz⟩ = ' + pmpa + ' MPa)'
+              : 'SE only — Love–Weber particle stress σ_VM / ⟨σ_VM⟩ (all particles)',
+    ticks: lin ? lwLinTicks(lo, hi) : netCurrentTicks(lo, hi, netCurrentFmtJ),
+    sub: 'Colour range = ' + rng + '.  '
+      + (pn ? 'P_ref = axial load of this bed at this frame from the same pair contacts (Σ branch ⊗ force / box volume; force balance — '
+              + 'wall contacts are not in the dump, so it reads a few % below the plate pressure).  ' : '')
+      + 'Love–Weber (same function as the AM-only view; SE values to 4 significant digits) · wall forces absent for wall-touching particles · '
+      + 'model contact forces.  ' + (lin ? 'Linear colour scale.' : 'Log colour scale.'),
+  };
+}
+
+/* SE 만 범례 조작 배선 — 양 · 범위 (σ_VM 비 = 저장) · lo · hi · 벽 표지 · 컬러바 PNG (양 · 고정마다 파일 이름) */
+function _seOnlyWireLegend(state, ui) {
+  const el = document.getElementById('view-mode-legend');
+  if (!el) return;
+  const on = (id, ev, fn) => { const x = el.querySelector('#' + id); if (x) x.addEventListener(ev, fn); };
+  on('seonly-metric', 'change', ev => { ui.metric = ev.target.value; applySeOnlyView(state); });
+  on('seonly-range', 'change', ev => { ui.range = ev.target.value; lwRangeRemember(ui); applySeOnlyView(state); });
+  on('seonly-lo', 'change', ev => { lwRangeSetLim(ui, ev.target.value, null); applySeOnlyView(state); });
+  on('seonly-hi', 'change', ev => { lwRangeSetLim(ui, null, ev.target.value); applySeOnlyView(state); });
+  on('seonly-wall', 'change', ev => { ui.wall = ev.target.checked; applySeOnlyView(state); });
+  on('seonly-cbar', 'click', () => {
+    const l = state._seOnlyLast;
+    if (!l) return;
+    exportColorbarPNG(seOnlyColorbarSpec(l.lv, l.ui, l.st.lo, l.st.hi), 'colorbar_se_only_' + l.ui.metric + (l.st && l.st.lin ? '_fixed' : '') + '.png');
   });
 }
 

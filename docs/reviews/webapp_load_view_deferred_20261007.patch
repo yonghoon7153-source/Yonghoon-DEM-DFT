@@ -1,3 +1,7 @@
+✅ 11-02 적용됨 (194 발사 10-30 뒤 · σ_VM ÷ P_ref · SE 만 보기 묶음 · 1저자 11-02 비준) — 그 뒤 캐시 스키마 15 (load_view 에 p_ref · se · 접촉 압력) ·
+   다시 적용하지 않는다 (이미 들어갔다 — git apply 는 실패한다).  이 패치를 손으로 미리 적용한 사본은 먼저 되돌리고 (git checkout -- webapp/app.py
+   webapp/test_viewer_coordination.py) 받는다.  시험 = webapp/test_viewer_load_view.py [P] · webapp/test_viewer_lw_pnorm.py [P].
+
 발사 뒤 패치 (194 봉인 파일 webapp/app.py) — 10-07 1저자 결정 웹앱 묶음 #11 (AM 만 칠하기) · WEB-06 (최대 접촉 압력) ·
 10-08 접촉마다 (AM–AM · AM–SE — 1저자 "그 버전도 좋을거 같은데" · "ㄱㄱ해봐") = 캐시 스키마 14
 
