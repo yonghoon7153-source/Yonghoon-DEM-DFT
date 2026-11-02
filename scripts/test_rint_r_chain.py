@@ -11381,6 +11381,244 @@ def t_PD02cr():
     return out == want, out
 
 
+# ── ★ 11-02 PC7-01 – 04 (사전 공격 7 회차 · 보고 preattack7/PREATTACK_7.md · 탐침 preattack7/probes/probe7_real.py · probe7_unit.py ·
+#    1저자 11-02 *"ㅇㅇ 권고대로"* = Codex 전에 PC7-01–04 시험 먼저 고침 · PC7-05 = 등록 R 문구) ──
+#: 시작 기록 (원장 줄 kind start · ★ 11-02 PC7-01) 의 칸 (시험 쪽 글자 · 사슬 상수의 사본 금지 짝)
+PE_START_KEYS = ('base', 'folder', 'host', 'kind', 'n', 'utc')
+#: ★ 11-02 PC7-01 — 다른 기계 신원 (사슬 host_ident 를 바꿔 끼운 구동기 · 같은 원장 · 다른 바탕 = 그 기계의 새 자리)
+PE_HOST_DRIVER = r'''
+import json, os, sys
+from pathlib import Path
+cfg = json.load(open(sys.argv[1], encoding='utf-8'))
+sys.path.insert(0, cfg['scripts'])
+import rint_r_chain as RR
+RR.HERE = Path(cfg['here'])
+os.environ.update(cfg['env'])
+_other = {'machine_id': 'f' * 32, 'boot_id': '00000000-0000-4000-8000-0000000000e1', 'pidns': 'pid:[4026539999]'}
+RR.host_ident = lambda: dict(_other)
+sys.exit(RR.main(cfg['argv']))
+'''
+
+
+def pe_kill_after(tag, d, n, base, wpath, needle, law='P0', t_wait=30):
+    """원장 시도 (사슬 = 따로 프로세스) 의 바닥 런 로그에 needle 이 보이면 사슬 부모 SIGKILL → (본 bool, 시도 폴더, 그룹 표지)."""
+    import signal as _sig
+    pr = gr_spawn_chain(tag, ladder_argv(base, law=law) + ['--ledger', str(d), '--attempt', str(n)], wpath)
+    f = Path(base) / f'attempt_{n}'
+    t_end, seen = time.time() + t_wait, False
+    while time.time() < t_end and not seen:
+        try:
+            seen = needle in (f / 'logs' / 'L01_floor.log').read_text(encoding='utf-8', errors='replace')
+        except OSError:
+            pass
+        time.sleep(0.05)
+    time.sleep(0.2)
+    os.kill(pr.pid, _sig.SIGKILL)
+    pr.wait()
+    try:
+        tok = json.loads((f / 'groups' / 'L01_floor.launch.json').read_text(encoding='utf-8')).get('token')
+    except (OSError, ValueError):
+        tok = None
+    return seen, f, tok
+
+
+def pe_starts(d):
+    return [x for x in led_lines(d) if x.get('kind') == 'start']
+
+
+def pe_start_ok(s, n, base):
+    """시작 기록 하나 = 칸 · 번호 · 바탕 (절대 · resolve) · 폴더 이름 · 기계 신원 (이 컨테이너 host_ident) · utc."""
+    return (isinstance(s, dict) and tuple(sorted(s)) == PE_START_KEYS and s.get('n') == n and s.get('base') == str(Path(base).resolve())
+            and s.get('folder') == f'attempt_{n}' and s.get('host') == RR.host_ident() and isinstance(s.get('utc'), str))
+
+
+@check('PE01', '★ 11-02 PC7-01 (사전 공격 7 회차 probe7_real C · P1 후보 · PC6-09 범위) — 원장 시도 (바닥 런 표지 뒤 잠) 의 사슬 부모 SIGKILL (러너 그룹 삶) '
+               '→ 원장 = 머리 · 항목 · 시작 기록 (번호 · 바탕 절대 경로 · 폴더 · 기계 신원 · utc) · 같은 --attempt 를 **다른 --out** 으로 다시 → rc 3 · 화면만 '
+               'ATTEMPT_LEDGER_MISMATCH (기록된 바탕 · boot_id · --stage recover 안내) · 원장 무변경 · 새 바탕 안 만듦 · 러너 0 회 (옛 = 새 바탕에 처음부터 '
+               '다시 · CALIBRATED · 결과 줄 completed · 판정 통과) · 옛 그룹 삶 → 사본 바탕에서 recover = rc 3 (시작 기록의 바탕 ≠ 이 폴더의 바탕 · 결과 줄 · '
+               '원장 무변경) → 원 바탕 recover = rc 0 · 결과 줄 interrupted · 결과 뒤 → 사본 바탕 recover 다시 = rc 3 (결과 줄 폴더 요약 sha ≠ 이 폴더 · 원장 '
+               '무변경) · 원 바탕 recover 다시 = rc 0 · 원장 줄 = 머리 · 항목 · 시작 · 결과')
+def t_PE01():
+    def go():
+        d, _rc, _so = led_new('PE01')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        b1 = Path(TD) / 'runs' / 'PE01_b1'
+        w = world('PE01', dict(PW, faults=[{'do': 'msg_sleep_after_mark', 'msg': '[p2] solving (PE01)', 's': 25.0, 'match': {'rj': 'inf'}}]))
+        seen, f1, tok = pe_kill_after('PE01', d, n1, b1, w, 'solving (PE01)')
+        raw1 = led_raw(d)
+        st = pe_starts(d)
+        b2 = Path(TD) / 'runs' / 'PE01_b2'
+        w2 = world('PE01_other_out')
+        o = lad_att('PE01_o', w2, d, n1, base=b2)
+        bid = (RR.host_ident() or {}).get('boot_id') or '?'
+        row_out = (o['rc'], 'ATTEMPT_LEDGER_MISMATCH' in o['so'], '--stage recover' in o['so'], str(b1.resolve()) in o['so'], bid in o['so'],
+                   led_raw(d) == raw1, b2.exists(), n_calls(w2))
+        alive = bool(gr_alive(tok)) if tok else None
+        b4 = Path(TD) / 'runs' / 'PE01_b4'
+        b4.mkdir(parents=True)
+        shutil.copytree(f1, b4 / f'attempt_{n1}', symlinks=True)
+        rc_c, so_c = call(['--stage', 'recover', '--out', str(b4 / f'attempt_{n1}'), '--ledger', str(d)], w)
+        row_copy = (rc_c, led_raw(d) == raw1, '시작 기록의 바탕' in so_c)
+        rc_r, _so_r = call(['--stage', 'recover', '--out', str(f1), '--ledger', str(d)], w)
+        r1 = pc_res(d, n1, keys=('status', 'side', 'by', 'folder'))
+        raw2 = led_raw(d)
+        rc_c2, so_c2 = call(['--stage', 'recover', '--out', str(b4 / f'attempt_{n1}'), '--ledger', str(d)], w)
+        row_copy2 = (rc_c2, led_raw(d) == raw2, '요약 sha' in so_c2)
+        rc_r2, _so_r2 = call(['--stage', 'recover', '--out', str(f1), '--ledger', str(d)], w)
+        return {'seen': seen, 'start': (len(st), pe_start_ok(st[0] if st else None, n1, b1)), 'row_out': row_out, 'alive': alive,
+                'row_copy': row_copy, 'rc_r': rc_r, 'r1': r1, 'row_copy2': row_copy2, 'rc_r2': rc_r2, 'led_after': led_raw(d) == raw2,
+                'kinds': [x.get('kind') for x in led_lines(d)], 'alive_after': bool(gr_alive(tok)) if tok else None,
+                'tail_out': o['so'].strip().splitlines()[-1:] if o['so'] else None}
+    r = scen('PE01', go)
+    want = {'seen': True, 'start': (1, True), 'row_out': (3, True, True, True, True, True, False, 0), 'alive': True, 'row_copy': (3, True, True),
+            'rc_r': 0, 'r1': {'status': 'interrupted', 'side': 'post', 'by': 'recover', 'folder': 'attempt_1'}, 'row_copy2': (3, True, True), 'rc_r2': 0,
+            'led_after': True, 'kinds': ['header', 'entry', 'start', 'result'], 'alive_after': False}
+    got = {k: r[k] for k in want}
+    return got == want, (got, r['tail_out'])
+
+
+@check('PE01h', '★ 11-02 PC7-01 다른 기계 신원 (probe7_real C 의 "env 가 같은 다른 기계" 꼴 · 사슬 host_ident = 다른 machine_id · boot_id · pidns 구동기 · 같은 '
+                '--machine kgy · 같은 원장 · 그 기계의 새 바탕) — 원 시도 사슬 부모 SIGKILL 뒤 그 기계에서 같은 --attempt → rc 3 · 화면만 ATTEMPT_LEDGER_MISMATCH '
+                '(기록된 바탕 · --stage recover) · 원장 무변경 · 새 바탕 안 만듦 · 러너 0 회 (옛 = 그 기계에서 처음부터 다시 · 결과 줄 completed) · 원 그룹 삶 → '
+                '원 바탕 recover = rc 0 · 결과 줄 interrupted · 결과 뒤')
+def t_PE01h():
+    def go():
+        d, _rc, _so = led_new('PE01h')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        b1 = Path(TD) / 'runs' / 'PE01h_b1'
+        w = world('PE01h', dict(PW, faults=[{'do': 'msg_sleep_after_mark', 'msg': '[p2] solving (PE01h)', 's': 25.0, 'match': {'rj': 'inf'}}]))
+        seen, f1, tok = pe_kill_after('PE01h', d, n1, b1, w, 'solving (PE01h)')
+        raw1 = led_raw(d)
+        b3 = Path(TD) / 'runs' / 'PE01h_b3'
+        w3 = world('PE01h_other_host')
+        p3 = gr_spawn_chain('PE01h_h', ladder_argv(b3) + ['--ledger', str(d), '--attempt', str(n1)], w3, driver=PE_HOST_DRIVER,
+                            dname='pe_host_driver.py')
+        rc3 = p3.wait(timeout=180)
+        so3 = (Path(TD) / 'PE01h_h_chain.log').read_text(encoding='utf-8', errors='replace')
+        row_host = (rc3, 'ATTEMPT_LEDGER_MISMATCH' in so3, '--stage recover' in so3, str(b1.resolve()) in so3, led_raw(d) == raw1, b3.exists(),
+                    n_calls(w3))
+        alive = bool(gr_alive(tok)) if tok else None
+        rc_r, _so_r = call(['--stage', 'recover', '--out', str(f1), '--ledger', str(d)], w)
+        return {'seen': seen, 'row_host': row_host, 'alive': alive, 'rc_r': rc_r, 'r1': pc_res(d, n1, keys=('status', 'side', 'by')),
+                'tail': so3.strip().splitlines()[-1:]}
+    r = scen('PE01h', go)
+    want = {'seen': True, 'row_host': (3, True, True, True, True, False, 0), 'alive': True, 'rc_r': 0,
+            'r1': {'status': 'interrupted', 'side': 'post', 'by': 'recover'}}
+    got = {k: r[k] for k in want}
+    return got == want, (got, r['tail'])
+
+
+@check('PE01r', '★ 11-02 PC7-01 재실행 항목 꼴 (사전 공격 7 회차 표 PC7-01 "재실행 항목 꼴 · 코드 읽기" 를 실경로로) — 원 시도 메모리 부족 (표지 뒤 · resource · '
+                '자격) → --add --resume 1 → 재실행 시도 2 (같은 바탕 · 다시 도는 바닥 런 표지 뒤 잠) 의 사슬 부모 SIGKILL → 같은 --attempt 2 를 다른 --out → '
+                'rc 3 · 화면만 (원장 무변경 · 새 바탕 안 만듦 · 거부 기록 없음 · 러너 0 회 · 옛 = 새 바탕엔 원천이 없어 RESUME_NOT_ALLOWED 거부 기록 + 결과 뒤였던 '
+                '시도 2 에 rejected · 결과 전 결과 줄) → 원 바탕 recover = 결과 줄 interrupted · 결과 뒤')
+def t_PE01r():
+    def go():
+        d, _rc, _so = led_new('PE01r')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        b1 = Path(TD) / 'runs' / 'PE01r_b1'
+        a = lad_att('PE01r_a', world('PE01r_a', dict(PW, faults=[{'do': 'msg_after_mark', 'msg': PC_MSGS['oom_cupy'][0], 'match': {'rj': 'inf'}}])),
+                    d, n1, base=b1)
+        r1 = pc_res(d, n1, keys=('status', 'side', 'cause', 'resume_ok'))
+        rc_add, n2, _so_add = led_add(d, 'ladder:P0', resume=n1)
+        w = world('PE01r_b', dict(PW, faults=[{'do': 'msg_sleep_after_mark', 'msg': '[p2] solving (PE01r)', 's': 25.0, 'match': {'rj': 'inf'}}]))
+        seen, f2, tok = pe_kill_after('PE01r_b', d, n2, b1, w, 'solving (PE01r)') if n2 else (False, None, None)
+        raw1 = led_raw(d)
+        b2 = Path(TD) / 'runs' / 'PE01r_b2'
+        w2 = world('PE01r_other_out')
+        o = lad_att('PE01r_o', w2, d, n2, base=b2) if n2 else {'rc': None, 'so': ''}
+        row = (o['rc'], 'ATTEMPT_LEDGER_MISMATCH' in o['so'], '--stage recover' in o['so'], led_raw(d) == raw1, b2.exists(), n_calls(w2),
+               led_result(d, n2) is None)
+        rc_r, _so_r = call(['--stage', 'recover', '--out', str(f2), '--ledger', str(d)], w) if f2 else (None, '')
+        return {'a_rc': a['rc'], 'r1': r1, 'rc_add': rc_add, 'seen': seen, 'row': row, 'rc_r': rc_r,
+                'r2': pc_res(d, n2, keys=('status', 'side', 'by')) if n2 else None, 'tail': (o['so'].strip().splitlines() or [''])[-1:]}
+    r = scen('PE01r', go)
+    want = {'a_rc': 3, 'r1': {'status': 'stopped', 'side': 'post', 'cause': 'resource', 'resume_ok': True}, 'rc_add': 0, 'seen': True,
+            'row': (3, True, True, True, False, 0, True), 'rc_r': 0, 'r2': {'status': 'interrupted', 'side': 'post', 'by': 'recover'}}
+    got = {k: r[k] for k in want}
+    return got == want, (got, r['tail'])
+
+
+def pe_ledger(*objs):
+    return b''.join(RR.ledger_line(o).encode('utf-8') for o in objs)
+
+
+PE_HDR = {'kind': 'header', 'schema': 'rint-r-ledger-v1', 'plan_sha256': 'a' * 64, 'utc': '2026-11-02T00:00:00Z'}
+
+
+def pe_entry(n, target='ladder:P0', resume_of=None):
+    return {'kind': 'entry', 'n': n, 'target': target, 'machine': MACH, 'resume_of': resume_of, 'plan_sha256': 'a' * 64, 'code_key_sha256': 'b' * 64,
+            'env': {}, 'bed': {}, 'utc': '2026-11-02T00:00:01Z'}
+
+
+def pe_start(n, **over):
+    return dict({'kind': 'start', 'n': n, 'base': '/srv/runs/PE', 'folder': f'attempt_{n}',
+                 'host': {'machine_id': None, 'boot_id': 'b' * 36, 'pidns': 'pid:[4026531836]'}, 'utc': '2026-11-02T00:00:02Z'}, **over)
+
+
+def pe_result(n, **over):
+    return dict({'kind': 'result', 'n': n, 'status': 'completed', 'stop': None, 'side': 'post', 'cause': None, 'resume_ok': False,
+                 'folder': f'attempt_{n}', 'folder_sha256': 'c' * 64, 'by': 'chain', 'utc': '2026-11-02T00:00:03Z'}, **over)
+
+
+@check('PE01p', '★ 11-02 PC7-01 원장 해석 (ledger_parse · 모든 길의 한 함수) — 시작 기록 (kind start) 을 받는다: 항목 뒤 · 한 번호에 하나 · 그 번호의 결과 줄은 '
+                '시작 기록 뒤 · 칸 (번호 · 바탕 = 절대 경로 · 폴더 = attempt_<n> · 기계 신원 = host_ident 세 칸 · utc) — 어기면 ATTEMPT_LEDGER_MISMATCH (항목 없음 · '
+                '앞 항목 없음 · 둘 · 결과 줄 뒤 · 칸 다름 · 폴더 다름 · 상대 경로 · 신원 꼴 · 번호 bool) · 시작 기록 없는 결과 줄 = 지금처럼 받는다 · 시작 기록은 시도 · '
+                '결과로 세지 않는다 (같은 원장에서 시작 줄만 뺀 판과 채택 · 사슬 · 최대 시도 수 · 차례 · 다음 항목 번호가 같다)')
+def t_PE01p():
+    def parse(raw):
+        try:
+            return RR.ledger_parse(raw), None
+        except RR.Stop as e:
+            return None, e.code
+    ok_cases = {'start_then_result': pe_ledger(PE_HDR, pe_entry(1), pe_start(1), pe_result(1)),
+                'start_only': pe_ledger(PE_HDR, pe_entry(1), pe_start(1)),
+                'result_without_start': pe_ledger(PE_HDR, pe_entry(1), pe_result(1)),
+                'side_rejected_without_start': pe_ledger(PE_HDR, pe_entry(1), pe_result(1, status='rejected', side='pre', cause='presolve',
+                                                                                         stop={'code': 'OUTDIR_NOT_EMPTY', 'run': None, 'reason': None},
+                                                                                         folder='attempt_1.rejected.json')),
+                'start_after_other_entry': pe_ledger(PE_HDR, pe_entry(1), pe_entry(2, target='ladder:P1'), pe_start(1), pe_start(2), pe_result(2),
+                                                     pe_result(1))}
+    bad_cases = {'start_no_entry': pe_ledger(PE_HDR, pe_start(1)),
+                 'start_missing_n': pe_ledger(PE_HDR, pe_entry(1), pe_start(2)),
+                 'start_twice': pe_ledger(PE_HDR, pe_entry(1), pe_start(1), pe_start(1)),
+                 'start_after_result': pe_ledger(PE_HDR, pe_entry(1), pe_result(1), pe_start(1)),
+                 'start_extra_key': pe_ledger(PE_HDR, pe_entry(1), pe_start(1, note='x')),
+                 'start_missing_key': pe_ledger(PE_HDR, pe_entry(1), {k: v for k, v in pe_start(1).items() if k != 'host'}),
+                 'start_folder_other_n': pe_ledger(PE_HDR, pe_entry(1), pe_start(1, folder='attempt_2')),
+                 'start_folder_side': pe_ledger(PE_HDR, pe_entry(1), pe_start(1, folder='attempt_1.rejected.json')),
+                 'start_base_relative': pe_ledger(PE_HDR, pe_entry(1), pe_start(1, base='runs/PE')),
+                 'start_base_empty': pe_ledger(PE_HDR, pe_entry(1), pe_start(1, base='')),
+                 'start_host_str': pe_ledger(PE_HDR, pe_entry(1), pe_start(1, host='kgy')),
+                 'start_host_missing': pe_ledger(PE_HDR, pe_entry(1), pe_start(1, host={'machine_id': None, 'boot_id': 'b'})),
+                 'start_host_num': pe_ledger(PE_HDR, pe_entry(1), pe_start(1, host={'machine_id': None, 'boot_id': 7, 'pidns': None})),
+                 'start_n_bool': pe_ledger(PE_HDR, pe_entry(1), pe_start(True)),
+                 'start_utc_num': pe_ledger(PE_HDR, pe_entry(1), pe_start(1, utc=0))}
+    got_ok = {k: (parse(v)[1], len((parse(v)[0] or {}).get('starts') or {})) for k, v in ok_cases.items()}
+    got_bad = {k: parse(v)[1] for k, v in bad_cases.items()}
+    full = [PE_HDR, pe_entry(1), pe_start(1), pe_result(1, status='stopped', stop={'code': 'RUNNER_RC', 'run': 'L01_floor', 'reason': None},
+                                                        cause='resource', resume_ok=True),
+            pe_entry(2, resume_of=1), pe_start(2), pe_result(2), pe_entry(3, target='ladder:P1'), pe_start(3),
+            pe_result(3, status='rejected', side='pre', cause='presolve', stop={'code': 'MACHINE_NOT_ALLOWED', 'run': None, 'reason': None}),
+            pe_entry(4, target='ladder:P1')]
+    st_w, _c1 = parse(pe_ledger(*full))
+    st_wo, _c2 = parse(pe_ledger(*[x for x in full if x.get('kind') != 'start']))
+    plan = {'exec_policy': {'max_attempts': 3}}
+    same = {}
+    if st_w is not None and st_wo is not None:
+        for t in ('ladder:P0', 'ladder:P1'):
+            same[f'adoption {t}'] = RR.adoption(st_w, t) == RR.adoption(st_wo, t)
+            same[f'limit {t}'] = RR.attempt_limit_problem(st_w, t, 4, plan) == RR.attempt_limit_problem(st_wo, t, 4, plan)
+        nxt = pe_entry(5, target='ladder:P1')
+        same['order'] = RR.attempt_order_problem(st_w, nxt, plan) == RR.attempt_order_problem(st_wo, nxt, plan)
+        same['entries_results'] = (st_w['entries'] == st_wo['entries'] and st_w['results'] == st_wo['results'])
+        same['next_n'] = len(st_w['entries']) + 1 == len(st_wo['entries']) + 1 == 5
+    want_ok = {'start_then_result': (None, 1), 'start_only': (None, 1), 'result_without_start': (None, 0), 'side_rejected_without_start': (None, 0),
+               'start_after_other_entry': (None, 2)}
+    ok = (got_ok == want_ok and all(v == 'ATTEMPT_LEDGER_MISMATCH' for v in got_bad.values()) and len(same) == 7 and all(same.values()))
+    return ok, {'ok': got_ok, 'bad': {k: v for k, v in got_bad.items() if v != 'ATTEMPT_LEDGER_MISMATCH'}, 'same': same}
+
+
 # ═════════════════════════ 실행 ═════════════════════════
 def main(argv=None):
     global RR, TD
