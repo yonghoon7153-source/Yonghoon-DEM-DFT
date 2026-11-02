@@ -1,0 +1,7 @@
+&PROJWFC
+  prefix = 'NiS2_mp-aaaaadju'
+  outdir = './tmp'
+  filpdos = 'NiS2_mp-aaaaadju'
+  degauss = 0.007
+  ngauss = 0
+/

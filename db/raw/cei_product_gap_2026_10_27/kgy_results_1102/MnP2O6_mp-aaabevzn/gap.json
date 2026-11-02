@@ -1,0 +1,31 @@
+{
+  "tag": "MnP2O6_mp-aaabevzn",
+  "vbm": 4.0581,
+  "cbm": 8.0,
+  "gap": 3.9419000000000004,
+  "verdict": "절연체",
+  "nelec": 244.0,
+  "nbnd": 186,
+  "nk": 144,
+  "spin_polarized": true,
+  "total_magnetization_bohr": 20.0,
+  "n_occ_up": 132,
+  "n_occ_dn": 112,
+  "occ_source": "02_scf converged moment (nscf kept M=0 filling)",
+  "qe_homo": 9.7763,
+  "qe_lumo": 2.8988,
+  "qe_check": "QE 줄은 M=0 점유라 대조 안 함",
+  "edges_by_spin": {
+    "up": [
+      4.0581,
+      8.0
+    ],
+    "down": [
+      2.9929,
+      8.4039
+    ]
+  },
+  "n_occ_bands": 132,
+  "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+  "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators"
+}

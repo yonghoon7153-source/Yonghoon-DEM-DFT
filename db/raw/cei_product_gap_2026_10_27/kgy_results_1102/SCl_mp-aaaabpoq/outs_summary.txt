@@ -1,0 +1,15 @@
+== 01_relax.out 185753 B · JOB DONE 1
+     the Fermi energy is     2.8945 ev
+!    total energy              =   -1165.17072191 Ry
+     convergence has been achieved in   8 iterations
+     bfgs converged in   7 scf cycles and   6 bfgs steps
+== 02_scf.out 27160 B · JOB DONE 1
+     the Fermi energy is     2.8909 ev
+!    total energy              =   -1165.17072191 Ry
+     convergence has been achieved in  12 iterations
+== 03_nscf_gap.out 165187 B · JOB DONE 1
+     highest occupied, lowest unoccupied level (ev):     1.0717    3.7273
+== 04_nscf_dos.out 55842 B · JOB DONE 1
+     the Fermi energy is     2.4892 ev
+== 05_dos.out 2091 B · JOB DONE 1
+== 06_projwfc.out 2644737 B · JOB DONE 1

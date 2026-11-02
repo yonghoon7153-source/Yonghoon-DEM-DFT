@@ -1,0 +1,6 @@
+&DOS
+  prefix = 'P2O5_mp-aaaaadqi'
+  outdir = './tmp'
+  fildos = 'P2O5_mp-aaaaadqi.dos'
+  degauss = 0.007
+/

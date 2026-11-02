@@ -1,0 +1,50 @@
+&CONTROL
+    calculation     = 'vc-relax'
+    prefix          = 'licl_mp-22905'
+    outdir          = './tmp'
+    pseudo_dir      = '/home/kgy/work/runs/cei_gap_1027/pseudo'
+    tprnfor         = .true.
+    tstress         = .true.
+/
+&SYSTEM
+    ibrav           = 0
+    nat             = 8
+    ntyp            = 2
+    ecutwfc         = 60.0
+    ecutrho         = 480.0
+    occupations     = 'smearing'
+    smearing        = 'mv'
+    degauss         = 0.01
+/
+&ELECTRONS
+    conv_thr        = 1.0d-8
+    mixing_beta     = 0.3
+    electron_maxstep = 200
+/
+&IONS
+/
+&CELL
+    cell_dofree     = 'all'
+/
+
+ATOMIC_SPECIES
+  Cl    35.450  Cl.pbe-nl-kjpaw_psl.1.0.0.UPF
+  Li     6.940  Li.pbe-sl-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS angstrom
+      5.0842446800     0.0000000000     0.0000000000
+     -0.0000000000     5.0842446800     0.0000000000
+      0.0000000000     0.0000000000     5.0842446800
+
+ATOMIC_POSITIONS angstrom
+  Li      0.0000000000     0.0000000000     0.0000000000
+  Li     -0.0000000000     2.5421223400     2.5421223400
+  Li      2.5421223400     0.0000000000     2.5421223400
+  Li      2.5421223400     2.5421223400     0.0000000000
+  Cl      2.5421223400     0.0000000000     0.0000000000
+  Cl      2.5421223400     2.5421223400     2.5421223400
+  Cl      0.0000000000     0.0000000000     2.5421223400
+  Cl     -0.0000000000     2.5421223400     0.0000000000
+
+K_POINTS automatic
+  5 5 5 0 0 0

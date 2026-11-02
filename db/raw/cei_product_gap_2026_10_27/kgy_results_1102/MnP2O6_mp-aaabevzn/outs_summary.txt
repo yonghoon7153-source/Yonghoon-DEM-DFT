@@ -1,0 +1,16 @@
+== 01_vcrelax.out 1955044 B · JOB DONE 1
+     the Fermi energy is     5.0625 ev
+!    total energy              =   -2290.87226860 Ry
+     total magnetization       =    20.00 Bohr mag/cell
+     convergence has been achieved in  18 iterations
+== 02_scf.out 92506 B · JOB DONE 1
+     the Fermi energy is     5.0734 ev
+!    total energy              =   -2290.87226859 Ry
+     total magnetization       =    20.00 Bohr mag/cell
+     convergence has been achieved in  14 iterations
+== 03_nscf_gap.out 565510 B · JOB DONE 1
+     highest occupied, lowest unoccupied level (ev):     9.7763    2.8988
+== 04_nscf_dos.out 226983 B · JOB DONE 1
+     the Fermi energy is     7.3806 ev
+== 05_dos.out 2191 B · JOB DONE 1
+== 06_projwfc.out 26368786 B · JOB DONE 1

@@ -1,0 +1,6 @@
+&DOS
+  prefix = 'NiS2_mp-aaaaadju'
+  outdir = './tmp'
+  fildos = 'NiS2_mp-aaaaadju.dos'
+  degauss = 0.007
+/

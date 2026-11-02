@@ -1,0 +1,10 @@
+{
+  "tag": "NiS2_mp-aaaaadju",
+  "gap": null,
+  "verdict": "NOT_APPLICABLE",
+  "electronic_class": "metal",
+  "reason": "electronic_class=metal — 금속엔 VBM/CBM 이 없다",
+  "electronic_class_evidence": "declared",
+  "do_instead": "04~06 (DOS/PDOS) 로 E_F 에 상태가 있는지 확인한다. 그게 금속 선언의 근거가 된다.",
+  "registry": "db/properties/sei_electronic_class.json"
+}

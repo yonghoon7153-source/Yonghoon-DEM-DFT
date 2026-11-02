@@ -1,0 +1,31 @@
+{
+  "tag": "NiP2O6_mp-aaaabchz",
+  "vbm": 4.0719,
+  "cbm": 8.3447,
+  "gap": 4.272799999999999,
+  "verdict": "절연체",
+  "nelec": 256.0,
+  "nbnd": 188,
+  "nk": 144,
+  "spin_polarized": true,
+  "total_magnetization_bohr": 8.0,
+  "n_occ_up": 132,
+  "n_occ_dn": 124,
+  "occ_source": "02_scf converged moment (nscf kept M=0 filling)",
+  "qe_homo": 8.4891,
+  "qe_lumo": 3.5953,
+  "qe_check": "QE 줄은 M=0 점유라 대조 안 함",
+  "edges_by_spin": {
+    "up": [
+      4.0719,
+      9.0547
+    ],
+    "down": [
+      3.8888,
+      8.3447
+    ]
+  },
+  "n_occ_bands": 132,
+  "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+  "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators"
+}

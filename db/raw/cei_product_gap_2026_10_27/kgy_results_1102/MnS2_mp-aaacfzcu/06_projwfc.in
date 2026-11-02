@@ -1,0 +1,7 @@
+&PROJWFC
+  prefix = 'MnS2_mp-aaacfzcu'
+  outdir = './tmp'
+  filpdos = 'MnS2_mp-aaacfzcu'
+  degauss = 0.007
+  ngauss = 0
+/

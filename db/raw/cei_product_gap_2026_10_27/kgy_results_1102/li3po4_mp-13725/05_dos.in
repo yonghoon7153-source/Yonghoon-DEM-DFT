@@ -1,0 +1,6 @@
+&DOS
+  prefix = 'li3po4_mp-13725'
+  outdir = './tmp'
+  fildos = 'li3po4_mp-13725.dos'
+  degauss = 0.007
+/

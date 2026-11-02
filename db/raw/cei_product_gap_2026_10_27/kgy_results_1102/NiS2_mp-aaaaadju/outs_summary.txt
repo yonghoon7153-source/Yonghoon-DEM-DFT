@@ -1,0 +1,14 @@
+== 01_vcrelax.out 511063 B · JOB DONE 1
+     the Fermi energy is    11.3459 ev
+!    total energy              =   -1903.66255220 Ry
+     total magnetization       =     0.00 Bohr mag/cell
+     convergence has been achieved in  38 iterations
+== 02_scf.out 84616 B · JOB DONE 1
+     the Fermi energy is    11.3459 ev
+!    total energy              =   -1903.66255220 Ry
+     total magnetization       =    -0.00 Bohr mag/cell
+     convergence has been achieved in  39 iterations
+== 04_nscf_dos.out 14435 B · JOB DONE 1
+     the Fermi energy is    11.3459 ev
+== 05_dos.out 2065 B · JOB DONE 1
+== 06_projwfc.out 9647147 B · JOB DONE 1

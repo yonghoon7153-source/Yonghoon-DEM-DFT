@@ -1,0 +1,34 @@
+[10:07:01] ═══ CoS2_mp-aaaaadbq ═══
+[10:07:01]   ✓ 메모리 프리플라이트: 여유 47 GB ≥ 8 GB · 12 원자
+[10:07:01]   ✓ 01_vcrelax.in 이미 완료
+  기하 승계 → 02_scf.in
+  ⏭ 03_nscf_gap.in 없음 — 건너뜀 (electronic_class=metal 이면 정상이다)
+  기하 승계 → 04_nscf_dos.in
+  ⚠ 승계 안 한 타깃 1개: 03_nscf_gap.in
+[10:07:01]   ✓ VRAM 여유 17820 MiB ≥ 8000 — 02_scf.in
+[10:07:01]   ▶ 02_scf.in
+  CoS2_mp-aaaaadbq           ⏭ 03_nscf_gap.in 없음
+[10:54:32]   ⏭ 03(갭) 입력 없음 — electronic_class=metal 로 의도된 것인지 확인:
+[10:54:32]      ✔ 사유 파일 있음 → DOS/PDOS 로 E_F 상태를 본다
+[10:54:32]   ✓ VRAM 여유 18010 MiB ≥ 8000 — 04_nscf_dos.in
+[10:54:32]   ▶ 04_nscf_dos.in
+[11:12:45]   ▶ 05_dos.in
+[11:12:55]   ▶ 06_projwfc.in
+[11:13:48]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/CoS2_mp-aaaaadbq
+[11:13:48] ═══ 결산 ═══
+  상                               VBM      CBM   gap(eV)  판정
+  CoS2_mp-aaaaadbq                  —        —         —  NOT_APPLICABLE
+  Li2SO4_mp-aaaaagtg            1.344    7.401     6.056  절연체
+  MnP2O6_mp-aaabevzn            4.058    8.000     3.942  절연체
+  MnS2_mp-aaacfzcu                  —        —         —  NOT_APPLICABLE
+  Ni3S4_mp-aaaaabok                 —        —         —  NOT_APPLICABLE
+  NiP2O6_mp-aaaabchz            4.072    8.345     4.273  절연체
+  NiS2_mp-aaaaadju                  —        —         —  NOT_APPLICABLE
+  P2O5_mp-aaaaadqi              1.431    6.617     5.186  절연체
+  SCl_mp-aaaabpoq               1.072    3.727     2.656  절연체
+  SO2_mp-aaaabpak               0.511    3.031     2.520  절연체
+  li3po4_mp-13725               2.886    8.816     5.930  절연체
+  licl_mp-22905                 1.550    7.814     6.264  절연체
+
+  ⚠ PBE 갭은 이 계열에서 30-50% 과소평가된다 — 실험값과 나란히 놓지 말 것.
+  ⚠ 갭은 fixed-occ nscf 고유값이다. DOS 문턱 판독 금지.

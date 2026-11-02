@@ -1,0 +1,6 @@
+&DOS
+  prefix = 'MnP2O6_mp-aaabevzn'
+  outdir = './tmp'
+  fildos = 'MnP2O6_mp-aaabevzn.dos'
+  degauss = 0.007
+/
