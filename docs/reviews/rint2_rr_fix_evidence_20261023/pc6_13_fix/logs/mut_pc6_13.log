@@ -1,0 +1,24 @@
+# 변이 시험 — 새 가드 하나씩 끄고 그 시험 접두 (사본 트리 = scripts 사본 · 고친 판) · Python 3.11 · 2026-11-02
+# cmd: python3 docs/reviews/rint2_rr_fix_evidence_20261023/pc6_13_fix/mutate_pc6_13.py /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a33a734123b1ed7bb /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/mtree docs/reviews/rint2_rr_fix_evidence_20261023/pc6_13_fix/logs/mut_pc6_13_res.json docs/reviews/rint2_rr_fix_evidence_20261023/pc6_13_fix/logs/mut_pc6_13 all
+BASE PD13,PD02c BASE-OK (기대 pass) test_rint_r_chain: 7/7 PASS (6.4 s) fails= []
+G13a PD13 killed (기대 killed) test_rint_r_chain: 3/5 PASS (4.9 s)   FAILED: ['PD13', 'PD13r'] fails= ['PD13', 'PD13r']
+G13b PD13 killed (기대 killed) test_rint_r_chain: 3/5 PASS (4.8 s)   FAILED: ['PD13', 'PD13r'] fails= ['PD13', 'PD13r']
+G13c PD13 killed (기대 killed) test_rint_r_chain: 4/5 PASS (4.8 s)   FAILED: ['PD13'] fails= ['PD13']
+G13d PD13 killed (기대 killed) test_rint_r_chain: 1/5 PASS (4.4 s)   FAILED: ['PD13', 'PD13o', 'PD13r', 'PD13d'] fails= ['PD13', 'PD13o', 'PD13r', 'PD13d']
+G13e PD13 killed (기대 killed) test_rint_r_chain: 3/5 PASS (4.9 s)   FAILED: ['PD13', 'PD13o'] fails= ['PD13', 'PD13o']
+G13f PD13 killed (기대 killed) test_rint_r_chain: 3/5 PASS (4.9 s)   FAILED: ['PD13o', 'PD13d'] fails= ['PD13o', 'PD13d']
+G13g PD13 killed (기대 killed) test_rint_r_chain: 4/5 PASS (4.8 s)   FAILED: ['PD13o'] fails= ['PD13o']
+G13h PD13 killed (기대 killed) test_rint_r_chain: 3/5 PASS (5.7 s)   FAILED: ['PD13g', 'PD13d'] fails= ['PD13g', 'PD13d']
+G13i PD13 killed (기대 killed) test_rint_r_chain: 4/5 PASS (5.9 s)   FAILED: ['PD13g'] fails= ['PD13g']
+G13j PD13 killed (기대 killed) test_rint_r_chain: 3/5 PASS (5.3 s)   FAILED: ['PD13g', 'PD13d'] fails= ['PD13g', 'PD13d']
+G13k PD13 killed (기대 killed) test_rint_r_chain: 3/5 PASS (5.5 s)   FAILED: ['PD13g', 'PD13d'] fails= ['PD13g', 'PD13d']
+G13l PD13 killed (기대 killed) test_rint_r_chain: 4/5 PASS (5.3 s)   FAILED: ['PD13r'] fails= ['PD13r']
+L02a PD02c killed (기대 killed) test_rint_r_chain: 1/2 PASS (2.7 s)   FAILED: ['PD02c'] fails= ['PD02c']
+L02b PD02c killed (기대 killed) test_rint_r_chain: 1/2 PASS (3.0 s)   FAILED: ['PD02c'] fails= ['PD02c']
+L02c PD02c killed (기대 killed) test_rint_r_chain: 0/2 PASS (3.2 s)   FAILED: ['PD02c', 'PD02cr'] fails= ['PD02c', 'PD02cr']
+L02d PD02c killed (기대 killed) test_rint_r_chain: 1/2 PASS (2.9 s)   FAILED: ['PD02c'] fails= ['PD02c']
+L02e PD02c killed (기대 killed) test_rint_r_chain: 1/2 PASS (3.0 s)   FAILED: ['PD02c'] fails= ['PD02c']
+L02f PD02c killed (기대 killed) test_rint_r_chain: 1/2 PASS (3.2 s)   FAILED: ['PD02c'] fails= ['PD02c']
+L02g PD02c killed (기대 killed) test_rint_r_chain: 1/2 PASS (2.8 s)   FAILED: ['PD02c'] fails= ['PD02c']
+
+rc=0 seconds=100

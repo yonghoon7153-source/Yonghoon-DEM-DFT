@@ -1,0 +1,24 @@
+# 변이 옳은 이유 — 시험 함수를 새 프로세스에서 직접 (화면 자름 없음) · 틀린 칸 = 기대 칸 · 사본 트리 · Python 3.11 · 2026-11-02
+# cmd: python3 -I docs/reviews/rint2_rr_fix_evidence_20261023/pc6_13_fix/mut_reasons.py /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a33a734123b1ed7bb /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/mtree docs/reviews/rint2_rr_fix_evidence_20261023/pc6_13_fix/logs/mut_reasons_res.json
+G13a right_reason {"PD13": "bad_n 32 / 기대 32 · 보인 칸 ⊆ 기대 True", "PD13o": "pass", "PD13g": "pass", "PD13r": "fail · 기대 칸 값", "PD13d": "pass"}
+G13b right_reason {"PD13": "bad_n 16 / 기대 16 · 보인 칸 ⊆ 기대 True", "PD13o": "pass", "PD13g": "pass", "PD13r": "fail · 기대 칸 값", "PD13d": "pass"}
+G13c right_reason {"PD13": "bad_n 8 / 기대 8 · 보인 칸 ⊆ 기대 True", "PD13o": "pass", "PD13g": "pass", "PD13r": "pass", "PD13d": "pass"}
+G13d right_reason {"PD13": "bad_n 32 / 기대 32 · 보인 칸 ⊆ 기대 True", "PD13o": "틀린 칸 ['ce1_plain', 'ce1_python', 'ce_neg9_plain'] / 기대 ['ce1_plain', 'ce1_python', 'ce_neg9_plain']", "PD13g": "pass", "PD13r": "fail · 기대 칸 값", "PD13d": "fail · 기대 칸 값"}
+G13e right_reason {"PD13": "bad_n 16 / 기대 16 · 보인 칸 ⊆ 기대 True", "PD13o": "틀린 칸 ['ce_none_rc'] / 기대 ['ce_none_rc']", "PD13g": "pass", "PD13r": "pass", "PD13d": "pass"}
+G13f right_reason {"PD13": "pass", "PD13o": "틀린 칸 ['ce1_plain', 'ce1_python', 'ce_neg9_plain'] / 기대 ['ce1_plain', 'ce1_python', 'ce_neg9_plain']", "PD13g": "pass", "PD13r": "pass", "PD13d": "fail · 기대 칸 값"}
+G13g right_reason {"PD13": "pass", "PD13o": "틀린 칸 ['ce_signal', 'ce_timeout'] / 기대 ['ce_signal', 'ce_timeout']", "PD13g": "pass", "PD13r": "pass", "PD13d": "pass"}
+G13h right_reason {"PD13": "pass", "PD13o": "pass", "PD13g": "틀린 칸 ['chain_rc1', 'chain_timeout'] / 기대 ['chain_rc1', 'chain_timeout']", "PD13r": "pass", "PD13d": "fail · 기대 칸 값"}
+G13i right_reason {"PD13": "pass", "PD13o": "pass", "PD13g": "틀린 칸 ['recover_carry'] / 기대 ['recover_carry']", "PD13r": "pass", "PD13d": "pass"}
+G13j right_reason {"PD13": "pass", "PD13o": "pass", "PD13g": "틀린 칸 ['chain_rc1', 'chain_timeout', 'recover_carry'] / 기대 ['chain_rc1', 'chain_timeout', 'recover_carry']", "PD13r": "pass", "PD13d": "fail · 기대 칸 값"}
+G13k right_reason {"PD13": "pass", "PD13o": "pass", "PD13g": "틀린 칸 ['chain_rc1', 'chain_timeout', 'recover_carry'] / 기대 ['chain_rc1', 'chain_timeout', 'recover_carry']", "PD13r": "pass", "PD13d": "fail · 기대 칸 값"}
+G13l right_reason {"PD13": "pass", "PD13o": "pass", "PD13g": "pass", "PD13r": "fail · 기대 칸 값", "PD13d": "pass"}
+L02a right_reason {"PD02c": "bad_n 9 / 기대 9 · 보인 칸 ⊆ 기대 True · cuda9 False", "PD02cr": "pass"}
+L02b right_reason {"PD02c": "bad_n 9 / 기대 9 · 보인 칸 ⊆ 기대 True · cuda9 False", "PD02cr": "pass"}
+L02c right_reason {"PD02c": "bad_n 9 / 기대 9 · 보인 칸 ⊆ 기대 True · cuda9 False", "PD02cr": "fail · 기대 칸 값"}
+L02d right_reason {"PD02c": "bad_n 9 / 기대 9 · 보인 칸 ⊆ 기대 True · cuda9 False", "PD02cr": "pass"}
+L02e right_reason {"PD02c": "bad_n 18 / 기대 18 · 보인 칸 ⊆ 기대 True · cuda9 False", "PD02cr": "pass"}
+L02f right_reason {"PD02c": "bad_n 22 / 기대 22 · 보인 칸 ⊆ 기대 True · cuda9 True", "PD02cr": "pass"}
+L02g right_reason {"PD02c": "bad_n 18 / 기대 18 · 보인 칸 ⊆ 기대 True · cuda9 False", "PD02cr": "pass"}
+right_reason 19 / 19
+
+rc=0 seconds=85

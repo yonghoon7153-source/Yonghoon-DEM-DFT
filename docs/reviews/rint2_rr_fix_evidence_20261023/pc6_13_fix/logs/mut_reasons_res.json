@@ -1,0 +1,209 @@
+[
+ {
+  "id": "G13a",
+  "why": "PC6-13 요약 있는 길 — 그룹 미확인 + 러너 실패 rc 가드 끔 (옛 = group_unconfirmed · 재실행 자격)",
+  "right_reason": true,
+  "notes": {
+   "PD13": "bad_n 32 / 기대 32 · 보인 칸 ⊆ 기대 True",
+   "PD13o": "pass",
+   "PD13g": "pass",
+   "PD13r": "fail · 기대 칸 값",
+   "PD13d": "pass"
+  }
+ },
+ {
+  "id": "G13b",
+  "why": "PC6-13 요약 있는 길 — 낱말 없을 때 기본값 runner_rc → group_unconfirmed (낱말만 보고 기본 원인은 그대로)",
+  "right_reason": true,
+  "notes": {
+   "PD13": "bad_n 16 / 기대 16 · 보인 칸 ⊆ 기대 True",
+   "PD13o": "pass",
+   "PD13g": "pass",
+   "PD13r": "fail · 기대 칸 값",
+   "PD13d": "pass"
+  }
+ },
+ {
+  "id": "G13c",
+  "why": "PC6-13 runner_rc_failed = 같음 비교 (rc not in (0, None) — False · 0.0 = 0 으로 읽음 · 보수 반대)",
+  "right_reason": true,
+  "notes": {
+   "PD13": "bad_n 8 / 기대 8 · 보인 칸 ⊆ 기대 True",
+   "PD13o": "pass",
+   "PD13g": "pass",
+   "PD13r": "pass",
+   "PD13d": "pass"
+  }
+ },
+ {
+  "id": "G13d",
+  "why": "PC6-13 runner_rc_failed 늘 False (모든 길의 새 가드 끔)",
+  "right_reason": true,
+  "notes": {
+   "PD13": "bad_n 32 / 기대 32 · 보인 칸 ⊆ 기대 True",
+   "PD13o": "틀린 칸 ['ce1_plain', 'ce1_python', 'ce_neg9_plain'] / 기대 ['ce1_plain', 'ce1_python', 'ce_neg9_plain']",
+   "PD13g": "pass",
+   "PD13r": "fail · 기대 칸 값",
+   "PD13d": "fail · 기대 칸 값"
+  }
+ },
+ {
+  "id": "G13e",
+  "why": "PC6-13 runner_rc_failed — None 도 실패로 (사슬이 죽인 런 · 정리 중 신호를 runner_rc 로 · 넘침)",
+  "right_reason": true,
+  "notes": {
+   "PD13": "bad_n 16 / 기대 16 · 보인 칸 ⊆ 기대 True",
+   "PD13o": "틀린 칸 ['ce_none_rc'] / 기대 ['ce_none_rc']",
+   "PD13g": "pass",
+   "PD13r": "pass",
+   "PD13d": "pass"
+  }
+ },
+ {
+  "id": "G13f",
+  "why": "PC6-13 요약 없는 길 — recover 끝 기록의 chain_end 무시 (옛 = parent_dead)",
+  "right_reason": true,
+  "notes": {
+   "PD13": "pass",
+   "PD13o": "틀린 칸 ['ce1_plain', 'ce1_python', 'ce_neg9_plain'] / 기대 ['ce1_plain', 'ce1_python', 'ce_neg9_plain']",
+   "PD13g": "pass",
+   "PD13r": "pass",
+   "PD13d": "fail · 기대 칸 값"
+  }
+ },
+ {
+  "id": "G13g",
+  "why": "PC6-13 chain_end_failed — 원인 칸 무시 (사슬이 죽인 런 rc −9 · timeout · signal 을 runner_rc 로 · 넘침)",
+  "right_reason": true,
+  "notes": {
+   "PD13": "pass",
+   "PD13o": "틀린 칸 ['ce_signal', 'ce_timeout'] / 기대 ['ce_signal', 'ce_timeout']",
+   "PD13g": "pass",
+   "PD13r": "pass",
+   "PD13d": "pass"
+  }
+ },
+ {
+  "id": "G13h",
+  "why": "PC6-13 recover_group — 사슬의 옛 끝 기록에서 chain_end 를 만들지 않음 (옛 = 덮어써 잃음)",
+  "right_reason": true,
+  "notes": {
+   "PD13": "pass",
+   "PD13o": "pass",
+   "PD13g": "틀린 칸 ['chain_rc1', 'chain_timeout'] / 기대 ['chain_rc1', 'chain_timeout']",
+   "PD13r": "pass",
+   "PD13d": "fail · 기대 칸 값"
+  }
+ },
+ {
+  "id": "G13i",
+  "why": "PC6-13 recover_group — 앞 recover 끝 기록의 chain_end 를 이어받지 않음 (recover 두 번 = 잃음)",
+  "right_reason": true,
+  "notes": {
+   "PD13": "pass",
+   "PD13o": "pass",
+   "PD13g": "틀린 칸 ['recover_carry'] / 기대 ['recover_carry']",
+   "PD13r": "pass",
+   "PD13d": "pass"
+  }
+ },
+ {
+  "id": "G13j",
+  "why": "PC6-13 recover_group — chain_end 를 끝 기록에 쓰지 않음",
+  "right_reason": true,
+  "notes": {
+   "PD13": "pass",
+   "PD13o": "pass",
+   "PD13g": "틀린 칸 ['chain_rc1', 'chain_timeout', 'recover_carry'] / 기대 ['chain_rc1', 'chain_timeout', 'recover_carry']",
+   "PD13r": "pass",
+   "PD13d": "fail · 기대 칸 값"
+  }
+ },
+ {
+  "id": "G13k",
+  "why": "PC6-13 recover_group — chain_end 대신 새 끝 기록 rc 에 러너 rc (재실행 원천 \"끝난 런\" rc 0 판정을 흔듦 · 칸 없음)",
+  "right_reason": true,
+  "notes": {
+   "PD13": "pass",
+   "PD13o": "pass",
+   "PD13g": "틀린 칸 ['chain_rc1', 'chain_timeout', 'recover_carry'] / 기대 ['chain_rc1', 'chain_timeout', 'recover_carry']",
+   "PD13r": "pass",
+   "PD13d": "fail · 기대 칸 값"
+  }
+ },
+ {
+  "id": "G13l",
+  "why": "PC6-13 멈춤 문장에 러너 rc 를 빼 (화면 · 단계 요약 · 옛 문장)",
+  "right_reason": true,
+  "notes": {
+   "PD13": "pass",
+   "PD13o": "pass",
+   "PD13g": "pass",
+   "PD13r": "fail · 기대 칸 값",
+   "PD13d": "pass"
+  }
+ },
+ {
+  "id": "L02a",
+  "why": "PC6-02 라이브러리 표지 CUBLAS_STATUS_ 뺌",
+  "right_reason": true,
+  "notes": {
+   "PD02c": "bad_n 9 / 기대 9 · 보인 칸 ⊆ 기대 True · cuda9 False",
+   "PD02cr": "pass"
+  }
+ },
+ {
+  "id": "L02b",
+  "why": "PC6-02 라이브러리 표지 CUSOLVER_STATUS_ 뺌",
+  "right_reason": true,
+  "notes": {
+   "PD02c": "bad_n 9 / 기대 9 · 보인 칸 ⊆ 기대 True · cuda9 False",
+   "PD02cr": "pass"
+  }
+ },
+ {
+  "id": "L02c",
+  "why": "PC6-02 라이브러리 표지 CUSPARSE_STATUS_ 뺌",
+  "right_reason": true,
+  "notes": {
+   "PD02c": "bad_n 9 / 기대 9 · 보인 칸 ⊆ 기대 True · cuda9 False",
+   "PD02cr": "fail · 기대 칸 값"
+  }
+ },
+ {
+  "id": "L02d",
+  "why": "PC6-02 라이브러리 표지 CUFFT_ 뺌",
+  "right_reason": true,
+  "notes": {
+   "PD02c": "bad_n 9 / 기대 9 · 보인 칸 ⊆ 기대 True · cuda9 False",
+   "PD02cr": "pass"
+  }
+ },
+ {
+  "id": "L02e",
+  "why": "PC6-02 다른 꼴 표지 'CUDA error:' 뺌",
+  "right_reason": true,
+  "notes": {
+   "PD02c": "bad_n 18 / 기대 18 · 보인 칸 ⊆ 기대 True · cuda9 False",
+   "PD02cr": "pass"
+  }
+ },
+ {
+  "id": "L02f",
+  "why": "PC6-02 CUDA 표지를 자원 낱말 앞에 봄 (메모리 부족 + 라이브러리 줄 = runner_rc · 1저자 결정의 차례 반대)",
+  "right_reason": true,
+  "notes": {
+   "PD02c": "bad_n 22 / 기대 22 · 보인 칸 ⊆ 기대 True · cuda9 True",
+   "PD02cr": "pass"
+  }
+ },
+ {
+  "id": "L02g",
+  "why": "PC6-02 'CUDA error:' 를 대소문자 무시 판으로 ('CUDA error:' → 'CUDA Error:' — 대조 표지 · 실제 줄 꼴과 다름)",
+  "right_reason": true,
+  "notes": {
+   "PD02c": "bad_n 18 / 기대 18 · 보인 칸 ⊆ 기대 True · cuda9 False",
+   "PD02cr": "pass"
+  }
+ }
+]
