@@ -14816,6 +14816,44 @@
       "opened_in": "docs/data/kg50_mpm_20261102/README.md",
       "title": "11-02 채팅 — MPM ↔ DEM 이온 전도도 비교를 솔버 상수 σ₀ 3.0 기준으로 적었다 (보고 기준 1.5 mS/cm · 1저자 10-12) · 같은 답에서 \"키트가 활물질을 AM_S 로 잘못 이름 붙였다 · AM_P 가 맞다\" 고 단정 — 실제는 키트의 크기 문턱 규칙 (mono_absolute_3.5um · r 3 < 3.5 µm → AM_S) 이고 50kg NCM 이 다결정인지 단결정인지는 미확인",
       "note": "영향: 비 (MPM ÷ DEM · 0.99 · 1.06 · 1.22) 는 σ₀ 와 무관 (이온 = SE 만 흐름 · 정확히 비례) · 1저자에게 1.5 기준 표로 다시 보고 (1 µm 0.356 → 원값 0.3554 = 0.355 · 반올림한 0.711 에서 나눈 끝자리).  AM 상 설명은 다음 보고에서 정정 · README §2 에 정확한 문장.  닫는 조건 = 정정 보고 · 이후 보고 σ₀ 1.5 기준 고정."
+    },
+    {
+      "id": "SELF-149",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "자기 점검 (11-02 · 1저자에게 보낸 진도점검 덱 12장판 10장 재독)",
+      "opened_in": "docs/50kg/report_y4/meeting_20261104/README.md",
+      "title": "11-02 50kg 영률 장 (진도점검 덱 10장) — 활물질–전해질 접촉점 압력 (|Fn|/A · 221 · 370 · 493 MPa) 을 결과 줄로 싣고 '무른 전해질이 활물질 계면을 보호' 로 읽었다 — 선형 스프링 + 겹침 기반 면적에서 |Fn|/A ≈ k_n/(πR*) 라 하중 결과가 아니라 접촉 강성의 표지 (E^0.8 · 예측 비 0.57 · 1 · 1.38 ↔ 관찰 0.60 · 1 · 1.33)",
+      "note": "고침 = 표 · 글머리 · 노트에서 접촉점 압력 줄 뺌 · 두 번째 글머리 = 활물질 응력 (σ_VM ÷ 끝 판 압력) · 활물질끼리 하중 몫 · 검사기 규칙 (장 어디든 '접촉점 압력' = 실패 · 의도 변이 탐지) · 하중 분담 도구는 그 값을 진단 전용으로 표시.  덱 전체 재주사 = '접촉 압력' 류 0 건.  이미 보낸 12장판 (접촉점 압력 줄 있음) 은 고친 판 (sha256 b7c73097…) 으로 대체 전달.",
+      "claimed_fixed_sha": "e1a14df1dc4eba280fc858bde0007935f6bced51",
+      "evidence_tests": [
+        "docs/50kg/report_y4/meeting_20261104/tools/check_meeting_deck.py (접촉점 압력 금지 규칙 · 고치기 전 덱 6 문제 → 고친 덱 0 · 의도 변이 10/10 탐지)"
+      ]
+    },
+    {
+      "id": "SELF-150",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "1저자 11-02 밤 *\"100만 부터 시작해야지\"* · *\"당연히 할 수 있지 restart 파일이 있는데\"*",
+      "opened_in": "docs/50kg/kg50_resume_recheck_fix_plan_20261028.md",
+      "title": "11-02 D0.7 재개 안내 — 압축 중 끊긴 런 (335457 · 압축 체크포인트 restart_compress_* 약 100만 step 까지) 을 정착 끝 체크포인트 (200,001) 재개로 안내했다 · 10-28 Q3 결정의 조건 ('지금은 압축 체크포인트 재개 거부 · 압축 중 런이 끊기면 그때 (나)') 을 놓쳐 압축 진행분을 다시 돌리게 할 뻔함 (본 명령 전 1저자가 잡음)",
+      "note": "닫는 조건 = Q3 (나) 구현 (판정 2 step 앞 체크포인트 → 남은 step → 판정 → 루프 · 경계 앞 · 위 · 뒤 시험 먼저) → ibb -T (압축 체크포인트 · 본 제출 없음) → Codex 확인 → 본 제출.  같은 부류 = SELF-140 (Q3 칸 'D0.7 · D1 · D2 재개 = 정착 체크포인트라 무관' 오기)."
+    },
+    {
+      "id": "SELF-151",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "자기 점검 (11-02 게이트 실패 · check_review_findings selftest 21 = MPM README 철회값 꼴 우연 일치)",
+      "opened_in": "scripts/check_all.sh",
+      "title": "게이트 전 사전 점검 (CLAUDE.md '게이트 전에 check_doc_refs · check_review_findings 를 먼저') 을 무인자 check_review_findings 로만 돌렸다 — 무인자 실행은 원장 자기일관만 보고 철회값 스윕은 --ban-sweep · selftest 21 만 한다 (CI discipline.yml 주석에 이미 적힘) · 게이트 줄 이름 '(원장 + 철회값 스윕)' 도 그 실행과 어긋남 → 누수가 전체 게이트 (selftest 21) 에서야 드러나 게이트 한 바퀴 허비",
+      "note": "게이트 자체는 초록이 아니었다 (selftest 21 이 잡음 — false-green 아님).  고침 = 사전 점검에 --ban-sweep 따로 (CLAUDE.md 줄) · 게이트 줄 이름을 실제 실행대로 — 게이트 단계 수 · 실행 명령 그대로.",
+      "claimed_fixed_sha": "f015c1faf36c33f6bce374e8edb4bc4853f57800",
+      "evidence_tests": [
+        "scripts/check_all.sh 줄 이름 (실행 명령 그대로) · CLAUDE.md 사전 점검 줄 — 문서 고침 · 시험 없음"
+      ]
     }
   ]
 }
