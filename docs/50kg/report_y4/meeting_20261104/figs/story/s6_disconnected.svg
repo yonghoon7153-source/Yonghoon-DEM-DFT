@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="309.6pt" height="194.4pt" viewBox="0 0 309.6 194.4" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 194.4 
+L 309.6 194.4 
+L 309.6 0 
+L 0 0 
+L 0 194.4 
+z
+" style="fill: none"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 44.64 158.4 
+L 300.96 158.4 
+L 300.96 15.84 
+L 44.64 15.84 
+L 44.64 158.4 
+z
+" style="fill: none"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1"/>
+     <g id="text_1">
+      <text style="font-size: 10.5px; font-family: 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="92.7" y="171.797949" transform="rotate(-0 92.7 171.797949)">3</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2"/>
+     <g id="text_2">
+      <text style="font-size: 10.5px; font-family: 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="172.8" y="171.797949" transform="rotate(-0 172.8 171.797949)">2</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3"/>
+     <g id="text_3">
+      <text style="font-size: 10.5px; font-family: 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="252.9" y="171.797949" transform="rotate(-0 252.9 171.797949)">1</text>
+     </g>
+    </g>
+    <g id="text_4">
+     <!-- $D_\mathrm{SE}$ (µm) -->
+     <g style="fill: #262626" transform="translate(152.0625 185.297949)">
+      <text>
+       <tspan x="0" y="-0.34375" style="font-style: oblique; font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #262626">D</tspan>
+       <tspan x="8.085205" y="1.231245" style="font-size: 7.35px; font-family: 'DejaVu Sans'; fill: #262626">S</tspan>
+       <tspan x="12.750732" y="1.231245" style="font-size: 7.35px; font-family: 'DejaVu Sans'; fill: #262626">E</tspan>
+       <tspan x="17.681836" y="-0.34375" style="font-weight: 500; font-size: 10.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626"> </tspan>
+       <tspan x="20.829785" y="-0.34375" style="font-weight: 500; font-size: 10.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">(</tspan>
+       <tspan x="23.977734" y="-0.34375" style="font-weight: 500; font-size: 10.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">µ</tspan>
+       <tspan x="29.637891" y="-0.34375" style="font-weight: 500; font-size: 10.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">m</tspan>
+       <tspan x="38.240918" y="-0.34375" style="font-weight: 500; font-size: 10.5px; font-family: 'WenQuanYi Zen Hei'; fill: #262626">)</tspan>
+      </text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_4">
+      <defs>
+       <path id="m8476508163" d="M 0 0 
+L 3 0 
+" style="stroke: #262626; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m8476508163" x="44.64" y="158.4" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="41.14" y="162.399023" transform="rotate(-0 41.14 162.399023)">0</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#m8476508163" x="44.64" y="110.88" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 10px; font-family: 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="41.14" y="114.879023" transform="rotate(-0 41.14 114.879023)">2</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m8476508163" x="44.64" y="63.36" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 10px; font-family: 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="41.14" y="67.359023" transform="rotate(-0 41.14 67.359023)">4</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#m8476508163" x="44.64" y="15.84" style="fill: #262626; stroke: #262626; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 10px; font-family: 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: end; fill: #262626" x="41.14" y="19.839023" transform="rotate(-0 41.14 19.839023)">6</text>
+     </g>
+    </g>
+    <g id="text_9">
+     <text style="font-size: 9.5px; font-family: 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="29.24127" y="87.12" transform="rotate(-90 29.24127 87.12)">SE outside spanning network (%)</text>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 44.64 158.4 
+L 44.64 15.84 
+" style="fill: none; stroke: #262626; stroke-width: 0.9; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 44.64 158.4 
+L 300.96 158.4 
+" style="fill: none; stroke: #262626; stroke-width: 0.9; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 70.272 158.4 
+L 115.128 158.4 
+L 115.128 48.129624 
+L 70.272 48.129624 
+z
+" clip-path="url(#pa841563ff4)" style="fill: #0d366b; stroke: #0d366b; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="92.7" y="42.363475" transform="rotate(-0 92.7 42.363475)">4.6%</text>
+   </g>
+   <g id="patch_6">
+    <path d="M 150.372 158.4 
+L 195.228 158.4 
+L 195.228 110.360903 
+L 150.372 110.360903 
+z
+" clip-path="url(#pa841563ff4)" style="fill: #1c5cab; stroke: #1c5cab; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="172.8" y="104.594755" transform="rotate(-0 172.8 104.594755)">2.0%</text>
+   </g>
+   <g id="patch_7">
+    <path d="M 230.472 158.4 
+L 275.328 158.4 
+L 275.328 143.060043 
+L 230.472 143.060043 
+z
+" clip-path="url(#pa841563ff4)" style="fill: #3987e5; stroke: #3987e5; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'WenQuanYi Zen Hei', 'DejaVu Sans'; text-anchor: middle; fill: #262626" x="252.9" y="137.293894" transform="rotate(-0 252.9 137.293894)">0.6%</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pa841563ff4">
+   <rect x="44.64" y="15.84" width="256.32" height="142.56"/>
+  </clipPath>
+ </defs>
+</svg>

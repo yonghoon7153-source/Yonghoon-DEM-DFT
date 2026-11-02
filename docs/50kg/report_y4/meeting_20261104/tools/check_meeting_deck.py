@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""진도점검 덱 (2026-11-04 회의 · DEM 8 장) 검사 — 화면 · 표 · 노트의 숫자 = 원자료 · 1저자 11-02 규칙.
+"""진도점검 덱 (2026-11-04 회의 · DEM 10 장 — 11-02 이야기 보강) 검사 — 화면 · 표 · 노트의 숫자 = 원자료 · 1저자 11-02 규칙.
 
 숫자 원천 (리포): docs/50kg/report_y4/draft2/metrics_all.csv · docs/50kg/report_y4/draft2/figs/p5_breakeven_sigma.csv
 검사:
@@ -36,10 +36,11 @@ def load_data(repo):
     be = list(csv.DictReader(open(os.path.join(d2, 'figs/p5_breakeven_sigma.csv'), encoding='utf-8')))
     meas = {r['bed']: float(r['sigma_meas_mScm']) for r in be if r['kind'] == 'measured' and r['sigma_meas_mScm']}
     req = {r['bed']: float(r['sigma_req_mScm']) for r in be if r['kind'] == 'required' and r['basis'] == 'f_mc Hertz'}
-    return rows, meas, req
+    szz = json.load(open(os.path.join(repo, 'docs/50kg/report_y4/meeting_20261104/values/szz_share/plane_load.json'), encoding='utf-8'))['cases']
+    return rows, meas, req, szz
 
 
-def expected(rows, meas, req):
+def expected(rows, meas, req, szz):
     """(장 번호, 칸 'screen'|'table'|'notes'|'any', 있어야 할 글, 근거) — 글은 원자료에서 다시 만든다."""
     v = lambda b, k: float(rows[b][k])
     eps = [f"{v(b, 'eps_union_exact_pct'):.1f}" for b in ORDER]
@@ -61,24 +62,38 @@ def expected(rows, meas, req):
     E += [(5, 'screen', f'({cn[0]} → {cn[1]} → {cn[2]}개)', 'am_se_cn_mean')]
     assert 9.5 <= ratio_cn < 10.5, ratio_cn
     E += [(1, 'screen', '접촉 수 약 10배', f'D1/D3 = {ratio_cn:.3f}'), (5, 'screen', '접촉 수 약 10배', f'D1/D3 = {ratio_cn:.3f}'),
-          (8, 'screen', '접촉 수 약 10배', f'D1/D3 = {ratio_cn:.3f}')]
+          (9, 'screen', '접촉 수 약 10배', f'D1/D3 = {ratio_cn:.3f}')]
     E += [(1, 'table', x, 'coverage_physics_union_pct') for x in cov]
     E += [(5, 'screen', f'증가하지 않음 ({cov[0]} → {cov[1]} → {cov[2]} %)', 'coverage_physics_union_pct (1저자 11-02 문구)')]
     E += [(1, 'table', x, 'f_ion_hertz / f_ion_hertz(D3)') for x in frel]
-    E += [(6, 'screen', f'{frel[1]}배 (2 µm), {frel[2]}배 (1 µm)', 'f_ion_hertz 비')]
+    E += [(7, 'screen', f'{frel[1]}배 (2 µm), {frel[2]}배 (1 µm)', 'f_ion_hertz 비')]
     E += [(1, 'table', x, 'tau2_ion_hertz') for x in tau]
-    E += [(6, 'screen', f'({tau[0]} → {tau[1]} → {tau[2]})', 'tau2_ion_hertz')]
+    E += [(7, 'screen', f'({tau[0]} → {tau[1]} → {tau[2]})', 'tau2_ion_hertz')]
     E += [(1, 'table', f'{pel3:.1f}', '펠릿 실측 3 µm'), (1, 'table', f'{pel1:.1f}', '펠릿 실측 1 µm')]
     E += [(2, 'screen', f'{pel3:.1f} → {pel1:.1f}', '펠릿 실측 (단위 표기 = 1저자 mS cm⁻¹)')]
-    E += [(n, 'screen', f'{loss:.2f}배', f'{pel1}/{pel3} = {loss:.4f}') for n in (1, 7, 8)]
-    E += [(7, 'screen', f'{need:.1f} mS/cm', f'필요 σ (f_mc Hertz) = {need:.5f}')]
-    E += [(7, 'screen', f'{need / pel3:.2f}배', f'{need:.5f}/{pel3} = {need / pel3:.4f}')]
-    E += [(7, 'screen', f'{gain:.1f}배 × 전해질 이온전도도 {loss:.2f}배 ≈ {gain * loss:.1f}배', f'{gain:.4f} × {loss:.4f} = {gain * loss:.4f}')]
-    E += [(6, 'notes', f'{min(cps):.0f}–{max(cps):.0f} %', f'constriction_power_share_ion_hertz × 100 = {", ".join(f"{c:.1f}" for c in cps)}')]
+    E += [(n, 'screen', f'{loss:.2f}배', f'{pel1}/{pel3} = {loss:.4f}') for n in (1, 8, 9)]
+    E += [(8, 'screen', f'{need:.1f} mS/cm', f'필요 σ (f_mc Hertz) = {need:.5f}')]
+    E += [(8, 'screen', f'{need / pel3:.2f}배', f'{need:.5f}/{pel3} = {need / pel3:.4f}')]
+    E += [(8, 'screen', f'{gain:.1f}배 × 전해질 이온전도도 {loss:.2f}배 ≈ {gain * loss:.1f}배', f'{gain:.4f} × {loss:.4f} = {gain * loss:.4f}')]
+    E += [(7, 'notes', f'{min(cps):.0f}–{max(cps):.0f} %', f'constriction_power_share_ion_hertz × 100 = {", ".join(f"{c:.1f}" for c in cps)}')]
     assert 0.70 <= min(cps) / 100 and max(cps) / 100 <= 0.80
-    E += [(8, 'screen', f'{min(cps):.0f}–{max(cps):.0f} %가 전해질–전해질 접촉부', f'{min(cps):.1f}–{max(cps):.1f} %')]
-    E += [(7, 'screen', f'↔ 실측 {pel1:.1f}', '펠릿 실측 1 µm')]
-    E += [(7, 'notes', '조건부 추정', 'KG50B-02 조건 (노트)')]
+    E += [(9, 'screen', f'{min(cps):.0f}–{max(cps):.0f} %가 전해질–전해질 접촉부', f'{min(cps):.1f}–{max(cps):.1f} %')]
+    E += [(8, 'screen', f'↔ 실측 {pel1:.1f}', '펠릿 실측 1 µm')]
+    E += [(8, 'notes', '조건부 추정', 'KG50B-02 조건 (노트)')]
+    # 11-02 이야기 보강 (6 · 7 · 10장) — 배위수 · 끊긴 입자 · σ0 1.5 기준 유효 이온전도도 · 부록 표 (가압 응력 기여 %)
+    cse = [f"{v(b, 'se_se_cn_mean'):.1f}" for b in ORDER]
+    cam = [f"{v(b, 'am_am_cn_mean'):.1f}" for b in ORDER]
+    dsc = [f"{100 - v(b, 'percolation_pct'):.1f}" for b in ORDER]
+    sig = [f"{1.5 * v(b, 'f_ion_hertz'):.3f}" for b in ORDER]
+    E += [(6, 'screen', f'배위수 증가 ({cse[0]} → {cse[1]} → {cse[2]})', 'se_se_cn_mean')]
+    E += [(6, 'screen', f'끊긴 입자 감소 ({dsc[0]} → {dsc[1]} → {dsc[2]} %)', '100 − percolation_pct')]
+    E += [(6, 'notes', f'{cam[0]}, {cam[1]}, {cam[2]}개', 'am_am_cn_mean')]
+    E += [(7, 'screen', f'{min(cps):.0f}–{max(cps):.0f} %가 전해질 접촉부', 'constriction_power_share_ion_hertz')]
+    E += [(7, 'notes', f'3 µm {sig[0]}, 2 µm {sig[1]}, 1 µm {sig[2]} mS/cm', 'f_ion_hertz × σ0 1.5')]
+    E += [(10, 'table', x, 'se_se_cn_mean') for x in cse] + [(10, 'table', x, 'am_am_cn_mean') for x in cam]
+    E += [(10, 'table', x, 'f_ion_hertz × 1.5') for x in sig] + [(10, 'table', x, 'eps_union_exact_pct') for x in eps]
+    for g in ('AM–AM', 'AM–SE', 'SE–SE'):
+        E += [(10, 'table', f"{szz[lab]['contribution_sigma_zz_pct'][g]:.1f}", f'plane_load_share {lab} {g}') for lab in ('SE3um', 'SE2um', 'SE1um')]
     return E
 
 
@@ -92,12 +107,12 @@ def slide_texts(prs):
     return out
 
 
-def run_checks(prs, rows, meas, req):
+def run_checks(prs, rows, meas, req, szz):
     prob, ok = [], 0
     T = slide_texts(prs)
-    if len(T) != 8:
-        prob.append(f'장 수 {len(T)} ≠ 8')
-    for n, where, txt, src in expected(rows, meas, req):
+    if len(T) != 10:
+        prob.append(f'장 수 {len(T)} ≠ 10')
+    for n, where, txt, src in expected(rows, meas, req, szz):
         hay = T[n - 1]['screen'] + '\n' + T[n - 1]['table'] + '\n' + T[n - 1]['notes'] if where == 'any' else T[n - 1][where]
         if txt in hay:
             ok += 1
@@ -189,14 +204,14 @@ def main():
     ap.add_argument('--json', help='결과 JSON 저장 경로')
     ap.add_argument('--selftest', action='store_true', help='덱을 다섯 가지로 망가뜨려 각각 FAIL 인지 확인')
     a = ap.parse_args()
-    rows, meas, req = load_data(a.repo)
+    rows, meas, req, szz = load_data(a.repo)
     raw = open(a.deck, 'rb').read()
-    ok, prob = run_checks(Presentation(io.BytesIO(raw)), rows, meas, req)
+    ok, prob = run_checks(Presentation(io.BytesIO(raw)), rows, meas, req, szz)
     res = {'deck': os.path.basename(a.deck), 'n_number_checks_ok': ok, 'problems': prob}
     if a.selftest:
         st = {}
         for kind in ('number', 'caption', 'red', 'italic', 'banned'):
-            _, pb = run_checks(mutate(raw, kind), rows, meas, req)
+            _, pb = run_checks(mutate(raw, kind), rows, meas, req, szz)
             st[kind] = len(pb) > len(prob)
         res['selftest_mutations_detected'] = st
     if a.json:

@@ -1,0 +1,46 @@
+{
+ "source": [
+  "docs/50kg/report_y4/draft2/metrics_all.csv",
+  "docs/50kg/report_y4/draft2/figs/p5_breakeven_sigma.csv"
+ ],
+ "sigma0_report_mScm": 1.5,
+ "values": {
+  "se_se_cn_mean": {
+   "D3": 3.33764554,
+   "D2": 4.04091606,
+   "D1": 4.97525918
+  },
+  "am_am_cn_mean": {
+   "D3": 4.60458839,
+   "D2": 4.47535449,
+   "D1": 3.65563808
+  },
+  "se_outside_spanning_pct": {
+   "D3": 4.641009100000005,
+   "D2": 2.021847500000007,
+   "D1": 0.6456210999999996
+  },
+  "se_outside_spanning_definition": "100 − percolation_pct (calc_percolation · 위아래 판 쪽에 모두 닿는 SE 덩어리에 들지 않은 SE 입자 비율)",
+  "sigma_li_mScm": {
+   "D3": 0.0292688235,
+   "D2": 0.05007928635,
+   "D1": 0.07020479205
+  },
+  "sigma_li_basis": "f_ion_hertz × σ0 1.5 mS/cm (보고 기준 · 1저자 10-12)",
+  "net": {
+   "structure_gain": 2.398620226398919,
+   "pellet_ratio": 0.45098039215686275,
+   "net": 1.0817306903367674,
+   "pellet_mScm": {
+    "D1": 2.3,
+    "D3": 5.1
+   }
+  }
+ },
+ "files": {
+  "s6_cn_network": "s6_cn_network.png",
+  "s6_disconnected": "s6_disconnected.png",
+  "s7_sigma_li": "s7_sigma_li.png",
+  "s8_net": "s8_net.png"
+ }
+}
