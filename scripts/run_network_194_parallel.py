@@ -5175,6 +5175,62 @@ def _selftest() -> int:
                 repr((rc_a, el_, o_[-200:])))
 
         _scenario('㊳ L214P-02 manifest git.sha 끝 LF 시나리오', _s38)
+
+        # ═══ ㊴ ★ 11-02 L214P-03 (㊳ 과 같은 부류 · 1저자 11-02 Q5 *"다 권고대로 해봐"*) — launch_eligibility 의 64 hex 형식 검사 넷 (`_HEX64.match` —
+        #     code_hashes 값 · handover_code_hashes 값 · input_digest.cohort_tsv_sha256 값 · input_digest.raw_sha256_table_sha256) 이 64 hex 뒤 LF 하나를
+        #     받는다 (`$`) — 반례 먼저 (고치기 전 코드에서 ✗) · 고침 = 넷 다 `.fullmatch`.  code_hashes 꼴은 seal.code_fp 를 바꾼 지도로 다시 계산한 사본 —
+        #     code_fp 대조가 대신 잡는 것을 형식 검사의 통과로 읽지 않게 한다.  대조 = 바꾸지 않은 manifest current (문제 0) · + CRLF · + 공백 · 63 hex ·
+        #     대문자 = invalid (고치기 전에도) · 꼴마다 그 자리 문제 한 줄만.  값을 strip 하지 않는다.
+        def _s39():
+            hv_, cfp_ = _G.get('launch_eligibility'), _G.get('code_fp')
+            m0 = read_json(tmp / 'run_gen' / 'manifest.json') or {}
+            sites_ = (('code_hashes', 'code_hashes'), ('handover_code_hashes', 'handover_code_hashes'),
+                      ('cohort_tsv_sha256', 'input_digest.cohort_tsv_sha256'), ('raw_sha256_table_sha256', 'input_digest.raw_sha256_table_sha256'))
+
+            def mut_(site_, f_):
+                m_ = json.loads(json.dumps(m0))
+                if site_ in ('code_hashes', 'handover_code_hashes'):
+                    d_ = m_[site_]
+                    k_ = sorted(d_)[0]
+                    d_[k_] = f_(d_[k_])
+                    if site_ == 'code_hashes':
+                        m_['seal']['code_fp'] = cfp_(d_)
+                elif site_ == 'cohort_tsv_sha256':
+                    d_ = m_['input_digest'][site_]
+                    k_ = sorted(d_)[0]
+                    d_[k_] = f_(d_[k_])
+                else:
+                    m_['input_digest'][site_] = f_(m_['input_digest'][site_])
+                return m_
+
+            forms_ = {'+ LF': lambda v: v + '\n', '+ CRLF': lambda v: v + '\r\n', '+ 공백': lambda v: v + ' ',
+                      '63 hex': lambda v: v[:63], '대문자': lambda v: v.upper()}
+            e0 = hv_(json.loads(json.dumps(m0)))
+            bad = {}
+            for site_, pref_ in sites_:
+                for fn_, f_ in forms_.items():
+                    e_ = hv_(mut_(site_, f_))
+                    ps_ = [str(p_) for p_ in e_.get('problems') or []]
+                    if not (e_.get('kind') == 'invalid' and len(ps_) == 1 and ps_[0].startswith(pref_)):
+                        bad[f'{site_} {fn_}'] = (e_.get('kind'), [p_[:60] for p_ in ps_])
+            chk('㊴ ★ L214P-03 — launch_eligibility (실제 함수) 64 hex 형식 네 자리 × 다섯 꼴: + LF · + CRLF · + 공백 · 63 hex · 대문자 = invalid '
+                '(그 자리 문제 한 줄만) · 바꾸지 않은 manifest = current (문제 0) — 옛 코드: 네 자리 모두 + LF 가 current (`_HEX64.match` 의 `$` · '
+                'code_hashes 꼴은 seal.code_fp 를 다시 계산한 사본)',
+                e0.get('kind') == 'current' and not e0.get('problems') and not bad, repr((e0.get('kind'), (e0.get('problems') or [])[:2], bad)))
+            r_ = tmp / 'l214p03_hex64_lf'
+            shutil.copytree(tmp / 'run_gen', r_, symlinks=True)
+            m1 = read_json(r_ / 'manifest.json') or {}
+            m1['input_digest']['raw_sha256_table_sha256'] = m1['input_digest']['raw_sha256_table_sha256'] + '\n'
+            write_json(r_ / 'manifest.json', m1)
+            rc_a, aj_, o_ = _audit_json(r_)
+            el_ = aj_.get('eligibility') or {}
+            chk('㊴ ★ L214P-03 — 실제 audit CLI: input_digest.raw_sha256_table_sha256 = 64 hex + LF 인 ROOT = 실행 형식 자격 invalid · rc 2 '
+                '(옛 코드: 자격 current)',
+                rc_a == 2 and el_.get('kind') == 'invalid'
+                and any(str(p_).startswith('input_digest.raw_sha256_table_sha256') for p_ in el_.get('problems') or []),
+                repr((rc_a, el_, o_[-200:])))
+
+        _scenario('㊴ L214P-03 64 hex 형식 네 자리 끝 LF 시나리오', _s39)
     finally:
         for k, v in env_keep.items():
             if v is None:
