@@ -42,6 +42,7 @@
 #   Q2 (KG50R-02 · 03 · 05) 정적 대조 = 전체 프로그램 대조 (check() 앞 STATE_CMD 머리 주석) · 시험 덱 = 같은 논리 명령 파서로 자름
 #     (--cut-trial · 첫 긴 run 꼬리 · & 이음 = 거부) · 시험 예산 = 첫 긴 run 앞 run 합 + min(N, -t) = 시험 덱 run 합 (G0 기대 끝 = S0 + 그 합).
 #   Q3 (KG50R-01 · KG50-19) 압축 체크포인트 재개 = 거부 — -C · 본 흐름 (계획 compress) 둘 다 · 이완 중 restart_compress_* 도.
+#     (11-02 Q3 (나) 로 바뀜 — 아래 2026-11-02 줄 · 표지 없는 압축 재개 덱의 -C 는 예전 거부 그대로)
 #   Q4 (Codex Q7) 도구 신원 — 이 스크립트 · ~/dem_test/dem_restart.py sha256 을 보고 · 시도 폴더에.  본 제출 (-T 없음) = -A · -H 와 같을 때만
 #     (시작 때 · 본 제출 바로 전 다시) · -T = 기록 + 본 제출 명령 한 줄 (그 -T 에서 G0–G3 통과한 케이스만 · 없으면 "명령 없음").
 #   Q5 (KG50R-07) G0 = 시험 로그 마지막 thermo 줄이 최신 머리와 칸 수 같고 모든 칸이 유한한 수 · 'Loop time … for N steps' 의 N = 시험 마지막 run.
@@ -52,6 +53,12 @@
 #     공백 없음 · 제어 글자 · 주석 밖 비 ASCII = 거부) · 재개 덱 준비 구간 print file 을 읽는 명령 (1저자 결정 대기) · write_restart 체크포인트
 #     앞 label · jump · clear · python · 판 메시 file 이름 = 펼친 이름 · 펼친 글 4096 자 넘음 = 닫힌 실패
 #   F02 러너 결속 — 헬퍼 러너 줄마다 대조 (runnerck) · 본 · 시험 러너 = 도구 틀 · 실행 입력 영수증 · 잡 안 sha256 대조 · G0 신원 관문
+# 2026-11-02 (1저자 Q3 (나) · KG50R-01 · D0.7-50 본 런이 압축 중 멈춤 — restart_compress_1000000 · 위상 4,998): 압축 루프 체크포인트 재개 (예전 Q3 (가) = 거부).
+#   본 덱 run 순서로 루프 위상을 정해 (loop_phase · 판정 = 루프 진입 E + N k · 남은 r = N − (S0 − E) mod N · 판정 step 그 자리 (위상 0) = 거부) dem_restart.py
+#   재개 덱의 루프 머리 앞에 run r + 루프 몸 (그대로) + jump SELF q3b_done_<루프> · 루프 끝 if 뒤에 label q3b_done_<루프> (--q3b-fix) · 정적 대조 = 그 꼴만
+#   허용 (예전 규칙 그대로) · 시험 덱 = run r + 판정 (목표에 닿으면 quit) + 루프 run min(TS − r, N) (--cut-trial-q3b) · G0–G3 그대로 (G2 = S0 덤프).
+#   위상을 못 정하면 (루프 밖 · 루프 뒤 restart 0 없음 = 이완 체크포인트일 수 있음 KG50-11 · 변수 run · 판정 step 그 자리 …) 거부 · 표지 없는
+#   압축 재개 덱 = 예전 거부 그대로
 NP=30; SUF=""; L=~/dem_test/lhs; SFX=""; TS=2000; TONLY=0; CHK=0; STRIP=0; APT=""; APH=""
 while getopts "n:s:r:x:t:TCcA:H:" o; do case $o in n) NP=$OPTARG;; s) SUF=$OPTARG;; r) L=$OPTARG;; x) SFX=$OPTARG;; t) TS=$OPTARG;; T) TONLY=1;; C) CHK=1;; c) STRIP=1;; A) APT=$OPTARG;; H) APH=$OPTARG;; *) exit 1;; esac; done
 shift $((OPTIND-1))
@@ -267,7 +274,8 @@ def plain(lst):
 #   그 밖 — 변수 참조 (${x} · $x · v_x) 는 그 앞에 정의 · label 은 본 덱 · 재개 덱 각각 유일 · jump 목적지 = 재개 덱에 있고 본 덱 뒤 구간의 그
 #     label · 명령 자리 (최상위 · if 안 · run every 안) 의 include · next · jump SELF <label> 말고 다른 jump · 이름에 변수인 명령 = 거부 ·
 #     첫 긴 run = 꼬리 없는 run N 한 줄 (every · pre · post · start · stop · upto · & 이음 = 거부) · read_restart 1 개 = 체크포인트
-#   압축 체크포인트 (restart_compress_* · 반복 안 restart 체크포인트) = 거부 (KG50R-01 · 1저자 10-28 Q3 (가))
+#   압축 체크포인트 (restart_compress_* · 반복 안 restart 체크포인트) = 거부 (KG50R-01 · 1저자 10-28 Q3 (가)) — 11-02 Q3 (나): 재개 덱에 Q3 (나) 표지가
+#     있으면 loop_phase 로 위상을 정해 뒤 구간 전체를 그 꼴과 대조 (ckpt_hits 아래 머리 주석) · 표지 없으면 예전 거부 그대로
 STATE_CMD = {'fix', 'unfix', 'fix_modify', 'compute', 'uncompute', 'compute_modify', 'variable', 'dump', 'undump',
              'dump_modify', 'region', 'thermo', 'thermo_style', 'thermo_modify', 'timestep', 'neighbor', 'neigh_modify',
              'atom_style', 'atom_modify', 'units', 'boundary', 'newton', 'dimension', 'processors', 'soft_particles',
@@ -1008,8 +1016,9 @@ def labels_of(L):
     return out
 
 
-def label_check(M, R, pM, probs):
+def label_check(M, R, pM, probs, extra=()):
     # label = 본 덱 · 재개 덱 각각 유일 · jump 목적지 = 재개 덱에 있고 본 덱 뒤 구간 (pM 부터) 의 그 label (10-28 KG50R-03 (ⅳ))
+    #   extra (11-02 Q3 (나)) = 본 덱에 없어도 되는 목적지 — 건너뜀 label q3b_done_<루프> (자리는 뒤 구간 전체 대조가 본다 · 재개 덱에 하나여야는 그대로)
     for nm, L in (('본 덱', M), ('재개 덱', R)):
         names = [x for _, x in labels_of(L)]
         dup = sorted(set(x for x in names if names.count(x) > 1))
@@ -1025,6 +1034,8 @@ def label_check(M, R, pM, probs):
                 continue                  # 다른 jump 꼴 = 다룰 수 없는 구문이 본다
             if cw[2] not in rl:
                 probs.append('jump 목적지 label %s 가 재개 덱에 없음 (10-28 KG50R-03): [%s]' % (cw[2], l))
+            elif cw[2] in extra:
+                continue
             elif ml.get(cw[2], -1) < pM:
                 probs.append('jump 목적지 label %s 가 본 덱 체크포인트 뒤 구간에 없음 (자리가 다르다 · 10-28 KG50R-03): [%s]' % (cw[2], l))
 
@@ -1119,6 +1130,141 @@ def print_file_reads(L, n, nm, probs):
                     break
 
 
+def ckpt_hits(M, base):
+    # 체크포인트 → 본 덱의 자리 (그 파일을 만드는 restart · write_restart 줄) — [(종류, 번호)] (check · Q3 (나) 가 같이 쓴다)
+    hits = []
+    for i, l in enumerate(M):
+        t = l.split()
+        if t[0] == 'write_restart' and len(t) >= 2 and os.path.basename(t[1]) == base:
+            hits.append(('write', i))
+        elif t[0] == 'restart' and len(t) >= 3 and num(t[1]) > 0:
+            for p in t[2:4]:
+                pat = '^' + re.escape(os.path.basename(p)).replace(r'\*', '[0-9]+') + '$'
+                if re.match(pat, base):
+                    hits.append(('restart', i))
+                    break
+    return hits
+
+
+# ── 11-02 (1저자 Q3 (나) · KG50R-01 · Codex 판정문 §2 최소 해결 · 수정 계획 docs/50kg/kg50_resume_recheck_fix_plan_20261028.md Q3 행) ──
+#   압축 루프 체크포인트 재개.  예전 (Q3 (가)) = 거부 — 루프 run 5000 을 새로 돌면 체크포인트 뒤 첫 판정이 원 일정과 어긋난다 (KG50R-01 · 위상 4,998).
+#   루프 일정 = 본 덱 run 순서에서 (짐작 아님 · loop_phase): 체크포인트를 만든 restart <간격> <파일*> 줄 → (run · 흐름 없이) 루프 머리 label X →
+#     바로 꼬리 없는 run N (N ≥ 2) → 루프 몸 (variable equal|string · print 만) → 끝 if "<조건>" then "jump SELF X" (그것 하나 · else 없음).
+#     루프 진입 E = 루프 앞 run 합 (숫자 run · 꼬리 pre · post 만 · 흐름 · step 을 바꾸는 명령 없음) · 판정 = E + N k (k ≥ 1 · 그 run 뒤 if).
+#     체크포인트 S0 = 간격의 배수 · S0 > E · 본 덱에 끝 if 말고 jump 없음 · 루프 몸 변수는 루프 앞에 안 나옴 · 루프 뒤 첫 run 앞에 restart 0
+#     (없으면 그 이름 체크포인트가 이완 run 에서 나왔을 수 있다 · KG50-11).  하나라도 못 지키면 = 위상을 정할 수 없음 = 거부 (예전 거부와 같은 닫힌 실패).
+#   위상 p = (S0 − E) mod N · 남은 r = N − p (1 ≤ r ≤ N − 1 · 판정은 run r 의 마지막 step 힘 = 원 일정과 같은 값).
+#     p = 0 (체크포인트 = 판정 step 그 자리) = 거부 — restart 는 run 안에서 그 step 끝에 써지고 (고정판 output.cpp Output::write · verlet.cpp step
+#     고리) 판정 (if) 은 run 이 돌아온 뒤라 체크포인트 상태는 그 판정 앞이다.  그 판정의 입력 (마지막 step 판 힘) 은 재개 setup 에서 다시 셀 수 없다
+#     (read_restart 직후 setup 판 압력 = 0 · 절차 docs/resume_ckpt_procedure_20260927.md §1 전제 ②) → run 0 판정은 늘 '목표 아래' · run N (이미 돈
+#     것으로 침) 은 원 런이 거기서 이완으로 갔으면 압축을 N step 더 한다 = 어느 쪽도 원 일정을 보증하지 못한다.  v3 덱 (E 400,002 · 간격 200,000) 은
+#     늘 위상 4,998 이라 이 경우가 없다.
+#   재개 덱 (도구가 dem_restart.py 산출에 넣음 · --q3b-fix) = [준비 구간 — 예전 규칙 그대로] + run r + 루프 몸 (run 뒤 ~ 끝 if · 원 줄 그대로) +
+#     jump SELF q3b_done_X + 루프 그대로 + label q3b_done_X (끝 if 바로 뒤) + 그 뒤 그대로.  LIGGGHTS jump SELF = 파일을 처음부터 다시 읽어 그 label
+#     까지 건너뜀 (input.cpp Input::jump · label) → 목표 아래면 끝 if 가 루프로 · 넘었으면 다음 줄 jump 가 루프 뒤로 (원 루프 if 와 같은 조건 · 같은 줄).
+#   정적 대조 (재개 덱에 표지 q3b_done_ 이 있을 때만) = 뒤 구간 전체가 위 꼴과 명령 하나하나 같아야 (허용 차이 = 이것뿐 · 준비 구간 규칙 · label ·
+#     jump · run 꼬리 규칙 그대로) · 표지 없는 압축 재개 덱 = 예전 거부 그대로 (Q3MSG · -C 출력 그대로 — Q5 등록 §12-4 W2 글자).
+Q3BMARK = 'q3b_done_'
+Q3BNO = '압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함 — 루프 위상을 본 덱에서 정할 수 없음 (11-02 · 닫힌 실패 · KG50R-01)'
+Q3BTRIAL = 'q3b trial - below target, loop continues'
+
+
+def loop_phase(M, ia, s0):
+    # 11-02 Q3 (나): 본 덱 M · 체크포인트를 만든 restart 줄 번호 ia · 체크포인트 step s0 → 루프 일정 dict · 못 정하면 이유 (str) — 규칙 = 위 머리 주석
+    w = words(M[ia]) or []
+    if len(w) != 3 or w[0] != 'restart' or not re.fullmatch(r'[1-9][0-9]*', w[1]) or '*' not in w[2]:
+        return 'restart 줄 꼴이 지원 밖 (restart <간격 숫자> <파일 하나 · *>): [%s]' % M[ia]
+    every, il = int(w[1]), None
+    for i in range(ia + 1, len(M)):
+        wi = words(M[i])
+        if wi is None:
+            return '따옴표를 못 읽음: [%s]' % M[i]
+        if wi and wi[0] == 'label':
+            il = i
+            break
+        if wi and (wi[0] in ('run', 'quit') or ctl(M[i]) or wi[0] in STEPC):
+            return '체크포인트 restart 줄과 루프 머리 label 사이에 run · 흐름 · step 을 바꾸는 명령 (체크포인트가 그 자리에서 나왔을 수 있다): [%s]' % M[i]
+    if il is None:
+        return '체크포인트 restart 줄 뒤에 루프 머리 label 이 없음'
+    wl = words(M[il]) or []
+    if len(wl) != 2 or not re.fullmatch(r'[A-Za-z0-9_]+', wl[1]):
+        return '루프 머리 label 꼴이 지원 밖 (label <글자 · 숫자 · _>): [%s]' % M[il]
+    X = wl[1]
+    if [l for l in M if (words(l) or [''])[:2] == ['label', X]] != [M[il]]:
+        return '루프 머리 label %s 가 본 덱에 둘 이상' % X
+    im = il + 1
+    wr = (words(M[im]) or []) if im < len(M) else []
+    if len(wr) != 2 or wr[0] != 'run' or not re.fullmatch(r'[0-9]+', wr[1]) or int(wr[1]) < 2:
+        return '루프 머리 바로 뒤가 꼬리 없는 run N (N ≥ 2) 이 아님: [%s]' % (M[im] if im < len(M) else '(덱 끝)')
+    N, ic, bv = int(wr[1]), None, []
+    for i in range(im + 1, len(M)):
+        wi = words(M[i]) or ['']
+        if wi[0] == 'if':
+            ic = i
+            break
+        if wi[0] == 'print':
+            continue
+        if wi[0] == 'variable' and len(wi) >= 4 and wi[2] in ('equal', 'string') and re.fullmatch(r'[A-Za-z0-9_]+', wi[1]):
+            bv.append(wi[1])
+            continue
+        return '루프 몸 (run 뒤 · 끝 if 앞) 에 지원 밖 명령 (variable equal|string · print 만): [%s]' % M[i]
+    if ic is None:
+        return '루프 끝 if (jump SELF %s) 가 없음' % X
+    wc = words(M[ic]) or []
+    if len(wc) != 4 or wc[2] != 'then' or words(wc[3]) != ['jump', 'SELF', X] or '"' in wc[1]:
+        return '루프 끝 if 꼴이 지원 밖 (if "<조건>" then "jump SELF %s" 하나만 · else 없음 · 조건에 큰따옴표 없음): [%s]' % (X, M[ic])
+    for i, l in enumerate(M):
+        wi = words(l) or ['']
+        if i != ic and (any(x[:1] == ['jump'] for x in [wi] + nested(wi))
+                        or (wi[0] == 'partition' and (words(part_cmd(l)) or [''])[:1] == ['jump'])):
+            return '본 덱에 루프 끝 if 말고 다른 jump (루프 일정을 줄 순서로 정할 수 없음): [%s]' % l
+    for v in bv:
+        for l in M[:il]:
+            wi = words(l) or ['']
+            if (wi[0] == 'variable' and wi[1:2] == [v]) or any(next(g for g in m.groups() if g is not None) == v for m in VREF.finditer(l)):
+                return '루프 몸 변수 %s 가 루프 앞에도 나옴 (체크포인트 때 값 = 루프 몸 정의 — 준비 구간과 갈린다): [%s]' % (v, l)
+    E = 0
+    for l in M[:il]:
+        wi = words(l) or ['']
+        if wi[0] == 'run':
+            n, why = run_n(wi)
+            if n is None:
+                return '루프 앞 run 이 숫자 run 이 아님 (꼬리 pre · post 만 · %s — 루프 진입 step 을 못 셈): [%s]' % (why, l)
+            E += n
+        elif wi[0] in FLOWC or wi[0] in ('label', 'quit') or wi[0] in STEPC or (wi[0] == 'if' and not if_ok(wi)):
+            return '루프 앞에 흐름 · step 을 바꾸는 명령 (루프 진입 step 을 줄 순서로 못 셈): [%s]' % l
+    pr = [i for i in range(ic + 1, len(M)) if (words(M[i]) or [''])[0] == 'run']
+    if pr:
+        bad = [M[i] for i in range(ic + 1, pr[0]) if ctl(M[i]) or (words(M[i]) or [''])[0] in STEPC]
+        rl = [i for i in range(ic + 1, pr[0]) if (words(M[i]) or [''])[0] == 'restart']
+        if bad or not rl or words(M[rl[-1]]) != ['restart', '0']:
+            return ('루프 뒤 첫 run 앞에 restart 0 이 없음 (또는 그 사이 흐름 줄) — 이 이름 체크포인트가 루프 뒤 run (이완) 에서 나왔을 수 있다 '
+                    '(KG50-11): [%s]' % M[pr[0]])
+    if s0 <= E:
+        return '체크포인트 step %d ≤ 루프 진입 step %d (루프 앞 run 합) — 루프 안 체크포인트가 아님' % (s0, E)
+    if s0 % every:
+        return '체크포인트 step %d 가 restart 간격 %d 의 배수가 아님 (그 restart 줄이 그 step 에 쓸 수 없다)' % (s0, every)
+    skip = Q3BMARK + X
+    if any(skip in (words(l) or []) for l in M):
+        return '건너뜀 label 이름 %s 가 본 덱에 이미 있음' % skip
+    p = (s0 - E) % N
+    if p == 0:
+        return ('체크포인트 step %d = 판정 step 그 자리 (루프 진입 %d + %d × %d · 위상 0) — 체크포인트는 그 판정 앞 상태인데 그 판정의 판 힘 (run 마지막 step) 을 '
+                '재개 setup 에서 다시 셀 수 없다 (read_restart 직후 setup 판 압력 = 0 · 절차 §1 전제 ②) · 원 런의 그 판정 결과를 정할 수 없음'
+                % (s0, E, N, (s0 - E) // N))
+    r = N - p
+    body = M[im + 1:ic + 1]
+    return dict(il=il, im=im, ic=ic, N=N, E=E, every=every, p=p, r=r, X=X, skip=skip, body=body,
+                pre=['run %d' % r] + body + ['jump SELF %s' % skip])
+
+
+def phase_note(lp, s0):
+    return ('압축 루프 위상 (11-02 Q3 (나) · KG50R-01): 루프 진입 step %d (루프 앞 run 합) · 판정 %d + %d k (루프 run 뒤 if) · 체크포인트 %d '
+            '(restart 간격 %d) · 위상 %d → 남은 %d step · 다음 판정 %d · 그 뒤 %d 마다 · 재개 덱 read_restart 뒤 첫 run 부터 = [run %d] + 루프 몸 %d 개 + '
+            '[jump SELF %s] + 루프 + [label %s] + 그 뒤 (Q3 (나) 재개 뒤 구간 · 명령 하나하나)'
+            % (lp['E'], lp['E'], lp['N'], s0, lp['every'], lp['p'], lp['r'], s0 + lp['r'], lp['N'], lp['r'], len(lp['body']), lp['skip'], lp['skip']))
+
+
 def check(main, res, ckpt, s0, W):
     # 10-28 밤 (KG50R-01 · 02 · 03 · 05 · 1저자 Q2 (가) · Q3 (가)) — 전체 프로그램 대조 (규칙 = 위 STATE_CMD 머리 주석)
     #   예전 B (물리 줄이 본 덱 어딘가에) · C (fix · 쌍 · 이웃 · timestep 만) · E (fix · run · if … 만 순서) = 아래 상태 · 구간 대조가 대신한다
@@ -1161,17 +1307,7 @@ def check(main, res, ckpt, s0, W):
         probs.append('재개 덱 read_restart 가 체크포인트 %s 가 아님 (10-28 KG50R-03): [%s]' % (ckpt, R[rs[0]]))
     # 체크포인트 → 본 덱의 자리 (그 파일을 만드는 restart · write_restart 줄 하나)
     base = os.path.basename(ckpt)
-    hits = []
-    for i, l in enumerate(M):
-        t = l.split()
-        if t[0] == 'write_restart' and len(t) >= 2 and os.path.basename(t[1]) == base:
-            hits.append(('write', i))
-        elif t[0] == 'restart' and len(t) >= 3 and num(t[1]) > 0:
-            for p in t[2:4]:
-                pat = '^' + re.escape(os.path.basename(p)).replace(r'\*', '[0-9]+') + '$'
-                if re.match(pat, base):
-                    hits.append(('restart', i))
-                    break
+    hits = ckpt_hits(M, base)
     if len(hits) != 1:
         probs.append('체크포인트 %s 를 만든 restart · write_restart 줄이 본 덱에 %d 개 (1 개여야 · 손으로 확인)'
                      % (base, len(hits)))
@@ -1190,6 +1326,7 @@ def check(main, res, ckpt, s0, W):
     if form:
         probs.append(form)
     pM, q = im, ir                        # 뒤 구간 시작 — 본 덱 pM · 재개 덱 q (준비 구간 = 재개 덱 q 앞 · 본 덱 상태 = pM 앞)
+    QB = ''                               # 11-02 Q3 (나): 압축 루프 재개 꼴이면 건너뜀 label 이름 (뒤 구간 = 위에서 전체 대조 · label 대조 허용)
     if kind == 'restart' and len(words(M[im]) or []) > 2:
         # 10-28 밤 2 (사전 공격 B): 체크포인트가 든 본 덱 run 에 꼬리 (every · pre · post · start · stop · upto …) — 재개 덱 첫 긴 run 은
         #   꼬리 없는 run N 한 줄이라 같은 동작을 낼 수 없다 (예전 = 남은 step 만 보고 꼬리를 안 봤다)
@@ -1216,12 +1353,30 @@ def check(main, res, ckpt, s0, W):
             elif ctl(l) or t[0] in STEPC:
                 known = False  # 10-28 (KG50-19): include · next · print/quit 말고 다른 명령이 든 if · step 을 바꾸는 명령 = 남은 step 을 못 센다
         labs = [i for i in range(ia + 1, im) if M[i].split()[0] == 'label']
+        if (base.startswith('restart_compress_') or (not known and labs)) and any(Q3BMARK in l for l in R):
+            # 11-02 (1저자 Q3 (나) · KG50R-01): 압축 루프 체크포인트 + 재개 덱에 Q3 (나) 표지 → 루프 위상을 본 덱 run 순서로 정해 (loop_phase) 재개 덱
+            #   read_restart 뒤 첫 run 부터 끝까지 = run r + 루프 몸 + jump SELF 건너뜀 + 루프 + label 건너뜀 + 그 뒤 (명령 하나하나 · 허용 차이 = 이것뿐) ·
+            #   준비 구간 = 그 run 앞 (예전 규칙 그대로 · 본 덱 상태 = 루프 머리 앞) · 위상을 못 정하면 거부
+            lp = loop_phase(M, ia, s0)
+            if isinstance(lp, str):
+                probs.append('%s — %s' % (Q3BNO, lp))
+                return probs, notes
+            qs = [i for i in range(rs[0] + 1, len(R)) if (words(R[i]) or [''])[0] == 'run']
+            if not qs:
+                probs.append('재개 덱 read_restart 뒤에 run 이 없음 — Q3 (나) 준비 run 자리를 못 정함 (11-02 Q3 (나))')
+                return probs, notes
+            q, pM, QB = qs[0], lp['il'], lp['skip']
+            notes.append(phase_note(lp, s0))
+            seq_cmp(lp['pre'] + M[lp['il']:lp['ic'] + 1] + ['label ' + QB] + M[lp['ic'] + 1:], R[q:], W, notes, probs, 'Q3 (나) 재개 뒤 구간')
         # Q3 (가) · KG50R-01: 압축 체크포인트 (이름 restart_compress_* · 반복 안 restart 체크포인트) = 거부 — 체크포인트가 루프 run 의 어디서
         #   저장됐는지 (다음 판정까지 남은 step) 를 맞추지 않는다 · 이완 중 restart_compress_* (KG50-11) 도 같은 길
-        if base.startswith('restart_compress_') or (not known and labs):
+        #   11-02: Q3 (나) 표지가 없는 압축 재개 덱 (dem_restart.py 산출 그대로 · 루프부터 다시) 은 예전 거부 그대로 (본 흐름은 --q3b-fix 가 넣는다)
+        elif base.startswith('restart_compress_') or (not known and labs):
             probs.append('%s — 체크포인트 %s (%s)' % (Q3MSG, base, '이름 restart_compress_*' if base.startswith('restart_compress_')
                                                      else '본 덱 반복 (label · jump) 안 restart 체크포인트'))
-        if known:
+        if QB:
+            pass                          # 11-02 Q3 (나): 위에서 뒤 구간 전체를 대조했다
+        elif known:
             # 10-28 (KG50-18): 체크포인트 = 본 덱 그 run 도중 → 재개 덱 첫 긴 run 앞에 run (run 0 말고) 이 없어야
             #   (G0 이 시험 덱 run 합을 보면 그 run 으로 생긴 어긋남을 예전 G0 (마지막 run 만) 처럼 우연히 막지 못한다)
             pre = [l for l in R[:ir] if l.split()[0] == 'run' and run_n(words(l) or [''])[0] != 0]
@@ -1255,7 +1410,7 @@ def check(main, res, ckpt, s0, W):
         pM = ia + 1
         flow_before_write(M[:pM], probs)          # 10-30 사전 공격 R5
     # 뒤 구간 (10-28 KG50R-03 · 예전 E 를 넓힘) — 본 덱 pM ~ 끝 = 재개 덱 q ~ 끝 (첫 긴 run 은 위 D · write 대조가 본다)
-    if im > pM:
+    if im > pM and not QB:
         # 준비 구간 경계 q = 재개 덱 첫 긴 run 바로 앞 같은 수 명령 (그 꼴이면) · 아니면 재개 덱 read_restart 뒤에서 본 덱 구간을 맞춰 본
         #   첫 명령 자리 (difflib) — 끼워 넣은 · 뺀 명령이 아래 구간 대조에 그대로 보이고 준비 구간 · 상태 대조는 맞는 경계로 돈다
         seg, region = M[pM:im], R[rs[0] + 1:ir]
@@ -1271,7 +1426,8 @@ def check(main, res, ckpt, s0, W):
                          % seg[0])
         else:
             seq_cmp(seg, R[q:ir], W, notes, probs, '체크포인트 뒤 ~ 첫 긴 run 앞 명령')
-    seq_cmp(M[im + 1:], R[ir + 1:], W, notes, probs, '첫 긴 run 뒤 명령')
+    if not QB:
+        seq_cmp(M[im + 1:], R[ir + 1:], W, notes, probs, '첫 긴 run 뒤 명령')
     # 준비 구간 · 상태 (10-28 KG50R-03 · 예전 C 를 넓힘) — 재개 덱 q 앞 (read_restart 빼고) ↔ 본 덱 pM 앞
     if q is not None:
         mprefix_check(M[:pM], probs)
@@ -1292,7 +1448,7 @@ def check(main, res, ckpt, s0, W):
         setup_values(R, ri, pairs, tpl, eM, eR, notes, probs)
         state_cmp(stM, stR, W, notes, probs, xstate(M, sM, eM, '본 덱'), xstate(R, sR, eR, '재개 덱'))
     var_refs(R, probs)
-    label_check(M, R, pM, probs)
+    label_check(M, R, pM, probs, (QB,) if QB else ())
     return probs, notes
 
 
@@ -1457,6 +1613,128 @@ def fix_run(main, res, ckpt, s0, W):
     return 0
 
 
+def q3b_lp(main, ckpt, s0):
+    # 11-02 Q3 (나): 본 덱 명령 · 루프 일정 (loop_phase) — 체크포인트를 만든 줄이 restart 줄 하나가 아니면 이유 (str)
+    M = deck(main)
+    hits = ckpt_hits(M, os.path.basename(ckpt))
+    if len(hits) != 1 or hits[0][0] != 'restart':
+        return M, '체크포인트 %s 를 만든 본 덱 restart 줄이 %d 개 (restart 줄 하나여야 · write_restart 아님)' % (os.path.basename(ckpt), len(hits))
+    return M, loop_phase(M, hits[0][1], s0)
+
+
+def q3b_fix(main, res, ckpt, s0, W):
+    # 11-02 (1저자 Q3 (나) · KG50R-01): dem_restart.py 의 압축 재개 덱 (루프 머리 label 부터 끝까지 = 본 덱 그대로) 에 Q3 (나) 꼴을 넣는다 —
+    #   label <루프> 바로 앞 = 설명 주석 한 줄 + run r + 루프 몸 원 줄 (run 뒤 ~ 끝 if · 그대로 복사) + jump SELF q3b_done_<루프> ·
+    #   루프 끝 if 바로 뒤 = label q3b_done_<루프>.  r · 루프 = loop_phase (본 덱 run 순서 · 머리 주석).  넣은 덱을 다시 읽어 명령 = 기대 (넣은 것만 다름)
+    #   일 때만 바꾼다 (임시 파일 → os.replace) · 판정은 뒤의 정적 대조가 한다 (여기서는 다시 대조 문제 수만 적는다).
+    #   종료 코드 0 = 넣음 (또는 이미 있고 정적 대조 통과) · 1 = 안 넣음 (위상 못 정함 · 재개 덱 루프 뒤가 본 덱과 다름 · CRLF … — 덱 그대로 · 시험 안 냄)
+    import shutil
+    s0 = int(s0)
+    M, lp = q3b_lp(main, ckpt, s0)
+    if isinstance(lp, str):
+        print('  ✗ %s — %s' % (Q3BNO, lp))
+        return 1
+    R = deck(res)
+    if any(Q3BMARK in l for l in R):
+        p, _ = check(main, res, ckpt, s0, W)
+        if p:
+            print('  ✗ %s — 재개 덱에 Q3 (나) 표지 (%s…) 가 이미 있는데 정적 대조 문제 %d (다시 넣지 않음 · 손으로)' % (Q3BNO, Q3BMARK, len(p)))
+            return 1
+        print('  · 압축 루프 재개 준비 (Q3 (나) · KG50R-01): 재개 덱에 이미 있음 · 정적 대조 통과 — 고칠 것 없음')
+        return 0
+    X, il, ic, skip, r = lp['X'], lp['il'], lp['ic'], lp['skip'], lp['r']
+    rl = [i for i, l in enumerate(R) if (words(l) or [''])[:2] == ['label', X]]
+    if len(rl) != 1:
+        print('  ✗ %s — 재개 덱에 루프 머리 [label %s] 가 %d 개 (1 개여야 · 넣지 않음)' % (Q3BNO, X, len(rl)))
+        return 1
+    a = rl[0]
+    c = a + (ic - il)
+    if len(R) - a != len(M) - il or any(not cmd_eq(x, y) for x, y in zip(M[il:], R[a:])):
+        print('  ✗ %s — 재개 덱의 루프 머리 뒤 (%d 개) 가 본 덱 루프 머리 뒤 (%d 개) 와 명령 하나하나 같지 않음 (넣지 않음 · 정적 대조가 본다)'
+              % (Q3BNO, len(R) - a, len(M) - il))
+        return 1
+    spans, raw = deck_spans(res)
+    with open(res, 'rb') as f:
+        rawb = f.read().split(b'\n')
+    if [s for s, _, _ in spans] != R or len(rawb) != len(raw) or any(x.endswith(b'\r') for x in rawb):
+        print('  ✗ %s — 재개 덱 원 줄 ↔ 명령 대응을 못 정함 (CRLF · 줄 끝 꼴 · 넣지 않음)' % Q3BNO)
+        return 1
+    la, b0, b1 = spans[a][1], spans[a + 2][1], spans[c][2]
+    intro = ('# Q3 (나) (resume_ckpt.sh 11-02 · KG50R-01): 체크포인트 step %d · 루프 진입 %d · 판정 %d + %d k → 남은 %d step 뒤 판정 %d · '
+             '목표에 닿았으면 label %s 로 루프 건너뜀 · 아니면 루프 그대로' % (s0, lp['E'], lp['E'], lp['N'], r, s0 + r, skip))
+    new = (rawb[:la] + [intro.encode('utf-8'), ('run %d' % r).encode()] + rawb[b0:b1 + 1] + [('jump SELF %s' % skip).encode()]
+           + rawb[la:b1 + 1] + [('label %s' % skip).encode()] + rawb[b1 + 1:])
+    want = R[:a] + ['run %d' % r] + R[a + 2:c + 1] + ['jump SELF %s' % skip] + R[a:c + 1] + ['label %s' % skip] + R[c + 1:]
+    t = res + '.q3b'
+    try:
+        with open(t, 'wb') as f:
+            f.write(b'\n'.join(new))
+        if deck(t) != want:
+            print('  ✗ %s — 넣은 덱을 다시 읽은 명령 ≠ 기대 (넣지 않음)' % Q3BNO)
+            return 1
+        p2, _ = check(main, t, ckpt, s0, W)
+        shutil.copystat(res, t)
+        os.replace(t, res)
+    finally:
+        if os.path.exists(t):
+            os.remove(t)
+    print('  · 압축 루프 재개 준비 (Q3 (나) · KG50R-01): 체크포인트 step %d · 루프 진입 %d (루프 앞 run 합) · 판정 %d + %d k · 위상 %d → '
+          '[run %d] + 루프 몸 %d 개 (끝 if 까지) + [jump SELF %s] 를 [label %s] 앞 (원 줄 %d) 에 · [label %s] 를 루프 끝 if 뒤 (원 줄 %d) 에 · '
+          '다음 판정 %d · 다시 대조 문제 %d (판정 = 뒤 정적 대조)'
+          % (s0, lp['E'], lp['E'], lp['N'], lp['p'], r, len(lp['body']), skip, X, la + 1, skip, b1 + 1, s0 + r, len(p2)))
+    return 0
+
+
+def cut_trial_q3b(main, res, ckpt, s0, ts, out):
+    # 11-02 (1저자 Q3 (나)): 압축 루프 재개 시험 덱 — [준비 구간] + run r + 루프 몸 (variable · print) + if "<루프 끝 if 와 같은 조건>" then "print …"
+    #   else "quit" + run min(TS − r, N) · TS ≤ r 이면 [준비 구간] + run TS (판정 전).  판정에서 목표에 닿으면 quit = 이완 전에 멈춘다 (끝 step ≠ 기대 →
+    #   G0 실패 · 본 제출 없음).  재개 덱 뒤 구간이 Q3 (나) 꼴 (loop_phase 기대) 일 때만 자르고, 자른 덱을 다시 읽어 명령 = 기대일 때만 쓴다 (임시 → os.replace).
+    #   stdout (통과) = 'r 시험끝run 앞run합 원줄' (--cut-trial 과 같은 네 칸 · 원줄 = 준비 run 의 원 줄) · 0 / 거부 = 이유 한 줄 · 1 (시험 덱 안 씀)
+    if not re.fullmatch(r'[1-9][0-9]*', ts):
+        print('시험 step (-t) 이 1 이상 정수가 아님: %s' % ts)
+        return 1
+    s0, ts = int(s0), int(ts)
+    M, lp = q3b_lp(main, ckpt, s0)
+    if isinstance(lp, str):
+        print('%s — %s' % (Q3BNO, lp))
+        return 1
+    R = deck(res)
+    rs = [i for i, l in enumerate(R) if l.split()[0] == 'read_restart']
+    qs = [i for i in range(rs[0] + 1, len(R)) if (words(R[i]) or [''])[0] == 'run'] if len(rs) == 1 else []
+    exp = lp['pre'] + M[lp['il']:lp['ic'] + 1] + ['label ' + lp['skip']] + M[lp['ic'] + 1:]
+    if not qs or len(R) - qs[0] != len(exp) or any(not cmd_eq(x, y) for x, y in zip(exp, R[qs[0]:])):
+        print('재개 덱 read_restart 뒤 첫 run 부터가 Q3 (나) 꼴이 아님 (준비 run · 판정 · 건너뜀 · 루프 · 11-02 · 시험 덱을 못 자름)')
+        return 1
+    q, r, N, nb = qs[0], lp['r'], lp['N'], len(lp['body'])
+    spans, raw = deck_spans(res)
+    with open(res, 'rb') as f:
+        rawb = f.read().split(b'\n')
+    if [s for s, _, _ in spans] != R or len(rawb) != len(raw) or spans[q][1] != spans[q][2]:
+        print('재개 덱 원 줄 ↔ 명령 대응을 못 정함 (11-02 Q3 (나) · 시험 덱을 못 자름)')
+        return 1
+    k = spans[q][1]
+    if ts <= r:
+        lines, want, last, ps = rawb[:k] + [('run %d' % ts).encode()], R[:q] + ['run %d' % ts], ts, 0
+    else:
+        tn = min(ts - r, N)
+        ifl = 'if "%s" then "print \'%s\'" else "quit"' % (words(R[q + nb])[1], Q3BTRIAL)
+        lines = rawb[:spans[q + nb - 1][2] + 1] + [ifl.encode(), ('run %d' % tn).encode()]
+        want, last, ps = R[:q + nb] + [' '.join(ifl.split()), 'run %d' % tn], tn, r
+    t = out + '.cut'
+    try:
+        with open(t, 'wb') as f:
+            f.write(b''.join(x + b'\n' for x in lines))
+        if deck(t) != want:
+            print('잘라 낸 Q3 (나) 시험 덱 명령 ≠ 기대 (11-02 · 시험 덱 안 씀)')
+            return 1
+        os.replace(t, out)
+    finally:
+        if os.path.exists(t):
+            os.remove(t)
+    print('%d %d %d %d' % (r, last, ps, k + 1))
+    return 0
+
+
 def strip_comments(W):
     # -c (10-27 ibb · dem_restart.py 덱 검사가 머리 주석의 다른 케이스 이름도 거부): 작업 폴더 W 의 맨 위 input*.liggghts 에서
     # 줄 전체 주석 (첫 공백 아닌 글자 '#') 만 뺀다 — 인라인 주석 · 빈 줄 · 나머지 바이트 (줄 끝 포함) 그대로.
@@ -1552,6 +1830,18 @@ if len(sys.argv) == 7 and sys.argv[1] == '--fix-run':
         sys.exit(fix_run(*sys.argv[2:7]))
     except Exception as e:
         print('  · 첫 긴 run 그대로 — 도구 오류: %s: %s' % (type(e).__name__, e))
+        sys.exit(1)
+if len(sys.argv) == 7 and sys.argv[1] == '--q3b-fix':
+    try:
+        sys.exit(q3b_fix(*sys.argv[2:7]))
+    except Exception as e:
+        print('  ✗ %s — 도구 오류: %s: %s' % (Q3BNO, type(e).__name__, e))
+        sys.exit(1)
+if len(sys.argv) == 8 and sys.argv[1] == '--cut-trial-q3b':
+    try:
+        sys.exit(cut_trial_q3b(*sys.argv[2:8]))
+    except Exception as e:
+        print('Q3 (나) 시험 덱 도구 오류: %s: %s' % (type(e).__name__, e))
         sys.exit(1)
 try:
     main, res, ckpt, s0, W = sys.argv[1:6]
@@ -1894,11 +2184,16 @@ for C in "${CASEA[@]}"; do
   P=$(grep -E "^ +$C +(compress|after_settling|settling) " $W/plan_$SFX.txt | sed 's/^ *//')
   [ -n "$P" ] || { rej "재개 덱 만들기 (dem_restart.py)" "재개 덱 못 만듦 (체크포인트 없음 → 처음부터밖에 없음 · 보고 후 승인):"; grep -A3 '제외' $W/plan_$SFX.txt; continue; }
   M=$(echo $P | awk '{print $2}'); RR=$(awk '$1=="read_restart"{print $2}' $D)
-  # 10-28 밤 Q3 (가) · KG50R-01: 압축 체크포인트 재개 = 거부 (체크포인트가 루프 run 의 어디서 저장됐는지 맞추지 않는다 · 이완 중 restart_compress_* 도)
-  [ "$M" = compress ] && { rej "압축 체크포인트 (Q3)" "압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 계획 [$P] · 시험 · 본 제출 안 함"; continue; }
   S0=$(echo $RR | sed -nE 's/.*_([0-9]+)\.bin$/\1/p')
   [ -z "$S0" ] && S0=$(awk '/^ *Step +Atoms +c?_?zmax/{getline; print $1; exit}' $W/log.liggghts.$SUF)
-  # (compress 가지는 위 Q3 거부로 지금 닿지 않는다 — Q3 (나) 를 고를 때를 위해 그대로 둔다)
+  # 11-02 (1저자 Q3 (나) · KG50R-01 · 예전 10-28 밤 Q3 (가) = 계획 compress 면 거부): 압축 체크포인트 = 본 덱 run 순서로 루프 위상을 정해 재개 덱에
+  #   준비 run (남은 r) · 판정 (루프 몸 그대로) · 건너뜀 jump/label 을 넣는다 (--q3b-fix · 규칙 = deckcheck 의 loop_phase 머리 주석) — 못 정하면
+  #   (루프 밖 체크포인트 · 루프 뒤 restart 0 없음 (이완 체크포인트일 수 있다 · KG50-11) · 변수 run …) 시험 전 거부 (재개 덱 그대로)
+  if [ "$M" = compress ]; then
+    deckcheck --q3b-fix $W/input_$C.liggghts $D "$RR" "${S0:-0}" $W > $W/q3b_$SFX.txt 2>&1; QBC=$?; cat $W/q3b_$SFX.txt
+    [ $QBC = 0 ] || { rej "압축 체크포인트 (Q3 (나))" "$(sed -n 's/^  ✗ //p' $W/q3b_$SFX.txt | head -1 | cut -c1-600) — 계획 [$P] · 시험 · 본 제출 안 함 (기록 q3b_$SFX.txt)"; continue; }
+  fi
+  # compress = 템플릿 재선언 없음 (판 메시 type 1 이 첫 run 전에 생김 — 예전 그대로)
   if [ "$M" = compress ]; then TP="없음 (메시 type 1 이 첫 run 전에 생김)"; else
     awk '$1=="fix" && ($2~/^pts[0-9]+$/ || $2=="pdd_mix")' $W/input_$C.liggghts > $W/tmpl_$SFX.txt
     grep -q '&$' $W/tmpl_$SFX.txt && { rej "템플릿 재선언" "템플릿 줄이 여러 줄 — 손으로 봐야 함"; continue; }
@@ -1920,7 +2215,10 @@ for C in "${CASEA[@]}"; do
   sed -i "s/^#SBATCH -n [0-9][0-9]*\$/#SBATCH -n $NP/; s/^mpirun \(--oversubscribe \)\{0,1\}\(--bind-to none \)\{0,1\}-np [0-9][0-9]* lmp_mpi -in /mpirun --oversubscribe --bind-to none -np $NP lmp_mpi -in /" $RN
   # 10-28 밤 (KG50R-02 · 05 · 1저자 Q2 (가)): 시험 덱 = 정적 대조와 같은 논리 명령 파서로 자름 (예전 = 원 줄 awk — & 이음 · run 꼬리를 못 봤다)
   TD=$W/input_${C}_${SFX}t.liggghts; rm -f $TD
-  CUT=$(deckcheck --cut-trial $D $TS $TD 2>&1); CUTC=$?; printf '%s\n' "$CUT" > $W/cut_$SFX.txt
+  # 11-02 (Q3 (나)): compress = 준비 run r + 판정 (목표에 닿으면 quit — 이완 전 멈춤) + 루프 run min(TS − r, N) · TS ≤ r 이면 run TS (판정 전) — 같은 네 칸
+  if [ "$M" = compress ]; then CUT=$(deckcheck --cut-trial-q3b $W/input_$C.liggghts $D "$RR" "${S0:-0}" $TS $TD 2>&1); CUTC=$?
+  else CUT=$(deckcheck --cut-trial $D $TS $TD 2>&1); CUTC=$?; fi
+  printf '%s\n' "$CUT" > $W/cut_$SFX.txt
   # 10-30 (KG50R-F02 · 1저자 Q2): 시험 러너를 헬퍼 러너의 sed 사본으로 만들지 않는다 (예전 = s/<C>_<SFX>/<C>_<SFX>t/g — .bak · 다른 cd · 둘째
   #   실행 줄이 그대로 따라왔다) — 헬퍼 러너 (위 -n · -np 고침 뒤) 엄격 대조 → 통과면 본 $RN · 시험 $TR 을 도구 틀로 씀 (runnerck 머리 주석) ·
   #   거부 = 아래 ng (러너 안 씀 · 시험 · 본 제출 없음) · 대조 기록 = 시도 폴더 runner_check.txt · WR = 작업 폴더 실제 경로 (러너 cd · -in · 영수증 ·
@@ -1938,7 +2236,11 @@ for C in "${CASEA[@]}"; do
   if [ $RCKC = 0 ]; then echo "  · $RCK"; else ng "$(printf '%s' "$RCK" | tr '\n' ' ')"; fi
   CRE='^([0-9]+) ([0-9]+) ([0-9]+|-) ([0-9]+)$'
   if [ $CUTC = 0 ] && [[ "$CUT" =~ $CRE ]]; then CN=${BASH_REMATCH[1]}; CTN=${BASH_REMATCH[2]}; CPS=${BASH_REMATCH[3]}; CLN=${BASH_REMATCH[4]}
-    echo "  · 시험 덱 (10-28 KG50R-02 · 05 · 같은 논리 명령 파서): 재개 덱 첫 긴 run [run $CN] (원 줄 $CLN) → [run $CTN] · 시험 예산 = 첫 긴 run 앞 run 합 $CPS + $CTN"
+    if [ "$M" = compress ]; then
+      if [ "$CPS" = 0 ] && [ "$CN" != 0 ]; then echo "  · 시험 덱 (11-02 Q3 (나) · 압축 루프 재개): 준비 run [run $CN] (원 줄 $CLN) 을 [run $CTN] 으로 자름 (판정 전 · 남은 $CN ≥ 시험 $TS) · 시험 예산 = $CTN"
+      else echo "  · 시험 덱 (11-02 Q3 (나) · 압축 루프 재개): 준비 run [run $CN] (원 줄 $CLN) → 판정 (목표에 닿으면 quit — 이완 전 멈춤 · G0 실패) → 루프 run [run $CTN] · 시험 예산 = $CPS + $CTN"; fi
+    else
+    echo "  · 시험 덱 (10-28 KG50R-02 · 05 · 같은 논리 명령 파서): 재개 덱 첫 긴 run [run $CN] (원 줄 $CLN) → [run $CTN] · 시험 예산 = 첫 긴 run 앞 run 합 $CPS + $CTN"; fi
   else CTN=""; CPS=""; ng "시험 덱을 못 만듦 (10-28 KG50R-02 · 05) — $(printf '%s' "$CUT" | tr '\n' ' ')"; fi
   NT=$( [ -f $TD ] && tail -1 $TD | awk '$1=="run" && NF==2 && $2~/^[0-9]+$/{print $2}')
   { [ -n "$NT" ] && [[ "$S0" =~ ^[0-9]+$ ]]; } || ng "시험 덱 끝이 숫자 run 이 아님 또는 S0 모름 (기대 끝 step 을 못 정함)"
@@ -1961,6 +2263,7 @@ for C in "${CASEA[@]}"; do
     # 10-28 밤 (KG50R-04 · Q4): 시도 폴더에 이번 시험의 입력 그대로 (덱 · 러너 · 계획 · 대조 기록 · 도구 신원)
     cp -p $D $TD $RN $W/run_${C}_${SFX}t.sh $W/plan_$SFX.txt $W/fixrun_$SFX.txt $W/deckcheck_$SFX.txt $W/cut_$SFX.txt $W/tp_$SFX.txt $AD/
     [ $STRIP = 1 ] && cp -p $W/strip_$SFX.txt $AD/
+    [ "$M" = compress ] && cp -p $W/q3b_$SFX.txt $AD/
     # 10-28 밤 2 (사전 공격 C · Codex §10-5): 실행 영수증 — 본 제출이 낼 재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트 · lmp_mpi (이 셸
     #   PATH 에서 찾은 것 · 잡 환경은 다를 수 있다) 의 sha256 · 본 제출 직전 재개 덱 · 러너 sha256 을 main_inputs.sha256 과 다시 대조
     # 10-30 (KG50R-F02 · 1저자 Q2 (3)): main_inputs.sha256 = 러너가 실제로 읽는 자리 (작업 폴더 실제 경로 $WR · 러너의 cd · -in 과 같은 절대 경로)
@@ -1981,7 +2284,8 @@ for C in "${CASEA[@]}"; do
       "$([ -n "$LMP" ] && echo "$LMP sha256 ${LMS:-못 읽음}" || echo '없음 (이 셸 PATH · 잡 환경은 다를 수 있다)')" >> $AD/tool.txt
     printf '실행 입력 영수증 main_inputs.sha256 sha256 %s (10-30 KG50R-F02 · 다섯 = 러너가 읽는 절대 경로 · 작업 폴더 실제 경로 %s)\n잡 안 신원 = 시험 · 본 잡 로그의 LMP_IDENTITY 줄 (러너가 잡 시작 때 덱 · 체크포인트 sha256 을 여기서 읽은 값과 대조 · 다르면 LMP_IDENTITY_MISMATCH · mpirun 안 함 · 시험 로그의 덱 경로 · sha256 = G0 관문 · lmp_mpi = 기록만 · 위 lmp_mpi 줄 = 제출 셸 PATH · 10-30 KG50R-F02)\n' \
       "$MIS" "$WR" >> $AD/tool.txt
-    echo "모드 $M · S0 $S0 · 체크포인트 $RR · 시험 덱 첫 긴 run [run $CN] → [run $CTN] · 시험 예산 $NT" >> $AD/tool.txt
+    if [ "$M" = compress ]; then echo "모드 $M · S0 $S0 · 체크포인트 $RR · Q3 (나) 준비 run [run $CN] · 시험 덱 끝 run [run $CTN] · 시험 예산 $NT (11-02)" >> $AD/tool.txt
+    else echo "모드 $M · S0 $S0 · 체크포인트 $RR · 시험 덱 첫 긴 run [run $CN] → [run $CTN] · 시험 예산 $NT" >> $AD/tool.txt; fi
     J=$(sbatch --parsable $W/run_${C}_${SFX}t.sh); JR=$?
     # 10-28 밤 (KG50R-04): 시험 job = sbatch 성공 · 숫자 job 번호 (--parsable 'id' 또는 'id;cluster') 일 때만 — 이번 호출 목록 SUBMITTED 에 넣는다
     if [ $JR = 0 ] && [[ "$J" =~ ^([0-9]+)(;[^[:space:]]*)?$ ]]; then J=${BASH_REMATCH[1]}
@@ -2065,6 +2369,7 @@ for ENT in $SUBMITTED; do
     echo "- 작업 폴더: $W (= 멈춘 폴더 cp -a) · 원 로그 → log.liggghts.$SUF · 체크포인트 뒤 덤프 → old_post_after${S0}_$SUF/"
     [ $STRIP = 1 ] && { echo "- 주석 줄 빼기 (-c · 작업 폴더 덱만): $(tail -1 $W/strip_$SFX.txt | sed 's/^ *주석 줄 빼기 (-c): //') (strip_$SFX.txt)"; sed -n 's/^  · /    /p' $W/strip_$SFX.txt; }
     echo "- 재개: $M 체크포인트 \`read_restart $RR\` (step $S0) · 덱 input_${C}_$SFX.liggghts · 러너 run_${C}_$SFX.sh (#SBATCH -n $NP · mpirun --oversubscribe --bind-to none -np $NP)"
+    [ "$M" = compress ] && echo "- 압축 루프 재개 (11-02 Q3 (나) · KG50R-01): $(grep -a '^  · 압축 루프 재개 준비' $W/q3b_$SFX.txt | tail -1 | sed 's/^  · [^:]*: //') (q3b_$SFX.txt)"
     echo "- 러너 (10-30 KG50R-F02 · 1저자 Q2): $(head -1 $AD/runner_check.txt 2>/dev/null) · 헬퍼 러너 원본 = $ATT/helper_run_${C}_$SFX.sh.orig · 실행 입력 영수증 $ATT/main_inputs.sha256 (다섯)"
     echo "- 템플릿 재선언: $(cat $W/tp_$SFX.txt)"
     echo "- 첫 긴 run (10-27 · 1저자 Q1 (가)): $(tail -1 $W/fixrun_$SFX.txt 2>/dev/null | sed 's/^ *· //') (fixrun_$SFX.txt)"
