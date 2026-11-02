@@ -252,10 +252,11 @@
   "mesh_dumps": "not in the repository — plate position checked only at the end (mesh_end)"
  },
  "arrows": {
-  "relaxation_start": {
-   "x_ms": 2685.002,
+  "relaxation_end_segment": {
+   "x_ms": 2735.002,
    "y_um": 122.595726030801,
-   "drawn": true
+   "drawn": true,
+   "note": "points down to the fixed-plate relaxation segment (1st author slide layout)"
   },
   "packing_start": {
    "drawn": false,

@@ -64,7 +64,10 @@ STL_HALF_ULP_DECK = 5e-7      # mesh STL 꼭짓점 = 6 유효숫자 (0.122596 �
 STAGE_P_MPA = 50.0            # 오른쪽 3D 단계 "50 MPa"
 SLOPE_REL = 1e-9              # 판 궤적 기울기 자기검사 (상대)
 GRAY, LIGHT, RED = '#404040', '#9AA0A8', '#F14040'
-COLORS = {'thickness': '#4FBDFF', 'velocity': '#7030A0', 'pressure': '#F14040'}
+COLORS = {'thickness': '#7030A0', 'velocity': '#4FBDFF', 'pressure': '#F14040'}   # 1저자 슬라이드 (11-02): 두께 보라 · 판 속도 파랑 · 압력 빨강
+OGS_RGB = {'thickness': '112,48,160', 'velocity': '79,189,255', 'pressure': '241,64,64'}
+XTICK_MAJOR = 500             # ms — 슬라이드와 같은 눈금 (0 … 2500 · 축 끝 2800 = 런 끝 2,785.002 를 덮는다)
+THICK_YLIM = (115, 155)       # µm — 위쪽에 가로 단계 이름 자리
 SRC = {'noplate': 'no plate (0 by definition)', 'thermo': 'measured (thermo pressMPa)',
        'placed': 'plate placed (log PLATE HEIGHT)', 'stab': 'plate fixed (stabilization · deck)',
        'c_start': 'compression start (deck press_speed)', 'comp': 'compression (deck press_speed · computed)',
@@ -381,7 +384,7 @@ def ogs_text(name, what, color, y_from, y_to, y_inc, ylabel, bounds_ms, target=N
           'layer.y.label.font = font(Aptos); layer.y.label.pt = 28; layer.y.label.color = color(64,64,64);\n'
           'layer.x2.showAxes = 3; layer.x2.color = color(64,64,64); layer.x2.thickness = 1; layer.x2.ticks = 0; layer.x2.showLabels = 0;\n'
           'layer.y2.showAxes = 3; layer.y2.color = color(64,64,64); layer.y2.thickness = 1; layer.y2.ticks = 0; layer.y2.showLabels = 0;\n'
-          f'layer.x.from = {X0:g}; layer.x.to = {X1:g}; layer.x.inc = 1000; layer.x.minor = 1;\n'
+          f'layer.x.from = {X0:g}; layer.x.to = {X1:g}; layer.x.inc = {XTICK_MAJOR}; layer.x.minor = 1;\n'
           f'page.margincontrol = 1;\nlabel -xb {XLABEL};\n')
     vb = ''.join(f'draw -n b{i} -l -v {t:.3f}; b{i}.linetype = 3; b{i}.color = color(154,160,168);\n'
                  for i, t in enumerate(bounds_ms, start=2))
@@ -396,9 +399,11 @@ def ogs_text(name, what, color, y_from, y_to, y_inc, ylabel, bounds_ms, target=N
             f'layer.y.from = {y_from:g}; layer.y.to = {y_to:g}; layer.y.inc = {y_inc:g}; layer.y.minor = 1;\nlabel -yl {ylabel};\n' + vb + tgt)
 
 
-def draw_preview(tser, vser, pser, bounds_ms, target_mpa, arrows, stem):
+def draw_preview(tser, vser, pser, bounds_ms, arrows, stem):
     """세 패널 왼쪽 열 미리보기 (ps73 서식 · 이 기계에 Aptos 가 없어 Liberation Sans — Origin 결과로 바꿔 끼운다).
-    arrows = [(x, y, dx_pt, dy_pt)] 두께 패널의 작은 빨간 화살표 (자료가 있는 점만 가리킨다)."""
+    1저자 슬라이드 배치 (11-02): 단계 이름 가로 · Particle packing 왼쪽 위 (그 구간 자료 없음 → 화살표 없음) · Stabilization = 경계 바로 오른쪽 ·
+    평평한 선 위 · Compression = 기운 선 위 · Relaxation = 끝 근처 + 빨간 화살표가 끝 구간을 아래로 가리킴 · 목표 300 MPa 점선 없음 · 압력 원값 그대로.
+    arrows = [(x_tip, y_tip, x_tail, y_tail)] 데이터 좌표 — 자료가 있는 점만 가리킨다."""
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -412,7 +417,7 @@ def draw_preview(tser, vser, pser, bounds_ms, target_mpa, arrows, stem):
                          'mathtext.sf': 'Liberation Sans', 'mathtext.cal': 'Liberation Sans', 'mathtext.tt': 'Liberation Mono'})
     fig, axs = plt.subplots(3, 1, sharex=True, figsize=(4.3, 7.2))
     b2, b3, b4 = bounds_ms
-    spec = [(tser, 'thickness', 'Thickness (µm)', (115, 150), 10),
+    spec = [(tser, 'thickness', 'Thickness (µm)', THICK_YLIM, 10),
             (vser, 'velocity', r'Plate velocity (µm s$^{-1}$)', (0, 15), 5),
             (pser, 'pressure', 'Measured pressure (MPa)', (0, 330), 100)]
     for ax, (ser, key, ylabel, ylim, ystep) in zip(axs, spec):
@@ -425,22 +430,25 @@ def draw_preview(tser, vser, pser, bounds_ms, target_mpa, arrows, stem):
         ax.yaxis.set_minor_locator(MultipleLocator(ystep / 2))
         ax.yaxis.set_major_formatter(FuncFormatter(lambda y, _p: '0' if abs(y) < 1e-12 else f'{y:g}'))   # 보고 원칙 "0.0 → 0"
         ax.set_ylabel(ylabel)
-    ax = axs[0]                                           # 단계 이름 · 화살표 = 두께 패널만
+    ax = axs[0]                                           # 단계 이름 · 화살표 = 두께 패널만 (모두 가로)
     lo, hi = ax.get_ylim()
-    y_top, y_bot = hi - 0.04 * (hi - lo), lo + 0.04 * (hi - lo)
-    ax.text(b2 / 2, y_top, 'Particle packing', rotation=90, fontsize=8.5, color=LIGHT, ha='center', va='top')
-    ax.text((b2 + b3) / 2, y_bot, 'Stabilization', rotation=90, fontsize=8.5, color=LIGHT, ha='center', va='bottom')  # 판 높이 선 아래
-    ax.text((b3 + b4) / 2, y_top, 'Compression', fontsize=9, color=LIGHT, ha='center', va='top')
-    ax.text(min((b4 + X1) / 2, X1 - 30), y_top, 'Relaxation', rotation=90, fontsize=8.5, color=LIGHT, ha='center', va='top')
-    for x, y, dx, dy in arrows:
-        ax.annotate('', xy=(x, y), xytext=(dx, dy), textcoords='offset points',
+    ts, zs = [t for t, _, _ in tser], [z for _, z, _ in tser]
+
+    def zline(x):                                         # 두께 선의 높이 (점 사이 직선 — 그린 선과 같다)
+        k = max(i for i in range(len(ts) - 1) if ts[i] <= x) if x < ts[-1] else len(ts) - 2
+        return zs[k] + (zs[k + 1] - zs[k]) * (x - ts[k]) / (ts[k + 1] - ts[k])
+    kw = dict(fontsize=9, color=LIGHT)
+    ax.text(X0 + 20, hi - 0.04 * (hi - lo), 'Particle packing', ha='left', va='top', **kw)
+    ax.text(b2 + 15, zline(b2) + 0.8, 'Stabilization', ha='left', va='bottom', **kw)          # 경계 바로 오른쪽 · 평평한 선 위
+    xc = (b3 + b4) / 2
+    ax.text(xc, zline(xc - 300) + 1.5, 'Compression', ha='center', va='bottom', **kw)          # 기운 선 위 (글 왼쪽 끝에서도 선 위)
+    ax.text(X1 - 12, zline(ts[-1]) + 6.0, 'Relaxation', ha='right', va='bottom', **kw)         # 끝 근처 · 아래 화살표
+    for x, y, xt, yt in arrows:
+        ax.annotate('', xy=(x, y), xytext=(xt, yt), textcoords='data',
                     arrowprops=dict(arrowstyle='-|>', color=RED, lw=1.2, shrinkA=0, shrinkB=1.5, mutation_scale=8))
-    pa = axs[2]
-    pa.axhline(target_mpa, color=GRAY, lw=0.9, ls='--')
-    pa.text(b3 + 60, target_mpa + 5, f'Target {target_mpa:g} MPa', fontsize=9, color=GRAY, va='bottom')
     axs[-1].set_xlim(X0, X1)
-    axs[-1].xaxis.set_major_locator(MultipleLocator(1000))
-    axs[-1].xaxis.set_minor_locator(MultipleLocator(500))
+    axs[-1].xaxis.set_major_locator(MultipleLocator(XTICK_MAJOR))
+    axs[-1].xaxis.set_minor_locator(MultipleLocator(XTICK_MAJOR / 2))
     axs[-1].set_xlabel(XLABEL)
     fig.align_ylabels(axs)
     fig.tight_layout(pad=0.4, h_pad=0.6)
@@ -520,7 +528,8 @@ def main():
     tar_steps = sorted({st[r]['step'] for st in stages for r in ('nearest', 'recommended') if st[r] is not None})
     cmd = cluster_command(tar_steps, end, dk['post_dir'], atoms_at)
     bounds_ms = [b['2'] * ms_per_step, b['3'] * ms_per_step, b['4'] * ms_per_step]
-    arrows = [(b['4'] * ms_per_step, zfn(b['4']) * um, -26, 20)]   # 판 정지 (이완 시작) — 두께 곡선 위 점 · 투입 시작은 자료 없음
+    x_rel = (b['4'] + end) / 2 * ms_per_step                         # 이완 구간 (판 고정) 가운데 — 화살표가 끝 구간을 아래로 가리킨다
+    arrows = [(x_rel, zfn(end) * um, x_rel, zfn(end) * um + 5.6)]    # 투입 시작은 자료 없음 → 화살표 없음
 
     for p in (ORIGIN, PREV):
         p.mkdir(exist_ok=True)
@@ -530,13 +539,13 @@ def main():
                      [(f'{t:.3f}', f'{v:g}', s) for t, v, s in vser])
     write_origin_csv(ORIGIN / f'{CSV_NAMES["pressure"]}.csv', ['Time', 'Measured pressure', 'Source'], ['ms', 'MPa', ''],
                      [(f'{t:.3f}', f'{p:.8g}', s) for t, p, s in pser])
-    ogs = [('thickness', '시간 (ms)–두께 (판 위치 · 덱으로 계산)', '79,189,255', 115, 150, 10, 'Thickness (\\g(m)m)', None),
-           ('velocity', '시간 (ms)–판 속도 · 덱 press_speed', '112,48,160', 0, 15, 5, 'Plate velocity (\\g(m)m s\\+(-1))', None),
-           ('pressure', '시간 (ms)–판 압력 (thermo 원값)', '241,64,64', 0, 330, 100, 'Measured pressure (MPa)', dk['target_mpa'])]
-    for key, what, color, y0, y1, yi, ylab, tgt in ogs:
-        (ORIGIN / f'{CSV_NAMES[key]}.ogs').write_text(ogs_text(CSV_NAMES[key], what, color, y0, y1, yi, ylab, bounds_ms, tgt),
+    ogs = [('thickness', '시간 (ms)–두께 (판 위치 · 덱으로 계산)', *THICK_YLIM, 10, 'Thickness (\\g(m)m)'),
+           ('velocity', '시간 (ms)–판 속도 · 덱 press_speed', 0, 15, 5, 'Plate velocity (\\g(m)m s\\+(-1))'),
+           ('pressure', '시간 (ms)–판 압력 (thermo 원값)', 0, 330, 100, 'Measured pressure (MPa)')]   # 목표 점선 없음 (1저자 슬라이드)
+    for key, what, y0, y1, yi, ylab in ogs:
+        (ORIGIN / f'{CSV_NAMES[key]}.ogs').write_text(ogs_text(CSV_NAMES[key], what, OGS_RGB[key], y0, y1, yi, ylab, bounds_ms),
                                                       encoding='utf-8')
-    draw_preview(tser, vser, pser, bounds_ms, dk['target_mpa'], arrows, FIG_NAME)
+    draw_preview(tser, vser, pser, bounds_ms, arrows, FIG_NAME)
     with open(STAGE_CSV, 'w', newline='', encoding='utf-8') as f:
         w = csv.writer(f, lineterminator='\n')
         w.writerow(['stage', 'event_step', 'event_pressure_MPa', 'role', 'dump_step', 'delta_steps', 'dump_phase', 'pressure_MPa',
@@ -602,7 +611,8 @@ def main():
                    'plate_end_vs_mesh_end': {'residual_um': res_um, 'within_um': tol_um},
                    'draft2_crosscheck': dict(xstat, status='same'),
                    'mesh_dumps': 'not in the repository — plate position checked only at the end (mesh_end)'},
-        'arrows': {'relaxation_start': {'x_ms': arrows[0][0], 'y_um': arrows[0][1], 'drawn': True},
+        'arrows': {'relaxation_end_segment': {'x_ms': arrows[0][0], 'y_um': arrows[0][1], 'drawn': True,
+                                              'note': 'points down to the fixed-plate relaxation segment (1st author slide layout)'},
                    'packing_start': {'drawn': False, 'why': 'no thickness data before plate placement (packing segment not drawn)'}},
         'stage_frames': stages,
         'cluster_tar': {'steps': tar_steps, 'run_dir': f'{RUN_PARENT}/{RUN_CASE}', 'bundle': f'$HOME/{TAR_TAG}.tgz', 'command': cmd},

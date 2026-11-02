@@ -13,7 +13,7 @@ layer.y.ticklength = 6; layer.y.tickthickness = 1; layer.y.mticklength = 3; laye
 layer.y.label.font = font(Aptos); layer.y.label.pt = 28; layer.y.label.color = color(64,64,64);
 layer.x2.showAxes = 3; layer.x2.color = color(64,64,64); layer.x2.thickness = 1; layer.x2.ticks = 0; layer.x2.showLabels = 0;
 layer.y2.showAxes = 3; layer.y2.color = color(64,64,64); layer.y2.thickness = 1; layer.y2.ticks = 0; layer.y2.showLabels = 0;
-layer.x.from = 0; layer.x.to = 2800; layer.x.inc = 1000; layer.x.minor = 1;
+layer.x.from = 0; layer.x.to = 2800; layer.x.inc = 500; layer.x.minor = 1;
 page.margincontrol = 1;
 label -xb Time (ms);
 layer.y.from = 0; layer.y.to = 330; layer.y.inc = 100; layer.y.minor = 1;
@@ -21,4 +21,3 @@ label -yl Measured pressure (MPa);
 draw -n b2 -l -v 200.002; b2.linetype = 3; b2.color = color(154,160,168);
 draw -n b3 -l -v 400.002; b3.linetype = 3; b3.color = color(154,160,168);
 draw -n b4 -l -v 2685.002; b4.linetype = 3; b4.color = color(154,160,168);
-draw -n tgt -l -h 300; tgt.linetype = 2; tgt.color = color(64,64,64);
