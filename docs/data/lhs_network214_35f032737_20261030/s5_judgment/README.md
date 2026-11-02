@@ -257,6 +257,8 @@ tar czf "$Q/q1_settle_$(date +%Y%m%d).tar.gz" -C "$Q" out_lhs00_123 out_lhsx_026
 | INCONCLUSIVE (rc 4) | v1.2 가 CG 경로 (옛 반복해 오차) — B 를 판정하지 않는다 | 두 행은 해당 없음 (관통 < 30,000) |
 | rc 2 | 입력 결손 · `--out` 이 비어 있지 않음 | 자리 확인 |
 
+- 한정: B 의 분해능 = v1.2 저장 반폭 (0.5e-8) — 상대로 lhs00_123 7.6e-5 · lhsx_026 1.2e-8.  그보다 작은 전극 밖 차이는 B 가 못 본다 → lhs00_123 의 1.5e-4 대비는 정확값 Δ_전극 에 그 반폭을 더해 읽는다 (Δ_전극 + 7.6e-5 ≤ 1.5e-4 이면 어느 쪽이든 문턱 안).
+
 **(g) 도구 검증 (이 컨테이너 · 커밋된 real_14 덤프)** — `tools/s5_q1_validate_real14.sh` (`tools/s5_q1_validate_fixtures.py` 보조) · 산출 `q1_settle_validation.json`
 
 | 경우 | 픽스처 | 결과 (기대) |
