@@ -5,8 +5,8 @@
 
 | 파일 | 내용 |
 |---|---|
-| `values_D123.csv` | 쪽별 항목 · 단위 · 3 / 2 / 1 µm · 출처 — 만든 것 `tools/compile_values_kg50.py` (옮김뿐 · 새 계산 없음) |
-| `szz_share/` | 접촉 종류별 σzz 기여 (18쪽 아래 그래프와 같은 양) — `tools/szz_share_kg50.py` = `scripts/plane_load_share.py` 그대로 (21 단면 하중 가중 몫 · 벽에서 2 r_max 밖) · 입력 = 끝 세트 묶음 (sha256 대조) |
+| `values_D123.csv` | 쪽별 항목 · 단위 · 3 / 2 / 1 µm · 출처 — 만든 것 `docs/50kg/report_y4/meeting_20261104/tools/compile_values_kg50.py` (옮김뿐 · 새 계산 없음) |
+| `szz_share/` | 접촉 종류별 σzz 기여 (18쪽 아래 그래프와 같은 양) — `docs/50kg/report_y4/meeting_20261104/tools/szz_share_kg50.py` = `scripts/plane_load_share.py` 그대로 (21 단면 하중 가중 몫 · 벽에서 2 r_max 밖) · 입력 = 끝 세트 묶음 (sha256 대조) |
 
 ## 값의 출처 · 기준
 

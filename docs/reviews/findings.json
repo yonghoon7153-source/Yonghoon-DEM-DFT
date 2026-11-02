@@ -13598,7 +13598,7 @@
     {
       "id": "L214P-02",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-28 LHS214 S1 재확인 (리뷰 핀 b7a979032 · 실제 생산 함수 launch_eligibility · supp20_input_receipt.receipt 로 합성 manifest 15 대조)",
       "opened_in": "docs/reviews/codex_lhs214_pin_syntax_review_20261028/codex_review_lhs214_pin_syntax_20261028.md",
@@ -13606,7 +13606,12 @@
       "note": "판정문 §3 Q5 · Codex = 남은 P3 형식 경계 · 새 커밋 우회 P1 아님 · L214P-01 종결을 막지 않음 · *\"모든 발사 경로가 SHA 형식에 fail-closed\"* 일반화는 반박됨.  운영 (기존 실행표대로) = 전체 40자리 `--approved-sha` 를 늘 주고 두 실제 manifest 를 F7 · G7 에 통과 · 승인값 없는 rc 0 을 승인 핀 일치 증서로 쓰지 않음.  우리 확인 = HEAD 1140 행 `.match` 그대로.  ⬜ 고칠지 = 1저자 (봉인 밖 실행기 · 한 줄 · 시험 먼저).  ★ 1저자 10-28 밤 *\"다 권고대로\"* (권고 정정) = 이번 214 발사는 B7 `35f032737` 그대로 (코드 무변경 · 지금 고치면 핀이 바뀌어 WSL 사전 점검을 다시 해야 함) · 발사 명령은 전체 40자리 승인 · 한 줄 수정 = 214 발사 뒤 (시험 먼저). ★ 10-30 Codex S2 발사 확인 (docs/reviews/codex_lhs214_relaunch_review_20261030/codex_review_lhs214_relaunch_20261030.md §3-2) = 열림 유지 (1140 행 .match 그대로 · 수정 완료로 기록 안 함) · 실제 launch_eligibility · _manifest_checks 에 SHA 경계 10형: 정확한 B7 40자리 승인만 F7 통과 · B7+LF · 마지막 자리 오값 = 전체 40자리 승인에서 F7 거부 · 7자리 · 생략 = 방어 없음 ⇒ 이번 운영 = 전체 40자리 --approved-sha 필수 (생략 · 7자리면 GO 전제 깨짐) · 한 줄 수정 = 214 발사 뒤 (그대로).",
       "evidence": [
         "docs/reviews/codex_lhs214_pin_syntax_review_20261028/codex_review_lhs214_pin_syntax_20261028.md"
-      ]
+      ],
+      "evidence_tests": [
+        "scripts/run_network_194_parallel.py --selftest — 시험 먼저 ㊳ 2 개 (manifest git.sha 끝 LF 만 current · audit 자격 current) 139/141 → 고친 뒤 141/141 (11-02 LHS 작업 에이전트 · 반입 본 가지)",
+        "scripts/supp20_input_receipt.py --selftest 123/123 (의존 도구 · 무변경)"
+      ],
+      "claimed_fixed_sha": "29addb8f4"
     },
     {
       "id": "SELF-139",
