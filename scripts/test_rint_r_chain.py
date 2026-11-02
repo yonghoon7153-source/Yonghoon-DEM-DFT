@@ -11875,6 +11875,79 @@ def t_PE03u():
     return not bad, {'n': n, 'bad': dict(sorted(bad.items())[:12])}
 
 
+def pe04_holder(tok):
+    """그룹 표지 (RINT_RUN_TOKEN=tok) 를 env 에 든 산 프로세스 하나 (따로 세션) → Popen — recover 의 고아 찾기 · 죽이기 대조."""
+    import subprocess as _sp
+    return _sp.Popen([sys.executable, '-c', 'import time; time.sleep(120)'], env=dict(os.environ, RINT_RUN_TOKEN=tok), start_new_session=True,
+                     stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+
+
+def pe04_prev(tok, **over):
+    return dict({'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': tok, 'rc': 1, 'cause': None, 'signal': None, 'confirmed': False,
+                 'left': [999989], 'left_after_exit': 0, 'killed': 0, 'unsure': None, 'by': 'chain', 'ended_utc': '2026-11-02T00:00:02Z'}, **over)
+
+
+@check('PE04', '★ 11-02 PC7-04 (사전 공격 7 회차 probe7_unit U6 · P3) — recover 가 옛 끝 기록 (by chain · by recover 의 chain_end) 을 chain_end 로 옮기는 것은 그 표지 · '
+               '이름이 시작 기록과 같을 때만: 다른 표지 (by chain rc 0 · by recover chain_end 품음) · 다른 이름 = 그 그룹 미확인 (끝 기록을 쓰지 않음 · 바이트 '
+               '그대로 · 사유 = 표지 · 이름) · 고아 찾기 · 죽이기는 시작 기록 표지로 그대로 (그 표지의 산 프로세스 = 죽음) · --stage recover = rc 3 · 원장 시도 '
+               '폴더 + --ledger = 결과 줄 안 씀 (원장 무변경 · 옛 = 다른 런의 rc 를 chain_end 로 옮겨 원인을 정하고 결과 줄 · rc 0) · 대조 = 같은 표지 · 이름 = '
+               'chain_end 옮김 (PD13g 그대로)')
+def t_PE04():
+    rows, bad = {}, {}
+    cases = {'token_chain': lambda t: pe04_prev('e' * 32, rc=0),
+             'token_recover': lambda t: pe04_prev('e' * 32, rc=None, cause='parent_dead', by='recover',
+                                                  chain_end={'rc': 1, 'cause': None, 'confirmed': False, 'ended_utc': '2026-11-02T00:00:01Z'}),
+             'name_chain': lambda t: pe04_prev(t, name='L02_ceiling'),
+             'same': lambda t: pe04_prev(t)}
+    for nm, mk in cases.items():
+        tok = hashlib.sha256(f'PE04_{nm}'.encode()).hexdigest()[:32]
+        hp = pe04_holder(tok)
+        try:
+            out, _t = gr_fake_launch(f'PE04_{nm}', token=tok)
+            ep = out / 'groups' / 'L01_floor.end.json'
+            ep.write_text(json.dumps(mk(tok)), encoding='utf-8')
+            b0 = ep.read_bytes()
+            end, held = RR.recover_group(out / 'groups' / 'L01_floor.launch.json', RR.host_ident())
+            try:
+                hrc = hp.wait(timeout=10)
+            except Exception:                              # noqa: BLE001
+                hrc = 'alive'
+            rows[nm] = (held is not None, end is None, ep.read_bytes() == b0, hrc, (end or {}).get('chain_end', {}).get('rc') if end else None,
+                        ('표지' in (held or '') or '이름' in (held or '')))
+        finally:
+            if hp.poll() is None:
+                hp.kill()
+                hp.wait()
+    want = {'token_chain': (True, True, True, -9, None, True), 'token_recover': (True, True, True, -9, None, True),
+            'name_chain': (True, True, True, -9, None, True), 'same': (False, False, True, -9, 1, False)}
+    for k, v in want.items():
+        if rows.get(k) != v:
+            bad[k] = (rows.get(k), v)
+    tok = hashlib.sha256(b'PE04_stage').hexdigest()[:32]
+    out, _t = gr_fake_launch('PE04_stage', token=tok)
+    ep = out / 'groups' / 'L01_floor.end.json'
+    ep.write_text(json.dumps(pe04_prev('e' * 32, rc=0)), encoding='utf-8')
+    b0 = ep.read_bytes()
+    rc_s, so_s = call(['--stage', 'recover', '--out', str(out)])
+    stage = (rc_s, ep.read_bytes() == b0, ': 미확인 · ' in so_s and '표지' in so_s)
+    if stage != (3, True, True):
+        bad['stage'] = (stage, so_s[-300:])
+    d, _rc, _so = led_new('PE04L')
+    _r, n1, _s = led_add(d, 'ladder:P0')
+    tokl = hashlib.sha256(b'PE04_ledger').hexdigest()[:32]
+    fo, _t = gr_fake_launch(f'PE04L/attempt_{n1}', token=tokl)
+    (fo / 'attempt.json').write_text(json.dumps({'schema': 'rint-r-attempt-v1', 'n': n1, 'target': 'ladder:P0', 'machine': MACH, 'resume_of': None,
+                                                 'ledger_commit': git_(d, 'rev-parse', 'HEAD')}), encoding='utf-8')
+    epl = fo / 'groups' / 'L01_floor.end.json'
+    epl.write_text(json.dumps(pe04_prev('e' * 32, rc=0)), encoding='utf-8')
+    raw = led_raw(d)
+    rc_l, so_l = call(['--stage', 'recover', '--out', str(fo), '--ledger', str(d)])
+    ledger_row = (rc_l, led_raw(d) == raw, led_result(d, n1) is None)
+    if ledger_row != (3, True, True):
+        bad['ledger'] = (ledger_row, so_l[-300:])
+    return not bad, {'rows': rows, 'stage': stage, 'ledger': ledger_row, 'bad': bad}
+
+
 # ═════════════════════════ 실행 ═════════════════════════
 def main(argv=None):
     global RR, TD
