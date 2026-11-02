@@ -10452,6 +10452,8 @@ def t_PD01():
                                      {'pid': 940000, 'start': None})
         got['cycle'] = table('cycle', [dict(pid=960001, ppid=960002, environ=None), dict(pid=960002, ppid=960001, environ=b'A=1\0')], run)
         got['member_and_outside'] = table('mo', [dict(pid=950000, sid=S, environ=needle + b'\0'), dict(pid=950001, environ=None)], run)
+        deep = [dict(pid=990001, environ=b'A=1\0')] + [dict(pid=990001 + k, ppid=990000 + k, environ=b'A=1\0') for k in range(1, 70)]
+        got['deep_lineage'] = table('deep', deep + [dict(pid=990071, ppid=990070, environ=None)], run)     # 계보 70 > 깊이 상한 = 확인 불가 (보수)
         #  group_settle — 확인 불가 (러너 세션 안 · 못 읽음) 여도 찾은 표지 프로세스는 죽인다 (옛 = 그 자리에서 (False, None) · 아무도 안 죽임)
         (fp / 'settle').mkdir(parents=True)
         pd_fake_proc(fp / 'settle', 970000, sid=S, environ=b'A=1\0' + needle + b'\0')
@@ -10487,7 +10489,7 @@ def t_PD01():
         RR.PROC_DIR, RR.group_kill_pids = old
     want = {'outside': [], 'outside_odd_name': [], 'no_run_record': None, 'in_session': None, 'in_pgrp': None, 'child_of_member': None,
             'child_of_session': None, 'grandchild_of_session': None, 'session_reused': [], 'leader_gone': None, 'start_unknown': None, 'cycle': None,
-            'member_and_outside': [950000], 'settle': ((False, None, 1), [970000]), 'recover_out': (None, True, 0),
+            'member_and_outside': [950000], 'deep_lineage': None, 'settle': ((False, None, 1), [970000]), 'recover_out': (None, True, 0),
             'recover_in': (None, False, 1, [980001], True, [980000])}
     bad = {k: (got.get(k), want[k]) for k in want if got.get(k) != want[k]}
     return not bad, bad
@@ -10535,6 +10537,8 @@ def pd01r_scene(d, agent):
         with open(d / 'run.log', 'w', encoding='utf-8') as lf:
             rc, cause, end = RR.run_in_group(['bash', '-c', 'sleep 1'], str(d), dict(os.environ), lf, 60, d / 'groups', 'PD01r_run')
         res['run'] = [rc, cause, end.get('confirmed'), end.get('left')]
+        L1 = json.loads((d / 'groups' / 'PD01r_run.launch.json').read_text(encoding='utf-8'))
+        res['runner_start_recorded'] = type(L1.get('runner_start')) is int and L1['runner_start'] > 0
         rd = d / 'rec'
         (rd / 'groups').mkdir(parents=True)
         L = {'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': os.urandom(16).hex(), 'pid': DEAD_PID, 'pgid': DEAD_PID, 'argv': ['bash'],
@@ -10551,9 +10555,11 @@ def pd01r_scene(d, agent):
             rc2, cause2, end2 = RR.run_in_group(['bash', str(sh)], str(d), dict(os.environ), lf, 60, d / 'groups', 'PD01r_in')
         res['in_session'] = [rc2, cause2, end2.get('confirmed'), end2.get('left')]
         try:
-            os.kill(int((d / 'in_pid').read_text(encoding='utf-8').strip()), _sig.SIGKILL)
+            ipid = int((d / 'in_pid').read_text(encoding='utf-8').strip())
+            res['in_unsure'] = end2.get('unsure') == [ipid]
+            os.kill(ipid, _sig.SIGKILL)
         except (OSError, ValueError):
-            pass
+            res['in_unsure'] = None
     finally:
         b.kill()
         b.wait()
@@ -10619,7 +10625,8 @@ def t_PD01r():
     sf = res.get('stat_fields') or [None, None]
     ok = (res.get('uid', 0) != 0 and sf[0] == sf[1] and res.get('bystander_ready') is True
           and str(res.get('bystander_environ', '')).startswith('errno') and res.get('run') == [0, None, True, []]
-          and res.get('recover') == [0, True, 'recover'] and (res.get('in_session') or [None] * 4)[:3] == [0, None, False])
+          and res.get('recover') == [0, True, 'recover'] and (res.get('in_session') or [None] * 4)[:3] == [0, None, False]
+          and res.get('runner_start_recorded') is True and res.get('in_unsure') is True)
     return ok, res
 
 
@@ -10667,7 +10674,10 @@ def pd_cause(tag, log, path):
 def t_PD02():
     rows, bad = {}, {}
     lf = PC_MSGS['launch_failed'][0]
-    cases = [(nm, PC_MSGS[nm][0], 'q2') for nm in PD_Q2] + [('plain', '', 'plain')] + [(nm, PC_MSGS[nm][0], 'res') for nm in PD_RES] + [
+    one = [('drv_code_only', 'CUDA_ERROR_LAUNCH_FAILED: unspecified launch failure', 'q2'),
+           ('rt_code_only', 'cudaErrorAssert: device-side assert triggered', 'q2'),
+           ('drv_class_only', 'cupy_backends.cuda.api.driver.CUDADriverError', 'q2')]
+    cases = [(nm, PC_MSGS[nm][0], 'q2') for nm in PD_Q2] + one + [('plain', '', 'plain')] + [(nm, PC_MSGS[nm][0], 'res') for nm in PD_RES] + [
         ('oom_and_launch', 'cupy.cuda.memory.OutOfMemoryError: out of memory\n' + lf, 'res'), ('oom_and_illegal', PC_MSGS['oom_and_illegal'][0], 'q2')]
     for nm, msg, kind in cases:
         for path in PD_PATHS:
@@ -10796,6 +10806,29 @@ def t_PD09():
     got = scen('PD09', go)
     want = (True, 'post', (3, True, False, True, True), (3, True), 0, {'status': 'interrupted', 'side': 'post', 'by': 'recover'}, (3, True))
     return got == want, got
+
+
+@check('PD09b', '★ 11-02 PC6-09 남의 폴더 (변이 보강 · 가드가 넘치지 않는지) — 시도 폴더 attempt_1 이 이미 있고 attempt.json 이 ⓐ 이 항목과 칸은 같지만 '
+                '시작 커밋이 원장 조상이 아님 (다른 원장 역사) ⓑ 시작 커밋은 원장 HEAD 인데 대상이 다름 → 옆 거부 기록 (OUTDIR_NOT_EMPTY) + rejected · 결과 전 '
+                '결과 줄 그대로 (화면만 아님 · 러너 0 회 · 고치기 전과 같음)')
+def t_PD09b():
+    out = {}
+    for tag, kw in (('history', {'ledger_commit': 'f' * 40}), ('target', {'target': 'ladder:P0:FIBRE'})):
+        d, _rc, _so = led_new(f'PD09b_{tag}')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        base = Path(TD) / 'runs' / f'PD09b_{tag}'
+        f = base / f'attempt_{n1}'
+        f.mkdir(parents=True)
+        a = dict({'schema': 'rint-r-attempt-v1', 'n': n1, 'target': 'ladder:P0', 'machine': MACH, 'resume_of': None,
+                  'ledger_commit': git_(d, 'rev-parse', 'HEAD')}, **kw)
+        (f / 'attempt.json').write_text(json.dumps(a), encoding='utf-8')
+        w = world(f'PD09b_{tag}')
+        r = lad_att(f'PD09b_{tag}', w, d, n1, base=base)
+        rec = led_result(d, n1) or {}
+        out[tag] = (r['rc'], (base / f'attempt_{n1}{RR.REJECTED_SIDE}').exists(), rec.get('status'), rec.get('side'),
+                    (rec.get('stop') or {}).get('code'), n_calls(w))
+    want = (3, True, 'rejected', 'pre', 'OUTDIR_NOT_EMPTY', 0)
+    return all(v == want for v in out.values()), out
 
 
 @check('PD12', '★ 11-02 PC6-12 (사전 공격 6 회차 마무리 R10 · PC5-01 다시 셈의 범위) — 정직한 원장 (항목 1 ladder:P0 · 결과 줄 stopped · 결과 뒤 · 잘못된 '
