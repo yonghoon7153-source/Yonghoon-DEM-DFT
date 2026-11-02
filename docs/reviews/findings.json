@@ -14776,6 +14776,46 @@
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack7/PREATTACK_7.md",
       "title": "attempt_open 의 mkdir → attempt.json 쓰기 사이 창 — 빈 attempt_1 에서 같은 --attempt = 옆 거부 · 새 시도 뒤 판정 = 원장에 없는 시도 폴더 (보수 · 손 정리 전까지 멈춤)",
       "note": "사전 공격 7 회차 §1 · 고침 제안 = 빈 폴더 = 이 항목 것 (화면만 + recover = interrupted · pre) 또는 빈 폴더 지우기 · 탐침 probe7_unit.py U4 · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정."
+    },
+    {
+      "id": "MPMC-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 11-02 50kg D3 · D2 · D1 MPM 결과 판독 (1저자 질문 \"MPM coverage 값을 쓰면 안되는 이유\") + 키트 점검 보고 (스크래치)",
+      "opened_in": "docs/data/kg50_mpm_20261102/README.md",
+      "title": "MPM coverage (deformed_coverage · geometric_coverage) = 활물질 표면에서 0.13 / 0.26 µm 띠 안에 SE 가 가까이 있는 비율 — 닿은 면적이 아니라서 DEM 접촉 면적 피복률과 뜻이 다르고, 작은 SE 가 많을수록 근처 개수만으로 커진다 (강체 Tabor 띠 33 → 46 → 76 % · DEM Physics 합집합 52.6 → 54.2 → 46.8 %)",
+      "note": "자리: scripts/mpm_webapp_payload.py (deformed_coverage · geometric_coverage · cov_hertz_um 0.13 · cov_tabor_um 0.26).  50kg 격자 간격 ≈ 0.216 µm (54.35/252) ↔ 띠 = 격자 한 칸 안팎 → 점 구름 밀도에 좌우.  고침 방향 = \"변형된 SE 표면이 AM 표면에 닿은 면적\" (간격 ≤ 격자 한 칸 · DEM 접촉 면적과 같은 뜻).  ✅ 1저자 11-02 *\"다 권고대로\"* (덱 Q4 = MPM 피복률 숫자 안 씀) · *\"MPM관련 수치들도 Rint와 함께 다 업데이트\"* = 이온 계면 트랙 (Rint ② 다음) 과 같은 묶음 · 시험 먼저 · 웹앱 같은 묶음."
+    },
+    {
+      "id": "MPMC-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "MPM 키트 읽기 전용 점검 (11-02 · 씨앗 구름 대조 · 스크래치 보고) · 메인 11-02 판독",
+      "opened_in": "docs/data/kg50_mpm_20261102/README.md",
+      "title": "MPM coverage 의 \"소성 − 강체\" (MPM 고유 몫으로 읽던 차이) 가 가압 전 씨앗 상태에서도 +2.3 … +5.1 %p — MPM 이 아무것도 안 해도 나오는 측정 치우침 (점 구름 이산화 · SE 가 작을수록 Hertz 띠 쪽 커짐 2.3 → 3.2 → 4.3 = 가짜 크기 경향).  50kg 실측 소성 − 강체 = +2.9 … +5.6 %p 라 진짜 소성 증가분이 치우침 안",
+      "note": "고침 = 같은 함수로 씨앗 (가압 전) 상태를 재서 빼기 (소성 − 씨앗 · 1저자 비준 대기였던 보고 규약 = 11-02 *\"다 권고대로\"* 묶음에 포함).  씨앗 재측정에는 se_dump.npy (킷당 ≈ 0.75–0.8 GB · kgy) 필요.  CLAUDE.md 의 \"MPM coverage PLASTIC vs RIGID — why the value is USABLE (2026-06-21)\" 절 (real_14 소성 증가분 +6/+3 %p 를 MPM 고유 값으로 읽음) 도 이 치우침을 빼지 않은 판독 — 고친 뒤 다시 본다."
+    },
+    {
+      "id": "MPMC-03",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "MPM 키트 읽기 전용 점검 (11-02 · 주기 보정 대조 · 스크래치 보고 \"코드 결함 · 고치지 않음 · 원장 미등재\" → 이 등재)",
+      "opened_in": "docs/data/kg50_mpm_20261102/README.md",
+      "title": "MPM coverage 두 함수 (소성 · 강체) 가 x,y 주기 이미지를 보지 않는다 — 주기 상자 (DEM p p f · --periodic) 인데 경계 너머 SE 를 못 봐 강체 −2.3 … −3.3 %p · 씨앗 −1.0 … −1.8 %p · 둘의 비대칭 +1.3 … +1.5 %p",
+      "note": "고침 = 최소 영상 (minimum image) 으로 x,y 이웃 찾기 (KDTree boxsize 또는 경계 띠 복제) · 시험 먼저 (주기 경계를 걸친 합성 접촉 한 쌍).  `MPMC-01` · `02` 와 같은 묶음 (1저자 11-02 *\"MPM관련 수치들도 Rint와 함께 다 업데이트\"*)."
+    },
+    {
+      "id": "SELF-148",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "1저자 11-02 *\"1.5로 하기로 했으니까 기억하구\"* + 메인 키트 점검 보고 재독",
+      "opened_in": "docs/data/kg50_mpm_20261102/README.md",
+      "title": "11-02 채팅 — MPM ↔ DEM 이온 전도도 비교를 솔버 상수 σ₀ 3.0 기준으로 적었다 (보고 기준 1.5 mS/cm · 1저자 10-12) · 같은 답에서 \"키트가 활물질을 AM_S 로 잘못 이름 붙였다 · AM_P 가 맞다\" 고 단정 — 실제는 키트의 크기 문턱 규칙 (mono_absolute_3.5um · r 3 < 3.5 µm → AM_S) 이고 50kg NCM 이 다결정인지 단결정인지는 미확인",
+      "note": "영향: 비 (MPM ÷ DEM · 0.99 · 1.06 · 1.22) 는 σ₀ 와 무관 (이온 = SE 만 흐름 · 정확히 비례) · 1저자에게 1.5 기준 표로 다시 보고 (1 µm 0.356 → 원값 0.3554 = 0.355 · 반올림한 0.711 에서 나눈 끝자리).  AM 상 설명은 다음 보고에서 정정 · README §2 에 정확한 문장.  닫는 조건 = 정정 보고 · 이후 보고 σ₀ 1.5 기준 고정."
     }
   ]
 }
