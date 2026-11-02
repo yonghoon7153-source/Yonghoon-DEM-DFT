@@ -14675,6 +14675,21 @@
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
       "note": "사전 공격 6 회차 §4 U4 · PC6-01 고침으로 그룹 미확인이 크게 줄어 드묾 · ⬜ 1저자 선택: A (권고) = 그룹 미확인 + 러너 rc ≠ 0/None 이면 같은 낱말 규칙 · 기본 runner_rc (재실행 없음) / B = 지금대로 두고 등록 R 에 한정.",
       "decision_note": "1저자 11-02 *\"권고대로해요\"* = A — 그룹 미확인이어도 러너 rc 가 0 · None 이 아니면 같은 낱말 규칙 (words_cause) 으로 원인을 나누고 해당 없으면 기본 runner_rc (자동 재실행 없음).  ⬜ 고침 = 시험 먼저 (작업 트리 에이전트) → 등록 R §10-5 문구 → Codex 회차 ②."
+    },
+    {
+      "id": "L214P-03",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "LHS214 §5 판정 작업 (11-02 · 작업 트리 에이전트 · L214P-02 같은 부류 관찰)",
+      "opened_in": "docs/data/lhs_network214_35f032737_20261030/s5_judgment/README.md",
+      "title": "launch_eligibility 의 64 hex 형식 검사 넷 (`_HEX64.match`) 이 64 hex + 끝 LF 를 받는다 — L214P-02 와 같은 부류 (code_hashes · handover_code_hashes · input_digest.cohort_tsv_sha256 · raw_sha256_table_sha256 값 · scripts/run_network_194_parallel.py 1128 · 1137 · 1159 · 1161 행)",
+      "note": "판정 문서 §11-5 · 형식 검사만 (뒤 단계 같음 대조가 대부분 막는 구조 = 추정 · 자리별 반례 시험 안 함) · 받은 B7 두 manifest 의 64 hex 값 = 전부 정확히 64 hex (이번 기록 영향 없음) · ✅ 11-02 고침 (1저자 11-02 Q5 *\"다 권고대로 해봐\"* · 시험 먼저 1bdb6e3db → 고침 08b28b3e7 = 넷 다 `.fullmatch` · 값 strip 안 함) · 봉인 code_fp `2149f873…` 그대로 (실행기 = CODE_FILES · HANDOVER_FILES 밖) · ⬜ Codex 확인.",
+      "claimed_fixed_sha": "08b28b3e7",
+      "evidence_tests": [
+        "scripts/run_network_194_parallel.py --selftest (㊴ · 고치기 전 141/143 → 고친 뒤 143/143)",
+        "scripts/supp20_input_receipt.py --selftest (123/123)"
+      ]
     }
   ]
 }
