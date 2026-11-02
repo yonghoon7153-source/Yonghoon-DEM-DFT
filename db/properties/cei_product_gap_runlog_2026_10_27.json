@@ -143,5 +143,14 @@
   "판독": "아직 안 한다 — 12 상 (CoS2 포함) 이 끝나야 R1–R6 한 번에",
   "kgy": "GPU 6,142 MiB · 94 % · QE 프로세스 0 · tmux cv7main 만 — CEI 체인이 끝나 cascade 이어받기가 시작된 것으로 보인다 (cascade 감시로 확인 대기) · 가동 2 일 19 h (10-30 정전 뒤 재부팅 그대로) · 디스크 85 %",
   "by": "agent · 2026-11-02"
+ },
+ "⛔_CoS2_02_원인_2026_11_02": {
+  "출처": "사용자 붙여넣기 2026-11-02 (kgy · 읽기만): 02_scf.out 1,994 B (11-01 06:06 · 01 vc-relax 끝과 같은 분)",
+  "오류": "Error in routine d_matrix (10): D_S (l=2) for this symmetry operation is not orthogonal → MPI_ABORT (전자 계산 전 · 대칭 준비 단계)",
+  "읽기": "pw.x 가 vc-relax 뒤 셀 (거의 입방이지만 정확히 입방은 아님 — MP 셀부터 1e-6 Å 급 잡음) 에서 허용오차로 대칭 연산을 찾고, 그 연산의 d 궤도 (l=2) 회전 행렬이 직교 검사 (아주 좁은 문턱) 를 못 넘었다 = 대칭 처리의 수치 문제 · 물리 결과가 아니다. 같은 구조형 NiS2 (pyrite) 는 통과했다 — 셀 잡음 크기 차이로 본다 (확인 안 함)",
+  "고침_결과_전": "CoS2 02_scf.in 에만 nosym = .true. · noinv = .true. (04 DOS 입력은 원래 nosym · noinv) — 구조 · PP · k 격자 (4×4×4 → 전 BZ 로 펼침) · smearing · 자성 시작값은 그대로. 갭은 원래 정의 안 됨 (선언 금속) · DOS 는 아직 안 봤다 → 결과를 보기 전의 수치 우회다. 저장소 입력 sha e01cb3ff… → bbd077e0… (SHA256SUMS 갱신)",
+  "실행": "kgy: 실패한 02_scf.out 은 CoS2_mp-aaaaadbq/failed_1101/ 로 옮겨 보관 · 저장소 판 02_scf.in 복사 → run_sei_dft.sh CoS2_mp-aaaaadbq 하나만 (01 은 JOB DONE + 지문으로 건너뜀 → 기하 승계 → 02 → 04–06) · tmux ndbader2 가 끝난 뒤 시작 (pp.x 와 pw.x 를 같은 3090 에 겹치지 않게) · cascade v7 옆",
+  "승인": "사용자 — kgy 블록 실행을 승인으로 본다 (CEI 트랙 계산 쪽 결정 = 사용자)",
+  "by": "agent · 2026-11-02"
  }
 }

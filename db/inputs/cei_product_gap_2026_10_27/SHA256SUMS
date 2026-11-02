@@ -9,7 +9,7 @@ f76b86ce60cde3d83dfcc8df79ba05478db573d158289f1b226919442d977d25  ./pseudo/ni_pb
 793fb9a3c21164c7f6660c2d312d3b1acfb59e46a8ffa0b579e8789addaab155  ./run_kgy.sh
 bb4858d4b6a41db345f9b923e2fc9912ac25d2d12b4fa8116f705aeba2d80892  ./work/CoS2_mp-aaaaadbq/00_build_meta.json
 6c7631d2588fbccc0880b3b022f1bbae193a2dc095bc1b01d79c7e87bf428b69  ./work/CoS2_mp-aaaaadbq/01_vcrelax.in
-e01cb3ff9268d1905d5285400cbb138782ca8d26ffad33383991d1e68d93fb84  ./work/CoS2_mp-aaaaadbq/02_scf.in
+bbd077e0423f4855bfbd41cb3d85d791feb56e38c339fe1dd7732abfb95e8e6d  ./work/CoS2_mp-aaaaadbq/02_scf.in
 440dc6548253c40ef148fb9875707d8faf81f3cfcaa24ded7952ac5e91b11a3d  ./work/CoS2_mp-aaaaadbq/03_GAP_NOT_APPLICABLE.json
 196ccf0285898d55f7d5859de06cfba26380f60eaf4a2bf9274bff209e49d1db  ./work/CoS2_mp-aaaaadbq/04_nscf_dos.in
 d9f8e3a4561216d2ab16f6495333cc1b1e3922473d0a743a217bcb4564d62a41  ./work/CoS2_mp-aaaaadbq/05_dos.in
