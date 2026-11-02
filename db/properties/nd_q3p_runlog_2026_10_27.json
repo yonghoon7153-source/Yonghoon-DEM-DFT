@@ -92,5 +92,12 @@
   "결론에_미치는_영향": "없음 — 평균으로 봐도 위쪽 중앙으로 봐도 MP_07 이 원소마다 MLi_04 보다 많다 (약 3–33 배 · Nd 가 가장 작고 Li 가 가장 크다) · 판독 보류 근거 그대로",
   "그림": "docs/figures/weekly_2026_11_01/nd_q3p_bader_density_check.png · Origin CSV db/properties/weekly_nd_q3p_bader_density_check_origin_2026_11_01.csv (원자 한 줄)",
   "by": "agent · 2026-11-01"
+ },
+ "관측_2026_11_02_0912": {
+  "출처": "사용자 붙여넣기 2026-11-02 09:12:05 KST (kgy watch · 읽기만)",
+  "ELF_SCF": "11-01 04:57:43 시작 조건 충족 ('파일이 생겼다' = CoS2 01_vcrelax.out) → 11-01 05:13:55 끝 — 완료 2 · 건너뜀 0 · 실패 0 · 총 16 분 (MP_07 8 분)",
+  "MP_07_Bader_SCF_다시": "11-01 05:27:13 끝 — 완료 1 · 실패 0 · 12 분 ($HOME/work/runs/nd_q3p_rerun_1030)",
+  "다음": "① run_bader_pp_kgy.sh R=$HOME/work/runs/nd_q3p_rerun_1030 MODELS=MP_07 → pp_ae.out 음의 밀도 · 유의 극대 수를 첫 판 (0.1885 e · 7,580) · MLi_04 (0.00064 e · 692) 와 대조 (가르는_법 그대로) ② ELF 후처리 (pp.x plot_num 8 → 카드 §4 판독) — 10-19 gabia 실행기 run_nd_elf_nc_gabia.sh 를 kgy 에 쓸 수 있는지 먼저 본다",
+  "by": "agent · 2026-11-02"
  }
 }
