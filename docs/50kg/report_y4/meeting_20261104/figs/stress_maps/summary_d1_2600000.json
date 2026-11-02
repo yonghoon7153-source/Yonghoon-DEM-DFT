@@ -1,0 +1,54 @@
+{
+ "label": "d1_2600000",
+ "step_atom": 2600000,
+ "step_contact": 2600000,
+ "same_step": true,
+ "plate_mpa_log": 285.3,
+ "plate_z_um": 123.446,
+ "box_um": [
+  50.0,
+  50.0
+ ],
+ "n_particles": 168457,
+ "n_contacts": 558838,
+ "pos_from_contact": 0,
+ "pos_candidate_maxdev_um": 0.0,
+ "lw_status": "OK",
+ "lw_vm_cv": 97.69996708526072,
+ "virial": "checked",
+ "p_ref_MPa": 158.01004972394887,
+ "files": {
+  "atom": {
+   "path": "atom_2600000.liggghts",
+   "sha256": "042488708b72c1ffb31692ac110135b8b9051b1ceaaacd7ce4c3f2b0856c56c6"
+  },
+  "contact": {
+   "path": "contact_2600000.liggghts",
+   "sha256": "e1339175569ad7b9429d107445dda54210ccc9ad76396dee81aa6f8c1cc3471a"
+  },
+  "mesh": {
+   "path": "mesh_2600000.stl",
+   "sha256": "83717a63280534faac4f73be46c1b484c4722b087b7df1ae7cc1409fa4efc25c"
+  }
+ },
+ "AM": {
+  "n": 1412,
+  "n_wall": 69,
+  "median": 172.2046875076892,
+  "p10": 61.428262179325806,
+  "p90": 368.1667744859971,
+  "p99": 605.1911796689446,
+  "max": 1085.0314611527187,
+  "median_over_P": 0.6035916141173824
+ },
+ "SE": {
+  "n": 163475,
+  "n_wall": 3501,
+  "median": 72.42729095428285,
+  "p10": 25.54132194583134,
+  "p90": 178.75184120937365,
+  "p99": 530.6679314836583,
+  "max": 1061.6427550476546,
+  "median_over_P": 0.25386362058984524
+ }
+}

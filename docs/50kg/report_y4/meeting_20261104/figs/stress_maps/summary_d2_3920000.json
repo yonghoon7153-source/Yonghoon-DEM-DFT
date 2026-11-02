@@ -1,0 +1,54 @@
+{
+ "label": "d2_3920000",
+ "step_atom": 3950000,
+ "step_contact": 3920000,
+ "same_step": false,
+ "plate_mpa_log": 284.9,
+ "plate_z_um": 122.469,
+ "box_um": [
+  50.0,
+  50.0
+ ],
+ "n_particles": 22353,
+ "n_contacts": 80980,
+ "pos_from_contact": 22353,
+ "pos_candidate_maxdev_um": 0.0,
+ "lw_status": "OK",
+ "lw_vm_cv": 69.93112730237972,
+ "virial": "unavailable (no c_strs in atom dump)",
+ "p_ref_MPa": 275.07701416642766,
+ "files": {
+  "atom": {
+   "path": "atom_3950000.liggghts",
+   "sha256": "61e61689a639e92ac50836186d791d04d4d141cb9e40bd242f39cb1da9f85133"
+  },
+  "contact": {
+   "path": "contact_3920000.liggghts",
+   "sha256": "481758e0589d3114b5a302960ef387ae0efb783ed614da7e0fbe20cd0a301267"
+  },
+  "mesh": {
+   "path": "mesh_3920000.stl",
+   "sha256": "3db1e87d86b5b7df69ee94bfd4700534837734f84be85a3839e86ffb643cc9f2"
+  }
+ },
+ "AM": {
+  "n": 1401,
+  "n_wall": 80,
+  "median": 340.0335506189814,
+  "p10": 154.52597108771198,
+  "p90": 569.1181022464983,
+  "p99": 840.1030879533338,
+  "max": 1160.508990749613,
+  "median_over_P": 1.1935189561915809
+ },
+ "SE": {
+  "n": 20200,
+  "n_wall": 672,
+  "median": 126.06775434892846,
+  "p10": 54.715117222728466,
+  "p90": 265.3795929120103,
+  "p99": 461.667343952268,
+  "max": 639.245763877213,
+  "median_over_P": 0.4424982602629992
+ }
+}
