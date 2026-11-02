@@ -287,3 +287,95 @@ tar czf "$Q/q1_settle_$(date +%Y%m%d).tar.gz" -C "$Q" out_lhs00_123 out_lhsx_026
 
 - 해제 전에는 단계 B (배포 묶음) · ZIP · 전달 없음.  S3 (봉인 창) = 별도 HOLD — 이 조건으로 풀지 않는다.
 
+### 11-3. Q3 — 단계 A (가): 인계표 셋만 · WSL 명령
+
+`lhs_release_build.stage_handovers_v13` 를 직접 부른다 (CLI 에 단계 A 만 도는 옵션이 없다 · 그 함수가 ⓪ 감사 · ⓪b 다시 읽기 · 발사 봉인 · 배치 교차 관문을 먼저 돈다 · 단계 B · `--codex-verdict` 없음).  입력 = 두 배치의 merged 결과 (`<ROOT>/merged/<ds>/results` → 케이스 결과 폴더 링크) + 압력 기록 셋 (`<ROOT>/pressure/<ds>_pressure_record.tsv` — 그 함수가 찾는 자리).  파일로 저장 → 자리표시를 바꾼 뒤 `bash 파일` — 단계마다 ✗ 면 그 자리에서 멈춘다 (그 화면 그대로 보고 · 셸에 붙여 넣지 않는다).
+
+```bash
+B7=<발사 체크아웃 — 승인 핀 B7 · 깨끗>
+PY=<B7 manifest 의 python — 3.12.3 · numpy 2.5.2 · scipy 1.18.1>
+R=<194 배치 ROOT>
+RS=<보충 20 배치 ROOT>
+DL=<다운로드 폴더>
+D=$(date +%Y%m%d)
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+cd "$B7" || exit 1
+# 1) 사전 점검
+test "$(git rev-parse HEAD)" = 35f0327377a4213774010a090df4d224e50d29e1 || { echo '⛔ HEAD ≠ B7'; exit 1; }
+test "$(git status --porcelain --untracked-files=no | wc -l)" -eq 0 || { echo '⛔ dirty'; exit 1; }
+test ! -e "$R/handover_v13_$D" || { echo '⛔ 인계표 폴더가 이미 있다'; exit 1; }
+for f in "$R/pressure/lhs_pressure_record.tsv" "$R/pressure/lhsx_pressure_record.tsv" "$RS/pressure/lhss_pressure_record.tsv"; do
+  test ! -e "$f" || { echo "⛔ 압력 기록이 이미 있다 — $f"; exit 1; }
+done
+"$PY" -I - "$B7" "$R" "$RS" <<'EOF' || exit 1
+import hashlib, json, os, sys
+B7, R, RS = sys.argv[1:4]
+h = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
+bad = []
+want = {R + '/manifest.json': 'd2d9af0335c439fc0de1f7531a3c1781f0316f151f1c172de49f21c50163cffb',
+        R + '/seal_audit.json': 'a6515b1e216d3034be200902580b1358ef1c4c7d0877ac614e366f17a7cf6c69',
+        R + '/reread.json': 'd6558654721020aca99679b9e84576a693d3db2d02115139d69ae064cfa028e6',
+        RS + '/manifest.json': 'e8c5a1202f6584e5e8f320bd064cccbb2d5cce2b203227918e7373f052cb90ac',
+        RS + '/seal_audit.json': 'f4ebcb4eda0eab2d01905b7d543557efe3c87420783c70073d238c0f18b1634d',
+        RS + '/reread.json': 'd8255f0ed07b0886fcff927e48ce09c9feb8e9c7eb99c03c6bda957698083499'}
+bad += [p + ' sha256 ≠ 받은 기록' for p, w in want.items() if h(p) != w]
+for root in (R, RS):
+    for rel, w in json.load(open(root + '/manifest.json'))['handover_code_hashes'].items():
+        if h(B7 + '/' + rel) != w:
+            bad.append(rel + ' ≠ manifest handover_code_hashes')
+for rel, w in {'scripts/lhs_release_build.py': '3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383',
+               'scripts/lhs_pressure_record.py': '34eb74142884489505590501840ccc6423a014a508989c82f135020146283ad3'}.items():
+    if h(B7 + '/' + rel) != w:
+        bad.append(rel + ' ≠ B7 지문')
+for root, ds, n in ((R, 'lhs', 130), (R, 'lhsx', 64), (RS, 'lhss', 20)):
+    d = root + '/merged/' + ds + '/results'
+    names = sorted(os.listdir(d)) if os.path.isdir(d) else []
+    ok = [c for c in names if os.path.isfile(d + '/' + c + '/network_conductivity_dual.json') and os.path.isfile(d + '/' + c + '/network_provenance.json')]
+    if len(names) != n or len(ok) != n:
+        bad.append(f'{ds}: results {len(names)} · 망 기록 있음 {len(ok)} (기대 {n})')
+print('\n'.join('✗ ' + b for b in bad) or '✓ 사전 점검 통과')
+sys.exit(1 if bad else 0)
+EOF
+# 2) ②a 완료 압력 기록 (새 파일 셋 · 덱 · LIGGGHTS 로그 읽기만)
+mkdir -p "$R/pressure" "$RS/pressure"
+"$PY" scripts/lhs_pressure_record.py --cohort docs/data/area_s2_cohort.tsv --harvest-dir docs/data/lhs_descriptors_cov_1e09f661d --out "$R/pressure/lhs_pressure_record.tsv"; echo "lhs rc=$?"
+"$PY" scripts/lhs_pressure_record.py --cohort docs/data/lhsx_descriptors_20260925/_cohort.tsv --harvest-dir docs/data/lhsx_descriptors_cov_1e09f661d --out "$R/pressure/lhsx_pressure_record.tsv"; echo "lhsx rc=$?"
+"$PY" scripts/lhs_pressure_record.py --cohort docs/data/lhss_descriptors_cov_1e09f661d/_cohort.tsv --harvest-dir docs/data/lhss_descriptors_cov_1e09f661d --out "$RS/pressure/lhss_pressure_record.tsv"; echo "lhss rc=$?"
+# 3) Q4 관문 (§11-4) — OK 아닌 침대가 하나라도 있으면 단계 A 를 돌리지 않는다
+"$PY" -I - "$R" "$RS" <<'EOF' || exit 1
+import csv, sys
+R, RS = sys.argv[1:3]
+bad = []
+for p, n in ((R + '/pressure/lhs_pressure_record.tsv', 130), (R + '/pressure/lhsx_pressure_record.tsv', 64), (RS + '/pressure/lhss_pressure_record.tsv', 20)):
+    rows = list(csv.DictReader(open(p, encoding='utf-8', newline=''), delimiter='\t'))
+    nok = [r for r in rows if r.get('status') != 'OK' or r.get('schema') != 'lhs_pressure_record/v1']
+    print(f'{p}: 행 {len(rows)} (기대 {n}) · OK 아님 {len(nok)}')
+    for r in nok:
+        print('   ', r.get('case'), r.get('status'), r.get('why'))
+    if len(rows) != n or nok:
+        bad.append(p)
+print('✓ 압력 214 OK — 단계 A 로' if not bad else '⛔ OK 아닌 침대 — 단계 A 를 돌리지 않는다 (§11-4 · 이 화면 그대로 보고)')
+sys.exit(1 if bad else 0)
+EOF
+# 4) 단계 A — 인계표 셋 (배포 묶음 · 단계 B 없음)
+"$PY" -I -c "
+import sys
+sys.path.insert(0, sys.argv[1] + '/scripts')
+import lhs_release_build as L
+try:
+    L.stage_handovers_v13(sys.argv[2], sys.argv[2] + '/handover_v13_' + sys.argv[4], sys.argv[4], supp_batch_root=sys.argv[3])
+except L.ReleaseError as e:
+    print('⛔ 단계 A 거부 —', e)
+    sys.exit(1)
+" "$B7" "$R" "$RS" "$D"; echo "stage A rc=$?"
+# 5) 묶음 → 다운로드 (인계표 셋은 194 ROOT 아래 한 폴더 · 보충 = 압력 기록만)
+tar czf "$DL/net194_35f032737_v13handover_$D.tar.gz" -C "$R" "handover_v13_$D" pressure
+tar czf "$DL/netsupp20_35f032737_v13pressure_$D.tar.gz" -C "$RS" pressure
+sha256sum "$DL/net194_35f032737_v13handover_$D.tar.gz" "$DL/netsupp20_35f032737_v13pressure_$D.tar.gz"
+```
+
+- 사전 점검 지문의 원천: 기록 여섯 = 받은 묶음 안 파일의 sha256 (위 README 의 묶음) · 인계 도구 둘 = 두 manifest 의 `handover_code_hashes` · 배포 빌더 · 압력 도구 = B7 트리의 sha256 (이 컨테이너 대조 · B7 ↔ 지금 트리 바이트 같음).
+- 이 컨테이너 마른 시험: 두 블록 = 자리표시를 가짜 경로로 바꾸면 `bash -n` rc 0 · 그대로면 rc 2 · 파이썬 조각 셋 컴파일 OK · 사전 점검 조각을 받은 기록에 = 기록 여섯 · 인계 도구 둘 (manifest 둘 다) · 빌더 · 압력 도구 지문 모두 ✓ · results 셋만 ✗ (묶음에 없음 — WSL 에는 있다) · 압력 관문 조각 = 합성 TSV 전부 OK → rc 0 · 하나 NOT_REACHED → rc 1 + 멈춤 줄.
+- §6 의 명령 블록과 같은 일을 하되 압력 관문 (3) 과 사전 점검 (1) 을 더했다 · τ 진단 표 (§6 ①) 는 단계 A 의 입력이 아니라 이 블록에서 뺐다 (따로 돌려도 된다).
+- 반입 뒤 (메인): 인계표 → 이 폴더 옆 `s5_v13/` · 인계표 수준 §5-7 대조 · 등록 §9 결과 칸 — 배포는 §11-2 조건 뒤.
+
