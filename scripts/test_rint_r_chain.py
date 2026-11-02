@@ -10937,31 +10937,55 @@ def t_PD12m():
 
 
 @check('PD12u', '★ 11-02 PC6-12 단위 — 찾은 시도 폴더 ↔ 원장 항목 (found_attempts_problem · 판정 · 합치기 · 합친 예측 · 예측 입력 공용): 꼴 맞는 attempt.json 의 '
-                '대상 · 기계 · 재실행 원 시도 하나라도 원장 항목과 다르면 사유 (폴더 이름 · 항목 번호) · 같으면 None · attempt.json 없는 폴더 (남의 폴더 · 옆 '
-                '거부 기록의 까닭) · 옆 거부 기록 파일 · 원장에 없는 번호 = 이 함수 몫 아님 (None)')
+                '대상 · 기계 · 재실행 원 시도 하나라도 원장 항목과 다르면 사유 (폴더 이름 · 항목 번호) · 같으면 None · 옆 거부 기록 파일 · 원장에 없는 번호 = 이 함수 '
+                '몫 아님 (None) · ★ 11-02 PC7-02 (1저자 11-02 — 바뀐 설계 단언 · 옛 = attempt.json 없는 폴더 None) 원장 항목이 있는 attempt_<n> 폴더에 꼴 맞는 '
+                'attempt.json 이 없으면 (없음 · 꼴 틀림 (칸 하나 더) · 심볼릭 링크) 사유 — 예외 하나 = 그 번호의 결과 줄 rejected 이고 그 바탕에 옆 거부 기록 '
+                'attempt_<n>.rejected.json 이 있을 때 (AL07 남의 폴더 · None) · 결과 줄 rejected 인데 그 바탕에 옆 거부 기록 없음 · 결과 줄 stopped 인데 옆 거부 '
+                '기록 있음 = 사유')
 def t_PD12u():
     f = getattr(RR, 'found_attempts_problem', None)
     if f is None:
         return False, '사슬에 found_attempts_problem 이 없다'
     root = Path(TD) / 'pd' / 'PD12u'
+    good = {'schema': 'rint-r-attempt-v1', 'target': 'ladder:P0', 'machine': MACH, 'resume_of': None, 'ledger_commit': 'a' * 40}
 
-    def mk(tag, n, valid=True, **kw):
+    def mk(tag, n, valid=True, side=False, link=False, extra=None, **kw):
         p = root / tag / f'attempt_{n}'
         p.mkdir(parents=True)
         if valid:
-            a = dict({'schema': 'rint-r-attempt-v1', 'n': n, 'target': 'ladder:P0', 'machine': MACH, 'resume_of': None, 'ledger_commit': 'a' * 40}, **kw)
-            (p / 'attempt.json').write_text(json.dumps(a), encoding='utf-8')
-        return p
-    st = {'entries': {1: {'target': 'ladder:P0', 'machine': MACH, 'resume_of': None}, 2: {'target': 'ladder:P0', 'machine': MACH, 'resume_of': 1}}}
-    side = root / 'side' / 'attempt_1.rejected.json'
-    side.parent.mkdir(parents=True)
-    side.write_text('{}', encoding='utf-8')
-    got = {'same': f(st, {1: [mk('same', 1)]}), 'target': f(st, {1: [mk('target', 1, target='ladder:P0:FIBRE')]}),
-           'machine': f(st, {1: [mk('machine', 1, machine='gabia')]}), 'resume_of': f(st, {2: [mk('resume', 2, resume_of=None)]}),
-           'no_attempt_json': f(st, {1: [mk('noaj', 1, valid=False)]}), 'side_file': f(st, {1: [side]}),
-           'not_in_ledger': f(st, {7: [mk('n7', 7)]})}
-    ok = (got['same'] is None and got['no_attempt_json'] is None and got['side_file'] is None and got['not_in_ledger'] is None
-          and all(isinstance(got[k], str) and 'attempt_' in got[k] for k in ('target', 'machine', 'resume_of')))
+            a = dict(good, n=n, **kw)
+            if extra:
+                a.update(extra)
+            if link:
+                real = root / tag / f'real_attempt_{n}.json'
+                real.write_text(json.dumps(a), encoding='utf-8')
+                (p / 'attempt.json').symlink_to(real)
+            else:
+                (p / 'attempt.json').write_text(json.dumps(a), encoding='utf-8')
+        out = [p]
+        if side:
+            sp = root / tag / f'attempt_{n}.rejected.json'
+            sp.write_text('{}', encoding='utf-8')
+            out.append(sp)
+        return out
+    rej = {'status': 'rejected', 'side': 'pre', 'folder': 'attempt_1.rejected.json'}
+    st = {'entries': {1: {'target': 'ladder:P0', 'machine': MACH, 'resume_of': None}, 2: {'target': 'ladder:P0', 'machine': MACH, 'resume_of': 1},
+                      3: {'target': 'ladder:P0', 'machine': MACH, 'resume_of': None}},
+          'results': {1: rej, 3: {'status': 'stopped', 'side': 'post', 'folder': 'attempt_3'}}}
+    side_only = root / 'side' / 'attempt_1.rejected.json'
+    side_only.parent.mkdir(parents=True)
+    side_only.write_text('{}', encoding='utf-8')
+    got = {'same': f(st, {1: mk('same', 1)}), 'target': f(st, {1: mk('target', 1, target='ladder:P0:FIBRE')}),
+           'machine': f(st, {1: mk('machine', 1, machine='gabia')}), 'resume_of': f(st, {2: mk('resume', 2, resume_of=None)}),
+           'no_attempt_json': f(st, {2: mk('noaj', 2, valid=False)}), 'extra_key': f(st, {1: mk('extra', 1, extra={'note': 'x'})}),
+           'attempt_json_symlink': f(st, {1: mk('link', 1, link=True)}),
+           'rejected_side': f(st, {1: mk('rejside', 1, valid=False, side=True)}),
+           'rejected_no_side': f(st, {1: mk('rejnoside', 1, valid=False)}),
+           'stopped_side': f(st, {3: mk('stopside', 3, valid=False, side=True)}),
+           'side_file': f(st, {1: [side_only]}), 'not_in_ledger': f(st, {7: mk('n7', 7)})}
+    none_rows = ('same', 'rejected_side', 'side_file', 'not_in_ledger')
+    reason_rows = ('target', 'machine', 'resume_of', 'no_attempt_json', 'extra_key', 'attempt_json_symlink', 'rejected_no_side', 'stopped_side')
+    ok = (all(got[k] is None for k in none_rows) and all(isinstance(got[k], str) and 'attempt_' in got[k] for k in reason_rows))
     return ok, got
 
 
@@ -11623,6 +11647,87 @@ def t_PE01p():
                'start_after_other_entry': (None, 2)}
     ok = (got_ok == want_ok and all(v == 'ATTEMPT_LEDGER_MISMATCH' for v in got_bad.values()) and len(same) == 7 and all(same.values()))
     return ok, {'ok': got_ok, 'bad': {k: v for k, v in got_bad.items() if v != 'ATTEMPT_LEDGER_MISMATCH'}, 'same': same}
+
+
+def pe02_hide(tag, d, n1):
+    """원장 clone — 항목 n1 커밋 앞으로 되돌리고 그 항목의 대상만 ladder:P0:FIBRE 로 바꾼 줄 + 결과 줄 그대로 (6 회차 R10 · PD12 꼴) → clone 경로."""
+    lines = led_lines(d)
+    e1 = [x for x in lines if x.get('kind') == 'entry' and x.get('n') == n1][0]
+    r1 = [x for x in lines if x.get('kind') == 'result' and x.get('n') == n1][0]
+    dr = led_reset_before(d, tag, f'rint-r attempt {n1} entry ')
+    led_hand(dr, dict(e1, target='ladder:P0:FIBRE'), msg='항목 1 대상만 바꿈 (시험 · PC7-02)')
+    led_hand(dr, r1, msg='결과 줄 1 그대로 (시험 · PC7-02)')
+    return dr
+
+
+@check('PE02', '★ 11-02 PC7-02 (사전 공격 7 회차 probe7_real A · P2 · PC6-12 닫힘 주장의 범위) — 6 회차 R10 원장 (항목 1 커밋 앞으로 되돌리고 대상만 '
+               'ladder:P0:FIBRE · 결과 줄 그대로) 위에서 시도 1 폴더 쪽 손 하나: ⓐ attempt.json 지움 ⓑ attempt.json 에 칸 하나 (꼴 틀림) ⓒ attempt.json = 심볼릭 '
+               '링크 (같은 내용) → 같은 대상 새 시도 2 (CALIBRATED) 뒤 판정 = 멈춤 ATTEMPT_LEDGER_MISMATCH (사유 = attempt_1 · 원장 항목 1 있음) · 예측 입력 대조 '
+               '(P1 사다리 + 예측) = ATTEMPT_LEDGER_MISMATCH · 러너 0 회 · 결과 전 (옛 = 찾은 폴더의 attempt.json 이 없거나 꼴이 틀리면 건너뜀 → 판정 원장 대조 '
+               '통과 · 시도 2 채택 · 예측 러너 24 회 · completed)')
+def t_PE02():
+    def go():
+        d, _rc, _so = led_new('PE02')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        a = lad_att('PE02', world('PE02_a', dict(PW, faults=[{'do': 'illegal_driver_after_mark', 'match': {'rj': 'inf'}}])), d, n1)
+        rows = {}
+        for tag in ('rm_attempt_json', 'extra_key', 'symlink'):
+            dr = pe02_hide(f'PE02_{tag}', d, n1)
+            base = pc_copy_base(a['base'], f'PE02_{tag}_base')
+            aj = base / f'attempt_{n1}' / 'attempt.json'
+            if tag == 'rm_attempt_json':
+                aj.unlink()
+            elif tag == 'extra_key':
+                j = json.loads(aj.read_text(encoding='utf-8'))
+                aj.write_text(json.dumps(dict(j, note='x')), encoding='utf-8')
+            else:
+                real = base.parent / f'PE02_{tag}_attempt.json'
+                shutil.move(str(aj), str(real))
+                aj.symlink_to(real)
+            add2 = led_add(dr, 'ladder:P0')
+            b = lad_att(f'PE02_{tag}_b', world(f'PE02_{tag}_b'), dr, add2[1], base=base) if add2[1] else None
+            v = ver_led(f'PE02_{tag}_v', [b['out']], dr) if b else None
+            vwhy = str((((v or {}).get('v') or {}).get('stop') or {}).get('cause'))
+            _r3, n3, _s3 = led_add(dr, 'ladder:P1')
+            c = lad_att(f'PE02_{tag}_P1', world(f'PE02_{tag}_c'), dr, n3, law='P1')
+            _r4, n4, _s4 = led_add(dr, 'predict')
+            wp = world(f'PE02_{tag}_p')
+            p = pred_att(f'PE02_{tag}_pred', wp, dr, n4, [b['out'], c['out']]) if b else None
+            pwhy = str((((p or {}).get('sum') or {}).get('stop') or {}).get('cause'))
+            rows[tag] = {'add2_rc': add2[0], 'b_status': ((b or {}).get('sum') or {}).get('status'), 'verdict': stop_code(v) if v else None,
+                         'v_names_attempt1': 'attempt_1' in vwhy, 'predict': stop_code(p) if p else None, 'predict_calls': n_calls(wp),
+                         'predict_side': (led_result(dr, n4) or {}).get('side'), 'p_names_attempt1': 'attempt_1' in pwhy}
+        return rows
+    rows = scen('PE02', go)
+    want = {'add2_rc': 0, 'b_status': 'CALIBRATED', 'verdict': 'ATTEMPT_LEDGER_MISMATCH', 'v_names_attempt1': True, 'predict': 'ATTEMPT_LEDGER_MISMATCH',
+            'predict_calls': 0, 'predict_side': 'pre', 'p_names_attempt1': True}
+    return all(rows.get(t) == want for t in ('rm_attempt_json', 'extra_key', 'symlink')), rows
+
+
+@check('PE02x', '★ 11-02 PC7-02 예외 하나 (AL07 남의 폴더 · 지금 동작 그대로 · 실경로) — 바탕에 이미 있던 attempt_1 (attempt.json 없음 · 옛 파일) 때문에 항목 1 '
+                '(ladder:P1) = 옆 거부 기록 attempt_1.rejected.json + 결과 줄 rejected · 같은 바탕의 항목 2 (ladder:P0) 완주 → 판정 (입력 = 시도 2) = 원장 대조 통과 '
+                '(INPUT_MISSING · 찾은 attempt_1 = 결과 줄 rejected + 그 바탕에 옆 거부 기록) · 그 옆 거부 기록을 지운 사본 = ATTEMPT_LEDGER_MISMATCH (사유 = '
+                'attempt_1 · 옛 = 통과)')
+def t_PE02x():
+    def go():
+        d, _rc, _so = led_new('PE02x')
+        _r1, n1, _s1 = led_add(d, 'ladder:P1')
+        base = Path(TD) / 'runs' / 'PE02x'
+        (base / 'attempt_1').mkdir(parents=True)
+        (base / 'attempt_1' / 'old.txt').write_text('old', encoding='utf-8')
+        a = lad_att('PE02x_P1', world('PE02x_a'), d, n1, law='P1', base=base)
+        r1 = pc_res(d, n1, keys=('status', 'side', 'folder'))
+        _r2, n2, _s2 = led_add(d, 'ladder:P0')
+        b = lad_att('PE02x_P0', world('PE02x_b'), d, n2, base=base)
+        v = ver_led('PE02x_v', [b['out']], d)
+        base2 = pc_copy_base(base, 'PE02x_noside')
+        (base2 / 'attempt_1.rejected.json').unlink()
+        v2 = ver_led('PE02x_v2', [base2 / f'attempt_{n2}'], d)
+        return a['rc'], r1, b['rc'], stop_code(v), stop_code(v2), str((((v2.get('v') or {}).get('stop')) or {}).get('cause'))
+    a_rc, r1, b_rc, c1, c2, why2 = scen('PE02x', go)
+    got = (a_rc, r1, b_rc, c1, c2, 'attempt_1' in why2)
+    want = (3, {'status': 'rejected', 'side': 'pre', 'folder': 'attempt_1.rejected.json'}, 0, 'INPUT_MISSING', 'ATTEMPT_LEDGER_MISMATCH', True)
+    return got == want, (got, why2[:200])
 
 
 # ═════════════════════════ 실행 ═════════════════════════
