@@ -59,6 +59,8 @@
 #   허용 (예전 규칙 그대로) · 시험 덱 = run r + 판정 (목표에 닿으면 quit) + 루프 run min(TS − r, N) (--cut-trial-q3b) · G0–G3 그대로 (G2 = S0 덤프).
 #   위상을 못 정하면 (루프 밖 · 루프 뒤 restart 0 없음 = 이완 체크포인트일 수 있음 KG50-11 · 변수 run · 판정 step 그 자리 …) 거부 · 표지 없는
 #   압축 재개 덱 = 예전 거부 그대로
+#   11-02 2 (ibb 실제 -T 거부 · 1저자): --q3b-fix 가 넣기 전에 준비 구간 (read_restart 뒤 ~ 루프 머리 앞) 순서를 본 덱 자리로 고친다 (prep_order ·
+#   dem_restart.py compress 산출 = 끝 상태 fix 를 판 메시 앞에) — 순서 규칙 (setup_order) 그대로 · 같은 명령 없는 줄 = 제자리 (정적 대조가 거부)
 NP=30; SUF=""; L=~/dem_test/lhs; SFX=""; TS=2000; TONLY=0; CHK=0; STRIP=0; APT=""; APH=""
 while getopts "n:s:r:x:t:TCcA:H:" o; do case $o in n) NP=$OPTARG;; s) SUF=$OPTARG;; r) L=$OPTARG;; x) SFX=$OPTARG;; t) TS=$OPTARG;; T) TONLY=1;; C) CHK=1;; c) STRIP=1;; A) APT=$OPTARG;; H) APH=$OPTARG;; *) exit 1;; esac; done
 shift $((OPTIND-1))
@@ -518,6 +520,17 @@ def setup_check(Rs, Mp, probs):
                      'if (print · quit 만) · group type · shell mkdir 만): [%s]' % l)
 
 
+def prep_eq(r, m):
+    # 준비 구간 같은 명령 규칙 (setup_order 의 짝 맞추기 · 11-02 Q3 (나) 순서 고침이 같은 함수를 쓴다) — 글자 같음 (deck() = 공백 정규화) ·
+    #   shell mkdir ↔ mkdir -p (③) · 판 메시 fix 의 file 이름만 다름 (②)
+    if r == m:
+        return True
+    kr, km = mkdir_key(words(r) or []), mkdir_key(words(m) or [])
+    if kr is not None and kr == km:
+        return True
+    return mesh_file(m, r) is not None
+
+
 def setup_order(Rs, Mp, probs, ri=None):
     # 10-28 밤 2 (독립 사전 공격 A · KG50R-03 부류): 준비 구간 (read_restart 빼고) = 본 덱 체크포인트 앞 명령의 순서 보존 부분열.
     #   상태 명령 줄은 본 덱 체크포인트 앞에 글자 그대로 있어야 하고 명령 순서 (상태 + 동작) 도 본 덱과 같아야 한다 — LIGGGHTS 는
@@ -530,13 +543,7 @@ def setup_order(Rs, Mp, probs, ri=None):
         w = words(l) or []
         return len(w) >= 4 and w[0] == 'fix' and bool(TMPL.match(w[3]))
 
-    def eq(r, m):
-        if r == m:
-            return True
-        kr, km = mkdir_key(words(r) or []), mkdir_key(words(m) or [])
-        if kr is not None and kr == km:
-            return True
-        return mesh_file(m, r) is not None
+    eq = prep_eq                          # 11-02: 밖으로 옮김 (규칙 그대로)
 
     Mq = [(x, l) for x, l in enumerate(Mp) if not tmpl(l)]
     j, prev, pairs = 0, None, []
@@ -1613,6 +1620,29 @@ def fix_run(main, res, ckpt, s0, W):
     return 0
 
 
+def prep_order(Mp, P):
+    # 11-02 (ibb 실제 -T 거부 · 1저자 — 도구 쪽 고침 · 순서 규칙 (setup_order) 은 그대로): dem_restart.py compress 산출은 끝 상태 fix (integr ·
+    #   gravi 9.81 · damp 0.5) 를 판 메시 fix 앞에 둔다 (09-27 r075 꼴) → 준비 구간 P (read_restart 뒤 ~ 루프 머리 앞 명령) 를 본 덱 체크포인트 앞
+    #   (Mp) 의 같은 명령 (prep_eq — 정적 대조와 같은 규칙) 의 마지막 자리 순으로 안정 정렬한다.  같은 명령이 P 에 n 번이면 그 n 개를 본 덱의 마지막
+    #   n 자리에 차례로 (n = 1 이면 마지막 같은 명령 자리 — 다시 정의한 fix gravi 9.81 = 본 덱 뒤 자리 · thermo 1000 이 두 번이면 본 덱 두 자리) ·
+    #   같은 명령이 없거나 모자라면 그 칸 그대로 (제자리 → 뒤 정적 대조가 거부) · 자리 있는 명령만 그 칸들 안에서 자리 순으로.
+    #   → (perm = 새 칸마다 P 번호, key = P 번호마다 본 덱 자리 또는 None)
+    cand = [tuple(x for x, m in enumerate(Mp) if prep_eq(l, m)) for l in P]
+    key, grp = [None] * len(P), {}
+    for i, c in enumerate(cand):
+        if c:
+            grp.setdefault(c, []).append(i)
+    for c, mem in grp.items():
+        for k, i in enumerate(mem):
+            j = len(c) - len(mem) + k
+            key[i] = c[j] if j >= 0 else None
+    slots = [i for i in range(len(P)) if key[i] is not None]
+    perm = list(range(len(P)))
+    for sl, i in zip(slots, sorted(slots, key=lambda i: key[i])):
+        perm[sl] = i
+    return perm, key
+
+
 def q3b_lp(main, ckpt, s0):
     # 11-02 Q3 (나): 본 덱 명령 · 루프 일정 (loop_phase) — 체크포인트를 만든 줄이 restart 줄 하나가 아니면 이유 (str)
     M = deck(main)
@@ -1660,11 +1690,32 @@ def q3b_fix(main, res, ckpt, s0, W):
         print('  ✗ %s — 재개 덱 원 줄 ↔ 명령 대응을 못 정함 (CRLF · 줄 끝 꼴 · 넣지 않음)' % Q3BNO)
         return 1
     la, b0, b1 = spans[a][1], spans[a + 2][1], spans[c][2]
+    # 11-02 (ibb 실제 -T 거부 · 1저자): 준비 구간 순서 고침 (prep_order) — read_restart 뒤 ~ label <루프> 앞 명령을 원 줄 묶음 (그 명령 앞 주석 ·
+    #   빈 줄 + 명령 원 줄들) 째로 옮긴다 (줄 수 그대로 = la · b0 · b1 그대로) · read_restart 앞 · 루프 머리부터는 그대로 · 판정은 뒤 정적 대조
+    rr = [i for i, l in enumerate(R) if (words(l) or [''])[0] == 'read_restart']
+    Rn, mv = list(R), []
+    if len(rr) == 1 and rr[0] < a - 1:
+        lo = rr[0] + 1
+        perm, key = prep_order(M[:il], R[lo:a])
+        if perm != list(range(a - lo)):
+            ms, _ = deck_spans(main)
+            st = [spans[i - 1][2] + 1 for i in range(lo, a)]
+            en = [spans[i][2] + 1 for i in range(lo, a)]
+            blk = [rawb[x:y] for x, y in zip(st, en)]
+            rawb = rawb[:st[0]] + [ln for k in perm for ln in blk[k]] + rawb[en[-1]:]
+            Rn = R[:lo] + [R[lo + k] for k in perm] + R[a:]
+            mv = [(R[lo + k], ms[key[k]][1] + 1) for sl, k in enumerate(perm) if k != sl]
+            nk = sum(1 for k in key if k is None)
+            print('  · 준비 구간 순서 고침 (11-02 Q3 (나) · ibb 실제 -T 거부 · 1저자 — 순서 규칙 그대로 · 판정 = 뒤 정적 대조): 명령 %d 개 중 %d 개 자리 '
+                  '바꿈 = 본 덱 체크포인트 앞 같은 명령 (정적 대조 규칙 — 판 메시 file 이름 · mkdir -p) 의 마지막 자리 순 (안정 정렬 · 같은 명령 '
+                  '없는 %d 개 = 제자리): %s' % (a - lo, len(mv), nk, ' · '.join('[%s] → 본 덱 %d 줄 자리' % x for x in mv[:12])
+                                                + (' · … (%d 개 더)' % (len(mv) - 12) if len(mv) > 12 else '')))
     intro = ('# Q3 (나) (resume_ckpt.sh 11-02 · KG50R-01): 체크포인트 step %d · 루프 진입 %d · 판정 %d + %d k → 남은 %d step 뒤 판정 %d · '
-             '목표에 닿았으면 label %s 로 루프 건너뜀 · 아니면 루프 그대로' % (s0, lp['E'], lp['E'], lp['N'], r, s0 + r, skip))
+             '목표에 닿았으면 label %s 로 루프 건너뜀 · 아니면 루프 그대로%s' % (s0, lp['E'], lp['E'], lp['N'], r, s0 + r, skip,
+                                                                 (' · 준비 구간 순서 고침 %d 개 (본 덱 자리)' % len(mv)) if mv else ''))
     new = (rawb[:la] + [intro.encode('utf-8'), ('run %d' % r).encode()] + rawb[b0:b1 + 1] + [('jump SELF %s' % skip).encode()]
            + rawb[la:b1 + 1] + [('label %s' % skip).encode()] + rawb[b1 + 1:])
-    want = R[:a] + ['run %d' % r] + R[a + 2:c + 1] + ['jump SELF %s' % skip] + R[a:c + 1] + ['label %s' % skip] + R[c + 1:]
+    want = Rn[:a] + ['run %d' % r] + R[a + 2:c + 1] + ['jump SELF %s' % skip] + R[a:c + 1] + ['label %s' % skip] + R[c + 1:]
     t = res + '.q3b'
     try:
         with open(t, 'wb') as f:
@@ -2370,6 +2421,7 @@ for ENT in $SUBMITTED; do
     [ $STRIP = 1 ] && { echo "- 주석 줄 빼기 (-c · 작업 폴더 덱만): $(tail -1 $W/strip_$SFX.txt | sed 's/^ *주석 줄 빼기 (-c): //') (strip_$SFX.txt)"; sed -n 's/^  · /    /p' $W/strip_$SFX.txt; }
     echo "- 재개: $M 체크포인트 \`read_restart $RR\` (step $S0) · 덱 input_${C}_$SFX.liggghts · 러너 run_${C}_$SFX.sh (#SBATCH -n $NP · mpirun --oversubscribe --bind-to none -np $NP)"
     [ "$M" = compress ] && echo "- 압축 루프 재개 (11-02 Q3 (나) · KG50R-01): $(grep -a '^  · 압축 루프 재개 준비' $W/q3b_$SFX.txt | tail -1 | sed 's/^  · [^:]*: //') (q3b_$SFX.txt)"
+    [ "$M" = compress ] && grep -aq '^  · 준비 구간 순서 고침' $W/q3b_$SFX.txt && echo "- 준비 구간 순서 고침 (11-02 · dem_restart.py 산출 순서 → 본 덱 자리 · 순서 규칙 그대로): $(grep -a '^  · 준비 구간 순서 고침' $W/q3b_$SFX.txt | tail -1 | sed 's/^  · [^:]*: //') (q3b_$SFX.txt)"
     echo "- 러너 (10-30 KG50R-F02 · 1저자 Q2): $(head -1 $AD/runner_check.txt 2>/dev/null) · 헬퍼 러너 원본 = $ATT/helper_run_${C}_$SFX.sh.orig · 실행 입력 영수증 $ATT/main_inputs.sha256 (다섯)"
     echo "- 템플릿 재선언: $(cat $W/tp_$SFX.txt)"
     echo "- 첫 긴 run (10-27 · 1저자 Q1 (가)): $(tail -1 $W/fixrun_$SFX.txt 2>/dev/null | sed 's/^ *· //') (fixrun_$SFX.txt)"
