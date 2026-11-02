@@ -14551,7 +14551,7 @@
       "owner": "claude",
       "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
-      "note": "사전 공격 6 회차 §2 · ✅ 11-02 고침 (시험 먼저 483cf413e → 고침 93d8c3d34) = CUDA_ERROR_WORDS 표지를 words_cause 한 곳에서 · stop_cause · orphan_cause 모든 길.  같은 보고의 넓힘 U4 (그룹 미확인이 러너 rc 1 을 가림) = 나눠서 PC6-13.  한정: CUDA 라이브러리 상태 문자열 · \"CUDA error:\" = 표지 아님 (1저자 결정) · 부분 문자열 일치 = 보수 쪽.  ⬜ Codex 회차 ②.",
+      "note": "사전 공격 6 회차 §2 · ✅ 11-02 고침 (시험 먼저 483cf413e → 고침 93d8c3d34) = CUDA_ERROR_WORDS 표지를 words_cause 한 곳에서 · stop_cause · orphan_cause 모든 길.  같은 보고의 넓힘 U4 (그룹 미확인이 러너 rc 1 을 가림) = 나눠서 PC6-13.  한정: CUDA 라이브러리 상태 문자열 · \"CUDA error:\" = 표지 아님 (1저자 결정) · 부분 문자열 일치 = 보수 쪽.  ⬜ Codex 회차 ②.  ✅ 11-02 결정 반영 = CUDA 라이브러리 상태 문자열 표지 (4499f3ffd · 시험 PD02c · PD02cr) · ⚠ 자원 낱말이 없는 메모리 실패 꼴 (맨 \"CUDA error: out of memory\" · *_ALLOC_FAILED) = runner_rc (재실행 없음) — 결정 문장의 \"메모리 부족은 그대로 자원\" 은 자원 낱말이 함께 찍힌 cupy 꼴에서만 (SELF-147).",
       "claimed_fixed_sha": "93d8c3d34",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py PD02 · PD02r (표지 표 200 행 · 고치기 전 판 실패 = docs/reviews/rint2_rr_fix_evidence_20261023/pc6_fix/logs/before_PD_0102)",
@@ -14668,13 +14668,19 @@
     {
       "id": "PC6-13",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "title": "그룹 미확인 (GROUP_UNCONFIRMED) 이면 러너의 0 아닌 종료 코드를 무시 — 파이썬 traceback (KeyError 등) 도 자동 재실행 자격 (U4 · PC6-02 넓힘에서 나눔)",
       "owner": "claude",
       "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
-      "note": "사전 공격 6 회차 §4 U4 · PC6-01 고침으로 그룹 미확인이 크게 줄어 드묾 · ⬜ 1저자 선택: A (권고) = 그룹 미확인 + 러너 rc ≠ 0/None 이면 같은 낱말 규칙 · 기본 runner_rc (재실행 없음) / B = 지금대로 두고 등록 R 에 한정.",
-      "decision_note": "1저자 11-02 *\"권고대로해요\"* = A — 그룹 미확인이어도 러너 rc 가 0 · None 이 아니면 같은 낱말 규칙 (words_cause) 으로 원인을 나누고 해당 없으면 기본 runner_rc (자동 재실행 없음).  ⬜ 고침 = 시험 먼저 (작업 트리 에이전트) → 등록 R §10-5 문구 → Codex 회차 ②."
+      "note": "사전 공격 6 회차 §4 U4 · PC6-01 고침으로 그룹 미확인이 크게 줄어 드묾 · ⬜ 1저자 선택: A (권고) = 그룹 미확인 + 러너 rc ≠ 0/None 이면 같은 낱말 규칙 · 기본 runner_rc (재실행 없음) / B = 지금대로 두고 등록 R 에 한정.  ✅ 11-02 고침 (시험 먼저 c738a6826 → 고침 4499f3ffd · 요약 있는 길 stop_cause + 요약 없는 길 recover_group chain_end) · 한정 = 사슬이 끝 기록 전에 죽은 런은 러너 rc 없음 = 옛 그대로 · ⬜ Codex 회차 ②.",
+      "decision_note": "1저자 11-02 *\"권고대로해요\"* = A — 그룹 미확인이어도 러너 rc 가 0 · None 이 아니면 같은 낱말 규칙 (words_cause) 으로 원인을 나누고 해당 없으면 기본 runner_rc (자동 재실행 없음).  ⬜ 고침 = 시험 먼저 (작업 트리 에이전트) → 등록 R §10-5 문구 → Codex 회차 ②.",
+      "claimed_fixed_sha": "4499f3ffd",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py PD13 · PD13o · PD13g · PD13r · PD13d (고치기 전 0/7 · docs/reviews/rint2_rr_fix_evidence_20261023/pc6_13_fix/logs/before_PD13_PD02c.log) · 전체 428/428",
+        "scripts/test_rint_r_chain_e2e.py (40/40)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc6_13_fix/REPORT_PC6_13_FIX.md (변이 19/19 · 옳은 이유)"
+      ]
     },
     {
       "id": "L214P-03",
@@ -14690,6 +14696,16 @@
         "scripts/run_network_194_parallel.py --selftest (㊴ · 고치기 전 141/143 → 고친 뒤 143/143)",
         "scripts/supp20_input_receipt.py --selftest (123/123)"
       ]
+    },
+    {
+      "id": "SELF-147",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "Rint PC6-13 · CUDA 표지 고침 에이전트 탐침 (11-02 · probe_open_q.log)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/pc6_13_fix/REPORT_PC6_13_FIX.md",
+      "title": "11-02 메인 설명 (1저자 Rint Q2) \"메모리 부족 (out of memory) 낱말을 먼저 보기 때문에 메모리 부족은 지금처럼 자원 · 재실행 대상\" — 자원 낱말 다섯 (OutOfMemoryError · CUDA_ERROR_OUT_OF_MEMORY · cudaErrorMemoryAllocation · MemoryError · No space left on device) 에 맨 \"out of memory\" 가 없어 \"CUDA error: out of memory\" · *_ALLOC_FAILED 꼴은 새 표지로 runner_rc (재실행 없음) — 코드 대조 없이 설명했다",
+      "note": "영향: 지금 payload (cupy) 의 메모리 부족 줄은 자원 낱말이 함께 찍혀 그대로 resource (탐침) · 맨 꼴은 PyTorch · C++ 문구 (scripts 에 torch 없음) · 1저자에게 정정 보고 + 열린 질문 Q1 (자원 낱말에 넣을지) · 닫는 조건 = 1저자 결정 반영."
     }
   ]
 }
