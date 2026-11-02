@@ -17,6 +17,8 @@
 | 압력 기록 · 인계표 v1.3 생성 | 입력이 묶음에 없음 → 미실행 · WSL 명령 = §5 · §6 |
 | L214P-02 | 시험 먼저 139/141 → 고친 뒤 141/141 · 봉인 무변경 (§7) |
 
+- ★ 11-02 1저자 Q1–Q5 *"다 권고대로 해봐"* → 처리 = **§11**: Q1 = 기록 판정 (lhs00_123 = 저장 한 칸 · lhsx_026 = 실제 변화 · 전극 꼴) + WSL 확정 명령 (도구 real_14 검증 8/8) · Q2 = 해제 조건 표 · Q3 = 단계 A 명령 (사전 점검 · 압력 관문) · Q4 = 압력 규칙 · Q5 = L214P-03 시험 먼저 141/143 → 143/143 · 새 결정 Q6 (§11-6).
+
 ## 1. §5 판정 표
 
 | 등록 칸 | 규칙 요지 (등록 문구) | 194 (lhs 130 · lhsx 64) | 보충 20 (lhss) | 판정 |
@@ -134,10 +136,10 @@ cp ~/net194_35f032737_v13handover_$D.tar.gz ~/netsupp20_35f032737_v13handover_$D
 
 - ㊳ 경계 7 형 = 정확한 40 hex · 다른 유효 40 hex (형식만 · 승인 대조는 F7 · G7 몫) = current / + LF · + CRLF · + 공백 · + NUL · 39 hex = invalid (git.sha 문제 한 줄) · 원문 SHA 를 strip 하지 않는다.
 - Codex S1 반례 (두 manifest SHA + LF · 승인값 생략 → rc 0) 의 경로: 영수증 F1 · G1 이 같은 함수를 부른다 (`scripts/supp20_input_receipt.py` 338–339) → 형식에서 거부될 것 — 영수증 전체 rc 재현은 하지 않았다 (**미확인**).
-- 같은 부류 관찰 (고치지 않음 · 반례 시험 안 함): 같은 함수의 `_HEX64.match` 1128 · 1137 · 1159 · 1161 행 (code_hashes · handover_code_hashes · cohort_tsv_sha256 · raw_sha256_table_sha256 값) 도 끝 LF 를 받는다 — 뒤 단계의 같음 대조가 막는 구조로 보인다 (추정) → Q5.
+- 같은 부류 관찰 (고치지 않음 · 반례 시험 안 함): 같은 함수의 `_HEX64.match` 1128 · 1137 · 1159 · 1161 행 (code_hashes · handover_code_hashes · cohort_tsv_sha256 · raw_sha256_table_sha256 값) 도 끝 LF 를 받는다 — 뒤 단계의 같음 대조가 막는 구조로 보인다 (추정) → Q5.  ★ 11-02 = 시험 먼저 → 고침 (원장 초안 L214P-03 · §11-5).
 - 원장 `L214P-02` 상태 변경 = 메인 (반입 뒤 본 가지 커밋으로 claimed_fixed · Codex 확인 전 verified 아님 — `docs/reviews/findings.json`).
 
-## 8. 1저자 결정 필요
+## 8. 1저자 결정 필요 — ✅ 11-02 Q1–Q5 권고대로 (처리 = §11 · 새 Q6 = §11-6)
 
 1. **[§5-7] Q1 — H0 이온 배포값 2 행이 선언 문턱을 넘는다.**  194 등록 §5-7: *"허용되는 다름은 선언된 변경뿐: 전극 정확 Dirichlet (H0 σ 상대 ≤ 1.5e-4 · 설계 기록 §1) … 그 밖의 차이는 보고하고 원인을 밝힌 뒤에만 싣는다."* · 설계 기록 §1 (`docs/reviews/gen2_network_design_20261006.md`): *"배포값 변화 ≤ 1.5e-4 (194 행 5–6 째 자리)"*.  실측 lhs00_123 1.5258e-4 · lhsx_026 1.5228e-4 (비교한 관통 170 행 중 나머지 168 행 ≤ 1.35e-4 · 증가 167 · 같음 3 · 감소 0 = 전극 변경과 같은 방향 · 비관통 24 = 둘 다 0.0).  설계 기록의 *"194 행"* 계산 원천을 리포에서 찾지 못했다 (`docs/data/gen2_design_20261006/c1/lhs194_estimates.py` = H1 · H12 추정 · 전극 아님 · 전극 실측 = 설계 기록 §3 real_14 ×1.0000219) — 문턱 근거 **미확인**.  선택: (가) 1.5e-4 를 "5–6 째 자리" 의 어림 서술로 보고 두 행을 선언된 전극 변경으로 싣는다 (한정어) · (나) 싣기 전에 두 침대에서 원인 확인 (같은 덤프 · 옛 모듈 ↔ B7 모듈의 H0 간선 비트 같음 확인 — WSL) · 권고: **(나)** — 등록 글자 (*"원인을 밝힌 뒤에만"*) 그대로 · 배포 HOLD 중이라 일정 영향 없음.
 2. **[§9-8 ⑤] Q2 — 배포 HOLD 의 근거.**  위 README: *"v1.3 배포 = 따로 HOLD · H0 모형 한계 행"* · 등록 §9-8 ⑤: *"v1.3 주 타깃 배포 HOLD (`lhs_release_build.v13_primary_model_limit_problems` — 실제 빌드 거부 …)"*.  이번 기록의 H0 모형 한계 = 0 행 (관문 문제 0) — 그 관문으로는 HOLD 가 걸리지 않는다.  Codex S2 §4 는 *"v1.3 주 학습 인계·FULL 모형 한계·S3 — 기존 별도 판정 유지. 이번 GO로 해제하지 않음"*.  권고: 배포 HOLD 그대로 (1저자 11-01) — 푸는 조건을 "Q1 처리 · 압력 기록 OK · 단계 A 인계표 · 인계표 수준 회귀 뒤 Codex v1.3 배포 확인" 으로 적는다.
@@ -385,3 +387,26 @@ sha256sum "$DL/net194_35f032737_v13handover_$D.tar.gz" "$DL/netsupp20_35f032737_
 - `--pressure-unverified` 는 쓰지 않는다 (v1.3 계획 Q2 · DESC-06).  OK 아닌 침대를 빼고 만들지도 않는다 — 처리는 1저자가 화면을 보고 정한다.
 - §11-3 블록의 (3) 이 이 규칙을 실행한다 (rc 1 = 멈춤).  생성기 자체도 `--pressure-record` 가 주어지면 설계 케이스마다 OK 가 아니면 거부한다 (`scripts/lhs_design_dataset.py` `_press_problem`) — 두 겹.
 
+### 11-5. Q5 — 같은 부류 `_HEX64.match` 네 자리 = 원장 초안 L214P-03 · 시험 먼저 → 고침
+
+원장 초안 (등재 = 메인 · 이 묶음은 `docs/reviews/findings.json` 을 건드리지 않는다):
+
+| 칸 | 값 (제안) |
+|---|---|
+| id | `L214P-03` |
+| severity · status | P3 · 고침 반입 뒤 claimed_fixed (Codex 확인 전 verified 아님) |
+| title | launch_eligibility 의 64 hex 형식 검사 넷 (`_HEX64.match`) 이 64 hex + 끝 LF 를 받는다 — L214P-02 와 같은 부류 |
+| where | `scripts/run_network_194_parallel.py` 1128 (code_hashes 값) · 1137 (handover_code_hashes 값) · 1159 (input_digest.cohort_tsv_sha256 값) · 1161 (input_digest.raw_sha256_table_sha256) |
+| evidence | `^[0-9a-f]{64}$` 의 `.match` 는 `$` 가 마지막 개행 앞에서도 맞는다 · 실행기 selftest ㊴ 고치기 전 **141/143** — 네 자리 모두 + LF 만 current (+ CRLF · + 공백 · 63 hex · 대문자 16 꼴 = 고치기 전에도 invalid) · 실제 audit CLI (raw_sha256_table_sha256 + LF) = 자격 current · rc 1 · code_hashes 꼴은 seal.code_fp 를 다시 계산한 사본 (code_fp 대조가 대신 잡지 않게) |
+| impact | 형식 검사만 — 뒤 단계의 같음 대조가 대부분 막는 구조 (code_hashes ↔ seal.code_fp · 영수증 F6/G6 handover_code_hashes ↔ 체크아웃 지문 · 자리별 반례는 시험 안 함 = **추정**) · 받은 B7 두 manifest 의 64 hex 값 37 · 36 개 = 전부 정확히 64 hex → 이번 기록 무영향 |
+| fix | 넷 다 `.fullmatch` (값 strip 안 함 · L214P-02 의 1140 행과 같은 처방) · 네 줄 |
+| tests | 실행기 selftest 141/143 → **143/143** · `scripts/supp20_input_receipt.py --selftest` 123/123 · 고친 코드로 받은 두 manifest 의 자격 = current (문제 0) 그대로 |
+| seal | code_fp `2149f873…c3eb` 그대로 (실행기 = CODE_FILES 32 · HANDOVER_FILES 2 밖 · 대기 지문 없음) · 실행 파일 sha256 `e250ba1b…` (L214P-02 고친 판) → `03836f4a…` (시험만) → `9b9294a8…` (고친 판) · 영수증 runner.sha256 = 기록 전용 칸 |
+| related | L214P-02 · Codex S2 §3-2 · §4 |
+
+- 지금 고칠 만큼 작은가: 네 줄 · 형식 검사만 · 판정이 바뀌는 입력 = 끝 개행이 붙은 64 hex 값뿐 → 예 (권고대로 시험 먼저 → 고침).
+
+### 11-6. 1저자에게 (새로)
+
+1. **[인계 문구] Q6 — 열 사전 `CAVEAT_TAU_NET` 의 *"배포값 변화 ≤ 1.5e-4"*.**  lhsx_026 1.5228e-4 (해상도 위) 가 반례다 — 전극만이어도 틀린 문장.  (가) 봉인 인계 도구 그대로 · v1.3 배포 README 정오에 실측 최대와 출처 (§11-1 (a)) 를 적는다 · (나) 문구를 고치고 인계 도구 재봉인 (manifest handover_code_hashes 대조가 바뀜 → 등록 개정).  권고: **(가)** (봉인 · 단계 A 사전 점검 그대로 · 배포는 어차피 §11-2 조건 뒤).
+2. **[실행] WSL 두 블록** — §11-1 (e) Q1 확정 (읽기 전용 · 침대당 수 초) → §11-3 단계 A (압력 기록 셋 → §11-4 관문 → 인계표 셋).  반입 = `q1_settle_<날짜>.tar.gz` · 두 다운로드 묶음 + 화면.
