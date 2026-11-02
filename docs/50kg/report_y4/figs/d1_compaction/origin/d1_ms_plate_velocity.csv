@@ -1,0 +1,9 @@
+﻿Time,Plate velocity,Source
+ms,µm/s,
+0.000,0,no plate (0 by definition)
+200.002,0,plate placed (log PLATE HEIGHT)
+400.002,0,plate fixed (stabilization · deck)
+400.002,10,compression start (deck press_speed)
+2685.002,10,plate stop (loop exit)
+2685.002,0,plate fixed (relaxation · deck)
+2785.002,0,end of run (= mesh_end check)

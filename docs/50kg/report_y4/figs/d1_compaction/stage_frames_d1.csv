@@ -1,0 +1,7 @@
+stage,event_step,event_pressure_MPa,role,dump_step,delta_steps,dump_phase,pressure_MPa,plate_um,atoms,eps_sphere_pct_draft2,atom_file,mesh_file
+initial_compression,400002,0,nearest+recommended,450000,49998,3,0,144.9457,168457,29.6501,post_kg50_d1_b50/atom_450000.liggghts,post_kg50_d1_b50/mesh_450000.stl
+p50,1239000,50.20155,nearest+recommended,1250000,11000,3,53.107941,136.9457,168457,25.5405,post_kg50_d1_b50/atom_1250000.liggghts,post_kg50_d1_b50/mesh_1250000.stl
+p50,1239000,50.20155,other_side,1200000,-39000,3,41.293571,137.4457,168457,25.8113,post_kg50_d1_b50/atom_1200000.liggghts,post_kg50_d1_b50/mesh_1200000.stl
+p300_stop,2685002,300.58919,nearest,2700000,14998,4,154.70105,122.5957,168452,16.8250,post_kg50_d1_b50/atom_2700000.liggghts,post_kg50_d1_b50/mesh_2700000.stl
+p300_stop,2685002,300.58919,other_side+recommended,2650000,-35002,3,294.26469,122.9457,168457,17.0616,post_kg50_d1_b50/atom_2650000.liggghts,post_kg50_d1_b50/mesh_2650000.stl
+after_relaxation,2785002,156.15118,nearest+recommended,2785002,0,4,156.15118,122.5957,168452,16.8250,post_kg50_d1_b50/atom_end_2785002.liggghts,post_kg50_d1_b50/mesh_end_2785002.stl

@@ -1,0 +1,521 @@
+{
+ "what": "50kg D1 (kg50_d1_b50 · SE D50 1 µm) compaction curve — left column of the ps73-style slide (thickness · plate velocity · measured pressure) · stage frames for the right-side 3D pore renders",
+ "generator": "docs/50kg/report_y4/figs/d1_compaction/make_fig_d1_ms.py",
+ "inputs": {
+  "log": {
+   "path": "docs/data/kg50_d1_end_20261031/kg50_d1_b50_log.liggghts",
+   "sha256": "6a90f706da68e3d5041ff063d0ffd4f61e9d89a5823f29e0755a23ed679bc1b5"
+  },
+  "deck_repo": {
+   "path": "docs/data/kg50_decks_20261027_v3_b50/kg50_d1_b50/input_kg50_d1_b50.liggghts",
+   "sha256": "514afdb705613dab876c9c0ff5c1f2fef3fad3e029d71778875c08b89edfde91"
+  },
+  "d1_readme": "docs/data/kg50_d1_end_20261031/README.md",
+  "draft2_metrics": "docs/50kg/report_y4/draft2/data/D1/metrics_D1.json",
+  "draft2_curve": "docs/50kg/report_y4/draft2/data/D1/curve_D1.csv"
+ },
+ "deck": {
+  "units": "si",
+  "scale_r": 1000.0,
+  "scale_E": 0.001,
+  "scale_P": 0.001,
+  "um_per_deck_m": 1000.0,
+  "mpa_per_deck_mpa": 1000.0,
+  "dt_s": 1e-06,
+  "press_speed_deck_m_s": 0.01,
+  "target_deck": 0.3,
+  "target_mpa": 300.0,
+  "area_deck_m2": 0.0025,
+  "box_xy_deck": [
+   0.0,
+   0.05,
+   0.0,
+   0.05
+  ],
+  "r_am_p_deck": 0.003,
+  "plate_margin_deck": 0.003,
+  "zmax_center_deck": 0.139445726030801,
+  "plate_z0_deck": 0.145445726030801,
+  "loop_run_steps": 5000,
+  "atom_dump_every": 50000,
+  "mesh_dump_every": 5000,
+  "post_dir": "post_kg50_d1_b50"
+ },
+ "x_axis": {
+  "label": "Time (ms)",
+  "time_ms": "step × 0.001 (= step × dt 1e-06 s × 1000 · dt from the deck echo in the log)",
+  "range_ms": [
+   0.0,
+   2800.0
+  ],
+  "t0": "step 0 = start of the insertion-only run (NP 1 · insertion at step 1); this log starts at step 20001 (read_restart restart_kg50_d1_b50/restart_settling_20001.bin)",
+  "note": "scaled deck time (Scale r×1000 · E×0.001 · P×0.001) — not the real pressing time (ps73 README §5)"
+ },
+ "phase_bounds_step": {
+  "packing_settling": [
+   1,
+   200001
+  ],
+  "plate_placed_stabilization": 200002,
+  "compression_start": 400002,
+  "relaxation_plate_stop": 2685002,
+  "end": 2785002
+ },
+ "phase_bounds_ms": {
+  "packing_settling_start": 0.0,
+  "plate_placed_stabilization": 200.002,
+  "compression_start": 400.002,
+  "relaxation_plate_stop": 2685.002,
+  "end": 2785.002
+ },
+ "phase_markers_in_log": {
+  "1": {
+   "step": 20001,
+   "name": "SETTLING"
+  },
+  "2": {
+   "step": 200002,
+   "name": "STABILIZE"
+  },
+  "3": {
+   "step": 400002,
+   "name": "COMPRESSION (Speed 0.01)"
+  },
+  "4": {
+   "step": 2685002,
+   "name": "RELAXATION"
+  }
+ },
+ "compression": {
+  "n_runs": 457,
+  "steps": 2285000,
+  "duration_ms": 2285.0,
+  "duration_s": 2.285
+ },
+ "thickness": {
+  "definition": "plate position (bottom wall z = 0 → plate), computed from the deck: fixed at PLATE HEIGHT during stabilization · −press_speed·dt per step during compression · fixed during relaxation",
+  "plate_z0_um": 145.445726030801,
+  "zmax_center_at_settling_end_um": 139.445726031,
+  "stop_um": 122.595726030801,
+  "end_um_computed": 122.595726030801,
+  "end_um_mesh_end": 122.596,
+  "residual_um": -0.0002739691990001347,
+  "tolerance_um": 0.00050005,
+  "descent_um": 22.85,
+  "n_points": 521,
+  "grid": "mesh-dump steps (every 5000) + four phase corners",
+  "packing_segment": "NOT DRAWN — needs atom positions during settling (not in the repository · README §4)"
+ },
+ "velocity": {
+  "deck_m_per_s": 0.01,
+  "um_per_s": 10.0,
+  "mm_per_s": 0.01,
+  "note": "real length per simulation second (ps73 README §8)",
+  "series": [
+   [
+    0.0,
+    0.0,
+    "no plate (0 by definition)"
+   ],
+   [
+    200.002,
+    0.0,
+    "plate placed (log PLATE HEIGHT)"
+   ],
+   [
+    400.002,
+    0.0,
+    "plate fixed (stabilization · deck)"
+   ],
+   [
+    400.002,
+    10.0,
+    "compression start (deck press_speed)"
+   ],
+   [
+    2685.002,
+    10.0,
+    "plate stop (loop exit)"
+   ],
+   [
+    2685.002,
+    0.0,
+    "plate fixed (relaxation · deck)"
+   ],
+   [
+    2785.002,
+    0.0,
+    "end of run (= mesh_end check)"
+   ]
+  ]
+ },
+ "pressure": {
+  "source": "thermo pressMPa × 1000 (setup line of every run dropped · scripts/compaction_curve.py rule)",
+  "n_points": 3045,
+  "prepended": [
+   0.0,
+   0.0,
+   "no plate (0 by definition)"
+  ],
+  "first_step_ge_mpa": {
+   "0.1": [
+    850000,
+    0.12208004
+   ],
+   "1": [
+    890000,
+    1.0071170999999999
+   ],
+   "10": [
+    1027000,
+    10.055729
+   ],
+   "50": [
+    1239000,
+    50.20155
+   ],
+   "100": [
+    1472000,
+    100.19527000000001
+   ],
+   "200": [
+    2076000,
+    200.00427000000002
+   ],
+   "300": [
+    2682000,
+    300.03283
+   ]
+  },
+  "first_nonzero_in_compression": {
+   "step": 848000,
+   "ms": 848.0,
+   "mpa": 0.023701523999999998,
+   "plate_um": 140.965746030801
+  },
+  "stop": [
+   2685002,
+   300.58919000000003
+  ],
+  "relax_first": [
+   2686000,
+   199.68129000000002
+  ],
+  "relax_min": [
+   2689000,
+   111.97709
+  ],
+  "end": [
+   2785002,
+   156.15118
+  ],
+  "max": [
+   2685002,
+   300.58919000000003
+  ],
+  "target_mpa": 300.0
+ },
+ "atoms": {
+  "count_changes": [
+   [
+    21000,
+    168457
+   ],
+   [
+    2687000,
+    168456
+   ],
+   [
+    2688000,
+    168455
+   ],
+   [
+    2689000,
+    168452
+   ]
+  ],
+  "note": "SE lost at the start of relaxation (D1 README §2)"
+ },
+ "checks": {
+  "deck_log_vs_repo_deck": "same settings",
+  "judge_lines_vs_thermo": 457,
+  "plate_end_vs_mesh_end": {
+   "residual_um": -0.0002739691990001347,
+   "within_um": 0.00050005
+  },
+  "draft2_crosscheck": {
+   "n_rows_compared": 2843,
+   "max_abs_plate_um": 3.080103283537028e-08,
+   "max_abs_pressure_mpa": 5.684341886080802e-14,
+   "status": "same"
+  },
+  "mesh_dumps": "not in the repository — plate position checked only at the end (mesh_end)"
+ },
+ "arrows": {
+  "relaxation_start": {
+   "x_ms": 2685.002,
+   "y_um": 122.595726030801,
+   "drawn": true
+  },
+  "packing_start": {
+   "drawn": false,
+   "why": "no thickness data before plate placement (packing segment not drawn)"
+  }
+ },
+ "stage_frames": [
+  {
+   "stage": "initial_compression",
+   "label": "Initial compression",
+   "event": {
+    "step": 400002,
+    "ms": 400.002,
+    "phase": 2,
+    "pressure_mpa": 0.0,
+    "plate_um": 145.445726030801,
+    "atoms": 168457,
+    "eps_sphere_pct_draft2": null
+   },
+   "event_phase": 3,
+   "nearest": {
+    "step": 450000,
+    "ms": 450.0,
+    "phase": 3,
+    "pressure_mpa": 0.0,
+    "plate_um": 144.945746030801,
+    "atoms": 168457,
+    "delta_steps": 49998,
+    "eps_sphere_pct_draft2": 29.6501009,
+    "atom_file": "post_kg50_d1_b50/atom_450000.liggghts",
+    "mesh_file": "post_kg50_d1_b50/mesh_450000.stl"
+   },
+   "other_side": null,
+   "recommended": {
+    "step": 450000,
+    "ms": 450.0,
+    "phase": 3,
+    "pressure_mpa": 0.0,
+    "plate_um": 144.945746030801,
+    "atoms": 168457,
+    "delta_steps": 49998,
+    "eps_sphere_pct_draft2": 29.6501009,
+    "atom_file": "post_kg50_d1_b50/atom_450000.liggghts",
+    "mesh_file": "post_kg50_d1_b50/mesh_450000.stl"
+   },
+   "nearest_is_same_phase": true
+  },
+  {
+   "stage": "p50",
+   "label": "50 MPa",
+   "event": {
+    "step": 1239000,
+    "ms": 1239.0,
+    "phase": 3,
+    "pressure_mpa": 50.20155,
+    "plate_um": 137.055746030801,
+    "atoms": 168457,
+    "eps_sphere_pct_draft2": 25.6002109
+   },
+   "event_phase": 3,
+   "nearest": {
+    "step": 1250000,
+    "ms": 1250.0,
+    "phase": 3,
+    "pressure_mpa": 53.107941,
+    "plate_um": 136.94574603080102,
+    "atoms": 168457,
+    "delta_steps": 11000,
+    "eps_sphere_pct_draft2": 25.5404502,
+    "atom_file": "post_kg50_d1_b50/atom_1250000.liggghts",
+    "mesh_file": "post_kg50_d1_b50/mesh_1250000.stl"
+   },
+   "other_side": {
+    "step": 1200000,
+    "ms": 1200.0,
+    "phase": 3,
+    "pressure_mpa": 41.293571,
+    "plate_um": 137.44574603080102,
+    "atoms": 168457,
+    "delta_steps": -39000,
+    "eps_sphere_pct_draft2": 25.811319,
+    "atom_file": "post_kg50_d1_b50/atom_1200000.liggghts",
+    "mesh_file": "post_kg50_d1_b50/mesh_1200000.stl"
+   },
+   "recommended": {
+    "step": 1250000,
+    "ms": 1250.0,
+    "phase": 3,
+    "pressure_mpa": 53.107941,
+    "plate_um": 136.94574603080102,
+    "atoms": 168457,
+    "delta_steps": 11000,
+    "eps_sphere_pct_draft2": 25.5404502,
+    "atom_file": "post_kg50_d1_b50/atom_1250000.liggghts",
+    "mesh_file": "post_kg50_d1_b50/mesh_1250000.stl"
+   },
+   "nearest_is_same_phase": true
+  },
+  {
+   "stage": "p300_stop",
+   "label": "300 MPa (plate stop)",
+   "event": {
+    "step": 2685002,
+    "ms": 2685.002,
+    "phase": 3,
+    "pressure_mpa": 300.58919000000003,
+    "plate_um": 122.595726030801,
+    "atoms": 168457,
+    "eps_sphere_pct_draft2": 16.8248443
+   },
+   "event_phase": 3,
+   "nearest": {
+    "step": 2700000,
+    "ms": 2700.0,
+    "phase": 4,
+    "pressure_mpa": 154.70105,
+    "plate_um": 122.595726030801,
+    "atoms": 168452,
+    "delta_steps": 14998,
+    "eps_sphere_pct_draft2": 16.8250302,
+    "atom_file": "post_kg50_d1_b50/atom_2700000.liggghts",
+    "mesh_file": "post_kg50_d1_b50/mesh_2700000.stl"
+   },
+   "other_side": {
+    "step": 2650000,
+    "ms": 2650.0,
+    "phase": 3,
+    "pressure_mpa": 294.26469,
+    "plate_um": 122.94574603080099,
+    "atoms": 168457,
+    "delta_steps": -35002,
+    "eps_sphere_pct_draft2": 17.0616395,
+    "atom_file": "post_kg50_d1_b50/atom_2650000.liggghts",
+    "mesh_file": "post_kg50_d1_b50/mesh_2650000.stl"
+   },
+   "recommended": {
+    "step": 2650000,
+    "ms": 2650.0,
+    "phase": 3,
+    "pressure_mpa": 294.26469,
+    "plate_um": 122.94574603080099,
+    "atoms": 168457,
+    "delta_steps": -35002,
+    "eps_sphere_pct_draft2": 17.0616395,
+    "atom_file": "post_kg50_d1_b50/atom_2650000.liggghts",
+    "mesh_file": "post_kg50_d1_b50/mesh_2650000.stl"
+   },
+   "nearest_is_same_phase": false
+  },
+  {
+   "stage": "after_relaxation",
+   "label": "After relaxation",
+   "event": {
+    "step": 2785002,
+    "ms": 2785.002,
+    "phase": 4,
+    "pressure_mpa": 156.15118,
+    "plate_um": 122.595726030801,
+    "atoms": 168452,
+    "eps_sphere_pct_draft2": 16.8250302
+   },
+   "event_phase": 4,
+   "nearest": {
+    "step": 2785002,
+    "ms": 2785.002,
+    "phase": 4,
+    "pressure_mpa": 156.15118,
+    "plate_um": 122.595726030801,
+    "atoms": 168452,
+    "delta_steps": 0,
+    "eps_sphere_pct_draft2": 16.8250302,
+    "atom_file": "post_kg50_d1_b50/atom_end_2785002.liggghts",
+    "mesh_file": "post_kg50_d1_b50/mesh_end_2785002.stl"
+   },
+   "other_side": null,
+   "recommended": {
+    "step": 2785002,
+    "ms": 2785.002,
+    "phase": 4,
+    "pressure_mpa": 156.15118,
+    "plate_um": 122.595726030801,
+    "atoms": 168452,
+    "delta_steps": 0,
+    "eps_sphere_pct_draft2": 16.8250302,
+    "atom_file": "post_kg50_d1_b50/atom_end_2785002.liggghts",
+    "mesh_file": "post_kg50_d1_b50/mesh_end_2785002.stl"
+   },
+   "nearest_is_same_phase": true
+  }
+ ],
+ "cluster_tar": {
+  "steps": [
+   450000,
+   1250000,
+   2650000,
+   2700000,
+   2785002
+  ],
+  "run_dir": "$HOME/simulation/kg50_d1_b50",
+  "bundle": "$HOME/kg50_d1_stage_frames_20261102.tgz",
+  "command": "bash -s <<'EOF'\nset -euo pipefail\ncd \"$HOME/simulation\"   # D1 런 폴더 = $HOME/simulation/kg50_d1_b50 (리포 기록: docs/data/kg50_decks_20261027_v3_b50/README.md §3)\nprintf \"%s  %s\\n\" e55bb3f44c138cf824837f9dd17775eaea5cc1148b28a8c1d4c07c57a3aec635 kg50_d1_b50/post_kg50_d1_b50/atom_end_2785002.liggghts ec99971a2e7f27e1baeedbdab72e6f3c2db52239cc318671142931d56592fe16 kg50_d1_b50/post_kg50_d1_b50/mesh_end_2785002.stl | sha256sum -c -   # 같은 런 (끝 묶음 기록)\ncheck() { t=$(sed -n 2p \"$1\"); n=$(sed -n 4p \"$1\"); [ \"$t\" = \"$2\" ] && [ \"$n\" = \"$3\" ] || { echo \"STOP $1: TIMESTEP $t atoms $n (expected $2 $3)\"; exit 1; }; }\ncheck kg50_d1_b50/post_kg50_d1_b50/atom_450000.liggghts 450000 168457\ncheck kg50_d1_b50/post_kg50_d1_b50/atom_1250000.liggghts 1250000 168457\ncheck kg50_d1_b50/post_kg50_d1_b50/atom_2650000.liggghts 2650000 168457\ncheck kg50_d1_b50/post_kg50_d1_b50/atom_2700000.liggghts 2700000 168452\ncheck kg50_d1_b50/post_kg50_d1_b50/atom_end_2785002.liggghts 2785002 168452\nF=\"kg50_d1_b50/post_kg50_d1_b50/atom_450000.liggghts kg50_d1_b50/post_kg50_d1_b50/mesh_450000.stl kg50_d1_b50/post_kg50_d1_b50/atom_1250000.liggghts kg50_d1_b50/post_kg50_d1_b50/mesh_1250000.stl kg50_d1_b50/post_kg50_d1_b50/atom_2650000.liggghts kg50_d1_b50/post_kg50_d1_b50/mesh_2650000.stl kg50_d1_b50/post_kg50_d1_b50/atom_2700000.liggghts kg50_d1_b50/post_kg50_d1_b50/mesh_2700000.stl kg50_d1_b50/post_kg50_d1_b50/atom_end_2785002.liggghts kg50_d1_b50/post_kg50_d1_b50/mesh_end_2785002.stl\"\nls -l $F\nsha256sum $F > \"$HOME/kg50_d1_stage_frames_20261102.sha256\"\ntar czf \"$HOME/kg50_d1_stage_frames_20261102.tgz\" $F\nsha256sum \"$HOME/kg50_d1_stage_frames_20261102.tgz\" \"$HOME/kg50_d1_stage_frames_20261102.sha256\"\nEOF"
+ },
+ "packing_segment_requirements": {
+  "checkpoints_run0": [
+   "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_20001.bin",
+   "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_50000.bin",
+   "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_100000.bin",
+   "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_150000.bin",
+   "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_200000.bin",
+   "kg50_d1_b50/restart_kg50_d1_b50/restart_after_settling.bin"
+  ],
+  "checkpoints_stabilization_expected": [
+   "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_250000.bin",
+   "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_300000.bin",
+   "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_350000.bin",
+   "kg50_d1_b50/restart_kg50_d1_b50/restart_settling_400000.bin"
+  ],
+  "ke_reference_from_log": {
+   "20001": [
+    168457,
+    2.3894425
+   ],
+   "50000": [
+    168457,
+    3.2480619
+   ],
+   "100000": [
+    168457,
+    0.0073460391
+   ],
+   "150000": [
+    168457,
+    0.00081993853
+   ],
+   "200000": [
+    168457,
+    1.9866698e-05
+   ],
+   "200001": [
+    168457,
+    1.9881675e-05
+   ],
+   "250000": [
+    168457,
+    4.4168899e-07
+   ],
+   "300000": [
+    168457,
+    3.8465837e-07
+   ],
+   "350000": [
+    168457,
+    3.4737142e-07
+   ],
+   "400000": [
+    168457,
+    3.1955678e-07
+   ]
+  },
+  "insertion_replay": "input_kg50_d1_b50_insert.liggghts at NP 1 (same as the insertion run) + atom dump; check inserted counts and KE against log_kg50_d1_b50_ins.out (end bundle, outside the repository)",
+  "atom_dumps_for_one_criterion": "47 compression/relaxation dumps (every 50000) + atom_end"
+ }
+}
