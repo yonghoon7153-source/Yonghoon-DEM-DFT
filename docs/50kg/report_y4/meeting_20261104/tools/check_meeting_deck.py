@@ -12,9 +12,12 @@
   I  σ = 이탤릭 · 바로 뒤 첨자 (eff · 0) = 아래첨자 · 똑바로
   F  글꼴 = KoPubWorld돋움체
   M  MPM 장: MPM 기공도 (리포 묶음 docs/data/kg50_mpm_20261102) 숫자 · MPM 피복률 숫자 없음 (1저자 11-02 Q4 · 원장 MPMC-01 – 03)
+  E  영률 장 (선택 · 2 µm 전해질 영률 0.675 · 1.35 · 2.025 GPa): 머리 글 영률 셋 · 표 머리 = 영률 차례 · 일곱 줄 칸 = 기록에서 다시 만든 글
+     (draft2 metrics_<침대>.json · tools/modulus_load_share.py 출력 · 묶음 sha256 결합 · 기록 없는 침대 = '—') · 표 안 σ 이탤릭/첨자 · 글꼴
 사용:
   python3 -I check_meeting_deck.py <deck.pptx> --repo <리포> [--json out.json]
-  python3 -I check_meeting_deck.py <deck.pptx> --repo <리포> --selftest   (덱을 메모리에서 여섯 가지로 망가뜨려 각각 FAIL 인지)
+      [--modulus-data-root <draft2 출력 뿌리 · 기본 리포 draft2>] [--modulus-load-share <modulus_load_share.json · 기본 values/modulus/>]
+  python3 -I check_meeting_deck.py <deck.pptx> --repo <리포> --selftest   (덱을 메모리에서 망가뜨려 각각 FAIL 인지 · 영률 장이 있으면 칸 값 변이 포함)
 """
 import argparse
 import copy
@@ -58,6 +61,133 @@ def load_data(repo):
     assert set(mpm) == set(ORDER), mpm.keys()
     rows['_mpm'] = mpm
     return rows, meas, req, szz
+
+
+MOD_BEDS = ('D2E05', 'D2', 'D2E15')          # 영률 차례 (0.675 → 1.35 → 2.025 GPa)
+SIGMA0 = 1.5                                  # mS/cm — 보고 기준 (7장 · 부록 표와 같음)
+#: 영률 장 표 줄 (첫 칸이 이 글로 시작 · 정의) — 칸 글은 load_modulus 의 기록에서 만든다
+MOD_ROWS = (('기공도', 'eps_union_exact_pct · .1f'), ('활물질 표면 피복률', 'coverage_physics_union_pct · .1f'),
+            ('유효 이온전도도', 'f_ion_hertz × σ0 1.5 · .3f'), ('활물질 응력', 'lw_am_nowall_median_MPa ÷ p_end_MPa · .2f'),
+            ('가압 하중 중 활물질–활물질 몫', 'plane21 contribution AM–AM · .1f'), ('활물질–전해질 접촉점 압력', 'AM–SE |Fn|/면적 평균 · .0f'),
+            ('끝 판 압력', 'p_end_MPa · .1f'))
+
+
+def load_modulus(repo, data_root=None, load_share=None):
+    """영률 장 원자료 → dict(E, rec, ls, problems).  D2 = 리포 기록 · 변형 = data_root/data/<침대>/ · 짐 몫 · 접촉 압력 = load_share JSON."""
+    sys.path.insert(0, os.path.join(repo, 'docs/50kg/report_y4/draft2'))
+    import run_draft2_metrics as R
+    src = R.src
+    data_root = data_root or str(R.HERE)
+    load_share = load_share or os.path.join(repo, 'docs/50kg/report_y4/meeting_20261104/values/modulus/modulus_load_share.json')
+    b2 = next(x for x in src.BEDS if x['case'] == R.CASE['D2'])
+    E = {'D2': src.parse_deck(src.rp(b2['deck']).read_text(encoding='utf-8'), b2['case'])['E_se_GPa']}
+    E.update({b: R._gpa(R.E_BEDS[b]['se_E_sim']) for b in R.E_BEDS})
+    prob, rec, ls = [], {}, {}
+    lsd = json.load(open(load_share, encoding='utf-8'))['beds'] if os.path.isfile(load_share) else {}
+    for b in MOD_BEDS:
+        pth = str(R.BASE_D2_RECORD) if b == 'D2' else os.path.join(data_root, 'data', b, f'metrics_{b}.json')
+        if not os.path.isfile(pth):
+            rec[b] = ls[b] = None
+            continue
+        r = json.load(open(pth, encoding='utf-8'))
+        if r.get('schema') != R.SCHEMA or r.get('bed') != b:
+            prob.append(f'E 기록 {pth}: schema · 침대 이름')
+        if b != 'D2' and abs(r['variant']['se_E_GPa'] - E[b]) > 1e-12:
+            prob.append(f'E 기록 {b}: 영률 {r["variant"]["se_E_GPa"]} ≠ 설계 {E[b]}')
+        e = lsd.get(b)
+        if not e or e.get('status') != 'OK' or e['plane21']['status'] != 'OK':
+            prob.append(f'E {b}: 짐 몫 · 접촉 압력 기록 없음 또는 상태 OK 아님 ({load_share})')
+            e = None
+        elif e['end_set']['tgz_sha256'] != r['provenance']['end_set']['tgz_sha256']:
+            prob.append(f'E {b}: 짐 몫 기록 묶음 sha256 ≠ metrics 묶음 sha256')
+            e = None
+        rec[b], ls[b] = r, e
+    if rec['D2'] is None:
+        prob.append('E 기준 D2 기록 없음')
+    return dict(E=E, rec=rec, ls=ls, problems=prob, data_root=data_root, load_share=load_share)
+
+
+def modulus_expected(mod, szz):
+    """→ (머리 글 조각, 표 머리 [영률 셋], [(첫 칸 낱말, [칸 글 셋])], 문제).  기록 없는 침대 = '—'."""
+    prob = []
+    E = mod['E']
+    gtxt = [f'{E[b]:g}' for b in MOD_BEDS]
+    rows = []
+    for key, _ in MOD_ROWS:
+        vals = []
+        for b in MOD_BEDS:
+            r, e = mod['rec'][b], mod['ls'][b]
+            if r is None or e is None:
+                vals.append('—')
+                continue
+            m = r['metrics']
+            x = {'기공도': f"{m['eps_union_exact_pct']:.1f}", '활물질 표면 피복률': f"{m['coverage_physics_union_pct']:.1f}",
+                 '유효 이온전도도': f"{SIGMA0 * m['f_ion_hertz']:.3f}", '활물질 응력': f"{m['lw_am_nowall_median_MPa'] / m['p_end_MPa']:.2f}",
+                 '가압 하중 중 활물질–활물질 몫': f"{e['plane21']['contribution_sigma_zz_pct']['AM–AM']:.1f}",
+                 '활물질–전해질 접촉점 압력': f"{e['am_se_contact_pressure']['mean_MPa']:.0f}", '끝 판 압력': f"{m['p_end_MPa']:.1f}"}[key]
+            vals.append(x)
+        rows.append((key, vals))
+    if mod['ls'].get('D2'):                    # 기준 D2 짐 몫 = 부록 표 (values/szz_share) 와 같은 값이어야 한다
+        a_ = mod['ls']['D2']['plane21']['contribution_sigma_zz_pct']
+        b_ = szz['SE2um']['contribution_sigma_zz_pct']
+        if any(abs(a_[g] - b_[g]) > 1e-9 for g in ('AM–AM', 'AM–SE', 'SE–SE')):
+            prob.append(f'E 기준 D2 짐 몫 {a_} ≠ 부록 기록 {b_}')
+    return f'2 µm: {gtxt[0]} · {gtxt[1]} · {gtxt[2]} GPa', [f'{g} GPa' for g in gtxt], rows, prob
+
+
+def check_modulus(prs, i, mod, szz):
+    s = prs.slides[i]
+    ok, prob = 0, list(mod['problems'])
+    head_txt, hdr, rows, p2 = modulus_expected(mod, szz)
+    prob += p2
+    h = ''.join(''.join(r.text for r in sh.text_frame.paragraphs[0].runs) for sh in s.shapes if sh.name == 'Rectangle 23')
+    if head_txt in h:
+        ok += 1
+    else:
+        prob.append(f'E {i + 1}장 머리 글에 "{head_txt}" 없음 ("{h}")')
+    tabs = [sh for sh in s.shapes if getattr(sh, 'has_table', False) and sh.has_table]
+    if len(tabs) != 1:
+        return ok, prob + [f'E {i + 1}장 표 {len(tabs)} 개 (하나여야 함)']
+    t = tabs[0].table
+    cell = lambda r, c: t.cell(r, c).text.strip()
+    if len(t.columns) != 4:
+        return ok, prob + [f'E {i + 1}장 표 열 {len(t.columns)} (4 여야 함)']
+    got_hdr = [cell(0, c) for c in (1, 2, 3)]
+    if got_hdr == hdr:
+        ok += 1
+    else:
+        prob.append(f'E {i + 1}장 표 머리 {got_hdr} ≠ {hdr}')
+    for key, vals in rows:
+        hit = [r for r in range(1, len(t.rows)) if cell(r, 0).startswith(key)]       # 첫 칸 = 줄 이름으로 시작
+        if len(hit) != 1:
+            prob.append(f'E {i + 1}장 표 "{key}" 줄 {len(hit)} 개')
+            continue
+        got = [cell(hit[0], c) for c in (1, 2, 3)]
+        if got == vals:
+            ok += 1
+        else:
+            prob.append(f'E {i + 1}장 표 "{key}" {got} ≠ 기록 {vals}')
+    if len(t.rows) != 1 + len(rows):
+        prob.append(f'E {i + 1}장 표 줄 {len(t.rows)} ≠ {1 + len(rows)}')
+    for r_ in t.rows:                          # 표 안 글자 규칙 (표는 아래 공통 I · F 검사 밖이라 여기서)
+        for c_ in r_.cells:
+            for p_ in c_.text_frame.paragraphs:
+                runs = p_.runs
+                for k, r in enumerate(runs):
+                    rpr = r._r.find(qn('a:rPr'))
+                    lat = rpr.find(qn('a:latin')) if rpr is not None else None
+                    if re.search('[가-힣A-Za-z]', r.text) and (lat is None or not lat.get('typeface', '').startswith('KoPubWorld')):
+                        prob.append(f'F {i + 1}장 표 글꼴: "{r.text[:20]}"')
+                    c = rpr.find(qn('a:solidFill') + '/' + qn('a:srgbClr')) if rpr is not None else None
+                    if c is not None and c.get('val') == 'FF5050':
+                        prob.append(f'R {i + 1}장 표 빨강: "{r.text}"')
+                    if r.text == 'σ':
+                        nxt = runs[k + 1] if k + 1 < len(runs) else None
+                        nrpr = nxt._r.find(qn('a:rPr')) if nxt is not None else None
+                        if rpr is None or rpr.get('i') != '1' or nxt is None or nxt.text not in SIGMA_SUB or nrpr is None \
+                                or nrpr.get('baseline') != '-25000' or nrpr.get('i') == '1':
+                            prob.append(f'I {i + 1}장 표 σ 이탤릭 · 첨자 아님')
+    return ok, prob
 
 
 def expected(rows, meas, req, szz):
@@ -152,11 +282,21 @@ def slide_texts(prs):
     return out
 
 
-def run_checks(prs, rows, meas, req, szz):
+SIGMA_SUB = ('eff', '0', 'VM')                # σ 바로 뒤 아래첨자 (VM = 영률 장 활물질 응력 σ_VM)
+
+
+def run_checks(prs, rows, meas, req, szz, mod=None):
     prob, ok = [], 0
     T = slide_texts(prs)
     roles, rprob = slide_roles(prs)
     prob += rprob
+    if 'modulus' in roles:
+        if mod is None:
+            prob.append('E 영률 장이 있는데 원자료 (load_modulus) 를 안 읽었다')
+        else:
+            k, pb = check_modulus(prs, roles['modulus'], mod, szz)
+            ok += k
+            prob += pb
     for n, where, txt, src in expected(rows, meas, req, szz):
         role = OLD_NO[n] if isinstance(n, int) else n
         if role not in roles:
@@ -202,7 +342,7 @@ def run_checks(prs, rows, meas, req, szz):
                             prob.append(f'I {n}장 σ 이탤릭 아님')
                         nxt = runs[k + 1] if k + 1 < len(runs) else None
                         nrpr = nxt._r.find(qn('a:rPr')) if nxt is not None else None
-                        if nxt is None or nxt.text not in ('eff', '0') or nrpr is None or nrpr.get('baseline') != '-25000' or nrpr.get('i') == '1':
+                        if nxt is None or nxt.text not in SIGMA_SUB or nrpr is None or nrpr.get('baseline') != '-25000' or nrpr.get('i') == '1':
                             prob.append(f'I {n}장 σ 뒤 첨자 (eff · 0 · 아래첨자 · 똑바로) 아님')
                     lat = rpr.find(qn('a:latin'))
                     if re.search('[가-힣A-Za-z]', r.text) and (lat is None or not lat.get('typeface', '').startswith('KoPubWorld')):   # 기호만 든 run (예: 위첨자 −1) 은 글꼴 자유
@@ -259,6 +399,14 @@ def mutate(prs_bytes, kind):
         p = s[roles['mpm']].notes_slide.notes_text_frame.paragraphs[0]
         p.runs[-1].text += ' 1 µm 피복률은 80 %입니다.'
         return prs
+    if kind == 'modulus_value':               # 영률 장 표의 기공도 줄 마지막 칸 (2.025 GPa) 숫자 끝자리 하나 바꿈
+        roles, _ = slide_roles(prs)
+        t = [sh for sh in s[roles['modulus']].shapes if getattr(sh, 'has_table', False) and sh.has_table][0].table
+        for row in t.rows:
+            if row.cells[0].text.startswith('기공도'):
+                r = row.cells[3].text_frame.paragraphs[0].runs[0]
+                r.text = r.text[:-1] + ('1' if r.text[-1] != '1' else '2')
+                return prs
     raise SystemExit(f'변이 자리 못 찾음: {kind}')
 
 
@@ -267,16 +415,23 @@ def main():
     ap.add_argument('deck', help='덱 PPTX')
     ap.add_argument('--repo', default='.', help='리포 뿌리 (원자료 CSV 위치)')
     ap.add_argument('--json', help='결과 JSON 저장 경로')
-    ap.add_argument('--selftest', action='store_true', help='덱을 여섯 가지로 망가뜨려 각각 FAIL 인지 확인')
+    ap.add_argument('--selftest', action='store_true', help='덱을 망가뜨려 각각 FAIL 인지 확인 (영률 장이 있으면 칸 값 변이 포함)')
+    ap.add_argument('--modulus-data-root', default=None, help='영률 변형 침대 metrics 뿌리 (data/<침대>/) — 기본 리포 draft2')
+    ap.add_argument('--modulus-load-share', default=None, help='modulus_load_share.json — 기본 values/modulus/')
     a = ap.parse_args()
     rows, meas, req, szz = load_data(a.repo)
     raw = open(a.deck, 'rb').read()
-    ok, prob = run_checks(Presentation(io.BytesIO(raw)), rows, meas, req, szz)
-    res = {'deck': os.path.basename(a.deck), 'n_number_checks_ok': ok, 'problems': prob}
+    prs0 = Presentation(io.BytesIO(raw))
+    has_mod = 'modulus' in slide_roles(prs0)[0]
+    mod = load_modulus(a.repo, a.modulus_data_root, a.modulus_load_share) if has_mod else None
+    ok, prob = run_checks(prs0, rows, meas, req, szz, mod)
+    res = {'deck': os.path.basename(a.deck), 'n_slides': len(prs0.slides), 'n_number_checks_ok': ok, 'problems': prob,
+           'modulus': (dict(data_root=mod['data_root'], load_share=mod['load_share'],
+                            beds_with_record=[b for b in MOD_BEDS if mod['rec'][b] is not None]) if mod else None)}
     if a.selftest:
         st = {}
-        for kind in ('number', 'caption', 'red', 'italic', 'banned', 'mpm_cov'):
-            _, pb = run_checks(mutate(raw, kind), rows, meas, req, szz)
+        for kind in ('number', 'caption', 'red', 'italic', 'banned', 'mpm_cov') + (('modulus_value',) if has_mod else ()):
+            _, pb = run_checks(mutate(raw, kind), rows, meas, req, szz, mod)
             st[kind] = len(pb) > len(prob)
         res['selftest_mutations_detected'] = st
     if a.json:
