@@ -1,10 +1,14 @@
-"""새 장 = 고체전해질 영률에 따른 변화 (2 µm: 0.675 · 1.35 · 2.025 GPa) — 손익분기 장 뒤 · 결론 장 앞 (11 → 12 장).
-  결론 장 (머리 글 · 글머리 · 결과 표 꼴 = 12 pt KoPub 표) 을 손익분기 장 뒤로 복제 → 머리 글 · 글머리 한 줄 · 표 (영률 셋 × 일곱 줄) ·
+"""새 장 = 고체전해질 영률에 따른 변화 (2 µm: 11 · 22 · 33 GPa) — 손익분기 장 뒤 · 결론 장 앞 (11 → 12 장).
+  결론 장 (머리 글 · 글머리 · 결과 표 꼴 = 12 pt KoPub 표) 을 손익분기 장 뒤로 복제 → 머리 글 · 글머리 둘 · 표 (영률 셋 × 여섯 줄) ·
   캡션 (부록 장 캡션 꼴 · σ0 기준) · 노트 한 문장.  빨강 없음 (나쁜 결과 표시 아님).
+  영률 표기 = 1저자 규약 (재료값 22 GPa 의 ×0.5 · ×1 · ×1.5 = 11 · 22 · 33 GPa) — 재료값 · DEM 유효 입력 = 부록 조건 표 한 칸
+    ("140 / 22 GPa (DEM 유효 1.35)") 에서 읽고 (손으로 적지 않음) 표기 = 재료값 × (침대 DEM 유효 입력 ÷ 1.35) · 노트에 DEM 유효 입력 셋.
   칸 값 = 기록 그대로 (손으로 적은 숫자 없음):
     기공도 · 활물질 표면 피복률 · 유효 이온전도도 (f × σ0 1.5) · 활물질 응력 σ_VM ÷ 끝 판 압력 · 끝 판 압력 = draft2 metrics_<침대>.json
       (D2 = 리포 기록 · D2E05 · D2E15 = --data-root/data/<침대>/)
-    가압 하중 중 활물질–활물질 몫 (21 단면 = 부록 표와 같은 도구) · 활물질–전해질 접촉점 압력 = tools/modulus_load_share.py 출력 (--load-share)
+    가압 하중 중 활물질–활물질 몫 (21 단면 = 부록 표와 같은 도구) = tools/modulus_load_share.py 출력 (--load-share)
+  ⛔ 활물질–전해질 접촉점 압력 (|Fn|/면적) 은 넣지 않는다 — 선형 스프링 접촉 + 겹침 기반 면적이면 ≈ k_n/(π R*) = 접촉 강성 (E_SE^0.8 · R*) 이
+    정하는 값이라 독립 결과가 아니다 (11-02 메인 세션 정정 · 검사기가 '접촉점 압력' 낱말을 막는다).
   기록이 없는 침대 = 칸 '—' (값을 만들지 않는다) · 글머리 · 노트의 방향 문장 = 있는 침대들의 값에서 단조 방향을 확인한 뒤에만 쓴다.
 usage: python3 put_modulus_slide.py in.pptx out.pptx SKILL_DIR <repo> [--data-root <draft2 출력 뿌리>] [--load-share <json>]
   (add_slide.py = pptx 기술의 장 복제 도구 — 그 폴더의 office 모듈을 쓰므로 -I 없이 부른다)
@@ -13,6 +17,7 @@ import argparse
 import copy
 import importlib
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -39,6 +44,7 @@ LS_PATH = Path(a.load_share) if a.load_share else REPO / 'docs/50kg/report_y4/me
 SIGMA0 = 1.5                         # mS/cm — 덱 보고 기준 (7장 · 부록 표와 같음)
 A = lambda t: qn('a:' + t)
 BEDS = ('D2E05', 'D2', 'D2E15')      # 영률 차례
+APPX_E = re.compile(r'(\d+(?:\.\d+)?) / (\d+(?:\.\d+)?) GPa \(DEM 유효 (\d+(?:\.\d+)?)\)')   # 부록 조건 표 '영률 (NCM / SE)' 칸
 
 # ── 값 ─────────────────────────────────────────────────────────────
 b2 = next(x for x in src.BEDS if x['case'] == R.CASE['D2'])
@@ -57,7 +63,7 @@ for b in BEDS:
     if b != 'D2':
         assert abs(r['variant']['se_E_GPa'] - E[b]) < 1e-12, (b, r['variant'])
     e = lsd.get(b)
-    assert e and e['status'] == 'OK' and e['plane21']['status'] == 'OK', f'{b}: 짐 몫 · 접촉 압력 기록 없음 또는 OK 아님 ({LS_PATH})'
+    assert e and e['status'] == 'OK' and e['plane21']['status'] == 'OK', f'{b}: 짐 몫 기록 없음 또는 OK 아님 ({LS_PATH})'
     assert e['end_set']['tgz_sha256'] == r['provenance']['end_set']['tgz_sha256'], f'{b}: 짐 몫 기록 묶음 ≠ metrics 묶음'
     rec[b], ls[b] = r, e
 assert rec['D2'] is not None
@@ -69,13 +75,12 @@ def raw(b):
     m, e = rec[b]['metrics'], ls[b]
     return dict(por=m['eps_union_exact_pct'], cov=m['coverage_physics_union_pct'], sig=SIGMA0 * m['f_ion_hertz'],
                 svm=m['lw_am_nowall_median_MPa'] / m['p_end_MPa'], amam=e['plane21']['contribution_sigma_zz_pct']['AM–AM'],
-                cp=e['am_se_contact_pressure']['mean_MPa'], pend=m['p_end_MPa'])
+                pend=m['p_end_MPa'])
 
 
-FMT = dict(por='.1f', cov='.1f', sig='.3f', svm='.2f', amam='.1f', cp='.0f', pend='.1f')
+FMT = dict(por='.1f', cov='.1f', sig='.3f', svm='.2f', amam='.1f', pend='.1f')
 V = {b: raw(b) for b in have}
 cellv = {k: [format(V[b][k], f) if b in V else '—' for b in BEDS] for k, f in FMT.items()}
-gtxt = [f'{E[b]:g}' for b in BEDS]
 
 
 def mono(k):
@@ -86,36 +91,14 @@ def mono(k):
 
 
 # 글머리 둘 · 노트 = 값의 방향을 확인한 문장만 (어긋나면 멈춘다 — 문장을 바꿀지 사람이 정한다) · 좋은 쪽 · 나쁜 쪽 방향을 다 쓴다
-#   글머리 1 = 기공도 감소 · 피복률 · 유효 이온전도도 증가 (영률이 낮을수록) · 글머리 2 = 접촉점 압력 감소 · 활물질 입자 응력 · 활물질끼리 하중 몫 증가
-for n_b, want in ((1, dict(por=1, cov=-1, sig=-1)), (2, dict(cp=1, svm=-1, amam=-1))):
+#   글머리 1 = 기공도 감소 · 피복률 · 유효 이온전도도 증가 (영률이 낮을수록) · 글머리 2 = 활물질 입자 응력 · 활물질끼리 하중 몫 증가
+for n_b, want in ((1, dict(por=1, cov=-1, sig=-1)), (2, dict(svm=-1, amam=-1))):
     bad = {k: mono(k) for k, w in want.items() if mono(k) != w}
     assert not bad, f'글머리 {n_b}: 방향이 문장과 다르다 {bad} (+1 = 영률과 함께 증가 · 영률 차례 {have})'
-cp_lo, cp_hi = V[have[0]]['cp'], V[have[-1]]['cp']
-assert cp_hi / cp_lo > 1.5, (cp_lo, cp_hi)                  # '크게' 낮음
 svm_lo, svm_hi = V[have[-1]]['svm'], V[have[0]]['svm']
-assert 1.0 < svm_hi / svm_lo < 1.2, (svm_lo, svm_hi)        # '약간' 높음
-HEAD = f'  고체전해질 영률에 따른 변화 (2 µm: {gtxt[0]} · {gtxt[1]} · {gtxt[2]} GPa)'
-BULLETS = ('영률이 낮을수록 기공도 감소, 활물질 표면 피복률 · 유효 이온전도도 증가',
-           '활물질–전해질 접촉점 압력은 감소, 활물질 입자 응력 · 활물질끼리의 하중 몫은 증가')
-egs = ', '.join(f'{E[b]:g}' for b in have)
-NOTE = (f'2 µm 전해질의 영률을 {egs} GPa로 바꾼 계산에서, 영률이 낮을수록 기공도는 낮고 활물질 표면 피복률과 유효 이온전도도는 높으며, '
-        '가압 하중을 활물질–활물질 접촉이 더 많이 지고 활물질 응력도 약간 높아지는 반면, 활물질–전해질 접촉점 압력은 크게 낮아집니다.')
-CAP = ('【 고체전해질 영률별 2 µm 복합양극 해석 결과 (유효 이온전도도: ', f' = {SIGMA0:g} mS/cm 기준) 】')
-for t_ in (HEAD, *BULLETS, NOTE, *CAP):
-    assert ' ,' not in t_, f'쉼표 앞 공백: {t_!r}'                 # 글자 그대로 공백 + 쉼표 금지 (렌더의 " , " 는 대체 글꼴 간격)
-I_, SUB, SUP = {'i': '1'}, {'baseline': '-25000'}, {'baseline': '30000'}
-ROWS = [
-    ([('고체전해질 영률', {})], [(f'{g} GPa', {}) for g in gtxt]),
-    ([('기공도 (%)', {})], cellv['por']),
-    ([('활물질 표면 피복률 (%)', {})], cellv['cov']),
-    ([('유효 이온전도도 ', {}), ('σ', I_), ('eff', SUB), (' (mS cm', {}), ('−1', SUP), (')', {})], cellv['sig']),
-    ([('활물질 응력 ', {}), ('σ', I_), ('VM', SUB), (' ÷ 끝 판 압력 (중앙값, 벽 접촉 입자 제외)', {})], cellv['svm']),
-    ([('가압 하중 중 활물질–활물질 몫 (%)', {})], cellv['amam']),
-    ([('활물질–전해질 접촉점 압력 (평균, MPa)', {})], cellv['cp']),
-    ([('끝 판 압력 (MPa)', {})], cellv['pend']),
-]
+assert 1.0 < svm_hi / svm_lo < 1.2, (svm_lo, svm_hi)        # 노트 '약간' 높음
 
-# ── 장 복제 (결론 장 → 손익분기 장 뒤) ─────────────────────────────
+# ── 덱 · 영률 표기 (부록 조건 표에서) ───────────────────────────────
 p0 = Presentation(a.src)
 n0 = len(p0.slides)
 
@@ -131,6 +114,37 @@ i_ap = [i for i, sl in enumerate(p0.slides) if '부록' in head(sl)]
 assert len(i_be) == 1 and len(i_co) == 1 and len(i_ap) == 1 and i_co[0] == i_be[0] + 1, (i_be, i_co, i_ap)
 assert not any('영률' in head(sl) for sl in p0.slides), '영률 장이 이미 있다'
 i_be, i_co, i_ap = i_be[0], i_co[0], i_ap[0]
+hits = [APPX_E.search(c.text) for sh in p0.slides[i_ap].shapes if getattr(sh, 'has_table', False) and sh.has_table
+        for row in sh.table.rows for c in row.cells]
+hits = [h for h in hits if h]
+assert len(hits) == 1, f'부록 조건 표의 영률 칸 ("… / 22 GPa (DEM 유효 1.35)") 이 정확히 하나가 아니다 ({len(hits)})'
+E_MAT, E_EFF = float(hits[0].group(2)), float(hits[0].group(3))
+assert abs(E_EFF - E['D2']) < 1e-12, f'부록 DEM 유효 {E_EFF} ≠ 기준 D2 덱 {E["D2"]}'
+MAT = {b: round(E_MAT * E[b] / E['D2'], 6) for b in BEDS}          # 11 · 22 · 33 GPa (×0.5 · ×1 · ×1.5)
+mtxt = [f'{MAT[b]:g}' for b in BEDS]
+etxt = [f'{E[b]:g}' for b in BEDS]
+HEAD = f'  고체전해질 영률에 따른 변화 (2 µm: {mtxt[0]} · {mtxt[1]} · {mtxt[2]} GPa)'
+BULLETS = ('영률이 낮을수록 기공도 감소, 활물질 표면 피복률 · 유효 이온전도도 증가',
+           '활물질 입자 응력 · 활물질끼리의 하중 몫은 증가')
+NOTE = (f'2 µm 전해질의 영률을 {", ".join(f"{MAT[b]:g}" for b in have)} GPa (DEM 유효 입력 {etxt[0]} · {etxt[1]} · {etxt[2]} GPa)로 바꾼 계산에서, '
+        '영률이 낮을수록 기공도는 낮고 활물질 표면 피복률과 유효 이온전도도는 높으며, 가압 하중을 활물질–활물질 접촉이 더 많이 지고 '
+        '활물질 응력도 약간 높아집니다.')
+CAP = ('【 고체전해질 영률별 2 µm 복합양극 해석 결과 (유효 이온전도도: ', f' = {SIGMA0:g} mS/cm 기준) 】')
+for t_ in (HEAD, *BULLETS, NOTE, *CAP):
+    assert ' ,' not in t_, f'쉼표 앞 공백: {t_!r}'                 # 글자 그대로 공백 + 쉼표 금지 (렌더의 " , " 는 대체 글꼴 간격)
+    assert '접촉점 압력' not in t_, t_                              # 접촉 강성이 정하는 값 — 넣지 않는다
+I_, SUB, SUP = {'i': '1'}, {'baseline': '-25000'}, {'baseline': '30000'}
+ROWS = [
+    ([('고체전해질 영률', {})], [(f'{g} GPa', {}) for g in mtxt]),
+    ([('기공도 (%)', {})], cellv['por']),
+    ([('활물질 표면 피복률 (%)', {})], cellv['cov']),
+    ([('유효 이온전도도 ', {}), ('σ', I_), ('eff', SUB), (' (mS cm', {}), ('−1', SUP), (')', {})], cellv['sig']),
+    ([('활물질 응력 ', {}), ('σ', I_), ('VM', SUB), (' ÷ 끝 판 압력 (중앙값, 벽 접촉 입자 제외)', {})], cellv['svm']),
+    ([('가압 하중 중 활물질–활물질 몫 (%)', {})], cellv['amam']),
+    ([('끝 판 압력 (MPa)', {})], cellv['pend']),
+]
+
+# ── 장 복제 (결론 장 → 손익분기 장 뒤) ─────────────────────────────
 part = lambda k: p0.slides[k].part.partname.split('/')[-1]
 tmp = a.dst + '.dup.pptx'
 subprocess.run([sys.executable, str(Path(a.skill) / 'scripts/add_slide.py'), a.src, part(i_co), '--after', part(i_be), '-o', tmp],
@@ -185,7 +199,7 @@ r2[0].find(A('t')).text = BULLETS[1]
 assert [''.join(r.text for r in p.runs) for p in rect.text_frame.paragraphs] == [HEAD, *BULLETS]
 rect.height = Inches(1.7)
 
-# ── 표 (결론 장 결과 표 꼴 12 pt · 2 열 → 4 열 · 5 줄 → 8 줄) ─────────
+# ── 표 (결론 장 결과 표 꼴 12 pt · 2 열 → 4 열 · 5 줄 → 7 줄) ─────────
 fr = shape(s, '결과 요약 표')
 fr.name = '영률 비교 표'
 tbl = fr._element.find('.//' + A('tbl'))
@@ -225,7 +239,7 @@ for tr, (label_segs, vals) in zip(trs, ROWS):
             segs = [v] if isinstance(v, tuple) else [(v, {})]
         put_runs(ps[0], segs, tmpl)
 row_h = int(trs[0].get('h'))
-fr.top = Inches(2.9)                                          # 글머리 두 줄 아래 · 표 끝 6.26 in < 캡션 6.45 in
+fr.top = Inches(2.9)                                          # 글머리 두 줄 아래 · 표 끝 2.9 + 7 × 0.42 = 5.84 in < 캡션 6.45 in
 fr.height = row_h * len(trs)
 
 # ── 캡션 (부록 장 캡션 꼴 · σ0 = 이탤릭 σ + 아래첨자 0) ────────────────
@@ -266,6 +280,6 @@ for p in ps[1:]:
 
 prs.save(a.dst)
 Path(tmp).unlink()
-print(f'{n0} → {len(S)} 장 · {i_be + 2}장 영률 · 침대 기록 {have}')
+print(f'{n0} → {len(S)} 장 · {i_be + 2}장 영률 · 침대 기록 {have} · 영률 표기 {mtxt} GPa (DEM 유효 {etxt})')
 for (lab, vals) in ROWS[1:]:
     print('  ', ''.join(t for t, _ in lab), '|', ' | '.join(vals))

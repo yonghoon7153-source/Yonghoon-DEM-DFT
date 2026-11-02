@@ -8,6 +8,9 @@
   ③ 상자 전체 virial 몫 = Σ_c f_z^up (z_up − z_down) (모든 입자–입자 접촉 · 벽 접촉은 덤프에 없음) — ②의 창 없는 판 (참고)
   ④ AM–SE 접촉 압력 = |F_n| ÷ 접촉 면적 (contact_area = c_cpl[22] · 법선력이 밀어내는 접촉만 = F_n · (x₁ − x₂) > 0) — 접촉 평균 ·
      중앙값 · Σ|F_n| ÷ ΣA (면적 가중) · 단위 MPa = 덱 힘 ÷ 덱 면적 × scale ÷ 1e6
+     ⛔ 진단 전용 — 독립 결과가 아니다: 선형 스프링 접촉 (F = k_n δ) + 겹침 기반 면적 (A = π R* δ) 이면 F/A ≈ k_n / (π R*) = 접촉 강성이
+     정하는 값 (E_SE^0.8 · R* 에 비례 — 0.675 · 1.35 · 2.025 GPa 예측 비 0.57 · 1 · 1.38 ↔ 실측 0.60 · 1 · 1.33 · 11-02 메인 세션 정정) ·
+     덱 · 보고에 쓰지 않는다 (영률 장 검사기가 '접촉점 압력' 낱말을 막는다)
 입력 = draft2 metrics_<침대>.json 의 끝 세트 (묶음 sha256 · 멤버 sha256 대조 · 다르면 멈춤) → 빈 작업 폴더 → scripts/parse_liggghts.py (웹앱 파서)
   → atoms.csv · contacts.csv · mesh_info.json · input_params.json.  변형 침대 = 웹앱에 올린 매개 덱 (run_draft2_metrics.e_deck_check ·
   sha256 = 기록) 으로 파싱 (E 덱은 재개 덱이라 상자 줄이 없다).  D2 = 리포 기록 · 변형 = --data-root/data/<침대>/.

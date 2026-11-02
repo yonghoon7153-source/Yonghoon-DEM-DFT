@@ -12,9 +12,12 @@
   I  σ = 이탤릭 · 바로 뒤 첨자 (eff · 0) = 아래첨자 · 똑바로
   F  글꼴 = KoPubWorld돋움체
   M  MPM 장: MPM 기공도 (리포 묶음 docs/data/kg50_mpm_20261102) 숫자 · MPM 피복률 숫자 없음 (1저자 11-02 Q4 · 원장 MPMC-01 – 03)
-  E  영률 장 (선택 · 2 µm 전해질 영률 0.675 · 1.35 · 2.025 GPa): 머리 글 영률 셋 · 표 머리 = 영률 차례 · 일곱 줄 칸 = 기록에서 다시 만든 글
+  E  영률 장 (선택 · 2 µm 전해질 영률 11 · 22 · 33 GPa = 재료값 22 GPa 의 ×0.5 · ×1 · ×1.5 · DEM 유효 입력 0.675 · 1.35 · 2.025 GPa):
+     영률 표기 = 부록 조건 표 '… / 22 GPa (DEM 유효 1.35)' 칸에서 (DEM 유효 = 기준 D2 덱) · 머리 글 · 표 머리 = 표기 셋 · 노트 = DEM 유효 입력 셋 ·
+     여섯 줄 칸 = 기록에서 다시 만든 글
      (draft2 metrics_<침대>.json · tools/modulus_load_share.py 출력 · 묶음 sha256 결합 · 기록 없는 침대 = '—') · 표 안 σ 이탤릭/첨자 · 글꼴 ·
-     글머리 둘 다 있음 (좋은 쪽 · 나쁜 쪽 방향 — 한쪽만 쓰지 않음) · 각 글머리의 방향 = 기록 값의 단조 방향
+     글머리 둘 다 있음 (좋은 쪽 · 나쁜 쪽 방향 — 한쪽만 쓰지 않음) · 각 글머리의 방향 = 기록 값의 단조 방향 ·
+     '접촉점 압력' 없음 (화면 · 표 · 노트 — 선형 스프링 접촉 + 겹침 기반 면적이면 |Fn|/A ≈ k_n/(π R*) = 접촉 강성이 정하는 값 · 독립 결과 아님)
   S  쉼표 앞 공백 (글자 그대로 ' ,') 이 화면 · 표 · 노트에 없는가 (렌더의 ' , ' 는 대체 글꼴 간격 — 글자가 아니다)
 사용:
   python3 -I check_meeting_deck.py <deck.pptx> --repo <리포> [--json out.json]
@@ -70,13 +73,14 @@ SIGMA0 = 1.5                                  # mS/cm — 보고 기준 (7장 ·
 #: 영률 장 표 줄 (첫 칸이 이 글로 시작 · 정의) — 칸 글은 load_modulus 의 기록에서 만든다
 MOD_ROWS = (('기공도', 'eps_union_exact_pct · .1f'), ('활물질 표면 피복률', 'coverage_physics_union_pct · .1f'),
             ('유효 이온전도도', 'f_ion_hertz × σ0 1.5 · .3f'), ('활물질 응력', 'lw_am_nowall_median_MPa ÷ p_end_MPa · .2f'),
-            ('가압 하중 중 활물질–활물질 몫', 'plane21 contribution AM–AM · .1f'), ('활물질–전해질 접촉점 압력', 'AM–SE |Fn|/면적 평균 · .0f'),
-            ('끝 판 압력', 'p_end_MPa · .1f'))
+            ('가압 하중 중 활물질–활물질 몫', 'plane21 contribution AM–AM · .1f'), ('끝 판 압력', 'p_end_MPa · .1f'))
+#: 영률 장에 있으면 안 되는 낱말 — AM–SE 접촉점 압력 |Fn|/A ≈ k_n/(π R*) (선형 스프링 · 겹침 기반 면적) = 접촉 강성 (E_SE^0.8 · R*) 이 정하는 값
+MOD_FORBIDDEN = ('접촉점 압력',)
 
 
 #: 영률 장 글머리 둘 (글 그대로) · 방향 (+1 = 영률과 함께 증가) — 둘 다 있어야 한다 (좋은 쪽만 쓰지 않음)
 MOD_BULLETS = (('영률이 낮을수록 기공도 감소, 활물질 표면 피복률 · 유효 이온전도도 증가', dict(por=1, cov=-1, sig=-1)),
-               ('활물질–전해질 접촉점 압력은 감소, 활물질 입자 응력 · 활물질끼리의 하중 몫은 증가', dict(cp=1, svm=-1, amam=-1)))
+               ('활물질 입자 응력 · 활물질끼리의 하중 몫은 증가', dict(svm=-1, amam=-1)))
 
 
 def modulus_raw(mod):
@@ -88,8 +92,7 @@ def modulus_raw(mod):
             continue
         m = r['metrics']
         out[b] = dict(por=m['eps_union_exact_pct'], cov=m['coverage_physics_union_pct'], sig=SIGMA0 * m['f_ion_hertz'],
-                      svm=m['lw_am_nowall_median_MPa'] / m['p_end_MPa'], amam=e['plane21']['contribution_sigma_zz_pct']['AM–AM'],
-                      cp=e['am_se_contact_pressure']['mean_MPa'])
+                      svm=m['lw_am_nowall_median_MPa'] / m['p_end_MPa'], amam=e['plane21']['contribution_sigma_zz_pct']['AM–AM'])
     return out
 
 
@@ -128,11 +131,30 @@ def load_modulus(repo, data_root=None, load_share=None):
     return dict(E=E, rec=rec, ls=ls, problems=prob, data_root=data_root, load_share=load_share)
 
 
-def modulus_expected(mod, szz):
-    """→ (머리 글 조각, 표 머리 [영률 셋], [(첫 칸 낱말, [칸 글 셋])], 문제).  기록 없는 침대 = '—'."""
+APPX_E = re.compile(r'(\d+(?:\.\d+)?) / (\d+(?:\.\d+)?) GPa \(DEM 유효 (\d+(?:\.\d+)?)\)')   # 부록 조건 표 '영률 (NCM / SE)' 칸
+
+
+def modulus_labels(prs, roles, mod):
+    """부록 조건 표 '140 / 22 GPa (DEM 유효 1.35)' → 침대별 영률 표기 = 재료값 × (DEM 유효 입력 ÷ 기준 D2) · 문제."""
+    if 'appendix' not in roles:
+        return None, ['E 부록 장 없음 — 영률 표기 기준 (재료값 · DEM 유효) 을 못 읽음']
+    hits = [APPX_E.search(c.text) for sh in prs.slides[roles['appendix']].shapes if getattr(sh, 'has_table', False) and sh.has_table
+            for row in sh.table.rows for c in row.cells]
+    hits = [h for h in hits if h]
+    if len(hits) != 1:
+        return None, [f'E 부록 조건 표의 영률 칸 ("… / 22 GPa (DEM 유효 1.35)") {len(hits)} 개 (하나여야 함)']
+    mat, eff = float(hits[0].group(2)), float(hits[0].group(3))
+    if abs(eff - mod['E']['D2']) > 1e-12:
+        return None, [f'E 부록 DEM 유효 {eff} ≠ 기준 D2 덱 {mod["E"]["D2"]}']
+    return {b: round(mat * mod['E'][b] / mod['E']['D2'], 6) for b in MOD_BEDS}, []
+
+
+def modulus_expected(mod, szz, labels):
+    """→ (머리 글 조각, 표 머리 [영률 표기 셋], [(첫 칸 낱말, [칸 글 셋])], 노트 조각 (DEM 유효 입력 셋), 문제).  기록 없는 침대 = '—'."""
     prob = []
     E = mod['E']
-    gtxt = [f'{E[b]:g}' for b in MOD_BEDS]
+    gtxt = [f'{labels[b]:g}' for b in MOD_BEDS]
+    etxt = [f'{E[b]:g}' for b in MOD_BEDS]
     rows = []
     for key, _ in MOD_ROWS:
         vals = []
@@ -145,7 +167,7 @@ def modulus_expected(mod, szz):
             x = {'기공도': f"{m['eps_union_exact_pct']:.1f}", '활물질 표면 피복률': f"{m['coverage_physics_union_pct']:.1f}",
                  '유효 이온전도도': f"{SIGMA0 * m['f_ion_hertz']:.3f}", '활물질 응력': f"{m['lw_am_nowall_median_MPa'] / m['p_end_MPa']:.2f}",
                  '가압 하중 중 활물질–활물질 몫': f"{e['plane21']['contribution_sigma_zz_pct']['AM–AM']:.1f}",
-                 '활물질–전해질 접촉점 압력': f"{e['am_se_contact_pressure']['mean_MPa']:.0f}", '끝 판 압력': f"{m['p_end_MPa']:.1f}"}[key]
+                 '끝 판 압력': f"{m['p_end_MPa']:.1f}"}[key]
             vals.append(x)
         rows.append((key, vals))
     if mod['ls'].get('D2'):                    # 기준 D2 짐 몫 = 부록 표 (values/szz_share) 와 같은 값이어야 한다
@@ -153,14 +175,23 @@ def modulus_expected(mod, szz):
         b_ = szz['SE2um']['contribution_sigma_zz_pct']
         if any(abs(a_[g] - b_[g]) > 1e-9 for g in ('AM–AM', 'AM–SE', 'SE–SE')):
             prob.append(f'E 기준 D2 짐 몫 {a_} ≠ 부록 기록 {b_}')
-    return f'2 µm: {gtxt[0]} · {gtxt[1]} · {gtxt[2]} GPa', [f'{g} GPa' for g in gtxt], rows, prob
+    return (f'2 µm: {gtxt[0]} · {gtxt[1]} · {gtxt[2]} GPa', [f'{g} GPa' for g in gtxt], rows,
+            f'DEM 유효 입력 {etxt[0]} · {etxt[1]} · {etxt[2]} GPa', prob)
 
 
-def check_modulus(prs, i, mod, szz):
+def check_modulus(prs, i, mod, szz, roles):
     s = prs.slides[i]
     ok, prob = 0, list(mod['problems'])
-    head_txt, hdr, rows, p2 = modulus_expected(mod, szz)
+    labels, p1 = modulus_labels(prs, roles, mod)
+    if labels is None:
+        return ok, prob + p1
+    head_txt, hdr, rows, note_txt, p2 = modulus_expected(mod, szz, labels)
     prob += p2
+    note = s.notes_slide.notes_text_frame.text if s.has_notes_slide else ''
+    if note_txt in note:
+        ok += 1
+    else:
+        prob.append(f'E {i + 1}장 노트에 "{note_txt}" 없음')
     h = ''.join(''.join(r.text for r in sh.text_frame.paragraphs[0].runs) for sh in s.shapes if sh.name == 'Rectangle 23')
     if head_txt in h:
         ok += 1
@@ -190,6 +221,12 @@ def check_modulus(prs, i, mod, szz):
             prob.append(f'E {i + 1}장 표 "{key}" {got} ≠ 기록 {vals}')
     if len(t.rows) != 1 + len(rows):
         prob.append(f'E {i + 1}장 표 줄 {len(t.rows)} ≠ {1 + len(rows)}')
+    hay = '\n'.join([sh.text_frame.text for sh in s.shapes if sh.has_text_frame]
+                    + [c_.text for sh in s.shapes if getattr(sh, 'has_table', False) and sh.has_table for r_ in sh.table.rows for c_ in r_.cells]
+                    + [s.notes_slide.notes_text_frame.text if s.has_notes_slide else ''])
+    for w in MOD_FORBIDDEN:
+        if w in hay:
+            prob.append(f'E {i + 1}장 "{w}" 있음 — 접촉 강성이 정하는 값 (독립 결과 아님 · 화면 · 표 · 노트에서 뺀다)')
     paras = [''.join(r.text for r in p_.runs) for sh in s.shapes if sh.name == 'Rectangle 23' for p_ in sh.text_frame.paragraphs]
     raw = modulus_raw(mod)
     have = [b for b in MOD_BEDS if b in raw]
@@ -336,7 +373,7 @@ def run_checks(prs, rows, meas, req, szz, mod=None):
         if mod is None:
             prob.append('E 영률 장이 있는데 원자료 (load_modulus) 를 안 읽었다')
         else:
-            k, pb = check_modulus(prs, roles['modulus'], mod, szz)
+            k, pb = check_modulus(prs, roles['modulus'], mod, szz, roles)
             ok += k
             prob += pb
     for n, where, txt, src in expected(rows, meas, req, szz):
@@ -454,6 +491,11 @@ def mutate(prs_bytes, kind):
         if len(ps) >= 3:
             rect.text_frame._txBody.remove(ps[2])
             return prs
+    if kind == 'modulus_cp':                # 영률 장 노트에 접촉점 압력 문장 — 있으면 FAIL
+        roles, _ = slide_roles(prs)
+        p = s[roles['modulus']].notes_slide.notes_text_frame.paragraphs[0]
+        p.runs[-1].text += ' 활물질–전해질 접촉점 압력도 낮아집니다.'
+        return prs
     if kind == 'modulus_value':               # 영률 장 표의 기공도 줄 마지막 칸 (2.025 GPa) 숫자 끝자리 하나 바꿈
         roles, _ = slide_roles(prs)
         t = [sh for sh in s[roles['modulus']].shapes if getattr(sh, 'has_table', False) and sh.has_table][0].table
@@ -486,7 +528,7 @@ def main():
     if a.selftest:
         st = {}
         for kind in ('number', 'caption', 'red', 'italic', 'banned', 'mpm_cov', 'space_comma') + \
-                (('modulus_value', 'modulus_bullet') if has_mod else ()):
+                (('modulus_value', 'modulus_bullet', 'modulus_cp') if has_mod else ()):
             _, pb = run_checks(mutate(raw, kind), rows, meas, req, szz, mod)
             st[kind] = len(pb) > len(prob)
         res['selftest_mutations_detected'] = st
