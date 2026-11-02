@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 232편 · 생성 2026-10-30
+> digest 233편 · 생성 2026-11-02
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -47,7 +47,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | — |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (45편)
+## 접촉역학 · 소성 (DEM 이론) (46편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -89,6 +89,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `thakur2014_eepa_adhesive_elastoplastic_dem` | EEPA 점착 탄소성 접촉모델 (면적의존 점착) — 응집 분말의 미시역학 — Thakur (Granular Matter 2014) | DEM (contact-LAW theory + uniaxial calibration) | 2026-06-26 | 🖼 22 |
 | `thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography` | 초고압 (≈3.8 GPa) in situ 치밀화 — 비정질 Li₃PS₄ (LPS) 와 결정 Li₆PS₅Cl (LPSCl): 파리–에든버러 프레스 (UToPEC · 준등방 가압) 에서 X-선 흡수 밀도 · 단층촬영 (1.277 µm) · 에너지분산 XRD · 중성자 회절 + 실험실 EIS · 결합원자가 (BVEL) — 두  | experiment (in situ 고압 — PE 프레스 UToPEC · Beer–Lambert 흡수 밀도  | 2026-10-13 | 🖼 23 |
 | `thorntonning1998_adhesive_elastoplastic_contact` | 점착 탄소성 구의 stick/bounce — 항복압 캡(p_y) 접촉 LAW의 정의서 — Thornton & Ning (Powder Technology 1998) | DEM (contact-LAW theory) | 2026-06-26 | 🖼 7 |
+| `tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond` | 냉간분무(cold spray) 양극 복합분말 증착을 탄소성(elastoplastic) 결합구 DEM 으로 — NMC622 단일입자 충돌: 기판 항복응력이 지배 · 사선 충돌은 증착을 죽인다 · PVDF 최소량 문턱 · 입자만 한 크레이터만 돕는다 — Tovar et al. (Surf. Coat. Technol. 2026, | DEM (elastoplastic bonded-sphere, single-particle impact) +  | 2026-11-02 | 🖼 36 |
 | `vanlew2015_modifying_youngs_modulus_distribution` | 단일 pebble 압쇄실험의 E 분포로 DEM 입자별 Young률을 수정 (Hertz 접촉) — Van Lew (Fusion Eng. Des. 2015) | DEM (Hertz 접촉 + 단일입자 압쇄실험 → 입자별 E) | 2026-08-25 | 🖼 5 |
 | `varkey2026_multicontact_elastoplastic_dem` | 응력기반 multi-contact 탄소성 모델로 SE separator·양극 압밀 DEM — Varkey (Adv. Powder Tech. 2026) | DEM | 2026-06-23 | — |
 | `wang2024_hot_pressed_lpscl_pressure_invariant_conductivity` | 열간 가압 (hot pressing) 한 Li₆PS₅Cl 단독 펠릿 — 가압 온도 20–200 °C · 압력 150–450 MPa · 분말 질량 스윕의 겉보기 밀도 (densification · porosity) 와 이온전도도, 측정 스택압 0–8 MPa 에서 σ ≈2.7 mS/cm 불변 ↔ 냉간 펠릿 ≈20 배 변동 — | experiment (hot-press powder compaction · densification · po | 2026-10-14 | 🖼 27 |

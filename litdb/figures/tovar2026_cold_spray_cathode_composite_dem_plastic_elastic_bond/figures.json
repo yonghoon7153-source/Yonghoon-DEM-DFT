@@ -1,0 +1,905 @@
+{
+ "slug": "tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-02",
+ "sources": [
+  "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+  "a75745a2-69._Sup_Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf"
+ ],
+ "figures": [
+  {
+   "key": "fGA",
+   "kind": "figure",
+   "label": "GA",
+   "page": 29,
+   "file": "fig_GA.png",
+   "caption": "Graphical abstract — no caption in the PDF (page label \"Graphics Abstract\"; curator description). Panels: COR vs time for NMC on Al with impact snapshots (cf. Fig. 7a) · predicted COR per substrate (cf. Fig. 8a) · literature yield stress σ0 per substrate (cf. Fig. 8b) · cold-sprayed deposits on Al vs increasing PVDF wt% (cf. Fig. 12a) · COR and deposit volume vs impact angle (cf. Fig. 11a).",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    295.0,
+    137.6
+   ],
+   "w": 1189,
+   "h": 533,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.791,
+   "src_native": [
+    1979,
+    886
+   ],
+   "manual_crop": "graphical abstract is an uncaptioned page (p.29) — not a caption target for the tool; clip = the embedded raster rect (page label \"Graphics Abstract\" below it excluded) (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 30,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Cold spray system schematic, (b) SEM picture of resulting feedstock NMC622:PVDF:CB powder, (c) predicted gas velocity field, (d) predicted particle velocities.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    254.7,
+    400.0
+   ],
+   "w": 1021,
+   "h": 1626,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.729,
+   "src_native": [
+    1699,
+    2708
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.24 but the figure is a stand-alone raster page p.30 (only a \"Figure 1\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (1699×2708 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 31,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Cold spray system with tilting stage.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    253.8,
+    293.4
+   ],
+   "w": 1017,
+   "h": 1182,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.007,
+   "src_native": [
+    1693,
+    1968
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.24 but the figure is a stand-alone raster page p.31 (only a \"Figure 2\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (1693×1968 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 32,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Schematic of the virtual cylindrical bond linking two constituent spheres. The light-blue cylinder indicates the massless bond.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    235.2,
+    150.1
+   ],
+   "w": 940,
+   "h": 585,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.566,
+   "src_native": [
+    1564,
+    973
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.24 but the figure is a stand-alone raster page p.32 (only a \"Figure 3\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (1564×973 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 33,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Elastoplastic (a) bending and (b) normal response of the virtual bond.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    351.0,
+    392.0
+   ],
+   "w": 1422,
+   "h": 1593,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.936,
+   "src_native": [
+    2368,
+    2653
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.25 but the figure is a stand-alone raster page p.33 (only a \"Figure 4\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (2368×2653 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 34,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) Schematic of the DEM simulation setup showing the bonded-sphere particle and substrate, and (b) initial bond network.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    371.4,
+    176.2
+   ],
+   "w": 1507,
+   "h": 694,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.713,
+   "src_native": [
+    2510,
+    1154
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.25 but the figure is a stand-alone raster page p.34 (only a \"Figure 5\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (2510×1154 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 35,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) Predicted particle velocities from CFD-DEM simulation, and (b) measured particle velocities from high-speed video analysis. The x-axis shows the tracked particle clusters, each corresponding to a collection of particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    194.8,
+    295.1
+   ],
+   "w": 771,
+   "h": 1189,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.935,
+   "src_native": [
+    1283,
+    1980
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.25 but the figure is a stand-alone raster page p.35 (only a \"Figure 6\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (1283×1980 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 36,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Coefficient of restitution as a function of time for an NMC particle impacting an (a) aluminum substrate, resulting in particle deposition and a (b) tungsten substrate, resulting in particle rebound.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    207.1,
+    325.8
+   ],
+   "w": 823,
+   "h": 1317,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.804,
+   "src_native": [
+    1369,
+    2193
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.25 but the figure is a stand-alone raster page p.36 (only a \"Figure 7\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (1369×2193 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 37,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. (a) Predicted values for the NMC particle coefficient of restitution, and literature values (Table 1 and Table 2) of (b) yield stress and (c) Young’s modulus for various substrate materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    254.7,
+    334.0
+   ],
+   "w": 1021,
+   "h": 1351,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.957,
+   "src_native": [
+    1699,
+    2250
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.25 but the figure is a stand-alone raster page p.37 (only a \"Figure 8\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (1699×2250 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 38,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Post-impact NMC particle and substrate: (a) normal and (b) bending elastoplastic bond networks.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    254.7,
+    264.0
+   ],
+   "w": 1021,
+   "h": 1060,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.789,
+   "src_native": [
+    1699,
+    1764
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.25 but the figure is a stand-alone raster page p.38 (only a \"Figure 9\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (1699×1764 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 39,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. DEM configuration with the particle velocity initialized at an angle relative to the normal surface.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    351.0,
+    273.5
+   ],
+   "w": 1422,
+   "h": 1099,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.403,
+   "src_native": [
+    2368,
+    1830
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.25 but the figure is a stand-alone raster page p.39 (only a \"Figure 10\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (2368×1830 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 40,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. (a) Predicted coefficient of restitution and measured particle deposit volume, (b) measured particle deposit profile, (c) normal and (d) shear bond stress distributions at various impact angles.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    464.3,
+    514.9
+   ],
+   "w": 1894,
+   "h": 2105,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.869,
+   "src_native": [
+    3155,
+    3506
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.25 but the figure is a stand-alone raster page p.40 (only a \"Figure 11\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (3155×3506 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 41,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. (a) Deposits formed for an NMC:PVDF:CB 90:x:2 mixture, where x denotes the PVDF weight percentage, on various substrates. The 0 wt% is not shown because it produced no deposits. (b) Profile of NMC composite deposits on aluminum substrate and (c) Deposit volume on all substrates as a function of PVDF content.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    474.3,
+    443.3
+   ],
+   "w": 1936,
+   "h": 1807,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.711,
+   "src_native": [
+    3224,
+    3009
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.25 but the figure is a stand-alone raster page p.41 (only a \"Figure 12\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (3224×3009 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 42,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. (a) Substrate roughness crater in DEM simulation and (b) its corresponding initial bond network.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    407.7,
+    194.5
+   ],
+   "w": 1658,
+   "h": 770,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.62,
+   "src_native": [
+    2762,
+    1281
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.25 but the figure is a stand-alone raster page p.42 (only a \"Figure 13\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (2762×1281 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 43,
+   "file": "fig_14.png",
+   "caption": "Fig. 14. Post-impact NMC particle on a stainless-steel substrate for three crater geometries: (a) 𝑤crater/𝑑par = 0.43, ℎcrater/𝑑par = 0.21; (b) 𝑤crater/𝑑par = 0.99, ℎcrater/𝑑par = 0.07; (c) 𝑤crater/𝑑par = 0.99, ℎcrater/𝑑par = 0.35; with corresponding normal and bending post-impact bond-network states.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    464.3,
+    531.0
+   ],
+   "w": 1894,
+   "h": 2172,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.677,
+   "src_native": [
+    3155,
+    3618
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.25 but the figure is a stand-alone raster page p.43 (only a \"Figure 14\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (3155×3618 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 44,
+   "file": "fig_15.png",
+   "caption": "Fig. 15. Coefficient of restitution as a function of the crater height ratio ℎcrater/𝑑par, evaluated only for cases with 𝑤crater/𝑑par > 0.80.",
+   "rotated_deg": 0,
+   "bbox": [
+    10.0,
+    10.0,
+    231.9,
+    135.7
+   ],
+   "w": 926,
+   "h": 525,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.896,
+   "src_native": [
+    1541,
+    873
+   ],
+   "manual_crop": "Journal Pre-proof layout: caption is text on p.25 but the figure is a stand-alone raster page p.44 (only a \"Figure 15\" label under it), so the caption-anchored tool skipped it (\"그래픽 없음/영역 없음\"); clip = the embedded raster rect (1541×873 px native ≈ 500 dpi), label excluded (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. High-speed video setup used to track particles exiting the cold spray nozzle for validating CFD-DEM predicted particle velocities.",
+   "rotated_deg": 0,
+   "bbox": [
+    92.2,
+    130.6,
+    519.8,
+    402.0
+   ],
+   "w": 1782,
+   "h": 1131,
+   "dpi": 300,
+   "src": "a75745a2-69._Sup_Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.384,
+   "src_native": [
+    1306,
+    829
+   ],
+   "recrop": "auto region began at the SI section heading \"High Speed Video Analysis\" (y72.8) — heading + white gap above the figure; clip = embedded raster rect (old bbox [86.2, 66.8, 528.8, 389.7]) (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. Particle feature tracking from high-speed video analysis.",
+   "rotated_deg": 0,
+   "bbox": [
+    95.0,
+    483.7,
+    517.0,
+    694.4
+   ],
+   "w": 1760,
+   "h": 879,
+   "dpi": 300,
+   "src": "a75745a2-69._Sup_Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.0,
+   "src_native": [
+    747,
+    369
+   ],
+   "recrop": "auto region began at the tail of the Fig. S1 caption (\"validating CFD-DEM predicted particle velocities.\"); clip = embedded raster rect (old bbox [66.0, 424.3, 525.6, 681.3]) (2026-11-02, litdb-curator)",
+   "caption_fix": "auto caption carried the SI page number \"2\"; trimmed (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. Parametric study. Coefficient of restitution for an NMC particle impacting an Inconel 625 substrate as the substrate’s (a) yield stress and (b)Young’s Modulus are systematically varied.",
+   "rotated_deg": 0,
+   "bbox": [
+    134.9,
+    130.6,
+    472.6,
+    520.1
+   ],
+   "w": 1408,
+   "h": 1624,
+   "dpi": 300,
+   "src": "a75745a2-69._Sup_Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.927,
+   "src_native": [
+    1033,
+    1192
+   ],
+   "recrop": "auto region began at the SI section heading and stopped above the raster bottom — panel (b) x-axis title \"Young's Modulus Ratio, Substrate / Particle (-)\" was cut; clip = embedded raster rect (old bbox [74.4, 66.8, 540.5, 508.0]) (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. Post-impact bond-state networks for an NMC particle impacting an Inconel 625 substrate. (a) Normal and (b) bending bond networks as the yield stress ratio is increased.",
+   "rotated_deg": 0,
+   "bbox": [
+    164.2,
+    72.0,
+    474.5,
+    632.5
+   ],
+   "w": 1294,
+   "h": 2336,
+   "dpi": 300,
+   "src": "a75745a2-69._Sup_Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.765,
+   "src_native": [
+    950,
+    1715
+   ],
+   "recrop": "auto region stopped ~12 pt above the raster bottom — x-axis tick labels/title \"x (µm)\" cut; clip = embedded raster rect (old bbox [67.9, 66.0, 556.1, 620.6]) (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. Post-impact bond-state networks for an NMC particle impacting an Inconel 625 substrate. (a) normal and (b) bending bond networks as the Young’s modulus ratio is increased.",
+   "rotated_deg": 0,
+   "bbox": [
+    164.2,
+    72.0,
+    474.5,
+    634.1
+   ],
+   "w": 1294,
+   "h": 2342,
+   "dpi": 300,
+   "src": "a75745a2-69._Sup_Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.759,
+   "src_native": [
+    947,
+    1716
+   ],
+   "recrop": "auto region stopped ~12 pt above the raster bottom — x-axis tick labels/title \"x (µm)\" cut; clip = embedded raster rect (old bbox [67.9, 66.0, 556.1, 622.1]) (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. Coefficient of restitution for an NMC particle impacting different substrates as the substrate’s yield stress is systematically varied.",
+   "rotated_deg": 0,
+   "bbox": [
+    86.9,
+    72.0,
+    525.1,
+    327.6
+   ],
+   "w": 1828,
+   "h": 1066,
+   "dpi": 300,
+   "src": "a75745a2-69._Sup_Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.928,
+   "src_native": [
+    1217,
+    710
+   ],
+   "recrop": "auto region stopped ~12 pt above the raster bottom — x-axis title \"Yield Stress Ratio, Substrate / Particle (-)\" cut; clip = embedded raster rect (old bbox [80.9, 66.0, 537.2, 315.0]) (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. Coefficient of restitution for an NMC particle impacting different substrates as the substrate’s Young’s Modulus is systematically varied.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    389.3,
+    540.0,
+    662.3
+   ],
+   "w": 1950,
+   "h": 1138,
+   "dpi": 300,
+   "src": "a75745a2-69._Sup_Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.925,
+   "src_native": [
+    1299,
+    758
+   ],
+   "recrop": "auto region began at the tail of the Fig. S6 caption and stopped above the raster bottom — x-axis title \"Young's Modulus Ratio …\" cut; clip = embedded raster rect (old bbox [66.0, 349.6, 549.2, 649.9]) (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8. Coefficient of restitution for an NMC particle impacting different substrates as the substrate’s density is systematically varied.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    72.0,
+    540.0,
+    344.9
+   ],
+   "w": 1950,
+   "h": 1137,
+   "dpi": 300,
+   "src": "a75745a2-69._Sup_Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.927,
+   "src_native": [
+    1299,
+    757
+   ],
+   "recrop": "auto region stopped ~12 pt above the raster bottom — x-axis title \"Density Ratio, Substrate / Particle (-)\" cut; clip = embedded raster rect (old bbox [66.0, 66.0, 549.2, 332.5]) (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 25,
+   "file": "tab_1.png",
+   "caption": "Table 1. DEM Material Properties for NMC, Aluminum, Copper, and Steel.",
+   "rotated_deg": 0,
+   "bbox": [
+    60.0,
+    626.5,
+    552.0,
+    697.5
+   ],
+   "w": 2050,
+   "h": 2626,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.933,
+   "caption_fix": "auto caption ran into the table header cells; trimmed to the caption (2026-11-02, litdb-curator)",
+   "recrop": "auto crop stopped at the p.25 page end — only the caption + header row (the property rows continue on p.26); PNG = vertical stitch of p.25 [60.0, 626.5, 552.0, 697.5] + p.26 [60.0, 71.0, 552.0, 624.0] at 300 dpi (dotted separator marks the page break; the diagonal \"Journal Pre-proof\" watermark is in the PDF); bbox/page below describe the first part only (old bbox [60.9, 622.9, 550.5, 701.6]) (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 26,
+   "file": "tab_2.png",
+   "caption": "Table 2. DEM Material Properties for Stainless Steel 316, Inconel 625, and Tungsten.",
+   "rotated_deg": 0,
+   "bbox": [
+    60.0,
+    624.0,
+    552.0,
+    693.8
+   ],
+   "w": 2050,
+   "h": 2620,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.935,
+   "caption_fix": "auto caption ran into the table header cells; trimmed to the caption (2026-11-02, litdb-curator)",
+   "recrop": "auto crop stopped at the p.26 page end — only the caption + header row (the property rows continue on p.27); PNG = vertical stitch of p.26 [60.0, 624.0, 552.0, 693.8] + p.27 [60.0, 71.0, 552.0, 624.0] at 300 dpi (dotted separator marks the page break; the diagonal \"Journal Pre-proof\" watermark is in the PDF); bbox/page below describe the first part only (old bbox [60.9, 619.1, 550.5, 697.9]) (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq1-4",
+   "page": 6,
+   "file": "eq_01_04_bond_elastic_increments.png",
+   "caption": "Equations (1)–(4), p.6: elastic (Potyondy–Cundall) bond increments — dF_b^n = K_b,e^n dδ_b^n = (E_b A/l_b) v_r^n dt · dF_b^t = (G_b A/l_b) v_r^t dt · dM_b^n = (G_b I_p/l_b) ω_r^n dt (torsion) · dM_b^t = (E_b I/l_b) ω_r^t dt (bending).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    276.3,
+    542.0,
+    381.2
+   ],
+   "w": 1968,
+   "h": 438,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.927,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits sub/superscripts and fractions into separate lines, so the equations are unreadable as text (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 6,
+   "file": "eq_05_bending_backbone.png",
+   "caption": "Equation (5), p.6: elastoplastic bending backbone (Guo 2018) — dM_b^t = K_b,e^ben dθ for |θ_b^t| ≤ θ_e-lim; K_b,ep^ben dθ for θ_e-lim < |θ| ≤ θ_p-lim; 0 beyond θ_p-lim.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    640.2,
+    542.0,
+    701.0
+   ],
+   "w": 1968,
+   "h": 254,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.963,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits sub/superscripts and fractions into separate lines, so the equations are unreadable as text (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "eq6-10",
+   "page": 7,
+   "file": "eq_06_10_bending_limits.png",
+   "caption": "Equations (6)–(10), p.7: θ_b,e-lim^t = σ0 l_b/(E_b r_b) · M_b,e-lim^t = (E_b I/l_b) θ_e-lim = σ0 I/r_b · K_b,ep^ben = ½ K_b,e^ben = E_b I/(2 l_b) · θ_p-lim = θ_e-lim + (M_p-lim − M_e-lim)/K_b,ep^ben · M_b,p-lim^t = (4/3) σ0 r_b³.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    126.2,
+    542.0,
+    414.6
+   ],
+   "w": 1968,
+   "h": 1203,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.924,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits sub/superscripts and fractions into separate lines, so the equations are unreadable as text (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e4",
+   "kind": "equation",
+   "label": "eq11-12",
+   "page": 7,
+   "file": "eq_11_12_normal_backbone.png",
+   "caption": "Equations (11)–(12), p.7: elastoplastic normal backbone (Suehr 2025) — dF_b^n = K_b,e^n dδ / K_b,ep^n dδ / 0 for |δ_b^n| ≤ δ_e-lim < … ≤ δ_p-lim < …; δ_b,e-lim^n = σ0 l_b/E_b.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    587.8,
+    542.0,
+    701.6
+   ],
+   "w": 1968,
+   "h": 475,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.963,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits sub/superscripts and fractions into separate lines, so the equations are unreadable as text (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e5",
+   "kind": "equation",
+   "label": "eq13-16",
+   "page": 8,
+   "file": "eq_13_16_normal_limits.png",
+   "caption": "Equations (13)–(16), p.8: F_b,e-lim^n = (E_b A/l_b) δ_e-lim = σ0 A · K_b,ep^n = ½ K_b,e^n = E_b A/(2 l_b) · δ_p-lim = δ_e-lim + (F_p-lim − F_e-lim)/K_b,ep^n · F_b,p-lim^n = α σ0 A (α = hardening factor).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    89.8,
+    542.0,
+    282.3
+   ],
+   "w": 1968,
+   "h": 803,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.955,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits sub/superscripts and fractions into separate lines, so the equations are unreadable as text (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e6",
+   "kind": "equation",
+   "label": "eq17-18",
+   "page": 8,
+   "file": "eq_17_18_bond_failure.png",
+   "caption": "Equations (17)–(18), p.8: bond failure (Potyondy–Cundall) — σ_b^max = F_b^n/A + |M_b^t| r_b/I > σ_normal, or τ_b^max = |F_b^t|/A + |M_b^n| r_b/I_p > τ_shear.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    408.8,
+    542.0,
+    496.4
+   ],
+   "w": 1968,
+   "h": 366,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.944,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits sub/superscripts and fractions into separate lines, so the equations are unreadable as text (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e7",
+   "kind": "equation",
+   "label": "eq19-20",
+   "page": 8,
+   "file": "eq_19_20_equations_of_motion.png",
+   "caption": "Equations (19)–(20), p.8: m_s d²x_s/dt² = F_c + F_cd + m_s g + F_vdW + F_b + F_bd · J_s d²Θ_s/dt² = M_c + M_cd + M_b + M_bd (J_s = 2/5 m_s r_s²).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    571.0,
+    542.0,
+    627.0
+   ],
+   "w": 1968,
+   "h": 234,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.962,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits sub/superscripts and fractions into separate lines, so the equations are unreadable as text (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e8",
+   "kind": "equation",
+   "label": "eq21-24",
+   "page": 9,
+   "file": "eq_21_24_contact_damping.png",
+   "caption": "Equations (21)–(24), p.9: contact damping F_cd^n,t = β_c √(5/6) √(2 m_s* K_c^n,t) v_c^n,t (K_c from Thornton & Yin) · β_c = −ln e/√(π² + ln² e), e = 0.60 · M_cd = r × F_cd.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    258.1,
+    542.0,
+    498.4
+   ],
+   "w": 1968,
+   "h": 1002,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.906,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits sub/superscripts and fractions into separate lines, so the equations are unreadable as text (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e9",
+   "kind": "equation",
+   "label": "eq25-28",
+   "page": 9,
+   "file": "eq_25_28_bond_damping.png",
+   "caption": "Equations (25)–(28), p.9: bond damping F_bd^n,t = β_b √(2 m_s* K_b^n,t) v_r^n,t · M_bd^n = β_b √(2 J_s* K_b^tor) ω_r^n · M_bd^t = β_b √(2 J_s* K_b^ben) ω_r^t.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    557.2,
+    542.0,
+    691.3
+   ],
+   "w": 1968,
+   "h": 560,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.966,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits sub/superscripts and fractions into separate lines, so the equations are unreadable as text (2026-11-02, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq29-31",
+   "page": 10,
+   "file": "eq_29_31_bond_damping_coeff_vdw.png",
+   "caption": "Equations (29)–(31), p.10: β_b = −ln e_b/√(π² + ln² e_b), e_b = 0.88 · Hamaker vdW F_vdW,pp = (A_H/12)·2 r_s2/((r_s2/r_s1 + 1) x_pp²) (r_s1 = r_s2) · F_vdW,pw = (A_H/6) r_s/x_pw²; cutoff 4×10⁻¹⁰ m, neighbour range 10×10⁻⁶ m.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    68.9,
+    542.0,
+    346.3
+   ],
+   "w": 1968,
+   "h": 1156,
+   "dpi": 300,
+   "src": "dcce51a3-69._Cold_spray_deposition_of_cathode_composites_modeled_via_a_DEM_plastic_elastic_bond_framework.pdf",
+   "blank": 0.912,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits sub/superscripts and fractions into separate lines, so the equations are unreadable as text (2026-11-02, litdb-curator)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "f1–f15 (+GA): Journal Pre-proof stand-alone figure pages pp.29–44 with captions as text on pp.24–25 — the tool reported all 15 as \"그래픽 없음/영역 없음\"; hand-cropped to the raster rect, see manual_crop · fS1–fS8 · t1–t2 re-cropped, see recrop (2026-11-02, litdb-curator) · ⚠ `--audit` 의 \"번호 구멍 16,17,…\" 은 식 라벨(eq6-10 · eq29-31 …)의 숫자를 그림 번호로 읽는 도구 한계 — 실제 구멍 아님 (본문 Fig. 1–15 · SI S1–S8 · Table 1–2 전부 있음)"
+}

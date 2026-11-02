@@ -2575,6 +2575,20 @@
 > 2026-10-27 추가 — `wang2027_ncm811_effective_bulk_modulus_mapper_dfs_gnn` — 액체 LIB NCM811 재구성 부피의 복셀 FE (복셀 면 공유 = 완전 결합 · CBD-기공 강성 ≈ 0 · 선형 탄성) 유효 체적탄성률 K ≈ 15–16 GPa = 치밀 NCM K 116.7 의 ≈0.13 · Hashin–Shtrikman 상한의 ≈0.27–0.32 · 창 안 국소 K ∝ φ_s^≈6 [판독 · 우리 산술] — 접촉 법칙이 없어 같은 기하의 접촉망보다 단단한 쪽 (STEP3 σ 의 CF 가지 `CL-81` 의 역학판) · 거친 재사상 (10³ · 20³) 이 K 를 2–3 배 키움 = 목이 굵어지는 격자 효과 (우리 d_h/dx 규칙과 같은 부류) · 값 이전 금지 (액체 LIB · 2 상 · 작은 변형).
 > 2026-10-27 추가 — `wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode` — 압출 100 °C 혼련에서 LPSCl 이 NCM 위에 납작하게 눌린 층 (SEM 입자 하나 · 정성) · 같은 배치 MF 는 8.7 µm NCM 은 입히고 3.8 µm 는 못 입힘 — 혼합 중 SE 형상 소성은 우리 MPM (압축만) · DEM (강체 구) 밖.
 
+> ⭐ **2026-11-02 추가 — [Tovar26CS] 결합구 응집체 + 탄소성 가상결합 = "형상이 바뀌는 이산 입자계" 의 넷째 행 — 단 냉간분무 *충돌*이지 압밀이 아니다**
+> (`papers/tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond.md` §4-5 · §4-7 · §7 · §10; ⚠ NMC622 : PVDF : CB = LIB 조성 · 황화물 SE 0 · Journal Pre-proof)
+
+| | 입자 SHAPE 가 바뀌나 | 무엇이 바뀌어서 | 변형 세기를 정하는 것 | 하위 자유도 |
+|---|---|---|---|---|
+| 우리 DEM (hooke/hysteresis) | ⛔ | — (δ 겹침 = 기하 프록시) | 연화 강성 E_eff 1.35 GPa | 없음 |
+| [Xu23] (CGMD) | ✅ 2차입자 | 1차구 재배열 + 겹침 | JKR 수치 구속 (γ_intra ≈1000 J/m², derived) | 1차구 평균 62 개/입자 |
+| **[Tovar26CS]** (BPM) | ✅ 응집체 — 단 NMC 는 "minimal" (저자) | 하위 **강체** 구 재배열 + 결합 굽힘·법선 **항복의 잔류각·잔류변위** | 결합 항복응력 σ0 (NMC 유효 9.3 MPa · α 1.2) + 격자 종류 (입자 FCC / 기판 단순입방) | Ø1 µm 구 2,499 개/입자 |
+| 우리 MPM (J2, ν 0.49) | ✅ 연속체 | 부피보존 소성 유동 | σ_y 0.15 (2D) / 0.30 GPa (3D) | 격자 물질점 |
+
+- ★ **우리 축에 닿는 곳 셋.** ① 이 절 제목의 한정이 하나 더 — *결합구 응집체면 문헌 DEM 도 입자 모양을 바꾼다*. 단 그 소성은 **격자 의존 이산 소성**이고 (저자: 조밀 결합 기판은 압흔이 안 생겨 단순입방 격자를 골랐다 = 조율 손잡이), 항복변형률이 4.7 × 10⁻⁵ (NMC · 우리 산수) 라 결합 상태 지도가 거의 전부 '소성' 으로 포화한다 — 저자 스스로 *"the particle yields but does not undergo substantial plastic behavior"*. ⇒ 소성 **표지** ≠ 소성 **양**. ② **비용** — 우리 SE 1 µm 입자를 하위 구 10²–10³ 개로 풀면 real_14 SE 32,832 개 → 3 × 10⁶–3 × 10⁷ 구 (우리 산수) = Giannis 2021 (`giannis2021_stress_based_multicontact_dem`, §C 위 "frame[5] 4중 확증") 이 적은 비용 장벽 그대로 ⇒ **MPM scaffold 커플링 (AM 골격 고정 + SE 만 MPM) 유지 근거 +1**. ③ **손잡이가 반대** — 그들은 강성을 실재값 (E_b = E_NMC 1.99 × 10¹¹ Pa) 으로 두고 **강도**를 복합체 유효값으로 낮춘다 (기공 붕괴 · 재배열 · 바인더 변형 · 계면 미끄럼을 α 1.2 · σ0 에 럼핑, stated); 우리 DEM 은 **강성**을 18× 연화. 같은 인식론 (빠진 기전을 유효 매개변수로 럼핑 — frame [2]), 다른 매개변수.
+- ⛔ **옮기지 않는 것**: COR 값 · 기판 서열 · *"기판 항복응력 ≫ 영률"* (동적 충돌 소산의 결론 — 우리 MPM pure-SE 압밀 보정의 "영률이 주 손잡이" 와 문제가 다르다) · Hamaker 23.4 × 10⁻¹⁹ J (출처 미기재) · 표 σ0 (Al · Cu · W 는 유도 한계와 ×0.34 · ×0.63 · ×2.0 불일치 · SS316 E_b 2.00 × 10¹⁰ 오기 추정 — 우리 산수, 카드 §4-7).
+- **frame [4] · [5]**: 실험 대조가 서열뿐 (속도 범위 겹침 · 각도 실험 4점 · 기판 서열에 Al 예외를 산화막으로 사후 설명 · 크레이터 실험 0) → 교차검증 상대 아님. DEM 을 **역학**(충돌·소산·증착)에 쓰고 수송 (σ) 은 0 — 우리 분업의 반대 방향 사용.
+
 ## D. 패킹 / Furnas dip — DEM·기하 소유, 소성 MPM 불가
 > ★ **할라이드 cross-check (Varkey ↔ Kim 2025):** Varkey 2026 (할라이드 Li₃YBrCl₆) = 할라이드 *압밀/σ* (E=10.58 →
 > stiffer → floor 21/37 %); **Kim 2025 (할라이드 Li₂ZrCl₆ LZC) = 할라이드 *계면 kinetics*** (bulk σ 0.51 < LPSCl
@@ -3814,6 +3828,7 @@
 > 2026-10-27 추가 — `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` — ① σ 를 z 로만 푼다 (`solve_sigma_z`) — 설계 이방성에서 방향차가 κ ≤ 4.0 · E ≤ 20.5 (공극 60 %) 라 압밀 (z) 이 만든 면내 σ_x · σ_y 와 강성 이방이 미측정 ② 복셀 격자 선형 탄성 주기 균질화 (C_eff · 단위 변형 6) 가 없다 — 압밀 침대의 이방 탄성 텐서 기준값 [제안 · 접촉 완전 결합이라 상한 쪽].
 > 2026-10-27 추가 — `wang2027_ncm811_effective_bulk_modulus_mapper_dfs_gnn` — ① 압축된 침대의 **선형 탄성 균질화 판독** (K · E · G) 이 없다 — 복셀 FE 한 번으로 나오는 양이고 정본 `song2025_porous_argyrodite_modulus_fracture_toughness` (다공 LPSCl 펠릿 벌크 E 4.7 GPa) 가 frame[4] 표적이 된다 (제안 · 미실행 · 가장 작은 길 = 스칼라 Moulinec–Suquet 균질화기 `scripts/fft_homogenize.py` 에 4 차 Green 연산자를 넣는 확장 · 복셀 완전 결합 판은 실측보다 단단하게 나올 것 — 그 차가 접촉 유연성의 정량값) ② 구조 예측기 중첩 CV 의 바깥 폴드가 무작위 순열 (`scripts/ml_design_structure.py:273–278`) — 설계점 (시드 가족) 묶음 폴드가 없다 (이 논문은 공간 묶음 분할로 누수 −0.007 을 따로 쟀다) ③ 이 논문의 교훈 = φ 이차식 (3 매개변수) R² 0.905 > GIN GNN 0.880 · 혼합 0.917 — 대리모델의 몫은 조성 잔차 분산의 ≈13 % [우리 산술] = 우리 "법칙이 σ · ML 은 구조 입력" 분업의 외부 확인.
 > 2026-10-27 추가 — 혼합 중 껍질 형성 (SE 전단 소성) · 공정 온도 (100 °C 혼련 · 5 °C 냉각) · 크기별 피복 (같은 MF 에서 8.7 µm 만 입혀짐) 을 담을 자리가 없다 (`wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode`) — 첫 대리 후보 = 믹서 DEM 의 쌍 · 크기별 사건당 소산 에너지 분포 (제안 · 미등록).
+> 2026-11-02 추가 — `tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond` — 입자 **분할 (파편)** 을 실제로 내는 결합구 응집체 DEM (Potyondy–Cundall 결합 파단 · `Fig. 7b` · `Fig. 14b` 에 떨어져 나간 구) — 우리 Auerbach 는 분류만. 단 이 논문 설정은 NMC 강도/항복 = 860/9.3 MPa ≈ 92 라 식대로면 법선 파단 불가 (σ_b^max ≤ ≈27 MPa, 우리 산수) → 흡수하려면 강도 · 항복을 입자 분할 실측 (`wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem`) 에 먼저 묶을 것. 고속 충돌 · 분사 퇴적 (냉간분무) 공정 축도 우리에게 없다 (우리 = 준정적 압밀만).
 
 
 ## G. AM 입자 **내부**(sub-particle) 미세구조 — 우리 축 **아래 한 칸**, 접점은 방법론뿐 (2026-08-25 신설)

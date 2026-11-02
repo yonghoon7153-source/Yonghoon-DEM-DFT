@@ -510,6 +510,18 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/xu2023_realistic_am_shape_cgmd_calendering.md` | **Xu, Ngandjong, Liu, Zanotto, Arcelus, Demortière, Franco\*** (**LRCS / ARTISTIC**, Amiens), "**Lithium ion battery electrode manufacturing model accounting for 3D realistic shapes of active material particles**" (***J. Power Sources* 554 (2023) 232294**, DOI 10.1016/j.jpowsour.2022.232294, **open access CC BY**; 본문 9 pp · Fig 1–5 · Table 1–2 · SI Fig S1–S7 + Table S1–S2 · 동영상 3편) — 위 편의 **구(球) 근사를 깬** 후속. AM 2차입자를 **싱크로트론 µ-XCT 형상 그대로** 재현(Ø**1.59 µm** 1차구 평균 **62 개**의 JKR 응집 클러스터)하고 LAMMPS 로 슬러리·건조·압연 재실행 | ★★ **DL 3편이 ref [36] / ref [33] 으로 지목한 바로 그 논문** — 그 셋의 DEM 물리(LJ + JKR, E/ν/γ/k_t/μ_t/감쇠 전수)와 유일한 실험 검증이 여기 있다. ⛔ **그러나 압력축을 밀지 않았다 — 없앴다**: 본문·SI 전수 `MPa` **0 회**, 유일한 `Pa` 는 슬러리 배로스탯 **10⁵ Pa**, 공정 축은 **CD 0–42.2 %** 뿐이고 **포화하지 않은 채 끝난다**(⇒ floor 판정 불가). ⛔ **timestep · 플래튼 속도 · COR 미기재** ⇒ 준정적성 검산 불가. ⛔ **τ 검증은 독립이 아니다** — SI 가 **dilation–erosion 인자를 τ 의 XCT 값에 맞춰 {1,2,3} 중 2 로 고르고 모든 결과에 적용**했다고 명시(porosity 검증은 부피보존이라 유효). ★ **우리가 얻는 것은 형상 축**: Krumbein 구형도 `(bc/a²)^⅓` 분포가 두께 36–42 % 감소에 **모드 −0.04 ~ −0.06** 만 이동 ⇒ **우리 AM-frozen 규약의 외부 지지** · 같은 porosity 에서 실형상 τ 가 구 근사의 **1.55–2.40배**(압밀할수록 벌어짐) · **CBD 를 전도상에 넣느냐로 τ 가 1.7–3.2배** 갈리고 논문이 *"참값은 그 사이"* 라고 적는다 · 전체볼륨 대비 서브볼륨 τ **RVE 편향 +5.1 → +12.0 %**(압밀 후 두 배) |
 
 
+## 🌬️ 건식(무용매) **분사 퇴적** — 냉간분무 단일입자 충돌 DEM (2026-11-02 신설)
+
+> 압연·피브릴 계열(🏭 건식 후막 절)과 **다른 건식 갈래** — 분말을 기류로 쏘아 충돌만으로 붙인다.
+> 우리 준정적 냉간 압밀(300 MPa)과 **하중 체제가 다르다**(고속 충돌 ≈10⁻⁷ s) — 값은 옮기지 않고 **입자 표현 · 소성의 종류**만 가져온다.
+> ⚠ 소재 = NMC622 : PVDF : CB (LIB 조성, **황화물 SE 0**) — 물성 4축에 *수치로* 넣지 않는다.
+> DEM 축 전체 목록은 `INDEX_DEM.md`, 우리 대비 비교노트는 `comparison_vs_ours_DEM.md` (§C `[Tovar26CS]` · §F).
+
+| slug | 논문 | 왜 중요한가 |
+|---|---|---|
+| `papers/tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond.md` **(본문 44 pp Journal Pre-proof + SI 9 pp 전수 · 그림 15/15 + GA + SI 8/8 + 표 2 이어붙임 + 식 크롭 10 · 손 크롭 26 (GA + 본문 15 + 식 10) · 재크롭 10 (SI 8 + 표 2))** | **Tovar, Kim, Surghani, Ramos, Roehling, Hoover, Radousky, Ye, John, Nisar, Mohammed, Agarwal, Baker, Curtis\*** (**UC Davis 화공 + LLNL + FIU**), "**Cold spray deposition of cathode composites modeled via a DEM plastic–elastic bond framework**" (***Surf. Coat. Technol.*** 2026, **Journal Pre-proof** 134102, DOI `10.1016/j.surfcoat.2026.134102`; 접수 2026-08-05 / 채택 2026-10-29). NMC622 응집 입자 하나 (Ø1 µm 강체 구 **2,499개** FCC) 가 결합구 기판 (구 12,716개) 에 **160 m/s** 로 부딪히는 **탄소성 가상결합 DEM** (굽힘 Guo 2018 · 법선 Suehr 2025 · Potyondy–Cundall 파단 · Hertz/Mindlin 접촉 e 0.60 · Hamaker vdW) + 실험 (N₂ 70 psi · 300 °C · CFD-DEM 속도 ≈120–210 m/s ↔ 고속영상 114–185 m/s). **COR 0 = 증착**: Al 만 증착 (COR 0) · W 최고 (figure-read ≈0.20) · 기판 감도 = **항복응력 ≫ 영률** (항복 10³배 ↓ → COR 0.3 → 0 vs 영률 10⁵배 ↓ → 0.2 → 0) · 사선 30° 부터 실험 증착 ≈0 · **PVDF 0 wt% = 무증착**, 최소량 Cu 1 · steel/SS316/Inconel/Al 2–3 · W ≈4 wt% · 크레이터 w/d ≳ 0.8 · h/d > 0.2 에서만 증착 | ★★ **우리 층위 지도의 "형상이 바뀌는 이산 입자계" 넷째 행** — 하위 구는 강체, 응집체 모양은 **결합 항복 (격자 의존 이산 소성)** 으로만 변한다 = 우리 DEM (접촉 δ 프록시 · 형상 불변) 도 우리 MPM (J2 연속체 유동) 도 아닌 셋째 범주 · 그런데 NMC 는 항복변형률 4.7 × 10⁻⁵ (우리 산수) 라 결합 지도가 전부 "소성" 으로 포화하면서도 실질 변형은 "minimal" (저자) = **표지 ≠ 양** · 강성은 실재값 (199 GPa), 강도만 유효값 (σ0 9.3 MPa · α 1.2) 으로 낮춤 = 우리 18× 강성 연화와 손잡이가 반대인 같은 럼핑 인식론. 🔴 **표 내부 불일치** (우리 산수): SS316 E_b 2.00 × 10¹⁰ (오기 추정) · Al/Cu/W 유도 한계 ↔ σ0 ×0.34/×0.63/×2.0 · 식대로면 NMC 법선 파단 불가 (σ_b^max ≤ ≈27 MPa) 인데 `Fig. 11c` 입자 내부 고응력 띠 · `Fig. S8` 은 본문 말과 달리 **기판** 밀도 스윕 · 실험 대조는 **서열뿐** (Al 예외 사후 설명) · DEM 코드 미기재 · 단일 실행 · **축**: 건식 분사 퇴적 · 결합구 (BPM) 소성 · 입자 분할 DEM · 기판(집전체) 의존 바인더 문턱 |
+
+
 ## 🧰 방법론(ML) 카드 (배터리 아님 — 도구)
 | slug | 논문 | 축 |
 |---|---|---|
