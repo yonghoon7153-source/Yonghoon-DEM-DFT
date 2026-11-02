@@ -1,25 +1,12 @@
----
-title: "서버 용도 설명서 2026-10 (GABIA GPU SERVER · RTX A6000)"
-date: 2026-11-02
-updated: 2026-11-02
-tags: [report, server, gabia, usage-statement, monthly]
-status: 초안 (2026-11-02 · 사용자 양식 '3. 서버 용도 설명서.hwp' 의 '2. 용도 설명' 칸에 붙여 넣을 본문 · 9 월판과 같은 틀)
-confidence: medium
-verificationStatus: unverified
-explored: false
-authoredBy: agent
-effort: medium
-claimType: mixed
-evidenceScope: multi-source-primary
----
+서 버 용 도 설 명 서
 
-# 서버 용도 설명서 — 2026년 10월 (GABIA GPU SERVER · RTX A6000)
+1. 품명
+영문법
+GABIA GPU SERVER (RTX A6000)
+국문법
+가비아 GPU 서버호스팅 (RTX A6000)
 
-> 양식의 **1. 품명** 칸 (영문명 GABIA GPU SERVER (RTX A6000) · 국문명 가비아 GPU 서버호스팅 (RTX A6000)) 은 9 월과 같다.
-> 아래 **2. 용도 설명** 본문을 양식에 그대로 붙여 넣는다. 값 규율: 판독 전 값 · 인용위험 원장의 값 · 점착 W 값 · li2s 절대 수송값은 싣지 않았다.
-> 근거 기록: `db/properties/` 의 10 월 runlog · 마감 · 결정 원장 (`db/governance/decisions.json`) · `kb/open_items.md` ⏭-NOW-z1~z28 · 주간 정리 10-04 · 10-25 · 11-01.
-
-## 2. 용도 설명 (붙여 넣을 본문)
+ 2. 용도 설명
 
 "전고체 배터리용 황화물 고체전해질(Argyrodite Li₆PS₅Cl 계)의 첨가제 디지털 트윈 스크리닝 플랫폼 구축"의 수행을 위해, 본 GPU 서버에서 아래의 양자역학적 시뮬레이션·머신러닝 계산 및 자율검증 인프라 구축 연구를 수행하였습니다. 지난달이 검증된 판정 체계를 셀 수준 협업 입력과 실험 공동연구로 넓히는 단계였다면, 이번 달은 넓혀 둔 트랙들을 결과를 보기 전에 정한 닫힘 조건대로 마감하고, 그 결과를 원고의 계산 방법(Methods)과 공동연구자 전달물로 묶어 내는 단계였습니다. 외부 공동연구자가 판정 규칙을 정한 비정질(유리) 황화물 소셀 이온수송 트랙을 대조 유리 비교와 모델 검증까지 마친 뒤 확정·금지 문장과 미해결 목록을 한 문서에 모아 닫았고, 첨가제(Nd)–고전압 양극 계면 연구는 Nd 치환 자리·분해 구동력·결합 분석(Bader·ELF)을 사전등록 카드대로 계산하여 실험 쪽 공동연구자 원고의 계산 방법 본문판과 SI 판으로 정리해 송부하였습니다. 계면 생성물의 리튬 이동 장벽은 셀 크기 수렴을 판정하는 4×4×4 대형 계산을 본 서버 단독으로 시작하였고, 탄성 상수 계산은 12 변형점 중 11 점까지 진행하였습니다. 이 계산들이 GPU 한 장(48 GB)을 안전하게 나눠 쓰도록, 계산 간 공존은 결정 원장에 등록한 범위 한정 예외와 기계 가드로만 허용하고 계산 교대는 자동 실행 사슬로 묶어 운용하였습니다. 다음 다섯 가지 트랙을 병렬 수행하였습니다.
 
@@ -35,26 +22,4 @@ evidenceScope: multi-source-primary
 
 이상의 UMA 머신러닝 MD(유리 평형·담금질)·UMA+D3 계면 이완·QE-GPU 탄성 상수·NEB 셀 수렴·대형 대조 이완·ELF/빈자리 SCF·Bader 후처리·공개 DB 열역학 조회·자율검증 인프라는 본 GPU 서버에서 수행되었으며, 공용 RTX 3090 서버(도펀트 캐스케이드 본 라운드 · 계면 생성물 밴드갭 12 상 · Nd 자리 상태방정식·분해·같은 셀 Bader/ELF · 유리 MD 일부 · Li₂S 2×2×2 대조)와 외주 VASP 계산(점착 2차) 등 별도 자원의 산출물은 원자료 해시 대조를 거쳐 본 서버의 판정 체계에 회수·연동됩니다.
 
-모든 결과는 GitHub 저장소(yonghoon7153-source/Yonghoon-DEM-DFT, claude/friendly-meitner-lldvar 브랜치)의 tools/·kb/·db/·webapp/ 디렉토리에 paper-grade 형식으로 git-tracked 보존되어 있으며(당월 커밋 737 건 · 결정 원장 등록 59 건 · 리뷰 프롬프트·회신 33 건 · 문헌 digest 111 편), 향후 Argyrodite 첨가제 paper, DEM 협업 계면 입력, 물리AI 소재검증 플랫폼의 핵심 데이터로 활용 예정입니다.
-
-## 근거 (사람용 · 양식에는 안 넣는다)
-
-| 줄 | 근거 |
-|---|---|
-| ① 공존 예외 넷 · 피크 · 가드 | CLAUDE.md gabia 절 — 예외 (4) v2 5 런 (10-01 → 10-03 16:56:59 · 10-01 GPU 43,015 MiB / 가드 46,000) · (5) 대조 B 담금질 3 시드 (→ 10-11 19:39:47 · seed3 47.5 h) · (6) 600 K 3 런 (→ 10-14 19:47:20) · (7) 650 K 3 런 (→ 10-16 12:48:08 · 각 9.2 h · 피크 합계 39,351 MiB) · 전부 가드 발동 0 |
-| ① 650 K 5/5 · 600 K 1/5 · R 집합 3 < 4 | `lpscl_smallcell_glass_control_bmeasurable_closed_2026_10_30.json` 허용 문장 |
-| ① UMA–DFT 몫 · 분산력 몫 | `lpscl_smallcell_glass_track_closed_2026_10_30.json` (모델 검증 문장 · 분해 열 +2.7 · 모델 −0.9 · 분산 +9.4 · 나머지 +6.5 ln-부피 %) |
-| ① k-점 단일점 압력 차 0 | `lpscl_glass_model_check_runlog_2026_10_19.json` `✅_sp_판독_2026_10_23` (gabia 10-23 16:24–17:32) |
-| ② 0.002 eV/Nd | 주간 정리 10-25 · `ndo_site_eos_fit_2026_10_23.json` (압력 어림 −0.098 대 EOS −0.100) · CLAUDE.md 'EOS 는 조건부' |
-| ② 분해 구동력 | `nd_q2_decomp_readout_2026_10_26.json` 허용 문장 (숫자는 양식에 안 넣음) · 기저 조회 = gabia CPU step1 · 1b |
-| ② S 빈자리 | `nd_s_vacancy_closed_2026_10_20.json` 허용 문장 · gabia ndsvac 10-20 09:21–12:34 |
-| ② Bader · ELF (gabia) | `nd_q3_bader_elf_runlog_2026_10_19.json` (Bader 후처리 14:56–14:58 · NC Nd 변환 검증 · ELF SCF 16:17 → 17:36) |
-| ② 원고 Methods · 검토 22 건 | `kb/papers/ndo_lpscl16_methods_2026_10_28.md` · 커밋 f3b41b9a |
-| ② 생성물 11 종 | `cei_product_gap_card_2026_10_27.json` · `cei_product_gap_runlog_2026_10_27.json` (gabia 조회 b44d899c · 계산은 kgy · 12/12 = 11-02) |
-| ③ 30 meV · 45 GB · 39,138 MiB · 26 h | `li2s_cellconv_card_2026_09_01.json` C1 · `li2s_neb_cellconv_runlog_2026_10_09.json` (P1 10-30 13:27:50 · G1 ok 10-31 15:25:13) |
-| ③ Li₃Nd r2 | `li3nd_p333_control_runlog_2026_10_11.json` (`✅_r2_닫음_2026_10_26` · 누적 BFGS 311) · `D-2026-10-26-li3nd-r2-stop-now` · `D-2026-10-26-li3nd-neb-si-conditional` · `HZ-li3nd-neb-si-conditional` |
-| ④ 네 점 · 11/12 · 게이트 | `shear_b2o3_vs_lpscl16_2x_amendment_2026_10_14_bfgs_gate.json` (10-14 기준 9/12 · 13_m 10-11 BFGS 171 정지) · 13_m 10-28 23:07 · 12_p 10-30 13:10 |
-| ④ 31 시간 · 자동 사슬 | `D-2026-10-30-li2s-444-after-12p` (selftest 13 · 깨기 4/4) |
-| ⑤ SE 쌍 16 구조 | `wad_se_pairs_uma_result_2026_10_01.json` (gabia · 탄성 23_m 정지 창 02:27–03:28) |
-| ⑤ 107 엔트리 · 용해 에너지 | `esw_e2b_li2s_correction_2026_10_03.json` · `cascade_dissolution_energy_demo_readout_2026_10_14.json` (gabia CPU 8 스레드 37 분 · 180/180) |
-| 맺음 · 통계 | KST 10-01–10-31 `git log HEAD` 737 · `D-2026-10-*` 59 (active 50 · superseded 5 · proposed 4) · kb/reviews 새 prompt/reply 33 · litdb/papers 새 digest 111 · V100 은 10 월에 안 씀 (Ag\|흑연 · Nd EOS 를 kgy 로) |
+모든 결과는 GitHub 저장소(yonghoon7153-source/Yonghoon-DEM-DFT, claude/friendly-meitner-lldvar 브랜치)의 tools/·kb/·db/·webapp/ 디렉토리에 paper-grade 형식으로 git-tracked 보존되어 있으며(당월 커밋 737 건 · 결정 원장 등록 59 건 · 리뷰 프롬프트·회신 32 건 · 문헌 digest 111 편), 향후 Argyrodite 첨가제 paper, DEM 협업 계면 입력, 물리AI 소재검증 플랫폼의 핵심 데이터로 활용 예정입니다.
