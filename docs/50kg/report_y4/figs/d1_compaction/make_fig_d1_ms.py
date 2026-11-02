@@ -59,6 +59,7 @@ RUN_PARENT, RUN_CASE = '$HOME/simulation', 'kg50_d1_b50'
 TAR_TAG = 'kg50_d1_stage_frames_20261102'
 
 ORIGIN, PREV = HERE / 'origin', HERE / 'previews'
+FIGSIZE = None   # (W, H) in — 슬라이드 칸 크기로 그리기 (1저자 11-03 *"글씨가 보이게 들어가려면 사이즈가 충족"*) · None = 4.3 × 7.2 · 이때 y 이름 두 줄
 KEY_JSON = HERE / 'key_numbers_d1_ms.json'
 STAGE_CSV = HERE / 'stage_frames_d1.csv'
 FIG_NAME = 'd1_ms_compaction_3panel'
@@ -709,6 +710,9 @@ def _mpl_setup():
                          'axes.labelsize': 12, 'svg.hashsalt': 'd1ms', 'mathtext.fontset': 'custom',   # s⁻¹ (U+207B 없는 글꼴)
                          'mathtext.rm': 'Liberation Sans', 'mathtext.it': 'Liberation Sans:italic', 'mathtext.bf': 'Liberation Sans:bold',
                          'mathtext.sf': 'Liberation Sans', 'mathtext.cal': 'Liberation Sans', 'mathtext.tt': 'Liberation Mono'})
+    if FIGSIZE:                                           # 슬라이드 칸 크기 = 1:1 로 붙이므로 글씨를 그 크기에 맞춘다
+        plt.rcParams.update({'font.size': 9, 'axes.labelsize': 9.5, 'xtick.major.size': 4, 'ytick.major.size': 4,
+                             'xtick.minor.size': 2, 'ytick.minor.size': 2})
     return plt
 
 
@@ -745,15 +749,17 @@ def draw_preview(tser, vser, pser, bounds_ms, arrows, stem, ranges=None, start_a
     plt = _mpl_setup()
     from matplotlib.ticker import FixedLocator, FuncFormatter, MultipleLocator
     if ranges is None:
-        fig, axs = plt.subplots(3, 1, sharex=True, figsize=(4.3, 7.2))
+        fig, axs = plt.subplots(3, 1, sharex=True, figsize=FIGSIZE or (4.3, 7.2))
     else:
         (hi0, hi1), (lo0, lo1) = ranges
         top = 1 + GAP_FRAC + (hi1 - hi0) / (lo1 - lo0)        # 아래 범위 = 다른 두 패널과 같은 높이
-        fig, axs = plt.subplots(3, 1, sharex=True, figsize=(4.3, 7.2 * (2 + top) / 3), gridspec_kw={'height_ratios': [top, 1, 1]})
+        fig, axs = plt.subplots(3, 1, sharex=True, figsize=FIGSIZE or (4.3, 7.2 * (2 + top) / 3),
+                                gridspec_kw={'height_ratios': [top, 1, 1]})
     b2, b3, b4 = bounds_ms
+    nl = '\n' if FIGSIZE else ' '                       # 슬라이드 칸 = 패널이 낮아 y 이름 두 줄 (ps73 슬라이드 그림과 같다)
     spec = [(tser, 'thickness', 'Thickness (µm)', THICK_YLIM, 10),
-            (vser, 'velocity', r'Plate velocity (µm s$^{-1}$)', (0, 15), 5),
-            (pser, 'pressure', 'Measured pressure (MPa)', (0, 330), 100)]
+            (vser, 'velocity', r'Plate velocity' + nl + r'(µm s$^{-1}$)', (0, 15), 5),
+            (pser, 'pressure', 'Measured pressure' + nl + '(MPa)', (0, 330), 100)]
     for ax, (ser, key, ylabel, ylim, ystep) in zip(axs, spec):
         ax.tick_params(top=False, right=False, which='both')
         ax.plot([t for t, _, _ in ser], [y for _, y, _ in ser], '-', color=COLORS[key], lw=1.6)
@@ -1609,4 +1615,10 @@ def selftest():
 if __name__ == '__main__':
     if '--selftest' in sys.argv[1:]:
         sys.exit(0 if selftest() else 1)
-    main(require_packing='--atomtop' in sys.argv[1:])
+    av = sys.argv[1:]
+    if '--figsize' in av:                                 # 슬라이드 칸 크기 · 미리보기만 다른 폴더 (리포 산출 안 건드림)
+        i = av.index('--figsize')
+        FIGSIZE = (float(av[i + 1]), float(av[i + 2]))
+    if '--preview-dir' in av:
+        PREV = Path(av[av.index('--preview-dir') + 1])
+    main(require_packing='--atomtop' in av)
