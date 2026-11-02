@@ -10904,6 +10904,155 @@ def t_PD12u():
     return ok, got
 
 
+# ── ★ 11-02 PC6-11 (사전 공격 6 회차 마무리 · 변이 생존 = 시험 공백 · 보고 preattack6/PREATTACK_C2_final.md §3-2 · 탐침 final/probes/probe6f_mut_paths.py) ──
+#    가드는 지금 동작한다 (아래 시험 = 지금 사슬에서 통과) · 그 가드를 끄면 (변이 M2e · M2c · M9 · M8 · M11 · M12 · M15) 옳은 이유로 실패해야 한다.
+def pd11_forge(tag, d, n, changes):
+    """원장 clone 의 끝 커밋 (결과 줄 n) 을 되돌리고 그 줄의 칸만 바꾼 손 줄 → clone 경로 (probe6f_mut_paths 의 forge 꼴)."""
+    res = led_result(d, n)
+    dr = led_clone(d, tag + '_forged')
+    git_(dr, 'reset', '-q', '--hard', 'HEAD~1')
+    led_hand(dr, dict(res, **changes), msg='시험 — 끝 결과 줄 칸 바꿈 (PC6-11)')
+    return dr
+
+
+def pd11_tail(tag, dr, base, n_orig):
+    """--add --resume n_orig (원장만 보는 관문) → 재실행 시도 (바탕 사본) → 판정 (그 시도 폴더) → 칸."""
+    add = led_add(dr, 'ladder:P0', resume=n_orig)
+    w = world(tag + '_r')
+    c = lad_att(tag + '_r', w, dr, add[1], base=base) if add[1] else None
+    rj = (c['out'] / 'rejected.json') if c else None
+    rec = json.loads(rj.read_text(encoding='utf-8')) if rj is not None and rj.exists() else {}
+    v = ver_led(tag + '_v', [c['out'] if c else base / f'attempt_{n_orig}'], dr)
+    return {'add_rc': add[0], 'calls': n_calls(w), 'rejected': rec.get('code'), 'why': str(rec.get('cause')), 'verdict': stop_code(v),
+            'vwhy': str((((v or {}).get('v') or {}).get('stop') or {}).get('cause'))}
+
+
+@check('PD11', '★ 11-02 PC6-11 (변이 생존 M2e · M2c · M9 · probe6f_mut_paths 꼴 · 실경로) — PC5-01 다시 셈의 resume_ok · side 칸 · 재실행 풀기 전 다시 셈의 앞 '
+               '재실행: ⓐ 원 시도 결과 뒤 · resource · 자격 False (검사 실패 흔적) → 끝 결과 줄 resume_ok 만 True (reset + 손 줄) → --add --resume 1 = 받음 '
+               '(원장만 봄) → 재실행 시도 = 풀기 전 거부 ATTEMPT_LEDGER_MISMATCH (러너 0 · 사유 resume_ok) · 판정 (재실행 바탕) = ATTEMPT_LEDGER_MISMATCH (사유 '
+               'resume_ok) (변이 M2e = 재실행 돎 · 판정 원장 대조 통과) ⓑ 원 시도 OOM (자격) → 재실행 2 = 잘못된 주소 (runner_rc · 자격 False) → 끝 줄 (항목 2) '
+               'side 만 pre → 재실행 3 = 풀기 전 거부 (러너 0 · 사유 side · 변이 M2c = 돎) ⓒ 같은 사슬 → 끝 줄 (항목 2) cause · resume_ok → resource · True → '
+               '재실행 3 = 풀기 전 거부 (러너 0 · 사유 cause · 변이 M9 = 원 시도만 다시 세어 돎)')
+def t_PD11():
+    def go():
+        out = {}
+        d, _rc, _so = led_new('PD11e')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        a = lad_att('PD11e', world('PD11e_a', dict(PW, faults=[{'do': 'unchecked_fail', 'oom': True, 'match': {'rj': 'inf'}}])), d, n1)
+        out['e'] = (pc_res(d, n1), pd11_tail('PD11e', pd11_forge('PD11e', d, n1, {'resume_ok': True}), pc_copy_base(a['base'], 'PD11e_base'), n1))
+        for tag, changes in (('PD11c', {'side': 'pre'}), ('PD11n', {'cause': 'resource', 'resume_ok': True})):
+            d, _rc, _so = led_new(tag)
+            _r, n1, _s = led_add(d, 'ladder:P0')
+            a = lad_att(tag, world(tag + '_a', dict(PW, faults=[{'do': 'oom_after_mark', 'match': {'rj': 'inf'}}])), d, n1)
+            _r, n2, _s = led_add(d, 'ladder:P0', resume=n1)
+            lad_att(tag + '_b', world(tag + '_b', dict(PW, faults=[{'do': 'illegal_driver_after_mark', 'match': {'rj': 'inf'}}])), d, n2, base=a['base'])
+            out[tag] = (pc_res(d, n2), pd11_tail(tag, pd11_forge(tag, d, n2, changes), pc_copy_base(a['base'], tag + '_base'), n1))
+        return out
+    out = scen('PD11', go)
+    (e_h, e), (c_h, c), (n_h, n) = out['e'], out['PD11c'], out['PD11n']
+    ok = (e_h == {'status': 'stopped', 'side': 'post', 'cause': 'resource', 'resume_ok': False, 'by': 'chain'}
+          and (e['add_rc'], e['calls'], e['rejected'], e['verdict']) == (0, 0, 'ATTEMPT_LEDGER_MISMATCH', 'ATTEMPT_LEDGER_MISMATCH')
+          and 'resume_ok' in e['why'] and 'resume_ok' in e['vwhy']
+          and (c_h['cause'], c_h['resume_ok'], n_h['cause'], n_h['resume_ok']) == ('runner_rc', False, 'runner_rc', False)
+          and (c['add_rc'], c['calls'], c['rejected']) == (0, 0, 'ATTEMPT_LEDGER_MISMATCH') and "side 'pre'" in c['why']
+          and (n['add_rc'], n['calls'], n['rejected']) == (0, 0, 'ATTEMPT_LEDGER_MISMATCH') and "cause 'resource'" in n['why'])
+    # 화면 600 자 안에 세 경우가 다 보이게 (변이 기록 · 옳은 이유 확인용) — 원장 끝 줄 (원인 · 자격) · --add rc · 러너 횟수 · 풀기 전 거부 · 판정 · 사유 앞머리
+    return ok, {k: (h['cause'], h['resume_ok'], v['add_rc'], v['calls'], v['rejected'], v['verdict'], v['why'][:40], v['vwhy'][:40])
+                for k, (h, v) in out.items()}
+
+
+@check('PD11m', '★ 11-02 PC6-11 (변이 생존 M8) — 합친 예측 판정 (사다리 둘 사본 · 합친 예측 · 원장 clone) 뒤 같은 바탕에 합친 단위 대상 (unit:P0_c0_R_j_lo) '
+                '의 뒤 시도 흔적 (손 항목 · 시도 폴더) → --reverify = REVERIFY_DIFF · rc 1 (PC5-10 너그러움 = 판정 입력 대상 · 합친 예측의 단위 · 점 대상 밖만 · '
+                '변이 M8 = 합친 단위 대상도 너그럽게 = REVERIFY_SAME)')
+def t_PD11m():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_main()
+
+    def go():
+        d = led_clone(r['d'], 'PD11m')
+        b0, b1 = (pc_copy_base(r[k]['base'], f'PD11m_{k}') for k in ('l0', 'l1'))
+        v = ver_led('PD11m_v', [b0 / r['l0']['out'].name, b1 / r['l1']['out'].name, r['m']['out']], d)
+        rv0 = call(['--stage', 'verdict', '--reverify', str(v['out']), '--root', FX['root']])
+        tpl = [x for x in led_lines(d) if x.get('kind') == 'entry' and x.get('target') == 'unit:P0_c0_R_j_lo'][0]
+        e = led_entry_like(d, tpl['n'])
+        c = led_hand(d, e, msg='시험 — 합친 단위 대상의 뒤 항목 (PC6-11 M8)')
+        f = b0 / f'attempt_{e["n"]}'
+        f.mkdir()
+        (f / 'attempt.json').write_text(json.dumps({'schema': 'rint-r-attempt-v1', 'n': e['n'], 'target': e['target'], 'machine': e['machine'],
+                                                    'resume_of': e['resume_of'], 'ledger_commit': c}), encoding='utf-8')
+        rv1 = call(['--stage', 'verdict', '--reverify', str(v['out']), '--root', FX['root']])
+        return v, rv0, rv1
+    v, rv0, rv1 = scen('PD11m', go)
+    return (v['rc'] == 0 and rv0[0] == 0 and 'REVERIFY_SAME' in rv0[1] and rv1[0] == 1 and 'REVERIFY_DIFF' in rv1[1]
+            and 'ATTEMPT_LEDGER_MISMATCH' in rv1[1], (v['rc'], rv0[0], rv0[1][-160:], rv1[0], rv1[1][-240:]))
+
+
+@check('PD11p', '★ 11-02 PC6-11 (변이 생존 M15 · PC10 의 예측 쪽) 사슬 예외 (Stop 아님 · 예측 단계 팔 읽기 중 KeyError) — 원장 예측 시도 → 예측 요약 (STOPPED · '
+                '멈춤 CHAIN_EXCEPTION · 사유에 예외 이름) · 결과 줄 by chain · stopped · 원인 chain_exception · 재실행 자격 False · 예외는 다시 올린다 → --add '
+                '--resume = rc 3 (변이 M15 = 요약 · 결과 줄 없이 다시 올림 → recover → parent_dead · 자격)')
+def t_PD11p():
+    r = s_led_main()
+
+    def go():
+        d = led_reset_after(r['d'], 'PD11p', 'rint-r attempt 2 result completed')
+        _r, n3, _s = led_add(d, 'predict')
+        orig = RR.read_run
+
+        def boom(*_a, **_k):
+            raise KeyError('시험: 예측 팔 읽기 중 사슬 결함 (Stop 아님)')
+        RR.read_run = boom
+        exc = None
+        try:
+            pred_att('PD11p', world('PD11p'), d, n3, [r['l0']['out'], r['l1']['out']])
+        except KeyError as e:
+            exc = repr(e)
+        finally:
+            RR.read_run = orig
+        f = Path(TD) / 'runs' / 'PD11p' / f'attempt_{n3}'
+        s = json.loads((f / 'predict_summary.json').read_text(encoding='utf-8')) if (f / 'predict_summary.json').exists() else None
+        r3 = led_result(d, n3)
+        raw = led_raw(d)
+        rc_add, _n4, so_add = led_add(d, 'predict', resume=n3)
+        return exc, s, r3, rc_add, led_raw(d) == raw
+    exc, s, r3, rc_add, same = scen('PD11p', go)
+    st = (s or {}).get('stop') or {}
+    r3 = r3 or {}
+    return (exc is not None and (s or {}).get('status') == 'STOPPED' and st.get('code') == 'CHAIN_EXCEPTION' and 'KeyError' in str(st.get('cause'))
+            and (r3.get('by'), r3.get('status'), r3.get('cause'), r3.get('resume_ok')) == ('chain', 'stopped', 'chain_exception', False)
+            and rc_add == 3 and same, (exc, (s or {}).get('status'), st.get('code'), {k: r3.get(k) for k in ('by', 'status', 'cause', 'resume_ok')}, rc_add))
+
+
+@check('PD11g', '★ 11-02 PC6-11 (변이 생존 M12) — 사슬 부모 칸 (chain_pid) 이 없는 시작 기록 (옛 기록 · 꼴 틀림 · 끝 기록 없음) 의 recover = rc 3 · 끝 기록을 쓰지 '
+                '않는다 (사슬 부모가 살았는지 확인할 수 없다 = 산 것과 같이 · 보수 · 변이 M12 = 죽은 것으로 → 끝 기록 · rc 0)')
+def t_PD11g():
+    out, _tok = gr_fake_launch('PD11g', chain={})
+    rc, so = call(['--stage', 'recover', '--out', str(out)])
+    end = out / 'groups' / 'L01_floor.end.json'
+    return rc == 3 and not end.exists() and '확인할 수 없다' in so, (rc, end.exists(), so[-240:])
+
+
+@check('PD11s', '★ 11-02 PC6-11 (변이 생존 M11) — 그룹 원 찾기: stat 을 못 읽는 프로세스 (가짜 /proc · stat = 폴더) = 확인 불가 (None) — 러너 세션 기록이 있어도 · '
+                '없어도 (stat 이 없으면 세션 · 계보로 가를 수 없다 · 보수 · 변이 M11 = 건너뜀 → [] = 거짓 확인)')
+def t_PD11s():
+    tok = 'd' * 32
+    fp = Path(TD) / 'pd' / 'PD11s_proc'
+    (fp / '990500' / 'stat').mkdir(parents=True)
+    runmap = RR.__dict__.setdefault('GROUP_RUN', {})
+    old = RR.PROC_DIR
+    try:
+        RR.PROC_DIR = str(fp)
+        no_ref = RR.group_members(tok)
+        runmap[tok] = {'pid': 910000, 'start': 5000}
+        try:
+            with_ref = RR.group_members(tok)
+        finally:
+            runmap.pop(tok, None)
+    finally:
+        RR.PROC_DIR = old
+    return no_ref is None and with_ref is None, (no_ref, with_ref)
+
+
 # ═════════════════════════ 실행 ═════════════════════════
 def main(argv=None):
     global RR, TD
