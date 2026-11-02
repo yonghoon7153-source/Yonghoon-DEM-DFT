@@ -10387,6 +10387,378 @@ def t_PC20():
     return w_ok and b_ok and q_ok, {'words': (len(wl), words), 'box6': (len(box6), [x[-200:] for x in box6]), 'q9': [x[-200:] for x in ql]}
 
 
+# ── ★ 11-02 사전 공격 6 회차 (PC6-01 · PC6-02 · 보고 docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2.md) ──
+#    탐침 = preattack6/probes/probe6_uid.py (PC6-01 · 같은 실 uid · environ 못 읽는 무관 프로세스) · probe6_unit.py U1 · probe6_real.py R1 · R2 (PC6-02) 를
+#    상주 시험으로 옮김 (고치기 전 판에서 옳은 이유로 실패 · 고친 뒤 통과 · 보수 쪽 (러너 세션 안 = 확인 불가) 은 그대로인지 함께)
+def pd_fake_proc(root, pid, ppid=1, pgrp=None, sid=None, start=10 ** 9, environ=b'', comm='fake'):
+    """가짜 /proc 항목 (PD01 · ★ 11-02 PC6-01) — pc_fake_proc 꼴 + 부모 · 프로세스 그룹 · 세션 (stat 4 · 5 · 6 째 칸 · 기본 = 자기 pid) · 이름 (괄호 ·
+    빈칸 포함) · environ None = 폴더 (못 읽음) · 실 uid = 이 시험 프로세스."""
+    p = Path(root) / str(pid)
+    p.mkdir(parents=True)
+    rest = ['S', str(ppid), str(pid if pgrp is None else pgrp), str(pid if sid is None else sid), '0', '-1'] + ['0'] * 13 + [str(start)] + ['0'] * 20
+    (p / 'stat').write_text(f'{pid} ({comm}) ' + ' '.join(rest) + '\n', encoding='ascii')
+    u = os.getuid()
+    (p / 'status').write_text(f'Name:\t{comm}\nUid:\t{u}\t{u}\t{u}\t{u}\n', encoding='ascii')
+    if environ is None:
+        (p / 'environ').mkdir()
+    else:
+        (p / 'environ').write_bytes(environ)
+
+
+@check('PD01', '★ 11-02 PC6-01 (사전 공격 6 회차 · 가짜 /proc) 그룹 원 찾기 — environ 을 못 읽는 같은 실 uid 프로세스: 러너 세션 · 그룹 밖이고 계보 (ppid) 위에 '
+               '이 런 프로세스 (표지 env · 러너 세션 · 그룹) 가 없으면 셈 밖 (옛 = 확인 불가 None → 끝난 런 GROUP_UNCONFIRMED · recover rc 3 — ssh 로그인 세션 · '
+               'setuid · agent 꼴 · 이름에 괄호 · 빈칸) · 러너 세션 안 · 그룹 번호 = 러너 · 부모가 표지 프로세스 · 부모 · 조부모가 러너 세션 = 확인 불가 그대로 · '
+               '러너 세션 번호의 지금 지도자가 뒤에 생긴 다른 프로세스 (시작 시각 다름 · pid 다시 쓰임) = 셈 밖 · 지도자 없음 · 러너 시작 시각 모름 · 계보 고리 = '
+               '확인 불가 (보수) · 러너 기록 없음 (옛 시작 기록 · 직접 부름) = 옛 규칙 그대로 · 확인 불가여도 찾은 표지 프로세스는 죽인다 · recover 끝 기록 = '
+               '확인 불가 pid · 무관 프로세스뿐이면 확인')
+def t_PD01():
+    tok, tok2 = 'b' * 32, 'c' * 32
+    needle, needle2 = f'RINT_RUN_TOKEN={tok}'.encode(), f'RINT_RUN_TOKEN={tok2}'.encode()
+    S, SST = 910000, 5000
+    run = {'pid': S, 'start': SST}
+    fp = Path(TD) / 'pd' / 'PD01_proc'
+    runmap = RR.__dict__.setdefault('GROUP_RUN', {})            # 고치기 전 판 = 이 자리 없음 (넣어도 읽지 않는다 = 옛 규칙)
+    old = (RR.PROC_DIR, RR.group_kill_pids)
+    got, kills = {}, []
+
+    def table(name, rows, ref):
+        (fp / name).mkdir(parents=True)
+        for kw in rows:
+            pd_fake_proc(fp / name, **kw)
+        RR.PROC_DIR = str(fp / name)
+        if ref is not None:
+            runmap[tok] = ref
+        try:
+            return RR.group_members(tok)
+        finally:
+            runmap.pop(tok, None)
+    unrelated = [dict(pid=910100, environ=b'X=1\0'), dict(pid=910101, ppid=910100, environ=None, start=6000)]
+    try:
+        RR.group_kill_pids = lambda pids: kills.extend(int(x) for x in pids)     # 가짜 pid — 죽이기 = 기록만
+        got['outside'] = table('outside', unrelated, run)
+        got['outside_odd_name'] = table('odd', [dict(pid=910100, environ=b'X=1\0'),
+                                                dict(pid=910111, ppid=910100, environ=None, comm='sshd: u@pts/0) (x')], run)
+        got['no_run_record'] = table('noref', unrelated, None)
+        got['in_session'] = table('insess', [dict(pid=910201, sid=S, environ=None)], run)
+        got['in_pgrp'] = table('inpgrp', [dict(pid=910301, pgrp=S, environ=None)], run)
+        got['child_of_member'] = table('kinm', [dict(pid=910400, environ=b'A=1\0' + needle + b'\0'), dict(pid=910401, ppid=910400, environ=None)], run)
+        got['child_of_session'] = table('kins', [dict(pid=910500, sid=S, environ=b'A=1\0'), dict(pid=910501, ppid=910500, environ=None)], run)
+        got['grandchild_of_session'] = table('kind', [dict(pid=910600, sid=S, environ=b'A=1\0'), dict(pid=910601, ppid=910600, environ=b'A=1\0'),
+                                                      dict(pid=910602, ppid=910601, environ=None)], run)
+        got['session_reused'] = table('reused', [dict(pid=920000, start=7000, environ=b'A=1\0'), dict(pid=920001, ppid=920000, sid=920000, environ=None)],
+                                      {'pid': 920000, 'start': 5000})
+        got['leader_gone'] = table('gone', [dict(pid=930001, sid=930000, environ=None)], {'pid': 930000, 'start': 5000})
+        got['start_unknown'] = table('unk', [dict(pid=940000, start=7000, environ=b'A=1\0'), dict(pid=940001, ppid=940000, sid=940000, environ=None)],
+                                     {'pid': 940000, 'start': None})
+        got['cycle'] = table('cycle', [dict(pid=960001, ppid=960002, environ=None), dict(pid=960002, ppid=960001, environ=b'A=1\0')], run)
+        got['member_and_outside'] = table('mo', [dict(pid=950000, sid=S, environ=needle + b'\0'), dict(pid=950001, environ=None)], run)
+        #  group_settle — 확인 불가 (러너 세션 안 · 못 읽음) 여도 찾은 표지 프로세스는 죽인다 (옛 = 그 자리에서 (False, None) · 아무도 안 죽임)
+        (fp / 'settle').mkdir(parents=True)
+        pd_fake_proc(fp / 'settle', 970000, sid=S, environ=b'A=1\0' + needle + b'\0')
+        pd_fake_proc(fp / 'settle', 970001, ppid=970000, sid=S, environ=None)
+        RR.PROC_DIR = str(fp / 'settle')
+        runmap[tok] = run
+        try:
+            got['settle'] = (RR.group_settle(tok, 0.2), sorted(kills))
+        finally:
+            runmap.pop(tok, None)
+        #  recover_group — 시작 기록의 러너 pid · 시작 시각 = 러너 세션 (무관 프로세스뿐 = 확인 · 러너 세션 안 못 읽음 = 미확인 + pid + 표지 프로세스 죽임)
+        g = Path(TD) / 'pd' / 'PD01_rec' / 'groups'
+        g.mkdir(parents=True)
+        for nm in ('L01_out', 'L01_in'):
+            (g / f'{nm}.launch.json').write_text(json.dumps({
+                'schema': 'rint-r-group-v1', 'name': nm, 'token': tok2, 'pid': S, 'pgid': S, 'runner_start': SST, 'argv': ['bash'],
+                'host': RR.host_ident(), 'started_utc': '2026-11-02T00:00:00Z', 'by': 'chain', 'chain_pid': DEAD_PID}), encoding='utf-8')
+        (fp / 'rec_out').mkdir(parents=True)
+        pd_fake_proc(fp / 'rec_out', 980100, environ=b'X=1\0')
+        pd_fake_proc(fp / 'rec_out', 980101, ppid=980100, environ=None)
+        RR.PROC_DIR = str(fp / 'rec_out')
+        e_out, skip_out = RR.recover_group(g / 'L01_out.launch.json', RR.host_ident())
+        (fp / 'rec_in').mkdir(parents=True)
+        pd_fake_proc(fp / 'rec_in', 980000, sid=S, environ=b'A=1\0' + needle2 + b'\0')
+        pd_fake_proc(fp / 'rec_in', 980001, ppid=980000, sid=S, environ=None)
+        RR.PROC_DIR = str(fp / 'rec_in')
+        del kills[:]
+        e_in, skip_in = RR.recover_group(g / 'L01_in.launch.json', RR.host_ident())
+        got['recover_out'] = (skip_out, (e_out or {}).get('confirmed'), (e_out or {}).get('killed'))
+        got['recover_in'] = (skip_in, (e_in or {}).get('confirmed'), (e_in or {}).get('killed'), (e_in or {}).get('unsure'),
+                             '980001' in str((e_in or {}).get('why')), sorted(kills))
+    finally:
+        RR.PROC_DIR, RR.group_kill_pids = old
+    want = {'outside': [], 'outside_odd_name': [], 'no_run_record': None, 'in_session': None, 'in_pgrp': None, 'child_of_member': None,
+            'child_of_session': None, 'grandchild_of_session': None, 'session_reused': [], 'leader_gone': None, 'start_unknown': None, 'cycle': None,
+            'member_and_outside': [950000], 'settle': ((False, None, 1), [970000]), 'recover_out': (None, True, 0),
+            'recover_in': (None, False, 1, [980001], True, [980000])}
+    bad = {k: (got.get(k), want[k]) for k in want if got.get(k) != want[k]}
+    return not bad, bad
+
+
+PD01R_AGENT = ('import ctypes, sys, time\n'
+               'ctypes.CDLL(None).prctl(4, 0, 0, 0, 0)\n'            # PR_SET_DUMPABLE 0 (ssh-agent · gpg-agent 꼴 — environ 이 root 소유 · 같은 uid 도 못 읽음)
+               'sys.stdout.write("1")\n'
+               'sys.stdout.flush()\n'
+               'time.sleep(float(sys.argv[1]))\n')
+def pd_world_tmp():
+    """root 시험 — uid 65534 자식이 지날 수 있는 임시 폴더 바탕 (TMPDIR 이 root 전용이면 /tmp · /var/tmp · /dev/shm 중 처음 맞는 것) · root 아님 = None (기본)."""
+    if os.getuid() != 0:
+        return None
+    for c in (tempfile.gettempdir(), '/tmp', '/var/tmp', '/dev/shm'):
+        p = Path(c)
+        try:
+            if p.is_dir() and all(os.stat(q).st_mode & 0o001 for q in [p] + list(p.parents)):
+                return str(p)
+        except OSError:
+            continue
+    return None
+
+
+def pd01r_scene(d, agent):
+    """(포크한 자식 · root 면 uid 65534 로 내린 뒤) PD01r 장면 → dict — 구경꾼 (같은 실 uid · dumpable 0 · 표지 env 없음 · 이 프로세스의 자식 = 러너 세션 밖) 이
+    사는 동안 run_in_group · 사슬 부모가 죽은 시작 기록의 recover · 러너 세션 안 environ 못 읽는 자식."""
+    import signal as _sig
+    import subprocess as _sp
+    res = {'uid': os.getuid()}
+    try:
+        ps = RR.proc_stat(os.getpid())
+        res['stat_fields'] = [list(ps[2:5]) if ps else None, [os.getppid(), os.getpgrp(), os.getsid(0)]]
+    except Exception as e:                                   # noqa: BLE001 — 고치기 전 판 (칸 없음) = 기록
+        res['stat_fields'] = [f'{type(e).__name__}: {e}', None]
+    env = {k: v for k, v in os.environ.items() if k != RR.GROUP_TOKEN_ENV}
+    b = _sp.Popen([sys.executable, '-I', '-S', str(agent), '60'], env=env, stdin=_sp.DEVNULL, stdout=_sp.PIPE)
+    try:
+        res['bystander_ready'] = b.stdout.read(1) == b'1'
+        try:
+            Path(f'/proc/{b.pid}/environ').read_bytes()
+            res['bystander_environ'] = 'readable'
+        except OSError as e:
+            res['bystander_environ'] = f'errno {e.errno}'
+        with open(d / 'run.log', 'w', encoding='utf-8') as lf:
+            rc, cause, end = RR.run_in_group(['bash', '-c', 'sleep 1'], str(d), dict(os.environ), lf, 60, d / 'groups', 'PD01r_run')
+        res['run'] = [rc, cause, end.get('confirmed'), end.get('left')]
+        rd = d / 'rec'
+        (rd / 'groups').mkdir(parents=True)
+        L = {'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': os.urandom(16).hex(), 'pid': DEAD_PID, 'pgid': DEAD_PID, 'argv': ['bash'],
+             'host': RR.host_ident(), 'started_utc': '2026-11-02T00:00:00Z', 'by': 'chain', 'chain_pid': DEAD_PID}
+        (rd / 'groups' / 'L01_floor.launch.json').write_text(json.dumps(L), encoding='utf-8')
+        with contextlib.redirect_stdout(io.StringIO()):
+            rc_rec = RR.main(['--stage', 'recover', '--out', str(rd)])
+        er = json.loads((rd / 'groups' / 'L01_floor.end.json').read_text(encoding='utf-8'))
+        res['recover'] = [rc_rec, er.get('confirmed'), er.get('by')]
+        sh = d / 'in.sh'
+        sh.write_text(f'"{sys.executable}" -I -S "{agent}" 60 > "{d / "in_ready"}" &\necho $! > "{d / "in_pid"}"\n'
+                      f'for i in $(seq 200); do [ -s "{d / "in_ready"}" ] && break; sleep 0.05; done\nexit 0\n', encoding='utf-8')
+        with open(d / 'in.log', 'w', encoding='utf-8') as lf:
+            rc2, cause2, end2 = RR.run_in_group(['bash', str(sh)], str(d), dict(os.environ), lf, 60, d / 'groups', 'PD01r_in')
+        res['in_session'] = [rc2, cause2, end2.get('confirmed'), end2.get('left')]
+        try:
+            os.kill(int((d / 'in_pid').read_text(encoding='utf-8').strip()), _sig.SIGKILL)
+        except (OSError, ValueError):
+            pass
+    finally:
+        b.kill()
+        b.wait()
+    return res
+
+
+@check('PD01r', '★ 11-02 PC6-01 실경로 (사전 공격 6 회차 probe6_uid 꼴 · 실제 /proc · 포크한 자식 · root 면 자식을 uid 65534 로 내려서) — 사슬과 같은 실 uid '
+                '이고 environ 을 못 읽는 무관 프로세스 (prctl dumpable 0 · 표지 env 없음 · 러너 세션 밖) 가 사는 동안: run_in_group (bash sleep 1 · rc 0) = 끝 '
+                '기록 확인 · 남음 [] (옛 = 확인 False · left None → GROUP_UNCONFIRMED) · 사슬 부모가 죽은 시작 기록의 recover = rc 0 · 확인 (옛 = rc 3) · 러너가 '
+                '띄운 environ 못 읽는 자식 (러너 세션 안 · 표지 물려받음) = 확인 False 그대로 (보수) · proc_stat 의 부모 · 그룹 · 세션 칸 = 실제 값')
+def t_PD01r():
+    import select
+    import signal as _sig
+    d = Path(tempfile.mkdtemp(prefix='pd01r_', dir=pd_world_tmp()))
+    root = os.getuid() == 0
+    try:
+        (d / 'agent.py').write_text(PD01R_AGENT, encoding='utf-8')
+        (d / 'w').mkdir()
+        if root:                                             # root = environ 을 다 읽는다 → 같은 실 uid · 못 읽음 꼴을 만들려고 자식만 uid 65534 로
+            for p in (d, d / 'w'):
+                os.chmod(p, 0o777)
+            os.chmod(d / 'agent.py', 0o644)
+        r, w = os.pipe()
+        pid = os.fork()
+        if pid == 0:                                         # 자식 — 끝은 늘 os._exit (부모의 finally · 정리를 돌리지 않는다)
+            code = 0
+            try:
+                os.close(r)
+                os.environ.pop('RINT_RUN_TOKEN', None)
+                if root:
+                    os.setgroups([])
+                    os.setresgid(65534, 65534, 65534)
+                    os.setresuid(65534, 65534, 65534)
+                out = pd01r_scene(d / 'w', d / 'agent.py')
+            except BaseException as e:                       # noqa: BLE001
+                out = {'error': f'{type(e).__name__}: {e}'}
+            try:
+                buf = json.dumps(out, sort_keys=True, default=str).encode('utf-8')
+                while buf:
+                    buf = buf[os.write(w, buf):]
+            except BaseException:                            # noqa: BLE001
+                code = 1
+            os._exit(code)
+        os.close(w)
+        chunks, t_end = [], time.time() + 240
+        while time.time() < t_end:
+            rl, _w, _x = select.select([r], [], [], 1.0)
+            if rl:
+                x = os.read(r, 65536)
+                if not x:
+                    break
+                chunks.append(x)
+        os.close(r)
+        if not chunks:                                       # 시간 초과 = 자식을 끝낸다 (결과 없음 = 실패)
+            try:
+                os.kill(pid, _sig.SIGKILL)
+            except OSError:
+                pass
+        os.waitpid(pid, 0)
+        res = json.loads(b''.join(chunks).decode('utf-8') or '{}')
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+    sf = res.get('stat_fields') or [None, None]
+    ok = (res.get('uid', 0) != 0 and sf[0] == sf[1] and res.get('bystander_ready') is True
+          and str(res.get('bystander_environ', '')).startswith('errno') and res.get('run') == [0, None, True, []]
+          and res.get('recover') == [0, True, 'recover'] and (res.get('in_session') or [None] * 4)[:3] == [0, None, False])
+    return ok, res
+
+
+PD_Q2 = ('assert_runtime', 'misaligned', 'illegal_instruction', 'launch_failed', 'launch_failure_rt', 'invalid_value', 'class_only')
+PD_RES = ('oom_cupy', 'oom_driver', 'oom_runtime', 'host_memory', 'disk_full')
+#: 길 (이름, 단계 요약 (멈춤 · 그룹 원인 · 러너 rc) | None = 요약 없는 길, 끝 기록 칸 (요약 없는 길), 낱말 없을 때 원인)
+PD_PATHS = (
+    ('rc1', ('RUNNER_RC', None, 1), None, 'runner_rc'),
+    ('rc_timeout', ('RUNNER_RC', 'timeout', None), None, 'timeout'),
+    ('rc_signal', ('RUNNER_RC', 'signal', None), None, 'signal'),
+    ('rc_signal_after', ('RUNNER_RC', 'signal_after', 0), None, 'signal'),
+    ('time_limit', ('TIME_LIMIT', 'timeout', None), None, 'timeout'),
+    ('group_unconfirmed', ('GROUP_UNCONFIRMED', None, 0), None, 'group_unconfirmed'),
+    ('orphan_recover', None, {'by': 'recover', 'cause': 'parent_dead'}, 'parent_dead'),
+    ('orphan_timeout', None, {'cause': 'timeout'}, 'timeout'),
+    ('orphan_signal', None, {'cause': 'signal', 'signal': 'SIGTERM'}, 'signal'),
+    ('orphan_signal_after', None, {'cause': 'signal_after'}, 'signal'),
+    ('orphan_rc1', None, {'rc': 1}, 'runner_rc'),
+)
+
+
+def pd_cause(tag, log, path):
+    """합성 시도 폴더 (표지 = 결과 뒤 · 그 런 로그 = log) 하나 → 결과 줄 (원인, 결과 전 · 뒤, 재실행 자격) — 요약 있는 길 = 그 요약 · 요약 없는 길 = 그룹 기록."""
+    nm, summ, end, _dflt = path
+    if summ is not None:
+        f = pc_folder(tag, {PC_MARK: '{}\n', 'logs/L01_floor.log': log})
+        code, gc, rc = summ
+        s = {'status': 'STOPPED', 'stop': {'code': code, 'run': 'L01_floor', 'reason': None},
+             'runs': [{'name': 'L01_floor', 'outdir': 'L01_floor_arm1', 'rc': rc, 'group_cause': gc}]}
+        r = RR.attempt_result_line(1, f, s, 'chain')
+    else:
+        f = pc_folder(tag, {PC_MARK: '{}\n'})
+        pc_group(f, 'L01_floor', end, log)
+        r = RR.attempt_result_line(1, f, None, 'recover')
+    return r['cause'], r['side'], r['resume_ok']
+
+
+@check('PD02', '★ 11-02 PC6-02 (사전 공격 6 회차 U1 · U4 · 1저자 10-28 Q2 "그 밖 CUDA 오류 (클래스 이름만 있는 줄 포함) = 자동 재실행 없음 (runner_rc)") — 같은 '
+               '낱말 규칙 = 모든 길: cupy 꼴 device-side assert · misaligned · illegal instruction · launch failed (드라이버 · 런타임) · invalid value · 클래스 '
+               '이름만 줄 × 길 열하나 (요약 있는 길 러너 rc 1 · rc + 시간 초과 · 신호 · 정리 중 신호 · TIME_LIMIT · GROUP_UNCONFIRMED · 요약 없는 길 recover · '
+               '사슬 끝 기록 시간 초과 · 신호 · 정리 중 신호 · 러너 rc 1) = runner_rc · 재실행 자격 False (옛 = rc 1 두 길에서만 · 나머지 아홉 = 그 길의 원인 · '
+               '자격 True) · GROUP_UNCONFIRMED + 러너 rc 1 + CUDA 줄 = runner_rc · 넘치지 않음: 낱말 없는 로그 = 그 길의 원인 그대로 · 메모리 · 디스크 줄 (클래스 '
+               '이름 CUDADriverError · CUDARuntimeError 가 함께 있는 OOM 줄 포함) = 자격 그대로 (rc 1 · recover · 사슬 rc 1 = resource · 나머지 = 그 길의 원인) · '
+               'OOM + launch failed = 자원 차례 그대로 (Q2 = 잘못된 주소만 먼저) · OOM + 잘못된 주소 = runner_rc')
+def t_PD02():
+    rows, bad = {}, {}
+    lf = PC_MSGS['launch_failed'][0]
+    cases = [(nm, PC_MSGS[nm][0], 'q2') for nm in PD_Q2] + [('plain', '', 'plain')] + [(nm, PC_MSGS[nm][0], 'res') for nm in PD_RES] + [
+        ('oom_and_launch', 'cupy.cuda.memory.OutOfMemoryError: out of memory\n' + lf, 'res'), ('oom_and_illegal', PC_MSGS['oom_and_illegal'][0], 'q2')]
+    for nm, msg, kind in cases:
+        for path in PD_PATHS:
+            got = pd_cause(f'PD02_{nm}_{path[0]}', '[p2] run\n' + (msg + '\n' if msg else ''), path)
+            if kind == 'q2':
+                c = 'runner_rc'
+            elif kind == 'res' and path[0] in ('rc1', 'orphan_recover', 'orphan_rc1'):
+                c = 'resource'
+            else:
+                c = path[3]
+            want = (c, 'post', c in RR.RESUME_CAUSES)
+            rows[f'{nm}/{path[0]}'] = got
+            if got != want:
+                bad[f'{nm}/{path[0]}'] = (got, want)
+    for nm in ('launch_failed', 'assert_runtime'):                  # U4 의 CUDA 꼴 — 그룹 미확인이 러너 rc 1 을 가린 런
+        path = ('group_unconfirmed_rc1', ('GROUP_UNCONFIRMED', None, 1), None, 'group_unconfirmed')
+        got = pd_cause(f'PD02_u4_{nm}', '[p2] run\n' + PC_MSGS[nm][0] + '\n', path)
+        rows[f'{nm}/group_unconfirmed_rc1'] = got
+        if got != ('runner_rc', 'post', False):
+            bad[f'{nm}/group_unconfirmed_rc1'] = (got, ('runner_rc', 'post', False))
+    return not bad, {'n': len(rows), 'bad_n': len(bad), 'bad': dict(sorted(bad.items())[:12])}
+
+
+@check('PD02r', '★ 11-02 PC6-02 실경로 (사전 공격 6 회차 R1 · R2 꼴) — ⓐ 표지 뒤 러너 로그에 cupy 꼴 launch failed (드라이버) 를 본 뒤 사슬 부모 SIGKILL → recover '
+                '--ledger = 결과 줄 interrupted · 결과 뒤 · runner_rc · 재실행 자격 False → --add --resume 1 = rc 3 RESUME_NOT_ALLOWED · 원장 무변경 (옛 = '
+                'parent_dead · 자격 True · rc 0 → 재실행 CALIBRATED) ⓑ device-side assert (런타임) 뒤 사슬이 SIGTERM (기다림 중 · 신호 원인) → stopped · 결과 뒤 · '
+                'runner_rc · False → rc 3 · 시험의 지킴 처리기 불리지 않음 (옛 = signal · True · rc 0)')
+def t_PD02r():
+    import signal as _sig
+    import threading
+
+    def go():
+        out = {}
+        d, _rc, _so = led_new('PD02r_k')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        base = Path(TD) / 'runs' / 'PD02r_k'
+        w = world('PD02r_k', dict(PW, faults=[{'do': 'msg_sleep_after_mark', 'msg': PC_MSGS['launch_failed'][0], 's': 8.0, 'match': {'rj': 'inf'}}]))
+        pr = gr_spawn_chain('PD02r_k', ladder_argv(base) + ['--ledger', str(d), '--attempt', str(n1)], w)
+        logp = base / f'attempt_{n1}' / 'logs' / 'L01_floor.log'
+        t_end, seen = time.time() + 30, False
+        while time.time() < t_end and not seen:
+            try:
+                seen = 'CUDA_ERROR_LAUNCH_FAILED' in logp.read_text(encoding='utf-8', errors='replace')
+            except OSError:
+                pass
+            time.sleep(0.05)
+        os.kill(pr.pid, _sig.SIGKILL)
+        pr.wait()
+        rc_rec, _so_rec = call(['--stage', 'recover', '--out', str(base / f'attempt_{n1}'), '--ledger', str(d)], w)
+        r1 = pc_res(d, n1)
+        raw = led_raw(d)
+        rc_add, _n2, so_add = led_add(d, 'ladder:P0', resume=n1)
+        out['kill'] = (seen, rc_rec, r1, rc_add, 'RESUME_NOT_ALLOWED' in so_add, led_raw(d) == raw)
+        d2, _rc, _so = led_new('PD02r_t')
+        _r, m1, _s = led_add(d2, 'ladder:P0')
+        hit_ = []
+
+        def guard(signum, frame):
+            hit_.append(signum)
+        old = _sig.signal(_sig.SIGTERM, guard)
+        logq = Path(TD) / 'runs' / 'PD02r_t' / f'attempt_{m1}' / 'logs' / 'L01_floor.log'
+
+        def fire():
+            t_e = time.time() + 15.0
+            while time.time() < t_e:
+                try:
+                    if 'cudaErrorAssert' in logq.read_text(encoding='utf-8', errors='replace'):
+                        break
+                except OSError:
+                    pass
+                time.sleep(0.05)
+            time.sleep(0.2)
+            os.kill(os.getpid(), _sig.SIGTERM)
+        try:
+            th = threading.Thread(target=fire)
+            th.start()
+            a = lad_att('PD02r_t', world('PD02r_t', dict(PW, faults=[{'do': 'msg_sleep_after_mark', 'msg': PC_MSGS['assert_runtime'][0], 's': 8.0,
+                                                                      'match': {'rj': 'inf'}}])), d2, m1)
+            th.join()
+        finally:
+            _sig.signal(_sig.SIGTERM, old)
+        raw2 = led_raw(d2)
+        rc_add2, _m2, _so2 = led_add(d2, 'ladder:P0', resume=m1)
+        out['term'] = (stop_code(a), pc_res(d2, m1), rc_add2, led_raw(d2) == raw2, hit_)
+        return out
+    out = scen('PD02r', go)
+    want = {'kill': (True, 0, {'status': 'interrupted', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'recover'}, 3, True, True),
+            'term': ('RUNNER_RC', {'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'chain'}, 3, True, [])}
+    return out == want, out
+
+
 # ═════════════════════════ 실행 ═════════════════════════
 def main(argv=None):
     global RR, TD
