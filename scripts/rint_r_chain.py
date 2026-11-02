@@ -6541,7 +6541,10 @@ def recover_group(lp, me, operator=None):
     ★ 11-02 PC6-13 — 갈아 쓰는 옛 끝 기록이 사슬의 것 (by chain · 미확인) 이면 새 끝 기록에 그 요약 `chain_end` = {rc · cause · confirmed · ended_utc} (러너
     스스로의 rc 를 잃지 않는다 — `orphan_cause` 가 `chain_end_failed` 로 읽는다 · 옛 = 덮어써 잃음 → 파이썬 결함 런도 parent_dead · 재실행 자격) · 옛 끝 기록이
     recover 의 것 (미확인) 이고 chain_end 가 있으면 그대로 이어받음 · 옛 끝 기록 없음 · 못 읽음 · 그 밖 = 칸 없음 (옛 모양 · 러너 rc 를 모름 = 옛 규칙).
-    새 끝 기록의 rc 는 None 그대로 (재실행 원천의 "끝난 런" = rc 0 판정 `ResumeRunner._src_done` 을 흔들지 않는다)."""
+    새 끝 기록의 rc 는 None 그대로 (재실행 원천의 "끝난 런" = rc 0 판정 `ResumeRunner._src_done` 을 흔들지 않는다).
+    ★ 11-02 PC7-04 (사전 공격 7 회차 · 1저자 11-02 "권고대로") — 옮기는 것은 그 옛 끝 기록의 표지 · 이름이 시작 기록과 같을 때만 · 다르면 (다른 런의 끝
+    기록 · 손 고침 · 부분 복사 — 옛 = 다른 런의 rc 가 원인을 정했다) 그 그룹 = 미확인: (None, 사유) — 끝 기록을 쓰지 않는다 (결과 줄 없음 · recover rc 3 ·
+    사람이 본다) · 고아 찾기 · 죽이기는 시작 기록 표지로 그대로 (아래 정리를 다 한 뒤 사유를 돌려준다)."""
     nm = lp.name[:-len('.launch.json')]
     try:
         L = json.loads(lp.read_text(encoding='utf-8'))
@@ -6557,6 +6560,13 @@ def recover_group(lp, me, operator=None):
     elif isinstance(prev, dict) and prev.get('by') == 'recover' and isinstance(prev.get('chain_end'), dict):
         chain_end = prev['chain_end']
     tok = (L or {}).get('token') if isinstance(L, dict) else None
+    other = None
+    if chain_end is not None:                              # ★ 11-02 PC7-04 — 옛 끝 기록 표지 · 이름 = 시작 기록일 때만 chain_end 로 옮긴다
+        lname = L.get('name') if isinstance(L, dict) else None
+        if prev.get('token') != tok or prev.get('name') != lname:
+            other = (f'옛 끝 기록 (by {prev.get("by")}) 의 표지 {str(prev.get("token"))[:12]} · 이름 {prev.get("name")!r} ≠ 시작 기록의 표지 '
+                     f'{str(tok)[:12]} · 이름 {lname!r} (다른 런의 끝 기록 · 손 고침 · 부분 복사)')
+            chain_end = None
     confirmed, left, killed, why, op_rec, unsure = False, None, 0, None, None, None
     if not (isinstance(tok, str) and re.fullmatch(r'[0-9a-f]{32}', tok)):
         why = '시작 기록 꼴 (그룹 표지) 을 못 읽는다'
@@ -6596,6 +6606,9 @@ def recover_group(lp, me, operator=None):
             else:
                 why = (f'{what} — 여기서 그 프로세스를 볼 수 없다 (machine_id 는 기계 정체가 아니다 — 복제 이미지 · 컨테이너) · 운영자가 그 그룹이 끝났음을 '
                        f'확인했으면 --ledger 와 --operator-confirm <시도 번호> --operator-why "<사유>"')
+    if other is not None:                                  # ★ 11-02 PC7-04 — 정리 (시작 기록 표지로 찾아 죽임) 뒤 · 끝 기록을 쓰지 않는다 (미확인)
+        return None, (f'{other} — 끝 기록을 쓰지 않는다 · 결과 줄 없음 (사람이 본다 · 시작 기록 표지로 찾은 프로세스 = 정리 · 종료 '
+                      f'{"확인" if confirmed else "미확인"} · 죽인 프로세스 {killed} · ★ 11-02 PC7-04)')
     end = {'schema': GROUP_SCHEMA, 'name': nm, 'token': tok, 'rc': None, 'cause': 'parent_dead', 'signal': None, 'confirmed': bool(confirmed),
            'left': left, 'left_after_exit': None, 'killed': killed, 'unsure': unsure, 'by': 'recover', 'why': why, 'host': me, 'ended_utc': _utc()}
     if op_rec is not None:

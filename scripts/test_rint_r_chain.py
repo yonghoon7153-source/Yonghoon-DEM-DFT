@@ -11261,8 +11261,8 @@ def t_PD13g():
     for nm, prev in prevs.items():
         out, _tok = gr_fake_launch(f'PD13g_{nm}')
         lp = out / 'groups' / 'L01_floor.launch.json'
-        if prev is not None:
-            lp.with_name('L01_floor.end.json').write_text(prev if isinstance(prev, str) else json.dumps(prev), encoding='utf-8')
+        if prev is not None:                                # ★ 11-02 PC7-04 — 옛 끝 기록 = 그 런의 표지 (사슬 · recover 가 쓰는 끝 기록은 늘 표지를 싣는다)
+            lp.with_name('L01_floor.end.json').write_text(prev if isinstance(prev, str) else json.dumps(dict(prev, token=_tok)), encoding='utf-8')
         end, held = RR.recover_group(lp, RR.host_ident())
         e = end or {}
         got[nm] = (held, e.get('by'), e.get('rc'), e.get('cause'), e.get('confirmed'), e.get('chain_end', '(없음)'))
