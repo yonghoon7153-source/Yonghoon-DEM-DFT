@@ -1,0 +1,85 @@
+[2026-10-30 13:27:50] ■ start · HEAD 09c7f83b5 · GPU 1 MiB
+[2026-10-30 13:27:50] ■ 0 build endpoint inputs
+[2026-10-30 13:27:52] ■ 1 endpoints relax
+[13:27:52]   ▶ li2s/ep_initial relax
+[02:26:43]   ✅ li2s/ep_initial 수렴
+[02:26:43]   ▶ li2s/ep_final relax
+[15:25:13]   ✅ li2s/ep_final 수렴
+[15:25:13] 끝점 이완 끝 — build_neb_inputs.py 를 **다시 돌려** 이완 좌표를 승계시킬 것
+[2026-10-31 15:25:13] ■ G1 ok
+[2026-10-31 15:25:13] ■ 2 build no-CI
+[2026-10-31 15:25:18] ■ 3 NEB no-CI
+[15:25:18] ═══ li2s ═══
+[15:25:18]   ▶ neb.x (원자 191)  — 진행은 neb.out 의 'activation energy' 줄로 본다
+[01:20:12]   ✅ 수렴
+     activation energy (->) =   0.292130 eV
+     activation energy (<-) =   0.292130 eV
+[01:20:12] ═══ 결산 ═══
+상            상태                Ea→      Ea←     유효Ea     끝점    스텝  판정
+┌ v2
+li2s         converged      0.3050   0.3050   0.3050     대칭     1  ✅ 인용 가능
+             └ 홉 수 검산 (ν₀ 1e+13 s⁻¹ 가정 · 300 K): Γ ≈ 7.51e+07 s⁻¹ · 평균 대기 ≈ 1.33e-08 s
+li3nd        converged      2.0717  -0.0000   2.0717    비대칭    83  ⚠ CI 가 꺼져 있다 — 장벽이 이미지 격자만큼 과소평가된다 · no-CI 단계다 — 장벽이 이미지 격자만큼 과소
+             └ Li 자리 두 종류 ['c', 'b'] — 정·역 차 2.072 eV 는 **자리 에너지 차**다(정상). 수송 장벽은 유효Ea 를 쓴다
+             └ 홉 수 검산 (ν₀ 1e+13 s⁻¹ 가정 · 300 K): Γ ≈ 1.57e-22 s⁻¹ · 평균 대기 ≈ 6.36e+21 s
+┌ v2_ccpath
+li3nd        converged      0.2290   0.2290   0.2290     대칭     1  ✅ 인용 가능
+             └ 홉 수 검산 (ν₀ 1e+13 s⁻¹ 가정 · 300 K): Γ ≈ 1.42e+09 s⁻¹ · 평균 대기 ≈ 7.03e-10 s
+┌ v2_cc333
+li3nd        running        0.1278   0.1280   0.1280     대칭     7  ⚠ 경로 미수렴 — nstep_path 를 늘려 이어서 돌릴 것 · CI 가 꺼져 있다 — 장벽이 이미지 격자만큼 
+             └ 홉 수 검산 (ν₀ 1e+13 s⁻¹ 가정 · 300 K): Γ ≈ 7.08e+10 s⁻¹ · 평균 대기 ≈ 1.41e-11 s
+┌ v3
+li2o         not_started         —        —        —      ?     0  ⚠ 진행 중
+li3p         not_started         —        —        —      ?     0  ⚠ 진행 중
+li3po4g      not_started         —        —        —      ?     0  ⚠ 진행 중
+licl         not_started         —        —        —      ?     0  ⚠ 진행 중
+
+⛔ 이번 회수는 루트가 **줄어든다** — 쓰지 않는다.
+   기존 ['sei_neb', 'v2', 'v2_cc333', 'v2_ccpath', 'v3'] → 이번 ['v2', 'v2_cc333', 'v2_ccpath', 'v3']  (사라질 루트: ['sei_neb'])
+   전체를 회수하려면 --work 없이 그냥 돌릴 것 (기본이 ROOTS 전부):
+     python3 tools/sei/collect_neb.py
+   정말 축소하려면 --allow-shrink (근거를 db 에 남길 것)
+[2026-11-03 01:20:13] ■ G2a ok
+     activation energy (->) =   0.292130 eV
+     activation energy (<-) =   0.292130 eV
+[2026-11-03 01:20:13] ■ 4 CI stage
+[01:20:13]   ▶ li2s: no-CI 수렴본을 백업하고 CI 단계 입력을 만든다
+[01:20:13]      이제 생성기를 CI 로 다시 돌릴 것 (같은 WORK):
+[01:20:13]        python3 tools/sei/build_neb_inputs.py --only li2s --ci_scheme auto --restart
+[01:20:13]      그 뒤:  bash tools/sei/run_sei_neb.sh li2s
+[2026-11-03 01:20:45] ■ 5 NEB CI
+[01:20:45] ═══ li2s ═══
+[01:20:45]   ⭐ neb.out 에 이력이 없지만 neb.out.noCI 에 11스텝 있다 — 체크포인트를 살린다
+[01:20:45]   ✓ restart_mode 이미 'restart'
+[01:20:45]   ▶ neb.x (원자 191)  — 진행은 neb.out 의 'activation energy' 줄로 본다
+[08:01:02]   ✅ 수렴
+     activation energy (->) =   0.292130 eV
+     activation energy (<-) =   0.292130 eV
+[08:01:02] ═══ 결산 ═══
+상            상태                Ea→      Ea←     유효Ea     끝점    스텝  판정
+┌ v2
+li2s         converged      0.3050   0.3050   0.3050     대칭     1  ✅ 인용 가능
+             └ 홉 수 검산 (ν₀ 1e+13 s⁻¹ 가정 · 300 K): Γ ≈ 7.51e+07 s⁻¹ · 평균 대기 ≈ 1.33e-08 s
+li3nd        converged      2.0717  -0.0000   2.0717    비대칭    83  ⚠ CI 가 꺼져 있다 — 장벽이 이미지 격자만큼 과소평가된다 · no-CI 단계다 — 장벽이 이미지 격자만큼 과소
+             └ Li 자리 두 종류 ['c', 'b'] — 정·역 차 2.072 eV 는 **자리 에너지 차**다(정상). 수송 장벽은 유효Ea 를 쓴다
+             └ 홉 수 검산 (ν₀ 1e+13 s⁻¹ 가정 · 300 K): Γ ≈ 1.57e-22 s⁻¹ · 평균 대기 ≈ 6.36e+21 s
+┌ v2_ccpath
+li3nd        converged      0.2290   0.2290   0.2290     대칭     1  ✅ 인용 가능
+             └ 홉 수 검산 (ν₀ 1e+13 s⁻¹ 가정 · 300 K): Γ ≈ 1.42e+09 s⁻¹ · 평균 대기 ≈ 7.03e-10 s
+┌ v2_cc333
+li3nd        running        0.1278   0.1280   0.1280     대칭     7  ⚠ 경로 미수렴 — nstep_path 를 늘려 이어서 돌릴 것 · CI 가 꺼져 있다 — 장벽이 이미지 격자만큼 
+             └ 홉 수 검산 (ν₀ 1e+13 s⁻¹ 가정 · 300 K): Γ ≈ 7.08e+10 s⁻¹ · 평균 대기 ≈ 1.41e-11 s
+┌ v3
+li2o         not_started         —        —        —      ?     0  ⚠ 진행 중
+li3p         not_started         —        —        —      ?     0  ⚠ 진행 중
+li3po4g      not_started         —        —        —      ?     0  ⚠ 진행 중
+licl         not_started         —        —        —      ?     0  ⚠ 진행 중
+
+⛔ 이번 회수는 루트가 **줄어든다** — 쓰지 않는다.
+   기존 ['sei_neb', 'v2', 'v2_cc333', 'v2_ccpath', 'v3'] → 이번 ['v2', 'v2_cc333', 'v2_ccpath', 'v3']  (사라질 루트: ['sei_neb'])
+   전체를 회수하려면 --work 없이 그냥 돌릴 것 (기본이 ROOTS 전부):
+     python3 tools/sei/collect_neb.py
+   정말 축소하려면 --allow-shrink (근거를 db 에 남길 것)
+[2026-11-03 08:01:03] ■ DONE G2b ok
+     activation energy (->) =   0.292130 eV
+     activation energy (<-) =   0.292130 eV

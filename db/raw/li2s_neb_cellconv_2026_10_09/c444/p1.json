@@ -1,0 +1,17 @@
+{
+ "criteria": "끝까지 돎 ∧ 오류 줄 없음 ∧ 최고 VRAM ≤ P1_MAX_MIB · 처음 통과한 손잡이",
+ "n_iter_model": 3275,
+ "runs": {
+  "david": {
+   "completed": true,
+   "error_line": false,
+   "peak_mib": 39138,
+   "wall_s": 1023,
+   "t_iter_s": 286.5,
+   "t_iter_source": "cpu time diff",
+   "iterations_seen": 3,
+   "est_days": 10.86,
+   "note": "rc0"
+  }
+ }
+}
