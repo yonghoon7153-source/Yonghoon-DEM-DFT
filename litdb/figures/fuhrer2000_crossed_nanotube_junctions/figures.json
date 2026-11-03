@@ -1,0 +1,104 @@
+{
+ "slug": "fuhrer2000_crossed_nanotube_junctions",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-03",
+ "sources": [
+  "3._Crossed_nanotube_junctions.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "src": "3._Crossed_nanotube_junctions.pdf",
+   "bbox": [
+    313.0,
+    171.0,
+    563.8,
+    332.3
+   ],
+   "w": 1045,
+   "h": 672,
+   "blank": 0.252,
+   "manual_crop": "2026-11-03 litdb-curator: Science side-caption layout - tool found no graphics on pp. 2-3 for this report and instead took 'Fig. 1. Geologic map of Nepal' from the next article on p. 4 (dropped). Clip = embedded raster image bounds (+ white trim); side caption stored here, not cropped; the vertical 'Downloaded from' watermark (x>=581.8) excluded · image [314.9, 173.0, 566.9, 330.0]",
+   "caption": "Fig. 1. (A) Tapping-mode AFM image (amplitude signal) of a crossed SWNT device. Two SWNTs (green) can be seen spanning between the Cr/Au electrodes (yellow). (B and C) The structures used to calculate the conductance of a junction between two metallic (5,5) SWNTs (see text and supplementary material).",
+   "rotated_deg": 0,
+   "dpi": 300,
+   "viewed": true,
+   "caption_note": "text-layer artefacts fixed (font-encoded \"Vg = -25 V\", ligatures, line-break hyphens) - checked against the rendered page"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "src": "3._Crossed_nanotube_junctions.pdf",
+   "bbox": [
+    309.7,
+    351.0,
+    567.2,
+    534.6
+   ],
+   "w": 1073,
+   "h": 765,
+   "blank": 0.917,
+   "manual_crop": "2026-11-03 litdb-curator: Science side-caption layout - tool found no graphics on pp. 2-3 for this report and instead took 'Fig. 1. Geologic map of Nepal' from the next article on p. 4 (dropped). Clip = embedded raster image bounds (+ white trim); side caption stored here, not cropped; the vertical 'Downloaded from' watermark (x>=581.8) excluded · image [310.9, 353.0, 567.0, 533.0]",
+   "caption": "Fig. 2. (A) I-V characteristics of several SWNT junctions. Open squares, four-terminal measurement of an MM at 200 K; open circles, two-terminal measurement of an SS at 200 K; crosses and plus signs, two-terminal measurements of MS junctions at 50 K and Vg = −25 V. (B through D) The expected band structures near the junctions. There exists a finite density of states on either side of the junction for (B) the MM and (C) the SS junctions. (D) In the MS junction, a Schottky barrier of height Ebarrier forms in the semiconducting SWNT because of charge transfer from the metallic SWNT. (The conduction and valence bands of the semiconducting SWNTs are denoted by C and V and the Fermi level by EF).",
+   "rotated_deg": 0,
+   "dpi": 300,
+   "viewed": true,
+   "caption_note": "text-layer artefacts fixed (font-encoded \"Vg = -25 V\", ligatures, line-break hyphens) - checked against the rendered page"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 2,
+   "file": "fig_3.png",
+   "src": "3._Crossed_nanotube_junctions.pdf",
+   "bbox": [
+    346.2,
+    588.0,
+    567.7,
+    751.9
+   ],
+   "w": 923,
+   "h": 683,
+   "blank": 0.895,
+   "manual_crop": "2026-11-03 litdb-curator: Science side-caption layout - tool found no graphics on pp. 2-3 for this report and instead took 'Fig. 1. Geologic map of Nepal' from the next article on p. 4 (dropped). Clip = embedded raster image bounds (+ white trim); side caption stored here, not cropped; the vertical 'Downloaded from' watermark (x>=581.8) excluded · image [347.0, 590.1, 567.1, 750.2]",
+   "caption": "Fig. 3. Two-terminal I-V characteristics of two metallic SWNT–semiconducting SWNT junctions at a temperature of 50 K (solid and dashed lines). Bias was applied to the semiconducting SWNT. The dotted lines are linear fits to the forward bias data. The schematic energy level diagrams for the reverse bias (upper left inset) and forward bias (lower right inset) are shown.",
+   "rotated_deg": 0,
+   "dpi": 300,
+   "viewed": true,
+   "caption_note": "text-layer artefacts fixed (font-encoded \"Vg = -25 V\", ligatures, line-break hyphens) - checked against the rendered page"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "src": "3._Crossed_nanotube_junctions.pdf",
+   "bbox": [
+    129.6,
+    71.0,
+    566.7,
+    255.0
+   ],
+   "w": 1821,
+   "h": 767,
+   "blank": 0.912,
+   "manual_crop": "2026-11-03 litdb-curator: Science side-caption layout - tool found no graphics on pp. 2-3 for this report and instead took 'Fig. 1. Geologic map of Nepal' from the next article on p. 4 (dropped). Clip = embedded raster image bounds (+ white trim); side caption stored here, not cropped; the vertical 'Downloaded from' watermark (x>=581.8) excluded · image [129.5, 72.5, 566.7, 255.5]",
+   "caption": "Fig. 4. (A) Three-terminal measurement of a metallic SWNT–semiconducting SWNT device at 100 K. IM, current flowing from metallic SWNT; IS, current flowing from semiconducting SWNT. The inset (upper left) shows the measurement configuration (for simplicity, only one terminal of the metallic SWNT is shown). (B) At zero bias, a conduction barrier exists in the semiconducting SWNT, caused by depletion of carriers by the metallic SWNT at the junction. (C) In reverse bias, the barrier between the grounded metallic SWNT and the grounded end of the semiconducting SWNT persists. (D) In forward bias, the barrier disappears when the potential difference between the left end of the semiconducting SWNT and the metallic SWNTis equal to the barrier height. Current is then free to flow in the semiconducting SWNT, as seen in (A).",
+   "rotated_deg": 0,
+   "dpi": 300,
+   "viewed": true,
+   "caption_note": "text-layer artefacts fixed (font-encoded \"Vg = -25 V\", ligatures, line-break hyphens) - checked against the rendered page"
+  }
+ ],
+ "missing_labels": []
+}

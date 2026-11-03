@@ -1,0 +1,210 @@
+{
+  "slug": "nirmalraj2009_swcnt_network_junction_resistance",
+  "dpi": 300,
+  "maxpx": 3000,
+  "generated": "2026-11-03",
+  "sources": [
+    "5._Electrical_connectivity_in_single-walled_carbon_nanotube_networks.pdf",
+    "5._Sup_Electrical_connectivity_in_single-walled_carbon_nanotube_networks.pdf"
+  ],
+  "figures": [
+    {
+      "key": "f1",
+      "kind": "figure",
+      "label": "1",
+      "page": 2,
+      "file": "fig_1.png",
+      "caption": "Figure 1. (a) Schematic of conductive atomic force microscope technique. (b) Morphology of NTN showing the presence of both individual nanotubes and nanotubes bundles forming networks deposited using SWCNT concentration of 0.025 mg/mL. (c) The bundle diameter histogram shows the presence of individual tubes and a larger population of nanotube bundles.",
+      "rotated_deg": 0,
+      "bbox": [
+        82.7,
+        29.4,
+        507.3,
+        155.4
+      ],
+      "w": 1770,
+      "h": 526,
+      "dpi": 300,
+      "src": "5._Electrical_connectivity_in_single-walled_carbon_nanotube_networks.pdf",
+      "blank": 0.445,
+      "viewed": true
+    },
+    {
+      "key": "f2",
+      "kind": "figure",
+      "label": "2",
+      "page": 3,
+      "file": "fig_2.png",
+      "caption": "Figure 2. C-AFM results on pristine Iljin sparse networks. (a) Current map of a nanotube bundle (D ∼2.3 nm), which is intersected by an individual tube (D ∼1.65 nm). The electrode is positioned on the top of the image (not shown). (b) Local resistance analysis through the bundle and individual tube depicted as pathway 1 and 2 as shown in the schematic (c). (d) Current map of interconnected tubes of varying diameter showing the formation of junctions with varying resistances. (e) Local resistance analyzed along the individual tube connected to a sparse configuration of nanotubes highlighted as pathway 1 and 2 as shown in the schematic in (f). The electrode is positioned on the left-hand side of the image (not shown). (CI-AFM scanning parameters for a and d: bias Voltage 1 mV, preamplifier sensitivity 100 nA/V.)",
+      "rotated_deg": 0,
+      "bbox": [
+        37.4,
+        29.7,
+        553.7,
+        323.7
+      ],
+      "w": 2153,
+      "h": 1226,
+      "dpi": 300,
+      "src": "5._Electrical_connectivity_in_single-walled_carbon_nanotube_networks.pdf",
+      "blank": 0.715,
+      "viewed": true,
+      "caption_note": "ligatures (fi/fl) normalized from the text layer"
+    },
+    {
+      "key": "f3",
+      "kind": "figure",
+      "label": "3",
+      "page": 4,
+      "file": "fig_3.png",
+      "caption": "Figure 3. Diameter dependent junction resistance analysis. Junction resistance analysis of pristine (I), acid-treated Ilgin tubes (II) and annealed (III) based on the diameter of the participating tubes. Case A, B, C, and D in the three panels are the junction resistance measured between individual tubes (diameter, 1.2-1.8 nm), between individual nanotubes and smaller diameter nanotube bundles (diameter, 2.5-4.5 nm), between smaller diameter nanotube bundles (diameter, 4.5-6.8 nm) and the junction resistance between larger diameter nanotube bundles (diameter, 7-14 nm), respectively. conductivity associated with individual SWCNTs to be (4.4 ( 1.6) × 107 S/m (averaging over ∼30 semiconducting and metallic tubes). duction of NTNs. To examine the influence of acid treatment on the junction resistance, Iljin mats were exposed to nitric acid (70%, 15 M) for 2 h at room temperature, followed by ",
+      "rotated_deg": 0,
+      "bbox": [
+        131.4,
+        29.5,
+        458.9,
+        227.5
+      ],
+      "w": 1365,
+      "h": 826,
+      "dpi": 300,
+      "src": "5._Electrical_connectivity_in_single-walled_carbon_nanotube_networks.pdf",
+      "blank": 0.834,
+      "viewed": true,
+      "caption_note": "ligatures (fi/fl) normalized from the text layer"
+    },
+    {
+      "key": "f4",
+      "kind": "figure",
+      "label": "4",
+      "page": 5,
+      "file": "fig_4.png",
+      "caption": "Figure 4. Junction resistance analysis of annealed tubes. (a) Current map of a smaller diameter bundle, (D ∼2.2 nm) connected to the electrode on the left-hand side of the image (not shown) and intersected by an individual tube (D ∼1.6 nm). (b) The plot shows the resistance to increase by ∼1.3 MΩat the junction point. Pathway 1 and pathway 2 shown in 4b is the resistance traced along the bundle and the resistance traced from the bundle through the interconnecting individual tube as depicted in the schematic (c). The electrode is positioned on the left-hand side of the image (not shown). (CI-AFM scanning parameters, bias Voltage 5 mV, preamplifier sensitivity 100 nA/V.)",
+      "rotated_deg": 0,
+      "bbox": [
+        37.4,
+        29.4,
+        553.5,
+        175.4
+      ],
+      "w": 2152,
+      "h": 609,
+      "dpi": 300,
+      "src": "5._Electrical_connectivity_in_single-walled_carbon_nanotube_networks.pdf",
+      "blank": 0.734,
+      "viewed": true,
+      "caption_note": "ligatures (fi/fl) normalized from the text layer"
+    },
+    {
+      "key": "f5",
+      "kind": "figure",
+      "label": "5",
+      "page": 5,
+      "file": "fig_5.png",
+      "caption": "Figure 5. Plot of measured film conductivity as a function of the inverse of mean junction resistance measured for pairs of larger bundles (see panels ID, IID, and IIID in Figure 3). The error in junction resistance is the standard error of the distribution while the error in film resistivity is associated with the calculation of the film thickness.",
+      "rotated_deg": 0,
+      "bbox": [
+        322.2,
+        246.2,
+        532.2,
+        403.4
+      ],
+      "w": 876,
+      "h": 656,
+      "dpi": 300,
+      "src": "5._Electrical_connectivity_in_single-walled_carbon_nanotube_networks.pdf",
+      "blank": 0.935,
+      "viewed": true,
+      "caption_note": "ligatures (fi/fl) normalized from the text layer"
+    },
+    {
+      "key": "fS1",
+      "kind": "figure",
+      "label": "S1",
+      "page": 1,
+      "file": "fig_S1.png",
+      "src": "5._Sup_Electrical_connectivity_in_single-walled_carbon_nanotube_networks.pdf",
+      "bbox": [
+        91.8,
+        105.5,
+        275.2,
+        218.8
+      ],
+      "w": 764,
+      "h": 472,
+      "blank": 0.255,
+      "caption": "Topography data for Figure 2A. Diameter of the bundle connected to the electrode (on the top, not shown in the image) is ~2.3nm. This bundle is intersected by an individual tube of diameter ~1.65nm.",
+      "manual_crop": "2026-11-03 litdb-curator: SI images carry no 'Figure S#' caption (the tool found none) - numbered S1-S4 in page order; caption = the SI paragraph under each image (verbatim); clip = embedded image bounds · image [90.0, 99.6, 279.1, 222.5]",
+      "rotated_deg": 0,
+      "dpi": 300,
+      "viewed": true
+    },
+    {
+      "key": "fS2",
+      "kind": "figure",
+      "label": "S2",
+      "page": 1,
+      "file": "fig_S2.png",
+      "src": "5._Sup_Electrical_connectivity_in_single-walled_carbon_nanotube_networks.pdf",
+      "bbox": [
+        92.3,
+        307.9,
+        268.0,
+        423.5
+      ],
+      "w": 732,
+      "h": 482,
+      "blank": 0.215,
+      "caption": "Topographic data for Figure 2D. Diameter of the individual tube connected to the electrode (not shown in the image) is ~1.2nm. Diameter of the bundle connected to the individual tube is ~2.5nm, forming junction A. Junction B is formed between the smaller diameter bundle and the medium sized bundle of diameter ~ 4.8nm. Junction C is formed between an individual tube of diameter ~1.8nm and the smaller diameter bundle.",
+      "manual_crop": "2026-11-03 litdb-curator: SI images carry no 'Figure S#' caption (the tool found none) - numbered S1-S4 in page order; caption = the SI paragraph under each image (verbatim); clip = embedded image bounds · image [90.0, 305.3, 270.1, 426.6]",
+      "rotated_deg": 0,
+      "dpi": 300,
+      "viewed": true
+    },
+    {
+      "key": "fS3",
+      "kind": "figure",
+      "label": "S3",
+      "page": 1,
+      "file": "fig_S3.png",
+      "src": "5._Sup_Electrical_connectivity_in_single-walled_carbon_nanotube_networks.pdf",
+      "bbox": [
+        89.2,
+        538.8,
+        268.5,
+        660.0
+      ],
+      "w": 747,
+      "h": 505,
+      "blank": 0.182,
+      "caption": "Topographic data for figure 4A. A nanotube bundle of diameter ~2.2nm is intersected by an individual tube of diameter ~1.6nm forming a point junction.",
+      "manual_crop": "2026-11-03 litdb-curator: SI images carry no 'Figure S#' caption (the tool found none) - numbered S1-S4 in page order; caption = the SI paragraph under each image (verbatim); clip = embedded image bounds · image [90.0, 537.0, 269.9, 659.8]",
+      "rotated_deg": 0,
+      "dpi": 300,
+      "viewed": true
+    },
+    {
+      "key": "fS4",
+      "kind": "figure",
+      "label": "S4",
+      "page": 2,
+      "file": "fig_S4.png",
+      "src": "5._Sup_Electrical_connectivity_in_single-walled_carbon_nanotube_networks.pdf",
+      "bbox": [
+        89.2,
+        73.4,
+        259.6,
+        220.7
+      ],
+      "w": 710,
+      "h": 614,
+      "blank": 0.17,
+      "caption": "Zoomed out current map data (Containing Fig 2D) showing the formation of sparse networks. On the left hand side is the electrode and the nanotubes are seen to be protruding from the electrode. Once a region is highlighted in the current map we zoom into that area of interest and obtain well resolved current maps. In such zoomed in images the electrode is excluded to obtain good topographic and current maps as there is a significant height difference between the located tubes and the electrode. Also the specific area of interest is isolated from other tubes connected directly to the electrode. The measurements are specifically targeted towards areas where only a single tube is connected to the electrode, and the rest of the tubes branch out from that single tube.",
+      "manual_crop": "2026-11-03 litdb-curator: SI images carry no 'Figure S#' caption (the tool found none) - numbered S1-S4 in page order; caption = the SI paragraph under each image (verbatim); clip = embedded image bounds · image [90.0, 72.0, 261.0, 221.0]",
+      "rotated_deg": 0,
+      "dpi": 300,
+      "viewed": true
+    }
+  ],
+  "missing_labels": []
+}

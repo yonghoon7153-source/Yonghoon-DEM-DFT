@@ -1,0 +1,200 @@
+{
+  "slug": "hamasaki2022_single_parallel_contact_mwcnt_conductivity",
+  "dpi": 300,
+  "maxpx": 3000,
+  "generated": "2026-11-03",
+  "sources": [
+    "1._Electrical_conductivity_of_a_single_parallel_contact_between_carbon_nanotubes.pdf",
+    "1._Sup_Electrical_conductivity_of_a_single_parallel_contact_between_carbon_nanotubes.pdf"
+  ],
+  "figures": [
+    {
+      "key": "f1",
+      "kind": "figure",
+      "label": "1",
+      "page": 2,
+      "file": "fig_1.png",
+      "src": "1._Electrical_conductivity_of_a_single_parallel_contact_between_carbon_nanotubes.pdf",
+      "bbox": [
+        48.4,
+        48.2,
+        545.0,
+        212.6
+      ],
+      "w": 2069,
+      "h": 685,
+      "blank": 0.334,
+      "manual_crop": "2026-11-03 litdb-curator: tool missed Fig. 1 (number gap, caption near-miss p2) - clip = embedded image [51.0, 50.6, 542.0, 210.0] + 3 pt, above caption (y=219.6); white-border trim",
+      "caption": "Fig. 1 In situ measurement of electrical resistance of parallel contact between two multiwalled carbon nanotubes (MWCNTs) with varying the contact length. (a) Schematic and (b) actual transmission electron microscopy (TEM) image of the experimental setup. (c) TEM image after MWCNT cutoff via self-Joule heating. After cutting, one MWCNT is brought into contact with the other. (d–f) TEM images of outertube–outertube contacts of various contact lengths. (g) Current–voltage relationships for (d) (black), (e) (blue), and (f) (red). The legend presents contact length.",
+      "rotated_deg": 0,
+      "dpi": 300,
+      "viewed": true,
+      "caption_note": "text-layer artefacts fixed (ligatures, line-break hyphens, APL bracket glyphs) - checked against the rendered page"
+    },
+    {
+      "key": "f2",
+      "kind": "figure",
+      "label": "2",
+      "page": 2,
+      "file": "fig_2.png",
+      "caption": "Fig. 2 Electrical resistance of single contact between multiwalled carbon nanotubes as a function of contact length. Legend indicates the outer diameter of each multiwalled carbon nanotube.",
+      "rotated_deg": 0,
+      "bbox": [
+        306.4,
+        285.9,
+        547.2,
+        487.0
+      ],
+      "w": 1003,
+      "h": 838,
+      "dpi": 300,
+      "src": "1._Electrical_conductivity_of_a_single_parallel_contact_between_carbon_nanotubes.pdf",
+      "blank": 0.894,
+      "recrop": "2026-11-03 litdb-curator: auto crop spanned both columns (x 36.5-558.8) and pulled in left-column body text - clip = right-column image [309.0, 288.3, 544.4, 484.4] + 3 pt",
+      "viewed": true
+    },
+    {
+      "key": "f3",
+      "kind": "figure",
+      "label": "3",
+      "page": 3,
+      "file": "fig_3.png",
+      "caption": "Fig. 3 Electrical resistance of single contact between multiwalled carbon nanotubes (MWCNTs) as a function of the inverse of contact length. (a) Purple circles, green triangles, and red crosses represent the data shown in Fig. 2 using the same symbols. Orange crosses represent the data for the same pair of MWCNTs as red crosses but with the contact on the opposite side of each MWCNT. (b–d) Transmission electron microscopy (TEM) images corresponding to (b) purple circles, (c) red crosses, and (d) orange crosses. TEM images corresponding to green triangles are shown in Fig. 1(d)–(f). The shapes of the MWCNT tips changed between (c) and (d) because of MWCNT sublimation.",
+      "rotated_deg": 0,
+      "bbox": [
+        36.5,
+        477.3,
+        558.8,
+        667.2
+      ],
+      "w": 2177,
+      "h": 793,
+      "dpi": 300,
+      "src": "1._Electrical_conductivity_of_a_single_parallel_contact_between_carbon_nanotubes.pdf",
+      "blank": 0.7,
+      "viewed": true
+    },
+    {
+      "key": "f4",
+      "kind": "figure",
+      "label": "4",
+      "page": 4,
+      "file": "fig_4.png",
+      "caption": "Fig. 4 Electrical resistance of single contact between multiwalled carbon nanotubes (MWCNTs) as a function of contact length for contact lengths over 150 nm. (a) Purple circles and black bars represent outertube–outertube contact data; the legend indicates the outer diameter of each MWCNTs. The brown diamonds represent telescoped MWCNT data; in this case, the legend indicates the outer diameter of the core and the housing MWCNTs. (b) Schematic of telescoped MWCNT.",
+      "rotated_deg": 0,
+      "bbox": [
+        297.3,
+        44.6,
+        558.8,
+        372.1
+      ],
+      "w": 1091,
+      "h": 1366,
+      "dpi": 300,
+      "src": "1._Electrical_conductivity_of_a_single_parallel_contact_between_carbon_nanotubes.pdf",
+      "blank": 0.858,
+      "viewed": true,
+      "caption_note": "text-layer artefacts fixed (ligatures, line-break hyphens, APL bracket glyphs) - checked against the rendered page"
+    },
+    {
+      "key": "fS1",
+      "kind": "figure",
+      "label": "S1",
+      "page": 3,
+      "file": "fig_S1.png",
+      "caption": "Fig. S1. Estimation of size factor of interfacial electrical resistance. (a) Schematic of the cross-sections of two adjacent multiwalled carbon nanotubes. (b) Size factor l/C as a function of l1.",
+      "rotated_deg": 0,
+      "bbox": [
+        105.5,
+        161.8,
+        509.4,
+        382.5
+      ],
+      "w": 1684,
+      "h": 920,
+      "dpi": 300,
+      "src": "1._Sup_Electrical_conductivity_of_a_single_parallel_contact_between_carbon_nanotubes.pdf",
+      "blank": 0.957,
+      "caption_note": "text layer garbled the inline math (l/C) - restored from the rendered page",
+      "viewed": true
+    },
+    {
+      "key": "fS2",
+      "kind": "figure",
+      "label": "S2",
+      "page": 6,
+      "file": "fig_S2.png",
+      "caption": "Fig. S2. (a) Schematic of two multiwalled carbon nanotubes connected in a parallel contact (left) and an equivalent circuit of the contact (right). (b) Schematic of two multiwalled carbon nanotubes with a single parallel contact. Rtotal and Rp represent the electrical resistance over the entire section in the measurement and over the contact section, respectively. (c) Model for finite element calculation of the electrical resistance of the contact section shown in (b). (d), (e) Comparisons between the finite element calculation results and the approximation given in Eq. (S1) for α/β′ values of (d) 2 × 10^4, (e) 2 × 10^5.",
+      "rotated_deg": 0,
+      "bbox": [
+        79.1,
+        100.0,
+        516.2,
+        524.3
+      ],
+      "w": 1823,
+      "h": 1769,
+      "dpi": 300,
+      "src": "1._Sup_Electrical_conductivity_of_a_single_parallel_contact_between_carbon_nanotubes.pdf",
+      "blank": 0.909,
+      "caption_note": "text layer garbled α/β′ and dropped the exponents - restored from the rendered page",
+      "viewed": true
+    },
+    {
+      "key": "fS3",
+      "kind": "figure",
+      "label": "S3",
+      "page": 7,
+      "file": "fig_S3.png",
+      "caption": "Fig. S3. TEM images and schematic of a telescoped MWCNT. (a, b, c) TEM images of the core tube extraction from the housing tube. (d) Schematic of the telescoped MWCNT. (e) TEM image of the housing tube after core tube extraction. Red arrows indicate the edge of the housing tube.",
+      "rotated_deg": 0,
+      "bbox": [
+        100.2,
+        369.9,
+        507.6,
+        566.2
+      ],
+      "w": 1699,
+      "h": 818,
+      "dpi": 300,
+      "src": "1._Sup_Electrical_conductivity_of_a_single_parallel_contact_between_carbon_nanotubes.pdf",
+      "blank": 0.307,
+      "viewed": true
+    },
+    {
+      "key": "fS4",
+      "kind": "figure",
+      "label": "S4",
+      "page": 9,
+      "file": "fig_S4.png",
+      "caption": "Fig. S4. Electrical resistance before and after cutting the multiwalled carbon nanotube (MWCNT). (a, b) Transmission electron microscopy images of (a) single MWCNT and (b) two MWCNTs connected by an interface. (c) Current–voltage relationships for the MWCNT without and with an interface, corresponding to the images shown in (a) and (b), respectively.",
+      "rotated_deg": 0,
+      "bbox": [
+        111.7,
+        126.4,
+        496.5,
+        503.3
+      ],
+      "w": 1605,
+      "h": 1571,
+      "dpi": 300,
+      "src": "1._Sup_Electrical_conductivity_of_a_single_parallel_contact_between_carbon_nanotubes.pdf",
+      "blank": 0.501,
+      "viewed": true
+    }
+  ],
+  "missing_labels": [
+    {
+      "key": "f1",
+      "why": "번호 공백 — 이 번호가 추출되지 않았다",
+      "skipped": [],
+      "near_miss": [
+        {
+          "page": 2,
+          "text": "Fig. 1 In situ measurement of electrical resistance of parallel contact between two multiw"
+        }
+      ],
+      "resolved": "manual_crop fig_1.png (2026-11-03, litdb-curator) - see figures[f1].manual_crop"
+    }
+  ]
+}

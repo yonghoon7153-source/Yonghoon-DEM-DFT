@@ -119,6 +119,13 @@
    "11._Insights_into_Electrolyte_Effects_on_Interfacial_Kinetics_and_Transport_in_Porous_Redox_Flow_Battery_Electrodes_A_Multiparadigm_Modelling_Study.pdf"
   ]
  },
+ "banerjee2019_tunneling_tlm_parallel_nanoscale_contacts": {
+  "figures": 10,
+  "generated": "2026-11-03",
+  "pdfs": [
+   "2._A_two_dimensional_tunneling_resistance_transmission_line_model_for_nanoscale_parallel_electrical_contacts.pdf"
+  ]
+ },
  "banik2022_substitutions_oxidative_stability_argyrodite": {
   "figures": 4,
   "generated": "2026-08-05",
@@ -588,6 +595,13 @@
    "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf"
   ]
  },
+ "fuhrer2000_crossed_nanotube_junctions": {
+  "figures": 4,
+  "generated": "2026-11-03",
+  "pdfs": [
+   "3._Crossed_nanotube_junctions.pdf"
+  ]
+ },
  "fujimura2013_ml_conductivity_origin": {
   "figures": 4,
   "generated": "2026-08-05",
@@ -698,6 +712,14 @@
   "pdfs": [
    "44960ac0-2._Effects_of_LLZO_Microstructure_Porosity_LLZOLi-Metal_Interfacial_Polarization_Resistance_and_Applied_Areal_Current_Density_on_Li-Metal_Dendrite_Formation_in_LLZO_Bilayer_Symmetric_Cells.pdf",
    "f0791619-2._Sup_Effects_of_LLZO_Microstructure_Porosity_LLZOLi-Metal_Interfacial_Polarization_Resistance_and_Applied_Areal_Current_Density_on_Li-Metal_Dendrite_Formation_in_LLZO_Bilayer_Symmetric_Cells.pdf"
+  ]
+ },
+ "hamasaki2022_single_parallel_contact_mwcnt_conductivity": {
+  "figures": 8,
+  "generated": "2026-11-03",
+  "pdfs": [
+   "1._Electrical_conductivity_of_a_single_parallel_contact_between_carbon_nanotubes.pdf",
+   "1._Sup_Electrical_conductivity_of_a_single_parallel_contact_between_carbon_nanotubes.pdf"
   ]
  },
  "han2025_icep_binder_ultrahigh_loading_ncm811": {
@@ -1508,6 +1530,13 @@
    "23704322-3._Review_of_Particle_Size_Effects_of_Solid_Electrolytes_in_All-Solid-State_Batteries.pdf"
   ]
  },
+ "li2007_tunneling_resistance_cnt_composites": {
+  "figures": 4,
+  "generated": "2026-11-03",
+  "pdfs": [
+   "4._Dominant_role_of_tunneling_resistance_in_the_electrical_conductivity_of_carbon_nanotube_based_composites.pdf"
+  ]
+ },
  "li2024_inf3_argyrodite_ultrathin_film": {
   "figures": 40,
   "generated": "2026-08-05",
@@ -1595,6 +1624,13 @@
   "pdfs": [
    "3eb1fa04-2._Sup_Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf",
    "d697636f-2._Sub-micrometer_Li6PS5Cl_regulated_cathodic_Li_kinetics_in_sulfide_based_all-solid-state_batteries.pdf"
+  ]
+ },
+ "lindblad2005_surface_area_weighted_local_configurations": {
+  "figures": 18,
+  "generated": "2026-11-03",
+  "pdfs": [
+   "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf"
   ]
  },
  "ling2026_dual_thermal_stabilization_fg_cuox": {
@@ -2014,6 +2050,14 @@
    "_p8si/p8_si.docx (SI)"
   ]
  },
+ "neumann2021_garnet_3d_structure_grain_boundaries_li_transport": {
+  "figures": 27,
+  "generated": "2026-11-03",
+  "pdfs": [
+   "9._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "9._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf"
+  ]
+ },
  "ngandjong2021_dem_calendering_digital_twin": {
   "figures": 10,
   "generated": "2026-08-05",
@@ -2026,6 +2070,14 @@
   "generated": "2026-10-02",
   "pdfs": [
    "6. The electrode tortuosity factor why the conventional tortuosity factor is not well suited for quantifying transport in porous Li-ion battery electrodes and what to use instead.pdf"
+  ]
+ },
+ "nirmalraj2009_swcnt_network_junction_resistance": {
+  "figures": 9,
+  "generated": "2026-11-03",
+  "pdfs": [
+   "5._Electrical_connectivity_in_single-walled_carbon_nanotube_networks.pdf",
+   "5._Sup_Electrical_connectivity_in_single-walled_carbon_nanotube_networks.pdf"
   ]
  },
  "nisar2021_cathode_coating_review_critical_thickness": {
@@ -2927,6 +2979,13 @@
    "0b34a0f3-98._Sup_Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf"
   ]
  },
+ "windreich2003_voxel_based_surface_area_estimation": {
+  "figures": 14,
+  "generated": "2026-11-03",
+  "pdfs": [
+   "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf"
+  ]
+ },
  "wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode": {
   "figures": 17,
   "generated": "2026-10-27",
@@ -3206,6 +3265,13 @@
   "generated": "2026-09-03",
   "pdfs": [
    "Zhu et al., Adv. Funct. Mater. 2026, 36, e23442 — Supporting Information (스캔/이미지 PDF, 폰트 0개)"
+  ]
+ },
+ "ziegel2010_surface_area_measure_digitizations": {
+  "figures": 13,
+  "generated": "2026-11-03",
+  "pdfs": [
+   "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf"
   ]
  },
  "ziemke2026_li3ocl_substitutional_defects": {

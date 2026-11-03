@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 233편 · 생성 2026-11-02
+> digest 242편 · 생성 2026-11-03
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -47,13 +47,14 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | — |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (46편)
+## 접촉역학 · 소성 (DEM 이론) (48편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
 | `alabdali2023_cgmd_wet_manufacturing_ssb_cathode` | ASSB 양극 습식 제조 사슬 전체(슬러리→건조→압연)를 CGMD(LAMMPS, LJ + Granular-Hertz) 로 — 유변학(점도·밀도)으로 force field 를 보정하고 GeoDict 로 δ_e·τ_g 산출 — Franco 그룹 ASSB 제조모델 1호(구형 AM) — Alabdali / Zanotto / Du | CGMD/DEM (LAMMPS, Lennard-Jones + Granular-Hertzian; 슬러리 NPT | 2026-08-19 | 🖼 11 |
 | `alizadeh2018_dem_adhesion_calibration_segregation_heap` | 코팅으로 끈적해진 소량 성분의 점착을 안식각으로 보정 하는 DEM 절차 — PEG 400 코팅 효소 위약 과립 (2 wt%) + 세제 분말 3 성분 더미 형성 · JKR 계면 에너지 Γ 를 응집수 (Cohesion number) 불변 으로 강성 · 크기 환산 · 코팅–비코팅 접촉 = Γ 의 절반 · 코팅이 분리 지수를 낮 | DEM (EDEM 2.7.1, Hertz–Mindlin + JKR adhesion, sphere clumps | 2026-10-13 | 🖼 23 |
 | `arzt1982_particle_coordination_densification_spheres` | 구형 분말 치밀화에서 배위수 증가의 영향 — 무작위 조밀 충전 RDF + Voronoi 셀 해석 모델 (The influence of an increasing particle coordination on the densification of spherical powders) — Arzt (Acta Metall. 1982) | theory (analytic powder-densification geometry: random-dense | 2026-10-02 | 🖼 6 |
+| `banerjee2019_tunneling_tlm_parallel_nanoscale_contacts` | A Two Dimensional Tunneling Resistance Transmission Line Model for Nanoscale Parallel Electrical Contacts — Banerjee (Sci. Rep. 2019) · 부분 겹친 나란한 접촉의 전송선 모형 (TLM) — 전달 길이 λ₀ = √(ρc | theory (2D transmission-line model + Simmons tunneling, self | 2026-11-03 | 🖼 10 |
 | `begat2004_cohesive_adhesive_balance_afm_colloid_probe` | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations I: Direct Quantification by Atomic Force Microscopy — AFM 콜로이드 탐침 한 개를 "자기 물질" 결정면과 "상대 물질" 결정면에 번갈아 대어 떼는 힘의 비 (C | experiment (AFM colloid-probe pull-off forces on engineered  | 2026-10-13 | 🖼 13 |
 | `begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery` | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations II: Influence on Fine Particle Delivery Characteristics — Part I 의 AFM 응집 · 접착 비를 환산 혼합 계수 Λ₁₂ = F^ad₁₂ / F^co₁₁ ( | experiment (dry powder inhaler blends — cohesive-adhesive ba | 2026-10-13 | 🖼 15 |
 | `bouvard2000_hard_soft_powder_densification` | 경/연 분말 혼합물의 가압 압밀 거동 — Bouvard (Powder Technology 2000) | exp+theory(review) | 2026-06-23 | — |
@@ -63,6 +64,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `electromechanical_contact_model_particulate_systems` | An electro-mechanical contact model for particulate systems — Chao Zhang (Powder Technology 2024) | DEM (Hertz-Mindlin 역학 + Holm/constriction 전기접촉저항 + Kirchhoff | 2026-06-26 | 🖼 22 |
 | `giannis2021_stress_based_multicontact_dem` | 입자 응력텐서 trace 로 모든 접촉을 서로 묶은 non-binary DEM 접촉모델 (MC-stress) — Giannis (Granular Matter 2021) | DEM (contact-LAW theory, non-binary multi-contact) | 2026-08-25 | — |
 | `gonzalez2012_nonlocal_contact_confined_granular` | 비국소(nonlocal) 접촉 정식화 — 구속된 입상계에서 "접촉은 서로 독립"이라는 Hertz 가정을 깨다 — Gonzalez & Cuitiño (J. Mech. Phys. Solids 2012) | DEM 접촉이론 (해석적 비국소 탄성 contact formulation + 자체 FEM 검증 + Tatar | 2026-08-25 | — |
+| `hamasaki2022_single_parallel_contact_mwcnt_conductivity` | Electrical conductivity of a single parallel contact between carbon nanotubes — Hamasaki (Nanoscale 2022) · TEM 안에서 두 MWCNT 의 나란한 겹침 길이를 바꿔 가며 잰 접합 저항 — 짧은 겹침은 R ∝ 1/x (G ∝ 길이) · 계 | exp (in-situ TEM nanomanipulation · two-terminal I–V vs over | 2026-11-03 | 🖼 8 |
 | `he2026_dem_calendering_inhomogeneity_areal_density` | NCM 양극 calendering(롤 압연) 불균일성을 DEM 으로 — 면적로딩(areal density) 15.2→20.0 mg cm⁻² 가 힘분포·접촉수·입자 integrity 를 어떻게 가르나 · EDEM 2024 + EEPA 탄소성 접촉 · 나노압입 + Hg 압입 이중검증 — He·Zhang·Hao·Sun·Xu·C | DEM (EDEM 2024 상용, EEPA 탄소성 접촉 + JKR 집전체; 나노압입·Hg압입 검증; 액체계  | 2026-09-15 | — |
 | `heck2026_densification_sulfide_se_binder_scalable` | 황화물 SE 바인더 분리막의 일축 치밀화 — β-Li₃PS₄ (LPS) + HNBR 0 · 3 · 4.3 wt% 슬러리 시트 (+ Li₆PS₅Cl 대조): 제조압 · 적층압 · 치밀화 온도 · 층 두께가 밀도 (in-die 0.01 → 1.5 → 0.01 GPa · out-of-die) · 접착 · 나노압입 · σ_ion | experiment (일축 치밀화 — 실험실 프레스 · CompreDrive in-die 밀도 + EIS · | 2026-10-13 | 🖼 34 |
 | `jacksongreen2005_fem_elastoplastic_hemispherical_contact` | 탄소성 반구–강체평판 접촉의 유한요소 연구 — Jackson & Green (J. Tribology 2005) | FEM (continuum, single-contact) | 2026-06-26 | 🖼 13 |
@@ -233,7 +235,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `lee2023_sicspe_digitaltwin_assb` | Lee 2023 (Battery Energy 2, 20220061) — 디지털트윈 기반 SIC-SPE vs LPSCl 복합양극 구조·전기화학 분석 ★ DTBL 디지털트윈 계보의 가장 이른 논문(2023) + LPSCl 전극 구조지표 | DEM | 2026-07-28 | — |
 | `park2020_digitaltwin_assb_foundational` | Park 2020 (Adv. Energy Mater. 10, 2001563) — Digital-Twin-Driven All-Solid-State Battery: 물리·전기화학 거동 규명 ★ DTBL 디지털트윈 계보의 시조(FOUNDATIONAL ROOT, 2020) | FEM·digital-twin | 2026-07-28 | 🖼 26 |
 
-## 기타 (46편)
+## 기타 (53편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -250,6 +252,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell` | 저전류 반쪽셀 전위곡선만으로 LFP 전극의 입도분포(PSD) 를 역산하고, 그 PSD 를 다입자 모델에 넣어 풀셀(Sony 26650 LFP/흑연) 전압을 재현 — 크기의존 스피노달 간극 (regular solution × Ferguson–Bazant 핵생성 관계) · Eizenhammer · Jossen (J. Elec | continuum (many-particle regular-solution model + physicoche | 2026-09-29 | 🖼 15 |
 | `ender2011_3d_reconstruction_composite_cathode` | Three-dimensional reconstruction of a composite cathode for lithium-ion cells — LiFePO₄ 복합양극 FIB/SEM 3상 재구성 (카본블랙 · LiFePO₄ · 기공) 과 상별 τ 세 가지 (FEM Laplace τ_FEM · 최단경로 τ_geom · Bru | image-based (FIB/SEM 3D 재구성 + FEM Laplace τ · 기하 τ · Bruggem | 2026-10-03 | 🖼 4 |
 | `endo2001_vgcf_basic_properties_battery_applications` | 기상성장 탄소섬유(VGCF) — 단섬유 4단자 저항률 · 압착분말 부피저항률(HTT·충전밀도 의존) · 인장물성 · 납축/Li-ion 전극 첨가 효과 — Endo et al. (Carbon 2001, Review article · Shinshu Univ. + Showa Denko + MIT) | experiment + review (single-fibre 4-point resistivity · comp | 2026-09-25 | 🖼 16 |
+| `fuhrer2000_crossed_nanotube_junctions` | Crossed Nanotube Junctions — Fuhrer (Science 2000) · 교차한 두 SWCNT 의 접합을 4/3/2 단자로 직접 잰 첫 실험 — 금속–금속 접합 ≈ 200 kΩ (0.086–0.26 e²/h · 투과율 2–6 %) · 금속–반도체는 Schottky 로 두 자릿수 낮은 컨덕턴스 · 계산 | exp (crossed SWNT junction contact resistance · 4-, 3- and 2 | 2026-11-03 | 🖼 4 |
 | `geldart2006_powder_flowability_angle_of_repose_tester` | 안식각 (AOR) 으로 분말 유동성을 재는 소량 시험기 — Powder Research Ltd. Mark 4 (진동 경사판 → 깔때기 → 뒤판에 반원뿔 · 100 g) · AOR 과 Hausner 비 (HR) 가 직선 상관 (θ = 36.2 HR − 13.4 · 29.8 HR − 5.4, R² 0.97) · 7 µm 미분 | exp (powder flowability characterization — dynamic angle-of- | 2026-10-13 | 🖼 12 |
 | `grey1969_hausner_ratio_metal_powders` | Hausner 비 (HR = 탭 밀도 ÷ 겉보기 밀도) 라는 이름의 원전 — 구리 분말 셋 (분무 · 전해 · 박편) 에서 HR 1.08–1.55 · HR 이 클수록 안식각 ↑ · Hall 유량 ↓ · HR 은 정지 안식각보다 동적 안식각 (β) 을 따른다 ("움직이는 분말의 마찰 상태") · 기름을 섞어 점착을 키워도  | experiment (metal powder flowability — Hausner ratio T.D./A. | 2026-10-13 | 🖼 13 |
 | `hersey1975_ordered_mixing_concept` | 정렬 혼합 (ordered mixing) — 점착 · 상호작용하는 미분은 "무작위로 섞이는 것" 이 아니라 큰 운반 입자 표면에 붙어 단위체를 이루며 (무질서 → 질서) 섞인다 · 단층 부착 수 n = 4fD²/d² · 미분이 모자라면 다성분 · 넘치면 "정렬 단위체 + 남는 미분" 의 이원 혼합 · 정렬 혼합물은 무작위 | theory (powder mixing concept — ordered vs random mixing of  | 2026-10-13 | 🖼 1 |
@@ -266,11 +269,15 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `lawrence2008_single_vgcnf_elastic_modulus_morphology` | 개별 기상성장 탄소나노섬유(VGCNF) 17가닥의 탄성률 6–207 GPa 와 벽 구조 — AFM 3점 굽힘 · FIB Pt 양단고정 · HRTEM — Lawrence, Berhan, Nadarajah (ACS Nano 2008) | experiment (single-nanofibre AFM three-point bending, FIB Pt | 2026-09-26 | 🖼 8 |
 | `lee2024_multiphysics_dem_fem_initial_pressure_assb` | 초기압력의 ASSB 역학·전기화학 성능 영향 — DEM+FEM 멀티피직스 (Lee, J. Energy Storage 2024) | DEM+FEM (mixed, echem-mech coupled) | 2026-06-26 | 🖼 11 |
 | `lee2026_eecfp_dnn_electrolyte_ce_lmb` | Interpretable Enhanced-ECFP-Guided Deep Learning for Rational Electrolyte Design and Coulombic Efficiency Prediction in Lithium Metal Batteries — Lee et al. (Energy Storage Materia | exp(셀·Raman·SEM·XPS) + ML(e-ECFP/DNN/SHAP) — **자체 DFT/MD 0** | 2026-07-17 | — |
+| `li2007_tunneling_resistance_cnt_composites` | Dominant role of tunneling resistance in the electrical conductivity of carbon nanotube–based composites — Li (APL 2007) · 교차 CNT 사이 절연막의 Simmons 터널 저항 + 몬테카를로 퍼콜레이션 망 — 막 1.0 nm ≈ | simulation (Monte-Carlo percolation network of straight CNTs | 2026-11-03 | 🖼 4 |
+| `lindblad2005_surface_area_weighted_local_configurations` | Surface area estimation of digitized 3D objects using weighted local configurations — Lindblad (Image and Vision Computing 2005) · 2×2×2 이웃 (m-cube) 13 경우에 넓이 가중을 주는 국소 추정기 — 평면 불편 | method (digital geometry — 2×2×2 configuration-weighted surf | 2026-11-03 | 🖼 18 |
 | `luan2025_graded_cathode_400whkg_pouch` | Luan 2025 (Adv. Funct. Mater. 36, e26239) — 이온/전자 flux 에 맞춘 전하운반체 공간분포로 만든 graded 복합양극 → 5 Ah 파우치 404 Wh/kg ★ 우리 Phase-5(층상 양극) + 백로그 A7(graded-z) 의 실험적 실현판 | exp + FEM (COMSOL phase-field) | 2026-08-11 | 🖼 7 |
 | `matsusaka2010_triboelectric_charging_powders_review` | Triboelectric charging of powders: A review — 분말은 손대는 공정마다 마찰 대전된다 · 전하 이동 기전 (전자 · 이온 · 물질) · 축전기 모형 Δq = k_c·C·V 와 전하 완화 (Paschen) 모형 이 반복 충돌에서 같은 지수식 q = q₀e^{−n/n₀} + q∞(1 − e^ | review (triboelectric / contact charging of powders: electro | 2026-10-13 | 🖼 92 |
 | `minnmann2022_designing_cathodes_solidstate` | Minnmann 2022 (Adv. Energy Mater. 12, 2201425) — "Designing Cathodes and Cathode Active Materials for Solid-State Batteries" (설계 Perspective) | DEM | 2026-07-28 | 🖼 7 |
 | `nadeem2023_gnn_mixing_index` | 입자 스케일 혼합도(mixedness)를 이웃 구성으로 재는 지표 — GNN (generalized nearest neighbor) mixing index: Godlieb 의 50:50 전용 이웃지표를 불균등 조성과 3종 이상으로 일반화하고, X-ray CT 로 잰 이성분 침대에서 Lacey(SD계)·MGMMI(위치계)와 | metric/method (X-ray CT 실험 + 혼합지표 정식화; DEM 없음) | 2026-09-19 | 🖼 9 |
 | `nase2001_granular_bond_collision_number_wet_cohesion` | 점착 분체의 두 무차원 수 — 입자 Bond 수 Bo_g = F_c/W (정지 더미 · 호퍼는 Bo_g ≈ 1 에서 급변) 와 충돌 수 Co = F_c/F_Bagnold (회전 드럼의 동적 안식각은 Bo_g 로는 전이가 안 보이고 Co 로 보면 전이) — 모세관 (액체 다리) 점착 · 유리구 0.5–10 mm · 실험 + | exp + DEM (particle dynamics with capillary liquid-bridge co | 2026-10-13 | 🖼 11 |
+| `neumann2021_garnet_3d_structure_grain_boundaries_li_transport` | Effect of the 3D Structure and Grain Boundaries on Lithium Transport in Garnet Solid Electrolytes — Neumann (ACS Appl. Energy Mater. 2021) · FIB-SEM 재구성 다공 LLCZNO 를 watershed 로 입자  | sim (3D microstructure-resolved continuum electrochemistry — | 2026-11-03 | 🖼 27 |
+| `nirmalraj2009_swcnt_network_junction_resistance` | Electrical Connectivity in Single-Walled Carbon Nanotube Networks — Nirmalraj (Nano Lett. 2009) · 전도성 AFM 으로 SWCNT 망의 접합 저항을 하나씩 잰 실측 — 단일 튜브 접합 평균 98 kΩ → 큰 다발 (7–14 nm) 2.7 MΩ ·  | exp (conductive-AFM junction resistance mapping of sparse SW | 2026-11-03 | 🖼 9 |
 | `oh2026_carbon_coating_siox_ion_electron_balance` | Oh 2026 (Journal of Power Sources 689, 240698) — SiOx 탄소코팅 두께가 이온/전자 수송 BALANCE + 균일분산을 결정 | FEM·digital-twin | 2026-07-28 | — |
 | `otani2023_ionic_conductivity_path_resistance_separation_model` | 황화물 복합양극의 이온전도 저하 인자를 셋으로 가르고 (공극 우회 · 입자 접촉 면적 · 계면 접촉 저항) "경로 저항 계수" 곱 모형으로 예측 — 순수 LPSCl 층은 Bruggeman β = 4 (공극 30 % 에서 경로 저항 ≈3 = 경로 ≈1.2 × 접촉 면적 ≈2.5 · 격자 부정합 저항은 무시 가능) · 복합  | exp + 해석 모형 (LPSCl 층 · NCM523 복합 공극률 열 EIS · 2D SEM 무작위 행보 경 | 2026-10-13 | 🖼 7 |
 | `pan2026_thesis_rate_capable_energy_dense_cathode_composites` | 액체 LIB 양극 복합체의 수송을 세 층위로 손본 CMU 박사학위논문 — ① NCM811 2 층 기공 구배 (캘린더한 조밀 하층 + 분무 다공 상층 · μCT 0.5 µm + OpenPNM) ② Co-free LMR 에 SWCNT + 그래핀 혼성 도전재 (전극 밀도 1.1–2.7 g/cm³ · GITT-EIS-DRT ·  | thesis · exp (액체 전해질 LIB 양극 · Li 금속 반쪽셀 · 습식 PVDF/NMP 슬러리 ·  | 2026-10-13 | 🖼 45 |
@@ -281,8 +288,10 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `song2025_electrochemo_mechanical_microelectrode_ees` | Song 2025 (Energy & Environmental Science 18, 3129-3147) — 미세전극(microelectrode) electrochemo-mechanical 디지털트윈: FIB-SEM 재구성 + 전성분 고유물성 → 셀전압 >98% 검증 + 입자↔셀 괴리 3메커니즘 + 폴리머 바인더 VISCOP | FEM·electrochemo-mechanical | 2026-07-28 | — |
 | `wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni` | LCO · NMC333/532/622/811 의 전자·이온 전도도를 Ni 함량의 함수로 분리 측정 (SPS 치밀 펠릿 · 이온차단 Ag 전극) — Wang et al. (J. Power Sources 2018, Univ. of Washington) | experiment (impedance + DC polarization, SPS-sintered pellet | 2026-09-25 | 🖼 20 |
 | `wiedenmann2013_pore_structure_ion_conductivity_ceramic_diaphragms` | Three-Dimensional Pore Structure and Ion Conductivity of Porous Ceramic Diaphragms — 단층촬영 기하 τ_geo · constriction factor β 와 EIS σ_eff 를 맞대는 "확장 기공 구조 모형" σ_eff/σ₀ = ε·β/τ_geo (지수  | exp + 3D image analysis (tortuosity · constriction · porosit | 2026-10-03 | 🖼 10 |
+| `windreich2003_voxel_based_surface_area_estimation` | Voxel-based surface area estimation: from theory to practice — Windreich (Pattern Recognition 2003) · 복셀 그대로 (다각형화 없이) 곡면 넓이를 재는 Mullikin–Verbeek 9-부류 가중 추정기를 고곡률 표면까지 넓힌 실용판 | method (digital geometry — voxel surface-area estimator · 합성 | 2026-11-03 | 🖼 14 |
 | `zhang2023_pfib_multiscale_imaging_4d_thick_cathode` | 후막(80 µm · 6 mAh/cm²) NMC811 양극을 PFIB-SEM 으로 전(全)두께 3D 실측 → 그 복셀을 그대로 4D(공간+시간) Newman 모델에 넣어 열화 기전 규명 — Zhang & Chouchane / Meng (UCSD) + Franco (LRCS) (Joule 2023) | exp (PFIB-SEM 3D 대용적 + cryo-(S)TEM/EDX + 코인셀) + 3D-resolved  | 2026-08-19 | 🖼 19 |
 | `zhang2026_polymer_electrolyte_modeling_perspective` | 고분자계 전해질 (SPE · 겔 · 이온겔 · 복합) 모델링을 고르는 틀 — 목적 (기전 · 예측 · 선별/최적화 · 신호 분류) × 근거 (물리 · 데이터 · 혼성) × 결합도 (비결합 · 뭉뚱그림 · 약결합 · 완전결합) × 축척 (분자 · 메조 · 연속체/소자 · 신호/데이터) · 이온겔 모델 연구 24 편 지도 = | perspective (모델링 방법론 틀 · 고분자계 전해질 · 이온겔 문헌 지도 · 복합전극 microst | 2026-10-13 | 🖼 7 |
+| `ziegel2010_surface_area_measure_digitizations` | Estimation of surface area and surface area measure of three-dimensional sets from digitizations — Ziegel & Kiderlen (Image and Vision Computing 2010) · 2×2×2 배치 수의 점근 이론 (h-함수) 으로 | method/theory (stochastic & integral geometry — asymptotic s | 2026-11-03 | 🖼 13 |
 
 ## 🎤 발표 덱 (1편) — ⚠ 인용 등급이 papers/ 보다 한 단계 낮다
 

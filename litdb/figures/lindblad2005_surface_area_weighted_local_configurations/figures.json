@@ -1,0 +1,394 @@
+{
+  "slug": "lindblad2005_surface_area_weighted_local_configurations",
+  "dpi": 300,
+  "maxpx": 3000,
+  "generated": "2026-11-03",
+  "sources": [
+    "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf"
+  ],
+  "figures": [
+    {
+      "key": "f1",
+      "kind": "figure",
+      "label": "1",
+      "page": 4,
+      "file": "fig_1.png",
+      "caption": "Fig. 1. m-Squares of 2!2 pixels. Pixel centers denoted by a † are inside the object. The complementary cases are classiﬁed to be the same as the original cases.",
+      "rotated_deg": 0,
+      "bbox": [
+        131.7,
+        65.2,
+        471.7,
+        162.9
+      ],
+      "w": 1418,
+      "h": 408,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.973,
+      "viewed": true
+    },
+    {
+      "key": "f2",
+      "kind": "figure",
+      "label": "2",
+      "page": 4,
+      "file": "fig_2.png",
+      "caption": "Fig. 2. m-Square split by lines of equal slope but different w.",
+      "rotated_deg": 0,
+      "bbox": [
+        326.8,
+        519.4,
+        539.7,
+        726.8
+      ],
+      "w": 888,
+      "h": 865,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.977,
+      "viewed": true
+    },
+    {
+      "key": "f3",
+      "kind": "figure",
+      "label": "3",
+      "page": 5,
+      "file": "fig_3.png",
+      "caption": "Fig. 3. Two m-squares of type s3, the top one representing two locally (internal to the m-square) connected components, while the bottom one only represents one locally connected component. and the total number of occurrences of a speciﬁc conﬁguration, si, is Nið~nÞ Z Pðsij~nÞNtotð~nÞ: (10)",
+      "rotated_deg": 0,
+      "bbox": [
+        86.2,
+        67.6,
+        237.8,
+        274.9
+      ],
+      "w": 632,
+      "h": 865,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.968,
+      "viewed": true
+    },
+    {
+      "key": "f4",
+      "kind": "figure",
+      "label": "4",
+      "page": 5,
+      "file": "fig_4.png",
+      "caption": "Fig. 4. m-Cubes of 2!2!2 voxels. Voxel centers denoted by a † are inside the object. The complementary cases are classiﬁed to be the same as the original cases. Only Cases c1, c2, c5, c8, and c9 (emphasized) appear for planar surfaces.",
+      "rotated_deg": 0,
+      "bbox": [
+        127.9,
+        553.1,
+        459.3,
+        716.3
+      ],
+      "w": 1381,
+      "h": 681,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.939,
+      "viewed": true
+    },
+    {
+      "key": "f5",
+      "kind": "figure",
+      "label": "5",
+      "page": 6,
+      "file": "fig_5.png",
+      "caption": "Fig. 5. (a) Marching cubes rendering of an MRI volume 142!188!131 voxels. (b) Histogram showing the occurrence of surface m-cubes present in (a).",
+      "rotated_deg": 0,
+      "bbox": [
+        133.6,
+        65.2,
+        470.8,
+        254.5
+      ],
+      "w": 1406,
+      "h": 790,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.715,
+      "viewed": true
+    },
+    {
+      "key": "f6",
+      "kind": "figure",
+      "label": "6",
+      "page": 7,
+      "file": "fig_6.png",
+      "caption": "Fig. 6. The surface between object and background, zZz0",
+      "rotated_deg": 0,
+      "bbox": [
+        36.5,
+        65.2,
+        287.0,
+        214.9
+      ],
+      "w": 1044,
+      "h": 625,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.81,
+      "viewed": true
+    },
+    {
+      "key": "f7",
+      "kind": "figure",
+      "label": "7",
+      "page": 7,
+      "file": "fig_7.png",
+      "caption": "Fig. 7. The different cases appearing for z0xCz0y%1 as w is varied are shown.",
+      "rotated_deg": 0,
+      "bbox": [
+        127.0,
+        376.0,
+        460.0,
+        520.0
+      ],
+      "w": 1388,
+      "h": 601,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.824,
+      "recrop": "auto crop included a body-text equation line ((16c), (19)) above the figure; hand crop = embedded raster extent + margin, PDF p.7 = printed 117 (2026-11-03)",
+      "viewed": true
+    },
+    {
+      "key": "f8",
+      "kind": "figure",
+      "label": "8",
+      "page": 7,
+      "file": "fig_8.png",
+      "caption": "Fig. 8. The different cases appearing for z0xCz0yO1 as w is varied are shown.",
+      "rotated_deg": 0,
+      "bbox": [
+        119.4,
+        543.0,
+        468.0,
+        725.1
+      ],
+      "w": 1453,
+      "h": 760,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.796,
+      "viewed": true
+    },
+    {
+      "key": "f9",
+      "kind": "figure",
+      "label": "9",
+      "page": 8,
+      "file": "fig_9.png",
+      "caption": "Fig. 9. Estimated surface area divided by true surface area, for different values of z0 y. The maximum error, ADZ7.3% is reached for z0 x and z0 xZz0 yZ0: and the total estimated surface area is given by X 13 ^Að~nÞ Z AiNið~nÞ: (20) iZ1",
+      "rotated_deg": 0,
+      "bbox": [
+        44.6,
+        65.2,
+        295.8,
+        256.0
+      ],
+      "w": 1048,
+      "h": 796,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.661,
+      "viewed": true
+    },
+    {
+      "key": "f10",
+      "kind": "figure",
+      "label": "10",
+      "page": 9,
+      "file": "fig_10.png",
+      "caption": "Fig. 10. Relative error of the surface area estimate calculated for balls of increasing radii when using A1Z0.2118 as suggested in Ref. [1]. (b) shows the same information as (a) in a log–log scale. We use the same approach as in Section 5.1, in order to ﬁnd an optimal distribution of surface area between cases c1, c5, and c9. Since planar surfaces do not provide enough information to give a unique solution, we need some type of non-planar objects to perform the optimization on. We feel that the most natural objects to use for this purpose are digitized balls of ﬁnite radii. Balls are the simplest of ﬁnite- sized objects, they are rotationally symmetric, and their surfaces have a constant curvature. The plane segments used in Section 5.1 can be seen as being parts of the surface of a ball with inﬁnite radius. e.g. the total surface area of a number of balls of varying size, the larger ba",
+      "rotated_deg": 0,
+      "bbox": [
+        97.7,
+        65.2,
+        489.3,
+        229.7
+      ],
+      "w": 1632,
+      "h": 687,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.93,
+      "viewed": true
+    },
+    {
+      "key": "f11",
+      "kind": "figure",
+      "label": "11",
+      "page": 9,
+      "file": "fig_11.png",
+      "caption": "Fig. 11. Relative density of m-cubes on the surface of balls of increasing radius. Only the basic cases appear on the surface of balls.",
+      "rotated_deg": 0,
+      "bbox": [
+        299.5,
+        535.4,
+        550.7,
+        716.9
+      ],
+      "w": 1048,
+      "h": 758,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.932,
+      "viewed": true
+    },
+    {
+      "key": "f12",
+      "kind": "figure",
+      "label": "12",
+      "page": 10,
+      "file": "fig_12.png",
+      "caption": "Fig. 12. Relative error of the surface area estimate as a function of the area weight A1, for 1,000,000 balls with radii picked from a 1/r-distribution, and 1,000,000 ball with radii picked from a 1/r3-distribution, respectively.",
+      "rotated_deg": 0,
+      "bbox": [
+        44.6,
+        65.2,
+        295.8,
+        265.1
+      ],
+      "w": 1048,
+      "h": 834,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.933,
+      "viewed": true
+    },
+    {
+      "key": "f13",
+      "kind": "figure",
+      "label": "13",
+      "page": 10,
+      "file": "fig_13.png",
+      "caption": "Fig. 13. Relative error of the surface area estimate calculated for balls of increasing radii when using A1Z0.636. (b) shows the same information as (a) in a log–log scale.",
+      "rotated_deg": 0,
+      "bbox": [
+        110.3,
+        549.7,
+        493.0,
+        715.0
+      ],
+      "w": 1596,
+      "h": 690,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.918,
+      "viewed": true
+    },
+    {
+      "key": "f14",
+      "kind": "figure",
+      "label": "14",
+      "page": 11,
+      "file": "fig_14.png",
+      "caption": "Fig. 14. Digitized spherical cap with a radius of 40 pixels.",
+      "rotated_deg": 0,
+      "bbox": [
+        99.1,
+        68.3,
+        225.3,
+        225.0
+      ],
+      "w": 526,
+      "h": 654,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.348,
+      "viewed": true
+    },
+    {
+      "key": "f15",
+      "kind": "figure",
+      "label": "15",
+      "page": 11,
+      "file": "fig_15.png",
+      "caption": "Fig. 15. Relative error (a) and mean absolute deviation (b) of the surface area estimates for digitized objects of increasing size. The error bars indicate minimum and maximum values of the estimate.",
+      "rotated_deg": 0,
+      "bbox": [
+        98.2,
+        406.9,
+        488.8,
+        565.5
+      ],
+      "w": 1628,
+      "h": 662,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.922,
+      "viewed": true
+    },
+    {
+      "key": "t1",
+      "kind": "table",
+      "label": "1",
+      "page": 8,
+      "file": "tab_1.png",
+      "caption": "Table 1 Table of elementary areas assigned to the different m-cubes A1Zundeﬁned A2Z0.6690 A3Z2A1 A4Z2A1 A5Z1.1897KA1 A6ZA1CA2 A7Z3A1 A8Z0.9270 A9Z1.6942K2A1 A10Z2A2 A11Z1.5731 A12ZA1CA5 A13Z4A1 A1 is left undeﬁned.",
+      "rotated_deg": 0,
+      "bbox": [
+        48.0,
+        662.0,
+        555.0,
+        740.0
+      ],
+      "w": 2113,
+      "h": 326,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.855,
+      "recrop": "auto crop was the whole page; hand crop = Table 1 title + rules + footnote, PDF p.8 = printed 118 (2026-11-03)",
+      "viewed": true
+    },
+    {
+      "key": "t2",
+      "kind": "table",
+      "label": "2",
+      "page": 10,
+      "file": "tab_2.png",
+      "caption": "Table 2 Table of suggested elementary areas assigned to the different m-cube cases A1Z0.636 A2Z0.669 A3Z1.272 A4Z1.272 A5Z0.554 A6Z1.305 A7Z1.908 A8Z0.927 A9Z0.422 A10Z1.338 A11Z1.573 A12Z1.190 A13Z2.544",
+      "rotated_deg": 0,
+      "bbox": [
+        48.0,
+        313.0,
+        292.0,
+        377.0
+      ],
+      "w": 1017,
+      "h": 267,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.904,
+      "recrop": "auto crop was the whole page; hand crop = Table 2 title + rules (left column), PDF p.10 = printed 120 (2026-11-03)",
+      "viewed": true
+    },
+    {
+      "key": "t3",
+      "kind": "table",
+      "label": "3",
+      "page": 11,
+      "file": "tab_3.png",
+      "caption": "Table 3 Performance on synthetic test objects of given sizes Object Mean (Aˆ), A CV (%) Mean AD (%) Max AD (%) Ball rZ10 1.0000 0.24 0.19 1.37 Cube sideZ20 0.9811 1.09 1.89 9.77 Cylinder rZ10, sideZ20 0.9870 0.75 1.31 5.71 Spherical cap rZ10 0.9823 0.79 1.78 8.01 Ball rZ100 1.0000 0.009 0.008 0.029 Cube sideZ200 0.9981 0.91 0.66 6.06 Cylinder rZ100, sideZ200 0.9987 0.63 0.45 3.26 Spherical cap rZ100 0.9982 0.32 0.26 2.20",
+      "rotated_deg": 0,
+      "bbox": [
+        40.0,
+        605.0,
+        547.0,
+        736.0
+      ],
+      "w": 2114,
+      "h": 547,
+      "dpi": 300,
+      "src": "7._Surface_area_estimation_of_digitized_3D_objects_using_weighted_local_configurations.pdf",
+      "blank": 0.896,
+      "recrop": "auto crop was the whole page; hand crop = Table 3 title + rules, PDF p.11 = printed 121 (2026-11-03)",
+      "viewed": true
+    }
+  ],
+  "missing_labels": []
+}

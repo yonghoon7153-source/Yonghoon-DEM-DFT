@@ -1,0 +1,308 @@
+{
+  "slug": "windreich2003_voxel_based_surface_area_estimation",
+  "dpi": 300,
+  "maxpx": 3000,
+  "generated": "2026-11-03",
+  "sources": [
+    "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf"
+  ],
+  "figures": [
+    {
+      "key": "f1",
+      "kind": "figure",
+      "label": "1",
+      "page": 3,
+      "file": "fig_1.png",
+      "caption": "Fig. 1. In both examples, generation of the shortest path (solid) between border voxels ‘1’ and ‘2’ does not follow the intended contour (dashed), even though the path is constrained to border voxels.",
+      "rotated_deg": 0,
+      "bbox": [
+        125.8,
+        59.1,
+        413.9,
+        253.6
+      ],
+      "w": 1201,
+      "h": 811,
+      "dpi": 300,
+      "src": "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf",
+      "blank": 0.659,
+      "viewed": true
+    },
+    {
+      "key": "f2",
+      "kind": "figure",
+      "label": "2",
+      "page": 3,
+      "file": "fig_2.png",
+      "caption": "Fig. 2. A region grown from the seed voxel (black) within the contour will include not only the intended region of interest (darker voxels in the top layer) but also other voxels in the border-set to which they are connected (bottom layer). representation is crucial, since the surface area estimation algorithm, based on [9], operates on the border-set. The data structure used to represent the boundary must satisfy several requirements. To allow the selection of key-faces, direct or semi-direct access to each boundary face should be possible. Chain generation and region grow- ing call for a graph-like representation, where each face is linked (by its four edges) to its four spatially adjacent faces. Serial traversal of the selected boundary elements is also necessary.",
+      "rotated_deg": 0,
+      "bbox": [
+        36.1,
+        285.7,
+        263.3,
+        460.3
+      ],
+      "w": 948,
+      "h": 728,
+      "dpi": 300,
+      "src": "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf",
+      "blank": 0.522,
+      "viewed": true
+    },
+    {
+      "key": "f3",
+      "kind": "figure",
+      "label": "3",
+      "page": 4,
+      "file": "fig_3.png",
+      "caption": "Fig. 3. Finding the shortest path (white) between two boundary faces on a segmented white matter MR brain image.",
+      "rotated_deg": 0,
+      "bbox": [
+        275.2,
+        59.1,
+        502.4,
+        331.1
+      ],
+      "w": 948,
+      "h": 1134,
+      "dpi": 300,
+      "src": "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf",
+      "blank": 0.369,
+      "viewed": true
+    },
+    {
+      "key": "f4",
+      "kind": "figure",
+      "label": "4",
+      "page": 5,
+      "file": "fig_4.png",
+      "caption": "Fig. 4. The nine unique surface voxel classes (after [9]). Only voxels of types S1–3 appear in a planar surface.",
+      "rotated_deg": 0,
+      "bbox": [
+        275.2,
+        59.3,
+        502.4,
+        337.5
+      ],
+      "w": 948,
+      "h": 1161,
+      "dpi": 300,
+      "src": "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf",
+      "blank": 0.781,
+      "viewed": true
+    },
+    {
+      "key": "f5",
+      "kind": "figure",
+      "label": "5",
+      "page": 6,
+      "file": "fig_5.png",
+      "caption": "Fig. 5. Brain image details showing voxels of types S7–9 (dark). (a,b) Two images showing the same S7 voxel (with two opposite faces are exposed to the background). In (b), the object detail is rotated by 180◦around the vertical axis with respect to (a). (c) An S8 voxel, with two pairs of opposite faces exposed to the background. (d) Voxel of type S9, with all its six faces exposed to the background.",
+      "rotated_deg": 0,
+      "bbox": [
+        118.6,
+        154.2,
+        421.3,
+        334.6
+      ],
+      "w": 1262,
+      "h": 753,
+      "dpi": 300,
+      "src": "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf",
+      "blank": 0.645,
+      "viewed": true
+    },
+    {
+      "key": "f6",
+      "kind": "figure",
+      "label": "6",
+      "page": 7,
+      "file": "fig_6.png",
+      "caption": "Fig. 6. The relative mean estimation error (percent) in estimating the surface area of spheres, as a function of sphere radius (with object-background averaging). Left: Small sphere radii. Right: Large sphere radii.",
+      "rotated_deg": 0,
+      "bbox": [
+        36.1,
+        58.6,
+        502.4,
+        229.7
+      ],
+      "w": 1944,
+      "h": 713,
+      "dpi": 300,
+      "src": "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf",
+      "blank": 0.976,
+      "viewed": true
+    },
+    {
+      "key": "f7",
+      "kind": "figure",
+      "label": "7",
+      "page": 7,
+      "file": "fig_7.png",
+      "caption": "Fig. 7. The coe8cient of variation (percent) as a function of radius in estimating the surface area of spheres (with object-background averaging). Left: Small radii. Right: Large radii.",
+      "rotated_deg": 0,
+      "bbox": [
+        36.1,
+        270.2,
+        502.4,
+        442.7
+      ],
+      "w": 1944,
+      "h": 720,
+      "dpi": 300,
+      "src": "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf",
+      "blank": 0.977,
+      "viewed": true
+    },
+    {
+      "key": "f8",
+      "kind": "figure",
+      "label": "8",
+      "page": 8,
+      "file": "fig_8.png",
+      "caption": "Fig. 8. An ellipsoid with semi-main axes (a; b; c), aligned with the coordinate system.",
+      "rotated_deg": 0,
+      "bbox": [
+        40.0,
+        56.0,
+        259.0,
+        256.0
+      ],
+      "w": 914,
+      "h": 834,
+      "dpi": 300,
+      "src": "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf",
+      "blank": 0.968,
+      "manual_crop": "auto crop took the Fig. 9 plot region (duplicate of fig_9); hand crop = vector ellipsoid sketch above the Fig. 8 caption, left column, PDF p.8 = printed 2538 (2026-11-03)",
+      "viewed": true
+    },
+    {
+      "key": "f9",
+      "kind": "figure",
+      "label": "9",
+      "page": 8,
+      "file": "fig_9.png",
+      "caption": "Fig. 9. Relative mean estimation error (percent) as a function of ellipsoid main semi-axis a (using object-background surface area averaging). The dots refer to the ellipsoid family (a; 26; 25); the x’s to (a; 51; 50).",
+      "rotated_deg": 0,
+      "bbox": [
+        36.1,
+        299.8,
+        263.3,
+        476.1
+      ],
+      "w": 948,
+      "h": 735,
+      "dpi": 300,
+      "src": "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf",
+      "blank": 0.968,
+      "viewed": true
+    },
+    {
+      "key": "f10",
+      "kind": "figure",
+      "label": "10",
+      "page": 8,
+      "file": "fig_10.png",
+      "caption": "Fig. 10. Coe8cient of variation (percent) as a function of ellipsoid semi main-axis a (using object-background surface area averag- ing). The dots refer to the ellipsoid family (a; 26; 25); the x’s to (a; 51; 50).",
+      "rotated_deg": 0,
+      "bbox": [
+        275.2,
+        58.4,
+        502.4,
+        234.0
+      ],
+      "w": 948,
+      "h": 732,
+      "dpi": 300,
+      "src": "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf",
+      "blank": 0.966,
+      "viewed": true
+    },
+    {
+      "key": "f11",
+      "kind": "figure",
+      "label": "11",
+      "page": 8,
+      "file": "fig_11.png",
+      "caption": "Fig. 11. Grey/white matter interface in a segmented MR brain im- age. The Erst two key points entered by the user and the connecting path are shown (white).",
+      "rotated_deg": 0,
+      "bbox": [
+        275.2,
+        295.8,
+        502.4,
+        500.5
+      ],
+      "w": 948,
+      "h": 854,
+      "dpi": 300,
+      "src": "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf",
+      "blank": 0.361,
+      "viewed": true
+    },
+    {
+      "key": "f12",
+      "kind": "figure",
+      "label": "12",
+      "page": 9,
+      "file": "fig_12.png",
+      "caption": "Fig. 12. Interactive deEnition of the region of interest on the surface. ((a)–(c)) Automatic connection of key points provided by the user. (d) Closure of the contour surrounding the region of interest.",
+      "rotated_deg": 0,
+      "bbox": [
+        125.6,
+        58.8,
+        414.1,
+        321.0
+      ],
+      "w": 1203,
+      "h": 1093,
+      "dpi": 300,
+      "src": "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf",
+      "blank": 0.447,
+      "viewed": true
+    },
+    {
+      "key": "f13",
+      "kind": "figure",
+      "label": "13",
+      "page": 9,
+      "file": "fig_13.png",
+      "caption": "Fig. 13. The region of interest on the boundary surface, shown from two viewing points.",
+      "rotated_deg": 0,
+      "bbox": [
+        117.6,
+        361.0,
+        420.9,
+        530.0
+      ],
+      "w": 1265,
+      "h": 705,
+      "dpi": 300,
+      "src": "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf",
+      "blank": 0.459,
+      "viewed": true
+    },
+    {
+      "key": "t1",
+      "kind": "table",
+      "label": "1",
+      "page": 6,
+      "file": "tab_1.png",
+      "caption": "Table 1 The frequencies of surface voxels types in the grey–white matter interface of a segmented 160 × 200 × 160 MR brain image S1 S2 S3 S4 S5 S6 S7 S8 S9 Total No. of voxels 65878 46532 37218 1151 2547 1383 468 923 725 187567 Frequency (%) 42.1 29.6 23.7 0.73 1.62 0.88 0.30 0.59 0.46 100",
+      "rotated_deg": 0,
+      "bbox": [
+        40.0,
+        62.0,
+        498.0,
+        133.0
+      ],
+      "w": 1909,
+      "h": 297,
+      "dpi": 300,
+      "src": "6._Voxel-based_surface_area_estimation_from_theory_to_practice.pdf",
+      "blank": 0.854,
+      "recrop": "auto crop was the whole page (Table 1 + Fig. 5 + body text); hand crop = Table 1 title + rules only, PDF p.6 = printed 2536 (2026-11-03)",
+      "viewed": true
+    }
+  ],
+  "missing_labels": []
+}
