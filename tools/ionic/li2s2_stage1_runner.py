@@ -464,14 +464,15 @@ def ack_declaration_problems(decl, sp, led, values, mq, run_root):
     rid, code = sp.get("run_id"), sp.get("code")
     if not rid:
         return ["이 멈춤은 특정 실행 (run_id) 에 묶여 있지 않다 — 재시도 선언을 붙일 곳이 아니다"]
-    kind = next((k for k, cs in mq.RETRY_BIND_CODES.items() if code in cs), None)
-    if kind is None:
-        return [f"이 멈춤 ({code}) 은 재시도 영수증이 될 수 없다"]
     hit = [r for r in led.get("runs", []) if isinstance(r, dict) and r.get("run_id") == rid]
     if len(hit) != 1:
         return [f"장부에 run_id {str(rid)[:8]} 런이 {len(hit)} 개"]
     inv_, _ = mq.attempt_inventory(run_root)
     rec = inv_.get(rid)
+    vfs = mq.verdict_file_status(rec["path"]) if rec else None
+    kind = "invalid" if (hit[0].get("verdict") == "invalid" or vfs == "invalid") else "interrupted"   # 그 실행의 종류 (code 가 아니라 실행에서)
+    if code not in mq.RETRY_BIND_CODES[kind]:
+        return [f"이 멈춤 ({code}) 은 이 실행 ({kind}) 의 재시도 영수증이 될 수 없다 — 묶는 code {list(mq.RETRY_BIND_CODES[kind])}"]
     st = mq.folder_stage(rec["path"]) if rec else None
     return mq.declaration_problems(decl, kind, values, rejudge_needed=(kind == "invalid" and st in ("final", "md_complete")),
                                    prev_status=hit[0].get("status"))
@@ -722,6 +723,9 @@ def run(a, deps=None):
             save_ledger()
             log(f"  앞선 멈춤 {code} (stop_id {sp.get('stop_id')}) 확인" + (f" · 재시도 선언 {decl['reason']} ({decl['event']})" if decl else "")
                 + " — 장부 stop_history 로 옮기고 이어간다")
+        elif declaration_from_args(a) is not None:           # 확인할 멈춤이 없는데 선언만 주면 조용히 버리지 않는다
+            log("⛔ 재시도 선언은 --ack_stop 으로 확인할 멈춤 (STOP.json) 에 붙인다 — 지금 확인할 멈춤이 없다 (아무것도 안 했다)")
+            return RC["refused"]
         # ①-2 장부의 도는 중 런 — 살아 있으면 거부 · 죽었으면 고아 런으로 마감 (비용 어림)
         for ent in led["runs"]:
             if ent.get("end") is None:
@@ -1572,6 +1576,9 @@ def _selftest():
         and sm_t2["track"] == "stage1_pass" and len(led_t["runs"]) == 11 and abs(sm_t2["cost"]["cap_h"] - (230.0 + b12[0]["wall_h"])) < 1e-9,
         "정전 복구 · DJ Q1 · Q4: 판정 없이 끊긴 B12 (MD 미완) 는 그 run_id 의 STOP 을 정전 선언과 함께 확인한 뒤 한 번 다시 돈다 · 영수증 · "
         "실행 전 기록 · 장부가 서로 맞고 · 앞 런 비용은 장부에 남고 · 정전 손실만큼 실효 상한이 오른다 (11 런 · 통과)")
+    rc_dn, L_dn, _ = go(wt, rr=rr_t1, declare=OUT)            # 확인할 멈춤이 없는데 선언만 → 조용히 버리지 않고 거부
+    chk(rc_dn == RC["refused"] and not L_dn and not (rr_t1 / "STOP.json").exists(),
+        "⛔음성 DJ Q1: 확인할 멈춤이 없는데 재시도 선언만 주면 조용히 버리지 않고 거부 (발사 0)")
     rc_u1, L_u1, rr_u2 = go(wt, scen={("B", 12): {"raise_on_poll": 3, "polls": 6}})
     su1 = J(rr_u2 / "STOP.json"); (rr_u2 / "B/seed12").rename(rr_u2 / "B/seed12.int1")
     rc_u2b, L_u2b, _ = go(wt, rr=rr_u2, ack=su1["stop_id"], declare=OUT, scen={("B", 12): {"raise_on_poll": 3, "polls": 6}})
@@ -1622,6 +1629,10 @@ def _selftest():
     sx1 = J(rr_x1 / "STOP.json")
     shutil.move(str(rr_x1 / "A/seed11"), str(rr_x1.parent / (rr_x1.name + "_outside_seed11")))
     rc_x2, L_x2, _ = go(wt, rr=rr_x1, ack=sx1["stop_id"], declare=FIX)
+    sv2 = J(rr_v1 / "STOP.json")                             # 그 멈춤 (code invalid · 끊긴 런에 묶임) 을 원인 고침 선언으로 확인 → 종류가 안 맞아 거부
+    rc_v3, L_v3, _ = go(wt, rr=rr_v1, ack=sv2["stop_id"], declare=FIX)
+    chk(rc_v3 == RC["refused"] and not L_v3 and J(rr_v1 / "STOP.json")["stop_id"] == sv2["stop_id"],
+        "⛔음성 DJ Q1: 확인 때 영수증 종류는 멈춤 code 가 아니라 그 실행에서 정한다 — 끊긴 런에 묶인 invalid 멈춤에 '원인 고침' 선언 → 거부 (STOP 그대로)")
     chk(rc_v2 == RC["invalid"] and not L_v2 and "못 읽는다" in J(rr_v1 / "STOP.json")["reason"]
         and rc_x1 == RC["invalid"] and rc_x2 == RC["invalid"] and not L_x2 and "보존 누락" in J(rr_x1 / "STOP.json")["reason"],
         "⛔음성 DJ P0-2 (Codex 재현): 끊긴 B12 보존 폴더의 판정 파일이 잘리면 '판정 없음' 으로 읽지 않고 막는다 · 기술적 invalid A11 폴더를 "
