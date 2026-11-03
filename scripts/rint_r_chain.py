@@ -134,7 +134,8 @@
     원장은 원장 안 시도끼리만 (그림자 런 · 모든 사본 일관 편집 = 못 막는다 · Q-D) · 기계마다 비트 차 = 칼날 (판정 보장 아님 · Q-G)
 ★ 10-27 묶음 C2e (Q9 설계 개정 5 ③ · Codex 회차 ① ③): 판정 = 판정 프로세스 환경 옆 파일 (`verdict_env.json` · 판정 JSON 밖) · 다시 판정 = 바이트 대조 그대로
   (구조 대조가 같아도 최종 등급이 다르면 REVERIFY_DIFF · 약화 · 덮어쓰기 · 유리한 쪽 고르기 없음) + 보고 (원 · 다시 계산 등급 · 다른 공개 칸 · 다른 결과 칸 이름 =
-  값 봉인 · 원 · 지금 환경 · 다른 환경 칸 · `--out <새 폴더>` = `reverify_report.json`)
+  값 봉인 · 원 · 지금 환경 · 다른 환경 칸 · `--out <새 폴더>` = `reverify_report.json`) · ★ 11-03 밤 (1저자 Q5 · RINT2-E01) 보고 v2 = 두 JSON 의
+  바이트 칸 (`public_bytes` · `results_bytes` = 다름 · 까닭 `BYTE_DIFF_KINDS` · 처음 다른 바이트 · 길이 차 · 값 없음) + 화면 한 줄 — 판정 동작 그대로
 ★ 10-28 밤 사전 공격 5 회차 (PC5-01–08 · 10 · 1저자 10-28 밤 "rint는 권고대로" · 규칙 정본 = 등록 R §10-5 아): 결과 줄 다시 셈 (`result_fields` ·
   판정 · 합치기 · 입력 시도 · 재실행 풀기 전 · 원장 역사 = 첫 부모 위) · 자원 낱말 = 메모리 · 디스크 다섯 · 요약 없는 시도 원인 (`orphan_cause` · 같은 낱말
   규칙) · 사슬 예외 = `CHAIN_EXCEPTION` · 산 사슬은 recover 하지 않음 (`chain_parent_alive`) · 다른 부팅 = 미확인 + `--operator-confirm` · `--operator-why` ·
@@ -6393,8 +6394,101 @@ def _stopped_pub(e, dirs, reg):
 #   원 · 지금 환경 · 다른 환경 칸 · 등급 다름) — 구조 대조가 같아도 바이트가 다르면 REVERIFY_DIFF 그대로 (약화하지 않는다 · 원 판정을 덮지 않는다)
 VERDICT_ENV_SCHEMA = 'rint-r-verdict-env-v1'
 VERDICT_ENV_FILE = 'verdict_env.json'
-REVERIFY_SCHEMA = 'rint-r-reverify-v1'
+#: ★ 11-03 밤 (1저자 *"다 권고대로"* Q5 · 원장 RINT2-E01) v2 = 보고에 두 JSON 의 바이트 칸 (`public_bytes` · `results_bytes`) — 옛 v1 은 값 대조 칸뿐이라
+#   바이트만 다른 저장본 (끝 공백 · 줄바꿈 · 칸 순서 · 꼴) 의 까닭을 적지 못했다 (판정 = REVERIFY_DIFF 그대로였다 · 거짓 SAME 아님)
+REVERIFY_SCHEMA = 'rint-r-reverify-v2'
 REVERIFY_REPORT = 'reverify_report.json'
+#: 바이트 까닭 닫힌 목록 (이 차례로 보고) — missing = 한쪽 파일 없음 · unreadable = 저장본이 UTF-8 JSON 아님 · value = 파싱한 값이 다름 · key_order = 값 같고
+#   칸 순서 (문서 차례) 다름 · newline = 줄바꿈 꼴 (CR · CRLF · 끝 줄바꿈 수) · trailing_whitespace = 줄 끝 · 문서 끝 공백 · 탭 · whitespace = 그 밖 문자열 밖
+#   공백 (들여쓰기 · 간격) · format = 그 밖 직렬화 꼴 (이스케이프 · 수 꼴 1 ↔ 1.0 · 겹친 칸 등).  값 · 글은 싣지 않는다 (봉인 · 등록 R §4-1).
+BYTE_DIFF_KINDS = ('missing', 'unreadable', 'value', 'key_order', 'newline', 'trailing_whitespace', 'whitespace', 'format')
+
+
+def _key_seq(v, pre=''):
+    """문서 차례의 칸 이름 열 (중첩 · 목록 위치 포함) — 칸 순서 대조용 (값 없음)."""
+    if isinstance(v, dict):
+        out = []
+        for k, x in v.items():
+            out.append(pre + str(k))
+            out += _key_seq(x, pre + str(k) + '.')
+        return out
+    if isinstance(v, list):
+        out = []
+        for i, x in enumerate(v):
+            out += _key_seq(x, f'{pre}{i}.')
+        return out
+    return []
+
+
+def _json_min(b):
+    """JSON 바이트에서 문자열 밖 공백 (sp · tab · CR · LF) 만 뺀다 (문자열 안 · 이스케이프 그대로)."""
+    out, ins, esc = bytearray(), False, False
+    for c in b:
+        if ins:
+            out.append(c)
+            if esc:
+                esc = False
+            elif c == 0x5C:
+                esc = True
+            elif c == 0x22:
+                ins = False
+        elif c == 0x22:
+            ins = True
+            out.append(c)
+        elif c not in (0x20, 0x09, 0x0D, 0x0A):
+            out.append(c)
+    return bytes(out)
+
+
+def byte_diff_view(old, new):
+    """저장본 바이트 (old) ↔ 다시 계산한 정규 바이트 (new · `canon_bytes`) → {'differ' · 'kinds' (BYTE_DIFF_KINDS 차례 · 여럿 가능) ·
+    'first_diff_offset' (처음 다른 바이트 · 한쪽이 앞부분이면 짧은 쪽 길이) · 'len_delta' (len(new) − len(old))} — 값 · 글 없음 (봉인).
+    판정 (바이트 대조) 은 이 함수와 무관하다 — 다시 판정 보고 · 화면에 까닭만 적는다 (RINT2-E01)."""
+    if old is None or new is None:
+        d = (old is None) != (new is None)
+        return {'differ': d, 'kinds': ['missing'] if d else [], 'first_diff_offset': None, 'len_delta': None}
+    if old == new:
+        return {'differ': False, 'kinds': [], 'first_diff_offset': None, 'len_delta': 0}
+    n = min(len(old), len(new))
+    off = next((i for i in range(n) if old[i] != new[i]), n)
+    view = {'differ': True, 'kinds': [], 'first_diff_offset': off, 'len_delta': len(new) - len(old)}
+    try:
+        v0 = json.loads(old.decode('utf-8'))
+    except (UnicodeDecodeError, ValueError):
+        view['kinds'] = ['unreadable']
+        return view
+    v1 = json.loads(new.decode('utf-8'))
+    if v0 != v1:                                             # NaN · inf 가 낀 저장본도 여기 (NaN ≠ NaN · 정규 바이트엔 없다)
+        view['kinds'] = ['value']
+        return view
+    k = set()
+    if _key_seq(v0) != _key_seq(v1):
+        k.add('key_order')
+    ref = (json.dumps(v0, ensure_ascii=False, indent=1, sort_keys=False, allow_nan=False) + '\n').encode('utf-8')   # 저장본 칸 순서 · 정규 꼴
+    s = old
+    if b'\r' in s:
+        k.add('newline')
+        s = s.replace(b'\r\n', b'\n').replace(b'\r', b'\n')
+    t, tr = s.rstrip(b' \t\n'), ref.rstrip(b' \t\n')
+    tail, tail_r = s[len(t):], ref[len(tr):]
+    if tail != tail_r:
+        if tail.replace(b'\n', b'') != tail_r.replace(b'\n', b''):
+            k.add('trailing_whitespace')
+        if tail.count(b'\n') != tail_r.count(b'\n'):
+            k.add('newline')
+    lines = t.split(b'\n')
+    stripped = [ln.rstrip(b' \t') for ln in lines]
+    if stripped != lines:
+        k.add('trailing_whitespace')
+    body = b'\n'.join(stripped)
+    if body != tr:
+        k.add('whitespace' if _json_min(body) == _json_min(tr) else 'format')
+    if canon_bytes(v0) != new:                               # 값은 같은데 정규 꼴이 다르다 (수 꼴 1 ↔ 1.0 · -0.0 등)
+        k.add('format')
+    if not k:                                                # 남은 꼴 (설명 못 함) — 비우지 않는다
+        k.add('format')
+    view['kinds'] = [x for x in BYTE_DIFF_KINDS if x in k]
+    return view
 
 
 def verdict_grade_view(p):
@@ -6405,8 +6499,9 @@ def verdict_grade_view(p):
             'sentence_allowed': p.get('sentence_allowed'), 'stop_code': (st or {}).get('code')}
 
 
-def reverify_report(vdir, pub0, pub, old_res, res, same, lin):
-    """다시 판정 보고 (REVERIFY_SCHEMA) — 결과 JSON 은 칸 이름만 (값 = 봉인 · 화면 · 보고에 σ 없음)."""
+def reverify_report(vdir, pub0, pub, old_res, res, same, lin, old_pub=None, new_pub=None, new_res=None):
+    """다시 판정 보고 (REVERIFY_SCHEMA) — 결과 JSON 은 칸 이름만 (값 = 봉인 · 화면 · 보고에 σ 없음).  ★ 11-03 밤 (Q5 · RINT2-E01) 두 JSON 의
+    바이트 칸 (`byte_diff_view` — 다름 · 까닭 · 처음 다른 바이트 · 길이 차) · old_pub · new_pub · new_res = 대조한 그 바이트 (판정 동작 무관)."""
     try:
         r0 = json.loads(old_res.decode('utf-8')) if old_res is not None else None
     except (UnicodeDecodeError, ValueError):
@@ -6422,6 +6517,8 @@ def reverify_report(vdir, pub0, pub, old_res, res, same, lin):
             'original': g0, 'recomputed': g1, 'grade_differ': g0 != g1,
             'public_keys_differ': sorted(k for k in set(pc) | set(pub0) if pc.get(k) != pub0.get(k)),
             'results_differ': (old_res is None) != (res is None) or (r0 != r1), 'results_keys_differ': rkeys,
+            'public_bytes': (byte_diff_view(old_pub, new_pub if new_pub is not None else canon_bytes(pc)) if old_pub is not None else None),
+            'results_bytes': byte_diff_view(old_res, new_res if new_res is not None else (canon_bytes(res) if res is not None else None)),
             'env_original': env0, 'env_now': env1, 'env_fields_differ': (_env_diff(env0, env1) if env0 is not None else None),
             'ledger_input': lin, 'utc': _utc()}
 
@@ -6508,7 +6605,7 @@ def reverify(vdir, contract, root, out=None):
     pub['ledger_input'] = lin
     new_pub, new_res = canon_bytes(_clean(pub)), (canon_bytes(res) if res is not None else None)
     same = new_pub == old_pub and new_res == old_res
-    rep = reverify_report(vdir, pub0, pub, old_res, res, same, lin)
+    rep = reverify_report(vdir, pub0, pub, old_res, res, same, lin, old_pub=old_pub, new_pub=new_pub, new_res=new_res)
     if out is not None:
         Path(out).mkdir(parents=True, exist_ok=True)
         write_json(Path(out) / REVERIFY_REPORT, rep)
@@ -6524,6 +6621,10 @@ def reverify(vdir, contract, root, out=None):
     print(f'  원 판정 {g0["verdict"]} ({g0["state"]}) → 다시 계산 {g1["verdict"]} ({g1["state"]}) · 등급 다름 {rep["grade_differ"]} · 다른 결과 칸 '
           f'{rep["results_keys_differ"]} (값 = 봉인) · 다른 환경 칸 {(rep["env_fields_differ"] or [])[:6] if rep["env_original"] is not None else "원 환경 기록 없음"}'
           f' — 원 판정을 덮지 않는다 · 유리한 쪽을 고르지 않는다' + (f' · 보고 → {Path(out) / REVERIFY_REPORT}' if out is not None else ''))
+    #  ★ 11-03 밤 (Q5 · RINT2-E01) — 바이트 까닭 (값 칸이 비어도 왜 다른지) · 값 · 글 없음
+    pb, rb = rep.get('public_bytes') or {}, rep.get('results_bytes') or {}
+    print(f'  바이트 까닭 — 판정 JSON {pb.get("kinds") or "같음"} (처음 다른 바이트 {pb.get("first_diff_offset")} · 길이 차 {pb.get("len_delta")}) · 결과 JSON '
+          f'{rb.get("kinds") or "같음"} (처음 다른 바이트 {rb.get("first_diff_offset")} · 길이 차 {rb.get("len_delta")}) — 판정은 바이트 대조 그대로')
     return 1
 
 
