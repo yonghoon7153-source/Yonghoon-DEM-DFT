@@ -79,6 +79,9 @@ DI 수정:
   · 그룹에서 자기 pgid 를 바꾼 (setsid · setpgid) 손자는 이 그룹 밖이라 못 본다 · /proc 이 없는 OS 는 좀비도 '남음' 으로 셀 수 있다
   · 판정 자체는 하지 않는다 — melt_quench_uma.py 의 melt_window_check · stage1_verdict · stage1_summary 를 부른다 (같은 worktree · sha 고정)
   · flock 은 같은 기계의 로컬 파일시스템에서만 믿는다 (NFS 너머 두 기계의 동시 실행은 못 막는다)
+  · 사람이 장부 · STOP · 보존 폴더를 손으로 고치는 것은 못 막는다 — 러너 · --attest_cost 는 잠금 안에서만 쓰고, 묶음 판정 (stage1_summary ·
+    ledger_check) 이 장부 · 폴더 · 영수증 · 선언을 다시 대조할 뿐이다 (서로 맞게 꾸민 기록은 대조로 못 잡는다)
+  · 재시도 선언 (사유 · 사건 · 근거 · 선언자) 이 참인지 — 결과를 보고 멈춘 것이 아닌지 — 는 모른다. 감사할 수 있게 남길 뿐이다
 
   python3 tools/ionic/li2s2_stage1_runner.py --worktree ~/wt_li2s2 --run_root ~/work/runs/li2s2_dense_1103 \\
           --python /home/kgy/apps/miniforge3/envs/uma/bin/python
