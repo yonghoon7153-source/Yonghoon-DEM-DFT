@@ -240,3 +240,5 @@ reviews/review_reil_c4e_e1_0b_prereview_20261030/** -text
 reviews/review_reil_c4e_e1_0b_v2_prereview_20261103/** -text
 # 2026-11-03: REIL C4-E · E1-0b 증거 — 단계 기록 · stdout / stderr · porcelain · 원천 해시 · 외곽 반환 · 외곽 실행기 · 끝 기록 작성기 사본 · 착수 / 끝 기록 (상태 문서 §91 · §92) — bytes 그대로
 evidence/reil_c4e1_0b_20261103/** -text
+# 2026-11-03: REIL C4-E · E1-0b 결과 검토 회신 (STOP_HANDLING_ACCEPTED_E1_0B_INCOMPLETE_TEST_CORRECTION_REQUIRED · 필수 정정 E1_0B_RESULT_N1 · 고정 HEAD a38c878f · 실행 승인 아님 · source/ · basis/ · input/ = 검토자가 본 저장소 · 발송문 사본 · *.py = 검토자 도구 사본, 실행하지 않음) — bytes 그대로
+reviews/review_reil_c4e1_0b_result_20261103/** -text
