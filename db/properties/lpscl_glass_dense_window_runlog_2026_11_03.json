@@ -13,7 +13,7 @@
   "by": "agent · 2026-11-03"
  },
  "리뷰": "Codex DF — NO-GO → 반영 (위) → 확인 리뷰 DG (고친 곳만) 뒤 활성 · 발사",
- "⏭": "Codex DG (고친 곳 확인) → 결정 활성 (사용자 (위임 10-30)) → kgy worktree · 러너 발사 (cascade v7 끝 ≈ 11-04 뒤 · 러너가 GPU 가 빌 때까지 기다린다)",
+ "⏭": "Codex DH (DG 고침 확인) 회신 → GO 면 결정 활성 · kgy 1 단계 발사 블록",
  "회신_DF_2026_11_03": {
   "판정": "NO-GO (ff795d669 그대로 실행 보류) · 고정 밀도 NVT 방향 조건부 찬성 · P0 1 · P1 5 · P2 4",
   "원문": "kb/reviews/codex_DF_reply_li2s2_dense_window_card_2026_11_03.md",
@@ -22,6 +22,16 @@
   "반영_러너": "tools/ionic/li2s2_stage1_runner.py sha16 61abc3ff9591d043 — 결정 active · sha 고정 · 잠금 · 끊긴 런 거부 · 첫 시드 녹음 판정이 담금질을 실제로 멈춤 · 시드 판정 · 묶음 판정 · 누적 벽시계 상한 · selftest 15/15 · 깨기 5/5",
   "반영_카드": "카드 §개정_DF_2026_11_03 (결과 전) · 기계_판독_값 · R0 (LiCl 2.07 · 20 °C · 회신 DF 가 Merck 물성표로 확인)",
   "남은_것": "2 단계 전: MD 압력 스냅숏 재계산 도구 (절차는 카드 §2) · 3 단계 전: 별도 결정",
+  "by": "agent · 2026-11-03"
+ },
+ "회신_DG_2026_11_03": {
+  "판정": "NO-GO (947e83ba0 첫 담금질 승인 보류) · DF 핵심 MSD 반례 해제 · P0 3 · P1 5 · P2 3 · 새 물리 설계 · UMA 계산 요구 없음",
+  "원문": "kb/reviews/codex_DG_reply_li2s2_df_fixes_2026_11_03.md",
+  "반영_드라이버": "melt_quench_uma.py sha16 615445c9e0f54710: validate_li2s2_values (읽을 때 카드 값 거부 — estimator · 비유한 · 조성 · software_required · thermo 열 · first_seed · 상한) · _same (NaN · None = 다름) · melt_window_check (plan · traj 없음 · 쓰는 중 = 미완 · 프레임 종 · 원자 수 일치 · 종은 창 안 프레임) · gate_check NVT (총압 · virial 두 열) · final_structure_check (원자 수 · 조성 · 종 순서 · 셀 · 밀도) · traj 프레임 수 · thermo 머리줄 · 판정 provenance (원자료 sha256 · 카드 값 sha16 · 도구 sha16) · closes_system (첫 시드 녹음 미충족) · 묶음: 지문 다시 잼 · 선언 시드 전부 · 허용 상태만 · 장부 상한 (cap_incomplete 종료 5 · 장부 없음 = 대기) · NVT plan final_relax 설명",
+  "반영_러너": "li2s2_stage1_runner.py sha16 d736a65cbc775038 (드라이버 고정값 615445c9e0f54710): try/except BaseException/finally (예외 · Ctrl-C · SIGTERM · SIGHUP → 자식 멈춤 · 장부 · STOP → 잠금 해제) · flock 잠금 · STOP terminal/stop_id/--ack_stop · 장부 closes_system · 띄운 직후 장부 + heartbeat · 고아 런 (살아 있으면 거부 · 죽었으면 어림 마감) · 재시작 때 원자료로 다시 판정 · 실행 중 상한 (카드 stage1_cap_gpu_h · --cap_h 없앰) · 순서 = 카드 시드 전부 · 첫 시드 = first_seed · 명령은 기계값에서 repr (--print_cmd)",
+  "반영_시험": "드라이버 selftest 152 → 185 · 러너 selftest 15 → 36 (가짜 담금질이 진짜 파일을 쓰고 **진짜 판독 함수** 를 부른다 · 진짜 프로세스 그룹 멈춤 1) · 깨기 36/36 빨강 (겹마다 따로 — terminal STOP · 장부 closes · 묶음 closes · 시드 판정 closes · 정리 경로 · 띄운 직후 장부 · 실행 중 상한 · 다시 판정 · flock · 순서 · 고아 런 · ack 일치 · 상한 ack · 첫 시드 멈춤 · 명령 repr · plan 없음 · 종 · estimator 둘 · NaN · 소프트웨어 · 압력 열 · 최종 구조 배선 · 전부 판정 · 모르는 상태 · 지문 · 장부 상한 둘 · traj 프레임 · thermo 머리줄 · first_seed · gate 목표 · 조성 · 카드 값 지문)",
+  "반영_카드": "카드 §개정_DG_2026_11_03 (결과 전) · 기계_판독_값 추가 (composition · software_required · thermo_required_columns · first_seed · stage1_cap_gpu_h) · §1b 2_3단계_MD · §4 S2 측정_가능 (stage1_summary 의 두 시드 · 그 순서의 기계) · 비용 현재형 문구 · A 밀도 1.91347 표기",
+  "남은_것": "Codex DH 확인 → 결정 활성 (사용자 · 위임 10-30) → kgy 발사 블록 (cascade v7 끝난 뒤) · 2 단계 전: MD 압력 스냅숏 재계산 도구",
   "by": "agent · 2026-11-03"
  }
 }

@@ -710,6 +710,12 @@ def _selftest():
     chk(sm_t["track"] == "invalid" and sm_t["stale_verdicts"] == ["A11"],
         "⛔음성 DG P1-4: 판정 뒤 원자료 (final.xyz) 가 한 바이트라도 바뀌면 그 시드 판정은 무효 (다시 판정하라)")
     shutil.move(rr_full / "A/seed11/final.xyz.bak", rr_full / "A/seed11/final.xyz")
+    vals_other = json.loads(json.dumps(real.read_li2s2_values(wt / CARD_REL)))
+    vals_other["melt_window"]["threshold_source"] = "시험: 카드 값 글자 하나만 다름"
+    sm_card = real.stage1_summary(rr_full, values=vals_other, log=lambda *m: None)
+    sm_same = real.stage1_summary(rr_full, values=real.read_li2s2_values(wt / CARD_REL), log=lambda *m: None)
+    chk(sm_card["track"] == "invalid" and len(sm_card["stale_verdicts"]) == 10 and sm_same["track"] == "stage1_pass",
+        "⛔음성 DG P1-4: 다른 카드 값으로 낸 판정은 묶음에서 무효 (카드 값 지문 · 같은 카드면 그대로 통과)")
     # 4) DG P0-2 — Ctrl-C · 예외 · 판독 예외
     hook = {"armed": True}
     def ctrl_c(t):
