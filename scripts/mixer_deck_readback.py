@@ -972,10 +972,9 @@ D2_MATERIAL = {'youngsModulus': ('peratomtype', None), 'poissonsRatio': ('perato
                'characteristicVelocity': ('scalar', 2.0)}
 #: ── D2 생성기 꼴 전체 (MXD2R-04 · 11-03 사전 공격 · 1저자 11-03 Q1 = 권고대로 · 원리 = MXD2R-01–03 (가)) ────────────────────────────
 #:   덱의 명령을 **전부** make_mixer_deck.deck() 의 토큰으로 다시 내어 차례대로 대조한다 — 뜻이 같아도 표기가 다르면 거부 (생성기 꼴 엄격).
-#:   값은 상수 · 메타 · 등록 레시피 · 계획수에서 다시 낸다 (드럼 · 삽입 영역 = plan() · deck() 식 사본 · 같은 연산 순서).  예외 하나 =
-#:   neighbor skin 값 (ASCII 양수만 · 기존 시험 test_actual_command_scope 가 단일 덱 PASS 를 요구 — 짝 대조는 두 덱의 skin 이 다를 때만
-#:   잡고, 두 덱에 같이 바꾼 skin 은 세 소비자 PASS = 남은 같은 부류 · 고정은 1저자 결정).  CED · 삽입 총수 · run 수 ·
-#:   dt 값은 기존 검사 (힘 규칙 · 계획수 · 메타) 가 묶고 여기서는 생성기 표기만 본다.
+#:   값은 상수 · 메타 · 등록 레시피 · 계획수에서 다시 낸다 (드럼 · 삽입 영역 = plan() · deck() 식 사본 · 같은 연산 순서).  자유 칸 없음 —
+#:   neighbor skin 도 생성기 값 min(지름)·0.5 의 .6g (11-03 밤 1저자 Q4 = 권고대로 · 첫 판의 예외 = 두 덱에 같이 바꾼 skin 을 세 소비자가
+#:   받던 같은 부류를 없앴다).  CED · 삽입 총수 · run 수 · dt 값은 기존 검사 (힘 규칙 · 계획수 · 메타) 가 묶고 여기서는 생성기 표기만 본다.
 #:   사본 원본 = deck() 템플릿 · plan() 기본값 · _next_prime · dump_columns · dump_modify_format · TPL_SEED (시험이 사본 ↔ 생성기 대조).
 D2_GLOBAL_FORM = (('atom_style', 'granular'), ('atom_modify', 'map', 'array', 'sort', '0', '0'), ('hard_particles', 'yes'),
                   ('boundary', 'f', 'f', 'f'), ('newton', 'off'), ('communicate', 'single', 'vel', 'yes'), ('units', 'si'))
@@ -1346,7 +1345,8 @@ def _d2_generator_form(commands, D, meta, names, phases, density, counts, k, cgf
     전역 설정 · 재료 · 기하 (드럼 R = 계획수 · 반지름 · 밀도에서 plan() 식 사본) · 템플릿 · 분포 · 삽입 · 적분기 · 출력 · 체크포인트 ·
     회전 줄을 다시 내어 토큰 단위로 대조한다 — 값이 같아도 표기가 다르면 거부 (`0.01447070` · `5e3` · `1.037e9` · `0.30`→`0.3` …).
     ⚠ 옛 판: `boundary p p p` · `newton on` · 템플릿 뒤 `volume_limit` · 분포 · 둘째 삽입 시드 · 삽입 영역 · 메시 scale · `dump_modify` ·
-    `thermo 1000` · `write_restart` 삭제 (사전 공격 17) 를 두 덱에 같이 넣어도 세 소비자 PASS.  남는 자유 칸 = neighbor skin 값 하나."""
+    `thermo 1000` · `write_restart` 삭제 (사전 공격 17) 를 두 덱에 같이 넣어도 세 소비자 PASS.  자유 칸 없음 — neighbor skin = 생성기 값
+    min(지름)·0.5 (11-03 밤 Q4 · 첫 판은 skin 값을 비워 두 덱에 같이 바꾼 skin 을 받았다)."""
     f6 = lambda x: format(x, '.6g')
     neg = lambda x: '-' + f6(x)
     N, order = len(names), [names[i] for i in range(1, len(names) + 1)]
@@ -1379,7 +1379,7 @@ def _d2_generator_form(commands, D, meta, names, phases, density, counts, k, cgf
     box, scale = R * 1.15, f6(R / 0.5)
     seq = [list(t) for t in D2_GLOBAL_FORM]
     seq += [['region', 'reg', 'block', neg(box), f6(box), neg(box), f6(box), neg(box), f6(box), 'units', 'box'],
-            ['create_box', str(N), 'reg'], ['neighbor', None, 'bin'], list(D2_NEIGH_MODIFY),
+            ['create_box', str(N), 'reg'], ['neighbor', f6(min(d.values()) * 0.5), 'bin'], list(D2_NEIGH_MODIFY),
             ['fix', 'm1', 'all', 'property/global', 'youngsModulus', 'peratomtype']
             + [format(1e7 * stiff if p == 'SE' else REG_E_FIXED[p], '.4g') for p in order],
             ['fix', 'm2', 'all', 'property/global', 'poissonsRatio', 'peratomtype'] + [format(REG_NU[p], '.2f') for p in order]]
@@ -1444,11 +1444,8 @@ def _d2_generator_form(commands, D, meta, names, phases, density, counts, k, cgf
     for index, (got, want) in enumerate(zip(commands, seq), 1):
         for j in range(max(len(got), len(want))):
             g, w = (got[j] if j < len(got) else '(end)'), (want[j] if j < len(want) else '(end)')
-            if w is None and g != '(end)':               # 자유 칸 = neighbor skin 값 (ASCII 양수 · 단일 덱 계약 밖)
-                _d2_number(_d2_float_token(g, 'neighbor skin'), 'neighbor skin')
-                continue
             _d2_need(g == w, f'D2 generator form: command {index} `{" ".join(got[:2])[:30]} …` token {j} `{g[:40]}` '
-                     f'(generator `{"<skin>" if w is None else w[:40]}`) — every command must be the make_mixer_deck.deck() tokens '
+                     f'(generator `{w[:40]}`) — every command must be the make_mixer_deck.deck() tokens '
                      '(a different spelling of the same value is rejected)')
     _d2_need(len(commands) == len(seq), f'D2 generator form: command count {len(commands)} (generator {len(seq)})')
 
@@ -1624,7 +1621,8 @@ def read_d2(deck, meta):
                       tolerances=dict(absolute_Bo_relative=D2_FORCE_REL,pair_force_relative=TOL['f0_ratio']),
                       metadata_fields_checked='schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts',
                       generator_form='every command = make_mixer_deck.deck() tokens (same value, different spelling rejected; '
-                                     'free: neighbor skin value) · command text printable ASCII without quotes/$ · continuation " &" only')
+                                     'no free slot — neighbor skin = generator min(diameter)*0.5) · command text printable ASCII without '
+                                     'quotes/$ · continuation " &" only')
     except (ValueError,TypeError,KeyError,IndexError,OverflowError,ZeroDivisionError) as exc:
         result['failures'].append(f'D2 development contract: {type(exc).__name__}: {exc}')
     return result
