@@ -1782,6 +1782,31 @@ def _selftest():
         "최종 (판정하라) · MD 완료 (FIRE 보류) · 영수증 없음 · 선언 없음 · 다른 런 · 확인 안 됨 · 다시 판정 못 하는 이유 없음 · invalid 에 "
         "resume 영수증 · invalid 에 정전 사유 · 상한 런에 정전 사유 · 두 번 끊김 (한도) → 거부 / 맞으면 통과 (plan 전 끊김 · 상한 사유 · "
         f"invalid 다음 끊김 1 회) ({ {k: got_u[k] for k in got_u if got_u[k] != exp_u[k]} })")
+    # 확인 때 선언 검사 단위 (ack_declaration_problems) — 종류는 실행에서 · code 는 그 종류의 묶는 code · 상한 규칙 · 다시 판정 못 하는 이유
+    ar = pathlib.Path(tempfile.mkdtemp(dir=tmp_root))
+    def afold(name, rid_, stage="md_incomplete", verdict=None):
+        d = ar / "A" / name
+        d.parent.mkdir(parents=True, exist_ok=True)
+        info = ufold("ack_" + name, stage=stage, verdict=verdict)
+        shutil.copytree(info["path"], d)
+        _write_json_atomic(d / real.ATTEMPT_NAME, {"system": "A", "seed": 11, "run_id": rid_, "retry_of": None, "retry_stop_id": None, "retry_kind": None})
+    RA, RB, RC_, RD = "1" * 32, "2" * 32, "3" * 32, "4" * 32
+    afold("seed11.a", RA); afold("seed11.b", RB, verdict=INV); afold("seed11.c", RC_, stage="final", verdict=INV); afold("seed11.d", RD)
+    led_a = {"runs": [{"run_id": RA, "status": "interrupted"}, {"run_id": RB, "status": "invalid", "verdict": "invalid"},
+                      {"run_id": RC_, "status": "ended", "verdict": "invalid"}, {"run_id": RD, "status": "cap"}]}
+    A_ = lambda decl, code, rid_: ack_declaration_problems(DECL(decl), {"run_id": rid_, "code": code}, led_a, vals_t, real, ar)
+    ack_cases = {"no_run": bool(ack_declaration_problems(DECL(OUT), {"code": "resume"}, led_a, vals_t, real, ar)),
+                 "unknown_run": bool(A_(OUT, "resume", "5" * 32)),
+                 "int_run_invalid_code": bool(A_(FIX, "invalid", RA)), "inv_run_resume_code": bool(A_(FIX, "resume", RB)),
+                 "inv_run_ok": bool(A_(FIX, "invalid", RB)), "inv_final_no_reason": bool(A_(FIX, "invalid", RC_)),
+                 "inv_final_reason": bool(A_({**FIX, "rejudge_impossible_reason": "x"}, "invalid", RC_)),
+                 "int_run_ok": bool(A_(OUT, "interrupted", RA)), "cap_run_outage": bool(A_(OUT, "cap", RD)),
+                 "cap_run_raise": bool(A_({**OUT, "retry_reason": "budget_cap_raised"}, "cap", RD))}
+    exp_a = {"no_run": True, "unknown_run": True, "int_run_invalid_code": True, "inv_run_resume_code": True, "inv_run_ok": False,
+             "inv_final_no_reason": True, "inv_final_reason": False, "int_run_ok": False, "cap_run_outage": True, "cap_run_raise": False}
+    chk(ack_cases == exp_a,
+        "⛔음성 DJ Q1 (확인 때 선언 검사 단위): run_id 없음 · 장부에 없는 런 · 끊긴 런에 invalid code · invalid 런에 resume code · 끝까지 돈 invalid 런에 "
+        f"이유 없음 · 상한 런에 정전 사유 → 문제 / 맞는 조합은 통과 ({ {k: ack_cases[k] for k in ack_cases if ack_cases[k] != exp_a[k]} })")
     # 회신 DJ Q4 — 실효 상한 (러너 사전 · 실행 중 · 사후 검사 + 소비자) — 정전 손실만큼만
     wt_c = mk_wt(card=mk_card(stage1_cap_gpu_h=50.5))
     rc_q1, L_q1, rr_q = go(wt_c, seed_worst_h=5.0, scen={("B", 12): {"raise_on_poll": 3, "polls": 6}})
