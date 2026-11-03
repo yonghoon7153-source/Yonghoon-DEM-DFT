@@ -3,7 +3,7 @@
  "kind": "estimand",
  "record_kind": "estimand_card",
  "date": "2026-10-19",
- "status": "사용자 비준 2026-10-19 (결정 D-2026-10-19-nd-anion-removal active) · 기계 = gabia · r2 잠깐 세움 (D-2026-10-19-gabia-nd-removal-pause-li3nd) · 결과 없음",
+ "status": "superseded — 결정 D-2026-10-19-nd-anion-removal 은 10-20 D-2026-10-20-nd-s-vacancy-neutral 로 대체 (이 셀에서 보고량 정의 안 됨 · 값 없음) · 원래 글자: 사용자 비준 2026-10-19 (결정 D-2026-10-19-nd-anion-removal active) · 기계 = gabia · r2 잠깐 세움 (D-2026-10-19-gabia-nd-removal-pause-li3nd) · 결과 없음",
  "citable": false,
  "results_seen": false,
  "results_seen_note": "떼어낸 셀 계산 0 개 · 점전하 예측은 이 카드 커밋 뒤에 낸다 (아래 §5 예측은 결과 전 기록 칸)",

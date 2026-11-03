@@ -27,7 +27,7 @@ S 빈자리 마감 비준 (10-22) · Li₃Nd 장벽 인용 결정 (10-26) 을 �
     ③ 전자 합 = ZVAL 합 ± 0.05 e      ⑥ 자리마다 net = ZVAL − N (±0.002 e)
     ④ ELF 표에 그릴 다섯 결합과 호스트 P–S 가 있다 · 그림 자료에 Li–X 결합이 없다
     ⑤ Pauling 표의 Nd · P · S · O 가 1저자 카톡 요지에 적힌 값과 같다
-    ⑦ Q1 원자료 ΔG (site_dg.py) 가 runlog 판독 글자 (+0.490) 와 카드 §5 문장의 값을 재현한다 — 카드가 active 가 아니면 '잠정' 을 단다
+    ⑦ Q1 원자료 ΔG (site_dg.py) 가 runlog 판독 글자 (+0.490) 와 카드 §5 문장의 값을 재현한다 — 카드가 active 가 아니거나 1저자 동의 기록 (Q1 runlog 최상위 '1저자_동의') 이 없으면 '잠정' 을 단다
     ⑧ Q2 판독 Y = 원자료 (decomp_result.json) · 분해능 밖 · 부피 · 상 이완 점검 통과 · 허용 문장의 크기 = 원자료 · 카드 active
     ⑨ S 빈자리 확정값 (ΔE · n · 문턱) 이 허용 문장과 같고 마감 결정이 active
     ⑩ Li₃Nd 장벽은 CONDITIONAL 항목 (결정 active) 의 SI 문장으로만 — 그 문장의 값 = NEB 기록 · 나머지 NEB 값은 BLOCKED 그대로
@@ -275,6 +275,10 @@ def check_pauling(card):
 
 
 Q1_CARD = "D-2026-10-14-ndo-site-stability-estimand"
+# ⚠ 2026-11-03 — Q1 카드가 비준돼 active 가 됐다 (Nd 묶음 마감 db/properties/nd_q123_closed_2026_11_03.json §7).
+#   '잠정' 표지 문구는 '원고 문장으로 옮기기 전에 1저자 동의' 이고 비준된 카드의 트랙.지위 그대로 아직 참이다.
+#   그래서 provisional = (카드가 active 가 아님) 또는 (Q1 runlog 최상위 '1저자_동의' 기록이 없음) 이다 —
+#   종전엔 카드 상태만 봐서, 비준만으로 표지가 빠졌을 것이다 (selftest 가 실제 원장으로 빨강을 냈다).
 Q2_CARD = "D-2026-10-23-nd-q2-decomp-card"
 SVAC_DEC = "D-2026-10-20-nd-s-vacancy-closed"
 LI3ND_DEC = "D-2026-10-26-li3nd-neb-si-conditional"
@@ -303,7 +307,8 @@ def derive_results(p):
     if not m or f"{dg:.2f} eV/Nd" not in m.group(1):
         raise CheckError("⑦ Q1 카드 §5 문장에 원자료 값이 없다")
     cl = nd["closure"]
-    q1 = {"dG": dg, "sentence": m.group(1), "provisional": state(Q1_CARD, "⑦") != "active",
+    consent = rd("q1_runlog").get("1저자_동의")   # 1저자 (실험 쪽) 동의 기록 — 없으면 원고 문장 전 잠정 (카드 트랙.지위)
+    q1 = {"dG": dg, "sentence": m.group(1), "provisional": (state(Q1_CARD, "⑦") != "active") or not consent,
           "top": {k: v["top"][0] for k, v in nd["models"].items()}, "a_li2s": cl["a_Li2S"], "b_li3ps4": cl["b_Li3PS4"],
           "n_nd": cl["n_dopant"]}
 
@@ -1546,7 +1551,7 @@ def selftest():
         check_page(doc, ln["ea"])
     ok(True, "⑪ 만든 페이지 (단독 · Artifact 본문) 통과")
     # Q1 지위 표지 — 양쪽을 본다: 카드가 proposed 면 일곱 자리 전부에 있고, active 로 바꾸면 전부 빠진다
-    ok(q1["provisional"] and page.count("잠정") == 7 and "Q1, provisional" in page, "Q1 잠정 표지 7 자리 (카드 proposed)")
+    ok(q1["provisional"] and page.count("잠정") == 7 and "Q1, provisional" in page, "Q1 잠정 표지 7 자리 (실제 원장: 1저자 동의 기록 없음)")
     with tempfile.TemporaryDirectory() as td:
         root = pathlib.Path(td)
         for key, rel in IN.items():
@@ -1556,12 +1561,22 @@ def selftest():
         dd = json.loads(dp.read_text(encoding="utf-8"))
         hit = [d for d in dd["decisions"] if d.get("id") == Q1_CARD]
         ok(len(hit) == 1, "Q1 카드 결정이 원장에 하나")
-        hit[0]["decision_state"] = "active"
-        dp.write_text(json.dumps(dd, ensure_ascii=False), encoding="utf-8")
-        D2 = derive(root)
-        p2 = assemble(D2, True)
-        ok(not D2["q1"]["provisional"] and "잠정" not in p2 and "provisional" not in p2,
-           "Q1 카드를 active 로 바꾸면 잠정 표지가 전부 빠진다")
+        rp = root / IN["q1_runlog"]
+        rl0 = json.loads(rp.read_text(encoding="utf-8"))
+        rl0.pop("1저자_동의", None)
+        for st_, cons_, want_prov, tag_ in (("active", True, False, "카드 active + 1저자 동의 기록 → 잠정 표지가 전부 빠진다"),
+                                            ("active", False, True, "⛔[음성] 카드 active 여도 1저자 동의 기록이 없으면 잠정 그대로"),
+                                            ("proposed", True, True, "⛔[음성] 동의 기록이 있어도 카드가 proposed 면 잠정 그대로")):
+            hit[0]["decision_state"] = st_
+            dp.write_text(json.dumps(dd, ensure_ascii=False), encoding="utf-8")
+            rl1 = dict(rl0, **({"1저자_동의": "selftest"} if cons_ else {}))
+            rp.write_text(json.dumps(rl1, ensure_ascii=False), encoding="utf-8")
+            D2 = derive(root)
+            p2 = assemble(D2, True)
+            if want_prov:
+                ok(D2["q1"]["provisional"] and p2.count("잠정") == 7, tag_)
+            else:
+                ok(not D2["q1"]["provisional"] and "잠정" not in p2 and "provisional" not in p2, tag_)
     ok(page.index('id="site"') < page.index('id="decomp"') < page.index('id="q"') < page.index('id="svac"') < page.index('id="li3nd"'), "절 순서")
     for tag_, doc_, want_ in (("Li₂S 0.305 를 넣음", page.replace("</footer>", " 0.305 eV</footer>"), "⑪"),
                               ("0.229 를 블록 밖에 둠", page.replace("<footer>", "<footer>0.229 eV · "), "⑪"),

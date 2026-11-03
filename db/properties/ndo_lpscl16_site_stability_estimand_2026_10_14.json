@@ -3,7 +3,7 @@
   "kind": "estimand",
   "id": "ndo_lpscl16_site_stability_2026_10_14",
   "제목": "Nd/O 공도핑 LPSCl1.6 — Nd 자리 (Rietveld 4b 대 Li 자리) · 닫힌계 분해 구동력 · 전자 배치 묘사",
-  "status": "proposed",
+  "status": "active — 사용자 비준 2026-11-03 (결정 D-2026-10-14-ndo-site-stability-estimand · 결과 뒤 비준 · 글자 그대로) · 묶음 닫힘 2026-11-03 (db/properties/nd_q123_closed_2026_11_03.json) · 원고 문장 전 1저자 동의는 트랙.지위 그대로",
   "written_on": "2026-10-14",
   "트랙": {
     "이름": "CEI/Nd",
@@ -228,5 +228,11 @@
     "✅ UMA 어닐 23 개 (2026-10-15 끝 · kgy · 18.6 h · 23 개 전부 수렴 · 판독 db/properties/ndo_site_uma_rietveld_readout_2026_10_15.json · 모델별 상위 3 = DFT 단일점 후보) — 첫 시도는 실행기 버그로 발사 안 됨 → 고침",
     "✅ 기준상 구조 (2026-10-14 · Li₃PS₄ mp-985583 · Li₂S mp-1153) — UMA 이완 ✅ 14:01 kgy (run_uma_kgy.sh --refs · 둘 다 수렴 · 기록 db/properties/site_refs_uma_li2s_li3ps4_2026_10_14.json) · DFT 는 §6 설정으로",
     "1저자 통지 · 동의"
-  ]
+  ],
+  "✅_비준_닫힘_2026_11_03": {
+    "사용자": "'Nd는 이제 마무리하자' · 🔔 'Q1 · Q3′ 카드 비준 (권고: 비준)' 에 '이건 그냥 마무리하고'",
+    "결정": "D-2026-10-14-ndo-site-stability-estimand active (decision_digest 는 원장) · 마감 D-2026-11-03-nd-q123-closed",
+    "남는_것": "원고 문장으로 옮기기 전 1저자 (실험 쪽) 동의 (트랙.지위) · Q1 · Q2 메시지 초안 미발송 (보낼지는 사용자)",
+    "by": "agent · 2026-11-03"
+  }
 }

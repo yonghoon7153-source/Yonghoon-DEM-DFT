@@ -8195,7 +8195,7 @@
    "title": "Nd/O-LPSCl1.6 — Nd 자리 (Rietveld 4b 대 Li 자리) 조성 균형 비교 · 닫힌계 분해 구동력 · 전자 배치 묘사 (트랙 CEI/Nd · 1저자 = 실험)",
    "statement": "보고량 카드 db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json. Q1 ΔG_site = {[E(M_P) − E(M_Li)] − n_Nd·[4E(Li₂S) − E(Li₃PS₄)]}/n_Nd (eV/Nd · > 0 이면 4b 불리) — Rietveld 정수화 5 f.u. host · Nd/(Nd+P) 0.40 · frozen-4f PBE · Li₃PS₄/Li₂S 교환에 조건부. Q2 같은 상 기저 분해 구동력 (도핑 대 host · 닫힌계). Q3 Bader · ELF · Δρ 는 묘사량 (안정성 판정 아님). 게이트 G1–G7 (G7 기준상 Li₃PS₄ 다형 · 결과 전 추가 2026-10-14) · 허용/금지 서술은 결과 전에 카드 §4 · §5 에 고정. + 보조 host 정본 LPSCl1.6 10 f.u. (Nd/(Nd+P) 0.2 · UMA 만 · 카드 §1-b 보조_host_modelc10 · 결과 전 추가 2026-10-14).",
    "rationale": "CEI 트랙 1저자 (실험) 가 '이 물질이 안정한가' 와 전자 배치 설명 (카톡 4 줄 · 전기화학 아님) 을 원한다. 기록 대조 결과 Rietveld 는 Nd 를 4b 에 두는데 Nd 자리의 DFT 판정은 0 건이고, 6 월 'Nd→P 기각' 은 근거가 없었다 (HZ-nd-site-cfg23-mislabeled). Y 는 같은 질문을 조성 균형 QE 로 풀었다 (+1.878 eV/Y · 조건부).",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "results_seen_note": "Nd 자리 · 분해 구동력 · 같은 설정의 Bader/ELF 는 0 건. 이미 본 것은 카드 ⚠_결과_보기_전에_썼다.이미_본_것 (O 배치 DFT 단일점 · UMA 교환 부호 · Y 선례) — 방향 기대가 있어 문턱을 지금 박는다.",
@@ -8227,7 +8227,33 @@
      "date": "2026-10-14"
     }
    ],
-   "_note": "proposed — 사용자 비준 (§6 기입 뒤) + 1저자 통지. 사용자의 '해보자' 는 실행 승인이지 1저자 동의를 대신하지 않는다."
+   "_note": "proposed — 사용자 비준 (§6 기입 뒤) + 1저자 통지. 사용자의 '해보자' 는 실행 승인이지 1저자 동의를 대신하지 않는다.",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-14",
+     "state": "proposed",
+     "by": "agent",
+     "note": "(소급 기록) 이 항목은 status_history 없이 proposed 로 등록됐다 · _note 그대로"
+    },
+    {
+     "at": "2026-11-03",
+     "state": "active",
+     "by": "사용자 (CEI/Nd 트랙 계산 담당 — 1저자는 실험 쪽)",
+     "note": "비준 — 🔔 'Q1 · Q3′ 카드 비준 (권고: 비준)' 에 '이건 그냥 마무리하고' · Nd 묶음 마감 D-2026-11-03-nd-q123-closed 와 같이. _note 의 '1저자 통지' 는 아직이다 (메시지 초안 미발송 · 보낼지는 사용자) — 원고 문장 전 1저자 동의 (카드 트랙.지위) 는 그대로 남는다"
+    }
+   ],
+   "비준_시점_결과": "비준 (11-03) 은 Q1 단일점 (10-16) · EOS V₀ (10-23) · Q2 (10-26) · Q3 (10-19) 결과가 나온 뒤다. 카드 글자 (§1–§5 · G3 개정 10-15 결과 전 · G7 10-14 결과 전) 는 결과 전에 쓴 그대로이고 비준하면서 바꾼 글자가 없다 · results_seen 은 카드 작성 시점 값 그대로 둔다 (선례 D-2026-10-27-cei-product-gaps-amend1).",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-03T02:32:21Z",
+    "commit": "2831530d5f89c4e3c745150e4a39371776e5aaa4",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-03 (이 세션): 'Nd는 이제 마무리하자' → 🔔 '[CEI Nd] Q1 · Q3′ 카드 비준. 권고: 비준이에요. 둘 다 결과 전에 정한 규칙이에요.' 에 '이건 그냥 마무리하고'",
+    "decision_digest": "sha256:4d1415caa3b9d58451d18ed2b58b4bb2fcb4da5b4e45a9c63b851c6f6565896f"
+   }
   },
   {
    "id": "D-2026-10-14-b2o3-site-screen",
@@ -9981,7 +10007,7 @@
    "title": "Nd Q3′ — Nd@P (MP_07) 와 같은 셀 Nd@Li (MLi_04) 의 Bader · ELF · 자리 분류는 이완 전 원래 역할 (PX4 · NdT · free) + Nd 이웃 3.3/2.9 Å (Q3 그대로)",
    "statement": "카드 db/properties/nd_q3p_same_cell_card_2026_10_27.json 이 정의다: Q1 V₀ 이온 이완 끝 기하 두 모델에 Q3 와 같은 Bader SCF (PAW psl · 70/560 · k 3 3 1) 와 ELF SCF (NC · 80/320 · k 3 3 1) 를 돌려, 원래 역할 · Nd 이웃 분류별 Bader net 과 결합 중점 ELF 를 같은 셀 안에서 견준다 (C1–C5 · 판독 규칙은 카드 §5). 120 원자 Q3 와 같은 표에 두지 않고, x = 0.02 로 크기를 옮기지 않는다.",
    "rationale": "사용자 10-27 'P 에 들어가 있는 Nd 도 이거 봐줄 수 있나' → 권고 (kgy · cascade 옆 · 같은 셀 두 모델) 승인 '권고대로 해'. 원고가 Nd@P 를 전제하므로 Nd@P 에서 전기음성도 예상 (Nd 에 붙은 S 가 더 음전하) 이 나오는지 본다. 같은 셀 Nd@Li 를 같이 돌려야 자리 사이 비교가 셀 차이와 섞이지 않는다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "results_seen_note": "SCF · Bader · ELF 0 건 (2026-10-27 작성 시점) · 역할 개수만 구조에서 셈",
@@ -10006,15 +10032,32 @@
     "견적": "SCF 넷 어림 3–6 h · 후처리 CPU 몇 분"
    },
    "proposed_by": "claude-session-2026-10-27 (friendly)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-27",
      "state": "proposed",
      "by": "agent",
      "note": "사용자 '권고대로 해' (실행 승인) · 트랙 CEI — 1저자 = 실험 쪽 · 결정은 사용자. 비준 = 사용자."
+    },
+    {
+     "at": "2026-11-03",
+     "state": "active",
+     "by": "사용자 (CEI/Nd 트랙 계산 담당 — 1저자는 실험 쪽)",
+     "note": "비준 — 🔔 'Q1 · Q3′ 카드 비준 (권고: 비준)' 에 '이건 그냥 마무리하고' · 같은 날 마감 D-2026-11-03-nd-q123-closed (C1–C4 는 갈래 ② 로 내지 않음 · C5 후처리 안 함)"
     }
-   ]
+   ],
+   "비준_시점_결과": "비준 (11-03) 은 Bader 회수 (10-30) · MP_07 가름 ② (11-02) · ELF SCF (11-01) 뒤다. 카드 글자는 결과 전 그대로 · 카드에 밀도 품질 게이트가 없었던 것은 마감 기록 §4 ③ 에 적었다.",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-03T02:32:21Z",
+    "commit": "2831530d5f89c4e3c745150e4a39371776e5aaa4",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-03 (이 세션): 'Nd는 이제 마무리하자' → 🔔 '[CEI Nd] Q1 · Q3′ 카드 비준. 권고: 비준이에요. 둘 다 결과 전에 정한 규칙이에요.' 에 '이건 그냥 마무리하고'",
+    "decision_digest": "sha256:dc0b251ef3f1e6de70882b98753f5ba17acc98f2c9e2731ef446035a53ab3d57"
+   }
   },
   {
    "id": "D-2026-10-27-cei-product-gaps",
@@ -10649,6 +10692,73 @@
      "note": "gabia G4 확인 반영 (해석 2 건 → 1 건) · 비준 전 수정"
     }
    ]
+  },
+  {
+   "id": "D-2026-11-03-nd-q123-closed",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": null,
+   "slot": "nd_cei_q123_closure",
+   "applies_to": {
+    "systems": [
+     "ndo_lpscl16_n5fu",
+     "lpscl16_rietveld_host",
+     "ndo_lpscl16",
+     "nd_at_li_120atom_ppswap",
+     "modelc_nd_doped"
+    ]
+   },
+   "title": "CEI/Nd 계산 묶음 (Q1 자리 · Q2 분해 · Q3 · Q3′ 전자 배치) — 닫는다: 확정 · 금지 문장 · 미해결 · 재개 조건을 한 곳에 · Q3′ MP_07 Bader 는 방법 개정 없이 닫고 ELF (C5) 는 후처리 안 함 · Q1 · Q3′ 카드 비준 (사용자 11-03)",
+   "statement": "nd_q123_closed_2026_11_03.json 이 이 묶음의 마감 기록이다 — 허용 문장은 §2 (각 원장에서 그대로 복사) 밖으로 쓰지 않고 금지는 §3 (정본은 각 파일) · 재개는 §5 (a) Q3′ ELF 후처리 · (b) Q3′ Bader 방법 개정 · (c) Q1 · Q2 카드 재개 조건 뿐이다. Q3′ 는 허용 문장 없이 닫는다 (C1–C4 = MP_07 Bader 방법상 못 읽음 · C5 = 후처리 안 함). 원고 문장 전 1저자 (실험 쪽) 동의는 Q1 카드 트랙.지위 그대로다.",
+   "rationale": "사용자 11-03 'Nd는 이제 마무리하자' · 🔔 MP_07 (닫기 대 싼 시험) 와 카드 비준에 '이건 그냥 마무리하고'. Q1 · Q2 · Q3 은 판독이 끝났고, Q3′ 는 11-02 갈래 ② 뒤 사용자 결정이 남아 있었다. ELF 후처리 안 함은 '그냥 마무리' 에서 읽은 것이다 — 원하면 §5 (a) 로 끝난 SCF 의 후처리만 하면 된다.",
+   "decision_state": "active",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/nd_q123_closed_2026_11_03.json",
+   "record": "db/properties/nd_q123_closed_2026_11_03.json",
+   "supersedes": [],
+   "depends_on": [
+    "D-2026-10-14-ndo-site-stability-estimand",
+    "D-2026-10-23-nd-q2-decomp-card",
+    "D-2026-10-19-nd-q23-ppswap-structure",
+    "D-2026-10-27-nd-q3p-same-cell",
+    "D-2026-10-20-nd-s-vacancy-closed",
+    "D-2026-09-24-nd-icohp-close"
+   ],
+   "evidence": [
+    "db/properties/nd_q123_closed_2026_11_03.json",
+    "db/properties/ndo_site_dft_runlog_2026_10_15.json ✅_Q1_EOS_판독_2026_10_23",
+    "db/properties/nd_q2_decomp_readout_2026_10_26.json",
+    "db/properties/nd_q3_bader_elf_runlog_2026_10_19.json",
+    "db/properties/nd_q3p_runlog_2026_10_27.json ✅_MP_07_다시_가름_2026_11_02"
+   ],
+   "reopen_criteria": [
+    "(a) 1저자 원고가 Nd@P 대 Nd@Li 전자 묘사를 요구하면 — 끝난 ELF SCF 의 후처리만 (새 결정)",
+    "(b) Q3′ Bader 방법 개정 (ecut 등 · 결과 전 문턱) — 새 결정",
+    "(c) Q1 · Q2 카드의 재개 조건 그대로",
+    "'모델 · 배치 · 자리를 하나 더 봤다' 는 재개 사유가 아니다"
+   ],
+   "enforcement": "마감 기록 §2 · §3 밖으로 쓰지 않는다 · 각 카드의 금지 서술이 정본 · Q3′ 값 없음 · 설명 페이지는 그대로 (§7 — 생성기의 '잠정' 판정 = 카드 상태 + 1저자 동의 기록)",
+   "proposed_by": "claude-session-2026-11-03 (friendly)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-11-03",
+     "state": "active",
+     "by": "사용자 (CEI/Nd 트랙 계산 담당 — 1저자는 실험 쪽)",
+     "note": "마감 — 사용자 'Nd는 이제 마무리하자' · '이건 그냥 마무리하고'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-03T02:32:21Z",
+    "commit": "2831530d5f89c4e3c745150e4a39371776e5aaa4",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-03 (이 세션): 용훈 포메이션 CEI Nd 표 붙여넣기 + 'Nd는 이제 마무리하자' → 🔔 '[CEI Nd] MP_07 Bader 를 닫을지, 싼 시험을 한 번 할지. 권고: 싼 시험 한 번' · '[CEI Nd] Q1 · Q3′ 카드 비준. 권고: 비준이에요. 둘 다 결과 전에 정한 규칙이에요.' 에 '이건 그냥 마무리하고'",
+    "decision_digest": "sha256:9357fec64a8a986a6fe54807fa07563cb70b11a3d4e24ba52d2052ff63fd39e9"
+   }
   }
  ]
 }

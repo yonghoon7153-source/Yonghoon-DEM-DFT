@@ -3,7 +3,7 @@
  "kind": "estimand",
  "id": "nd_q3p_same_cell_card_2026_10_27",
  "제목": "Nd Q3′ — Nd@P 모델 (MP_07) 과 같은 셀의 Nd@Li 모델 (MLi_04) 의 전자 배치 (Bader · ELF)",
- "status": "proposed — 사용자 실행 승인 10-27 '권고대로 해' · 비준 = 사용자 (결정 D-2026-10-27-nd-q3p-same-cell)",
+ "status": "active — 사용자 비준 2026-11-03 (결정 D-2026-10-27-nd-q3p-same-cell · 결과 뒤 비준 · 글자 그대로) · 같은 날 닫힘 (db/properties/nd_q123_closed_2026_11_03.json — 허용 문장 없음)",
  "written_on": "2026-10-27",
  "트랙": "CEI/Nd · 1저자 = 실험 쪽 · 결정은 '사용자' (계산 담당) · 1저자 통지는 사용자를 통해",
  "⚠_결과_보기_전에_썼다": "SCF 넷도 Bader · ELF 도 아직 0 건이다. 자리 분류 · 문턱 · 비교 · 허용 서술은 이 파일이 정본이다.",
@@ -43,5 +43,12 @@
  },
  "7_비용": "GPU SCF 넷 (kgy · 66/58 원자 · Q1 이완이 모델당 2 h 안쪽) — 어림 3–6 h · CPU 후처리 몇 분",
  "8_재개_조건": "PP · ecut · 구조 출처가 바뀔 때만. '다른 모델 하나 더' 는 재개 사유가 아니다.",
- "연결": ["db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json §2 Q3", "db/properties/nd_q3_bader_elf_runlog_2026_10_19.json", "db/properties/ndo_site_eos_fit_2026_10_23.json", "db/inputs/nd_q3p_2026_10_27/roles_manifest.json"]
+ "연결": ["db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json §2 Q3", "db/properties/nd_q3_bader_elf_runlog_2026_10_19.json", "db/properties/ndo_site_eos_fit_2026_10_23.json", "db/inputs/nd_q3p_2026_10_27/roles_manifest.json"],
+ "✅_비준_닫힘_2026_11_03": {
+  "사용자": "'Nd는 이제 마무리하자' · 🔔 MP_07 (닫기 대 싼 시험) · 카드 비준에 '이건 그냥 마무리하고'",
+  "결정": "D-2026-10-27-nd-q3p-same-cell active · 마감 D-2026-11-03-nd-q123-closed",
+  "결과": "C1–C4 내지 않음 (MP_07 Bader 갈래 ② — 이 방법으로 못 읽음 · 방법 개정 안 함) · C5 (ELF) 후처리 안 함 · 재개는 마감 §5 (a) (b) 만",
+  "⚠_교훈": "이 카드에 밀도 품질 게이트 (음의 밀도 · Bader 극대 수) 가 없었다 — 다음 Bader 카드는 결과 전에 건다 (마감 §4 ③)",
+  "by": "agent · 2026-11-03"
+ }
 }
