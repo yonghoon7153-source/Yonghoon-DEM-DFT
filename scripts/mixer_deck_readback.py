@@ -958,6 +958,18 @@ D2_RUN_COUNT = r'(?:0|[1-9][0-9]*)'       # `run <정수>` 의 정수 — ASCII 
 D2_INSERT_FORM = ('fix', None, 'all', 'insert/pack', 'seed', None, 'distributiontemplate', None, 'maxattempt', '200',
                   'insert_every', 'once', 'overlapcheck', 'yes', 'all_in', 'yes', 'vel', 'constant', '0.', '0.', '-0.2',
                   'region', None, 'particles_in_region', None, 'ntry_mc', '20000')
+#: ── D2 실제 적용 접촉 (MXD2R-02 · 1저자 11-02 Q2 (가) = 접촉 제외 거부 + 재료 fix 완비성 · 적용 전 순서) ───────────────────────────
+#:   생성기 꼴의 이웃 · pair 명령만 받는다 (`neigh_modify exclude …` 는 그 쌍을 이웃 목록에서 빼 쌍 상호작용을 끈다 — LIGGGHTS 3d5c00f
+#:   doc/neigh_modify.txt · 인쇄 CED 의 Bo 산술은 그대로 맞으므로 산술이 아니라 명령 꼴로 닫는다).
+D2_NEIGH_MODIFY = ['neigh_modify', 'delay', '0']
+D2_PAIR_COEFF = ['pair_coeff', '*', '*']
+#: 지원 접촉 모델 (pair · wall = hertz · tangential history · cohesion sjkr · rolling_friction cdt) 의 재료 fix — 생성기 덱의 property/global
+#:   목록 그대로 (이름 → (형식, 생성기 상수)).  상수 None = 값은 다른 검사가 본다 (영률 · ν = 등록 표 · CED = 기하평균 힘 규칙 · 대칭 · 벽–벽 0).
+#:   사본 원본 = make_mixer_deck.COR · MU_S · MU_R · `characteristicVelocity scalar 2.0` (시험이 사본 ↔ 생성기 대조).
+D2_MATERIAL = {'youngsModulus': ('peratomtype', None), 'poissonsRatio': ('peratomtype', None),
+               'coefficientRestitution': ('peratomtypepair', 0.3), 'coefficientFriction': ('peratomtypepair', 0.9),
+               'coefficientRollingFriction': ('peratomtypepair', 0.075), 'cohesionEnergyDensity': ('peratomtypepair', None),
+               'characteristicVelocity': ('scalar', 2.0)}
 
 
 def _d2_need(condition, message):
@@ -1127,6 +1139,55 @@ def _d2_time_grammar(commands):
     _d2_need(bool(runs) and len(steps) == 1 and len(commands[steps[0]]) == 2 and steps[0] < runs[0],
              'D2 time contract: exactly one two-token `timestep <dt>` before the first run (dt set once, unchanged after) — '
              f'found {len(steps)} at command index {steps} · first run at {runs[:1]}')
+
+
+def _d2_contact_grammar(commands, n_types):
+    """MXD2R-02 — 실제 적용 접촉 계약: 이웃 · pair 명령 = 생성기 꼴 · 재료 fix = 지원 접촉 모델이 읽는 목록의 완비성 · 형식 · 생성기 상수 ·
+    적용 전 순서 (create_box 뒤 · pair_style · wall/gran 앞 = 생성기 순서 — LIGGGHTS 가 요구하는 '첫 run 전' 보다 엄격).
+
+    ⚠ 옛 판: `neigh_modify exclude type 3 3` (SE–SE 쌍 상호작용 끔) · coefficientFriction fix 통째 삭제를 두 덱에 넣어도 세 소비자 PASS
+    (Codex exclude_SE_SE · 보조 탐침) — 허용 명령에 neigh_modify 가 있을 뿐 인자 의미 · 재료 fix 목록을 보지 않았다.  모르는 이름 · 옵션은 거부."""
+    runs = [i for i, t in enumerate(commands) if t[0] == 'run']
+    box = [i for i, t in enumerate(commands) if t[0] == 'create_box']
+    _d2_need(bool(runs) and len(box) == 1, 'D2 contact contract: create_box and runs required')
+    first, box = runs[0], box[0]
+    neigh = [(i, t) for i, t in enumerate(commands) if t[0] == 'neigh_modify']
+    _d2_need(len(neigh) == 1 and neigh[0][1] == D2_NEIGH_MODIFY and box < neigh[0][0] < first,
+             'D2 contact contract: exactly one `neigh_modify delay 0` after create_box and before the first run — exclude and other '
+             'neighbor options change which contacts are computed: '
+             + (' | '.join('`' + ' '.join(t)[:60] + '`' for _, t in neigh) or 'none'))
+    pair = [i for i, t in enumerate(commands) if t[0] == 'pair_style']
+    coeff = [(i, t) for i, t in enumerate(commands) if t[0] == 'pair_coeff']
+    _d2_need(len(pair) == 1 and len(coeff) == 1 and coeff[0][1] == D2_PAIR_COEFF and box < pair[0] < coeff[0][0] < first,
+             'D2 contact contract: one `pair_style gran …` then one `pair_coeff * *`, both after create_box and before the first run')
+    walls = [i for i, t in enumerate(commands) if t[0] == 'fix' and len(t) > 3 and t[3] == 'wall/gran']
+    found = {}
+    for i, t in enumerate(commands):
+        if not (t[0] == 'fix' and len(t) > 3 and t[3] == 'property/global'):
+            continue
+        name = t[4] if len(t) > 4 else None
+        _d2_need(name in D2_MATERIAL, f'D2 contact contract: unsupported material property {name!r} — the supported '
+                 f'hertz/sjkr/rolling_friction pair and wall model reads exactly {sorted(D2_MATERIAL)}')
+        _d2_need(name not in found, f'D2 contact contract: material fix {name} defined more than once')
+        found[name] = i
+        form, constant = D2_MATERIAL[name]
+        _d2_need(len(t) > 5 and t[5] == form, f'D2 contact contract: material fix {name} must be {form}')
+        if form == 'peratomtypepair':
+            _d2_need(len(t) > 6 and _d2_int_token(t[6], name + ' matrix size') == n_types,
+                     f'D2 contact contract: material fix {name} matrix size != create_box {n_types}')
+            values, want = t[7:], n_types * n_types
+        else:
+            values, want = t[6:], (n_types if form == 'peratomtype' else 1)
+        _d2_need(len(values) == want, f'D2 contact contract: material fix {name} has {len(values)} values != {want}')
+        if constant is not None:
+            _d2_need(all(_d2_float_token(v, name) == constant for v in values),
+                     f'D2 contact contract: {name} values != generator constant {constant:g}')
+        _d2_need(box < i < pair[0] and all(i < w for w in walls),
+                 f'D2 contact contract: material fix {name} must follow create_box and precede pair_style and wall/gran '
+                 '(generator order — defined before the contact laws that read it)')
+    missing = sorted(set(D2_MATERIAL) - set(found))
+    _d2_need(not missing, 'D2 contact contract: material fix missing for the supported hertz/sjkr/rolling_friction pair and wall '
+             'model: ' + ', '.join(missing))
 
 
 def _d2_lifecycle(commands):
@@ -1299,6 +1360,7 @@ def read_d2(text, meta):
         grav = _d2_number(float(gravity[0][4]), 'actual gravity')
         _d2_need(grav==9.81 and [float(v) for v in gravity[0][6:]]==[0.,0.,-1.], 'actual gravity != declared mixer gravity')
         _d2_time_grammar(commands)            # MXD2R-01 — run <정수> · timestep 하나 (첫 run 전)
+        _d2_contact_grammar(commands, D['n_types'])   # MXD2R-02 — neigh_modify · pair 꼴 · 재료 fix 완비성 · 순서 · 상수
         _d2_lifecycle(commands)               # + MXD2R-01 삽입 생성기 꼴 · 공동 회전 주기
         adhesion = meta.get('adhesion_rule')
         _d2_need(isinstance(adhesion,dict) and set(adhesion)==D2_ADHESION_KEYS, 'unknown/missing adhesion rule keys')
