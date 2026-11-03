@@ -927,3 +927,236 @@ R2 (2 런, 256/384) → f_AM 측정 (GPU 불요) → R3-v2 (2 런) → corner (3
 - ⚠ **열람 고지**: 내가 드린 명령 `tail -8 fam_r4_fa.log` 가 실패 팔의 `FINAL` 줄 (wallP · porosity(settled) · porosity@target · thickness) 까지 보여 줬다 — 위 *"정지 · 실패 런은
   상태 줄만"* 밖 열람 (`SELF-80` 과 같은 부류 · 내 명령 탓).  그 값은 **미수렴 값**이라 어디에도 쓰지 않는다 (I_a 없음 그대로).
 - 다음: §12-7 gabia (A6000 48 GB · 확인 런 1 + corner 3) = 딴 시뮬 끝난 뒤 — 이 결과 (`f = 0` 과압축 · f_(a) 서보 미수렴 · v2 축퇴) 를 **본 뒤**의 등록이 된다.
+
+### 12-7. 후속 등록 — gabia (RTX A6000) · 확인 런 (real_14 f_(b)) + corner 3 (2026-11-03 밤 · **선행 결과를 본 뒤의 후속 등록** · 1저자 비준 11-03 밤 Q1–Q13 *"권고대로"* · **결과 0 건**)
+
+- **지위**: §12-5 봉인의 재시도도, §12-6 의 연장도 아니다 — 새 기계 (gabia) 의 새 등록이다.  §12-5-9 · §12-6-2 의 결과와 corner 06-26 결과 (폐기된 f) 를 **본 뒤**에 적었다 ⇒ **"선행 결과를 본 뒤의 후속 등록"** (§12-3 FAMV2-07 과 같은 분류).  이 절의 어떤 값도 원고 · 발표 · 보고에서 *"사전등록 예측 적중"* 으로 쓰지 않는다 — 결과 문장마다 *"선행 결과를 본 뒤의 후속 등록 · 열람 이력 = §12-7"* 을 붙인다.
+- **결과 0 건**: 이 절을 적을 때 §12-7 의 런 · 건식 실행 모두 0 개 (gabia 에서 아무것도 돌리지 않았다).
+- **시점**: 1저자 11-03 *"FAM §12-7 을 Rint R 전에 gabia 빈 기간에 돌린다 — 등록 먼저"* (조정 세션 전달) · 진행 기록 `docs/session_20260923_progress.md` 1267–1268 행 (gabia = 11-22 부터 Rint ② R · FAM §12-7 은 그 전 빈 기간에만) · 그 전 = 10-20 Q15 *"gabia = Rint · 214 뒤"* → 10-23 인계 Q2 *"Rint R 이 끝난 뒤"* (`docs/handoff_codex_nonrint_20261023.md` 198 행) → 11-03 = Rint R **전**.
+- **초안**: `docs/reviews/fam_platen_s12_7_registration_draft_20261103.md` (11-03 · 확인 런 후보 표 · 산술 전문 · 권고 원문) → 1저자 11-03 밤 *"권고대로"* → 정본 = 이 절 (Q13).
+- ⛔ **DO-NOT 경계** (`CLAUDE.md` 머리 DO-NOT): MPM 을 "진짜 300 MPa 에 닿게" 하려는 시도가 아니다 · f 팔 = ② (AM 하중분담) 시험 · `--frames` = 끝까지 돌 수 있는가의 조건 (루프 길이 · 동역학 불변 · §12-6) · `final_stress_GPa < target` 을 미달로 읽지 않는다 (f 팔 서보 설정점 = `target·(1 − f)` · §12-5-9 ⓒ).
+
+**1저자 결정 (11-03 밤 · 조정 세션 전달 · Q1–Q13 = 초안 §7 권고 그대로)**
+
+| Q | 결정 |
+|---|---|
+| Q1 확인 런 1 | (가) real_14 f_(b) 0.8085 · ⑤ argv 그대로 (다른 것 = 출력 이름 · 기계 자리) · gabia — 기계 확인 (판정에 안 쓴다) |
+| Q2 corner 예산 | `--frames 3000` (§12-6 과 같은 근거) · 3000 안 미수렴 = `EXECUTION_FAILED` · 추가 등록 없음 |
+| Q3 `f = 0` 관문 | corner `f = 0` 팔에만 `--allow-unconverged-servo` (§12-6 의 R1 레시피) · 적격 규칙 그대로 |
+| Q4 격자 · 메모리 | `--lateral-box 0.1 --n-grid 768` · `--gpu-mem 28` 그대로 · 건식이 필드 할당에서 멈추면 발사하지 않고 1저자에게 (그때의 안 = `--gpu-mem` 만 올림 · 기계 인자) |
+| Q5 순서 | 확인 런 → corner f_(b) → f_(a) → `f = 0` (한 GPU · 한 번에 한 팔) |
+| Q6 기한 | 11-21 (토) 12:00 KST 또는 1저자가 Rint R 을 위해 gabia 를 비우라고 한 시각 중 이른 쪽 · 그때 도는 팔 = 정지 · *"미완주 — 실패 아님 · 판정 없음"* · 이어 돌리기 = Rint R 뒤 새 등록 |
+| Q7 확인 런 쓰임 | 값 보고만 (새 판정선 없음) · kgy I_b · corner 판정 · real_14 네 칸 불변 · kgy ↔ gabia 차가 동률 폭보다 크면 corner 결과에 "기계 한정" · 기술 실패 (오류 · 예산 안 미수렴) 면 corner 전에 멈추고 보고 |
+| Q8 §9 v2 | corner `f = 0` 에 채점 안 함 · JSON `am_load_split` 기록만 |
+| Q9 환경 | gabia MPM env 를 따로 (`~/rint-venv38` 손대지 않음) · 판 = kgy `ti310` freeze 와 같게 · 다르면 차이를 결과에 적는다 |
+| Q10 코드 | 봉인 코드 사본 (커밋 `7f44d6534` 트리) + corner CSV 둘 (커밋 `cf5103c94`) · 앞머리 검사 = 커밋 · md5 · sha256 넷 · 가지 끝 코드는 쓰지 않는다 |
+| Q11 재시도 셈 | kgy corner 메모리 부족 2 회 (§12-5-9) 는 이 등록의 재시도 수에 넣지 않는다 · 결과 문장에 함께 적는다 |
+| Q12 발사 기준 | §12-6 과 같다 — Codex 없이 1저자 비준 + 건식 |
+| Q13 정본 | 이 절 · 초안 머리에 옮김 표지 |
+
+**열람 이력 (이 절을 적을 때까지 본 것 · 원본 = 초안 §0-1)**: real_14 `f = 0` 25.842 µm · I_0 거짓 (§12-6-2) · real_14 f_(b) 29.491 µm · I_b 참 · frame 266/400 (§12-5-9 · 시도 1 끝 네 줄 = `SELF-80`) · real_14 f_(a) 400 · 3000 프레임 둘 다 미수렴 (④ 끝 두 줄 · §12-6-2 실패 팔 `FINAL` 줄 — 미사용) · §9 v2 = 계측 축퇴 쪽 (§12-6-2) · `am_load_split` 부수 열람 두 번 (12-0 · §12-6) · corner 06-26 (kserver = gabia A6000 · `hold` · n_grid 384 · **폐기된 f 0.86**): f = 0 porosity 15.90 % · f 0.86 porosity 25.25 % · 두께 19.3 µm · DEM 28.34 % (`docs/mpm_wallP_conditional_troubleshooting.md` 104–112 · 123–131 행 · §12-3 = 폐기값 · 근거 아님) · kgy corner 두 시도 = 필드 할당 메모리 부족 (프레임 0 · 값 없음 · §12-5-9).
+
+**예측 가능성 고지 (결과 전)**: ① corner `f = 0` — real_14 `f = 0` 이 과압축 (−14.7 %) · 06-26 corner f = 0 도 DEM 아래 (15.90 ↔ 28.34 %) ⇒ I_0 거짓 쪽이 미리 보인다 ② corner f_(a) · f_(b) — 06-26 f 0.86 런의 두께 19.3 µm 는 corner 창 안 (\|19.3 / 19.1455 − 1\| = 0.0081) · 0.86 은 0.8240 과 0.9007 사이 ⇒ 프로토콜 (hold ↔ servo) · 격자 (384 ↔ 768) · 코드 세대 · f 출처가 달라도 I_a · I_b 는 맹검 예측이 아니다 ③ real_14 f_(a) 는 3000 프레임 안 미수렴 ⇒ corner f 팔도 그럴 수 있음을 안다.  ⇒ 네 칸 · 순서 결과를 *"사전등록 적중"* 으로 쓰지 않는다.
+
+**런 넷 · argv (Q1 · Q2 · Q3 · Q5)** — 기계 = gabia 한 GPU · 한 번에 한 팔:
+
+| 순서 | 팔 | `--am-load-frac` | 예산 | argv 출처 |
+|---|---|---|---|---|
+| 1 | 확인 런 — real_14 f_(b) | 0.8085 | 400 | §12-5-5 f 팔 줄 (⑤ 가 돈 줄) — 다른 것 = 출력 이름 · 기계 자리 (`$PY` · 작업 자리 · `<OUT>`) |
+| 2 | corner f_(b) — **primary** | 0.9007 | 3000 | §12-5-8 줄 — 다른 것 = `--frames` 400 → 3000 (Q2) · 출력 이름 · 기계 자리 |
+| 3 | corner f_(a) | 0.8240 | 3000 | 같음 |
+| 4 | corner `f = 0` | 0 | 3000 | 같음 + `--allow-unconverged-servo` (Q3) |
+
+```bash
+# 등록 문안 (붙여 넣기용 아님 — 한 줄 명령 = 12-7-1).  기계 자리: $PY = ~/fam-mpm310/bin/python · 작업 자리 = ~/fam-wt · <OUT> = ~/fam_s127 (12-7-1 이 만드는 자리)
+COMMON="--arch cuda --gpu-mem 28 --protocol servo --floor-porosity 0 --compact-to 0 --stop-freeze-probe --platen-mach 0.01 --e-se 1.53 --nu-se 0.49 --sigma-y 0.30 --target-gpa 0.30 --readout wallP --frames 400 --sub 40 --seed 3"
+COMMON7="--arch cuda --gpu-mem 28 --protocol servo --floor-porosity 0 --compact-to 0 --stop-freeze-probe --platen-mach 0.01 --e-se 1.53 --nu-se 0.49 --sigma-y 0.30 --target-gpa 0.30 --readout wallP --frames 3000 --sub 40 --seed 3"
+#   COMMON = §12-5-5 의 $COMMON 글자 그대로 · COMMON7 = §12-6 의 COMMON6 글자 그대로 (둘의 차이 = --frames 하나)
+$PY -u scripts/mpm3d_compaction.py --am-scaffold docs/data/real14_am_scaffold.csv --se-dump docs/data/real14_se_scaffold.csv \
+  --n-grid 384 $COMMON --am-load-frac 0.8085 --save-metrics <OUT>/fam_s127_confirm_fb.json > <OUT>/fam_s127_confirm_fb.log 2>&1
+$PY -u scripts/mpm3d_compaction.py --am-scaffold docs/data/case15_corner_20261001/case15_am_scaffold.csv \
+  --se-dump docs/data/case15_corner_20261001/case15_se_scaffold.csv --lateral-box 0.1 --n-grid 768 $COMMON7 \
+  --am-load-frac 0.9007 --save-metrics <OUT>/fam_s127_corner_fb.json > <OUT>/fam_s127_corner_fb.log 2>&1
+$PY -u scripts/mpm3d_compaction.py --am-scaffold docs/data/case15_corner_20261001/case15_am_scaffold.csv \
+  --se-dump docs/data/case15_corner_20261001/case15_se_scaffold.csv --lateral-box 0.1 --n-grid 768 $COMMON7 \
+  --am-load-frac 0.8240 --save-metrics <OUT>/fam_s127_corner_fa.json > <OUT>/fam_s127_corner_fa.log 2>&1
+$PY -u scripts/mpm3d_compaction.py --am-scaffold docs/data/case15_corner_20261001/case15_am_scaffold.csv \
+  --se-dump docs/data/case15_corner_20261001/case15_se_scaffold.csv --lateral-box 0.1 --n-grid 768 $COMMON7 \
+  --am-load-frac 0 --allow-unconverged-servo --save-metrics <OUT>/fam_s127_corner_f0.json > <OUT>/fam_s127_corner_f0.log 2>&1
+```
+
+- **corner 고정값** (§12-5-7 그대로 · 손대지 않는다): 케이스 `input_1mAh_100_15` · 원자료 지문 = `docs/data/case15_corner_20261001/README.md` · step 1,710,000 · t_DEM **19.1455 µm** · 창 **[18.571135, 19.719865] µm** · f_(a) 0.8240 · f_(b) 0.9007 · primary b · 허용 오차 상대 ±3 % (실용 허용 오차 · 신뢰구간 아님 · 12-2).
+- **코드 · 입력** (Q10 · 11-03 git blob 으로 다시 셈 · 초안 §2-2): 커밋 `7f44d6534` 트리 · `scripts/mpm3d_compaction.py` md5 c31f0512021d416702e162709c6f4400 (12-5-6 의 c31f0512 와 같다) · ⚠ 가지 끝의 같은 파일은 10-14 커밋 `cb5a6a445` 뒤 md5 cae40a894339d3b0db32ac3dfc6c1846 — 쓰지 않는다 · real_14 스캐폴드 둘 = 봉인 트리 안 · corner CSV 둘 = 봉인 트리에 **없다** (커밋 `cf5103c94` · 봉인 2 h 39 m 뒤) → 사본에 넣고 sha256 대조 (12-7-1 ②).
+
+**자격 · 분류** (판정 전 12-4 표로 먼저): 적격 = 로그 `✓ converged: σzz equilibrated at target` ∧ JSON `porosity_at_target_pct` 비-None (§12-6) ∧ 12-5-1 자격 (`servo_status == converged` ∧ `stop_mode ∉ {hard_floor, am_jam}` ∧ `am_load_applied_to == descend+servo_setpoint`) · 재하율 = 로그 `[platen]` 줄 · JSON 의 `platen_mach_V_over_cP` · `dt_effective` · `dt_cfl_limited` (봉인 코드 3703 · 3724 · 3726 행) 를 적고 `V/cP_SE ≤ 0.01` (부동소수 반올림 수준만 허용) · 위반 = `RATE_INELIGIBLE` → `NOT_EVALUABLE` (12-1) — n_grid 768 에서는 CFL 상한이 dt 를 문다 (산술 · 초안 §3-2) · 플래그로 내보낸 미수렴 JSON = `EXECUTION_FAILED` · 예산 안 미수렴 · 런 전 관문 거부 = `EXECUTION_FAILED` · 재시도 없음 · 추가 등록 없음 (Q2) · 메모리 부족 · 노드 장애 · CUDA 오류 = `EXECUTION_FAILED` → 재시도 · python 이 시작되지 않은 러너 결함 = 런 시도 아님 (12-6-1 꼴) · 기한 정지 = 미완주 · 판정 없음 (Q6) · corner 팔 하나라도 `EXECUTION_FAILED` · 미완주면 corner 네 칸 · 순서 **미배정** (남는 값 = 값으로만 · 12-5-9 꼴).
+
+**재시도** (12-4 · 12-5-5 그대로): 메모리 부족 · 노드 장애에 한해 같은 argv · 같은 기계 1 회 · 모든 시도 보고 · 적중한 시도만 고르지 않는다 · 물리 결과가 나온 팔은 재시도 없음 · kgy corner 2 회는 세지 않는다 (Q11) · 건식의 필드 할당 실패 = 시도 아님 · 발사하지 않는다 (Q4).
+
+**기한** (Q6): 11-21 (토) 12:00 KST 또는 1저자가 비우라고 한 시각 중 이른 쪽 · 그때 도는 팔 = 정지 (`setsid` 로 띄운 런은 PGID ≠ `$!` → `pkill -TERM -f <OUT 이름>` · `config/env_db.json` kgy) · 시작 전 팔은 띄우지 않는다 · 이어 돌리기 = Rint R 뒤 새 등록.
+
+**판정선** (등록된 것만 · 새 숫자 없음):
+- corner: 1차 관측량 = 서보 수렴 최종 두께 `thickness_um` (12-5-1 · 하강 정지 두께 = 보조) · `I_x = |t_x / 19.1455 − 1| ≤ 0.03` (원 정밀도 · 반올림 창 금지 · 12-5-7) · 네 칸 = I_a × I_b (12-2 표 · "허용되지 않는 해석" 그대로) · I_0 = 값 보고 (네 칸 밖 · 12-6-2 꼴) · 순서 `t(0) < t(a) < t(b)` · 동률 폭 = 런이 기록하는 두께 판독 분해능 (12-5-5) · 실패 = "예측 실패 / 원인 미식별" · ε_sphere = 보고 전용 · 이 절에서 환산하지 않는다 (12-6-2 꼴) · §9 v2 = 채점 안 함 · `am_load_split` 기록만 (Q8) · 구제 금지 (12-2 — f 역산 재실행 · 창 이동 · 정지 시점 교체 없음 · 두 팔이 다 빗나가도 AM 하중분담 모델 일반 기각이라 쓰지 않는다).
+- 확인 런 (Q7): 값 보고만 — gabia 두께 · I_b′ (같은 창 [29.3716, 31.1884] µm) · kgy 29.491 µm 와의 차 · kgy I_b · corner 판정 · real_14 네 칸 불변 · 차 > 동률 폭이면 corner 결과에 "기계 한정 (kgy ↔ gabia 차 > 두께 판독 분해능)" · 기술 관문 = python · CUDA 오류 · 400 안 미수렴이면 corner 를 띄우지 않고 1저자에게 (kgy 는 이 argv 로 frame 266 에 수렴했다).
+- 결과 뒤 적는 순서 (§12-6 꼴): 12-4 분류 (모든 팔 · 모든 시도) → 확인 런 값 → I_0 · I_a · I_b → 네 칸 → 순서 → 보고 전용 (ε · `am_load_split`) → 위 고지 병기.
+
+**메모리 · 시간 · 일정 (추정 · 산술 전문 = 초안 §3 · 확인 런 = (가) 기준)**:
+- 메모리 (corner 768): 격자 768³ × 24 B + 점 ≤ 65,866 × 1,437 × 124 B (12-5-9 의 필드 산술) = 22.61 × 10⁹ B = **21.06 GiB** · 코드 상한 = round(min(총 MiB × 0.85, 여유 MiB × 0.90) / 1024, 1) (봉인 코드 1742–1763 행 · `nvidia-smi` 질의 실패면 20) · gabia 총 49,140 MiB → 40.8 ⇒ 여유 ≥ **31,858 MiB** 면 `--gpu-mem 28` 이 안 깎이고 6.94 GiB 남는다 ⇒ 산술상 들어간다 (필드만 센 상한 · 건식 할당으로 확인) · kgy 상한 18.7 (10-01 발사 직전 기록값으로 계산) < 21.06 = 메모리 부족 두 번과 맞는다 · 두 팔 동시 불가 (두 번째 팔 상한 ≤ 18.0).
+- 시간: kgy 실측 6.85 – 9.10 s/프레임 (real_14 384 · ⑤ · §12-6 두 팔) → corner (kgy 급 · 점 × 2.006 ~ 격자 칸 × 8) 13.7 – 72.8 s/프레임 · A6000 ↔ RTX 3090 속도비 [미확인] · 프레임당 판 이동 0.157 칸 (384) ↔ 0.160 칸 (768 · CFL 상한이 dt 를 묾) · 예산 3000 을 다 쓰면 팔 하나 11.4 – 60.7 h · corner 3 34.4 – 182.0 h · 확인 런 ≤ 1.0 h (kgy 실측 30 분) · 재시도 1 회 여유 ≤ 60.7 h.
+- 일정: 11-04 ~ 05 gabia 준비 · 건식 (12-7-1) → 11-05 ~ 06 발사 (1저자) → 11-06 0 시 발사면 11-07 (토) 오전 ~ 11-13 (금) 오후 끝 · 재시도 1 회면 ~ 11-16 (월) 새벽 · 발사 한계 ≈ 11-11 (수) 08 시 (상한 183.0 h + 재시도 60.7 h = 243.7 h · 기한 11-21 12:00 기준) ⇒ **11-10 (화) 안 발사를 목표** · 11-22 gabia → Rint ② R.
+- ETA: 첫 corner 팔의 처음 1 시간 프레임 줄 간격으로 s/프레임을 다시 재고, 남은 팔이 예산을 다 쓴다고 쳐서 기한을 넘으면 1저자에게 보고 (자동 변경 없음).
+
+**환경 (Q9)**: kgy 에서 FAM 이 돈 env = conda `ti310` (`/home/kgy/apps/miniforge3/envs/ti310/bin/python` · Python 3.10 · 11-02 기록 3.10.21 · taichi 1.7.3 = 09-25 기록 · numpy · scipy 판 [미확인]) · 봉인 코드가 부르는 바깥 꾸러미 = numpy · scipy · taichi 셋 (리포 모듈 `additives` 는 `--add-recipe` 때만) · Taichi CUDA = 드라이버만 필요 (`docs/server_setup.md`) · gabia = Ubuntu 24.04 · RTX A6000 49,140 MiB · 드라이버 595.58.03 (CUDA 13.2) · RAM 62 GB · 20 코어 · 디스크 207 GB · 리포 있음 (진행 기록 1267 행) · `~/rint-venv38` = **Rint ② R 전용** (python · numpy · scipy 판을 kgy `~/dem-venv` 와 같게 묶었다) → 손대지 않고 MPM env 를 따로 만든다 · gabia 의 06-26 ~ 28 MPM 기록 (kserver = gabia) 은 있으나 그 환경은 기록 없음 [미확인] · Rint 쪽 gabia 환경 시험 (`scripts/check_kgy_py38.sh` · 합성 시험 · 스크립트에 GPU · cupy · nvidia 낱말 없음) 은 FAM GPU 팔과 함께 돌 수 있다고 본다 (추정 · 같이 돌면 적는다).
+
+#### 12-7-1. 봉인 · 발사 전 점검 (발사 전 · 결과 0 건 · ⬜ = 발사 전 채움)
+
+- **붙여 넣는 규칙** (1저자 TeamViewer): 한 줄에 명령 하나 · heredoc · 여러 줄 블록 없음 · 명령 안에는 영문 · 숫자 · 기호만 (한글 없음) · 줄마다 기대 출력이 있다 — 기대와 다르면 다음 줄로 가지 않고 멈춘다 (보고 → 1저자) · gabia 리포 자리 `~/Yonghoon-DEM-DFT` (1저자 확인 · 다르면 그 자리로).
+- **열람 규칙**: 건식은 rc · 상태 줄 · 설정 줄 (`[Taichi]` · `3D MPM` · `[platen] v=`) · 프레임 줄 **개수** · JSON 필드 **수** · 걸린 시간만 본다 (프레임 줄의 값 · `FINAL` 줄 미열람 · 12-6-1 · `SELF-80`) · 건식은 런 시도로 세지 않는다.
+
+**① 봉인 코드 사본 (gabia)**
+
+1. 커밋 받기 — 기대: `fatal` 없음
+   ```
+   git -C ~/Yonghoon-DEM-DFT fetch origin claude/stoic-knuth-NObVQ
+   ```
+2. 두 커밋 있는지 — 기대: `commit` 두 줄 (`fatal` 이 나오면 2b 한 줄 뒤 2 를 다시)
+   ```
+   git -C ~/Yonghoon-DEM-DFT cat-file -t 7f44d6534d864f7be2f3310fa55d213b65cc707d; git -C ~/Yonghoon-DEM-DFT cat-file -t cf5103c948fffce69a1126331dc462fd9dd0a83c
+   ```
+   - 2b (2 가 실패할 때만 · shallow 클론) — 기대: `fatal` 없음
+     ```
+     git -C ~/Yonghoon-DEM-DFT fetch --unshallow origin
+     ```
+3. 사본 만들기 (`~/fam-wt` 가 이미 있으면 멈춘다) — 기대: `fatal` 없음
+   ```
+   git -C ~/Yonghoon-DEM-DFT worktree add --detach ~/fam-wt 7f44d6534d864f7be2f3310fa55d213b65cc707d
+   ```
+4. 사본 커밋 — 기대: `7f44d6534d864f7be2f3310fa55d213b65cc707d`
+   ```
+   git -C ~/fam-wt rev-parse HEAD
+   ```
+5. 코드 md5 — 기대: c31f0512021d416702e162709c6f4400
+   ```
+   md5sum ~/fam-wt/scripts/mpm3d_compaction.py
+   ```
+6. 봉인 표지 파일 (kgy `~/dem-fam` 과 같은 꼴 · 발사 러너가 읽는다) — 기대: `7f44d6534`
+   ```
+   echo 7f44d6534 > ~/fam-wt/SEAL_COMMIT; cat ~/fam-wt/SEAL_COMMIT
+   ```
+
+**② corner 스캐폴드 CSV (gabia)**
+
+7. 자리 — 기대: 출력 없음
+   ```
+   mkdir -p ~/fam-wt/docs/data/case15_corner_20261001
+   ```
+8. AM CSV 를 커밋 `cf5103c94` 에서 — 기대: 출력 없음
+   ```
+   git -C ~/Yonghoon-DEM-DFT cat-file blob cf5103c948fffce69a1126331dc462fd9dd0a83c:docs/data/case15_corner_20261001/case15_am_scaffold.csv > ~/fam-wt/docs/data/case15_corner_20261001/case15_am_scaffold.csv
+   ```
+9. SE CSV 를 같은 커밋에서 — 기대: 출력 없음
+   ```
+   git -C ~/Yonghoon-DEM-DFT cat-file blob cf5103c948fffce69a1126331dc462fd9dd0a83c:docs/data/case15_corner_20261001/case15_se_scaffold.csv > ~/fam-wt/docs/data/case15_corner_20261001/case15_se_scaffold.csv
+   ```
+10. 넷 sha256 — 기대 = 아래 표 (case15 둘은 `docs/data/case15_corner_20261001/README.md` 의 앞 16 자리와도 같아야 한다)
+    ```
+    sha256sum ~/fam-wt/docs/data/case15_corner_20261001/case15_am_scaffold.csv ~/fam-wt/docs/data/case15_corner_20261001/case15_se_scaffold.csv ~/fam-wt/docs/data/real14_am_scaffold.csv ~/fam-wt/docs/data/real14_se_scaffold.csv
+    ```
+
+| 파일 | 기대 sha256 (리포 LF 바이트 · 11-03 git blob 으로 셈 · 초안 §2-2) |
+|---|---|
+| `docs/data/case15_corner_20261001/case15_am_scaffold.csv` | 275c56e12fe11294fe6bf2cb304ce4187ee3fb3cb2f7ccdd8a5fc92d770383ba |
+| `docs/data/case15_corner_20261001/case15_se_scaffold.csv` | 929a495e4599dc55f09b2348b5b8b7fe41ecda131bfdbfae08ca0597d1ae0d1f |
+| `docs/data/real14_am_scaffold.csv` | 281ad86e0465a13b6ed96dbcf30c76acf4f372ff9d7c4a7e36fe55ecd44413fd |
+| `docs/data/real14_se_scaffold.csv` | 159f4ac05973197e71019e9f541b6cb1517ef7a75c0790f935d1ccfb4c526640 |
+
+**③ MPM 환경 (kgy 판 먼저 → gabia 따로 · Q9)**
+
+11. (**kgy**) `ti310` 판 — 화면 (또는 `~/ti310_freeze_20261103.txt`) 을 조정 세션에 전달 → 아래 14 의 ⬜ 를 채운다 (`pip list --format=freeze` = `이름==판` 꼴 · 판이 안 보이는 줄은 그대로 전달)
+    ```
+    /home/kgy/apps/miniforge3/envs/ti310/bin/python -V; /home/kgy/apps/miniforge3/envs/ti310/bin/python -m pip list --format=freeze | tee ~/ti310_freeze_20261103.txt
+    ```
+12. (gabia) uv — 기대: 판 한 줄
+    ```
+    uv --version
+    ```
+13. (gabia) MPM env 를 새 자리에 (`~/rint-venv38` 와 다른 자리) — 기대: CPython 3.10 으로 만들었다는 줄 · 패치 판을 12-7-1 칸에 적는다 (kgy 와 다르면 결과에 · Q9)
+    ```
+    uv venv --python 3.10 ~/fam-mpm310
+    ```
+14. (gabia) 꾸러미 — ⬜ **NUMPY_VER · SCIPY_VER 를 11 의 kgy 판으로 바꾼 뒤에만 붙여 넣는다** (발사 전 채움) · taichi = 1.7.3 (09-25 기록 · 11 의 판이 다르면 11 의 판)
+    ```
+    uv pip install --python ~/fam-mpm310/bin/python taichi==1.7.3 numpy==NUMPY_VER scipy==SCIPY_VER
+    ```
+15. (gabia) 판 확인 — 기대: `3.10.x` · 14 의 numpy · scipy 판 · `1.7.3` 한 줄 (+ `[Taichi] version …` 줄)
+    ```
+    ~/fam-mpm310/bin/python -c "import sys, numpy, scipy, taichi; print(sys.version.split()[0], numpy.__version__, scipy.__version__, taichi.__version__)"
+    ```
+16. (gabia) 코드가 하는 GPU 질의 그대로 — 기대: `49140, <여유 MiB>` 숫자 둘 (못 내면 코드가 상한을 20 으로 깎는다 → corner 메모리 부족)
+    ```
+    nvidia-smi --query-gpu=memory.total,memory.free --format=csv,noheader,nounits
+    ```
+
+**④ 건식 1 프레임 (팔마다 · §12-6-1 꼴 · 순서 = Q5 · 팔마다 앞 점검 → 건식 → 상태)**
+
+17. 자리 — 기대: 출력 없음
+    ```
+    mkdir -p ~/fam_s127/dryrun
+    ```
+18. 앞 점검 (팔마다 건식 직전) — 기대: `49140, F` (corner 는 F ≥ 31858 · 아니면 그 팔을 띄우지 않는다) · pgrep 줄 없음 · `pre_ok`
+    ```
+    nvidia-smi --query-gpu=memory.total,memory.free --format=csv,noheader,nounits; pgrep -af '[m]pm3d_compaction.py'; echo pre_ok
+    ```
+19. 건식 넷 — 각 한 줄 = 위 등록 문안 그대로 (`$COMMON` · `$COMMON7` 를 풀어 씀 · `$PY` = `~/fam-mpm310/bin/python` · `<OUT>` = `~/fam_s127/dryrun`) + 끝에 `--frames 1` (argparse 는 마지막 값) · 앞뒤 `date` · `rc=`:
+    - 19-1 확인 런 (real_14 f_(b) 0.8085)
+      ```
+      date '+%F %T'; cd ~/fam-wt && ~/fam-mpm310/bin/python -u scripts/mpm3d_compaction.py --am-scaffold docs/data/real14_am_scaffold.csv --se-dump docs/data/real14_se_scaffold.csv --n-grid 384 --arch cuda --gpu-mem 28 --protocol servo --floor-porosity 0 --compact-to 0 --stop-freeze-probe --platen-mach 0.01 --e-se 1.53 --nu-se 0.49 --sigma-y 0.30 --target-gpa 0.30 --readout wallP --frames 400 --sub 40 --seed 3 --am-load-frac 0.8085 --save-metrics ~/fam_s127/dryrun/fam_s127_confirm_fb.json --frames 1 > ~/fam_s127/dryrun/fam_s127_confirm_fb.log 2>&1; echo rc=$?; date '+%F %T'
+      ```
+    - 19-2 corner f_(b) 0.9007
+      ```
+      date '+%F %T'; cd ~/fam-wt && ~/fam-mpm310/bin/python -u scripts/mpm3d_compaction.py --am-scaffold docs/data/case15_corner_20261001/case15_am_scaffold.csv --se-dump docs/data/case15_corner_20261001/case15_se_scaffold.csv --lateral-box 0.1 --n-grid 768 --arch cuda --gpu-mem 28 --protocol servo --floor-porosity 0 --compact-to 0 --stop-freeze-probe --platen-mach 0.01 --e-se 1.53 --nu-se 0.49 --sigma-y 0.30 --target-gpa 0.30 --readout wallP --frames 3000 --sub 40 --seed 3 --am-load-frac 0.9007 --save-metrics ~/fam_s127/dryrun/fam_s127_corner_fb.json --frames 1 > ~/fam_s127/dryrun/fam_s127_corner_fb.log 2>&1; echo rc=$?; date '+%F %T'
+      ```
+    - 19-3 corner f_(a) 0.8240
+      ```
+      date '+%F %T'; cd ~/fam-wt && ~/fam-mpm310/bin/python -u scripts/mpm3d_compaction.py --am-scaffold docs/data/case15_corner_20261001/case15_am_scaffold.csv --se-dump docs/data/case15_corner_20261001/case15_se_scaffold.csv --lateral-box 0.1 --n-grid 768 --arch cuda --gpu-mem 28 --protocol servo --floor-porosity 0 --compact-to 0 --stop-freeze-probe --platen-mach 0.01 --e-se 1.53 --nu-se 0.49 --sigma-y 0.30 --target-gpa 0.30 --readout wallP --frames 3000 --sub 40 --seed 3 --am-load-frac 0.8240 --save-metrics ~/fam_s127/dryrun/fam_s127_corner_fa.json --frames 1 > ~/fam_s127/dryrun/fam_s127_corner_fa.log 2>&1; echo rc=$?; date '+%F %T'
+      ```
+    - 19-4 corner `f = 0` (플래그)
+      ```
+      date '+%F %T'; cd ~/fam-wt && ~/fam-mpm310/bin/python -u scripts/mpm3d_compaction.py --am-scaffold docs/data/case15_corner_20261001/case15_am_scaffold.csv --se-dump docs/data/case15_corner_20261001/case15_se_scaffold.csv --lateral-box 0.1 --n-grid 768 --arch cuda --gpu-mem 28 --protocol servo --floor-porosity 0 --compact-to 0 --stop-freeze-probe --platen-mach 0.01 --e-se 1.53 --nu-se 0.49 --sigma-y 0.30 --target-gpa 0.30 --readout wallP --frames 3000 --sub 40 --seed 3 --am-load-frac 0 --allow-unconverged-servo --save-metrics ~/fam_s127/dryrun/fam_s127_corner_f0.json --frames 1 > ~/fam_s127/dryrun/fam_s127_corner_f0.log 2>&1; echo rc=$?; date '+%F %T'
+      ```
+20. 상태 (팔마다 · 값 줄은 안 나온다):
+    - 20-1
+      ```
+      grep -aE 'Taichi\]|capping to|^3D MPM|\[platen\] v=|Traceback|Error|CUDA_ERROR|\[stop\]|\[servo\]|servo_status|saved metrics' ~/fam_s127/dryrun/fam_s127_confirm_fb.log; echo frame_lines=$(grep -acE '^ +frame +[0-9]+ \[' ~/fam_s127/dryrun/fam_s127_confirm_fb.log)
+      ```
+    - 20-2
+      ```
+      grep -aE 'Taichi\]|capping to|^3D MPM|\[platen\] v=|Traceback|Error|CUDA_ERROR|\[stop\]|\[servo\]|servo_status|saved metrics' ~/fam_s127/dryrun/fam_s127_corner_fb.log; echo frame_lines=$(grep -acE '^ +frame +[0-9]+ \[' ~/fam_s127/dryrun/fam_s127_corner_fb.log)
+      ```
+    - 20-3
+      ```
+      grep -aE 'Taichi\]|capping to|^3D MPM|\[platen\] v=|Traceback|Error|CUDA_ERROR|\[stop\]|\[servo\]|servo_status|saved metrics' ~/fam_s127/dryrun/fam_s127_corner_fa.log; echo frame_lines=$(grep -acE '^ +frame +[0-9]+ \[' ~/fam_s127/dryrun/fam_s127_corner_fa.log)
+      ```
+    - 20-4
+      ```
+      grep -aE 'Taichi\]|capping to|^3D MPM|\[platen\] v=|Traceback|Error|CUDA_ERROR|\[stop\]|\[servo\]|servo_status|saved metrics' ~/fam_s127/dryrun/fam_s127_corner_f0.log; echo frame_lines=$(grep -acE '^ +frame +[0-9]+ \[' ~/fam_s127/dryrun/fam_s127_corner_f0.log)
+      ```
+
+| 건식 팔 | 기대 rc | 기대 상태 줄 | frame_lines | JSON |
+|---|---|---|---|---|
+| 19-1 확인 런 · 19-2 corner f_(b) · 19-3 corner f_(a) | 1 | `[servo] …` + `servo_status = not_converged_frame_budget` (1 프레임의 등록된 중단 · 12-6-1 의 f_(a) 와 같은 꼴) | 1 | 없음 |
+| 19-4 corner `f = 0` (플래그) | 0 | `saved metrics → … (N fields)` · `[stop]` 없음 (12-6-1 의 `f = 0` 과 같은 꼴) | 1 | 있음 (필드 수만 적는다) |
+| 넷 다 | — | `[Taichi] Starting on arch=cuda` · `CUDA_ERROR` · `Traceback` 없음 · `[platen] v=… V/c_P=0.010` · corner 는 `capping to` 없음 (있으면 멈춤) · corner `3D MPM grid=…` = 768³ (12-5-9 · 정육면체) · `pts=` ≤ 94,649,442 (= 65,866 × 1,437 · 12-5-9 산술 상한) | — | — |
+
+**봉인 칸 (⬜ = 발사 전 채움)**
+
+| 칸 | 값 |
+|---|---|
+| 봉인 시각 = 이 절이 본 가지에 들어간 커밋 (Q13) | ⬜ 발사 전 채움 (병합 뒤) |
+| gabia 리포 자리 · `~/fam-wt` HEAD · mpm3d md5 | ⬜ 발사 전 채움 (기대 = ① 4 · 5) |
+| CSV 넷 sha256 | ⬜ 발사 전 채움 (기대 = ② 표) |
+| kgy `ti310` 판 (python · taichi · numpy · scipy) | ⬜ 발사 전 채움 (③ 11) |
+| gabia `~/fam-mpm310` 판 (python · taichi · numpy · scipy) | ⬜ 발사 전 채움 (③ 15) |
+| `nvidia-smi` 총 · 여유 (③ 16 · 팔마다 ④ 18) | ⬜ 발사 전 채움 |
+| 건식 표 (팔 · rc · 상태 줄 · frame_lines · JSON 필드 수 · 걸린 시간 · `3D MPM` 줄의 grid · pts) | ⬜ 발사 전 채움 (④) |
+| 발사 러너 (팔 넷 = 위 등록 문안 · 앞머리 = `SEAL_COMMIT` · md5 · sha256 넷 · 여유 메모리 · `[m]pm3d` 검사 · 시작 줄 `§12-7 시작`) md5 · 옮기는 법 | ⬜ 발사 전 채움 (다음 단계 = 1저자) |
+| 발사 시각 (= 러너의 `§12-7 시작` 줄) | ⬜ 발사 전 채움 (= 1저자) |
