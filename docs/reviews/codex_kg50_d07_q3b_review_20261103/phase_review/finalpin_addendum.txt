@@ -1,0 +1,110 @@
+Final-PIN phase / trial arithmetic addendum — 2026-11-03
+
+Final PIN: 4d2b8fc42dc4d65845570c1bf4de5a67924ad311
+Input: received_zip/REQUEST.md and received_zip/repo/docs/50kg/d07_guard/
+t_test_20261103/{README.md,t_output_grep.txt}.
+This is a read-only review of supplied text, not a live ibb query or rerun.
+
+Identity and source result
+SHA256 comparisons between the earlier source/repo and final received_zip/repo:
+  scripts/resume_ckpt.sh: equal, 66006239ec58043f963fa885f9db545c63614d279bfb6cac1665a2eae9884c6d
+  scripts/test_resume_ckpt.py: equal, a7c50120684cc24552f584e6072b9ef315e52b8ac3991fa04bde122dab8358c5
+  actual b50 main: equal, 2555640c7792df6954006392d05b8fd83f09687bd49e315ae0d8ffaa9ba65ab2
+Therefore no source retest was needed: the previous 40/40 checks apply to
+this final PIN. The earlier report's missing--T qualification is superseded
+by the supplied final-PIN screen evidence described below, with its limits.
+
+1. Supplied trial evidence is numerically consistent
+t_output_grep.txt line 4 reports job337078 COMPLETED, ExitCode0:0, 233s.
+Lines11–12 report last step1002000 and last Loop length1998; 1000000+2+1998
+=1002000. This agrees with the tested actual-code transformation.
+Lines16–17 report identical initial KE3.3619779e-08 and atom count488285.
+Line18 reports both checkpoint dumps equal. Lines20–21 report:
+
+  pressure: 0.00011997834 -> 0.00011998104
+    absolute difference 2.7e-9
+    relative difference = 2.2504061983e-5 = 0.0022504062 percent
+  KE: 3.3622402e-08 -> 3.364381e-08
+    absolute difference 2.1408e-11
+    relative difference = 6.3671834035e-4 = 0.0636718340 percent
+
+REQUEST line44 / trial README line8 round these correctly. The pressure
+relative difference is far below the5-percent G3 tolerance. G3's shown
+comparison row cannot on its own establish all later physics or full-run
+completion; it is a short continuation check at the original run endpoint.
+
+REQUEST line42 and trial README line5 explain below-target continuation by
+claiming 'quit would have nonzero exit status, so0:0 proves below target'.
+The exact loaded lmp_mpi quit implementation is not supplied in this ZIP.
+The review does not need or independently establish that exit-status claim.
+Use the stronger supplied endpoint evidence instead: this trial reached
+1002000 and completed its1998-step second run; the generated threshold-hit
+path quits at1000002 before that run. Its shown pressure0.00011998104 is
+also directly less than the code threshold0.30. This preserves the claimed
+conclusion without relying on an unverified quit exit status.
+
+The extracted report is supplied screen text, not the raw trial deck,
+complete runtime log, binary, or original dump files. The final main launch's
+fresh test and identity checks remain material conditions, as in REQUEST.
+
+2. Contact-onset wording in REQUEST line58 needs narrowing
+The fraction is correct:
+  0.00011998104 /0.30 *100 =0.03999368 percent of target.
+Using the agreed code-pressure conversion0.30 ->300MPa, this reading is
+about0.11998104MPa physical pressure. It supports 'far below target'.
+It does not establish 'the plate has just touched the bed'.
+
+There is a concrete geometry-label error in the justification. The main
+deck's line175 defines z_max from c_zmax and line178 prints 'Z_MAX (center)'.
+Line176 defines plate_z = z_max + r_AM_P + plate_margin; lines40/44 set
+r_AM_P=0.003m and plate_margin=0.003m. Therefore
+  0.142972 -0.136972 =0.006m
+is a plate-to-maximum-CENTER distance, not plate-to-bed-SURFACE clearance.
+The surface top is max_i(z_i+r_i), which is not max_i(z_i). At the original
+center snapshot with these three constant radii0.00035,0.002,0.003m, a
+static geometric surface clearance would lie between0.003 and0.00565m.
+At1e-8m per step, that gives a nominal300000–565000steps, not600000steps.
+These bounds are illustrative, not a prediction: the deck then runs another
+200000-step stabilization before compression, so particle heights can change.
+Neither that old center snapshot nor one low force reading determines the
+actual first-contact step. A contact/top-surface history would be needed.
+
+Minimal scoped wording remedy: replace '판이 침대에 막 닿은 자리' with
+'목표 대비 약0.04%의 저압 상태; 실제 접촉 시작 시점은 이 자료로 확정하지 않음'.
+Describe600000steps only as0.006m nominal plate travel, and identify0.136972
+as maximum particle-center height. This is a documentation/interpretation
+correction, not a newly found phase-transform defect or source-level GO block.
+
+3. Remaining-time arithmetic is a conditional scenario, not a forecast
+If D0.7 ended at the reported D2-E05 endpoint4485002, the remaining work
+from the actual restart checkpoint1000000 would be3485002steps, rather
+than subtracting the old cancelled run tail1055002:
+  from checkpoint: 3485002/20000 =174.2501h
+  from cancelled tail: 3430000/20000 =171.5h
+Thus 'about3.4M steps/about170h' is acceptable rough arithmetic, but the
+precise checkpoint-based scenario is3.485M/about174h.
+
+The displayed old loop5000steps/868.491s gives20725.60steps/h; using that
+one-loop rate gives168.15h for3485002steps. The trial's2000steps/233s gives
+30901.29steps/h including whatever that job elapsed field includes. These
+different short measurements are not a guarantee of long-run throughput.
+
+The quoted120h is the repository runner setting; REQUEST explicitly says
+the actual helper-runner time limit is absent from this screen. Moreover,
+D2-E05's endpoint is reported in REQUEST, not independently established by
+a D2 full log here, and transferring it to D0.7 assumes comparable compression
+duration despite different particle size/bed geometry. So these numbers
+justify having a TIMEOUT recovery plan, not 'likely exactly one TIMEOUT' or
+an assurance that a second job will finish. Safer wording is 'TIMEOUT
+가능성에 대비한다' with these assumptions explicit.
+
+Q4 arithmetic is unchanged: for this same E400002/N5000/every200000 deck,
+all later interval checkpoints have phase4998 and residual2. Future launch
+qualification still requires the new checkpoint's original-log phase evidence,
+fresh test and identities; the remaining-time scenario supplies none of those.
+
+Sub-review recommendation
+Accept the final supplied short-test numbers as internally consistent and
+retain the source-level phase result. Correct/narrow contact-onset and runtime
+claims as above. Do not use them as new physical-validation evidence or as
+unconditional approval for an unknown future checkpoint/runtime.

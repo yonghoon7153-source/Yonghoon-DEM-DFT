@@ -1,0 +1,1246 @@
+{
+  "zip_path": "C:\\Users\\Administrator\\Downloads\\codex_kg50_d07_compress_resume_20261103.zip",
+  "sha256": "564e72ecfbba61ff23513c3e89cfeafbbecc47e199f86228043e6d113cb0dbcc",
+  "bytes": 2020342,
+  "pin": "PIN 4d2b8fc42dc4d65845570c1bf4de5a67924ad311\nbranch claude/stoic-knuth-NObVQ\nrepo/ = git archive of PIN (blob 그대로)\n",
+  "hazards": [],
+  "verified": 198,
+  "manifest_all_pass": true,
+  "files": [
+    {
+      "path": "PIN.txt",
+      "expected": "b040b34c2f4186e6b4ca53e1fdfb43c284e14cd0e365580776eade90a2422316",
+      "actual": "b040b34c2f4186e6b4ca53e1fdfb43c284e14cd0e365580776eade90a2422316",
+      "match": true
+    },
+    {
+      "path": "REQUEST.md",
+      "expected": "ec17f6798991b8a8f44a8f40889ff17e39fe0a749441a540ebaa1a63f269e8b4",
+      "actual": "ec17f6798991b8a8f44a8f40889ff17e39fe0a749441a540ebaa1a63f269e8b4",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/codex_kg50_d07_compress_resume_request_20261103.md",
+      "expected": "ec17f6798991b8a8f44a8f40889ff17e39fe0a749441a540ebaa1a63f269e8b4",
+      "actual": "ec17f6798991b8a8f44a8f40889ff17e39fe0a749441a540ebaa1a63f269e8b4",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/README.md",
+      "expected": "b96c44ad882e445a283216c6042bd6375cc77ac49950822ac292a34d2b459ec2",
+      "actual": "b96c44ad882e445a283216c6042bd6375cc77ac49950822ac292a34d2b459ec2",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/d07_guard.sh",
+      "expected": "4b1227ef76e8d248065537c147b650ad863c1d002a53d382fc553895d4bbc474",
+      "actual": "4b1227ef76e8d248065537c147b650ad863c1d002a53d382fc553895d4bbc474",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/d07_guard_block.txt",
+      "expected": "1b21663e3f29d4bf902e481ce615fbb11b3e676d6c64e5b2338162f8c898bbee",
+      "actual": "1b21663e3f29d4bf902e481ce615fbb11b3e676d6c64e5b2338162f8c898bbee",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/d07_guard_v2.sh",
+      "expected": "4124533440e5dd9bf5768571ec02185d578e5f1d0178ec3a78e2d3c8ac3fdcf4",
+      "actual": "4124533440e5dd9bf5768571ec02185d578e5f1d0178ec3a78e2d3c8ac3fdcf4",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/d07_guard_v2_1031.sh",
+      "expected": "ff18a4fadcdaf4acc6190e60d3534096f2a9a4075e73e6e33808d25dc4a427b4",
+      "actual": "ff18a4fadcdaf4acc6190e60d3534096f2a9a4075e73e6e33808d25dc4a427b4",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/d07_guard_v2_block.txt",
+      "expected": "0e38a110f50b8c312877d82c6c86c78bb9c0d257c24e72d262903fb0d8ba6f19",
+      "actual": "0e38a110f50b8c312877d82c6c86c78bb9c0d257c24e72d262903fb0d8ba6f19",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/sim_guard.sh",
+      "expected": "5431443d93b5e8e84bcd1f9083c40b34323401986c8586329f74f2248f673fc6",
+      "actual": "5431443d93b5e8e84bcd1f9083c40b34323401986c8586329f74f2248f673fc6",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/sim_guard_v2.sh",
+      "expected": "6af27695597c865eb2d5f64b5383d6c840b4fb3280f8df28fe6a7cfdc965e9a9",
+      "actual": "6af27695597c865eb2d5f64b5383d6c840b4fb3280f8df28fe6a7cfdc965e9a9",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/sim_v2_mutation_20261031.txt",
+      "expected": "9e3d0d5b55f86b67db159990ad1b3d26bf7531920c340f7b94ac30ceeea4da60",
+      "actual": "9e3d0d5b55f86b67db159990ad1b3d26bf7531920c340f7b94ac30ceeea4da60",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/sim_v2_results_20261031.txt",
+      "expected": "17c46ecffb2f6292e268d03f4e2743bfcf23ffc25ec85e6faf5074aebeea052d",
+      "actual": "17c46ecffb2f6292e268d03f4e2743bfcf23ffc25ec85e6faf5074aebeea052d",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/t_test_20261031/README.md",
+      "expected": "9f9fe8656a058e322c3591b36ccd7e5cca129b7d890577bad9913b3d173b0595",
+      "actual": "9f9fe8656a058e322c3591b36ccd7e5cca129b7d890577bad9913b3d173b0595",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/t_test_20261031/attempts_and_identity.txt",
+      "expected": "4f7f25e4b63be6c714465c65d4ce0f1096f0f6d5670a4a8149f0bc3e5eb99a25",
+      "actual": "4f7f25e4b63be6c714465c65d4ce0f1096f0f6d5670a4a8149f0bc3e5eb99a25",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/t_test_20261031/report_resume_r56_1031_215830.md",
+      "expected": "ffa61cedc409463f2cbc6c448b3f5451cbc900dbbb1c2653a7888a784dc69a7e",
+      "actual": "ffa61cedc409463f2cbc6c448b3f5451cbc900dbbb1c2653a7888a784dc69a7e",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/t_test_20261103/README.md",
+      "expected": "2f561f6984dedbadc9c0fdff75bf209ebd4ffd9a05907ae9e4e6f34135e429bf",
+      "actual": "2f561f6984dedbadc9c0fdff75bf209ebd4ffd9a05907ae9e4e6f34135e429bf",
+      "match": true
+    },
+    {
+      "path": "repo/docs/50kg/d07_guard/t_test_20261103/t_output_grep.txt",
+      "expected": "4b14587bd13a844261ffece6980221faddc55b5d2c954d40ada91f3c62df62b3",
+      "actual": "4b14587bd13a844261ffece6980221faddc55b5d2c954d40ada91f3c62df62b3",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+      "expected": "39b4990ad619a7602402196b106b71c817c55473dc849a42d8b1933b41127cb5",
+      "actual": "39b4990ad619a7602402196b106b71c817c55473dc849a42d8b1933b41127cb5",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40_insert.liggghts",
+      "expected": "bd49db8125ca10f349d9284d67e88ce5ae999eb87ead9cb8a4a5f6089f6692d3",
+      "actual": "bd49db8125ca10f349d9284d67e88ce5ae999eb87ead9cb8a4a5f6089f6692d3",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_decks_20261026_v2/kg50_d07_b40/run_kg50_d07_b40.sh",
+      "expected": "2f355d886286f61315bd29b29efae448df57cb4027bb6364715a4399fc0aeb8f",
+      "actual": "2f355d886286f61315bd29b29efae448df57cb4027bb6364715a4399fc0aeb8f",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_decks_20261026_v2/kg50_d07_b40/run_kg50_d07_b40_insert.sh",
+      "expected": "be320024baa13576e14e42d6bcfbf71f5c26bec2a11c736b1c67941e403c4ce0",
+      "actual": "be320024baa13576e14e42d6bcfbf71f5c26bec2a11c736b1c67941e403c4ce0",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/input_kg50_d07_b50.liggghts",
+      "expected": "2555640c7792df6954006392d05b8fd83f09687bd49e315ae0d8ffaa9ba65ab2",
+      "actual": "2555640c7792df6954006392d05b8fd83f09687bd49e315ae0d8ffaa9ba65ab2",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/input_kg50_d07_b50_insert.liggghts",
+      "expected": "44ac7277bad638500f965de285ebc1738aa6d978fd87758d7cff4f667feb85fc",
+      "actual": "44ac7277bad638500f965de285ebc1738aa6d978fd87758d7cff4f667feb85fc",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/run_kg50_d07_b50.sh",
+      "expected": "a75ca484aef99a7e30171985761c392973e87e16e6402a25cb57a7d75dd211c9",
+      "actual": "a75ca484aef99a7e30171985761c392973e87e16e6402a25cb57a7d75dd211c9",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/run_kg50_d07_b50_insert.sh",
+      "expected": "f2b1c6090a25ce246a1142b697abbafe7ed7161e66724583e2128d7ca05daa18",
+      "actual": "f2b1c6090a25ce246a1142b697abbafe7ed7161e66724583e2128d7ca05daa18",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/DECK_CHECK.md",
+      "expected": "31d68a105c4007cb9a48d6f3eeb2ca9ac8eade32a8bac9b5418c1ccfa2314c6c",
+      "actual": "31d68a105c4007cb9a48d6f3eeb2ca9ac8eade32a8bac9b5418c1ccfa2314c6c",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/deckcheck_r4.txt",
+      "expected": "d87bd5f6016ace38982364d984e61819f065bf13ce04fa2d276ab8b652d715dc",
+      "actual": "d87bd5f6016ace38982364d984e61819f065bf13ce04fa2d276ab8b652d715dc",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/fixrun_r4.txt",
+      "expected": "d9238fcba08ea5c82a8f1d468b1b660b620c0ab25973b664b522455eb2b635ac",
+      "actual": "d9238fcba08ea5c82a8f1d468b1b660b620c0ab25973b664b522455eb2b635ac",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/input_kg50_d2_b50.liggghts",
+      "expected": "f8ac9932a6cb4a0b45c9b6cb846bc637dd746ccf036f32590036c70ab6508825",
+      "actual": "f8ac9932a6cb4a0b45c9b6cb846bc637dd746ccf036f32590036c70ab6508825",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/input_kg50_d2_b50_r4.liggghts",
+      "expected": "eacc23e60ae5981496091d3bab02084f8aae4ea180752b2b687750935316c3c6",
+      "actual": "eacc23e60ae5981496091d3bab02084f8aae4ea180752b2b687750935316c3c6",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/input_kg50_d2_b50_r4t.liggghts",
+      "expected": "aac7debc81029acfa4f7619aab8a2358741095b4f5e833cedac0a8f9f29c044b",
+      "actual": "aac7debc81029acfa4f7619aab8a2358741095b4f5e833cedac0a8f9f29c044b",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/job_r4t.txt",
+      "expected": "8d1404f83560bec48c479809b9d84232d570cd5d0334ba749c3de1c48d02eb00",
+      "actual": "8d1404f83560bec48c479809b9d84232d570cd5d0334ba749c3de1c48d02eb00",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/mode_r4.txt",
+      "expected": "eff2fcc88e873604ef2dc1691161caf4f76b82b1b072e6f16d60934a54e1202c",
+      "actual": "eff2fcc88e873604ef2dc1691161caf4f76b82b1b072e6f16d60934a54e1202c",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/plan_r4.txt",
+      "expected": "8225d43957bc03327d308c59f5a50d006b5a05a912f88aa7eadc520c758fe98a",
+      "actual": "8225d43957bc03327d308c59f5a50d006b5a05a912f88aa7eadc520c758fe98a",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/received_d2_resume_1028.tgz",
+      "expected": "b0d376a6ffa97f81d2e9feb41aa8c53010915e0e19c483247503f7b9a6474635",
+      "actual": "b0d376a6ffa97f81d2e9feb41aa8c53010915e0e19c483247503f7b9a6474635",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/kg50_resume_tests_20261027/d2_main_1028_0942/run_kg50_d2_b50_r4.sh",
+      "expected": "830655571b9a94055f468e697f67c4dbc35b78dfe1df6bb7462b030b209d3236",
+      "actual": "830655571b9a94055f468e697f67c4dbc35b78dfe1df6bb7462b030b209d3236",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/pure_se_r075_20260927/README.md",
+      "expected": "4821391738be523b249f0a7e7b346ec60fc10f14e9330713bce385f1b17d0b18",
+      "actual": "4821391738be523b249f0a7e7b346ec60fc10f14e9330713bce385f1b17d0b18",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/pure_se_r075_20260927/input_pse_r075_a.liggghts",
+      "expected": "23f3b0af108a530c76941fc9e437d06df23e081bb3f14ac7ed9face399c7ecfe",
+      "actual": "23f3b0af108a530c76941fc9e437d06df23e081bb3f14ac7ed9face399c7ecfe",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/pure_se_r075_20260927/input_pse_r075_a_r30.liggghts",
+      "expected": "9a7f4ed12db19b0577918d5df9e6b8a75dc86569223dc0c56720e58daa4ea189",
+      "actual": "9a7f4ed12db19b0577918d5df9e6b8a75dc86569223dc0c56720e58daa4ea189",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/pure_se_r075_20260927/input_pse_r075_a_r30t.liggghts",
+      "expected": "1ea4672ff361d134f235696e9721f382b7a8a1de19b603764a4b0fc291b0e77f",
+      "actual": "1ea4672ff361d134f235696e9721f382b7a8a1de19b603764a4b0fc291b0e77f",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/pure_se_r075_20260927/log_pse_r075_a.gz",
+      "expected": "ffed6bdf12c201573fbcbe9a0c24c4457361fb9205ddb7f9d64c4173401e15be",
+      "actual": "ffed6bdf12c201573fbcbe9a0c24c4457361fb9205ddb7f9d64c4173401e15be",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/pure_se_r075_20260927/log_pse_r075_a.r30t.gz",
+      "expected": "662ae6683b4580c1ca5bbbff36814ae7effc8ed95525660486530d4515432326",
+      "actual": "662ae6683b4580c1ca5bbbff36814ae7effc8ed95525660486530d4515432326",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/pure_se_r075_20260927/log_pse_r075_a.stop15.gz",
+      "expected": "413b67a87dcea74f4e05700a117e29fbe349a1bbddddd5b5699fe9ea6735e298",
+      "actual": "413b67a87dcea74f4e05700a117e29fbe349a1bbddddd5b5699fe9ea6735e298",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/pure_se_r075_20260927/plate_pse_r075_a.stl",
+      "expected": "2278c2245c8d3c9d65257cca63ba1297955e828bf55b587cd22becdb23787c90",
+      "actual": "2278c2245c8d3c9d65257cca63ba1297955e828bf55b587cd22becdb23787c90",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/pure_se_r075_20260927/pse_union_r075.tsv",
+      "expected": "96600ed7aac2d751c9a9daa4633406b8399c5730be280d985d4423d90e4eff34",
+      "actual": "96600ed7aac2d751c9a9daa4633406b8399c5730be280d985d4423d90e4eff34",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/pure_se_r075_20260927/run_pse_r075_a.sh",
+      "expected": "d55ddb6e3383430e5eb45017d170d85e73087bc67f980616b1ecaeb5cef43a20",
+      "actual": "d55ddb6e3383430e5eb45017d170d85e73087bc67f980616b1ecaeb5cef43a20",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/pure_se_r075_20260927/run_pse_r075_a_r30.sh",
+      "expected": "7c3a257db31f70a3b4da5bce91f9f8eaf7c20dc978c6460511a95238637887cb",
+      "actual": "7c3a257db31f70a3b4da5bce91f9f8eaf7c20dc978c6460511a95238637887cb",
+      "match": true
+    },
+    {
+      "path": "repo/docs/data/pure_se_r075_20260927/run_pse_r075_a_r30t.sh",
+      "expected": "1b135c2a5ee933734c0f1a877f13f8887ef865a681e82ccb438809d88740429e",
+      "actual": "1b135c2a5ee933734c0f1a877f13f8887ef865a681e82ccb438809d88740429e",
+      "match": true
+    },
+    {
+      "path": "repo/docs/resume_ckpt_procedure_20260927.md",
+      "expected": "b4a8a304c9e9de17f9bc0d33878a7058234e7c02e5c2fae393222b9f134da16c",
+      "actual": "b4a8a304c9e9de17f9bc0d33878a7058234e7c02e5c2fae393222b9f134da16c",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/FINAL_QA.json",
+      "expected": "9bfa9f6f8d636f01b783c6b2760c3f8a5e719110a71517c0e99ef65cf06d23aa",
+      "actual": "9bfa9f6f8d636f01b783c6b2760c3f8a5e719110a71517c0e99ef65cf06d23aa",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/PACKAGE_MANIFEST.sha256",
+      "expected": "a55d646cb3b30ab01686178c163cb0333eed71d0d67ed4a52d4438bbba063c62",
+      "actual": "a55d646cb3b30ab01686178c163cb0333eed71d0d67ed4a52d4438bbba063c62",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/PIN.txt",
+      "expected": "a9cc3b256e0551c78137c8196b23690a7567d2e0068b960e68929efc1bae17b5",
+      "actual": "a9cc3b256e0551c78137c8196b23690a7567d2e0068b960e68929efc1bae17b5",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/README.md",
+      "expected": "03d7c652d49e8b5ce29b742a45f03ef4adf697eec835e8f4df4cfbb55c1d9ddb",
+      "actual": "03d7c652d49e8b5ce29b742a45f03ef4adf697eec835e8f4df4cfbb55c1d9ddb",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/REPRODUCE.md",
+      "expected": "069d4495b7ab228511526efc64e0204873cb87d71ed5b1bad2ac5ce35a431ace",
+      "actual": "069d4495b7ab228511526efc64e0204873cb87d71ed5b1bad2ac5ce35a431ace",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/README.md",
+      "expected": "e875e0754129ec80043c7167c153a1e62255fc711666816bf7fbc4b65a0001b5",
+      "actual": "e875e0754129ec80043c7167c153a1e62255fc711666816bf7fbc4b65a0001b5",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/awk_trial/table.txt",
+      "expected": "5f97e44067a051cfd800335cb27b1b3e092dda6fddb9888383f08a202d1657f3",
+      "actual": "5f97e44067a051cfd800335cb27b1b3e092dda6fddb9888383f08a202d1657f3",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/deck/results_rerun_linux.json",
+      "expected": "ede27dba4ff94787388b252d777c727f2f26c7b514b7a583aeb0f2c630022e89",
+      "actual": "ede27dba4ff94787388b252d777c727f2f26c7b514b7a583aeb0f2c630022e89",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/deck/state_observability_rerun_linux.json",
+      "expected": "77c660b49f62473495bba9e8c333a485673a6f57744fe21c7fb3e021b73de9d7",
+      "actual": "77c660b49f62473495bba9e8c333a485673a6f57744fe21c7fb3e021b73de9d7",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/deck/trial_steps_results_rerun_linux.json",
+      "expected": "17dcf951c6270a740bfc37165c86fd4cc3f6ccbafc00705ae2a95dd546ffe92a",
+      "actual": "17dcf951c6270a740bfc37165c86fd4cc3f6ccbafc00705ae2a95dd546ffe92a",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/g0_lastrun/bad_final.log",
+      "expected": "a37c88a156dcb18ce6d0fab975122bd05be35638d24095c1f1807e1576a9f613",
+      "actual": "a37c88a156dcb18ce6d0fab975122bd05be35638d24095c1f1807e1576a9f613",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/g0_lastrun/bad_late.log",
+      "expected": "bb3f8b60b484b0c15f775a576c8caf9fb4306ebb2f3cff28901c45e99bcb961f",
+      "actual": "bb3f8b60b484b0c15f775a576c8caf9fb4306ebb2f3cff28901c45e99bcb961f",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/g0_lastrun/funcs_from_ours.sh",
+      "expected": "cdb5fb86dd21cebad2502bcb1af3bd95b81cae944e56d0425b7e91e7ea8d8712",
+      "actual": "cdb5fb86dd21cebad2502bcb1af3bd95b81cae944e56d0425b7e91e7ea8d8712",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/g0_lastrun/run.out",
+      "expected": "d18350af2c8647e42780c299d641bfb03ea4518b4a95bd937aff7b560ceafaf5",
+      "actual": "d18350af2c8647e42780c299d641bfb03ea4518b4a95bd937aff7b560ceafaf5",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/g0_lastrun/run.sh",
+      "expected": "a3f2d59081d0c2c5f8025f067b835842ddb3e3d0bc88e6ebb8b3958511232ce4",
+      "actual": "a3f2d59081d0c2c5f8025f067b835842ddb3e3d0bc88e6ebb8b3958511232ce4",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/r075_bash_C/out.txt",
+      "expected": "1efc303bd223eabf1cc40d39bcd0f945a4cfb9cff374be4f51fe22f8af48a0e3",
+      "actual": "1efc303bd223eabf1cc40d39bcd0f945a4cfb9cff374be4f51fe22f8af48a0e3",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/r075_retro.md",
+      "expected": "05ef5d59430de2d6cbea3bfdc818534e612ac6d48e5f983e8cefce25000c0d9b",
+      "actual": "05ef5d59430de2d6cbea3bfdc818534e612ac6d48e5f983e8cefce25000c0d9b",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/repro_ours.sh",
+      "expected": "0eadb30493bcb3005b24915d6006c0337d61dc43c27073779e659a108b4c4abb",
+      "actual": "0eadb30493bcb3005b24915d6006c0337d61dc43c27073779e659a108b4c4abb",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/stale_trial/busy_queue/resume_r56_1028_0856.md",
+      "expected": "ce3eaefa10d323e7db321e15cd59c78c55fb3c899b4e1f75e871c9733bd75ad6",
+      "actual": "ce3eaefa10d323e7db321e15cd59c78c55fb3c899b4e1f75e871c9733bd75ad6",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/stale_trial/busy_queue/sbatch_calls.txt",
+      "expected": "567fa45b34e471cd4b32056e65f2afd305b46d0844876c4b84158ffc98a9c01b",
+      "actual": "567fa45b34e471cd4b32056e65f2afd305b46d0844876c4b84158ffc98a9c01b",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/stale_trial/busy_queue/stderr.log",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/stale_trial/busy_queue/stdout.log",
+      "expected": "b414d73238a2c42649338d237f3d9e3efb9a66fdf4608a00082995678151b397",
+      "actual": "b414d73238a2c42649338d237f3d9e3efb9a66fdf4608a00082995678151b397",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/stale_trial/queue_query_failure/resume_r56_1028_0856.md",
+      "expected": "278db7b6985ea7cf39b3ad634be8b89745956e18c96536e11ece3da20896a5bd",
+      "actual": "278db7b6985ea7cf39b3ad634be8b89745956e18c96536e11ece3da20896a5bd",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/stale_trial/queue_query_failure/sbatch_calls.txt",
+      "expected": "25806643272b6d51a69be97fcb6b6c43065003b78988a1126d819418d1c317fd",
+      "actual": "25806643272b6d51a69be97fcb6b6c43065003b78988a1126d819418d1c317fd",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/stale_trial/queue_query_failure/stderr.log",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/stale_trial/queue_query_failure/stdout.log",
+      "expected": "2e7fe8c1f22eb8aef9b9b3e3d35cad04c4a7390ca9f79c9269599b765e629a4a",
+      "actual": "2e7fe8c1f22eb8aef9b9b3e3d35cad04c4a7390ca9f79c9269599b765e629a4a",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/stale_trial/stale_trial_results.json",
+      "expected": "35167bab9c07a5eb469b472f4b176aa8bfc233188c55795f584eea17ef0dfcbe",
+      "actual": "35167bab9c07a5eb469b472f4b176aa8bfc233188c55795f584eea17ef0dfcbe",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/codex_review_kg50_resume_recheck_20261028.md",
+      "expected": "33aa05952cb07ac9b52ec774625c9af4be25e9a3e9bfd6d86f77a869239f4910",
+      "actual": "33aa05952cb07ac9b52ec774625c9af4be25e9a3e9bfd6d86f77a869239f4910",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/FINDINGS.md",
+      "expected": "ff1a712671345bc5a1ac4c00d206743a28347317c8f60343a0c0aba8ac5b1708",
+      "actual": "ff1a712671345bc5a1ac4c00d206743a28347317c8f60343a0c0aba8ac5b1708",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/after_settling_baseline.liggghts",
+      "expected": "df97e63580e29742de86ec3854f9154a59221bf3689c67240b7a2088bedb0ed3",
+      "actual": "df97e63580e29742de86ec3854f9154a59221bf3689c67240b7a2088bedb0ed3",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/after_settling_damp_mismatch.liggghts",
+      "expected": "d92aba9e3598ead195719983b4639d955e0293ccff6fdabacc5e090309cd8188",
+      "actual": "d92aba9e3598ead195719983b4639d955e0293ccff6fdabacc5e090309cd8188",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/after_settling_first_long_changed_300000.liggghts",
+      "expected": "64f272284589034363637ff290ce07375827ec42551875da15f004d73f00b9cf",
+      "actual": "64f272284589034363637ff290ce07375827ec42551875da15f004d73f00b9cf",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/baseline.liggghts",
+      "expected": "b73b508611c2f926a0681a8ffbec07a0e8efee85c48866e28b989cd648973d18",
+      "actual": "b73b508611c2f926a0681a8ffbec07a0e8efee85c48866e28b989cd648973d18",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/baseline_trial.liggghts",
+      "expected": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "actual": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/changed_timestep_control.liggghts",
+      "expected": "5a18c7610ae9b159786a335f1026c6a98d987fccf64cd9f048f6e83005399445",
+      "actual": "5a18c7610ae9b159786a335f1026c6a98d987fccf64cd9f048f6e83005399445",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/changed_timestep_control_trial.liggghts",
+      "expected": "8d58241657505205bb30a7e2c77fb3549ac52cfe9c8f81deb94d1d39a1a4aa91",
+      "actual": "8d58241657505205bb30a7e2c77fb3549ac52cfe9c8f81deb94d1d39a1a4aa91",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/delete_after_first_long.liggghts",
+      "expected": "04e8ab04b629a3cd631beb17411e69c38cbdd169db809dc4acacb33183241910",
+      "actual": "04e8ab04b629a3cd631beb17411e69c38cbdd169db809dc4acacb33183241910",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/density_after_first_long.liggghts",
+      "expected": "03c9e89ab8e0a831972f5252672f5a0cc65ea4dfe8948b1b714c83f1ce38b64a",
+      "actual": "03c9e89ab8e0a831972f5252672f5a0cc65ea4dfe8948b1b714c83f1ce38b64a",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/duplicate_loop_label.liggghts",
+      "expected": "a145c767bcb39da56211f860c3366b032f70989417128a5566eb417ef96af278",
+      "actual": "a145c767bcb39da56211f860c3366b032f70989417128a5566eb417ef96af278",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/duplicate_loop_label_trial.liggghts",
+      "expected": "ce39c020138ea7914aabeafe84d9fe30cf7ba854e8c452674a92c3912d78ee25",
+      "actual": "ce39c020138ea7914aabeafe84d9fe30cf7ba854e8c452674a92c3912d78ee25",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/duplicate_target_later.liggghts",
+      "expected": "dbcc3d94f9e00ad1bc63369a746c56a04f973b1565d792c67aa79ca3fb93f2e4",
+      "actual": "dbcc3d94f9e00ad1bc63369a746c56a04f973b1565d792c67aa79ca3fb93f2e4",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/first_run_every.liggghts",
+      "expected": "250a2a569b4fd6dd1c7db5cc283354611c13419214faae0010a3068bb1d51d1d",
+      "actual": "250a2a569b4fd6dd1c7db5cc283354611c13419214faae0010a3068bb1d51d1d",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/first_run_every_trial.liggghts",
+      "expected": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "actual": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/first_run_pre_no.liggghts",
+      "expected": "eb37014597b5e6fb70c63bbcbe9d3cf8a0e8ef356db0318ae29d4f88ad5de7fd",
+      "actual": "eb37014597b5e6fb70c63bbcbe9d3cf8a0e8ef356db0318ae29d4f88ad5de7fd",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/first_run_pre_no_trial.liggghts",
+      "expected": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "actual": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/first_run_upto_right.liggghts",
+      "expected": "1c2b8a67f4f302b15beeba4274b8f52fd0e1733e1157d1009b5ec51956643185",
+      "actual": "1c2b8a67f4f302b15beeba4274b8f52fd0e1733e1157d1009b5ec51956643185",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/first_run_upto_right_trial.liggghts",
+      "expected": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "actual": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/first_run_upto_wrong.liggghts",
+      "expected": "805f2178b12ee52c2151b007af130333791933bd3603376814e3bfa6dd9b9133",
+      "actual": "805f2178b12ee52c2151b007af130333791933bd3603376814e3bfa6dd9b9133",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/first_run_upto_wrong_trial.liggghts",
+      "expected": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "actual": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/fix_one_short.liggghts",
+      "expected": "b73b508611c2f926a0681a8ffbec07a0e8efee85c48866e28b989cd648973d18",
+      "actual": "b73b508611c2f926a0681a8ffbec07a0e8efee85c48866e28b989cd648973d18",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/fix_one_short_with_physics_mismatch.liggghts",
+      "expected": "de6fb5d2efd3bb8d18b54b61a784b98307270751dc4647c92b2c64376bc83524",
+      "actual": "de6fb5d2efd3bb8d18b54b61a784b98307270751dc4647c92b2c64376bc83524",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/fix_one_short_with_suffix_velocity.liggghts",
+      "expected": "fc7cd46b6de08a98e64d26e6365c2e5393b6d17a677471cfa9f5bd5777b5ccb7",
+      "actual": "fc7cd46b6de08a98e64d26e6365c2e5393b6d17a677471cfa9f5bd5777b5ccb7",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/fix_two_short.liggghts",
+      "expected": "8d68478f0225115186232c7cb02926c5109e6e9c2e376184c7422be6ca931209",
+      "actual": "8d68478f0225115186232c7cb02926c5109e6e9c2e376184c7422be6ca931209",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/include_after_first_long.liggghts",
+      "expected": "b500a8799cf3c332ffdb1fce770d0202d4efb9364d2589a15eb0041401d6a96f",
+      "actual": "b500a8799cf3c332ffdb1fce770d0202d4efb9364d2589a15eb0041401d6a96f",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/initial_results.json",
+      "expected": "06252c435310a4c9be249ac5fed6692a4cd4b46cfc0b3478a18c02d6d3a83874",
+      "actual": "06252c435310a4c9be249ac5fed6692a4cd4b46cfc0b3478a18c02d6d3a83874",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/loop_first_numeric_remaining2.liggghts",
+      "expected": "d6a354cf0c35a80ae3d280e91d82159408ccf3b9b55a8ab19371db839e290adb",
+      "actual": "d6a354cf0c35a80ae3d280e91d82159408ccf3b9b55a8ab19371db839e290adb",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/missing_c_zmax_compute.liggghts",
+      "expected": "b6c2b7c547ba4f8bb5a900aa95206b69c06d3d9c6ef8fed663114b25a8043cf8",
+      "actual": "b6c2b7c547ba4f8bb5a900aa95206b69c06d3d9c6ef8fed663114b25a8043cf8",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/missing_compute_control.liggghts",
+      "expected": "b6c2b7c547ba4f8bb5a900aa95206b69c06d3d9c6ef8fed663114b25a8043cf8",
+      "actual": "b6c2b7c547ba4f8bb5a900aa95206b69c06d3d9c6ef8fed663114b25a8043cf8",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/missing_compute_control_trial.liggghts",
+      "expected": "c9d8acd51d64ed67543cc5af3a2d78b4c8add4fc58d1bcd2cfcf23b4e2ecef43",
+      "actual": "c9d8acd51d64ed67543cc5af3a2d78b4c8add4fc58d1bcd2cfcf23b4e2ecef43",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/missing_target_variable.liggghts",
+      "expected": "c0e9fee94abd77cbc695923d9f672bfc301acaf1984ea32b00e292d6b1fefc7d",
+      "actual": "c0e9fee94abd77cbc695923d9f672bfc301acaf1984ea32b00e292d6b1fefc7d",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/missing_target_variable_trial.liggghts",
+      "expected": "1060729f5eaa8e8db9cfa1a762df84620feaecd8d3857fd99c340568172150cf",
+      "actual": "1060729f5eaa8e8db9cfa1a762df84620feaecd8d3857fd99c340568172150cf",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/more_results.json",
+      "expected": "93aee51bc81b0bbdab07816ce330a054bed2cda92e68834d650e53a77da8773b",
+      "actual": "93aee51bc81b0bbdab07816ce330a054bed2cda92e68834d650e53a77da8773b",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/pinned_embedded_cli.py",
+      "expected": "a0237d0272983c08ef8384126580db9ef30bef79f58a7a6770308f15e14b8336",
+      "actual": "a0237d0272983c08ef8384126580db9ef30bef79f58a7a6770308f15e14b8336",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/plate_pse_r075_a_r30.stl",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/rename_read_restart.liggghts",
+      "expected": "605a8795cc97ff3722a0eb6bd8155ded55439e230ce362aaf40a56bd81e60044",
+      "actual": "605a8795cc97ff3722a0eb6bd8155ded55439e230ce362aaf40a56bd81e60044",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/reorder_velocity_before_restart.liggghts",
+      "expected": "4bb8a65c2bc884dbfbbdb892d0abd4b40f3befc4ad9c46317cf04260bf2395cf",
+      "actual": "4bb8a65c2bc884dbfbbdb892d0abd4b40f3befc4ad9c46317cf04260bf2395cf",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/reproduce_deck.py",
+      "expected": "748b83f84f5edffc6fbe1f0b12d0bfbf1efd300c80bda24d1d49b94e23e3d044",
+      "actual": "748b83f84f5edffc6fbe1f0b12d0bfbf1efd300c80bda24d1d49b94e23e3d044",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/results.json",
+      "expected": "deaa5150b3ae1d26e80ad0933943eecae206a65e59dbee8977aaf72e2b3f41b6",
+      "actual": "deaa5150b3ae1d26e80ad0933943eecae206a65e59dbee8977aaf72e2b3f41b6",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/run_every_action.liggghts",
+      "expected": "250a2a569b4fd6dd1c7db5cc283354611c13419214faae0010a3068bb1d51d1d",
+      "actual": "250a2a569b4fd6dd1c7db5cc283354611c13419214faae0010a3068bb1d51d1d",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/run_post_no.liggghts",
+      "expected": "ae30f08d23da8e285a60ed951f5915ae83fc20f9eb8a06f04e6344b538c87579",
+      "actual": "ae30f08d23da8e285a60ed951f5915ae83fc20f9eb8a06f04e6344b538c87579",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/run_pre_no.liggghts",
+      "expected": "eb37014597b5e6fb70c63bbcbe9d3cf8a0e8ef356db0318ae29d4f88ad5de7fd",
+      "actual": "eb37014597b5e6fb70c63bbcbe9d3cf8a0e8ef356db0318ae29d4f88ad5de7fd",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/run_upto_same_end.liggghts",
+      "expected": "1c2b8a67f4f302b15beeba4274b8f52fd0e1733e1157d1009b5ec51956643185",
+      "actual": "1c2b8a67f4f302b15beeba4274b8f52fd0e1733e1157d1009b5ec51956643185",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/strip_continuation_comment/input_test.liggghts",
+      "expected": "ec2b92211fb90cde0a56b0c707768a6e945c42998b1546c6fb89499bc17959e9",
+      "actual": "ec2b92211fb90cde0a56b0c707768a6e945c42998b1546c6fb89499bc17959e9",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/strip_safe/input_test.liggghts",
+      "expected": "6f989c155550d63cbfa78076aa10092b8a4b66dc7beecab6dd1ecb906883a2cd",
+      "actual": "6f989c155550d63cbfa78076aa10092b8a4b66dc7beecab6dd1ecb906883a2cd",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/suffix_delete.liggghts",
+      "expected": "04e8ab04b629a3cd631beb17411e69c38cbdd169db809dc4acacb33183241910",
+      "actual": "04e8ab04b629a3cd631beb17411e69c38cbdd169db809dc4acacb33183241910",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/suffix_delete_trial.liggghts",
+      "expected": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "actual": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/suffix_density.liggghts",
+      "expected": "03c9e89ab8e0a831972f5252672f5a0cc65ea4dfe8948b1b714c83f1ce38b64a",
+      "actual": "03c9e89ab8e0a831972f5252672f5a0cc65ea4dfe8948b1b714c83f1ce38b64a",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/suffix_density_trial.liggghts",
+      "expected": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "actual": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/suffix_include.liggghts",
+      "expected": "b500a8799cf3c332ffdb1fce770d0202d4efb9364d2589a15eb0041401d6a96f",
+      "actual": "b500a8799cf3c332ffdb1fce770d0202d4efb9364d2589a15eb0041401d6a96f",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/suffix_include_trial.liggghts",
+      "expected": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "actual": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/suffix_velocity.liggghts",
+      "expected": "fc7cd46b6de08a98e64d26e6365c2e5393b6d17a677471cfa9f5bd5777b5ccb7",
+      "actual": "fc7cd46b6de08a98e64d26e6365c2e5393b6d17a677471cfa9f5bd5777b5ccb7",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/suffix_velocity_trial.liggghts",
+      "expected": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "actual": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/deck/velocity_after_first_long.liggghts",
+      "expected": "fc7cd46b6de08a98e64d26e6365c2e5393b6d17a677471cfa9f5bd5777b5ccb7",
+      "actual": "fc7cd46b6de08a98e64d26e6365c2e5393b6d17a677471cfa9f5bd5777b5ccb7",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/fakebin/sacct",
+      "expected": "d4f93da518737f7e42c744bd3abf3b2d9dc3628c2bcfbc01eb7aae1ea5fde8df",
+      "actual": "d4f93da518737f7e42c744bd3abf3b2d9dc3628c2bcfbc01eb7aae1ea5fde8df",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/fakebin/sbatch",
+      "expected": "add46d21f475221a1df12359cd97d6f9b6ddd781319d24dd33b75a6c4bd4f5a4",
+      "actual": "add46d21f475221a1df12359cd97d6f9b6ddd781319d24dd33b75a6c4bd4f5a4",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/fakebin/sleep",
+      "expected": "306c6ca7407560340797866e077e053627ad409277d1b9da58106fce4cf717cb",
+      "actual": "306c6ca7407560340797866e077e053627ad409277d1b9da58106fce4cf717cb",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/fakebin/squeue",
+      "expected": "35c0a499890cf7663b7c265f6cdfe705fca0684efde8b2c67c5de36efee1b21e",
+      "actual": "35c0a499890cf7663b7c265f6cdfe705fca0684efde8b2c67c5de36efee1b21e",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/kg50_d07_b40.ins1/log.liggghts",
+      "expected": "a8e7dbab38786d6889807a57197fd679c016e8135342446442c516befc52cc42",
+      "actual": "a8e7dbab38786d6889807a57197fd679c016e8135342446442c516befc52cc42",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/kg50_d07_b40/deckcheck_r56.txt",
+      "expected": "3388117c683a8e8caf2138cb54f2e2479b6c2449c6231b0acba84da911e5a542",
+      "actual": "3388117c683a8e8caf2138cb54f2e2479b6c2449c6231b0acba84da911e5a542",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/kg50_d07_b40/fixrun_r56.txt",
+      "expected": "3388117c683a8e8caf2138cb54f2e2479b6c2449c6231b0acba84da911e5a542",
+      "actual": "3388117c683a8e8caf2138cb54f2e2479b6c2449c6231b0acba84da911e5a542",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/kg50_d07_b40/job_r56t.txt",
+      "expected": "591ec59a18f0383766a38e62f3abd91829865037a844f0b96e407d03c35f70a7",
+      "actual": "591ec59a18f0383766a38e62f3abd91829865037a844f0b96e407d03c35f70a7",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/kg50_d07_b40/log.liggghts.ins1",
+      "expected": "a8e7dbab38786d6889807a57197fd679c016e8135342446442c516befc52cc42",
+      "actual": "a8e7dbab38786d6889807a57197fd679c016e8135342446442c516befc52cc42",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/kg50_d07_b40/mode_r56.txt",
+      "expected": "efbea9e1b97f7cf50d5691c75ef76d162e3c05ba72f8f4fefcb5647fb4d23753",
+      "actual": "efbea9e1b97f7cf50d5691c75ef76d162e3c05ba72f8f4fefcb5647fb4d23753",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/kg50_d07_b40/run_kg50_d07_b40_r56.sh",
+      "expected": "72239792f28680795fe4e06526ce2a283a1420647c624b186a728ad490132956",
+      "actual": "72239792f28680795fe4e06526ce2a283a1420647c624b186a728ad490132956",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/kg50_d07_b40/tp_r56.txt",
+      "expected": "3388117c683a8e8caf2138cb54f2e2479b6c2449c6231b0acba84da911e5a542",
+      "actual": "3388117c683a8e8caf2138cb54f2e2479b6c2449c6231b0acba84da911e5a542",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/logs/output_kg50_d07_b40_r56t_7001.out",
+      "expected": "12d578a5018a294f7c33f1cb471684bca055f16991afe1ef3e3afe28deed2795",
+      "actual": "12d578a5018a294f7c33f1cb471684bca055f16991afe1ef3e3afe28deed2795",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/run_probe.sh",
+      "expected": "4d82b52616a7232bbb538c766da643bf01cd19be2295ae9edb6345a0f7552a1c",
+      "actual": "4d82b52616a7232bbb538c766da643bf01cd19be2295ae9edb6345a0f7552a1c",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/sbatch_calls.txt",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/stderr.log",
+      "expected": "b308fe1319458241d71063c38987f4b41b6ce74ffab1fab5d8f8806760e808f2",
+      "actual": "b308fe1319458241d71063c38987f4b41b6ce74ffab1fab5d8f8806760e808f2",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/busy_queue/stdout.log",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/continued_first_long_run.liggghts",
+      "expected": "c58022ca75dd35801c430e13ed0338c8ae5d0749a6afd33f4b2366b6b4ff84e2",
+      "actual": "c58022ca75dd35801c430e13ed0338c8ae5d0749a6afd33f4b2366b6b4ff84e2",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/continued_first_long_run_trial.liggghts",
+      "expected": "9a30380c9c3ac68ffdf44fc680a44a80ba0352e89f0fcc8791fcc89b3cbfe9e7",
+      "actual": "9a30380c9c3ac68ffdf44fc680a44a80ba0352e89f0fcc8791fcc89b3cbfe9e7",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/exact_embedded_gate.py",
+      "expected": "a0237d0272983c08ef8384126580db9ef30bef79f58a7a6770308f15e14b8336",
+      "actual": "a0237d0272983c08ef8384126580db9ef30bef79f58a7a6770308f15e14b8336",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/findings.json",
+      "expected": "28b9745a069758e97a77d6fd922fe18ad05b912b55e04aa08696ff690bbb1980",
+      "actual": "28b9745a069758e97a77d6fd922fe18ad05b912b55e04aa08696ff690bbb1980",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/note.md",
+      "expected": "bfb80365c2293db2e56d7c68afdbe7eda6679a7a9cbec9f8c328f65b5dfb41af",
+      "actual": "bfb80365c2293db2e56d7c68afdbe7eda6679a7a9cbec9f8c328f65b5dfb41af",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/plain.liggghts",
+      "expected": "c1e565f7ce8e36ec54fe0f6f3f6d9c2887f3af41537b9303d25d7b7804e0e3c0",
+      "actual": "c1e565f7ce8e36ec54fe0f6f3f6d9c2887f3af41537b9303d25d7b7804e0e3c0",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/plain_trial.liggghts",
+      "expected": "744d92baa8c5aa0e4036a78e99b23ba367e7fc4015a2539242cb051526afa754",
+      "actual": "744d92baa8c5aa0e4036a78e99b23ba367e7fc4015a2539242cb051526afa754",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/probe_log_functions_NOT_EXECUTED.sh",
+      "expected": "42fbb099e4ef6e2305170b2b83495012dce96b7757824328c99180df3b8fe407",
+      "actual": "42fbb099e4ef6e2305170b2b83495012dce96b7757824328c99180df3b8fe407",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/probe_stale_trial.py",
+      "expected": "0b373c924af0baf13b26bdd62cc6b983e9f2144328e2deaf4d8744590a15dda5",
+      "actual": "0b373c924af0baf13b26bdd62cc6b983e9f2144328e2deaf4d8744590a15dda5",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/probe_trial_steps.py",
+      "expected": "6a70247d68ae9d46ae6470a8bede331e9323b55db7d6ca41e3ea03e7793fd073",
+      "actual": "6a70247d68ae9d46ae6470a8bede331e9323b55db7d6ca41e3ea03e7793fd073",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/fakebin/sacct",
+      "expected": "d4f93da518737f7e42c744bd3abf3b2d9dc3628c2bcfbc01eb7aae1ea5fde8df",
+      "actual": "d4f93da518737f7e42c744bd3abf3b2d9dc3628c2bcfbc01eb7aae1ea5fde8df",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/fakebin/sbatch",
+      "expected": "40f1deab980f2836637102e62ce4769be3af30a3f58c1fd09499c6eb7025d1ef",
+      "actual": "40f1deab980f2836637102e62ce4769be3af30a3f58c1fd09499c6eb7025d1ef",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/fakebin/sleep",
+      "expected": "306c6ca7407560340797866e077e053627ad409277d1b9da58106fce4cf717cb",
+      "actual": "306c6ca7407560340797866e077e053627ad409277d1b9da58106fce4cf717cb",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/fakebin/squeue",
+      "expected": "918631fce32da695bf7bea7ad0273edbec965bb9b5966c80c0deb4b084feaeb7",
+      "actual": "918631fce32da695bf7bea7ad0273edbec965bb9b5966c80c0deb4b084feaeb7",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/kg50_d07_b40.ins1/log.liggghts",
+      "expected": "a8e7dbab38786d6889807a57197fd679c016e8135342446442c516befc52cc42",
+      "actual": "a8e7dbab38786d6889807a57197fd679c016e8135342446442c516befc52cc42",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/kg50_d07_b40/deckcheck_r56.txt",
+      "expected": "3388117c683a8e8caf2138cb54f2e2479b6c2449c6231b0acba84da911e5a542",
+      "actual": "3388117c683a8e8caf2138cb54f2e2479b6c2449c6231b0acba84da911e5a542",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/kg50_d07_b40/fixrun_r56.txt",
+      "expected": "3388117c683a8e8caf2138cb54f2e2479b6c2449c6231b0acba84da911e5a542",
+      "actual": "3388117c683a8e8caf2138cb54f2e2479b6c2449c6231b0acba84da911e5a542",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/kg50_d07_b40/job_r56t.txt",
+      "expected": "591ec59a18f0383766a38e62f3abd91829865037a844f0b96e407d03c35f70a7",
+      "actual": "591ec59a18f0383766a38e62f3abd91829865037a844f0b96e407d03c35f70a7",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/kg50_d07_b40/log.liggghts.ins1",
+      "expected": "a8e7dbab38786d6889807a57197fd679c016e8135342446442c516befc52cc42",
+      "actual": "a8e7dbab38786d6889807a57197fd679c016e8135342446442c516befc52cc42",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/kg50_d07_b40/mode_r56.txt",
+      "expected": "efbea9e1b97f7cf50d5691c75ef76d162e3c05ba72f8f4fefcb5647fb4d23753",
+      "actual": "efbea9e1b97f7cf50d5691c75ef76d162e3c05ba72f8f4fefcb5647fb4d23753",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/kg50_d07_b40/run_kg50_d07_b40_r56.sh",
+      "expected": "72239792f28680795fe4e06526ce2a283a1420647c624b186a728ad490132956",
+      "actual": "72239792f28680795fe4e06526ce2a283a1420647c624b186a728ad490132956",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/kg50_d07_b40/tp_r56.txt",
+      "expected": "3388117c683a8e8caf2138cb54f2e2479b6c2449c6231b0acba84da911e5a542",
+      "actual": "3388117c683a8e8caf2138cb54f2e2479b6c2449c6231b0acba84da911e5a542",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/logs/output_kg50_d07_b40_r56t_7001.out",
+      "expected": "12d578a5018a294f7c33f1cb471684bca055f16991afe1ef3e3afe28deed2795",
+      "actual": "12d578a5018a294f7c33f1cb471684bca055f16991afe1ef3e3afe28deed2795",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/run_probe.sh",
+      "expected": "7c4025f927588c5606561a728e6cb0b8bbf4de8c14f2e18d3c10963c4c7282a1",
+      "actual": "7c4025f927588c5606561a728e6cb0b8bbf4de8c14f2e18d3c10963c4c7282a1",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/sbatch_calls.txt",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/stderr.log",
+      "expected": "24b7292ecd688c571a5750750af05f8ff903dc711bcea0baee151c6bf2ec23b7",
+      "actual": "24b7292ecd688c571a5750750af05f8ff903dc711bcea0baee151c6bf2ec23b7",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/queue_query_failure/stdout.log",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/stale_trial_results.json",
+      "expected": "0a1b8aa97b45d0bb90202cc9e0db40b3312a60e68130f60d76d81c5d2b1f1d9a",
+      "actual": "0a1b8aa97b45d0bb90202cc9e0db40b3312a60e68130f60d76d81c5d2b1f1d9a",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scheduler/trial_steps_results.json",
+      "expected": "17dcf951c6270a740bfc37165c86fd4cc3f6ccbafc00705ae2a95dd546ffe92a",
+      "actual": "17dcf951c6270a740bfc37165c86fd4cc3f6ccbafc00705ae2a95dd546ffe92a",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scope/peer_every_result.json",
+      "expected": "630ead285eee6bd44e1e3f48957e0fdfa8aff5f97ebddcf48928382a396af484",
+      "actual": "630ead285eee6bd44e1e3f48957e0fdfa8aff5f97ebddcf48928382a396af484",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scope/peer_main.liggghts",
+      "expected": "6f6fa71e7cef323526de4595a9d961b3d00e4a319542a6734e0ad012e47f1b1a",
+      "actual": "6f6fa71e7cef323526de4595a9d961b3d00e4a319542a6734e0ad012e47f1b1a",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scope/peer_note.md",
+      "expected": "4c78b1e652aa6235d87463ce7aa493ca9968bcd3e87ae81437b04280f1938920",
+      "actual": "4c78b1e652aa6235d87463ce7aa493ca9968bcd3e87ae81437b04280f1938920",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scope/peer_resume.liggghts",
+      "expected": "3db7b5143a4c27c478933c2cbef76eb6b8c421b9035e5cc3957a547424fed409",
+      "actual": "3db7b5143a4c27c478933c2cbef76eb6b8c421b9035e5cc3957a547424fed409",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scope/peer_trial.liggghts",
+      "expected": "8d8e0a25d3aeada1c84a4f9f54dfe9c2be130f115afd5ee213492f9314d5bbac",
+      "actual": "8d8e0a25d3aeada1c84a4f9f54dfe9c2be130f115afd5ee213492f9314d5bbac",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scope/probe_state_observability.py",
+      "expected": "5f167649fd873fb974cea9168143129edbb8d07dc5efdd6018c59e3373da8d93",
+      "actual": "5f167649fd873fb974cea9168143129edbb8d07dc5efdd6018c59e3373da8d93",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scope/scope_review.md",
+      "expected": "c3a985a9c98b5759c956ea47a56c443173f8135a1f35093aa533b80ed720aa43",
+      "actual": "c3a985a9c98b5759c956ea47a56c443173f8135a1f35093aa533b80ed720aa43",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/independent/scope/state_observability.json",
+      "expected": "77c660b49f62473495bba9e8c333a485673a6f57744fe21c7fb3e021b73de9d7",
+      "actual": "77c660b49f62473495bba9e8c333a485673a6f57744fe21c7fb3e021b73de9d7",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/intake.json",
+      "expected": "c9d2c453f6c806eb1c3848bb1bd2ff572e6955a2c218fe8020982f3326f594c4",
+      "actual": "c9d2c453f6c806eb1c3848bb1bd2ff572e6955a2c218fe8020982f3326f594c4",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/received_codex_kg50_resume_recheck_20261028.zip",
+      "expected": "dcfb42e09316cd0f90fc768dabc23539dd3238b840f7321250d926d362f21c9c",
+      "actual": "dcfb42e09316cd0f90fc768dabc23539dd3238b840f7321250d926d362f21c9c",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_resume_recheck_20261028/remote_identity.json",
+      "expected": "ad630fec7d2a562c37115de74a1700482725de443c9d0f222266ec5d89e33e09",
+      "actual": "ad630fec7d2a562c37115de74a1700482725de443c9d0f222266ec5d89e33e09",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_kg50_y4_draft2_review_20261101/codex_review_kg50_y4_draft2_20261101.md",
+      "expected": "0ffa8b52ee6b75466f5e673197cbaa0dc31725f54ee2f41cdd877615a705785e",
+      "actual": "0ffa8b52ee6b75466f5e673197cbaa0dc31725f54ee2f41cdd877615a705785e",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/kg50_q3b_preattack_20261103/PREATTACK.md",
+      "expected": "47f65415fa641c3469d65056f4c2d493f8fa4a7f03f7f5f288131f1ac5d359a4",
+      "actual": "47f65415fa641c3469d65056f4c2d493f8fa4a7f03f7f5f288131f1ac5d359a4",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/kg50_q3b_preattack_20261103/mut.py",
+      "expected": "3c388cc684ffc4e9f99002fee73a8deb903509b91ca5ce673499968792a1cff4",
+      "actual": "3c388cc684ffc4e9f99002fee73a8deb903509b91ca5ce673499968792a1cff4",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/kg50_q3b_preattack_20261103/mut_out.txt",
+      "expected": "c57d32a08e9aa7dc97d13e83401a3309bea88de42cc86362cbc72f30eb228475",
+      "actual": "c57d32a08e9aa7dc97d13e83401a3309bea88de42cc86362cbc72f30eb228475",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/kg50_q3b_preattack_20261103/probes.py",
+      "expected": "297747ff17e56db9dacb6b86e1acc411d48fe970df63eb26604ca41a4a8dcf36",
+      "actual": "297747ff17e56db9dacb6b86e1acc411d48fe970df63eb26604ca41a4a8dcf36",
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/kg50_q3b_preattack_20261103/probes_out.txt",
+      "expected": "b19af302d288dcc6fda100bdce33b7d30d5e46c798c639e50d77f2f19e3474eb",
+      "actual": "b19af302d288dcc6fda100bdce33b7d30d5e46c798c639e50d77f2f19e3474eb",
+      "match": true
+    },
+    {
+      "path": "repo/scripts/resume_ckpt.sh",
+      "expected": "66006239ec58043f963fa885f9db545c63614d279bfb6cac1665a2eae9884c6d",
+      "actual": "66006239ec58043f963fa885f9db545c63614d279bfb6cac1665a2eae9884c6d",
+      "match": true
+    },
+    {
+      "path": "repo/scripts/test_resume_ckpt.py",
+      "expected": "a7c50120684cc24552f584e6072b9ef315e52b8ac3991fa04bde122dab8358c5",
+      "actual": "a7c50120684cc24552f584e6072b9ef315e52b8ac3991fa04bde122dab8358c5",
+      "match": true
+    }
+  ],
+  "prior_snapshot_comparison": [
+    {
+      "path": "AGENTS.md",
+      "in_zip": false,
+      "identical": false
+    },
+    {
+      "path": "docs/resume_ckpt_procedure_20260927.md",
+      "in_zip": true,
+      "identical": true
+    },
+    {
+      "path": "scripts/resume_ckpt.sh",
+      "in_zip": true,
+      "identical": true
+    },
+    {
+      "path": "scripts/test_resume_ckpt.py",
+      "in_zip": true,
+      "identical": true
+    },
+    {
+      "path": "docs/50kg/codex_kg50_d07_compress_resume_request_20261103.md",
+      "in_zip": true,
+      "identical": false
+    },
+    {
+      "path": "docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+      "in_zip": true,
+      "identical": true
+    },
+    {
+      "path": "docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40_insert.liggghts",
+      "in_zip": true,
+      "identical": true
+    },
+    {
+      "path": "docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/input_kg50_d07_b50.liggghts",
+      "in_zip": true,
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/kg50_q3b_preattack_20261103/PREATTACK.md",
+      "in_zip": true,
+      "identical": true
+    }
+  ]
+}

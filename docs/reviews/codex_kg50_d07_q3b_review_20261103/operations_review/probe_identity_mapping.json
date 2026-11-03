@@ -1,0 +1,56 @@
+{
+  "kind": "synthetic protocol probe; not actual -T evidence",
+  "source_sha256": "66006239ec58043f963fa885f9db545c63614d279bfb6cac1665a2eae9884c6d",
+  "rendered": {
+    "main": {
+      "expected_deck_path": "/synthetic/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts",
+      "expected_deck_sha256": "322aeec7870695760c160bacef5c87ef3f55c6ae7b91e8721399eab1354fb5b1",
+      "receipt_row": 1,
+      "identity_output_template": "echo \"LMP_IDENTITY (10-30 KG50R-F02): lmp_mpi=$(command -v lmp_mpi || echo none) sha256=$(sha256sum 2>/dev/null < \"$(command -v lmp_mpi)\" | cut -c1-64) deck=/synthetic/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts sha256=$ds checkpoint=/synthetic/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_1000000.bin sha256=$ks\"",
+      "expected_hash_guard": "[ \"$ds\" = \"322aeec7870695760c160bacef5c87ef3f55c6ae7b91e8721399eab1354fb5b1\" ] && [ \"$ks\" = \"d94f152912894b080bd7a377d2c1c1cc535bd5d1931b0082f3b668ab608a8a2e\" ] || { echo \"LMP_IDENTITY_MISMATCH (10-30 KG50R-F02): deck /synthetic/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts sha256 $ds (checked 322aeec7870695760c160bacef5c87ef3f55c6ae7b91e8721399eab1354fb5b1) checkpoint /synthetic/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_1000000.bin sha256 $ks (checked d94f152912894b080bd7a377d2c1c1cc535bd5d1931b0082f3b668ab608a8a2e) - mpirun not started\"; exit 1; }"
+    },
+    "trial": {
+      "expected_deck_path": "/synthetic/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts",
+      "expected_deck_sha256": "862482e630403be5fd74dee8bc4d8f306342f3dfa7ab5c31cc9a6d735f8e2809",
+      "receipt_row": 3,
+      "identity_output_template": "echo \"LMP_IDENTITY (10-30 KG50R-F02): lmp_mpi=$(command -v lmp_mpi || echo none) sha256=$(sha256sum 2>/dev/null < \"$(command -v lmp_mpi)\" | cut -c1-64) deck=/synthetic/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts sha256=$ds checkpoint=/synthetic/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_1000000.bin sha256=$ks\"",
+      "expected_hash_guard": "[ \"$ds\" = \"862482e630403be5fd74dee8bc4d8f306342f3dfa7ab5c31cc9a6d735f8e2809\" ] && [ \"$ks\" = \"d94f152912894b080bd7a377d2c1c1cc535bd5d1931b0082f3b668ab608a8a2e\" ] || { echo \"LMP_IDENTITY_MISMATCH (10-30 KG50R-F02): deck /synthetic/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts sha256 $ds (checked 862482e630403be5fd74dee8bc4d8f306342f3dfa7ab5c31cc9a6d735f8e2809) checkpoint /synthetic/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_1000000.bin sha256 $ks (checked d94f152912894b080bd7a377d2c1c1cc535bd5d1931b0082f3b668ab608a8a2e) - mpirun not started\"; exit 1; }"
+    }
+  },
+  "actual_fixture_prefix_runs": [
+    1,
+    200000,
+    1,
+    200000
+  ],
+  "entry": 400002,
+  "period": 5000,
+  "phase_samples": [
+    {
+      "S0": 1000000,
+      "phase": 4998,
+      "residual": 2,
+      "next_decision": 1000002
+    },
+    {
+      "S0": 1200000,
+      "phase": 4998,
+      "residual": 2,
+      "next_decision": 1200002
+    },
+    {
+      "S0": 1400000,
+      "phase": 4998,
+      "residual": 2,
+      "next_decision": 1400002
+    },
+    {
+      "S0": 2000000,
+      "phase": 4998,
+      "residual": 2,
+      "next_decision": 2000002
+    }
+  ],
+  "literal_main_vs_trial_identity_equal": false,
+  "assertions": "PASS"
+}

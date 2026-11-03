@@ -1,0 +1,41 @@
+Final-pin addendum — 2026-11-03
+Final ZIP pin: 4d2b8fc42dc4d65845570c1bf4de5a67924ad311
+Location: C:/Users/Administrator/Documents/Codex/d07q3b_1103/received_zip
+This addendum supersedes the earlier report's statements that actual -T results were wholly absent. It does not change the fixed-source force/order analysis.
+
+Decision on one-case B
+
+Accept the final request's B disposition for kg50_d07_b50 / job 335457 / restart_compress_1000000.bin within the specified fresh-test and manual-identity conditions. The supplied real-trial transcript now provides the empirical short-window support that the initial candidate lacked. There is no identified B-specific reason to demand every original simulation file or rerun the simulation merely for this review.
+
+The acceptance basis is combined evidence, not any single item:
+1. Independently compared initial and final resume_ckpt.sh, test_resume_ckpt.py and reference b50 MAIN: all byte-identical. Tool SHA256 remains 66006239ec58043f963fa885f9db545c63614d279bfb6cac1665a2eae9884c6d. The prior pinned-source analysis therefore carries over.
+2. Final request L52 narrows the claim to particle-force-changing fixes gravity, viscous and wall/gran. This resolves the earlier overbroad suggestion that mesh/integrator/motion all operate as additive post_force fixes.
+3. t_output_grep.txt L4 reports job 337078 COMPLETED / 0:0 / 00:03:53; L11–13 reports expected step 1002000, final run 1998 and matching trial-deck identity; L15–22 reports G1, G2 and G3 passing and no main submission.
+4. The visible step-1000002 pressures are far below the 0.30 threshold, so the small observed difference cannot alter this particular decision. This says nothing about later near-threshold decisions.
+
+Reported observation versus independent remeasurement
+
+- G1, t_output_grep.txt L15–17: the operator-pasted tool output reports step-1000000 atoms 488285 and KE 3.3619779e-08 matching. I read that report; I did not independently parse the original full log.
+- G2, L18: the tool reports atom_1000000.liggghts and mesh_1000000.stl equal. The atom and mesh payloads are not in this evidence directory. I did not independently compare their bytes or content.
+- G3, L19–21: the tool reports the comparison interval within 5%. The visible example is step 1000002, with pressure 0.00011997834 -> 0.00011998104 and KE 3.3622402e-08 -> 3.364381e-08.
+  Independently recomputed from these pasted decimal values:
+  pressure relative difference = 2.250406198318083e-5 (0.0022504062%)
+  KE relative difference = 6.367183403494394e-4 (0.0636718340%)
+  Both are below 5%. This arithmetic checks the shown pair, not every omitted G3 row.
+- The final receipt lists main-deck SHA256 12873efcf4829de6f6cb036099782b1c2e2a11e8f9df44bb2b6720a5c1d6ccf5 and trial-deck SHA256 4110ee76810b85f0f64ce88562bc148b119b86bee9be2dfdbbac529478c8ca2a. The actual deck payloads are absent, so their exact preparation inventory/order was not independently re-read. Successful passage through the intended pinned workflow supports that structure as an inference, combined with the previously inspected reference and checker.
+- A hash receipt binds an identity once the artifact is supplied or observed; it does not by itself reveal deck contents. This remains a verification limit, not an identified contradictory command or B-specific defect.
+- README L10 and request L45 openly say the old trial's tool identity line is absent. Current production -A/-H cannot retroactively attest that old tool invocation. This is a provenance question for the parent review; do not quietly count the missing line as observed. The final conditions also require a fresh candidate-approved trial and matching manually checked receipts before relying on the production run.
+
+Interpretation to preserve
+
+The exact-state source argument still says gravity crossing the top-wall post_force summation does not add a noncommuting physical force law in this deck. wall/gran mesh reaction is formed from new f minus old f, so it reads accumulated f and may experience order-dependent cancellation. The final narrower list is acceptable without claiming that no fix ever reads f.
+
+The measured differences in this restart trial must NOT be attributed solely to amendment 5b. They include the whole restart/setup/integration path. The evidence supports "the reported actual trial stayed inside the configured checks"; it does not establish a universal roundoff bound, bitwise physical continuation, long-term trajectory identity, or physical qualification of damping/contact settings.
+
+No new demand for original all-files transfer is necessary for B acceptance. If the intended claim were upgraded to independently reproduced equality of the actual generated deck and dump state, those specific payloads would be necessary. That stronger claim is not needed for this scoped review.
+
+A–D impact:
+A and D still rely on the actual source-log phase anchor; B can now be accepted on the above bounded evidence; C remains a generic test-coverage gap without a demonstrated one-case impact. Future checkpoint acceptance still needs its own fresh -T and source-run phase evidence; this successful 337078 window is not an unconditional future-run GO.
+
+No further commands were run beyond local reads/hash comparisons and arithmetic. No DEM, MPI, SLURM, WSL, Bash, source or Git mutation.
+

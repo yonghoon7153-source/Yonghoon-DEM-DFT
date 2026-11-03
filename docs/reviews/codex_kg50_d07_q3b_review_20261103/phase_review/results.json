@@ -1,0 +1,975 @@
+{
+  "source_kind": "actual pinned b50 main + synthetic r075-style helper output",
+  "pressure_note": "Branch inputs are symbolic code-pressure values: 0.30 represents 300 MPa at SCALE_STRESS=1e9 Pa. Quoted deck print strings are preserved verbatim, including their original MPa label.",
+  "records": [
+    {
+      "name": "source identity",
+      "ok": true,
+      "source_kind": "actual pinned b50 main + synthetic r075-style helper output",
+      "sha256": "66006239ec58043f963fa885f9db545c63614d279bfb6cac1665a2eae9884c6d"
+    },
+    {
+      "name": "actual-case arithmetic",
+      "ok": true,
+      "result": {
+        "il": 108,
+        "im": 109,
+        "ic": 112,
+        "N": 5000,
+        "E": 400002,
+        "every": 200000,
+        "p": 4998,
+        "r": 2,
+        "X": "loop_press",
+        "skip": "q3b_done_loop_press",
+        "body": [
+          "variable current_press equal \"abs(f_top_mesh[3]) / 0.0025 / 1000000\"",
+          "print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"",
+          "if \"${current_press} < ${target_press}\" then \"jump SELF loop_press\""
+        ],
+        "pre": [
+          "run 2",
+          "variable current_press equal \"abs(f_top_mesh[3]) / 0.0025 / 1000000\"",
+          "print \"Current Pressure: ${current_press} MPa (Target: ${target_press})\"",
+          "if \"${current_press} < ${target_press}\" then \"jump SELF loop_press\"",
+          "jump SELF q3b_done_loop_press"
+        ]
+      }
+    },
+    {
+      "name": "rewrite then complete static checker",
+      "ok": true,
+      "rc": 0,
+      "output": "  · 준비 구간 순서 고침 (11-02 Q3 (나) · ibb 실제 -T 거부 · 1저자 — 순서 규칙 그대로 · 판정 = 뒤 정적 대조): 명령 46 개 중 5 개 자리 바꿈 = 본 덱 체크포인트 앞 같은 명령 (정적 대조 규칙 — 판 메시 file 이름 · mkdir -p) 의 마지막 자리 순 (안정 정렬 · 같은 명령 없는 0 개 = 제자리): [fix top_mesh all mesh/surface/stress file plate_kg50_d07_b50.stl type 1 scale 1.0 reference_point 0 0 0] → 본 덱 200 줄 자리 · [fix zwall_top all wall/gran model hooke/hysteresis tangential history rolling_friction cdt mesh n_meshes 1 meshes top_mesh] → 본 덱 201 줄 자리 · [dump dmp_mesh all mesh/stl 5000 post_kg50_d07_b50/mesh_*.stl top_mesh] → 본 덱 203 줄 자리 · [fix gravi all gravity 9.81 vector 0.0 0.0 -1.0] → 본 덱 206 줄 자리 · [fix damp all viscous 0.5] → 본 덱 208 줄 자리\n  · 압축 루프 재개 준비 (Q3 (나) · KG50R-01): 체크포인트 step 1000000 · 루프 진입 400002 (루프 앞 run 합) · 판정 400002 + 5000 k · 위상 4998 → [run 2] + 루프 몸 3 개 (끝 if 까지) + [jump SELF q3b_done_loop_press] 를 [label loop_press] 앞 (원 줄 158) 에 · [label q3b_done_loop_press] 를 루프 끝 if 뒤 (원 줄 162) 에 · 다음 판정 1000002 · 다시 대조 문제 0 (판정 = 뒤 정적 대조)\n",
+      "problems": []
+    },
+    {
+      "name": "main branch below then below then equal",
+      "ok": true,
+      "events": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.1,
+          true
+        ],
+        [
+          "jump",
+          "loop_press",
+          1000002
+        ],
+        [
+          "run_end",
+          1005002,
+          5000
+        ],
+        [
+          "judgment",
+          1005002,
+          0.299,
+          true
+        ],
+        [
+          "jump",
+          "loop_press",
+          1005002
+        ],
+        [
+          "run_end",
+          1010002,
+          5000
+        ],
+        [
+          "judgment",
+          1010002,
+          0.3,
+          false
+        ],
+        [
+          "relax",
+          1010002
+        ]
+      ]
+    },
+    {
+      "name": "main branch first equal",
+      "ok": true,
+      "events": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.3,
+          false
+        ],
+        [
+          "jump",
+          "q3b_done_loop_press",
+          1000002
+        ],
+        [
+          "relax",
+          1000002
+        ]
+      ]
+    },
+    {
+      "name": "main branch first above",
+      "ok": true,
+      "events": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.301,
+          false
+        ],
+        [
+          "jump",
+          "q3b_done_loop_press",
+          1000002
+        ],
+        [
+          "relax",
+          1000002
+        ]
+      ]
+    },
+    {
+      "name": "main branch below then above",
+      "ok": true,
+      "events": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.299,
+          true
+        ],
+        [
+          "jump",
+          "loop_press",
+          1000002
+        ],
+        [
+          "run_end",
+          1005002,
+          5000
+        ],
+        [
+          "judgment",
+          1005002,
+          0.301,
+          false
+        ],
+        [
+          "relax",
+          1005002
+        ]
+      ]
+    },
+    {
+      "name": "trial budget 1",
+      "ok": true,
+      "cut": "2 1 0 159\n",
+      "count": "1 1 [run 1]\n",
+      "calls": [
+        1
+      ],
+      "below": [
+        [
+          "run_end",
+          1000001,
+          1
+        ],
+        [
+          "end",
+          1000001
+        ]
+      ],
+      "equal": [
+        [
+          "run_end",
+          1000001,
+          1
+        ],
+        [
+          "end",
+          1000001
+        ]
+      ],
+      "above": [
+        [
+          "run_end",
+          1000001,
+          1
+        ],
+        [
+          "end",
+          1000001
+        ]
+      ],
+      "expected_end": 1000001
+    },
+    {
+      "name": "trial budget 2",
+      "ok": true,
+      "cut": "2 2 0 159\n",
+      "count": "2 1 [run 2]\n",
+      "calls": [
+        2
+      ],
+      "below": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "end",
+          1000002
+        ]
+      ],
+      "equal": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "end",
+          1000002
+        ]
+      ],
+      "above": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "end",
+          1000002
+        ]
+      ],
+      "expected_end": 1000002
+    },
+    {
+      "name": "trial budget 3",
+      "ok": true,
+      "cut": "2 1 2 159\n",
+      "count": "3 2 [run 2] [run 1]\n",
+      "calls": [
+        2,
+        1
+      ],
+      "below": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.299,
+          true
+        ],
+        [
+          "run_end",
+          1000003,
+          1
+        ],
+        [
+          "end",
+          1000003
+        ]
+      ],
+      "equal": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.3,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "above": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.301,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "expected_end": 1000003
+    },
+    {
+      "name": "trial budget 1999",
+      "ok": true,
+      "cut": "2 1997 2 159\n",
+      "count": "1999 2 [run 2] [run 1997]\n",
+      "calls": [
+        2,
+        1997
+      ],
+      "below": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.299,
+          true
+        ],
+        [
+          "run_end",
+          1001999,
+          1997
+        ],
+        [
+          "end",
+          1001999
+        ]
+      ],
+      "equal": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.3,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "above": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.301,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "expected_end": 1001999
+    },
+    {
+      "name": "trial budget 2000",
+      "ok": true,
+      "cut": "2 1998 2 159\n",
+      "count": "2000 2 [run 2] [run 1998]\n",
+      "calls": [
+        2,
+        1998
+      ],
+      "below": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.299,
+          true
+        ],
+        [
+          "run_end",
+          1002000,
+          1998
+        ],
+        [
+          "end",
+          1002000
+        ]
+      ],
+      "equal": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.3,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "above": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.301,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "expected_end": 1002000
+    },
+    {
+      "name": "trial budget 5000",
+      "ok": true,
+      "cut": "2 4998 2 159\n",
+      "count": "5000 2 [run 2] [run 4998]\n",
+      "calls": [
+        2,
+        4998
+      ],
+      "below": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.299,
+          true
+        ],
+        [
+          "run_end",
+          1005000,
+          4998
+        ],
+        [
+          "end",
+          1005000
+        ]
+      ],
+      "equal": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.3,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "above": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.301,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "expected_end": 1005000
+    },
+    {
+      "name": "trial budget 5001",
+      "ok": true,
+      "cut": "2 4999 2 159\n",
+      "count": "5001 2 [run 2] [run 4999]\n",
+      "calls": [
+        2,
+        4999
+      ],
+      "below": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.299,
+          true
+        ],
+        [
+          "run_end",
+          1005001,
+          4999
+        ],
+        [
+          "end",
+          1005001
+        ]
+      ],
+      "equal": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.3,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "above": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.301,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "expected_end": 1005001
+    },
+    {
+      "name": "trial budget 5002",
+      "ok": true,
+      "cut": "2 5000 2 159\n",
+      "count": "5002 2 [run 2] [run 5000]\n",
+      "calls": [
+        2,
+        5000
+      ],
+      "below": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.299,
+          true
+        ],
+        [
+          "run_end",
+          1005002,
+          5000
+        ],
+        [
+          "end",
+          1005002
+        ]
+      ],
+      "equal": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.3,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "above": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.301,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "expected_end": 1005002
+    },
+    {
+      "name": "trial budget 5003",
+      "ok": true,
+      "cut": "2 5000 2 159\n",
+      "count": "5002 2 [run 2] [run 5000]\n",
+      "calls": [
+        2,
+        5000
+      ],
+      "below": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.299,
+          true
+        ],
+        [
+          "run_end",
+          1005002,
+          5000
+        ],
+        [
+          "end",
+          1005002
+        ]
+      ],
+      "equal": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.3,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "above": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.301,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "expected_end": 1005002
+    },
+    {
+      "name": "trial budget 100000",
+      "ok": true,
+      "cut": "2 5000 2 159\n",
+      "count": "5002 2 [run 2] [run 5000]\n",
+      "calls": [
+        2,
+        5000
+      ],
+      "below": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.299,
+          true
+        ],
+        [
+          "run_end",
+          1005002,
+          5000
+        ],
+        [
+          "end",
+          1005002
+        ]
+      ],
+      "equal": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.3,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "above": [
+        [
+          "run_end",
+          1000002,
+          2
+        ],
+        [
+          "judgment",
+          1000002,
+          0.301,
+          false
+        ],
+        [
+          "quit",
+          1000002
+        ]
+      ],
+      "expected_end": 1005002
+    },
+    {
+      "name": "later/source checkpoint phase 600000",
+      "ok": true,
+      "r": 2
+    },
+    {
+      "name": "later/source checkpoint phase 800000",
+      "ok": true,
+      "r": 2
+    },
+    {
+      "name": "later/source checkpoint phase 1000000",
+      "ok": true,
+      "r": 2
+    },
+    {
+      "name": "later/source checkpoint phase 1200000",
+      "ok": true,
+      "r": 2
+    },
+    {
+      "name": "later/source checkpoint phase 1400000",
+      "ok": true,
+      "r": 2
+    },
+    {
+      "name": "later/source checkpoint phase 2000000",
+      "ok": true,
+      "r": 2
+    },
+    {
+      "name": "later/source checkpoint phase 10000000",
+      "ok": true,
+      "r": 2
+    },
+    {
+      "name": "exhaustive 5000 phase residues",
+      "ok": true,
+      "failures": []
+    },
+    {
+      "name": "refuse nonmultiple checkpoint",
+      "ok": true,
+      "result": "체크포인트 step 1000001 가 restart 간격 200000 의 배수가 아님 (그 restart 줄이 그 step 에 쓸 수 없다)"
+    },
+    {
+      "name": "refuse checkpoint not in loop",
+      "ok": true,
+      "result": "체크포인트 step 400000 ≤ 루프 진입 step 400002 (루프 앞 run 합) — 루프 안 체크포인트가 아님"
+    },
+    {
+      "name": "refuse missing restart zero",
+      "ok": true,
+      "result": "루프 뒤 첫 run 앞에 restart 0 이 없음 (또는 그 사이 흐름 줄) — 이 이름 체크포인트가 루프 뒤 run (이완) 에서 나왔을 수 있다 (KG50-11): [run 100000]"
+    },
+    {
+      "name": "reject rewrite mutation residual one",
+      "ok": true,
+      "problems": [
+        "Q3 (나) 재개 뒤 구간 다름 (10-28 KG50R-03 · 명령 하나하나): 1 곳 · 첫 차이 1 번째 — 본 덱 [run 2] ↔ 재개 덱 [run 1]"
+      ],
+      "fix_rejection": "  ✗ 압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함 — 루프 위상을 본 덱에서 정할 수 없음 (11-02 · 닫힌 실패 · KG50R-01) — 재개 덱에 Q3 (나) 표지 (q3b_done_…) 가 이미 있는데 정적 대조 문제 1 (다시 넣지 않음 · 손으로)\n",
+      "cut_rejection": "재개 덱 read_restart 뒤 첫 run 부터가 Q3 (나) 꼴이 아님 (준비 run · 판정 · 건너뜀 · 루프 · 11-02 · 시험 덱을 못 자름)\n"
+    },
+    {
+      "name": "reject rewrite mutation residual three",
+      "ok": true,
+      "problems": [
+        "Q3 (나) 재개 뒤 구간 다름 (10-28 KG50R-03 · 명령 하나하나): 1 곳 · 첫 차이 1 번째 — 본 덱 [run 2] ↔ 재개 덱 [run 3]"
+      ],
+      "fix_rejection": "  ✗ 압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함 — 루프 위상을 본 덱에서 정할 수 없음 (11-02 · 닫힌 실패 · KG50R-01) — 재개 덱에 Q3 (나) 표지 (q3b_done_…) 가 이미 있는데 정적 대조 문제 1 (다시 넣지 않음 · 손으로)\n",
+      "cut_rejection": "재개 덱 read_restart 뒤 첫 run 부터가 Q3 (나) 꼴이 아님 (준비 run · 판정 · 건너뜀 · 루프 · 11-02 · 시험 덱을 못 자름)\n"
+    },
+    {
+      "name": "reject rewrite mutation residual full chunk",
+      "ok": true,
+      "problems": [
+        "Q3 (나) 재개 뒤 구간 다름 (10-28 KG50R-03 · 명령 하나하나): 1 곳 · 첫 차이 1 번째 — 본 덱 [run 2] ↔ 재개 덱 [run 5000]"
+      ],
+      "fix_rejection": "  ✗ 압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함 — 루프 위상을 본 덱에서 정할 수 없음 (11-02 · 닫힌 실패 · KG50R-01) — 재개 덱에 Q3 (나) 표지 (q3b_done_…) 가 이미 있는데 정적 대조 문제 1 (다시 넣지 않음 · 손으로)\n",
+      "cut_rejection": "재개 덱 read_restart 뒤 첫 run 부터가 Q3 (나) 꼴이 아님 (준비 run · 판정 · 건너뜀 · 루프 · 11-02 · 시험 덱을 못 자름)\n"
+    },
+    {
+      "name": "reject rewrite mutation main loop shortened",
+      "ok": true,
+      "problems": [
+        "Q3 (나) 재개 뒤 구간 다름 (10-28 KG50R-03 · 명령 하나하나): 1 곳 · 첫 차이 7 번째 — 본 덱 [run 5000] ↔ 재개 덱 [run 2]"
+      ],
+      "fix_rejection": "  ✗ 압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함 — 루프 위상을 본 덱에서 정할 수 없음 (11-02 · 닫힌 실패 · KG50R-01) — 재개 덱에 Q3 (나) 표지 (q3b_done_…) 가 이미 있는데 정적 대조 문제 1 (다시 넣지 않음 · 손으로)\n",
+      "cut_rejection": "재개 덱 read_restart 뒤 첫 run 부터가 Q3 (나) 꼴이 아님 (준비 run · 판정 · 건너뜀 · 루프 · 11-02 · 시험 덱을 못 자름)\n"
+    },
+    {
+      "name": "reject rewrite mutation skip jump missing",
+      "ok": true,
+      "problems": [
+        "Q3 (나) 재개 뒤 구간 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 27 개 ↔ 재개 덱 26 개 — 재개 덱에 없음 [jump SELF q3b_done_loop_press]"
+      ],
+      "fix_rejection": "  ✗ 압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함 — 루프 위상을 본 덱에서 정할 수 없음 (11-02 · 닫힌 실패 · KG50R-01) — 재개 덱에 Q3 (나) 표지 (q3b_done_…) 가 이미 있는데 정적 대조 문제 1 (다시 넣지 않음 · 손으로)\n",
+      "cut_rejection": "재개 덱 read_restart 뒤 첫 run 부터가 Q3 (나) 꼴이 아님 (준비 run · 판정 · 건너뜀 · 루프 · 11-02 · 시험 덱을 못 자름)\n"
+    },
+    {
+      "name": "reject rewrite mutation skip label missing",
+      "ok": true,
+      "problems": [
+        "Q3 (나) 재개 뒤 구간 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 27 개 ↔ 재개 덱 26 개 — 재개 덱에 없음 [label q3b_done_loop_press]",
+        "jump 목적지 label q3b_done_loop_press 가 재개 덱에 없음 (10-28 KG50R-03): [jump SELF q3b_done_loop_press]"
+      ],
+      "fix_rejection": "  ✗ 압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함 — 루프 위상을 본 덱에서 정할 수 없음 (11-02 · 닫힌 실패 · KG50R-01) — 재개 덱에 Q3 (나) 표지 (q3b_done_…) 가 이미 있는데 정적 대조 문제 2 (다시 넣지 않음 · 손으로)\n",
+      "cut_rejection": "재개 덱 read_restart 뒤 첫 run 부터가 Q3 (나) 꼴이 아님 (준비 run · 판정 · 건너뜀 · 루프 · 11-02 · 시험 덱을 못 자름)\n"
+    },
+    {
+      "name": "reject rewrite mutation wrong skip target",
+      "ok": true,
+      "problems": [
+        "Q3 (나) 재개 뒤 구간 다름 (10-28 KG50R-03 · 명령 하나하나): 1 곳 · 첫 차이 5 번째 — 본 덱 [jump SELF q3b_done_loop_press] ↔ 재개 덱 [jump SELF loop_press]"
+      ],
+      "fix_rejection": "  ✗ 압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함 — 루프 위상을 본 덱에서 정할 수 없음 (11-02 · 닫힌 실패 · KG50R-01) — 재개 덱에 Q3 (나) 표지 (q3b_done_…) 가 이미 있는데 정적 대조 문제 1 (다시 넣지 않음 · 손으로)\n",
+      "cut_rejection": "재개 덱 read_restart 뒤 첫 run 부터가 Q3 (나) 꼴이 아님 (준비 run · 판정 · 건너뜀 · 루프 · 11-02 · 시험 덱을 못 자름)\n"
+    },
+    {
+      "name": "reject rewrite mutation first equality repeats",
+      "ok": true,
+      "problems": [
+        "Q3 (나) 재개 뒤 구간 다름 (10-28 KG50R-03 · 명령 하나하나): 1 곳 · 첫 차이 4 번째 — 본 덱 [if \"${current_press} < ${target_press}\" then \"jump SELF loop_press\"] ↔ 재개 덱 [if \"${current_press} <= ${target_press}\" then \"jump SELF loop_press\"]"
+      ],
+      "fix_rejection": "  ✗ 압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함 — 루프 위상을 본 덱에서 정할 수 없음 (11-02 · 닫힌 실패 · KG50R-01) — 재개 덱에 Q3 (나) 표지 (q3b_done_…) 가 이미 있는데 정적 대조 문제 1 (다시 넣지 않음 · 손으로)\n",
+      "cut_rejection": "재개 덱 read_restart 뒤 첫 run 부터가 Q3 (나) 꼴이 아님 (준비 run · 판정 · 건너뜀 · 루프 · 11-02 · 시험 덱을 못 자름)\n"
+    },
+    {
+      "name": "reject rewrite mutation first threshold inverted",
+      "ok": true,
+      "problems": [
+        "Q3 (나) 재개 뒤 구간 다름 (10-28 KG50R-03 · 명령 하나하나): 1 곳 · 첫 차이 4 번째 — 본 덱 [if \"${current_press} < ${target_press}\" then \"jump SELF loop_press\"] ↔ 재개 덱 [if \"${current_press} > ${target_press}\" then \"jump SELF loop_press\"]"
+      ],
+      "fix_rejection": "  ✗ 압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함 — 루프 위상을 본 덱에서 정할 수 없음 (11-02 · 닫힌 실패 · KG50R-01) — 재개 덱에 Q3 (나) 표지 (q3b_done_…) 가 이미 있는데 정적 대조 문제 1 (다시 넣지 않음 · 손으로)\n",
+      "cut_rejection": "재개 덱 read_restart 뒤 첫 run 부터가 Q3 (나) 꼴이 아님 (준비 run · 판정 · 건너뜀 · 루프 · 11-02 · 시험 덱을 못 자름)\n"
+    },
+    {
+      "name": "reject rewrite mutation all threshold equality repeats",
+      "ok": true,
+      "problems": [
+        "Q3 (나) 재개 뒤 구간 다름 (10-28 KG50R-03 · 명령 하나하나): 2 곳 · 첫 차이 4 번째 — 본 덱 [if \"${current_press} < ${target_press}\" then \"jump SELF loop_press\"] ↔ 재개 덱 [if \"${current_press} <= ${target_press}\" then \"jump SELF loop_press\"]"
+      ],
+      "fix_rejection": "  ✗ 압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함 — 루프 위상을 본 덱에서 정할 수 없음 (11-02 · 닫힌 실패 · KG50R-01) — 재개 덱에 Q3 (나) 표지 (q3b_done_…) 가 이미 있는데 정적 대조 문제 1 (다시 넣지 않음 · 손으로)\n",
+      "cut_rejection": "재개 덱 read_restart 뒤 첫 run 부터가 Q3 (나) 꼴이 아님 (준비 run · 판정 · 건너뜀 · 루프 · 11-02 · 시험 덱을 못 자름)\n"
+    },
+    {
+      "name": "reject rewrite mutation extra step before skip",
+      "ok": true,
+      "problems": [
+        "Q3 (나) 재개 뒤 구간 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 27 개 ↔ 재개 덱 28 개 — 재개 덱에만 [run 1]"
+      ],
+      "fix_rejection": "  ✗ 압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함 — 루프 위상을 본 덱에서 정할 수 없음 (11-02 · 닫힌 실패 · KG50R-01) — 재개 덱에 Q3 (나) 표지 (q3b_done_…) 가 이미 있는데 정적 대조 문제 1 (다시 넣지 않음 · 손으로)\n",
+      "cut_rejection": "재개 덱 read_restart 뒤 첫 run 부터가 Q3 (나) 꼴이 아님 (준비 run · 판정 · 건너뜀 · 루프 · 11-02 · 시험 덱을 못 자름)\n"
+    },
+    {
+      "name": "reject rewrite mutation skip label moved past unfix",
+      "ok": true,
+      "problems": [
+        "Q3 (나) 재개 뒤 구간 다름 (10-28 KG50R-03 · 명령 하나하나): 2 곳 · 첫 차이 11 번째 — 본 덱 [label q3b_done_loop_press] ↔ 재개 덱 [unfix move_press]"
+      ],
+      "fix_rejection": "  ✗ 압축 체크포인트 재개 (Q3 (나)) = 이 체크포인트는 지원 안 함 — 루프 위상을 본 덱에서 정할 수 없음 (11-02 · 닫힌 실패 · KG50R-01) — 재개 덱에 Q3 (나) 표지 (q3b_done_…) 가 이미 있는데 정적 대조 문제 1 (다시 넣지 않음 · 손으로)\n",
+      "cut_rejection": "재개 덱 read_restart 뒤 첫 run 부터가 Q3 (나) 꼴이 아님 (준비 run · 판정 · 건너뜀 · 루프 · 11-02 · 시험 덱을 못 자름)\n"
+    }
+  ]
+}

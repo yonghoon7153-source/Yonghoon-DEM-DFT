@@ -1,0 +1,27 @@
+{
+  "review_pin": "4d2b8fc42dc4d65845570c1bf4de5a67924ad311",
+  "verdict": "CONDITIONAL_GO_ONE_CASE",
+  "unchanged_request_4_6_submission_sequence": "HOLD",
+  "new_findings": [
+    {
+      "id": "KG50Q3B-01",
+      "priority": "P2",
+      "topic": "approval-receipt comparison must finish during fresh trial before main submission"
+    },
+    {
+      "id": "KG50Q3B-02",
+      "priority": "P3",
+      "topic": "center-to-plate distance does not establish first surface-contact time"
+    }
+  ],
+  "final_scope": "kg50_d07_b50 source job335457 restart_compress_1000000.bin NP56 r56 fixed tool/helper; report section6 mandatory",
+  "actual_execution_performed": false,
+  "git_mutation": false,
+  "source_mutation": false,
+  "manifest_verified": 198,
+  "independent_phase_checks": 40,
+  "actual_trial_evidence": "received transcribed grep/sacct record, not direct cluster interrogation or dump remeasurement",
+  "full_485_shell_harness": "not independently rerun: local Bash E_ACCESSDENIED",
+  "prior_snapshot_code_transfers": "7 identical overlapping files; final request differs",
+  "final_pin_remote": "lookup failed, reviewed attached ZIP bytes"
+}

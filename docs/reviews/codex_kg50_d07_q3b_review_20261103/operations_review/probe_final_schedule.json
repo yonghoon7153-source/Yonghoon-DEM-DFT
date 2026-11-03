@@ -1,0 +1,131 @@
+{
+  "pin": "PIN 4d2b8fc42dc4d65845570c1bf4de5a67924ad311",
+  "kind": "pure schedule model; no real commands executed",
+  "source_sha256": "66006239ec58043f963fa885f9db545c63614d279bfb6cac1665a2eae9884c6d",
+  "receipt_reconstruction_sha256": "cff47c44385a95529ed2c6e97438985a56e6e2ede194e05f7541c14788570176",
+  "receipt_rows": 5,
+  "tool_code_contains_previous_approved_receipt_literal": false,
+  "cases": [
+    {
+      "changed_since_approved_trial": false,
+      "new_receipt_matches_approved": true,
+      "main_submitted_before_first_documented_manual_check": true,
+      "events": [
+        {
+          "source_line": 1933,
+          "event": "new attempt identifier available on stdout"
+        },
+        {
+          "source_line": 2324,
+          "event": "write current five-line receipt",
+          "hash": "cff47c44385a95529ed2c6e97438985a56e6e2ede194e05f7541c14788570176"
+        },
+        {
+          "source_line": 2327,
+          "event": "save same-call MIS",
+          "hash": "cff47c44385a95529ed2c6e97438985a56e6e2ede194e05f7541c14788570176"
+        },
+        {
+          "source_line": 2340,
+          "event": "submit new trial"
+        },
+        {
+          "source_line": 2441,
+          "event": "assume current trial G0-G3 pass"
+        },
+        {
+          "source_line": 2454,
+          "event": "receipt hash == same-call MIS",
+          "pass": true
+        },
+        {
+          "source_line": 2456,
+          "event": "current five inputs == current receipt",
+          "pass": true
+        },
+        {
+          "source_line": 2461,
+          "event": "submit main"
+        },
+        {
+          "source_line": null,
+          "event": "main may start (scheduler ordering not constrained by protocol)"
+        },
+        {
+          "source_line": 2463,
+          "event": "append main-success line to report file"
+        },
+        {
+          "source_line": 2478,
+          "event": "copy report to redirected main.log; requested trigger now visible"
+        },
+        {
+          "request_line": 82,
+          "event": "first manual approved-receipt comparison",
+          "match": true
+        }
+      ]
+    },
+    {
+      "changed_since_approved_trial": true,
+      "new_receipt_matches_approved": false,
+      "main_submitted_before_first_documented_manual_check": true,
+      "events": [
+        {
+          "source_line": 1933,
+          "event": "new attempt identifier available on stdout"
+        },
+        {
+          "source_line": 2324,
+          "event": "write current five-line receipt",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "source_line": 2327,
+          "event": "save same-call MIS",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "source_line": 2340,
+          "event": "submit new trial"
+        },
+        {
+          "source_line": 2441,
+          "event": "assume current trial G0-G3 pass"
+        },
+        {
+          "source_line": 2454,
+          "event": "receipt hash == same-call MIS",
+          "pass": true
+        },
+        {
+          "source_line": 2456,
+          "event": "current five inputs == current receipt",
+          "pass": true
+        },
+        {
+          "source_line": 2461,
+          "event": "submit main"
+        },
+        {
+          "source_line": null,
+          "event": "main may start (scheduler ordering not constrained by protocol)"
+        },
+        {
+          "source_line": 2463,
+          "event": "append main-success line to report file"
+        },
+        {
+          "source_line": 2478,
+          "event": "copy report to redirected main.log; requested trigger now visible"
+        },
+        {
+          "request_line": 82,
+          "event": "first manual approved-receipt comparison",
+          "match": false
+        }
+      ]
+    }
+  ],
+  "assertions": "PASS"
+}

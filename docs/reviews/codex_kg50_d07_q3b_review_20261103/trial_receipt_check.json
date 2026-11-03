@@ -1,0 +1,23 @@
+{
+  "pin": "4d2b8fc42dc4d65845570c1bf4de5a67924ad311",
+  "status": "PASS: transcribed receipt bytes and displayed arithmetic only; original decks/checkpoint/dumps not rehashed",
+  "reconstructed_receipt_sha256": "cff47c44385a95529ed2c6e97438985a56e6e2ede194e05f7541c14788570176",
+  "rows": [
+    "12873efcf4829de6f6cb036099782b1c2e2a11e8f9df44bb2b6720a5c1d6ccf5  /lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts",
+    "f20d6854293950cf3a513bfb34d660dd5e358c25da64c12f5dee532e85baefa0  /lustre/home/yonghoon/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56.sh",
+    "4110ee76810b85f0f64ce88562bc148b119b86bee9be2dfdbbac529478c8ca2a  /lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts",
+    "97e4df27e46624864737f567a5a6152dabe39d2a3f51bcc7b77d72818d29795c  /lustre/home/yonghoon/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56t.sh",
+    "164824ea603741e436361589b48ee9d9f0fb16bf6bb12b92a630552bc3799de0  /lustre/home/yonghoon/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_1000000.bin"
+  ],
+  "pressure_relative_change": 2.250406198318083e-05,
+  "pressure_percent_change": 0.002250406198318083,
+  "ke_relative_change": 0.0006367183403494394,
+  "ke_percent_change": 0.06367183403494393,
+  "target_fraction": 0.0003999278,
+  "target_percent": 0.039992780000000006,
+  "first_judgment": 1000002,
+  "trial_end": 1002000,
+  "identity_main_deck_vs_trial_deck_are_different": true,
+  "remaining_steps_if_D2_end_reused": 3485002,
+  "conditional_hours_if_20000_steps_per_hour": 174.2501
+}

@@ -1,0 +1,68 @@
+{
+  "classification": "PURE FUNCTION AND SLOT/SCALAR MODEL ONLY. No actual LIGGGHTS/helper/MPI/SLURM/WSL execution.",
+  "candidate_pin": "50b5fb4b74c14df8738a3f34cdb36c53c6448bc1",
+  "tool_sha256": "66006239ec58043f963fa885f9db545c63614d279bfb6cac1665a2eae9884c6d",
+  "main_sha256": "2555640c7792df6954006392d05b8fd83f09687bd49e315ae0d8ffaa9ba65ab2",
+  "main_explicit_dynamical_slots": [
+    "zwall_bot",
+    "integr",
+    "gravi",
+    "top_mesh",
+    "zwall_top",
+    "damp",
+    "move_press"
+  ],
+  "synthetic_helper_raw_slots": [
+    "zwall_bot",
+    "integr",
+    "gravi",
+    "damp",
+    "top_mesh",
+    "zwall_top",
+    "move_press"
+  ],
+  "synthetic_5b_sorted_slots": [
+    "zwall_bot",
+    "integr",
+    "top_mesh",
+    "zwall_top",
+    "gravi",
+    "damp",
+    "move_press"
+  ],
+  "setup_order_issues": [],
+  "identical_thermo_one_of_two_key": [
+    [
+      0
+    ],
+    [
+      2
+    ]
+  ],
+  "too_many_identical_fixes_keys": [
+    [
+      0,
+      1
+    ],
+    [
+      null,
+      0
+    ]
+  ],
+  "simple_additive_step": {
+    "before": 19.689999999999998,
+    "after": 19.689999999999998
+  },
+  "mesh_force_difference_scalar_extreme_illustration": {
+    "context": "Synthetic floating-point cancellation example only, NOT realistic D0.7 magnitudes",
+    "initial_force": 9007199254740992.0,
+    "gravity": 2.0,
+    "contact": 1.0,
+    "gravity_before_wall_reported_contact": 2.0,
+    "gravity_after_wall_reported_contact": 0.0
+  },
+  "out_of_scope_setforce_general_witness": {
+    "gravity_then_setforce": 0.0,
+    "setforce_then_gravity": -9.81
+  }
+}

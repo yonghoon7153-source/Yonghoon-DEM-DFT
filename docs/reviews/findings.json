@@ -14854,6 +14854,26 @@
       "evidence_tests": [
         "scripts/check_all.sh 줄 이름 (실행 명령 그대로) · CLAUDE.md 사전 점검 줄 — 문서 고침 · 시험 없음"
       ]
+    },
+    {
+      "id": "KG50Q-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 11-03 D0.7-50 압축 체크포인트 재개 한 건 확인 (ZIP 핀 4d2b8fc42 · 독립 탐침 40/40 · ZIP 해시 198/198 · 제출 · 취소 · LIGGGHTS 미실행)",
+      "opened_in": "docs/reviews/codex_kg50_d07_q3b_review_20261103/codex_review_kg50_d07_compress_resume_20261103.md",
+      "title": "(Codex 표기 KG50Q3B-01) 요청서 §4-6 = 승인 영수증 (-T 337078 · cff47c44…) 첫 대조가 \"✅ 본 제출 job\" 뒤 — 도구 안 대조 (scripts/resume_ckpt.sh :2324 MIS · :2454 BLK) 는 이번 호출 내부 불변성뿐이라 승인 자료와 다른 새 입력도 정적 대조 · 시험을 지나면 본 job 이 RUNNING 이 된 뒤에야 차이를 안다 · 11-01 §6-2 사전 수동 대조 후퇴",
+      "note": "판정문 §3 · 최소 해결 = 승인 영수증은 새 시험이 끝나기 전 · 본 제출 전에 대조 · 본 신원은 본 job 시작 뒤 (본 덱 = 영수증 1 행 · 시험 덱 = 3 행 · 체크포인트 = 5 행) · 확인 지연 · 결손 (빈 · 잘린 · 여러 신원 줄) = 불일치와 같은 중단 · 상태 확인 · 취소 명령 · 로그에 없음 = 종료 증거 아님 (판정문 §6).  고침 = 실행 절차 docs/50kg/d07_guard/compress_resume_exec_20261103.md (창 A 호출 · 창 B 시험 중 대조 · 본 job 뒤 신원 · 중단 블록) + 요청서 머리 배너.  실제 11-03 13:31 KST 본 호출 = 그 순서로 시험 중 영수증 cff47c44… ✅ · 시험 신원 1 줄 ✅ (진행 기록 11-03).  일반 도구 고침 (승인 영수증을 도구가 대조) 은 요구 아님."
+    },
+    {
+      "id": "KG50Q-02",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 11-03 D0.7-50 압축 체크포인트 재개 한 건 확인 (ZIP 핀 4d2b8fc42 · 독립 탐침 40/40 · ZIP 해시 198/198 · 제출 · 취소 · LIGGGHTS 미실행)",
+      "opened_in": "docs/reviews/codex_kg50_d07_q3b_review_20261103/codex_review_kg50_d07_compress_resume_20261103.md",
+      "title": "(Codex 표기 KG50Q3B-02) 요청서 §3-4 · 진행 기록 · 인계 = \"600,000 step = 판이 침대에 막 닿음\" 단정 — 덱 z_max 는 입자 중심 z 최대 · 판 = z_max + r_AM_P + plate_margin (본 덱 :175–178) 이라 0.006 m 는 중심 기준 거리 (최고점이 AM_P 면 표면 간극 0.003 m) · 안정화 구조 변화도 있음 → 첫 접촉 시점 증거 아님",
+      "note": "판정문 §3 · 최소 문안 = \"해당 시점 판 압력은 목표의 약 0.04 %다. 초기 중심 기준 판 거리로 계산한 600,000 step 은 참고 기하이며 실제 표면 접촉 개시 시점은 미측정이다.\" · 남은 시간 어림 = D2 끝 step 대입 3,485,002 step · 20,000 step/h 가정 174.2501 h (추정 · 한정 유지).  고침 = 요청서 §3-4 정정판 · 진행 기록 11-03 줄 · 인계 D0.7 줄.  Q3 (나) 2-step 산술 · 한 건 재개를 막는 결함 아님."
     }
   ]
 }

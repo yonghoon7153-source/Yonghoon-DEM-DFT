@@ -1,0 +1,344 @@
+{
+  "repository": "CFDEMproject/LIGGGHTS-PUBLIC",
+  "commit": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+  "method": "Read-only GitHub connector fetch_file; source review, not binary execution",
+  "sources": [
+    {
+      "path": "modify.cpp",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/modify.cpp",
+      "git_blob_sha": "839fa3213f64386d2fb8d5ab007d78da9719638c",
+      "excerpts": [
+        {
+          "start": 784,
+          "end": 859,
+          "text": "784   // if fix ID exists:\n785   //   set newflag = 0 so create new fix in same location in fix list\n786   //   error if new style does not match old style\n787   //     since can't replace it (all when-to-invoke ptrs would be invalid)\n788   //   warn if new group != old group\n789   //   delete old fix, but do not call update_callback(),\n790   //     since will replace this fix and thus other fix locs will not change\n791   //   set ptr to NULL in case new fix scans list of fixes,\n792   //     e.g. scan will occur in add_callback() if called by new fix\n793   // if fix ID does not exist:\n794   //   set newflag = 1 so create new fix\n795   //   extend fix and fmask lists as necessary\n796 \n797   int ifix,newflag;\n798   for (ifix = 0; ifix < nfix; ifix++)\n799     if (strcmp(arg[0],fix[ifix]->id) == 0) break;\n800 \n801   if (ifix < nfix) {\n802     newflag = 0;\n803     \n804     if (strncmp(fix[ifix]->style,\"insert/\",7) == 0)\n805       error->all(FLERR,\"Using a fix insert/* ID twice, which is not possible. Please use different ID\");\n806     if (strcmp(arg[2],fix[ifix]->style) != 0)\n807       error->all(FLERR,\"Replacing a fix, but new style != old style\");\n808     if (fix[ifix]->igroup != igroup && comm->me == 0)\n809       error->warning(FLERR,\"Replacing a fix, but new group != old group\");\n810     \n811     fix[ifix]->pre_delete(true);\n812     delete fix[ifix];\n813     fix[ifix] = NULL;\n814   } else {\n815     newflag = 1;\n816     if (nfix == maxfix) {\n817       maxfix += DELTA;\n818       fix = (Fix **) memory->srealloc(fix,maxfix*sizeof(Fix *),\"modify:fix\");\n819       memory->grow(fmask,maxfix,\"modify:fmask\");\n820     }\n821   }\n822 \n823   // create the Fix\n824   // try first with suffix appended\n825 \n826   fix[ifix] = NULL;\n827 \n828   if (suffix && lmp->suffix_enable) {\n829     char estyle[256];\n830     sprintf(estyle,\"%s/%s\",arg[2],suffix);\n831 \n832     if (fix_map->find(estyle) != fix_map->end()) {\n833       FixCreator fix_creator = (*fix_map)[estyle];\n834       fix[ifix] = fix_creator(lmp,narg,arg);\n835     }\n836   }\n837 \n838   if (fix[ifix] == NULL && fix_map->find(arg[2]) != fix_map->end()) {\n839     FixCreator fix_creator = (*fix_map)[arg[2]];\n840     fix[ifix] = fix_creator(lmp,narg,arg);\n841   }\n842 \n843   if (fix[ifix] == NULL && strncmp(arg[2], \"mesh/surface\", 12) == 0)\n844   {\n845     FixCreator fix_creator = (*fix_map)[\"mesh/surface\"];\n846     fix[ifix] = fix_creator(lmp, narg, arg);\n847   }\n848 \n849   if (fix[ifix] == NULL){ \n850     char * errmsg = new char[30+strlen(arg[2])]; \n851     sprintf(errmsg,\"Invalid fix style: \\\"%s\\\"\",arg[2]);\n852     error->all(FLERR,errmsg);\n853     delete [] errmsg; \n854   } \n855 \n856   // set fix mask values and increment nfix (if new)\n857 \n858   fmask[ifix] = fix[ifix]->setmask();\n859   if (newflag) nfix++;"
+        },
+        {
+          "start": 863,
+          "end": 911,
+          "text": "863   // check if Fix is in restart_global list\n864   // if yes, pass state info to the Fix so it can reset itself\n865 \n866   for (int i = 0; i < nfix_restart_global; i++)\n867   {\n868     \n869     if (strcmp(id_restart_global[i],fix[ifix]->id) == 0 &&\n870           (strcmp(style_restart_global[i],fix[ifix]->style) == 0 ||\n871             (fix[ifix]->accepts_restart_data_from_style && strcmp(style_restart_global[i],fix[ifix]->accepts_restart_data_from_style) == 0)\n872           )\n873        )\n874       {\n875           fix[ifix]->restart(state_restart_global[i]);\n876           fix[ifix]->recent_restart = 1; \n877           if (comm->me == 0) {\n878             char *str = (char *) (\"Resetting global state of Fix %s Style %s \"\n879                                   \"from restart file info\\n\");\n880             if (screen) fprintf(screen,str,fix[ifix]->id,fix[ifix]->style);\n881             if (logfile) fprintf(logfile,str,fix[ifix]->id,fix[ifix]->style);\n882       }\n883     }\n884   }\n885 \n886   // check if Fix is in restart_peratom list\n887   // if yes, loop over atoms so they can extract info from atom->extra array\n888 \n889   for (int i = 0; i < nfix_restart_peratom; i++)\n890   {\n891     if (strcmp(id_restart_peratom[i],fix[ifix]->id) == 0 &&\n892           (strcmp(style_restart_peratom[i],fix[ifix]->style) == 0 ||\n893             (fix[ifix]->accepts_restart_data_from_style && strcmp(style_restart_peratom[i],fix[ifix]->accepts_restart_data_from_style) == 0)\n894           )\n895        )\n896     {\n897       for (int j = 0; j < atom->nlocal; j++)\n898         fix[ifix]->unpack_restart(j,index_restart_peratom[i]);\n899       fix[ifix]->recent_restart = 1; \n900       fix[ifix]->restart_reset = 1;\n901       if (comm->me == 0) {\n902         char *str = (char *) (\"Resetting per-atom state of Fix %s Style %s \"\n903                      \"from restart file info\\n\");\n904         if (screen) fprintf(screen,str,fix[ifix]->id,fix[ifix]->style);\n905         if (logfile) fprintf(logfile,str,fix[ifix]->id,fix[ifix]->style);\n906 \n907       }\n908     }\n909   }\n910 \n911   fix[ifix]->post_create(); "
+        },
+        {
+          "start": 947,
+          "end": 962,
+          "text": "947 void Modify::delete_fix(const char *id, bool unfixflag) \n948 {\n949   int ifix = find_fix(id);\n950   if (ifix < 0) error->all(FLERR,\"Could not find fix ID to delete\");\n951 \n952   fix[ifix]->pre_delete(unfixflag);\n953 \n954   delete fix[ifix];\n955   fix[ifix] = NULL; \n956   atom->update_callback(ifix);\n957 \n958   // move other Fixes and fmask down in list one slot\n959   \n960   for (int i = ifix+1; i < nfix; i++) fix[i-1] = fix[i];\n961   for (int i = ifix+1; i < nfix; i++) fmask[i-1] = fmask[i];\n962   nfix--;"
+        },
+        {
+          "start": 1190,
+          "end": 1200,
+          "text": "1190    read in restart file data on all previously defined Fixes with restart info\n1191    (1) fixes that have global state\n1192    (2) fixes that store per-atom quantities\n1193    return maxsize of extra info that will be stored with any atom\n1194 ------------------------------------------------------------------------- */\n1195 \n1196 int Modify::read_restart(FILE *fp)\n1197 {\n1198   // nfix_restart_global = # of restart entries with global state info\n1199 \n1200   int me = comm->me;"
+        },
+        {
+          "start": 1325,
+          "end": 1335,
+          "text": "1325 void Modify::list_init(int mask, int &n, int *&list)\n1326 {\n1327   delete [] list;\n1328 \n1329   n = 0;\n1330   for (int i = 0; i < nfix; i++) if (fmask[i] & mask) n++;\n1331   list = new int[n];\n1332 \n1333   n = 0;\n1334   for (int i = 0; i < nfix; i++) if (fmask[i] & mask) list[n++] = i;\n1335 }"
+        }
+      ]
+    },
+    {
+      "path": "fix_gravity.cpp",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/fix_gravity.cpp",
+      "git_blob_sha": "0ad1775b542fe1162ec78917c8bd6c230b8f4241",
+      "excerpts": [
+        {
+          "start": 193,
+          "end": 201,
+          "text": "193 int FixGravity::setmask()\n194 {\n195   int mask = 0;\n196   mask |= POST_FORCE;\n197   mask |= THERMO_ENERGY;\n198   mask |= POST_FORCE_RESPA;\n199   return mask;\n200 }\n201 "
+        },
+        {
+          "start": 288,
+          "end": 348,
+          "text": "288 void FixGravity::setup(int vflag)\n289 {\n290   if (strstr(update->integrate_style,\"verlet\"))\n291     post_force(vflag);\n292   else {\n293     ((Respa *) update->integrate)->copy_flevel_f(nlevels_respa-1);\n294     post_force_respa(vflag,nlevels_respa-1,0);\n295     ((Respa *) update->integrate)->copy_f_flevel(nlevels_respa-1);\n296   }\n297 }\n298 \n299 /* ---------------------------------------------------------------------- */\n300 \n301 void FixGravity::post_force(int vflag)\n302 {\n303   // update gravity due to variables\n304 \n305   if (varflag != CONSTANT) {\n306     modify->clearstep_compute();\n307     if (mstyle == EQUAL) magnitude = input->variable->compute_equal(mvar);\n308     if (vstyle == EQUAL) vert = input->variable->compute_equal(vvar);\n309     if (pstyle == EQUAL) phi = input->variable->compute_equal(pvar);\n310     if (tstyle == EQUAL) theta = input->variable->compute_equal(tvar);\n311     if (xstyle == EQUAL) xdir = input->variable->compute_equal(xvar);\n312     if (ystyle == EQUAL) ydir = input->variable->compute_equal(yvar);\n313     if (zstyle == EQUAL) zdir = input->variable->compute_equal(zvar);\n314     modify->addstep_compute(update->ntimestep + 1);\n315 \n316     set_acceleration();\n317   }\n318 \n319   double **x = atom->x;\n320   double **f = atom->f;\n321   double *rmass = atom->rmass;\n322   double *mass = atom->mass;\n323   int *mask = atom->mask;\n324   int *type = atom->type;\n325   int nlocal = atom->nlocal;\n326   double massone;\n327 \n328   eflag = 0;\n329   egrav = 0.0;\n330 \n331   if (rmass) {\n332     for (int i = 0; i < nlocal; i++)\n333       if ((mask[i] & groupbit) && (!fm || (fm && fm->belongs_to(i) < 0))) { \n334         massone = rmass[i] * (fix_relax ? (fix_relax->factor_relax(i)) : 1.);\n335         f[i][0] += massone*xacc;\n336         f[i][1] += massone*yacc;\n337         f[i][2] += massone*zacc;\n338         egrav -= massone * (xacc*x[i][0] + yacc*x[i][1] + zacc*x[i][2]);\n339       }\n340   } else {\n341     for (int i = 0; i < nlocal; i++)\n342       if ((mask[i] & groupbit) && (!fm || (fm && fm->belongs_to(i) < 0))) { \n343         massone = mass[type[i]];\n344         f[i][0] += massone*xacc;\n345         f[i][1] += massone*yacc;\n346         f[i][2] += massone*zacc;\n347         egrav -= massone * (xacc*x[i][0] + yacc*x[i][1] + zacc*x[i][2]);\n348       }"
+        }
+      ]
+    },
+    {
+      "path": "fix_viscous.cpp",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/fix_viscous.cpp",
+      "git_blob_sha": "a478763a04cff0a8c81a6fae3f16a53ca80214bb",
+      "excerpts": [
+        {
+          "start": 95,
+          "end": 102,
+          "text": "95 int FixViscous::setmask()\n96 {\n97   int mask = 0;\n98   mask |= POST_FORCE;\n99   mask |= POST_FORCE_RESPA;\n100   mask |= MIN_POST_FORCE;\n101   return mask;\n102 }"
+        },
+        {
+          "start": 114,
+          "end": 121,
+          "text": "114 void FixViscous::setup(int vflag)\n115 {\n116   if (strstr(update->integrate_style,\"verlet\"))\n117     post_force(vflag);\n118   else {\n119     ((Respa *) update->integrate)->copy_flevel_f(nlevels_respa-1);\n120     post_force_respa(vflag,nlevels_respa-1,0);\n121     ((Respa *) update->integrate)->copy_f_flevel(nlevels_respa-1);"
+        },
+        {
+          "start": 138,
+          "end": 159,
+          "text": "138 void FixViscous::post_force(int vflag)\n139 {\n140   // apply drag force to atoms in group\n141   // direction is opposed to velocity vector\n142   // magnitude depends on atom type\n143 \n144   double **v = atom->v;\n145   double **f = atom->f;\n146   int *mask = atom->mask;\n147   int *type = atom->type;\n148   int nlocal = atom->nlocal;\n149 \n150   double drag;\n151 \n152   for (int i = 0; i < nlocal; i++)\n153     if (mask[i] & groupbit) {\n154       drag = gamma[type[i]];\n155       f[i][0] -= drag*v[i][0];\n156       f[i][1] -= drag*v[i][1];\n157       f[i][2] -= drag*v[i][2];\n158     }\n159 }"
+        }
+      ]
+    },
+    {
+      "path": "fix_wall_gran.cpp",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/fix_wall_gran.cpp",
+      "git_blob_sha": "bc7f1374f85d488e3f07e401ca803e695fa696f2",
+      "excerpts": [
+        {
+          "start": 572,
+          "end": 580,
+          "text": "572 int FixWallGran::setmask()\n573 {\n574     int mask = 0;\n575     mask |= PRE_NEIGHBOR;\n576     mask |= PRE_FORCE;\n577     mask |= POST_FORCE;\n578     mask |= POST_FORCE_RESPA;\n579     return mask;\n580 }"
+        },
+        {
+          "start": 681,
+          "end": 700,
+          "text": "681 void FixWallGran::setup(int vflag)\n682 {\n683     if (strstr(update->integrate_style,\"verlet\"))\n684     {\n685       pre_neighbor();\n686       pre_force(vflag);\n687       post_force(vflag);\n688     }\n689     else\n690     {\n691       ((Respa *) update->integrate)->copy_flevel_f(nlevels_respa_-1);\n692       post_force_respa(vflag,nlevels_respa_-1,0);\n693       ((Respa *) update->integrate)->copy_f_flevel(nlevels_respa_-1);\n694     }\n695 \n696     init_heattransfer();\n697 }\n698 \n699 /* ----------------------------------------------------------------------\n700    neighbor list via fix wall/gran is only relevant for primitive walls"
+        },
+        {
+          "start": 736,
+          "end": 744,
+          "text": "736 void FixWallGran::post_force(int vflag)\n737 {\n738     computeflag_ = 1;\n739     shearupdate_ = 1;\n740     if (update->setupflag) shearupdate_ = 0;\n741     addflag_ = 0;\n742 \n743     post_force_wall(vflag);\n744 "
+        },
+        {
+          "start": 845,
+          "end": 888,
+          "text": "845 void FixWallGran::post_force_mesh(int vflag)\n846 {\n847     \n848     // contact properties\n849     double v_wall[3],bary[3];\n850     double delta[3],deltan;\n851     MultiVectorContainer<double,3,3> *vMeshC;\n852     double *radius = atom->radius;\n853     double ***vMesh = 0;\n854     int nlocal = atom->nlocal;\n855     int nTriAll, barysign = -1;\n856     const double contactDistanceMultiplier = neighbor->contactDistanceFactor - 1.0;\n857 \n858     SurfacesIntersectData sidata;\n859     sidata.is_wall = true;\n860 \n861     for(int iMesh = 0; iMesh < n_FixMesh_; iMesh++)\n862     {\n863       TriMesh *mesh = FixMesh_list_[iMesh]->triMesh();\n864       nTriAll = mesh->sizeLocal() + mesh->sizeGhost();\n865       FixContactHistoryMesh *fix_contact = FixMesh_list_[iMesh]->contactHistory();\n866 \n867       // mark all contacts for delettion at this point\n868       \n869       if(fix_contact) fix_contact->markAllContacts();\n870 \n871       if(store_force_contact_)\n872         fix_wallforce_contact_ = FixMesh_list_[iMesh]->meshforceContact();\n873 \n874       if(store_force_contact_stress_)\n875         fix_wallforce_contact_stress_ = FixMesh_list_[iMesh]->meshforceContactStress();\n876 \n877       fix_store_multicontact_data_ = FixMesh_list_[iMesh]->meshMulticontactData();\n878 \n879       // get neighborList and numNeigh\n880       FixNeighlistMesh * meshNeighlist = FixMesh_list_[iMesh]->meshNeighlist();\n881 \n882       // moving mesh\n883       vectorZeroize3D(v_wall);\n884       vMeshC = mesh->prop().getElementProperty<MultiVectorContainer<double,3,3> >(\"v\");\n885       if(vMeshC)\n886         vMesh = vMeshC->begin();\n887 \n888       atom_type_wall_ = FixMesh_list_[iMesh]->atomTypeWall();"
+        },
+        {
+          "start": 985,
+          "end": 1017,
+          "text": "985             sidata.fix_mesh = FixMesh_list_[iMesh];\n986 \n987             if(deltan <= 0 || (radius && deltan < contactDistanceMultiplier*radius[iPart]))\n988             {\n989               \n990               if(!atom->shapetype_flag && fix_contact && ! fix_contact->handleContact(iPart,idTri,sidata.contact_history,intersectflag,7 == barysign)) continue;\n991 \n992               if(vMeshC && !atom->shapetype_flag)\n993               {\n994                 for(int i = 0; i < 3; i++)\n995                     v_wall[i] = (bary[0]*vMesh[iTri][0][i] + bary[1]*vMesh[iTri][1][i] + bary[2]*vMesh[iTri][2][i]);\n996               }\n997 \n998               if(!sidata.is_non_spherical || atom->superquadric_flag)\n999                 sidata.deltan   = -deltan;\n1000               sidata.delta[0] = -delta[0];\n1001               sidata.delta[1] = -delta[1];\n1002               sidata.delta[2] = -delta[2];\n1003               if(impl)\n1004                 impl->compute_force(this, sidata, intersectflag,v_wall,FixMesh_list_[iMesh],iMesh,mesh,iTri);\n1005               else\n1006               {\n1007                 sidata.r =  r0_ - sidata.deltan;\n1008                 compute_force(sidata, v_wall); // LEGACY CODE (SPH)\n1009               }\n1010             }\n1011           }\n1012       }\n1013 \n1014       // clean-up contacts\n1015       \n1016       if(fix_contact) fix_contact->cleanUpContacts();\n1017     }"
+        }
+      ]
+    },
+    {
+      "path": "fix_nve_sphere.cpp",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/fix_nve_sphere.cpp",
+      "git_blob_sha": "fd26d366feba1e3492564a5a229e177f64d28530",
+      "excerpts": [
+        {
+          "start": 135,
+          "end": 186,
+          "text": "135 \n136 /* ---------------------------------------------------------------------- */\n137 \n138 void FixNVESphere::initial_integrate(int vflag)\n139 {\n140   double dtfm,dtirotate,msq,scale;\n141   double g[3];\n142 \n143   double **x = atom->x;\n144   double **v = atom->v;\n145   double **f = atom->f;\n146   double **omega = atom->omega;\n147   double **torque = atom->torque;\n148   double *radius = atom->radius;\n149   double *rmass = atom->rmass;\n150   int *mask = atom->mask;\n151   int nlocal = atom->nlocal;\n152   if (igroup == atom->firstgroup) nlocal = atom->nfirst;\n153 \n154   // set timestep here since dt may have changed or come via rRESPA\n155 \n156   double dtfrotate; \n157   if (domain->dimension == 2) dtfrotate = dtf / 0.5; // for discs the formula is I=0.5*Mass*Radius^2\n158   else dtfrotate  = dtf / INERTIA;\n159 \n160   // update 1/2 step for v and omega, and full step for  x for all particles\n161   // d_omega/dt = torque / inertia\n162 \n163   for (int i = 0; i < nlocal; i++) {\n164     if (mask[i] & groupbit) {\n165 \n166       // velocity update for 1/2 step\n167       dtfm = dtf / (rmass[i]*onePlusCAddRhoFluid_);\n168       v[i][0] += dtfm * f[i][0];\n169       v[i][1] += dtfm * f[i][1];\n170       v[i][2] += dtfm * f[i][2];\n171 \n172       // position update\n173       x[i][0] += dtv * v[i][0];\n174       x[i][1] += dtv * v[i][1];\n175       x[i][2] += dtv * v[i][2];\n176       \n177       // rotation update\n178       dtirotate = dtfrotate / (radius[i]*radius[i]*rmass[i]);\n179       omega[i][0] += dtirotate * torque[i][0];\n180       omega[i][1] += dtirotate * torque[i][1];\n181       omega[i][2] += dtirotate * torque[i][2];\n182     }\n183   }\n184 \n185   // update mu for dipoles\n186   // d_mu/dt = omega cross mu"
+        },
+        {
+          "start": 207,
+          "end": 247,
+          "text": "207 \n208 void FixNVESphere::final_integrate()\n209 {\n210   double dtfm,dtirotate;\n211 \n212   double **v = atom->v;\n213   double **f = atom->f;\n214   double **omega = atom->omega;\n215   double **torque = atom->torque;\n216   double *rmass = atom->rmass;\n217   double *radius = atom->radius;\n218   int *mask = atom->mask;\n219   int nlocal = atom->nlocal;\n220   if (igroup == atom->firstgroup) nlocal = atom->nfirst;\n221 \n222   // set timestep here since dt may have changed or come via rRESPA\n223 \n224   double dtfrotate; \n225   if (domain->dimension == 2) dtfrotate = dtf / 0.5; // for discs the formula is I=0.5*Mass*Radius^2\n226   else dtfrotate  = dtf / INERTIA;\n227 \n228   // update 1/2 step for v,omega for all particles\n229   // d_omega/dt = torque / inertia\n230 \n231   for (int i = 0; i < nlocal; i++)\n232     if (mask[i] & groupbit) {\n233 \n234       // velocity update for 1/2 step\n235       dtfm = dtf / (rmass[i]*onePlusCAddRhoFluid_);\n236       v[i][0] += dtfm * f[i][0];\n237       v[i][1] += dtfm * f[i][1];\n238       v[i][2] += dtfm * f[i][2];\n239 \n240       // rotation update\n241       dtirotate = dtfrotate / (radius[i]*radius[i]*rmass[i]);\n242       omega[i][0] += dtirotate * torque[i][0];\n243       omega[i][1] += dtirotate * torque[i][1];\n244       omega[i][2] += dtirotate * torque[i][2];\n245     }\n246 }\n247 "
+        }
+      ]
+    },
+    {
+      "path": "fix_move_mesh.cpp",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/fix_move_mesh.cpp",
+      "git_blob_sha": "208acd548e09cb2e81f631b49683dedb98bd5dd8",
+      "excerpts": [
+        {
+          "start": 176,
+          "end": 247,
+          "text": "176 int FixMoveMesh::setmask()\n177 {\n178     int mask = 0;\n179     mask |= INITIAL_INTEGRATE;\n180     mask |= FINAL_INTEGRATE;\n181     return mask;\n182 }\n183 \n184 /* ---------------------------------------------------------------------- */\n185 \n186 void FixMoveMesh::init()\n187 {\n188     reset_reference_point();\n189     move_->init();\n190 }\n191 \n192 /* ---------------------------------------------------------------------- */\n193 \n194 void FixMoveMesh::setup(int vflag)\n195 {\n196     \n197     time_since_setup_ = 0.;\n198     \n199     reset_reference_point();\n200 \n201     if(!mesh_->prop().getElementProperty<MultiVectorContainer<double,3,3> >(\"v\"))\n202     {\n203         \n204         mesh_->prop().addElementProperty<MultiVectorContainer<double,3,3> >(\"v\",\"comm_exchange_borders\",\"frame_invariant\",\"restart_no\");\n205         \n206     }\n207 \n208     move_->setup();\n209 \n210     // do set-up in case velocity is dumped (called via set-up)\n211     if(move_->isFirst())\n212     {\n213         MultiVectorContainer<double,3,3> *v;\n214         v = mesh_->prop().getElementProperty<MultiVectorContainer<double,3,3> >(\"v\");\n215         v->setAll(0.);\n216     }\n217 }\n218 \n219 /* ---------------------------------------------------------------------- */\n220 \n221 void FixMoveMesh::initial_integrate(int dummy)\n222 {\n223     MultiVectorContainer<double,3,3> *v;\n224 \n225     double dt = update->dt;\n226     time_ += update->dt;\n227     time_since_setup_ += update->dt;\n228 \n229     if(move_->isFirst())\n230     {\n231         v = mesh_->prop().getElementProperty<MultiVectorContainer<double,3,3> >(\"v\");\n232         v->setAll(0.);\n233     }\n234 \n235     // integration\n236     \n237     move_->initial_integrate(time_,time_since_setup_,dt);\n238 }\n239 \n240 /* ---------------------------------------------------------------------- */\n241 \n242 void FixMoveMesh::final_integrate()\n243 {\n244     double dt = update->dt;\n245 \n246     // useful only if accelerations are known\n247     "
+        },
+        {
+          "start": 255,
+          "end": 285,
+          "text": "255 void FixMoveMesh::write_restart(FILE *fp)\n256 {\n257   int n = 0;\n258   double * list = new double[1 + move_->n_restart()];\n259   list[n++] = time_;\n260   \n261   move_->write_restart(&(list[n]));\n262   n += move_->n_restart();\n263 \n264   if (comm->me == 0) {\n265     int size = n * sizeof(double);\n266     fwrite(&size,sizeof(int),1,fp);\n267     fwrite(list,sizeof(double),n,fp);\n268   }\n269 \n270   delete[] list;\n271 }\n272 \n273 /* ----------------------------------------------------------------------\n274    use state info from restart file to restart the Fix\n275 ------------------------------------------------------------------------- */\n276 \n277 void FixMoveMesh::restart(char *buf)\n278 {\n279   int n = 0;\n280   double *list = (double *) buf;\n281 \n282   time_ = static_cast<double> (list[n++]);\n283   move_->read_restart(&(list[n]));\n284 \n285 }"
+        }
+      ]
+    },
+    {
+      "path": "fix_mesh_surface.cpp",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/fix_mesh_surface.cpp",
+      "git_blob_sha": "81773ca01a64c6877750da22a5ab42808bbb14a8",
+      "excerpts": [
+        {
+          "start": 455,
+          "end": 468,
+          "text": "455 int FixMeshSurface::setmask()\n456 {\n457     int mask = FixMesh::setmask();\n458 \n459     if(velFlag_ && (vSurfVarX_ >= 0 || vSurfVarY_ >= 0 || vSurfVarZ_ >= 0))\n460         mask |= PRE_FORCE;\n461 \n462     if(angVelFlag_ && omegaVar_ >= 0)\n463         mask |= PRE_FORCE;\n464 \n465     std::vector<std::string>::iterator it;\n466     for(it = mesh_module_order.begin(); it != mesh_module_order.end(); it++)\n467         mask |= active_mesh_modules[*it]->setmask();\n468 "
+        },
+        {
+          "start": 474,
+          "end": 542,
+          "text": "474 void FixMeshSurface::setup_pre_force(int vflag)\n475 {\n476     FixMesh::setup_pre_force(vflag);\n477 \n478     // create neigh list for owned and local elements\n479     \n480     if(meshNeighlist())\n481         meshNeighlist()->initializeNeighlist();\n482 \n483     std::vector<std::string>::iterator it;\n484     for(it = mesh_module_order.begin(); it != mesh_module_order.end(); it++)\n485         active_mesh_modules[*it]->setup_pre_force(vflag);\n486 \n487     if (extrude_mesh_ && !extrusion_created_)\n488     {\n489         if (update->nsteps > 0)\n490             error->all(FLERR, \"Extrude mesh requires a run 0 after its definition\");\n491         mesh()->extrudePlanarMesh(extrusion_length_, extrusion_tri_nodes_, extrusion_tri_count_);\n492         extrusion_created_ = true;\n493         can_create_mesh_ = true;\n494     }\n495 \n496 }\n497 \n498 /* ---------------------------------------------------------------------- */\n499 \n500 void FixMeshSurface::pre_force(int vflag)\n501 {\n502     FixMesh::pre_force(vflag);\n503 \n504     if(velFlag_ && (vSurfVarX_ >= 0 || vSurfVarY_ >= 0 || vSurfVarZ_ >= 0))\n505         setVel();\n506 \n507     if(angVelFlag_ && omegaVar_ >= 0)\n508         setAngVel();\n509 \n510     std::vector<std::string>::iterator it;\n511     for(it = mesh_module_order.begin(); it != mesh_module_order.end(); it++)\n512         active_mesh_modules[*it]->pre_force(vflag);\n513 }\n514 \n515 /* ----------------------------------------------------------------------\n516    initial integrate for mesh modules\n517 ------------------------------------------------------------------------- */\n518 \n519 void FixMeshSurface::initial_integrate(int vflag)\n520 {\n521     std::vector<std::string>::iterator it;\n522     for(it = mesh_module_order.begin(); it != mesh_module_order.end(); it++)\n523         active_mesh_modules[*it]->initial_integrate(vflag);\n524 }\n525 \n526 /* ----------------------------------------------------------------------\n527    reverse comm for mesh\n528 ------------------------------------------------------------------------- */\n529 \n530 void FixMeshSurface::final_integrate()\n531 {\n532     // Mesh modules final integrate before reverse communication of properties\n533     std::vector<std::string>::iterator it;\n534     for(it = mesh_module_order.begin(); it != mesh_module_order.end(); it++)\n535         active_mesh_modules[*it]->final_integrate_pre_comm();\n536 \n537     // Reverse communication of mesh properties happens in here\n538     FixMesh::final_integrate();\n539 \n540     // Default final integrate of mesh modules after reverse communication\n541     for(it = mesh_module_order.begin(); it != mesh_module_order.end(); it++)\n542         active_mesh_modules[*it]->final_integrate();"
+        },
+        {
+          "start": 1044,
+          "end": 1049,
+          "text": "1044 void FixMeshSurface::add_particle_contribution(int ip, double *frc, double *delta, int iTri, double *v_wall)\n1045 {\n1046     std::vector<std::string>::iterator it;\n1047     for(it = mesh_module_order.begin(); it != mesh_module_order.end(); it++)\n1048         active_mesh_modules[*it]->add_particle_contribution(ip, frc, delta, iTri, v_wall);\n1049 }"
+        }
+      ]
+    },
+    {
+      "path": "mesh_module_stress.cpp",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/mesh_module_stress.cpp",
+      "git_blob_sha": "0c4a6a962f342080ca6bc1408168a93c438f28a3",
+      "excerpts": [
+        {
+          "start": 239,
+          "end": 303,
+          "text": "239 int MeshModuleStress::setmask()\n240 {\n241     int mask = 0;\n242     mask |= PRE_FORCE;\n243     mask |= FINAL_INTEGRATE;\n244     return mask;\n245 }\n246 \n247 /* ---------------------------------------------------------------------- */\n248 \n249 void MeshModuleStress::pre_force(int vflag)\n250 {\n251     if(trackStress())\n252     {\n253         vectorCopy3D(f_total_,f_total_old_);\n254         vectorCopy3D(torque_total_,torque_total_old_);\n255         vectorZeroize3D(f_total_);\n256         vectorZeroize3D(torque_total_);\n257         updatedStresses_ = false;\n258     }\n259 \n260     if (wear_flag_ && store_wear_increment_)\n261         mesh->prop().getElementProperty<ScalarContainer<double> >(\"wear_increment\")->setAll(0.);\n262 \n263 }\n264 \n265 /* ---------------------------------------------------------------------- */\n266 \n267 void MeshModuleStress::final_integrate()\n268 {\n269     calc_total_force();\n270 }\n271 \n272 /* ----------------------------------------------------------------------\n273    called during wall force calc\n274 ------------------------------------------------------------------------- */\n275 \n276 void MeshModuleStress::add_particle_contribution(int ip,double *frc,\n277                                 double *delta,int iTri,double *v_wall)\n278 {\n279     double E,c[3],v_rel[3],v_rel_mag,cos_gamma,sin_gamma,sin_2gamma;\n280     double contactPoint[3]={},surfNorm[3], tmp[3], tmp2[3];\n281 \n282     // do not include if not in fix group\n283     if(!(atom->mask[ip] & fix_mesh->get_groupbit())) return;\n284 \n285     double *x = atom->x[ip];\n286     double *v = atom->v[ip];\n287 \n288     vectorNegate3D(frc);\n289 \n290     vectorAdd3D(x,delta,contactPoint);\n291 \n292     if(trackStress())\n293     {\n294         \n295         // add contribution to triangle force\n296         vectorAdd3D(f(iTri),frc,f(iTri));\n297 \n298         // add contribution to total body force and torque\n299         vectorAdd3D(f_total_,frc,f_total_);\n300         vectorSubtract3D(contactPoint,p_ref_(0),tmp);\n301         \n302         vectorCross3D(tmp,frc,tmp2); // tmp2 is torque contrib\n303         vectorAdd3D(torque_total_,tmp2,torque_total_);"
+        },
+        {
+          "start": 376,
+          "end": 431,
+          "text": "376 void MeshModuleStress::calc_total_force()\n377 {\n378     double surfNorm[3], invSurfArea, temp[3];\n379     int nTri = mesh->size();\n380 \n381     // add wear from this step to total wear\n382     if(trackWear())\n383     {\n384         for(int i = 0; i < nTri; i++)\n385         {\n386             wear(i) += wear_step(i);\n387             wear_step(i) = 0.;\n388         }\n389     }\n390 \n391     // calculate normal and shear stress\n392     if(trackStress())\n393     {\n394         // total force and torque on mesh\n395 \n396         MPI_Sum_Vector(f_total_,3,world);\n397         MPI_Sum_Vector(torque_total_,3,world);\n398         \n399         updatedStresses_ = true; // f_total_ and torque_total_ are now up-to-date\n400 \n401         for(int i = 0; i < nTri; i++)\n402         {\n403             // get element surface norm and area\n404             mesh->surfaceNorm(i,surfNorm);\n405             invSurfArea = 1./mesh->areaElem(i);\n406 \n407             // calculate normal force\n408             sigma_n(i) = vectorDot3D(f(i),surfNorm);\n409             \n410             // calculate tangential force\n411             vectorScalarMult3D(surfNorm,sigma_n(i),temp);\n412             vectorSubtract3D(f(i),temp,temp);\n413             sigma_t(i) = vectorMag3D(temp);\n414 \n415             // make both positive\n416             // necessary since orientation of surfNorm not known\n417             sigma_n(i) = MathExtraLiggghts::abs(sigma_n(i));\n418             sigma_t(i) = MathExtraLiggghts::abs(sigma_t(i));\n419 \n420             // divide by area so have stress\n421             sigma_n(i) *= invSurfArea;\n422             sigma_t(i) *= invSurfArea;\n423             \n424         }\n425     }\n426 }\n427 \n428 /* ----------------------------------------------------------------------\n429    return total force or torque component on body\n430 ------------------------------------------------------------------------- */\n431 "
+        }
+      ]
+    },
+    {
+      "path": "fix_wall_gran_base.h",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/fix_wall_gran_base.h",
+      "git_blob_sha": "dd2dbb6d0557639213c5f54d83804608f3086c78",
+      "excerpts": [
+        {
+          "start": 135,
+          "end": 140,
+          "text": "135   inline void force_update(double * const f, double * const torque,\n136       const ForceData & forces) {\n137     for (int coord = 0; coord < 3; coord++) {\n138       f[coord] += forces.delta_F[coord];\n139       torque[coord] += forces.delta_torque[coord];\n140     }"
+        },
+        {
+          "start": 148,
+          "end": 207,
+          "text": "148   virtual void compute_force(FixWallGran * wg, SurfacesIntersectData & sidata, bool intersectflag,double *vwall, class FixMeshSurface * fix_mesh = 0, int iMesh = 0, class TriMesh *mesh = 0,int iTri = 0)\n149   {\n150     const int ip = sidata.i;\n151 \n152     double *x = atom->x[ip];\n153     double *f = atom->f[ip];\n154     double *torque = atom->torque[ip];\n155     double *v = atom->v[ip];\n156     double *omega = atom->omega[ip];\n157     double mass = atom->rmass[ip];\n158     int *type = atom->type;\n159 \n160 #ifdef LIGGGHTS_DEBUG\n161     if(std::isnan(vectorMag3D(x)))\n162       error->one(FLERR,\"x is NaN!\");\n163     if(std::isnan(vectorMag3D(f)))\n164       error->one(FLERR,\"f is NaN!\");\n165     if(std::isnan(vectorMag3D(torque)))\n166       error->one(FLERR,\"torque is NaN!\");\n167     if(std::isnan(vectorMag3D(omega)))\n168       error->one(FLERR,\"omega is NaN!\");\n169 #endif\n170 \n171     // copy collision data to struct (compiler can figure out a better way to\n172     // interleave these stores with the double calculations above.\n173     ForceData i_forces;\n174     ForceData j_forces;\n175     memset(&i_forces, 0, sizeof(ForceData));\n176     memset(&j_forces, 0, sizeof(ForceData));\n177     sidata.v_i = v;\n178     sidata.v_j = vwall;\n179     sidata.omega_i = omega;\n180 \n181     sidata.r = sidata.radi - sidata.deltan; // sign corrected, because negative value is passed\n182     sidata.rsq = sidata.r*sidata.r;\n183     const double rinv = 1.0/sidata.r;\n184     sidata.rinv = rinv;\n185     sidata.area_ratio = 1.;\n186 \n187     //store type here as negative in case of primitive wall!\n188     sidata.j = mesh ? iTri : -wg->atom_type_wall();\n189     sidata.contact_flags = NULL;\n190     sidata.itype = type[ip];\n191 \n192     if(wg->fix_rigid() && wg->body(ip) >= 0)\n193       mass = wg->masstotal(wg->body(ip));\n194 \n195     sidata.meff = mass;\n196     sidata.mi = mass;\n197 \n198     sidata.computeflag = wg->computeflag();\n199     sidata.shearupdate = wg->shearupdate();\n200     sidata.jtype = wg->atom_type_wall();\n201 \n202     double force_old[3]={}, f_pw[3];\n203 \n204     // if force should be stored - remember old force\n205     if(wg->store_force() || fix_mesh)\n206         vectorCopy3D(f,force_old);\n207 "
+        },
+        {
+          "start": 279,
+          "end": 360,
+          "text": "279     if (intersectflag)\n280     {\n281        cmodel.surfacesIntersect(sidata, i_forces, j_forces);\n282        cmodel.endSurfacesIntersect(sidata, mesh, i_forces, j_forces);\n283        // if there is a surface touch, there will always be a force\n284        sidata.has_force_update = true;\n285     }\n286     // surfacesClose is not supported for convex particles\n287     else if (!atom->shapetype_flag)\n288     {\n289        // apply force update only if selected contact models have requested it\n290        sidata.has_force_update = false;\n291        cmodel.surfacesClose(sidata, i_forces, j_forces);\n292     }\n293 \n294     if (sidata.is_wall && dissipation_offset_ >= 0 && sidata.computeflag && sidata.shearupdate)\n295     {\n296         // new displacement force from this time step\n297         double * const diss_force = &sidata.contact_history[dissipation_offset_];\n298         // in the scalar product with the mesh displacement from earlier on\n299         const double dissipated_energy = vectorDot3D(delta, diss_force)*0.5;\n300         //printf(\"pdis %e %e\\n\", update->get_cur_time(), dissipated_energy);\n301         fix_dissipated_energy_->dissipate_energy(dissipated_energy, false);\n302     }\n303 \n304     if(sidata.computeflag)\n305     {\n306         if (sidata.has_force_update)\n307             force_update(f, torque, i_forces);\n308         // summation of f.n to compute a simplistic pressure\n309         if (wg->store_sum_normal_force())\n310         {\n311             double * const iforce = wg->get_sum_normal_force_ptr(ip);\n312             const double fDotN = vectorDot3D(i_forces.delta_F, sidata.en);\n313             *iforce += fDotN;\n314         }\n315     }\n316 \n317     if (wg->store_force_contact() && 0 == update->ntimestep % wg->store_force_contact_every())\n318     {\n319       wg->add_contactforce_wall(ip,i_forces,mesh?mesh->id(iTri):0);\n320     }\n321 \n322     if (wg->store_force_contact_stress())\n323       wg->add_contactforce_stress_wall(ip, i_forces, sidata.delta, vwall, mesh?mesh->id(iTri):0);\n324 \n325     if(wg->compute_wall_gran_local() && wg->addflag())\n326     {\n327           const double fx = i_forces.delta_F[0];\n328           const double fy = i_forces.delta_F[1];\n329           const double fz = i_forces.delta_F[2];\n330           const double tor1 = i_forces.delta_torque[0]*sidata.area_ratio;\n331           const double tor2 = i_forces.delta_torque[1]*sidata.area_ratio;\n332           const double tor3 = i_forces.delta_torque[2]*sidata.area_ratio;\n333           double normal[3];\n334           vectorCopy3D(sidata.en, normal);\n335           vectorNegate3D(normal);\n336           wg->compute_wall_gran_local()->add_wall_2(sidata.i,fx,fy,fz,tor1,tor2,tor3,sidata.contact_history,sidata.rsq, normal);\n337     }\n338 \n339     // add heat flux\n340     \n341     if(wg->heattransfer_flag())\n342        wg->addHeatFlux(mesh,ip,sidata.radi,sidata.deltan,1.);\n343 \n344     // if force should be stored or evaluated\n345     if(sidata.has_force_update && (wg->store_force() || fix_mesh) )\n346     {\n347         vectorSubtract3D(f,force_old,f_pw);\n348 \n349         if(wg->store_force())\n350             vectorAdd3D (wg->fix_wallforce()->array_atom[ip], f_pw, wg->fix_wallforce()->array_atom[ip]);\n351 \n352         if (fix_mesh)\n353         {\n354             double delta[3];\n355             delta[0] = -sidata.delta[0];\n356             delta[1] = -sidata.delta[1];\n357             delta[2] = -sidata.delta[2];\n358             fix_mesh->add_particle_contribution (ip,f_pw,delta,iTri,vwall);\n359         }\n360     }"
+        }
+      ]
+    },
+    {
+      "path": "mesh_mover_linear.h",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/mesh_mover_linear.h",
+      "git_blob_sha": "0aad9441214f32c72f4b42e95d0b232d7b44e1ec",
+      "excerpts": [
+        {
+          "start": 70,
+          "end": 80,
+          "text": "70 \n71 class MeshMoverLinear : public MeshMover{\n72 \n73 public:\n74 \n75     MeshMoverLinear(LAMMPS *lmp,AbstractMesh *_mesh,FixMoveMesh *_fix_move_mesh,\n76                     const char * const * const arg, const int narg);\n77     virtual ~MeshMoverLinear();\n78 \n79     void initial_integrate(double dTAbs,double dTSetup,double dt);\n80     void final_integrate(double dTAbs,double dTSetup,double dt) {}"
+        }
+      ]
+    },
+    {
+      "path": "fix_nve.cpp",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/fix_nve.cpp",
+      "git_blob_sha": "40c512f62848799b7e562f97c6d2b9636b031174",
+      "excerpts": [
+        {
+          "start": 71,
+          "end": 79,
+          "text": "71 int FixNVE::setmask()\n72 {\n73   int mask = 0;\n74   mask |= INITIAL_INTEGRATE;\n75   mask |= FINAL_INTEGRATE;\n76   mask |= INITIAL_INTEGRATE_RESPA;\n77   mask |= FINAL_INTEGRATE_RESPA;\n78   return mask;\n79 }"
+        }
+      ]
+    },
+    {
+      "path": "verlet.cpp",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/verlet.cpp",
+      "git_blob_sha": "1e4310f8b2a396913ba96f2ded737a2f673c8418",
+      "excerpts": [
+        {
+          "start": 332,
+          "end": 380,
+          "text": "332     // force computations\n333     // important for pair to come before bonded contributions\n334     // since some bonded potentials tally pairwise energy/virial\n335     // and Pair:ev_tally() needs to be called before any tallying\n336 \n337     force_clear();\n338     if (n_pre_force) modify->pre_force(vflag);\n339 \n340     timer->stamp();\n341 \n342     if (pair_compute_flag) {\n343       force->pair->compute(eflag,vflag);\n344       timer->stamp(TIME_PAIR);\n345     }\n346 \n347     if (atom->molecular) {\n348       if (force->bond) force->bond->compute(eflag,vflag);\n349       if (force->angle) force->angle->compute(eflag,vflag);\n350       if (force->dihedral) force->dihedral->compute(eflag,vflag);\n351       if (force->improper) force->improper->compute(eflag,vflag);\n352       timer->stamp(TIME_BOND);\n353     }\n354 \n355     if (kspace_compute_flag) {\n356       force->kspace->compute(eflag,vflag);\n357       timer->stamp(TIME_KSPACE);\n358     }\n359 \n360     // reverse communication of forces\n361     \n362     if (force->newton) {\n363       comm->reverse_comm();\n364       timer->stamp(TIME_COMM);\n365     }\n366 \n367     // force modifications, final time integration, diagnostics\n368     \n369     if (n_post_force) modify->post_force(vflag);\n370     \n371     if (n_pre_final_integrate) modify->pre_final_integrate();\n372     \n373     modify->final_integrate();\n374     \n375     if (n_end_of_step) modify->end_of_step();\n376 \n377     // all output\n378     \n379     if (ntimestep == output->next) {\n380       timer->stamp();"
+        }
+      ]
+    },
+    {
+      "path": "normal_model_hooke_hysteresis.h",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/normal_model_hooke_hysteresis.h",
+      "git_blob_sha": "3921ff5c767324e8825e76ff7528563e92e8efd7",
+      "excerpts": [
+        {
+          "start": 103,
+          "end": 115,
+          "text": "103     inline void surfacesIntersect(SurfacesIntersectData & sidata, ForceData & i_forces, ForceData & j_forces)\n104     {\n105       // use these values from HOOKE implementation\n106       bool & viscous = NormalModel<HOOKE>::viscous;\n107       double ** & Yeff = NormalModel<HOOKE>::Yeff;\n108       double & charVel = NormalModel<HOOKE>::charVel;\n109       bool & tangential_damping = NormalModel<HOOKE>::tangential_damping;\n110       Force * & force = NormalModel<HOOKE>::force;\n111 \n112       const int itype = sidata.itype;\n113       const int jtype = sidata.jtype;\n114       const double deltan = sidata.deltan;\n115       const double radi = sidata.radi;"
+        },
+        {
+          "start": 153,
+          "end": 220,
+          "text": "153       // get the history value -- maximal overlap\n154       if(sidata.contact_flags) *sidata.contact_flags |= CONTACT_NORMAL_MODEL;\n155       double * const history = &sidata.contact_history[history_offset];\n156       if (deltan > history[0]) {\n157           history[0] = deltan;\n158       }\n159       const double deltaMax = history[0]; // the 1st value of the history array is deltaMax\n160 \n161       // k2 dependent on the maximum overlap\n162       // this accounts for an increasing stiffness with deformation\n163       const double deltaMaxLim =(k2Max/(k2Max-kn))*phiF[itype][jtype]*2*reff;\n164       double k2, fHys;\n165       const bool update_history = sidata.computeflag && sidata.shearupdate;\n166       if (deltaMax >= deltaMaxLim) // big overlap ... no kn at all\n167       {\n168           k2 = k2Max;\n169           const double fTmp = k2*(deltan-deltaMaxLim)+kn*deltaMaxLim;//k2*(deltan-delta0);\n170           if (fTmp >= -kc*deltan) { // un-/reloading part (k2)\n171               fHys = fTmp;\n172           } else { // cohesion part\n173               fHys = -kc*deltan;\n174 \n175               const double newDeltaMax = 0.5*(deltan+sqrt(deltan*deltan+4*((kn+kc)*deltan*deltaMaxLim/(k2Max-kn))));\n176               if (update_history)\n177                   history[0] = newDeltaMax;\n178           }\n179       } else {\n180           k2 = kn+(k2Max-kn)*deltaMax/deltaMaxLim;\n181           const double fTmp = k2*(deltan-deltaMax)+kn*deltaMax;//k2*(deltan-delta0);\n182           if (fTmp >= kn*deltan) { // loading part (kn)\n183               fHys = kn*deltan;\n184           } else { // un-/reloading part (k2)\n185               if (fTmp > -kc*deltan) {\n186                   fHys = fTmp;\n187               } else { // cohesion part\n188                   fHys = -kc*deltan;\n189 \n190                   const double newDeltaMax = 0.5*(deltan+sqrt(deltan*deltan+4*((kn+kc)*deltan*deltaMaxLim/(k2Max-kn))));\n191                   if (update_history)\n192                       history[0] = newDeltaMax;\n193               }\n194           }\n195       }\n196 \n197       const double Fn_damping = -gamman*sidata.vn;\n198       const double Fn = fHys + Fn_damping;\n199 \n200       sidata.Fn = Fn;\n201       sidata.kn = kn;\n202       sidata.kt = kt;\n203       sidata.gamman = gamman;\n204       sidata.gammat = gammat;\n205 \n206       #ifdef NONSPHERICAL_ACTIVE_FLAG\n207           double Fn_i[3] = { Fn * sidata.en[0], Fn * sidata.en[1], Fn * sidata.en[2]};\n208           double torque_i[3] = {0.0, 0.0, 0.0}; //initialized here with zeros to avoid compiler warnings\n209           if(sidata.is_non_spherical) {\n210             double xci[3];\n211             vectorSubtract3D(sidata.contact_point, atom->x[sidata.i], xci);\n212             vectorCross3D(xci, Fn_i, torque_i);\n213           }\n214       #endif\n215       // apply normal force\n216       if(sidata.is_wall) {\n217         const double Fn_ = Fn * sidata.area_ratio;\n218         i_forces.delta_F[0] += Fn_ * sidata.en[0];\n219         i_forces.delta_F[1] += Fn_ * sidata.en[1];\n220         i_forces.delta_F[2] += Fn_ * sidata.en[2];"
+        }
+      ]
+    },
+    {
+      "path": "tangential_model_history.h",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/tangential_model_history.h",
+      "git_blob_sha": "3015cde4f1cad4612c08e49682143aee3492b746",
+      "excerpts": [
+        {
+          "start": 130,
+          "end": 165,
+          "text": "130     inline void surfacesIntersect(const SurfacesIntersectData & sidata, ForceData & i_forces, ForceData & j_forces)\n131     {\n132         // normal forces = Hookian contact + normal velocity damping\n133         const double enx = sidata.en[0];\n134         const double eny = sidata.en[1];\n135         const double enz = sidata.en[2];\n136 \n137         if(sidata.contact_flags)\n138             *sidata.contact_flags |= CONTACT_TANGENTIAL_MODEL;\n139 \n140         // shear history effects\n141         double * const shear = &sidata.contact_history[history_offset];\n142         double shear_old[3];\n143         const bool update_history = sidata.computeflag && sidata.shearupdate;\n144         if (update_history && elasticpotflag_)\n145             vectorCopy3D(shear, shear_old);\n146 \n147         if (update_history) {\n148           const double dt = update->dt;\n149           shear[0] += sidata.vtr1 * dt;\n150           shear[1] += sidata.vtr2 * dt;\n151           shear[2] += sidata.vtr3 * dt;\n152 \n153           // rotate shear displacements\n154 \n155           double rsht = shear[0]*enx + shear[1]*eny + shear[2]*enz;\n156           shear[0] -= rsht * enx;\n157           shear[1] -= rsht * eny;\n158           shear[2] -= rsht * enz;\n159         }\n160 \n161         const double shrmag = sqrt(shear[0]*shear[0] + shear[1]*shear[1] + shear[2]*shear[2]);\n162         const double kt = sidata.kt;\n163         const double xmu = coeffFrict[sidata.itype][sidata.jtype];\n164 \n165         // tangential forces = shear + tangential velocity damping"
+        },
+        {
+          "start": 320,
+          "end": 355,
+          "text": "320                 {\n321                     double * const diss_force = &sidata.contact_history[dissipation_history_offset_];\n322                     diss_force[0] += Ft1 - Ft_ela1;\n323                     diss_force[1] += Ft2 - Ft_ela2;\n324                     diss_force[2] += Ft3 - Ft_ela3;\n325                 }\n326             }\n327         }\n328 \n329         // return resulting forces\n330         if(sidata.is_wall)\n331         {\n332             const double area_ratio = sidata.area_ratio;\n333             i_forces.delta_F[0] += Ft1 * area_ratio;\n334             i_forces.delta_F[1] += Ft2 * area_ratio;\n335             i_forces.delta_F[2] += Ft3 * area_ratio;\n336             i_forces.delta_torque[0] += torque_i[0] * area_ratio;\n337             i_forces.delta_torque[1] += torque_i[1] * area_ratio;\n338             i_forces.delta_torque[2] += torque_i[2] * area_ratio;\n339         }\n340         else\n341         {\n342             i_forces.delta_F[0] += Ft1;\n343             i_forces.delta_F[1] += Ft2;\n344             i_forces.delta_F[2] += Ft3;\n345             j_forces.delta_F[0] += -Ft1;\n346             j_forces.delta_F[1] += -Ft2;\n347             j_forces.delta_F[2] += -Ft3;\n348             i_forces.delta_torque[0] += torque_i[0];\n349             i_forces.delta_torque[1] += torque_i[1];\n350             i_forces.delta_torque[2] += torque_i[2];\n351 \n352             j_forces.delta_torque[0] += torque_j[0];\n353             j_forces.delta_torque[1] += torque_j[1];\n354             j_forces.delta_torque[2] += torque_j[2];\n355         }"
+        }
+      ]
+    },
+    {
+      "path": "rolling_model_cdt.h",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/rolling_model_cdt.h",
+      "git_blob_sha": "8d7f2476d709a153aebcdb8f8ca68881889373d5",
+      "excerpts": [
+        {
+          "start": 89,
+          "end": 110,
+          "text": "89     void surfacesIntersect(SurfacesIntersectData & sidata, ForceData & i_forces, ForceData & j_forces) \n90     {\n91       const double rmu = coeffRollFrict[sidata.itype][sidata.jtype];\n92 \n93       double r_torque[3], wr_roll[3];\n94       vectorZeroize3D(r_torque);\n95 \n96       const double radi = sidata.radi;\n97       const double radj = sidata.radj;\n98       double reff=sidata.is_wall ? radi : (radi*radj/(radi+radj));\n99 \n100 #ifdef SUPERQUADRIC_ACTIVE_FLAG\n101       if(sidata.is_non_spherical && atom->superquadric_flag)\n102         reff = sidata.reff;\n103 #endif\n104 \n105       if(sidata.is_wall){\n106         const double wr1 = sidata.wr1;\n107         const double wr2 = sidata.wr2;\n108         const double wr3 = sidata.wr3;\n109         const double wrmag = sqrt(wr1*wr1+wr2*wr2+wr3*wr3);\n110         if (wrmag > 0.)"
+        },
+        {
+          "start": 150,
+          "end": 167,
+          "text": "150               const double rtorque_dot_delta = r_torque[0]*enx + r_torque[1]*eny + r_torque[2]*enz;\n151               double r_torque_n[3];\n152               r_torque_n[0] = enx * rtorque_dot_delta;\n153               r_torque_n[1] = eny * rtorque_dot_delta;\n154               r_torque_n[2] = enz * rtorque_dot_delta;\n155               vectorSubtract3D(r_torque,r_torque_n,r_torque);\n156           }\n157         }\n158       }\n159 \n160       i_forces.delta_torque[0] -= r_torque[0];\n161       i_forces.delta_torque[1] -= r_torque[1];\n162       i_forces.delta_torque[2] -= r_torque[2];\n163 \n164       j_forces.delta_torque[0] += r_torque[0];\n165       j_forces.delta_torque[1] += r_torque[1];\n166       j_forces.delta_torque[2] += r_torque[2];\n167     }"
+        }
+      ]
+    },
+    {
+      "path": "fix_mesh.cpp",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/fix_mesh.cpp",
+      "git_blob_sha": "cf7049af0312feeccf93e93a708df98ded56c99c",
+      "excerpts": [
+        {
+          "start": 216,
+          "end": 220,
+          "text": "216     // construct a mesh - can be surface or volume mesh\n217     // just create object and return if reading data from restart file\n218     \n219     if(modify->have_restart_data(this)) create_mesh_restart(mesh_file_or_generator_type);\n220     else create_mesh(mesh_file_or_generator_type, is_fix);"
+        },
+        {
+          "start": 405,
+          "end": 440,
+          "text": "405 void FixMesh::create_mesh_restart(const char *mesh_file_or_generator_type)\n406 {\n407     \n408     if(strcmp(style, \"mesh/surface/stress/deform\") == 0)\n409         mesh_ = new TriMeshDeformable(lmp);\n410     else if(strcmp(style, \"mesh/surface/planar\") == 0)\n411         mesh_ = new TriMeshPlanar(lmp);\n412     else if(strncmp(style, \"mesh/surface\", 12) == 0)\n413         mesh_ = new TriMesh(lmp);\n414     else error->one(FLERR, \"Illegal implementation of create_mesh();\");\n415 \n416     // test if file exists\n417     if (0 == comm->me && !is_valid_generator_type(mesh_file_or_generator_type))\n418     {\n419        char str[512];\n420        FILE * test = fopen(mesh_file_or_generator_type, \"r\");\n421        if(!test)\n422        {\n423           sprintf(str,\"Cannot open mesh file %s. FYI: This file is required, but data will be taken from restart file\", mesh_file_or_generator_type);\n424           error->one(FLERR, str);\n425        }\n426        else\n427        {\n428           sprintf(str,\"INFO: mesh file (%s) is required, but data will be taken from restart file\", mesh_file_or_generator_type);\n429           error->message(FLERR, str);\n430           fclose(test);\n431        }\n432     }\n433 \n434     // set properties that are important for reading\n435     mesh_->setMeshID(id);\n436     if(verbose_) mesh_->setVerbose();\n437     if(autoRemoveDuplicates_) mesh_->autoRemoveDuplicates();\n438     if(precision_ > 0.) mesh_->setPrecision(precision_);\n439 \n440     // case write exlusion list"
+        },
+        {
+          "start": 490,
+          "end": 519,
+          "text": "490 int FixMesh::setmask()\n491 {\n492     int mask = 0;\n493     mask |= PRE_EXCHANGE;\n494     mask |= PRE_FORCE;\n495     mask |= FINAL_INTEGRATE;\n496     return mask;\n497 }\n498 \n499 /* ---------------------------------------------------------------------- */\n500 \n501 void FixMesh::setup_pre_force(int vflag)\n502 {\n503     // first-time set-up\n504     \n505     if(!setupFlag_)\n506     {\n507         initialSetup();\n508         setupFlag_ = true;\n509     }\n510     // if mesh already set-up and parallelized\n511     \n512     else\n513     {\n514         mesh_->pbcExchangeBorders(1);\n515     }\n516 \n517     // clear reverse comm properties\n518     mesh_->clearReverse();\n519 "
+        },
+        {
+          "start": 690,
+          "end": 703,
+          "text": "690 void FixMesh::write_restart(FILE *fp)\n691 {\n692     mesh_->writeRestart(fp);\n693 }\n694 \n695 /* ----------------------------------------------------------------------\n696    use state info from restart file to restart the Fix\n697 ------------------------------------------------------------------------- */\n698 \n699 void FixMesh::restart(char *buf)\n700 {\n701     double *list = (double *) buf;\n702     mesh_->restart(list);\n703 }"
+        }
+      ]
+    },
+    {
+      "path": "mesh_mover_linear.cpp",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/mesh_mover_linear.cpp",
+      "git_blob_sha": "7abc4c23bf332212e26a925b1d4cc54d74a6e995",
+      "excerpts": [
+        {
+          "start": 94,
+          "end": 113,
+          "text": "94 void MeshMoverLinear::initial_integrate(double dTAbs,double dTSetup,double dt)\n95 {\n96     double dx[3];\n97 \n98     int size = mesh_->size();\n99     int numNodes = mesh_->numNodes();\n100     double ***v_node = get_v();\n101 \n102     // calculate total and incremental displacement\n103     vectorScalarMult3D(vel_,dt,dx);\n104 \n105     // apply move\n106     fix_move_mesh_->fixMesh()->move(dx, fix_move_mesh_);\n107 \n108     // set mesh velocity\n109     for (int i = 0; i < size; i++)\n110         for(int j = 0; j < numNodes; j++)\n111             vectorAdd3D(v_node[i][j],vel_,v_node[i][j]);\n112 }\n113 "
+        }
+      ]
+    },
+    {
+      "path": "fix_property_global.cpp",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/fix_property_global.cpp",
+      "git_blob_sha": "a32f4bcc1e1a10814af4ca9eec344e00a0ab2415",
+      "excerpts": [
+        {
+          "start": 347,
+          "end": 351,
+          "text": "347 int FixPropertyGlobal::setmask()\n348 {\n349   int mask = 0;\n350   return mask;\n351 }"
+        }
+      ]
+    }
+  ]
+}
+

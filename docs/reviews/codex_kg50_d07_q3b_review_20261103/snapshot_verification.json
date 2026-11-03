@@ -1,0 +1,79 @@
+{
+  "reviewed_candidate_pin": "50b5fb4b74c14df8738a3f34cdb36c53c6448bc1",
+  "checked": 9,
+  "passed": 9,
+  "rows": [
+    {
+      "path": "AGENTS.md",
+      "expected_git_blob": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+      "actual_git_blob": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+      "sha256": "38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3",
+      "bytes": 2822,
+      "match": true
+    },
+    {
+      "path": "scripts/resume_ckpt.sh",
+      "expected_git_blob": "56a7715745204357da0918fbf7e683f6ba0f78b5",
+      "actual_git_blob": "56a7715745204357da0918fbf7e683f6ba0f78b5",
+      "sha256": "66006239ec58043f963fa885f9db545c63614d279bfb6cac1665a2eae9884c6d",
+      "bytes": 174220,
+      "match": true
+    },
+    {
+      "path": "scripts/test_resume_ckpt.py",
+      "expected_git_blob": "db543da267081a7eb9048acd85aa5699feac41f8",
+      "actual_git_blob": "db543da267081a7eb9048acd85aa5699feac41f8",
+      "sha256": "a7c50120684cc24552f584e6072b9ef315e52b8ac3991fa04bde122dab8358c5",
+      "bytes": 236751,
+      "match": true
+    },
+    {
+      "path": "docs/resume_ckpt_procedure_20260927.md",
+      "expected_git_blob": "5b149b1ef343725581c5113b94ac5265311b59e6",
+      "actual_git_blob": "5b149b1ef343725581c5113b94ac5265311b59e6",
+      "sha256": "b4a8a304c9e9de17f9bc0d33878a7058234e7c02e5c2fae393222b9f134da16c",
+      "bytes": 87213,
+      "match": true
+    },
+    {
+      "path": "docs/50kg/codex_kg50_d07_compress_resume_request_20261103.md",
+      "expected_git_blob": "1f23f9d8c86eae92ac2c4a6171e6c3c209d298b0",
+      "actual_git_blob": "1f23f9d8c86eae92ac2c4a6171e6c3c209d298b0",
+      "sha256": "1367bf122dfe30c2c61081bd991612fa6f00865896fea403ba3f7688f6cbe35b",
+      "bytes": 8990,
+      "match": true
+    },
+    {
+      "path": "docs/reviews/kg50_q3b_preattack_20261103/PREATTACK.md",
+      "expected_git_blob": "fd9f76410754a3d3431ea0ff33fa41afd9f3219f",
+      "actual_git_blob": "fd9f76410754a3d3431ea0ff33fa41afd9f3219f",
+      "sha256": "47f65415fa641c3469d65056f4c2d493f8fa4a7f03f7f5f288131f1ac5d359a4",
+      "bytes": 9590,
+      "match": true
+    },
+    {
+      "path": "docs/data/kg50_decks_20261027_v3_b50/kg50_d07_b50/input_kg50_d07_b50.liggghts",
+      "expected_git_blob": "a9121f17e7367c36c6c371bcc58c1c32e0c78192",
+      "actual_git_blob": "a9121f17e7367c36c6c371bcc58c1c32e0c78192",
+      "sha256": "2555640c7792df6954006392d05b8fd83f09687bd49e315ae0d8ffaa9ba65ab2",
+      "bytes": 12859,
+      "match": true
+    },
+    {
+      "path": "docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+      "expected_git_blob": "97ce24383a9e38d5bdcb269f785a23bd929eed89",
+      "actual_git_blob": "97ce24383a9e38d5bdcb269f785a23bd929eed89",
+      "sha256": "39b4990ad619a7602402196b106b71c817c55473dc849a42d8b1933b41127cb5",
+      "bytes": 12664,
+      "match": true
+    },
+    {
+      "path": "docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40_insert.liggghts",
+      "expected_git_blob": "87ccb505c9f4645a8bbfbfa5859663fee7e234f6",
+      "actual_git_blob": "87ccb505c9f4645a8bbfbfa5859663fee7e234f6",
+      "sha256": "bd49db8125ca10f349d9284d67e88ce5ae999eb87ead9cb8a4a5f6089f6692d3",
+      "bytes": 8458,
+      "match": true
+    }
+  ]
+}
