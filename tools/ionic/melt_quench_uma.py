@@ -1223,7 +1223,11 @@ def folder_stage(folder):
         return "no_plan"
     try:
         plan = json.loads((f / "plan.json").read_text(encoding="utf-8"))
-        want = int(round((float(plan["melt_ps"]) + float(plan["quench_ps"]) + float(plan["hold_ps"])) / float(plan["save_ps"]))) + 1
+        dt = float(plan["dt_fs"])
+        # run_melt_quench 와 같은 셈: 단계마다 반올림한 스텝 수 · save 간격 → 프레임 = N // save_int + 1 (끝 record 포함)
+        n_tot = sum(int(round(float(plan[k]) * 1000.0 / dt)) for k in ("melt_ps", "quench_ps", "hold_ps"))
+        save_int = max(1, int(round(float(plan["save_ps"]) * 1000.0 / dt)))
+        want = n_tot // save_int + 1
     except (OSError, ValueError, KeyError, TypeError, ZeroDivisionError, AttributeError):
         return "unreadable"
     tr = f / "traj.xyz"
@@ -2887,7 +2891,9 @@ def _selftest():
         def _fs(name, plan=True, traj=None, final=False):
             d = pathlib.Path(td_) / name; d.mkdir()
             if plan is True:
-                (d / "plan.json").write_text(json.dumps({"melt_ps": 2.0, "quench_ps": 1.0, "hold_ps": 1.0, "save_ps": 1.0}), encoding="utf-8")
+                (d / "plan.json").write_text(json.dumps({"melt_ps": 2.0, "quench_ps": 1.0, "hold_ps": 1.0, "save_ps": 1.0, "dt_fs": 2.0}), encoding="utf-8")
+            elif isinstance(plan, dict):
+                (d / "plan.json").write_text(json.dumps(plan), encoding="utf-8")
             elif isinstance(plan, str):
                 (d / "plan.json").write_text(plan, encoding="utf-8")
             if traj is not None:
@@ -2899,12 +2905,16 @@ def _selftest():
         fs_ = {"final": _fs("f", traj=5, final=True), "md_complete": _fs("c", traj=5), "md_incomplete": _fs("i", traj=4),
                "no_plan": _fs("n", plan=False, traj=5), "unreadable_plan": _fs("u", plan='{"melt_ps": 2', traj=5),
                "empty_traj": _fs("e", traj=b""), "nul_traj": _fs("z", traj=b"\x00" * 64), "garbage": _fs("g", traj=b"abc\n1\n"),
-               "half_frame": _fs("h", traj=("2\nL\nLi 0 0 0\nLi 1 1 1\n" * 4 + "2\nL\nLi 0 0 0\n").encode())}
+               "half_frame": _fs("h", traj=("2\nL\nLi 0 0 0\nLi 1 1 1\n" * 4 + "2\nL\nLi 0 0 0\n").encode()),
+               # save 0.7 ps · dt 2 fs → 스텝 2000 · 간격 350 → 드라이버가 쓰는 프레임 2000 // 350 + 1 = 6 (ps 비 반올림이면 7 이라 MD 완료를 미완으로 읽는다)
+               "step_arith": _fs("s", plan={"melt_ps": 2.0, "quench_ps": 1.0, "hold_ps": 1.0, "save_ps": 0.7, "dt_fs": 2.0}, traj=6),
+               "step_arith_short": _fs("t", plan={"melt_ps": 2.0, "quench_ps": 1.0, "hold_ps": 1.0, "save_ps": 0.7, "dt_fs": 2.0}, traj=5),
+               "no_dt": _fs("d", plan={"melt_ps": 2.0, "quench_ps": 1.0, "hold_ps": 1.0, "save_ps": 1.0}, traj=5)}
         chk(fs_ == {"final": "final", "md_complete": "md_complete", "md_incomplete": "md_incomplete", "no_plan": "no_plan",
                     "unreadable_plan": "unreadable", "empty_traj": "md_incomplete", "nul_traj": "md_incomplete", "garbage": "unreadable",
-                    "half_frame": "md_incomplete"},
+                    "half_frame": "md_incomplete", "step_arith": "md_complete", "step_arith_short": "md_incomplete", "no_dt": "unreadable"},
             f"⛔음성 DJ Q2: 완료 단계 — 최종 · MD 완료 (FIRE 미완) · MD 미완 · plan 없음 · plan 잘림 = 판독 불가 · 빈 / NUL traj = 프레임 0 · "
-            f"머리 깨짐 = 판독 불가 · 끝의 반쪽 프레임은 안 센다 ({fs_})")
+            f"머리 깨짐 = 판독 불가 · 끝의 반쪽 프레임은 안 센다 · 프레임 수는 드라이버 스텝 셈 (save 0.7 ps) · dt 없는 plan = 판독 불가 ({fs_})")
         vd = pathlib.Path(td_) / "v"; vd.mkdir()
         v_none = verdict_file_status(vd)
         (vd / "stage1_verdict.json").write_text('{"status": "pass"}', encoding="utf-8"); v_pass = verdict_file_status(vd)
@@ -2944,7 +2954,7 @@ def _selftest():
     with tempfile.TemporaryDirectory() as td_:
         dc, di = pathlib.Path(td_) / "c", pathlib.Path(td_) / "i"
         for d_, n_ in ((dc, 5), (di, 2)):
-            d_.mkdir(); (d_ / "plan.json").write_text(json.dumps({"melt_ps": 2.0, "quench_ps": 1.0, "hold_ps": 1.0, "save_ps": 1.0}), encoding="utf-8")
+            d_.mkdir(); (d_ / "plan.json").write_text(json.dumps({"melt_ps": 2.0, "quench_ps": 1.0, "hold_ps": 1.0, "save_ps": 1.0, "dt_fs": 2.0}), encoding="utf-8")
             (d_ / "traj.xyz").write_text("".join("1\nL\nLi 0 0 0\n" for _ in range(n_)), encoding="utf-8")
         ec5 = effective_cap(runs_, [ack_("1" * 32, "power_outage")], VAL, inventory={"1" * 32: {"path": str(dc)}})[0]
         ec6 = effective_cap(runs_, [ack_("1" * 32, "power_outage")], VAL, inventory={"1" * 32: {"path": str(di)}})[0]
