@@ -1,0 +1,93 @@
+[
+ {
+  "id": "BASE",
+  "why": "변이 없음",
+  "rc": 0,
+  "killed": null,
+  "want": null,
+  "want_hit": null,
+  "tail": "test_rint_r_chain: 2/2 PASS (6.2 s)",
+  "fails": [],
+  "seconds": 6.7
+ },
+ {
+  "id": "Q1",
+  "why": "까닭을 늘 빈 목록 (다름만 적음)",
+  "rc": 1,
+  "killed": true,
+  "want": "RV05",
+  "want_hit": true,
+  "tail": "test_rint_r_chain: 0/2 PASS (6.4 s)   FAILED: ['RV05', 'RV06']",
+  "fails": [
+   "RV05",
+   "RV06"
+  ],
+  "seconds": 6.8
+ },
+ {
+  "id": "Q2",
+  "why": "보고에 결과 바이트 칸 없음 (옛 v1 꼴)",
+  "rc": 1,
+  "killed": true,
+  "want": "RV06",
+  "want_hit": true,
+  "tail": "test_rint_r_chain: 1/2 PASS (6.6 s)   FAILED: ['RV06']",
+  "fails": [
+   "RV06"
+  ],
+  "seconds": 7.0
+ },
+ {
+  "id": "Q3",
+  "why": "칸 순서 대조 끔",
+  "rc": 1,
+  "killed": true,
+  "want": "RV05",
+  "want_hit": true,
+  "tail": "test_rint_r_chain: 0/2 PASS (6.3 s)   FAILED: ['RV05', 'RV06']",
+  "fails": [
+   "RV05",
+   "RV06"
+  ],
+  "seconds": 6.7
+ },
+ {
+  "id": "Q4",
+  "why": "끝 공백을 줄바꿈으로 (끝 꼴 가르기 하나로)",
+  "rc": 1,
+  "killed": true,
+  "want": "RV05",
+  "want_hit": true,
+  "tail": "test_rint_r_chain: 1/2 PASS (6.4 s)   FAILED: ['RV05']",
+  "fails": [
+   "RV05"
+  ],
+  "seconds": 7.0
+ },
+ {
+  "id": "Q5",
+  "why": "화면 까닭 줄 없음",
+  "rc": 1,
+  "killed": true,
+  "want": "RV06",
+  "want_hit": true,
+  "tail": "test_rint_r_chain: 1/2 PASS (7.0 s)   FAILED: ['RV06']",
+  "fails": [
+   "RV06"
+  ],
+  "seconds": 7.5
+ },
+ {
+  "id": "Q6",
+  "why": "값 다름 먼저 가르기 끔 (값이 달라도 꼴 까닭으로)",
+  "rc": 1,
+  "killed": true,
+  "want": "RV05",
+  "want_hit": true,
+  "tail": "test_rint_r_chain: 1/2 PASS (7.0 s)   FAILED: ['RV05']",
+  "fails": [
+   "RV05"
+  ],
+  "seconds": 7.5
+ }
+]
