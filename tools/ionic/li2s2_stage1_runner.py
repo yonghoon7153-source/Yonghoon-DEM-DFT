@@ -33,12 +33,23 @@ DI 수정:
   · stage1_attempt.json을 실행 전에 작성한다. plan 이전 중단도 실행 신원을 잃지 않는다.
   · /proc 판독 불가는 빈 그룹이 아니다. 종료 확인 불가이면 그룹 정리 실패/재개 거부로 남긴다.
   · 실행·정리 경과는 monotonic, 고아 상한은 동일 호스트/boot의 BOOTTIME이다. 근거 없으면 비용 미확정.
+회신 DJ (2026-11-03 NO-GO → 고침 · 카드 §개정_정전_복구_v2_2026_11_03):
+  P0-1 재시도 이력은 필드가 아니라 실행 이력으로 — 소비자가 두 번째 실행부터 재시도 필드를 요구하고 직전 실행 · 확인된 STOP · 선언 ·
+       stage1_attempt.json 을 서로 대조한다 · 끊긴 런 재시도 수는 앞 실행 종류로 센다 (필드를 지워도 줄지 않는다)
+  P0-2 판정 파일 '없음' 과 '있는데 못 읽음' 을 가른다 (못 읽음 = 차단) · 보존 폴더 · 실행 신원 검사를 invalid 런까지 · 장부 → 폴더 방향도
+  P0-3 증언은 하한 (heartbeat · 장부 하한) 이 유한 · 일치할 때만 — 미상이면 비용은 미확정 그대로 · 소비자가 증언 때 하한과 대조
+  P1-4 증언은 잠금을 먼저 잡고 그 안에서 읽기 · 검사 · 쓰기 · 이미 확정된 것은 거부
+  Q1 재시도 사유는 결과와 무관한 사건 (카드 retry_reasons) 을 --ack_stop 때 선언 (사유 · 사건 · 근거 · 선언자) — Ctrl-C 등은 사유가 아니다
+  Q2 MD 완료 · FIRE 미완은 재담금질하지 않고 보류 (FIRE 복구는 새 결정) · MD · 최종까지 돈 invalid 런은 다시 판정 못 하는 이유를 선언
+  Q3 증언 필드 = 사건 · 시각 기준 · 불확실성 · H 산출 · 확인자 · 확인 시각 (카드 attestation_required_fields)
+  Q4 실효 상한 = 카드 상한 + min(정전 선언된 끊긴 런 비용, 카드 정전 추가 예산) · 상한 런은 budget_cap_raised 만 (카드 cap_retry_reasons)
 정전 복구 개정 (2026-11-03 · 사용자 '2번으로 가자' · 결과 0 건 · 카드 §개정_정전_복구_2026_11_03):
   · 판정 없이 끊긴 런 (장부 · 보존 폴더 둘 다 판정 없음 · 결과 파일 result.json · final.xyz 없음 · 비용 확정) 은 그 run_id 에 묶여 확인된 STOP
     (interrupted · abnormal · resume · cap) 이 있으면 시드마다 카드 stage1_max_interrupt_retries_per_seed 번까지 다시 돌린다 (retry_eligibility)
   · STOP 마다 그 런의 run_id 를 싣는다 (재시도 확인이 어느 런에 묶이는지)
-  · 재부팅을 넘긴 고아 런 비용은 자동으로는 미확정 — `--attest_cost RUN_ID` 가 근거를 모아 보여 주고, `--attest_hours H --attest_note '근거'`
-    로 사람이 상한을 적는다 (하한 미만 거부 · cost_basis attested_upper_bound) · 미확정 고아 런이 있으면 러너가 그 run_id 와 이 명령을 알려 주고 멈춘다
+  · 재부팅을 넘긴 고아 런 비용은 자동으로는 미확정 — `--attest_cost RUN_ID` 가 근거를 모아 보여 주고, `--attest_hours H` + 근거 필드
+    (회신 DJ 로 바뀜 — 아래 사용 예) 로 사람이 상한을 적는다 (하한 미상 · 하한 미만 거부 · cost_basis attested_upper_bound) ·
+    미확정 고아 런이 있으면 러너가 그 run_id 와 이 명령을 알려 주고 멈춘다
 
 하는 일 (순서 A11 → B11 → A12 → B12 → … → B15 · 계를 번갈아):
   ① 시작 전: 결정 active · 드라이버 sha16 = 고정값 · 카드 값 (드라이버 검사 통과) · 순서 = 카드 시드 전부 · 첫 시드 = 카드 first_seed ·
@@ -73,13 +84,16 @@ DI 수정:
           --python /home/kgy/apps/miniforge3/envs/uma/bin/python
   python3 tools/ionic/li2s2_stage1_runner.py --worktree ~/wt_li2s2 --run_root … --print_cmd A:11   # 명령 확인용 (손 실행은 공식 시드로 자동 편입하지 않음)
   python3 tools/ionic/li2s2_stage1_runner.py --worktree ~/wt_li2s2 --run_root … --attest_cost <run_id>          # 근거만 본다
-  python3 tools/ionic/li2s2_stage1_runner.py --worktree ~/wt_li2s2 --run_root … --attest_cost <run_id> --attest_hours H --attest_note '근거'
+  python3 tools/ionic/li2s2_stage1_runner.py --worktree ~/wt_li2s2 --run_root … --attest_cost <run_id> --attest_hours H \\
+          --attest_event '…' --attest_time_reference '…' --attest_uncertainty_h U --attest_derivation '…' --attest_confirmer '…'
+  python3 tools/ionic/li2s2_stage1_runner.py --worktree ~/wt_li2s2 --run_root … --ack_stop <stop_id> \\
+          --retry_reason power_outage --retry_event '…' --retry_evidence '…' --declared_by '…'      # 끊긴 런 재시도 영수증
   python3 tools/ionic/li2s2_stage1_runner.py --selftest
 """
 from __future__ import annotations
 import argparse, datetime, hashlib, importlib.util, json, os, pathlib, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "c9120a731e21d08f"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "69697056c3c2bbf5"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 DECISION = "D-2026-11-03-li2s2-dense-window"
 CARD_REL = "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json"
 DRIVER_REL = "tools/ionic/melt_quench_uma.py"
@@ -356,25 +370,6 @@ class _Lock:
         self.fd = None
 
 
-RETRY_BIND_CODES = {"invalid": ("invalid",), "interrupted": ("interrupted", "abnormal", "resume", "cap")}
-
-
-def _folder_status(path):
-    """보존 · 현재 폴더의 판정 상태 (없으면 None) 와 결과 파일 유무."""
-    if path is None:
-        return None, None
-    pth = pathlib.Path(path)
-    st = None
-    vf = pth / "stage1_verdict.json"
-    if vf.is_file():
-        try:
-            st = json.loads(vf.read_text(encoding="utf-8")).get("status")
-        except (OSError, ValueError):
-            st = "unreadable"
-    done = any((pth / f).is_file() for f in ("result.json", "final.xyz"))
-    return st, done
-
-
 def _folder_run_id(rd):
     for name in ("stage1_attempt.json", "plan.json"):
         try:
@@ -386,38 +381,100 @@ def _folder_run_id(rd):
     return None
 
 
-def retry_eligibility(attempts, stop_history, inventory, max_interrupt, cost_bases):
-    """⭐ 정전 복구 개정 — 같은 계 · 시드의 이전 실행들을 보고 다시 돌려도 되는지 가른다 (폴더가 아니라 **실행 이력**으로).
-    거부: 과학적 판정 (장부 · 폴더 어느 쪽이든 pass · fail) · 비용 미확정 · 폴더를 못 찾음 · 끝까지 돈 런 (결과 파일 — 판정해야 한다) ·
-          끊긴 런 재시도가 카드 한도를 넘음 · 마지막 실행의 run_id 에 묶여 확인된 STOP 이 없음 (invalid 는 invalid STOP · 끊긴 런은
-          interrupted · abnormal · resume · cap).
-    반환 {"ok", "code", "why", "retry_of", "stop_id", "kind"}."""
-    n_int, kinds = 0, []
+def retry_eligibility(attempts, stop_history, inventory, values, mq):
+    """⭐ 정전 복구 · 회신 DJ — 같은 계 · 시드의 이전 실행 **전부** (장부 순서 · invalid 런 포함) 를 보고 다시 돌려도 되는지 가른다.
+    실행마다:
+      · 장부 판정 pass · fail → invalid (과학적 판정 — 다시 담금질하지 않는다)
+      · 보존 폴더를 못 찾음 (같은 계 폴더 안 · 실행 전 기록의 run_id) → resume (보존 누락 · 회신 DJ P0-2)
+      · 폴더 판정 파일 pass · fail → invalid · **있는데 못 읽음** → invalid ('판정 없음' 으로 읽지 않는다 · 회신 DJ P0-2)
+      · 비용 미확정 → resume (고아 런이면 --attest_cost)
+      · 완료 단계 (mq.folder_stage) 판독 불가 → resume
+      · 종류 = invalid (장부 · 폴더 판정 invalid) 아니면 interrupted — interrupted 인데 최종 산출 → resume (판정하라) ·
+        **MD 완료 · FIRE 미완 → resume (보류 — 재담금질하지 않는다 · FIRE 복구는 새 결정 · 회신 DJ Q2)**
+    끊긴 런 재시도 수 (앞 실행 종류가 interrupted 인 것 — 필드가 아니라 실행 이력으로 센다) > 카드 한도 → invalid.
+    마지막 실행에 묶여 확인된 STOP (종류별 code — mq.RETRY_BIND_CODES) 중 **재시도 선언이 맞는 것** (mq.declaration_problems — 결과와
+    무관한 사유 · 사건 · 근거 · 선언자 · MD 까지 돈 invalid 런이면 다시 판정 못 하는 이유 · 상한 런 규칙 · 회신 DJ Q1 · Q4) 이 없으면 그 종류의
+    code (invalid · resume) 로 멈춘다 — 그 멈춤을 선언과 함께 --ack_stop 하면 영수증이 된다.
+    반환 {"ok", "code", "why", "retry_of", "stop_id", "kind", "stage"}."""
+    n_int, kinds, stages = 0, [], []
     for x in attempts:
         rid = x.get("run_id")
         tag = str(rid)[:8]
-        fst, done = _folder_status((inventory.get(rid) or {}).get("path")) if rid else (None, None)
         v = x.get("verdict")
-        if v in ("pass", "fail") or fst in ("pass", "fail"):
-            return {"ok": False, "code": "invalid", "why": f"이전 실행 {tag} 에 과학적 판정 ({v or fst}) 이 있다 — 다시 담금질하지 않는다 (카드: 미통과 시드는 기록 · 제외)"}
-        if x.get("end") is None or x.get("cost_basis") not in cost_bases:
+        if v in ("pass", "fail"):
+            return {"ok": False, "code": "invalid", "why": f"이전 실행 {tag} 에 과학적 판정 ({v}) 이 있다 — 다시 담금질하지 않는다 (카드: 미통과 시드는 기록 · 제외)"}
+        rec = inventory.get(rid) if isinstance(rid, str) else None
+        if rec is None:
+            return {"ok": False, "code": "resume", "why": f"이전 실행 {tag} 폴더를 못 찾는다 (invalid 런 포함) — 같은 계 폴더 안에 옆으로 옮겨 보존해야 한다 "
+                                                         "(지우거나 run_root 밖으로 옮기지 않는다)"}
+        vfs = mq.verdict_file_status(rec["path"])
+        if vfs in ("pass", "fail"):
+            return {"ok": False, "code": "invalid", "why": f"이전 실행 {tag} 폴더에 과학적 판정 ({vfs}) 이 있다 — 다시 담금질하지 않는다"}
+        if vfs == "unreadable":
+            return {"ok": False, "code": "invalid", "why": f"이전 실행 {tag} 폴더의 판정 파일을 못 읽는다 — '판정 없음' 으로 읽지 않는다 "
+                                                          "(원자료로 --stage1_verdict 다시 판정한 뒤 다시)"}
+        if x.get("end") is None or x.get("cost_basis") not in mq.COST_BASES:
             return {"ok": False, "code": "resume", "why": f"이전 실행 {tag} 비용이 확정 안 됐다 ({x.get('cost_basis')}) — 고아 런이면 --attest_cost {rid}"}
-        if v == "invalid" or fst == "invalid":
-            kinds.append("invalid"); continue
-        if not rid or rid not in inventory:
-            return {"ok": False, "code": "resume", "why": f"이전 실행 {tag} 폴더를 못 찾는다 — 같은 계 폴더 안에 옆으로 옮겨 보존해야 한다 (지우지 않는다)"}
-        if done:
-            return {"ok": False, "code": "resume", "why": f"이전 실행 {tag} 이 끝까지 돌았다 (result.json · final.xyz) — 다시 돌리지 말고 그 폴더를 --stage1_verdict 로 판정"}
-        kinds.append("interrupted"); n_int += 1
-    if n_int > int(max_interrupt):
-        return {"ok": False, "code": "invalid", "why": f"끊긴 런 재시도가 카드 한도 {max_interrupt} 를 넘는다 ({n_int}) — 새 결정 없이는 다시 안 돌린다"}
-    prev, kind = attempts[-1], kinds[-1]
-    receipts = [h for h in stop_history if h.get("code") in RETRY_BIND_CODES[kind]
-                and h.get("run_id") == prev.get("run_id") and h.get("acked_at")]
-    if not receipts:
-        return {"ok": False, "code": "resume", "why": f"이전 실행 {str(prev.get('run_id'))[:8]} ({kind}) 에 묶여 확인 (--ack_stop) 된 STOP "
-                                                         f"({' · '.join(RETRY_BIND_CODES[kind])}) 이 없다"}
-    return {"ok": True, "code": None, "why": None, "retry_of": prev["run_id"], "stop_id": receipts[-1]["stop_id"], "kind": kind}
+        st = mq.folder_stage(rec["path"])
+        if st == "unreadable":
+            return {"ok": False, "code": "resume", "why": f"이전 실행 {tag} 폴더의 완료 단계를 못 읽는다 (plan · traj 머리) — 사람이 본다"}
+        kind = "invalid" if (v == "invalid" or vfs == "invalid") else "interrupted"
+        if kind == "interrupted":
+            if st == "final":
+                return {"ok": False, "code": "resume", "why": f"이전 실행 {tag} 이 끝까지 돌았다 (result.json · final.xyz) — 다시 돌리지 말고 "
+                                                             "그 폴더를 --stage1_verdict 로 판정"}
+            if st == "md_complete":
+                return {"ok": False, "code": "resume", "why": f"이전 실행 {tag} 은 MD 가 끝났고 FIRE 만 못 마쳤다 — 재담금질하지 않고 보류 "
+                                                             "(그 마지막 구조에서 정해진 FIRE 만 다시 하는 복구는 새 결정 · 회신 DJ Q2)"}
+            n_int += 1
+        kinds.append(kind); stages.append(st)
+    lim = int(values["stage1_max_interrupt_retries_per_seed"])
+    if n_int > lim:
+        return {"ok": False, "code": "invalid", "why": f"끊긴 런 재시도가 카드 한도 {lim} 를 넘는다 ({n_int}) — 새 결정 없이는 다시 안 돌린다"}
+    prev, kind, st = attempts[-1], kinds[-1], stages[-1]
+    codes = mq.RETRY_BIND_CODES[kind]
+    rejudge = kind == "invalid" and st in ("final", "md_complete")
+    bound = [(h, mq.declaration_problems(h.get("declaration"), kind, values, rejudge_needed=rejudge, prev_status=prev.get("status")))
+             for h in stop_history if h.get("acked_at") and h.get("run_id") == prev.get("run_id") and h.get("code") in codes]
+    good = [h for h, pr in bound if not pr]
+    if not good:
+        why = (f"이전 실행 {str(prev.get('run_id'))[:8]} ({kind}) 에 묶여 확인 (--ack_stop) 된 STOP ({' · '.join(codes)}) 중 재시도 선언이 맞는 것이 없다"
+               + (" — 선언 문제: " + " / ".join(" · ".join(pr) for _, pr in bound) if bound else "")
+               + " · 이 멈춤을 확인할 때 선언을 붙인다: --ack_stop <stop_id> --retry_reason <카드 retry_reasons> --retry_event '…' "
+                 "--retry_evidence '…' --declared_by '…'" + (" --rejudge_impossible_reason '…'" if rejudge else ""))
+        return {"ok": False, "code": "invalid" if kind == "invalid" else "resume", "why": why}
+    return {"ok": True, "code": None, "why": None, "retry_of": prev["run_id"], "stop_id": good[-1]["stop_id"], "kind": kind, "stage": st}
+
+
+def declaration_from_args(a):
+    """--ack_stop 에 붙인 재시도 선언 (없으면 None) — 선언 시각은 자동."""
+    f = {"reason": getattr(a, "retry_reason", None), "event": getattr(a, "retry_event", None),
+         "evidence": getattr(a, "retry_evidence", None), "declared_by": getattr(a, "declared_by", None),
+         "rejudge_impossible_reason": getattr(a, "rejudge_impossible_reason", None)}
+    if all(x is None for x in f.values()):
+        return None
+    d = {k: x for k, x in f.items() if x is not None}
+    d["declared_at"] = _now()
+    return d
+
+
+def ack_declaration_problems(decl, sp, led, values, mq, run_root):
+    """확인 (--ack_stop) 때 선언을 바로 검사한다 (회신 DJ Q1) — 그 멈춤이 어떤 실행에 묶였나 · 그 code 가 어느 종류의 영수증이 되나 ·
+    그 실행의 장부 상태 (상한 규칙) · 폴더 완료 단계 (MD 까지 돈 invalid 런이면 다시 판정 못 하는 이유). 문제 목록."""
+    rid, code = sp.get("run_id"), sp.get("code")
+    if not rid:
+        return ["이 멈춤은 특정 실행 (run_id) 에 묶여 있지 않다 — 재시도 선언을 붙일 곳이 아니다"]
+    kind = next((k for k, cs in mq.RETRY_BIND_CODES.items() if code in cs), None)
+    if kind is None:
+        return [f"이 멈춤 ({code}) 은 재시도 영수증이 될 수 없다"]
+    hit = [r for r in led.get("runs", []) if isinstance(r, dict) and r.get("run_id") == rid]
+    if len(hit) != 1:
+        return [f"장부에 run_id {str(rid)[:8]} 런이 {len(hit)} 개"]
+    inv_, _ = mq.attempt_inventory(run_root)
+    rec = inv_.get(rid)
+    st = mq.folder_stage(rec["path"]) if rec else None
+    return mq.declaration_problems(decl, kind, values, rejudge_needed=(kind == "invalid" and st in ("final", "md_complete")),
+                                   prev_status=hit[0].get("status"))
 
 
 def _btime():
@@ -430,55 +487,107 @@ def _btime():
     return None
 
 
-def attest_cost(run_root, run_id, hours=None, note=None, deps=None):
-    """⭐ 정전 복구 개정 — 재부팅을 넘긴 고아 런 (cost_basis unknown) 의 비용 상한을 사람이 근거를 보고 적는다.
-    hours 가 없으면 근거만 모아 보여 준다 (읽기만). 있으면 잠금을 잡고: 그 런이 orphaned · unknown 이어야 · hours 는 유한 ·
-    하한 (마지막 heartbeat) 이상 · note 가 있어야 → cost_basis attested_upper_bound · attestation (근거 · 시각 · 증거) 로 닫는다.
-    ⛔ 못 하는 것: 상한이 맞는지는 모른다 — 사람이 근거를 보고 정한 값이다 (realtime 시각 차 제안은 시계가 맞을 때만 뜻이 있다)."""
-    deps = deps or {}
-    R = pathlib.Path(run_root)
-    led_p = R / "stage1_ledger.json"
-    led = json.loads(led_p.read_text(encoding="utf-8"))
-    hit = [e for e in led.get("runs", []) if e.get("run_id") == run_id]
-    if len(hit) != 1:
-        return 10, {"why": f"장부에 run_id {run_id} 가 {len(hit)} 개"}
-    e = hit[0]
+def _attest_evidence(R, e, deps):
+    """증언에 쓸 근거를 모은다 (읽기만) — 마지막 heartbeat = 하한 · 시작 시각 · 시작 boot 시계 · 지금 부팅 시각 · 보존 폴더 파일 마지막 시각."""
     rd = R / str(e.get("system")) / f"seed{e.get('seed')}"
     mt = None
     for cand in [rd] + sorted((R / str(e.get("system"))).glob(f"seed{e.get('seed')}*")):
         if cand.is_dir() and (cand / "stage1_attempt.json").is_file():
             try:
-                if json.loads((cand / "stage1_attempt.json").read_text(encoding="utf-8")).get("run_id") == run_id:
+                if json.loads((cand / "stage1_attempt.json").read_text(encoding="utf-8")).get("run_id") == e.get("run_id"):
                     mt = max((f.stat().st_mtime for f in cand.iterdir() if f.is_file()), default=None); rd = cand; break
             except (OSError, ValueError):
                 pass
     bt = deps.get("btime", _btime)()
     se = e.get("start_epoch")
-    ev = {"start": e.get("start"), "start_epoch": se, "start_recovery_clock": e.get("start_recovery_clock"),
-          "wall_h_lower_heartbeat": e.get("wall_h_lower", e.get("wall_h_so_far")), "folder": str(rd),
-          "folder_last_mtime_minus_start_h": ((mt - float(se)) / 3600.0) if (mt is not None and se is not None) else None,
-          "boot_time_now_epoch": bt,
-          "suggest_realtime_bound_h": ((bt - float(se)) / 3600.0) if (bt is not None and se is not None and bt > float(se)) else None,
-          "⚠": "suggest_realtime_bound_h = 지금 부팅 시각 − 시작 (realtime) — 재부팅 뒤 시계가 맞을 때만 상한이다 (10-16 처럼 2018 로 돌아갔으면 쓰지 않는다)"}
-    if hours is None:
-        return 0, {"evidence": ev, "status": e.get("status"), "cost_basis": e.get("cost_basis")}
-    if not (e.get("status") == "orphaned" and e.get("cost_basis") == "unknown"):
-        return 10, {"why": f"그 런은 고아 · 비용 미확정이 아니다 (상태 {e.get('status')} · 근거 {e.get('cost_basis')}) — 증언 상한을 쓰지 않는다", "evidence": ev}
-    lo = ev["wall_h_lower_heartbeat"]
-    try:
-        h = float(hours)
-    except (TypeError, ValueError):
-        return 10, {"why": f"hours {hours!r} 가 수가 아니다", "evidence": ev}
-    if not math.isfinite(h) or h < 0 or (lo is not None and h < float(lo)):
-        return 10, {"why": f"hours {h} 가 유한한 비음수가 아니거나 하한 {lo} h 보다 작다", "evidence": ev}
-    if not (isinstance(note, str) and note.strip()):
-        return 10, {"why": "근거 글 (--attest_note) 이 없다", "evidence": ev}
+    se_ok = isinstance(se, (int, float)) and not isinstance(se, bool) and math.isfinite(se)
+    return {"start": e.get("start"), "start_epoch": se, "start_recovery_clock": e.get("start_recovery_clock"),
+            "wall_h_lower": e.get("wall_h_lower"), "heartbeat_wall_h_so_far": e.get("wall_h_so_far"), "folder": str(rd),
+            "folder_last_mtime_minus_start_h": ((mt - float(se)) / 3600.0) if (mt is not None and se_ok) else None,
+            "boot_time_now_epoch": bt,
+            "suggest_realtime_bound_h": ((bt - float(se)) / 3600.0) if (bt is not None and se_ok and bt > float(se)) else None,
+            "⚠": "suggest_realtime_bound_h = 지금 부팅 시각 − 시작 (realtime) — 재부팅 뒤 시계가 맞을 때만 상한이다 (10-16 처럼 2018 로 돌아갔으면 "
+                  "쓰지 않는다) · 폴더 마지막 시각은 하한 쪽 근거다 (정전 때 디스크에 안 쓴 꼬리는 사라진다)"}
+
+
+def _finite_nonneg(x):
+    return isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x) and x >= 0
+
+
+def attest_cost(run_root, run_id, values, hours=None, fields=None, deps=None):
+    """⭐ 정전 복구 · 회신 DJ P0-3 · P1-4 · Q3 — 재부팅을 넘긴 고아 런 (cost_basis unknown) 의 비용 상한을 사람이 근거를 보고 적는다.
+    hours 가 없으면 근거만 모아 보여 준다 (읽기만 · 쓰지 않는다).
+    hours 가 있으면 **잠금을 먼저 잡고** 장부를 그 안에서 다시 읽어 검사 · 쓰기까지 한다 (잠금 전에 읽은 장부로 덮어쓰지 않는다 · P1-4):
+      · 그 런이 orphaned · unknown 이어야 — 이미 증언 · 확정이면 두 번째 쓰기를 거부
+      · 하한 (wall_h_lower) 과 heartbeat (wall_h_so_far) 가 유한한 비음수 · 하한 ≥ heartbeat — 아니면 **하한 미상**: 증언을 받지 않고
+        비용은 미확정 그대로 (P0-3 · 미상을 비교 생략으로 처리하지 않는다)
+      · H 는 유한 · 양수 · 하한 이상
+      · 근거 필드 (카드 attestation_required_fields — 사건 · 시각 기준 · 불확실성 h · H 산출 방식 · 확인자 · 확인 시각 (자동)) 가 다 있어야 (Q3)
+      → cost_basis attested_upper_bound + attestation {필드 · lower_at_attest · heartbeat_at_attest · evidence · os_user · host}.
+    ⛔ 못 하는 것: 상한이 맞는지는 모른다 — 사람이 근거를 보고 정한 값이다 · 확인자가 실제 그 사람인지 못 본다 (OS 사용자 · 호스트를 같이 적는다)."""
+    deps = deps or {}
+    R = pathlib.Path(run_root)
+    led_p = R / "stage1_ledger.json"
+    if hours is None:                                        # 근거 보기 — 읽기만
+        led = json.loads(led_p.read_text(encoding="utf-8"))
+        hit = [e for e in led.get("runs", []) if isinstance(e, dict) and e.get("run_id") == run_id]
+        if len(hit) != 1:
+            return 10, {"why": f"장부에 run_id {run_id} 가 {len(hit)} 개"}
+        return 0, {"evidence": _attest_evidence(R, hit[0], deps), "status": hit[0].get("status"), "cost_basis": hit[0].get("cost_basis"),
+                   "required_fields": list(values["attestation_required_fields"])}
+    if deps.get("before_lock"):
+        deps["before_lock"]()                                # 시험: 잠금 전에 다른 기록자가 끼어드는 순서
     lock = _Lock(R / "stage1.lock")
     if not lock.acquire():
-        return 10, {"why": "러너가 돌고 있다 (잠금) — 러너를 멈춘 뒤 적는다", "evidence": ev}
+        return 10, {"why": "러너 (또는 다른 증언) 가 잠금을 잡고 있다 — 멈춘 뒤 적는다 (아무것도 안 썼다)"}
     try:
-        e.update(wall_h=h, wall_h_lower=lo, cost_basis="attested_upper_bound",
-                 attestation={"note": note.strip(), "by": "사용자 증언 (--attest_cost)", "at": _now(), "evidence": ev})
+        led = json.loads(led_p.read_text(encoding="utf-8"))  # ⭐ 잠금 안에서 다시 읽는다
+        hit = [e for e in led.get("runs", []) if isinstance(e, dict) and e.get("run_id") == run_id]
+        if len(hit) != 1:
+            return 10, {"why": f"장부에 run_id {run_id} 가 {len(hit)} 개"}
+        e = hit[0]
+        ev = _attest_evidence(R, e, deps)
+        if e.get("cost_basis") == "attested_upper_bound" or e.get("attestation") is not None:
+            return 10, {"why": "그 런은 이미 증언으로 확정됐다 — 두 번째 쓰기를 거부 (바꾸려면 결정)", "evidence": ev}
+        if not (e.get("status") == "orphaned" and e.get("cost_basis") == "unknown"):
+            return 10, {"why": f"그 런은 고아 · 비용 미확정이 아니다 (상태 {e.get('status')} · 근거 {e.get('cost_basis')}) — 증언 상한을 쓰지 않는다",
+                        "evidence": ev}
+        lo, hb = e.get("wall_h_lower"), e.get("wall_h_so_far")
+        if not (_finite_nonneg(lo) and _finite_nonneg(hb) and lo >= hb - 1e-9):
+            return 10, {"why": f"하한이 미상 · 잘못이다 (하한 {lo!r} · heartbeat {hb!r}) — 증언을 받지 않는다 · 비용은 미확정 그대로 (새 결정)",
+                        "evidence": ev}
+        try:
+            h = float(hours)
+        except (TypeError, ValueError):
+            return 10, {"why": f"hours {hours!r} 가 수가 아니다", "evidence": ev}
+        if not (math.isfinite(h) and h > 0 and h >= float(lo)):
+            return 10, {"why": f"hours {h} 가 유한한 양수가 아니거나 하한 {lo} h 보다 작다", "evidence": ev}
+        fields = dict(fields or {})
+        rec, miss = {}, []
+        for f_ in values["attestation_required_fields"]:
+            if f_ == "confirmed_at":
+                continue
+            x = fields.get(f_)
+            if f_ == "uncertainty_h":
+                try:
+                    x = float(x)
+                except (TypeError, ValueError):
+                    x = None
+                if x is None or not _finite_nonneg(x):
+                    miss.append(f_); continue
+            elif not (isinstance(x, str) and x.strip()):
+                miss.append(f_); continue
+            rec[f_] = x.strip() if isinstance(x, str) else x
+        if miss:
+            return 10, {"why": f"근거 필드가 없다 · 잘못이다: {miss} (카드 attestation_required_fields)", "evidence": ev}
+        try:
+            import getpass
+            os_user = getpass.getuser()
+        except Exception:
+            os_user = None
+        e.update(wall_h=h, cost_basis="attested_upper_bound",
+                 attestation={**rec, "confirmed_at": _now(), "lower_at_attest": lo, "heartbeat_at_attest": hb, "evidence": ev,
+                              "os_user": os_user, "host": socket.gethostname(), "tool": "li2s2_stage1_runner.py --attest_cost"})
         _write_json_atomic(led_p, led)
     finally:
         lock.release()
@@ -562,7 +671,11 @@ def run(a, deps=None):
             build_cmd(a.python, W, R, s, vals["first_seed"], vals, mq)
     except Exception as e:
         log(f"⛔ 카드 값 · 순서를 못 받았다 ({type(e).__name__}: {e}) — 시작하지 않는다"); logf.close(); return RC["refused"]
-    cap = float(vals["stage1_cap_gpu_h"])
+    cap_base = float(vals["stage1_cap_gpu_h"])
+    def cap_eff():
+        """실효 상한 (회신 DJ Q4) — 카드 상한 + min(정전 선언된 끊긴 런 비용, 카드 정전 추가 예산) · 장부 · 보존 폴더에서 매번 다시 잰다."""
+        inv_, _ = mq.attempt_inventory(R)
+        return mq.effective_cap(state["ledger"]["runs"], state["ledger"]["stop_history"], vals, inventory=inv_)
     lock = _Lock(R / "stage1.lock")
     if not lock.acquire():
         log("⛔ 같은 run_root 로 러너가 이미 잠금을 잡고 있다 — 시작하지 않는다"); logf.close(); return RC["refused"]
@@ -582,7 +695,7 @@ def run(a, deps=None):
         state["ledger"] = (json.loads(led_p.read_text(encoding="utf-8")) if led_p.is_file() else {"runs": []})
         led = state["ledger"]
         led.setdefault("runs", []); led.setdefault("stop_history", [])
-        led.update({"decision": DECISION, "driver_sha16": s16, "card": CARD_REL, "cap_h": cap,
+        led.update({"decision": DECISION, "driver_sha16": s16, "card": CARD_REL, "cap_h": cap_base,
                     "card_values_sha16": mq.values_sha16(vals)})
         # ①-1 STOP.json — 닫는 사건은 넘기지 않는다 · 나머지는 사람이 stop_id 로 확인해야 이어간다 (회신 DG P0-1)
         if stop_p.is_file():
@@ -594,13 +707,21 @@ def run(a, deps=None):
             if a.ack_stop != sp.get("stop_id"):
                 log(f"⛔ 앞선 멈춤이 남아 있다 ({code} · {sp.get('reason')}) — 확인했으면 --ack_stop {sp.get('stop_id')}")
                 return RC.get(code, RC["refused"])
-            if code == "cap" and not (cap > float(sp.get("cap_h", cap)) + 1e-9):
-                log(f"⛔ 상한 멈춤은 카드 상한이 올라갔을 때만 넘긴다 (멈춤 {sp.get('cap_h')} · 지금 {cap} — 바꾸려면 결정 · 카드 개정)")
+            ce_now = cap_eff()[0]
+            if code == "cap" and not (ce_now > float(sp.get("cap_h", ce_now)) + 1e-9):
+                log(f"⛔ 상한 멈춤은 실효 상한이 올라갔을 때만 넘긴다 (멈춤 {sp.get('cap_h')} · 지금 {ce_now:g} — 바꾸려면 결정 · 카드 개정)")
                 return RC["cap"]
-            led["stop_history"].append({**sp, "acked_at": _now()})
+            decl = declaration_from_args(a)                  # ⭐ 회신 DJ Q1 — 재시도 선언은 확인 때 붙이고 그 자리에서 검사한다
+            if decl is not None:
+                dprob = ack_declaration_problems(decl, sp, led, vals, mq, R)
+                if dprob:
+                    log(f"⛔ 재시도 선언을 받지 않는다 — {' · '.join(dprob)} (멈춤은 그대로 · 고쳐서 다시 확인)")
+                    return RC["refused"]
+            led["stop_history"].append({**sp, "acked_at": _now(), **({"declaration": decl} if decl else {})})
             stop_p.unlink()
             save_ledger()
-            log(f"  앞선 멈춤 {code} (stop_id {sp.get('stop_id')}) 확인 — 장부 stop_history 로 옮기고 이어간다")
+            log(f"  앞선 멈춤 {code} (stop_id {sp.get('stop_id')}) 확인" + (f" · 재시도 선언 {decl['reason']} ({decl['event']})" if decl else "")
+                + " — 장부 stop_history 로 옮기고 이어간다")
         # ①-2 장부의 도는 중 런 — 살아 있으면 거부 · 죽었으면 고아 런으로 마감 (비용 어림)
         for ent in led["runs"]:
             if ent.get("end") is None:
@@ -623,7 +744,8 @@ def run(a, deps=None):
         if unk:                                              # 정전 복구 개정 — 재부팅 고아 런은 사람이 근거를 보고 상한을 적어야 한다
             e0 = unk[0]
             return stop("resume", f"{e0['system']}{e0['seed']} 고아 런 비용이 미확정 (재부팅 · 같은 부팅 시계 근거 없음) — 근거를 보고 "
-                                  f"--attest_cost {e0.get('run_id')} --attest_hours H --attest_note '근거' 로 상한을 적은 뒤 다시",
+                                  f"--attest_cost {e0.get('run_id')} (근거 보기) → --attest_hours H --attest_event '…' --attest_time_reference '…' "
+                                  "--attest_uncertainty_h U --attest_derivation '…' --attest_confirmer '…' 로 상한을 적은 뒤 다시 (하한 미상이면 증언을 안 받는다)",
                         sys=e0["system"], seed=e0["seed"], run_id=e0.get("run_id"))
         # ①-3 장부에 그 계를 닫은 사건이 있으면 거부 (STOP 을 지워도)
         closed = [f"{r['system']}{r['seed']}" for r in led["runs"] if r.get("closes_system")]
@@ -646,11 +768,13 @@ def run(a, deps=None):
         if sm["track"] == "invalid":
             return stop("invalid", f"시작 전 묶음 판정 invalid (자료 · 기록 오류 — 과학적 종료 아님) — {sm.get('why')}", summary=sm)
         if sm["track"] == "cap_incomplete":
-            return stop("cap", f"시작 전 묶음 판정 상한 · 미완결 — {sm.get('why')}", cap_h=cap, summary=sm)
+            return stop("cap", f"시작 전 묶음 판정 상한 · 미완결 — {sm.get('why')}", cap_h=cap_eff()[0], summary=sm)
         if sm["track"] == "stage1_pass":
             log(f"✅ 이미 1 단계 통과 — 2 단계 시드 {sm['stage2']['seeds']} · 기계 {sm['stage2']['machines']}")
             return RC["pass"]
-        log(f"▶ 시작 · sha16 {s16} · 결정 {DECISION} active · 순서 {a.order} · 상한 {cap:g} h (카드) · 누적 {cost_so_far():.2f} h")
+        ce0, ci0 = cap_eff()
+        log(f"▶ 시작 · sha16 {s16} · 결정 {DECISION} active · 순서 {a.order} · 상한 {cap_base:g} h (카드) · 실효 {ce0:g} h "
+            f"(정전 손실 {ci0['outage_loss_h']:g} h · 추가 예산 {ci0['outage_extra_budget_h']:g} h) · 누적 {cost_so_far():.2f} h")
         for sysn, seed in order:
             rd = R / sysn / f"seed{seed}"
             vf = rd / "stage1_verdict.json"
@@ -667,16 +791,17 @@ def run(a, deps=None):
             retry_of, retry_stop, retry_kind = None, None, None
             if attempts:
                 inv_, _ = mq.attempt_inventory(R)
-                el_ = retry_eligibility(attempts, led["stop_history"], inv_, vals["stage1_max_interrupt_retries_per_seed"], mq.COST_BASES)
+                el_ = retry_eligibility(attempts, led["stop_history"], inv_, vals, mq)
                 if not el_["ok"]:
                     return stop(el_["code"], f"{sysn}{seed}: {el_['why']}", sys=sysn, seed=seed, run_id=attempts[-1].get("run_id"))
                 retry_of, retry_stop, retry_kind = el_["retry_of"], el_["stop_id"], el_["kind"]
-                log(f"  {sysn}{seed}: 다시 돌린다 ({retry_kind} · 앞 런 {retry_of[:8]} · 확인 STOP {retry_stop})")
+                log(f"  {sysn}{seed}: 다시 돌린다 ({retry_kind} · 앞 런 {retry_of[:8]} · 단계 {el_['stage']} · 확인 STOP {retry_stop})")
             walls = [float(r["wall_h"]) for r in led["runs"] if r.get("wall_h") is not None and r.get("status") == "ended"]
             cum, worst = cost_so_far(), max(walls + [a.seed_worst_h])
+            cap, cap_info = cap_eff()                        # ⭐ 실효 상한 (회신 DJ Q4) — 이 런 동안 고정
             if cum + worst > cap:
-                return stop("cap", f"누적 {cum:.1f} h + 한 시드 최악 {worst:.1f} h > 상한 {cap:g} h — 미완결로 멈춤 (끝난 시드만 골라 판정하지 않는다)",
-                            cum_h=cum, worst_h=worst, cap_h=cap)
+                return stop("cap", f"누적 {cum:.1f} h + 한 시드 최악 {worst:.1f} h > 실효 상한 {cap:g} h — 미완결로 멈춤 (끝난 시드만 골라 판정하지 않는다)",
+                            cum_h=cum, worst_h=worst, cap_h=cap, cap_info=cap_info)
             ok_n, t_wait = 0, clock()
             while ok_n < 2:
                 u = gpu_used()
@@ -694,7 +819,7 @@ def run(a, deps=None):
                                                      "retry_of": retry_of, "retry_stop_id": retry_stop, "retry_kind": retry_kind})
             ent = {"system": sysn, "seed": seed, "run_id": rid, "start": _now(), "start_epoch": wall(), "pgid": None,
                    "start_recovery_clock": recovery_clock(), "retry_of": retry_of, "retry_stop_id": retry_stop, "retry_kind": retry_kind,
-                   "status": "starting", "end": None, "wall_h": None, "wall_h_so_far": 0.0, "cum_before_h": cum}
+                   "status": "starting", "end": None, "wall_h": None, "wall_h_so_far": 0.0, "cum_before_h": cum, "cap_eff_h": cap}
             led["runs"].append(ent); state["entry"], state["t0"] = ent, t0
             save_ledger()
             h = launch(cmd, R / f"quench_{sysn}{seed}.log")
@@ -764,7 +889,7 @@ def run(a, deps=None):
             if sm["track"] == "invalid":
                 return stop("invalid", f"묶음 판정 invalid (자료 · 기록 오류 — 과학적 종료 아님) — {sm.get('why')}", summary=sm, run_id=rid, sys=sysn, seed=seed)
             if sm["track"] == "cap_incomplete":
-                return stop("cap", f"묶음 판정 상한 · 미완결 — {sm.get('why')}", cap_h=cap, summary=sm)
+                return stop("cap", f"묶음 판정 상한 · 미완결 — {sm.get('why')}", cap_h=cap_eff()[0], summary=sm)
         sm = mq.stage1_summary(R, values=vals, log=log)
         if sm["track"] == "stage1_pass":
             log(f"✅ 1 단계 통과 — 2 단계 시드 {sm['stage2']['seeds']} · 기계 {sm['stage2']['machines']}")
@@ -774,7 +899,7 @@ def run(a, deps=None):
         if sm["track"] == "invalid":
             return stop("invalid", f"묶음 판정 invalid (자료 · 기록 오류 — 과학적 종료 아님) — {sm.get('why')}", summary=sm)
         if sm["track"] == "cap_incomplete":
-            return stop("cap", f"묶음 판정 상한 · 미완결 — {sm.get('why')}", cap_h=cap, summary=sm)
+            return stop("cap", f"묶음 판정 상한 · 미완결 — {sm.get('why')}", cap_h=cap_eff()[0], summary=sm)
         return stop("pending", f"순서를 다 돌았는데 묶음 판정이 {sm['track']} — 판정 파일을 확인한다", summary=sm)
     except BaseException as e:                               # 예외 · Ctrl-C · SIGTERM · SIGHUP (회신 DG P0-2)
         why = f"{type(e).__name__}: {e}"
@@ -951,7 +1076,7 @@ def _selftest():
         return td
 
     def go(wt, scen=None, poll_s=3600.0, order=DEFAULT_ORDER, expect=None, rr=None, ack=None, mq=None,
-           gpu=None, sleep_hook=None, pg_alive=None, seed_worst_h=21.0, cleanup_s=0.0, default_clock=False, boot="fixture"):
+           gpu=None, sleep_hook=None, pg_alive=None, seed_worst_h=21.0, cleanup_s=0.0, default_clock=False, boot="fixture", declare=None):
         launched, clock = [], [0.0]
         def launch(cmd, lp):
             h = FakeQuench(cmd, lp, scen=scen, launched=launched)
@@ -974,7 +1099,9 @@ def _selftest():
         rr = rr or pathlib.Path(tempfile.mkdtemp(dir=tmp_root))
         a = argparse.Namespace(worktree=str(wt), run_root=str(rr), python="python3", seed_worst_h=seed_worst_h,
                                poll_s=poll_s, gpu_poll_s=60.0, start_max_mib=2000, order=order, ack_stop=ack,
-                               expect_sha=expect or sha16(pathlib.Path(wt) / DRIVER_REL))
+                               expect_sha=expect or sha16(pathlib.Path(wt) / DRIVER_REL),
+                               **{k: (declare or {}).get(k) for k in ("retry_reason", "retry_event", "retry_evidence", "declared_by",
+                                                                      "rejudge_impossible_reason")})
         deps = {"mq": mq or real, "launch": launch, "gpu_used": gpu_used, "sleep": sleep,
                 "pg_alive": pg_alive or (lambda pg: False),
                 "recovery_clock": lambda: {"host": "fixture", "boot_id": boot, "kind": "CLOCK_BOOTTIME", "seconds": 7200.0}}
@@ -996,6 +1123,66 @@ def _selftest():
         return rc, launched, rr
     J = lambda p: json.loads(pathlib.Path(p).read_text(encoding="utf-8"))
     tag = lambda L: [(p.sys, p.seed) for p in L]
+    #: 회신 DJ Q1 — 재시도 영수증에 붙이는 선언 (결과와 무관한 사건) · Q3 — 증언 근거 필드
+    OUT = {"retry_reason": "power_outage", "retry_event": "kgy 정전 (selftest)", "retry_evidence": "UPS 로그 (selftest)", "declared_by": "selftest"}
+    FIX = {"retry_reason": "invalid_cause_fixed", "retry_event": "판독 결함 고침 (selftest)", "retry_evidence": "커밋 (selftest)", "declared_by": "selftest"}
+    ATT = {"event": "kgy 정전 (selftest)", "time_reference": "UPS 로그 시각 (selftest)", "uncertainty_h": 0.1,
+           "derivation": "정전 시각 − 시작 + 불확실성 (selftest)", "confirmer": "selftest"}
+    DECL = lambda d: {"reason": d["retry_reason"], "event": d["retry_event"], "evidence": d["retry_evidence"], "declared_by": d["declared_by"],
+                      "declared_at": "2026-11-03 00:00:00", **({"rejudge_impossible_reason": d["rejudge_impossible_reason"]}
+                                                             if d.get("rejudge_impossible_reason") else {})}
+
+    def with_history(rr_, sysn, seed, prevs):
+        """rr_ 의 (계, 시드) 공식 런 앞에 이전 실행들을 **모든 면에서 맞게** 끼운다 — 보존 폴더 (같은 계 폴더 안) · 실행 전 기록 · 장부 행 ·
+        재시도 필드 (retry_of = 바로 앞 · retry_kind = 앞 종류 · retry_stop_id) · 앞 실행에 묶여 확인된 STOP + 선언. 음성 시험은 여기서
+        **한 가지만** 깨서 그 한 가지를 잡는지 본다 (양성 대조: 그대로면 통과). prevs (시간 순): {"kind", "stage", "status", "rc",
+        "wall_h", "decl" (OUT · FIX · None), "code"}. 반환: 끼운 run_id 목록."""
+        led_ = J(rr_ / "stage1_ledger.json")
+        canon = rr_ / sysn / f"seed{seed}"
+        ic = next(i for i, x in enumerate(led_["runs"]) if (x["system"], x["seed"]) == (sysn, seed))
+        lines = (canon / "traj.xyz").read_text(encoding="utf-8").splitlines(keepends=True)
+        fr = int(lines[0]) + 2
+        n_fr = len(lines) // fr
+        chain = []
+        for k, pv in enumerate(prevs):
+            rid_ = uuid.uuid4().hex
+            d = rr_ / sysn / f"seed{seed}.prev{k}"
+            d.mkdir()
+            st_ = pv.get("stage", "md_incomplete")
+            if st_ != "no_plan":
+                shutil.copy(canon / "plan.json", d / "plan.json")
+                pl_ = J(d / "plan.json"); pl_["run_id"] = rid_; (d / "plan.json").write_text(json.dumps(pl_, ensure_ascii=False), encoding="utf-8")
+                keep = n_fr if st_ in ("md_complete", "final") else max(1, n_fr // 3)
+                (d / "traj.xyz").write_text("".join(lines[:keep * fr]), encoding="utf-8")
+                if st_ == "final":
+                    shutil.copy(canon / "final.xyz", d / "final.xyz"); shutil.copy(canon / "result.json", d / "result.json")
+            row = {"system": sysn, "seed": seed, "run_id": rid_, "start": "t", "end": "t", "status": pv.get("status", "interrupted"),
+                   "rc": pv.get("rc", "killed_runner_exit"), "wall_h": pv.get("wall_h", 1.0), "cost_basis": "measured"}
+            if pv.get("kind") == "invalid":
+                (d / "stage1_verdict.json").write_text(json.dumps({"status": "invalid"}), encoding="utf-8")
+                row["verdict"] = "invalid"
+            chain.append((d, row, pv))
+        seq = chain + [(canon, led_["runs"][ic], None)]
+        hist_ = list(led_.get("stop_history") or [])
+        for k, (d, row, _) in enumerate(seq):
+            rf = {"retry_of": None, "retry_stop_id": None, "retry_kind": None}
+            if k:
+                _, prow, ppv = seq[k - 1]
+                kind = ppv.get("kind", "interrupted")
+                sid = f"selftest{k}{sysn}{seed}"
+                rec = {"at": "t", "code": ppv.get("code", "invalid" if kind == "invalid" else "interrupted"), "reason": "selftest",
+                       "terminal": False, "run_id": prow["run_id"], "stop_id": sid, "acked_at": "t"}
+                if ppv.get("decl") is not None:
+                    rec["declaration"] = DECL(ppv["decl"])
+                hist_.append(rec)
+                rf = {"retry_of": prow["run_id"], "retry_stop_id": sid, "retry_kind": kind}
+            row.update(rf)
+            base_att = J(d / "stage1_attempt.json") if (d / "stage1_attempt.json").is_file() else {"system": sysn, "seed": seed, "run_id": row["run_id"]}
+            _write_json_atomic(d / "stage1_attempt.json", {**base_att, **rf})
+        led_["runs"][ic:ic] = [row for _, row, _ in chain]
+        led_["stop_history"] = hist_
+        _write_json_atomic(rr_ / "stage1_ledger.json", led_)
+        return [row["run_id"] for _, row, _ in chain]
 
     wt = mk_wt()
     # 1) 모두 통과 — 진짜 판독 함수로
@@ -1144,15 +1331,13 @@ def _selftest():
     vals_t = real.read_li2s2_values(wt / CARD_REL)
     led_full = J(rr_full / "stage1_ledger.json")
     sm_ok = real.stage1_summary(rr_full, values=vals_t, log=lambda *m: None)
-    rows_over = [dict(x) for x in led_full["runs"]]
-    ia11 = next(i for i, x in enumerate(rows_over) if (x["system"], x["seed"]) == ("A", 11))
-    rows_over[ia11].update(retry_of="f" * 32, retry_kind="interrupted")      # 비싼 끊긴 런 (300 h) 뒤의 정당한 재시도 — 이력 규칙은 통과 · 상한만 넘는다
-    rows_over[ia11:ia11] = [{"system": "A", "seed": 11, "run_id": "f" * 32, "end": "t", "status": "interrupted", "wall_h": 300.0, "cost_basis": "measured"}]
-    _write_json_atomic(rr_full / "stage1_ledger.json", {**led_full, "runs": rows_over})
+    # 비싼 상한 멈춤 런 (300 h) 뒤의 정당한 재시도 (budget_cap_raised) — 이력 · 선언 규칙은 통과 · 상한만 넘는다 (정전 손실 아님 → 실효 상한 = 230)
+    with_history(rr_full, "A", 11, [{"status": "cap", "rc": "killed_cap", "wall_h": 300.0, "code": "cap",
+                                     "decl": {**OUT, "retry_reason": "budget_cap_raised", "retry_event": "카드 상한 개정 (selftest)"}}])
     sm_over = real.stage1_summary(rr_full, values=vals_t, log=lambda *m: None)
     (rr_full / "stage1_ledger.json").unlink()
     sm_none = real.stage1_summary(rr_full, values=vals_t, log=lambda *m: None)
-    chk(sm_ok["track"] == "stage1_pass" and sm_over["track"] == "cap_incomplete" and sm_none["track"] == "pending",
+    chk(sm_ok["track"] == "stage1_pass" and sm_over["track"] == "cap_incomplete" and sm_over["cost"]["cap_h"] == 230.0 and sm_none["track"] == "pending",
         f"⛔음성 DG P0-3 (소비자): 다 통과해도 장부 합 > 상한이면 미완결 · 장부가 없으면 대기 ({sm_ok['track']} · {sm_over['track']} · {sm_none['track']})")
     # 6) 시작 전 검사 · 끊긴 런 · 잠금 · 고아 런 · 순서
     rc, L, rr = go(mk_wt(state="proposed"))
@@ -1182,10 +1367,12 @@ def _selftest():
     rc, L, _ = go(wt, rr=rr1)
     chk(rc == 0 and len(L) == 10, "낡은 잠금 파일 (프로세스 없음) 은 막지 않는다 — flock 은 커널이 풀었다")
     rr2 = pathlib.Path(tempfile.mkdtemp(dir=tmp_root)); (rr2 / "A/seed11").mkdir(parents=True)
+    _write_json_atomic(rr2 / "A/seed11/stage1_attempt.json", {"system": "A", "seed": 11, "run_id": "e" * 32, "retry_of": None,
+                                                            "retry_stop_id": None, "retry_kind": None})
     (rr2 / "A/seed11/thermo.csv").write_text("x\n")
     t_start = time.time() - 7200
     os.utime(rr2 / "A/seed11/thermo.csv", (t_start + 3600, t_start + 3600))   # 마지막 기록 = 시작 + 1 h → 하한 1.5 h (heartbeat) · 상한 2.0 h 가 갈린다
-    _write_json_atomic(rr2 / "stage1_ledger.json", {"runs": [{"system": "A", "seed": 11, "start": "t", "start_epoch": t_start,
+    _write_json_atomic(rr2 / "stage1_ledger.json", {"runs": [{"system": "A", "seed": 11, "run_id": "e" * 32, "start": "t", "start_epoch": t_start,
                                                                "pgid": 4242, "status": "running", "end": None, "wall_h": None,
                                                                "start_recovery_clock": {"host": "fixture", "boot_id": "fixture", "kind": "CLOCK_BOOTTIME", "seconds": 0.0},
                                                                "wall_h_so_far": 1.5}]})
@@ -1267,10 +1454,10 @@ def _selftest():
         and si["code"] == "invalid" and not si["terminal"] and "증거가 아니다" in si["reason"],
         "⛔음성 DH P1-4: 첫 시드 녹음 판정 invalid (0 번 프레임 종 바뀜) → 멈추되 과학적 종료 (melt · terminal) 로 적지 않는다")
     (rr_i / "A/seed11").rename(rr_i / "A/seed11.invalid_selftest")
-    rc_i2, L_i2, _ = go(wt, rr=rr_i, ack=si["stop_id"])
+    rc_i2, L_i2, _ = go(wt, rr=rr_i, ack=si["stop_id"], declare=FIX)
     chk(rc_i2 == 0 and len(L_i2) == 10 and len(J(rr_i / "stage1_ledger.json")["runs"]) == 11
         and J(rr_i / "stage1_summary.json")["track"] == "stage1_pass",
-        "DH P1-4: 자료 오류는 고친 뒤 (폴더를 옆으로 · --ack_stop) 다시 돌린다 — 앞 런 비용은 장부에 남는다 (11 런)")
+        "DH P1-4 · DJ Q1: 자료 오류는 고친 뒤 (폴더를 옆으로 · --ack_stop + 원인 고침 선언) 다시 돌린다 — 앞 런 비용은 장부에 남는다 (11 런)")
     h1 = clone(rr_d)
     with open(h1 / "A/seed11/final.xyz", "a") as fh:
         fh.write("\n")
@@ -1357,45 +1544,314 @@ def _selftest():
         chk(_group_members(424242) == [], "DI 양성: /proc 일부 판독 불가라도 자기 그룹 ESRCH 확인이면 부재")
     finally:
         globals()["os"], globals()["pathlib"], globals()["signal"] = saved_os, saved_path, saved_sig
-    # 10) 정전 복구 개정 — 판정 없이 끊긴 런은 그 run_id 의 STOP 확인 뒤 시드마다 한 번 · 재부팅 고아 런은 증언 상한
+    # 10) 정전 복구 개정 + 회신 DJ — 끊긴 런은 그 run_id 의 STOP 을 **선언과 함께** 확인한 뒤 시드마다 한 번 · 재부팅 고아 런은 증언 상한
+    inv_ = lambda s_, w: s_["track"] == "invalid" and any(w in x for x in (s_.get("cost") or {}).get("invalid") or [])
     rc_t1, L_t1, rr_t1 = go(wt, scen={("B", 12): {"raise_on_poll": 3, "polls": 6}})
     s_t1 = J(rr_t1 / "STOP.json")
     e_t1 = [x for x in J(rr_t1 / "stage1_ledger.json")["runs"] if (x["system"], x["seed"]) == ("B", 12)][0]
     ok1 = rc_t1 == RC["interrupted"] and s_t1.get("run_id") == e_t1["run_id"] and e_t1["status"] == "interrupted"
     (rr_t1 / "B/seed12").rename(rr_t1 / "B/seed12.interrupted_selftest")
-    rc_t2, L_t2, _ = go(wt, rr=rr_t1, ack=s_t1["stop_id"])
+    rc_n1, L_n1, _ = go(wt, rr=rr_t1, ack=s_t1["stop_id"])                     # 선언 없이 확인 → 확인은 되지만 영수증이 아니다
+    s_n1 = J(rr_t1 / "STOP.json")
+    rc_n2, L_n2, _ = go(wt, rr=rr_t1, ack=s_n1["stop_id"], declare={**OUT, "retry_reason": "user_ctrl_c"})
+    rc_n3, L_n3, _ = go(wt, rr=rr_t1, ack=s_n1["stop_id"], declare={**OUT, "retry_reason": "budget_cap_raised"})
+    rc_n4, L_n4, _ = go(wt, rr=rr_t1, ack=s_n1["stop_id"], declare={**OUT, "declared_by": " "})
+    still = J(rr_t1 / "STOP.json")["stop_id"] == s_n1["stop_id"]
+    chk(ok1 and rc_n1 == RC["resume"] and not L_n1 and "선언" in s_n1["reason"] and s_n1.get("run_id") == e_t1["run_id"]
+        and rc_n2 == rc_n3 == rc_n4 == RC["refused"] and not (L_n2 or L_n3 or L_n4) and still,
+        "⛔음성 DJ Q1: 선언 없는 확인은 재시도 영수증이 아니다 (그 run_id 에 묶여 멈춤) · 허용 밖 사유 (Ctrl-C) · 상한 아닌 런에 상한 사유 · "
+        "선언자 없음 → 확인 자체를 거부 (STOP 그대로 · 발사 0)")
+    rc_t2, L_t2, _ = go(wt, rr=rr_t1, ack=s_n1["stop_id"], declare=OUT)
     led_t = J(rr_t1 / "stage1_ledger.json")
     b12 = [x for x in led_t["runs"] if (x["system"], x["seed"]) == ("B", 12)]
-    chk(ok1 and rc_t2 == 0 and len(b12) == 2 and b12[1].get("retry_of") == b12[0]["run_id"] and b12[1].get("retry_kind") == "interrupted"
-        and J(rr_t1 / "stage1_summary.json")["track"] == "stage1_pass" and len(led_t["runs"]) == 11,
-        "정전 복구: 판정 없이 끊긴 런 (B12 · 결과 파일 없음) 은 그 run_id 의 STOP 확인 뒤 한 번 다시 돈다 · 앞 런 비용은 장부에 남는다 (11 런 · 통과)")
+    sm_t2 = J(rr_t1 / "stage1_summary.json")
+    rcpt_t = [h for h in led_t["stop_history"] if h.get("stop_id") == b12[-1].get("retry_stop_id")]
+    chk(rc_t2 == 0 and len(b12) == 2 and b12[1].get("retry_of") == b12[0]["run_id"] and b12[1].get("retry_kind") == "interrupted"
+        and len(rcpt_t) == 1 and rcpt_t[0]["declaration"]["reason"] == "power_outage" and rcpt_t[0]["run_id"] == b12[0]["run_id"]
+        and J(rr_t1 / "B/seed12" / real.ATTEMPT_NAME).get("retry_stop_id") == b12[1]["retry_stop_id"]
+        and sm_t2["track"] == "stage1_pass" and len(led_t["runs"]) == 11 and abs(sm_t2["cost"]["cap_h"] - (230.0 + b12[0]["wall_h"])) < 1e-9,
+        "정전 복구 · DJ Q1 · Q4: 판정 없이 끊긴 B12 (MD 미완) 는 그 run_id 의 STOP 을 정전 선언과 함께 확인한 뒤 한 번 다시 돈다 · 영수증 · "
+        "실행 전 기록 · 장부가 서로 맞고 · 앞 런 비용은 장부에 남고 · 정전 손실만큼 실효 상한이 오른다 (11 런 · 통과)")
     rc_u1, L_u1, rr_u2 = go(wt, scen={("B", 12): {"raise_on_poll": 3, "polls": 6}})
     su1 = J(rr_u2 / "STOP.json"); (rr_u2 / "B/seed12").rename(rr_u2 / "B/seed12.int1")
-    rc_u2b, L_u2b, _ = go(wt, rr=rr_u2, ack=su1["stop_id"], scen={("B", 12): {"raise_on_poll": 3, "polls": 6}})
+    rc_u2b, L_u2b, _ = go(wt, rr=rr_u2, ack=su1["stop_id"], declare=OUT, scen={("B", 12): {"raise_on_poll": 3, "polls": 6}})
     su2 = J(rr_u2 / "STOP.json"); (rr_u2 / "B/seed12").rename(rr_u2 / "B/seed12.int2")
-    rc_u3, L_u3, _ = go(wt, rr=rr_u2, ack=su2["stop_id"])
-    chk(rc_u2b == RC["interrupted"] and rc_u3 == RC["invalid"] and not L_u3 and "한도" in J(rr_u2 / "STOP.json")["reason"],
-        "⛔음성 정전 복구: 같은 시드가 두 번 끊기면 (카드 한도 1) 세 번째는 안 돌린다 — 새 결정 없이는")
+    rc_u3, L_u3, _ = go(wt, rr=rr_u2, ack=su2["stop_id"], declare=OUT)
+    chk(rc_u2b == RC["interrupted"] and tag(L_u2b) == [("B", 12)] and rc_u3 == RC["invalid"] and not L_u3 and "한도" in J(rr_u2 / "STOP.json")["reason"],
+        "⛔음성 정전 복구: 같은 시드가 두 번 끊기면 (카드 한도 1) 선언이 맞아도 세 번째는 안 돌린다 — 새 결정 없이는")
     c_d = clone(rr_d)
     led_cd = J(c_d / "stage1_ledger.json")
     b13 = [x for x in led_cd["runs"] if (x["system"], x["seed"]) == ("B", 13)][0]
     b13.pop("verdict", None)
     (c_d / "B/seed13/stage1_verdict.json").unlink()
     (c_d / "B/seed13").rename(c_d / "B/seed13.unjudged")
-    led_cd["stop_history"] = list(led_cd.get("stop_history") or []) + [{"code": "interrupted", "run_id": b13["run_id"], "stop_id": "selftest", "acked_at": "t"}]
+    led_cd["stop_history"] = list(led_cd.get("stop_history") or []) + [{"code": "interrupted", "run_id": b13["run_id"], "stop_id": "selftest",
+                                                                      "acked_at": "t", "declaration": DECL(OUT)}]
     _write_json_atomic(c_d / "stage1_ledger.json", led_cd)
     rc_cd, L_cd, _ = go(wt, rr=c_d)
     chk(rc_cd == RC["resume"] and not L_cd and "끝까지 돌았다" in J(c_d / "STOP.json")["reason"],
-        "⛔음성 정전 복구: 끝까지 돈 런 (결과 파일 있음 · 판정 없음) 은 재시도가 아니라 판정해야 한다")
+        "⛔음성 정전 복구: 끝까지 돈 런 (결과 파일 있음 · 판정 없음) 은 선언이 맞아도 재시도가 아니라 판정해야 한다")
+    c_m = clone(rr_d)
+    led_cm = J(c_m / "stage1_ledger.json")
+    b13m = [x for x in led_cm["runs"] if (x["system"], x["seed"]) == ("B", 13)][0]
+    b13m.pop("verdict", None); b13m.update(status="interrupted", rc="killed_runner_exit")
+    for f_ in ("stage1_verdict.json", "final.xyz", "result.json"):
+        (c_m / "B/seed13" / f_).unlink()
+    (c_m / "B/seed13").rename(c_m / "B/seed13.fire_cut")
+    led_cm["stop_history"] = list(led_cm.get("stop_history") or []) + [{"code": "interrupted", "run_id": b13m["run_id"], "stop_id": "selftest_m",
+                                                                      "acked_at": "t", "declaration": DECL(OUT)}]
+    _write_json_atomic(c_m / "stage1_ledger.json", led_cm)
+    rc_cm, L_cm, _ = go(wt, rr=c_m)
+    chk(rc_cm == RC["resume"] and not L_cm and "FIRE" in J(c_m / "STOP.json")["reason"] and real.folder_stage(c_m / "B/seed13.fire_cut") == "md_complete",
+        "⛔음성 DJ Q2: MD 는 끝났고 FIRE 만 못 마친 런은 선언이 맞아도 재담금질하지 않고 보류 (FIRE 복구는 새 결정)")
     rc_w1, L_w1, rr_w = go(wt, scen={("B", 12): {"raise_on_poll": 3, "polls": 6}})
     sw1 = J(rr_w / "STOP.json")
     (rr_w / "B/seed12").rename(rr_w / "B/seed12.int1")
     led_w = J(rr_w / "stage1_ledger.json")
-    led_w.setdefault("stop_history", []).append({**sw1, "run_id": "0" * 32, "acked_at": "t"})
+    led_w.setdefault("stop_history", []).append({**sw1, "run_id": "0" * 32, "acked_at": "t", "declaration": DECL(OUT)})
     _write_json_atomic(rr_w / "stage1_ledger.json", led_w); (rr_w / "STOP.json").unlink()
     rc_w2, L_w2, _ = go(wt, rr=rr_w)
     chk(rc_w2 == RC["resume"] and not L_w2 and "묶여 확인" in J(rr_w / "STOP.json")["reason"],
-        "⛔음성 정전 복구: 확인된 STOP 이 다른 run_id 에 묶여 있으면 다시 안 돌린다")
+        "⛔음성 정전 복구: 확인된 STOP (선언 포함) 이 다른 run_id 에 묶여 있으면 다시 안 돌린다")
+    # 회신 DJ P0-2 (Codex 재현 두 경로) — 끊긴 보존 폴더의 판정 파일이 잘림 · invalid 폴더를 run_root 밖으로
+    rc_v1, L_v1, rr_v1 = go(wt, scen={("B", 12): {"raise_on_poll": 3, "polls": 6}})
+    sv1 = J(rr_v1 / "STOP.json"); (rr_v1 / "B/seed12").rename(rr_v1 / "B/seed12.int")
+    (rr_v1 / "B/seed12.int/stage1_verdict.json").write_text('{"status": "inc', encoding="utf-8")
+    rc_v2, L_v2, _ = go(wt, rr=rr_v1, ack=sv1["stop_id"], declare=OUT)
+    rc_x1, L_x1, rr_x1 = go(wt, scen={("A", 11): {"melt": "species_swap", "polls": 8}})
+    sx1 = J(rr_x1 / "STOP.json")
+    shutil.move(str(rr_x1 / "A/seed11"), str(rr_x1.parent / (rr_x1.name + "_outside_seed11")))
+    rc_x2, L_x2, _ = go(wt, rr=rr_x1, ack=sx1["stop_id"], declare=FIX)
+    chk(rc_v2 == RC["invalid"] and not L_v2 and "못 읽는다" in J(rr_v1 / "STOP.json")["reason"]
+        and rc_x1 == RC["invalid"] and rc_x2 == RC["invalid"] and not L_x2 and "보존 누락" in J(rr_x1 / "STOP.json")["reason"],
+        "⛔음성 DJ P0-2 (Codex 재현): 끊긴 B12 보존 폴더의 판정 파일이 잘리면 '판정 없음' 으로 읽지 않고 막는다 · 기술적 invalid A11 폴더를 "
+        "run_root 밖으로 옮기면 invalid 런이어도 다시 안 돌린다 (장부 → 폴더 대조 · 발사 0)")
+    # 회신 DJ P0-2 끝 — 끝까지 돈 기술적 invalid 런은 다시 판정 못 하는 이유를 선언해야 재담금질
+    rc_f5, L_f5, rr_f5 = go(wt, scen={("A", 12): {"final": "five"}})
+    sf5 = J(rr_f5 / "STOP.json")
+    (rr_f5 / "A/seed12").rename(rr_f5 / "A/seed12.invalid_five")
+    rc_f6, L_f6, _ = go(wt, rr=rr_f5, ack=sf5["stop_id"], declare=FIX)
+    still_f = J(rr_f5 / "STOP.json")["stop_id"] == sf5["stop_id"]
+    rc_f7, L_f7, _ = go(wt, rr=rr_f5, ack=sf5["stop_id"],
+                        declare={**FIX, "rejudge_impossible_reason": "final.xyz 원자 5 개 — 원시 traj 마지막 프레임에서 FIRE 를 다시 해야 한다 (selftest)"})
+    chk(rc_f5 == RC["invalid"] and sf5.get("run_id") and rc_f6 == RC["refused"] and not L_f6 and still_f and rc_f7 == 0 and len(L_f7) == 8
+        and J(rr_f5 / "stage1_summary.json")["track"] == "stage1_pass",
+        "⛔음성 DJ P0-2: 끝까지 돈 invalid 런 (final.xyz 5 원자) 은 '다시 판정 못 하는 이유' 없이는 재시도 선언을 안 받고 (STOP 그대로) · 이유를 적으면 "
+        "다시 돌아 1 단계를 마친다")
+    # 회신 DJ P0-1 (소비자) — 모든 면에서 맞는 이력 (양성 대조) 에서 한 가지씩만 깬다
+    def hist_case(prevs, mut=None):
+        c = clone(rr_d)
+        ids = with_history(c, "B", 13, prevs)
+        if mut:
+            mut(c, ids)
+        return c, summ(c)
+    def strip_ledger(c, ids):                                # Codex 재현 1: 장부의 재시도 필드 · STOP 이력을 지운다
+        l_ = J(c / "stage1_ledger.json")
+        for r in l_["runs"]:
+            for f_ in ("retry_of", "retry_kind", "retry_stop_id"):
+                r.pop(f_, None)
+        l_["stop_history"] = []
+        _write_json_atomic(c / "stage1_ledger.json", l_)
+    def strip_all(c, ids):                                   # 실행 전 기록까지 같이 지운다 (장부와 맞춰서)
+        strip_ledger(c, ids)
+        for d in (c / "B").glob("seed13*"):
+            a_ = J(d / real.ATTEMPT_NAME)
+            a_.update(retry_of=None, retry_kind=None, retry_stop_id=None)
+            _write_json_atomic(d / real.ATTEMPT_NAME, a_)
+    def strip_kind(c, ids):                                  # Codex 재현 2: 두 번 재시도에서 retry_kind 만 지운다 (장부 · 실행 전 기록 둘 다)
+        l_ = J(c / "stage1_ledger.json")
+        for r in l_["runs"]:
+            r.pop("retry_kind", None)
+        _write_json_atomic(c / "stage1_ledger.json", l_)
+        for d in (c / "B").glob("seed13*"):
+            a_ = J(d / real.ATTEMPT_NAME); a_.pop("retry_kind", None); _write_json_atomic(d / real.ATTEMPT_NAME, a_)
+    def att_mismatch(c, ids):
+        a_ = J(c / "B/seed13" / real.ATTEMPT_NAME); a_["retry_of"] = None; _write_json_atomic(c / "B/seed13" / real.ATTEMPT_NAME, a_)
+    def att_gone(c, ids):
+        (c / "B/seed13.prev0" / real.ATTEMPT_NAME).unlink()
+    def rebind(c, ids):
+        l_ = J(c / "stage1_ledger.json"); l_["stop_history"][-1]["run_id"] = "0" * 32; _write_json_atomic(c / "stage1_ledger.json", l_)
+    def cut_verdict(c, ids):
+        (c / "B/seed13.prev0/stage1_verdict.json").write_text('{"status": "pa', encoding="utf-8")
+    def move_out(c, ids):
+        shutil.move(str(c / "B/seed13.prev0"), str(c.parent / "outside_prev0"))
+    s_ok1 = hist_case([{"decl": OUT}])[1]
+    c_two, s_two = hist_case([{"decl": OUT}, {"decl": OUT}])
+    s_two_k = hist_case([{"decl": OUT}, {"decl": OUT}], strip_kind)[1]
+    c_sl, s_sl = hist_case([{"decl": OUT}], strip_ledger)
+    s_sa = hist_case([{"decl": OUT}], strip_all)[1]
+    s_am = hist_case([{"decl": OUT}], att_mismatch)[1]
+    s_ag = hist_case([{"decl": OUT}], att_gone)[1]
+    s_nd = hist_case([{"decl": None}])[1]
+    s_rb = hist_case([{"decl": OUT}], rebind)[1]
+    s_cv = hist_case([{"decl": OUT}], cut_verdict)[1]
+    s_mo = hist_case([{"decl": OUT}], move_out)[1]
+    s_mc = hist_case([{"decl": OUT, "stage": "md_complete"}])[1]
+    s_fn = hist_case([{"decl": OUT, "stage": "final"}])[1]
+    s_ivn = hist_case([{"kind": "invalid", "stage": "final", "status": "ended", "rc": 0, "decl": FIX}])[1]
+    s_ivy = hist_case([{"kind": "invalid", "stage": "final", "status": "ended", "rc": 0,
+                        "decl": {**FIX, "rejudge_impossible_reason": "final.xyz 깨짐 (selftest)"}}])[1]
+    s_cpo = hist_case([{"status": "cap", "rc": "killed_cap", "code": "cap", "decl": OUT}])[1]
+    rc_sl, L_sl, _ = go(wt, rr=c_sl)
+    got_c = {"ok": s_ok1["track"], "two": inv_(s_two, "한도"), "two_kind": inv_(s_two_k, "한도"), "strip_ledger": inv_(s_sl, "retry_of"),
+             "strip_all": inv_(s_sa, "retry_of"), "att_mismatch": inv_(s_am, real.ATTEMPT_NAME), "att_gone": inv_(s_ag, real.ATTEMPT_NAME),
+             "no_decl": inv_(s_nd, "재시도 선언"), "rebind": inv_(s_rb, "묶여 확인된"), "cut_verdict": inv_(s_cv, "못 읽는데"),
+             "move_out": inv_(s_mo, "보존 누락"), "md_complete": inv_(s_mc, "MD 까지"), "final": inv_(s_fn, "끝까지"),
+             "invalid_final_no_reason": inv_(s_ivn, "다시 판정할 수 없다"), "invalid_final_reason": s_ivy["track"],
+             "cap_run_outage_reason": inv_(s_cpo, "상한으로 멈춘 런"), "runner_on_stripped": (rc_sl, len(L_sl))}
+    exp_c = {"ok": "stage1_pass", "two": True, "two_kind": True, "strip_ledger": True, "strip_all": True, "att_mismatch": True, "att_gone": True,
+             "no_decl": True, "rebind": True, "cut_verdict": True, "move_out": True, "md_complete": True, "final": True,
+             "invalid_final_no_reason": True, "invalid_final_reason": "stage1_pass", "cap_run_outage_reason": True,
+             "runner_on_stripped": (RC["invalid"], 0)}
+    chk(got_c == exp_c,
+        "⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 "
+        "종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까지 지움 · 기록 불일치 · 기록 없음 · 선언 없음 · 다른 런에 묶임 · 앞 판정 "
+        "잘림 · 보존 폴더 밖 · MD 완료 / 최종 뒤 재담금질 · 끝까지 돈 invalid 에 이유 없음 · 상한 런에 정전 사유 → 무효 (이유가 있으면 통과) · "
+        f"지운 자료를 러너에 다시 줘도 통과 아님 · 발사 0 ({ {k: got_c[k] for k in got_c if got_c[k] != exp_c[k]} })")
+    # 러너 재시도 자격 단위 (소비자와 따로 깬다)
+    ue = pathlib.Path(tempfile.mkdtemp(dir=tmp_root))
+    src_ = rr_d / "B/seed13"
+    def ufold(name, stage="md_incomplete", verdict=None):
+        d = ue / name; d.mkdir()
+        if stage != "no_plan":
+            shutil.copy(src_ / "plan.json", d / "plan.json")
+            lines = (src_ / "traj.xyz").read_text(encoding="utf-8").splitlines(keepends=True)
+            fr = int(lines[0]) + 2; n_fr = len(lines) // fr
+            keep = n_fr if stage in ("md_complete", "final") else max(1, n_fr // 3)
+            (d / "traj.xyz").write_text("".join(lines[:keep * fr]), encoding="utf-8")
+            if stage == "final":
+                shutil.copy(src_ / "final.xyz", d / "final.xyz")
+            if stage == "unreadable":
+                (d / "plan.json").write_text('{"melt', encoding="utf-8")
+        if verdict is not None:
+            (d / "stage1_verdict.json").write_text(verdict, encoding="utf-8")
+        return {"path": str(d)}
+    R0, R1 = "9" * 32, "7" * 32
+    run0 = lambda **k: {"run_id": R0, "end": "t", "cost_basis": "measured", "status": "interrupted", **k}
+    rcpt = lambda code="interrupted", decl=OUT, rid=R0: [{"stop_id": "u1", "code": code, "run_id": rid, "acked_at": "t",
+                                                         **({"declaration": DECL(decl)} if decl else {})}]
+    E = lambda atts, hist_, inv: retry_eligibility(atts, hist_, inv, vals_t, real)
+    INV = '{"status": "invalid"}'
+    cases = {
+        "ok": E([run0()], rcpt(), {R0: ufold("ok")}),
+        "no_plan_ok": E([run0()], rcpt(), {R0: ufold("np", stage="no_plan")}),
+        "ledger_fail": E([run0(verdict="fail")], rcpt(), {R0: ufold("lf")}),
+        "missing_invalid": E([run0(verdict="invalid")], rcpt("invalid", FIX), {}),
+        "folder_pass": E([run0()], rcpt(), {R0: ufold("fp", verdict='{"status": "pass"}')}),
+        "folder_cut": E([run0()], rcpt(), {R0: ufold("fc", verdict='{"status": "in')}),
+        "cost": E([run0(cost_basis="unknown")], rcpt(), {R0: ufold("co")}),
+        "stage_bad": E([run0()], rcpt(), {R0: ufold("sb", stage="unreadable")}),
+        "final": E([run0()], rcpt(), {R0: ufold("fi", stage="final")}),
+        "fire": E([run0()], rcpt(), {R0: ufold("mc", stage="md_complete")}),
+        "no_receipt": E([run0()], [], {R0: ufold("nr")}),
+        "no_decl": E([run0()], rcpt(decl=None), {R0: ufold("nd")}),
+        "other_run": E([run0()], rcpt(rid="8" * 32), {R0: ufold("or")}),
+        "unacked": E([run0()], [{**rcpt()[0], "acked_at": None}], {R0: ufold("ua")}),
+        "inv_needs_rejudge": E([run0(verdict="invalid")], rcpt("invalid", FIX), {R0: ufold("ir", stage="md_complete", verdict=INV)}),
+        "inv_rejudge_ok": E([run0(verdict="invalid")], rcpt("invalid", {**FIX, "rejudge_impossible_reason": "x"}), {R0: ufold("io", stage="md_complete", verdict=INV)}),
+        "inv_wrong_code": E([run0(verdict="invalid")], rcpt("resume", FIX), {R0: ufold("iw", verdict=INV)}),
+        "inv_outage_reason": E([run0(verdict="invalid")], rcpt("invalid", OUT), {R0: ufold("iu", verdict=INV)}),
+        "cap_outage": E([run0(status="cap")], rcpt("cap", OUT), {R0: ufold("ca")}),
+        "cap_raise": E([run0(status="cap")], rcpt("cap", {**OUT, "retry_reason": "budget_cap_raised"}), {R0: ufold("cr")}),
+        "two": E([run0(), run0(run_id=R1)], [{**rcpt(rid=R1)[0], "stop_id": "u2"}], {R0: ufold("t0"), R1: ufold("t1")}),
+        "inv_then_int": E([run0(verdict="invalid"), run0(run_id=R1)], [{**rcpt(rid=R1)[0], "stop_id": "u3"}],
+                          {R0: ufold("v0", verdict=INV), R1: ufold("v1")}),
+    }
+    exp_u = {"ok": (True, None), "no_plan_ok": (True, None), "ledger_fail": (False, "invalid"), "missing_invalid": (False, "resume"),
+             "folder_pass": (False, "invalid"), "folder_cut": (False, "invalid"), "cost": (False, "resume"), "stage_bad": (False, "resume"),
+             "final": (False, "resume"), "fire": (False, "resume"), "no_receipt": (False, "resume"), "no_decl": (False, "resume"),
+             "other_run": (False, "resume"), "unacked": (False, "resume"), "inv_needs_rejudge": (False, "invalid"), "inv_rejudge_ok": (True, None),
+             "inv_wrong_code": (False, "invalid"), "inv_outage_reason": (False, "invalid"), "cap_outage": (False, "resume"),
+             "cap_raise": (True, None), "two": (False, "invalid"), "inv_then_int": (True, None)}
+    got_u = {k: (v["ok"], v["code"]) for k, v in cases.items()}
+    chk(got_u == exp_u and "한도" in cases["two"]["why"] and "FIRE" in cases["fire"]["why"] and "못 찾는다" in cases["missing_invalid"]["why"]
+        and "못 읽는다" in cases["folder_cut"]["why"] and "선언 문제" in cases["no_decl"]["why"] and cases["ok"]["kind"] == "interrupted"
+        and cases["inv_rejudge_ok"]["kind"] == "invalid" and cases["inv_then_int"]["retry_of"] == R1,
+        "⛔음성 DJ (러너 재시도 자격 단위): 과학적 판정 · 보존 누락 (invalid 런 포함) · 폴더 판정 pass · 판정 잘림 · 비용 미확정 · 단계 판독 불가 · "
+        "최종 (판정하라) · MD 완료 (FIRE 보류) · 영수증 없음 · 선언 없음 · 다른 런 · 확인 안 됨 · 다시 판정 못 하는 이유 없음 · invalid 에 "
+        "resume 영수증 · invalid 에 정전 사유 · 상한 런에 정전 사유 · 두 번 끊김 (한도) → 거부 / 맞으면 통과 (plan 전 끊김 · 상한 사유 · "
+        f"invalid 다음 끊김 1 회) ({ {k: got_u[k] for k in got_u if got_u[k] != exp_u[k]} })")
+    # 회신 DJ Q4 — 실효 상한 (러너 사전 · 실행 중 · 사후 검사 + 소비자) — 정전 손실만큼만
+    wt_c = mk_wt(card=mk_card(stage1_cap_gpu_h=50.5))
+    rc_q1, L_q1, rr_q = go(wt_c, seed_worst_h=5.0, scen={("B", 12): {"raise_on_poll": 3, "polls": 6}})
+    sq = J(rr_q / "STOP.json"); (rr_q / "B/seed12").rename(rr_q / "B/seed12.int")
+    rc_q2, L_q2, _ = go(wt_c, rr=rr_q, seed_worst_h=5.0, ack=sq["stop_id"], declare=OUT)
+    smq = J(rr_q / "stage1_summary.json")
+    vq = real.read_li2s2_values(wt_c / CARD_REL)
+    lc0 = real.ledger_check(rr_q, {}, {**vq, "stage1_outage_extra_budget_gpu_h": 0.0})
+    chk(rc_q1 == RC["interrupted"] and rc_q2 == 0 and len(L_q2) == 7 and abs(smq["cost"]["total_h"] - 52.0) < 1e-6
+        and abs(smq["cost"]["cap_h"] - 52.5) < 1e-6 and abs(lc0["cap_h"] - 50.5) < 1e-9,
+        f"DJ Q4: 카드 상한 50.5 h 에서 B12 가 정전으로 2 h 를 잃으면 실효 상한 52.5 h — 러너가 마지막 시드까지 띄우고 (누적 52 h) 묶음도 통과 · "
+        f"추가 예산 0 이면 소비자 상한 50.5 h ({smq['cost']['total_h']} / {smq['cost']['cap_h']} · {lc0['cap_h']})")
+    # 회신 DJ P0-3 · Q3 · P1-4 — 증언 상한: 하한 검증 · 근거 필드 · 잠금 안에서 읽기 · 검사 · 쓰기
+    def orphan_root(lower, hb=5.0):
+        rr_ = pathlib.Path(tempfile.mkdtemp(dir=tmp_root))
+        rid_ = uuid.uuid4().hex
+        (rr_ / "A/seed11").mkdir(parents=True)
+        _write_json_atomic(rr_ / "A/seed11" / real.ATTEMPT_NAME, {"system": "A", "seed": 11, "run_id": rid_, "retry_of": None,
+                                                                "retry_stop_id": None, "retry_kind": None})
+        _write_json_atomic(rr_ / "stage1_ledger.json", {"runs": [{"system": "A", "seed": 11, "run_id": rid_, "start": "t",
+            "start_epoch": time.time() - 7200, "pgid": 4243, "status": "orphaned", "end": "t", "wall_h": None, "wall_h_so_far": hb,
+            "wall_h_lower": lower, "rc": "unknown_runner_died", "cost_basis": "unknown"}], "stop_history": []})
+        return rr_, rid_
+    res_lb = {}
+    for nm_, lo_ in (("null", None), ("nan", float("nan")), ("neg", -1.0), ("below_heartbeat", 4.0)):
+        rr_, rid_ = orphan_root(lo_)
+        before = (rr_ / "stage1_ledger.json").read_bytes()
+        res_lb[nm_] = ([attest_cost(rr_, rid_, vals_t, hours=h_, fields=ATT)[0] for h_ in (0.0, 6.0)],
+                       (rr_ / "stage1_ledger.json").read_bytes() == before)
+    rr_g0, rid_g0 = orphan_root(0.0, hb=0.0)                # 첫 heartbeat 전에 끊긴 런 — 하한 0 이어도 0 h 는 상한이 아니다
+    rc_g00, _ = attest_cost(rr_g0, rid_g0, vals_t, hours=0.0, fields=ATT)
+    rc_g05, _ = attest_cost(rr_g0, rid_g0, vals_t, hours=0.5, fields=ATT)
+    rr_g5, rid_g5 = orphan_root(5.0)
+    rc_z, _ = attest_cost(rr_g5, rid_g5, vals_t, hours=0.0, fields=ATT)
+    rc_g, _ = attest_cost(rr_g5, rid_g5, vals_t, hours=6.0, fields=ATT)
+    eg5 = J(rr_g5 / "stage1_ledger.json")["runs"][0]
+    chk(all(x == ([10, 10], True) for x in res_lb.values()) and rc_z == 10 and rc_g == 0 and eg5["cost_basis"] == "attested_upper_bound"
+        and rc_g00 == 10 and rc_g05 == 0
+        and eg5["attestation"]["lower_at_attest"] == 5.0 and eg5["attestation"]["heartbeat_at_attest"] == 5.0 and eg5["attestation"]["confirmer"] == "selftest",
+        f"⛔음성 DJ P0-3 (Codex 재현): 하한이 null · NaN · −1 · heartbeat 미만이면 0 h · 6 h 어느 증언도 안 받고 장부를 안 건드린다 (비용 미확정 그대로) · "
+        f"하한이 맞으면 0 h 는 거부 · 6 h 는 받고 증언 때 하한 · heartbeat 를 같이 적는다 ({res_lb})")
+    def attested_bad(lo_, w_=0.0, status="orphaned"):
+        c = clone(rr_d)
+        l_ = J(c / "stage1_ledger.json")
+        l_["runs"][0].update(status=status, cost_basis="attested_upper_bound", wall_h=w_, wall_h_so_far=5.0, wall_h_lower=lo_,
+                             attestation={**ATT, "confirmed_at": "t", "lower_at_attest": lo_, "heartbeat_at_attest": 5.0})
+        _write_json_atomic(c / "stage1_ledger.json", l_)
+        return summ(c)
+    sb_ = [attested_bad(x) for x in (None, float("nan"), -1.0)]
+    s_good0, s_good6, s_ended = attested_bad(5.0), attested_bad(5.0, 6.0), attested_bad(5.0, 6.0, status="ended")
+    chk(all(inv_(x, "하한이 미상") for x in sb_) and inv_(s_good0, "하한") and s_good6["track"] == "stage1_pass" and inv_(s_ended, "고아 런"),
+        "⛔음성 DJ P0-3 (소비자): 증언 상한 0 h 에 하한이 null · NaN · −1 이면 비용 0 으로 통과시키지 않고 무효 · 하한이 맞아도 0 h < 하한이면 무효 · "
+        "고아 런이 아닌 행 (정상 끝) 을 증언 상한으로 바꾸면 무효 (양성 대조: 하한 5 · 상한 6 h 고아 런은 통과)")
+    rr_m, rid_m = orphan_root(1.5, hb=1.5)
+    rcs_m = [attest_cost(rr_m, rid_m, vals_t, hours=2.0, fields={k: x for k, x in ATT.items() if k != drop})[0]
+             for drop in ("event", "time_reference", "uncertainty_h", "derivation", "confirmer")]
+    rc_mu, _ = attest_cost(rr_m, rid_m, vals_t, hours=2.0, fields={**ATT, "uncertainty_h": "nan"})
+    chk(rcs_m == [10] * 5 and rc_mu == 10 and J(rr_m / "stage1_ledger.json")["runs"][0]["cost_basis"] == "unknown",
+        "⛔음성 DJ Q3: 증언 근거 필드 (사건 · 시각 기준 · 불확실성 · H 산출 · 확인자) 가 하나라도 없거나 불확실성이 NaN 이면 거부 (비용 미확정 그대로)")
+    rr_l, rid_l = orphan_root(1.5, hb=1.5)
+    def other_writer():                                      # Codex 재현: 잠금 전에 다른 기록자가 8 h 증언 + STOP 확인을 저장
+        l_ = J(rr_l / "stage1_ledger.json")
+        l_["runs"][0].update(wall_h=8.0, cost_basis="attested_upper_bound",
+                             attestation={**ATT, "confirmed_at": "t", "lower_at_attest": 1.5, "heartbeat_at_attest": 1.5})
+        l_["stop_history"].append({"stop_id": "other", "code": "resume", "run_id": rid_l, "acked_at": "t"})
+        _write_json_atomic(rr_l / "stage1_ledger.json", l_)
+    rc_l1, _ = attest_cost(rr_l, rid_l, vals_t, hours=2.0, fields=ATT, deps={"before_lock": other_writer})
+    el_l = J(rr_l / "stage1_ledger.json")
+    rr_l2, rid_l2 = orphan_root(1.5, hb=1.5)
+    held2 = _Lock(rr_l2 / "stage1.lock"); assert held2.acquire()
+    b2 = (rr_l2 / "stage1_ledger.json").read_bytes()
+    rc_l2, _ = attest_cost(rr_l2, rid_l2, vals_t, hours=2.0, fields=ATT)
+    held2.release()
+    unchanged2 = (rr_l2 / "stage1_ledger.json").read_bytes() == b2
+    rc_l3, _ = attest_cost(rr_l2, rid_l2, vals_t, hours=2.0, fields=ATT)
+    rc_l4, _ = attest_cost(rr_l2, rid_l2, vals_t, hours=3.0, fields=ATT)
+    chk(rc_l1 == 10 and el_l["runs"][0]["wall_h"] == 8.0 and any(h.get("stop_id") == "other" for h in el_l["stop_history"])
+        and rc_l2 == 10 and unchanged2 and rc_l3 == 0 and rc_l4 == 10 and J(rr_l2 / "stage1_ledger.json")["runs"][0]["wall_h"] == 2.0,
+        "⛔음성 DJ P1-4 (Codex 재현): 잠금 전에 다른 기록자가 8 h 증언 · STOP 확인을 저장하면 우리 증언은 잠금 안에서 다시 읽고 거부 (8 h · 확인 그대로) · "
+        "잠금이 잡혀 있으면 아무것도 안 쓴다 · 두 번째 증언은 거부")
+    # 재부팅 고아 런 → 증언 → 정전 선언 → 한 번 다시 (끝에서 끝까지)
     rr_o = pathlib.Path(tempfile.mkdtemp(dir=tmp_root))
     rid0 = "a" * 32
     (rr_o / "A/seed11").mkdir(parents=True)
@@ -1407,42 +1863,35 @@ def _selftest():
         "status": "running", "end": None, "wall_h": None, "wall_h_so_far": 1.5}], "stop_history": []})
     rc_o1, L_o1, _ = go(wt, rr=rr_o, boot="b-new")
     e_o, s_o1 = J(rr_o / "stage1_ledger.json")["runs"][0], J(rr_o / "STOP.json")
-    rc_a1, _i1 = attest_cost(rr_o, rid0, hours=1.0, note="정전 (selftest)")
-    rc_a2, _i2 = attest_cost(rr_o, rid0, hours=2.5, note="")
-    rc_a3, info3 = attest_cost(rr_o, rid0, hours=2.5, note="정전 시각 = 사용자 확인 (selftest)", deps={"btime": lambda: t_s + 3 * 3600})
+    rc_a1, _i1 = attest_cost(rr_o, rid0, vals_t, hours=1.0, fields=ATT)
+    rc_a2, _i2 = attest_cost(rr_o, rid0, vals_t, hours=2.5, fields={**ATT, "confirmer": ""})
+    rc_a3, info3 = attest_cost(rr_o, rid0, vals_t, hours=2.5, fields=ATT, deps={"btime": lambda: t_s + 3 * 3600})
     e_o2 = J(rr_o / "stage1_ledger.json")["runs"][0]
     chk(rc_o1 == RC["resume"] and not L_o1 and e_o["cost_basis"] == "unknown" and "--attest_cost" in s_o1["reason"] and rc_a1 != 0 and rc_a2 != 0
         and rc_a3 == 0 and e_o2["cost_basis"] == "attested_upper_bound" and e_o2["wall_h"] == 2.5
         and abs(info3["evidence"]["suggest_realtime_bound_h"] - 3.0) < 1e-6,
-        "정전 복구: 재부팅을 넘긴 고아 런은 비용 미확정으로 멈추고 --attest_cost 를 알려 준다 · 하한 (1.5 h) 미만 · 근거 없음 거부 · 근거를 적으면 증언 상한")
+        "정전 복구: 재부팅을 넘긴 고아 런은 비용 미확정으로 멈추고 --attest_cost 를 알려 준다 · 하한 (1.5 h) 미만 · 확인자 없음 거부 · 근거를 다 적으면 증언 상한")
     rc_o2, L_o2, _ = go(wt, rr=rr_o, boot="b-new", ack=s_o1["stop_id"])
     s_o2 = J(rr_o / "STOP.json")
     (rr_o / "A/seed11").rename(rr_o / "A/seed11.outage")
-    rc_o3, L_o3, _ = go(wt, rr=rr_o, boot="b-new", ack=s_o2["stop_id"])
+    rc_o3, L_o3, _ = go(wt, rr=rr_o, boot="b-new", ack=s_o2["stop_id"], declare=OUT)
     smo = J(rr_o / "stage1_summary.json")
     chk(rc_o2 == RC["resume"] and s_o2.get("run_id") == rid0 and rc_o3 == 0 and len(L_o3) == 10 and smo["track"] == "stage1_pass"
-        and any("2.5" in x for x in (smo.get("cost") or {}).get("attested") or []),
-        "정전 복구: 증언 상한으로 비용을 닫고 · 끊긴 폴더를 옆으로 옮겨 그 run_id 의 STOP 을 확인하면 A11 을 한 번 다시 돌려 1 단계를 마친다 (증언 비용은 묶음에 드러남)")
+        and any("2.5" in x for x in (smo.get("cost") or {}).get("attested") or []) and abs(smo["cost"]["cap_h"] - 232.5) < 1e-9,
+        "정전 복구: 증언 상한으로 비용을 닫고 · 끊긴 폴더를 옆으로 옮겨 그 run_id 의 STOP 을 정전 선언과 함께 확인하면 A11 을 한 번 다시 돌려 1 단계를 "
+        "마친다 (증언 비용은 묶음에 드러나고 실효 상한 230 + 2.5 h)")
     c6 = clone(rr_d); led6 = J(c6 / "stage1_ledger.json")
     a11 = [x for x in led6["runs"] if (x["system"], x["seed"]) == ("A", 11)][0]
     led6["runs"].append({"system": "A", "seed": 11, "run_id": "b" * 32, "end": "t", "status": "ended", "wall_h": 1.0, "cost_basis": "measured",
                          "retry_of": a11["run_id"], "retry_kind": "interrupted"})
     _write_json_atomic(c6 / "stage1_ledger.json", led6)
-    c7 = clone(rr_d); led7 = J(c7 / "stage1_ledger.json")
-    i3 = next(i for i, x in enumerate(led7["runs"]) if (x["system"], x["seed"]) == ("B", 11))
-    led7["runs"][i3].update(retry_of="d" * 32, retry_kind="interrupted")
-    led7["runs"][i3:i3] = [{"system": "B", "seed": 11, "run_id": "c" * 32, "end": "t", "status": "interrupted", "wall_h": 1.0, "cost_basis": "measured"},
-                           {"system": "B", "seed": 11, "run_id": "d" * 32, "end": "t", "status": "interrupted", "wall_h": 1.0, "cost_basis": "measured",
-                            "retry_of": "c" * 32, "retry_kind": "interrupted"}]
-    _write_json_atomic(c7 / "stage1_ledger.json", led7)
     c8 = clone(rr_d); led8 = J(c8 / "stage1_ledger.json")
     led8["runs"][0].update(cost_basis="attested_upper_bound")               # 근거 (attestation) 없이 증언 상한이라고만
     _write_json_atomic(c8 / "stage1_ledger.json", led8)
-    s6, s7, s8 = summ(c6), summ(c7), summ(c8)
+    s6, s8 = summ(c6), summ(c8)
     chk(s6["track"] == "invalid" and any("과학적 판정" in x for x in s6["cost"]["invalid"])
-        and s7["track"] == "invalid" and any("한도" in x for x in s7["cost"]["invalid"])
         and s8["track"] == "invalid" and any("근거" in x for x in s8["cost"]["invalid"]),
-        "⛔음성 정전 복구 (소비자): 장부에 과학적 판정 뒤 같은 시드 실행 · 끊긴 런 재시도가 한도를 넘음 · 근거 없는 증언 상한 → 묶음 무효")
+        "⛔음성 정전 복구 (소비자): 장부에 과학적 판정 뒤 같은 시드 실행 · 근거 없는 증언 상한 → 묶음 무효")
     # 7) 진짜 프로세스 그룹 (POSIX) — _Proc.stop 이 자기 그룹 (자식 · 손자) 만 멈추고 기다린다 · 옆 프로세스는 안 건드린다
     #    (회신 DG: '실제 Linux 프로세스 그룹 종료는 하지 않았다' — 가짜 담금질 시험이 못 보는 자리)
     if os.name == "posix":
@@ -1524,9 +1973,21 @@ def main():
     ap.add_argument("--gpu_poll_s", type=float, default=60.0)
     ap.add_argument("--start_max_mib", type=int, default=2000, help="이 이하가 두 번 연속이면 띄운다")
     ap.add_argument("--ack_stop", default=None, help="STOP.json 의 stop_id — 앞선 (닫는 사건이 아닌) 멈춤을 확인했다는 표시")
-    ap.add_argument("--attest_cost", default=None, metavar="RUN_ID", help="재부팅 고아 런의 비용 근거를 본다 (--attest_hours · --attest_note 를 주면 상한을 적는다)")
-    ap.add_argument("--attest_hours", type=float, default=None)
-    ap.add_argument("--attest_note", default=None)
+    g = ap.add_argument_group("재시도 선언 (--ack_stop 과 함께 · 회신 DJ Q1 — 결과와 무관한 사건만 · 카드 retry_reasons)")
+    g.add_argument("--retry_reason", default=None, help="카드 retry_reasons 의 사유 (끊긴 런: power_outage · host_crash_or_reboot · hardware_fault · "
+                                                     "budget_cap_raised (상한 런만) · invalid 런: invalid_cause_fixed)")
+    g.add_argument("--retry_event", default=None, help="무슨 사건인가 (예: '11-05 03:10 kgy 정전')")
+    g.add_argument("--retry_evidence", default=None, help="근거 (로그 · 커밋 · 결정 · 사진 위치 등)")
+    g.add_argument("--declared_by", default=None, help="선언하는 사람")
+    g.add_argument("--rejudge_impossible_reason", default=None, help="MD 까지 (또는 끝까지) 돈 invalid 런 — 있는 파일을 고쳐 다시 판정할 수 없는 이유")
+    g2 = ap.add_argument_group("재부팅 고아 런 비용 증언 (회신 DJ Q3 — 카드 attestation_required_fields)")
+    g2.add_argument("--attest_cost", default=None, metavar="RUN_ID", help="그 런의 비용 근거를 본다 (--attest_hours 와 근거 필드를 주면 잠금 안에서 상한을 적는다)")
+    g2.add_argument("--attest_hours", type=float, default=None, help="비용 상한 H [GPU-h] — 유한 · 양수 · 하한 (마지막 heartbeat) 이상")
+    g2.add_argument("--attest_event", default=None, help="어떤 사건으로 종료 상한을 알았나")
+    g2.add_argument("--attest_time_reference", default=None, help="시각의 기준 (어느 시계 · 어느 기록)")
+    g2.add_argument("--attest_uncertainty_h", default=None, help="그 시각의 불확실성 [h]")
+    g2.add_argument("--attest_derivation", default=None, help="H 를 어떻게 냈나")
+    g2.add_argument("--attest_confirmer", default=None, help="확인한 사람")
     ap.add_argument("--print_cmd", default=None, metavar="SYS:SEED", help="그 시드의 담금질 명령을 카드 기계값에서 만들어 찍고 끝난다")
     ap.add_argument("--expect_sha", default=EXPECTED_DRIVER_SHA16)
     a = ap.parse_args()
@@ -1535,7 +1996,12 @@ def main():
     if not (a.worktree and a.run_root):
         ap.error("--worktree · --run_root 가 필요하다")
     if a.attest_cost:
-        rc_, info = attest_cost(a.run_root, a.attest_cost, hours=a.attest_hours, note=a.attest_note)
+        W = pathlib.Path(a.worktree); mq = load_mq(W)
+        vals = mq.read_li2s2_values(W / CARD_REL)
+        rc_, info = attest_cost(a.run_root, a.attest_cost, vals, hours=a.attest_hours,
+                                fields={"event": a.attest_event, "time_reference": a.attest_time_reference,
+                                        "uncertainty_h": a.attest_uncertainty_h, "derivation": a.attest_derivation,
+                                        "confirmer": a.attest_confirmer})
         print(json.dumps(info, ensure_ascii=False, indent=1, default=str))
         return rc_
     if a.print_cmd:

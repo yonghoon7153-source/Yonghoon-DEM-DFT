@@ -249,7 +249,36 @@
   "stage1_cap_gpu_h": 230.0,
   "⚠_개정_DG": "2026-11-03 회신 DG (결과 0 건에서): composition · software_required · thermo_required_columns · first_seed · stage1_cap_gpu_h 추가 — 소비자 (stage1_verdict · stage1_summary) 와 러너가 이 값을 읽는다 · 러너의 --cap_h 는 없앴다 (상한은 카드 값만 · 바꾸려면 결정)",
   "stage1_max_interrupt_retries_per_seed": 1,
-  "⚠_개정_정전_복구": "2026-11-03 (결과 0 건 · 사용자 '2번으로 가자'): stage1_max_interrupt_retries_per_seed — 판정 없이 끊긴 런 (결과 파일 없음) 을 그 run_id 에 묶인 STOP 확인으로 시드마다 이 횟수까지만 다시 돌린다 · pass · fail 이 난 시드는 다시 안 돌린다"
+  "⚠_개정_정전_복구": "2026-11-03 (결과 0 건 · 사용자 '2번으로 가자'): stage1_max_interrupt_retries_per_seed — 판정 없이 끊긴 런 (결과 파일 없음) 을 그 run_id 에 묶인 STOP 확인으로 시드마다 이 횟수까지만 다시 돌린다 · pass · fail 이 난 시드는 다시 안 돌린다",
+  "retry_reasons": {
+   "interrupted": [
+    "power_outage",
+    "host_crash_or_reboot",
+    "hardware_fault",
+    "budget_cap_raised"
+   ],
+   "invalid": [
+    "invalid_cause_fixed"
+   ]
+  },
+  "outage_reasons": [
+   "power_outage",
+   "host_crash_or_reboot",
+   "hardware_fault"
+  ],
+  "stage1_outage_extra_budget_gpu_h": 45.0,
+  "cap_retry_reasons": [
+   "budget_cap_raised"
+  ],
+  "attestation_required_fields": [
+   "event",
+   "time_reference",
+   "uncertainty_h",
+   "derivation",
+   "confirmer",
+   "confirmed_at"
+  ],
+  "⚠_개정_정전_복구_v2": "2026-11-03 회신 DJ (결과 0 건): retry_reasons (결과와 무관한 사유만 · 종류별) · outage_reasons · stage1_outage_extra_budget_gpu_h (정전 손실만 실효 상한에 더함) · cap_retry_reasons (상한으로 멈춘 런에만 · 그 런은 이 사유만) · attestation_required_fields"
  },
  "개정_DF_2026_11_03": {
   "결과_전": "이 판도 결과 0 건에서 고쳤다 (새 밀도 유리 없음)",
@@ -284,5 +313,15 @@
   "재부팅_고아_런_비용": "자동으로는 미확정 그대로 (Codex DI: 확인 안 된 시각으로 상한을 확정하지 않는다) · 사람이 근거 (러너가 모아 보여 줌: 마지막 heartbeat = 하한 · 새 부팅 시각 · 시작 시각 · 폴더 파일 시각) 를 보고 `li2s2_stage1_runner.py --attest_cost <run_id> --attest_hours H --attest_note '근거'` 로 상한을 적는다 — 하한보다 작으면 거부 · 장부에 cost_basis attested_upper_bound + attestation (근거 · 시각) · 묶음 판정이 근거 유무 · 하한을 다시 본다",
   "⚠_고친_것": "처음 제안의 '이전 부팅 마지막 시스템 로그 시각 = 상한' 은 틀렸다 — 정전 때 디스크에 안 쓴 마지막 로그가 사라져 그 시각은 하한이다 (2026-11-03 설계 중 발견)",
   "소비자_검사": "ledger_check — 과학적 판정 뒤 같은 시드 실행 · 끊긴 런 재시도 > 한도 · retry_of 가 같은 시드 앞선 실행이 아님 · 증언 상한에 근거 없음 · 하한 미만 → 무효"
+ },
+ "개정_정전_복구_v2_2026_11_03": {
+  "결과_전": "결과 0 건 · 회신 DJ (NO-GO · 정전 복구 방향 찬성) 반영 · 위임 10-30 트랙",
+  "회신": "kb/reviews/codex_DJ_reply_li2s2_outage_rule_2026_11_03.md",
+  "재시도_사유_Q1": "재시도는 **결과와 무관한 설비 · 운영 사건**으로만: 끊긴 런 = power_outage · host_crash_or_reboot · hardware_fault · budget_cap_raised · invalid 런 = invalid_cause_fixed (원인을 고친 근거 — 커밋 · 결정). 확인 (--ack_stop) 때 선언 (--retry_reason · --retry_event · --retry_evidence · --declared_by · 끝까지 돈 invalid 런이면 --rejudge_impossible_reason) 을 붙여야 재시도 영수증이 된다. Ctrl-C · abnormal · resume 은 기술 상태일 뿐 사유가 아니다 · 결과를 보고 멈춘 런 · 원인 미확정 런은 사유를 선언할 수 없으므로 자동 대체하지 않는다 (보류 · 새 결정).",
+  "채택_순서_Q1": "재시도한 실행이 그 시드의 공식 표본이다 — 앞 실행에는 판정이 없거나 invalid 이므로 '둘 중 더 좋은 것' 을 고를 일이 없다 (과학적 판정이 난 시드는 다시 안 돌린다).",
+  "완료_단계_Q2": "끊긴 런을 셋으로 가른다 (folder_stage): MD 미완 (traj 가 계획 프레임 전) → 위 사유로 재담금질 1 회 · **MD 완료 · FIRE 미완** (traj 끝까지 · final 없음) → 재담금질하지 않고 보류 (그 마지막 구조에서 정해진 FIRE 만 다시 하는 복구는 새 결정) · 최종 완료 (result.json · final.xyz) → 재시도가 아니라 판정.",
+  "증언_상한_Q3": "attestation_required_fields = 사건 (어떤 사건으로 종료 상한을 알았나) · 시각 기준 · 불확실성 (h) · H 산출 방식 · 확인자 (실제 사람) · 확인 시각 — 하한 (heartbeat · 유한 · 장부 하한과 같음) 이 미상이면 증언을 받지 않고 비용은 미확정 그대로 · 잠금 안에서 읽고 · 검사하고 · 쓴다 · 이미 확정된 것은 거부.",
+  "상한_Q4": "실효 상한 = stage1_cap_gpu_h (230) + min(정전 손실, stage1_outage_extra_budget_gpu_h (45)) — 정전 손실 = 사유가 outage_reasons 로 선언된 끊긴 런의 비용. 45 = 최악의 끊긴 런 둘 (시드당 견적 상단 21 h × 2) + 여유. 그 밖의 상한 인상은 카드 개정 (결정 · 사유 · 시점) 뿐이고 유리한 결과를 얻으려 올리지 않는다 · 상한으로 끊긴 런도 같은 재시도 횟수 · 사유 (budget_cap_raised) · 완료 단계 규칙을 따른다 · 기존 비용 · 실패 · 시드 목록은 그대로. · 상한 사유 (cap_retry_reasons = budget_cap_raised) 는 장부 상태가 cap 인 런에만 쓰고 · 그런 런에는 정전 사유를 못 쓴다 (정전 사유로 상한을 늘리는 길을 막는다) · 정전 손실은 판정 없이 도중에 끊긴 런 (interrupted · orphaned · rc ≠ 0) 중 폴더가 MD 미완인 것만 센다",
+  "소비자": "ledger_check: 두 번째 실행부터 재시도 필드 필수 · retry_of = 바로 앞 실행 · retry_kind = 앞 실행 종류 · retry_stop_id = 그 앞 실행에 묶여 확인된 STOP · 그 선언 · stage1_attempt.json = 장부 · 끊긴 런 재시도 수는 앞 실행 종류로 센다 · 장부 ↔ 보존 폴더 양쪽 · 판독 불가 판정 · 증언 필드 · 하한."
  }
 }

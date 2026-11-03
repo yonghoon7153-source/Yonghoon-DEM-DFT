@@ -532,6 +532,7 @@ PROVENANCE_FILES = ("plan.json", "thermo.csv", "traj.xyz", "final.xyz", "result.
 ATTEMPT_NAME = "stage1_attempt.json"  # 러너가 실행 전에 쓰는 식별 기록 — 보존 폴더도 비용 검사 대상
 LEDGER_NAME = "stage1_ledger.json"   # li2s2_stage1_runner.py 가 쓰는 비용 장부 — stage1_summary 가 상한을 여기서 다시 잰다
 RUN_ID_RE = re.compile(r"^[0-9a-f]{32}$")   # 회신 DH P0-2 — 러너가 담금질마다 주는 실행 식별자 (plan.json run_id · 장부 run_id)
+RETRY_BIND_CODES = {"invalid": ("invalid",), "interrupted": ("interrupted", "abnormal", "resume", "cap")}   # 재시도 확인 STOP 의 code (종류별)
 VERDICT_HISTORY = "stage1_verdict_history.jsonl"   # 회신 DH P1-5 — 판정을 덮어쓰기 전 이전 판정 전체 · 지문 변화 · 사유
 COST_BASES = ("measured", "upper_bound", "attested_upper_bound")    # 장부 런 비용 근거 — 측정 · 보수 상한 · 사람이 근거를 보고 적은 상한 (재부팅 고아 런 · --attest_cost) —  시작)
 
@@ -639,6 +640,23 @@ def validate_li2s2_values(v):
         cap = v.get("stage1_cap_gpu_h")
         if not (_fin(cap) and float(cap) > 0):
             bad.append(f"stage1_cap_gpu_h {cap!r}")
+        rr_ = v.get("retry_reasons")
+        if (not isinstance(rr_, dict) or set(rr_) != {"invalid", "interrupted"}
+                or not all(isinstance(x, list) and x and all(isinstance(y, str) and y for y in x) for x in rr_.values())):
+            bad.append(f"retry_reasons {rr_!r} (invalid · interrupted 각각 허용 사유 목록 — 결과와 무관한 사건만)")
+        orr = v.get("outage_reasons")
+        if not (isinstance(orr, list) and orr and isinstance(rr_, dict) and set(orr) <= set(rr_.get("interrupted") or [])):
+            bad.append(f"outage_reasons {orr!r} (interrupted 사유의 부분집합)")
+        ex = v.get("stage1_outage_extra_budget_gpu_h")
+        if not (_fin(ex) and float(ex) >= 0):
+            bad.append(f"stage1_outage_extra_budget_gpu_h {ex!r}")
+        cr = v.get("cap_retry_reasons")
+        if not (isinstance(cr, list) and cr and isinstance(rr_, dict) and set(cr) <= set(rr_.get("interrupted") or [])
+                and not (set(cr) & set(orr if isinstance(orr, list) else []))):
+            bad.append(f"cap_retry_reasons {cr!r} (interrupted 사유의 부분집합 · 정전 사유와 겹치지 않음 — 상한으로 멈춘 런에만)")
+        af = v.get("attestation_required_fields")
+        if not (isinstance(af, list) and {"event", "time_reference", "uncertainty_h", "derivation", "confirmer", "confirmed_at"} <= set(af)):
+            bad.append(f"attestation_required_fields {af!r}")
         mr = v.get("stage1_max_interrupt_retries_per_seed")
         if isinstance(mr, bool) or not isinstance(mr, int) or mr < 0:
             bad.append(f"stage1_max_interrupt_retries_per_seed {mr!r} (0 이상 정수 — 끊긴 런 재시도 한도 · 정전 복구 개정)")
@@ -1169,7 +1187,7 @@ def attempt_inventory(out_root):
         for rd in sorted(parent.iterdir()):
             if not rd.is_dir():
                 continue
-            ids = []
+            ids, att_rec = [], None
             for name in (ATTEMPT_NAME, "plan.json"):
                 p = rd / name
                 if not p.is_file():
@@ -1184,43 +1202,152 @@ def attempt_inventory(out_root):
                     invalid.append(f"{p}: 실행 신원을 못 읽음 ({type(e).__name__})")
                     continue
                 ids.append((rid, sysn, seed))
+                if name == ATTEMPT_NAME:
+                    att_rec = {k: rec.get(k) for k in ("retry_of", "retry_stop_id", "retry_kind")}
             if len(set(ids)) > 1:
                 invalid.append(f"{rd}: 실행 전 기록과 plan 신원이 다름")
             for rid, sysn, seed in set(ids):
                 if rid in found:
                     invalid.append(f"run_id {rid} 산출물 폴더가 둘: {found[rid]['path']} · {rd}")
-                found[rid] = {"system": sysn, "seed": seed, "path": str(rd)}
+                found[rid] = {"system": sysn, "seed": seed, "path": str(rd), "attempt": att_rec}
     return found, invalid
 
 
+def folder_stage(folder):
+    """⭐ 회신 DJ Q2 — 실행 폴더의 완료 단계: 'final' (result.json · final.xyz) · 'md_complete' (traj 가 계획 프레임까지 · final 없음 =
+    FIRE 미완) · 'md_incomplete' · 'no_plan' · 'unreadable' (plan · traj 머리를 못 읽음). 쓰는 중에 끊긴 마지막 반쪽 프레임은 세지 않는다."""
+    f = pathlib.Path(folder)
+    if any((f / x).is_file() for x in ("result.json", "final.xyz")):
+        return "final"
+    if not (f / "plan.json").is_file():
+        return "no_plan"
+    try:
+        plan = json.loads((f / "plan.json").read_text(encoding="utf-8"))
+        want = int(round((float(plan["melt_ps"]) + float(plan["quench_ps"]) + float(plan["hold_ps"])) / float(plan["save_ps"]))) + 1
+    except (OSError, ValueError, KeyError, TypeError, ZeroDivisionError, AttributeError):
+        return "unreadable"
+    tr = f / "traj.xyz"
+    if not tr.is_file():
+        return "md_incomplete"
+    try:
+        with open(tr, encoding="utf-8", errors="replace") as fh:
+            head = fh.readline().replace("\x00", "").strip()
+            n_lines = 1 + sum(1 for _ in fh)
+    except OSError:
+        return "unreadable"
+    if not head:                                      # 빈 파일 · NUL 만 (정전 때 디스크에 안 내려간 꼬리) = 프레임 0
+        return "md_incomplete"
+    try:
+        nat = int(head)
+    except ValueError:
+        return "unreadable"
+    if nat <= 0:
+        return "unreadable"
+    return "md_complete" if n_lines // (nat + 2) >= want else "md_incomplete"
+
+
+def verdict_file_status(folder):
+    """판정 파일 상태 — None (파일 없음) · 허용 상태 · 'unreadable' (있는데 못 읽음 · 모르는 상태). 회신 DJ P0-2: 없음과 판독 불가를 가른다."""
+    vf = pathlib.Path(folder) / "stage1_verdict.json"
+    if not vf.is_file():
+        return None
+    try:
+        st = json.loads(vf.read_text(encoding="utf-8")).get("status")
+    except (OSError, ValueError, AttributeError):
+        return "unreadable"
+    return st if st in LI2S2_STATUSES else "unreadable"
+
+
+def declaration_problems(decl, kind, values, rejudge_needed=False, prev_status=None):
+    """⭐ 회신 DJ Q1 · Q4 — 재시도 선언 (확인 STOP 에 붙인 것) 검사: 그 종류에 허용된 **결과와 무관한** 사유 (카드 retry_reasons) ·
+    상한으로 멈춘 런 (장부 상태 'cap') 은 카드 cap_retry_reasons 만 · 그 사유는 상한 런에만 · 사건 · 근거 · 선언자 · 선언 시각 ·
+    (MD 까지 · 끝까지 돈 invalid 런이면) 있는 파일을 고쳐 다시 판정할 수 없다는 이유. 문제 목록 (빈 목록 = 통과).
+    ⛔ 못 하는 것: 사람이 적은 사건이 참인지 · 결과를 보고 멈춘 것이 아닌지는 모른다 — 기록 (사건 · 근거 · 선언자) 을 남겨 감사할 수 있게 할 뿐."""
+    if not isinstance(decl, dict):
+        return ["재시도 선언이 없다 (사유 · 사건 · 근거 · 선언자 — 결과와 무관한 설비 · 운영 사건만 · Ctrl-C · abnormal · resume 는 사유가 아니다)"]
+    why = []
+    allowed = list(((values.get("retry_reasons") or {}).get(kind)) or [])
+    cap_r = list(values.get("cap_retry_reasons") or [])
+    reason = decl.get("reason")
+    if reason not in allowed:
+        why.append(f"사유 {reason!r} 는 {kind} 재시도에 허용된 사유 {allowed} 가 아니다")
+    elif prev_status == "cap" and reason not in cap_r:
+        why.append(f"상한으로 멈춘 런의 재시도 사유는 {cap_r} 뿐이다 ({reason!r} 아님 — 정전 사유로 상한을 늘리지 않는다)")
+    elif reason in cap_r and prev_status != "cap":
+        why.append(f"사유 {reason!r} 는 상한으로 멈춘 런 (장부 상태 cap) 에만 — 앞 런 상태 {prev_status!r}")
+    for k in ("event", "evidence", "declared_by", "declared_at"):
+        if not (isinstance(decl.get(k), str) and decl[k].strip()):
+            why.append(f"선언 {k} 없음")
+    if rejudge_needed and not (isinstance(decl.get("rejudge_impossible_reason"), str) and decl["rejudge_impossible_reason"].strip()):
+        why.append("MD 까지 (또는 끝까지) 돈 invalid 런 — 있는 파일을 고쳐 다시 판정할 수 없다는 이유 (rejudge_impossible_reason) 가 없다")
+    return why
+
+
+#: 정전 손실로 셀 수 있는 '도중에 끊긴' 장부 상태 — 상한 멈춤 (cap) · 녹음 판정 멈춤 (fail · invalid) · 정상 끝 (rc 0) 은 아니다
+CUT_SHORT_STATUSES = ("interrupted", "orphaned")
+
+
+def _cut_short(r):
+    return (r.get("verdict") not in ("pass", "fail", "invalid")
+            and (r.get("status") in CUT_SHORT_STATUSES or (r.get("status") == "ended" and r.get("rc") not in (0, None))))
+
+
+def effective_cap(runs, stop_history, values, inventory=None):
+    """⭐ 회신 DJ Q4 — 실효 상한 = 카드 stage1_cap_gpu_h + min(정전 손실, 카드 stage1_outage_extra_budget_gpu_h).
+    정전 손실 = 확인된 STOP 에 정전 사유 (카드 outage_reasons) 로 선언된 런 중 **도중에 끊긴** 런 (판정 없음 · 상태 interrupted ·
+    orphaned · rc ≠ 0 끝) 의 확정 비용 — inventory 를 주면 그 폴더가 MD 미완 (md_incomplete · no_plan) 일 때만 (MD 완료 · 최종 산출은
+    잃은 것이 아니다 — 판정 · FIRE 복구 대상). 그 밖의 상한 인상은 카드 개정 (결정) 뿐."""
+    base = float(values["stage1_cap_gpu_h"])
+    extra = float(values["stage1_outage_extra_budget_gpu_h"])
+    outage = set(values["outage_reasons"])
+    lost = {h.get("run_id") for h in (stop_history or []) if isinstance(h, dict) and h.get("acked_at")
+            and isinstance(h.get("declaration"), dict) and h["declaration"].get("reason") in outage}
+    loss, counted = 0.0, []
+    for r in (runs or []):
+        if not (isinstance(r, dict) and r.get("run_id") in lost and _fin(r.get("wall_h")) and float(r["wall_h"]) >= 0 and _cut_short(r)):
+            continue
+        if inventory is not None:
+            rec = inventory.get(r["run_id"])
+            if not rec or folder_stage(rec["path"]) not in ("md_incomplete", "no_plan"):
+                continue
+        loss += float(r["wall_h"]); counted.append(f"{r.get('system')}{r.get('seed')}:{str(r['run_id'])[:8]}")
+    return base + min(loss, extra), {"base_h": base, "outage_loss_h": loss, "outage_extra_budget_h": extra, "outage_runs": counted}
+
+
 def ledger_check(out_root, verdicts, values):
-    """⭐ 회신 DH P0-1 — 장부 = **실행 목록**. 장부가 없으면 None (확인 못 함 → 통과 안 됨).
-    invalid (자료 · 기록 오류): 장부 꼴 · 비용이 유한한 비음수가 아님 · 비용 근거가 측정 · 보수 상한이 아님 · run_id 중복 ·
-             판정 (이 out_root 의 시드 판정) 의 run_id 가 장부에 없음 (비용이 안 잡힌 실행) · 그 장부 런의 (계, 시드) 가 판정 자리와 다름.
-    pending (아직 확정 안 됨): 끝나지 않은 런 (running · 멈춤 실패) — heartbeat 는 하한일 뿐이라 확정 비용이 아니다.
-    total_h 는 확정 비용 (측정 + 보수 상한) 의 합이다 — 하한 어림은 더하지 않는다 (그런 런은 pending)."""
+    """⭐ 회신 DH P0-1 · DI · DJ — 장부 = **실행 목록**. 장부가 없으면 None (확인 못 함 → 통과 안 됨).
+    invalid: 장부 꼴 · run_id 꼴 · 중복 · 비용이 유한한 비음수가 아님 · 근거가 측정 · 보수 상한 · 증언 상한이 아님 · 증언 상한의 근거 필드
+             (카드 attestation_required_fields) · 하한 (유한 · heartbeat 이상 · 증언 때 하한과 같음) · 폴더 ↔ 장부 양쪽 (보존 누락 포함) ·
+             재시도 이력 (두 번째 실행부터: retry_of = 바로 앞 실행 · retry_kind = 앞 실행 종류 · retry_stop_id = 그 앞 실행에 묶여 확인된 STOP ·
+             그 STOP 의 선언 · stage1_attempt.json 의 재시도 필드 = 장부 · 과학적 판정 · 판독 불가 판정 · 끝까지 / MD 까지 돈 런 뒤 재시도 ·
+             끊긴 런 재시도 수 (앞 실행 종류로 센다) > 카드 한도) · 판정 ↔ 장부.
+    pending: 끝나지 않은 런 (heartbeat 는 하한일 뿐). total_h = 확정 비용 합 · cap_h = 실효 상한 (effective_cap)."""
     p = pathlib.Path(out_root) / LEDGER_NAME
     if not p.is_file():
         return None
     invalid, pending, by_id, attested = [], [], {}, []
     try:
         led = json.loads(p.read_text(encoding="utf-8"))
-        runs = led.get("runs")
+        runs, stop_hist = led.get("runs"), led.get("stop_history", [])
     except (json.JSONDecodeError, UnicodeDecodeError, AttributeError) as e:
         return {"total_h": float("nan"), "cap_h": float(values["stage1_cap_gpu_h"]), "invalid": [f"장부를 못 읽었다 ({type(e).__name__})"],
-                "pending": [], "runs": 0, "source": str(p)}
+                "pending": [], "runs": 0, "attested": [], "source": str(p)}
     if not isinstance(runs, list):
         invalid.append("장부 runs 가 목록이 아니다"); runs = []
+    if not isinstance(stop_hist, list):
+        invalid.append("장부 stop_history 가 목록이 아니다"); stop_hist = []
+    req_att = list(values.get("attestation_required_fields") or [])
     tot = 0.0
     for r in runs:
         if not isinstance(r, dict):
             invalid.append("장부 runs 원소가 객체가 아니다"); continue
         key = f"{r.get('system')}{r.get('seed')}"
         rid = r.get("run_id")
-        if isinstance(rid, str) and rid:
-            if rid in by_id:
-                invalid.append(f"장부에 run_id {rid[:8]} 가 둘 ({key})")
-            by_id[rid] = r
+        if not (isinstance(rid, str) and RUN_ID_RE.match(rid)):
+            invalid.append(f"{key} 런의 run_id {rid!r} 꼴이 아니다 — 폴더 · 판정과 못 잇는다"); continue
+        if rid in by_id:
+            invalid.append(f"장부에 run_id {rid[:8]} 가 둘 ({key})")
+        by_id[rid] = r
         if r.get("end") is None:
             pending.append(f"{key} 런이 끝나지 않았다 (상태 {r.get('status')} · 비용 미확정 — heartbeat {r.get('wall_h_so_far')} h 는 하한)")
             continue
@@ -1229,15 +1356,27 @@ def ledger_check(out_root, verdicts, values):
             invalid.append(f"{key} 런 비용 {w!r} — 유한한 비음수가 아니다"); continue
         if r.get("cost_basis") not in COST_BASES:
             invalid.append(f"{key} 런 비용 근거 {r.get('cost_basis')!r} — 측정 · 보수 상한 · 증언 상한이 아니면 확정 비용이 아니다"); continue
-        if r.get("cost_basis") == "attested_upper_bound":       # 정전 복구 개정 — 사람이 근거를 보고 적은 상한 (하한 이상 · 근거 글 필수)
-            at = r.get("attestation")
-            lo = r.get("wall_h_lower")
-            if not (isinstance(at, dict) and isinstance(at.get("note"), str) and at["note"].strip()
-                    and isinstance(at.get("by"), str) and at["by"].strip()):
-                invalid.append(f"{key} 런 증언 상한에 근거 (note · by) 가 없다"); continue
-            if _fin(lo) and float(w) < float(lo):
-                invalid.append(f"{key} 런 증언 상한 {w} h < 하한 {lo} h"); continue
-            attested.append(f"{key} {float(w):g} h ({at['note'][:60]})")
+        if r.get("cost_basis") == "attested_upper_bound":       # 정전 복구 · 회신 DJ P0-3 · Q3 — 증언 상한
+            at, lo, hb = r.get("attestation"), r.get("wall_h_lower"), r.get("wall_h_so_far")
+            bad = []
+            if r.get("status") != "orphaned":
+                bad.append(f"증언 상한은 재부팅 고아 런 (orphaned) 에만 — 상태 {r.get('status')!r}")
+            if not isinstance(at, dict):
+                bad.append("근거 (attestation) 없음"); at = {}
+            for f_ in req_att:
+                x = at.get(f_)
+                ok_ = (_fin(x) and float(x) >= 0) if f_ == "uncertainty_h" else (isinstance(x, str) and x.strip())
+                if not ok_:
+                    bad.append(f"근거 {f_} 없음")
+            if not (_fin(lo) and _fin(hb) and float(lo) >= 0 and float(hb) >= 0 and float(lo) >= float(hb) - 1e-9):
+                bad.append(f"하한이 미상 · 잘못 (하한 {lo!r} · heartbeat {hb!r}) — 하한 미상이면 비용도 미상")
+            elif not (_same(at.get("lower_at_attest"), lo, rel=0.0, abs_=1e-9) and _same(at.get("heartbeat_at_attest"), hb, rel=0.0, abs_=1e-9)):
+                bad.append(f"증언 때 하한 · heartbeat ({at.get('lower_at_attest')!r} · {at.get('heartbeat_at_attest')!r}) ≠ 장부 ({lo!r} · {hb!r})")
+            elif float(w) < float(lo):
+                bad.append(f"증언 상한 {w} h < 하한 {lo} h")
+            if bad:
+                invalid.append(f"{key} 런 증언 상한 — " + " · ".join(bad)); continue
+            attested.append(f"{key} {float(w):g} h ({str(at.get('event'))[:40]} · {at.get('confirmer')})")
         tot += float(w)
     inventory, inventory_bad = attempt_inventory(out_root)
     invalid.extend(inventory_bad)
@@ -1247,28 +1386,62 @@ def ledger_check(out_root, verdicts, values):
             invalid.append(f"보존 포함 실행 {rid} ({rec['path']}) 이 장부에 없다")
         elif (r.get("system"), r.get("seed")) != (rec["system"], rec["seed"]):
             invalid.append(f"실행 {rid} 의 산출물 · 장부 계/시드가 다름")
-    # ⭐ 정전 복구 개정 — 시드마다 실행 이력: 과학적 판정 (pass · fail) 뒤의 같은 시드 실행은 무효 · 끊긴 런 재시도는 카드 한도 이하 ·
-    #   retry_of 는 같은 시드의 앞선 실행이어야 한다 (러너가 막지만 소비자도 다시 본다)
-    max_int = values.get("stage1_max_interrupt_retries_per_seed")
+    for rid, r in by_id.items():                              # 회신 DJ P0-2 — 장부 → 보존 폴더 방향
+        if rid not in inventory:
+            invalid.append(f"장부의 {r.get('system')}{r.get('seed')} 런 ({rid[:8]}) 폴더가 run_root 의 계 폴더 안에 없다 (보존 누락 · 지우거나 밖으로 옮김)")
+    hist = {h.get("stop_id"): h for h in stop_hist if isinstance(h, dict) and h.get("stop_id")}
     seen = {}
     for r in runs:
-        if not isinstance(r, dict):
-            continue
-        k = (r.get("system"), r.get("seed"))
-        prev = seen.setdefault(k, [])
-        if any(x.get("verdict") in ("pass", "fail") for x in prev):
-            invalid.append(f"{k[0]}{k[1]}: 과학적 판정 ({[x.get('verdict') for x in prev]}) 뒤에 같은 시드를 다시 돌렸다")
-        ro = r.get("retry_of")
-        if ro is not None and ro not in {x.get("run_id") for x in prev}:
-            invalid.append(f"{k[0]}{k[1]}: retry_of {str(ro)[:8]} 가 같은 시드의 앞선 실행이 아니다")
-        prev.append(r)
-    if isinstance(max_int, int):
-        for k, rr_ in seen.items():
-            n = sum(1 for x in rr_ if x.get("retry_kind") == "interrupted")
-            if n > max_int:
-                invalid.append(f"{k[0]}{k[1]}: 끊긴 런 재시도 {n} 번 > 카드 한도 {max_int}")
-    # 실패를 보존 폴더로 옮겨 새 실행으로 대체해도 과학적 탈락은 사라지지 않는다.
-    for r in runs:
+        if isinstance(r, dict) and isinstance(r.get("run_id"), str):
+            seen.setdefault((r.get("system"), r.get("seed")), []).append(r)
+    max_int = int(values["stage1_max_interrupt_retries_per_seed"])      # 카드 검사가 0 이상 정수를 보장 — 없으면 여기서 멈춘다 (검사를 끄지 않는다)
+    fields = ("retry_of", "retry_stop_id", "retry_kind")
+    for k, rr_ in seen.items():
+        tag = f"{k[0]}{k[1]}"
+        n_int = 0
+        for i_, r in enumerate(rr_):
+            inv_rec = inventory.get(r.get("run_id"))
+            att = (inv_rec or {}).get("attempt")
+            if inv_rec is not None and att is None:
+                invalid.append(f"{tag}: 실행 {r['run_id'][:8]} 폴더에 실행 전 기록 ({ATTEMPT_NAME}) 이 없다 — 재시도 필드를 대조할 수 없다")
+            elif att is not None and any(att.get(f_) != r.get(f_) for f_ in fields):
+                invalid.append(f"{tag}: 실행 {r['run_id'][:8]} 의 {ATTEMPT_NAME} 재시도 필드가 장부와 다르다")
+            if i_ == 0:
+                if any(r.get(f_) for f_ in fields):
+                    invalid.append(f"{tag}: 첫 실행 {r['run_id'][:8]} 에 재시도 필드가 있다")
+                continue
+            p_ = rr_[i_ - 1]
+            pf = (inventory.get(p_.get("run_id")) or {}).get("path")
+            pfs = verdict_file_status(pf) if pf else None
+            pv = p_.get("verdict")
+            if pv in ("pass", "fail") or pfs in ("pass", "fail"):
+                invalid.append(f"{tag}: 과학적 판정 ({pv or pfs}) 뒤에 같은 시드를 다시 돌렸다"); continue
+            if pfs == "unreadable":
+                invalid.append(f"{tag}: 앞 실행 {str(p_.get('run_id'))[:8]} 판정 파일을 못 읽는데 다시 돌렸다"); continue
+            kind = "invalid" if (pv == "invalid" or pfs == "invalid") else "interrupted"
+            if kind == "interrupted":
+                n_int += 1
+            if r.get("retry_of") != p_.get("run_id"):
+                invalid.append(f"{tag}: 실행 {r['run_id'][:8]} 의 retry_of {str(r.get('retry_of'))[:8]} ≠ 바로 앞 실행 {str(p_.get('run_id'))[:8]}")
+            if r.get("retry_kind") != kind:
+                invalid.append(f"{tag}: 실행 {r['run_id'][:8]} 의 retry_kind {r.get('retry_kind')!r} ≠ 앞 실행 종류 {kind!r}")
+            h = hist.get(r.get("retry_stop_id"))
+            if not (h and h.get("acked_at") and h.get("run_id") == p_.get("run_id") and h.get("code") in RETRY_BIND_CODES[kind]):
+                invalid.append(f"{tag}: 실행 {r['run_id'][:8]} 이 앞 실행에 묶여 확인된 STOP ({' · '.join(RETRY_BIND_CODES[kind])}) 과 안 묶인다")
+            else:
+                st_ = folder_stage(pf) if pf else None
+                dp = declaration_problems(h.get("declaration"), kind, values, prev_status=p_.get("status"),
+                                          rejudge_needed=(kind == "invalid" and st_ in ("final", "md_complete")))
+                if dp:
+                    invalid.append(f"{tag}: 재시도 선언 — " + " · ".join(dp))
+            st_p = folder_stage(pf) if pf else None
+            if st_p == "unreadable":
+                invalid.append(f"{tag}: 앞 실행 {str(p_.get('run_id'))[:8]} 폴더의 완료 단계를 못 읽는데 다시 돌렸다")
+            elif kind == "interrupted" and st_p in ("final", "md_complete"):
+                invalid.append(f"{tag}: 앞 실행이 끝까지 (또는 MD 까지) 돌았는데 다시 돌렸다 — 판정 · FIRE 복구 대상")
+        if n_int > max_int:
+            invalid.append(f"{tag}: 끊긴 런 재시도 {n_int} 번 > 카드 한도 {max_int} (앞 실행 종류로 셈)")
+    for r in runs:                                            # 실패를 보존 폴더로 옮겨 새 실행으로 대체해도 과학적 탈락은 사라지지 않는다
         if not isinstance(r, dict) or r.get("verdict") != "fail":
             continue
         vv = verdicts.get((r.get("system"), r.get("seed")))
@@ -1286,7 +1459,8 @@ def ledger_check(out_root, verdicts, values):
             invalid.append(f"{s}{sd} 판정의 run_id {rid[:8]} 가 장부에 없다 — 비용이 안 잡힌 실행")
         elif (r.get("system"), r.get("seed")) != (s, sd):
             invalid.append(f"{s}{sd} 판정의 run_id {rid[:8]} 는 장부에서 {r.get('system')}{r.get('seed')} 런이다")
-    return {"total_h": tot, "cap_h": float(values["stage1_cap_gpu_h"]), "invalid": invalid, "pending": pending,
+    cap_eff, cap_info = effective_cap([r for r in runs if isinstance(r, dict)], stop_hist, values, inventory=inventory)
+    return {"total_h": tot, "cap_h": cap_eff, "cap_info": cap_info, "invalid": invalid, "pending": pending,
             "runs": len(runs), "attested": attested, "source": str(p)}
 
 
@@ -2509,7 +2683,12 @@ def _selftest():
            "composition": {"A": {"Cl": 12, "Li": 48, "P": 12, "S": 48}, "B": {"Li": 45, "P": 15, "S": 60}, "T": {"P": 4, "S": 4}},
            "software_required": {"model": "uma-s-1p1", "task": "omat", "versions_present": ["fairchem-core", "torch", "ase"]},
            "thermo_required_columns": ["t_ps", "T_K", "T_set_K", "density_g_cm3", "P_GPa", "P_virial_GPa"],
-           "first_seed": 11, "stage1_cap_gpu_h": 230.0, "stage1_max_interrupt_retries_per_seed": 1}
+           "first_seed": 11, "stage1_cap_gpu_h": 230.0, "stage1_max_interrupt_retries_per_seed": 1,
+           "retry_reasons": {"interrupted": ["power_outage", "host_crash_or_reboot", "hardware_fault", "budget_cap_raised"],
+                             "invalid": ["invalid_cause_fixed"]},
+           "outage_reasons": ["power_outage", "host_crash_or_reboot", "hardware_fault"], "stage1_outage_extra_budget_gpu_h": 45.0,
+           "cap_retry_reasons": ["budget_cap_raised"],
+           "attestation_required_fields": ["event", "time_reference", "uncertainty_h", "derivation", "confirmer", "confirmed_at"]}
     VAL["melt_window"]["estimator"] = MELT_WINDOW_ESTIMATOR
     rng = np.random.default_rng(7); L = 12.0
     base = rng.uniform(1, L - 1, (8, 3)); symW = ["P"] * 4 + ["S"] * 4
@@ -2696,6 +2875,83 @@ def _selftest():
                      ("software_required 없음", {"software_required": None}), ("밀도 NaN", {"fix_density_g_cm3": {"A": float("nan"), "B": 1.88}}),
                      ("압력 열 목록에 virial 없음", {"thermo_required_columns": ["t_ps", "T_set_K", "density_g_cm3", "P_GPa"]})):
         chk(validate_li2s2_values({**VAL, **mut}) != [], f"⛔음성 DG: 카드 값 검사가 거부한다 — {nm_}")
+    # 회신 DJ — 재시도 사유 · 실효 상한 · 증언 필드 (카드 값) · 완료 단계 · 판정 파일 상태 · 선언 검사 (드라이버 단위)
+    for nm_, mut in (("retry_reasons 없음", {"retry_reasons": None}), ("retry_reasons 한 종류만", {"retry_reasons": {"interrupted": ["power_outage"]}}),
+                     ("retry_reasons 빈 목록", {"retry_reasons": {"interrupted": [], "invalid": ["invalid_cause_fixed"]}}),
+                     ("outage_reasons 가 interrupted 밖", {"outage_reasons": ["user_ctrl_c"]}), ("정전 추가 예산 NaN", {"stage1_outage_extra_budget_gpu_h": float("nan")}),
+                     ("정전 추가 예산 -1", {"stage1_outage_extra_budget_gpu_h": -1.0}), ("정전 추가 예산 없음", {"stage1_outage_extra_budget_gpu_h": None}),
+                     ("증언 필드에 확인자 없음", {"attestation_required_fields": ["event", "time_reference", "uncertainty_h", "derivation", "confirmed_at"]}),
+                     ("상한 사유가 정전 사유와 겹침", {"cap_retry_reasons": ["power_outage"]}), ("상한 사유 없음", {"cap_retry_reasons": None})):
+        chk(validate_li2s2_values({**VAL, **mut}) != [], f"⛔음성 DJ: 카드 값 검사가 거부한다 — {nm_}")
+    with tempfile.TemporaryDirectory() as td_:
+        def _fs(name, plan=True, traj=None, final=False):
+            d = pathlib.Path(td_) / name; d.mkdir()
+            if plan is True:
+                (d / "plan.json").write_text(json.dumps({"melt_ps": 2.0, "quench_ps": 1.0, "hold_ps": 1.0, "save_ps": 1.0}), encoding="utf-8")
+            elif isinstance(plan, str):
+                (d / "plan.json").write_text(plan, encoding="utf-8")
+            if traj is not None:
+                (d / "traj.xyz").write_bytes(traj if isinstance(traj, bytes) else
+                                             "".join("2\nLattice=\"5 0 0 0 5 0 0 0 5\"\nLi 0 0 0\nLi 1 1 1\n" for _ in range(traj)).encode())
+            if final:
+                (d / "final.xyz").write_text("x", encoding="utf-8")
+            return folder_stage(d)
+        fs_ = {"final": _fs("f", traj=5, final=True), "md_complete": _fs("c", traj=5), "md_incomplete": _fs("i", traj=4),
+               "no_plan": _fs("n", plan=False, traj=5), "unreadable_plan": _fs("u", plan='{"melt_ps": 2', traj=5),
+               "empty_traj": _fs("e", traj=b""), "nul_traj": _fs("z", traj=b"\x00" * 64), "garbage": _fs("g", traj=b"abc\n1\n"),
+               "half_frame": _fs("h", traj=("2\nL\nLi 0 0 0\nLi 1 1 1\n" * 4 + "2\nL\nLi 0 0 0\n").encode())}
+        chk(fs_ == {"final": "final", "md_complete": "md_complete", "md_incomplete": "md_incomplete", "no_plan": "no_plan",
+                    "unreadable_plan": "unreadable", "empty_traj": "md_incomplete", "nul_traj": "md_incomplete", "garbage": "unreadable",
+                    "half_frame": "md_incomplete"},
+            f"⛔음성 DJ Q2: 완료 단계 — 최종 · MD 완료 (FIRE 미완) · MD 미완 · plan 없음 · plan 잘림 = 판독 불가 · 빈 / NUL traj = 프레임 0 · "
+            f"머리 깨짐 = 판독 불가 · 끝의 반쪽 프레임은 안 센다 ({fs_})")
+        vd = pathlib.Path(td_) / "v"; vd.mkdir()
+        v_none = verdict_file_status(vd)
+        (vd / "stage1_verdict.json").write_text('{"status": "pass"}', encoding="utf-8"); v_pass = verdict_file_status(vd)
+        (vd / "stage1_verdict.json").write_text('{"status": "pa', encoding="utf-8"); v_cut = verdict_file_status(vd)
+        (vd / "stage1_verdict.json").write_text('{"status": "maybe"}', encoding="utf-8"); v_unk = verdict_file_status(vd)
+        (vd / "stage1_verdict.json").write_text('[1, 2]', encoding="utf-8"); v_list = verdict_file_status(vd)
+    chk(v_none is None and v_pass == "pass" and v_cut == v_unk == v_list == "unreadable",
+        f"⛔음성 DJ P0-2: 판정 파일 없음 (None) 과 있는데 못 읽음 (잘림 · 모르는 상태 · 객체 아님 = unreadable) 을 가른다 ({v_none} · {v_pass} · {v_cut} · {v_unk} · {v_list})")
+    D_ = lambda **k: {"reason": "power_outage", "event": "kgy 정전 (selftest)", "evidence": "UPS 로그 (selftest)", "declared_by": "selftest",
+                      "declared_at": "2026-11-03 00:00:00", **k}
+    dp = {"none": declaration_problems(None, "interrupted", VAL), "ok": declaration_problems(D_(), "interrupted", VAL),
+          "ctrl_c": declaration_problems(D_(reason="user_ctrl_c"), "interrupted", VAL),
+          "inv_reason_for_int": declaration_problems(D_(reason="invalid_cause_fixed"), "interrupted", VAL),
+          "inv_ok": declaration_problems(D_(reason="invalid_cause_fixed"), "invalid", VAL),
+          "no_by": declaration_problems(D_(declared_by=" "), "interrupted", VAL),
+          "rejudge_missing": declaration_problems(D_(reason="invalid_cause_fixed"), "invalid", VAL, rejudge_needed=True),
+          "rejudge_ok": declaration_problems(D_(reason="invalid_cause_fixed", rejudge_impossible_reason="traj 0 번 프레임 종이 바뀜 (selftest)"),
+                                             "invalid", VAL, rejudge_needed=True),
+          "cap_outage": declaration_problems(D_(), "interrupted", VAL, prev_status="cap"),
+          "cap_ok": declaration_problems(D_(reason="budget_cap_raised"), "interrupted", VAL, prev_status="cap"),
+          "raise_noncap": declaration_problems(D_(reason="budget_cap_raised"), "interrupted", VAL, prev_status="interrupted")}
+    chk(all(dp[k] for k in ("none", "ctrl_c", "inv_reason_for_int", "no_by", "rejudge_missing", "cap_outage", "raise_noncap"))
+        and not any(dp[k] for k in ("ok", "inv_ok", "rejudge_ok", "cap_ok")),
+        "⛔음성 DJ Q1 · Q4: 재시도 선언 — 없음 · 허용 밖 사유 (Ctrl-C) · 다른 종류 사유 · 선언자 없음 · 다시 판정 못 하는 이유 없음 · "
+        "상한 런에 정전 사유 · 상한 아닌 런에 상한 사유 → 거부 (맞는 선언은 통과)")
+    ack_ = lambda rid, reason, acked=True: {"stop_id": rid[:4], "run_id": rid, "code": "resume", **({"acked_at": "t"} if acked else {}),
+                                            "declaration": D_(reason=reason)}
+    runs_ = [{"system": "A", "seed": 12, "run_id": "1" * 32, "status": "orphaned", "end": "t", "wall_h": 30.0},
+             {"system": "B", "seed": 12, "run_id": "2" * 32, "status": "ended", "rc": 0, "end": "t", "wall_h": 100.0},
+             {"system": "A", "seed": 13, "run_id": "3" * 32, "status": "cap", "end": "t", "wall_h": 100.0},
+             {"system": "B", "seed": 13, "run_id": "4" * 32, "status": "ended", "rc": 137, "end": "t", "wall_h": 100.0}]
+    ec0 = effective_cap(runs_, [], VAL)[0]
+    ec1 = effective_cap(runs_, [ack_("1" * 32, "power_outage")], VAL)[0]
+    ec2 = effective_cap(runs_, [ack_("1" * 32, "power_outage"), ack_("4" * 32, "hardware_fault")], VAL)[0]
+    ec3 = effective_cap(runs_, [ack_("2" * 32, "power_outage"), ack_("3" * 32, "power_outage")], VAL)[0]
+    ec4 = effective_cap(runs_, [ack_("1" * 32, "power_outage", acked=False), ack_("1" * 32, "budget_cap_raised")], VAL)[0]
+    with tempfile.TemporaryDirectory() as td_:
+        dc, di = pathlib.Path(td_) / "c", pathlib.Path(td_) / "i"
+        for d_, n_ in ((dc, 5), (di, 2)):
+            d_.mkdir(); (d_ / "plan.json").write_text(json.dumps({"melt_ps": 2.0, "quench_ps": 1.0, "hold_ps": 1.0, "save_ps": 1.0}), encoding="utf-8")
+            (d_ / "traj.xyz").write_text("".join("1\nL\nLi 0 0 0\n" for _ in range(n_)), encoding="utf-8")
+        ec5 = effective_cap(runs_, [ack_("1" * 32, "power_outage")], VAL, inventory={"1" * 32: {"path": str(dc)}})[0]
+        ec6 = effective_cap(runs_, [ack_("1" * 32, "power_outage")], VAL, inventory={"1" * 32: {"path": str(di)}})[0]
+        ec7 = effective_cap(runs_, [ack_("1" * 32, "power_outage")], VAL, inventory={})[0]
+    chk(ec0 == 230.0 and ec1 == 260.0 and ec2 == 275.0 and ec3 == 230.0 and ec4 == 230.0 and ec5 == 230.0 and ec6 == 260.0 and ec7 == 230.0,
+        f"⛔음성 DJ Q4: 실효 상한 = 230 + min(정전 손실, 45) — 끊긴 런 30 h → 260 · 더 끊김 → 275 (45 상한) · 정상 끝 · 상한 런에 정전 선언 → 그대로 · "
+        f"확인 안 된 선언 · 정전 아닌 사유 → 그대로 · 폴더가 MD 완료 · 없음 → 그대로 ({ec0} {ec1} {ec2} {ec3} {ec4} {ec5} {ec6} {ec7})")
     # ④ 배로스탯 대조 잡 — LJ 결정(fcc)으로 배선만. 같은 BARO 를 쓰는지까지 본다
     from ase.build import bulk
     with tempfile.TemporaryDirectory() as td:
