@@ -10835,6 +10835,61 @@
      "note": "Codex DF NO-GO 반영 (결과 전) — 판독량 window_mto_v1 · 문턱 승계 · 소비자 --stage1_verdict · 시드 규칙 · 한쪽 계 닫힘 = 트랙 멈춤 · 러너 · 문구 · 비용"
     }
    ]
+  },
+  {
+   "id": "D-2026-11-03-shear-pair-closed",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": null,
+   "slot": "shear_b2o3_lpscl16_2x_pair_closure",
+   "applies_to": {
+    "systems": [
+     "modelc_2x",
+     "b2o3_128"
+    ]
+   },
+   "title": "b2o3 (128) 대 LPSCl1.6 2× (124) relaxed-ion 전단 짝 — 닫는다: modelc_2x 검사 ② 회색 (전단 기반 G · E 보고 안 함) · b2o3 짝은 돌리지 않는다 (사용자 11-03)",
+   "statement": "db/properties/shear_b2o3_vs_lpscl16_2x_closed_2026_11_03.json 이 마감 기록이다 — modelc_2x 12/12 (재현 일치 · 수렴 12/12): 양의 정부호 · 금지 커플링 9.2 (대칭화) / 11.1 GPa (대칭화 전) 가 깨끗 (≈ 3.6) 과 깨짐 (≈ 30) 사이라 회색 → G · E 보고 안 함 · b2o3 (128) 는 돌리지 않는다 · 짝 판정 네 갈래 없음 · DEM 의 SE 영률은 modelc(62) 27.66 GPa 그대로 · 재개는 새 카드로만 (마감 §5).",
+   "rationale": "짝의 한쪽 (modelc_2x) 이 회색이면 짝 질문에 약하게만 답한다 · 2× 프레임은 1e-4 에 못 닿았던 이력 (09-11) 이 있어 문턱을 다시 조이는 것도 막힐 수 있다 · 사용자 'ㅇㅇ 그냥 stop하자'.",
+   "decision_state": "active",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/shear_b2o3_vs_lpscl16_2x_closed_2026_11_03.json",
+   "record": "db/properties/shear_b2o3_vs_lpscl16_2x_result_2026_11_03.json",
+   "supersedes": [],
+   "depends_on": [
+    "D-2026-09-11-elastic-conv-threshold",
+    "D-2026-10-14-elastic-60bfgs-gate-continue"
+   ],
+   "evidence": [
+    "db/properties/shear_b2o3_vs_lpscl16_2x_result_2026_11_03.json",
+    "db/raw/elastic_modelc_2x_2026_11_03/ (e07ac308 · SHA ok · fit 재현 51/51)"
+   ],
+   "reopen_criteria": [
+    "b2o3 E 가 필요해지면 새 카드로만 (strain 0.01 전단 + 같은 골짜기 게이트 · 또는 64 원자급 새 모델 at 1e-4)",
+    "이 짝은 다시 열지 않는다"
+   ],
+   "enforcement": "마감 기록 §2 · §3 밖으로 쓰지 않는다 · modelc_2x 의 G · E · ν 는 어디에도 싣지 않는다",
+   "proposed_by": "claude-session-2026-11-03 (friendly)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-11-03",
+     "state": "active",
+     "by": "사용자 (탄성 트랙 1저자)",
+     "note": "사용자 2026-11-03 (이 세션): 검사 ② 회색 · 짝 닫기 권고에 'ㅇㅇ 그냥 stop하자'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-03T05:48:43Z",
+    "commit": "aae82af4be0527590057f3d02c9cef3f1c689ad2",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-03 (이 세션): 검사 ② 회색 · 짝 닫기 권고에 'ㅇㅇ 그냥 stop하자'",
+    "decision_digest": "sha256:3e72105904e72ef6e7b35ac0139bad4cd9a47b6c0bea4d42810be44b308f2a1b"
+   }
   }
  ]
 }
