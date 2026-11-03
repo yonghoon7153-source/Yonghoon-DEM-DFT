@@ -13,7 +13,7 @@
   "by": "agent · 2026-11-03"
  },
  "리뷰": "Codex DF — NO-GO → 반영 (위) → 확인 리뷰 DG (고친 곳만) 뒤 활성 · 발사",
- "⏭": "Codex DH (DG 고침 확인) 회신 → GO 면 결정 활성 · kgy 1 단계 발사 블록",
+ "⏭": "Codex DI (DH 고침 확인) 회신 → GO 면 결정 활성 · kgy 1 단계 발사 블록",
  "회신_DF_2026_11_03": {
   "판정": "NO-GO (ff795d669 그대로 실행 보류) · 고정 밀도 NVT 방향 조건부 찬성 · P0 1 · P1 5 · P2 4",
   "원문": "kb/reviews/codex_DF_reply_li2s2_dense_window_card_2026_11_03.md",
@@ -32,6 +32,15 @@
   "반영_시험": "드라이버 selftest 152 → 185 · 러너 selftest 15 → 36 (가짜 담금질이 진짜 파일을 쓰고 **진짜 판독 함수** 를 부른다 · 진짜 프로세스 그룹 멈춤 1) · 깨기 36/36 빨강 (겹마다 따로 — terminal STOP · 장부 closes · 묶음 closes · 시드 판정 closes · 정리 경로 · 띄운 직후 장부 · 실행 중 상한 · 다시 판정 · flock · 순서 · 고아 런 · ack 일치 · 상한 ack · 첫 시드 멈춤 · 명령 repr · plan 없음 · 종 · estimator 둘 · NaN · 소프트웨어 · 압력 열 · 최종 구조 배선 · 전부 판정 · 모르는 상태 · 지문 · 장부 상한 둘 · traj 프레임 · thermo 머리줄 · first_seed · gate 목표 · 조성 · 카드 값 지문)",
   "반영_카드": "카드 §개정_DG_2026_11_03 (결과 전) · 기계_판독_값 추가 (composition · software_required · thermo_required_columns · first_seed · stage1_cap_gpu_h) · §1b 2_3단계_MD · §4 S2 측정_가능 (stage1_summary 의 두 시드 · 그 순서의 기계) · 비용 현재형 문구 · A 밀도 1.91347 표기",
   "남은_것": "Codex DH 확인 → 결정 활성 (사용자 · 위임 10-30) → kgy 발사 블록 (cascade v7 끝난 뒤) · 2 단계 전: MD 압력 스냅숏 재계산 도구",
+  "by": "agent · 2026-11-03"
+ },
+ "회신_DH_2026_11_03": {
+  "판정": "NO-GO (7abe7929 첫 담금질 승인 보류) · DG 일반 반례 대부분 해제 · P0 3 · P1 2 · 물리 설계 · 생산 계산 요구 없음",
+  "원문": "kb/reviews/codex_DH_reply_li2s2_dg_fixes_2026_11_03.md",
+  "반영_드라이버": "melt_quench_uma.py sha16 bc325e25ef7f2bba: --run_id (plan.json) · identity_check (폴더 = plan · run_id) · stage1_verdict reason + stage1_verdict_history.jsonl (덮어쓰기 전 이전 판정 전체 · 지문 변화 · 사유) · ledger_check (장부 = 실행 목록: 판정 run_id ↔ 장부 런 · 누락 · 음수 · 근거 없음 · run_id 중복 · 다른 시드 = 무효 · 안 끝난 런 = 대기 · 확정 비용만 합) · 묶음: 자리 ≠ 판정 · run_id 중복 = 무효",
+  "반영_러너": "li2s2_stage1_runner.py sha16 ee20b434b428b590 (드라이버 고정값 bc325e25ef7f2bba): 산출물 위 빈 장부 거부 · run_id 생성 · cost_basis (측정 · 보수 상한) · 고아 런 = 그룹이 죽은 것을 본 시각 − 시작 (하한은 wall_h_lower) · _Proc.stop 이 대표와 그룹을 따로 (TERM → KILL → 빔 확인) · 정상 끝 뒤에도 그룹 정리 · 못 비우면 stop_failed (끝 없음 · 비용 미확정) · STOP invalid (27 · terminal 아님) ≠ melt · track · 재판정 사유",
+  "반영_시험": "드라이버 selftest 185 → 191 · 러너 selftest 36 → 49 (DH 반례 그대로: 빈 장부 · 한 행 누락 · 음수 · 미종료 · 하한 근거 · 빈 장부 + ack · 장부 없는 산출물 · A11 → A12 복사 · 다섯 자리 복사 · plan 시드만 고침 · 판정 자리 바꿈 · 장부 시드 바꿈 · 그룹 잔존 (가짜 둘 · 진짜 Linux 셋: TERM 이 손자까지 · 대표 TERM 사망 + TERM 무시 일꾼 · 대표 rc 0 + TERM 무시 일꾼) · 첫 시드 invalid → STOP invalid → 폴더 옆으로 + ack → 재개 · final.xyz 빈 줄 → 이력) · 깨기 53/53 빨강 (DG 36 다시 + DH 17 · 저장소 밖 복사본)",
+  "남은_것": "Codex DI 확인 → 결정 활성 (사용자 · 위임 10-30) → kgy 발사 블록 (cascade v7 끝난 뒤) · 2 단계 전: MD 압력 스냅숏 재계산 도구",
   "by": "agent · 2026-11-03"
  }
 }

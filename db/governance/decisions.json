@@ -10802,8 +10802,9 @@
    "supersedes": [],
    "amends": null,
    "evidence": [
-    "tools/ionic/melt_quench_uma.py (sha16 615445c9e0f54710 · selftest 185/185 · DG 깨기 포함)",
-    "tools/ionic/li2s2_stage1_runner.py (sha16 d736a65cbc775038 · selftest 36/36 — 진짜 판독 함수 · 진짜 프로세스 그룹 · 깨기 36/36)",
+    "tools/ionic/melt_quench_uma.py (sha16 bc325e25ef7f2bba · selftest 191/191)",
+    "tools/ionic/li2s2_stage1_runner.py (sha16 ee20b434b428b590 · selftest 49/49 — 진짜 판독 함수 · 진짜 프로세스 그룹 · 깨기 53/53)",
+    "kb/reviews/codex_DH_reply_li2s2_dg_fixes_2026_11_03.md (NO-GO · DG 일반 반례 대부분 해제)",
     "kb/reviews/codex_DG_reply_li2s2_df_fixes_2026_11_03.md (NO-GO · DF 핵심 MSD 반례 해제)",
     "kb/reviews/codex_DF_reply_li2s2_dense_window_card_2026_11_03.md (NO-GO · 고정 밀도 NVT 방향 조건부 찬성)",
     "db/properties/lpscl_smallcell_glass_track_closed_2026_10_30.json §6 (설계 초안)",
@@ -10813,7 +10814,7 @@
     "없음 — 셀 키움 · 긴 런 · D3 · 다른 온도 · 다른 밀도는 새 카드",
     "'시드 · 온도를 하나 더' 는 재개 사유가 아니다"
    ],
-   "enforcement": "1 단계 러너 li2s2_stage1_runner.py: 결정 active · 드라이버 sha16 고정 · 카드 값 검사 · 순서 = 카드 시드 전부 · flock 잠금 · STOP (닫는 사건 = ack 불가 · 나머지 = stop_id) · 장부 closes_system · 고아 런 · 재시작 때 원자료로 다시 판정 · 끊긴 런 폴더 거부 · 첫 시드 녹음 판정으로 담금질 실제 정지 · 실행 중 상한 (카드 stage1_cap_gpu_h) · 모든 탈출 경로에서 자식 정리 → 장부 · STOP → 잠금 해제 · 시드마다 --stage1_verdict · --stage1_summary (장부 상한 · 지문 · 선언 시드 전부) · 2 · 3 단계 러너는 각 단계 결정 때",
+   "enforcement": "1 단계 러너 li2s2_stage1_runner.py: 결정 active · 드라이버 sha16 고정 · 카드 값 검사 · 순서 = 카드 시드 전부 · flock 잠금 · STOP (과학적 종료 melt · track = ack 불가 · 자료 오류 invalid · 나머지 = stop_id) · 장부 closes_system · 산출물 위 빈 장부 거부 · 고아 런 (살아 있으면 거부 · 죽었으면 보수 상한) · 담금질마다 run_id · 재시작 때 원자료로 다시 판정 (이전 판정은 이력) · 끊긴 런 폴더 거부 · 첫 시드 녹음 판정으로 담금질 실제 정지 · 실행 중 상한 (카드 stage1_cap_gpu_h) · 그룹 정리 (대표와 따로 · 못 비우면 런을 안 닫음) · 모든 탈출 경로에서 정리 → 장부 · STOP → 잠금 해제 · 시드마다 --stage1_verdict (실행 식별 · 최종 구조 · 지문) · --stage1_summary (장부 = 실행 목록 · 지문 · 선언 시드 전부 · 상한) · 2 · 3 단계 러너는 각 단계 결정 때",
    "cost_cap": {
     "stage1_GPU_h": 230,
     "stage2_GPU_h": 230,
@@ -10840,6 +10841,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex DG NO-GO 반영 (결과 전) — 닫는 사건 재시작 유지 · 모든 탈출 경로 정리 · 실행 중 상한 · 원자료 결속 · 선언 시드 전부 · flock · 입력 검사 · 카드 본문 · DH 확인 뒤 활성"
+    },
+    {
+     "at": "2026-11-03",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DH NO-GO 반영 (결과 전) — 장부 = 실행 목록 · run_id · 그룹 정리 · invalid ≠ 과학적 종료 · 재판정 이력 · DI 확인 뒤 활성"
     }
    ]
   },
