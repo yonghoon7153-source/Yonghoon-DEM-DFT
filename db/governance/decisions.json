@@ -10802,13 +10802,12 @@
    "supersedes": [],
    "amends": null,
    "evidence": [
-    "tools/ionic/melt_quench_uma.py (sha16 bc325e25ef7f2bba · selftest 191/191)",
-    "tools/ionic/li2s2_stage1_runner.py (sha16 ee20b434b428b590 · selftest 49/49 — 진짜 판독 함수 · 진짜 프로세스 그룹 · 깨기 53/53)",
-    "kb/reviews/codex_DH_reply_li2s2_dg_fixes_2026_11_03.md (NO-GO · DG 일반 반례 대부분 해제)",
-    "kb/reviews/codex_DG_reply_li2s2_df_fixes_2026_11_03.md (NO-GO · DF 핵심 MSD 반례 해제)",
-    "kb/reviews/codex_DF_reply_li2s2_dense_window_card_2026_11_03.md (NO-GO · 고정 밀도 NVT 방향 조건부 찬성)",
-    "db/properties/lpscl_smallcell_glass_track_closed_2026_10_30.json §6 (설계 초안)",
-    "db/properties/lpscl_glass_model_check_sp_readout_2026_10_23.json (밀도 분해)"
+    "tools/ionic/melt_quench_uma.py (0f51518d · selftest 193/193)",
+    "tools/ionic/li2s2_stage1_runner.py (0f51518d · selftest 65/65 Linux — 진짜 판독 함수 · 진짜 프로세스 그룹)",
+    "kb/reviews/codex_DI_reply_li2s2_dh_fixes_2026_11_03.md (NO-GO → Codex 고침 묶음 적용 b7d11f81)",
+    "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json §개정_정전_복구_2026_11_03 (사용자 '2번으로 가자')",
+    "kb/reviews/codex_DH_reply_li2s2_dg_fixes_2026_11_03.md · codex_DG_reply… · codex_DF_reply… (앞선 NO-GO 들)",
+    "db/properties/lpscl_smallcell_glass_track_closed_2026_10_30.json §6 (설계 초안)"
    ],
    "reopen_criteria": [
     "없음 — 셀 키움 · 긴 런 · D3 · 다른 온도 · 다른 밀도는 새 카드",
@@ -10847,6 +10846,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex DH NO-GO 반영 (결과 전) — 장부 = 실행 목록 · run_id · 그룹 정리 · invalid ≠ 과학적 종료 · 재판정 이력 · DI 확인 뒤 활성"
+    },
+    {
+     "at": "2026-11-03",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DI 고침 묶음 적용 (b7d11f81 · Linux 확인) + 정전 복구 개정 (0f51518d · 사용자 '2번으로 가자') — DJ 확인 뒤 활성"
     }
    ]
   },

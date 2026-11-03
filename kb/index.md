@@ -1,12 +1,12 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-03 · managed-files: 561
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-03 · managed-files: 562
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 352건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 353건)
 - 2026-11-03 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-03 · `kb/reviews/codex_DF_prompt_li2s2_dense_window_card_2026_11_03.md` — DF 프롬프트 — li2s-2 새 트랙 설계: 실험 밀도에 고정해 다시 담금질한 두 유리 (a-Li₄PS₄Cl · a-Li₃PS₄) 의 측정 온도 창 → D 비 · Ea 차 + melt_quench_uma.py --fix_density · 발송 2026-11-03 (사용자 · 기준 커밋 ff795d669) …
 - 2026-11-03 · `kb/reviews/codex_DF_reply_li2s2_dense_window_card_2026_11_03.md` — DF 회신 — li2s-2 새 트랙 설계 (ff795d669): NO-GO · 고정 밀도 NVT 방향은 조건부 찬성 · P0 1 (melt_check 시간창 ≠ 판정량) · P1 5 (종료코드 ≠ 카드 통과 · 시드 11·12 고정 빈 경로 · MD 압력 미기록 · T₅₀ 로 과냉각 액체 추론 철회 · 비용 합계·회계) · P2 4 · 수령 2026-11-03 (사용자 붙여넣기 · 원문 보존 · 마크다운…
@@ -16,6 +16,7 @@
 - 2026-11-03 · `kb/reviews/codex_DH_reply_li2s2_dg_fixes_2026_11_03.md` — DH 회신 — li2s-2 DG 고침 확인 (7abe7929): NO-GO · DG 일반 반례 대부분 해제 · P0 3 (장부가 있기만 하면 빠진 비용을 0 으로 인정 · 폴더 시드와 실제 실행 시드 비결속 · 그룹 대표가 먼저 끝나면 남은 자식 미정리) · P1 2 (첫 시드 invalid 를 과학적 영구 종료로 기록 · 재판정이 이전 증거를 덮어씀) · 수령 2026-11-03 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-11-03 · `kb/reviews/codex_DI_prompt_li2s2_dh_fixes_2026_11_03.md` — DI 프롬프트 — li2s-2 DH 고침 확인 (dad10ecf): 장부 = 실행 목록 · 실행 식별자 run_id · 그룹 정리 (대표와 따로) · invalid ≠ 과학적 종료 · 재판정 이력 — 첫 담금질 GO 여부 · 발송 · 회신 수령 2026-11-03 (고침 묶음 · `codex_…
 - 2026-11-03 · `kb/reviews/codex_DI_reply_li2s2_dh_fixes_2026_11_03.md` — DI 회신 — li2s-2 DH 고침 확인 (dad10ecf): NO-GO · P0 3 (fail 시드 재담금질 · 보존 실행 비용 누락 · 프로세스 조회 불가 = 빈 그룹) · P1 2 (정리 시간 · 벽시계 역행) → Codex 가 고침 묶음까지 (패치 · 검증 · 변이) — 실패 시드 재담금질 차단 · 보존 실행 비용 대조 · 그룹 판독 불가 = 모름 · 정리 시간 계상 · 같은 부팅 단조 시계 고아 상한 · 수령 2026-11-03 (사용자 업로드 zip `li2s2_DI_f…
+- 2026-11-03 · `kb/reviews/codex_DJ_prompt_li2s2_outage_rule_2026_11_03.md` — DJ 프롬프트 — li2s-2 DI 고침 적용 확인 (Linux) + 정전 복구 개정 (0f51518d): 끊긴 런 시드마다 1 회 재시도 · 재부팅 고아 런 증언 상한 — 첫 담금질 GO 여부 · 초안 (2026-11-03) — 사용자 발송 대기 · 기준 커밋 0f…
 - 2026-11-01 · `kb/reports/weekly_2026_11_01.md` — 주간 정리 2026-10-26 ~ 11-01 (주간보고 초안) · 초안 (2026-11-01 · 도는 계산은 마지막 실측 기준 — kg…
 - 2026-10-30 · `kb/reviews/li2s1a_DA_prompt_li2s_glass_bmeas_650k_readout_2026_10_19.md` — DA 프롬프트 — li2s B 측정 가능 조건 카드 ① 단계 판독: N_B 5/5 · 골격 이동 2 (이량체 다리 교환) · R 집합 3 → R 불가 · A 650 K 여부 · 모델 검증 (UMA–PBE p1 · p1 · BVSE) · 트랙 마감 제안 · 새 트랙 여부 · 발송 안 함 — 2026-10-30 사용자 위임 (외부 1저자 확인 …
 - 2026-10-28 · `kb/concepts/nmr_shift.md` — NMR 화학적 이동 읽기 — 차폐 · ppm · up-field · 확정 (개념 카드)
@@ -26,7 +27,6 @@
 - 2026-10-26 · `kb/projects/merge_request_2026_10_26.md` — 머지 요청 — 대피 브랜치 claude/evac-2026-10-22 → claude/friendly-meitner-lldvar (2026-10-26 · fast-forward · 충돌 0) · 최종 — 10-26 실측 (friendly 끝 = 대피 인계 카드 a…
 - 2026-10-26 · `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` — Li₃Nd pristine 3×3×3 이 0.65 eV 재구성한다 — NEB 기반 구조도 같은가? · open [open]
 - 2026-10-22 · `kb/reviews/codex_CZ_reply_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 회신 — W_ad 외주 2차 묶음 리뷰: NO-GO · 발송 보류 · 구조 봉인·집계 산식은 유지 · 반송 검사 경로의 결함 (판정 순서 · A→B 결박 · 시도별 환경 감사 · optB88 판독 · 인프라 중단 비용) 을 고친 뒤 재봉인 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…
-- 2026-10-22 · `kb/reviews/codex_DB_prompt_wad_outsourcing_round2_v2_2026_10_22.md` — DB 프롬프트 — W_ad 외주 2차 묶음 v2 재리뷰: CZ 해제조건 일곱 + 발송 전 자체 검토 고침 (S1–S9) 이 닫혔는지 (고친 곳 diff 만) · 발송 승인 여부 · 발송 2026-10-22 (사용자 · 기준 커밋 3d684e502 ·…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -213,7 +213,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (228)
+## reviews/ (229)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-03 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -350,6 +350,7 @@
 - `kb/reviews/codex_DH_reply_li2s2_dg_fixes_2026_11_03.md` — DH 회신 — li2s-2 DG 고침 확인 (7abe7929): NO-GO · DG 일반 반례 대부분 해제 · P0 3 (장부가 있기만 하면 빠진 비용을 0 으로 인정 · 폴더 시드와 실제 실행 시드 비결속 · 그룹 대표가 먼저 끝나면 남은 자식 미정리) · P1 2 (첫 시드 invalid 를 과학적 영구 종료로 기록 · 재판정이 이전 증거를 덮어씀)  (2026-11-03 · 수령 2026-11-03 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
 - `kb/reviews/codex_DI_prompt_li2s2_dh_fixes_2026_11_03.md` — DI 프롬프트 — li2s-2 DH 고침 확인 (dad10ecf): 장부 = 실행 목록 · 실행 식별자 run_id · 그룹 정리 (대표와 따로) · invalid ≠ 과학적 종료 · 재판정 이력 — 첫 담금질 GO 여부  (2026-11-03 · 발송 · 회신 수령 2026-11-03 (고침 묶음 · `codex_…)
 - `kb/reviews/codex_DI_reply_li2s2_dh_fixes_2026_11_03.md` — DI 회신 — li2s-2 DH 고침 확인 (dad10ecf): NO-GO · P0 3 (fail 시드 재담금질 · 보존 실행 비용 누락 · 프로세스 조회 불가 = 빈 그룹) · P1 2 (정리 시간 · 벽시계 역행) → Codex 가 고침 묶음까지 (패치 · 검증 · 변이) — 실패 시드 재담금질 차단 · 보존 실행 비용 대조 · 그룹 판독 불가 = 모름 · 정리 시간 계상 · 같은 부팅 단조 시계 고아 상한  (2026-11-03 · 수령 2026-11-03 (사용자 업로드 zip `li2s2_DI_f…)
+- `kb/reviews/codex_DJ_prompt_li2s2_outage_rule_2026_11_03.md` — DJ 프롬프트 — li2s-2 DI 고침 적용 확인 (Linux) + 정전 복구 개정 (0f51518d): 끊긴 런 시드마다 1 회 재시도 · 재부팅 고아 런 증언 상한 — 첫 담금질 GO 여부  (2026-11-03 · 초안 (2026-11-03) — 사용자 발송 대기 · 기준 커밋 0f…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
 - `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)
