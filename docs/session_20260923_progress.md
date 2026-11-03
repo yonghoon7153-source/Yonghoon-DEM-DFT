@@ -1243,7 +1243,7 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
 
 ## 11-03 새벽 — 50kg 덱 · D0.7 재개 · D1 압밀 그림 (압축 전 대피)
 
-- **게이트 X 프로토콜** (1저자 11-02 밤) — 해제 전까지 전체 게이트 새로 안 띄움 · push = 빠른 점검 (`check_doc_refs` · `check_review_findings` · `--ban-sweep`).
+- **게이트 X 프로토콜** (1저자 11-02 밤) — 해제 전까지 전체 게이트 새로 안 띄움 · push = 빠른 점검 (`check_doc_refs` · `check_review_findings` · `--ban-sweep`). → ✅ 해제 11-03 오전 (1저자).
 - **D0.7 압축 체크포인트 재개** — Q3 (나) + 준비 구간 순서 고침 (`scripts/resume_ckpt.sh` sha256 `66006239…` · push `8dc0a79fb` · 시험 485/485 = 에이전트 보고) → ibb `-T` 시험 job 337078 (56 코어 · `restart_compress_1000000` → 1,002,000) 진행 중 → G0–G3 통과 뒤 = 지킴이 v3 + **Codex 짧은 확인 (10-30 범위 GO 밖)** → 본 제출.  사전 공격 리뷰 에이전트 진행 중 (`docs/reviews/kg50_q3b_preattack_20261103/`).  watch = `~/kg50_watch.sh` (ibb · 읽기만 · DEM1 꼴).
 - **D1 압밀 그림** — bml 원자 기준 두께 (`d1_atomtop_cluster.py` sha256 `8a9fe00f…` · 파일 이름 `d1_atomtop_ff.py` · `--work ~/kg50_d1_atomtop_ff` · 11-03 01:5x 발사 · 약 10 분) → CSV 오면 `make_fig_d1_ms.py --atomtop --figsize 3.5 3.85 --preview-dir …` → 6장 왼쪽 칸.  0–20 ms = 10 g 자유 낙하 모식 (CSV Source · JSON 표기 · 그림엔 안 적음).  Origin 칸 판 = `docs/50kg/report_y4/figs/d1_compaction/origin/slide_350x385/`.
 - **덱 (2026.11 양식 · 생성기 `docs/50kg/report_y4/tmpl_202611/build_tmpl_dem.py`)** — 6장 = 글머리 2줄 · 그래프 칸 3.50 × 3.85 in · 기공 그림 약 10 % 축소 / 7장 = 템플릿 크기 · 자리 · 라벨 "Tortuosity" · 값 = 수송 tortuosity 6.00 / 8.26 / 13.63 (기하 1.22 / 1.28 / 1.37 · SE–SE 협착 몫 71–74 % — 경로 그림이 값을 보여 주지 않는다는 한정은 대본) · 전달 = 한 장씩 (1저자 11-03 *"page 다 만들지말고 이 한페이지 한슬라이드 씩만"*).
@@ -1253,3 +1253,11 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
 - **11-03 새벽 5 (14쪽 영률 응력 지도)**: 1저자 *"이 페이지 채우게"* — 11 GPa (E05 이완 끝 4,485,002 · 판 278.5 · NCM 352.75 · SE 84.73 MPa) · 33 GPa (E15 3,665,002 · 280.1 · 325.98 · 151.51) = 슬라이드 값과 같음 · 그림 = `docs/50kg/report_y4/meeting_20261104/figs/stress_maps/` · 22 GPa = ibb 이완 끝 덤프 대기 · 입도 300 MPa 직전 그림 · 값도 같은 폴더 (1저자 *"나중에 혹시 넣어야될 때를 대비해서 기록해둬"* · 1 µm 한정 문구 동봉).
 - **11-03 새벽 6 (14쪽 22 GPa 칸)**: ibb 이완 끝 묶음 (`kg50_d2_base_end.tgz` sha256 2011cb60… · 한 조각) → LW = 16쪽 기록과 끝자리까지 같음 (NCM 334.8483429814734 · SE 125.96240826497187 MPa · virial checked · 판 279.79 MPa) · 그림 `docs/50kg/report_y4/meeting_20261104/figs/stress_maps/modulus_22GPa_{NCM,SE}.png` · 14쪽 세 칸 그림 끝.
 - **11-03 아침 (50kg 보고 덱 DEM 장 최종)**: 1저자 덱 `50kg_report_DEM_slides_1.pptx` 위에서 6–15 장 — tortuosity = 수송만 · 화면 이름 'Tortuosity' (기하 1.22–1.37 · 1.28–1.30 값 삭제) · 그림 = 1저자 웹앱 캡처 + 응력 지도 · 빈 칸 = 점선 그대로 · Origin 값 xlsx (차트마다 시트) · 기록 `docs/50kg/report_y4/meeting_20261104/final_deck_20261103/README.md` · 생성기 `build_tmpl_dem.py` 의 tortuosity 라벨 'Tortuosity' 로.
+
+
+## 11-03 오전 — 덱 마무리 · 본 세션 복귀
+
+- **50kg 덱 (11-04 보고)**: 영률 구조 장 = 입도 장 (1저자 2쪽) 과 같은 자리 · 크기 · 그래프 칸 (`8e5e453a5` · `4bb4e8e0d` · 11 · 33 GPa 짝 = 세로/가로 비 = 두께 비) · 영률 이온 장 = 5쪽과 같은 방법 (`c1e393e46` · 중앙값 0.13 / 0.14 / 0.15 A cm⁻² · 접촉 41165 / 39402 / 38063) · coverage 질문 대비 (README 절 *"입도 ↔ coverage"*) · 1저자 최종 PDF 10 쪽 확인 = 글 자릿수 (tortuosity · σ) · 3쪽 글머리 coverage 만 남음 (1저자 몫) · 그래프 = 사수가 Origin.
+- **게이트 X 해제** (1저자 11-03 *"그건 취소하고"*) — 커밋 전 전체 게이트 평소대로.
+- **D0.7 다시 시작** (1저자 11-03 *"넘어가기전에 여기서 d0.7 이거 다시 시작하고 넘어가자"*) — 압축 체크포인트 1,000,000 재개 = Codex 11-01 초안 2 판정 §6 이 승인하지 않은 범위 → `-T` 337078 결과 → Codex 짧은 확인 → GO 뒤 본 제출.  위상 확인 (사전 공격 A · 1저자 ibb 읽기만 · 11-03 새벽): 멈춘 폴더 `kg50_d07_b50.run335457` 원 로그 4884 줄 `1000002   488285  3.3622402e-08      868.48924  0.00011997834` → 4885 줄 `Loop time of 868.491 on 56 procs for 5000 steps with 488285 atoms` (4915 줄 = 다음 run setup 줄 · CPU 0) ⇒ step 1,000,002 = 5000-step run 끝 = 판정 자리 = 도구 위상 4,998 (남은 2 step) 과 같다 (이 한 건 · 도구 일반 A 는 안 고침).
+- **본 세션 복귀 인계** `docs/handoff_return_to_stoic_knuth_20261103.md` — fast-forward 만 · 반입 전 로컬 커밋 16 = bundle `docs/handoff_20261103/unmerged_local_branches.bundle` (`pc7-fix` 14 = Rint ② PC7 고침 · 반입 전).  1저자 *"Rint 관련해서 추가된 요구사항이 많아졌는데 그 부분도 잘 인계해줘"* → 인계 문서 §2-1 = Rint ② 지금 위치 · 1저자 결정 시간순 (10-26 ~ 11-02 밤 2) · 늘 지킬 것 · 다음 순서 (PC7 반입 → Codex 회차 ② 요청서 (아직 없음) → S0 단계 1 재실행 → GO 뒤 봉인 · R 캠페인 → 이온 계면 · MPM 수치).
