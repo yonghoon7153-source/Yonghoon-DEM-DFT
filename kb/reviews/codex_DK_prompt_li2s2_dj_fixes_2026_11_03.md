@@ -1,5 +1,5 @@
 ---
-title: "DK 프롬프트 — li2s-2 DJ 고침 확인 (2c36eac9): 재시도 이력 대조 · 판독 불가 · 보존 누락 차단 · 증언 하한 · 잠금 안 증언 · 결과와 무관한 재시도 사유 · MD/FIRE 구분 · 정전 추가 예산 — 첫 담금질 GO 여부"
+title: "DK 프롬프트 — li2s-2 DJ 고침 확인 (172daf67): 재시도 이력 대조 · 판독 불가 · 보존 누락 차단 · 증언 하한 · 잠금 안 증언 · 결과와 무관한 재시도 사유 · MD/FIRE 구분 · 정전 추가 예산 — 첫 담금질 GO 여부"
 date: 2026-11-03
 updated: 2026-11-03
 tags: [review, li2s, glass, md, uma, density, quench, runner, codex, prompt, letter]
@@ -7,7 +7,7 @@ letter: DK
 track: li2s
 channel: codex
 kind: prompt
-status: 초안 (2026-11-03) — 사용자 발송 대기 · 기준 커밋 2c36eac9
+status: 초안 (2026-11-03) — 사용자 발송 대기 · 기준 커밋 172daf67
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -18,7 +18,7 @@ evidenceScope: multi-source-primary
 ---
 
 > 트랙 = li2s-2 (논문 1저자 = 외부 · 위임 10-30). DJ (0f51518d · NO-GO · P0 3 · P1 1 · Q1–Q4) 다음 편지다 — **고친 곳만** 본다.
-> ⛔ li2s 절대 수송값은 싣지 않는다. 기준 커밋 `2c36eac9` (브랜치 `claude/friendly-meitner-lldvar`). ⬇ 아래 **보내는 글**만 발송한다.
+> ⛔ li2s 절대 수송값은 싣지 않는다. 기준 커밋 `172daf67` (브랜치 `claude/friendly-meitner-lldvar`). ⬇ 아래 **보내는 글**만 발송한다.
 > 회신이 오면 `codex_DK_reply_li2s2_dj_fixes_2026_11_03.md` 로 원문 보존.
 
 ---
@@ -34,9 +34,9 @@ DJ 가 해제로 본 DI 지적 (P0-1 · P0-2 · P0-3 · P1-4 · P1-5 기존 경�
 
 ## 1. 보는 범위
 
-- `git diff 0f51518d 2c36eac9 -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
+- `git diff 0f51518d 172daf67 -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
 - 카드 `개정_정전_복구_v2_2026_11_03` · 기계값 `retry_reasons` · `outage_reasons` · `cap_retry_reasons` · `stage1_outage_extra_budget_gpu_h` (45) · `attestation_required_fields`
-- 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 207) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 76 · Linux)
+- 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 207) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 78 · Linux)
 - 깨기 (변이) __MUT__ — 저장소 밖 복사본에서 DG · DH · DI · 정전 복구 · DJ 고친 곳을 하나씩 되돌려 해당 시험이 빨개지는지
 
 ## 2. DJ 지적별로 한 것 (재현 → 지금 막는 시험)
@@ -68,7 +68,8 @@ DJ 가 해제로 본 DI 지적 (P0-1 · P0-2 · P0-3 · P1-4 · P1-5 기존 경�
 - Ctrl-C · abnormal · resume 는 기술 상태일 뿐 사유가 아니다 — **선언 없는 확인은 영수증이 아니다** (러너가 '선언이 맞는 확인이 없다' 로 그 run_id 에 묶인 STOP 을 다시 낸다).
 - 결과를 보고 멈춘 런 · 원인 미확정 런은 맞는 사유를 선언할 수 없으므로 자동 대체되지 않는다 (보류 · 새 결정).
 - 채택 순서: 재시도한 실행이 그 시드의 공식 표본 — 앞 실행은 판정이 없거나 invalid 라 '둘 중 좋은 것' 을 고를 일이 없다 (과학적 판정이 난 시드는 다시 안 돌린다 · DI 그대로).
-- 시험: 선언 없는 확인 → 멈춤 (rc 24 · 발사 0) / Ctrl-C 사유 · 상한 아닌 런에 상한 사유 · 선언자 빈칸 → 확인 거부 (rc 10 · STOP 그대로) / 정전 선언 확인 → 한 번 다시 · 영수증 · 실행 전 기록 · 장부 일치 · 통과
+- 확인 때 영수증 **종류는 멈춤 code 가 아니라 그 실행에서** 정한다 (장부 · 폴더 판정 invalid → invalid · 아니면 interrupted) — code 가 그 종류의 묶는 code 가 아니면 거부 · 확인할 멈춤이 없는데 선언만 주면 조용히 버리지 않고 거부 (발송 전 자체 점검에서 고침 · 172daf67)
+- 시험: 선언 없는 확인 → 멈춤 (rc 24 · 발사 0) / Ctrl-C 사유 · 상한 아닌 런에 상한 사유 · 선언자 빈칸 → 확인 거부 (rc 10 · STOP 그대로) / 끊긴 런에 묶인 invalid 멈춤에 원인 고침 선언 → 거부 / 멈춤 없이 선언만 → 거부 / 정전 선언 확인 → 한 번 다시 · 영수증 · 실행 전 기록 · 장부 일치 · 통과
 
 **Q2 MD 완료 · FIRE 미완 구분** — `folder_stage`: `final` (result.json · final.xyz) · `md_complete` (traj 가 계획 프레임까지 · final 없음) · `md_incomplete` · `no_plan` · `unreadable` (plan · traj 머리를 못 읽음 · 끝의 반쪽 프레임은 안 셈 · 빈 / NUL 만 있는 traj = 프레임 0).
 - 끊긴 런: MD 미완 → 사유가 맞으면 재담금질 1 회 / **MD 완료 · FIRE 미완 → 재담금질하지 않고 보류** (그 마지막 구조에서 정해진 FIRE 만 다시 하는 복구는 새 결정) / 최종 → 재시도가 아니라 판정 / 판독 불가 → 보류
@@ -85,7 +86,7 @@ DJ 가 해제로 본 DI 지적 (P0-1 · P0-2 · P0-3 · P1-4 · P1-5 기존 경�
 
 **Q5 값이 없으면 검사가 약해지는 자리** — 재시도 한도 (`int(values[...])` — 카드 검사가 0 이상 정수를 보장 · 없으면 멈춤) · 실효 상한의 카드 값 (`values[...]` 필수) · 하한 (위 P0-3) · 첫 실행 이외의 재시도 필드 (위 P0-1).
 
-**인터페이스가 바뀐 곳**: 드라이버 `RETRY_BIND_CODES` · `folder_stage` · `verdict_file_status` · `declaration_problems(decl, kind, values, rejudge_needed, prev_status)` · `effective_cap(runs, stop_history, values, inventory)` · `attempt_inventory` 원소에 `attempt` (재시도 필드) · `ledger_check` 반환 `cap_h` = 실효 상한 + `cap_info` · 카드 검사가 새 기계값 다섯을 본다 / 러너 `retry_eligibility(attempts, stop_history, inventory, values, mq)` · `declaration_from_args` · `ack_declaration_problems` · `attest_cost(run_root, run_id, values, hours, fields, deps)` · CLI `--retry_reason` · `--retry_event` · `--retry_evidence` · `--declared_by` · `--rejudge_impossible_reason` · `--attest_event` · `--attest_time_reference` · `--attest_uncertainty_h` · `--attest_derivation` · `--attest_confirmer` (`--attest_note` 없앰) · 러너 고정 드라이버 sha16 `9bb45bdda464b23e`.
+**인터페이스가 바뀐 곳**: 드라이버 `RETRY_BIND_CODES` · `folder_stage` · `verdict_file_status` · `declaration_problems(decl, kind, values, rejudge_needed, prev_status)` · `effective_cap(runs, stop_history, values, inventory)` · `attempt_inventory` 원소에 `attempt` (재시도 필드) · `ledger_check` 반환 `cap_h` = 실효 상한 + `cap_info` · 카드 검사가 새 기계값 다섯을 본다 / 러너 `retry_eligibility(attempts, stop_history, inventory, values, mq)` · `declaration_from_args` · `ack_declaration_problems` (종류는 실행에서) · `attest_cost(run_root, run_id, values, hours, fields, deps)` · CLI `--retry_reason` · `--retry_event` · `--retry_evidence` · `--declared_by` · `--rejudge_impossible_reason` · `--attest_event` · `--attest_time_reference` · `--attest_uncertainty_h` · `--attest_derivation` · `--attest_confirmer` (`--attest_note` 없앰) · 러너 고정 드라이버 sha16 `9bb45bdda464b23e`.
 
 ## 3. 이것을 특히 봐 달라
 
