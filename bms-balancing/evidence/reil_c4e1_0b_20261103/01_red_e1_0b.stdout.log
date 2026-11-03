@@ -1,0 +1,138 @@
+.............F........F.F..FFFFFF                                        [100%]
+=================================== FAILURES ===================================
+________ test_l14_independence_fixed_commands_constants_and_main_rules _________
+tests/test_reil_c4e1_launch.py:460: in test_l14_independence_fixed_commands_constants_and_main_rules
+    assert L.REQUEST == "docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md", ("E1-0b: 승인 문구의 요청서 경로", L.REQUEST)
+E   AssertionError: ('E1-0b: 승인 문구의 요청서 경로', 'docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md')
+E   assert 'docs/REIL_C4...5_20261027.md' == 'docs/REIL_C4...T_20261030.md'
+E     
+E     - docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md
+E     ?                 ---                        ^^
+E     + docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md
+E     ?                                   +++      ^^
+_ test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child _
+tests/test_reil_c4e1_launch.py:707: in test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child
+    assert pre["ok"] is True, (name, "FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다", pre["problems"])
+E   AssertionError: ('rewrite', 'FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다', ['git 설정 url.https://example.invalid/.insteadof (file:/tmp/claude-0... ≠ 고정 https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git"])
+E   assert False is True
+_ test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git _
+tests/test_reil_c4e1_launch.py:749: in test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git
+    assert names == FETCH_NAMES, ("FUTURE-01: fetch 자식에 고정 설정 원천이 없다", names)
+E   AssertionError: ('FUTURE-01: fetch 자식에 고정 설정 원천이 없다', [])
+E   assert [] == ['GIT_CONFIG_...NFIG_VALUE_0']
+E     
+E     Right contains 5 more items, first extra item: 'GIT_CONFIG_COUNT'
+E     Use -v to get more diff
+----------------------------- Captured stdout call -----------------------------
+{"step": "fetch", "launched": true, "complete": true, "rc": 0, "timed_out": false, "errors": 0}
+_ test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list _
+tests/test_reil_c4e1_launch.py:897: in test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list
+    fetch_env = L.fetch_env
+                ^^^^^^^^^^^
+E   AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'fetch_env'
+_ test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child _
+tests/test_reil_c4e1_launch.py:946: in test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child
+    assert rc == 0, ("FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다", m.get("precheck_problems"),
+E   AssertionError: ('FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다', [], ["받은 저장소의 유효 출처 'https://example.invalid/REIL-UConn/Multi-Object... ≠ 고정 https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git"])
+E   assert 1 == 0
+----------------------------- Captured stdout call -----------------------------
+{"step": "fetch", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 0}
+_ test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write _
+tests/test_reil_c4e1_launch.py:988: in test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write
+    assert rc == 1, ("FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다", mode)
+E   AssertionError: ('FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다', 'localtls')
+E   assert 0 == 1
+----------------------------- Captured stdout call -----------------------------
+{"step": "fetch", "launched": true, "complete": true, "rc": 0, "timed_out": false, "errors": 0}
+_ test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look _
+tests/test_reil_c4e1_launch.py:999: in test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look
+    cleanup_group = L.cleanup_group
+                    ^^^^^^^^^^^^^^^
+E   AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'
+_ test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline _
+tests/test_reil_c4e1_launch.py:1030: in test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline
+    cleanup_group = L.cleanup_group
+                    ^^^^^^^^^^^^^^^
+E   AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'
+_ test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty _
+tests/test_reil_c4e1_launch.py:1063: in test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty
+    assert post()["problems"] == []
+E   assert ["bms-balanci...ad63148563'}"] == []
+E     
+E     Left contains 2 more items, first extra item: "bms-balancing/scripts/reil_c6_profile.py: sha256 676ef3bde4c2aedd5c005de35fb77f81f916277a5c2c30bcb7ce85d87f3c8b51 · 25 B ≠ 기대 {'bytes': 15915, 'sha256': '408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d'}"
+E     Use -v to get more diff
+==================================== PASSES ====================================
+_ test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false __
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 0}
+_ test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds _
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": true, "complete": true, "rc": 0, "timed_out": false, "errors": 0}
+{"step": "run", "launched": true, "complete": false, "rc": 2, "timed_out": false, "errors": 0}
+{"step": "run", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 0}
+____ test_l11_timeout_kills_the_whole_process_group_including_grandchildren ____
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": true, "complete": false, "rc": -9, "timed_out": true, "errors": 0}
+_ test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder _
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 0}
+{"step": "fetch", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 0}
+{"step": "fetch", "launched": true, "complete": true, "rc": 0, "timed_out": false, "errors": 0}
+{"step": "fetch", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 0}
+_ test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it _
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 0}
+______ test_l16_a_leaf_extension_module_beside_an_approved_module_blocks _______
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 0}
+_ test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited _
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": true, "complete": false, "rc": null, "timed_out": true, "errors": 0}
+_ test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state _
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 1}
+{"step": "run", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 1}
+{"step": "run", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 1}
+_ test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output _
+----------------------------- Captured stdout call -----------------------------
+{"step": "run", "launched": false, "complete": false, "rc": null, "timed_out": null, "errors": 1}
+__ test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source __
+----------------------------- Captured stdout call -----------------------------
+{"step": "fetch", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 0}
+{"step": "fetch", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 0}
+{"step": "fetch", "launched": true, "complete": false, "rc": 0, "timed_out": false, "errors": 0}
+=========================== short test summary info ============================
+PASSED tests/test_reil_c4e1_launch.py::test_l1_precheck_passes_only_with_fixed_list_exact_bytes_seal_binding_clean_interpreter_and_approved_specs
+PASSED tests/test_reil_c4e1_launch.py::test_l2_list_sha_schema_path_set_entry_format_and_non_json_each_block
+PASSED tests/test_reil_c4e1_launch.py::test_l3_changed_same_size_missing_symlinked_module_or_linked_parent_each_block
+PASSED tests/test_reil_c4e1_launch.py::test_l4_a_shadowing_scripts_package_module_zip_entry_or_our_init_blocks
+PASSED tests/test_reil_c4e1_launch.py::test_l5_interpreter_flags_fixed_argv_head_and_run_script_path_are_checked
+PASSED tests/test_reil_c4e1_launch.py::test_l6_stage_verdict_is_the_and_of_precheck_child_rc_timeout_and_postcheck
+PASSED tests/test_reil_c4e1_launch.py::test_l7_child_result_reads_the_last_stdout_line_and_needs_final_complete_for_run
+PASSED tests/test_reil_c4e1_launch.py::test_l8_identity_link_binds_the_run_import_paths_to_the_checked_paths
+PASSED tests/test_reil_c4e1_launch.py::test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false
+PASSED tests/test_reil_c4e1_launch.py::test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds
+PASSED tests/test_reil_c4e1_launch.py::test_l11_timeout_kills_the_whole_process_group_including_grandchildren
+PASSED tests/test_reil_c4e1_launch.py::test_l12_refuses_to_overwrite_records_or_reuse_a_pycache_folder
+PASSED tests/test_reil_c4e1_launch.py::test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder
+PASSED tests/test_reil_c4e1_launch.py::test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it
+PASSED tests/test_reil_c4e1_launch.py::test_l16_a_leaf_extension_module_beside_an_approved_module_blocks
+PASSED tests/test_reil_c4e1_launch.py::test_l17_extra_executed_files_and_the_seal_lock_binding_each_block
+PASSED tests/test_reil_c4e1_launch.py::test_l18_process_observation_errors_stay_unknown_and_only_vanished_pids_are_gone
+PASSED tests/test_reil_c4e1_launch.py::test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited
+PASSED tests/test_reil_c4e1_launch.py::test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state
+PASSED tests/test_reil_c4e1_launch.py::test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output
+PASSED tests/test_reil_c4e1_launch.py::test_l22_child_env_keeps_only_the_ca_among_git_variables_and_removes_secrets
+PASSED tests/test_reil_c4e1_launch.py::test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source
+PASSED tests/test_reil_c4e1_launch.py::test_l26_preparation_failures_are_recorded_as_phase_prepare_and_never_start_the_child
+PASSED tests/test_reil_c4e1_launch.py::test_l27_decode_failures_in_proc_reads_and_git_output_are_recorded_not_escaped
+FAILED tests/test_reil_c4e1_launch.py::test_l14_independence_fixed_commands_constants_and_main_rules
+FAILED tests/test_reil_c4e1_launch.py::test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child
+FAILED tests/test_reil_c4e1_launch.py::test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git
+FAILED tests/test_reil_c4e1_launch.py::test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list
+FAILED tests/test_reil_c4e1_launch.py::test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child
+FAILED tests/test_reil_c4e1_launch.py::test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write
+FAILED tests/test_reil_c4e1_launch.py::test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look
+FAILED tests/test_reil_c4e1_launch.py::test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline
+FAILED tests/test_reil_c4e1_launch.py::test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty
+9 failed, 24 passed in 14.25s
