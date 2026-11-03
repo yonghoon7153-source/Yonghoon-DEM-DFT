@@ -1,0 +1,87 @@
+[
+ {
+  "id": "BASE",
+  "target": null,
+  "why": "변이 없음",
+  "rc": 0,
+  "killed": null,
+  "want": null,
+  "want_hit": null,
+  "tail": "== test_carbon_junction: 27/27 PASS",
+  "failed_checks": [],
+  "n_fail_lines": 0,
+  "seconds": 5.2
+ },
+ {
+  "id": "M1",
+  "target": "scripts/carbon_junction.py",
+  "why": "lumped — 간선 수 k 를 늘 1 (instance 하나에 총 G · 분산판 없음)",
+  "rc": 1,
+  "killed": true,
+  "want": "BAN8 ④",
+  "want_hit": true,
+  "tail": "== test_carbon_junction: 7/27 PASS",
+  "failed_checks": [
+   "②",
+   "③",
+   "④",
+   "⑤",
+   "⑥"
+  ],
+  "n_fail_lines": 20,
+  "seconds": 4.0
+ },
+ {
+  "id": "M2",
+  "target": "scripts/carbon_junction.py",
+  "why": "간선 G 를 k 로 나누지 않음 (총 G 가 k 배)",
+  "rc": 1,
+  "killed": true,
+  "want": "BAN8 ④",
+  "want_hit": true,
+  "tail": "== test_carbon_junction: 3/27 PASS",
+  "failed_checks": [
+   "②",
+   "③",
+   "④",
+   "⑤",
+   "⑥",
+   "⑦"
+  ],
+  "n_fail_lines": 24,
+  "seconds": 4.2
+ },
+ {
+  "id": "M3",
+  "target": "scripts/carbon_junction.py",
+  "why": "등분 칸 가운데 → 칸 시작점 (t = j·L/k)",
+  "rc": 1,
+  "killed": true,
+  "want": "BAN8 ②",
+  "want_hit": true,
+  "tail": "== test_carbon_junction: 15/27 PASS",
+  "failed_checks": [
+   "②",
+   "③"
+  ],
+  "n_fail_lines": 12,
+  "seconds": 4.7
+ },
+ {
+  "id": "T1",
+  "target": "scripts/test_carbon_junction.py",
+  "why": "시험 쪽 — 같은 두 섬유에 Eq. 9 (R̄sh2 0) 를 기대값으로 (식 고르기 판별력)",
+  "rc": 1,
+  "killed": true,
+  "want": "BAN8 ④",
+  "want_hit": true,
+  "tail": "== test_carbon_junction: 19/27 PASS",
+  "failed_checks": [
+   "④",
+   "⑤",
+   "⑥"
+  ],
+  "n_fail_lines": 8,
+  "seconds": 5.7
+ }
+]

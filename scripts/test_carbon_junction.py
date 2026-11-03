@@ -135,6 +135,9 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
   (변이 시험 다지기 · 10-21) KINK KU s_min 없음 L_c 손 값 (자기 L_c = 접합 쌍만) · RING 닫힌 머리핀 = 자기 하나 (쌍 무리 고리 둘레) ·
          CEN 재방문 사이 덮인 위치 = 경로 끊김 (경로로만 아님) · KINK U 분산판 맞은편 = 등분점 선분의 접합 짝 위 (L_par 0.25 · 손 값)
   MUT-RCA (09) 반사실 변이 = 생산 서명 (certify= · ★ 10-22 backend=) · 변이 안 예외 (`_try` 가 삼킨 것 포함) = 하네스 실패 (옳은 이유 아님)
+  BAN8   ★ 11-03 밤 (1저자 Q3 · 시험만 · 물리 변경 없음) 분산판 v0 = 이산 전송선 ↔ Banerjee 2019 Eq. 8 · 9
+         (`litdb-canon:banerjee2019_tunneling_tlm_parallel_nanoscale_contacts`) — 나란한 두 복셀 섬유 · Rc (Eq. 4) = 손 사다리 · 닫힌 꼴 (1e-11) ·
+         Eq. 8 (허용 = 이산화 오차 주항 × 1.5) · 2 차 수렴 · 포화 = 풀이 · "길이 비례만" 거부 · 변이 lumped (`_n_sub` → 1)
 """
 import argparse
 import ast
@@ -2279,6 +2282,166 @@ def _lp_ref(rj, contract=(), cut=()):
             E.append((a_, b_, 3.0 * 1e4 / rj / 3.0))
     E = [(rep[a_], rep[b_], g) for a_, b_, g in E if rep[a_] != rep[b_]]
     return ref_I(nA + len(seqB), E, [(0, G_PL)], [(rep[nA + len(seqB) - 1], G_PL)])
+
+
+# ── BAN8 (★ 11-03 · 1저자 11-03 밤 Q3 · 시험만 · 물리 변경 없음) — 분산판 v0 = 이산 전송선 ↔ Banerjee 2019 식 8 · 9
+#  (`litdb-canon:banerjee2019_tunneling_tlm_parallel_nanoscale_contacts` §3-1 Eq. 4 · §3-2 Eq. 7–9 — 식은 카드 그대로).
+#  기하 = LP 꼴을 길게: A (1,1,0..2m+1) 아래 판 · B (2,1,2..nz−1) 위 판 · 중심선 거리 0.6 · A 끝 z 1.7 + 2m · B 시작 z 2.5 →
+#    닿음 길이 L_c = (1.7 + 2m − 2.5) + 0.8 = 2m = m L_par (정확) · k = m 간선 · 간선 g = (m·1e4/R_j,0)/m = 1e4/R_j,0 ·
+#    포트 (1,1,2+2j) ↔ (2,1,2+2j) (A 닿음 구간 [1.7, 1.7+2m] 의 등분 칸 가운데 2.7+2j 의 셀 · 맞은편 같은 높이).
+#  Banerjee Rc (Eq. 4) = 도체 1 의 겹침 시작 → 도체 2 의 겹침 끝 (겹친 도체 저항 포함) = 단자 저항 − 리드 (판 둘 · A 0→1 한 면 ·
+#    B 2m+1→nz−1 면) — 셀 1 · 셀 2m+1 = 첫 · 끝 간선에서 반 칸 (Δ/2 = 1 셀) 떨어진 마디 = 중점 규칙 사다리의 x = 0 · x = L.
+#  식 (카드 Eq. 8 · R̄sh2 = 1 · 같은 두 섬유): Rc = r′L·[1/2 + coth(q/2)/q] · q = L/λ · λ = λ_model (아래) · R̄sh2 → 0 = Eq. 9 coth q / q.
+#  이산 닫힌 꼴 (중점 규칙 사다리 · 끝 반 칸 · 같은 두 레일 · 우리 산술): Rc_d = a(m+1)/2 + a·cosh(θ(m−1)/2)/(2·sinh(θm/2)·sinh(θ/2)) ·
+#    cosh θ = 1 + ab · a = r′Δ (Δ = L_c/k = L_par) · b = 1e4/R_j,0.  ⇒ 이산화 오차 주항 둘 (닫힌 꼴 전개): L ≫ λ — 접합 몫
+#    (a/2)·coth(θ/2) = r′λ·(1 + (Δ/λ)²/8 + …) · L ≪ λ — 넘침 a/(3m) = r′Δ²/(3L) → 허용 |Rc − Rc_8| ≤ 1.5·[r′λ(Δ/λ)²/8 + r′Δ²/(3L)]
+#    (1.5 = 고차항 여유 · `_ban_tol`) · 상대 오차는 같은 q 에서 (Δ/λ)² 로 준다 (2 차 수렴).
+#  첫 판 (11-03 · 시험 먼저) = 일부러 **틀린 기대** "길이 비례만" (접합 총 G = L_c/(R_j,0·L_par) 를 고르게 · 전류 쏠림 없음 →
+#    Rc = R_j,0·L_par/L + (2/3)·r′L) → L ≫ λ 세 경우 실패 (q 0.4 · 0.6 은 그 극한이라 통과) — 기록
+#    `docs/reviews/rint2_rr_fix_evidence_20261023/ban8_20261103/logs/ban8_wrong_expectation_first.log` · 지금 판 = 그 기대를 ⑦ 의 거부 대상으로 둔다.
+#  경우 (m, R_j,0 [Ω]) — q = L_c/λ 10 · 6 · 6 · 0.6 · 0.4 · 19 · Δ/λ 0.2 · 0.2 · 0.1 · 0.02 · 0.2 · 0.63.  마지막 (Δ/λ 0.63) = 생산 사다리 낮은 끝
+#  (R_j,0 1e2 Ω · λ_model 0.515 µm · Δ ≤ L_par 0.30 µm → Δ/λ ≤ 0.58 · 우리 산술) 을 덮는 꼴 (픽스처 단위 = 생산 비 · L_par = 2h · r_f = h/2).
+BAN_CASES = ((50, 1e4), (30, 1e4), (60, 4e4), (30, 1e6), (2, 1e4), (30, 1e3))
+
+
+def _ban_geom(m):
+    nz = 2 * m + 6
+    return [[(1.5, 1.5, 0.5), (1.5, 1.5, 1.7 + 2.0 * m)], [(2.1, 1.5, 2.5), (2.1, 1.5, nz - 0.5)]], (5, 3, nz)
+
+
+def _ban_run(m, rj):
+    """생산 경로 (`rasterize` → `cjunc_registry` → `cjunc_plan` → `solve_sigma_z`) → (Rc [코드 단위 저항 · ΔV 1], 원장, 계획)."""
+    polys, n = _ban_geom(m)
+    P = rows(polys)
+    sid, _ = bed(P, n)
+    reg = registry(sid, P)
+    pl = plan(reg, rj)
+    I = I_of(solve(sid, sig_e(), n, pl), n)
+    lead = 2.0 / G_PL + 1.0 / G_AX + (n[2] - 2 - 2 * m) / G_AX
+    return 1.0 / I - lead, reg, pl
+
+
+def _ban_lam(rj):
+    """모형 전달 길이 λ_model = √(R_j,0·L_par/(r′_i + r′_j)) [µm] (카드 Eq. 7 의 λ₀ = √(ρc/(Rsh1 + Rsh2)) 와 같은 꼴 · 우리 산술)."""
+    return math.sqrt(rjc(rj) * LPAR / (2.0 / G_AX))
+
+
+def _ban_tol(m, rj):
+    """허용 |Rc − Rc_식| (코드 단위) — 이산화 오차 주항 둘 (아래 `t_ban8` 머리말) × 1.5."""
+    rp, D, L, lam = 1.0 / G_AX, LPAR, LPAR * m, _ban_lam(rj)
+    return 1.5 * (rp * lam * (D / lam) ** 2 / 8.0 + rp * D * D / (3.0 * L))
+
+
+def _ban8_eq(q, r2):
+    """카드 Eq. (8) — R̄c = [(1 + R̄sh2²)·cosh q + R̄sh2·(2 + q·sinh q)] / [(1 + R̄sh2)·q·sinh q] (R̄c = Rc/(Rsh1·L/w) · q = L/λ₀ =
+    √((1 + R̄sh2)/ρ̄c)).  R̄sh2 → 0 = Eq. (9) coth q / q."""
+    return ((1.0 + r2 * r2) * math.cosh(q) + r2 * (2.0 + q * math.sinh(q))) / ((1.0 + r2) * q * math.sinh(q))
+
+
+def _ban_ladder(m, a1, a2, b):
+    """손 사다리 (모듈 밖 · 독립) — 레일 둘 · 마디 m 개 (칸 가운데) · 칸 저항 a1 · a2 · 끝 반 칸 (레일 1 x = 0 · 레일 2 x = L) · 계면 g = b ·
+    레일 1 x = 0 에 넣고 레일 2 x = L 에서 뺀다 (Eq. 4 경계) → Rc.  a2 = 0 = 레일 2 완전 도체 (Eq. 9 극한 · 마디 전부 = 빼는 단자)."""
+    N = 2 * m + 2
+    xL = 2 * m + 1
+    E = [(0, 1, 2.0 / a1)] + [(1 + j, 2 + j, 1.0 / a1) for j in range(m - 1)] + [(1 + j, m + 1 + j, b) for j in range(m)]
+    if a2 > 0:
+        E += [(m + 1 + j, m + 2 + j, 1.0 / a2) for j in range(m - 1)] + [(2 * m, xL, 2.0 / a2)]
+        snk = {xL}
+    else:
+        snk = {m + 1 + j for j in range(m)} | {xL}
+    from scipy.sparse import coo_matrix
+    from scipy.sparse.linalg import spsolve
+    ii, jj, gg = (np.array([e[k] for e in E]) for k in range(3))
+    Lm = coo_matrix((np.r_[gg, gg, -gg, -gg], (np.r_[ii, jj, ii, jj], np.r_[ii, jj, jj, ii])), shape=(N, N)).tocsr()
+    free = np.array([i for i in range(N) if i != 0 and i not in snk])
+    u = np.zeros(N); u[0] = 1.0
+    u[free] = spsolve(Lm[free][:, free].tocsc(), -Lm[free][:, [0]].toarray().ravel())
+    return 1.0 / float((Lm @ u)[0])
+
+
+def _ban_closed(m, a, b):
+    """같은 두 레일 중점 사다리의 닫힌 꼴 (위 머리말 · 우리 산술 — 차동 전압 u_j = A·cosh(θ(j − (m−1)/2)) · cosh θ = 1 + ab)."""
+    th = math.acosh(1.0 + a * b)
+    return a * (m + 1) / 2.0 + a * math.cosh(th * (m - 1) / 2.0) / (2.0 * math.sinh(th * m / 2.0) * math.sinh(th / 2.0))
+
+
+@case('BAN8')
+def t_ban8():
+    rp = 1.0 / G_AX
+    #  ① 식 옮김 (모듈 밖) — Eq. 8 의 두 특수형 (R̄sh2 = 0 → Eq. 9 · R̄sh2 = 1 → 1/2 + coth(q/2)/q) · 세밀한 손 사다리 (m 4000) ↔ Eq. 8
+    #    (R̄sh2 0 · 0.5 · 1 · 2 × q 0.5 · 2 · 6) — 허용 1e-6 (m 4000 · q ≤ 6 → (q/m)²/8 = 2.8e-7 · 1/(3m²) = 2.1e-8 · 식 옮김 오류 = 1e-2 꼴)
+    qs = (0.1, 0.5, 2.0, 6.0, 20.0)
+    e9 = max(abs(_ban8_eq(q, 0.0) - 1.0 / math.tanh(q) / q) / (1.0 / math.tanh(q) / q) for q in qs)
+    e1 = max(abs(_ban8_eq(q, 1.0) - (0.5 + 1.0 / math.tanh(q / 2.0) / q)) / (0.5 + 1.0 / math.tanh(q / 2.0) / q) for q in qs)
+    chk('BAN8 ① Eq. 8 특수형 — R̄sh2 → 0 = Eq. 9 coth q / q · R̄sh2 = 1 = 1/2 + coth(q/2)/q (q 0.1 – 20 · 상대 1e-13)',
+        e9 < 1e-13 and e1 < 1e-13, f'{e9:.2e} {e1:.2e}')
+    worst = 0.0
+    for r2 in (0.0, 0.5, 1.0, 2.0):
+        for q in (0.5, 2.0, 6.0):
+            g = q * q / (1.0 + r2)                                   # L = 1 · r1 = 1 → λ₀ = 1/√(g(r1 + r2)) = 1/q
+            lad = _ban_ladder(4000, 1.0 / 4000, r2 / 4000, g / 4000)
+            worst = max(worst, abs(lad - _ban8_eq(q, r2)) / _ban8_eq(q, r2))
+    chk('BAN8 ① 손 사다리 (m 4000 · 모듈 밖) ↔ Eq. 8 (R̄sh2 0 (= Eq. 9) · 0.5 · 1 · 2 × q 0.5 · 2 · 6) 상대 ≤ 1e-6', worst <= 1e-6,
+        f'최대 {worst:.2e}')
+    rel8, J = {}, {}
+    for m, rj in BAN_CASES:
+        L = LPAR * m
+        lam = _ban_lam(rj)
+        q = L / lam
+        tag = f'm {m} · R_j,0 {rj:g} Ω (λ {lam:.3g} µm · q {q:.3g} · Δ/λ {LPAR / lam:.3g})'
+        Rc, reg, pl = _try(lambda: _ban_run(m, rj), (math.nan, None, None))
+        inst = (reg or {}).get('instances') or {}
+        sc = _sub_cells(reg) if reg is not None else None
+        g = None if pl is None else np.asarray(pl['g_code'], np.float64)
+        #  ② 기하 — instance 하나 · L_c = 2m · k = m · 포트 칸 가운데 · 간선 g = 1e4/R_j,0
+        chk(f'BAN8 ② {tag} — instance 하나 · L_c = {L:g} (1e-12) · k = {m} 간선 · 포트 (1,1,2+2j) ↔ (2,1,2+2j) · 간선 g = 1e4/R_j,0 (1e-15)',
+            reg is not None and len(inst.get('fi', ())) == 1 and abs(float(inst['Lc'][0]) - L) <= 1e-12 * L
+            and sc is not None and sorted(sc) == [((1, 1, 2 + 2 * j), (2, 1, 2 + 2 * j)) for j in range(m)]
+            and g is not None and len(g) == m and np.all(np.abs(g - 1e4 / rj) <= 1e-15 * (1e4 / rj)),
+            f"{None if reg is None else (len(inst.get('fi', ())), inst.get('Lc'))} · {None if sc is None else sc[:3]} · {g if g is None else g[:3]}")
+        #  ③ 구현 = 이산 전송선 — 생산 Rc ↔ 손 사다리 · 닫힌 꼴 (같은 a · b) 상대 1e-11
+        lad = _ban_ladder(m, rp * LPAR, rp * LPAR, 1e4 / rj)
+        cl = _ban_closed(m, rp * LPAR, 1e4 / rj)
+        chk(f'BAN8 ③ {tag} — 생산 Rc = 이산 전송선 (손 사다리 · 닫힌 꼴 · 상대 1e-11)',
+            rel(Rc, lad) <= 1e-11 and rel(Rc, cl) <= 1e-11 and rel(lad, cl) <= 1e-11, f'Rc {Rc:.15g} 사다리 {lad:.15g} 닫힌 꼴 {cl:.15g}')
+        #  ④ 식 검증 — 생산 Rc ↔ Eq. 8 (R̄sh2 = 1) · 허용 = 이산화 오차 주항 × 1.5
+        w8 = _ban8_eq(q, 1.0) * rp * L
+        tol = _ban_tol(m, rj)
+        rel8[(m, rj)] = abs(Rc - w8) / w8
+        chk(f'BAN8 ④ {tag} — 생산 Rc ↔ Banerjee Eq. 8 (R̄sh2 1) |Δ| ≤ 허용 {tol:.3e} = 1.5·[r′λ(Δ/λ)²/8 + r′Δ²/(3L)]',
+            abs(Rc - w8) <= tol, f'Rc {Rc:.12g} Eq.8 {w8:.12g} |Δ| {abs(Rc - w8):.3e}')
+        J[(m, rj)] = (Rc - rp * L / 2.0, w8 - rp * L / 2.0)
+        #  ⑦ 틀린 기대 거부 — "길이 비례만" (쏠림 없음) 은 L ≫ λ 에서 허용 밖 (q ≥ 6 · 허용의 10 배 넘게) · 시험 먼저 첫 판의 기대
+        if q >= 6.0:
+            naive = rjc(rj) * LPAR / L + (2.0 / 3.0) * rp * L
+            chk(f'BAN8 ⑦ {tag} — "길이 비례만" (R_j,0·L_par/L + (2/3)·r′L) 은 |Δ| > 10 × 허용 (거부 · 판별력)',
+                abs(Rc - naive) > 10.0 * tol, f'|Δ| {abs(Rc - naive):.3e} · 허용 {tol:.3e}')
+    #  ⑤ 2 차 수렴 — 같은 q 6 · λ 10 → 20 µm (Δ/λ 0.2 → 0.1): 상대 오차 비 ≈ 4 ((Δ/λ)² 비)
+    r_a, r_b = rel8.get((30, 1e4), math.nan), rel8.get((60, 4e4), math.nan)
+    chk('BAN8 ⑤ 2 차 수렴 — q 6 에서 Δ/λ 0.2 → 0.1 의 Eq. 8 상대 오차 비 ∈ [3.6, 4.4] ((Δ/λ)² 비 4)', 3.6 <= r_a / r_b <= 4.4,
+        f'{r_a:.3e} / {r_b:.3e} = {r_a / r_b:.4g}')
+    #  ⑥ 포화는 풀이에서 — λ 10 µm 에서 L 60 → 100 µm (q 6 → 10): 접합 몫 J = Rc − r′L/2 가 거의 그대로 (Eq. 8 의 같은 비 1e-3 안 ·
+    #    1 % 안) · 길이 법칙만 (집중 접합 R_j,0·L_par/L) 이면 비 60/100 = 0.6
+    ja, jb = J.get((30, 1e4), (math.nan, math.nan)), J.get((50, 1e4), (math.nan, math.nan))
+    chk('BAN8 ⑥ 포화 = 풀이 — λ 10 µm · L 60 → 100: 접합 몫 Rc − r′L/2 비 = Eq. 8 의 비 (1e-3) · |비 − 1| < 1 % (집중 길이 법칙이면 0.6)',
+        abs(jb[0] / ja[0] - jb[1] / ja[1]) <= 1e-3 and abs(jb[0] / ja[0] - 1.0) < 0.01,
+        f'생산 {jb[0] / ja[0]:.6f} · Eq.8 {jb[1] / ja[1]:.6f}')
+    #  ⑧ 변이 — 간선을 하나로 몬다 (lumped · `_n_sub` → 1 = instance 하나에 총 G): ④ 가 모든 경우에 실패해야 한다 (훅 없음 = 실패)
+    hook = CJ is not None and callable(getattr(CJ, '_n_sub', None))
+    caught = []
+    if hook:
+        old = CJ._n_sub
+        CJ._n_sub = lambda Lc, L_par: 1
+        try:
+            for m, rj in BAN_CASES:
+                L = LPAR * m
+                Rm = _try(lambda: _ban_run(m, rj)[0])
+                w8 = _ban8_eq(L / _ban_lam(rj), 1.0) * rp * L
+                caught.append(not (abs(Rm - w8) <= _ban_tol(m, rj)))
+        finally:
+            CJ._n_sub = old
+    chk(f'BAN8 ⑧ 변이 lumped (`_n_sub` → 1 · 총 G 를 간선 하나에) → ④ 가 {len(BAN_CASES)} 경우 모두 실패 (훅 있음)',
+        hook and len(caught) == len(BAN_CASES) and all(caught), f'hook {hook} caught {caught}')
 
 
 # ── RCA06 (Q4) 픽스처 — A 세로 (1,1,0..20) 아래 판 · B 는 A 아래쪽 (2.1, ·, 1.5) 에서 시작해 +x 로 (3.5) 돌아 위로 위 판 (3,1,1..21) ·
