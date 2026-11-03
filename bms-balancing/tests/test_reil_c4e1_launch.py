@@ -1,12 +1,19 @@
-"""REIL C4-E · E1 단계 실행기 v5 대조 27 (승인 요청 `docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md` §6) — 독립 사전 대조 · 고정 명령 · 유한 정리 ·
+"""REIL C4-E · E1 단계 실행기 v6 대조 33 (승인 요청 `docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md` §6) — 독립 사전 대조 · 고정 명령 · 유한 정리 ·
 외부 단계 판정 · 사전 검토 §74 의 N1–N4 · 자체 발견 S1 · v2 사전 검토 §76 의 V2-02 · V2-04 · 자체 발견 S2–S4 · v3 사전 검토 §78 의 V3-02 · V3-03 ·
-자체 발견 S5 · v4 사전 검토 §80 의 V4-01 · 자체 발견 S6.
+자체 발견 S5 · v4 사전 검토 §80 의 V4-01 · 자체 발견 S6 · E1-0 결과 검토 §86 의 Q3 (FUTURE-01 · launcher 운영 정리 정책 · 사용자 채택 §87) · E1-0b
+사전 검토 §88 의 E1_0B_N1 (RED 원인 결속 · 사용자 채택 §89 — 대조 정정판 v7 · launcher 는 v6 그대로).
 
-RED 는 골격 (`scripts/reil_c4e1_launch.py` 의 함수가 모두 NotImplementedError) 에서 27 개 모두 NotImplementedError 로 실패해야 하고, GREEN 은 고정 구현에서
-27 개 모두 통과해야 한다. 이 파일은 우리 실행 모듈 다섯 · 실제 자료 · optimizer · 네트워크를 쓰지 않는다. 띄우는 것은 tmp 의 가짜 run 스크립트 (stdlib) ·
-손주 sleep · 해석기 탐침 (`-c`) · tmp 안의 로컬 git (init · 빈 커밋 · rev-parse · remote add · config · ls-remote --get-url · blob 생성
-`hash-object -w --no-filters` · `cat-file blob`) 뿐이다. fixture 가 직접 부르는 git 은 launcher 와 독립인 `_git_env()` 로 상속 `GIT_*` · 비밀 형태 이름을
-모두 빼고 시스템 · 사용자 설정을 읽지 않는다 (V2-02 · S3). 기존 시험 파일은 고치지 않는다.
+E1_0B_N1 — l23 · l29 · l30 은 기대 assert 바로 앞에서 원인을 구분한다. 관측한 결과 (사전 대조의 ok · launch 반환) 로 분기하고, v5 의 알려진 결함
+분기는 그 fixture 가 심은 원인만 문제인지 · v6 의 정상 / 거부 분기는 정상 실행에 심은 원인의 거부만 있는지를 raw 기록 (설정 목록 · 유효 출처 · meta) 과
+문제 목록으로 같이 확인한다. 그 밖이면 RED 표에 없는 `('UNEXPECTED_RED_CAUSE', …)` 로 실패한다. 원인 구분은 v5 에 없는 이름을 쓰지 않는다.
+
+E1-0b 의 RED 는 v5 고정 구현 (`scripts/reil_c4e1_launch.py` = `2269d775…` · E1-0 GREEN 의 바이트) 에서 이 파일의 33 개 중 바뀌거나 새로 넣은 9 개
+(l14 · l23 · l25 · l28–l33) 만 nodeid 별로 정한 최종 예외로 실패하고 나머지 24 개는 통과해야 한다 (각 시험의 docstring 첫 줄 · 요청서 §4-3 의 표). GREEN
+은 v6 고정 구현에서 33 개 모두 통과해야 한다. 이 파일은 우리 실행 모듈 다섯 · 실제 자료 · optimizer · 네트워크를 쓰지 않는다. 띄우는 것은 tmp 의 가짜 run
+스크립트 (stdlib) · 손주 sleep · 해석기 탐침 (`-c`) · tmp 안의 로컬 git (init · 빈 커밋 · rev-parse · remote add · config · ls-remote --get-url · blob 생성
+`hash-object -w --no-filters` · `cat-file blob` · file 프로토콜의 `fetch --depth 1 --filter=blob:none`) 뿐이다. fixture 가 직접 부르는 git 은 launcher 와
+독립인 `_git_env()` 로 상속 `GIT_*` · 비밀 형태 이름을 모두 빼고 시스템 · 사용자 설정을 읽지 않는다 (V2-02 · S3) — 예외는 l23 · l29 가 위험을 정말
+심었는지 보려고 정제 env (`L.child_env`) 와 가짜 HOME 으로 부르는 git 이다 (원격 접속 0). 기존 시험 파일은 고치지 않는다.
 """
 from __future__ import annotations
 
@@ -39,6 +46,10 @@ URL = "https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Io
 COMMIT = "1188c371e5836df4a7e5f5acf336a34ffd4027e6"
 GITID = ["-c", "user.name=fixture", "-c", "user.email=fixture@example.invalid"]
 SECRETISH = re.compile(r"TOKEN|SECRET|PASSW|ACCESS_KEY|CREDENTIAL|COOKIE", re.I)
+#: FUTURE-01 — fetch env 의 고정 설정 원천 (이름 · 값)
+FETCH_GIT = {"GIT_CONFIG_COUNT": "1", "GIT_CONFIG_GLOBAL": "/dev/null", "GIT_CONFIG_KEY_0": "http.proxyAuthMethod", "GIT_CONFIG_NOSYSTEM": "1",
+             "GIT_CONFIG_VALUE_0": "basic"}
+FETCH_NAMES = sorted(FETCH_GIT)
 
 #: tmp 트리의 `scripts/reil_c4e_run.py` 자리에 두는 가짜 (stdlib · git 은 tmp 안 로컬만) — 고정 argv 를 받아 FAKE_MODE 대로 움직인다
 FAKE_RUN = r'''import hashlib, json, os, subprocess, sys, time
@@ -59,6 +70,10 @@ if args[0] == "fetch":
     subprocess.run(["git", "init", "-q", str(gd)], check=True)
     subprocess.run(["git", "-C", str(gd), "remote", "add", "origin", "https://example.invalid/other.git" if mode == "badremote" else URL],
                    check=True)
+    if mode == "localtls":
+        subprocess.run(["git", "-C", str(gd), "config", "http.sslVerify", "false"], check=True)
+    if mode == "localinclude":
+        subprocess.run(["git", "-C", str(gd), "config", "include.path", os.devnull], check=True)
     (gd / ".git" / "shallow").write_text(("0" * 40 if mode == "badshallow" else COMMIT) + "\n")
     if mode == "alternates":
         (gd / ".git" / "objects" / "info").mkdir(parents=True, exist_ok=True)
@@ -439,8 +454,10 @@ def test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_b
 
 
 def test_l14_independence_fixed_commands_constants_and_main_rules(tmp_path):
-    """[RED 실패 — 골격] stdlib 만 import · 동적 import · exec 0 · 고정 상수 (경로 · 목록 · 실행 파일 둘 · 봉인 lock · 출처 · 자료 · helper · 시간 ·
-    단계 이름 · 셋) · 세 단계 argv 문자 그대로 · main 의 승인 절 · 증거 폴더 규칙."""
+    """[RED 실패 — v5: AssertionError ('E1-0b: 승인 문구의 요청서 경로', …)] stdlib 만 import · 동적 import · exec 0 · 고정 상수 (요청서 경로 · 경로 ·
+    목록 · 실행 파일 둘 · 봉인 lock · 출처 · 자료 · helper · 시간 · 정리 기한 · fetch 고정 설정 · 받은 저장소의 local 허용 키 · 단계 이름 · 셋) · 세 단계
+    argv 문자 그대로 · main 의 승인 절 · 증거 폴더 규칙."""
+    assert L.REQUEST == "docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md", ("E1-0b: 승인 문구의 요청서 경로", L.REQUEST)
     tree = ast.parse(Path(L.__file__).read_text(encoding="utf-8"))
     mods = ({a.name for n in ast.walk(tree) if isinstance(n, ast.Import) for a in n.names}
             | {n.module for n in ast.walk(tree) if isinstance(n, ast.ImportFrom)})
@@ -460,7 +477,12 @@ def test_l14_independence_fixed_commands_constants_and_main_rules(tmp_path):
     assert (L.SOURCE_URL, L.SOURCE_COMMIT, L.LEAVES) == (URL, COMMIT, ("reil_c4_e3a", "reil_c4_monitor", "reil_c5_pilot"))
     assert L.DATA_FILES == {"LFP_Data.xlsx": {"bytes": 10_841_377, "sha256": "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1"},
                             "util_LFP.py": {"bytes": 33_754, "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"}}
-    assert (L.TIMEOUTS, L.KILL_WAIT_S, L.GROUP_GRACE_S) == ({"identity": 60.0, "fetch": 300.0, "run": 10_800.0}, 10.0, 5.0)
+    assert (L.TIMEOUTS, L.KILL_WAIT_S, L.GROUP_GRACE_S, L.CLEANUP_S, L.POLL_S) == (
+        {"identity": 60.0, "fetch": 300.0, "run": 10_800.0}, 10.0, 5.0, 20.0, 0.1)
+    assert L.FETCH_GIT_CONFIG == (("http.proxyAuthMethod", "basic"),)
+    assert L.FETCH_LOCAL_KEYS == frozenset({"core.repositoryformatversion", "core.filemode", "core.bare", "core.logallrefupdates", "remote.origin.url",
+                                            "remote.origin.fetch", "remote.origin.promisor", "remote.origin.partialclonefilter",
+                                            "extensions.partialclone"})
     assert L.STEPS == {"identity": "03_identity", "fetch": "04_fetch", "run": "05_run"}
     ev, pre = Path(f"{BMS}/evidence/reil_c4e1_20261021"), Path(f"{SP}/c4e1/pycache/05_run")
     head = [f"{SP}/reil_c4env/venv/bin/python", "-I", "-B", "-X", f"pycache_prefix={SP}/c4e1/pycache/05_run"]
@@ -471,7 +493,7 @@ def test_l14_independence_fixed_commands_constants_and_main_rules(tmp_path):
         "--sources", f"{BMS}/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
         "--sources-sha256", "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52",
         "--out", f"{BMS}/evidence/reil_c4e1_20261021/run",
-        "--approval", "상태 문서 §80 (사용자 E1-1–3 승인 · docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md)"]
+        "--approval", "상태 문서 §80 (사용자 E1-1–3 승인 · docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md)"]
     assert L.build_argv("fetch", ev, "§80", pre) == head + [run_script, "fetch", "--dest", f"{SP}/c4e1/data"]
     assert L.build_argv("identity", ev, "§80", pre) == head + [
         f"{BMS}/evidence/reil_c4e1_20261021/00_identity_c4.py", f"{SP}/reil_c4env/venv", f"{BMS}/reil_c6_rebuild_20261013", seal_sha,
@@ -653,31 +675,41 @@ def test_l22_child_env_keeps_only_the_ca_among_git_variables_and_removes_secrets
     assert sorted(k for k in env if k.startswith("GIT_")) == ["GIT_SSL_CAINFO", "GIT_TERMINAL_PROMPT"]
 
 
-def test_l23_fetch_precheck_refuses_url_rewrite_proxy_and_tls_off_settings(tmp_path):
-    """[RED 실패 — 골격] (N4) 가짜 HOME 의 `.gitconfig` — `url.<x>.insteadOf = https://github.com/` (유효 출처도 바뀜) · `http.proxy` · `http.sslVerify = false`
-    → 각각 fetch 사전 실패 · 자식 0. 깨끗한 설정이면 사전 통과 (유효 출처 = 고정 URL)."""
+def test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child(tmp_path):
+    """[RED 실패 — v5: AssertionError ('rewrite', 'FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다', …)] (N4 → FUTURE-01) 가짜 HOME 의 `.gitconfig` —
+    `url.<x>.insteadOf = https://github.com/` · `http.proxy` · `http.sslVerify = false` → 정제 env 만 쓰면 그 파일이 설정 목록에 실제로 보인다 (fixture 가
+    위험을 정말 심었는지 확인) / launcher 의 fetch 단계는 fetch env (시스템 · 사용자 설정 끔 · 고정 목록만) 라 보이지도 적용되지도 않는다 → 사전 통과 ·
+    설정 항목은 command line 고정 목록 하나 · 유효 출처 = 고정 URL · fetch complete · meta 의 설정 원천 변수 = 고정 다섯. (v5 는 같은 설정을 사전 실패로
+    막았다 — v6 은 원천을 끊어서 닿지 않게 한다.)"""
     confs = {"rewrite": '[url "https://example.invalid/"]\n\tinsteadOf = https://github.com/\n',
              "proxy": "[http]\n\tproxy = http://127.0.0.1:9\n", "tlsoff": "[http]\n\tsslVerify = false\n"}
+    #: E1_0B_N1 — 사례마다 심은 키 (설정 목록의 소문자 키) · 유효 출처가 바뀌는가
+    planted = {"rewrite": ("url.https://example.invalid/.insteadof", True), "proxy": ("http.proxy", False), "tlsoff": ("http.sslverify", False)}
+    rewritten = URL.replace("https://github.com/", "https://example.invalid/")
     for name, conf in confs.items():
         t = _tree(tmp_path / name)
         home = t.tmp / "home"
         home.mkdir()
         (home / ".gitconfig").write_text(conf)
+        plain, _ = L.child_env({**os.environ, "HOME": str(home)}, t.work)
+        seen = subprocess.run(["git", "config", "--list", "--show-origin"], env=plain, cwd=t.tmp, capture_output=True, text=True, timeout=60)
+        assert seen.returncode == 0 and f"file:{home / '.gitconfig'}" in seen.stdout, (name, seen.stdout[-300:])
         pre = _pre(t, "fetch", data=t.tmp / "fresh", env_extra={"HOME": str(home)})
-        assert pre["ok"] is False and any("git 설정" in x for x in pre["problems"]), name
-        assert _launch(t, step="fetch", data=t.tmp / "fresh", extra_env={"HOME": str(home)}) == 1, name
-        assert _meta(t, "04_fetch")["launched"] is False and not (t.repo / "LAUNCHED").exists()
-    t = _tree(tmp_path / "rewrite_url")
-    home = t.tmp / "home"
-    home.mkdir()
-    (home / ".gitconfig").write_text(confs["rewrite"])
-    pre = _pre(t, "fetch", data=t.tmp / "fresh", env_extra={"HOME": str(home)})
-    assert any("유효 출처" in x for x in pre["problems"])
-    t = _tree(tmp_path / "clean")
-    home = t.tmp / "home"
-    home.mkdir()
-    pre = _pre(t, "fetch", data=t.tmp / "fresh", env_extra={"HOME": str(home)})
-    assert pre["ok"] is True and pre["source"]["get_url"]["out"].strip() == URL
+        if pre["ok"] is not True:  # E1_0B_N1 — v5 의 알려진 결함: 출처 관측은 성공 · raw 에 심은 원인 · 문제는 심은 원인뿐 (개수까지)
+            key, moved = planted[name]
+            src = pre.get("source") or {}
+            c, g = src.get("config") or {}, src.get("get_url") or {}
+            origin = f"file:{home / '.gitconfig'}"
+            kinds = sorted("key" if key in p and origin in p else "url" if moved and repr(rewritten) in p else "other" for p in pre["problems"])
+            assert (c.get("rc") == 0 and "error" not in c and g.get("rc") == 0 and "error" not in g
+                    and f"{origin}\t{key}=" in (c.get("out") or "") and (g.get("out") or "").strip() == (rewritten if moved else URL)
+                    and kinds == sorted(["key"] + (["url"] if moved else []))), ("UNEXPECTED_RED_CAUSE", "l23", name, pre["problems"])
+        assert pre["ok"] is True, (name, "FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다", pre["problems"])
+        entries = [(s, k, v) for s, _, k, v in L.git_config_entries(pre["source"]["config"]["out"])]
+        assert entries == [("command", "http.proxyauthmethod", "basic")] and pre["source"]["get_url"]["out"].strip() == URL, (name, entries)
+        assert _launch(t, step="fetch", data=t.tmp / "fresh", extra_env={"HOME": str(home)}) == 0, name
+        m = _meta(t, "04_fetch")
+        assert m["stage"]["complete"] is True and m["env_git_config"] == FETCH_GIT, name
 
 
 def test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source(tmp_path):
@@ -692,9 +724,10 @@ def test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source(t
 
 
 def test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git(tmp_path, monkeypatch):
-    """[RED 실패 — 골격] (V2-02) 상속 env 에 다른 저장소의 GIT_DIR · 허용 밖 기존 폴더의 GIT_OBJECT_DIRECTORY · GIT_INDEX_FILE · GIT_TRACE 를 넣어도 →
-    fixture git 은 tmp 저장소에 쓰고, launcher 의 시작 · 끝 기록 · fetch 사전 · 사후 Git 검사 · 가짜 fetch 의 git 은 표지 폴더에 아무것도 쓰지 않는다 ·
-    다른 저장소 불변 · 기록 HEAD = fixture 저장소 · 뺀 이름 기록 · 자식이 본 GIT_* 없음 · fetch complete."""
+    """[RED 실패 — v5: AssertionError ('FUTURE-01: fetch 자식에 고정 설정 원천이 없다', [])] (V2-02 · FUTURE-01) 상속 env 에 다른 저장소의 GIT_DIR ·
+    허용 밖 기존 폴더의 GIT_OBJECT_DIRECTORY · GIT_INDEX_FILE · GIT_TRACE 를 넣어도 → fixture git 은 tmp 저장소에 쓰고, launcher 의 시작 · 끝 기록 ·
+    fetch 사전 · 사후 Git 검사 · 가짜 fetch 의 git 은 표지 폴더에 아무것도 쓰지 않는다 · 다른 저장소 불변 · 기록 HEAD = fixture 저장소 · 뺀 이름 기록 ·
+    fetch complete · 자식이 본 GIT_* 는 fetch env 의 고정 다섯뿐 (meta 의 설정 원천 변수도 같다)."""
     other = tmp_path / "other"
     _git("init", "-q", "--template=", str(other))
     _git("-C", str(other), *GITID, "commit", "-q", "--allow-empty", "-m", "other")
@@ -711,7 +744,10 @@ def test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_no
     assert _launch(t, step="fetch", data=t.tmp / "fresh") == 0
     m = _meta(t, "04_fetch")
     assert m["records"]["head_start"]["out"] == head == m["records"]["head_end"]["out"] and head != other_head
-    assert set(bad) <= set(m["env_removed_names"]) and json.loads((t.repo / "CHILD_ENV").read_text()) == []
+    assert set(bad) <= set(m["env_removed_names"])
+    names = json.loads((t.repo / "CHILD_ENV").read_text())
+    assert names == FETCH_NAMES, ("FUTURE-01: fetch 자식에 고정 설정 원천이 없다", names)
+    assert m["env_git_config"] == FETCH_GIT
     assert [p.name for p in sentinel.rglob("*")] == ["objects"]
     assert _git("-C", str(other), "rev-parse", "HEAD").strip() == other_head
     assert sorted(str(p) for p in (other / ".git").rglob("*")) == other_files
@@ -797,3 +833,236 @@ def test_l27_decode_failures_in_proc_reads_and_git_output_are_recorded_not_escap
     assert (kw.get("text"), kw.get("encoding"), kw.get("errors")) == (True, "utf-8", "replace"), kw
     r = L.git_run(["-C", repo, "cat-file", "blob", sha], env=_git_env())
     assert r["rc"] == 0 and r["out"] == data.decode("utf-8", "replace") and "�" in r["out"] and "error" not in r, r
+
+
+# ---------------------------------------------------------------- E1-0b (FUTURE-01 · launcher 운영 정리 정책 · 상태 문서 §87)
+class _Clock:
+    """가짜 단조 시계 — sleep 한 만큼 · 관측 비용만큼 나아간다 (실제로 자지 않는다)."""
+
+    def __init__(self, t=1000.0):
+        self.t, self.sleeps = t, []
+
+    def __call__(self):
+        return self.t
+
+    def sleep(self, s):
+        assert s >= 0, s
+        self.sleeps.append((self.t, s))
+        self.t += s
+
+
+class _P:
+    """가짜 자식 — pid · poll · returncode. exits_at 이 None 이면 끝나지 않는다."""
+
+    def __init__(self, pid, clock, exits_at=None, rc=0):
+        self.pid, self.clock, self.exits_at, self.rc, self.returncode = pid, clock, exits_at, rc, None
+
+    def poll(self):
+        if self.exits_at is not None and self.clock() >= self.exits_at:
+            self.returncode = self.rc
+        return self.returncode
+
+
+def _normal_fetch_meta(m) -> bool:
+    """E1_0B_N1 — fetch meta 가 이 launch 의 것이고 실행이 정상이었다: 단계 · 이름 · launcher 경로 · 단계 오류 0 · 사전 통과 · 자식 시작 · rc 0 ·
+    timeout 없음 · 그룹 empty · 자식 오류 0 · 자식 결과 ok · HEAD / porcelain 기록 rc 0 · HEAD 불변. meta 사전만 읽는다 (v5 · v6 공통 키)."""
+    child, rec, terms = m.get("child") or {}, m.get("records") or {}, (m.get("stage") or {}).get("terms") or {}
+    return (m.get("step") == "fetch" and m.get("name") == "04_fetch" and (m.get("launcher") or {}).get("path") == str(Path(L.__file__).resolve())
+            and m.get("errors") == [] and m.get("first_error") is None and m.get("precheck_ok") is True and m.get("launched") is True
+            and child.get("started") is True and child.get("rc") == 0 and child.get("timed_out") is False
+            and (child.get("group") or {}).get("status") == "empty" and not child.get("errors") and terms.get("child_ok") is True
+            and all((rec.get(k) or {}).get("rc") == 0 for k in ("head_start", "porcelain_start", "porcelain_end", "head_end"))
+            and (rec.get("head_start") or {}).get("out") == (rec.get("head_end") or {}).get("out") not in (None, ""))
+
+
+def _fake_group(tmp: Path, pgid: int, members, clock, cost: float, starts: list):
+    """가짜 /proc (구성원은 하나 — 관측 한 번 = stat 읽기 한 번) · 읽을 때마다 시작 시각을 남기고 cost 초를 쓰는 read."""
+    proc = tmp / "proc"
+    for pid, state in members:
+        (proc / str(pid)).mkdir(parents=True, exist_ok=True)
+        (proc / str(pid) / "stat").write_bytes(b"%d (x) %s 1 %d 0 0\n" % (pid, state.encode(), pgid))
+
+    def read(q):
+        starts.append(clock())
+        clock.t += cost
+        return q.read_bytes()
+
+    return proc, read
+
+
+def test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list():
+    """[RED 실패 — v5: AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'fetch_env'] (FUTURE-01) 받은 env 의 `GIT_CONFIG*` (COUNT ·
+    KEY · VALUE · PARAMETERS · GLOBAL · SYSTEM · 옛 GIT_CONFIG) 를 모두 빼고 NOSYSTEM=1 · GLOBAL=/dev/null · 고정 목록 하나 (`http.proxyAuthMethod=basic`)
+    만 command line 설정으로 넣는다 · 그 밖 이름 (CA · 프록시 · PATH · HOME) 은 그대로 · 받은 env 를 바꾸지 않는다 · 두 번 적용해도 같다."""
+    fetch_env = L.fetch_env
+    base = {"GIT_CONFIG_COUNT": "2", "GIT_CONFIG_KEY_0": "url.https://example.invalid/.insteadOf", "GIT_CONFIG_VALUE_0": "https://github.com/",
+            "GIT_CONFIG_KEY_1": "http.sslVerify", "GIT_CONFIG_VALUE_1": "false", "GIT_CONFIG_PARAMETERS": "'http.proxy'='http://127.0.0.1:9'",
+            "GIT_CONFIG_GLOBAL": "/x", "GIT_CONFIG_SYSTEM": "/y", "GIT_CONFIG": "/z", "GIT_SSL_CAINFO": "/c", "HTTPS_PROXY": "http://127.0.0.1:1",
+            "PATH": "/usr/bin", "HOME": "/root"}
+    snap = dict(base)
+    env = fetch_env(base)
+    assert base == snap
+    assert {k: v for k, v in env.items() if k.startswith("GIT_CONFIG")} == FETCH_GIT
+    assert {k: v for k, v in env.items() if not k.startswith("GIT_CONFIG")} == {
+        "GIT_SSL_CAINFO": "/c", "HTTPS_PROXY": "http://127.0.0.1:1", "PATH": "/usr/bin", "HOME": "/root"}
+    assert fetch_env(env) == env and fetch_env({}) == FETCH_GIT
+
+
+def test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child(tmp_path):
+    """[RED 실패 — v5: AssertionError ('FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다', …)] (FUTURE-01) 가짜 HOME 의 `.gitconfig`
+    에 이름이 `git` 인 폴더의 저장소에만 걸리는 `includeIf "gitdir:**/git/"` (URL 바꿈 · TLS 끔) → 정제 env 만 쓰면 그런 저장소에서는 바뀐 유효 출처가
+    보이고 작업 폴더 문맥에서는 보이지 않는다 (사전 검사를 지나는 위험이 정말 심겼는지 확인) / launcher 의 fetch 단계는 사전 · 자식 · 사후가 모두 fetch
+    env 라 영향이 없다 → complete · 받은 저장소의 유효 출처 = 고정 URL · meta 어디에도 그 파일이 없다 · 자식이 본 GIT_* 는 고정 다섯."""
+    t = _tree(tmp_path)
+    home = t.tmp / "home"
+    home.mkdir()
+    evil = home / "evil.cfg"
+    evil.write_text('[url "https://example.invalid/"]\n\tinsteadOf = https://github.com/\n[http]\n\tsslVerify = false\n')
+    (home / ".gitconfig").write_text(f'[includeIf "gitdir:**/git/"]\n\tpath = {evil}\n')
+    rewritten = URL.replace("https://github.com/", "https://example.invalid/")
+    plain, _ = L.child_env({**os.environ, "HOME": str(home)}, t.work)
+    t.work.mkdir(parents=True, exist_ok=True)
+    demo = t.tmp / "demo" / "git"
+    for argv in (["git", "init", "-q", str(demo)], ["git", "-C", str(demo), "remote", "add", "origin", URL]):
+        r = subprocess.run(argv, env=plain, capture_output=True, text=True, timeout=60)
+        assert r.returncode == 0, (argv, r.stderr[-300:])
+    inside = subprocess.run(["git", "-C", str(demo), "ls-remote", "--get-url", "origin"], env=plain, capture_output=True, text=True, timeout=60)
+    outside = subprocess.run(["git", "ls-remote", "--get-url", URL], env=plain, cwd=t.work, capture_output=True, text=True, timeout=60)
+    assert inside.stdout.strip() == URL.replace("https://github.com/", "https://example.invalid/"), inside.stdout
+    assert outside.stdout.strip() == URL, outside.stdout
+    rc = _launch(t, step="fetch", data=t.tmp / "fresh", extra_env={"HOME": str(home)})
+    assert rc in (0, 1), ("UNEXPECTED_RED_CAUSE", "l29", rc)
+    m = _meta(t, "04_fetch")
+    post, probs = m.get("postcheck") or {}, (m.get("postcheck") or {}).get("problems")
+    src = post.get("source") or {}
+    if rc == 0:  # E1_0B_N1 — v6 정상: 정상 실행 · complete · 사후 문제 0
+        cause = _normal_fetch_meta(m) and m["stage"]["complete"] is True and probs == []
+    else:  # v5 의 알려진 결함: 정상 실행 뒤 받은 저장소의 유효 출처가 바뀐 것 하나만 사후 문제 (출처 관측 성공 · raw 에 바뀐 URL)
+        g, u = src.get("get_url") or {}, src.get("remote_url") or {}
+        cause = (_normal_fetch_meta(m) and post.get("ok") is False and isinstance(probs, list) and len(probs) == 1 and repr(rewritten) in probs[0]
+                 and g.get("rc") == 0 and "error" not in g and (g.get("out") or "").strip() == rewritten
+                 and u.get("rc") == 0 and "error" not in u and (u.get("out") or "").strip() == URL)
+    assert cause, ("UNEXPECTED_RED_CAUSE", "l29", rc, m.get("first_error"), m.get("precheck_problems"), probs)
+    assert rc == 0, ("FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다", m.get("precheck_problems"),
+                     (m.get("postcheck") or {}).get("problems"))
+    assert m["postcheck"]["source"]["get_url"]["out"].strip() == URL and str(evil) not in json.dumps(m, ensure_ascii=False)
+    assert json.loads((t.repo / "CHILD_ENV").read_text()) == FETCH_NAMES
+
+
+def test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write(tmp_path):
+    """[RED 실패 — v5: AssertionError ('FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다', 'localtls')] (FUTURE-01) (a) tmp 의 로컬 저장소에서
+    실제 `init` → `remote add` → `fetch --depth 1 --filter=blob:none` (file 프로토콜 · 네트워크 0) 로 받은 저장소 → 사후 검사 문제 0 (local 키가 허용
+    목록 안 · shallow = 그 커밋 · 유효 출처 = 그 경로) (b) 가짜 fetch 가 받은 저장소의 local 설정에 `http.sslVerify=false` · `include.path` 를 남기면 →
+    각각 사후 실패 ("허용 local 키 밖") · stage false."""
+    up = tmp_path / "upstream"
+    _git("init", "-q", "--template=", str(up))
+    (up / "LFP_Data.xlsx").write_bytes(b"xlsx-bytes")
+    _git("-C", str(up), "add", "-A")
+    _git("-C", str(up), *GITID, "commit", "-q", "-m", "fixture")
+    sha = _git("-C", str(up), "rev-parse", "HEAD").strip()
+    _git("-C", str(up), "config", "uploadpack.allowFilter", "true")
+    _git("-C", str(up), "config", "uploadpack.allowAnySHA1InWant", "true")
+    data = tmp_path / "data"
+    gd = data / "git"
+    fenv = {**_git_env(), "GIT_ALLOW_PROTOCOL": "file"}
+    for argv in (["init", "-q", str(gd)], ["-C", str(gd), "remote", "add", "origin", str(up)],
+                 ["-C", str(gd), "fetch", "--depth", "1", "--filter=blob:none", "origin", sha]):
+        r = subprocess.run(["git", *argv], env=fenv, capture_output=True, text=True, timeout=60)
+        assert r.returncode == 0, (argv, r.stderr[-500:])
+    env, _ = L.child_env(dict(os.environ), tmp_path / "work")
+    _, probs = L.fetch_source_postcheck(env, data, url=str(up), commit=sha)
+    assert probs == [], probs
+    for mode in ("localtls", "localinclude"):
+        t = _tree(tmp_path / mode)
+        rc = _launch(t, step="fetch", mode=mode, data=t.tmp / "fresh")
+        assert rc in (0, 1), ("UNEXPECTED_RED_CAUSE", "l30", mode, rc)  # E1_0B_N1 — 반환 4 (meta 기록 실패) 등은 meta 를 읽기 전에 멈춘다
+        m = _meta(t, "04_fetch")
+        post = m.get("postcheck") or {}
+        probs, key = post.get("problems"), {"localtls": "http.sslverify", "localinclude": "include.path"}[mode]
+        if rc == 0:  # v5 의 알려진 결함: 정상 실행 · complete · 사후 ok · 사후 문제 0 으로 통과한 것
+            cause = _normal_fetch_meta(m) and m["stage"]["complete"] is True and post.get("ok") is True and probs == []
+        else:  # v6 거부: 정상 실행 뒤 사후 문제가 모두 심은 local 키를 가리키고 그중 허용 키 밖 거부가 있다
+            cause = (_normal_fetch_meta(m) and post.get("ok") is False and isinstance(probs, list) and probs != []
+                     and all(key in p for p in probs) and any("허용 local 키 밖" in p for p in probs))
+        assert cause, ("UNEXPECTED_RED_CAUSE", "l30", mode, rc, m.get("first_error"), probs)
+        assert rc == 1, ("FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다", mode)
+        assert m["launched"] is True and m["stage"]["terms"]["postcheck_ok"] is False, mode
+        assert any("허용 local 키 밖" in x for x in m["postcheck"]["problems"]), (mode, m["postcheck"]["problems"])
+
+
+def test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look(tmp_path):
+    """[RED 실패 — v5: AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'] (launcher 운영 정리 정책 · V3-01 규칙) 가짜
+    시계 · 관측마다 시간을 쓰는 가짜 /proc · (a) timeout · kill 이 듣지 않는 자식 (구성원 계속 삶) · 관측 0.05 s · 기한 t0+20 → 그룹 SIGKILL 두 번
+    (처음 · 재kill) · alive · deadline_hit · 모든 관측 시작 < 기한 · 끝 ≤ 기한 + 관측 하나 · sleep 끝 ≤ 기한 (b) 정상 종료 · 첫 관측에 좀비만 → empty ·
+    kill 0 · 관측 1 · 기한 안 (c) 정리 진입 때 이미 기한 → 관측 0 · sleep 0 · unverified · timeout 의 kill 은 보낸다 (기다리지 않는 동작) (d) 관측 하나가
+    기한을 넘음 (비용 3 s · 기한 t0+1 · 정상 종료 · 구성원 삶) → 그 관측 결과에 따른 재kill 은 보내고 재관측은 없음 → unverified · 끝 = t0+3."""
+    cleanup_group = L.cleanup_group
+
+    def case(name, members, cost, *, exits_at=None, timed_out, deadline_after):
+        clk, starts, kills = _Clock(), [], []
+        t0 = clk()
+        proc, read = _fake_group(tmp_path / name, 4242, members, clk, cost, starts)
+        p = _P(4242, clk, exits_at=None if exits_at is None else t0 + exits_at)
+        r = cleanup_group(p, timed_out, deadline=t0 + deadline_after, clock=clk, sleep=clk.sleep, killpg=lambda pg, sig: kills.append((pg, sig)),
+                          kill_wait=10.0, grace=5.0, proc=proc, read=read)
+        return r, clk, t0, starts, kills
+
+    r, clk, t0, starts, kills = case("a", [(4242, "S")], 0.05, timed_out=True, deadline_after=20.0)
+    assert r["status"] == "alive" and r["deadline_hit"] is True and r["exited_after_kill"] is False and r["errors"] == [] and r["emergency"] is False
+    assert kills == [(4242, signal.SIGKILL)] * 2 and [k["result"] for k in r["kill"]] == ["sent", "sent"] and r["group"]["status"] == "alive"
+    assert starts and all(s < t0 + 20.0 for s in starts) and clk() <= t0 + 20.0 + 0.05 + 1e-9
+    assert all(a + b <= t0 + 20.0 + 1e-9 for a, b in clk.sleeps)
+    r, clk, t0, starts, kills = case("b", [(4243, "Z")], 0.05, exits_at=0.0, timed_out=False, deadline_after=20.0)
+    assert r["status"] == "empty" and r["kill"] == [] and kills == [] and len(starts) == 1 and r["deadline_hit"] is False
+    r, clk, t0, starts, kills = case("c", [(4242, "S")], 0.05, timed_out=True, deadline_after=0.0)
+    assert r["status"] == "unverified" and starts == [] and clk.sleeps == [] and kills == [(4242, signal.SIGKILL)]
+    assert r["exited_after_kill"] is False and r["deadline_hit"] is True
+    r, clk, t0, starts, kills = case("d", [(4243, "S")], 3.0, exits_at=0.0, timed_out=False, deadline_after=1.0)
+    assert starts == [t0] and kills == [(4242, signal.SIGKILL)] and r["status"] == "unverified" and r["deadline_hit"] is True
+    assert clk() == t0 + 3.0
+
+
+def test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline(tmp_path):
+    """[RED 실패 — v5: AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'] (launcher 운영 정리 정책) 관측 0.05 s · 기한
+    t0+20 · timeout · 끝나지 않는 자식 · 시작 시각이 t0+10 이후인 첫 sleep 이 RuntimeError (주입) → 정리가 잡는다 · unknown (그룹 기록도) · emergency ·
+    errors = ["RuntimeError: sleep failed (시험 주입)"] · 예외 시각 ∈ [t0+10, t0+10.2) · 그룹 SIGKILL 두 번 (처음 · 비상) · 비상 관측도 같은 기한 (모든
+    관측 시작 < t0+20) · 새 기한 없음 (끝 ≤ t0+20 + 관측 하나) · deadline_hit."""
+    cleanup_group = L.cleanup_group
+    clk, starts, kills, fired = _Clock(), [], [], []
+    t0 = clk()
+    proc, read = _fake_group(tmp_path, 4242, [(4242, "S")], clk, 0.05, starts)
+
+    def sleep(s):
+        if clk() >= t0 + 10.0 and not fired:
+            fired.append(clk())
+            raise RuntimeError("sleep failed (시험 주입)")
+        clk.sleep(s)
+
+    r = cleanup_group(_P(4242, clk), True, deadline=t0 + 20.0, clock=clk, sleep=sleep, killpg=lambda pg, sig: kills.append(pg), kill_wait=10.0,
+                      grace=5.0, proc=proc, read=read)
+    assert r["status"] == "unknown" and r["group"]["status"] == "unknown" and r["emergency"] is True
+    assert r["errors"] == ["RuntimeError: sleep failed (시험 주입)"] and t0 + 10.0 <= fired[0] < t0 + 10.2 and kills == [4242, 4242]
+    assert starts and all(s < t0 + 20.0 for s in starts) and clk() <= t0 + 20.0 + 0.05 + 1e-9 and r["deadline_hit"] is True
+
+
+def test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty(tmp_path):
+    """[RED 실패 — v5: AssertionError ('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])] (launcher 운영 정리 정책 · 차단 기준) 같은 사전 대조 ·
+    Git 기록에 자식 기록만 바꿔 넣는다 — 끝 상태 empty · 기한 안 · 오류 0 → 문제 0 / empty 인데 deadline_hit → 실패 / killed · unverified · unknown →
+    각각 실패 / 정리 오류 → 실패. 판정은 `first_error` 가 아니라 정리 기록 (그룹 끝 상태 · 기한 도달 · 오류) 을 본다."""
+    t = _tree(tmp_path)
+    pre = _pre(t, "identity")
+    prefix = t.work / "pycache" / "pre_identity"
+    env, _ = L.child_env(dict(os.environ), t.work)
+    head = {"rc": 0, "out": "a" * 40 + "\n"}
+    records = {"head_start": head, "head_end": head, "porcelain_start": {"rc": 0, "out": ""}, "porcelain_end": {"rc": 0, "out": ""}}
+
+    def post(**child):
+        base = {"started": True, "rc": 0, "timed_out": False, "group": {"status": "empty"}, "deadline_hit": False, "errors": []}
+        return L.postcheck("identity", t.ev, pre, prefix, {**base, **child}, env=env, repo=t.repo, records=records)
+
+    assert post()["problems"] == []
+    r = post(deadline_hit=True)
+    assert r["ok"] is False, ("정리 기한에 닿은 기록을 사후 대조가 통과시켰다", r["problems"])
+    for status in ("killed", "unverified", "unknown"):
+        assert any(status in x for x in post(group={"status": status})["problems"]), status
+    assert post(errors=["RuntimeError: x"])["ok"] is False
