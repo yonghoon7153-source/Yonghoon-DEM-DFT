@@ -1,0 +1,13 @@
+d992ec6539a7ddf964ac5913bf11f7914c5d7534
+ M docs/reviews/codex_rint2_rr_round2_request_20261103.md
+ M docs/reviews/rint2_dev_probe_ledger_20261026.md
+ M docs/reviews/rint2_rr_fix_evidence_20261023/q9_predict_units_design.md
+?? docs/reviews/rint2_rr_fix_evidence_20261023/reverify_bytes_20261103/logs/long_head.txt
+?? docs/reviews/rint2_rr_fix_evidence_20261023/reverify_bytes_20261103/logs/mut/
+?? docs/reviews/rint2_rr_fix_evidence_20261023/reverify_bytes_20261103/logs/mutation_q5.json
+?? docs/reviews/rint2_rr_fix_evidence_20261023/reverify_bytes_20261103/mutate_q5.py
+58650cdf1bbde3aa9a8ae52006ce948c6cae3744d2b61e7254252a355daa7f06  scripts/rint_r_chain.py
+180ca4a96f1d98bddaf673cf3b1839a23e143e50e5cc3a2a6ebef461144033dd  scripts/test_rint_r_chain.py
+be7972aeae5250da2778d2ebbed36dc2de274f179057bcbb7a0e1b4f58aee601  scripts/test_rint_r_chain_e2e.py
+265c70674cfe168c12a679ac31c28b16172d2bae0fbe9e4f7a13dd8b0d509894  scripts/carbon_junction.py
+2d4fb3c0be9f9edc784d6f12164f0248600bc8c3d2187adc0f6cbd7e4ac57d2e  scripts/test_carbon_junction.py

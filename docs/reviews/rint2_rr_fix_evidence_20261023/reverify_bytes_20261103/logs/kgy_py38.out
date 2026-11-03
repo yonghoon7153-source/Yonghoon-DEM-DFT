@@ -1,0 +1,13 @@
+  kgy 판 = Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 (/root/.local/share/uv/python/cpython-3.8.20-linux-x86_64-gnu/bin/python3.8)
+  ✓ run_contract :: run_contract selftest: 124/124 PASS
+  ✓ step3_rint :: STEP3 RINT SELFTEST PASS
+  ✓ ptfe_face_alpha :: 242 PASS · 0 FAIL
+  ✓ carbon_junction :: == test_carbon_junction: 493/493 PASS
+  ✓ ca_ext_b6 :: 501 PASS · 0 FAIL
+  ✗ ca_ext_runner ::   PASS  N11j 설정부 — 조립만 팔 태그 = 생산 태그 + `_cjgo` · NG_FLAG 에 `--step3-cjunc-graph-only` 한 번 · NG_DECL 같음 · 접합 요청 �   FAIL  N12f 시도 꼴 .unchecked/ 에 그 팔의 옛 파일 (payload · 표지 · .part) → ABORT (새 OUTDIR 로 · 옛 파일 그대로) · 그 팔 payload 150 PASS · 1 FAIL  (로그 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a42a47dbf29d085c6/docs/reviews/rint2_rr_fix_evidence_20261023/reverify_bytes_20261103/logs/kgy/ca_ext_runner.log)
+  ✓ rint_r_chain :: test_rint_r_chain: 442/442 PASS (639.1 s)
+  ✓ rint_r_chain_e2e :: test_rint_r_chain_e2e: 51 PASS · 0 FAIL (818.2 s)
+  ✓ step3_target_cert :: == test_step3_target_cert [빠른 판]: 264/264 PASS (17.6 s)
+  ✓ step3_conv_cert :: == test_step3_conv_cert: 29/29 PASS
+  ✓ ca_s0_census :: 167 PASS · 0 FAIL
+✗ kgy 판 R 경로 시험 실패 (로그 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a42a47dbf29d085c6/docs/reviews/rint2_rr_fix_evidence_20261023/reverify_bytes_20261103/logs/kgy)
