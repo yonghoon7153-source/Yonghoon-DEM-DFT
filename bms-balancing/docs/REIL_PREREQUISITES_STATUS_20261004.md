@@ -2530,3 +2530,47 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   (600 s) 을 넘을 수 있어, GREEN 명령 줄은 도구의 배경 실행으로 띄우고 끝 알림을 받는다 (명령 문자열 · 외곽 반환 기록은 같다). RED 는 전경으로 띄운다.
 - **번호:** 결과 기록은 §92 이다.
 - 이 승인은 E1-1–3 (identity · 읽기 경로 `add_repo` · fetch · 자료 개봉 · run) · C4-A / B · 설치 · 환경 재구축 · COMSOL 승인이 아니다.
+
+## §92 C4-E · E1-0b 결과 — RED 에서 멈춤 (l33 의 실패 원인이 표와 다름 · 대조 결함) · GREEN 실행 안 함 · 결과 검토 대기 (2026-11-03 KST · 덧붙임 — 위 §0–§91 은 그대로)
+
+- **대상 커밋:** 끝 기록 `7f73e640` (push 뒤 원격과 일치).
+  - RED 증거 `419c0652` · 복사 넷 + 착수 기록 (첫 시험 전 봉인) `69dacaab` · 승인 기록 §91 + 보존 규칙 `2ad8cc2c` · 착수 전 HEAD `e7d3d9fc`.
+  - 증거 `evidence/reil_c4e1_0b_20261103/` — 12 파일 · 69,968 B.
+- **시간 (2026-11-03 UTC):** 이름 확인 a 06:22:48 · 착수 기록 06:23:48 · RED 06:24:20.895–06:24:38.377 · 끝 기록 06:27:01 — 착수 기록부터 끝 기록까지 193 s
+  (a 부터 253 s · 배정 2 h). 커밋 · push · 문서는 끝 기록 뒤다. 재시도 · 예산 변경 0.
+- **RED `01_red_e1_0b` (launcher v5 `2269d775…` · 대조 v7):**
+
+  | 항목 | 결과 |
+  |---|---|
+  | 실행기 | started · pytest rc 1 · timeout 없음 · 자식 17.027 s · 정리 0.002 s (`cleanup.status` empty · `deadline_hit` false · `emergency` false · 오류 0) · problems · end_problems · errors 0 · runner_ok true · 외곽 반환 파일 `1` · stderr 0 B |
+  | 기록 | HEAD 시작 = 끝 = `69dacaab` · porcelain rc 0 · 원천 해시 시작 = 끝 = EXPECT[01_red_e1_0b] |
+  | 마지막 줄 | `9 failed, 24 passed in 14.25s` (warning 없음) · 수집 오류 · `INTERNALERROR` · 중단 0 · `UNEXPECTED_RED_CAUSE` 0 |
+  | nodeid 집합 | `FAILED` = 표의 9 · `PASSED` = 목록의 24 (누락 · 추가 · 중복 없음) |
+  | 표와 같은 여덟 | l14 (460 줄) · l23 (707) · l25 (749) · l28 (897) · l29 (946) · l30 (988) · l31 (999) · l32 (1030) — 첫 traceback 항목 (파일 경로 + 전체 시험명) · 연쇄 예외 없음 · 예외 블록 하나 · 최종 예외 종류 · 메시지 (정확히 6 · 접두 2) 가 표와 같다 |
+  | **표와 다른 하나** | **l33** — 기대는 1065 줄 `AssertionError: ('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])`. 실제는 1063 줄 `assert post()["problems"] == []` (기본 기록의 문제 0 단언) 에서 실패 · 예외 블록 머리 `E   assert ["bms-balanci...ad63148563'}"] == []` · 문제 2 건 (첫째: `bms-balancing/scripts/reil_c6_profile.py: sha256 676ef3bd… · 25 B ≠ 기대 {'bytes': 15915, 'sha256': '408afc4b…'}`) |
+
+- **판정: 멈춤.** 요청서 §4-3 의 2 (최종 예외의 줄 · 메시지 = 표) 가 l33 에서 어긋났다. 실패 수가 9 로 같아도 받아들이지 않는다 (§88 · §90). §4-1 대로 RED 기록을
+  있는 그대로 커밋하고 e 를 했다. **d (launcher v6 복사 · GREEN) 는 하지 않았다** — `scripts/reil_c4e1_launch.py` 는 v5 그대로다. 수정 · 재시험 · 다른 근거로의
+  대체는 없다.
+- **원인 (정적 · 이 저장소의 대조 결함 · 실행 0):** l33 의 도우미 `post()` 가 `L.postcheck("identity", t.ev, pre, prefix, child, env=env, repo=t.repo,
+  records=records)` 로 부르면서 `extra=t.extra` 를 넘기지 않았다. 그래서 기본값 `EXTRA_EXECUTED` (실제 두 파일 `reil_c6_profile.py` · `env_profile.py` 의 sha ·
+  bytes) 로 tmp 가짜 트리 (`_tree`) 의 가짜 파일 둘 (25 B · 21 B) 을 대조해 문제 2 건이 났다. 대조에서 `L.postcheck` 를 직접 부르는 곳은 이 하나뿐이다
+  (l30 (a) 는 `fetch_source_postcheck` 에 url · commit 을 넘긴다). launcher v6 의 `postcheck` 도 같은 대조를 하므로 GREEN 에서도 같은 자리에서 실패했을
+  결함이다 (정적 판단). 정적 검토 (작성 · §88 · §90) 는 l33 의 기본 기록이 문제 0 이라고 가정했고, 기본 인자가 실제 파일을 가리키는지는 확인하지 않았다.
+- **원인 구분의 효과:** E1_0B_N1 의 규칙 (실패 수 · nodeid 만으로 받지 않고 실패 절의 줄 · 최종 예외를 nodeid 마다 대조) 이 이 대조 결함을 GREEN 전에
+  잡았다. 나머지 여덟은 v5 의 행동 (rewrite 가 사전 대조에 보임 · 자식 env 에 고정 설정 원천 없음 · includeIf 가 사후 유효 출처에 닿음 · local TLS 끔이
+  통과) 과 인터페이스 · 상수 RED 를 표대로 보였다.
+- **판정 도구 메모:** 내 판정 스크립트 (`SP/c4e1b_judge/judge_red.py` · 저장소 밖) 는 "짧은 요약 절에 FAILED · PASSED 밖의 줄 없음" 을 따로 보다가 그 절의 마지막
+  줄 (`9 failed, 24 passed …`) 을 그 밖 줄로 셌다. 요청서의 기준은 `ERROR` 줄 0 이고 그것은 충족했다 — 멈춘 이유는 l33 하나다.
+- **기록 · 자원:** `00_start.txt` (sha 열 · Git 없음) · `03_end.json` (고정 작성기 `2e44f2e5…` · 06:27:01Z · 복사본 다섯 sha = 고정본 · GREEN 의 meta · 외곽 반환은
+  "파일 없음" 사유) · 자식 최대 RSS 48,896 KiB · 디스크 여유 26,109,669,376 → 26,099,011,584 B · settle 의 좀비 [520, 601] 은 회수 목록과 같다. 커밋 전 비밀 검사 ·
+  URL 계정 형태 · 50 MB 초과 모두 0.
+- **절차 Git 이름 확인:** a (06:22:48Z) · e (06:27:01Z) 모두 허용 목록 밖 0 (이름만). b · c · e 의 절차 git 은 모두 같은 줄에서 확인 뒤에만 실행했다.
+- **저장소의 지금 상태 (RED 상태 · 되돌리지 않음):** `tests/test_reil_c4e1_launch.py` = 대조 v7 · `tests/test_reil_c4e1_runner.py` = 실행기 대조 v4 · launcher =
+  v5. 이 상태에서 대조 v7 을 돌리면 위 RED 와 같은 실패가 난다. 다음 승인 전까지 그대로 둔다.
+- **밝힐 것:**
+  1. E1-0b 는 끝나지 않았다 (GREEN 없음). FUTURE-01 · 운영 정리 정책의 GREEN 관측은 없다.
+  2. §91 의 승인은 이번 한 번의 a–e 로 썼다 (재시도 0). l33 을 고쳐 다시 하려면 정정 범위 · 승인 요청 갱신 · 검토 · 사용자 승인이 다시 필요하다.
+  3. l33 의 결함은 대조 (시험) 쪽이다. launcher v5 · v6 의 바이트와 판단은 바뀌지 않았다.
+- **다음:** 결과 검토 발송문 `docs/REIL_C4E1_0B_RESULT_REVIEW_SEND_20261103.md` → 사용자 발송 결정 → 회신 → (정정이 요구되면) l33 정정 범위안 → 사용자 채택 →
+  … 각각 별도 사용자 결정이다. 이 기록은 어느 단계의 실행 승인도 아니다.
