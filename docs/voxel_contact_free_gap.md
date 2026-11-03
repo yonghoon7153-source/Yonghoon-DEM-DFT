@@ -264,3 +264,11 @@ CL-91 / VGCF 100 ~~분말~~ [⛔ 10-03 `RINT-10`: 도입 때 넣은 값 · 분�
 나란히** 보고한 뒤, ⑤ (a) 첨가제 없는 같은 침대에서 복셀+계면 ↔ DEM 접촉망 FULL (b) vox 사다리
 (c) 그 뒤에야 실험 대조 (맞추기 없음) 로 닫는다.  r 값 자체의 출처 (litdb 카드) 도 ④ 의 일이다.
 웹앱 화면은 ⑥ (아직 없음 — J20-l 보고).
+
+---
+
+## 9. 문헌 선례 (11-03 · 1저자 비준 · 숫자 = litdb 정본 카드 원문 · 정본 `eeb8d13d9`)
+
+- **a. §0 · §1-2 의 방향 (계면 항이 없어 σ 가 높게 나오는 쪽) 의 실험 지지** — FIB-SEM 재구성 위 복셀 FV 의 σ_ion 시뮬 ÷ 실측 = 1.46 · 1.42 (`litdb-canon:lee2026_unveiling_ptfe_dry_electrode_digital_twin` 머리 표 ③) · 입력 σ_LPSCl 1.0 mS cm⁻¹ (출처 미기재) 에 조건부 · *"계면 · 입계 · 미해상 기공 몫 ≈ 30 %"* 는 카드의 해석.
+- **b. §8 ① 면 직렬 시트 저항의 출판 선례 (형식만)** — Eq. S3 `(0.5/κ_a + 0.5/κ_b + R_int/dx)⁻¹` (`litdb-canon:ketter2025_resistor_network_models_predict_transport_properties` §4-1 · §7-6).
+- **가져오지 않는 것** — ① 값 2 × 10⁻⁶ m² K W⁻¹ (열 채널 · 경험적으로 고른 값 · 해상도 의존) ② 전하 채널 R_int (그 논문 밖) · 우리가 더한 같은 상 다른 입자 면 (AM–AM) · 계단 면적 보정 (CNC 법칙 r·N_ref·h²/A) = 문헌 없음 · 모형 내부값 (자세히 = `docs/reviews/codex_rint2_rr_round2_request_20261103.md` §7).
