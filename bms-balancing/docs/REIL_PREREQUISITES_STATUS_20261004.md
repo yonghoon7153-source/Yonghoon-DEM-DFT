@@ -2465,3 +2465,37 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
     같은 노드 46) · 공개 보강 (§8 의 5 · 19–21).
   - 재검토 발송문 `docs/REIL_C4E_E1_0B_PREREVIEW_SEND_v2_20261030.md` (`e58ac94e7d02a290afb3504a7939e1b3f80e713af62fcaf7d0feb64faf17ba7f` · 7,582 B · 질문 3).
 - **다음:** 재검토 발송 (사용자 결정) → 수용 → 사용자의 E1-0b 한정 승인 → E1-0b → 결과 검토 → E1-1–3 승인 요청. 이 기록은 어느 단계의 실행 승인도 아니다.
+
+## §90 C4-E · E1-0b v2 사전 재검토 회신 접수 — E1_0B_N1 정적 종결 · 새 차단 0 · E1-0b 한정 사용자 승인 단계로 넘어갈 수 있음 · 실행 승인 아님 (2026-11-03 KST · 덧붙임 — 위 §0–§89 는 그대로)
+
+- **회신 (2026-11-03):** 사용자가 §89 의 재검토 발송문 (`e58ac94e…`) 을 Codex 에 보냈고, 회신 ZIP · 짧은 회신 본문 · 영수증 · 포장 반환 전사를 대화로 전달했다. 고정
+  HEAD `421d746e3676f7444fbf18355aecbf8d2da8bcf3` (검토 종료 때 브랜치도 같은 커밋).
+- **보존:** `reviews/review_reil_c4e_e1_0b_v2_prereview_20261103/REIL_C4E_E1_0B_V2_PREREVIEW_20261103.zip` (1,465,467 B · sha256
+  `c3d3399b0268abdfb1d7f4d4497fc36d6207b658f4d813f1d4c61f860ebb8537` = 영수증). 규칙 `cd56cd33` → 보존 `1823d87f`.
+  - `originals/` 49 (경로 이탈 · 링크 0) · PACKAGE_MANIFEST (`cc74a3af…` · 10,457 B) 48/48 (목록 밖 없음) · blob 50/50 · 비밀 검사 50 파일 0 건.
+  - `source/` 6 · `basis/unchanged_at_pin/` 16 · `basis/attachments/` 2 = `421d746e` 의 blob. 첨부 승인 요청은 사용자 쪽에서 이름이 `… (1).md` 로 바뀌었고
+    바이트는 같다. `basis/prior_review/` 7 = §88 보존본 (ZIP · originals) 과 같은 바이트. 합계 31/31.
+  - 짧은 회신 `CODEX_REPLY_KO.txt` = 대화에 붙인 본문 (눈으로 대조). 검토자 도구 셋 (`capture_decode.py` · `package_review.py` · `static_audit_data.py`) 은
+    실행하지 않았다.
+- **판정 (`REVIEW_DECISION.json`):** `E1_0B_PREREVIEW_ACCEPTED_FOR_USER_APPROVAL_NOT_EXECUTION`.
+  - Q1 `STATICALLY_CLOSED_FOR_PINNED_PRODUCER_PATHS` — l23 (raw 출처 관측 성공 · 심은 키 / URL 의 정확한 문제 개수) · l29 (정상 실행 meta · 단일 URL
+    불일치) · l30 (meta 읽기 전 반환 0 / 1 · 정상 실행 · 사후 상태) 이 §88 의 반례 셋을 모두 막는다.
+  - Q2 `NO_STATIC_CONTRADICTION_FOUND_EXPECTED_PATHS_NOT_RUN` — v5 의 알려진 실패 · v6 의 정상 / 거부 경로가 원인 확인을 통과하는 데 정적 모순 없음.
+    실제 RED / GREEN 결과의 확정 · 임의 meta 의 진위 보증은 아니다.
+  - Q3 `READY_FOR_USER_E1_0B_ONLY_APPROVAL_CHOICE` — 승인 요청 `38960400…` (57,744 B) · 대조 v7 `3f9d2f25…` · 실행기 v7 `c5aab7c3…` · 단계별 봉인 15 행
+    일치 · 숫자 정정 (`00_start` sha 10 · 실행기 대조 같은 노드 46) 확인.
+  - 새 차단 0 · 문서 정정 요구 0. 나머지 여섯 RED 의 원인 결속도 후퇴하지 않았다 (회신의 좁은 대조).
+- **회신이 남긴 한계 (`limits` · 공개로 유지):**
+  - 원인 확인의 충분성은 고정 생산자 코드 · fixture 에 묶여 있다 — 임의로 만든 meta 나 raw 기록의 진위 인증이 아니다.
+  - l30 의 반환 1 분기는 문자열 포함으로 거른다 — 고정 경로에서 다른 실패가 허용 문제로 바뀌어 통과하는 구체 경로는 찾지 못했다.
+  - 실제 환경의 동작 · RED / GREEN 결과 · 정리는 관측되지 않았다. GitHub 의 불변 blob 과 로컬 사본만 대조했다 (원격 작업 트리 측정 아님).
+- **실행할 때의 조건 (회신 · 요청서 §4 그대로):** 순서 · 고정 바이트 · 예산 · 중지 기준을 바꾸지 않는다. RED 는 정확한 9 FAILED / 24 PASSED 와 원인 /
+  최종 예외를, GREEN 은 정확한 71 PASSED 와 외곽 실행 · 정리 기록을 같이 판정한다. `UNEXPECTED_RED_CAUSE` 나 그 밖 예상 밖 결과에서는 다음 시험 단계로
+  가지 않고, 수정 · 재시험 · 다른 근거로의 대체를 하지 않는다. RED 120 s · GREEN 600 s · 외곽 정리 공통 기한 15 s · 대조 안 launcher 정리 20 s 는 서로
+  다른 관측 경계이고, a → e 끝 기록의 2 h 는 그 뒤 커밋 · push · 문서 시간을 포함하지 않는다. 기한 전에 시작한 관측이 멈추면 유한 반환을 보장할 수 없다는
+  공개도 그대로다.
+- **승인 전 확인 (파일 존재만 · 실행 0):** `/usr/bin/python3.11` · `SP/reil_c4env/venv/bin/python` · `SP/reil_c4env/pytest_t` 가 있고, 작업 폴더
+  `SP/c4e1_0b_steps` 와 증거 폴더 `evidence/reil_c4e1_0b_20261103` 은 없다. 디스크 가용 약 26 GB. 저장소 HEAD = 원격.
+- **유지:** FUTURE-01 기능 종결은 E1-0b 실제 결과 검토까지 보류 · E1-0 결과 수용 · 절차 이탈 `E1_0_N1` · E1-1–3 · 실제 자료 fetch / run · COMSOL 미승인.
+- **다음:** 사용자의 E1-0b 한정 승인 (명시적으로). 승인하시면 승인 기록 § 를 먼저 남기고 요청서 §4 의 a–e 를 그대로 한다. 이 기록은 E1-0b 의 실행 승인이
+  아니다.
