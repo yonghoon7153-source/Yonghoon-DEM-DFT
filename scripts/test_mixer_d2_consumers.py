@@ -250,6 +250,8 @@ MXD2R04_SAME_CLASS = {
                                         'fix mvBf all move/mesh mesh Baffle rotate origin 0 0 0 axis 1. 0. 0. period 0.782508', 1)),
                     _tok(1, 'Baffle', 'walls')),
     'neighbor_garbage_skin': (lambda s: re.sub(r'(?m)^(neighbor\s+)\S+ bin$', r'\g<1>7.57e-05x bin', s), 'neighbor skin'),
+    # 사전 공격 변이 M30 생존 (11-03) — 마지막 run 뒤에 붙인 명령은 차례 대조 (zip) 가 못 본다 → 개수 대조를 시험에 묶는다
+    'command_appended_at_end': (lambda s: s + 'compute kx all ke\n', 'command count'),
 }
 #: MXD2R-04 문자 꼴 — 우리 파서와 LIGGGHTS 가 다른 토큰을 읽을 수 있거나 (주석 끝 '&' + 유니코드 공백 · 주석 안 NUL · 따옴표 · $) 같은 토큰을
 #:   다른 글자로 쓴 꼴 (탭 · NBSP · 전각 공백 · 폭 없는 공백 · 이음 꼴 · 끝 줄바꿈).  고치기 전 세 소비자 PASS.
@@ -271,7 +273,46 @@ MXD2R04_PARSER = {
     'missing_final_newline': (lambda s: s[:-1], _EOL),
     'dump_modify_quoted_format': (_rep('\n# ① 채우고 정착', '\ndump_modify dmp format "%d %d %g %g %g %g %g %g %g %g %g %g"\n# ① 채우고 정착'),
                                   _ASCII),
+    # 사전 공격 변이 M25 생존 (11-03) — 주석 줄 끝 ' &' (두 파서 모두 다음 줄을 주석으로 삼킨다 · 생성기 꼴 밖) → 주석 줄 이음 금지를 묶는다
+    'comment_continuation_ascii': (_rep('neigh_modify    delay 0\n', 'neigh_modify    delay 0\n# note &\nneigh_modify exclude type 3 3\n'), _CONT),
 }
+
+
+def _set_meta(path, value):
+    """메타 한 칸 고치기 (value = 상수 또는 (meta, deck) → 값)."""
+    def edit(meta, deck):
+        node = meta
+        for part in path[:-1]:
+            node = node[part]
+        node[path[-1]] = value(meta, deck) if callable(value) else value
+    return edit
+
+
+def _seed_edit(new_seed):
+    """첫 삽입 시드 (덱) + 메타 seed 를 같이 — 소수 · 상한 규칙만 남는 차이."""
+    return (lambda s: s.replace('insert/pack seed 32452843 ', f'insert/pack seed {new_seed} ', 1)), _set_meta(('seed',), new_seed)
+
+
+def _steps_edit(fill_delta=0, dump_new=None, restart_new=None):
+    """정착 step · dump · restart 간격을 덱에서 바꾸고 메타의 시간 칸 (steps · physical_s · t0) 을 전부 맞춘다."""
+    def deck(s):
+        if fill_delta:
+            fill = int(re.search(r'(?m)^run (\d+)\nunfix', s).group(1))
+            s = s.replace(f'run {fill}\n', f'run {fill + fill_delta}\n')
+        if dump_new:
+            s = re.sub(r'(?m)^(dump dmp all custom )\d+', r'\g<1>' + str(dump_new), s)
+        if restart_new:
+            s = re.sub(r'(?m)^restart \d+ ', f'restart {restart_new} ', s)
+        return s
+
+    def meta_edit(meta, deck_text):
+        steps, physical, dt = meta['steps'], meta['physical_s'], meta['dt']['deck_s']
+        steps['fill'] += fill_delta
+        steps['dump_every'] = dump_new or steps['dump_every']
+        steps['restart_every'] = restart_new or steps['restart_every']
+        steps['t0_planned'] = (2 * steps['fill'] // steps['dump_every']) * steps['dump_every']
+        physical.update(settle=2 * steps['fill'] * dt, dump_interval=steps['dump_every'] * dt, t0_planned=steps['t0_planned'] * dt)
+    return deck, meta_edit
 #: 실제 파일 바이트로도 보는 문자 꼴 (CLI 셋)
 MXD2R04_PARSER_CLI = ('tab_separator', 'nul_in_comment_before_rotation', 'comment_continuation_nbsp', 'missing_final_newline')
 
@@ -681,6 +722,32 @@ class D2Consumers(unittest.TestCase):
                     with self.subTest(api=key):
                         self.assert_fail(result)
                         self.assertTrue(any(_tok(1, new, old) in f for f in result['failures']), result['failures'])
+
+    def test_mxd2r04_metadata_coordinated_rules(self):
+        """MXD2R-04 — 메타까지 같이 바꾼 덱 (해시 재결합 + 메타가 덱과 같은 말 → 메타 결합으로는 못 잡는다): 합성수 시드 · 2^31−1 넘는 소수
+        시드 · k 배가 아닌 정착 step · 규칙 밖 dump · restart 간격 · 전 정밀도 형식 메타 ↔ 생성기 (사전 공격 변이 M28 · M32–M35 생존 → 묶음)."""
+        cases = {
+            'seed_composite': ({}, *_seed_edit(32452845), 'insertion seed must be a prime'),
+            'seed_prime_over_int32': ({}, *_seed_edit(gen._next_prime(2 ** 31)), 'insertion seed must be a prime'),
+            'settle_not_multiple_of_k': (dict(dt_factor=.5), *_steps_edit(fill_delta=1), 'k × the generator plan'),
+            'dump_interval_off_rule': ({}, *_steps_edit(dump_new=33000), _tok(4, '33000', '32976')),
+            'restart_interval_off_rule': ({}, *_steps_edit(restart_new=150000), _tok(1, '150000', '200000')),
+            'dump_format_meta_only': (dict(dump_full_precision=True), lambda s: s,
+                                      _set_meta(('dump_modify_format',), '%d %d' + ' %.16g' * 10),
+                                      'metadata dump_modify_format'),
+        }
+        for name, (kw, deck_edit, meta_edit, reason) in cases.items():
+            with self.subTest(case=name):
+                a, am, _ = fixture(**kw); b, bm, _ = fixture(coated=True, **kw)
+                aa, bb = deck_edit(a), deck_edit(b)
+                ma, mb = rebound(aa, am), rebound(bb, bm)
+                meta_edit(ma, aa); meta_edit(mb, bb)
+                self.assertNotEqual((aa, ma), (a, am))
+                for key, result in {'readback': rb.read_d2(aa, ma), 'pair': dd.diff_d2_decks(aa, bb, ma, mb),
+                                    'plan': smoke.d2_plan_check(aa, ma)}.items():
+                    with self.subTest(api=key):
+                        self.assert_fail(result)
+                        self.assertTrue(any(reason in f for f in result['failures']), (key, reason, result['failures']))
 
     def test_mxd2r04_positive_generator_options(self):
         """양성 보존 — 생성기 꼴 엄격이 생성기 출력 (전 정밀도 덤프 · dt/3 · 다른 Froude · 다른 소수 시드 · 균일 · 층상 · 2 · 3 상) 을 받는다."""
