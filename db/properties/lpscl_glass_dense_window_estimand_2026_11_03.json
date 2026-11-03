@@ -247,7 +247,9 @@
    "gabia"
   ],
   "stage1_cap_gpu_h": 230.0,
-  "⚠_개정_DG": "2026-11-03 회신 DG (결과 0 건에서): composition · software_required · thermo_required_columns · first_seed · stage1_cap_gpu_h 추가 — 소비자 (stage1_verdict · stage1_summary) 와 러너가 이 값을 읽는다 · 러너의 --cap_h 는 없앴다 (상한은 카드 값만 · 바꾸려면 결정)"
+  "⚠_개정_DG": "2026-11-03 회신 DG (결과 0 건에서): composition · software_required · thermo_required_columns · first_seed · stage1_cap_gpu_h 추가 — 소비자 (stage1_verdict · stage1_summary) 와 러너가 이 값을 읽는다 · 러너의 --cap_h 는 없앴다 (상한은 카드 값만 · 바꾸려면 결정)",
+  "stage1_max_interrupt_retries_per_seed": 1,
+  "⚠_개정_정전_복구": "2026-11-03 (결과 0 건 · 사용자 '2번으로 가자'): stage1_max_interrupt_retries_per_seed — 판정 없이 끊긴 런 (결과 파일 없음) 을 그 run_id 에 묶인 STOP 확인으로 시드마다 이 횟수까지만 다시 돌린다 · pass · fail 이 난 시드는 다시 안 돌린다"
  },
  "개정_DF_2026_11_03": {
   "결과_전": "이 판도 결과 0 건에서 고쳤다 (새 밀도 유리 없음)",
@@ -274,5 +276,13 @@
   "P1-8": "§1b 기계 2_3단계_MD · §4 S2 측정_가능 — 2 단계는 stage1_summary 의 두 시드와 그 순서의 기계",
   "P2": "옛 비용 현재형 문구 정리 · NVT plan 의 final_relax 설명 (고정 밀도 셀) · 실행 명령은 기계값에서 (러너 --print_cmd · 1.91347)",
   "기계값_추가": "composition · software_required · thermo_required_columns · first_seed · stage1_cap_gpu_h (기계_판독_값 ⚠_개정_DG)"
+ },
+ "개정_정전_복구_2026_11_03": {
+  "결과_전": "결과 0 건 (1 단계 담금질 안 띄움) · 사용자 2026-11-03 '2번으로 가자' (위임 10-30 트랙 · 선택지는 이 세션 대화)",
+  "왜": "Codex DI 고침 뒤 규칙으로는 kgy 정전이 한 번만 나도 1 단계가 막힌다 — 끊긴 런은 그 시드를 다시 못 돌리고 (판정이 없어 'invalid' 재시도 대상이 아님) · 재부팅을 넘긴 고아 런은 비용 미확정 → 묶음 통과 불가. kgy 는 10 월에 정전이 두 번 (10-16 · 10-30) · 1 단계는 6–9 일",
+  "끊긴_런_재시도": "판정이 없고 (장부 · 보존 폴더 둘 다) 결과 파일 (result.json · final.xyz) 이 없고 비용이 확정된 이전 실행만 · 그 run_id 에 묶여 확인 (--ack_stop) 된 STOP (interrupted · abnormal · resume · cap) 이 있어야 · 시드마다 기계값 stage1_max_interrupt_retries_per_seed (1) 번까지 · 앞 런 비용은 장부에 남는다 · pass · fail 이 난 시드는 다시 안 돌린다 (카드: 미통과 시드는 기록 · 제외) · 끝까지 돈 런 (결과 파일 있음) 은 재시도가 아니라 판정 (--stage1_verdict)",
+  "재부팅_고아_런_비용": "자동으로는 미확정 그대로 (Codex DI: 확인 안 된 시각으로 상한을 확정하지 않는다) · 사람이 근거 (러너가 모아 보여 줌: 마지막 heartbeat = 하한 · 새 부팅 시각 · 시작 시각 · 폴더 파일 시각) 를 보고 `li2s2_stage1_runner.py --attest_cost <run_id> --attest_hours H --attest_note '근거'` 로 상한을 적는다 — 하한보다 작으면 거부 · 장부에 cost_basis attested_upper_bound + attestation (근거 · 시각) · 묶음 판정이 근거 유무 · 하한을 다시 본다",
+  "⚠_고친_것": "처음 제안의 '이전 부팅 마지막 시스템 로그 시각 = 상한' 은 틀렸다 — 정전 때 디스크에 안 쓴 마지막 로그가 사라져 그 시각은 하한이다 (2026-11-03 설계 중 발견)",
+  "소비자_검사": "ledger_check — 과학적 판정 뒤 같은 시드 실행 · 끊긴 런 재시도 > 한도 · retry_of 가 같은 시드 앞선 실행이 아님 · 증언 상한에 근거 없음 · 하한 미만 → 무효"
  }
 }

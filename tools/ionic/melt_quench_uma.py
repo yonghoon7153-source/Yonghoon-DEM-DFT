@@ -533,7 +533,7 @@ ATTEMPT_NAME = "stage1_attempt.json"  # 러너가 실행 전에 쓰는 식별 �
 LEDGER_NAME = "stage1_ledger.json"   # li2s2_stage1_runner.py 가 쓰는 비용 장부 — stage1_summary 가 상한을 여기서 다시 잰다
 RUN_ID_RE = re.compile(r"^[0-9a-f]{32}$")   # 회신 DH P0-2 — 러너가 담금질마다 주는 실행 식별자 (plan.json run_id · 장부 run_id)
 VERDICT_HISTORY = "stage1_verdict_history.jsonl"   # 회신 DH P1-5 — 판정을 덮어쓰기 전 이전 판정 전체 · 지문 변화 · 사유
-COST_BASES = ("measured", "upper_bound")    # 장부 런 비용 근거 — 측정 (러너가 끝까지 잼) · 보수 상한 (고아 런: 발견 시각 − 시작)
+COST_BASES = ("measured", "upper_bound", "attested_upper_bound")    # 장부 런 비용 근거 — 측정 · 보수 상한 · 사람이 근거를 보고 적은 상한 (재부팅 고아 런 · --attest_cost) —  시작)
 
 
 def _fin(x):
@@ -639,6 +639,9 @@ def validate_li2s2_values(v):
         cap = v.get("stage1_cap_gpu_h")
         if not (_fin(cap) and float(cap) > 0):
             bad.append(f"stage1_cap_gpu_h {cap!r}")
+        mr = v.get("stage1_max_interrupt_retries_per_seed")
+        if isinstance(mr, bool) or not isinstance(mr, int) or mr < 0:
+            bad.append(f"stage1_max_interrupt_retries_per_seed {mr!r} (0 이상 정수 — 끊긴 런 재시도 한도 · 정전 복구 개정)")
     except (KeyError, TypeError, ValueError, AttributeError) as e:
         bad.append(f"꼴 오류 {type(e).__name__}: {e}")
     return bad
@@ -1199,7 +1202,7 @@ def ledger_check(out_root, verdicts, values):
     p = pathlib.Path(out_root) / LEDGER_NAME
     if not p.is_file():
         return None
-    invalid, pending, by_id = [], [], {}
+    invalid, pending, by_id, attested = [], [], {}, []
     try:
         led = json.loads(p.read_text(encoding="utf-8"))
         runs = led.get("runs")
@@ -1225,7 +1228,16 @@ def ledger_check(out_root, verdicts, values):
         if not (_fin(w) and float(w) >= 0.0):
             invalid.append(f"{key} 런 비용 {w!r} — 유한한 비음수가 아니다"); continue
         if r.get("cost_basis") not in COST_BASES:
-            invalid.append(f"{key} 런 비용 근거 {r.get('cost_basis')!r} — 측정 · 보수 상한이 아니면 확정 비용이 아니다"); continue
+            invalid.append(f"{key} 런 비용 근거 {r.get('cost_basis')!r} — 측정 · 보수 상한 · 증언 상한이 아니면 확정 비용이 아니다"); continue
+        if r.get("cost_basis") == "attested_upper_bound":       # 정전 복구 개정 — 사람이 근거를 보고 적은 상한 (하한 이상 · 근거 글 필수)
+            at = r.get("attestation")
+            lo = r.get("wall_h_lower")
+            if not (isinstance(at, dict) and isinstance(at.get("note"), str) and at["note"].strip()
+                    and isinstance(at.get("by"), str) and at["by"].strip()):
+                invalid.append(f"{key} 런 증언 상한에 근거 (note · by) 가 없다"); continue
+            if _fin(lo) and float(w) < float(lo):
+                invalid.append(f"{key} 런 증언 상한 {w} h < 하한 {lo} h"); continue
+            attested.append(f"{key} {float(w):g} h ({at['note'][:60]})")
         tot += float(w)
     inventory, inventory_bad = attempt_inventory(out_root)
     invalid.extend(inventory_bad)
@@ -1235,6 +1247,26 @@ def ledger_check(out_root, verdicts, values):
             invalid.append(f"보존 포함 실행 {rid} ({rec['path']}) 이 장부에 없다")
         elif (r.get("system"), r.get("seed")) != (rec["system"], rec["seed"]):
             invalid.append(f"실행 {rid} 의 산출물 · 장부 계/시드가 다름")
+    # ⭐ 정전 복구 개정 — 시드마다 실행 이력: 과학적 판정 (pass · fail) 뒤의 같은 시드 실행은 무효 · 끊긴 런 재시도는 카드 한도 이하 ·
+    #   retry_of 는 같은 시드의 앞선 실행이어야 한다 (러너가 막지만 소비자도 다시 본다)
+    max_int = values.get("stage1_max_interrupt_retries_per_seed")
+    seen = {}
+    for r in runs:
+        if not isinstance(r, dict):
+            continue
+        k = (r.get("system"), r.get("seed"))
+        prev = seen.setdefault(k, [])
+        if any(x.get("verdict") in ("pass", "fail") for x in prev):
+            invalid.append(f"{k[0]}{k[1]}: 과학적 판정 ({[x.get('verdict') for x in prev]}) 뒤에 같은 시드를 다시 돌렸다")
+        ro = r.get("retry_of")
+        if ro is not None and ro not in {x.get("run_id") for x in prev}:
+            invalid.append(f"{k[0]}{k[1]}: retry_of {str(ro)[:8]} 가 같은 시드의 앞선 실행이 아니다")
+        prev.append(r)
+    if isinstance(max_int, int):
+        for k, rr_ in seen.items():
+            n = sum(1 for x in rr_ if x.get("retry_kind") == "interrupted")
+            if n > max_int:
+                invalid.append(f"{k[0]}{k[1]}: 끊긴 런 재시도 {n} 번 > 카드 한도 {max_int}")
     # 실패를 보존 폴더로 옮겨 새 실행으로 대체해도 과학적 탈락은 사라지지 않는다.
     for r in runs:
         if not isinstance(r, dict) or r.get("verdict") != "fail":
@@ -1255,7 +1287,7 @@ def ledger_check(out_root, verdicts, values):
         elif (r.get("system"), r.get("seed")) != (s, sd):
             invalid.append(f"{s}{sd} 판정의 run_id {rid[:8]} 는 장부에서 {r.get('system')}{r.get('seed')} 런이다")
     return {"total_h": tot, "cap_h": float(values["stage1_cap_gpu_h"]), "invalid": invalid, "pending": pending,
-            "runs": len(runs), "source": str(p)}
+            "runs": len(runs), "attested": attested, "source": str(p)}
 
 
 def stage1_summary(out_root, *, values=None, card=LI2S2_CARD, log=print):
@@ -2477,7 +2509,7 @@ def _selftest():
            "composition": {"A": {"Cl": 12, "Li": 48, "P": 12, "S": 48}, "B": {"Li": 45, "P": 15, "S": 60}, "T": {"P": 4, "S": 4}},
            "software_required": {"model": "uma-s-1p1", "task": "omat", "versions_present": ["fairchem-core", "torch", "ase"]},
            "thermo_required_columns": ["t_ps", "T_K", "T_set_K", "density_g_cm3", "P_GPa", "P_virial_GPa"],
-           "first_seed": 11, "stage1_cap_gpu_h": 230.0}
+           "first_seed": 11, "stage1_cap_gpu_h": 230.0, "stage1_max_interrupt_retries_per_seed": 1}
     VAL["melt_window"]["estimator"] = MELT_WINDOW_ESTIMATOR
     rng = np.random.default_rng(7); L = 12.0
     base = rng.uniform(1, L - 1, (8, 3)); symW = ["P"] * 4 + ["S"] * 4
@@ -2658,7 +2690,8 @@ def _selftest():
         "⛔음성 DH P0-2: 폴더 seed12 에 plan 시드 11 → 무효 · run_id 없음 → 무효 · 폴더 이름 꼴 아님 → 무효 (맞으면 통과)")
     chk(combine_stage1(plan_ok, VAL, g_ok, m_ok, s_ok, f_ok, checks={"identity": ic_cp})["status"] == "invalid",
         "⛔음성 DH P0-2: 시드 판정이 실행 식별 불일치를 무효로")
-    for nm_, mut in (("first_seed 12 (seeds[0] 아님)", {"first_seed": 12}), ("상한 NaN", {"stage1_cap_gpu_h": float("nan")}),
+    for nm_, mut in (("재시도 한도 -1", {"stage1_max_interrupt_retries_per_seed": -1}), ("재시도 한도 없음", {"stage1_max_interrupt_retries_per_seed": None}),
+                     ("first_seed 12 (seeds[0] 아님)", {"first_seed": 12}), ("상한 NaN", {"stage1_cap_gpu_h": float("nan")}),
                      ("조성 합 ≠ n_atoms", {"composition": {"A": {"Li": 48}, "B": VAL["composition"]["B"]}}),
                      ("software_required 없음", {"software_required": None}), ("밀도 NaN", {"fix_density_g_cm3": {"A": float("nan"), "B": 1.88}}),
                      ("압력 열 목록에 virial 없음", {"thermo_required_columns": ["t_ps", "T_set_K", "density_g_cm3", "P_GPa"]})):
