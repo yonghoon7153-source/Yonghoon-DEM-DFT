@@ -85,5 +85,11 @@
   "2×2×2_대조_런": "10-09~10 kgy GPU 에서 2×2×2 대조 NEB (이 카드 밖 · 판정에 안 씀) — db/properties/li2s_neb_cellconv_estimand_2026_10_09.json · 실행 기록 li2s_neb_cellconv_runlog_2026_10_09.json · 원자료 db/raw/li2s_neb_cellconv_2026_10_09/",
   "결정_등록": "이 카드의 C1–C3 를 D-2026-10-09-li2s-neb-cellconv (proposed) 가 등록한다 — 10-09 판의 0.05 eV 는 이 카드를 못 보고 쓴 것이라 철회했다",
   "변경_없음": "C1 30 meV · C2 · C3 · §3b 결론 그대로"
+ },
+ "3d_판독_2026_11_03": {
+  "결과": "4×4×4 0.29213 eV 대 3×3×3 0.305025 eV · ΔEa -12.9 meV → C1 통과 (30 meV 안) · G1–G5 통과 (G4 해석 2 건)",
+  "기록": "db/properties/li2s_neb_cellconv_runlog_2026_10_09.json 결과_4x4x4_2026_11_03 · sei_neb.json v2/li2s cell_convergence_2026_11_03",
+  "승격": "D-2026-11-03-li2s-neb-cellconv-promote (proposed · 사용자 비준 대기) — 카드 C1 '승격 자체는 1저자 비준' 그대로",
+  "변경_없음": "C1 30 meV · C2 · C3 · §5 그대로 — 이 덧붙임은 판독 위치만 적는다"
  }
 }

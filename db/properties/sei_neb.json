@@ -182,7 +182,7 @@
       "blocking_checks": [],
       "citable": false,
       "root": "v2",
-      "cell_convergence_status": "untested",
+      "cell_convergence_status": "converged_3x3x3_vs_4x4x4",
       "absolute_citable": false,
       "scientific_status": "provisional_single_cell",
       "allowed_statement": "For the Li2S antifluorite 3x3x3 model, the charged-vacancy (V_Li-, jellium) nearest-neighbour c->c CI-NEB barrier is 0.305 eV under this finite-cell protocol.",
@@ -198,7 +198,27 @@
       "citable_downgraded_by": "scientific_status=provisional_single_cell (사람 판단 우선)",
       "why_not_absolute": "① 셀 수렴 미시험 — 다른 셀에서 재본 적이 없다. ② 하전 공공(q=-1) + jellium 배경이라 유한셀 정전 보정이 근사다. ③ λ₁ 12.100 Å 통과는 **한 셀의 최소 요건**이지 수렴 증거가 아니다.",
       "hop_note": "루트 라벨 v2 의 'c→b 진단용' 배너는 li3nd 용이다. Li2S 반형석은 Li 궤도가 8c 하나뿐이라(li_orbits.n_li_orbits=1) 이 홉은 c→c 최근접(d=2.8526 Å) — 진단용이 아니라 실제 전도 홉이다.",
-      "preserved_from_previous_db": true
+      "preserved_from_previous_db": true,
+      "cell_convergence_2026_11_03": {
+        "verdict": "C1 pass — |Ea(4x4x4) − Ea(3x3x3)| = 12.9 meV <= 30 meV (pre-registered, db/properties/li2s_cellconv_card_2026_09_01.json)",
+        "Ea_effective_eV_4x4x4": 0.29213,
+        "Ea_forward_eV_4x4x4": 0.29213,
+        "Ea_backward_eV_4x4x4": 0.29213,
+        "delta_Ea_eV": -0.012895,
+        "supercell_4x4x4": [
+          4,
+          4,
+          4
+        ],
+        "min_cell_A_4x4x4": 16.14,
+        "protocol_hash_4x4x4": "e78a3e9a5e3a",
+        "status_4x4x4": "converged",
+        "gates": "G1–G5 pass (G4 with two stated interpretations: endpoints_relaxed flag of the reference build; ase_version of a reference built on kgy — lambda1 scales 4/3 exactly)",
+        "raw": "db/raw/li2s_neb_cellconv_2026_10_09/c444/ (commit 72850282)",
+        "record": "db/properties/li2s_neb_cellconv_runlog_2026_10_09.json → 결과_4x4x4_2026_11_03",
+        "read_on": "2026-11-03"
+      },
+      "absolute_citable_proposal": "D-2026-11-03-li2s-neb-cellconv-promote (proposed) — absolute_citable stays false until the user ratifies; the file-level BLOCKED hazard (HZ-sei-neb-retracted) stays until then"
     },
     "v2/li3nd": {
       "tag": "li3nd",
