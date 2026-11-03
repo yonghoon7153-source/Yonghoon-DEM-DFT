@@ -130,7 +130,7 @@
    "⛔": "P1 의 에너지 · 힘은 값이 아니다 (electron_maxstep 3 · disk_io none)"
   },
   "풀기_규칙": "붙든 뒤 어떤 식으로 끝나든 (성공 · P1 · 비용 · 사슬 실패 · 신호) pause_relax_at_bfgs.sh --release 를 딱 한 번 · 실패하면 종료 40 + 사람이 풀 명령을 찍는다 · SIGKILL 만 예외",
-  "상태": "▶ 사슬 실행 중 — 10-30 13:27:50 P1 david 통과 → 10-31 15:25:13 G1 ok (끝점 이완 둘 끝) → 10-31 15:25:18 NEB no-CI 시작 (손잡이 david · 사람 손 없음 · 끝나면 탄성 러너를 푼다 → 12_m)",
+  "상태": "✅ 사슬 끝 — 11-03 08:01:03 '■ DONE G2b ok' (CI NEB 수렴 · 12 반복) → 08:01:04 '✅ 탄성 러너 풀림 — 다음 탄성 점으로 잇는다 (rc 0)' · 판독 = 회수 뒤 카드 C1 (|Ea(4×4×4) − Ea(3×3×3)| ≤ 30 meV) · G3–G5 (10-09 카드 §5) — 값은 판독 전이라 기록에 옮기지 않는다",
   "관측": {
    "10_30_06:50:55_시작": "tmux li2s444 · chain.log '▶ 시작' · HEAD 09c7f83b5 (push 된 09c7f83b 와 같음 · gabia 는 짧은 해시 9 자) · POINT=strain_12_p",
    "10_30_06:51:57_점검": "통과 — PW /data/apps/qe-7.4.1-gpu/bin/pw.x · NEB /data/apps/qe-7.4.1-gpu/bin/neb.x · MPIRUN nvhpc (GPU 빌드)",
@@ -150,6 +150,16 @@
     "탄성_러너": "PID 971786 T+ · 경과 6-11:25:11 — 붙든 채 정상 (Li₂S 사슬이 끝나면 trap 이 푼다 → 12_m)",
     "끝_어림_메모": "11-10 오전 어림 (반복 3,275) 은 끝점이 어림보다 빨라서 늦은 쪽일 수 있다 — NEB 반복 수는 neb.out 을 봐야 안다 (새 어림은 내지 않는다)",
     "by": "agent · 2026-11-02"
+   },
+   "11_03_10:38_사용자_watch": {
+    "출처": "사용자 붙여넣기 2026-11-03 10:38:57 KST (gabia watch · 읽기만)",
+    "사슬": "chain.log '[2026-11-03 08:01:03] ■ DONE G2b ok' · '[08:01:04] ✅ 탄성 러너 풀림 — 다음 탄성 점으로 잇는다 (이 스크립트 rc 0)'",
+    "끝점": "ep_initial · ep_final 둘 다 bfgs 15 · final 1 (Begin final coordinates)",
+    "NEB": "neb.out 'neb: convergence achieved in 12 iterations' (CI 단계) — 화면에 장벽 값은 안 나왔다 (watch 가 activation 줄을 안 찍음)",
+    "걸린_시간": "P1 10-30 13:27:50 → 끝 11-03 08:01:03 ≈ 3.8 일 (설계 어림 10.86 일보다 짧다 · 끝점 ≈ 26 h · NEB no-CI + CI ≈ 2.7 일)",
+    "탄성": "러너 971786 'S+' 경과 7-13:01:18 (풀림 → 12_m 진행으로 보임) · GPU 41,124 MiB · 100 %",
+    "다음": "gabia 회수 블록 (neb.out · neb.dat · path · 끝점 relax · chain 로그 → db/raw/li2s_neb_cellconv_2026_10_09/c444/) → collect_neb · 카드 C1 · G3–G5 판독",
+    "by": "agent · 2026-11-03"
    }
   }
  }
