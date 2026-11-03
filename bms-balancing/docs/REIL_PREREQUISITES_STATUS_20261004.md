@@ -2574,3 +2574,49 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   3. l33 의 결함은 대조 (시험) 쪽이다. launcher v5 · v6 의 바이트와 판단은 바뀌지 않았다.
 - **다음:** 결과 검토 발송문 `docs/REIL_C4E1_0B_RESULT_REVIEW_SEND_20261103.md` → 사용자 발송 결정 → 회신 → (정정이 요구되면) l33 정정 범위안 → 사용자 채택 →
   … 각각 별도 사용자 결정이다. 이 기록은 어느 단계의 실행 승인도 아니다.
+
+## §93 C4-E · E1-0b 결과 검토 회신 접수 — 멈춘 처리 수용 · E1-0b 미완 · 필수 정정 E1_0B_RESULT_N1 (l33 의 extra 누락) · 재실행 승인 아님 (2026-11-03 KST · 덧붙임 — 위 §0–§92 는 그대로)
+
+- **회신 (2026-11-03):** 사용자가 §92 의 결과 검토 발송문 (`50715fb8…`) 을 Codex 에 보냈고, 회신 ZIP · 영수증 · 포장 반환 전사를 대화로 전달했다. 고정 HEAD
+  `a38c878ff0055f588143288707d8b5f46646bf63` · 실행 HEAD `69dacaab`.
+- **보존:** `reviews/review_reil_c4e1_0b_result_20261103/REIL_C4E1_0B_RESULT_REVIEW_20261103.zip` (938,261 B · sha256
+  `98a88abb95b572883b54484a315671cae9a3addafc2f3e815a1dcc0a1eaa29d0` = 영수증). 규칙 `d89dfc8b` → 보존 `5ad08c28`.
+  - `originals/` 64 (경로 이탈 · 링크 0) · PACKAGE_MANIFEST (`51d5da14…` · 13,656 B) 63/63 (목록 밖 없음) · blob 65/65 · 비밀 검사 65 파일 0 건.
+  - `source/` 19 · `basis/unchanged_at_pin/` 16 · `input/` 발송문 1 = `a38c878f` 의 blob. `basis/prior_v1_review/` 3 · `prior_v2_review/` 4 = §88 · §90 보존본과 같은
+    바이트. 합계 43/43.
+  - 검토자 도구 넷 (`connect_basis.py` · `materialize_capture.py` · `package_review.py` · `review_red_artifacts.py`) 은 실행하지 않았다.
+- **판정 (`REVIEW_DECISION.json`):** `STOP_HANDLING_ACCEPTED_E1_0B_INCOMPLETE_TEST_CORRECTION_REQUIRED`.
+  - Q1 `RECORDED_STOP_HANDLING_CONFORMS_NO_SUBSTANTIVE_DEVIATION_FOUND` — 커밋 사슬 (e7d3d9fc → 2ad8cc2c → 69dacaab → 419c0652 → 7f73e640 → a38c878f · 인접
+    1 앞섬 / 0 뒤짐) · 승인 기록과 사전 봉인이 RED 시작보다 앞섬 · RED 뒤 launcher v5 그대로 · GREEN 자료 없음의 사유가 끝 기록에 있음 · 승인 범위 밖 수정 ·
+    자동 재시험 · GREEN 진행의 증거 없음. 예측 줄 숫자 (1063 / 1065) 의 차이 자체는 중지 사유가 아니다 (참고값) — 중지 사유는 최종 예외 · 메시지의 차이다.
+  - Q2 `L33_MISSING_FIXTURE_EXTRA_CONFIRMED_STATICALLY_FOR_V5_AND_V6` — l33 의 `post()` (1059–1061 줄) 가 `extra=t.extra` 를 넘기지 않아 기본값
+    `EXTRA_EXECUTED` 로 가짜 파일 둘을 대조. v5 `postcheck` (536 · 544–545 줄) · v6 (601 · 609–610 줄) 공통 · 생산 코드의 기본값 · 해시 검사를 완화할 이유 없음.
+    두 번째 문제의 완전한 문장은 pytest 출력에서 생략됐다 (소스로 추론 가능하나 관측한 것처럼 복원하지 않는다).
+  - Q3 `EIGHT_HISTORICAL_MATCHES_RETAINED_NEW_FULL_RED_REQUIRED_UNDER_NEXT_APPROVAL` — 여덟의 일치는 이번 v5 / v7 조합의 과거 증거로 보존한다. l23 은 첫
+    rewrite · l30 은 localtls 에서 멈췄고, l28 · l31 · l32 는 인터페이스 실패이며, 24 PASSED 도 v6 GREEN 을 대신하지 않는다. 다음 시도는 새로 봉인한 대조 ·
+    실행기 · 요청서로 33 개 전체 RED 를 다시 확인한다 — 과거 여덟과 새 l33 을 이어 붙여 gate 를 통과시키지 않는다.
+  - Q4 `NARROW_CORRECTION_SCOPE_THEN_LINKED_DRAFTS_SEALS_FRESH_PATHS_PREREVIEW_REAPPROVAL` — 정정 범위안 → (그 범위에서) 대조 v8 · 연동 봉인 · 승인 요청 갱신 →
+    사전 검토 → 사용자 E1-0b 재승인.
+- **E1_0B_RESULT_N1 (P2 · 시험 fixture · `tests/test_reil_c4e1_launch.py` 1061 줄 · 상태 `OPEN_FOR_FUTURE_CORRECTION_NOT_IMPLEMENTED`):** 직접 호출에 fixture 의
+  `extra` 를 명시한다 · 생산 검사와 원 증거를 보존한다.
+- **회신이 범위안에 넣으라고 한 것:**
+  - l33 직접 호출에 `extra=t.extra` (대조 v8) · 정상 기준 → deadline_hit → 미종료 상태의 구분 유지 · 생산 검사 완화 없음.
+  - 직접 호출의 repo / env / extra / data / records 기본값이 fixture 대신 실파일을 가리키는지 정적 대조 (probe · 부분 실행 추가 없이).
+  - 바뀐 대조의 크기 / sha 를 실행기 `_FIXED` / EXPECT · 봉인표 · 복사 명령 · 착수 / 끝 기록 기대값에 반영 · 실행기 자신의 새 식별 · 33 / 71 집합 · RED 예외표 ·
+    예측 줄을 새 바이트에 연결.
+  - **새 증거 · 작업 · cache 경로를 요청서에 고정** — 기존 `SP/c4e1_0b_steps` 와 `evidence/reil_c4e1_0b_20261103` 이 있으므로 원 요청을 그대로 쓰면 착수 중지
+    조건에 걸린다. 옛 기록을 삭제 · 재사용 · 이름 변경해 피하지 않는다. 실행기 WORK · 증거 이름 규칙 · 끝 기록 작성기의 이름 검사까지 영향을 확인한다.
+  - 이번 12 원기록 · 중지 결과 · 이전 검토 오류를 그대로 연결 · 보조 판정의 요약 줄 오분류를 새 기준과 혼동하지 않게 명시 · 새 보조 판정 도구를 쓰려면 고정
+    판정식과 책임 범위가 검토 가능해야 한다.
+  - RED 전체 → 일치할 때만 GREEN · 예상 밖 결과에서 즉시 중지 · 자동 수정 / 재시험 / 대체 금지 · 실행 범위 · 예산 유지.
+- **검토자의 이전 검토 정정 (`REVIEWER_CORRECTION.json`):** v2 사전 재검토 (§90 · `c3d3399b…`) 의 `REVIEW_KO.txt` 34 행 ("l33 은 정상 기준 결과를 확인한 뒤 …") 과
+  Q2 의 "정적 모순 없음 · 승인 준비" 판단은 l33 에 관해 철회 · 정정한다. 원 검토 파일은 고치지 않는다. E1_0B_N1 (l23 · l29 · l30) 의 정적 종결은 별개로 유지.
+- **보조 판정기 메모 (회신):** 작성자 판정 스크립트가 마지막 줄을 요약의 추가 줄로 센 것은 별도 오분류다 (그 줄은 요청서가 요구한 마지막 요약). 판정기 원문은
+  제출되지 않아 검토하지 않았다. 원 stdout 과 고정 판정식의 독립 대조로도 중지 사유는 l33 이다.
+- **회신이 남긴 한계:** 승인은 실행자가 착수 전에 커밋한 기록 (§91) 으로 확인했고 플랫폼의 원 메시지를 독립 인증한 것은 아니다 · 기록과 커밋 사슬은 독립 OS
+  감사가 아니다 · pytest 가 l33 의 둘째 문제를 생략했다 · 정정한 fixture 와 GREEN 은 실행되지 않았다. 현재 12 원기록으로 원인과 중지 판단은 충분히 검토 가능하며
+  과거 시험을 다시 돌릴 필요는 없다.
+- **유지:** E1-0b 미완 · GREEN 미실행 · FUTURE-01 기능 종결 보류 · E1-0 수용 · `E1_0_N1` · E1-1–3 · 실제 자료 fetch / run · C4-A / B · COMSOL 미승인. §91 의 승인은
+  이번 한 번으로 썼다 — 다음 시도는 새 승인이 필요하다.
+- **다음:** E1_0B_RESULT_N1 정정 범위안 (사용자 채택 요청) → 채택 뒤 비활성 정정본 · 승인 요청 갱신 · 사전 검토 발송문 → 사전 검토 → 사용자 E1-0b 재승인. 이
+  기록은 수정 · 재시험 · 실행의 승인이 아니다.
