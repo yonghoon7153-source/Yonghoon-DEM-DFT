@@ -1,6 +1,6 @@
 # MXD2R-01 · 02 · 03 수정 증거 (2026-11-03) — 믹서 D2 개발 소비자
 
-> ★ 11-03 오후 — §5-3 의 범위 밖 공통 변조 17 은 같은 부류 **MXD2R-04** 로 닫았다 (1저자 11-03 Q1 = 권고대로 · 증거 `mxd2r04/README.md`).  이 문서의 §0 · §5-1 · §5-3 · §7 은 MXD2R-04 **전** (커밋 `5ef8bb780`) 기록 그대로다 — §5-1 의 '같은 뜻 꼴 PASS' 6 행 (run 탭 · neigh 탭 · 폼 피드 · Front 주기 `7.82508e-1` · 마찰 `9e-1` · 주석 안 NUL) 은 이제 FAIL 이다 (**뜻이 같아도 표기가 다르면 거부한다 (생성기 꼴 엄격)** · `mxd2r04/README.md` §4-2).
+> ★ 11-03 오후 — §5-3 의 범위 밖 공통 변조 17 은 같은 부류 **MXD2R-04** 로 닫았다 (1저자 11-03 Q1 = 권고대로 · 증거 `mxd2r04/README.md`).  이 문서의 §0 · §5-1 · §5-3 · §7 은 MXD2R-04 **전** (커밋 `f2f63e7cd`) 기록 그대로다 — §5-1 의 '같은 뜻 꼴 PASS' 6 행 (run 탭 · neigh 탭 · 폼 피드 · Front 주기 `7.82508e-1` · 마찰 `9e-1` · 주석 안 NUL) 은 이제 FAIL 이다 (**뜻이 같아도 표기가 다르면 거부한다 (생성기 꼴 엄격)** · `mxd2r04/README.md` §4-2).
 
 - 근거: Codex 10-27 독립 재검토 `docs/reviews/codex_mixer_d2_review_20261027/codex_review_mixer_d2_20261027.md` (HOLD · 새 P1 둘 · P2 하나) · 수정 계획 `docs/reviews/mxd2r_fix_plan_20261030.md` · **1저자 11-02 비준 Q1–Q3 = 전부 (가)** (생성기 자신의 문법만 · 접촉 제외 거부 + 재료 fix 완비성 · 적용 전 순서 · 실제 파일 바이트를 먼저 해시 · CRLF 는 구체 사유로 거부).
 - 대상: `scripts/mixer_deck_readback.py` (`--d2` · `read_d2`) · `scripts/mixer_deck_diff.py` (`--allow D2` · `diff_d2_decks`) · `scripts/mixer_smoke_blind.py` (`--d2-plan` · `d2_plan_check`) · 회귀 `scripts/test_mixer_d2_consumers.py` · 웹앱 `/mixer` 개발 이력 `docs/mixer_devlog/v20_20261103.md`.
@@ -19,17 +19,17 @@
 
 | 커밋 | 무엇 |
 |---|---|
-| `a9e82e019` | 시험 먼저 — Codex 공통 변조 여섯 · CRLF 두 방향 · 같은 부류 · 양성 48 (고치기 전 소비자) |
-| `e77dc379a` | MXD2R-01 수정 (`_d2_time_grammar` · `_d2_lifecycle` 삽입 꼴 · 공동 회전 주기) |
-| `8d4f9a94a` | MXD2R-02 수정 (`_d2_contact_grammar` · `D2_MATERIAL` 생성기 사본) |
-| `6016d20ef` | MXD2R-03 수정 (`read_d2` 바이트 입력 · CR 거부 · 세 CLI 바이트 읽기 · `d2_text`) |
-| `5ef8bb780` | 사전 공격 후속 — 같은 값 중복 재료 fix 시험 (변이 M11) · 삽입 꼴 사유에 첫 어긋난 토큰 |
+| `f1cdd99c7` | 시험 먼저 — Codex 공통 변조 여섯 · CRLF 두 방향 · 같은 부류 · 양성 48 (고치기 전 소비자) |
+| `c03de45c3` | MXD2R-01 수정 (`_d2_time_grammar` · `_d2_lifecycle` 삽입 꼴 · 공동 회전 주기) |
+| `708bf881a` | MXD2R-02 수정 (`_d2_contact_grammar` · `D2_MATERIAL` 생성기 사본) |
+| `f7c9c81b1` | MXD2R-03 수정 (`read_d2` 바이트 입력 · CR 거부 · 세 CLI 바이트 읽기 · `d2_text`) |
+| `f2f63e7cd` | 사전 공격 후속 — 같은 값 중복 재료 fix 시험 (변이 M11) · 삽입 꼴 사유에 첫 어긋난 토큰 |
 
 ## 2. 발견별 — 고치기 전 실패 · 고친 뒤 통과 · 바뀐 파일
 
 커밋마다 그 커밋의 `scripts/` (git archive) 로 그 커밋의 `test_mixer_d2_consumers.py` 를 돌렸다 (`tools/per_commit_replay.py` → `per_commit/per_commit_replay.json` · 로그 `per_commit/replay_<커밋>.log` · 경로는 `<replay>` 로 가림).  칸 = 실패 subTest 수 F · 오류 E (ok = 통과).
 
-| 시험 메서드 \ 커밋 | `a9e82e019` 시험 먼저 | `e77dc379a` 01 | `8d4f9a94a` 02 | `6016d20ef` 03 | `5ef8bb780` 후속 |
+| 시험 메서드 \ 커밋 | `f1cdd99c7` 시험 먼저 | `c03de45c3` 01 | `708bf881a` 02 | `f7c9c81b1` 03 | `f2f63e7cd` 후속 |
 |---|---|---|---|---|---|
 | 기존 13 메서드 | ok ×13 | ok ×13 | ok ×13 | ok ×13 | ok ×13 |
 | test_mxd2r01_codex_time_insert_rotation | F24 | ok | ok | ok | ok |
@@ -43,7 +43,7 @@
 | 합 (21 시험) | FAILED (failures=116, errors=1) | FAILED (failures=68, errors=1) | FAILED (failures=17) | OK | OK |
 
 - 고치기 전 실패 116 의 단언 문구 (전부 '옳은 이유' — 반례를 소비자가 받았거나 바이트를 못 받음): API `AssertionError: 'PASS' != 'FAIL'` 83 · CLI `AssertionError: 0 != 1 : D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님` 21 · 바이트 API `deck text must be a string` 6 · LF 바이트 양성 `'FAIL' != 'PASS'` 3 · CRLF+CRLF 메타 CLI `'LF-only' not found in '… metadata SHA256 != actual deck'` 3 (정규화 텍스트의 해시로 거부 = 결함 그대로) · 오류 1 = `module 'mixer_deck_readback' has no attribute 'D2_MATERIAL'`.
-- 5ef8bb780 의 same_class 는 사례 14 (같은 값 중복 추가) — 앞 커밋들의 시험 파일은 13.  subTest 실측 (`tools/count_subtests.py` → `after/subtest_counts_5ef8bb780.json` · 중첩 subTest 는 바깥 사례도 하나로 센다): 01 Codex 28 (= 사례 4 + 안쪽 24) · 01 같은 부류 32 (8 + 24) · 02 Codex 14 (2 + 12) · 02 같은 부류 56 (14 + 42) · 03 API 11 · 03 CLI 9 · 양성 48.
+- f2f63e7cd 의 same_class 는 사례 14 (같은 값 중복 추가) — 앞 커밋들의 시험 파일은 13.  subTest 실측 (`tools/count_subtests.py` → `after/subtest_counts_5ef8bb780.json` · 중첩 subTest 는 바깥 사례도 하나로 센다): 01 Codex 28 (= 사례 4 + 안쪽 24) · 01 같은 부류 32 (8 + 24) · 02 Codex 14 (2 + 12) · 02 같은 부류 56 (14 + 42) · 03 API 11 · 03 CLI 9 · 양성 48.
 
 고친 뒤 거부 사유 — CLI 화면 그대로 (`after/codex_cases_cli/cli_logs_after.txt` · Codex 받은 사례 파일):
 
@@ -62,7 +62,7 @@
 
 ## 3. 기존 시험 전 · 후 (같은 명령 · 이 컨테이너)
 
-| 시험 | 전 (커밋 `57f1b2baf` 기반) | 후 (커밋 `5ef8bb780`) | 로그 |
+| 시험 | 전 (커밋 `57f1b2baf` 기반) | 후 (커밋 `f2f63e7cd`) | 로그 |
 |---|---|---|---|
 | `scripts/test_mixer_d2_consumers.py` | 13/13 OK | 21/21 OK (기존 13 그대로 + 새 8) | `before/test_mixer_d2_consumers_13_base_57f1b2baf.log` · `per_commit/replay_5ef8bb780.log` |
 | `scripts/mixer_deck_readback.py --selftest` | 24/24 PASS | 24/24 PASS | `before/readback_selftest_before.log` · `after/readback_selftest_after.log` |
@@ -77,7 +77,7 @@
 
 도구 = 10-30 재현 도구 그대로 `docs/reviews/codex_mixer_d2_review_20261027/_repro_ours_20261030/tools/run_d2_cli_cases.py` · 입력 = `docs/reviews/codex_mixer_d2_review_20261027/d2/evidence/cases/` (바이트 그대로 · CRLF 덱 13833 B).  readback / pair / plan.
 
-| 사례 | 전 (커밋 `57f1b2baf`) | 후 (커밋 `5ef8bb780`) |
+| 사례 | 전 (커밋 `57f1b2baf`) | 후 (커밋 `f2f63e7cd`) |
 |---|---|---|
 | run_upto · late_timestep · insert_start_late · front_period | 0/0/0 | 1/1/1 |
 | exclude_SE_SE | 0/0/0 | 1/1/1 |
@@ -114,9 +114,9 @@ Traceback 0 (전 · 후).  JSON = `before/codex_cases_cli/cli_rc_codex_cases_bef
 
 `tools/mutation_check.py` (커밋의 `scripts/` 사본에서 가드 하나를 정확한 문자열 치환으로 끄고 시험 → 되돌림).
 
-- 1 회차 (커밋 `6016d20ef`): **18/19 죽음 · M11 '재료 fix 중복 허용' 생존** — 시험의 중복 덱은 값이 0.1 이라 상수 검사가 먼저 거부해 중복 규칙이 묶이지 않았다 (`preattack/mutation_check_v1_6016d20ef_console.txt` · 화면 그대로 · 이 회차 JSON 은 2 회차가 덮어썼다).
-- 고침 (커밋 `5ef8bb780`): 같은 값 (0.9) 중복 사례 `friction_duplicate_same_values` (사유 = defined more than once).
-- 2 회차 (커밋 `5ef8bb780`): **19/19 죽음** · 변이 없는 판 rc 0 (`preattack/mutation_check_v2_5ef8bb780.json`).  가드 = run 옵션 · timestep 위치 · timestep 토큰 수 · 삽입 꼴 · 공동 주기 · neigh 인자 · neigh 개수 · pair 위치 · pair_coeff 인자 · 재료 결손 · 중복 · 상수 · 순서 · 모르는 이름 · CR · 정규화 해시 · 세 CLI 의 바이트 읽기.
+- 1 회차 (커밋 `f7c9c81b1`): **18/19 죽음 · M11 '재료 fix 중복 허용' 생존** — 시험의 중복 덱은 값이 0.1 이라 상수 검사가 먼저 거부해 중복 규칙이 묶이지 않았다 (`preattack/mutation_check_v1_6016d20ef_console.txt` · 화면 그대로 · 이 회차 JSON 은 2 회차가 덮어썼다).
+- 고침 (커밋 `f2f63e7cd`): 같은 값 (0.9) 중복 사례 `friction_duplicate_same_values` (사유 = defined more than once).
+- 2 회차 (커밋 `f2f63e7cd`): **19/19 죽음** · 변이 없는 판 rc 0 (`preattack/mutation_check_v2_5ef8bb780.json`).  가드 = run 옵션 · timestep 위치 · timestep 토큰 수 · 삽입 꼴 · 공동 주기 · neigh 인자 · neigh 개수 · pair 위치 · pair_coeff 인자 · 재료 결손 · 중복 · 상수 · 순서 · 모르는 이름 · CR · 정규화 해시 · 세 CLI 의 바이트 읽기.
 
 ### 5-3. 범위 밖 공통 변조 — 여전히 PASS (닫지 않음 · 1저자 11-02 비준 범위 밖) → 11-03 MXD2R-04 로 닫음 (`mxd2r04/README.md`)
 

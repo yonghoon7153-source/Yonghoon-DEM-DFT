@@ -9,7 +9,7 @@
 - **뜻이 같아도 표기가 다르면 거부한다 (생성기 꼴 엄격).**
 - **LIGGGHTS 실행 · Windows · Python 3.8 실행은 확인하지 않았다.**
 
-> ★ 11-03 밤 범위 넓힘 (1저자 Q4 = 권고대로) — 첫 판의 유일한 자유 칸 **neighbor skin 값**도 생성기 꼴로 고정했다 (자유 칸 없음 · 기존 시험 `test_actual_command_scope` 의 기대를 바꿈) → **§9**.  §0 – §8 은 첫 판 (커밋 `8b88cf154` 까지) 기록이고, skin 을 자유 칸으로 적은 줄에는 §9 표지를 달았다.
+> ★ 11-03 밤 범위 넓힘 (1저자 Q4 = 권고대로) — 첫 판의 유일한 자유 칸 **neighbor skin 값**도 생성기 꼴로 고정했다 (자유 칸 없음 · 기존 시험 `test_actual_command_scope` 의 기대를 바꿈) → **§9**.  §0 – §8 은 첫 판 (커밋 `42dcdc7f9` 까지) 기록이고, skin 을 자유 칸으로 적은 줄에는 §9 표지를 달았다.
 
 ## 0. 이번에 닫는 것 / 닫지 않는 것
 
@@ -24,16 +24,16 @@
 
 | 커밋 | 무엇 |
 |---|---|
-| `fe674510e` | 시험 먼저 — 범위 밖 17 · 같은 부류 46 · 글자 꼴 13 · timestep 표기+메타 · 양성 보존 · 사본 대조 (고치기 전 소비자) |
-| `e2ef42cb4` | MXD2R-04 수정 (`_d2_text_form` · `_d2_generator_form` · 사본 상수 · read_d2 끝에서 호출) |
-| `89315d8d2` | 사전 공격 후속 — 변이 1 회차 생존 7 을 시험에 묶음 (새 사례 8 · 소비자 코드 무변경) |
+| `85e2d66d8` | 시험 먼저 — 범위 밖 17 · 같은 부류 46 · 글자 꼴 13 · timestep 표기+메타 · 양성 보존 · 사본 대조 (고치기 전 소비자) |
+| `49608570a` | MXD2R-04 수정 (`_d2_text_form` · `_d2_generator_form` · 사본 상수 · read_d2 끝에서 호출) |
+| `52d84d9eb` | 사전 공격 후속 — 변이 1 회차 생존 7 을 시험에 묶음 (새 사례 8 · 소비자 코드 무변경) |
 | (이 폴더를 넣은 커밋) | 증거 · 원장 MXD2R-04 · `/mixer` v2.1 · 수정 계획 상태 줄 · 상위 README 표지 · `scripts/mixer_deck_readback.py` **주석 두 줄만** (skin 자유 칸 서술 정정 — 동작 무변경 · 시험 28/28 그대로 · 변이 문자열에 안 걸림) |
 
 ## 2. 고치기 전 → 뒤
 
 커밋마다 그 커밋의 `scripts/` (git archive) 로 그 커밋의 `test_mixer_d2_consumers.py` 를 돌렸다 (`../tools/per_commit_replay.py` → `per_commit/per_commit_replay.json` · 로그 `per_commit/replay_<커밋>.log`).  칸 = 실패 subTest 수 F · 오류 E · ok · `-` = 그 판에 없는 시험.
 
-| 시험 메서드 \ 커밋 | `c3bf134b9` 기반 | `fe674510e` 시험 먼저 | `e2ef42cb4` 수정 | `89315d8d2` 후속 |
+| 시험 메서드 \ 커밋 | `fe103fc01` 기반 | `85e2d66d8` 시험 먼저 | `49608570a` 수정 | `52d84d9eb` 후속 |
 |---|---|---|---|---|
 | 기존 21 메서드 (MXD2R-01–03 · 양성 48 포함) | ok ×21 | ok ×21 | ok ×21 | ok ×21 |
 | test_mxd2r04_outside_scope_17_api_and_cli | - | F102 | ok | ok |
@@ -46,8 +46,8 @@
 | 합 | 21 OK | 27 FAILED (failures=300, errors=1) | 27 OK | 28 OK |
 
 - 고치기 전 실패 300 은 전부 '옳은 이유' — 소비자가 변조 덱을 **받았다**: API `AssertionError: 'PASS' != 'FAIL'` 237 · CLI `AssertionError: 0 != 1 : D2 개발 덱 계약 PASS …` 63 · 오류 1 = `module 'mixer_deck_readback' has no attribute 'D2_GLOBAL_FORM'` (사본 상수 없음).
-- 후속 커밋의 새 사례 8 (메타 동반 6 · 같은 부류 `command_appended_at_end` · 글자 꼴 `comment_continuation_ascii`) 을 고치기 전 소비자 (커밋 `c3bf134b9` 의 scripts + 후속 시험 파일) 에서 돌림 = 8 사례 × API 3 = **24/24 PASS (결함)** · `before/followup_cases_on_prefix_c3bf134b9.log` (scratch 경로 = `<scratch>`).
-- subTest 실측 (커밋 `89315d8d2` · `../tools/count_subtests.py` → `after/subtest_counts_89315d8d2.json` · 바깥 사례도 하나로 센다): 범위 밖 17 = 119 (17 + 17×6 = API 3 + CLI 3) · 같은 부류 188 (47 + 47×3) · 글자 꼴 68 (14 + 14×3 + CLI 4×3) · timestep 12 (3 + 9) · 메타 동반 24 (6 + 18) · 양성 10.
+- 후속 커밋의 새 사례 8 (메타 동반 6 · 같은 부류 `command_appended_at_end` · 글자 꼴 `comment_continuation_ascii`) 을 고치기 전 소비자 (커밋 `fe103fc01` 의 scripts + 후속 시험 파일) 에서 돌림 = 8 사례 × API 3 = **24/24 PASS (결함)** · `before/followup_cases_on_prefix_c3bf134b9.log` (scratch 경로 = `<scratch>`).
+- subTest 실측 (커밋 `52d84d9eb` · `../tools/count_subtests.py` → `after/subtest_counts_89315d8d2.json` · 바깥 사례도 하나로 센다): 범위 밖 17 = 119 (17 + 17×6 = API 3 + CLI 3) · 같은 부류 188 (47 + 47×3) · 글자 꼴 68 (14 + 14×3 + CLI 4×3) · timestep 12 (3 + 9) · 메타 동반 24 (6 + 18) · 양성 10.
 
 고친 뒤 거부 사유 — 범위 밖 17 (readback API 첫 사유 · 꼬리 설명 생략 · 같은 사유가 세 CLI 화면에 그대로 나온다 — 시험이 rc 1 · 사유를 확인):
 
@@ -75,7 +75,7 @@
 
 ## 3. 기존 시험 · 대조 전 · 후 (같은 명령 · 이 컨테이너)
 
-| 시험 | 전 (소비자 = 커밋 `5ef8bb780` · `c3bf134b9` 같음) | 후 (커밋 `89315d8d2` · 소비자 = 커밋 `e2ef42cb4`) | 로그 |
+| 시험 | 전 (소비자 = 커밋 `f2f63e7cd` · `fe103fc01` 같음) | 후 (커밋 `52d84d9eb` · 소비자 = 커밋 `49608570a`) | 로그 |
 |---|---|---|---|
 | `scripts/test_mixer_d2_consumers.py` | 21/21 OK | 28/28 OK (기존 21 그대로 + 새 7) | `per_commit/replay_c3bf134b9.log` · `per_commit/replay_89315d8d2.log` |
 | Codex 독립 정상 48 조합 (`test_mxd2r_positive_codex_independent_48`) | 48 PASS | 48 PASS | 같은 로그 |
@@ -120,9 +120,9 @@
 
 `tools/mutation_check_v3.py` (커밋 scripts 사본에서 가드 하나를 정확한 문자열 치환으로 바꾸고 시험 → 되돌림 · M01–M19 = 1 회차 도구 그대로 import · M20–M54 = MXD2R-04).  **weaken** 29 (자리 값을 덱 자신에서 복사 · 검사 끔 — 반례 시험이 잡아야 함) · **tighten** 6 (M27 · M50–M54 사본 상수 바꿈 — 양성 시험이 잡아야 함).
 
-- 1 회차 (커밋 `e2ef42cb4`): M01–M19 **19/19** · M20–M54 **28/35** — 생존 7 = M25 (주석 줄 이음) · M28 (메타 dump 형식) · M30 (명령 개수) · M32 (시드 소수 · 상한) · M33 (정착 step k 배) · M34 (dump 간격 규칙) · M35 (restart 간격 규칙).  원인 = 해시 재결합만 하는 공통 변조 시험으로는 메타가 막는 칸 · 마지막 run 뒤 명령 · ASCII 주석 이음에 닿지 않았다 (가드는 동작 — 사전 공격 4-1 이 같은 사례로 확인).  `preattack/mutation_v3_round1_e2ef42cb4_*.json`.
-- 후속 (커밋 `89315d8d2`): 새 사례 8 — 고치기 전 소비자에서 24/24 PASS (결함) 확인 뒤 넣음 (§2).
-- 2 회차 (커밋 `89315d8d2`): **54/54 죽음** (19 + 35) · 변이 없는 판 rc 0 — weaken 29 은 MXD2R-04 반례 시험이 · tighten 6 은 양성 시험 (생성기 출력 · 정상 48 · dpf) 이 잡는다.  `preattack/mutation_v3_round2_89315d8d2_*.json`.
+- 1 회차 (커밋 `49608570a`): M01–M19 **19/19** · M20–M54 **28/35** — 생존 7 = M25 (주석 줄 이음) · M28 (메타 dump 형식) · M30 (명령 개수) · M32 (시드 소수 · 상한) · M33 (정착 step k 배) · M34 (dump 간격 규칙) · M35 (restart 간격 규칙).  원인 = 해시 재결합만 하는 공통 변조 시험으로는 메타가 막는 칸 · 마지막 run 뒤 명령 · ASCII 주석 이음에 닿지 않았다 (가드는 동작 — 사전 공격 4-1 이 같은 사례로 확인).  `preattack/mutation_v3_round1_49608570a_*.json`.
+- 후속 (커밋 `52d84d9eb`): 새 사례 8 — 고치기 전 소비자에서 24/24 PASS (결함) 확인 뒤 넣음 (§2).
+- 2 회차 (커밋 `52d84d9eb`): **54/54 죽음** (19 + 35) · 변이 없는 판 rc 0 — weaken 29 은 MXD2R-04 반례 시험이 · tighten 6 은 양성 시험 (생성기 출력 · 정상 48 · dpf) 이 잡는다.  `preattack/mutation_v3_round2_52d84d9eb_*.json`.
 
 ## 6. 한정
 
@@ -152,7 +152,7 @@ python3 -I -X utf8 -B $E/tools/preattack_probe.py "$PWD/scripts" <OUT>.json     
 python3 -I -X utf8 -B $E/tools/preattack_outside_scope.py "$PWD/scripts" <OUT>.json               # 17/17 FAIL
 python3 -I -X utf8 -B $E/mxd2r04/tools/positive_extra.py "$PWD/scripts"                           # bad 0
 # 커밋별 · 변이: git archive <커밋> scripts | tar -x -C <ROOT>/<커밋> 뒤
-python3 -I $E/tools/per_commit_replay.py <ROOT> <OUT>.json c3bf134b9 fe674510e e2ef42cb4 89315d8d2   # 커밋 넷 (§2)
+python3 -I $E/tools/per_commit_replay.py <ROOT> <OUT>.json fe103fc01 85e2d66d8 49608570a 52d84d9eb   # 커밋 넷 (§2)
 python3 -I $E/mxd2r04/tools/mutation_check_v3.py <ROOT>/<커밋>/scripts <OUT>.json [M0 M1 | M2 M3 | M4 M5]
 ```
 
@@ -170,13 +170,13 @@ python3 -I $E/mxd2r04/tools/mutation_check_v3.py <ROOT>/<커밋>/scripts <OUT>.j
 
 | 커밋 | 무엇 |
 |---|---|
-| `4e761d674` | 시험 먼저 — skin 공통 변조 7 (×1.1 repr · ×1.1 .6g · ×2 · AM 반지름 · 1e-9 · 같은 값 `0.0000757` · `7.570e-05` · 둘은 CLI 셋) · 기존 시험 기대 바꿈 · garbage skin 사유 |
-| `02ad3f7b8` | 수정 (skin = 생성기 값 · 자유 칸 없앰) |
+| `83ad3ba4e` | 시험 먼저 — skin 공통 변조 7 (×1.1 repr · ×1.1 .6g · ×2 · AM 반지름 · 1e-9 · 같은 값 `0.0000757` · `7.570e-05` · 둘은 CLI 셋) · 기존 시험 기대 바꿈 · garbage skin 사유 |
+| `b74fc9b75` | 수정 (skin = 생성기 값 · 자유 칸 없앰) |
 | (이 절을 넣은 커밋) | 증거 · 원장 MXD2R-04 범위 넓힘 메모 · `/mixer` v2.1 한 줄 · 수정 계획 상태 줄 |
 
 ### 9-2. 옛 기대 → 새 기대 (이유 = (가) 원리 — 생성기 자신의 꼴만 · 같은 부류 예외 제거)
 
-| 시험 · 사례 | 옛 기대 (커밋 `8b88cf154` 까지) | 새 기대 (커밋 `02ad3f7b8` 부터) |
+| 시험 · 사례 | 옛 기대 (커밋 `42dcdc7f9` 까지) | 새 기대 (커밋 `b74fc9b75` 부터) |
 |---|---|---|
 | `test_actual_command_scope` — 한쪽 덱만 skin ×1.1 (`8.327000000000001e-05`) · **단일 덱 readback** | **PASS** (skin = 단일 덱 계약 밖 · 짝 대조만 FAIL) | **FAIL** — token 1 `8.327000000000001e-05` (generator `7.57e-05`) (시험이 사유까지 확인) |
 | 같은 시험 — 그 덱과 정상 덱의 **짝 대조** (diff) | FAIL | FAIL (그대로) |
@@ -188,7 +188,7 @@ python3 -I $E/mxd2r04/tools/mutation_check_v3.py <ROOT>/<커밋>/scripts <OUT>.j
 
 ### 9-3. 고치기 전 → 뒤 (`../tools/per_commit_replay.py` → `q4_skin/per_commit/per_commit_replay.json` · 바뀐 메서드만 · 나머지 26 은 세 판 모두 ok)
 
-| 시험 메서드 \ 커밋 | `8b88cf154` 첫 판 | `4e761d674` 시험 먼저 | `02ad3f7b8` 수정 |
+| 시험 메서드 \ 커밋 | `42dcdc7f9` 첫 판 | `83ad3ba4e` 시험 먼저 | `b74fc9b75` 수정 |
 |---|---|---|---|
 | test_actual_command_scope | ok (옛 기대) | F1 | ok |
 | test_mxd2r04_neighbor_skin_generator_form | - | F27 | ok |
@@ -196,9 +196,9 @@ python3 -I $E/mxd2r04/tools/mutation_check_v3.py <ROOT>/<커밋>/scripts <OUT>.j
 | 합 | 28 OK | 29 FAILED (failures=31) | 29 OK |
 
 - 고치기 전 실패 31 = skin 7 사례 API 21 + CLI 6 (세 소비자가 받음: `'PASS' != 'FAIL'` · rc 0) · 단일 덱 skin ×1.1 PASS 1 (옛 기대의 동작) · garbage skin 사유 3 (거부는 같고 사유 문구만 다름) — `q4_skin/before/tests_on_4e761d674_before_skin_fix.log` (리포 경로 = `<repo>`).
-- subTest (커밋 `02ad3f7b8` · `q4_skin/after/subtest_counts_02ad3f7b8.json`): skin 34 (7 + API 21 + CLI 6).
+- subTest (커밋 `b74fc9b75` · `q4_skin/after/subtest_counts_02ad3f7b8.json`): skin 34 (7 + API 21 + CLI 6).
 
-### 9-4. 다시 돌린 것 (커밋 `02ad3f7b8` 소비자)
+### 9-4. 다시 돌린 것 (커밋 `b74fc9b75` 소비자)
 
 | 시험 | 결과 | 로그 |
 |---|---|---|
@@ -209,7 +209,7 @@ python3 -I $E/mxd2r04/tools/mutation_check_v3.py <ROOT>/<커밋>/scripts <OUT>.j
 | 생성기 옵션 양성 (`tools/positive_extra.py`) | 18/18 PASS × 4 (rpm 60 = 생성기 스스로 거부) | `q4_skin/preattack/positive_extra.txt` |
 | 사전 공격 v3 (`tools/preattack_probe_v3.py`) | **93/93** (v2 85 사례의 skin 행 기대 바꿈 + skin 8 더함: 대문자 E · + 부호 · 앞자리 0 · 전각 숫자 · 탭 · NBSP · 다른 CGF 생성기 덱 PASS · 다른 계획의 skin 값 FAIL) | `q4_skin/preattack/preattack_probe_v3.json` |
 | 1 회차 사전 공격 도구 · 범위 밖 17 | 66/72 (첫 판과 같음 · 6 = 의도한 엄격화) · 17/17 세 소비자 FAIL | `q4_skin/preattack/` |
-| 변이 v4 (`tools/mutation_check_v4.py` · 커밋 `02ad3f7b8` 사본) | **55/55 죽음** · 변이 없는 판 rc 0 — M31 (바꿈) = skin 기대 토큰을 덱 자신에서 복사 → `test_actual_command_scope` · skin 시험 · garbage skin 이 잡음 · M55 (더함 · tighten) = skin 계수 0.5 → 0.6 → 양성 시험이 잡음 | `q4_skin/preattack/mutation_v4_02ad3f7b8_*.json` |
+| 변이 v4 (`tools/mutation_check_v4.py` · 커밋 `b74fc9b75` 사본) | **55/55 죽음** · 변이 없는 판 rc 0 — M31 (바꿈) = skin 기대 토큰을 덱 자신에서 복사 → `test_actual_command_scope` · skin 시험 · garbage skin 이 잡음 · M55 (더함 · tighten) = skin 계수 0.5 → 0.6 → 양성 시험이 잡음 | `q4_skin/preattack/mutation_v4_b74fc9b75_*.json` |
 
 - 한정은 §6 그대로 (자유 칸 줄만 없어짐): **뜻이 같아도 표기가 다르면 거부한다 (생성기 꼴 엄격)** · **LIGGGHTS 실행 · Windows · Python 3.8 실행은 확인하지 않았다** (3.8 = 문법 검사만).  skin 이 성능 쪽 값이라는 판단은 고정 근거가 아니다 — 근거는 (가) 원리다.
 - 원장: MXD2R-04 범위 넓힘 메모 · claimed_fixed_sha = 이 수정 커밋 · 회귀에 skin 시험 · `test_actual_command_scope` 를 더함 (Codex 재확인 전).
