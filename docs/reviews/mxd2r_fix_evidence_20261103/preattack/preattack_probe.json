@@ -1,0 +1,912 @@
+{
+ "tool": "preattack_probe.py",
+ "python": "3.11.15",
+ "n": 72,
+ "n_ok": 72,
+ "rows": [
+  {
+   "case": "run_nan",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+   "semantics": "not an integer"
+  },
+  {
+   "case": "run_inf",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+   "semantics": "not an integer"
+  },
+  {
+   "case": "run_empty",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck parsing: 줄 160: `run` — 읽을 수 없다 (list index out of range); run 구조 [1, 560606, 6595382] ≠ [1, F, F, N] (삽입 · 정착 ×2 · 회전)",
+   "semantics": "missing count"
+  },
+  {
+   "case": "run_leading_zero",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 time contract: only two-token `run <integer>` (generator grammar) — run options such as upto · start · stop · pre · post · every change the executed step program: `run 0560606`",
+   "semantics": "same value in LIGGGHTS, but not the generator spelling"
+  },
+  {
+   "case": "run_plus_sign",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 time contract: only two-token `run <integer>` (generator grammar) — run options such as upto · start · stop · pre · post · every change the executed step program: `run +560606`",
+   "semantics": "non-generator spelling"
+  },
+  {
+   "case": "run_float",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck parsing: 줄 160: `run 560606.0` — 읽을 수 없다 (invalid literal for int() with base 10: '560606.0'); run 구조 [1, 560606, 6595382] ≠ [1, F, F, N] (삽입 · 정착 ×2 · 회전)",
+   "semantics": "not an integer token"
+  },
+  {
+   "case": "run_unicode_digit",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+   "semantics": "Unicode digit"
+  },
+  {
+   "case": "run_upto_twice",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 time contract: only two-token `run <integer>` (generator grammar) — run options such as upto · start · stop · pre · post · every change the executed step program: `run 1 upto upto`",
+   "semantics": "duplicate option"
+  },
+  {
+   "case": "run_tab_separator",
+   "attacks": "_d2_time_grammar",
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "ok": true,
+   "first_failure": "",
+   "semantics": "tab is a token separator for both Python and LIGGGHTS (same command)"
+  },
+  {
+   "case": "run_comment_upto",
+   "attacks": "_d2_time_grammar",
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "ok": true,
+   "first_failure": "",
+   "semantics": "comment — LIGGGHTS strips it too (same command)"
+  },
+  {
+   "case": "run_continuation_upto",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 time contract: only two-token `run <integer>` (generator grammar) — run options such as upto · start · stop · pre · post · every change the executed step program: `run 1 upto`",
+   "semantics": "`&` joins the next line — option is real"
+  },
+  {
+   "case": "run_nbsp_upto",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 time contract: only two-token `run <integer>` (generator grammar) — run options such as upto · start · stop · pre · post · every change the executed step program: `run 1 upto`",
+   "semantics": "Python str.split() splits on NBSP (3 tokens) — rejected (how LIGGGHTS tokenizes NBSP: not checked here)"
+  },
+  {
+   "case": "timestep_nan",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+   "semantics": "nonfinite dt"
+  },
+  {
+   "case": "timestep_inf",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+   "semantics": "nonfinite dt"
+  },
+  {
+   "case": "timestep_empty",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck parsing: 줄 100: `timestep` — 읽을 수 없다 (list index out of range); timestep 이 없다",
+   "semantics": "missing dt"
+  },
+  {
+   "case": "timestep_duplicate_same_value",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck parsing: timestep 명령이 2 개 — 하나여야 한다",
+   "semantics": "second timestep after the first run (same value) — not the generator form"
+  },
+  {
+   "case": "timestep_unicode_digit",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+   "semantics": "Unicode digit"
+  },
+  {
+   "case": "insert_every_nan",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 regio",
+   "semantics": "not once"
+  },
+  {
+   "case": "insert_every_zero",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 regio",
+   "semantics": "not once"
+  },
+  {
+   "case": "insert_once_twice",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 regio",
+   "semantics": "duplicate option"
+  },
+  {
+   "case": "insert_ntry_unicode",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 regio",
+   "semantics": "Unicode digit"
+  },
+  {
+   "case": "insert_vel_inf",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 regio",
+   "semantics": "nonfinite velocity"
+  },
+  {
+   "case": "insert_vel_same_value_spelling",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 regio",
+   "semantics": "same values, non-generator spelling (exact token pin)"
+  },
+  {
+   "case": "front_period_nan",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+   "semantics": "nonfinite period"
+  },
+  {
+   "case": "front_period_inf",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+   "semantics": "nonfinite period"
+  },
+  {
+   "case": "front_period_negative",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: rotation period: finite normal positive number required",
+   "semantics": "reverse rotation (negative period)"
+  },
+  {
+   "case": "front_period_zero",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: rotation period: finite normal positive number required",
+   "semantics": "zero period"
+  },
+  {
+   "case": "front_period_exp_spelling",
+   "attacks": "_d2_lifecycle",
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "ok": true,
+   "first_failure": "",
+   "semantics": "exactly the same float as Drum (same rotation)"
+  },
+  {
+   "case": "front_period_last_digit",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 rotation contract: every wall mesh must rotate with the Drum period (common rotation) — Back 0.782508 s · Drum 0.782508 s · Front 0.782509 s",
+   "semantics": "1e-6 s different period — not the common rotation"
+  },
+  {
+   "case": "front_period_unicode_digit",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+   "semantics": "Unicode digit"
+  },
+  {
+   "case": "front_rotates_twice",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: each wall mesh must rotate exactly once",
+   "semantics": "duplicate motion of one mesh"
+  },
+  {
+   "case": "neigh_delay_nan",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 contact contract: exactly one `neigh_modify delay 0` after create_box and before the first run — exclude and other neighbor options change which contacts are computed: `neigh_modif",
+   "semantics": "not delay 0"
+  },
+  {
+   "case": "neigh_delay_unicode",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 contact contract: exactly one `neigh_modify delay 0` after create_box and before the first run — exclude and other neighbor options change which contacts are computed: `neigh_modif",
+   "semantics": "Unicode digit"
+  },
+  {
+   "case": "neigh_duplicate_same",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 contact contract: exactly one `neigh_modify delay 0` after create_box and before the first run — exclude and other neighbor options change which contacts are computed: `neigh_modif",
+   "semantics": "duplicate command (generator writes one)"
+  },
+  {
+   "case": "neigh_tab",
+   "attacks": "_d2_contact_grammar",
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "ok": true,
+   "first_failure": "",
+   "semantics": "tab separator (same command)"
+  },
+  {
+   "case": "neigh_nbsp_exclude",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 contact contract: exactly one `neigh_modify delay 0` after create_box and before the first run — exclude and other neighbor options change which contacts are computed: `neigh_modif",
+   "semantics": "NBSP-joined option"
+  },
+  {
+   "case": "pair_coeff_duplicate",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 contact contract: one `pair_style gran …` then one `pair_coeff * *`, both after create_box and before the first run",
+   "semantics": "duplicate command"
+  },
+  {
+   "case": "friction_nan",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: coefficientFriction: ASCII decimal token required before float conversion",
+   "semantics": "nonfinite coefficient"
+  },
+  {
+   "case": "friction_inf",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: coefficientFriction: ASCII decimal token required before float conversion",
+   "semantics": "nonfinite coefficient"
+  },
+  {
+   "case": "friction_unicode_digit",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: coefficientFriction: ASCII decimal token required before float conversion",
+   "semantics": "Unicode digit"
+  },
+  {
+   "case": "friction_same_value_spellings",
+   "attacks": "_d2_contact_grammar",
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "ok": true,
+   "first_failure": "",
+   "semantics": "same float 0.9 (same physics)"
+  },
+  {
+   "case": "friction_matrix_size_unicode",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: coefficientFriction matrix size: ASCII positive integer token required",
+   "semantics": "Unicode digit matrix size"
+  },
+  {
+   "case": "friction_matrix_empty",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 contact contract: material fix coefficientFriction has 0 values != 16",
+   "semantics": "no values"
+  },
+  {
+   "case": "restitution_extra_value",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 contact contract: material fix coefficientRestitution has 17 values != 16",
+   "semantics": "17 values for 4x4"
+  },
+  {
+   "case": "charvel_nan",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: characteristicVelocity: ASCII decimal token required before float conversion",
+   "semantics": "nonfinite"
+  },
+  {
+   "case": "property_name_empty",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 contact contract: unsupported material property None — the supported hertz/sjkr/rolling_friction pair and wall model reads exactly ['characteristicVelocity', 'coefficientFriction',",
+   "semantics": "property/global without a name"
+  },
+  {
+   "case": "ced_duplicate_fix",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck parsing: cohesionEnergyDensity 명령이 2 개 — 하나여야 한다",
+   "semantics": "second CED fix (read_deck duplicate count + material duplicate)"
+  },
+  {
+   "case": "bom_prefix",
+   "attacks": "read_d2",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: unsupported command/control flow in development deck",
+   "semantics": "UTF-8 BOM before the first line (not generator output)"
+  },
+  {
+   "case": "nul_in_comment",
+   "attacks": "read_d2",
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "ok": true,
+   "first_failure": "",
+   "semantics": "NUL inside a comment — both Python and LIGGGHTS ignore comment text"
+  },
+  {
+   "case": "form_feed_in_code",
+   "attacks": "read_d2",
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "ok": true,
+   "first_failure": "",
+   "semantics": "form feed: Python str.split() separator (LIGGGHTS tokenizer separators: not checked here — see README limits)"
+  },
+  {
+   "case": "trailing_spaces",
+   "attacks": "read_d2",
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "ok": true,
+   "first_failure": "",
+   "semantics": "trailing spaces (same command)"
+  },
+  {
+   "case": "quote_hash_run",
+   "attacks": "_d2_time_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 time contract: only two-token `run <integer>` (generator grammar) — run options such as upto · start · stop · pre · post · every change the executed step program: `run 1 \"`",
+   "semantics": "leftover `\"` token on a pinned line"
+  },
+  {
+   "case": "quote_hash_neigh",
+   "attacks": "_d2_contact_grammar",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 contact contract: exactly one `neigh_modify delay 0` after create_box and before the first run — exclude and other neighbor options change which contacts are computed: `neigh_modif",
+   "semantics": "leftover `\"` token on a pinned line"
+  },
+  {
+   "case": "quote_hash_insert",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 regio",
+   "semantics": "leftover `\"` token on a pinned line"
+  },
+  {
+   "case": "quote_hash_front",
+   "attacks": "_d2_lifecycle",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: unsupported mesh motion syntax",
+   "semantics": "leftover `\"` token on a pinned line"
+  },
+  {
+   "case": "quote_hash_mesh",
+   "attacks": "read_d2",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: unsupported mesh declaration/order",
+   "semantics": "leftover `\"` token on a pinned line (mesh/surface 10 tokens)"
+  },
+  {
+   "case": "bytes_lf",
+   "attacks": "read_d2 (bytes)",
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS"
+   },
+   "ok": true,
+   "first_failure": "",
+   "semantics": "physical LF bytes"
+  },
+  {
+   "case": "bytes_lone_cr_in_comment",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck contains 1 CR (0x0D) byte(s) — CRLF/CR line endings are rejected: D2 development decks are LF-only generator output (never normalized before hashing or parsing)",
+   "semantics": "any CR byte"
+  },
+  {
+   "case": "bytes_cr_only_line_endings",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck contains 179 CR (0x0D) byte(s) — CRLF/CR line endings are rejected: D2 development decks are LF-only generator output (never normalized before hashing or parsing)",
+   "semantics": "old-Mac CR line endings"
+  },
+  {
+   "case": "bytes_crlf",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck contains 179 CR (0x0D) byte(s) — CRLF/CR line endings are rejected: D2 development decks are LF-only generator output (never normalized before hashing or parsing)",
+   "semantics": "CRLF"
+  },
+  {
+   "case": "bytes_invalid_utf8",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck bytes are not valid UTF-8 (invalid start byte at byte 13656)",
+   "semantics": "invalid UTF-8 (strict decode)"
+  },
+  {
+   "case": "bytes_utf16",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck contains 7 CR (0x0D) byte(s) — CRLF/CR line endings are rejected: D2 development decks are LF-only generator output (never normalized before hashing or parsing)",
+   "semantics": "UTF-16 with BOM"
+  },
+  {
+   "case": "bytes_utf16le_no_bom",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck contains 7 CR (0x0D) byte(s) — CRLF/CR line endings are rejected: D2 development decks are LF-only generator output (never normalized before hashing or parsing)",
+   "semantics": "NUL-interleaved (valid UTF-8, unknown commands)"
+  },
+  {
+   "case": "bytes_empty",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck_bytes: positive integer required",
+   "semantics": "empty deck (deck_bytes must be positive)"
+  },
+  {
+   "case": "bytes_trailing_nul",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: unsupported command/control flow in development deck",
+   "semantics": "NUL after the last newline = a command token"
+  },
+  {
+   "case": "bytearray_input",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck must be the physical file bytes (bytes) or the deck text (str)",
+   "semantics": "only bytes or str"
+  },
+  {
+   "case": "memoryview_input",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck must be the physical file bytes (bytes) or the deck text (str)",
+   "semantics": "only bytes or str"
+  },
+  {
+   "case": "none_input",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck must be the physical file bytes (bytes) or the deck text (str)",
+   "semantics": "unreadable file in the diff CLI arrives as None"
+  },
+  {
+   "case": "str_surrogate",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: UnicodeEncodeError: 'utf-8' codec can't encode character '\\udc80' in position 10679: surrogates not allowed",
+   "semantics": "str that cannot be UTF-8 encoded (must fail, not crash)"
+  },
+  {
+   "case": "bytes_meta_len_off_by_one",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: metadata bytes != actual deck file bytes",
+   "semantics": "length mismatch"
+  },
+  {
+   "case": "bytes_meta_len_bool",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck_bytes: positive integer required",
+   "semantics": "bool is not an integer"
+  },
+  {
+   "case": "bytes_meta_sha_upper",
+   "attacks": "read_d2 (bytes)",
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: metadata SHA256 != actual deck file bytes",
+   "semantics": "upper-case hex is not the recorded form"
+  }
+ ]
+}

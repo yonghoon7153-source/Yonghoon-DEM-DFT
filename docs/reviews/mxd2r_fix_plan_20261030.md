@@ -1,5 +1,7 @@
 # 믹서 D2 개발 소비자 재검토 (10-27) — MXD2R-01 · 02 · 03 수정 계획 초안 (2026-10-30 · ⬜ 1저자 비준 대기)
 
+> ✅ 2026-11-02 1저자 비준 = Q1–Q3 전부 (가) → 11-03 구현 (단계 1 시험 먼저 → 2 수정 → 3 · 4 양성 · 구 회귀 → 5 웹앱 `/mixer` v2.0 · 원장 claimed_fixed → 6 사전 공격) · 증거 `docs/reviews/mxd2r_fix_evidence_20261103/README.md` · ⬜ Codex 짧은 재확인 (단계 6 끝) 전 — 아래 본문은 10-30 초안 그대로.
+
 > 근거 = Codex 독립 재검토 `docs/reviews/codex_mixer_d2_review_20261027/codex_review_mixer_d2_20261027.md` (리뷰 핀 `045e0b309` · `codex/mixer-mxd2` · 요청서 `docs/reviews/codex_mixer_d2_consumers_request_20261024.md`) · 반입 `docs/reviews/codex_mixer_d2_review_20261027/README_import.md` (우리 트리 재현 = 판정값 차이 0 · 반례 CLI rc 판정문과 같음).
 > 판정 요지: **HOLD** — MXD2-01 의 개발 소비자 하위 범위도 닫히지 않는다 · 새 P1 둘 · P2 하나 · **정상 덱 산술 (밀도 세대 · 상별 계획수 · 인쇄 CED 로 SE Bo) 은 수용** · `--d2-plan` 이 증서 · 실행 GO 를 만들지 않음도 수용.
 > 범위: 개발 소비자 셋 `scripts/mixer_deck_readback.py` (`--d2`) · `scripts/mixer_deck_diff.py` (`--allow D2`) · `scripts/mixer_smoke_blind.py` (`--d2-plan`) + 회귀 `scripts/test_mixer_d2_consumers.py` · `/mixer` 개발 이력 (같은 묶음).  생성기 `scripts/make_mixer_deck.py` 의 정상 출력 · 등록 표 (E · E0 · DT · B · U) · 봉인 32 · 실행 정책은 건드리지 않는다.  **이 문서는 계획만 — 코드는 고치지 않았다.**

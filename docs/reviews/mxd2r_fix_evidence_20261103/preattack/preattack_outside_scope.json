@@ -1,0 +1,176 @@
+{
+ "tool": "preattack_outside_scope.py",
+ "python": "3.11.15",
+ "rows": [
+  {
+   "case": "boundary_periodic",
+   "kind": "global setting",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "newton_on",
+   "kind": "global setting",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "atom_style_sphere",
+   "kind": "global setting",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "communicate_cutoff",
+   "kind": "global setting",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "hard_particles_no",
+   "kind": "global setting",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "atom_modify_sort",
+   "kind": "global setting",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "thermo_lost_error",
+   "kind": "output/lost-atom policy",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "neighbor_nsq",
+   "kind": "neighbor build style",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "template_extra_option",
+   "kind": "particletemplate/sphere trailing option",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "template_quote_hash",
+   "kind": "particletemplate/sphere quoted # (unpinned line)",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "pdd_seed",
+   "kind": "RNG seed (distribution)",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "insert_b_seed",
+   "kind": "RNG seed (2nd insertion)",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "insert_region_geometry",
+   "kind": "geometry (supplied input)",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "mesh_scale",
+   "kind": "geometry (supplied input)",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "dump_modify_added",
+   "kind": "output only",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "thermo_every",
+   "kind": "output only",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  },
+  {
+   "case": "write_restart_removed",
+   "kind": "checkpoint only",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "first_failure": ""
+  }
+ ]
+}

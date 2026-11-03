@@ -1,0 +1,596 @@
+{
+ "tool": "per_commit_replay.py",
+ "python": "3.11.15",
+ "commits": {
+  "a9e82e019": {
+   "rc": 1,
+   "files_sha256": {
+    "mixer_deck_readback.py": "bfeaf8497048360ba328cb1a01575f2c2f7573d93e7627f53e535da73b8874d3",
+    "mixer_deck_diff.py": "9a86950434b4abe852a6e3411fa809e78eef3d5ef6d7c8e125fb694cc1582877",
+    "mixer_smoke_blind.py": "83760d9d81e4b2b6cf2d4ae7eda7f140dbec87cadc836b82079b1fd64f15dd4a",
+    "test_mixer_d2_consumers.py": "a99dae3511e55c6ebe297b722f08ee1e159c789f240b42882e2e2ba0a05786ad"
+   },
+   "ran": 21,
+   "result": "FAILED (failures=116, errors=1)",
+   "methods": {
+    "test_actual_command_scope": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_actual_common_mode_mutations": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_ceiling_and_ced_meta_rebinding": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_cli_and_duplicate_json": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_command_lifecycle": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_coordinated_density_and_gravity_vector": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_counts_are_from_actual_inputs": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_d2_pairs_and_old_contracts": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_dt_half_and_legacy_cli_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_generation_and_supported_phase_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_meta_binding_and_numeric_boundaries": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_codex_time_insert_rotation": {
+     "fail_subtests": 24,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r01_same_class_generator_grammar": {
+     "fail_subtests": 24,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r02_codex_contact_exclusion_and_friction": {
+     "fail_subtests": 12,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r02_material_copies_match_generator": {
+     "fail_subtests": 0,
+     "error": 1,
+     "status": "FAILED"
+    },
+    "test_mxd2r02_same_class_contact_and_materials": {
+     "fail_subtests": 39,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r03_physical_bytes_api": {
+     "fail_subtests": 11,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r03_physical_bytes_cli_both_directions": {
+     "fail_subtests": 6,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r_positive_codex_independent_48": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_pair_identity_and_orientation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_tokens_and_nested_schema": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    }
+   }
+  },
+  "e77dc379a": {
+   "rc": 1,
+   "files_sha256": {
+    "mixer_deck_readback.py": "c6d3185f407bd448a73930f42b32eb512c5b01a2f5f44ab3430f23da284ef0a7",
+    "mixer_deck_diff.py": "9a86950434b4abe852a6e3411fa809e78eef3d5ef6d7c8e125fb694cc1582877",
+    "mixer_smoke_blind.py": "83760d9d81e4b2b6cf2d4ae7eda7f140dbec87cadc836b82079b1fd64f15dd4a",
+    "test_mixer_d2_consumers.py": "a99dae3511e55c6ebe297b722f08ee1e159c789f240b42882e2e2ba0a05786ad"
+   },
+   "ran": 21,
+   "result": "FAILED (failures=68, errors=1)",
+   "methods": {
+    "test_actual_command_scope": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_actual_common_mode_mutations": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_ceiling_and_ced_meta_rebinding": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_cli_and_duplicate_json": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_command_lifecycle": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_coordinated_density_and_gravity_vector": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_counts_are_from_actual_inputs": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_d2_pairs_and_old_contracts": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_dt_half_and_legacy_cli_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_generation_and_supported_phase_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_meta_binding_and_numeric_boundaries": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_codex_time_insert_rotation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_same_class_generator_grammar": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_codex_contact_exclusion_and_friction": {
+     "fail_subtests": 12,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r02_material_copies_match_generator": {
+     "fail_subtests": 0,
+     "error": 1,
+     "status": "FAILED"
+    },
+    "test_mxd2r02_same_class_contact_and_materials": {
+     "fail_subtests": 39,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r03_physical_bytes_api": {
+     "fail_subtests": 11,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r03_physical_bytes_cli_both_directions": {
+     "fail_subtests": 6,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r_positive_codex_independent_48": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_pair_identity_and_orientation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_tokens_and_nested_schema": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    }
+   }
+  },
+  "8d4f9a94a": {
+   "rc": 1,
+   "files_sha256": {
+    "mixer_deck_readback.py": "83addb37eead8a8fac3f77603e092bff2d818d88d5985a8bce04146fae713511",
+    "mixer_deck_diff.py": "9a86950434b4abe852a6e3411fa809e78eef3d5ef6d7c8e125fb694cc1582877",
+    "mixer_smoke_blind.py": "83760d9d81e4b2b6cf2d4ae7eda7f140dbec87cadc836b82079b1fd64f15dd4a",
+    "test_mixer_d2_consumers.py": "a99dae3511e55c6ebe297b722f08ee1e159c789f240b42882e2e2ba0a05786ad"
+   },
+   "ran": 21,
+   "result": "FAILED (failures=17)",
+   "methods": {
+    "test_actual_command_scope": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_actual_common_mode_mutations": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_ceiling_and_ced_meta_rebinding": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_cli_and_duplicate_json": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_command_lifecycle": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_coordinated_density_and_gravity_vector": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_counts_are_from_actual_inputs": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_d2_pairs_and_old_contracts": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_dt_half_and_legacy_cli_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_generation_and_supported_phase_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_meta_binding_and_numeric_boundaries": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_codex_time_insert_rotation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_same_class_generator_grammar": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_codex_contact_exclusion_and_friction": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_material_copies_match_generator": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_same_class_contact_and_materials": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r03_physical_bytes_api": {
+     "fail_subtests": 11,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r03_physical_bytes_cli_both_directions": {
+     "fail_subtests": 6,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r_positive_codex_independent_48": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_pair_identity_and_orientation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_tokens_and_nested_schema": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    }
+   }
+  },
+  "6016d20ef": {
+   "rc": 0,
+   "files_sha256": {
+    "mixer_deck_readback.py": "3a23a6cec24d5706395bdcbb9d78ff48b67ce103a783a719387e39901b0b50a1",
+    "mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "mixer_smoke_blind.py": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24",
+    "test_mixer_d2_consumers.py": "a99dae3511e55c6ebe297b722f08ee1e159c789f240b42882e2e2ba0a05786ad"
+   },
+   "ran": 21,
+   "result": "OK",
+   "methods": {
+    "test_actual_command_scope": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_actual_common_mode_mutations": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_ceiling_and_ced_meta_rebinding": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_cli_and_duplicate_json": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_command_lifecycle": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_coordinated_density_and_gravity_vector": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_counts_are_from_actual_inputs": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_d2_pairs_and_old_contracts": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_dt_half_and_legacy_cli_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_generation_and_supported_phase_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_meta_binding_and_numeric_boundaries": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_codex_time_insert_rotation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_same_class_generator_grammar": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_codex_contact_exclusion_and_friction": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_material_copies_match_generator": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_same_class_contact_and_materials": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r03_physical_bytes_api": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r03_physical_bytes_cli_both_directions": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r_positive_codex_independent_48": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_pair_identity_and_orientation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_tokens_and_nested_schema": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    }
+   }
+  },
+  "5ef8bb780": {
+   "rc": 0,
+   "files_sha256": {
+    "mixer_deck_readback.py": "438e0ceaa097931ed2901dce240578e8bd04a2cf41ac16786b63b5209f19bc0c",
+    "mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "mixer_smoke_blind.py": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24",
+    "test_mixer_d2_consumers.py": "677970f7dac860653b1adc24d85500b74ec3c0940a04df41f33bbc89bfc1d865"
+   },
+   "ran": 21,
+   "result": "OK",
+   "methods": {
+    "test_actual_command_scope": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_actual_common_mode_mutations": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_ceiling_and_ced_meta_rebinding": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_cli_and_duplicate_json": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_command_lifecycle": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_coordinated_density_and_gravity_vector": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_counts_are_from_actual_inputs": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_d2_pairs_and_old_contracts": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_dt_half_and_legacy_cli_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_generation_and_supported_phase_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_meta_binding_and_numeric_boundaries": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_codex_time_insert_rotation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_same_class_generator_grammar": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_codex_contact_exclusion_and_friction": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_material_copies_match_generator": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_same_class_contact_and_materials": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r03_physical_bytes_api": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r03_physical_bytes_cli_both_directions": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r_positive_codex_independent_48": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_pair_identity_and_orientation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_tokens_and_nested_schema": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    }
+   }
+  }
+ }
+}

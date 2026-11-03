@@ -1,0 +1,23 @@
+# mutation_check.py 1 회차 — 대상 = 커밋 6016d20ef 의 scripts/ (git archive) · 2026-11-03 · Python 3.11.15
+# 화면 출력 그대로 옮김 (이 회차의 JSON 은 2 회차가 같은 이름으로 덮어써 남지 않았다 — 2 회차 = mutation_check_v2_5ef8bb780.json).
+# 1 회차 M04 의 대상 문자열은 고치기 전 판 `_d2_need(len(t)==len(D2_INSERT_FORM) and all(` 이었다 (5ef8bb780 에서 사유 문구를 바꾸며 if 꼴로 바뀜).
+killed   M01 run: options allowed                   test_mxd2r01_codex_time_insert_rotation, test_mxd2r01_same_class_generator_grammar
+killed   M02 timestep: after first run allowed      test_mxd2r01_codex_time_insert_rotation, test_mxd2r01_same_class_generator_grammar
+killed   M03 timestep: extra token allowed          test_mxd2r01_same_class_generator_grammar
+killed   M04 insert/pack: any form                  test_mxd2r01_codex_time_insert_rotation, test_mxd2r01_same_class_generator_grammar
+killed   M05 rotation: Front/Back period free       test_mxd2r01_codex_time_insert_rotation, test_mxd2r01_same_class_generator_grammar
+killed   M06 neigh_modify: any arguments            test_mxd2r02_same_class_contact_and_materials
+killed   M07 neigh_modify: extra commands           test_mxd2r02_codex_contact_exclusion_and_friction, test_mxd2r02_same_class_contact_and_materials
+killed   M08 pair_style: after first run allowed    test_mxd2r02_same_class_contact_and_materials
+killed   M09 pair_coeff: any arguments              test_mxd2r02_same_class_contact_and_materials
+killed   M10 material: missing allowed              test_mxd2r02_codex_contact_exclusion_and_friction, test_mxd2r02_same_class_contact_and_materials
+SURVIVED M11 material: duplicate allowed
+killed   M12 material: constants unchecked          test_mxd2r02_same_class_contact_and_materials
+killed   M13 material: order unchecked              test_mxd2r02_same_class_contact_and_materials
+killed   M14 material: unknown name skipped         test_mxd2r02_same_class_contact_and_materials
+killed   M15 bytes: CR accepted                     test_mxd2r03_physical_bytes_api, test_mxd2r03_physical_bytes_cli_both_directions
+killed   M16 bytes: hash of normalized text         test_mxd2r03_physical_bytes_api, test_mxd2r03_physical_bytes_cli_both_directions
+killed   M17 readback CLI: text-mode read           test_mxd2r03_physical_bytes_cli_both_directions
+killed   M18 diff CLI: text-mode read               test_mxd2r03_physical_bytes_cli_both_directions
+killed   M19 smoke CLI: text-mode read              test_mxd2r03_physical_bytes_cli_both_directions
+18/19 killed · unmutated rc 0

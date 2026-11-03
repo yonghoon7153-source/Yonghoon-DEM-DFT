@@ -1,0 +1,252 @@
+test_actual_command_scope (__main__.D2Consumers.test_actual_command_scope) ... <replay>/8d4f9a94a/scripts/make_mixer_deck.py:1122: ResourceWarning: unclosed file <_io.BufferedReader name='<replay>/8d4f9a94a/scripts/make_mixer_deck.py'>
+  generator_sha256=hashlib.sha256(open(os.path.abspath(__file__), 'rb').read()).hexdigest(),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_actual_common_mode_mutations (__main__.D2Consumers.test_actual_common_mode_mutations) ... ok
+test_ceiling_and_ced_meta_rebinding (__main__.D2Consumers.test_ceiling_and_ced_meta_rebinding) ... ok
+test_cli_and_duplicate_json (__main__.D2Consumers.test_cli_and_duplicate_json) ... ok
+test_command_lifecycle (__main__.D2Consumers.test_command_lifecycle) ... ok
+test_coordinated_density_and_gravity_vector (__main__.D2Consumers.test_coordinated_density_and_gravity_vector) ... ok
+test_counts_are_from_actual_inputs (__main__.D2Consumers.test_counts_are_from_actual_inputs) ... ok
+test_d2_pairs_and_old_contracts (__main__.D2Consumers.test_d2_pairs_and_old_contracts) ... ok
+test_dt_half_and_legacy_cli_positive (__main__.D2Consumers.test_dt_half_and_legacy_cli_positive) ... ok
+test_generation_and_supported_phase_positive (__main__.D2Consumers.test_generation_and_supported_phase_positive) ... ok
+test_meta_binding_and_numeric_boundaries (__main__.D2Consumers.test_meta_binding_and_numeric_boundaries) ... ok
+test_mxd2r01_codex_time_insert_rotation (__main__.D2Consumers.test_mxd2r01_codex_time_insert_rotation)
+MXD2R-01 — Codex 네 공통 변조 (run upto · 늦은 timestep · 삽입 start · Front 주기): API 셋 FAIL · CLI 셋 rc 1 · 사유. ... ok
+test_mxd2r01_same_class_generator_grammar (__main__.D2Consumers.test_mxd2r01_same_class_generator_grammar)
+MXD2R-01 같은 부류 — run 옵션 · timestep 위치/토큰 · 삽입 반복/start/속도 · Back 주기 (API 셋). ... ok
+test_mxd2r02_codex_contact_exclusion_and_friction (__main__.D2Consumers.test_mxd2r02_codex_contact_exclusion_and_friction)
+MXD2R-02 — Codex SE–SE 접촉 제외 · 보조 탐침 마찰 행렬 삭제: API 셋 FAIL · CLI 셋 rc 1 · 사유. ... ok
+test_mxd2r02_material_copies_match_generator (__main__.D2Consumers.test_mxd2r02_material_copies_match_generator)
+재료 fix 목록 · 상수 = 생성기 덱에서 뽑은 것과 정확히 같다 (사본이 갈리면 여기서 드러난다 · fail-closed). ... ok
+test_mxd2r02_same_class_contact_and_materials (__main__.D2Consumers.test_mxd2r02_same_class_contact_and_materials)
+MXD2R-02 같은 부류 — 다른 제외 · 이웃 갱신 옵션 · 재료 fix 결손/중복/값/순서/모르는 이름 · pair 위치/계수 (API 셋). ... ok
+test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api)
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유. ... 
+  test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (lf_bytes='readback')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유. ... FAIL
+  test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (lf_bytes='pair')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유. ... FAIL
+  test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (lf_bytes='plan')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유. ... FAIL
+  test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_bytes_lf_meta='readback')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유. ... FAIL
+  test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_bytes_lf_meta='pair')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유. ... FAIL
+  test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_bytes_lf_meta='plan')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유. ... FAIL
+  test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_crlf_meta='readback')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유. ... FAIL
+  test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_crlf_meta='pair')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유. ... FAIL
+  test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_crlf_meta='plan')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유. ... FAIL
+  test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_crlf_meta='readback_text')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유. ... FAIL
+  test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_crlf_meta='pair_text')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유. ... FAIL
+test_mxd2r03_physical_bytes_cli_both_directions (__main__.D2Consumers.test_mxd2r03_physical_bytes_cli_both_directions)
+MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유). ... 
+  test_mxd2r03_physical_bytes_cli_both_directions (__main__.D2Consumers.test_mxd2r03_physical_bytes_cli_both_directions) (case='crlf_lf_meta', cli='readback')
+MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유). ... FAIL
+  test_mxd2r03_physical_bytes_cli_both_directions (__main__.D2Consumers.test_mxd2r03_physical_bytes_cli_both_directions) (case='crlf_lf_meta', cli='pair')
+MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유). ... FAIL
+  test_mxd2r03_physical_bytes_cli_both_directions (__main__.D2Consumers.test_mxd2r03_physical_bytes_cli_both_directions) (case='crlf_lf_meta', cli='plan')
+MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유). ... FAIL
+  test_mxd2r03_physical_bytes_cli_both_directions (__main__.D2Consumers.test_mxd2r03_physical_bytes_cli_both_directions) (case='crlf_crlf_meta', cli='readback')
+MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유). ... FAIL
+  test_mxd2r03_physical_bytes_cli_both_directions (__main__.D2Consumers.test_mxd2r03_physical_bytes_cli_both_directions) (case='crlf_crlf_meta', cli='pair')
+MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유). ... FAIL
+  test_mxd2r03_physical_bytes_cli_both_directions (__main__.D2Consumers.test_mxd2r03_physical_bytes_cli_both_directions) (case='crlf_crlf_meta', cli='plan')
+MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유). ... FAIL
+test_mxd2r_positive_codex_independent_48 (__main__.D2Consumers.test_mxd2r_positive_codex_independent_48)
+양성 보존 (판정문 §7 (4)) — Codex 독립 정상 48 조합: 세 소비자 PASS · SE Bo · 상별 계획수 독립 산술 일치 · 증서 아님. ... ok
+test_pair_identity_and_orientation (__main__.D2Consumers.test_pair_identity_and_orientation) ... ok
+test_tokens_and_nested_schema (__main__.D2Consumers.test_tokens_and_nested_schema) ... ok
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (lf_bytes='readback')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 442, in test_mxd2r03_physical_bytes_api
+    self.assert_pass(result)
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 158, in assert_pass
+    self.assertEqual(result['verdict'], 'PASS', result.get('failures'))
+AssertionError: 'FAIL' != 'PASS'
+- FAIL
++ PASS
+ : ['D2 development contract: ValueError: deck text must be a string']
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (lf_bytes='pair')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 442, in test_mxd2r03_physical_bytes_api
+    self.assert_pass(result)
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 158, in assert_pass
+    self.assertEqual(result['verdict'], 'PASS', result.get('failures'))
+AssertionError: 'FAIL' != 'PASS'
+- FAIL
++ PASS
+ : ['old: D2 development contract: ValueError: deck text must be a string', 'new: D2 development contract: ValueError: deck text must be a string']
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (lf_bytes='plan')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 442, in test_mxd2r03_physical_bytes_api
+    self.assert_pass(result)
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 158, in assert_pass
+    self.assertEqual(result['verdict'], 'PASS', result.get('failures'))
+AssertionError: 'FAIL' != 'PASS'
+- FAIL
++ PASS
+ : ['D2 development contract: ValueError: deck text must be a string']
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_bytes_lf_meta='readback')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 447, in test_mxd2r03_physical_bytes_api
+    self.assertTrue(any('SHA256' in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['D2 development contract: ValueError: deck text must be a string']
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_bytes_lf_meta='pair')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 447, in test_mxd2r03_physical_bytes_api
+    self.assertTrue(any('SHA256' in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['old: D2 development contract: ValueError: deck text must be a string', 'new: D2 development contract: ValueError: deck text must be a string']
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_bytes_lf_meta='plan')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 447, in test_mxd2r03_physical_bytes_api
+    self.assertTrue(any('SHA256' in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['D2 development contract: ValueError: deck text must be a string']
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_crlf_meta='readback')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 453, in test_mxd2r03_physical_bytes_api
+    self.assertTrue(any('LF-only' in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['D2 development contract: ValueError: deck text must be a string']
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_crlf_meta='pair')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 453, in test_mxd2r03_physical_bytes_api
+    self.assertTrue(any('LF-only' in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['old: D2 development contract: ValueError: deck text must be a string', 'new: D2 development contract: ValueError: deck text must be a string']
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_crlf_meta='plan')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 453, in test_mxd2r03_physical_bytes_api
+    self.assertTrue(any('LF-only' in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['D2 development contract: ValueError: deck text must be a string']
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_crlf_meta='readback_text')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 452, in test_mxd2r03_physical_bytes_api
+    self.assert_fail(result)
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 163, in assert_fail
+    self.assertEqual(result['verdict'], 'FAIL', result)
+AssertionError: 'PASS' != 'FAIL'
+- PASS
++ FAIL
+ : {'schema': 'mixer_d2_development/1', 'verdict': 'PASS', 'failures': [], 'registered': None, 'execution_authorized': False, 'scope': 'D2 development deck and planned counts only; not execution evidence', 'deck_sha256': '0b92f856e224d0537b36b2c4fb2cc257e23cfbdea9528c478ef42d0dda63f015', 'density_generation': 'lab20261014', 'phase_names': {1: 'AM_P', 2: 'AM_S', 3: 'SE', 4: 'WALL'}, 'expected_counts': {'1': 143, '2': 699, '3': 99158}, 'n_atoms_planned': 100000, 'Bo_SE': 0.7299906001321018, 'gravity': 9.81, 'rho_uncoated_ncm': 0.3, 'gamma': {'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0, 'WALL': 0.00768}, 'bo_se': 0.73, 'pairs': [{'pair': 'AM_P-AM_P', 'i': 1, 'j': 1, 'F0': 5.762056386024637e-08, 'expected_F0': 5.761958623113774e-08, 'CED': 102869.0, 'overlap_fraction': 3.8411948264080864e-07}, {'pair': 'AM_P-AM_S', 'i': 1, 'j': 2, 'F0': 3.545905129851062e-08, 'expected_F0': 3.545820691146938e-08, 'CED': 120940.0, 'overlap_fraction': 7.351337819054406e-07}, {'pair': 'AM_P-SE', 'i': 1, 'j': 3, 'F0': 2.104013281862581e-08, 'expected_F0': 2.1039698088605478e-08, 'CED': 102981.0, 'overlap_fraction': 6.304885957683845e-06}, {'pair': 'AM_P-WALL', 'i': 1, 'j': 4, 'F0': 1.8438472695519334e-08, 'expected_F0': 1.8438267593964075e-08, 'CED': 49785.9, 'overlap_fraction': 1.2698778143316802e-07}, {'pair': 'AM_S-AM_S', 'i': 2, 'j': 2, 'F0': 2.5608841273169413e-08, 'expected_F0': 2.560870499161677e-08, 'CED': 134796.0, 'overlap_fraction': 6.595554435016158e-07}, {'pair': 'AM_S-SE', 'i': 2, 'j': 3, 'F0': 1.870204897498837e-08, 'expected_F0': 1.87019538565382e-08, 'CED': 107104.0, 'overlap_fraction': 6.06208309259074e-06}, {'pair': 'AM_S-WALL', 'i': 2, 'j': 4, 'F0': 8.19488259882398e-09, 'expected_F0': 8.194785597317367e-09, 'CED': 65238.0, 'overlap_fraction': 2.1804718674125384e-07}, {'pair': 'SE-SE', 'i': 3, 'j': 3, 'F0': 2.1340587493013975e-08, 'expected_F0': 2.1340587493013975e-08, 'CED': 108837.0, 'overlap_fraction': 1.089151207006458e-05}, {'pair': 'SE-WALL', 'i': 3, 'j': 4, 'F0': 3.740430042738864e-09, 'expected_F0': 3.74039077130764e-09, 'CED': 55973.6, 'overlap_fraction': 1.8559516978638765e-06}], 'tolerances': {'absolute_Bo_relative': 2e-05, 'pair_force_relative': 3.0000000000000004e-05}, 'metadata_fields_checked': 'schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts'}
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api) (crlf_crlf_meta='pair_text')
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 452, in test_mxd2r03_physical_bytes_api
+    self.assert_fail(result)
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 163, in assert_fail
+    self.assertEqual(result['verdict'], 'FAIL', result)
+AssertionError: 'PASS' != 'FAIL'
+- PASS
++ FAIL
+ : {'schema': 'mixer_d2_pair_development/1', 'allow': 'D2', 'verdict': 'PASS', 'registered': None, 'execution_authorized': False, 'failures': [], 'table': [{'pair': 'AM_P-AM_P', 'ref': 5.762056386024637e-08, 'new': 1.9206901507553435e-07, 'ratio': 3.333341470614222, 'rule': 3.3333333333333335}, {'pair': 'AM_P-AM_S', 'ref': 3.545905129851062e-08, 'new': 1.1819612450006176e-07, 'ratio': 3.3333132210738623, 'rule': 3.3333333333333335}, {'pair': 'AM_P-SE', 'ref': 2.104013281862581e-08, 'new': 3.841331182975715e-08, 'ratio': 1.8257162234143176, 'rule': 1.8257418583505538}, {'pair': 'AM_P-WALL', 'ref': 1.8438472695519334e-08, 'new': 3.3663870859109335e-08, 'ratio': 1.8257407440958964, 'rule': 1.8257418583505538}, {'pair': 'AM_S-AM_S', 'ref': 2.5608841273169413e-08, 'new': 8.536346803507442e-08, 'ratio': 3.3333592537242365, 'rule': 3.3333333333333335}, {'pair': 'AM_S-SE', 'ref': 1.870204897498837e-08, 'new': 3.414529506847026e-08, 'ratio': 1.8257515587802857, 'rule': 1.8257418583505538}, {'pair': 'AM_S-WALL', 'ref': 8.19488259882398e-09, 'new': 1.4961767943410874e-08, 'ratio': 1.825745245643664, 'rule': 1.8257418583505538}, {'pair': 'SE-SE', 'ref': 2.1340587493013975e-08, 'new': 2.1340587493013975e-08, 'ratio': 1.0, 'rule': 1.0}, {'pair': 'SE-WALL', 'ref': 3.740430042738864e-09, 'new': 3.740430042738864e-09, 'ratio': 1.0, 'rule': 1.0}], 'old': {'schema': 'mixer_d2_development/1', 'verdict': 'PASS', 'failures': [], 'registered': None, 'execution_authorized': False, 'scope': 'D2 development deck and planned counts only; not execution evidence', 'deck_sha256': '0b92f856e224d0537b36b2c4fb2cc257e23cfbdea9528c478ef42d0dda63f015', 'density_generation': 'lab20261014', 'phase_names': {1: 'AM_P', 2: 'AM_S', 3: 'SE', 4: 'WALL'}, 'expected_counts': {'1': 143, '2': 699, '3': 99158}, 'n_atoms_planned': 100000, 'Bo_SE': 0.7299906001321018, 'gravity': 9.81, 'rho_uncoated_ncm': 0.3, 'gamma': {'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0, 'WALL': 0.00768}, 'bo_se': 0.73, 'pairs': [{'pair': 'AM_P-AM_P', 'i': 1, 'j': 1, 'F0': 5.762056386024637e-08, 'expected_F0': 5.761958623113774e-08, 'CED': 102869.0, 'overlap_fraction': 3.8411948264080864e-07}, {'pair': 'AM_P-AM_S', 'i': 1, 'j': 2, 'F0': 3.545905129851062e-08, 'expected_F0': 3.545820691146938e-08, 'CED': 120940.0, 'overlap_fraction': 7.351337819054406e-07}, {'pair': 'AM_P-SE', 'i': 1, 'j': 3, 'F0': 2.104013281862581e-08, 'expected_F0': 2.1039698088605478e-08, 'CED': 102981.0, 'overlap_fraction': 6.304885957683845e-06}, {'pair': 'AM_P-WALL', 'i': 1, 'j': 4, 'F0': 1.8438472695519334e-08, 'expected_F0': 1.8438267593964075e-08, 'CED': 49785.9, 'overlap_fraction': 1.2698778143316802e-07}, {'pair': 'AM_S-AM_S', 'i': 2, 'j': 2, 'F0': 2.5608841273169413e-08, 'expected_F0': 2.560870499161677e-08, 'CED': 134796.0, 'overlap_fraction': 6.595554435016158e-07}, {'pair': 'AM_S-SE', 'i': 2, 'j': 3, 'F0': 1.870204897498837e-08, 'expected_F0': 1.87019538565382e-08, 'CED': 107104.0, 'overlap_fraction': 6.06208309259074e-06}, {'pair': 'AM_S-WALL', 'i': 2, 'j': 4, 'F0': 8.19488259882398e-09, 'expected_F0': 8.194785597317367e-09, 'CED': 65238.0, 'overlap_fraction': 2.1804718674125384e-07}, {'pair': 'SE-SE', 'i': 3, 'j': 3, 'F0': 2.1340587493013975e-08, 'expected_F0': 2.1340587493013975e-08, 'CED': 108837.0, 'overlap_fraction': 1.089151207006458e-05}, {'pair': 'SE-WALL', 'i': 3, 'j': 4, 'F0': 3.740430042738864e-09, 'expected_F0': 3.74039077130764e-09, 'CED': 55973.6, 'overlap_fraction': 1.8559516978638765e-06}], 'tolerances': {'absolute_Bo_relative': 2e-05, 'pair_force_relative': 3.0000000000000004e-05}, 'metadata_fields_checked': 'schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts'}, 'new': {'schema': 'mixer_d2_development/1', 'verdict': 'PASS', 'failures': [], 'registered': None, 'execution_authorized': False, 'scope': 'D2 development deck and planned counts only; not execution evidence', 'deck_sha256': 'a26fd5e80edb7553e1f3c831286a3b153257d4cd8ffe79a83b1fb82b248ab4ae', 'density_generation': 'lab20261014', 'phase_names': {1: 'AM_P', 2: 'AM_S', 3: 'SE', 4: 'WALL'}, 'expected_counts': {'1': 143, '2': 699, '3': 99158}, 'n_atoms_planned': 100000, 'Bo_SE': 0.7299906001321018, 'gravity': 9.81, 'rho_uncoated_ncm': 0.3, 'gamma': {'AM_P': 1.0, 'AM_S': 1.0, 'SE': 1.0, 'WALL': 0.00768}, 'bo_se': 0.73, 'pairs': [{'pair': 'AM_P-AM_P', 'i': 1, 'j': 1, 'F0': 1.9206901507553435e-07, 'expected_F0': 1.9206528743712578e-07, 'CED': 153666.0, 'overlap_fraction': 8.571421897860918e-07}, {'pair': 'AM_P-AM_S', 'i': 1, 'j': 2, 'F0': 1.1819612450006176e-07, 'expected_F0': 1.1819402303823127e-07, 'CED': 180660.0, 'overlap_fraction': 1.6404026559461227e-06}, {'pair': 'AM_P-SE', 'i': 1, 'j': 3, 'F0': 3.841331182975715e-08, 'expected_F0': 3.841305748742516e-08, 'CED': 125864.0, 'overlap_fraction': 9.418160458846041e-06}, {'pair': 'AM_P-WALL', 'i': 1, 'j': 4, 'F0': 3.3663870859109335e-08, 'expected_F0': 3.3663516941768766e-08, 'CED': 60848.9, 'overlap_fraction': 1.8969447164241945e-07}, {'pair': 'AM_S-AM_S', 'i': 2, 'j': 2, 'F0': 8.536346803507442e-08, 'expected_F0': 8.53623499720559e-08, 'CED': 201359.0, 'overlap_fraction': 1.4717681173316766e-06}, {'pair': 'AM_S-SE', 'i': 2, 'j': 3, 'F0': 3.414529506847026e-08, 'expected_F0': 3.414493998882236e-08, 'CED': 130904.0, 'overlap_fraction': 9.055581390651056e-06}, {'pair': 'AM_S-WALL', 'i': 2, 'j': 4, 'F0': 1.4961767943410874e-08, 'expected_F0': 1.496156308523056e-08, 'CED': 79734.7, 'overlap_fraction': 3.2571963541568235e-07}, {'pair': 'SE-SE', 'i': 3, 'j': 3, 'F0': 2.1340587493013975e-08, 'expected_F0': 2.1340587493013975e-08, 'CED': 108837.0, 'overlap_fraction': 1.089151207006458e-05}, {'pair': 'SE-WALL', 'i': 3, 'j': 4, 'F0': 3.740430042738864e-09, 'expected_F0': 3.74039077130764e-09, 'CED': 55973.6, 'overlap_fraction': 1.8559516978638765e-06}], 'tolerances': {'absolute_Bo_relative': 2e-05, 'pair_force_relative': 3.0000000000000004e-05}, 'metadata_fields_checked': 'schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts'}, 'scope': 'same-world D2 development pair, not a cohort or launch certificate', 'degenerate_same_gamma_world': False}
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_cli_both_directions (__main__.D2Consumers.test_mxd2r03_physical_bytes_cli_both_directions) (case='crlf_lf_meta', cli='readback')
+MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유).
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 469, in test_mxd2r03_physical_bytes_cli_both_directions
+    self.assertEqual(rc, rc_want, out + err)
+AssertionError: 0 != 1 : D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_cli_both_directions (__main__.D2Consumers.test_mxd2r03_physical_bytes_cli_both_directions) (case='crlf_lf_meta', cli='pair')
+MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유).
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 469, in test_mxd2r03_physical_bytes_cli_both_directions
+    self.assertEqual(rc, rc_want, out + err)
+AssertionError: 0 != 1 : D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_cli_both_directions (__main__.D2Consumers.test_mxd2r03_physical_bytes_cli_both_directions) (case='crlf_lf_meta', cli='plan')
+MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유).
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 469, in test_mxd2r03_physical_bytes_cli_both_directions
+    self.assertEqual(rc, rc_want, out + err)
+AssertionError: 0 != 1 : D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_cli_both_directions (__main__.D2Consumers.test_mxd2r03_physical_bytes_cli_both_directions) (case='crlf_crlf_meta', cli='readback')
+MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유).
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 470, in test_mxd2r03_physical_bytes_cli_both_directions
+    self.assertIn(reason, out)
+AssertionError: 'LF-only' not found in 'D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님\n  D2 development contract: ValueError: metadata SHA256 != actual deck\n'
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_cli_both_directions (__main__.D2Consumers.test_mxd2r03_physical_bytes_cli_both_directions) (case='crlf_crlf_meta', cli='pair')
+MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유).
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 470, in test_mxd2r03_physical_bytes_cli_both_directions
+    self.assertIn(reason, out)
+AssertionError: 'LF-only' not found in 'D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님\n  old: D2 development contract: ValueError: metadata SHA256 != actual deck\n  new: D2 development contract: ValueError: metadata SHA256 != actual deck\n'
+
+======================================================================
+FAIL: test_mxd2r03_physical_bytes_cli_both_directions (__main__.D2Consumers.test_mxd2r03_physical_bytes_cli_both_directions) (case='crlf_crlf_meta', cli='plan')
+MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유).
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<replay>/8d4f9a94a/scripts/test_mixer_d2_consumers.py", line 470, in test_mxd2r03_physical_bytes_cli_both_directions
+    self.assertIn(reason, out)
+AssertionError: 'LF-only' not found in 'D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님\n  D2 development contract: ValueError: metadata SHA256 != actual deck\n'
+
+----------------------------------------------------------------------
+Ran 21 tests in 5.955s
+
+FAILED (failures=17)
