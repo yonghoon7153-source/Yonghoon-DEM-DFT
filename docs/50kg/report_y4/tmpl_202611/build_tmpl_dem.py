@@ -47,6 +47,7 @@ SIZE = dict(
     thickness=[124.57, 126.83, 131.50],      # 질량 보존 두께 (µm)
     porosity=[18.1, 19.6, 22.4],             # 기공도 (정확 합집합, %)
     coverage=[46.8, 54.2, 52.6],             # AM coverage (Physics 합집합, %)
+    contacts=[99.7, 24.1, 10.3],             # NCM 1개당 SE 접촉 수 (CN AM–SE 평균) — 1저자 11-03 '피복률 안 넣고 AM–SE contacts 갯수로'
     tau2=[6.00, 8.26, 13.63],                # 수송 tortuosity = φ_SE·σ₀/σ_eff (제곱근 아님)
     tau_geo=[1.22, 1.28, 1.37],              # 기하 tortuosity (최단 경로 / 두께)
     sigma=[0.0702, 0.0501, 0.0293],          # σ_Li+ (σ₀ = 1.5 mS/cm, Hertz) mS/cm
@@ -82,6 +83,7 @@ def verify(values_csv, metrics_modulus, tau_geo_json=None):
             return [r[5], r[4], r[3]]
         checks = [('질량 보존 두께', SIZE['thickness'], 2), ('기공도 (정확 합집합)', SIZE['porosity'], 1),
                   ('AM coverage', SIZE['coverage'], 1), ('수송 tortuosity', SIZE['tau2'], 2),
+                  ('CN AM–SE (NCM 1개당 SE 접촉 수)', SIZE['contacts'], 1),
                   ('기하 tortuosity (최단 경로 / 두께)', SIZE['tau_geo'], 2),
                   ('유효 이온전도도 σ_Li+ (σ₀ = 1.5 mS/cm)', SIZE['sigma'], 4),
                   ('이완 끝 판 압력', SIZE['p_end'], 0),
@@ -287,6 +289,13 @@ def make_charts(fig_dir):
         write_csv(fig_dir / (name + '.csv'), x0, sec['unit'], 'Coverage', '%',
                   sec['cats'], sec['coverage'], '{:.1f}')
         out[name] = fig_dir / (name + '.png')
+        if 'contacts' in sec:                # 1저자 11-03 — 9장 coverage 막대 대신 NCM 1개당 SE 접촉 수 (입도 절만 · 같은 크기 · 같은 색)
+            name = '%s_contacts_%s' % (pe, tag)
+            simple_chart(fig_dir / (name + '.png'), E_SIZE, sec['cats'], sec['contacts'], RAMP,
+                         'SE contacts per CAM', xl, (0, 120), [0, 40, 80, 120], [20, 60, 100], '{:.1f}')
+            write_csv(fig_dir / (name + '.csv'), x0, sec['unit'], 'SE contacts per CAM', '-',
+                      sec['cats'], sec['contacts'], '{:.1f}')
+            out[name] = fig_dir / (name + '.png')
         name = '%s_sigma_%s' % (pg, tag)
         simple_chart(fig_dir / (name + '.png'), G_SIZE, sec['cats'], sec['sigma'], RAMP,
                      r'$\sigma_{\mathrm{Li^{+}}}$ (mS cm$^{-1}$)', xl, (0, 0.08), [0, 0.02, 0.04, 0.06, 0.08],

@@ -1,0 +1,199 @@
+{
+ "tool": "docs/50kg/report_y4/meeting_20261104/tools/modulus_load_share.py",
+ "definition": "    python3 -I modulus_load_share.py <리포> <출력 폴더> [--data-root <draft2 출력 뿌리 (변형 침대 metrics)>] [침대 …]",
+ "plane_load_share_sha256": "a1d95cb9c2f800028d67c44d79330362f9ffee568fc9cccebb943cce064a61ee",
+ "beds": {
+  "D2": {
+   "status": "OK",
+   "record": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-adaa56e77169f0277/docs/50kg/report_y4/draft2/data/D2/metrics_D2.json",
+   "end_set": {
+    "tgz": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-adaa56e77169f0277/docs/data/kg50_d2_end_20261030/kg50_d2_end_20261030_4files.tgz",
+    "tgz_sha256": "ead5bed68e770766a93e2f2c79899f88ff7150ec687409d220c05298add5cbfa",
+    "end_step": 4015002
+   },
+   "se_E_GPa": null,
+   "p_end_MPa": 279.79158,
+   "lw_am_nowall_median_MPa": 334.8483429814734,
+   "lw_am_over_p_end": 1.1967777693005395,
+   "plane21": {
+    "status": "OK",
+    "why": [],
+    "contribution_sigma_zz_pct": {
+     "AM–AM": 69.53078291062589,
+     "AM–SE": 23.592121222495773,
+     "SE–SE": 6.8770958668783155
+    },
+    "sigma_zz_planes_mean_mpa": 281.67084220174735,
+    "conservation_max_over_min": 1.012298334519031,
+    "balance_residual": 0.00012625138474623405
+   },
+   "window_integral": {
+    "contribution_pct": {
+     "AM–AM": 69.11928360557182,
+     "AM–SE": 24.265089545650458,
+     "SE–SE": 6.615626848777704
+    },
+    "sigma_zz_mpa": 281.67163082343586,
+    "window_um": [
+     6.0,
+     116.46899999999998
+    ]
+   },
+   "alpha": {
+    "status": "OK",
+    "alpha_zz": {
+     "AM_P": 1.3211094550194171,
+     "AM_S": null,
+     "AM": 1.3211094550194171,
+     "SE": 0.3717356706288012
+    }
+   },
+   "box_virial_share_pct": {
+    "AM–AM": 68.7430472546649,
+    "AM–SE": 24.575025743906668,
+    "SE–SE": 6.681927001428451
+   },
+   "box_virial_sigma_zz_mpa": 271.3663242005955,
+   "n_contacts": 81115,
+   "am_se_contact_pressure": {
+    "mean_MPa": 369.58198506095783,
+    "median_MPa": 385.67210275122665,
+    "area_weighted_MPa": 415.9198147613612,
+    "p10_MPa": 271.8528493808452,
+    "p90_MPa": 448.589988259696,
+    "n": 34833,
+    "n_am_se": 35630,
+    "n_not_pushing": 797,
+    "n_area_le0": 0
+   }
+  },
+  "D2E05": {
+   "status": "OK",
+   "record": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/e15_out/data/D2E05/metrics_D2E05.json",
+   "end_set": {
+    "tgz": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/e05_in/kg50_d2_b50_e05_end.tgz",
+    "tgz_sha256": "ed47c5a26158d2dab3d5d8779547a386f3c855a81a987a69da687b5b76d20a00",
+    "end_step": 4485002
+   },
+   "se_E_GPa": 0.675,
+   "p_end_MPa": 278.45593,
+   "lw_am_nowall_median_MPa": 352.7544507613269,
+   "lw_am_over_p_end": 1.2668232662932581,
+   "plane21": {
+    "status": "OK",
+    "why": [],
+    "contribution_sigma_zz_pct": {
+     "AM–AM": 78.3126921678434,
+     "AM–SE": 16.964598091070208,
+     "SE–SE": 4.722709741086415
+    },
+    "sigma_zz_planes_mean_mpa": 280.3286151093354,
+    "conservation_max_over_min": 1.0122489665062107,
+    "balance_residual": 0.00014176961846049194
+   },
+   "window_integral": {
+    "contribution_pct": {
+     "AM–AM": 77.98913123727606,
+     "AM–SE": 17.424472194615433,
+     "SE–SE": 4.58639656810851
+    },
+    "sigma_zz_mpa": 280.32819380881267,
+    "window_um": [
+     6.0,
+     111.76899999999999
+    ]
+   },
+   "alpha": {
+    "status": "OK",
+    "alpha_zz": {
+     "AM_P": 1.3761032683564443,
+     "AM_S": null,
+     "AM": 1.3761032683564443,
+     "SE": 0.2621427038331294
+    }
+   },
+   "box_virial_share_pct": {
+    "AM–AM": 77.72873736502326,
+    "AM–SE": 17.625230480956887,
+    "SE–SE": 4.646032154019844
+   },
+   "box_virial_sigma_zz_mpa": 269.08863986274326,
+   "n_contacts": 84875,
+   "am_se_contact_pressure": {
+    "mean_MPa": 220.96615395799685,
+    "median_MPa": 227.96357863281145,
+    "area_weighted_MPa": 247.0984482384664,
+    "p10_MPa": 167.00507285808743,
+    "p90_MPa": 268.1816310979909,
+    "n": 36656,
+    "n_am_se": 37328,
+    "n_not_pushing": 672,
+    "n_area_le0": 0
+   }
+  },
+  "D2E15": {
+   "status": "OK",
+   "record": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/e15_out/data/D2E15/metrics_D2E15.json",
+   "end_set": {
+    "tgz": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/e15_in/kg50_d2_b50_e15_end.tgz",
+    "tgz_sha256": "afc925d741d32af4179e3e64bf725b288506dd945b1a731516ca901dfa41947a",
+    "end_step": 3665002
+   },
+   "se_E_GPa": 2.025,
+   "p_end_MPa": 280.14436,
+   "lw_am_nowall_median_MPa": 325.9790281541339,
+   "lw_am_over_p_end": 1.1636108903071756,
+   "plane21": {
+    "status": "OK",
+    "why": [],
+    "contribution_sigma_zz_pct": {
+     "AM–AM": 64.62101331134474,
+     "AM–SE": 27.27682692646911,
+     "SE–SE": 8.102159762186162
+    },
+    "sigma_zz_planes_mean_mpa": 282.032998365261,
+    "conservation_max_over_min": 1.0123785966883865,
+    "balance_residual": 0.00012680243279548795
+   },
+   "window_integral": {
+    "contribution_pct": {
+     "AM–AM": 64.27047303604552,
+     "AM–SE": 27.963330596815418,
+     "SE–SE": 7.7661963671390675
+    },
+    "sigma_zz_mpa": 282.0336481071856,
+    "window_um": [
+     6.0,
+     119.969
+    ]
+   },
+   "alpha": {
+    "status": "OK",
+    "alpha_zz": {
+     "AM_P": 1.2905138878865305,
+     "AM_S": null,
+     "AM": 1.2905138878865305,
+     "SE": 0.43216477649712126
+    }
+   },
+   "box_virial_share_pct": {
+    "AM–AM": 63.87140696059835,
+    "AM–SE": 28.294522838741948,
+    "SE–SE": 7.834070200659701
+   },
+   "box_virial_sigma_zz_mpa": 272.33924732572245,
+   "n_contacts": 78543,
+   "am_se_contact_pressure": {
+    "mean_MPa": 493.17367144418296,
+    "median_MPa": 519.5605183066905,
+    "area_weighted_MPa": 558.8055030897656,
+    "p10_MPa": 348.67254166646677,
+    "p90_MPa": 600.975399150756,
+    "n": 33691,
+    "n_am_se": 34581,
+    "n_not_pushing": 890,
+    "n_area_le0": 0
+   }
+  }
+ }
+}
