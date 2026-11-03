@@ -143,7 +143,7 @@ for c in (1, 2, 3):
     fill_slot(8, f'Image slot Geometric tortuosity {c}', webp_png(IMGS / f'{pth[c]}.webp'), f'Tortuosity path D{c}')
 set_notes(8, 'D_SE = 1 / 2 / 3 µm: 활물질 (NCM) 1개당 전해질 접촉 수 99.7 / 24.1 / 10.3개, 기공도 18.1 / 19.6 / 22.4 %, '
              'tortuosity 6.00 / 8.26 / 13.63 (= φ_SE·σ₀/σ_eff · 이온 수송).\n'
-             'Structure · Pore · Tortuosity 그림 = 웹앱 캡처 (경로 그림 = 예시 · 값은 전도도 해) · SE contacts per CAM 칸 = 그림 대기 (1저자 웹앱 AM–SE 접촉 보기 캡처 · coverage 는 1저자 11-03 결정으로 뺌).')
+             'Structure · Pore · Tortuosity 그림 = 웹앱 캡처 (경로 그림 = 예시 · 값은 전도도 해) · SE contacts per AM 칸 = 그림 대기 (1저자 웹앱 AM–SE 접촉 보기 캡처 · coverage 는 1저자 11-03 결정으로 뺌).')
 
 # ── 9장 (입도 · 지표)
 drop_word_before(9)
@@ -171,14 +171,14 @@ set_notes(9, 'D_SE = 1 / 2 / 3 µm: 기공도 (시뮬레이션) 18.1 / 19.6 / 22
              '활물질당 접촉 면적 합은 21.0 / 22.6 / 20.3 µm² 로 비슷하다 (docs/50kg/report_y4/draft2/metrics_all.csv).\n'
              'Origin 자료: 시트 p09_porosity_DSE · p09_tortuosity_DSE · p09_contacts_DSE.')
 log.append('s9: coverage 막대 → 접촉 수 막대 · 둘째 글머리 · 노트')
-relabel(8, 'Coverage', 'SE contacts per CAM', 3)
+relabel(8, 'Coverage', 'SE contacts per AM', 3)
 for _o, _n in (('46.8 %', '99.7'), ('54.2 %', '24.1'), ('52.6 %', '10.3')):
     relabel(8, _o, _n, 1)
 _r8 = [r for x in all_shapes(S[8]) if x.has_text_frame for pp in x.text_frame.paragraphs for r in pp.runs
        if r.text == '구조, coverage, 기공 및 이온 이동 경로']
 assert len(_r8) == 1, len(_r8)
 _r8[0].text = '구조, 활물질–전해질 접촉, 기공 및 이온 이동 경로'
-log.append('s8: Coverage 칸 → SE contacts per CAM (그림 칸 = 공백 · 1저자 웹앱 캡처 자리) · 글머리')
+log.append('s8: Coverage 칸 → SE contacts per AM (그림 칸 = 공백 · 1저자 웹앱 캡처 자리) · 글머리')
 
 # ── 10장 (입도 · 이온전도도) — 글 그대로 · 노트에 Origin
 old10 = S[10].notes_slide.notes_text_frame.text

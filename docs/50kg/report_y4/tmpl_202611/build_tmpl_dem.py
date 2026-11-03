@@ -292,8 +292,8 @@ def make_charts(fig_dir):
         if 'contacts' in sec:                # 1저자 11-03 — 9장 coverage 막대 대신 NCM 1개당 SE 접촉 수 (입도 절만 · 같은 크기 · 같은 색)
             name = '%s_contacts_%s' % (pe, tag)
             simple_chart(fig_dir / (name + '.png'), E_SIZE, sec['cats'], sec['contacts'], RAMP,
-                         'SE contacts per CAM', xl, (0, 120), [0, 40, 80, 120], [20, 60, 100], '{:.1f}')
-            write_csv(fig_dir / (name + '.csv'), x0, sec['unit'], 'SE contacts per CAM', '-',
+                         'SE contacts per AM', xl, (0, 120), [0, 40, 80, 120], [20, 60, 100], '{:.1f}')
+            write_csv(fig_dir / (name + '.csv'), x0, sec['unit'], 'SE contacts per AM', '-',
                       sec['cats'], sec['contacts'], '{:.1f}')
             out[name] = fig_dir / (name + '.png')
         name = '%s_sigma_%s' % (pg, tag)
