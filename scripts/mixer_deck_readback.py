@@ -1260,10 +1260,12 @@ def _d2_lifecycle(commands):
     for ordinal,(name,i,t) in enumerate(inserts):
         # ★ MXD2R-01 — 생성기 꼴만: insert_every once (반복 거부) · start 없음 (늦은 시작 = 제거 전에 삽입 기회 없음 · Codex insert_start_late) ·
         #   maxattempt · overlapcheck · all_in · 속도 · ntry_mc = 생성기 상수 · 다른 옵션 없음
-        _d2_need(len(t)==len(D2_INSERT_FORM) and all(w is None or t[k]==w for k,w in enumerate(D2_INSERT_FORM)),
-                 'D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 '
-                 'insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region R particles_in_region N ntry_mc 20000) '
-                 '— start · repeat (insert_every N) · other options rejected: `'+' '.join(t[1:])[:90]+'`')
+        if not (len(t)==len(D2_INSERT_FORM) and all(w is None or t[k]==w for k,w in enumerate(D2_INSERT_FORM))):
+            k=next((k for k,w in enumerate(D2_INSERT_FORM) if k>=len(t) or (w is not None and t[k]!=w)),len(D2_INSERT_FORM))
+            got,want=(t[k] if k<len(t) else '(end)'),(D2_INSERT_FORM[k] if k<len(D2_INSERT_FORM) else '(end)')
+            _d2_need(False,'D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 '
+                     'insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region R particles_in_region N ntry_mc 20000) '
+                     f'— start · repeat (insert_every N) · other options rejected: fix {t[1]} token {k} `{got}` (generator `{want}`)')
         for field in ('region','distributiontemplate'):
             _d2_need(t.count(field)==1,'missing/duplicate insertion '+field)
         region=t[t.index('region')+1];distribution=t[t.index('distributiontemplate')+1]

@@ -121,6 +121,10 @@ MXD2R02_SAME_CLASS = {
     'charvel_missing': (lambda s: re.sub(r'(?m)^fix m9 [^\n]*\n', '', s), 'characteristicVelocity'),
     'friction_duplicate': (lambda s: s.replace('fix m5 all', 'fix m4b all property/global coefficientFriction peratomtypepair 4 &\n'
                                                + '    0.1 0.1 0.1 0.1 &\n' * 3 + '    0.1 0.1 0.1 0.1\nfix m5 all', 1), 'coefficientFriction'),
+    # 사전 공격 변이 M11 생존 (11-03) — 값이 다른 중복은 상수 검사가 먼저 잡아 '중복' 규칙이 시험에 묶이지 않았다 → 같은 값 중복으로 묶는다
+    'friction_duplicate_same_values': (lambda s: s.replace('fix m5 all', 'fix m4b all property/global coefficientFriction peratomtypepair 4 &\n'
+                                                           + '    0.9 0.9 0.9 0.9 &\n' * 3 + '    0.9 0.9 0.9 0.9\nfix m5 all', 1),
+                                       'defined more than once'),
     'friction_value': (_friction_values('0.1'), 'coefficientFriction'),
     'friction_after_pair_style': (_move_after(r'^fix m4 [^\n]*\n(?:    [^\n]*\n){4}', 'pair_coeff      * *'), 'coefficientFriction'),
     'unknown_property': (lambda s: s.replace('fix m9 all', 'fix mX all property/global coefficientRestitutionWall scalar 0.5\nfix m9 all', 1),
