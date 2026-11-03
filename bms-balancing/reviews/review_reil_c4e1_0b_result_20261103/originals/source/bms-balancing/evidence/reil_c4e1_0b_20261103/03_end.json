@@ -1,0 +1,56 @@
+{
+ "copies_sha256": {
+  "bms-balancing/evidence/reil_c4e1_0b_20261103/00_end_writer.py": "2e44f2e570b88ebd5bb88ee89b4e125d7774156a890bf01a429095aeb6fd5e44",
+  "bms-balancing/evidence/reil_c4e1_0b_20261103/00_step_runner.py": "c5aab7c35fd3e81fc34a787703f5895853954db5d3903f5399f74fbc27363425",
+  "bms-balancing/scripts/reil_c4e1_launch.py": "2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396",
+  "bms-balancing/tests/test_reil_c4e1_launch.py": "3f9d2f2585b36819d229796154ecd4e902ffce86120c8e3c5a1e75bb1554e9cc",
+  "bms-balancing/tests/test_reil_c4e1_runner.py": "d9880f28092e064017fd5d35f13b0f41b359ba301fca88fa5e3bc72e26d2bddd"
+ },
+ "disk_avail_bytes": 26098778112,
+ "git_name_check_e": {
+  "git_env_names": [
+   "GIT_ASKPASS",
+   "GIT_CONFIG_COUNT",
+   "GIT_CONFIG_KEY_0",
+   "GIT_CONFIG_KEY_1",
+   "GIT_CONFIG_KEY_2",
+   "GIT_CONFIG_VALUE_0",
+   "GIT_CONFIG_VALUE_1",
+   "GIT_CONFIG_VALUE_2",
+   "GIT_EDITOR",
+   "GIT_SSL_CAINFO",
+   "GIT_TERMINAL_PROMPT"
+  ],
+  "outside_allowlist": []
+ },
+ "kind": "REIL_C4E1_0B_END",
+ "steps": {
+  "01_red_e1_0b": {
+   "cleanup_status": "empty",
+   "deadline_hit": false,
+   "head_end": "69dacaab42b7e704f89320498accb1defd051fc2",
+   "head_start": "69dacaab42b7e704f89320498accb1defd051fc2",
+   "outer_rc": {
+    "rc": 1,
+    "text": "1\n"
+   },
+   "rc": 1,
+   "runner_ok": true,
+   "started": true,
+   "timed_out": false,
+   "times": {
+    "child_s": 17.027,
+    "cleanup_s": 0.002,
+    "records_s": 0.043,
+    "total_s": 17.482
+   }
+  },
+  "02_green_e1_0b": {
+   "meta_why": "FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_0b_20261103/02_green_e1_0b.meta.json'",
+   "outer_rc": {
+    "why": "FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_0b_20261103/02_green_e1_0b.outer_rc.txt'"
+   }
+  }
+ },
+ "utc": "2026-11-03T06:27:01Z"
+}

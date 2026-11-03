@@ -1,0 +1,30 @@
+{
+  "kind": "REVIEWER_DATA_OPERATIONS",
+  "allowed_actions_performed": [
+    "Read-only GitHub exact-commit fetches and commit comparisons",
+    "Local attachment and prior capture reads",
+    "Reviewer-owned byte/hash/JSON/AST parsing and source linkage",
+    "Review reports and package creation/readback"
+  ],
+  "received_code_imports": 0,
+  "target_tests": 0,
+  "target_probes": 0,
+  "target_fixture_runs": 0,
+  "repository_edits": 0,
+  "repository_commits_pushes": 0,
+  "COMSOL": 0,
+  "external_transmission": 0,
+  "reviewer_setup_error": [
+    {
+      "operation": "Sub-reviewer attempted Windows python alias for stdin data analysis",
+      "result": "ResourceUnavailable before script execution",
+      "handling": "Used already verified bundled absolute Python path for reviewer-owned data analysis only",
+      "target_failure": false
+    }
+  ],
+  "budget": {
+    "numeric_new_work_budget": null,
+    "whole_work_elapsed_claim": null,
+    "prior_budget_reused": false
+  }
+}

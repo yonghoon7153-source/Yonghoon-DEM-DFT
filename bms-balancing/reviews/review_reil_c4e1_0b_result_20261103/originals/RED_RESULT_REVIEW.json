@@ -1,0 +1,637 @@
+{
+  "kind": "REIL_C4E1_0B_RED_STATIC_RESULT_REVIEW",
+  "captured_commit": "a38c878ff0055f588143288707d8b5f46646bf63",
+  "method": "Reviewer-owned standard-library text/JSON parsing, AST literal extraction, and SHA-256 only. No target imports, target calls, tests, probes, Git fixtures, or target-code execution.",
+  "verdict": "RED_EXPECTATION_MISMATCH_STOP_REQUIRED",
+  "node_sets": {
+    "FAILED": {
+      "expected_count": 9,
+      "actual_count": 9,
+      "missing": [],
+      "extra": [],
+      "duplicates": {},
+      "match": true
+    },
+    "PASSED": {
+      "expected_count": 24,
+      "actual_count": 24,
+      "missing": [],
+      "extra": [],
+      "duplicates": {},
+      "match": true
+    }
+  },
+  "observed_summary_nodes": {
+    "FAILED": [
+      "tests/test_reil_c4e1_launch.py::test_l14_independence_fixed_commands_constants_and_main_rules",
+      "tests/test_reil_c4e1_launch.py::test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child",
+      "tests/test_reil_c4e1_launch.py::test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git",
+      "tests/test_reil_c4e1_launch.py::test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list",
+      "tests/test_reil_c4e1_launch.py::test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child",
+      "tests/test_reil_c4e1_launch.py::test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write",
+      "tests/test_reil_c4e1_launch.py::test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look",
+      "tests/test_reil_c4e1_launch.py::test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline",
+      "tests/test_reil_c4e1_launch.py::test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty"
+    ],
+    "PASSED": [
+      "tests/test_reil_c4e1_launch.py::test_l1_precheck_passes_only_with_fixed_list_exact_bytes_seal_binding_clean_interpreter_and_approved_specs",
+      "tests/test_reil_c4e1_launch.py::test_l2_list_sha_schema_path_set_entry_format_and_non_json_each_block",
+      "tests/test_reil_c4e1_launch.py::test_l3_changed_same_size_missing_symlinked_module_or_linked_parent_each_block",
+      "tests/test_reil_c4e1_launch.py::test_l4_a_shadowing_scripts_package_module_zip_entry_or_our_init_blocks",
+      "tests/test_reil_c4e1_launch.py::test_l5_interpreter_flags_fixed_argv_head_and_run_script_path_are_checked",
+      "tests/test_reil_c4e1_launch.py::test_l6_stage_verdict_is_the_and_of_precheck_child_rc_timeout_and_postcheck",
+      "tests/test_reil_c4e1_launch.py::test_l7_child_result_reads_the_last_stdout_line_and_needs_final_complete_for_run",
+      "tests/test_reil_c4e1_launch.py::test_l8_identity_link_binds_the_run_import_paths_to_the_checked_paths",
+      "tests/test_reil_c4e1_launch.py::test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false",
+      "tests/test_reil_c4e1_launch.py::test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds",
+      "tests/test_reil_c4e1_launch.py::test_l11_timeout_kills_the_whole_process_group_including_grandchildren",
+      "tests/test_reil_c4e1_launch.py::test_l12_refuses_to_overwrite_records_or_reuse_a_pycache_folder",
+      "tests/test_reil_c4e1_launch.py::test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder",
+      "tests/test_reil_c4e1_launch.py::test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it",
+      "tests/test_reil_c4e1_launch.py::test_l16_a_leaf_extension_module_beside_an_approved_module_blocks",
+      "tests/test_reil_c4e1_launch.py::test_l17_extra_executed_files_and_the_seal_lock_binding_each_block",
+      "tests/test_reil_c4e1_launch.py::test_l18_process_observation_errors_stay_unknown_and_only_vanished_pids_are_gone",
+      "tests/test_reil_c4e1_launch.py::test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited",
+      "tests/test_reil_c4e1_launch.py::test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state",
+      "tests/test_reil_c4e1_launch.py::test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output",
+      "tests/test_reil_c4e1_launch.py::test_l22_child_env_keeps_only_the_ca_among_git_variables_and_removes_secrets",
+      "tests/test_reil_c4e1_launch.py::test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source",
+      "tests/test_reil_c4e1_launch.py::test_l26_preparation_failures_are_recorded_as_phase_prepare_and_never_start_the_child",
+      "tests/test_reil_c4e1_launch.py::test_l27_decode_failures_in_proc_reads_and_git_output_are_recorded_not_escaped"
+    ]
+  },
+  "failure_checks": [
+    {
+      "number": 1,
+      "name": "test_l14_independence_fixed_commands_constants_and_main_rules",
+      "nodeid": "tests/test_reil_c4e1_launch.py::test_l14_independence_fixed_commands_constants_and_main_rules",
+      "expected_exception": "AssertionError",
+      "message_match_mode": "exact",
+      "expected_message": "('E1-0b: 승인 문구의 요청서 경로', 'docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md')",
+      "predicted_line_reference_only": 460,
+      "approval_line": 242,
+      "matching_failure_section_count": 1,
+      "stdout_header_line": 3,
+      "first_traceback_stdout_line": 4,
+      "first_traceback": "tests/test_reil_c4e1_launch.py:460: in test_l14_independence_fixed_commands_constants_and_main_rules",
+      "actual_test_source_line": 460,
+      "first_traceback_matches": true,
+      "actual_exception_header_count": 1,
+      "actual_exception": "AssertionError",
+      "actual_message": "('E1-0b: 승인 문구의 요청서 경로', 'docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md')",
+      "exception_message_matches": true,
+      "chained_exception_markers": false,
+      "exception_block_raw": [
+        {
+          "line": 6,
+          "text": "E   AssertionError: ('E1-0b: 승인 문구의 요청서 경로', 'docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md')"
+        },
+        {
+          "line": 7,
+          "text": "E   assert 'docs/REIL_C4...5_20261027.md' == 'docs/REIL_C4...T_20261030.md'"
+        },
+        {
+          "line": 8,
+          "text": "E     "
+        },
+        {
+          "line": 9,
+          "text": "E     - docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md"
+        },
+        {
+          "line": 10,
+          "text": "E     ?                 ---                        ^^"
+        },
+        {
+          "line": 11,
+          "text": "E     + docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md"
+        },
+        {
+          "line": 12,
+          "text": "E     ?                                   +++      ^^"
+        }
+      ],
+      "match": true
+    },
+    {
+      "number": 2,
+      "name": "test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child",
+      "nodeid": "tests/test_reil_c4e1_launch.py::test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child",
+      "expected_exception": "AssertionError",
+      "message_match_mode": "prefix",
+      "expected_message": "('rewrite', 'FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다', ",
+      "predicted_line_reference_only": 707,
+      "approval_line": 243,
+      "matching_failure_section_count": 1,
+      "stdout_header_line": 13,
+      "first_traceback_stdout_line": 14,
+      "first_traceback": "tests/test_reil_c4e1_launch.py:707: in test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child",
+      "actual_test_source_line": 707,
+      "first_traceback_matches": true,
+      "actual_exception_header_count": 1,
+      "actual_exception": "AssertionError",
+      "actual_message": "('rewrite', 'FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다', ['git 설정 url.https://example.invalid/.insteadof (file:/tmp/claude-0... ≠ 고정 https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git\"])",
+      "exception_message_matches": true,
+      "chained_exception_markers": false,
+      "exception_block_raw": [
+        {
+          "line": 16,
+          "text": "E   AssertionError: ('rewrite', 'FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다', ['git 설정 url.https://example.invalid/.insteadof (file:/tmp/claude-0... ≠ 고정 https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git\"])"
+        },
+        {
+          "line": 17,
+          "text": "E   assert False is True"
+        }
+      ],
+      "match": true
+    },
+    {
+      "number": 3,
+      "name": "test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git",
+      "nodeid": "tests/test_reil_c4e1_launch.py::test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git",
+      "expected_exception": "AssertionError",
+      "message_match_mode": "exact",
+      "expected_message": "('FUTURE-01: fetch 자식에 고정 설정 원천이 없다', [])",
+      "predicted_line_reference_only": 749,
+      "approval_line": 244,
+      "matching_failure_section_count": 1,
+      "stdout_header_line": 18,
+      "first_traceback_stdout_line": 19,
+      "first_traceback": "tests/test_reil_c4e1_launch.py:749: in test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git",
+      "actual_test_source_line": 749,
+      "first_traceback_matches": true,
+      "actual_exception_header_count": 1,
+      "actual_exception": "AssertionError",
+      "actual_message": "('FUTURE-01: fetch 자식에 고정 설정 원천이 없다', [])",
+      "exception_message_matches": true,
+      "chained_exception_markers": false,
+      "exception_block_raw": [
+        {
+          "line": 21,
+          "text": "E   AssertionError: ('FUTURE-01: fetch 자식에 고정 설정 원천이 없다', [])"
+        },
+        {
+          "line": 22,
+          "text": "E   assert [] == ['GIT_CONFIG_...NFIG_VALUE_0']"
+        },
+        {
+          "line": 23,
+          "text": "E     "
+        },
+        {
+          "line": 24,
+          "text": "E     Right contains 5 more items, first extra item: 'GIT_CONFIG_COUNT'"
+        },
+        {
+          "line": 25,
+          "text": "E     Use -v to get more diff"
+        }
+      ],
+      "match": true
+    },
+    {
+      "number": 4,
+      "name": "test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list",
+      "nodeid": "tests/test_reil_c4e1_launch.py::test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list",
+      "expected_exception": "AttributeError",
+      "message_match_mode": "exact",
+      "expected_message": "module 'scripts.reil_c4e1_launch' has no attribute 'fetch_env'",
+      "predicted_line_reference_only": 897,
+      "approval_line": 245,
+      "matching_failure_section_count": 1,
+      "stdout_header_line": 28,
+      "first_traceback_stdout_line": 29,
+      "first_traceback": "tests/test_reil_c4e1_launch.py:897: in test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list",
+      "actual_test_source_line": 897,
+      "first_traceback_matches": true,
+      "actual_exception_header_count": 1,
+      "actual_exception": "AttributeError",
+      "actual_message": "module 'scripts.reil_c4e1_launch' has no attribute 'fetch_env'",
+      "exception_message_matches": true,
+      "chained_exception_markers": false,
+      "exception_block_raw": [
+        {
+          "line": 32,
+          "text": "E   AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'fetch_env'"
+        }
+      ],
+      "match": true
+    },
+    {
+      "number": 5,
+      "name": "test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child",
+      "nodeid": "tests/test_reil_c4e1_launch.py::test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child",
+      "expected_exception": "AssertionError",
+      "message_match_mode": "prefix",
+      "expected_message": "('FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다', ",
+      "predicted_line_reference_only": 946,
+      "approval_line": 246,
+      "matching_failure_section_count": 1,
+      "stdout_header_line": 33,
+      "first_traceback_stdout_line": 34,
+      "first_traceback": "tests/test_reil_c4e1_launch.py:946: in test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child",
+      "actual_test_source_line": 946,
+      "first_traceback_matches": true,
+      "actual_exception_header_count": 1,
+      "actual_exception": "AssertionError",
+      "actual_message": "('FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다', [], [\"받은 저장소의 유효 출처 'https://example.invalid/REIL-UConn/Multi-Object... ≠ 고정 https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git\"])",
+      "exception_message_matches": true,
+      "chained_exception_markers": false,
+      "exception_block_raw": [
+        {
+          "line": 36,
+          "text": "E   AssertionError: ('FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다', [], [\"받은 저장소의 유효 출처 'https://example.invalid/REIL-UConn/Multi-Object... ≠ 고정 https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git\"])"
+        },
+        {
+          "line": 37,
+          "text": "E   assert 1 == 0"
+        }
+      ],
+      "match": true
+    },
+    {
+      "number": 6,
+      "name": "test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write",
+      "nodeid": "tests/test_reil_c4e1_launch.py::test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write",
+      "expected_exception": "AssertionError",
+      "message_match_mode": "exact",
+      "expected_message": "('FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다', 'localtls')",
+      "predicted_line_reference_only": 988,
+      "approval_line": 247,
+      "matching_failure_section_count": 1,
+      "stdout_header_line": 40,
+      "first_traceback_stdout_line": 41,
+      "first_traceback": "tests/test_reil_c4e1_launch.py:988: in test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write",
+      "actual_test_source_line": 988,
+      "first_traceback_matches": true,
+      "actual_exception_header_count": 1,
+      "actual_exception": "AssertionError",
+      "actual_message": "('FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다', 'localtls')",
+      "exception_message_matches": true,
+      "chained_exception_markers": false,
+      "exception_block_raw": [
+        {
+          "line": 43,
+          "text": "E   AssertionError: ('FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다', 'localtls')"
+        },
+        {
+          "line": 44,
+          "text": "E   assert 0 == 1"
+        }
+      ],
+      "match": true
+    },
+    {
+      "number": 7,
+      "name": "test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look",
+      "nodeid": "tests/test_reil_c4e1_launch.py::test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look",
+      "expected_exception": "AttributeError",
+      "message_match_mode": "exact",
+      "expected_message": "module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'",
+      "predicted_line_reference_only": 999,
+      "approval_line": 248,
+      "matching_failure_section_count": 1,
+      "stdout_header_line": 47,
+      "first_traceback_stdout_line": 48,
+      "first_traceback": "tests/test_reil_c4e1_launch.py:999: in test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look",
+      "actual_test_source_line": 999,
+      "first_traceback_matches": true,
+      "actual_exception_header_count": 1,
+      "actual_exception": "AttributeError",
+      "actual_message": "module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'",
+      "exception_message_matches": true,
+      "chained_exception_markers": false,
+      "exception_block_raw": [
+        {
+          "line": 51,
+          "text": "E   AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'"
+        }
+      ],
+      "match": true
+    },
+    {
+      "number": 8,
+      "name": "test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline",
+      "nodeid": "tests/test_reil_c4e1_launch.py::test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline",
+      "expected_exception": "AttributeError",
+      "message_match_mode": "exact",
+      "expected_message": "module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'",
+      "predicted_line_reference_only": 1030,
+      "approval_line": 249,
+      "matching_failure_section_count": 1,
+      "stdout_header_line": 52,
+      "first_traceback_stdout_line": 53,
+      "first_traceback": "tests/test_reil_c4e1_launch.py:1030: in test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline",
+      "actual_test_source_line": 1030,
+      "first_traceback_matches": true,
+      "actual_exception_header_count": 1,
+      "actual_exception": "AttributeError",
+      "actual_message": "module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'",
+      "exception_message_matches": true,
+      "chained_exception_markers": false,
+      "exception_block_raw": [
+        {
+          "line": 56,
+          "text": "E   AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'"
+        }
+      ],
+      "match": true
+    },
+    {
+      "number": 9,
+      "name": "test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty",
+      "nodeid": "tests/test_reil_c4e1_launch.py::test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty",
+      "expected_exception": "AssertionError",
+      "message_match_mode": "exact",
+      "expected_message": "('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])",
+      "predicted_line_reference_only": 1065,
+      "approval_line": 250,
+      "matching_failure_section_count": 1,
+      "stdout_header_line": 57,
+      "first_traceback_stdout_line": 58,
+      "first_traceback": "tests/test_reil_c4e1_launch.py:1063: in test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty",
+      "actual_test_source_line": 1063,
+      "first_traceback_matches": true,
+      "actual_exception_header_count": 0,
+      "actual_exception": null,
+      "actual_message": null,
+      "exception_message_matches": false,
+      "chained_exception_markers": false,
+      "exception_block_raw": [
+        {
+          "line": 60,
+          "text": "E   assert [\"bms-balanci...ad63148563'}\"] == []"
+        },
+        {
+          "line": 61,
+          "text": "E     "
+        },
+        {
+          "line": 62,
+          "text": "E     Left contains 2 more items, first extra item: \"bms-balancing/scripts/reil_c6_profile.py: sha256 676ef3bde4c2aedd5c005de35fb77f81f916277a5c2c30bcb7ce85d87f3c8b51 · 25 B ≠ 기대 {'bytes': 15915, 'sha256': '408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d'}\""
+        },
+        {
+          "line": 63,
+          "text": "E     Use -v to get more diff"
+        }
+      ],
+      "match": false
+    }
+  ],
+  "matching_failures": [
+    "l14",
+    "l23",
+    "l25",
+    "l28",
+    "l29",
+    "l30",
+    "l31",
+    "l32"
+  ],
+  "all_claimed_eight_match": true,
+  "l33": {
+    "required_message": "('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])",
+    "actual": "Baseline assert post()[\"problems\"] == [] fails at tests/test_reil_c4e1_launch.py:1063, before the deadline test.",
+    "raw_exception_header_present": false,
+    "raw_observed_problem_count": 2,
+    "first_fully_rendered_problem": "E     Left contains 2 more items, first extra item: \"bms-balancing/scripts/reil_c6_profile.py: sha256 676ef3bde4c2aedd5c005de35fb77f81f916277a5c2c30bcb7ce85d87f3c8b51 · 25 B ≠ 기대 {'bytes': 15915, 'sha256': '408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d'}\"",
+    "second_problem_fully_rendered": false,
+    "line_number_rule": "1065 is only a prediction/reference under §4-3. The rejection is based on the missing required exception/message, not line-number inequality alone.",
+    "source_inference_boundary": "The second problem and why both arise can be inferred from captured source, but the raw log does not independently expose its complete text. This report does not reconstruct omitted raw output."
+  },
+  "summary_and_errors": {
+    "summary_heading_line": 104,
+    "last_line_number": 138,
+    "last_line": "9 failed, 24 passed in 14.25s",
+    "matches_required_counts_only": true,
+    "warning_count_reported": 0,
+    "unexpected_red_cause_occurrences": 0,
+    "ERROR_lines": [],
+    "INTERNALERROR_occurrences": 0,
+    "Interrupted_occurrences": 0,
+    "bang_interrupt_markers": 0,
+    "summary_other_lines": [
+      {
+        "line": 138,
+        "text": "9 failed, 24 passed in 14.25s"
+      }
+    ],
+    "falseextra_judgment": "The sole non-node line in the summary section is the required terminal count/time summary (line 138). Counting it as a prohibited extra line is an author-judge false positive. §4-3 forbids extra nodeids and error/interruption/result categories, not this mandatory summary line; it is not another RED mismatch.",
+    "author_judge_script_available": false,
+    "author_judge_limit": "The reported judge implementation is outside the repository and not captured. This review independently verifies only that the alleged extra line is permitted by the request."
+  },
+  "common_checks": {
+    "started_true": true,
+    "timed_out_false": true,
+    "cleanup_status_empty": true,
+    "cleanup_deadline_hit_false": true,
+    "cleanup_errors_empty": true,
+    "end_problems_empty": true,
+    "errors_empty": true,
+    "runner_ok_true": true,
+    "meta_rc_1": true,
+    "outer_rc_1": true,
+    "all_record_rc_0": true,
+    "head_unchanged": true,
+    "source_start_equals_fixed_RED_EXPECT": true,
+    "source_end_equals_fixed_RED_EXPECT": true,
+    "source_hash_logs_match_meta": true,
+    "stderr_empty": true
+  },
+  "common_checks_all_pass": true,
+  "cleanup": {
+    "cleanup_s": 0.002,
+    "deadline_hit": false,
+    "emergency": false,
+    "errors": [],
+    "exited_after_kill": null,
+    "kills": [],
+    "rc_after_kill": null,
+    "settle": {
+      "alive": [],
+      "deadline_hit": false,
+      "errors": [],
+      "first_alive": [],
+      "first_error": null,
+      "kills": [],
+      "reaped": [
+        520,
+        601
+      ],
+      "status": "empty",
+      "zombies": [
+        520,
+        601
+      ]
+    },
+    "status": "empty",
+    "timed_out": false
+  },
+  "problems": [],
+  "end_problems": [],
+  "errors": [],
+  "first_error": null,
+  "records": {
+    "head_start": "69dacaab42b7e704f89320498accb1defd051fc2",
+    "head_end": "69dacaab42b7e704f89320498accb1defd051fc2",
+    "porcelain_start": [
+      "?? bms-balancing/evidence/reil_c4e1_0b_20261103/01_red_e1_0b.source_sha256.txt"
+    ],
+    "porcelain_end": [
+      "?? bms-balancing/evidence/reil_c4e1_0b_20261103/01_red_e1_0b.porcelain_start.txt",
+      "?? bms-balancing/evidence/reil_c4e1_0b_20261103/01_red_e1_0b.source_sha256.txt"
+    ],
+    "interpretation": "The two snapshots show only untracked files created for this evidence. They do not independently prove absence of transient activity between snapshots."
+  },
+  "timing": {
+    "start_record_utc": "2026-11-03T06:23:48Z",
+    "runner_start_utc": "2026-11-03T06:24:20.895Z",
+    "runner_end_utc": "2026-11-03T06:24:38.377Z",
+    "end_record_utc": "2026-11-03T06:27:01Z",
+    "start_record_to_end_record_seconds": 193.0,
+    "runner_times": {
+      "child_s": 17.027,
+      "cleanup_s": 0.002,
+      "records_s": 0.043,
+      "total_s": 17.482
+    },
+    "child_timeout_seconds": 120.0,
+    "cleanup_budget_seconds": 15.0,
+    "child_within_timeout": true,
+    "cleanup_within_budget": true,
+    "recorded_interval_within_two_hours": true,
+    "limits": "The 193-second interval begins at 00_start (step b) and ends at e; it excludes step a and post-e commits/push/documentation. The evidence alone therefore is not an independently complete a-to-e wall-clock measurement."
+  },
+  "hashes": {
+    "source_expected_count": 14,
+    "source_start_count": 14,
+    "source_end_count": 14,
+    "independently_measured_available_source_files": {
+      "bms-balancing/scripts/reil_c4e1_launch.py": {
+        "measured": {
+          "bytes": 51957,
+          "sha256": "2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396"
+        },
+        "matches": true
+      },
+      "bms-balancing/tests/test_reil_c4e1_launch.py": {
+        "measured": {
+          "bytes": 73572,
+          "sha256": "3f9d2f2585b36819d229796154ecd4e902ffce86120c8e3c5a1e75bb1554e9cc"
+        },
+        "matches": true
+      },
+      "bms-balancing/tests/test_reil_c4e1_runner.py": {
+        "measured": {
+          "bytes": 36600,
+          "sha256": "d9880f28092e064017fd5d35f13b0f41b359ba301fca88fa5e3bc72e26d2bddd"
+        },
+        "matches": true
+      }
+    },
+    "unavailable_source_files_in_this_capture": [
+      "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "bms-balancing/scripts/reil_c4_e3a.py",
+      "bms-balancing/scripts/reil_c4_monitor.py",
+      "bms-balancing/scripts/reil_c4e_run.py",
+      "bms-balancing/scripts/reil_c5_pilot.py",
+      "bms-balancing/scripts/reil_c6_profile.py",
+      "bms-balancing/scripts/reil_p0.py",
+      "bms-balancing/tests/test_reil_c4e.py",
+      "bms-balancing/tests/test_reil_c4e_fix.py",
+      "degradation-degeneracy/tools/env_profile.py"
+    ],
+    "runner_record_sha_matches_file": true,
+    "copies_end_sha_match_available_files": true,
+    "source_start_and_end_log_bytes_equal": true
+  },
+  "end_record": {
+    "green_meta_missing_recorded": {
+      "meta_why": "FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_0b_20261103/02_green_e1_0b.meta.json'",
+      "outer_rc": {
+        "why": "FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_0b_20261103/02_green_e1_0b.outer_rc.txt'"
+      }
+    },
+    "copies_sha256": {
+      "bms-balancing/evidence/reil_c4e1_0b_20261103/00_end_writer.py": "2e44f2e570b88ebd5bb88ee89b4e125d7774156a890bf01a429095aeb6fd5e44",
+      "bms-balancing/evidence/reil_c4e1_0b_20261103/00_step_runner.py": "c5aab7c35fd3e81fc34a787703f5895853954db5d3903f5399f74fbc27363425",
+      "bms-balancing/scripts/reil_c4e1_launch.py": "2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396",
+      "bms-balancing/tests/test_reil_c4e1_launch.py": "3f9d2f2585b36819d229796154ecd4e902ffce86120c8e3c5a1e75bb1554e9cc",
+      "bms-balancing/tests/test_reil_c4e1_runner.py": "d9880f28092e064017fd5d35f13b0f41b359ba301fca88fa5e3bc72e26d2bddd"
+    },
+    "current_launcher_remains_v5": true,
+    "no_green_files_in_captured_evidence": true
+  },
+  "evidence_file_count": 12,
+  "evidence_total_bytes": 69968,
+  "evidence_files": [
+    {
+      "path": "00_end_writer.py",
+      "bytes": 3697,
+      "sha256": "2e44f2e570b88ebd5bb88ee89b4e125d7774156a890bf01a429095aeb6fd5e44"
+    },
+    {
+      "path": "00_start.txt",
+      "bytes": 1578,
+      "sha256": "ec2fc8d8f755afd70c9903ea8d5605dbd65fa322cc96d45e9b779bbf0adefbd9"
+    },
+    {
+      "path": "00_step_runner.py",
+      "bytes": 36672,
+      "sha256": "c5aab7c35fd3e81fc34a787703f5895853954db5d3903f5399f74fbc27363425"
+    },
+    {
+      "path": "01_red_e1_0b.meta.json",
+      "bytes": 8819,
+      "sha256": "c5aeeb240433ed1bc65a34f1f7d222de5a3c6bf8100cca106c887a4b9b81d596"
+    },
+    {
+      "path": "01_red_e1_0b.outer_rc.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "01_red_e1_0b.porcelain_end.txt",
+      "bytes": 160,
+      "sha256": "a4445b460dfaf7111973a38c43f91c83c0f95348fe7a340b531ca0ec178629f2"
+    },
+    {
+      "path": "01_red_e1_0b.porcelain_start.txt",
+      "bytes": 79,
+      "sha256": "0960ae0e24be6cd3f2242cb6ff6ac3c9949692cc91f3681d3a88a7ea559503d2"
+    },
+    {
+      "path": "01_red_e1_0b.source_sha256.txt",
+      "bytes": 1729,
+      "sha256": "3f75124b869fb00d776f367d133145f8a0c6c4099bf959ade6c9fef3f07bafcd"
+    },
+    {
+      "path": "01_red_e1_0b.source_sha256_end.txt",
+      "bytes": 1729,
+      "sha256": "3f75124b869fb00d776f367d133145f8a0c6c4099bf959ade6c9fef3f07bafcd"
+    },
+    {
+      "path": "01_red_e1_0b.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "01_red_e1_0b.stdout.log",
+      "bytes": 13579,
+      "sha256": "3e8c520e92a5671fc3c3c3cddf4f62dd0f4677bc4ff2bc33364a274a6c4d6886"
+    },
+    {
+      "path": "03_end.json",
+      "bytes": 1924,
+      "sha256": "57553d417d637477983390b5edb7f4914aa01b74464ab5aabb165dd11b0dba08"
+    }
+  ],
+  "limitations": [
+    "Original pytest --tb=short/saferepr output abbreviates l23/l29 tuple tails, assertion diffs, and l33 second problem. Required l23/l29 prefixes are fully present and match; no full raw child meta or fixture files are present here.",
+    "The full captured stdout is 138 lines and contains a final summary; all lines were parsed directly from disk. Earlier tool-display truncation does not affect these results. Pytest-originated abbreviation remains irrecoverable from these raw artifacts.",
+    "All eight matching failures establish only the executed failing path. Multi-case functions stop at the first failure (l23 rewrite; l30 localtls), and interface-level l28/l31/l32 do not exercise missing v6 behavior.",
+    "runner_ok=true validates outer execution/cleanup/recording conditions; it does not validate the RED expectation matrix.",
+    "This is not E1-0b success or authorization to continue. Eight matches may be retained as historical evidence, but the fixed 9-failure gate failed and cannot be turned into partial acceptance."
+  ]
+}

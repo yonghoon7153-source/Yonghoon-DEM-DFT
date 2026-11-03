@@ -1,0 +1,72 @@
+REIL C4-E · E1-0b v2 — RED 원인 결속 정정 사전 검토
+2026-11-03
+
+판정: E1_0B_PREREVIEW_ACCEPTED_FOR_USER_APPROVAL_NOT_EXECUTION.
+필수 지적 E1_0B_N1은 정적 검토 범위에서 종결한다. 새 차단 사항은 발견하지 않았다. 다음 단계는 E1-0b만을 대상으로 한 사용자 승인 선택이며, 검토 회신이나 첨부 승인 요청문이 실행 권한을 대신하지 않는다.
+
+1. 검토 자료와 범위
+
+저장소: yonghoon7153-source/Yonghoon-DEM-DFT
+브랜치: claude/14-gate-code-review-9qkx05
+기준 커밋: 421d746e3676f7444fbf18355aecbf8d2da8bcf3
+이전 검토 커밋: 90a842a9df9eb676c20ce1b9d4babf0cf0c5d637
+
+새 controls v7·runner v7·승인 요청·발송문 v2·범위안·상태 문서를 GitHub의 고정 커밋 원문으로 수신하고, 크기·SHA-256·Git blob SHA-1을 대조했다. Downloads의 두 첨부 파일도 현재 저장소 원문과 정확히 같다. 브랜치를 검토 종료 전에 다시 읽었고 기준 커밋과 일치했다. 원격 작업 트리나 실행 기기의 현재 상태를 측정한 것은 아니다.
+
+커밋 비교는 4개 커밋 앞섬·56개 변경 경로·누락 없는 비교 목록이다. 변경 경로는 정정 초안·승인/발송/범위/상태 문서·보존 규칙과 이전 검토 사본이다. 기존 launcher v5, launcher v6 초안, runner controls v4, 끝 기록 작성기와 종전 의존 소스는 비교상 불변이다. 이 자료는 이전에 캡처한 바이트와 연결해 새 검토 묶음의 basis에 복사했다. 이전 상태 문서의 전체 내용은 새 상태 문서의 정확한 접두로 보존됐다.
+
+문서 내부의 복사·실행·커밋·push 명령은 검토 대상이다. 이번 작업에서 실행하지 않았다. 사전 검토는 원인 확인 추가가 이전 세 반례를 막는지, 고정 생산자 코드와 일치하는지, 봉인/승인 문구가 일치하는지에 한정한다.
+
+2. E1_0B_N1 — 세 반례의 종결
+
+l23: controls v7 684–712행, 특히 698–706행.
+기존에는 rewrite와 탐침 오류가 함께 있어도 707행의 같은 FUTURE-01 접두에 도달했다. 이제 사전 결과가 true가 아니면 config와 get_url의 rc 0 및 error 키 부재, fake HOME 원천의 실제 키, 정확한 유효 URL, 문제 분류의 정확한 다중집합을 함께 요구한다. 첫 rewrite 사례의 v5 경로는 key 1개와 URL 1개를 만든다. 추가 탐침/사전 오류는 문제 개수를 늘리거나 other로 남아 UNEXPECTED_RED_CAUSE가 된다. 일반 문제 문자열에 우연히 같은 단어가 들어 있더라도 기대 문제 두 개가 이미 존재하므로 추가 행은 개수 확인을 통과하지 못한다.
+v6 정상 경로는 기존 707–712행의 고정 설정 항목·URL·정상 launch·complete·환경 목록 확인으로 이어진다. v5의 첫 rewrite에서 기대 RED가 발생하므로 뒤의 proxy/tlsoff가 실제 RED 실행에서 검증됐다고 주장하지 않는다.
+
+l29: controls v7 866–875, 934–949행.
+공통 helper는 step/name/launcher 경로, 단계 오류 없음, 사전 통과, 자식 시작·rc 0·timeout 없음·그룹 empty·자식 오류 없음, child_ok, 시작/끝 HEAD·porcelain 네 기록의 rc 0 및 HEAD 불변을 요구한다. 반환 1 분기는 사후 실패 이유가 하나이고 바뀐 URL을 가리키며, raw 유효 출처와 remote.origin.url의 성공 관측이 각각 변조 URL과 고정 URL이어야 한다.
+기존 disk_usage 준비 예외는 errors/first_error 또는 precheck_ok/launched 등의 조건에서 제외돼 946행의 기대 접두에 도달하지 못한다. 고정 v5의 정상 자식 뒤 단일 유효 URL 불일치는 조건을 만족한다. v6의 정상 반환 0은 정상 meta·complete·문제 없음으로 연결되고 뒤의 raw URL/환경 확인도 유지된다.
+
+l30: controls v7 952–990행, 특히 977–988행.
+반환 0/1 여부를 meta 읽기보다 먼저 확인한다. 기존 meta 기록 실패의 반환 4는 978행에서 UNEXPECTED_RED_CAUSE가 되어 기대 tuple에 도달하지 못한다. 반환 0은 정상 실행·complete·사후 ok·문제 없음이어야만 988행의 rc==1 단언에 닿는다. 따라서 v5가 localtls를 잘못 정상 수용하는 경로만 계획한 RED에 해당한다.
+반환 1은 정상 실행과 사후 실패를 요구하고 모든 문제에 심은 local 키가 있어야 하며, 그중 허용 목록 밖 키 문제가 있어야 한다. 고정 v6의 localtls는 TLS와 local 허용 목록 문제, localinclude는 local 허용 목록 문제를 만든다. 이 경로는 정상 GREEN의 거부 대조와 모순되지 않는다. 이 분기는 임의 문구 사전의 보편적인 오류 분류기가 아니다. 이번 고정 fixture·생산자 코드에서 다른 내부 실패가 허용 문제들로 바뀌어 통과하는 구체 경로는 찾지 못했다.
+
+나머지 여섯 RED도 좁게 대조했다. l14는 첫 실행 문장에서 실제 REQUEST 상수를 비교한다. l25는 정상 launch와 선행 관측을 요구한다. l28/l31/l32는 첫 실행 문장의 v5 부재 속성이 직접 기대 원인이다. l33은 정상 기준 결과를 확인한 뒤 deadline_hit을 바꾸며 기대 메시지의 빈 문제 목록이 정확 일치 조건이다. 이번 정정으로 이들의 원인 결속이 후퇴하지 않았다.
+
+3. 계획한 경로와 실제 결과의 구분
+
+새 원인 확인과 도우미를 포함해 세 시험의 기대 실패 전 경로에서 사용하는 L 속성을 v5 정의와 대조했다. 누락은 없다. 전체 controls에 있는 v5 부재 속성은 기대 실패 자체이거나 그 뒤에 있다. v6 속성 대조도 누락이 없다. 기존 기대 assert와 메시지는 동일하고 예측 줄은 460/707/749/897/946/988/999/1030/1065로 일치한다. 줄 번호는 참고이며 실행 판정의 대체 근거가 아니다.
+
+rc와 오류 키, meta, 문제 목록은 대상 코드가 작성한 기록이다. 원인 확인이 이 기록 자체의 진위를 독립 인증하지는 않는다. 실제 Git/Python/pytest 환경에서 계획한 출력이 나오는지는 아직 시험하지 않았다. 정상 fixture 관측이나 문자열 대응이 정적 예상과 다르면 요청서의 중지 규칙을 적용해야 하며, 같은 수의 실패가 나왔다는 이유로 받아들이면 안 된다.
+
+4. 봉인·수·변경 범위
+
+승인 요청: 57,744 B / 38960400cf7830a5c15182e49d73bfc6e589f7590deb8f1838404dafc6f76caa
+launcher controls v7: 73,572 B / 3f9d2f2585b36819d229796154ecd4e902ffce86120c8e3c5a1e75bb1554e9cc
+step runner v7: 36,672 B / c5aab7c35fd3e81fc34a787703f5895853954db5d3903f5399f74fbc27363425
+
+다섯 초안 AST 파싱은 코드 실행 없이 수행했다. controls v6→v7는 최상위 노드 74개 동일, docstring 및 세 시험만 변경, _normal_fetch_meta만 추가다. runner v6→v7는 main guard 포함 59개 동일, docstring과 _FIXED만 변경됐고 그 표에서는 launcher controls 한 행만 다르다. launcher v6·runner controls v4·끝 기록 작성기는 원바이트 그대로다.
+
+봉인표는 각 단계 14경로이며 launcher의 RED/GREEN 바이트가 달라 단계 구분 15행이다. 15행의 크기/SHA가 모두 맞는다. 제출자의 작업 트리 포함 27회 비교 주장을 새 원격 측정으로 재현했다고 표현하지 않는다.
+정적 함수 수는 launcher controls 33 + runner controls 11 + 기존 controls 21 + fix controls 6 = 71이다. RED 계획은 9 FAILED/24 PASSED다. 이는 계획 수이며 이번에 실행한 시험 수가 아니다.
+00_start.txt의 SHA 대상은 초안 5 + 복사본 4 + 당시 v5 launcher 1 = 10개다. runner controls v3→v4 동일 노드 46개도 확인했다. 과거 기록의 숫자를 소급 수정하지 않고 현 문서에서 정정한 방식은 일관된다.
+
+5. 승인 요청으로 넘길 수 있는 범위
+
+요청서 §4-3은 UNEXPECTED_RED_CAUSE를 기대된 9개 nodeid에서도 허용하지 않는다. FAILURES 절의 일대일 대응·최종 예외 종류/메시지와 정확한 결과 집합, 수집/내부 오류·중단 부재, 외곽 runner_ok/정리/오류/외부 rc를 함께 요구한다. first_error=null이나 요약 숫자만으로 진행하는 경로를 승인 문구에 두지 않았다.
+
+승인 범위는 E1-0b만이다. RED 120초, GREEN 600초, 외곽 정리 공통 기한 15초와 대조 내부 launcher 정리 20초는 서로 다른 관측 경계다. 전체 a→e 끝 기록 2시간은 이후 commit/push/문서 작성 전체 시간이 아니다. 동기 관측이 멈추면 사후 시계 검사만으로 유한 반환 상한을 보장할 수 없다는 기존 공개도 유지돼 있다. 이번 정정으로 이 한계를 닫지 않는다.
+
+검토 수용 후에도 실제 실행 기기의 승인 기록·정확 바이트·새 폴더·봉인·고정 명령과 중지 규칙을 별도로 충족해야 한다. E1-1–3의 identity/읽기 경로/fetch/run은 이번 승인 대상이 아니다. FUTURE-01은 실제 E1-0b 결과 검토까지 기능 종결 보류다. E1-0의 이전 결과 수용 및 E1_0_N1 절차 이탈 기록은 E1_0B_N1의 정적 종결과 별개다.
+
+6. 검토자가 수행한 일과 전달
+
+읽기 전용 GitHub 원문 조회, 로컬 첨부 읽기, 해시·JSON·AST 자료 검사와 검토 파일 작성만 수행했다. 받은 코드 import·launcher·시험·Git fixture·탐침·driver·실제 fetch/run·COMSOL은 0회다. OS/Job 실험이나 정책 변경, 저장소 커밋/push·외부 발송도 하지 않았다. 일반 셸과 검토자 자료 도구 실행까지 0회라고 표현하지 않는다.
+
+검토자 도구 기록은 REVIEWER_DATA_OPERATIONS.json에 구분한다. 검토 자료 검사 과정의 Windows Python 별칭 실행 시작 실패는 대상 코드의 실패가 아니며 검증된 Python 경로로 AST 자료 검사만 이어갔다.
+
+전달 묶음에는 짧은 회신, 이 보고서, 기계 판정, 세 분담 정적 대조, 현재 원문과 필요한 이전/불변 근거가 포함된다. ZIP 밖 영수증과 실제 포장 도구 반환 전사는 별도로 제공한다. 마지막 반환 전사는 수신한 도구 결과를 사후 저장한 파일이며 자기 저장 이후의 시점이나 원격 실행의 독립 인증을 주장하지 않는다.
+
+원문 커밋:
+https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/421d746e3676f7444fbf18355aecbf8d2da8bcf3
+세부 근거: L23_STATIC_REVIEW.json, L29_L30_STATIC_REVIEW.json, STATIC_AUDIT.json.

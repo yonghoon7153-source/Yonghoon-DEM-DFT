@@ -1,0 +1,64 @@
+{
+  "kind": "E1_0B_RESULT_REVIEW_DECISION",
+  "date": "2026-11-03",
+  "decision": "STOP_HANDLING_ACCEPTED_E1_0B_INCOMPLETE_TEST_CORRECTION_REQUIRED",
+  "pinned_commit": "a38c878ff0055f588143288707d8b5f46646bf63",
+  "execution_head": "69dacaab42b7e704f89320498accb1defd051fc2",
+  "approval_request_sha256": "38960400cf7830a5c15182e49d73bfc6e589f7590deb8f1838404dafc6f76caa",
+  "Q1": "RECORDED_STOP_HANDLING_CONFORMS_NO_SUBSTANTIVE_DEVIATION_FOUND",
+  "Q2": "L33_MISSING_FIXTURE_EXTRA_CONFIRMED_STATICALLY_FOR_V5_AND_V6",
+  "Q3": "EIGHT_HISTORICAL_MATCHES_RETAINED_NEW_FULL_RED_REQUIRED_UNDER_NEXT_APPROVAL",
+  "Q4": "NARROW_CORRECTION_SCOPE_THEN_LINKED_DRAFTS_SEALS_FRESH_PATHS_PREREVIEW_REAPPROVAL",
+  "required_findings": [
+    {
+      "id": "E1_0B_RESULT_N1",
+      "priority": 2,
+      "scope": "test fixture",
+      "file": "bms-balancing/tests/test_reil_c4e1_launch.py",
+      "line": 1061,
+      "problem": "L.postcheck omits extra=t.extra; production identities reject fake files before intended assertion.",
+      "resolution": "Explicitly bind fixture extra at direct call in a future reviewed correction, preserving production checks and original evidence.",
+      "status": "OPEN_FOR_FUTURE_CORRECTION_NOT_IMPLEMENTED"
+    }
+  ],
+  "red": {
+    "expected_failed": 9,
+    "observed_failed": 9,
+    "expected_passed": 24,
+    "observed_passed": 24,
+    "node_sets_match": true,
+    "causes_matching": 8,
+    "causes_mismatching": [
+      "l33"
+    ],
+    "full_RED_accepted": false,
+    "outer_runner_ok": true,
+    "pytest_rc": 1,
+    "outer_rc": 1
+  },
+  "green": {
+    "executed": false,
+    "accepted": false
+  },
+  "E1_0B_complete": false,
+  "FUTURE_01_functional_closure": false,
+  "prior_E1_0B_N1_static_closure": "RETAINED_FOR_L23_L29_L30",
+  "reviewer_prior_l33_claim": "CORRECTED_SEPARATELY_ORIGINALS_PRESERVED",
+  "evidence_files": 12,
+  "evidence_bytes": 69968,
+  "source_hash_rows_matched": 14,
+  "reviewer_received_program_execution": 0,
+  "reviewer_functional_tests": 0,
+  "reviewer_repository_mutation": false,
+  "external_transmission": false,
+  "new_correction_authorized": false,
+  "new_execution_authorized": false,
+  "E1_1_3_authorized": false,
+  "COMSOL_authorized": false,
+  "limitations": [
+    "Executor ledger reports prior user approval; no independent platform approval transcript.",
+    "Captured evidence and commit chain are not an independent remote OS audit.",
+    "Raw pytest truncates the full second l33 problem.",
+    "No corrected fixture or GREEN was run."
+  ]
+}

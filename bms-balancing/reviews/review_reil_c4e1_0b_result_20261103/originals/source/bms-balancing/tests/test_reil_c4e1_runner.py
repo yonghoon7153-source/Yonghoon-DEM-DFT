@@ -1,0 +1,575 @@
+"""REIL C4-E · E1-0b 외곽 단계 실행기 대조 11 · v4 (승인 요청 `docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md` §6 · v2 사전 검토 §76 의 V2-01–05 ·
+v3 사전 검토 §78 의 V3-01–03 · V3-N1 · v4 사전 검토 §80 의 V4-01 · 자체 발견 S4 · S5 · S6) — 시험할 실행기 파일은 env `REIL_C4E1_RUNNER_UNDER_TEST` 가
+정한다. 값이 두 형태 밖이면 수집 단계에서 멈추고 (RuntimeError), 값이 없으면 (단계 밖) 이 파일 전체를 건너뛴다 — 단계의 기준은 skipped 0 이므로 단계
+안에서 빠지면 기준이 깨진다. v3 (E1-0) 와 다른 것은 시험할 실행기의 증거 폴더 이름 규칙 (`reil_c4e1_0b_YYYYMMDD`) · driver tmp 증거 폴더 이름 · r5 의
+봉인 표 단계 이름 (E1-0b 의 둘) 뿐이다.
+
+E1-0 의 RED (`02_red_runner`) 는 v2 실행기 초안 `docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt` 를 시험했다 (§85 — r1 AssertionError · r2–r11
+AttributeError). E1-0b 는 실행기 대조의 RED 를 하지 않고, GREEN (`02_green_e1_0b`) 에서 `<E0b>/00_step_runner.py` (v6) 로 11 개 모두 통과해야 한다
+(정리 · 기록 규칙은 v5 와 같은 바이트 경로 — 회귀 확인). r1–r5 · r9–r11 은 이 프로세스 안 (가짜 /proc 표 · tmp 가짜 /proc 폴더 · 관측마다 시간을
+쓰는 가짜 시계 · 가짜 kill / waitpid · tmp 로컬 git), r6–r8 은 driver 하위 프로세스 (`-I -B -X pycache_prefix`) 가 실행기 모듈을 경로로 적재해 (`main`
+미실행) `run_step` 을 tmp 경로로 부른다 — driver 가 subreaper 가 되고, r8 은 실제 자식 + 다른 세션 손주를 쓴다. 우리 실행 모듈 다섯 · launcher · 실제
+자료 · optimizer · 네트워크를 쓰지 않는다. fixture 가 직접 부르는 git 은 상속 `GIT_*` · 비밀 형태 이름을 모두 빼고 시스템 · 사용자 설정을 읽지 않는다
+(V2-02 · S3).
+"""
+from __future__ import annotations
+
+import ast
+import hashlib
+import importlib.machinery
+import importlib.util
+import inspect
+import json
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+
+BMS = "/home/user/Yonghoon-DEM-DFT/bms-balancing"
+V2 = f"{BMS}/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt"
+V4 = re.compile(re.escape(BMS) + r"/evidence/reil_c4e1_0b_20[0-9]{6}/00_step_runner\.py")
+UNDER_TEST = os.environ.get("REIL_C4E1_RUNNER_UNDER_TEST")
+if UNDER_TEST is None:
+    pytest.skip("REIL_C4E1_RUNNER_UNDER_TEST 없음 — 단계 밖에서는 이 파일을 시험하지 않는다", allow_module_level=True)
+if UNDER_TEST != V2 and not V4.fullmatch(UNDER_TEST):
+    raise RuntimeError(f"REIL_C4E1_RUNNER_UNDER_TEST 는 {V2} 또는 <E0b>/00_step_runner.py 여야 한다: {UNDER_TEST!r}")
+GITID = ["-c", "user.name=fixture", "-c", "user.email=fixture@example.invalid"]
+SECRETISH = re.compile(r"TOKEN|SECRET|PASSW|ACCESS_KEY|CREDENTIAL|COOKIE", re.I)
+
+
+def _load(path):
+    """실행기 파일을 경로로 적재한다 (최상위 정의만 실행 · `main` 은 부르지 않는다)."""
+    loader = importlib.machinery.SourceFileLoader("runner_under_test", path)
+    spec = importlib.util.spec_from_file_location("runner_under_test", path, loader=loader)
+    mod = importlib.util.module_from_spec(spec)
+    loader.exec_module(mod)
+    return mod
+
+
+R = _load(UNDER_TEST)
+
+#: driver — 실행기 모듈을 경로로 적재해 run_step 을 tmp 경로로 부른다 (stdlib 만). no_meta 면 meta 쓰기만 실패시킨다 (주입). 거부는 반환 2 + JSON 한 줄.
+DRIVER = r'''import importlib.machinery, importlib.util, json, sys
+from pathlib import Path
+path, args = sys.argv[1], json.loads(sys.argv[2])
+loader = importlib.machinery.SourceFileLoader("runner_under_test", path)
+spec = importlib.util.spec_from_file_location("runner_under_test", path, loader=loader)
+R = importlib.util.module_from_spec(spec)
+loader.exec_module(R)
+if args["no_meta"]:
+    real = R.write_new
+    def write_new(p, text):
+        if str(p).endswith(".meta.json"):
+            raise OSError("cannot write meta (시험 주입)")
+        return real(p, text)
+    R.write_new = write_new
+kw = dict(args["kw"])
+for k in ("repo", "bms", "e", "work"):
+    kw[k] = Path(kw[k])
+kw["targets"] = tuple(kw["targets"])
+try:
+    rc = R.run_step(args["name"], args["timeout"], args["argv"], **kw)
+except SystemExit as e:
+    print(json.dumps({"refused": str(e)}, ensure_ascii=False))
+    sys.exit(2)
+sys.exit(rc)
+'''
+#: 정상 자식 — 받은 env 의 GIT_* 이름 · cwd · 단계 변수를 파일에 쓰고 끝난다
+CHILD = r'''import json, os, sys
+open(sys.argv[1], "w").write(json.dumps({"git": sorted(k for k in os.environ if k.startswith("GIT_")), "cwd": os.getcwd(),
+                                         "step": os.environ.get("REIL_C4_FIX_STEP"), "tmpdir": os.environ.get("TMPDIR")}))
+print("child ok")
+'''
+#: timeout 자식 — 다른 세션의 손주를 띄우고 그 pid 를 쓴 뒤 잔다
+TREE = r'''import subprocess, sys, time
+g = subprocess.Popen([sys.executable, "-I", "-B", "-c", "import time; time.sleep(60)"], start_new_session=True)
+open(sys.argv[1], "w").write(str(g.pid))
+time.sleep(60)
+'''
+
+
+class _Clock:
+    """가짜 시계 — sleep 만큼 간다 (기록: [(시각, 길이)]). 관측 비용은 `_costly` 가 더한다."""
+
+    def __init__(self):
+        self.t, self.sleeps = 1000.0, []
+
+    def __call__(self):
+        return self.t
+
+    def sleep(self, d):
+        self.sleeps.append((self.t, d))
+        self.t += d
+
+
+class _P:
+    """가짜 Popen — end_at 시각에 끝난다 (None 이면 끝나지 않는다). wait(timeout) 은 그 안에 끝나면 rc, 아니면 시계를 timeout 만큼 보내고 TimeoutExpired."""
+
+    def __init__(self, pid, clock, end_at=None, rc=-9):
+        self.pid, self.clock, self.end_at, self.rc, self.waits = pid, clock, end_at, rc, []
+
+    def poll(self):
+        return self.rc if self.end_at is not None and self.clock.t >= self.end_at else None
+
+    def wait(self, timeout=None):
+        self.waits.append((self.clock.t, timeout))
+        if self.end_at is not None and self.clock.t + timeout >= self.end_at:
+            self.clock.t = max(self.clock.t, self.end_at)
+            return self.rc
+        self.clock.t += timeout
+        raise subprocess.TimeoutExpired("fake", timeout)
+
+
+def _costly(clk, starts, table_of, cost):
+    """관측마다 시간을 쓰는 가짜 proc_table (V3-01) — 시작 시각을 starts 에 남기고, 시작 시각의 표를 만든 뒤 시계를 cost (수 또는 () → 수) 만큼 보낸다.
+    table_of 가 예외를 내면 그 예외를 시간을 쓴 뒤 그대로 올린다 (늦은 예외 주입)."""
+    def scan(*a, **k):
+        starts.append(clk.t)
+        try:
+            table = table_of()
+        finally:
+            clk.t += cost() if callable(cost) else cost
+        return table, []
+    return scan
+
+
+def _git_env() -> dict:
+    """fixture 가 직접 부르는 git · driver 의 env — 상속 `GIT_*` · 비밀 형태 이름을 모두 빼고 시스템 · 사용자 설정을 읽지 않는다."""
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_") and not SECRETISH.search(k)}
+    env.update(GIT_TERMINAL_PROMPT="0", GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull)
+    return env
+
+
+def _git(*args) -> str:
+    r = subprocess.run(["git", *args], env=_git_env(), capture_output=True, text=True, timeout=60)
+    assert r.returncode == 0, (args, r.stderr[-500:])
+    return r.stdout
+
+
+def _run_keywords(path, func_name) -> dict:
+    """정적 (S6 · 대상을 실행하지 않는다) — 모듈 파일의 최상위 함수 `func_name` 안 `subprocess.run(…)` 호출 하나의 상수 키워드 {이름: 값}."""
+    tree = ast.parse(Path(path).read_text(encoding="utf-8"))
+    fn = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == func_name)
+    calls = [n for n in ast.walk(fn) if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr == "run"
+             and isinstance(n.func.value, ast.Name) and n.func.value.id == "subprocess"]
+    assert len(calls) == 1, (func_name, len(calls))
+    return {k.arg: k.value.value for k in calls[0].keywords if isinstance(k.value, ast.Constant)}
+
+
+def _repo(path: Path, msg: str) -> Path:
+    _git("init", "-q", "--template=", str(path))
+    _git("-C", str(path), *GITID, "commit", "-q", "--allow-empty", "-m", msg)
+    return path
+
+
+def _head(path: Path) -> str:
+    return _git("-C", str(path), "rev-parse", "HEAD").strip()
+
+
+def _sentinels(tmp: Path) -> tuple:
+    """다른 저장소 · 허용 밖 기존 폴더를 가리키는 표지 GIT_* → (env 조각, 다른 저장소, 표지 폴더)."""
+    other, sentinel = _repo(tmp / "other", "other"), tmp / "sentinel"
+    (sentinel / "objects").mkdir(parents=True)
+    return ({"GIT_DIR": str(other / ".git"), "GIT_OBJECT_DIRECTORY": str(sentinel / "objects"), "GIT_INDEX_FILE": str(sentinel / "index"),
+             "GIT_TRACE": str(sentinel / "trace.log")}, other, sentinel)
+
+
+def _rtree(tmp: Path, *, git: bool = True) -> SimpleNamespace:
+    """driver 용 tmp 트리 — repo (git) · bms-balancing · evidence/reil_c4e1_0b_20990101 · 원천 둘 · 봉인 표 · 작업 폴더 (만들지 않음)."""
+    tmp.mkdir(parents=True, exist_ok=True)
+    tmp = tmp.resolve()
+    repo = tmp / "repo"
+    bms = repo / "bms-balancing"
+    e = bms / "evidence" / "reil_c4e1_0b_20990101"
+    e.mkdir(parents=True)
+    files = {"bms-balancing/a.py": b"a = 1\n", "bms-balancing/b.txt": b"b\n"}
+    for rel, b in files.items():
+        (repo / rel).write_bytes(b)
+    if git:
+        _repo(repo, "runner fixture")
+    expect = {rel: {"sha256": hashlib.sha256(b).hexdigest(), "bytes": len(b)} for rel, b in files.items()}
+    return SimpleNamespace(tmp=tmp, repo=repo, bms=bms, e=e, work=tmp / "work", targets=list(files), expect=expect)
+
+
+def _environ(tmp: Path, extra: dict) -> dict:
+    """run_step 에 줄 상속 env — PATH · 빈 HOME · 주어진 것."""
+    home = tmp / "home"
+    home.mkdir(exist_ok=True)
+    return {"PATH": os.environ.get("PATH", "/usr/bin:/bin"), "HOME": str(home), **extra}
+
+
+def _drive(t, name, timeout, argv, *, environ, expect=None, work=None, no_meta=False):
+    """driver 하위 프로세스로 run_step 을 부른다 → CompletedProcess."""
+    kw = {"repo": str(t.repo), "bms": str(t.bms), "e": str(t.e), "work": str(work or t.work), "targets": t.targets,
+          "expect": {name: expect or t.expect}, "environ": environ}
+    args = {"name": name, "timeout": timeout, "argv": argv, "kw": kw, "no_meta": no_meta}
+    return subprocess.run([sys.executable, "-I", "-B", "-X", f"pycache_prefix={t.tmp / 'pyc'}", "-c", DRIVER, UNDER_TEST, json.dumps(args)],
+                          env=_git_env(), capture_output=True, text=True, timeout=120)
+
+
+def _meta(t, name):
+    return json.loads((t.e / f"{name}.meta.json").read_text(encoding="utf-8"))
+
+
+def test_r1_an_observation_error_followed_by_a_clean_empty_observation_stays_unknown(monkeypatch):
+    """[RED 실패 — v2: AssertionError (empty)] (V2-01 · 회신의 반례 그대로) 첫 /proc 관측에 오류 → 그 뒤 정상 빈 관측 → settle 의 끝 상태는 unknown ·
+    주입한 오류가 누적 기록의 첫 항목 (where settle)."""
+    calls = []
+
+    def fake(*a, **k):
+        calls.append(1)
+        return ({}, ["4242: PermissionError: denied (시험 주입)"]) if len(calls) == 1 else ({}, [])
+
+    monkeypatch.setattr(R, "proc_table", fake)
+    res = R.settle(-1)
+    assert res["status"] == "unknown", res
+    assert "denied (시험 주입)" in res["first_error"]["error"] and res["first_error"]["where"] == "settle"
+
+
+def test_r2_observation_errors_during_the_timeout_loop_are_kept_to_the_end(monkeypatch):
+    """[RED 실패 — v2: AttributeError (cleanup)] (V2-01) timeout 정리의 첫 관측에 목록 오류 → 뒤 관측은 정상 · 자손 없음 · pytest 는 그룹 kill 뒤 끝남 →
+    끝 상태 unknown · 첫 항목 where timeout · 그룹 kill 결과 · pytest 회수 (기한은 호출자가 준다)."""
+    cleanup = R.cleanup
+    clk = _Clock()
+    calls = []
+
+    def fake(*a, **k):
+        calls.append(1)
+        return ({}, ["list: OSError: transient (시험 주입)"]) if len(calls) == 1 else ({}, [])
+
+    monkeypatch.setattr(R, "proc_table", fake)
+    sent = []
+    p = _P(4242, clk, end_at=clk.t + 0.05)
+    rec = cleanup(p, True, ledger=[], deadline=clk.t + 15.0, me=1, clock=clk, sleep=clk.sleep, killpg=lambda pid, sig: sent.append((pid, sig)),
+                  killer=lambda pid, sig: None, waitpid=lambda pid, opt: (0, 0))
+    first = rec["settle"]["first_error"]
+    assert rec["status"] == "unknown" and first["where"] == "timeout" and "transient" in first["error"]
+    assert sent == [(4242, R.signal.SIGKILL)] and rec["kills"][0] == ["group", 4242, "sent"] and rec["exited_after_kill"] is True
+    assert rec["rc_after_kill"] == -9 and len(calls) >= 3
+
+
+def test_r3_cleanup_never_starts_an_observation_past_one_common_deadline_even_when_observations_take_time(monkeypatch):
+    """[RED 실패 — v2: AttributeError (cleanup)] (V2-03 · V3-01) 가짜 시계 · 관측마다 0.05 s · 기한 15 s (7 + 3 + 5 · 호출자가 준다) — (a) timeout ·
+    pytest 와 자손이 끝나지 않음 (kill 이 듣지 않음) → 모든 관측 시작 < 기한 · 끝 ≤ 기한 + 관측 한 번 · deadline_hit · alive · 미종료 · 어떤 sleep 도
+    기한을 넘지 않음 · pytest 회수 대기는 kill 대기 끝까지 남은 시간만 (0.1 s 하한 없음) / (b) 정상 종료 · 2 s 뒤 스스로 끝나는 자손 → empty · kill 0 ·
+    회수 / (c) 정상 종료 · 끝나지 않다가 kill 로 끝나는 자손 → 3 s 관측 뒤 kill · killed."""
+    cleanup = R.cleanup
+    assert (R.CLEANUP_S, R.KILL_WAIT_S, R.SETTLE_S) == (15.0, 7.0, 3.0)
+    cost = 0.05
+    clk, starts = _Clock(), []
+    t0 = clk.t
+    monkeypatch.setattr(R, "proc_table", _costly(clk, starts, lambda: {4242: (1, "S"), 4243: (1, "S")}, cost))
+    p = _P(4242, clk)
+    rec = cleanup(p, True, ledger=[], deadline=t0 + 15.0, me=1, clock=clk, sleep=clk.sleep, killpg=lambda pid, sig: None,
+                  killer=lambda pid, sig: None, waitpid=lambda pid, opt: (0, 0))
+    assert rec["status"] == "alive" and rec["deadline_hit"] is True and rec["exited_after_kill"] is False
+    assert starts and max(starts) < t0 + 15.0 and clk.t <= t0 + 15.0 + cost + 1e-9 and rec["cleanup_s"] <= 15.0 + cost + 1e-6
+    assert all(at + d <= t0 + 15.0 + 1e-9 for at, d in clk.sleeps) and p.waits
+    assert all(0.0 <= w <= max(0.0, t0 + 7.0 - at) + 1e-9 for at, w in p.waits)
+
+    def no_kill(pid, sig):
+        raise AssertionError("스스로 끝나는 자손 · 이미 끝난 pytest 는 kill 하지 않는다")
+
+    clk, starts, got = _Clock(), [], []
+    t0 = clk.t
+    monkeypatch.setattr(R, "proc_table", _costly(clk, starts, lambda: {4243: (1, "S" if clk.t < t0 + 2.0 else "Z")}, cost))
+    rec = cleanup(_P(4242, clk, end_at=t0 - 1.0, rc=0), False, ledger=[], deadline=t0 + 15.0, me=1, clock=clk, sleep=clk.sleep, killpg=no_kill,
+                  killer=no_kill, waitpid=lambda pid, opt: got.append(pid) or (pid, 0))
+    assert rec["status"] == "empty" and rec["settle"]["kills"] == [] and got == [4243] and rec["deadline_hit"] is False
+    assert max(starts) < t0 + 15.0
+    clk, starts, dead = _Clock(), [], []
+    t0 = clk.t
+    monkeypatch.setattr(R, "proc_table", _costly(clk, starts, lambda: {4243: (1, "Z" if dead else "S")}, cost))
+    rec = cleanup(_P(4242, clk, end_at=t0 - 1.0, rc=0), False, ledger=[], deadline=t0 + 15.0, me=1, clock=clk, sleep=clk.sleep, killpg=no_kill,
+                  killer=lambda pid, sig: dead.append(pid), waitpid=lambda pid, opt: (pid, 0))
+    assert rec["status"] == "killed" and rec["settle"]["kills"] == [[4243, "sent"]] and dead == [4243] and abs(clk.t - (t0 + 3.0)) < 0.2
+
+
+def test_r4_the_runner_cleans_inherited_git_variables_before_its_first_git_call(tmp_path, monkeypatch):
+    """[RED 실패 — v2: AttributeError (base_env)] (V2-02) base_env = launcher child_env 와 같은 규칙 (비밀 형태 · SSH_ASKPASS · GIT_SSL_CAINFO 밖의 GIT_*
+    제거 · GIT_TERMINAL_PROMPT=0 · 뺀 이름) · git 은 env 를 반드시 받는다 (기본값 없음) — 상속 env 에 다른 저장소의 GIT_DIR · 허용 밖 GIT_OBJECT_DIRECTORY ·
+    GIT_INDEX_FILE · GIT_TRACE 가 있어도 기록 HEAD = tmp 저장소 · 표지 폴더 비어 있음 · 다른 저장소 불변."""
+    base_env = R.base_env
+    names = ("GIT_DIR", "GIT_WORK_TREE", "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_INDEX_FILE", "GIT_TRACE",
+             "GIT_CONFIG_COUNT", "GIT_CONFIG_KEY_0", "GIT_EXEC_PATH", "GIT_TERMINAL_PROMPT")
+    env, removed = base_env({**{n: "/x" for n in names}, "GITHUB_TOKEN": "t", "SSH_ASKPASS": "a", "GIT_SSL_CAINFO": "/c", "PATH": "/usr/bin",
+                             "HOME": "/root"})
+    assert removed == sorted(set(names) | {"GITHUB_TOKEN", "SSH_ASKPASS"})
+    assert sorted(k for k in env if k.startswith("GIT_")) == ["GIT_SSL_CAINFO", "GIT_TERMINAL_PROMPT"] and env["GIT_TERMINAL_PROMPT"] == "0"
+    assert (env["PATH"], env["HOME"]) == ("/usr/bin", "/root") and "GITHUB_TOKEN" not in env and "SSH_ASKPASS" not in env
+    assert inspect.signature(R.git).parameters["env"].default is inspect.Parameter.empty
+    repo = _repo(tmp_path / "repo", "repo")
+    bad, other, sentinel = _sentinels(tmp_path)
+    other_head = _head(other)
+    for k, v in bad.items():
+        monkeypatch.setenv(k, v)
+    env, removed = base_env(dict(os.environ))
+    assert set(bad) <= set(removed)
+    head = R.git(["rev-parse", "HEAD"], env=env, cwd=repo)
+    st = R.git(["status", "--porcelain=v1", "--untracked-files=all"], env=env, cwd=repo)
+    assert head["rc"] == 0 and head["out"].strip() == _head(repo) != other_head and st["rc"] == 0
+    assert [p.name for p in sentinel.rglob("*")] == ["objects"] and _head(other) == other_head
+
+
+def test_r5_source_table_hashes_the_fixed_targets_and_any_difference_from_the_sealed_table_is_a_problem(tmp_path):
+    """[RED 실패 — v2: AttributeError (source_table)] (V2-05) 고정 목록 14 · 단계별 봉인 표 (E1-0b 의 두 단계 · 같은 경로 집합 · launcher 행만 RED /
+    GREEN 이 다름) · 같은 바이트 → 문제 0 · 기록 줄 형식 / 한 바이트 더함 · 같은 크기 다른 바이트 · 없음 · 같은 바이트의 심볼릭 링크 · 링크된 상위
+    폴더 · 경로 집합 다름 → 각각 문제."""
+    source_table, source_problems = R.source_table, R.source_problems
+    launch = "bms-balancing/scripts/reil_c4e1_launch.py"
+    assert set(R.EXPECT) == {"01_red_e1_0b", "02_green_e1_0b"} and len(R.TARGETS) == len(set(R.TARGETS)) == 14
+    assert all(list(v) == [launch] + [x for x in R.TARGETS if x != launch] and set(v) == set(R.TARGETS) for v in R.EXPECT.values())
+    assert R.EXPECT["01_red_e1_0b"][launch] != R.EXPECT["02_green_e1_0b"][launch]
+    assert {k: v for k, v in R.EXPECT["01_red_e1_0b"].items() if k != launch} == {k: v for k, v in R.EXPECT["02_green_e1_0b"].items() if k != launch}
+    files = {"a/x.py": b"x = 1\n", "b/y.txt": b"y\n"}
+    want = {rel: {"sha256": hashlib.sha256(b).hexdigest(), "bytes": len(b)} for rel, b in files.items()}
+
+    def tree(kind):
+        root = (tmp_path / kind).resolve()
+        for rel, b in files.items():
+            (root / rel).parent.mkdir(parents=True, exist_ok=True)
+            (root / rel).write_bytes(b)
+        return root
+
+    root = tree("ok")
+    rows = source_table(root, tuple(files))
+    assert source_problems(rows, want) == [] and rows == want
+    assert R.source_text(rows, root / "runner.py", "0" * 64).splitlines() == [
+        f"{want['a/x.py']['sha256']}  a/x.py", f"{want['b/y.txt']['sha256']}  b/y.txt", f"# 실행기 자신 (대조 밖) {'0' * 64}  {root / 'runner.py'}"]
+    for kind in ("append", "same_size", "missing", "symlink", "parent_link"):
+        root = tree(kind)
+        target = root / "a" / "x.py"
+        if kind == "append":
+            target.write_bytes(files["a/x.py"] + b"#")
+        elif kind == "same_size":
+            target.write_bytes(b"x = 2\n")
+        elif kind == "missing":
+            target.unlink()
+        elif kind == "symlink":
+            real = root / "real_x.py"
+            real.write_bytes(files["a/x.py"])
+            target.unlink()
+            target.symlink_to(real)
+        else:
+            moved = root / "real_a"
+            (root / "a").rename(moved)
+            (root / "a").symlink_to(moved, target_is_directory=True)
+        probs = source_problems(source_table(root, tuple(files)), want)
+        assert probs and any("a/x.py" in x for x in probs), kind
+    rows = source_table(tree("set"), tuple(files))
+    assert any("경로 집합" in x for x in source_problems(rows, {"a/x.py": want["a/x.py"]}))
+    assert any("경로 집합" in x for x in source_problems(rows, dict(want, **{"c/z.py": want["a/x.py"]})))
+
+
+def test_r6_a_normal_step_writes_both_source_tables_and_records_from_the_right_repo_with_a_clean_child_env(tmp_path):
+    """[RED 실패 — v2: AttributeError (run_step)] (V2-02 · V2-05 · V2-03 기록) driver 가 tmp 트리로 run_step — 상속 env 에 표지 GIT_* 가 있어도 시작 ·
+    끝 기록 HEAD = tmp 저장소 · 표지 폴더 비어 있음 · 다른 저장소 불변 · 자식이 본 GIT_* = GIT_TERMINAL_PROMPT 뿐 · cwd = bms · source_sha256.txt ·
+    _end.txt 의 정확한 줄 · 끝 상태 empty · 시간 경계 넷 (cleanup_s 는 run_step 이 정리 원점부터 · V3-01) · runner_ok · 반환 0."""
+    run_step = R.run_step
+    assert callable(run_step)
+    t = _rtree(tmp_path / "t")
+    bad, other, sentinel = _sentinels(tmp_path)
+    other_head = _head(other)
+    out = t.tmp / "child.json"
+    r = _drive(t, "03_green", 30.0, [sys.executable, "-I", "-B", "-c", CHILD, str(out)], environ=_environ(t.tmp, bad))
+    assert r.returncode == 0, (r.stdout[-500:], r.stderr[-1000:])
+    m = _meta(t, "03_green")
+    assert m["runner_ok"] is True and m["started"] is True and m["timed_out"] is False and m["rc"] == 0 and m["errors"] == []
+    assert m["cleanup"]["status"] == "empty" and m["cleanup"]["deadline_hit"] is False and m["cleanup"]["cleanup_s"] <= 15.0
+    assert {"child_s", "cleanup_s", "records_s", "total_s"} <= set(m["times"]) and m["times"]["cleanup_s"] >= m["cleanup"]["cleanup_s"]
+    head = _head(t.repo)
+    assert m["records"]["head_start"]["out"] == head == m["records"]["head_end"]["out"] != other_head
+    assert set(bad) <= set(m["env_removed_names"]) and [p.name for p in sentinel.rglob("*")] == ["objects"] and _head(other) == other_head
+    child = json.loads(out.read_text())
+    assert child["git"] == ["GIT_TERMINAL_PROMPT"] and child["cwd"] == str(t.bms) and child["step"] == "03_green"
+    me = Path(UNDER_TEST).resolve()
+    want = [f"{t.expect[rel]['sha256']}  {rel}" for rel in t.targets] + [
+        f"# 실행기 자신 (대조 밖) {hashlib.sha256(me.read_bytes()).hexdigest()}  {me}"]
+    for f in ("03_green.source_sha256.txt", "03_green.source_sha256_end.txt"):
+        assert (t.e / f).read_text(encoding="utf-8").splitlines() == want, f
+    assert m["source_start"] == m["source_end"] == t.expect
+
+
+def test_r7_preparation_failures_stop_before_the_child_and_intentional_refusals_write_nothing(tmp_path):
+    """[RED 실패 — v2: AttributeError (run_step)] (V2-04 · V2-05 · S4 · V3-02 · V3-N1) driver — (a) 원천 하나가 봉인 표와 다름 → 반환 3 · 자식 0 ·
+    started false · 문제에 그 경로 · first_error prepare / SourceMismatch · source_sha256.txt 는 남음 / (b) 작업 폴더 자리가 파일 → 반환 3 ·
+    first_error.phase prepare / (c) (b) + meta 를 쓸 수 없음 (주입) → 반환 4 · stderr 마지막 줄 JSON 의 first_error.phase prepare · meta 없음 / (d) 기존
+    기록 파일 → 거부 (SystemExit) · 새 파일 · 폴더 0 / (d′) 기록 파일 자리가 없는 대상을 가리키는 심볼릭 링크 → 같은 거부 · 대상 · 작업 폴더 · 자식 0 /
+    (e) git 저장소가 아님 → 시작 기록 실패 → 반환 3 · 자식 0 · first_error record / GitRecordFailed."""
+    run_step = R.run_step
+    assert callable(run_step)
+    argv = [sys.executable, "-I", "-B", "-c", CHILD]
+    t = _rtree(tmp_path / "a")
+    out = t.tmp / "child.json"
+    wrong = dict(t.expect, **{"bms-balancing/b.txt": {"sha256": "0" * 64, "bytes": 2}})
+    r = _drive(t, "03_green", 30.0, argv + [str(out)], environ=_environ(t.tmp, {}), expect=wrong)
+    m = _meta(t, "03_green")
+    assert r.returncode == 3 and m["started"] is False and m["runner_ok"] is False and any("bms-balancing/b.txt" in x for x in m["problems"])
+    assert (m["first_error"]["phase"], m["first_error"]["type"]) == ("prepare", "SourceMismatch")
+    assert (t.e / "03_green.source_sha256.txt").exists() and not (t.e / "03_green.stdout.log").exists() and not out.exists()
+    t = _rtree(tmp_path / "b")
+    (t.tmp / "workfile").write_text("not a folder")
+    r = _drive(t, "03_green", 30.0, argv + [str(t.tmp / "child.json")], environ=_environ(t.tmp, {}), work=t.tmp / "workfile")
+    m = _meta(t, "03_green")
+    assert r.returncode == 3 and m["first_error"]["phase"] == "prepare" and m["started"] is False and not (t.tmp / "child.json").exists()
+    t = _rtree(tmp_path / "c")
+    (t.tmp / "workfile").write_text("not a folder")
+    r = _drive(t, "03_green", 30.0, argv + [str(t.tmp / "child.json")], environ=_environ(t.tmp, {}), work=t.tmp / "workfile", no_meta=True)
+    line = json.loads(r.stderr.strip().splitlines()[-1])
+    assert r.returncode == 4 and line["first_error"]["phase"] == "prepare" and line["started"] is False and "meta_write_failed" in line
+    assert not (t.e / "03_green.meta.json").exists()
+    t = _rtree(tmp_path / "d")
+    (t.e / "03_green.meta.json").write_text("{}")
+    r = _drive(t, "03_green", 30.0, argv + [str(t.tmp / "child.json")], environ=_environ(t.tmp, {}))
+    assert r.returncode == 2 and "덮어쓰지 않는다" in json.loads(r.stdout.strip().splitlines()[-1])["refused"]
+    assert sorted(p.name for p in t.e.iterdir()) == ["03_green.meta.json"] and not t.work.exists()
+    t = _rtree(tmp_path / "d2")
+    gone = t.tmp / "gone.json"
+    (t.e / "03_green.meta.json").symlink_to(gone)
+    r = _drive(t, "03_green", 30.0, argv + [str(t.tmp / "child.json")], environ=_environ(t.tmp, {}))
+    assert r.returncode == 2 and "덮어쓰지 않는다" in json.loads(r.stdout.strip().splitlines()[-1])["refused"]
+    assert sorted(p.name for p in t.e.iterdir()) == ["03_green.meta.json"] and (t.e / "03_green.meta.json").is_symlink()
+    assert not gone.exists() and not t.work.exists() and not (t.tmp / "child.json").exists()
+    t = _rtree(tmp_path / "e", git=False)
+    r = _drive(t, "03_green", 30.0, argv + [str(t.tmp / "child.json")], environ=_environ(t.tmp, {}))
+    m = _meta(t, "03_green")
+    assert r.returncode == 3 and m["started"] is False and any("head_start" in x for x in m["problems"])
+    assert (m["first_error"]["phase"], m["first_error"]["type"]) == ("record", "GitRecordFailed")
+    assert not (t.e / "03_green.stdout.log").exists() and not (t.tmp / "child.json").exists()
+
+
+def test_r8_a_real_timeout_kills_the_group_and_an_orphaned_other_session_grandchild_within_the_deadline(tmp_path):
+    """[RED 실패 — v2: AttributeError (run_step)] (V2-01 · V2-03 실제 경로) driver 가 subreaper — 자식 (새 세션) 이 다른 세션 손주를 띄우고 잔다 →
+    timeout 1.5 s → 그룹 SIGKILL · 손주 (그룹 밖 · 고아는 driver 밑으로) SIGKILL · 회수 · 끝 상태 empty · exited_after_kill · 기한 안 · 관측 오류 0 ·
+    runner_ok false (timeout) · 반환 1."""
+    run_step = R.run_step
+    assert callable(run_step)
+    t = _rtree(tmp_path / "t")
+    gfile = t.tmp / "grandchild.pid"
+    r = _drive(t, "03_green", 1.5, [sys.executable, "-I", "-B", "-c", TREE, str(gfile)], environ=_environ(t.tmp, {}))
+    m = _meta(t, "03_green")
+    g = int(gfile.read_text())
+    assert r.returncode == 1 and m["timed_out"] is True and m["runner_ok"] is False and m["started"] is True, (r.stdout[-300:], r.stderr[-500:])
+    c = m["cleanup"]
+    assert c["status"] == "empty" and c["exited_after_kill"] is True and c["deadline_hit"] is False and c["cleanup_s"] <= 15.0
+    assert c["kills"][0] == ["group", m["pgid"], "sent"] and ["pid", g, "sent"] in c["kills"]
+    assert g in c["settle"]["reaped"] and c["settle"]["errors"] == []
+
+
+def test_r9_an_observation_started_before_the_deadline_that_returns_after_it_is_followed_only_by_immediate_actions(monkeypatch):
+    """[RED 실패 — v2: AttributeError (cleanup)] (V3-01 · 회신의 정적 반례) timeout · 첫 관측 6.85 s · 6.95 s 에 시작한 둘째 관측이 9 s 걸려 15.95 s 에
+    생존을 돌려줌 → 그 자손들에 SIGKILL (즉시 동작) · 그 뒤 새 관측 0 · sleep 은 첫 관측 뒤 하나뿐 · pytest 회수는 wait(0) 하나 · settle 은 관측 없이
+    unverified (alive None · kill 0) · 끝 상태 unverified · deadline_hit · cleanup_s 15.95."""
+    cleanup = R.cleanup
+    clk, starts, sent, costs = _Clock(), [], [], [6.85, 9.0]
+    t0 = clk.t
+    monkeypatch.setattr(R, "proc_table", _costly(clk, starts, lambda: {4242: (1, "S"), 4243: (1, "S")}, lambda: costs.pop(0)))
+    p = _P(4242, clk)
+    rec = cleanup(p, True, ledger=[], deadline=t0 + 15.0, me=1, clock=clk, sleep=clk.sleep, killpg=lambda pid, sig: None,
+                  killer=lambda pid, sig: sent.append(pid), waitpid=lambda pid, opt: (0, 0))
+    assert len(starts) == 2 and starts[0] == t0 and abs(starts[1] - (t0 + 6.95)) < 1e-9 and abs(clk.t - (t0 + 15.95)) < 1e-9
+    assert sent.count(4243) == 2 and sent.count(4242) == 2 and len(clk.sleeps) == 1 and p.waits == [(clk.t, 0.0)]
+    assert rec["exited_after_kill"] is False and rec["status"] == "unverified" and rec["deadline_hit"] is True and rec["emergency"] is False
+    s = rec["settle"]
+    assert s["status"] == "unverified" and s["alive"] is None and s["kills"] == [] and s["errors"] == [] and s["deadline_hit"] is True
+    assert abs(rec["cleanup_s"] - 15.95) < 1e-6
+
+
+def test_r10_an_exception_late_in_cleanup_is_recorded_and_handled_under_the_same_deadline(monkeypatch):
+    """[RED 실패 — v2: AttributeError (cleanup)] (V3-01) 관측마다 0.05 s · 기한 15 s — (a) 정상 종료 · kill 이 듣지 않는 자손 · 10 s 쯤 시작한 관측이
+    예외 → cleanup 이 잡아 오류 · ledger (cleanup_exception) 에 남기고 같은 기한으로 비상 settle → unknown · emergency · 그룹 kill 0 (pytest 는 이미
+    끝남) · 모든 관측 시작 < 원래 기한 · 끝 ≤ 기한 + 관측 한 번 (새 15 s 없음) / (b) timeout · pytest 가 끝나지 않음 · 첫 관측이 예외 → 비상 동작이 그룹
+    SIGKILL 을 한 번 더 · pytest 회수 대기 0 · 같은 기한 · unknown."""
+    cleanup = R.cleanup
+    cost = 0.05
+    clk, starts, raised = _Clock(), [], []
+    t0 = clk.t
+
+    def late():
+        if clk.t >= t0 + 10.0 and not raised:
+            raised.append(clk.t)
+            raise RuntimeError("scan failed (시험 주입)")
+        return {4243: (1, "S")}
+
+    monkeypatch.setattr(R, "proc_table", _costly(clk, starts, late, cost))
+    rec = cleanup(_P(4242, clk, end_at=t0 - 1.0, rc=0), False, ledger=[], deadline=t0 + 15.0, me=1, clock=clk, sleep=clk.sleep,
+                  killpg=lambda pid, sig: None, killer=lambda pid, sig: None, waitpid=lambda pid, opt: (0, 0))
+    assert rec["status"] == "unknown" and rec["emergency"] is True and rec["errors"] == ["RuntimeError: scan failed (시험 주입)"]
+    assert len(raised) == 1 and t0 + 10.0 <= raised[0] < t0 + 10.2 and rec["kills"] == []
+    assert rec["deadline_hit"] is True and max(starts) < t0 + 15.0 and t0 + 15.0 <= clk.t <= t0 + 15.0 + cost + 1e-9
+    s = rec["settle"]
+    assert s["status"] == "unknown" and s["first_error"]["where"] == "cleanup_exception" and "scan failed" in s["first_error"]["error"]
+    assert abs(rec["cleanup_s"] - (clk.t - t0)) < 1e-3
+    clk, starts, raised, groups = _Clock(), [], [], []
+    t0 = clk.t
+
+    def first():
+        if not raised:
+            raised.append(clk.t)
+            raise RuntimeError("scan failed (시험 주입)")
+        return {4242: (1, "S"), 4243: (1, "S")}
+
+    monkeypatch.setattr(R, "proc_table", _costly(clk, starts, first, cost))
+    p = _P(4242, clk)
+    rec = cleanup(p, True, ledger=[], deadline=t0 + 15.0, me=1, clock=clk, sleep=clk.sleep, killpg=lambda pid, sig: groups.append(pid),
+                  killer=lambda pid, sig: None, waitpid=lambda pid, opt: (0, 0))
+    assert rec["status"] == "unknown" and rec["emergency"] is True and groups == [4242, 4242] and rec["kills"] == [["group", 4242, "sent"]] * 2
+    assert rec["exited_after_kill"] is None and p.waits == [] and max(starts) < t0 + 15.0 and t0 + 15.0 <= clk.t <= t0 + 15.0 + cost + 1e-9
+    assert rec["settle"]["first_error"]["where"] == "cleanup_exception" and rec["deadline_hit"] is True
+
+
+def test_r11_proc_reads_are_bytes_and_every_per_pid_read_or_parse_error_is_recorded_without_stopping_the_scan(tmp_path, monkeypatch):
+    """[RED 실패 — v2: AttributeError (observe)] (V3-03 · S5 · V4-01 · S6) tmp 가짜 /proc — 101 정상 · 102 PermissionError · 103 UnicodeDecodeError
+    (주입한 read) · 104 비 UTF-8 comm 바이트 (괄호 포함) · 숫자 아닌 항목 → 오류 둘 (where 그대로) · 나머지 표 완성 / 기본 읽기 (바이트) 는 오류 0 · 넷
+    모두 / settle 의 첫 관측에 그 오류 · 뒤 관측은 정상 빈 표 → unknown · kill · 회수 0 / 실행기 git 이 비 UTF-8 출력을 예외 없이 UTF-8 로 읽는다 — 입력은
+    tmp 저장소의 blob (`hash-object -w --no-filters` · `cat-file blob`) 이고 커밋 메시지를 쓰지 않는다 (V4-01). fixture 가 먼저 wrapper 를 거치지 않고 그
+    git stdout 이 정확히 그 바이트이며 잘못된 UTF-8 임을 확인하고, wrapper 의 호출 키워드 (AST · S6) 와 정확한 대체 문자 결과를 본다."""
+    observe = R.observe
+    proc = tmp_path / "proc"
+    for pid, comm in ((101, b"python3"), (102, b"p"), (103, b"q"), (104, b"\xff\xfe a) b")):
+        (proc / str(pid)).mkdir(parents=True)
+        (proc / str(pid) / "stat").write_bytes(b"%d (%s) S 1 %d %d 0 -1 4194304" % (pid, comm, pid, pid))
+    (proc / "self").mkdir()
+
+    def reader(q):
+        if q.parent.name == "102":
+            raise PermissionError(13, "denied (시험 주입)")
+        if q.parent.name == "103":
+            raise UnicodeDecodeError("utf-8", b"\xff", 0, 1, "invalid start byte (시험 주입)")
+        return q.read_bytes()
+
+    ledger = []
+    assert observe(ledger, "settle", proc=proc, read=reader) == {101: (1, "S"), 104: (1, "S")}
+    assert sorted(x["error"].split(":")[0] for x in ledger) == ["102", "103"] and {x["where"] for x in ledger} == {"settle"}
+    ledger = []
+    assert observe(ledger, "settle", proc=proc) == {pid: (1, "S") for pid in (101, 102, 103, 104)} and ledger == []
+    real, calls, clk = R.proc_table, [], _Clock()
+
+    def once(*a, **k):
+        calls.append(1)
+        return real(proc, reader) if len(calls) == 1 else ({}, [])
+
+    def never(*a):
+        raise AssertionError("남은 자손이 없으면 kill · 회수하지 않는다")
+
+    monkeypatch.setattr(R, "proc_table", once)
+    res = R.settle(-1, me=1, clock=clk, sleep=clk.sleep, killer=never, waitpid=never)
+    assert res["status"] == "unknown" and len(calls) == 2 and res["first_alive"] == [101, 104] and res["alive"] == [] and res["kills"] == []
+    assert sorted(x["error"].split(":")[0] for x in res["errors"]) == ["102", "103"]
+    repo = tmp_path / "repo"
+    _git("init", "-q", "--template=", str(repo))
+    data = b"fixture \xff\xfe not utf-8\n"
+    (tmp_path / "blob.bin").write_bytes(data)
+    sha = _git("-C", str(repo), "hash-object", "-w", "--no-filters", str(tmp_path / "blob.bin")).strip()
+    raw = subprocess.run(["git", "-C", str(repo), "cat-file", "blob", sha], env=_git_env(), capture_output=True, timeout=60)
+    assert raw.returncode == 0 and raw.stdout == data, (raw.returncode, raw.stdout[:80])
+    with pytest.raises(UnicodeDecodeError):
+        raw.stdout.decode("utf-8")
+    kw = _run_keywords(UNDER_TEST, "git")
+    assert (kw.get("text"), kw.get("encoding"), kw.get("errors")) == (True, "utf-8", "replace"), kw
+    r = R.git(["cat-file", "blob", sha], env=_git_env(), cwd=repo)
+    assert r["rc"] == 0 and r["out"] == data.decode("utf-8", "replace") and "�" in r["out"] and "error" not in r, r

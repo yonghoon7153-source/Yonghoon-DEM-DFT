@@ -1,0 +1,71 @@
+{
+  "kind": "REIL_C4E_E1_0B_PREREVIEW_DECISION",
+  "date": "2026-10-30",
+  "decision": "E1_0B_PREREVIEW_CHANGES_REQUIRED_BEFORE_APPROVAL",
+  "pinned_commit": "90a842a9df9eb676c20ce1b9d4babf0cf0c5d637",
+  "basis_commit": "a9544ee04458d9fa79b5b09b463e72ef9543c2d0",
+  "required_findings": [
+    {
+      "id": "E1_0B_N1",
+      "priority": "P2",
+      "title": "Expected RED signatures also admit unrelated nested failures",
+      "cases": [
+        "l23",
+        "l29",
+        "l30"
+      ],
+      "expected_cause_binding_required": true,
+      "static_only": true,
+      "actual_counterexample_execution": 0
+    }
+  ],
+  "nonblocking_notes": [
+    {
+      "id": "DOC_COUNT_01",
+      "description": "00_start SHA description 11 versus literal command 10"
+    },
+    {
+      "id": "DOC_COUNT_02",
+      "description": "Runner-controls unchanged top-level AST: observed 46, described 47; disclosed changed scope remains consistent"
+    }
+  ],
+  "answers": {
+    "Q1": "STATIC_ACCEPTABLE_FUNCTIONAL_PENDING",
+    "Q2": "STATIC_ACCEPTABLE_OPERATIONAL_NEED_UNOBSERVED",
+    "Q3": "STATIC_ACCEPTABLE_DISCLOSED_LIMITS_RETAINED",
+    "Q4": "CHANGES_REQUIRED_RED_CAUSE_BINDING",
+    "Q5": "SEALS_RECORDING_SPLIT_SCOPE_STATIC_ACCEPTABLE_APPROVAL_BLOCKED_BY_N1"
+  },
+  "verified_static": {
+    "drafts_AST_parsed": 5,
+    "fixed_seal_rows_matched": 15,
+    "planned_test_function_count": 71,
+    "planned_RED_failed_nodeids": 9,
+    "planned_RED_passed_nodeids": 24,
+    "attached_documents_equal_pinned_repository": true,
+    "branch_at_close_identical": true
+  },
+  "execution": {
+    "received_programs": 0,
+    "target_imports": 0,
+    "functional_tests": 0,
+    "Git_fixtures": 0,
+    "probes": 0,
+    "target_launcher_runner_or_end_writer": 0,
+    "real_data_fetch_or_run": 0,
+    "repository_changes": 0,
+    "commits_or_pushes": 0,
+    "external_transmission": 0
+  },
+  "retained": {
+    "prior_E1_0_result": "ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION",
+    "prior_deviation": "E1_0_N1",
+    "E1_0b_execution_approved": false,
+    "E1_1_to_3_execution_approved": false,
+    "FUTURE_01_functionally_closed": false
+  },
+  "next_step": "Author prepares inactive cause-binding correction and reseals dependent drafts/documents; static rereview before user execution approval",
+  "whole_review_budget": null,
+  "whole_review_elapsed_claim": null,
+  "source_boundary": "Immutable Git blob bytes and local supplied/captured files; not a remote working-tree audit"
+}

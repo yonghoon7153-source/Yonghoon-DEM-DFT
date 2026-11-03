@@ -1,0 +1,139 @@
+{
+  "review_kind": "STATIC_L33_CAUSE_AND_DEFAULT_ARGUMENT_REVIEW",
+  "date": "2026-11-03",
+  "conclusion": "CONFIRMED_TEST_FIXTURE_DEFECT",
+  "summary": "l33 omits extra=t.extra from its sole direct L.postcheck call. Both launcher v5 and draft v6 therefore compare the fixture's two fake dependency files with production EXTRA_EXECUTED identities. The baseline assertion fails at line 1063, before the intended deadline_hit assertion at line 1065. The observed nine-failure count does not establish the expected l33 RED cause.",
+  "sources": {
+    "controls": {
+      "path": "source/bms-balancing/tests/test_reil_c4e1_launch.py",
+      "sha256": "3f9d2f2585b36819d229796154ecd4e902ffce86120c8e3c5a1e75bb1554e9cc",
+      "same_hash_as": "../reil_c4e_e1_0b_v2_prereview_20261103/source/bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v7_20261030.py.txt"
+    },
+    "v5": {
+      "path": "source/bms-balancing/scripts/reil_c4e1_launch.py",
+      "sha256": "2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396",
+      "same_hash_as": "../reil_c4e_e1_0b_v2_prereview_20261103/basis/unchanged_at_pin/bms-balancing/scripts/reil_c4e1_launch.py"
+    },
+    "v6": {
+      "path": "../reil_c4e_e1_0b_v2_prereview_20261103/basis/unchanged_at_pin/bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt",
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+    },
+    "stdout": {
+      "path": "source/bms-balancing/evidence/reil_c4e1_0b_20261103/01_red_e1_0b.stdout.log",
+      "sha256": "3e8c520e92a5671fc3c3c3cddf4f62dd0f4677bc4ff2bc33364a274a6c4d6886"
+    }
+  },
+  "observed_evidence": {
+    "stdout_lines": [57, 63],
+    "failing_source_line": 1063,
+    "failing_statement": "assert post()[\"problems\"] == []",
+    "problem_count_reported": 2,
+    "first_problem": "bms-balancing/scripts/reil_c6_profile.py: sha256 676ef3bde4c2aedd5c005de35fb77f81f916277a5c2c30bcb7ce85d87f3c8b51 · 25 B ≠ 기대 {'bytes': 15915, 'sha256': '408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d'}",
+    "summary_line": 138,
+    "summary": "9 failed, 24 passed in 14.25s",
+    "limitation": "The second complete problem string is truncated in the supplied pytest output. Its identity is derived from the two-entry fixture and source comparison, not presented as a separately visible full log message."
+  },
+  "static_causal_chain": [
+    {
+      "source": "controls",
+      "lines": [153, 183],
+      "finding": "_tree creates the repository and two fake extra files at lines 164-167, derives their fixture sha256/bytes table at 168, and returns it as t.extra at 182. C6P is '# reil_c6_profile (fake)\\n' (25 bytes); ENV is '# env_profile (fake)\\n' (21 bytes)."
+    },
+    {
+      "source": "controls",
+      "lines": [186, 203],
+      "finding": "_pre passes extra=extra or t.extra at 195; _launch passes extra=t.extra at 200. Those wrapper paths explicitly supply fixture identities."
+    },
+    {
+      "source": "controls",
+      "lines": [1048, 1068],
+      "finding": "l33 creates the same fake tree and precheck record. The nested post is defined at 1059, builds the normal child at 1060, and calls L.postcheck at 1061 with env, repo and records, but no extra. The normal baseline assertion is at 1063; the deadline variant is not reached until 1064-1065."
+    },
+    {
+      "source": "v5",
+      "lines": [[82, 84], [228, 244], [536, 545]],
+      "finding": "postcheck's extra default is EXTRA_EXECUTED, containing production sizes 15915 and 22333 and production hashes. It calls check_files(repo, extra) unconditionally for identity as well as other steps, adding one mismatch per fake file. The observed first mismatch exactly matches this path."
+    },
+    {
+      "source": "v6",
+      "lines": [[93, 95], [601, 610]],
+      "finding": "Draft v6 has the same production extra identities, the same default and the same unconditional check_files(repo, extra). The unchanged l33 would fail the same normal baseline with v6. This is a static consequence, not an observed GREEN execution."
+    },
+    {
+      "source": "v5",
+      "lines": [559, 568],
+      "finding": "The intended v5 defect still exists: postcheck does not inspect deadline_hit and returns ok=not probs. However, the fixture's prior mismatch prevents l33 from demonstrating that defect in this RED run."
+    },
+    {
+      "source": "v6",
+      "lines": [624, 635],
+      "finding": "Draft v6 does check deadline_hit is False at 627-628 and independently rejects nonempty group states and child errors. With matching fixture identities and otherwise valid postcheck conditions, the l33 cases exercise these intended checks."
+    }
+  ],
+  "direct_call_inventory": {
+    "scope": "Captured source/bms-balancing/tests, with full direct L.* call inspection of test_reil_c4e1_launch.py",
+    "L_postcheck_site_count": 1,
+    "L_postcheck_sites": [{"file": "source/bms-balancing/tests/test_reil_c4e1_launch.py", "line": 1061, "function": "test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty.post"}],
+    "related_sites": [
+      {"controls_lines": [193, 195], "call": "L.precheck", "assessment": "Receives fixture repo, Python, seal, work, data, data_files, sources, source hash, seal hash, lock hash and extra."},
+      {"controls_lines": [198, 203], "call": "L.launch", "assessment": "Receives the fixture options including extra; v5 launch forwards extra to postcheck at 768-769, and v6 forwards it at 888-889."},
+      {"controls_lines": [973, 974], "call": "L.fetch_source_postcheck", "assessment": "l30(a) supplies local data plus url=str(up) and commit=sha explicitly. It is a different function and does not use EXTRA_EXECUTED."},
+      {"controls_lines": [645, 645], "call": "monkeypatch of L.postcheck", "assessment": "Fault injection in l20, not a second direct postcheck call; it is scoped by pytest monkeypatch."}
+    ]
+  },
+  "minimal_correction": {
+    "target": "Future corrected controls draft (v8), l33 nested post call currently at line 1061",
+    "change": "Pass extra=t.extra to L.postcheck.",
+    "suggested_call": "return L.postcheck(\"identity\", t.ev, pre, prefix, {**base, **child}, env=env, repo=t.repo, extra=t.extra, records=records)",
+    "effect": "Uses the same fixture identity table as _pre and _launch; removes the two unrelated dependency mismatches while preserving the baseline assertion and intended deadline/group/error assertions.",
+    "preserve": ["Production EXTRA_EXECUTED values and defaults in v5/v6", "The baseline assertion at 1063", "The intended exact v5 deadline assertion and message at 1065", "All existing RED execution evidence as recorded"],
+    "do_not_substitute": ["Changing expected RED to accept the fixture mismatch", "Removing the baseline assertion", "Passing extra={} to disable dependency comparison", "Replacing production EXTRA_EXECUTED with fake identities globally"],
+    "runtime_status": "Proposed only; no source edited, target imported, target executed, or corrected test run. No future RED/GREEN result is claimed."
+  },
+  "collateral_default_argument_audit": [
+    {
+      "item": "l33 postcheck data/data_files defaults",
+      "source_lines": {"v5": [547, 554], "v6": [612, 619]},
+      "assessment": "These production defaults are not read in step='identity'; only fetch/run enter the data checks. They do not add another cause here. If this helper is later reused for fetch/run, supply data=t.data and data_files=t.data_files too."
+    },
+    {
+      "item": "l33 postcheck repo/env/records",
+      "source_lines": {"controls": [1054, 1061]},
+      "assessment": "repo, prefix, env and records are supplied from the fixture; evidence and pre are positional. Thus extra is the only omitted fixture-sensitive argument read by this identity postcheck path."
+    },
+    {
+      "item": "_pre/build_argv venv default and helper_sha256 default",
+      "source_lines": {"controls": [[164, 183], [191, 195], [1052, 1054]], "v5": [[354, 359], [484, 488], [539, 545]], "v6": [549, 553]},
+      "assessment": "_pre's build_argv omits venv and its precheck retains the production helper hash. _tree does not install IDENTITY_HELPER, so this identity precheck is not established as ok=True. That does not create the observed postcheck problems: postcheck reads the source entries/modules and does not require pre.ok or copy pre.problems. Describe l33 as a postcheck unit fixture with a normal child/record baseline, not proof of a successful precheck or full stage. Making pre.ok a new requirement would be a separate fixture design change, not the minimal extra fix."
+    },
+    {
+      "item": "Intentional production defaults in l14",
+      "source_lines": {"controls": [487, 507], "v5": [[354, 367], [798, 809]]},
+      "assessment": "l14's build_argv calls intentionally verify fixed production command strings. These calls construct lists rather than execute paths. Its main calls use invalid approval/evidence inputs and stop before launch. A blanket rule requiring all production defaults to be overridden would incorrectly reject these intentional contract tests."
+    },
+    {
+      "item": "Default binding and correction scope",
+      "assessment": "Supply fixture arguments at the call site. Rebinding the module's EXTRA_EXECUTED name after function definition would not replace an already-bound Python default argument; mutating the shared production dictionary would contaminate other checks. No such workaround is needed."
+    }
+  ],
+  "prior_review_correction": {
+    "explicit_prior_claim": {"path": "../reil_c4e_e1_0b_v2_prereview_20261103/REVIEW_KO.txt", "line": 34},
+    "supporting_prior_analysis": {"path": "../reil_c4e_e1_0b_v2_prereview_20261103/L23_STATIC_REVIEW.json", "lines": [143, 146]},
+    "expected_assert_inventory": {"path": "../reil_c4e_e1_0b_v2_prereview_20261103/STATIC_AUDIT.json", "lines": [593, 599]},
+    "correction": "Retract the assertion that the unchanged l33 fixture can reach the expected deadline RED after a normal baseline. The review identified the baseline assertion as a guard but did not verify its satisfiability under the actual default extra binding. The expected assertion's source location and v5's missing deadline check were correctly identified; reachability with the delivered fixture was not.",
+    "scope": "This invalidates the prior l33 normal-baseline/reachability conclusion and any aggregate conclusion that relied on l33 matching the declared RED cause. It does not itself invalidate the separately audited l23/l29/l30 guard logic, the eight matching RED failures, or prove GREEN behavior. Prior artifacts should remain preserved, with this result review serving as the explicit correction."
+  },
+  "documentation_precision": {
+    "path": "input/REIL_C4E1_0B_RESULT_REVIEW_SEND_20261103.md",
+    "line": 25,
+    "issue": "The note says post() spans 1058-1060. In the hash-matching v7/test file, line 1058 is blank, def post is 1059, base is 1060, and L.postcheck is 1061. The whole l33 range 1048-1068 and assertion lines 1063/1065 are correct.",
+    "severity": "Documentation-only one-line offset; not another execution failure."
+  },
+  "limits": [
+    "Read-only static review of captured source and supplied execution logs; no target module import, test, launcher, child, COMSOL, or repository mutation was performed.",
+    "Only this review JSON was created. Target code and earlier evidence were not modified.",
+    "File hashes were computed locally on captured bytes. Branch/pin provenance, overall evidence integrity, execution authorization and full Q1/Q3/Q4 procedural disposition are assigned to the parent review.",
+    "The observed mismatch is explained without an additional cause. Source-based v6 and corrected-fixture behavior are conditional static conclusions, not independently reproduced execution results.",
+    "This correction proposal is not authorization to rerun RED, copy launcher v6, run GREEN or perform E1-1 through E1-3."
+  ]
+}

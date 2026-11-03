@@ -1,0 +1,75 @@
+{
+  "kind": "E1_0B_Q4_STATIC_REVIEW",
+  "commit": "90a842a9df9eb676c20ce1b9d4babf0cf0c5d637",
+  "received_program_execution": 0,
+  "target_imports": 0,
+  "tests_or_probes_or_git_fixtures_run": 0,
+  "nodeid_partition": {
+    "AST_count": 33,
+    "RED_count": 9,
+    "PASS_count": 24,
+    "RED_unique": 9,
+    "PASS_unique": 24,
+    "sets_disjoint": true,
+    "union_equals_AST": true
+  },
+  "pytest_format_static_check": {
+    "version_read": "9.1.1",
+    "short_traceback_filename_line_full_function_name_supported": true,
+    "custom_tuple_assertion_message_uses_saferepr": true,
+    "default_max_repr": 240,
+    "global_ellipsis_keeps_leading_characters": 118,
+    "prefix_character_lengths": [
+      51,
+      50
+    ],
+    "all_selected_prefixes_within_first_60": true,
+    "source_links": [
+      "https://github.com/pytest-dev/pytest/blob/9.1.1/src/_pytest/assertion/rewrite.py#L395-L424",
+      "https://github.com/pytest-dev/pytest/blob/9.1.1/src/_pytest/_io/saferepr.py#L26-L31",
+      "https://github.com/pytest-dev/pytest/blob/9.1.1/src/_pytest/_code/code.py#L988-L1030"
+    ],
+    "actual_future_output_not_observed": true
+  },
+  "findings": [
+    {
+      "id": "Q4-RED-CAUSE-BINDING",
+      "priority": "P2",
+      "request_lines": [
+        213,
+        215,
+        226,
+        229,
+        230
+      ],
+      "controls_lines": [
+        690,
+        903,
+        905,
+        936,
+        937
+      ],
+      "description": "The matching AssertionError label and nodeid do not bind actual internal failure cause or nested launcher rc. Unrelated nested failures can satisfy the accepted RED signature.",
+      "static_counterexamples": [
+        {
+          "test": "l23",
+          "path": "v5 precheck 491-504 appends a failed interpreter-probe reason to expected rewrite reasons; ok remains False; control 690 raises the same accepted prefix. Extra unrelated failure is not rejected.",
+          "unchanged_expected_signature": "AssertionError plus rewrite/FUTURE-01 prefix"
+        },
+        {
+          "test": "l29",
+          "path": "v5 launch 735 disk_usage OSError caught at 770-771; meta write succeeds; returns 1 at 795 with prepare error, precheck None and postcheck None. Control 904 loads meta; 905 raises same accepted prefix. No launched child and no chained exception.",
+          "unchanged_expected_signature": "AssertionError plus conditional-config prefix; ignored suffix can be None, None"
+        },
+        {
+          "test": "l30",
+          "path": "v5 launch completes its normal child path but meta write 788 fails; catch 789-792 prints JSON and returns 4. Control 937 asserts rc==1 and raises exactly the same tuple as predicted rc==0, before meta read 938.",
+          "unchanged_expected_signature": "AssertionError exact (FUTURE-01 local-key label, localtls)"
+        }
+      ],
+      "outer_common_can_still_match": "All nested failures are handled by the launcher; pytest finishes normally with the same 9 expected failed nodeids plus 24 passed and rc 1. External runner 525-543 checks its own cleanup, fixed-source hashes and records, not each test nested-launcher meta; these can remain normal, giving runner_ok=true and outer rc=1.",
+      "minimum_correction": "Add distinct UNEXPECTED-cause guards before the existing final assert in l23/l29/l30. For l23 accept pre.ok or only the exact intended rewrite reasons with successful source reads. For l29 accept rc0 or rc1 with normal precheck/child/cleanup/records and only the intended effective-URL postcheck mismatch. For l30 reject rc outside 0/1 and read/verify meta before the expected RED assert, requiring rc0 to be a normal complete launch. Existing named tests and expected final asserts can remain, preserving 33 tests, 9+24 RED and 71 GREEN. Rebind modified control hashes and step-runner seals."
+    }
+  ],
+  "finding_not_claimed": "No deterministic mismatch of the nine expected first-failure locations was found from code reading; 9+24 is still only a static prediction. The finding concerns false acceptance of other handled failures, not ordinary pytest formatting."
+}
