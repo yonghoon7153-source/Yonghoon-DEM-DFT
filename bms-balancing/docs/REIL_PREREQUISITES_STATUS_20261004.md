@@ -2499,3 +2499,34 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - **유지:** FUTURE-01 기능 종결은 E1-0b 실제 결과 검토까지 보류 · E1-0 결과 수용 · 절차 이탈 `E1_0_N1` · E1-1–3 · 실제 자료 fetch / run · COMSOL 미승인.
 - **다음:** 사용자의 E1-0b 한정 승인 (명시적으로). 승인하시면 승인 기록 § 를 먼저 남기고 요청서 §4 의 a–e 를 그대로 한다. 이 기록은 E1-0b 의 실행 승인이
   아니다.
+
+## §91 C4-E · E1-0b — 사용자 승인 (2026-11-03 KST · 착수 전 기록 · 덧붙임 — 위 §0–§90 은 그대로)
+
+- **사용자 (2026-11-03):** "승인" — §90 뒤 E1-0b 한정 승인을 묻는 결정 요청 (요청서 §10 의 2) 에 대한 답이다. 승인 대상은 승인 요청
+  `docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md` (`38960400cf7830a5c15182e49d73bfc6e589f7590deb8f1838404dafc6f76caa` · 57,744 B · 재검토 수용 §90) §4 의
+  E1-0b 뿐이다.
+- **고정본 (요청서 §1-1 · 봉인 표 15/15 — §90):** launcher v6 `2c707123…` (62,639) · launcher 대조 v7 `3f9d2f25…` (73,572) · 외곽 실행기 대조 v4
+  `d9880f28…` (36,600) · 외곽 실행기 v7 `c5aab7c3…` (36,672 · 봉인 표 EXPECT 포함) · 끝 기록 작성기 `2e44f2e5…` (3,697). RED 대상 = 지금 저장소의
+  `scripts/reil_c4e1_launch.py` (v5 `2269d775…` · 51,957).
+- **순서 · 배정 (요청서 §4-1 그대로):**
+  - a 이 기록 · 보존 규칙 · `<E>` 만들기 → b 복사 넷 · `00_start.txt` · 첫 시험 전 봉인 커밋 → c RED `01_red_e1_0b` (pytest 120 s) · 외곽 반환 · 판정 · 커밋 →
+    d 고정 구현 v6 복사 (sha 대조) · GREEN `02_green_e1_0b` (71 · `-x` · 600 s) · 외곽 반환 · 판정 · 커밋 → e `03_end.json` · 비밀 검사 · 커밋 · push · 결과
+    기록 § · 결과 검토 발송문 → 멈춤.
+  - 단계마다 외곽 실행기 정리 ≤ 15 s (공통 기한) + 기록 (별도 배정). E1-0b 전체 (a → e 의 끝 기록) ≤ 2 h. 재시도 0 · 예산 변경 0. c · d 에서 멈추면 그 단계의
+    기록을 있는 그대로 커밋하고 e 를 한다.
+- **판정 기준 (요청서 §4-3 · 회신 §88 의 RED 문구 + 근거 위치 · 형식 고정):**
+  - 공통 (실행기 meta · 외곽 반환): started · timeout 없음 · `cleanup.status` empty · `cleanup.deadline_hit` false · `cleanup.errors` · `end_problems` ·
+    `errors` 없음 · `runner_ok` true · 외곽 반환 RED 1 / GREEN 0.
+  - RED: `FAILED` nodeid 집합 = 표의 9 · `PASSED` 집합 = 목록의 24 · 실패 절마다 첫 traceback 항목 (파일 경로 + 전체 시험명) · 예외 블록 머리의 종류 /
+    메시지 = 표 (정확히 7 · 접두 2) · `UNEXPECTED_RED_CAUSE` 0 · 연쇄 예외 0 · rc 1 · 마지막 줄 `9 failed` · `24 passed` 뿐 · 수집 / 내부 오류 · 중단 0.
+  - GREEN: rc 0 · 마지막 줄 `71 passed` 뿐 · `PASSED` 집합 = 네 파일의 최상위 `test_*` 71 · `FAILED` · `ERROR` 0.
+  - 근거의 위치 · 형식이 요청서와 다르면 대체하지 않고 그 자리에서 멈춘다 (실행자 규칙 · §86).
+- **증거 폴더:** `<E>` = `evidence/reil_c4e1_0b_20261103/` (착수 UTC 날짜 2026-11-03). 이 기록 시점 확인 (06:22Z): `<E>` · `SP/c4e1_0b_steps` 없음. 복사 대상
+  셋의 지금 바이트 = E1-0 판 (`tests/test_reil_c4e1_launch.py` `4720585c…` · `tests/test_reil_c4e1_runner.py` `ae42d8e8…` · launcher v5 `2269d775…`).
+- **절차 Git 이름 확인 (요청서 §4-6 · 단계 a · 2026-11-03T06:22:48Z · 이름만 · 값은 읽거나 출력하지 않음):** 결과 `outside_allowlist` = [] (rc 0).
+  - 이름: `GIT_ASKPASS` · `GIT_CONFIG_COUNT` · `GIT_CONFIG_KEY_0`–`2` · `GIT_CONFIG_VALUE_0`–`2` · `GIT_EDITOR` · `GIT_SSL_CAINFO` · `GIT_TERMINAL_PROMPT`.
+  - a–e 의 절차 git 은 모두 같은 셸 명령 줄에서 이 확인 뒤에만 실행한다 (`<확인> && git …`).
+- **도구 실행 방식 (밝힘):** 명령 줄은 요청서 §4-2 그대로 쓴다. GREEN 의 최악 소요 (pytest 600 s + 정리 15 s + 기록) 가 이 세션 셸 도구의 전경 상한
+  (600 s) 을 넘을 수 있어, GREEN 명령 줄은 도구의 배경 실행으로 띄우고 끝 알림을 받는다 (명령 문자열 · 외곽 반환 기록은 같다). RED 는 전경으로 띄운다.
+- **번호:** 결과 기록은 §92 이다.
+- 이 승인은 E1-1–3 (identity · 읽기 경로 `add_repo` · fetch · 자료 개봉 · run) · C4-A / B · 설치 · 환경 재구축 · COMSOL 승인이 아니다.
