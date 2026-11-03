@@ -1,0 +1,30 @@
+{
+  "baseline": {
+    "passed": 11,
+    "failed": 0
+  },
+  "retry_guard_removed": {
+    "passed": 10,
+    "failed": 1
+  },
+  "archive_cost_join_removed": {
+    "passed": 10,
+    "failed": 1
+  },
+  "proc_error_swallowed": {
+    "passed": 10,
+    "failed": 1
+  },
+  "cleanup_cost_omitted": {
+    "passed": 10,
+    "failed": 1
+  },
+  "wallclock_duration": {
+    "passed": 10,
+    "failed": 1
+  },
+  "cross_boot_cost_accepted": {
+    "passed": 9,
+    "failed": 2
+  }
+}

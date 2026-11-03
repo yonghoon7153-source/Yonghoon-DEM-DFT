@@ -529,6 +529,7 @@ SUMMARY_RC = {"stage1_pass": 0, "stop_track": 2, "pending": 3, "invalid": 4, "ca
 LI2S2_STATUSES = ("pass", "fail", "incomplete", "invalid")
 DENSITY_REL_TOL = 1e-4          # 고정 밀도 대조 (gate_check NVT · 최종 구조) — 한 곳에서만 정한다
 PROVENANCE_FILES = ("plan.json", "thermo.csv", "traj.xyz", "final.xyz", "result.json")
+ATTEMPT_NAME = "stage1_attempt.json"  # 러너가 실행 전에 쓰는 식별 기록 — 보존 폴더도 비용 검사 대상
 LEDGER_NAME = "stage1_ledger.json"   # li2s2_stage1_runner.py 가 쓰는 비용 장부 — stage1_summary 가 상한을 여기서 다시 잰다
 RUN_ID_RE = re.compile(r"^[0-9a-f]{32}$")   # 회신 DH P0-2 — 러너가 담금질마다 주는 실행 식별자 (plan.json run_id · 장부 run_id)
 VERDICT_HISTORY = "stage1_verdict_history.jsonl"   # 회신 DH P1-5 — 판정을 덮어쓰기 전 이전 판정 전체 · 지문 변화 · 사유
@@ -1152,6 +1153,43 @@ def summarize_stage1(verdicts, values, cost=None):
     return out
 
 
+def attempt_inventory(out_root):
+    """현재 · 보존된 시드 폴더의 실행을 읽는다. plan 이 아직 없어도 실행 전 기록으로 장부와 잇는다.
+    기록을 모두 지우거나 root 밖으로 옮긴 실행을 복원하는 도구는 아니다. 기존 plan-only 실행은 신원을 읽되 추정하지 않는다.
+    """
+    found, invalid = {}, []
+    root = pathlib.Path(out_root)
+    for system in ("A", "B"):
+        parent = root / system
+        if not parent.is_dir():
+            continue
+        for rd in sorted(parent.iterdir()):
+            if not rd.is_dir():
+                continue
+            ids = []
+            for name in (ATTEMPT_NAME, "plan.json"):
+                p = rd / name
+                if not p.is_file():
+                    continue
+                try:
+                    rec = json.loads(p.read_text(encoding="utf-8"))
+                    rid, sysn, seed = rec.get("run_id"), rec.get("system"), rec.get("seed")
+                    if not (isinstance(rid, str) and RUN_ID_RE.fullmatch(rid)
+                            and sysn == system and type(seed) is int):
+                        raise ValueError("실행 식별 필드 불일치")
+                except (OSError, ValueError, AttributeError) as e:
+                    invalid.append(f"{p}: 실행 신원을 못 읽음 ({type(e).__name__})")
+                    continue
+                ids.append((rid, sysn, seed))
+            if len(set(ids)) > 1:
+                invalid.append(f"{rd}: 실행 전 기록과 plan 신원이 다름")
+            for rid, sysn, seed in set(ids):
+                if rid in found:
+                    invalid.append(f"run_id {rid} 산출물 폴더가 둘: {found[rid]['path']} · {rd}")
+                found[rid] = {"system": sysn, "seed": seed, "path": str(rd)}
+    return found, invalid
+
+
 def ledger_check(out_root, verdicts, values):
     """⭐ 회신 DH P0-1 — 장부 = **실행 목록**. 장부가 없으면 None (확인 못 함 → 통과 안 됨).
     invalid (자료 · 기록 오류): 장부 꼴 · 비용이 유한한 비음수가 아님 · 비용 근거가 측정 · 보수 상한이 아님 · run_id 중복 ·
@@ -1172,6 +1210,8 @@ def ledger_check(out_root, verdicts, values):
         invalid.append("장부 runs 가 목록이 아니다"); runs = []
     tot = 0.0
     for r in runs:
+        if not isinstance(r, dict):
+            invalid.append("장부 runs 원소가 객체가 아니다"); continue
         key = f"{r.get('system')}{r.get('seed')}"
         rid = r.get("run_id")
         if isinstance(rid, str) and rid:
@@ -1187,6 +1227,21 @@ def ledger_check(out_root, verdicts, values):
         if r.get("cost_basis") not in COST_BASES:
             invalid.append(f"{key} 런 비용 근거 {r.get('cost_basis')!r} — 측정 · 보수 상한이 아니면 확정 비용이 아니다"); continue
         tot += float(w)
+    inventory, inventory_bad = attempt_inventory(out_root)
+    invalid.extend(inventory_bad)
+    for rid, rec in inventory.items():
+        r = by_id.get(rid)
+        if r is None:
+            invalid.append(f"보존 포함 실행 {rid} ({rec['path']}) 이 장부에 없다")
+        elif (r.get("system"), r.get("seed")) != (rec["system"], rec["seed"]):
+            invalid.append(f"실행 {rid} 의 산출물 · 장부 계/시드가 다름")
+    # 실패를 보존 폴더로 옮겨 새 실행으로 대체해도 과학적 탈락은 사라지지 않는다.
+    for r in runs:
+        if not isinstance(r, dict) or r.get("verdict") != "fail":
+            continue
+        vv = verdicts.get((r.get("system"), r.get("seed")))
+        if vv is not None and vv.get("run_id") != r.get("run_id"):
+            invalid.append(f"{r.get('system')}{r.get('seed')}: 과학적 fail 실행을 다른 실행으로 대체했다")
     for (s, sd), vv in verdicts.items():
         if vv is None:
             continue
