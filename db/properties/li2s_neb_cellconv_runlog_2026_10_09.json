@@ -185,5 +185,11 @@
   "벽시계": "P1 10-30 13:27:50 → 끝 11-03 08:01:03 ≈ 3.8 일 (끝점 ≈ 25.9 h · NEB no-CI + CI ≈ 2.7 일) — 설계 어림 10.86 일보다 짧다",
   "by": "agent · 2026-11-03",
   "G4_확인_2026_11_03": "사용자 붙여넣기 2026-11-03 (gabia · 검사용 · 입력 파일만 · QE 안 돌림): /data/work/wt_li2s444_1027 HEAD 09c7f83b5 (4×4×4 와 같은 코드) · build_neb_inputs.py --min_l 10 --allow_unrelaxed_endpoints → build rc 0 · ase 3.28.0 · nat 80 · λ₁ 12.102 · endpoint_coords_sha 86ff57dfcad3a783 = kgy ref333 (ase 3.29.0) 와 같음 · 4×4×4 payload 대비 허용 밖 차이 = {'endpoints_relaxed': (False, True)} 하나 (플래그 값)"
+ },
+ "승격_비준_2026_11_03": {
+  "결정": "D-2026-11-03-li2s-neb-cellconv-promote active (사용자 비준 · '보냈고 승격 비준')",
+  "sei_neb": "results v2/li2s absolute_citable true",
+  "hazard": "HZ-sei-neb-li2s-cc-cellconv (CONDITIONAL · 허용 문장 + 홉 수 검산 줄)",
+  "by": "agent · 2026-11-03"
  }
 }

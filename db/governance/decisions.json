@@ -10653,7 +10653,7 @@
    "title": "Li₂S V_Li⁻ c→c CI-NEB 장벽 — 09-01 카드 C1 통과 (4×4×4 대 3×3×3 |ΔEa| 12.9 meV ≤ 30) 에 따라 절대값 인용 자격 (absolute_citable) 으로 올린다 · 인용 값 = 4×4×4 0.29 eV · 허용 문장 하나 + 홉 수 검산 줄",
    "statement": "sei_neb.json v2/li2s 를 absolute_citable true 로 올린다 (cell_convergence_status = converged_3x3x3_vs_4x4x4 는 C1 판정으로 이미 기록). 인용 값 = 4×4×4 Ea 0.29 eV (두 자리 — 수렴 판정 해상도 30 meV) 이고 3×3×3 0.305 eV 와의 차 13 meV 를 같은 문장에 싣는다. 허용 문장 (영문 · 뜻을 줄이지 않는 다듬기만): \"In a 4x4x4 Li2S antifluorite supercell (191 atoms), the charged-vacancy (V_Li-, jellium background) nearest-neighbour c->c CI-NEB barrier is 0.29 eV; it differs by 13 meV from the 3x3x3 value (0.305 eV), within the 30 meV cell-convergence criterion set before the calculation.\" + 홉 수 검산 줄 (ν₀ 1e13 s⁻¹ 가정 · 298 K: Γ ≈ 1.1e8 s⁻¹ · 평균 대기 ≈ 9 ns · 차수 검산 — 확산계수 · 전도도 아님). 파일 전체 BLOCKED (HZ-sei-neb-retracted) 의 예외 hazard 하나 (CONDITIONAL · 이 문장) 를 단다. ⛔ 문헌값 (Lai 0.22 · Moradabadi ≈ 0.45 등) 과 값 대 값 표 (09-01 카드 §5 '어느 경우에도' — 전하 규약 · 홉 정의가 따로 맞아야 한다) · 셀 수렴이 안 된 다른 상과의 순위 (Li₃Nd 0.229 는 SI 단서 전용 · HZ-li3nd-neb-si-conditional) · 'Li₂S 의 Li 전도도 · 확산계수' 로 읽기 · jellium 단서를 뺀 문장 · 2×2×2 값 인용.",
    "rationale": "09-01 카드 C1 이 결과 전에 정한 규칙이다: |Ea(4×4×4) − Ea(3×3×3)| ≤ 30 meV 면 셀 수렴으로 판정하고 absolute_citable 승격을 제안하며 승격 자체는 1저자 비준. 11-03 판독 (runlog 결과_4x4x4_2026_11_03): 0.29213 대 0.305025 eV · ΔEa −12.9 meV · C3 · G1–G5 통과 (G4 해석 2 건). 부모 D-2026-10-09-li2s-neb-cellconv 의 sei_neb.json why_not_absolute ① 셀 수렴 미시험이 풀린다 · ② jellium 유한셀 근사는 남지만 같은 전하 · 같은 셀 차인 장벽에서 셀 키움 효과가 13 meV 라 문장의 단서로 남긴다 · ③ λ₁ 단일 셀 요건은 두 셀 비교로 대체된다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "policy",
    "results_seen": true,
    "results_seen_note": "4×4×4 결과를 본 뒤의 승격 제안 — 문턱 30 meV · 승격 규칙은 09-01 사전등록 그대로 (결과를 보고 바꾼 것 없음)",
@@ -10677,7 +10677,7 @@
    ],
    "enforcement": "비준 뒤에만: sei_neb.json v2/li2s absolute_citable true · 예외 hazard (CONDITIONAL · 허용 문장 · 이 결정 id) 등록 · validate_canonical 통과 · 화면은 hazard id 로 이름만 (sei_neb.json 은 레지스트리 등록 0 건)",
    "proposed_by": "claude-session-2026-11-03 (friendly)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-03",
@@ -10690,8 +10690,24 @@
      "state": "proposed",
      "by": "agent",
      "note": "gabia G4 확인 반영 (해석 2 건 → 1 건) · 비준 전 수정"
+    },
+    {
+     "at": "2026-11-03",
+     "state": "active",
+     "by": "사용자 (SEI 트랙 1저자)",
+     "note": "사용자 2026-11-03 (이 세션): '보냈고 승격 비준' — Li₂S 승격 비준 (SEI 트랙 1저자 = 사용자)"
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-03T11:31:23Z",
+    "commit": "042c726ec8ff0303c1da998827480659866d1955",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-03 (이 세션): '보냈고 승격 비준' — Li₂S 승격 비준 (SEI 트랙 1저자 = 사용자)",
+    "decision_digest": "sha256:93ea785ff8ad88a1ace964f4a7a2e755d8f9b335e99a578441c0debd003122d5"
+   }
   },
   {
    "id": "D-2026-11-03-nd-q123-closed",

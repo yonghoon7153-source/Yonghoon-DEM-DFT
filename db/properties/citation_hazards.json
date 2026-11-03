@@ -682,6 +682,19 @@
    "binding_scope": "partial",
    "binding_scope_why": "sei_neb.json 은 canonical_registry 에 등록 0 건이라 숫자 결속 자리가 없다 (HZ-sei-neb-retracted 와 같은 사정) — 화면은 id 로만 이름을 댄다",
    "⏩_2026_10_28_NdO_원고_SI_예외": "D-2026-10-28-li3nd-neb-si-ndo-tail (사용자 비준 10-28) — NdO-LPSCl₁.₆ 원고 SI (Methods) 에서만 끝 꼬리 'and is not compared with other phases' 없이 (원고 Fig. 3f,g 는 원고 그대로 · 사용자 10-27) · 나머지 단서 · 금지 · 다른 문서의 부모 문장은 그대로"
+  },
+  {
+   "file": "db/properties/sei_neb.json",
+   "source_path": "db/properties/sei_neb.json",
+   "level": "CONDITIONAL",
+   "added": "2026-11-03",
+   "what": "Li₂S 4×4×4 V_Li⁻ (jellium) c→c CI-NEB 장벽 **0.29 eV** (results v2/li2s) — HZ-sei-neb-retracted (파일 전체 BLOCKED) 의 예외 하나",
+   "why": "셀 수렴 카드 C1 통과 (09-01 카드 · 결과 전 문턱 30 meV): 4×4×4 0.29213 대 3×3×3 0.305025 eV · ΔEa −12.9 meV · C3 · G1–G5 통과 · jellium 유한셀 근사는 남는다 (같은 전하 · 같은 셀 차인 장벽에서 셀 키움 효과 13 meV)",
+   "fix": "이 문장 그대로 (뜻을 줄이지 않는 다듬기만): \"In a 4x4x4 Li2S antifluorite supercell (191 atoms), the charged-vacancy (V_Li-, jellium background) nearest-neighbour c->c CI-NEB barrier is 0.29 eV; it differs by 13 meV from the 3x3x3 value (0.305 eV), within the 30 meV cell-convergence criterion set before the calculation.\" + 홉 수 검산 (ν₀ 1e13 s⁻¹ 가정 · 298 K): Γ ≈ 1.1e8 s⁻¹ · 평균 대기 ≈ 9 ns (tools/sei/collect_neb 의 hop_check · 차수 검산 — 확산계수 · 전도도 아님). ⛔ 문헌값 (Lai 0.22 · Moradabadi ≈ 0.45 등) 과 값 대 값 표 (09-01 카드 §5 '어느 경우에도' — 전하 규약 · 홉 정의가 따로 맞아야 한다) · 셀 수렴이 안 된 다른 상과의 순위 (Li₃Nd 0.229 는 SI 단서 전용 · HZ-li3nd-neb-si-conditional) · 'Li₂S 의 Li 전도도 · 확산계수' 로 읽기 · jellium 단서를 뺀 문장 · 2×2×2 값 인용.",
+   "id": "HZ-sei-neb-li2s-cc-cellconv",
+   "decision": "D-2026-11-03-li2s-neb-cellconv-promote",
+   "binding_scope": "partial",
+   "binding_scope_why": "sei_neb.json 은 canonical_registry 에 등록 0 건이라 숫자 결속 자리가 없다 (HZ-sei-neb-retracted · HZ-li3nd-neb-si-conditional 과 같은 사정) — 화면은 id 로만 이름을 댄다"
   }
  ],
  "_history": [
@@ -736,7 +749,7 @@
    "why": "CEI 트랙 1저자의 Nd 안정성 질문에 답하다 원장과 대조해 발견 · 세 kb 문서에 정정 줄"
   }
  ],
- "updated": "2026-10-26",
+ "updated": "2026-11-03",
  "_schema_note": {
   "claim": "화면 결속용 claim id (`<metric>@<system>`, canonical_registry 파생). 이 위험이 **어느 정본 주장**에 대한 것인지 이름을 대면, /governance 표에서 근접성 없이 결속이 성립한다 (회신 BG ②).",
   "id": "안정 hazard 식별자. 화면·handoff 가 `data-claim=\"<id>\"` 로 이 위험을 선언한다 (회신 BG ②).",

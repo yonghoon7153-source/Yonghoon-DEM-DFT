@@ -7,7 +7,7 @@ letter: DJ
 track: li2s
 channel: codex
 kind: prompt
-status: 초안 (2026-11-03) — 사용자 발송 대기 · 기준 커밋 0f51518d
+status: 발송 2026-11-03 (사용자) — 회신 대기 · 기준 커밋 0f51518d
 confidence: medium
 verificationStatus: unverified
 explored: false
