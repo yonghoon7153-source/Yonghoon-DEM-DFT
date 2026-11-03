@@ -41,6 +41,9 @@
   python3 tools/ionic/melt_quench_uma.py --stage1_summary <out_root>     # li2s-2 1 단계 묶음 판정 · 2 단계 시드 (stage1_summary.json)
     ⭐ 회신 DG (2026-11-03): 시드 판정에 원자료 · 카드 값 · 도구 지문 · 최종 구조 대조 · 첫 시드 녹음 미충족 = closes_system ·
        묶음은 지문을 다시 재고 선언된 시드 전부 판정 끝 · 비용 장부 상한 · 카드 값 검사 (validate_li2s2_values)
+    ⭐ 회신 DH (2026-11-03): --run_id (러너가 주는 실행 식별자 → plan.json) · 시드 판정 = 폴더 (계, 시드) · plan · run_id 대조 ·
+       판정을 덮어쓰기 전에 이전 판정 전체 · 지문 변화 · 사유를 stage1_verdict_history.jsonl 에 · 묶음은 장부를 판정과 대조
+       (ledger_check: 누락 · 음수 · 근거 없음 · run_id 중복 · 다른 시드 = 무효 · 안 끝난 런 = 대기)
   python3 tools/ionic/melt_quench_uma.py --selftest
 
 ⚠ final.xyz 는 **relax 본**이다 (④ · plan.json 게이트_입력.final_relax). 담금질 원시는 traj.xyz 마지막 프레임뿐이고,
@@ -55,7 +58,7 @@
      압축 **뒤** 반쪽 창 [melt_ps/2, melt_ps] 에서 골격 확산을 본다) · 옵션을 안 주면 옛 NPT 경로와 바이트까지 같은 동작이다.
 """
 from __future__ import annotations
-import argparse, hashlib, json, math, os, pathlib, re, sys, time
+import argparse, datetime, hashlib, json, math, os, pathlib, re, sys, time
 import numpy as np
 
 MASS = {"Li": 6.94, "P": 30.974, "S": 32.06, "Cl": 35.45}
@@ -527,6 +530,9 @@ LI2S2_STATUSES = ("pass", "fail", "incomplete", "invalid")
 DENSITY_REL_TOL = 1e-4          # 고정 밀도 대조 (gate_check NVT · 최종 구조) — 한 곳에서만 정한다
 PROVENANCE_FILES = ("plan.json", "thermo.csv", "traj.xyz", "final.xyz", "result.json")
 LEDGER_NAME = "stage1_ledger.json"   # li2s2_stage1_runner.py 가 쓰는 비용 장부 — stage1_summary 가 상한을 여기서 다시 잰다
+RUN_ID_RE = re.compile(r"^[0-9a-f]{32}$")   # 회신 DH P0-2 — 러너가 담금질마다 주는 실행 식별자 (plan.json run_id · 장부 run_id)
+VERDICT_HISTORY = "stage1_verdict_history.jsonl"   # 회신 DH P1-5 — 판정을 덮어쓰기 전 이전 판정 전체 · 지문 변화 · 사유
+COST_BASES = ("measured", "upper_bound")    # 장부 런 비용 근거 — 측정 (러너가 끝까지 잼) · 보수 상한 (고아 런: 발견 시각 − 시작)
 
 
 def _fin(x):
@@ -931,6 +937,9 @@ def combine_stage1(plan, values, gate, melt, seedg, files, checks=None):
     fs = checks.get("final_structure")
     if fs is not None and not fs.get("ok"):
         reasons["invalid"].append("최종 구조가 이 런과 안 맞는다 — " + " · ".join(fs.get("why") or ["?"]))
+    idc = checks.get("identity")
+    if idc is not None and not idc.get("ok"):
+        reasons["invalid"].append("실행 식별이 안 맞는다 — " + " · ".join(idc.get("why") or ["?"]))
     first = values.get("first_seed")
     closes = bool(first is not None and plan.get("seed") == first and mv == "fail" and not reasons["invalid"])
     if reasons["invalid"]:
@@ -940,13 +949,54 @@ def combine_stage1(plan, values, gate, melt, seedg, files, checks=None):
     else:
         status = next((s for s in ("incomplete", "fail") if reasons[s]), "pass")
     return {"status": status, "reasons": reasons, "system": sysname, "seed": plan.get("seed"), "software": sw,
-            "closes_system": closes,
+            "run_id": plan.get("run_id"), "closes_system": closes,
             "closing_event": ("계의 첫 시드 녹음 판정 미충족 — 그 계를 닫는다 (카드 S1 ② · 일반 시드 탈락과 다르다)" if closes else None)}
 
 
-def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print):
+def folder_identity(run_dir):
+    """<out_root>/<계>/seed<S>/ 의 (계, 시드) — 꼴이 아니면 (None, None)."""
+    run = pathlib.Path(run_dir)
+    m = re.fullmatch(r"seed(\d+)", run.name)
+    return (run.parent.name, int(m.group(1))) if m else (None, None)
+
+
+def identity_check(run_dir, plan):
+    """⭐ 회신 DH P0-2 — 폴더 (계, 시드) = plan (계, 시드) · plan 에 러너의 실행 식별자 (run_id · 32 hex) 가 있다.
+    폴더를 통째로 복사하면 (A11 → A12) plan 의 시드가 폴더와 달라 여기서 무효가 된다 · plan 시드까지 고치면 run_id 가 겹치거나
+    장부의 그 run_id 런이 다른 시드라서 묶음 (stage1_summary) 에서 무효가 된다."""
+    fs, fsd = folder_identity(run_dir)
+    why = []
+    if fs is None:
+        why.append(f"폴더 이름 {pathlib.Path(run_dir).name!r} 이 seed<번호> 꼴이 아니다")
+    elif (plan.get("system"), plan.get("seed")) != (fs, fsd):
+        why.append(f"폴더 ({fs}, {fsd}) ≠ plan ({plan.get('system')}, {plan.get('seed')}) — 다른 시드의 폴더를 옮겨 왔거나 잘못 회수했다")
+    rid = plan.get("run_id")
+    if not (isinstance(rid, str) and RUN_ID_RE.match(rid)):
+        why.append(f"plan.json 에 실행 식별자 run_id 가 없다 ({rid!r}) — 러너 밖에서 돌린 담금질은 장부에 안 잡힌다")
+    return {"folder": [fs, fsd], "plan": [plan.get("system"), plan.get("seed")], "run_id": rid, "ok": not why, "why": why}
+
+
+def _append_history(run, prev, res, reason):
+    """⭐ 회신 DH P1-5 — 판정을 덮어쓰기 전에 이전 판정 **전체** 와 지문 변화 · 사유를 한 줄 덧붙인다 (지우지 않는다)."""
+    pp, npv = (prev.get("provenance") or {}), (res.get("provenance") or {})
+    pf, nf = (pp.get("files_sha256") or {}), (npv.get("files_sha256") or {})
+    rec = {"at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "reason": reason,
+           "prev_status": prev.get("status"), "new_status": res.get("status"),
+           "changed": {"status": prev.get("status") != res.get("status"),
+                       "files": sorted(k for k in set(pf) | set(nf) if pf.get(k) != nf.get(k)),
+                       "card_values": pp.get("card_values_sha16") != npv.get("card_values_sha16"),
+                       "driver": pp.get("driver_sha16") != npv.get("driver_sha16"),
+                       "run_id": prev.get("run_id") != res.get("run_id")},
+           "prev_provenance": pp, "new_provenance": npv, "prev": prev}
+    with open(pathlib.Path(run) / VERDICT_HISTORY, "a", encoding="utf-8") as fh:
+        fh.write(json.dumps(rec, ensure_ascii=False, default=str) + "\n")
+    return rec
+
+
+def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print, reason="수동 (--stage1_verdict)"):
     """li2s-2 1 단계 시드 판정을 **원자료에서 새로 계산해서** 낸다 (gate_check · melt_window_check · seed_gate · 최종 구조 ·
-    traj 프레임 수 · thermo 열) → stage1_verdict.json. 판정에는 원자료 지문 · 카드 값 지문 · 도구 지문을 같이 적는다 (회신 DG P1-4)."""
+    traj 프레임 수 · thermo 열 · 실행 식별) → stage1_verdict.json. 판정에는 원자료 지문 · 카드 값 지문 · 도구 지문을 같이 적는다
+    (회신 DG P1-4). 이미 판정이 있으면 덮어쓰기 **전에** 그 판정 전체와 지문 변화 · 사유를 stage1_verdict_history.jsonl 에 남긴다 (회신 DH P1-5)."""
     from ase.io import read
     v = values if values is not None else read_li2s2_values(card)
     run = pathlib.Path(run_dir)
@@ -985,6 +1035,7 @@ def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print):
                 checks["seed_gate_error"] = str(e)
             except Exception as e:
                 checks["seed_gate_error"] = f"{type(e).__name__}: {e}"
+        checks["identity"] = identity_check(run, plan)
         if files["final.xyz"]:
             raw_last = None
             if files["traj.xyz"]:
@@ -998,7 +1049,18 @@ def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print):
                     "seed_gate_view": (seedg or {}).get(v["seed_gate"]["version"])})
     res["provenance"] = {"files_sha256": run_provenance(run), "card_values_sha16": values_sha16(v), "driver_sha16": driver_sha16(),
                          "⛔": "묶음 판정 (stage1_summary) 이 이 지문을 지금 파일 · 카드 값 · 도구와 다시 잰다 — 안 맞으면 그 시드는 무효 (다시 판정)"}
-    (run / "stage1_verdict.json").write_text(json.dumps(res, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+    res["reason"] = reason
+    vf = run / "stage1_verdict.json"
+    if vf.is_file():
+        try:
+            prev = json.loads(vf.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, UnicodeDecodeError) as e:
+            prev = {"status": None, "⛔": f"이전 판정 파일을 못 읽었다 ({type(e).__name__})", "raw_text": vf.read_text(encoding="utf-8", errors="replace")}
+        h = _append_history(run, prev, res, reason)
+        res["history"] = {"file": VERDICT_HISTORY, "prev_status": h["prev_status"], "changed": h["changed"]}
+    tmp = vf.with_name(vf.name + ".tmp")
+    tmp.write_text(json.dumps(res, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+    os.replace(tmp, vf)
     log(f"  [stage1] {run} → {res['status']}" + (" · ⛔ 그 계를 닫는 사건" if res.get("closes_system") else "") + "  "
         + "; ".join(str(x) for k in ("invalid", "incomplete", "fail") for x in res["reasons"].get(k, [])))
     return res
@@ -1014,7 +1076,12 @@ def summarize_stage1(verdicts, values, cost=None):
     못했으므로 두 계가 통과여도 1 단계 통과로 올리지 않는다 (대기). 두 계 통과면 2 단계 시드 = 두 계 **모두** 통과한 시드 중 작은 둘 ·
     기계는 그 순서로 (카드 stage2_machines)."""
     seeds, need = list(values["seeds"]), int(values["stage1_need_pass"])
-    per, sw_seen, unknown = {}, {}, []
+    per, sw_seen, unknown, ident = {}, {}, [], []
+    rid_at = {}
+    for (s, sd), vv in verdicts.items():                  # 회신 DH P0-2 — 같은 실행을 여러 시드로 세지 않는다
+        if vv is not None and vv.get("run_id"):
+            rid_at.setdefault(vv["run_id"], []).append(f"{s}{sd}")
+    dup = {k: x for k, x in rid_at.items() if len(x) > 1}
     for s in ("A", "B"):
         st, closed = {}, []
         for sd in seeds:
@@ -1022,6 +1089,11 @@ def summarize_stage1(verdicts, values, cost=None):
             x = "missing" if vv is None else vv.get("status")
             if x not in LI2S2_STATUSES and x != "missing":
                 unknown.append(f"{s}{sd}={x!r}"); x = "invalid"
+            if vv is not None and x != "missing":
+                if vv.get("system") is not None and (vv.get("system"), vv.get("seed")) != (s, sd):
+                    ident.append(f"{s}{sd} 자리의 판정이 ({vv.get('system')}, {vv.get('seed')}) 런이다"); x = "invalid"
+                if vv.get("run_id") in dup:
+                    ident.append(f"{s}{sd} 의 run_id 가 {dup[vv['run_id']]} 와 같다 (한 실행을 여러 시드로)"); x = "invalid"
             st[sd] = x
             if vv is not None and vv.get("closes_system") is True:
                 closed.append(sd)
@@ -1039,13 +1111,17 @@ def summarize_stage1(verdicts, values, cost=None):
                 sw = {k: x for k, x in (vv.get("software") or {}).items()}
                 sw_seen[json.dumps(sw, sort_keys=True)] = sw
     out = {"per_system": per, "software_variants": list(sw_seen.values()), "stage2": None, "unknown_status": unknown,
-           "cost": cost}
+           "identity_problems": ident, "cost": cost}
+    led_bad = list((cost or {}).get("invalid") or [])
+    led_open = list((cost or {}).get("pending") or [])
     over = bool(cost is not None and not (_fin(cost.get("total_h")) and _fin(cost.get("cap_h"))
                                          and float(cost["total_h"]) <= float(cost["cap_h"])))
-    if any(per[s]["status"] == "invalid" for s in per) or len(sw_seen) > 1:
+    if any(per[s]["status"] == "invalid" for s in per) or len(sw_seen) > 1 or led_bad:
         out["track"] = "invalid"
-        out["why"] = ("카드와 다른 실행 · 원자료와 안 맞는 판정 · 모르는 판정 상태 · 또는 통과 시드의 소프트웨어 판이 둘 이상 — 사용자 결정"
-                      + (f" (모르는 상태 {unknown})" if unknown else ""))
+        out["why"] = ("카드와 다른 실행 · 원자료와 안 맞는 판정 · 실행 식별 불일치 · 모르는 판정 상태 · 장부 불완전 · 또는 통과 시드의 소프트웨어 판이 "
+                      "둘 이상 — 자료 · 기록 오류 (과학적 판정 아님) · 고친 뒤 다시"
+                      + (f" (모르는 상태 {unknown})" if unknown else "") + (f" (식별 {ident})" if ident else "")
+                      + (f" (장부 {led_bad})" if led_bad else ""))
     elif any(per[s]["status"] == "closed" for s in per):
         out["track"] = "stop_track"
         out["why"] = ("계의 첫 시드 녹음 판정 미충족 → 그 계 닫힘 → 두 계 비교 트랙 전체 멈춤 (회신 DG P0-1 · 재시작으로 다시 열지 않는다) — "
@@ -1060,6 +1136,8 @@ def summarize_stage1(verdicts, values, cost=None):
         common = sorted(sd for sd in seeds if per["A"]["per_seed"][sd] == "pass" and per["B"]["per_seed"][sd] == "pass")
         if cost is None:
             out["track"] = "pending"; out["why"] = "두 계 모두 통과지만 비용 장부를 못 봤다 — 상한 안인지 확인 전에는 1 단계 통과로 올리지 않는다"
+        elif led_open:
+            out["track"] = "pending"; out["why"] = f"두 계 모두 통과지만 장부에 비용이 확정 안 된 런이 있다 ({led_open}) — 통과로 올리지 않는다"
         elif len(common) < 2:
             out["track"] = "stop_track"; out["why"] = f"두 계 공통 통과 시드가 {len(common)} 개 — 2 단계에 둘이 필요하다"
         else:
@@ -1074,20 +1152,55 @@ def summarize_stage1(verdicts, values, cost=None):
     return out
 
 
-def ledger_cost(out_root, values):
-    """러너 비용 장부 (stage1_ledger.json) 의 벽시계 합 — 끝난 런은 wall_h · 도는 중 · 고아 런은 wall_h_so_far. 장부가 없으면 None."""
+def ledger_check(out_root, verdicts, values):
+    """⭐ 회신 DH P0-1 — 장부 = **실행 목록**. 장부가 없으면 None (확인 못 함 → 통과 안 됨).
+    invalid (자료 · 기록 오류): 장부 꼴 · 비용이 유한한 비음수가 아님 · 비용 근거가 측정 · 보수 상한이 아님 · run_id 중복 ·
+             판정 (이 out_root 의 시드 판정) 의 run_id 가 장부에 없음 (비용이 안 잡힌 실행) · 그 장부 런의 (계, 시드) 가 판정 자리와 다름.
+    pending (아직 확정 안 됨): 끝나지 않은 런 (running · 멈춤 실패) — heartbeat 는 하한일 뿐이라 확정 비용이 아니다.
+    total_h 는 확정 비용 (측정 + 보수 상한) 의 합이다 — 하한 어림은 더하지 않는다 (그런 런은 pending)."""
     p = pathlib.Path(out_root) / LEDGER_NAME
     if not p.is_file():
         return None
-    led = json.loads(p.read_text(encoding="utf-8"))
-    tot, n_est = 0.0, 0
-    for r in led.get("runs", []):
+    invalid, pending, by_id = [], [], {}
+    try:
+        led = json.loads(p.read_text(encoding="utf-8"))
+        runs = led.get("runs")
+    except (json.JSONDecodeError, UnicodeDecodeError, AttributeError) as e:
+        return {"total_h": float("nan"), "cap_h": float(values["stage1_cap_gpu_h"]), "invalid": [f"장부를 못 읽었다 ({type(e).__name__})"],
+                "pending": [], "runs": 0, "source": str(p)}
+    if not isinstance(runs, list):
+        invalid.append("장부 runs 가 목록이 아니다"); runs = []
+    tot = 0.0
+    for r in runs:
+        key = f"{r.get('system')}{r.get('seed')}"
+        rid = r.get("run_id")
+        if isinstance(rid, str) and rid:
+            if rid in by_id:
+                invalid.append(f"장부에 run_id {rid[:8]} 가 둘 ({key})")
+            by_id[rid] = r
+        if r.get("end") is None:
+            pending.append(f"{key} 런이 끝나지 않았다 (상태 {r.get('status')} · 비용 미확정 — heartbeat {r.get('wall_h_so_far')} h 는 하한)")
+            continue
         w = r.get("wall_h")
-        if w is None:
-            w = r.get("wall_h_so_far"); n_est += 1
-        tot += float(w) if _fin(w) else float("nan")
-    return {"total_h": tot, "cap_h": float(values["stage1_cap_gpu_h"]), "runs": len(led.get("runs", [])),
-            "estimated_runs": n_est, "source": str(p)}
+        if not (_fin(w) and float(w) >= 0.0):
+            invalid.append(f"{key} 런 비용 {w!r} — 유한한 비음수가 아니다"); continue
+        if r.get("cost_basis") not in COST_BASES:
+            invalid.append(f"{key} 런 비용 근거 {r.get('cost_basis')!r} — 측정 · 보수 상한이 아니면 확정 비용이 아니다"); continue
+        tot += float(w)
+    for (s, sd), vv in verdicts.items():
+        if vv is None:
+            continue
+        rid = vv.get("run_id")
+        if not (isinstance(rid, str) and rid):
+            (pending if vv.get("status") == "incomplete" else invalid).append(f"{s}{sd} 판정에 run_id 가 없다 — 장부와 못 잇는다")
+            continue
+        r = by_id.get(rid)
+        if r is None:
+            invalid.append(f"{s}{sd} 판정의 run_id {rid[:8]} 가 장부에 없다 — 비용이 안 잡힌 실행")
+        elif (r.get("system"), r.get("seed")) != (s, sd):
+            invalid.append(f"{s}{sd} 판정의 run_id {rid[:8]} 는 장부에서 {r.get('system')}{r.get('seed')} 런이다")
+    return {"total_h": tot, "cap_h": float(values["stage1_cap_gpu_h"]), "invalid": invalid, "pending": pending,
+            "runs": len(runs), "source": str(p)}
 
 
 def stage1_summary(out_root, *, values=None, card=LI2S2_CARD, log=print):
@@ -1119,7 +1232,7 @@ def stage1_summary(out_root, *, values=None, card=LI2S2_CARD, log=print):
                       "reasons": {**(vv.get("reasons") or {}), "invalid": list((vv.get("reasons") or {}).get("invalid", []))
                                   + [f"⛔ 판정이 원자료에 안 묶였다 — {' · '.join(bad)} → --stage1_verdict 로 다시 판정"]}}
             ver[(s, sd)] = vv
-    res = summarize_stage1(ver, v, cost=ledger_cost(root, v))
+    res = summarize_stage1(ver, v, cost=ledger_check(root, ver, v))
     res["stale_verdicts"] = stale
     (root / "stage1_summary.json").write_text(json.dumps(res, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
     log(f"  [stage1 묶음] {res['track']} — {res['why']} · " +
@@ -2461,6 +2574,32 @@ def _selftest():
         f"⛔음성 DG P0-3: 비용 240 > 상한 230 → 미완결 · 장부 없음 → 대기 · 비유한 → 미완결 ({sm9['track']} · {sm10['track']} · {sm11['track']})")
     chk(validate_li2s2_values(VAL) == [] or [x for x in validate_li2s2_values(VAL) if "composition.T" not in x] == [],
         f"카드 값 검사: 시험 값은 통과 ({validate_li2s2_values(VAL)})")
+    # 회신 DH P0-2 — 실행 식별: 자리 (계, 시드) ≠ 판정 · run_id 중복 · 장부 불완전 (invalid) · 장부 미확정 (pending)
+    RID = lambda k: f"{k:032x}"
+    vid = {(s_, sd): dict(_v("pass"), system=s_, seed=sd, run_id=RID(100 * (s_ == "A") + sd)) for s_ in ("A", "B") for sd in (11, 12, 13, 14, 15)}
+    chk(summarize_stage1(vid, VAL, cost=COST)["track"] == "stage1_pass", "실행 식별이 다 맞으면 (자리 = 판정 · run_id 서로 다름) 통과")
+    cp = dict(vid); cp[("A", 12)] = dict(vid[("A", 11)])
+    sm_cp = summarize_stage1(cp, VAL, cost=COST)
+    allc = {k: dict(vid[(k[0], 11)]) for k in vid}
+    sm_all = summarize_stage1(allc, VAL, cost=COST)
+    ed = dict(vid); ed[("A", 12)] = dict(vid[("A", 11)], seed=12)
+    sm_ed = summarize_stage1(ed, VAL, cost=COST)
+    chk(sm_cp["track"] == "invalid" and sm_all["track"] == "invalid" and sm_ed["track"] == "invalid" and bool(sm_cp["identity_problems"]),
+        f"⛔음성 DH P0-2: A11 판정을 A12 자리에 · 모든 자리에 · 시드만 고쳐서 (run_id 같음) → 한 실행을 여러 시드로 못 센다 ({sm_cp['track']} · {sm_all['track']} · {sm_ed['track']})")
+    sm_li = summarize_stage1(vid, VAL, cost=dict(COST, invalid=["A12 판정의 run_id 가 장부에 없다"]))
+    sm_lp = summarize_stage1(vid, VAL, cost=dict(COST, pending=["A11 런이 끝나지 않았다"]))
+    chk(sm_li["track"] == "invalid" and sm_lp["track"] == "pending",
+        f"⛔음성 DH P0-1: 장부 불완전 (누락 · 음수 · 근거 없음) → 무효 · 비용 미확정 런 → 대기 ({sm_li['track']} · {sm_lp['track']})")
+    with tempfile.TemporaryDirectory() as td_:
+        rd_ = pathlib.Path(td_) / "A" / "seed12"; rd_.mkdir(parents=True)
+        ic_ok = identity_check(rd_, {"system": "A", "seed": 12, "run_id": RID(5)})
+        ic_cp = identity_check(rd_, {"system": "A", "seed": 11, "run_id": RID(5)})
+        ic_no = identity_check(rd_, {"system": "A", "seed": 12})
+        ic_bad = identity_check(pathlib.Path(td_) / "A" / "s12", {"system": "A", "seed": 12, "run_id": RID(5)})
+    chk(ic_ok["ok"] and not ic_cp["ok"] and not ic_no["ok"] and not ic_bad["ok"],
+        "⛔음성 DH P0-2: 폴더 seed12 에 plan 시드 11 → 무효 · run_id 없음 → 무효 · 폴더 이름 꼴 아님 → 무효 (맞으면 통과)")
+    chk(combine_stage1(plan_ok, VAL, g_ok, m_ok, s_ok, f_ok, checks={"identity": ic_cp})["status"] == "invalid",
+        "⛔음성 DH P0-2: 시드 판정이 실행 식별 불일치를 무효로")
     for nm_, mut in (("first_seed 12 (seeds[0] 아님)", {"first_seed": 12}), ("상한 NaN", {"stage1_cap_gpu_h": float("nan")}),
                      ("조성 합 ≠ n_atoms", {"composition": {"A": {"Li": 48}, "B": VAL["composition"]["B"]}}),
                      ("software_required 없음", {"software_required": None}), ("밀도 NaN", {"fix_density_g_cm3": {"A": float("nan"), "B": 1.88}}),
@@ -3077,6 +3216,8 @@ def main():
     ap.add_argument("--hold_ps", type=float, default=50.0)
     ap.add_argument("--dt_fs", type=float, default=2.0)
     ap.add_argument("--save_ps", type=float, default=1.0)
+    ap.add_argument("--run_id", default=None,
+                    help="⭐li2s-2: 러너가 담금질마다 주는 실행 식별자 (32 hex · plan.json run_id · 장부 run_id 와 묶는다 — 회신 DH P0-2)")
     ap.add_argument("--fix_density", type=float, default=None,
                     help="⭐li2s-2: 담금질을 NVT 로 — melt 첫 --compress_ps 동안 이 밀도 [g/cm³] 로 압축한 뒤 고정 "
                          "(같은 Berendsen 열욕 · 바로스탯 없음). 안 주면 옛 NPT 0 GPa 그대로")
@@ -3272,6 +3413,9 @@ def main():
     plan = build_plan(a.system, a.seed, sym, a.density, a.T_melt, a.T_final, a.melt_ps,
                       a.quench_rate, quench_ps, a.hold_ps, a.dt_fs, a.save_ps,
                       fix_density=a.fix_density, compress_ps=a.compress_ps)
+    if a.run_id is not None and not RUN_ID_RE.match(a.run_id):
+        raise SystemExit(f"⛔ --run_id {a.run_id!r} 는 32 자리 소문자 hex 여야 한다 (러너가 준다)")
+    plan["run_id"] = a.run_id
     (out / "plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=1))
     from ase import Atoms
     from ase.io import write
