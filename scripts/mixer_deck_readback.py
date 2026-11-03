@@ -973,7 +973,8 @@ D2_MATERIAL = {'youngsModulus': ('peratomtype', None), 'poissonsRatio': ('perato
 #: ── D2 생성기 꼴 전체 (MXD2R-04 · 11-03 사전 공격 · 1저자 11-03 Q1 = 권고대로 · 원리 = MXD2R-01–03 (가)) ────────────────────────────
 #:   덱의 명령을 **전부** make_mixer_deck.deck() 의 토큰으로 다시 내어 차례대로 대조한다 — 뜻이 같아도 표기가 다르면 거부 (생성기 꼴 엄격).
 #:   값은 상수 · 메타 · 등록 레시피 · 계획수에서 다시 낸다 (드럼 · 삽입 영역 = plan() · deck() 식 사본 · 같은 연산 순서).  예외 하나 =
-#:   neighbor skin 값 (ASCII 양수만 · 단일 덱 계약 밖 · 짝 대조가 잡는다 — 기존 시험 test_actual_command_scope).  CED · 삽입 총수 · run 수 ·
+#:   neighbor skin 값 (ASCII 양수만 · 기존 시험 test_actual_command_scope 가 단일 덱 PASS 를 요구 — 짝 대조는 두 덱의 skin 이 다를 때만
+#:   잡고, 두 덱에 같이 바꾼 skin 은 세 소비자 PASS = 남은 같은 부류 · 고정은 1저자 결정).  CED · 삽입 총수 · run 수 ·
 #:   dt 값은 기존 검사 (힘 규칙 · 계획수 · 메타) 가 묶고 여기서는 생성기 표기만 본다.
 #:   사본 원본 = deck() 템플릿 · plan() 기본값 · _next_prime · dump_columns · dump_modify_format · TPL_SEED (시험이 사본 ↔ 생성기 대조).
 D2_GLOBAL_FORM = (('atom_style', 'granular'), ('atom_modify', 'map', 'array', 'sort', '0', '0'), ('hard_particles', 'yes'),

@@ -1,0 +1,201 @@
+{
+ "tool": "mutation_check_v3.py",
+ "python": "3.11.15",
+ "selection": [
+  "M4",
+  "M5"
+ ],
+ "n": 15,
+ "killed": 15,
+ "unmutated_rc": 0,
+ "rows": [
+  {
+   "mutant": "M40 weaken form: CED spelling from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=3)",
+   "failing_tests": [
+    "test_mxd2r04_same_class_spelling_identity_order"
+   ]
+  },
+  {
+   "mutant": "M41 weaken form: mesh scale from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=6, errors=1)",
+   "failing_tests": [
+    "test_mxd2r04_outside_scope_17_api_and_cli",
+    "test_mxd2r04_same_class_spelling_identity_order"
+   ]
+  },
+  {
+   "mutant": "M42 weaken form: template tail from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=6, errors=1)",
+   "failing_tests": [
+    "test_mxd2r04_outside_scope_17_api_and_cli",
+    "test_mxd2r04_same_class_spelling_identity_order"
+   ]
+  },
+  {
+   "mutant": "M43 weaken form: distribution entries from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=6)",
+   "failing_tests": [
+    "test_mxd2r04_same_class_spelling_identity_order"
+   ]
+  },
+  {
+   "mutant": "M44 weaken form: distribution seed from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=6)",
+   "failing_tests": [
+    "test_mxd2r04_outside_scope_17_api_and_cli"
+   ]
+  },
+  {
+   "mutant": "M45 weaken form: insertion region from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=6, errors=1)",
+   "failing_tests": [
+    "test_mxd2r04_outside_scope_17_api_and_cli",
+    "test_mxd2r04_same_class_spelling_identity_order"
+   ]
+  },
+  {
+   "mutant": "M46 weaken form: second insertion seed from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=6)",
+   "failing_tests": [
+    "test_mxd2r04_outside_scope_17_api_and_cli"
+   ]
+  },
+  {
+   "mutant": "M47 weaken form: thermo interval from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=9)",
+   "failing_tests": [
+    "test_mxd2r04_outside_scope_17_api_and_cli",
+    "test_mxd2r04_same_class_spelling_identity_order"
+   ]
+  },
+  {
+   "mutant": "M48 weaken form: rotation period from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=3)",
+   "failing_tests": [
+    "test_mxd2r04_same_class_spelling_identity_order"
+   ]
+  },
+  {
+   "mutant": "M49 weaken form: upper insertion block from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=3)",
+   "failing_tests": [
+    "test_mxd2r04_same_class_spelling_identity_order"
+   ]
+  },
+  {
+   "mutant": "M50 tighten form: drum box factor 1.15 → 1.16",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=390)",
+   "failing_tests": [
+    "test_actual_command_scope",
+    "test_cli_and_duplicate_json",
+    "test_counts_are_from_actual_inputs",
+    "test_d2_pairs_and_old_contracts",
+    "test_dt_half_and_legacy_cli_positive",
+    "test_generation_and_supported_phase_positive",
+    "test_mxd2r03_physical_bytes_api",
+    "test_mxd2r03_physical_bytes_cli_both_directions",
+    "test_mxd2r04_outside_scope_17_api_and_cli",
+    "test_mxd2r04_positive_generator_options",
+    "test_mxd2r04_same_class_spelling_identity_order",
+    "test_mxd2r04_timestep_spelling_with_metadata",
+    "test_mxd2r_positive_codex_independent_48"
+   ]
+  },
+  {
+   "mutant": "M51 tighten form: drum fill 0.30 → 0.31",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=391)",
+   "failing_tests": [
+    "test_actual_command_scope",
+    "test_cli_and_duplicate_json",
+    "test_counts_are_from_actual_inputs",
+    "test_d2_pairs_and_old_contracts",
+    "test_dt_half_and_legacy_cli_positive",
+    "test_generation_and_supported_phase_positive",
+    "test_mxd2r03_physical_bytes_api",
+    "test_mxd2r03_physical_bytes_cli_both_directions",
+    "test_mxd2r04_copies_match_generator",
+    "test_mxd2r04_outside_scope_17_api_and_cli",
+    "test_mxd2r04_positive_generator_options",
+    "test_mxd2r04_same_class_spelling_identity_order",
+    "test_mxd2r04_timestep_spelling_with_metadata",
+    "test_mxd2r_positive_codex_independent_48"
+   ]
+  },
+  {
+   "mutant": "M52 tighten form: pddB seed constant",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=201)",
+   "failing_tests": [
+    "test_actual_command_scope",
+    "test_cli_and_duplicate_json",
+    "test_counts_are_from_actual_inputs",
+    "test_d2_pairs_and_old_contracts",
+    "test_dt_half_and_legacy_cli_positive",
+    "test_generation_and_supported_phase_positive",
+    "test_mxd2r03_physical_bytes_api",
+    "test_mxd2r03_physical_bytes_cli_both_directions",
+    "test_mxd2r04_copies_match_generator",
+    "test_mxd2r04_outside_scope_17_api_and_cli",
+    "test_mxd2r04_positive_generator_options",
+    "test_mxd2r04_same_class_spelling_identity_order",
+    "test_mxd2r_positive_codex_independent_48"
+   ]
+  },
+  {
+   "mutant": "M53 tighten form: layered bed pack 0.60 → 0.61",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=134)",
+   "failing_tests": [
+    "test_actual_command_scope",
+    "test_cli_and_duplicate_json",
+    "test_counts_are_from_actual_inputs",
+    "test_d2_pairs_and_old_contracts",
+    "test_dt_half_and_legacy_cli_positive",
+    "test_generation_and_supported_phase_positive",
+    "test_mxd2r03_physical_bytes_api",
+    "test_mxd2r03_physical_bytes_cli_both_directions",
+    "test_mxd2r04_outside_scope_17_api_and_cli",
+    "test_mxd2r04_positive_generator_options",
+    "test_mxd2r04_same_class_spelling_identity_order",
+    "test_mxd2r_positive_codex_independent_48"
+   ]
+  },
+  {
+   "mutant": "M54 tighten form: dump full-precision format",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=3)",
+   "failing_tests": [
+    "test_mxd2r04_copies_match_generator",
+    "test_mxd2r04_positive_generator_options"
+   ]
+  }
+ ]
+}

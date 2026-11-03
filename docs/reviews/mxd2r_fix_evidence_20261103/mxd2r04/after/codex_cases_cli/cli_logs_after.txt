@@ -1,0 +1,138 @@
+=== crlf_crlf_metadata__pair.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: deck contains 179 CR (0x0D) byte(s) — CRLF/CR line endings are rejected: D2 development decks are LF-only generator output (never normalized before hashing or parsing)
+  new: D2 development contract: ValueError: deck contains 179 CR (0x0D) byte(s) — CRLF/CR line endings are rejected: D2 development decks are LF-only generator output (never normalized before hashing or parsing)
+
+=== crlf_crlf_metadata__plan.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: deck contains 179 CR (0x0D) byte(s) — CRLF/CR line endings are rejected: D2 development decks are LF-only generator output (never normalized before hashing or parsing)
+
+=== crlf_crlf_metadata__readback.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: deck contains 179 CR (0x0D) byte(s) — CRLF/CR line endings are rejected: D2 development decks are LF-only generator output (never normalized before hashing or parsing)
+
+=== crlf_lf_metadata__pair.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: metadata SHA256 != actual deck file bytes
+  new: D2 development contract: ValueError: metadata SHA256 != actual deck file bytes
+
+=== crlf_lf_metadata__plan.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: metadata SHA256 != actual deck file bytes
+
+=== crlf_lf_metadata__readback.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: metadata SHA256 != actual deck file bytes
+
+=== exclude_SE_SE__pair.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: D2 contact contract: exactly one `neigh_modify delay 0` after create_box and before the first run — exclude and other neighbor options change which contacts are computed: `neigh_modify delay 0` | `neigh_modify exclude type 3 3`
+  new: D2 development contract: ValueError: D2 contact contract: exactly one `neigh_modify delay 0` after create_box and before the first run — exclude and other neighbor options change which contacts are computed: `neigh_modify delay 0` | `neigh_modify exclude type 3 3`
+
+=== exclude_SE_SE__plan.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: D2 contact contract: exactly one `neigh_modify delay 0` after create_box and before the first run — exclude and other neighbor options change which contacts are computed: `neigh_modify delay 0` | `neigh_modify exclude type 3 3`
+
+=== exclude_SE_SE__readback.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: D2 contact contract: exactly one `neigh_modify delay 0` after create_box and before the first run — exclude and other neighbor options change which contacts are computed: `neigh_modify delay 0` | `neigh_modify exclude type 3 3`
+
+=== friction_missing__pair.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: D2 contact contract: material fix missing for the supported hertz/sjkr/rolling_friction pair and wall model: coefficientFriction
+  new: D2 development contract: ValueError: D2 contact contract: material fix missing for the supported hertz/sjkr/rolling_friction pair and wall model: coefficientFriction
+
+=== friction_missing__plan.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: D2 contact contract: material fix missing for the supported hertz/sjkr/rolling_friction pair and wall model: coefficientFriction
+
+=== friction_missing__readback.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: D2 contact contract: material fix missing for the supported hertz/sjkr/rolling_friction pair and wall model: coefficientFriction
+
+=== front_period__pair.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: D2 rotation contract: every wall mesh must rotate with the Drum period (common rotation) — Back 0.782508 s · Drum 0.782508 s · Front 0.1 s
+  new: D2 development contract: ValueError: D2 rotation contract: every wall mesh must rotate with the Drum period (common rotation) — Back 0.782508 s · Drum 0.782508 s · Front 0.1 s
+
+=== front_period__plan.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: D2 rotation contract: every wall mesh must rotate with the Drum period (common rotation) — Back 0.782508 s · Drum 0.782508 s · Front 0.1 s
+
+=== front_period__readback.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: D2 rotation contract: every wall mesh must rotate with the Drum period (common rotation) — Back 0.782508 s · Drum 0.782508 s · Front 0.1 s
+
+=== insert_start_late__pair.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region R particles_in_region N ntry_mc 20000) — start · repeat (insert_every N) · other options rejected: fix insA token 12 `start` (generator `overlapcheck`)
+  new: D2 development contract: ValueError: D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region R particles_in_region N ntry_mc 20000) — start · repeat (insert_every N) · other options rejected: fix insA token 12 `start` (generator `overlapcheck`)
+
+=== insert_start_late__plan.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region R particles_in_region N ntry_mc 20000) — start · repeat (insert_every N) · other options rejected: fix insA token 12 `start` (generator `overlapcheck`)
+
+=== insert_start_late__readback.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region R particles_in_region N ntry_mc 20000) — start · repeat (insert_every N) · other options rejected: fix insA token 12 `start` (generator `overlapcheck`)
+
+=== late_timestep__pair.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: D2 time contract: exactly one two-token `timestep <dt>` before the first run (dt set once, unchanged after) — found 1 at command index [53] · first run at [40]
+  new: D2 development contract: ValueError: D2 time contract: exactly one two-token `timestep <dt>` before the first run (dt set once, unchanged after) — found 1 at command index [53] · first run at [40]
+
+=== late_timestep__plan.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: D2 time contract: exactly one two-token `timestep <dt>` before the first run (dt set once, unchanged after) — found 1 at command index [53] · first run at [40]
+
+=== late_timestep__readback.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: D2 time contract: exactly one two-token `timestep <dt>` before the first run (dt set once, unchanged after) — found 1 at command index [53] · first run at [40]
+
+=== negative_control_bad_gravity__pair.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: actual gravity != declared mixer gravity
+  new: D2 development contract: ValueError: actual gravity != declared mixer gravity
+
+=== negative_control_bad_gravity__plan.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: actual gravity != declared mixer gravity
+
+=== negative_control_bad_gravity__readback.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: actual gravity != declared mixer gravity
+
+=== negative_control_remove_integrator__pair.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: one persistent sphere integrator required before insertion run
+  new: D2 development contract: ValueError: one persistent sphere integrator required before insertion run
+
+=== negative_control_remove_integrator__plan.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: one persistent sphere integrator required before insertion run
+
+=== negative_control_remove_integrator__readback.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: one persistent sphere integrator required before insertion run
+
+=== normal__pair.log ===
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+
+=== normal__plan.log ===
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+
+=== normal__readback.log ===
+D2 개발 덱 계약 PASS — 실제 런/코호트/발사 인증 아님
+
+=== run_upto__pair.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: D2 time contract: only two-token `run <integer>` (generator grammar) — run options such as upto · start · stop · pre · post · every change the executed step program: `run 1 upto`
+  new: D2 development contract: ValueError: D2 time contract: only two-token `run <integer>` (generator grammar) — run options such as upto · start · stop · pre · post · every change the executed step program: `run 1 upto`
+
+=== run_upto__plan.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: D2 time contract: only two-token `run <integer>` (generator grammar) — run options such as upto · start · stop · pre · post · every change the executed step program: `run 1 upto`
+
+=== run_upto__readback.log ===
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: D2 time contract: only two-token `run <integer>` (generator grammar) — run options such as upto · start · stop · pre · post · every change the executed step program: `run 1 upto`

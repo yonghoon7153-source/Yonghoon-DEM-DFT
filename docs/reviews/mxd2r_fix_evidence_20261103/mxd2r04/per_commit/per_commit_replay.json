@@ -1,0 +1,573 @@
+{
+ "tool": "per_commit_replay.py",
+ "python": "3.11.15",
+ "commits": {
+  "c3bf134b9": {
+   "rc": 0,
+   "files_sha256": {
+    "mixer_deck_readback.py": "438e0ceaa097931ed2901dce240578e8bd04a2cf41ac16786b63b5209f19bc0c",
+    "mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "mixer_smoke_blind.py": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24",
+    "test_mixer_d2_consumers.py": "677970f7dac860653b1adc24d85500b74ec3c0940a04df41f33bbc89bfc1d865"
+   },
+   "ran": 21,
+   "result": "OK",
+   "methods": {
+    "test_actual_command_scope": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_actual_common_mode_mutations": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_ceiling_and_ced_meta_rebinding": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_cli_and_duplicate_json": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_command_lifecycle": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_coordinated_density_and_gravity_vector": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_counts_are_from_actual_inputs": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_d2_pairs_and_old_contracts": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_dt_half_and_legacy_cli_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_generation_and_supported_phase_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_meta_binding_and_numeric_boundaries": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_codex_time_insert_rotation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_same_class_generator_grammar": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_codex_contact_exclusion_and_friction": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_material_copies_match_generator": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_same_class_contact_and_materials": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r03_physical_bytes_api": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r03_physical_bytes_cli_both_directions": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r_positive_codex_independent_48": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_pair_identity_and_orientation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_tokens_and_nested_schema": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    }
+   }
+  },
+  "fe674510e": {
+   "rc": 1,
+   "files_sha256": {
+    "mixer_deck_readback.py": "438e0ceaa097931ed2901dce240578e8bd04a2cf41ac16786b63b5209f19bc0c",
+    "mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "mixer_smoke_blind.py": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24",
+    "test_mixer_d2_consumers.py": "3a3977703bb85f959e6bab1b740647dc5b4476ccdf2b1733a5fc1a79a832fdc9"
+   },
+   "ran": 27,
+   "result": "FAILED (failures=300, errors=1)",
+   "methods": {
+    "test_actual_command_scope": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_actual_common_mode_mutations": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_ceiling_and_ced_meta_rebinding": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_cli_and_duplicate_json": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_command_lifecycle": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_coordinated_density_and_gravity_vector": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_counts_are_from_actual_inputs": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_d2_pairs_and_old_contracts": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_dt_half_and_legacy_cli_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_generation_and_supported_phase_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_meta_binding_and_numeric_boundaries": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_codex_time_insert_rotation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_same_class_generator_grammar": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_codex_contact_exclusion_and_friction": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_material_copies_match_generator": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_same_class_contact_and_materials": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r03_physical_bytes_api": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r03_physical_bytes_cli_both_directions": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_copies_match_generator": {
+     "fail_subtests": 0,
+     "error": 1,
+     "status": "FAILED"
+    },
+    "test_mxd2r04_outside_scope_17_api_and_cli": {
+     "fail_subtests": 102,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r04_parser_equivalence_characters": {
+     "fail_subtests": 51,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r04_positive_generator_options": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_same_class_spelling_identity_order": {
+     "fail_subtests": 138,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r04_timestep_spelling_with_metadata": {
+     "fail_subtests": 9,
+     "error": 0,
+     "status": "FAILED"
+    },
+    "test_mxd2r_positive_codex_independent_48": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_pair_identity_and_orientation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_tokens_and_nested_schema": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    }
+   }
+  },
+  "e2ef42cb4": {
+   "rc": 0,
+   "files_sha256": {
+    "mixer_deck_readback.py": "6c94a2c10eedba43a5f6e98815dc7b0721bb50d60ef7ab0d9f900f6e85ca0a80",
+    "mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "mixer_smoke_blind.py": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24",
+    "test_mixer_d2_consumers.py": "3a3977703bb85f959e6bab1b740647dc5b4476ccdf2b1733a5fc1a79a832fdc9"
+   },
+   "ran": 27,
+   "result": "OK",
+   "methods": {
+    "test_actual_command_scope": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_actual_common_mode_mutations": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_ceiling_and_ced_meta_rebinding": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_cli_and_duplicate_json": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_command_lifecycle": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_coordinated_density_and_gravity_vector": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_counts_are_from_actual_inputs": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_d2_pairs_and_old_contracts": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_dt_half_and_legacy_cli_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_generation_and_supported_phase_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_meta_binding_and_numeric_boundaries": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_codex_time_insert_rotation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_same_class_generator_grammar": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_codex_contact_exclusion_and_friction": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_material_copies_match_generator": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_same_class_contact_and_materials": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r03_physical_bytes_api": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r03_physical_bytes_cli_both_directions": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_copies_match_generator": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_outside_scope_17_api_and_cli": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_parser_equivalence_characters": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_positive_generator_options": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_same_class_spelling_identity_order": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_timestep_spelling_with_metadata": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r_positive_codex_independent_48": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_pair_identity_and_orientation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_tokens_and_nested_schema": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    }
+   }
+  },
+  "89315d8d2": {
+   "rc": 0,
+   "files_sha256": {
+    "mixer_deck_readback.py": "6c94a2c10eedba43a5f6e98815dc7b0721bb50d60ef7ab0d9f900f6e85ca0a80",
+    "mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "mixer_smoke_blind.py": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24",
+    "test_mixer_d2_consumers.py": "30fd927117a249a131574f23a3ec0015f770445a624528f9849d97e4729d17e0"
+   },
+   "ran": 28,
+   "result": "OK",
+   "methods": {
+    "test_actual_command_scope": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_actual_common_mode_mutations": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_ceiling_and_ced_meta_rebinding": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_cli_and_duplicate_json": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_command_lifecycle": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_coordinated_density_and_gravity_vector": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_counts_are_from_actual_inputs": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_d2_pairs_and_old_contracts": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_dt_half_and_legacy_cli_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_generation_and_supported_phase_positive": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_meta_binding_and_numeric_boundaries": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_codex_time_insert_rotation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r01_same_class_generator_grammar": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_codex_contact_exclusion_and_friction": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_material_copies_match_generator": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r02_same_class_contact_and_materials": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r03_physical_bytes_api": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r03_physical_bytes_cli_both_directions": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_copies_match_generator": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_metadata_coordinated_rules": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_outside_scope_17_api_and_cli": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_parser_equivalence_characters": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_positive_generator_options": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_same_class_spelling_identity_order": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r04_timestep_spelling_with_metadata": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_mxd2r_positive_codex_independent_48": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_pair_identity_and_orientation": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    },
+    "test_tokens_and_nested_schema": {
+     "fail_subtests": 0,
+     "error": 0,
+     "status": "ok"
+    }
+   }
+  }
+ }
+}

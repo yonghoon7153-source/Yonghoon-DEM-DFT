@@ -1,0 +1,184 @@
+{
+ "tool": "mutation_check_v3.py",
+ "python": "3.11.15",
+ "selection": [
+  "M2",
+  "M3"
+ ],
+ "n": 20,
+ "killed": 13,
+ "unmutated_rc": 0,
+ "rows": [
+  {
+   "mutant": "M20 weaken text: no final newline accepted",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=6)",
+   "failing_tests": [
+    "test_mxd2r04_parser_equivalence_characters"
+   ]
+  },
+  {
+   "mutant": "M21 weaken text: control characters accepted",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=15)",
+   "failing_tests": [
+    "test_mxd2r04_parser_equivalence_characters"
+   ]
+  },
+  {
+   "mutant": "M22 weaken text: any command characters",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=21)",
+   "failing_tests": [
+    "test_mxd2r04_outside_scope_17_api_and_cli",
+    "test_mxd2r04_parser_equivalence_characters"
+   ]
+  },
+  {
+   "mutant": "M23 weaken text: quotes and $ accepted (ASCII kept)",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=12)",
+   "failing_tests": [
+    "test_mxd2r04_outside_scope_17_api_and_cli",
+    "test_mxd2r04_parser_equivalence_characters"
+   ]
+  },
+  {
+   "mutant": "M24 weaken text: continuation unchecked",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=15)",
+   "failing_tests": [
+    "test_mxd2r04_parser_equivalence_characters"
+   ]
+  },
+  {
+   "mutant": "M25 weaken text: continuation on comment lines accepted",
+   "file": "mixer_deck_readback.py",
+   "killed": false,
+   "result": "OK",
+   "failing_tests": []
+  },
+  {
+   "mutant": "M26 weaken text: continuation spelling free (comment rule kept)",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=6)",
+   "failing_tests": [
+    "test_mxd2r04_parser_equivalence_characters"
+   ]
+  },
+  {
+   "mutant": "M27 tighten text: no dump_modify exemption",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=2)",
+   "failing_tests": [
+    "test_mxd2r04_positive_generator_options"
+   ]
+  },
+  {
+   "mutant": "M28 weaken text: metadata dump format unchecked",
+   "file": "mixer_deck_readback.py",
+   "killed": false,
+   "result": "OK",
+   "failing_tests": []
+  },
+  {
+   "mutant": "M29 weaken form: no command comparison",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=243)",
+   "failing_tests": [
+    "test_mxd2r04_outside_scope_17_api_and_cli",
+    "test_mxd2r04_same_class_spelling_identity_order",
+    "test_mxd2r04_timestep_spelling_with_metadata"
+   ]
+  },
+  {
+   "mutant": "M30 weaken form: command count unchecked",
+   "file": "mixer_deck_readback.py",
+   "killed": false,
+   "result": "OK",
+   "failing_tests": []
+  },
+  {
+   "mutant": "M31 weaken form: skin token unchecked",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=3)",
+   "failing_tests": [
+    "test_mxd2r04_same_class_spelling_identity_order"
+   ]
+  },
+  {
+   "mutant": "M32 weaken form: seed prime / bound unchecked",
+   "file": "mixer_deck_readback.py",
+   "killed": false,
+   "result": "OK",
+   "failing_tests": []
+  },
+  {
+   "mutant": "M33 weaken form: steps k-multiple unchecked",
+   "file": "mixer_deck_readback.py",
+   "killed": false,
+   "result": "OK",
+   "failing_tests": []
+  },
+  {
+   "mutant": "M34 weaken form: dump interval from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": false,
+   "result": "OK",
+   "failing_tests": []
+  },
+  {
+   "mutant": "M35 weaken form: restart interval from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": false,
+   "result": "OK",
+   "failing_tests": []
+  },
+  {
+   "mutant": "M36 weaken form: dt spelling from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=9)",
+   "failing_tests": [
+    "test_mxd2r04_timestep_spelling_with_metadata"
+   ]
+  },
+  {
+   "mutant": "M37 weaken form: global settings from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=51)",
+   "failing_tests": [
+    "test_mxd2r04_outside_scope_17_api_and_cli",
+    "test_mxd2r04_same_class_spelling_identity_order"
+   ]
+  },
+  {
+   "mutant": "M38 weaken form: box region from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=6)",
+   "failing_tests": [
+    "test_mxd2r04_same_class_spelling_identity_order"
+   ]
+  },
+  {
+   "mutant": "M39 weaken form: youngsModulus tokens from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=3)",
+   "failing_tests": [
+    "test_mxd2r04_same_class_spelling_identity_order"
+   ]
+  }
+ ]
+}

@@ -1,5 +1,7 @@
 # MXD2R-01 · 02 · 03 수정 증거 (2026-11-03) — 믹서 D2 개발 소비자
 
+> ★ 11-03 오후 — §5-3 의 범위 밖 공통 변조 17 은 같은 부류 **MXD2R-04** 로 닫았다 (1저자 11-03 Q1 = 권고대로 · 증거 `mxd2r04/README.md`).  이 문서의 §0 · §5-1 · §5-3 · §7 은 MXD2R-04 **전** (커밋 `5ef8bb780`) 기록 그대로다 — §5-1 의 '같은 뜻 꼴 PASS' 6 행 (run 탭 · neigh 탭 · 폼 피드 · Front 주기 `7.82508e-1` · 마찰 `9e-1` · 주석 안 NUL) 은 이제 FAIL 이다 (**뜻이 같아도 표기가 다르면 거부한다 (생성기 꼴 엄격)** · `mxd2r04/README.md` §4-2).
+
 - 근거: Codex 10-27 독립 재검토 `docs/reviews/codex_mixer_d2_review_20261027/codex_review_mixer_d2_20261027.md` (HOLD · 새 P1 둘 · P2 하나) · 수정 계획 `docs/reviews/mxd2r_fix_plan_20261030.md` · **1저자 11-02 비준 Q1–Q3 = 전부 (가)** (생성기 자신의 문법만 · 접촉 제외 거부 + 재료 fix 완비성 · 적용 전 순서 · 실제 파일 바이트를 먼저 해시 · CRLF 는 구체 사유로 거부).
 - 대상: `scripts/mixer_deck_readback.py` (`--d2` · `read_d2`) · `scripts/mixer_deck_diff.py` (`--allow D2` · `diff_d2_decks`) · `scripts/mixer_smoke_blind.py` (`--d2-plan` · `d2_plan_check`) · 회귀 `scripts/test_mixer_d2_consumers.py` · 웹앱 `/mixer` 개발 이력 `docs/mixer_devlog/v20_20261103.md`.
 - 환경: 이 컨테이너 · Linux · Python 3.11.15 · `python3 -I -X utf8 -B`.  LIGGGHTS · DEM · 스케줄러 · 믹서 실행 0 회.
@@ -10,7 +12,7 @@
 |---|---|
 | MXD2R-01 시간 · 삽입 · 회전 = 생성기 문법만 | MXD2-01 전체 — 개발 소비자 하위 범위 종결은 Codex 재확인 GO 전에 주장하지 않는다 (수정 계획 §3 단계 6) |
 | MXD2R-02 접촉 제외 거부 · pair 꼴 · 재료 fix 완비성 · 순서 · 생성기 상수 | 새 S1 셀 · 코호트 · 정책 · 등록 · 실물 입력 · 실제 DEM · 믹서 실행 (계획 §3 끝) |
-| MXD2R-03 실제 파일 바이트 해시 · CR 거부 · 바이트를 디코딩해 파싱 | 범위 밖 공통 변조 17 (전역 설정 · 템플릿 옵션 · RNG 시드 · 기하 · 출력) — 여전히 PASS (§5-3) |
+| MXD2R-03 실제 파일 바이트 해시 · CR 거부 · 바이트를 디코딩해 파싱 | 범위 밖 공통 변조 17 (전역 설정 · 템플릿 옵션 · RNG 시드 · 기하 · 출력) — 여전히 PASS (§5-3) → 11-03 MXD2R-04 로 닫음 (`mxd2r04/`) |
 | | LIGGGHTS 토큰화 · 실행 의미의 실측 (소스 판독 인용만 · 실행 안 함) · 등록 표 · 코호트 경로의 텍스트 읽기 (D2 밖 · 그대로) |
 
 ## 1. 커밋 (이 작업 가지 — 본 가지로 cherry-pick 하면 SHA 가 바뀐다 · check_doc_refs 가 남은 옛 SHA 를 잡는다)
@@ -116,7 +118,7 @@ Traceback 0 (전 · 후).  JSON = `before/codex_cases_cli/cli_rc_codex_cases_bef
 - 고침 (커밋 `5ef8bb780`): 같은 값 (0.9) 중복 사례 `friction_duplicate_same_values` (사유 = defined more than once).
 - 2 회차 (커밋 `5ef8bb780`): **19/19 죽음** · 변이 없는 판 rc 0 (`preattack/mutation_check_v2_5ef8bb780.json`).  가드 = run 옵션 · timestep 위치 · timestep 토큰 수 · 삽입 꼴 · 공동 주기 · neigh 인자 · neigh 개수 · pair 위치 · pair_coeff 인자 · 재료 결손 · 중복 · 상수 · 순서 · 모르는 이름 · CR · 정규화 해시 · 세 CLI 의 바이트 읽기.
 
-### 5-3. 범위 밖 공통 변조 — 여전히 PASS (닫지 않음 · 1저자 11-02 비준 범위 밖)
+### 5-3. 범위 밖 공통 변조 — 여전히 PASS (닫지 않음 · 1저자 11-02 비준 범위 밖) → 11-03 MXD2R-04 로 닫음 (`mxd2r04/README.md`)
 
 `tools/preattack_outside_scope.py` → `preattack/preattack_outside_scope.json` — 17/17 세 소비자 PASS.
 
@@ -130,6 +132,7 @@ Traceback 0 (전 · 후).  JSON = `before/codex_cases_cli/cli_rc_codex_cases_bef
 
 - 같은 부류의 표기 차이: 소비자 파서는 줄의 첫 `#` 부터 주석으로 버린다 (`_logical`) — 따옴표 안 `#` 를 LIGGGHTS 가 어떻게 읽는지는 대조하지 않았다.  토큰 수 · 꼴이 고정된 줄 (run · timestep · insert/pack · neigh_modify · pair_coeff · 재료 fix · region · create_box · 메시 · 벽 · 중력 · 적분기 · move/mesh · 분포) 은 `"` 토큰이 남아 거부되고, 고정되지 않은 줄 (템플릿 · 전역 설정 · 출력) 에만 이 차이가 남는다.
 - ⬜ **1저자 결정 후보 (권고 = 고정)**: 전역 설정 · 템플릿 줄도 같은 (가) 원리로 생성기 꼴 고정할지 — 이번 비준 범위 (시간 · 삽입 · 회전 · 접촉 제외 · 재료 fix · 바이트) 밖이라 구현하지 않았다.  Codex 재확인에서 같은 부류로 지적될 수 있다.
+  → ✅ 1저자 11-03 Q1 = 권고대로 → 원장 MXD2R-04 (P2) · 구현 · 증거 `mxd2r04/README.md` (17/17 세 소비자 FAIL · 같은 부류 47 · 글자 꼴 14 · 메타 동반 6).
 
 ## 6. 한정
 
@@ -144,7 +147,7 @@ Traceback 0 (전 · 후).  JSON = `before/codex_cases_cli/cli_rc_codex_cases_bef
 ## 7. 재현
 
 ```bash
-python3 -I -X utf8 -B scripts/test_mixer_d2_consumers.py                         # 21/21
+python3 -I -X utf8 -B scripts/test_mixer_d2_consumers.py                         # 21/21 (MXD2R-04 뒤 28/28 — mxd2r04/README.md §7)
 python3 scripts/mixer_deck_readback.py --selftest                                # 24/24
 python3 scripts/mixer_deck_diff.py --selftest                                    # 55/55
 python3 scripts/mixer_smoke_blind.py --selftest                                  # rc 0

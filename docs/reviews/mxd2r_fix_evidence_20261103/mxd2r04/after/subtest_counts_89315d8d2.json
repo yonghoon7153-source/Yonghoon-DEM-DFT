@@ -1,0 +1,177 @@
+{
+ "tool": "count_subtests.py",
+ "python": "3.11.15",
+ "tests_run": 28,
+ "failures": 0,
+ "errors": 0,
+ "methods": {
+  "test_actual_command_scope": {
+   "subtests_pass": 0,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_actual_common_mode_mutations": {
+   "subtests_pass": 0,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_ceiling_and_ced_meta_rebinding": {
+   "subtests_pass": 0,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_cli_and_duplicate_json": {
+   "subtests_pass": 0,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_command_lifecycle": {
+   "subtests_pass": 10,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_coordinated_density_and_gravity_vector": {
+   "subtests_pass": 0,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_counts_are_from_actual_inputs": {
+   "subtests_pass": 0,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_d2_pairs_and_old_contracts": {
+   "subtests_pass": 0,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_dt_half_and_legacy_cli_positive": {
+   "subtests_pass": 0,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_generation_and_supported_phase_positive": {
+   "subtests_pass": 128,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_meta_binding_and_numeric_boundaries": {
+   "subtests_pass": 0,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r01_codex_time_insert_rotation": {
+   "subtests_pass": 28,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r01_same_class_generator_grammar": {
+   "subtests_pass": 32,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r02_codex_contact_exclusion_and_friction": {
+   "subtests_pass": 14,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r02_material_copies_match_generator": {
+   "subtests_pass": 0,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r02_same_class_contact_and_materials": {
+   "subtests_pass": 56,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r03_physical_bytes_api": {
+   "subtests_pass": 11,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r03_physical_bytes_cli_both_directions": {
+   "subtests_pass": 9,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r04_copies_match_generator": {
+   "subtests_pass": 0,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r04_metadata_coordinated_rules": {
+   "subtests_pass": 24,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r04_outside_scope_17_api_and_cli": {
+   "subtests_pass": 119,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r04_parser_equivalence_characters": {
+   "subtests_pass": 68,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r04_positive_generator_options": {
+   "subtests_pass": 10,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r04_same_class_spelling_identity_order": {
+   "subtests_pass": 188,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r04_timestep_spelling_with_metadata": {
+   "subtests_pass": 12,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_mxd2r_positive_codex_independent_48": {
+   "subtests_pass": 48,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_pair_identity_and_orientation": {
+   "subtests_pass": 0,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  },
+  "test_tokens_and_nested_schema": {
+   "subtests_pass": 0,
+   "subtests_fail": 0,
+   "tests_pass": 1,
+   "tests_fail": 0
+  }
+ }
+}
