@@ -1,0 +1,41 @@
+{
+ "what": "영률 이온전도도 장 (템플릿 15장 · 1저자 10쪽) 이온 전류 3D 셋 — 1저자 11-03 웹앱 캡처 (webp 셋) + 컬러바 두 장 (11 · 33 GPa) 의 숫자. 22 GPa = D_SE 2 µm 와 같은 침대 → 11-02 입도 캡처 (figs/jcur/src/MANIFEST.json D2) 의 숫자",
+ "webapp_view": "이온 (SE–SE) · Hertz FULL · 1 V · 전류 = 전체 · 선형 눈금 · 색 위쪽 = 고른 접촉 j 의 p50 (컬러바 아래 글 그대로)",
+ "assignment": "그림 = 세로/가로 비 (11 GPa 1.736 · 22 GPa 1.784 · 33 GPa 1.832 — 두께 비 123.61 : 126.83 : 129.39 와 같은 순서) · 컬러바 = 접촉 수 · 중앙값이 22 GPa (39402 · 0.14) 를 사이에 두고 단조 (11 GPa 41165 · 0.13 · 33 GPa 38063 · 0.15)",
+ "beds": {
+  "E11": {
+   "label": "11 GPa",
+   "current_carrying_contacts": 41165,
+   "colorbar_ticks_A_cm2": [
+    "5.8×10⁻⁶",
+    "0.065",
+    "0.13"
+   ],
+   "raw_3d": "E11.webp",
+   "raw_3d_sha256": "07fe5fe2d464f83f3c4b3b2050ef45107df4b242c233fad728cc443664a1e2b2"
+  },
+  "E22": {
+   "label": "22 GPa",
+   "current_carrying_contacts": 39402,
+   "colorbar_ticks_A_cm2": [
+    "2.7×10⁻⁶",
+    "0.07",
+    "0.14"
+   ],
+   "raw_3d": "E22.webp",
+   "colorbar_source": "figs/jcur/src/MANIFEST.json D2 (같은 침대 · 같은 설정)",
+   "raw_3d_sha256": "511d01c324a0ab97c6cabe599c025a514edbf0cd7c181d4e253c9a7575eb9492"
+  },
+  "E33": {
+   "label": "33 GPa",
+   "current_carrying_contacts": 38063,
+   "colorbar_ticks_A_cm2": [
+    "2.3×10⁻⁶",
+    "0.074",
+    "0.15"
+   ],
+   "raw_3d": "E33.webp",
+   "raw_3d_sha256": "445ab73f82be3104b2f80c6414d86df2e6e63f2d3837c1e8adfaf47bda62daff"
+  }
+ }
+}
