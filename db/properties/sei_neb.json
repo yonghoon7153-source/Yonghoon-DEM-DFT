@@ -213,7 +213,7 @@
         "min_cell_A_4x4x4": 16.14,
         "protocol_hash_4x4x4": "e78a3e9a5e3a",
         "status_4x4x4": "converged",
-        "gates": "G1–G5 pass (G4 with two stated interpretations: endpoints_relaxed flag of the reference build; ase_version of a reference built on kgy — lambda1 scales 4/3 exactly)",
+        "gates": "G1–G5 pass (G4: same-machine same-code 3x3x3 reference built on gabia 2026-11-03 — only endpoints_relaxed differs, which is the reference-build flag; endpoint_coords_sha identical across ASE 3.28.0/3.29.0)",
         "raw": "db/raw/li2s_neb_cellconv_2026_10_09/c444/ (commit 72850282)",
         "record": "db/properties/li2s_neb_cellconv_runlog_2026_10_09.json → 결과_4x4x4_2026_11_03",
         "read_on": "2026-11-03"

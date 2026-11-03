@@ -171,7 +171,7 @@
    "G1": "통과 — ep_initial · ep_final 둘 다 'Begin final coordinates' (bfgs 15 · 15 · 'bfgs converged in 16 scf cycles and 15 bfgs steps') · 끝점 총에너지 −3398.95396830 / −3398.95396835 Ry (차 5e-8 Ry ≈ 0.7 μeV · 대칭 등가)",
    "G2": "통과 — neb.out.noCI 'convergence achieved in 11 iterations' → CI restart neb.out CI_scheme = auto · 'convergence achieved in 12 iterations' (재시작 뒤 1 반복 · 2×2×2 와 같은 모양 — 홀수 이미지 · 대칭 경로라 가운데 이미지가 이미 안장점) · path length 4.950 bohr",
    "G3": "통과 — Ea(→) = Ea(←) = 0.29213 eV · 차 0.000000 ≤ 0.01",
-   "G4": "통과 (해석 2 건 명시) — 4×4×4 payload (gabia · ase 3.28.0) 대 ref333 payload (kgy 10-09 사전점검 · ase 3.29.0): 차이 = 허용 9 키 + endpoints_relaxed + ase_version. ① endpoints_relaxed: 10-10 과 같은 해석 — ref333 을 --allow_unrelaxed_endpoints 로 만들어 False 다 (build_neb_inputs.py:501 — 이 칸은 플래그 값이지 기하가 아니다) · 실제 3×3×3 v2 meta (gabia) 는 true · 4×4×4 도 true → 같다. ② ase_version: 기준 쪽 사정 — 카드는 '같은 기계 · 같은 코드로 만든 기준' 을 요구했는데 gabia 사슬에 기준 빌드를 넣지 않았다 (10-10 메모 '다음엔 기준 payload 를 같은 플래그로 만든다 (4×4×4 때)' 를 못 지킴 · 내 누락). ase_version 이 지문에 든 이유는 λ₁ 을 ASE Minkowski 축약이 내기 때문이다 (build_neb_inputs.py 주석) → λ₁ 로 확인: 4×4×4 λ₁ 16.137 = 3×3×3 12.102 × 4/3 (16.136 · 반올림 안) · 면 높이 13.176 = 9.882 × 4/3 — 두 판의 축약이 같다. 물리 칸 (ecut 60/480 · q −1 · gaussian 0.005 · PP 둘 · 이미지 7 · path_thr 0.05 · c-c 2.8526 Å · hop_pair_orbits · insulator · hash_schema 2 · lambda1_method_id) 전부 같다. 확인 블록 (gabia 같은 worktree 로 3×3×3 기준만 빌드 · 검사용 · ase 3.28.0 판 endpoint_coords_sha 가 kgy ref333 86ff57dfcad3a783 과 같은지) 을 사용자에게 줬다 — 허용 밖 차이가 나오면 G4 를 다시 연다. ⚠ 이 해석은 문턱 · 판정 규칙을 바꾸지 않는다.",
+   "G4": "통과 (해석 1 건 · 10-10 과 같음) — 같은 기계 (gabia) · 같은 코드 (09c7f83b5) 로 만든 3×3×3 기준과 대조: 허용 밖 차이는 endpoints_relaxed 하나 (기준을 --allow_unrelaxed_endpoints 로 만들어 False · build_neb_inputs.py:501 — 플래그 값이지 기하가 아니다 · 실제 3×3×3 v2 meta 와 4×4×4 는 둘 다 true). ase 3.28.0 (gabia) 판의 3×3×3 끝점 좌표 해시가 kgy (3.29.0) 판과 같다 (86ff57dfcad3a783) → 두 ASE 판이 같은 기하를 만든다. 물리 칸 전부 같음. ⚠ 처음 판독 (11-03 오전) 은 kgy 기준으로 해석 2 건 (ase_version 포함) 이었고 gabia 확인 블록으로 1 건이 됐다 — 문턱 · 판정 규칙은 안 바뀜",
    "G5": "통과 — li2s.dat 이미지 에너지 0 · 0.10719 · 0.24254 · 0.29213 · 0.24254 · 0.10720 · 0.00000 eV — 1→4 단조 증가 · 4→7 단조 감소 · 최고점 = 이미지 4 (가운데) · 끝점 아님 · 2↔6 · 3↔5 대칭 (차 ≤ 3e-6 eV)"
   },
   "Ea_eff_4x4x4_eV": 0.29213,
@@ -183,6 +183,7 @@
   "홉_수_검산": "4×4×4: 홉 수 검산 (ν₀ 1e+13 s⁻¹ 가정 · 298 K): Γ ≈ 1.15e+08 s⁻¹ · 평균 대기 ≈ 8.72e-09 s · 3×3×3: 홉 수 검산 (ν₀ 1e+13 s⁻¹ 가정 · 298 K): Γ ≈ 6.94e+07 s⁻¹ · 평균 대기 ≈ 1.44e-08 s — 차수 같음 (collect_neb.hop_check · 차수 검산 — 확산계수 · 전도도 아님)",
   "⛔": "값 인용은 비준 전 금지 — sei_neb.json 은 파일 전체 BLOCKED (HZ-sei-neb-retracted) 그대로 · 비준되면 예외 hazard (CONDITIONAL) 를 따로 단다 · 문헌값 (Lai 0.22 · Moradabadi ≈ 0.45) 과 값 대 값 표 금지 (09-01 카드 §5 '어느 경우에도' — 전하 규약 · 홉 정의가 따로 맞아야 한다)",
   "벽시계": "P1 10-30 13:27:50 → 끝 11-03 08:01:03 ≈ 3.8 일 (끝점 ≈ 25.9 h · NEB no-CI + CI ≈ 2.7 일) — 설계 어림 10.86 일보다 짧다",
-  "by": "agent · 2026-11-03"
+  "by": "agent · 2026-11-03",
+  "G4_확인_2026_11_03": "사용자 붙여넣기 2026-11-03 (gabia · 검사용 · 입력 파일만 · QE 안 돌림): /data/work/wt_li2s444_1027 HEAD 09c7f83b5 (4×4×4 와 같은 코드) · build_neb_inputs.py --min_l 10 --allow_unrelaxed_endpoints → build rc 0 · ase 3.28.0 · nat 80 · λ₁ 12.102 · endpoint_coords_sha 86ff57dfcad3a783 = kgy ref333 (ase 3.29.0) 와 같음 · 4×4×4 payload 대비 허용 밖 차이 = {'endpoints_relaxed': (False, True)} 하나 (플래그 값)"
  }
 }

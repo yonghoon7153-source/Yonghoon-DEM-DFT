@@ -10625,10 +10625,11 @@
    "evidence": [
     "db/raw/li2s_neb_cellconv_2026_10_09/c444/ (commit 72850282 · SHA256SUMS ok)",
     "db/properties/li2s_neb_cellconv_runlog_2026_10_09.json 결과_4x4x4_2026_11_03 (C3 · G1–G5 · ΔEa · 홉 수 검산)",
-    "db/properties/sei_neb.json v2/li2s cell_convergence_2026_11_03"
+    "db/properties/sei_neb.json v2/li2s cell_convergence_2026_11_03",
+    "gabia G4 확인 2026-11-03 (사용자 붙여넣기 · 같은 기계 · 같은 코드 09c7f83b5 · 허용 밖 차이 endpoints_relaxed 하나 · 끝점 좌표 해시 kgy 판과 같음) — runlog 결과_4x4x4_2026_11_03.G4_확인_2026_11_03"
    ],
    "reopen_criteria": [
-    "G4 확인 블록 (gabia 같은 worktree 로 3×3×3 기준 payload 빌드) 에서 허용 밖 차이가 나오면 — 승격 보류하고 G4 다시",
+    "✅ G4 확인 블록 (11-03) — 허용 밖 차이 endpoints_relaxed 하나 (기준 빌드 플래그) · 이 조건은 닫혔다",
     "규약 칸 (ecut · PP · 전하 규약 · smearing) 이 바뀌는 경우 (부모 결정과 같음)"
    ],
    "enforcement": "비준 뒤에만: sei_neb.json v2/li2s absolute_citable true · 예외 hazard (CONDITIONAL · 허용 문장 · 이 결정 id) 등록 · validate_canonical 통과 · 화면은 hazard id 로 이름만 (sei_neb.json 은 레지스트리 등록 0 건)",
@@ -10640,6 +10641,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "카드 C1 통과 판독 뒤 승격 제안 · 트랙 SEI NEB — 비준 = 사용자 (SEI 트랙 1저자)"
+    },
+    {
+     "at": "2026-11-03",
+     "state": "proposed",
+     "by": "agent",
+     "note": "gabia G4 확인 반영 (해석 2 건 → 1 건) · 비준 전 수정"
     }
    ]
   }
