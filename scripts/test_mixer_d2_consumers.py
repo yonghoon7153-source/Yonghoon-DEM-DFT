@@ -3,9 +3,12 @@
 
 MXD2R-01 · 02 · 03 (Codex 10-27 재검토 HOLD · 수정 계획 docs/reviews/mxd2r_fix_plan_20261030.md · 1저자 11-02 Q1–Q3 (가)):
 반례를 고치기 **전에** 옮겼다 — 고치기 전 소비자는 아래 공통 변조 · CRLF 바이트를 세 소비자 모두 PASS / rc 0 으로 받았다.
+MXD2R-04 (11-03 사전 공격 · 1저자 11-03 Q1 = 권고대로): 범위 밖 공통 변조 17 · 같은 부류 (같은 값 다른 표기 · 이름 · 순서 · 중복 ·
+결손 · 배플) · 문자 꼴 (우리 파서와 LIGGGHTS 가 다른 토큰을 읽을 수 있는 꼴) 도 고치기 **전에** 옮겼다 (고치기 전 세 소비자 PASS).
 """
 import copy
 import hashlib
+import inspect
 import itertools
 import json
 import math
@@ -23,7 +26,8 @@ import mixer_smoke_blind as smoke
 
 
 def fixture(phases=('AM_P', 'AM_S', 'SE'), generation='lab20261014', stiff=20., rho=.3,
-            coated=False, bo=.73, n=100000, cgf=151.4, layered=True, seed=32452843, dt_factor=1.):
+            coated=False, bo=.73, n=100000, cgf=151.4, layered=True, seed=32452843, dt_factor=1.,
+            dump_full_precision=False, fr=None):
     old = gen.TYPES
     try:
         gen.set_phases(phases)
@@ -33,9 +37,11 @@ def fixture(phases=('AM_P', 'AM_S', 'SE'), generation='lab20261014', stiff=20., 
         arm['layered'] = layered
         gen.ARMS['D2CONSUMER'] = arm
         p = gen.plan(n, cgf=cgf, stiffen_se=stiff, dens_gen=generation)
-        rpm = gen.resolve_rpm(p['R'])
-        text = gen.deck(p, rpm, 2, seed=seed, arm='D2CONSUMER', hold_bo_pairwise=True, dt_factor=dt_factor)
-        meta = gen.deck_meta(p, rpm, 2, seed, 'D2CONSUMER', text, hold_bo_pairwise=True, dt_factor=dt_factor)
+        rpm = gen.resolve_rpm(p['R']) if fr is None else gen.resolve_rpm(p['R'], fr=fr)
+        text = gen.deck(p, rpm, 2, seed=seed, arm='D2CONSUMER', hold_bo_pairwise=True, dt_factor=dt_factor,
+                        dump_full_precision=dump_full_precision)
+        meta = gen.deck_meta(p, rpm, 2, seed, 'D2CONSUMER', text, hold_bo_pairwise=True, dt_factor=dt_factor,
+                             dump_full_precision=dump_full_precision)
         return text, meta, {str(i+1): int(p['n'][phase]) for i, phase in enumerate(phases)}
     finally:
         gen.ARMS.pop('D2CONSUMER', None)
@@ -132,6 +138,142 @@ MXD2R02_SAME_CLASS = {
     'pair_style_late': (_move_after(r'^pair_style[^\n]*\npair_coeff[^\n]*\n', 'write_restart restart/settled.bin'), 'pair_coeff * *'),
     'pair_coeff_partial': (lambda s: s.replace('pair_coeff      * *', 'pair_coeff      1 1'), 'pair_coeff * *'),
 }
+
+
+def _tok(k, got, want):
+    """MXD2R-04 거부 사유 문구 — 첫 어긋난 토큰 (명령 안 위치 · 덱 토큰 · 생성기 토큰)."""
+    return f'token {k} `{got}` (generator `{want}`)'
+
+
+def _swap(first, second):
+    """정확히 한 번씩 있는 두 줄의 자리를 바꾼다 (순서만 다른 덱)."""
+    def transform(s):
+        assert s.count(first) == 1 and s.count(second) == 1, (first, second)
+        return s.replace(first, '\0').replace(second, first).replace('\0', second)
+    return transform
+
+
+def _rep(old, new, count=1):
+    return lambda s: s.replace(old, new, count)
+
+
+#: 문자 꼴 사유 (MXD2R-04) — 우리 파서 (_logical: 유니코드 공백 · 첫 # · 유니코드 rstrip 뒤 '&') 와 LIGGGHTS (ASCII 공백 · 따옴표 안 # ·
+#:   $ 치환 · C 문자열) 가 다른 토큰을 읽을 수 있는 꼴을 토큰 대조 **전에** 거부한다.
+_CTRL, _ASCII = 'control character', 'printable ASCII without quotes or $'
+_CONT, _EOL = "continuation must be a command line ending exactly in ' &'", 'must end with a newline'
+#: MXD2R-04 — 사전 공격 (11-03) 이 보고한 MXD2R-01–03 범위 밖 공통 변조 17 (식 = docs/reviews/mxd2r_fix_evidence_20261103/tools/
+#:   preattack_outside_scope.py 그대로) · 고치기 전 세 소비자 PASS.  값 = (변조, 고친 뒤 사유 = 첫 어긋난 토큰 ↔ 생성기 토큰 · 따옴표 = 문자 꼴)
+MXD2R04_OUTSIDE_17 = {
+    'boundary_periodic': (_rep('boundary        f f f', 'boundary        p p p'), _tok(1, 'p', 'f')),
+    'newton_on': (_rep('newton          off', 'newton          on'), _tok(1, 'on', 'off')),
+    'atom_style_sphere': (_rep('atom_style      granular', 'atom_style      sphere'), _tok(1, 'sphere', 'granular')),
+    'communicate_cutoff': (_rep('communicate     single vel yes', 'communicate     single cutoff 0.001 vel yes'), _tok(2, 'cutoff', 'vel')),
+    'hard_particles_no': (_rep('hard_particles  yes', 'hard_particles  no'), _tok(1, 'no', 'yes')),
+    'atom_modify_sort': (_rep('atom_modify     map array sort 0 0', 'atom_modify     map array sort 1000 0.0'), _tok(4, '1000', '0')),
+    'thermo_lost_error': (_rep('thermo_modify lost ignore norm no', 'thermo_modify lost error norm no'), _tok(2, 'error', 'ignore')),
+    'neighbor_nsq': (lambda s: re.sub(r'(?m)^(neighbor\s+\S+) bin$', r'\1 nsq', s), _tok(2, 'nsq', 'bin')),
+    'template_extra_option': (lambda s: re.sub(r'(?m)^(fix pt1 [^\n]*radius constant \S+)$', r'\1 volume_limit 1e-30', s),
+                              _tok(13, 'volume_limit', '(end)')),
+    'template_quote_hash': (lambda s: re.sub(r'(?m)^(fix pt1 [^\n]*radius constant \S+)$', r'\1 "#" volume_limit 1e-30', s), _ASCII),
+    'pdd_seed': (_rep('particledistribution/discrete 32452867', 'particledistribution/discrete 15485863'), _tok(4, '15485863', '32452867')),
+    'insert_b_seed': (lambda s: re.sub(r'(fix insB all insert/pack seed )\d+', r'\g<1>15485867', s), _tok(5, '15485867', '32452867')),
+    'insert_region_geometry': (lambda s: re.sub(r'(region ins_reg cylinder x 0\.0 0\.0 )(\S+)', r'\g<1>0.0100000', s),
+                               _tok(6, '0.0100000', '0.0113249')),
+    'mesh_scale': (lambda s: s.replace('scale 0.0251665', 'scale 0.0250000'), _tok(9, '0.0250000', '0.0251665')),
+    'dump_modify_added': (_rep('\n# ① 채우고 정착', '\ndump_modify dmp sort id\n# ① 채우고 정착'), _tok(0, 'dump_modify', 'run')),
+    'thermo_every': (_rep('thermo 5000', 'thermo 1000'), _tok(1, '1000', '5000')),
+    'write_restart_removed': (_rep('write_restart restart/settled.bin\n', ''), _tok(0, 'fix', 'write_restart')),
+}
+#: MXD2R-04 같은 부류 — 같은 값 다른 표기 · 생성기 이름 (fix · region · 메시 · dump · 템플릿 id) · 순서 · 중복 · 결손 · 생성기 옵션 밖 (배플) ·
+#:   출력 · 체크포인트 · 이웃 skin 토큰 꼴 (고치기 전 세 소비자 PASS — 11-03 선별 기록 docs/reviews/mxd2r_fix_evidence_20261103/)
+MXD2R04_SAME_CLASS = {
+    'box_spelling': (_rep('0.0144707', '0.01447070', -1), _tok(3, '-0.01447070', '-0.0144707')),
+    'box_size': (_rep('0.0144707', '0.0150000', -1), _tok(3, '-0.0150000', '-0.0144707')),
+    'create_box_spelling': (_rep('create_box      4 reg', 'create_box      04 reg'), _tok(1, '04', '4')),
+    'young_spelling': (_rep('1.037e+09 1.037e+09', '1.037e9 1.037e9'), _tok(6, '1.037e9', '1.037e+09')),
+    'nu_spelling': (_rep('poissonsRatio peratomtype 0.25 0.25 0.30 0.30', 'poissonsRatio peratomtype 0.25 0.25 0.3 0.3'), _tok(8, '0.3', '0.30')),
+    'restitution_spelling': (lambda s: re.sub(r'(?m)^(fix m3 [^\n]*\n(?:    [^\n]*\n){4})', lambda m: m.group(1).replace('0.3', '0.30'), s),
+                             _tok(7, '0.30', '0.3')),
+    'ced_spelling': (lambda s: re.sub(r'(?m)^(fix mC [^\n]*\n(?:    [^\n]*\n){3}    [^\n]* )0$', r'\g<1>0.0', s), _tok(22, '0.0', '0')),
+    'charvel_spelling': (_rep('characteristicVelocity scalar 2.0', 'characteristicVelocity scalar 2'), _tok(6, '2', '2.0')),
+    'gravity_spelling': (_rep('gravity 9.81 vector', 'gravity 9.810 vector'), _tok(4, '9.810', '9.81')),
+    'gravity_vector_spelling': (_rep('vector 0.0 0.0 -1.0', 'vector 0 0 -1'), _tok(6, '0', '0.0')),
+    'stl_name': (_rep('file Drum.stl', 'file drum.stl'), _tok(5, 'drum.stl', 'Drum.stl')),
+    'mesh_type_spelling': (_rep('type 4 scale', 'type 04 scale', -1), _tok(7, '04', '4')),
+    'density_decimal': (_rep('density constant 4850 radius constant 0.0006813', 'density constant 4850.0 radius constant 0.0006813'),
+                        _tok(9, '4850.0', '4850')),
+    'pdd_fraction_spelling': (_rep('pt1 0.700000', 'pt1 0.7000000'), _tok(7, '0.7000000', '0.700000')),
+    'ins_hi_zlo': (lambda s: re.sub(r'(?m)^(region ins_hi block (?:\S+ ){4})\S+', r'\g<1>-0.00400000', s), _tok(7, '-0.00400000', '-0.00528143')),
+    'thermo_exp_spelling': (_rep('thermo 5000', 'thermo 5e3'), _tok(1, '5e3', '5000')),
+    'thermo_style_extra': (_rep('thermo_style custom step atoms ke c_rke vol', 'thermo_style custom step atoms ke c_rke vol press'),
+                           _tok(7, 'press', '(end)')),
+    'thermo_norm_yes': (_rep('thermo_modify lost ignore norm no', 'thermo_modify lost ignore norm yes'), _tok(4, 'yes', 'no')),
+    'communicate_multi': (_rep('communicate     single vel yes', 'communicate     multi vel yes'), _tok(1, 'multi', 'single')),
+    'atom_modify_hash': (_rep('atom_modify     map array sort 0 0', 'atom_modify     map hash sort 0 0'), _tok(2, 'hash', 'array')),
+    'restart_spelling': (lambda s: re.sub(r'(?m)^restart (\d+) ', r'restart 0\1 ', s), _tok(1, '0200000', '200000')),
+    'restart_files': (_rep('restart/a.bin restart/b.bin', 'restart/a.bin restart/a.bin'), _tok(3, 'restart/a.bin', 'restart/b.bin')),
+    'write_restart_path': (_rep('write_restart restart/settled.bin', 'write_restart restart/s.bin'), _tok(1, 'restart/s.bin', 'restart/settled.bin')),
+    'dump_every_spelling': (lambda s: re.sub(r'(?m)^(dump dmp all custom )(\d+)', r'\g<1>0\2', s), _tok(4, '032976', '32976')),
+    'dump_path': (_rep('post/mix_*.liggghts', 'post/x_*.liggghts'), _tok(5, 'post/x_*.liggghts', 'post/mix_*.liggghts')),
+    'dump_columns': (_rep('fx fy fz radius', 'fx fy fz'), _tok(17, '(end)', 'radius')),
+    'move_axis_spelling': (_rep('axis 1. 0. 0.', 'axis 1.0 0.0 0.0', -1), _tok(12, '1.0', '1.')),
+    'origin_spelling': (_rep('origin 0 0 0', 'origin 0.0 0 0', -1), _tok(8, '0.0', '0')),
+    'period_spelling': (_rep('period 0.782508', 'period 0.7825080', -1), _tok(16, '0.7825080', '0.782508')),
+    'fix_id_material': (_rep('fix m9 all property/global', 'fix m6 all property/global'), _tok(1, 'm6', 'm9')),
+    'fix_id_walls': (_rep('fix walls all wall/gran', 'fix wall all wall/gran'), _tok(1, 'wall', 'walls')),
+    'fix_id_integrator': (_rep('fix integrS all nve/sphere', 'fix integr all nve/sphere'), _tok(1, 'integr', 'integrS')),
+    'template_id': (lambda s: s.replace('fix pt1 ', 'fix ptA ').replace('pt1 0.700000', 'ptA 0.700000'), _tok(1, 'ptA', 'pt1')),
+    'region_id_rename': (lambda s: s.replace('region ins_reg ', 'region ins_cyl ').replace('region ins_reg particles_in_region',
+                                                                                          'region ins_cyl particles_in_region'),
+                         _tok(1, 'ins_cyl', 'ins_reg')),
+    'mesh_id_rename': (lambda s: s.replace('fix Front all mesh/surface', 'fix Fr all mesh/surface')
+                       .replace('meshes Drum Front Back', 'meshes Drum Fr Back').replace('mesh Front rotate', 'mesh Fr rotate'),
+                       _tok(1, 'Fr', 'Front')),
+    'dump_id_rename': (_rep('dump dmp all custom', 'dump d1 all custom'), _tok(1, 'd1', 'dmp')),
+    'pdd_entry_order': (_rep('pt1 0.700000 pt2 0.300000', 'pt2 0.300000 pt1 0.700000'), _tok(6, 'pt2', 'pt1')),
+    'template_order': (_swap('fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813',
+                             'fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028'),
+                       _tok(1, 'pt2', 'pt1')),
+    'global_order': (_swap('newton          off', 'communicate     single vel yes'), _tok(0, 'communicate', 'newton')),
+    'global_duplicate': (_rep('boundary        f f f\n', 'boundary        f f f\nboundary        f f f\n'), _tok(0, 'boundary', 'newton')),
+    'atom_modify_removed': (_rep('atom_modify     map array sort 0 0\n', ''), _tok(0, 'hard_particles', 'atom_modify')),
+    'thermo_style_removed': (_rep('thermo_style custom step atoms ke c_rke vol\n', ''), _tok(0, 'thermo', 'thermo_style')),
+    'compute_extra': (_rep('compute rke all erotate/sphere', 'compute rke all erotate/sphere\ncompute kx all ke'),
+                      _tok(0, 'compute', 'thermo_style')),
+    'shell_order': (_swap('shell mkdir post\n', 'shell mkdir restart\n'), _tok(2, 'restart', 'post')),
+    'baffle_mesh': (lambda s: (s.replace('fix Back  all mesh/surface file Back.stl  type 4 scale 0.0251665',
+                                         'fix Back  all mesh/surface file Back.stl  type 4 scale 0.0251665\n'
+                                         'fix Baffle all mesh/surface file Baffles.stl type 4 scale 0.0251665', 1)
+                               .replace('mesh n_meshes 3 meshes Drum Front Back', 'mesh n_meshes 4 meshes Drum Front Back Baffle', 1)
+                               .replace('fix mvB all move/mesh mesh Back  rotate origin 0 0 0 axis 1. 0. 0. period 0.782508',
+                                        'fix mvB all move/mesh mesh Back  rotate origin 0 0 0 axis 1. 0. 0. period 0.782508\n'
+                                        'fix mvBf all move/mesh mesh Baffle rotate origin 0 0 0 axis 1. 0. 0. period 0.782508', 1)),
+                    _tok(1, 'Baffle', 'walls')),
+    'neighbor_garbage_skin': (lambda s: re.sub(r'(?m)^(neighbor\s+)\S+ bin$', r'\g<1>7.57e-05x bin', s), 'neighbor skin'),
+}
+#: MXD2R-04 문자 꼴 — 우리 파서와 LIGGGHTS 가 다른 토큰을 읽을 수 있거나 (주석 끝 '&' + 유니코드 공백 · 주석 안 NUL · 따옴표 · $) 같은 토큰을
+#:   다른 글자로 쓴 꼴 (탭 · NBSP · 전각 공백 · 폭 없는 공백 · 이음 꼴 · 끝 줄바꿈).  고치기 전 세 소비자 PASS.
+MXD2R04_PARSER = {
+    'tab_separator': (_rep('boundary        f f f', 'boundary\tf f f'), _CTRL),
+    'nbsp_separator': (_rep('boundary        f f f', 'boundary        f f f'), _ASCII),
+    'ideographic_space': (_rep('newton          off', 'newton　off'), _ASCII),
+    'zero_width_space': (_rep('boundary        f f f', 'boundary        f f f​'), _ASCII),
+    'nul_in_comment_before_rotation': (_rep('# ② 회전', '# ②\u0000 회전'), _CTRL),
+    'comment_continuation_nbsp': (_rep('neigh_modify    delay 0\n', 'neigh_modify    delay 0\n# note & \nneigh_modify exclude type 3 3\n'),
+                                  _CONT),
+    'comment_continuation_ideographic': (_rep('neigh_modify    delay 0\n',
+                                              'neigh_modify    delay 0\n# note &　\nneigh_modify exclude type 3 3\n'), _CONT),
+    'comment_continuation_nel': (_rep('neigh_modify    delay 0\n', 'neigh_modify    delay 0\n# note &\u0085\nneigh_modify exclude type 3 3\n'),
+                                 _CTRL),
+    'continuation_no_space': (_rep('coefficientFriction peratomtypepair 4 &', 'coefficientFriction peratomtypepair 4&'), _CONT),
+    'continuation_trailing_space': (_rep('coefficientFriction peratomtypepair 4 &', 'coefficientFriction peratomtypepair 4 & '), _CONT),
+    'dollar_variable': (_rep('thermo 5000', 'thermo ${every}'), _ASCII),
+    'missing_final_newline': (lambda s: s[:-1], _EOL),
+    'dump_modify_quoted_format': (_rep('\n# ① 채우고 정착', '\ndump_modify dmp format "%d %d %g %g %g %g %g %g %g %g %g %g"\n# ① 채우고 정착'),
+                                  _ASCII),
+}
+#: 실제 파일 바이트로도 보는 문자 꼴 (CLI 셋)
+MXD2R04_PARSER_CLI = ('tab_separator', 'nul_in_comment_before_rotation', 'comment_continuation_nbsp', 'missing_final_newline')
 
 
 def _write_case(folder, old, new, old_meta, new_meta):
@@ -497,6 +639,85 @@ class D2Consumers(unittest.TestCase):
                 self.assertEqual(list(result['expected_counts'].values()), [round(90007 * x / sum(nr)) for x in nr])
                 seen += 1
         self.assertEqual(seen, 48)
+
+    # ── MXD2R-04 (11-03 사전 공격 · 1저자 11-03 Q1 = 권고대로 — 공통 변조 17 도 생성기 꼴로) — 반례를 고치기 전에 옮겼다 ──────────────
+    def test_mxd2r04_outside_scope_17_api_and_cli(self):
+        """MXD2R-04 — 사전 공격이 보고한 범위 밖 공통 변조 17 (전역 설정 · 템플릿 뒤 옵션 · 따옴표 # · RNG 시드 · 기하 · 출력 · 체크포인트):
+        API 셋 FAIL · CLI 셋 rc 1 · 사유 = 첫 어긋난 토큰 ↔ 생성기 토큰 (따옴표 = 문자 꼴)."""
+        self.assertEqual(len(MXD2R04_OUTSIDE_17), 17)
+        for name, (transform, reason) in MXD2R04_OUTSIDE_17.items():
+            with self.subTest(case=name):
+                self._common_mode(transform, reason, cli=True)
+
+    def test_mxd2r04_same_class_spelling_identity_order(self):
+        """MXD2R-04 같은 부류 — 같은 값 다른 표기 · 생성기 이름 · 순서 · 중복 · 결손 · 배플 · 출력 · 체크포인트 · skin 토큰 꼴 (API 셋)."""
+        for name, (transform, reason) in MXD2R04_SAME_CLASS.items():
+            with self.subTest(case=name):
+                self._common_mode(transform, reason)
+
+    def test_mxd2r04_parser_equivalence_characters(self):
+        """MXD2R-04 문자 꼴 — 탭 · NBSP · 전각 · 폭 없는 공백 · 주석 안 NUL · 주석 끝 '&'+유니코드 공백 · 이음 꼴 · $ · 따옴표 · 끝 줄바꿈
+        (API 셋 · 넷은 실제 파일 바이트로 CLI 셋)."""
+        for name, (transform, reason) in MXD2R04_PARSER.items():
+            with self.subTest(case=name):
+                self._common_mode(transform, reason, cli=name in MXD2R04_PARSER_CLI)
+
+    def test_mxd2r04_timestep_spelling_with_metadata(self):
+        """같은 값 다른 timestep 표기를 메타 deck_txt 에도 같이 넣은 덱 (k = 1 · 2 · 3) — 메타 결합만으로는 못 잡는다 → 생성기 표기로 거부."""
+        for factor in (1., .5, 1 / 3):
+            with self.subTest(dt_factor=factor):
+                a, am, _ = fixture(dt_factor=factor); b, bm, _ = fixture(coated=True, dt_factor=factor)
+                old = re.search(r'(?m)^timestep\s+(\S+)$', a).group(1)
+                mantissa, exponent = old.split('e')
+                new = mantissa + ('0' if '.' in mantissa else '.0') + 'e' + exponent
+                self.assertEqual(float(new), float(old)); self.assertNotEqual(new, old)
+                aa, bb = (x.replace('timestep        ' + old + '\n', 'timestep        ' + new + '\n') for x in (a, b))
+                self.assertNotEqual(aa, a)
+                ma, mb = rebound(aa, am), rebound(bb, bm)
+                for meta in (ma, mb):
+                    meta['dt']['deck_txt'] = new
+                for key, result in {'readback': rb.read_d2(aa, ma), 'pair': dd.diff_d2_decks(aa, bb, ma, mb),
+                                    'plan': smoke.d2_plan_check(aa, ma)}.items():
+                    with self.subTest(api=key):
+                        self.assert_fail(result)
+                        self.assertTrue(any(_tok(1, new, old) in f for f in result['failures']), result['failures'])
+
+    def test_mxd2r04_positive_generator_options(self):
+        """양성 보존 — 생성기 꼴 엄격이 생성기 출력 (전 정밀도 덤프 · dt/3 · 다른 Froude · 다른 소수 시드 · 균일 · 층상 · 2 · 3 상) 을 받는다."""
+        options = [dict(dump_full_precision=True), dict(dump_full_precision=True, layered=False, phases=('AM_P', 'SE')),
+                   dict(dt_factor=1 / 3), dict(dt_factor=.25, layered=False), dict(fr=.06), dict(fr=.085, phases=('AM_P', 'SE')),
+                   dict(seed=91648301), dict(seed=15485863, layered=False), dict(n=8000, cgf=302.8, generation='gen1'),
+                   dict(stiff=1., rho=10., n=100001, cgf=75.7)]
+        for kw in options:
+            with self.subTest(**{k: str(v) for k, v in kw.items()}):
+                a, am, _ = fixture(**kw); b, bm, _ = fixture(coated=True, **kw)
+                for r in (rb.read_d2(a, am), dd.diff_d2_decks(a, b, am, bm), smoke.d2_plan_check(a, am),
+                          rb.read_d2(a.encode('utf-8'), am)):
+                    self.assert_pass(r)
+
+    def test_mxd2r04_copies_match_generator(self):
+        """MXD2R-04 사본 ↔ 생성기 — 전역 설정 줄 · 드럼 기본값 · 분포 시드 · 소수 규칙 · dump 열 · 전 정밀도 형식 · 템플릿 시드 · 시드 상한."""
+        text, _, _ = fixture()
+        commands = [t for _, t in rb.read_deck(text)['cmds']]
+        self.assertEqual([tuple(t) for t in commands[:7]], list(rb.D2_GLOBAL_FORM))
+        params = inspect.signature(gen.plan).parameters
+        self.assertEqual(rb.D2_DRUM, dict(fill=params['fill'].default, pack=params['pack'].default,
+                                          r_over_l=params['drum_r_over_l'].default))
+        self.assertEqual(rb.D2_DIST_SEED, (32452867, gen._next_prime(32452867 + 2)))
+        self.assertIn('fix pddA all particledistribution/discrete 32452867 2 &', text)
+        for n in (0, 1, 2, 3, 4, 24, 32452843, 32452845, 32452869, 49979688, 2 ** 31 - 2):
+            self.assertEqual(rb._d2_next_prime(n), gen._next_prime(n), n)
+        old = gen.TYPES
+        try:
+            for phases in (('AM_P', 'AM_S', 'SE'), ('AM_P', 'SE')):
+                gen.set_phases(phases)
+                self.assertEqual(rb.D2_DUMP_COLUMNS, gen.dump_columns())
+                self.assertEqual(rb.D2_DUMP_FORMAT, gen.dump_modify_format(gen.dump_columns()))
+        finally:
+            gen.set_phases(old)
+        self.assertEqual({p: s for s, p in rb.REG_TPL_SEED.items()}, {p: gen.TPL_SEED[p] for p in ('AM_P', 'AM_S', 'SE')})
+        self.assertEqual(rb.D2_MESHES, ('Drum', 'Front', 'Back'))
+        self.assertEqual(rb.D2_SEED_MAX, 2 ** 31 - 1)
 
 
 if __name__ == '__main__':
