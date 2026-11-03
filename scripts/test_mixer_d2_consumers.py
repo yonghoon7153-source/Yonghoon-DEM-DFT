@@ -249,7 +249,8 @@ MXD2R04_SAME_CLASS = {
                                         'fix mvB all move/mesh mesh Back  rotate origin 0 0 0 axis 1. 0. 0. period 0.782508\n'
                                         'fix mvBf all move/mesh mesh Baffle rotate origin 0 0 0 axis 1. 0. 0. period 0.782508', 1)),
                     _tok(1, 'Baffle', 'walls')),
-    'neighbor_garbage_skin': (lambda s: re.sub(r'(?m)^(neighbor\s+)\S+ bin$', r'\g<1>7.57e-05x bin', s), 'neighbor skin'),
+    # 11-03 밤 Q4 — skin 자유 칸을 없앴다: 사유가 'neighbor skin: ASCII …' (자유 칸 수 검사) → 생성기 토큰 대조로 바뀐다 (거부는 전과 같음)
+    'neighbor_garbage_skin': (lambda s: re.sub(r'(?m)^(neighbor\s+)\S+ bin$', r'\g<1>7.57e-05x bin', s), _tok(1, '7.57e-05x', '7.57e-05')),
     # 사전 공격 변이 M30 생존 (11-03) — 마지막 run 뒤에 붙인 명령은 차례 대조 (zip) 가 못 본다 → 개수 대조를 시험에 묶는다
     'command_appended_at_end': (lambda s: s + 'compute kx all ke\n', 'command count'),
 }
@@ -315,6 +316,19 @@ def _steps_edit(fill_delta=0, dump_new=None, restart_new=None):
     return deck, meta_edit
 #: 실제 파일 바이트로도 보는 문자 꼴 (CLI 셋)
 MXD2R04_PARSER_CLI = ('tab_separator', 'nul_in_comment_before_rotation', 'comment_continuation_nbsp', 'missing_final_newline')
+#: MXD2R-04 범위 넓힘 (1저자 11-03 밤 Q4 = 권고대로) — neighbor skin 도 생성기 꼴 (min(지름)·0.5 의 .6g = 7.57e-05 @ CGF 151.4).
+#:   두 덱에 같이 바꾼 skin (값 · 같은 값 다른 표기) — 고치기 전 (skin = 자유 칸이던 MXD2R-04 첫 판) 세 소비자 PASS = 남은 같은 부류였다.
+MXD2R04_SKIN = {
+    'skin_x1p1_repr': (_rep('neighbor        7.57e-05 bin', 'neighbor        8.327000000000001e-05 bin'),
+                       _tok(1, '8.327000000000001e-05', '7.57e-05')),
+    'skin_x1p1_g6': (_rep('neighbor        7.57e-05 bin', 'neighbor        8.327e-05 bin'), _tok(1, '8.327e-05', '7.57e-05')),
+    'skin_doubled': (_rep('neighbor        7.57e-05 bin', 'neighbor        0.0001514 bin'), _tok(1, '0.0001514', '7.57e-05')),
+    'skin_am_radius': (_rep('neighbor        7.57e-05 bin', 'neighbor        0.0006813 bin'), _tok(1, '0.0006813', '7.57e-05')),
+    'skin_tiny': (_rep('neighbor        7.57e-05 bin', 'neighbor        1e-09 bin'), _tok(1, '1e-09', '7.57e-05')),
+    'skin_same_value_decimal': (_rep('neighbor        7.57e-05 bin', 'neighbor        0.0000757 bin'), _tok(1, '0.0000757', '7.57e-05')),
+    'skin_same_value_padded': (_rep('neighbor        7.57e-05 bin', 'neighbor        7.570e-05 bin'), _tok(1, '7.570e-05', '7.57e-05')),
+}
+MXD2R04_SKIN_CLI = ('skin_x1p1_repr', 'skin_same_value_decimal')
 
 
 def _write_case(folder, old, new, old_meta, new_meta):
@@ -493,7 +507,13 @@ class D2Consumers(unittest.TestCase):
         i=next(i for i,line in enumerate(lines) if line.startswith('neighbor'))
         tokens=lines[i].split();tokens[1]=str(float(tokens[1])*1.1);lines[i]=' '.join(tokens)
         changed='\n'.join(lines)+'\n'
-        self.assert_pass(rb.read_d2(changed,rebound(changed,other[1])))
+        # ★ 기대 바꿈 (MXD2R-04 범위 넓힘 · 1저자 11-03 밤 Q4 = 권고대로 · 이유 = (가) 원리 (생성기 자신의 꼴만) · 같은 부류 예외 제거):
+        #   옛 기대 = 한쪽 덱의 neighbor skin ×1.1 → 단일 덱 readback PASS (skin = 단일 덱 계약 밖 · 짝 대조만 FAIL) — 그래서 두 덱에 같이
+        #   바꾼 skin 은 세 소비자 PASS 였다 (남은 같은 부류).  새 기대 = 단일 덱도 FAIL (skin = 생성기 값 min(지름)·0.5 의 .6g) · 짝도 FAIL.
+        #   증거 docs/reviews/mxd2r_fix_evidence_20261103/mxd2r04/README.md §9 (옛 기대 → 새 기대 표).
+        single = rb.read_d2(changed,rebound(changed,other[1]))
+        self.assert_fail(single)
+        self.assertTrue(any(_tok(1, tokens[1], '7.57e-05') in f for f in single['failures']), single['failures'])
         self.assert_fail(dd.diff_d2_decks(text,changed,meta,rebound(changed,other[1])))
 
     def test_command_lifecycle(self):
@@ -722,6 +742,13 @@ class D2Consumers(unittest.TestCase):
                     with self.subTest(api=key):
                         self.assert_fail(result)
                         self.assertTrue(any(_tok(1, new, old) in f for f in result['failures']), result['failures'])
+
+    def test_mxd2r04_neighbor_skin_generator_form(self):
+        """MXD2R-04 범위 넓힘 (1저자 11-03 밤 Q4) — 두 덱에 같이 바꾼 neighbor skin (×1.1 · ×2 · AM 반지름 · 1e-9 · 같은 값 다른 표기):
+        API 셋 FAIL · 둘은 CLI 셋 rc 1 · 사유 = 생성기 skin 토큰 (min(지름)·0.5 · .6g).  다른 CGF 의 생성기 skin 은 기존 양성 시험이 지킨다."""
+        for name, (transform, reason) in MXD2R04_SKIN.items():
+            with self.subTest(case=name):
+                self._common_mode(transform, reason, cli=name in MXD2R04_SKIN_CLI)
 
     def test_mxd2r04_metadata_coordinated_rules(self):
         """MXD2R-04 — 메타까지 같이 바꾼 덱 (해시 재결합 + 메타가 덱과 같은 말 → 메타 결합으로는 못 잡는다): 합성수 시드 · 2^31−1 넘는 소수
