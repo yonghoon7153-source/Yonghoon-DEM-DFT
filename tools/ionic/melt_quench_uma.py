@@ -39,6 +39,8 @@
   python3 tools/ionic/melt_quench_uma.py --melt_window_check <run_dir>   # li2s-2 녹음 판정 (창 안 원점 · 0 통과 · 2 미충족 · 3 미완 · 4 무효)
   python3 tools/ionic/melt_quench_uma.py --stage1_verdict <run_dir> …    # li2s-2 1 단계 시드 판정 (카드 필드 직접 · stage1_verdict.json)
   python3 tools/ionic/melt_quench_uma.py --stage1_summary <out_root>     # li2s-2 1 단계 묶음 판정 · 2 단계 시드 (stage1_summary.json)
+    ⭐ 회신 DG (2026-11-03): 시드 판정에 원자료 · 카드 값 · 도구 지문 · 최종 구조 대조 · 첫 시드 녹음 미충족 = closes_system ·
+       묶음은 지문을 다시 재고 선언된 시드 전부 판정 끝 · 비용 장부 상한 · 카드 값 검사 (validate_li2s2_values)
   python3 tools/ionic/melt_quench_uma.py --selftest
 
 ⚠ final.xyz 는 **relax 본**이다 (④ · plan.json 게이트_입력.final_relax). 담금질 원시는 traj.xyz 마지막 프레임뿐이고,
@@ -53,7 +55,7 @@
      압축 **뒤** 반쪽 창 [melt_ps/2, melt_ps] 에서 골격 확산을 본다) · 옵션을 안 주면 옛 NPT 경로와 바이트까지 같은 동작이다.
 """
 from __future__ import annotations
-import argparse, json, math, os, pathlib, re, sys, time
+import argparse, hashlib, json, math, os, pathlib, re, sys, time
 import numpy as np
 
 MASS = {"Li": 6.94, "P": 30.974, "S": 32.06, "Cl": 35.45}
@@ -104,6 +106,14 @@ def scale_to_density(atoms, rho_g_cm3):
 FINAL_RELAX = {"kind": "FIRE", "fmax_eV_A": 0.05, "cell": "fixed",
                "⛔": "밀도는 **마지막 NPT 셀**의 값이고 구조 지표는 그 셀을 고정한 완화 구조의 값이다 "
                      "(개정 ③ — '300 K 평형 유리의 평균값' 이 아니다)."}
+FINAL_RELAX_NVT = {"kind": "FIRE", "fmax_eV_A": 0.05, "cell": "fixed",
+                   "⛔": "밀도는 **고정 밀도 셀** (NVT · 카드 목표 ρ) 의 값이고 구조 지표는 그 셀을 고정한 완화 구조의 값이다 "
+                         "('300 K 평형 유리의 평균값' 이 아니다 · 회신 DG P2 — NVT plan 에 'NPT 셀' 이라 적던 것)."}
+
+
+def final_relax_decl(fix_density=None):
+    """plan.json 게이트_입력.final_relax — 앙상블에 맞는 설명 (FIRE 설정은 같다)."""
+    return FINAL_RELAX if fix_density is None else FINAL_RELAX_NVT
 BAND_CARD = "db/properties/lpscl_li2s_layer1_amendment_2026_09_12.json"
 BAND_PATH = ("1_바꾸는_것", "⑤_밴드_산수_정정")   # → 중심 · 밴드_±15%
 P_TOL_GPA = 0.10        # --gate_check: |⟨P⟩| 허용 (npt_control 의 --control_p_tol 과 같은 눈금)
@@ -497,22 +507,146 @@ def melt_check(run_dir, *, d_melt_cm2s=1e-6, log=print):
     return out
 
 
-# ───────────────────────── li2s-2 (카드 lpscl_glass_dense_window) — 회신 DF P0 · P1-2 · P1-3 ─────────────────────────
+# ───────────────────────── li2s-2 (카드 lpscl_glass_dense_window) — 회신 DF P0 · P1-2 · P1-3 · 회신 DG P1-4 · P1-5 · P1-7 ─────────────────────────
 #: ⛔ 2026-11-03 회신 DF P0 — 옛 `melt_check` 는 0 ps 부터 **누적한** 변위로 MSD 를 만들고 회귀 점만 [melt/2, melt] 로 잘랐다.
 #:   그래서 압축 · 초기 재배열 때 생긴 변위와 뒤 변위의 교차항이 판정에 남는다 (창 좌표가 같아도 이력만 달라 21 배 · 70 ps 에서
 #:   끊긴 궤적도 '창 [50, 100]' 으로 기록). 아래 `melt_window_check` 는 **창 안 프레임만** 읽고 **창 안 시간원점만** 쓴다.
 #:   문턱 (1e-6 cm²/s) 은 옛 진단값을 승계한다 — 그 승계는 카드 · 결정에 결과 전에 적었다. 옛 진단 결과는 덮지 않는다.
+#: ⛔ 2026-11-03 회신 DG — 판정이 원자료에 안 묶여 있었다: final.xyz 에 5 원자 PS₄ 를 넣어도 통과 · 판정 파일만 남은 폴더도
+#:   통과 · 다섯째 시드가 미완이어도 묶음 통과 · 녹음 상태 'unknown' 통과 · plan 밀도 NaN 통과 · 소프트웨어 반쪽 기록 통과 ·
+#:   virial 열을 지워도 '압력 기록' · 카드 estimator 이름을 바꿔도 window_mto_v1 실행 · 0 번 프레임의 종 배치만 바꿔도 판정이 바뀜.
+#:   아래는 그 구멍을 막는다: 카드 값 검사 (`validate_li2s2_values`) · 비교 전 유한성 (`_same`) · 프레임 종 일치 · 최종 구조 대조
+#:   (`final_structure_check`) · 판정에 원자료 지문 (`run_provenance`) · 묶음은 지문을 다시 재고 선언된 시드 **전부** 판정 끝 ·
+#:   첫 시드 녹음 미충족은 **그 계를 닫는 사건** (`closes_system`) 으로 판정 파일에 남긴다 (일반 시드 탈락과 가른다 · DG P0-1) ·
+#:   비용 장부의 합이 상한을 넘으면 통과로 올리지 않는다 (DG P0-3 의 소비자 쪽).
 LI2S2_CARD = "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json"
 MELT_WINDOW_ESTIMATOR = "window_mto_v1"
 STAGE1_RC = {"pass": 0, "fail": 2, "incomplete": 3, "invalid": 4}
+SUMMARY_RC = {"stage1_pass": 0, "stop_track": 2, "pending": 3, "invalid": 4, "cap_incomplete": 5}
+LI2S2_STATUSES = ("pass", "fail", "incomplete", "invalid")
+DENSITY_REL_TOL = 1e-4          # 고정 밀도 대조 (gate_check NVT · 최종 구조) — 한 곳에서만 정한다
+PROVENANCE_FILES = ("plan.json", "thermo.csv", "traj.xyz", "final.xyz", "result.json")
+LEDGER_NAME = "stage1_ledger.json"   # li2s2_stage1_runner.py 가 쓰는 비용 장부 — stage1_summary 가 상한을 여기서 다시 잰다
+
+
+def _fin(x):
+    """유한한 수인가 — None · NaN · inf · 문자열 · bool 은 아니다."""
+    if isinstance(x, bool):
+        return False
+    try:
+        return x is not None and math.isfinite(float(x))
+    except (TypeError, ValueError):
+        return False
+
+
+def _same(a, b, rel=1e-9, abs_=0.0):
+    """둘 다 유한하고 |a − b| ≤ max(abs_, rel·max(1, |b|)) — NaN · None 은 '다르다' (회신 DG P1-7: NaN 이 비교를 빠져나가던 것)."""
+    if not (_fin(a) and _fin(b)):
+        return False
+    a, b = float(a), float(b)
+    return abs(a - b) <= max(float(abs_), float(rel) * max(1.0, abs(b)))
+
+
+def _sha256_file(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def values_sha16(v):
+    """카드 기계_판독_값의 지문 — 판정이 **어느 카드 값으로** 났는지 묶는다."""
+    return hashlib.sha256(json.dumps(v, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()[:16]
+
+
+def driver_sha16():
+    return _sha256_file(__file__)[:16]
+
+
+def run_provenance(run):
+    """판정이 기댄 원자료의 지문 (회신 DG P1-4) — 없으면 None 으로 적는다 ('없음' 도 지문이다)."""
+    run = pathlib.Path(run)
+    return {f: (_sha256_file(run / f) if (run / f).is_file() else None) for f in PROVENANCE_FILES}
+
+
+def validate_li2s2_values(v):
+    """카드 `기계_판독_값` 검사 — 문제 목록 (빈 목록이면 통과). 이 도구가 구현하지 않은 판독량 · 비유한 값 · 꼴 오류를 거부한다."""
+    bad = []
+    try:
+        mw = v["melt_window"]
+        if mw.get("estimator") != MELT_WINDOW_ESTIMATOR:
+            bad.append(f"melt_window.estimator {mw.get('estimator')!r} ≠ 이 도구가 구현한 {MELT_WINDOW_ESTIMATOR!r}")
+        a_, b_ = mw["t_from_frac_of_melt"], mw["t_to_frac_of_melt"]
+        if not (_fin(a_) and _fin(b_) and 0.0 <= float(a_) < float(b_) <= 1.0):
+            bad.append(f"melt_window 창 비율 [{a_!r}, {b_!r}]")
+        lo, hi = mw["lag_fit_ps"]
+        if not (_fin(lo) and _fin(hi) and 0.0 < float(lo) < float(hi)):
+            bad.append(f"melt_window.lag_fit_ps [{lo!r}, {hi!r}]")
+        if not (_fin(mw["D_threshold_cm2_s"]) and float(mw["D_threshold_cm2_s"]) > 0):
+            bad.append(f"melt_window.D_threshold_cm2_s {mw['D_threshold_cm2_s']!r}")
+        if not isinstance(mw.get("element"), str) or mw["element"] not in MASS:
+            bad.append(f"melt_window.element {mw.get('element')!r}")
+        sched = v["schedule"]
+        for k in ("T_melt_K", "T_final_K", "melt_ps", "quench_rate_K_s", "hold_ps", "dt_fs", "save_ps", "compress_ps", "n_atoms"):
+            if not (_fin(sched.get(k)) and float(sched[k]) > 0):
+                bad.append(f"schedule.{k} {sched.get(k)!r}")
+        if all(_fin(sched.get(k)) for k in ("compress_ps", "melt_ps")) and float(sched["compress_ps"]) > float(sched["melt_ps"]) / 2 + 1e-9:
+            bad.append("schedule.compress_ps > melt_ps/2 (판정 창과 겹친다)")
+        comp = v.get("composition")
+        for s_ in ("A", "B"):
+            rho = (v.get("fix_density_g_cm3") or {}).get(s_)
+            if not (_fin(rho) and float(rho) > 0):
+                bad.append(f"fix_density_g_cm3.{s_} {rho!r}")
+            c = (comp or {}).get(s_)
+            if (not isinstance(c, dict) or not c or any(e not in MASS or isinstance(n, bool) or not isinstance(n, int) or n <= 0
+                                                       for e, n in c.items())
+                    or not _fin(sched.get("n_atoms")) or sum(c.values()) != int(sched["n_atoms"])):
+                bad.append(f"composition.{s_} {c!r} (원소 · 양의 정수 · 합 = n_atoms)")
+        if not isinstance(v.get("uma_inference_mode"), str):
+            bad.append(f"uma_inference_mode {v.get('uma_inference_mode')!r}")
+        req = v.get("software_required")
+        if (not isinstance(req, dict) or not all(isinstance(req.get(k), str) and req.get(k) for k in ("model", "task"))
+                or not isinstance(req.get("versions_present"), list) or not req["versions_present"]):
+            bad.append(f"software_required {req!r} (model · task · versions_present)")
+        cols = v.get("thermo_required_columns")
+        if not isinstance(cols, list) or not {"t_ps", "T_set_K", "density_g_cm3", "P_GPa", "P_virial_GPa"} <= set(cols):
+            bad.append(f"thermo_required_columns {cols!r} (t_ps · T_set_K · density_g_cm3 · P_GPa · P_virial_GPa 포함)")
+        sg = v["seed_gate"]
+        if sg.get("version") not in ("relaxed", "raw") or not _fin(sg.get("PS4_fraction_min")) or not _fin(sg.get("min_pair_excl_PS_A_gt")):
+            bad.append(f"seed_gate {sg!r}")
+        if not (_fin(v["gate_check"].get("win_ps")) and float(v["gate_check"]["win_ps"]) > 0):
+            bad.append(f"gate_check.win_ps {v['gate_check'].get('win_ps')!r}")
+        seeds = v["seeds"]
+        if (not isinstance(seeds, list) or not seeds or any(isinstance(x, bool) or not isinstance(x, int) for x in seeds)
+                or len(set(seeds)) != len(seeds) or seeds != sorted(seeds)):
+            bad.append(f"seeds {seeds!r} (서로 다른 정수 · 오름차순)")
+        need = v["stage1_need_pass"]
+        if isinstance(need, bool) or not isinstance(need, int) or not (1 <= need <= len(seeds or [])):
+            bad.append(f"stage1_need_pass {need!r}")
+        if not isinstance(seeds, list) or not seeds or v.get("first_seed") != seeds[0]:
+            bad.append(f"first_seed {v.get('first_seed')!r} ≠ seeds[0] — 첫 시드 녹음 판정의 '첫' 을 카드가 정한다")
+        m = v["stage2_machines"]
+        if not isinstance(m, list) or len(m) < 2 or not all(isinstance(x, str) and x for x in m):
+            bad.append(f"stage2_machines {m!r}")
+        cap = v.get("stage1_cap_gpu_h")
+        if not (_fin(cap) and float(cap) > 0):
+            bad.append(f"stage1_cap_gpu_h {cap!r}")
+    except (KeyError, TypeError, ValueError, AttributeError) as e:
+        bad.append(f"꼴 오류 {type(e).__name__}: {e}")
+    return bad
 
 
 def read_li2s2_values(card=LI2S2_CARD):
-    """li2s-2 카드의 `기계_판독_값` — 이 도구는 그 카드의 문턱 · 일정 · 목표 밀도를 **자체 보관하지 않는다**."""
+    """li2s-2 카드의 `기계_판독_값` — 이 도구는 그 카드의 문턱 · 일정 · 목표 밀도를 **자체 보관하지 않는다**.
+    값이 이 도구가 구현한 것과 안 맞으면 (estimator 이름 · 비유한 값 · 빠진 필드) **읽기에서 죽는다** (회신 DG P1-7)."""
     d = json.loads(pathlib.Path(card).read_text(encoding="utf-8"))
     v = d.get("기계_판독_값")
     if not v:
         raise KeyError(f"{card} 에 '기계_판독_값' 이 없다 — 카드 없이 판정하지 않는다")
+    bad = validate_li2s2_values(v)
+    if bad:
+        raise ValueError(f"{card} 기계_판독_값 거부 — " + " · ".join(bad))
     return v
 
 
@@ -559,43 +693,86 @@ def window_mto_msd(sym, pos, cells, lags):
     return out
 
 
+def _species_check(frames, plan, values):
+    """프레임마다 원자 수 · 종 순서가 같고, plan · 카드 조성과 맞는가 (회신 DG P1-7: 종을 frames[0] 에서만 가져오던 것).
+    문제 목록을 돌려준다 — 이런 파일은 다른 물리 판정을 내릴 것이 아니라 **무효**다."""
+    why = []
+    if not frames:
+        return why
+    syms = [tuple(f.get_chemical_symbols()) for f in frames]
+    if len(set(syms)) > 1:
+        i = next(k for k, x in enumerate(syms) if x != syms[0])
+        why.append(f"프레임마다 원자 수 · 종 순서가 다르다 (프레임 0 대 {i})")
+    s0 = syms[0]
+    comp = {e: s0.count(e) for e in sorted(set(s0))}
+    if plan.get("n_atoms") is not None and len(s0) != plan.get("n_atoms"):
+        why.append(f"traj 원자 수 {len(s0)} ≠ plan {plan.get('n_atoms')}")
+    if plan.get("composition") is not None and comp != plan["composition"]:
+        why.append(f"traj 조성 {comp} ≠ plan {plan['composition']}")
+    if "composition" in values:
+        want = (values.get("composition") or {}).get(plan.get("system"))
+        if want is None or comp != want:
+            why.append(f"traj 조성 {comp} ≠ 카드 {plan.get('system')} {want}")
+    return why
+
+
 def melt_window_check(run_dir, *, values=None, card=LI2S2_CARD, log=print):
     """⭐ li2s-2 녹음 판정 — 압축 **뒤** 창 [melt_ps·a, melt_ps·b] 안 프레임 · 창 안 시간원점만 쓰는 P 골격 D (회신 DF P0).
 
-    verdict: pass (D_P > 문턱) · fail · incomplete (창 전체가 없다 · 쓰는 중) · invalid (압축이 창과 겹침 · 좌표가 유한하지 않음).
+    verdict: pass (D_P > 문턱) · fail · incomplete (plan · traj 가 아직 없다 · 창 전체가 없다 · 쓰는 중) ·
+             invalid (카드 estimator ≠ 구현 · 고정 밀도 plan 아님 · 압축이 창과 겹침 · 좌표 비유한 · 프레임 종 · 원자 수 불일치).
     ⛔ 못 하는 것: 'pass' 는 '이 밀도 · 온도 · 시간에서 사전 정의한 P 골격 이동 기준을 충족했다' 까지다 — 평형 액체의 인증이
-       아니다. 'fail' 은 '1200 K 에서 액체가 없다' 가 아니다 (회신 DF Q-DF-3 문구). 결정화 · 구조는 안 본다."""
+       아니다. 'fail' 은 '1200 K 에서 액체가 없다' 가 아니다 (회신 DF Q-DF-3 문구). 결정화 · 구조는 안 본다.
+       겹치는 시간원점들은 독립 표본이 아니다 (회신 DG ①) — D 는 운영 판독량이지 오차막대가 붙은 측정이 아니다."""
     v = values if values is not None else read_li2s2_values(card)
     mw = v["melt_window"]
     run = pathlib.Path(run_dir)
-    plan = json.loads((run / "plan.json").read_text(encoding="utf-8"))
-    melt_ps, save_ps = float(plan["melt_ps"]), float(plan["save_ps"])
-    t_from, t_to = float(mw["t_from_frac_of_melt"]) * melt_ps, float(mw["t_to_frac_of_melt"]) * melt_ps
-    lag_lo, lag_hi = (float(x) for x in mw["lag_fit_ps"])
-    comp = float(plan.get("compress_ps") or 0.0) if plan.get("fix_density_g_cm3") is not None else 0.0
-    thr, el = float(mw["D_threshold_cm2_s"]), str(mw["element"])
-    out = {"kind": "melt_window_check", "estimator": MELT_WINDOW_ESTIMATOR, "run": str(run),
+    out = {"kind": "melt_window_check", "estimator": MELT_WINDOW_ESTIMATOR, "estimator_card": mw.get("estimator"), "run": str(run),
            "estimator_def": "창 안 프레임만 · 창 안 시간원점 (다중 원점) · 창 첫 프레임 기준 unwrap · 전체 병진 제거 · "
                             "지연 [lag_fit] 자유절편 선형맞춤 MSD = 6Dτ + c",
-           "window_declared_ps": [t_from, t_to], "lag_fit_ps": [lag_lo, lag_hi], "compress_end_ps": comp,
-           "element": el, "D_threshold_cm2_s": thr, "threshold_source": mw.get("threshold_source"),
-           "overlap_ok": comp <= t_from + 1e-9, "coverage_ok": None, "finite_ok": None, "window_used_ps": None,
+           "overlap_ok": None, "coverage_ok": None, "finite_ok": None, "species_ok": None, "window_used_ps": None,
            "per_element": {}, "D_framework_cm2_s": None}
     def done(verdict, msg):
         out["verdict"] = verdict; out["message"] = msg; log(f"  [melt_window] {verdict} — {msg}"); return out
+    if mw.get("estimator") != MELT_WINDOW_ESTIMATOR:     # 회신 DG P1-7 — 카드가 다른 판독량을 부르면 이 이름으로 돌리지 않는다
+        return done("invalid", f"카드 estimator {mw.get('estimator')!r} ≠ 이 도구가 구현한 {MELT_WINDOW_ESTIMATOR!r}")
+    try:                                                  # 회신 DG P0-2 — 담금질 시작 직후에는 plan.json 이 아직 없다
+        plan = json.loads((run / "plan.json").read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return done("incomplete", "plan.json 이 아직 없다 (담금질 시작 직후) — 기다린다")
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        return done("incomplete", f"plan.json 을 아직 못 읽는다 ({type(e).__name__} · 쓰는 중일 수 있다) — 기다린다")
+    if plan.get("fix_density_g_cm3") is None:
+        return done("invalid", "고정 밀도 plan 이 아니다 (fix_density_g_cm3 없음) — 이 판독량은 li2s-2 고정 밀도 런 전용")
+    if not (_fin(plan.get("melt_ps")) and _fin(plan.get("save_ps")) and float(plan["save_ps"]) > 0):
+        return done("invalid", f"plan 의 melt_ps · save_ps 가 유한한 양수가 아니다 ({plan.get('melt_ps')!r} · {plan.get('save_ps')!r})")
+    melt_ps, save_ps = float(plan["melt_ps"]), float(plan["save_ps"])
+    t_from, t_to = float(mw["t_from_frac_of_melt"]) * melt_ps, float(mw["t_to_frac_of_melt"]) * melt_ps
+    lag_lo, lag_hi = (float(x) for x in mw["lag_fit_ps"])
+    comp = float(plan.get("compress_ps")) if _fin(plan.get("compress_ps")) else float("nan")
+    thr, el = float(mw["D_threshold_cm2_s"]), str(mw["element"])
+    out.update({"window_declared_ps": [t_from, t_to], "lag_fit_ps": [lag_lo, lag_hi], "compress_end_ps": comp,
+                "element": el, "D_threshold_cm2_s": thr, "threshold_source": mw.get("threshold_source"),
+                "overlap_ok": bool(comp <= t_from + 1e-9)})
     if not out["overlap_ok"]:
-        return done("invalid", f"압축 끝 {comp:g} ps 가 판정 창 시작 {t_from:g} ps 보다 늦다 — 창이 강제 압축과 겹친다")
+        return done("invalid", f"압축 끝 {comp:g} ps 가 판정 창 시작 {t_from:g} ps 보다 늦다 (또는 비유한) — 창이 강제 압축과 겹친다")
+    if not (run / "traj.xyz").is_file():
+        return done("incomplete", "traj.xyz 가 아직 없다 — 기다린다")
     n_need = int(round(t_to / save_ps)) + 1
     frames, why = _leading_frames(run / "traj.xyz", n_need)
+    out["n_frames_read"], out["read_stop"] = len(frames), why
+    sp_why = _species_check(frames, plan, v)
+    out["species_ok"] = not sp_why
+    if sp_why:
+        return done("invalid", " · ".join(sp_why))
     times = np.arange(len(frames)) * save_ps
     sel = np.where((times >= t_from - 1e-6) & (times <= t_to + 1e-6))[0]
-    out["n_frames_read"], out["read_stop"] = len(frames), why
     if sel.size:
         out["window_used_ps"] = [float(times[sel[0]]), float(times[sel[-1]])]
     out["coverage_ok"] = bool(sel.size >= 2 and times[sel[0]] <= t_from + 1e-6 and times[sel[-1]] >= t_to - 1e-6)
     if not out["coverage_ok"]:
         return done("incomplete", f"창 [{t_from:g}, {t_to:g}] ps 가 다 없다 — 읽은 프레임 {len(frames)} · 쓴 창 {out['window_used_ps']}")
-    sym = frames[0].get_chemical_symbols()
+    sym = frames[sel[0]].get_chemical_symbols()            # 종도 **창 안** 프레임에서 (프레임 종 일치는 위에서 봤다)
     pos = np.array([frames[i].get_positions() for i in sel]); cells = np.array([np.asarray(frames[i].get_cell()) for i in sel])
     out["finite_ok"] = bool(np.isfinite(pos).all() and np.isfinite(cells).all())
     if not out["finite_ok"]:
@@ -620,133 +797,336 @@ def melt_window_check(run_dir, *, values=None, card=LI2S2_CARD, log=print):
     return done("fail", f"이 밀도 · 온도 · 시간에서 사전 정의한 {el} 골격 이동 기준을 충족하지 못했다 (D {D:.2e} ≤ {thr:g} cm²/s) — '액체가 없다' 가 아님")
 
 
-def combine_stage1(plan, values, gate, melt, seedg, files):
+def final_structure_check(run, plan, values, raw_last=None):
+    """⭐ 회신 DG P1-4 — final.xyz 가 **이 런의** 최종 구조인가: 원자 수 · 조성 (카드 · plan) · 종 순서 (traj 마지막 프레임과) ·
+    셀 (traj 마지막 셀과 — 고정 셀 FIRE) · 밀도 (카드 목표, 상대 DENSITY_REL_TOL). 문제가 있으면 ok False + 이유.
+    ⛔ 못 하는 것: final.xyz 가 '그 traj 에서 FIRE 로 나온 것' 인지까지는 모른다 — 같은 원자 수 · 조성 · 셀의 다른 구조로 바꿔치면
+       못 잡는다 (원시와의 변위는 seed_gate 가 기록만 한다). 일관된 전면 위조는 막지 않는다 (회신 DG 도 그 가정은 안 했다)."""
+    from ase.io import read
+    run = pathlib.Path(run)
+    res = {"ok": False, "why": []}
+    try:
+        fa = read(str(run / "final.xyz"))
+    except Exception as e:
+        res["why"].append(f"final.xyz 를 못 읽었다 ({type(e).__name__}: {e})")
+        return res
+    sym = fa.get_chemical_symbols()
+    sysname = plan.get("system")
+    comp = {e: sym.count(e) for e in sorted(set(sym))}
+    rho = density_g_cm3(fa) if all(e in MASS for e in sym) and fa.get_volume() > 0 else float("nan")
+    res.update({"n_atoms": len(sym), "composition": comp, "density_g_cm3": rho})
+    want_n = values["schedule"]["n_atoms"]
+    if not (_same(len(sym), want_n) and _same(len(sym), plan.get("n_atoms"))):
+        res["why"].append(f"원자 수 {len(sym)} ≠ 카드 {want_n} · plan {plan.get('n_atoms')}")
+    want_comp = (values.get("composition") or {}).get(sysname)
+    if want_comp is None or comp != want_comp:
+        res["why"].append(f"조성 {comp} ≠ 카드 {sysname} {want_comp}")
+    if plan.get("composition") is not None and comp != plan["composition"]:
+        res["why"].append(f"조성 {comp} ≠ plan {plan['composition']}")
+    tgt = (values.get("fix_density_g_cm3") or {}).get(sysname)
+    dev = abs(rho / float(tgt) - 1.0) if (_fin(tgt) and _fin(rho)) else float("nan")
+    res["density_rel_dev"] = dev
+    if not (dev <= DENSITY_REL_TOL):
+        res["why"].append(f"밀도 {rho} ≠ 카드 {tgt} (상대 차 {dev:.1e} > {DENSITY_REL_TOL:g})")
+    if raw_last is None:
+        res["why"].append("traj 마지막 프레임이 없다 — 종 순서 · 셀을 대조하지 못했다")
+    else:
+        same_order = list(raw_last.get_chemical_symbols()) == list(sym)
+        res["species_order_same_as_traj_last"] = same_order
+        if not same_order:
+            res["why"].append("종 순서 · 원자 수가 traj 마지막 프레임과 다르다")
+        dc = float(np.abs(np.asarray(raw_last.get_cell()) - np.asarray(fa.get_cell())).max())
+        res["cell_vs_traj_last_max_A"] = dc
+        if not (dc <= 1e-6):
+            res["why"].append(f"고정 셀인데 final 셀이 traj 마지막 셀과 {dc:.2e} Å 다르다")
+    res["ok"] = not res["why"]
+    return res
+
+
+def combine_stage1(plan, values, gate, melt, seedg, files, checks=None):
     """li2s-2 1 단계 시드 판정 — 카드가 요구하는 필드를 **직접** 읽는다 (회신 DF P1-2: 종료코드를 합쳐 판정하지 않는다).
 
-    입력은 이미 계산된 dict (plan.json · gate_check · melt_window_check · seed_gate · 파일 존재) — 순수 함수라 시험이 가볍다.
-    우선순위: invalid (카드와 다른 실행 · 소프트웨어 기록 없음) > incomplete (끝나지 않음 · 창 · 파일 없음) > fail > pass."""
+    입력은 이미 계산된 dict (plan.json · gate_check · melt_window_check · seed_gate · 파일 존재 · checks) — 순수 함수라 시험이 가볍다.
+    checks (회신 DG): thermo_header · traj_frames · final_structure · seed_gate_error — 있으면 본다.
+    우선순위: invalid (카드와 다른 실행 · 기록 꼴 · 원자료 불일치) > [첫 시드 녹음 미충족 = 그 계를 닫는 사건] > incomplete > fail > pass.
+    ⭐ 회신 DG P0-1 — 계의 첫 시드 (카드 first_seed) 녹음 미충족은 일반 시드 탈락이 아니라 **그 계를 닫는 사건**이다:
+       closes_system True · 상태 fail (러너가 멈춰서 일정이 미완이어도). 다른 invalid 이유가 있으면 닫지 않고 invalid (카드 런이 아니다)."""
+    checks = checks or {}
     reasons = {"invalid": [], "incomplete": [], "fail": []}
     sched, sysname = values["schedule"], plan.get("system")
-    tgt = values["fix_density_g_cm3"].get(sysname)
-    if tgt is None or plan.get("fix_density_g_cm3") is None or abs(float(plan["fix_density_g_cm3"]) - float(tgt)) > 1e-6:
-        reasons["invalid"].append(f"고정 밀도 {plan.get('fix_density_g_cm3')} ≠ 카드 {tgt} ({sysname})")
+    tgt = (values.get("fix_density_g_cm3") or {}).get(sysname)
+    if not _same(plan.get("fix_density_g_cm3"), tgt, rel=0.0, abs_=1e-6):
+        reasons["invalid"].append(f"고정 밀도 {plan.get('fix_density_g_cm3')!r} ≠ 카드 {tgt!r} ({sysname}) — 비유한 값도 '다름'")
     for k, want in sched.items():
-        got = plan.get("n_atoms") if k == "n_atoms" else plan.get(k)
-        if got is None or abs(float(got) - float(want)) > 1e-9 * max(1.0, abs(float(want))):
-            reasons["invalid"].append(f"일정 {k} {got} ≠ 카드 {want}")
+        if not _same(plan.get(k), want):
+            reasons["invalid"].append(f"일정 {k} {plan.get(k)!r} ≠ 카드 {want!r}")
+    want_comp = (values.get("composition") or {}).get(sysname)
+    if want_comp is None or plan.get("composition") != want_comp:
+        reasons["invalid"].append(f"조성 plan {plan.get('composition')} ≠ 카드 {sysname} {want_comp}")
     sw = plan.get("software") or {}
-    if sw.get("inference") != values["uma_inference_mode"] or not sw.get("fairchem-core") or str(sw.get("fairchem-core")).startswith("?"):
-        reasons["invalid"].append(f"소프트웨어 기록 {sw or '없음'} — 추론 설정 {values['uma_inference_mode']} · fairchem 판이 있어야 한다")
+    req = values.get("software_required") or {}
+    sw_bad = [] if req else ["카드 software_required 없음"]
+    if sw.get("inference") != values.get("uma_inference_mode"):
+        sw_bad.append(f"inference {sw.get('inference')!r} ≠ {values.get('uma_inference_mode')!r}")
+    for k in ("model", "task"):
+        if sw.get(k) != req.get(k):
+            sw_bad.append(f"{k} {sw.get(k)!r} ≠ {req.get(k)!r}")
+    for k in req.get("versions_present") or []:
+        x = sw.get(k)
+        if not isinstance(x, str) or not x or x.startswith("?"):
+            sw_bad.append(f"{k} 판 {x!r}")
+    if sw_bad:
+        reasons["invalid"].append("소프트웨어 기록이 카드 요구와 다르다 — " + " · ".join(sw_bad))
     for f, ok in files.items():
         if not ok:
             reasons["incomplete"].append(f"{f} 없음")
+    th = checks.get("thermo_header")
+    if th is not None and not th.get("ok"):
+        reasons["invalid"].append(f"thermo.csv 열 {th.get('missing')} 없음 — 이 드라이버가 쓰는 꼴이 아니다")
+    sched_done = bool(gate and gate.get("schedule_complete"))
     if gate is None:
-        reasons["incomplete"].append("gate_check 없음")
+        if th is None or th.get("ok"):
+            reasons["incomplete"].append("gate_check 없음")
+    elif gate.get("error"):
+        reasons["incomplete"].append(f"gate_check 오류 ({gate['error']}) — 쓰는 중일 수 있다")
     else:
-        if not gate.get("schedule_complete"):
+        if gate.get("thermo_columns_ok") is False:
+            reasons["invalid"].append(f"thermo 압력 열이 다 있지 않다 ({gate.get('pressure_columns')}) — 총압 · virial 둘 다 있어야 한다")
+        if not _same(gate.get("target_density_g_cm3"), tgt, rel=0.0, abs_=1e-6):
+            reasons["invalid"].append(f"gate_check 목표 밀도 {gate.get('target_density_g_cm3')!r} ≠ 카드 {tgt!r}")
+        if not sched_done:
             reasons["incomplete"].append("계획한 일정 (melt · 담금질 · 유지) 을 다 돌지 않았다")
         for k, why in (("window_in_hold", "판정 창이 300 K 유지 구간 안이 아니다"), ("density_ok", "밀도 ≠ 목표"),
                        ("pressure_recorded", "압력 기록이 없다 (NaN · 빈 칸) — '기록했다' 와 '없다' 를 가른다")):
-            if gate.get("schedule_complete") and not gate.get(k):
+            if sched_done and not gate.get(k):
                 reasons["fail"].append(why)
-    if melt is None or melt.get("verdict") in (None, "incomplete"):
-        reasons["incomplete"].append(f"녹음 판정 {None if melt is None else melt.get('verdict')}")
-    elif melt["verdict"] == "invalid":
+    mv = None if melt is None else melt.get("verdict")
+    if mv is None or mv == "incomplete":
+        reasons["incomplete"].append(f"녹음 판정 {mv}")
+    elif mv == "invalid":
         reasons["invalid"].append(f"녹음 판정 invalid — {melt.get('message')}")
-    elif melt["verdict"] == "fail":
+    elif mv == "fail":
         reasons["fail"].append(melt.get("message"))
+    elif mv != "pass":                                     # 회신 DG P1-7 — 모르는 상태를 통과로 떨어뜨리지 않는다
+        reasons["invalid"].append(f"녹음 판정 상태 {mv!r} 를 모른다 (허용: {', '.join(LI2S2_STATUSES)})")
+    if checks.get("seed_gate_error"):
+        reasons["invalid"].append(f"시드 게이트를 못 냈다 — {checks['seed_gate_error']}")
     sg, rel = values["seed_gate"], (seedg or {}).get(values["seed_gate"]["version"])
     if not rel:
-        reasons["incomplete"].append(f"시드 게이트 {values['seed_gate']['version']} 판 없음")
+        if not checks.get("seed_gate_error"):
+            reasons["incomplete"].append(f"시드 게이트 {values['seed_gate']['version']} 판 없음")
     else:
-        if not (rel.get("PS4_fraction") is not None and rel["PS4_fraction"] >= float(sg["PS4_fraction_min"]) - 1e-12):
+        if not (_fin(rel.get("PS4_fraction")) and float(rel["PS4_fraction"]) >= float(sg["PS4_fraction_min"]) - 1e-12):
             reasons["fail"].append(f"PS₄ 보존율 {rel.get('PS4_fraction')} < {sg['PS4_fraction_min']}")
-        if not (rel.get("min_pair_excl_PS_A") is not None and rel["min_pair_excl_PS_A"] > float(sg["min_pair_excl_PS_A_gt"])):
+        if not (_fin(rel.get("min_pair_excl_PS_A")) and float(rel["min_pair_excl_PS_A"]) > float(sg["min_pair_excl_PS_A_gt"])):
             reasons["fail"].append(f"최단 원자간 (P–S 제외) {rel.get('min_pair_excl_PS_A')} ≤ {sg['min_pair_excl_PS_A_gt']} Å")
-    status = next((s for s in ("invalid", "incomplete", "fail") if reasons[s]), "pass")
-    return {"status": status, "reasons": reasons, "system": sysname, "seed": plan.get("seed"), "software": sw}
+    tf = checks.get("traj_frames")
+    if tf is not None:
+        n, want = tf.get("n"), tf.get("expected")
+        if n is None:
+            reasons["invalid"].append("traj 프레임 수를 못 셌다 (줄 수가 원자수+2 의 배수가 아니다)")
+        elif want is not None and n != want:
+            (reasons["invalid"] if (sched_done or n > want) else reasons["incomplete"]).append(
+                f"traj 프레임 {n} ≠ 계획 {want}" + (" — thermo 는 끝났는데 traj 가 다르다" if sched_done else ""))
+    fs = checks.get("final_structure")
+    if fs is not None and not fs.get("ok"):
+        reasons["invalid"].append("최종 구조가 이 런과 안 맞는다 — " + " · ".join(fs.get("why") or ["?"]))
+    first = values.get("first_seed")
+    closes = bool(first is not None and plan.get("seed") == first and mv == "fail" and not reasons["invalid"])
+    if reasons["invalid"]:
+        status = "invalid"
+    elif closes:
+        status = "fail"
+    else:
+        status = next((s for s in ("incomplete", "fail") if reasons[s]), "pass")
+    return {"status": status, "reasons": reasons, "system": sysname, "seed": plan.get("seed"), "software": sw,
+            "closes_system": closes,
+            "closing_event": ("계의 첫 시드 녹음 판정 미충족 — 그 계를 닫는다 (카드 S1 ② · 일반 시드 탈락과 다르다)" if closes else None)}
 
 
 def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print):
-    """li2s-2 1 단계 시드 판정을 **새로 계산해서** 낸다 (gate_check · melt_window_check · seed_gate) → stage1_verdict.json."""
+    """li2s-2 1 단계 시드 판정을 **원자료에서 새로 계산해서** 낸다 (gate_check · melt_window_check · seed_gate · 최종 구조 ·
+    traj 프레임 수 · thermo 열) → stage1_verdict.json. 판정에는 원자료 지문 · 카드 값 지문 · 도구 지문을 같이 적는다 (회신 DG P1-4)."""
+    from ase.io import read
     v = values if values is not None else read_li2s2_values(card)
     run = pathlib.Path(run_dir)
-    plan_p = run / "plan.json"
-    if not plan_p.is_file():
+    plan = None
+    try:
+        plan = json.loads((run / "plan.json").read_text(encoding="utf-8"))
+    except FileNotFoundError:
         res = {"status": "incomplete", "reasons": {"incomplete": ["plan.json 없음"]}, "run": str(run)}
-    else:
-        plan = json.loads(plan_p.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        res = {"status": "incomplete", "reasons": {"incomplete": [f"plan.json 을 못 읽는다 ({type(e).__name__})"]}, "run": str(run)}
+    if plan is not None:
         files = {f: (run / f).is_file() for f in ("result.json", "final.xyz", "thermo.csv", "traj.xyz")}
-        gate = melt = seedg = None
+        checks = {}
         if files["thermo.csv"]:
+            with open(run / "thermo.csv", encoding="utf-8", errors="replace") as fh:
+                hdr = fh.readline().strip().split(",")
+            miss = [c for c in v["thermo_required_columns"] if c not in hdr]
+            checks["thermo_header"] = {"columns": hdr, "missing": miss, "ok": not miss}
+        gate = melt = seedg = None
+        if files["thermo.csv"] and checks["thermo_header"]["ok"]:
             try:
                 gate = gate_check(run, win_ps=float(v["gate_check"]["win_ps"]), log=lambda *a: None)
             except Exception as e:
                 gate = {"schedule_complete": False, "error": f"{type(e).__name__}: {e}"}
         if files["traj.xyz"]:
             melt = melt_window_check(run, values=v, log=lambda *a: None)
+            n_fr = _xyz_frames(run / "traj.xyz")
+            want = None
+            if all(_fin(plan.get(k)) for k in ("melt_ps", "quench_ps", "hold_ps", "save_ps")) and float(plan["save_ps"]) > 0:
+                want = int(round((float(plan["melt_ps"]) + float(plan["quench_ps"]) + float(plan["hold_ps"])) / float(plan["save_ps"]))) + 1
+            checks["traj_frames"] = {"n": n_fr, "expected": want}
         if files["final.xyz"] and files["traj.xyz"]:
-            seedg = seed_gate(run, write_raw=True, log=lambda *a: None)
-        res = combine_stage1(plan, v, gate, melt, seedg, files)
-        res.update({"run": str(run), "gate_check": gate, "melt_window_check": melt,
+            try:
+                seedg = seed_gate(run, write_raw=True, log=lambda *a: None)
+            except SystemExit as e:                       # md_init_raw.xyz 가 다르다 — 그 자리에서 죽지 않고 판정에 싣는다
+                checks["seed_gate_error"] = str(e)
+            except Exception as e:
+                checks["seed_gate_error"] = f"{type(e).__name__}: {e}"
+        if files["final.xyz"]:
+            raw_last = None
+            if files["traj.xyz"]:
+                try:
+                    raw_last = read(str(run / "traj.xyz"), index=-1)
+                except Exception:
+                    raw_last = None
+            checks["final_structure"] = final_structure_check(run, plan, v, raw_last)
+        res = combine_stage1(plan, v, gate, melt, seedg, files, checks=checks)
+        res.update({"run": str(run), "gate_check": gate, "melt_window_check": melt, "checks": checks,
                     "seed_gate_view": (seedg or {}).get(v["seed_gate"]["version"])})
+    res["provenance"] = {"files_sha256": run_provenance(run), "card_values_sha16": values_sha16(v), "driver_sha16": driver_sha16(),
+                         "⛔": "묶음 판정 (stage1_summary) 이 이 지문을 지금 파일 · 카드 값 · 도구와 다시 잰다 — 안 맞으면 그 시드는 무효 (다시 판정)"}
     (run / "stage1_verdict.json").write_text(json.dumps(res, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
-    log(f"  [stage1] {run} → {res['status']}  " + "; ".join(x for k in ("invalid", "incomplete", "fail") for x in res["reasons"].get(k, [])))
+    log(f"  [stage1] {run} → {res['status']}" + (" · ⛔ 그 계를 닫는 사건" if res.get("closes_system") else "") + "  "
+        + "; ".join(str(x) for k in ("invalid", "incomplete", "fail") for x in res["reasons"].get(k, [])))
     return res
 
 
-def summarize_stage1(verdicts, values):
-    """li2s-2 1 단계 묶음 판정 (회신 DF P1-3) — verdicts: {(계, 시드): stage1_verdict dict 또는 None}.
+def summarize_stage1(verdicts, values, cost=None):
+    """li2s-2 1 단계 묶음 판정 (회신 DF P1-3 · 회신 DG P0-1 · P0-3 · P1-5) — verdicts: {(계, 시드): stage1_verdict dict 또는 None}.
 
-    계마다 pass ≥ need 면 통과 · fail 이 (시드 수 − need) 를 넘으면 그 계 탈락 → **비교 트랙 전체 멈춤** · 아니면 대기.
-    두 계 통과면 2 단계 시드 = 두 계 **모두** 통과한 시드 번호 중 작은 둘 · 기계는 그 순서로 (카드 stage2_machines)."""
+    계마다: invalid 가 있으면 invalid · 첫 시드 녹음 미충족 (closes_system) 이면 그 계 닫힘 · 탈락이 (시드 수 − need) 를 넘으면 탈락 ·
+    **선언된 시드가 전부 판정 끝 (pass · fail)** 이고 pass ≥ need 면 통과 · 아니면 대기 (missing · incomplete 가 남음).
+    허용 상태 밖 ('unknown' 등) 은 invalid. 한쪽 계라도 닫힘 · 탈락이면 비교 트랙 전체 멈춤.
+    cost = {"total_h", "cap_h"} (러너 비용 장부) — total > cap 이면 '상한 · 미완결' (통과로 올리지 않는다) · None 이면 상한을 확인하지
+    못했으므로 두 계가 통과여도 1 단계 통과로 올리지 않는다 (대기). 두 계 통과면 2 단계 시드 = 두 계 **모두** 통과한 시드 중 작은 둘 ·
+    기계는 그 순서로 (카드 stage2_machines)."""
     seeds, need = list(values["seeds"]), int(values["stage1_need_pass"])
-    per, sw_seen = {}, {}
+    per, sw_seen, unknown = {}, {}, []
     for s in ("A", "B"):
-        st = {sd: ((verdicts.get((s, sd)) or {}).get("status") or "missing") for sd in seeds}
+        st, closed = {}, []
+        for sd in seeds:
+            vv = verdicts.get((s, sd))
+            x = "missing" if vv is None else vv.get("status")
+            if x not in LI2S2_STATUSES and x != "missing":
+                unknown.append(f"{s}{sd}={x!r}"); x = "invalid"
+            st[sd] = x
+            if vv is not None and vv.get("closes_system") is True:
+                closed.append(sd)
         n_pass = sum(1 for x in st.values() if x == "pass")
         n_fail = sum(1 for x in st.values() if x == "fail")
         n_bad = sum(1 for x in st.values() if x == "invalid")
-        status = ("invalid" if n_bad else "pass" if n_pass >= need else "fail" if n_fail > len(seeds) - need else "pending")
-        per[s] = {"status": status, "per_seed": st, "n_pass": n_pass, "n_fail": n_fail}
+        n_open = sum(1 for x in st.values() if x in ("missing", "incomplete"))
+        status = ("invalid" if n_bad else "closed" if closed else "fail" if n_fail > len(seeds) - need
+                  else "pass" if (n_open == 0 and n_pass >= need) else "pending")
+        per[s] = {"status": status, "per_seed": st, "n_pass": n_pass, "n_fail": n_fail, "n_open": n_open,
+                  "closed_by_first_seed": closed}
         for sd in seeds:
             vv = verdicts.get((s, sd)) or {}
             if vv.get("status") == "pass":
                 sw = {k: x for k, x in (vv.get("software") or {}).items()}
                 sw_seen[json.dumps(sw, sort_keys=True)] = sw
-    out = {"per_system": per, "software_variants": list(sw_seen.values()), "stage2": None}
+    out = {"per_system": per, "software_variants": list(sw_seen.values()), "stage2": None, "unknown_status": unknown,
+           "cost": cost}
+    over = bool(cost is not None and not (_fin(cost.get("total_h")) and _fin(cost.get("cap_h"))
+                                         and float(cost["total_h"]) <= float(cost["cap_h"])))
     if any(per[s]["status"] == "invalid" for s in per) or len(sw_seen) > 1:
-        out["track"] = "invalid"; out["why"] = "카드와 다른 실행 · 또는 통과 시드의 소프트웨어 판이 둘 이상 — 사용자 결정"
+        out["track"] = "invalid"
+        out["why"] = ("카드와 다른 실행 · 원자료와 안 맞는 판정 · 모르는 판정 상태 · 또는 통과 시드의 소프트웨어 판이 둘 이상 — 사용자 결정"
+                      + (f" (모르는 상태 {unknown})" if unknown else ""))
+    elif any(per[s]["status"] == "closed" for s in per):
+        out["track"] = "stop_track"
+        out["why"] = ("계의 첫 시드 녹음 판정 미충족 → 그 계 닫힘 → 두 계 비교 트랙 전체 멈춤 (회신 DG P0-1 · 재시작으로 다시 열지 않는다) — "
+                      + " · ".join(f"{s}{per[s]['closed_by_first_seed']}" for s in per if per[s]["closed_by_first_seed"]))
     elif any(per[s]["status"] == "fail" for s in per):
         out["track"] = "stop_track"; out["why"] = "한쪽 계가 1 단계에서 닫혔다 → 두 계 비교 트랙 전체 멈춤 (회신 DF P1-3)"
+    elif over:
+        out["track"] = "cap_incomplete"
+        out["why"] = (f"비용 장부 {cost.get('total_h')} h > 상한 {cost.get('cap_h')} h (또는 비유한) — 1 단계 미완결 · "
+                      "그때 끝난 시드만 골라 판정하지 않는다 (회신 DG P0-3)")
     elif all(per[s]["status"] == "pass" for s in per):
         common = sorted(sd for sd in seeds if per["A"]["per_seed"][sd] == "pass" and per["B"]["per_seed"][sd] == "pass")
-        if len(common) < 2:
+        if cost is None:
+            out["track"] = "pending"; out["why"] = "두 계 모두 통과지만 비용 장부를 못 봤다 — 상한 안인지 확인 전에는 1 단계 통과로 올리지 않는다"
+        elif len(common) < 2:
             out["track"] = "stop_track"; out["why"] = f"두 계 공통 통과 시드가 {len(common)} 개 — 2 단계에 둘이 필요하다"
         else:
             m = list(values["stage2_machines"])
             out["track"] = "stage1_pass"
             out["stage2"] = {"seeds": common[:2], "machines": {str(sd): m[i] for i, sd in enumerate(common[:2])},
                              "common_pass_seeds": common, "rule": "두 계 모두 통과한 시드 중 작은 둘 · 기계는 그 순서"}
-            out["why"] = "두 계 모두 통과"
+            out["why"] = "두 계 모두 통과 (선언된 시드 전부 판정 끝 · 비용 상한 안)"
     else:
-        out["track"] = "pending"; out["why"] = "시드 판정이 덜 끝났다"
+        out["track"] = "pending"
+        out["why"] = "시드 판정이 덜 끝났다 (미판정 · 미완이 남으면 통과로 올리지 않는다 — 회신 DG P1-5)"
     return out
 
 
+def ledger_cost(out_root, values):
+    """러너 비용 장부 (stage1_ledger.json) 의 벽시계 합 — 끝난 런은 wall_h · 도는 중 · 고아 런은 wall_h_so_far. 장부가 없으면 None."""
+    p = pathlib.Path(out_root) / LEDGER_NAME
+    if not p.is_file():
+        return None
+    led = json.loads(p.read_text(encoding="utf-8"))
+    tot, n_est = 0.0, 0
+    for r in led.get("runs", []):
+        w = r.get("wall_h")
+        if w is None:
+            w = r.get("wall_h_so_far"); n_est += 1
+        tot += float(w) if _fin(w) else float("nan")
+    return {"total_h": tot, "cap_h": float(values["stage1_cap_gpu_h"]), "runs": len(led.get("runs", [])),
+            "estimated_runs": n_est, "source": str(p)}
+
+
 def stage1_summary(out_root, *, values=None, card=LI2S2_CARD, log=print):
-    """<out_root>/<A|B>/seed<S>/stage1_verdict.json 을 모아 묶음 판정 → <out_root>/stage1_summary.json."""
+    """<out_root>/<A|B>/seed<S>/stage1_verdict.json 을 모아 묶음 판정 → <out_root>/stage1_summary.json.
+    ⭐ 회신 DG P1-4 — 판정 파일을 그대로 믿지 않는다: 지문 (원자료 · 카드 값 · 도구) 을 지금 것과 다시 잰다 → 안 맞으면 그 시드는
+    invalid ('다시 판정하라'). 비용 장부 (러너) 로 상한을 다시 잰다 (DG P0-3)."""
     v = values if values is not None else read_li2s2_values(card)
     root = pathlib.Path(out_root); ver = {}
+    cur_vals, cur_drv = values_sha16(v), driver_sha16()
+    stale = []
     for s in ("A", "B"):
         for sd in v["seeds"]:
-            p = root / s / f"seed{sd}" / "stage1_verdict.json"
-            ver[(s, sd)] = json.loads(p.read_text(encoding="utf-8")) if p.is_file() else None
-    res = summarize_stage1(ver, v)
-    (root / "stage1_summary.json").write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
+            rd = root / s / f"seed{sd}"
+            p = rd / "stage1_verdict.json"
+            if not p.is_file():
+                ver[(s, sd)] = None; continue
+            vv = json.loads(p.read_text(encoding="utf-8"))
+            pv = vv.get("provenance") or {}
+            bad = []
+            if pv.get("files_sha256") != run_provenance(rd):
+                bad.append("원자료 지문이 지금 파일과 다르다 (판정 뒤 파일이 바뀌었거나 판정만 복사됐다)")
+            if pv.get("card_values_sha16") != cur_vals:
+                bad.append(f"카드 값 지문 {pv.get('card_values_sha16')} ≠ 지금 {cur_vals}")
+            if pv.get("driver_sha16") != cur_drv:
+                bad.append(f"도구 지문 {pv.get('driver_sha16')} ≠ 지금 {cur_drv}")
+            if bad:
+                stale.append(f"{s}{sd}")
+                vv = {**vv, "status": "invalid", "closes_system": vv.get("closes_system") is True,
+                      "reasons": {**(vv.get("reasons") or {}), "invalid": list((vv.get("reasons") or {}).get("invalid", []))
+                                  + [f"⛔ 판정이 원자료에 안 묶였다 — {' · '.join(bad)} → --stage1_verdict 로 다시 판정"]}}
+            ver[(s, sd)] = vv
+    res = summarize_stage1(ver, v, cost=ledger_cost(root, v))
+    res["stale_verdicts"] = stale
+    (root / "stage1_summary.json").write_text(json.dumps(res, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
     log(f"  [stage1 묶음] {res['track']} — {res['why']} · " +
         " · ".join(f"{s} {res['per_system'][s]['status']} ({res['per_system'][s]['n_pass']} 통과)" for s in ("A", "B")) +
-        (f" · 2 단계 시드 {res['stage2']['seeds']} {res['stage2']['machines']}" if res.get("stage2") else ""))
+        (f" · 2 단계 시드 {res['stage2']['seeds']} {res['stage2']['machines']}" if res.get("stage2") else "") +
+        (f" · 비용 {res['cost']['total_h']:.1f}/{res['cost']['cap_h']:g} h" if res.get("cost") and _fin(res["cost"].get("total_h")) else "") +
+        (f" · ⛔ 지문 불일치 {stale}" if stale else ""))
     return res
 
 
@@ -852,7 +1232,7 @@ def build_plan(system, seed, sym, density, T_melt, T_final, melt_ps,
             "G2_declared_before_results": True,
             "card": "db/properties/lpscl_li2s_interphase_prereg_2026_09_11.json",
             # ⭐ 게이트가 읽는 값 — 누가 읽나: `--gate_check`. 없으면 그 모드가 **기록없음** 으로 fail-closed 한다.
-            "게이트_입력": {"G2_quench_rate_K_s": quench_rate, **ens, "final_relax": FINAL_RELAX,
+            "게이트_입력": {"G2_quench_rate_K_s": quench_rate, **ens, "final_relax": final_relax_decl(fix_density),
                          "G4_band_card": BAND_CARD, "읽는_곳": "melt_quench_uma.py --gate_check <run_dir>"}}
 
 
@@ -1058,7 +1438,7 @@ def gate_check(run, band_card=BAND_CARD, win_ps=10.0, p_tol=P_TOL_GPA, n_blocks=
         # ⭐ li2s-2 고정 밀도 런 — 압력은 결과 (기록) · 게이트는 '밀도 = 선언값' · 옛 G4 밴드 (1층 카드) 는 해당 없음
         rt = float(g["target_density_g_cm3"])
         dev = max(abs(res["rho_min"] / rt - 1.0), abs(res["rho_max"] / rt - 1.0), abs(res["rho_last"] / rt - 1.0))
-        rho_ok = dev <= 1e-4          # ⭐ 한 곳에서만 정한다 — density_ok 와 gate_ok 가 갈리면 깨기 시험이 못 본다 (11-03 실측)
+        rho_ok = bool(dev <= DENSITY_REL_TOL)   # ⭐ 한 곳에서만 정한다 — density_ok 와 gate_ok 가 갈리면 깨기 시험이 못 본다 (11-03 실측)
         # ⭐ 회신 DF P1-2 — 밀도만 맞으면 통과하던 구멍 셋을 막는다: ① 계획한 일정 끝까지 ② 판정 창이 실제 유지 구간 안
         #   ③ 압력이 **기록돼 있다** (크기는 판정 아님 · NaN · 빈 칸이면 '압력이 없다' 로 가른다)
         total = float(plan["melt_ps"]) + float(plan.get("quench_ps") or 0.0) + float(plan["hold_ps"])
@@ -1070,13 +1450,16 @@ def gate_check(run, band_card=BAND_CARD, win_ps=10.0, p_tol=P_TOL_GPA, n_blocks=
         except KeyError as e:
             ht = {"⛔": str(e)}
         hold_ok = bool(in_hold and ht.get("hold_len_ps", 0.0) >= 0.9 * float(plan["hold_ps"]) - 1e-9)
-        p_tail = np.concatenate([P, t["P_virial_GPa"][tail]]) if "P_virial_GPa" in t else P
-        p_rec = bool(p_tail.size > 0 and np.isfinite(p_tail).all())
+        # ⛔ 회신 DG P1-7 — virial 열을 지워도 '기록 있음' 이던 구멍: 두 압력 열이 **다 있고** 유한해야 기록이다
+        p_cols = [c for c in ("P_GPa", "P_virial_GPa") if c in t]
+        cols_ok = len(p_cols) == 2 and all(c in t for c in ("t_ps", "T_set_K", "density_g_cm3"))
+        p_tail = np.concatenate([t[c][tail] for c in p_cols]) if p_cols else np.array([])
+        p_rec = bool(cols_ok and p_tail.size > 0 and np.isfinite(p_tail).all())
         gate_ok = bool(rho_ok and sched_ok and hold_ok and p_rec)
         res.update({"mode": "NVT_fixed_density", "target_density_g_cm3": rt, "density_max_rel_dev": dev,
                     "density_ok": rho_ok, "pressure_ok": None, "target_pressure_GPa": None,
                     "schedule_complete": sched_ok, "planned_total_ps": total, "window_in_hold": hold_ok,
-                    "pressure_recorded": p_rec, "hold_trend": ht,
+                    "pressure_recorded": p_rec, "pressure_columns": p_cols, "thermo_columns_ok": cols_ok, "hold_trend": ht,
                     "gate_ok": gate_ok, "G4_fires": None, "G4_role": "해당 없음 (고정 밀도 · 1층 밴드 카드 밖)",
                     "P_role": "기록 — 고정 밀도에서 UMA 셀에 남는 내부 압력 (크기는 판정 아님 · 기록 유무는 판정)"})
         log(f"  NVT 고정 밀도 — 목표 {rt:.4f} · 마지막 {win_ps:g} ps ρ {res['rho_min']:.5f}–{res['rho_max']:.5f} "
@@ -1881,6 +2264,15 @@ def _selftest():
         gn = gate_check(td, win_ps=0.015, log=lambda *a: None)
         chk(not gn["gate_ok"] and not gn["pressure_recorded"] and gn["density_ok"],
             "⛔음성 DF: 압력이 NaN 이면 '압력 기록 없음' 으로 통과 못 한다 (압력 크기는 판정하지 않는다)")
+        # 회신 DG P1-7 — virial 열을 지우면 (총압만 남음) '기록 있음' 이던 구멍
+        rows = [",".join(c[:-1]) for c in (ln.split(",") for ln in orig.splitlines())]
+        tp.write_text("\n".join(rows) + "\n", encoding="utf-8")
+        gv = gate_check(td, win_ps=0.015, log=lambda *a: None)
+        chk(not gv["gate_ok"] and not gv["pressure_recorded"] and gv["thermo_columns_ok"] is False and gv["pressure_columns"] == ["P_GPa"],
+            "⛔음성 DG P1-7: thermo 에서 virial 압력 열을 지우면 '압력 기록 없음' · 열 꼴 불일치 (통과 못 한다)")
+        chk(planF["게이트_입력"]["final_relax"]["⛔"].startswith("밀도는 **고정 밀도 셀**")
+            and build_plan("A", 5, list(symF), 0.8, 600, 300, 0.4, 3e14, 1.0, 0.02, 2.0, 0.004)["게이트_입력"]["final_relax"] is FINAL_RELAX,
+            "DG P2: NVT plan 의 final_relax 설명은 '고정 밀도 셀' · NPT plan 은 옛 설명 그대로")
         tp.write_text(orig, encoding="utf-8")
         try:
             melt_check(td, log=lambda *a: None); legacy_refused = False
@@ -1912,7 +2304,13 @@ def _selftest():
            "schedule": {"T_melt_K": 1200.0, "T_final_K": 300.0, "melt_ps": 100.0, "quench_rate_K_s": 1e12, "hold_ps": 50.0,
                         "dt_fs": 2.0, "save_ps": 1.0, "compress_ps": 20.0, "n_atoms": 120},
            "uma_inference_mode": "turbo", "seed_gate": {"version": "relaxed", "PS4_fraction_min": 1.0, "min_pair_excl_PS_A_gt": 2.0},
-           "gate_check": {"win_ps": 10.0}, "seeds": [11, 12, 13, 14, 15], "stage1_need_pass": 4, "stage2_machines": ["kgy", "gabia"]}
+           "gate_check": {"win_ps": 10.0}, "seeds": [11, 12, 13, 14, 15], "stage1_need_pass": 4, "stage2_machines": ["kgy", "gabia"],
+           # 회신 DG — 카드에 더한 값 (T 는 합성 궤적용 8 원자 계 · 실제 카드에는 A · B 만)
+           "composition": {"A": {"Cl": 12, "Li": 48, "P": 12, "S": 48}, "B": {"Li": 45, "P": 15, "S": 60}, "T": {"P": 4, "S": 4}},
+           "software_required": {"model": "uma-s-1p1", "task": "omat", "versions_present": ["fairchem-core", "torch", "ase"]},
+           "thermo_required_columns": ["t_ps", "T_K", "T_set_K", "density_g_cm3", "P_GPa", "P_virial_GPa"],
+           "first_seed": 11, "stage1_cap_gpu_h": 230.0}
+    VAL["melt_window"]["estimator"] = MELT_WINDOW_ESTIMATOR
     rng = np.random.default_rng(7); L = 12.0
     base = rng.uniform(1, L - 1, (8, 3)); symW = ["P"] * 4 + ["S"] * 4
     win = [base.copy()]
@@ -1922,11 +2320,12 @@ def _selftest():
     for _ in range(50):
         prv = pre_moving[-1].copy(); prv[:4] += rng.normal(0, 0.9, (4, 3)); pre_moving.append(prv)
     pre_moving = pre_moving[::-1]                                                               # t = 0 … 50 · 끝이 창 첫 프레임
-    def _mk_win(td_, frames, plan_extra=None):
-        pl = {"melt_ps": 100.0, "save_ps": 1.0, "fix_density_g_cm3": 1.2, "compress_ps": 20.0}; pl.update(plan_extra or {})
+    def _mk_win(td_, frames, plan_extra=None, syms=None):
+        pl = {"melt_ps": 100.0, "save_ps": 1.0, "fix_density_g_cm3": 1.2, "compress_ps": 20.0,
+              "system": "T", "n_atoms": 8, "composition": {"P": 4, "S": 4}}; pl.update(plan_extra or {})
         (pathlib.Path(td_) / "plan.json").write_text(json.dumps(pl), encoding="utf-8")
-        _w(str(pathlib.Path(td_) / "traj.xyz"), [Atoms(symbols=symW, positions=f, cell=np.eye(3) * L, pbc=True) for f in frames],
-           format="extxyz")
+        _w(str(pathlib.Path(td_) / "traj.xyz"), [Atoms(symbols=(syms or {}).get(i, symW), positions=f, cell=np.eye(3) * L, pbc=True)
+                                                 for i, f in enumerate(frames)], format="extxyz")
     with tempfile.TemporaryDirectory() as ta, tempfile.TemporaryDirectory() as tb, tempfile.TemporaryDirectory() as tc:
         _mk_win(ta, pre_moving[:-1] + win)                       # 앞 50 ps 크게 움직임 → 창
         _mk_win(tb, [win[0]] * 50 + win)                         # 앞 50 ps 얼어 있음 → 같은 창
@@ -1955,11 +2354,39 @@ def _selftest():
         badf = [f.copy() for f in pre_moving[:-1] + win]; badf[80][0, 0] = np.nan
         _mk_win(td, badf)
         chk(melt_window_check(td, values=VAL, log=lambda *a: None)["verdict"] == "invalid", "⛔음성 DF: 창 안 좌표가 NaN 이면 '무효'")
+    # 회신 DG P0-2 — 시작 직후 (plan · traj 없음 · plan 쓰는 중) 는 예외가 아니라 '미완' · P1-7 — estimator 이름 · 종 배치
+    with tempfile.TemporaryDirectory() as td:
+        r0 = melt_window_check(td, values=VAL, log=lambda *a: None)
+        (pathlib.Path(td) / "plan.json").write_text('{"melt_ps": 100.0, "save_', encoding="utf-8")
+        r1 = melt_window_check(td, values=VAL, log=lambda *a: None)
+        (pathlib.Path(td) / "plan.json").write_text(json.dumps({"melt_ps": 100.0, "save_ps": 1.0, "fix_density_g_cm3": 1.2,
+                                                                "compress_ps": 20.0, "system": "T", "n_atoms": 8,
+                                                                "composition": {"P": 4, "S": 4}}), encoding="utf-8")
+        r2 = melt_window_check(td, values=VAL, log=lambda *a: None)
+        chk(r0["verdict"] == r1["verdict"] == r2["verdict"] == "incomplete",
+            f"⛔음성 DG P0-2: plan.json 없음 · 쓰는 중 · traj 없음 → 예외가 아니라 '미완' ({r0['verdict']} · {r1['verdict']} · {r2['verdict']})")
+    with tempfile.TemporaryDirectory() as td:
+        _mk_win(td, pre_moving[:-1] + win)
+        VALx = json.loads(json.dumps(VAL)); VALx["melt_window"]["estimator"] = "window_mto_v2"
+        chk(melt_window_check(td, values=VALx, log=lambda *a: None)["verdict"] == "invalid",
+            "⛔음성 DG P1-7: 카드 estimator 를 다른 이름으로 바꾸면 window_mto_v1 을 돌리지 않고 '무효'")
+        chk(any("estimator" in x for x in validate_li2s2_values(VALx)), "⛔음성 DG P1-7: 카드 값 검사가 모르는 estimator 를 거부한다")
+    with tempfile.TemporaryDirectory() as td:
+        sw_ = ["S"] + symW[1:4] + ["P"] + symW[5:]                 # 0 번 프레임만 P·S 자리를 바꿈 (조성은 같다)
+        _mk_win(td, pre_moving[:-1] + win, syms={0: sw_})
+        r_sp = melt_window_check(td, values=VAL, log=lambda *a: None)
+        chk(r_sp["verdict"] == "invalid" and r_sp["species_ok"] is False,
+            f"⛔음성 DG P1-7: 0 번 프레임의 종 배치만 바꾸면 판정이 바뀌지 않고 '무효' ({r_sp['verdict']})")
+    with tempfile.TemporaryDirectory() as td:
+        _mk_win(td, pre_moving[:-1] + win, plan_extra={"n_atoms": 9})
+        chk(melt_window_check(td, values=VAL, log=lambda *a: None)["verdict"] == "invalid", "⛔음성 DG: traj 원자 수 ≠ plan → '무효'")
     # ③d li2s-2 1 단계 시드 판정 · 묶음 판정 (회신 DF P1-2 · P1-3) — 순수 함수
-    plan_ok = {"system": "A", "seed": 11, "fix_density_g_cm3": 1.91347, "n_atoms": 120,
-               "software": {"inference": "turbo", "fairchem-core": "2.21.0"}, **VAL["schedule"]}
+    SW_OK = {"model": "uma-s-1p1", "task": "omat", "inference": "turbo", "fairchem-core": "2.21.0", "torch": "2.8.0", "ase": "3.26.0"}
+    plan_ok = {"system": "A", "seed": 12, "fix_density_g_cm3": 1.91347, "n_atoms": 120, "composition": dict(VAL["composition"]["A"]),
+               "software": dict(SW_OK), **VAL["schedule"]}
     plan_ok.pop("n_atoms"); plan_ok["n_atoms"] = 120
-    g_ok = {"schedule_complete": True, "window_in_hold": True, "density_ok": True, "pressure_recorded": True}
+    g_ok = {"schedule_complete": True, "window_in_hold": True, "density_ok": True, "pressure_recorded": True,
+            "thermo_columns_ok": True, "target_density_g_cm3": 1.91347}
     m_ok = {"verdict": "pass"}; s_ok = {"relaxed": {"PS4_fraction": 1.0, "min_pair_excl_PS_A": 2.31}}
     f_ok = {"result.json": True, "final.xyz": True, "thermo.csv": True, "traj.xyz": True}
     chk(combine_stage1(plan_ok, VAL, g_ok, m_ok, s_ok, f_ok)["status"] == "pass", "1 단계 시드 판정: 모두 맞으면 통과")
@@ -1972,24 +2399,73 @@ def _selftest():
                          ("final.xyz 없음", {"files": dict(f_ok, **{"final.xyz": False})}, "incomplete"),
                          ("밀도 1.9 로 돌림", {"plan": dict(plan_ok, fix_density_g_cm3=1.9)}, "invalid"),
                          ("melt 80 ps 로 돌림", {"plan": dict(plan_ok, melt_ps=80.0)}, "invalid"),
-                         ("소프트웨어 기록 없음", {"plan": {k: x for k, x in plan_ok.items() if k != "software"}}, "invalid")):
-        args = {"plan": plan_ok, "gate": g_ok, "melt": m_ok, "seedg": s_ok, "files": f_ok}; args.update(kw)
-        got = combine_stage1(args["plan"], VAL, args["gate"], args["melt"], args["seedg"], args["files"])["status"]
-        chk(got == want, f"⛔음성 DF: 1 단계 시드 판정 — {nm} → {want} (받음 {got})")
+                         ("소프트웨어 기록 없음", {"plan": {k: x for k, x in plan_ok.items() if k != "software"}}, "invalid"),
+                         # 회신 DG P1-7 표 — 모르는 상태 · NaN · 반쪽 소프트웨어 · virial 열 없음 · 조성 · 최종 구조 · traj 프레임
+                         ("녹음 상태 'unknown' (DG)", {"melt": {"verdict": "unknown"}}, "invalid"),
+                         ("plan 목표 밀도 NaN (DG)", {"plan": dict(plan_ok, fix_density_g_cm3=float("nan"))}, "invalid"),
+                         ("plan melt_ps NaN (DG)", {"plan": dict(plan_ok, melt_ps=float("nan"))}, "invalid"),
+                         ("소프트웨어 fairchem·inference 만 (DG)", {"plan": dict(plan_ok, software={"inference": "turbo", "fairchem-core": "2.21.0"})}, "invalid"),
+                         ("torch 판이 ?(오류) (DG)", {"plan": dict(plan_ok, software=dict(SW_OK, torch="?(PackageNotFoundError)"))}, "invalid"),
+                         ("virial 열 없음 (DG)", {"gate": dict(g_ok, thermo_columns_ok=False, pressure_recorded=False)}, "invalid"),
+                         ("thermo 머리줄에 virial 없음 (DG)", {"checks": {"thermo_header": {"ok": False, "missing": ["P_virial_GPa"]}}, "gate": None}, "invalid"),
+                         ("gate 목표 밀도 NaN (DG)", {"gate": dict(g_ok, target_density_g_cm3=float("nan"))}, "invalid"),
+                         ("조성 다름 (DG)", {"plan": dict(plan_ok, composition={"Li": 45, "P": 15, "S": 60})}, "invalid"),
+                         ("final.xyz 가 5 원자 (DG)", {"checks": {"final_structure": {"ok": False, "why": ["원자 수 5 ≠ 120"]}}}, "invalid"),
+                         ("thermo 끝났는데 traj 잘림 (DG)", {"checks": {"traj_frames": {"n": 900, "expected": 1051}}}, "invalid"),
+                         ("traj 프레임 수를 못 셈 (DG)", {"checks": {"traj_frames": {"n": None, "expected": 1051}}}, "invalid"),
+                         ("일정 미완 · traj 짧음 (DG)", {"gate": dict(g_ok, schedule_complete=False), "checks": {"traj_frames": {"n": 900, "expected": 1051}}}, "incomplete"),
+                         ("md_init_raw 불일치 (DG)", {"checks": {"seed_gate_error": "⛔ 이미 있고 다르다"}, "seedg": None}, "invalid")):
+        args = {"plan": plan_ok, "gate": g_ok, "melt": m_ok, "seedg": s_ok, "files": f_ok, "checks": None}; args.update(kw)
+        got = combine_stage1(args["plan"], VAL, args["gate"], args["melt"], args["seedg"], args["files"], checks=args["checks"])["status"]
+        chk(got == want, f"⛔음성 DF/DG: 1 단계 시드 판정 — {nm} → {want} (받음 {got})")
+    # 회신 DG P0-1 — 계의 첫 시드 녹음 미충족은 '그 계를 닫는 사건' (러너가 멈춰 일정 미완이어도) · 둘째 시드는 일반 탈락
+    c_first = combine_stage1(dict(plan_ok, seed=11), VAL, dict(g_ok, schedule_complete=False), {"verdict": "fail", "message": "x"},
+                             None, dict(f_ok, **{"final.xyz": False, "result.json": False}))
+    c_second = combine_stage1(plan_ok, VAL, g_ok, {"verdict": "fail", "message": "x"}, s_ok, f_ok)
+    c_bad = combine_stage1(dict(plan_ok, seed=11, fix_density_g_cm3=1.9), VAL, g_ok, {"verdict": "fail", "message": "x"}, s_ok, f_ok)
+    chk(c_first["status"] == "fail" and c_first["closes_system"] and not c_second["closes_system"] and c_second["status"] == "fail"
+        and c_bad["status"] == "invalid" and not c_bad["closes_system"],
+        "DG P0-1: 첫 시드 (11) 녹음 미충족 → fail + closes_system (일정 미완이어도) · 둘째 시드는 일반 탈락 · 카드와 다른 런이면 닫지 않고 무효")
     def _v(st, fc="2.21.0"):
         return {"status": st, "software": {"inference": "turbo", "fairchem-core": fc}}
     ver = {("A", 11): _v("fail"), ("A", 12): _v("pass"), ("A", 13): _v("pass"), ("A", 14): _v("pass"), ("A", 15): _v("pass"),
            ("B", 11): _v("pass"), ("B", 12): _v("pass"), ("B", 13): _v("pass"), ("B", 14): _v("pass"), ("B", 15): _v("fail")}
-    sm = summarize_stage1(ver, VAL)
+    COST = {"total_h": 150.0, "cap_h": 230.0}
+    sm = summarize_stage1(ver, VAL, cost=COST)
     chk(sm["track"] == "stage1_pass" and sm["stage2"]["seeds"] == [12, 13] and sm["stage2"]["machines"] == {"12": "kgy", "13": "gabia"},
         f"DF P1-3: A11 · B15 탈락이어도 4/5 씩 통과 → 2 단계 시드 = 공통 통과 중 작은 둘 {sm['stage2'] and sm['stage2']['seeds']} (11 고정 아님)")
-    sm2 = summarize_stage1({**ver, ("A", 12): _v("fail")}, VAL)
+    sm2 = summarize_stage1({**ver, ("A", 12): _v("fail")}, VAL, cost=COST)
     chk(sm2["track"] == "stop_track" and sm2["per_system"]["A"]["status"] == "fail" and sm2["stage2"] is None,
         "⛔음성 DF: 한쪽 계가 1 단계에서 닫히면 (A 3/5) 다른 계가 통과해도 비교 트랙 전체가 멈춘다")
-    sm3 = summarize_stage1({k: (None if k in (("B", 14), ("B", 15)) else x) for k, x in ver.items()} | {("B", 15): None}, VAL)
+    sm3 = summarize_stage1({k: (None if k in (("B", 14), ("B", 15)) else x) for k, x in ver.items()} | {("B", 15): None}, VAL, cost=COST)
     chk(sm3["track"] == "pending", "시드 판정이 덜 끝났으면 (B 3 통과 · 2 없음) 대기")
-    sm4 = summarize_stage1({**ver, ("B", 13): _v("pass", fc="2.19.0")}, VAL)
+    sm4 = summarize_stage1({**ver, ("B", 13): _v("pass", fc="2.19.0")}, VAL, cost=COST)
     chk(sm4["track"] == "invalid", "⛔음성 DF: 통과 시드의 fairchem 판이 둘 이상이면 무효 (기계 이름이 아니라 판을 고정)")
+    all4 = {(s_, sd): _v("pass") for s_ in ("A", "B") for sd in (11, 12, 13, 14)}
+    sm5 = summarize_stage1({**all4, ("A", 15): _v("incomplete"), ("B", 15): _v("incomplete")}, VAL, cost=COST)
+    sm6 = summarize_stage1({**all4, ("A", 15): None, ("B", 15): None}, VAL, cost=COST)
+    chk(sm5["track"] == "pending" and sm6["track"] == "pending" and sm5["stage2"] is None,
+        f"⛔음성 DG P1-5: 11–14 통과 · 15 미완 (또는 판정 없음) 이면 묶음은 통과가 아니라 대기 ({sm5['track']} · {sm6['track']})")
+    sm7 = summarize_stage1({**ver, ("A", 13): _v("unknown")}, VAL, cost=COST)
+    chk(sm7["track"] == "invalid" and bool(sm7["unknown_status"]), "⛔음성 DG P1-7: 판정 상태 'unknown' 은 통과 · 대기가 아니라 무효")
+    closed = {**{k: None for k in ver}, ("A", 11): dict(_v("fail"), closes_system=True)}
+    closed.update({("B", sd): _v("pass") for sd in (11, 12, 13, 14, 15)})
+    closed.update({("A", sd): _v("pass") for sd in (12, 13, 14, 15)})
+    sm8 = summarize_stage1(closed, VAL, cost=COST)
+    chk(sm8["track"] == "stop_track" and sm8["per_system"]["A"]["status"] == "closed",
+        "⛔음성 DG P0-1: A11 이 계를 닫으면 (첫 시드 녹음 미충족) 나머지 아홉이 통과해도 (A 4/5) 트랙 멈춤 — 일반 탈락과 다르다")
+    sm9 = summarize_stage1(ver, VAL, cost={"total_h": 240.0, "cap_h": 230.0})
+    sm10 = summarize_stage1(ver, VAL, cost=None)
+    sm11 = summarize_stage1(ver, VAL, cost={"total_h": float("nan"), "cap_h": 230.0})
+    chk(sm9["track"] == "cap_incomplete" and sm10["track"] == "pending" and sm11["track"] == "cap_incomplete" and not sm9["stage2"],
+        f"⛔음성 DG P0-3: 비용 240 > 상한 230 → 미완결 · 장부 없음 → 대기 · 비유한 → 미완결 ({sm9['track']} · {sm10['track']} · {sm11['track']})")
+    chk(validate_li2s2_values(VAL) == [] or [x for x in validate_li2s2_values(VAL) if "composition.T" not in x] == [],
+        f"카드 값 검사: 시험 값은 통과 ({validate_li2s2_values(VAL)})")
+    for nm_, mut in (("first_seed 12 (seeds[0] 아님)", {"first_seed": 12}), ("상한 NaN", {"stage1_cap_gpu_h": float("nan")}),
+                     ("조성 합 ≠ n_atoms", {"composition": {"A": {"Li": 48}, "B": VAL["composition"]["B"]}}),
+                     ("software_required 없음", {"software_required": None}), ("밀도 NaN", {"fix_density_g_cm3": {"A": float("nan"), "B": 1.88}}),
+                     ("압력 열 목록에 virial 없음", {"thermo_required_columns": ["t_ps", "T_set_K", "density_g_cm3", "P_GPa"]})):
+        chk(validate_li2s2_values({**VAL, **mut}) != [], f"⛔음성 DG: 카드 값 검사가 거부한다 — {nm_}")
     # ④ 배로스탯 대조 잡 — LJ 결정(fcc)으로 배선만. 같은 BARO 를 쓰는지까지 본다
     from ase.build import bulk
     with tempfile.TemporaryDirectory() as td:
@@ -2616,7 +3092,9 @@ def main():
     ap.add_argument("--stage1_verdict", nargs="+", metavar="RUN_DIR",
                     help="⭐li2s-2 1 단계 시드 판정 (일정 완주 · 유지 구간 · 압력 기록 · 밀도 · 녹음 · 시드 게이트 · 카드 일정) → stage1_verdict.json")
     ap.add_argument("--stage1_summary", metavar="OUT_ROOT",
-                    help="⭐li2s-2 1 단계 묶음 판정 (계마다 ≥ need · 한쪽 탈락 = 트랙 멈춤 · 2 단계 시드 = 공통 통과 중 작은 둘)")
+                    help="⭐li2s-2 1 단계 묶음 판정 (판정 지문 다시 잼 · 선언 시드 전부 판정 끝 · 첫 시드 녹음 미충족 = 그 계 닫힘 · "
+                         "한쪽 탈락 = 트랙 멈춤 · 비용 장부 > 상한 = 미완결 · 2 단계 시드 = 공통 통과 중 작은 둘). "
+                         "종료 0 통과 · 2 멈춤 · 3 대기 · 4 무효 · 5 상한 미완결")
     ap.add_argument("--li2s2_card", default=LI2S2_CARD, help="li2s-2 카드 (기계_판독_값 출처 — 도구가 문턱을 자체 보관하지 않는다)")
     ap.add_argument("--melt_check", metavar="RUN_DIR",
                     help="⭐이미 끝난 런에서 melt 구간 P 골격이 확산했는지 본다 (새 계산 없음)")
@@ -2738,7 +3216,7 @@ def main():
         raise SystemExit(max(rcs))
     if a.stage1_summary:
         res = stage1_summary(a.stage1_summary, card=a.li2s2_card)
-        raise SystemExit({"stage1_pass": 0, "stop_track": 2, "pending": 3}.get(res["track"], 4))
+        raise SystemExit(SUMMARY_RC.get(res["track"], 4))
     if a.melt_check:
         res = melt_check(a.melt_check, d_melt_cm2s=a.d_melt_cm2_s)
         (pathlib.Path(a.melt_check) / "melt_check.json").write_text(
