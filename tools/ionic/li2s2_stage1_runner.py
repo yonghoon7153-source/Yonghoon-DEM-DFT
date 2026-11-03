@@ -1680,6 +1680,13 @@ def _selftest():
         a_ = J(c / "B/seed13" / real.ATTEMPT_NAME); a_["retry_of"] = None; _write_json_atomic(c / "B/seed13" / real.ATTEMPT_NAME, a_)
     def att_gone(c, ids):
         (c / "B/seed13.prev0" / real.ATTEMPT_NAME).unlink()
+    def wrong_kind(c, ids):                                  # retry_kind 만 틀림 (장부 · 실행 전 기록 둘 다 맞춰서) — 그 대조만 잡는다
+        l_ = J(c / "stage1_ledger.json")
+        for r in l_["runs"]:
+            if r.get("retry_of"):
+                r["retry_kind"] = "invalid"
+        _write_json_atomic(c / "stage1_ledger.json", l_)
+        a_ = J(c / "B/seed13" / real.ATTEMPT_NAME); a_["retry_kind"] = "invalid"; _write_json_atomic(c / "B/seed13" / real.ATTEMPT_NAME, a_)
     def rebind(c, ids):
         l_ = J(c / "stage1_ledger.json"); l_["stop_history"][-1]["run_id"] = "0" * 32; _write_json_atomic(c / "stage1_ledger.json", l_)
     def cut_verdict(c, ids):
@@ -1695,6 +1702,7 @@ def _selftest():
     s_ag = hist_case([{"decl": OUT}], att_gone)[1]
     s_nd = hist_case([{"decl": None}])[1]
     s_rb = hist_case([{"decl": OUT}], rebind)[1]
+    s_wk = hist_case([{"decl": OUT}], wrong_kind)[1]
     s_cv = hist_case([{"decl": OUT}], cut_verdict)[1]
     s_mo = hist_case([{"decl": OUT}], move_out)[1]
     s_mc = hist_case([{"decl": OUT, "stage": "md_complete"}])[1]
@@ -1706,12 +1714,13 @@ def _selftest():
     rc_sl, L_sl, _ = go(wt, rr=c_sl)
     got_c = {"ok": s_ok1["track"], "two": inv_(s_two, "한도"), "two_kind": inv_(s_two_k, "한도"), "strip_ledger": inv_(s_sl, "retry_of"),
              "strip_all": inv_(s_sa, "retry_of"), "att_mismatch": inv_(s_am, real.ATTEMPT_NAME), "att_gone": inv_(s_ag, real.ATTEMPT_NAME),
-             "no_decl": inv_(s_nd, "재시도 선언"), "rebind": inv_(s_rb, "묶여 확인된"), "cut_verdict": inv_(s_cv, "못 읽는데"),
+             "no_decl": inv_(s_nd, "재시도 선언"), "rebind": inv_(s_rb, "묶여 확인된"), "wrong_kind": inv_(s_wk, "retry_kind"),
+             "cut_verdict": inv_(s_cv, "못 읽는데"),
              "move_out": inv_(s_mo, "보존 누락"), "md_complete": inv_(s_mc, "MD 까지"), "final": inv_(s_fn, "끝까지"),
              "invalid_final_no_reason": inv_(s_ivn, "다시 판정할 수 없다"), "invalid_final_reason": s_ivy["track"],
              "cap_run_outage_reason": inv_(s_cpo, "상한으로 멈춘 런"), "runner_on_stripped": (rc_sl, len(L_sl))}
     exp_c = {"ok": "stage1_pass", "two": True, "two_kind": True, "strip_ledger": True, "strip_all": True, "att_mismatch": True, "att_gone": True,
-             "no_decl": True, "rebind": True, "cut_verdict": True, "move_out": True, "md_complete": True, "final": True,
+             "no_decl": True, "rebind": True, "wrong_kind": True, "cut_verdict": True, "move_out": True, "md_complete": True, "final": True,
              "invalid_final_no_reason": True, "invalid_final_reason": "stage1_pass", "cap_run_outage_reason": True,
              "runner_on_stripped": (RC["invalid"], 0)}
     chk(got_c == exp_c,
@@ -1848,18 +1857,20 @@ def _selftest():
         and eg5["attestation"]["lower_at_attest"] == 5.0 and eg5["attestation"]["heartbeat_at_attest"] == 5.0 and eg5["attestation"]["confirmer"] == "selftest",
         f"⛔음성 DJ P0-3 (Codex 재현): 하한이 null · NaN · −1 · heartbeat 미만이면 0 h · 6 h 어느 증언도 안 받고 장부를 안 건드린다 (비용 미확정 그대로) · "
         f"하한이 맞으면 0 h 는 거부 · 6 h 는 받고 증언 때 하한 · heartbeat 를 같이 적는다 ({res_lb})")
-    def attested_bad(lo_, w_=0.0, status="orphaned"):
+    def attested_bad(lo_, w_=0.0, status="orphaned", hb_at=5.0):
         c = clone(rr_d)
         l_ = J(c / "stage1_ledger.json")
         l_["runs"][0].update(status=status, cost_basis="attested_upper_bound", wall_h=w_, wall_h_so_far=5.0, wall_h_lower=lo_,
-                             attestation={**ATT, "confirmed_at": "t", "lower_at_attest": lo_, "heartbeat_at_attest": 5.0})
+                             attestation={**ATT, "confirmed_at": "t", "lower_at_attest": lo_, "heartbeat_at_attest": hb_at})
         _write_json_atomic(c / "stage1_ledger.json", l_)
         return summ(c)
     sb_ = [attested_bad(x) for x in (None, float("nan"), -1.0)]
     s_good0, s_good6, s_ended = attested_bad(5.0), attested_bad(5.0, 6.0), attested_bad(5.0, 6.0, status="ended")
-    chk(all(inv_(x, "하한이 미상") for x in sb_) and inv_(s_good0, "하한") and s_good6["track"] == "stage1_pass" and inv_(s_ended, "고아 런"),
+    s_hbat = attested_bad(5.0, 6.0, hb_at=3.0)                # 증언 때 적은 heartbeat 가 장부와 다름 (하한은 맞음)
+    chk(all(inv_(x, "하한이 미상") for x in sb_) and inv_(s_good0, "하한") and s_good6["track"] == "stage1_pass" and inv_(s_ended, "고아 런")
+        and inv_(s_hbat, "heartbeat"),
         "⛔음성 DJ P0-3 (소비자): 증언 상한 0 h 에 하한이 null · NaN · −1 이면 비용 0 으로 통과시키지 않고 무효 · 하한이 맞아도 0 h < 하한이면 무효 · "
-        "고아 런이 아닌 행 (정상 끝) 을 증언 상한으로 바꾸면 무효 (양성 대조: 하한 5 · 상한 6 h 고아 런은 통과)")
+        "고아 런이 아닌 행 (정상 끝) 을 증언 상한으로 바꾸면 무효 · 증언 때 적은 heartbeat 가 장부와 다르면 무효 (양성 대조: 하한 5 · 상한 6 h 고아 런은 통과)")
     rr_m, rid_m = orphan_root(1.5, hb=1.5)
     rcs_m = [attest_cost(rr_m, rid_m, vals_t, hours=2.0, fields={k: x for k, x in ATT.items() if k != drop})[0]
              for drop in ("event", "time_reference", "uncertainty_h", "derivation", "confirmer")]
