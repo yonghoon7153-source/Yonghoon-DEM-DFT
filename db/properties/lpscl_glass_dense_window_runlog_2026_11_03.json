@@ -12,6 +12,16 @@
   "깨기": "4/4 빨강 — 압축 안 함 (끝 밀도 검사가 멈춤) · 입력 검사 끔 · gate 허용폭 1.0 · plan 이 옵션 무시 / ⚠ 처음엔 허용폭 깨기가 초록이었다 (density_ok · gate_ok 를 따로 계산) → 한 곳에서 정하게 고침",
   "by": "agent · 2026-11-03"
  },
- "리뷰": "Codex DF — 카드 §0–§8 + 도구 변경 · 회신 대기",
- "⏭": "Codex DF 회신 → P0 · P1 반영 → 결정 활성 (사용자 (위임 10-30)) → R0 (LiCl 밀도 출처) → 1 단계 kgy 러너 (시드 11–15 · A/B 번갈아 · 시드마다 gate_check · melt_check · seed_gate) → cascade v7 끝 (≈ 11-04) 뒤 발사"
+ "리뷰": "Codex DF — NO-GO → 반영 (위) → 확인 리뷰 DG (고친 곳만) 뒤 활성 · 발사",
+ "⏭": "Codex DG (고친 곳 확인) → 결정 활성 (사용자 (위임 10-30)) → kgy worktree · 러너 발사 (cascade v7 끝 ≈ 11-04 뒤 · 러너가 GPU 가 빌 때까지 기다린다)",
+ "회신_DF_2026_11_03": {
+  "판정": "NO-GO (ff795d669 그대로 실행 보류) · 고정 밀도 NVT 방향 조건부 찬성 · P0 1 · P1 5 · P2 4",
+  "원문": "kb/reviews/codex_DF_reply_li2s2_dense_window_card_2026_11_03.md",
+  "반영_도구": "melt_quench_uma.py sha16 f5063afca93dbf31: --melt_window_check (window_mto_v1 · 창 안 원점 · 창 확보 · 유한 · 겹침) · gate_check NVT (일정 완주 · 유지 구간 · 압력 기록) · --compress_ps ≤ melt/2 강제 · 옛 --melt_check 는 고정 밀도 런 거부 · plan.json software (fairchem · torch · ase · 모델 · 추론) · --stage1_verdict · --stage1_summary · 카드 기계_판독_값 읽기",
+  "반영_시험": "selftest 126 → 152 (DF 반례: 창 좌표가 같고 이력만 다른 둘 → 같은 D · 70 ps 끊김 → 미완 + 실제 창 [50, 70] · 겹침 · NaN · melt 기록만 · 압력 NaN · 시드 판정 10 갈래 · 묶음 판정 4 갈래) · 깨기 7/7 빨강 (창 원점 0 · 창 확보 안 봄 · 압력 기록 안 봄 · 일정 안 봄 · 시드 11 · 12 고정 · PS₄ 안 봄 · 두 계 다 떨어져야 멈춤)",
+  "반영_러너": "tools/ionic/li2s2_stage1_runner.py sha16 61abc3ff9591d043 — 결정 active · sha 고정 · 잠금 · 끊긴 런 거부 · 첫 시드 녹음 판정이 담금질을 실제로 멈춤 · 시드 판정 · 묶음 판정 · 누적 벽시계 상한 · selftest 15/15 · 깨기 5/5",
+  "반영_카드": "카드 §개정_DF_2026_11_03 (결과 전) · 기계_판독_값 · R0 (LiCl 2.07 · 20 °C · 회신 DF 가 Merck 물성표로 확인)",
+  "남은_것": "2 단계 전: MD 압력 스냅숏 재계산 도구 (절차는 카드 §2) · 3 단계 전: 별도 결정",
+  "by": "agent · 2026-11-03"
+ }
 }

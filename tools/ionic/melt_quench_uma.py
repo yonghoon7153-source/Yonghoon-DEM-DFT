@@ -36,6 +36,9 @@
   python3 tools/ionic/melt_quench_uma.py --system A --seed 1 --quench_rate 1e12 --out_root /data/work/runs/li2s_layer1
   python3 tools/ionic/melt_quench_uma.py --npt_control db/structures/sei_li2s_mp-1153.vasp --out_root /data/work/runs/li2s_layer1
   python3 tools/ionic/melt_quench_uma.py --seed_gate <run_dir> [<run_dir> ...]   # 시드 게이트 입력 · 원시/relax 두 판 · md_init_raw.xyz
+  python3 tools/ionic/melt_quench_uma.py --melt_window_check <run_dir>   # li2s-2 녹음 판정 (창 안 원점 · 0 통과 · 2 미충족 · 3 미완 · 4 무효)
+  python3 tools/ionic/melt_quench_uma.py --stage1_verdict <run_dir> …    # li2s-2 1 단계 시드 판정 (카드 필드 직접 · stage1_verdict.json)
+  python3 tools/ionic/melt_quench_uma.py --stage1_summary <out_root>     # li2s-2 1 단계 묶음 판정 · 2 단계 시드 (stage1_summary.json)
   python3 tools/ionic/melt_quench_uma.py --selftest
 
 ⚠ final.xyz 는 **relax 본**이다 (④ · plan.json 게이트_입력.final_relax). 담금질 원시는 traj.xyz 마지막 프레임뿐이고,
@@ -86,6 +89,9 @@ def validate_fix_density(rho_g_cm3, compress_ps, melt_ps):
         raise SystemExit(f"⛔ --compress_ps 는 양수여야 한다 (받은 값 {compress_ps})")
     if compress_ps > melt_ps:
         raise SystemExit(f"⛔ --compress_ps {compress_ps} 가 --melt_ps {melt_ps} 보다 길다 — 압축은 melt 안에서 끝나야 한다")
+    if compress_ps > melt_ps / 2.0 + 1e-9:   # 회신 DF Q-DF-8 — 녹음 판정 창 [melt/2, melt] 과 겹치지 않게
+        raise SystemExit(f"⛔ --compress_ps {compress_ps} 가 녹음 판정 창 시작 (melt_ps/2 = {melt_ps/2:g} ps) 보다 늦게 끝난다 — "
+                         "압축은 판정 창 전에 끝나야 한다")
 
 
 def scale_to_density(atoms, rho_g_cm3):
@@ -456,6 +462,8 @@ def melt_check(run_dir, *, d_melt_cm2s=1e-6, log=print):
     from ase.io import read
     run = pathlib.Path(run_dir)
     plan = json.loads((run / "plan.json").read_text(encoding="utf-8"))
+    if plan.get("fix_density_g_cm3") is not None:   # 회신 DF P0 · P2 — 누적 원점 판정 · '밀도는 물리다' 출력이 고정 밀도에 안 맞는다
+        raise SystemExit("⛔ 고정 밀도 (--fix_density) 런이다 — 옛 --melt_check (0 ps 누적 원점) 대신 --melt_window_check 를 쓴다")
     frames = read(str(run / "traj.xyz"), index=":")
     if len(frames) < 8:
         raise SystemExit(f"⛔ 프레임이 {len(frames)}개뿐이다 — MSD 를 못 낸다")
@@ -487,6 +495,259 @@ def melt_check(run_dir, *, d_melt_cm2s=1e-6, log=print):
     out["⛔"] = ("진단이다. 'melted' 가 구조가 좋다는 뜻이 아니고, 'not_melted' 면 그 담금질의 밀도는 "
                  "물리가 아니라 생성기 채움밀도다 — G4 밴드를 논하기 전에 이걸 고친다.")
     return out
+
+
+# ───────────────────────── li2s-2 (카드 lpscl_glass_dense_window) — 회신 DF P0 · P1-2 · P1-3 ─────────────────────────
+#: ⛔ 2026-11-03 회신 DF P0 — 옛 `melt_check` 는 0 ps 부터 **누적한** 변위로 MSD 를 만들고 회귀 점만 [melt/2, melt] 로 잘랐다.
+#:   그래서 압축 · 초기 재배열 때 생긴 변위와 뒤 변위의 교차항이 판정에 남는다 (창 좌표가 같아도 이력만 달라 21 배 · 70 ps 에서
+#:   끊긴 궤적도 '창 [50, 100]' 으로 기록). 아래 `melt_window_check` 는 **창 안 프레임만** 읽고 **창 안 시간원점만** 쓴다.
+#:   문턱 (1e-6 cm²/s) 은 옛 진단값을 승계한다 — 그 승계는 카드 · 결정에 결과 전에 적었다. 옛 진단 결과는 덮지 않는다.
+LI2S2_CARD = "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json"
+MELT_WINDOW_ESTIMATOR = "window_mto_v1"
+STAGE1_RC = {"pass": 0, "fail": 2, "incomplete": 3, "invalid": 4}
+
+
+def read_li2s2_values(card=LI2S2_CARD):
+    """li2s-2 카드의 `기계_판독_값` — 이 도구는 그 카드의 문턱 · 일정 · 목표 밀도를 **자체 보관하지 않는다**."""
+    d = json.loads(pathlib.Path(card).read_text(encoding="utf-8"))
+    v = d.get("기계_판독_값")
+    if not v:
+        raise KeyError(f"{card} 에 '기계_판독_값' 이 없다 — 카드 없이 판정하지 않는다")
+    return v
+
+
+def software_versions(mode):
+    """plan.json 에 남길 실행 소프트웨어 (회신 DF Q-DF-6: 기계 이름이 아니라 판 · 체크포인트 · 추론 설정을 고정한다)."""
+    from importlib import metadata
+    out = {"model": "uma-s-1p1", "task": "omat", "inference": mode}
+    for pkg in ("fairchem-core", "torch", "ase"):
+        try:
+            out[pkg] = metadata.version(pkg)
+        except Exception as e:
+            out[pkg] = f"?({type(e).__name__})"
+    return out
+
+
+def _leading_frames(traj_path, n_need):
+    """traj.xyz 의 앞 n_need 프레임만 읽는다 — 쓰는 중인 파일이면 끝의 반쪽 프레임에서 멈춘다 (멈춘 이유를 돌려준다)."""
+    from ase.io import iread
+    frames, why = [], None
+    try:
+        for fr in iread(str(traj_path), index=slice(0, n_need)):
+            frames.append(fr)
+    except Exception as e:
+        why = f"{type(e).__name__}: {e}"
+    return frames, why
+
+
+def window_mto_msd(sym, pos, cells, lags):
+    """창 안 프레임들로 원소별 **다중 시간원점** MSD [Å²] — 원점은 창 안에서만 고른다.
+
+    분수좌표 차분 → MIC → 그 프레임 셀로 실공간 증분 → 창 첫 프레임 기준 누적 → 전체 평균 병진 제거 (npt_msd 와 같은 꼴)
+    → 지연 k 마다 모든 (j, j+k) 쌍 평균. 창 밖 이력은 들어갈 길이 없다."""
+    sym = np.asarray(sym); pos = np.asarray(pos, float); cells = np.asarray(cells, float)
+    T, N, _ = pos.shape
+    frac = np.einsum("tnj,tjk->tnk", pos, np.linalg.inv(cells))
+    df = np.diff(frac, axis=0); df -= np.round(df)
+    steps = np.einsum("tnj,tjk->tnk", df, cells[1:])
+    disp = np.concatenate([np.zeros((1, N, 3)), np.cumsum(steps, axis=0)])
+    disp -= disp.mean(axis=1, keepdims=True)
+    out = {}
+    for e in sorted(set(sym.tolist())):
+        d = disp[:, sym == e]
+        out[str(e)] = np.array([((d[k:] - d[:-k]) ** 2).sum(-1).mean() if 0 < k < T else np.nan for k in lags])
+    return out
+
+
+def melt_window_check(run_dir, *, values=None, card=LI2S2_CARD, log=print):
+    """⭐ li2s-2 녹음 판정 — 압축 **뒤** 창 [melt_ps·a, melt_ps·b] 안 프레임 · 창 안 시간원점만 쓰는 P 골격 D (회신 DF P0).
+
+    verdict: pass (D_P > 문턱) · fail · incomplete (창 전체가 없다 · 쓰는 중) · invalid (압축이 창과 겹침 · 좌표가 유한하지 않음).
+    ⛔ 못 하는 것: 'pass' 는 '이 밀도 · 온도 · 시간에서 사전 정의한 P 골격 이동 기준을 충족했다' 까지다 — 평형 액체의 인증이
+       아니다. 'fail' 은 '1200 K 에서 액체가 없다' 가 아니다 (회신 DF Q-DF-3 문구). 결정화 · 구조는 안 본다."""
+    v = values if values is not None else read_li2s2_values(card)
+    mw = v["melt_window"]
+    run = pathlib.Path(run_dir)
+    plan = json.loads((run / "plan.json").read_text(encoding="utf-8"))
+    melt_ps, save_ps = float(plan["melt_ps"]), float(plan["save_ps"])
+    t_from, t_to = float(mw["t_from_frac_of_melt"]) * melt_ps, float(mw["t_to_frac_of_melt"]) * melt_ps
+    lag_lo, lag_hi = (float(x) for x in mw["lag_fit_ps"])
+    comp = float(plan.get("compress_ps") or 0.0) if plan.get("fix_density_g_cm3") is not None else 0.0
+    thr, el = float(mw["D_threshold_cm2_s"]), str(mw["element"])
+    out = {"kind": "melt_window_check", "estimator": MELT_WINDOW_ESTIMATOR, "run": str(run),
+           "estimator_def": "창 안 프레임만 · 창 안 시간원점 (다중 원점) · 창 첫 프레임 기준 unwrap · 전체 병진 제거 · "
+                            "지연 [lag_fit] 자유절편 선형맞춤 MSD = 6Dτ + c",
+           "window_declared_ps": [t_from, t_to], "lag_fit_ps": [lag_lo, lag_hi], "compress_end_ps": comp,
+           "element": el, "D_threshold_cm2_s": thr, "threshold_source": mw.get("threshold_source"),
+           "overlap_ok": comp <= t_from + 1e-9, "coverage_ok": None, "finite_ok": None, "window_used_ps": None,
+           "per_element": {}, "D_framework_cm2_s": None}
+    def done(verdict, msg):
+        out["verdict"] = verdict; out["message"] = msg; log(f"  [melt_window] {verdict} — {msg}"); return out
+    if not out["overlap_ok"]:
+        return done("invalid", f"압축 끝 {comp:g} ps 가 판정 창 시작 {t_from:g} ps 보다 늦다 — 창이 강제 압축과 겹친다")
+    n_need = int(round(t_to / save_ps)) + 1
+    frames, why = _leading_frames(run / "traj.xyz", n_need)
+    times = np.arange(len(frames)) * save_ps
+    sel = np.where((times >= t_from - 1e-6) & (times <= t_to + 1e-6))[0]
+    out["n_frames_read"], out["read_stop"] = len(frames), why
+    if sel.size:
+        out["window_used_ps"] = [float(times[sel[0]]), float(times[sel[-1]])]
+    out["coverage_ok"] = bool(sel.size >= 2 and times[sel[0]] <= t_from + 1e-6 and times[sel[-1]] >= t_to - 1e-6)
+    if not out["coverage_ok"]:
+        return done("incomplete", f"창 [{t_from:g}, {t_to:g}] ps 가 다 없다 — 읽은 프레임 {len(frames)} · 쓴 창 {out['window_used_ps']}")
+    sym = frames[0].get_chemical_symbols()
+    pos = np.array([frames[i].get_positions() for i in sel]); cells = np.array([np.asarray(frames[i].get_cell()) for i in sel])
+    out["finite_ok"] = bool(np.isfinite(pos).all() and np.isfinite(cells).all())
+    if not out["finite_ok"]:
+        return done("invalid", "창 안 좌표 · 셀에 유한하지 않은 값이 있다")
+    k_lo, k_hi = int(math.ceil(lag_lo / save_ps - 1e-9)), int(math.floor(lag_hi / save_ps + 1e-9))
+    lags = list(range(max(1, k_lo), k_hi + 1))
+    msd = window_mto_msd(sym, pos, cells, lags)
+    tau = np.array(lags) * save_ps
+    for e, m in msd.items():
+        ok = np.isfinite(m)
+        if ok.sum() < 4:
+            out["per_element"][e] = {"D_cm2_s": None}; continue
+        a, c = np.polyfit(tau[ok], m[ok], 1)
+        out["per_element"][e] = {"D_cm2_s": float(a / 6.0 * 1e-4), "intercept_A2": float(c),
+                                 "msd_at_lag_hi_A2": float(m[ok][-1])}
+    D = out["per_element"].get(el, {}).get("D_cm2_s")
+    out["D_framework_cm2_s"] = D
+    if D is None or not math.isfinite(D):
+        return done("invalid", f"{el} 의 D 를 못 냈다 (지연 점 부족)")
+    if D > thr:
+        return done("pass", f"이 밀도 · 온도 · 시간에서 사전 정의한 {el} 골격 이동 기준을 충족했다 (D {D:.2e} > {thr:g} cm²/s) — 평형 액체 인증 아님")
+    return done("fail", f"이 밀도 · 온도 · 시간에서 사전 정의한 {el} 골격 이동 기준을 충족하지 못했다 (D {D:.2e} ≤ {thr:g} cm²/s) — '액체가 없다' 가 아님")
+
+
+def combine_stage1(plan, values, gate, melt, seedg, files):
+    """li2s-2 1 단계 시드 판정 — 카드가 요구하는 필드를 **직접** 읽는다 (회신 DF P1-2: 종료코드를 합쳐 판정하지 않는다).
+
+    입력은 이미 계산된 dict (plan.json · gate_check · melt_window_check · seed_gate · 파일 존재) — 순수 함수라 시험이 가볍다.
+    우선순위: invalid (카드와 다른 실행 · 소프트웨어 기록 없음) > incomplete (끝나지 않음 · 창 · 파일 없음) > fail > pass."""
+    reasons = {"invalid": [], "incomplete": [], "fail": []}
+    sched, sysname = values["schedule"], plan.get("system")
+    tgt = values["fix_density_g_cm3"].get(sysname)
+    if tgt is None or plan.get("fix_density_g_cm3") is None or abs(float(plan["fix_density_g_cm3"]) - float(tgt)) > 1e-6:
+        reasons["invalid"].append(f"고정 밀도 {plan.get('fix_density_g_cm3')} ≠ 카드 {tgt} ({sysname})")
+    for k, want in sched.items():
+        got = plan.get("n_atoms") if k == "n_atoms" else plan.get(k)
+        if got is None or abs(float(got) - float(want)) > 1e-9 * max(1.0, abs(float(want))):
+            reasons["invalid"].append(f"일정 {k} {got} ≠ 카드 {want}")
+    sw = plan.get("software") or {}
+    if sw.get("inference") != values["uma_inference_mode"] or not sw.get("fairchem-core") or str(sw.get("fairchem-core")).startswith("?"):
+        reasons["invalid"].append(f"소프트웨어 기록 {sw or '없음'} — 추론 설정 {values['uma_inference_mode']} · fairchem 판이 있어야 한다")
+    for f, ok in files.items():
+        if not ok:
+            reasons["incomplete"].append(f"{f} 없음")
+    if gate is None:
+        reasons["incomplete"].append("gate_check 없음")
+    else:
+        if not gate.get("schedule_complete"):
+            reasons["incomplete"].append("계획한 일정 (melt · 담금질 · 유지) 을 다 돌지 않았다")
+        for k, why in (("window_in_hold", "판정 창이 300 K 유지 구간 안이 아니다"), ("density_ok", "밀도 ≠ 목표"),
+                       ("pressure_recorded", "압력 기록이 없다 (NaN · 빈 칸) — '기록했다' 와 '없다' 를 가른다")):
+            if gate.get("schedule_complete") and not gate.get(k):
+                reasons["fail"].append(why)
+    if melt is None or melt.get("verdict") in (None, "incomplete"):
+        reasons["incomplete"].append(f"녹음 판정 {None if melt is None else melt.get('verdict')}")
+    elif melt["verdict"] == "invalid":
+        reasons["invalid"].append(f"녹음 판정 invalid — {melt.get('message')}")
+    elif melt["verdict"] == "fail":
+        reasons["fail"].append(melt.get("message"))
+    sg, rel = values["seed_gate"], (seedg or {}).get(values["seed_gate"]["version"])
+    if not rel:
+        reasons["incomplete"].append(f"시드 게이트 {values['seed_gate']['version']} 판 없음")
+    else:
+        if not (rel.get("PS4_fraction") is not None and rel["PS4_fraction"] >= float(sg["PS4_fraction_min"]) - 1e-12):
+            reasons["fail"].append(f"PS₄ 보존율 {rel.get('PS4_fraction')} < {sg['PS4_fraction_min']}")
+        if not (rel.get("min_pair_excl_PS_A") is not None and rel["min_pair_excl_PS_A"] > float(sg["min_pair_excl_PS_A_gt"])):
+            reasons["fail"].append(f"최단 원자간 (P–S 제외) {rel.get('min_pair_excl_PS_A')} ≤ {sg['min_pair_excl_PS_A_gt']} Å")
+    status = next((s for s in ("invalid", "incomplete", "fail") if reasons[s]), "pass")
+    return {"status": status, "reasons": reasons, "system": sysname, "seed": plan.get("seed"), "software": sw}
+
+
+def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print):
+    """li2s-2 1 단계 시드 판정을 **새로 계산해서** 낸다 (gate_check · melt_window_check · seed_gate) → stage1_verdict.json."""
+    v = values if values is not None else read_li2s2_values(card)
+    run = pathlib.Path(run_dir)
+    plan_p = run / "plan.json"
+    if not plan_p.is_file():
+        res = {"status": "incomplete", "reasons": {"incomplete": ["plan.json 없음"]}, "run": str(run)}
+    else:
+        plan = json.loads(plan_p.read_text(encoding="utf-8"))
+        files = {f: (run / f).is_file() for f in ("result.json", "final.xyz", "thermo.csv", "traj.xyz")}
+        gate = melt = seedg = None
+        if files["thermo.csv"]:
+            try:
+                gate = gate_check(run, win_ps=float(v["gate_check"]["win_ps"]), log=lambda *a: None)
+            except Exception as e:
+                gate = {"schedule_complete": False, "error": f"{type(e).__name__}: {e}"}
+        if files["traj.xyz"]:
+            melt = melt_window_check(run, values=v, log=lambda *a: None)
+        if files["final.xyz"] and files["traj.xyz"]:
+            seedg = seed_gate(run, write_raw=True, log=lambda *a: None)
+        res = combine_stage1(plan, v, gate, melt, seedg, files)
+        res.update({"run": str(run), "gate_check": gate, "melt_window_check": melt,
+                    "seed_gate_view": (seedg or {}).get(v["seed_gate"]["version"])})
+    (run / "stage1_verdict.json").write_text(json.dumps(res, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+    log(f"  [stage1] {run} → {res['status']}  " + "; ".join(x for k in ("invalid", "incomplete", "fail") for x in res["reasons"].get(k, [])))
+    return res
+
+
+def summarize_stage1(verdicts, values):
+    """li2s-2 1 단계 묶음 판정 (회신 DF P1-3) — verdicts: {(계, 시드): stage1_verdict dict 또는 None}.
+
+    계마다 pass ≥ need 면 통과 · fail 이 (시드 수 − need) 를 넘으면 그 계 탈락 → **비교 트랙 전체 멈춤** · 아니면 대기.
+    두 계 통과면 2 단계 시드 = 두 계 **모두** 통과한 시드 번호 중 작은 둘 · 기계는 그 순서로 (카드 stage2_machines)."""
+    seeds, need = list(values["seeds"]), int(values["stage1_need_pass"])
+    per, sw_seen = {}, {}
+    for s in ("A", "B"):
+        st = {sd: ((verdicts.get((s, sd)) or {}).get("status") or "missing") for sd in seeds}
+        n_pass = sum(1 for x in st.values() if x == "pass")
+        n_fail = sum(1 for x in st.values() if x == "fail")
+        n_bad = sum(1 for x in st.values() if x == "invalid")
+        status = ("invalid" if n_bad else "pass" if n_pass >= need else "fail" if n_fail > len(seeds) - need else "pending")
+        per[s] = {"status": status, "per_seed": st, "n_pass": n_pass, "n_fail": n_fail}
+        for sd in seeds:
+            vv = verdicts.get((s, sd)) or {}
+            if vv.get("status") == "pass":
+                sw = {k: x for k, x in (vv.get("software") or {}).items()}
+                sw_seen[json.dumps(sw, sort_keys=True)] = sw
+    out = {"per_system": per, "software_variants": list(sw_seen.values()), "stage2": None}
+    if any(per[s]["status"] == "invalid" for s in per) or len(sw_seen) > 1:
+        out["track"] = "invalid"; out["why"] = "카드와 다른 실행 · 또는 통과 시드의 소프트웨어 판이 둘 이상 — 사용자 결정"
+    elif any(per[s]["status"] == "fail" for s in per):
+        out["track"] = "stop_track"; out["why"] = "한쪽 계가 1 단계에서 닫혔다 → 두 계 비교 트랙 전체 멈춤 (회신 DF P1-3)"
+    elif all(per[s]["status"] == "pass" for s in per):
+        common = sorted(sd for sd in seeds if per["A"]["per_seed"][sd] == "pass" and per["B"]["per_seed"][sd] == "pass")
+        if len(common) < 2:
+            out["track"] = "stop_track"; out["why"] = f"두 계 공통 통과 시드가 {len(common)} 개 — 2 단계에 둘이 필요하다"
+        else:
+            m = list(values["stage2_machines"])
+            out["track"] = "stage1_pass"
+            out["stage2"] = {"seeds": common[:2], "machines": {str(sd): m[i] for i, sd in enumerate(common[:2])},
+                             "common_pass_seeds": common, "rule": "두 계 모두 통과한 시드 중 작은 둘 · 기계는 그 순서"}
+            out["why"] = "두 계 모두 통과"
+    else:
+        out["track"] = "pending"; out["why"] = "시드 판정이 덜 끝났다"
+    return out
+
+
+def stage1_summary(out_root, *, values=None, card=LI2S2_CARD, log=print):
+    """<out_root>/<A|B>/seed<S>/stage1_verdict.json 을 모아 묶음 판정 → <out_root>/stage1_summary.json."""
+    v = values if values is not None else read_li2s2_values(card)
+    root = pathlib.Path(out_root); ver = {}
+    for s in ("A", "B"):
+        for sd in v["seeds"]:
+            p = root / s / f"seed{sd}" / "stage1_verdict.json"
+            ver[(s, sd)] = json.loads(p.read_text(encoding="utf-8")) if p.is_file() else None
+    res = summarize_stage1(ver, v)
+    (root / "stage1_summary.json").write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
+    log(f"  [stage1 묶음] {res['track']} — {res['why']} · " +
+        " · ".join(f"{s} {res['per_system'][s]['status']} ({res['per_system'][s]['n_pass']} 통과)" for s in ("A", "B")) +
+        (f" · 2 단계 시드 {res['stage2']['seeds']} {res['stage2']['machines']}" if res.get("stage2") else ""))
+    return res
 
 
 def schedule(T_melt, T_final, quench_rate_K_s, dt_fs):
@@ -798,16 +1059,30 @@ def gate_check(run, band_card=BAND_CARD, win_ps=10.0, p_tol=P_TOL_GPA, n_blocks=
         rt = float(g["target_density_g_cm3"])
         dev = max(abs(res["rho_min"] / rt - 1.0), abs(res["rho_max"] / rt - 1.0), abs(res["rho_last"] / rt - 1.0))
         rho_ok = dev <= 1e-4          # ⭐ 한 곳에서만 정한다 — density_ok 와 gate_ok 가 갈리면 깨기 시험이 못 본다 (11-03 실측)
+        # ⭐ 회신 DF P1-2 — 밀도만 맞으면 통과하던 구멍 셋을 막는다: ① 계획한 일정 끝까지 ② 판정 창이 실제 유지 구간 안
+        #   ③ 압력이 **기록돼 있다** (크기는 판정 아님 · NaN · 빈 칸이면 '압력이 없다' 로 가른다)
+        total = float(plan["melt_ps"]) + float(plan.get("quench_ps") or 0.0) + float(plan["hold_ps"])
+        sched_ok = bool(float(t["t_ps"].max()) >= total - float(plan["save_ps"]) - 1e-6)
+        T_fin = float(plan["T_final_K"])
+        in_hold = bool(tail.sum() > 0 and np.allclose(t["T_set_K"][tail], T_fin))
+        try:
+            ht = hold_trend(t, n_blocks)
+        except KeyError as e:
+            ht = {"⛔": str(e)}
+        hold_ok = bool(in_hold and ht.get("hold_len_ps", 0.0) >= 0.9 * float(plan["hold_ps"]) - 1e-9)
+        p_tail = np.concatenate([P, t["P_virial_GPa"][tail]]) if "P_virial_GPa" in t else P
+        p_rec = bool(p_tail.size > 0 and np.isfinite(p_tail).all())
+        gate_ok = bool(rho_ok and sched_ok and hold_ok and p_rec)
         res.update({"mode": "NVT_fixed_density", "target_density_g_cm3": rt, "density_max_rel_dev": dev,
                     "density_ok": rho_ok, "pressure_ok": None, "target_pressure_GPa": None,
-                    "gate_ok": rho_ok, "G4_fires": None, "G4_role": "해당 없음 (고정 밀도 · 1층 밴드 카드 밖)",
-                    "P_role": "기록 — 고정 밀도에서 UMA 셀에 남는 내부 압력 (판정 아님)"})
-        log(f"  NVT 고정 밀도 — 목표 {rt:.4f} · 마지막 {win_ps:.0f} ps ρ {res['rho_min']:.5f}–{res['rho_max']:.5f} "
-            f"(최대 상대 차 {dev:.1e} → {'같음' if res['density_ok'] else '⛔ 다름'}) · ⟨P⟩ {res['P_mean_GPa']:+.3f} GPa (기록)")
-        try:
-            res["hold_trend"] = hold_trend(t, n_blocks)
-        except KeyError as e:
-            res["hold_trend"] = {"⛔": str(e)}
+                    "schedule_complete": sched_ok, "planned_total_ps": total, "window_in_hold": hold_ok,
+                    "pressure_recorded": p_rec, "hold_trend": ht,
+                    "gate_ok": gate_ok, "G4_fires": None, "G4_role": "해당 없음 (고정 밀도 · 1층 밴드 카드 밖)",
+                    "P_role": "기록 — 고정 밀도에서 UMA 셀에 남는 내부 압력 (크기는 판정 아님 · 기록 유무는 판정)"})
+        log(f"  NVT 고정 밀도 — 목표 {rt:.4f} · 마지막 {win_ps:g} ps ρ {res['rho_min']:.5f}–{res['rho_max']:.5f} "
+            f"(최대 상대 차 {dev:.1e} → {'같음' if rho_ok else '⛔ 다름'}) · 일정 {'끝' if sched_ok else '⛔ 미완'} "
+            f"({float(t['t_ps'].max()):g}/{total:g} ps) · 창 {'유지 구간 안' if hold_ok else '⛔ 유지 구간 밖'} · "
+            f"⟨P⟩ {res['P_mean_GPa']:+.3f} GPa ({'기록' if p_rec else '⛔ 기록 없음'})")
         return res
     tgt = float(g["target_pressure_GPa"]) if g else 0.0
     res["target_pressure_GPa"] = tgt
@@ -1561,11 +1836,12 @@ def _selftest():
             and row[-1] not in ("", "nan") and row[-2] != row[-1],
             f"thermo.csv 에 총 압력과 virial 을 **둘 다** 기록하고 서로 다르다 ({row[-2]} / {row[-1]} GPa)")
     # ③b li2s-2 --fix_density — NVT 고정 밀도 경로 (LJ 배선) · 옵션이 없으면 옛 plan 과 같은 키
+    #     (회신 DF Q-DF-8 뒤: 압축은 melt/2 전에 끝나야 한다 → melt 0.8 · 압축 0.3 ps)
     symF, posF, cellF = build_random_cell("A", seed=5, n_fu=2, density_g_cm3=0.8)
     with tempfile.TemporaryDirectory() as td:
         atF = Atoms(symbols=symF, positions=posF, cell=cellF, pbc=True)
         infoF = run_melt_quench(atF, LennardJones(sigma=2.5, epsilon=0.05, rc=6.0), td, seed=5, T_melt=600, T_final=300,
-                                melt_ps=0.4, quench_rate=3e14, hold_ps=0.02, dt_fs=2.0, save_ps=0.004, pre_relax=False,
+                                melt_ps=0.8, quench_rate=3e14, hold_ps=0.02, dt_fs=2.0, save_ps=0.004, pre_relax=False,
                                 fix_density=1.2, compress_ps=0.3, log=lambda *a: None)
         thF = read_thermo(os.path.join(td, "thermo.csv"))
         rhoF, tF = thF["density_g_cm3"], thF["t_ps"]
@@ -1576,37 +1852,144 @@ def _selftest():
         chk(ramp.size >= 3 and rhoF[0] < 1.15 and np.all(np.diff(ramp) >= -1e-9) and len(set(np.round(ramp, 4))) >= 3,
             f"고정 밀도: 압축 구간 밀도가 단계적으로 오른다 ({rhoF[0]:.3f} → … · 단계 {len(set(np.round(ramp, 4)))})")
         chk(after.size > 50 and np.all(np.abs(after - 1.2) < 1e-3), "고정 밀도: 압축 뒤 (melt 나머지 · 담금질 · 유지) 밀도가 1.2 에 머문다")
-        planF = build_plan("A", 5, list(symF), 0.8, 600, 300, 0.4, 3e14, 1.0, 0.02, 2.0, 0.004, fix_density=1.2, compress_ps=0.3)
+        planF = build_plan("A", 5, list(symF), 0.8, 600, 300, 0.8, 3e14, 1.0, 0.02, 2.0, 0.004, fix_density=1.2, compress_ps=0.3)
         gF = planF["게이트_입력"]
         chk(gF["ensemble"] == "NVT" and gF["barostat"] is None and gF["target_density_g_cm3"] == 1.2
             and "target_pressure_GPa" not in gF and planF["fix_density_g_cm3"] == 1.2,
             "고정 밀도 plan: 게이트_입력 앙상블 = NVT · 목표 밀도 1.2 · 목표 압력 키 없음")
         (pathlib.Path(td) / "plan.json").write_text(json.dumps(planF, ensure_ascii=False), encoding="utf-8")
-        gcF = gate_check(td, win_ps=0.5, log=lambda *a: None)
-        chk(gcF["mode"] == "NVT_fixed_density" and gcF["gate_ok"] and gcF["pressure_ok"] is None
-            and math.isfinite(gcF["P_mean_GPa"]), "--gate_check: 고정 밀도 런은 압력 대신 밀도를 보고 통과 (압력은 기록)")
+        gcF = gate_check(td, win_ps=0.015, log=lambda *a: None)
+        chk(gcF["mode"] == "NVT_fixed_density" and gcF["gate_ok"] and gcF["pressure_ok"] is None and gcF["schedule_complete"]
+            and gcF["window_in_hold"] and gcF["pressure_recorded"] and math.isfinite(gcF["P_mean_GPa"]),
+            "--gate_check: 고정 밀도 런 — 일정 완주 · 창이 유지 구간 안 · 압력 기록 · 밀도 = 목표 → 통과")
         tp = pathlib.Path(td) / "thermo.csv"
-        lines = tp.read_text(encoding="utf-8").splitlines()
+        orig = tp.read_text(encoding="utf-8")
+        lines = orig.splitlines()
         cols = lines[-3].split(","); cols[3] = "1.2500"; lines[-3] = ",".join(cols)
         tp.write_text("\n".join(lines) + "\n", encoding="utf-8")
-        chk(not gate_check(td, win_ps=0.5, log=lambda *a: None)["gate_ok"],
+        chk(not gate_check(td, win_ps=0.015, log=lambda *a: None)["gate_ok"],
             "⛔음성: 유지 구간 한 줄의 밀도를 1.25 로 바꾸면 --gate_check 가 잡는다")
+        # 회신 DF P1-2 반례 ① — 담금질 · 유지 없이 melt 기록만 (밀도는 맞음)
+        keep = [ln for ln in orig.splitlines()[1:] if float(ln.split(",")[0]) <= 0.79]
+        tp.write_text(orig.splitlines()[0] + "\n" + "\n".join(keep) + "\n", encoding="utf-8")
+        gm = gate_check(td, win_ps=0.015, log=lambda *a: None)
+        chk(not gm["gate_ok"] and not gm["schedule_complete"],
+            "⛔음성 DF: melt 기록만 있으면 (일정 미완 · 창이 유지 구간 밖) 밀도가 맞아도 통과 못 한다")
+        # 회신 DF P1-2 반례 ② — 압력 열을 NaN 으로
+        rows = [orig.splitlines()[0]] + [",".join(c[:-2] + ["nan", "nan"]) for c in (ln.split(",") for ln in orig.splitlines()[1:])]
+        tp.write_text("\n".join(rows) + "\n", encoding="utf-8")
+        gn = gate_check(td, win_ps=0.015, log=lambda *a: None)
+        chk(not gn["gate_ok"] and not gn["pressure_recorded"] and gn["density_ok"],
+            "⛔음성 DF: 압력이 NaN 이면 '압력 기록 없음' 으로 통과 못 한다 (압력 크기는 판정하지 않는다)")
+        tp.write_text(orig, encoding="utf-8")
+        try:
+            melt_check(td, log=lambda *a: None); legacy_refused = False
+        except SystemExit as e:
+            legacy_refused = "--melt_window_check" in str(e)
+        chk(legacy_refused, "⛔음성 DF: 고정 밀도 런에 옛 --melt_check (0 ps 누적 원점) 를 쓰면 거부하고 --melt_window_check 를 가리킨다")
     plan0 = build_plan("A", 5, list(symF), 0.8, 600, 300, 0.4, 3e14, 1.0, 0.02, 2.0, 0.004)
     chk("fix_density_g_cm3" not in plan0 and plan0["게이트_입력"]["ensemble"] == "NPT"
         and plan0["게이트_입력"]["target_pressure_GPa"] == 0.0 and plan0["게이트_입력"]["barostat"] == "Berendsen",
         "옵션이 없으면 plan 은 옛 NPT 0 GPa 그대로 (fix_density 키 없음)")
     for nm, args in (("밀도 0", (0.0, 20.0, 100.0)), ("밀도 음수", (-1.9, 20.0, 100.0)), ("압축 0 ps", (1.9, 0.0, 100.0)),
-                     ("압축이 melt 보다 김", (1.9, 120.0, 100.0)), ("밀도 nan", (float("nan"), 20.0, 100.0))):
+                     ("압축이 melt 보다 김", (1.9, 120.0, 100.0)), ("밀도 nan", (float("nan"), 20.0, 100.0)),
+                     ("압축이 판정 창 (melt/2) 에 걸림 — DF", (1.9, 60.0, 100.0))):
         try:
             validate_fix_density(*args); refused = False
         except SystemExit:
             refused = True
         chk(refused, f"⛔음성: --fix_density 입력 거부 — {nm}")
     try:
-        validate_fix_density(None, 0.0, 0.0); off_ok = True
+        validate_fix_density(None, 0.0, 0.0); validate_fix_density(1.9, 50.0, 100.0); off_ok = True
     except SystemExit:
         off_ok = False
-    chk(off_ok, "옵션을 안 주면 (None) 압축 값과 무관하게 검사하지 않는다 (옛 경로)")
+    chk(off_ok, "옵션을 안 주면 (None) 검사하지 않고 · 압축이 판정 창 시작 (50/100) 에 딱 끝나면 받는다")
+    # ③c li2s-2 녹음 판정 (회신 DF P0) — 합성 궤적: 창 [50, 100] 좌표가 같고 앞 이력만 다른 둘 · 70 ps 에서 끊긴 것 · 겹침 · NaN
+    from ase.io import write as _w
+    VAL = {"melt_window": {"t_from_frac_of_melt": 0.5, "t_to_frac_of_melt": 1.0, "lag_fit_ps": [2.0, 25.0], "element": "P",
+                           "D_threshold_cm2_s": 1e-6, "threshold_source": "selftest"},
+           "fix_density_g_cm3": {"A": 1.91347, "B": 1.88},
+           "schedule": {"T_melt_K": 1200.0, "T_final_K": 300.0, "melt_ps": 100.0, "quench_rate_K_s": 1e12, "hold_ps": 50.0,
+                        "dt_fs": 2.0, "save_ps": 1.0, "compress_ps": 20.0, "n_atoms": 120},
+           "uma_inference_mode": "turbo", "seed_gate": {"version": "relaxed", "PS4_fraction_min": 1.0, "min_pair_excl_PS_A_gt": 2.0},
+           "gate_check": {"win_ps": 10.0}, "seeds": [11, 12, 13, 14, 15], "stage1_need_pass": 4, "stage2_machines": ["kgy", "gabia"]}
+    rng = np.random.default_rng(7); L = 12.0
+    base = rng.uniform(1, L - 1, (8, 3)); symW = ["P"] * 4 + ["S"] * 4
+    win = [base.copy()]
+    for _ in range(50):
+        nxt = win[-1].copy(); nxt[:4] += rng.normal(0, 0.6, (4, 3)); win.append(nxt)          # t = 50 … 100 · P 만 움직임
+    pre_moving = [win[0].copy()]
+    for _ in range(50):
+        prv = pre_moving[-1].copy(); prv[:4] += rng.normal(0, 0.9, (4, 3)); pre_moving.append(prv)
+    pre_moving = pre_moving[::-1]                                                               # t = 0 … 50 · 끝이 창 첫 프레임
+    def _mk_win(td_, frames, plan_extra=None):
+        pl = {"melt_ps": 100.0, "save_ps": 1.0, "fix_density_g_cm3": 1.2, "compress_ps": 20.0}; pl.update(plan_extra or {})
+        (pathlib.Path(td_) / "plan.json").write_text(json.dumps(pl), encoding="utf-8")
+        _w(str(pathlib.Path(td_) / "traj.xyz"), [Atoms(symbols=symW, positions=f, cell=np.eye(3) * L, pbc=True) for f in frames],
+           format="extxyz")
+    with tempfile.TemporaryDirectory() as ta, tempfile.TemporaryDirectory() as tb, tempfile.TemporaryDirectory() as tc:
+        _mk_win(ta, pre_moving[:-1] + win)                       # 앞 50 ps 크게 움직임 → 창
+        _mk_win(tb, [win[0]] * 50 + win)                         # 앞 50 ps 얼어 있음 → 같은 창
+        ra = melt_window_check(ta, values=VAL, log=lambda *a: None); rb = melt_window_check(tb, values=VAL, log=lambda *a: None)
+        chk(ra["D_framework_cm2_s"] is not None and ra["D_framework_cm2_s"] == rb["D_framework_cm2_s"] and ra["verdict"] == rb["verdict"]
+            and ra["window_used_ps"] == [50.0, 100.0],
+            f"DF 반례: 창 [50, 100] 좌표가 같으면 앞 이력과 무관하게 D 가 같다 ({ra['D_framework_cm2_s']:.3e} · {ra['verdict']})")
+        chk(ra["verdict"] == "pass", "합성 확산 창 (P 이동) 은 통과")
+        _mk_win(tc, pre_moving[:-1] + [win[0]] * 51)            # 앞은 크게 움직였지만 창 안은 얼어 있음
+        rc = melt_window_check(tc, values=VAL, log=lambda *a: None)
+        chk(rc["verdict"] == "fail", f"⛔음성 DF: 창 안이 얼어 있으면 앞 이력이 커도 '미충족' ({rc['D_framework_cm2_s']:.1e})")
+    with tempfile.TemporaryDirectory() as td:
+        _mk_win(td, (pre_moving[:-1] + win)[:71])                # 70 ps 에서 끊김
+        rt = melt_window_check(td, values=VAL, log=lambda *a: None)
+        chk(rt["verdict"] == "incomplete" and rt["window_used_ps"] == [50.0, 70.0] and not rt["coverage_ok"],
+            "⛔음성 DF: 70 ps 에서 끊긴 궤적은 '미완' — 실제 쓴 창 [50, 70] 을 그대로 적는다")
+        with open(pathlib.Path(td) / "traj.xyz", "a") as fh:
+            fh.write("8\nLattice=\"12 0 0 0 12 0 0 0 12\" Properties=species:S:1:pos:R:3\nP 1.0 2.0")   # 쓰는 중 반쪽 프레임
+        rt2 = melt_window_check(td, values=VAL, log=lambda *a: None)
+        chk(rt2["verdict"] == "incomplete" and rt2["n_frames_read"] == 71, "쓰는 중인 반쪽 프레임에서 멈추고 '미완' (죽지 않는다)")
+    with tempfile.TemporaryDirectory() as td:
+        _mk_win(td, pre_moving[:-1] + win, plan_extra={"compress_ps": 60.0})
+        chk(melt_window_check(td, values=VAL, log=lambda *a: None)["verdict"] == "invalid",
+            "⛔음성 DF: 압축 끝 (60 ps) 이 판정 창 시작 (50 ps) 보다 늦으면 '무효'")
+    with tempfile.TemporaryDirectory() as td:
+        badf = [f.copy() for f in pre_moving[:-1] + win]; badf[80][0, 0] = np.nan
+        _mk_win(td, badf)
+        chk(melt_window_check(td, values=VAL, log=lambda *a: None)["verdict"] == "invalid", "⛔음성 DF: 창 안 좌표가 NaN 이면 '무효'")
+    # ③d li2s-2 1 단계 시드 판정 · 묶음 판정 (회신 DF P1-2 · P1-3) — 순수 함수
+    plan_ok = {"system": "A", "seed": 11, "fix_density_g_cm3": 1.91347, "n_atoms": 120,
+               "software": {"inference": "turbo", "fairchem-core": "2.21.0"}, **VAL["schedule"]}
+    plan_ok.pop("n_atoms"); plan_ok["n_atoms"] = 120
+    g_ok = {"schedule_complete": True, "window_in_hold": True, "density_ok": True, "pressure_recorded": True}
+    m_ok = {"verdict": "pass"}; s_ok = {"relaxed": {"PS4_fraction": 1.0, "min_pair_excl_PS_A": 2.31}}
+    f_ok = {"result.json": True, "final.xyz": True, "thermo.csv": True, "traj.xyz": True}
+    chk(combine_stage1(plan_ok, VAL, g_ok, m_ok, s_ok, f_ok)["status"] == "pass", "1 단계 시드 판정: 모두 맞으면 통과")
+    for nm, kw, want in (("PS₄ 0.9167", {"seedg": {"relaxed": {"PS4_fraction": 11 / 12, "min_pair_excl_PS_A": 2.31}}}, "fail"),
+                         ("최단 원자간 1.98 Å", {"seedg": {"relaxed": {"PS4_fraction": 1.0, "min_pair_excl_PS_A": 1.98}}}, "fail"),
+                         ("녹음 미충족", {"melt": {"verdict": "fail", "message": "x"}}, "fail"),
+                         ("녹음 미완", {"melt": {"verdict": "incomplete"}}, "incomplete"),
+                         ("일정 미완", {"gate": dict(g_ok, schedule_complete=False)}, "incomplete"),
+                         ("압력 기록 없음", {"gate": dict(g_ok, pressure_recorded=False)}, "fail"),
+                         ("final.xyz 없음", {"files": dict(f_ok, **{"final.xyz": False})}, "incomplete"),
+                         ("밀도 1.9 로 돌림", {"plan": dict(plan_ok, fix_density_g_cm3=1.9)}, "invalid"),
+                         ("melt 80 ps 로 돌림", {"plan": dict(plan_ok, melt_ps=80.0)}, "invalid"),
+                         ("소프트웨어 기록 없음", {"plan": {k: x for k, x in plan_ok.items() if k != "software"}}, "invalid")):
+        args = {"plan": plan_ok, "gate": g_ok, "melt": m_ok, "seedg": s_ok, "files": f_ok}; args.update(kw)
+        got = combine_stage1(args["plan"], VAL, args["gate"], args["melt"], args["seedg"], args["files"])["status"]
+        chk(got == want, f"⛔음성 DF: 1 단계 시드 판정 — {nm} → {want} (받음 {got})")
+    def _v(st, fc="2.21.0"):
+        return {"status": st, "software": {"inference": "turbo", "fairchem-core": fc}}
+    ver = {("A", 11): _v("fail"), ("A", 12): _v("pass"), ("A", 13): _v("pass"), ("A", 14): _v("pass"), ("A", 15): _v("pass"),
+           ("B", 11): _v("pass"), ("B", 12): _v("pass"), ("B", 13): _v("pass"), ("B", 14): _v("pass"), ("B", 15): _v("fail")}
+    sm = summarize_stage1(ver, VAL)
+    chk(sm["track"] == "stage1_pass" and sm["stage2"]["seeds"] == [12, 13] and sm["stage2"]["machines"] == {"12": "kgy", "13": "gabia"},
+        f"DF P1-3: A11 · B15 탈락이어도 4/5 씩 통과 → 2 단계 시드 = 공통 통과 중 작은 둘 {sm['stage2'] and sm['stage2']['seeds']} (11 고정 아님)")
+    sm2 = summarize_stage1({**ver, ("A", 12): _v("fail")}, VAL)
+    chk(sm2["track"] == "stop_track" and sm2["per_system"]["A"]["status"] == "fail" and sm2["stage2"] is None,
+        "⛔음성 DF: 한쪽 계가 1 단계에서 닫히면 (A 3/5) 다른 계가 통과해도 비교 트랙 전체가 멈춘다")
+    sm3 = summarize_stage1({k: (None if k in (("B", 14), ("B", 15)) else x) for k, x in ver.items()} | {("B", 15): None}, VAL)
+    chk(sm3["track"] == "pending", "시드 판정이 덜 끝났으면 (B 3 통과 · 2 없음) 대기")
+    sm4 = summarize_stage1({**ver, ("B", 13): _v("pass", fc="2.19.0")}, VAL)
+    chk(sm4["track"] == "invalid", "⛔음성 DF: 통과 시드의 fairchem 판이 둘 이상이면 무효 (기계 이름이 아니라 판을 고정)")
     # ④ 배로스탯 대조 잡 — LJ 결정(fcc)으로 배선만. 같은 BARO 를 쓰는지까지 본다
     from ase.build import bulk
     with tempfile.TemporaryDirectory() as td:
@@ -2228,6 +2611,13 @@ def main():
     ap.add_argument("--pcheck", nargs="+", metavar="STRUCT",
                     help="⭐구조 파일들의 **단일점 압력**을 UMA 로 찍는다 (완화 없음). "
                          "고정 셀 MD 가 어떤 내부 압력에서 돌고 있는지 보는 용도")
+    ap.add_argument("--melt_window_check", metavar="RUN_DIR",
+                    help="⭐li2s-2 녹음 판정 (회신 DF P0) — 압축 뒤 창 안 프레임 · 창 안 시간원점만 · 카드 문턱. 종료 0 통과 · 2 미충족 · 3 미완 · 4 무효")
+    ap.add_argument("--stage1_verdict", nargs="+", metavar="RUN_DIR",
+                    help="⭐li2s-2 1 단계 시드 판정 (일정 완주 · 유지 구간 · 압력 기록 · 밀도 · 녹음 · 시드 게이트 · 카드 일정) → stage1_verdict.json")
+    ap.add_argument("--stage1_summary", metavar="OUT_ROOT",
+                    help="⭐li2s-2 1 단계 묶음 판정 (계마다 ≥ need · 한쪽 탈락 = 트랙 멈춤 · 2 단계 시드 = 공통 통과 중 작은 둘)")
+    ap.add_argument("--li2s2_card", default=LI2S2_CARD, help="li2s-2 카드 (기계_판독_값 출처 — 도구가 문턱을 자체 보관하지 않는다)")
     ap.add_argument("--melt_check", metavar="RUN_DIR",
                     help="⭐이미 끝난 런에서 melt 구간 P 골격이 확산했는지 본다 (새 계산 없음)")
     ap.add_argument("--d_melt_cm2_s", type=float, default=1e-6, help="--melt_check 액체 판정 진단 문턱")
@@ -2338,6 +2728,17 @@ def main():
         print("  ⛔ 이건 **그 셀에서의 압력**이다. 양수면 UMA 가 더 큰 셀을 원한다는 뜻이고, "
               "그 자체가 구조가 틀렸다는 뜻은 아니다 (DFT 로 완화한 셀이면 UMA-DFT 차이다).")
         return
+    if a.melt_window_check:
+        res = melt_window_check(a.melt_window_check, card=a.li2s2_card)
+        (pathlib.Path(a.melt_window_check) / "melt_window_check.json").write_text(
+            json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
+        raise SystemExit({"pass": 0, "fail": 2, "incomplete": 3}.get(res["verdict"], 4))
+    if a.stage1_verdict:
+        rcs = [STAGE1_RC.get(stage1_verdict(rd, card=a.li2s2_card)["status"], 4) for rd in a.stage1_verdict]
+        raise SystemExit(max(rcs))
+    if a.stage1_summary:
+        res = stage1_summary(a.stage1_summary, card=a.li2s2_card)
+        raise SystemExit({"stage1_pass": 0, "stop_track": 2, "pending": 3}.get(res["track"], 4))
     if a.melt_check:
         res = melt_check(a.melt_check, d_melt_cm2s=a.d_melt_cm2_s)
         (pathlib.Path(a.melt_check) / "melt_check.json").write_text(
@@ -2405,6 +2806,7 @@ def main():
         print("dry_run — 여기서 멈춘다"); return
     calc = make_calc(a.device, a.turbo)
     plan["uma_inference_mode"] = getattr(calc, "_mq_mode", "default")
+    plan["software"] = software_versions(plan["uma_inference_mode"])   # 회신 DF Q-DF-6 — 판 · 모델 · 추론 설정을 기록
     (out / "plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=1))
     print(f"UMA inference mode: {plan['uma_inference_mode']}", flush=True)
     info = run_melt_quench(at, calc, out, seed=a.seed, T_melt=a.T_melt, T_final=a.T_final, melt_ps=a.melt_ps,
