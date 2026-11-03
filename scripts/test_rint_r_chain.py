@@ -9455,6 +9455,105 @@ def t_RV04():
     return rc == 3 and 'OUTDIR_NOT_EMPTY' in so and dir_digest(out) == before, (rc, so[-200:])
 
 
+# ── ★ 11-03 밤 (1저자 *"다 권고대로"* Q5 · 원장 RINT2-E01) 다시 판정 보고의 바이트 까닭 — 판정 동작 (바이트 대조 · REVERIFY_DIFF) 그대로 · 보고에 두 JSON 의
+#    바이트 칸 (`public_bytes` · `results_bytes` = 다름 · 까닭 · 처음 다른 바이트 · 길이 차 — 값 · 글 없음 = 봉인) · 까닭 = `BYTE_DIFF_KINDS` 닫힌 목록 ·
+#    시험 먼저 (고치기 전 판 = 함수 · 칸 없음 → RV05 · RV06 실패)
+def chain_q5():
+    return callable(getattr(RR, 'byte_diff_view', None)) and tuple(getattr(RR, 'BYTE_DIFF_KINDS', ())) == (
+        'missing', 'unreadable', 'value', 'key_order', 'newline', 'trailing_whitespace', 'whitespace', 'format')
+
+
+@check('RV05', '★ 11-03 밤 (Q5 · RINT2-E01) 바이트 까닭 분류 (합성 · 런 없음) — 정규 바이트 (canon_bytes) 대비 저장본: 같음 · 끝 공백 · 끝 줄바꿈 더함 · 뺌 · CRLF · '
+               '줄 끝 공백 · 칸 순서 · 들여쓰기 · \\u 이스케이프 · 1 ↔ 1.0 · 값 · 읽을 수 없음 · 한쪽 없음 · 칸 순서 + CRLF + 끝 공백 → 까닭 목록 (닫힌 목록 차례) · '
+               '처음 다른 바이트 · 길이 차 정확 · 값 · 글 없음')
+def t_RV05():
+    if not chain_q5():
+        return False, '사슬에 바이트 까닭 (byte_diff_view · BYTE_DIFF_KINDS) 이 없다'
+    obj = {'b': 1, 'a': {'d': [1, 2.5, 'x'], 'c': '가'}, 'e': None}
+    new = RR.canon_bytes(obj)
+
+    def dumps(o, **kw):
+        k = dict(ensure_ascii=False, indent=1, sort_keys=True)
+        k.update(kw)
+        return (json.dumps(o, **k) + '\n').encode('utf-8')
+    rev = {'e': None, 'a': {'c': '가', 'd': [1, 2.5, 'x']}, 'b': 1}           # 칸 순서만 다름 (값 같음)
+    lines = new.split(b'\n')
+    lines[1] = lines[1] + b'  '                                              # 줄 끝 공백 (값 밖)
+    cases = {
+        'same': (new, [], None, 0),
+        'trail_space': (new + b' ', ['trailing_whitespace'], len(new), -1),
+        'extra_nl': (new + b'\n', ['newline'], len(new), -1),
+        'no_nl': (new[:-1], ['newline'], len(new) - 1, 1),
+        'crlf': (new.replace(b'\n', b'\r\n'), ['newline'], new.index(b'\n'), None),
+        'line_trail': (b'\n'.join(lines), ['trailing_whitespace'], len(lines[0]) + 1 + len(lines[1]) - 2, -2),
+        'key_order': (dumps(rev, sort_keys=False), ['key_order'], None, 0),
+        'indent2': (dumps(obj, indent=2), ['whitespace'], None, None),
+        'ascii_esc': (dumps(obj, ensure_ascii=True), ['format'], None, None),
+        'int_float': (dumps(dict(obj, b=1.0)), ['format'], None, -2),
+        'value': (dumps(dict(obj, b=2)), ['value'], None, 0),
+        'unreadable': (b'{"a": ', ['unreadable'], 1, None),
+        'combo': (dumps(rev, sort_keys=False).replace(b'\n', b'\r\n') + b' ', ['key_order', 'newline', 'trailing_whitespace'], None, None),
+    }
+    got, bad = {}, []
+    for nm, (old, kinds, off, dl) in cases.items():
+        v = RR.byte_diff_view(old, new)
+        got[nm] = v
+        ok = (isinstance(v, dict) and sorted(v) == ['differ', 'first_diff_offset', 'kinds', 'len_delta'] and v['kinds'] == kinds
+              and v['differ'] is (old != new) and (off is None or v['first_diff_offset'] == off) and (dl is None or v['len_delta'] == dl)
+              and v['len_delta'] == len(new) - len(old) and (v['first_diff_offset'] is None) is (old == new)
+              and all(k in RR.BYTE_DIFF_KINDS for k in v['kinds']))
+        if not ok:
+            bad.append(nm)
+    miss = (RR.byte_diff_view(None, new), RR.byte_diff_view(new, None), RR.byte_diff_view(None, None))
+    m_ok = (miss[0] == {'differ': True, 'kinds': ['missing'], 'first_diff_offset': None, 'len_delta': None} and miss[1] == miss[0]
+            and miss[2] == {'differ': False, 'kinds': [], 'first_diff_offset': None, 'len_delta': None})
+    #  값 · 글 없음 — 보기의 값은 bool · 정수 · None · 닫힌 목록 낱말뿐
+    leak = [nm for nm, v in got.items() if any(not isinstance(x, (bool, int, type(None), list)) for x in v.values())]
+    return not bad and m_ok and not leak, (bad, {k: got[k] for k in bad[:3]}, miss, leak)
+
+
+@check('RV06', '★ 11-03 밤 (Q5 · RINT2-E01) 다시 판정 보고 바이트 칸 (가짜 러너 세계 판정 · 저장본 손대고 되돌림) — 결과 JSON 을 CRLF · 칸 순서 (값 같음) 로 · 판정 '
+               'JSON 끝에 줄바꿈 하나 → rc 1 REVERIFY_DIFF 그대로 (바이트 대조) · 보고 results_bytes · public_bytes 까닭 = newline · key_order · newline (값 칸 그대로 '
+               '비고 · 등급 다름 False) · 화면에 까닭 · 보고 schema = REVERIFY_SCHEMA · 되돌리면 REVERIFY_SAME (보고 바이트 칸 = 같음)')
+def t_RV06():
+    if not chain_q5():
+        return False, '사슬에 바이트 까닭 (byte_diff_view · BYTE_DIFF_KINDS) 이 없다'
+    v = s_verdict_main()
+    resp, pubp = v['out'] / 'verdict_results.json', v['out'] / 'verdict.json'
+    res0, pub0 = resp.read_bytes(), pubp.read_bytes()
+    before = dir_digest(v['out'])
+    runs = {}
+    try:
+        resp.write_bytes(res0.replace(b'\n', b'\r\n'))
+        runs['crlf'] = rv_call(v['out'], out=Path(TD) / 'runs' / 'RV06_crlf') + (u_json(Path(TD) / 'runs' / 'RV06_crlf' / 'reverify_report.json'),)
+        r0 = json.loads(res0.decode('utf-8'))
+        resp.write_bytes((json.dumps(dict(reversed(list(r0.items()))), ensure_ascii=False, indent=1, sort_keys=False) + '\n').encode('utf-8'))
+        runs['order'] = rv_call(v['out'], out=Path(TD) / 'runs' / 'RV06_order') + (u_json(Path(TD) / 'runs' / 'RV06_order' / 'reverify_report.json'),)
+        resp.write_bytes(res0)
+        pubp.write_bytes(pub0 + b'\n')
+        runs['pub_nl'] = rv_call(v['out'], out=Path(TD) / 'runs' / 'RV06_pubnl') + (u_json(Path(TD) / 'runs' / 'RV06_pubnl' / 'reverify_report.json'),)
+    finally:
+        resp.write_bytes(res0)
+        pubp.write_bytes(pub0)
+    runs['back'] = rv_call(v['out'], out=Path(TD) / 'runs' / 'RV06_back') + (u_json(Path(TD) / 'runs' / 'RV06_back' / 'reverify_report.json'),)
+
+    def kinds(rep, side):
+        b = (rep or {}).get(side) or {}
+        return b.get('differ'), b.get('kinds')
+    want = {'crlf': ((False, []), (True, ['newline'])), 'order': ((False, []), (True, ['key_order'])),
+            'pub_nl': ((True, ['newline']), (False, [])), 'back': ((False, []), (False, []))}
+    ok, got = True, {}
+    for nm, (rc, so, rep) in runs.items():
+        g = (kinds(rep, 'public_bytes'), kinds(rep, 'results_bytes'))
+        got[nm] = (rc, g, (rep or {}).get('results_differ'), (rep or {}).get('grade_differ'), (rep or {}).get('public_keys_differ'))
+        same = nm == 'back'
+        ok = ok and rc == (0 if same else 1) and (rep or {}).get('schema') == RR.REVERIFY_SCHEMA and g == want[nm] \
+            and (rep or {}).get('result') == ('REVERIFY_SAME' if same else 'REVERIFY_DIFF') and (rep or {}).get('results_differ') is False \
+            and (rep or {}).get('grade_differ') is False and (rep or {}).get('public_keys_differ') == [] \
+            and (same or all(k in so for k in (want[nm][0][1] + want[nm][1][1])))
+    return ok and dir_digest(v['out']) == before, (got, dir_digest(v['out']) == before)
+
+
 def doc_tool_commands(path, tool):
     """문서의 ```bash 블록에서 `python3 …/<tool>` 명령 → [(첫 줄 번호, 인자 목록)].  `\\` 이음 · 주석 줄 (`#` 시작) 은 뺀다 · `&&` · `|` ·
     `;` (앞뒤 빈칸) 로 가른 조각 중 그 도구를 python 으로 부르는 것만 · 자리표 `<…>` = 낱말 '1' (수 · 경로 어느 자리든 argparse 를 지난다) ·

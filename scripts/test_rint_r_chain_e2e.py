@@ -38,7 +38,8 @@
   E17 ★ 10-28 밤 PC5 §4 #5 시험 고정물 등록 사본 — 계획 숫자 블록 = §2-1 자리 · 표지 각 하나 · 봉인된 등록의 사본도 하나 (러너 없음 · 빠름)
   E18 ★ 11-03 (Codex 회차 ① §10 "작은 실제 producer → 판정 → 재판정" · 1저자 11-03 밤 Q2) 실물 원장 사슬 (사다리 P0 · P1 · 예측) → 판정 (원장
       판정 · 원 팔 JSON 에서 다시 계산) → 같은 입력 다시 판정 (같은 · 다른 프로세스) = REVERIFY_SAME → 판정 문턱만 옮김 · 입력 하나씩 (DBE 킷 ·
-      예측 시도 팔 JSON · 등록 사본 글) · 저장된 결과 JSON 을 바꿈 = 거부 또는 REVERIFY_DIFF (원 판정 보존) → 되돌림 = REVERIFY_SAME
+      예측 시도 팔 JSON · 등록 사본 글) · 저장된 결과 JSON 을 바꿈 = 거부 또는 REVERIFY_DIFF (원 판정 보존) → 되돌림 = REVERIFY_SAME ·
+      ★ 11-03 밤 (Q5 · RINT2-E01) 보고 바이트 칸 (`results_bytes` · `public_bytes` · 까닭 = 사슬 `BYTE_DIFF_KINDS`) — E18i [value] · E18j [trailing_whitespace]
   ★ 3판 — 계획 `rint-r-plan-v2` (결과 전 등록 숫자 넷 = 시험 값) · S0 계획 (`ca_s0_census.make_plan` · 정준 바이트) · 등록 사본 두 줄 · `--s0-plan`
 ⚠ PASS 는 사슬 · 러너 · payload 배선이 실물로 이어진다는 증거이지 R_j 값 · 판정의 물리 검증이 아니다 (픽스처 σ 는 의미 없다).
 """
@@ -1703,10 +1704,12 @@ def t_verdict_real():
     with open(resp, 'wb') as f:
         f.write(res0)
     chk('E18i 저장된 판정 결과 JSON 의 값 하나를 바꿈 (reference.G0 + 1) — 다시 판정 = rc 1 REVERIFY_DIFF · 보고 = 결과 다름 True · 다른 결과 칸 이름 = '
-        'reference 하나 (값 = 봉인 · 이름만) · 등급 다름 False · 다른 공개 칸 없음',
+        'reference 하나 (값 = 봉인 · 이름만) · 등급 다름 False · 다른 공개 칸 없음 · ★ 11-03 밤 (Q5) 결과 바이트 까닭 = [value] · 공개 바이트 같음',
         rc7 == 1 and 'REVERIFY_DIFF' in so7 and r7.get('result') == 'REVERIFY_DIFF' and r7.get('results_differ') is True
-        and r7.get('results_keys_differ') == ['reference'] and r7.get('grade_differ') is False and r7.get('public_keys_differ') == [],
-        (rc7, so7[-300:], {k: r7.get(k) for k in ('results_differ', 'results_keys_differ', 'grade_differ', 'public_keys_differ')}))
+        and r7.get('results_keys_differ') == ['reference'] and r7.get('grade_differ') is False and r7.get('public_keys_differ') == []
+        and (r7.get('results_bytes') or {}).get('kinds') == ['value'] and (r7.get('public_bytes') or {}).get('differ') is False,
+        (rc7, so7[-300:], {k: r7.get(k) for k in ('results_differ', 'results_keys_differ', 'grade_differ', 'public_keys_differ', 'results_bytes',
+                                                  'public_bytes')}))
     with open(resp, 'ab') as f:
         f.write(b' ')
     out8 = os.path.join(TD, 'runs', 'e18_rep_ws')
@@ -1714,12 +1717,18 @@ def t_verdict_real():
     r8 = rep_of(out8)
     with open(resp, 'wb') as f:
         f.write(res0)
-    chk('E18j (현재 꼴 기록 · RINT2-E01) 저장된 판정 결과 JSON 끝에 공백 하나 (값 같음 · 바이트만 다름) — 다시 판정 = rc 1 REVERIFY_DIFF (바이트 대조 · 화면 '
-        '"결과 다름") · 보고 칸은 값 대조라 다른 칸이 없다 (results_differ False · 등급 다름 False · 다른 공개 · 결과 칸 이름 없음 — 보고만으로는 까닭을 '
-        '모른다 · 판정은 막는 쪽 그대로)',
+    #  ★ 11-03 밤 (1저자 Q5 · RINT2-E01 고침) — 옛 기대 (현재 꼴 기록: 보고 칸은 값 대조라 비어 있어 까닭을 모른다) → 새 보고 = 값 칸은 그대로 비고 바이트 칸이
+    #    까닭을 적는다 (판정 동작 = REVERIFY_DIFF 그대로)
+    rb8, pb8 = r8.get('results_bytes') or {}, r8.get('public_bytes') or {}
+    chk('E18j (RINT2-E01 · 11-03 밤 Q5 고침) 저장된 판정 결과 JSON 끝에 공백 하나 (값 같음 · 바이트만 다름) — 다시 판정 = rc 1 REVERIFY_DIFF 그대로 (바이트 '
+        '대조 · 화면 "결과 다름") · 값 칸 그대로 비어 있음 (results_differ False · 등급 다름 False · 다른 공개 · 결과 칸 이름 없음) · 바이트 칸이 까닭을 '
+        '적는다 (results_bytes = 다름 · [trailing_whitespace] · 처음 다른 바이트 = 원 결과 길이 · 길이 차 −1 · public_bytes = 같음) · 화면에도 그 까닭',
         rc8 == 1 and 'REVERIFY_DIFF' in so8 and '결과 다름' in so8 and r8.get('result') == 'REVERIFY_DIFF' and r8.get('results_differ') is False
-        and r8.get('grade_differ') is False and r8.get('public_keys_differ') == [] and r8.get('results_keys_differ') == [],
-        (rc8, so8[-300:], {k: r8.get(k) for k in ('results_differ', 'grade_differ', 'public_keys_differ', 'results_keys_differ')}))
+        and r8.get('grade_differ') is False and r8.get('public_keys_differ') == [] and r8.get('results_keys_differ') == []
+        and rb8 == {'differ': True, 'kinds': ['trailing_whitespace'], 'first_diff_offset': len(res0), 'len_delta': -1}
+        and pb8 == {'differ': False, 'kinds': [], 'first_diff_offset': None, 'len_delta': 0} and 'trailing_whitespace' in so8,
+        (rc8, so8[-300:], {k: r8.get(k) for k in ('results_differ', 'grade_differ', 'public_keys_differ', 'results_keys_differ', 'results_bytes',
+                                                  'public_bytes')}))
     out9 = os.path.join(TD, 'runs', 'e18_rep_back')
     rc9, so9 = reverify(out9)
     r9 = rep_of(out9)
