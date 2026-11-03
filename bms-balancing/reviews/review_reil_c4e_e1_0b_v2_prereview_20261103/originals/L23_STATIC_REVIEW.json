@@ -1,0 +1,157 @@
+{
+  "review_kind": "independent_static_source_review",
+  "review_date": "2026-11-03",
+  "scope": "E1_0B_N1 closure for L23; narrow cross-check of the six unchanged RED causes",
+  "verdict": "L23_E1_0B_N1_STATICALLY_CLOSED",
+  "actionable_findings": [],
+  "execution": {
+    "received_module_imports": 0,
+    "received_function_calls": 0,
+    "tests": 0,
+    "fixtures": 0,
+    "probes": 0,
+    "git_operations": 0,
+    "method": "UTF-8 source reads, source-line tracing, and SHA-256 reads only"
+  },
+  "sources": {
+    "controls_v7": {
+      "path": "source/bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v7_20261030.py.txt",
+      "sha256": "3f9d2f2585b36819d229796154ecd4e902ffce86120c8e3c5a1e75bb1554e9cc"
+    },
+    "launcher_v5": {
+      "path": "../reil_c4e_e1_0b_prereview_20261030/basis/unchanged_at_pin/bms-balancing/scripts/reil_c4e1_launch.py",
+      "sha256": "2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396"
+    },
+    "launcher_v6": {
+      "path": "../reil_c4e_e1_0b_prereview_20261030/source/bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt",
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+    },
+    "previous_controls_v6": {
+      "path": "../reil_c4e_e1_0b_prereview_20261030/source/bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v6_20261030.py.txt",
+      "relevant_lines": [673, 695]
+    },
+    "approval_request": {
+      "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "relevant_lines": [235, 243, 338]
+    },
+    "scope_document": {
+      "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_N1_SCOPE_20261030.md",
+      "relevant_lines": [25, 49]
+    }
+  },
+  "guard_checks": [
+    {
+      "source": "controls_v7",
+      "lines": [684, 697],
+      "finding": "The first fixture is rewrite. Each case writes one known key to a fresh fake HOME .gitconfig. The preliminary Git observation must have rc 0 and expose that exact origin before the launcher precheck is considered. The precheck wrapper passes the fake HOME through child_env, uses step fetch, and a new fresh data path."
+    },
+    {
+      "source": "controls_v7",
+      "lines": [698, 706],
+      "finding": "The guard branches on the actual pre['ok'] result. On a non-True result it requires config and get_url rc 0, absence of their error keys, the exact fake-HOME origin followed by the expected key in raw config output, the exact planted effective URL result, and exactly one key problem plus exactly one URL problem only for rewrite. It contains no L attribute lookup, no version-string branch, and no execution."
+    },
+    {
+      "source": "controls_v7",
+      "lines": [703, 706],
+      "finding": "The classifier uses key/origin and URL substrings, but compares the entire list of classifications, including multiplicities. For the pinned launcher and planted fixture the raw source conditions necessarily generate the expected key and URL problems. Any additional problem therefore increases the list length and fails the guard even if its text happens to contain those substrings."
+    },
+    {
+      "source": "controls_v7",
+      "lines": [707, 712],
+      "finding": "The expected RED assertion remains at line 707. All later checks are the pre-existing GREEN checks: one fixed command-scope key/value, fixed effective URL, fetch launch return 0, stage complete, and the exact five fixed Git configuration environment entries. The v5-missing git_config_entries lookup occurs only after the expected assertion."
+    }
+  ],
+  "branches": [
+    {
+      "name": "v5_expected_RED_first_rewrite",
+      "controls_lines": [684, 707],
+      "launcher_lines": [[370, 376], [392, 417], [491, 508]],
+      "trace": [
+        "v5 child_env keeps HOME and removes inherited GIT configuration variables, but it does not disable the fake HOME configuration file.",
+        "v5 fetch_source_precheck uses that environment unchanged for config --list --show-origin and ls-remote --get-url.",
+        "With successful observations, git_config_problems appends the fake-HOME url.https://example.invalid/.insteadof key problem at line 400, and the rewritten URL appends the effective-source problem at line 416.",
+        "precheck appends those two problems to the complete precheck problem list and sets ok to not probs at line 505.",
+        "The new guard classifies exactly ['key', 'url'], verifies the raw observations, and passes. The next assertion at controls line 707 raises the unchanged expected ('rewrite', 'FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다', ...) message."
+      ],
+      "result": "Expected RED remains reachable for the known v5 behavior without triggering a missing v6 attribute."
+    },
+    {
+      "name": "v5_prior_counterexample_probe_failure_plus_rewrite",
+      "controls_lines": [698, 707],
+      "launcher_lines": [[338, 351], [491, 495], [503, 505]],
+      "trace": [
+        "A returned probe failure appends one additional problem before the source problems. Flag, path, and spec failures also append their problems to the same list.",
+        "Successful source observations still contribute the known key and rewritten-URL problems.",
+        "The list therefore has at least three entries rather than exactly the two expected classifications. The guard at line 704 fails with UNEXPECTED_RED_CAUSE before line 707."
+      ],
+      "result": "The previously identified unrelated-failure-as-expected-RED path is closed."
+    },
+    {
+      "name": "v5_source_observation_error_or_other_problem",
+      "controls_lines": [698, 706],
+      "launcher_lines": [[380, 389], [406, 417], [468, 505]],
+      "trace": [
+        "A config or URL observation OSError/timeout returns rc None and an error key; a nonzero completed observation returns a nonzero rc. Both fail the explicit raw observation conditions.",
+        "A different effective URL fails the exact rewritten/fixed URL comparison.",
+        "A missing planted origin/key fails the raw config check; additional denied configuration, file/seal/interpreter/data-path, or probe problems fail the exact classifications list.",
+        "An exception escaping _pre or malformed data raises before the expected assertion; it is not converted to the approved expected-RED message."
+      ],
+      "result": "No remaining reachable unrelated failure accepted as the expected L23 RED was found in the pinned source."
+    },
+    {
+      "name": "v6_expected_GREEN_all_three_cases",
+      "controls_lines": [689, 712],
+      "launcher_lines": [[398, 406], [422, 475], [528, 573], [845, 849], [894, 915]],
+      "trace": [
+        "The fixture self-check deliberately uses plain child_env, so the fake HOME file remains observable there.",
+        "v6 fetch_source_precheck independently applies fetch_env: inherited GIT_CONFIG sources are removed, system/user configuration is disabled, and only http.proxyAuthMethod=basic is added.",
+        "Normal config output is the single command-scope entry and the effective URL remains fixed. The full precheck returns ok True, skips the RED-only guard, and passes controls lines 707-709.",
+        "v6 launch also applies fetch_env to the complete fetch stage. Return 0 requires its stage complete; any recorded launcher error makes the postcheck stage term false. The existing controls lines 710-712 then require return 0, complete True, and the exact fixed environment entries.",
+        "The loop can proceed through rewrite, proxy, and tlsoff under these normal conditions."
+      ],
+      "result": "The guard introduces no static false rejection of the intended v6 path. Runtime GREEN counts are not claimed."
+    },
+    {
+      "name": "v6_unrelated_precheck_failure",
+      "controls_lines": [698, 706],
+      "launcher_lines": [[462, 475], [556, 570]],
+      "trace": [
+        "If a v6 precheck failure makes ok non-True while source isolation is working, the source output does not contain the planted fake-HOME key, and the effective URL is fixed rather than rewritten in the first case.",
+        "The guard consequently rejects this path before the expected RED assertion."
+      ],
+      "result": "An unrelated v6 precheck failure cannot masquerade as the approved v5 L23 cause through this path."
+    }
+  ],
+  "narrow_unchanged_RED_crosscheck": [
+    {
+      "test": "l14",
+      "controls_lines": [456, 460],
+      "launcher_v5_lines": [101, 101],
+      "assessment": "First executable statement compares REQUEST; the message includes its actual pinned v5 value. No prior internal launcher failure can supply this exact expected tuple."
+    },
+    {
+      "test": "l25",
+      "controls_lines": [744, 749],
+      "assessment": "Requires successful launch, correct unchanged fixture HEAD, and removal of planted variable names before comparing child-observed names. The expected [] message is exact, so the known missing fixed configuration list remains the relevant cause."
+    },
+    {
+      "test": "l28_l31_l32",
+      "controls_lines": [[897, 897], [999, 999], [1030, 1030]],
+      "assessment": "Each first executable statement reads the respective v5-absent fetch_env or cleanup_group attribute. This directly supplies the expected AttributeError cause without executing later fixture behavior."
+    },
+    {
+      "test": "l33",
+      "controls_lines": [1053, 1065],
+      "launcher_v5_lines": [536, 567],
+      "assessment": "The baseline requires post()['problems'] == []. The failure case changes deadline_hit only; v5 does not inspect it and returns ok = not probs. An unrelated postcheck problem makes ok False and prevents the expected assertion failure, while the expected [] message is exact."
+    }
+  ],
+  "limits": [
+    "This is a static conclusion for the identified pinned files, not observed RED/GREEN execution or approval to execute.",
+    "Normal-path reasoning assumes the documented Linux/Python/Git environment and successful fixture/probe observations. No Git or interpreter behavior was exercised.",
+    "The guard is not a generic typed provenance validator for arbitrary fabricated dictionaries. Its sufficiency here follows from the pinned producer code, controlled fixture strings, raw observation checks, and complete problem-list cardinality.",
+    "rc 0 plus absence of the error key is the producer's success contract; a nonempty Git stderr string alone is not rejected. No source-supported unrelated failing path hidden by that distinction was found in this scope.",
+    "v5 stops at the first rewrite assertion; proxy and tlsoff RED branches are only statically inspected, not claimed as executed.",
+    "Source file hashes were checked, but repository pin provenance, full package checks, L29/L30 closure, and overall approval remain the parent review's responsibility."
+  ]
+}

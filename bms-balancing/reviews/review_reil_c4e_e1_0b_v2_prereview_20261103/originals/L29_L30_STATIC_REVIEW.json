@@ -1,0 +1,277 @@
+{
+  "kind": "E1_0B_V2_L29_L30_STATIC_REVIEW",
+  "review_date": "2026-11-03",
+  "target_pin_prefix": "421d746e",
+  "scope": [
+    "_normal_fetch_meta",
+    "test_l29",
+    "test_l30"
+  ],
+  "method": {
+    "received_program_execution": 0,
+    "received_imports": 0,
+    "received_function_calls": 0,
+    "tests_fixtures_probes_run": 0,
+    "git_operations": 0,
+    "activity": "UTF-8 source reads, manual control-flow reasoning, reviewer-owned stdlib ast.parse of source as data, and reviewer JSON writing only.",
+    "text_encoding": "UTF-8 explicitly selected for source reads and successful Python invocation (-X utf8).",
+    "reviewer_tooling_attempts": [
+      {
+        "result": "failed_to_start",
+        "command_kind": "reviewer-owned AST script via WindowsApps python alias",
+        "explanation": "WindowsApps python.exe was inaccessible; no Python interpreter or received program ran."
+      },
+      {
+        "result": "success",
+        "interpreter": "C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "command_kind": "reviewer-owned AST script; source parsed as data only"
+      }
+    ]
+  },
+  "inputs": {
+    "controls_v7": "outputs/reil_c4e_e1_0b_v2_prereview_20261103/source/bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v7_20261030.py.txt",
+    "launcher_v5": "outputs/reil_c4e_e1_0b_prereview_20261030/basis/unchanged_at_pin/bms-balancing/scripts/reil_c4e1_launch.py",
+    "launcher_v6": "outputs/reil_c4e_e1_0b_prereview_20261030/source/bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt",
+    "prior_finding": "outputs/reil_c4e_e1_0b_prereview_20261030/Q4_STATIC_REVIEW.json",
+    "adopted_scope": "outputs/reil_c4e_e1_0b_v2_prereview_20261103/source/bms-balancing/docs/REIL_C4E_E1_0B_N1_SCOPE_20261030.md"
+  },
+  "conclusion": {
+    "l29_previous_prepare_error_counterexample_closed": true,
+    "l30_previous_meta_write_rc4_counterexample_closed": true,
+    "expected_v5_red_paths_reach_original_assertions": true,
+    "expected_v6_green_and_intended_rejections_preserved_by_source_reasoning": true,
+    "concrete_additional_unrelated_failure_admitted_by_pinned_paths_found": false,
+    "blocking_findings": [],
+    "runtime_result_claimed": false
+  },
+  "ast_observations": [
+    {
+      "name": "_normal_fetch_meta",
+      "lines": [
+        866,
+        875
+      ],
+      "direct_L_attributes": [
+        "__file__"
+      ],
+      "assert_lines": []
+    },
+    {
+      "name": "test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child",
+      "lines": [
+        911,
+        949
+      ],
+      "direct_L_attributes": [
+        "child_env"
+      ],
+      "assert_lines": [
+        928,
+        931,
+        932,
+        934,
+        945,
+        946,
+        948,
+        949
+      ]
+    },
+    {
+      "name": "test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write",
+      "lines": [
+        952,
+        990
+      ],
+      "direct_L_attributes": [
+        "child_env",
+        "fetch_source_postcheck"
+      ],
+      "assert_lines": [
+        971,
+        974,
+        978,
+        987,
+        988,
+        989,
+        990
+      ]
+    }
+  ],
+  "shared_guard": {
+    "controls_v7_lines": [
+      866,
+      875
+    ],
+    "requirements": [
+      "step == fetch; name == 04_fetch; launcher.path == resolved L.__file__",
+      "errors == []; first_error is None; precheck_ok is True; launched is True",
+      "child.started is True; child.rc == 0; child.timed_out is False",
+      "child.group.status == empty; child.errors falsey; stage.terms.child_ok is True",
+      "head_start, porcelain_start, porcelain_end, head_end rc == 0",
+      "head_start.out == head_end.out; HEAD output is neither None nor empty string"
+    ],
+    "compatibility": "The helper reads dictionaries and L.__file__ only; no v6-only launcher function is used. The source producer in v5 launch 733-734 and 778-786 and v6 launch 853-854 and 898-906 provides these common fields.",
+    "exact_line_evidence": [
+      {
+        "line": 870,
+        "fragment": "m.get(\"step\") == \"fetch\" and m.get(\"name\") == \"04_fetch\""
+      },
+      {
+        "line": 871,
+        "fragment": "m.get(\"errors\") == [] and m.get(\"first_error\") is None and m.get(\"precheck_ok\") is True and m.get(\"launched\") is True"
+      },
+      {
+        "line": 872,
+        "fragment": "child.get(\"started\") is True and child.get(\"rc\") == 0 and child.get(\"timed_out\") is False"
+      },
+      {
+        "line": 873,
+        "fragment": "(child.get(\"group\") or {}).get(\"status\") == \"empty\" and not child.get(\"errors\") and terms.get(\"child_ok\") is True"
+      },
+      {
+        "line": 874,
+        "fragment": "all((rec.get(k) or {}).get(\"rc\") == 0 for k in (\"head_start\", \"porcelain_start\", \"porcelain_end\", \"head_end\"))"
+      },
+      {
+        "line": 875,
+        "fragment": "(rec.get(\"head_start\") or {}).get(\"out\") == (rec.get(\"head_end\") or {}).get(\"out\") not in (None, \"\")"
+      }
+    ]
+  },
+  "l29": {
+    "closed_counterexample": {
+      "prior_path": "v5 disk_usage at 735 raises; launch catches at 770-771; errors/first_error record prepare; pre, child, post remain None from 717; metadata update 778-786 sets launched false and precheck_ok false; successful meta write leads to rc 1 at 795.",
+      "v7_path": "rc 1 passes range check 934; metadata read 935 succeeds; rc 1 branch invokes _normal_fetch_meta at 942, which fails at 871; distinct assertion 945 fires before original expected RED assertion 946.",
+      "resulting_assertion_prefix": "('UNEXPECTED_RED_CAUSE', 'l29',",
+      "expected_old_signature_reached": false
+    },
+    "branches": [
+      {
+        "case": "Expected v5 RED",
+        "source_reasoning": "Fixture 920-932 establishes an includeIf rewrite affecting a received directory named git while leaving work context unchanged. Fake fetch stores fixed origin and prints ok. v5 postcheck 424-430 sees raw remote URL fixed, effective URL rewritten, and adds one effective-source problem; 431-439 add none for the seeded normal shallow/alternates state. Normal launch fields pass helper. v7 942-944 requires exactly that sole problem, successful error-free URL reads, rewritten get_url and fixed remote_url; 945 passes and 946 raises the original expected tuple.",
+        "controls_v7_lines": [
+          920,
+          949
+        ],
+        "launcher_v5_lines": [
+          420,
+          439,
+          536,
+          568,
+          778,
+          795
+        ],
+        "guard_rejects_expected_case": false,
+        "final_expected_assert_line": 946
+      },
+      {
+        "case": "Expected v6 GREEN",
+        "source_reasoning": "v6 launch 845-849 replaces fetch config sources before the precheck, fake child and postcheck. v6 fetch_env 398-406 disables user config, so the fixture's includeIf file does not affect the received source. With normal child/records, post has no problems and stage is complete (899-915). v7 rc 0 branch 938-939 passes the helper, complete and empty-problems checks; final assertions 946, 948-949 verify rc 0, fixed effective URL, absent evil path and fixed child config names.",
+        "controls_v7_lines": [
+          938,
+          949
+        ],
+        "launcher_v6_lines": [
+          398,
+          406,
+          478,
+          504,
+          845,
+          849,
+          899,
+          915
+        ],
+        "guard_rejects_expected_case": false
+      }
+    ],
+    "additional_failure_exclusions": [
+      "Any rc other than 0 or 1 stops at 934 before metadata consumption.",
+      "Preparation, precheck, start, wait, record-write, postcheck exception, or end-observation errors make errors nonempty and fail 871.",
+      "Failed child rc, timeout, nonempty/unverified group or false child result fails 872-873.",
+      "Any additional postcheck problem violates len(probs) == 1 on the v5 branch, including data/module/pycache/source/record or v6 cleanup-deadline problems.",
+      "A failed get_url or remote_url observation fails 943-944 even if diagnostic text contains the rewritten URL.",
+      "A missing or malformed metadata document raises a different read/JSON exception before the expected RED assertion."
+    ]
+  },
+  "l30": {
+    "closed_counterexample": {
+      "prior_path": "v5 normal launch reaches meta write 788, which raises; catch 789-792 prints failure record and returns 4. Previously rc != 1 raised the same expected tuple before reading metadata.",
+      "v7_path": "rc 4 fails the range guard at 978. Metadata read at 979 and original expected assertion at 988 are not reached.",
+      "resulting_assertion_prefix": "('UNEXPECTED_RED_CAUSE', 'l30', 'localtls', 4)",
+      "expected_old_signature_reached": false
+    },
+    "branches": [
+      {
+        "case": "Expected v5 RED at first localtls iteration",
+        "source_reasoning": "v7 fake fetch 73-74 writes local http.sslVerify=false and completes normally. v5 fetch_source_postcheck 420-439 has no local-config allowlist/TLS scan; fixed raw/effective URL, shallow and alternates pass. v5 launch returns 0 with complete stage and no post problems. v7 983 passes the helper, complete, post.ok true and problems == []; 987 passes, then 988 raises the original exact tuple with localtls. The localinclude iteration is unreachable after that expected RED failure.",
+        "controls_v7_lines": [
+          73,
+          74,
+          975,
+          988
+        ],
+        "launcher_v5_lines": [
+          420,
+          439,
+          778,
+          795
+        ],
+        "guard_rejects_expected_case": false,
+        "final_expected_assert_line": 988
+      },
+      {
+        "case": "Expected v6 localtls rejection",
+        "source_reasoning": "The normal fake child still returns rc 0. v6 git_config_problems adds one TLS-disable message containing http.sslverify (443-444), and config_source_problems adds the forbidden-local-key message containing the same key (455-458). fetch_source_postcheck aggregates both at 494; post is false and launch rc is 1. Both messages contain the seeded key, one has the allowlist phrase, and common execution fields remain normal, so 985-987 pass. Assertions 988-990 confirm intended rc 1 and postcheck rejection.",
+        "controls_v7_lines": [
+          981,
+          990
+        ],
+        "launcher_v6_lines": [
+          436,
+          459,
+          491,
+          504,
+          899,
+          915
+        ],
+        "predicted_seeded_problem_count": 2,
+        "guard_rejects_expected_case": false
+      },
+      {
+        "case": "Expected v6 localinclude rejection",
+        "source_reasoning": "The fake child writes include.path to os.devnull (v7 75-76). That key does not match v6 GIT_CONFIG_DENY or GIT_SSLVERIFY (128-130), so only config_source_problems 458 rejects the local key. Its message contains include.path and the allowlist phrase; normal execution fields and rc 1 satisfy 985-990.",
+        "controls_v7_lines": [
+          75,
+          76,
+          981,
+          990
+        ],
+        "launcher_v6_lines": [
+          128,
+          130,
+          436,
+          459,
+          491,
+          504,
+          899,
+          915
+        ],
+        "predicted_seeded_problem_count": 1,
+        "guard_rejects_expected_case": false
+      }
+    ],
+    "additional_failure_exclusions": [
+      "Any rc other than 0 or 1 stops at 978 before metadata consumption.",
+      "The rc 0 (v5 RED) branch requires normal execution, complete stage, post.ok true, and zero post problems; unrelated handled failures cannot satisfy it.",
+      "A common execution failure on rc 1 fails _normal_fetch_meta before final assertion 988.",
+      "Ordinary pinned postcheck failures for source reads, data/module hashes, pycache, invalid records, group state or cleanup deadline do not contain the selected seeded key and are rejected by all(key in p for p in probs).",
+      "The initial valid local-repository source check at 973-974 remains before the two negative cases; its failure cannot reach the accepted RED tuple."
+    ]
+  },
+  "limitations": [
+    "These are source-level predictions only. No v5 RED, v6 GREEN, fixture, Git command, launcher, received helper or probe was executed.",
+    "The shared guard intentionally uses common v5/v6 fields. It does not independently validate the complete metadata schema, record HEAD format, launch-specific cwd/hash, or the v6-only deadline flag. The pinned source producers, no-overwrite entry checks and branch-specific postcheck constraints supply the relevant relationships.",
+    "The l30 v6 rejection filter at 985-986 uses substring membership and at least one allowlist phrase rather than an exact structured problem count/category. An invented additional diagnostic containing the same key would satisfy that predicate. No concrete unrelated failure emitted by the pinned fixture/launcher path was found that exploits this while all other guard requirements hold; this is recorded as a boundary of the string-based filter, not a blocking finding.",
+    "The l29 expected source mismatch filter uses repr(rewritten) membership rather than an exact message equality, but pinned v5 source code necessarily emits its effective-source mismatch when the required raw rewritten get_url is present. The exactly-one-problem constraint excludes simultaneous emitted failures."
+  ]
+}

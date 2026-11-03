@@ -1,0 +1,31 @@
+{
+  "kind": "REVIEWER_DATA_OPERATIONS",
+  "scope": "Reviewer-owned data processing only; received programs not executed",
+  "operations": [
+    "Read pinned GitHub blobs and compare metadata",
+    "Strict base64 decode, byte size/SHA256/Git blob identity checks",
+    "Read-only source control-flow analysis",
+    "Reviewer-owned AST parsing and data comparison",
+    "Copy unchanged/past evidence into separate review output",
+    "Write review documents and package"
+  ],
+  "reviewer_tooling_issues": [
+    {
+      "kind": "INTERPRETER_ALIAS_FAILED_TO_START",
+      "reported_by": "e10b_v2_l29l30",
+      "detail": "WindowsApps python.exe alias inaccessible; no target ran. Subsequent data-only AST parse used the verified bundled interpreter.",
+      "scope": "Reviewer tooling, not target failure"
+    }
+  ],
+  "reviewed_target_execution": 0,
+  "reviewed_target_import": 0,
+  "functional_tests": 0,
+  "received_tool_execution": 0,
+  "ruff_run_by_reviewer": 0,
+  "Git_fixture_or_probe": 0,
+  "COMSOL": 0,
+  "branch_mutations": 0,
+  "external_transmission": 0,
+  "whole_work_elapsed": null,
+  "note": "Author-reported ruff and working-tree checks are not claimed as repeated by this reviewer."
+}

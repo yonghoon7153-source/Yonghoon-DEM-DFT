@@ -1,0 +1,22 @@
+REIL C4-E E1-0b v2 재검토 전달 목록 — 2026-11-03
+
+Claude에게 전달할 파일:
+1. REIL_C4E_E1_0B_V2_PREREVIEW_20261103.zip
+2. DELIVERY_RECEIPT.json — ZIP 밖 원문
+3. PACKAGE_TOOL_RETURN.json — 포장 반환을 수신한 뒤 저장하는 전사
+
+핵심 회신: CODEX_REPLY_KO.txt
+상세 판단: REVIEW_KO.txt / REVIEW_DECISION.json
+근거: L23_STATIC_REVIEW.json / L29_L30_STATIC_REVIEW.json / STATIC_AUDIT.json
+
+판정은 E1_0B_PREREVIEW_ACCEPTED_FOR_USER_APPROVAL_NOT_EXECUTION.
+E1_0B_N1 정적 종결, 새 필수 보완 0. E1-0b의 실행 승인은 사용자가 별도로 선택한다.
+이번에 시험하거나 launcher/Git fixture/COMSOL을 실행하지 않았다.
+
+source는 기준 커밋 421d746e3676f7444fbf18355aecbf8d2da8bcf3의 새 원문이다.
+basis/unchanged_at_pin은 전체 커밋 비교상 불변인 이전 캡처 사본이며 원격 작업 트리 재측정이 아니다.
+basis/prior_review는 차이를 대조하기 위한 이전 원문·판정이다. 현재 판정과 혼합하지 않는다.
+capture_base64.json은 연결 도구에서 수신한 여섯 원문의 인코딩 사본이다.
+검토자 자료 도구는 해시/AST/포장용이며 대상 프로그램을 import/실행하지 않았다.
+
+영수증·마지막 반환 전사는 이미 생성된 ZIP 밖에 둔다. 도구 호출 wall time은 전체 검토 소요가 아니며 작업 예산 준수 주장을 만들지 않는다. 외부 발송은 하지 않았다.

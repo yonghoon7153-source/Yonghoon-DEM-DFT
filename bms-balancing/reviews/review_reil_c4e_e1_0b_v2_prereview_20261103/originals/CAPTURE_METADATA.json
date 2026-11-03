@@ -1,0 +1,42 @@
+{
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "branch": "claude/14-gate-code-review-9qkx05",
+  "pinned_commit": "421d746e3676f7444fbf18355aecbf8d2da8bcf3",
+  "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/421d746e3676f7444fbf18355aecbf8d2da8bcf3",
+  "message": "REIL §89 — C4-E · E1_0B_N1 정정 (사용자 채택): 대조 v7 · 외곽 실행기 v7 · 승인 요청 같은 경로에서 고쳐 씀 · 재검토 발송문 (정적 검사만 · 실행 0)\n\n사용자 결정 \"권고대로 해\" — 정정 범위안 (59e11840) §5 의 권장 넷.\n\n- launcher 대조 v7 (3f9d2f25 · 73,572 B): l23 · l29 · l30 의 기대 assert 앞에\n  원인 구분 — 기대 원인 밖이면 ('UNEXPECTED_RED_CAUSE', …). l29 · l30 은\n  반환 ∈ {0, 1} 을 먼저 보고, meta 를 기대 assert 앞에서 읽어 정상 실행\n  (_normal_fetch_meta) 과 원인을 확인한다. 시험 수 · 메시지 · RED 9 + 24 ·\n  GREEN 71 그대로.\n- 외곽 실행기 v7 (c5aab7c3): 봉인 표의 launcher 대조 행만 바뀜.\n- launcher v6 · 실행기 대조 v4 · 끝 기록 작성기는 그대로.\n- 승인 요청 (같은 경로 · 38960400): sha / bytes · 예측 줄 · UNEXPECTED 규칙 ·\n  숫자 정정 둘 (00_start sha 10 · 실행기 대조 같은 노드 46) · 공개 보강.\n  지난 검토 바이트 112f033b 는 90a842a9 와 회신 ZIP 에 있다.\n- 재검토 발송문 v2 (e58ac94e) · 원장 §89.\n\n정적 검사만: AST · ruff · 이름 · L.* 대조 (v5 · v6) · 봉인 표 15 행 불일치 0 ·\n비밀 검사 0 건. 시험 · Git fixture · launcher 0 회. E1-0b 실행 승인 아님.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_0157zrP6GFu6cJF5x8CwZaEm",
+  "prior_commit": "90a842a9df9eb676c20ce1b9d4babf0cf0c5d637",
+  "scope": "Read-only GitHub API, immutable commit blobs; no remote working-tree audit",
+  "captured_files": [
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v7_20261030.py.txt",
+      "blob_sha": "24f108d5e4598350f37806e200f9d80472d8b0ec",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/421d746e3676f7444fbf18355aecbf8d2da8bcf3/bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v7_20261030.py.txt"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v7_20261030.py.txt",
+      "blob_sha": "c4f7565af3c9cf67a55b80a0ed5cecb408e8b793",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/421d746e3676f7444fbf18355aecbf8d2da8bcf3/bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v7_20261030.py.txt"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "blob_sha": "2f7083b29bfde92a97518c9f983448b8bade1a0f",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/421d746e3676f7444fbf18355aecbf8d2da8bcf3/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_0B_PREREVIEW_SEND_v2_20261030.md",
+      "blob_sha": "a5577deafe3bfdcb2f2c14d985a8d20a6cdecb4e",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/421d746e3676f7444fbf18355aecbf8d2da8bcf3/bms-balancing/docs/REIL_C4E_E1_0B_PREREVIEW_SEND_v2_20261030.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "blob_sha": "783f72daaa4bd3f80c4a8615183d38b8f097a917",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/421d746e3676f7444fbf18355aecbf8d2da8bcf3/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_0B_N1_SCOPE_20261030.md",
+      "blob_sha": "cf42bfd1a73dcad8b30f11f9d2a67dcdb1bdb05e",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/421d746e3676f7444fbf18355aecbf8d2da8bcf3/bms-balancing/docs/REIL_C4E_E1_0B_N1_SCOPE_20261030.md"
+    }
+  ]
+}
+
