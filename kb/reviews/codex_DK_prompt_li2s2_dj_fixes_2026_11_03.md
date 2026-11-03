@@ -1,5 +1,5 @@
 ---
-title: "DK 프롬프트 — li2s-2 DJ 고침 확인 (172daf67): 재시도 이력 대조 · 판독 불가 · 보존 누락 차단 · 증언 하한 · 잠금 안 증언 · 결과와 무관한 재시도 사유 · MD/FIRE 구분 · 정전 추가 예산 — 첫 담금질 GO 여부"
+title: "DK 프롬프트 — li2s-2 DJ 고침 확인 (7ac0be8e): 재시도 이력 대조 · 판독 불가 · 보존 누락 차단 · 증언 하한 · 잠금 안 증언 · 결과와 무관한 재시도 사유 · MD/FIRE 구분 · 정전 추가 예산 — 첫 담금질 GO 여부"
 date: 2026-11-03
 updated: 2026-11-03
 tags: [review, li2s, glass, md, uma, density, quench, runner, codex, prompt, letter]
@@ -7,7 +7,7 @@ letter: DK
 track: li2s
 channel: codex
 kind: prompt
-status: 초안 (2026-11-03) — 사용자 발송 대기 · 기준 커밋 172daf67
+status: 초안 (2026-11-03) — 사용자 발송 대기 · 기준 커밋 7ac0be8e
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -18,7 +18,7 @@ evidenceScope: multi-source-primary
 ---
 
 > 트랙 = li2s-2 (논문 1저자 = 외부 · 위임 10-30). DJ (0f51518d · NO-GO · P0 3 · P1 1 · Q1–Q4) 다음 편지다 — **고친 곳만** 본다.
-> ⛔ li2s 절대 수송값은 싣지 않는다. 기준 커밋 `172daf67` (브랜치 `claude/friendly-meitner-lldvar`). ⬇ 아래 **보내는 글**만 발송한다.
+> ⛔ li2s 절대 수송값은 싣지 않는다. 기준 커밋 `7ac0be8e` (브랜치 `claude/friendly-meitner-lldvar`). ⬇ 아래 **보내는 글**만 발송한다.
 > 회신이 오면 `codex_DK_reply_li2s2_dj_fixes_2026_11_03.md` 로 원문 보존.
 
 ---
@@ -34,10 +34,10 @@ DJ 가 해제로 본 DI 지적 (P0-1 · P0-2 · P0-3 · P1-4 · P1-5 기존 경�
 
 ## 1. 보는 범위
 
-- `git diff 0f51518d 172daf67 -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
+- `git diff 0f51518d 7ac0be8e -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
 - 카드 `개정_정전_복구_v2_2026_11_03` · 기계값 `retry_reasons` · `outage_reasons` · `cap_retry_reasons` · `stage1_outage_extra_budget_gpu_h` (45) · `attestation_required_fields`
-- 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 207) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 78 · Linux)
-- 깨기 (변이) __MUT__ — 저장소 밖 복사본에서 DG · DH · DI · 정전 복구 · DJ 고친 곳을 하나씩 되돌려 해당 시험이 빨개지는지
+- 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 207) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 79 · Linux)
+- 깨기 (변이) **116 / 116 빨강** — 저장소 밖 복사본에서 DG · DH · DI · 정전 복구 · DJ 고친 곳을 하나씩 되돌려 해당 시험이 빨개지는지. 본 판 111 (코드 2c36eac9) 은 빨강 109 · **초록 2** (J3 소비자 `retry_kind` 대조 · J22 증언 때 heartbeat 대조 — 검사 줄은 있는데 그 줄만 깨는 시험이 없었다 · 다른 검사가 같은 자료를 먼저 잡음) → 그 줄만 깨는 시험을 보태고 (d1fb5380) 뒤 판 7 (확인 단계 고침 5 + J3 · J22) 이 7 / 7 빨강. 본 판 뒤에는 시험이 늘기만 했다. 스크립트 · 로그 · 해시 = `db/raw/li2s2_dj_mutation_2026_11_03/`
 
 ## 2. DJ 지적별로 한 것 (재현 → 지금 막는 시험)
 
@@ -47,7 +47,7 @@ DJ 가 해제로 본 DI 지적 (P0-1 · P0-2 · P0-3 · P1-4 · P1-5 기존 경�
 - `retry_stop_id` → `stop_history` 의 그 STOP 이 **확인됐고 · 앞 실행 run_id 에 묶였고 · code 가 그 종류의 묶는 code** 이고 · 그 확인에 붙은 **재시도 선언** 이 맞아야 (Q1)
 - 그 실행 폴더의 `stage1_attempt.json` 재시도 필드 = 장부 (실행 전 기록이 없으면 무효)
 - 끊긴 런 재시도 수는 **앞 실행 종류로** 센다 — 필드를 지워도 줄지 않는다 · 첫 실행에 재시도 필드가 있으면 무효
-- 시험 (모든 면에서 맞는 이력을 만든 양성 대조 → 한 가지씩만 깸): 양성 대조 통과 / 장부 재시도 필드 + STOP 이력 지움 → 무효 / 실행 전 기록까지 맞춰 지움 → 무효 / 두 번 재시도 → 한도 / **그 두 번 재시도에서 retry_kind 만 지움 → 여전히 한도** / 기록 ≠ 장부 · 기록 없음 · 선언 없음 · 다른 런에 묶임 → 무효 / **지운 자료를 러너에 다시 줌 → rc 27 (invalid) · 발사 0** (DJ: rc 0)
+- 시험 (모든 면에서 맞는 이력을 만든 양성 대조 → 한 가지씩만 깸): 양성 대조 통과 / 장부 재시도 필드 + STOP 이력 지움 → 무효 / 실행 전 기록까지 맞춰 지움 → 무효 / 두 번 재시도 → 한도 / **그 두 번 재시도에서 retry_kind 만 지움 → 여전히 한도** / 기록 ≠ 장부 · 기록 없음 · 선언 없음 · 다른 런에 묶임 · **retry_kind 만 틀림 (장부 · 기록 맞춰서)** → 무효 / **지운 자료를 러너에 다시 줌 → rc 27 (invalid) · 발사 0** (DJ: rc 0)
 
 **P0-2 판독 불가 · 보존 누락에도 재시도** —
 - `verdict_file_status`: 판정 파일 **없음 (None)** 과 **있는데 못 읽음 · 모르는 상태 · 객체 아님 (`unreadable`)** 을 가른다 → 러너 재시도 자격 · 소비자 둘 다 못 읽음을 차단 ('판정 없음' 으로 읽지 않는다)
@@ -59,7 +59,7 @@ DJ 가 해제로 본 DI 지적 (P0-1 · P0-2 · P0-3 · P1-4 · P1-5 기존 경�
 **P0-3 하한 미상 · NaN · 음수면 0 h 증언을 확정 비용으로** —
 - `--attest_cost` 는 하한 (`wall_h_lower`) 과 heartbeat (`wall_h_so_far`) 가 **유한한 비음수 · 하한 ≥ heartbeat** 일 때만 받는다 — 아니면 **하한 미상 → 증언을 받지 않고 비용은 미확정 그대로** (`dict.get(key, fallback)` 대체 경로를 없앴다) · H 는 유한 · **양수** · 하한 이상
 - 증언 기록에 그때의 하한 · heartbeat (`lower_at_attest` · `heartbeat_at_attest`) 를 남기고 · 소비자가 장부와 대조 · 하한 검사를 생략하는 길 (`_fin(lo)` 일 때만) 을 없앴다 · 증언 상한은 **고아 런 (orphaned)** 에만
-- 시험: DJ 재현 그대로 — 하한 null · NaN · −1 (heartbeat 5) 에 0 h · 6 h → 둘 다 거부 · 장부 바이트 그대로 / heartbeat 미만 하한 (4 < 5) → 거부 / 하한 0 (첫 heartbeat 전 끊김) 에 0 h → 거부 · 0.5 h → 받음 / 소비자: 그 셋에 0 h 증언 행 → 무효 · 정상 끝 행을 증언 상한으로 바꿈 → 무효 · 양성 대조 (하한 5 · 상한 6 · 고아 런) 통과
+- 시험: DJ 재현 그대로 — 하한 null · NaN · −1 (heartbeat 5) 에 0 h · 6 h → 둘 다 거부 · 장부 바이트 그대로 / heartbeat 미만 하한 (4 < 5) → 거부 / 하한 0 (첫 heartbeat 전 끊김) 에 0 h → 거부 · 0.5 h → 받음 / 소비자: 그 셋에 0 h 증언 행 → 무효 · 정상 끝 행을 증언 상한으로 바꿈 → 무효 · **증언 때 적은 heartbeat ≠ 장부** → 무효 · 양성 대조 (하한 5 · 상한 6 · 고아 런) 통과
 
 **P1-4 증언이 잠금 전에 읽은 장부로 덮어씀** — 쓰는 경로는 **잠금을 먼저 잡고 · 그 안에서 장부를 다시 읽어 · 자격 검사부터 저장까지** 한다 · 이미 증언 · 확정된 런이면 두 번째 쓰기 거부 (근거 보기 — hours 없음 — 는 읽기만 · 쓰지 않음).
 - 시험: DJ 재현 순서 그대로 — 잠금 전에 다른 기록자가 8 h 증언 + STOP 확인을 저장 → 우리 호출 (2 h) 거부 · 장부는 8 h · 확인 그대로 / 잠금이 잡혀 있으면 아무것도 안 씀 / 두 번째 증언 거부
@@ -93,7 +93,7 @@ DJ 가 해제로 본 DI 지적 (P0-1 · P0-2 · P0-3 · P1-4 · P1-5 기존 경�
 1. **영수증 검사 위치** — 선언은 확인 때 (러너) · 재시도 직전 (러너 `retry_eligibility`) · 묶음 (소비자) 세 곳에서 같은 함수 (`declaration_problems`) 로 본다. 확인 때 검사의 '다시 판정 못 하는 이유' 판단은 그 run_id 의 폴더를 실행 목록 (`attempt_inventory`) 에서 찾아 완료 단계를 잰다 — 폴더를 못 찾으면 (아직 옮기기 전 · 밖으로 옮김) 그 요구를 못 건다 (뒤 두 곳이 다시 막는다). 이 순서가 맞는가.
 2. **정전 손실 산정** — '정전 사유로 선언됐고 도중에 끊겼고 MD 미완' 이면 그 런 비용 전부를 손실로 센다 (상한 45 h). 사람이 정전이 아닌 끊김을 정전으로 선언하면 예산이 최대 45 h 늘어난다 — 선언 (사건 · 근거 · 선언자) 이 감사 기록으로 충분한가, 더 필요한가 (예: 사건 시각과 장부 last_seen 대조).
 3. **MD 완료 판정** — 계획 프레임 수 = (단계별 반올림 스텝 합) // save_int + 1 (드라이버 `run_melt_quench` 의 `record` — 끝 `record(T_final)` 은 총 스텝이 save 간격의 배수일 때만 쓰인다 — 와 같은 셈이라고 읽었다) · 끝의 반쪽 프레임은 안 센다. 이 셈이 실제 드라이버 출력과 맞는가.
-4. **잠금과 러너** — 증언은 러너와 같은 flock 을 잡는다 (러너가 돌면 증언 거부). 러너 밖에서 사람이 장부를 손으로 고치는 것은 못 막는다 (도구 한계로 적음).
+4. **잠금과 러너** — 증언은 러너와 같은 flock 을 잡는다 (러너가 돌면 증언 거부). 러너 밖에서 사람이 장부 · STOP · 폴더를 손으로 고치는 것은 못 막는다 — 서로 맞게 꾸민 기록은 대조로 못 잡는다 (러너 docstring '못 하는 것' 에 적음 · 7ac0be8e). 이 한계를 두고 1 단계를 띄워도 되는가.
 5. 새로 생긴 조용히 틀린 경로가 있는가.
 
 ## 4. 회신 꼴
