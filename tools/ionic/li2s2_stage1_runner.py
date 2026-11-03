@@ -932,7 +932,9 @@ def _selftest():
     chk(rc == 0 and len(L) == 10, "낡은 잠금 파일 (프로세스 없음) 은 막지 않는다 — flock 은 커널이 풀었다")
     rr2 = pathlib.Path(tempfile.mkdtemp(dir=tmp_root)); (rr2 / "A/seed11").mkdir(parents=True)
     (rr2 / "A/seed11/thermo.csv").write_text("x\n")
-    _write_json_atomic(rr2 / "stage1_ledger.json", {"runs": [{"system": "A", "seed": 11, "start": "t", "start_epoch": time.time() - 7200,
+    t_start = time.time() - 7200
+    os.utime(rr2 / "A/seed11/thermo.csv", (t_start + 3600, t_start + 3600))   # 마지막 기록 = 시작 + 1 h → 하한 1.5 h (heartbeat) · 상한 2.0 h 가 갈린다
+    _write_json_atomic(rr2 / "stage1_ledger.json", {"runs": [{"system": "A", "seed": 11, "start": "t", "start_epoch": t_start,
                                                                "pgid": 4242, "status": "running", "end": None, "wall_h": None,
                                                                "wall_h_so_far": 1.5}]})
     rc_al, L_al, _ = go(wt, rr=rr2, pg_alive=lambda pg: pg == 4242)
@@ -940,7 +942,7 @@ def _selftest():
     led = J(rr2 / "stage1_ledger.json")
     chk(rc_al == RC["refused"] and not L_al and rc_or == RC["resume"] and not L_or and led["runs"][0]["status"] == "orphaned"
         and led["runs"][0]["cost_basis"] == "upper_bound" and led["runs"][0]["wall_h"] >= 2.0 - 1e-3
-        and led["runs"][0]["wall_h"] >= led["runs"][0]["wall_h_lower"] >= 1.5,
+        and abs(led["runs"][0]["wall_h_lower"] - 1.5) < 1e-6 and led["runs"][0]["wall_h"] - led["runs"][0]["wall_h_lower"] > 0.4,
         f"⛔음성 DG P0-2 · DH P0-1: 장부의 도는 중 런 — 그룹이 살아 있으면 거부 · 죽었으면 고아 런 · 비용은 보수 상한 "
         f"({led['runs'][0]['wall_h']:.2f} h ≥ 하한 {led['runs'][0]['wall_h_lower']:.2f}) · 끊긴 폴더에서 멈춤")
     rc, L, rr = go(wt, scen={("B", 12): {"rc": 137}})
