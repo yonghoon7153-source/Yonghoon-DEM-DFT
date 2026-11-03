@@ -133,7 +133,7 @@ evidenceScope: multi-source-primary
 | DE | 2026-10-22 | `codex_DE_prompt_wad_outsourcing_round2_v5_2026_10_22.md` | `codex_DE_reply_wad_outsourcing_round2_v5_2026_10_22.md` | 발송 2026-10-22 (사용자 · 기준 커밋 9ddfbe448 · 묶음 v5 MANIFEST 714324cc…) → 회신 수령 GO · 발송 동의 (P2 1 — codex_DE_reply_wad_outsourcing_round2_v5_2026_10_22.md) | 같은 라벨 · 주제 토큰 일치 ['outsourcing', 'round2', 'v5', 'wad'] |
 | DF | 2026-11-03 | `codex_DF_prompt_li2s2_dense_window_card_2026_11_03.md` | `codex_DF_reply_li2s2_dense_window_card_2026_11_03.md` | 발송 2026-11-03 (사용자 · 기준 커밋 ff795d669) → 회신 수령 NO-GO (P0 1 · P1 5 · P2 4 — codex_DF_reply_li2s2_dense_window_card_2026_11_03.md) · 고정 밀도 NVT 방향은 조건부 찬성 | 같은 라벨 · 주제 토큰 일치 ['card', 'dense', 'li2s2', 'window']; 판정 인용 12회 |
 | DG | 2026-11-03 | `codex_DG_prompt_li2s2_df_fixes_2026_11_03.md` | `codex_DG_reply_li2s2_df_fixes_2026_11_03.md` | 발송 · 회신 수령 2026-11-03 (NO-GO · `codex_DG_reply_li2s2_df_fixes_2026_11_03.md`) · 기준 커밋 947e83ba0 | 같은 라벨 · 주제 토큰 일치 ['df', 'fixes', 'li2s2']; 판정 인용 5회 |
-| DH | 2026-11-03 | `codex_DH_prompt_li2s2_dg_fixes_2026_11_03.md` | — | 초안 (2026-11-03) — 사용자 발송 대기 · 기준 커밋 7abe7929 | — |
+| DH | 2026-11-03 | `codex_DH_prompt_li2s2_dg_fixes_2026_11_03.md` | `codex_DH_reply_li2s2_dg_fixes_2026_11_03.md` | 발송 · 회신 수령 2026-11-03 (NO-GO · `codex_DH_reply_li2s2_dg_fixes_2026_11_03.md`) · 기준 커밋 7abe7929 | 같은 라벨 · 주제 토큰 일치 ['dg', 'fixes', 'li2s2'] |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
