@@ -949,6 +949,15 @@ D2_META_KEYS = frozenset(('schema registered generator generator_sha256 argv dec
 D2_ADHESION_KEYS = frozenset(('rule gamma gamma_wall bo_se ratified law ceiling status wall_rule rho_uncoated_ncm').split())
 D2_RAW_WEIGHT = {'AM_P': 56., 'AM_S': 24., 'SE': 18.}
 D2_FORCE_REL = 2e-5                       # CED cubed + radius print rounding; fixed before comparisons.
+#: ── D2 개발 덱 문법 (MXD2R-01 · Codex 10-27 · 1저자 11-02 Q1 (가) = 생성기 자신의 문법만 · 모르는 의미는 거부) ─────────────────────────
+#:   make_mixer_deck.deck() 가 쓰는 꼴의 **사본** (생성기를 import 하지 않는다 — 생성기가 바뀌면 개발 소비자가 거부해 드러난다 · fail-closed).
+#:   LIGGGHTS 의 다른 의미 (run upto · 늦은 timestep · 삽입 start/반복 · 메시별 주기) 를 계산하지 않고 생성기 꼴 밖을 거부한다
+#:   (수정 계획 docs/reviews/mxd2r_fix_plan_20261030.md Q1 — 의미 계산은 표면이 커서 새 반례를 부른다).
+D2_RUN_COUNT = r'(?:0|[1-9][0-9]*)'       # `run <정수>` 의 정수 — ASCII 십진 (부호 · 앞자리 0 · Unicode 숫자 · 옵션 거부)
+#: insert/pack 생성기 꼴 — None 자리는 다른 검사가 값을 본다 (fix id · 시드 · 분포 · 영역 참조 · 삽입 수 = _d2_counts · _d2_lifecycle)
+D2_INSERT_FORM = ('fix', None, 'all', 'insert/pack', 'seed', None, 'distributiontemplate', None, 'maxattempt', '200',
+                  'insert_every', 'once', 'overlapcheck', 'yes', 'all_in', 'yes', 'vel', 'constant', '0.', '0.', '-0.2',
+                  'region', None, 'particles_in_region', None, 'ntry_mc', '20000')
 
 
 def _d2_need(condition, message):
@@ -1101,11 +1110,32 @@ def _d2_counts(D, meta, phases, density):
     return {str(i+1): n for i,n in enumerate(vector)}
 
 
+def _d2_time_grammar(commands):
+    """MXD2R-01 — 시간 계약: `run <정수>` 두 토큰만 · `timestep <dt>` 는 정확히 하나 · 두 토큰 · 첫 run 전 (그 뒤 dt 불변).
+
+    LIGGGHTS 3d5c00f 소스 판독 (Codex 판정문 §3 · 우리 반입 대조): `run N upto` = 목표 누적 step − 현재 step 만큼 돈다 · 마지막 run 뒤의
+    timestep 은 실행에 쓰인 dt 를 정하지 않는다.  두 덱에 같이 넣으면 짝 비교 (CED 밖 토큰 동일) 도 못 잡는다 ⇒ 의미를 계산하지 않고
+    생성기 꼴 밖을 거부한다 (dt 를 바꾸는 다른 명령 — reset_timestep · run_style · fix dt/reset — 은 허용 명령 · fix 꼴 밖이라 이미 거부)."""
+    import re
+    runs = [i for i, t in enumerate(commands) if t[0] == 'run']
+    for i in runs:
+        t = commands[i]
+        _d2_need(len(t) == 2 and re.fullmatch(D2_RUN_COUNT, t[1]) is not None,
+                 'D2 time contract: only two-token `run <integer>` (generator grammar) — run options such as upto · start · stop · '
+                 'pre · post · every change the executed step program: `' + ' '.join(t)[:60] + '`')
+    steps = [i for i, t in enumerate(commands) if t[0] == 'timestep']
+    _d2_need(bool(runs) and len(steps) == 1 and len(commands[steps[0]]) == 2 and steps[0] < runs[0],
+             'D2 time contract: exactly one two-token `timestep <dt>` before the first run (dt set once, unchanged after) — '
+             f'found {len(steps)} at command index {steps} · first run at {runs[:1]}')
+
+
 def _d2_lifecycle(commands):
     """Validate the supported insertion/settling/rotation program, without executing it.
 
     Geometry remains supplied input; references and command lifetimes must still make
     the planned-count interpretation meaningful. No STL/physical geometry is certified.
+    MXD2R-01: insert/pack must be the generator form (no start/repeat/other options) and every
+    wall mesh rotates with the Drum period (common rotation contract; origin/axis/start/end below).
     """
     runs=[i for i,t in enumerate(commands) if t[0]=='run']
     _d2_need(len(runs)==4,'D2 requires insertion, two settling, and rotation runs')
@@ -1147,6 +1177,7 @@ def _d2_lifecycle(commands):
              and all(meshes[name][0]<wi<runs[0] for name in references),'wall mesh references/order')
     moves=[(i,t) for i,t in fixes.values() if t[3]=='move/mesh']
     moved=[]
+    periods={}
     for i,t in moves:
         _d2_need(len(t)==17 and t[4]=='mesh' and t[6:8]==['rotate','origin']
                  and t[11]=='axis' and t[15]=='period','unsupported mesh motion syntax')
@@ -1155,10 +1186,23 @@ def _d2_lifecycle(commands):
         axis=[_d2_float_token(x,'rotation axis') for x in t[12:15]]
         _d2_need(origin==[0.,0.,0.] and axis==[1.,0.,0.],'unsupported rotation origin/axis')
         _d2_need(runs[2]<i<runs[3],'mesh rotation must follow both settling runs')
+        periods[t[5]]=_d2_number(_d2_float_token(t[16],'rotation period'),'rotation period')
     _d2_need(len(moved)==len(set(moved)) and set(moved)==set(meshes),'each wall mesh must rotate exactly once')
+    # ★ MXD2R-01 — 공동 회전 계약: 모든 벽 메시 (Drum · Front · Back …) 가 Drum 과 **같은 주기** (Drum 주기 = 메타 period_s 는 read_d2 가 대조) ·
+    #   같은 원점 (0 0 0) · 축 (1 0 0) (위) · 같은 시작 (두 정착 run 뒤 · 회전 run 전 = 같은 step · 위) · 끝 (unfix 금지 = 마지막 run 끝까지 · read_d2).
+    #   ⚠ 옛 판은 Drum 주기만 메타에 묶었다 — Front 만 0.1 s 인 덱 (드럼 0.7825 s · Front 15.65 회전) 이 세 소비자 PASS (Codex front_period).
+    _d2_need('Drum' in periods and all(p==periods['Drum'] for p in periods.values()),
+             'D2 rotation contract: every wall mesh must rotate with the Drum period (common rotation) — '
+             +' · '.join(f'{k} {v:g} s' for k,v in sorted(periods.items())))
     inserts=[(name,i,t) for name,(i,t) in fixes.items() if t[3]=='insert/pack']
     _d2_need(len(inserts) in (1,2),'unsupported insertion count')
     for ordinal,(name,i,t) in enumerate(inserts):
+        # ★ MXD2R-01 — 생성기 꼴만: insert_every once (반복 거부) · start 없음 (늦은 시작 = 제거 전에 삽입 기회 없음 · Codex insert_start_late) ·
+        #   maxattempt · overlapcheck · all_in · 속도 · ntry_mc = 생성기 상수 · 다른 옵션 없음
+        _d2_need(len(t)==len(D2_INSERT_FORM) and all(w is None or t[k]==w for k,w in enumerate(D2_INSERT_FORM)),
+                 'D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 '
+                 'insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region R particles_in_region N ntry_mc 20000) '
+                 '— start · repeat (insert_every N) · other options rejected: `'+' '.join(t[1:])[:90]+'`')
         for field in ('region','distributiontemplate'):
             _d2_need(t.count(field)==1,'missing/duplicate insertion '+field)
         region=t[t.index('region')+1];distribution=t[t.index('distributiontemplate')+1]
@@ -1254,7 +1298,8 @@ def read_d2(text, meta):
         _d2_need(len(gravity)==1 and len(gravity[0])==9 and gravity[0][2]=='all' and gravity[0][5]=='vector', 'one explicit gravity vector required')
         grav = _d2_number(float(gravity[0][4]), 'actual gravity')
         _d2_need(grav==9.81 and [float(v) for v in gravity[0][6:]]==[0.,0.,-1.], 'actual gravity != declared mixer gravity')
-        _d2_lifecycle(commands)
+        _d2_time_grammar(commands)            # MXD2R-01 — run <정수> · timestep 하나 (첫 run 전)
+        _d2_lifecycle(commands)               # + MXD2R-01 삽입 생성기 꼴 · 공동 회전 주기
         adhesion = meta.get('adhesion_rule')
         _d2_need(isinstance(adhesion,dict) and set(adhesion)==D2_ADHESION_KEYS, 'unknown/missing adhesion rule keys')
         _d2_need(adhesion['rule']=='geomean' and adhesion['wall_rule']=='hare2026_x_rho_uncoated_ncm', 'D2 pair/wall rule differs')
