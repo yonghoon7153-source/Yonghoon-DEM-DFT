@@ -1,0 +1,31 @@
+(base) [yonghoon@ibb-master ~]$ sacct -j 337078 -X -o JobID,State,ExitCode,Elapsed
+JobID             State ExitCode    Elapsed
+------------ ---------- -------- ----------
+337078        COMPLETED      0:0   00:03:53
+(base) [yonghoon@ibb-master ~]$ grep -E "^- (G0|G1|G2|G3)|원 로그 :|재개    :|시험만|시도 \(10-28|LMP_IDENTITY" ~/d07_cmp_T.log | cut -c1-400
+
+  · 헬퍼 러너 엄격 대조 통과 (10-30 KG50R-F02) — #SBATCH 6 · 환경 줄 6 · cd 실제 경로 = 작업 폴더 /lustre/home/yonghoon/dem_test/kg50_d07_b50 → 본 · 시험 러너를 도구 틀로 씀 (cd "작업 폴더 실제 경로" || exit 1 · -in "검사한 덱 절대 경로" · 잡 시작 때 덱 · 체크포인트 sha256 대조 · command mpirun 한 줄 · LMP_IDENTITY 줄 = 시험 로그에서 G0 관문)
+- 시도 (10-28 KG50R-04): attempt_r56_1103_014321_1895853 — 이번 호출이 낸 시험만 본 제출 대상 (작업 폴더의 옛 job · mode 파일은 읽지 않는다)
+- 시도 (10-28 KG50R-04): attempt_r56_1103_014321_1895853 · 이번 호출이 낸 시험 job 337078 만 승격 대상 (기록 /home/yonghoon/dem_test/kg50_d07_b50/attempt_r56_1103_014321_1895853)
+- 러너 (10-30 KG50R-F02 · 1저자 Q2): 헬퍼 러너 엄격 대조 통과 (10-30 KG50R-F02) — #SBATCH 6 · 환경 줄 6 · cd 실제 경로 = 작업 폴더 /lustre/home/yonghoon/dem_test/kg50_d07_b50 → 본 · 시험 러너를 도구 틀로 씀 (cd "작업 폴더 실제 경로" || exit 1 · -in "검사한 덱 절대 경로" · 잡 시작 때 덱 · 체크포인트 sha256 대조 · command mpirun 한 줄 · LMP_IDENTITY 줄 = 시험 로그에서 G0 관문) · 헬퍼 러너 원본 = attempt_r56_1103_014321_1895853/helper_run_kg50_d07_b50_r56.sh.orig · 실행 입력 영수증 atte
+- G0 시험 정상 종료: 통과 — 상태 COMPLETED · ExitCode 0:0 · 마지막 step 1002000 (기대 1002000) · Loop time 끝 step 뒤에 있음 · 조회 실패 0 번 · 끝 상태 얻음
+- G0 마지막 줄 · Loop (10-28 KG50R-07): 마지막 thermo 줄 = 최신 머리 아래 · 칸 수 같음 · 모든 칸 유한 수 (step 1002000 · 줄 227) · 'Loop time … for 1998 steps' ↔ 시험 마지막 run 1998 — 같음
+- G0 잡 안 덱 신원 (10-30 KG50R-F02 · 관문): 통과 — 같음 (덱 /lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts sha256 4110ee76810b85f0f64ce88562bc148b119b86bee9be2dfdbbac529478c8ca2a · 체크포인트 /lustre/home/yonghoon/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_1000000.bin sha256 164824ea603741e436361589b48ee9d9f0fb16bf6bb12b92a630552bc3799de0 = 기록만 · lmp_mpi = 기록만)
+    신원 줄 (10-30 KG50R-F02): LMP_IDENTITY (10-30 KG50R-F02): lmp_mpi=/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi sha256=ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f deck=/lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts sha256=4110ee76810b85f0f64ce88562bc148b119b86bee9be2dfdbbac529478c8ca2a checkpoint=/lustre/home/yonghoon/dem_test/kg50_d07_b50/restart_
+- G1 재개 첫 thermo (step 1000000, setup 줄, CPU·압력 열 제외, 1e-6): 통과
+    원 로그 : Step=1000000 Atoms=488285 KinEng=3.3619779e-08
+    재개    : Step=1000000 Atoms=488285 KinEng=3.3619779e-08
+- G2 체크포인트 상태 덤프 대조: 통과 — atom_1000000.liggghts 같음 · mesh_1000000.stl 같음 ·
+- G3 원 로그 비교 구간 (step 1000002 부터, 느슨한 확인): 5 % 안
+    원 로그 : Step=1000002 Atoms=488285 KinEng=3.3622402e-08 pressMPa=0.00011997834
+    재개    : Step=1000002 Atoms=488285 KinEng=3.364381e-08 pressMPa=0.00011998104
+- 🧪 시험만 (-T) — G0–G3 통과 · 본 제출 안 함
+(base) [yonghoon@ibb-master ~]$ A=$(ls -td ~/dem_test/kg50_d07_b50/attempt_r56_* | head -1); echo $A; cat $A/main_inputs.sha256; sha256sum $A/main_inputs.sha256
+/home/yonghoon/dem_test/kg50_d07_b50/attempt_r56_1103_014321_1895853
+12873efcf4829de6f6cb036099782b1c2e2a11e8f9df44bb2b6720a5c1d6ccf5  /lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56.liggghts
+f20d6854293950cf3a513bfb34d660dd5e358c25da64c12f5dee532e85baefa0  /lustre/home/yonghoon/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56.sh
+4110ee76810b85f0f64ce88562bc148b119b86bee9be2dfdbbac529478c8ca2a  /lustre/home/yonghoon/dem_test/kg50_d07_b50/input_kg50_d07_b50_r56t.liggghts
+97e4df27e46624864737f567a5a6152dabe39d2a3f51bcc7b77d72818d29795c  /lustre/home/yonghoon/dem_test/kg50_d07_b50/run_kg50_d07_b50_r56t.sh
+164824ea603741e436361589b48ee9d9f0fb16bf6bb12b92a630552bc3799de0  /lustre/home/yonghoon/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_1000000.bin
+cff47c44385a95529ed2c6e97438985a56e6e2ede194e05f7541c14788570176  /home/yonghoon/dem_test/kg50_d07_b50/attempt_r56_1103_014321_1895853/main_inputs.sha256
+(base) [yonghoon@ibb-master ~]$
