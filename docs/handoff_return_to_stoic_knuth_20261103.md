@@ -25,7 +25,7 @@ git log -1 --format='%h %s'       # 제목 = '연장 세션 → 본 세션 복�
 |---|---|---|
 | 규칙 | **게이트 X 프로토콜 해제** (1저자 11-03) — 커밋 전 전체 게이트 (`scripts/check_all.sh`) 평소대로 · 띄우는 법 = CLAUDE.md *"Codex 요청 전 사전 공격 리뷰"* 줄 (Bash `run_in_background` + timeout 7200000) | — |
 | 50kg 보고 덱 (11-04) | DEM 장 10 쪽 = 1저자 최종 (11-03 PDF 확인) · 그래프 = 사수가 Origin 으로 고침 (1저자 *"신경 안 써도 돼"*) · 글에 남은 것 = tortuosity 자릿수 (2쪽 그림 · 4 · 6 · 8쪽 글머리 소수 둘째 자리 ↔ 3 · 6 · 7쪽 한 자리) · 3쪽 글머리 'coverage' (칸은 접촉 수) · 2 · 5쪽 σ 자릿수 (0.029 ↔ 그래프 0.0293) = 1저자 몫 · 기록 `docs/50kg/report_y4/meeting_20261104/final_deck_20261103/README.md` | 보고 뒤 |
-| 50kg D0.7 | 1저자 11-03 *"넘어가기전에 여기서 d0.7 이거 다시 시작하고 넘어가자"* → `-T` 337078 G0–G3 통과 (`docs/50kg/d07_guard/t_test_20261103/README.md`) → Codex 짧은 확인 = **한 건 조건부 GO** (11-03 · `docs/reviews/codex_kg50_d07_q3b_review_20261103/codex_review_kg50_d07_compress_resume_20261103.md` · 새 P1 없음 · P2 `KG50Q-01` (Codex 표기 KG50Q3B-01) = 영수증 대조를 새 시험 중 · 본 제출 전에 · P3 `KG50Q-02` (Codex 표기 KG50Q3B-02) = 600,000 step 첫 접촉 단정 정정) → 실행 절차 `docs/50kg/d07_guard/compress_resume_exec_20261103.md` → **본 호출 11-03 13:31 KST** (시도 `attempt_r56_1103_133112_3121914` · 시험 job 338342 · 시험 중 영수증 = `cff47c44…` ✅ · 시험 신원 1 줄 = lmp · 시험 덱 · 체크포인트 ✅) → G0–G3 → 본 job → **본 job 신원 확인 (본 덱 `12873efc…`) = 남음** · 남은 압축 ≈ 3.49 M step ≈ 174 h > 시간 한도 120 h → TIMEOUT 한 번 뒤 재개 가능성 큼 (추정 · TIMEOUT 뒤 = 판정문 §7 · 실행 절차 끝 절) | 본 job 신원 확인 · 그 뒤 읽기 전용 watch |
+| 50kg D0.7 | 1저자 11-03 *"넘어가기전에 여기서 d0.7 이거 다시 시작하고 넘어가자"* → `-T` 337078 G0–G3 통과 (`docs/50kg/d07_guard/t_test_20261103/README.md`) → Codex 짧은 확인 = **한 건 조건부 GO** (11-03 · `docs/reviews/codex_kg50_d07_q3b_review_20261103/codex_review_kg50_d07_compress_resume_20261103.md` · 새 P1 없음 · P2 `KG50Q-01` (Codex 표기 KG50Q3B-01) = 영수증 대조를 새 시험 중 · 본 제출 전에 · P3 `KG50Q-02` (Codex 표기 KG50Q3B-02) = 600,000 step 첫 접촉 단정 정정) → 실행 절차 `docs/50kg/d07_guard/compress_resume_exec_20261103.md` → **본 호출 11-03 13:31 KST** (시도 `attempt_r56_1103_133112_3121914` · 시험 job 338342 · 시험 중 영수증 = `cff47c44…` ✅ · 시험 신원 1 줄 = lmp · 시험 덱 · 체크포인트 ✅) → G0–G3 → **본 job 338349 RUNNING** (본 신원 1 줄 = lmp `ee2d7726…` · 본 덱 `12873efc…` · 체크포인트 `164824ea…` ✅) · 남은 압축 ≈ 3.49 M step ≈ 174 h > 시간 한도 120 h → TIMEOUT 한 번 뒤 재개 가능성 큼 (추정 · TIMEOUT 뒤 = 판정문 §7 · 실행 절차 끝 절) | 읽기 전용 watch (`~/kg50_watch.sh`) · TIMEOUT 이면 판정문 §7 (새 `-T` · 새 영수증 · 원 로그 S0 + 2) |
 | Rint ② | PC6 고침 반입 · 사전 공격 7 회차 · Codex 회차 ② 요청 · **PC7-01–05 고침 (시험 먼저 · 14 커밋) = 반입 전** → bundle 의 `pc7-fix` | PC7 cherry-pick → 원장 → 게이트 → push → Codex 회차 ② (1저자 지시 뒤) |
 | LHS214 | 새 214 발사 끝 (10-30 · SEALED 214) · §5 판정 · τ · 압력 · 인계표 ⬜ · `L214P-02` 한 줄 ⬜ · v1.3 배포 HOLD | 1저자 지시 |
 | 믹서 | MXD2R-01–03 수정 = Q1–Q3 (가) 비준 (11-02) · 구현 전 | 자리 나면 |
@@ -106,7 +106,7 @@ git cherry -v HEAD pc7-fix | head -20          # '+' = 아직 안 들어간 커�
 게이트 X 프로토콜은 11-03 에 해제했어 — 커밋 전 전체 게이트 평소대로.
 §3 bundle 의 pc7-fix (Rint ② PC7 고침 14 커밋) 는 아직 반입 전이니 복원 · 확인만 하고, 반입은 내가 지시할 때.
 Rint ② 는 §2-1 (지금 위치 · 내 결정 시간순 · 늘 지킬 것 · 다음 순서) 을 꼭 읽어 — 순서는 50kg → Rint, 단계마다 내 지시 뒤.
-50kg 보고는 11-04 — 그래프는 사수가 Origin 으로 고치는 중이라 손대지 마. D0.7 은 보고 끝나고.
+50kg 보고는 11-04 — 그래프는 사수가 Origin 으로 고치는 중이라 손대지 마. D0.7 은 11-03 압축 체크포인트에서 다시 돌고 있어 (본 job 338349 · Codex 조건부 GO) — watch 만 (TIMEOUT 이면 §2 D0.7 줄대로).
 지금 상태를 용훈 포메이션으로 짧게 정리해줘.
 ```
 
