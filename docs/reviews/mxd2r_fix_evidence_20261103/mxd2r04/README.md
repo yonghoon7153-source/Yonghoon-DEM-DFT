@@ -9,12 +9,14 @@
 - **뜻이 같아도 표기가 다르면 거부한다 (생성기 꼴 엄격).**
 - **LIGGGHTS 실행 · Windows · Python 3.8 실행은 확인하지 않았다.**
 
+> ★ 11-03 밤 범위 넓힘 (1저자 Q4 = 권고대로) — 첫 판의 유일한 자유 칸 **neighbor skin 값**도 생성기 꼴로 고정했다 (자유 칸 없음 · 기존 시험 `test_actual_command_scope` 의 기대를 바꿈) → **§9**.  §0 – §8 은 첫 판 (커밋 `8b88cf154` 까지) 기록이고, skin 을 자유 칸으로 적은 줄에는 §9 표지를 달았다.
+
 ## 0. 이번에 닫는 것 / 닫지 않는 것
 
 | 닫는 것 (claimed_fixed · Codex 재확인 전) | 닫지 않는 것 |
 |---|---|
 | MXD2R-04 — 사전 공격 17 (전역 설정 · 템플릿 뒤 옵션 · 따옴표 `#` · RNG 시드 · 기하 · 출력 · 체크포인트) | MXD2-01 전체 · MXD2R-01–03 의 Codex 재확인 (상태 그대로) |
-| 같은 부류 47 (같은 값 다른 표기 · 생성기 이름 · 순서 · 중복 · 결손 · 배플 · 마지막 run 뒤 명령 · skin 토큰 꼴) | neighbor skin **값** (자유 칸 — 기존 시험 `test_actual_command_scope` 가 단일 덱 PASS 를 요구 · 두 덱에 같이 바꾸면 세 소비자 PASS = 남은 같은 부류 · §6) |
+| 같은 부류 47 (같은 값 다른 표기 · 생성기 이름 · 순서 · 중복 · 결손 · 배플 · 마지막 run 뒤 명령 · skin 토큰 꼴) | neighbor skin **값** (자유 칸 — 기존 시험 `test_actual_command_scope` 가 단일 덱 PASS 를 요구 · 두 덱에 같이 바꾸면 세 소비자 PASS = 남은 같은 부류 · §6) → **11-03 밤 Q4 로 닫음 (§9)** |
 | 글자 꼴 14 (탭 · 제어 문자 · 비 ASCII · 따옴표 · `$` · 이음 꼴 · 끝 줄바꿈 · 주석 끝 `&`+유니코드 공백) | LIGGGHTS 가 그 글자들을 실제로 어떻게 읽는지의 실측 (소스 규약 판독 · 실행 안 함) |
 | 메타까지 같이 바꾼 덱 6 + timestep 표기 3 (메타 결합으로는 못 잡는 표기 · 규칙) | 새 S1 셀 · 코호트 · 정책 · 등록 · 실물 입력 · 실제 DEM · 믹서 실행 |
 
@@ -126,7 +128,7 @@
 
 - **뜻이 같아도 표기가 다르면 거부한다 (생성기 꼴 엄격)** — 예: `0.01447070` · `5e3` · `1.037e9` · `0.3` ↔ `0.30` · `9e-1` · `7.82508e-1` · `04` · `+2.373e-07` · 탭 · 폼 피드.  LIGGGHTS 가 같은 값으로 읽어도 거부한다.
 - **LIGGGHTS 실행 · Windows · Python 3.8 실행은 확인하지 않았다.**  LIGGGHTS 쪽 읽기 (ASCII 공백만 구분 · 따옴표 안 `#` 는 주석 아님 · `$` 치환 · 줄 = C 문자열 (NUL 에서 끝) · `&` 앞 ASCII 공백만 건너뜀) 는 소스 규약 판독이고 실행으로 확인하지 않았다 — 생성기가 그 글자들을 쓰지 않으므로 무엇으로 읽히든 거부한다.  주석 끝 `&`+NBSP 로 다음 줄을 숨기는 사례는 '우리 파서가 그 줄을 못 본다' 는 것만 확인했고 LIGGGHTS 가 그 줄을 실행한다는 것은 추정이다.
-- **예외 (자유 칸 하나) = neighbor skin 값** — 양의 ASCII 수만 받는다 (nan · inf · 0 · 음수 · 빈 · 문자 = 거부).  값과 표기 (`0.0000757`) 는 고정하지 않았다: 기존 시험 `test_actual_command_scope` 가 skin ×1.1 덱의 **단일 덱 PASS** 와 **짝 대조 FAIL** (한쪽 덱만 바꾼 짝) 을 요구한다 (그 시험은 고치지 않았다).  ⚠ 짝 대조는 두 덱의 skin 이 **다를 때만** 잡는다 — 두 덱에 **같이** 바꾼 skin (공통 변조) 은 세 소비자 PASS 다 = 남은 같은 부류 (이웃 목록 갱신 간격 · 성능 쪽 값이라는 판단은 추정 · 실행 확인 안 함).  고정하려면 그 기존 시험을 바꿔야 한다 — ⬜ 1저자 결정 후보.
+- (첫 판 기록 — **11-03 밤 Q4 로 없앰 · §9**) **예외 (자유 칸 하나) = neighbor skin 값** — 양의 ASCII 수만 받는다 (nan · inf · 0 · 음수 · 빈 · 문자 = 거부).  값과 표기 (`0.0000757`) 는 고정하지 않았다: 기존 시험 `test_actual_command_scope` 가 skin ×1.1 덱의 **단일 덱 PASS** 와 **짝 대조 FAIL** (한쪽 덱만 바꾼 짝) 을 요구한다 (그 시험은 고치지 않았다).  ⚠ 짝 대조는 두 덱의 skin 이 **다를 때만** 잡는다 — 두 덱에 **같이** 바꾼 skin (공통 변조) 은 세 소비자 PASS 다 = 남은 같은 부류 (이웃 목록 갱신 간격 · 성능 쪽 값이라는 판단은 추정 · 실행 확인 안 함).  고정하려면 그 기존 시험을 바꿔야 한다 — ⬜ 1저자 결정 후보.
 - **토큰 단위 엄격 · 배치 자유**: 토큰 사이 공백 수 · 빈 줄 · 주석 글 · 명령 줄 앞뒤 ASCII 공백은 고정하지 않는다 (두 파서가 같은 토큰을 읽는 범위 — 4-1 배치 PASS 9).  명령 부분 = 인쇄 가능 ASCII (공백 = 0x20 만) · 따옴표 · `$` 금지 (메타가 선언한 전 정밀도 dump 한 줄만 문자열 그대로) · 이음 = 명령 줄 끝 ` &` 만 · 제어 문자 (C0 · DEL · C1) 는 주석 안에서도 거부.
 - **값 묶음의 갈래**: 드럼 기하 (상자 1.15R · 메시 scale 2R · 삽입 영역 0.9R · ±0.45L · 층상 위 블록) · 템플릿 (id · 시드 · 밀도 · 반지름) · 분포 (시드 · 분율) · 영률 · ν · 재료 상수 · 시드 · dump / restart 간격 규칙 · 회전 주기 (= 메타) = **정확한 생성기 문자열**.  CED 값 · 삽입 총수 · run step 수 · dt 값 = 기존 검사 (힘 규칙 허용폭 · 계획수 · 메타) 가 묶고 여기서는 **생성기 표기**만 본다 (예: CED 를 허용폭 안에서 바꾼 같은 표기 꼴의 값은 기존 규칙 그대로).
 - **생성기보다 엄격한 곳**: 배플 덱 (`--baffles`) 거부 (D2 메타에 배플 칸이 없다) · 시드 2^31−1 초과 거부 (생성기는 상한 없음 · LIGGGHTS 시드 = C int — 추정).
@@ -137,7 +139,7 @@
 ## 7. 재현
 
 ```bash
-python3 -I -X utf8 -B scripts/test_mixer_d2_consumers.py                         # 28/28
+python3 -I -X utf8 -B scripts/test_mixer_d2_consumers.py                         # 28/28 (§9 skin 판 뒤 29/29)
 python3 scripts/mixer_deck_readback.py --selftest                                # 24/24
 python3 scripts/mixer_deck_diff.py --selftest                                    # 55/55
 python3 scripts/mixer_smoke_blind.py --selftest                                  # rc 0
@@ -156,4 +158,58 @@ python3 -I $E/mxd2r04/tools/mutation_check_v3.py <ROOT>/<커밋>/scripts <OUT>.j
 
 ## 8. 파일
 
-`SHA256SUMS` = 이 폴더의 파일 전부 (자신 제외 · `sha256sum -c SHA256SUMS` 로 대조).  상위 `../SHA256SUMS` 도 이 폴더를 포함해 다시 만들었다.
+`SHA256SUMS` = 이 폴더의 파일 전부 (자신 제외 · 하위 `q4_skin/` 포함 · `sha256sum -c SHA256SUMS` 로 대조).  상위 `../SHA256SUMS` 도 이 폴더를 포함해 다시 만들었다.
+
+## 9. 11-03 밤 범위 넓힘 — neighbor skin 도 생성기 꼴 (1저자 Q4 = 권고대로)
+
+- 근거: 첫 판의 남은 같은 부류 (§0 · §6 — skin 값 = 자유 칸이라 두 덱에 같이 바꾼 skin 을 세 소비자가 받음) · **1저자 11-03 밤 Q4 = 권고대로** (skin 값도 고정 · 기존 시험 기대 바꿈).
+- 바뀐 것: `_d2_generator_form` 의 neighbor 줄 기대 = `['neighbor', f6(min(d)·0.5), 'bin']` (deck() 의 `{min(d.values())*0.5:.6g}` 사본 · 같은 연산 · d = 활성 상 지름 = REG_D_UM × 1e-6 × CGF) · 자유 칸 분기 · `<skin>` 사유 문구 삭제 · 결과 설명 칸 · 주석.  **자유 칸 없음.**
+- 증거 폴더 `q4_skin/` (before · after · per_commit · preattack) · 도구 `tools/preattack_probe_v3.py` · `tools/mutation_check_v4.py` (v2 · v3 와 그 결과는 첫 판 기록 그대로).
+
+### 9-1. 커밋
+
+| 커밋 | 무엇 |
+|---|---|
+| `4e761d674` | 시험 먼저 — skin 공통 변조 7 (×1.1 repr · ×1.1 .6g · ×2 · AM 반지름 · 1e-9 · 같은 값 `0.0000757` · `7.570e-05` · 둘은 CLI 셋) · 기존 시험 기대 바꿈 · garbage skin 사유 |
+| `02ad3f7b8` | 수정 (skin = 생성기 값 · 자유 칸 없앰) |
+| (이 절을 넣은 커밋) | 증거 · 원장 MXD2R-04 범위 넓힘 메모 · `/mixer` v2.1 한 줄 · 수정 계획 상태 줄 |
+
+### 9-2. 옛 기대 → 새 기대 (이유 = (가) 원리 — 생성기 자신의 꼴만 · 같은 부류 예외 제거)
+
+| 시험 · 사례 | 옛 기대 (커밋 `8b88cf154` 까지) | 새 기대 (커밋 `02ad3f7b8` 부터) |
+|---|---|---|
+| `test_actual_command_scope` — 한쪽 덱만 skin ×1.1 (`8.327000000000001e-05`) · **단일 덱 readback** | **PASS** (skin = 단일 덱 계약 밖 · 짝 대조만 FAIL) | **FAIL** — token 1 `8.327000000000001e-05` (generator `7.57e-05`) (시험이 사유까지 확인) |
+| 같은 시험 — 그 덱과 정상 덱의 **짝 대조** (diff) | FAIL | FAIL (그대로) |
+| `test_mxd2r04_same_class…` `neighbor_garbage_skin` (`7.57e-05x`) — 사유 | `neighbor skin: ASCII decimal token required …` (자유 칸 수 검사) | token 1 `7.57e-05x` (generator `7.57e-05`) — 거부는 전과 같고 사유 문구만 바뀜 |
+| 사전 공격 v2 `skin_nan` · `skin_inf` · `skin_empty` · `skin_zero` · `skin_negative` — 사유 | `neighbor skin` (자유 칸 수 검사) | 생성기 토큰 대조 사유 (v3 · 거부 그대로) |
+| 사전 공격 v2 `skin_same_value_spelling` (`0.0000757`) · `skin_value_x1.1` — 두 덱 같이 | **PASS** (자유 칸 기록) | **FAIL** (v3) |
+
+- 시험 주석 = `scripts/test_mixer_d2_consumers.py` `test_actual_command_scope` (같은 이유 · 이 표 가리킴).
+
+### 9-3. 고치기 전 → 뒤 (`../tools/per_commit_replay.py` → `q4_skin/per_commit/per_commit_replay.json` · 바뀐 메서드만 · 나머지 26 은 세 판 모두 ok)
+
+| 시험 메서드 \ 커밋 | `8b88cf154` 첫 판 | `4e761d674` 시험 먼저 | `02ad3f7b8` 수정 |
+|---|---|---|---|
+| test_actual_command_scope | ok (옛 기대) | F1 | ok |
+| test_mxd2r04_neighbor_skin_generator_form | - | F27 | ok |
+| test_mxd2r04_same_class_spelling_identity_order | ok | F3 | ok |
+| 합 | 28 OK | 29 FAILED (failures=31) | 29 OK |
+
+- 고치기 전 실패 31 = skin 7 사례 API 21 + CLI 6 (세 소비자가 받음: `'PASS' != 'FAIL'` · rc 0) · 단일 덱 skin ×1.1 PASS 1 (옛 기대의 동작) · garbage skin 사유 3 (거부는 같고 사유 문구만 다름) — `q4_skin/before/tests_on_4e761d674_before_skin_fix.log` (리포 경로 = `<repo>`).
+- subTest (커밋 `02ad3f7b8` · `q4_skin/after/subtest_counts_02ad3f7b8.json`): skin 34 (7 + API 21 + CLI 6).
+
+### 9-4. 다시 돌린 것 (커밋 `02ad3f7b8` 소비자)
+
+| 시험 | 결과 | 로그 |
+|---|---|---|
+| D2 소비자 (`scripts/test_mixer_d2_consumers.py`) | 29/29 OK (첫 판 28 + skin 1) | `q4_skin/per_commit/replay_02ad3f7b8.log` |
+| Codex 독립 정상 48 조합 | 48 PASS | 같은 로그 |
+| readback `--selftest` · diff `--selftest` · smoke `--selftest` · `/mixer` 개발 이력 | 24/24 · 55/55 · rc 0 (✓ 31 · ✗ 0) · 9/9 | `q4_skin/after/` |
+| Codex 받은 사례 (세 CLI) | rc · 입력 지문 · 첫 줄 · 화면 (경로 가림) 첫 판과 전부 같음 (normal 0/0/0 · 반례 · 음성 대조 1/1/1) | `q4_skin/after/codex_cases_cli/` |
+| 생성기 옵션 양성 (`tools/positive_extra.py`) | 18/18 PASS × 4 (rpm 60 = 생성기 스스로 거부) | `q4_skin/preattack/positive_extra.txt` |
+| 사전 공격 v3 (`tools/preattack_probe_v3.py`) | **93/93** (v2 85 사례의 skin 행 기대 바꿈 + skin 8 더함: 대문자 E · + 부호 · 앞자리 0 · 전각 숫자 · 탭 · NBSP · 다른 CGF 생성기 덱 PASS · 다른 계획의 skin 값 FAIL) | `q4_skin/preattack/preattack_probe_v3.json` |
+| 1 회차 사전 공격 도구 · 범위 밖 17 | 66/72 (첫 판과 같음 · 6 = 의도한 엄격화) · 17/17 세 소비자 FAIL | `q4_skin/preattack/` |
+| 변이 v4 (`tools/mutation_check_v4.py` · 커밋 `02ad3f7b8` 사본) | **55/55 죽음** · 변이 없는 판 rc 0 — M31 (바꿈) = skin 기대 토큰을 덱 자신에서 복사 → `test_actual_command_scope` · skin 시험 · garbage skin 이 잡음 · M55 (더함 · tighten) = skin 계수 0.5 → 0.6 → 양성 시험이 잡음 | `q4_skin/preattack/mutation_v4_02ad3f7b8_*.json` |
+
+- 한정은 §6 그대로 (자유 칸 줄만 없어짐): **뜻이 같아도 표기가 다르면 거부한다 (생성기 꼴 엄격)** · **LIGGGHTS 실행 · Windows · Python 3.8 실행은 확인하지 않았다** (3.8 = 문법 검사만).  skin 이 성능 쪽 값이라는 판단은 고정 근거가 아니다 — 근거는 (가) 원리다.
+- 원장: MXD2R-04 범위 넓힘 메모 · claimed_fixed_sha = 이 수정 커밋 · 회귀에 skin 시험 · `test_actual_command_scope` 를 더함 (Codex 재확인 전).

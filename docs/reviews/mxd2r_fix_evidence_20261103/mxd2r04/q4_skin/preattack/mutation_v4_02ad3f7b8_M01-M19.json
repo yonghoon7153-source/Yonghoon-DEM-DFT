@@ -1,0 +1,192 @@
+{
+ "tool": "mutation_check_v4.py (v3.main · M31 바꿈 · M55 더함)",
+ "python": "3.11.15",
+ "selection": [
+  "M0",
+  "M1"
+ ],
+ "n": 19,
+ "killed": 19,
+ "unmutated_rc": 0,
+ "rows": [
+  {
+   "mutant": "M01 run: options allowed",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=12)",
+   "failing_tests": [
+    "test_mxd2r01_codex_time_insert_rotation",
+    "test_mxd2r01_same_class_generator_grammar"
+   ]
+  },
+  {
+   "mutant": "M02 timestep: after first run allowed",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=9)",
+   "failing_tests": [
+    "test_mxd2r01_codex_time_insert_rotation",
+    "test_mxd2r01_same_class_generator_grammar"
+   ]
+  },
+  {
+   "mutant": "M03 timestep: extra token allowed",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=3)",
+   "failing_tests": [
+    "test_mxd2r01_same_class_generator_grammar"
+   ]
+  },
+  {
+   "mutant": "M04 insert/pack: any form",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=15)",
+   "failing_tests": [
+    "test_mxd2r01_codex_time_insert_rotation",
+    "test_mxd2r01_same_class_generator_grammar"
+   ]
+  },
+  {
+   "mutant": "M05 rotation: Front/Back period free",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=9)",
+   "failing_tests": [
+    "test_mxd2r01_codex_time_insert_rotation",
+    "test_mxd2r01_same_class_generator_grammar"
+   ]
+  },
+  {
+   "mutant": "M06 neigh_modify: any arguments",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=6)",
+   "failing_tests": [
+    "test_mxd2r02_same_class_contact_and_materials"
+   ]
+  },
+  {
+   "mutant": "M07 neigh_modify: extra commands",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=9)",
+   "failing_tests": [
+    "test_mxd2r02_codex_contact_exclusion_and_friction",
+    "test_mxd2r02_same_class_contact_and_materials"
+   ]
+  },
+  {
+   "mutant": "M08 pair_style: after first run allowed",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=3)",
+   "failing_tests": [
+    "test_mxd2r02_same_class_contact_and_materials"
+   ]
+  },
+  {
+   "mutant": "M09 pair_coeff: any arguments",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=3)",
+   "failing_tests": [
+    "test_mxd2r02_same_class_contact_and_materials"
+   ]
+  },
+  {
+   "mutant": "M10 material: missing allowed",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=15)",
+   "failing_tests": [
+    "test_mxd2r02_codex_contact_exclusion_and_friction",
+    "test_mxd2r02_same_class_contact_and_materials"
+   ]
+  },
+  {
+   "mutant": "M11 material: duplicate allowed",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=3)",
+   "failing_tests": [
+    "test_mxd2r02_same_class_contact_and_materials"
+   ]
+  },
+  {
+   "mutant": "M12 material: constants unchecked",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=3)",
+   "failing_tests": [
+    "test_mxd2r02_same_class_contact_and_materials"
+   ]
+  },
+  {
+   "mutant": "M13 material: order unchecked",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=3)",
+   "failing_tests": [
+    "test_mxd2r02_same_class_contact_and_materials"
+   ]
+  },
+  {
+   "mutant": "M14 material: unknown name skipped",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=3)",
+   "failing_tests": [
+    "test_mxd2r02_same_class_contact_and_materials"
+   ]
+  },
+  {
+   "mutant": "M15 bytes: CR accepted",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=8)",
+   "failing_tests": [
+    "test_mxd2r03_physical_bytes_api",
+    "test_mxd2r03_physical_bytes_cli_both_directions"
+   ]
+  },
+  {
+   "mutant": "M16 bytes: hash of normalized text",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=14)",
+   "failing_tests": [
+    "test_mxd2r03_physical_bytes_api",
+    "test_mxd2r03_physical_bytes_cli_both_directions"
+   ]
+  },
+  {
+   "mutant": "M17 readback CLI: text-mode read",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=2)",
+   "failing_tests": [
+    "test_mxd2r03_physical_bytes_cli_both_directions"
+   ]
+  },
+  {
+   "mutant": "M18 diff CLI: text-mode read",
+   "file": "mixer_deck_diff.py",
+   "killed": true,
+   "result": "FAILED (failures=2)",
+   "failing_tests": [
+    "test_mxd2r03_physical_bytes_cli_both_directions"
+   ]
+  },
+  {
+   "mutant": "M19 smoke CLI: text-mode read",
+   "file": "mixer_smoke_blind.py",
+   "killed": true,
+   "result": "FAILED (failures=2)",
+   "failing_tests": [
+    "test_mxd2r03_physical_bytes_cli_both_directions"
+   ]
+  }
+ ]
+}
