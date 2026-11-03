@@ -11,8 +11,7 @@ layer.x.label.font = font(Aptos); layer.x.label.pt = 28; layer.x.label.color = c
 layer.y.color = color(64,64,64); layer.y.thickness = 1; layer.y.ticks = 10;
 layer.y.ticklength = 6; layer.y.tickthickness = 1; layer.y.mticklength = 3; layer.y.mtickthickness = 1;
 layer.y.label.font = font(Aptos); layer.y.label.pt = 28; layer.y.label.color = color(64,64,64);
-layer.x2.showAxes = 3; layer.x2.color = color(64,64,64); layer.x2.thickness = 1; layer.x2.ticks = 0; layer.x2.showLabels = 0;
-layer.y2.showAxes = 3; layer.y2.color = color(64,64,64); layer.y2.thickness = 1; layer.y2.ticks = 0; layer.y2.showLabels = 0;
+layer.x.showAxes = 1; layer.y.showAxes = 1; layer.x2.showAxes = 0; layer.y2.showAxes = 0;
 layer.x.from = 0; layer.x.to = 2800; layer.x.inc = 500; layer.x.minor = 1;
 page.margincontrol = 1;
 label -xb Time (ms);

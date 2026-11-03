@@ -177,6 +177,9 @@ def break_chart(path, size, margins, cats, vals, lo, hi, ticks, minor, ylabel, x
     axb.set_ylim(0, 1)
     axt.spines['bottom'].set_visible(False)
     axb.spines['top'].set_visible(False)
+    for _ax in (axt, axb):                                   # 1저자 11-03 '우측, 위측 테두리는 없애줘 그게 우리 표준이야'
+        _ax.spines['right'].set_visible(False)
+    axt.spines['top'].set_visible(False)
     axt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
     axt.set_yticks(ticks)
     axt.set_yticks(minor, minor=True)
@@ -187,10 +190,10 @@ def break_chart(path, size, margins, cats, vals, lo, hi, ticks, minor, ylabel, x
     axb.set_xticks(xs)
     axb.set_xticklabels(cats)
     axb.tick_params(axis='x', which='both', top=False, labelsize=7, pad=1.5)
-    # 끊김 표시 (왼쪽 · 오른쪽 축)
+    # 끊김 표시 (왼쪽 축만 — 1저자 11-03 표준 = 오른쪽 축선 없음)
     y_lo, y_hi = (b + stub) / fh, (b + stub + gap) / fh
     dx, dy = 0.035 / fw, 0.022 / fh
-    for xa in (l / fw, (l + W) / fw):
+    for xa in (l / fw,):                                     # 오른쪽 축선이 없으니 끊김 표시도 왼쪽만 (1저자 11-03 표준)
         for yy in (y_lo, y_hi):
             fig.add_artist(Line2D([xa - dx, xa + dx], [yy - dy, yy + dy], transform=fig.transFigure,
                                   color='black', lw=0.6))
@@ -222,6 +225,8 @@ def simple_chart(path, size, cats, vals, colors, ylabel, xlabel, ylim, ticks, mi
         ax.yaxis.set_major_formatter(FuncFormatter(tickfmt))
     ax.tick_params(axis='both', which='both', top=False, right=False, labelsize=8, pad=2)
     ax.tick_params(axis='x', which='minor', bottom=False)
+    ax.spines['top'].set_visible(False)                       # 1저자 11-03 표준 (위 · 오른쪽 축선 없음)
+    ax.spines['right'].set_visible(False)
     ax.set_ylabel(ylabel, fontsize=9, labelpad=3)
     ax.set_xlabel(xlabel, fontsize=9, labelpad=2)
     if legend:

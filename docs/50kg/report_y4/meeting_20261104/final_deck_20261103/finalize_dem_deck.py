@@ -7,7 +7,7 @@ from pptx import Presentation
 from pptx.util import Emu
 from PIL import Image
 
-SRC, OUT, CHARTS, IMGS, REPO, P06 = (Path(a) for a in sys.argv[1:7])
+SRC, OUT, CHARTS, IMGS, REPO, P06, D1FIG = (Path(a) for a in sys.argv[1:8])
 FIG = REPO / 'docs/50kg/report_y4/meeting_20261104/figs'
 prs = Presentation(str(SRC))
 S = {i + 1: s for i, s in enumerate(prs.slides)}
@@ -250,7 +250,18 @@ def replace_slide_from(src_path, pos):
     return prs.slides[pos - 1]
 
 
+# 1저자 11-03 표준 (위 · 오른쪽 축선 없음) — 덱의 막대 그림 전부를 같은 값 · 같은 크기의 열린 틀 판으로
+for _no, _names in ((7, ('kg50t_p07_thickness_DSE', 'kg50t_p07_porosity_DSE')), (9, ('p09_porosity_DSE', 'p09_coverage_DSE')),
+                    (10, ('p11_sigma_DSE',)), (11, ('kg50t_p12_thickness_ESE', 'kg50t_p12_porosity_ESE')),
+                    (13, ('p14_porosity_ESE', 'p14_coverage_ESE')), (15, ('p16_sigma_ESE',))):
+    for _n in _names:
+        replace_picture(_no, _n, CHARTS / (_n.replace('kg50t_', '') + '.png'))
 s6 = replace_slide_from(P06, 6)
+# 1저자 11-03 '우측, 위측 테두리는 없애줘 그게 우리 표준이야' — 압밀 곡선 = 위 · 오른쪽 축선 없는 판 (make_fig_d1_ms.py 기본)
+_pic = next(sh for sh in s6.shapes if sh.shape_type == 13 and sh.name == 'D1 compaction curves')
+_, _rid = s6.part.get_or_add_image_part(str(D1FIG))
+_pic._element.xpath('.//a:blip')[0].set('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}embed', _rid)
+log.append(f's6: 압밀 곡선 ← {D1FIG.name} (위 · 오른쪽 축선 없음)')
 s6.notes_slide.notes_text_frame.text = s6.notes_slide.notes_text_frame.text.rstrip() + ('\n'
     '⚠ 질문 대비 (화면에 안 씀): 1 µm 는 압축 중 판 압력의 약 65 % 가 감쇠 항력 상당 (R_drag 0.647 · 접촉망 평균 응력 158 MPa · 2 µm 0.074 · 3 µm 0.026) — 판 정지 뒤 압력 하락 원인은 확정 아님 (원장 KG50-20).\n'
     'Origin 자료: 50kg_DEM_origin_data.xlsx 시트 p06_D1_compaction (시간 · 두께 · 압력 · 가압판 속도).')

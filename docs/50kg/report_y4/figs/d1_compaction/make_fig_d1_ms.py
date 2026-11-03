@@ -110,6 +110,7 @@ SLIDE_TAU_STEP = 15000        # 압력 슬라이드판 모식 감쇠 시간 상�
 HI_SPAN_UM = 20.0             # 끊긴 y 축 위 범위 높이 (아래 범위와 같은 µm/높이 축척)
 GAP_FRAC = 0.06               # 끊긴 자리 높이 (아래 범위 높이의 몫)
 B3_CONTACT = False            # 가운데 점선 = 판이 침대에 처음 닿은 때 (압력 첫 0 아님) · False = 판 움직임 시작 (1저자 11-03 옛 ps73 그림처럼 --b3-contact)
+OPEN_FRAME = True              # 1저자 11-03 *"우측, 위측 테두리는 없애줘 그게 우리 표준이야"* — 위 · 오른쪽 축선 없음 · 끊김 표시 = 왼쪽 축만 · --closed-frame = 옛 네 변
 HI_FRAC = None                # 위 범위 눈에 보이는 높이 (아래 범위 높이의 몫) · None = 같은 µm/높이 축척 · 1저자 11-03 ps73 옛 그림처럼 위 띠를 좁게 (--hi-frac)
 SRC_REPLAY, SRC_CKPT, SRC_DUMP = 'replay (insertion · NP 1)', 'checkpoint (run 0)', 'atom dump'
 SRC_INTERP = 'interpolated (PCHIP between measured points)'
@@ -675,7 +676,7 @@ def write_origin_csv(path, head, units, rows):
 
 
 def ogs_text(name, what, color, y_from, y_to, y_inc, ylabel, bounds_ms, target=None):
-    """ps73 .ogs 와 같은 BML 서식 (바깥 틱 · 위/오른쪽 축선 · #404040 · 10 × 8 cm · Aptos 28 pt) — 단계 경계 점선 셋."""
+    """ps73 .ogs 와 같은 BML 서식 (바깥 틱 · #404040 · 10 × 8 cm · Aptos 28 pt · 위/오른쪽 축선 = OPEN_FRAME 이면 없음) — 단계 경계 점선 셋."""
     ax = ('layer.unit = 3; layer.width = 10; layer.height = 8;\n'
           'layer.x.color = color(64,64,64); layer.x.thickness = 1; layer.x.ticks = 10;\n'
           'layer.x.ticklength = 6; layer.x.tickthickness = 1; layer.x.mticklength = 3; layer.x.mtickthickness = 1;\n'
@@ -683,8 +684,10 @@ def ogs_text(name, what, color, y_from, y_to, y_inc, ylabel, bounds_ms, target=N
           'layer.y.color = color(64,64,64); layer.y.thickness = 1; layer.y.ticks = 10;\n'
           'layer.y.ticklength = 6; layer.y.tickthickness = 1; layer.y.mticklength = 3; layer.y.mtickthickness = 1;\n'
           'layer.y.label.font = font(Aptos); layer.y.label.pt = 28; layer.y.label.color = color(64,64,64);\n'
-          'layer.x2.showAxes = 3; layer.x2.color = color(64,64,64); layer.x2.thickness = 1; layer.x2.ticks = 0; layer.x2.showLabels = 0;\n'
-          'layer.y2.showAxes = 3; layer.y2.color = color(64,64,64); layer.y2.thickness = 1; layer.y2.ticks = 0; layer.y2.showLabels = 0;\n'
+          + (# 1저자 11-03 표준 = 위 · 오른쪽 축선 없음 (Origin 에서 확인 전 — 아래 두 줄은 아래 · 왼쪽만 보이게) · --closed-frame = 옛 네 변
+             'layer.x.showAxes = 1; layer.y.showAxes = 1; layer.x2.showAxes = 0; layer.y2.showAxes = 0;\n' if OPEN_FRAME else
+             'layer.x2.showAxes = 3; layer.x2.color = color(64,64,64); layer.x2.thickness = 1; layer.x2.ticks = 0; layer.x2.showLabels = 0;\n'
+             'layer.y2.showAxes = 3; layer.y2.color = color(64,64,64); layer.y2.thickness = 1; layer.y2.ticks = 0; layer.y2.showLabels = 0;\n') +
           f'layer.x.from = {X0:g}; layer.x.to = {X1:g}; layer.x.inc = {XTICK_MAJOR}; layer.x.minor = 1;\n'
           f'page.margincontrol = 1;\nlabel -xb {XLABEL};\n')
     vb = ''.join(f'draw -n b{i} -l -v {t:.3f}; b{i}.linetype = 3; b{i}.color = color(154,160,168);\n'
@@ -765,6 +768,9 @@ def draw_preview(tser, vser, pser, bounds_ms, arrows, stem, ranges=None, start_a
             (pser, 'pressure', 'Measured pressure' + nl + '(MPa)', (0, 330), 100)]
     for ax, (ser, key, ylabel, ylim, ystep) in zip(axs, spec):
         ax.tick_params(top=False, right=False, which='both')
+        if OPEN_FRAME:
+            ax.spines['top'].set_visible(False)
+            ax.spines['right'].set_visible(False)
         ax.plot([t for t, _, _ in ser], [y for _, y, _ in ser], '-', color=COLORS[key], lw=1.6)
         for t in bounds_ms:
             ax.axvline(t, color=LIGHT, lw=0.9, ls=':')
@@ -825,7 +831,7 @@ def draw_preview(tser, vser, pser, bounds_ms, arrows, stem, ranges=None, start_a
         u_lo, u_hi = 1.0 / top, (1.0 + GAP_FRAC) / top     # 끊긴 자리 (축 높이 몫)
         ax.add_patch(mpatches.Rectangle((-0.02, u_lo), 1.04, u_hi - u_lo, transform=ax.transAxes, facecolor='white', edgecolor='none',
                                         zorder=4, clip_on=False))
-        for xe in (0.0, 1.0):
+        for xe in ((0.0,) if OPEN_FRAME else (0.0, 1.0)):   # 오른쪽 축선이 없으면 끊김 표시도 왼쪽만
             for ue in (u_lo, u_hi):
                 ax.plot([xe - 0.015, xe + 0.015], [ue - 0.012, ue + 0.012], transform=ax.transAxes, color=GRAY, lw=1.0, clip_on=False, zorder=5)
         fig.canvas.draw()
@@ -1635,6 +1641,8 @@ if __name__ == '__main__':
         FIGSIZE = (float(av[i + 1]), float(av[i + 2]))
     if '--preview-dir' in av:
         PREV = Path(av[av.index('--preview-dir') + 1])
+    if '--closed-frame' in av:                            # 옛 네 변 틀 (기본 = 1저자 11-03 표준 = 위 · 오른쪽 없음)
+        globals()['OPEN_FRAME'] = False
     if '--b3-contact' in av:
         B3_CONTACT = True
     if '--hi-span' in av:                                 # 끊긴 축 위 범위 높이 (µm) · 1저자 11-03 20 ms 점 (296 µm) 이 보이게

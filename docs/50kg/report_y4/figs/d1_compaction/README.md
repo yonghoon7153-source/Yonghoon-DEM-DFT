@@ -9,6 +9,8 @@
 - **다시 만들기**: `python3 -I docs/50kg/report_y4/figs/d1_compaction/make_fig_d1_ms.py` (결정적 — 두 번 돌려 산출 14 개 sha256 같음) ·
   원자 기준 그림 = 같은 명령 + `--atomtop` (raw 폴더에 `kg50_d1_atomtop.csv` 가 있어야 한다 — 없으면 멈춘다) · 시험 `… --selftest` (90/90) ·
   클러스터 스크립트 시험 `python3 -I docs/50kg/report_y4/figs/d1_compaction/cluster/d1_atomtop_cluster.py --selftest` (9/9).
+- **틀 (1저자 11-03 *"우측, 위측 테두리는 없애줘 그게 우리 표준이야"*)**: 그림 (PNG · SVG) 과 Origin `.ogs` 모두 위 · 오른쪽 축선 없음 · 끊긴 축 표시 = 왼쪽만 (`OPEN_FRAME` 기본 · `--closed-frame` = 옛 네 변) ·
+  지금 커밋된 산출 = `--b3-contact --hi-span 45 --hi-frac 0.35` (원값판 · 원자 기준판 둘 다) · 덱 6장 판 = 같은 인자 + `--atomtop --figsize 3.5 3.85` · ⚠ `.ogs` 의 열린 틀 줄 (`layer.x2.showAxes = 0` 등) 은 Origin 에서 아직 확인 전.
 - **본보기**: `docs/data/ps73_compaction_curve_20261006/` (README §5 · §7 · §8 · `make_fig_ms.py` · `make_fig_velocity_ms.py` · `atom_top_scan.py` · `docs/data/ps73_compaction_curve_20261006/early_ckpt/make_early_decks.py`) ·
   단계 고르기 = `docs/data/ps73_compaction_curve_20261006/stages_20261012/README.md` §6.  로그 읽기 = ps73 생성기와 같은 `scripts/compaction_curve.py`
   (thermo 블록 · run 마다 첫 줄 = 설정 줄 버림 · 단계 표지 · 판정 줄) · 앞 구간 곡선 채움 = ps73 `make_fig_ms.pchip` 그대로 (사본 없이 그 파일에서 읽는다).
