@@ -2620,3 +2620,53 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   이번 한 번으로 썼다 — 다음 시도는 새 승인이 필요하다.
 - **다음:** E1_0B_RESULT_N1 정정 범위안 (사용자 채택 요청) → 채택 뒤 비활성 정정본 · 승인 요청 갱신 · 사전 검토 발송문 → 사전 검토 → 사용자 E1-0b 재승인. 이
   기록은 수정 · 재시험 · 실행의 승인이 아니다.
+
+## §94 C4-E · E1-0b — 사용자 정정 범위 채택 ("ㄱㄱ") · 정정본 여섯 (launcher v6 그대로) · 승인 요청 같은 경로 갱신 · 사전 검토 발송문 v3 · 실행 0 (2026-11-03 KST · 덧붙임 — 위 §0–§93 은 그대로)
+
+- **사용자 결정 (원문 "ㄱㄱ"):** 정정 범위안 `docs/REIL_C4E_E1_0B_RESULT_N1_SCOPE_20261103.md` (`8a0586d44712a0dfef6cba8b065a722d0ccd8725e82191a71e3687ed277627eb` ·
+  11,937 B · 커밋 `fdc85e45`) §6 의 권장 다섯을 채택했다 — (1) 범위 채택 (정정본 · 승인 요청 갱신 · 사전 검토 발송문까지 쓰고 멈춤 · 정적 검사만 · Git
+  fixture 포함 실행 0) · (2) 새 경로 A (시도 표지 `a2` — 증거 `evidence/reil_c4e1_0b_a2_<착수 UTC 날짜>/` · 작업 `SP/c4e1_0b_a2_steps` · pycache
+  `SP/c4e1_0b_a2_steps/pycache/<단계>`) · (3) l33 A (`extra` · `data` · `data_files` 모두 fixture 로) · (4) 판정기 A (고정본 · 첫 시험 전 봉인 · 출력을 증거로) ·
+  (5) 승인 요청은 같은 경로에서 고쳐 쓴다 (launcher v6 바이트 그대로 · 지난 시도의 요청 바이트 `38960400…` 는 커밋 · 회신 ZIP 에 남음).
+- **이번에 고정한 것 (`docs/` · 정적 검사만 · 실행 0):**
+
+  | 초안 | sha256 | bytes |
+  |---|---|---:|
+  | launcher v6 `REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt` (**그대로**) | `2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf` | 62,639 |
+  | launcher 대조 v8 `REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v8_20261103.py.txt` | `49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001` | 74,542 |
+  | 실행기 대조 v5 `REIL_C4E1_RUNNER_CONTROLS_DRAFT_v5_20261103.py.txt` | `b34fb9a98eb6e852d4c30038ee988adee57d03c2b138e767ca742ea327a45e13` | 37,003 |
+  | 외곽 실행기 v8 `REIL_C4E1_STEP_RUNNER_DRAFT_v8_20261103.py.txt` | `e284f8a14a5f15f405b566ab668a58f069a6ab465a25e391a36ce28f1fdf9059` | 36,938 |
+  | 끝 기록 작성기 v2 `REIL_C4E1_0B_END_WRITER_DRAFT_v2_20261103.py.txt` | `2f316acc348412cafd8607ef7fe0d19a579237e21c4535ab2a657ca090a5472b` | 4,875 |
+  | 판정기 (새) `REIL_C4E1_0B_JUDGE_DRAFT_20261103.py.txt` | `3749b32edd3954fdfa4bfe92336d9eafaf2121b6275c9bd0b3584ece42dc60c4` | 21,889 |
+  | 승인 요청 (같은 경로 · 갱신) `REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md` | `775056233e1dc41a2f0163da793c148eb9a51e627eab0e9bb99e093ad10ae6cf` | 85,590 |
+
+  - 대조 v8: l33 의 도우미 `post()` 가 `L.postcheck(…, records=records, extra=t.extra, data=t.data, data_files=t.data_files)` 로 부른다 · docstring (머리 ·
+    E1_0B_RESULT_N1 문단 · l33 한 문장). 시험 이름 · 기대 assert · 메시지는 그대로. 최상위 노드 바뀜 둘 · 같은 77.
+  - 실행기 대조 v5: `V4` · 수집 오류 문구 · `_rtree` 의 tmp 폴더 이름 (a2) · docstring. 같은 48 (시험 본문 그대로).
+  - 외곽 실행기 v8: `EVIDENCE_NAME` (`^reil_c4e1_0b_a2_20[0-9]{6}$`) · `WORK` (`SP/c4e1_0b_a2_steps`) · 거부 메시지 · `_FIXED` 의 대조 두 행 · docstring. 같은 56.
+  - 끝 기록 작성기 v2: 이름 규칙 a2 · 복사본 여섯 (판정기 포함) · 단계마다 판정 기록 (`<단계>.judge.json`) 의 sha256 · bytes · verdict · 거짓 항목 이름.
+  - 판정기: 요청서 §4-3 의 기준과 읽기 규칙 그대로 (stdlib 읽기 전용 · `<단계>.judge.json` 배타 생성 · 반환 0 MATCH / 1 STOP / 2 거부). 마지막 요약 줄은 "마지막
+    줄" 로 따로 읽는다 (지난 오분류). 기준보다 엄격하게 읽는 셋 (표 밖 실패 절 · stdout 어디의 `UNEXPECTED_RED_CAUSE` · 시험 파일과 meta `source_end` 결속) 은
+    요청서 §4-3 에 적었다.
+- **정적 검사 (실행 0):** AST · ruff 여섯 0 건 · 이름: `__file__` (실행기 · 판정기 · launcher) 뿐 · `L.*` 49 가 v6 에 모두 있고 v5 에 없는 일곱은 아홉 RED 시험의
+  예측 실패 줄 이후에만 · `R.*` 16 이 실행기 v8 에 모두 있음 · 봉인 표 15 행 · 27 비교 · 불일치 0 · 예측 줄 465 · 712 · 754 · 902 · 951 · 993 · 1004 · 1035 · 1072
+  (v7 의 여덟 관측 줄 + 5 · l33 + 7) · GREEN 네 파일의 최상위 `test_*` 21 · 6 · 33 · 11 (그 밖 `test*` · 클래스 · import 0).
+- **기본값 결속 정적 대조 (범위안 §2 · 요청서 부록 A):** 도구를 v2 로 넓혔다 — v1 (범위안 §2 의 표) 은 직접 `L.f(…)` 호출만 봐서 지역 별칭 호출 (l28
+  `fetch_env = L.fetch_env` · l31 · l32 `cleanup_group = L.cleanup_group` · 실행기 대조의 `cleanup = R.cleanup`) 을 놓쳤다 (자체 발견). v2 결과: 대조 v8 →
+  launcher v6 18 행 · → v5 14 행 · 실행기 대조 v5 → 실행기 v8 12 행 · 결함 0 (l33 `L.postcheck` 행은 사라졌다). 새로 보인 행은 l28 `fetch_env` 의 `config`
+  (고정 목록) · 실행기 대조의 `proc=PROC` (모든 경로가 `R.proc_table` 을 인자를 무시하는 가짜로 바꾼다 — 실제 /proc 를 읽지 않음) · `limit` · `kill_wait_s` ·
+  `settle_s` · `timeout` (정책) 이다. 분류 표는 요청서 §1-3.
+- **l33 의 정적 재확인:** v5 · v6 `postcheck` 를 따라가면 고친 기본 기록은 문제 0 (identity 단계 · `data` / `data_files` 는 읽히지 않음 · 탐침은 `-I -B`) —
+  관측 근거는 지난 RED 의 문제 목록이 정확히 둘이고 둘 다 `extra` 의 실파일 대조였다는 것. v5 는 다음 `deadline_hit` 기록에서 1072 줄의 기대 메시지 · v6 는
+  통과로 예측 (요청서 §8 의 24).
+- **판정기 · 작성기의 작성자 확인 (저장소 밖 스크래치 사본에만 · 시험 · launcher · Git fixture 0):** 지난 RED 기록의 사본 → STOP · 거짓 항목
+  `red.l33.exception` 하나 (§92 의 수동 판단과 같음) · l33 실패 절만 기대 모양으로 바꾼 합성 사본 → MATCH · 합성 GREEN (71) → MATCH · 합성 GREEN (실패 하나 ·
+  `-x` 멈춤) → STOP · 거부 넷 → 반환 2 · 쓰기 0 · 작성기 v2 → 없는 파일은 사유로. 합성 기록은 판정기 확인용이고 증거가 아니다. 옛 증거 폴더는 읽기만 했다.
+- **승인 요청 갱신 (같은 경로):** 머리말 (§90–§94 · 두 번 고쳐 쓴 경위) · §0 · §1-1 (초안 여섯 · `<E>` 와 작업 폴더 a2) · §1-2 (지난 시도 보존) · §1-3 (기본값
+  결속 표 · 판정기 확인) · §2 · §3-4 · §4-1 (a2 착수 조건 · 판정기 멈춤 규칙) · §4-2 (명령 · GREEN 배경 실행) · §4-3 (판정의 정본 · 읽기 규칙 · 예측 줄) ·
+  §4-4 · §4-5 (판정기 · 작성기 v2 · `00_start.txt` 열둘 · 커밋 아홉 · `git add -f`) · §5 · §6 (l33) · §8 의 11 · 13 · 22–29 · §9 · §10 · 부록 A (도구 원문).
+- **사전 검토 발송문:** `docs/REIL_C4E_E1_0B_PREREVIEW_SEND_v3_20261103.md` (이 커밋).
+- **유지:** E1-0b 미완 · GREEN 미실행 · FUTURE-01 기능 종결 보류 · E1-0 수용 · `E1_0_N1` · 지난 시도의 원기록 · 작업 폴더 · 고정본 (삭제 · 재사용 · 이름 변경
+  0) · E1-1–3 · 실제 자료 fetch / run · C4-A / B · COMSOL 미승인.
+- **다음:** 사전 검토 (Codex) → 회신 수용 뒤 사용자의 E1-0b 한정 승인 (새 승인 · 시도 a2). 이 기록 · 범위 채택은 시험 · launcher · Git fixture 실행의 승인이
+  아니다.
