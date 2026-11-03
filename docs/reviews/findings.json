@@ -14971,6 +14971,16 @@
       "evidence_tests": [
         "scripts/test_rint_r_chain_e2e.py — E18j (현재 꼴 기록) · E18i · 로그 docs/reviews/rint2_rr_fix_evidence_20261023/e2e_verdict_20261103/logs/e2e_full_after.log"
       ]
+    },
+    {
+      "id": "RINT2-L01",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "11-03 litdb 추가 (1저자 11-03 \"요청서 보내기 전에 litdb 추가된 것도 같이\" · litdb 정본 2dbfb26ab 새 카드 hamasaki2022 · banerjee2019 의 '적용 후보 (11-03)' (가) 장부 항목)",
+      "opened_in": "docs/reviews/codex_rint2_rr_round2_request_20261103.md",
+      "title": "분산판 v0 의 전달 길이 미검증 — 길이 비례 G_j = max(1, L_c/L_par)/R_j,0 = 국소 법칙 (짧은 나란한 겹침의 길이당 컨덕턴스 일정 · litdb-canon:hamasaki2022_single_parallel_contact_mwcnt_conductivity) · 분산판 v0 (k = ceil(L_c/L_par) 간선 · 섬유 축저항 복셀) = 이산 전송선이라 긴 접촉의 실효 컨덕턴스 포화는 풀이에서 생긴다 (litdb-canon:banerjee2019_tunneling_tlm_parallel_nanoscale_contacts Eq. 7–9) · 모형 전달 길이 λ_model = √(R_j,0·L_par/(r′_i + r′_j)) [우리 산술] 가 실침대 접촉 길이 L_c 분포의 어디에 놓이는지 미측정",
+      "note": "지위 = 한정어 · 장부 (법칙 · R_j,0 · 사다리 · 문턱 변경 없음 · v0 동결) · 닫는 조건 = R 보정 뒤 보정된 R_j,0 마다 λ_model 을 내고 S0 census 의 L_c 목록과 대조 (L_c > λ_model · > 2λ_model 인 instance 수 · 그 접합 전류 몫 · 보고 전용 · 값 채택 없음) · DBE L_c 분포 = 등록 R §2-1 개정 커밋 뒤 (S0 단계 2 규칙) · 코드 한정어 = scripts/carbon_junction.py CJUNC_QUALIFIERS 의 '(접점 저항 분포 · 전달 길이 미검증)' · VGCF–VGCF 접합 실측 0 건 (CNT 카드 둘 모두 n/a) · 문서 자리 = 요청서 §6-5 ① · 등록 R §7-1 ⑫ (11-03) · 설계 §4-5 (11-03)."
     }
   ]
 }

@@ -267,8 +267,10 @@ CL-91 / VGCF 100 ~~분말~~ [⛔ 10-03 `RINT-10`: 도입 때 넣은 값 · 분�
 
 ---
 
-## 9. 문헌 선례 (11-03 · 1저자 비준 · 숫자 = litdb 정본 카드 원문 · 정본 `eeb8d13d9`)
+## 9. 문헌 선례 (11-03 · 1저자 비준 · 숫자 = litdb 정본 카드 원문 · 정본 `eeb8d13d9` · 11-03 litdb 추가 뒤 `2dbfb26ab` (c · d))
 
 - **a. §0 · §1-2 의 방향 (계면 항이 없어 σ 가 높게 나오는 쪽) 의 실험 지지** — FIB-SEM 재구성 위 복셀 FV 의 σ_ion 시뮬 ÷ 실측 = 1.46 · 1.42 (`litdb-canon:lee2026_unveiling_ptfe_dry_electrode_digital_twin` 머리 표 ③) · 입력 σ_LPSCl 1.0 mS cm⁻¹ (출처 미기재) 에 조건부 · *"계면 · 입계 · 미해상 기공 몫 ≈ 30 %"* 는 카드의 해석.
 - **b. §8 ① 면 직렬 시트 저항의 출판 선례 (형식만)** — Eq. S3 `(0.5/κ_a + 0.5/κ_b + R_int/dx)⁻¹` (`litdb-canon:ketter2025_resistor_network_models_predict_transport_properties` §4-1 · §7-6).
-- **가져오지 않는 것** — ① 값 2 × 10⁻⁶ m² K W⁻¹ (열 채널 · 경험적으로 고른 값 · 해상도 의존) ② 전하 채널 R_int (그 논문 밖) · 우리가 더한 같은 상 다른 입자 면 (AM–AM) · 계단 면적 보정 (CNC 법칙 r·N_ref·h²/A) = 문헌 없음 · 모형 내부값 (자세히 = `docs/reviews/codex_rint2_rr_round2_request_20261103.md` §7).
+- **c. 이온 (전하) 채널 계면 항의 출판 선례 (형식 + 실험 대조 · 11-03 litdb 추가)** — FIB-SEM 다공 garnet (LLCZNO) 을 watershed 로 입자 분할하고 입자 번호가 다른 두 입자가 맞닿는 복셀 면에 입계 플럭스 조건 (얇은 상 아님) · 치밀 시료로 맞추고 같은 값으로 다공 셋을 예측 · 56 % σ_eff = 구조만 1.1 × 10⁻⁴ → 입계 포함 8.6 × 10⁻⁶ ↔ 실측 ≈ 5.17 × 10⁻⁶ S cm⁻¹ (`litdb-canon:neumann2021_garnet_3d_structure_grain_boundaries_li_transport` §0-1 · §3-5) — 값은 안 가져온다 (garnet 소결 · 입계 i₀₀ 손 조정 · 저자 *"only reproduce qualitative trends"* · 입력 SE 3.0 = 입계를 품은 펠릿값 `CL-91`) · SE–SE = 다음 트랙.
+- **d. 계단 (복셀) 면적 편향 (11-03 litdb 추가)** — 평면의 면 개수 = 법선 L1 노름 배 (등방 평균 1.5 · 카드의 우리 산술) · 가중 국소 추정기는 구에서 평균 오차 < 1 % (반경 2 voxel · 물체 · 배경 평균) · 최악 (격자 정렬 평면) 7.3 % · 같은 계열 점근 최악의 최선 3.98 % (`litdb-canon:windreich2003_voxel_based_surface_area_estimation` · `litdb-canon:lindblad2005_surface_area_weighted_local_configurations` · `litdb-canon:ziegel2010_surface_area_measure_digitizations`) · ①′ CNC = 추정기가 아니다 (접점마다 총 넓이 규약 · 국소 분포 `RINTG-02` 는 못 고친다).
+- **가져오지 않는 것** — ① 값 2 × 10⁻⁶ m² K W⁻¹ (열 채널 · 경험적으로 고른 값 · 해상도 의존) ② 전하 채널 R_int (그 논문 밖 → 11-03 c 가 형식 선례 · 값 없음) · 우리가 더한 같은 상 다른 입자 면 (AM–AM · 전자 채널 = 여전히 문헌 없음) · ~~계단 면적 보정 (CNC 법칙 r·N_ref·h²/A) = 문헌 없음 · 모형 내부값~~ → (11-03) 계단 면적 편향 = 문헌 있음 (d) · CNC 규약 자체 = 문헌 없음 · 모형 내부값 (자세히 = `docs/reviews/codex_rint2_rr_round2_request_20261103.md` §7).
