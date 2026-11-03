@@ -1,6 +1,6 @@
-# REIL C4-E · E1-0b 승인 요청 — FUTURE-01 (fetch 설정 원천 격리) · launcher 운영 정리 정책 · 대조 33 + 11 · E1-1–3 고정 계획 · 2026-10-30 KST
+# REIL C4-E · E1-0b 승인 요청 — FUTURE-01 (fetch 설정 원천 격리) · launcher 운영 정리 정책 · 대조 33 + 11 · E1-1–3 고정 계획 · 2026-10-30 KST (E1_0B_N1 정정 · 2026-11-03)
 
-> **승인 요청문이다 (실행 0).** 이번 승인 대상은 **E1-0b 뿐**이다 — launcher 대조 v6 의 RED (지금 저장소의 v5 고정 구현 바이트) 와 GREEN (v6 고정 구현 ·
+> **승인 요청문이다 (실행 0).** 이번 승인 대상은 **E1-0b 뿐**이다 — launcher 대조 v7 의 RED (지금 저장소의 v5 고정 구현 바이트) 와 GREEN (v6 고정 구현 ·
 > 기존 대조 포함 71). E1-1–3 (identity · 읽기 경로 · fetch · run) 은 §7 에 고정 계획만 둔다 (**승인 대상 아님** · E1-0b 결과 검토 뒤 별도 요청 · 사용자
 > 별도 승인).
 > 근거:
@@ -8,6 +8,14 @@
 >   Q3 — 다음 요청서에 RED 판정 문구 · FUTURE-01 / E1-0b 범위 · launcher 운영 정리 정책 · 오류 수용 기준 · 단계 및 전체 예산 · E1-1–3 의 대상 바이트 ·
 >   입력 · 명령 · 예상 결과 · 중지 조건을 명시한다.
 > - §87 — 사용자 범위 채택 ("권고대로"): 범위안 `docs/REIL_C4E_E1_0B_E1_1_3_SCOPE_20261030.md` (`9b94a31f…` · 커밋 `b9904cdf`) §9 의 권장 여섯.
+> - §88 — 이 요청의 사전 검토 회신 (`reviews/review_reil_c4e_e1_0b_prereview_20261030/originals/`): `E1_0B_PREREVIEW_CHANGES_REQUIRED_BEFORE_APPROVAL` —
+>   필수 보완 E1_0B_N1 (RED 원인 결속 · l23 · l29 · l30) · 숫자 정정 둘. Q1 · Q2 · Q3 · Q5 는 정적 범위에서 수용.
+> - §89 — 사용자 정정 범위 채택 ("권고대로 해"): `docs/REIL_C4E_E1_0B_N1_SCOPE_20261030.md` (`69262ac4…` · 커밋 `59e11840`) — A (기대 assert 앞의
+>   원인 구분) · 이 요청은 같은 경로에서 고쳐 쓴다 · 숫자 정정 · 공개 보강.
+>
+> **이 파일은 같은 경로에서 고쳐 쓴 정정판이다.** 사전 검토를 받은 바이트 (`112f033bce27cf4e8d9e942643e563a0997af9c20e9eb60f68e5fe86416cfb74` · 51,720 B) 는
+> 커밋 `90a842a9` 와 회신 ZIP 의 `source/` 에 그대로 있다. launcher 의 `REQUEST` 상수가 이 경로를 가리키므로 launcher v6 바이트를 바꾸지 않으려고 경로를
+> 유지했다. 바뀐 것: 대조 v7 · 실행기 v7 (§1-1) · 원인 구분 (§4-3 · §6) · 예측 줄 · 숫자 정정 둘 (§1-3 · §4-5) · 공개 (§8 의 5 · 19–21).
 >
 > 순서: 이 요청 → Codex 사전 검토 → **사용자의 E1-0b 한정 승인** → E1-0b → 결과 검토 → E1-1–3 승인 요청 → 검토 → 사용자 별도 승인. v1–v5 요청서 ·
 > 초안 · E1-0 증거는 바꾸지 않는다.
@@ -25,6 +33,8 @@
   절로 대체하고 계속한 절차 차이가 있다." 이번 RED 판정은 회신의 제안 문구를 쓰고 근거의 위치 · 형식을 미리 고정한다 (§4-3). 실제 출력이 그와 다르면
   **대체하지 않고 멈춘다**.
 - launcher 대조: 기존 27 중 24 는 본문이 그대로이고 l14 · l23 · l25 를 고쳤으며 새로 여섯 (l28–l33) 을 넣었다 → 33. 실행기 대조 11 은 시험 본문이 그대로다.
+- **E1_0B_N1 (§88 · 대조 v7):** l23 · l29 · l30 은 기대 assert 바로 앞에서 원인을 구분한다. 기대 원인 밖 (탐침 · 준비 · 자식 · 정리 · 기록 실패 · 예상 밖
+  반환 · 추가 문제) 이면 RED 표에 없는 `('UNEXPECTED_RED_CAUSE', …)` 로 실패하고, 그것은 표와 다르므로 멈춘다. 시험 수 · RED 9 + 24 · GREEN 71 은 같다.
 
 ## 1. 고정 식별
 
@@ -33,9 +43,9 @@
 | 초안 (`bms-balancing/docs/`) | sha256 | bytes | 복사할 곳 (E1-0b 승인 뒤) |
 |---|---|---:|---|
 | `REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt` — launcher v6 | `2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf` | 62,639 | `scripts/reil_c4e1_launch.py` (GREEN 직전 · 단계 d) |
-| `REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v6_20261030.py.txt` — launcher 대조 33 | `0482305198aa1a32b1c1753a3d8fe71a5fd7ff5926053e49607bf680d8701634` | 68,212 | `tests/test_reil_c4e1_launch.py` (b) |
+| `REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v7_20261030.py.txt` — launcher 대조 33 (정정판 v7 · E1_0B_N1) | `3f9d2f2585b36819d229796154ecd4e902ffce86120c8e3c5a1e75bb1554e9cc` | 73,572 | `tests/test_reil_c4e1_launch.py` (b) |
 | `REIL_C4E1_RUNNER_CONTROLS_DRAFT_v4_20261030.py.txt` — 외곽 실행기 대조 11 | `d9880f28092e064017fd5d35f13b0f41b359ba301fca88fa5e3bc72e26d2bddd` | 36,600 | `tests/test_reil_c4e1_runner.py` (b) |
-| `REIL_C4E1_STEP_RUNNER_DRAFT_v6_20261030.py.txt` — E1-0b 외곽 실행기 v6 (봉인 표 포함) | `3f5bdfc010cf9b84e2bc0352138b335164c3511c6c84a63eab01cef565a09cb6` | 36,518 | `<E>/00_step_runner.py` (b) |
+| `REIL_C4E1_STEP_RUNNER_DRAFT_v7_20261030.py.txt` — E1-0b 외곽 실행기 v7 (봉인 표 포함 · v6 와 대조 행만 다름) | `c5aab7c35fd3e81fc34a787703f5895853954db5d3903f5399f74fbc27363425` | 36,672 | `<E>/00_step_runner.py` (b) |
 | `REIL_C4E1_0B_END_WRITER_DRAFT_20261030.py.txt` — 끝 기록 작성기 (범위안 §6) | `2e44f2e570b88ebd5bb88ee89b4e125d7774156a890bf01a429095aeb6fd5e44` | 3,697 | `<E>/00_end_writer.py` (b) |
 
 `<E>` = `/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_0b_<착수 UTC 날짜 YYYYMMDD>` (실행기 · 작성기가 이름 규칙을 확인한다 · E1-0 의
@@ -58,12 +68,14 @@
 
 - AST 파싱 다섯 · ruff `--isolated --select F,E9,B006,B008` 다섯 모두 0 건 · 이름 검사: 미해결은 `__file__` (launcher `launch` · 실행기 `run_step` —
   모듈 속성 · 오탐) 뿐.
-- **속성 대조:** launcher 대조 v6 의 `L.*` 참조 49 가 v6 에 모두 있다 (`__file__` 제외). v5 바이트에 없는 것은 일곱 (`CLEANUP_S` · `POLL_S` ·
+- **속성 대조:** launcher 대조 v7 의 `L.*` 참조 49 가 v6 에 모두 있다 (`__file__` 제외). v5 바이트에 없는 것은 일곱 (`CLEANUP_S` · `POLL_S` ·
   `FETCH_GIT_CONFIG` · `FETCH_LOCAL_KEYS` · `fetch_env` · `git_config_entries` · `cleanup_group`) 이고, 이 이름은 RED 실패로 정한 아홉 시험 안에서만, 그
-  시험의 예측 실패 줄 이후에만 쓰인다 (도우미 · 나머지 24 시험은 쓰지 않는다 — AST). 실행기 대조 v4 의 `R.*` 16 은 실행기 v6 에 모두 있다.
-- **봉인 표:** 실행기 v6 의 `_FIXED` · `RED_LAUNCH` · `IMPL` (AST literal) = 대조 초안 둘 · 열하나 (HEAD blob · 작업 트리 둘 다) · 저장소 launcher (v5 ·
+  시험의 예측 실패 줄 이후에만 쓰인다 (도우미 · 원인 구분 · 나머지 24 시험은 쓰지 않는다 — AST). 실행기 대조 v4 의 `R.*` 16 은 실행기 v7 에 모두 있다.
+- **원인 구분 (E1_0B_N1):** l23 · l29 · l30 의 원인 구분과 도우미 `_normal_fetch_meta` 는 `pre` · meta 사전 · 문자열만 읽는다 (`L` 은 `__file__` 만).
+- **봉인 표:** 실행기 v7 의 `_FIXED` · `RED_LAUNCH` · `IMPL` (AST literal) = 대조 초안 둘 · 열하나 (HEAD blob · 작업 트리 둘 다) · 저장소 launcher (v5 ·
   HEAD blob · 작업 트리) · launcher v6 초안 — 15 행 · 27 비교 · 불일치 0.
-- **최상위 노드 비교 (AST):** v5 → v6 의 바뀐 곳은 §3 의 목록뿐이다.
+- **최상위 노드 비교 (AST):** 바뀐 곳은 §3 의 목록뿐이다. 같은 노드 수 — launcher v5 → v6 88 · 대조 v5 → v7 62 · 대조 v6 → v7 74 ·
+  실행기 v5 → v7 53 · 실행기 v6 → v7 59 · 실행기 대조 v3 → v4 **46** (바뀜 6 — 발송문 · §87 의 47 은 틀린 값 · §88).
 - **끝 기록 작성기:** import 는 datetime · hashlib · json · re · shutil · sys · pathlib 뿐 · subprocess · socket · os · exec · eval 없음.
 - 비밀 검사 (커밋 전 · 0 건).
 
@@ -79,6 +91,7 @@
 | §5 구조 = A (따로 승인) | 이 요청은 E1-0b 만 | — |
 | §6 기록 보강 = 포함 | 외곽 반환 파일 `<단계>.outer_rc.txt` · 끝 기록 작성기 고정본 | §4-2 · §4-5 |
 | (요청서 경로) | `REQUEST = "docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md"` | l14 |
+| §88 E1_0B_N1 (§89 채택 · A) | — (launcher 그대로) | l23 · l29 · l30 의 원인 구분 · 도우미 `_normal_fetch_meta` (대조 v7) |
 
 ## 3. 바뀐 곳 (정본은 초안 — 최상위 노드 AST 비교)
 
@@ -147,6 +160,9 @@
 - **실행기 대조 v3 → v4:** docstring · `V4` (`reil_c4e1_0b_`) · 수집 오류 메시지 (`<E0b>`) · 건너뜀 메시지 · `_rtree` 의 tmp 증거 폴더 이름 · r5 의 단계
   이름 (E1-0b 의 둘). 시험 본문의 입력 · 기대는 같다.
 - **끝 기록 작성기 (새):** §4-5.
+- **launcher 대조 v6 → v7 (E1_0B_N1):** docstring · l23 (심은 키 표 · 원인 구분) · l29 (반환 ∈ {0, 1} · meta · 원인 구분) · l30 (반환 ∈ {0, 1} · meta 읽기를
+  기대 assert 앞으로 · 원인 구분) · 도우미 `_normal_fetch_meta` (새). 그 밖 최상위 노드 74 는 같다. 시험 이름 · 기대 assert · 메시지는 그대로다.
+- **외곽 실행기 v6 → v7:** docstring · `_FIXED` 의 launcher 대조 행. 그 밖 59 는 같다.
 
 ## 4. E1-0b 절차 (이 요청의 승인 대상)
 
@@ -171,9 +187,9 @@
 ```
 a  <확인> && git add …(.gitattributes · 상태 문서) && <확인> && git commit …
    test ! -e <E> && test ! -e SP/c4e1_0b_steps && mkdir <E>
-b  cp BMS/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v6_20261030.py.txt BMS/tests/test_reil_c4e1_launch.py
+b  cp BMS/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v7_20261030.py.txt BMS/tests/test_reil_c4e1_launch.py
    cp BMS/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v4_20261030.py.txt   BMS/tests/test_reil_c4e1_runner.py
-   cp BMS/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v6_20261030.py.txt       <E>/00_step_runner.py
+   cp BMS/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v7_20261030.py.txt       <E>/00_step_runner.py
    cp BMS/docs/REIL_C4E1_0B_END_WRITER_DRAFT_20261030.py.txt        <E>/00_end_writer.py
    set -C; { date -u +%Y-%m-%dT%H:%M:%SZ; df -B1 --output=avail /home/user/Yonghoon-DEM-DFT;
              sha256sum <초안 다섯> <복사본 넷> BMS/scripts/reil_c4e1_launch.py; } > <E>/00_start.txt
@@ -216,21 +232,22 @@ GREEN argv:
    - 대응하는 절이 없거나 둘 이상 · 절 안에 연쇄 예외 표시 (`The above exception was the direct cause` · `During handling of the above exception`) ·
      예외 블록을 하나로 정할 수 없음 → 그 자리에서 멈춘다 (다른 위치 · 형식으로 대체하지 않는다).
    - E 줄 개수 · stdout 전체의 첫 E 줄은 판정식이 아니다.
+   - **원인 구분 (E1_0B_N1):** 메시지가 `('UNEXPECTED_RED_CAUSE'` 로 시작하는 실패는 표에 없는 실패다 — 그 nodeid 가 표의 아홉에 있어도 멈춘다.
 3. **수 · 오류:** pytest rc (`meta.rc`) 1 · stdout 마지막 줄의 항목이 `9 failed` · `24 passed` 뿐 (skipped · xfailed · xpassed · error(s) · deselected 가
    하나라도 있으면 멈춤 · warning(s) 는 판정 조건이 아니고 수만 기록) · 수집 오류 (`ERROR` 줄) 0 · `INTERNALERROR` 0 · 중단 (`Interrupted` · `!!!!`) 0.
 4. **정리 · 해시 · 기한 · 기록:** 위 공통.
 
 | # | nodeid (`tests/test_reil_c4e1_launch.py::` 뒤) | 최종 예외 | 메시지 첫 줄 | 예측 줄 (참고 · 판정 아님) |
 |---|---|---|---|---:|
-| 1 | `test_l14_independence_fixed_commands_constants_and_main_rules` | AssertionError | 정확히 `('E1-0b: 승인 문구의 요청서 경로', 'docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md')` | 455 |
-| 2 | `test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child` | AssertionError | 접두 `('rewrite', 'FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다', ` | 690 |
-| 3 | `test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git` | AssertionError | 정확히 `('FUTURE-01: fetch 자식에 고정 설정 원천이 없다', [])` | 732 |
-| 4 | `test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list` | AttributeError | 정확히 `module 'scripts.reil_c4e1_launch' has no attribute 'fetch_env'` | 868 |
-| 5 | `test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child` | AssertionError | 접두 `('FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다', ` | 905 |
-| 6 | `test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write` | AssertionError | 정확히 `('FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다', 'localtls')` | 937 |
-| 7 | `test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look` | AttributeError | 정확히 `module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'` | 949 |
-| 8 | `test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline` | AttributeError | 정확히 `module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'` | 980 |
-| 9 | `test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty` | AssertionError | 정확히 `('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])` | 1015 |
+| 1 | `test_l14_independence_fixed_commands_constants_and_main_rules` | AssertionError | 정확히 `('E1-0b: 승인 문구의 요청서 경로', 'docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md')` | 460 |
+| 2 | `test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child` | AssertionError | 접두 `('rewrite', 'FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다', ` | 707 |
+| 3 | `test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git` | AssertionError | 정확히 `('FUTURE-01: fetch 자식에 고정 설정 원천이 없다', [])` | 749 |
+| 4 | `test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list` | AttributeError | 정확히 `module 'scripts.reil_c4e1_launch' has no attribute 'fetch_env'` | 897 |
+| 5 | `test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child` | AssertionError | 접두 `('FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다', ` | 946 |
+| 6 | `test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write` | AssertionError | 정확히 `('FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다', 'localtls')` | 988 |
+| 7 | `test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look` | AttributeError | 정확히 `module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'` | 999 |
+| 8 | `test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline` | AttributeError | 정확히 `module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'` | 1030 |
+| 9 | `test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty` | AssertionError | 정확히 `('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])` | 1065 |
 
 - 접두로 정한 둘 (l23 · l29) 은 메시지 뒤쪽에 tmp 경로가 든 문제 목록이 붙어 실행마다 다르다. pytest 는 `assert …, <튜플>` 의 메시지를 `saferepr` 로
   만들고 길면 가운데를 줄인다 — 접두는 앞 60 자 안이다.
@@ -260,8 +277,8 @@ GREEN argv:
 - **첫 시험 전 봉인:** 복사 넷 (대조 둘 · 실행기 · 작성기) 을 RED 전에 커밋한다 (b). fixture 생성 규칙 · 고정 입력 · 기대값은 봉인된 대조 파일 안에 있다.
   끝 기록의 diff 로 사전 고정을 대신하지 않는다.
 - **생성 주체 = 외곽 실행기.** 대상 = `TARGETS` 14 (v5 와 같다).
-- **기대값 = `EXPECT[단계]`** (실행기 v6 안): 단계마다 다른 것은 launcher 행 하나 — RED = v5 `2269d775…` (51,957) · GREEN = v6 `2c707123…` (62,639). 대조
-  둘의 행 = launcher 대조 v6 `04823051…` (68,212) · 실행기 대조 v4 `d9880f28…` (36,600). 나머지 열하나 = §1-2.
+- **기대값 = `EXPECT[단계]`** (실행기 v7 안): 단계마다 다른 것은 launcher 행 하나 — RED = v5 `2269d775…` (51,957) · GREEN = v6 `2c707123…` (62,639). 대조
+  둘의 행 = launcher 대조 v7 `3f9d2f25…` (73,572) · 실행기 대조 v4 `d9880f28…` (36,600). 나머지 열하나 = §1-2.
 - **시점 · 실패 기준 (v5 와 같다):** 준비 끝 (자식 전) `<단계>.source_sha256.txt` → 하나라도 다르면 자식 0 · 반환 3 · `first_error` = prepare /
   SourceMismatch / 끝 기록 뒤 `<단계>.source_sha256_end.txt` → 다르면 runner_ok false.
 - 실행기 · 작성기 자신의 sha 는 `00_start.txt` 와 `03_end.json` 에 남는다 (실행기는 자기 sha 를 meta 에 기록만 한다 — 자기 해시를 자기 안에 둘 수 없다).
@@ -279,7 +296,7 @@ GREEN argv:
   - 기록을 모을 뿐 판정하지 않는다.
 - **증거의 Git 상태는 외곽 실행기 기록만이다:** 단계마다 시작 · 끝의 HEAD · porcelain (meta 의 `records` 와 `<단계>.porcelain_*.txt`). 단계 안의 HEAD
   불변은 실행기가 확인한다. 수동 기록 (`00_start.txt` · `03_end.json`) 은 Git 을 부르지 않는다.
-- **`00_start.txt`** = UTC · 디스크 · sha256 열하나 (초안 다섯 · 복사본 넷 · 그 시점의 `scripts/reil_c4e1_launch.py` = v5).
+- **`00_start.txt`** = UTC · 디스크 · sha256 열 (초안 다섯 · 복사본 넷 · 그 시점의 `scripts/reil_c4e1_launch.py` = v5).
 - **커밋:** a = 승인 기록 § · 보존 규칙 · b = 복사본 넷 + `00_start.txt` · c = RED 증거 여덟 (실행기 일곱 + 외곽 반환) · d = GREEN 증거 여덟 +
   `scripts/reil_c4e1_launch.py` (v6) · e = `03_end.json` (+ 결과 기록 § · 발송문은 그 뒤 커밋). 커밋하지 않음: `SP/c4e1_0b_steps/`.
 - 커밋 전: 비밀 검사 + URL 계정 정보 형태 검사 · 파일 하나 ≤ 50 MB.
@@ -318,11 +335,11 @@ GREEN argv:
 | ID | 고정 입력 | 기대 (GREEN · v6) | RED (v5) · 이유 · 호출 경로 |
 |---|---|---|---|
 | l14 (고침) | — | 요청서 경로 · v5 의 상수 + `CLEANUP_S` 20 · `POLL_S` 0.1 · `FETCH_GIT_CONFIG` · `FETCH_LOCAL_KEYS` · 승인 문구 `상태 문서 §80 (사용자 E1-1–3 승인 · docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md)` | 첫 문장 (요청서 경로) 에서 AssertionError — 상수 수준 |
-| l23 (다시 씀) | 가짜 HOME `.gitconfig` 셋 (각각 새 tmp 트리): `url."https://example.invalid/".insteadOf = https://github.com/` · `http.proxy = http://127.0.0.1:9` · `http.sslVerify = false` | fixture 자기 확인 (정제 env 의 `config --list --show-origin` 에 그 파일이 보임) → fetch 사전 대조 통과 · 설정 항목 = `[("command", "http.proxyauthmethod", "basic")]` · 유효 출처 = 고정 URL · launch fetch 반환 0 · complete · meta `env_git_config` = 고정 다섯 | v5 는 같은 설정을 사전 실패로 막는다 (v5 의 l23 이 시험한 것). v6 은 원천을 끊어서 닿지 않게 한다 — 첫 사례 (rewrite) 에서 AssertionError · 행동 수준 · `launch` → `precheck` → `fetch_source_precheck` |
+| l23 (다시 씀) | 가짜 HOME `.gitconfig` 셋 (각각 새 tmp 트리): `url."https://example.invalid/".insteadOf = https://github.com/` · `http.proxy = http://127.0.0.1:9` · `http.sslVerify = false` | fixture 자기 확인 (정제 env 의 `config --list --show-origin` 에 그 파일이 보임) → fetch 사전 대조 통과 · 설정 항목 = `[("command", "http.proxyauthmethod", "basic")]` · 유효 출처 = 고정 URL · launch fetch 반환 0 · complete · meta `env_git_config` = 고정 다섯 | v5 는 같은 설정을 사전 실패로 막는다 (v5 의 l23 이 시험한 것). v6 은 원천을 끊어서 닿지 않게 한다 — 첫 사례 (rewrite) 에서 AssertionError · 행동 수준 · `launch` → `precheck` → `fetch_source_precheck`. 원인 구분: `ok` false 는 출처 관측 둘 rc 0 · raw 설정 목록에 가짜 HOME `.gitconfig` 원천의 심은 키 · raw 유효 출처 = 심은 결과 · 문제 = 심은 키 하나 (+ rewrite 면 유효 출처 하나) 뿐일 때만 기대 RED (탐침 · 출처 읽기 · 그 밖 문제는 `UNEXPECTED_RED_CAUSE`) |
 | l25 (고침) | v5 와 같은 입력 (다른 저장소의 `GIT_DIR` · 표지 폴더의 `GIT_OBJECT_DIRECTORY` · `GIT_INDEX_FILE` · `GIT_TRACE`) | v5 의 기대 + 가짜 run 이 본 `GIT_*` 이름 = fetch env 의 고정 다섯 · meta `env_git_config` = 고정 다섯 | v5 의 자식 env 에는 `GIT_CONFIG*` 가 없다 → `[]` · 행동 수준 · `launch` → `fetch_env` |
 | l28 (새) | `GIT_CONFIG_COUNT` · `KEY_0/1` · `VALUE_0/1` (URL 바꿈 · TLS 끔) · `GIT_CONFIG_PARAMETERS` · `GIT_CONFIG_GLOBAL` · `GIT_CONFIG_SYSTEM` · 옛 `GIT_CONFIG` · CA · 프록시 · PATH · HOME | `GIT_CONFIG*` = 고정 다섯 · 그 밖 넷 그대로 · 받은 env 불변 · 두 번 적용해도 같다 · `fetch_env({})` = 고정 다섯 | `fetch_env` 없음 — 인터페이스 수준 |
-| l29 (새) | 가짜 HOME `.gitconfig` = `[includeIf "gitdir:**/git/"] path = <tmp>/home/evil.cfg` (URL 바꿈 · TLS 끔) | fixture 자기 확인 (정제 env 로 `<tmp>/demo/git` 저장소 안에서는 바뀐 유효 출처 · 작업 폴더에서는 고정 URL) → launch fetch 반환 0 · 받은 저장소의 유효 출처 = 고정 URL · meta 어디에도 evil 파일 경로 없음 · 가짜 run 이 본 `GIT_*` = 고정 다섯 | v5 는 사전 대조 (작업 폴더) 를 지나고, 가짜 run 이 받은 `<data>/git` 에서 includeIf 가 걸려 사후 유효 출처가 달라진다 → 반환 1 · 행동 수준 (FUTURE-01 의 위험 재현) |
-| l30 (새) | (a) tmp upstream 저장소 (`uploadpack.allowFilter` · `allowAnySHA1InWant`) 에서 `init` → `remote add` → `fetch --depth 1 --filter=blob:none origin <sha>` (file 프로토콜 · fixture env) (b) 가짜 run 이 받은 저장소의 local 설정에 `http.sslVerify=false` / `include.path=/dev/null` | (a) `fetch_source_postcheck(…, url=<upstream 경로>, commit=<sha>)` 문제 0 (실제 git 이 쓴 local 키가 허용 목록 안) (b) 각각 반환 1 · postcheck_ok false · "허용 local 키 밖" 문제 | v5 의 사후 대조는 받은 저장소의 설정을 보지 않는다 → (a) 통과 · (b) `localtls` 가 반환 0 → AssertionError · 행동 수준 |
+| l29 (새) | 가짜 HOME `.gitconfig` = `[includeIf "gitdir:**/git/"] path = <tmp>/home/evil.cfg` (URL 바꿈 · TLS 끔) | fixture 자기 확인 (정제 env 로 `<tmp>/demo/git` 저장소 안에서는 바뀐 유효 출처 · 작업 폴더에서는 고정 URL) → launch fetch 반환 0 · 받은 저장소의 유효 출처 = 고정 URL · meta 어디에도 evil 파일 경로 없음 · 가짜 run 이 본 `GIT_*` = 고정 다섯 · **원인 구분:** 반환 ∈ {0, 1} · meta 가 이 launch 의 정상 실행 (`_normal_fetch_meta` — 단계 · 이름 · launcher 경로 · 오류 0 · 사전 통과 · 자식 rc 0 · timeout 없음 · 그룹 empty · 자식 결과 ok · 기록 rc 0 · HEAD 불변) · 반환 0 이면 complete · 사후 문제 0 | v5 는 사전 대조 (작업 폴더) 를 지나고, 가짜 run 이 받은 `<data>/git` 에서 includeIf 가 걸려 사후 유효 출처가 달라진다 → 반환 1 · 행동 수준 (FUTURE-01 의 위험 재현). 원인 구분: 반환 1 은 정상 실행 뒤 사후 문제가 **하나**이고 그것이 바뀐 URL 의 유효 출처 문제 · raw 유효 출처 = 바뀐 URL · raw `remote.origin.url` = 고정 URL · 출처 관측 rc 0 일 때만 기대 RED (준비 예외 · 자식 없음 · 추가 문제는 `UNEXPECTED_RED_CAUSE`) |
+| l30 (새) | (a) tmp upstream 저장소 (`uploadpack.allowFilter` · `allowAnySHA1InWant`) 에서 `init` → `remote add` → `fetch --depth 1 --filter=blob:none origin <sha>` (file 프로토콜 · fixture env) (b) 가짜 run 이 받은 저장소의 local 설정에 `http.sslVerify=false` / `include.path=/dev/null` | (a) `fetch_source_postcheck(…, url=<upstream 경로>, commit=<sha>)` 문제 0 (실제 git 이 쓴 local 키가 허용 목록 안) (b) 각각 반환 1 · postcheck_ok false · "허용 local 키 밖" 문제 · **원인 구분:** 반환 ∈ {0, 1} (아니면 meta 를 읽기 전에 멈춤) · meta 를 기대 assert 앞에서 읽고 정상 실행 (`_normal_fetch_meta`) · 반환 1 이면 사후 문제가 모두 심은 local 키 (`http.sslverify` / `include.path`) 를 가리키고 그중 "허용 local 키 밖" 이 있음 | v5 의 사후 대조는 받은 저장소의 설정을 보지 않는다 → (a) 통과 · (b) `localtls` 가 반환 0 → AssertionError · 행동 수준. 원인 구분: 반환 0 은 정상 실행 · complete · 사후 ok · 사후 문제 0 일 때만 기대 RED (반환 4 등 · 사후 문제는 `UNEXPECTED_RED_CAUSE`) |
 | l31 (새) | 가짜 시계 · 관측 한 번에 비용을 쓰는 가짜 /proc (구성원 하나) · kill_wait 10 · grace 5 · (a) timeout · kill 이 듣지 않는 자식 · 비용 0.05 · 기한 t0+20 (b) 정상 종료 · 좀비만 · 기한 t0+20 (c) timeout · 기한 = t0 (d) 정상 종료 · 살아 있는 구성원 · 비용 3 s · 기한 t0+1 | (a) alive · deadline_hit · 미종료 · SIGKILL 둘 (sent) · 모든 관측 시작 < 기한 · 끝 ≤ 기한 + 0.05 · 모든 sleep 끝 ≤ 기한 (b) empty · kill 0 · 관측 1 · 기한 안 (c) 관측 0 · sleep 0 · unverified · 첫 SIGKILL 은 보냄 (d) 관측 [t0] 하나 · 그 결과로 재kill · 재관측 0 → unverified · 끝 = t0+3 | `cleanup_group` 없음 — 인터페이스 수준 (§8 의 2) · `cleanup_group` → `group_status` → `proc_members` |
 | l32 (새) | 같은 가짜 · timeout · 끝나지 않는 자식 · 시작 시각 ≥ t0+10 인 첫 sleep 이 RuntimeError (주입) · 기한 t0+20 | unknown (그룹 기록도) · emergency · errors = `["RuntimeError: sleep failed (시험 주입)"]` · 예외 시각 ∈ [t0+10, t0+10.2) · SIGKILL 둘 (처음 · 비상) · 모든 관측 시작 < 기한 · 끝 ≤ 기한 + 0.05 · deadline_hit | 같음 |
 | l33 (새) | 사전 대조 (identity) · Git 기록 (HEAD 같음 · porcelain 빈) 고정 · 자식 기록만 바꿈: 기본 (empty · deadline_hit false · 오류 0) / deadline_hit true / 끝 상태 killed · unverified · unknown / errors 하나 | 기본 → 문제 0 · 나머지 → 각각 실패 (상태 이름이 문제에 있음) | v5 사후 대조는 `deadline_hit` 을 보지 않는다 → ok true → AssertionError · 행동 수준 · `postcheck` |
@@ -330,6 +347,7 @@ GREEN argv:
 - **RED 선언:** 9 실패 · 24 통과 (§4-3 의 표 · 목록). 행동 수준 RED 는 l23 · l25 · l29 · l30 · l33 (v5 바이트의 실제 동작이 기대와 다르다), 상수 수준은
   l14, 인터페이스 수준은 l28 · l31 · l32 (새 함수가 v5 에 없다).
 - **GREEN 선언:** 71 passed (E0 21 + N1 6 + launcher 33 + 실행기 11). 시험 함수 하나 = 사례 하나 (parametrize 없음 · 한 함수 안의 하위 사례는 순서대로).
+- **원인 구분은 계획한 경로 (v5 의 알려진 결함 · v6 정상 / 거부) 에서 발동하지 않는다.** 발동하면 예상 밖 원인이므로 RED · GREEN 모두 그 자리에서 멈춘다.
 - 틀린 구현을 잡는 근거는 GREEN 의 음성 대조다 (v5 의 l2–l5 · l9 · l11–l13 · l15–l27 · r1–r5 · r7–r11 + l29 · l30 (b) · l31 · l32 · l33).
 
 ## 7. E1-1–3 고정 계획 — **이 요청의 승인 대상이 아니다**
@@ -365,7 +383,8 @@ E1-0b 결과 검토 뒤 별도 요청서에 아래를 고정하고 검토 · 사
 5. **설정 값 읽기 (§87 · 범위안 §9-1 의 유일한 예외):** 2026-10-30 06:33:43Z 에 한 번. 명령은 `git config --global --get http.proxyAuthMethod` 의 값을
    인증 방식 이름 다섯 (anyauth · basic · digest · negotiate · ntlm) 중 하나일 때만 출력하고 (그 밖이면 길이만), origin 은 첫 칸만 출력했다 (같은 줄에
    `git --version`). 결과: `basic` · rc 0 · origin `file:/root/.gitconfig` · git 2.43.0. 다른 키의 값은 읽지 않았다. 인증 방식 이름이고 비밀이 아니다.
-   fetch 에 이 키가 필요한지는 관측하지 않았다 (E1-2).
+   fetch 에 이 키가 필요한지는 관측하지 않았다 (E1-2). git-config 문서상 이 키는 프록시 문자열에 사용자 이름이 있을 때 의미가 있고
+   `GIT_HTTP_PROXY_AUTHMETHOD` 로도 바뀔 수 있다 — `child_env` 는 그 변수를 뺀다 (§88 의 Q2 주의). 프록시 문자열의 값은 읽지 않았다.
 6. **fetch env 의 범위:** fetch 단계 전체 (사전 · 탐침 · 기록 git · 자식 · 사후) 가 시스템 · 사용자 설정을 읽지 않는다. 그래서 그 단계의 기록 git
    (`rev-parse HEAD` · `status --porcelain`) 도 사용자 설정 (`core.checkstat` · `core.trustctime` 등) 없이 돈다 — 기록일 뿐 판정 항은 HEAD 불변 · 기록
    성공이다. `safe.directory` 같은 사용자 설정의 보호 키도 빠진다 (저장소 · 자료 폴더 모두 실행 사용자 소유 — 정적 판단). identity · run 단계는 v5 와
@@ -380,7 +399,7 @@ E1-0b 결과 검토 뒤 별도 요청서에 아래를 고정하고 검토 · 사
    지키기 위해서다. 그래서 재관측 창이 기한보다 일찍 끝날 수 있고, 그때 끝 상태는 alive 이며 단계는 실패다 (fail-closed).
 10. **상태 이름 · 시간:** v5 의 `alive_then_killed` 는 v6 에서 `killed` 다 (둘 다 사후 대조 실패). `wait_s` 의 경계가 바뀌었다 (§3-3).
 11. **외곽 실행기:** 정리 · 기록 코드는 v5 바이트 (E1-0 · §86 수용) 와 같고 이름 규칙 · 봉인 표 · 작업 폴더만 바뀌었다. E1-0b 는 실행기 대조의 RED 를
-    하지 않는다 (범위안) — GREEN 의 r1–r11 이 v6 사본에서 회귀를 본다. 작업 폴더를 `SP/c4e1_0b_steps` 로 나눈 것은 E1-0 의 `SP/c4e1_steps/tmp` 와 섞지
+    하지 않는다 (범위안) — GREEN 의 r1–r11 이 v7 사본에서 회귀를 본다. 작업 폴더를 `SP/c4e1_0b_steps` 로 나눈 것은 E1-0 의 `SP/c4e1_steps/tmp` 와 섞지
     않으려는 것이다 (같은 TMPDIR 이면 pytest 의 tmp 보존 규칙이 E1-0 의 오래된 tmp 폴더를 지울 수 있다).
 12. **외곽 반환 파일:** 셸이 실행기 반환 직후 쓴 값이다. 실행기 · pytest · 셸 사이의 다른 경로를 독립 증명하지 않는다.
 13. **끝 기록 작성기:** 실행 전에 고정한 바이트를 e 에서 한 번 실행한다. 기록을 모을 뿐 판정하지 않는다. E1-0 의 작성기 (사본 `4c3d2991…`) 와 다른 것은
@@ -394,6 +413,13 @@ E1-0b 결과 검토 뒤 별도 요청서에 아래를 고정하고 검토 · 사
     보증이 아니다 (11) · 정리 예외는 `cleanup.errors` 에 (20) · lstat 은 원자적 보호가 아니다 (22) · fixture 도우미 `_git` 은 `text=True` 만 (26) · GitHub
     의 커밋 상태는 기록되지 않은 일시 활동이 없었음을 증명하지 않는다 (§86).
 18. **정적 예측:** RED · GREEN 예측은 AST · 코드 읽기로만 했다 (실행 0). 맞지 않으면 그 자리에서 멈추고 결과 검토로 간다.
+19. **원인 구분의 범위 (E1_0B_N1):** 원인 구분은 시험이 받은 raw 기록 (사전 대조의 설정 목록 · 유효 출처 · launch meta) 과 문제 목록을 본다. raw 기록
+    자체가 틀리게 만들어진 경우까지 독립 증명하지는 않는다. v5 분기의 문제 개수 · 원인 대응은 v5 바이트 (`2269d775…`) 의 문구 · 순서에 기댄 정적
+    판단이다 — 틀리면 RED 에서 `UNEXPECTED_RED_CAUSE` 로 멈춘다 (fail-closed). 나머지 여섯 RED (l14 · l25 · l28 · l31 · l32 · l33) 는 첫 문장 실패이거나
+    기대 assert 앞에 정상 실행 단언이 있어 원인에 묶여 있다 (정정 범위안 §2).
+20. **숫자 정정 (§88):** `00_start.txt` 의 sha 는 열이다 (첫 판은 "열하나"). 실행기 대조 v3 → v4 의 같은 최상위 노드는 46 이다 (첫 발송문 · §87 은 47 —
+    건너뜀 메시지를 고치기 전에 센 값). 이미 커밋된 §87 · 첫 발송문은 고치지 않는다.
+21. **끝 기록의 범위 (§88 의 Q5 주의):** `03_end.json` 은 커밋 · push · 문서 전 snapshot 이다. 그 뒤 활동까지의 전체 시간으로 넓혀 읽지 않는다.
 
 ## 9. 하지 않는 것
 
@@ -403,5 +429,5 @@ E1-1–3 (identity · 읽기 경로 · fetch · 자료 개봉 · run) · C4-A / 
 
 ## 10. 정하실 것
 
-1. **사전 검토** — 이 요청과 초안 다섯을 Codex 에 보낸다 (권장 · 발송문 `docs/REIL_C4E_E1_0B_PREREVIEW_SEND_20261030.md`).
+1. **사전 검토** — 이 요청과 초안 다섯을 Codex 에 보낸다 (권장 · 재검토 발송문 `docs/REIL_C4E_E1_0B_PREREVIEW_SEND_v2_20261030.md` · 첫 발송문은 `…_SEND_20261030.md`).
 2. (검토 수용 뒤) **E1-0b 한정 승인** — 승인해도 E1-1–3 은 시작하지 않는다.
