@@ -63,7 +63,7 @@
 from __future__ import annotations
 import argparse, datetime, hashlib, importlib.util, json, os, pathlib, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid
 
-EXPECTED_DRIVER_SHA16 = "0a8468db6349e53c"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "bc325e25ef7f2bba"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 DECISION = "D-2026-11-03-li2s2-dense-window"
 CARD_REL = "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json"
 DRIVER_REL = "tools/ionic/melt_quench_uma.py"
@@ -989,6 +989,14 @@ def _selftest():
     chk(s_c3["track"] == "invalid" and J(c3 / "A/seed12/stage1_verdict.json")["status"] != "invalid"
         and any("run_id" in x for x in s_c3["identity_problems"] + list((s_c3.get("cost") or {}).get("invalid") or [])),
         "⛔음성 DH P0-2: plan 시드까지 12 로 고치면 시드 판정은 통과해도 run_id 가 A11 과 같고 장부에선 A11 런이라 묶음 무효")
+    r6 = clone(rr_d)
+    rows = [dict(x) for x in led0["runs"]]
+    ia = [i for i, x in enumerate(rows) if (x["system"], x["seed"]) in (("A", 11), ("A", 12))]
+    rows[ia[0]]["seed"], rows[ia[1]]["seed"] = rows[ia[1]]["seed"], rows[ia[0]]["seed"]
+    _write_json_atomic(r6 / "stage1_ledger.json", {**led0, "runs": rows})
+    s_r6 = summ(r6)
+    chk(s_r6["track"] == "invalid" and any("장부에서" in x for x in (s_r6.get("cost") or {}).get("invalid") or []),
+        "⛔음성 DH P0-2: 장부 행의 시드 표시가 바뀌면 (A11 ↔ A12) 판정의 run_id 가 장부에서 다른 시드 런이라 무효")
     rc_g, L_g, rr_g = go(wt, scen={("A", 11): {"melt": "fail", "polls": 8, "group_stuck": True}})
     eg, sg = J(rr_g / "stage1_ledger.json")["runs"][0], J(rr_g / "STOP.json")
     rc_g2, L_g2, _ = go(wt, rr=rr_g, ack=sg["stop_id"], pg_alive=lambda pg: True)
@@ -1049,8 +1057,8 @@ def _selftest():
         gone = (pr.poll() is not None) and not _pid_alive(gpid)
         by_ok = bystander.poll() is None
         bystander.kill(); bystander.wait()
-        chk(before and gone and by_ok and r1["group_empty"] and dt < 10,
-            f"진짜 프로세스 그룹: _Proc.stop 이 그 담금질과 손자까지 멈추고 기다린다 · 옆 프로세스는 산다 (대표 rc {r1['leader_rc']} · {dt:.1f} s)")
+        chk(before and gone and by_ok and r1["group_empty"] and r1["signals"] == ["TERM"] and dt < 10,
+            f"진짜 프로세스 그룹: TERM 이 그룹 전체 (손자까지) 에 가서 KILL 없이 비고 기다린다 · 옆 프로세스는 산다 (대표 rc {r1['leader_rc']} · {r1['signals']} · {dt:.1f} s)")
         def _wait_pid(path):
             for _ in range(200):
                 if path.is_file() and path.read_text().strip():

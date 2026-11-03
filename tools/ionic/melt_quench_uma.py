@@ -2586,6 +2586,9 @@ def _selftest():
     sm_ed = summarize_stage1(ed, VAL, cost=COST)
     chk(sm_cp["track"] == "invalid" and sm_all["track"] == "invalid" and sm_ed["track"] == "invalid" and bool(sm_cp["identity_problems"]),
         f"⛔음성 DH P0-2: A11 판정을 A12 자리에 · 모든 자리에 · 시드만 고쳐서 (run_id 같음) → 한 실행을 여러 시드로 못 센다 ({sm_cp['track']} · {sm_all['track']} · {sm_ed['track']})")
+    swp = dict(vid); swp[("A", 12)], swp[("A", 13)] = vid[("A", 13)], vid[("A", 12)]
+    chk(summarize_stage1(swp, VAL, cost=COST)["track"] == "invalid",
+        "⛔음성 DH P0-2: A12 · A13 판정 파일이 서로 자리를 바꾸면 (run_id 는 각자 하나) 자리 ≠ 판정 이라 무효")
     sm_li = summarize_stage1(vid, VAL, cost=dict(COST, invalid=["A12 판정의 run_id 가 장부에 없다"]))
     sm_lp = summarize_stage1(vid, VAL, cost=dict(COST, pending=["A11 런이 끝나지 않았다"]))
     chk(sm_li["track"] == "invalid" and sm_lp["track"] == "pending",
