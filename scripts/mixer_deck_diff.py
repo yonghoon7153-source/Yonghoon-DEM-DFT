@@ -167,7 +167,10 @@ def parse_deck(text):
 
 
 def diff_d2_decks(text_ref, text_new, meta_ref, meta_new):
-    """Explicit development-only uncoated -> coated pair; legacy allowlists unchanged."""
+    """Explicit development-only uncoated -> coated pair; legacy allowlists unchanged.
+
+    MXD2R-03: each deck may be the physical file bytes (bytes — the CLI passes them) or text (str);
+    rb.read_d2 checks metadata against those bytes (LF-only) before anything is parsed."""
     import mixer_deck_readback as rb
     a = rb.read_d2(text_ref, meta_ref)
     b = rb.read_d2(text_new, meta_new)
@@ -187,7 +190,7 @@ def diff_d2_decks(text_ref, text_new, meta_ref, meta_new):
         ncm = [p for p in a['gamma'] if p.startswith('AM_')]
         rb._d2_need(all(a['gamma'][p] == rho and b['gamma'][p] == 1 for p in ncm),
                     'pair direction must be uncoated rho -> coated 1')
-        pa, pb = parse_deck(text_ref), parse_deck(text_new)
+        pa, pb = parse_deck(rb.d2_text(text_ref)), parse_deck(rb.d2_text(text_new))      # 두 덱 모두 read_d2 PASS (UTF-8 · LF 확인) 뒤
         rb._d2_need(pa['cmds']==pb['cmds'] and pa['ced_head']==pb['ced_head'],
                     'non-CED command tokens differ (geometry/seed/gravity/material/time/etc.)')
         rb._d2_need(a['expected_counts'] == b['expected_counts'], 'pair actual phase counts differ')
@@ -838,6 +841,16 @@ def report_cohort(r):
 def _read(path):
     try:
         return open(path, encoding='utf-8').read()
+    except OSError:
+        return None
+
+
+def _read_bytes(path):
+    """D2 개발 경로 (MXD2R-03) — 실제 파일 바이트 (텍스트 모드 = CRLF → LF 정규화).  못 읽으면 None (옛 `_read` 와 같은 실패 표면 = 소비자 거부 rc 1).
+    등록 표 · 코호트 경로는 `_read` 그대로다 (수정 계획 범위 밖)."""
+    try:
+        with open(path, 'rb') as stream:
+            return stream.read()
     except OSError:
         return None
 
@@ -1795,7 +1808,7 @@ def main():
             ap.error('D2 개발: OLD NEW --allow D2 --meta-ref OLD_META --meta-new NEW_META [--json REPORT] only')
         import mixer_deck_readback as rb
         try:
-            old, new = (_read(path) for path in a.decks)
+            old, new = (_read_bytes(path) for path in a.decks)          # MXD2R-03 — 실제 파일 바이트
             d2_result = diff_d2_decks(old,new,rb.load_d2_meta(a.meta_ref),rb.load_d2_meta(a.meta_new))
         except (OSError,ValueError) as exc:
             ap.error(str(exc))

@@ -243,7 +243,8 @@ def _run_total(run_dir):
 
 
 def d2_plan_check(text, meta):
-    """Development preflight only: counts bound to the actual D2 deck, not a rest/contact cert."""
+    """Development preflight only: counts bound to the actual D2 deck, not a rest/contact cert.
+    `text` = physical file bytes (bytes — the CLI passes them · MXD2R-03) or deck text (str)."""
     import mixer_deck_readback as rb
     result = rb.read_d2(text, meta)
     result['schema'] = 'mixer_d2_plan_check/1'
@@ -982,8 +983,8 @@ def main(argv=None):
             ap.error('--d2-plan DECK --d2-meta META [--json REPORT] only; no registered certificate mode')
         import mixer_deck_readback as rb
         try:
-            text = Path(a.d2_plan).read_text(encoding='utf-8')
-            result = d2_plan_check(text, rb.load_d2_meta(a.d2_meta))
+            raw = Path(a.d2_plan).read_bytes()        # MXD2R-03 — 실제 파일 바이트 (read_text 는 CRLF → LF 정규화)
+            result = d2_plan_check(raw, rb.load_d2_meta(a.d2_meta))
         except (OSError,ValueError) as exc:
             ap.error(str(exc))
         return rb._d2_cli_report(result,a.json)

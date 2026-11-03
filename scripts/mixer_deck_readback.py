@@ -1284,24 +1284,42 @@ def _d2_lifecycle(commands):
                          and fixes[template][0]<i for template in t[6::2]),'distribution template/reference order')
 
 
-def read_d2(text, meta):
+def d2_text(deck):
+    """D2 덱 입력 (bytes = 실제 파일 바이트 · str = 메모리 텍스트) → 텍스트.  read_d2 가 PASS 한 입력에만 쓴다 (엄격 UTF-8 · LF 확인 뒤)."""
+    return deck.decode('utf-8') if type(deck) is bytes else deck
+
+
+def read_d2(deck, meta):
     """Validate explicit D2 development deck+metadata; PASS never authorizes a run.
 
     Supported active phase sets are AM_P+AM_S+SE and AM_P+SE. Legacy table paths
     remain gen1/registered contracts. This path neither names cells nor registers a cohort.
+
+    MXD2R-03 (1저자 11-02 Q3 (가)): `deck` = the **physical file bytes** (bytes — the three CLIs pass
+    `read_bytes()`) or in-memory deck text (str — its UTF-8 encoding is the file bytes).  metadata
+    deck_sha256 / deck_bytes are checked against those bytes first; the verified bytes are then decoded
+    (strict UTF-8) and parsed.  The generator writes LF only, so any CR (0x0D) byte is rejected with its
+    own reason — CRLF is never normalized away (a text-mode read used to hash the LF-normalized text).
     """
     result = dict(schema=D2_CONTRACT, verdict='FAIL', failures=[], registered=None,
                   execution_authorized=False, scope='D2 development deck and planned counts only; not execution evidence')
     try:
-        _d2_need(isinstance(text, str), 'deck text must be a string')
+        _d2_need(type(deck) in (bytes, str), 'deck must be the physical file bytes (bytes) or the deck text (str)')
         _d2_need(isinstance(meta, dict), 'metadata must be an object')
         _d2_need(set(meta) <= D2_META_KEYS, 'unknown metadata keys')
         _d2_need(meta.get('schema') == 'mixer_deck_meta/2' and meta.get('registered', False) is None
                  and meta.get('development_contract') == 'D2-geomean/unregistered', 'D2 unregistered metadata schema required')
-        raw = text.encode('utf-8')
+        raw = deck if type(deck) is bytes else deck.encode('utf-8')
         digest = hashlib.sha256(raw).hexdigest()
-        _d2_need(meta.get('deck_sha256') == digest, 'metadata SHA256 != actual deck')
-        _d2_need(_d2_integer(meta['deck_bytes'], 'deck_bytes') == len(raw), 'metadata bytes != actual deck')
+        _d2_need(meta.get('deck_sha256') == digest, 'metadata SHA256 != actual deck file bytes')
+        _d2_need(_d2_integer(meta['deck_bytes'], 'deck_bytes') == len(raw), 'metadata bytes != actual deck file bytes')
+        n_cr = raw.count(b'\r')               # (f-string 안 백슬래시 = Python 3.8–3.11 문법 오류 → 밖에서 센다)
+        _d2_need(n_cr == 0, f'deck contains {n_cr} CR (0x0D) byte(s) — CRLF/CR line endings are rejected: '
+                 'D2 development decks are LF-only generator output (never normalized before hashing or parsing)')
+        try:
+            text = raw.decode('utf-8')
+        except UnicodeDecodeError as exc:
+            raise ValueError(f'deck bytes are not valid UTF-8 ({exc.reason} at byte {exc.start})') from None
         generation = meta.get('dens_gen')
         _d2_need(isinstance(generation,str) and generation in D2_DENSITY, 'unknown/missing exact density generation')
         density = D2_DENSITY[generation]
@@ -1427,7 +1445,8 @@ def read_d2(text, meta):
         _d2_need(abs(expected_time['rotation']-expected_duration)<=expected_duration*TOL['dt_print_rel']+D['dt'],
                  'actual rotation steps/time != declared revolutions')
         counts=_d2_counts(D,meta,phases,density)
-        result.update(verdict='PASS',deck_sha256=digest,density_generation=generation,phase_names=names,
+        result.update(verdict='PASS',deck_sha256=digest,deck_bytes=len(raw),deck_hash_basis='physical file bytes (LF-only · not normalized)',
+                      density_generation=generation,phase_names=names,
                       expected_counts=counts,n_atoms_planned=sum(counts.values()),Bo_SE=fss/weight,
                       gravity=grav,rho_uncoated_ncm=rho,gamma=gamma,bo_se=bo,pairs=rows,
                       tolerances=dict(absolute_Bo_relative=D2_FORCE_REL,pair_force_relative=TOL['f0_ratio']),
@@ -1462,8 +1481,9 @@ def main(argv=None):
         if a.table or a.md:
             ap.error('--d2 DECK META [--json REPORT] cannot mix registered tables/markdown')
         try:
-            text = open(a.d2[0], encoding='utf-8').read()
-            report = read_d2(text, load_d2_meta(a.d2[1]))
+            with open(a.d2[0], 'rb') as stream:       # MXD2R-03 — 실제 파일 바이트 (텍스트 모드 읽기는 CRLF 를 LF 로 바꿔 해시가 갈린다)
+                raw = stream.read()
+            report = read_d2(raw, load_d2_meta(a.d2[1]))
         except (OSError, ValueError) as exc:
             ap.error(str(exc))
         raise SystemExit(_d2_cli_report(report, a.json))
