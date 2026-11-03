@@ -970,6 +970,20 @@ D2_MATERIAL = {'youngsModulus': ('peratomtype', None), 'poissonsRatio': ('perato
                'coefficientRestitution': ('peratomtypepair', 0.3), 'coefficientFriction': ('peratomtypepair', 0.9),
                'coefficientRollingFriction': ('peratomtypepair', 0.075), 'cohesionEnergyDensity': ('peratomtypepair', None),
                'characteristicVelocity': ('scalar', 2.0)}
+#: ── D2 생성기 꼴 전체 (MXD2R-04 · 11-03 사전 공격 · 1저자 11-03 Q1 = 권고대로 · 원리 = MXD2R-01–03 (가)) ────────────────────────────
+#:   덱의 명령을 **전부** make_mixer_deck.deck() 의 토큰으로 다시 내어 차례대로 대조한다 — 뜻이 같아도 표기가 다르면 거부 (생성기 꼴 엄격).
+#:   값은 상수 · 메타 · 등록 레시피 · 계획수에서 다시 낸다 (드럼 · 삽입 영역 = plan() · deck() 식 사본 · 같은 연산 순서).  예외 하나 =
+#:   neighbor skin 값 (ASCII 양수만 · 단일 덱 계약 밖 · 짝 대조가 잡는다 — 기존 시험 test_actual_command_scope).  CED · 삽입 총수 · run 수 ·
+#:   dt 값은 기존 검사 (힘 규칙 · 계획수 · 메타) 가 묶고 여기서는 생성기 표기만 본다.
+#:   사본 원본 = deck() 템플릿 · plan() 기본값 · _next_prime · dump_columns · dump_modify_format · TPL_SEED (시험이 사본 ↔ 생성기 대조).
+D2_GLOBAL_FORM = (('atom_style', 'granular'), ('atom_modify', 'map', 'array', 'sort', '0', '0'), ('hard_particles', 'yes'),
+                  ('boundary', 'f', 'f', 'f'), ('newton', 'off'), ('communicate', 'single', 'vel', 'yes'), ('units', 'si'))
+D2_DRUM = dict(fill=0.30, pack=0.60, r_over_l=2.5)       # plan() 기본 — v_drum = v_solid/(fill·pack) · R = (r/l·v_drum/π)^(1/3) · L = R/(r/l)
+D2_DIST_SEED = (32452867, 32452883)                       # pdd · pddA · pddB (= 첫 소수 ≥ 32452867 + 2)
+D2_MESHES = ('Drum', 'Front', 'Back')                      # 배플 (--baffles) = D2 개발 계약 밖 (메타에 배플 칸이 없다)
+D2_DUMP_COLUMNS = ('id', 'type', 'x', 'y', 'z', 'vx', 'vy', 'vz', 'fx', 'fy', 'fz', 'radius')
+D2_DUMP_FORMAT = '%d %d' + ' %.17g' * 10                  # --dump-full-precision (메타 dump_modify_format 이 있을 때만 · 그 한 줄만 따옴표)
+D2_SEED_MAX = 2 ** 31 - 1                                  # LIGGGHTS 시드 = C int · 소수 (생성기가 합성수 시드를 거부한다)
 
 
 def _d2_need(condition, message):
@@ -1286,6 +1300,158 @@ def _d2_lifecycle(commands):
                          and fixes[template][0]<i for template in t[6::2]),'distribution template/reference order')
 
 
+def _d2_next_prime(n):
+    """n 이상의 첫 소수 — make_mixer_deck._next_prime 사본 (층상 둘째 insert/pack 시드 · 시드 소수 확인 · 시험이 생성기와 대조)."""
+    n = int(n)
+    while n < 2 or (n % 2 == 0 and n != 2) or any(n % i == 0 for i in range(3, math.isqrt(n) + 1, 2)):
+        n += 1
+    return n
+
+
+def _d2_text_form(text, meta):
+    """MXD2R-04 — 문자 꼴: 우리 파서 (_logical) 와 LIGGGHTS 가 **같은 토큰**을 읽는 꼴만 받는다 (생성기 출력 = 이 꼴).
+
+    _logical 은 유니코드 공백으로 토큰을 가르고 · 첫 # 에서 주석을 자르고 · 유니코드 rstrip 뒤 끝 '&' 로 줄을 잇는다.  LIGGGHTS 는 ASCII
+    공백으로 가르고 · 따옴표 안 # 을 주석으로 보지 않고 · $ 를 변수로 바꾸고 · 줄을 C 문자열로 읽는다 (LIGGGHTS 실행으로 확인하지 않았다 —
+    소스 규약 판독 · 생성기는 이 글자들을 쓰지 않으므로 무엇으로 읽히든 거부한다).  ⚠ 옛 판: 주석 끝 '&' 뒤 NBSP 한 글자로 다음 줄
+    `neigh_modify exclude type 3 3` 을 우리 파서는 주석으로 이어 붙여 못 보고 세 소비자 PASS (11-03 사전 공격)."""
+    fmt = meta.get('dump_modify_format')
+    dump_line = None
+    if 'dump_modify_format' in meta:
+        _d2_need(fmt == D2_DUMP_FORMAT, 'D2 generator form: metadata dump_modify_format != generator full-precision format')
+        dump_line = 'dump_modify dmp format "' + D2_DUMP_FORMAT + '"'
+    _d2_need(text.endswith('\n'), 'D2 generator form: deck must end with a newline (LF) — generator output')
+    for number, line in enumerate(text.split('\n')[:-1], 1):
+        controls = sorted({f'U+{ord(c):04X}' for c in line if ord(c) < 0x20 or 0x7f <= ord(c) <= 0x9f})
+        _d2_need(not controls, f'D2 generator form: line {number}: control character(s) {" ".join(controls)} — LF is the only line end '
+                 '(TAB · NUL · other C0/C1 controls are not generator output; a NUL ends a C-string line early)')
+        if line == dump_line:
+            continue                       # 전 정밀도 덤프 한 줄 (메타가 선언 · 문자열 그대로) — 따옴표가 허용되는 유일한 줄
+        code = line.partition('#')[0]
+        _d2_need(all(' ' <= c <= '~' and c not in '"\'$' for c in code),
+                 f'D2 generator form: line {number}: command text must be printable ASCII without quotes or $ — {code.strip()[:40]!r} '
+                 '(our parser splits on Unicode whitespace and cuts at the first #; LIGGGHTS splits on ASCII whitespace, keeps a quoted # '
+                 'and substitutes $)')
+        if line.rstrip().endswith('&'):
+            _d2_need(line.endswith(' &') and '#' not in line and line[:-2].strip() != '',
+                     f"D2 generator form: line {number}: continuation must be a command line ending exactly in ' &' (no comment · no "
+                     "trailing whitespace) — our parser strips trailing Unicode whitespace before testing '&', LIGGGHTS only ASCII "
+                     'whitespace, so one would join the next line and the other would not')
+
+
+def _d2_generator_form(commands, D, meta, names, phases, density, counts, k, cgf, stiff):
+    """MXD2R-04 — 생성기 꼴 엄격: 덱의 명령 전부 (차례 · 개수 · 토큰) = make_mixer_deck.deck() 가 이 계획에서 쓰는 토큰.
+
+    전역 설정 · 재료 · 기하 (드럼 R = 계획수 · 반지름 · 밀도에서 plan() 식 사본) · 템플릿 · 분포 · 삽입 · 적분기 · 출력 · 체크포인트 ·
+    회전 줄을 다시 내어 토큰 단위로 대조한다 — 값이 같아도 표기가 다르면 거부 (`0.01447070` · `5e3` · `1.037e9` · `0.30`→`0.3` …).
+    ⚠ 옛 판: `boundary p p p` · `newton on` · 템플릿 뒤 `volume_limit` · 분포 · 둘째 삽입 시드 · 삽입 영역 · 메시 scale · `dump_modify` ·
+    `thermo 1000` · `write_restart` 삭제 (사전 공격 17) 를 두 덱에 같이 넣어도 세 소비자 PASS.  남는 자유 칸 = neighbor skin 값 하나."""
+    f6 = lambda x: format(x, '.6g')
+    neg = lambda x: '-' + f6(x)
+    N, order = len(names), [names[i] for i in range(1, len(names) + 1)]
+    seed = meta['seed']
+    _d2_need(seed <= D2_SEED_MAX and _d2_next_prime(seed) == seed,
+             'D2 generator form: insertion seed must be a prime ≤ 2^31−1 (the generator rejects composite seeds for LIGGGHTS insert/pack)')
+    inserts = [t for t in commands if t[0] == 'fix' and len(t) > 3 and t[3] == 'insert/pack']
+    totals = [t[t.index('particles_in_region') + 1] for t in inserts]          # 값 = _d2_counts (계획수 규칙 · 메타 총수) 가 묶었다
+    layered = len(inserts) == 2
+    F, n_run = D['runs'][1], D['runs'][3]
+    _d2_need(F % k == 0 and n_run % k == 0 and F // k >= 1000,
+             'D2 generator form: settle/rotation steps must be k × the generator plan (settle ≥ 1000 · k)')
+    dump_every = k * max(1000, (n_run // k) // 200)
+    restart_every = max(50_000, min(200_000, (n_run or 2 * F) // 20))
+    dt_tok = format(D['dt'], '.4g') if k == 1 else repr(float(format(D['dt'] * k, '.4g')) / k)
+    # ── 조성 · 드럼 · 삽입 영역 (plan() · deck() 사본 — 같은 연산 순서) ──
+    raw = {p: D2_RAW_WEIGHT[p] for p in phases}
+    tot_w = sum(raw[p] for p in phases)
+    wt = {p: raw[p] * 100.0 / tot_w for p in phases}
+    v = {p: wt[p] / density['SE' if p == 'SE' else 'AM'] for p in phases}
+    tot = sum(v.values())
+    phi = {p: v[p] / tot for p in v}
+    mf = {p: wt[p] / 100.0 for p in wt}
+    d = {p: REG_D_UM[p] * 1e-6 * cgf for p in phases}
+    n = {p: counts[str(i + 1)] for i, p in enumerate(phases)}
+    v_solid = n['AM_P'] * (math.pi / 6) * d['AM_P'] ** 3 / phi['AM_P']
+    v_drum = v_solid / (D2_DRUM['fill'] * D2_DRUM['pack'])
+    R = (D2_DRUM['r_over_l'] * v_drum / math.pi) ** (1 / 3.0)
+    L = R / D2_DRUM['r_over_l']
+    box, scale = R * 1.15, f6(R / 0.5)
+    seq = [list(t) for t in D2_GLOBAL_FORM]
+    seq += [['region', 'reg', 'block', neg(box), f6(box), neg(box), f6(box), neg(box), f6(box), 'units', 'box'],
+            ['create_box', str(N), 'reg'], ['neighbor', None, 'bin'], list(D2_NEIGH_MODIFY),
+            ['fix', 'm1', 'all', 'property/global', 'youngsModulus', 'peratomtype']
+            + [format(1e7 * stiff if p == 'SE' else REG_E_FIXED[p], '.4g') for p in order],
+            ['fix', 'm2', 'all', 'property/global', 'poissonsRatio', 'peratomtype'] + [format(REG_NU[p], '.2f') for p in order]]
+    for fid, name in (('m3', 'coefficientRestitution'), ('m4', 'coefficientFriction'), ('m5', 'coefficientRollingFriction')):
+        seq.append(['fix', fid, 'all', 'property/global', name, 'peratomtypepair', str(N)] + [format(D2_MATERIAL[name][1], 'g')] * (N * N))
+    seq += [['fix', 'mC', 'all', 'property/global', 'cohesionEnergyDensity', 'peratomtypepair', str(N)]
+            + [format(D['ced'][(i, j)], 'g') for i in range(1, N + 1) for j in range(1, N + 1)],
+            ['fix', 'm9', 'all', 'property/global', 'characteristicVelocity', 'scalar', '2.0'],
+            ['pair_style', 'gran', 'model', 'hertz', 'tangential', 'history', 'cohesion', 'sjkr', 'rolling_friction', 'cdt'],
+            list(D2_PAIR_COEFF), ['timestep', dt_tok], ['fix', 'gravi', 'all', 'gravity', '9.81', 'vector', '0.0', '0.0', '-1.0']]
+    seq += [['fix', mesh, 'all', 'mesh/surface', 'file', mesh + '.stl', 'type', str(N), 'scale', scale] for mesh in D2_MESHES]
+    seq.append(['fix', 'walls', 'all', 'wall/gran', 'model', 'hertz', 'tangential', 'history', 'cohesion', 'sjkr', 'rolling_friction',
+                'cdt', 'mesh', 'n_meshes', str(len(D2_MESHES)), 'meshes'] + list(D2_MESHES))
+    tpl_seed = {p: s for s, p in REG_TPL_SEED.items()}
+    seq += [['fix', f'pt{i}', 'all', 'particletemplate/sphere', str(tpl_seed[p]), 'atom_type', str(i), 'density', 'constant',
+             format(density['SE' if p == 'SE' else 'AM'] * 1000.0, '.0f'), 'radius', 'constant', f6(d[p] / 2)]
+            for i, p in enumerate(phases, 1)]
+    groups = ([('pdd', D2_DIST_SEED[0], phases)] if not layered else
+              [('pddA', D2_DIST_SEED[0], [p for p in phases if p.startswith('AM_')]),
+               ('pddB', D2_DIST_SEED[1], [p for p in phases if not p.startswith('AM_')])])
+    for fid, dist_seed, group in groups:
+        share = sum(mf[p] for p in group)
+        seq.append(['fix', fid, 'all', 'particledistribution/discrete', str(dist_seed), str(len(group))]
+                   + [x for p in group for x in (f'pt{phases.index(p) + 1}', format(mf[p] / share if layered else mf[p], '.6f'))])
+
+    def insert(fid, dist, region, total, insert_seed):
+        return (['fix', fid, 'all', 'insert/pack', 'seed', str(insert_seed), 'distributiontemplate', dist, 'maxattempt', '200',
+                 'insert_every', 'once', 'overlapcheck', 'yes', 'all_in', 'yes', 'vel', 'constant', '0.', '0.', '-0.2',
+                 'region', region, 'particles_in_region', total, 'ntry_mc', '20000'])
+    first = 'insA' if layered else 'ins'
+    seq += [['region', 'ins_reg', 'cylinder', 'x', '0.0', '0.0', f6(R * 0.9), neg(L * 0.45), f6(L * 0.45), 'units', 'box'],
+            insert(first, 'pddA' if layered else 'pdd', 'ins_reg', totals[0], seed),
+            ['fix', 'integrS', 'all', 'nve/sphere'], ['compute', 'rke', 'all', 'erotate/sphere'],
+            ['thermo_style', 'custom', 'step', 'atoms', 'ke', 'c_rke', 'vol'], ['thermo', '5000'],
+            ['thermo_modify', 'lost', 'ignore', 'norm', 'no'], ['shell', 'mkdir', 'post'], ['shell', 'mkdir', 'restart'],
+            ['restart', str(restart_every), 'restart/a.bin', 'restart/b.bin'], ['run', '1'],
+            ['dump', 'dmp', 'all', 'custom', str(dump_every), 'post/mix_*.liggghts'] + list(D2_DUMP_COLUMNS)]
+    if 'dump_modify_format' in meta:
+        seq.append(['dump_modify', 'dmp', 'format'] + ('"' + D2_DUMP_FORMAT + '"').split())
+    seq += [['run', str(F)], ['unfix', first]]
+    if layered:
+        v_am = sum(n[p] * (math.pi / 6) * d[p] ** 3 for p in phases if p.startswith('AM_'))
+        area = v_am / 0.60 / L                                  # 침대 단면 (plan() pack 기본 0.60) — deck() 식 그대로
+        lo, hi, th = 0.0, 2 * math.pi, 2.0
+        for _ in range(60):                                       # θ − sinθ = 2A/R² 이분법 (deck() 와 같은 60 회)
+            th = 0.5 * (lo + hi)
+            if th - math.sin(th) < 2 * area / R ** 2:
+                lo = th
+            else:
+                hi = th
+        z_lo = -R + R * (1 - math.cos(th / 2)) + d['AM_P']
+        seq += [['region', 'ins_hi', 'block', neg(L * 0.45), f6(L * 0.45), neg(R * 0.6), f6(R * 0.6), f6(z_lo), f6(0.78 * R), 'units', 'box'],
+                insert('insB', 'pddB', 'ins_hi', totals[1], _d2_next_prime(seed + 2))]
+    seq.append(['run', str(F)])
+    if layered:
+        seq.append(['unfix', 'insB'])
+    period = f6(meta['period_s'])
+    seq += [['write_restart', 'restart/settled.bin']]
+    seq += [['fix', fid, 'all', 'move/mesh', 'mesh', mesh, 'rotate', 'origin', '0', '0', '0', 'axis', '1.', '0.', '0.', 'period', period]
+            for fid, mesh in zip(('mvD', 'mvF', 'mvB'), D2_MESHES)]
+    seq.append(['run', str(n_run)])
+    for index, (got, want) in enumerate(zip(commands, seq), 1):
+        for j in range(max(len(got), len(want))):
+            g, w = (got[j] if j < len(got) else '(end)'), (want[j] if j < len(want) else '(end)')
+            if w is None and g != '(end)':               # 자유 칸 = neighbor skin 값 (ASCII 양수 · 단일 덱 계약 밖)
+                _d2_number(_d2_float_token(g, 'neighbor skin'), 'neighbor skin')
+                continue
+            _d2_need(g == w, f'D2 generator form: command {index} `{" ".join(got[:2])[:30]} …` token {j} `{g[:40]}` '
+                     f'(generator `{"<skin>" if w is None else w[:40]}`) — every command must be the make_mixer_deck.deck() tokens '
+                     '(a different spelling of the same value is rejected)')
+    _d2_need(len(commands) == len(seq), f'D2 generator form: command count {len(commands)} (generator {len(seq)})')
+
+
 def d2_text(deck):
     """D2 덱 입력 (bytes = 실제 파일 바이트 · str = 메모리 텍스트) → 텍스트.  read_d2 가 PASS 한 입력에만 쓴다 (엄격 UTF-8 · LF 확인 뒤)."""
     return deck.decode('utf-8') if type(deck) is bytes else deck
@@ -1447,12 +1613,17 @@ def read_d2(deck, meta):
         _d2_need(abs(expected_time['rotation']-expected_duration)<=expected_duration*TOL['dt_print_rel']+D['dt'],
                  'actual rotation steps/time != declared revolutions')
         counts=_d2_counts(D,meta,phases,density)
+        # ★ MXD2R-04 (1저자 11-03 Q1 = 권고대로) — 기존 검사 뒤 (기존 사유가 먼저 나오게): 문자 꼴 (우리 파서 = LIGGGHTS 토큰) → 명령 전부 = 생성기 토큰
+        _d2_text_form(text, meta)
+        _d2_generator_form(commands, D, meta, names, phases, density, counts, k, cgf, stiff)
         result.update(verdict='PASS',deck_sha256=digest,deck_bytes=len(raw),deck_hash_basis='physical file bytes (LF-only · not normalized)',
                       density_generation=generation,phase_names=names,
                       expected_counts=counts,n_atoms_planned=sum(counts.values()),Bo_SE=fss/weight,
                       gravity=grav,rho_uncoated_ncm=rho,gamma=gamma,bo_se=bo,pairs=rows,
                       tolerances=dict(absolute_Bo_relative=D2_FORCE_REL,pair_force_relative=TOL['f0_ratio']),
-                      metadata_fields_checked='schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts')
+                      metadata_fields_checked='schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts',
+                      generator_form='every command = make_mixer_deck.deck() tokens (same value, different spelling rejected; '
+                                     'free: neighbor skin value) · command text printable ASCII without quotes/$ · continuation " &" only')
     except (ValueError,TypeError,KeyError,IndexError,OverflowError,ZeroDivisionError) as exc:
         result['failures'].append(f'D2 development contract: {type(exc).__name__}: {exc}')
     return result
