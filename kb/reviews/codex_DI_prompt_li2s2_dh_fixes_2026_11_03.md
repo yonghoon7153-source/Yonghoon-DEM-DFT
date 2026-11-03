@@ -7,7 +7,7 @@ letter: DI
 track: li2s
 channel: codex
 kind: prompt
-status: 초안 (2026-11-03) — 사용자 발송 대기 · 기준 커밋 dad10ecf
+status: 발송 · 회신 수령 2026-11-03 (고침 묶음 · `codex_DI_reply_li2s2_dh_fixes_2026_11_03.md` · 패치 적용 b7d11f81) · 기준 커밋 dad10ecf
 confidence: medium
 verificationStatus: unverified
 explored: false
