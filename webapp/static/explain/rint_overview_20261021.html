@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rint 적용 현황</title>
 <style>
-:root{--bg:#fbfaf7;--fg:#1d1d1b;--mut:#5f5e58;--line:#dedcd3;--card:#ffffff;--acc:#2f5d8a;--warn:#9a5b00;--bad:#a1342b;--ok:#2e6b3a;--chip:#eef2f7;--hl:#fff4d6;--hlb:#c9932a}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#17181a;--fg:#e9e7e1;--mut:#a9a69d;--line:#34363a;--card:#1f2124;--acc:#8fb4dc;--warn:#e0a54a;--bad:#e07a70;--ok:#7fc28c;--chip:#263040;--hl:#2c2516;--hlb:#e0a54a;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#17181a;--fg:#e9e7e1;--mut:#a9a69d;--line:#34363a;--card:#1f2124;--acc:#8fb4dc;--warn:#e0a54a;--bad:#e07a70;--ok:#7fc28c;--chip:#263040;--hl:#2c2516;--hlb:#e0a54a;color-scheme:dark}
+:root{--bg:#fbfaf7;--fg:#1d1d1b;--mut:#5f5e58;--line:#dedcd3;--card:#ffffff;--acc:#2f5d8a;--warn:#9a5b00;--bad:#a1342b;--ok:#2e6b3a;--chip:#eef2f7;--hl:#fff4d6;--hlb:#c9932a;--am:#7f8ba3;--se:#cf9d27;--pt:#a46fc0;--sd:#1b9686;--cfc:#3f4650;--cur:#c2410c}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#17181a;--fg:#e9e7e1;--mut:#a9a69d;--line:#34363a;--card:#1f2124;--acc:#8fb4dc;--warn:#e0a54a;--bad:#e07a70;--ok:#7fc28c;--chip:#263040;--hl:#2c2516;--hlb:#e0a54a;--am:#a1abc0;--se:#e2b94d;--pt:#c99be0;--sd:#45c2b2;--cfc:#c7ccd4;--cur:#ff9a66;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17181a;--fg:#e9e7e1;--mut:#a9a69d;--line:#34363a;--card:#1f2124;--acc:#8fb4dc;--warn:#e0a54a;--bad:#e07a70;--ok:#7fc28c;--chip:#263040;--hl:#2c2516;--hlb:#e0a54a;--am:#a1abc0;--se:#e2b94d;--pt:#c99be0;--sd:#45c2b2;--cfc:#c7ccd4;--cur:#ff9a66;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.65 "Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif}
 main{max-width:960px;margin:0 auto;padding:28px 16px 64px}
@@ -114,13 +114,513 @@ figure.fig > figcaption{font-size:14px;font-weight:600;margin:0 0 8px}
 .fig .tn{fill:var(--card);stroke:var(--acc);stroke-width:2.4}
 .fig .tnf{fill:var(--acc);stroke:var(--acc);stroke-width:2.4}
 .backlink{margin:0 0 14px;font-size:14px}.backlink a{color:var(--acc);text-decoration:none}.backlink a:hover{text-decoration:underline}
+/* v4 (11-03): A 아주 쉬운 설명 — 처음 보는 분 (1저자 11-03 "기존거에 추가해서" · "webapp에 갱신해줘") */
+.ehead h1{font-size:26px;line-height:1.3;margin:0 0 6px;text-wrap:balance}
+.ehead .sub{margin:0 0 12px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px}
+.toc a{display:inline-block;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--acc);text-decoration:none;font-size:14px}
+.toc a:hover{border-color:var(--acc)}
+.toc a:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+h2.part{font-size:21px;margin:30px 0 10px;padding-top:12px;border-top:2px solid var(--fg)}
+.oldh1{font-size:19px;font-weight:700;margin:10px 0 2px;text-wrap:balance}
+.oneline{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:8px;padding:12px 18px;margin:12px 0 8px}
+.oneline p:first-child{font-size:16.5px}
+.estep{display:grid;grid-template-columns:minmax(0,1fr);gap:10px 28px;padding:20px 0;border-top:1px solid var(--line)}
+@media (min-width:820px){.estep{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}.estep.wide{grid-template-columns:minmax(0,1fr)}}
+.etext{min-width:0}
+.estep h3{font-size:18px;line-height:1.35;margin:0 0 8px;text-wrap:balance}
+.eno{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--acc);color:var(--card);font-weight:700;font-size:15px;margin:0 0 8px;font-variant-numeric:tabular-nums}
+.mats{list-style:none;padding:0;margin:8px 0}
+.mats li{margin:7px 0}
+.sw{display:inline-block;width:13px;height:13px;border-radius:50%;margin-right:7px;vertical-align:-1px}
+.sw.am{background:var(--am)}
+.sw.se{background:var(--se)}
+.sw.sd{background:var(--sd);border-radius:45% 55% 50% 50%}
+.sw.cf{width:18px;height:4px;border-radius:2px;background:var(--fg);vertical-align:3px}
+.sw.pt{width:18px;height:0;border-radius:0;border-top:3px dashed var(--pt);vertical-align:4px}
+figure.efig{margin:0;min-width:0}
+figure.efig > figcaption{font-size:13px;font-weight:400;color:var(--mut);margin:6px 0 0;text-align:center}
+.efig svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto;font-size:13.5px}
+.efig .lg text,.efig .lg2 text{font-size:13px}
+.fig .m-am{fill:var(--am)}
+.fig .m-se{fill:var(--se)}
+.fig .m-sd{fill:var(--sd)}
+.fig .m-sd-o{fill:var(--sd);fill-opacity:.45}
+.fig .m-pt-o{fill:var(--pt);fill-opacity:.6}
+.fig .m-pt-f{fill:var(--pt)}
+.fig .m-cf{stroke:var(--fg);stroke-width:3.4;fill:none;stroke-linecap:round}
+.fig .m-pt{stroke:var(--pt);stroke-width:3;stroke-dasharray:6 4;fill:none;stroke-linecap:round}
+.fig .v-am{fill:var(--am)}
+.fig .v-se{fill:var(--se)}
+.fig .v-cfc{fill:var(--cfc)}
+.fig .v-po{fill:var(--bg)}
+.fig .vox rect,.fig .lg2 rect{stroke:var(--card);stroke-width:1.5}
+.fig .plate{fill:var(--mut)}
+.fig .fibx{stroke:var(--fg);stroke-width:8;stroke-linecap:round;fill:none}
+.fig .halo2{stroke:var(--card);stroke-width:8;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.fig .halo3{stroke:var(--card);stroke-width:9;fill:none}
+.fig .cur{stroke:var(--cur);stroke-width:4;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.fig .cur-h{fill:var(--cur)}
+.fig .faceh{stroke:var(--acc);stroke-width:5;stroke-linecap:round}
+.fig .rbox{fill:var(--card);stroke:var(--acc);stroke-width:1.6}
+.fig .solder{fill:var(--fg)}
+.fig .cut{stroke:var(--bad);stroke-width:3.4;stroke-linecap:round}
+.fig .bar{fill:var(--acc);fill-opacity:.3;stroke:var(--acc);stroke-width:1.5}
+.eol{margin:8px 0;padding-left:22px}
+.ebox{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin:18px 0}
+.ebox h3{font-size:16.5px;margin:0 0 8px;text-wrap:balance}
+.ebox ul{margin:6px 0;padding-left:20px}
+.sdbox{border-left:5px solid var(--sd)}
+.gobox{border-left:5px solid var(--bad)}
+.notbox{border-left:5px solid var(--warn)}
+.etab td:nth-child(2){white-space:nowrap}
+.tline{list-style:none;padding:0;margin:8px 0}
+.tline li{display:grid;grid-template-columns:8.8em minmax(0,1fr);gap:4px 12px;padding:8px 0;border-bottom:1px dashed var(--line);margin:0}
+.tline .d{color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tline .tag{margin-right:6px}
+.tag.wait{color:var(--mut);border-color:var(--mut)}
+.egl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 16px;margin:4px 0}
+.egl dt{font-weight:600}
+.egl dd{margin:0}
+@media (max-width:560px){.egl{grid-template-columns:minmax(0,1fr);gap:0}.egl dd{margin:0 0 8px}.tline li{grid-template-columns:minmax(0,1fr);gap:2px}.ehead h1{font-size:22px}}
 </style>
 </head>
 <body>
 <main>
 <nav class="backlink"><a href="/">← DEM/MPM Analyzer 로 돌아가기</a></nav>
 <h1>Rint 적용 현황 — 무엇을 넣고, 어디서 막히나</h1>
-<p class="sub">2026-10-21 · 10-22 갱신 (사전 리뷰 2 회차 1저자 결정 — 상자 ① ② ③ · 남은 길 순서 · 날짜) · 10-23 갱신 (Codex 재검토 수정 계획 1저자 결정 — 상자 ④) · 10-25 갱신 (같은 계획 묶음 B — 상자 ⑤) · 10-27 갱신 (같은 계획 묶음 C — 상자 ⑥) · 10-28 갱신 (1저자 <i>"Rint 권고대로"</i> — 낡은 세 자리에 날짜 표지 · C3 ②) · 10-28 밤 갱신 (1저자 <i>"rint는 권고대로"</i> — 상자 ⑥ 주석 날짜 표지 · 사전 공격 5 회차 봉인 전 남은 #9) · 리포 <code>claude/stoic-knuth-NObVQ</code> · 숫자는 리포 기록 · 원장 · Codex 판정문 기준</p>
+<p class="sub">2026-10-21 · 10-22 갱신 (사전 리뷰 2 회차 1저자 결정 — 상자 ① ② ③ · 남은 길 순서 · 날짜) · 10-23 갱신 (Codex 재검토 수정 계획 1저자 결정 — 상자 ④) · 10-25 갱신 (같은 계획 묶음 B — 상자 ⑤) · 10-27 갱신 (같은 계획 묶음 C — 상자 ⑥) · 10-28 갱신 (1저자 <i>"Rint 권고대로"</i> — 낡은 세 자리에 날짜 표지 · C3 ②) · 10-28 밤 갱신 (1저자 <i>"rint는 권고대로"</i> — 상자 ⑥ 주석 날짜 표지 · 사전 공격 5 회차 봉인 전 남은 #9) · 리포 <code>claude/stoic-knuth-NObVQ</code> · 숫자는 리포 기록 · 원장 · Codex 판정문 기준 · 11-03 갱신 (1저자 "처음 보는 사람용 … 기존거에 추가해서" — 맨 앞 A 아주 쉬운 설명 (열 단계 · 그림 9) · 아래 B = 10-21 ~ 10-28 기록)</p>
+<nav class="toc" aria-label="이 페이지 차례"><a href="#easy">A. 아주 쉬운 설명 — 처음이면 여기부터 (11-03)</a><a href="#detail">B. 자세한 기록 (10-21 ~ 10-28)</a></nav>
+
+<section id="easy" class="easy-part" aria-labelledby="easy-h">
+<h2 id="easy-h" class="part">A. 아주 쉬운 설명</h2>
+
+<div class="oneline">
+<p><b>한 줄로</b> — 전극 안에서 전기가 얼마나 잘 흐르는지 컴퓨터로 계산합니다. 지금 계산은 알갱이와 섬유가 <b>맞닿은 곳의 저항</b>을 빼먹어서, 전기가 실제보다 잘 흐르게 나옵니다. <b>Rint</b> 는 그 빠진 저항을 계산에 넣는 일입니다.</p>
+<p class="note">Rint ② 의 결과 숫자는 아직 없습니다. 이 A 부분은 무엇을 어떤 순서로 하려는지 (계획) 와 지금 어디까지 왔는지를 설명합니다.</p>
+</div>
+
+<!-- 1 -->
+<article class="estep" id="s1" aria-labelledby="s1-h">
+<div class="etext">
+<p class="eno" aria-hidden="true">1</p>
+<h3 id="s1-h">전극은 가루를 섞어 꾹 누른 것</h3>
+<p>전고체전지 양극은 다섯 가지 가루를 섞은 뒤 높은 압력으로 눌러 만듭니다.</p>
+<ul class="mats">
+<li><i class="sw am" aria-hidden="true"></i><b>활물질 (AM)</b> — 큰 알갱이. 리튬을 넣었다 뺐다 하며 에너지를 저장합니다.</li>
+<li><i class="sw se" aria-hidden="true"></i><b>고체전해질 (SE)</b> — 작은 알갱이. 리튬 이온이 다니는 길입니다.</li>
+<li><i class="sw cf" aria-hidden="true"></i><b>탄소 섬유 (VGCF)</b> — 가는 실. 전자가 다니는 길, 곧 <b>전선</b>입니다.</li>
+<li><i class="sw pt" aria-hidden="true"></i><b>PTFE</b> — 실처럼 늘어나 가루를 묶는 바인더. 전기가 통하지 않습니다 (<b>절연 테이프</b>).</li>
+<li><i class="sw sd" aria-hidden="true"></i><b>SDCP</b> — 전기가 통하는 바인더 (<b>전도성 풀</b>). DBE 에만 들어갑니다.</li>
+</ul>
+<p>전극은 두 가지입니다. <b>SBE</b> 는 바인더가 PTFE 하나, <b>DBE</b> 는 PTFE 와 SDCP 둘입니다. 실측 전자 전도도 (전기가 얼마나 잘 흐르는지 · 단위 mS/cm · 클수록 잘 흐름 · DC 분극 10-16) 는 SBE <b>1.63</b>, DBE <b>4.68</b> 로, DBE 가 약 2.9 배 잘 흐릅니다.</p>
+</div>
+<figure class="fig efig">
+<svg viewBox="0 0 440 250" role="img" aria-label="전극 단면 그림: 큰 활물질 알갱이 셋, 작은 전해질 알갱이 여럿, 탄소 섬유 두 가닥, PTFE 실, SDCP 덩어리">
+<rect class="pbg" x="6" y="6" width="428" height="200" rx="10"/>
+<circle class="m-am" cx="95" cy="88" r="44"/>
+<circle class="m-am" cx="250" cy="140" r="48"/>
+<circle class="m-am" cx="370" cy="78" r="38"/>
+<g class="m-se">
+<circle cx="158" cy="40" r="11"/><circle cx="180" cy="64" r="11"/><circle cx="160" cy="92" r="11"/><circle cx="146" cy="124" r="11"/><circle cx="186" cy="118" r="11"/>
+<circle cx="52" cy="160" r="11"/><circle cx="84" cy="182" r="11"/><circle cx="118" cy="170" r="11"/><circle cx="312" cy="170" r="11"/><circle cx="334" cy="192" r="11"/>
+<circle cx="300" cy="96" r="11"/><circle cx="286" cy="52" r="11"/><circle cx="206" cy="38" r="11"/><circle cx="394" cy="150" r="11"/><circle cx="404" cy="186" r="11"/>
+<circle cx="30" cy="36" r="11"/><circle cx="214" cy="82" r="11"/><circle cx="150" cy="182" r="11"/><circle cx="366" cy="130" r="11"/><circle cx="36" cy="110" r="11"/><circle cx="420" cy="40" r="11"/>
+</g>
+<path class="m-sd" d="M178 172 C188 160 214 162 222 174 C230 188 210 200 192 196 C176 194 170 184 178 172 Z"/>
+<path class="m-cf" d="M20 196 C120 150 220 60 330 26"/>
+<path class="m-cf" d="M40 24 C150 60 260 150 424 194"/>
+<path class="m-pt" d="M110 30 C140 46 180 28 228 44"/>
+<path class="m-pt" d="M276 196 C300 182 330 190 362 176"/>
+<g class="lg">
+<circle class="m-am" cx="20" cy="228" r="7"/><text x="32" y="233">활물질</text>
+<circle class="m-se" cx="90" cy="228" r="5"/><text x="100" y="233">전해질</text>
+<line class="m-cf" x1="158" y1="228" x2="180" y2="228"/><text x="186" y="233">탄소 섬유</text>
+<line class="m-pt" x1="256" y1="228" x2="278" y2="228"/><text x="284" y="233">PTFE</text>
+<ellipse class="m-sd" cx="336" cy="228" rx="8" ry="6"/><text x="348" y="233">SDCP</text>
+</g>
+</svg>
+<figcaption>그림 A1 · 섞어 누른 전극 단면 (모양은 설명용)</figcaption>
+</figure>
+</article>
+
+<!-- 2 -->
+<article class="estep" id="s2" aria-labelledby="s2-h">
+<div class="etext">
+<p class="eno" aria-hidden="true">2</p>
+<h3 id="s2-h">컴퓨터 안에서 전극 만들기</h3>
+<p><b>① 붓기 (DEM)</b> — 알갱이를 딱딱한 공으로 보고 상자에 붓습니다.</p>
+<p><b>② 누르기 (DEM · MPM)</b> — 위 판으로 꾹 누릅니다. 무른 전해질이 눌려 모양이 바뀌는 것은 MPM 이 계산합니다.</p>
+<p><b>③ 칸 나누기 (복셀)</b> — 다 만든 전극을 아주 작은 정육면체 칸 (한 변 0.15 µm) 으로 잘라, 칸마다 재료 하나를 적습니다. 사진을 픽셀로 쪼개는 것을 3 차원으로 한다고 보면 됩니다.</p>
+</div>
+<figure class="fig efig">
+<svg viewBox="0 0 440 190" role="img" aria-label="세 단계 그림: 상자에 공을 붓기, 판으로 누르기, 작은 칸으로 나누기">
+<text class="b" x="70" y="20" text-anchor="middle">① 붓기 (DEM)</text>
+<text class="b" x="220" y="20" text-anchor="middle">② 누르기</text>
+<text class="b" x="370" y="20" text-anchor="middle">③ 칸 나누기</text>
+<rect class="pbg" x="8" y="34" width="124" height="140" rx="6"/>
+<g><circle class="m-am" cx="40" cy="64" r="16"/><circle class="m-am" cx="98" cy="96" r="18"/><circle class="m-am" cx="46" cy="140" r="17"/>
+<circle class="m-se" cx="76" cy="52" r="6"/><circle class="m-se" cx="110" cy="56" r="6"/><circle class="m-se" cx="70" cy="90" r="6"/><circle class="m-se" cx="28" cy="104" r="6"/>
+<circle class="m-se" cx="86" cy="130" r="6"/><circle class="m-se" cx="112" cy="150" r="6"/><circle class="m-se" cx="72" cy="160" r="6"/><circle class="m-se" cx="60" cy="116" r="6"/></g>
+<line class="lnf" x1="136" y1="104" x2="152" y2="104"/><path class="ff" d="M152 99 L160 104 L152 109 Z"/>
+<rect class="pbg" x="158" y="34" width="124" height="140" rx="6"/>
+<rect class="plate" x="160" y="84" width="120" height="7"/>
+<line class="lnf" x1="220" y1="44" x2="220" y2="74"/><path class="ff" d="M215 72 L220 82 L225 72 Z"/>
+<g><circle class="m-am" cx="186" cy="120" r="15"/><circle class="m-am" cx="246" cy="132" r="17"/><circle class="m-am" cx="196" cy="156" r="14"/>
+<circle class="m-se" cx="214" cy="104" r="6"/><circle class="m-se" cx="228" cy="114" r="6"/><circle class="m-se" cx="170" cy="100" r="6"/><circle class="m-se" cx="266" cy="104" r="6"/>
+<circle class="m-se" cx="218" cy="140" r="6"/><circle class="m-se" cx="226" cy="160" r="6"/><circle class="m-se" cx="266" cy="160" r="6"/><circle class="m-se" cx="174" cy="140" r="5"/></g>
+<line class="lnf" x1="286" y1="104" x2="302" y2="104"/><path class="ff" d="M302 99 L310 104 L302 109 Z"/>
+<rect class="pbg" x="308" y="34" width="124" height="140" rx="6"/>
+<g class="vox" transform="translate(316 50)">
+<rect class="v-am" x="0" y="0" width="18" height="18"/><rect class="v-am" x="18" y="0" width="18" height="18"/><rect class="v-se" x="36" y="0" width="18" height="18"/><rect class="v-po" x="54" y="0" width="18" height="18"/><rect class="v-se" x="72" y="0" width="18" height="18"/><rect class="v-am" x="90" y="0" width="18" height="18"/>
+<rect class="v-am" x="0" y="18" width="18" height="18"/><rect class="v-cfc" x="18" y="18" width="18" height="18"/><rect class="v-se" x="36" y="18" width="18" height="18"/><rect class="v-se" x="54" y="18" width="18" height="18"/><rect class="v-am" x="72" y="18" width="18" height="18"/><rect class="v-am" x="90" y="18" width="18" height="18"/>
+<rect class="v-se" x="0" y="36" width="18" height="18"/><rect class="v-cfc" x="18" y="36" width="18" height="18"/><rect class="v-cfc" x="36" y="36" width="18" height="18"/><rect class="v-se" x="54" y="36" width="18" height="18"/><rect class="v-po" x="72" y="36" width="18" height="18"/><rect class="v-se" x="90" y="36" width="18" height="18"/>
+<rect class="v-am" x="0" y="54" width="18" height="18"/><rect class="v-se" x="18" y="54" width="18" height="18"/><rect class="v-cfc" x="36" y="54" width="18" height="18"/><rect class="v-am" x="54" y="54" width="18" height="18"/><rect class="v-am" x="72" y="54" width="18" height="18"/><rect class="v-se" x="90" y="54" width="18" height="18"/>
+<rect class="v-am" x="0" y="72" width="18" height="18"/><rect class="v-po" x="18" y="72" width="18" height="18"/><rect class="v-cfc" x="36" y="72" width="18" height="18"/><rect class="v-cfc" x="54" y="72" width="18" height="18"/><rect class="v-am" x="72" y="72" width="18" height="18"/><rect class="v-am" x="90" y="72" width="18" height="18"/>
+<rect class="v-se" x="0" y="90" width="18" height="18"/><rect class="v-se" x="18" y="90" width="18" height="18"/><rect class="v-am" x="36" y="90" width="18" height="18"/><rect class="v-cfc" x="54" y="90" width="18" height="18"/><rect class="v-se" x="72" y="90" width="18" height="18"/><rect class="v-po" x="90" y="90" width="18" height="18"/>
+</g>
+</svg>
+<figcaption>그림 A2 · 붓기 → 누르기 → 칸 나누기 (칸 색 = 재료 · 진한 칸 = 탄소)</figcaption>
+</figure>
+</article>
+
+<!-- 3 -->
+<article class="estep" id="s3" aria-labelledby="s3-h">
+<div class="etext">
+<p class="eno" aria-hidden="true">3</p>
+<h3 id="s3-h">전기 계산 — 칸에서 칸으로</h3>
+<p>위아래 판에 전압을 걸면, 전류는 칸에서 이웃 칸으로 <b>맞닿은 면</b>을 지나 흐릅니다.</p>
+<p>면마다 '얼마나 잘 통하나' 는 <b>두 칸 재료의 평균 (조화평균)</b> 으로 정합니다. 조화평균은 둘 중 덜 통하는 쪽에 끌립니다.</p>
+<p>전자는 탄소 섬유 · SDCP · 활물질 칸으로 흐르고, 전해질 칸으로는 흐르지 않습니다 (계산에서 0). 전체 전류를 재면 전자 전도도가 나옵니다.</p>
+</div>
+<figure class="fig efig">
+<svg viewBox="0 0 440 270" role="img" aria-label="칸 격자 위로 전류가 탄소 칸을 따라 위 판에서 아래 판으로 흐르는 그림">
+<rect class="fa" x="20" y="22" width="280" height="12" rx="3"/>
+<rect class="fm" x="20" y="242" width="280" height="12" rx="3"/>
+<text class="tm" x="308" y="32">위 판 (전압)</text>
+<text class="tm" x="308" y="252">아래 판 (0 V)</text>
+<g class="vox" transform="translate(20 40)">
+<rect class="v-am" x="0" y="0" width="40" height="40"/><rect class="v-am" x="40" y="0" width="40" height="40"/><rect class="v-cfc" x="80" y="0" width="40" height="40"/><rect class="v-po" x="120" y="0" width="40" height="40"/><rect class="v-se" x="160" y="0" width="40" height="40"/><rect class="v-se" x="200" y="0" width="40" height="40"/><rect class="v-po" x="240" y="0" width="40" height="40"/>
+<rect class="v-am" x="0" y="40" width="40" height="40"/><rect class="v-se" x="40" y="40" width="40" height="40"/><rect class="v-cfc" x="80" y="40" width="40" height="40"/><rect class="v-cfc" x="120" y="40" width="40" height="40"/><rect class="v-se" x="160" y="40" width="40" height="40"/><rect class="v-am" x="200" y="40" width="40" height="40"/><rect class="v-am" x="240" y="40" width="40" height="40"/>
+<rect class="v-po" x="0" y="80" width="40" height="40"/><rect class="v-se" x="40" y="80" width="40" height="40"/><rect class="v-se" x="80" y="80" width="40" height="40"/><rect class="v-cfc" x="120" y="80" width="40" height="40"/><rect class="v-se" x="160" y="80" width="40" height="40"/><rect class="v-am" x="200" y="80" width="40" height="40"/><rect class="v-am" x="240" y="80" width="40" height="40"/>
+<rect class="v-am" x="0" y="120" width="40" height="40"/><rect class="v-am" x="40" y="120" width="40" height="40"/><rect class="v-se" x="80" y="120" width="40" height="40"/><rect class="v-cfc" x="120" y="120" width="40" height="40"/><rect class="v-cfc" x="160" y="120" width="40" height="40"/><rect class="v-se" x="200" y="120" width="40" height="40"/><rect class="v-po" x="240" y="120" width="40" height="40"/>
+<rect class="v-se" x="0" y="160" width="40" height="40"/><rect class="v-am" x="40" y="160" width="40" height="40"/><rect class="v-se" x="80" y="160" width="40" height="40"/><rect class="v-po" x="120" y="160" width="40" height="40"/><rect class="v-cfc" x="160" y="160" width="40" height="40"/><rect class="v-se" x="200" y="160" width="40" height="40"/><rect class="v-se" x="240" y="160" width="40" height="40"/>
+</g>
+<polyline class="halo2" points="120,34 120,100 160,100 160,180 200,180 200,238"/>
+<polyline class="cur" points="120,34 120,100 160,100 160,180 200,180 200,232"/>
+<path class="cur-h" d="M194 230 L200 242 L206 230 Z"/>
+<line class="faceh" x1="141" y1="120" x2="179" y2="120"/>
+<line class="ln" x1="182" y1="118" x2="306" y2="92"/>
+<text x="310" y="78">이 면 하나</text>
+<text x="310" y="96">= 두 칸 재료의</text>
+<text x="310" y="114">평균 (조화평균)</text>
+<text x="310" y="132">→ 얼마나 잘 통하나</text>
+<g class="lg2">
+<rect class="v-am" x="310" y="158" width="14" height="14"/><text x="330" y="170">활물질</text>
+<rect class="v-se" x="310" y="178" width="14" height="14"/><text x="330" y="190">전해질 (전자 0)</text>
+<rect class="v-cfc" x="310" y="198" width="14" height="14"/><text x="330" y="210">탄소</text>
+<rect class="v-po" x="310" y="218" width="14" height="14"/><text x="330" y="230">빈 곳</text>
+</g>
+</svg>
+<figcaption>그림 A3 · 전류 (주황 화살표) 는 잘 통하는 칸을 따라 흐른다</figcaption>
+</figure>
+</article>
+
+<!-- 4 -->
+<article class="estep" id="s4" aria-labelledby="s4-h">
+<div class="etext">
+<p class="eno" aria-hidden="true">4</p>
+<h3 id="s4-h">문제 — 맞닿은 곳이 전부 '납땜'</h3>
+<p><b>실제</b> — 탄소 섬유끼리는 그냥 맞대어 있을 뿐입니다. 맞닿은 곳에서 전기가 조금 막힙니다 (<b>접촉 저항</b>).</p>
+<p><b>지금 계산</b> — 같은 재료 칸끼리 붙으면 한 덩어리로 봅니다. 맞닿은 곳의 저항이 0, 곧 납땜한 것과 같습니다. 그래서 계산이 실제보다 잘 흐릅니다.</p>
+<p><b>지금까지의 땜질</b> — 실측에 맞추려고 탄소 섬유 전도도를 전극마다 따로 깎았습니다.</p>
+<div class="wrap"><table class="etab">
+<tr><th>탄소 섬유 전도도를</th><th>SBE 계산</th><th>DBE 계산</th></tr>
+<tr><td>SBE 에 맞춤 (0.347 S/cm)</td><td>1.63 (실측과 같음)</td><td>1.89 (실측 4.68 의 약 0.4 배)</td></tr>
+<tr><td>DBE 만 따로 맞춤 (2.618 S/cm)</td><td>—</td><td>4.73</td></tr>
+</table></div>
+<p>같은 섬유인데 값이 7.5 배 다릅니다. 이 값은 재료의 성질이 아니라 <b>빠진 저항을 떠안은 땜질 값</b>이라는 뜻입니다.</p>
+</div>
+<figure class="fig efig">
+<svg viewBox="0 0 440 230" role="img" aria-label="두 섬유가 맞닿은 그림 둘: 실제는 맞대기만 해서 저항이 있고, 지금 계산은 납땜처럼 한 덩어리">
+<text class="b" x="110" y="22" text-anchor="middle">실제</text>
+<text class="b" x="330" y="22" text-anchor="middle">지금 계산</text>
+<rect class="pbg" x="8" y="34" width="204" height="130" rx="8"/>
+<rect class="pbg" x="228" y="34" width="204" height="130" rx="8"/>
+<line class="fibx" x1="40" y1="148" x2="180" y2="50"/>
+<line class="halo" x1="40" y1="50" x2="180" y2="148"/>
+<line class="fibx" x1="40" y1="50" x2="180" y2="148"/>
+<g transform="translate(120 112)"><rect class="rbox" x="-16" y="-9" width="32" height="18" rx="4"/><polyline class="res" points="-11,0 -7,-5 -3,5 1,-5 5,5 9,-5 11,0"/></g>
+<line class="fibx" x1="260" y1="148" x2="400" y2="50"/>
+<line class="fibx" x1="260" y1="50" x2="400" y2="148"/>
+<circle class="solder" cx="330" cy="99" r="14"/>
+<text x="110" y="186" text-anchor="middle">맞대어 있을 뿐</text>
+<text x="110" y="204" text-anchor="middle">→ 조금 막힘 (접촉 저항)</text>
+<text x="330" y="186" text-anchor="middle">한 덩어리로 봄</text>
+<text x="330" y="204" text-anchor="middle">→ 저항 0 (납땜과 같음)</text>
+</svg>
+<figcaption>그림 A4 · 같은 맞닿음을 실제와 지금 계산은 다르게 다룬다</figcaption>
+</figure>
+</article>
+
+<!-- 5 -->
+<article class="estep" id="s5" aria-labelledby="s5-h">
+<div class="etext">
+<p class="eno" aria-hidden="true">5</p>
+<h3 id="s5-h">Rint 가 하는 일 — 맞닿은 곳마다 '요금소' 하나</h3>
+<p>탄소 섬유끼리 맞닿은 곳마다 작은 저항 (접합 저항 R<sub>j</sub>) 을 하나씩 답니다. 요금소를 세우는 것과 같습니다.</p>
+<p>그 크기는 모릅니다. 그래서 <b>손잡이를 하나만</b> 둡니다 (기준값 R<sub>j,0</sub>). 이 하나를 SBE 실측 1.63 에 한 번 맞춥니다.</p>
+<p>탄소 섬유 전도도는 땜질하지 않습니다. 섬유 한 가닥 측정값에서 온 값 하나 (7854 S/cm) 를 두 전극에 똑같이 씁니다.</p>
+<p class="note">나란히 길게 붙은 곳은 길이만큼 더 잘 통하게 봅니다 (길이 비례). 섬유 한 가닥이 꺾여 자기 자신과 닿는 곳은 일정 길이보다 가까우면 맞닿음으로 세지 않습니다.</p>
+</div>
+<figure class="fig efig">
+<svg viewBox="0 0 440 236" role="img" aria-label="탄소 섬유 넷이 네 곳에서 교차하고, 교차하는 곳마다 저항 표시가 달린 그림">
+<rect class="pbg" x="6" y="8" width="428" height="196" rx="10"/>
+<line class="fibx" x1="20" y1="70" x2="420" y2="70"/>
+<line class="fibx" x1="20" y1="160" x2="420" y2="160"/>
+<line class="fibx" x1="90" y1="16" x2="170" y2="198"/>
+<line class="fibx" x1="300" y1="16" x2="230" y2="198"/>
+<g transform="translate(113.7 70)"><rect class="rbox" x="-16" y="-9" width="32" height="18" rx="4"/><polyline class="res" points="-11,0 -7,-5 -3,5 1,-5 5,5 9,-5 11,0"/></g>
+<g transform="translate(153.3 160)"><rect class="rbox" x="-16" y="-9" width="32" height="18" rx="4"/><polyline class="res" points="-11,0 -7,-5 -3,5 1,-5 5,5 9,-5 11,0"/></g>
+<g transform="translate(279.2 70)"><rect class="rbox" x="-16" y="-9" width="32" height="18" rx="4"/><polyline class="res" points="-11,0 -7,-5 -3,5 1,-5 5,5 9,-5 11,0"/></g>
+<g transform="translate(244.6 160)"><rect class="rbox" x="-16" y="-9" width="32" height="18" rx="4"/><polyline class="res" points="-11,0 -7,-5 -3,5 1,-5 5,5 9,-5 11,0"/></g>
+<g transform="translate(26 224)"><rect class="rbox" x="-16" y="-9" width="32" height="18" rx="4"/><polyline class="res" points="-11,0 -7,-5 -3,5 1,-5 5,5 9,-5 11,0"/></g>
+<text x="50" y="229">= 맞닿은 곳의 저항 (모두 같은 손잡이 하나로 정함)</text>
+</svg>
+<figcaption>그림 A5 · 섬유가 맞닿은 곳마다 저항을 단다 (Rint ② 의 S2)</figcaption>
+</figure>
+</article>
+
+<!-- 6 -->
+<article class="estep" id="s6" aria-labelledby="s6-h">
+<div class="etext">
+<p class="eno" aria-hidden="true">6</p>
+<h3 id="s6-h">첨가제 둘 — 늘 넣는 것</h3>
+<p><b>PTFE (절연 테이프)</b> — 칸과 칸 사이 면을 가린 만큼 그 면이 좁아집니다. 남은 열린 비율을 α 라 부르고, α 가 0 이면 그 면은 막힙니다 (S1). 맞추는 값이 없는 계산입니다.</p>
+<p><b>SDCP (전도성 풀)</b> — 자기 칸으로 전기를 나릅니다. 이건 원래 계산에도 있던 부분입니다.</p>
+</div>
+<figure class="fig efig">
+<svg viewBox="0 0 440 214" role="img" aria-label="왼쪽: PTFE 가 칸 사이 면의 일부를 가려 전류가 열린 부분으로만 지나는 그림. 오른쪽: SDCP 덩어리가 섬유와 활물질을 이어 전류를 나르는 그림">
+<rect class="cellm" x="30" y="40" width="80" height="80"/>
+<rect class="cellm" x="110" y="40" width="80" height="80"/>
+<text class="tm" x="70" y="34" text-anchor="middle">칸 1</text>
+<text class="tm" x="150" y="34" text-anchor="middle">칸 2</text>
+<rect class="m-pt-f" x="103" y="40" width="14" height="50" rx="3"/>
+<line class="faceh" x1="110" y1="92" x2="110" y2="120"/>
+<line class="halo2" x1="56" y1="106" x2="160" y2="106"/>
+<line class="cur" x1="56" y1="106" x2="158" y2="106"/>
+<path class="cur-h" d="M156 100 L168 106 L156 112 Z"/>
+<text x="110" y="150" text-anchor="middle">PTFE 가 가린 만큼</text>
+<text x="110" y="168" text-anchor="middle">면이 좁아짐</text>
+<text x="110" y="186" text-anchor="middle">열린 비율 α (0 이면 막힘)</text>
+<circle class="m-am" cx="282" cy="84" r="40"/>
+<line class="fibx" x1="384" y1="30" x2="420" y2="132"/>
+<path class="m-sd" d="M316 70 C334 60 386 64 404 78 C412 92 398 108 380 104 C356 100 334 108 318 100 C308 92 308 78 316 70 Z"/>
+<path class="halo2" d="M402 86 C380 86 340 84 300 84"/>
+<path class="cur" d="M402 86 C380 86 340 84 306 84"/>
+<path class="cur-h" d="M308 78 L296 84 L308 90 Z"/>
+<text x="330" y="150" text-anchor="middle">SDCP 는 자기 칸으로</text>
+<text x="330" y="168" text-anchor="middle">전기를 나름</text>
+<text x="330" y="186" text-anchor="middle">(원래 계산에도 있음)</text>
+</svg>
+<figcaption>그림 A6 · PTFE 는 면을 좁히고, SDCP 는 전기를 나른다</figcaption>
+</figure>
+</article>
+
+<!-- 7 -->
+<article class="estep" id="s7" aria-labelledby="s7-h">
+<div class="etext">
+<p class="eno" aria-hidden="true">7</p>
+<h3 id="s7-h">모르는 것 둘 → 네 가지 경우를 다 계산</h3>
+<p><b>P</b> — 테이프 (PTFE) 가 섬유끼리 맞닿은 곳을 덮으면 어떻게 되나? <b>P0</b> = 상관없음 · <b>P1</b> = 그 맞닿음은 끊김.</p>
+<p><b>c</b> — 풀 (SDCP) 이 섬유끼리 맞닿은 곳을 적시면 어떻게 되나? <b>c0</b> = 상관없음 · <b>c1</b> = 그 맞닿음의 저항이 0 (납땜처럼).</p>
+<p>둘 다 실험으로 아직 모릅니다. 그래서 2 × 2 = <b>네 가지를 다 계산</b>해 범위로 봅니다. 한 맞닿음이 덮이고 적셔져 있기도 하면 끊김이 먼저입니다.</p>
+<p class="note">SBE 에는 SDCP 가 없어서 c 는 SBE 에 영향이 없습니다. P0 · P1 은 SBE 에 각각 따로 맞춥니다. 네 경우는 범위의 끝들이지 실제 값의 예측이 아닙니다 (c1 의 '저항 0' 도 실제로는 0 보다 큽니다 — 아래 8 번 상자).</p>
+</div>
+<figure class="fig efig">
+<svg viewBox="0 0 440 334" role="img" aria-label="두 줄 두 칸 표: P0 과 P1, c0 과 c1 조합마다 테이프가 덮은 맞닿음과 풀이 적신 맞닿음이 보통, 0, 끊김 중 무엇이 되는지">
+<text class="b" x="192" y="18" text-anchor="middle">c0</text>
+<text x="192" y="36" text-anchor="middle">풀이 적셔도 그대로</text>
+<text class="b" x="357" y="18" text-anchor="middle">c1</text>
+<text x="357" y="36" text-anchor="middle">풀이 적시면 저항 0</text>
+<text class="b" x="8" y="92">P0</text><text x="8" y="110">테이프가</text><text x="8" y="128">덮어도 그대로</text>
+<text class="b" x="8" y="212">P1</text><text x="8" y="230">테이프가</text><text x="8" y="248">덮으면 끊김</text>
+<rect class="bx" x="115" y="48" width="155" height="110" rx="6"/>
+<rect class="bx" x="280" y="48" width="155" height="110" rx="6"/>
+<rect class="bx" x="115" y="168" width="155" height="110" rx="6"/>
+<rect class="bx" x="280" y="168" width="155" height="110" rx="6"/>
+<!-- 칸 (c0,P0) -->
+<g transform="translate(160 93)"><line class="fibt" x1="-20" y1="-20" x2="20" y2="20"/><line class="fibt" x1="-20" y1="20" x2="20" y2="-20"/><rect class="m-pt-o" x="-15" y="-10" width="30" height="20" rx="3"/><rect class="rbox" x="-11" y="-6" width="22" height="12" rx="3"/><polyline class="res" points="-8,0 -5,-3 -2,3 1,-3 4,3 7,-3 8,0"/></g>
+<g transform="translate(225 93)"><ellipse class="m-sd-o" cx="0" cy="0" rx="18" ry="14"/><line class="fibt" x1="-20" y1="-20" x2="20" y2="20"/><line class="fibt" x1="-20" y1="20" x2="20" y2="-20"/><rect class="rbox" x="-11" y="-6" width="22" height="12" rx="3"/><polyline class="res" points="-8,0 -5,-3 -2,3 1,-3 4,3 7,-3 8,0"/></g>
+<text x="160" y="140" text-anchor="middle">보통</text><text x="225" y="140" text-anchor="middle">보통</text>
+<!-- 칸 (c1,P0) -->
+<g transform="translate(325 93)"><line class="fibt" x1="-20" y1="-20" x2="20" y2="20"/><line class="fibt" x1="-20" y1="20" x2="20" y2="-20"/><rect class="m-pt-o" x="-15" y="-10" width="30" height="20" rx="3"/><rect class="rbox" x="-11" y="-6" width="22" height="12" rx="3"/><polyline class="res" points="-8,0 -5,-3 -2,3 1,-3 4,3 7,-3 8,0"/></g>
+<g transform="translate(390 93)"><ellipse class="m-sd-o" cx="0" cy="0" rx="18" ry="14"/><line class="fibt" x1="-20" y1="-20" x2="20" y2="20"/><line class="fibt" x1="-20" y1="20" x2="20" y2="-20"/><circle class="solder" cx="0" cy="0" r="7"/></g>
+<text x="325" y="140" text-anchor="middle">보통</text><text class="b" x="390" y="140" text-anchor="middle">0</text>
+<!-- 칸 (c0,P1) -->
+<g transform="translate(160 213)"><line class="fibt" x1="-20" y1="20" x2="20" y2="-20"/><line class="halo3" x1="-20" y1="-20" x2="20" y2="20"/><line class="fibt" x1="-20" y1="-20" x2="20" y2="20"/><rect class="m-pt-o" x="-15" y="-10" width="30" height="20" rx="3"/><line class="cut" x1="-8" y1="-8" x2="8" y2="8"/><line class="cut" x1="-8" y1="8" x2="8" y2="-8"/></g>
+<g transform="translate(225 213)"><ellipse class="m-sd-o" cx="0" cy="0" rx="18" ry="14"/><line class="fibt" x1="-20" y1="-20" x2="20" y2="20"/><line class="fibt" x1="-20" y1="20" x2="20" y2="-20"/><rect class="rbox" x="-11" y="-6" width="22" height="12" rx="3"/><polyline class="res" points="-8,0 -5,-3 -2,3 1,-3 4,3 7,-3 8,0"/></g>
+<text class="tb b" x="160" y="260" text-anchor="middle">끊김</text><text x="225" y="260" text-anchor="middle">보통</text>
+<!-- 칸 (c1,P1) -->
+<g transform="translate(325 213)"><line class="fibt" x1="-20" y1="20" x2="20" y2="-20"/><line class="halo3" x1="-20" y1="-20" x2="20" y2="20"/><line class="fibt" x1="-20" y1="-20" x2="20" y2="20"/><rect class="m-pt-o" x="-15" y="-10" width="30" height="20" rx="3"/><line class="cut" x1="-8" y1="-8" x2="8" y2="8"/><line class="cut" x1="-8" y1="8" x2="8" y2="-8"/></g>
+<g transform="translate(390 213)"><ellipse class="m-sd-o" cx="0" cy="0" rx="18" ry="14"/><line class="fibt" x1="-20" y1="-20" x2="20" y2="20"/><line class="fibt" x1="-20" y1="20" x2="20" y2="-20"/><circle class="solder" cx="0" cy="0" r="7"/></g>
+<text class="tb b" x="325" y="260" text-anchor="middle">끊김</text><text class="b" x="390" y="260" text-anchor="middle">0</text>
+<text class="tm" x="8" y="304">각 칸의 왼쪽 = 테이프 (PTFE) 가 덮은 맞닿음</text>
+<text class="tm" x="8" y="324">각 칸의 오른쪽 = 풀 (SDCP) 이 적신 맞닿음</text>
+</svg>
+<figcaption>그림 A7 · 네 가지 경우 (P0 · P1 × c0 · c1)</figcaption>
+</figure>
+</article>
+
+<!-- 8 -->
+<article class="estep" id="s8" aria-labelledby="s8-h">
+<div class="etext">
+<p class="eno" aria-hidden="true">8</p>
+<h3 id="s8-h">맞추기 → 맞혀 보기</h3>
+<ol class="eol">
+<li>SBE 실측 1.63 에 손잡이 R<sub>j,0</sub> 하나를 맞춥니다 (P0 판 · P1 판 따로).</li>
+<li>같은 값으로 DBE 를 네 가지 경우로 계산합니다.</li>
+<li>네 값의 [가장 작은 값 ~ 가장 큰 값] 안에 DBE 실측 4.68 이 들어오는지 봅니다.</li>
+</ol>
+<p>들어오면 — 이 모형으로 SBE 와 DBE 의 차이를 설명할 수 있다는 뜻입니다. 못 미치면 — 빠진 물리가 더 있다는 뜻이고, 그것도 결과입니다.</p>
+<p class="note">한정: DBE 4.68 은 이전 땜질 (2.618) 을 정할 때 이미 한 번 쓰인 측정입니다. 그래서 보정에 한 번도 안 쓴 '처음 보는 시험 문제' (holdout) 는 아닙니다.</p>
+</div>
+<figure class="fig efig">
+<svg viewBox="0 0 440 268" role="img" aria-label="흐름 그림: SBE 실측으로 손잡이 하나를 맞추고 DBE 네 경우를 계산해 범위를 만든다. 아래는 범위가 실측 4.68 을 포함하는 예시와 못 미치는 예시">
+<rect class="bxa" x="8" y="12" width="128" height="50" rx="6"/>
+<text class="b" x="72" y="33" text-anchor="middle">SBE 실측</text><text x="72" y="52" text-anchor="middle">1.63 mS/cm</text>
+<line class="lnf" x1="136" y1="37" x2="150" y2="37"/><path class="ff" d="M150 32 L158 37 L150 42 Z"/>
+<rect class="bxa" x="158" y="12" width="124" height="50" rx="6"/>
+<text class="b" x="220" y="33" text-anchor="middle">손잡이 하나 맞춤</text><text x="220" y="52" text-anchor="middle">(P0 판 · P1 판)</text>
+<line class="lnf" x1="282" y1="37" x2="296" y2="37"/><path class="ff" d="M296 32 L304 37 L296 42 Z"/>
+<rect class="bxa" x="304" y="12" width="128" height="50" rx="6"/>
+<text class="b" x="368" y="33" text-anchor="middle">DBE 네 경우</text><text x="368" y="52" text-anchor="middle">계산 → 범위</text>
+<text x="40" y="102">예시 ① 범위 안에 들어옴 → 설명 가능</text>
+<rect class="bar" x="235.4" y="113" width="97.8" height="14" rx="3"/>
+<text x="40" y="172">예시 ② 못 미침 → 빠진 물리가 더 있음</text>
+<rect class="bar" x="126.9" y="183" width="70.6" height="14" rx="3"/>
+<line class="lnb dash" x1="294.1" y1="108" x2="294.1" y2="220"/>
+<text class="tb" x="300" y="150">DBE 실측 4.68</text>
+<line class="lnf" x1="40" y1="220" x2="420" y2="220"/>
+<line class="lnf" x1="40" y1="220" x2="40" y2="226"/><line class="lnf" x1="148.6" y1="220" x2="148.6" y2="226"/><line class="lnf" x1="257.1" y1="220" x2="257.1" y2="226"/><line class="lnf" x1="365.7" y1="220" x2="365.7" y2="226"/>
+<text class="tm" x="40" y="240" text-anchor="middle">0</text><text class="tm" x="148.6" y="240" text-anchor="middle">2</text><text class="tm" x="257.1" y="240" text-anchor="middle">4</text><text class="tm" x="365.7" y="240" text-anchor="middle">6</text>
+<text class="tm" x="420" y="258" text-anchor="end">전자 전도도 (mS/cm)</text>
+<text class="tm" x="8" y="258">막대 위치 = 예시 (계산 전)</text>
+</svg>
+<figcaption>그림 A8 · 맞추는 곳은 SBE 하나, DBE 는 계산해서 실측과 견준다</figcaption>
+</figure>
+</article>
+
+<div class="ebox sdbox" id="sdcp-real" aria-labelledby="sdcp-real-h">
+<h3 id="sdcp-real-h">질문 — 실제로는 SDCP 접점에도 저항이 있지 않나?</h3>
+<p><b>있습니다.</b> 위 설명에서 "PTFE 와 SDCP 는 맞닿음을 끊거나 납땜처럼 만들기만 한다" 는 것은 <b>지금 모형</b>의 이야기입니다.</p>
+<ul>
+<li>실제로는 SDCP–섬유, SDCP–활물질, SDCP 끼리 맞닿은 곳에도 접촉 저항이 있을 것입니다.</li>
+<li>첫 판 (v0) 은 그 값을 <b>0 으로 가정</b>합니다. 결과 문장마다 이 가정을 한정어로 붙입니다 (SDCP–VGCF 접촉 저항 0 가정).</li>
+<li>0 으로 두는 이유 — 측정값이 없고, SBE 에는 SDCP 가 없어서 SBE 로 맞출 수도 없습니다. 손잡이를 하나 더 만들어도 맞출 데이터가 없습니다.</li>
+<li>0 으로 두면 그 부분만 놓고 볼 때 <b>DBE 를 실제보다 잘 흐르게 계산하는 쪽</b>으로 치우칩니다 (저항을 키우면 전도도는 올라갈 수 없습니다).</li>
+<li>그래서 늘 따로 보고하는 숫자가 있습니다 — SDCP 를 거쳐 다른 섬유로 넘어가는 길을 끊고 다시 계산했을 때의 비 (SV 반사실 비). 이 비가 크면 '0 가정' 이 DBE 결과를 크게 좌우한다는 뜻이라, 결과 해석을 그만큼 좁힙니다.</li>
+<li>SDCP 접점 저항을 넣는 일은 설계 문서에 다음 판 (v1) 으로 적혀 있습니다.</li>
+</ul>
+</div>
+
+<!-- 9 -->
+<article class="estep" id="s9" aria-labelledby="s9-h">
+<div class="etext">
+<p class="eno" aria-hidden="true">9</p>
+<h3 id="s9-h">왜 오래 걸리나 — 검사 순서</h3>
+<ul class="mats">
+<li><b>시험 먼저</b> — 고치기 전에 그 결함을 재현하는 시험을 먼저 만들어 실패하는 것을 확인하고, 고친 뒤 통과하는 것을 봅니다.</li>
+<li><b>게이트</b> — 올리기 (push) 전에 리포 전체를 자동으로 검사합니다. 한 번에 약 1 시간 반 걸립니다 (11-03 실측).</li>
+<li><b>사전 공격</b> — 고친 사람의 설명 없이, 독립 검토자가 작은 반례로 먼저 깨 봅니다. 5 · 6 · 7 회차에 반례 11 · 13 · 7 건이 나왔고, 10 · 5 · 5 건을 고쳤습니다 (7 회차 고침 5 건은 아직 반입 전).</li>
+<li><b>Codex 검토</b> — 외부 검토자가 반례로 따져 GO (진행) 또는 HOLD (고친 뒤 다시) 를 줍니다.</li>
+<li><b>1저자 결정</b> — 단계마다 1저자 (이 작업의 결정권자) 지시가 있을 때만 다음으로 갑니다.</li>
+</ul>
+</div>
+<figure class="fig efig">
+<svg viewBox="0 0 440 252" role="img" aria-label="검사 고리: 고치기, 게이트, 사전 공격, Codex 검토. HOLD 이면 다시 고치기로, GO 이면 다음 단계로">
+<path class="ln dash" d="M366 44 L366 26 L74 26 L74 44"/><path class="fm" d="M69 38 L74 48 L79 38 Z"/>
+<text class="tm" x="220" y="18" text-anchor="middle">반례가 나오면 다시 고침</text>
+<rect class="bxa" x="12" y="48" width="124" height="46" rx="6"/><text class="b" x="74" y="67" text-anchor="middle">고치기</text><text x="74" y="85" text-anchor="middle">시험 먼저</text>
+<line class="lnf" x1="136" y1="71" x2="150" y2="71"/><path class="ff" d="M150 66 L158 71 L150 76 Z"/>
+<rect class="bxa" x="158" y="48" width="124" height="46" rx="6"/><text class="b" x="220" y="67" text-anchor="middle">게이트</text><text x="220" y="85" text-anchor="middle">전체 자동 검사</text>
+<line class="lnf" x1="282" y1="71" x2="296" y2="71"/><path class="ff" d="M296 66 L304 71 L296 76 Z"/>
+<rect class="bxa" x="304" y="48" width="124" height="46" rx="6"/><text class="b" x="366" y="67" text-anchor="middle">사전 공격</text><text x="366" y="85" text-anchor="middle">작은 반례로 시험</text>
+<line class="lnf" x1="366" y1="94" x2="366" y2="118"/><path class="ff" d="M361 116 L366 126 L371 116 Z"/>
+<rect class="bxa" x="304" y="126" width="124" height="46" rx="6"/><text class="b" x="366" y="145" text-anchor="middle">Codex 검토</text><text x="366" y="163" text-anchor="middle">외부 · 반례</text>
+<path class="lnb" d="M304 149 L74 149 L74 102"/><path class="fb" d="M69 104 L74 94 L79 104 Z"/>
+<text class="tb b" x="190" y="142" text-anchor="middle">HOLD → 다시 고침</text>
+<line class="lna" x1="366" y1="172" x2="366" y2="194"/><path class="fa" d="M361 192 L366 202 L371 192 Z"/>
+<text class="ta b" x="376" y="188">GO</text>
+<rect class="bxa" x="304" y="202" width="124" height="44" rx="6"/><text class="b" x="366" y="221" text-anchor="middle">다음 단계로</text><text x="366" y="239" text-anchor="middle">1저자 지시 뒤</text>
+</svg>
+<figcaption>그림 A9 · HOLD 이면 고리를 한 바퀴 더 돈다</figcaption>
+</figure>
+</article>
+
+<!-- 10 -->
+<article class="estep wide" id="s10" aria-labelledby="s10-h">
+<div class="etext">
+<p class="eno" aria-hidden="true">10</p>
+<h3 id="s10-h">지금 어디까지 왔나 (11-03)</h3>
+<ol class="tline">
+<li><span class="d">10-02</span><span><span class="tag ok">끝</span> 맞닿은 곳에 저항을 넣는 장치 (①) — Codex 통과</span></li>
+<li><span class="d">10-07</span><span><span class="tag wait">꺼 둠</span> 활물질끼리 막 저항 (①′) — 만들었지만 정량으로 쓰는 것은 HOLD</span></li>
+<li><span class="d">10-20</span><span><span class="tag ok">끝</span> Rint ② 설계 (S0 기하 세기 · S1 PTFE 가림 · S2 섬유 맞닿음 저항 · S3 SDCP 적심)</span></li>
+<li><span class="d">10-21</span><span><span class="tag bad">HOLD</span> Codex 설계 리뷰 → 고침</span></li>
+<li><span class="d">10-22</span><span><span class="tag bad">HOLD</span> Codex 재검토 → 고침</span></li>
+<li><span class="d">10-23</span><span><span class="tag ok">끝</span> 새 침대 두 벌 — 탄소 섬유를 더 단단한 값 (영률 100 GPa) 으로 바꿔 다시 누름</span></li>
+<li><span class="d">10-26</span><span><span class="tag bad">HOLD</span> Codex 회차 ① (가장 무거운 등급의 새 지적은 없음) → 고침</span></li>
+<li><span class="d">10-26 ~ 11-02</span><span><span class="tag warn">고치는 중</span> 고침 묶음 B · B″ · C, 사전 공격 5 · 6 회차 고침 (반입 끝) · 7 회차 고침 (만들었고 반입 전)</span></li>
+<li><span class="d">다음</span><span><span class="tag wait">대기</span> 7 회차 고침 반입 → Codex 회차 ② 요청 → S0 단계 1 (SBE 침대에서 기하만 세기 · kgy) → Codex GO → 숫자 봉인 → 실제 계산 (GPU 두 대 · 며칠 · 추정) → 판정</span></li>
+</ol>
+<p class="note">일정 — 11 월 안 (1저자 10-27) · 순서는 50kg 보고 다음 Rint · 단계마다 1저자 지시 뒤.</p>
+</div>
+</article>
+
+<div class="ebox gobox" id="go-status" aria-labelledby="go-h">
+<h3 id="go-h">검토 상태 한눈에 — 전부 GO 받은 것은 아니다</h3>
+<div class="wrap"><table class="etab">
+<tr><th>부분</th><th>Codex 판정</th><th>뜻</th></tr>
+<tr><td>① 맞닿은 곳 저항 장치 (10-02)</td><td><span class="tag ok">닫힘</span></td><td>통과</td></tr>
+<tr><td>② 개발용 조각 — S0 기하 세기 · S1 PTFE 가림 · S3 SDCP 시험 · S0 단계 1 개발 실행</td><td><span class="tag warn">조건부 GO</span></td><td>개발 범위에서만 진행 가능</td></tr>
+<tr><td>② 실제 계산 — SBE 로 맞추고 DBE 네 경우 예측 (등록 R)</td><td><span class="tag bad">HOLD</span></td><td>10-21 · 10-22 · 10-26 세 번 · 아직 돌리지 않음 (10-26 판정은 가장 무거운 등급의 새 지적 없음)</td></tr>
+<tr><td>10-26 뒤 고친 것 (묶음 B · B″ · C · 사전 공격 5 · 6 · 7 고침)</td><td><span class="tag wait">아직 안 봄</span></td><td>Codex 회차 ② 요청서 (7 회차 고침 반입 뒤) 에서 봄</td></tr>
+<tr><td>①′ 활물질끼리 막 저항의 정량 사용</td><td><span class="tag bad">HOLD</span></td><td>꺼 둔 채</td></tr>
+</table></div>
+</div>
+
+<div class="ebox notbox" id="not-in" aria-labelledby="not-h">
+<h3 id="not-h">이번 Rint ② 에 넣지 않는 것</h3>
+<ul>
+<li><b>활물질끼리 (AM–AM)</b> — 저항을 넣는 장치 (①′) 는 만들어 두었지만 꺼 두었습니다 (Codex HOLD). 지금은 작은 다리 (0.48 µm) 로 붙여 둔 상태라 저항이 0 입니다.</li>
+<li><b>활물질–전해질 (AM–SE)</b> — 전자 계산에서는 전해질이 전자를 나르지 않아서 해당이 없습니다. 이온이 활물질로 들어가는 반응 쪽은 이 작업 범위 밖입니다.</li>
+<li><b>전해질끼리 (SE–SE)</b> — 이온이 다니는 쪽의 문제입니다. Rint ② 는 전자만 다룹니다. 다음 트랙으로 정해 두었습니다 (1저자 11-02 · 50kg D1–D3 침대부터).</li>
+<li><b>섬유–활물질 · SDCP–섬유 · SDCP–활물질</b> — 첫 판에서는 저항 0 으로 둡니다 (가정으로 적어 둠 · 위 질문 상자).</li>
+<li>PTFE 가림 (6 번) 은 활물질끼리 맞닿은 목과, 이온 계산에서는 전해질끼리 면에도 걸립니다. 저항 값을 넣는 것이 아니라 면을 좁히는 것입니다.</li>
+</ul>
+</div>
+
+<div class="ebox" id="easy-gloss" aria-labelledby="gl-h">
+<h3 id="gl-h">A 에 나온 말</h3>
+<dl class="egl">
+<dt>전자 전도도</dt><dd>전기 (전자) 가 얼마나 잘 흐르는지 · 단위 mS/cm · 클수록 잘 흐름</dd>
+<dt>복셀</dt><dd>계산 격자의 작은 정육면체 칸 · 여기서는 한 변 0.15 µm · 칸마다 재료 하나</dd>
+<dt>접촉 저항</dt><dd>맞닿은 곳에서 전기가 조금 막히는 정도</dd>
+<dt>보정</dt><dd>모르는 값 하나를 측정 하나에 맞추는 것 · 여기서는 R<sub>j,0</sub> 를 SBE 1.63 에</dd>
+<dt>holdout</dt><dd>보정에 쓰지 않고 남겨 둔 시험용 측정 · DBE 4.68 은 이전 보정에 쓰여서 엄밀한 holdout 은 아님</dd>
+<dt>침대</dt><dd>시뮬레이션으로 눌러 만든 전극 구조 한 벌</dd>
+<dt>Codex</dt><dd>반례로 설계와 코드를 따지는 외부 검토 · GO = 진행 · HOLD = 고친 뒤 다시</dd>
+<dt>사전 공격</dt><dd>Codex 에 보내기 전, 독립 검토자가 작은 반례로 먼저 깨 보는 것</dd>
+<dt>게이트</dt><dd>올리기 (push) 전에 리포 전체를 자동으로 검사하는 것</dd>
+<dt>1저자</dt><dd>이 작업의 결정권자 (논문 제1저자)</dd>
+</dl>
+</div>
+</section>
+
+<h2 id="detail" class="part">B. 자세한 기록 (10-21 ~ 10-28)</h2>
+<p class="note">아래는 10-21 ~ 10-28 에 쓴 자세한 기록입니다. 날짜가 붙은 문장은 그 날짜 기준이고, 11-03 상태는 위 A 의 10 번과 검토 상태 표를 보세요.</p>
+
 
 <section class="first" aria-labelledby="first-h">
 <h2 id="first-h">처음 보는 분께</h2>

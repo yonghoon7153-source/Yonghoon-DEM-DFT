@@ -7,7 +7,7 @@
 에서 링크한다.  이 시험이 지키는 것:
 
   ① 파일이 그 자리에 있고 한 파일로 닫혀 있다 (스크립트 · 외부 자원 없음 — 오프라인 · 인증 면제 경로라도 새는 것 없음)
-  ② 그림 6 장 · "처음 보는 분께" · CONTACT_FREE · "독립 holdout 검증 아님" 표지가 남아 있다
+  ② 그림 15 장 (⑭ 쉬운 설명 A 9 장 + 기존 6 장) · "처음 보는 분께" · CONTACT_FREE · "독립 holdout 검증 아님" 표지가 남아 있다
   ③ α = **열린 면적 비율 (개구율)** — v1 의 거꾸로 쓴 문장 ("가리는 비율 α") 이 다시 들어오지 않는다
   ④ 보이는 글에 천 단위 콤마가 없다 (보고자료 작성 원칙 · `docs/report_making_principles.md`)
   ⑤ 웹앱으로 돌아가는 링크 (`href="/"`)
@@ -31,6 +31,11 @@
      끝나는 날 (11-01 – 11-03) 에 "10-22 시점" · 머리 줄 10-28
   ⑬ (10-28 밤 · 사전 공격 5 회차 봉인 전 남은 #9 · 1저자 10-28 밤 *"rint는 권고대로"*) 상자 ⑥ 주석의 "구현 = 묶음 C 코드 · 진행 중" = 날짜 표지
      ("10-27 시점" + 10-28 반입) · 보이는 p · td 의 "진행 중" 은 모두 "시점" 표지와 함께 · 머리 줄 "10-28 밤 갱신"
+  ⑭ (11-03 · 1저자 *"모든 과정을 엄청 쉽게 설명하는 처음 보는 사람용 html을 만들어봐 기존거에 추가해서"* · *"관련해서 webapp에 갱신해줘"*)
+     맨 앞 A (아주 쉬운 설명) — 차례 (#easy · #detail) · 단계 열 (s1–s10 · 번호 배지 10) · 그림 A1–A9 · '결과 숫자는 아직 없습니다' ·
+     A8 막대 = '예시 (계산 전)' · SDCP 접점 저항 상자 (실제로는 있음 · v0 = 0 가정 · DBE 를 잘 흐르게 · SV 반사실 비 · v1) ·
+     검토 상태 표 (닫힘 · 조건부 GO · HOLD · 아직 안 봄 · '전부 GO 받은 것은 아니다') · 넣지 않는 것 (AM–AM · AM–SE · SE–SE · 0.48 µm) ·
+     핵심 수치 (7854 · 0.15 µm) · A 가 '처음 보는 분께' 보다 앞 · 재료 색 토큰 = 밝은 · 어두운 셋 다 · 머리 줄 "11-03 갱신"
 
   python3 webapp/test_rint_explainer_page.py
 """
@@ -215,9 +220,12 @@ def main():
     text = ' '.join(sc.text)
 
     print('── ② 내용 표지')
-    chk('그림 6 장 (<figure>)', src.count('<figure') == 6)
-    chk('그림마다 설명 (svg role="img" + aria-label)',
-        src.count('<svg') >= 6 and src.count('role="img"') >= 6 and src.count('aria-label=') >= 6)
+    easy_m = re.search(r'<section id="easy"[^>]*>(.*?)</section>', src, re.S)
+    easy = easy_m.group(1) if easy_m else ''
+    chk('그림 15 장 (<figure>) = ⑭ 쉬운 설명 A 9 장 + 기존 6 장', src.count('<figure') == 15 and easy.count('<figure') == 9)
+    chk('그림마다 설명 (svg role="img" + aria-label · A 의 svg 9 개 모두)',
+        src.count('<svg') >= 15 and src.count('role="img"') >= 15 and src.count('aria-label=') >= 15
+        and easy.count('<svg') == 9 and easy.count('role="img"') == 9)
     chk('"처음 보는 분께" 상자', '처음 보는 분께' in text)
     chk('CONTACT_FREE (지금 복셀 σ 의 빈틈) 설명', 'CONTACT_FREE' in text)
     chk('DBE 비교는 "독립 holdout 검증 아님" 표지', 'holdout' in text and '아님' in text)
@@ -365,6 +373,30 @@ def main():
     hl_rule = _css_block(src, r'\.hl\{([^}]*)\}')
     chk('.hl 상자 = 하이라이트 배경 var(--hl) · 테두리 var(--hlb)', 'var(--hl)' in hl_rule and 'var(--hlb)' in hl_rule)
     chk('용어 풀이에 "SV 반사실 비"', bool(re.search(r'<td>SV 반사실 비</td><td>[^<]*G_전체 / G_끊음', src)))
+
+    print('── ⑭ 11-03 처음 보는 분을 위한 쉬운 설명 A')
+    etext = _vis(easy)
+    chk('A = section#easy 가 "처음 보는 분께" (section.first) 보다 앞', bool(easy_m) and src.find('<section id="easy"') < src.find('<section class="first"'))
+    chk('차례 — href="#easy" · href="#detail" · id="detail" (B 머리)', 'href="#easy"' in src and 'href="#detail"' in src and 'id="detail"' in src)
+    chk('단계 열 — article id s1 … s10 · 번호 배지 10', all(f'id="s{i}"' in easy for i in range(1, 11)) and easy.count('class="eno"') == 10)
+    chk('그림 이름 A1 … A9', all(f'그림 A{i}' in etext for i in range(1, 10)))
+    chk('결과 없음 표지 — "결과 숫자는 아직 없습니다" · A8 막대 = "예시 (계산 전)"', '결과 숫자는 아직 없습니다' in etext and '예시 (계산 전)' in etext)
+    sd = re.search(r'<div class="ebox sdbox" id="sdcp-real"[^>]*>(.*?)</div>', easy, re.S)
+    sdt = _vis(sd.group(1)) if sd else ''
+    chk('SDCP 접점 저항 상자 — 실제로는 있음 · 0 으로 가정 · DBE 를 실제보다 잘 흐르게 · SV 반사실 비 · v1',
+        bool(sd) and all(w in sdt for w in ('있습니다', '0 으로 가정', 'DBE 를 실제보다 잘 흐르게', 'SV 반사실 비', 'v1')))
+    go = re.search(r'<div class="ebox gobox" id="go-status"[^>]*>(.*?)</table></div>\s*</div>', easy, re.S)
+    got_ = _vis(go.group(1)) if go else ''
+    chk('검토 상태 표 — 닫힘 · 조건부 GO · HOLD · 아직 안 봄 · "전부 GO 받은 것은 아니다"',
+        bool(go) and all(w in got_ for w in ('닫힘', '조건부 GO', 'HOLD', '아직 안 봄', '전부 GO 받은 것은 아니다')))
+    no = re.search(r'<div class="ebox notbox" id="not-in"[^>]*>(.*?)</div>', easy, re.S)
+    not_ = _vis(no.group(1)) if no else ''
+    chk('넣지 않는 것 — AM–AM · AM–SE · SE–SE · 0.48 µm', bool(no) and all(w in not_ for w in ('AM–AM', 'AM–SE', 'SE–SE', '0.48 µm')))
+    chk('A 핵심 수치 — 1.63 · 4.68 · 0.347 · 2.618 · 7854 · 0.15 µm', all(w in etext for w in ('1.63', '4.68', '0.347', '2.618', '7854', '0.15 µm')))
+    mtok = {nm: (_tok(light, nm), _tok(dmed, nm), _tok(dattr, nm)) for nm in ('--am', '--se', '--pt', '--sd', '--cfc', '--cur')}
+    chk(f'재료 · 전류 색 토큰 = 밝은 :root · 어두운 (media · data-theme) 셋 다 · 어두운 ≠ 밝은 · 두 어두운 같음 {mtok}',
+        all(l_ and m_ and a_ and m_ == a_ and m_ != l_ for l_, m_, a_ in mtok.values()))
+    chk('머리 줄 (.sub) 에 "11-03 갱신"', bool(sub4) and '11-03 갱신' in sub4.group(1))
 
     print('── ⑥ 사이드바 링크 · 실제 서빙')
     base = open(BASE, encoding='utf-8').read()
