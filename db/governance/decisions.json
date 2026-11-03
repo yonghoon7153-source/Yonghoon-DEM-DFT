@@ -10818,9 +10818,11 @@
    "supersedes": [],
    "amends": null,
    "evidence": [
-    "tools/ionic/melt_quench_uma.py (0f51518d · selftest 193/193)",
-    "tools/ionic/li2s2_stage1_runner.py (0f51518d · selftest 65/65 Linux — 진짜 판독 함수 · 진짜 프로세스 그룹)",
+    "tools/ionic/melt_quench_uma.py (2c36eac9 · selftest 207/207)",
+    "tools/ionic/li2s2_stage1_runner.py (2c36eac9 · selftest 76/76 Linux — 진짜 판독 함수 · 진짜 프로세스 그룹)",
+    "kb/reviews/codex_DJ_reply_li2s2_outage_rule_2026_11_03.md (NO-GO · 정전 복구 방향 찬성 → 89d48885 · 2c36eac9 고침)",
     "kb/reviews/codex_DI_reply_li2s2_dh_fixes_2026_11_03.md (NO-GO → Codex 고침 묶음 적용 b7d11f81)",
+    "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json §개정_정전_복구_v2_2026_11_03 (회신 DJ — 결과와 무관한 재시도 사유 · MD/FIRE 구분 · 증언 필드 · 정전 추가 예산)",
     "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json §개정_정전_복구_2026_11_03 (사용자 '2번으로 가자')",
     "kb/reviews/codex_DH_reply_li2s2_dg_fixes_2026_11_03.md · codex_DG_reply… · codex_DF_reply… (앞선 NO-GO 들)",
     "db/properties/lpscl_smallcell_glass_track_closed_2026_10_30.json §6 (설계 초안)"
@@ -10868,6 +10870,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex DI 고침 묶음 적용 (b7d11f81 · Linux 확인) + 정전 복구 개정 (0f51518d · 사용자 '2번으로 가자') — DJ 확인 뒤 활성"
+    },
+    {
+     "at": "2026-11-03",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DJ NO-GO 반영 (결과 전 · 89d48885 · 2c36eac9) — 재시도 이력 · STOP · 영수증 대조 · 판독 불가 · 보존 누락 차단 · 증언 하한 검증 · 잠금 안 증언 · 결과와 무관한 재시도 사유 선언 · MD 완료 / FIRE 미완 보류 · 정전 추가 예산 — DK 확인 뒤 활성"
     }
    ]
   },
