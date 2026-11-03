@@ -1,0 +1,18 @@
+
+── E18
+    보고 E18 — 원장 rc [0, 0, 0, 0, 0, 0, 0] · 사다리 ['CALIBRATED', 'CALIBRATED'] (런 [16, 16]) · 예측 PREDICTED (런 24) · 결과 줄 [(1, 'completed'), (2, 'completed'), (3, 'completed')]
+  PASS  E18a 실물 원장 사슬 (producer) — --init · --add 셋 · 사다리 P0 · P1 · 예측 rc 0 · 사다리 CALIBRATED (마지막 런 = sbe_noop · 사다리 단계 끝 no-op) · 예측 PREDICTED (DBE 런만 · no-op 런 요청 없음) · 결과 줄 셋 completed · 폴더 요약 sha = 독립 계산
+    보고 E18 — 판정 rc 0 · FAIL (상태 positive) · 표지 ['CALIB_ORIGIN_SENSITIVE', 'FIBRE_UNCHECKED', 'GRID_UNCHECKED', 'SVORDER_UNCHECKED', 'SV_DEPENDENT', 'UNREG_UNCHECKED'] · 입력 3 · 팔 88 · 결과 긴 소수 124 개
+  PASS  E18b 판정 (실물 producer 출력 · 원장 판정) — rc 0 · 등록 판정 이름 (멈춤 아님) · 입력 = 사다리 P0 · P1 CALIBRATED · 예측 PREDICTED (요약 sha = 독립 계산) · 팔 = 세 요약의 팔 전부 (경로 · sha256 = 파일 독립 계산) · 원장 채택 1 · 2 · 3 · 원장 커밋 = 원장 HEAD · 등록 sha256 = 등록 사본 · 판정 환경 옆 파일 (rint-r-verdict-env-v1 · env = 사슬 env_record) · 결과 JSON 0600 · 값 봉인 (결과 긴 소수가 화면 · 판정 JSON 에 없음)
+  PASS  E18c 같은 입력 다시 판정 (같은 프로세스) — rc 0 · REVERIFY_SAME · 보고 (같음 · 등급 다름 False · 다른 공개 · 결과 칸 없음 · 원 환경 = 옆 파일 · 다른 환경 칸 없음) · 판정 폴더 바이트 그대로
+  PASS  E18d 같은 입력 다시 판정 (따로 프로세스 · 새 인터프리터 · 같은 기계) — rc 0 · REVERIFY_SAME · 보고 같음 · 다른 환경 칸 없음 · 판정 폴더 바이트 그대로
+  PASS  E18e 같은 입력 · 판정 문턱만 옮긴 다시 판정 (RV02 꼴 · 실물 기록) — rc 1 · REVERIFY_DIFF · 원 판정 이름 = 저장본 · 다시 계산 이름 다름 · 멈춤 아님 (구조 대조 통과) · 등급 다름 True · 공개 칸 verdict · 결과 다름 · 판정 폴더 바이트 그대로 (원 판정을 덮지 않는다)
+  FAIL  E18f 입력 하나 = DBE 킷 metrics 파일 (끝에 공백 하나) — 새 판정 = 거부 (rc 3 · NOT_COMPUTED · S0_REPORT_MISMATCH · 결과 JSON 없음) · 원 판정 다시 판정 = rc 1 REVERIFY_DIFF (원 판정 이름 = 저장본 · 다시 계산 = 멈춤 S0_REPORT_MISMATCH · 등급 다름 True) · 판정 폴더 바이트 그대로  ((0, 'FAIL', None, 0, '팔 0 → rc 0 · 5.0 s · payload 최대 RSS 89324 kB (지문 대조는 다음)\n  G04_P10_corner_a0: 봉인 원천 (조립만) · 런 P10_corner 팔 0 → rc 0 · 5.4 s · payload 최대 RSS 89672 kB (지문 대조는 다음)\nREVERIFY_SAME — 판정 JSON · 결과 JSON 바이트 같음 (3 입력 · 판정 FAIL)\n다시 판정 보고 → /tmp/rint_r_chain_e2e_bou1cpz6/runs/e18_rep_kit/reverify_report.json\n', {'blocking_flags': ['CALIB_ORIGIN_SENSITIVE', 'FIBRE_UNCHECKED', 'GRID_UNCHECKED', 'SVORDER_UNCHECKED', 'SV_DEPENDENT', 'UNREG_UNCHECKED'], 'flags': ['CALIB_ORIGIN_SENSITIVE', 'FIBRE_UNCHECKED', 'GRID_UNCHECKED', 'SVORDER_UNCHECKED', 'SV_DEPENDENT', 'UNREG_UNCHECKED'], 'sentence_allowed': False, 'state': 'positive', 'stop_code': None, 'verdict': 'FAIL'}))
+  PASS  E18g 입력 하나 = 예측 시도 폴더의 팔 JSON 하나 (끝에 공백 하나) — 새 판정 = 거부 (rc 3 · NOT_COMPUTED · ATTEMPT_LEDGER_MISMATCH = 폴더 요약 ≠ 원장 결과 줄) · 원 판정 다시 판정 = rc 1 REVERIFY_DIFF (다시 계산 = 멈춤 ATTEMPT_LEDGER_MISMATCH · 원 판정 이름 = 저장본) · 판정 폴더 바이트 그대로
+  PASS  E18h 입력 하나 = 등록 사본 글 (계획 해시 칸 · 계획 숫자 블록 밖 한 줄) — 새 판정 = rc 0 · 같은 판정 이름 · 결과 JSON 바이트 같음 · 판정 JSON 의 다른 칸 = registration 하나 (sha256) · 원 판정 다시 판정 = rc 1 REVERIFY_DIFF (최종 등급 같음 = 등급 다름 False · 공개 칸 registration · 결과 같음 — 바이트 대조 · 같은 판정이라 부르지 않는다) · 판정 폴더 바이트 그대로
+  PASS  E18i 저장된 판정 결과 JSON 의 값 하나를 바꿈 (reference.G0 + 1) — 다시 판정 = rc 1 REVERIFY_DIFF · 보고 = 결과 다름 True · 다른 결과 칸 이름 = reference 하나 (값 = 봉인 · 이름만) · 등급 다름 False · 다른 공개 칸 없음
+  PASS  E18j (현재 꼴 기록 · RINT2-E01) 저장된 판정 결과 JSON 끝에 공백 하나 (값 같음 · 바이트만 다름) — 다시 판정 = rc 1 REVERIFY_DIFF (바이트 대조 · 화면 "결과 다름") · 보고 칸은 값 대조라 다른 칸이 없다 (results_differ False · 등급 다름 False · 다른 공개 · 결과 칸 이름 없음 — 보고만으로는 까닭을 모른다 · 판정은 막는 쪽 그대로)
+  PASS  E18k 모두 되돌림 (킷 · 팔 · 등록 사본 · 결과 JSON 원 바이트) → 다시 판정 = rc 0 REVERIFY_SAME · 판정 폴더 바이트 = 처음 판정 그대로 · 값 봉인 (다시 판정 화면 · 보고 아홉에 결과 긴 소수 없음)
+
+test_rint_r_chain_e2e: 10 PASS · 1 FAIL (635.6 s)
+  - E18f 입력 하나 = DBE 킷 metrics 파일 (끝에 공백 하나) — 새 판정 = 거부 (rc 3 · NOT_COMPUTED · S0_REPORT_MISMATCH · 결과 JSON 없음) · 원 판정 다시 판정 = rc 1 REVERIFY_DIFF (원 판정 이름 = 저장본 · 다시 계산 = 멈춤 S0_REPORT_MISMATCH · 등급 다름 True) · 판정 폴더 바이트 그대로

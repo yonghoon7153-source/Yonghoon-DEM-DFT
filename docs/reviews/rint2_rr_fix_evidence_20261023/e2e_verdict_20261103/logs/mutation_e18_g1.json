@@ -1,0 +1,65 @@
+[
+ {
+  "id": "BASE",
+  "why": "변이 없음",
+  "rc": 0,
+  "killed": null,
+  "want": null,
+  "want_hit": null,
+  "tail": "test_rint_r_chain_e2e: 11 PASS · 0 FAIL (561.5 s)",
+  "fails": [],
+  "seconds": 562.1
+ },
+ {
+  "id": "V0",
+  "why": "판정 단계 없음 — stage_verdict = rc 0 · 아무것도 안 씀 (판정 · 다시 판정 둘 다)",
+  "rc": 1,
+  "killed": true,
+  "want": "E18b",
+  "want_hit": true,
+  "tail": "test_rint_r_chain_e2e: 1 PASS · 1 FAIL (404.1 s)",
+  "fails": [
+   "E18b"
+  ],
+  "seconds": 404.7
+ },
+ {
+  "id": "V1",
+  "why": "다시 판정 없음 — reverify = rc 0 (다시 계산 · 바이트 대조 · 보고 없음)",
+  "rc": 1,
+  "killed": true,
+  "want": "E18c",
+  "want_hit": true,
+  "tail": "test_rint_r_chain_e2e: 2 PASS · 9 FAIL (517.0 s)",
+  "fails": [
+   "E18c",
+   "E18d",
+   "E18e",
+   "E18f",
+   "E18g",
+   "E18h",
+   "E18i",
+   "E18j",
+   "E18k"
+  ],
+  "seconds": 517.6
+ },
+ {
+  "id": "V2",
+  "why": "다시 판정 바이트 대조 끔 (늘 같음)",
+  "rc": 1,
+  "killed": true,
+  "want": "E18e",
+  "want_hit": true,
+  "tail": "test_rint_r_chain_e2e: 5 PASS · 6 FAIL (721.7 s)",
+  "fails": [
+   "E18e",
+   "E18f",
+   "E18g",
+   "E18h",
+   "E18i",
+   "E18j"
+  ],
+  "seconds": 722.3
+ }
+]

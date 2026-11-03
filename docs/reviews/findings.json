@@ -14958,6 +14958,19 @@
       "evidence_tests": [
         "docs/50kg/codex_kg50_d07_compress_resume_request_20261103.md — §3-4 정정판 · 진행 기록 11-03 · 인계 D0.7 줄 문구 정정 (시험 없음)"
       ]
+    },
+    {
+      "id": "RINT2-E01",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "11-03 끝-끝 E18 (작업 트리 · 1저자 11-03 밤 Q2 · 실물 원장 사슬 → 판정 → 다시 판정 시험 · 저장된 결과 JSON 끝에 공백 하나)",
+      "opened_in": "docs/reviews/codex_rint2_rr_round2_request_20261103.md",
+      "title": "다시 판정 보고 (reverify_report.json) 가 바이트만 다른 저장본의 까닭을 적지 못한다 — 저장된 verdict_results.json 끝에 공백 하나 (값 같음) → result REVERIFY_DIFF (rc 1 · 화면 \"결과 다름\" = 바이트 대조) 인데 보고 칸 results_differ False (파싱한 값 대조) · grade_differ False · public_keys_differ [] · results_keys_differ [] — 보고만 읽으면 다른 칸이 없다 (판정 = 막는 쪽 그대로 · 거짓 SAME 아님)",
+      "note": "자리 = scripts/rint_r_chain.py reverify (same = 판정 JSON · 결과 JSON 바이트 대조) ↔ reverify_report (results_differ · public_keys_differ = 파싱한 JSON 대조) · 판정 JSON (verdict.json) 의 바이트만 다른 꼴도 같은 길 (코드 읽기 · 시험 없음) · 시험 = scripts/test_rint_r_chain_e2e.py E18j (지금 동작을 박음 · 현재 꼴 기록) · 값이 다른 꼴 = E18i (results_differ True · 다른 결과 칸 이름 reference) · 11-03 Q2 = 시험만 범위라 고치지 않음 · 최소 해결 후보 = 보고에 바이트 대조 칸 (예 public_bytes_differ · results_bytes_differ) 을 더하고 화면 · 보고가 같은 말을 하게 · 처분 = 1저자 · Codex 회차 ② 요청서 §8-2 한정.",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain_e2e.py — E18j (현재 꼴 기록) · E18i · 로그 docs/reviews/rint2_rr_fix_evidence_20261023/e2e_verdict_20261103/logs/e2e_full_after.log"
+      ]
     }
   ]
 }

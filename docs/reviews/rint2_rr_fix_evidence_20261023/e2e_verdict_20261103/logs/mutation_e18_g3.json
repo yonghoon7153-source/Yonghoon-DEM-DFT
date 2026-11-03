@@ -1,0 +1,57 @@
+[
+ {
+  "id": "V7",
+  "why": "다시 판정 보고의 등급 다름 = 늘 False",
+  "rc": 1,
+  "killed": true,
+  "want": "E18e",
+  "want_hit": true,
+  "tail": "test_rint_r_chain_e2e: 9 PASS · 2 FAIL (558.9 s)",
+  "fails": [
+   "E18e",
+   "E18f"
+  ],
+  "seconds": 559.4
+ },
+ {
+  "id": "V8",
+  "why": "판정 환경 옆 파일 (verdict_env.json) 안 씀",
+  "rc": 1,
+  "killed": true,
+  "want": "E18b",
+  "want_hit": true,
+  "tail": "test_rint_r_chain_e2e: 8 PASS · 3 FAIL (610.4 s)",
+  "fails": [
+   "E18b",
+   "E18c",
+   "E18d"
+  ],
+  "seconds": 610.9
+ },
+ {
+  "id": "V9",
+  "why": "값 봉인 끔 — 판정이 --show-results 없이도 결과를 화면에",
+  "rc": 1,
+  "killed": true,
+  "want": "E18b",
+  "want_hit": true,
+  "tail": "test_rint_r_chain_e2e: 10 PASS · 1 FAIL (691.8 s)",
+  "fails": [
+   "E18b"
+  ],
+  "seconds": 692.6
+ },
+ {
+  "id": "V10",
+  "why": "다시 판정 보고의 다른 결과 칸 이름 = 늘 빈 목록",
+  "rc": 1,
+  "killed": true,
+  "want": "E18i",
+  "want_hit": true,
+  "tail": "test_rint_r_chain_e2e: 10 PASS · 1 FAIL (619.3 s)",
+  "fails": [
+   "E18i"
+  ],
+  "seconds": 619.9
+ }
+]

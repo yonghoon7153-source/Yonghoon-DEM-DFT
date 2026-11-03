@@ -1,0 +1,9 @@
+
+── E18
+    보고 E18 — 원장 rc [0, 0, 0, 0, 0, 0, 0] · 사다리 ['CALIBRATED', 'CALIBRATED'] (런 [16, 16]) · 예측 PREDICTED (런 24) · 결과 줄 [(1, 'completed'), (2, 'completed'), (3, 'completed')]
+  PASS  E18a 실물 원장 사슬 (producer) — --init · --add 셋 · 사다리 P0 · P1 · 예측 rc 0 · 사다리 CALIBRATED (마지막 런 = sbe_noop · 사다리 단계 끝 no-op) · 예측 PREDICTED (DBE 런만 · no-op 런 요청 없음) · 결과 줄 셋 completed · 폴더 요약 sha = 독립 계산
+    보고 E18 — 판정 rc 0 · None (상태 None) · 표지 None · 입력 0 · 팔 0 · 결과 긴 소수 0 개
+  FAIL  E18b 판정 (실물 producer 출력 · 원장 판정) — rc 0 · 등록 판정 이름 (멈춤 아님) · 입력 = 사다리 P0 · P1 CALIBRATED · 예측 PREDICTED (요약 sha = 독립 계산) · 팔 = 세 요약의 팔 전부 (경로 · sha256 = 파일 독립 계산) · 원장 채택 1 · 2 · 3 · 원장 커밋 = 원장 HEAD · 등록 sha256 = 등록 사본 · 판정 환경 옆 파일 (rint-r-verdict-env-v1 · env = 사슬 env_record) · 결과 JSON 0600 · 값 봉인 (결과 긴 소수가 화면 · 판정 JSON 에 없음)  ((0, None, None, [], 0, 88, [], {}, 'f2cff5e363c5a02e0c355922ddfc0da18eb03ef7', None, [], ''))
+
+test_rint_r_chain_e2e: 1 PASS · 1 FAIL (404.1 s)
+  - E18b 판정 (실물 producer 출력 · 원장 판정) — rc 0 · 등록 판정 이름 (멈춤 아님) · 입력 = 사다리 P0 · P1 CALIBRATED · 예측 PREDICTED (요약 sha = 독립 계산) · 팔 = 세 요약의 팔 전부 (경로 · sha256 = 파일 독립 계산) · 원장 채택 1 · 2 · 3 · 원장 커밋 = 원장 HEAD · 등록 sha256 = 등록 사본 · 판정 환경 옆 파일 (rint-r-verdict-env-v1 · env = 사슬 env_record) · 결과 JSON 0600 · 값 봉인 (결과 긴 소수가 화면 · 판정 JSON 에 없음)

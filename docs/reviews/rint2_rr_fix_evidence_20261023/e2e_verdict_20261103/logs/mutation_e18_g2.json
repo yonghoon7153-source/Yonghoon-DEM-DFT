@@ -1,0 +1,57 @@
+[
+ {
+  "id": "V3",
+  "why": "다시 판정이 결과 JSON 을 대조하지 않음 (공개 JSON 만)",
+  "rc": 1,
+  "killed": true,
+  "want": "E18i",
+  "want_hit": true,
+  "tail": "test_rint_r_chain_e2e: 9 PASS · 2 FAIL (550.9 s)",
+  "fails": [
+   "E18i",
+   "E18j"
+  ],
+  "seconds": 551.3
+ },
+ {
+  "id": "V4",
+  "why": "판정의 킷 다시 해시 (bed_problem) 끔",
+  "rc": 1,
+  "killed": true,
+  "want": "E18f",
+  "want_hit": true,
+  "tail": "test_rint_r_chain_e2e: 10 PASS · 1 FAIL (635.6 s)",
+  "fails": [
+   "E18f"
+  ],
+  "seconds": 636.1
+ },
+ {
+  "id": "V5",
+  "why": "판정의 원장 대조 (ledger_verdict_check) 끔",
+  "rc": 1,
+  "killed": true,
+  "want": "E18g",
+  "want_hit": true,
+  "tail": "test_rint_r_chain_e2e: 9 PASS · 2 FAIL (692.5 s)",
+  "fails": [
+   "E18b",
+   "E18g"
+  ],
+  "seconds": 693.0
+ },
+ {
+  "id": "V6",
+  "why": "판정 기록에 등록 sha256 을 싣지 않음",
+  "rc": 1,
+  "killed": true,
+  "want": "E18h",
+  "want_hit": true,
+  "tail": "test_rint_r_chain_e2e: 9 PASS · 2 FAIL (614.4 s)",
+  "fails": [
+   "E18b",
+   "E18h"
+  ],
+  "seconds": 614.9
+ }
+]

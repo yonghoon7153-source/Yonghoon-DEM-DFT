@@ -36,6 +36,9 @@
   E14 ★ 10-27 묶음 C1b 실물 원장 시도 — --init · --add · 사다리 시도 → 결과 줄 · 폴더 요약 sha (독립 계산) · 런마다 표지
   E15 ★ 10-27 묶음 C1b-2 실물 재실행 — 바닥 런 표지 뒤 사슬 부모 SIGKILL → recover --ledger → --add --resume → 재실행 시도 → CALIBRATED
   E17 ★ 10-28 밤 PC5 §4 #5 시험 고정물 등록 사본 — 계획 숫자 블록 = §2-1 자리 · 표지 각 하나 · 봉인된 등록의 사본도 하나 (러너 없음 · 빠름)
+  E18 ★ 11-03 (Codex 회차 ① §10 "작은 실제 producer → 판정 → 재판정" · 1저자 11-03 밤 Q2) 실물 원장 사슬 (사다리 P0 · P1 · 예측) → 판정 (원장
+      판정 · 원 팔 JSON 에서 다시 계산) → 같은 입력 다시 판정 (같은 · 다른 프로세스) = REVERIFY_SAME → 판정 문턱만 옮김 · 입력 하나씩 (DBE 킷 ·
+      예측 시도 팔 JSON · 등록 사본 글) · 저장된 결과 JSON 을 바꿈 = 거부 또는 REVERIFY_DIFF (원 판정 보존) → 되돌림 = REVERIFY_SAME
   ★ 3판 — 계획 `rint-r-plan-v2` (결과 전 등록 숫자 넷 = 시험 값) · S0 계획 (`ca_s0_census.make_plan` · 정준 바이트) · 등록 사본 두 줄 · `--s0-plan`
 ⚠ PASS 는 사슬 · 러너 · payload 배선이 실물로 이어진다는 증거이지 R_j 값 · 판정의 물리 검증이 아니다 (픽스처 σ 는 의미 없다).
 """
@@ -45,6 +48,7 @@ import glob
 import hashlib
 import io
 import json
+import math
 import os
 import re
 import shutil
@@ -1433,6 +1437,299 @@ def t_reg_fixture():
         '각 하나 · 블록 = 이 계획 (plan_doc_problem None)', first == (1, 1, True) and second == (1, 1, 1, True, None), (first, second))
 
 
+#  ═════════════ ★ 11-03 (1저자 11-03 밤 비준 Q2 · Codex 회차 ① §10 "작은 실제 producer → 게시 / 판정 → 재판정") 실물 판정 · 다시 판정 ═════════════
+#  시험만 (사슬 · 러너 · payload 코드 · 물리 · 판정 규칙 변경 없음).  판정 · 다시 판정 배선의 실물 짝 = 가짜 러너 시험 RV01 – RV04 · UM08 · PC16.
+def _jload(p):
+    try:
+        with open(p, encoding='utf-8') as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return None
+
+
+def _sha(p):
+    with open(p, 'rb') as f:
+        return hashlib.sha256(f.read()).hexdigest()
+
+
+def dir_digest(p):
+    """폴더 바이트 지문 (상대 경로 → sha256 · 시험 쪽 독립 계산) — 판정 폴더가 다시 판정 뒤에도 그대로인지."""
+    out = {}
+    for r, _ds, fs in os.walk(p):
+        for f in fs:
+            q = os.path.join(r, f)
+            out[os.path.relpath(q, p).replace(os.sep, '/')] = _sha(q)
+    return out
+
+
+def proc_env(ws):
+    """따로 프로세스 사슬 env (chain_env 꼴 · e13_env 에서 지연 구동기 칸을 뺌)."""
+    env = e13_env(ws, '', 0)
+    for k in ('SHIM_DELAY_DRIVER', 'E2E_DELAY_MODE', 'E2E_DELAY_S'):
+        env.pop(k, None)
+    return env
+
+
+@contextlib.contextmanager
+def judge_flip():
+    """다시 판정만 등급을 뒤집는 꼴 (가짜 러너 시험 RV02 의 `judge_flip` 과 같은 꼴 · 이 모듈의 RR · 구조 · 입력 같음 · 경계가 옮겨진 흉내) — 판정 함수의
+    x 를 옮긴다: 원 이름이 FAIL 이면 구간 가운데 (안) · 아니면 구간 위 끝 × 1e6 (밖)."""
+    orig = RR.judge
+
+    def flip(vals, x=None, ref=None):
+        r0 = orig(vals) if x is None else orig(vals, x=x, ref=ref)
+        lo, hi = r0['interval_mScm']
+        x2 = math.sqrt(lo * hi) if r0['verdict'] == 'FAIL' else hi * 1e6
+        return orig(vals, x=x2) if ref is None else orig(vals, x=x2, ref=ref)
+    RR.judge = flip
+    try:
+        yield
+    finally:
+        RR.judge = orig
+
+
+def _seal_leaks(res_txt, texts):
+    """값 봉인 — 결과 JSON 의 긴 소수 글자 (σ · W · 구간 · 비) 가 공개 글 (화면 · 판정 JSON · 다시 판정 보고) 에 그대로 나오나 (RV02 꼴 · 정확 글자)."""
+    toks = sorted(set(re.findall(r'\d\.\d{6,}', res_txt)))
+    blob = '\n'.join(texts)
+    return toks, [t for t in toks if t in blob]
+
+
+def t_verdict_real():
+    """★ 11-03 실물 판정 → 다시 판정 — 원장 시도 (사다리 P0 · P1 · 예측 · 실물 러너 · payload · 합성 SBE · DBE 킷 · CPU · 기계 kgy) 로 만든 단계 폴더에
+    `--stage verdict` (원장 판정 · 원 팔 JSON 전부에서 다시 계산 · 킷 다시 해시 · 봉인 원천 다시 조립) → `--reverify` (같은 프로세스 · 따로 프로세스) ·
+    판정 문턱만 옮긴 다시 판정 (RV02 꼴 `judge_flip`) · 입력 하나씩 바꿈 (DBE 킷 metrics 파일 · 예측 시도 팔 JSON · 등록 사본 글 · 저장된 결과 JSON) →
+    거부 (새 판정 = NOT_COMPUTED · 멈춤 이름) 또는 REVERIFY_DIFF (원 판정 이름 · 판정 폴더 바이트 보존) → 모두 되돌림 → REVERIFY_SAME.
+    ⚠ PASS = 판정 · 다시 판정 배선이 실물 producer 출력에서 이어진다는 증거 · 판정 이름 (픽스처 σ) 의 물리 뜻은 없다."""
+    ws = make_root('e18')
+    pp, sp, rp0 = make_plan_and_reg(ws)
+    rp = os.path.join(TD, 'e18_reg.md')                  # E18 만의 등록 사본 (다른 묶음이 TD/reg_ok.md 를 다시 쓴다 · E18h 가 이 사본만 바꾼다)
+    shutil.copy2(rp0, rp)
+    sd = code_repo()
+    runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
+    led = os.path.join(TD, 'ledger_e18')
+    os.makedirs(led)
+    subprocess.run(['git', 'init', '-q', led], check=True, capture_output=True)
+    rcs = [e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--init', '--plan', pp])[0]]
+
+    def add(target):
+        rc_, so_ = e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--add', '--ledger-target', target, '--machine', E2E_MACH,
+                                     '--plan', pp, '--runner', runner, '--root', ws])
+        rcs.append(rc_)
+        m = re.search(r'ATTEMPT_ADDED n=(\d+)', so_)
+        return int(m.group(1)) if m else None
+    dirs, sums, nums = {}, {}, {}
+    for law in ('P0', 'P1'):
+        n = add(f'ladder:{law}')
+        base = os.path.join(TD, 'runs', f'e18_{law}')
+        rc, _so = e2e_call(ws, sd, ['--stage', 'ladder', '--law', law, '--target', str(RR.TARGET_SBE_MS), '--runner', runner, '--root', ws,
+                                    '--plan', pp, '--s0-plan', sp, '--registration', rp, '--max-hours', E2E_MAXH, '--out', base,
+                                    '--machine', E2E_MACH] + s0_args() + ['--ledger', led, '--attempt', str(n)])
+        rcs.append(rc)
+        dirs[law], nums[law] = os.path.join(base, f'attempt_{n}'), n
+        sums[law] = _jload(os.path.join(dirs[law], 'ladder_summary.json')) or {}
+    n = add('predict')
+    pbase = os.path.join(TD, 'runs', 'e18_pred')
+    rc, so_p = e2e_call(ws, sd, ['--stage', 'predict', '--ladders', dirs['P0'], dirs['P1'], '--runner', runner, '--root', ws, '--registration', rp,
+                                 '--max-hours', E2E_MAXH, '--out', pbase, '--machine', E2E_MACH, '--ledger', led, '--attempt', str(n)])
+    rcs.append(rc)
+    dirs['pred'], nums['pred'] = os.path.join(pbase, f'attempt_{n}'), n
+    sums['pred'] = _jload(os.path.join(dirs['pred'], 'predict_summary.json')) or {}
+    lines = [json.loads(x) for x in open(os.path.join(led, 'rint_r_attempts.jsonl'), encoding='utf-8').read().splitlines()]
+    res = {x.get('n'): x for x in lines if x.get('kind') == 'result'}
+    print(f'    보고 E18 — 원장 rc {rcs} · 사다리 {[sums[k].get("status") for k in ("P0", "P1")]} (런 '
+          f'{[len(sums[k].get("runs") or []) for k in ("P0", "P1")]}) · 예측 {sums["pred"].get("status")} (런 {len(sums["pred"].get("runs") or [])}) · '
+          f'결과 줄 {[(k, v.get("status")) for k, v in sorted(res.items(), key=lambda kv: str(kv[0]))]}')
+    fbad = [k for k in ('P0', 'P1', 'pred') if (res.get(nums[k]) or {}).get('folder_sha256') != tree_digest(dirs[k])
+            or (res.get(nums[k]) or {}).get('status') != 'completed']
+    if not chk('E18a 실물 원장 사슬 (producer) — --init · --add 셋 · 사다리 P0 · P1 · 예측 rc 0 · 사다리 CALIBRATED (마지막 런 = sbe_noop · 사다리 단계 끝 no-op) · '
+               '예측 PREDICTED (DBE 런만 · no-op 런 요청 없음) · 결과 줄 셋 completed · 폴더 요약 sha = 독립 계산',
+               all(r == 0 for r in rcs) and len(rcs) == 7 and all(sums[k].get('status') == 'CALIBRATED' for k in ('P0', 'P1'))
+               and all(((sums[k].get('runs') or [{}])[-1]).get('role') == 'sbe_noop' for k in ('P0', 'P1'))
+               and sums['pred'].get('status') == 'PREDICTED' and bool(sums['pred'].get('runs'))
+               and all(x.get('kit') == DBE_KIT for x in sums['pred'].get('runs') or []) and not fbad,
+               (rcs, [sums[k].get('status') for k in ('P0', 'P1', 'pred')], fbad, so_p[-600:])):
+        return
+    runs_in = [dirs['P0'], dirs['P1'], dirs['pred']]
+    vdir = os.path.join(TD, 'runs', 'e18_v')
+
+    def verdict(out):
+        return e2e_call(ws, sd, ['--stage', 'verdict', '--runs'] + runs_in + ['--root', ws, '--registration', rp, '--ledger', led, '--out', out])
+
+    def reverify(out, flip=False):
+        argv = ['--stage', 'verdict', '--reverify', vdir, '--root', ws, '--out', out]
+        if not flip:
+            return e2e_call(ws, sd, argv)
+        with judge_flip():
+            return e2e_call(ws, sd, argv)
+    rcv, sov = verdict(vdir)
+    v = _jload(os.path.join(vdir, 'verdict.json')) or {}
+    ve = _jload(os.path.join(vdir, 'verdict_env.json')) or {}
+    resp = os.path.join(vdir, 'verdict_results.json')
+    res_txt = open(resp, encoding='utf-8').read() if os.path.exists(resp) else ''
+    vtxt = open(os.path.join(vdir, 'verdict.json'), encoding='utf-8').read() if os.path.exists(os.path.join(vdir, 'verdict.json')) else ''
+    want_in = [('ladder', 'P0', 'CALIBRATED', _sha(os.path.join(dirs['P0'], 'ladder_summary.json'))),
+               ('ladder', 'P1', 'CALIBRATED', _sha(os.path.join(dirs['P1'], 'ladder_summary.json'))),
+               ('predict', None, 'PREDICTED', _sha(os.path.join(dirs['pred'], 'predict_summary.json')))]
+    got_in = [(x.get('stage'), x.get('law'), x.get('status'), x.get('summary_sha256')) for x in v.get('inputs') or []]
+    n_arms = sum(len(r.get('arms_read') or []) for k in ('P0', 'P1', 'pred') for r in sums[k].get('runs') or [])
+    abad = [a for a in v.get('arms') or [] if not (os.path.isfile(a.get('path', '')) and _sha(a['path']) == a.get('sha256'))]
+    tg = ((v.get('ledger') or {}).get('targets') or {})
+    head = _git(led, 'rev-parse', 'HEAD')
+    toks, leak = _seal_leaks(res_txt, [sov, vtxt])
+    print(f'    보고 E18 — 판정 rc {rcv} · {v.get("verdict")} (상태 {v.get("state")}) · 표지 {v.get("flags")} · 입력 {len(got_in)} · 팔 {len(v.get("arms") or [])} '
+          f'· 결과 긴 소수 {len(toks)} 개')
+    chk('E18b 판정 (실물 producer 출력 · 원장 판정) — rc 0 · 등록 판정 이름 (멈춤 아님) · 입력 = 사다리 P0 · P1 CALIBRATED · 예측 PREDICTED (요약 sha = 독립 계산) · '
+        '팔 = 세 요약의 팔 전부 (경로 · sha256 = 파일 독립 계산) · 원장 채택 1 · 2 · 3 · 원장 커밋 = 원장 HEAD · 등록 sha256 = 등록 사본 · 판정 환경 옆 파일 '
+        '(rint-r-verdict-env-v1 · env = 사슬 env_record) · 결과 JSON 0600 · 값 봉인 (결과 긴 소수가 화면 · 판정 JSON 에 없음)',
+        rcv == 0 and v.get('stage') == 'verdict' and v.get('stop') is None and v.get('verdict') not in (None, 'NOT_COMPUTED')
+        and got_in == want_in and len(v.get('arms') or []) == n_arms > 0 and not abad
+        and {k: (x or {}).get('adopted') for k, x in tg.items()} == {'ladder:P0': nums['P0'], 'ladder:P1': nums['P1'], 'predict': nums['pred']}
+        and (v.get('ledger') or {}).get('commit') == head and (v.get('registration') or {}).get('sha256') == _sha(rp)
+        and ve.get('schema') == 'rint-r-verdict-env-v1' and ve.get('env') == RR.env_record()
+        and bool(res_txt) and (os.stat(resp).st_mode & 0o777) == 0o600 and bool(toks) and not leak,
+        (rcv, v.get('verdict'), v.get('stop'), got_in, len(v.get('arms') or []), n_arms, abad[:2], tg, head, ve.get('schema'), leak[:3], sov[-600:]))
+    if not os.path.exists(os.path.join(vdir, 'verdict.json')):
+        return
+    d0 = dir_digest(vdir)
+    rep_txt = []
+
+    def rep_of(out):
+        p = os.path.join(out, 'reverify_report.json')
+        if os.path.exists(p):
+            rep_txt.append(open(p, encoding='utf-8').read())
+        return _jload(p) or {}
+    out1 = os.path.join(TD, 'runs', 'e18_rep_same')
+    rc1, so1 = reverify(out1)
+    r1 = rep_of(out1)
+    chk('E18c 같은 입력 다시 판정 (같은 프로세스) — rc 0 · REVERIFY_SAME · 보고 (같음 · 등급 다름 False · 다른 공개 · 결과 칸 없음 · 원 환경 = 옆 파일 · 다른 환경 칸 '
+        '없음) · 판정 폴더 바이트 그대로',
+        rc1 == 0 and 'REVERIFY_SAME' in so1 and r1.get('result') == 'REVERIFY_SAME' and r1.get('grade_differ') is False
+        and r1.get('public_keys_differ') == [] and r1.get('results_differ') is False and r1.get('results_keys_differ') == []
+        and r1.get('env_original') == ve.get('env') and r1.get('env_fields_differ') == [] and dir_digest(vdir) == d0,
+        (rc1, so1[-300:], {k: r1.get(k) for k in ('result', 'grade_differ', 'public_keys_differ', 'results_differ', 'env_fields_differ')}))
+    drv = os.path.join(TD, 'e18_stage_driver.py')
+    with open(drv, 'w', encoding='utf-8') as f:
+        f.write(STAGE_DRIVER)
+    out2 = os.path.join(TD, 'runs', 'e18_rep_proc')
+    cfg = os.path.join(TD, 'e18_cfg.json')
+    with open(cfg, 'w', encoding='utf-8') as f:
+        json.dump({'scripts': SCRIPTS, 'here': sd, 'env': proc_env(ws),
+                   'argv': ['--stage', 'verdict', '--reverify', vdir, '--root', ws, '--out', out2]}, f)
+    pr = subprocess.run([sys.executable, '-I', drv, cfg], cwd=ws, capture_output=True, text=True, timeout=1200)
+    r2 = rep_of(out2)
+    chk('E18d 같은 입력 다시 판정 (따로 프로세스 · 새 인터프리터 · 같은 기계) — rc 0 · REVERIFY_SAME · 보고 같음 · 다른 환경 칸 없음 · 판정 폴더 바이트 그대로',
+        pr.returncode == 0 and 'REVERIFY_SAME' in pr.stdout and r2.get('result') == 'REVERIFY_SAME' and r2.get('grade_differ') is False
+        and r2.get('env_fields_differ') == [] and dir_digest(vdir) == d0,
+        (pr.returncode, (pr.stdout + pr.stderr)[-500:], {k: r2.get(k) for k in ('result', 'grade_differ', 'env_fields_differ')}))
+    out3 = os.path.join(TD, 'runs', 'e18_rep_flip')
+    rc3, so3 = reverify(out3, flip=True)
+    r3 = rep_of(out3)
+    o3, n3 = r3.get('original') or {}, r3.get('recomputed') or {}
+    chk('E18e 같은 입력 · 판정 문턱만 옮긴 다시 판정 (RV02 꼴 · 실물 기록) — rc 1 · REVERIFY_DIFF · 원 판정 이름 = 저장본 · 다시 계산 이름 다름 · 멈춤 아님 (구조 대조 '
+        '통과) · 등급 다름 True · 공개 칸 verdict · 결과 다름 · 판정 폴더 바이트 그대로 (원 판정을 덮지 않는다)',
+        rc3 == 1 and 'REVERIFY_DIFF' in so3 and r3.get('result') == 'REVERIFY_DIFF' and o3.get('verdict') == v.get('verdict')
+        and n3.get('verdict') not in (None, v.get('verdict'), 'NOT_COMPUTED') and n3.get('stop_code') is None and r3.get('grade_differ') is True
+        and 'verdict' in (r3.get('public_keys_differ') or []) and r3.get('results_differ') is True and dir_digest(vdir) == d0,
+        (rc3, so3[-300:], o3, n3, r3.get('grade_differ'), r3.get('public_keys_differ')))
+    #  ── 입력 하나씩 (바꾼 뒤 되돌린다 · 되돌림 = 끝 E18j 의 다시 판정 하나가 본다) ──
+    kitf = os.path.join(ws, DBE_KIT, 'run_1', 'box.json')
+    kit0 = open(kitf, 'rb').read()
+    with open(kitf, 'ab') as f:
+        f.write(b' ')
+    vk = os.path.join(TD, 'runs', 'e18_v_kit')
+    rck, _sok = verdict(vk)
+    k_new = _jload(os.path.join(vk, 'verdict.json')) or {}
+    out4 = os.path.join(TD, 'runs', 'e18_rep_kit')
+    rc4, so4 = reverify(out4)
+    r4 = rep_of(out4)
+    with open(kitf, 'wb') as f:
+        f.write(kit0)
+    chk('E18f 입력 하나 = DBE 킷 metrics 파일 (끝에 공백 하나) — 새 판정 = 거부 (rc 3 · NOT_COMPUTED · S0_REPORT_MISMATCH · 결과 JSON 없음) · 원 판정 다시 판정 = '
+        'rc 1 REVERIFY_DIFF (원 판정 이름 = 저장본 · 다시 계산 = 멈춤 S0_REPORT_MISMATCH · 등급 다름 True) · 판정 폴더 바이트 그대로',
+        rck == 3 and k_new.get('verdict') == 'NOT_COMPUTED' and (k_new.get('stop') or {}).get('code') == 'S0_REPORT_MISMATCH'
+        and not os.path.exists(os.path.join(vk, 'verdict_results.json')) and rc4 == 1 and r4.get('result') == 'REVERIFY_DIFF'
+        and (r4.get('original') or {}).get('verdict') == v.get('verdict') and (r4.get('recomputed') or {}).get('stop_code') == 'S0_REPORT_MISMATCH'
+        and r4.get('grade_differ') is True and dir_digest(vdir) == d0,
+        (rck, k_new.get('verdict'), (k_new.get('stop') or {}).get('code'), rc4, so4[-300:], r4.get('recomputed')))
+    pr0 = [r for r in sums['pred'].get('runs') or [] if r.get('arms_read')][0]
+    armf = os.path.join(dirs['pred'], pr0['outdir'], pr0['arms_read'][0]['file'])
+    arm0 = open(armf, 'rb').read()
+    with open(armf, 'ab') as f:
+        f.write(b' ')
+    va = os.path.join(TD, 'runs', 'e18_v_arm')
+    rca, _soa = verdict(va)
+    a_new = _jload(os.path.join(va, 'verdict.json')) or {}
+    out5 = os.path.join(TD, 'runs', 'e18_rep_arm')
+    rc5, so5 = reverify(out5)
+    r5 = rep_of(out5)
+    with open(armf, 'wb') as f:
+        f.write(arm0)
+    chk('E18g 입력 하나 = 예측 시도 폴더의 팔 JSON 하나 (끝에 공백 하나) — 새 판정 = 거부 (rc 3 · NOT_COMPUTED · ATTEMPT_LEDGER_MISMATCH = 폴더 요약 ≠ 원장 결과 '
+        '줄) · 원 판정 다시 판정 = rc 1 REVERIFY_DIFF (다시 계산 = 멈춤 ATTEMPT_LEDGER_MISMATCH · 원 판정 이름 = 저장본) · 판정 폴더 바이트 그대로',
+        rca == 3 and a_new.get('verdict') == 'NOT_COMPUTED' and (a_new.get('stop') or {}).get('code') == 'ATTEMPT_LEDGER_MISMATCH'
+        and rc5 == 1 and r5.get('result') == 'REVERIFY_DIFF' and (r5.get('recomputed') or {}).get('stop_code') == 'ATTEMPT_LEDGER_MISMATCH'
+        and (r5.get('original') or {}).get('verdict') == v.get('verdict') and dir_digest(vdir) == d0,
+        (rca, a_new.get('verdict'), (a_new.get('stop') or {}).get('code'), rc5, so5[-300:], r5.get('recomputed')))
+    reg0 = open(rp, 'rb').read()
+    with open(rp, 'ab') as f:
+        f.write('\n<!-- E18h 시험 — 계획 해시 칸 · 계획 숫자 블록 밖 한 줄 -->\n'.encode('utf-8'))
+    vr = os.path.join(TD, 'runs', 'e18_v_reg')
+    rcr, _sor = verdict(vr)
+    g_new = _jload(os.path.join(vr, 'verdict.json')) or {}
+    same_res = (os.path.exists(os.path.join(vr, 'verdict_results.json'))
+                and open(os.path.join(vr, 'verdict_results.json'), encoding='utf-8').read() == res_txt)
+    kdiff = sorted(k for k in set(g_new) | set(v) if k != 'input_dirs' and g_new.get(k) != v.get(k))
+    out6 = os.path.join(TD, 'runs', 'e18_rep_reg')
+    rc6, so6 = reverify(out6)
+    r6 = rep_of(out6)
+    with open(rp, 'wb') as f:
+        f.write(reg0)
+    chk('E18h 입력 하나 = 등록 사본 글 (계획 해시 칸 · 계획 숫자 블록 밖 한 줄) — 새 판정 = rc 0 · 같은 판정 이름 · 결과 JSON 바이트 같음 · 판정 JSON 의 다른 칸 = '
+        'registration 하나 (sha256) · 원 판정 다시 판정 = rc 1 REVERIFY_DIFF (최종 등급 같음 = 등급 다름 False · 공개 칸 registration · 결과 같음 — 바이트 대조 · '
+        '같은 판정이라 부르지 않는다) · 판정 폴더 바이트 그대로',
+        rcr == 0 and g_new.get('verdict') == v.get('verdict') and same_res and kdiff == ['registration'] and rc6 == 1
+        and r6.get('result') == 'REVERIFY_DIFF' and r6.get('grade_differ') is False and r6.get('public_keys_differ') == ['registration']
+        and r6.get('results_differ') is False and dir_digest(vdir) == d0,
+        (rcr, g_new.get('verdict'), same_res, kdiff, rc6, so6[-300:], {k: r6.get(k) for k in ('grade_differ', 'public_keys_differ', 'results_differ')}))
+    res0 = open(resp, 'rb').read()
+    rj = json.loads(res0.decode('utf-8'))
+    rj['reference'] = dict(rj.get('reference') or {}, G0=(((rj.get('reference') or {}).get('G0') or 0.0) + 1.0))   # 값 하나 (등록 상수 칸)
+    with open(resp, 'w', encoding='utf-8') as f:
+        json.dump(rj, f, ensure_ascii=False, indent=1, sort_keys=True)
+    out7 = os.path.join(TD, 'runs', 'e18_rep_res')
+    rc7, so7 = reverify(out7)
+    r7 = rep_of(out7)
+    with open(resp, 'wb') as f:
+        f.write(res0)
+    chk('E18i 저장된 판정 결과 JSON 의 값 하나를 바꿈 (reference.G0 + 1) — 다시 판정 = rc 1 REVERIFY_DIFF · 보고 = 결과 다름 True · 다른 결과 칸 이름 = '
+        'reference 하나 (값 = 봉인 · 이름만) · 등급 다름 False · 다른 공개 칸 없음',
+        rc7 == 1 and 'REVERIFY_DIFF' in so7 and r7.get('result') == 'REVERIFY_DIFF' and r7.get('results_differ') is True
+        and r7.get('results_keys_differ') == ['reference'] and r7.get('grade_differ') is False and r7.get('public_keys_differ') == [],
+        (rc7, so7[-300:], {k: r7.get(k) for k in ('results_differ', 'results_keys_differ', 'grade_differ', 'public_keys_differ')}))
+    with open(resp, 'ab') as f:
+        f.write(b' ')
+    out8 = os.path.join(TD, 'runs', 'e18_rep_ws')
+    rc8, so8 = reverify(out8)
+    r8 = rep_of(out8)
+    with open(resp, 'wb') as f:
+        f.write(res0)
+    chk('E18j (현재 꼴 기록 · RINT2-E01) 저장된 판정 결과 JSON 끝에 공백 하나 (값 같음 · 바이트만 다름) — 다시 판정 = rc 1 REVERIFY_DIFF (바이트 대조 · 화면 '
+        '"결과 다름") · 보고 칸은 값 대조라 다른 칸이 없다 (results_differ False · 등급 다름 False · 다른 공개 · 결과 칸 이름 없음 — 보고만으로는 까닭을 '
+        '모른다 · 판정은 막는 쪽 그대로)',
+        rc8 == 1 and 'REVERIFY_DIFF' in so8 and '결과 다름' in so8 and r8.get('result') == 'REVERIFY_DIFF' and r8.get('results_differ') is False
+        and r8.get('grade_differ') is False and r8.get('public_keys_differ') == [] and r8.get('results_keys_differ') == [],
+        (rc8, so8[-300:], {k: r8.get(k) for k in ('results_differ', 'grade_differ', 'public_keys_differ', 'results_keys_differ')}))
+    out9 = os.path.join(TD, 'runs', 'e18_rep_back')
+    rc9, so9 = reverify(out9)
+    r9 = rep_of(out9)
+    _toks, leak2 = _seal_leaks(res_txt, [so1, so3, so4, so5, so6, so7, so8, so9, pr.stdout] + rep_txt)
+    chk('E18k 모두 되돌림 (킷 · 팔 · 등록 사본 · 결과 JSON 원 바이트) → 다시 판정 = rc 0 REVERIFY_SAME · 판정 폴더 바이트 = 처음 판정 그대로 · 값 봉인 (다시 판정 '
+        '화면 · 보고 아홉에 결과 긴 소수 없음)',
+        rc9 == 0 and 'REVERIFY_SAME' in so9 and r9.get('result') == 'REVERIFY_SAME' and dir_digest(vdir) == d0 and len(rep_txt) == 9 and not leak2,
+        (rc9, so9[-300:], r9.get('result'), len(rep_txt), leak2[:3]))
+
+
 def t_prod_form():
     ws = make_root('e6', kit_sh=KIT_SH_PROD)
     out = os.path.join(TD, 'runs', 'e6_P0')
@@ -1470,7 +1767,7 @@ def main():
         for tag, fn in (('E1', t_ladder), ('E6', t_prod_form), ('E8', t_zero_floor), ('E9', t_short_ceiling), ('E10', t_sv_census_dbe),
                         ('E11', t_no_venv), ('E12', t_graph_source), ('E13', t_runner_kill), ('E13t', t_timeout_kill),
                         ('E13p', t_parent_kill), ('E14', t_ledger), ('E15', t_resume_real), ('E16', t_merge_fetch_real),
-                        ('E17', t_reg_fixture)):
+                        ('E17', t_reg_fixture), ('E18', t_verdict_real)):
             if sel and tag not in sel:
                 continue
             print(f'\n── {tag}')
