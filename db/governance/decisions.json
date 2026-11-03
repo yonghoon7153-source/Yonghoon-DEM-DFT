@@ -10759,6 +10759,74 @@
     "근거_발화": "사용자 2026-11-03 (이 세션): 용훈 포메이션 CEI Nd 표 붙여넣기 + 'Nd는 이제 마무리하자' → 🔔 '[CEI Nd] MP_07 Bader 를 닫을지, 싼 시험을 한 번 할지. 권고: 싼 시험 한 번' · '[CEI Nd] Q1 · Q3′ 카드 비준. 권고: 비준이에요. 둘 다 결과 전에 정한 규칙이에요.' 에 '이건 그냥 마무리하고'",
     "decision_digest": "sha256:9357fec64a8a986a6fe54807fa07563cb70b11a3d4e24ba52d2052ff63fd39e9"
    }
+  },
+  {
+   "id": "D-2026-11-03-li2s2-dense-window",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "li2s.glass.transport.dense",
+   "slot": "li2s2_dense_glass_window_ratio",
+   "applies_to": {
+    "systems": [
+     "a_li4ps4cl_glass_dense",
+     "a_li3ps4_glass_dense"
+    ],
+    "tasks": [
+     "melt_quench_fixed_density",
+     "md_diffusion_window",
+     "diffusion_ratio",
+     "activation_energy_difference"
+    ],
+    "methods": [
+     "uma-s-1p1-omat-turbo",
+     "langevin_nvt"
+    ],
+    "use_cases": [
+     "manuscript_relative_only"
+    ]
+   },
+   "title": "li2s-2 — 실험 밀도에 고정해 다시 담금질한 두 유리 (a-Li₄PS₄Cl · a-Li₃PS₄) 의 측정 가능 온도 창 (1 · 2 단계) → 두 유리의 D 비 R(T) · Ea 차 (3 단계는 2 단계 통과 뒤 따로 결정)",
+   "statement": "카드 db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json 이 보고량 · 게이트 · 멈춤 규칙이다: 1 단계 = melt_quench_uma.py --fix_density (B 1.88 · A 1.9135 g/cm³ · NVT · 같은 열욕 · melt 첫 20 ps 압축) 담금질 10 개 (구조 시드 11–15 · kgy 한 기계 · 한 번에 하나) → 시드 게이트 (PS₄ 1.0000 ∧ 최단 원자간 > 2.0 Å) · melt_check · 계마다 < 4/5 면 멈춤 · 2 단계 = 600/650/700/750 K × 시드 11 · 12 × 400 ps (조건부 550 K 800 ps) · 측정 가능 = 시드 둘 다 C1 ∧ C2 통과 ∧ 골격 통과 · |W| ≥ 3 이면 3 단계 후보 · 0 이면 닫음 · 3 단계 (사용자 결정으로만) = R(T) (R 집합 ≥ 4) · ΔEa (세 온도 R 집합 시드 ≥ 4 · 시드별 아레니우스). 상한 1 단계 230 · 2 단계 230 GPU-h. 상대값만 · 단서 (내부 압력 차 > 1 GPa · T₅₀ 거리) 는 같은 문장 안.",
+   "rationale": "옛 트랙 (마감 10-30) 이 두 유리의 D 비 · Ea 를 못 낸 원인 둘 — 모델 유리 밀도 −17 % (분산이 제일 큰 몫) · 게이트를 넘는 온도가 600–650 K 하나 구간 — 을 차례로 고친다 (마감 §6 초안). D3 대신 고정 밀도: D3 만으로는 ±3 % 를 못 맞출 수 있고 MD · 담금질 드라이버가 D3 를 못 쓴다 · 밀도 하나만 바꾸면 옛 트랙과 대조가 깨끗하다. 담금질 한 기계 = 옛 B 의 기계별 갈림 제거.",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "results_seen_note": "새 밀도 유리 결과 0 건 · 옛 트랙 (낮은 밀도) 결과는 봤다 (카드 §0)",
+   "card": "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json",
+   "record": "db/properties/lpscl_glass_dense_window_runlog_2026_11_03.json",
+   "depends_on": [
+    "D-2026-10-30-lpscl-smallcell-glass-track-closed",
+    "D-2026-10-30-li2s-first-author-confirmation-waived",
+    "D-2026-09-27-barrier-hop-count"
+   ],
+   "supersedes": [],
+   "amends": null,
+   "evidence": [
+    "tools/ionic/melt_quench_uma.py --fix_density (sha16 05fd2de2ce69fdf7 · selftest 126/126 · 깨기 4/4)",
+    "db/properties/lpscl_smallcell_glass_track_closed_2026_10_30.json §6 (설계 초안)",
+    "db/properties/lpscl_glass_model_check_sp_readout_2026_10_23.json (밀도 분해)"
+   ],
+   "reopen_criteria": [
+    "없음 — 셀 키움 · 긴 런 · D3 · 다른 온도 · 다른 밀도는 새 카드",
+    "'시드 · 온도를 하나 더' 는 재개 사유가 아니다"
+   ],
+   "enforcement": "1 단계 러너 (Codex DF 뒤 작성): 결정 active 확인 · 드라이버 sha16 고정 · 시드마다 gate_check · melt_check · seed_gate · 상한 장부 — 2 · 3 단계 러너는 각 단계 결정 때",
+   "cost_cap": {
+    "stage1_GPU_h": 230,
+    "stage2_GPU_h": 230,
+    "stage3": "2 단계 뒤 사용자 결정에 적는다",
+    "machine": "1 단계 kgy 단독 (cascade v7 끝 ≈ 11-04 뒤) · 2 · 3 단계 kgy + gabia (시드–기계 대응 두 계 같게)"
+   },
+   "proposed_by": "claude-session-2026-11-03 (friendly)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-03",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 '트랙을 열어봐 · kgy 에서 하면 되려나' · 'codex 리뷰도 받고' (위임 10-30) — Codex DF 회신 반영 뒤 활성 · 활성은 '사용자 (위임 10-30)'"
+    }
+   ]
   }
  ]
 }

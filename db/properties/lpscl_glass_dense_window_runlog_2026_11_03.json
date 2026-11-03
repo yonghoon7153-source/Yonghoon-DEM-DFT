@@ -1,0 +1,17 @@
+{
+ "kind": "runlog",
+ "date": "2026-11-03",
+ "system": "li2s-2 — A a-Li₄PS₄Cl · B a-Li₃PS₄ (120 원자 · 실험 밀도 고정)",
+ "card": "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json",
+ "decision": "D-2026-11-03-li2s2-dense-window (proposed)",
+ "track": "li2s-2 (새 트랙) — 논문 1저자 = 외부 · 위임 10-30 · 사용자 '트랙을 열어봐' (11-03)",
+ "도구_2026_11_03": {
+  "melt_quench_uma.py": "--fix_density ρ · --compress_ps (기본 20) 추가 — NVTBerendsen (BARO taut 100 fs) · melt 첫 구간 밀도 선형 압축 · 담금질 끝 밀도 강제 · plan.json 게이트_입력 NVT · gate_check NVT 갈래 (밀도 = 목표 · 압력 기록) · 옵션 없으면 옛 NPT 경로 그대로",
+  "sha16": "05fd2de2ce69fdf7 (옛 담금질 판 47c7e0aab5d14fbd · 직전 3726995d4bfa834c — --eos_path 추가뿐)",
+  "selftest": "126/126 (새 13: 고정 밀도 끝 1.2 · 단계적 압축 · 압축 뒤 고정 · plan NVT · gate_check 통과 · ⛔ 밀도 조작 잡음 · 옵션 없으면 옛 plan · ⛔ 입력 거부 다섯 · 옵션 없음 무검사)",
+  "깨기": "4/4 빨강 — 압축 안 함 (끝 밀도 검사가 멈춤) · 입력 검사 끔 · gate 허용폭 1.0 · plan 이 옵션 무시 / ⚠ 처음엔 허용폭 깨기가 초록이었다 (density_ok · gate_ok 를 따로 계산) → 한 곳에서 정하게 고침",
+  "by": "agent · 2026-11-03"
+ },
+ "리뷰": "Codex DF — 카드 §0–§8 + 도구 변경 · 회신 대기",
+ "⏭": "Codex DF 회신 → P0 · P1 반영 → 결정 활성 (사용자 (위임 10-30)) → R0 (LiCl 밀도 출처) → 1 단계 kgy 러너 (시드 11–15 · A/B 번갈아 · 시드마다 gate_check · melt_check · seed_gate) → cascade v7 끝 (≈ 11-04) 뒤 발사"
+}

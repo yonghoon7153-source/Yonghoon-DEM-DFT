@@ -40,6 +40,14 @@
 
 ⚠ final.xyz 는 **relax 본**이다 (④ · plan.json 게이트_입력.final_relax). 담금질 원시는 traj.xyz 마지막 프레임뿐이고,
   `--seed_gate` 가 그것을 md_init_raw.xyz 로 뽑는다. (2026-09-24 — 카드 문구가 반대로 적은 적이 있다)
+
+⭐ 2026-11-03 `--fix_density ρ` (li2s-2 카드 db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json §1b):
+  ③ 을 **NVT** 로 바꾼다 — 열욕은 NVTBerendsen 에 같은 taut (BARO taut_fs) · 바로스탯만 없다. melt 첫 --compress_ps 동안
+  시작 밀도 → ρ 로 **밀도에 선형으로 등방 압축** (50 스텝마다 셀·좌표를 같이 늘임) 한 뒤 나머지 melt · 담금질 · 유지는 ρ 고정.
+  plan.json 게이트_입력 의 앙상블이 NVT 로 내려가고 `--gate_check` 는 압력 대신 **밀도 = ρ** 를 본다 (압력은 기록).
+  ⛔ 못 하는 것: 고정 밀도라 UMA 셀에 남는 내부 압력을 없애지 않는다 (thermo.csv P 로 **기록만**) · ρ 가 물리적으로
+     맞는지 모른다 (목표 밀도는 카드가 정한다) · 압축 중 겹침을 따로 막지 않는다 (1200 K 액체에서 압축한다 — melt_check 가
+     압축 **뒤** 반쪽 창 [melt_ps/2, melt_ps] 에서 골격 확산을 본다) · 옵션을 안 주면 옛 NPT 경로와 바이트까지 같은 동작이다.
 """
 from __future__ import annotations
 import argparse, json, math, os, pathlib, re, sys, time
@@ -58,6 +66,35 @@ ENSEMBLE = {"ensemble": "NPT", "thermostat": "Berendsen", "barostat": "Berendsen
             "target_pressure_GPa": 0.0, "barostat_params": dict(BARO),
             "⛔_엄밀성": "Berendsen 은 부피 변동을 정확한 NPT 분포로 표본화하지 않는다 "
                         "(Bernetti–Bussi 2020) — 구조 생성용이지 앙상블 통계용이 아니다."}
+def ensemble_fixed_density(rho_g_cm3, compress_ps):
+    """`--fix_density` 의 앙상블 **선언** — ENSEMBLE 과 같은 자리 (plan.json 게이트_입력) 로 내려간다.
+    읽는 곳: `gate_check` (ensemble == "NVT" 면 압력 대신 밀도를 본다)."""
+    return {"ensemble": "NVT", "thermostat": "Berendsen", "barostat": None,
+            "target_density_g_cm3": float(rho_g_cm3),
+            "thermostat_params": {"taut_fs": BARO["taut_fs"]},
+            "compress": {"over_ps": float(compress_ps), "kind": "등방 · 밀도에 선형 · melt 첫 구간 · 50 스텝마다"},
+            "⛔_엄밀성": "고정 밀도 — 내부 압력은 결과다 (thermo.csv P · 기록만). Berendsen 열욕은 구조 생성용."}
+
+
+def validate_fix_density(rho_g_cm3, compress_ps, melt_ps):
+    """`--fix_density` 입력 검사 — 틀리면 시작하지 않는다 (조용히 고치지 않는다)."""
+    if rho_g_cm3 is None:
+        return
+    if not (rho_g_cm3 > 0 and math.isfinite(rho_g_cm3)):
+        raise SystemExit(f"⛔ --fix_density 는 양수여야 한다 (받은 값 {rho_g_cm3})")
+    if not (compress_ps > 0 and math.isfinite(compress_ps)):
+        raise SystemExit(f"⛔ --compress_ps 는 양수여야 한다 (받은 값 {compress_ps})")
+    if compress_ps > melt_ps:
+        raise SystemExit(f"⛔ --compress_ps {compress_ps} 가 --melt_ps {melt_ps} 보다 길다 — 압축은 melt 안에서 끝나야 한다")
+
+
+def scale_to_density(atoms, rho_g_cm3):
+    """셀과 좌표를 같이 등방으로 늘여 밀도를 ρ 로 맞춘다 (속도는 그대로). 맞춘 밀도를 돌려준다."""
+    s = (density_g_cm3(atoms) / float(rho_g_cm3)) ** (1.0 / 3.0)
+    atoms.set_cell(np.asarray(atoms.get_cell()) * s, scale_atoms=True)
+    return density_g_cm3(atoms)
+
+
 FINAL_RELAX = {"kind": "FIRE", "fmax_eV_A": 0.05, "cell": "fixed",
                "⛔": "밀도는 **마지막 NPT 셀**의 값이고 구조 지표는 그 셀을 고정한 완화 구조의 값이다 "
                      "(개정 ③ — '300 K 평형 유리의 평균값' 이 아니다)."}
@@ -461,21 +498,28 @@ def schedule(T_melt, T_final, quench_rate_K_s, dt_fs):
 
 
 def run_melt_quench(atoms, calc, out, *, seed, T_melt, T_final, melt_ps, quench_rate, hold_ps, dt_fs, save_ps,
-                    pre_relax=True, log=print):
+                    pre_relax=True, fix_density=None, compress_ps=20.0, log=print):
     from ase import units
     from ase.io import write
     from ase.md.nptberendsen import NPTBerendsen
     from ase.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary
     from ase.optimize import FIRE
+    validate_fix_density(fix_density, compress_ps, melt_ps)
     out = pathlib.Path(out); out.mkdir(parents=True, exist_ok=True)
     atoms.calc = calc
     if pre_relax:
         FIRE(atoms, logfile=str(out / "prerelax.log")).run(fmax=1.0, steps=200)
     MaxwellBoltzmannDistribution(atoms, temperature_K=T_melt, rng=np.random.default_rng(seed)); Stationary(atoms)
     dt = dt_fs * units.fs
-    dyn = NPTBerendsen(atoms, dt, temperature_K=T_melt, pressure_au=0.0,
-                       taut=BARO["taut_fs"] * units.fs, taup=BARO["taup_fs"] * units.fs,
-                       compressibility_au=BARO["compressibility_au"])
+    if fix_density is None:
+        dyn = NPTBerendsen(atoms, dt, temperature_K=T_melt, pressure_au=0.0,
+                           taut=BARO["taut_fs"] * units.fs, taup=BARO["taup_fs"] * units.fs,
+                           compressibility_au=BARO["compressibility_au"])
+    else:   # ⭐ li2s-2 — 같은 열욕 (taut) · 바로스탯 없음 · melt 첫 compress_ps 동안 밀도를 ρ 로 끌어올린다
+        from ase.md.nvtberendsen import NVTBerendsen
+        dyn = NVTBerendsen(atoms, dt, temperature_K=T_melt, taut=BARO["taut_fs"] * units.fs)
+        rho0 = density_g_cm3(atoms)
+        n_c = max(1, int(round(compress_ps * 1000 / dt_fs)))
     quench_ps, n_q = schedule(T_melt, T_final, quench_rate, dt_fs)
     n_m = int(round(melt_ps * 1000 / dt_fs)); n_h = int(round(hold_ps * 1000 / dt_fs))
     save_int = max(1, int(round(save_ps * 1000 / dt_fs)))
@@ -498,6 +542,9 @@ def run_melt_quench(atoms, calc, out, *, seed, T_melt, T_final, melt_ps, quench_
         while i < n_steps:
             T_set = Tfun(i); dyn.set_temperature(temperature_K=T_set)
             k = min(chunk, n_steps - i)
+            if fix_density is not None and phase == "melt" and i < n_c:
+                # 이 덩어리가 끝날 때의 목표 밀도로 먼저 맞춘다 — 마지막 덩어리에서 정확히 ρ 에 닿는다
+                scale_to_density(atoms, rho0 + (float(fix_density) - rho0) * min(1.0, (i + k) / n_c))
             for _ in range(k):
                 record(T_set); dyn.run(1); step += 1
             i += k
@@ -507,10 +554,18 @@ def run_melt_quench(atoms, calc, out, *, seed, T_melt, T_final, melt_ps, quench_
                     f"({(time.time()-t0)/60:.1f} min)")
                 sys.stdout.flush()   # ⛔ 로그 리다이렉트 시 블록 버퍼링 — 안 하면 진행 줄이 몇 시간 뒤에 뜬다
     record(T_final); tlog.close()
+    if fix_density is not None:
+        rho_end = density_g_cm3(atoms)
+        if abs(rho_end / float(fix_density) - 1.0) > 1e-9:   # 압축이 덜 끝났거나 셀이 움직였다 — 조용히 넘기지 않는다
+            raise SystemExit(f"⛔ --fix_density {fix_density}: 담금질 끝 밀도 {rho_end:.6f} 가 목표와 다르다")
     FIRE(atoms, logfile=str(out / "final_relax.log")).run(fmax=0.05, steps=2000)
     write(str(out / "final.xyz"), atoms, format="extxyz")
     write(str(out / "final.vasp"), atoms, format="vasp", direct=True, sort=True)
-    return {"quench_ps": quench_ps, "n_steps": {"melt": n_m, "quench": n_q, "hold": n_h}, "wall_min": (time.time() - t0) / 60}
+    info = {"quench_ps": quench_ps, "n_steps": {"melt": n_m, "quench": n_q, "hold": n_h}, "wall_min": (time.time() - t0) / 60}
+    if fix_density is not None:
+        info["fix_density"] = {"target_g_cm3": float(fix_density), "start_g_cm3": rho0, "compress_steps": n_c,
+                               "final_g_cm3": density_g_cm3(atoms)}
+    return info
 
 
 def write_gr_csv(cols, path):
@@ -522,9 +577,13 @@ def write_gr_csv(cols, path):
 
 
 def build_plan(system, seed, sym, density, T_melt, T_final, melt_ps,
-               quench_rate, quench_ps, hold_ps, dt_fs, save_ps):
-    """plan.json 의 내용. **게이트가 읽을 값이 여기서 들어간다** — 읽는 곳은 `--gate_check`."""
-    return {"system": system, "seed": seed, "n_atoms": len(sym),
+               quench_rate, quench_ps, hold_ps, dt_fs, save_ps, fix_density=None, compress_ps=20.0):
+    """plan.json 의 내용. **게이트가 읽을 값이 여기서 들어간다** — 읽는 곳은 `--gate_check`.
+    `fix_density` 를 주면 게이트_입력 의 앙상블이 NVT (ensemble_fixed_density) 로 바뀐다 — 옵션이 없으면 옛 plan 과 같은 키다."""
+    ens = ENSEMBLE if fix_density is None else ensemble_fixed_density(fix_density, compress_ps)
+    extra = {} if fix_density is None else {"fix_density_g_cm3": float(fix_density), "compress_ps": float(compress_ps),
+                                            "card_fix_density": "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json"}
+    return {"system": system, "seed": seed, "n_atoms": len(sym), **extra,
             "composition": {e: sym.count(e) for e in sorted(set(sym))},
             "start_density_g_cm3": density, "T_melt_K": T_melt, "T_final_K": T_final, "melt_ps": melt_ps,
             "quench_rate_K_s": quench_rate, "quench_ps": quench_ps, "hold_ps": hold_ps, "dt_fs": dt_fs,
@@ -532,7 +591,7 @@ def build_plan(system, seed, sym, density, T_melt, T_final, melt_ps,
             "G2_declared_before_results": True,
             "card": "db/properties/lpscl_li2s_interphase_prereg_2026_09_11.json",
             # ⭐ 게이트가 읽는 값 — 누가 읽나: `--gate_check`. 없으면 그 모드가 **기록없음** 으로 fail-closed 한다.
-            "게이트_입력": {"G2_quench_rate_K_s": quench_rate, **ENSEMBLE, "final_relax": FINAL_RELAX,
+            "게이트_입력": {"G2_quench_rate_K_s": quench_rate, **ens, "final_relax": FINAL_RELAX,
                          "G4_band_card": BAND_CARD, "읽는_곳": "melt_quench_uma.py --gate_check <run_dir>"}}
 
 
@@ -733,10 +792,27 @@ def gate_check(run, band_card=BAND_CARD, win_ps=10.0, p_tol=P_TOL_GPA, n_blocks=
                 "P_mean_GPa": float(P.mean()), "P_sd_GPa": float(P.std(ddof=1)) if tail.sum() > 1 else 0.0,
                 "rho_mean": float(rho.mean()), "rho_min": float(rho.min()), "rho_max": float(rho.max()),
                 "rho_last": float(t["density_g_cm3"][-1])})
+    res["rho_flat_pct"] = 100.0 * (res["rho_max"] - res["rho_min"]) / res["rho_mean"]
+    if g and g.get("ensemble") == "NVT":
+        # ⭐ li2s-2 고정 밀도 런 — 압력은 결과 (기록) · 게이트는 '밀도 = 선언값' · 옛 G4 밴드 (1층 카드) 는 해당 없음
+        rt = float(g["target_density_g_cm3"])
+        dev = max(abs(res["rho_min"] / rt - 1.0), abs(res["rho_max"] / rt - 1.0), abs(res["rho_last"] / rt - 1.0))
+        rho_ok = dev <= 1e-4          # ⭐ 한 곳에서만 정한다 — density_ok 와 gate_ok 가 갈리면 깨기 시험이 못 본다 (11-03 실측)
+        res.update({"mode": "NVT_fixed_density", "target_density_g_cm3": rt, "density_max_rel_dev": dev,
+                    "density_ok": rho_ok, "pressure_ok": None, "target_pressure_GPa": None,
+                    "gate_ok": rho_ok, "G4_fires": None, "G4_role": "해당 없음 (고정 밀도 · 1층 밴드 카드 밖)",
+                    "P_role": "기록 — 고정 밀도에서 UMA 셀에 남는 내부 압력 (판정 아님)"})
+        log(f"  NVT 고정 밀도 — 목표 {rt:.4f} · 마지막 {win_ps:.0f} ps ρ {res['rho_min']:.5f}–{res['rho_max']:.5f} "
+            f"(최대 상대 차 {dev:.1e} → {'같음' if res['density_ok'] else '⛔ 다름'}) · ⟨P⟩ {res['P_mean_GPa']:+.3f} GPa (기록)")
+        try:
+            res["hold_trend"] = hold_trend(t, n_blocks)
+        except KeyError as e:
+            res["hold_trend"] = {"⛔": str(e)}
+        return res
     tgt = float(g["target_pressure_GPa"]) if g else 0.0
     res["target_pressure_GPa"] = tgt
     res["pressure_ok"] = abs(res["P_mean_GPa"] - tgt) <= p_tol
-    res["rho_flat_pct"] = 100.0 * (res["rho_max"] - res["rho_min"]) / res["rho_mean"]
+    res["gate_ok"] = res["pressure_ok"]
     c, lo, hi = read_band(band_card)
     res.update({"band_center": c, "band_lo": lo, "band_hi": hi, "band_card": str(band_card),
                 "dev_pct_vs_center": 100.0 * (res["rho_last"] / c - 1.0),
@@ -1484,6 +1560,53 @@ def _selftest():
         chk(hdr[-2:] == ["P_GPa", "P_virial_GPa"] and len(row) == len(hdr)
             and row[-1] not in ("", "nan") and row[-2] != row[-1],
             f"thermo.csv 에 총 압력과 virial 을 **둘 다** 기록하고 서로 다르다 ({row[-2]} / {row[-1]} GPa)")
+    # ③b li2s-2 --fix_density — NVT 고정 밀도 경로 (LJ 배선) · 옵션이 없으면 옛 plan 과 같은 키
+    symF, posF, cellF = build_random_cell("A", seed=5, n_fu=2, density_g_cm3=0.8)
+    with tempfile.TemporaryDirectory() as td:
+        atF = Atoms(symbols=symF, positions=posF, cell=cellF, pbc=True)
+        infoF = run_melt_quench(atF, LennardJones(sigma=2.5, epsilon=0.05, rc=6.0), td, seed=5, T_melt=600, T_final=300,
+                                melt_ps=0.4, quench_rate=3e14, hold_ps=0.02, dt_fs=2.0, save_ps=0.004, pre_relax=False,
+                                fix_density=1.2, compress_ps=0.3, log=lambda *a: None)
+        thF = read_thermo(os.path.join(td, "thermo.csv"))
+        rhoF, tF = thF["density_g_cm3"], thF["t_ps"]
+        chk(abs(density_g_cm3(atF) / 1.2 - 1.0) < 1e-9 and abs(infoF["fix_density"]["final_g_cm3"] / 1.2 - 1.0) < 1e-9
+            and abs(infoF["fix_density"]["start_g_cm3"] - 0.8) < 0.02,
+            f"고정 밀도: 0.8 에서 시작해 담금질 · 완화 끝 밀도가 1.2 (1e-9) — 끝 {infoF['fix_density']['final_g_cm3']:.6f}")
+        ramp, after = rhoF[tF < 0.3 - 1e-9], rhoF[tF >= 0.3 - 1e-9]
+        chk(ramp.size >= 3 and rhoF[0] < 1.15 and np.all(np.diff(ramp) >= -1e-9) and len(set(np.round(ramp, 4))) >= 3,
+            f"고정 밀도: 압축 구간 밀도가 단계적으로 오른다 ({rhoF[0]:.3f} → … · 단계 {len(set(np.round(ramp, 4)))})")
+        chk(after.size > 50 and np.all(np.abs(after - 1.2) < 1e-3), "고정 밀도: 압축 뒤 (melt 나머지 · 담금질 · 유지) 밀도가 1.2 에 머문다")
+        planF = build_plan("A", 5, list(symF), 0.8, 600, 300, 0.4, 3e14, 1.0, 0.02, 2.0, 0.004, fix_density=1.2, compress_ps=0.3)
+        gF = planF["게이트_입력"]
+        chk(gF["ensemble"] == "NVT" and gF["barostat"] is None and gF["target_density_g_cm3"] == 1.2
+            and "target_pressure_GPa" not in gF and planF["fix_density_g_cm3"] == 1.2,
+            "고정 밀도 plan: 게이트_입력 앙상블 = NVT · 목표 밀도 1.2 · 목표 압력 키 없음")
+        (pathlib.Path(td) / "plan.json").write_text(json.dumps(planF, ensure_ascii=False), encoding="utf-8")
+        gcF = gate_check(td, win_ps=0.5, log=lambda *a: None)
+        chk(gcF["mode"] == "NVT_fixed_density" and gcF["gate_ok"] and gcF["pressure_ok"] is None
+            and math.isfinite(gcF["P_mean_GPa"]), "--gate_check: 고정 밀도 런은 압력 대신 밀도를 보고 통과 (압력은 기록)")
+        tp = pathlib.Path(td) / "thermo.csv"
+        lines = tp.read_text(encoding="utf-8").splitlines()
+        cols = lines[-3].split(","); cols[3] = "1.2500"; lines[-3] = ",".join(cols)
+        tp.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        chk(not gate_check(td, win_ps=0.5, log=lambda *a: None)["gate_ok"],
+            "⛔음성: 유지 구간 한 줄의 밀도를 1.25 로 바꾸면 --gate_check 가 잡는다")
+    plan0 = build_plan("A", 5, list(symF), 0.8, 600, 300, 0.4, 3e14, 1.0, 0.02, 2.0, 0.004)
+    chk("fix_density_g_cm3" not in plan0 and plan0["게이트_입력"]["ensemble"] == "NPT"
+        and plan0["게이트_입력"]["target_pressure_GPa"] == 0.0 and plan0["게이트_입력"]["barostat"] == "Berendsen",
+        "옵션이 없으면 plan 은 옛 NPT 0 GPa 그대로 (fix_density 키 없음)")
+    for nm, args in (("밀도 0", (0.0, 20.0, 100.0)), ("밀도 음수", (-1.9, 20.0, 100.0)), ("압축 0 ps", (1.9, 0.0, 100.0)),
+                     ("압축이 melt 보다 김", (1.9, 120.0, 100.0)), ("밀도 nan", (float("nan"), 20.0, 100.0))):
+        try:
+            validate_fix_density(*args); refused = False
+        except SystemExit:
+            refused = True
+        chk(refused, f"⛔음성: --fix_density 입력 거부 — {nm}")
+    try:
+        validate_fix_density(None, 0.0, 0.0); off_ok = True
+    except SystemExit:
+        off_ok = False
+    chk(off_ok, "옵션을 안 주면 (None) 압축 값과 무관하게 검사하지 않는다 (옛 경로)")
     # ④ 배로스탯 대조 잡 — LJ 결정(fcc)으로 배선만. 같은 BARO 를 쓰는지까지 본다
     from ase.build import bulk
     with tempfile.TemporaryDirectory() as td:
@@ -2095,6 +2218,10 @@ def main():
     ap.add_argument("--hold_ps", type=float, default=50.0)
     ap.add_argument("--dt_fs", type=float, default=2.0)
     ap.add_argument("--save_ps", type=float, default=1.0)
+    ap.add_argument("--fix_density", type=float, default=None,
+                    help="⭐li2s-2: 담금질을 NVT 로 — melt 첫 --compress_ps 동안 이 밀도 [g/cm³] 로 압축한 뒤 고정 "
+                         "(같은 Berendsen 열욕 · 바로스탯 없음). 안 주면 옛 NPT 0 GPa 그대로")
+    ap.add_argument("--compress_ps", type=float, default=20.0, help="--fix_density 압축 구간 [ps] (melt 안 · 기본 20)")
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--turbo", action="store_true", help="fairchem inference_settings='turbo' 시도 (없으면 기본으로 내려가고 기록)")
     ap.add_argument("--out_root", help="출력 루트 → <out_root>/<system>/seed<seed>/")
@@ -2187,7 +2314,7 @@ def main():
         r = gate_check(a.gate_check, a.band_card, a.gate_win_ps, n_blocks=a.hold_blocks)
         (pathlib.Path(a.gate_check) / "gate_check.json").write_text(
             json.dumps(r, ensure_ascii=False, indent=1), encoding="utf-8")
-        raise SystemExit(0 if (r["record_has_gate_input"] and r["pressure_ok"]) else 2)
+        raise SystemExit(0 if (r["record_has_gate_input"] and r["gate_ok"]) else 2)
     if a.seed_gate:
         rows = []
         for rd in a.seed_gate:
@@ -2260,16 +2387,20 @@ def main():
     if not (a.system and a.seed is not None and a.out_root):
         ap.error("--system · --seed · --out_root 가 필요하다")
     quench_ps, n_q = schedule(a.T_melt, a.T_final, a.quench_rate, a.dt_fs)
+    validate_fix_density(a.fix_density, a.compress_ps, a.melt_ps)
     sym, pos, cell = build_random_cell(a.system, a.seed, a.density, a.n_fu)
     out = pathlib.Path(a.out_root) / a.system / f"seed{a.seed}"; out.mkdir(parents=True, exist_ok=True)
     plan = build_plan(a.system, a.seed, sym, a.density, a.T_melt, a.T_final, a.melt_ps,
-                      a.quench_rate, quench_ps, a.hold_ps, a.dt_fs, a.save_ps)
+                      a.quench_rate, quench_ps, a.hold_ps, a.dt_fs, a.save_ps,
+                      fix_density=a.fix_density, compress_ps=a.compress_ps)
     (out / "plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=1))
     from ase import Atoms
     from ase.io import write
     at = Atoms(symbols=sym, positions=pos, cell=cell, pbc=True)
     write(str(out / "initial.xyz"), at, format="extxyz")
     print(f"[{a.system} seed{a.seed}] {len(sym)} 원자 · 셀 {cell[0,0]:.2f} Å · 담금질 {quench_ps:.0f} ps ({n_q} 스텝) → {out}", flush=True)
+    print(("  앙상블: NPT Berendsen 0 GPa (옛 경로)" if a.fix_density is None else
+           f"  앙상블: NVT 고정 밀도 {a.fix_density:.5f} g/cm³ (melt 첫 {a.compress_ps:g} ps 동안 압축 · 같은 열욕)"), flush=True)
     if a.dry_run:
         print("dry_run — 여기서 멈춘다"); return
     calc = make_calc(a.device, a.turbo)
@@ -2277,7 +2408,8 @@ def main():
     (out / "plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=1))
     print(f"UMA inference mode: {plan['uma_inference_mode']}", flush=True)
     info = run_melt_quench(at, calc, out, seed=a.seed, T_melt=a.T_melt, T_final=a.T_final, melt_ps=a.melt_ps,
-                           quench_rate=a.quench_rate, hold_ps=a.hold_ps, dt_fs=a.dt_fs, save_ps=a.save_ps)
+                           quench_rate=a.quench_rate, hold_ps=a.hold_ps, dt_fs=a.dt_fs, save_ps=a.save_ps,
+                           fix_density=a.fix_density, compress_ps=a.compress_ps)
     ind = indicators(at.get_chemical_symbols(), at.get_positions(), np.asarray(at.get_cell()))
     gr = partial_gr(at.get_chemical_symbols(), at.get_positions(), np.asarray(at.get_cell()))
     write_gr_csv(gr, out / "gr_partials.csv")
