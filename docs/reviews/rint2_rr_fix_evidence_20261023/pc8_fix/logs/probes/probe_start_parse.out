@@ -1,0 +1,68 @@
+{
+ "ok": [
+  "accepted",
+  [
+   1
+  ]
+ ],
+ "dup_key": [
+  "refused",
+  "ATTEMPT_LEDGER_MISMATCH"
+ ],
+ "nan_utc": [
+  "refused",
+  "ATTEMPT_LEDGER_MISMATCH"
+ ],
+ "inf_n": [
+  "refused",
+  "ATTEMPT_LEDGER_MISMATCH"
+ ],
+ "spacing": [
+  "refused",
+  "ATTEMPT_LEDGER_MISMATCH"
+ ],
+ "n_str": [
+  "refused",
+  "ATTEMPT_LEDGER_MISMATCH"
+ ],
+ "n_float": [
+  "refused",
+  "ATTEMPT_LEDGER_MISMATCH"
+ ],
+ "nul_base": [
+  "refused",
+  "ATTEMPT_LEDGER_MISMATCH"
+ ],
+ "base_dotdot": [
+  "accepted",
+  [
+   1
+  ]
+ ],
+ "base_slash": [
+  "accepted",
+  [
+   1
+  ]
+ ],
+ "n_huge": [
+  "refused",
+  "ATTEMPT_LEDGER_MISMATCH"
+ ],
+ "crlf": [
+  "refused",
+  "ATTEMPT_LEDGER_MISMATCH"
+ ],
+ "bom": [
+  "refused",
+  "ATTEMPT_LEDGER_MISMATCH"
+ ],
+ "nbsp_folder": [
+  "refused",
+  "ATTEMPT_LEDGER_MISMATCH"
+ ],
+ "arabic_digit_folder": [
+  "refused",
+  "ATTEMPT_LEDGER_MISMATCH"
+ ]
+}

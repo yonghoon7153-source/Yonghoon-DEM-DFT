@@ -1,0 +1,4 @@
+BASE chain rc=0
+BASE cj BAN8 rc=0
+BASE b6 R rc=1 (R10 = git 이력 필요 · 사본 트리 환경)
+mutate8 rc=0 2026-11-04T03:16:20Z

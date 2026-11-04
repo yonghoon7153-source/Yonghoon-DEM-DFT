@@ -1,0 +1,47 @@
+donor end record: {'by': 'chain', 'cause': None, 'confirmed': True, 'ended_utc': '2026-11-04T02:53:47Z', 'killed': 0, 'left': [], 'left_after_exit': 0, 'name': 'L01_floor', 'rc': 0, 'schema': 'rint-r-group-v1', 'signal': None, 'token': 'ecb90259252f84da8c9a3d2d638ddc48', 'unsure': None}
+{
+ "control_unconfirmed": {
+  "seen_mark": true,
+  "launch_token": "e06d8a93ff33d09b09c79714ecb7e514",
+  "end_token": "ecb90259252f84da8c9a3d2d638ddc48",
+  "alive_before_recover": true,
+  "unit": {
+   "attempt_groups_problem": "그룹 attempt_1/L01_floor 종료 미확인 (끝 기록의 표지 · 이름 ≠ 시작 기록 · ★ 11-04 PC8-02)",
+   "orphan_cause": [
+    "parent_dead",
+    false
+   ]
+  },
+  "recover_rc": 3,
+  "result_line": null,
+  "runner_group_alive_after_recover": false,
+  "recover_tail": [
+   "recover attempt_1/L01_floor: 미확인 · 옛 끝 기록 (by chain) 의 표지 ecb90259252f · 이름 'L01_floor' ≠ 시작 기록의 표지 e06d8a93ff33 · 이름 'L01_floor' (다른 런의 끝 기록 · 손 고침 · 부분 복사) — 끝 기록을 쓰지 않는다 · 결과 줄 없음 (사람이 본다 · 시작 기록 표지로 찾은 프로세스 = 정리 · 종료 확인 · 죽인 프로세스 1 · ★ 11-02 PC7-04)",
+   "recover — 그룹 기록 1 개 정리 · 미확인 1 (다음 시도 전에 사람이 본다)",
+   "  recover attempt_1: 그룹 attempt_1/L01_floor 종료 미확인 (끝 기록의 표지 · 이름 ≠ 시작 기록 · ★ 11-04 PC8-02) — 결과 줄을 쓰지 않는다 (미확인 · 다음 시도 채택을 막는다)"
+  ]
+ },
+ "foreign_confirmed": {
+  "seen_mark": true,
+  "launch_token": "cac1081fcf1c583a341f654024fccf7d",
+  "end_token": "ecb90259252f84da8c9a3d2d638ddc48",
+  "alive_before_recover": true,
+  "unit": {
+   "attempt_groups_problem": "그룹 attempt_1/L01_floor 종료 미확인 (끝 기록의 표지 · 이름 ≠ 시작 기록 · ★ 11-04 PC8-02)",
+   "orphan_cause": [
+    "parent_dead",
+    false
+   ]
+  },
+  "recover_rc": 3,
+  "result_line": null,
+  "runner_group_alive_after_recover": false,
+  "recover_tail": [
+   "recover attempt_1/L01_floor: 미확인 · 옛 끝 기록 (by chain) 의 표지 ecb90259252f · 이름 'L01_floor' ≠ 시작 기록의 표지 cac1081fcf1c · 이름 'L01_floor' (다른 런의 끝 기록 · 손 고침 · 부분 복사) — 끝 기록을 쓰지 않는다 · 결과 줄 없음 (사람이 본다 · 시작 기록 표지로 찾은 프로세스 = 정리 · 종료 확인 · 죽인 프로세스 1 · ★ 11-02 PC7-04)",
+   "recover — 그룹 기록 1 개 정리 · 미확인 1 (다음 시도 전에 사람이 본다)",
+   "  recover attempt_1: 그룹 attempt_1/L01_floor 종료 미확인 (끝 기록의 표지 · 이름 ≠ 시작 기록 · ★ 11-04 PC8-02) — 결과 줄을 쓰지 않는다 (미확인 · 다음 시도 채택을 막는다)"
+  ]
+ }
+}
+
+no hole — result line written while the runner group is alive: False · result line None

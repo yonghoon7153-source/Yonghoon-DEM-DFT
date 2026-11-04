@@ -1,0 +1,248 @@
+{
+ "PE05o": {
+  "ok": false,
+  "why": {
+   "dead": [
+    [
+     3,
+     true,
+     {
+      "status": null,
+      "side": null,
+      "by": null
+     }
+    ],
+    [
+     0,
+     false,
+     {
+      "status": "interrupted",
+      "side": "pre",
+      "by": "recover"
+     }
+    ]
+   ],
+   "live": [
+    [
+     true,
+     3,
+     true,
+     false,
+     3,
+     true,
+     3,
+     true,
+     {
+      "status": null,
+      "side": null,
+      "by": null
+     }
+    ],
+    [
+     true,
+     3,
+     true,
+     true,
+     3,
+     true,
+     0,
+     false,
+     {
+      "status": "interrupted",
+      "side": "pre",
+      "by": "recover"
+     }
+    ]
+   ],
+   "reused": [
+    [
+     3,
+     true
+    ],
+    [
+     0,
+     false
+    ]
+   ],
+   "nostart": [
+    [
+     3,
+     true,
+     false
+    ],
+    [
+     3,
+     true,
+     true
+    ]
+   ],
+   "other": [
+    [
+     3,
+     true,
+     false,
+     3,
+     true,
+     {
+      "status": null,
+      "side": null,
+      "by": null
+     },
+     false
+    ],
+    [
+     3,
+     true,
+     true,
+     0,
+     false,
+     {
+      "status": "interrupted",
+      "side": "pre",
+      "by": "recover"
+     },
+     true
+    ]
+   ],
+   "old": [
+    [
+     0,
+     false,
+     false,
+     3,
+     true,
+     {
+      "status": "interrupted",
+      "side": "pre",
+      "by": "recover"
+     },
+     false
+    ],
+    [
+     3,
+     true,
+     true,
+     0,
+     false,
+     {
+      "status": "interrupted",
+      "side": "pre",
+      "by": "recover"
+     },
+     true
+    ]
+   ],
+   "scope": [
+    [
+     3,
+     {
+      "status": null,
+      "by": null
+     },
+     null
+    ],
+    [
+     3,
+     {
+      "status": "interrupted",
+      "by": "recover"
+     },
+     null
+    ]
+   ]
+  }
+ },
+ "PE06": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "foreign_confirmed": {
+     "unit": [
+      [
+       false,
+       true
+      ],
+      [
+       true,
+       false
+      ]
+     ],
+     "rc": [
+      0,
+      3
+     ],
+     "led_same": [
+      false,
+      true
+     ],
+     "res": [
+      {
+       "by": "recover",
+       "cause": "parent_dead",
+       "folder": "attempt_1",
+       "folder_sha256": "92493fd52a588534e0310f14cb6340dee50986d85961e040079df672c65290fc",
+       "kind": "result",
+       "n": 1,
+       "resume_ok": true,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null,
+       "utc": "2026-11-04T02:49:39Z"
+      },
+      null
+     ],
+     "alive1": [
+      [
+       11273
+      ],
+      []
+     ],
+     "add": [
+      0,
+      3
+     ]
+    },
+    "foreign_unconfirmed": {
+     "unit": [
+      [
+       true,
+       true
+      ],
+      [
+       true,
+       false
+      ]
+     ]
+    }
+   },
+   "src_done": {
+    "bound_rc0": true,
+    "foreign_rc0": true,
+    "other_name": true,
+    "rc_false": true,
+    "rc_float": true
+   },
+   "groups_problem_none": {
+    "bound": true,
+    "foreign": true,
+    "other_name": true
+   },
+   "recover_group_foreign_no_chain_end": [
+    false,
+    false,
+    true
+   ],
+   "tail": {
+    "foreign_confirmed": [
+     "recover — 그룹 기록 0 개 정리 · 미확인 0",
+     "  recover attempt_1: 결과 줄 interrupted · 결과 post · 원인 parent_dead · 재실행 자격 True"
+    ],
+    "foreign_unconfirmed": [
+     "recover attempt_1/L01_floor: 미확인 · 옛 끝 기록 (by chain) 의 표지 3d506db00583 · 이름 'L01_floor' ≠ 시작 기록의 표지 7de608ffd86a · 이름 'L01_floor' (다른 런의 끝 기록 · 손 고침 · 부분 복사) — 끝 기록을 쓰지 않는다 · 결과 줄 없음 (사람이 본다 · 시작 기록 표지로 찾은 프로세스 = 정리 · 종료 확인 · 죽인 프로세스 1 · ★ 11-02 PC7-04)",
+     "recover — 그룹 기록 1 개 정리 · 미확인 1 (다음 시도 전에 사람이 본다)",
+     "  recover attempt_1: 그룹 attempt_1/L01_floor 종료 미확인 — 결과 줄을 쓰지 않는다 (미확인 · 다음 시도 채택을 막는다)"
+    ]
+   }
+  }
+ }
+}
