@@ -10818,10 +10818,12 @@
    "supersedes": [],
    "amends": null,
    "evidence": [
+    "kb/reviews/codex_DN_reply_li2s2_dm_fixes_2026_11_04.md (NO-GO · DM P0 두 건 해제 · P1 1 · P2 1 → 091689c2 고침 · 카드 v6)",
+    "db/raw/li2s2_dn_mutation_2026_11_04/ (깨기 __MUT__)",
+    "tools/ionic/melt_quench_uma.py (ebaff2f3d2237ac8 · selftest 212/212)",
+    "tools/ionic/li2s2_stage1_runner.py (selftest 83/83 Linux — 진짜 판독 함수 · 진짜 판정 함수로 만든 반례 · 진짜 프로세스 그룹)",
     "kb/reviews/codex_DM_reply_li2s2_dl_fixes_2026_11_04.md (NO-GO · P0 2 → 206d9d52 · 3d97d145 고침 · 카드 v5)",
     "db/raw/li2s2_dm_mutation_2026_11_04/ (깨기 165 / 165 빨강 — 본 판 163 + 시험 구멍 둘 고친 뒤 다시 빨강)",
-    "tools/ionic/melt_quench_uma.py (c2744b7927da30cf · selftest 211/211)",
-    "tools/ionic/li2s2_stage1_runner.py (selftest 83/83 Linux — 진짜 판독 함수 · 진짜 판정 함수로 만든 반례 · 진짜 프로세스 그룹)",
     "kb/reviews/codex_DL_reply_li2s2_dk_fixes_2026_11_04.md (NO-GO · P0 1 · P1 2 → cafc9e99 고침 · 카드 v4)",
     "db/raw/li2s2_dl_mutation_2026_11_04/ (깨기 147 / 147 빨강)",
     "kb/reviews/codex_DJ_reply_li2s2_outage_rule_2026_11_03.md (NO-GO · 정전 복구 방향 찬성 → 89d48885 · 2c36eac9 · 172daf67 고침)",
@@ -10901,6 +10903,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "회신 DM NO-GO (P0 2) → 고침 (thermo 꼬리 시각 · 판정 기록을 내용으로 · 같은 갈래로 도중 끊김 후보의 MD 완료 흔적 · 카드 v5) · 깨기 165/165 · Codex DN 대기"
+    },
+    {
+     "at": "2026-11-04",
+     "state": "proposed",
+     "by": "agent",
+     "note": "회신 DN NO-GO (DM P0 두 건 해제 · P1 1 · P2 1) → 고침 (완료 판단 필드의 타입 오류 = 해석할 수 없는 기록 · NUL 꼬리 문구 · 카드 v6) · 깨기 __MUT__ · Codex DO 대기"
     }
    ]
   },
