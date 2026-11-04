@@ -1,0 +1,29 @@
+{
+  "confirmed_document_pin": "0f284e7db65278acb52dd4666b1b22151604e9ba",
+  "prior_draft_pin": "d0107959955f284df56cb546ee008595d26dac61",
+  "received_zip_bytes": 702645,
+  "received_zip_sha256": "0ab8d2ff63afef986ba92f9eee6458965ece48d3974de02119fdb07736141ae8",
+  "outer_archive": {
+    "members": 6,
+    "hashes": 5,
+    "crc_path_duplicates_symlinks": "PASS"
+  },
+  "embedded_input_equals_local_archive": true,
+  "embedded_input_bytes": 699062,
+  "embedded_input_sha256": "149884c16a1024cd9fa7e377fc8d52d12ad4851bc065d1ee8fa57bafe2b6bdbc",
+  "inner_archive": {
+    "members": 46,
+    "hashes": 45,
+    "crc_path_duplicates_symlinks": "PASS"
+  },
+  "snapshot_files_compared_to_local_git": 32,
+  "recorded_remote_metadata_matches_local_git": true,
+  "remote_metadata_newly_fetched": false,
+  "verbatim_delta_bytes": 301,
+  "removal_restores_initial_draft": true,
+  "other_original_snapshot_files_compared_unchanged": 21,
+  "raw_report_and_result_preserved": true,
+  "external_verifier_rerun": false,
+  "arithmetic_or_research_code_executed": false,
+  "whole_gate": "HOLD"
+}
