@@ -2992,3 +2992,31 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   - 검토자 메모: 자기 자료 도구가 첫 색인에서만 찾다 KeyError → 보조 색인을 합쳐 다시 대조 (제출물 결함 아님).
 - **다음:** 정정 셋을 담은 범위안 v2 (새 경로 `docs/REIL_C4E_E1_1_3_SCOPE_v2_20261104.md` · v1 은 그대로) → 사용자 선택 (또는 재검토) → 승인 요청서 · 판정기 ·
   작성기 초안 · 사전 검토 → 별도 실행 승인. 이 기록은 어느 단계의 실행 승인도 아니다.
+
+## §103 C4-E · E1-1–3 범위안 v2 재검토 회신 접수 — E113_N1 종결 · P1 문서 방향 수용 · P2 즉시 탐침은 정정 필요 (P2_01) · 요청서에 넣을 셋 (F1–F3) · 선택 · 실행 승인 아님 (2026-11-04 KST · 덧붙임 — 위 §0–§102 는 그대로)
+
+- **받은 것 · 보존:** 사용자 업로드 `REIL_C4E_E1_1_3_SCOPE_V2_REVIEW_20261104.zip` (161,338 B · `343a912431b24e491fb33caa59cafdb0c943358147ad6e1622f9d706fea891fa` =
+  전달 영수증) · 대화에 붙인 영수증 (`REIL_SCOPE_V2_REVIEW_DELIVERY_RECEIPT` · 1,477 B `c6ab48fd…` — 포장 도구 반환 기준) · 포장 도구 반환 (rc 0 · 0.452 s).
+  - 커밋 `9a2e0302` (보존 규칙) · `eb972f97` (바이트): `reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/` — ZIP (업로드와 cmp 일치) + `originals/` 23 (안전
+    추출) · PACKAGE_MANIFEST (`91fe9758…` · 3,903 B · 이번에는 `files` 키 22/22 · 목록 밖 없음) · blob 24/24 · 비밀 검사 24 파일 0 건 · URL 계정 형태 0.
+  - `source/bms-balancing/` 5 · `input/` 범위안 v2 = 고정 `c54217a8` · `basis/` 3 = 보존한 v1 범위 검토 회신 (`V1_` 이름) — 9/9 바이트 일치 ·
+    `input/SCOPE_V2_NUMBERED.txt` 는 줄 번호를 빼면 v2 와 같다. 검토자 도구 `package_review_data.py` · `prepare_review_data.py` 는 실행하지 않았다.
+- **판정 (`REVIEW_DECISION.json`):** `DOCUMENT_ONLY_DIRECTION_ACCEPTABLE_P2_PROBE_REQUIRES_CORRECTION` (고정 `c54217a8` · v2 `f101f0a2…` · 20,255 B).
+  - **E113_N1 `CLOSED`.** 보존된 시험 폴더와 실제 실행 이름 규칙을 나눴고, 날짜와 관계없이 지난 실제 시도 경로가 있으면 멈춘다.
+  - **E113_N2 `FOLLOWUP_REQUIREMENTS_BEFORE_EXECUTION_APPROVAL`** — wrapper 의 외곽 출력 보존 · 배타 시작 기록 · 완성 뒤 반환 게시 · 형식 검사 · 첫 절대 기한 ·
+    차단 · 감시 종료와 실행 종료의 구분은 인정. 380 / 860 s · 900 / 1,800 / 12,600 s 의 구분도 적절. 승인 요청서에 넣을 셋:
+    - **F1:** v6 meta 에는 `cleanup` 키가 없다 (v2 의 "meta 의 `cleanup`" 은 틀린 이름) — 근거는 `child.group.status` (= empty) · `child.deadline_hit` (false) ·
+      `child.errors` · timeout 이면 `child.timed_out` · `child.exited_after_kill` · 그리고 `postcheck` · `stage` (launcher 624–632 · 803–806 · 899–906 행 — 다시
+      읽어 확인). meta 나 필요한 필드가 없으면 미확인 (정상 수용 아님).
+    - **F2:** v2 의 "셸 도구 상한에 launcher 가 끊길 일이 없다" 는 공개한 탐침 한계를 넘는 단정이다 — 호출을 떼어 놓으려는 방식이고 장시간 도구 관리 영향은
+      미확인이라고 적는다. 새 장시간 시험 요구는 아니다.
+    - **F3:** 종료가 확인되지 않은 작성 주체 (launcher · wrapper · 자식) 는 `<E>/run` 밖의 외곽 stdout / stderr · meta · 반환 파일에도 쓸 수 있다 — 원본을 보존하고,
+      읽은 범위의 고정 관측 사본 · INCOMPLETE 기록과 최종 봉인을 나눈다 (여러 파일의 원자적 동시 시점이라고 주장하지 않는다). 정확한 대상 목록은 요청서에.
+  - **E113_N3 `P1_ACCEPTABLE_P2_NOT_READY`.** P1 (탐침을 요청서에 명세해 따로 승인 · identity 전에 수행) 은 수용. **P2_01 (P2):** 고정 명령 `… sleep 150; date … >
+    done.tmp && mv …` 의 세미콜론 때문에 `sleep` 이 실패해도 유효한 `done.txt` 가 생기고, v2 의 성공 조건 (done 형식 · tmp 부재 · 프로세스 부재 / Z) 을 채울 수
+    있다 (정적 반례 · 실행 아님). 요구: 준비 · PID 기록 · 대기 성공을 완료 게시의 선행 조건으로 묶고, 실패 단계 · 반환 · 오류 원문을 보존해 성공으로 분류하지
+    않으며, 성공 판정을 띄운 호출의 반환 경계 뒤의 대기 · 종료 관측에 묶는다 (done 존재만으로 생존 시간의 증거로 쓰지 않는다). P1 초안 작성은 막지 않는다.
+  - 유지: a2 한정 수용 · A2_PROC_01 · 재시험 · launcher 변경 요구 없음. 회신은 사용자의 "ㅇㅇ" (재검토 진행) 를 여섯 선택의 기록으로 보지 않았다.
+- **선택 · 실행 승인 아님:** 사용자 선택 (`user_choices_recorded` false) · 탐침 · R1 · 결과 공개 · E1-1–3 · C4-A / B · COMSOL 모두 승인 아님.
+- **다음:** 범위안 v3 (새 경로 `docs/REIL_C4E_E1_1_3_SCOPE_v3_20261104.md` · v1 · v2 그대로) — P2_01 을 고친 탐침 명세 · F1–F3 의 틀린 문장 정정 → 사용자 선택 →
+  (P1 이면) 승인 요청서 · 판정기 · 작성기 초안 · 사전 검토. 이 기록은 어느 단계의 실행 승인도 아니다.
