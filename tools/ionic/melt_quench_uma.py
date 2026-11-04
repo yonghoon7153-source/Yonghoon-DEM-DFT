@@ -3536,6 +3536,20 @@ def _selftest():
         chk(idn == {"seed11.cut1": (True, True), "seed11.cut2": (False, False), "seed11.cut3": (False, False), "seed11": (True, False)},
             "⛔음성 DO 전 리뷰 (소비자 P0 a): 보존 폴더 seed<N>.<붙임> 은 실행 전 기록의 계 · 시드 · run_id 가 plan 과 같을 때만 같은 실행으로 "
             f"식별 (판정이 이름 때문에 invalid 로 새지 않게) · 기록이 없거나 다르면 아니다 ({idn})")
+        # 판정 함수 쪽 (쓰는 쪽) — gate_check 가 예외면 판정 기록에 '모름' (None + 오류) 으로 적고, 그 기록은 보류로 읽힌다 (깨기 DO19 가 드러낸 시험 구멍)
+        _fs("xgw", traj=2)
+        _gc0 = globals()["gate_check"]
+        def _gc_boom(*a_, **k_):
+            raise RuntimeError("selftest gate boom")
+        globals()["gate_check"] = _gc_boom
+        try:
+            vgw = stage1_verdict(pathlib.Path(td_) / "xgw", values=VAL, log=lambda *a: None, reason="selftest — gate 예외")
+        finally:
+            globals()["gate_check"] = _gc0
+        gw_, stg_gw = (vgw.get("gate_check") or {}), folder_stage_detail(pathlib.Path(td_) / "xgw")
+        chk(gw_.get("schedule_complete") is None and "boom" in str(gw_.get("error")) and stg_gw[0] == "unreadable",
+            "⛔음성 DO 전 리뷰 P1 (소비자 t4): 판정 중 gate_check 예외는 False 가 아니라 모름 (None + 오류) 으로 적고, 그 판정 기록이 남은 도중 끊김 "
+            f"폴더는 보류 (재시도 아님) — 쓰는 쪽까지 ({gw_} · {stg_gw})")
         PASSV = {"status": "pass", "reasons": {}, "run_id": RIDF,
                  "provenance": {"files_sha256": {"plan.json": "a" * 64, "thermo.csv": "b" * 64, "traj.xyz": "c" * 64,
                                                  "final.xyz": "d" * 64, "result.json": "e" * 64}}}
@@ -3699,6 +3713,7 @@ def _selftest():
                    {"prev": MIDV, "prev_status": "pass", "new_status": "incomplete", "new_provenance": MIDV["provenance"]}) + "\n",
                    encoding="utf-8")]),
                "mid_hist_summary_pass": _fs("xn", traj=2, after=lambda d: _wv(d, {**MIDV, "history": {"prev_status": "pass"}})),
+               "mid_hist_summary_badtype": _fs("xq", traj=2, after=lambda d: _wv(d, {**MIDV, "history": {"prev_status": 1}})),
                # F3 — plan 전 판정에 진짜 함수가 안 쓰는 열쇠 · 재판정 요약의 과학적 판정
                "no_plan_extra_key": _fs("xo", plan=False, traj=None, thermo=None, after=lambda d: (d / "stage1_verdict.json").write_text(
                    json.dumps({**PRERUN(d), "gate_check": {"schedule_complete": True}}), encoding="utf-8")),
@@ -3751,7 +3766,8 @@ def _selftest():
                   "plan_huge": "unreadable", "plan_deep": "unreadable", "verdict_deep": "unreadable", "thermo_all_nul": "unreadable",
                   "traj_all_nul": "unreadable", "mid_gate_error": "unreadable", "mid_final_structure": "unreadable",
                   "mid_seed_gate_view": "unreadable", "mid_frames_plan": "unreadable", "mid_frames_plan_ok": "md_incomplete",
-                  "mid_hist_line_mismatch": "unreadable", "mid_hist_summary_pass": "unreadable", "no_plan_extra_key": "unreadable",
+                  "mid_hist_line_mismatch": "unreadable", "mid_hist_summary_pass": "unreadable", "mid_hist_summary_badtype": "unreadable",
+                  "no_plan_extra_key": "unreadable",
                   "no_plan_hist_summary_pass": "unreadable",
                   "thermo_garbage_mid": "unreadable", "thermo_bad_cadence": "unreadable", "thermo_no_header": "unreadable", "thermo_wrong_header": "unreadable",
                   "traj_partial_end": "unreadable", "traj_garbage_mid": "unreadable", "traj_nul_tail": "md_incomplete"}
@@ -3770,6 +3786,10 @@ def _selftest():
         chk(all(want_dn[k] in (rs_dn[k] or "") for k in want_dn),
             "⛔음성 DN P1: 완료 판단 필드가 있는데 타입이 틀리면 (n:\"5\" · expected 0 · schedule_complete:\"true\" · provenance 글자 · 빈 지문 · "
             f"이력의 새 판정 지문 글자) '해석할 수 없는 기록' 이유로 보류한다 — 다른 갈래의 보류와 구별 ({rs_dn})")
+        rs_f2 = {k: folder_stage_detail(pathlib.Path(td_) / k)[1] for k in ("x6", "x7")}   # final_is_dir · result_dangling
+        chk(all("파일이 아닌 것" in (r_ or "") for r_ in rs_f2.values()),
+            "⛔음성 DO 전 리뷰 F2: final · result 자리에 디렉터리 · 깨진 링크가 있으면 그 이유로 보류한다 (MD 중 파일 목록 검사와 구별 · 사람이 보는 "
+            f"보류 이유 · 깨기 DO6 이 드러낸 시험 구멍) ({rs_f2})")
         rs_pf = {k: folder_stage_detail(pathlib.Path(td_) / k)[1] for k in ("v6", "w3")}   # mid_history_pass · mid_history_pass_nofinal
         chk(all("과학적 판정 (pass)" in (r_ or "") for r_ in rs_pf.values()),
             "⛔음성 DM P0-2: 도중 끊김 후보의 pass 이력은 '과학적 판정' 이유로 보류한다 — 해석할 수 없는 상태와 구별 (사람이 보는 보류 이유 · "
@@ -3862,6 +3882,10 @@ def _selftest():
               "closes_true": run_kind({"status": "orphaned", "closes_system": True}, _vf("n", None)),
               "closes_str": run_kind({"closes_system": "true"}, _vf("o", None)),
               "melt_check_bad": run_kind({"melt_check": "fail"}, _vf("p", None)),
+              # 꼴이 틀린 melt_check (러너는 fail · invalid 일 때만 dict 로 쓴다) — 끊긴 런으로 새지 않는다 (깨기 DO24 가 드러낸 시험 구멍)
+              "melt_check_pass_dict": run_kind({"status": "interrupted", "melt_check": {"verdict": "pass"}}, _vf("s", None)),
+              "melt_check_empty": run_kind({"status": "interrupted", "melt_check": []}, _vf("t", None)),
+              "melt_check_zero": run_kind({"status": "interrupted", "melt_check": 0}, _vf("u", None)),
               # 판정 이력의 과학적 판정 (현재 판정이 incomplete 여도)
               "history_fail": run_kind({}, _vf("q", '{"status": "incomplete"}')),
               "verdict_tmp": run_kind({}, _vf("r", None))}
@@ -3874,7 +3898,8 @@ def _selftest():
               "folder_pass": "scientific", "ledger_fail": "scientific", "folder_cut": "unreadable", "ledger_unknown": "unreadable",
               "incomplete": "interrupted", "no_folder": "interrupted", "cut_folder_invalid": "interrupted", "orphan_was_ended": "invalid",
               "melt_invalid_kill": "invalid", "melt_fail_kill": "scientific", "closes_true": "scientific", "closes_str": "unreadable",
-              "melt_check_bad": "unreadable", "history_fail": "scientific", "verdict_tmp": "unreadable", "bad_row": "unreadable"}
+              "melt_check_bad": "unreadable", "melt_check_pass_dict": "unreadable", "melt_check_empty": "unreadable", "melt_check_zero": "unreadable",
+              "history_fail": "scientific", "verdict_tmp": "unreadable", "bad_row": "unreadable"}
     chk(rk == exp_rk,
         "⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid "
         "판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = invalid · 녹음 fail · closes_system · 이력의 fail = 과학적 · 꼴이 틀린 "

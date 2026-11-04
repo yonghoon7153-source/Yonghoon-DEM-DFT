@@ -102,7 +102,7 @@ DI 수정:
 from __future__ import annotations
 import argparse, datetime, hashlib, importlib.util, json, os, pathlib, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "158d994ed5a66af6"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "c000aee9d688e77c"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 EXPECTED_VALUES_SHA16 = "086de59c484f9c32"     # 카드 기계_판독_값 (mq.values_sha16) — ⭐ DO 전 리뷰 P2-12: 카드 값 (상한 포함) 을 바꾸면 이 줄도
                                                #   같이 바꾸고 다시 리뷰한다 (카드 파일만 고쳐서는 상한 멈춤을 넘기지 못한다)
 STOP_KEYS = ("at", "code", "reason", "terminal", "stop_id", "run_id", "sys", "seed", "cleanup", "rc", "verdict", "melt", "summary",
@@ -1015,9 +1015,13 @@ def _selftest():
     stage1_summary · 카드 검사) — 회신 DG ④: 판독기를 가짜로 바꾸면 판독 예외 · 산출물 검증 누락을 못 본다."""
     import numpy as np
     ok = bad = 0
+    failfast = os.environ.get("LI2S2_SELFTEST_FAILFAST") == "1"   # 변이 실행용 — 첫 빨강에서 멈춘다 (빨강 · 초록 판정은 같다 · 시간만 준다)
     def chk(c, m):
         nonlocal ok, bad
         print(("  ⭕ " if c else "  ⛔ ") + m); ok += bool(c); bad += (not c)
+        if failfast and not c:                               # SystemExit — finally · atexit (임시 폴더 지우기) 는 그대로 돈다
+            print(f"li2s2_stage1_runner selftest: ⭕ {ok} · ⛔ {bad} (첫 빨강에서 멈춤 · LI2S2_SELFTEST_FAILFAST=1)", flush=True)
+            raise SystemExit(1)
     repo = pathlib.Path(__file__).resolve().parents[2]
     real = load_mq(repo)
     tmp_root = pathlib.Path(tempfile.mkdtemp(prefix="li2s2_runner_st_"))
@@ -2376,6 +2380,7 @@ def _selftest():
         l_["runs"][0]["wall_h"] = 0
         return json.dumps(l_).replace('"wall_h": 0,', '"wall_h": 1' + "0" * 400 + ",", 1)
     led_t = {"wall_str": (_led_edit(lambda l_: l_["runs"][0].update(wall_h=str(l_["runs"][0]["wall_h"]))), "유한한 비음수"),
+             "heartbeat_str": (_led_edit(lambda l_: l_["runs"][0].update(wall_h_so_far="0.5")), "유한한 비음수"),
              "end_false": (_led_edit(lambda l_: l_["runs"][0].update(end=False)), "끝 시각"),
              "seed_float": (_led_edit(lambda l_: l_["runs"][0].update(seed=float(l_["runs"][0]["seed"]))), "계 · 시드 꼴"),
              "closes_str": (_led_edit(lambda l_: l_["runs"][0].update(closes_system="true")), "참거짓"),
@@ -2391,6 +2396,13 @@ def _selftest():
         "⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · "
         "10^400 · heartbeat 보다 작은 측정 비용 → 무효 (죽지 않음) · 장부에만 적힌 첫 시드 닫힘 → stop_track · 잘린 현재 판정 → 무효 (죽지 않음) "
         f"({ {k: x for k, x in got_l.items() if not x} } · {s_close['track']} · {s_tv['track']})")
+    clk_ = lambda sec: {"host": "h", "boot_id": "b", "kind": "CLOCK_BOOTTIME", "seconds": sec}
+    oh_ = {"ok": _orphan_upper_hours({"start_recovery_clock": clk_(100.0), "wall_h_so_far": 0.5}, clk_(7300.0)),
+           "start_str": _orphan_upper_hours({"start_recovery_clock": clk_("100"), "wall_h_so_far": 0.5}, clk_(7300.0)),
+           "now_bool": _orphan_upper_hours({"start_recovery_clock": clk_(0.0), "wall_h_so_far": 0.5}, clk_(True)),
+           "lower_str": _orphan_upper_hours({"start_recovery_clock": clk_(100.0), "wall_h_so_far": "0.5"}, clk_(7300.0))}
+    chk(oh_["ok"] == 2.0 and oh_["start_str"] is None and oh_["now_bool"] is None and oh_["lower_str"] is None,
+        f"⛔음성 DO 전 리뷰 P1-3 (러너): 고아 런 상한의 시계 · 하한이 글자 · 참거짓이면 상한을 내지 않는다 (비용 미확정 → 증언) ({oh_})")
     cu_ = {"cap_orphan_outage": E([run0(status="orphaned", status_before_orphan="cap")], rcpt("cap", OUT), {R0: ufold("cpo")}),
            "cap_orphan_raise": E([run0(status="orphaned", status_before_orphan="cap")],
                                  rcpt("cap", {**OUT, "retry_reason": "budget_cap_raised"}), {R0: ufold("cpr")})}
