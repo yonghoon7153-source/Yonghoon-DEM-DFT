@@ -1,0 +1,725 @@
+{
+ "primary": {
+  "T_K": 1000,
+  "delta_lnD": 0.405465,
+  "n_parents_declared": 10,
+  "n_valid": 6,
+  "L_bar": 0.09359528436651506,
+  "sd": 0.06137114343034584,
+  "SE": 0.02505466438925123,
+  "t": 2.571,
+  "df": 5,
+  "ci_ln": [
+   0.02917974222175014,
+   0.15801082651127996
+  ],
+  "ratio": 1.098115231570704,
+  "ci_ratio": [
+   1.0296096421688097,
+   1.1711788744203255
+  ],
+  "verdict": "실질_동등_지지",
+  "sign_count": "L_k > 0 : 5/6 · < 0 : 1/6"
+ },
+ "parents": {
+  "A": {
+   "D_bar_P1": 2.8249031767559354e-05,
+   "D_bar_P2": null,
+   "⛔": "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+  },
+  "B": {
+   "D_bar_P1": 2.5075723743447998e-05,
+   "D_bar_P2": 2.5570415227404246e-05,
+   "R": 0.9806537563212474,
+   "lnR": -0.01953583144168665
+  },
+  "C": {
+   "D_bar_P1": 2.8035168605604405e-05,
+   "D_bar_P2": 2.56185909744241e-05,
+   "R": 1.0943290610163867,
+   "lnR": 0.0901414458075266
+  },
+  "D": {
+   "D_bar_P1": 2.6370485080878307e-05,
+   "D_bar_P2": 2.3284612079012836e-05,
+   "R": 1.1325284265588804,
+   "lnR": 0.12445267877427757
+  },
+  "E": {
+   "D_bar_P1": null,
+   "D_bar_P2": 2.427207543418191e-05,
+   "⛔": "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+  },
+  "F": {
+   "D_bar_P1": 2.561530884526049e-05,
+   "D_bar_P2": null,
+   "⛔": "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+  },
+  "G": {
+   "D_bar_P1": 2.614653319003477e-05,
+   "D_bar_P2": 2.3786248504285836e-05,
+   "R": 1.0992289593427755,
+   "lnR": 0.09460898797476079
+  },
+  "H": {
+   "D_bar_P1": 2.8531654891994944e-05,
+   "D_bar_P2": null,
+   "⛔": "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+  },
+  "I": {
+   "D_bar_P1": 2.9426860154551747e-05,
+   "D_bar_P2": 2.49969034177478e-05,
+   "R": 1.1772202205517457,
+   "lnR": 0.1631559140490166
+  },
+  "J": {
+   "D_bar_P1": 2.7699494676619376e-05,
+   "D_bar_P2": 2.4845226940635236e-05,
+   "R": 1.1148819345785843,
+   "lnR": 0.10874851103519544
+  }
+ },
+ "card": "db/properties/cascade_estimand_card_v7_probe_2026_10_01.json + db/properties/cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json (집계 = v6 §4)",
+ "T_star_K": 1000,
+ "protocol": {
+  "prod_ps": 400.0,
+  "dt_fs": 2.0,
+  "save_fs": 100.0
+ },
+ "probe_json": "/home/kgy/wt_cv7main_1028/db/raw/cascade_v7_probe_2026_10_03/cascade_v7_probe.json",
+ "claim_scope": "사전 지정된 탐침 규칙으로 선택한 T* K에서, UMA·공통 고정셀·준비 및 자격 조건 아래의 P1/P2 확산 비를 평가했다. 등가영역 내 판정은 이 조건에 한정하며, 600 K·작동 온도·실제 재료의 동등성을 뜻하지 않는다. 결론은 전체 배열이 아니라 **자격 통과 집합에 조건부**다 (회신 CP P0-3). T* 는 '확산이 시작되는 최저 온도' 가 아니라 지정 사다리·시드에서 운영 기준을 통과한 온도다.",
+ "excluded_probe_seed_runs": [],
+ "tool": {
+  "commit": "2331c488b3e420079e8df54e7ac8ccb72e4b9287",
+  "dirty": false
+ },
+ "⚠_인용정책": "1저자 2026-09-18 — 계 간 상대차로만. 절대 D 인용 금지 · UMA·표집·부피·T* 조건부",
+ "eligibility": {
+  "n_runs": 40,
+  "n_eligible": 36,
+  "ignore_eligibility": false,
+  "partial": false,
+  "reason_tally": {
+   "검사불가": 1,
+   "①_D_inc_plateau": 1,
+   "②_부창_기울기비": 0,
+   "③_사건수": 0,
+   "사건수_최소_중앙_최대": [
+    22511,
+    23124,
+    23747
+   ]
+  },
+  "binding": "온도(msd·aimd·폴더·태그·T*)·prod·dt·save·시간축 끝",
+  "framework_alarm": "거부권만"
+ },
+ "rows": [
+  {
+   "structure": "P1_Al2O3_A",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P1_Al2O3_A__T1000__s1",
+   "D": 2.651505137811368e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22946,
+   "reasons": [
+    "D_inc plateau (산포 3%) · 홉 36.2/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_A__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "eb889a4c17e7338213d69df700675c27a7db2d0082fe90a946149625c5f5739d"
+  },
+  {
+   "structure": "P1_Al2O3_A",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P1_Al2O3_A__T1000__s2",
+   "D": 2.9983012157005024e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22748,
+   "reasons": [
+    "D_inc plateau (산포 5%) · 홉 40.1/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_A__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "22d46720f1a5062a834e1749f14eb12f3a737a674fef1777a5611c1f743f0d7d"
+  },
+  {
+   "structure": "P1_Al2O3_B",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P1_Al2O3_B__T1000__s1",
+   "D": 2.4355613872923333e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22686,
+   "reasons": [
+    "D_inc plateau (산포 7%) · 홉 35.6/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_B__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "3195c73c769db8e03b9c0f6c9189eed4bab4861e574e1756ad6b64c27e806c40"
+  },
+  {
+   "structure": "P1_Al2O3_B",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P1_Al2O3_B__T1000__s2",
+   "D": 2.5795833613972663e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22861,
+   "reasons": [
+    "D_inc plateau (산포 4%) · 홉 32.6/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_B__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "f1c2c13e2de569d26165ce37e9241003a05a60988190f99be17ff262e94d184d"
+  },
+  {
+   "structure": "P1_Al2O3_C",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P1_Al2O3_C__T1000__s1",
+   "D": 2.8701742674717513e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22984,
+   "reasons": [
+    "D_inc plateau (산포 4%) · 홉 39.9/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_C__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "e99cfe7ef59dd6826fe31c495f550eefa20ed75cfb66b2cda8c40c1484972da7"
+  },
+  {
+   "structure": "P1_Al2O3_C",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P1_Al2O3_C__T1000__s2",
+   "D": 2.7368594536491293e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22783,
+   "reasons": [
+    "D_inc plateau (산포 5%) · 홉 36.5/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_C__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "5860feaca8ac1983413a81a024b3d800e6c867f178f0fd795c090079ca6ef535"
+  },
+  {
+   "structure": "P1_Al2O3_D",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P1_Al2O3_D__T1000__s1",
+   "D": 2.5434130229285784e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22705,
+   "reasons": [
+    "D_inc plateau (산포 8%) · 홉 31.3/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_D__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "8bdb18174a91fa3b0305b3c43336b95608eda1da50343ee8f68fe1763f575628"
+  },
+  {
+   "structure": "P1_Al2O3_D",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P1_Al2O3_D__T1000__s2",
+   "D": 2.730683993247083e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22863,
+   "reasons": [
+    "D_inc plateau (산포 5%) · 홉 37.6/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_D__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "a2449c1257911f01faad23318d8efef0d8a846a3aa33648fbf0d15e8ef9ca910"
+  },
+  {
+   "structure": "P1_Al2O3_E",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P1_Al2O3_E__T1000__s1",
+   "D": 2.6557732348689328e-05,
+   "eligible": false,
+   "framework_alarm": "alarm",
+   "events_per_run": 22726,
+   "reasons": [
+    "D_inc plateau (산포 6%) · 홉 34.5/이온",
+    "⛔ 골격 경보 alarm — 거부권 (경보 통과는 인증이 아니다 · 회신 CP P1)"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_E__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "acfc66b8c855e3f0be9c3f0d5a2b99dbbdd5e04f12e0d2ef2360d3f81e2f9d8f"
+  },
+  {
+   "structure": "P1_Al2O3_E",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P1_Al2O3_E__T1000__s2",
+   "D": 2.8399592371097887e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22724,
+   "reasons": [
+    "D_inc plateau (산포 3%) · 홉 39.4/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_E__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "cb1cba1f3da7d27143500df84f3539c7857e7d620922121363d87f45a7c5b155"
+  },
+  {
+   "structure": "P1_Al2O3_F",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P1_Al2O3_F__T1000__s1",
+   "D": 2.465840739571207e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22631,
+   "reasons": [
+    "D_inc plateau (산포 3%) · 홉 33.0/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_F__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "5464ebf8b5d650b290a2a1c27faa9c5097e4af5e5bb38fdc2d30053033547dcf"
+  },
+  {
+   "structure": "P1_Al2O3_F",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P1_Al2O3_F__T1000__s2",
+   "D": 2.6572210294808913e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22641,
+   "reasons": [
+    "D_inc plateau (산포 4%) · 홉 35.0/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_F__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "de79a9827a28e9eaad33c966e9a7cfd464823bc959f1f865da35821dfb916f16"
+  },
+  {
+   "structure": "P1_Al2O3_G",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P1_Al2O3_G__T1000__s1",
+   "D": 2.598794375984303e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22589,
+   "reasons": [
+    "D_inc plateau (산포 4%) · 홉 35.7/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_G__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "cf22d2b22932e561331e243397f7ea9bf4c2b3e13f6db33ba5004e8cbc90c1ac"
+  },
+  {
+   "structure": "P1_Al2O3_G",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P1_Al2O3_G__T1000__s2",
+   "D": 2.6305122620226513e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22511,
+   "reasons": [
+    "D_inc plateau (산포 4%) · 홉 35.5/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_G__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "deb3c72ecea73dc0b500b8f61837f45f91c0dac9a59c627b149267d092170064"
+  },
+  {
+   "structure": "P1_Al2O3_H",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P1_Al2O3_H__T1000__s1",
+   "D": 2.5997047826578423e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23178,
+   "reasons": [
+    "D_inc plateau (산포 5%) · 홉 34.6/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_H__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "46afc2f96c0d171f155ac8bd4977620b8973518968c2e625766c554062895b04"
+  },
+  {
+   "structure": "P1_Al2O3_H",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P1_Al2O3_H__T1000__s2",
+   "D": 3.106626195741146e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22711,
+   "reasons": [
+    "D_inc plateau (산포 2%) · 홉 42.1/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_H__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "a7bd8595cde8f7391c4ba36106a2a64b390cb9699163aa48193dc0fa74e69e86"
+  },
+  {
+   "structure": "P1_Al2O3_I",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P1_Al2O3_I__T1000__s1",
+   "D": 2.9902054715780876e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22830,
+   "reasons": [
+    "D_inc plateau (산포 3%) · 홉 42.3/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_I__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "f39d7d93bc6c0138e0a31bff671ec2152a184a0a18505ebe80b538f38b191ae0"
+  },
+  {
+   "structure": "P1_Al2O3_I",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P1_Al2O3_I__T1000__s2",
+   "D": 2.895166559332262e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23356,
+   "reasons": [
+    "D_inc plateau (산포 2%) · 홉 40.5/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_I__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "b38df1f7117823ba0058310b936b515c31107748133c625df3bb7b20f8b1a9c1"
+  },
+  {
+   "structure": "P1_Al2O3_J",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P1_Al2O3_J__T1000__s1",
+   "D": 3.0596207924448516e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22800,
+   "reasons": [
+    "D_inc plateau (산포 7%) · 홉 38.1/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_J__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "85bfd900e09bb68ec6706ffded3cc8497f95347ef881414dfd836efd531ed1ec"
+  },
+  {
+   "structure": "P1_Al2O3_J",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P1_Al2O3_J__T1000__s2",
+   "D": 2.4802781428790233e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 22807,
+   "reasons": [
+    "D_inc plateau (산포 7%) · 홉 30.8/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P1_Al2O3_J__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "96bbeaed27c78b6f68292d1c842bd245de6520739cef3bf738222205a9f2cb73"
+  },
+  {
+   "structure": "P2_Al2S3_A",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P2_Al2S3_A__T1000__s1",
+   "D": 2.2207975455597253e-05,
+   "eligible": false,
+   "framework_alarm": null,
+   "events_per_run": 23397,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 11% > 10%, 추세 -11%)"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_A__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "3afeda9e271250369d2c6f6c2945466cc32057887dd8df7ca7b7e03d80e73604"
+  },
+  {
+   "structure": "P2_Al2S3_A",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P2_Al2S3_A__T1000__s2",
+   "D": 2.6978108197417153e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23124,
+   "reasons": [
+    "D_inc plateau (산포 4%) · 홉 35.9/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_A__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "2d930fbd8f16deed8c5f312ea4cb9b9cb4030a1cb0107ec832c6aaa6e8d76e37"
+  },
+  {
+   "structure": "P2_Al2S3_B",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P2_Al2S3_B__T1000__s1",
+   "D": 2.4248713465643213e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23662,
+   "reasons": [
+    "D_inc plateau (산포 3%) · 홉 32.8/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_B__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "7f691449ba1896e52f594888b355b5abb405c5616d758970afb4fc5ca6d42f37"
+  },
+  {
+   "structure": "P2_Al2S3_B",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P2_Al2S3_B__T1000__s2",
+   "D": 2.6892116989165282e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23577,
+   "reasons": [
+    "D_inc plateau (산포 6%) · 홉 38.1/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_B__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "f274c63ab9d52a5ca90ff0cafe55e0b239ffc8fa6ba4d9df6d824c7a2c7c222b"
+  },
+  {
+   "structure": "P2_Al2S3_C",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P2_Al2S3_C__T1000__s1",
+   "D": 2.5321775139018385e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23581,
+   "reasons": [
+    "D_inc plateau (산포 10%) · 홉 34.5/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_C__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "0538837bb1ce050022922e207790d8f510df9a107d40fde9256e195cc2c1e892"
+  },
+  {
+   "structure": "P2_Al2S3_C",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P2_Al2S3_C__T1000__s2",
+   "D": 2.5915406809829816e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23706,
+   "reasons": [
+    "D_inc plateau (산포 3%) · 홉 36.0/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_C__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "3560a06f29bbe2cbd0d3bbcb3fea72c81306e763aead3f445cea536c10d78717"
+  },
+  {
+   "structure": "P2_Al2S3_D",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P2_Al2S3_D__T1000__s1",
+   "D": 2.3350658707748955e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23205,
+   "reasons": [
+    "D_inc plateau (산포 5%) · 홉 32.0/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_D__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "538a8c0171815a6fec7e8532e768eafcf3ef76026b798c4f229e5db0050acf37"
+  },
+  {
+   "structure": "P2_Al2S3_D",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P2_Al2S3_D__T1000__s2",
+   "D": 2.321856545027672e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23149,
+   "reasons": [
+    "D_inc plateau (산포 4%) · 홉 32.5/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_D__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "80a45736ef2778a0aa613c0a16c6c1db0a266a3415ebe01155e8cad270752bb6"
+  },
+  {
+   "structure": "P2_Al2S3_E",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P2_Al2S3_E__T1000__s1",
+   "D": 2.4110371155271706e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23275,
+   "reasons": [
+    "D_inc plateau (산포 6%) · 홉 32.7/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_E__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "7d737b297316f02528b94a7f6b19d5d15e87c0037e94d9ebe3221609963bfbaa"
+  },
+  {
+   "structure": "P2_Al2S3_E",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P2_Al2S3_E__T1000__s2",
+   "D": 2.443377971309211e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23675,
+   "reasons": [
+    "D_inc plateau (산포 9%) · 홉 36.9/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_E__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "d5e4cc652d7773d38bce49c25b84edf8b9b03ab084dc2a77e17bb8b5cd87bd9c"
+  },
+  {
+   "structure": "P2_Al2S3_F",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P2_Al2S3_F__T1000__s1",
+   "D": 2.3167137367278295e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23337,
+   "reasons": [
+    "D_inc plateau (산포 5%) · 홉 31.2/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_F__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "a1ba6c40828081bdc207ab4a475d183cf9acac413d434a14b6c59fbc1874f9b2"
+  },
+  {
+   "structure": "P2_Al2S3_F",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P2_Al2S3_F__T1000__s2",
+   "D": 2.410740968082079e-05,
+   "eligible": false,
+   "framework_alarm": "alarm",
+   "events_per_run": 23563,
+   "reasons": [
+    "D_inc plateau (산포 4%) · 홉 33.3/이온",
+    "⛔ 골격 경보 alarm — 거부권 (경보 통과는 인증이 아니다 · 회신 CP P1)"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_F__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "6dd9186ec032f678dd7b6b96c10c6f2e8b51ba78b423193e0cac1a85e2a90689"
+  },
+  {
+   "structure": "P2_Al2S3_G",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P2_Al2S3_G__T1000__s1",
+   "D": 2.2810036892002565e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23514,
+   "reasons": [
+    "D_inc plateau (산포 9%) · 홉 31.0/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_G__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "bb08815bc5f32a8008bb2e0c7512f2740e1640139e5156ed8c013f66b480938f"
+  },
+  {
+   "structure": "P2_Al2S3_G",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P2_Al2S3_G__T1000__s2",
+   "D": 2.4762460116569107e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23058,
+   "reasons": [
+    "D_inc plateau (산포 3%) · 홉 33.3/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_G__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "fc0ca3f0f9cee03d2762b19fac5e19ee9a7cf666c7ccba15201b834f6530bd8f"
+  },
+  {
+   "structure": "P2_Al2S3_H",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P2_Al2S3_H__T1000__s1",
+   "D": 2.6545062081584364e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23329,
+   "reasons": [
+    "D_inc plateau (산포 3%) · 홉 38.2/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_H__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "c529f49d3f0e80285253d846c1bed4b4953035c77c49b75207a38c7ad2748d91"
+  },
+  {
+   "structure": "P2_Al2S3_H",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P2_Al2S3_H__T1000__s2",
+   "D": null,
+   "eligible": false,
+   "framework_alarm": null,
+   "events_per_run": null,
+   "reasons": [
+    "⛔ 검사 불가 — 한 프레임 변위가 셀의 0.41 — unwrap(최소상)이 모호하다 (문턱 0.4)"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_H__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "e433a4d984b9be816737447033a5b3b4d52af0a87e081a619987cb9c49bf2af6"
+  },
+  {
+   "structure": "P2_Al2S3_I",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P2_Al2S3_I__T1000__s1",
+   "D": 2.4795179602854533e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23613,
+   "reasons": [
+    "D_inc plateau (산포 3%) · 홉 33.2/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_I__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "56da338ffe6aaa9a4eb82a19ce85dc832a7c776f98a44581223e18664316360e"
+  },
+  {
+   "structure": "P2_Al2S3_I",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P2_Al2S3_I__T1000__s2",
+   "D": 2.5198627232641065e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23553,
+   "reasons": [
+    "D_inc plateau (산포 5%) · 홉 33.9/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_I__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "f989d3264cbcb6dd404431e3e81481e6ee68d8e8640aa913d455df95d4379c44"
+  },
+  {
+   "structure": "P2_Al2S3_J",
+   "T_K": 1000,
+   "seed": 1,
+   "tag": "P2_Al2S3_J__T1000__s1",
+   "D": 2.4681652017193613e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23747,
+   "reasons": [
+    "D_inc plateau (산포 8%) · 홉 34.0/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_J__T1000__s1/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "3a97117bcbe947ca9b3fea9ecbbb5530e177ac0743282a09175ee3c3bd2dc218"
+  },
+  {
+   "structure": "P2_Al2S3_J",
+   "T_K": 1000,
+   "seed": 2,
+   "tag": "P2_Al2S3_J__T1000__s2",
+   "D": 2.500880186407686e-05,
+   "eligible": true,
+   "framework_alarm": "framework_static",
+   "events_per_run": 23517,
+   "reasons": [
+    "D_inc plateau (산포 3%) · 홉 33.8/이온"
+   ],
+   "msd_path": "/home/kgy/work/runs/cascade_v7_main_1007/md/P2_Al2S3_J__T1000__s2/d0.00_cfg0/T1000/msd.json",
+   "msd_sha256": "53d2644ab416b2db02efce0a007058257fd019c0a84b476412d2d876d4a2480e"
+  }
+ ],
+ "inputs": {
+  "probe_json_sha256": "1366bb31c7c1fbf94f36c50bf08828be52ea7c3e0a60842c3ee0e36c3332d94c",
+  "manifest_sha256": "6f15cb0075ff1ca2a8e4edeab499c85e36635de304f81371e67fb98aa0f1b13a",
+  "budget_sha256": "e52ebb6d02a5b252888f885b810bb9fa91e0ebf0d66258bd75759472554341d3"
+ }
+}

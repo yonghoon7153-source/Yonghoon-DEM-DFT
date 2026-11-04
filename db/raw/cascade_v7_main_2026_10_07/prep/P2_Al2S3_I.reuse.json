@@ -1,0 +1,13 @@
+{
+ "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_I.prepared.json",
+ "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_I.prepared.xyz",
+ "sha256": "35472e1623786dc02475ee68c704e8698030a1deded6e0712a8fe825b8f2de49",
+ "input_sha256": "72c5c7204bffff77a3feb1a4f8e21c44b864daec85d5212a2860bf2f2642102b",
+ "n_atoms": 204,
+ "V_A3": 4066.4796953466644,
+ "final_fmax_eV_A": 0.019835302606225014,
+ "converged": true,
+ "copied_to": "/home/kgy/work/runs/cascade_v7_main_1007/prep/P2_Al2S3_I.prepared.xyz",
+ "copied_utc": "2026-10-07T11:04:49Z",
+ "⚠": "v6 준비를 초기 좌표로만 재사용 (개정 ⑩) — 이 온도에서의 평형을 뜻하지 않는다"
+}
