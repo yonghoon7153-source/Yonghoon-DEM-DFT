@@ -1289,8 +1289,12 @@ def _junk(line):
 
 def _thermo_last_step(path, plan):
     """thermo.csv 에서 **시작된** 마지막 기록의 스텝 — (스텝 | None, 문제 | None).
-    온전한 행은 시각이 저장 간격대로여야 한다 (t_k = k · 저장 간격). 마지막 비어 있지 않은 줄이 덜 써졌으면 (잘린 줄 · NUL) 그 기록도
-    시작된 것으로 센다 (보수적 — 보류 쪽). 꼬리가 아닌 자리에서 깨지면 문제."""
+    온전한 행은 시각이 저장 간격대로 (t_k = k · 저장 간격) 이고 줄이 이어져야 한다. 꼬리가 아닌 자리에서 깨지면 문제 (보류).
+    ⭐ 회신 DM P0-1 — 마지막 비어 있지 않은 줄 (꼬리) 은 '온전하지만 순서가 다른 행' 과 '덜 써진 행' 을 가른다:
+      · 첫 칸 (시각) 이 다 써졌다 (쉼표가 있다) → 그 시각이 다음 기록 시각이어야 시작된 기록으로 센다 · 다르면 **보류**
+        (그 줄에 남은 시각이 끝 시각일 수 있다 — 버리지 않는다)
+      · 첫 칸이 쓰이다 말았다 (쉼표 없음) → 다음 기록 시각 문자열 (드라이버 꼴 '%.3f') 의 앞부분이어야 센다 · 아니면 보류
+      · NUL 뒤에 다른 글자가 있다 · 앞 줄과 이어지지 않는다 → 보류"""
     save_int, dt = save_interval_steps(plan), float(plan["dt_fs"])
     lines = path.read_bytes().decode("utf-8", errors="replace").split("\n")
     idx = [i for i, ln in enumerate(lines) if not _junk(ln)]
@@ -1298,21 +1302,38 @@ def _thermo_last_step(path, plan):
         return None, None
     if idx[0] != 0 or lines[0].split(",")[0].strip() != "t_ps":
         return None, "thermo.csv 첫 줄이 머리 (t_ps,…) 가 아니다"
-    n, prev = 0, 0
-    for j, i in enumerate(idx[1:]):
+    t_of = lambda k: k * save_int * dt / 1000.0
+    n, prev, body = 0, 0, idx[1:]
+    for j, i in enumerate(body):
+        ln = lines[i]
         try:
-            t = float(lines[i].split(",")[0])
-            ok = ("\x00" not in lines[i] and math.isfinite(t) and i == prev + 1
-                  and abs(t - n * save_int * dt / 1000.0) <= 1.5e-3)
+            t = float(ln.split(",")[0])
+            ok = ("\x00" not in ln and math.isfinite(t) and i == prev + 1 and abs(t - t_of(n)) <= 1.5e-3)
         except ValueError:
             ok = False
         if ok:
             n, prev = n + 1, i
             continue
-        if j == len(idx) - 2:                          # 마지막 비어 있지 않은 줄 = 덜 써진 꼬리 → 시작된 기록
-            n += 1
-            break
-        return None, f"thermo.csv {i + 1} 번째 줄이 깨졌다 (꼬리가 아니다) — 진행량을 못 읽는다"
+        if j < len(body) - 1:
+            return None, f"thermo.csv {i + 1} 번째 줄이 깨졌다 (꼬리가 아니다) — 진행량을 못 읽는다"
+        if i != prev + 1:                              # ── 꼬리 (마지막 비어 있지 않은 줄)
+            return None, f"thermo.csv 마지막 줄 ({i + 1}) 이 앞 줄과 이어지지 않는다 — 진행량을 못 정한다"
+        frag, _, rest = ln.partition("\x00")
+        if rest.strip("\x00 \t\r"):
+            return None, "thermo.csv 마지막 줄에 NUL 뒤 글자가 있다 — 진행량을 못 정한다"
+        head, want = frag.rstrip("\r").split(",", 1)[0].strip(), f"{t_of(n):.3f}"
+        if "," in frag:
+            try:
+                tt = float(head)
+            except ValueError:
+                return None, f"thermo.csv 마지막 줄 첫 칸 {head!r} 을 못 읽는다 — 진행량을 못 정한다"
+            if not (math.isfinite(tt) and abs(tt - t_of(n)) <= 1.5e-3):
+                return None, (f"thermo.csv 마지막 줄 시각 {head} 이 다음 기록 시각 ({want}) 과 다르다 — "
+                              "남은 시각을 버리지 않는다 (끝 시각일 수 있다)")
+        elif not (head and want.startswith(head)):
+            return None, f"thermo.csv 마지막 줄 조각 {head!r} 이 다음 기록 시각 ({want}) 의 앞부분이 아니다 — 진행량을 못 정한다"
+        n += 1                                         # 다음 기록이 시작됐다 (덜 써진 행 · 첫 칸이 맞다)
+        break
     return ((n - 1) * save_int if n else None), None
 
 
@@ -1360,16 +1381,94 @@ def md_last_recorded_step(folder, plan):
     return best, None
 
 
+def _verdict_is_pre_run(v):
+    """plan 전 끊김에서만 생기는 판정인가 — stage1_verdict 가 plan.json 없는 폴더에 쓰는 꼴 그대로 (회신 DM P0-2):
+    status incomplete · 이유가 incomplete 'plan.json 없음' 하나뿐 · 원자료 지문 (PROVENANCE_FILES) 이 전부 있고 전부 None."""
+    if not isinstance(v, dict) or v.get("status") != "incomplete":
+        return False
+    rs = v.get("reasons")
+    if not (isinstance(rs, dict) and rs.get("incomplete") == ["plan.json 없음"] and all(not rs.get(k) for k in rs if k != "incomplete")):
+        return False
+    pv = v.get("provenance")
+    fs = pv.get("files_sha256") if isinstance(pv, dict) else None
+    return isinstance(fs, dict) and set(PROVENANCE_FILES) <= set(fs) and all(fs.get(x) is None for x in PROVENANCE_FILES)
+
+
+def _verdict_records(folder):
+    """판정 기록 — 현재 판정 · 이력 줄마다 이전 판정 (전체) 과 새 판정 (상태 · 지문만) · (목록 [(어디, 기록, 부분인가)], 문제 | None).
+    판정 임시 파일이 남았거나 (그 안에 완료 판정이 있을 수 있다) 못 읽는 기록이 있으면 문제 (회신 DM P0-2)."""
+    f = pathlib.Path(folder)
+    vf = f / "stage1_verdict.json"
+    if os.path.lexists(vf.with_name(vf.name + ".tmp")):
+        return [], "판정 임시 파일 (stage1_verdict.json.tmp) 이 남았다 — 판정 도중 끊김 · 그 안에 완료 판정이 있을 수 있다"
+    recs = []
+    if os.path.lexists(vf):
+        try:
+            v = json.loads(vf.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return [], "판정 파일을 못 읽는다"
+        recs.append(("현재 판정", v, False))
+    hp = f / VERDICT_HISTORY
+    if os.path.lexists(hp):
+        try:
+            hl = hp.read_text(encoding="utf-8").splitlines()
+        except (OSError, ValueError):
+            return [], "판정 이력을 못 읽는다"
+        for k, ln in enumerate(hl, 1):
+            if not ln.strip():
+                continue
+            try:
+                h = json.loads(ln)
+            except ValueError:
+                return [], f"판정 이력 {k} 번째 줄을 못 읽는다"
+            if not isinstance(h, dict):
+                return [], f"판정 이력 {k} 번째 줄이 객체가 아니다"
+            npv = h.get("new_provenance")
+            recs.append((f"판정 이력 {k} 의 이전 판정", h.get("prev"), False))
+            recs.append((f"판정 이력 {k} 의 새 판정", {"status": h.get("new_status"),
+                                                   "provenance": npv if isinstance(npv, dict) else None}, True))
+    return recs, None
+
+
+def _verdict_evidence(folder, pre_run_only):
+    """판정 기록이 재시도 갈래 (plan 전 끊김 · 명확한 도중 끊김) 와 맞는가 — 맞지 않으면 그 이유 (보류 · 회신 DM P0-2).
+      pre_run_only (no_plan 후보): 모든 기록이 plan 전 끊김의 판정이어야 한다 (_verdict_is_pre_run · 이력의 새 판정은 상태 · 지문으로)
+      그 밖 (md_incomplete 후보): 어느 기록에도 과학적 판정 (pass · fail) · 최종 산출물 (final.xyz · result.json) 지문이 없어야 한다
+    ⛔ 못 하는 것: 이력 파일 자체가 통째로 지워졌으면 모른다 (없는 기록은 못 읽는다)."""
+    recs, prob = _verdict_records(folder)
+    if prob:
+        return prob
+    for where, r, partial in recs:
+        if not isinstance(r, dict):
+            return f"{where} 을 못 읽는다"
+        pv = r.get("provenance")
+        fs = pv.get("files_sha256") if isinstance(pv, dict) else None
+        st = r.get("status")
+        if pre_run_only:
+            ok = (st == "incomplete" and isinstance(fs, dict) and set(PROVENANCE_FILES) <= set(fs)
+                  and all(fs.get(x) is None for x in PROVENANCE_FILES)) if partial else _verdict_is_pre_run(r)
+            if not ok:
+                return f"{where} 이 plan 전 끊김의 판정이 아니다 (상태 {st} · 이유 · 원자료 지문)"
+        else:
+            if st in ("pass", "fail"):
+                return f"{where} 에 과학적 판정 ({st}) 이 있다"
+            if isinstance(fs, dict) and any(fs.get(x) for x in ("final.xyz", "result.json")):
+                return f"{where} 에 최종 산출물 지문이 있다 (끝까지 돌았던 흔적)"
+    return None
+
+
 def folder_stage_detail(folder):
     """⭐ 회신 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2 — 실행 폴더의 완료 단계와 그 이유 (재시도 자격 · 소비자가 같이 쓴다):
       'final'         result.json · final.xyz 가 있다 (재시도가 아니라 판정)
       'md_complete'   MD 완료 기록 (md_done.json) 이 맞다 — run_id = plan · 계획 = 실제 스텝 = plan 일정 · traj · thermo 해시 일치 (FIRE 미완 → 보류)
       'md_incomplete' **명확한 도중 끊김만** — plan 이 있고 · 완료 기록 · 임시 기록 · FIRE 로그가 없고 · 시작된 마지막 기록이 끝 경계
                       (계획 스텝 안의 마지막 저장 스텝) 보다 앞이거나 MD 기록이 아예 없다
-      'no_plan'       plan.json 이 없고 폴더에 MD 산출물이 아닌 기록 (NON_MD_FILES) 밖의 것이 없다 (plan 전에 끊김)
+      'no_plan'       plan.json 이 없고 폴더에 MD 산출물이 아닌 기록 (NON_MD_FILES) 밖의 것이 없고 · **판정 기록이 내용으로도 plan 전 것**
+                      (현재 판정 · 이력의 이전 판정 = status incomplete · 'plan.json 없음' · 원자료 지문 전부 None · 판정 임시 파일 없음 — 회신 DM P0-2)
       'unreadable'    보류 — plan 을 못 읽음 · 완료 기록을 못 읽음 · 기록이 plan 과 다름 · 기록 뒤 궤적 · thermo 가 바뀜 ·
                       **임시 기록이 남음** · **plan 없이 산출물이 남음** · **FIRE 로그가 있는데 기록 없음** ·
-                      **기록 없이 마지막 저장이 끝 경계에 닿음 (완료 여부 불명)** · 진행량을 못 읽음
+                      **기록 없이 마지막 저장이 끝 경계에 닿음 (완료 여부 불명)** · 진행량을 못 읽음 (thermo 마지막 줄 시각이 다음 기록과
+                      다름 포함 — 회신 DM P0-1) · **판정 기록에 과학적 판정 · 최종 산출물 지문 · 임시 판정이 있음** (회신 DM P0-2)
     프레임 · 시각은 완료 승인에 안 쓴다 (회신 DK P1-1) — 끝까지 갔을 수도 있는 실행을 보류하는 데만 쓴다 (회신 DL Q2)."""
     f = pathlib.Path(folder)
     if any((f / x).is_file() for x in ("result.json", "final.xyz")):
@@ -1381,7 +1480,10 @@ def folder_stage_detail(folder):
             return "unreadable", f"폴더를 못 읽는다 ({type(e).__name__})"
         if extra:
             return "unreadable", f"plan.json 없이 실행 산출물이 남았다 ({' · '.join(extra[:4])}) — 보류"
-        return "no_plan", "실행 전 · 판정 기록뿐 (plan 전에 끊김 · MD 산출물 없음)"
+        ev = _verdict_evidence(f, pre_run_only=True)          # ⭐ 회신 DM P0-2 — 판정 기록은 이름이 아니라 내용으로
+        if ev:
+            return "unreadable", f"plan.json 이 없는데 {ev} — 보류"
+        return "no_plan", "실행 전 · 판정 기록뿐 (plan 전에 끊김 · MD 산출물 없음 · 판정 기록도 plan 전 것)"
     try:
         plan = json.loads((f / "plan.json").read_text(encoding="utf-8"))
         want = planned_md_steps(plan)
@@ -1409,12 +1511,15 @@ def folder_stage_detail(folder):
     last, prob = md_last_recorded_step(f, plan)
     if prob:
         return "unreadable", prob + " — 보류"
-    if last is None:
-        return "md_incomplete", "MD 기록 전에 끊김 (사전 이완 · 시작)"
     end = (want // save_int) * save_int
-    if last >= end:
+    if last is not None and last >= end:
         return "unreadable", (f"완료 기록이 없는데 시작된 마지막 기록 (스텝 {last}) 이 끝 경계 (스텝 {end} · 계획 {want}) 에 닿았다 — "
                               "완료 여부 불명 (보류)")
+    ev = _verdict_evidence(f, pre_run_only=False)            # ⭐ 회신 DM P0-2 — 판정 기록에 완료 흔적이 있으면 재시도 아님
+    if ev:
+        return "unreadable", f"진행 기록은 도중이지만 {ev} — 보류"
+    if last is None:
+        return "md_incomplete", "MD 기록 전에 끊김 (사전 이완 · 시작)"
     return "md_incomplete", f"명확한 도중 끊김 (시작된 마지막 기록 스텝 {last} < 끝 경계 {end})"
 
 
@@ -3130,6 +3235,19 @@ def _selftest():
         def _tmp_only(d):                                    # 회신 DL P0 반례 2 — 기록을 임시 이름으로만 (os.replace 직전 끊김)
             (d / MD_DONE_TMP).write_text(json.dumps({"run_id": RIDF, "n_steps_planned": 2000, "n_steps_done": 2000}), encoding="utf-8")
         P07 = {**PLAN0, "save_ps": 0.7}
+        PASSV = {"status": "pass", "reasons": {}, "run_id": RIDF,
+                 "provenance": {"files_sha256": {"plan.json": "a" * 64, "thermo.csv": "b" * 64, "traj.xyz": "c" * 64,
+                                                 "final.xyz": "d" * 64, "result.json": "e" * 64}}}
+        MIDV = {"status": "incomplete", "reasons": {"incomplete": ["상한 멈춤 (기록용 · 미완)"]},
+                "provenance": {"files_sha256": {"plan.json": "a" * 64, "thermo.csv": "b" * 64, "traj.xyz": "c" * 64,
+                                                "final.xyz": None, "result.json": None}}}
+        def _judge_prerun(d):                                # 진짜 판정 함수로 plan 전 끊긴 폴더를 판정 (이미 있으면 이력이 생긴다)
+            stage1_verdict(d, values=VAL, log=lambda *a: None, reason="selftest")
+        def PRERUN(d):
+            return stage1_verdict(d, values=VAL, log=lambda *a: None, reason="selftest")
+        def _rejudged_after_pass(d):                         # 회신 DM P0-2 반례 1 — pass 판정이 있던 폴더에서 원자료가 없어진 뒤 진짜 재판정
+            (d / "stage1_verdict.json").write_text(json.dumps(PASSV), encoding="utf-8")
+            stage1_verdict(d, values=VAL, log=lambda *a: None, reason="selftest — 원자료 소실 뒤 재판정")
         fs_ = {"final": _fs("f", final=True), "md_complete": _fs("c", done=True),
                # 회신 DL Q2: 기록 없이 시작된 마지막 기록이 끝 경계 (4 ps = 2,000 스텝) 에 닿음 → 완료 여부 불명 → 보류
                "no_marker_end_reached": _fs("i", traj=5),
@@ -3140,9 +3258,9 @@ def _selftest():
                "no_plan_no_attempt": _fs("n2", plan=False, traj=None, thermo=None, attempt=False),
                "no_plan_attempt_tmp": _fs("n3", plan=False, traj=None, thermo=None,
                                           after=lambda d: (d / (ATTEMPT_NAME + ".tmp")).write_text("{", encoding="utf-8")),
-               "no_plan_judged": _fs("n4", plan=False, traj=None, thermo=None,     # 러너가 plan 전 끊긴 런을 판정한 기록
-                                     after=lambda d: [(d / "stage1_verdict.json").write_text('{"status": "incomplete"}', encoding="utf-8"),
-                                                      (d / VERDICT_HISTORY).write_text("{}\n", encoding="utf-8")]),
+               "no_plan_judged": _fs("n4", plan=False, traj=None, thermo=None, after=_judge_prerun),   # 러너가 plan 전 끊긴 런을 판정한 기록 (진짜 판정)
+               "no_plan_fake_judged": _fs("n5", plan=False, traj=None, thermo=None,   # 지문 없는 'incomplete' 한 줄 — plan 전 판정 꼴이 아니다
+                                          after=lambda d: (d / "stage1_verdict.json").write_text('{"status": "incomplete"}', encoding="utf-8")),
                # 회신 DL P0 반례 1 — 완료 기록 · 궤적 · thermo 는 정상이고 plan.json 만 없음 → 보류 (no_plan 아님)
                "plan_gone_after_done": _fs("pg", done=True, after=lambda d: (d / "plan.json").unlink()),
                "no_plan_with_traj": _fs("pt", plan=False, traj=2),
@@ -3169,7 +3287,46 @@ def _selftest():
                "no_dt": _fs("d", plan={k: v for k, v in PLAN0.items() if k != "dt_fs"}, done=True),
                # 진행량 판독 — 정전 꼬리는 받아 주고 (시작된 기록으로 센다) · 꼬리가 아닌 깨짐은 보류
                "thermo_nul_tail": _fs("q1", traj=2, after=lambda d: open(d / "thermo.csv", "ab").write(b"\x00" * 64)),
-               "thermo_partial_mid": _fs("q2", traj=2, after=lambda d: open(d / "thermo.csv", "a").write("1.0")),
+               "thermo_partial_mid": _fs("q2", traj=2, after=lambda d: open(d / "thermo.csv", "a").write("1.0")),   # '1.0' ≠ '2.000' 앞부분 → 보류
+               # ⭐ 회신 DM P0-1 재현 — 완료 기록 없음 · 궤적 앞부분만 · thermo 에 온전한 0 · 1 · 4 ps (= 끝) 행 → 남은 끝 시각을 버리지 않는다
+               "thermo_end_row_kept": _fs("e1", traj=2, after=lambda d: (d / "thermo.csv").write_text(
+                   "".join(TH(5).splitlines(keepends=True)[i] for i in (0, 1, 2, 5)), encoding="utf-8")),
+               "thermo_last_row_wrong": _fs("e2", traj=2, after=lambda d: open(d / "thermo.csv", "a").write(
+                   "2.500,300.0,300.0,1.8000,1000.00,-500.0000,0.1000,0.1000\n")),
+               "thermo_tail_prefix_ok": _fs("e3", traj=2, after=lambda d: open(d / "thermo.csv", "a").write("2.0")),      # 대조: 덜 써진 다음 기록
+               "thermo_tail_bad_prefix": _fs("e4", traj=2, after=lambda d: open(d / "thermo.csv", "a").write("12")),
+               "thermo_tail_row_nul_ok": _fs("e5", traj=2, after=lambda d: open(d / "thermo.csv", "ab").write(b"2.000,300.0\x00\x00")),
+               "thermo_tail_nul_text": _fs("e6", traj=2, after=lambda d: open(d / "thermo.csv", "ab").write(b"2.0\x00x")),
+               "thermo_tail_gap": _fs("e7", traj=2, after=lambda d: open(d / "thermo.csv", "ab").write(
+                   b"\x00\x00\x00\n2.000,300.0,300.0,1.8000,1000.00,-500.0000,0.1000,0.1000\n")),
+               # ⭐ 회신 DM P0-2 재현 — 판정 기록은 이름이 아니라 내용으로 (plan 없는 폴더)
+               "no_plan_history_pass": _fs("v1", plan=False, traj=None, thermo=None, after=_rejudged_after_pass),
+               "no_plan_verdict_tmp_pass": _fs("v2", plan=False, traj=None, thermo=None,
+                                               after=lambda d: (d / "stage1_verdict.json.tmp").write_text(json.dumps(PASSV), encoding="utf-8")),
+               "no_plan_verdict_other": _fs("v3", plan=False, traj=None, thermo=None, after=lambda d: (d / "stage1_verdict.json").write_text(
+                   json.dumps({**PRERUN(d), "reasons": {"incomplete": ["traj 프레임 3 ≠ 계획 5"]}}), encoding="utf-8")),
+               "no_plan_history_garbled": _fs("v4", plan=False, traj=None, thermo=None,
+                                              after=lambda d: [_judge_prerun(d), (d / VERDICT_HISTORY).write_text("{\n", encoding="utf-8")]),
+               "no_plan_judged_real": _fs("v5", plan=False, traj=None, thermo=None, after=lambda d: [_judge_prerun(d), _judge_prerun(d)]),
+               # 이력 줄의 '새 판정' 이 pass 인데 그 뒤 줄이 없다 (앞뒤가 안 맞는 이력) — 이전 판정이 plan 전 것이어도 보류
+               "no_plan_history_new_pass": _fs("v9", plan=False, traj=None, thermo=None, after=lambda d: [
+                   _judge_prerun(d), (d / VERDICT_HISTORY).write_text(json.dumps(
+                       {"prev": json.loads((d / "stage1_verdict.json").read_text(encoding="utf-8")), "prev_status": "incomplete",
+                        "new_status": "pass", "new_provenance": PASSV["provenance"]}) + "\n", encoding="utf-8")]),
+               # 판정 기록의 완료 흔적은 plan 이 있는 도중 끊김 폴더에서도 재시도를 막는다 · 대조: 상한 멈춤 판정 (MD 지문만) 은 그대로 미완
+               "mid_history_pass": _fs("v6", traj=2, after=lambda d: [(d / "stage1_verdict.json").write_text(json.dumps(MIDV), encoding="utf-8"),
+                                                                    _append_history(d, PASSV, MIDV, "selftest")]),
+               "mid_verdict_tmp": _fs("v7", traj=2, after=lambda d: (d / "stage1_verdict.json.tmp").write_text(json.dumps(MIDV), encoding="utf-8")),
+               "mid_cap_verdict_ok": _fs("v8", traj=2, after=lambda d: (d / "stage1_verdict.json").write_text(json.dumps(MIDV), encoding="utf-8")),
+               # 판정 꼴은 plan 전 것인데 원자료 지문 (궤적) 이 남았다 — 판정 때는 MD 산출물이 있었다 → 보류
+               "no_plan_verdict_had_traj": _fs("w1", plan=False, traj=None, thermo=None, after=lambda d: (d / "stage1_verdict.json").write_text(
+                   json.dumps({**PRERUN(d), "provenance": {"files_sha256": {**{x: None for x in PROVENANCE_FILES}, "traj.xyz": "c" * 64}}}),
+                   encoding="utf-8")),
+               # invalid 판정인데 최종 산출물 지문이 있다 (끝까지 돈 뒤 최종 파일 소실) · pass 인데 최종 지문은 없다 → 둘 다 보류
+               "mid_verdict_invalid_final": _fs("w2", traj=2, after=lambda d: (d / "stage1_verdict.json").write_text(
+                   json.dumps({"status": "invalid", "reasons": {"invalid": ["x"]}, "provenance": PASSV["provenance"]}), encoding="utf-8")),
+               "mid_history_pass_nofinal": _fs("w3", traj=2, after=lambda d: [(d / "stage1_verdict.json").write_text(json.dumps(MIDV), encoding="utf-8"),
+                   _append_history(d, {**PASSV, "provenance": MIDV["provenance"]}, MIDV, "selftest")]),
                # 덜 써진 마지막 줄 — 첫 칸부터 NUL 이 섞인 조각 (온전한 행으로 읽히면 꼬리 규칙을 안 거친다 · DL 깨기 N6 이 잡은 시험 구멍)
                "thermo_partial_end": _fs("q3", traj=4, after=lambda d: open(d / "thermo.csv", "ab").write(b"4.0\x00\x00\x00")),
                "thermo_garbage_mid": _fs("q4", traj=3, after=lambda d: (d / "thermo.csv").write_text(
@@ -3185,6 +3342,7 @@ def _selftest():
         exp_fs = {"final": "final", "md_complete": "md_complete", "no_marker_end_reached": "unreadable", "no_marker_cut_mid": "md_incomplete",
                   "nothing_recorded": "md_incomplete", "header_only": "md_incomplete",
                   "no_plan": "no_plan", "no_plan_no_attempt": "no_plan", "no_plan_attempt_tmp": "no_plan", "no_plan_judged": "no_plan",
+                  "no_plan_fake_judged": "unreadable",
                   "plan_gone_after_done": "unreadable", "no_plan_with_traj": "unreadable", "no_plan_unknown_file": "unreadable",
                   "tmp_only_mid": "unreadable", "tmp_and_done": "unreadable", "fire_log_no_marker": "unreadable",
                   "unreadable_plan": "unreadable", "plan_no_save": "unreadable",
@@ -3192,7 +3350,14 @@ def _selftest():
                   "thermo_changed": "unreadable", "traj_gone": "unreadable", "marker_other_run": "unreadable", "marker_short": "unreadable",
                   "marker_cut": "unreadable", "plan_no_run_id": "unreadable", "save07_end": "unreadable", "save07_mid": "md_incomplete",
                   "save07_done": "md_complete", "no_dt": "unreadable",
-                  "thermo_nul_tail": "md_incomplete", "thermo_partial_mid": "md_incomplete", "thermo_partial_end": "unreadable",
+                  "thermo_nul_tail": "md_incomplete", "thermo_partial_mid": "unreadable", "thermo_partial_end": "unreadable",
+                  "thermo_end_row_kept": "unreadable", "thermo_last_row_wrong": "unreadable", "thermo_tail_prefix_ok": "md_incomplete",
+                  "thermo_tail_bad_prefix": "unreadable", "thermo_tail_row_nul_ok": "md_incomplete", "thermo_tail_nul_text": "unreadable",
+                  "thermo_tail_gap": "unreadable",
+                  "no_plan_history_pass": "unreadable", "no_plan_verdict_tmp_pass": "unreadable", "no_plan_verdict_other": "unreadable",
+                  "no_plan_history_garbled": "unreadable", "no_plan_judged_real": "no_plan", "no_plan_history_new_pass": "unreadable",
+                  "mid_history_pass": "unreadable", "mid_verdict_tmp": "unreadable", "mid_cap_verdict_ok": "md_incomplete",
+                  "no_plan_verdict_had_traj": "unreadable", "mid_verdict_invalid_final": "unreadable", "mid_history_pass_nofinal": "unreadable",
                   "thermo_garbage_mid": "unreadable", "thermo_bad_cadence": "unreadable", "thermo_no_header": "unreadable",
                   "traj_partial_end": "unreadable", "traj_garbage_mid": "unreadable", "traj_nul_tail": "md_incomplete"}
         chk(fs_ == exp_fs,

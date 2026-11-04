@@ -102,7 +102,7 @@ DI 수정:
 from __future__ import annotations
 import argparse, datetime, hashlib, importlib.util, json, os, pathlib, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "b0f8a1ecbaafe029"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "7467aae3709eeadb"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 DECISION = "D-2026-11-03-li2s2-dense-window"
 CARD_REL = "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json"
 DRIVER_REL = "tools/ionic/melt_quench_uma.py"
@@ -1147,6 +1147,22 @@ def _selftest():
                                                              if d.get("rejudge_impossible_reason") else {})}
 
     FULL_STAGES = ("md_complete", "final", "md_complete_noplan", "md_tmp", "end_no_marker")   # 궤적 · thermo 를 끝까지 남기는 단계
+    NOPLAN_STAGES = ("no_plan", "noplan_hist_pass", "noplan_vtmp_pass", "noplan_judged")       # plan 을 안 남기는 단계 (회신 DM P0-2 포함)
+    PASSV = {"status": "pass", "reasons": {}, "provenance": {"files_sha256": {"plan.json": "a" * 64, "thermo.csv": "b" * 64,
+                                                                              "traj.xyz": "c" * 64, "final.xyz": "d" * 64, "result.json": "e" * 64}}}
+    def dm_stage(d, st_, th_full=None):
+        """회신 DM 반례 · 대조를 폴더 d 에 만든다 — end_row_kept: thermo 에 앞 행 + 끝 시각 행만 · noplan_*: 진짜 판정 함수로 판정 기록."""
+        if st_ == "end_row_kept":                           # P0-1 — 궤적은 앞부분 · thermo 는 앞 행 + 온전한 끝 행
+            th_ = (d / "thermo.csv").read_text(encoding="utf-8").splitlines(keepends=True)
+            (d / "thermo.csv").write_text("".join(th_) + th_full[-1], encoding="utf-8")
+        elif st_ == "noplan_hist_pass":                     # P0-2 반례 1 — pass 판정이 있던 폴더에서 원자료 소실 뒤 진짜 재판정
+            (d / "stage1_verdict.json").write_text(json.dumps(PASSV), encoding="utf-8")
+            real.stage1_verdict(d, values=vals_t, log=lambda *m: None, reason="selftest — 원자료 소실 뒤 재판정")
+        elif st_ == "noplan_vtmp_pass":                     # P0-2 반례 2 — pass 판정이 임시 파일에만
+            (d / "stage1_verdict.json.tmp").write_text(json.dumps(PASSV), encoding="utf-8")
+        elif st_ == "noplan_judged":                        # 대조 — plan 전 끊긴 런을 두 번 판정 (진짜 · 이력도 plan 전 것)
+            for _ in range(2):
+                real.stage1_verdict(d, values=vals_t, log=lambda *m: None, reason="selftest — plan 전 끊김 판정")
     def with_history(rr_, sysn, seed, prevs):
         """rr_ 의 (계, 시드) 공식 런 앞에 이전 실행들을 **모든 면에서 맞게** 끼운다 — 보존 폴더 (같은 계 폴더 안) · 실행 전 기록 · 장부 행 ·
         재시도 필드 (retry_of = 바로 앞 · retry_kind = 앞 종류 · retry_stop_id) · 앞 실행에 묶여 확인된 STOP + 선언. 음성 시험은 여기서
@@ -1164,7 +1180,7 @@ def _selftest():
             d = rr_ / sysn / f"seed{seed}.prev{k}"
             d.mkdir()
             st_ = pv.get("stage", "md_incomplete")
-            if st_ != "no_plan":
+            if st_ not in NOPLAN_STAGES:
                 shutil.copy(canon / "plan.json", d / "plan.json")
                 pl_ = J(d / "plan.json"); pl_["run_id"] = rid_; (d / "plan.json").write_text(json.dumps(pl_, ensure_ascii=False), encoding="utf-8")
                 keep = n_fr if st_ in FULL_STAGES else max(1, n_fr // 3)
@@ -1180,6 +1196,7 @@ def _selftest():
                     (d / "plan.json").unlink()
                 if st_ == "final":
                     shutil.copy(canon / "final.xyz", d / "final.xyz"); shutil.copy(canon / "result.json", d / "result.json")
+            dm_stage(d, st_, th_full=(canon / "thermo.csv").read_text(encoding="utf-8").splitlines(keepends=True))
             row = {"system": sysn, "seed": seed, "run_id": rid_, "start": "t", "end": "t", "status": pv.get("status", "interrupted"),
                    "rc": pv.get("rc", "killed_runner_exit"), "wall_h": pv.get("wall_h", 1.0), "cost_basis": "measured"}
             if pv.get("kind") == "invalid":
@@ -1658,6 +1675,43 @@ def _selftest():
     chk(all(v_ == (RC["resume"], 0, True, "unreadable", True) for v_ in dl_cases.values()),
         f"⛔음성 DL P0 (Codex 재현): MD 완료 폴더에서 plan.json 만 지움 · 완료 기록을 임시 이름으로만 (os.replace 직전 끊김) · 기록 없이 "
         f"끝 경계까지 → 선언이 맞아도 재담금질 0 · 보류 · 폴더 파일 그대로 ({dl_cases})")
+    # ⭐ 회신 DM P0-1 · P0-2 (Codex 재현) — 러너 발사 0 · 폴더 그대로 / 대조: 진짜 plan 전 판정 · 명확한 도중 끊김은 그대로 재시도
+    def _strip_raw(d):
+        for x_ in ("plan.json", "traj.xyz", "thermo.csv", real.MD_DONE_NAME):
+            (d / x_).unlink(missing_ok=True)
+    def _cut_front(d, keep=2):
+        (d / real.MD_DONE_NAME).unlink(missing_ok=True)
+        tl = (d / "traj.xyz").read_text(encoding="utf-8").splitlines(keepends=True); fr_ = int(tl[0]) + 2
+        (d / "traj.xyz").write_text("".join(tl[:keep * fr_]), encoding="utf-8")
+        th_ = (d / "thermo.csv").read_text(encoding="utf-8").splitlines(keepends=True)
+        (d / "thermo.csv").write_text("".join(th_[:1 + keep]), encoding="utf-8")
+        return th_
+    def _keep_attempt_only(d):                               # 진짜 plan 전 끊김 — 실행 전 기록만 (pass 였던 폴더의 이력까지 지운다)
+        for p_ in list(d.iterdir()):
+            if p_.name != real.ATTEMPT_NAME:
+                p_.unlink()
+    def _end_row(d):
+        th_ = _cut_front(d); open(d / "thermo.csv", "a", encoding="utf-8").write(th_[-1])
+    dm_cases, dm_ctrl = {}, {}
+    for nm_, how, ctrl in (("end_row_kept", _end_row, False),
+                           ("noplan_hist_pass", lambda d: (_strip_raw(d), dm_stage(d, "noplan_hist_pass")), False),
+                           ("noplan_vtmp_pass", lambda d: (_strip_raw(d), dm_stage(d, "noplan_vtmp_pass")), False),
+                           ("ctrl_noplan_judged", lambda d: (_keep_attempt_only(d), dm_stage(d, "noplan_judged")), True),
+                           ("ctrl_mid_cut", lambda d: _cut_front(d), True)):
+        c_x = clone(c_m); (c_x / "STOP.json").unlink(missing_ok=True)
+        fc_ = c_x / "B/seed13.fire_cut"; how(fc_)
+        snap = lambda: {p_.name: hashlib.sha256(p_.read_bytes()).hexdigest() for p_ in sorted(fc_.iterdir())}
+        before, st0 = snap(), real.folder_stage(fc_)
+        rc_x, L_x, _ = go(wt, rr=c_x)
+        sp_ = J(c_x / "STOP.json") if (c_x / "STOP.json").is_file() else {}
+        (dm_ctrl if ctrl else dm_cases)[nm_] = (rc_x, len(L_x), "완료 단계를 못 읽는다" in (sp_.get("reason") or ""), st0, snap() == before)
+    chk(all(v_ == (RC["resume"], 0, True, "unreadable", True) for v_ in dm_cases.values())
+        and dm_ctrl["ctrl_noplan_judged"][:2] == (0, 1) and dm_ctrl["ctrl_noplan_judged"][3] == "no_plan"
+        and dm_ctrl["ctrl_mid_cut"][:2] == (0, 1) and dm_ctrl["ctrl_mid_cut"][3] == "md_incomplete"
+        and all(v_[4] for v_ in dm_ctrl.values()),
+        f"⛔음성 DM P0-1 · P0-2 (Codex 재현): 궤적 앞부분 + thermo 에 온전한 끝 시각 행 · pass 판정이 있던 폴더를 원자료 소실 뒤 재판정 · "
+        f"pass 판정이 임시 파일에만 → 선언이 맞아도 재담금질 0 · 보류 · 폴더 그대로 / 대조: 진짜 plan 전 판정만 · 명확한 도중 끊김 → 재시도 1 · "
+        f"rc 0 ({dm_cases} · {dm_ctrl})")
     rc_w1, L_w1, rr_w = go(wt, scen={("B", 12): {"raise_on_poll": 3, "polls": 6}})
     sw1 = J(rr_w / "STOP.json")
     (rr_w / "B/seed12").rename(rr_w / "B/seed12.int1")
@@ -1756,6 +1810,10 @@ def _selftest():
     s_dlnp = hist_case([{"decl": OUT, "stage": "md_complete_noplan"}])[1]     # 회신 DL P0 반례 1 — 소비자도 같은 판독
     s_dltp = hist_case([{"decl": OUT, "stage": "md_tmp"}])[1]                 # 회신 DL P0 반례 2
     s_dlen = hist_case([{"decl": OUT, "stage": "end_no_marker"}])[1]          # 회신 DL Q2 — 기록 없이 끝 경계
+    s_dmer = hist_case([{"decl": OUT, "stage": "end_row_kept"}])[1]           # 회신 DM P0-1 — 남은 끝 시각
+    s_dmhp = hist_case([{"decl": OUT, "stage": "noplan_hist_pass"}])[1]       # 회신 DM P0-2 반례 1
+    s_dmvt = hist_case([{"decl": OUT, "stage": "noplan_vtmp_pass"}])[1]       # 회신 DM P0-2 반례 2
+    s_dmjd = hist_case([{"decl": OUT, "stage": "noplan_judged"}])[1]          # 대조 — 진짜 plan 전 판정만
     s_fn = hist_case([{"decl": OUT, "stage": "final"}])[1]
     s_ivn = hist_case([{"kind": "invalid", "stage": "final", "status": "ended", "rc": 0, "decl": FIX}])[1]
     s_ivy = hist_case([{"kind": "invalid", "stage": "final", "status": "ended", "rc": 0,
@@ -1771,6 +1829,8 @@ def _selftest():
              "move_out": inv_(s_mo, "보존 누락"), "md_complete": inv_(s_mc, "MD 까지"), "final": inv_(s_fn, "끝까지"),
              "dl_noplan": inv_(s_dlnp, "완료 단계를 못 읽는데"), "dl_tmp": inv_(s_dltp, "완료 단계를 못 읽는데"),
              "dl_end": inv_(s_dlen, "완료 단계를 못 읽는데"),
+             "dm_end_row": inv_(s_dmer, "완료 단계를 못 읽는데"), "dm_noplan_hist": inv_(s_dmhp, "완료 단계를 못 읽는데"),
+             "dm_noplan_vtmp": inv_(s_dmvt, "완료 단계를 못 읽는데"), "dm_noplan_judged": s_dmjd["track"],
              "invalid_final_no_reason": inv_(s_ivn, "다시 판정할 수 없다"), "invalid_final_reason": s_ivy["track"],
              "cap_run_outage_reason": inv_(s_cpo, "상한으로 멈춘 런"), "runner_on_stripped": (rc_sl, len(L_sl)),
              "same_answer_folder_vs_ledger": (s_fo["track"], s_fo["cost"]["cap_h"], s_fo["cost"]["total_h"]) == (s_lb["track"], s_lb["cost"]["cap_h"], s_lb["cost"]["total_h"])
@@ -1778,6 +1838,7 @@ def _selftest():
     exp_c = {"ok": "stage1_pass", "two": True, "two_kind": True, "strip_ledger": True, "strip_all": True, "att_mismatch": True, "att_gone": True,
              "no_decl": True, "rebind": True, "wrong_kind": True, "cut_verdict": True, "move_out": True, "md_complete": True, "final": True,
              "dl_noplan": True, "dl_tmp": True, "dl_end": True,
+             "dm_end_row": True, "dm_noplan_hist": True, "dm_noplan_vtmp": True, "dm_noplan_judged": "stage1_pass",
              "invalid_final_no_reason": True, "invalid_final_reason": "stage1_pass", "cap_run_outage_reason": True,
              "runner_on_stripped": (RC["invalid"], 0), "same_answer_folder_vs_ledger": True}
     chk(got_c == exp_c,
@@ -1790,7 +1851,7 @@ def _selftest():
     src_ = rr_d / "B/seed13"
     def ufold(name, stage="md_incomplete", verdict=None):
         d = ue / name; d.mkdir()
-        if stage != "no_plan":
+        if stage not in NOPLAN_STAGES:
             shutil.copy(src_ / "plan.json", d / "plan.json")
             lines = (src_ / "traj.xyz").read_text(encoding="utf-8").splitlines(keepends=True)
             fr = int(lines[0]) + 2; n_fr = len(lines) // fr
@@ -1809,6 +1870,7 @@ def _selftest():
                 shutil.copy(src_ / "final.xyz", d / "final.xyz")
             if stage == "unreadable":
                 (d / "plan.json").write_text('{"melt', encoding="utf-8")
+        dm_stage(d, stage, th_full=(src_ / "thermo.csv").read_text(encoding="utf-8").splitlines(keepends=True))
         if verdict is not None:
             (d / "stage1_verdict.json").write_text(verdict, encoding="utf-8")
         return {"path": str(d)}
@@ -1848,6 +1910,11 @@ def _selftest():
         "dl_tmp": E([run0()], rcpt(), {R0: ufold("dt", stage="md_tmp")}),
         "dl_end": E([run0()], rcpt(), {R0: ufold("de", stage="end_no_marker")}),
         "dl_inv_tmp": E([run0(verdict="invalid")], rcpt("invalid", FIX), {R0: ufold("di", stage="md_tmp", verdict=INV)}),
+        # ⭐ 회신 DM P0-1 · P0-2 — 남은 끝 시각 · 판정 기록의 완료 흔적은 보류 / 대조: 진짜 plan 전 판정만 있는 폴더는 재시도
+        "dm_end_row": E([run0()], rcpt(), {R0: ufold("me", stage="end_row_kept")}),
+        "dm_noplan_hist": E([run0()], rcpt(), {R0: ufold("mh", stage="noplan_hist_pass")}),
+        "dm_noplan_vtmp": E([run0()], rcpt(), {R0: ufold("mt", stage="noplan_vtmp_pass")}),
+        "dm_noplan_judged": E([run0()], rcpt(), {R0: ufold("mj", stage="noplan_judged")}),
     }
     exp_u = {"ok": (True, None), "no_plan_ok": (True, None), "ledger_fail": (False, "invalid"), "ledger_fail_no_folder": (False, "invalid"),
              "missing_invalid": (False, "resume"),
@@ -1856,7 +1923,9 @@ def _selftest():
              "other_run": (False, "resume"), "unacked": (False, "resume"), "inv_needs_rejudge": (False, "invalid"), "inv_rejudge_ok": (True, None),
              "inv_wrong_code": (False, "invalid"), "inv_outage_reason": (False, "invalid"), "cap_outage": (False, "resume"),
              "cap_raise": (True, None), "two": (False, "invalid"), "inv_then_int": (True, None),
-             "dl_noplan_done": (False, "resume"), "dl_tmp": (False, "resume"), "dl_end": (False, "resume"), "dl_inv_tmp": (False, "resume")}
+             "dl_noplan_done": (False, "resume"), "dl_tmp": (False, "resume"), "dl_end": (False, "resume"), "dl_inv_tmp": (False, "resume"),
+             "dm_end_row": (False, "resume"), "dm_noplan_hist": (False, "resume"), "dm_noplan_vtmp": (False, "resume"),
+             "dm_noplan_judged": (True, None)}
     got_u = {k: (v["ok"], v["code"]) for k, v in cases.items()}
     chk(got_u == exp_u and "한도" in cases["two"]["why"] and "FIRE" in cases["fire"]["why"] and "못 찾는다" in cases["missing_invalid"]["why"]
         and "못 읽는다" in cases["folder_cut"]["why"] and "선언 문제" in cases["no_decl"]["why"] and cases["ok"]["kind"] == "interrupted"
