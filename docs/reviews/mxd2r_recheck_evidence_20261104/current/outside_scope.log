@@ -1,0 +1,17 @@
+boundary_periodic          global setting                           {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+newton_on                  global setting                           {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+atom_style_sphere          global setting                           {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+communicate_cutoff         global setting                           {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+hard_particles_no          global setting                           {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+atom_modify_sort           global setting                           {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+thermo_lost_error          output/lost-atom policy                  {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+neighbor_nsq               neighbor build style                     {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+template_extra_option      particletemplate/sphere trailing option  {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+template_quote_hash        particletemplate/sphere quoted # (unpinned line) {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+pdd_seed                   RNG seed (distribution)                  {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+insert_b_seed              RNG seed (2nd insertion)                 {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+insert_region_geometry     geometry (supplied input)                {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+mesh_scale                 geometry (supplied input)                {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+dump_modify_added          output only                              {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+thermo_every               output only                              {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+write_restart_removed      checkpoint only                          {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}

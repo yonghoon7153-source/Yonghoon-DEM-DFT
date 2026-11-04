@@ -1,0 +1,53 @@
+test_actual_command_scope (__main__.D2Consumers.test_actual_command_scope) ... /workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py:1122: ResourceWarning: unclosed file <_io.BufferedReader name='/workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py'>
+  generator_sha256=hashlib.sha256(open(os.path.abspath(__file__), 'rb').read()).hexdigest(),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_actual_common_mode_mutations (__main__.D2Consumers.test_actual_common_mode_mutations) ... ok
+test_ceiling_and_ced_meta_rebinding (__main__.D2Consumers.test_ceiling_and_ced_meta_rebinding) ... ok
+test_cli_and_duplicate_json (__main__.D2Consumers.test_cli_and_duplicate_json) ... ok
+test_command_lifecycle (__main__.D2Consumers.test_command_lifecycle) ... ok
+test_coordinated_density_and_gravity_vector (__main__.D2Consumers.test_coordinated_density_and_gravity_vector) ... ok
+test_counts_are_from_actual_inputs (__main__.D2Consumers.test_counts_are_from_actual_inputs) ... ok
+test_d2_pairs_and_old_contracts (__main__.D2Consumers.test_d2_pairs_and_old_contracts) ... ok
+test_dt_half_and_legacy_cli_positive (__main__.D2Consumers.test_dt_half_and_legacy_cli_positive) ... ok
+test_generation_and_supported_phase_positive (__main__.D2Consumers.test_generation_and_supported_phase_positive) ... ok
+test_meta_binding_and_numeric_boundaries (__main__.D2Consumers.test_meta_binding_and_numeric_boundaries) ... ok
+test_mxd2r01_codex_time_insert_rotation (__main__.D2Consumers.test_mxd2r01_codex_time_insert_rotation)
+MXD2R-01 — Codex 네 공통 변조 (run upto · 늦은 timestep · 삽입 start · Front 주기): API 셋 FAIL · CLI 셋 rc 1 · 사유. ... ok
+test_mxd2r01_same_class_generator_grammar (__main__.D2Consumers.test_mxd2r01_same_class_generator_grammar)
+MXD2R-01 같은 부류 — run 옵션 · timestep 위치/토큰 · 삽입 반복/start/속도 · Back 주기 (API 셋). ... ok
+test_mxd2r02_codex_contact_exclusion_and_friction (__main__.D2Consumers.test_mxd2r02_codex_contact_exclusion_and_friction)
+MXD2R-02 — Codex SE–SE 접촉 제외 · 보조 탐침 마찰 행렬 삭제: API 셋 FAIL · CLI 셋 rc 1 · 사유. ... ok
+test_mxd2r02_material_copies_match_generator (__main__.D2Consumers.test_mxd2r02_material_copies_match_generator)
+재료 fix 목록 · 상수 = 생성기 덱에서 뽑은 것과 정확히 같다 (사본이 갈리면 여기서 드러난다 · fail-closed). ... ok
+test_mxd2r02_same_class_contact_and_materials (__main__.D2Consumers.test_mxd2r02_same_class_contact_and_materials)
+MXD2R-02 같은 부류 — 다른 제외 · 이웃 갱신 옵션 · 재료 fix 결손/중복/값/순서/모르는 이름 · pair 위치/계수 (API 셋). ... ok
+test_mxd2r03_physical_bytes_api (__main__.D2Consumers.test_mxd2r03_physical_bytes_api)
+MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유. ... ok
+test_mxd2r03_physical_bytes_cli_both_directions (__main__.D2Consumers.test_mxd2r03_physical_bytes_cli_both_directions)
+MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유). ... ok
+test_mxd2r04_copies_match_generator (__main__.D2Consumers.test_mxd2r04_copies_match_generator)
+MXD2R-04 사본 ↔ 생성기 — 전역 설정 줄 · 드럼 기본값 · 분포 시드 · 소수 규칙 · dump 열 · 전 정밀도 형식 · 템플릿 시드 · 시드 상한. ... ok
+test_mxd2r04_metadata_coordinated_rules (__main__.D2Consumers.test_mxd2r04_metadata_coordinated_rules)
+MXD2R-04 — 메타까지 같이 바꾼 덱 (해시 재결합 + 메타가 덱과 같은 말 → 메타 결합으로는 못 잡는다): 합성수 시드 · 2^31−1 넘는 소수 ... ok
+test_mxd2r04_neighbor_skin_generator_form (__main__.D2Consumers.test_mxd2r04_neighbor_skin_generator_form)
+MXD2R-04 범위 넓힘 (1저자 11-03 밤 Q4) — 두 덱에 같이 바꾼 neighbor skin (×1.1 · ×2 · AM 반지름 · 1e-9 · 같은 값 다른 표기): ... ok
+test_mxd2r04_outside_scope_17_api_and_cli (__main__.D2Consumers.test_mxd2r04_outside_scope_17_api_and_cli)
+MXD2R-04 — 사전 공격이 보고한 범위 밖 공통 변조 17 (전역 설정 · 템플릿 뒤 옵션 · 따옴표 # · RNG 시드 · 기하 · 출력 · 체크포인트): ... ok
+test_mxd2r04_parser_equivalence_characters (__main__.D2Consumers.test_mxd2r04_parser_equivalence_characters)
+MXD2R-04 문자 꼴 — 탭 · NBSP · 전각 · 폭 없는 공백 · 주석 안 NUL · 주석 끝 '&'+유니코드 공백 · 이음 꼴 · $ · 따옴표 · 끝 줄바꿈 ... ok
+test_mxd2r04_positive_generator_options (__main__.D2Consumers.test_mxd2r04_positive_generator_options)
+양성 보존 — 생성기 꼴 엄격이 생성기 출력 (전 정밀도 덤프 · dt/3 · 다른 Froude · 다른 소수 시드 · 균일 · 층상 · 2 · 3 상) 을 받는다. ... ok
+test_mxd2r04_same_class_spelling_identity_order (__main__.D2Consumers.test_mxd2r04_same_class_spelling_identity_order)
+MXD2R-04 같은 부류 — 같은 값 다른 표기 · 생성기 이름 · 순서 · 중복 · 결손 · 배플 · 출력 · 체크포인트 · skin 토큰 꼴 (API 셋). ... ok
+test_mxd2r04_timestep_spelling_with_metadata (__main__.D2Consumers.test_mxd2r04_timestep_spelling_with_metadata)
+같은 값 다른 timestep 표기를 메타 deck_txt 에도 같이 넣은 덱 (k = 1 · 2 · 3) — 메타 결합만으로는 못 잡는다 → 생성기 표기로 거부. ... ok
+test_mxd2r_positive_codex_independent_48 (__main__.D2Consumers.test_mxd2r_positive_codex_independent_48)
+양성 보존 (판정문 §7 (4)) — Codex 독립 정상 48 조합: 세 소비자 PASS · SE Bo · 상별 계획수 독립 산술 일치 · 증서 아님. ... ok
+test_pair_identity_and_orientation (__main__.D2Consumers.test_pair_identity_and_orientation) ... ok
+test_tokens_and_nested_schema (__main__.D2Consumers.test_tokens_and_nested_schema) ... ok
+
+----------------------------------------------------------------------
+Ran 29 tests in 25.092s
+
+OK

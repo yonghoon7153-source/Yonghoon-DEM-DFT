@@ -1,0 +1,2 @@
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: deck contains 179 CR (0x0D) byte(s) — CRLF/CR line endings are rejected: D2 development decks are LF-only generator output (never normalized before hashing or parsing)

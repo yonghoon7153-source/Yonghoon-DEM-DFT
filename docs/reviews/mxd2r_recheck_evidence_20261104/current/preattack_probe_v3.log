@@ -1,0 +1,94 @@
+ok  tab_in_code                        expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  tab_in_comment                     expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  form_feed_in_code                  expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  nul_in_code                        expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  nul_in_comment                     expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  del_in_comment                     expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  nel_in_comment_middle              expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  esc_in_comment                     expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  nbsp_in_code                       expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  ideographic_space_in_code          expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  line_separator_in_code             expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  zero_width_space_in_code           expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  fullwidth_letters                  expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  cyrillic_homoglyph                 expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  combining_mark                     expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  fullwidth_digit                    expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  single_quote                       expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  double_quote_hash_on_template      expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dollar_variable                    expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dollar_immediate                   expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  comment_amp_nbsp_hides_command     expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  comment_amp_ideographic            expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  comment_amp_ascii                  expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  command_amp_then_comment           expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  continuation_no_space              expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  continuation_trailing_space        expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  continuation_trailing_nbsp         expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  continuation_double_amp            expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  continuation_then_blank_line       expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  amp_only_line                      expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  missing_final_newline              expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  nul_after_final_newline            expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  blank_lines_added                  expect PASS got {'readback': 'PASS', 'pair': 'PASS', 'plan': 'PASS'}
+ok  comment_lines_added                expect PASS got {'readback': 'PASS', 'pair': 'PASS', 'plan': 'PASS'}
+ok  nbsp_in_comment_middle             expect PASS got {'readback': 'PASS', 'pair': 'PASS', 'plan': 'PASS'}
+ok  line_separator_in_comment          expect PASS got {'readback': 'PASS', 'pair': 'PASS', 'plan': 'PASS'}
+ok  leading_spaces_on_command          expect PASS got {'readback': 'PASS', 'pair': 'PASS', 'plan': 'PASS'}
+ok  single_space_layout                expect PASS got {'readback': 'PASS', 'pair': 'PASS', 'plan': 'PASS'}
+ok  trailing_spaces_on_command         expect PASS got {'readback': 'PASS', 'pair': 'PASS', 'plan': 'PASS'}
+ok  trailing_comment_on_command        expect PASS got {'readback': 'PASS', 'pair': 'PASS', 'plan': 'PASS'}
+ok  double_final_newline               expect PASS got {'readback': 'PASS', 'pair': 'PASS', 'plan': 'PASS'}
+ok  skin_nan                           expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  skin_inf                           expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  skin_empty                         expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  skin_zero                          expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  skin_negative                      expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  skin_extra_token                   expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  skin_same_value_spelling           expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  skin_value_x1.1                    expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  skin_upper_exponent                expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  skin_plus_sign                     expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  skin_leading_zero                  expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  skin_unicode_digit                 expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  skin_tab_separator                 expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  skin_nbsp_separator                expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  skin_other_cgf_generator           expect PASS got {'readback': 'PASS', 'pair': 'PASS', 'plan': 'PASS'}
+ok  skin_value_of_other_cgf            expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  box_nan                            expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  mesh_scale_inf                     expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  ced_diagonal_exponent_spelling     expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  material_unicode_digit             expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  material_exponent_spelling         expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dist_b_seed_same_as_a              expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  insert_b_seed_same_as_a            expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  compute_duplicated                 expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  thermo_modify_removed              expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  command_appended_at_end            expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  front_period_exp_spelling          expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  origin_spelling                    expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  seed_composite                     expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  seed_prime_over_int32              expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dt_k1_exponent_unpadded            expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dt_k1_plus_sign                    expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dt_k2_padded                       expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dt_k3_padded                       expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  settle_steps_not_multiple_of_k     expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dump_interval_off_rule             expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  restart_interval_off_rule          expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dpf_exact                          expect PASS got {'readback': 'PASS', 'pair': 'PASS', 'plan': 'PASS'}
+ok  dpf_double_space                   expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dpf_trailing_comment               expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dpf_meta_format_mismatch           expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dpf_meta_and_line_changed          expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dpf_line_missing                   expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dpf_line_duplicated                expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  dpf_meta_removed                   expect FAIL got {'readback': 'FAIL', 'pair': 'FAIL', 'plan': 'FAIL'}
+ok  bytes_lf                           expect PASS got {'readback': 'PASS'}
+ok  bytes_nbsp_continuation            expect FAIL got {'readback': 'FAIL'}
+ok  bytes_nul_in_comment               expect FAIL got {'readback': 'FAIL'}
+ok  bytes_overlong_nul                 expect FAIL got {'readback': 'FAIL'}
+ok  bytes_crlf                         expect FAIL got {'readback': 'FAIL'}
+ok  bytes_bom                          expect FAIL got {'readback': 'FAIL'}
+ok  bytes_tab                          expect FAIL got {'readback': 'FAIL'}
+93/93 as the guarantee requires
