@@ -1151,14 +1151,14 @@ $PY -u scripts/mpm3d_compaction.py --am-scaffold docs/data/case15_corner_2026100
 
 | 칸 | 값 |
 |---|---|
-| 봉인 시각 = 이 절이 본 가지에 들어간 커밋 (Q13) | ⬜ 발사 전 채움 (병합 뒤) |
-| gabia 리포 자리 · `~/fam-wt` HEAD · mpm3d md5 | ⬜ 발사 전 채움 (기대 = ① 4 · 5) |
-| CSV 넷 sha256 | ⬜ 발사 전 채움 (기대 = ② 표) |
-| kgy `ti310` 판 (python · taichi · numpy · scipy) | ⬜ 발사 전 채움 (③ 11) |
-| gabia `~/fam-mpm310` 판 (python · taichi · numpy · scipy) | ⬜ 발사 전 채움 (③ 15) |
-| `nvidia-smi` 총 · 여유 (③ 16 · 팔마다 ④ 18) | ⬜ 발사 전 채움 |
-| 건식 표 (팔 · rc · 상태 줄 · frame_lines · JSON 필드 수 · 걸린 시간 · `3D MPM` 줄의 grid · pts) | ⬜ 발사 전 채움 (④) |
-| 발사 러너 (팔 넷 = 위 등록 문안 · 앞머리 = `SEAL_COMMIT` · md5 · sha256 넷 · 여유 메모리 · `[m]pm3d` 검사 · 시작 줄 `§12-7 시작`) md5 · 옮기는 법 | ⬜ 발사 전 채움 (다음 단계 = 1저자) |
+| 봉인 시각 = 이 절이 본 가지에 들어간 커밋 (Q13) | `e1be7d077` (2026-11-03 11:42:53 UTC · FAM §12-7 본 등록) · 개정 = 12-7-2 (`74150affc`) |
+| gabia 리포 자리 · `~/fam-wt` HEAD · mpm3d md5 | `~/Yonghoon-DEM-DFT` · `~/fam-wt` = `7f44d6534d864f7be2f3310fa55d213b65cc707d` (worktree · detached) · mpm3d md5 c31f0512021d416702e162709c6f4400 · `SEAL_COMMIT` = `7f44d6534` (11-04 gabia 화면 · 발사 러너 앞머리가 발사 때 다시 대조) |
+| CSV 넷 sha256 | ② 표와 넷 다 같음 (11-04 gabia 화면 · 발사 러너 앞머리가 다시 대조) |
+| kgy `ti310` 판 (python · taichi · numpy · scipy) | 3.10.21 · 1.7.3 · 2.2.6 · 1.15.3 |
+| gabia `~/fam-mpm310` 판 (python · taichi · numpy · scipy) | 3.10.21 · 1.7.3 · 2.2.6 · 1.15.3 (kgy 와 같음 · 건식 화면 `[Taichi] version 1.7.3, llvm 15.0.4, commit 5ec301be, linux, python 3.10.21` · 발사 러너가 발사 때 다시 적는다) |
+| `nvidia-smi` 총 · 여유 (③ 16 · 팔마다 ④ 18) | `49140, 48539` (건식 1 차 앞 점검) · 발사 러너가 앞머리 · 팔마다 다시 적는다 |
+| 건식 표 (팔 · rc · 상태 줄 · frame_lines · JSON 필드 수 · 걸린 시간 · `3D MPM` 줄의 grid · pts) | 12-7-2 건식 1 차 (확인 런) · 건식 2 차 (corner 셋) 표 |
+| 발사 러너 (팔 넷 = 위 등록 문안 · 앞머리 = `SEAL_COMMIT` · md5 · sha256 넷 · 여유 메모리 · `[m]pm3d` 검사 · 시작 줄 `§12-7 시작`) md5 · 옮기는 법 | `docs/reviews/fam_s127_runner/run_s127.sh` md5 `6e4b12b8cd296ec7b00376de07cf46b4` (시험 747 / 747 · 변이 18 / 18 · `docs/reviews/fam_s127_runner/README.md`) · 옮기는 법 = 12-7-3 (gabia 에서 `git show` → md5 대조) |
 | 발사 시각 (= 러너의 `§12-7 시작` 줄) | ⬜ 발사 전 채움 (= 1저자) |
 
 #### 12-7-2. 건식 1 차 기록 · corner argv 개정 (11-04 · 결과 0 건 · 1저자 11-04 *"다 권고대로"*)
@@ -1180,3 +1180,43 @@ $PY -u scripts/mpm3d_compaction.py --am-scaffold docs/data/case15_corner_2026100
 - 버린 안: (다) 관문 비교에 허용폭을 넣는 코드 수정 (봉인 md5 가 바뀐다) · (가) `--allow-fast-platen` (결과 JSON 에 "준정적 위반" 표지가 거짓으로 박힌다).
 - 건식 2 차 = corner 세 팔만 · 새 폴더 `~/fam_s127/dryrun_r2` (1 차 폴더는 그대로 둔다 · 확인 런 건식은 1 차 기록으로 갈음).
 - 한정: 0.0099999 는 처방 범위 (V/c_P ≤ 0.01–0.02 · §7-2) 안이다.  재하율 차는 상대 10⁻⁵ 이고 이 차이의 응력 효과는 재지 않았다 (어림으로 무시할 크기 · 확인 안 함).
+
+**건식 2 차** (11-04 · gabia · `~/fam-wt` = `7f44d6534` · 폴더 `~/fam_s127/dryrun_r2` · corner 세 팔만 · argv = 19-2 · 19-3 · 19-4 + `--platen-mach 0.0099999` · rc · 시각 = 1저자 tmux 화면 기록 (awk 로 `== 팔` · 날짜 · `rc=` 줄만) · 로그 파일 생성 · 마지막 쓰기 시각과 같은 분):
+
+| 건식 팔 | rc | 상태 줄 | frame_lines | JSON | 걸린 시간 | `3D MPM` 줄 | 기대와 |
+|---|---|---|---|---|---|---|---|
+| corner f_(b) 0.9007 | 1 | `servo_status = not_converged_frame_budget` · 프로브 0 회 (등록된 1 프레임 중단) | 1 | 없음 | 10:31:47 → 10:32:44 (57 s) | `grid=768  pts=95874312` · `[platen] … V/c_P=0.010  V/c_S=0.07` | pts 만 다름 (등록 어림 ≤ 94,649,442) → Q4 → 같음 |
+| corner f_(a) 0.8240 | 1 | 같음 | 1 | 없음 | 10:37:06 → 10:37:50 (44 s) | `grid=768  pts=95874312` | 같음 (Q4 기준) |
+| corner `f = 0` (플래그) | 0 | `saved metrics → … (72 fields)` · `[stop]` 없음 | 1 | 있음 (72 필드) | 10:37:50 → 10:39:34 (104 s) | `grid=768  pts=95874312` | 같음 (Q4 기준) |
+
+세 팔 다 `[Taichi] Starting on arch=cuda` · `Traceback` · `CUDA_ERROR` 0 · `capping to` 없음.
+
+- **pts 기준 개정 (1저자 11-04 Q4 *"권고대로"* · 결과 0 건)**: 12-7-1 표의 `pts= ≤ 94,649,442 (= 65,866 × 1,437 · 12-5-9 산술 상한)` 은 **상한이 아니라 내 어림**이었다 (실측 95,874,312 = 어림의 1.0129 배) → corner 세 팔의 기대 = **corner_fb 의 pts 와 같음** (세 팔이 같은 스캐폴드 · 같은 격자라 같아야 한다 · 95,874,312 셋 다 같음).  메모리 산술 (12-7 · 21.06 GiB) 은 점 수 어림을 쓰므로 실측 점 수로는 +1.3 % 남짓 크다 (어림 · 건식 할당 성공으로 확인).
+- **읽기 규칙 이탈 (내 잘못 · 원장 SELF)**: 건식 2 차 첫 블록 (corner_fb) 의 확인 함수가 "기대와 다름" 가지에서 로그 끝 8 줄 (`tail -8`) 을 찍어 1 프레임 런의 SystemExit 문구 (설정점 대비 `wallP_end` 값 줄) 가 1저자 화면에 나왔다 — 12-6-2 (`SELF-80`) 와 같은 부류 · 그 값은 1 프레임 중단 값이라 판정에 쓰이지 않는다 (판정 = 본 런 서보 수렴 두께) · 둘째 블록부터 상태 줄만 (확인 함수 `chk2`).
+
+#### 12-7-3. 발사 (1저자 · gabia · 한 줄에 명령 하나 · 영문 입력 · 기대와 다르면 멈추고 보고)
+
+1. 받기 — 기대: `fatal` 없음
+   ```
+   git -C ~/Yonghoon-DEM-DFT fetch origin claude/stoic-knuth-NObVQ
+   ```
+2. 러너 꺼내기 · 지문 — 기대: `6e4b12b8cd296ec7b00376de07cf46b4`
+   ```
+   git -C ~/Yonghoon-DEM-DFT show origin/claude/stoic-knuth-NObVQ:docs/reviews/fam_s127_runner/run_s127.sh > ~/run_s127.sh; md5sum ~/run_s127.sh
+   ```
+3. 앞 점검 — 기대: `49140, F` (F ≥ 31858) · pgrep 줄 없음 · `fam_s127_` 로 시작하는 파일 없음 (`dryrun` · `dryrun_r2` 폴더만)
+   ```
+   nvidia-smi --query-gpu=memory.total,memory.free --format=csv,noheader,nounits; pgrep -af '[m]pm3d_compaction.py'; ls ~/fam_s127
+   ```
+4. 띄우기 (= 발사 · 기한 11-10 안 · tmux 세션 이름 `fam127`)
+   ```
+   tmux new -d -s fam127 'bash ~/run_s127.sh'
+   ```
+5. 확인 (몇 초 뒤) — 기대: `HEADER ok …` · `§12-7 시작 <시각>` · `PRE confirm_fb ok …` · `RUN confirm_fb …` (`REFUSED` 나 `SKIP` 이면 그 줄을 보고)
+   ```
+   cat ~/fam_s127/batch_s127.log
+   ```
+6. 지켜보기 (아무 때나 · 값 줄 없음) — `tail -5 ~/fam_s127/batch_s127.log`
+7. 일찍 멈추기 (1저자만 · Rint R 에 gabia 를 비울 때 등) — `touch ~/fam_s127/STOP` (60 s 안 TERM · 다음 팔 없음)
+
+- 발사 시각 = 5 의 `§12-7 시작` 줄 → 봉인 칸에 적는다.  확인 런이 기술 관문을 못 넘으면 러너가 `CONFIRM_GATE_FAIL` 로 멈춘다 (corner 없음 · 1저자에게).
