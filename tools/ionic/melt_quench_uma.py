@@ -666,7 +666,7 @@ def validate_li2s2_values(v):
 def read_li2s2_values(card=LI2S2_CARD):
     """li2s-2 카드의 `기계_판독_값` — 이 도구는 그 카드의 문턱 · 일정 · 목표 밀도를 **자체 보관하지 않는다**.
     값이 이 도구가 구현한 것과 안 맞으면 (estimator 이름 · 비유한 값 · 빠진 필드) **읽기에서 죽는다** (회신 DG P1-7)."""
-    d = json.loads(pathlib.Path(card).read_text(encoding="utf-8"))
+    d = loads_strict(pathlib.Path(card).read_text(encoding="utf-8"))   # ⭐ 회신 DO P1 — 카드도 같은 열쇠 둘을 받지 않는다
     v = d.get("기계_판독_값")
     if not v:
         raise KeyError(f"{card} 에 '기계_판독_값' 이 없다 — 카드 없이 판정하지 않는다")
@@ -763,7 +763,7 @@ def melt_window_check(run_dir, *, values=None, card=LI2S2_CARD, log=print):
     if mw.get("estimator") != MELT_WINDOW_ESTIMATOR:     # 회신 DG P1-7 — 카드가 다른 판독량을 부르면 이 이름으로 돌리지 않는다
         return done("invalid", f"카드 estimator {mw.get('estimator')!r} ≠ 이 도구가 구현한 {MELT_WINDOW_ESTIMATOR!r}")
     try:                                                  # 회신 DG P0-2 — 담금질 시작 직후에는 plan.json 이 아직 없다
-        plan = json.loads((run / "plan.json").read_text(encoding="utf-8"))
+        plan = loads_strict((run / "plan.json").read_text(encoding="utf-8"))   # ⭐ 회신 DO P1 — 같은 열쇠 둘은 예외 (호출자가 보류)
     except FileNotFoundError:
         return done("incomplete", "plan.json 이 아직 없다 (담금질 시작 직후) — 기다린다")
     except (json.JSONDecodeError, UnicodeDecodeError) as e:
@@ -992,7 +992,7 @@ def identity_check(run_dir, plan):
         att_ = None
         if m_:
             try:
-                att_ = json.loads((rd_ / ATTEMPT_NAME).read_text(encoding="utf-8"))
+                att_ = loads_strict((rd_ / ATTEMPT_NAME).read_text(encoding="utf-8"))
             except (OSError, ValueError, RecursionError):
                 att_ = None
         if (m_ and isinstance(att_, dict) and att_.get("system") == rd_.parent.name and type(att_.get("seed")) is int
@@ -1040,10 +1040,13 @@ def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print, reason="
     run = pathlib.Path(run_dir)
     plan = None
     try:
-        plan = json.loads((run / "plan.json").read_text(encoding="utf-8"))
+        plan = loads_strict((run / "plan.json").read_text(encoding="utf-8"))   # ⭐ 회신 DO P1 — 같은 열쇠 둘은 마지막 값으로 읽지 않는다
+        if not isinstance(plan, dict):
+            raise ValueError("plan.json 이 객체가 아니다")
     except FileNotFoundError:
         res = {"status": "incomplete", "reasons": {"incomplete": ["plan.json 없음"]}, "run": str(run)}
-    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+    except (ValueError, UnicodeDecodeError, RecursionError) as e:
+        plan = None
         res = {"status": "incomplete", "reasons": {"incomplete": [f"plan.json 을 못 읽는다 ({type(e).__name__})"]}, "run": str(run)}
     if plan is not None:
         files = {f: (run / f).is_file() for f in ("result.json", "final.xyz", "thermo.csv", "traj.xyz")}
@@ -1090,10 +1093,13 @@ def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print, reason="
     res["reason"] = reason
     vf = run / "stage1_verdict.json"
     if vf.is_file():
-        try:
-            prev = json.loads(vf.read_text(encoding="utf-8"))
-        except (json.JSONDecodeError, UnicodeDecodeError) as e:
-            prev = {"status": None, "⛔": f"이전 판정 파일을 못 읽었다 ({type(e).__name__})", "raw_text": vf.read_text(encoding="utf-8", errors="replace")}
+        try:                                                 # ⭐ 회신 DO P1 — 엄격히 읽는다 · 못 읽으면 원문 그대로 이력에 (마지막 값으로 정규화하지 않는다)
+            prev = loads_strict(vf.read_text(encoding="utf-8"))
+            if not isinstance(prev, dict):
+                raise ValueError("이전 판정이 객체가 아니다")
+        except (ValueError, UnicodeDecodeError, RecursionError) as e:
+            prev = {"status": None, "⛔": f"이전 판정 파일을 못 읽었다 ({type(e).__name__}: {str(e)[:60]}) — 원문을 raw_text 로 남긴다",
+                    "raw_text": vf.read_text(encoding="utf-8", errors="replace")}
         h = _append_history(run, prev, res, reason)
         res["history"] = {"file": VERDICT_HISTORY, "prev_status": h["prev_status"], "changed": h["changed"]}
     tmp = vf.with_name(vf.name + ".tmp")
@@ -1213,12 +1219,12 @@ def attempt_inventory(out_root):
                 if not p.is_file():
                     continue
                 try:
-                    rec = json.loads(p.read_text(encoding="utf-8"))
+                    rec = loads_strict(p.read_text(encoding="utf-8"))   # ⭐ 회신 DO P1
                     rid, sysn, seed = rec.get("run_id"), rec.get("system"), rec.get("seed")
                     if not (isinstance(rid, str) and RUN_ID_RE.fullmatch(rid)
                             and sysn == system and type(seed) is int):
                         raise ValueError("실행 식별 필드 불일치")
-                except (OSError, ValueError, AttributeError) as e:
+                except (OSError, ValueError, AttributeError, RecursionError) as e:
                     invalid.append(f"{p}: 실행 신원을 못 읽음 ({type(e).__name__})")
                     continue
                 ids.append((rid, sysn, seed))
@@ -1462,10 +1468,10 @@ def _verdict_records(folder):
         return [], "판정 임시 파일 (stage1_verdict.json.tmp) 이 남았다 — 판정 도중 끊김 · 그 안에 완료 판정이 있을 수 있다"
     recs = []
     if os.path.lexists(vf):
-        try:
-            v = json.loads(vf.read_text(encoding="utf-8"))
-        except (OSError, ValueError):
-            return [], "판정 파일을 못 읽는다"
+        try:                                                 # ⭐ 회신 DO P1 — 같은 열쇠 둘 (n 130 · 71) 을 마지막 값으로 읽지 않는다
+            v = loads_strict(vf.read_text(encoding="utf-8"))
+        except (OSError, ValueError, RecursionError) as e:
+            return [], f"판정 파일을 못 읽는다 ({type(e).__name__}: {str(e)[:60]})"
         recs.append(("현재 판정", v, False))
     hp = f / VERDICT_HISTORY
     if os.path.lexists(hp):
@@ -1477,9 +1483,9 @@ def _verdict_records(folder):
             if not ln.strip():
                 continue
             try:
-                h = json.loads(ln)
-            except ValueError:
-                return [], f"판정 이력 {k} 번째 줄을 못 읽는다"
+                h = loads_strict(ln)                             # ⭐ 회신 DO P1
+            except (ValueError, RecursionError) as e:
+                return [], f"판정 이력 {k} 번째 줄을 못 읽는다 ({type(e).__name__}: {str(e)[:60]})"
             if not isinstance(h, dict):
                 return [], f"판정 이력 {k} 번째 줄이 객체가 아니다"
             pv_ = h.get("prev")
@@ -1560,7 +1566,7 @@ def _verdict_evidence(folder, pre_run_only):
         return prob
     plan_frames = None                                       # ⭐ DO 전 리뷰 F4 — 기록에 expected 가 없으면 plan 에서 (stage1_verdict 와 같은 셈)
     try:
-        pl_ = json.loads((pathlib.Path(folder) / "plan.json").read_text(encoding="utf-8"))
+        pl_ = loads_strict((pathlib.Path(folder) / "plan.json").read_text(encoding="utf-8"))
         if all(_fin(pl_.get(k)) for k in ("melt_ps", "quench_ps", "hold_ps", "save_ps")) and float(pl_["save_ps"]) > 0:
             plan_frames = int(round((float(pl_["melt_ps"]) + float(pl_["quench_ps"]) + float(pl_["hold_ps"])) / float(pl_["save_ps"]))) + 1
     except (OSError, ValueError, AttributeError, OverflowError, RecursionError):
@@ -1650,7 +1656,7 @@ def _folder_stage_detail(folder):
             return "unreadable", f"plan.json 이 없는데 {ev} — 보류"
         return "no_plan", "실행 전 · 판정 기록뿐 (plan 전에 끊김 · MD 산출물 없음 · 판정 기록도 plan 전 것)"
     try:
-        plan = json.loads((f / "plan.json").read_text(encoding="utf-8"))
+        plan = loads_strict((f / "plan.json").read_text(encoding="utf-8"))   # ⭐ 회신 DO P1 — 같은 열쇠 둘 = 못 읽음 (보류)
         want = planned_md_steps(plan)
         save_int = save_interval_steps(plan)
     except (OSError, ValueError, KeyError, TypeError, ZeroDivisionError, AttributeError, OverflowError, RecursionError):
@@ -1660,7 +1666,7 @@ def _folder_stage_detail(folder):
     md = f / MD_DONE_NAME
     if os.path.lexists(md):
         try:
-            rec = json.loads(md.read_text(encoding="utf-8"))
+            rec = loads_strict(md.read_text(encoding="utf-8"))
             rid = plan.get("run_id")
             ok = (isinstance(rec, dict) and isinstance(rid, str) and rid and rec.get("run_id") == rid
                   and type(rec.get("n_steps_planned")) is int and type(rec.get("n_steps_done")) is int
@@ -1706,7 +1712,7 @@ def verdict_file_status(folder):
     if not vf.is_file():
         return None
     try:
-        st = json.loads(vf.read_text(encoding="utf-8")).get("status")
+        st = loads_strict(vf.read_text(encoding="utf-8")).get("status")
     except Exception:                                        # OSError · ValueError · AttributeError · RecursionError (DO 전 리뷰 F6)
         return "unreadable"
     return st if st in LI2S2_STATUSES else "unreadable"
@@ -1724,44 +1730,56 @@ def run_kind(row, folder, values=None):
                     (values) 보존 폴더의 녹음 판정 invalid
       'interrupted' 그 밖 — 끊긴 런 (interrupted · orphaned · stop_failed · cap …) 의 폴더를 판정해 invalid 가 나와도 종류는 끊긴 런이다
                     (일찍 끊긴 폴더 · 덜 써진 꼬리 · 보존 이름은 판정이 invalid 로 낼 수 있다 — 그것으로 끊긴 런 한도를 우회하지 않는다)"""
+    return run_kind_detail(row, folder, values)[0]
+
+
+MELT_OBSERVED_KEYS = ("verdict", "message", "D_framework_cm2_s", "window_used_ps", "n_frames_read", "estimator")
+
+
+def run_kind_detail(row, folder, values=None):
+    """⭐ 회신 DO P0 — run_kind 와 **같은 분류** + 그 분류를 정한 근거. 반환 (kind, detail).
+      detail["source"]: ledger (장부 verdict · closes_system · melt_check) · folder_verdict (판정 기록) · folder_melt_window (보존 폴더의
+      녹음 판정을 지금 계산) · unreadable · default · exception
+      detail["melt"]: source 가 folder_melt_window 일 때 그 판정 (MELT_OBSERVED_KEYS) — 러너가 거부하기 **전에** 장부에 적는다
+      (복구 · 확인 경로가 본 과학적 결과를 버리지 않게 · 실시간 감시 경로와 같은 보존)."""
     try:
         return _run_kind(row, folder, values)
-    except Exception:
-        return "unreadable"
+    except Exception as e:
+        return "unreadable", {"source": "exception", "error": f"{type(e).__name__}: {str(e)[:80]}"}
 
 
 def _run_kind(row, folder, values):
     if not isinstance(row, dict):
-        return "unreadable"
+        return "unreadable", {"source": "unreadable"}
     v, mc, cs = row.get("verdict"), row.get("melt_check"), row.get("closes_system")
     if v not in (None, "pass", "fail", "invalid", "incomplete"):
-        return "unreadable"
+        return "unreadable", {"source": "unreadable"}
     if mc is not None and not (isinstance(mc, dict) and mc.get("verdict") in ("fail", "invalid")):
-        return "unreadable"
+        return "unreadable", {"source": "unreadable"}
     if cs is not None and not isinstance(cs, bool):
-        return "unreadable"
+        return "unreadable", {"source": "unreadable"}
     if v in ("pass", "fail") or cs is True or (mc or {}).get("verdict") == "fail":
-        return "scientific"
+        return "scientific", {"source": "ledger"}
     recs, prob = _verdict_records(folder) if folder else ([], None)
     if prob:
-        return "unreadable"
+        return "unreadable", {"source": "unreadable"}
     sts = [r_.get("status") if isinstance(r_, dict) else "?" for _, r_, _ in recs]
     if any(x in ("pass", "fail") for x in sts):
-        return "scientific"
+        return "scientific", {"source": "folder_verdict"}
     if any(x not in LI2S2_STATUSES and x is not None for x in sts):
-        return "unreadable"
+        return "unreadable", {"source": "unreadable"}
     if values is not None and folder and os.path.lexists(pathlib.Path(folder) / "traj.xyz"):
         mw = melt_window_check(folder, values=values, log=lambda *a: None)     # ⭐ DO 전 리뷰 S1d · t12 — 녹음 결과가 이미 정해졌나
         if mw.get("verdict") == "fail":
-            return "scientific"
+            return "scientific", {"source": "folder_melt_window", "melt": {k: mw.get(k) for k in MELT_OBSERVED_KEYS}}
         if mw.get("verdict") == "invalid":
-            return "invalid"
+            return "invalid", {"source": "folder_melt_window"}
     if (mc or {}).get("verdict") == "invalid":
-        return "invalid"
+        return "invalid", {"source": "ledger"}
     st_ = row.get("status_before_orphan") or row.get("status")
     if (v == "invalid" or "invalid" in sts) and st_ in RUN_STATUSES_ENDED:
-        return "invalid"
-    return "interrupted"
+        return "invalid", {"source": "ledger" if v == "invalid" else "folder_verdict"}
+    return "interrupted", {"source": "default"}
 
 
 def declaration_problems(decl, kind, values, rejudge_needed=False, prev_status=None):
@@ -1980,12 +1998,66 @@ def _ledger_check(out_root, verdicts, values):
             "runs": len(runs), "attested": attested, "closing": closing, "source": str(p)}
 
 
+VERDICT_SHAPE = (("status", (str,)), ("run_id", (str,)), ("system", (str,)), ("seed", (int,)), ("closes_system", (bool,)),
+                 ("provenance", (dict,)), ("reasons", (dict,)), ("software", (dict,)), ("checks", (dict,)), ("history", (dict,)),
+                 ("gate_check", (dict,)), ("melt_window_check", (dict,)), ("seed_gate_view", (dict,)))
+
+
+def _verdict_shape_problem(vv):
+    """⭐ 회신 DO P2 — 묶음 판정이 쓰는 판정 기록 필드의 꼴. 없음 · None 은 허용 · 있는데 타입이 다르면 문제 (그 시드는 invalid · 정수로 바꿔 읽지 않는다).
+    provenance 안 (files_sha256 · 카드 값 · 도구 지문) · reasons 의 값 (목록) · checks 의 identity 까지 본다."""
+    for k, kinds in VERDICT_SHAPE:
+        x = vv.get(k)
+        if x is not None and (not isinstance(x, kinds) or (isinstance(x, bool) and bool not in kinds)):
+            return f"{k} 타입이 {type(x).__name__} 이다 (기대 {' · '.join(t.__name__ for t in kinds)})"
+    pv = vv.get("provenance") or {}
+    for k, kinds in (("files_sha256", (dict,)), ("card_values_sha16", (str,)), ("driver_sha16", (str,))):
+        x = pv.get(k)
+        if x is not None and not isinstance(x, kinds):
+            return f"provenance 의 {k} 타입이 {type(x).__name__} 이다"
+    for k, x in (vv.get("reasons") or {}).items():
+        if not isinstance(x, list):
+            return f"reasons 의 {k} 가 목록이 아니다 ({type(x).__name__})"
+    idn = (vv.get("checks") or {}).get("identity")
+    if idn is not None and not isinstance(idn, dict):
+        return f"checks 의 identity 타입이 {type(idn).__name__} 이다"
+    return None
+
+
+def _summary_failed(why):
+    """⭐ 회신 DO P2 — 묶음 판정이 예외로 끝나면 이 꼴로 (invalid) — 이전 stage1_summary.json (예 stage1_pass) 이 남지 않게."""
+    per = {s: {"status": "invalid", "per_seed": {}, "n_pass": 0, "n_fail": 0, "n_open": 0, "closed_by_first_seed": []} for s in ("A", "B")}
+    return {"per_system": per, "software_variants": [], "stage2": None, "unknown_status": [], "identity_problems": [], "cost": None,
+            "track": "invalid", "why": f"묶음 판정 중 예외 ({why}) — 판정 · 장부 기록의 꼴이 틀렸을 수 있다 · 이전 요약을 남기지 않는다 (fail-closed)",
+            "stale_verdicts": [], "error": why}
+
+
 def stage1_summary(out_root, *, values=None, card=LI2S2_CARD, log=print):
     """<out_root>/<A|B>/seed<S>/stage1_verdict.json 을 모아 묶음 판정 → <out_root>/stage1_summary.json.
     ⭐ 회신 DG P1-4 — 판정 파일을 그대로 믿지 않는다: 지문 (원자료 · 카드 값 · 도구) 을 지금 것과 다시 잰다 → 안 맞으면 그 시드는
-    invalid ('다시 판정하라'). 비용 장부 (러너) 로 상한을 다시 잰다 (DG P0-3)."""
-    v = values if values is not None else read_li2s2_values(card)
-    root = pathlib.Path(out_root); ver = {}
+    invalid ('다시 판정하라'). 비용 장부 (러너) 로 상한을 다시 잰다 (DG P0-3).
+    ⭐ 회신 DO P2 — 판정 기록의 중첩 꼴이 틀리면 그 시드는 invalid · 그래도 예외가 나면 invalid 요약을 쓴다 (이전 통과 파일을 남기지 않는다) ·
+    요약 파일은 임시 파일 → 이름 교체로 쓴다."""
+    root = pathlib.Path(out_root)
+    try:
+        v = values if values is not None else read_li2s2_values(card)
+        res = _stage1_summary_core(root, v)
+    except Exception as e:
+        res = _summary_failed(f"{type(e).__name__}: {str(e)[:160]}")
+    q = root / "stage1_summary.json"
+    q_tmp = q.with_name(q.name + ".tmp")
+    q_tmp.write_text(json.dumps(res, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+    os.replace(q_tmp, q)
+    log(f"  [stage1 묶음] {res['track']} — {res['why']} · " +
+        " · ".join(f"{s} {res['per_system'][s]['status']} ({res['per_system'][s]['n_pass']} 통과)" for s in ("A", "B")) +
+        (f" · 2 단계 시드 {res['stage2']['seeds']} {res['stage2']['machines']}" if res.get("stage2") else "") +
+        (f" · 비용 {res['cost']['total_h']:.1f}/{res['cost']['cap_h']:g} h" if res.get("cost") and _fin(res["cost"].get("total_h")) else "") +
+        (f" · ⛔ 지문 불일치 {res.get('stale_verdicts')}" if res.get("stale_verdicts") else ""))
+    return res
+
+
+def _stage1_summary_core(root, v):
+    ver = {}
     cur_vals, cur_drv = values_sha16(v), driver_sha16()
     stale = []
     for s in ("A", "B"):
@@ -2001,6 +2073,12 @@ def stage1_summary(out_root, *, values=None, card=LI2S2_CARD, log=print):
             except (ValueError, UnicodeDecodeError, RecursionError) as e:     # ⭐ DO 전 리뷰 — 잘린 판정에 죽지 않는다
                 ver[(s, sd)] = {"status": "invalid", "system": s, "seed": sd, "closes_system": False,
                                 "reasons": {"invalid": [f"판정 파일을 못 읽는다 ({type(e).__name__}) → --stage1_verdict 로 다시 판정"]}}
+                stale.append(f"{s}{sd}")
+                continue
+            shp = _verdict_shape_problem(vv)                  # ⭐ 회신 DO P2 — 중첩 꼴 (provenance [1] · software [1] · run_id {} …)
+            if shp:
+                ver[(s, sd)] = {"status": "invalid", "system": s, "seed": sd, "closes_system": vv.get("closes_system") is True,
+                                "reasons": {"invalid": [f"판정 기록 꼴이 틀렸다 ({shp}) → --stage1_verdict 로 다시 판정"]}}
                 stale.append(f"{s}{sd}")
                 continue
             pv = vv.get("provenance") or {}
@@ -2019,12 +2097,6 @@ def stage1_summary(out_root, *, values=None, card=LI2S2_CARD, log=print):
             ver[(s, sd)] = vv
     res = summarize_stage1(ver, v, cost=ledger_check(root, ver, v))
     res["stale_verdicts"] = stale
-    (root / "stage1_summary.json").write_text(json.dumps(res, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
-    log(f"  [stage1 묶음] {res['track']} — {res['why']} · " +
-        " · ".join(f"{s} {res['per_system'][s]['status']} ({res['per_system'][s]['n_pass']} 통과)" for s in ("A", "B")) +
-        (f" · 2 단계 시드 {res['stage2']['seeds']} {res['stage2']['machines']}" if res.get("stage2") else "") +
-        (f" · 비용 {res['cost']['total_h']:.1f}/{res['cost']['cap_h']:g} h" if res.get("cost") and _fin(res["cost"].get("total_h")) else "") +
-        (f" · ⛔ 지문 불일치 {stale}" if stale else ""))
     return res
 
 
@@ -2254,7 +2326,7 @@ def read_band(card=BAND_CARD):
     q = pathlib.Path(card)
     if not q.exists():                       # repo 루트 상대 (도구가 어디서 불리든 같은 카드)
         q = pathlib.Path(__file__).resolve().parents[2] / card
-    d = json.loads(q.read_text(encoding="utf-8"))
+    d = loads_strict(q.read_text(encoding="utf-8"))          # ⭐ 회신 DO P1 — G4 밴드 카드도 같은 열쇠 둘을 받지 않는다
     for k in BAND_PATH:
         if not isinstance(d, dict) or k not in d:
             raise KeyError(f"{q}: 밴드 절 '{k}' 가 없다 — 밴드를 도구가 지어내지 않는다")
@@ -2314,7 +2386,7 @@ def gate_check(run, band_card=BAND_CARD, win_ps=10.0, p_tol=P_TOL_GPA, n_blocks=
       · 기록이 없는 옛 런에서 thermo 로 **역추적**은 하되, 그것을 기록으로 승격하지 않는다.
     """
     run = pathlib.Path(run)
-    plan = json.loads((run / "plan.json").read_text(encoding="utf-8"))
+    plan = loads_strict((run / "plan.json").read_text(encoding="utf-8"))   # ⭐ 회신 DO P1 (예외 → 판정이 '모름' 으로 적는다)
     g = plan.get("게이트_입력")
     res = {"run": str(run), "record_has_gate_input": bool(g),
            "출처": "plan.json 선언" if g else "thermo.csv 역추적 (기록 아님)"}
@@ -2480,7 +2552,7 @@ def seed_gate(run, write_raw=True, log=print):
     run = pathlib.Path(run)
     res = {"run": str(run), "raw": None, "relaxed": None, "raw_vs_relaxed": None, "warnings": [],
            "⛔": "판정 아님 — 게이트를 어느 판으로 잴지는 카드·사람 몫 (이 도구의 final.xyz 는 relax 본이다)"}
-    plan = json.loads((run / "plan.json").read_text(encoding="utf-8")) if (run / "plan.json").exists() else {}
+    plan = loads_strict((run / "plan.json").read_text(encoding="utf-8")) if (run / "plan.json").exists() else {}
     fr = (plan.get("게이트_입력") or {}).get("final_relax")
     res["final_xyz_is"] = ("relax 본 (plan.json 게이트_입력.final_relax: "
                            + ", ".join(f"{k}={fr[k]}" for k in ("kind", "fmax_eV_A", "cell") if k in fr) + ")"
@@ -3536,6 +3608,20 @@ def _selftest():
         chk(idn == {"seed11.cut1": (True, True), "seed11.cut2": (False, False), "seed11.cut3": (False, False), "seed11": (True, False)},
             "⛔음성 DO 전 리뷰 (소비자 P0 a): 보존 폴더 seed<N>.<붙임> 은 실행 전 기록의 계 · 시드 · run_id 가 plan 과 같을 때만 같은 실행으로 "
             f"식별 (판정이 이름 때문에 invalid 로 새지 않게) · 기록이 없거나 다르면 아니다 ({idn})")
+        dz4 = pz / "seed11.cut4"; dz4.mkdir()                 # ⭐ 회신 DO P1 — 실행 전 기록의 run_id 가 둘 (마지막 값이 plan 과 같아도) → 식별 안 함
+        (dz4 / ATTEMPT_NAME).write_text('{"system": "A", "seed": 11, "run_id": "' + "0" * 32 + '", "run_id": "' + RIDF + '"}', encoding="utf-8")
+        r4_ = identity_check(dz4, {"system": "A", "seed": 11, "run_id": RIDF})
+        vfs_ = pathlib.Path(td_) / "_vfs"; vfs_.mkdir()
+        (vfs_ / "stage1_verdict.json").write_text('{"status": "pass", "status": "incomplete"}', encoding="utf-8")
+        inv_root = pathlib.Path(td_) / "_inv"; (inv_root / "A" / "seed11").mkdir(parents=True)     # ⭐ 회신 DO P1 — 실행 전 기록 목록도 엄격히
+        (inv_root / "A" / "seed11" / ATTEMPT_NAME).write_text('{"system": "A", "seed": 11, "run_id": "' + "0" * 32 + '", "run_id": "' + RIDF + '"}',
+                                                             encoding="utf-8")
+        inv_f, inv_bad = attempt_inventory(inv_root)
+        chk(RIDF not in inv_f and "0" * 32 not in inv_f and any("실행 신원을 못 읽음" in x for x in inv_bad),
+            f"⛔음성 회신 DO P1: 실행 전 기록 목록 (attempt_inventory) 은 같은 열쇠 둘인 기록을 마지막 값으로 묶지 않고 못 읽음으로 적는다 ({list(inv_f)} · {inv_bad})")
+        chk((r4_["ok"], r4_.get("preserved")) == (False, False) and verdict_file_status(vfs_) == "unreadable",
+            "⛔음성 회신 DO P1: 실행 전 기록 · 판정 파일의 같은 열쇠 둘은 마지막 값으로 읽지 않는다 (보존 폴더 식별 안 함 · 판정 상태 판독 불가) "
+            f"({(r4_['ok'], r4_.get('preserved'))} · {verdict_file_status(vfs_)})")
         # 판정 함수 쪽 (쓰는 쪽) — gate_check 가 예외면 판정 기록에 '모름' (None + 오류) 으로 적고, 그 기록은 보류로 읽힌다 (깨기 DO19 가 드러낸 시험 구멍)
         _fs("xgw", traj=2)
         _gc0 = globals()["gate_check"]
@@ -3719,6 +3805,18 @@ def _selftest():
                    encoding="utf-8")]),
                "mid_hist_summary_pass": _fs("xn", traj=2, after=lambda d: _wv(d, {**MIDV, "history": {"prev_status": "pass"}})),
                "mid_hist_summary_badtype": _fs("xq", traj=2, after=lambda d: _wv(d, {**MIDV, "history": {"prev_status": 1}})),
+               # ⭐ 회신 DO P1 — 같은 열쇠 둘 (마지막 값으로 읽으면 완료 흔적이 사라지거나 일정이 바뀐다) = 해석할 수 없는 기록 (보류)
+               "mid_dup_frames_n": _fs("xr", traj=2, after=lambda d: (d / "stage1_verdict.json").write_text(
+                   json.dumps({**MIDV, "checks": {"traj_frames": {"n": 5, "expected": 5}}}).replace('{"n": 5,', '{"n": 5, "n": 1,', 1),
+                   encoding="utf-8")),
+               "mid_dup_hist_sched": _fs("xs", traj=2, after=lambda d: [_wv(d, MIDV), (d / VERDICT_HISTORY).write_text(json.dumps(
+                   {"prev": {**MIDV, "gate_check": {"schedule_complete": True}}, "prev_status": "incomplete", "new_status": "incomplete",
+                    "new_provenance": MIDV["provenance"]}).replace('"schedule_complete": true', '"schedule_complete": true, "schedule_complete": false', 1)
+                   + "\n", encoding="utf-8")]),
+               "plan_dup_hold": _fs("xt", plan=json.dumps(PLAN0).replace('"hold_ps": 1.0', '"hold_ps": 1.0, "hold_ps": 1000.0', 1), traj=2),
+               "md_done_dup": _fs("xu", done=True, after=lambda d: (d / MD_DONE_NAME).write_text(re.sub(
+                   r'"n_steps_done": (\d+)', r'"n_steps_done": 1, "n_steps_done": \1', (d / MD_DONE_NAME).read_text(encoding="utf-8"), count=1),
+                   encoding="utf-8")),
                # F3 — plan 전 판정에 진짜 함수가 안 쓰는 열쇠 · 재판정 요약의 과학적 판정
                "no_plan_extra_key": _fs("xo", plan=False, traj=None, thermo=None, after=lambda d: (d / "stage1_verdict.json").write_text(
                    json.dumps({**PRERUN(d), "gate_check": {"schedule_complete": True}}), encoding="utf-8")),
@@ -3772,7 +3870,8 @@ def _selftest():
                   "traj_all_nul": "unreadable", "mid_gate_error": "unreadable", "mid_final_structure": "unreadable",
                   "mid_seed_gate_view": "unreadable", "mid_frames_plan": "unreadable", "mid_frames_plan_ok": "md_incomplete",
                   "mid_hist_line_mismatch": "unreadable", "mid_hist_summary_pass": "unreadable", "mid_hist_summary_badtype": "unreadable",
-                  "no_plan_extra_key": "unreadable",
+                  "no_plan_extra_key": "unreadable", "mid_dup_frames_n": "unreadable", "mid_dup_hist_sched": "unreadable",
+                  "plan_dup_hold": "unreadable", "md_done_dup": "unreadable",
                   "no_plan_hist_summary_pass": "unreadable",
                   "thermo_garbage_mid": "unreadable", "thermo_bad_cadence": "unreadable", "thermo_no_header": "unreadable", "thermo_wrong_header": "unreadable",
                   "traj_partial_end": "unreadable", "traj_garbage_mid": "unreadable", "traj_nul_tail": "md_incomplete"}
@@ -3795,6 +3894,34 @@ def _selftest():
         chk(all("타입이" in (r_ or "") for r_ in rs_ct.values()),
             "⛔음성 회신 DN P1 (이유): 판정 기록의 gate_check · checks 가 객체가 아니면 '타입 오류' 로 보류한다 (판독 예외로 새지 않는다 · "
             f"깨기 DN8 이 드러낸 시험 구멍) ({rs_ct})")
+        sm_res = {}                                          # ⭐ 회신 DO P2 (Codex 재현) — 판정 기록의 중첩 꼴 · 예외 → invalid 요약 (이전 통과 파일을 안 남긴다)
+        for nm_, bad_ in (("provenance_list", {"provenance": [1]}), ("software_list", {"software": [1]}), ("run_id_dict", {"run_id": {}}),
+                          ("reasons_list", {"reasons": []}), ("prov_fs_list", {"provenance": {"files_sha256": [1]}})):
+            rs_ = pathlib.Path(td_) / f"_sum_{nm_}"; (rs_ / "A" / "seed11").mkdir(parents=True)
+            (rs_ / "stage1_summary.json").write_text(json.dumps({"track": "stage1_pass"}), encoding="utf-8")
+            (rs_ / "A" / "seed11" / "stage1_verdict.json").write_text(json.dumps({"status": "pass", **bad_}), encoding="utf-8")
+            try:
+                r_ = stage1_summary(rs_, values=VAL, log=lambda *a: None); ok_ = True
+            except Exception:
+                r_, ok_ = {}, False
+            sm_res[nm_] = (ok_, r_.get("track"), json.loads((rs_ / "stage1_summary.json").read_text(encoding="utf-8")).get("track"),
+                           ((r_.get("per_system") or {}).get("A") or {}).get("per_seed", {}).get(11))
+        rsx = pathlib.Path(td_) / "_sum_raise"; rsx.mkdir()
+        (rsx / "stage1_summary.json").write_text(json.dumps({"track": "stage1_pass"}), encoding="utf-8")
+        _ss0 = globals()["summarize_stage1"]
+        def _ss_boom(*a_, **k_):
+            raise RuntimeError("selftest summary boom")
+        globals()["summarize_stage1"] = _ss_boom
+        try:
+            rx_ = stage1_summary(rsx, values=VAL, log=lambda *a: None)
+        finally:
+            globals()["summarize_stage1"] = _ss0
+        fx_ = json.loads((rsx / "stage1_summary.json").read_text(encoding="utf-8"))
+        chk(all(v_ == (True, "invalid", "invalid", "invalid") for v_ in sm_res.values()) and rx_["track"] == fx_["track"] == "invalid"
+            and "boom" in str(fx_.get("error")),
+            "⛔음성 회신 DO P2 (Codex 재현): 판정 기록의 중첩 꼴 (provenance [1] · software [1] · run_id {} · reasons [] · files_sha256 [1]) → "
+            "그 시드 invalid · 요약이 죽지 않고 invalid 로 이전 stage1_pass 파일을 덮는다 · 요약 중 예외가 나도 invalid 요약 (fail-closed) "
+            f"({ {k: v for k, v in sm_res.items() if v != (True, 'invalid', 'invalid', 'invalid')} } · {rx_['track']} · {fx_.get('error')})")
         rs_fl = folder_stage_detail(pathlib.Path(td_) / "fl")[1]                         # fire_log_no_marker
         chk("FIRE 로그" in (rs_fl or ""),
             "⛔음성 회신 DL Q3: FIRE 로그만 있고 MD 완료 기록이 없으면 그 이유로 보류한다 (MD 중 파일 목록 검사와 구별 · 사람이 보는 보류 이유 · "
