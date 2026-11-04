@@ -1,5 +1,5 @@
 ---
-title: "DN 프롬프트 — li2s-2 DM 고침 확인 (__BASE__): thermo 꼬리의 시각 · 판정 기록을 내용으로 (plan 전 끊김 · 도중 끊김 후보) — 첫 담금질 GO 여부"
+title: "DN 프롬프트 — li2s-2 DM 고침 확인 (acc648b0): thermo 꼬리의 시각 · 판정 기록을 내용으로 (plan 전 끊김 · 도중 끊김 후보) — 첫 담금질 GO 여부"
 date: 2026-11-04
 updated: 2026-11-04
 tags: [review, li2s, glass, md, uma, density, quench, runner, codex, prompt, letter]
@@ -7,7 +7,7 @@ letter: DN
 track: li2s
 channel: codex
 kind: prompt
-status: 초안 → 발송 대기 · 기준 커밋 __BASE__
+status: 발송 대기 · 기준 커밋 acc648b0 (깨기 165/165)
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -18,7 +18,7 @@ evidenceScope: multi-source-primary
 ---
 
 > 트랙 = li2s-2 (논문 1저자 = 외부 · 위임 10-30). DM (04555774 · NO-GO · P0 2) 다음 편지다 — **고친 곳만** 본다.
-> ⛔ li2s 절대 수송값은 싣지 않는다. 기준 커밋 `__BASE__` (브랜치 `claude/friendly-meitner-lldvar` · 기록까지 들어간 커밋). ⬇ 아래 **보내는 글**만 발송한다.
+> ⛔ li2s 절대 수송값은 싣지 않는다. 기준 커밋 `acc648b0` (브랜치 `claude/friendly-meitner-lldvar` · 기록까지 들어간 커밋). ⬇ 아래 **보내는 글**만 발송한다.
 > 회신이 오면 `codex_DN_reply_li2s2_dm_fixes_2026_11_04.md` 로 원문 보존.
 
 ---
@@ -34,7 +34,7 @@ DM 이 해제로 본 항목 (DL P1-1 저장 순서 · DL P1-2 FIRE 순서 시험
 
 ## 1. 보는 범위
 
-- `git diff 04555774 __BASE__ -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
+- `git diff 04555774 acc648b0 -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
 - 카드 `개정_완료_기록_v5_2026_11_04` (결과 0 건 · 카드 값은 안 바뀜)
 - 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 211) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 83 · Linux)
 - 깨기 (변이) **165 / 165 빨강** — 저장소 밖 복사본에서 DG · DH · DI · 정전 복구 · DJ · DK · DL · DM 고친 곳을 하나씩 되돌려 해당 시험이 빨개지는지. DL 판 147 개 중 thermo 판독을 다시 써서 자리가 바뀐 4 개 (N3 · N6 · N8 · N9) 는 새 자리로 옮겼고, DM 자리 13 개 (`O1_tail_time_mismatch_ok` ~ `O13_history_new_part_off`) 와 같은 갈래 자리 5 개 (`O14_mid_status_check_off` ~ `O18_invalid_held`) 를 더했다 (165 · 앞 번호가 정전 복구 판의 O6 · O9–O13 과 겹쳐 전체 이름으로 가른다). 본 판은 빨강 163 · **초록 2 = 시험 구멍** — `N18_header_check_off` (머리 없는 thermo fixture 를 새 꼬리 시각 규칙이 대신 잡아 머리 검사를 안 봤다) · `O12_mid_pass_fail_off` (같은 갈래의 상태 화이트리스트가 pass 도 잡아 결과 단계가 같았다) → 시험 둘을 더했고 (머리 이름이 다른 thermo · pass 이력의 보류 이유 문구) 둘 다 다시 빨강. `db/raw/li2s2_dm_mutation_2026_11_04/` (README)
