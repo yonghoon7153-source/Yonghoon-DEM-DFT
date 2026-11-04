@@ -258,3 +258,5 @@ reviews/review_reil_c4e_e1_1_3_scope_review_20261104/** -text
 reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/** -text
 # 2026-11-04: REIL C4-E · E1-1–3 범위안 v3 검토 회신 (P1_DOCUMENT_DIRECTION_ACCEPTED_P2_OBSERVER_FIX_REQUIRED · P2_01 · F1–F3 종결 · 고정 HEAD 2621b4b2 · 실행 · 탐침 승인 아님 · source/ · input/ = 검토자가 본 저장소 · 범위안 v3 사본 · basis/ = v2 검토 회신 · 영수증 · 도구 반환 사본 · 검토자 도구 *.py (package_review_data.py · prepare_review_data.py) 와 source/ 의 *.py = 실행하지 않음) — bytes 그대로
 reviews/review_reil_c4e_e1_1_3_scope_v3_review_20261104/** -text
+# 2026-11-04: REIL C4-E · E1-1–3 승인 요청 사전 검토 회신 (REVISION_REQUIRED_BEFORE_EXECUTION_APPROVAL · 지적 여섯 + E113_PRE_C1 · P2_02 종결 · 고정 HEAD 26a6c3a4 · 실행 승인 아님 · source/ · input/ = 검토자가 본 저장소 · 요청서 · 발송문 사본 · numbered/ = 줄 번호 붙인 파생본 · basis/ = 범위안 v3 검토 회신 · 영수증 · 도구 반환 사본 · 검토자 도구 *.py (check_review_data.py · package_review_data.py · prepare_review_data.py) 와 source/ 의 *.py · *.py.txt = 실행하지 않음) — bytes 그대로
+reviews/review_reil_c4e_e1_1_3_prereview_20261104/** -text
