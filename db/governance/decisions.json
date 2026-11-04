@@ -11039,7 +11039,7 @@
    "title": "cascade 스크리닝 축 ① — 91 설계의 도핑 조성 × NCM 대리 양극 (LiNiO₂ 만충 · 반충) 닫힌계 계면 반응: 호스트 대비 δ (R1) · 도펀트 행방 · 산물 MP 갭 등급 (R2) · 양극 의존 (R4 · LCO) · O/S 짝 (R5)",
    "statement": "카드 db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json 이 보고량 · 게이트 · 금지 문장이다: 닫힌계 pseudo-binary (Richards/Ong eq 2 · Xiao F4 · M6 규약 norm · use_hull_energy · MP GGA_GGA+U) · 1차 = 반충 Li0.5NiO₂ 의 δ 와 도펀트 행방 등급 · 호스트 Li6PS5Cl 같은 실행 · G1 manifest · G1b LCO 앵커 (Xiao 0.5–2.0×) · G2 완결 · G3 같은 MP 판 · G4 |δ| ≥ 10 meV/atom · IQR < 10 이면 R1 축 변별 없음 선언 · G5 등급 규칙 봉인 · G6 NCM811 호스트 대리 점검. 판독기는 회수 전에 커밋. 합치는 규칙 비준 전에는 이 축으로 거르거나 줄 세우지 않는다.",
    "rationale": "축 확장 계획 (D-2026-10-15-cascade-screening-axes-plan) 의 첫 묶음 ① · 사용자 11-04 '① NCM 계면 분해 먼저'. v7 에서 Al 짝이 수송 실질 동등이라 O/S 를 가르는 건 안정성 쪽이어야 한다. 열린계 전압 격자는 4.3 V 에서 전해질 자기 산화가 양극을 빼고 이겨 ESW 축과 겹친다 (M6 초판 실측) → 닫힌계 리튬화 축. NCM811 직접은 17 종이 MP 화학계 상한 (9) 을 넘어 설계 간 비교가 깨진다 → LiNiO₂ 대리 + 호스트만 NCM811 점검. M6 의 vacuous 교훈 (양극은 잘 안 갈리는 상대) → 문턱 거르기 대신 호스트 대비 δ 와 도펀트 행방으로 읽고 변별 없음을 미리 선언할 자리를 둔다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "results_seen_note": "설계 × 닫힌계 × LNO 결과 0 건 · 1 단계 열린계 계면 표 · M6 (별도 상) · M6 호스트 LCO 앵커 값은 봤다 (카드 §0 이미_본_것)",
@@ -11069,15 +11069,31 @@
     "compute": "gabia CPU · MP 조회 370 쌍 (≈ 45 분–1.6 h) + 산물 갭 ≈ 10–20 분 · GPU 0 · SCF 0"
    },
    "proposed_by": "agent",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-04",
      "state": "proposed",
      "by": "agent",
      "note": "사용자 'NCM 계면 분해 카드를 짜보고 이건 빨리 끝날 수 있나' — 결과 전 초안 · 첫 초안 (열린계) 을 결과 전에 닫힌계로 바꿈 · 사용자 비준 대기"
+    },
+    {
+     "at": "2026-11-04",
+     "state": "active",
+     "by": "사용자 (cascade 1저자)",
+     "note": "사용자 2026-11-04 (이 세션 · AskUserQuestion): 축 ① NCM 계면 분해 카드 '비준 — 바로 실행 (Recommended)'"
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-04T01:38:36Z",
+    "commit": "08398e1bcae8f83e07fc5ef8c9e2b0199c077cf3",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-04 (이 세션 · AskUserQuestion): 축 ① NCM 계면 분해 카드 '비준 — 바로 실행 (Recommended)'",
+    "decision_digest": "sha256:43d999159bb9e6fc9e045306f888a512d2a04096887c8c02051a05699c27739f"
+   }
   }
  ]
 }

@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+# run_axis_ncm_gabia.sh — cascade 축 ① NCM 계면 분해 (D-2026-11-04-cascade-axis-ncm-interface)
+#
+# 카드: db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json §3b
+#   닫힌계 pseudo-binary (M6 규약) · 91 대표 조성 × {LiNiO2, Li0.5NiO2} (1차) · {LiCoO2, Li0.5CoO2} (민감도)
+#   · 호스트 Li6PS5Cl × 위 넷 + NCM811 만충/반충 (대리 점검 G6) · 산물 MP 갭 · manifest.
+#
+# ⛔ 이건 QE 가 아니다 — gabia CPU 파이썬 + MP 조회만 (GPU 0 · SCF 0).
+# ⛔ 값은 화면에 안 낸다 — runner.log 에는 단계 · 줄 수 · 판 일치만 (카드 §8 ②: 판독기 커밋 전에 값을 안 본다).
+#    갈래별 값 출력은 lane_*.log 에만 간다 (회수 대상 · 판독기가 읽는다).
+#
+# 이 스크립트가 못 하는 것:
+#   · 판독 (δ · 도펀트 행방 · 등급 · G1b–G6) — tools/cascade/analyze_cathode_reactivity.py 몫
+#   · 오류 행 재시도 — interface_reactivity_v2 --resume 은 오류 행도 '끝남' 으로 센다.
+#     오류가 있으면 그 행을 지우고 RESUME=1 로 다시 돈다 (같은 MP 판일 때만 · 카드 §3b).
+#   · MP 판이 실행 중에 바뀌는 것을 막지 못한다 — 앞 · 뒤 판을 적고 다르면 알린다 (G3).
+#
+# 실행 (gabia · uma env):  bash tools/cascade/run_axis_ncm_gabia.sh
+#   env: PY (기본 uma python) · OUT (기본 db/raw/cascade_axis_ncm_2026_11_04) · RESUME=1 · DRY=1 (검사만)
+set -uo pipefail
+PY=${PY:-/data/apps/miniforge3/envs/uma/bin/python}
+ROOT=$(cd "$(dirname "$0")/../.." && pwd)
+OUT=${OUT:-$ROOT/db/raw/cascade_axis_ncm_2026_11_04}
+DEC=${DEC:-D-2026-11-04-cascade-axis-ncm-interface}
+CARD=db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json
+cd "$ROOT" || exit 2
+log(){ echo "[$(date '+%F %T')] $*" | tee -a "$OUT/runner.log"; }
+die(){ local c=${2:-3}; echo "⛔ $1 (rc $c)" >&2; [ -d "$OUT" ] && echo "[$(date '+%F %T')] ⛔ $1 (rc $c)" >> "$OUT/runner.log"; exit "$c"; }
+
+# 0) 결정이 active 인가 — 아니면 시작하지 않는다
+python3 - "$DEC" "$CARD" <<'EOF' || die "결정 $DEC 가 active 가 아니거나 카드가 다르다 — 비준 전에는 돌지 않는다" 10
+import json, sys
+d = json.load(open("db/governance/decisions.json", encoding="utf-8"))
+x = [y for y in d["decisions"] if y["id"] == sys.argv[1]]
+sys.exit(0 if x and x[0].get("decision_state") == "active" and x[0].get("card") == sys.argv[2] else 1)
+EOF
+[ -x "$PY" ] || die "파이썬이 없다: $PY (uma env 절대경로)" 11
+[ -n "${MP_API_KEY:-}" ] || die "MP_API_KEY 가 환경에 없다 (tmux 는 -e MP_API_KEY=… 로 넘긴다)" 12
+
+# 1) 중복 실행 가드 — 출력 폴더 (잡 고유) 로 잡는다 · comm 으로 파이썬만 센다
+running(){ for x in $(pgrep -f "interface_reactivity_v2.py.*$OUT" 2>/dev/null); do
+             case "$(cat /proc/$x/comm 2>/dev/null)" in python*) echo "$x";; esac; done; }
+[ -z "$(running)" ] || die "이미 돌고 있다 (PID $(running | tr '\n' ' '))" 13
+mkdir -p "$OUT"
+RES=()
+EXIST=0; for f in designs_lno.jsonl designs_lco.jsonl host.jsonl; do [ -e "$OUT/$f" ] && EXIST=1; done
+if [ "$EXIST" = 1 ]; then
+  [ "${RESUME:-0}" = 1 ] || die "출력이 이미 있다 — 이어 돌리려면 RESUME=1 (오류 행은 먼저 지운다)" 14
+  RES=(--resume)
+fi
+log "시작 · 결정 $DEC active · OUT=$OUT · PY=$PY · resume=${RESUME:-0}"
+[ "${DRY:-0}" = 1 ] && { log "DRY=1 — 검사만 하고 끝"; exit 0; }
+
+# 2) 도구 selftest (오프라인)
+"$PY" tools/oxidation/interface_reactivity_v2.py --selftest > "$OUT/selftest_iface.log" 2>&1 \
+  || die "interface_reactivity_v2 selftest 실패 — $OUT/selftest_iface.log" 15
+"$PY" tools/oxidation/sei_product_gaps.py --selftest > "$OUT/selftest_gaps.log" 2>&1 \
+  || die "sei_product_gaps selftest 실패 — $OUT/selftest_gaps.log" 16
+log "selftest 둘 통과"
+
+# 3) manifest (앞) — MP 판 · 판 번호 · 보정 이름 표본 · 도구 sha16 · HEAD
+manifest(){ "$PY" - "$1" "$OUT/manifest.json" "$DEC" "$CARD" <<'EOF'
+import json, os, sys, hashlib, subprocess, datetime, platform
+from importlib.metadata import version as _v
+def version(n):
+    for k in (n, n.replace("_", "-")):
+        try:
+            return _v(k)
+        except Exception:
+            pass
+    return "unknown"
+phase, path, dec, card = sys.argv[1:5]
+m = json.load(open(path)) if os.path.exists(path) else {}
+now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+from mp_api.client import MPRester
+with MPRester(os.environ["MP_API_KEY"]) as r:
+    dbv = r.get_database_version()
+    if phase == "before":
+        es = r.get_entries_in_chemsys(["Li", "Ni", "O"],
+                                      additional_criteria={"thermo_types": ["GGA_GGA+U"]})
+if phase == "before":
+    sha = lambda f: hashlib.sha256(open(f, "rb").read()).hexdigest()[:16]
+    adj = sorted({getattr(a, "name", type(a).__name__)
+                  for e in es for a in (getattr(e, "energy_adjustments", None) or [])})
+    m.update({"decision": dec, "card": card, "started_utc": now, "host": platform.node(),
+              "python": sys.executable, "pymatgen": version("pymatgen"), "mp_api": version("mp_api"),
+              "thermo_types": ["GGA_GGA+U"],
+              "correction_names_sample_Li-Ni-O": adj, "n_entries_sample_Li-Ni-O": len(es),
+              "tools_sha16": {f: sha(f) for f in ("tools/oxidation/interface_reactivity_v2.py",
+                                                  "tools/oxidation/sei_product_gaps.py",
+                                                  "tools/cascade/run_axis_ncm_gabia.sh")},
+              "repo_head": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "mp_db_version_before": dbv})
+else:
+    m.update({"finished_utc": now, "mp_db_version_after": dbv,
+              "same_mp_version": dbv == m.get("mp_db_version_before")})
+json.dump(m, open(path, "w"), ensure_ascii=False, indent=1)
+print("same" if m.get("same_mp_version", True) else "DIFFERENT")
+EOF
+}
+manifest before > /dev/null || die "manifest (앞) 실패 — MP 조회 · 키 확인" 17
+log "manifest 앞 기록"
+
+# 4) 세 갈래 동시 — 설계 × LNO · 설계 × LCO · 호스트 × 여섯
+IR=tools/oxidation/interface_reactivity_v2.py
+"$PY" $IR --batch_from --closed "${RES[@]}" --cathodes "LiNiO2:LNO_full" "Li0.5NiO2:LNO_half" \
+   --out "$OUT/designs_lno.jsonl" > "$OUT/lane_lno.log" 2>&1 & P1=$!
+"$PY" $IR --batch_from --closed "${RES[@]}" --cathodes "LiCoO2:LCO_full" "Li0.5CoO2:LCO_half" \
+   --out "$OUT/designs_lco.jsonl" > "$OUT/lane_lco.log" 2>&1 & P2=$!
+"$PY" $IR --only "HOST:Li6PS5Cl" --closed "${RES[@]}" --cathodes "LiNiO2:LNO_full" "Li0.5NiO2:LNO_half" \
+   "LiCoO2:LCO_full" "Li0.5CoO2:LCO_half" "LiNi0.8Co0.1Mn0.1O2:NCM_full" "Li0.5Ni0.8Co0.1Mn0.1O2:NCM_half" \
+   --out "$OUT/host.jsonl" > "$OUT/lane_host.log" 2>&1 & P3=$!
+log "갈래 셋 발사 (PID $P1 $P2 $P3) — 기대 줄 수 182 · 182 · 6"
+wait $P1; R1=$?; wait $P2; R2=$?; wait $P3; R3=$?
+log "갈래 끝 · rc lno=$R1 lco=$R2 host=$R3"
+
+# 5) 줄 세기 (값 없이) + manifest (뒤)
+"$PY" - "$OUT" "$R1" "$R2" "$R3" <<'EOF' | tee -a "$OUT/runner.log"
+import json, sys, collections
+out, rcs = sys.argv[1], dict(zip(("designs_lno", "designs_lco", "host"), sys.argv[2:5]))
+m = json.load(open(f"{out}/manifest.json"))
+m["lanes"] = {}
+for k in ("designs_lno", "designs_lco", "host"):
+    rows = [json.loads(l) for l in open(f"{out}/{k}.jsonl")] if __import__("os").path.exists(f"{out}/{k}.jsonl") else []
+    c = collections.Counter("error" if "error" in r else "skipped" if "skipped" in r
+                            else "ok" if "dE_eV_per_atom" in r else "other" for r in rows)
+    dup = sum(v - 1 for v in collections.Counter((r.get("species"), r.get("cathode")) for r in rows).values() if v > 1)
+    m["lanes"][k] = {"rc": int(rcs[k]), "rows": len(rows), **dict(c), "duplicate_pairs": dup}
+    print(f"  {k:12s} rc {rcs[k]} · 줄 {len(rows)} · " + " · ".join(f"{a} {b}" for a, b in sorted(c.items())) + f" · 중복 {dup}")
+json.dump(m, open(f"{out}/manifest.json", "w"), ensure_ascii=False, indent=1)
+EOF
+SAME=$(manifest after) || die "manifest (뒤) 실패" 18
+log "MP 판 앞뒤: $SAME"
+
+# 6) 산물 MP 갭 (값은 로그 · json 에만)
+"$PY" tools/oxidation/sei_product_gaps.py --from_reactions "$OUT/designs_lno.jsonl" "$OUT/designs_lco.jsonl" \
+   "$OUT/host.jsonl" --out "$OUT/product_gaps.json" > "$OUT/lane_gaps.log" 2>&1; R4=$?
+log "산물 갭 rc=$R4"
+
+# 7) 끝 줄을 먼저 쓰고 해시 (runner.log 가 해시 뒤에 안 바뀌게)
+log "끝 — 회수 블록은 판독기 커밋 뒤에 받는다 (카드 §8 ③)"
+( cd "$OUT" && sha256sum *.jsonl *.json *.log > SHA256SUMS )
+[ "$R1$R2$R3$R4" = 0000 ] && [ "$SAME" = same ] || exit 4
