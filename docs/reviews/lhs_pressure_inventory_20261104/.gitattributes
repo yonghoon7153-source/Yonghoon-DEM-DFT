@@ -1,0 +1,2 @@
+pressure_inventory.sh -text
+received/*.md -text

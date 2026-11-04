@@ -1,0 +1,133 @@
+{
+ "schema": "s5_q1_electrode_settle/v1",
+ "case": "lhs00_123",
+ "verdict": "INCLUDE",
+ "why": "v1.2 → B7 차이 = 전극 모형뿐 (같은 입력 · 같은 망) — 정확한 Δ 는 rows.*.d_electrode",
+ "checks": {
+  "A0_inputs_equal_b7_provenance": true,
+  "A0v_inputs_equal_v12_provenance": true,
+  "A_b7_reproduced": true,
+  "B_v12_reproduced_by_old_electrode": true,
+  "case_dir_untouched": true,
+  "A_code_equals_b7_seal": true,
+  "A_run_record_chain": true,
+  "v12_solver_path": "spsolve",
+  "v12_n_perc_approx": 11228,
+  "n_perc_rebuilt": 11228
+ },
+ "rows": {
+  "full": {
+   "n_calls": 1,
+   "repeat_calls_identical": true,
+   "sigma_b7_inprocess": 6.553582322465586e-05,
+   "record_b7": 6.554e-05,
+   "A": true,
+   "result_dict_equals_record": true,
+   "sigma_adaptive": 6.553482071741239e-05,
+   "record_v12": 6.553e-05,
+   "B": true,
+   "sigma_dirichlet_netsolve": 6.553582322447324e-05,
+   "dirichlet_netsolve_vs_b7_rel": -2.7865487695066804e-12,
+   "d_electrode": 1.5297321828144916e-05,
+   "d_records": 0.00015257857796757433,
+   "g_boundary": 180.64137374921924,
+   "sum_g": 2507.302267639163,
+   "g_max": 0.5101692565207441,
+   "n_perc": 11228,
+   "n_bot": 1382,
+   "n_top": 6,
+   "b7_method": "spsolve",
+   "error": null
+  },
+  "bulk_only": {
+   "n_calls": 1,
+   "repeat_calls_identical": true,
+   "sigma_b7_inprocess": 0.0008691824228297206,
+   "record_b7": 0.00086918,
+   "A": true,
+   "result_dict_equals_record": true,
+   "sigma_adaptive": 0.000869157861237944,
+   "record_v12": 0.00086916,
+   "B": true,
+   "sigma_dirichlet_netsolve": 0.0008691824228292529,
+   "dirichlet_netsolve_vs_b7_rel": -5.381251000358134e-13,
+   "d_electrode": 2.825906877457207e-05,
+   "d_records": 2.3010193515715552e-05,
+   "g_boundary": 1205.5224745970959,
+   "sum_g": 16732.651947407692,
+   "g_max": 1.360098946887936,
+   "n_perc": 11228,
+   "n_bot": 1382,
+   "n_top": 6,
+   "b7_method": "spsolve",
+   "error": null
+  },
+  "constriction_only": {
+   "n_calls": 1,
+   "repeat_calls_identical": true,
+   "sigma_b7_inprocess": 7.101838659305434e-05,
+   "record_b7": 7.102e-05,
+   "A": true,
+   "result_dict_equals_record": true,
+   "sigma_adaptive": 7.101746891574766e-05,
+   "record_v12": 7.102e-05,
+   "B": true,
+   "sigma_dirichlet_netsolve": 7.101838659287536e-05,
+   "dirichlet_netsolve_vs_b7_rel": -2.520095243596643e-12,
+   "d_electrode": 1.2921853181913079e-05,
+   "d_records": 0.0,
+   "g_boundary": 234.0224733173413,
+   "sum_g": 3248.231929644697,
+   "g_max": 0.8163977284152653,
+   "n_perc": 11228,
+   "n_bot": 1382,
+   "n_top": 6,
+   "b7_method": "spsolve",
+   "error": null
+  }
+ },
+ "digests": {
+  "atoms.csv": "2598392aacbfd55b",
+  "contacts.csv": "6562ef917328be60"
+ },
+ "code_sha256": {
+  "network_conductivity.py": "a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e",
+  "netsolve.py": "3b8ed8273e2cdd49e28bc96cf5fab5bb40a09306550c3a81cbaa9f8c9ec5a718",
+  "analyze_contacts.py": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9"
+ },
+ "code_seal_detail": {
+  "checked": {
+   "scripts/analyze_contacts.py": true,
+   "scripts/dem_analysis_core.py": true,
+   "scripts/lens_geometry.py": true,
+   "scripts/metrics_json.py": true,
+   "scripts/network_conductivity.py": true,
+   "scripts/plastic_coverage.py": true,
+   "scripts/se_material.py": true,
+   "scripts/type_map_resolve.py": true
+  },
+  "not_in_seal": [
+   "docs/data/gen2_design_20261006/c1/netsolve.py"
+  ]
+ },
+ "run_detail": {
+  "prov_run_id": "20261030T071159-79a43347",
+  "reread_run_id": "20261030T071159-79a43347",
+  "table_equals_dual": {
+   "full": true,
+   "bulk_only": true,
+   "constriction_only": true
+  }
+ },
+ "argv": {
+  "type_map": "1:AM_P,2:SE",
+  "scale": 1000
+ },
+ "geometry": {
+  "plate_z": 0.0313466,
+  "box_x": 0.05,
+  "box_y": 0.05
+ },
+ "half_unit": 5e-09,
+ "d_full_within_1p5e4": true
+}
