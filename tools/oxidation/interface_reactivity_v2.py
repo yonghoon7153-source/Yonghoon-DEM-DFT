@@ -185,6 +185,24 @@ def min_rxn_closed(c1, c2, pd):
     return min_e, min_rxn, min_x
 
 
+def kinks_table(kinks):
+    """`InterfacialReactivity.get_kinks()` → [{"x", "dE_eV_per_atom", "reaction"}] (x 오름차순) — **기록용** (2026-11-04 · cascade 축 ③).
+
+    x = 반응물 1 (설계 · 전해질) 의 원자 분율 (x = 0 은 상대 물질만 · x = 1 은 반응물 1 만 — 행의 `mixing_x` 와 같은 뜻).
+    상대가 Li 금속이면 **0 보다 큰 가장 작은 x** 의 반응식이 완전 환원 끝점 (Li 를 더 넣어도 금속 Li 가 남기만 한다).
+    ⛔ 못 하는 것: 이 표로 최소 kink 를 다시 고르지 않는다 (`min_rxn_closed` 몫 · 같은 kinks) · 값은 반올림 기록값이다."""
+    out = []
+    for k in kinks:
+        out.append({"x": round(float(k[1]), 6), "dE_eV_per_atom": round(float(k[2]), 5), "reaction": str(k[3])})
+    return sorted(out, key=lambda d: d["x"])
+
+
+def closed_kinks(c1, c2, pd):
+    """닫힌계 kink 전부 (`kinks_table` 꼴) — `--record_kinks` 일 때만 부른다 (`min_rxn_closed` 와 같은 InterfacialReactivity 설정)."""
+    from pymatgen.analysis.interface_reactions import InterfacialReactivity
+    return kinks_table(InterfacialReactivity(c1, c2, pd, use_hull_energy=True).get_kinks())
+
+
 def why_skip(e_formula, c_formula, open_elements=("Li",), closed=False):
     """이 (전해질, 상대) 쌍을 **돌리기 전에** 막아야 하는 이유. 없으면 None.
 
@@ -308,6 +326,8 @@ def run_batch(a):
                     rec["endpoint_basis"] = _why
                     if rec["min_kink_at_endpoint"]:
                         rec["endpoint_meaning"] = endpoint_meaning(True)
+                    if getattr(a, "record_kinks", False):     # 2026-11-04 cascade 축 ③ R3 (완전 환원 끝점 산물 · 기록만)
+                        rec["kinks"] = closed_kinks(Composition(forms[sp]), Composition(cstr), pd)
                 else:
                     rec["by_voltage"] = {}
                     for V in a.voltages:
@@ -366,6 +386,17 @@ def _selftest():
             f"[양성] Ag2O 챔피언에 O 가 있다 ({f.get('Ag2O')})")
     else:
         chk(False, f"[전제] {CASCADE_CSV} 가 있어야 한다")
+    # ── kinks_table (2026-11-04 · 축 ③ R3 기록) — pymatgen 없이 가짜 kink 로 ─────────
+    _kt = kinks_table([(2, 0.4, -0.31, "a -> b", 1.0), (0, 0.0, 0.0, "Li -> Li", 0.0), (1, 0.1234567, -0.12, "c -> d", 1.0)])
+    chk([d["x"] for d in _kt] == [0.0, 0.123457, 0.4] and _kt[1]["reaction"] == "c -> d" and _kt[2]["dE_eV_per_atom"] == -0.31,
+        "[양성] kinks_table: x 오름차순 · 반올림 · 반응식 문자열 (가장 작은 x>0 = 완전 환원 끝점)")
+    _ap_h = _sp_kt = None
+    try:
+        import subprocess as _sp_kt
+        _ap_h = _sp_kt.run([sys.executable, __file__, "--help"], capture_output=True, text=True, timeout=60).stdout
+    except Exception:
+        pass
+    chk(bool(_ap_h) and "--record_kinks" in _ap_h, "[양성] --record_kinks 인자가 있다 (기본 꺼짐 — 축 ① · ② · 다른 호출부는 그대로)")
     # ── why_skip: 두 실패를 **돌리기 전에** 막는가 ────────────────────────
     try:
         chk(why_skip("Li6PS5Cl", "LiCoO2") is None,
@@ -2657,6 +2688,8 @@ def main():
                          '(기준선용: "LPSCl:Li6PS5Cl")')
     ap.add_argument("--closed", action="store_true",
                     help="닫힌계 0 V (Li 저장고 안 엶) — **Li 음극 쪽은 이걸 써야 한다**")
+    ap.add_argument("--record_kinks", action="store_true",
+                    help="--closed 에서 kink 전부를 행에 'kinks' 로 남긴다 (기록용 · 최소 kink 판정은 그대로 · cascade 축 ③ R3)")
     ap.add_argument("--cathodes", nargs="+", default=["LiCoO2", "LiNiO2"],
                     help='comp[:label] cathodes')
     ap.add_argument("--voltages", nargs="+", type=float,

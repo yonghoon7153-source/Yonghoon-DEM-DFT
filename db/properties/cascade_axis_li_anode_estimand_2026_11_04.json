@@ -5,7 +5,7 @@
  "date": "2026-11-04",
  "results_seen": "부분 — §0 '이미_본_것' 그대로 (축 ③ 설계 × Li 금속 닫힌계 값은 0 건)",
  "citable": false,
- "status": "proposed — 사용자 (cascade 1저자) 비준 대기 · 결정 D-2026-11-04-cascade-axis-li-anode",
+ "status": "active",
  "system": "cascade (트랙 cascade · 1저자 = 사용자)",
  "관점": "**도핑 격자의 조성** — 축 ① 개정 1 · 축 ② 와 같은 91 종 · 같은 조성 (1 단계 계면 표 cascade_interface_90.jsonl). ⚠ MP 에는 도핑 LPSCl 상이 없어서 그 조성은 hull 위 평형 상 혼합으로 들어간다 (use_hull_energy) — 도핑 격자의 초과 에너지는 빠진다 ⇒ 구동력의 하한 쪽. '전구체 화합물 (별도 상) 이 Li 와 만나는' 관점은 8 월 T9 (cascade_stability_axes.csv · 코팅 화합물) 이고 이 카드가 아니다.",
  "제목": "cascade 스크리닝 축 ③ — 91 개 전구체 설계의 도핑 조성이 Li 금속 (음극) 과 만날 때의 환원 분해: 구동력 (호스트 대비) · **도펀트가 어느 산물로 가는가 · 그 산물이 전자를 막는가 (부동태화 · Li 합금 · 금속이면 전자 전도 계면)**",
@@ -162,6 +162,18 @@
    "state": "proposed",
    "by": "agent",
    "note": "사용자 '권고대로 다음 축 카드를 열어' — 결과 전 초안 · 위험 표시 · 좋은 방향 · 축 ① 겹침 기준 (0.8) 까지 봉인 · 사용자 비준 대기"
+  },
+  {
+   "at": "2026-11-04",
+   "state": "active",
+   "by": "사용자 (cascade 1저자)",
+   "note": "AskUserQuestion '비준 — 바로 진행 (Recommended)' · 결정 D-2026-11-04-cascade-axis-li-anode active"
+  },
+  {
+   "at": "2026-11-04",
+   "state": "active",
+   "by": "agent",
+   "note": "회수 전 도구 커밋 — 러너 AXIS=li (interface_reactivity_v2 --record_kinks · 산물 갭) · 판독기 --axis_li (selftest 16 · 깨기 24/24 · 축 ① · ② 판독 재현 같음) · '음이온 없는 금속간' 의 음이온 = AX_NONMETAL (Si · Ge · As · Sb · Te 포함 — 그 Li 화합물은 MP 갭으로) · G2 에 산물 갭 파일 있음 · R3 완전 환원 끝점 = 끝점 뺀 가장 작은 x 의 kink (기록만)"
   }
  ]
 }

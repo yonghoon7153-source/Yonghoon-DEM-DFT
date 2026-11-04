@@ -11299,7 +11299,7 @@
    "title": "cascade 스크리닝 축 ③ — 91 설계의 도핑 조성 + Li 금속 닫힌계 환원 분해: 호스트 대비 δ_Li (R1) · 도펀트 행방 MP 갭 등급 (R2) · O/S 짝 (R5) · 축 ① 과의 겹침 (G7)",
    "statement": "카드 db/properties/cascade_axis_li_anode_estimand_2026_11_04.json 이 보고량 · 게이트 · 금지 문장이다: 대상 = 축 ① 개정 1 의 91 종 조성 · 호스트 Li6PS5Cl · 상대 Li 금속 · 닫힌계 pseudo-binary (축 ① · ② 규약) · R2 등급 규칙은 축 ① 그대로 (원소 금속 · 음이온 없는 금속간은 금속성) · G1b 호스트 반응 음수 + Li2S · Li3P · LiCl 산물 · G2 완결 · G3 같은 MP 판 · G4 IQR ≥ 10 meV/atom · G7 축 ① 과 Spearman |ρ| ≥ 0.8 이면 겹침. 합치는 규칙 연결: 위험 표시 F1_Li 금속성 (도펀트 원자 ≥ 1 % 가 금속성 산물로) · F2_Li δ_Li ≤ −10 · 좋은 방향 δ_Li 큰 쪽 · 세 축 위험 표시 모두 적용. 판독기는 회수 전에 커밋.",
    "rationale": "축 ② 가 G4 불통과라 G4 를 넘은 연속 축이 축 ① 하나뿐 (R4 표시만) — 첫 선택 집합에는 축이 하나 더 필요하다. 축 확장 계획의 스크리닝 후보 중 같은 계산 틀 · CPU MP 조회만 · 양극 (산화) · 물과 다른 음극 (환원) 쪽 · 부동태화를 축 ① 등급 규칙 그대로 볼 수 있는 축이다 (사용자 '권고대로 다음 축 카드를 열어').",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "results_seen_note": "축 ③ 설계 × Li 값 0 건 · 8 월 T9 (별도 상) · 축 ① · ② 판독은 봤다 (카드 §0)",
@@ -11325,15 +11325,31 @@
     "compute": "gabia CPU · MP 조회 92 쌍 + 산물 갭 조회 (≈ 25–35 분) · GPU 0 · SCF 0"
    },
    "proposed_by": "agent",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-04",
      "state": "proposed",
      "by": "agent",
      "note": "사용자 '권고대로 다음 축 카드를 열어' — 결과 전 초안 · 사용자 비준 대기"
+    },
+    {
+     "at": "2026-11-04",
+     "state": "active",
+     "by": "사용자 (cascade 1저자)",
+     "note": "사용자 2026-11-04 (이 세션 · AskUserQuestion): 축 ③ Li 금속 음극 카드 '비준 — 바로 진행 (Recommended)'"
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-04T11:56:59Z",
+    "commit": "870719e38fc555fc3107dc2010fa4037953e6490",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-04 (이 세션 · AskUserQuestion): 축 ③ Li 금속 음극 카드 '비준 — 바로 진행 (Recommended)'",
+    "decision_digest": "sha256:db2d0aa4619acc7971f65ab61b04f79f179fab1037ac844af1aa7795232416f6"
+   }
   }
  ]
 }

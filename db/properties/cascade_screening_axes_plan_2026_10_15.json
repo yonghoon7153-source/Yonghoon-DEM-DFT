@@ -161,8 +161,9 @@
  },
  "축_③_카드_2026_11_04": {
   "카드": "db/properties/cascade_axis_li_anode_estimand_2026_11_04.json",
-  "결정": "D-2026-11-04-cascade-axis-li-anode (proposed · 사용자 비준 대기)",
+  "결정": "D-2026-11-04-cascade-axis-li-anode (✅ 비준 active · 사용자 11-04 '비준 — 바로 진행')",
   "왜": "축 ② G4 불통과 → 연속 축이 ① 하나 (R4 표시만) · 사용자 '권고대로 다음 축 카드를 열어' — 후보 중 같은 틀 · CPU · 환원 쪽 · 부동태화",
-  "요지": "91 설계 × Li 금속 닫힌계 · δ_Li · 도펀트 행방 MP 갭 등급 (축 ① 규칙) · F1_Li 금속성 · F2_Li δ ≤ −10 · G4 · G7 (축 ① 과 0.8)"
+  "요지": "91 설계 × Li 금속 닫힌계 · δ_Li · 도펀트 행방 MP 갭 등급 (축 ① 규칙) · F1_Li 금속성 · F2_Li δ ≤ −10 · G4 · G7 (축 ① 과 0.8)",
+  "도구_회수_전_커밋": "러너 tools/cascade/run_axis_ncm_gabia.sh AXIS=li (출력 db/raw/cascade_axis_li_2026_11_04 · --record_kinks) · 판독기 analyze_cathode_reactivity.py --axis_li (selftest 16 · 깨기 24/24 db/raw/cascade_axis_li_reader_mutation_2026_11_04 · 축 ① · ② 재현 같음)"
  }
 }

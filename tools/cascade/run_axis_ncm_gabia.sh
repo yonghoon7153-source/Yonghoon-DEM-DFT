@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # run_axis_ncm_gabia.sh — cascade MP 닫힌계 축 러너: AXIS=ncm (기본 · 축 ① NCM 계면 분해 · D-2026-11-04-cascade-axis-ncm-interface)
 #                          · AXIS=hyd (축 ② 가수분해 · D-2026-11-04-cascade-axis-hydrolysis · 같은 91 종 × H2O · 호스트 × H2O)
+#                          · AXIS=li  (축 ③ Li 금속 음극 · D-2026-11-04-cascade-axis-li-anode · 같은 91 종 × Li · 호스트 × Li ·
+#                                      kink 전부 기록 (--record_kinks · R3 완전 환원 끝점 산물) · 산물 MP 갭)
 #
 # 카드: db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json §3b
 #   닫힌계 pseudo-binary (M6 규약) · 91 대표 조성 × {LiNiO2, Li0.5NiO2} (1차) · {LiCoO2, Li0.5CoO2} (민감도)
@@ -30,7 +32,9 @@ case "$AXIS" in
        CARD=db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json; LANES=(designs_lno designs_lco host); EXPECT="182 · 182 · 6" ;;
   hyd) DEF_OUT=$ROOT/db/raw/cascade_axis_hyd_2026_11_04; DEF_DEC=D-2026-11-04-cascade-axis-hydrolysis
        CARD=db/properties/cascade_axis_hydrolysis_estimand_2026_11_04.json; LANES=(designs_hyd host_hyd); EXPECT="91 · 1" ;;
-  *) echo "⛔ AXIS 는 ncm · hyd 중 하나 ($AXIS) (rc 9)" >&2; exit 9 ;;
+  li)  DEF_OUT=$ROOT/db/raw/cascade_axis_li_2026_11_04; DEF_DEC=D-2026-11-04-cascade-axis-li-anode
+       CARD=db/properties/cascade_axis_li_anode_estimand_2026_11_04.json; LANES=(designs_li host_li); EXPECT="91 · 1" ;;
+  *) echo "⛔ AXIS 는 ncm · hyd · li 중 하나 ($AXIS) (rc 9)" >&2; exit 9 ;;
 esac
 OUT=${OUT:-$DEF_OUT}
 DEC=${DEC:-$DEF_DEC}
@@ -147,11 +151,17 @@ if [ "$AXIS" = ncm ]; then
 "$PY" $IR --only "HOST:Li6PS5Cl" --closed "${RES[@]}" --cathodes "LiNiO2:LNO_full" "Li0.5NiO2:LNO_half" \
    "LiCoO2:LCO_full" "Li0.5CoO2:LCO_half" "LiNi0.8Co0.1Mn0.1O2:NCM_full" "Li0.5Ni0.8Co0.1Mn0.1O2:NCM_half" \
    --out "$OUT/host.jsonl" >> "$OUT/lane_host.log" 2>&1 & P3=$!
-else                                    # AXIS=hyd — 상대 H2O (카드 §1b · 같은 91 종)
+elif [ "$AXIS" = hyd ]; then            # AXIS=hyd — 상대 H2O (카드 §1b · 같은 91 종)
 "$PY" $IR --only "${ROSTER[@]}" --closed "${RES[@]}" --cathodes "H2O:H2O" \
    --out "$OUT/designs_hyd.jsonl" >> "$OUT/lane_hyd.log" 2>&1 & P1=$!
 "$PY" $IR --only "HOST:Li6PS5Cl" --closed "${RES[@]}" --cathodes "H2O:H2O" \
    --out "$OUT/host_hyd.jsonl" >> "$OUT/lane_host_hyd.log" 2>&1 & P2=$!
+P3=
+else                                    # AXIS=li — 상대 Li 금속 (축 ③ 카드 §1b · §3b · 같은 91 종 · kink 전부 기록)
+"$PY" $IR --only "${ROSTER[@]}" --closed --record_kinks "${RES[@]}" --cathodes "Li:Li" \
+   --out "$OUT/designs_li.jsonl" >> "$OUT/lane_li.log" 2>&1 & P1=$!
+"$PY" $IR --only "HOST:Li6PS5Cl" --closed --record_kinks "${RES[@]}" --cathodes "Li:Li" \
+   --out "$OUT/host_li.jsonl" >> "$OUT/lane_host_li.log" 2>&1 & P2=$!
 P3=
 fi
 log "갈래 발사 (PID $P1 $P2 $P3 · 대상 ${#ROSTER[@]} 종 · $ROSTER_SRC) — 기대 줄 수 $EXPECT"
@@ -177,11 +187,15 @@ EOF
 SAME=$(manifest after) || die "manifest (뒤) 실패" 18
 log "MP 판 앞뒤: $SAME"
 
-# 6) 산물 MP 갭 (축 ① 만 · 값은 로그 · json 에만 · 축 ② 카드는 갭을 안 쓴다)
+# 6) 산물 MP 갭 (축 ① · ③ · 값은 로그 · json 에만 · 축 ② 카드는 갭을 안 쓴다)
 R4=0
 if [ "$AXIS" = ncm ]; then
 "$PY" tools/oxidation/sei_product_gaps.py --from_reactions "$OUT/designs_lno.jsonl" "$OUT/designs_lco.jsonl" \
    "$OUT/host.jsonl" --out "$OUT/product_gaps.json" > "$OUT/lane_gaps.log" 2>&1; R4=$?
+log "산물 갭 rc=$R4"
+elif [ "$AXIS" = li ]; then
+"$PY" tools/oxidation/sei_product_gaps.py --from_reactions "$OUT/designs_li.jsonl" "$OUT/host_li.jsonl" \
+   --out "$OUT/product_gaps.json" > "$OUT/lane_gaps.log" 2>&1; R4=$?
 log "산물 갭 rc=$R4"
 fi
 
