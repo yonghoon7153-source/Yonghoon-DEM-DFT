@@ -1,5 +1,6 @@
 """DG · DH · DI · 정전 복구 · DJ · DK · DL · DM 고침 변이 검사 — DL 판 (../li2s2_dl_mutation_2026_11_04/dl_mutate.py) 의 147 개를 가져오되
-thermo 판독을 다시 써서 자리가 바뀐 N6 · N8 · N9 는 새 자리로 옮기고, DM 고침 자리 (O 계열) 를 더한다. 실행 · 판정은 DL 판과 같다
+thermo 판독을 다시 써서 자리가 바뀐 N3 · N6 · N8 · N9 는 새 자리로 옮기고, DM 고침 자리 (O1–O13) 와 같은 갈래로 더 막은 자리 (O14–O18 ·
+도중 끊김 후보의 판정 기록 — 해석할 수 없는 상태 · MD 완료 흔적 · invalid 허용 대조) 를 더한다. 실행 · 판정은 DL 판과 같다
 (저장소 밖 복사본 3 개 · 작업자 3 개 · which = run / drv / both). --dry : 자리만 · --only=접두 : 그 접두의 변이만."""
 import importlib.util, pathlib, sys
 
@@ -37,6 +38,14 @@ NEW = [
  ("O12_mid_pass_fail_off", DRVR, [("            if st in (\"pass\", \"fail\"):\n                return f\"{where} 에 과학적 판정", "            if False:\n                return f\"{where} 에 과학적 판정")], "drv"),
  ("O13_history_new_part_off", DRVR, [("            ok = (st == \"incomplete\" and isinstance(fs, dict) and set(PROVENANCE_FILES) <= set(fs)\n                  and all(fs.get(x) is None for x in PROVENANCE_FILES)) if partial else _verdict_is_pre_run(r)",
                                       "            ok = True if partial else _verdict_is_pre_run(r)")], "drv"),
+ # ── 같은 갈래 (DN 전) — 도중 끊김 후보의 판정 기록: 해석할 수 없는 상태 · MD 완료 흔적 (일정 끝 · 프레임 다 참) / invalid 는 허용 (대조)
+ ("O14_mid_status_check_off", DRVR, [("            if st not in (\"incomplete\", \"invalid\"):          # 못 읽은 이전 판정",
+                                      "            if False:          # 못 읽은 이전 판정")], "drv"),
+ ("O15_mid_sched_done_off", DRVR, [("                if isinstance(gc, dict) and gc.get(\"schedule_complete\"):", "                if False:")], "both"),
+ ("O16_mid_frames_full_off", DRVR, [("                if type(n_) is int and type(ex_) is int and ex_ > 0 and n_ >= ex_:", "                if False:")], "drv"),
+ ("O17_mid_full_record_off", DRVR, [("            if not partial:                                  # 전체 기록", "            if False:                                  # 전체 기록")], "both"),
+ ("O18_invalid_held", DRVR, [("            if st not in (\"incomplete\", \"invalid\"):          # 못 읽은 이전 판정",
+                              "            if st not in (\"incomplete\",):          # 못 읽은 이전 판정")], "both"),
 ]
 
 MUT = [MOVED.get(m[0], m) for m in dl.MUT] + NEW

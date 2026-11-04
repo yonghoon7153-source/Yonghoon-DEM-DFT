@@ -102,7 +102,7 @@ DI 수정:
 from __future__ import annotations
 import argparse, datetime, hashlib, importlib.util, json, os, pathlib, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "7467aae3709eeadb"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "d03ddcf72d36eac5"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 DECISION = "D-2026-11-03-li2s2-dense-window"
 CARD_REL = "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json"
 DRIVER_REL = "tools/ionic/melt_quench_uma.py"
@@ -1152,8 +1152,30 @@ def _selftest():
     NOPLAN_STAGES = ("no_plan", "noplan_hist_pass", "noplan_vtmp_pass", "noplan_judged")       # plan 을 안 남기는 단계 (회신 DM P0-2 포함)
     PASSV = {"status": "pass", "reasons": {}, "provenance": {"files_sha256": {"plan.json": "a" * 64, "thermo.csv": "b" * 64,
                                                                               "traj.xyz": "c" * 64, "final.xyz": "d" * 64, "result.json": "e" * 64}}}
-    def dm_stage(d, st_, th_full=None):
-        """회신 DM 반례 · 대조를 폴더 d 에 만든다 — end_row_kept: thermo 에 앞 행 + 끝 시각 행만 · noplan_*: 진짜 판정 함수로 판정 기록."""
+    md_judged = []                                           # 진짜 판정 함수가 'MD 완료 · FIRE 미완' 폴더에 낸 판정의 꼴 (fixture 뜻 확인)
+    def _note_md_judge(v_):
+        tf_ = (v_.get("checks") or {}).get("traj_frames") or {}
+        md_judged.append((v_.get("status"), bool((v_.get("gate_check") or {}).get("schedule_complete")),
+                          tf_.get("n") is not None and tf_.get("n") == tf_.get("expected")))
+    def _judge_as_seed(d, reason):                           # 러너는 보존 (이름 바꿈) 전에 seed<번호> 폴더에서 판정한다 — 그 이름 아래에서 진짜 판정
+        pl_j = J(d / "plan.json")
+        jroot = d.parent.parent / f"_judge_{uuid.uuid4().hex[:8]}"
+        jdir = jroot / pl_j["system"] / f"seed{pl_j['seed']}"
+        jdir.parent.mkdir(parents=True); d.rename(jdir)
+        try:
+            return real.stage1_verdict(jdir, values=vals_t, log=lambda *m: None, reason=reason)
+        finally:
+            jdir.rename(d); shutil.rmtree(jroot)
+    def dm_stage(d, st_, th_full=None, src_full=None):
+        """회신 DM 반례 · 대조를 폴더 d 에 만든다 — end_row_kept: thermo 에 앞 행 + 끝 시각 행만 · noplan_*: 진짜 판정 함수로 판정 기록 ·
+        judged_md_then_cut: MD 완료 · FIRE 미완 폴더를 진짜 판정 (incomplete · 일정 끝 · 프레임 다 참) 한 뒤 완료 기록 · 원자료 꼬리 소실."""
+        if st_ == "judged_md_then_cut":                     # 같은 갈래 (DN 전) — 판정 기록의 'MD 가 끝났다' 흔적
+            cut_tr, cut_th = (d / "traj.xyz").read_bytes(), (d / "thermo.csv").read_bytes()
+            shutil.copy(src_full / "traj.xyz", d / "traj.xyz"); shutil.copy(src_full / "thermo.csv", d / "thermo.csv")
+            pl_j = J(d / "plan.json"); n_pl = real.planned_md_steps(pl_j)
+            real.write_md_done(d, run_id=pl_j["run_id"], n_steps_planned=n_pl, n_steps_done=n_pl)
+            _note_md_judge(_judge_as_seed(d, "selftest — MD 완료 · FIRE 미완 판정"))
+            (d / real.MD_DONE_NAME).unlink(); (d / "traj.xyz").write_bytes(cut_tr); (d / "thermo.csv").write_bytes(cut_th)
         if st_ == "end_row_kept":                           # P0-1 — 궤적은 앞부분 · thermo 는 앞 행 + 온전한 끝 행
             th_ = (d / "thermo.csv").read_text(encoding="utf-8").splitlines(keepends=True)
             (d / "thermo.csv").write_text("".join(th_) + th_full[-1], encoding="utf-8")
@@ -1198,7 +1220,7 @@ def _selftest():
                     (d / "plan.json").unlink()
                 if st_ == "final":
                     shutil.copy(canon / "final.xyz", d / "final.xyz"); shutil.copy(canon / "result.json", d / "result.json")
-            dm_stage(d, st_, th_full=(canon / "thermo.csv").read_text(encoding="utf-8").splitlines(keepends=True))
+            dm_stage(d, st_, th_full=(canon / "thermo.csv").read_text(encoding="utf-8").splitlines(keepends=True), src_full=canon)
             row = {"system": sysn, "seed": seed, "run_id": rid_, "start": "t", "end": "t", "status": pv.get("status", "interrupted"),
                    "rc": pv.get("rc", "killed_runner_exit"), "wall_h": pv.get("wall_h", 1.0), "cost_basis": "measured"}
             if pv.get("kind") == "invalid":
@@ -1698,6 +1720,8 @@ def _selftest():
     for nm_, how, ctrl in (("end_row_kept", _end_row, False),
                            ("noplan_hist_pass", lambda d: (_strip_raw(d), dm_stage(d, "noplan_hist_pass")), False),
                            ("noplan_vtmp_pass", lambda d: (_strip_raw(d), dm_stage(d, "noplan_vtmp_pass")), False),
+                           ("judged_md_then_cut", lambda d: (_note_md_judge(_judge_as_seed(d, "selftest — MD 완료 · FIRE 미완 판정")),
+                                                             _cut_front(d)), False),
                            ("ctrl_noplan_judged", lambda d: (_keep_attempt_only(d), dm_stage(d, "noplan_judged")), True),
                            ("ctrl_mid_cut", lambda d: _cut_front(d), True)):
         c_x = clone(c_m); (c_x / "STOP.json").unlink(missing_ok=True)
@@ -1712,8 +1736,8 @@ def _selftest():
         and dm_ctrl["ctrl_mid_cut"][:2] == (0, 1) and dm_ctrl["ctrl_mid_cut"][3] == "md_incomplete"
         and all(v_[4] for v_ in dm_ctrl.values()),
         f"⛔음성 DM P0-1 · P0-2 (Codex 재현): 궤적 앞부분 + thermo 에 온전한 끝 시각 행 · pass 판정이 있던 폴더를 원자료 소실 뒤 재판정 · "
-        f"pass 판정이 임시 파일에만 → 선언이 맞아도 재담금질 0 · 보류 · 폴더 그대로 / 대조: 진짜 plan 전 판정만 · 명확한 도중 끊김 → 재시도 1 · "
-        f"rc 0 ({dm_cases} · {dm_ctrl})")
+        f"pass 판정이 임시 파일에만 · (같은 갈래) MD 완료 · FIRE 미완 폴더를 진짜 판정한 뒤 완료 기록 · 꼬리 소실 → 선언이 맞아도 재담금질 0 · "
+        f"보류 · 폴더 그대로 / 대조: 진짜 plan 전 판정만 · 명확한 도중 끊김 → 재시도 1 · rc 0 ({dm_cases} · {dm_ctrl})")
     rc_w1, L_w1, rr_w = go(wt, scen={("B", 12): {"raise_on_poll": 3, "polls": 6}})
     sw1 = J(rr_w / "STOP.json")
     (rr_w / "B/seed12").rename(rr_w / "B/seed12.int1")
@@ -1816,6 +1840,7 @@ def _selftest():
     s_dmhp = hist_case([{"decl": OUT, "stage": "noplan_hist_pass"}])[1]       # 회신 DM P0-2 반례 1
     s_dmvt = hist_case([{"decl": OUT, "stage": "noplan_vtmp_pass"}])[1]       # 회신 DM P0-2 반례 2
     s_dmjd = hist_case([{"decl": OUT, "stage": "noplan_judged"}])[1]          # 대조 — 진짜 plan 전 판정만
+    s_dmjm = hist_case([{"decl": OUT, "stage": "judged_md_then_cut"}])[1]     # 같은 갈래 — 진짜 판정의 MD 완료 흔적 뒤 꼬리 소실
     s_fn = hist_case([{"decl": OUT, "stage": "final"}])[1]
     s_ivn = hist_case([{"kind": "invalid", "stage": "final", "status": "ended", "rc": 0, "decl": FIX}])[1]
     s_ivy = hist_case([{"kind": "invalid", "stage": "final", "status": "ended", "rc": 0,
@@ -1833,6 +1858,7 @@ def _selftest():
              "dl_end": inv_(s_dlen, "완료 단계를 못 읽는데"),
              "dm_end_row": inv_(s_dmer, "완료 단계를 못 읽는데"), "dm_noplan_hist": inv_(s_dmhp, "완료 단계를 못 읽는데"),
              "dm_noplan_vtmp": inv_(s_dmvt, "완료 단계를 못 읽는데"), "dm_noplan_judged": s_dmjd["track"],
+             "dm_judged_md": inv_(s_dmjm, "완료 단계를 못 읽는데"),
              "invalid_final_no_reason": inv_(s_ivn, "다시 판정할 수 없다"), "invalid_final_reason": s_ivy["track"],
              "cap_run_outage_reason": inv_(s_cpo, "상한으로 멈춘 런"), "runner_on_stripped": (rc_sl, len(L_sl)),
              "same_answer_folder_vs_ledger": (s_fo["track"], s_fo["cost"]["cap_h"], s_fo["cost"]["total_h"]) == (s_lb["track"], s_lb["cost"]["cap_h"], s_lb["cost"]["total_h"])
@@ -1840,7 +1866,7 @@ def _selftest():
     exp_c = {"ok": "stage1_pass", "two": True, "two_kind": True, "strip_ledger": True, "strip_all": True, "att_mismatch": True, "att_gone": True,
              "no_decl": True, "rebind": True, "wrong_kind": True, "cut_verdict": True, "move_out": True, "md_complete": True, "final": True,
              "dl_noplan": True, "dl_tmp": True, "dl_end": True,
-             "dm_end_row": True, "dm_noplan_hist": True, "dm_noplan_vtmp": True, "dm_noplan_judged": "stage1_pass",
+             "dm_end_row": True, "dm_noplan_hist": True, "dm_noplan_vtmp": True, "dm_noplan_judged": "stage1_pass", "dm_judged_md": True,
              "invalid_final_no_reason": True, "invalid_final_reason": "stage1_pass", "cap_run_outage_reason": True,
              "runner_on_stripped": (RC["invalid"], 0), "same_answer_folder_vs_ledger": True}
     chk(got_c == exp_c,
@@ -1872,7 +1898,7 @@ def _selftest():
                 shutil.copy(src_ / "final.xyz", d / "final.xyz")
             if stage == "unreadable":
                 (d / "plan.json").write_text('{"melt', encoding="utf-8")
-        dm_stage(d, stage, th_full=(src_ / "thermo.csv").read_text(encoding="utf-8").splitlines(keepends=True))
+        dm_stage(d, stage, th_full=(src_ / "thermo.csv").read_text(encoding="utf-8").splitlines(keepends=True), src_full=src_)
         if verdict is not None:
             (d / "stage1_verdict.json").write_text(verdict, encoding="utf-8")
         return {"path": str(d)}
@@ -1917,6 +1943,7 @@ def _selftest():
         "dm_noplan_hist": E([run0()], rcpt(), {R0: ufold("mh", stage="noplan_hist_pass")}),
         "dm_noplan_vtmp": E([run0()], rcpt(), {R0: ufold("mt", stage="noplan_vtmp_pass")}),
         "dm_noplan_judged": E([run0()], rcpt(), {R0: ufold("mj", stage="noplan_judged")}),
+        "dm_judged_md": E([run0()], rcpt(), {R0: ufold("mk", stage="judged_md_then_cut")}),   # 같은 갈래 — 판정의 MD 완료 흔적
     }
     exp_u = {"ok": (True, None), "no_plan_ok": (True, None), "ledger_fail": (False, "invalid"), "ledger_fail_no_folder": (False, "invalid"),
              "missing_invalid": (False, "resume"),
@@ -1927,7 +1954,7 @@ def _selftest():
              "cap_raise": (True, None), "two": (False, "invalid"), "inv_then_int": (True, None),
              "dl_noplan_done": (False, "resume"), "dl_tmp": (False, "resume"), "dl_end": (False, "resume"), "dl_inv_tmp": (False, "resume"),
              "dm_end_row": (False, "resume"), "dm_noplan_hist": (False, "resume"), "dm_noplan_vtmp": (False, "resume"),
-             "dm_noplan_judged": (True, None)}
+             "dm_noplan_judged": (True, None), "dm_judged_md": (False, "resume")}
     got_u = {k: (v["ok"], v["code"]) for k, v in cases.items()}
     chk(got_u == exp_u and "한도" in cases["two"]["why"] and "FIRE" in cases["fire"]["why"] and "못 찾는다" in cases["missing_invalid"]["why"]
         and "못 읽는다" in cases["folder_cut"]["why"] and "선언 문제" in cases["no_decl"]["why"] and cases["ok"]["kind"] == "interrupted"
@@ -1939,6 +1966,9 @@ def _selftest():
         "resume 영수증 · invalid 에 정전 사유 · 상한 런에 정전 사유 · 두 번 끊김 (한도) · **완료 폴더에서 plan 만 없음 · 임시 기록만 · "
         "기록 없이 끝 경계 · invalid 런의 임시 기록 (회신 DL)** → 거부 / 맞으면 통과 (plan 전 끊김 · 상한 사유 · "
         f"invalid 다음 끊김 1 회) ({ {k: got_u[k] for k in got_u if got_u[k] != exp_u[k]} })")
+    chk(len(md_judged) >= 3 and all(x_ == ("incomplete", True, True) for x_ in md_judged) and "MD 가 끝났던 흔적" in (cases["dm_judged_md"]["why"] or ""),
+        "⛔ fixture 뜻 (같은 갈래 · DN 전): 진짜 판정 함수가 'MD 완료 · FIRE 미완' 폴더에 낸 판정은 incomplete · 일정 끝 · 프레임 다 참이다 "
+        f"— 그 흔적이 남은 채 완료 기록 · 꼬리가 사라지면 러너 · 재시도 자격 · 소비자가 보류 ({md_judged} · {(cases['dm_judged_md']['why'] or '')[:160]})")
     # 확인 때 선언 검사 단위 (ack_declaration_problems) — 종류는 실행에서 · code 는 그 종류의 묶는 code · 상한 규칙 · 다시 판정 못 하는 이유
     ar = pathlib.Path(tempfile.mkdtemp(dir=tmp_root))
     def afold(name, rid_, stage="md_incomplete", verdict=None):
