@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-11-03
-updated: 2026-11-03
+date: 2026-11-04
+updated: 2026-11-04
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-11-03
+verifiedAt: 2026-11-04
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -136,7 +136,7 @@ evidenceScope: multi-source-primary
 | DH | 2026-11-03 | `codex_DH_prompt_li2s2_dg_fixes_2026_11_03.md` | `codex_DH_reply_li2s2_dg_fixes_2026_11_03.md` | 발송 · 회신 수령 2026-11-03 (NO-GO · `codex_DH_reply_li2s2_dg_fixes_2026_11_03.md`) · 기준 커밋 7abe7929 | 같은 라벨 · 주제 토큰 일치 ['dg', 'fixes', 'li2s2'] |
 | DI | 2026-11-03 | `codex_DI_prompt_li2s2_dh_fixes_2026_11_03.md` | `codex_DI_reply_li2s2_dh_fixes_2026_11_03.md` | 발송 · 회신 수령 2026-11-03 (고침 묶음 · `codex_DI_reply_li2s2_dh_fixes_2026_11_03.md` · 패치 적용 b7d11f81) · 기준 커밋 dad10ecf | 같은 라벨 · 주제 토큰 일치 ['dh', 'fixes', 'li2s2'] |
 | DJ | 2026-11-03 | `codex_DJ_prompt_li2s2_outage_rule_2026_11_03.md` | `codex_DJ_reply_li2s2_outage_rule_2026_11_03.md` | 발송 · 회신 수령 2026-11-03 (NO-GO · `codex_DJ_reply_li2s2_outage_rule_2026_11_03.md`) · 기준 커밋 0f51518d | 같은 라벨 · 주제 토큰 일치 ['li2s2', 'outage', 'rule'] |
-| DK | 2026-11-03 | `codex_DK_prompt_li2s2_dj_fixes_2026_11_03.md` | — | 초안 (2026-11-03) — 사용자 발송 대기 · 기준 커밋 7ac0be8e | — |
+| DK | 2026-11-03 | `codex_DK_prompt_li2s2_dj_fixes_2026_11_03.md` | `codex_DK_reply_li2s2_dj_fixes_2026_11_03.md` | 발송 · 회신 수령 2026-11-04 (NO-GO · P0 2 · P1 2 · `codex_DK_reply_li2s2_dj_fixes_2026_11_03.md`) · 기준 커밋 7ac0be8e | 같은 라벨 · 주제 토큰 일치 ['dj', 'fixes', 'li2s2'] |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
