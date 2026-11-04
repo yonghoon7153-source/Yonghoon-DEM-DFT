@@ -11273,6 +11273,67 @@
     "근거_발화": "사용자 2026-11-04 (이 세션 · AskUserQuestion): 축 ② 가수분해 카드 '비준 — 바로 진행 (Recommended)'",
     "decision_digest": "sha256:b42768db53d460bf0c581becf35d23ba8515d34192dc5a2ff9cc7206b2668f01"
    }
+  },
+  {
+   "id": "D-2026-11-04-cascade-axis-li-anode",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "cascade.dopant_screening.axis_li_anode",
+   "slot": "cascade_axis_li_anode",
+   "applies_to": {
+    "systems": [
+     "lpscl_dopant_designs"
+    ],
+    "tasks": [
+     "li_metal_reduction_driving_force",
+     "dopant_fate_passivation"
+    ],
+    "methods": [
+     "mp_interfacial_reactivity",
+     "mp_band_gap_grades"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "cascade 스크리닝 축 ③ — 91 설계의 도핑 조성 + Li 금속 닫힌계 환원 분해: 호스트 대비 δ_Li (R1) · 도펀트 행방 MP 갭 등급 (R2) · O/S 짝 (R5) · 축 ① 과의 겹침 (G7)",
+   "statement": "카드 db/properties/cascade_axis_li_anode_estimand_2026_11_04.json 이 보고량 · 게이트 · 금지 문장이다: 대상 = 축 ① 개정 1 의 91 종 조성 · 호스트 Li6PS5Cl · 상대 Li 금속 · 닫힌계 pseudo-binary (축 ① · ② 규약) · R2 등급 규칙은 축 ① 그대로 (원소 금속 · 음이온 없는 금속간은 금속성) · G1b 호스트 반응 음수 + Li2S · Li3P · LiCl 산물 · G2 완결 · G3 같은 MP 판 · G4 IQR ≥ 10 meV/atom · G7 축 ① 과 Spearman |ρ| ≥ 0.8 이면 겹침. 합치는 규칙 연결: 위험 표시 F1_Li 금속성 (도펀트 원자 ≥ 1 % 가 금속성 산물로) · F2_Li δ_Li ≤ −10 · 좋은 방향 δ_Li 큰 쪽 · 세 축 위험 표시 모두 적용. 판독기는 회수 전에 커밋.",
+   "rationale": "축 ② 가 G4 불통과라 G4 를 넘은 연속 축이 축 ① 하나뿐 (R4 표시만) — 첫 선택 집합에는 축이 하나 더 필요하다. 축 확장 계획의 스크리닝 후보 중 같은 계산 틀 · CPU MP 조회만 · 양극 (산화) · 물과 다른 음극 (환원) 쪽 · 부동태화를 축 ① 등급 규칙 그대로 볼 수 있는 축이다 (사용자 '권고대로 다음 축 카드를 열어').",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "results_seen_note": "축 ③ 설계 × Li 값 0 건 · 8 월 T9 (별도 상) · 축 ① · ② 판독은 봤다 (카드 §0)",
+   "card": "db/properties/cascade_axis_li_anode_estimand_2026_11_04.json",
+   "record": "db/properties/cascade_screening_axes_plan_2026_10_15.json",
+   "depends_on": [
+    "D-2026-10-15-cascade-screening-axes-plan",
+    "D-2026-11-04-cascade-axes-combination-rule",
+    "D-2026-11-04-cascade-axis-ncm-interface",
+    "D-2026-11-04-cascade-axis-hydrolysis"
+   ],
+   "supersedes": [],
+   "amends": null,
+   "evidence": [
+    "tools/cascade/stability_axes.py T9 (같은 계산 틀 · 별도 상)",
+    "db/properties/cascade_axis_hyd_readout_2026_11_04.json (축 ② G4 불통과 → R4)"
+   ],
+   "reopen_criteria": [
+    "없음 — 열린계 (μLi = 0) 판 · 다른 음극 (Li 합금 · 흑연) · 이온 전도 판은 새 카드"
+   ],
+   "enforcement": "판독기 (analyze_cathode_reactivity.py --axis_li) 가 게이트를 검사하고 불통과면 표를 내지 않는다 · 결정이 active 가 아니면 러너 · 판독기가 멈춘다",
+   "cost_cap": {
+    "compute": "gabia CPU · MP 조회 92 쌍 + 산물 갭 조회 (≈ 25–35 분) · GPU 0 · SCF 0"
+   },
+   "proposed_by": "agent",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-04",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 '권고대로 다음 축 카드를 열어' — 결과 전 초안 · 사용자 비준 대기"
+    }
+   ]
   }
  ]
 }
