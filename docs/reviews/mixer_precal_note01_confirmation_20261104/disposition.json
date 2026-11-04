@@ -1,0 +1,16 @@
+{
+  "confirmed_document_pin": "0f284e7db65278acb52dd4666b1b22151604e9ba",
+  "prior_draft_accepted_pin": "d0107959955f284df56cb546ee008595d26dac61",
+  "external_verdict": "NOTE01_AND_RECEIPT_ACCEPTED_WITHIN_DOCUMENT_SCOPE",
+  "new_findings": [],
+  "note01_external_confirmation_pending": false,
+  "accepted_documents_or_existing_evidence_changed": false,
+  "repeat_external_review_requested": false,
+  "author_Q1_Q4": "PENDING",
+  "full_gate": "HOLD",
+  "active_registration": false,
+  "research_execution": false,
+  "deployment": false,
+  "integration": false,
+  "ledger_closure": false
+}
