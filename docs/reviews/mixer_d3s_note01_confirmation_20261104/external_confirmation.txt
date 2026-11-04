@@ -1,0 +1,27 @@
+# D3S-NOTE01 한 문장 반영·수령 기록 확인 — 2026-11-04
+
+**판정: 요청한 한 문장 반영 및 판정 수령 기록 범위 수용. 새 P1/P2/P3 발견 없음.**
+
+- 이전 문서 수용 핀: `df9a4623e2f9e6302e6bc8922bd0612ab48e120c`.
+- 이번 확인 핀: `67d23a4fdeab0f09c8a8c2602cfc59daecd07f20`, `codex/mixer-1104`.
+- 입력 ZIP SHA-256: `e6529061e6723037233761b19f6e1069f8a4d00d8db187dabfb5c7a835673ab5`.
+
+| 확인 항목 | 독립 대조 결과 |
+|---|---|
+| 핀 구분 | PIN.txt는 새 핀, EXTERNALLY_ACCEPTED_PIN.txt는 이전 수용 핀으로 정확히 구분 |
+| 한 문장 전사 | SOP §3 표 뒤 **45행**의 문장이 이전 외부 판정 §4 제안과 정확히 일치 |
+| 나머지 SOP 보존 | 추가 문장과 빈 줄 **294 bytes**를 제거하면 이전 **11,561 bytes**와 바이트 단위로 동일. 새 SOP는 **11,855 bytes** |
+| 기존 설계·계약 | 동봉한 v2 설계와 후보 판독기 계약은 이전 묶음과 바이트 동일 |
+| 원본 보존 | 이전 증거 ZIP의 SHA-256이 `71706a409469fde4cdb0d2ed349ff0fbad6e30a4bd83510de304f920a5fab3a3`로 동일. 수령한 판정문·범위 JSON·검증 결과도 원본과 바이트 동일 |
+| 새 전달물 신원 | snapshot 17개를 실제 bytes·SHA-256·Git blob과 대조하고 새 원격 핀의 blob·크기와 일치 확인. 포장 해시 31개 일치. 포함 관계이므로 합산하지 않음 |
+
+추가 후 SOP SHA-256은 `dde2857a41b847fbb1f1888588a6ddc0331aa71dfd08ad40f02618ce1bddcc38`다. 추가분을 제거한 SHA-256은 이전 수용본의 `4f055a1094e870465357827e0fd8a080b464c6cc503ac7cf04c09edad8d0aa43`다.
+
+문구의 의미도 기존 판정과 같다. **고정된 규칙 아래 순차 C2 계산·봉인·열람은 계속 허용**한다. 앞선 검증 결과에 맞춰 후속 예측 생성·판독/제외·재시도 규칙을 바꾸면 기존 무맞춤 검증으로 집계하지 않고 변경 이력과 새 분석 지위를 기록한다. 모든 검증 단위를 동시에 봉인하라는 조건은 추가하지 않았다. [새 핀 SOP 45행](https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/67d23a4fdeab0f09c8a8c2602cfc59daecd07f20/docs/reviews/mixer_d3_measurement_sop_draft_20261104.md#L45)
+
+수령 README:3,7,21 및 후속 쪽지는 이전 핀의 수용과 새 핀 확인 대기를 구분한다. `disposition.json`과 `scope_verdict.json`에서도 문서 수용을 실제 등록·장비·맹검·통계·물리 타당성, 실행·배포·통합·원장 종결로 확대하지 않았다. [수령 기록](https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/67d23a4fdeab0f09c8a8c2602cfc59daecd07f20/docs/reviews/mixer_d3_sop_acceptance_20261104/README.md)
+
+이번에는 Q1–Q6 전체 감사, 판독기·전체 게이트 재실행, 실제 기계 접근을 하지 않았다. 파일 무결성과 한 문장의 의미·수령 범위만 대조했다. 증거의 `verify_note01.py`는 입력 ZIP과 기록된 원격 메타데이터를 오프라인 재대조하는 도구이며 실제 접근통제·통계·물리 타당성을 인증하지 않는다.
+
+**D3S-NOTE01 반영 확인 완료. 전체 게이트 HOLD 및 실제 실행 미승인 유지. 발송·진행 순서는 1저자, Rint② 우선.**
+

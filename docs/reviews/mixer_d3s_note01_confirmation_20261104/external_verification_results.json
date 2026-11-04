@@ -1,0 +1,23 @@
+{
+  "new_pin": "67d23a4fdeab0f09c8a8c2602cfc59daecd07f20",
+  "externally_accepted_pin": "df9a4623e2f9e6302e6bc8922bd0612ab48e120c",
+  "package_sha256": "e6529061e6723037233761b19f6e1069f8a4d00d8db187dabfb5c7a835673ab5",
+  "snapshot_remote_files": 17,
+  "package_entries": 31,
+  "proposal_exact_transcription": true,
+  "added_sentence_line": 45,
+  "sop_old_bytes": 11561,
+  "sop_new_bytes": 11855,
+  "added_bytes_including_newlines": 294,
+  "restored_sop_sha256": "4f055a1094e870465357827e0fd8a080b464c6cc503ac7cf04c09edad8d0aa43",
+  "new_sop_sha256": "dde2857a41b847fbb1f1888588a6ddc0331aa71dfd08ad40f02618ce1bddcc38",
+  "remove_sentence_and_blank_line_restores_exact_bytes": true,
+  "prior_review_evidence_zip_preserved": true,
+  "original_verdict_scope_and_verification_preserved": true,
+  "v2_and_reader_contract_unchanged": true,
+  "request_copy_identical": true,
+  "review_scope": "NOTE01 sentence transcription and receipt boundaries only",
+  "source_code_tests_full_gate_reexecuted": false,
+  "overall_gate": "HOLD",
+  "execution_authorized": false
+}
