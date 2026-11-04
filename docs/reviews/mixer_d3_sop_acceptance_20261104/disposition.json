@@ -1,0 +1,14 @@
+{
+  "reviewed_pin": "df9a4623e2f9e6302e6bc8922bd0612ab48e120c",
+  "external_verdict": "DOCUMENT_DRAFT_ACCEPTED",
+  "scope": "D3 SOP document only",
+  "new_findings": [],
+  "nonblocking_suggestion": "D3S-NOTE01",
+  "suggestion_applied_verbatim": true,
+  "post_change_pin_externally_confirmed": false,
+  "whole_gate": "HOLD",
+  "registration": false,
+  "execution": false,
+  "deployment": false,
+  "ledger_closure": false
+}
