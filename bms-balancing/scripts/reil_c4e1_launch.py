@@ -1,14 +1,15 @@
-"""REIL C4-E · E1 단계 실행기 v5 — 독립 사전 대조 · 고정 명령 · 유한 정리 · 외부 단계 판정 (stdlib 만 · 실행 모듈을 import 하지 않는다).
+"""REIL C4-E · E1 단계 실행기 v6 — 독립 사전 대조 · 고정 명령 · 유한 정리 · 외부 단계 판정 (stdlib 만 · 실행 모듈을 import 하지 않는다).
 
     /usr/bin/python3.11 -I bms-balancing/scripts/reil_c4e1_launch.py <identity|fetch|run>
                         --evidence /home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_YYYYMMDD --approval-section §NN
 
-승인 · 범위: `docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md` (E1-0 승인 요청 · E1-1–3 의 고정 명령) · 정정 범위
+승인 · 범위: `docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md` (E1-0b 승인 요청 · E1-1–3 의 고정 명령) · 정정 범위
 `docs/REIL_C4E_E1_REVISION_SCOPE_20261015.md` (사전 검토 §74 의 N1–N6 · 자체 발견 S1 · 사용자 채택 §75) ·
 `docs/REIL_C4E_E1_REVISION_SCOPE_v3_20261021.md` (v2 사전 검토 §76 의 V2-01–05 · 자체 발견 S2–S4 · 사용자 채택 §77) ·
 `docs/REIL_C4E_E1_REVISION_SCOPE_v4_20261021.md` (v3 사전 검토 §78 의 V3-01–04 · V3-N1 · 자체 발견 S5 · 사용자 채택 §79) ·
-`docs/REIL_C4E_E1_REVISION_SCOPE_v5_20261027.md` (v4 사전 검토 §80 의 V4-01 · V4-N1 · 자체 발견 S6 · 사용자 채택 §81). 자식 argv 는 이 파일이
-고정한다 (`build_argv`) — 인자로 바뀌는 것은 증거 폴더 (이름 규칙 · 미리 만든 폴더) 와 승인 절 번호뿐이다.
+`docs/REIL_C4E_E1_REVISION_SCOPE_v5_20261027.md` (v4 사전 검토 §80 의 V4-01 · V4-N1 · 자체 발견 S6 · 사용자 채택 §81) ·
+`docs/REIL_C4E_E1_0B_E1_1_3_SCOPE_20261030.md` (E1-0 결과 검토 §86 의 Q3 — FUTURE-01 · launcher 운영 정리 정책 · 사용자 채택 §87). 자식 argv 는
+이 파일이 고정한다 (`build_argv`) — 인자로 바뀌는 것은 증거 폴더 (이름 규칙 · 미리 만든 폴더) 와 승인 절 번호뿐이다.
 
 단계마다:
 0. **준비 (V2-04 — 기록되는 단계 `prepare`)** — 의도된 거부 (단계 이름 · 기존 기록 파일 · 기존 pycache 폴더) 는 어떤 파일 · 폴더도 만들기 전 SystemExit
@@ -19,15 +20,22 @@
    lock 머리줄 (MANIFEST → lock → 머리줄) · 실행 스크립트 · 해석기 플래그 · 개별 모듈 가림 (N1 — `scripts/<이름>/__init__*` · 같은 이름 확장 파일) · 탐침 (같은
    해석기 · 플래그 · env · cwd · `-c` · json / sys 만): 플래그 · sys.path 의 `scripts` 가림 · `sys.meta_path` 의 finder 에 `find_spec` 만 물어 본 `scripts`
    (네임스페이스) 와 셋 (`reil_c4_e3a` · `reil_c4_monitor` · `reil_c5_pilot`) 의 origin · loader = 승인 소스 (부모 import · 대상 실행 0) · (run) 자료 두 파일 ·
-   (fetch) 자료 폴더 없음 · Git 설정에 URL 바꿈 · 프록시 · 자격 도우미 · TLS 검증 끔이 없음 · `ls-remote --get-url` 의 유효 출처 = 고정 URL (원격 접속 0).
-2. **시작 기록 · 자식** — HEAD · porcelain 시작 기록이 실패하면 자식을 띄우지 않는다 (S4). 자식은 새 세션 · `-I -B -X pycache_prefix=<새 빈 폴더>` ·
-   timeout 이면 그룹 SIGKILL (결과 기록) 뒤 제한된 대기 (`KILL_WAIT_S`) — 넘으면 미종료로 기록하고 기다림을 멈춘다 · 끝난 뒤 그룹 관측
-   (`GROUP_GRACE_S`) — 살아 있으면 다시 SIGKILL 뒤 재관측. 대기 (`wait_s`) 와 정리 (`cleanup_s`) 시간을 따로 남긴다 (S2). `/proc` 는 바이트로 읽고 comm
-   은 해석하지 않는다 (V3-03). PID 소멸만 "사라짐" 이고 그 밖의 모든 읽기 예외 (권한 · I/O · 디코딩 등) · 파싱 · 목록 오류는 그 PID 의 오류로 남아 unknown
-   으로 끝까지 간다 (N2).
+   (fetch) 자료 폴더 없음 · fetch env (FUTURE-01 — 아래) 의 설정 원천이 command line 고정 목록뿐 (빈 임시 폴더에서 `--show-scope --show-origin`) · URL 바꿈 ·
+   프록시 · 자격 도우미 · TLS 검증 끔이 없음 · `ls-remote --get-url` 의 유효 출처 = 고정 URL (원격 접속 0).
+2. **시작 기록 · 자식 · 정리 (launcher 운영 정리 정책 · V3-01 규칙)** — HEAD · porcelain 시작 기록이 실패하면 자식을 띄우지 않는다 (S4). 자식은 새 세션 ·
+   `-I -B -X pycache_prefix=<새 빈 폴더>`. 자식이 끝나거나 timeout 이 되면 정리 단계에 들어가며 공통 절대 기한 (원점 + `CLEANUP_S` 20 s = kill 대기 10 +
+   그룹 관측 5 + 재관측 5) 을 한 번 만든다 (`cleanup_group` 은 받기만 한다). timeout 이면 그룹 SIGKILL → 자식 종료를 비차단으로 확인 (kill 대기 · 기한 안)
+   → 그룹 관측 창 (`GROUP_GRACE_S` · 기한 안) → 살아 있으면 그룹 SIGKILL (기한 뒤라도 보낸다) → 재관측 창. 모든 관측 · sleep 은 기한 **전에만** 시작한다 —
+   기한을 넘을 수 있는 것은 기한 전에 시작한 관측 하나이고, 그 길이에는 상한이 없다 (감시 스레드 없음). 기한 뒤에는 즉시 동작 (SIGKILL) · 비차단 확인
+   (`poll`) · 기록만 한다. 끝 상태 = empty (재kill 없이 비어 있음) · killed (재kill 뒤 비어 있음) · alive · unverified (관측을 못 함 · 재kill 뒤 재관측을 못
+   함) · unknown (관측 오류 · 정리 안의 예외 — 우선). 정리 안의 예외는 정리가 잡아 같은 기한으로 비상 동작 (자식이 살아 있으면 그룹 SIGKILL · 관측) 만 한다
+   — 새 기한은 없다. 대기 (`wait_s`) 와 정리 (`cleanup_s`) 시간을 따로 남긴다 (S2). `/proc` 는 바이트로 읽고 comm 은 해석하지 않는다 (V3-03). PID 소멸만
+   "사라짐" 이고 그 밖의 모든 읽기 예외 (권한 · I/O · 디코딩 등) · 파싱 · 목록 오류는 그 PID 의 오류로 남아 unknown 으로 끝까지 간다 (N2).
 3. **사후 대조** — 다섯 모듈 · 실행 파일 둘 다시 · (fetch · run) 자료 두 파일 다시 · (fetch) `remote.origin.url` · 유효 출처 · `.git/shallow` = 고정 커밋 ·
-   alternates 없음 · (run) run 의 `IDENTITY.json` 시작 · 끝 표 모듈 행 = 대조 경로 · 목록 · pycache 폴더 파일 0 · 그룹 empty · 미종료 0 · 자식 단계 오류 0 ·
-   Git 기록 (HEAD · porcelain) 성공 · 단계 중 HEAD 불변.
+   alternates 없음 · 받은 저장소의 설정 원천 = command line 고정 목록 + local 허용 키 (`FETCH_LOCAL_KEYS` — FUTURE-01) · (run) run 의 `IDENTITY.json` 시작 ·
+   끝 표 모듈 행 = 대조 경로 · 목록 · pycache 폴더 파일 0 · 정리 끝 상태 empty · 기한 안 (`deadline_hit` false) · 미종료 0 · 자식 단계 오류 0 · Git 기록
+   (HEAD · porcelain) 성공 · 단계 중 HEAD 불변. 판정과 소비자는 `first_error` 하나로 정리의 성공을 판단하지 않는다 (`child.group.status` · `deadline_hit` ·
+   `errors`).
 4. **단계 판정** = precheck_ok AND child_ok AND rc_0 AND timeout_false AND postcheck_ok. run 모듈의 `stage_verdict` 는 쓰지 않는다 (사전 대조를 포함하지
    않는다).
 
@@ -35,6 +43,9 @@
 `launched` 는 자식 시작이 성공한 뒤에만 참이다. 오류가 하나라도 있으면 단계 판정은 false 다. meta 를 쓸 수 없으면 stderr 한 줄 (첫 오류 포함) · 반환 4.
 자식 env (N4): 비밀 형태 이름 · `GIT_SSL_CAINFO` 밖의 모든 `GIT_*` · `SSH_ASKPASS` 를 뺀다 (이름만 기록) · 프록시 · CA 변수는 둔다 · BLAS 스레드 1 ·
 MPL Agg · TMPDIR · GIT_TERMINAL_PROMPT=0. 이 정제 env 는 탐침 · fetch 검사 · 기록용 git (`git_out`) 에도 쓴다 (V2-02 — 상속 env 로 부르는 git 은 없다).
+fetch env (FUTURE-01 · fetch 단계 전체): 정제 env 에서 남은 `GIT_CONFIG*` 를 다시 빼고 `GIT_CONFIG_NOSYSTEM=1` · `GIT_CONFIG_GLOBAL=/dev/null` 로 시스템 ·
+사용자 · XDG 설정 (그 안의 `includeIf` 포함) 을 끈 뒤, 고정 목록 (`FETCH_GIT_CONFIG`) 만 command line 설정 (`GIT_CONFIG_COUNT` / `KEY_n` / `VALUE_n`) 으로
+넣는다. run 의 fetch 는 자식 env 를 그대로 물려받으므로 (run l.690) 다섯 모듈을 바꾸지 않고 자식의 모든 git 호출에 걸린다.
 git 출력은 UTF-8 로 읽는다 — `encoding="utf-8"` · `errors="replace"` (S5 — 비 UTF-8 출력이 기록 밖 예외가 되지 않게 · S6 — 해석이 실행 환경의
 locale 에 기대지 않게). 재시도 없음 · 덮어쓰지 않는다. 자원은 사후 관측이다 (강제 상한이 아니다).
 """
@@ -97,8 +108,16 @@ PROBE_TIMEOUT_S = 60.0
 GIT_TIMEOUT_S = 60.0
 KILL_WAIT_S = 10.0
 GROUP_GRACE_S = 5.0
+#: launcher 운영 정리 정책 (§87) — 정리 단계의 공통 절대 기한 = kill 대기 10 + 그룹 관측 5 + 재관측 5 (명목 배정 그대로 · 각 창은 이 기한 안)
+CLEANUP_S = 20.0
+POLL_S = 0.1
 PROC = Path("/proc")
-REQUEST = "docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md"
+#: FUTURE-01 (§87) — fetch 단계의 git 설정은 이 command line 목록뿐이다. 값은 사용자 설정에서 한 번 읽었다 (2026-10-30 · 프록시 인증 방식 이름 · §87)
+FETCH_GIT_CONFIG = (("http.proxyAuthMethod", "basic"),)
+#: 받은 저장소 (`data/git`) 의 local 설정에 허용하는 키 — `init` · `remote add` · `fetch --filter` (부분 받기 등록) 가 쓰는 것뿐 (include · includeIf 없음)
+FETCH_LOCAL_KEYS = frozenset({"core.repositoryformatversion", "core.filemode", "core.bare", "core.logallrefupdates", "remote.origin.url",
+                              "remote.origin.fetch", "remote.origin.promisor", "remote.origin.partialclonefilter", "extensions.partialclone"})
+REQUEST = "docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md"
 EVIDENCE_NAME = re.compile(r"^reil_c4e1_20[0-9]{6}$")
 SECTION = re.compile(r"^§[0-9]{2,3}$")
 SECRET = re.compile(r"TOKEN|SECRET|PASSW|ACCESS_KEY|CREDENTIAL|COOKIE|^GIT_CONFIG_", re.I)
@@ -376,6 +395,17 @@ def child_env(base: dict, work=WORK) -> tuple:
     return env, removed
 
 
+def fetch_env(env: dict, config=FETCH_GIT_CONFIG) -> dict:
+    """fetch 단계의 env (FUTURE-01) — 받은 env 의 사본에서 `GIT_CONFIG*` (COUNT · KEY · VALUE · PARAMETERS · GLOBAL · SYSTEM · 옛 GIT_CONFIG) 를 모두
+    빼고, 시스템 · 사용자 · XDG 설정 (그 안의 `includeIf` 포함) 을 끈 뒤 (`GIT_CONFIG_NOSYSTEM=1` · `GIT_CONFIG_GLOBAL=/dev/null`) 고정 목록만 command
+    line 설정 (`GIT_CONFIG_COUNT` / `KEY_n` / `VALUE_n`) 으로 넣는다. 그 밖 이름 · 값은 그대로 · 받은 env 는 바꾸지 않는다 · 두 번 적용해도 같다."""
+    out = {k: v for k, v in env.items() if not k.startswith("GIT_CONFIG")}
+    out.update(GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_COUNT=str(len(config)))
+    for i, (k, v) in enumerate(config):
+        out[f"GIT_CONFIG_KEY_{i}"], out[f"GIT_CONFIG_VALUE_{i}"] = k, v
+    return out
+
+
 # ---------------------------------------------------------------- Git (기록 · 출처)
 def git_run(args, *, env=None, cwd=None, timeout=GIT_TIMEOUT_S) -> dict:
     """git 하나 → {argv, rc, out, err[, error]} — 실패를 빈 정상 출력으로 바꾸지 않는다 (rc · 오류를 그대로 둔다). 출력은 UTF-8 로 읽는다
@@ -389,45 +419,79 @@ def git_run(args, *, env=None, cwd=None, timeout=GIT_TIMEOUT_S) -> dict:
         return {"argv": argv, "rc": None, "out": "", "err": "", "error": f"{e.__class__.__name__}: {e}"}
 
 
-def git_config_problems(listing: str) -> list:
-    """`git config --list --show-origin` 출력에서 유효 출처를 바꾸거나 우회하는 설정 (URL 바꿈 · 프록시 · 자격 도우미 · TLS 검증 끔)."""
-    probs = []
+def git_config_entries(listing: str) -> list:
+    """`git config --list --show-scope --show-origin` 출력 → [(scope, origin, 소문자 key, value)]. 세 칸이 아닌 줄은 ("?", 그 줄, "", "") 로 남긴다
+    (원천 검사에서 문제가 된다)."""
+    out = []
     for line in listing.splitlines():
-        origin, _, kv = line.partition("\t")
-        key, _, val = kv.partition("=")
-        k = key.strip().lower()
+        parts = line.split("\t", 2)
+        if len(parts) != 3:
+            out.append(("?", line, "", ""))
+            continue
+        key, _, val = parts[2].partition("=")
+        out.append((parts[0], parts[1], key.strip().lower(), val))
+    return out
+
+
+def git_config_problems(listing: str) -> list:
+    """설정 목록 (`--show-scope --show-origin`) 에서 유효 출처를 바꾸거나 우회하는 설정 (URL 바꿈 · 프록시 · 자격 도우미 · TLS 검증 끔) — 원천과
+    관계없이."""
+    probs = []
+    for scope, origin, k, val in git_config_entries(listing):
         if GIT_CONFIG_DENY.match(k):
-            probs.append(f"git 설정 {k} ({origin}) — URL 바꿈 · 프록시 · 자격 도우미는 허용하지 않는다")
+            probs.append(f"git 설정 {k} ({scope} {origin}) — URL 바꿈 · 프록시 · 자격 도우미는 허용하지 않는다")
         elif GIT_SSLVERIFY.match(k) and val.strip().lower() in ("false", "no", "off", "0", ""):
-            probs.append(f"git 설정 {k}={val.strip()} ({origin}) — TLS 검증을 끄지 않는다")
+            probs.append(f"git 설정 {k}={val.strip()} ({scope} {origin}) — TLS 검증을 끄지 않는다")
     return probs
 
 
-def fetch_source_precheck(env, cwd, url=SOURCE_URL) -> tuple:
-    """N4 (fetch 전 · 원격 접속 0) — 자식 env · 작업 폴더에서 Git 설정 금지 키 없음 · `ls-remote --get-url` (rewrite 적용 URL) = 고정 URL."""
-    c = git_run(["config", "--list", "--show-origin"], env=env, cwd=cwd)
-    g = git_run(["ls-remote", "--get-url", url], env=env, cwd=cwd)
+def config_source_problems(listing: str, config=FETCH_GIT_CONFIG, local_keys=None) -> list:
+    """설정 원천 (FUTURE-01) — command line 항목 = 고정 목록 (소문자 키 · 값) 정확히. 그 밖의 원천은 local_keys 가 주어질 때 local 의 허용 키만 둔다.
+    시스템 · 사용자 · worktree 원천 · 허용 밖 local 키 (include · includeIf 포함) · 형식이 다른 줄이 하나라도 있으면 문제."""
+    entries = git_config_entries(listing)
+    want = sorted((k.lower(), v) for k, v in config)
+    got = sorted((k, v) for s, _, k, v in entries if s == "command")
+    probs = [] if got == want else [f"command line 설정 {got} ≠ 고정 목록 {want}"]
+    for s, o, k, _ in entries:
+        if s == "command" or (local_keys is not None and s == "local" and k in local_keys):
+            continue
+        probs.append(f"설정 원천 {s} ({o}) 의 {k or '(형식 밖)'} — 고정 목록 · 허용 local 키 밖")
+    return probs
+
+
+def fetch_source_precheck(env, cwd, url=SOURCE_URL, config=FETCH_GIT_CONFIG) -> tuple:
+    """N4 · FUTURE-01 (fetch 전 · 원격 접속 0) — fetch env 로 작업 폴더 (저장소 밖) 에서: 설정 원천이 command line 고정 목록뿐 · 금지 키 없음 ·
+    `ls-remote --get-url` (rewrite 적용 URL) = 고정 URL. 받은 env 가 fetch env 가 아니어도 여기서 fetch env 로 만든다."""
+    fenv = fetch_env(env, config)
+    c = git_run(["config", "--list", "--show-scope", "--show-origin"], env=fenv, cwd=cwd)
+    g = git_run(["ls-remote", "--get-url", url], env=fenv, cwd=cwd)
     probs = []
     if c["rc"] != 0:
         probs.append(f"git config --list 실패 (rc {c['rc']} {c.get('error', '')})")
     else:
-        probs += git_config_problems(c["out"])
+        probs += git_config_problems(c["out"]) + config_source_problems(c["out"], config)
     if g["rc"] != 0 or g["out"].strip() != url:
         probs.append(f"유효 출처 {g['out'].strip()!r} (rc {g['rc']} {g.get('error', '')}) ≠ 고정 {url}")
-    return {"config": c, "get_url": g}, probs
+    return {"config": c, "get_url": g, "env_git_config": {k: fenv[k] for k in sorted(fenv) if k.startswith("GIT_CONFIG")}}, probs
 
 
-def fetch_source_postcheck(env, data, url=SOURCE_URL, commit=SOURCE_COMMIT) -> tuple:
-    """N4 (fetch 뒤 · 원격 접속 0) — 받은 저장소의 `remote.origin.url` · 유효 출처 = 고정 URL · `.git/shallow` = 고정 커밋 하나 · alternates 없음.
-    FETCH_HEAD 는 기록만 한다."""
+def fetch_source_postcheck(env, data, url=SOURCE_URL, commit=SOURCE_COMMIT, config=FETCH_GIT_CONFIG, local_keys=FETCH_LOCAL_KEYS) -> tuple:
+    """N4 · FUTURE-01 (fetch 뒤 · 원격 접속 0) — fetch env 로: 받은 저장소의 `remote.origin.url` · 유효 출처 = 고정 URL · 설정 원천 = command line 고정
+    목록 + local 허용 키 · 금지 키 없음 · `.git/shallow` = 고정 커밋 하나 · alternates 없음. FETCH_HEAD 는 기록만 한다."""
+    fenv = fetch_env(env, config)
     gd = Path(data) / "git"
-    u = git_run(["-C", gd, "config", "--get", "remote.origin.url"], env=env, cwd=data)
-    g = git_run(["-C", gd, "ls-remote", "--get-url", "origin"], env=env, cwd=data)
+    u = git_run(["-C", gd, "config", "--get", "remote.origin.url"], env=fenv, cwd=data)
+    g = git_run(["-C", gd, "ls-remote", "--get-url", "origin"], env=fenv, cwd=data)
+    c = git_run(["-C", gd, "config", "--list", "--show-scope", "--show-origin"], env=fenv, cwd=data)
     probs = []
     if u["rc"] != 0 or u["out"].strip() != url:
         probs.append(f"remote.origin.url {u['out'].strip()!r} (rc {u['rc']}) ≠ 고정 {url}")
     if g["rc"] != 0 or g["out"].strip() != url:
         probs.append(f"받은 저장소의 유효 출처 {g['out'].strip()!r} (rc {g['rc']}) ≠ 고정 {url}")
+    if c["rc"] != 0:
+        probs.append(f"받은 저장소의 git config --list 실패 (rc {c['rc']} {c.get('error', '')})")
+    else:
+        probs += git_config_problems(c["out"]) + config_source_problems(c["out"], config, local_keys)
     sh, why = read_regular(gd / ".git" / "shallow")
     shallow = sh.decode("utf-8", "replace").split() if sh is not None else None
     if shallow != [commit]:
@@ -436,7 +500,8 @@ def fetch_source_postcheck(env, data, url=SOURCE_URL, commit=SOURCE_COMMIT) -> t
     if alt.exists() or alt.is_symlink():
         probs.append(f"{alt} 가 있다 — 객체를 다른 곳에서 빌려 오지 않는다")
     fh, _ = read_regular(gd / ".git" / "FETCH_HEAD")
-    return {"remote_url": u, "get_url": g, "shallow": shallow, "fetch_head": None if fh is None else fh.decode("utf-8", "replace")[:500]}, probs
+    return ({"remote_url": u, "get_url": g, "config": c, "shallow": shallow,
+             "fetch_head": None if fh is None else fh.decode("utf-8", "replace")[:500]}, probs)
 
 
 def record_problems(records: dict, heads=("head_start", "head_end"), porcelains=("porcelain_start", "porcelain_end")) -> list:
@@ -559,6 +624,8 @@ def postcheck(step, evidence, pre, prefix, child, *, env, repo=REPO, data=DATA, 
     group = child.get("group") or {}
     if group.get("status") != "empty":
         probs.append(f"자식 프로세스 그룹 상태 {group.get('status')!r} — 비어 있음이 확인되지 않았다")
+    if child.get("deadline_hit") is not False:
+        probs.append(f"정리 공통 기한 도달 표시 {child.get('deadline_hit')!r} — 기한 안에 끝난 정리가 아니다")
     if child.get("timed_out") and not child.get("exited_after_kill"):
         probs.append("timeout 뒤 자식이 제한 시간 안에 끝나지 않았다 (미종료)")
     if child.get("errors"):
@@ -625,20 +692,27 @@ def proc_members(pgid, *, proc=PROC, read=None) -> dict:
     return out
 
 
-def group_status(pgid, *, grace=GROUP_GRACE_S, proc=PROC, read=None) -> dict:
-    """그룹 상태 = empty (좀비 아닌 구성원 0 · 오류 0) / alive (grace 초 뒤에도 살아 있음) / unknown (관측 오류 — 뒤의 관측으로 지우지 않는다)."""
-    t, n = time.monotonic(), 0
-    while True:
+def group_status(pgid, *, grace=GROUP_GRACE_S, until=None, clock=time.monotonic, sleep=time.sleep, proc=PROC, read=None) -> dict:
+    """그룹 관측 창 — 관측은 `until` (주지 않으면 지금 + grace) 전에만 시작한다 (V3-01 규칙 · 관측 하나의 길이는 묶지 않는다). 좀비 아닌 구성원 0 ·
+    오류 0 → empty · 관측 오류 → unknown (바로 돌아간다 · 뒤의 관측으로 지우지 않는다) · 창 끝까지 살아 있음 → alive · 관측을 하나도 시작하지 못함 →
+    unverified. sleep 은 남은 시간만큼만 잔다 (0 이하이면 자지 않는다)."""
+    until = clock() + grace if until is None else until
+    n, alive, zombies = 0, None, []
+    while clock() < until:
         o = proc_members(pgid, proc=proc, read=read)
         n += 1
         alive = [m for m in o["members"] if m[1] != "Z"]
+        zombies = [m for m in o["members"] if m[1] == "Z"]
         if o["errors"]:
-            return {"status": "unknown", "alive": alive, "errors": o["errors"], "observations": n}
+            return {"status": "unknown", "alive": alive, "zombies": zombies, "errors": o["errors"], "observations": n}
         if not alive:
-            return {"status": "empty", "alive": [], "zombies": [m for m in o["members"] if m[1] == "Z"], "errors": [], "observations": n}
-        if time.monotonic() - t > grace:
-            return {"status": "alive", "alive": alive, "errors": [], "observations": n}
-        time.sleep(0.1)
+            return {"status": "empty", "alive": [], "zombies": zombies, "errors": [], "observations": n}
+        left = until - clock()
+        if left > 0:
+            sleep(min(POLL_S, left))
+    if n == 0:
+        return {"status": "unverified", "alive": None, "zombies": [], "errors": [], "observations": 0}
+    return {"status": "alive", "alive": alive, "zombies": zombies, "errors": [], "observations": n}
 
 
 def kill_group(pgid, killpg=os.killpg) -> dict:
@@ -654,12 +728,60 @@ def kill_group(pgid, killpg=os.killpg) -> dict:
         return {"utc": utc(), "result": "error", "error": f"{e.__class__.__name__}: {e}"}
 
 
+def cleanup_group(p, timed_out, *, deadline, clock=time.monotonic, sleep=time.sleep, killpg=os.killpg, kill_wait=KILL_WAIT_S,
+                  grace=GROUP_GRACE_S, proc=PROC, read=None) -> dict:
+    """정리 (launcher 운영 정리 정책 · V3-01 규칙) — 기한 (`deadline` · run_child 가 정리 단계에 들어갈 때 한 번 만든 절대 시각) 은 받기만 한다.
+    timeout 이면 그룹 SIGKILL → 자식 종료를 비차단 확인 (`poll`) 하며 기다림 (kill_wait · 기한 안) → 그룹 관측 창 (grace · 기한 안) → 살아 있으면 그룹
+    SIGKILL (기한 뒤라도 보낸다 — 기다리지 않는 동작) → 재관측 창 (grace · 기한 안). 관측 · sleep 은 기한 전에만 시작한다. 끝 상태 = empty (재kill 없이
+    비어 있음) · killed (재kill 뒤 비어 있음) · alive · unverified (관측을 못 함 · 재kill 뒤 재관측을 못 함) · unknown (관측 오류 · 정리 안의 예외 — 우선).
+    안의 예외는 여기서 잡아 같은 기한으로 비상 동작 (자식이 살아 있으면 그룹 SIGKILL · 관측) 만 한다 — 새 기한은 없다."""
+    t0 = clock()
+    rec = {"kill": [], "exited_after_kill": None, "rc_after_kill": None, "group_first": None, "group": None, "errors": [], "emergency": False}
+
+    def window():
+        return group_status(p.pid, until=min(deadline, clock() + grace), clock=clock, sleep=sleep, proc=proc, read=read)
+
+    try:
+        if timed_out:
+            rec["kill"].append(kill_group(p.pid, killpg))
+            until = min(deadline, t0 + kill_wait)
+            while p.poll() is None and clock() < until:
+                left = until - clock()
+                if left > 0:
+                    sleep(min(POLL_S, left))
+            rec["exited_after_kill"] = p.poll() is not None
+            if rec["exited_after_kill"]:
+                rec["rc_after_kill"] = p.returncode
+        g = window()
+        if g["status"] == "alive":
+            rec["group_first"] = g
+            rec["kill"].append(kill_group(p.pid, killpg))
+            g2 = window()
+            g = dict(g2, status="killed") if g2["status"] == "empty" else g2
+        rec["group"] = g
+    except Exception as e:  # noqa: BLE001 — 정리 안의 예외 — 같은 기한으로 비상 동작만 (새 기한 없음)
+        rec["errors"].append(f"{e.__class__.__name__}: {e}")
+        rec["emergency"] = True
+        try:
+            if p.poll() is None:
+                rec["kill"].append(kill_group(p.pid, killpg))
+            rec["group"] = group_status(p.pid, until=deadline, clock=clock, sleep=sleep, proc=proc, read=read)
+        except Exception as e2:  # noqa: BLE001
+            rec["errors"].append(f"비상 동작 {e2.__class__.__name__}: {e2}")
+    status = "unknown" if rec["errors"] else (rec["group"] or {}).get("status", "unknown")
+    rec["group"] = dict(rec["group"] or {}, status=status)
+    rec.update(status=status, deadline_hit=clock() >= deadline, cleanup_s=round(clock() - t0, 3))
+    return rec
+
+
 def run_child(argv, *, cwd, env, stdout, stderr, timeout, popen=subprocess.Popen, killpg=os.killpg, kill_wait=KILL_WAIT_S,
-              grace=GROUP_GRACE_S, proc=PROC, read=None) -> dict:
-    """새 세션에서 자식을 띄우고 기다린다 (N3). 시작 실패 · timeout · kill 결과 · 제한된 종료 확인 · 그룹 상태를 모두 기록하고, 어느 대기도 무기한이 아니다.
-    시간은 대기 (`wait_s` — 시작 → 종료 또는 kill 뒤 대기 끝) 와 정리 (`cleanup_s` — 그룹 관측 · 재kill · 재관측) 로 나눠 남긴다 (S2 · 배정은 그대로)."""
+              grace=GROUP_GRACE_S, cleanup_s=CLEANUP_S, proc=PROC, read=None, clock=time.monotonic, sleep=time.sleep) -> dict:
+    """새 세션에서 자식을 띄우고 기다린다 (N3). 자식이 끝나거나 timeout 이 되면 정리 단계에 들어가며 공통 절대 기한 (원점 + cleanup_s) 을 한 번 만들어
+    `cleanup_group` 에 넘긴다 (launcher 운영 정리 정책 · V3-01). 시작 실패 · timeout · kill 결과 · 비차단 종료 확인 · 그룹 상태 · 기한 도달을 모두
+    기록하고, 어느 대기도 무기한이 아니다. 시간은 대기 (`wait_s` — 시작 → 종료 또는 timeout) 와 정리 (`cleanup_s` — 정리 원점부터 · kill 뒤 대기 ·
+    관측 · 재kill · 재관측) 로 나눠 남긴다 (S2)."""
     rec = {"started": False, "rc": None, "timed_out": None, "errors": []}
-    t = time.monotonic()
+    t = clock()
     try:
         p = popen(argv, cwd=str(cwd), env=env, stdout=stdout, stderr=stderr, start_new_session=True)
     except Exception as e:  # noqa: BLE001 — 시작 실패는 기록하고 돌아간다
@@ -667,27 +789,21 @@ def run_child(argv, *, cwd, env, stdout, stderr, timeout, popen=subprocess.Popen
         return rec
     rec.update(started=True, pgid=p.pid, start_utc=utc())
     try:
-        try:
-            rec["rc"], rec["timed_out"] = p.wait(timeout=timeout), False
-        except subprocess.TimeoutExpired:
-            rec["timed_out"] = True
-            rec["kill"] = [kill_group(p.pid, killpg)]
-            try:
-                rec["rc"], rec["exited_after_kill"] = p.wait(timeout=kill_wait), True
-            except subprocess.TimeoutExpired:
-                rec["exited_after_kill"] = False
-        t2 = time.monotonic()
-        rec["wait_s"] = round(t2 - t, 3)
-        rec["group"] = group_status(p.pid, grace=grace, proc=proc, read=read)
-        if rec["group"]["status"] == "alive":
-            rec.setdefault("kill", []).append(kill_group(p.pid, killpg))
-            rec["group_first"] = rec["group"]
-            rec["group"] = group_status(p.pid, grace=grace, proc=proc, read=read)
-            if rec["group"]["status"] == "empty":
-                rec["group"] = dict(rec["group"], status="alive_then_killed")
-        rec["cleanup_s"] = round(time.monotonic() - t2, 3)
-    except Exception as e:  # noqa: BLE001 — 대기 · 정리 중 오류도 기록 (판정은 false)
-        rec["errors"].append(f"{e.__class__.__name__}: {e}")
+        rec["rc"], rec["timed_out"] = p.wait(timeout=timeout), False
+    except subprocess.TimeoutExpired:
+        rec["timed_out"] = True
+    except Exception as e:  # noqa: BLE001 — 대기 자체의 예외도 기록하고 정리로 간다 (timed_out 이 None 이라 판정은 false)
+        rec["errors"].append(f"wait {e.__class__.__name__}: {e}")
+    t_c0 = clock()
+    rec["wait_s"] = round(t_c0 - t, 3)
+    c = cleanup_group(p, rec["timed_out"] is True, deadline=t_c0 + cleanup_s, clock=clock, sleep=sleep, killpg=killpg, kill_wait=kill_wait,
+                      grace=grace, proc=proc, read=read)
+    if rec["timed_out"] and c["exited_after_kill"]:
+        rec["rc"] = c["rc_after_kill"]
+    rec.update(kill=c["kill"], exited_after_kill=c["exited_after_kill"], group=c["group"], group_first=c["group_first"],
+               deadline_hit=c["deadline_hit"], emergency=c["emergency"], cleanup_deadline_s=cleanup_s)
+    rec["errors"] += c["errors"]
+    rec["cleanup_s"] = round(clock() - t_c0, 3)
     return rec
 
 
@@ -700,7 +816,7 @@ def git_out(repo, *args, env) -> dict:
 def launch(step, evidence, section, *, repo=REPO, py=PY, venv=VENV, seal=SEAL, work=WORK, data=DATA, data_files=DATA_FILES,
            sources=SOURCES, sources_sha256=SOURCES_SHA256, seal_manifest_sha256=SEAL_MANIFEST_SHA256, lock_sha256=C6_LOCK_SHA256,
            extra=EXTRA_EXECUTED, helper_sha256=IDENTITY_HELPER_SHA256, timeouts=TIMEOUTS, env_base=None, popen=subprocess.Popen,
-           killpg=os.killpg, kill_wait=KILL_WAIT_S, grace=GROUP_GRACE_S, proc=PROC, read=None) -> int:
+           killpg=os.killpg, kill_wait=KILL_WAIT_S, grace=GROUP_GRACE_S, cleanup_s=CLEANUP_S, proc=PROC, read=None) -> int:
     """준비 → 사전 대조 → (통과할 때만) 시작 기록 → (성공할 때만) 자식 → 끝 기록 → 사후 대조 → 끝 관측 → 단계 판정 → meta. 반환 0 = 단계 판정
     complete · 1 = 아님 (meta 있음 · 자식 시작 여부는 `launched`) · 4 = meta 를 쓰지 못함 (stderr 한 줄 · 첫 오류 포함). 의도된 거부 (단계 이름 · 기존 기록
     파일 · 기존 pycache 폴더 — lstat 기준 · 끊어진 링크 포함) 는 어떤 파일 · 폴더도 만들기 전 SystemExit 이고, 기록용 `except Exception` 은 SystemExit 를
@@ -712,7 +828,8 @@ def launch(step, evidence, section, *, repo=REPO, py=PY, venv=VENV, seal=SEAL, w
                                              "porcelain_end.txt")}
     prefix = Path(work) / "pycache" / name
     meta = {"step": step, "name": name, "cwd": str(bms), "timeout_s": timeouts[step], "kill_wait_s": kill_wait, "group_grace_s": grace,
-            "pycache_prefix": str(prefix), "request": REQUEST, "approval_section": section, "start_utc": utc()}
+            "cleanup_deadline_s": cleanup_s, "pycache_prefix": str(prefix), "request": REQUEST, "approval_section": section,
+            "start_utc": utc()}
     errors, records, phase = [], {}, "prepare"
     pre = child = post = detail = None
     ok = False
@@ -726,7 +843,10 @@ def launch(step, evidence, section, *, repo=REPO, py=PY, venv=VENV, seal=SEAL, w
         for k in ("mpl", "tmp"):
             (Path(work) / k).mkdir(parents=True, exist_ok=True)
         env, removed = child_env(dict(os.environ if env_base is None else env_base), work)
-        meta.update(env_removed_names=removed, env_set={k: env[k] for k in ENV_SET_KEYS})
+        if step == "fetch":  # FUTURE-01 — fetch 단계 전체 (사전 · 자식 · 사후 · 기록 git) 가 같은 fetch env
+            env = fetch_env(env)
+        meta.update(env_removed_names=removed, env_set={k: env[k] for k in ENV_SET_KEYS},
+                    env_git_config={k: env[k] for k in sorted(env) if k.startswith("GIT_CONFIG")})
         argv = build_argv(step, ev, section, prefix, py=py, bms=bms, venv=venv, seal=seal, data=data, sources=sources,
                           sources_sha256=sources_sha256, seal_manifest_sha256=seal_manifest_sha256)
         meta["argv"] = argv
@@ -754,7 +874,7 @@ def launch(step, evidence, section, *, repo=REPO, py=PY, venv=VENV, seal=SEAL, w
                 phase = "start"
                 with open(files["stdout.log"], "xb") as fo, open(files["stderr.log"], "xb") as fe:
                     child = run_child(argv, cwd=bms, env=env, stdout=fo, stderr=fe, timeout=timeouts[step], popen=popen, killpg=killpg,
-                                      kill_wait=kill_wait, grace=grace, proc=proc, read=read)
+                                      kill_wait=kill_wait, grace=grace, cleanup_s=cleanup_s, proc=proc, read=read)
                 if not child.get("started"):
                     errors.append({"phase": "start", "type": "StartError", "message": str(child.get("start_error"))[:500]})
                 errors += [{"phase": "wait", "type": "ChildError", "message": str(msg)[:500]} for msg in child.get("errors") or []]
