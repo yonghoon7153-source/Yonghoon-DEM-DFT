@@ -2914,3 +2914,44 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
      이번 근거가 아니다 — 이번 a2 의 근거는 위 증거 23 파일이다.
 - **다음:** 결과 검토 발송문 `docs/REIL_C4E1_0B_A2_RESULT_REVIEW_SEND_20261104.md` → 사용자 발송 결정 → 회신 → (수용되면) E1-1 이후의 범위 · 승인 요청 … 각각
   별도 사용자 결정이다. 이 기록은 어느 단계의 실행 승인도 아니다. E1-1–3 · C4-A / B · COMSOL 미승인.
+
+## §101 C4-E · E1-0b a2 결과 검토 회신 접수 — 한정 기능 결과 수용 · 차단 0 · 비차단 절차 이탈 A2_PROC_01 (기록 유지 · 재시험 없음) · FUTURE-01 · 운영 정리 정책 봉인 대조 범위 종결 · 다음 범위 · 승인 요청서 작성 가능 · 실행 승인 아님 (2026-11-04 KST · 덧붙임 — 위 §0–§100 은 그대로)
+
+- **받은 것 · 보존:** 사용자 업로드 `REIL_C4E1_0B_A2_RESULT_REVIEW_20261104.zip` (644,282 B · `c7c9e9e0c176cc47598653703171e4e6bc2f8e5a82b87913b71beba831b3d2aa` =
+  전달 영수증) · 대화에 붙인 영수증 (`REIL_A2_RESULT_REVIEW_DELIVERY_RECEIPT` · 1,235 B `a6c5a310…` — 포장 도구 반환 기준) · 포장 도구 반환 (rc 0 · 0.594 s).
+  - 커밋 `a1c076dc` (보존 규칙) · `b32dec94` (바이트): `reviews/review_reil_c4e1_0b_a2_result_review_20261104/` — ZIP (업로드와 cmp 일치) + `originals/` 68 (안전
+    추출) · PACKAGE_MANIFEST (`513dd9fa…` · 13,200 B · `members` 67/67 · 목록 밖 없음 · 자기 제외) · blob 69/69 · 비밀 검사 69 파일 0 건 · URL 계정 형태 0.
+  - `source/` 47 · `input/` 1 (발송문) = 고정 `f09ead06` · `basis/` 5 = 보존한 a2 v4 사전 검토 회신 4 (`reviews/review_reil_c4e1_0b_a2_v4_prereview_20261104/originals/`
+    의 같은 이름) + RED 대상 launcher v5 (`334e17f4` 의 `scripts/reil_c4e1_launch.py` · `2269d775…`) — 53/53 바이트 일치. 검토자 도구 없음 · 받은 코드 실행 0.
+  - 검사 도구 메모: 일반 manifest 검사기 (`SP/tools/verify_manifest.py`) 는 이 manifest 의 `members` 키를 읽지 못해 "listed 0 · bad 0" 으로 rc 0 을 냈다 — 그
+    출력은 검증이 아니다. `members` 의 name · bytes · sha256 을 직접 읽는 대조로 다시 확인한 것이 위 67/67 이다.
+- **판정 (`REVIEW_DECISION.json`):** `E1_0B_A2_LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION` (고정 `f09ead06` · 실행 끝 `421faa84` · 요청서
+  `ae413f96…`) · 차단 지적 0.
+  - Q1 `RECORDS_MATCH_WITH_DISCLOSED_COMMAND_DEVIATION_AND_PROVENANCE_LIMITS` — §99 승인 기록 · a–e 커밋 구성 (2 · 6 · 9 · 10 · 1 · 결과 문서 2) · 원천 바이트 ·
+    argv · 예산이 연결된다. GREEN 의 배경 실행은 요청서에 적힌 방식이라 이탈이 아니다.
+  - Q2 `RED_MATCH_9_EXPECTED_FAILED_24_PASSED` — l33 은 정정된 fixture 인자로 예정된 AssertionError 에 닿았다 · 판정기 76 항목과 원출력 대조가 일치 · 지난 여덟
+    RED 를 이어 붙여 세지 않았다.
+  - Q3 `GREEN_MATCH_71_PASSED_LIMITED_E1_0B_FUNCTIONAL_CLOSURE` — PASSED 71 = 최상위 `test_*` 21 / 6 / 33 / 11 · 판정기 20 항목. 선택 A 그대로 (GREEN 의 표지
+    0 건 관측을 추가 gate 로 만들지 않음).
+  - Q4 `MAY_PREPARE_NEXT_SCOPE_AND_APPROVAL_REQUEST_NO_NEW_EXECUTION_AUTHORIZATION`.
+  - 수용 (`accepted`): E1-0b · FUTURE-01 · 운영 정리 정책이 **봉인된 대조 범위 (tmp fixture · 가짜 자식) 에서** 기능 종결 · E1_0B_RESULT_N1 의 정정된 실패 원인
+    관측.
+  - 한계 (`limitations`): 절차 문자열의 완전 일치 아님 · 사용자 승인 원문과 원셸 전체 이력은 독립 인증되지 않음 · 실제 자료 성공 아님 ·
+    `procedural_fetch_details` = 제출 문구 (실제 E1 fetch 의 증거 아님).
+- **A2_PROC_01 (P3 · 비차단 · `RETAIN_DISCLOSURE_NO_RETEST_REQUIRED`):** 단계 a 의 커밋 줄 `<확인>` 이 고정 명령에서 `print(json.dumps(…))` 를 뺀 변형이었다
+  (§100). 이 기록을 그대로 둔다 — **a–e 의 명령 문자열이 전부 고정본과 같았다고 쓰지 않는다.** "같은 이름 · 정규식 · 반환 규칙" 은 제출자 설명이고 당시 셸 줄
+  원문의 독립 확인이 아니다. 재시험 · 결과 무효의 사유가 아니며, 과거 변형 명령의 소급 승인도 아니다.
+- **보충 기록 — §100 의 "fetch" (회신 권고 · 새 fetch · 재측정 없음):** §100 은 절차 git 에 fetch 를 넣어 적었으나 요청서 §4-6 의 열거는 add · commit · push ·
+  log 다. fetch 는 그 열거에 없고, push 전에 원격 상태를 확인하는 이 저장소의 관례로 넣었다. 사실은 아래뿐이다.
+  - 명령: `git fetch -q origin claude/14-gate-code-review-9qkx05` (cwd `/home/user/Yonghoon-DEM-DFT` · 같은 줄에서 이름 확인 뒤). 두 번 — e 의 끝 기록 커밋
+    `421faa84` (02:00:28Z) 직후 push 전 · 결과 기록 커밋 `f09ead06` (02:04:31Z) 직후 push 전.
+  - 대상: 이 작업 저장소의 remote `origin` (push 출력에 보인 주소 `https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT`) 의 이 브랜치 하나. 목적: push 전에
+    원격 브랜치 끝 (각각 `5b283217` · `421faa84`) 이 로컬 HEAD 의 조상인지 확인 — 둘 다 조상이었다.
+  - **REIL 대상 저장소 (REIL-UConn/…) 의 fetch · 자료 받기 · 개봉이 아니다** — 그것 (E1-2) 은 0 회다. 이 fetch 는 증거 23 파일에 들어가지 않는 절차 Git 이다.
+- **시간 표현 (회신):** 497 s / 7,200 s · 293 s 는 기록된 a 이름 확인 · 착수 기록부터 끝 기록까지다. 끝 기록 뒤의 커밋 · push · 문서 시간을 포함한 전체 소요로
+  쓰지 않는다.
+- **유지:** E1-1–3 (실제 REIL identity · 읽기 경로 · fetch · 자료 개봉 · run) · C4-A / B · COMSOL 미승인. 지난 시도 (§91–§93) 보존. 이번 수용은 다음 실행의 승인이
+  아니다.
+- **다음 (회신 Q4):** E1-1 이후의 범위 · 승인 요청서 — 실제 대상 identity · 읽기 경로 · fetch · 자료 개봉 · run 각각의 정확한 대상 · 명령 · 출처 · 허용 활동 ·
+  자원 / 시간 · 중지 조건 · 증거를 고정 → 사전 검토 → 별도 사용자 승인. 먼저 범위안을 만들어 사용자 채택을 받는다. 각각 별도 결정이며, 이 기록은 어느 단계의
+  실행 승인도 아니다.
