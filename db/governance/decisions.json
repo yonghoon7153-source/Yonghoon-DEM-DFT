@@ -11102,6 +11102,71 @@
     "근거_발화": "사용자 2026-11-04 (이 세션 · AskUserQuestion): 축 ① NCM 계면 분해 카드 '비준 — 바로 실행 (Recommended)'",
     "decision_digest": "sha256:43d999159bb9e6fc9e045306f888a512d2a04096887c8c02051a05699c27739f"
    }
+  },
+  {
+   "id": "D-2026-11-04-cascade-axes-combination-rule",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "cascade.dopant_screening.combination_rule",
+   "slot": "cascade_axes_combination_rule",
+   "applies_to": {
+    "systems": [
+     "lpscl_dopant_designs"
+    ],
+    "tasks": [
+     "cascade_axes_combination"
+    ],
+    "methods": [
+     "policy"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "cascade 다축 합치는 규칙 — 새 숫자 없음 · 축 카드에 결과 전 봉인된 위험 표시로 빼고 · 연속 축이 둘 이상이면 가중치 없는 Pareto 비지배 집합 (순위 없음) · 축 ① 은 F1 금속성 · F2 δ ≤ −10 표시",
+   "statement": "기록 db/properties/cascade_axes_combination_rule_2026_11_04.json 의 R0–R6 이 규칙이다: 이 규칙은 문턱 · 가중치 · 점수를 만들지 않는다 · 축마다 결과 전에 봉인된 위험 표시가 있으면 선택 집합에서 뺀다 (기록에는 남긴다) · 미판정 · 해당 없음은 '모름' 으로 들고 간다 · 연속 판독량 축이 둘 이상 끝나면 표시 없는 설계의 Pareto 비지배 집합 (가중치 없음 · 순위 없음) · 축이 하나뿐이면 표시만. 축 ① 적용: F1 = 도펀트 ≥ 1 % 가 금속성 산물 · F2 = δ (반충 LiNiO₂) ≤ −10 meV/atom · 좋은 방향 = δ 큰 쪽.",
+   "rationale": "축 계획은 합치는 규칙을 결과 전에 정하자고 했는데 축 ① 판독이 먼저 됐다 — 그래서 새 숫자를 고르지 않고, 각 축 카드에 결과 전 봉인된 문턱 · 등급만 쓰는 꼴로 정한다 (사용자 '권고대로 해줘'). 가중치 합산은 결과를 본 뒤 가중치를 고를 여지를 만들어 피한다 · 한 축 Pareto 는 순위와 같아 축이 둘 이상일 때만 고른다.",
+   "decision_state": "active",
+   "record_kind": "policy",
+   "results_seen": true,
+   "results_seen_note": "축 ① 판독 (2026-11-04) 을 본 뒤 정했다 — 새 숫자 없음 (기록 ⚠_결과_뒤_결정)",
+   "record": "db/properties/cascade_axes_combination_rule_2026_11_04.json",
+   "card": null,
+   "depends_on": [
+    "D-2026-10-15-cascade-objective-scope",
+    "D-2026-10-15-cascade-screening-axes-plan",
+    "D-2026-11-04-cascade-axis-ncm-interface"
+   ],
+   "supersedes": [],
+   "amends": null,
+   "evidence": [
+    "db/properties/cascade_axis_ncm_readout_2026_11_04.json (sha16 6b84dbb3dbb55c39)",
+    "db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json §2 · §4 · 판독_2026_11_04"
+   ],
+   "reopen_criteria": [
+    "없음 — 규칙을 바꾸려면 새 결정 (결과 전 · 다음 축 카드와 함께)"
+   ],
+   "enforcement": "사람이 적용한다 (축이 둘이 될 때 Pareto 를 내는 도구는 그때 selftest 와 같이 만든다)",
+   "proposed_by": "agent",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-11-04",
+     "state": "active",
+     "by": "사용자 (cascade 1저자)",
+     "note": "사용자 2026-11-04 (이 세션): '권고대로 해줘' — 합치는 규칙 권고 (봉인된 문턱 · 등급만 · 축 ① 은 표시로만 · 가중치 없이 Pareto)"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-04T05:09:12Z",
+    "commit": "4e42ed6bf53ad99244f6d9915c6be8d40a036d8d",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-04 (이 세션): '권고대로 해줘' — 합치는 규칙 권고 (봉인된 문턱 · 등급만 · 축 ① 은 표시로만 · 가중치 없이 Pareto)",
+    "decision_digest": "sha256:da58495778905281615b4bdbfe900a030bbec9d66dbcef24bd388e972bac004d"
+   }
   }
  ]
 }
