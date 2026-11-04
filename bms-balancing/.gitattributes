@@ -252,3 +252,5 @@ reviews/review_reil_c4e1_0b_a2_v4_prereview_20261104/** -text
 evidence/reil_c4e1_0b_a2_20261104/** -text
 # 2026-11-04: REIL C4-E · E1-0b a2 결과 검토 회신 (E1_0B_A2_LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION · 차단 0 · 비차단 절차 이탈 A2_PROC_01 · 고정 HEAD f09ead06 · 다음 실행 승인 아님 · source/ · input/ = 검토자가 본 저장소 · 발송문 사본 · basis/ = 이전 회신 · RED 대상 launcher v5 사본 · 검토자 도구 없음 · *.py · *.py.txt = 저장소 사본, 실행하지 않음) — bytes 그대로
 reviews/review_reil_c4e1_0b_a2_result_review_20261104/** -text
+# 2026-11-04: REIL C4-E · E1-1–3 범위안 검토 회신 (SCOPE_REVISION_REQUIRED_BEFORE_USER_SELECTION · 문서 정정 셋 · 고정 HEAD d88d064b · 실행 승인 아님 · source/ · input/ = 검토자가 본 저장소 · 범위안 사본 · basis/ = 이전 회신 사본 · 검토자 도구 *.py (package_review_data.py · prepare_review_data.py) 와 source/ 의 *.py = 실행하지 않음) — bytes 그대로
+reviews/review_reil_c4e_e1_1_3_scope_review_20261104/** -text
