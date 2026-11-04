@@ -1,14 +1,15 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-04 · managed-files: 565
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-04 · managed-files: 566
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 356건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 357건)
 - 2026-11-04 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-04 · `kb/reviews/codex_DK_reply_li2s2_dj_fixes_2026_11_03.md` — DK 회신 — li2s-2 DJ 고침 확인 (7ac0be8e): NO-GO · DJ 기존 반례는 차단 · P0 2 (손상된 완료 궤적이 md_incomplete 로 읽혀 재담금질 · 정전 예산 · 재시도 분류와 예산 집계가 다른 판정을 읽음) · P1 2 (프레임 수가 MD 완료를 증명하지 않음 · 소비자가 0 h 증언 상한을 받음) · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…
+- 2026-11-04 · `kb/reviews/codex_DL_prompt_li2s2_dk_fixes_2026_11_04.md` — DL 프롬프트 — li2s-2 DK 고침 확인 (__BASE__): MD 완료 기록 (프레임 셈 대신) · 실행 상태 한 곳 · 정전 추가 예산 없앰 · 증언 양수 — 첫 담금질 GO 여부 · 초안 (2026-11-04) — 사용자 발송 대기 · 기준 커밋 __…
 - 2026-11-03 · `kb/reviews/codex_DF_prompt_li2s2_dense_window_card_2026_11_03.md` — DF 프롬프트 — li2s-2 새 트랙 설계: 실험 밀도에 고정해 다시 담금질한 두 유리 (a-Li₄PS₄Cl · a-Li₃PS₄) 의 측정 온도 창 → D 비 · Ea 차 + melt_quench_uma.py --fix_density · 발송 2026-11-03 (사용자 · 기준 커밋 ff795d669) …
 - 2026-11-03 · `kb/reviews/codex_DF_reply_li2s2_dense_window_card_2026_11_03.md` — DF 회신 — li2s-2 새 트랙 설계 (ff795d669): NO-GO · 고정 밀도 NVT 방향은 조건부 찬성 · P0 1 (melt_check 시간창 ≠ 판정량) · P1 5 (종료코드 ≠ 카드 통과 · 시드 11·12 고정 빈 경로 · MD 압력 미기록 · T₅₀ 로 과냉각 액체 추론 철회 · 비용 합계·회계) · P2 4 · 수령 2026-11-03 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-11-03 · `kb/reviews/codex_DG_prompt_li2s2_df_fixes_2026_11_03.md` — DG 프롬프트 — li2s-2 DF 고침 확인 (947e83ba0): 녹음 판독량 window_mto_v1 · 1 단계 시드 판정 소비자 · 시드 규칙 · 1 단계 러너 — 첫 담금질 전 조건이 닫혔나 · 발송 · 회신 수령 2026-11-03 (NO-GO · `codex_…
@@ -26,7 +27,6 @@
 - 2026-10-28 · `kb/projects/handoff_ndo_methods_2026_10_28.md` — NdO-LPSCl₁.₆ 원고 계산 부분 인계 — Methods 두 판 · Fig. 3h · Fig. 5e,f · Fig. SX (2026-10-28) · 발송 대기 — 사용자가 Word 둘 · CSV 둘과 같이 전달한다
 - 2026-10-28 · `kb/papers/ndo_lpscl16_methods_2026_10_28.md` — NdO-LPSCl₁.₆ 원고 4.5 DFT calculations — 기록대로 · B₂O₃ 와 같은 꼴 (본문판 + SI 판) · 진행
 - 2026-10-26 · `kb/reports/weekly_2026_10_25.md` — 주간 정리 2026-10-19 ~ 10-25 (주간보고 초안) · 초안 (2026-10-26 · 도는 계산은 마지막 실측 기준 — kg…
-- 2026-10-26 · `kb/projects/handoff_2026_10_26_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-10-22 (82 커밋) 를 friendly 로 · fast-forward (2026-10-26) · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -213,7 +213,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (232)
+## reviews/ (233)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-04 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -354,6 +354,7 @@
 - `kb/reviews/codex_DJ_reply_li2s2_outage_rule_2026_11_03.md` — DJ 회신 — li2s-2 DI 적용 확인 + 정전 복구 개정 (0f51518d): NO-GO · 정전 복구 방향 찬성 · P0 3 (재시도 필드 빠지면 소비자 한도 검사 꺼짐 · 판독 불가 · 보존 누락에도 재시도 · 하한 미상이면 0 시간 증언 수용) · P1 1 (증언이 잠금 전 장부로 덮어씀) · Q1 결과와 무관한 재시도 사유 사전 명시 · Q2 MD 완료 / FIRE 미완 구분 · Q3 증언 필드 · Q4 cap 재시도 조건  (2026-11-03 · 수령 2026-11-03 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
 - `kb/reviews/codex_DK_prompt_li2s2_dj_fixes_2026_11_03.md` — DK 프롬프트 — li2s-2 DJ 고침 확인 (7ac0be8e): 재시도 이력 대조 · 판독 불가 · 보존 누락 차단 · 증언 하한 · 잠금 안 증언 · 결과와 무관한 재시도 사유 · MD/FIRE 구분 · 정전 추가 예산 — 첫 담금질 GO 여부  (2026-11-03 · 발송 · 회신 수령 2026-11-04 (NO-GO · P0 2 · …)
 - `kb/reviews/codex_DK_reply_li2s2_dj_fixes_2026_11_03.md` — DK 회신 — li2s-2 DJ 고침 확인 (7ac0be8e): NO-GO · DJ 기존 반례는 차단 · P0 2 (손상된 완료 궤적이 md_incomplete 로 읽혀 재담금질 · 정전 예산 · 재시도 분류와 예산 집계가 다른 판정을 읽음) · P1 2 (프레임 수가 MD 완료를 증명하지 않음 · 소비자가 0 h 증언 상한을 받음)  (2026-11-04 · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DL_prompt_li2s2_dk_fixes_2026_11_04.md` — DL 프롬프트 — li2s-2 DK 고침 확인 (__BASE__): MD 완료 기록 (프레임 셈 대신) · 실행 상태 한 곳 · 정전 추가 예산 없앰 · 증언 양수 — 첫 담금질 GO 여부  (2026-11-04 · 초안 (2026-11-04) — 사용자 발송 대기 · 기준 커밋 __…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
 - `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)

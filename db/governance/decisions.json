@@ -10818,9 +10818,10 @@
    "supersedes": [],
    "amends": null,
    "evidence": [
-    "tools/ionic/melt_quench_uma.py (d1fb5380 · selftest 207/207)",
-    "tools/ionic/li2s2_stage1_runner.py (7ac0be8e · selftest 79/79 Linux — 진짜 판독 함수 · 진짜 프로세스 그룹)",
+    "tools/ionic/melt_quench_uma.py (5f794e30 · selftest 207/207)",
+    "tools/ionic/li2s2_stage1_runner.py (5f794e30 · selftest 80/80 Linux — 진짜 판독 함수 · 진짜 프로세스 그룹)",
     "kb/reviews/codex_DJ_reply_li2s2_outage_rule_2026_11_03.md (NO-GO · 정전 복구 방향 찬성 → 89d48885 · 2c36eac9 · 172daf67 고침)",
+    "kb/reviews/codex_DK_reply_li2s2_dj_fixes_2026_11_03.md (NO-GO · P0 2 · P1 2 → 5f794e30 고침 · 카드 v3)",
     "db/raw/li2s2_dj_mutation_2026_11_03/ (깨기 116 / 116 빨강)",
     "kb/reviews/codex_DI_reply_li2s2_dh_fixes_2026_11_03.md (NO-GO → Codex 고침 묶음 적용 b7d11f81)",
     "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json §개정_정전_복구_v2_2026_11_03 (회신 DJ — 결과와 무관한 재시도 사유 · MD/FIRE 구분 · 증언 필드 · 정전 추가 예산)",
@@ -10877,6 +10878,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex DJ NO-GO 반영 (결과 전 · 89d48885 ~ 7ac0be8e) — 재시도 이력 · STOP · 영수증 대조 · 판독 불가 · 보존 누락 차단 · 증언 하한 검증 · 잠금 안 증언 · 결과와 무관한 재시도 사유 선언 · MD 완료 / FIRE 미완 보류 · 정전 추가 예산 — DK 확인 뒤 활성"
+    },
+    {
+     "at": "2026-11-04",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DK NO-GO 반영 (결과 전 · 5f794e30) — MD 완료 기록 (프레임 셈 대신) · 실행 상태 한 곳 (run_kind) · 정전 추가 예산 없앰 (카드 v3) · 증언 양수 — DL 확인 뒤 활성"
     }
    ]
   },
