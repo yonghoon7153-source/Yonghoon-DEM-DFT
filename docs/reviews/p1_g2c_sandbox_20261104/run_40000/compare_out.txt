@@ -1,0 +1,13 @@
+N 40000 A pairs 3111 A(N-1) pairs 3111 deltaMax>=0 True
+A2  common 3111 only_A 0 only_x 0 orient 0 | pos 0/3111 force 0/3111 force_normal 0/3111 force_tangential 0/3111 torque 0/3111 deltaMax 0/3111 shear 0/3111 contactArea 0/3111 delta 0/3111 contactPoint 0/3111
+     max_rel 
+B   common 3111 only_A 0 only_x 0 orient 0 | pos 0/3111 force 3111/3111 force_normal 3111/3111 force_tangential 3111/3111 torque 3111/3111 deltaMax 0/3111 shear 3111/3111 contactArea 0/3111 delta 0/3111 contactPoint 0/3111
+     max_rel force 1.93e+00 force_normal 6.14e-02 force_tangential 1.92e+00 torque 1.94e+00 shear 1.80e+00
+B2  common 3111 only_A 0 only_x 0 orient 0 | pos 0/3111 force 3111/3111 force_normal 3111/3111 force_tangential 3111/3111 torque 3111/3111 deltaMax 0/3111 shear 3111/3111 contactArea 0/3111 delta 0/3111 contactPoint 0/3111
+     max_rel force 1.93e+00 force_normal 6.14e-02 force_tangential 1.92e+00 torque 1.94e+00 shear 1.80e+00
+C   common 3111 only_A 0 only_x 0 orient 0 | pos 0/3111 force 334/3111 force_normal 334/3111 force_tangential 334/3111 torque 334/3111 deltaMax 0/3111 shear 0/3111 contactArea 0/3111 delta 0/3111 contactPoint 0/3111
+     max_rel force 1.20e+00 force_normal 6.14e-02 force_tangential 1.97e+00 torque 1.88e+00
+hist_vs_A_at_N A2 dm 3111/3111 sh 3111/3111 B dm 3111/3111 sh 0/3111 B2 dm 3111/3111 sh 0/3111 C dm 3111/3111 sh 3111/3111
+hist_vs_A_at_Nm1 A2 dm 3109/3111 sh 0/3111 B dm 3109/3111 sh 3111/3111 B2 dm 3109/3111 sh 3111/3111 C dm 3109/3111 sh 0/3111
+B_detail {"old_pairs": 3111, "old_pairs_shear_eq_A_Nm1": 3111, "new_pairs": 0, "new_pairs_shear_zero": 0, "fn_differ": 3111, "fn_differ_guarded_change_in_A": 0, "guarded_change_pairs_in_A": 0, "deltaMax_differ_vs_A_N": 0, "deltaMax_differ_vs_A_N_guarded_change": 0}
+atoms A2 0/1220 differ B 0/1220 differ B2 0/1220 differ C 0/1220 differ

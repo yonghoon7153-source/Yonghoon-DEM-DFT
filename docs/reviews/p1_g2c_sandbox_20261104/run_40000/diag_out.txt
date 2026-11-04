@@ -1,0 +1,2 @@
+pairs 3111 periodic-flag pairs 334 | C force-differ 334 of which periodic 334 | periodic pairs not differing in C 0
+non-periodic pairs: |shear.n|/|shear| max A 2.33e-16 B 2.88e-04 median B 1.52e-07
