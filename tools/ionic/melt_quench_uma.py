@@ -3366,6 +3366,9 @@ def _selftest():
                    TH(3).replace("1.000,", "1.500,", 1), encoding="utf-8")),
                "thermo_no_header": _fs("q6", traj=2, after=lambda d: (d / "thermo.csv").write_text(
                    "".join(TH(2).splitlines(keepends=True)[1:]), encoding="utf-8")),
+               # 머리 이름이 다르다 (첫 칸이 t_ps 가 아님) — 꼬리 시각 규칙으로는 안 걸린다 (행 시각은 맞다 · DM 깨기 N18 이 드러낸 시험 구멍)
+               "thermo_wrong_header": _fs("q6b", traj=2, after=lambda d: (d / "thermo.csv").write_text(
+                   TH(2).replace("t_ps,", "time_ps,", 1), encoding="utf-8")),
                "traj_partial_end": _fs("q7", traj=4, thermo=4, after=lambda d: open(d / "traj.xyz", "a").write("2\nLattice=\"5 0 0")),
                "traj_garbage_mid": _fs("q8", traj=3, after=lambda d: (d / "traj.xyz").write_text(
                    FR(1) + "garbage\n" + FR(2), encoding="utf-8")),
@@ -3391,7 +3394,7 @@ def _selftest():
                   "no_plan_verdict_had_traj": "unreadable", "mid_verdict_invalid_final": "unreadable", "mid_history_pass_nofinal": "unreadable",
                   "mid_history_unreadable_prev": "unreadable", "mid_verdict_unknown_status": "unreadable", "mid_verdict_sched_done": "unreadable",
                   "mid_history_frames_full": "unreadable", "mid_invalid_ok": "md_incomplete", "mid_verdict_open_ok": "md_incomplete",
-                  "thermo_garbage_mid": "unreadable", "thermo_bad_cadence": "unreadable", "thermo_no_header": "unreadable",
+                  "thermo_garbage_mid": "unreadable", "thermo_bad_cadence": "unreadable", "thermo_no_header": "unreadable", "thermo_wrong_header": "unreadable",
                   "traj_partial_end": "unreadable", "traj_garbage_mid": "unreadable", "traj_nul_tail": "md_incomplete"}
         chk(fs_ == exp_fs,
             "⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · "
@@ -3401,6 +3404,10 @@ def _selftest():
             "정전 꼬리 (NUL · 잘린 마지막 줄) 는 받아 주되 시작된 기록으로 세고 · 꼬리가 아닌 깨짐 · 시각 어긋남 · 머리 없음 = 보류 · "
             "판정 기록 (회신 DM P0-2): 못 읽은 이전 판정 · 모르는 상태 · 일정 끝 · 프레임 다 참이 적힌 판정 = 보류 · invalid · 일정 미완 판정 = 미완 "
             f"({ {k: fs_[k] for k in fs_ if fs_[k] != exp_fs[k]} })")
+        rs_pf = {k: folder_stage_detail(pathlib.Path(td_) / k)[1] for k in ("v6", "w3")}   # mid_history_pass · mid_history_pass_nofinal
+        chk(all("과학적 판정 (pass)" in (r_ or "") for r_ in rs_pf.values()),
+            "⛔음성 DM P0-2: 도중 끊김 후보의 pass 이력은 '과학적 판정' 이유로 보류한다 — 해석할 수 없는 상태와 구별 (사람이 보는 보류 이유 · "
+            f"DM 깨기 O12 가 드러낸 시험 구멍) ({rs_pf})")
         # ⭐ 회신 DL P1-1 — 완료 기록 쓰기 순서 (데이터 fsync → 임시 기록 fsync → 교체 → 디렉터리 fsync) · 어디서 실패해도 보류
         g_ = globals()
         real_ff, real_fh, real_fd = g_["_fsync_file"], g_["_fsync_handle"], g_["_fsync_dir"]

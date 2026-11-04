@@ -10819,8 +10819,8 @@
    "amends": null,
    "evidence": [
     "kb/reviews/codex_DM_reply_li2s2_dl_fixes_2026_11_04.md (NO-GO · P0 2 → 206d9d52 · 3d97d145 고침 · 카드 v5)",
-    "db/raw/li2s2_dm_mutation_2026_11_04/ (깨기 __MUT__)",
-    "tools/ionic/melt_quench_uma.py (d03ddcf72d36eac5 · selftest 210/210)",
+    "db/raw/li2s2_dm_mutation_2026_11_04/ (깨기 165 / 165 빨강 — 본 판 163 + 시험 구멍 둘 고친 뒤 다시 빨강)",
+    "tools/ionic/melt_quench_uma.py (c2744b7927da30cf · selftest 211/211)",
     "tools/ionic/li2s2_stage1_runner.py (selftest 83/83 Linux — 진짜 판독 함수 · 진짜 판정 함수로 만든 반례 · 진짜 프로세스 그룹)",
     "kb/reviews/codex_DL_reply_li2s2_dk_fixes_2026_11_04.md (NO-GO · P0 1 · P1 2 → cafc9e99 고침 · 카드 v4)",
     "db/raw/li2s2_dl_mutation_2026_11_04/ (깨기 147 / 147 빨강)",
@@ -10900,7 +10900,7 @@
      "at": "2026-11-04",
      "state": "proposed",
      "by": "agent",
-     "note": "회신 DM NO-GO (P0 2) → 고침 (thermo 꼬리 시각 · 판정 기록을 내용으로 · 같은 갈래로 도중 끊김 후보의 MD 완료 흔적 · 카드 v5) · 깨기 __MUT__ · Codex DN 대기"
+     "note": "회신 DM NO-GO (P0 2) → 고침 (thermo 꼬리 시각 · 판정 기록을 내용으로 · 같은 갈래로 도중 끊김 후보의 MD 완료 흔적 · 카드 v5) · 깨기 165/165 · Codex DN 대기"
     }
    ]
   },

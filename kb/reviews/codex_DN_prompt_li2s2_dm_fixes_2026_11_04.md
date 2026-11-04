@@ -36,8 +36,8 @@ DM 이 해제로 본 항목 (DL P1-1 저장 순서 · DL P1-2 FIRE 순서 시험
 
 - `git diff 04555774 __BASE__ -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
 - 카드 `개정_완료_기록_v5_2026_11_04` (결과 0 건 · 카드 값은 안 바뀜)
-- 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 210) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 83 · Linux)
-- 깨기 (변이) **__MUT__** — 저장소 밖 복사본에서 DG · DH · DI · 정전 복구 · DJ · DK · DL · DM 고친 곳을 하나씩 되돌려 해당 시험이 빨개지는지. DL 판 147 개 중 thermo 판독을 다시 써서 자리가 바뀐 4 개 (N3 · N6 · N8 · N9) 는 새 자리로 옮겼고, DM 자리 13 개 (O1–O13) 와 같은 갈래 자리 5 개 (O14–O18) 를 더했다 (165). `db/raw/li2s2_dm_mutation_2026_11_04/`
+- 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 211) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 83 · Linux)
+- 깨기 (변이) **165 / 165 빨강** — 저장소 밖 복사본에서 DG · DH · DI · 정전 복구 · DJ · DK · DL · DM 고친 곳을 하나씩 되돌려 해당 시험이 빨개지는지. DL 판 147 개 중 thermo 판독을 다시 써서 자리가 바뀐 4 개 (N3 · N6 · N8 · N9) 는 새 자리로 옮겼고, DM 자리 13 개 (`O1_tail_time_mismatch_ok` ~ `O13_history_new_part_off`) 와 같은 갈래 자리 5 개 (`O14_mid_status_check_off` ~ `O18_invalid_held`) 를 더했다 (165 · 앞 번호가 정전 복구 판의 O6 · O9–O13 과 겹쳐 전체 이름으로 가른다). 본 판은 빨강 163 · **초록 2 = 시험 구멍** — `N18_header_check_off` (머리 없는 thermo fixture 를 새 꼬리 시각 규칙이 대신 잡아 머리 검사를 안 봤다) · `O12_mid_pass_fail_off` (같은 갈래의 상태 화이트리스트가 pass 도 잡아 결과 단계가 같았다) → 시험 둘을 더했고 (머리 이름이 다른 thermo · pass 이력의 보류 이유 문구) 둘 다 다시 빨강. `db/raw/li2s2_dm_mutation_2026_11_04/` (README)
 
 ## 2. DM 지적별로 한 것
 
@@ -64,11 +64,11 @@ DM 이 해제로 본 항목 (DL P1-1 저장 순서 · DL P1-2 FIRE 순서 시험
 - 같은 갈래: 못 읽은 이전 판정 · 모르는 상태 · 일정 끝 · 프레임 다 참 → 보류 / invalid 만 · 일정 미완이 적힌 incomplete → 미완 (대조). 러너 쪽은 **진짜 판정 함수**로 만들었다 — MD 완료 · FIRE 미완 폴더를 seed 이름 아래에서 판정 (incomplete · 일정 끝 · 프레임 다 참 · 이 꼴인지 fixture 뜻도 시험한다) → 보존 → 완료 기록 · 꼬리 소실.
 - 러너 발사 시험 (보존 폴더 · 진짜 판독 함수): DM 세 반례 + 같은 갈래 → 선언이 맞아도 재담금질 0 · 보류 rc 24 · 폴더 파일 해시 그대로 / 대조 둘 (진짜 판정 함수로 두 번 판정한 plan 전 끊김 · 명확한 도중 끊김) → 재시도 1 · rc 0.
 - 재시도 자격 단위 · 소비자 (`--stage1_summary` 이력 검사): 반례 → 보류 · 재시도 무효 / 대조 (plan 전 판정만) → 재시도 · stage1_pass.
-- 고치면서 드러난 시험 쪽 결함 둘 (고침): ① 대조 'plan 전 끊김 판정' 을 처음에 pass 였던 폴더에서 만들어 이력에 pass 가 남았다 (새 판독이 보류로 잡았다) → 실행 전 기록만 남긴 폴더로 · ② 새 fixture 검사가 why = None 일 때 TypeError 로 죽었다 (변이 O17 에서 보임 · 빨강은 맞았지만 깔끔하지 않음) → None 안전.
+- 고치면서 드러난 시험 쪽 결함 넷 (고침 · 뒤 둘은 깨기가 드러냄 — §1): ① 대조 'plan 전 끊김 판정' 을 처음에 pass 였던 폴더에서 만들어 이력에 pass 가 남았다 (새 판독이 보류로 잡았다) → 실행 전 기록만 남긴 폴더로 · ② 새 fixture 검사가 why = None 일 때 TypeError 로 죽었다 (변이 O17 에서 보임 · 빨강은 맞았지만 깔끔하지 않음) → None 안전 · ③ 머리 없는 thermo fixture 만 있어 머리 검사가 따로 안 시험됐다 → 머리 이름이 다른 thermo · ④ pass 이력 보류를 단계로만 봐서 pass 전용 검사가 따로 안 시험됐다 → 보류 이유 문구.
 
 **인터페이스가 바뀐 곳**:
 - 드라이버: `_thermo_last_step` 꼬리 규칙 · `_verdict_is_pre_run` · `_verdict_records` · `_verdict_evidence(folder, pre_run_only)` (새) · `folder_stage_detail` 이 판정 기록을 본다 (no_plan · 도중 끊김 둘 다) · 이유 문구
-- 러너: 고정 드라이버 sha16 `d03ddcf72d36eac5` · selftest 가 예외로 끝나도 임시 폴더를 지운다 (2d1c3a7b — 변이 실행 중 450 MB × 105 개로 디스크가 찼다)
+- 러너: 고정 드라이버 sha16 `c2744b7927da30cf` · selftest 가 예외로 끝나도 임시 폴더를 지운다 (2d1c3a7b — 변이 실행 중 450 MB × 105 개로 디스크가 찼다)
 
 ## 3. 이것을 특히 봐 달라
 
