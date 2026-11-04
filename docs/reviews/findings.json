@@ -15219,6 +15219,59 @@
       "evidence_tests": [
         "docs/handoff_codex_nonrint_20261104.md 머리 정정 표지 · §3-3 — 문서 · 시험 없음"
       ]
+    },
+    {
+      "id": "LPI-01",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "codex",
+      "title": "stdout 실패 뒤 두 번째 JSON 출력 시도",
+      "opened_in": "docs/reviews/lhs_pressure_inventory_review_intake_20261104/external_verdict.md",
+      "claimed_fixed_sha": "aede55a6fa119e5a616ee687db0d736b2443ab5c",
+      "verified_sha": null,
+      "evidence_tests": [
+        "docs/reviews/lhs_pressure_inventory_20261104/test_output_contract.py",
+        "docs/reviews/lhs_pressure_inventory_lpi_fix_20261104/direct_runs.json",
+        "docs/reviews/lhs_pressure_inventory_lpi_fix_20261104/mutations.json"
+      ],
+      "supersedes": [],
+      "decision_note": "출력/직렬화 분리, short write·flush 실패 rc2, CLI 종료 재flush 차단과 shell fallback 제거. 현재는 claimed_fixed, 독립 재확인 대기. 전체 게이트 HOLD·실제 실행/배포 미승인 유지.",
+      "verification_note": "독립 Codex 재검토가 출력·CLI 종료 보강 범위 종결 가능 판정. 근거는 lhs_pressure_inventory_closure_20261104/external_verdict.txt. 실제 실행/배포 GO 아님. verified 전환에는 원장의 독립 검증자 조건을 별도로 충족해야 한다 (두 Codex 창의 독립성을 owner/verified_by 로 표현할 수 없다 — 검증자를 지어 넣지 않는다). 실제 실행/배포 GO 아님.",
+      "verified_in": "docs/reviews/lhs_pressure_inventory_closure_20261104/external_verdict.txt"
+    },
+    {
+      "id": "LPI-02",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "codex",
+      "title": "입력 크기 상한은 정규식 처리 시간 상한이 아님",
+      "opened_in": "docs/reviews/lhs_pressure_inventory_review_intake_20261104/external_verdict.md",
+      "claimed_fixed_sha": "aede55a6fa119e5a616ee687db0d736b2443ab5c",
+      "verified_sha": null,
+      "evidence_tests": [
+        "docs/reviews/lhs_pressure_inventory_20261104/README.md",
+        "docs/reviews/lhs_pressure_inventory_lpi_fix_20261104/scope_comparison.json"
+      ],
+      "supersedes": [],
+      "decision_note": "시간 상한 부재 명시·반례 보존의 한정 보강. B7와 실제 시간 위험은 그대로이며 시간 상한 구현 완료가 아님. 독립 재확인 대기. 전체 게이트 HOLD·실제 실행/배포 미승인 유지.",
+      "verification_note": "독립 재검토가 문구 한정·반례 보존만 종결 가능 판정. 시간 위험 미해결. 최초 audit 원인은 OBS-AUDIT-01/LPI-A01로 별도 open. verified 전환에는 원장의 독립 검증자 조건을 별도로 충족해야 한다 (두 Codex 창의 독립성을 owner/verified_by 로 표현할 수 없다 — 검증자를 지어 넣지 않는다). 실제 실행/배포 GO 아님.",
+      "verified_in": "docs/reviews/lhs_pressure_inventory_closure_20261104/external_verdict.txt"
+    },
+    {
+      "id": "LPI-A01",
+      "external_id": "OBS-AUDIT-01",
+      "severity": "P3",
+      "status": "open",
+      "owner": "codex",
+      "title": "조상 메타데이터 변화의 보수적 재고 거부와 최초 audit 원인 미확정",
+      "opened_in": "docs/reviews/lhs_pressure_inventory_closure_20261104/external_verdict.txt",
+      "claimed_fixed_sha": null,
+      "verified_sha": null,
+      "evidence_tests": [
+        "docs/reviews/lhs_pressure_inventory_closure_20261104/_repro_ours_20261104/probe_obs_audit.py"
+      ],
+      "supersedes": [],
+      "decision_note": "무관 sibling 생성·삭제를 stat/open 사이에 주입하면 CHANGED/rc2. 합성 기전 재현일 뿐 최초 실패 원인 확정 아님. 가드 유지, 추가 수정·실제 실행 미승인."
     }
   ]
 }
