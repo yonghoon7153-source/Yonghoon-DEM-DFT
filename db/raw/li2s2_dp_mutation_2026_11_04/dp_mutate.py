@@ -171,6 +171,21 @@ NEW = [
 ]
 
 MUT = [MOVED.get(m[0], m) for m in do.MUT] + NEW
+
+
+def _keep_comment(reps):
+    """⭐ 2026-11-04 DP 전체 실행 (6eb03a10) 에서 자리 문자열이 주석 **중간**에서 끝나는 변이 다수가 '문법 오류 (무효 변이)' 였다 —
+    바꾼 글이 '#' 없이 끝나 남은 주석 글자 (' — …') 가 코드로 남았다 (판정에 안 들어감 · 빨강도 초록도 아님).
+    자리의 마지막 줄에 '#' 가 있고 바꾼 글의 마지막 줄에 없으면 끝에 '  #' 를 붙여 남은 글자를 주석으로 둔다 (변이의 뜻은 그대로)."""
+    out = []
+    for old, new in reps:
+        if "#" in old.split("\n")[-1] and "#" not in new.split("\n")[-1]:
+            new = new + "  #"
+        out.append((old, new))
+    return out
+
+
+MUT = [(m[0], m[1], _keep_comment(m[2]), m[3]) for m in MUT]
 dl.MUT = MUT
 TAG = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--tag=")), "dp")
 FAILFAST = "--failfast" in sys.argv
