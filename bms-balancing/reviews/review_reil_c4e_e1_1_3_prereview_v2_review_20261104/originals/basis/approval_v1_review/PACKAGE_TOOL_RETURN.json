@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_REIL_E113_PREREVIEW_PACKAGE_TOOL_RETURN",
+  "provenance": "Exact received exec_command result saved after return. Outside the completed review ZIP; no certification of its own future write return or whole-review timing.",
+  "tool_result": {
+    "chunk_id": "764667",
+    "wall_time_seconds": 0.547329,
+    "exit_code": 0,
+    "original_token_count": 253,
+    "output": "{\r\n  \"kind\": \"REIL_E113_PREREVIEW_PACKAGE_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4e_e1_1_3_prereview_20261104\\\\REIL_C4E_E1_1_3_PREREVIEW_20261104.zip\",\r\n    \"bytes\": 632397,\r\n    \"sha256\": \"da543829da49dbf23d1a2c46e0e13a10657ef2bdd8c8a14f4e16d7d6aea3d58a\"\r\n  },\r\n  \"receipt\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4e_e1_1_3_prereview_20261104\\\\DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 1472,\r\n    \"sha256\": \"e7c154c80e7c96e5c1d4276efaff3a315edfbb52d01e4d04f5fc2f73c2f2838b\"\r\n  },\r\n  \"payload_count\": 38,\r\n  \"entries\": 39,\r\n  \"decision\": \"REVISION_REQUIRED_BEFORE_EXECUTION_APPROVAL\",\r\n  \"findings\": 6,\r\n  \"P2_02\": \"CLOSED\",\r\n  \"received_program_execution\": 0,\r\n  \"probe_execution\": 0,\r\n  \"tests\": 0,\r\n  \"boundary\": \"After review ZIP and receipt write/readback; before actual tool return and its later transcription.\"\r\n}\r\n"
+  }
+}

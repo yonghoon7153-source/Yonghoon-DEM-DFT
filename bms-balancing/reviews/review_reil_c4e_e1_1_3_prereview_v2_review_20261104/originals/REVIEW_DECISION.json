@@ -1,0 +1,126 @@
+{
+  "kind": "REIL_E113_V2_PREREVIEW_DECISION",
+  "date": "2026-11-04",
+  "decision": "DOCUMENT_CLARIFICATION_REQUIRED_BEFORE_EXECUTION_APPROVAL",
+  "pin": "1f982e68432875452e9e5e7788239bfeb1ab226f",
+  "findings": [
+    {
+      "id": "E113_V2_N1",
+      "priority": "P2",
+      "category": "DOCUMENT_PROCEDURE_BOUNDARY",
+      "parent_findings": [
+        "E113_PRE_03",
+        "E113_FIX_SCOPE_02"
+      ],
+      "title": "정상 watch 게시 뒤 도구 반환 미확인의 수동/기계 판정 구분",
+      "locations": [
+        {
+          "file": "bms-balancing/docs/REIL_C4E_E1_1_3_APPROVAL_REQUEST_v2_20261104.md",
+          "start_line": 248,
+          "end_line": 248
+        },
+        {
+          "file": "bms-balancing/docs/REIL_C4E_E1_1_3_PRE_FIX_SCOPE_v2_20261104.md",
+          "start_line": 151,
+          "end_line": 151
+        },
+        {
+          "file": "bms-balancing/docs/REIL_C4E1_E113_OUTER_DRAFT_v2_20261104.py.txt",
+          "start_line": 411,
+          "end_line": 415
+        },
+        {
+          "file": "bms-balancing/docs/REIL_C4E1_E113_OUTER_DRAFT_v2_20261104.py.txt",
+          "start_line": 369,
+          "end_line": 373
+        },
+        {
+          "file": "bms-balancing/docs/REIL_C4E1_E113_JUDGE_DRAFT_v2_20261104.py.txt",
+          "start_line": 205,
+          "end_line": 218
+        }
+      ],
+      "static_path": "Complete published watch, no tmp; wait interrupted before say/tool return; later leftover empty and other normal records => JUDGE MATCH. Hypothetical forbidden wait reentry consumes complete watch with rc20, not always rc16.",
+      "impact": "Manual discrepancy stop prevents normal progression, but unconditional judge STOP and next-call16 claims are inaccurate.",
+      "minimal_correction": "Preserve manual failure and block next normal phase. Preserve possible judge MATCH without rewriting/retesting; preserve observed tool interruption evidence. No wait reentry without observed rc15. Existing-watch consumption20 never recovers unknown prior tool return. Align request/scope wording, by separate correction or new document version.",
+      "code_change_required": false,
+      "retest_required": false,
+      "automatic_approval_bypass_claimed": false
+    }
+  ],
+  "closures": {
+    "E113_PRE_01": "CLOSED_STATIC",
+    "E113_PRE_02": "CLOSED_STATIC",
+    "E113_PRE_03": "LATE_RC_AND_RECORDED_FAILURE_CORE_FIXED_N1_DOCUMENT_BOUNDARY_PENDING",
+    "E113_PRE_04": "CLOSED_STATIC",
+    "E113_PRE_05": "CLOSED_STATIC",
+    "E113_PRE_06": "CLOSED_STATIC",
+    "E113_PRE_C1": "CLOSED_STATIC",
+    "E113_FIX_SCOPE_01": "CLOSED_STATIC",
+    "E113_FIX_SCOPE_02": "BEGIN_SLICE_TOMBSTONE_CORE_FIXED_N1_DOCUMENT_BOUNDARY_PENDING",
+    "E113_FIX_SCOPE_03": "CLOSED_STATIC",
+    "P2_02": "PRIOR_STATIC_CLOSURE_RETAINED",
+    "earlier_closed_scope_items": "RETAINED"
+  },
+  "questions": {
+    "Q1": "Closures as listed; N1 remains.",
+    "Q2": "Same start/end validated before fresh observed_epoch<=deadline; accepted static boundary, no watch-publication/tool-return time guarantee.",
+    "Q3": "Begin/slice/final and exclusive start tombstone reflected; interrupted return distinction needs N1.",
+    "Q4": "Protected buffer reads, explicit publication attempt and partial failure handling accepted statically.",
+    "Q5": "Actual commit selection including F3, rules/secret-check procedure and staged set/blob buffer binding accepted within disclosed environment limits.",
+    "Q6": "Required fields/null/run8 align; tool-return interruption is outside current judge inputs.",
+    "Q7": "Original absolute budget, R1800 policy, f admission and actual push-return evidence align; no physical return bound or execution approval."
+  },
+  "normal_commit_counts": {
+    "b": 14,
+    "c": 18,
+    "e": 17,
+    "f_one_wait": 25,
+    "f_two_waits": 27
+  },
+  "b8_sha_rows": 20,
+  "b8_total_lines": 23,
+  "run_output_count": 8,
+  "user_choice_provenance": {
+    "source": "Pinned status ledger section109, lines3165-3175",
+    "reported_text": "채택해용",
+    "reported_choices": [
+      "Scope v2",
+      "A_WITH_CLARIFICATIONS",
+      "reserve R=1800 s"
+    ],
+    "interpretation": "Author-recorded document direction; not independent remote chat export, not E1 runtime approval",
+    "reopened": false
+  },
+  "readiness": {
+    "approval_request_accepted": false,
+    "document_only_correction_sufficient": true,
+    "new_code_required": false,
+    "new_tests_required": false,
+    "production_launcher_change_requested": false,
+    "actual_execution_authorized_by_review": false,
+    "external_transmission_authorized_by_review": false
+  },
+  "performed": {
+    "static_text_identity_review": true,
+    "AST_parse_only": 3,
+    "received_program_execution": 0,
+    "received_program_import": 0,
+    "probe_execution": 0,
+    "target_tests": 0,
+    "identity_fetch_data_import_run": 0,
+    "COMSOL": 0,
+    "signal_delivery": 0,
+    "source_changes": 0,
+    "git_mutations": 0,
+    "external_transmission": 0,
+    "review_file_identity_and_packaging_tools_used": true
+  },
+  "intake_limitation": {
+    "read_only_github_route_rejections": 1,
+    "reason": "Encoded branch API route rejected 400; error preserved; commits GET succeeded",
+    "target_failure": false
+  },
+  "numeric_review_budget_seconds": null,
+  "whole_work_elapsed_claim": null
+}

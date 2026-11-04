@@ -1,0 +1,68 @@
+{
+  "kind": "SELECTED_LOCAL_BASES_BEFORE_REVIEW_PACKAGE",
+  "count": 12,
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_1_3_PREREVIEW_SEND_v2_20261104.md",
+      "bytes": 6067,
+      "sha256": "911c1c63e66f4bdd6e442ff33170a7ae77c113566a7d3cbeff8e5d8066bdd68e"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_20261104\\REVIEW_KO.txt",
+      "bytes": 13516,
+      "sha256": "0ee98cbdb31eba27a92b3933f2671b1bf498a48022eea8d175de8eb165d02f67"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_20261104\\REVIEW_DECISION.json",
+      "bytes": 8800,
+      "sha256": "09d68f4055927e3de73c4685bde8d41b296343c7442b6313635ec5eda8802247"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_20261104\\DELIVERY_RECEIPT.json",
+      "bytes": 1472,
+      "sha256": "e7c154c80e7c96e5c1d4276efaff3a315edfbb52d01e4d04f5fc2f73c2f2838b"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_20261104\\PACKAGE_TOOL_RETURN.json",
+      "bytes": 1541,
+      "sha256": "fe59cb0d19f03fc091a3f9cab89d45bae8c1536a8021a0cffc526f2542084227"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_pre_fix_scope_review_20261104\\REVIEW_KO.txt",
+      "bytes": 8755,
+      "sha256": "5ece9555b7ed66743a866cb1bc50d8f8975bb5417720d7ac4376d4ae8e481ed0"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_pre_fix_scope_review_20261104\\REVIEW_DECISION.json",
+      "bytes": 4379,
+      "sha256": "76abd10faed546c6d8a059bd6f182cbf5961dad28537a126d5ff47450742e6f8"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_pre_fix_scope_review_20261104\\DELIVERY_RECEIPT.json",
+      "bytes": 1828,
+      "sha256": "1af77b1ede19a95796492d9826e5c8504290a128b77009c24a134c4123182c6e"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_pre_fix_scope_review_20261104\\PACKAGE_TOOL_RETURN.json",
+      "bytes": 2019,
+      "sha256": "71ad9857c870ea726a495efea0edefb8407191e2246c13bfc75220e9e240c238"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_20261104\\source\\bms-balancing\\scripts\\reil_c4e1_launch.py",
+      "bytes": 62639,
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_20261104\\source\\bms-balancing\\scripts\\reil_c4e_run.py",
+      "bytes": 53853,
+      "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_20261104\\source\\bms-balancing\\scripts\\reil_c4_monitor.py",
+      "bytes": 21546,
+      "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+    }
+  ],
+  "boundary": "Review source intake and report writing already occurred; before archive creation.",
+  "scope": "One local attachment, eight prior review records and three previously captured sources only. No remote-machine audit."
+}

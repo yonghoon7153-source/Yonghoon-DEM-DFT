@@ -1,0 +1,98 @@
+{
+  "pin": "1f982e68432875452e9e5e7788239bfeb1ab226f",
+  "attachment": {
+    "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_1_3_PREREVIEW_SEND_v2_20261104.md",
+    "bytes": 6067,
+    "sha256": "911c1c63e66f4bdd6e442ff33170a7ae77c113566a7d3cbeff8e5d8066bdd68e",
+    "matches_pinned": true
+  },
+  "files": [
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_1_3_APPROVAL_REQUEST_v2_20261104.md",
+      "bytes": 48063,
+      "sha256": "d52a3d5e276739b724642923bf2e6d194bf5d8daca1d3cd29a1e64cd7c4e36e1",
+      "git_blob_sha": "a76c5c0dfa2f81da6616f22f01243a6376387d48",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/1f982e68432875452e9e5e7788239bfeb1ab226f/bms-balancing/docs/REIL_C4E_E1_1_3_APPROVAL_REQUEST_v2_20261104.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_E113_JUDGE_DRAFT_v2_20261104.py.txt",
+      "bytes": 18578,
+      "sha256": "ad986c19905723a233abac667cd846f41c1427a7197e522eb78bc1c4d0d738c0",
+      "git_blob_sha": "9b8ef1888f45dcf6443fdb98fb3e17a80677f5a8",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/1f982e68432875452e9e5e7788239bfeb1ab226f/bms-balancing/docs/REIL_C4E1_E113_JUDGE_DRAFT_v2_20261104.py.txt"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_E113_END_WRITER_DRAFT_v2_20261104.py.txt",
+      "bytes": 10368,
+      "sha256": "0827723f6de7a6208e643c5851c206c537a664ed7cedf40c004c945743447f5a",
+      "git_blob_sha": "dff3049f0042cbae3b1e0be8c500f04e3d24a419",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/1f982e68432875452e9e5e7788239bfeb1ab226f/bms-balancing/docs/REIL_C4E1_E113_END_WRITER_DRAFT_v2_20261104.py.txt"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_1_3_PRE_FIX_SCOPE_v2_20261104.md",
+      "bytes": 24902,
+      "sha256": "4986ce430d2f166262a0299ddaa65f5ddf2ae37718bc5f8018addffc1f9325e5",
+      "git_blob_sha": "46605acc6e2d68d145ee6e82ec8e69ce6acac099",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/1f982e68432875452e9e5e7788239bfeb1ab226f/bms-balancing/docs/REIL_C4E_E1_1_3_PRE_FIX_SCOPE_v2_20261104.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_1_3_PREREVIEW_SEND_v2_20261104.md",
+      "bytes": 6067,
+      "sha256": "911c1c63e66f4bdd6e442ff33170a7ae77c113566a7d3cbeff8e5d8066bdd68e",
+      "git_blob_sha": "74cf4d8761ab92d2df9f7b881d1b4c722a374dde",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/1f982e68432875452e9e5e7788239bfeb1ab226f/bms-balancing/docs/REIL_C4E_E1_1_3_PREREVIEW_SEND_v2_20261104.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "bytes": 433451,
+      "sha256": "dc8fddc9293ec3e52a19ca334db798ae65fba205c1b4a54b24febc167a78a6e2",
+      "git_blob_sha": "13d209b582b938f0f82cf76e4f74bbdd8d2a83e8",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/1f982e68432875452e9e5e7788239bfeb1ab226f/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_E113_OUTER_DRAFT_v2_20261104.py.txt",
+      "bytes": 36733,
+      "sha256": "e107d566bc0dc9af37e2a53839720678be8ab6f15624ec54c605755b0001251e",
+      "git_blob_sha": "63ae7eae1c6f3de1c4ae35ca3d8979c5e66d1a00",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/1f982e68432875452e9e5e7788239bfeb1ab226f/bms-balancing/docs/REIL_C4E1_E113_OUTER_DRAFT_v2_20261104.py.txt"
+    }
+  ],
+  "unchanged_source_copies": [
+    {
+      "path": "bms-balancing/scripts/reil_c4e1_launch.py",
+      "bytes": 62639,
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf",
+      "basis": "Previously pinned raw file; unchanged in complete 8-commit compare"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4e_run.py",
+      "bytes": 53853,
+      "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9",
+      "basis": "Previously pinned raw file; unchanged in complete 8-commit compare"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4_monitor.py",
+      "bytes": 21546,
+      "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b",
+      "basis": "Previously pinned raw file; unchanged in complete 8-commit compare"
+    }
+  ],
+  "AST_parse_only": [
+    {
+      "name": "REIL_C4E1_E113_END_WRITER_DRAFT_v2_20261104.py.txt",
+      "ast_parse_only": true,
+      "top_level_nodes": 23
+    },
+    {
+      "name": "REIL_C4E1_E113_JUDGE_DRAFT_v2_20261104.py.txt",
+      "ast_parse_only": true,
+      "top_level_nodes": 38
+    },
+    {
+      "name": "REIL_C4E1_E113_OUTER_DRAFT_v2_20261104.py.txt",
+      "ast_parse_only": true,
+      "top_level_nodes": 77
+    }
+  ],
+  "received_program_execution": 0
+}
