@@ -1,0 +1,51 @@
+변이 147 개 (DK 판 125 − 자리 없어진 2 + DL 24) · 자리 모두 한 번씩
+R3_cleanup_paths                 ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-2: 담금질 중 Ctrl-C → 그 담금질을 멈추고 · 장부에 끝 · 경과 · STOP 을 쓴 뒤 잠금을 푼다
+R2_ledger_closes                 ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-1: STOP 을 지워도 장부가 막고 · 장부까지 지우면 러너는 빈 장부를 안 만들고 거부 · 판정 파일 (closes_system) 은 묶음에서 그 계를 닫는다 (rc 20 · 10 · 묶음 stop_track)
+R1_terminal_stop                 ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-1: 같은 run_root 로 재시작해도 · --ack_stop 을 줘도 닫는 사건은 다시 안 열린다 (담금질 0 · rc 21 · 21 · STOP 그대로 · 이력 1)
+R6_rejudge                       ⭕ 빨강 [li2s2_stage1_runner] · FileNotFoundError: [Errno 2] No such file or directory: '/tmp/li2s2_runner_st_2f97p7xx/tmpkwbv_js8/A/seed11/stage1_verdict_history.jsonl'
+R4_launch_ledger                 ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ 진짜 판독 함수: 10 담금질 · A/B 번갈아 · 띄운 직후 장부에 시작 (첫 poll 전) · 판정에 원자료 지문 · 1 단계 통과 · 2 단계 시드 [11, 12] (rc 0)
+R5_inrun_cap                     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-3: 마지막 런이 60 h 여도 누적 230 h 에서 그 담금질을 멈추고 미완결 (wall 60.0 h · 묶음 cap_incomplete)
+R7_flock                         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P1-6: 잠금을 잡은 러너가 있으면 거부 · 잠금은 한 번의 flock (둘째 획득 실패) · 놓으면 다시 잡힌다
+R9_orphan_alive                  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ DI 음성: 이전 그룹 조회 불가(None)면 종료 확정 없이 재개 거부
+R8_order_check                   ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성: 순서가 카드 시드 전부가 아니거나 첫 시드 ≠ 카드 first_seed 면 거부
+R10_ack_match                    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-2: 중단 뒤 재시작은 --ack_stop <stop_id> 가 맞아야 이어가고 · 끊긴 시드 폴더에서 멈춘다 (덮어쓰지 않는다)
+R11_cap_ack                      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-3: 상한 멈춤은 --ack_stop 만으로 안 넘어간다 (STOP 그대로 · 이력에 안 옮김 — 카드 상한이 올라가야)
+R12_melt_kill                    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DF Q-DF-3 · DG P0-1: A11 녹음 미충족 → 그 담금질을 실제로 멈추고 · 판정 fail + closes_system · STOP (닫는 사건)
+R13_cmd_repr                     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ 담금질 명령: 카드 기계값 그대로 (밀도 repr · 압축 20 · turbo · n_fu 12/15 = 카드 조성의 P 수)
+R15_empty_ledger_guard           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-1: STOP 을 지워도 장부가 막고 · 장부까지 지우면 러너는 빈 장부를 안 만들고 거부 · 판정 파일 (closes_system) 은 묶음에서 그 계를 닫는다 (rc 21 · 20 · 묶음 invalid)
+R14_term_leader_only             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ 진짜 프로세스 그룹: TERM 이 그룹 전체 (손자까지) 에 가서 KILL 없이 비고 기다린다 · 옆 프로세스는 산다 (대표 rc -15 · ['TERM', 'KILL'] · 5.1 s)
+R16_orphan_lower_bound           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-2 · DH P0-1: 장부의 도는 중 런 — 그룹이 살아 있으면 거부 · 죽었으면 고아 런 · 비용은 보수 상한 (1.50 h ≥ 하한 1.50) · 끊긴 폴더에서 멈춤
+R19_finish_ignores_group         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-3: 멈추려 했는데 그룹이 남으면 '멈췄다' · 비용 확정으로 안 적는다 (stop_failed · 끝 없음) · 그룹이 사는 동안 재시작 거부
+R20_no_cleanup_after_finish      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-3: 대표가 rc 0 으로 끝나도 그룹에 일꾼이 남으면 정리 실패로 멈춘다 (끝 · 비용 확정 안 함 · 다음 시드 안 띄움)
+R17_kill_leader_only             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-3 (진짜 프로세스): 대표가 TERM 에 죽고 일꾼은 TERM 을 무시 → 그룹에 KILL · 비움 (['TERM']) / 대표가 rc 0 으로 먼저 끝나고 일꾼이 남음 → 그룹을 보고 KILL · 비움 (['TERM'])
+R23_no_run_id                    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ 진짜 판독 함수: 10 담금질 · A/B 번갈아 · 띄운 직후 장부에 시작 (첫 poll 전) · 판정에 원자료 지문 · 1 단계 통과 · 2 단계 시드 None (rc 27)
+D1_plan_missing                  ⭕ 빨강 [melt_quench_uma] · FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpob6jwe6l/plan.json'
+R21_invalid_as_melt              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P1-4: 첫 시드 녹음 판정 invalid (0 번 프레임 종 바뀜) → 멈추되 과학적 종료 (melt · terminal) 로 적지 않는다
+D2_species                       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P1-7: 0 번 프레임의 종 배치만 바꾸면 판정이 바뀌지 않고 '무효' (pass)
+R22_summary_invalid_as_track     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P1-4: final.xyz 에 5 원자 PS₄ 를 넣으면 진짜 stage1_verdict 가 무효 → 멈춤 (자료 오류 · 과학적 종료 아님 · 통과 아님)
+D3a_estimator_check              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P1-7: 카드 estimator 를 다른 이름으로 바꾸면 window_mto_v1 을 돌리지 않고 '무효'
+D3b_estimator_validate           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P1-7: 카드 값 검사가 모르는 estimator 를 거부한다
+D4_same_nan                      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — plan 목표 밀도 NaN (DG) → invalid (받음 pass)
+D5_software                      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — 소프트웨어 fairchem·inference 만 (DG) → invalid (받음 pass)
+D6_pressure_cols                 ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P1-7: thermo 에서 virial 압력 열을 지우면 '압력 기록 없음' · 열 꼴 불일치 (통과 못 한다)
+D8_all_decided                   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P1-5: 11–14 통과 · 15 미완 (또는 판정 없음) 이면 묶음은 통과가 아니라 대기 (stage1_pass · stage1_pass)
+D9_unknown_status                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P1-7: 판정 상태 'unknown' 은 통과 · 대기가 아니라 무효
+D7_final_wiring                  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P1-4: final.xyz 에 5 원자 PS₄ 를 넣으면 진짜 stage1_verdict 가 무효 → 멈춤 (자료 오류 · 과학적 종료 아님 · 통과 아님)
+D10_closes_summary               ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P0-1: A11 이 계를 닫으면 (첫 시드 녹음 미충족) 나머지 아홉이 통과해도 (A 4/5) 트랙 멈춤 — 일반 탈락과 다르다
+D12_cost_cap                     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P0-3: 비용 240 > 상한 230 → 미완결 · 장부 없음 → 대기 · 비유한 → 미완결 (stage1_pass · pending · stage1_pass)
+D13_closes_combine               ⭕ 빨강 [melt_quench_uma] ·   ⛔ DG P0-1: 첫 시드 (11) 녹음 미충족 → fail + closes_system (일정 미완이어도) · 둘째 시드는 일반 탈락 · 카드와 다른 런이면 닫지 않고 무효
+D14_unknown_melt                 ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — 녹음 상태 'unknown' (DG) → invalid (받음 pass)
+D11_provenance                   ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P1-4: 원자료 없이 통과 판정 파일만 있는 폴더 — 묶음은 지문 불일치로 무효 · 러너는 다시 판정해 안 띄우고 멈춤 (rc 27)
+D15_traj_frames                  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — thermo 끝났는데 traj 잘림 (DG) → invalid (받음 pass)
+D16_thermo_header                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — thermo 머리줄에 virial 없음 (DG) → invalid (받음 pass)
+D17_first_seed_validate          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG: 카드 값 검사가 거부한다 — first_seed 12 (seeds[0] 아님)
+D18_gate_target                  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — gate 목표 밀도 NaN (DG) → invalid (받음 pass)
+D19_composition                  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — 조성 다름 (DG) → invalid (받음 pass)
+D20_summary_ledger               ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-3 (소비자): 다 통과해도 장부 합 > 상한이면 미완결 · 장부가 없으면 대기 (stage1_pass · stage1_pass · stage1_pass)
+D22_ledger_missing_run           ⭕ 빨강 [li2s2_stage1_runner] · AttributeError: 'NoneType' object has no attribute 'get'
+D21_card_vals_sha                ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P1-4: 다른 카드 값으로 낸 판정은 묶음에서 무효 (카드 값 지문 · 같은 카드면 그대로 통과)
+D23_ledger_negative              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-1: 빈 장부 · 한 행 누락 · 음수 비용 · 하한 근거 → 무효 · 모든 행이 안 끝남 → 대기 (invalid · invalid · stage1_pass · invalid · pending)
+D24_ledger_unfinished            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-1: 빈 장부 · 한 행 누락 · 음수 비용 · 하한 근거 → 무효 · 모든 행이 안 끝남 → 대기 (invalid · invalid · invalid · invalid · stage1_pass)
+D26_identity_folder              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DH P0-2: 폴더 seed12 에 plan 시드 11 → 무효 · run_id 없음 → 무효 · 폴더 이름 꼴 아님 → 무효 (맞으면 통과)
+D27_dup_run_id                   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DH P0-2: A11 판정을 A12 자리에 · 모든 자리에 · 시드만 고쳐서 (run_id 같음) → 한 실행을 여러 시드로 못 센다 (invalid · invalid · stage1_pass)
+D25_ledger_basis                 ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-1: 빈 장부 · 한 행 누락 · 음수 비용 · 하한 근거 → 무효 · 모든 행이 안 끝남 → 대기 (invalid · invalid · invalid · stage1_pass · pending)
