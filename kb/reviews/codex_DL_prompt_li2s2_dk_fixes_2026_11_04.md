@@ -1,5 +1,5 @@
 ---
-title: "DL 프롬프트 — li2s-2 DK 고침 확인 (__BASE__): MD 완료 기록 (프레임 셈 대신) · 실행 상태 한 곳 · 정전 추가 예산 없앰 · 증언 양수 — 첫 담금질 GO 여부"
+title: "DL 프롬프트 — li2s-2 DK 고침 확인 (390441c4): MD 완료 기록 (프레임 셈 대신) · 실행 상태 한 곳 · 정전 추가 예산 없앰 · 증언 양수 — 첫 담금질 GO 여부"
 date: 2026-11-04
 updated: 2026-11-04
 tags: [review, li2s, glass, md, uma, density, quench, runner, codex, prompt, letter]
@@ -7,7 +7,7 @@ letter: DL
 track: li2s
 channel: codex
 kind: prompt
-status: 초안 (2026-11-04) — 사용자 발송 대기 · 기준 커밋 __BASE__
+status: 초안 (2026-11-04) — 사용자 발송 대기 · 기준 커밋 390441c4
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -18,7 +18,7 @@ evidenceScope: multi-source-primary
 ---
 
 > 트랙 = li2s-2 (논문 1저자 = 외부 · 위임 10-30). DK (7ac0be8e · NO-GO · P0 2 · P1 2) 다음 편지다 — **고친 곳만** 본다.
-> ⛔ li2s 절대 수송값은 싣지 않는다. 기준 커밋 `__BASE__` (브랜치 `claude/friendly-meitner-lldvar` · **기록까지 들어간 커밋** — DK 때 runlog 가 한 커밋 뒤처졌던 것을 고침). ⬇ 아래 **보내는 글**만 발송한다.
+> ⛔ li2s 절대 수송값은 싣지 않는다. 기준 커밋 `390441c4` (브랜치 `claude/friendly-meitner-lldvar` · **기록까지 들어간 커밋** — DK 때 runlog 가 한 커밋 뒤처졌던 것을 고침). ⬇ 아래 **보내는 글**만 발송한다.
 > 회신이 오면 `codex_DL_reply_li2s2_dk_fixes_2026_11_04.md` 로 원문 보존.
 
 ---
@@ -34,7 +34,7 @@ DK 가 해제로 본 DJ 항목 (P0-1 · P0-2 기존 반례 · P1-4 · Q1 · Q3 �
 
 ## 1. 보는 범위
 
-- `git diff 7ac0be8e __BASE__ -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
+- `git diff 7ac0be8e 390441c4 -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
 - 카드 `개정_정전_복구_v3_2026_11_04` (결과 0 건)
 - 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 207) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 80 · Linux)
 - 깨기 (변이) **125 / 125 빨강** — 저장소 밖 복사본에서 DG · DH · DI · 정전 복구 · DJ · DK 고친 곳을 하나씩 되돌려 해당 시험이 빨개지는지. 본 판 125 (코드 5f794e30) 는 빨강 124 · **초록 1** (K1 러너 '장부 판정 pass · fail → 막기' — `run_kind` 가 같은 실행을 다시 막아 겹쳤고 폴더가 없을 때만 갈리는데 그 시험이 없었다 = 시험 구멍) → 장부 fail + 폴더 없음 단위 시험을 보태고 K1 다시 빨강. DJ 판 111 중 없어진 실효 상한 자리 5 개는 뺐고 완료 기록 · `run_kind` 자리 14 개를 더했다. 스크립트 · 로그 · 해시 = `db/raw/li2s2_dk_mutation_2026_11_04/`
