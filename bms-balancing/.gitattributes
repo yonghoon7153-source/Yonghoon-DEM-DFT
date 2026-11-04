@@ -262,3 +262,5 @@ reviews/review_reil_c4e_e1_1_3_scope_v3_review_20261104/** -text
 reviews/review_reil_c4e_e1_1_3_prereview_20261104/** -text
 # 2026-11-04: REIL C4-E · E1-1–3 정정 범위안 검토 회신 (방향 타당 · 보완 셋 · A 권고 · R 1,800 s 는 정책 제안 · 사용자 채택 · 실행 승인 아님 · input/ = 범위안 사본 · basis/ = 사전 검토 회신 · 저장소 사본 · 검토자 도구 없음 · basis/ 의 *.py · *.py.txt = 실행하지 않음) — bytes 그대로
 reviews/review_reil_c4e_e1_1_3_pre_fix_scope_review_20261104/** -text
+# 2026-11-04: REIL C4-E · E1-1–3 승인 요청 v2 사전 검토 회신 (DOCUMENT_CLARIFICATION_REQUIRED_BEFORE_EXECUTION_APPROVAL · E113_V2_N1 한 건 · 고정 HEAD 1f982e68 · 실행 승인 아님 · source/ · input/ = 검토자가 본 저장소 · 발송문 v2 사본 · numbered/ = 줄 번호 붙인 파생본 · basis/ = 앞 두 회신 · 영수증 · 도구 반환 사본 · source/ 의 *.py · *.py.txt = 실행하지 않음) — bytes 그대로
+reviews/review_reil_c4e_e1_1_3_prereview_v2_review_20261104/** -text
