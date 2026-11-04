@@ -1,0 +1,29 @@
+MODE: independent exact-AST fault injection; no POSIX/kernel validation
+SOURCE_SHA256: c989194dd204622d87fcaa435ec5e95aac5eb82904be0afaa4e2ff57ff1e718a
+test_01_alias_exact_policy (__main__.ExactPathFunctions.test_01_alias_exact_policy) ... ok
+test_02_open_directory_flags_and_relative_fd (__main__.ExactPathFunctions.test_02_open_directory_flags_and_relative_fd) ... ok
+test_03_directory_wrong_types_never_open (__main__.ExactPathFunctions.test_03_directory_wrong_types_never_open) ... ok
+test_04_directory_replaced_before_open_is_changed (__main__.ExactPathFunctions.test_04_directory_replaced_before_open_is_changed) ... ok
+test_05_missing_log (__main__.ExactPathFunctions.test_05_missing_log) ... ok
+test_06_nonregular_log_never_open (__main__.ExactPathFunctions.test_06_nonregular_log_never_open) ... ok
+test_07_open_permissions_denied (__main__.ExactPathFunctions.test_07_open_permissions_denied) ... ok
+test_08_symlink_swap_before_open_fails_closed (__main__.ExactPathFunctions.test_08_symlink_swap_before_open_fails_closed) ... ok
+test_09_nonregular_swap_before_fstat_fails_closed (__main__.ExactPathFunctions.test_09_nonregular_swap_before_fstat_fails_closed) ... ok
+test_10_regular_replacement_before_fstat_fails_closed (__main__.ExactPathFunctions.test_10_regular_replacement_before_fstat_fails_closed) ... ok
+test_11_mutation_during_read_discards_counts (__main__.ExactPathFunctions.test_11_mutation_during_read_discards_counts) ... ok
+test_12_named_replacement_discards_counts (__main__.ExactPathFunctions.test_12_named_replacement_discards_counts) ... ok
+test_13_named_disappearance_discards_counts (__main__.ExactPathFunctions.test_13_named_disappearance_discards_counts) ... ok
+test_14_read_failure_discards_counts (__main__.ExactPathFunctions.test_14_read_failure_discards_counts) ... ok
+test_15_success_uses_safe_open_flags (__main__.ExactPathFunctions.test_15_success_uses_safe_open_flags) ... ok
+test_16_optional_missing_directory_is_absent (__main__.ExactPathFunctions.test_16_optional_missing_directory_is_absent) ... ok
+test_17_optional_directory_permission_denied_is_error (__main__.ExactPathFunctions.test_17_optional_directory_permission_denied_is_error) ... ok
+test_18_out_wrong_type_no_names_or_counts (__main__.ExactPathFunctions.test_18_out_wrong_type_no_names_or_counts) ... ok
+test_19_out_metadata_changes_discard_count (__main__.ExactPathFunctions.test_19_out_metadata_changes_discard_count) ... ok
+test_20_verify_directory_current_name_missing (__main__.ExactPathFunctions.test_20_verify_directory_current_name_missing) ... ok
+test_21_inventory_required_log_failure_propagates_rc2 (__main__.ExactPathFunctions.test_21_inventory_required_log_failure_propagates_rc2) ... ok
+test_22_inventory_root_change_propagates_rc2 (__main__.ExactPathFunctions.test_22_inventory_root_change_propagates_rc2) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.027s
+
+OK

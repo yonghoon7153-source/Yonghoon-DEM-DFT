@@ -1,0 +1,29 @@
+{
+  "scope": "Windows pure-function/stdout probes only; pwd import stub, no inventory filesystem execution",
+  "command_sha256": "c989194dd204622d87fcaa435ec5e95aac5eb82904be0afaa4e2ff57ff1e718a",
+  "ast_python38_parse": true,
+  "fixed_plan": {
+    "ibb": 184,
+    "wsl": 30,
+    "unique": 214
+  },
+  "b7_regex_and_splitlines": {
+    "exact_regex": true,
+    "synthetic_corpora": 300,
+    "passed": 300
+  },
+  "identity_predicate_cases": 7,
+  "stdout_failure_after_json_before_newline": {
+    "rc": 2,
+    "single_json": false,
+    "success_status_present": true,
+    "failure_status_present": true,
+    "output": "{\"schema\":\"lhs_pressure_inventory/v1\",\"status\":\"INVENTORY_COMPLETE\",\"rc\":0}{\"schema\":\"lhs_pressure_inventory/v1\",\"status\":\"NOT_ESTABLISHED\",\"rc\":2,\"reason\":\"INVENTORY_ERROR\"}\n"
+  },
+  "persistent_stdout_failure_escapes_main": true,
+  "os_open_flags_source": [
+    "os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=parent)",
+    "os.open('/', os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)",
+    "os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC, dir_fd=parent)"
+  ]
+}

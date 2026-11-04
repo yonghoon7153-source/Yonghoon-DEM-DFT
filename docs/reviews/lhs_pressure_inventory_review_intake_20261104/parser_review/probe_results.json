@@ -1,0 +1,100 @@
+{
+  "scope": "Exact extracted parser/main functions; in-memory decoder simulation; no POSIX filesystem or host execution",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "command_sha256": "c989194dd204622d87fcaa435ec5e95aac5eb82904be0afaa4e2ff57ff1e718a",
+  "b7_sha256": "34eb74142884489505590501840ccc6423a014a508989c82f135020146283ad3",
+  "regex_pattern_and_flags_equal": true,
+  "byte_differential_cases_passed": 7179,
+  "separate_restart_counts_and_value_nonoutput": {
+    "b7_matches": 2,
+    "pressure_prefix_malformed": 0,
+    "read_restart_echo_lines": 1,
+    "reading_restart_message_lines": 1
+  },
+  "main_fakes_explicitly_labelled": [
+    {
+      "case": "invalid CLI arguments",
+      "rc": 2,
+      "result": {
+        "schema": "lhs_pressure_inventory/v1",
+        "status": "NOT_ESTABLISHED",
+        "rc": 2,
+        "reason": "MODE_REFUSED"
+      },
+      "stderr": ""
+    },
+    {
+      "case": "wrong identity",
+      "rc": 2,
+      "result": {
+        "schema": "lhs_pressure_inventory/v1",
+        "status": "NOT_ESTABLISHED",
+        "rc": 2,
+        "reason": "IDENTITY_REFUSED"
+      },
+      "stderr": ""
+    },
+    {
+      "case": "identity exception",
+      "rc": 2,
+      "result": {
+        "schema": "lhs_pressure_inventory/v1",
+        "status": "NOT_ESTABLISHED",
+        "rc": 2,
+        "reason": "INVENTORY_ERROR"
+      },
+      "stderr": ""
+    }
+  ],
+  "timing_synthetic_malformed": [
+    {
+      "repeats": 100,
+      "characters": 1219,
+      "seconds": 0.000585700006922707,
+      "result": {
+        "b7_matches": 0,
+        "pressure_prefix_malformed": 1,
+        "read_restart_echo_lines": 0,
+        "reading_restart_message_lines": 0
+      }
+    },
+    {
+      "repeats": 300,
+      "characters": 3619,
+      "seconds": 0.004857599997194484,
+      "result": {
+        "b7_matches": 0,
+        "pressure_prefix_malformed": 1,
+        "read_restart_echo_lines": 0,
+        "reading_restart_message_lines": 0
+      }
+    },
+    {
+      "repeats": 1000,
+      "characters": 12019,
+      "seconds": 0.05467909999424592,
+      "result": {
+        "b7_matches": 0,
+        "pressure_prefix_malformed": 1,
+        "read_restart_echo_lines": 0,
+        "reading_restart_message_lines": 0
+      }
+    },
+    {
+      "repeats": 3000,
+      "characters": 36019,
+      "seconds": 0.5008134999952745,
+      "result": {
+        "b7_matches": 0,
+        "pressure_prefix_malformed": 1,
+        "read_restart_echo_lines": 0,
+        "reading_restart_message_lines": 0
+      }
+    },
+    {
+      "repeats": 10000,
+      "characters": 120019,
+      "timeout_seconds": 5
+    }
+  ]
+}

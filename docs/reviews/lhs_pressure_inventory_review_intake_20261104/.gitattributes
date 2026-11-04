@@ -1,0 +1,7 @@
+* -text
+# Preserve external CRLF bytes; keep standard whitespace checks.
+contract_review/probe_result.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+parser_review/probe_results.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+paths_review/exact_ast_results.txt whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# External verdict is preserved verbatim, including its final blank line.
+external_verdict.md whitespace=blank-at-eol,space-before-tab,-blank-at-eof

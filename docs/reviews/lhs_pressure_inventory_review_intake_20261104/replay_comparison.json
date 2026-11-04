@@ -1,0 +1,34 @@
+{
+  "reviewed_pin": "c8a55c8ae1021ec80634ee8c6533deeebc67ce61",
+  "external_evidence_bytes": 246243,
+  "external_evidence_sha256": "00c6f07b273d55e3717bde6591ae69314dda439c97574fa6b74fe3216e3f5ef0",
+  "external_report_sha256": "3c27e3ba7d6cfcbbc711b4075af191fffe2be1d57486114d4380f0e66fd115fc",
+  "external_evidence_manifest_rechecked_after_replay": 88,
+  "unaltered_probe_sha256": {
+    "verify_received.py": "b95c6dbe51cba1830847ffde25fdef9667c5c09e2225028eaa054e9bed8901d2",
+    "contract_review/probe_contract.py": "2ad2587d46943071a48685570830965f909e2c4c8e42bd974a72b26e3bcfbe83",
+    "parser_review/probe_parser.py": "b0f006875f36341d9d3c0c877681490a474822a290b0bbb0bcf609fcf8dd14c1",
+    "paths_review/test_exact_path_functions.py": "1ec894e83030748557ab0072361e3c76c80fd744f17dd533d324b1ae8a5c134b"
+  },
+  "source_equivalence": "17 received snapshot files match local git objects at reviewed pin. Current command and B7 unchanged. Replay used those exact received bytes. No fresh remote API or research-host query.",
+  "comparison": {
+    "LPI-01": {
+      "external": "main rc2, concatenated success/error JSON; persistent output error escapes",
+      "ours": "same logical observations",
+      "severity": "P3",
+      "status": "open"
+    },
+    "LPI-02": {
+      "external": "120019-character malformed input exceeded probe timeout of 5 seconds",
+      "ours": "same bounded-probe outcome; timings at smaller sizes differ",
+      "severity": "P3",
+      "status": "open"
+    }
+  },
+  "whole_gate": "HOLD",
+  "fix_implemented": false,
+  "self_closed": false,
+  "actual_host_execution": false,
+  "posix_kernel_qualification": false,
+  "correction_plan": "[LHS] Q2, awaiting author ratification"
+}
