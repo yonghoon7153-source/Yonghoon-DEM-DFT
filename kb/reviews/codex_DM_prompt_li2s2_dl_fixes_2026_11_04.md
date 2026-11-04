@@ -1,5 +1,5 @@
 ---
-title: "DM 프롬프트 — li2s-2 DL 고침 확인 (<<BASE>>): 완료 증거가 남은 폴더는 보류 · 완료 기록 저장 순서 (fsync) · FIRE 진입 순서 시험 — 첫 담금질 GO 여부"
+title: "DM 프롬프트 — li2s-2 DL 고침 확인 (04555774): 완료 증거가 남은 폴더는 보류 · 완료 기록 저장 순서 (fsync) · FIRE 진입 순서 시험 — 첫 담금질 GO 여부"
 date: 2026-11-04
 updated: 2026-11-04
 tags: [review, li2s, glass, md, uma, density, quench, runner, codex, prompt, letter]
@@ -7,7 +7,7 @@ letter: DM
 track: li2s
 channel: codex
 kind: prompt
-status: 초안 (2026-11-04) — 사용자 발송 대기 · 기준 커밋 <<BASE>>
+status: 초안 (2026-11-04) — 사용자 발송 대기 · 기준 커밋 04555774
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -18,7 +18,7 @@ evidenceScope: multi-source-primary
 ---
 
 > 트랙 = li2s-2 (논문 1저자 = 외부 · 위임 10-30). DL (390441c4 · NO-GO · P0 1 · P1 2) 다음 편지다 — **고친 곳만** 본다.
-> ⛔ li2s 절대 수송값은 싣지 않는다. 기준 커밋 `<<BASE>>` (브랜치 `claude/friendly-meitner-lldvar` · 기록까지 들어간 커밋). ⬇ 아래 **보내는 글**만 발송한다.
+> ⛔ li2s 절대 수송값은 싣지 않는다. 기준 커밋 `04555774` (브랜치 `claude/friendly-meitner-lldvar` · 기록까지 들어간 커밋). ⬇ 아래 **보내는 글**만 발송한다.
 > 회신이 오면 `codex_DM_reply_li2s2_dl_fixes_2026_11_04.md` 로 원문 보존.
 
 ---
@@ -34,10 +34,10 @@ DL 이 해제로 본 항목 (DK P0-2 · DK P1-2 · DJ Q4 · Q3 정책) 은 다�
 
 ## 1. 보는 범위
 
-- `git diff 390441c4 <<BASE>> -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
+- `git diff 390441c4 04555774 -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
 - 카드 `개정_완료_기록_v4_2026_11_04` (결과 0 건 · 카드 값은 안 바뀜)
 - 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 210) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 81 · Linux)
-- 깨기 (변이) **<<MUT>>** — 저장소 밖 복사본에서 DG · DH · DI · 정전 복구 · DJ · DK · DL 고친 곳을 하나씩 되돌려 해당 시험이 빨개지는지. DK 판 125 개 중 folder_stage 를 다시 써서 자리가 없어진 2 개 (L6 · L7) 는 새 자리 (N22 · N23) 로 옮겼고 DL 자리 24 개를 더했다 (147). 스크립트 · 로그 · 해시 = `db/raw/li2s2_dl_mutation_2026_11_04/`
+- 깨기 (변이) ****147 / 147 빨강**** — 저장소 밖 복사본에서 DG · DH · DI · 정전 복구 · DJ · DK · DL 고친 곳을 하나씩 되돌려 해당 시험이 빨개지는지. DK 판 125 개 중 folder_stage 를 다시 써서 자리가 없어진 2 개 (L6 · L7) 는 새 자리 (N22 · N23) 로 옮겼고 DL 자리 24 개를 더했다 (147). 본 판은 빨강 146 · **초록 1 (N6 — thermo 의 덜 써진 꼬리를 '시작된 기록' 으로 세지 않음)** 이었다 — 시험 구멍: 그 경우의 조각 `4.0` 이 다음 시각과 같아 온전한 행으로 읽혀 꼬리 규칙을 안 거쳤다 → 조각을 NUL 섞인 정전 꼬리로 바꾸고 N 계열 24 개를 다시 돌려 24/24. 나머지 123 개는 바뀐 시험 한 줄과 무관한 코드라 다시 돌리지 않았다. 스크립트 · 로그 · 해시 · README = `db/raw/li2s2_dl_mutation_2026_11_04/`
 
 ## 2. DL 지적별로 한 것
 
@@ -67,13 +67,13 @@ DL 이 해제로 본 항목 (DK P0-2 · DK P1-2 · DJ Q4 · Q3 정책) 은 다�
 - docstring · 카드: '몇 ms' 한정을 뺐다. fsync 가 저장장치에 닿는지는 파일시스템 · 장치 캐시에 달렸고 kgy 에서 전원을 끊어 본 적이 없으니 **정전 뒤 기록이 남는다고 보증하지 않는다** — 기록이 없을 때는 끝 경계 규칙이 보류로 받친다
 - 시험: 저장 순서 (교체 전 임시 기록 fsync · 교체 뒤 디렉터리 fsync 를 그 시점의 파일 상태로 확인) · 세 단계 실패 주입 → 예외 + 보류
 
-**P1-2 — FIRE 전 기록 순서의 회귀시험.** selftest 가 진짜 MD 루프 (LJ) 를 돌리며 `ase.optimize.FIRE` 를 탐침으로 바꿔, final_relax 용 FIRE 가 **생성되는 순간** `folder_stage` 가 이미 `md_complete` 이고 final.xyz 가 없는지 본 뒤 멈춘다. 변이 N17 (기록 호출을 FIRE 뒤로) 은 <<N17>>.
+**P1-2 — FIRE 전 기록 순서의 회귀시험.** selftest 가 진짜 MD 루프 (LJ) 를 돌리며 `ase.optimize.FIRE` 를 탐침으로 바꿔, final_relax 용 FIRE 가 **생성되는 순간** `folder_stage` 가 이미 `md_complete` 이고 final.xyz 가 없는지 본 뒤 멈춘다. 변이 N17 (기록 호출을 FIRE 뒤로) 은 빨강이다 (FIRE 진입 탐침이 `unreadable` 을 본다).
 
 **Q1 · Q3** — 카드에 적었다: 완료 기록은 종료 구조의 복구 수단이 아니다 (FIRE 복구는 새 결정 · 그때 저장 간격 조건을 확인하거나 종료 구조를 따로 저장) · 상한 인상은 결과 열람 후 운영 개정 (미완결 기록 보존 · 이유 · 한도 · 남은 실행 목록을 재개 전에 고정 · 계 · 시드 골라 추가 금지).
 
 **인터페이스가 바뀐 곳**:
 - 드라이버: `MD_DONE_TMP` · `NON_MD_FILES` · `save_interval_steps(plan)` · `_fsync_file` · `_fsync_handle` · `_fsync_dir` · `md_last_recorded_step(folder, plan)` (+ `_thermo_last_step` · `_traj_last_step`) · `folder_stage_detail(folder)` · `folder_stage` = 그 첫 값 · 소비자 메시지에 이유
-- 러너: 재시도 자격의 보류 메시지에 이유 · 고정 드라이버 sha16 `f6e9ab1d0ed6bfda`
+- 러너: 재시도 자격의 보류 메시지에 이유 · 고정 드라이버 sha16 `b0f8a1ecbaafe029`
 
 ## 3. 이것을 특히 봐 달라
 
