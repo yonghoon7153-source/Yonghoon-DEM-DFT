@@ -276,5 +276,13 @@
   "판독기": "tools/doping/judge_eprime.py 는 10-08 (45c66ffc · Codex CT) 뒤로 안 바뀜 — worktree wt_cv7main_1028 의 판독기 = 레포 판독기 · 판독기 수정이 없어 과거 마감 재현 대조 대상 아님",
   "⏭": "kgy: 러너가 찍은 판정 명령을 그대로 (tmux cv7judge · 로그 ~/cv7_judge_1104.log · CPU 파이썬 분석 · QE 아님) → cascade_v7_judgement.json → 새 worktree 에서 db/raw/cascade_v7_main_2026_10_07/ 회수 커밋 · 푸시 (궤적 · msd 는 sha256 만) → 레포에서 카드 대로 읽기 (상대차만 · 절대 D 인용 금지)",
   "by": "agent · 2026-11-04"
+ },
+ "✅_판독_2026_11_04": {
+  "출처": "사용자 붙여넣기 2026-11-04 09:54:36 KST (kgy watch · tail ~/cv7_judge_1104.log) — tmux cv7judge 09:25:58 시작 · 러너가 찍은 판정 명령 그대로 (judge_eprime.py --card v7 --probe_json … --out_root …)",
+  "콘솔": "판정 대상 런 40 · 자격 통과 36 · 1차: 실질_동등_지지 · → /home/kgy/work/runs/cascade_v7_main_1007/cascade_v7_judgement.json · rc=0 (보인 마지막 넷 P2_Al2S3_I s1·s2 · J s1·s2 = 프레임 4000 · Li 90 · 자격 통과)",
+  "뜻": "카드 v6 §4 집계 (v7 · 개정 CP) — 자격 통과 부모의 L̄ = 평균 ln(D_P1/D_P2) 95 % 구간 (t, n−1) 이 ±δ (δ = ln 1.5) 안 → 3 갈래 중 '실질_동등_지지'",
+  "허용_범위": "V7_CLAIM_SCOPE 그대로 — T* 1000 K (사전 지정 탐침 규칙) · UMA · 공통 고정셀 · 준비 · 자격 조건 아래의 P1/P2 확산 비 · 600 K · 작동 온도 · 실제 재료의 동등성을 뜻하지 않음 · 자격 통과 집합에 조건부 · T* 는 '확산이 시작되는 최저 온도' 가 아님",
+  "⏭": "회수 커밋 (db/raw/cascade_v7_main_2026_10_07/) → 판정 JSON 으로 n · L̄ · 구간 · 자격 미달 넷의 사유 확인 (절대 D 는 인용 안 함) → 마감 기록 (허용 · 금지 서술 · 재개 조건) → 축 확장 계획 (D-2026-10-15-cascade-screening-axes-plan) 은 이 판독 뒤",
+  "by": "agent · 2026-11-04"
  }
 }
