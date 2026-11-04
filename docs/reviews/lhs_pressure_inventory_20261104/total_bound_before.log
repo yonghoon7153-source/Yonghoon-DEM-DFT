@@ -1,0 +1,14 @@
+test_20_growing_stream_has_a_total_read_bound (__main__.InventoryTests.test_20_growing_stream_has_a_total_read_bound) ... FAIL
+
+======================================================================
+FAIL: test_20_growing_stream_has_a_total_read_bound (__main__.InventoryTests.test_20_growing_stream_has_a_total_read_bound)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/pressure-inventory-draft/test_pressure_inventory.py", line 244, in test_20_growing_stream_has_a_total_read_bound
+    with self.assertRaises(self.m.Refusal):
+AssertionError: Refusal not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.010s
+
+FAILED (failures=1)
