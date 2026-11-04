@@ -1,0 +1,72 @@
+{
+  "schema": "document_static_review/1",
+  "review_pin": "d0107959955f284df56cb546ee008595d26dac61",
+  "branch": "codex/mixer-1104",
+  "verdict": "DOCUMENT_AND_STATIC_ARITHMETIC_ACCEPTED",
+  "new_findings": [],
+  "questions": [
+    {
+      "id": "Q1",
+      "verdict": "ACCEPTED_WITHIN_SCOPE"
+    },
+    {
+      "id": "Q2",
+      "verdict": "ACCEPTED_WITHIN_SCOPE"
+    },
+    {
+      "id": "Q3",
+      "verdict": "ACCEPTED_WITHIN_SCOPE"
+    },
+    {
+      "id": "Q4",
+      "verdict": "ACCEPTED_WITHIN_SCOPE"
+    },
+    {
+      "id": "Q5",
+      "verdict": "ACCEPTED_WITHIN_SCOPE"
+    },
+    {
+      "id": "Q6",
+      "verdict": "ACCEPTED_WITHIN_SCOPE"
+    }
+  ],
+  "nonblocking_clarifications": [
+    {
+      "id": "PRECAL-NOTE01",
+      "location": "docs/reviews/mixer_precal_exploration_registration_draft_20261104.md:24",
+      "text": "U/C share gamma_W but not AM-wall force. At fixed B, C arms across r differ only in wall interactions, not particle-particle force parameters."
+    }
+  ],
+  "future_qualification_notes": [
+    {
+      "location": "scripts/measure_mixing_index.py:1249",
+      "text": "Bind actual geometry radius, grid/axis/n_min, type mapping and E0 identity in later reader integration. Historical default radius is not proposed generation radius."
+    },
+    {
+      "location": "scripts/mixer_contact_reader.py:349",
+      "text": "AM-type attachment fractions use total SE denominator and may overlap; union fraction must not be their sum."
+    }
+  ],
+  "author_decisions": {
+    "Q1": "PENDING: first8 preparation/budget; no launch approval",
+    "Q2": "PENDING: proposed uncalibrated B/r/surface proxy choices",
+    "Q3": "PENDING: dedicated reader/integration qualification",
+    "Q4": "PENDING: experiment scope/equipment/sample/people after map"
+  },
+  "scope": {
+    "reviewed_code_executed": false,
+    "generator_or_reader_imported": false,
+    "simulation": false,
+    "research_data_read": false,
+    "actual_machine_access": false,
+    "whole_gate_reexecuted": false,
+    "actual_physical_statistical_or_equipment_certification": false
+  },
+  "overall_gate": "HOLD",
+  "execution_authorized": false,
+  "registration_authorized": false,
+  "deployment_authorized": false,
+  "integration_authorized": false,
+  "findings_ledger_updated": false,
+  "priority": "Rint2 first; sending and order determined by first author"
+}

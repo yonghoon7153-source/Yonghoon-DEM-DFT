@@ -1,0 +1,5 @@
+# Preserve externally received evidence bytes, including CRLF.
+external_review.txt -text
+scope_verdict.json -text
+independent_results.json -text
+codex_mixer_precal_map_review_evidence_20261104.zip -text
