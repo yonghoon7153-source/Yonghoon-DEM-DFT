@@ -10818,8 +10818,10 @@
    "supersedes": [],
    "amends": null,
    "evidence": [
-    "tools/ionic/melt_quench_uma.py (5f794e30 · selftest 207/207)",
-    "tools/ionic/li2s2_stage1_runner.py (5f794e30 · selftest 80/80 Linux — 진짜 판독 함수 · 진짜 프로세스 그룹)",
+    "kb/reviews/codex_DL_reply_li2s2_dk_fixes_2026_11_04.md (NO-GO · P0 1 · P1 2 → cafc9e99 고침 · 카드 v4)",
+    "db/raw/li2s2_dl_mutation_2026_11_04/ (깨기 147 / 147 빨강)",
+    "tools/ionic/melt_quench_uma.py (b0f8a1ecbaafe029 · selftest 210/210)",
+    "tools/ionic/li2s2_stage1_runner.py (selftest 81/81 Linux — 진짜 판독 함수 · 진짜 프로세스 그룹)",
     "kb/reviews/codex_DJ_reply_li2s2_outage_rule_2026_11_03.md (NO-GO · 정전 복구 방향 찬성 → 89d48885 · 2c36eac9 · 172daf67 고침)",
     "kb/reviews/codex_DK_reply_li2s2_dj_fixes_2026_11_03.md (NO-GO · P0 2 · P1 2 → 5f794e30 고침 · 카드 v3)",
     "db/raw/li2s2_dk_mutation_2026_11_04/ (깨기 125 / 125 빨강)",
@@ -10885,6 +10887,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex DK NO-GO 반영 (결과 전 · 5f794e30) — MD 완료 기록 (프레임 셈 대신) · 실행 상태 한 곳 (run_kind) · 정전 추가 예산 없앰 (카드 v3) · 증언 양수 — DL 확인 뒤 활성"
+    },
+    {
+     "at": "2026-11-04",
+     "state": "proposed",
+     "by": "agent",
+     "note": "회신 DL NO-GO (P0 1 · P1 2) → 고침 (완료 증거 보류 · 저장 순서 fsync · FIRE 진입 시험 · 카드 v4) · 깨기 147/147 · Codex DM 대기"
     }
    ]
   },

@@ -3170,7 +3170,8 @@ def _selftest():
                # 진행량 판독 — 정전 꼬리는 받아 주고 (시작된 기록으로 센다) · 꼬리가 아닌 깨짐은 보류
                "thermo_nul_tail": _fs("q1", traj=2, after=lambda d: open(d / "thermo.csv", "ab").write(b"\x00" * 64)),
                "thermo_partial_mid": _fs("q2", traj=2, after=lambda d: open(d / "thermo.csv", "a").write("1.0")),
-               "thermo_partial_end": _fs("q3", traj=4, after=lambda d: open(d / "thermo.csv", "a").write("4.0")),
+               # 덜 써진 마지막 줄 — 첫 칸부터 NUL 이 섞인 조각 (온전한 행으로 읽히면 꼬리 규칙을 안 거친다 · DL 깨기 N6 이 잡은 시험 구멍)
+               "thermo_partial_end": _fs("q3", traj=4, after=lambda d: open(d / "thermo.csv", "ab").write(b"4.0\x00\x00\x00")),
                "thermo_garbage_mid": _fs("q4", traj=3, after=lambda d: (d / "thermo.csv").write_text(
                    TH(3).replace("1.000,", "x.000,", 1), encoding="utf-8")),
                "thermo_bad_cadence": _fs("q5", traj=3, after=lambda d: (d / "thermo.csv").write_text(

@@ -1,0 +1,26 @@
+변이 147 개 (DK 판 125 − 자리 없어진 2 + DL 24) · 자리 모두 한 번씩
+N3_end_boundary_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N2_noplan_extras_ignored         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N1_tmp_ignored                   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N4_end_is_planned                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N6_thermo_tail_not_counted       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N5_fire_log_rule_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N7_traj_tail_not_counted         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N8_thermo_mid_garbage_ok         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N9_cadence_off                   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N10_traj_mid_garbage_ok          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N11_progress_thermo_only         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N12_progress_traj_only           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N18_header_check_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N19_nonmd_verdict_missing        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N22_mid_cut_as_complete          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-3 (소비자): 다 통과해도 장부 합 > 상한이면 미완결 · 장부가 없으면 대기 (stage1_pass · invalid · pending)
+N21_consumer_unreadable_ok       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+N23_bad_marker_incomplete        ⭕ 빨강 [li2s2_stage1_runner] · FileNotFoundError: [Errno 2] No such file or directory: '/tmp/li2s2_runner_st_1bfunk20/tmp8syqa02i/r/STOP.json'
+N24_tmp_as_complete              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N13_no_data_fsync                ⭕ 빨강 [melt_quench_uma] ·   ⛔ 회신 DL P1-1: 완료 기록 순서 = traj · thermo fsync (기록 전) → 임시 기록 fsync (교체 전) → 교체 → 디렉터리 fsync ([('handle', True, False), ('dir', False, True)])
+N14_no_tmp_fsync                 ⭕ 빨강 [melt_quench_uma] ·   ⛔ 회신 DL P1-1: 완료 기록 순서 = traj · thermo fsync (기록 전) → 임시 기록 fsync (교체 전) → 교체 → 디렉터리 fsync ([('file', 'traj.xyz', False), ('file', 'thermo.csv', Fal
+N15_no_dir_fsync                 ⭕ 빨강 [melt_quench_uma] ·   ⛔ 회신 DL P1-1: 완료 기록 순서 = traj · thermo fsync (기록 전) → 임시 기록 fsync (교체 전) → 교체 → 디렉터리 fsync ([('file', 'traj.xyz', False), ('file', 'thermo.csv', Fal
+N16_dir_fsync_before_replace     ⭕ 빨강 [melt_quench_uma] ·   ⛔ 회신 DL P1-1: 완료 기록 순서 = traj · thermo fsync (기록 전) → 임시 기록 fsync (교체 전) → 교체 → 디렉터리 fsync ([('file', 'traj.xyz', False), ('file', 'thermo.csv', Fal
+N17_md_done_after_fire           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DL P1-2: FIRE 진입 순간 이미 MD 완료 기록이 맞다 (folder_stage = md_complete · final 없음) — 기록 호출을 FIRE 뒤로 옮기면 빨개진다 ([('unreadable', False, False)])
+N25_runner_stage_plain           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 정전 복구: 끝까지 돈 런 (결과 파일 있음 · 판정 없음) 은 선언이 맞아도 재시도가 아니라 판정해야 한다
+끝: 빨강 24 / 24
