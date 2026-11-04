@@ -1,0 +1,21 @@
+{
+  "reviewed_pin": "d0107959955f284df56cb546ee008595d26dac61",
+  "external_verdict": "DOCUMENT_AND_STATIC_ARITHMETIC_ACCEPTED",
+  "new_findings": [],
+  "scope": "document draft and static arithmetic only",
+  "nonblocking_note": "PRECAL-NOTE01",
+  "suggestion_applied_verbatim": true,
+  "post_change_pin_externally_confirmed": false,
+  "author_Q1_Q2_Q3_Q4": "PENDING; external review is not author ratification",
+  "future_qualification": [
+    "Bind actual radius/axis/grid/n_min/type mapping/E0 identity; historical radius 0.02056 m differs from proposed 0.01258325 m.",
+    "AM-type attachment fractions use all SE as denominator and can overlap; their sum is not the union fraction.",
+    "D2 schema2/contact and mixing inputs, controls and output qualification remain unimplemented and unreviewed."
+  ],
+  "whole_gate": "HOLD",
+  "registration_authorized": false,
+  "execution_authorized": false,
+  "deployment_authorized": false,
+  "integration_authorized": false,
+  "ledger_closure": false
+}

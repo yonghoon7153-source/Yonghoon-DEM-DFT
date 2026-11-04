@@ -1,0 +1,113 @@
+{
+  "pin": "d0107959955f284df56cb546ee008595d26dac61",
+  "zip_sha256": "e64340eb1391f19cbf27f482d36bae0b19de0ab07c98b2bfdb67e13e6fc0a477",
+  "snapshot_and_remote_entries": 22,
+  "package_entries": 33,
+  "previous_note01_SOP_unchanged": true,
+  "source_basis_files_match": 14,
+  "cohort": {
+    "unique_jobs": 20,
+    "roles": {
+      "U": 9,
+      "C": 9,
+      "rotating_negative_control": 1,
+      "settling_normalizer": 1
+    },
+    "phases": {
+      "first8": 8,
+      "remaining12": 12
+    },
+    "U_C_pairs": 9,
+    "seed": 32452843,
+    "reserved_seeds_assigned": false
+  },
+  "scalar_arithmetic": {
+    "force_geometric_factors": {
+      "AM_P": 1.8,
+      "AM_S": 1.6
+    },
+    "equal_force_r": {
+      "AM_P": 0.30864197530864196,
+      "AM_S": 0.39062499999999994
+    },
+    "force_rows": [
+      {
+        "r": 0.1,
+        "AM_P": 0.5692099788303083,
+        "AM_S": 0.5059644256269408,
+        "gamma_wall": 0.00256,
+        "C_over_U_AM_AM_force": 10.0,
+        "C_over_U_AM_SE_and_AM_WALL_force": 3.162277660168379,
+        "C_over_U_SE_SE_and_SE_WALL_force": 1.0
+      },
+      {
+        "r": 0.35,
+        "AM_P": 1.0648943609579309,
+        "AM_S": 0.9465727652959386,
+        "gamma_wall": 0.00896,
+        "C_over_U_AM_AM_force": 2.857142857142857,
+        "C_over_U_AM_SE_and_AM_WALL_force": 1.6903085094570331,
+        "C_over_U_SE_SE_and_SE_WALL_force": 1.0
+      },
+      {
+        "r": 0.5,
+        "AM_P": 1.2727922061357857,
+        "AM_S": 1.1313708498984762,
+        "gamma_wall": 0.0128,
+        "C_over_U_AM_AM_force": 2.0,
+        "C_over_U_AM_SE_and_AM_WALL_force": 1.414213562373095,
+        "C_over_U_SE_SE_and_SE_WALL_force": 1.0
+      }
+    ],
+    "bo_po": [
+      0.031472592592592594,
+      3.1472592592592594,
+      31.47259259259259
+    ],
+    "C_particle_forces_across_r_at_fixed_B": "identical; wall force changes with sqrt(r)",
+    "C_wall_force_ratio_r05_over_r01": 2.23606797749979,
+    "settling_seconds": 0.2660524193181546,
+    "rotation_seconds": 1.565016660906536,
+    "total_steps_continuous_estimate": 7716597.39223696,
+    "settling_steps_continuous_estimate": 1121213.5179831008,
+    "rotating_hours_at_70_63_steps_s": [
+      30.621418223162543,
+      34.023798025736156
+    ],
+    "reference_hours_at_70_63_steps_s": [
+      4.449259991996432,
+      4.943622213329369
+    ],
+    "first8_slot_hours": [
+      218.79918755413422,
+      243.11020839348248
+    ],
+    "first8_core_hours": [
+      4375.983751082685,
+      4862.20416786965
+    ],
+    "first8_two_slot_wave_hours": [
+      122.48567289265017,
+      136.09519210294462
+    ],
+    "whole20_slot_hours": [
+      586.2562062320848,
+      651.3957847023163
+    ],
+    "whole20_core_hours": [
+      11725.124124641696,
+      13027.915694046325
+    ],
+    "whole20_two_slot_wave_hours": [
+      306.21418223162544,
+      340.2379802573615
+    ],
+    "M_proposed_geometric_radius_m": 0.01258325,
+    "M_historical_cli_default_radius_m": 0.02056,
+    "M_radius_ratio_default_over_proposed": 1.6339181054179164
+  },
+  "scope": "Archive identity + independent static algebra/counts only. Not code execution, simulation, geometry/solver qualification, statistical or physical certification.",
+  "reviewed_modules_imported_or_executed": false,
+  "whole_gate": "HOLD",
+  "execution_authorized": false
+}

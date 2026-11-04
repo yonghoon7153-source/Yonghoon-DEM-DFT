@@ -1,0 +1,40 @@
+{
+  "reviewed_pin": "d0107959955f284df56cb546ee008595d26dac61",
+  "received_zip_bytes": 346075,
+  "received_zip_sha256": "44c464e241458c8b3a7a1510e8aa93cca9a96eeef8e7d46aa97f940e40f13608",
+  "outer_archive": {
+    "members": 7,
+    "hash_entries": 6,
+    "crc_paths_duplicates_symlinks": "PASS"
+  },
+  "external_report_matches_user_pasted_bytes": true,
+  "embedded_prior_zip_exact_local_archive_match": true,
+  "prior_zip_bytes": 331591,
+  "prior_zip_sha256": "e64340eb1391f19cbf27f482d36bae0b19de0ab07c98b2bfdb67e13e6fc0a477",
+  "inner_archive": {
+    "members": 34,
+    "hash_entries": 33,
+    "crc_paths_duplicates_symlinks": "PASS"
+  },
+  "snapshot_files_compared_to_local_pinned_git": 22,
+  "external_remote_metadata_matches_local_pinned_git": true,
+  "external_remote_metadata_newly_fetched": false,
+  "accepted_sop_sha256": "dde2857a41b847fbb1f1888588a6ddc0331aa71dfd08ad40f02618ce1bddcc38",
+  "scope_verdict_preserved_bytes": true,
+  "independent_results_preserved_bytes": true,
+  "external_arithmetic_verifier_rerun": false,
+  "reason": "External accepted arithmetic preserved; intake verifies bytes and pins only.",
+  "clarification": {
+    "id": "PRECAL-NOTE01",
+    "exact_review_quote": "같은 (B,r)의 U/C는 γ_W와 SE–벽 힘 척도를 공유하지만 AM 표면값 변화로 AM–벽 힘도 함께 달라진다. 같은 B의 C 팔끼리는 입자–입자 조건이 같고 r에 따른 벽 조건만 다르므로 독립 반복이나 순수 입자 γ 효과로 해석하지 않는다.",
+    "added_bytes_including_blank_line": 301,
+    "before_bytes": 16409,
+    "before_sha256": "287602d9b3d96b7f6c410cb36ffda31417690037e29dc663b512082eb61d5639",
+    "after_bytes": 16710,
+    "after_sha256": "1e21ea3b8bee8eef87dd08d8ef395f434d73fe824ea429c347548de08530ab0c",
+    "remove_addition_restores_accepted_draft_exactly": true
+  },
+  "reviewed_generator_or_reader_executed": false,
+  "research_results": 0,
+  "whole_gate": "HOLD"
+}
