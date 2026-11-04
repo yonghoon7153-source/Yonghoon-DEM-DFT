@@ -3791,6 +3791,10 @@ def _selftest():
         chk(all(want_dn[k] in (rs_dn[k] or "") for k in want_dn),
             "⛔음성 DN P1: 완료 판단 필드가 있는데 타입이 틀리면 (n:\"5\" · expected 0 · schedule_complete:\"true\" · provenance 글자 · 빈 지문 · "
             f"이력의 새 판정 지문 글자) '해석할 수 없는 기록' 이유로 보류한다 — 다른 갈래의 보류와 구별 ({rs_dn})")
+        rs_ct = {k: folder_stage_detail(pathlib.Path(td_) / k)[1] for k in ("y6", "y7")}   # mid_gate_not_dict · mid_checks_not_dict
+        chk(all("타입이" in (r_ or "") for r_ in rs_ct.values()),
+            "⛔음성 회신 DN P1 (이유): 판정 기록의 gate_check · checks 가 객체가 아니면 '타입 오류' 로 보류한다 (판독 예외로 새지 않는다 · "
+            f"깨기 DN8 이 드러낸 시험 구멍) ({rs_ct})")
         rs_fl = folder_stage_detail(pathlib.Path(td_) / "fl")[1]                         # fire_log_no_marker
         chk("FIRE 로그" in (rs_fl or ""),
             "⛔음성 회신 DL Q3: FIRE 로그만 있고 MD 완료 기록이 없으면 그 이유로 보류한다 (MD 중 파일 목록 검사와 구별 · 사람이 보는 보류 이유 · "
