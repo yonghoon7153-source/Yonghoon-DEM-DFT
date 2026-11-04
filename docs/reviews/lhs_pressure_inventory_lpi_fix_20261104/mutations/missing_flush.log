@@ -1,0 +1,43 @@
+test_buffered_success_flushes_before_exit (__main__.OutputContract.test_buffered_success_flushes_before_exit) ... ERROR
+test_computation_error_one_failure_json (__main__.OutputContract.test_computation_error_one_failure_json) ... ok
+test_first_write_failure_no_second_output (__main__.OutputContract.test_first_write_failure_no_second_output) ... ok
+test_flush_failure_no_shutdown_reflush (__main__.OutputContract.test_flush_failure_no_shutdown_reflush) ... FAIL
+test_normal_exactly_one_json_and_zero (__main__.OutputContract.test_normal_exactly_one_json_and_zero) ... ok
+test_partial_write_no_second_output (__main__.OutputContract.test_partial_write_no_second_output) ... ok
+test_persistent_failure_nonzero_no_output (__main__.OutputContract.test_persistent_failure_nonzero_no_output) ... ok
+test_serialization_error_one_failure_json (__main__.OutputContract.test_serialization_error_one_failure_json) ... ok
+test_shell_partial_error_no_fallback (__main__.OutputContract.test_shell_partial_error_no_fallback) ... ok
+test_shell_signal_partial_no_fallback (__main__.OutputContract.test_shell_signal_partial_no_fallback) ... ok
+test_shell_start_other_error_no_fallback (__main__.OutputContract.test_shell_start_other_error_no_fallback) ... ok
+test_shell_start_rc2_no_fallback (__main__.OutputContract.test_shell_start_rc2_no_fallback) ... ok
+test_short_write_rejected_without_retry (__main__.OutputContract.test_short_write_rejected_without_retry) ... ok
+
+======================================================================
+ERROR: test_buffered_success_flushes_before_exit (__main__.OutputContract.test_buffered_success_flushes_before_exit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/lhs/docs/reviews/lhs_pressure_inventory_20261104/test_output_contract.py", line 102, in test_buffered_success_flushes_before_exit
+    obj = json.loads(p.stdout)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+FAIL: test_flush_failure_no_shutdown_reflush (__main__.OutputContract.test_flush_failure_no_shutdown_reflush)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/lhs/docs/reviews/lhs_pressure_inventory_20261104/test_output_contract.py", line 128, in test_flush_failure_no_shutdown_reflush
+    self.assertNotEqual(p.returncode, 0)
+AssertionError: 0 == 0
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.425s
+
+FAILED (failures=1, errors=1)

@@ -1,0 +1,11 @@
+--- pressure_inventory.sh
++++ missing_flush.sh
+@@ -274,7 +274,7 @@
+     try:
+         if sys.stdout.write(payload) != len(payload):
+             return 2
+-        sys.stdout.flush()
++        pass  # deliberately removed explicit flush
+     except BaseException:
+         return 2
+     return rc

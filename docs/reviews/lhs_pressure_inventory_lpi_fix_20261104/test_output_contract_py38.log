@@ -1,0 +1,18 @@
+test_buffered_success_flushes_before_exit (__main__.OutputContract) ... ok
+test_computation_error_one_failure_json (__main__.OutputContract) ... ok
+test_first_write_failure_no_second_output (__main__.OutputContract) ... ok
+test_flush_failure_no_shutdown_reflush (__main__.OutputContract) ... ok
+test_normal_exactly_one_json_and_zero (__main__.OutputContract) ... ok
+test_partial_write_no_second_output (__main__.OutputContract) ... ok
+test_persistent_failure_nonzero_no_output (__main__.OutputContract) ... ok
+test_serialization_error_one_failure_json (__main__.OutputContract) ... ok
+test_shell_partial_error_no_fallback (__main__.OutputContract) ... ok
+test_shell_signal_partial_no_fallback (__main__.OutputContract) ... ok
+test_shell_start_other_error_no_fallback (__main__.OutputContract) ... ok
+test_shell_start_rc2_no_fallback (__main__.OutputContract) ... ok
+test_short_write_rejected_without_retry (__main__.OutputContract) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 1.146s
+
+OK

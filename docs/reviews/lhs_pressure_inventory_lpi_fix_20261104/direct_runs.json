@@ -1,0 +1,71 @@
+{
+  "sources_sha256": {
+    "docs/reviews/lhs_pressure_inventory_20261104/pressure_inventory.sh": "2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634",
+    "docs/reviews/lhs_pressure_inventory_20261104/test_pressure_inventory.py": "633fc2f4164d350a68a6d9546bdb31174995cec18a639084e58d0a63bafeeeeb",
+    "docs/reviews/lhs_pressure_inventory_20261104/test_output_contract.py": "4490d46fa5d1ca0243e215eee8bd5f3c98e5005f9ae6c77079b71f675d483648",
+    "scripts/lhs_pressure_record.py": "34eb74142884489505590501840ccc6423a014a508989c82f135020146283ad3"
+  },
+  "source_unchanged_during_tests": true,
+  "results": [
+    {
+      "name": "test_pressure_inventory_py311_serial",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-B",
+        "/workspace/nonrint-1104/lhs/docs/reviews/lhs_pressure_inventory_20261104/test_pressure_inventory.py"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 0.271195,
+      "python": "Python 3.11.17",
+      "log": "test_pressure_inventory_py311_serial.log",
+      "sha256": "7b904d976d2c29ed45ae6daf0589bbaee6d6f337a192468c893e705c3837fd37"
+    },
+    {
+      "name": "test_output_contract_py311",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-B",
+        "/workspace/nonrint-1104/lhs/docs/reviews/lhs_pressure_inventory_20261104/test_output_contract.py"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 2.497279,
+      "python": "Python 3.11.17",
+      "log": "test_output_contract_py311.log",
+      "sha256": "0b8ca6921d57aa671f478f63ee0d68891c5506b25d70df87e7f97c368e308208"
+    },
+    {
+      "name": "test_pressure_inventory_py38",
+      "command": [
+        "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin/python3.8",
+        "-I",
+        "-B",
+        "/workspace/nonrint-1104/lhs/docs/reviews/lhs_pressure_inventory_20261104/test_pressure_inventory.py"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 1.70733,
+      "python": "Python 3.8.20",
+      "log": "test_pressure_inventory_py38.log",
+      "sha256": "1c4daf2eb2cde05e8de0c8bd9c8a8dd3c1a273e1a20970d6aaf071c7d9502438"
+    },
+    {
+      "name": "test_output_contract_py38",
+      "command": [
+        "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin/python3.8",
+        "-I",
+        "-B",
+        "/workspace/nonrint-1104/lhs/docs/reviews/lhs_pressure_inventory_20261104/test_output_contract.py"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 2.566083,
+      "python": "Python 3.8.20",
+      "log": "test_output_contract_py38.log",
+      "sha256": "20e5033242ced66d0199c61b7bc6a36135cf085e2367f0834e5a3ffc5e41db85"
+    }
+  ],
+  "scope": "Cloud synthetic filesystem fixtures, mocked stdout and child exit, fake-interpreter shell; existing wrong-host CLI refuses before opening research roots; no actual ibb/WSL execution and no shared full gate.",
+  "initial_attempt": "direct_runs_initial.json",
+  "diagnostic": "audit_failure_diagnostic.log",
+  "initial_failure_note": "Initial concurrent run: existing no-write audit test expected inventory rc0 but received rc2. Original failed assertion did not record per-file reason. Focused diagnostic and one serial full suite rerun follow; cause not established, no production or test source change."
+}

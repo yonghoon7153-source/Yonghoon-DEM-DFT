@@ -1,0 +1,20 @@
+--- pressure_inventory.sh
++++ shell_fallback.sh
+@@ -2,7 +2,7 @@
+ # Inventory only. Run as a file: sh pressure_inventory.sh ibb|wsl
+ # No heredoc (shells can spill large heredocs to temporary files).
+ # Python isolated mode and -B prevent environment imports and bytecode writes.
+-exec python3 -I -B -c '
++python3 -I -B -c '
+ import errno
+ import io
+ import json
+@@ -285,3 +285,8 @@
+     # from being flushed again during interpreter shutdown. This is a CLI.
+     os._exit(main(sys.argv[1:]))
+ ' "$@" 2>/dev/null
++rc=$?
++case "$rc" in
++  0|2) exit "$rc" ;;
++  *) printf '%s\n' '{"schema":"lhs_pressure_inventory/v1","status":"NOT_ESTABLISHED","rc":2,"reason":"RUNTIME_ERROR"}' ; exit 2 ;;
++esac

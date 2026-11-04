@@ -1,0 +1,34 @@
+test_buffered_success_flushes_before_exit (__main__.OutputContract.test_buffered_success_flushes_before_exit) ... ok
+test_computation_error_one_failure_json (__main__.OutputContract.test_computation_error_one_failure_json) ... ok
+test_first_write_failure_no_second_output (__main__.OutputContract.test_first_write_failure_no_second_output) ... FAIL
+test_flush_failure_no_shutdown_reflush (__main__.OutputContract.test_flush_failure_no_shutdown_reflush) ... ok
+test_normal_exactly_one_json_and_zero (__main__.OutputContract.test_normal_exactly_one_json_and_zero) ... ok
+test_partial_write_no_second_output (__main__.OutputContract.test_partial_write_no_second_output) ... FAIL
+test_persistent_failure_nonzero_no_output (__main__.OutputContract.test_persistent_failure_nonzero_no_output) ... ok
+test_serialization_error_one_failure_json (__main__.OutputContract.test_serialization_error_one_failure_json) ... ok
+test_shell_partial_error_no_fallback (__main__.OutputContract.test_shell_partial_error_no_fallback) ... ok
+test_shell_signal_partial_no_fallback (__main__.OutputContract.test_shell_signal_partial_no_fallback) ... ok
+test_shell_start_other_error_no_fallback (__main__.OutputContract.test_shell_start_other_error_no_fallback) ... ok
+test_shell_start_rc2_no_fallback (__main__.OutputContract.test_shell_start_rc2_no_fallback) ... ok
+test_short_write_rejected_without_retry (__main__.OutputContract.test_short_write_rejected_without_retry) ... ok
+
+======================================================================
+FAIL: test_first_write_failure_no_second_output (__main__.OutputContract.test_first_write_failure_no_second_output)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/lhs/docs/reviews/lhs_pressure_inventory_20261104/test_output_contract.py", line 109, in test_first_write_failure_no_second_output
+    self.assertEqual(p.stdout, b'')
+AssertionError: b'{"status": "NOT_ESTABLISHED", "rc": 2}\n' != b''
+
+======================================================================
+FAIL: test_partial_write_no_second_output (__main__.OutputContract.test_partial_write_no_second_output)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/lhs/docs/reviews/lhs_pressure_inventory_20261104/test_output_contract.py", line 114, in test_partial_write_no_second_output
+    self.assertEqual(p.stdout, PREFIX.encode())
+AssertionError: b'{"probe{"status": "NOT_ESTABLISHED", "rc": 2}\n' != b'{"probe'
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.408s
+
+FAILED (failures=2)

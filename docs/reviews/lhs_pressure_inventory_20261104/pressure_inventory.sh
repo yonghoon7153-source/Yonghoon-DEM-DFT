@@ -2,7 +2,7 @@
 # Inventory only. Run as a file: sh pressure_inventory.sh ibb|wsl
 # No heredoc (shells can spill large heredocs to temporary files).
 # Python isolated mode and -B prevent environment imports and bytecode writes.
-python3 -I -B -c '
+exec python3 -I -B -c '
 import errno
 import io
 import json
@@ -264,18 +264,24 @@ def main(argv):
             result = dict(failure, reason="IDENTITY_REFUSED")
         else:
             result = inventory(argv[0], ROOTS)
-        print(json.dumps(result, ensure_ascii=True, separators=(",", ":")))
-        return result["rc"]
+        payload = json.dumps(result, ensure_ascii=True, separators=(",", ":")) + "\n"
+        rc = result["rc"]
     except BaseException:
-        print(json.dumps(dict(failure, reason="INVENTORY_ERROR"), separators=(",", ":")))
+        payload = json.dumps(dict(failure, reason="INVENTORY_ERROR"), separators=(",", ":")) + "\n"
+        rc = 2
+    # Once output starts, do not turn a write/flush error into a second JSON.
+    # A single write is not atomic; the caller must also require process rc 0.
+    try:
+        if sys.stdout.write(payload) != len(payload):
+            return 2
+        sys.stdout.flush()
+    except BaseException:
         return 2
+    return rc
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    # main flushes successful output. Immediate exit prevents a failed buffer
+    # from being flushed again during interpreter shutdown. This is a CLI.
+    os._exit(main(sys.argv[1:]))
 ' "$@" 2>/dev/null
-rc=$?
-case "$rc" in
-  0|2) exit "$rc" ;;
-  *) printf '%s\n' '{"schema":"lhs_pressure_inventory/v1","status":"NOT_ESTABLISHED","rc":2,"reason":"RUNTIME_ERROR"}' ; exit 2 ;;
-esac

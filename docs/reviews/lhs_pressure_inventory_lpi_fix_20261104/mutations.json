@@ -1,0 +1,81 @@
+{
+  "source_sha256": "2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634",
+  "test_sha256": "4490d46fa5d1ca0243e215eee8bd5f3c98e5005f9ae6c77079b71f675d483648",
+  "mutations": [
+    {
+      "name": "output_retry",
+      "mutant_sha256": "1687898dd9f0162b72b46b9727020723cb31de203139deb3b5c9d7b3416ec344",
+      "patch_sha256": "bcd3082427d08faf763cafa2deac4fee6f31518489207b39ff91a43737771881",
+      "rc": 1,
+      "failures": [
+        "test_first_write_failure_no_second_output",
+        "test_partial_write_no_second_output"
+      ],
+      "log": "output_retry.log",
+      "log_sha256": "f8a11370d53c899ad0976b60b07bf0b28814e2c89f008588364a25d0fa69f39d",
+      "elapsed_seconds": 0.50784,
+      "errors": []
+    },
+    {
+      "name": "missing_flush",
+      "mutant_sha256": "8f58215f0d0d22a5dc4c22a2c4691ff464f66ecc57fe8aa07e2750583568552c",
+      "patch_sha256": "48010545afec4f071b9aca522ee5fc3383b853c4ffd8fc1a39afd487c29540dd",
+      "rc": 1,
+      "failures": [
+        "test_flush_failure_no_shutdown_reflush"
+      ],
+      "log": "missing_flush.log",
+      "log_sha256": "9dadc4aa3558ae50f248f79b664b7592346693204c52d00e7f6d2e72b9748be0",
+      "elapsed_seconds": 0.496562,
+      "errors": [
+        "test_buffered_success_flushes_before_exit"
+      ]
+    },
+    {
+      "name": "shutdown_reflush",
+      "mutant_sha256": "867e291b8733a76a26a8b53ad30a02e1d6ce3b3ffe3701af9dde04e0fbf29e30",
+      "patch_sha256": "89fccc6f5556e3e78bc71c7c728e20e51df9f3e077ed523120f08203890b2637",
+      "rc": 1,
+      "failures": [
+        "test_flush_failure_no_shutdown_reflush"
+      ],
+      "log": "shutdown_reflush.log",
+      "log_sha256": "b6f547b959565db05edec36191a6e72209c7807c3d31659d6204ce6ca2969478",
+      "elapsed_seconds": 0.464645,
+      "errors": []
+    },
+    {
+      "name": "short_write_accepted",
+      "mutant_sha256": "64f5ab92c9484cff2be89d191c842423f7e1edd4f40fdc355e2c56337fa20274",
+      "patch_sha256": "00f9cf40826170690dbaa4b0de3ed31319d696a54221427fa7cb940180fea544",
+      "rc": 1,
+      "failures": [
+        "test_short_write_rejected_without_retry"
+      ],
+      "log": "short_write_accepted.log",
+      "log_sha256": "c25732c3e91d4bf75c37d0753fa02a4bdbe78effd55851ab82f17fa0a2b49318",
+      "elapsed_seconds": 0.445826,
+      "errors": []
+    },
+    {
+      "name": "shell_fallback",
+      "mutant_sha256": "fb97722d28e22139a45cf03fba7b43775999bddad33e2bac61624f23df0b6f07",
+      "patch_sha256": "62e428643c4a1cf570db780b5fce053ae7c7bc21712d0fec49383d25e9ab88cc",
+      "rc": 1,
+      "failures": [
+        "test_shell_partial_error_no_fallback",
+        "test_shell_signal_partial_no_fallback",
+        "test_shell_start_other_error_no_fallback"
+      ],
+      "log": "shell_fallback.log",
+      "log_sha256": "6c6c9d3fbe66de0752257f46883f3ddd5ec124d7714089c6319da54eafb042a1",
+      "elapsed_seconds": 0.539033,
+      "errors": []
+    }
+  ],
+  "detected": 5,
+  "attempted": 5,
+  "non_main_function_class_ast_unchanged": 14,
+  "b7_file_unchanged": true,
+  "scope": "Synthetic faults and guarded-code reversions only; mutated commands never run against actual inventory paths."
+}
