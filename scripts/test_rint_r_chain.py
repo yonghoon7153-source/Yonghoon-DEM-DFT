@@ -11079,7 +11079,7 @@ def t_PD12u():
     side_only3 = root / 'side3' / 'attempt_3.rejected.json'          # ★ 11-02 PC7 변이 보강 (G04) — 옆 거부 기록 파일 = 결과 줄과 무관하게 이 함수 몫 아님
     side_only3.parent.mkdir(parents=True)
     side_only3.write_text('{}', encoding='utf-8')
-    def al07(tag, rec=None, folder=None, sha=None, code='OUTDIR_NOT_EMPTY', trace=None, link=False):
+    def al07(tag, rec=None, folder=None, sha=None, code='OUTDIR_NOT_EMPTY', trace=None, link=False, status='rejected', rec_over=None):
         """★ 11-04 PC8-01 — AL07 남의 폴더 (attempt.json 없음 · 옛 파일 하나 · trace = 사슬 흔적) + 옆 거부 기록 (기본 = 사슬이 쓰는 꼴 · n 1 ·
         OUTDIR_NOT_EMPTY) + 그 번호의 결과 줄 (rejected · 폴더 = 옆 기록 · 요약 sha = 옆 기록 · 멈춤 code) → (원장 상태, 찾은 폴더)."""
         p = root / tag / 'attempt_1'
@@ -11098,6 +11098,8 @@ def t_PD12u():
         sp = root / tag / 'attempt_1.rejected.json'
         body = rec if rec is not None else {'schema': 'rint-r-rejected-v1', 'n': 1, 'code': code, 'cause': '옛 폴더 (시험)', 'ledger_commit': 'a' * 40,
                                             'utc': '2026-11-04T00:00:00Z'}
+        if rec_over:
+            body = dict(body, **rec_over)
         txt = body if isinstance(body, str) else json.dumps(body)
         if link:
             real = root / tag / 'real_rejected.json'
@@ -11105,7 +11107,7 @@ def t_PD12u():
             sp.symlink_to(real)
         else:
             sp.write_text(txt, encoding='utf-8')
-        r = {'status': 'rejected', 'side': 'pre', 'stop': {'code': code, 'run': None, 'reason': None}, 'folder': folder or sp.name,
+        r = {'status': status, 'side': 'pre', 'stop': {'code': code, 'run': None, 'reason': None}, 'folder': folder or sp.name,
              'folder_sha256': sha or (tree_digest(real) if link else tree_digest(sp))}
         res_ = dict(st['results'])
         res_[1] = r
@@ -11126,11 +11128,17 @@ def t_PD12u():
                                                     'ledger_commit': 'a' * 40, 'utc': '2026-11-04T00:00:00Z'})),
            'al07_code': f(*al07('al07_code', code='MACHINE_NOT_ALLOWED')), 'al07_side_link': f(*al07('al07_link', link=True)),
            'al07_trace_groups': f(*al07('al07_groups', trace='groups')), 'al07_trace_post': f(*al07('al07_post', trace='post')),
-           'al07_trace_summary': f(*al07('al07_summary', trace='summary')), 'al07_trace_attempt_json': f(*al07('al07_aj', trace='attempt_json'))}
+           'al07_trace_summary': f(*al07('al07_summary', trace='summary')), 'al07_trace_attempt_json': f(*al07('al07_aj', trace='attempt_json')),
+           #  ★ 11-04 PC8-01 변이 보강 — 증거 칸 하나씩 (결과 줄 status · 거부 기록 schema · 칸 · 시작 커밋)
+           'al07_status_stopped': f(*al07('al07_stopped', status='stopped')),
+           'al07_record_schema': f(*al07('al07_schema', rec_over={'schema': 'rint-r-rejected-v0'})),
+           'al07_record_extra': f(*al07('al07_extra', rec_over={'note': 'x'})),
+           'al07_record_commit': f(*al07('al07_commit', rec_over={'ledger_commit': 'x' * 40}))}
     none_rows = ('same', 'rejected_side', 'side_file', 'side_file_stopped', 'not_in_ledger')
     reason_rows = ('target', 'machine', 'resume_of', 'no_attempt_json', 'extra_key', 'attempt_json_symlink', 'rejected_no_side', 'stopped_side',
                    'rejected_side_empty_record', 'al07_record_empty', 'al07_digest', 'al07_folder_attempt', 'al07_record_n', 'al07_code',
-                   'al07_side_link', 'al07_trace_groups', 'al07_trace_post', 'al07_trace_summary', 'al07_trace_attempt_json')
+                   'al07_side_link', 'al07_trace_groups', 'al07_trace_post', 'al07_trace_summary', 'al07_trace_attempt_json',
+                   'al07_status_stopped', 'al07_record_schema', 'al07_record_extra', 'al07_record_commit')
     ok = (all(got[k] is None for k in none_rows) and all(isinstance(got[k], str) and 'attempt_' in got[k] for k in reason_rows))
     return ok, {k: got[k] for k in none_rows + reason_rows if (got[k] is None) != (k in none_rows)}
 
