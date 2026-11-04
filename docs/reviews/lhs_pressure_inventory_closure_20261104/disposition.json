@@ -1,0 +1,39 @@
+{
+  "reviewed_pin": "edbe6eb176d22db574953d3e47d11969b353421b",
+  "command_sha256": "2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634",
+  "basis": "User-delivered independent Codex verdict and evidence, verified against reviewed pin; this implementation window does not self-verify closure.",
+  "external_dispositions": [
+    {
+      "id": "LPI-01",
+      "disposition": "eligible_for_scoped_closure",
+      "scope": "output and CLI termination error handling only"
+    },
+    {
+      "id": "LPI-02",
+      "disposition": "eligible_for_scoped_closure",
+      "scope": "documentation and prior counterexample preservation only",
+      "timing_risk_resolved": false
+    }
+  ],
+  "open_observations": [
+    {
+      "external_id": "OBS-AUDIT-01",
+      "proposed_ledger_alias": "LPI-A01",
+      "severity": "P3",
+      "status": "open",
+      "mechanism_reproduced_here": true,
+      "versions": [
+        "3.11.17",
+        "3.8.20"
+      ],
+      "historical_cause_proven": false,
+      "guard_changed": false
+    }
+  ],
+  "whole_gate": "HOLD",
+  "actual_execution_approved": false,
+  "deployment_approved": false,
+  "shared_ledger_changed": false,
+  "full_suites_rerun_here": false,
+  "source_unchanged": true
+}
