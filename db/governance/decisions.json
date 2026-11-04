@@ -10818,10 +10818,12 @@
    "supersedes": [],
    "amends": null,
    "evidence": [
+    "db/raw/li2s2_pre_do_review_2026_11_04/README.md (DO 전 독립 리뷰 셋 — P0 3 갈래 · P1 · P2 재현 → a5666b7c 고침 · 카드 v7 · 리뷰어 스크립트 재실행 모두 막힘)",
+    "db/raw/li2s2_do_mutation_2026_11_04/ (깨기 __MUT__)",
+    "tools/ionic/melt_quench_uma.py (cd45aa850f3f276a · selftest 218/218 · Windows 흉내도 218)",
+    "tools/ionic/li2s2_stage1_runner.py (selftest 99/99 Linux — 진짜 판독 · 판정 함수 · 진짜 프로세스 그룹 · 리뷰어 반례 · Windows 는 POSIX 전용 3 개를 건너뜀)",
     "kb/reviews/codex_DN_reply_li2s2_dm_fixes_2026_11_04.md (NO-GO · DM P0 두 건 해제 · P1 1 · P2 1 → 091689c2 고침 · 카드 v6)",
-    "db/raw/li2s2_dn_mutation_2026_11_04/ (깨기 __MUT__)",
-    "tools/ionic/melt_quench_uma.py (ebaff2f3d2237ac8 · selftest 212/212)",
-    "tools/ionic/li2s2_stage1_runner.py (selftest 83/83 Linux — 진짜 판독 함수 · 진짜 판정 함수로 만든 반례 · 진짜 프로세스 그룹)",
+    "db/raw/li2s2_dn_mutation_2026_11_04/ (DN 판 174 — 091689c2 에서 144/174 빨강 · 초록 0 일 때 멈춤 · DO 판 222 에 그대로 들어감)",
     "kb/reviews/codex_DM_reply_li2s2_dl_fixes_2026_11_04.md (NO-GO · P0 2 → 206d9d52 · 3d97d145 고침 · 카드 v5)",
     "db/raw/li2s2_dm_mutation_2026_11_04/ (깨기 165 / 165 빨강 — 본 판 163 + 시험 구멍 둘 고친 뒤 다시 빨강)",
     "kb/reviews/codex_DL_reply_li2s2_dk_fixes_2026_11_04.md (NO-GO · P0 1 · P1 2 → cafc9e99 고침 · 카드 v4)",
@@ -10908,7 +10910,13 @@
      "at": "2026-11-04",
      "state": "proposed",
      "by": "agent",
-     "note": "회신 DN NO-GO (DM P0 두 건 해제 · P1 1 · P2 1) → 고침 (완료 판단 필드의 타입 오류 = 해석할 수 없는 기록 · NUL 꼬리 문구 · 카드 v6) · 깨기 __MUT__ · Codex DO 대기"
+     "note": "회신 DN NO-GO (DM P0 두 건 해제 · P1 1 · P2 1) → 고침 (완료 판단 필드의 타입 오류 = 해석할 수 없는 기록 · NUL 꼬리 문구 · 카드 v6) · 깨기 DN 판 144/174 (멈춤 · DO 판에 포함) · Codex DO 대기"
+    },
+    {
+     "at": "2026-11-04",
+     "state": "proposed",
+     "by": "agent",
+     "note": "DO 전 독립 리뷰 셋 (사용자 'codex go 받을 수 있게 확실히') → P0 3 갈래 · P1 · P2 고침 (a5666b7c · 카드 v7) · 깨기 __MUT__ · Codex DO 대기"
     }
    ]
   },

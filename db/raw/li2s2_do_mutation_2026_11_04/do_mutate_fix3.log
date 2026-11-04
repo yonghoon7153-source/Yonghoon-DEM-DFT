@@ -1,0 +1,5 @@
+변이 222 개 (DN 판 174 · 자리 옮김 10 · DO 48) · 자리 모두 한 번씩
+DO6_final_lexists_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 F2: final · result 자리에 디렉터리 · 깨진 링크가 있으면 그 이유로 보류한다 (MD 중 파일 목록 검사와 구별 · 사람이 보는 보류 이유 · 깨기 DO6 이 드러낸 시험 구멍) ({'x6': '완료 기록은 없는데 MD 중 기
+DO19_gate_error_as_false         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 P1 (소비자 t4): 판정 중 gate_check 예외는 False 가 아니라 모름 (None + 오류) 으로 적고, 그 판정 기록이 남은 도중 끊김 폴더는 보류 (재시도 아님) — 쓰는 쪽까지 ({'schedule_complete': F
+DO24_kind_melt_check_type_off    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid 판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = 
+끝: 빨강 3 / 3
