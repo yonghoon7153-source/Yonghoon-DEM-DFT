@@ -2854,3 +2854,63 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   작성기는 전경으로 띄운다. 판정기 · 작성기는 요청서의 단계 (c · d · e) 에서만 한 번씩 띄운다.
 - **번호:** 결과 기록은 §100 이다.
 - 이 승인은 E1-1–3 (identity · 읽기 경로 `add_repo` · fetch · 자료 개봉 · run) · C4-A / B · 설치 · 환경 재구축 · COMSOL 승인이 아니다.
+
+## §100 C4-E · E1-0b a2 결과 — RED 표와 일치 (9 실패 · 24 통과 · 원인 결속) · GREEN 71 passed · 판정기 · 수동 판정 모두 MATCH · 끝 기록 · 결과 검토 대기 (2026-11-04 KST · 덧붙임 — 위 §0–§99 는 그대로)
+
+- **대상 커밋:** 끝 기록 `421faa84` (push 뒤 원격과 일치).
+  - GREEN 증거 + launcher v6 `aedd1ce3` · RED 증거 `a8139f58` · 복사 다섯 + 착수 기록 (첫 시험 전 봉인) `334e17f4` · 승인 기록 §99 + 보존 규칙 `00c2e3d6` ·
+    착수 전 HEAD `5b283217`.
+  - 증거 `evidence/reil_c4e1_0b_a2_20261104/` — 23 파일 · 138,608 B (사본 셋 + 착수 기록 · RED 아홉 · GREEN 아홉 · 끝 기록). 모두 추적된다.
+- **시간 (2026-11-04 UTC):** 이름 확인 a 01:51:48 · 착수 기록 01:55:12 · RED 01:56:18.942–01:56:36.152 · 판정기 01:56:36 · v6 복사 01:58:16 · GREEN
+  01:58:31.062–01:58:54.404 · 판정기 01:59:00 · 이름 확인 e · 끝 기록 02:00:05 — 착수 기록부터 끝 기록까지 293 s (a 부터 497 s · 배정 2 h). 커밋 · push · 문서는
+  끝 기록 뒤다. 재시도 · 예산 변경 0.
+- **RED `01_red_e1_0b` (launcher v5 `2269d775…` · 대조 v8 `49d3fa36…`):**
+
+  | 항목 | 결과 |
+  |---|---|
+  | 실행기 | started · pytest rc 1 · timeout 없음 · 자식 16.73 s · 정리 0.001 s (`cleanup.status` empty · `deadline_hit` false · `emergency` false · 오류 0) · problems · end_problems · errors 0 · runner_ok true · 외곽 반환 파일 `1\n` · stderr 0 B |
+  | 기록 | HEAD 시작 = 끝 = `334e17f4` · porcelain rc 0 (시작 · 끝 모두 실행기 자신의 새 기록 파일만) · 원천 해시 시작 = 끝 (대상 14 · launcher 행 = v5) |
+  | 마지막 줄 | `9 failed, 24 passed in 13.89s` (warning 없음) · 수집 오류 · `INTERNALERROR` · 중단 0 · `UNEXPECTED_RED_CAUSE` 0 |
+  | nodeid 집합 | `FAILED` = 표의 9 · `PASSED` = 목록의 24 (누락 · 추가 · 중복 없음) · `FAILURES` 절의 실패 절 머리줄 = 표의 아홉 |
+  | 아홉 모두 표와 같음 | 첫 traceback 항목 (파일 경로 + 전체 시험명) · 연쇄 예외 없음 · 예외 블록 하나 · 최종 예외 종류 · 메시지 (정확히 7 · 접두 2). 첫 항목 줄 l14 465 · l23 712 · l25 754 · l28 902 · l29 951 · l30 993 · l31 1004 · l32 1035 · l33 1072 (예측과 같다 · 판정 아님) |
+  | 판정기 | `01_red_e1_0b.judge.json` (`e2f0f036…` · 12,484 B) — verdict MATCH · 항목 76 · 거짓 0 (입력 결속 `red.table_bound` 참) · 짧은 요약의 그 밖 줄 0 |
+  | 수동 판정 | MATCH (§4-3 의 같은 위치를 직접 읽음) — 판정기와 같다 |
+
+  - 지난 시도 (§92) 에서 표와 달랐던 l33 은 이번에 1072 줄 `AssertionError: ('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])` 로 표와 같았다 (대조 v8 의
+    `post()` 가 `extra=t.extra` 등을 넘기는 정정 · E1_0B_RESULT_N1).
+- **GREEN `02_green_e1_0b` (launcher v6 `2c707123…` · 62,639 B · 복사 직후 sha 대조 일치):**
+
+  | 항목 | 결과 |
+  |---|---|
+  | 실행기 | started · pytest rc 0 · timeout 없음 · 자식 23.252 s · 정리 0.002 s (empty · `deadline_hit` false · `emergency` false · 오류 0) · problems · end_problems · errors 0 · runner_ok true · 외곽 반환 파일 `0\n` · stderr 0 B |
+  | 기록 | HEAD 시작 = 끝 = `a8139f58` · porcelain rc 0 · 시작 · 끝 모두 ` M bms-balancing/scripts/reil_c4e1_launch.py` (v6 복사본 — 절차대로 GREEN 뒤 d 커밋에 넣음) + 실행기 자신의 새 기록 파일 · 원천 해시 시작 = 끝 (RED 와 다른 행은 launcher 하나) |
+  | 마지막 줄 | `71 passed in 22.54s` (warning 없음) · `FAILURES` 절 없음 · `FAILED` · `ERROR` 줄 0 · 수집 오류 · `INTERNALERROR` · 중단 0 |
+  | nodeid 집합 | `PASSED` 71 = 봉인된 네 파일의 최상위 `test_*` (21 · 6 · 33 · 11 · 파일마다 meta `source_end` 와 결속) · 짧은 요약 절 하나 |
+  | 판정기 | `02_green_e1_0b.judge.json` (`e9a8a0b0…` · 4,559 B) — verdict MATCH · 항목 20 · 거짓 0 (`green.files_bound` 참) |
+  | 수동 판정 | MATCH — 판정기와 같다 |
+
+  - 참고 (판정 조건 아님 · 요청서 §4-3 의 GREEN 단락 · 선택 A): GREEN stdout 에 `UNEXPECTED_RED_CAUSE` 문자열은 0 건이었다. 이 수를 판정에 쓰지 않았고,
+    선택 A 의 범위 (GREEN 전역 표지 검사 없음) 는 그대로다.
+- **판정: RED · GREEN 모두 일치 → 멈춤 없이 e 까지 했다.** 요청서 §4-1 의 a–e 를 순서대로 한 번씩 했다. 판정기는 c · d 에서 외곽 반환 파일 뒤 한 번씩, 작성기는
+  e 에서 한 번 띄웠다.
+- **기록 · 자원:** `00_start.txt` (`38650a37…` · 1,895 B · UTC · 디스크 26,056,953,856 B · sha 열둘 · Git 없음) · `03_end.json` (`8a82fe6e…` · 2,436 B · 고정
+  작성기 `2f316acc…` · 02:00:05Z · 복사본 여섯 sha = 고정본 · 두 단계의 runner_ok true · 외곽 반환 1 / 0 · 판정 MATCH / MATCH · 디스크 26,028,994,560 B). 자식
+  최대 RSS RED 48,652 · GREEN 63,048 KiB. 디스크 여유 RED 26,056,769,536 → 26,046,140,416 · GREEN 26,045,820,928 → 26,029,281,280 B. settle 의 좀비 (RED
+  [1235, 1319] · GREEN [1956, 2042]) 는 회수 목록과 같다. 커밋 전 비밀 검사 · URL 계정 형태 · 50 MB 초과는 b · c · d · e 모두 0.
+- **절차 Git 이름 확인:** a (01:51:48Z · §99) · e (02:00:05Z · `03_end.json` 에 이름만) 모두 허용 목록 밖 0. b · c · d · e 의 절차 git (add · commit · fetch ·
+  push) 은 같은 줄에서 확인 뒤에만 실행했다.
+  - **밝힐 것 — 명령 문자열의 차이 (a 의 커밋 줄 하나):** `00c2e3d6` 의 커밋 줄은 고정 명령에서 `print(json.dumps(…))` 를 뺀 변형 (같은 이름 · 같은 정규식 ·
+    같은 반환 규칙) 을 `<확인>` 으로 썼다. 판단은 바로 앞 01:51:48Z 의 고정 명령 (§99) 과 같지만 명령 문자열은 고정본과 다르다. b 부터는 고정 명령 그대로
+    썼다 (push 줄은 그 출력을 화면에 내지 않았다 — 명령 · 반환은 같다).
+- **도구 실행 방식:** GREEN 명령 줄은 셸 도구의 배경 실행으로 띄우고 끝 알림 뒤 판정기를 전경으로 띄웠다. RED · 판정기 · 작성기는 전경. GREEN 이 도는 동안
+  저장소에 쓰지 않았다 (지난 결과 기록 · 발송문 읽기만).
+- **저장소의 지금 상태 (GREEN 상태):** `tests/test_reil_c4e1_launch.py` = 대조 v8 · `tests/test_reil_c4e1_runner.py` = 실행기 대조 v5 ·
+  `scripts/reil_c4e1_launch.py` = launcher v6 `2c707123…`.
+- **밝힐 것:**
+  1. 이번 관측은 봉인된 대조 안 (tmp fixture · 가짜 자식) 의 E1-0b 범위다. FUTURE-01 (fetch env · 설정 원천 사전 · 사후 검사) 과 운영 정리 정책 (공통 기한 ·
+     관측 시작 규칙) 의 GREEN 이 이 범위에서 관측됐다. 실제 REIL 저장소의 identity · 읽기 경로 · fetch · 자료 개봉 · run (E1-1–3) 은 0 회다.
+  2. §99 의 승인은 이번 한 번의 a–e 로 썼다 (재시도 0).
+  3. 이번 판정기 · 작성기 실행은 승인된 단계 (c · d · e) 의 고정본 실행이다. §95 의 작성자 확인 실행 (판정기 초안 8 회 · 작성기 초안 2 회 · 스크래치) 은
+     이번 근거가 아니다 — 이번 a2 의 근거는 위 증거 23 파일이다.
+- **다음:** 결과 검토 발송문 `docs/REIL_C4E1_0B_A2_RESULT_REVIEW_SEND_20261104.md` → 사용자 발송 결정 → 회신 → (수용되면) E1-1 이후의 범위 · 승인 요청 … 각각
+  별도 사용자 결정이다. 이 기록은 어느 단계의 실행 승인도 아니다. E1-1–3 · C4-A / B · COMSOL 미승인.
