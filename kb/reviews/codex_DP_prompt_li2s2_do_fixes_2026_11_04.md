@@ -39,9 +39,9 @@ DO 가 닫힘으로 본 항목 (DN P1 · P2 · 실시간 첫 시드 fail 보존 
 - `git diff 802290db __BASE__ -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
 - 카드 `개정_DO_고침_v8_2026_11_04` · `개정_DP_전_리뷰_v9_2026_11_04` (규칙 · 못 하는 것) — 결과 0 건 · 카드 값은 안 바뀜
 - 리뷰 둘의 지적과 처리: `db/raw/li2s2_pre_dp_review_2026_11_04/README.md`
-- 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 231) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ __RUN_N__ · Linux)
-  - Windows 에서는 러너의 POSIX 전용 5 개를 건너뛴다 (진짜 프로세스 그룹 2 · 띄우는 순간 신호 1 · 자식 신호 마스크 2) → __WIN_N__ 이 맞다. 드라이버는 그대로 231.
-- 깨기 (변이) **__MUT__** — DO 판 222 개 · 자리가 바뀐 8 개 (K14 · K28 · L12 · L13 · DO43 · DO23 · DO47 · R4) 를 옮기고 DP 자리 65 개를 더했다 (287). `db/raw/li2s2_dp_mutation_2026_11_04/`
+- 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 232) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 113 · Linux)
+  - Windows 에서는 러너의 POSIX 전용 5 개를 건너뛴다 (진짜 프로세스 그룹 2 · 띄우는 순간 신호 1 · 자식 신호 마스크 2) → 108 이 맞다. 드라이버는 그대로 232.
+- 깨기 (변이) **287 / 287 빨강 (전체 6eb03a10 빨강 264 · 무효 20 (주석 중간 자리 — 하네스 고침) · 초록 3 (DP18 · DP67 · DP68 — 시험 보강) → c8e7f1fc 에서 그 23 개 23 / 23)** — DO 판 222 개 · 자리가 바뀐 8 개 (K14 · K28 · L12 · L13 · DO43 · DO23 · DO47 · R4) 를 옮기고 DP 자리 65 개를 더했다 (287). `db/raw/li2s2_dp_mutation_2026_11_04/` (전체 실행 기록 · 고친 뒤 다시 돌린 것 · 깨기가 드러낸 시험 구멍 셋 — DP18 · DP67 · DP68)
 
 ## 2. 한 것
 
@@ -79,7 +79,7 @@ DO 가 닫힘으로 본 항목 (DN P1 · P2 · 실시간 첫 시드 fail 보존 
 
 **인터페이스가 바뀐 곳**
 - 드라이버: `run_kind_detail` (근거에 상태 · closes_system) · `MELT_OBSERVED_KEYS` · `VERDICT_SHAPE` · `_verdict_shape_problem` · `_summary_failed` · `_summary_write_or_drop` · `_stage1_summary_core` · `stage1_verdict` 반환 `written: False` (임시 파일이 남은 폴더).
-- 러너: `_loads_strict` · `_held` · `HELD_SIGNALS` · `_child_restore_mask` · `_critical` · `_PersistFailed` · `_leftover_tmps` · `ack_declaration_problems(…, observed=None)` (원소에 `kind`) · `retry_eligibility` 반환 `observed` (kind melt · verdict) · 고정값 `EXPECTED_DRIVER_SHA16 = __DRV_SHA__` (`EXPECTED_VALUES_SHA16` 그대로).
+- 러너: `_loads_strict` · `_held` · `HELD_SIGNALS` · `_child_restore_mask` · `_critical` · `_PersistFailed` · `_leftover_tmps` · `ack_declaration_problems(…, observed=None)` (원소에 `kind`) · `retry_eligibility` 반환 `observed` (kind melt · verdict) · 고정값 `EXPECTED_DRIVER_SHA16 = 15e9a718cefb856a` (`EXPECTED_VALUES_SHA16` 그대로).
 
 ## 3. 이것을 특히 봐 달라
 

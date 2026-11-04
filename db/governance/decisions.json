@@ -10819,7 +10819,7 @@
    "amends": null,
    "evidence": [
     "kb/reviews/codex_DO_reply_li2s2_dn_fixes_2026_11_04.md (DO NO-GO · P0 1 · P1 2 · P2 2) → 고침 115aa9eb · 카드 v8",
-    "db/raw/li2s2_dp_mutation_2026_11_04/ (깨기 __MUT__)",
+    "db/raw/li2s2_dp_mutation_2026_11_04/ (깨기 287 / 287 빨강 (전체 6eb03a10 빨강 264 · 무효 20 (주석 중간 자리 — 하네스 고침) · 초록 3 (DP18 · DP67 · DP68 — 시험 보강) → c8e7f1fc 에서 그 23 개 23 / 23))",
     "tools/ionic/melt_quench_uma.py (0d945e790c7bb8b7 · selftest 223/223)",
     "tools/ionic/li2s2_stage1_runner.py (selftest 105/105 Linux — Windows 는 POSIX 전용 4 개를 건너뜀)",
     "db/raw/li2s2_pre_do_review_2026_11_04/README.md (DO 전 독립 리뷰 셋 — P0 3 갈래 · P1 · P2 재현 → a5666b7c 고침 · 카드 v7 · 리뷰어 스크립트 재실행 모두 막힘)",
@@ -10838,7 +10838,9 @@
     "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json §개정_정전_복구_v2_2026_11_03 (회신 DJ — 결과와 무관한 재시도 사유 · MD/FIRE 구분 · 증언 필드 · 정전 추가 예산)",
     "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json §개정_정전_복구_2026_11_03 (사용자 '2번으로 가자')",
     "kb/reviews/codex_DH_reply_li2s2_dg_fixes_2026_11_03.md · codex_DG_reply… · codex_DF_reply… (앞선 NO-GO 들)",
-    "db/properties/lpscl_smallcell_glass_track_closed_2026_10_30.json §6 (설계 초안)"
+    "db/properties/lpscl_smallcell_glass_track_closed_2026_10_30.json §6 (설계 초안)",
+    "db/raw/li2s2_pre_dp_review_2026_11_04/README.md (DP 발송 전 독립 리뷰 둘 · 지적과 처리)",
+    "카드 개정_DP_전_리뷰_v9_2026_11_04 (도구 c8e7f1fc · 드라이버 sha16 15e9a718cefb856a · 값 지문 086de59c484f9c32 그대로)"
    ],
    "reopen_criteria": [
     "없음 — 셀 키움 · 긴 런 · D3 · 다른 온도 · 다른 밀도는 새 카드",
@@ -10924,7 +10926,13 @@
      "at": "2026-11-04",
      "state": "proposed",
      "by": "agent",
-     "note": "회신 DO NO-GO (복구 때 본 녹음 fail 미보존 · 같은 열쇠 둘 · 장부 정규화 · 요약 예외 · 자식 신호 마스크) → 같은 꼴 전체 고침 (115aa9eb · 카드 v8) · 깨기 __MUT__ · Codex DP 대기"
+     "note": "회신 DO NO-GO (복구 때 본 녹음 fail 미보존 · 같은 열쇠 둘 · 장부 정규화 · 요약 예외 · 자식 신호 마스크) → 같은 꼴 전체 고침 (115aa9eb · 카드 v8) · 깨기 287 / 287 빨강 (전체 6eb03a10 빨강 264 · 무효 20 (주석 중간 자리 — 하네스 고침) · 초록 3 (DP18 · DP67 · DP68 — 시험 보강) → c8e7f1fc 에서 그 23 개 23 / 23) · Codex DP 대기"
+    },
+    {
+     "at": "2026-11-04",
+     "state": "proposed",
+     "by": "agent (위임 10-30)",
+     "note": "DP 발송 전 독립 리뷰 둘 (첫째 P0 1 · P1 2 · P2 2 · 둘째 P1 2 · P2 4 · 잔 항목) → 고침 (c8e7f1fc · 카드 v9 · selftest 232 · 113) · 깨기 287 / 287 빨강 (전체 6eb03a10 빨강 264 · 무효 20 (주석 중간 자리 — 하네스 고침) · 초록 3 (DP18 · DP67 · DP68 — 시험 보강) → c8e7f1fc 에서 그 23 개 23 / 23) · Codex DP 대기"
     }
    ]
   },
