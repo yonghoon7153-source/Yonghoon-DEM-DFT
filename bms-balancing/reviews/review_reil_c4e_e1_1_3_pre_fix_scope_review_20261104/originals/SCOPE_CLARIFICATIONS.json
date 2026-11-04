@@ -1,0 +1,33 @@
+{
+  "kind": "STATIC_SCOPE_CLARIFICATIONS",
+  "findings": [
+    {
+      "id": "E113_FIX_SCOPE_01",
+      "priority": "P1",
+      "input_line": 21,
+      "parent_finding": "E113_PRE_03",
+      "title": "종료 시각만으로 기한 내 반환 게시를 인정하지 않기",
+      "counterexample_static_only": "deadline=900, launcher exit=899, complete end/rc publication=901; current proposed published condition can accept late publication.",
+      "required": "launcher 종료, outer_end 작성 전 snapshot, 완전한 rc/end의 검증 완료 관측을 구분한다. 정상 수용은 동일 실행의 유효 반환을 기한 안에 확인했다는 근거에 묶는다. 기한 뒤 최초 관측은 사전 게시를 입증할 다른 근거가 없으면 late/unknown으로 차단한다. outer_end 내부 시각은 그 뒤 rc 게시 완료를 인증하지 않는다."
+    },
+    {
+      "id": "E113_FIX_SCOPE_02",
+      "priority": "P1",
+      "input_line": 21,
+      "parent_finding": "E113_PRE_03",
+      "title": "중단된 감시의 재진입과 지연 시작을 실패 상태에 결속하기",
+      "counterexample_static_only": "Interruption after watch link but before return leaves a complete watch; interruption after observing failure but before publication can leave none. A delayed wrapper can otherwise launch after start_missing.",
+      "required": "도구 중단=기록 부재 단정을 삭제한다. 완전한 watch는 보존·소비하고 새 끝 상태를 만들지 않는다. 부분 기록/게시 실패/불명 중단은 정상 재진입 근거가 아니다. 부재만으로 이전 실패가 없었다고 보지 않으며, 비종결 중단이 확인되는 경우에만 같은 원점/마감으로 재감시한다. 실제 launcher 착수 전 시작 창 만료·기존 실패·감시 소유권을 확인하고 시작 게시/착수와 감시 실패 확정의 경합 순서를 정의한다. launcher 자체 수정 요구는 아니다."
+    },
+    {
+      "id": "E113_FIX_SCOPE_03",
+      "priority": "P2",
+      "input_line": 23,
+      "parent_finding": "E113_PRE_05",
+      "title": "종결 기록의 쓰기 시도와 쓰기 성공 보장을 구분하기",
+      "counterexample_static_only": "Input errors can be collected, but a failed output create/write/publish still prevents a complete 06_end.json.",
+      "required": "06_end.json은 늘 쓴다를 항목별 오류를 모아 배타 생성을 시도하며, 기록 자체 실패 시 관측 가능한 도구 반환/오류와 부분 산출물을 보존하고 미완 처리로 정정한다. 삭제·자동 재시도·정상 판정 승격은 없다. 한 번 읽기는 동일 반환 버퍼에서 SHA/크기/본문을 만든다는 의미이며 변경 중인 원본의 원자 snapshot 보장이 아니다."
+    }
+  ],
+  "dynamic_counterexamples_executed": false
+}

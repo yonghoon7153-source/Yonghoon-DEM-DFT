@@ -1,0 +1,270 @@
+{
+  "kind": "REIL_E113_APPROVAL_PREREVIEW_DECISION",
+  "date": "2026-11-04",
+  "decision": "REVISION_REQUIRED_BEFORE_EXECUTION_APPROVAL",
+  "pin": "26a6c3a49b5c0a9044535ccdd62a8ffa5ed05cdd",
+  "attachments": [
+    {
+      "name": "REIL_C4E_E1_1_3_APPROVAL_REQUEST_20261104.md",
+      "bytes": 34402,
+      "sha256": "b7e5a5e67efa4974a6532e6c5aab32498424b0f0aacc4c9dc16e7ccfd4bcd727"
+    },
+    {
+      "name": "REIL_C4E_E1_1_3_PREREVIEW_SEND_20261104.md",
+      "bytes": 4640,
+      "sha256": "5a3293c93d4d212fd7d5b1893f6547da0ca1c2b6303ef0672f005801a45fbbe2"
+    }
+  ],
+  "closures": {
+    "P2_02": "CLOSED_STATIC_CD_FAILURE_BRANCH",
+    "P2_01": "RETAINED",
+    "E113_N1": "RETAINED",
+    "N2_F1_F2_F3": "PRIOR_SCOPE_WORDING_CLOSURES_RETAINED_NEW_IMPLEMENTATION_FINDINGS_BELOW",
+    "E1_0b_a2": "LIMITED_ACCEPTANCE_RETAINED",
+    "A2_PROC_01": "RETAINED"
+  },
+  "user_choice_provenance": {
+    "source": "Pinned status document section105",
+    "reported_text": "권고대로",
+    "reported_choices": [
+      "A",
+      "R1",
+      "P1",
+      "판정 A",
+      "공개 A",
+      "절차 Git 권장안"
+    ],
+    "scope": "Document draft direction only; stored author record, not independent export of remote user chat"
+  },
+  "findings": [
+    {
+      "id": "E113_PRE_01",
+      "priority": "P1",
+      "title": "봉인 명령의 실제 개행이 인수 목록을 끊음",
+      "locations": [
+        {
+          "file": "bms-balancing/docs/REIL_C4E_E1_1_3_APPROVAL_REQUEST_20261104.md",
+          "lines": [
+            118,
+            119,
+            120,
+            121,
+            122
+          ]
+        }
+      ],
+      "trigger": "b3를 지정된 문자 그대로 절대경로 치환 후 수행",
+      "consequence": "첫 줄 이후 경로가 sha256sum 인수가 아닌 별도 명령으로 해석되어 20항목 봉인이 성립하지 않음",
+      "required": "한 줄/명시적 줄 연속 등으로 정확 명령 재고정; 모든 20항목 포함과 실패 반환 보존; 받은 파일 실행 시도 금지"
+    },
+    {
+      "id": "E113_PRE_02",
+      "priority": "P1",
+      "title": "고정 run의 실제 8개 산출물과 판정기의 9개 요구 불일치",
+      "locations": [
+        {
+          "file": "bms-balancing/docs/REIL_C4E1_E113_JUDGE_DRAFT_20261104.py.txt",
+          "lines": [
+            36,
+            37,
+            163,
+            164
+          ]
+        },
+        {
+          "file": "bms-balancing/scripts/reil_c4e_run.py",
+          "lines": [
+            579,
+            613,
+            614,
+            615,
+            616,
+            617,
+            628,
+            825,
+            826
+          ]
+        },
+        {
+          "file": "bms-balancing/scripts/reil_c4_monitor.py",
+          "lines": [
+            375,
+            378,
+            385,
+            409
+          ]
+        }
+      ],
+      "trigger": "고정 run이 정상 완료",
+      "consequence": "run/SOURCES.json을 생성하지 않으므로 run.output_files가 거짓, 정상 run도 STOP",
+      "required": "고정 run 유지; 기대 집합 8개 및 요청서 9개 표기와 f 커밋 수 22→21 정정; SOURCES는 기존 입력 봉인으로 보존"
+    },
+    {
+      "id": "E113_PRE_03",
+      "priority": "P1",
+      "title": "기한 초과와 감시 실패가 후속 판정에 유지되지 않음",
+      "locations": [
+        {
+          "file": "bms-balancing/docs/REIL_C4E1_E113_OUTER_DRAFT_20261104.py.txt",
+          "lines": [
+            161,
+            171,
+            180,
+            196,
+            200,
+            201,
+            240
+          ]
+        },
+        {
+          "file": "bms-balancing/docs/REIL_C4E1_E113_JUDGE_DRAFT_20261104.py.txt",
+          "lines": [
+            89,
+            100,
+            101,
+            102,
+            115,
+            117
+          ]
+        },
+        {
+          "file": "bms-balancing/docs/REIL_C4E_E1_1_3_APPROVAL_REQUEST_20261104.md",
+          "lines": [
+            208,
+            209,
+            210,
+            211
+          ]
+        }
+      ],
+      "trigger": "기한 뒤 첫 poll에서 rc 파일 발견 또는 wait가 10을 반환한 뒤 c3 전에 정상 종료",
+      "consequence": "기한 뒤 published/rc0 또는 잔류0 이후 judge MATCH 가능; §6-1의 실패→STOP 미구현",
+      "required": "불변 기산점·절대기한·관측/반환·최초 감시 실패를 보존하고 판정기 필수 입력으로 결속; 뒤늦은 rc0가 실패를 해제하지 못하도록 구성"
+    },
+    {
+      "id": "E113_PRE_04",
+      "priority": "P2",
+      "title": "전체 6시간 기한과 기한 뒤 종결 절차의 충돌",
+      "locations": [
+        {
+          "file": "bms-balancing/docs/REIL_C4E_E1_1_3_APPROVAL_REQUEST_20261104.md",
+          "lines": [
+            298,
+            300,
+            301
+          ]
+        },
+        {
+          "file": "bms-balancing/docs/REIL_C4E1_E113_OUTER_DRAFT_20261104.py.txt",
+          "lines": [
+            130,
+            132,
+            175,
+            176,
+            200
+          ]
+        }
+      ],
+      "trigger": "전체 6시간 도달 또는 잔여 전체시간보다 긴 단계 시작",
+      "consequence": "6시간 뒤 잔류 처리·커밋·g를 수행하여 a→g≤6h 조건과 불일치; 단계 wait에 전체 마감 미연결",
+      "required": "전체 절대기한·중지/종결 reserve·단계 시작 조건 및 유효 감시 마감 관계를 고정. 관측 상한을 실제 반환 보장으로 표현하지 말고 초과 시 미완/실제 경계 보존"
+    },
+    {
+      "id": "E113_PRE_05",
+      "priority": "P2",
+      "title": "읽기 오류 때 실패 종결 증거가 완성되지 않음",
+      "locations": [
+        {
+          "file": "bms-balancing/docs/REIL_C4E1_E113_END_WRITER_DRAFT_20261104.py.txt",
+          "lines": [
+            33,
+            38,
+            39,
+            59,
+            116,
+            122
+          ]
+        },
+        {
+          "file": "bms-balancing/docs/REIL_C4E1_E113_OUTER_DRAFT_20261104.py.txt",
+          "lines": [
+            303,
+            311,
+            314,
+            316,
+            317
+          ]
+        }
+      ],
+      "trigger": "일반 outer_rc 파일을 읽지 못하거나 F3 복사 도중 파일 소실/I/O 오류",
+      "consequence": "writer는 보호 없는 재읽기에서 중단; freeze는 부분 사본만 남고 목록을 쓰지 못함",
+      "required": "동일 보호된 읽기에서 해시/본문/사유 구성; F3 파일별 성공·실패·부분 산출 보존; 목록 자체 실패도 도구 반환과 종결 기록에 연결. 자동 재시도·부분 삭제 금지"
+    },
+    {
+      "id": "E113_PRE_06",
+      "priority": "P2",
+      "title": "F3 고정 사본이 공개 검사 대상에서 빠짐",
+      "locations": [
+        {
+          "file": "bms-balancing/docs/REIL_C4E_E1_1_3_APPROVAL_REQUEST_20261104.md",
+          "lines": [
+            224,
+            225,
+            226,
+            227,
+            243,
+            245,
+            262,
+            263,
+            264,
+            265,
+            266
+          ]
+        },
+        {
+          "file": "bms-balancing/docs/REIL_C4E1_E113_OUTER_DRAFT_20261104.py.txt",
+          "lines": [
+            301,
+            302,
+            312,
+            314
+          ]
+        }
+      ],
+      "trigger": "F3로 frozen_05_run/run 사본을 만들어 공개 커밋",
+      "consequence": "검사는 ev/run만 대상이므로 실제 공개할 사본의 원자료 해시/확장자/합계 제한이 확인되지 않음",
+      "required": "실제 커밋할 고정 사본 바이트에 원자료 해시·확장자·개별/합계크기·비밀/URL 검사를 적용. 부적합 사본은 보존하되 공개 중지"
+    }
+  ],
+  "additional_schema_correction": {
+    "id": "E113_PRE_C1",
+    "file": "bms-balancing/docs/REIL_C4E1_E113_JUDGE_DRAFT_20261104.py.txt",
+    "line": 134,
+    "issue": "first_error key missing passes get(...) is None",
+    "required": "Require presence before accepting null",
+    "counted_as_separate_blocker": false
+  },
+  "readiness": {
+    "approval_request_accepted": false,
+    "exact_commands_ready": false,
+    "actual_execution_authorized_by_review": false,
+    "scope_choices_reopened": false,
+    "production_launcher_change_requested": false,
+    "retest_requested": false
+  },
+  "performed": {
+    "static_text_identity_review": true,
+    "AST_parse_only": 3,
+    "received_program_execution": 0,
+    "probe_execution": 0,
+    "tests": 0,
+    "signal_delivery": 0,
+    "identity_fetch_data_import_run": 0,
+    "COMSOL": 0,
+    "source_changes": 0,
+    "git_mutations": 0,
+    "external_transmission": 0
+  },
+  "numeric_review_budget_seconds": null,
+  "whole_work_elapsed_claim": null
+}
