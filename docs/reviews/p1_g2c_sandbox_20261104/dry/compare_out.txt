@@ -1,0 +1,12 @@
+N 200 A pairs 0 A(N-1) pairs 0 deltaMax>=0 True
+A2  common 0 only_A 0 only_x 0 orient 0 | pos 0/0 force 0/0 force_normal 0/0 force_tangential 0/0 torque 0/0 deltaMax 0/0 shear 0/0 contactArea 0/0 delta 0/0 contactPoint 0/0
+     max_rel 
+B   common 0 only_A 0 only_x 0 orient 0 | pos 0/0 force 0/0 force_normal 0/0 force_tangential 0/0 torque 0/0 deltaMax 0/0 shear 0/0 contactArea 0/0 delta 0/0 contactPoint 0/0
+     max_rel 
+B2  common 0 only_A 0 only_x 0 orient 0 | pos 0/0 force 0/0 force_normal 0/0 force_tangential 0/0 torque 0/0 deltaMax 0/0 shear 0/0 contactArea 0/0 delta 0/0 contactPoint 0/0
+     max_rel 
+C   common 0 only_A 0 only_x 0 orient 0 | pos 0/0 force 0/0 force_normal 0/0 force_tangential 0/0 torque 0/0 deltaMax 0/0 shear 0/0 contactArea 0/0 delta 0/0 contactPoint 0/0
+     max_rel 
+hist_vs_A_at_N A2 dm 0/0 sh 0/0 B dm 0/0 sh 0/0 B2 dm 0/0 sh 0/0 C dm 0/0 sh 0/0
+hist_vs_A_at_Nm1 A2 dm 0/0 sh 0/0 B dm 0/0 sh 0/0 B2 dm 0/0 sh 0/0 C dm 0/0 sh 0/0
+atoms A2 0/1220 differ B 0/1220 differ B2 0/1220 differ C 0/1220 differ

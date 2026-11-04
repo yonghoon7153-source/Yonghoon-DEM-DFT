@@ -1,0 +1,30 @@
+[P] 생산자 — 없는 AM_P 상의 coverage (실행 · 읽기만)
+  PASS  P1 deformed_coverage — 없는 AM_P = [0.0, 0.0] (분모 max(len(idx), 1) 의 자리채움) · AM_S = 값
+  PASS  P2 강체 geometric_coverage — 없는 AM_P = None (같은 상황의 짝은 N/A 로 싣는다)
+  PASS  P3 mpm3d coverage_fraction — 없는 AM_P = (0.0, 0, 0) (표면 복셀 0 개 = 분모 0 의 자리채움)
+[R] 자료 경로 — 등록 → GET /mpm-lab/data/<pid>
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  R1 경로가 payload 를 그대로 준다 (5/5 · 200)
+  PASS  R2 SBE a0 꼴 — particles[].type = AM_S 만 (AM_P 입자 0 개)
+  PASS  R3 그 payload 의 AM_P 칸 = 0.0 자리채움 (plastic · 도전재) · 강체 = None — 비교표가 받는 그대로
+[T] 비교표 — 정량 표 블록을 node 로 (실제 innerHTML)
+  PASS  T00 node 실행 · 블록 추출
+  PASS  T0 1저자 화면 값 재현 (focus · 이온 · 두께 · 기공 · SE 덮임 · CA 덮임 · 연결률)
+  PASS  T1a SDCP 꼴 (두 침대 AM_S 만) — AM_P 행이 없다 (옛 = 0.0000 · 0.0000 세 행)
+  PASS  T1b 그 경우 AM_S 행 셋은 값 그대로 (Hertz 65.70 · Tabor 86.60 · 도전재 13.10 / 13.50)
+  PASS  T1c 행을 조용히 숨기지 않는다 — 표 밖 알림에 "AM_P" · "입자 0" · "N/A"
+  PASS  T2a 07-18 꼴 (두 침대 AM_P 만) — AM_S 행 숨김 그대로 (회귀)
+  PASS  T2b 그 경우 AM_P 행 셋은 값 그대로 (Tabor 80.00)
+  PASS  T2c 그 경우도 알림 — "AM_S" · "입자 0"
+  PASS  T3a bimodal 둘 — 상 행 6 개 · 칸에 "—" 없음 (회귀)
+  PASS  T3b bimodal 둘 — 없는 상 알림 없음
+  PASS  T4a A bimodal ↔ B AM_S 만 — AM_P Tabor 행: A 62.00 · B "—" · Δ "—" (옛 = B 0.0000 · Δ −100.0%)
+  PASS  T4b 같은 경우 도전재덮임 AM_P: B "—" · Δ "—"
+  PASS  T4c 같은 경우 AM_S 행은 두 칸 값 (둘 다 AM_S 있음)
+  PASS  T4d 알림 — "—" 칸의 뜻 (AM_P · B · 입자 0)
+  PASS  T5 A AM_S 만 ↔ B bimodal — AM_P Hertz 행: A "—" · B 32.40 (옛 = A 0.0000)
+  PASS  T6 있는 상의 참 0 (AM_P 있음 · 도전재 무접촉) = 0.0000 그대로 (0 ≠ N/A)
+  PASS  T7 상 아닌 행 = 모든 경우에 같은 수
+
+23/23  ✓ 전부 통과

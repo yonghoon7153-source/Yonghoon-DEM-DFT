@@ -1,0 +1,19 @@
+[P] 생산자 — 없는 AM_P 상의 coverage (실행 · 읽기만)
+  PASS  P1 deformed_coverage — 없는 AM_P = [0.0, 0.0] (분모 max(len(idx), 1) 의 자리채움) · AM_S = 값
+  PASS  P2 강체 geometric_coverage — 없는 AM_P = None (같은 상황의 짝은 N/A 로 싣는다)
+  PASS  P3 mpm3d coverage_fraction — 없는 AM_P = (0.0, 0, 0) (표면 복셀 0 개 = 분모 0 의 자리채움)
+[R] 자료 경로 — 등록 → GET /mpm-lab/data/<pid>
+Traceback (most recent call last):
+  File "/home/user/wt_rr2req/webapp/test_mpm_lab_cmp_absent_phase.py", line 303, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/user/wt_rr2req/webapp/test_mpm_lab_cmp_absent_phase.py", line 291, in main
+    got = section_r(tmp)
+          ^^^^^^^^^^^^^^
+  File "/home/user/wt_rr2req/webapp/test_mpm_lab_cmp_absent_phase.py", line 144, in section_r
+    import app as A
+  File "/home/user/wt_rr2req/webapp/app.py", line 63, in <module>
+    import storage_sync
+  File "/home/user/wt_rr2req/webapp/storage_sync.py", line 17, in <module>
+    import requests
+ModuleNotFoundError: No module named 'requests'
