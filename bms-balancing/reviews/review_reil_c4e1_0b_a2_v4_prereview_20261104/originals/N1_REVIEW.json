@@ -1,0 +1,60 @@
+{
+  "kind": "REIL_A2_V4_N1_DOCUMENT_CONSISTENCY_REVIEW",
+  "date": "2026-11-04",
+  "pinned_commit": "5d87b57eebc63480a26021e1bbdb090d2cfefb4d",
+  "finding": "E1_0B_A2_N1",
+  "decision": "CLOSED_DOCUMENT_CONSISTENCY_ONLY",
+  "required_findings": [],
+  "operative_request_sha256": "ae413f965e890103db175ef261b05d6c49b26f9a53048abdab8c9b8d3b234840",
+  "judge_sha256": "3749b32edd3954fdfa4bfe92336d9eafaf2121b6275c9bd0b3584ece42dc60c4",
+  "evidence": [
+    {
+      "file": "REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "lines": "67-69, 336-339",
+      "finding": "Global UNEXPECTED_RED_CAUSE search explicitly applies to RED only. Source-end binding applies to both stages."
+    },
+    {
+      "file": "REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "lines": "345-356",
+      "finding": "The remaining unqualified phrase 'stdout anywhere' is within the explicitly RED-only subsection and does not impose a GREEN ban."
+    },
+    {
+      "file": "REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "lines": "400-405",
+      "finding": "GREEN global-marker absence is explicit. Five failing assertions break existing GREEN success conditions, but standalone marker input is not claimed to be rejected. A and B distinction is preserved."
+    },
+    {
+      "file": "REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "lines": "590-597, 619-624",
+      "finding": "Responsibility/continuity/limitation paragraphs repeat the RED-only rule and disclose the previous applicability mismatch."
+    },
+    {
+      "file": "REIL_C4E_E1_0B_PREREVIEW_SEND_v4_20261104.md",
+      "lines": "35-44",
+      "finding": "Sender gives the same RED-only scope and accurate A/B distinction. The old static counterexample now produces aligned manual/machine treatment rather than an alleged reject-all guarantee."
+    },
+    {
+      "file": "REIL_C4E1_0B_JUDGE_DRAFT_20261103.py.txt",
+      "lines": "213-220, 265-266, 275-296",
+      "finding": "Global marker check remains inside judge_red. Common and GREEN rules contain no such check, matching the revised request."
+    },
+    {
+      "file": "REIL_PREREQUISITES_STATUS_20261004.md",
+      "lines": "2748-2755, 2771-2775",
+      "finding": "Latest appended ledger corrects the old scope rationale and records selected A. Preserved older history is not treated as the operative rule."
+    }
+  ],
+  "static_counterexample_retained": {
+    "description": "With all other GREEN conditions satisfied, one standalone non-header UNEXPECTED_RED_CAUSE line before the first section is not rejected solely for that marker under A; B would reject it.",
+    "real_stdout_observed": false,
+    "synthetic_probe_generated_or_executed": false,
+    "now_document_code_mismatch": false
+  },
+  "limits": [
+    "This closes the N1 document-applicability mismatch, not functional correctness or execution approval.",
+    "Manual/machine agreement is not independent proof against all possible judge errors.",
+    "No received judge, writer, launcher, runner, fixture or tests were imported or executed.",
+    "Historical selection is reported by supplied ledger; this review does not independently authenticate user authorization."
+  ],
+  "reviewer_received_code_execution": 0
+}

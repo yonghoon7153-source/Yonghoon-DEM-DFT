@@ -1,0 +1,6 @@
+{
+  "sha": "5d87b57eebc63480a26021e1bbdb090d2cfefb4d",
+  "message": "REIL §97 — C4-E · E1-0b a2 정정 (사용자 채택 \"권고대로\" · A · (i) · 같은 경로): 승인 요청 같은 경로 세 번째 고쳐 쓰기 (UNEXPECTED_RED_CAUSE 는 RED 한정 · 정적 검사와 작성자 확인 실행을 나눔) · 재검토 발송문 v4 · 초안 실행 0\n\n- 승인 요청 (ae413f96… · 96,529 B): §4-3 의 엄격한 셋에 단계 (RED 만 둘 · RED · GREEN 하나) · GREEN 단락 아래 §96 회신 문구 그대로 (A 는 GREEN 전역 표지를 보지 않고 B 는 본다) · §1-1 / §1-3 머리를 대상 실행 0 과 작성자 확인 실행으로 나눔 · §8 의 24 · 25 · 26 · 27 · 29 · 30 · §9 · §10.\n- 초안 여섯 · 봉인 · 명령 · 기준 · 예산 그대로 (sha256 다시 계산 · 같음). 지난 요청서 바이트 775056… 은 396c8380 – 5cb3cc22 에 남음.\n- 판정기 · 작성기 · 실행기 · launcher 초안 · 시험 · Git fixture 실행 0.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_0157zrP6GFu6cJF5x8CwZaEm",
+  "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/5d87b57eebc63480a26021e1bbdb090d2cfefb4d",
+  "matches_start": true
+}

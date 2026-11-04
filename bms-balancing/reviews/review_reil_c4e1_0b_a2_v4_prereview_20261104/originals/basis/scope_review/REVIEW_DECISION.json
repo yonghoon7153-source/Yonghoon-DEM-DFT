@@ -1,0 +1,63 @@
+{
+  "kind": "REIL_E1_0B_A2_N1_N2_SCOPE_REVIEW",
+  "date": "2026-11-04",
+  "pinned_commit": "f62a3efda53eec48f5c457fa555be28720037a38",
+  "decision": "CORRECTION_DIRECTION_ACCEPTABLE_WITH_N1_RATIONALE_CLARIFICATION",
+  "recommendations": {
+    "N1": "A_RED_ONLY_DOCUMENT_ALIGNMENT",
+    "N2": "I_DISCLOSE_EXISTING_RECORD_AVAILABILITY",
+    "request_path": "KEEP_EXISTING_PATH_AND_PRESERVE_PRIOR_COMMIT"
+  },
+  "user_selection": null,
+  "scope_adopted_by_this_review": false,
+  "a2_execution_authorized": false,
+  "required_clarification": {
+    "existing_finding": "E1_0B_A2_N1",
+    "scope_lines": [
+      21,
+      28,
+      29,
+      36,
+      37
+    ],
+    "issue": "Assert message sites do not prove the marker can only appear in stdout through a failing assertion. A and B can differ on otherwise-valid GREEN input.",
+    "resolution": "Keep A if selected; explicitly disclose that it has no GREEN global-marker check, whereas B would reject such input.",
+    "new_runtime_defect": false,
+    "probe_executed": false
+  },
+  "N2": {
+    "direction_acceptable": true,
+    "new_required_finding": false,
+    "reported_judge_runs": 8,
+    "reported_writer_runs": 2,
+    "reported_scratch_files": 38,
+    "independent_authentication": false,
+    "preservation_commit_required": false,
+    "historical_rerun_required": false
+  },
+  "original_findings": {
+    "E1_0B_RESULT_N1": "STATIC_CLOSURE_RETAINED",
+    "E1_0B_A2_N1": "PENDING_ACTUAL_DOCUMENT_CORRECTION_REVIEW",
+    "E1_0B_A2_N2": "PENDING_ACTUAL_DOCUMENT_CORRECTION_REVIEW"
+  },
+  "retained": {
+    "E1_0B_complete": false,
+    "new_a2_RED_observed": false,
+    "GREEN_observed": false,
+    "FUTURE_01_functional_closure": false,
+    "E1_1_3_authorized": false,
+    "real_data_fetch_run_authorized": false,
+    "C4_A_B_authorized": false,
+    "COMSOL_authorized": false
+  },
+  "performed": {
+    "received_code_import_execution": 0,
+    "target_tests": 0,
+    "repository_mutation_commit_push": 0,
+    "external_transmission": 0,
+    "text_json_hash_zip_data_tools": true
+  },
+  "numeric_budget_seconds": null,
+  "elapsed_claim": null
+}
+

@@ -1,0 +1,171 @@
+{
+  "kind": "REIL_A2_V4_PREREVIEW_PACKAGE_MANIFEST",
+  "payload_count": 33,
+  "files": [
+    {
+      "path": "basis/prior_prereview/CODEX_REPLY_KO.txt",
+      "bytes": 3343,
+      "sha256": "43c539ab95777985a074b2864f8e0c38dd5268670451126687836116d5e08999"
+    },
+    {
+      "path": "basis/prior_prereview/REVIEW_DECISION.json",
+      "bytes": 5194,
+      "sha256": "80ae12031ed51e0c748cb3753cf1f310cfc37214dec3983dcb048bf073a0339d"
+    },
+    {
+      "path": "basis/prior_prereview/REVIEW_KO.txt",
+      "bytes": 12801,
+      "sha256": "668a39dfa463113dc3a4f61c55b272455ace155763621938bd3068ebaa1ed28d"
+    },
+    {
+      "path": "basis/prior_source/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "bytes": 85590,
+      "sha256": "775056233e1dc41a2f0163da793c148eb9a51e627eab0e9bb99e093ad10ae6cf"
+    },
+    {
+      "path": "basis/prior_source/REIL_C4E_E1_0B_RESULT_N1_SCOPE_20261103.md",
+      "bytes": 11937,
+      "sha256": "8a0586d44712a0dfef6cba8b065a722d0ccd8725e82191a71e3687ed277627eb"
+    },
+    {
+      "path": "basis/prior_source/REIL_PREREQUISITES_STATUS_20261004.md",
+      "bytes": 353136,
+      "sha256": "bd193b684c6e8b911bb3662e3237e1520747877a4f90db837c7e924c96426f62"
+    },
+    {
+      "path": "basis/scope_review/CODEX_REPLY_KO.txt",
+      "bytes": 3247,
+      "sha256": "d6d240f9fb4565b21d35c9336a45f0c29c2524ec93cf01248d581651135c98ae"
+    },
+    {
+      "path": "basis/scope_review/REVIEW_DECISION.json",
+      "bytes": 2095,
+      "sha256": "b2f836d809338ba4a66db090086df3049bc6033a5471a9f0c7ca39f7de6e5f32"
+    },
+    {
+      "path": "basis/scope_review/REVIEW_KO.txt",
+      "bytes": 6808,
+      "sha256": "981e16d89f1b2a9e45eaa21c29441d4420266f4a5c00d60a69769c9373ba7495"
+    },
+    {
+      "path": "basis/scope_source/REIL_C4E_E1_0B_A2_N1_N2_SCOPE_20261104.md",
+      "bytes": 10066,
+      "sha256": "962b7e0d15509f25761124b4a3ea1588b1cd8bd18743611bdadeac62c67e54fa"
+    },
+    {
+      "path": "basis/scope_source/REIL_PREREQUISITES_STATUS_20261004.md",
+      "bytes": 362411,
+      "sha256": "6956af6755daa10f09f64cdd4af6825f2fbb353fd4b6611db9dd3f9ed3b54eef"
+    },
+    {
+      "path": "BRANCH_AT_CLOSE.json",
+      "bytes": 1279,
+      "sha256": "90bc3d1aafa14c881996f89148df45cc3c30edef302b83a7c92e40378bc06696"
+    },
+    {
+      "path": "capture_base64.json",
+      "bytes": 990480,
+      "sha256": "ed79db96e61d68efb3df1b33d94614623a194c8f65f2bebafaa62da3e6c782a7"
+    },
+    {
+      "path": "CODEX_REPLY_KO.txt",
+      "bytes": 3377,
+      "sha256": "32826d4c54eb21514a8b7253d2b5982b8a1cdef98573258c1f587f989d4d8d13"
+    },
+    {
+      "path": "COMPARE_FROM_PRIOR.json",
+      "bytes": 19594,
+      "sha256": "06d3aade8ef643886fc5850874a01aaeae895e2e12c205a65cd8c3be38824cdc"
+    },
+    {
+      "path": "DATA_REVIEW_NOTES.json",
+      "bytes": 580,
+      "sha256": "5a9ace30dc5f35cc80ed3eaf40e31992f60c8d64ff6db78cfd10a9fed1077803"
+    },
+    {
+      "path": "input/REIL_C4E_E1_0B_PREREVIEW_SEND_v4_20261104.md",
+      "bytes": 9923,
+      "sha256": "c3f398fdda225cea01f350d69a751efa9b5aa8a8cdcdc7115bf76944e7178ff6"
+    },
+    {
+      "path": "INVARIANCE_REVIEW.json",
+      "bytes": 3175,
+      "sha256": "cc251764cf0102c8cfaf1ced5ccbb27114e2442a9f7a1319ef2f7c7606f6ec22"
+    },
+    {
+      "path": "N1_REVIEW.json",
+      "bytes": 3200,
+      "sha256": "b5ec1aa710d55ea35fb8669fc37afb4294836cab27cc85aa7f227e78f4a22288"
+    },
+    {
+      "path": "N2_REVIEW.json",
+      "bytes": 3760,
+      "sha256": "9ffe51a20998dce753a12574f135504cfcc7704f5ce5c681e61d9fdf3333244e"
+    },
+    {
+      "path": "REQUEST_DIFF.txt",
+      "bytes": 28741,
+      "sha256": "586e27a8adb4e68b3c8e568ada7be7b618d3e5659cfa931c6632e07278abee56"
+    },
+    {
+      "path": "REVIEW_DECISION.json",
+      "bytes": 1939,
+      "sha256": "27edb6006218c22fabc9bc4c21fc056b80e0d12697f97cf9ddec4b6de452de96"
+    },
+    {
+      "path": "REVIEW_KO.txt",
+      "bytes": 8163,
+      "sha256": "d40bfe13b91c958ff910213fdd29a6bae88ea48d921a2bec3e9e65b23b28098b"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E1_0B_END_WRITER_DRAFT_v2_20261103.py.txt",
+      "bytes": 4875,
+      "sha256": "2f316acc348412cafd8607ef7fe0d19a579237e21c4535ab2a657ca090a5472b"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E1_0B_JUDGE_DRAFT_20261103.py.txt",
+      "bytes": 21889,
+      "sha256": "3749b32edd3954fdfa4bfe92336d9eafaf2121b6275c9bd0b3584ece42dc60c4"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v8_20261103.py.txt",
+      "bytes": 74542,
+      "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt",
+      "bytes": 62639,
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v5_20261103.py.txt",
+      "bytes": 37003,
+      "sha256": "b34fb9a98eb6e852d4c30038ee988adee57d03c2b138e767ca742ea327a45e13"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v8_20261103.py.txt",
+      "bytes": 36938,
+      "sha256": "e284f8a14a5f15f405b566ab668a58f069a6ab465a25e391a36ce28f1fdf9059"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "bytes": 96529,
+      "sha256": "ae413f965e890103db175ef261b05d6c49b26f9a53048abdab8c9b8d3b234840"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_PREREVIEW_SEND_v4_20261104.md",
+      "bytes": 9923,
+      "sha256": "c3f398fdda225cea01f350d69a751efa9b5aa8a8cdcdc7115bf76944e7178ff6"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "bytes": 371822,
+      "sha256": "32215a9a81fb96f74bfd55b6bc57aca019a8ee3af983388ba06c5751a6a75b82"
+    },
+    {
+      "path": "SOURCE_IDENTITIES.json",
+      "bytes": 11730,
+      "sha256": "41a506d40b3593e65045eeb38a2085c6c4e44a5699807e67c58be47a4aa0f1ca"
+    }
+  ]
+}

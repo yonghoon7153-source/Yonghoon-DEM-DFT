@@ -1,0 +1,105 @@
+{
+  "kind": "REIL_E1_0B_A2_PREREVIEW_DECISION",
+  "date": "2026-11-03",
+  "decision": "E1_0B_A2_PREREVIEW_CLARIFICATIONS_REQUIRED_BEFORE_APPROVAL",
+  "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "branch": "claude/14-gate-code-review-9qkx05",
+  "pinned_commit": "396c83804708b5f2102e210919d480e658b5fa69",
+  "approval_request_sha256": "775056233e1dc41a2f0163da793c148eb9a51e627eab0e9bb99e093ad10ae6cf",
+  "prior_result_commit": "a38c878ff0055f588143288707d8b5f46646bf63",
+  "prior_finding": {
+    "id": "E1_0B_RESULT_N1",
+    "status": "CLOSED_STATICALLY_NOT_FUNCTIONALLY",
+    "resolution": "l33 directly passes fixture extra, data, data_files; production checks remain unchanged.",
+    "new_execution_observed": false
+  },
+  "questions": {
+    "Q1": "ACCEPT_STATIC_L33_CORRECTION",
+    "Q2": "ACCEPT_DISCLOSED_AUTOMATIC_AND_MANUAL_DEFAULT_BINDING_REVIEW_SCOPE",
+    "Q3": "ACCEPT_A2_PATH_AND_PRESERVATION_DESIGN_STATICALLY",
+    "Q4": "UNEXPECTED_RED_CAUSE_APPLICABILITY_MUST_MATCH_BETWEEN_REQUEST_AND_JUDGE",
+    "Q5": "TWO_CLARIFICATIONS_REQUIRED_BEFORE_NEW_A2_USER_APPROVAL"
+  },
+  "required_findings": [
+    {
+      "id": "E1_0B_A2_N1",
+      "priority": 2,
+      "type": "JUDGE_CONTRACT_APPLICABILITY_MISMATCH",
+      "file": "bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "line": 306,
+      "related": [
+        "approval request lines 548-552",
+        "judge draft lines 265-266",
+        "judge draft lines 275-296",
+        "judge stdout_markers lines 213-220"
+      ],
+      "problem": "The request's common-looking reading rule bans UNEXPECTED_RED_CAUSE anywhere in stdout, but the judge checks it only in RED.",
+      "static_counterexample": "Keep all GREEN binding/rc/summary conditions satisfied and add one non-header UNEXPECTED_RED_CAUSE line before the first section. GREEN checks do not reject it; the common reading of the request requires STOP.",
+      "actual_fixture_or_execution_reproduction": false,
+      "resolution": "Explicitly scope the rule to RED consistently, or apply the common rule in GREEN and update changed-byte bindings. The reviewer does not silently select either interpretation.",
+      "manual_mismatch_stop_retained": true
+    },
+    {
+      "id": "E1_0B_A2_N2",
+      "priority": 2,
+      "type": "AUTHOR_EXECUTION_SCOPE_DISCLOSURE_INCONSISTENCY",
+      "file": "bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "line": 553,
+      "related": [
+        "scope document sections 5-6, lines 94-100",
+        "approval request headings lines 57 and 89",
+        "status section 94"
+      ],
+      "problem": "Static-only/draft-execution-zero wording conflicts with reported execution of the judge and end-writer drafts in scratch copies. Launcher/pytest/Git-fixture zero is a separate claim.",
+      "resolution": "Separate target-test zero from tool-draft author checks, disclose the difference from the selected scope and the availability of existing original records, and do not retroactively authorize or erase past actions.",
+      "reported_author_checks_independently_executed_or_authenticated": false,
+      "new_measurement_replay_or_historical_record_rewrite_required": false
+    }
+  ],
+  "accepted_static_checks": {
+    "fixture_defaults_v6_rows_including_manual_opts": 18,
+    "fixture_defaults_v5_rows_including_manual_opts": 14,
+    "runner_defaults_rows": 12,
+    "seal_semantic_rows": 15,
+    "seal_mismatches": 0,
+    "runner_TARGETS": 14,
+    "pretest_copies": 5,
+    "start_hashes": 12,
+    "end_copy_identities": 6,
+    "per_step_evidence_files": 9,
+    "unchanged_AST_nodes": [77, 48, 56],
+    "launcher_v6_bytes_unchanged": true,
+    "prior_status_full_byte_prefix_preserved": true
+  },
+  "retained": {
+    "E1_0B_complete": false,
+    "new_a2_RED_observed": false,
+    "GREEN_observed": false,
+    "FUTURE_01_functional_closure": false,
+    "historical_eight_RED_matches_are_new_gate_evidence": false,
+    "E1_1_3_authorized": false,
+    "real_data_fetch_run_authorized": false,
+    "C4_A_B_authorized": false,
+    "COMSOL_authorized": false
+  },
+  "reviewer_performed": {
+    "pinned_GitHub_file_reads": 13,
+    "local_text_JSON_AST_hash_and_ZIP_data_tools": true,
+    "received_program_import_or_execution": 0,
+    "judge_writer_launcher_runner_execution": 0,
+    "pytest_fixture_driver_probe_execution": 0,
+    "synthetic_counterexample_files_or_runs": 0,
+    "repository_mutation_commit_push": 0,
+    "external_transmission": 0
+  },
+  "limitations": [
+    "15 semantic seal identities were checked; the author's 27 remote HEAD/worktree observations were not independently repeated.",
+    "Actual a2 runtime path absence remains a future start condition, not a current observation.",
+    "Source/ledger reports do not independently authenticate historical user authorization or author tool execution.",
+    "No operational/runtime results are inferred from this static review."
+  ],
+  "new_correction_or_execution_authorized_by_review": false,
+  "numeric_review_budget_seconds": null,
+  "elapsed_claim": null,
+  "next": "Author addresses two findings, preserves history and updates only changed identities/references; rereview before the separate user approval for a2."
+}

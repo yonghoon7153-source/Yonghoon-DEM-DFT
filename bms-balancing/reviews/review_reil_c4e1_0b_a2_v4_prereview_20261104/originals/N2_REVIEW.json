@@ -1,0 +1,65 @@
+{
+  "kind": "N2_DOCUMENT_DISCLOSURE_REVIEW",
+  "date": "2026-11-04",
+  "source_commit": "5d87b57eebc63480a26021e1bbdb090d2cfefb4d",
+  "scope": "Static text review of N2 closure and Q3 disclosure notes only",
+  "finding_id": "E1_0B_A2_N2",
+  "decision": "CLOSED_AS_DOCUMENT_DISCLOSURE_CORRECTION",
+  "required_findings": [],
+  "closure_basis": [
+    {
+      "file": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "lines": "105-110,152-156,598-616",
+      "finding": "Separates target execution zero from the author's reported eight judge and two writer executions; expressly classifies the latter as nonstatic and outside the selected static-only scope. Preserves the incorrect prior wording as history and denies retroactive authorization or use as formal a2 test/gate evidence."
+    },
+    {
+      "file": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "lines": "599-613",
+      "finding": "The reported ten calls reconcile to five writes and five refusals. Discloses scratch 38-file distribution, complete SHA-256 values for the five outputs, noncommitment and nonprovision to the reviewer, session-ephemeral availability, and tool-return records remaining in the author session. Does not represent these disclosures as independent historical authentication or permanent preservation."
+    },
+    {
+      "file": "source/bms-balancing/docs/REIL_C4E_E1_0B_PREREVIEW_SEND_v4_20261104.md",
+      "lines": "19-23,48-56,78-80",
+      "finding": "Sender mirrors the execution/history distinction and retains review-only and future-approval boundaries."
+    },
+    {
+      "file": "source/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "lines": "2707-2725,2758-2764,2792-2796",
+      "finding": "Ledger preserves the out-of-scope author-run history, distinguishes disclosure from independent authentication, and keeps document selection/correction separate from a2 execution approval."
+    }
+  ],
+  "q3_disclosure_notes": {
+    "decision": "ACCEPTED_AS_LIMITATION_DISCLOSURES",
+    "references": [
+      {
+        "file": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+        "lines": "577-589,622-624"
+      },
+      {
+        "file": "source/bms-balancing/docs/REIL_C4E_E1_0B_PREREVIEW_SEND_v4_20261104.md",
+        "lines": "59-65"
+      }
+    ],
+    "covered": [
+      "l33 identity item is distinguished from whole _pre/pre.ok success",
+      "default-detector and alias/kwargs/dataflow coverage limitations are explicit",
+      "prior 27 HEAD/worktree comparisons are not claimed as independently repeated",
+      "a2 work-path absence is a future start condition, not a present observation",
+      "prior user approval and author-run history are not independently authenticated"
+    ]
+  },
+  "limits": {
+    "historical_execution_counts_and_results": "AUTHOR_REPORTED_NOT_INDEPENDENTLY_AUTHENTICATED",
+    "scratch_files_reviewer_availability": "REPORTED_NOT_PROVIDED",
+    "scratch_hashes_independently_recomputed_by_this_review": false,
+    "permanent_scratch_preservation_claim": false,
+    "retroactive_execution_approval": false,
+    "new_a2_execution_approval": false,
+    "formal_a2_result_acceptance": false,
+    "code_and_seal_immutability": "ROOT_REVIEW_SCOPE",
+    "received_program_execution_by_this_review": 0,
+    "received_program_imports_by_this_review": 0,
+    "tests_or_probes_by_this_review": 0
+  },
+  "review_note": "N2 closure resolves the document disclosure defect. It neither erases the disclosed out-of-scope executions nor certifies their original execution, results, approval history, or enduring artifact availability. No unsupported demand for new historical evidence, reexecution, or reconstructed records is added."
+}

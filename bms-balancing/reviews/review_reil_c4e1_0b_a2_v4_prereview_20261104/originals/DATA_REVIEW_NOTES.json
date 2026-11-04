@@ -1,0 +1,12 @@
+{
+  "kind": "REVIEWER_DATA_TOOL_NOTE",
+  "initial_call": {
+    "chunk_id": "4abd1c",
+    "exit_code": 1,
+    "failure": "AssertionError: RED table/rules"
+  },
+  "cause": "Reviewer substring boundary '**RED' selected an earlier inline occurrence rather than the line-start RED rule heading.",
+  "correction": "Bound subsection boundaries to newline + exact '**RED (' and '**GREEN (' heading prefixes.",
+  "effect": "Reviewer-owned data extraction corrected only; received request/source bytes unchanged; no target execution, test failure or retry.",
+  "target_code_execution": 0
+}
