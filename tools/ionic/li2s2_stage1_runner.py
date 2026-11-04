@@ -955,6 +955,8 @@ def _selftest():
     repo = pathlib.Path(__file__).resolve().parents[2]
     real = load_mq(repo)
     tmp_root = pathlib.Path(tempfile.mkdtemp(prefix="li2s2_runner_st_"))
+    import atexit                                            # 시험이 예외로 죽어도 임시 폴더 (≈ 450 MB) 를 지운다 — 2026-11-04 변이 실행이 105 개를 남겨 디스크를 채웠다
+    atexit.register(shutil.rmtree, str(tmp_root), True)
     # 시험 카드 = 진짜 카드에서 일정만 줄이고 (담금질 9 ps · 유지 20 ps) 밀도를 무작위 PS₄ 셀의 밀도로 — 그 외 값은 진짜 그대로
     card0 = json.loads((repo / CARD_REL).read_text(encoding="utf-8"))
     BASE, rho = {}, {}
