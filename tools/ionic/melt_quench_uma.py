@@ -4041,6 +4041,13 @@ def _selftest():
             and (rv_ / "stage1_verdict.json.tmp").read_text(encoding="utf-8") == '{"status": "pass"}'
             and (rv_ / "stage1_verdict.json").read_text(encoding="utf-8") == '{"status": "incomplete"}' and not (rv_ / VERDICT_HISTORY).exists(),
             f"⛔음성 DP 전 리뷰 (둘째) F2: 판정 임시 파일이 남은 폴더는 다시 판정해도 아무것도 안 쓴다 (앞 쓰기의 흔적을 덮지 않는다) ({vt_['status']})")
+        # ⭐ DP 깨기 DP18 (살아남음) — 판정의 plan 읽기도 같은 열쇠 둘 = 못 읽음 (마지막 값으로 판정하지 않는다)
+        rp_ = pathlib.Path(td_) / "_verdict_plan_dup"; rp_.mkdir()
+        (rp_ / "plan.json").write_text('{"melt_ps": 100.0, "melt_ps": 1.0, "save_ps": 1.0}', encoding="utf-8")
+        vp2_ = stage1_verdict(rp_, values=VAL, log=lambda *a: None)
+        chk(vp2_["status"] == "incomplete" and any("plan.json 을 못 읽는다 (ValueError)" in x for x in (vp2_.get("reasons") or {}).get("incomplete", [])),
+            "⛔음성 회신 DO P1 (판정): plan.json 에 같은 열쇠 둘이면 판정은 '못 읽음' (미완) — 마지막 값으로 판정하지 않는다 (깨기 DP18 이 드러낸 시험 구멍) "
+            f"({vp2_['status']} · {(vp2_.get('reasons') or {}).get('incomplete')})")
         # ⭐ DP 전 리뷰 (둘째) — 못 읽은 이전 판정의 원문은 바이트 그대로 (UTF-8 아닌 바이트 포함)
         rb_ = pathlib.Path(td_) / "_verdict_raw_bytes"; rb_.mkdir()
         raw0 = b'{"status": "pass", "n": 130, "n": 71, "x": "\xff\xfe"}'
