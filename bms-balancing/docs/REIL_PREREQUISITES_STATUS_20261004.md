@@ -2955,3 +2955,40 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - **다음 (회신 Q4):** E1-1 이후의 범위 · 승인 요청서 — 실제 대상 identity · 읽기 경로 · fetch · 자료 개봉 · run 각각의 정확한 대상 · 명령 · 출처 · 허용 활동 ·
   자원 / 시간 · 중지 조건 · 증거를 고정 → 사전 검토 → 별도 사용자 승인. 먼저 범위안을 만들어 사용자 채택을 받는다. 각각 별도 결정이며, 이 기록은 어느 단계의
   실행 승인도 아니다.
+
+## §102 C4-E · E1-1–3 범위안 검토 회신 접수 — 방향 타당 · 사용자 선택 전 문서 정정 셋 (E113_N1–N3 · P2) · 내 사실 오류 하나 공개 · 실행 · 탐침 승인 아님 (2026-11-04 KST · 덧붙임 — 위 §0–§101 은 그대로)
+
+- **받은 것 · 보존:** 사용자 업로드 `REIL_C4E_E1_1_3_SCOPE_REVIEW_20261104.zip` (177,124 B · `946fda5d38a886d0eed66d293277fde8b1f579009cb150a855997a6ac4bfde9c` =
+  전달 영수증) · 대화에 붙인 영수증 (`REIL_E1_1_3_SCOPE_REVIEW_DELIVERY_RECEIPT` · 1,423 B `2d6b882c…` — 포장 도구 반환 기준) · 포장 도구 반환 (rc 0 · 0.480 s).
+  - 커밋 `57589847` (보존 규칙) · `d816026c` (바이트): `reviews/review_reil_c4e_e1_1_3_scope_review_20261104/` — ZIP (업로드와 cmp 일치) + `originals/` 27 (안전
+    추출) · PACKAGE_MANIFEST (`e361b8c3…` · 4,594 B · `members` 26/26 · 목록 밖 없음 · 자기 제외 — 이번에도 `members` 를 직접 읽어 대조) · blob 28/28 · 비밀 검사
+    28 파일 0 건 · URL 계정 형태 0.
+  - `source/bms-balancing/` 6 · `input/` 범위안 = 고정 `d88d064b` · `basis/` 4 = 보존한 a2 결과 검토 회신 (`CODEX_REPLY_KO.txt` · `REVIEW_DECISION.json` ·
+    `PRIOR_ADDITIONAL_IDENTITIES.json` = `ADDITIONAL_IDENTITIES.json` · `PRIOR_SOURCE_IDENTITIES.json` = `SOURCE_IDENTITIES.json`) — 11/11 바이트 일치.
+  - 바이트 사본이 아닌 둘: `source/STATUS_101_EXCERPT.txt` (6,037 B) 는 CRLF 로 쓴 발췌다 — LF 로 바꾸면 `d88d064b` 의 원장 §101 (앞 줄바꿈 하나 · 끝 줄바꿈 없음)
+    과 같고 `STATUS_EXCERPT_CAPTURE.json` 의 content 와도 같다. `input/SCOPE_NUMBERED.txt` 는 줄 번호 (`N: `) 를 빼면 범위안과 같다.
+  - 검토자 도구 `package_review_data.py` · `prepare_review_data.py` 는 실행하지 않았다.
+- **판정 (`REVIEW_DECISION.json`):** `SCOPE_REVISION_REQUIRED_BEFORE_USER_SELECTION` (고정 `d88d064b`) · 방향 타당 · 필수 문서 정정 셋 (P2). a2 의 한정 수용 ·
+  A2_PROC_01 유지 · 재시험 불요. 사용자 선택 · 범위 채택 · 탐침 · E1-1–3 · C4-A / B · COMSOL 모두 승인 아님.
+  - **E113_N1 (범위안 38 · 80 행) — 과거 시험 증거와 실제 착수 이름:** 범위안은 "`evidence/reil_c4e1_*` 없음" 이라 적고 같은 glob 이 있으면 착수를 멈추게
+    했다. **이것은 내 사실 오류다** — 그 glob 에는 보존된 시험 증거 셋 (`reil_c4e1_0_20261030` · `reil_c4e1_0b_20261103` · `reil_c4e1_0b_a2_20261104`) 이
+    맞는다. 내가 읽기 전용으로 확인한 것은 `evidence/reil_c4e1_2*` 였는데, 문서에는 다른 glob 을 적었다. 그대로면 "없음" 은 거짓이고 착수 검사는 늘 멈춘다.
+    정정: launcher 의 이름 규칙 `^reil_c4e1_20[0-9]{6}$` (launcher 121 행) 과 정확한 착수 경로로 좁힌다. 다시 확인 (2026-11-04 · 읽기 전용): 그 규칙에 맞는 항목
+    0 · `SP/c4e1` 없음. 과거 기록은 지우거나 · 이름을 바꾸거나 · 다시 쓰지 않고, 새 이름으로 재시도를 우회하지 않는다.
+  - **E113_N2 (31 · 33 · 45–49 · 54 행) — 분리 실행의 실패 증거 · 완전한 반환 게시 · 유한 감시:** (a) wrapper 의 `/dev/null` 은 launcher 가 meta 쓰기 실패 때
+    외부 stderr 에 남기는 원문 (`meta_write_failed` · rc 4 — launcher 908–912 행) 도 버린다. 자식의 stdout.log / stderr.log 와 다른 자료다. (b) outer_rc 의 존재만
+    보면 생성과 내용 쓰기 사이에 판정이 시작될 수 있고, 시작 실패 · 셸 소실 · 반환 쓰기 실패면 파일이 아예 안 생길 수 있다 — until 루프와 "감시만 다시 건다"
+    로는 끝나는 길이 없다. (c) 감시 종료는 실행 종료가 아니다 (launcher 는 자식을 새 세션으로 띄운다 — 786 행). (d) 380 · 860 s 는 명시 timeout 의 산술 합이고,
+    정리 기한 전에 시작한 /proc 관측 · 해시 · 파일 I/O 를 포함한 실제 반환의 상한이 아니다 ("최악" 표현 철회). 요구: 외부 출력 보존 · 실행 식별 / 시작 상태 ·
+    완전한 반환 게시 확인 · 다시 걸어도 유지되는 첫 절대 감시 기한 · 미게시 / 부분 기록 / 시작 실패 / 기한 도달의 실패 종결과 잔류 책임 · identity / fetch 가
+    도구에 끊기는 경우도 같은 원칙. launcher 바이트 변경 요구는 아니다.
+  - **E113_N3 (6–7 · 50–51 · 91–93 행) — 즉시 탐침:** 정확한 명령 · cwd · 경로 충돌 시 중지 · 관측 마감 · 표지 누락 / 부분 기록 / 미종결 처리 · 기록과 잔류 책임이
+    없다. 방향만 고르고 탐침은 따로 명세 · 승인하거나, 지금 선택지에 탐침 한 번을 충분히 고정한다 (검토자는 고르지 않는다). 150 s 탐침은 7,200 s 도구 관리 ·
+    10,800 s run · 컨테이너 소실 · launcher 정리의 보증이 아니다.
+  - **요청서로 미룬 것 (새 차단 아님):** 자료 개봉의 실제 순서 (run 581–593 행: 시작 바이트 식별 → 발췌 · 경로 확인 → 새 산출 폴더 → P0 기록 읽기 → util import →
+    자료 적재 → 적재 결과 / P0 결속 대조 — "P0 결속 뒤 util import" 라고 쓰지 않는다) · 결과 필드 (자식 `05_run.stdout.log` 마지막 JSON 의 `final.complete` ·
+    `final.E3a` · `final.c4a_gate` 와 launcher 자신의 단계 요약 stdout 을 나눈다 — 최상위 `final_verdict` 키를 가정하지 않는다) · 새 판정기 / 작성기 봉인 · 절차
+    Git 문자열과 결과 공개 검사 세부 · 디스크 표현 (약 26 GB = a2 끝 기록 당시 값). launcher 단계 판정도 `final.complete` 를 쓰므로 두 판정은 독립이 아니다.
+  - 검토자 메모: 자기 자료 도구가 첫 색인에서만 찾다 KeyError → 보조 색인을 합쳐 다시 대조 (제출물 결함 아님).
+- **다음:** 정정 셋을 담은 범위안 v2 (새 경로 `docs/REIL_C4E_E1_1_3_SCOPE_v2_20261104.md` · v1 은 그대로) → 사용자 선택 (또는 재검토) → 승인 요청서 · 판정기 ·
+  작성기 초안 · 사전 검토 → 별도 실행 승인. 이 기록은 어느 단계의 실행 승인도 아니다.
