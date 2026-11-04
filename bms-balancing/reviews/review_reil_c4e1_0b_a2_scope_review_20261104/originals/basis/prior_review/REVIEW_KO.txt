@@ -1,0 +1,82 @@
+REIL C4-E · E1-0b a2 승인 요청 v3 사전 재검토
+2026-11-03
+
+판정: E1_0B_A2_PREREVIEW_CLARIFICATIONS_REQUIRED_BEFORE_APPROVAL
+기존 E1_0B_RESULT_N1은 정적 종결. 새 필수 정합성/공개 정정 2건. 현재 바이트로 새 실행 승인 단계에 넘기지는 않는다.
+
+1. 기준과 수행
+
+저장소 yonghoon7153-source/Yonghoon-DEM-DFT, 브랜치 claude/14-gate-code-review-9qkx05의 396c83804708b5f2102e210919d480e658b5fa69를 고정했다. 종결 전 브랜치도 같은 커밋이었다. 첨부 REIL_C4E_E1_0B_PREREVIEW_SEND_v3_20261103.md는 해당 커밋의 원문과 바이트 일치한다.
+
+GitHub에서 13개 파일을 base64로 수신해 원바이트를 복원하고 Git blob SHA-1과 SHA-256으로 식별했다. 검토 근거는 SOURCE_IDENTITIES.json, PINNED_COMMIT.json, COMPARE_FROM_RESULT.json, BRANCH_AT_CLOSE.json에 있다. 첨부 내부의 실행 명령은 검토 자료로만 읽었다. 사용자 “ㄱㄱ”는 이 사전 검토 진행으로 해석했다.
+
+검토자는 소스 텍스트·AST·literal·해시·기존 결과 자료만 대조했다. 받은 프로그램/import/판정기/작성기/launcher/runner/pytest/Git fixture/driver/probe는 실행하지 않았다. 저장소 수정·commit/push·실제 자료 개봉/fetch/run·COMSOL·외부 발송도 하지 않았다. 새 수치 검토 예산이나 전체 소요시간 주장을 만들지 않는다.
+
+2. Q1 — l33 정정: 정적 수용
+
+대조 v8 1067–1068행의 직접 L.postcheck 호출은 extra=t.extra, data=t.data, data_files=t.data_files를 명시한다. 기존 실파일 식별값과 tmp 가짜 파일을 비교하던 누락이 해소됐다. v7→v8의 AST 변경은 모듈 docstring과 l33뿐이고 동일 노드는 77개다. 시험명·기대 assert·메시지·하위 사례 순서는 유지됐다. launcher v5와 v6의 생산 검사도 약화되지 않았다.
+
+l33의 identity _pre는 helper_sha256의 실제 고정 기본값 때문에 pre.ok 자체가 성공이라고 보장되지 않는다. 그러나 이 시험은 pre의 파일 목록 등 필요한 항목을 이용하고 pre.ok를 postcheck 정상 기준으로 소비하지 않는다. postcheck가 대조하는 다섯 모듈·extra 두 파일은 fixture에 결속되고, 빈 pycache·empty 그룹·정상 기록 등 기준은 정적으로 맞는다. 사전 probe의 -I -B가 bytecode를 쓰지 않는다는 경로도 소스에서 확인했다. 이는 _pre 전체 성공이나 실제 identity 단계 성공 판정이 아니다.
+
+v5 postcheck는 deadline_hit을 검사하지 않아 고친 정상 기준 다음의 deadline_hit=true에서 1072행의 기대 AssertionError에 이르는 구조다. v6 627–628행은 이를 문제로 기록하며 l33의 나머지 비정상 그룹/오류 분기도 거부한다. 따라서 E1_0B_RESULT_N1을 정적으로 종결한다. 기능 통과는 아직 관측하지 않았으며 실제 RED/GREEN이 다르면 새 승인 절차의 중지 규칙이 적용된다.
+
+과거 RED 9 failed/24 passed 및 l33의 다른 원인 실패는 원기록대로 남는다. 생략된 두 번째 문제 문장의 완전한 출력을 복원했다고 하지 않는다. 이전 검토자의 l33 판단 정정도 원파일을 보존하며 유지한다. 상세: L33_DEFAULTS_REVIEW.json.
+
+3. Q2 — 기본값 결속 대조: 공개된 범위에서 수용
+
+독립 AST 대조의 모듈 상수 기본값 행은 v6에서 자동 식별 17+수동 **opts 1=18, v5에서 13+1=14, runner에서 12다. 지역 별칭 fetch_env/cleanup_group/cleanup을 포함하면 요청서 부록과 맞는다.
+
+_pre의 helper_sha256은 위 l33 경로에서 읽히되 정상 여부 단언에 사용되지 않는다. build_argv의 경로 기본값은 의도된 문자열/정책 비교이고 identity_link의 모듈 목록과 fetch 설정 목록도 생산 상수를 의도적으로 확인한다. _launch의 **opts는 fixture 값을 명시 전달하며 남은 실제 /proc 관측은 기존 프로세스 수명주기 대조의 의도와 연결된다. identity로 _launch를 호출하는 시험은 없다.
+
+r1/r2/r3/r9/r10/r11의 proc=PROC는 proc_table을 인자를 무시하는 가짜로 교체한 경로다. r11의 가짜도 tmp proc 폴더를 읽는다. 실제 /proc 기본 경로를 잘못 읽고 fixture 결과로 단언하는 추가 결함은 발견하지 못했다.
+
+부록 도구를 모든 시스템 의존성의 완전 증명으로 보지는 않는다. Attribute 기본값인 time.monotonic/time.sleep/Popen/kill, 문자열 안 driver, 임의 alias 전파나 **kwargs의 모든 내용을 자동으로 분석하는 도구가 아니다. 공개된 한계와 수동 경로 검토를 함께 적용했다. 정적 검사로 앞으로의 실행 성공을 확정하지 않는다.
+
+4. Q3 및 Q5 일부 — 경로·봉인: 정적 수용
+
+증거 reil_c4e1_0b_a2_<UTC 날짜>, 작업 SP/c4e1_0b_a2_steps 및 단계별 pycache 이름이 runner v8·runner controls v5·end writer v2·judge에 일치한다. 착수 시 a2 증거 패턴의 어떤 경로 또는 a2 작업 경로라도 있으면 중지하도록 적혀 있고, 예전 증거/작업 경로를 삭제·재사용·이름 변경하는 절차는 없다. 실제 원격 a2 경로의 부재를 이 검토에서 확인한 것은 아니며 그것은 미래 착수 조건이다.
+
+복사본 5개, 00_start의 SHA 12개, 끝 기록 식별 6개, 각 단계 증거 9개가 연결된다. TARGETS는 14개이며 단계별 launcher 차이를 합친 의미상 봉인 행은 15개다. 수신 고정 바이트 또는 이전 수신본+커밋 변경 없음 대조로 15행 모두 bytes/SHA를 확인했다. 작성자의 HEAD/worktree 쌍을 포함한 27회 대조를 이 기기에서 다시 직접 수행했다고 표현하지 않는다.
+
+controls 동일 AST 노드 77, runner controls 48, runner 56을 확인했다. 변경 노드는 선언된 docstring·경로·봉인·l33 등에 한정된다. launcher v6는 이전 수신본과 완전히 같다. 상세: PATH_SEAL_REVIEW.json, PATH_SEAL_DATA.json.
+
+a38c878f→현재 pin 비교는 ahead 4/behind 0이고 생산 코드·옛 증거·불변 의존 소스는 변경 목록에 없다. 이전 상태 문서 339003 B 전체가 현재 353136 B 상태 문서의 정확한 접두로 보존됐다. 과거 기록에 새 문구를 소급 덮어쓴 것으로 보이지 않는다. 저장소 밖 작업 폴더의 실제 보존을 독립 감사한 것은 아니다.
+
+5. 필수 정정 E1_0B_A2_N1 (P2) — Q4 marker 적용 범위 불일치
+
+요청서 docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md 306–307행은 '판정기가 기준보다 엄격하게 읽는 셋'에 stdout 어디에든 UNEXPECTED_RED_CAUSE가 있으면 중지한다고 적는다. 이 항목은 RED/GREEN 공통 읽기 규칙 위치에 있으며, §8(26) 548–552행과 발송문도 단계 제한을 명시하지 않는다. RED 세부 규칙 323–324행에는 다시 이 규칙이 있다.
+
+그러나 docs/REIL_C4E1_0B_JUDGE_DRAFT_20261103.py.txt 265–266행의 전역 문자열 검색은 judge_red 내부에만 있다. judge_green 275–296행에는 그 검사가 없고 stdout_markers 213–220행도 ERROR/INTERNALERROR/중단만 검사한다.
+
+정적 논리 반례: GREEN의 sealed 파일·meta·외곽 rc·PASSED 집합·마지막 71 passed 등 다른 모든 조건이 일치하는 stdout에서 첫 절 머리줄 앞에 UNEXPECTED_RED_CAUSE 단독 비-header 줄만 더 있다고 하자. 이 줄은 현재 GREEN 검사 어디에도 걸리지 않아 다른 검사 결과를 바꾸지 않는다. 따라서 공통 차단 문구를 그대로 수동 적용하면 STOP인데 기계는 MATCH가 가능하다. 이 설명은 실제 원출력에서 발견한 사건, 실행한 합성 fixture 또는 재현 시험이 아니다.
+
+RED만을 의도했다면 요청서의 공통처럼 보이는 문구·§8·발송문·판정기 설명에 RED 한정임을 명시해야 한다. 공통 규칙을 의도했다면 GREEN에도 검사하도록 맞춰야 한다. 검토자가 임의로 해석을 좁혀 수용하지 않는다. 후자를 선택하면 바뀌는 판정기 해시와 이를 가리키는 문서·사전 봉인 식별도 갱신해야 한다. 수동/기계 불일치 때 중지하는 기존 방어는 유효하지만, 기준을 일치시켜야 한다는 Q4를 대신하지 못한다.
+
+그 밖 RED/GREEN의 정확 집합, 중복/추가 방지, 마지막 요약 줄의 분리, 예외 블록·메시지 판정, 정확 외곽 rc 바이트, source_end 바이트 결속, 거부/STOP/MATCH 반환 및 배타 기록 흐름에서는 필수 정정 사항을 찾지 못했다. 판정기의 verdict를 실행자의 중지 책임보다 우선시키지 않는 구분과 writer가 판정 기록을 요약만 하는 역할도 수용한다. 상세: JUDGE_REVIEW.json.
+
+6. 필수 정정 E1_0B_A2_N2 (P2) — 작성자 실행과 정적 검사 범위 공개
+
+정정 범위안 docs/REIL_C4E_E1_0B_RESULT_N1_SCOPE_20261103.md §5–6, 특히 94–100행은 정적 검사만·실행 0을 제시하며, §4의 판정기 실행은 후속 승인 뒤 c/d 단계에 배치한다. 상태 §94는 그 범위의 사용자 채택을 기록한다. 새 승인 요청 57행·89행 제목도 초안·대조를 포함해 실행 0이라고 적는다.
+
+한편 같은 요청서 553–557행과 상태 §94는 새 판정기 및 끝 기록 작성기 초안을 저장소 밖 scratch 사본에서 실제 실행했다고 공개한다. 대상 launcher/pytest/Git fixture가 0이라는 주장과 판정기·작성기 초안 실행이 있었다는 주장은 함께 성립할 수 있지만, 초안 전체 실행 0과는 양립하지 않는다. 받은 코드 자체를 돌린 작성자 확인을 일반 AST/해시 자료 검사와 같은 '정적 검사만'으로 합치지 않아야 한다.
+
+정정은 수행 이력을 구분하는 문서 작업이다. 대상 시험·launcher·Git fixture 실행 0, 판정기·작성기 초안의 작성자 확인 실행 있음, 사본에 국한됐다는 제출자 설명, 당시 원기록의 보존/제공 여부와 범위를 각각 적어야 한다. 채택된 정적 범위 문구와 보고된 실제 수행의 차이도 별도로 남기고, 지금의 사전 검토나 향후 a2 승인이 과거 실행을 소급 승인한 것처럼 기록하지 않는다.
+
+작성자 확인의 실제 도구 원반환/사본 산출물은 이번 13개 캡처에 포함되지 않았다. 보고된 76항목 MATCH/STOP 등을 검토자의 실행 결과로 인증하지 않는다. 이미 남은 기록이 있다면 그 존재 범위를 설명하면 되며, 이번 지적 때문에 합성 기록을 새로 만들거나 초안을 재실행하거나 옛 원본을 고칠 필요는 없다. 사용자 메시지 원문 자체의 플랫폼 인증도 여기서 수행하지 않았다. 판정은 수신된 범위안·요청서·원장의 내용 불일치에 한정한다.
+
+7. 결론과 후속 범위
+
+Q1: l33 누락 정적 종결. Q2: 공개된 자동/수동 대조 범위에서 수용, 추가 fixture 결함 미발견. Q3: a2 경로와 보존 절차 정적 수용. Q4: marker 적용 범위를 맞추기 전 무조건 수용 불가. Q5: 위 두 필수 정정을 반영한 후 재검토가 필요하다.
+
+필요한 후속 작업은 적용 범위 문구/필요시 판정기 최소 정정, 실행 이력 공개 정정, 변경된 바이트의 해시·참조 갱신이다. 생산 launcher나 기존 시험 기준을 완화하거나 새로운 시험을 돌릴 필요가 없다. 현재 원본·지난 중지 기록·기존 수용·이전 검토자 정정은 그대로 보존한다.
+
+새 a2 승인은 아직 없다. E1-0b 미완·GREEN 미실행·FUTURE-01 기능 종결 보류 및 E1-1–3·실제 자료 fetch/run·C4-A/B·COMSOL 미승인을 유지한다. 이전 8개 RED 일치와 새 l33을 이어 붙여 통과 판정하지 않는다. 이 검토를 COMSOL event clock 문서 수용이나 그 OPEN 상태와 합치지 않는다.
+
+검토자 자료 도구의 처리 한계도 공개한다. 봉인 추출 첫 시도는 TARGETS의 LAUNCH 이름 노드를 완전 literal로 가정해 ValueError를 냈다. 상수 문자열을 별도로 연결하도록 검토자 도구만 고쳐 자료 대조를 마쳤다. 원입력 변경이나 대상 코드/시험 실행은 없었고, 제출물의 결함으로 세지 않는다. 상세 도구 chunk·영향은 PATH_SEAL_REVIEW.json method_notes에 있다.
+
+기준 커밋:
+https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/396c83804708b5f2102e210919d480e658b5fa69
+판정기:
+https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/396c83804708b5f2102e210919d480e658b5fa69/bms-balancing/docs/REIL_C4E1_0B_JUDGE_DRAFT_20261103.py.txt#L265
+승인 요청:
+https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/396c83804708b5f2102e210919d480e658b5fa69/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md#L306

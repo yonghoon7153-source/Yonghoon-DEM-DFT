@@ -1,0 +1,91 @@
+{
+  "pin": "f62a3efda53eec48f5c457fa555be28720037a38",
+  "fetched": [
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_0B_A2_N1_N2_SCOPE_20261104.md",
+      "bytes": 10066,
+      "sha256": "962b7e0d15509f25761124b4a3ea1588b1cd8bd18743611bdadeac62c67e54fa",
+      "git_blob_sha1": "b78c3679a613b9fdbf58390d86ef7d8e41890ba5",
+      "ref": "f62a3efda53eec48f5c457fa555be28720037a38",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/f62a3efda53eec48f5c457fa555be28720037a38/bms-balancing/docs/REIL_C4E_E1_0B_A2_N1_N2_SCOPE_20261104.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "bytes": 362411,
+      "sha256": "6956af6755daa10f09f64cdd4af6825f2fbb353fd4b6611db9dd3f9ed3b54eef",
+      "git_blob_sha1": "16a3f20ae53c3630a4ffe8f42539e8c19ab5294a",
+      "ref": "f62a3efda53eec48f5c457fa555be28720037a38",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/f62a3efda53eec48f5c457fa555be28720037a38/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md"
+    }
+  ],
+  "selected_local_sources": [
+    {
+      "source": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_0B_A2_N1_N2_SCOPE_20261104.md",
+      "copy": "input/REIL_C4E_E1_0B_A2_N1_N2_SCOPE_20261104.md",
+      "bytes": 10066,
+      "sha256": "962b7e0d15509f25761124b4a3ea1588b1cd8bd18743611bdadeac62c67e54fa"
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e1_0b_a2_prereview_20261103\\CODEX_REPLY_KO.txt",
+      "copy": "basis/prior_review/CODEX_REPLY_KO.txt",
+      "bytes": 3343,
+      "sha256": "43c539ab95777985a074b2864f8e0c38dd5268670451126687836116d5e08999"
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e1_0b_a2_prereview_20261103\\REVIEW_KO.txt",
+      "copy": "basis/prior_review/REVIEW_KO.txt",
+      "bytes": 12801,
+      "sha256": "668a39dfa463113dc3a4f61c55b272455ace155763621938bd3068ebaa1ed28d"
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e1_0b_a2_prereview_20261103\\REVIEW_DECISION.json",
+      "copy": "basis/prior_review/REVIEW_DECISION.json",
+      "bytes": 5194,
+      "sha256": "80ae12031ed51e0c748cb3753cf1f310cfc37214dec3983dcb048bf073a0339d"
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e1_0b_a2_prereview_20261103\\source\\bms-balancing\\docs\\REIL_C4E1_0B_JUDGE_DRAFT_20261103.py.txt",
+      "copy": "basis/prior_source/REIL_C4E1_0B_JUDGE_DRAFT_20261103.py.txt",
+      "bytes": 21889,
+      "sha256": "3749b32edd3954fdfa4bfe92336d9eafaf2121b6275c9bd0b3584ece42dc60c4"
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e1_0b_a2_prereview_20261103\\source\\bms-balancing\\docs\\REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v8_20261103.py.txt",
+      "copy": "basis/prior_source/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v8_20261103.py.txt",
+      "bytes": 74542,
+      "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001"
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e1_0b_a2_prereview_20261103\\source\\bms-balancing\\docs\\REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt",
+      "copy": "basis/prior_source/REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt",
+      "bytes": 62639,
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e1_0b_a2_prereview_20261103\\source\\bms-balancing\\docs\\REIL_C4E_E1_0B_RESULT_N1_SCOPE_20261103.md",
+      "copy": "basis/prior_source/REIL_C4E_E1_0B_RESULT_N1_SCOPE_20261103.md",
+      "bytes": 11937,
+      "sha256": "8a0586d44712a0dfef6cba8b065a722d0ccd8725e82191a71e3687ed277627eb"
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e1_0b_a2_prereview_20261103\\source\\bms-balancing\\docs\\REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "copy": "basis/prior_source/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "bytes": 85590,
+      "sha256": "775056233e1dc41a2f0163da793c148eb9a51e627eab0e9bb99e093ad10ae6cf"
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e1_0b_a2_prereview_20261103\\source\\bms-balancing\\docs\\REIL_PREREQUISITES_STATUS_20261004.md",
+      "copy": "basis/prior_source/REIL_PREREQUISITES_STATUS_20261004.md",
+      "bytes": 353136,
+      "sha256": "bd193b684c6e8b911bb3662e3237e1520747877a4f90db837c7e924c96426f62"
+    }
+  ],
+  "attachment_matches_pinned_source": true,
+  "prior_status_exact_prefix_preserved": true,
+  "prior_status_bytes": 353136,
+  "current_status_bytes": 362411,
+  "comparison_ahead_by": 3,
+  "changed_paths": 62,
+  "prior_review_code_and_request_not_in_changed_set": true,
+  "limits": "Historical scratch files and author tool returns were not received or independently authenticated."
+}
