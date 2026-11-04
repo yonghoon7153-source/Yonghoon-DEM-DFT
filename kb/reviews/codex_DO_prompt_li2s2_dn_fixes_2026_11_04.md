@@ -42,9 +42,9 @@ DN 이 해제로 본 항목 (DM P0-1 · P0-2 · 정상 중단 대조 · Q1–Q4)
 - `git diff acc648b0 __BASE__ -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
 - 카드 `개정_완료_기록_v6_2026_11_04` (DN) · `개정_DO_전_리뷰_v7_2026_11_04` (리뷰 고침 규칙 · 옛 문구 정정 · 못 하는 것) — 결과 0 건 · 카드 값은 안 바뀜
 - 리뷰 기록 `db/raw/li2s2_pre_do_review_2026_11_04/README.md` (찾은 것 → 고침 → 시험 · 리뷰어 스크립트 재실행 결과)
-- 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 218) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 99 · Linux)
-  - Windows 에서는 러너의 POSIX 전용 3 개를 건너뛴다 (진짜 프로세스 그룹 2 · 띄우는 순간 신호 1) → 96 이 맞다. 드라이버는 그대로 218.
-- 깨기 (변이) **__MUT__** — DN 판 174 개 (DM 판 165 + DN 9) 를 가져오되 이번에 자리가 바뀐 10 개를 옮기고 DO 자리 48 개 (`DO1_…` ~ `DO48_…`) 를 더했다 (222). `db/raw/li2s2_do_mutation_2026_11_04/`
+- 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 220) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 100 · Linux)
+  - Windows 에서는 러너의 POSIX 전용 3 개를 건너뛴다 (진짜 프로세스 그룹 2 · 띄우는 순간 신호 1) → 97 이 맞다. 드라이버는 그대로 220.
+- 깨기 (변이) **222 / 222 빨강 (전체 실행 218 · 39c02ed7 + 시험 구멍 넷을 이유 검사로 고친 뒤 다시 4 / 4 · 0e0c8739)** — DN 판 174 개 (DM 판 165 + DN 9) 를 가져오되 이번에 자리가 바뀐 10 개를 옮기고 DO 자리 48 개 (`DO1_…` ~ `DO48_…`) 를 더했다 (222). `db/raw/li2s2_do_mutation_2026_11_04/`
 
 ## 2. 한 것
 
@@ -121,10 +121,12 @@ DN 이 해제로 본 항목 (DM P0-1 · P0-2 · 정상 중단 대조 · Q1–Q4)
 **시험**
 - 리뷰어 재현을 진짜 판정 · 판독 함수로 selftest 에 넣었다. 러너 통합 시험 열여섯 · 드라이버 fixture 서른 가까이.
 - 고친 코드에 **리뷰어 스크립트를 그대로 다시 돌렸다** → 모두 막힘 (발사 0 · stage1_pass 없음).
-- 깨기 (변이) 가 시험 구멍 셋을 드러냈다 — 코드는 맞고 시험이 그 자리를 안 봤다. 시험을 더했다:
+- 깨기 (변이) 가 시험 구멍 일곱을 드러냈다 — 코드는 맞고 시험이 그 자리를 안 봤다. 대부분은 이번에 넣은 새 검사가 같은 입력을 먼저 잡아 가렸다. 시험을 더했다:
   - DO6: final 자리 디렉터리 · 깨진 링크 검사를 꺼도, 같은 폴더를 MD 중 파일 목록 검사가 잡아 몰랐다 → 보류 이유 문구까지 본다.
   - DO19: gate 오류를 쓰는 쪽 (`stage1_verdict`) 을 안 봤다 → gate_check 를 예외로 바꿔 진짜 판정 함수로 기록 · 보류를 본다.
   - DO24: 꼴 틀린 장부 melt_check 가 글자 하나뿐이었다 → dict · 빈 목록 · 0 을 더했다.
+  - D22 · D23: 장부에서 빠진 행의 판정 · 음수 비용을 넓힌 보존 폴더 검사 · 새 '자기 하한' 검사가 먼저 잡았다 → 각자의 무효 이유까지 본다.
+  - N5 · DN8: FIRE 로그만 남은 폴더 · 꼴 틀린 gate_check 를 MD 중 파일 목록 검사 · 새 '판독 예외 → 보류' 감싸개가 먼저 잡았다 → 각자의 보류 이유까지 본다.
 - Windows 에서 시험이 죽지 않게 했다 (시험만 · Linux 동작 같음):
   - 띄우는 순간 신호 시험은 `pthread_sigmask` 가 있는 OS 만 돈다. Windows 는 `os.kill(자기, SIGTERM)` 이 프로세스를 바로 끝낸다.
   - fsync 개수는 POSIX 만 디렉터리까지 2 번으로 본다.
@@ -146,7 +148,7 @@ DN 이 해제로 본 항목 (DM P0-1 · P0-2 · 정상 중단 대조 · Q1–Q4)
     - `ledger_check` 가 `closing` 을 돌려준다.
     - `folder_stage_detail` 은 예외에 죽지 않는다.
 - 러너:
-  - 고정값 `EXPECTED_DRIVER_SHA16 = cd45aa850f3f276a` · `EXPECTED_VALUES_SHA16 = 086de59c484f9c32` · `STOP_KEYS`
+  - 고정값 `EXPECTED_DRIVER_SHA16 = e0ab597b426158d6` · `EXPECTED_VALUES_SHA16 = 086de59c484f9c32` · `STOP_KEYS`
   - `--expect_sha` 명령줄 옵션을 없앴다.
   - selftest 에 `LI2S2_SELFTEST_FAILFAST=1` (변이 실행용 · 첫 빨강에서 멈춤 · 기본은 끔).
 
