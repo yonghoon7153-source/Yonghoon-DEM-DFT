@@ -63,6 +63,19 @@ def chk(name, cond, why=''):
 
 CASES = []
 
+#: ★ 11-04 PC8-07 — 11-03 밤 (Q3 · BAN8) 판 CJUNC_QUALIFIERS 넷째 줄 (전달 길이 문장이 기하를 좁히지 않은 판) — 시험 쪽 글자 (다시 핀 대조 · 사본 금지 짝)
+QUAL4_1103 = ('R_j,0 는 모든 VV instance 에 같은 값 · 접합 총 G = max(1, L_c/L_par)/R_j,0 (길이 법칙 v0 — 선 접촉 협착 ∝ 길이의 1차 근사 · '
+              '점 접합 L_c/L_par 개 병렬) · 분산판 v0: k = ceil(L_c/L_par) 간선 · 각 G/k · 닿음 구간 k 등분 점의 기하 포트 · 간선마다 PTFE 덮임 · '
+              'SDCP 근접 (L_c ≤ L_par = 점 접합 하나) · L_c = 닿음 길이 (중심선 기하 근접) · 분산 간선 = 같은 R_j,0 의 균일 분포 근사 '
+              '(접점 저항 분포 미검증 · 전달 길이 = 해석 시험 통과 (분산판 = 전송선 · 식 검증) · 실침대 L_c 대조는 R 보정 뒤) · k 가 바뀌는 L_c/L_par 정수 '
+              '경계에서 σ 가 계단으로 뛴다 (이산화 오차 · 크기 ∝ h·r′/R_j)')
+
+
+def qual_1103():
+    """producer 한정어 목록에서 전달 길이 줄만 11-03 판 글자로 (★ 11-04 PC8-07)."""
+    import carbon_junction as CJ
+    return [QUAL4_1103 if '전달 길이' in q else q for q in CJ.CJUNC_QUALIFIERS]
+
 
 def case(tag):
     def deco(fn):
@@ -236,6 +249,9 @@ def t_rc():
         '진단 표 빠짐': lambda x: E(x).pop('diagnostics'),
         '표지 다름': lambda x: E(x).update(label='탄소 접합'),
         '한정어 빠짐': lambda x: E(x).update(qualifiers=[]),
+        #  ★ 11-04 PC8-07 (사전 공격 8 회차 P8-07) — 전달 길이 한정어를 시험한 기하로 좁힘 = 계약 (producer 상수와 글자 같음) 다시 핀 · 11-03 판 넓은
+        #    문장을 실은 증거 = 거부 (그 문장 전에 만든 팔은 이 계약을 지나지 못한다 — 의도한 다시 핀)
+        '한정어 = 11-03 판 (전달 길이 넓은 문장 · 다시 핀)': lambda x: E(x).update(qualifiers=qual_1103()),
         '수정자 c 기록 ↔ 블록 없음 불일치': lambda x: E(x).update(sdcp_mod_c=1.0),
         '요청 칸에 sdcp_mod 만 더함 (블록 없음)': lambda x: x.update(ca_ext_requested=['cjunc', 'sdcp_mod']),
     }
