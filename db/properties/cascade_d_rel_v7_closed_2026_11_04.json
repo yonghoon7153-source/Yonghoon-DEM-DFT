@@ -2,7 +2,7 @@
  "schema": "campaign_closure/v1",
  "record_kind": "closure",
  "date": "2026-11-04",
- "status": "proposed — 사용자 (cascade 1저자) 비준 대기 · 결정 D-2026-11-04-cascade-v7-main-closed",
+ "status": "closed — 사용자 (cascade 1저자) 비준 2026-11-04 · 결정 D-2026-11-04-cascade-v7-main-closed active",
  "system": "comp1_V0_k444 2×2×1 기반 Al 도핑 LPSCl 셀 — 처방 P1 (Al₂O₃) / P2 (Al₂S₃) · 독립 부모 배열 10 · 공통부피 4066.479695 Å³ · Li 90 · UMA-s-1p1(omat) default · Langevin NVT T* = 1000 K · dt 2 fs · friction 0.02 · 평형 5 ps / 생산 400 ps · save 100 fs · kgy RTX3090",
  "track": "cascade — **사용자 = 1저자** (CLAUDE.md §소통). 결정이 그 자리에서 나고 통지할 제3자가 없다.",
  "citable": "조건부 — §2 허용 서술 그대로만 (상대 비 · 구간 · 판정 갈래). 절대 D 는 인용 금지 (1저자 인용정책 2026-09-18)",
@@ -19,10 +19,23 @@
   "sd_ln": 0.0614,
   "SE_ln": 0.0251,
   "t_0975_df5": 2.571,
-  "ci95_ln": [0.0292, 0.158],
+  "ci95_ln": [
+   0.0292,
+   0.158
+  ],
   "비_D_P1_over_D_P2": 1.098,
-  "ci95_비": [1.03, 1.171],
-  "부모별_lnR": {"B": -0.0195, "C": 0.0901, "D": 0.1245, "G": 0.0946, "I": 0.1632, "J": 0.1087},
+  "ci95_비": [
+   1.03,
+   1.171
+  ],
+  "부모별_lnR": {
+   "B": -0.0195,
+   "C": 0.0901,
+   "D": 0.1245,
+   "G": 0.0946,
+   "I": 0.1632,
+   "J": 0.1087
+  },
   "부호": "L_k > 0 : 5/6 · < 0 : 1/6",
   "비용": "누적 513.10 / 상한 592.0 GPU-h (결정 D-2026-10-28-cascade-v7-main-round-cap2)",
   "판독기": "tools/doping/judge_eprime.py · 판독 JSON 의 tool commit 2331c488 (dirty false · wt_cv7main_1028)",
@@ -64,8 +77,8 @@
   ],
   "⛔_재개_사유가_아닌_것": "결측 부모 넷 (A · E · F · H) 을 메우려는 추가 런 · 자격 문턱 완화 · 골격 경보 무시 · 자격 무시 가정계산 · 구간이 0 을 안 넘는다는 이유의 '차이' 재판정."
  },
- "6_다음": "스크리닝 축 확장 계획 (D-2026-10-15-cascade-screening-axes-plan · active) 이 'D_rel v7 판독 뒤 시작 시점과 D_rel 237 확장과의 순서를 사용자와 정한다' 고 했다 — 마감 비준과 같이 사용자 결정을 받는다 (계산 승인은 축마다 카드 비준).",
- "6_비준": "대기 — 사용자 (cascade 1저자)",
+ "6_다음": "사용자 2026-11-04: D_rel 을 237 설계로 넓히는 일은 **뒤로 미룸** (필요해지면 새 카드) · 스크리닝 축 확장 첫 묶음은 **① NCM 계면 분해 산물 먼저** (전압별 분해 상 · 구동력 · 산물 밴드갭 → 부동태화 · Nd CEI 카드 틀만 빌림) → 그 보고량 카드부터 (계산 전 비준) · ② 가수분해는 그 뒤",
+ "6_비준": "✅ 사용자 (cascade 1저자) 2026-11-04 — AskUserQuestion: '비준 — 마감 (Recommended)'. 결정 D-2026-11-04-cascade-v7-main-closed active.",
  "출처": {
   "카드_v7": "db/properties/cascade_estimand_card_v7_probe_2026_10_01.json (active)",
   "개정_CP": "db/properties/cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json (active)",
@@ -75,6 +88,17 @@
   "판독기": "tools/doping/judge_eprime.py (main_v7)"
  },
  "status_history": [
-  {"at": "2026-11-04", "state": "proposed", "by": "agent", "note": "kgy 판독 (09:54 · rc 0) · 회수 924858bf · SHA256SUMS 126 대조 OK → 마감 기록 초안 · 사용자 (cascade 1저자) 비준 대기"}
+  {
+   "at": "2026-11-04",
+   "state": "proposed",
+   "by": "agent",
+   "note": "kgy 판독 (09:54 · rc 0) · 회수 924858bf · SHA256SUMS 126 대조 OK → 마감 기록 초안 · 사용자 (cascade 1저자) 비준 대기"
+  },
+  {
+   "at": "2026-11-04",
+   "state": "closed",
+   "by": "사용자 (cascade 1저자)",
+   "note": "사용자 2026-11-04 (이 세션 · AskUserQuestion): v7 마감 '비준 — 마감 (Recommended)' · D_rel 237 확장 '뒤로 미룸 (Recommended)' · 첫 묶음 '① NCM 계면 분해 먼저 (Recommended)'"
+  }
  ]
 }

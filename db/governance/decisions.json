@@ -10962,10 +10962,10 @@
      "closure"
     ]
    },
-   "title": "cascade D_rel v7 본 라운드를 닫는다 — T* 1000 K · 자격 36/40 · 유효 부모 6/10 · 실질_동등_지지 (D_P1/D_P2 1.10 · 95 % 구간 1.03–1.17) (사용자 = cascade 1저자 비준 대기)",
+   "title": "cascade D_rel v7 본 라운드를 닫는다 — T* 1000 K · 자격 36/40 · 유효 부모 6/10 · 실질_동등_지지 (D_P1/D_P2 1.10 · 95 % 구간 1.03–1.17) (사용자 = cascade 1저자 비준)",
    "statement": "cascade D_rel 카드 v7 (+ 개정 CP) 본 라운드 (부모 10 × 처방 P1 Al₂O₃ / P2 Al₂S₃ × 시드 1·2 · T* 1000 K · 400 ps · kgy · 513.10/592 GPU-h) 를 러너가 찍은 판정 명령 그대로 한 번 판독했다 (judge_eprime --card v7 · 2026-11-04 · rc 0): 자격 36/40 · 유효 부모 6/10 · L̄ = 0.094 · 95 % 구간 (ln) [0.029, 0.158] · 비 1.10 [1.03, 1.17] → 등가영역 ±ln 1.5 안 → **실질_동등_지지**. 이 판정으로 v7 본 라운드를 닫는다 — 허용 서술은 마감 기록 §2 (V7_CLAIM_SCOPE 그대로 + 결과 문장) 뿐이고 절대 D 는 인용하지 않는다.",
    "rationale": "판정 규칙 (v6 §4 집계 · 자격 · 결측 · δ · 3 갈래 · 중간 집계 금지 · 허용 문구) 은 결과 전에 박혔고 판독기는 10-08 뒤 바뀌지 않았다. 갈래는 판독기가 구간 위치로 정했다. 구간이 0 을 넘나들지 않는 것은 기록만 하고 '차이' 로 읽지 않는다 (δ 기준). 결측 부모 넷은 메우지 않는다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "closure",
    "results_seen": true,
    "card": "db/properties/cascade_d_rel_v7_closed_2026_11_04.json",
@@ -10989,15 +10989,31 @@
    ],
    "enforcement": "① 마감 기록 §2 허용 서술 밖으로 쓰지 않는다 ② 런별 · 부모별 절대 D 를 어떤 형태로도 싣지 않는다 (판독 JSON 은 db/raw 원자료로만) ③ '600 K · 작동 온도 · 실제 재료 동등' · 'Al₂O₃ 처방이 빠르다' · '열 부모 모두' · 'T* = 확산 시작 온도' 금지",
    "proposed_by": "claude-session-2026-11-04",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-04",
      "state": "proposed",
      "by": "agent",
      "note": "kgy 판독 (rc 0) · 회수 924858bf (SHA256SUMS 126 OK) → 마감 기록 초안 · 사용자 (cascade 1저자) 비준 대기"
+    },
+    {
+     "at": "2026-11-04",
+     "state": "active",
+     "by": "사용자 (cascade 1저자)",
+     "note": "사용자 2026-11-04 (이 세션 · AskUserQuestion): v7 마감 '비준 — 마감 (Recommended)' · D_rel 237 확장 '뒤로 미룸 (Recommended)' · 첫 묶음 '① NCM 계면 분해 먼저 (Recommended)'"
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-04T01:05:46Z",
+    "commit": "50144e8009aab75ac9903655ff0324e8ff7dbc3c",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-04 (이 세션 · AskUserQuestion): v7 마감 '비준 — 마감 (Recommended)' · D_rel 237 확장 '뒤로 미룸 (Recommended)' · 첫 묶음 '① NCM 계면 분해 먼저 (Recommended)'",
+    "decision_digest": "sha256:d3ecb5fb44a1beb4ffda84a7633741d26297fb21761478c9547203aac003be27"
+   }
   }
  ]
 }
