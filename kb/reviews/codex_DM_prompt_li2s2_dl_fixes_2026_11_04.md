@@ -7,7 +7,7 @@ letter: DM
 track: li2s
 channel: codex
 kind: prompt
-status: 초안 (2026-11-04) — 사용자 발송 대기 · 기준 커밋 04555774
+status: 발송 · 회신 수령 2026-11-04 (NO-GO · P0 2 · `codex_DM_reply_li2s2_dl_fixes_2026_11_04.md`) · 기준 커밋 04555774
 confidence: medium
 verificationStatus: unverified
 explored: false
