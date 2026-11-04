@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# run_axis_ncm_gabia.sh — cascade 축 ① NCM 계면 분해 (D-2026-11-04-cascade-axis-ncm-interface)
+# run_axis_ncm_gabia.sh — cascade MP 닫힌계 축 러너: AXIS=ncm (기본 · 축 ① NCM 계면 분해 · D-2026-11-04-cascade-axis-ncm-interface)
+#                          · AXIS=hyd (축 ② 가수분해 · D-2026-11-04-cascade-axis-hydrolysis · 같은 91 종 × H2O · 호스트 × H2O)
 #
 # 카드: db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json §3b
 #   닫힌계 pseudo-binary (M6 규약) · 91 대표 조성 × {LiNiO2, Li0.5NiO2} (1차) · {LiCoO2, Li0.5CoO2} (민감도)
@@ -23,9 +24,16 @@
 set -uo pipefail
 PY=${PY:-/data/apps/miniforge3/envs/uma/bin/python}
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
-OUT=${OUT:-$ROOT/db/raw/cascade_axis_ncm_v2_2026_11_04}
-DEC=${DEC:-D-2026-11-04-cascade-axis-ncm-interface}
-CARD=db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json
+AXIS=${AXIS:-ncm}
+case "$AXIS" in
+  ncm) DEF_OUT=$ROOT/db/raw/cascade_axis_ncm_v2_2026_11_04; DEF_DEC=D-2026-11-04-cascade-axis-ncm-interface
+       CARD=db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json; LANES=(designs_lno designs_lco host); EXPECT="182 · 182 · 6" ;;
+  hyd) DEF_OUT=$ROOT/db/raw/cascade_axis_hyd_2026_11_04; DEF_DEC=D-2026-11-04-cascade-axis-hydrolysis
+       CARD=db/properties/cascade_axis_hydrolysis_estimand_2026_11_04.json; LANES=(designs_hyd host_hyd); EXPECT="91 · 1" ;;
+  *) echo "⛔ AXIS 는 ncm · hyd 중 하나 ($AXIS) (rc 9)" >&2; exit 9 ;;
+esac
+OUT=${OUT:-$DEF_OUT}
+DEC=${DEC:-$DEF_DEC}
 cd "$ROOT" || exit 2
 log(){ echo "[$(date '+%F %T')] $*" | tee -a "$OUT/runner.log"; }
 die(){ local c=${2:-3}; echo "⛔ $1 (rc $c)" >&2; [ -d "$OUT" ] && echo "[$(date '+%F %T')] ⛔ $1 (rc $c)" >> "$OUT/runner.log"; exit "$c"; }
@@ -46,12 +54,12 @@ running(){ for x in $(pgrep -f "interface_reactivity_v2.py.*$OUT" 2>/dev/null); 
 [ -z "$(running)" ] || die "이미 돌고 있다 (PID $(running | tr '\n' ' '))" 13
 mkdir -p "$OUT"
 RES=()
-EXIST=0; for f in designs_lno.jsonl designs_lco.jsonl host.jsonl; do [ -e "$OUT/$f" ] && EXIST=1; done
+EXIST=0; for f in "${LANES[@]}"; do [ -e "$OUT/$f.jsonl" ] && EXIST=1; done
 if [ "$EXIST" = 1 ]; then
   [ "${RESUME:-0}" = 1 ] || die "출력이 이미 있다 — 이어 돌리려면 RESUME=1 (오류 행은 먼저 지운다)" 14
   RES=(--resume)
 fi
-log "시작 · 결정 $DEC active · OUT=$OUT · PY=$PY · resume=${RESUME:-0}"
+log "시작 · AXIS=$AXIS · 결정 $DEC active · OUT=$OUT · PY=$PY · resume=${RESUME:-0}"
 [ "${DRY:-0}" = 1 ] && { log "DRY=1 — 검사만 하고 끝"; exit 0; }
 
 # 2) 도구 selftest (오프라인)
@@ -131,6 +139,7 @@ for k in sorted(f):
 EOF
 )
 [ "${#ROSTER[@]}" = 91 ] || die "대상 91 종을 못 읽는다 ($ROSTER_SRC → ${#ROSTER[@]} 종)" 19
+if [ "$AXIS" = ncm ]; then
 "$PY" $IR --only "${ROSTER[@]}" --closed "${RES[@]}" --cathodes "LiNiO2:LNO_full" "Li0.5NiO2:LNO_half" \
    --out "$OUT/designs_lno.jsonl" >> "$OUT/lane_lno.log" 2>&1 & P1=$!
 "$PY" $IR --only "${ROSTER[@]}" --closed "${RES[@]}" --cathodes "LiCoO2:LCO_full" "Li0.5CoO2:LCO_half" \
@@ -138,17 +147,25 @@ EOF
 "$PY" $IR --only "HOST:Li6PS5Cl" --closed "${RES[@]}" --cathodes "LiNiO2:LNO_full" "Li0.5NiO2:LNO_half" \
    "LiCoO2:LCO_full" "Li0.5CoO2:LCO_half" "LiNi0.8Co0.1Mn0.1O2:NCM_full" "Li0.5Ni0.8Co0.1Mn0.1O2:NCM_half" \
    --out "$OUT/host.jsonl" >> "$OUT/lane_host.log" 2>&1 & P3=$!
-log "갈래 셋 발사 (PID $P1 $P2 $P3 · 대상 ${#ROSTER[@]} 종 · $ROSTER_SRC) — 기대 줄 수 182 · 182 · 6"
-wait $P1; R1=$?; wait $P2; R2=$?; wait $P3; R3=$?
-log "갈래 끝 · rc lno=$R1 lco=$R2 host=$R3"
+else                                    # AXIS=hyd — 상대 H2O (카드 §1b · 같은 91 종)
+"$PY" $IR --only "${ROSTER[@]}" --closed "${RES[@]}" --cathodes "H2O:H2O" \
+   --out "$OUT/designs_hyd.jsonl" >> "$OUT/lane_hyd.log" 2>&1 & P1=$!
+"$PY" $IR --only "HOST:Li6PS5Cl" --closed "${RES[@]}" --cathodes "H2O:H2O" \
+   --out "$OUT/host_hyd.jsonl" >> "$OUT/lane_host_hyd.log" 2>&1 & P2=$!
+P3=
+fi
+log "갈래 발사 (PID $P1 $P2 $P3 · 대상 ${#ROSTER[@]} 종 · $ROSTER_SRC) — 기대 줄 수 $EXPECT"
+wait $P1; R1=$?; wait $P2; R2=$?; R3=0; [ -n "$P3" ] && { wait $P3; R3=$?; }
+log "갈래 끝 · rc ${LANES[*]} = $R1 $R2 $R3"
 
 # 5) 줄 세기 (값 없이) + manifest (뒤)
-"$PY" - "$OUT" "$R1" "$R2" "$R3" <<'EOF' | tee -a "$OUT/runner.log"
+"$PY" - "$OUT" "${LANES[*]}" "$R1" "$R2" "$R3" <<'EOF' | tee -a "$OUT/runner.log"
 import json, sys, collections
-out, rcs = sys.argv[1], dict(zip(("designs_lno", "designs_lco", "host"), sys.argv[2:5]))
+out, lanes = sys.argv[1], sys.argv[2].split()
+rcs = dict(zip(lanes, sys.argv[3:6]))
 m = json.load(open(f"{out}/manifest.json"))
 m["lanes"] = {}
-for k in ("designs_lno", "designs_lco", "host"):
+for k in lanes:
     rows = [json.loads(l) for l in open(f"{out}/{k}.jsonl")] if __import__("os").path.exists(f"{out}/{k}.jsonl") else []
     c = collections.Counter("error" if "error" in r else "skipped" if "skipped" in r
                             else "ok" if "dE_eV_per_atom" in r else "other" for r in rows)
@@ -160,10 +177,13 @@ EOF
 SAME=$(manifest after) || die "manifest (뒤) 실패" 18
 log "MP 판 앞뒤: $SAME"
 
-# 6) 산물 MP 갭 (값은 로그 · json 에만)
+# 6) 산물 MP 갭 (축 ① 만 · 값은 로그 · json 에만 · 축 ② 카드는 갭을 안 쓴다)
+R4=0
+if [ "$AXIS" = ncm ]; then
 "$PY" tools/oxidation/sei_product_gaps.py --from_reactions "$OUT/designs_lno.jsonl" "$OUT/designs_lco.jsonl" \
    "$OUT/host.jsonl" --out "$OUT/product_gaps.json" > "$OUT/lane_gaps.log" 2>&1; R4=$?
 log "산물 갭 rc=$R4"
+fi
 
 # 7) 끝 줄을 먼저 쓰고 해시 (runner.log 가 해시 뒤에 안 바뀌게)
 log "끝 — 회수 블록은 판독기 커밋 뒤에 받는다 (카드 §8 ③)"

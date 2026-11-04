@@ -1,0 +1,20 @@
+변이 18 개 · 자리 모두 한 번씩
+H1_h2s_any_HS                  ⭕ 빨강 ·   ⛔ 양성: 게이트 통과 · δ_hyd = 설계 − 호스트 · H₂S 몫 = H₂S 계수 / (설계 항 계수 × S 수) ({'Ag2O': (-2.0, 0.4105), 'Al2O3': (10.0, 0.4105), 
+H2_design_term_check_off       ⭕ 빨강 · IndexError: list index out of range
+H4_g1b_h2s_off                 ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — 호스트 반응 양수 · 호스트 H₂S 없음 · 행 빠짐 · 다른 조성 · 열린계 행 · MP 판 이동 · manifest · 도구 바뀜 · 결정 proposed 
+H5_g1b_sign_off                ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — 호스트 반응 양수 · 호스트 H₂S 없음 · 행 빠짐 · 다른 조성 · 열린계 행 · MP 판 이동 · manifest · 도구 바뀜 · 결정 proposed 
+H6_f1_sign                     ⭕ 빨강 ·   ⛔ 위험 표시: δ_hyd ≤ −10 → F1_hyd (Al2S3 −30) · Δf ≥ +0.10 → F2_H2S (Al2S3 +0.12) · 나머지는 표시 없음
+H7_f2_off                      ⭕ 빨강 ·   ⛔ 위험 표시: δ_hyd ≤ −10 → F1_hyd (Al2S3 −30) · Δf ≥ +0.10 → F2_H2S (Al2S3 +0.12) · 나머지는 표시 없음
+H8_g4_flip                     ⭕ 빨강 ·   ⛔ 합치는 규칙 R3: G4 통과 · 안 겹친 축만 Pareto 에 (['delta_NCM_LNO_half_meV'] · G7 0.6071)
+H9_g7_never_overlap            ⭕ 빨강 ·   ⛔ ⛔음성 G7: δ_hyd 순서가 축 ① 과 같으면 ρ = 1 → 겹침 ({'rho_spearman': 1.0, 'n': 7, 'overlap': False, 'use': '겹침 — Pareto 에는 축 ① δ
+H10_flags_ignored              ⭕ 빨강 ·   ⛔ 합치는 규칙: 위험 표시 (Ag2O 금속성 · Al2S3 반응 · 가수분해 증가) 는 빼고 · 남은 것의 Pareto 비지배 = SnO2 하나 (['Ag2O', 'SnO2'])
+H11_pareto_flip                ⭕ 빨강 ·   ⛔ 합치는 규칙: 위험 표시 (Ag2O 금속성 · Al2S3 반응 · 가수분해 증가) 는 빼고 · 남은 것의 Pareto 비지배 = SnO2 하나 (['Li2S'])
+H12_r4_off                     ⭕ 빨강 ·   ⛔ ⛔음성 합치는 규칙: 축 ① G4 불통과 · 축 ② 겹침 → 연속 축 하나 → R4 (표시만 · 고르지 않음)
+H13_g7_ignored                 ⭕ 빨강 ·   ⛔ ⛔음성 합치는 규칙: 축 ① G4 불통과 · 축 ② 겹침 → 연속 축 하나 → R4 (표시만 · 고르지 않음)
+H14_pair_f_off                 ⭕ 빨강 ·   ⛔ R5: Al 짝 (δ 차 30) · Sn 짝 (δ 차 2 이지만 f 차 0.13) 다름 · Li 짝 (δ 차 5 · f 차 0.02) 같음 · 없는 짝 missing
+H15_g5_off                     ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — 호스트 반응 양수 · 호스트 H₂S 없음 · 행 빠짐 · 다른 조성 · 열린계 행 · MP 판 이동 · manifest · 도구 바뀜 · 결정 proposed 
+H16_decision_off               ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — 호스트 반응 양수 · 호스트 H₂S 없음 · 행 빠짐 · 다른 조성 · 열린계 행 · MP 판 이동 · manifest · 도구 바뀜 · 결정 proposed 
+H17_formula_check_off          ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — 호스트 반응 양수 · 호스트 H₂S 없음 · 행 빠짐 · 다른 조성 · 열린계 행 · MP 판 이동 · manifest · 도구 바뀜 · 결정 proposed 
+H18_tool_drift_off             ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — 호스트 반응 양수 · 호스트 H₂S 없음 · 행 빠짐 · 다른 조성 · 열린계 행 · MP 판 이동 · manifest · 도구 바뀜 · 결정 proposed 
+H19_host_row_check_off         ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — 호스트 반응 양수 · 호스트 H₂S 없음 · 행 빠짐 · 다른 조성 · 열린계 행 · MP 판 이동 · manifest · 도구 바뀜 · 결정 proposed 
+끝: 빨강 18 / 18

@@ -11191,7 +11191,7 @@
    "title": "cascade 스크리닝 축 ② — 91 설계의 도핑 조성 + H₂O 닫힌계 가수분해: 호스트 대비 δ_hyd (R1) · H₂S 몫 Δf (R2) · O/S 짝 (R5) · 축 ① 과의 겹침 (G7)",
    "statement": "카드 db/properties/cascade_axis_hydrolysis_estimand_2026_11_04.json 이 보고량 · 게이트 · 금지 문장이다: 대상 = 축 ① 개정 1 의 91 종 조성 · 호스트 Li6PS5Cl · 상대 H₂O · 닫힌계 pseudo-binary (M6 · 축 ① 규약) · G1b 호스트 반응 음수 + H₂S 산물 · G2 완결 · G3 같은 MP 판 · G4 IQR ≥ 10 meV/atom · G7 축 ① 과 Spearman |ρ| ≥ 0.8 이면 겹침 (Pareto 에는 축 ① 만). 합치는 규칙 연결: 위험 표시 F1_hyd δ_hyd ≤ −10 · F2_H2S Δf ≥ +0.10 · 좋은 방향 δ_hyd 큰 쪽. 판독기는 회수 전에 커밋.",
    "rationale": "축 확장 계획 첫 묶음 ② · 합치는 규칙 (D-2026-11-04-cascade-axes-combination-rule) 이 다음 축 카드에 위험 표시 · 좋은 방향 · 겹침 기준을 결과 전에 적으라고 했다. 축 ① 과 같은 대상 · 규약이라 비교가 서고, Lee 2024 · Zhu 2020 은 다른 양이라 판정에 안 섞는다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "results_seen_note": "축 ② 설계 × H₂O 값 0 건 · 8 월 T11 (별도 상) · 문헌 표 · 축 ① 판독은 봤다 (카드 §0)",
@@ -11216,15 +11216,31 @@
     "compute": "gabia CPU · MP 조회 92 쌍 (≈ 20–25 분) · GPU 0 · SCF 0"
    },
    "proposed_by": "agent",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-04",
      "state": "proposed",
      "by": "agent",
      "note": "사용자 'ㅇㅇ 가자' (② 가수분해 카드) — 결과 전 초안 · 사용자 비준 대기"
+    },
+    {
+     "at": "2026-11-04",
+     "state": "active",
+     "by": "사용자 (cascade 1저자)",
+     "note": "사용자 2026-11-04 (이 세션 · AskUserQuestion): 축 ② 가수분해 카드 '비준 — 바로 진행 (Recommended)'"
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-04T05:23:29Z",
+    "commit": "2d1c3a7b19948b1c2e55cc6a675c307322062a1a",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-04 (이 세션 · AskUserQuestion): 축 ② 가수분해 카드 '비준 — 바로 진행 (Recommended)'",
+    "decision_digest": "sha256:b42768db53d460bf0c581becf35d23ba8515d34192dc5a2ff9cc7206b2668f01"
+   }
   }
  ]
 }
