@@ -1,0 +1,49 @@
+{
+  "python": "3.8.20 (default, Oct  2 2024, 16:34:12) \n[Clang 18.1.8 ]",
+  "scope": "Exact external ancestor baseline/injection block only; synthetic directories",
+  "checks": [
+    {
+      "name": "ancestor_baseline",
+      "passed": true,
+      "inventory_rc": 0,
+      "roots": {
+        "local": "COUNTED"
+      }
+    },
+    {
+      "name": "ancestor_sibling_create_remove",
+      "passed": true,
+      "inventory_rc": 2,
+      "roots": {
+        "local": "CHANGED"
+      },
+      "counted_cases": 0,
+      "injections": [
+        {
+          "before": [
+            34,
+            56380,
+            16832,
+            60,
+            1793787037905538916,
+            1793787037905538916,
+            1000,
+            1000
+          ],
+          "after": [
+            34,
+            56380,
+            16832,
+            60,
+            1793787037910066097,
+            1793787037910066097,
+            1000,
+            1000
+          ]
+        }
+      ],
+      "historical_cause_proven": false
+    }
+  ],
+  "historical_cause_proven": false
+}

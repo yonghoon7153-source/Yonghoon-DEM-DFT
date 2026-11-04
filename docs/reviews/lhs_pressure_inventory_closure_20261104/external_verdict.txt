@@ -1,0 +1,95 @@
+# LPI-01/02 독립 반박 재검토 판정 — 2026-11-04 (한국시간)
+
+**판정: LPI-01은 요청된 출력·종료 오류 보강 범위에서 종결 가능. LPI-02는 문구 한정·기존 반례 보존만 종결 가능. 시간 위험과 최초 audit 실패 원인은 열려 있다. 전체 게이트 HOLD 유지.**
+
+이 문서는 독립 검토 의견이다. 공유 원장에 CLOSED를 기록하지 않았다. 실제 ibb/WSL 접속·연구 경로 읽기·연구 계산·scheduler·발사·통합·배포·공유 전체 gate 실행은 하지 않았다. POSIX/Lustre 현장 자격·압력 적격성·단계 A·실제 실행/배포 GO는 승인하지 않는다.
+
+## 1. 대상과 증거 신원
+
+- 저장소: `yonghoon7153-source/Yonghoon-DEM-DFT`, 요청 branch `codex/lhs-v13-1104`.
+- 검토 PIN: `edbe6eb176d22db574953d3e47d11969b353421b`.
+- 이전 외부 PIN: `c8a55c8ae1021ec80634ee8c6533deeebc67ce61`.
+- 원 cloud checkout HEAD: `01c1aaf5be8acdf7d1716f34cc86fc77d8e27362`. 이를 검토 PIN으로 사용하지 않았다. 원 저장소는 읽기만 했고 시작·종료 상태 모두 clean이다.
+- 고정 SHA를 별도 scratch Git 저장소로 fetch했다. 세 검토 폴더 및 B7의 **68개 파일**을 Git blob SHA1·크기·SHA256으로 대조하고 시험 전후 바이트 동일성을 확인했다. `pin_blob_manifest.json`, `source_before.json`, `source_after.json`, `scope_verified.json` 참조. 원 채팅의 SNAPSHOT70 검증과 이 68개 범위는 서로 다른 집계다.
+- 명령 SHA256: `2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634`.
+- 기존 시험 SHA256: `633fc2f4164d350a68a6d9546bdb31174995cec18a639084e58d0a63bafeeeeb`.
+- 출력 시험 SHA256: `4490d46fa5d1ca0243e215eee8bd5f3c98e5005f9ae6c77079b71f675d483648`.
+- B7 SHA256: `34eb74142884489505590501840ccc6423a014a508989c82f135020146283ad3`.
+- 원격 PIN에 보존된 이전 원본 evidence ZIP을 직접 읽고 SHA256 `00c6f07b273d55e3717bde6591ae69314dda439c97574fa6b74fe3216e3f5ef0` 및 CRC를 확인했다. 과거 판정/실패 로그는 원문 그대로 패키지의 `source/` 아래 보존한다.
+
+**첨부 intake 분리:** 원 Windows 채팅이 검증했다는 전달 ZIP `codex_lhs_lpi_recheck_20261104_edbe6eb176d2.zip` (436,192 B, SHA256 `438f39b8fbcf82d8070bd2c2352d76e8d397f8440b196276cb09225d8cb406b2`) 자체를 이 cloud에서 열거나 재검증하지 않았다. PIN/PRIOR_REVIEW_PIN, SNAPSHOT70, PACKAGE84 및 원격70 일치는 사용자 전달에 따른 원 채팅의 독립 대조 기록이다. 이번 검토는 원격 고정 PIN의 동일 소스/보존 증거와 새 실행 결과에 근거한다.
+
+## 2. 환경·실행 경계
+
+runtime skill과 networking 지침을 먼저 읽었다. `/etc/codex/network-policy.json`: 제한 HTTP, VPN 미설정, TCP 허용 목록 없음. 환경 상태는 준비 완료 후 `running/connected`, 네트워크 정책 `enforced`였다. 비밀값은 읽거나 출력하지 않았다.
+
+Linux x86_64, 계정 `agent`, UID/eUID 1000, hostname `f6864f0c0802`, 커널 `6.18.57`. 실제 identity를 추출해 ibb/wsl 두 guard가 모두 false임을 먼저 단언했다. 기존 CLI 시험의 PATH를 해당 시험 해석기 bin으로 설정했다. 새 출력 child는 identity/inventory를 합성 함수로 대체하고 실제 CLI 종료 부분만 실행한다. fake interpreter는 내장 Python을 실행하지 않는다. 파일시스템 탐침은 TemporaryDirectory의 합성 roots만 사용한다.
+
+실제 설치된 Python **3.11.17**, **3.8.20**을 사용했다. 내려받거나 설치하지 않았다. 정확한 argv·PATH prefix·버전·rc·경과 시간은 `suites.json`과 `independent_311.json`, `independent_38.json`에 있다.
+
+## 3. 이번 실행 결과
+
+| 시험 | Python | 실행/성공/실패/오류 | rc |
+|---|---|---:|---:|
+| 기존 재고 suite | 3.11.17 | 20/20/0/0 | 0 |
+| 출력 suite | 3.11.17 | 13/13/0/0 | 0 |
+| 기존 재고 suite | 3.8.20 | 20/20/0/0 | 0 |
+| 출력 suite | 3.8.20 | 13/13/0/0 | 0 |
+| 독립 계약·진단 검사 | 각 3.11.17 / 3.8.20 | 각 18/18/0/0 | 각 0 |
+| 느린 입력 관찰 | 각 3.11.17 / 3.8.20 | 각 1회, 5초 제한 초과 | 대상 rc 없음; 탐침이 child 종료 |
+
+기존20/출력13은 버전별로 순차 실행했다. 독립 파일의 JSON에는 19개 기록이 있지만 마지막 항목은 시간 관찰이며, **19개 회귀시험 통과로 세지 않는다**. 18개에는 변경하지 않은 test17의 wrapper 진단 1회가 포함된다. 관찰을 포함한 독립 runner 자체 rc는 0이다. 과거 7,179개 parser 결과는 이번에 재실행하지 않았고 어떤 새 시험 수에도 넣지 않았다.
+
+보호 제거 변이는 Python 3.11.17에서 제공된 replay 도구로 실행했다. 도구는 최대 2개 worker로 합성 출력 시험만 실행한다. 각 child timeout 5초, suite timeout 60초다. replay runner rc0, 5/5 변이 검출:
+
+| 변이 | 총수 | 성공 | FAIL | ERROR | suite rc | 검출 내용 |
+|---|---:|---:|---:|---:|---:|---|
+| output_retry | 13 | 11 | 2 | 0 | 1 | 최초/부분 write 뒤 추가 출력 |
+| missing_flush | 13 | 11 | 1 | 1 | 1 | flush 실패 시험 FAIL, 정상 buffered JSON 부재로 JSONDecodeError |
+| shutdown_reflush | 13 | 12 | 1 | 0 | 1 | 종료 재flush |
+| short_write_accepted | 13 | 12 | 1 | 0 | 1 | short write의 잘못된 성공 |
+| shell_fallback | 13 | 10 | 3 | 0 | 1 | exit7·부분·신호 뒤 추가 JSON |
+
+변이의 FAIL/ERROR는 의도한 음성 대조 결과다. `mutations/evidence/`에 변이별 patch·실행 로그·SHA가 있고 변이 소스도 포함한다. `mutations.json`의 failures 배열만 보면 missing_flush의 ERROR가 빠지므로 위 표는 원로그를 별도로 파싱했다.
+
+## 4. Q1–Q4 판정
+
+**Q1 — LPI-01 출력/flush/종료: 수용.** 명령 `pressure_inventory.sh:258`의 계산/직렬화 try와 `:274`의 출력 try가 분리되어 있다. `:275`에서 short write를 거부하고 `:277`에서 flush, `:286`에서 즉시 종료한다. 최초/부분/지속 write·short write는 정확한 프로세스 rc2이며 두 번째 write가 없었다. 실제 `TextIOWrapper(BufferedWriter(RawIOBase))`의 첫 raw write가 prefix를 내고 실패한 경우 raw 호출 1회·rc2, 종료 재flush 표지 없음. 실제 CPython의 정상 pipe stdout은 완전한 JSON 하나·rc0이었다. custom Sink 정상 시험만으로 결론내리지 않았다.
+
+**Q2 — 계산 오류·shell 상태·수신 계약: 수용.** 계산 예외와 직렬화 불가 객체는 각각 고정 `INVENTORY_ERROR` JSON 하나·rc2였다. 완전한 `INVENTORY_COMPLETE/rc0` JSON이 이미 나간 뒤 flush를 실패시켜도 프로세스 rc2이며 수신 조건상 거부된다. shell의 `exec` (`:5`)에서 fake exit2→2, exit7→7, 부분 출력 후 exit7→7, SIGTERM→subprocess returncode -15(셸의 통상 143 표현과 구분)를 확인했다. missing/non-executable interpreter는 각각 127/126, stdout 빈 값, fallback 없음. 이번 셸에서 stderr도 비었으나 외부 shell 자체 실행 실패까지 공통 보장으로 확대하지 않는다. README:31,35 및 수정 증거 README의 범위 한정이 충분하다. 단일 write의 원자성·어떤 장애에서도 JSON 존재·치명적 런타임 실패의 rc2를 보장한 것은 아니다.
+
+**Q3 — LPI-02: 설명과 반례 보존만 수용.** README:33은 크기 상한과 시간 상한을 명확히 구분하고 regex·디렉터리 열거·파일시스템 대기·wall-clock 무제한을 명시한다. 원격 이전 PIN 명령과 현재 명령에서 main/entry를 제외한 Python AST 전체가 동일하다. B7 바이트와 정규식도 동일하다. 원격 compare 58개 변경 경로는 해당 리뷰·인계 문서에 한정되며 등록/생산/B7 변경은 없다. 기존 느린 반례와 원본 ZIP이 보존됐다. 같은 형태의 120,019자 입력을 이번에도 각 버전에서 1회 실행했으며 5초 제한을 넘었다(약 5.006/5.007초). 이는 탐침의 제한이고 명령의 시간 제한이 아니다. 시간 위험 해결·현장 지연 적격성으로 종결하지 않는다.
+
+**Q4 — 최초 audit 관찰: 보존 적절, 원인 미확정 유지.** 보존된 `test_pressure_inventory_py311.log`는 최초 20개 중 19 성공·1 FAIL, suite rc1이며 test17의 expected0/observed2를 담고 있다. 이 assertion은 쓰기 검출 assertion보다 먼저 실패하므로 '쓰기 발생을 검출했다'고 해석할 수 없다. 구현측 후속 단독 진단/순차20 통과는 별도 기록이고 최초 실패를 무효화하지 않는다. 이번 순차20과 wrapper 단독 진단도 두 버전에서 통과했으나 역사적 실패의 원인을 밝힌 것은 아니다.
+
+## 5. 새 반박 관찰과 등급
+
+**OBS-AUDIT-01 · P3 후속 조사 항목(기존 경로 검사의 보수적 거부, LPI-01 회귀 아님).**
+
+- 코드 위치: `pressure_inventory.sh:46` stamp의 size/mtime/ctime, `:51` open_dir의 stat→open→fstat 비교, `:78` open_root의 모든 절대경로 조상 순회. 원시험 `test_pressure_inventory.py:232`는 수정된 main을 거치지 않고 inventory를 직접 호출한다.
+- 독립 재현: `evidence/probe_independent.py:74`의 합성 shared/local에 빈 필수 로그 30쌍을 만든다. 기준 실행은 rc0·COUNTED. `:80`에서 shared의 stat과 open 사이에 무관한 sibling 생성·삭제를 정확히 주입하면 두 버전 모두 root `CHANGED`, counted_cases0, inventory rc2. before/after stamp를 JSON에 보존했다.
+- 의미: 연구 로그에 직접 쓰기가 없어도 공유 조상 메타데이터 변화가 재고 성립을 보수적으로 거부할 수 있다. 병렬 TemporaryDirectory 생성/삭제에 의한 최초 실패 설명은 **가능한 기전**이다.
+- 한계: 실제 `/tmp` 경쟁을 역사적으로 관측하거나 최초 실패를 동일 사건으로 재현한 것이 아니다. 최초 로그에 root/case/errno 상세가 없어 원인을 확정하지 못한다. 이번에는 결정적 합성 주입을 선택했으며 별도 확률적 동시 부하 시험은 실행하지 않았다.
+- 처분: 최초 실패 원문과 이 진단을 함께 유지하고 향후 재발 시 합성 wrapper에서 root/case 사유를 확보한다. guard를 약화하거나 최초 FAIL을 PASS로 다시 쓰지 않는다. LPI-01/02의 좁은 종결을 막는 새 P1/P2 근거는 없으며, audit 원인 조사까지 CLOSED로 묶지 않는다.
+
+그 밖의 새 LPI-01 기능 반례는 발견하지 못했다. 임의의 실제 OS·NSS·터미널·Lustre 장애 전체를 반증한 결과는 아니다.
+
+## 6. 재현 명령·자료 배치
+
+압축을 풀면 `evidence/`, `source/`, `mutations/`가 같은 부모 아래 놓인다. source는 검토한 고정 PIN의 부분 스냅샷이다. 원본 저장소를 변경하지 말고 별도 임시 폴더에서만 실행한다. 실제 CLI `ibb|wsl`를 연구 기계에서 실행하는 지침이 아니다.
+
+이번 사용한 해석기:
+
+```text
+PY311=/workspace/.venvs/yonghoon-dem/bin/python
+PY38=/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin/python3.8
+B=/workspace/scratch/lpi-independent-20261104
+```
+
+각 suite의 정확한 절대 argv는 `suites.json`. 핵심 호출은 `$PY -I -B $B/source/docs/reviews/lhs_pressure_inventory_20261104/test_pressure_inventory.py` 및 같은 폴더 `test_output_contract.py`이며, 각 PY bin을 PATH 앞에 두었다. suite 실행 전 실제 identity가 두 대상 guard에서 거부되는지 확인해야 한다.
+
+독립 재현: `$PY -I -B $B/evidence/probe_independent.py` (각 버전 rc0). 내부 명령은 같은 파일 CHILD/각 probe와 JSON 로그에 있다. 변이: `$PY311 -I -B $B/source/docs/reviews/lhs_pressure_inventory_lpi_fix_20261104/replay_mutations.py NEW_SCRATCH_DIRECTORY` (이번 runner rc0, 내부 suite 각각 rc1). 변이 대상 폴더는 새로 정해야 한다. `run_review.py`는 이번 실행 orchestrator 원본이며 기존 mutations 폴더에서는 재실행용이 아니다. `verify_scope.py`는 Git 객체가 있는 이번 scratch 환경용이다.
+
+증거 ZIP의 `SHA256SUMS`는 자신을 제외한 전체 파일을 포함한다. 최종 ZIP 해시는 외부 sidecar/최종 응답에 제공한다. 새 probe·로그와 고정 PIN의 과거 자료를 디렉터리로 분리했다.
+
+**LPI-01: 제한 범위 종결 가능. LPI-02: 문구·반례 보존 종결 가능, 시간 위험 미해결. 최초 audit 원인 미확정. 실제 실행·배포 미승인. 전체 게이트 HOLD 유지.**

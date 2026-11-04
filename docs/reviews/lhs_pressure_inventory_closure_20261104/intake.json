@@ -1,0 +1,15 @@
+{
+  "review_pin": "edbe6eb176d22db574953d3e47d11969b353421b",
+  "external_zip_bytes": 415990,
+  "external_zip_sha256": "4a91cfa578471ca88fa65ebc190b800a37d51f108041f5966db42b175b8a8ed0",
+  "manifest_entries_verified": 117,
+  "pinned_blobs_matched": 68,
+  "verdict_paste_byte_equal": true,
+  "summary_paste_differing_top_keys": [
+    "artifacts"
+  ],
+  "summary_difference_note": "Pasted summary adds artifacts (ZIP bytes/hash/path and verdict hash) after packaging. All other top-level fields equal; preserve both originals.",
+  "local_git_object_comparison": true,
+  "new_remote_authentication": false,
+  "source_unchanged": true
+}
