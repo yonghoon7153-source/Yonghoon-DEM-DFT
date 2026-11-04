@@ -102,7 +102,7 @@ DI 수정:
 from __future__ import annotations
 import argparse, datetime, hashlib, importlib.util, json, os, pathlib, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "931564744093955d"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "f6e9ab1d0ed6bfda"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 DECISION = "D-2026-11-03-li2s2-dense-window"
 CARD_REL = "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json"
 DRIVER_REL = "tools/ionic/melt_quench_uma.py"
@@ -397,7 +397,8 @@ def retry_eligibility(attempts, stop_history, inventory, values, mq):
       · 보존 폴더를 못 찾음 (같은 계 폴더 안 · 실행 전 기록의 run_id) → resume (보존 누락 · 회신 DJ P0-2)
       · 폴더 판정 파일 pass · fail → invalid · **있는데 못 읽음** → invalid ('판정 없음' 으로 읽지 않는다 · 회신 DJ P0-2)
       · 비용 미확정 → resume (고아 런이면 --attest_cost)
-      · 완료 단계 (mq.folder_stage) 판독 불가 → resume
+      · 완료 단계 (mq.folder_stage_detail) 판독 불가 → resume — 완료 기록 · 임시 기록 · plan 없는 산출물 · FIRE 로그 · 기록 없이 끝 경계
+        (완료 여부 불명) 도 여기 (회신 DL P0 · Q2 — 명확한 도중 끊김만 재시도 대상)
       · 종류 = invalid (장부 · 폴더 판정 invalid) 아니면 interrupted — interrupted 인데 최종 산출 → resume (판정하라) ·
         **MD 완료 · FIRE 미완 → resume (보류 — 재담금질하지 않는다 · FIRE 복구는 새 결정 · 회신 DJ Q2)**
     끊긴 런 재시도 수 (앞 실행 종류가 interrupted 인 것 — 필드가 아니라 실행 이력으로 센다) > 카드 한도 → invalid.
@@ -424,10 +425,10 @@ def retry_eligibility(attempts, stop_history, inventory, values, mq):
                                                           "(원자료로 --stage1_verdict 다시 판정한 뒤 다시)"}
         if x.get("end") is None or x.get("cost_basis") not in mq.COST_BASES:
             return {"ok": False, "code": "resume", "why": f"이전 실행 {tag} 비용이 확정 안 됐다 ({x.get('cost_basis')}) — 고아 런이면 --attest_cost {rid}"}
-        st = mq.folder_stage(rec["path"])
+        st, st_why = mq.folder_stage_detail(rec["path"])
         if st == "unreadable":
-            return {"ok": False, "code": "resume", "why": f"이전 실행 {tag} 폴더의 완료 단계를 못 읽는다 (plan · MD 완료 기록 · 기록 뒤 바뀐 궤적) — "
-                                                         "재담금질하지 않고 보류 · 사람이 본다"}
+            return {"ok": False, "code": "resume", "why": f"이전 실행 {tag} 폴더의 완료 단계를 못 읽는다 ({st_why}) — 재담금질하지 않고 보류 · "
+                                                         "사람이 본다 (회신 DL: 완료 증거가 남은 폴더는 재시도 대상이 아니다)"}
         kind = rk
         if kind == "interrupted":
             if st == "final":
@@ -1023,18 +1024,19 @@ def _selftest():
                 (self.rd / "plan.json").write_text(json.dumps(plan, ensure_ascii=False), encoding="utf-8")
                 (self.rd / "thermo.csv").write_text("t_ps,T_K,T_set_K,density_g_cm3,volume_A3,E_pot_eV,P_GPa,P_virial_GPa\n", encoding="utf-8")
             ts = [t for t in range(int(self.t_written) + 1, int(round(t_end)) + 1)]
+            ts_th = list(ts)                                 # thermo 는 기록마다 한 행 (0 번 포함 — 진짜 드라이버처럼 · 회신 DL 판독이 잡았다)
             if self.melt == "species_swap" and ts and ts[0] == 0:      # 0 번 프레임만 P · S 자리를 바꿈 (회신 DG P1-7 반례)
                 sw_ = list(self.sym); iP, iS = sw_.index("P"), sw_.index("S"); sw_[iP], sw_[iS] = "S", "P"
                 _xyz(self.rd / "traj.xyz", sw_, [self._pos(0)], self.cell); ts = ts[1:]
             _xyz(self.rd / "traj.xyz", self.sym, [self._pos(t) for t in ts], self.cell)
             M, Q = self.f["melt_ps"], self.quench_ps
             with open(self.rd / "thermo.csv", "a") as fh:
-                for t in ts:
+                for t in ts_th:
                     Ts = self.f["T_melt"] if t <= M else (self.f["T_final"] if t >= M + Q else
                                                          self.f["T_melt"] - (self.f["T_melt"] - self.f["T_final"]) * (t - M) / Q)
                     d = self.f["fix_density"] if t >= self.f["compress_ps"] else 1.0 + (self.f["fix_density"] - 1.0) * t / self.f["compress_ps"]
                     fh.write(f"{t:.3f},{Ts + 3:.1f},{Ts:.1f},{d:.4f},{1000.0:.2f},{-500.0:.4f},{3.6:.4f},{3.5:.4f}\n")
-            self.t_written = ts[-1] if ts else self.t_written
+            self.t_written = ts_th[-1] if ts_th else self.t_written
             if final:                                        # 진짜 드라이버처럼 MD 완료 기록 (FIRE 전) — 진짜 쓰기 함수로
                 n_pl = real.planned_md_steps(json.loads((self.rd / "plan.json").read_text(encoding="utf-8")))
                 real.write_md_done(self.rd, run_id=self.rid, n_steps_planned=n_pl, n_steps_done=n_pl)
@@ -1144,6 +1146,7 @@ def _selftest():
                       "declared_at": "2026-11-03 00:00:00", **({"rejudge_impossible_reason": d["rejudge_impossible_reason"]}
                                                              if d.get("rejudge_impossible_reason") else {})}
 
+    FULL_STAGES = ("md_complete", "final", "md_complete_noplan", "md_tmp", "end_no_marker")   # 궤적 · thermo 를 끝까지 남기는 단계
     def with_history(rr_, sysn, seed, prevs):
         """rr_ 의 (계, 시드) 공식 런 앞에 이전 실행들을 **모든 면에서 맞게** 끼운다 — 보존 폴더 (같은 계 폴더 안) · 실행 전 기록 · 장부 행 ·
         재시도 필드 (retry_of = 바로 앞 · retry_kind = 앞 종류 · retry_stop_id) · 앞 실행에 묶여 확인된 STOP + 선언. 음성 시험은 여기서
@@ -1164,12 +1167,17 @@ def _selftest():
             if st_ != "no_plan":
                 shutil.copy(canon / "plan.json", d / "plan.json")
                 pl_ = J(d / "plan.json"); pl_["run_id"] = rid_; (d / "plan.json").write_text(json.dumps(pl_, ensure_ascii=False), encoding="utf-8")
-                keep = n_fr if st_ in ("md_complete", "final") else max(1, n_fr // 3)
+                keep = n_fr if st_ in FULL_STAGES else max(1, n_fr // 3)
                 (d / "traj.xyz").write_text("".join(lines[:keep * fr]), encoding="utf-8")
-                shutil.copy(canon / "thermo.csv", d / "thermo.csv")
-                if st_ in ("md_complete", "final"):              # 진짜 쓰기 함수로 MD 완료 기록 (회신 DK)
+                th_ = (canon / "thermo.csv").read_text(encoding="utf-8").splitlines(keepends=True)
+                (d / "thermo.csv").write_text("".join(th_[:1 + keep]), encoding="utf-8")   # traj 와 같은 행 수 (회신 DL — 끝 경계 판독)
+                if st_ in ("md_complete", "final", "md_complete_noplan", "md_tmp"):   # 진짜 쓰기 함수로 MD 완료 기록 (회신 DK)
                     n_pl = real.planned_md_steps(pl_)
                     real.write_md_done(d, run_id=rid_, n_steps_planned=n_pl, n_steps_done=n_pl)
+                if st_ == "md_tmp":                              # 회신 DL P0 반례 2 — os.replace 직전 끊김 (임시 기록만)
+                    (d / real.MD_DONE_NAME).rename(d / real.MD_DONE_TMP)
+                if st_ == "md_complete_noplan":                  # 회신 DL P0 반례 1 — 완료 폴더에서 plan.json 만 없음
+                    (d / "plan.json").unlink()
                 if st_ == "final":
                     shutil.copy(canon / "final.xyz", d / "final.xyz"); shutil.copy(canon / "result.json", d / "result.json")
             row = {"system": sysn, "seed": seed, "run_id": rid_, "start": "t", "end": "t", "status": pv.get("status", "interrupted"),
@@ -1474,7 +1482,9 @@ def _selftest():
     rc_i2, L_i2, _ = go(wt, rr=rr_i, ack=si["stop_id"], declare=FIX)
     chk(rc_i2 == 0 and len(L_i2) == 10 and len(J(rr_i / "stage1_ledger.json")["runs"]) == 11
         and J(rr_i / "stage1_summary.json")["track"] == "stage1_pass",
-        "DH P1-4 · DJ Q1: 자료 오류는 고친 뒤 (폴더를 옆으로 · --ack_stop + 원인 고침 선언) 다시 돌린다 — 앞 런 비용은 장부에 남는다 (11 런)")
+        "DH P1-4 · DJ Q1: 자료 오류는 고친 뒤 (폴더를 옆으로 · --ack_stop + 원인 고침 선언) 다시 돌린다 — 앞 런 비용은 장부에 남는다 (11 런)"
+        + ("" if rc_i2 == 0 else f" — rc {rc_i2} · 발사 {len(L_i2)} · STOP {J(rr_i / 'STOP.json').get('reason') if (rr_i / 'STOP.json').is_file() else None} · "
+                                 f"단계 {real.folder_stage_detail(rr_i / 'A/seed11.invalid_selftest')}"))
     h1 = clone(rr_d)
     with open(h1 / "A/seed11/final.xyz", "a") as fh:
         fh.write("\n")
@@ -1634,6 +1644,20 @@ def _selftest():
     chk(all(v_ == (RC["resume"], 0, True, "unreadable") for v_ in corrupt.values()),
         f"⛔음성 DK P0-1 (Codex 재현): MD 가 끝난 (완료 기록 있는) 궤적의 첫 원자 수만 바꾸거나 첫 줄을 NUL 로 → '미완' 이 아니라 판독 불가 → "
         f"재담금질 · 발사 0 (보류) ({corrupt})")
+    # ⭐ 회신 DL P0 (Codex 재현 두 경로) + Q2 (기록 없이 끝 경계) — 완료 증거가 남은 폴더는 선언이 맞아도 재담금질 0 · 보류 · 파일 그대로
+    dl_cases = {}
+    for nm_, how in (("plan_gone", lambda d: (d / "plan.json").unlink()),
+                     ("tmp_only", lambda d: (d / real.MD_DONE_NAME).rename(d / real.MD_DONE_TMP)),
+                     ("end_no_marker", lambda d: (d / real.MD_DONE_NAME).unlink())):
+        c_x = clone(c_m); (c_x / "STOP.json").unlink(missing_ok=True)
+        fc_ = c_x / "B/seed13.fire_cut"; how(fc_)
+        snap = lambda: {p_.name: hashlib.sha256(p_.read_bytes()).hexdigest() for p_ in sorted(fc_.iterdir())}
+        before = snap()
+        rc_x, L_x, _ = go(wt, rr=c_x)
+        dl_cases[nm_] = (rc_x, len(L_x), "완료 단계를 못 읽는다" in J(c_x / "STOP.json")["reason"], real.folder_stage(fc_), snap() == before)
+    chk(all(v_ == (RC["resume"], 0, True, "unreadable", True) for v_ in dl_cases.values()),
+        f"⛔음성 DL P0 (Codex 재현): MD 완료 폴더에서 plan.json 만 지움 · 완료 기록을 임시 이름으로만 (os.replace 직전 끊김) · 기록 없이 "
+        f"끝 경계까지 → 선언이 맞아도 재담금질 0 · 보류 · 폴더 파일 그대로 ({dl_cases})")
     rc_w1, L_w1, rr_w = go(wt, scen={("B", 12): {"raise_on_poll": 3, "polls": 6}})
     sw1 = J(rr_w / "STOP.json")
     (rr_w / "B/seed12").rename(rr_w / "B/seed12.int1")
@@ -1729,6 +1753,9 @@ def _selftest():
     s_cv = hist_case([{"decl": OUT}], cut_verdict)[1]
     s_mo = hist_case([{"decl": OUT}], move_out)[1]
     s_mc = hist_case([{"decl": OUT, "stage": "md_complete"}])[1]
+    s_dlnp = hist_case([{"decl": OUT, "stage": "md_complete_noplan"}])[1]     # 회신 DL P0 반례 1 — 소비자도 같은 판독
+    s_dltp = hist_case([{"decl": OUT, "stage": "md_tmp"}])[1]                 # 회신 DL P0 반례 2
+    s_dlen = hist_case([{"decl": OUT, "stage": "end_no_marker"}])[1]          # 회신 DL Q2 — 기록 없이 끝 경계
     s_fn = hist_case([{"decl": OUT, "stage": "final"}])[1]
     s_ivn = hist_case([{"kind": "invalid", "stage": "final", "status": "ended", "rc": 0, "decl": FIX}])[1]
     s_ivy = hist_case([{"kind": "invalid", "stage": "final", "status": "ended", "rc": 0,
@@ -1742,12 +1769,15 @@ def _selftest():
              "no_decl": inv_(s_nd, "재시도 선언"), "rebind": inv_(s_rb, "묶여 확인된"), "wrong_kind": inv_(s_wk, "retry_kind"),
              "cut_verdict": inv_(s_cv, "못 읽는데"),
              "move_out": inv_(s_mo, "보존 누락"), "md_complete": inv_(s_mc, "MD 까지"), "final": inv_(s_fn, "끝까지"),
+             "dl_noplan": inv_(s_dlnp, "완료 단계를 못 읽는데"), "dl_tmp": inv_(s_dltp, "완료 단계를 못 읽는데"),
+             "dl_end": inv_(s_dlen, "완료 단계를 못 읽는데"),
              "invalid_final_no_reason": inv_(s_ivn, "다시 판정할 수 없다"), "invalid_final_reason": s_ivy["track"],
              "cap_run_outage_reason": inv_(s_cpo, "상한으로 멈춘 런"), "runner_on_stripped": (rc_sl, len(L_sl)),
              "same_answer_folder_vs_ledger": (s_fo["track"], s_fo["cost"]["cap_h"], s_fo["cost"]["total_h"]) == (s_lb["track"], s_lb["cost"]["cap_h"], s_lb["cost"]["total_h"])
                                             and s_fo["track"] == "stage1_pass"}
     exp_c = {"ok": "stage1_pass", "two": True, "two_kind": True, "strip_ledger": True, "strip_all": True, "att_mismatch": True, "att_gone": True,
              "no_decl": True, "rebind": True, "wrong_kind": True, "cut_verdict": True, "move_out": True, "md_complete": True, "final": True,
+             "dl_noplan": True, "dl_tmp": True, "dl_end": True,
              "invalid_final_no_reason": True, "invalid_final_reason": "stage1_pass", "cap_run_outage_reason": True,
              "runner_on_stripped": (RC["invalid"], 0), "same_answer_folder_vs_ledger": True}
     chk(got_c == exp_c,
@@ -1764,12 +1794,17 @@ def _selftest():
             shutil.copy(src_ / "plan.json", d / "plan.json")
             lines = (src_ / "traj.xyz").read_text(encoding="utf-8").splitlines(keepends=True)
             fr = int(lines[0]) + 2; n_fr = len(lines) // fr
-            keep = n_fr if stage in ("md_complete", "final") else max(1, n_fr // 3)
+            keep = n_fr if stage in FULL_STAGES else max(1, n_fr // 3)
             (d / "traj.xyz").write_text("".join(lines[:keep * fr]), encoding="utf-8")
-            shutil.copy(src_ / "thermo.csv", d / "thermo.csv")
-            if stage in ("md_complete", "final"):
+            th_ = (src_ / "thermo.csv").read_text(encoding="utf-8").splitlines(keepends=True)
+            (d / "thermo.csv").write_text("".join(th_[:1 + keep]), encoding="utf-8")       # traj 와 같은 행 수 (회신 DL)
+            if stage in ("md_complete", "final", "md_complete_noplan", "md_tmp"):
                 pl_u = J(d / "plan.json"); n_pl = real.planned_md_steps(pl_u)
                 real.write_md_done(d, run_id=pl_u["run_id"], n_steps_planned=n_pl, n_steps_done=n_pl)
+            if stage == "md_tmp":
+                (d / real.MD_DONE_NAME).rename(d / real.MD_DONE_TMP)
+            if stage == "md_complete_noplan":
+                (d / "plan.json").unlink()
             if stage == "final":
                 shutil.copy(src_ / "final.xyz", d / "final.xyz")
             if stage == "unreadable":
@@ -1808,6 +1843,11 @@ def _selftest():
         "two": E([run0(), run0(run_id=R1)], [{**rcpt(rid=R1)[0], "stop_id": "u2"}], {R0: ufold("t0"), R1: ufold("t1")}),
         "inv_then_int": E([run0(verdict="invalid"), run0(run_id=R1)], [{**rcpt(rid=R1)[0], "stop_id": "u3"}],
                           {R0: ufold("v0", verdict=INV), R1: ufold("v1")}),
+        # ⭐ 회신 DL P0 · Q2 — 완료 증거가 남은 폴더 (plan 만 없음 · 임시 기록만 · 기록 없이 끝 경계) 는 선언이 맞아도 보류
+        "dl_noplan_done": E([run0()], rcpt(), {R0: ufold("dn", stage="md_complete_noplan")}),
+        "dl_tmp": E([run0()], rcpt(), {R0: ufold("dt", stage="md_tmp")}),
+        "dl_end": E([run0()], rcpt(), {R0: ufold("de", stage="end_no_marker")}),
+        "dl_inv_tmp": E([run0(verdict="invalid")], rcpt("invalid", FIX), {R0: ufold("di", stage="md_tmp", verdict=INV)}),
     }
     exp_u = {"ok": (True, None), "no_plan_ok": (True, None), "ledger_fail": (False, "invalid"), "ledger_fail_no_folder": (False, "invalid"),
              "missing_invalid": (False, "resume"),
@@ -1815,14 +1855,18 @@ def _selftest():
              "final": (False, "resume"), "fire": (False, "resume"), "no_receipt": (False, "resume"), "no_decl": (False, "resume"),
              "other_run": (False, "resume"), "unacked": (False, "resume"), "inv_needs_rejudge": (False, "invalid"), "inv_rejudge_ok": (True, None),
              "inv_wrong_code": (False, "invalid"), "inv_outage_reason": (False, "invalid"), "cap_outage": (False, "resume"),
-             "cap_raise": (True, None), "two": (False, "invalid"), "inv_then_int": (True, None)}
+             "cap_raise": (True, None), "two": (False, "invalid"), "inv_then_int": (True, None),
+             "dl_noplan_done": (False, "resume"), "dl_tmp": (False, "resume"), "dl_end": (False, "resume"), "dl_inv_tmp": (False, "resume")}
     got_u = {k: (v["ok"], v["code"]) for k, v in cases.items()}
     chk(got_u == exp_u and "한도" in cases["two"]["why"] and "FIRE" in cases["fire"]["why"] and "못 찾는다" in cases["missing_invalid"]["why"]
         and "못 읽는다" in cases["folder_cut"]["why"] and "선언 문제" in cases["no_decl"]["why"] and cases["ok"]["kind"] == "interrupted"
-        and cases["inv_rejudge_ok"]["kind"] == "invalid" and cases["inv_then_int"]["retry_of"] == R1,
+        and cases["inv_rejudge_ok"]["kind"] == "invalid" and cases["inv_then_int"]["retry_of"] == R1
+        and all("완료 단계를 못 읽는다" in cases[k]["why"] for k in ("dl_noplan_done", "dl_tmp", "dl_end", "dl_inv_tmp"))
+        and "임시" in cases["dl_tmp"]["why"] and "끝 경계" in cases["dl_end"]["why"] and "plan.json 없이" in cases["dl_noplan_done"]["why"],
         "⛔음성 DJ (러너 재시도 자격 단위): 과학적 판정 · 보존 누락 (invalid 런 포함) · 폴더 판정 pass · 판정 잘림 · 비용 미확정 · 단계 판독 불가 · "
         "최종 (판정하라) · MD 완료 (FIRE 보류) · 영수증 없음 · 선언 없음 · 다른 런 · 확인 안 됨 · 다시 판정 못 하는 이유 없음 · invalid 에 "
-        "resume 영수증 · invalid 에 정전 사유 · 상한 런에 정전 사유 · 두 번 끊김 (한도) → 거부 / 맞으면 통과 (plan 전 끊김 · 상한 사유 · "
+        "resume 영수증 · invalid 에 정전 사유 · 상한 런에 정전 사유 · 두 번 끊김 (한도) · **완료 폴더에서 plan 만 없음 · 임시 기록만 · "
+        "기록 없이 끝 경계 · invalid 런의 임시 기록 (회신 DL)** → 거부 / 맞으면 통과 (plan 전 끊김 · 상한 사유 · "
         f"invalid 다음 끊김 1 회) ({ {k: got_u[k] for k in got_u if got_u[k] != exp_u[k]} })")
     # 확인 때 선언 검사 단위 (ack_declaration_problems) — 종류는 실행에서 · code 는 그 종류의 묶는 code · 상한 규칙 · 다시 판정 못 하는 이유
     ar = pathlib.Path(tempfile.mkdtemp(dir=tmp_root))

@@ -1211,6 +1211,9 @@ def attempt_inventory(out_root):
 
 
 MD_DONE_NAME = "md_done.json"   # 회신 DK P0-1 · P1-1 — run_melt_quench 가 MD 루프 직후 (FIRE 전) 원자적으로 쓰는 완료 기록
+MD_DONE_TMP = MD_DONE_NAME + ".tmp"   # 회신 DL P0 — 이것이 남아 있으면 기록 도중 끊김 (완료로 승인하지 않고 보류)
+NON_MD_FILES = frozenset({ATTEMPT_NAME, ATTEMPT_NAME + ".tmp", "stage1_verdict.json", "stage1_verdict.json.tmp", VERDICT_HISTORY})
+# ⭐ 회신 DL P0 — plan.json 이 없는 폴더에 있어도 되는 것 = MD 산출물이 아닌 기록 (러너의 실행 전 기록 · 판정 기록). 그 밖의 것이 하나라도 있으면 보류
 
 
 def planned_md_steps(plan):
@@ -1219,53 +1222,205 @@ def planned_md_steps(plan):
     return sum(int(round(float(plan[k]) * 1000.0 / dt)) for k in ("melt_ps", "quench_ps", "hold_ps"))
 
 
+def save_interval_steps(plan):
+    """plan 의 저장 간격 (스텝) — run_melt_quench 의 save_int 와 같은 셈."""
+    return max(1, int(round(float(plan["save_ps"]) * 1000.0 / float(plan["dt_fs"]))))
+
+
+def _fsync_file(path):
+    """파일 내용을 저장장치로 보낸다 (fsync). Windows 는 쓰기 핸들이 있어야 해서 O_RDWR 로 연다 — 내용은 안 바꾼다."""
+    fd = os.open(str(path), os.O_RDWR | getattr(os, "O_BINARY", 0))
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+def _fsync_handle(fh):
+    """열린 파일을 비우고 저장장치로 (flush + fsync)."""
+    fh.flush()
+    os.fsync(fh.fileno())
+
+
+def _fsync_dir(path):
+    """디렉터리 항목 (이름 교체) 을 저장장치로. ⛔ Windows 에는 디렉터리 fsync 가 없다 — 건너뛰고 False (생산은 Linux 뿐)."""
+    if os.name == "nt":
+        return False
+    fd = os.open(str(path), os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    return True
+
+
 def write_md_done(out, *, run_id, n_steps_planned, n_steps_done):
-    """MD 루프가 끝난 **직후** (FIRE 전) 의 완료 기록 — run_id · 계획 · 실제 스텝 · traj.xyz · thermo.csv 해시. 원자적으로 쓴다.
+    """MD 루프가 끝난 **직후** (FIRE 전) 의 완료 기록 — run_id · 계획 · 실제 스텝 · traj.xyz · thermo.csv 해시.
     ⭐ 회신 DK: MD 완료의 증거는 이 기록이다 (프레임 수가 아니다 — 저장 간격이 스텝을 못 나누면 마지막 저장 뒤 구간을 못 가른다).
-    ⛔ 못 하는 것: 마지막 스텝과 이 기록 사이 (몇 ms) 에 끊기면 MD 가 끝났어도 '미완' 으로 읽힌다 (재담금질 쪽 — 안전한 쪽은 아니지만 창이 짧다)."""
+    ⭐ 회신 DL P1-1 — 순서: traj.xyz · thermo.csv fsync → 해시 → 임시 기록 쓰기 · fsync → os.replace → 부모 디렉터리 fsync.
+      어느 단계든 실패하면 예외가 그대로 올라간다 (드라이버가 죽는다 = FIRE 안 함). 그때 폴더는 셋 중 하나이고 셋 다 보류다
+      (folder_stage): 임시 기록만 남음 · 기록 있음 (md_complete) · 둘 다 없음 + 마지막 저장이 끝 경계 (완료 여부 불명).
+    ⛔ 못 하는 것: fsync 가 실제 저장장치에 닿는지는 파일시스템 · 장치 쓰기 캐시에 달렸다 — kgy 에서 전원을 끊어 확인한 적이 없으니
+      정전 뒤 기록이 남는다고 보증하지 않는다 (손실 확률 · 창 길이를 주장하지 않는다). 기록이 없을 때의 판독 (끝 경계 → 보류) 이 그 빈자리를 맡는다.
+      Windows 에서는 디렉터리 fsync 를 건너뛴다.
+      저장 간격이 스텝 수를 못 나누면 궤적 끝 프레임은 MD 끝 구조가 아니다 (회신 DL Q1 · 카드의 1 ps 일정은 끝점이 저장된다) —
+      완료 사실의 확인과 종료 구조의 복구는 별개다."""
     out = pathlib.Path(out)
+    for nm in ("traj.xyz", "thermo.csv"):
+        if (out / nm).is_file():
+            _fsync_file(out / nm)
     rec = {"run_id": run_id, "n_steps_planned": int(n_steps_planned), "n_steps_done": int(n_steps_done),
            "traj_sha256": _sha256_file(out / "traj.xyz") if (out / "traj.xyz").is_file() else None,
            "thermo_sha256": _sha256_file(out / "thermo.csv") if (out / "thermo.csv").is_file() else None,
            "at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")}
-    tmp = out / (MD_DONE_NAME + ".tmp")
-    tmp.write_text(json.dumps(rec, ensure_ascii=False), encoding="utf-8")
+    tmp = out / MD_DONE_TMP
+    with open(tmp, "w", encoding="utf-8") as fh:
+        fh.write(json.dumps(rec, ensure_ascii=False))
+        _fsync_handle(fh)
     os.replace(tmp, out / MD_DONE_NAME)
+    _fsync_dir(out)
     return rec
 
 
-def folder_stage(folder):
-    """⭐ 회신 DJ Q2 · DK P0-1 · P1-1 — 실행 폴더의 완료 단계 (재시도 자격 · 소비자가 같이 쓴다):
-      'final'        result.json · final.xyz 가 있다 (재시도가 아니라 판정)
-      'md_complete'  MD 완료 기록 (md_done.json) 이 맞다 — run_id = plan · 계획 = 실제 스텝 = plan 일정 · traj · thermo 해시 일치 (FIRE 미완 → 보류)
-      'md_incomplete' plan 은 있는데 완료 기록이 없다 (MD 도중에 끊김 — 궤적 상태와 무관)
-      'no_plan'      plan.json 이 없다 (plan 전에 끊김)
-      'unreadable'   plan 을 못 읽음 · 완료 기록을 못 읽음 · 기록이 plan 과 다름 · **기록 뒤 궤적 · thermo 가 바뀜** (손상된 완료 궤적 = 보류)
-    프레임은 세지 않는다 (회신 DK P1-1)."""
+def _junk(line):
+    """NUL · 공백뿐인 줄 (정전 뒤 파일 꼬리에 생기는 모양)."""
+    return not line.strip("\x00 \t\r")
+
+
+def _thermo_last_step(path, plan):
+    """thermo.csv 에서 **시작된** 마지막 기록의 스텝 — (스텝 | None, 문제 | None).
+    온전한 행은 시각이 저장 간격대로여야 한다 (t_k = k · 저장 간격). 마지막 비어 있지 않은 줄이 덜 써졌으면 (잘린 줄 · NUL) 그 기록도
+    시작된 것으로 센다 (보수적 — 보류 쪽). 꼬리가 아닌 자리에서 깨지면 문제."""
+    save_int, dt = save_interval_steps(plan), float(plan["dt_fs"])
+    lines = path.read_bytes().decode("utf-8", errors="replace").split("\n")
+    idx = [i for i, ln in enumerate(lines) if not _junk(ln)]
+    if not idx:
+        return None, None
+    if idx[0] != 0 or lines[0].split(",")[0].strip() != "t_ps":
+        return None, "thermo.csv 첫 줄이 머리 (t_ps,…) 가 아니다"
+    n, prev = 0, 0
+    for j, i in enumerate(idx[1:]):
+        try:
+            t = float(lines[i].split(",")[0])
+            ok = ("\x00" not in lines[i] and math.isfinite(t) and i == prev + 1
+                  and abs(t - n * save_int * dt / 1000.0) <= 1.5e-3)
+        except ValueError:
+            ok = False
+        if ok:
+            n, prev = n + 1, i
+            continue
+        if j == len(idx) - 2:                          # 마지막 비어 있지 않은 줄 = 덜 써진 꼬리 → 시작된 기록
+            n += 1
+            break
+        return None, f"thermo.csv {i + 1} 번째 줄이 깨졌다 (꼬리가 아니다) — 진행량을 못 읽는다"
+    return ((n - 1) * save_int if n else None), None
+
+
+def _traj_last_step(path, plan):
+    """traj.xyz (extxyz) 에서 **시작된** 마지막 프레임의 스텝 — (스텝 | None, 문제 | None). 프레임 수로 완료를 승인하지 않는다
+    (회신 DK P1-1) — 이것은 '끝까지 갔을 수도 있다' 를 가려 보류하는 데만 쓴다 (회신 DL Q2). 덜 써진 마지막 프레임도 시작된 기록으로 센다."""
+    save_int = save_interval_steps(plan)
+    lines = path.read_bytes().decode("utf-8", errors="replace").split("\n")
+    last = max((i for i, ln in enumerate(lines) if not _junk(ln)), default=-1)
+    i, n, nat0 = 0, 0, None
+    while i <= last:
+        try:
+            nat = int(lines[i].strip())
+        except ValueError:
+            nat = None
+        if nat is None or nat <= 0 or (nat0 is not None and nat != nat0):
+            if nat0 is not None and last - i + 1 < nat0 + 2:   # 덜 써진 마지막 프레임 (머리째 잘림)
+                n += 1
+                break
+            return None, f"traj.xyz {i + 1} 번째 줄에서 프레임 머리가 깨졌다 (꼬리가 아니다) — 진행량을 못 읽는다"
+        if i + nat + 1 > last:                           # 덜 써진 마지막 프레임
+            n += 1
+            break
+        nat0, n, i = nat, n + 1, i + nat + 2
+    return ((n - 1) * save_int if n else None), None
+
+
+def md_last_recorded_step(folder, plan):
+    """완료 기록이 없을 때만 쓰는 **보조** 판독 (회신 DL Q2) — 보류 판단용이지 완료 승인용이 아니다.
+    thermo.csv · traj.xyz 에서 시작된 마지막 기록의 스텝 (둘 중 큰 값 — 보수적). 반환 (스텝 | None (MD 기록 전), 문제 | None).
+    ⛔ 못 하는 것: 정전으로 저장 안 된 꼬리 (fsync 전 쓰기) 는 사라진다 — 그러면 실제보다 앞에서 끊긴 것으로 읽힌다 (회신 DL Q2 가 받아들인 한계)."""
+    f, best = pathlib.Path(folder), None
+    for nm, fn in (("thermo.csv", _thermo_last_step), ("traj.xyz", _traj_last_step)):
+        p = f / nm
+        if not os.path.lexists(p):
+            continue
+        try:
+            st, prob = fn(p, plan)
+        except (OSError, ValueError, KeyError, TypeError, ZeroDivisionError) as e:
+            return None, f"{nm} 를 못 읽는다 ({type(e).__name__})"
+        if prob:
+            return None, prob
+        if st is not None:
+            best = st if best is None else max(best, st)
+    return best, None
+
+
+def folder_stage_detail(folder):
+    """⭐ 회신 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2 — 실행 폴더의 완료 단계와 그 이유 (재시도 자격 · 소비자가 같이 쓴다):
+      'final'         result.json · final.xyz 가 있다 (재시도가 아니라 판정)
+      'md_complete'   MD 완료 기록 (md_done.json) 이 맞다 — run_id = plan · 계획 = 실제 스텝 = plan 일정 · traj · thermo 해시 일치 (FIRE 미완 → 보류)
+      'md_incomplete' **명확한 도중 끊김만** — plan 이 있고 · 완료 기록 · 임시 기록 · FIRE 로그가 없고 · 시작된 마지막 기록이 끝 경계
+                      (계획 스텝 안의 마지막 저장 스텝) 보다 앞이거나 MD 기록이 아예 없다
+      'no_plan'       plan.json 이 없고 폴더에 MD 산출물이 아닌 기록 (NON_MD_FILES) 밖의 것이 없다 (plan 전에 끊김)
+      'unreadable'    보류 — plan 을 못 읽음 · 완료 기록을 못 읽음 · 기록이 plan 과 다름 · 기록 뒤 궤적 · thermo 가 바뀜 ·
+                      **임시 기록이 남음** · **plan 없이 산출물이 남음** · **FIRE 로그가 있는데 기록 없음** ·
+                      **기록 없이 마지막 저장이 끝 경계에 닿음 (완료 여부 불명)** · 진행량을 못 읽음
+    프레임 · 시각은 완료 승인에 안 쓴다 (회신 DK P1-1) — 끝까지 갔을 수도 있는 실행을 보류하는 데만 쓴다 (회신 DL Q2)."""
     f = pathlib.Path(folder)
     if any((f / x).is_file() for x in ("result.json", "final.xyz")):
-        return "final"
+        return "final", "result.json · final.xyz 가 있다"
     if not (f / "plan.json").is_file():
-        return "no_plan"
+        try:
+            extra = sorted(p.name for p in f.iterdir() if p.name not in NON_MD_FILES)
+        except OSError as e:
+            return "unreadable", f"폴더를 못 읽는다 ({type(e).__name__})"
+        if extra:
+            return "unreadable", f"plan.json 없이 실행 산출물이 남았다 ({' · '.join(extra[:4])}) — 보류"
+        return "no_plan", "실행 전 · 판정 기록뿐 (plan 전에 끊김 · MD 산출물 없음)"
     try:
         plan = json.loads((f / "plan.json").read_text(encoding="utf-8"))
         want = planned_md_steps(plan)
+        save_int = save_interval_steps(plan)
     except (OSError, ValueError, KeyError, TypeError, ZeroDivisionError, AttributeError):
-        return "unreadable"
+        return "unreadable", "plan.json 을 못 읽는다 (일정 · 저장 간격)"
+    if os.path.lexists(f / MD_DONE_TMP):
+        return "unreadable", "MD 완료 기록 임시 파일이 남았다 — 기록 도중 끊김 (완료로 승인하지 않고 보류)"
     md = f / MD_DONE_NAME
-    if not md.is_file():
-        return "md_incomplete"
-    try:
-        rec = json.loads(md.read_text(encoding="utf-8"))
-        rid = plan.get("run_id")
-        ok = (isinstance(rec, dict) and isinstance(rid, str) and rid and rec.get("run_id") == rid
-              and type(rec.get("n_steps_planned")) is int and type(rec.get("n_steps_done")) is int
-              and rec["n_steps_planned"] == want and rec["n_steps_done"] == want
-              and (f / "traj.xyz").is_file() and rec.get("traj_sha256") == _sha256_file(f / "traj.xyz")
-              and (f / "thermo.csv").is_file() and rec.get("thermo_sha256") == _sha256_file(f / "thermo.csv"))
-    except (OSError, ValueError, AttributeError):
-        return "unreadable"
-    return "md_complete" if ok else "unreadable"
+    if os.path.lexists(md):
+        try:
+            rec = json.loads(md.read_text(encoding="utf-8"))
+            rid = plan.get("run_id")
+            ok = (isinstance(rec, dict) and isinstance(rid, str) and rid and rec.get("run_id") == rid
+                  and type(rec.get("n_steps_planned")) is int and type(rec.get("n_steps_done")) is int
+                  and rec["n_steps_planned"] == want and rec["n_steps_done"] == want
+                  and (f / "traj.xyz").is_file() and rec.get("traj_sha256") == _sha256_file(f / "traj.xyz")
+                  and (f / "thermo.csv").is_file() and rec.get("thermo_sha256") == _sha256_file(f / "thermo.csv"))
+        except (OSError, ValueError, AttributeError):
+            return "unreadable", "MD 완료 기록을 못 읽는다"
+        return ("md_complete", "MD 완료 기록이 맞다 (FIRE 미완)") if ok else \
+               ("unreadable", "MD 완료 기록이 plan · 궤적 · thermo 와 안 맞는다 (기록 뒤 바뀜 포함)")
+    if os.path.lexists(f / "final_relax.log"):
+        return "unreadable", "FIRE 로그가 있는데 MD 완료 기록이 없다 — 보류"
+    last, prob = md_last_recorded_step(f, plan)
+    if prob:
+        return "unreadable", prob + " — 보류"
+    if last is None:
+        return "md_incomplete", "MD 기록 전에 끊김 (사전 이완 · 시작)"
+    end = (want // save_int) * save_int
+    if last >= end:
+        return "unreadable", (f"완료 기록이 없는데 시작된 마지막 기록 (스텝 {last}) 이 끝 경계 (스텝 {end} · 계획 {want}) 에 닿았다 — "
+                              "완료 여부 불명 (보류)")
+    return "md_incomplete", f"명확한 도중 끊김 (시작된 마지막 기록 스텝 {last} < 끝 경계 {end})"
+
+
+def folder_stage(folder):
+    """완료 단계만 — folder_stage_detail 의 첫 값 (러너 · 소비자가 같이 쓴다)."""
+    return folder_stage_detail(folder)[0]
 
 
 def verdict_file_status(folder):
@@ -1445,9 +1600,9 @@ def ledger_check(out_root, verdicts, values):
                                           rejudge_needed=(kind == "invalid" and st_ in ("final", "md_complete")))
                 if dp:
                     invalid.append(f"{tag}: 재시도 선언 — " + " · ".join(dp))
-            st_p = folder_stage(pf) if pf else None
+            st_p, st_pw = folder_stage_detail(pf) if pf else (None, None)
             if st_p == "unreadable":
-                invalid.append(f"{tag}: 앞 실행 {str(p_.get('run_id'))[:8]} 폴더의 완료 단계를 못 읽는데 다시 돌렸다")
+                invalid.append(f"{tag}: 앞 실행 {str(p_.get('run_id'))[:8]} 폴더의 완료 단계를 못 읽는데 다시 돌렸다 ({st_pw})")
             elif kind == "interrupted" and st_p in ("final", "md_complete"):
                 invalid.append(f"{tag}: 앞 실행이 끝까지 (또는 MD 까지) 돌았는데 다시 돌렸다 — 판정 · FIRE 복구 대상")
         if n_int > max_int:
@@ -2599,7 +2754,8 @@ def _selftest():
         chk(os.path.isfile(os.path.join(td, "final.xyz")) and os.path.isfile(os.path.join(td, "final.vasp"))
             and os.path.isfile(os.path.join(td, "thermo.csv")), "final.xyz + final.vasp + thermo.csv 생성 (xyz·POSCAR 쌍)")
         mdd = json.loads(open(os.path.join(td, MD_DONE_NAME), encoding="utf-8").read())
-        pl_lj = {"melt_ps": 0.02, "quench_ps": info["quench_ps"], "hold_ps": 0.02, "dt_fs": 2.0, "run_id": mdd["run_id"] or "7" * 32}
+        pl_lj = {"melt_ps": 0.02, "quench_ps": info["quench_ps"], "hold_ps": 0.02, "dt_fs": 2.0, "save_ps": 0.004,
+                 "run_id": mdd["run_id"] or "7" * 32}
         if mdd["run_id"] is None:                            # 이 연기 시험은 run_id 없이 돌렸다 — 판독 시험용으로 기록 · plan 을 같은 값으로 맞춘다
             mdd["run_id"] = pl_lj["run_id"]; open(os.path.join(td, MD_DONE_NAME), "w", encoding="utf-8").write(json.dumps(mdd))
         open(os.path.join(td, "plan.json"), "w", encoding="utf-8").write(json.dumps(pl_lj))
@@ -2614,6 +2770,36 @@ def _selftest():
         chk(hdr[-2:] == ["P_GPa", "P_virial_GPa"] and len(row) == len(hdr)
             and row[-1] not in ("", "nan") and row[-2] != row[-1],
             f"thermo.csv 에 총 압력과 virial 을 **둘 다** 기록하고 서로 다르다 ({row[-2]} / {row[-1]} GPa)")
+    # ⭐ 회신 DL P1-2 — FIRE 진입 순간에 완료 기록이 이미 맞는지 (진짜 MD 루프 · LJ) — 기록 호출을 FIRE 뒤로 옮기면 여기서 빨개진다
+    import ase.optimize as _aopt
+    class _AtFire(Exception):
+        pass
+    _RealFIRE, seen_fire = _aopt.FIRE, []
+    class _FireProbe(_RealFIRE):
+        def __init__(self, atoms_, *a_, logfile=None, **k_):
+            if logfile is not None and str(logfile).endswith("final_relax.log"):
+                dd_ = pathlib.Path(str(logfile)).parent
+                seen_fire.append((folder_stage(dd_), (dd_ / MD_DONE_NAME).is_file(), (dd_ / "final.xyz").exists()))
+                raise _AtFire()
+            super().__init__(atoms_, *a_, logfile=logfile, **k_)
+    with tempfile.TemporaryDirectory() as tdF:
+        qps_, _ = schedule(600, 300, 3e14, 2.0)
+        RIDP = "4" * 32
+        open(os.path.join(tdF, "plan.json"), "w", encoding="utf-8").write(json.dumps(
+            {"melt_ps": 0.02, "quench_ps": qps_, "hold_ps": 0.02, "dt_fs": 2.0, "save_ps": 0.004, "run_id": RIDP}))
+        at2 = Atoms(symbols=symS, positions=posS, cell=cellS, pbc=True)
+        _aopt.FIRE, stopped = _FireProbe, False
+        try:
+            run_melt_quench(at2, LennardJones(sigma=2.5, epsilon=0.05, rc=6.0), tdF, seed=5, T_melt=600, T_final=300,
+                            melt_ps=0.02, quench_rate=3e14, hold_ps=0.02, dt_fs=2.0, save_ps=0.004, pre_relax=False,
+                            log=lambda *a: None, run_id=RIDP)
+        except _AtFire:
+            stopped = True
+        finally:
+            _aopt.FIRE = _RealFIRE
+        chk(stopped and seen_fire == [("md_complete", True, False)],
+            f"⛔음성 DL P1-2: FIRE 진입 순간 이미 MD 완료 기록이 맞다 (folder_stage = md_complete · final 없음) — "
+            f"기록 호출을 FIRE 뒤로 옮기면 빨개진다 ({seen_fire})")
     # ③b li2s-2 --fix_density — NVT 고정 밀도 경로 (LJ 배선) · 옵션이 없으면 옛 plan 과 같은 키
     #     (회신 DF Q-DF-8 뒤: 압축은 melt/2 전에 끝나야 한다 → melt 0.8 · 압축 0.3 ps)
     symF, posF, cellF = build_random_cell("A", seed=5, n_fu=2, density_g_cm3=0.8)
@@ -2910,51 +3096,152 @@ def _selftest():
         RIDF = "5" * 32
         PLAN0 = {"melt_ps": 2.0, "quench_ps": 1.0, "hold_ps": 1.0, "save_ps": 1.0, "dt_fs": 2.0, "run_id": RIDF}
         FR = lambda n, nat="2": "".join(f"{nat}\nLattice=\"5 0 0 0 5 0 0 0 5\"\nLi 0 0 0\nLi 1 1 1\n" for _ in range(n))
-        def _fs(name, plan=True, traj=5, final=False, done=False, after=None):
-            """done: MD 완료 기록을 실제 쓰기 함수 (write_md_done) 로 · after: 기록 뒤에 폴더를 건드림 (손상 재현)."""
+        def TH(n, pl=PLAN0):
+            """thermo.csv — 진짜 머리 + 저장 간격대로 n 행 (traj 프레임과 같은 수)."""
+            si = save_interval_steps(pl) * float(pl["dt_fs"]) / 1000.0
+            return ("t_ps,T_K,T_set_K,density_g_cm3,volume_A3,E_pot_eV,P_GPa,P_virial_GPa\n"
+                    + "".join(f"{k * si:.3f},300.0,300.0,1.8000,1000.00,-500.0000,0.1000,0.1000\n" for k in range(n)))
+        def _fs(name, plan=True, traj=5, thermo="same", final=False, done=False, after=None, attempt=True):
+            """done: MD 완료 기록을 실제 쓰기 함수 (write_md_done) 로 · after: 기록 뒤에 폴더를 건드림 (손상 재현) ·
+            thermo: 'same' = traj 와 같은 행 수 · None = 파일 없음 · 정수 = 그 행 수. attempt: 러너의 실행 전 기록."""
             d = pathlib.Path(td_) / name; d.mkdir()
             pl = PLAN0 if plan is True else plan
+            if attempt:
+                (d / ATTEMPT_NAME).write_text(json.dumps({"run_id": RIDF}), encoding="utf-8")
             if isinstance(pl, dict):
                 (d / "plan.json").write_text(json.dumps(pl), encoding="utf-8")
             elif isinstance(pl, str):
                 (d / "plan.json").write_text(pl, encoding="utf-8")
+            plq = pl if isinstance(pl, dict) and "dt_fs" in pl and "save_ps" in pl else PLAN0
             if traj is not None:
                 (d / "traj.xyz").write_text(FR(traj), encoding="utf-8")
-            (d / "thermo.csv").write_text("t_ps,T_K\n0,1\n", encoding="utf-8")
+            nth = (traj or 0) if thermo == "same" else thermo
+            if nth is not None:
+                (d / "thermo.csv").write_text(TH(nth, plq), encoding="utf-8")
             if done:
                 dd = done if isinstance(done, dict) else {}
-                st_ = planned_md_steps(pl if isinstance(pl, dict) and "dt_fs" in pl else PLAN0)
+                st_ = planned_md_steps(plq)
                 write_md_done(d, run_id=dd.get("run_id", RIDF), n_steps_planned=dd.get("planned", st_), n_steps_done=dd.get("done", st_))
             if after:
                 after(d)
             if final:
                 (d / "final.xyz").write_text("x", encoding="utf-8")
             return folder_stage(d)
+        def _tmp_only(d):                                    # 회신 DL P0 반례 2 — 기록을 임시 이름으로만 (os.replace 직전 끊김)
+            (d / MD_DONE_TMP).write_text(json.dumps({"run_id": RIDF, "n_steps_planned": 2000, "n_steps_done": 2000}), encoding="utf-8")
         P07 = {**PLAN0, "save_ps": 0.7}
         fs_ = {"final": _fs("f", final=True), "md_complete": _fs("c", done=True),
-               "no_marker_full_traj": _fs("i", traj=5),                 # 궤적이 다 있어도 완료 기록이 없으면 미완 (완료의 증거는 기록)
-               "no_plan": _fs("n", plan=False), "unreadable_plan": _fs("u", plan='{"melt_ps": 2'),
+               # 회신 DL Q2: 기록 없이 시작된 마지막 기록이 끝 경계 (4 ps = 2,000 스텝) 에 닿음 → 완료 여부 불명 → 보류
+               "no_marker_end_reached": _fs("i", traj=5),
+               "no_marker_cut_mid": _fs("i2", traj=2),          # 1 ps 에서 끊김 — 명확한 도중 끊김 → 미완 (재시도 대상)
+               "nothing_recorded": _fs("i3", traj=None, thermo=None),   # plan 만 — MD 기록 전 끊김
+               "header_only": _fs("i4", traj=None, thermo=0),
+               "no_plan": _fs("n", plan=False, traj=None, thermo=None),
+               "no_plan_no_attempt": _fs("n2", plan=False, traj=None, thermo=None, attempt=False),
+               "no_plan_attempt_tmp": _fs("n3", plan=False, traj=None, thermo=None,
+                                          after=lambda d: (d / (ATTEMPT_NAME + ".tmp")).write_text("{", encoding="utf-8")),
+               "no_plan_judged": _fs("n4", plan=False, traj=None, thermo=None,     # 러너가 plan 전 끊긴 런을 판정한 기록
+                                     after=lambda d: [(d / "stage1_verdict.json").write_text('{"status": "incomplete"}', encoding="utf-8"),
+                                                      (d / VERDICT_HISTORY).write_text("{}\n", encoding="utf-8")]),
+               # 회신 DL P0 반례 1 — 완료 기록 · 궤적 · thermo 는 정상이고 plan.json 만 없음 → 보류 (no_plan 아님)
+               "plan_gone_after_done": _fs("pg", done=True, after=lambda d: (d / "plan.json").unlink()),
+               "no_plan_with_traj": _fs("pt", plan=False, traj=2),
+               "no_plan_unknown_file": _fs("pu", plan=False, traj=None, thermo=None,
+                                           after=lambda d: (d / "notes.txt").write_text("x", encoding="utf-8")),
+               # 회신 DL P0 반례 2 — 임시 기록만 (궤적은 도중이어도 — 임시 기록 하나로 보류)
+               "tmp_only_mid": _fs("t1", traj=2, after=_tmp_only),
+               "tmp_and_done": _fs("t2", done=True, after=_tmp_only),
+               "fire_log_no_marker": _fs("fl", traj=2, after=lambda d: (d / "final_relax.log").write_text("FIRE", encoding="utf-8")),
+               "unreadable_plan": _fs("u", plan='{"melt_ps": 2'),
+               "plan_no_save": _fs("u2", plan={k: v for k, v in PLAN0.items() if k != "save_ps"}, traj=2),
                # 회신 DK P0-1 재현: 완료 기록 뒤 첫 원자 수만 바꿈 · 첫 줄을 NUL 로 → 손상된 완료 궤적은 보류 (재담금질 아님)
                "atomcount_changed": _fs("a", done=True, after=lambda d: (d / "traj.xyz").write_text(FR(5).replace("2\n", "3\n", 1), encoding="utf-8")),
                "first_line_nul": _fs("z", done=True, after=lambda d: (d / "traj.xyz").write_bytes(b"\x00" + FR(5).encode()[1:])),
-               "thermo_changed": _fs("h", done=True, after=lambda d: (d / "thermo.csv").write_text("t_ps,T_K\n0,2\n", encoding="utf-8")),
+               "thermo_changed": _fs("h", done=True, after=lambda d: (d / "thermo.csv").write_text(TH(4), encoding="utf-8")),
                "traj_gone": _fs("g", done=True, after=lambda d: (d / "traj.xyz").unlink()),
                "marker_other_run": _fs("o", done={"run_id": "6" * 32}),
                "marker_short": _fs("s", done={"done": planned_md_steps(PLAN0) - 1}),
                "marker_cut": _fs("x", done=True, after=lambda d: (d / MD_DONE_NAME).write_text('{"run_id": "', encoding="utf-8")),
                "plan_no_run_id": _fs("r", plan={k: v for k, v in PLAN0.items() if k != "run_id"}, done=True),
-               # 회신 DK P1-1 재현: save 0.7 ps 일정을 1,750 스텝에서 끊음 (프레임 6 = 완주와 같은 수) → 완료 기록이 없으니 미완
-               "save07_cut": _fs("k", plan=P07, traj=6), "save07_done": _fs("l", plan=P07, traj=6, done=True),
-               "no_dt": _fs("d", plan={k: v for k, v in PLAN0.items() if k != "dt_fs"}, done=True)}
-        exp_fs = {"final": "final", "md_complete": "md_complete", "no_marker_full_traj": "md_incomplete", "no_plan": "no_plan",
-                  "unreadable_plan": "unreadable", "atomcount_changed": "unreadable", "first_line_nul": "unreadable",
+               # 회신 DK P1-1 · DL Q2: save 0.7 ps 를 1,750 스텝 (= 끝 경계) 에서 끊음 → 완료 여부 불명 → 보류 · 700 ps 쪽은 미완
+               "save07_end": _fs("k", plan=P07, traj=6), "save07_mid": _fs("k2", plan=P07, traj=3),
+               "save07_done": _fs("l", plan=P07, traj=6, done=True),
+               "no_dt": _fs("d", plan={k: v for k, v in PLAN0.items() if k != "dt_fs"}, done=True),
+               # 진행량 판독 — 정전 꼬리는 받아 주고 (시작된 기록으로 센다) · 꼬리가 아닌 깨짐은 보류
+               "thermo_nul_tail": _fs("q1", traj=2, after=lambda d: open(d / "thermo.csv", "ab").write(b"\x00" * 64)),
+               "thermo_partial_mid": _fs("q2", traj=2, after=lambda d: open(d / "thermo.csv", "a").write("1.0")),
+               "thermo_partial_end": _fs("q3", traj=4, after=lambda d: open(d / "thermo.csv", "a").write("4.0")),
+               "thermo_garbage_mid": _fs("q4", traj=3, after=lambda d: (d / "thermo.csv").write_text(
+                   TH(3).replace("1.000,", "x.000,", 1), encoding="utf-8")),
+               "thermo_bad_cadence": _fs("q5", traj=3, after=lambda d: (d / "thermo.csv").write_text(
+                   TH(3).replace("1.000,", "1.500,", 1), encoding="utf-8")),
+               "thermo_no_header": _fs("q6", traj=2, after=lambda d: (d / "thermo.csv").write_text(
+                   "".join(TH(2).splitlines(keepends=True)[1:]), encoding="utf-8")),
+               "traj_partial_end": _fs("q7", traj=4, thermo=4, after=lambda d: open(d / "traj.xyz", "a").write("2\nLattice=\"5 0 0")),
+               "traj_garbage_mid": _fs("q8", traj=3, after=lambda d: (d / "traj.xyz").write_text(
+                   FR(1) + "garbage\n" + FR(2), encoding="utf-8")),
+               "traj_nul_tail": _fs("q9", traj=2, after=lambda d: open(d / "traj.xyz", "ab").write(b"\x00" * 64))}
+        exp_fs = {"final": "final", "md_complete": "md_complete", "no_marker_end_reached": "unreadable", "no_marker_cut_mid": "md_incomplete",
+                  "nothing_recorded": "md_incomplete", "header_only": "md_incomplete",
+                  "no_plan": "no_plan", "no_plan_no_attempt": "no_plan", "no_plan_attempt_tmp": "no_plan", "no_plan_judged": "no_plan",
+                  "plan_gone_after_done": "unreadable", "no_plan_with_traj": "unreadable", "no_plan_unknown_file": "unreadable",
+                  "tmp_only_mid": "unreadable", "tmp_and_done": "unreadable", "fire_log_no_marker": "unreadable",
+                  "unreadable_plan": "unreadable", "plan_no_save": "unreadable",
+                  "atomcount_changed": "unreadable", "first_line_nul": "unreadable",
                   "thermo_changed": "unreadable", "traj_gone": "unreadable", "marker_other_run": "unreadable", "marker_short": "unreadable",
-                  "marker_cut": "unreadable", "plan_no_run_id": "unreadable", "save07_cut": "md_incomplete", "save07_done": "md_complete",
-                  "no_dt": "unreadable"}
+                  "marker_cut": "unreadable", "plan_no_run_id": "unreadable", "save07_end": "unreadable", "save07_mid": "md_incomplete",
+                  "save07_done": "md_complete", "no_dt": "unreadable",
+                  "thermo_nul_tail": "md_incomplete", "thermo_partial_mid": "md_incomplete", "thermo_partial_end": "unreadable",
+                  "thermo_garbage_mid": "unreadable", "thermo_bad_cadence": "unreadable", "thermo_no_header": "unreadable",
+                  "traj_partial_end": "unreadable", "traj_garbage_mid": "unreadable", "traj_nul_tail": "md_incomplete"}
         chk(fs_ == exp_fs,
-            "⛔음성 DJ Q2 · DK P0-1 · P1-1: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없음 = 미완 (궤적이 다 있어도) · "
-            "기록 뒤 첫 원자 수 · 첫 줄 NUL · thermo 바뀜 · 궤적 없음 · 다른 run_id · 스텝 모자람 · 기록 잘림 · plan run_id 없음 · dt 없음 = 판독 불가 (보류) · "
-            f"save 0.7 ps 를 1,750 스텝에서 끊음 = 미완 ({ {k: fs_[k] for k in fs_ if fs_[k] != exp_fs[k]} })")
+            "⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · "
+            "기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료 여부 불명 → 보류 · 끝 경계 앞 (도중) · MD 기록 전 = 미완 · "
+            "plan 없고 실행 전 기록뿐 = no_plan · **plan 만 지운 완료 폴더 · plan 없는 궤적 · 모르는 파일 · 임시 기록 · FIRE 로그만** = 보류 · "
+            "기록 뒤 원자 수 · NUL · thermo 바뀜 · 궤적 없음 · 다른 run_id · 스텝 모자람 · 기록 잘림 · plan run_id · dt · save 없음 = 보류 · "
+            "정전 꼬리 (NUL · 잘린 마지막 줄) 는 받아 주되 시작된 기록으로 세고 · 꼬리가 아닌 깨짐 · 시각 어긋남 · 머리 없음 = 보류 "
+            f"({ {k: fs_[k] for k in fs_ if fs_[k] != exp_fs[k]} })")
+        # ⭐ 회신 DL P1-1 — 완료 기록 쓰기 순서 (데이터 fsync → 임시 기록 fsync → 교체 → 디렉터리 fsync) · 어디서 실패해도 보류
+        g_ = globals()
+        real_ff, real_fh, real_fd = g_["_fsync_file"], g_["_fsync_handle"], g_["_fsync_dir"]
+        def _probe(name, fail_at=None):
+            d = pathlib.Path(td_) / name; d.mkdir()
+            (d / "plan.json").write_text(json.dumps(PLAN0), encoding="utf-8")
+            (d / "traj.xyz").write_text(FR(5), encoding="utf-8"); (d / "thermo.csv").write_text(TH(5), encoding="utf-8")
+            seq_ = []
+            def ff(p):
+                seq_.append(("file", pathlib.Path(p).name, (d / MD_DONE_TMP).exists() or (d / MD_DONE_NAME).exists()))
+                if fail_at == "file":
+                    raise OSError("주입: 데이터 fsync 실패")
+                real_ff(p)
+            def fh(h):
+                seq_.append(("handle", (d / MD_DONE_TMP).exists(), (d / MD_DONE_NAME).exists()))
+                if fail_at == "handle":
+                    raise OSError("주입: 임시 기록 fsync 실패")
+                real_fh(h)
+            def fd(p):
+                seq_.append(("dir", (d / MD_DONE_TMP).exists(), (d / MD_DONE_NAME).exists()))
+                if fail_at == "dir":
+                    raise OSError("주입: 디렉터리 fsync 실패")
+                return real_fd(p)
+            g_["_fsync_file"], g_["_fsync_handle"], g_["_fsync_dir"] = ff, fh, fd
+            err = None
+            try:
+                write_md_done(d, run_id=RIDF, n_steps_planned=planned_md_steps(PLAN0), n_steps_done=planned_md_steps(PLAN0))
+            except OSError as e:
+                err = str(e)
+            finally:
+                g_["_fsync_file"], g_["_fsync_handle"], g_["_fsync_dir"] = real_ff, real_fh, real_fd
+            return seq_, err, folder_stage(d)
+        sq_ok, e_ok, st_ok = _probe("fs_ok")
+        chk(e_ok is None and st_ok == "md_complete"
+            and sq_ok == [("file", "traj.xyz", False), ("file", "thermo.csv", False), ("handle", True, False), ("dir", False, True)],
+            f"회신 DL P1-1: 완료 기록 순서 = traj · thermo fsync (기록 전) → 임시 기록 fsync (교체 전) → 교체 → 디렉터리 fsync ({sq_ok})")
+        fails = {k: _probe("fs_" + k, fail_at=k) for k in ("file", "handle", "dir")}
+        chk(all(v[1] and v[2] in ("unreadable", "md_complete") for v in fails.values())
+            and fails["file"][2] == "unreadable" and fails["handle"][2] == "unreadable" and fails["dir"][2] == "md_complete",
+            "⛔음성 DL P1-1: 저장 단계 어디서 실패해도 예외가 올라가고 (FIRE 안 함) 폴더는 보류 — 데이터 fsync 실패 = 끝 경계 보류 · "
+            f"임시 기록 fsync 실패 = 임시 기록 보류 · 디렉터리 fsync 실패 = MD 완료 보류 ({ {k: v[2] for k, v in fails.items()} })")
         vd = pathlib.Path(td_) / "v"; vd.mkdir()
         v_none = verdict_file_status(vd)
         (vd / "stage1_verdict.json").write_text('{"status": "pass"}', encoding="utf-8"); v_pass = verdict_file_status(vd)
