@@ -14757,7 +14757,7 @@
       "found_by": "사전 공격 7 회차 (11-02 · 0658c0ac6 · 독립 작업 트리 · PC6 고침 재공격)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack7/PREATTACK_7.md",
       "title": "PC6-09 범위 — 부모 사망 뒤 같은 --attempt 를 다른 --out (또는 env 같은 다른 기계) 으로 다시 치면 attempt_open 이 새 바탕 폴더를 만들고 처음부터 다시 돎 · 결과 줄 completed · 판정 원장 대조 통과 · 결과 본 첫 런이 조용히 사라짐 (원장에 시작 기록 없음 · recover_ledger 는 결과 줄이 있으면 폴더 대조 안 함)",
-      "note": "사전 공격 7 회차 §1 · P1 후보 (메인 판단 = 1저자 결정 전 P1 로 둠) · 고침 제안 ① attempt_open 이 런 전에 원장에 시작 줄 (n · 바탕 절대 경로 · host_ident · boot) 커밋 + 결과 줄 없는 같은 n 의 두 번째 입구 = 화면만 ② recover_ledger: 결과 줄의 폴더 · 요약 sha ≠ 이 폴더면 rc 3 · 탐침 probe7_real.py C · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정. · ✅ 11-02 고침 (1저자 11-02 밤 *\"ㅇㅇ 권고대로\"* = Codex 전에 고침 · 시험 먼저 → 고침 → 증거 `docs/reviews/rint2_rr_fix_evidence_20261023/pc7_fix/`) = attempt_open 이 시도 폴더 + attempt.json 을 만든 뒤 · 풀기 전 대조 · 러너 전에 원장 시작 기록 한 줄 (kind start · 번호 · 바탕 절대 경로 (resolve) · 폴더 이름 · 기계 신원 (machine_id · boot_id · pidns) · utc) 을 커밋 (못 쓰면 러너 없이 rc 3) · 같은 번호에 시작 기록이 있고 결과 줄이 없으면 두 번째 입구 = 바탕 · 기계와 무관하게 화면만 ATTEMPT_LEDGER_MISMATCH (원장 · 폴더 무변경 · 기록된 바탕에서 recover 먼저) · recover_ledger = 결과 줄의 폴더 · 요약 sha · 시작 기록 바탕 ↔ 이 폴더 대조 · 원장 해석 = 같은 번호 시작 기록 둘 · 결과 줄 뒤 시작 기록 · 항목 없는 번호 = 거부 (등록 R §10-5 아 ⑦ PC6-09 단락 11-02 PC7 줄).  ⚠ claimed_fixed_sha = 11-03 작업 트리 가지의 cherry-pick 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 메인 번호로 고칠 것 (원 pc7-fix 번호 = 각 커밋 메시지의 \"cherry picked from commit\" 줄).  ⬜ Codex 회차 ②.",
+      "note": "사전 공격 7 회차 §1 · P1 후보 (메인 판단 = 1저자 결정 전 P1 로 둠) · 고침 제안 ① attempt_open 이 런 전에 원장에 시작 줄 (n · 바탕 절대 경로 · host_ident · boot) 커밋 + 결과 줄 없는 같은 n 의 두 번째 입구 = 화면만 ② recover_ledger: 결과 줄의 폴더 · 요약 sha ≠ 이 폴더면 rc 3 · 탐침 probe7_real.py C · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정. · ✅ 11-02 고침 (1저자 11-02 밤 *\"ㅇㅇ 권고대로\"* = Codex 전에 고침 · 시험 먼저 → 고침 → 증거 `docs/reviews/rint2_rr_fix_evidence_20261023/pc7_fix/`) = attempt_open 이 시도 폴더 + attempt.json 을 만든 뒤 · 풀기 전 대조 · 러너 전에 원장 시작 기록 한 줄 (kind start · 번호 · 바탕 절대 경로 (resolve) · 폴더 이름 · 기계 신원 (machine_id · boot_id · pidns) · utc) 을 커밋 (못 쓰면 러너 없이 rc 3) · 같은 번호에 시작 기록이 있고 결과 줄이 없으면 두 번째 입구 = 바탕 · 기계와 무관하게 화면만 ATTEMPT_LEDGER_MISMATCH (원장 · 폴더 무변경 · 기록된 바탕에서 recover 먼저) · recover_ledger = 결과 줄의 폴더 · 요약 sha · 시작 기록 바탕 ↔ 이 폴더 대조 · 원장 해석 = 같은 번호 시작 기록 둘 · 결과 줄 뒤 시작 기록 · 항목 없는 번호 = 거부 (등록 R §10-5 아 ⑦ PC6-09 단락 11-02 PC7 줄).  ⚠ claimed_fixed_sha = 11-03 작업 트리 가지의 cherry-pick 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 메인 번호로 고칠 것 (원 pc7-fix 번호 = 각 커밋 메시지의 \"cherry picked from commit\" 줄).  ⬜ Codex 회차 ②. · ★ 11-04 사전 공격 8 회차 = 같은 부류의 recover 쪽 (산 사슬의 시도에 결과 줄) = PC8-05 (claimed_fixed · 시작 기록 사슬 부모) · 원장 clone 한정 그대로.",
       "claimed_fixed_sha": "3995a44a0",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py PE01 · PE01h · PE01r · PE01p (고치기 전 0/4 = docs/reviews/rint2_rr_fix_evidence_20261023/pc7_fix/logs/before_PE01.log → 4/4 = docs/reviews/rint2_rr_fix_evidence_20261023/pc7_fix/logs/after_PE01.log) · 변이 보강 PE01s · PE01c (boost.log) · PE01f (구현과 함께 · pe01f.log) · 원장 줄 구조 맞춤 AL 30/30 · PC · PD 42/42 · 전체 440/440 (docs/reviews/rint2_rr_fix_evidence_20261023/pc7_fix/logs/full_after.log)",
@@ -14774,7 +14774,7 @@
       "found_by": "사전 공격 7 회차 (11-02 · 0658c0ac6 · 독립 작업 트리 · PC6 고침 재공격)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack7/PREATTACK_7.md",
       "title": "PC6-12 닫힘 주장 — found_attempts_problem 이 attempt.json 없음 · 꼴 틀림 · 심볼릭 링크 폴더를 건너뜀 → R10 (끝 두 커밋 reset + 대상만 바꾼 줄) 위에 attempt.json 하나만 지우거나 칸 하나를 더하면 판정 · 예측 입력 통과 (등록 ⑦ \"찾은 시도 폴더 전부\" 거짓)",
-      "note": "사전 공격 7 회차 §1 · 고침 제안 = 원장 항목이 있는 attempt_<n> 폴더에 꼴 맞는 attempt.json 이 없으면 MISMATCH (예외 = 결과 줄 rejected + 옆 거부 기록) · 변이 K09 (엄격) 는 PD12u 하나만 깸 · 탐침 probe7_real.py A · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정. · ✅ 11-02 고침 (1저자 11-02 밤 *\"ㅇㅇ 권고대로\"* · 시험 먼저 → 고침 → 증거 `docs/reviews/rint2_rr_fix_evidence_20261023/pc7_fix/`) = found_attempts_problem: 원장 항목이 있는 attempt_<n> 폴더에 꼴 맞는 attempt.json (read_attempt) 이 없으면 (없음 · 꼴 틀림 · 심볼릭 링크) = ATTEMPT_LEDGER_MISMATCH · 예외 하나 = 그 번호 결과 줄 rejected + 그 바탕에 옆 거부 기록 attempt_<n>.rejected.json (AL07 남의 폴더 · 지금 동작 그대로) · 바뀐 설계 단언 PD12u · 한정 = 꼴 밖 이름으로 옮긴 폴더 (attempt_1.old 꼴 = 찾지 않음 · Codex Q-D) (등록 R §10-5 아 ⑦ PC6-12 단락 11-02 PC7 줄).  ⚠ claimed_fixed_sha = 11-03 작업 트리 가지의 cherry-pick 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 메인 번호로 고칠 것 (원 pc7-fix 번호 = 각 커밋 메시지의 \"cherry picked from commit\" 줄).  ⬜ Codex 회차 ②.",
+      "note": "사전 공격 7 회차 §1 · 고침 제안 = 원장 항목이 있는 attempt_<n> 폴더에 꼴 맞는 attempt.json 이 없으면 MISMATCH (예외 = 결과 줄 rejected + 옆 거부 기록) · 변이 K09 (엄격) 는 PD12u 하나만 깸 · 탐침 probe7_real.py A · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정. · ✅ 11-02 고침 (1저자 11-02 밤 *\"ㅇㅇ 권고대로\"* · 시험 먼저 → 고침 → 증거 `docs/reviews/rint2_rr_fix_evidence_20261023/pc7_fix/`) = found_attempts_problem: 원장 항목이 있는 attempt_<n> 폴더에 꼴 맞는 attempt.json (read_attempt) 이 없으면 (없음 · 꼴 틀림 · 심볼릭 링크) = ATTEMPT_LEDGER_MISMATCH · 예외 하나 = 그 번호 결과 줄 rejected + 그 바탕에 옆 거부 기록 attempt_<n>.rejected.json (AL07 남의 폴더 · 지금 동작 그대로) · 바뀐 설계 단언 PD12u · 한정 = 꼴 밖 이름으로 옮긴 폴더 (attempt_1.old 꼴 = 찾지 않음 · Codex Q-D) (등록 R §10-5 아 ⑦ PC6-12 단락 11-02 PC7 줄).  ⚠ claimed_fixed_sha = 11-03 작업 트리 가지의 cherry-pick 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 메인 번호로 고칠 것 (원 pc7-fix 번호 = 각 커밋 메시지의 \"cherry picked from commit\" 줄).  ⬜ Codex 회차 ②. · ★ 11-04 사전 공격 8 회차 = 예외 (rejected + 옆 거부 기록) 가 증거에 안 묶임 = PC8-01 (claimed_fixed · al07_foreign_ok).",
       "claimed_fixed_sha": "eada9a316",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py PE02 · PE02x · PD12u (바뀐 설계 단언 · 고치기 전 0/3 = docs/reviews/rint2_rr_fix_evidence_20261023/pc7_fix/logs/before_PE02.log → 3/3 = docs/reviews/rint2_rr_fix_evidence_20261023/pc7_fix/logs/after_PE02.log) · 같은 부류 (사전 공격 7 회차 변이 K09 꼴) 52/52 = docs/reviews/rint2_rr_fix_evidence_20261023/pc7_fix/logs/after02_K09set.log · 전체 440/440",
@@ -14808,7 +14808,7 @@
       "found_by": "사전 공격 7 회차 (11-02 · 0658c0ac6 · 독립 작업 트리 · PC6 고침 재공격)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack7/PREATTACK_7.md",
       "title": "recover_group 이 옛 끝 기록을 chain_end 로 옮길 때 표지 · 이름 대조 없음 — 다른 런의 끝 기록 (손 고침 · 부분 복사) rc 가 원인을 정할 수 있음",
-      "note": "사전 공격 7 회차 §1 · 고침 제안 = prev 의 token · name 이 시작 기록과 같을 때만 · 탐침 probe7_unit.py U6 · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정. · ✅ 11-02 고침 (1저자 11-02 밤 *\"ㅇㅇ 권고대로\"* · 시험 먼저 → 고침 → 증거 `docs/reviews/rint2_rr_fix_evidence_20261023/pc7_fix/`) = recover_group 이 옛 끝 기록을 chain_end 로 옮기는 것 = 그 끝 기록의 표지 (token) · 이름이 시작 기록과 같을 때만 · 다르면 끝 기록을 쓰지 않고 미확인으로 둔다 (변이 J03) · 손 고침 · 부분 복사 꼴 (등록 R §10-5 아 ⑦ PC6-13 단락 11-02 PC7 줄).  ⚠ claimed_fixed_sha = 11-03 작업 트리 가지의 cherry-pick 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 메인 번호로 고칠 것 (원 pc7-fix 번호 = 각 커밋 메시지의 \"cherry picked from commit\" 줄).  ⬜ Codex 회차 ②.",
+      "note": "사전 공격 7 회차 §1 · 고침 제안 = prev 의 token · name 이 시작 기록과 같을 때만 · 탐침 probe7_unit.py U6 · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정. · ✅ 11-02 고침 (1저자 11-02 밤 *\"ㅇㅇ 권고대로\"* · 시험 먼저 → 고침 → 증거 `docs/reviews/rint2_rr_fix_evidence_20261023/pc7_fix/`) = recover_group 이 옛 끝 기록을 chain_end 로 옮기는 것 = 그 끝 기록의 표지 (token) · 이름이 시작 기록과 같을 때만 · 다르면 끝 기록을 쓰지 않고 미확인으로 둔다 (변이 J03) · 손 고침 · 부분 복사 꼴 (등록 R §10-5 아 ⑦ PC6-13 단락 11-02 PC7 줄).  ⚠ claimed_fixed_sha = 11-03 작업 트리 가지의 cherry-pick 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 메인 번호로 고칠 것 (원 pc7-fix 번호 = 각 커밋 메시지의 \"cherry picked from commit\" 줄).  ⬜ Codex 회차 ②. · ★ 11-04 사전 공격 8 회차 = 확인 True 인 다른 런의 끝 기록은 이 대조에 안 닿음 = PC8-02 (claimed_fixed · group_pair 다섯 자리).",
       "claimed_fixed_sha": "2be83462c",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py PE04 (고치기 전 0/1 = docs/reviews/rint2_rr_fix_evidence_20261023/pc7_fix/logs/before_PE04.log → GR · PC05 · PC06 · PD · PE 묶음 32/32 = docs/reviews/rint2_rr_fix_evidence_20261023/pc7_fix/logs/after_PE04.log) · 전체 440/440",
@@ -14852,6 +14852,155 @@
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack7/PREATTACK_7.md",
       "title": "attempt_open 의 mkdir → attempt.json 쓰기 사이 창 — 빈 attempt_1 에서 같은 --attempt = 옆 거부 · 새 시도 뒤 판정 = 원장에 없는 시도 폴더 (보수 · 손 정리 전까지 멈춤)",
       "note": "사전 공격 7 회차 §1 · 고침 제안 = 빈 폴더 = 이 항목 것 (화면만 + recover = interrupted · pre) 또는 빈 폴더 지우기 · 탐침 probe7_unit.py U4 · ⬜ 1저자 처리 결정 → 고침 (시험 먼저) 또는 Codex 회차 ② 요청서 한정. · 11-02 밤 1저자 *\"ㅇㅇ 권고대로\"* = 고치지 않음 · Codex 회차 ② 요청서 `docs/reviews/codex_rint2_rr_round2_request_20261103.md` 에 한정으로 적는다 (open 그대로)."
+    },
+    {
+      "id": "PC8-01",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "사전 공격 8 회차 (11-04 · 80095a7f0..7b51e591e · 독립 작업 트리 · PC7 고침 · BAN8 · RINT2-E01 · E18 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack8/PREATTACK_8.md",
+      "title": "PC7-02 부류 — found_attempts_problem 의 AL07 예외 (결과 줄 rejected + 그 바탕의 attempt_<k>.rejected.json 아무 파일 = 건너뜀) 가 증거에 묶이지 않음 → PE02 위협 모형 (원장 clone · 항목 1 대상만 FIBRE · attempt_1/attempt.json 지움) 위에 결과 줄 1 을 꼴 맞는 rejected 로 다시 쓰고 옆 파일 하나 ({}) 를 놓으면 판정 원장 대조 통과 (INPUT_MISSING) · 예측 입력 대조 통과 · 러너 24 회 · PREDICTED (입력 대상 밖 결과 줄은 다른 대조가 다시 읽지 않는 자리)",
+      "note": "사전 공격 8 회차 §1 P8-01 (P2 · 탐침 probe_p801_al07_exception.py) · ✅ 11-04 고침 (1저자 11-04 \"다 권고대로\" · 시험 먼저 → 고침 → 증거 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/) = 예외를 증거에 묶음 (scripts/rint_r_chain.py al07_foreign_ok · attempt_chain_trace — ① 결과 줄 rejected · 멈춤 OUTDIR_NOT_EMPTY · 폴더 = 옆 기록 이름 attempt_<k>.rejected.json ② 옆 기록 = 보통 파일 (링크 아님) · 요약 sha = 결과 줄 ③ 거부 기록 꼴 (칸 여섯 REJECTED_KEYS · schema · n = k · code OUTDIR_NOT_EMPTY · 시작 커밋 40 hex) ④ 남의 폴더에 사슬 흔적 없음 (attempt.json · rejected.json · 단계 요약 · 그룹 기록 · 결과 흔적 = 첫 풀이 끝 표지 · 팔 payload)) · 예외를 없애지 않고 묶은 까닭 = 정당한 AL07 (남의 옛 폴더 · mkdir 뒤 attempt.json 전에 죽은 빈 폴더 · 사슬이 쓰는 옆 기록은 ①–③ 을 늘 만족) 이 판정 · 예측을 멈추지 않게 (AL07 · PE02x 그대로 통과) · 바뀌는 길 = 예외 조건 하나 · 바뀐 설계 단언 PD12u (rejected_side = 증거를 맞춘 판 · 옛 {} 옆 기록 = 사유 · 새 사유 줄 열하나 + 증거 칸 하나씩 줄 넷 = 355c1b6d0 · 변이 A12 – A15) · 한정 = 사슬 흔적까지 지운 폴더 + 원장 고침 = 결과도 지운 손 (Q-D 그대로) · 변이 A10 (옆 기록 링크 검사 지움) = 같은 뜻 (요약 sha 가 링크를 None 으로 잡는다 · 두 겹 가드).  ⚠ claimed_fixed_sha = 작업 트리 가지 (pc8-fix-1104b) 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 본 가지 번호로 고칠 것 (본 가지 번호 = 반입 때).  ⬜ Codex 회차 ② (요청서 §5-5).",
+      "claimed_fixed_sha": "563b4019a",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py PE02y · PD12u (고치기 전 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_chain.log (PE02y 세 꼴 = 판정 INPUT_MISSING · 예측 러너 24 회) · docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_PD12u.log (새 사유 줄 11 = None) → 뒤 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/after_chain_targeted.log 52/52) · AL07 · PE02 · PE02x 그대로 · PD12u 증거 칸 하나씩 줄 넷 (355c1b6d0 · 시험만 · 고치기 전 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_PD12u_rows2_full.json — schema · 칸 · 시작 커밋 셋 None · 결과 줄 stopped = 옛 규칙도 사유 → 뒤 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/py311_r2/ · docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/mut/BASE2_al07.log)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/mutation_pc8fix.json (A1 – A15 · A10 = 같은 뜻 · 나머지 잡힘 · A11≈M12 · A12 – A15 = 증거 칸 하나씩 지움 · 첫 판 43 뒤 보탬)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/probes/probe_p801_al07_exception.out (탐침 무변경 · 우회 꼴 0 · 대조 거부 True)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/run_regression.sh — Python 3.11.15 (563b4019a 판 · 사슬만 355c1b6d0 판 다시) = 사슬 451/451 (다시 451/451) · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · kgy 판 3.8.20 (355c1b6d0 판) = 사슬 451/451 · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · 한정어 상수 소비자 = 웹앱 표지 93/0 · 영수증 105/0 (두 판) · S0 census 167/0 (두 판) · 로그 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/ (py311 · py311_r2 · py38 · consumers_*) · 요약 regression_env.txt · consumers_env.txt"
+      ]
+    },
+    {
+      "id": "PC8-02",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "사전 공격 8 회차 (11-04 · 80095a7f0..7b51e591e · 독립 작업 트리 · PC7 고침 · BAN8 · RINT2-E01 · E18 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack8/PREATTACK_8.md",
+      "title": "PC7-04 부류 — 끝 기록 ↔ 그 시작 기록 결합 (표지 · 이름) 을 recover_group 만 보았다 → 확인 True 인 다른 런의 끝 기록 (부분 복사) 은 stage_recover 가 고르지 않아 대조를 비켜 감 · attempt_groups_problem · orphan_cause · ResumeRunner._src_done 도 결합을 안 봄 → recover --ledger rc 0 · 결과 줄 interrupted · 결과 뒤 · 재실행 자격 True · 러너 그룹 삶 · --add --resume 1 rc 0",
+      "note": "사전 공격 8 회차 §1 P8-02 (P2 · 탐침 probe_p802_foreign_confirmed_end.py) · ✅ 11-04 고침 = 한 도우미 group_pair (scripts/rint_r_chain.py · 시작 기록 표지 32 hex · 끝 기록 표지 = 시작 기록 표지 · 끝 기록 이름 = 시작 기록 이름 = 파일 이름) 를 끝 기록을 믿는 자리 다섯이 씀 — attempt_groups_problem (결합 + 확인 True) · orphan_cause (결합 안 됨 = 읽음 False = 재실행 자격 없음) · stage_recover (결합 안 된 끝 기록도 고른다 · 확인 True 여도) · recover_group (옮길 chain_end 가 없는 옛 끝 기록도 결합 안 되면 미확인 = 끝 기록 안 씀 · 정리 = 시작 기록 표지로 그대로 · 옛 = chain_end 를 품은 것만 보고 나머지는 덮어씀) · ResumeRunner._src_done (결합 + rc = 정수 0 · bool · 실수 아님) · 그 밖 끝 기록을 읽는 자리 없음 (run_in_group 은 쓰는 쪽) · 그룹 기록 읽기 = RecursionError 도 못 읽음.  ⚠ claimed_fixed_sha = 작업 트리 가지 (pc8-fix-1104b) 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 본 가지 번호로 고칠 것 (본 가지 번호 = 반입 때).  ⬜ Codex 회차 ② (요청서 §5-5).",
+      "claimed_fixed_sha": "563b4019a",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py PE06 (고치기 전 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_chain.log (확인 True 다른 끝 기록 = 단위 (None · 읽음 True) · recover rc 0 · 결과 줄 interrupted 결과 뒤 재실행 자격 True · 러너 그룹 삶 · resume rc 0 · _src_done 다른 표지 · 다른 이름 · rc false · rc 0.0 = 끝난 런) · recover_group 줄 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_PE05o_PE06_full.json → 뒤 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/after_chain_targeted.log · docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/after_PE05o_PE06_rows2.log) · PE04 그대로",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/mutation_pc8fix.json (B1 – B9 잡힘 · B9≈M17)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/probes/probe_p802_foreign_confirmed_end.out (탐침 무변경 · recover rc 3 · 결과 줄 없음 · 러너 그룹 정리됨)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/run_regression.sh — Python 3.11.15 (563b4019a 판 · 사슬만 355c1b6d0 판 다시) = 사슬 451/451 (다시 451/451) · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · kgy 판 3.8.20 (355c1b6d0 판) = 사슬 451/451 · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · 한정어 상수 소비자 = 웹앱 표지 93/0 · 영수증 105/0 (두 판) · S0 census 167/0 (두 판) · 로그 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/ (py311 · py311_r2 · py38 · consumers_*) · 요약 regression_env.txt · consumers_env.txt"
+      ]
+    },
+    {
+      "id": "PC8-03",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "사전 공격 8 회차 (11-04 · 80095a7f0..7b51e591e · 독립 작업 트리 · PC7 고침 · BAN8 · RINT2-E01 · E18 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack8/PREATTACK_8.md",
+      "title": "RINT2-E01 고침의 값 대조가 파이썬 == — 형이 바뀐 값 (수 ↔ bool: true ↔ 1 · true ↔ 1.0) · 앞 사본이 다른 겹친 칸 = byte_diff_view kinds [format] (\"꼴만 다름\") · reverify_report results_differ · results_keys_differ · grade_differ · public_keys_differ = 같음 (판정 = 바이트 대조라 DIFF 그대로 · 보고 문구만)",
+      "note": "사전 공격 8 회차 §1 P8-03 (P3 · 탐침 probe_p803_byte_diff.py · probe_p803b_reverify_type.py) · ✅ 11-04 고침 = json_same (scripts/rint_r_chain.py · 형 엄격 · 되풀이 없이 · null · bool · 수 · 글 · 배열 · 객체 형부터 · 정수 1 = 실수 1.0 = 같은 수 · NaN ≠ NaN · 겹친 칸 = 사본 하나하나) 를 byte_diff_view (value) · reverify_report 네 칸 (다시 계산 쪽 = 정규 JSON 으로 한 번 돌린 값 · 저장본 = 겹친 칸 그대로 읽은 나무 · 한쪽에만 있는 칸 = 다름) · reverify 화면 공개 칸 목록 (보고와 같은 대조) 이 씀 · 겹친 칸 = 사본이 다 같으면 format · 하나라도 다르면 value + format · 판정 동작 (바이트 대조 · REVERIFY_DIFF · rc 1) 그대로.  ⚠ claimed_fixed_sha = 작업 트리 가지 (pc8-fix-1104b) 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 본 가지 번호로 고칠 것 (본 가지 번호 = 반입 때).  ⬜ Codex 회차 ② (요청서 §5-5).",
+      "claimed_fixed_sha": "563b4019a",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py RV07 · RV08 (고치기 전 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_chain.log (형 바뀜 = [format] · 보고 값 칸 같음) → 뒤 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/after_chain_targeted.log) · RV05 · RV06 그대로",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/mutation_pc8fix.json (J1 · J2 · J6 · J7 · J11 잡힘)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/probes/probe_p803b_reverify_type.out (탐침 무변경 · results_differ True · 칸 이름 · grade_differ True · [value])",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/run_regression.sh — Python 3.11.15 (563b4019a 판 · 사슬만 355c1b6d0 판 다시) = 사슬 451/451 (다시 451/451) · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · kgy 판 3.8.20 (355c1b6d0 판) = 사슬 451/451 · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · 한정어 상수 소비자 = 웹앱 표지 93/0 · 영수증 105/0 (두 판) · S0 census 167/0 (두 판) · 로그 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/ (py311 · py311_r2 · py38 · consumers_*) · 요약 regression_env.txt · consumers_env.txt"
+      ]
+    },
+    {
+      "id": "PC8-04",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "사전 공격 8 회차 (11-04 · 80095a7f0..7b51e591e · 독립 작업 트리 · PC7 고침 · BAN8 · RINT2-E01 · E18 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack8/PREATTACK_8.md",
+      "title": "byte_diff_view 가 value 를 찾으면 곧바로 돌아가 나머지 까닭 (끝 줄바꿈 · 칸 순서 · CRLF 등) 을 버림 (docstring \"여럿 가능\" 과 어긋남) · 끝-끝 E18i 가 json.dump (끝 줄바꿈 없음) 로 쓴 파일에 [value] 를 박아 빠진 목록을 고정",
+      "note": "사전 공격 8 회차 §1 P8-04 (P3) · ✅ 11-04 고침 = value 뒤에도 모은다 — 칸 순서 = 양쪽에 다 있는 칸끼리 (_json_order_differs) · 수 꼴 = 값이 같은 자리끼리 (_json_numform_differs · 옛 canon_bytes(v0) != new 는 값이 다르면 늘 참) · 꼴 · 공백 · 줄바꿈 = 저장본 자기 값의 정규 꼴 (NaN 그대로) 과 대조 · E18i 새 기대 [value, newline] (json.dump = 끝 줄바꿈 없음) · RINT2-E01 의 옛 한정 \"값이 다르면 value 하나만\" 철회 (요청서 §5-4 줄).  ⚠ claimed_fixed_sha = 작업 트리 가지 (pc8-fix-1104b) 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 본 가지 번호로 고칠 것 (본 가지 번호 = 반입 때).  ⬜ Codex 회차 ② (요청서 §5-5).",
+      "claimed_fixed_sha": "563b4019a",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py RV07 (value_no_nl · value_order_crlf · 고치기 전 [value] → 뒤 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/after_chain_targeted.log)",
+        "scripts/test_rint_r_chain_e2e.py E18i (고치기 전 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_e2e_E18.log 10 PASS · 1 FAIL (까닭 [value] · 길이 차 1) → 뒤 = 전체 끝-끝 (py311 · py38))",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/mutation_pc8fix.json (J3≈M27 · J4≈M20 잡힘)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/run_regression.sh — Python 3.11.15 (563b4019a 판 · 사슬만 355c1b6d0 판 다시) = 사슬 451/451 (다시 451/451) · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · kgy 판 3.8.20 (355c1b6d0 판) = 사슬 451/451 · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · 한정어 상수 소비자 = 웹앱 표지 93/0 · 영수증 105/0 (두 판) · S0 census 167/0 (두 판) · 로그 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/ (py311 · py311_r2 · py38 · consumers_*) · 요약 regression_env.txt · consumers_env.txt"
+      ]
+    },
+    {
+      "id": "PC8-05",
+      "severity": "P1",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "사전 공격 8 회차 (11-04 · 80095a7f0..7b51e591e · 독립 작업 트리 · PC7 고침 · BAN8 · RINT2-E01 · E18 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack8/PREATTACK_8.md",
+      "title": "PC7-01 부류 (recover 쪽) — recover --ledger 가 사슬이 아직 사는 시도에 결과 줄을 씀 (미확인 그룹 기록이 없는 창: 시작 기록 뒤 첫 러너 전 (풀기 전 대조 · S0 대조 · 침대 해시) · 런 사이 (앞 런 끝 기록 확인 · 다음 런 전)) — 시작 기록에 사슬 pid 없음 · chain_parent_alive 는 recover_group 만 봄 → (a) interrupted · 결과 전 · 같은 대상 새 --add rc 0 · 산 사슬 CALIBRATED (자기 결과 줄 거부 rc 3) (b) interrupted · 결과 뒤 · 재실행 자격 True · --add --resume 1 rc 0 (원 사슬과 함께) · 이어 그 폴더를 깎으면 판정 원장 대조 통과 (P8-05d)",
+      "note": "사전 공격 8 회차 §1 P8-05 (P1 후보 · 메인 판단 전 P1 로 둠 · 창은 그 diff 전부터) · 탐침 probe_p805 · 805b · 805c · 805d · ✅ 11-04 고침 = ① 시작 기록 새 판 = 칸 여섯 + 사슬 부모 (chain_pid = 사슬 pid · chain_start = 그 시작 틱 | null · 그룹 시작 기록과 같은 칸 이름 · START_KEYS) ② recover_ledger 가 결과 줄 전 start_chain_problem — 여기서 볼 수 있는 호스트 (host_seen = recover_group 과 한 함수 · 같은 부팅 · pid 이름공간 · machine_id) = chain_parent_alive (살아 있음 · 모름 = rc 3 · 결과 줄 없음 · 운영자 표지로도 안 덮음 · 끝남 = 그대로) · 볼 수 없는 호스트 = rc 3 · --operator-confirm <그 시도> --operator-why = 그 시도 폴더만 덮음 (사유 = 원장 커밋 글 · 화면 · stage_recover 쓰임 수에 듦) ③ 옛 판 시작 기록 (11-02 PC7-01 · 사슬 칸 없음 · START_KEYS_V1) = 그대로 읽음 (원장 꼴 · 채택 · 다음 번호 무관) · recover = 사슬 부모 모름 → 운영자 확인 표지 뒤만 (보수 · 생산 원장 없음 = 등록 R HOLD · 개발 원장만 · 1저자 11-04 \"다 권고대로\" 의 권고안) ④ 시작 기록 없는 시도 (옛 원장 · 시작 기록 커밋 전 창) = 옛 규칙 (그룹 기록 대조만 · 그 창의 산 사슬은 원장이 바뀌어 시작 기록 커밋이 expect 대조로 실패 → 러너 없이 rc 3) · 한정 = 원장 clone (그림자 원장 · 시작 기록 없음) 은 이 대조 밖 (PC7-01 범위 · Q-D 그대로) · 같은 기계에서 시작 틱을 못 읽은 산 pid (null) = 산 것으로 (그 pid 가 다른 프로세스로 다시 쓰였으면 그 프로세스가 끝날 때까지 rc 3 · 보수) · 등록 R §10-5 아 ⑦ · Q9 §3-5 의 recover 문장 = 아직 이 규칙을 안 실음 (메인 · 1저자 몫 · 요청서 §5-5 · §8-2).  ⚠ claimed_fixed_sha = 작업 트리 가지 (pc8-fix-1104b) 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 본 가지 번호로 고칠 것 (본 가지 번호 = 반입 때).  ⬜ Codex 회차 ② (요청서 §5-5).",
+      "claimed_fixed_sha": "563b4019a",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py PE05 · PE05b · PE05o · PE05p · PE01 (고치기 전 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_chain.log (PE05 · PE05b recover rc 0 · 다음 --add · --resume rc 0 · 산 사슬 rc 3 · PE05o · PE05p 새 판 시작 기록 · 규칙 없음 · PE01 시작 기록 칸) · 고친 뒤 넣은 PE05o 운영자 표지 범위 줄 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_PE05o_PE06_full.json → 뒤 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/after_chain_targeted.log · docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/after_PE05o_PE06_rows2.log) · PE01h · PE01r · PE01p · PE01s · PE01c · PE01f · PC06 · PC06b · AL14 · GR08 그대로",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/mutation_pc8fix.json (N01 – N03 · N05 – N11 = 10/10 잡힘 · N04 = 번호만 빔)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/probes/probe_p805_recover_live_nogroup.out (탐침 무변경 · recover rc 3 · 결과 줄 없음 · 원 사슬 CALIBRATED + 자기 결과 줄 · 다음 --add rc 3) · docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/probes/probe_p805b_recover_live_between_runs.out · docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/probes/probe_p805c_then_verdict.out · docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/probes/probe_p805d_pre_then_cut.out",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/run_regression.sh — Python 3.11.15 (563b4019a 판 · 사슬만 355c1b6d0 판 다시) = 사슬 451/451 (다시 451/451) · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · kgy 판 3.8.20 (355c1b6d0 판) = 사슬 451/451 · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · 한정어 상수 소비자 = 웹앱 표지 93/0 · 영수증 105/0 (두 판) · S0 census 167/0 (두 판) · 로그 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/ (py311 · py311_r2 · py38 · consumers_*) · 요약 regression_env.txt · consumers_env.txt"
+      ]
+    },
+    {
+      "id": "PC8-06",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "사전 공격 8 회차 (11-04 · 80095a7f0..7b51e591e · 독립 작업 트리 · PC7 고침 · BAN8 · RINT2-E01 · E18 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack8/PREATTACK_8.md",
+      "title": "시험 공백 — 변이 M26 (canon 꼴 검사 지움) 이 RV05 · RV06 을 지남 (\"까닭 없음 → format\" 이 가림 · 수 꼴 + 다른 까닭 꼴이 시험에 없음) · B01 (분산 간선 점 = 칸의 ¼ 자리) 이 BAN8 을 지남 (칸 가운데 x.7 · ¼ 밀려도 같은 포트 셀)",
+      "note": "사전 공격 8 회차 §1 P8-06 (P3) · ✅ 11-04 = 시험 보탬 (코드 변경 없음) — RV07 numform_order (수 꼴 1.0 + 칸 순서 = [key_order, format]) · BAN8 ⑨ (간선 기하 점 X_i = A 의 칸 가운데 1.7 + (j + ½)·L/k · X_j = B 의 같은 높이 · 접점 = 가운데 · 1e-12) · 고치기 전 코드 + 새 시험 = M26 → RV07 numform_order 줄만 새로 실패 (BASE 의 실패 줄 여덟 = 다른 PC8 줄) · B01 → BAN8 ⑨ 여섯 실패 · 고친 코드 = M26 자리가 바뀌어 같은 뜻 변이 J5≈M26 = RV07 이 잡음 · B01 = BAN8 ⑨ 가 잡음 (mutate8 다시) · claimed_fixed_sha = 시험 먼저 커밋 (이 항목은 시험만).  ⚠ claimed_fixed_sha = 작업 트리 가지 (pc8-fix-1104b) 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 본 가지 번호로 고칠 것 (본 가지 번호 = 반입 때).  ⬜ Codex 회차 ② (요청서 §5-5).",
+      "claimed_fixed_sha": "935ef2223",
+      "evidence_tests": [
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/kill_before_m26_b01.json (고치기 전 코드 · 새 시험 · M26 · B01 잡힘) · docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_RV07_rows_base.json ↔ docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_RV07_rows_M26.json (numform_order 줄만 더 실패)",
+        "scripts/test_carbon_junction.py BAN8 ⑨ (6/6 · docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/after_cj_ban8.log) · scripts/test_rint_r_chain.py RV07",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/mutation_pc8fix.json (J5≈M26 · B01 잡힘) · docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/mutate8_rerun.json (B01 잡힘 · BAN8 28/34 · M26 = 옛 줄 없음 SKIP)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/run_regression.sh — Python 3.11.15 (563b4019a 판 · 사슬만 355c1b6d0 판 다시) = 사슬 451/451 (다시 451/451) · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · kgy 판 3.8.20 (355c1b6d0 판) = 사슬 451/451 · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · 한정어 상수 소비자 = 웹앱 표지 93/0 · 영수증 105/0 (두 판) · S0 census 167/0 (두 판) · 로그 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/ (py311 · py311_r2 · py38 · consumers_*) · 요약 regression_env.txt · consumers_env.txt"
+      ]
+    },
+    {
+      "id": "PC8-07",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "사전 공격 8 회차 (11-04 · 80095a7f0..7b51e591e · 독립 작업 트리 · PC7 고침 · BAN8 · RINT2-E01 · E18 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack8/PREATTACK_8.md",
+      "title": "CJUNC_QUALIFIERS 전달 길이 문장 \"전달 길이 = 해석 시험 통과 (분산판 = 전송선 · 식 검증)\" 이 BAN8 이 덮는 기하 (같은 두 곧은 나란한 축 정렬 레일 · 이웃 셀 · R̄sh2 = 1 · L_c = L_par 정수배) 보다 넓음 (R̄sh2 ≠ 1 · 계단 · 기운 섬유 = 손 사다리 ↔ 식만 · 생산 경로 미시험)",
+      "note": "사전 공격 8 회차 §1 P8-07 (P3 · 문구) · ✅ 11-04 = 문장을 그 기하로 좁힘 (scripts/carbon_junction.py CJUNC_QUALIFIERS 넷째 줄 \"… 해석 시험 통과 (분산판 = 이산 전송선 · Banerjee 식 8) 는 같은 두 곧은 나란한 레일 (축 정렬 · 이웃 셀 · R̄sh2 = 1 · L_c = L_par 정수배 · 시험 BAN8) 에서만 — 계단 · 기운 섬유 · R̄sh2 ≠ 1 = 생산 경로 미시험 …\") · 계약 = scripts/ca_ext_cjunc.py cjunc_block_problem 이 producer 상수와 글자 대조 (코드 그대로 · 주석 한 줄) → 이 문장 전에 만든 팔 증거 = 거부 (의도한 다시 핀 · 생산 팔 없음 = 등록 R HOLD) · 시험 = BAN8 ⑩ (좁힌 문장 · 옛 넓은 문장 없음) · test_ca_ext_b6 R7 (11-03 판 한정어 = 거부) · 물리 · 법칙 · 값 변경 없음 · ⚠ scripts/carbon_junction.py 파일 지문 바뀜 → S0 단계 1 의 kgy 핀 = 이 고침 뒤로.  ⚠ claimed_fixed_sha = 작업 트리 가지 (pc8-fix-1104b) 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 본 가지 번호로 고칠 것 (본 가지 번호 = 반입 때).  ⬜ Codex 회차 ② (요청서 §5-5).",
+      "claimed_fixed_sha": "563b4019a",
+      "evidence_tests": [
+        "scripts/test_carbon_junction.py BAN8 ⑩ (고치기 전 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_cj_ban8.log 33/34 → 뒤 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/after_cj_ban8.log 34/34)",
+        "scripts/test_ca_ext_b6.py R7 \"한정어 = 11-03 판\" (고치기 전 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_b6_R.log 104 PASS · 1 FAIL → 뒤 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/after_b6_R.log 105 PASS · 0 FAIL)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/mutation_pc8fix.json (Q1 = 옛 문장으로 되돌림 → BAN8 ⑩ · b6 R7 잡힘)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/run_regression.sh — Python 3.11.15 (563b4019a 판 · 사슬만 355c1b6d0 판 다시) = 사슬 451/451 (다시 451/451) · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · kgy 판 3.8.20 (355c1b6d0 판) = 사슬 451/451 · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · 한정어 상수 소비자 = 웹앱 표지 93/0 · 영수증 105/0 (두 판) · S0 census 167/0 (두 판) · 로그 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/ (py311 · py311_r2 · py38 · consumers_*) · 요약 regression_env.txt · consumers_env.txt"
+      ]
+    },
+    {
+      "id": "PC8-08",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "사전 공격 8 회차 (11-04 · 80095a7f0..7b51e591e · 독립 작업 트리 · PC7 고침 · BAN8 · RINT2-E01 · E18 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack8/PREATTACK_8.md",
+      "title": "byte_diff_view docstring \"값 · 글 없음 (봉인)\" — 처음 다른 바이트 · 길이 차가 봉인 바이트의 함수 (봉인 σ 의 앞 몇 글자가 같은지 드러냄: 1.2345678 ↔ 1.2345679 = 8 · ↔ 1.2399999 = 4 · ↔ 9.9 = 0)",
+      "note": "사전 공격 8 회차 §1 P8-08 (P3 · 문구) · ✅ 11-04 = 문구 (scripts/rint_r_chain.py byte_diff_view docstring · BYTE_DIFF_KINDS 주석) — 두 수 = 봉인 바이트에서 나온 수 · 다시 판정 = 판정 뒤 · 보고 전용 · 봉인 = 값 · 글 한정 · 동작 변경 없음 (탐침 무변경 = 같은 수) · 요청서 §5-5 · §8-2 한 줄.  ⚠ claimed_fixed_sha = 작업 트리 가지 (pc8-fix-1104b) 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 본 가지 번호로 고칠 것 (본 가지 번호 = 반입 때).  ⬜ Codex 회차 ② (요청서 §5-5).",
+      "claimed_fixed_sha": "563b4019a",
+      "evidence_tests": [
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/probes/probe_p808_offset.out (고친 뒤 같은 수 8 · 4 · 0 = 동작 그대로 · 문구만)"
+      ]
+    },
+    {
+      "id": "PC8-09",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "사전 공격 8 회차 (11-04 · 80095a7f0..7b51e591e · 독립 작업 트리 · PC7 고침 · BAN8 · RINT2-E01 · E18 재공격)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack8/PREATTACK_8.md",
+      "title": "다시 판정의 저장본 읽기 — 깊은 중첩 (20 만) JSON = RecursionError 가 byte_diff_view · reverify_report · reverify 에서 traceback 으로 빠짐 (except 목록 = OSError · UnicodeDecodeError · ValueError) · (같은 부류) JSON 객체가 아닌 판정 JSON ([]) = AttributeError (종료 rc 는 둘 다 1 = 거짓 SAME 아님)",
+      "note": "사전 공격 8 회차 §1 P8-09 (P3 · 옛부터) · ✅ 11-04 고침 = 저장본 읽기 _json_pairs (RecursionError 포함 → 못 읽음 표지) · byte_diff_view = unreadable (닫힌 목록 · 값 대조 뒤 꼴 대조만 재귀 한도를 넘으면 value 와 함께 unreadable) · reverify_report = 못 읽은 저장본 = 다름 · reverify = 판정 JSON 깊음 · 객체 아님 = REVERIFY_DIFF 사유 한 줄 · rc 1 · 값 · 칸 비교 함수 = 되풀이 없이 · 그룹 기록 읽기도 RecursionError = 못 읽음 · 판정 동작 (바이트 대조) 그대로.  ⚠ claimed_fixed_sha = 작업 트리 가지 (pc8-fix-1104b) 번호 — 메인 반입 (cherry-pick) 때 바뀐다 → 반입 커밋에서 본 가지 번호로 고칠 것 (본 가지 번호 = 반입 때).  ⬜ Codex 회차 ② (요청서 §5-5).",
+      "claimed_fixed_sha": "563b4019a",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py RV07 (deep_array · deep_object) · RV09 (고치기 전 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_chain.log (RecursionError · AttributeError) → 뒤 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/after_chain_targeted.log)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/mutation_pc8fix.json (J8 · J9 · J10 잡힘)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/run_regression.sh — Python 3.11.15 (563b4019a 판 · 사슬만 355c1b6d0 판 다시) = 사슬 451/451 (다시 451/451) · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · kgy 판 3.8.20 (355c1b6d0 판) = 사슬 451/451 · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · 한정어 상수 소비자 = 웹앱 표지 93/0 · 영수증 105/0 (두 판) · S0 census 167/0 (두 판) · 로그 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/ (py311 · py311_r2 · py38 · consumers_*) · 요약 regression_env.txt · consumers_env.txt"
+      ]
     },
     {
       "id": "MPMC-01",
@@ -14967,7 +15116,7 @@
       "found_by": "11-03 끝-끝 E18 (작업 트리 · 1저자 11-03 밤 Q2 · 실물 원장 사슬 → 판정 → 다시 판정 시험 · 저장된 결과 JSON 끝에 공백 하나)",
       "opened_in": "docs/reviews/codex_rint2_rr_round2_request_20261103.md",
       "title": "다시 판정 보고 (reverify_report.json) 가 바이트만 다른 저장본의 까닭을 적지 못한다 — 저장된 verdict_results.json 끝에 공백 하나 (값 같음) → result REVERIFY_DIFF (rc 1 · 화면 \"결과 다름\" = 바이트 대조) 인데 보고 칸 results_differ False (파싱한 값 대조) · grade_differ False · public_keys_differ [] · results_keys_differ [] — 보고만 읽으면 다른 칸이 없다 (판정 = 막는 쪽 그대로 · 거짓 SAME 아님)",
-      "note": "자리 = scripts/rint_r_chain.py reverify (same = 판정 JSON · 결과 JSON 바이트 대조) ↔ reverify_report (results_differ · public_keys_differ = 파싱한 JSON 대조) · 판정 JSON (verdict.json) 의 바이트만 다른 꼴도 같은 길 (코드 읽기 · 시험 없음) · 시험 = scripts/test_rint_r_chain_e2e.py E18j (지금 동작을 박음 · 현재 꼴 기록) · 값이 다른 꼴 = E18i (results_differ True · 다른 결과 칸 이름 reference) · 11-03 Q2 = 시험만 범위라 고치지 않음 · 최소 해결 후보 = 보고에 바이트 대조 칸 (예 public_bytes_differ · results_bytes_differ) 을 더하고 화면 · 보고가 같은 말을 하게 · 처분 = 1저자 · Codex 회차 ② 요청서 §8-2 한정. · ★ 11-03 밤 (1저자 \"다 권고대로\" Q5) 고침 = scripts/rint_r_chain.py 보고 v2 (REVERIFY_SCHEMA rint-r-reverify-v2) — 두 JSON 의 바이트 칸 (public_bytes · results_bytes = byte_diff_view: differ · kinds (BYTE_DIFF_KINDS 닫힌 목록 여덟 = missing · unreadable · value · key_order · newline · trailing_whitespace · whitespace · format) · first_diff_offset · len_delta · 값 · 글 없음) + REVERIFY_DIFF 화면 한 줄 \"바이트 까닭\" · 판정 동작 (바이트 대조 · REVERIFY_DIFF · rc 1) 그대로 · 시험 먼저 → 고침 · claimed_fixed = Codex 회차 ② 재확인 전.",
+      "note": "자리 = scripts/rint_r_chain.py reverify (same = 판정 JSON · 결과 JSON 바이트 대조) ↔ reverify_report (results_differ · public_keys_differ = 파싱한 JSON 대조) · 판정 JSON (verdict.json) 의 바이트만 다른 꼴도 같은 길 (코드 읽기 · 시험 없음) · 시험 = scripts/test_rint_r_chain_e2e.py E18j (지금 동작을 박음 · 현재 꼴 기록) · 값이 다른 꼴 = E18i (results_differ True · 다른 결과 칸 이름 reference) · 11-03 Q2 = 시험만 범위라 고치지 않음 · 최소 해결 후보 = 보고에 바이트 대조 칸 (예 public_bytes_differ · results_bytes_differ) 을 더하고 화면 · 보고가 같은 말을 하게 · 처분 = 1저자 · Codex 회차 ② 요청서 §8-2 한정. · ★ 11-03 밤 (1저자 \"다 권고대로\" Q5) 고침 = scripts/rint_r_chain.py 보고 v2 (REVERIFY_SCHEMA rint-r-reverify-v2) — 두 JSON 의 바이트 칸 (public_bytes · results_bytes = byte_diff_view: differ · kinds (BYTE_DIFF_KINDS 닫힌 목록 여덟 = missing · unreadable · value · key_order · newline · trailing_whitespace · whitespace · format) · first_diff_offset · len_delta · 값 · 글 없음) + REVERIFY_DIFF 화면 한 줄 \"바이트 까닭\" · 판정 동작 (바이트 대조 · REVERIFY_DIFF · rc 1) 그대로 · 시험 먼저 → 고침 · claimed_fixed = Codex 회차 ② 재확인 전. · ★ 11-04 사전 공격 8 회차 = 값 대조 형 엄격 (PC8-03) · value 뒤에도 까닭 · E18i 새 기대 [value, newline] (PC8-04) · 처음 다른 바이트 · 길이 차 = 봉인 바이트에서 나온 수 (PC8-08) · 깊은 중첩 = unreadable (PC8-09) · 모두 claimed_fixed.",
       "evidence_tests": [
         "scripts/test_rint_r_chain_e2e.py — E18j (새 기대: 결과 JSON 끝 공백 → results_bytes kinds [trailing_whitespace] · 처음 다른 바이트 · 길이 차 −1 · public_bytes 같음 · 화면 까닭) · E18i (results_bytes [value])",
         "scripts/test_rint_r_chain.py — RV05 (바이트 까닭 분류 합성 13 + 한쪽 없음 셋) · RV06 (가짜 러너 세계 · 결과 CRLF · 칸 순서 · 판정 JSON 끝 줄바꿈 → 까닭 · 되돌림 SAME)",
@@ -14983,7 +15132,7 @@
       "found_by": "11-03 litdb 추가 (1저자 11-03 \"요청서 보내기 전에 litdb 추가된 것도 같이\" · litdb 정본 2dbfb26ab 새 카드 hamasaki2022 · banerjee2019 의 '적용 후보 (11-03)' (가) 장부 항목)",
       "opened_in": "docs/reviews/codex_rint2_rr_round2_request_20261103.md",
       "title": "분산판 v0 의 전달 길이 — (11-03 밤 Q3) 해석 시험 통과 (분산판 = 이산 전송선 · Banerjee Eq. 8 · 시험 BAN8) · 남은 것 = 실침대 L_c 분포 대조 — 길이 비례 G_j = max(1, L_c/L_par)/R_j,0 = 국소 법칙 (짧은 나란한 겹침의 길이당 컨덕턴스 일정 · litdb-canon:hamasaki2022_single_parallel_contact_mwcnt_conductivity) · 분산판 v0 (k = ceil(L_c/L_par) 간선 · 섬유 축저항 복셀) = 이산 전송선이라 긴 접촉의 실효 컨덕턴스 포화는 풀이에서 생긴다 (litdb-canon:banerjee2019_tunneling_tlm_parallel_nanoscale_contacts Eq. 7–9) · 모형 전달 길이 λ_model = √(R_j,0·L_par/(r′_i + r′_j)) [우리 산술] 가 실침대 접촉 길이 L_c 분포의 어디에 놓이는지 미측정",
-      "note": "지위 = 한정어 · 장부 (법칙 · R_j,0 · 사다리 · 문턱 변경 없음 · v0 동결) · 닫는 조건 = R 보정 뒤 보정된 R_j,0 마다 λ_model 을 내고 S0 census 의 L_c 목록과 대조 (L_c > λ_model · > 2λ_model 인 instance 수 · 그 접합 전류 몫 · 보고 전용 · 값 채택 없음) · DBE L_c 분포 = 등록 R §2-1 개정 커밋 뒤 (S0 단계 2 규칙) · 코드 한정어 = scripts/carbon_junction.py CJUNC_QUALIFIERS — 옛 '(접점 저항 분포 · 전달 길이 미검증)' → (11-03 밤 Q3 · 1저자 \"다 권고대로\") '(접점 저항 분포 미검증 · 전달 길이 = 해석 시험 통과 (분산판 = 전송선 · 식 검증) · 실침대 L_c 대조는 R 보정 뒤)' · 해석 시험 = scripts/test_carbon_junction.py BAN8 (생산 분산판 Rc = 이산 전송선 상대 1e-11 · Eq. 8 ↔ 생산 = 이산화 오차 주항 × 1.5 안 · Δ/λ 0.02 – 0.63 · 변이 lumped 잡힘) · 이 항목은 열린 채 둔다 (닫는 조건 = 실침대 대조) · VGCF–VGCF 접합 실측 0 건 (CNT 카드 둘 모두 n/a) · 문서 자리 = 요청서 §6-5 ① · 등록 R §7-1 ⑫ (11-03) · 설계 §4-5 (11-03).",
+      "note": "지위 = 한정어 · 장부 (법칙 · R_j,0 · 사다리 · 문턱 변경 없음 · v0 동결) · 닫는 조건 = R 보정 뒤 보정된 R_j,0 마다 λ_model 을 내고 S0 census 의 L_c 목록과 대조 (L_c > λ_model · > 2λ_model 인 instance 수 · 그 접합 전류 몫 · 보고 전용 · 값 채택 없음) · DBE L_c 분포 = 등록 R §2-1 개정 커밋 뒤 (S0 단계 2 규칙) · 코드 한정어 = scripts/carbon_junction.py CJUNC_QUALIFIERS — 옛 '(접점 저항 분포 · 전달 길이 미검증)' → (11-03 밤 Q3 · 1저자 \"다 권고대로\") '(접점 저항 분포 미검증 · 전달 길이 = 해석 시험 통과 (분산판 = 전송선 · 식 검증) · 실침대 L_c 대조는 R 보정 뒤)' · 해석 시험 = scripts/test_carbon_junction.py BAN8 (생산 분산판 Rc = 이산 전송선 상대 1e-11 · Eq. 8 ↔ 생산 = 이산화 오차 주항 × 1.5 안 · Δ/λ 0.02 – 0.63 · 변이 lumped 잡힘) · 이 항목은 열린 채 둔다 (닫는 조건 = 실침대 대조) · VGCF–VGCF 접합 실측 0 건 (CNT 카드 둘 모두 n/a) · 문서 자리 = 요청서 §6-5 ① · 등록 R §7-1 ⑫ (11-03) · 설계 §4-5 (11-03). · ★ 11-04 PC8-07 = 코드 한정어 전달 길이 문장을 시험한 기하 (같은 두 곧은 나란한 레일) 로 좁힘 (claimed_fixed · 이 항목은 실침대 대조로 열린 채).",
       "evidence_tests": [
         "scripts/test_carbon_junction.py — BAN8 (해석 시험 · 실침대 L_c 대조는 아님) · 로그 docs/reviews/rint2_rr_fix_evidence_20261023/ban8_20261103/logs/"
       ]

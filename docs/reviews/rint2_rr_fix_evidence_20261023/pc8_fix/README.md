@@ -1,6 +1,6 @@
 # Rint ② 사전 공격 8 회차 고침 — PC8-01 … 09 (11-04 · 작업 트리 에이전트 · 1저자 11-04 *"다 권고대로"*)
 
-보고 (읽기만 · 반입 = 바이트 그대로) `docs/reviews/rint2_rr_fix_evidence_20261023/preattack8/PREATTACK_8.md` · 원장 PC8-0N = 보고 P8-0N (`docs/reviews/findings.json`) ·
+보고 (읽기만 · 반입 = 바이트 그대로 · 받은 스크래치 원본 ↔ 커밋 사본 `preattack8/SHA256SUMS` 38/38 같음) `docs/reviews/rint2_rr_fix_evidence_20261023/preattack8/PREATTACK_8.md` · 원장 PC8-0N = 보고 P8-0N (`docs/reviews/findings.json`) ·
 요청서 자리 = `docs/reviews/codex_rint2_rr_round2_request_20261103.md` §0 ⑪ · §2 · §4 · §5-5 · §8-1 · §8-2 · §9 · Q1.
 
 - 커밋 = 작업 트리 가지 `pc8-fix-1104b` (기준 = 본 가지 `74150affc` · 그 사슬 · 접합 코드 = 리뷰 대상 끝 `7b51e591e` 와 같음) · 본 가지 번호 = 반입 때.
@@ -28,21 +28,31 @@
 
 | 묶음 | Python 3.11.15 (`563b4019a` 판 · 사슬만 `355c1b6d0` 판 다시) | kgy 판 3.8.20 (`355c1b6d0` 판) |
 |---|---|---|
-| `scripts/test_rint_r_chain.py` | 451/451 PASS (459.9 s) · 다시 451/451 PASS (444.5 s · PD12u 줄 넷 뒤 · `logs/py311_r2/`) | ⬜ |
-| `scripts/test_rint_r_chain_e2e.py` | 51 PASS · 0 FAIL (838.2 s) | ⬜ |
-| `scripts/test_carbon_junction.py` | 500/500 PASS | ⬜ |
-| `scripts/test_ca_ext_b6.py` | 502 PASS · 0 FAIL | ⬜ |
-| `scripts/test_ca_ext_runner.py` | 151 PASS · 0 FAIL | ⬜ |
-| `scripts/test_ca_ext_z3.py` | 84 PASS · 0 FAIL (24.0 s) | ⬜ |
-| `scripts/test_step3_target_cert.py` | 264/264 PASS (빠른 판 · 13.1 s) | ⬜ |
+| `scripts/test_rint_r_chain.py` | 451/451 PASS (459.9 s) · 다시 451/451 PASS (444.5 s · PD12u 줄 넷 뒤 · `logs/py311_r2/`) | 451/451 PASS (694.1 s) |
+| `scripts/test_rint_r_chain_e2e.py` | 51 PASS · 0 FAIL (838.2 s) | 51 PASS · 0 FAIL (705.6 s) |
+| `scripts/test_carbon_junction.py` | 500/500 PASS | 500/500 PASS |
+| `scripts/test_ca_ext_b6.py` | 502 PASS · 0 FAIL | 502 PASS · 0 FAIL |
+| `scripts/test_ca_ext_runner.py` | 151 PASS · 0 FAIL | 151 PASS · 0 FAIL |
+| `scripts/test_ca_ext_z3.py` | 84 PASS · 0 FAIL (24.0 s) | 84 PASS · 0 FAIL (23.0 s) |
+| `scripts/test_step3_target_cert.py` | 264/264 PASS (빠른 판 · 13.1 s) | 264/264 PASS (빠른 판 · 13.9 s) |
 
 로그 = `logs/py311/` · `logs/py311_r2/` · `logs/py38/` · 한 줄 요약 = `logs/regression_env.txt` (줄마다 판 · rc · 초 · 끝 줄).
 `563b4019a` → `355c1b6d0` 사이에 바뀐 시험 · 코드 파일 = `scripts/test_rint_r_chain.py` 하나 (`7141ac593` = 보고 반입 · 문서만) — 그래서 py311 의 사슬 밖 여섯 묶음 = `355c1b6d0` 판과 같은 파일.
+kgy 판 회귀가 도는 동안 `84cc1dd33` (이 폴더 · 요청서 · 허용 목록 = 문서 · 로그만) 을 커밋했다 — `scripts/` 그대로 (시험한 코드 = `logs/tested_code_sha256.txt` 일곱).
 명령 = `bash docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/run_regression.sh <작업 트리> <로그 폴더> <HEAD> py311` · 사슬만 다시 = 앞에 `SUITES=test_rint_r_chain SUFFIX=_r2` · kgy 판 = 끝 인자 `py38` (`PATH` 앞에 uv CPython 3.8.20 · 하나씩 차례로 · 묶음 사이 동시 실행 없음).
+
+### 2b. PC8-07 한정어 상수를 그대로 읽는 시험 (같은 판 · 하나씩 차례로 · `355c1b6d0` 판 코드)
+
+`webapp/test_ca_ext_labels.py` 93 PASS · 0 FAIL (3.11) · `scripts/test_rint_receipts.py` 105 PASS · 0 FAIL (3.11 · 3.8) · `scripts/test_ca_s0_census.py` 167 PASS · 0 FAIL (3.11 · 3.8 · 파일은 안 건드림) (`logs/consumers_py311/` · `logs/consumers_py38/` · 한 줄 요약 `logs/consumers_env.txt`).
+
+### 2c. 원장 · 참조
+
+`python3 scripts/check_review_findings.py` rc 0 (원장 967 · open 331 · claimed_fixed 382 · verified 244 · wontfix 10 — +9 = PC8-01 … 09 · 쓰기 꼴 = `json.dumps(indent=2, ensure_ascii=False) + '\n'` 그대로) · `python3 scripts/check_doc_refs.py` rc 0 (깨진 참조 0 · 허용 목록 +3) · 철회값 스윕 (`--ban-sweep`) = 요청서 §5-5 줄.
 
 ## 3. 변이
 
 - 새 가드 (`mutate_pc8fix.py` · 고친 트리 사본 · git 없음 · 한 번에 하나 · 끝나면 원 바이트 · 끝난 뒤 사본의 코드 · 시험 일곱 sha256 = 작업 트리와 같음) = **47 중 46 잡힘** · 생존 1 = A10 (옆 거부 기록 링크 검사를 지워도 `folder_digest` 가 링크를 None 으로 돌려 요약 sha 대조에서 거부 = 같은 뜻 · 두 겹 가드) (`logs/mutation_pc8fix.json` = 이름마다 마지막 판 · `logs/mutation_pc8fix.out` = 두 판 차례로).
+  finding 마다 (잡힘 / 변이) = PC8-05 10/10 · PC8-02 9/9 · PC8-01 14/15 · PC8-03 5/5 · PC8-04 2/2 · PC8-09 3/3 · PC8-06 2/2 (J5≈M26 · B01) · PC8-07 1/1 (Q1 = 옛 문장으로 되돌림) · PC8-08 = 문구만 (변이 없음).
   첫 판 43 (N01–N03 · N05–N11 · B1–B9 · A1–A11 · J1–J11 · B01 · Q1 · N04 = 번호만 빔 · 만든 변이 없음) = 42 잡힘 · A10 생존 → 첫 판에 없던 증거 칸 하나씩 지운 변이 넷 (A12 결과 줄 status · A13 거부 기록 schema · A14 칸 수 · A15 시작 커밋) + PD12u 에 그 칸 하나씩 어긴 줄 넷 (`355c1b6d0` · 시험만 · 코드 변경 없음) → A1–A15 다시 = 14 잡힘 · A10 생존 (같은 뜻).
   새 PD12u 줄 넷 · 고치기 전 코드 = 셋 (schema · 칸 · 시작 커밋) 이 None (옛 예외가 받음 = 시험 먼저 실패) · 넷째 (status stopped) 는 옛 규칙 ("결과 줄 stopped 인데 옆 거부 기록 있음 = 사유") 으로도 사유 (`logs/before_PD12u_rows2_full.json` · 실패 줄만 싣는 꼴 = 그 줄 없음).
   사본 기준선 (변이 없음) = 첫 판 사슬 27/27 · BAN8 34/34 · b6 R 104 PASS · 1 FAIL (R10 = 커밋된 영수증을 git 이력에서 읽음 · 사본 트리 = git 없음 · 작업 트리에서는 105/0) (`logs/mut/BASE_*.log`) · 둘째 판 (PD12u 줄 넷 뒤) AL07 · AL07b · PD12u · PE02 · PE02x · PE02y 6/6 PASS (`logs/mut/BASE2_al07.log`).
@@ -64,9 +74,11 @@ P8-05 a · b · c · d · P8-01 · P8-02 · P8-03 · P8-03b · P8-08 · PC7 닫�
 - AL07 예외 = 사슬 흔적까지 지운 남의 폴더 + 원장 고침 = Q-D.
 - 처음 다른 바이트 · 길이 차 = 봉인 바이트에서 나온 수 (보고 전용 · 문구로만 · 값 감추기 안 함).
 - 등록 R §10-5 아 ⑦ · Q9 §3-5 · 웹앱 설명 페이지 = 시작 기록 사슬 부모 규칙 문장 안 실음 (메인 · 1저자 몫) · 웹앱 = 바뀐 화면 없음.
+- PC8-07 = producer 상수 문장이 바뀌어 그 전에 만든 팔 증거 = 거부 (의도한 다시 핀 · 생산 팔 없음 = 등록 R HOLD) · `scripts/carbon_junction.py` 파일 지문 바뀜 → S0 단계 1 의 kgy 핀 = 이 고침 뒤로.
+- 변이 A10 = 같은 뜻 (§3) · 원장 `claimed_fixed_sha` · 로그 머리 커밋 칸 = 이 가지 번호 (메인 반입 때 본 가지 번호로 고칠 것) · 전체 게이트 (`scripts/check_all.sh`) = 이 작업 트리에서 안 돌림.
 
 ## 6. 파일
 
 `run_regression.sh` (회귀) · `mutate_pc8fix.py` (새 가드 변이) · `kill_before.py` (M26 · B01 ↔ 새 시험 · 고치기 전 코드) · `logs/` · `SHA256SUMS` (이 폴더의 다른 파일 전부 · `sha256sum -c SHA256SUMS` 를 이 폴더에서).
 
-커밋 차례 (작업 트리 가지 `pc8-fix-1104b` · 기준 `74150affc`) — `935ef2223` 시험 먼저 → `1cb165fef` 시험 결함 (PD12u 정수 칸 dict · 기대 그대로) → `563b4019a` 고침 → `7141ac593` 사전 공격 8 회차 반입 (바이트 그대로) → `355c1b6d0` 변이 보강 시험 (PD12u 줄 넷 · 코드 변경 없음) → 이 증거 · 원장 · 요청서 커밋.
+커밋 차례 (작업 트리 가지 `pc8-fix-1104b` · 기준 `74150affc`) — `935ef2223` 시험 먼저 → `1cb165fef` 시험 결함 (PD12u 정수 칸 dict · 기대 그대로) → `563b4019a` 고침 → `7141ac593` 사전 공격 8 회차 반입 (바이트 그대로) → `355c1b6d0` 변이 보강 시험 (PD12u 줄 넷 · 코드 변경 없음) → `84cc1dd33` 증거 · 요청서 (중간) → 원장 · kgy 판 회귀 · 상수 소비자 시험 · `SHA256SUMS` 커밋.
