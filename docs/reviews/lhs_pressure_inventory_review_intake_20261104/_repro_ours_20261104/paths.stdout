@@ -1,0 +1,2 @@
+MODE: independent exact-AST fault injection; no POSIX/kernel validation
+SOURCE_SHA256: c989194dd204622d87fcaa435ec5e95aac5eb82904be0afaa4e2ff57ff1e718a

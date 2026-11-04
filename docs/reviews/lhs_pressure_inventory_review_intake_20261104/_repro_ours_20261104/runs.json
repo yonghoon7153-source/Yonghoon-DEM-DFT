@@ -1,0 +1,64 @@
+{
+  "utc": "2026-11-04T07:23:29.412704+00:00",
+  "python": "3.11.17",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "scope": "Linux cloud pure AST/synthetic/OS-IO fault injection only; no ibb/WSL, real inventory, POSIX/Lustre qualification or full shared gate. External probe files unmodified; inherited Windows scope labels in those files are not claims about this replay.",
+  "results": {
+    "verify": {
+      "argv": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "verify_received.py"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 0.071756,
+      "stdout": "verify.stdout",
+      "stderr": "verify.stderr"
+    },
+    "contract": {
+      "argv": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "contract_review/probe_contract.py"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 0.103445,
+      "stdout": "contract.stdout",
+      "stderr": "contract.stderr"
+    },
+    "parser": {
+      "argv": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "parser_review/probe_parser.py"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 6.892084,
+      "stdout": "parser.stdout",
+      "stderr": "parser.stderr"
+    },
+    "paths": {
+      "argv": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "paths_review/test_exact_path_functions.py"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 0.244571,
+      "stdout": "paths.stdout",
+      "stderr": "paths.stderr"
+    }
+  }
+}
