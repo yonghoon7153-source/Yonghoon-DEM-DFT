@@ -102,7 +102,7 @@ DI 수정:
 from __future__ import annotations
 import argparse, datetime, hashlib, importlib.util, json, os, pathlib, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "cd45aa850f3f276a"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "14b44a1c39445a1c"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 EXPECTED_VALUES_SHA16 = "086de59c484f9c32"     # 카드 기계_판독_값 (mq.values_sha16) — ⭐ DO 전 리뷰 P2-12: 카드 값 (상한 포함) 을 바꾸면 이 줄도
                                                #   같이 바꾸고 다시 리뷰한다 (카드 파일만 고쳐서는 상한 멈춤을 넘기지 못한다)
 STOP_KEYS = ("at", "code", "reason", "terminal", "stop_id", "run_id", "sys", "seed", "cleanup", "rc", "verdict", "melt", "summary",
@@ -1562,6 +1562,12 @@ def _selftest():
     t1, t2, t3, t4, t5 = (summ(x)["track"] for x in (r1, r2, r3, r4, r5))
     chk(t1 == t2 == t3 == t5 == "invalid" and t4 == "pending" and summ(rr_d)["track"] == "stage1_pass",
         f"⛔음성 DH P0-1: 빈 장부 · 한 행 누락 · 음수 비용 · 하한 근거 → 무효 · 모든 행이 안 끝남 → 대기 ({t1} · {t2} · {t3} · {t5} · {t4})")
+    # 같은 반례가 각자의 검사로 무효인지 (다른 검사가 먼저 잡아 가리지 않게 — 깨기 D22 · D23 이 드러낸 시험 구멍)
+    s2_, s3_ = summ(r2), summ(r3)
+    has_ = lambda s_, w: s_["track"] == "invalid" and any(w in x for x in (s_.get("cost") or {}).get("invalid") or [])
+    chk(has_(s2_, "비용이 안 잡힌 실행") and has_(s3_, "유한한 비음수"),
+        "⛔음성 DH P0-1 (이유): 장부에서 빠진 행의 판정 → '판정의 run_id 가 장부에 없다' · 음수 비용 → '유한한 비음수가 아니다' "
+        f"({[x for x in (s2_.get('cost') or {}).get('invalid') or []][:3]} · {[x for x in (s3_.get('cost') or {}).get('invalid') or []][:3]})")
     rc_e, L_e, _ = go(wt, rr=r1)
     sid_e = J(r1 / "STOP.json")["stop_id"]
     rc_e2, L_e2, _ = go(wt, rr=r1, ack=sid_e)
