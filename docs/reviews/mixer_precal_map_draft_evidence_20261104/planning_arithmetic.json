@@ -1,0 +1,113 @@
+{
+  "scope": "draft arithmetic from published rounded constants; no generator, reader, simulation or research-data execution",
+  "results": 0,
+  "Bo_proposals": [
+    0.21244,
+    21.244,
+    212.44
+  ],
+  "rho_proposals": [
+    0.1,
+    0.35,
+    0.5
+  ],
+  "Bo_po_proposals": [
+    0.031472592592592594,
+    3.1472592592592594,
+    31.47259259259259
+  ],
+  "force_ratios_illustrative": [
+    {
+      "rho": 0.1,
+      "AM_P": 0.5692099788303083,
+      "AM_S": 0.5059644256269408,
+      "gamma_wall": 0.00256
+    },
+    {
+      "rho": 0.35,
+      "AM_P": 1.0648943609579309,
+      "AM_S": 0.9465727652959386,
+      "gamma_wall": 0.00896
+    },
+    {
+      "rho": 0.5,
+      "AM_P": 1.2727922061357857,
+      "AM_S": 1.1313708498984762,
+      "gamma_wall": 0.0128
+    }
+  ],
+  "exact_force_comparison_rho": {
+    "AM_P": 0.30864197530864196,
+    "AM_S": 0.39062499999999994
+  },
+  "numerical_inputs": {
+    "source": "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md §7 rounded lab20261014 values and scripts/make_mixer_deck.py settle_time/run_steps formulas, copied arithmetically; no repo code import",
+    "drum_diameter_m": 0.0251665,
+    "rpm": 76.6765,
+    "dt_s": 2.372897e-07,
+    "speed_assumed_steps_s": [
+      70,
+      63
+    ],
+    "NP_proposed": 20,
+    "slots_assumed": 2
+  },
+  "settling_time_s_estimate": 0.2660524193181546,
+  "rotation_time_s_estimate": 1.565016660906536,
+  "steps_total_estimate": 7716597.39223696,
+  "settling_steps_estimate": 1121213.5179831008,
+  "rotation_run_hours_estimate": [
+    30.621418223162543,
+    34.023798025736156
+  ],
+  "zero_revolution_reference_hours_estimate": [
+    4.449259991996432,
+    4.943622213329369
+  ],
+  "phase1": {
+    "paired_runs": 6,
+    "rotating_reference": 1,
+    "settling_reference": 1,
+    "total_jobs": 8,
+    "slot_hours_estimate": [
+      218.79918755413422,
+      243.11020839348248
+    ],
+    "core_hours_estimate": [
+      4375.983751082685,
+      4862.20416786965
+    ],
+    "two_slot_baseline_then_pair_waves_hours": [
+      122.48567289265017,
+      136.09519210294462
+    ]
+  },
+  "whole_map": {
+    "paired_runs": 18,
+    "rotating_reference": 1,
+    "settling_reference": 1,
+    "total_jobs": 20,
+    "slot_hours_estimate": [
+      586.2562062320848,
+      651.3957847023163
+    ],
+    "core_hours_estimate": [
+      11725.124124641696,
+      13027.915694046325
+    ],
+    "two_slot_baseline_then_pair_waves_hours": [
+      306.21418223162544,
+      340.2379802573615
+    ]
+  },
+  "excluded_costs": [
+    "implementation and independent review",
+    "queue and current resource availability",
+    "startup and extra high-precision I/O",
+    "contract holds/diagnostics",
+    "postprocessing",
+    "retries or another seed"
+  ],
+  "not_an_upper_bound": true,
+  "execute": false
+}

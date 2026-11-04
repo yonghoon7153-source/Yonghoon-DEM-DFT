@@ -1,0 +1,78 @@
+{
+  "base": "c29a53723f279ada302d31ddb759257faa16740e",
+  "source_files": [
+    {
+      "path": "docs/hetero_thesis.md",
+      "bytes": 19161,
+      "sha256": "fdb53a9bfe3ba31cffd35b98081ec39e489b8ededc11ff1beb929fbe1afd4980"
+    },
+    {
+      "path": "docs/mixer_d2_wall_gamma_derivation_20261014.md",
+      "bytes": 7935,
+      "sha256": "dee1022cb14a16eb83257aac5d72ba7242f3cc394bc6c6fb93b46be1f2694444"
+    },
+    {
+      "path": "docs/mixer_paper_pipeline_draft_20261013.md",
+      "bytes": 55961,
+      "sha256": "64ae8d06f14fe0e4219af987c1e94503132c018d066a658715828310d9794d70"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "bytes": 28064,
+      "sha256": "b2decfae1567465131b3391acb428646ffa2992448bbc08c862cb2b1efd9195d"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_candidate_reader_contract_20261024.md",
+      "bytes": 12407,
+      "sha256": "9e5871a4346af4cd8b1fce05845402e7ae9c05f76cee5b0bbc35683b77cd0232"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_measurement_sop_draft_20261104.md",
+      "bytes": 11855,
+      "sha256": "dde2857a41b847fbb1f1888588a6ddc0331aa71dfd08ad40f02618ce1bddcc38"
+    },
+    {
+      "path": "docs/data/mixer_highbo_devbo_prelim_20261003/README.md",
+      "bytes": 7594,
+      "sha256": "e1ded08092599e7804164f7d1a2db7cf289eeeaa84b08de98ceac036adbb3018"
+    },
+    {
+      "path": "docs/data/mixer_highbo_devu_prelim_20261006/README.md",
+      "bytes": 9575,
+      "sha256": "cd2a0cf5f6db32c64b399fdfff819ae9a03d4674379ec963a7525995ea5219cd"
+    },
+    {
+      "path": "docs/reviews/mixer_highbo_stiffness_prereg_20260929.md",
+      "bytes": 109023,
+      "sha256": "7967d924df23f1447b67a15781ef1890852a8de7de255cb0369b0e1c7a89c57d"
+    },
+    {
+      "path": "docs/reviews/codex_mixer_mxd2r_recheck_request_20261104.md",
+      "bytes": 5401,
+      "sha256": "27a37bb117481c08e08511d4f985d91711df9799d4b6f4015127ef8457d87a83"
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "bytes": 228396,
+      "sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27"
+    },
+    {
+      "path": "scripts/mixer_contact_reader.py",
+      "bytes": 59221,
+      "sha256": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de"
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "bytes": 90471,
+      "sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a"
+    },
+    {
+      "path": "scripts/mixer_d3_candidates.py",
+      "bytes": 24710,
+      "sha256": "ea4528156e8eb9762999fef0643985bebf0b0735691202fddb4a2c17814ee7f8"
+    }
+  ],
+  "new_research_results": 0,
+  "generator_reader_research_execution": false,
+  "sop_sha256": "dde2857a41b847fbb1f1888588a6ddc0331aa71dfd08ad40f02618ce1bddcc38"
+}
