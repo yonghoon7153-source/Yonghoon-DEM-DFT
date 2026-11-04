@@ -12319,7 +12319,8 @@ def pe05_live_helper():
                 'rc 0 · 결과 줄 interrupted · 결과 전 (대조) ⓑ 이 기계 · 산 프로세스 (시작 틱 같음) = rc 3 · 결과 줄 없음 · 사유 사슬 부모 살아 있음 · 운영자 확인 '
                 '표지도 rc 3 (보이는 산 사슬은 덮지 않는다) → 그 프로세스가 끝나면 rc 0 ⓒ 산 pid · 시작 틱 다름 (pid 다시 쓰임) = rc 0 ⓓ 산 pid · 시작 틱 칸 '
                 'null = rc 3 (모름 = 산 것과 같이) ⓔ 다른 부팅 (boot_id) = rc 3 · 사유 여기서 볼 수 없다 · --operator-confirm = rc 0 · 결과 줄 · 원장 커밋 글에 '
-                '운영자 사유 ⓕ 옛 판 시작 기록 (11-02 PC7-01 · 사슬 칸 없음) = 읽는다 · recover rc 3 (사슬 부모 모름) · --operator-confirm = rc 0 · 결과 줄')
+                '운영자 사유 ⓕ 옛 판 시작 기록 (11-02 PC7-01 · 사슬 칸 없음) = 읽는다 · recover rc 3 (사슬 부모 모름) · --operator-confirm = rc 0 · 결과 줄 ⓖ 표지의 '
+                '범위 = 그 시도 폴더만 (한 바탕 볼 수 없는 시도 둘 · 하나만 결과 줄 · rc 3)')
 def t_PE05o():
     def go():
         out = {}
@@ -12370,11 +12371,27 @@ def t_PE05o():
         rc2, same2, _so2 = rec(d, f, ['--operator-confirm', str(n), '--operator-why', why])
         out['old'] = (rc, same, '사슬' in so and '--operator-confirm' in so, rc2, same2, pc_res(d, n, keys=('status', 'side', 'by')),
                       why in git_(d, 'log', '-1', '--format=%B'))
+        #  ⓖ 운영자 확인 표지의 범위 — 한 바탕에 볼 수 없는 사슬의 시작 기록 시도 둘 (다른 대상) · --out = 바탕 · --operator-confirm m1 → m1 만 결과 줄 ·
+        #    m2 = 결과 줄 없음 · rc 3
+        d, _rc, _so = led_new('PE05o_scope')
+        _r, m1, _s = led_add(d, 'ladder:P0')
+        _r, m2, _s = led_add(d, 'ladder:P1')
+        base = Path(TD) / 'runs' / 'PE05o_scope'
+        for m, tgt in ((m1, 'ladder:P0'), (m2, 'ladder:P1')):
+            fm = base / f'attempt_{m}'
+            fm.mkdir(parents=True)
+            (fm / 'attempt.json').write_text(json.dumps({'schema': 'rint-r-attempt-v1', 'n': m, 'target': tgt, 'machine': MACH, 'resume_of': None,
+                                                         'ledger_commit': git_(d, 'rev-parse', 'HEAD')}), encoding='utf-8')
+            led_hand(d, {'kind': 'start', 'n': m, 'base': str(base.resolve()), 'folder': f'attempt_{m}', 'host': other, 'chain_pid': DEAD_PID,
+                         'chain_start': None, 'utc': '2026-11-04T00:00:00Z'}, msg=f'rint-r attempt {m} start (시험 · 손 · PC8-05)')
+        rc = call(['--stage', 'recover', '--out', str(base), '--ledger', str(d), '--operator-confirm', str(m1), '--operator-why', why])[0]
+        out['scope'] = (rc, pc_res(d, m1, keys=('status', 'by')), led_result(d, m2))
         return out
     o = scen('PE05o', go)
     res = {'status': 'interrupted', 'side': 'pre', 'by': 'recover'}
     want = {'dead': (0, False, res), 'live': (True, 3, True, True, 3, True, 0, False, res), 'reused': (0, False), 'nostart': (3, True, True),
-            'other': (3, True, True, 0, False, res, True), 'old': (3, True, True, 0, False, res, True)}
+            'other': (3, True, True, 0, False, res, True), 'old': (3, True, True, 0, False, res, True),
+            'scope': (3, {'status': 'interrupted', 'by': 'recover'}, None)}
     return o == want, {k: (o.get(k), want[k]) for k in want if o.get(k) != want[k]}
 
 
@@ -12443,7 +12460,8 @@ def pe06_case(tag, src_end, confirmed):
                '그룹 삶) 뒤 끝 기록 자리에 다른 시도의 끝 기록 (by chain · rc 0 · 다른 표지) 을 **확인 True** 로 넣음 → attempt_groups_problem = 사유 (미확인) · '
                'orphan_cause = 읽음 False · recover --ledger = rc 3 · 결과 줄 없음 · 원장 무변경 · 러너 그룹 = recover 가 시작 기록 표지로 죽임 · 끝 기록 바이트 그대로 · '
                '--add --resume 1 = rc 3 (옛 = 결합 검사 안 함 → 결과 줄 interrupted · 결과 뒤 · 재실행 자격 · 러너 그룹 삶 · resume rc 0) · 대조 = 같은 기록 확인 '
-               'False (PC7-04 길) 도 같은 답 · 재실행 원천의 "끝난 런" (ResumeRunner._src_done) = 결합된 rc 0 정수만 (다른 표지 · 다른 이름 · rc false = 끝난 런 아님)')
+               'False (PC7-04 길) 도 같은 답 · 재실행 원천의 "끝난 런" (ResumeRunner._src_done) = 결합된 rc 0 정수만 (다른 표지 · 다른 이름 · rc false = 끝난 런 아님) · '
+               'recover_group = 옮길 chain_end 없는 다른 런의 끝 기록도 미확인 (끝 기록 안 씀)')
 def t_PE06():
     import types as _types
     src = s_main('P0')['out'] / 'groups' / 'L01_floor.end.json'
@@ -12474,8 +12492,19 @@ def t_PE06():
                                                                             'cause': None, 'confirmed': True, 'by': 'chain'}, **over)), encoding='utf-8')
         gp[nm] = RR.attempt_groups_problem(sd) is None
     want_gp = {'bound': True, 'foreign': False, 'other_name': False}
-    ok = not bad and sdone == want_sd and gp == want_gp
-    return ok, {'bad': bad, 'src_done': sdone, 'groups_problem_none': gp, 'tail': {k: r.get('tail') for k, r in rows.items()}}
+    #  recover_group — 옮길 chain_end 가 없는 다른 런의 끝 기록 (by recover · 미확인 · 다른 표지) 도 미확인 = 끝 기록을 쓰지 않음 · 사유 = 표지 (옛 = chain_end 를
+    #  품은 것만 보고 덮어썼다)
+    out_dir, _tq = gr_fake_launch('PE06_rg')
+    lp = out_dir / 'groups' / 'L01_floor.launch.json'
+    ep = lp.with_name('L01_floor.end.json')
+    ep.write_text(json.dumps({'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': 'e' * 32, 'rc': None, 'cause': 'parent_dead', 'confirmed': False,
+                              'by': 'recover', 'ended_utc': '2026-11-04T00:00:00Z'}), encoding='utf-8')
+    b0 = ep.read_bytes()
+    end_rg, held_rg = RR.recover_group(lp, RR.host_ident())
+    rg = (end_rg is None, held_rg is not None and '표지' in held_rg, ep.read_bytes() == b0)
+    ok = not bad and sdone == want_sd and gp == want_gp and rg == (True, True, True)
+    return ok, {'bad': bad, 'src_done': sdone, 'groups_problem_none': gp, 'recover_group_foreign_no_chain_end': rg,
+                'tail': {k: r.get('tail') for k, r in rows.items()}}
 
 
 def pe02y_variant(tag, d, n1, a_base, mode):
