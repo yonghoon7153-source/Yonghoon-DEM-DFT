@@ -1,0 +1,32 @@
+{
+ "chain_alive_when_recover_ran": true,
+ "group_records_when_recover_ran": [],
+ "recover_rc": 0,
+ "result_line_after_recover": {
+  "status": "interrupted",
+  "side": "pre",
+  "cause": "parent_dead",
+  "resume_ok": false,
+  "by": "recover"
+ },
+ "recover_tail": [
+  "recover — 그룹 기록 0 개 정리 · 미확인 0",
+  "  recover attempt_1: 결과 줄 interrupted · 결과 pre · 원인 parent_dead · 재실행 자격 False"
+ ],
+ "chain_rc": 3,
+ "chain_summary_status": "CALIBRATED",
+ "runner_calls": 14,
+ "folder_side_now": "post",
+ "ledger_kinds": [
+  "header:None::",
+  "entry:1::",
+  "start:1::",
+  "result:1:interrupted:pre"
+ ],
+ "chain_log_tail": [
+  "  L13_origin: origin · R_j 2.27e+06 Ω · P0 · c 0 · 팔 [1, 2] → rc 0 · 0.1 s · 상태 positive · cg_info 0 · CG 반복 321 · 이어 풀기 17 · 잔차 3.0e-13 · 판 전류 불균형 2.0e-07 · 증서 ⓐⓑⓒⓓ ✓ · 판독 보장 오차 e 0.0e+00",
+  "  L14_sbe_noop: sbe_noop · R_j 2.27e+06 Ω · P0 · c 1 · 팔 [0] → rc 0 · 0.1 s · 상태 positive · cg_info 0 · CG 반복 321 · 이어 풀기 17 · 잔차 3.0e-13 · 판 전류 불균형 2.0e-07 · 증서 ⓐⓑⓒⓓ ✓ · 판독 보장 오차 e 0.0e+00",
+  "멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — 원장: 항목 1 의 결과 줄이 둘 (Q9 §3-5)"
+ ],
+ "next_add_rc": 0
+}

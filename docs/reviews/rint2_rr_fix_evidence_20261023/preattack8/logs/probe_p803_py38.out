@@ -1,0 +1,79 @@
+{
+ "int_to_true": {
+  "differ": true,
+  "kinds": [
+   "format"
+  ],
+  "first_diff_offset": 58,
+  "len_delta": -3
+ },
+ "true_to_int": {
+  "differ": true,
+  "kinds": [
+   "format"
+  ],
+  "first_diff_offset": 79,
+  "len_delta": 3
+ },
+ "true_to_float": {
+  "differ": true,
+  "kinds": [
+   "format"
+  ],
+  "first_diff_offset": 79,
+  "len_delta": 1
+ },
+ "neg_zero": {
+  "differ": true,
+  "kinds": [
+   "value"
+  ],
+  "first_diff_offset": 58,
+  "len_delta": -3
+ },
+ "value_and_no_nl": {
+  "differ": true,
+  "kinds": [
+   "value"
+  ],
+  "first_diff_offset": 58,
+  "len_delta": 1
+ },
+ "value_order_crlf": {
+  "differ": true,
+  "kinds": [
+   "value"
+  ],
+  "first_diff_offset": 1,
+  "len_delta": -12
+ },
+ "dup_key_diff_first": {
+  "differ": true,
+  "kinds": [
+   "format"
+  ],
+  "first_diff_offset": 58,
+  "len_delta": -11
+ },
+ "bom": {
+  "differ": true,
+  "kinds": [
+   "unreadable"
+  ],
+  "first_diff_offset": 0,
+  "len_delta": -3
+ },
+ "nan_for_null": {
+  "differ": true,
+  "kinds": [
+   "value"
+  ],
+  "first_diff_offset": 67,
+  "len_delta": 1
+ },
+ "_python_equality": {
+  "r0 == r1 (true vs 1)": true,
+  "results_keys_differ would be": []
+ },
+ "deep_nesting": "EXC RecursionError"
+}

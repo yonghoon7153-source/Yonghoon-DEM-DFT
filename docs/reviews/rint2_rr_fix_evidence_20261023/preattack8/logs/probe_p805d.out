@@ -1,0 +1,42 @@
+{
+ "chain_alive_at_recover": true,
+ "files_at_recover": [
+  "attempt.json"
+ ],
+ "recover_rc": 0,
+ "result_1": {
+  "status": "interrupted",
+  "side": "pre",
+  "cause": "parent_dead",
+  "resume_ok": false
+ },
+ "attempt1_chain_rc": 3,
+ "attempt1_summary_status": "CALIBRATED",
+ "attempt1_runner_calls": 14,
+ "attempt2": {
+  "n": 2,
+  "rc": 0,
+  "status": "CALIBRATED"
+ },
+ "verdict_before_cut": {
+  "stop": "ATTEMPT_LEDGER_MISMATCH",
+  "cause": "attempt_1: 폴더 요약 sha ≠ 원장 결과 줄 1"
+ },
+ "verdict_after_cut": {
+  "stop": "INPUT_MISSING",
+  "cause": "주 사다리 P0 · P1 둘이 다 있어야 한다",
+  "adopted": {
+   "ladder:P0": {
+    "adopted": 2,
+    "attempts": [
+     1,
+     2
+    ],
+    "chain": [
+     2
+    ],
+    "effective": 2
+   }
+  }
+ }
+}
