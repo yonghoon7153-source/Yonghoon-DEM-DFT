@@ -2794,3 +2794,35 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - **유지:** E1_0B_RESULT_N1 정적 종결 · E1_0B_A2_N1 · N2 는 재검토까지 보류 · E1-0b 미완 · a2 RED / GREEN 미관측 · FUTURE-01 기능 종결 보류 · E1-1–3 ·
   실제 자료 fetch / run · C4-A / B · COMSOL 미승인.
 - **다음:** Codex 재검토 (발송문 v4) → 회신 수용 뒤 사용자의 E1-0b 한정 새 승인 (시도 a2). 이 기록 · 범위 채택은 실행의 승인이 아니다.
+
+## §98 C4-E · E1-0b a2 재검토 회신 v4 접수 — 문서 정정 수용 · E1_0B_A2_N1 · N2 종결 · 필수 지적 0 · E1-0b a2 한정 새 사용자 승인 요청 가능 · 실행 승인 아님 (2026-11-04 KST · 덧붙임 — 위 §0–§97 은 그대로)
+
+- **받은 것 · 보존:** 사용자 업로드 `REIL_C4E1_0B_A2_V4_PREREVIEW_20261104.zip` (968,072 B · `f8908ced88860cf9c2bd13bbbdb4b5d2f8cd2688a3f8c5592f00aedb345d6767` =
+  전달 영수증) · 대화에 붙인 영수증 (`REIL_A2_V4_PREREVIEW_DELIVERY_RECEIPT` · 2026-11-04T01:41:28Z · 1,282 B `89ef1b98…` — 포장 도구 반환 기준) · 포장 도구
+  반환 (rc 0 · 0.63 s).
+  - 커밋 `48517939` (보존 규칙) · `85f44a5c` (바이트): `reviews/review_reil_c4e1_0b_a2_v4_prereview_20261104/` — ZIP + `originals/` 34 (안전 추출) ·
+    PACKAGE_MANIFEST (`2a921b03…` · 6,170 B) 33/33 · 목록 밖 없음 · blob 35/35 · 비밀 검사 35 파일 0 건 · URL 계정 형태 0.
+  - `source/` 9 · `input/` 1 (발송문 v4 `c3f398fd…`) = 고정 `5d87b57e` · `basis/` 11 = 이전 고정 `396c8380` 3 · `f62a3efd` 2 · 보존한 a2 사전 검토 회신 3 · 보존한
+    범위안 검토 회신 3 — 21/21 바이트 일치. 검토자 도구 없음 · 실행하지 않았다.
+- **판정 (`REVIEW_DECISION.json`):** `E1_0B_A2_DOCUMENT_CORRECTIONS_ACCEPTED_READY_FOR_USER_APPROVAL` (고정 `5d87b57e` · 요청서 `ae413f96…` · 96,529 B) · 필수 지적 0.
+  - Q1 `ACCEPT_N1_DOCUMENT_APPLICABILITY_CORRECTION` — **E1_0B_A2_N1 `CLOSED_DOCUMENT_CONSISTENCY`.** 요청서 §0 · §4-3 · §8 의 26 · 발송문 v4 가 표지의 stdout
+    전역 검사를 RED 에만 둔다 · 판정기 (`judge_red` 265–266 줄뿐) 와 일치 · GREEN 독립 표지 입력을 A 는 막지 않고 B 는 막는다는 차이를 명시 · 그 입력을 막았다고
+    주장하지 않음. 범위안 파일의 철회된 표현 ("유일한 경로" · "실제 차이 없음") 은 보존 · §96 이 대체 — 새 모순으로 세지 않음.
+  - Q2 `ACCEPT_N2_AUTHOR_EXECUTION_DISCLOSURE_CORRECTION` — **E1_0B_A2_N2 `CLOSED_DISCLOSURE_NOT_RETROACTIVE_AUTHORIZATION`.** 수행 이력 공개의 종결이며 과거
+    범위 밖 실행의 소급 허가 · 영구 보존 · 기능 검증이 아니다 · 출력 원파일을 받지 않아 전체 sha 의 기재와 독립 확인을 구분한다 · 새 원기록 제출 · 재실행 불요.
+  - Q3 `ACCEPT_LIMITATION_NOTES` · Q4 `MAY_REQUEST_NEW_USER_APPROVAL_FOR_E1_0B_A2_ONLY` — 초안 여섯 원바이트 불변 (launcher v6 `2c707123…` · 대조 v8 `49d3fa36…` ·
+    실행기 대조 v5 `b34fb9a9…` · 실행기 v8 `e284f8a1…` · 작성기 v2 `2f316acc…` · 판정기 `3749b32e…`) · 요청서 14 구역 / 부분이 개행 정규화 뒤 같음 · 봉인 의미 15
+    행 · TARGETS 14 · 복사 5 · 착수 sha 12 · 끝 식별 6 · 단계 증거 9 · 예산 (RED 120 s · GREEN 600 s · 외곽 정리 15 s · 전체 ≤ 2 h) 유지. 승인은 이 고정 요청서 ·
+    E1-0b 시도 a2 에 한정되어야 하고, 착수 때 a2 증거 / 작업 경로의 부재와 원천 식별을 확인해야 한다.
+  - 한계 (회신): GREEN 전역 표지 검사 없음 · 작성자 과거 실행 · 과거 사용자 메시지 원문 · 실제 a2 경로 부재 · 작성자의 27 원격 대조는 독립 확인되지 않았다.
+    검토자 자기 도구의 첫 대조가 본문 안의 "**RED" 를 절 경계로 잡아 rc 1 — 검토자 도구만 고쳐 다시 대조했다 (제출물 결함 아님).
+- **실행 승인 여부:** 회신 원문 (`CODEX_REPLY_KO.txt` 21 줄) 은 "이번 회신은 a2 실행 승인이 아닙니다" 이고 판정 (`new_a2_execution_authorized` false) · 영수증
+  (`a2_execution_authorized` false) 도 같다. 대화에 붙인 요약에는 "이번 검토 자체는 실행 승인이며" 라는 문장이 있었으나 회신 파일 · 판정 · 영수증과 반대이므로
+  파일을 따른다 — **이 회신은 실행 승인이 아니다.**
+- **착수 조건의 읽기 전용 확인 (실행 아님 · 2026-11-04):** `evidence/reil_c4e1_0b_a2_*` 없음 · `SP/c4e1_0b_a2_steps` 없음 · 지난 시도의 증거 · 작업 폴더는 그대로 ·
+  `SP/reil_c4env/venv/bin/python` · `pytest_t` 있음 · 디스크 여유 26,058,989,568 B. 착수 때 요청서 §4-1 a 의 명령으로 다시 확인한다.
+- **유지:** E1_0B_RESULT_N1 정적 종결 · E1-0b 기능 미완 · a2 RED / GREEN 미관측 · FUTURE-01 기능 종결 보류 · 지난 여덟 RED 일치를 새 게이트에 잇지 않음 ·
+  E1-1–3 · 실제 자료 fetch / run · C4-A / B · COMSOL 미승인 (COMSOL core 65 사례 결과와 이 승인 요청은 별개).
+- **다음:** 사용자의 E1-0b 한정 새 승인 (시도 a2 · 고정 요청서 `ae413f965e890103db175ef261b05d6c49b26f9a53048abdab8c9b8d3b234840` · 커밋 `5d87b57e`) → 승인되면
+  요청서 §4 의 a–e 만 (a 에서 승인 기록 § · 보존 규칙 · a2 경로 부재 확인 → b 복사 다섯 · 봉인 → c RED · 판정기 · 수동 판정 → 일치할 때만 d GREEN → e 끝 기록 →
+  멈춤). 이 기록은 실행의 승인이 아니다.
