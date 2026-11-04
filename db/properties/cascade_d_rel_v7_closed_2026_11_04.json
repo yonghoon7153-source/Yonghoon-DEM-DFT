@@ -1,0 +1,80 @@
+{
+ "schema": "campaign_closure/v1",
+ "record_kind": "closure",
+ "date": "2026-11-04",
+ "status": "proposed — 사용자 (cascade 1저자) 비준 대기 · 결정 D-2026-11-04-cascade-v7-main-closed",
+ "system": "comp1_V0_k444 2×2×1 기반 Al 도핑 LPSCl 셀 — 처방 P1 (Al₂O₃) / P2 (Al₂S₃) · 독립 부모 배열 10 · 공통부피 4066.479695 Å³ · Li 90 · UMA-s-1p1(omat) default · Langevin NVT T* = 1000 K · dt 2 fs · friction 0.02 · 평형 5 ps / 생산 400 ps · save 100 fs · kgy RTX3090",
+ "track": "cascade — **사용자 = 1저자** (CLAUDE.md §소통). 결정이 그 자리에서 나고 통지할 제3자가 없다.",
+ "citable": "조건부 — §2 허용 서술 그대로만 (상대 비 · 구간 · 판정 갈래). 절대 D 는 인용 금지 (1저자 인용정책 2026-09-18)",
+ "results_seen": true,
+ "제목": "cascade D_rel v7 본 라운드를 닫는다 — T* 1000 K · 40 런 · 자격 통과 36 · 유효 부모 6/10 · 실질_동등_지지 (D_P1/D_P2 = 1.10 · 95 % 구간 1.03–1.17 · 등가영역 1/1.5–1.5)",
+ "⚠_순서": "판정 규칙 (v6 §4 집계 · 자격 · 결측 규칙 · δ = ln 1.5 · 3 갈래 · 40 런 전 중간 집계 금지 · 허용 문구) 은 결과 전에 박혔다 (카드 v7 2026-10-01 · 개정 CP 2026-10-03 · 비준 active · 본 라운드 상한 10-07 · 재비준 10-28). 판독기 (judge_eprime.py) 는 10-08 (45c66ffc · Codex CT) 뒤 바뀌지 않았고 러너가 찍은 판정 명령을 그대로 한 번 돌렸다 (kgy 2026-11-04 09:25:58 → rc 0). 갈래는 판독기가 구간 위치로 정했다 — 사람이 고르지 않았다.",
+ "닫는_범위": "D_rel(P1/P2; V_common) 보고량의 카드 v7 (+ 개정 CP) 본 라운드 — 탐침 (2026-10-03 ~ 10-06 · T* 1000 K) + 본 라운드 40 런 (부모 10 × 처방 2 × 시드 1·2). ⛔ 닫지 않는 것: cascade 다른 축 (스크리닝 축 확장 계획 D-2026-10-15-cascade-screening-axes-plan · 목적 범위 D-2026-10-15-cascade-objective-scope) · 237 설계 순위 · ESW 퍼널 · v6 마감 (2026-10-01 · 그대로).",
+ "1_확정": {
+  "판정": "실질_동등_지지 (카드 §2-5 · 구간 [lo, hi] 가 [−δ, +δ] 안 · δ = ln 1.5 = 0.4055)",
+  "T_star_K": 1000,
+  "자격": "36 / 40 런 (판독기 aggregation_eligible + 결속 + 골격 경보 거부권)",
+  "유효_부모": "6 / 10 (B · C · D · G · I · J) — A · E · F · H 는 한쪽 처방의 시드 하나가 자격 미달이라 결측 (대체 금지 · 카드 §3)",
+  "L_bar_ln": 0.0936,
+  "sd_ln": 0.0614,
+  "SE_ln": 0.0251,
+  "t_0975_df5": 2.571,
+  "ci95_ln": [0.0292, 0.158],
+  "비_D_P1_over_D_P2": 1.098,
+  "ci95_비": [1.03, 1.171],
+  "부모별_lnR": {"B": -0.0195, "C": 0.0901, "D": 0.1245, "G": 0.0946, "I": 0.1632, "J": 0.1087},
+  "부호": "L_k > 0 : 5/6 · < 0 : 1/6",
+  "비용": "누적 513.10 / 상한 592.0 GPU-h (결정 D-2026-10-28-cascade-v7-main-round-cap2)",
+  "판독기": "tools/doping/judge_eprime.py · 판독 JSON 의 tool commit 2331c488 (dirty false · wt_cv7main_1028)",
+  "판독_JSON": "db/raw/cascade_v7_main_2026_10_07/cascade_v7_judgement.json (SHA256SUMS 126 대조 OK · 회수 924858bf)",
+  "⚠": "부모별 · 런별 절대 D 는 판독 JSON (db/raw) 에만 있다 — 여기 옮기지 않고 인용하지 않는다. 위의 비 · ln 비 · 구간은 상대값이다."
+ },
+ "2_허용_서술_이대로만": {
+  "①_범위_문장 (V7_CLAIM_SCOPE 그대로)": "「사전 지정된 탐침 규칙으로 선택한 T* K에서, UMA·공통 고정셀·준비 및 자격 조건 아래의 P1/P2 확산 비를 평가했다. 등가영역 내 판정은 이 조건에 한정하며, 600 K·작동 온도·실제 재료의 동등성을 뜻하지 않는다.」 + 결론은 전체 배열이 아니라 자격 통과 집합에 조건부다 + T* 는 '확산이 시작되는 최저 온도' 가 아니라 지정 사다리 · 시드에서 운영 기준을 통과한 온도다.",
+  "②_결과_문장": "「T* = 1000 K 에서 comp1 기반 Al 도핑 LPSCl 셀 (공통부피 4066.48 Å³) 의 Li 확산 비 D(Al₂O₃ 처방) / D(Al₂S₃ 처방) 는 자격을 통과한 부모 6/10 기준 1.10 (95 % 구간 1.03–1.17) 로, 사전 정의한 등가영역 (1/1.5–1.5) 안에 들었다 — 이 조건에서 두 처방의 Li 확산은 실질적으로 같다고 판정한다.」",
+  "③_영문 (덱 · 원고용 · 같은 내용)": "At T* = 1000 K (selected by a pre-specified probe rule), the Li diffusion ratio D(Al₂O₃ prescription)/D(Al₂S₃ prescription) in the comp1-based Al-doped LPSCl cell (common volume 4066.48 Å³, UMA, NVT) was 1.10 (95% CI 1.03–1.17; 6 of 10 parent configurations eligible), within the pre-registered equivalence margin of 1/1.5–1.5. The two prescriptions are judged practically equivalent under these conditions only; this does not imply equivalence at 600 K, at operating temperature, or in real materials."
+ },
+ "3_⛔_금지_서술": [
+  "절대 D · σ · Ea 값 — 어떤 형태로도 (판독 JSON 의 D_bar 값 포함 · 1저자 인용정책 2026-09-18).",
+  "'600 K · 상온 · 작동 온도에서도 두 처방의 확산이 같다' · '실제 재료에서 같다' — 판정은 T* 1000 K · UMA · 공통 고정셀 조건에 한정된다.",
+  "'Al₂O₃ 처방이 Al₂S₃ 처방보다 Li 확산이 빠르다 / 유리하다' — 비 1.10 · 구간이 1 을 넘나들지 않아도 카드의 판정은 δ (ln 1.5) 기준 3 갈래이고 결과는 '실질 동등' 이다 (그 크기의 차이를 주장하려면 새 카드 · 새 δ · 검정력).",
+  "'열 부모 모두에서 같다' · 배열 전체로의 일반화 — 결론은 자격 통과 6 부모에 조건부다 (빠진 넷은 '같다' 도 '다르다' 도 아니다 · 결측).",
+  "'1000 K 가 Li 확산이 시작되는 온도다' — T* 는 사다리 · 시드에서 운영 기준을 통과한 온도다.",
+  "'O 치환 (처방) 효과가 없다' · 도펀트 순위 · 설계 선택을 D_rel 하나로 — 목적은 다축이고 축을 합치는 규칙은 아직 없다 (D-2026-10-15-cascade-objective-scope).",
+  "v6 (600 K · 방법상 무효) 결과와 이어 붙이기 — '600 K 에서는 확산하지 않았고 1000 K 에서는 같다' 같은 문장 (v6 마감 금지 서술 그대로)."
+ ],
+ "4_기록_남길_것": {
+  "자격_미달_넷": {
+   "P1_Al2O3_E__T1000__s1": "D_inc plateau 는 통과 (산포 6 % · 홉 34.5/이온) — 골격 경보 alarm → 거부권 (경보 통과는 인증이 아니다 · 회신 CP P1)",
+   "P2_Al2S3_A__T1000__s1": "D_inc 가 창을 따라 움직인다 (상대 산포 11 % > 10 % · 추세 −11 %) — ① plateau 미달",
+   "P2_Al2S3_F__T1000__s2": "D_inc plateau 통과 (산포 4 % · 홉 33.3/이온) — 골격 경보 alarm → 거부권",
+   "P2_Al2S3_H__T1000__s2": "검사 불가 — 한 프레임 변위가 셀의 0.41 (문턱 0.4) 이라 unwrap (최소상) 이 모호 → 자격 없음 (메우지 않음)"
+  },
+  "자격_기준_집계": "검사불가 1 · ① D_inc plateau 1 · ② 부창 기울기비 0 · ③ 사건 수 0 · 골격 경보 거부 2 · 사건 수 최소 / 중앙 / 최대 22511 / 23124 / 23747 (기준 50)",
+  "구간과_0": "95 % 구간 (ln) [0.029, 0.158] 이 0 을 넘나들지 않고 부호가 5/6 이다 — **기록만** 한다. 판정은 δ 기준 3 갈래이고 이 크기 (≈ 10 %) 는 사전 정한 등가영역 안이다 (§3 금지 서술 셋째).",
+  "탐침_시드": "탐침 시드 3 · 4 런은 집계에서 뺐다 (개정 CP ④ · 판독 JSON excluded_probe_seed_runs)",
+  "결속": "판독기가 온도 (msd · aimd · 폴더 · 태그 · T*) · prod · dt · save · 시간축 끝 · manifest · budget · run_meta 를 결박했다 (결박 실패 0)",
+  "⚠_못_하는_것": "판독기 docstring 그대로 — 결속은 기록끼리의 일치다 (궤적이 실제로 그 온도로 돌았는지 md.log T 는 안 본다) · 골격 경보는 거부권뿐 (통과가 골격 보존 인증이 아니다 · n < 8 인 종은 판정에서 빠진다)."
+ },
+ "5_재개_조건": {
+  "이_라운드": "**재개하지 않는다.** 런을 늘리거나 (부모 · 시드 · 생산 길이) 같은 궤적을 다른 창 · 문턱 · δ 로 다시 판독해 판정을 바꾸지 않는다 (카드 v7 · 개정 CP §5 '바꾸지 않는 것').",
+  "이것들만": [
+   "① 판독기 결함이 드러나 고친 경우 — 고친 판독기로 과거 마감 (v6 · 이 v7) 부터 재현한 뒤 (CLAUDE.md 상시 절차) 같은 궤적을 다시 판독한다. 재현 못 하면 판정 보류.",
+   "② 새 질문 (다른 온도 — 예: 600 K 대 T* 외삽 · 다른 셀 · 처방 · 부모 · 무질서 호스트) 은 이 라운드의 재개가 아니라 **새 카드** 다 — §1–3 을 결과 전에 쓰고 리뷰 · 비준 · 탐침 문턱 · GPU 상한을 첫 런 전에."
+  ],
+  "⛔_재개_사유가_아닌_것": "결측 부모 넷 (A · E · F · H) 을 메우려는 추가 런 · 자격 문턱 완화 · 골격 경보 무시 · 자격 무시 가정계산 · 구간이 0 을 안 넘는다는 이유의 '차이' 재판정."
+ },
+ "6_다음": "스크리닝 축 확장 계획 (D-2026-10-15-cascade-screening-axes-plan · active) 이 'D_rel v7 판독 뒤 시작 시점과 D_rel 237 확장과의 순서를 사용자와 정한다' 고 했다 — 마감 비준과 같이 사용자 결정을 받는다 (계산 승인은 축마다 카드 비준).",
+ "6_비준": "대기 — 사용자 (cascade 1저자)",
+ "출처": {
+  "카드_v7": "db/properties/cascade_estimand_card_v7_probe_2026_10_01.json (active)",
+  "개정_CP": "db/properties/cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json (active)",
+  "탐침": "db/raw/cascade_v7_probe_2026_10_03/ · 기록 db/properties/cascade_v7_probe_runlog_2026_10_03.json",
+  "본_라운드_기록": "db/properties/cascade_v7_main_runlog_2026_10_07.json (✅_본라운드_끝_2026_11_04 · ✅_판독_2026_11_04)",
+  "원자료": "db/raw/cascade_v7_main_2026_10_07/ (판독 JSON · manifest · budget · run_meta · aimd_results · 러너 · 판독 로그 · 궤적 · msd 는 sha256 만 — 원본은 kgy /home/kgy/work/runs/cascade_v7_main_1007)",
+  "판독기": "tools/doping/judge_eprime.py (main_v7)"
+ },
+ "status_history": [
+  {"at": "2026-11-04", "state": "proposed", "by": "agent", "note": "kgy 판독 (09:54 · rc 0) · 회수 924858bf · SHA256SUMS 126 대조 OK → 마감 기록 초안 · 사용자 (cascade 1저자) 비준 대기"}
+ ]
+}
