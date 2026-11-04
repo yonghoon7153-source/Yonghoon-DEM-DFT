@@ -16,11 +16,14 @@
 #   · MP 판이 실행 중에 바뀌는 것을 막지 못한다 — 앞 · 뒤 판을 적고 다르면 알린다 (G3).
 #
 # 실행 (gabia · uma env):  bash tools/cascade/run_axis_ncm_gabia.sh
-#   env: PY (기본 uma python) · OUT (기본 db/raw/cascade_axis_ncm_2026_11_04) · RESUME=1 · DRY=1 (검사만)
+#   env: PY (기본 uma python) · OUT (기본 db/raw/cascade_axis_ncm_v2_2026_11_04) · RESUME=1 · DRY=1 (검사만)
+#   ⭐ 2026-11-04 고침 (결과 전 · 카드 개정 1): 설계 91 = 1 단계 계면 표 (cascade_interface_90.jsonl) 의 조성 그대로.
+#      첫 판 (ce4fc685) 은 --batch_from (지금 CSV 의 champion_formulas) 이라 90 종 · 그중 9 종 조성이 1 단계와 달랐다 —
+#      그 판의 출력 (db/raw/cascade_axis_ncm_2026_11_04) 은 쓰지 않는다 (회수 · 판독 안 함). 새 판은 새 폴더 (v2).
 set -uo pipefail
 PY=${PY:-/data/apps/miniforge3/envs/uma/bin/python}
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
-OUT=${OUT:-$ROOT/db/raw/cascade_axis_ncm_2026_11_04}
+OUT=${OUT:-$ROOT/db/raw/cascade_axis_ncm_v2_2026_11_04}
 DEC=${DEC:-D-2026-11-04-cascade-axis-ncm-interface}
 CARD=db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json
 cd "$ROOT" || exit 2
@@ -58,7 +61,7 @@ log "시작 · 결정 $DEC active · OUT=$OUT · PY=$PY · resume=${RESUME:-0}"
   || die "sei_product_gaps selftest 실패 — $OUT/selftest_gaps.log" 16
 log "selftest 둘 통과"
 
-# 3) manifest (앞) — MP 판 · 판 번호 · 보정 이름 표본 · 도구 sha16 · HEAD
+# 3) manifest — 실행 (invocation) 마다 MP 판 앞 · 뒤를 따로 남긴다 (RESUME 로 덧붙여도 G3 가 전부를 본다)
 manifest(){ "$PY" - "$1" "$OUT/manifest.json" "$DEC" "$CARD" <<'EOF'
 import json, os, sys, hashlib, subprocess, datetime, platform
 from importlib.metadata import version as _v
@@ -75,25 +78,32 @@ now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"
 from mp_api.client import MPRester
 with MPRester(os.environ["MP_API_KEY"]) as r:
     dbv = r.get_database_version()
-    if phase == "before":
+    if phase == "before" and not m:
         es = r.get_entries_in_chemsys(["Li", "Ni", "O"],
                                       additional_criteria={"thermo_types": ["GGA_GGA+U"]})
+if m and "invocations" not in m:            # 옛 판 runner 의 manifest — 첫 실행을 그대로 옮겨 적는다
+    m["invocations"] = [{k: m.get(k) for k in ("started_utc", "finished_utc", "mp_db_version_before", "mp_db_version_after",
+                                                "repo_head", "tools_sha16")}]
 if phase == "before":
     sha = lambda f: hashlib.sha256(open(f, "rb").read()).hexdigest()[:16]
-    adj = sorted({getattr(a, "name", type(a).__name__)
-                  for e in es for a in (getattr(e, "energy_adjustments", None) or [])})
-    m.update({"decision": dec, "card": card, "started_utc": now, "host": platform.node(),
-              "python": sys.executable, "pymatgen": version("pymatgen"), "mp_api": version("mp_api"),
-              "thermo_types": ["GGA_GGA+U"],
-              "correction_names_sample_Li-Ni-O": adj, "n_entries_sample_Li-Ni-O": len(es),
-              "tools_sha16": {f: sha(f) for f in ("tools/oxidation/interface_reactivity_v2.py",
-                                                  "tools/oxidation/sei_product_gaps.py",
-                                                  "tools/cascade/run_axis_ncm_gabia.sh")},
-              "repo_head": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
-              "mp_db_version_before": dbv})
+    inv = {"started_utc": now, "host": platform.node(), "resume": os.environ.get("RESUME", "0"),
+           "repo_head": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+           "tools_sha16": {f: sha(f) for f in ("tools/oxidation/interface_reactivity_v2.py",
+                                               "tools/oxidation/sei_product_gaps.py",
+                                               "tools/cascade/run_axis_ncm_gabia.sh")},
+           "pymatgen": version("pymatgen"), "mp_api": version("mp_api"), "mp_db_version_before": dbv}
+    if not m:
+        adj = sorted({getattr(a, "name", type(a).__name__)
+                      for e in es for a in (getattr(e, "energy_adjustments", None) or [])})
+        m.update({"decision": dec, "card": card, "started_utc": now, "host": platform.node(),
+                  "python": sys.executable, "pymatgen": inv["pymatgen"], "mp_api": inv["mp_api"],
+                  "thermo_types": ["GGA_GGA+U"], "correction_names_sample_Li-Ni-O": adj, "n_entries_sample_Li-Ni-O": len(es),
+                  "tools_sha16": inv["tools_sha16"], "repo_head": inv["repo_head"], "mp_db_version_before": dbv})
+    m.setdefault("invocations", []).append(inv)
 else:
-    m.update({"finished_utc": now, "mp_db_version_after": dbv,
-              "same_mp_version": dbv == m.get("mp_db_version_before")})
+    m["invocations"][-1].update({"finished_utc": now, "mp_db_version_after": dbv})
+    vers = {x.get(k) for x in m["invocations"] for k in ("mp_db_version_before", "mp_db_version_after")}
+    m.update({"finished_utc": now, "mp_db_version_after": dbv, "same_mp_version": len(vers) == 1 and None not in vers})
 json.dump(m, open(path, "w"), ensure_ascii=False, indent=1)
 print("same" if m.get("same_mp_version", True) else "DIFFERENT")
 EOF
@@ -102,15 +112,33 @@ manifest before > /dev/null || die "manifest (앞) 실패 — MP 조회 · 키 �
 log "manifest 앞 기록"
 
 # 4) 세 갈래 동시 — 설계 × LNO · 설계 × LCO · 호스트 × 여섯
+#    ⭐ 설계 = 카드 §1b 91 종 = **1 단계 계면 표 (cascade_interface_90.jsonl) 의 조성 그대로** (카드 개정 1 · 결과 전 2026-11-04):
+#       champion_formulas 를 지금 CSV 에 다시 돌리면 9 종이 다른 조성 (세 라벨 중 '먼저 나온 행' 이 바뀜) 이고 As2S3 는 CSV 에 없다.
 IR=tools/oxidation/interface_reactivity_v2.py
-"$PY" $IR --batch_from --closed "${RES[@]}" --cathodes "LiNiO2:LNO_full" "Li0.5NiO2:LNO_half" \
-   --out "$OUT/designs_lno.jsonl" > "$OUT/lane_lno.log" 2>&1 & P1=$!
-"$PY" $IR --batch_from --closed "${RES[@]}" --cathodes "LiCoO2:LCO_full" "Li0.5CoO2:LCO_half" \
-   --out "$OUT/designs_lco.jsonl" > "$OUT/lane_lco.log" 2>&1 & P2=$!
+ROSTER_SRC=db/properties/cascade_interface_90.jsonl
+mapfile -t ROSTER < <("$PY" - "$ROSTER_SRC" <<'EOF'
+import json, sys
+f = {}
+for ln in open(sys.argv[1], encoding="utf-8"):
+    r = json.loads(ln)
+    if r.get("cathode") in ("LCO", "LNO", "LMO") and r.get("formula"):
+        if f.setdefault(r["species"], r["formula"]) != r["formula"]:
+            sys.exit(f"{r['species']}: 양극마다 조성이 다르다")
+if len(f) != 91:
+    sys.exit(f"대상 {len(f)} 종 (91 이어야 한다)")
+for k in sorted(f):
+    print(f"{k}:{f[k]}")
+EOF
+)
+[ "${#ROSTER[@]}" = 91 ] || die "대상 91 종을 못 읽는다 ($ROSTER_SRC → ${#ROSTER[@]} 종)" 19
+"$PY" $IR --only "${ROSTER[@]}" --closed "${RES[@]}" --cathodes "LiNiO2:LNO_full" "Li0.5NiO2:LNO_half" \
+   --out "$OUT/designs_lno.jsonl" >> "$OUT/lane_lno.log" 2>&1 & P1=$!
+"$PY" $IR --only "${ROSTER[@]}" --closed "${RES[@]}" --cathodes "LiCoO2:LCO_full" "Li0.5CoO2:LCO_half" \
+   --out "$OUT/designs_lco.jsonl" >> "$OUT/lane_lco.log" 2>&1 & P2=$!
 "$PY" $IR --only "HOST:Li6PS5Cl" --closed "${RES[@]}" --cathodes "LiNiO2:LNO_full" "Li0.5NiO2:LNO_half" \
    "LiCoO2:LCO_full" "Li0.5CoO2:LCO_half" "LiNi0.8Co0.1Mn0.1O2:NCM_full" "Li0.5Ni0.8Co0.1Mn0.1O2:NCM_half" \
-   --out "$OUT/host.jsonl" > "$OUT/lane_host.log" 2>&1 & P3=$!
-log "갈래 셋 발사 (PID $P1 $P2 $P3) — 기대 줄 수 182 · 182 · 6"
+   --out "$OUT/host.jsonl" >> "$OUT/lane_host.log" 2>&1 & P3=$!
+log "갈래 셋 발사 (PID $P1 $P2 $P3 · 대상 ${#ROSTER[@]} 종 · $ROSTER_SRC) — 기대 줄 수 182 · 182 · 6"
 wait $P1; R1=$?; wait $P2; R2=$?; wait $P3; R3=$?
 log "갈래 끝 · rc lno=$R1 lco=$R2 host=$R3"
 

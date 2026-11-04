@@ -109,7 +109,8 @@
    "repo HEAD",
    "건너뜀 · 오류 행 수"
   ],
-  "⚠_이어달리기": "--resume 은 오류 행도 '끝남' 으로 센다 — 오류가 있으면 그 행을 지우고 **같은 MP 판일 때만** --resume 으로 다시 돈다."
+  "⚠_이어달리기": "--resume 은 오류 행도 '끝남' 으로 센다 — 오류가 있으면 그 행을 지우고 **같은 MP 판일 때만** --resume 으로 다시 돈다.",
+  "⚠_개정_1": "위 R1_R3_반응 의 --batch_from 은 개정 1 로 --only (1 단계 계면 표의 91 종 · 조성 그대로) 로 바뀌었다"
  },
  "4_검증_게이트_결과_보기_전에_정한다": {
   "G1_재현성_기록": {
@@ -204,6 +205,12 @@
    "state": "active",
    "by": "사용자 (cascade 1저자)",
    "note": "사용자 2026-11-04 (이 세션 · AskUserQuestion): 축 ① NCM 계면 분해 카드 '비준 — 바로 실행 (Recommended)'"
+  },
+  {
+   "at": "2026-11-04",
+   "state": "active",
+   "by": "agent",
+   "note": "개정 1 (결과 전) — 대상 조성 = 1 단계 계면 표 그대로 (지금 CSV 의 champion_formulas 는 90 종 · 9 종 조성이 다름) · 러너 --only · 새 출력 폴더"
   }
  ],
  "실행_2026_11_04": {
@@ -215,6 +222,16 @@
    "host.jsonl": 6
   },
   "값_규율": "runner.log · watch 에는 줄 수 · rc · MP 판 일치만 — 값은 lane_*.log · jsonl 에만 (판독기 커밋 전에 안 본다)",
-  "회수": "판독기 (analyze_cathode_reactivity.py 축 ① 모드) 커밋 뒤에 회수 블록을 받는다"
+  "회수": "판독기 (analyze_cathode_reactivity.py 축 ① 모드) 커밋 뒤에 회수 블록을 받는다",
+  "출력_개정_1": "db/raw/cascade_axis_ncm_v2_2026_11_04 (첫 러너 출력 db/raw/cascade_axis_ncm_2026_11_04 는 쓰지 않는다)"
+ },
+ "개정_1_대상_조성_2026_11_04": {
+  "때": "2026-11-04 · 결과 전 (설계 × 닫힌계 값 0 건 열람)",
+  "무엇": "§1b 대상의 조성 = **1 단계 계면 표 (db/properties/cascade_interface_90.jsonl) 의 91 종 조성 그대로** (LCO · LNO · LMO 행이 같은 조성인지 확인 · 다르면 멈춤). 러너는 --only 로 91 종을 명시한다.",
+  "왜": "§1b 가 두 정의를 같은 것으로 적었는데 지금은 다르다 — 'champion_formulas · cascade_v23_all.csv 의 rank_combined == 1' 로 지금 다시 뽑으면 90 종 (As2S3 는 10-13 보충 CSV 에만 있다) 이고 그중 9 종 (Al2O3 · BaCl2 · La2O3 · LiCl · SiS2 · Sm2O3 · SrCl2 · TiCl4 · ZnO) 은 조성이 다르다. champion_formulas 는 세 라벨 (x020 · x050 · x100) 중 'CSV 에서 먼저 나온 rank 1 행' 을 쓰는데 행 순서가 8 월과 달라졌다 (LiCl 은 호스트와 같은 Cl4Li24P4S20 이 나온다). '91 종' 과 '1 단계 계면 표와 같은 조성' 을 둘 다 만족하는 읽기는 1 단계 표뿐이라 그쪽으로 고정한다 — 새 선택이 아니라 카드 문장끼리의 모순을 카드의 명시 문장으로 푼 것이다.",
+  "발견": "판독기 (analyze_cathode_reactivity.py 축 ① 모드) 를 쓰며 대상 수를 셌더니 90 — 결과 전 · 2026-11-04",
+  "영향": "첫 러너 (ce4fc685 · --batch_from) 로 돌린 출력이 있으면 (db/raw/cascade_axis_ncm_2026_11_04) 쓰지 않는다 — 회수 · 판독 안 함. 새 러너는 새 폴더 (db/raw/cascade_axis_ncm_v2_2026_11_04) 에 쓴다.",
+  "판독기": "ax_roster() 가 같은 표에서 대상 · 조성을 읽고 G2 가 행마다 조성이 같은지 본다 (다르면 막음).",
+  "by": "agent · 사용자 (cascade 1저자) 에게 보고"
  }
 }
