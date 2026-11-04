@@ -1,0 +1,60 @@
+{
+  "schema": "document_scope_review/1",
+  "review_date": "2026-11-04",
+  "pin": "df9a4623e2f9e6302e6bc8922bd0612ab48e120c",
+  "branch": "codex/mixer-1104",
+  "verdict": "DOCUMENT_DRAFT_ACCEPTED",
+  "scope": "D3 SOP document consistency and static adversarial review only",
+  "questions": [
+    {
+      "question": "Q1",
+      "status": "ACCEPTED_WITHIN_DOCUMENT_SCOPE"
+    },
+    {
+      "question": "Q2",
+      "status": "ACCEPTED_WITHIN_DOCUMENT_SCOPE"
+    },
+    {
+      "question": "Q3",
+      "status": "ACCEPTED_WITHIN_DOCUMENT_SCOPE"
+    },
+    {
+      "question": "Q4",
+      "status": "ACCEPTED_WITHIN_DOCUMENT_SCOPE"
+    },
+    {
+      "question": "Q5",
+      "status": "ACCEPTED_WITHIN_DOCUMENT_SCOPE"
+    },
+    {
+      "question": "Q6",
+      "status": "ACCEPTED_WITHIN_DOCUMENT_SCOPE"
+    }
+  ],
+  "new_findings": [],
+  "nonblocking_clarifications": [
+    {
+      "id": "D3S-NOTE01",
+      "location": "docs/reviews/mixer_d3_measurement_sop_draft_20261104.md:42",
+      "summary": "Sequential C2 sealing remains allowed under frozen rules. Changing later predictions or analysis rules in response to an earlier validation unit is not the same no-refit validation."
+    }
+  ],
+  "reviewed_code_or_tests_executed": false,
+  "research_data_read": false,
+  "actual_blinding_verified": false,
+  "statistics_or_equipment_certified": false,
+  "source_documents_modified": false,
+  "findings_ledger_changed": false,
+  "overall_gate": "HOLD",
+  "registration_authorized": false,
+  "execution_authorized": false,
+  "deployment_authorized": false,
+  "integration_authorized": false,
+  "limitations": [
+    "No new equipment/sample/person/statistics/seed values assigned.",
+    "Existing Oct-27 reader GO not expanded.",
+    "Hash comparisons establish byte identity only.",
+    "Zero results is the declared scope of supplied materials, not an audit of actual research hosts.",
+    "Rint2 priority and first-author sending/order authority preserved."
+  ]
+}

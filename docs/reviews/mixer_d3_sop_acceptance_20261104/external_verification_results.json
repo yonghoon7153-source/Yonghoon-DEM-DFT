@@ -1,0 +1,66 @@
+{
+  "review_pin": "df9a4623e2f9e6302e6bc8922bd0612ab48e120c",
+  "source_zip_sha256": "7ad7020be45b8de645a01783c1009163853b7beb6447014f947422e40eabf501",
+  "source_zip_bytes": 101186,
+  "snapshot_files_checked": 6,
+  "recorded_remote_pin_blobs_matched": 6,
+  "package_entries_checked": 17,
+  "request_copy_identical": true,
+  "unsafe_entries": [],
+  "files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261104-1015_mixer-d3-sop-draft.md",
+      "bytes": 1998,
+      "sha256": "55d0a0fb58eb973be411417f11ea5cd0f4840d85abf822896f35dc5451a87041",
+      "git_blob": "490331c51ddf6e791777b958b8d8f70ac2d059c5",
+      "line_count": 23,
+      "remote_pin_blob_matches": true
+    },
+    {
+      "path": "docs/reviews/codex_mixer_d3_review_20261027/codex_review_mixer_d3_20261027.md",
+      "bytes": 10190,
+      "sha256": "93b0c42f18f2f4f30b40cdabd07d3e3480b3870f5dfc0b01a2f19844837d76af",
+      "git_blob": "f1bea2f9d2e5b4d0aee64088a3b4808f17a2bc42",
+      "line_count": 105,
+      "remote_pin_blob_matches": true
+    },
+    {
+      "path": "docs/reviews/codex_mixer_d3_sop_review_request_20261104.md",
+      "bytes": 4784,
+      "sha256": "55ea1c2e7459843abf98ab36c2034998e5632aa2770e17002231644c21821d5d",
+      "git_blob": "9fb5b60f3ebe90cae55e32f353f0395842395a3e",
+      "line_count": 36,
+      "remote_pin_blob_matches": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_candidate_reader_contract_20261024.md",
+      "bytes": 12407,
+      "sha256": "9e5871a4346af4cd8b1fce05845402e7ae9c05f76cee5b0bbc35683b77cd0232",
+      "git_blob": "bc919f1461e5700189ef9d6f480bd55506d254c8",
+      "line_count": 97,
+      "remote_pin_blob_matches": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_measurement_sop_draft_20261104.md",
+      "bytes": 11561,
+      "sha256": "4f055a1094e870465357827e0fd8a080b464c6cc503ac7cf04c09edad8d0aa43",
+      "git_blob": "d722090ba67e3097ef0e0983057915dd3fdfeb76",
+      "line_count": 76,
+      "remote_pin_blob_matches": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "bytes": 28064,
+      "sha256": "b2decfae1567465131b3391acb428646ffa2992448bbc08c862cb2b1efd9195d",
+      "git_blob": "939fa72fbe65592d282729125a893e31626c9db7",
+      "line_count": 161,
+      "remote_pin_blob_matches": true
+    }
+  ],
+  "scope": "Offline bytes and previously retrieved pinned GitHub metadata only; no semantic, human-blinding, statistical, equipment or physical certification",
+  "reviewed_code_or_tests_executed": false,
+  "research_data_read": false,
+  "overall_gate": "HOLD",
+  "execution_or_release_authorized": false,
+  "verification_recorded_utc": "2026-11-04T10:31:21.103799+00:00"
+}
