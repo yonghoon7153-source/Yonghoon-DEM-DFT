@@ -231,6 +231,8 @@ run 'mixer launcher (완주 판정 · 덮어쓰기 가드)' bash dem_scripts/mix
 #    드라이버 (`--run-fast`) 도 못 돈다 → 이름으로 건다 (CI 에도 같이).  실측 (10-27 · 컨테이너 · 두 번) D2 1.47 · 1.27 s · D3 0.42 · 0.40 s.
 run 'mixer D2 소비자 (합성 덱 · 결속 검증 · unittest)' python3 scripts/test_mixer_d2_consumers.py
 run 'mixer D3 후보 판독기 (합성 계약 · unittest)'      python3 scripts/test_mixer_d3_candidates.py
+run 'mixer 보정 전 첫8 준비 (합성 덱 · unittest)'      python3 scripts/test_mixer_precal_prepare.py
+run 'mixer 보정 전 관측 연결 (합성 프레임 · unittest)' python3 scripts/test_mixer_precal_observe.py
 #  ★ 2026-10-27 (non-Rint 통합 · 같은 대응표 §6 3) — 언로딩 키트 (ULPRI · `docs/data/ps45_unload_20261009/`) 직접 검사 다섯.  통합 뒤 이 트리의
 #    키트 폴더 = 수용 핀 4c29705fa 와 같다 (`git diff` 0) 인데 이 파일 · CI 어디에도 없었다 (통합 때도 돌리지 않음).  키트는 `scripts/` · `webapp/`
 #    밖이라 등재 (`selftest_inventory.tsv`) 가 보지 않는다 → 이름으로 건다 (CI 에도 같이).  꼴 = 키트 README · 인계 색인 §6 그대로 `python3 -I`

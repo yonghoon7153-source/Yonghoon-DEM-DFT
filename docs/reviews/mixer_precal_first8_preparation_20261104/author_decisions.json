@@ -1,0 +1,23 @@
+{
+  "schema": "mixer_precal_author_decisions/1",
+  "date": "2026-11-04",
+  "source": "User in this implementation thread: ㅇㅇ 권고대로 하고 저 인계 zip은 지금 보내면 되는거야?",
+  "context": "Assistant asked whether to adopt Q1–Q4 and start first8 implementation/review preparation; actual ibb execution separate.",
+  "accepted_document_pin": "0f284e7db65278acb52dd4666b1b22151604e9ba",
+  "receipt_parent_pin": "6d9d838a931bf2269d7bd43f22fe61c904f4b9ac",
+  "Q1": "Adopt whole20 as candidate map and prepare first8 only. Remaining12 require separate decision. No launch authorization.",
+  "Q2": "Adopt B=0.21244/21.244/212.44 and r=0.10/0.35/0.50 with surface-gamma U/C surrogate as uncalibrated development choices. First8 uses r=0.10 only; actual material values and D7 physical coating not established.",
+  "Q3": "Prepare dedicated contact/mixing input binding and controls; current D3 finite-candidate reader is not a map extractor. Theoretical M denominator/random-excess remain outside this unit.",
+  "Q4": "After the map, specify experiment requests separating conditional B from relative surface/adhesion observations. Equipment/sample/people assigned at that later approval stage.",
+  "handoff_delivery": {
+    "source": "User: ㅇㅇ claude 한테 보냈어",
+    "status": "USER_REPORTED_SENT_TO_CLAUDE",
+    "integration_confirmed": false
+  },
+  "active_launch_policy_changed": false,
+  "research_execution_authorized": false,
+  "old_confirmation18_frozen": true,
+  "D3_SOP_unchanged": true,
+  "priority": "Rint② first",
+  "whole_gate": "HOLD"
+}

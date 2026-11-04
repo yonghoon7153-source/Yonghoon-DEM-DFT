@@ -1,0 +1,126 @@
+{
+  "scope": "first8 local synthetic preparation/observation contracts only",
+  "versions": {
+    "3.11.17": {
+      "prepare": {
+        "test_methods": 14,
+        "result": "OK",
+        "rc": 0,
+        "log": "prepare_final_py311.log"
+      },
+      "observe": {
+        "test_methods": 20,
+        "result": "OK",
+        "rc": 0,
+        "log": "observe_thermo_py311.log"
+      }
+    },
+    "3.8.20": {
+      "prepare": {
+        "test_methods": 14,
+        "result": "OK",
+        "rc": 0,
+        "log": "prepare_final_py38.log"
+      },
+      "observe": {
+        "test_methods": 20,
+        "result": "OK",
+        "rc": 0,
+        "log": "observe_thermo_py38.log"
+      }
+    }
+  },
+  "source_sha256": {
+    "scripts/mixer_precal_prepare.py": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6",
+    "scripts/test_mixer_precal_prepare.py": "01cf375954201bf1a916b40f13359b564ff0ba7ed7758671e52fb218fd5e291c",
+    "scripts/mixer_precal_observe.py": "56dd81f00073a3f065831573275b4af94369cfb4108e7ee576993420484099af",
+    "scripts/test_mixer_precal_observe.py": "ffec066c43af8f7762aba9878e790371e0da2ce30dbf824aee9853c112caa354",
+    "scripts/make_mixer_deck.py": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "scripts/mixer_deck_readback.py": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f",
+    "scripts/mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "scripts/make_mixer_resume.py": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e",
+    "scripts/mixer_contact_reader.py": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de",
+    "scripts/measure_mixing_index.py": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a",
+    "scripts/measure_bed_aspect.py": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880"
+  },
+  "static_cases": {
+    "passed": 8,
+    "compared": 8,
+    "scope": "fixed first8 generated text decks and metadata"
+  },
+  "static_pairs": {
+    "passed": 3,
+    "compared": 3,
+    "scope": "U to C D2 independent static difference contract"
+  },
+  "unmocked_api_boundary": {
+    "valid_binding_to_missing_t0": 8,
+    "forged_hash_refused": 8,
+    "cases": 8,
+    "mock_used": false,
+    "all_read_inputs_unchanged": true,
+    "scope": "negative entry boundary only, no actual particle frame or positive full-size pipeline"
+  },
+  "test_first": {
+    "prepare_before.log": "missing module import failure; zero test methods executed",
+    "observe_before.log": "missing module import failure; zero test methods executed",
+    "observe_review_before.log": "17 methods; two assertion failures: reopen ABA and ERROR log returned metrics",
+    "observe_thermo_before.log": "20 methods; five failing subcases of thermo qualification test"
+  },
+  "internal_review": {
+    "probe": "observe_independent_probe.json",
+    "limited_recheck": "observe_independent_recheck.json",
+    "recheck_source_sha256": "b6467489f4f299932fc237aae264d4f8f6d5db6434c01fb2f698188825f4af2c",
+    "scope": "Two previously found ABA/ERROR probes only; explicitly mocked prepare binding.",
+    "not_final_source_whole_review": true,
+    "later_change": "Thermo header/cumulative endpoint and parser dependency hashes; final direct suites cover these.",
+    "external_review": "PENDING"
+  },
+  "limitations": [
+    "Counts are separate scopes and not summed.",
+    "Disk observation unit fixtures explicitly mock preparation binding; one rotating wiring test also mocks cell_stats.",
+    "No unmocked positive 100000-particle end-to-end pipeline or real LIGGGHTS log compatibility validation.",
+    "Prepare compares current generator output plus D2 static readback, not independent physics.",
+    "Declared mesh-scale geometry is not an inspection of STL bytes; NP20 is a proposal.",
+    "make_mixer_resume is included only because its logical_commands parser is imported; no resume is performed.",
+    "Existing generator/readback ResourceWarnings are preserved; existing source unchanged.",
+    "Earlier 15/19-method passes and initial12-method prepare pass are historical, not substituted for final runs.",
+    "Unit/synthetic pass does not certify exit code, rank, binary identity, statistical or physical validity."
+  ],
+  "common_gate": {
+    "new_suites_wired_into_check_all_and_CI": true,
+    "full_check_all_run_for_this_unit": false,
+    "status": "HOLD"
+  },
+  "research_results": 0,
+  "research_execution": false,
+  "ibb_or_wsl_access": false,
+  "active_registration_changed": false,
+  "old18_and_SOP_changed": false,
+  "shared_ledgers_changed": false,
+  "self_closure": false,
+  "raw_evidence_sha256": {
+    "prepare_before.log": "0cdae81a470ef0f657993eb5a34811079cdbaecf4b81892b9b57219533032788",
+    "prepare_after_initial_py311.log": "3134915d5a8238059f7d6e4956896f66da094ee9d26b764879f1b367c56c0916",
+    "prepare_final_py311.log": "461ea226217ae6debbacf6cc30ef79ef014d99ed3d92da38ba7ac2bc62a38b3a",
+    "prepare_final_py38.log": "b074258db8e06a6faf5e3245a905d10a89c239a211bcf8bc70478d0e788669dc",
+    "prepare_static_report.json": "769a49c782c4085c83c350a7c787f8e639cea159c59dfb8effda6e2e7b9efd5e",
+    "prepare_static_report.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prepare_summary.json": "0a65654a6ea8c50f62f1ff88e7969f3a64dc775af0959ffaaa655997ec579165",
+    "observe_before.log": "3479507216d89d8f2972fa1c2360b99d05d3a7e82ad967d69afa17a15af1f02d",
+    "observe_py311.log": "da1cf3aad419ee1df5bbac594ebbb142c5eb424683f05f031f3f651d5d1030d3",
+    "observe_py38.log": "82df4907d6ee9d742662f6db119292368998513a1632a1d38e5fa34faf6f9f36",
+    "observe_independent_probe.json": "fb40c3913c93f9fefb9f6951427abcf4842a39db8880a9e44b2407e99dcef184",
+    "observe_review_before.log": "5c71f84db1289312dd2df7c226d013a7f0c46946c1e03bb02d2ae0d1c2715c35",
+    "observe_review_py311.log": "c104da0be2f1638f7b01e8650ed429e4b1781931f12fce3cea0972cae949eef1",
+    "observe_review_py38.log": "a76f727dd9d4c3635e8da41910006cd7090f1039fc19c96ab3dd8618852a411c",
+    "observe_independent_recheck.json": "a6c981149cec27f34c4668e2c59ce097fb9f7ce16cc75dfba21c29c199c7193d",
+    "observe_thermo_before.log": "41a2c65e45d1e5ed81bf85ed35ab259d1c6412ec373bce2c0d2867c78b1ac5bc",
+    "observe_thermo_py311.log": "37eeee52e162b220cd4516f2aaf60fc8c5938f524d9dba8393ba8af2182e40e5",
+    "observe_thermo_py38.log": "56b77939908a7dbb2021d8f6b0ea048c0061a7932e5518d66599f7b46a710bfc",
+    "observe_final_sha256.txt": "d3d34b533cfc3e3bc5b912712ab40957708dc8d11be25bdd8b9bcc2c49b01bf7",
+    "probe_unmocked_binding.py": "6c34564f8a95323097928876b10aa7f1298fb03c68ee6e047de36bb47f8da8c1",
+    "unmocked_binding.json": "76637202f253405908ee7b9c2d09cd62ccab82d7231a3e013115bbd7f129ce43",
+    "unmocked_binding.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

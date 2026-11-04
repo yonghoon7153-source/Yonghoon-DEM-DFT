@@ -1,0 +1,42 @@
+{
+  "scope": "independent bounded recheck of the previous ERROR-log and restored-path ABA findings only; existing small synthetic fixture, preparation binding mocked; no research data",
+  "python": "3.11.17",
+  "source_sha256": {
+    "scripts/mixer_precal_observe.py": "b6467489f4f299932fc237aae264d4f8f6d5db6434c01fb2f698188825f4af2c",
+    "scripts/test_mixer_precal_observe.py": "9d2c068d50be610fe9c69a45d50d1043c9baa16f41405c97d30b8344bbeb38e9"
+  },
+  "author_full_test_runs_not_repeated": true,
+  "error_rejection": {
+    "valid_control_status": "OK",
+    "status": "TECH",
+    "contact_is_none": true,
+    "mixing_is_none": true,
+    "metric_calls": 0,
+    "reasons": [
+      "error/resume log is not fresh completion evidence"
+    ]
+  },
+  "frozen_bytes_aba_preservation": {
+    "status": "OK",
+    "calls": [
+      {
+        "raw_matches_original": true,
+        "disk_differs_while_parser_runs": true
+      }
+    ],
+    "restored_original_bytes": true,
+    "provenance_hash_matches_original": true,
+    "original_pairs": {
+      "SE-SE": 0,
+      "AM_P-SE": 0,
+      "AM_S-SE": 0
+    },
+    "returned_pairs": {
+      "SE-SE": 0,
+      "AM_P-SE": 0,
+      "AM_S-SE": 0
+    },
+    "reasons": []
+  },
+  "bounded_recheck_passed": true
+}
