@@ -11107,7 +11107,9 @@ def t_PD12u():
             sp.write_text(txt, encoding='utf-8')
         r = {'status': 'rejected', 'side': 'pre', 'stop': {'code': code, 'run': None, 'reason': None}, 'folder': folder or sp.name,
              'folder_sha256': sha or (tree_digest(real) if link else tree_digest(sp))}
-        return {'entries': st['entries'], 'results': dict(st['results'], **{1: r})}, {1: [p, sp]}
+        res_ = dict(st['results'])
+        res_[1] = r
+        return {'entries': st['entries'], 'results': res_}, {1: [p, sp]}
     got = {'same': f(st, {1: mk('same', 1)}), 'target': f(st, {1: mk('target', 1, target='ladder:P0:FIBRE')}),
            'machine': f(st, {1: mk('machine', 1, machine='gabia')}), 'resume_of': f(st, {2: mk('resume', 2, resume_of=None)}),
            'no_attempt_json': f(st, {2: mk('noaj', 2, valid=False)}), 'extra_key': f(st, {1: mk('extra', 1, extra={'note': 'x'})}),
