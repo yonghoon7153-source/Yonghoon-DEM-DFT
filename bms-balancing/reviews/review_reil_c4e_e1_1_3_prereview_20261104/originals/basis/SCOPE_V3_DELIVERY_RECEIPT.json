@@ -1,0 +1,38 @@
+{
+  "kind": "REIL_SCOPE_V3_REVIEW_DELIVERY_RECEIPT",
+  "recipient": null,
+  "archive": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_scope_v3_review_20261104\\REIL_C4E_E1_1_3_SCOPE_V3_REVIEW_20261104.zip",
+    "bytes": 162540,
+    "sha256": "3f9d6f5c52b0c351bfe6561dc3e809cffd7f15bbce896a9d06bdadce7d390db8"
+  },
+  "manifest": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_scope_v3_review_20261104\\PACKAGE_MANIFEST.json",
+    "bytes": 4423,
+    "sha256": "58df49b0c8d49aff6b0a15bf49a7c5f621c872b6f1ece1124d76035c3a86d99f"
+  },
+  "payload_count": 25,
+  "entries": 26,
+  "verification": "Exact set, safe unique relative paths, decompressed size/SHA256, link metadata and independently recomputed CRC32 matched.",
+  "original_attachment_preserved": true,
+  "fixed_source_copies_matched": 5,
+  "decision": "P1_DOCUMENT_DIRECTION_ACCEPTED_P2_OBSERVER_FIX_REQUIRED",
+  "closures": {
+    "E113_N1": "CLOSED_RETAINED",
+    "P2_01": "CLOSED",
+    "N2_F1": "DOCUMENT_CORRECTION_CLOSED",
+    "N2_F2": "DOCUMENT_CORRECTION_CLOSED",
+    "N2_F3": "DOCUMENT_CORRECTION_CLOSED",
+    "E113_N2": "EXACT_APPROVAL_DRAFT_REQUIREMENTS_REMAIN",
+    "E113_N3": "P1_ACCEPTABLE_P2_OBSERVER_FIX_REQUIRED"
+  },
+  "p1_document_direction_acceptable": true,
+  "p2_immediate_probe_ready": false,
+  "user_choices_recorded": false,
+  "received_program_execution": 0,
+  "probe_execution": 0,
+  "actual_E1_execution_authorized": false,
+  "numeric_review_budget_seconds": null,
+  "whole_work_elapsed_claim": null,
+  "boundary": "After review ZIP readback and original attachment rehash; before receipt write/readback and tool return."
+}

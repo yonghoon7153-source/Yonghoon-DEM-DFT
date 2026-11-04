@@ -1,0 +1,357 @@
+1: """REIL C4-E · E1-1–3 외곽 도구 초안 (2026-11-04 · 범위안 v3 §3 A · 사용자 선택 §105) — 고정 뒤 `<E>/00_outer.py` 로 복사해 쓴다.
+2: 
+3: 세 launcher 단계 (identity · fetch · run) 의 분리 실행 wrapper · 읽기 전용 감시 · 잔류 관측 · R1 정리 · F3 고정 사본. 모드 다섯:
+4: 
+5:   start   <step> <E> <§NN>  `setsid nohup` 으로만 띄운다 (요청서 §4). 시작 기록을 배타 게시 → launcher 를 자식으로 띄움 (stdout · stderr 는 외곽 파일 ·
+6:                             stdin 은 /dev/null) → launcher 반환을 임시 이름에 쓰고 닫은 뒤 최종 이름으로 배타 게시 (os.link). launcher 를 죽이지 않는다 —
+7:                             기한은 감시 · 잔류 처리의 몫이다. 반환 0 = 게시 · 3 = 외곽 오류 기록 · 4 = 게시 실패.
+8:   wait    <step> <E>        읽기 전용 · 파일 0. 시작 기록 (감시 시작 뒤 60 s 안) → 반환 게시 (형식 ^[0-9]+\n$) · 외곽 오류 · 시작 기록의 절대 기한 중 먼저
+9:                             오는 것. 다시 걸어도 같은 절대 기한을 쓴다 (새로 세지 않는다). 게시를 보면 wrapper 가 끝날 때까지 (없음 또는 Z) 최대
+10:                             10 s 를 읽기만 하며 기다리고 그 상태를 적는다. stdout 한 줄 JSON. 반환 0 = 게시 · 10 = 기한 · 11 = 형식 · 12 = 외곽 오류 ·
+11:                             13 = 시작 기록 없음 · 14 = 시작 기록을 못 읽음.
+12:   observe <step> <E> <1|2>  /proc 의 잔류 관측 (읽기) → `<name>.leftover_<n>.json` 배타 생성. 표지 = 시작 기록의 세션 id · cmdline 의
+13:                             `pycache_prefix=<WORK>/pycache/<name>` · cmdline 의 `<E>` 경로. 자기와 조상 (셸 도구) 은 뺀다. 반환 0 = 살아 있는 것 0 · 읽기
+14:                             오류 0 · 1 = 그 밖.
+15:   kill    <step> <E>        R1. `leftover_1` 의 살아 있는 (Z 아닌) 그룹마다, 관측한 구성원 하나의 시작 시각 · 그룹이 그대로일 때만 SIGKILL 한 번 →
+16:                             `<name>.kill.json` 배타 생성. pgid ≤ 1 · 자기 · 조상의 그룹은 건드리지 않는다. 반환 0.
+17:   freeze  <step> <E>        F3. 작성 주체의 종료를 확인하지 못했을 때 그 단계의 가변 파일 (launcher 기록 여섯 · 외곽 기록 · identity 면 `03_identity.json` ·
+18:                             run 이면 `<E>/run/**`) 을 읽은 그대로 `frozen_<name>/` 에 사본 + `frozen_<name>.json` (파일마다 bytes · sha256 · 읽은 시각).
+19:                             원본은 그대로 두고, 여러 파일의 원자적 · 동시 시점이라고 주장하지 않는다. 반환 0.
+20: 
+21: 공통: 증거 폴더 = BMS/evidence/reil_c4e1_YYYYMMDD (있는 폴더 · 링크 아님) 이고 이 파일이 그 폴더의 `00_outer.py` 일 때만 움직인다. 기록은 모두 배타
+22: 생성이다 (덮어쓰지 않는다). 의도된 거부 (인자 · 폴더 · 위치 · 이미 있는 기록) 는 아무것도 쓰지 않고 반환 2. 네트워크 · Git 0. launcher 의 경로 ·
+23: sha256 · 인자는 아래 상수로 고정한다.
+24: """
+25: import hashlib
+26: import json
+27: import os
+28: import re
+29: import signal
+30: import subprocess
+31: import sys
+32: import time
+33: from datetime import datetime, timezone
+34: from pathlib import Path
+35: 
+36: REPO = Path("/home/user/Yonghoon-DEM-DFT")
+37: BMS = REPO / "bms-balancing"
+38: SP = Path("/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad")
+39: WORK = SP / "c4e1"
+40: PROC = Path("/proc")
+41: PY = "/usr/bin/python3.11"
+42: LAUNCHER = BMS / "scripts" / "reil_c4e1_launch.py"
+43: LAUNCHER_SHA256 = "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+44: STEPS = {"identity": "03_identity", "fetch": "04_fetch", "run": "05_run"}
+45: ALLOW_S = {"identity": 900.0, "fetch": 1800.0, "run": 12600.0}
+46: START_WAIT_S = 60.0
+47: POLL_S = 5.0
+48: WRAPPER_EXIT_S = 10.0
+49: EVIDENCE_NAME = re.compile(r"^reil_c4e1_20[0-9]{6}$")
+50: SECTION = re.compile(r"^§[0-9]{2,3}$")
+51: RC_FORMAT = re.compile(rb"[0-9]+\n")
+52: LAUNCHER_FILES = ("precheck.json", "meta.json", "stdout.log", "stderr.log", "porcelain_start.txt", "porcelain_end.txt")
+53: PUBLISHED = ("outer_start.json", "outer_rc.txt", "outer_error.json")
+54: OUTER_FILES = PUBLISHED + tuple(f"{k}.tmp" for k in PUBLISHED) + ("outer_stdout.txt", "outer_stderr.txt", "wrapper_output.txt")
+55: MODES = ("start", "wait", "observe", "kill", "freeze")
+56: 
+57: 
+58: class Refusal(Exception):
+59:     """의도된 거부 — 아무것도 쓰지 않고 반환 2."""
+60: 
+61: 
+62: def utc() -> str:
+63:     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+64: 
+65: 
+66: def sha256(b: bytes) -> str:
+67:     return hashlib.sha256(b).hexdigest()
+68: 
+69: 
+70: def dump(obj) -> bytes:
+71:     return (json.dumps(obj, ensure_ascii=False, indent=1, sort_keys=True) + "\n").encode("utf-8")
+72: 
+73: 
+74: def write_new(path, data: bytes) -> None:
+75:     """배타 생성 (있으면 FileExistsError)."""
+76:     with open(path, "xb") as f:
+77:         f.write(data)
+78: 
+79: 
+80: def publish(path: Path, data: bytes) -> None:
+81:     """임시 이름에 쓰고 fsync · 닫은 뒤 최종 이름으로 배타 링크 (이미 있으면 FileExistsError) → 임시 이름을 지운다. 최종 이름이 보이는 순간 내용이
+82:     완전하다."""
+83:     tmp = path.with_name(path.name + ".tmp")
+84:     with open(tmp, "xb") as f:
+85:         f.write(data)
+86:         f.flush()
+87:         os.fsync(f.fileno())
+88:     os.link(tmp, path)
+89:     os.unlink(tmp)
+90: 
+91: 
+92: def names(ev: Path, step: str) -> dict:
+93:     name = STEPS[step]
+94:     return {k: ev / f"{name}.{k}" for k in LAUNCHER_FILES + OUTER_FILES}
+95: 
+96: 
+97: def stat_fields(pid: int) -> dict:
+98:     """/proc/<pid>/stat → 상태 · ppid · pgid · 세션 · 시작 시각 (괄호 안 comm 의 공백 · 괄호와 무관하게 마지막 ')' 뒤를 읽는다)."""
+99:     raw = (PROC / str(pid) / "stat").read_bytes()
+100:     rest = raw[raw.rindex(b")") + 2:].split()
+101:     return {"state": rest[0].decode("ascii", "replace"), "ppid": int(rest[1]), "pgid": int(rest[2]), "sid": int(rest[3]),
+102:             "starttime": int(rest[19])}
+103: 
+104: 
+105: def ancestors() -> set:
+106:     """자기와 조상 pid (셸 도구의 셸 포함) — 관측 · 정리에서 뺀다."""
+107:     seen, pid = set(), os.getpid()
+108:     while pid > 1 and pid not in seen:
+109:         seen.add(pid)
+110:         try:
+111:             pid = stat_fields(pid)["ppid"]
+112:         except (OSError, ValueError, IndexError):
+113:             break
+114:     return seen
+115: 
+116: 
+117: def start_record(p: dict) -> dict:
+118:     return json.loads(p["outer_start.json"].read_text(encoding="utf-8"))
+119: 
+120: 
+121: # ---------------------------------------------------------------- start
+122: def start(step: str, ev: Path, section: str) -> int:
+123:     p = names(ev, step)
+124:     taken = [k for k in OUTER_FILES if k != "wrapper_output.txt" and os.path.lexists(p[k])]
+125:     if taken:
+126:         raise Refusal(f"외곽 기록이 이미 있다 — 덮어쓰지 않는다: {taken}")
+127:     me = Path(__file__).resolve()
+128:     lb = LAUNCHER.read_bytes()
+129:     argv = [PY, "-I", str(LAUNCHER), step, "--evidence", str(ev), "--approval-section", section]
+130:     t0 = time.time()
+131:     rec = {"kind": "REIL_E113_OUTER_START", "step": step, "name": STEPS[step], "utc": utc(), "epoch": t0,
+132:            "deadline_epoch": t0 + ALLOW_S[step], "allow_s": ALLOW_S[step], "pid": os.getpid(), "ppid": os.getppid(),
+133:            "sid": os.getsid(0), "pgid": os.getpgid(0), "argv": argv, "cwd": str(BMS),
+134:            "outer": {"path": str(me), "sha256": sha256(me.read_bytes())},
+135:            "launcher": {"path": str(LAUNCHER), "sha256": sha256(lb), "expected": LAUNCHER_SHA256}, "python": sys.version}
+136:     publish(p["outer_start.json"], dump(rec))
+137:     if rec["launcher"]["sha256"] != LAUNCHER_SHA256:
+138:         publish(p["outer_error.json"], dump({"phase": "precheck", "utc": utc(),
+139:                                              "message": f"launcher sha256 {rec['launcher']['sha256']} ≠ 고정 {LAUNCHER_SHA256}"}))
+140:         return 3
+141:     try:
+142:         with open(p["outer_stdout.txt"], "xb") as fo, open(p["outer_stderr.txt"], "xb") as fe:
+143:             child = subprocess.Popen(argv, cwd=str(BMS), stdin=subprocess.DEVNULL, stdout=fo, stderr=fe)
+144:             rc = child.wait()
+145:     except Exception as e:  # noqa: BLE001 — 띄우기 · 기다리기의 실패는 외곽 오류로 남기고 반환을 게시하지 않는다
+146:         publish(p["outer_error.json"], dump({"phase": "launch", "utc": utc(), "type": e.__class__.__name__, "message": str(e)[:500]}))
+147:         return 3
+148:     code = rc if rc >= 0 else 128 - rc  # 시그널로 끝나면 셸 관례 128 + 번호
+149:     try:
+150:         publish(p["outer_rc.txt"], f"{code}\n".encode("ascii"))
+151:     except Exception as e:  # noqa: BLE001
+152:         publish(p["outer_error.json"], dump({"phase": "publish", "utc": utc(), "rc": code, "type": e.__class__.__name__,
+153:                                              "message": str(e)[:500]}))
+154:         return 4
+155:     return 0
+156: 
+157: 
+158: # ---------------------------------------------------------------- wait (읽기 전용)
+159: def wait(step: str, ev: Path) -> int:
+160:     p = names(ev, step)
+161:     t_begin = time.time()
+162: 
+163:     def out(state: str, code: int, **kw) -> int:
+164:         print(json.dumps({"step": step, "state": state, "utc": utc(), "waited_s": round(time.time() - t_begin, 1), **kw},
+165:                          ensure_ascii=False))
+166:         return code
+167: 
+168:     while not os.path.lexists(p["outer_start.json"]):
+169:         if os.path.lexists(p["outer_error.json"]):
+170:             return out("outer_error", 12)
+171:         if time.time() - t_begin >= START_WAIT_S:
+172:             return out("start_missing", 13)
+173:         time.sleep(1.0)
+174:     try:
+175:         rec = start_record(p)
+176:         deadline, wpid = float(rec["deadline_epoch"]), int(rec["pid"])
+177:     except (OSError, ValueError, KeyError, TypeError) as e:
+178:         return out("start_unreadable", 14, error=f"{e.__class__.__name__}: {e}"[:300])
+179:     while True:
+180:         if os.path.lexists(p["outer_rc.txt"]):
+181:             b = p["outer_rc.txt"].read_bytes()
+182:             if RC_FORMAT.fullmatch(b):
+183:                 # 게시 직후의 wrapper 가 잔류 관측에 잡히지 않도록, wrapper 가 끝날 때까지 (없음 또는 Z) 최대 WRAPPER_EXIT_S 를 읽기만 하며 기다린다
+184:                 t_pub = time.time()
+185:                 while time.time() - t_pub < WRAPPER_EXIT_S:
+186:                     try:
+187:                         if stat_fields(wpid)["state"] == "Z":
+188:                             break
+189:                     except (OSError, ValueError, IndexError):
+190:                         break
+191:                     time.sleep(0.5)
+192:                 try:
+193:                     wstate = stat_fields(wpid)["state"]
+194:                 except (OSError, ValueError, IndexError):
+195:                     wstate = "absent"
+196:                 return out("published", 0, rc=int(b), deadline_epoch=deadline, wrapper_state=wstate)
+197:             return out("malformed", 11, raw_hex=b[:20].hex(), deadline_epoch=deadline)
+198:         if os.path.lexists(p["outer_error.json"]):
+199:             return out("outer_error", 12, deadline_epoch=deadline)
+200:         if time.time() >= deadline:
+201:             return out("deadline", 10, deadline_epoch=deadline)
+202:         time.sleep(POLL_S)
+203: 
+204: 
+205: # ---------------------------------------------------------------- observe (읽기 · 기록 하나)
+206: def observe(step: str, ev: Path, rnd: str) -> int:
+207:     p, name = names(ev, step), STEPS[step]
+208:     outp = ev / f"{name}.leftover_{rnd}.json"
+209:     if os.path.lexists(outp):
+210:         raise Refusal(f"이미 있다: {outp}")
+211:     sid, sid_error = None, None
+212:     try:
+213:         sid = int(start_record(p)["sid"])
+214:     except (OSError, ValueError, KeyError, TypeError) as e:
+215:         sid_error = f"{e.__class__.__name__}: {e}"[:300]
+216:     markers = [f"pycache_prefix={WORK / 'pycache' / name}".encode(), str(ev).encode()]
+217:     skip = ancestors()
+218:     rows, errors = [], []
+219:     for d in sorted((x for x in PROC.iterdir() if x.name.isdigit()), key=lambda x: int(x.name)):
+220:         pid = int(d.name)
+221:         if pid in skip:
+222:             continue
+223:         try:
+224:             st = stat_fields(pid)
+225:             argv = (d / "cmdline").read_bytes().split(b"\0")
+226:         except (FileNotFoundError, ProcessLookupError):
+227:             continue  # 관측 사이에 끝난 프로세스
+228:         except (OSError, ValueError, IndexError) as e:
+229:             errors.append({"pid": pid, "type": e.__class__.__name__, "message": str(e)[:200]})
+230:             continue
+231:         why = (["sid"] if sid is not None and st["sid"] == sid else []) + \
+232:               [f"marker{i}" for i, m in enumerate(markers) if any(m in a for a in argv)]
+233:         if why:
+234:             rows.append({"pid": pid, **st, "matched": why, "argv": [a.decode("utf-8", "replace")[:300] for a in argv if a][:40]})
+235:     alive = [r for r in rows if r["state"] != "Z"]
+236:     write_new(outp, dump({"kind": "REIL_E113_LEFTOVER", "step": step, "round": rnd, "utc": utc(), "sid": sid, "sid_error": sid_error,
+237:                           "markers": [m.decode() for m in markers], "skipped_self_and_ancestors": sorted(skip), "rows": rows,
+238:                           "alive_count": len(alive), "errors": errors}))
+239:     print(json.dumps({"step": step, "round": rnd, "rows": len(rows), "alive": len(alive), "errors": len(errors)}, ensure_ascii=False))
+240:     return 0 if not alive and not errors else 1
+241: 
+242: 
+243: # ---------------------------------------------------------------- kill (R1)
+244: def kill(step: str, ev: Path) -> int:
+245:     name = STEPS[step]
+246:     src, outp = ev / f"{name}.leftover_1.json", ev / f"{name}.kill.json"
+247:     if os.path.lexists(outp):
+248:         raise Refusal(f"이미 있다: {outp}")
+249:     raw = src.read_bytes()
+250:     obs = json.loads(raw)
+251:     skip = ancestors()
+252:     own = {os.getpgid(0)}
+253:     for a in skip:
+254:         try:
+255:             own.add(stat_fields(a)["pgid"])
+256:         except (OSError, ValueError, IndexError):
+257:             pass
+258:     groups = {}
+259:     for r in obs.get("rows") or []:
+260:         if r.get("state") != "Z":
+261:             groups.setdefault(int(r["pgid"]), []).append(r)
+262:     results = []
+263:     for pgid, members in sorted(groups.items()):
+264:         if pgid <= 1 or pgid in own:
+265:             results.append({"pgid": pgid, "action": "skip", "why": "1 이하 · 자기 · 조상의 그룹"})
+266:             continue
+267:         same = None
+268:         for m in members:
+269:             try:
+270:                 st = stat_fields(int(m["pid"]))
+271:             except (OSError, ValueError, IndexError):
+272:                 continue
+273:             if st["starttime"] == m.get("starttime") and st["pgid"] == pgid:
+274:                 same = int(m["pid"])
+275:                 break
+276:         if same is None:
+277:             results.append({"pgid": pgid, "action": "skip", "why": "관측한 구성원이 없거나 시작 시각 · 그룹이 바뀌었다"})
+278:             continue
+279:         try:
+280:             os.killpg(pgid, signal.SIGKILL)
+281:             results.append({"pgid": pgid, "action": "SIGKILL", "ok": True, "verified_pid": same})
+282:         except OSError as e:
+283:             results.append({"pgid": pgid, "action": "SIGKILL", "ok": False, "verified_pid": same, "type": e.__class__.__name__,
+284:                             "message": str(e)[:200]})
+285:     write_new(outp, dump({"kind": "REIL_E113_KILL", "step": step, "utc": utc(), "source": {"path": str(src), "sha256": sha256(raw)},
+286:                           "results": results}))
+287:     print(json.dumps({"step": step, "groups": len(groups), "results": [r["action"] for r in results]}, ensure_ascii=False))
+288:     return 0
+289: 
+290: 
+291: # ---------------------------------------------------------------- freeze (F3)
+292: def freeze(step: str, ev: Path) -> int:
+293:     name = STEPS[step]
+294:     dst, man = ev / f"frozen_{name}", ev / f"frozen_{name}.json"
+295:     if os.path.lexists(dst) or os.path.lexists(man):
+296:         raise Refusal(f"이미 있다: {dst} 또는 {man}")
+297:     p = names(ev, step)
+298:     files = [p[k] for k in LAUNCHER_FILES + OUTER_FILES]
+299:     if step == "identity":
+300:         files.append(ev / "03_identity.json")
+301:     if step == "run" and (ev / "run").is_dir():
+302:         files += sorted(x for x in (ev / "run").rglob("*") if x.is_file())
+303:     dst.mkdir()
+304:     rows = []
+305:     for f in files:
+306:         rel = f.relative_to(ev)
+307:         if f.is_symlink() or not f.is_file():
+308:             rows.append({"path": str(rel), "state": "absent_or_not_regular"})
+309:             continue
+310:         t = utc()
+311:         b = f.read_bytes()
+312:         target = dst / rel
+313:         target.parent.mkdir(parents=True, exist_ok=True)
+314:         write_new(target, b)
+315:         rows.append({"path": str(rel), "bytes": len(b), "sha256": sha256(b), "read_utc": t})
+316:     write_new(man, dump({"kind": "REIL_E113_FROZEN", "step": step, "utc": utc(), "rows": rows,
+317:                          "note": "읽은 범위의 고정 관측 사본 — 원본은 그대로 · 여러 파일의 원자적 · 동시 시점이 아니다"}))
+318:     print(json.dumps({"step": step, "copied": sum(1 for r in rows if "sha256" in r), "absent": sum(1 for r in rows if "state" in r)},
+319:                      ensure_ascii=False))
+320:     return 0
+321: 
+322: 
+323: # ---------------------------------------------------------------- main
+324: def evidence(arg: str) -> Path:
+325:     ev = Path(arg)
+326:     if ev.parent != BMS / "evidence" or not EVIDENCE_NAME.match(ev.name) or ev.is_symlink() or not ev.is_dir():
+327:         raise Refusal(f"증거 폴더 규칙 밖: {arg}")
+328:     me = Path(__file__)
+329:     if me.is_symlink() or me.resolve() != (ev / "00_outer.py").resolve():
+330:         raise Refusal(f"이 파일이 그 증거 폴더의 00_outer.py 가 아니다: {me}")
+331:     return ev
+332: 
+333: 
+334: def main(argv=None) -> int:
+335:     a = list(sys.argv[1:] if argv is None else argv)
+336:     try:
+337:         if len(a) < 3 or a[0] not in MODES or a[1] not in STEPS:
+338:             raise Refusal(f"인자 — <{'|'.join(MODES)}> <{'|'.join(STEPS)}> <E> …: {a}")
+339:         mode, step, ev = a[0], a[1], evidence(a[2])
+340:         if mode == "start":
+341:             if len(a) != 4 or not SECTION.match(a[3]):
+342:                 raise Refusal(f"start 는 승인 절 §NN 하나를 더 받는다: {a[3:]}")
+343:             return start(step, ev, a[3])
+344:         if mode == "observe":
+345:             if len(a) != 4 or a[3] not in ("1", "2"):
+346:                 raise Refusal(f"observe 는 차례 1 또는 2 를 더 받는다: {a[3:]}")
+347:             return observe(step, ev, a[3])
+348:         if len(a) != 3:
+349:             raise Refusal(f"{mode} 는 인자 셋이다: {a}")
+350:         return {"wait": wait, "kill": kill, "freeze": freeze}[mode](step, ev)
+351:     except Refusal as e:
+352:         sys.stderr.write(f"거부: {e}\n")
+353:         return 2
+354: 
+355: 
+356: if __name__ == "__main__":
+357:     sys.exit(main())

@@ -1,0 +1,205 @@
+1: """REIL C4-E · E1-1–3 판정기 초안 (2026-11-04 · 범위안 v3 §5 A · 사용자 선택 §105) — 고정 뒤 `<E>/00_judge.py` 로 복사해 쓴다.
+2: 
+3: python -I <E>/00_judge.py <E> <identity|fetch|run> <§NN>
+4: 
+5: 읽기 (그 단계만): launcher 기록 `<name>.meta.json` · 외곽 기록 (`outer_start.json` · `outer_stdout.txt` · `outer_stderr.txt` · `outer_rc.txt` ·
+6: `wrapper_output.txt` · 오류 / 임시 이름의 부재) · 잔류 관측 `<name>.leftover_1.json` (`kill.json` · `leftover_2.json` · `frozen_<name>.json` 은 있는지만) ·
+7: identity 면 `03_identity.json` · run 이면 자식 `05_run.stdout.log` 의 마지막 JSON 과 `<E>/run/` 의 파일 이름. 쓰기 = `<name>.judge.json` 배타 생성 하나.
+8: 시험 · Git · 네트워크 · 하위 프로세스 · 신호 0. 환경 변수를 읽지 않는다 (`os` 를 import 하지 않는다).
+9: 
+10: 항목마다 id · ok · 관측값. verdict = 모든 항목이 참이면 MATCH, 아니면 STOP. 필요한 파일 · 필드가 없으면 그 항목은 거짓 ("미확인" — 정상으로 받지
+11: 않는다). run 은 실행 유효성 (launcher 단계 판정과 외곽 · 잔류 항목) 과 실험 결과 (자식의 `final.complete` · `final.E3a` · `final.c4a_gate`) 를 따로 적는다
+12: — launcher 단계 판정도 `final.complete` 를 쓰므로 둘은 독립이 아니다.
+13: 
+14: 반환 0 = MATCH · 1 = STOP · 2 = 의도된 거부 (폴더 이름 규칙 밖 · 판정기가 그 폴더 밖 · 단계 · 승인 절 형식 · 출력이 이미 있음 — 아무것도 쓰지 않음).
+15: 판정 중 예외는 거짓 항목 `judge.exception` 으로 남기고 기록은 쓴다.
+16: """
+17: import hashlib
+18: import json
+19: import re
+20: import sys
+21: from datetime import datetime, timezone
+22: from pathlib import Path
+23: 
+24: BMS = Path("/home/user/Yonghoon-DEM-DFT/bms-balancing")
+25: LAUNCHER = BMS / "scripts" / "reil_c4e1_launch.py"
+26: LAUNCHER_SHA256 = "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+27: REQUEST = "docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md"
+28: PY = "/usr/bin/python3.11"
+29: STEPS = {"identity": "03_identity", "fetch": "04_fetch", "run": "05_run"}
+30: ALLOW_S = {"identity": 900.0, "fetch": 1800.0, "run": 12600.0}
+31: EVIDENCE_NAME = re.compile(r"^reil_c4e1_20[0-9]{6}$")
+32: SECTION = re.compile(r"^§[0-9]{2,3}$")
+33: HEX40 = re.compile(r"[0-9a-f]{40}")
+34: DATA_FILES = {"LFP_Data.xlsx": {"bytes": 10_841_377, "sha256": "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1"},
+35:               "util_LFP.py": {"bytes": 33_754, "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"}}
+36: RUN_FILES = ("AGGREGATE.json", "END_RECORD.json", "HEADER.json", "IDENTITY.json", "OPERATION.json", "RESOURCES.json", "ROWS.json",
+37:              "RULE.json", "SOURCES.json")
+38: STAGE_TERMS = ("precheck_ok", "child_ok", "rc_0", "timeout_false", "postcheck_ok")
+39: ABSENT = ("outer_error.json", "outer_start.json.tmp", "outer_rc.txt.tmp", "outer_error.json.tmp", "kill.json", "leftover_2.json")
+40: 
+41: 
+42: class Refusal(Exception):
+43:     """의도된 거부 — 아무것도 쓰지 않고 반환 2."""
+44: 
+45: 
+46: def utc() -> str:
+47:     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+48: 
+49: 
+50: def sha256(b: bytes) -> str:
+51:     return hashlib.sha256(b).hexdigest()
+52: 
+53: 
+54: def last_json(text: str):
+55:     lines = [x for x in text.splitlines() if x.strip()]
+56:     try:
+57:         doc = json.loads(lines[-1]) if lines else None
+58:     except ValueError:
+59:         return None
+60:     return doc if isinstance(doc, dict) else None
+61: 
+62: 
+63: def judge(ev: Path, step: str, section: str) -> dict:
+64:     name = STEPS[step]
+65:     items, inputs = [], {}
+66: 
+67:     def item(iid, ok, observed=None):
+68:         items.append({"id": iid, "ok": bool(ok), "observed": observed})
+69: 
+70:     def read(rel):
+71:         p = ev / rel
+72:         if p.is_symlink() or not p.is_file():
+73:             inputs[rel] = None
+74:             return None
+75:         b = p.read_bytes()
+76:         inputs[rel] = {"sha256": sha256(b), "bytes": len(b)}
+77:         return b
+78: 
+79:     def jload(rel):
+80:         b = read(rel)
+81:         if b is None:
+82:             return None
+83:         try:
+84:             doc = json.loads(b)
+85:         except ValueError:
+86:             return None
+87:         return doc if isinstance(doc, dict) else None
+88: 
+89:     # 외곽 기록
+90:     start = jload(f"{name}.outer_start.json")
+91:     item("outer.start_present", start is not None)
+92:     s = start or {}
+93:     want_argv = [PY, "-I", str(LAUNCHER), step, "--evidence", str(ev), "--approval-section", section]
+94:     item("outer.start_kind_step", s.get("kind") == "REIL_E113_OUTER_START" and s.get("step") == step and s.get("name") == name,
+95:          [s.get("kind"), s.get("step"), s.get("name")])
+96:     item("outer.start_argv", s.get("argv") == want_argv, s.get("argv"))
+97:     item("outer.start_launcher", (s.get("launcher") or {}).get("sha256") == LAUNCHER_SHA256, (s.get("launcher") or {}).get("sha256"))
+98:     item("outer.start_session_leader", isinstance(s.get("pid"), int) and s.get("pid") == s.get("sid") == s.get("pgid"),
+99:          [s.get("pid"), s.get("sid"), s.get("pgid")])
+100:     item("outer.start_allow", s.get("allow_s") == ALLOW_S[step], s.get("allow_s"))
+101:     rc = read(f"{name}.outer_rc.txt")
+102:     item("outer.rc", rc == b"0\n", None if rc is None else rc[:20].hex())
+103:     for k in ABSENT:
+104:         q = ev / f"{name}.{k}"
+105:         item(f"outer.absent.{k}", not q.exists() and not q.is_symlink())
+106:     for k in ("outer_stderr.txt", "wrapper_output.txt"):
+107:         b = read(f"{name}.{k}")
+108:         item(f"outer.empty.{k}", b == b"", None if b is None else len(b))
+109:     so = read(f"{name}.outer_stdout.txt")
+110:     summary = last_json(so.decode("utf-8", "replace")) if so is not None else None
+111:     item("outer.stdout_summary", summary == {"step": step, "launched": True, "complete": True, "rc": 0, "timed_out": False, "errors": 0},
+112:          summary)
+113:     # 잔류 관측
+114:     left = jload(f"{name}.leftover_1.json")
+115:     item("leftover.1", left is not None and left.get("alive_count") == 0 and left.get("errors") == [] and left.get("sid") == s.get("sid"),
+116:          None if left is None else [left.get("alive_count"), len(left.get("errors") or []), left.get("sid")])
+117:     item("leftover.not_frozen", not (ev / f"frozen_{name}.json").exists() and not (ev / f"frozen_{name}").exists())
+118:     # launcher meta (F1 — v6 의 실제 필드)
+119:     m = jload(f"{name}.meta.json")
+120:     item("meta.present", m is not None)
+121:     m = m or {}
+122:     child = m.get("child") if isinstance(m.get("child"), dict) else {}
+123:     group = child.get("group") if isinstance(child.get("group"), dict) else {}
+124:     stage = m.get("stage") if isinstance(m.get("stage"), dict) else {}
+125:     post = m.get("postcheck") if isinstance(m.get("postcheck"), dict) else {}
+126:     records = m.get("records") if isinstance(m.get("records"), dict) else {}
+127:     item("meta.identity", m.get("step") == step and m.get("name") == name and m.get("request") == REQUEST
+128:          and m.get("approval_section") == section, [m.get("step"), m.get("name"), m.get("request"), m.get("approval_section")])
+129:     item("meta.launcher", (m.get("launcher") or {}).get("sha256") == LAUNCHER_SHA256
+130:          and (m.get("launcher") or {}).get("path") == str(LAUNCHER), m.get("launcher"))
+131:     item("meta.stage", stage.get("complete") is True and all((stage.get("terms") or {}).get(t) is True for t in STAGE_TERMS), stage)
+132:     item("meta.precheck_ok", m.get("precheck_ok") is True, m.get("precheck_ok"))
+133:     item("meta.postcheck", post.get("ok") is True and post.get("problems") == [], post.get("problems"))
+134:     item("meta.errors", m.get("errors") == [] and m.get("first_error") is None, m.get("errors"))
+135:     item("meta.child_started", child.get("started") is True and m.get("launched") is True, [child.get("started"), m.get("launched")])
+136:     item("meta.child_rc", child.get("rc") == 0 and child.get("timed_out") is False, [child.get("rc"), child.get("timed_out")])
+137:     item("meta.child_group_empty", group.get("status") == "empty", group.get("status"))
+138:     item("meta.child_deadline", child.get("deadline_hit") is False, child.get("deadline_hit"))
+139:     item("meta.child_errors", child.get("errors") == [], child.get("errors"))
+140:     heads = [(records.get(k) or {}).get("out") for k in ("head_start", "head_end")]
+141:     item("meta.head_unchanged", all(isinstance(h, str) and HEX40.fullmatch(h) for h in heads) and heads[0] == heads[1], heads)
+142:     cr = m.get("child_result") if isinstance(m.get("child_result"), dict) else {}
+143:     out = {"verdict": None, "step": step, "name": name}
+144:     if step == "identity":
+145:         item("identity.child_ok", cr.get("ok") is True, cr)
+146:         item("identity.helper_output", read("03_identity.json") is not None)
+147:     if step == "fetch":
+148:         data = post.get("data") if isinstance(post.get("data"), dict) else {}
+149:         item("fetch.data", all((data.get(k) or {}).get("ok") is True and (data.get(k) or {}).get("sha256") == v["sha256"]
+150:                                and (data.get(k) or {}).get("bytes") == v["bytes"] for k, v in DATA_FILES.items()),
+151:              {k: {kk: (data.get(k) or {}).get(kk) for kk in ("ok", "sha256", "bytes")} for k in DATA_FILES})
+152:         item("fetch.child_ok", cr.get("ok") is True, cr)
+153:     if step == "run":
+154:         cs = read(f"{name}.stdout.log")
+155:         doc = last_json(cs.decode("utf-8", "replace")) if cs is not None else None
+156:         fin = (doc or {}).get("final") if isinstance((doc or {}).get("final"), dict) else {}
+157:         result = {"ok": (doc or {}).get("ok"), "final.complete": fin.get("complete"), "final.E3a": fin.get("E3a"),
+158:                   "final.c4a_gate": fin.get("c4a_gate"), "final.record_state": fin.get("record_state")}
+159:         item("run.child_ok", cr.get("ok") is True and cr.get("final_complete") is True and cr.get("E3a") == "COMPLETE", cr)
+160:         item("run.experimental_result", doc is not None and doc.get("ok") is True and fin.get("complete") is True
+161:              and fin.get("E3a") == "COMPLETE" and fin.get("c4a_gate") is True, result)
+162:         rd = ev / "run"
+163:         got = sorted(str(x.relative_to(rd)) for x in rd.rglob("*") if x.is_file()) if rd.is_dir() and not rd.is_symlink() else None
+164:         item("run.output_files", got == sorted(RUN_FILES), got)
+165:         out["experimental_result"] = result
+166:     validity = [i for i in items if not i["id"].startswith("run.experimental")]
+167:     out["execution_validity"] = all(i["ok"] for i in validity)
+168:     out["items"], out["inputs"] = items, inputs
+169:     return out
+170: 
+171: 
+172: def main(argv=None) -> int:
+173:     a = list(sys.argv[1:] if argv is None else argv)
+174:     me = Path(__file__)
+175:     try:
+176:         if len(a) != 3 or a[1] not in STEPS or not SECTION.match(a[2]):
+177:             raise Refusal(f"인자 — <E> <{'|'.join(STEPS)}> <§NN>: {a}")
+178:         ev = Path(a[0])
+179:         if ev.parent != BMS / "evidence" or not EVIDENCE_NAME.match(ev.name) or ev.is_symlink() or not ev.is_dir():
+180:             raise Refusal(f"증거 폴더 규칙 밖: {ev}")
+181:         if me.is_symlink() or me.resolve() != (ev / "00_judge.py").resolve():
+182:             raise Refusal(f"이 파일이 그 증거 폴더의 00_judge.py 가 아니다: {me}")
+183:         outp = ev / f"{STEPS[a[1]]}.judge.json"
+184:         if outp.exists() or outp.is_symlink():
+185:             raise Refusal(f"이미 있다: {outp}")
+186:     except Refusal as e:
+187:         sys.stderr.write(f"거부: {e}\n")
+188:         return 2
+189:     try:
+190:         res = judge(ev, a[1], a[2])
+191:     except Exception as e:  # noqa: BLE001 — 판정 중 예외도 기록한다
+192:         res = {"step": a[1], "name": STEPS[a[1]], "items": [{"id": "judge.exception", "ok": False,
+193:                                                               "observed": f"{e.__class__.__name__}: {e}"[:500]}], "inputs": {}}
+194:     failed = [i["id"] for i in res["items"] if not i["ok"]]
+195:     res["verdict"] = "MATCH" if not failed else "STOP"
+196:     res.update(kind="REIL_E113_JUDGE", utc=utc(), section=a[2], failed=failed,
+197:                judge={"path": str(me.resolve()), "sha256": sha256(me.read_bytes()), "bytes": me.stat().st_size})
+198:     with open(outp, "x", encoding="utf-8") as f:
+199:         f.write(json.dumps(res, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
+200:     print(json.dumps({"written": str(outp), "verdict": res["verdict"], "checks": len(res["items"]), "failed": failed}, ensure_ascii=False))
+201:     return 0 if res["verdict"] == "MATCH" else 1
+202: 
+203: 
+204: if __name__ == "__main__":
+205:     sys.exit(main())

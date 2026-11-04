@@ -1,0 +1,410 @@
+1: """REIL C4 감시 · 기록 (C4 v2 §4-4 · 사전 검토 C4-N2 · C4-N3 보완 · 상태 문서 §39 C4-0a).
+2: 
+3: C5 의 `reil_c5_pilot.orchestrate` · `disk_sample` · `split_dirty` 는 **고치지 않는다** (실행된 증거). C4 실행기는 이 모듈을 쓴다. 고친 것 셋:
+4: 
+5: 1. **공백 검사** (C4-N2) — 표본이 *도착한* 시각으로, 성공 여부와 무관하게 마지막 유효 표본 (없으면 감시 시작) 과의 간격을 본 뒤에야 마지막
+6:    유효 시각을 갱신한다. 늦게 도착한 성공 표본도 공백을 덮지 못한다. None · 예외 · 첫 표본 지연을 따로 적는다. 예외는 기다리지 않는다.
+7: 2. **마감** (C4-N2) — 표본 수집 뒤 현재 시각으로 마감을 다시 본다. 작업자도 절대 마감 시각을 받아 **마감 뒤에는 새 작업을 시작하지 않는다**.
+8: 3. **산출량 · 소유 경로** (C4-N3) — 본체 · 래퍼 · 임시 · 최종 기록의 소유 루트를 미리 열거해 합산한다 (겹친 루트는 한 번). 최종 쓰기 뒤에 같은
+9:    루트 집합으로 다시 잰다. 경로는 정확 일치 또는 구분자 뒤 하위 경로만 소유로 본다. Git 원문은 분류와 따로 남기고, 따옴표 · 이름 바꿈처럼
+10:    모호한 줄은 소유로 보지 않는다.
+11: 
+12: C4-0a 결과 검토 (2026-10-13) 의 한정 보완 셋:
+13: 
+14: - **N2** — 최종 기록은 마지막 쓰기 · 재읽기 · 해시 · 용량 조회 **뒤** snapshot 하나로 시간 한도를 판정하고 그 값을 그대로 반환한다. 넘으면
+15:   파일 · 해시는 보존하고 미완 (`RECORD_INCOMPLETE`) 이다.
+16: - **N3** — 느릴 수 있는 조회 (RSS · 디스크) 뒤와 정상 종료 직전에 두 감시기의 freshness 를 확인한다 (`Watch.stale`). 확인은 표본이 아니라서
+17:   마지막 유효 시각을 바꾸지 않는다.
+18: - **N4** — 구조 오류의 `partial` (이미 모은 계수) 을 작업자 경계 너머 부모까지 보낸다. 그 작업은 여전히 중단 (`STARTED_INTERRUPTED`) 이다.
+19: 
+20: C4-E (v3 §3 · 상태 문서 §66) 의 선택 인자 하나:
+21: 
+22: - **`stop_rule`** — 기본값 None 이면 지금과 같은 동작이다. 주면 매 tick (RSS 표본 · freshness 확인 뒤) 에 `rule_snapshot` 으로 부른다
+23:   (원점 t0 의 상대 시각 · 작업자 start 사건 · 완료 행의 wall / n_eval / termination · progress · 계획 — X · F · G 없음). 문자열이면 전역
+24:   중지 사유 · 예외 · 형식 오류는 우리 구조 오류 (사유 원문 · `apply_rule`). 규칙은 상태를 바꾸지 않는다 (done 우선 분류 그대로).
+25: 
+26: OS 조회가 영구히 막히는 경우의 강제 종료나 OS 하드 한도를 증명하지 않는다 (C4 v2 §4-4).
+27: """
+28: from __future__ import annotations
+29: 
+30: import hashlib
+31: import json
+32: import os
+33: import queue
+34: import shutil
+35: import time
+36: from pathlib import Path
+37: 
+38: 
+39: class Structural(Exception):
+40:     """구조 오류 — 전역 중단 (행을 만들지 않는다)."""
+41: 
+42:     def __init__(self, info, partial=None):
+43:         super().__init__(info.get("message") if isinstance(info, dict) else info)
+44:         self.info, self.partial = info, partial
+45: 
+46: 
+47: # ---------------------------------------------------------------- (1) 공백 검사
+48: class Watch:
+49:     """표본 하나마다 `observe(t_before, value, t_after, error)` — 멈춰야 하면 이유 문자열, 아니면 None."""
+50: 
+51:     def __init__(self, name: str, gap_limit: float, t_start: float):
+52:         self.name, self.gap_limit = name, float(gap_limit)
+53:         self.last_valid = float(t_start)
+54:         self.has_valid = False
+55:         self.samples: list = []
+56: 
+57:     def observe(self, t_before: float, value, t_after: float, error: str | None = None):
+58:         gap = t_after - self.last_valid
+59:         self.samples.append({"t_before": t_before, "t_after": t_after, "latency": t_after - t_before,
+60:                              "value": value, "error": error, "gap_since_valid": gap})
+61:         if error is not None:
+62:             return f"{self.name} 감시 실패 (표본 예외): {error}"
+63:         if gap > self.gap_limit:
+64:             if not self.has_valid:
+65:                 kind = "첫 표본 지연"
+66:             elif value is None:
+67:                 kind = "표본 없음"
+68:             else:
+69:                 kind = "늦은 성공 표본"
+70:             return f"{self.name} {kind} — 마지막 유효 표본 뒤 {gap:.2f} s > {self.gap_limit} s"
+71:         if value is not None:
+72:             self.last_valid, self.has_valid = t_after, True
+73:         return None
+74: 
+75:     def stale(self, now: float):
+76:         """확인만 (C4-0A-N3) — 지금 시각에서 마지막 유효 표본 (없으면 감시 시작) 까지의 공백이 한도를 넘었으면 이유, 아니면 None.
+77:         표본이 아니므로 `last_valid` · `samples` 를 바꾸지 않는다."""
+78:         gap = now - self.last_valid
+79:         if gap > self.gap_limit:
+80:             return f"{self.name} 공백 (확인 · 표본 아님) — 마지막 유효 표본 뒤 {gap:.2f} s > {self.gap_limit} s"
+81:         return None
+82: 
+83: 
+84: # ---------------------------------------------------------------- (3) 소유 경로 · 산출량
+85: def _norm(p) -> str:
+86:     s = str(p).replace("\\", "/")
+87:     while s.endswith("/") and len(s) > 1:
+88:         s = s[:-1]
+89:     return s
+90: 
+91: 
+92: def owned(path, roots) -> bool:
+93:     p = _norm(path)
+94:     return any(p == r or p.startswith(r + "/") for r in (_norm(x) for x in roots))
+95: 
+96: 
+97: def split_dirty(porcelain: str, roots) -> dict:
+98:     """`git status --porcelain=v1` 줄을 소유 산출 · 그 밖 · 모호로 — 원문은 `raw` 에 그대로."""
+99:     own, other, amb = [], [], []
+100:     for ln in porcelain.splitlines():
+101:         if not ln.strip():
+102:             continue
+103:         path = ln[3:]
+104:         if path.startswith('"') or " -> " in path:
+105:             amb.append(ln)
+106:         elif owned(path, roots):
+107:             own.append(ln)
+108:         else:
+109:             other.append(ln)
+110:     return {"own_output": own, "other": other, "ambiguous": amb, "raw": porcelain}
+111: 
+112: 
+113: def output_bytes(roots) -> int:
+114:     real = []
+115:     for r in roots:
+116:         p = Path(r)
+117:         if p.exists():
+118:             real.append(p.resolve())
+119:     keep = [p for p in real if not any(q != p and q in p.parents for q in real)]
+120:     total, seen = 0, set()
+121:     for root in sorted(set(keep)):
+122:         for f in ([root] if root.is_file() else root.rglob("*")):
+123:             if f.is_file() and f not in seen:
+124:                 seen.add(f)
+125:                 total += f.stat().st_size
+126:     return total
+127: 
+128: 
+129: def disk_sample(roots, free_path) -> tuple:
+130:     return output_bytes(roots), shutil.disk_usage(str(free_path)).free
+131: 
+132: 
+133: def rss_bytes(pids) -> int:
+134:     """부모 + 작업자 VmRSS 합 (표본 · `reil_c5_pilot.rss_bytes` 와 같은 식 — 그 모듈을 import 하지 않으려고 값으로 둔다)."""
+135:     tot = 0
+136:     for pid in pids:
+137:         try:
+138:             txt = Path(f"/proc/{pid}/status").read_text()
+139:         except FileNotFoundError:
+140:             continue
+141:         for ln in txt.splitlines():
+142:             if ln.startswith("VmRSS:"):
+143:                 tot += int(ln.split()[1]) * 1024
+144:     return tot
+145: 
+146: 
+147: # ---------------------------------------------------------------- 작업자 · 조정
+148: def _jsonable(o):
+149:     try:
+150:         json.dumps(o)
+151:         return o
+152:     except TypeError:
+153:         if isinstance(o, dict):
+154:             return {str(k): _jsonable(v) for k, v in o.items()}
+155:         if isinstance(o, (list, tuple)):
+156:             return [_jsonable(v) for v in o]
+157:         if hasattr(o, "tolist"):
+158:             return o.tolist()
+159:         return repr(o)
+160: 
+161: 
+162: def worker_loop(wid, tasks, ctx, task_fn, q, stop, prog, deadline_abs: float, clock=time.monotonic):
+163:     """작업자 — 작업을 시작하기 **직전마다** 정지 신호와 절대 마감을 본다 (마감 뒤 신규 시작 없음)."""
+164:     try:
+165:         q.put(("worker_start", wid, {"pid": os.getpid(), "t": clock()}))
+166:         for task in tasks:
+167:             if stop.is_set():
+168:                 break
+169:             if clock() >= deadline_abs:
+170:                 q.put(("worker_deadline", wid, {"t": clock(), "next_task": task["task_id"]}))
+171:                 break
+172:             tid = task["task_id"]
+173:             q.put(("start", tid, {"worker": wid, "t": clock()}))
+174: 
+175:             def progress(n, tid=tid):
+176:                 prog[tid] = n
+177: 
+178:             def notify(kind, payload, tid=tid):
+179:                 q.put((kind, tid, _jsonable({**payload, "t": clock()})))
+180:             try:
+181:                 row = task_fn(task, ctx, notify=notify, progress=progress)
+182:             except Structural as s:                       # partial (이미 모은 계수) 도 부모까지 보낸다 (C4-0A-N4) — 완료 행으로 바꾸지 않는다
+183:                 q.put(("structural", tid, {**(s.info if isinstance(s.info, dict) else {"message": str(s.info)}),
+184:                                            "partial": _jsonable(s.partial), "t": clock()}))
+185:                 return
+186:             q.put(("done", tid, _jsonable(row)))
+187:         q.put(("worker_end", wid, {"t": clock()}))
+188:     except BaseException as e:  # noqa: BLE001 — 작업자 자체의 예외 = 우리 코드 = 구조 오류
+189:         q.put(("structural", None, {"kind": "structural", "origin": "worker", "type": type(e).__name__,
+190:                                     "message": str(e)[:300], "t": clock()}))
+191: 
+192: 
+193: def _states(tasks, ev, prog, reason, t_stop, t0) -> list:
+194:     partial = {s.get("task_id"): s["partial"] for s in ev.get("structural", []) if s.get("partial") is not None}
+195:     out = []
+196:     for task in tasks:
+197:         tid = task["task_id"]
+198:         st = ev["started"].get(tid)
+199:         rel = (st["t"] - t0) if st else None
+200:         if tid in ev["done"]:
+201:             out.append({**ev["done"][tid], "task_id": tid, "state": "COMPLETED", "t_start_rel": rel})
+202:         elif st:
+203:             row = {"task_id": tid, "worker": task.get("worker"), "state": "STARTED_INTERRUPTED", "t_start_rel": rel,
+204:                    "n_eval_observed": f"≥ {int(prog.get(tid, 0) if isinstance(prog, dict) else prog[tid])} · 미확인",
+205:                    "elapsed_s": t_stop - st["t"], "interrupt_reason": reason}
+206:             if tid in partial:
+207:                 row["structural_partial"] = partial[tid]        # 구조 오류 직전까지의 계수 — 상태는 중단 그대로
+208:             out.append(row)
+209:         else:
+210:             out.append({"task_id": tid, "worker": task.get("worker"), "state": "NOT_STARTED", "t_start_rel": None,
+211:                         "interrupt_reason": reason or "작업자가 끝난 뒤 남은 작업"})
+212:     return out
+213: 
+214: 
+215: def rule_snapshot(tasks, ev, prog, now_rel: float, t0: float) -> dict:
+216:     """규칙 입력 (C4-E v3 §3 의 좌표 계약) — 원점 t0 의 상대 시각 · 작업자 start 사건 t − t0 · 완료 행의 wall / n_eval / termination 만."""
+217:     return {"now_rel": now_rel,
+218:             "started": {tid: s["t"] - t0 for tid, s in ev["started"].items()},
+219:             "done": {tid: {k: d.get(k) for k in ("wall", "n_eval", "termination")} for tid, d in ev["done"].items()},
+220:             "progress": {t["task_id"]: int(prog[t["task_id"]]) for t in tasks},
+221:             "planned": [t["task_id"] for t in tasks]}
+222: 
+223: 
+224: def apply_rule(stop_rule, snap, ev, clock=time.monotonic):
+225:     """규칙 한 번 — 문자열이면 전역 중지 사유 · None 이면 계속. 예외 · 형식 오류는 우리 구조 오류로 기록하고 그 사유를 돌려준다."""
+226:     try:
+227:         r = stop_rule(snap)
+228:         if r is not None and not isinstance(r, str):
+229:             raise TypeError(f"stop_rule 반환 {type(r).__name__} — 문자열 또는 None 이어야 한다")
+230:         return r
+231:     except Exception as e:  # noqa: BLE001 — 규칙의 예외 = 우리 코드 = 구조 오류
+232:         ev["structural"].append({"task_id": None, "kind": "structural", "origin": "ours", "stage": "stop_rule",
+233:                                  "type": type(e).__name__, "message": str(e)[:300], "t": clock()})
+234:         return f"구조 오류: {type(e).__name__} (ours · stop_rule) {e}"[:400]
+235: 
+236: 
+237: def supervise(tasks, ctx, task_fn, *, n_workers, limits, t0, clock=time.monotonic, rss_fn=None, disk_fn=None,
+238:               out_roots=(), free_path=".", tick=1.0, disk_every=5.0, stop_rule=None) -> dict:
+239:     """작업 → 작업자 배정은 `task["worker"]` 로 고정. 표본 감시 (Watch) · 마감 · 전역 중단 → 소유 작업자만 종료.
+240:     `stop_rule` (C4-E) 은 매 tick RSS 표본 · freshness 확인 뒤에 부른다 — 기본값 None 이면 부르지 않는다."""
+241:     import multiprocessing as mp
+242:     mpc = mp.get_context("fork")
+243:     q, stop = mpc.Queue(), mpc.Event()
+244:     shared_prog = mpc.Array("q", (max(t["task_id"] for t in tasks) + 1) if tasks else 1, lock=False)
+245:     deadline_abs = t0 + float(limits["measure"])
+246:     rss_fn = rss_fn or rss_bytes
+247:     disk_fn = disk_fn or (lambda roots: disk_sample(roots, free_path))
+248:     ev = {"started": {}, "done": {}, "worker_start": {}, "worker_end": {}, "worker_deadline": {}, "structural": []}
+249:     rss_w = Watch("메모리", limits["rss_gap"], clock() - t0)      # 표본 시각은 원점 기준 상대값
+250:     disk_w = Watch("디스크", limits["disk_gap"], clock() - t0)
+251:     reason = None
+252: 
+253:     def fresh(now):
+254:         """두 감시기 freshness 확인 (C4-0A-N3) — 확인만 · 유효 시각을 바꾸지 않는다."""
+255:         return rss_w.stale(now) or disk_w.stale(now)
+256: 
+257:     def handle(msg):
+258:         kind, key, payload = msg
+259:         if kind in ("start", "done", "worker_start", "worker_end", "worker_deadline"):
+260:             ev["started" if kind == "start" else kind][key] = payload
+261:         elif kind == "structural":
+262:             ev["structural"].append({"task_id": key, **payload})
+263: 
+264:     def drain(timeout=0.05):
+265:         while True:
+266:             try:
+267:                 handle(q.get(timeout=timeout))
+268:             except queue.Empty:
+269:                 return True
+270:             except Exception:  # noqa: BLE001 — 강제 종료 뒤 깨진 메시지 → 기록 미완
+271:                 return False
+272: 
+273:     procs = {w: mpc.Process(target=worker_loop, args=(w, [t for t in tasks if t["worker"] == w], ctx, task_fn, q, stop,
+274:                                                        shared_prog, deadline_abs), daemon=True) for w in range(n_workers)}
+275:     if clock() >= deadline_abs:
+276:         reason = f"단계 경계 — 측정 마감 ({limits['measure']} s) 전에 시작하지 못했다"
+277:     else:
+278:         for p in procs.values():
+279:             p.start()
+280:     last_disk_try = -1e18
+281:     while reason is None:
+282:         try:
+283:             handle(q.get(timeout=tick))
+284:         except queue.Empty:
+285:             pass
+286:         if ev["structural"]:
+287:             s = ev["structural"][0]
+288:             reason = f"구조 오류: {s.get('type')} ({s.get('origin')} · {s.get('stage')}) {s.get('message')}"[:400]
+289:             break
+290:         if clock() >= deadline_abs:
+291:             reason = f"단계 경계 — 측정 마감 {limits['measure']} s · 신규 시작 중지 · 진행 중 작업 중단"
+292:             break
+293:         dead = [w for w, p in procs.items() if p.exitcode is not None and w not in ev["worker_end"]
+294:                 and w not in ev["worker_deadline"]]
+295:         if dead:
+296:             drain()
+297:             dead = [w for w in dead if w not in ev["worker_end"] and w not in ev["worker_deadline"]]
+298:             if ev["structural"] or dead:
+299:                 if dead and not ev["structural"]:
+300:                     reason = f"작업자 {dead[0]} 비정상 종료 (exitcode {procs[dead[0]].exitcode}) — 종료 메시지 없음"
+301:                 continue
+302:         tb = clock()
+303:         try:
+304:             v, err = rss_fn([os.getpid()] + [p.pid for p in procs.values() if p.is_alive()]), None
+305:         except Exception as e:  # noqa: BLE001
+306:             v, err = None, f"{type(e).__name__}: {e}"
+307:         ta = clock()
+308:         reason = rss_w.observe(tb - t0, v, ta - t0, err)
+309:         if reason is None and v is not None and v > limits["rss"]:
+310:             reason = f"메모리 표본 {v} B > 상한 {limits['rss']} B"
+311:         if reason is None and clock() >= deadline_abs:               # 표본 수집 뒤 마감 재검사
+312:             reason = f"단계 경계 — 측정 마감 {limits['measure']} s (표본 수집 뒤 재검사) · 신규 시작 중지"
+313:         if reason is None:
+314:             reason = fresh(clock() - t0)                              # 느린 RSS 조회 뒤 — 디스크 감시기 freshness (C4-0A-N3)
+315:         if reason is None and stop_rule is not None:                  # C4-E: 규칙 (호출당 상한 · 비용) — 사유면 전역 중지
+316:             reason = apply_rule(stop_rule, rule_snapshot(tasks, ev, shared_prog, clock() - t0, t0), ev, clock)
+317:         if reason is not None:
+318:             break
+319:         if ta - last_disk_try >= disk_every:
+320:             last_disk_try = ta
+321:             tb = clock()
+322:             try:
+323:                 d, err = disk_fn(list(out_roots)), None
+324:             except Exception as e:  # noqa: BLE001
+325:                 d, err = None, f"{type(e).__name__}: {e}"
+326:             ta = clock()
+327:             reason = disk_w.observe(tb - t0, d, ta - t0, err)
+328:             if reason is None and d is not None and (d[0] > limits["disk_new"] or d[1] < limits["disk_free"]):
+329:                 reason = f"디스크 표본: 새 산출 {d[0]} B (상한 {limits['disk_new']}) · 여유 {d[1]} B (하한 {limits['disk_free']})"
+330:             if reason is None and clock() >= deadline_abs:
+331:                 reason = f"단계 경계 — 측정 마감 {limits['measure']} s (디스크 표본 뒤 재검사) · 신규 시작 중지"
+332:             if reason is None:
+333:                 reason = fresh(clock() - t0)                          # 느린 디스크 조회 뒤 — RSS 감시기 freshness (C4-0A-N3)
+334:             if reason is not None:
+335:                 break
+336:         if len(set(ev["worker_end"]) | set(ev["worker_deadline"])) == n_workers:   # 마감을 본 작업자는 둘 다 보낸다 — 합집합으로 센다
+337:             drain()
+338:             if ev["worker_deadline"] and any(t["task_id"] not in ev["started"] for t in tasks):
+339:                 reason = f"단계 경계 — 작업자가 마감 ({limits['measure']} s) 을 보고 신규 시작을 멈췄다"
+340:             if reason is None:
+341:                 reason = fresh(clock() - t0)                          # 정상 종료 직전 — 두 감시기 freshness (C4-0A-N3)
+342:             break
+343:     t_stop = clock()
+344:     if reason is not None:
+345:         stop.set()
+346:         for p in procs.values():
+347:             if p.is_alive():
+348:                 p.terminate()
+349:         deadline = time.monotonic() + limits["grace"]
+350:         for p in procs.values():
+351:             if p.pid is not None:
+352:                 p.join(max(0.0, deadline - time.monotonic()))
+353:         for p in procs.values():
+354:             if p.is_alive():
+355:                 p.kill()
+356:                 p.join(5)
+357:     else:
+358:         for p in procs.values():
+359:             p.join(limits["grace"])
+360:     drained_ok = drain(0.1)
+361:     prog = {t["task_id"]: int(shared_prog[t["task_id"]]) for t in tasks}
+362:     alive_after = sum(1 for p in procs.values() if p.is_alive())
+363:     return {"states": _states(tasks, ev, prog, reason, t_stop, t0), "global_stop": reason,
+364:             "samples": {"rss": rss_w.samples, "disk": disk_w.samples}, "workers": ev["worker_start"],
+365:             "worker_end": ev["worker_end"], "worker_deadline": ev["worker_deadline"], "structural": ev["structural"],
+366:             "owned_alive_after": alive_after, "drain_ok": drained_ok, "t_stop": t_stop - t0, "deadline_rel": deadline_abs - t0,
+367:             "exitcodes": {w: p.exitcode for w, p in procs.items()}}
+368: 
+369: 
+370: # ---------------------------------------------------------------- (3) 최종 기록 — 쓰기 뒤 같은 루트로 다시 잰다
+371: def _dump(obj) -> bytes:
+372:     return (json.dumps(_jsonable(obj), ensure_ascii=False, sort_keys=True, indent=1) + "\n").encode("utf-8")
+373: 
+374: 
+375: def final_record(out_dir, parts: dict, *, roots, limit_bytes, clock=time.monotonic, t0=0.0, limit_s=float("inf")) -> dict:
+376:     out_dir = Path(out_dir)
+377:     state, files, problems = "COMPLETE", {}, []
+378:     for name, obj in parts.items():
+379:         if clock() - t0 > limit_s:
+380:             state = "RECORD_INCOMPLETE"
+381:             problems.append(f"최종 기록 단계 경계 {limit_s} s 초과 — {name} 부터 쓰지 않았다")
+382:             break
+383:         data = _dump(obj)
+384:         try:
+385:             (out_dir / name).write_bytes(data)
+386:             back = (out_dir / name).read_bytes()
+387:         except OSError as e:
+388:             state = "RECORD_INCOMPLETE"
+389:             problems.append(f"{name} 쓰기 실패: {type(e).__name__}: {e}")
+390:             break
+391:         if back != data:
+392:             state = "RECORD_INCOMPLETE"
+393:             problems.append(f"{name} 다시 읽은 바이트가 다르다")
+394:             break
+395:         files[name] = hashlib.sha256(back).hexdigest()
+396:     after = output_bytes(roots)
+397:     snap = clock() - t0       # 마지막 쓰기 · 재읽기 · 해시 · 용량 조회 뒤 snapshot 하나 — 시간 판정과 반환에 같은 값 (C4-0A-N2)
+398:     violations = []
+399:     if snap > limit_s:
+400:         violations.append("time")
+401:         problems.append(f"최종 snapshot {snap:.3f} s > 기록 한도 {limit_s} s — 파일 · 해시는 보존하고 미완으로 둔다")
+402:         if state == "COMPLETE":
+403:             state = "RECORD_INCOMPLETE"
+404:     if after > limit_bytes:
+405:         violations.append("size")
+406:         problems.append(f"최종 쓰기 뒤 산출 {after} B > 상한 {limit_bytes} B — 성공으로 종결하지 않는다")
+407:         if state == "COMPLETE":
+408:             state = "OUTPUT_LIMIT_EXCEEDED"
+409:     return {"record_state": state, "files": files, "problems": problems, "output_bytes_after": after,
+410:             "output_roots": [str(r) for r in roots], "final_snapshot_s": snap, "limit_violations": violations}

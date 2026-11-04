@@ -1,0 +1,97 @@
+{
+  "pin": "26a6c3a49b5c0a9044535ccdd62a8ffa5ed05cdd",
+  "attachments": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_1_3_APPROVAL_REQUEST_20261104.md",
+      "bytes": 34402,
+      "sha256": "b7e5a5e67efa4974a6532e6c5aab32498424b0f0aacc4c9dc16e7ccfd4bcd727",
+      "matches_pinned_source": true
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_1_3_PREREVIEW_SEND_20261104.md",
+      "bytes": 4640,
+      "sha256": "5a3293c93d4d212fd7d5b1893f6547da0ca1c2b6303ef0672f005801a45fbbe2",
+      "matches_pinned_source": true
+    }
+  ],
+  "connector_sources": [
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_1_3_APPROVAL_REQUEST_20261104.md",
+      "bytes": 34402,
+      "sha256": "b7e5a5e67efa4974a6532e6c5aab32498424b0f0aacc4c9dc16e7ccfd4bcd727",
+      "git_blob_sha1": "4713bb91d397a684f4c14233ca677e8180111dbc",
+      "source": "Pinned GitHub connector base64; blob identity verified"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_1_3_PREREVIEW_SEND_20261104.md",
+      "bytes": 4640,
+      "sha256": "5a3293c93d4d212fd7d5b1893f6547da0ca1c2b6303ef0672f005801a45fbbe2",
+      "git_blob_sha1": "01dd217c7ad520279f0ca70e2ecba45c8b05dfbb",
+      "source": "Pinned GitHub connector base64; blob identity verified"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_E113_OUTER_DRAFT_20261104.py.txt",
+      "bytes": 18313,
+      "sha256": "e11472bfc5445e43412c1cb3fefcbf0adf89d9dbd5ae538cdec7abe0a0b6cffe",
+      "git_blob_sha1": "11156869d99c7bcdf677afaa1c121de79ba041ff",
+      "source": "Pinned GitHub connector base64; blob identity verified"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_E113_JUDGE_DRAFT_20261104.py.txt",
+      "bytes": 12182,
+      "sha256": "0786f5cc339db03b62a1630d0c32a2ac52a08ce0652839a4dce1ed2ce4f04bdf",
+      "git_blob_sha1": "c843625e675f6b11a9fea842a98310129932a70e",
+      "source": "Pinned GitHub connector base64; blob identity verified"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_E113_END_WRITER_DRAFT_20261104.py.txt",
+      "bytes": 7229,
+      "sha256": "07bcaa4b1042d650a5b636b563acd0f6e762232a51cc71c7800ce642d1a10aa7",
+      "git_blob_sha1": "0031c442c38e8def3fa3865cf0bee12af4986395",
+      "source": "Pinned GitHub connector base64; blob identity verified"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "bytes": 416007,
+      "sha256": "c509285c71175be1486bdc49e73930e341e7ba5c52f270147d97404d5eda1224",
+      "git_blob_sha1": "943cc6b57ccf0931491e1ccb04bf4e016e2f1a15",
+      "source": "Pinned GitHub connector base64; blob identity verified"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4_monitor.py",
+      "bytes": 21546,
+      "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b",
+      "git_blob_sha1": "d25a1a7a0d582af8f3e4c0a2ff1745daf7646052",
+      "source": "Pinned GitHub connector base64; supplemental final_record text; blob identity verified"
+    }
+  ],
+  "reused_sources": [
+    {
+      "path": "bms-balancing/scripts/reil_c4e1_launch.py",
+      "bytes": 62639,
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf",
+      "source": "Prior verified raw copy; unchanged path in complete pinned compare"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4e_run.py",
+      "bytes": 53853,
+      "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9",
+      "source": "Prior verified raw copy; unchanged path in complete pinned compare"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "bytes": 96529,
+      "sha256": "ae413f965e890103db175ef261b05d6c49b26f9a53048abdab8c9b8d3b234840",
+      "source": "Prior verified raw copy; unchanged path in complete pinned compare"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_1_3_SCOPE_v3_20261104.md",
+      "bytes": 23619,
+      "sha256": "88ecc9ce457304c2bd0c0edb6fa470d515bc55e743810f409f5a944d41fc5f78",
+      "source": "Prior verified raw copy; unchanged path in complete pinned compare"
+    }
+  ],
+  "received_program_execution": 0,
+  "probe_execution": 0,
+  "scope": "Static bytes/text; no remote runtime observation"
+}

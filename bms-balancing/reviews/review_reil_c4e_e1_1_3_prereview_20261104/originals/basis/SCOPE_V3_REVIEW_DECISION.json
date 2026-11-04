@@ -1,0 +1,61 @@
+{
+  "kind": "REIL_E113_SCOPE_V3_REVIEW_DECISION",
+  "date": "2026-11-04",
+  "decision": "P1_DOCUMENT_DIRECTION_ACCEPTED_P2_OBSERVER_FIX_REQUIRED",
+  "pin": "2621b4b21f138005c4d74b3b9f4b146c2ace7928",
+  "input": {
+    "name": "REIL_C4E_E1_1_3_SCOPE_v3_20261104.md",
+    "bytes": 23619,
+    "sha256": "88ecc9ce457304c2bd0c0edb6fa470d515bc55e743810f409f5a944d41fc5f78"
+  },
+  "closures": {
+    "E113_N1": "CLOSED_RETAINED",
+    "P2_01": "CLOSED",
+    "N2_F1": "DOCUMENT_CORRECTION_CLOSED",
+    "N2_F2": "DOCUMENT_CORRECTION_CLOSED",
+    "N2_F3": "DOCUMENT_CORRECTION_CLOSED",
+    "E113_N2": "EXACT_APPROVAL_DRAFT_REQUIREMENTS_REMAIN",
+    "E113_N3": "P1_ACCEPTABLE_P2_OBSERVER_FIX_REQUIRED"
+  },
+  "p1_document_direction_acceptable": true,
+  "p1_drafting_blocked": false,
+  "p2_immediate_probe_ready": false,
+  "user_choices_recorded": false,
+  "probe_authorized": false,
+  "actual_execution_authorized": false,
+  "standalone_scope_v4_requested": false,
+  "prior_acceptance": {
+    "E1_0b_a2": "RETAINED",
+    "A2_PROC_01": "RETAINED",
+    "retest_requested": false,
+    "launcher_change_requested": false
+  },
+  "findings": [
+    {
+      "id": "P2_02",
+      "priority": "P2",
+      "lines": [
+        93,
+        95
+      ],
+      "scope": "Both exact observation commands; immediate P2, or incorporation into future P1 approval draft before execution",
+      "issue": "cd failure skips only until; trailing write runs in prior cwd and may mask failure with rc0",
+      "required": "Exit nonzero immediately on cd failure, or success-gate loop plus all subsequent writes; retain tool error/rc and stop.",
+      "blocks_p1_document_drafting": false
+    }
+  ],
+  "performed": {
+    "static_text_identity_review": true,
+    "official_shell_semantics_search": true,
+    "received_program_execution": 0,
+    "probe_execution": 0,
+    "identity_fetch_run": 0,
+    "signal_delivery": 0,
+    "COMSOL": 0,
+    "source_changes": 0,
+    "git_mutations": 0,
+    "external_transmission": 0
+  },
+  "numeric_review_budget_seconds": null,
+  "whole_work_elapsed_claim": null
+}

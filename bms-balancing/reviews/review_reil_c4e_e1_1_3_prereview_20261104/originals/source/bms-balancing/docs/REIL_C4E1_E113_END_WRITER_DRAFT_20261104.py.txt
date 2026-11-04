@@ -1,0 +1,130 @@
+"""REIL C4-E · E1-1–3 끝 기록 작성기 v3 초안 (2026-11-04 · 범위안 v3 §5 A · 사용자 선택 §105) — 고정 뒤 `<E>/00_end_writer.py` 로 복사해 쓴다.
+
+python -I <E>/00_end_writer.py <E> '<절차 Git 이름 확인 JSON>'
+
+읽기: 복사본 넷 (`00_outer.py` · `00_judge.py` · `00_end_writer.py` · `00_identity_c4.py`) 과 launcher 의 sha256 · 탐침 사본 `01_probe/` · 읽기 경로 기록
+`03_read_path.json` · 세 단계마다 외곽 기록 (시작 · 반환) · launcher meta 의 요약 · 판정 기록 · 잔류 관측 (1 · 2) · kill · frozen 목록 · 디스크 · 시각.
+쓰기 = `06_end.json` 배타 생성 하나. Git · 네트워크 · 하위 프로세스 · 신호 0.
+
+기록을 모을 뿐 판정하지 않는다 — 판정 기록은 sha256 · bytes · verdict · 거짓 항목 · 실행 유효성 · 실험 결과를 옮겨 적기만 한다. 읽지 못한 파일은 그
+자리에 사유를 남긴다 (대신 채우지 않는다). 이름 확인 결과는 받은 JSON 의 이름 목록만 담는다. 폴더 이름 규칙 (`reil_c4e1_YYYYMMDD` · 부모 `evidence`) 밖 ·
+이 파일이 그 폴더의 `00_end_writer.py` 가 아님 · `06_end.json` 이 이미 있음이면 아무것도 쓰지 않고 반환 2.
+"""
+import hashlib
+import json
+import re
+import shutil
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+BMS = Path("/home/user/Yonghoon-DEM-DFT/bms-balancing")
+LAUNCHER = BMS / "scripts" / "reil_c4e1_launch.py"
+EVIDENCE_NAME = re.compile(r"^reil_c4e1_20[0-9]{6}$")
+STEPS = {"identity": "03_identity", "fetch": "04_fetch", "run": "05_run"}
+COPIES = ("00_outer.py", "00_judge.py", "00_end_writer.py", "00_identity_c4.py")
+OUT = "06_end.json"
+
+
+def utc() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def ident(p: Path) -> dict:
+    if p.is_symlink() or not p.is_file():
+        return {"path": str(p), "why": "없음 또는 일반 파일 아님"}
+    try:
+        b = p.read_bytes()
+    except OSError as e:
+        return {"path": str(p), "why": f"읽지 못함 {e.__class__.__name__}"}
+    return {"path": str(p), "sha256": hashlib.sha256(b).hexdigest(), "bytes": len(b)}
+
+
+def jload(p: Path):
+    if p.is_symlink() or not p.is_file():
+        return None, "없음 또는 일반 파일 아님"
+    try:
+        doc = json.loads(p.read_bytes())
+    except (OSError, ValueError) as e:
+        return None, f"읽지 못함 {e.__class__.__name__}"
+    return (doc, None) if isinstance(doc, dict) else (None, "JSON 객체 아님")
+
+
+def step_row(ev: Path, name: str) -> dict:
+    row = {}
+    start, why = jload(ev / f"{name}.outer_start.json")
+    row["outer_start"] = ident(ev / f"{name}.outer_start.json") | (
+        {"utc": start.get("utc"), "sid": start.get("sid"), "deadline_epoch": start.get("deadline_epoch")} if start else {"read": why})
+    rc = ev / f"{name}.outer_rc.txt"
+    row["outer_rc"] = ident(rc) | ({"text": rc.read_bytes()[:20].decode("ascii", "replace")} if rc.is_file() and not rc.is_symlink() else {})
+    for k in ("outer_error.json", "outer_stderr.txt", "wrapper_output.txt"):
+        row[k] = ident(ev / f"{name}.{k}")
+    m, why = jload(ev / f"{name}.meta.json")
+    if m is None:
+        row["meta"] = {"why": why}
+    else:
+        child = m.get("child") if isinstance(m.get("child"), dict) else {}
+        stage = m.get("stage") if isinstance(m.get("stage"), dict) else {}
+        row["meta"] = ident(ev / f"{name}.meta.json") | {
+            "start_utc": m.get("start_utc"), "end_utc": m.get("end_utc"), "stage_complete": stage.get("complete"),
+            "stage_terms": stage.get("terms"), "child_rc": child.get("rc"), "child_timed_out": child.get("timed_out"),
+            "child_group_status": (child.get("group") or {}).get("status") if isinstance(child.get("group"), dict) else None,
+            "child_deadline_hit": child.get("deadline_hit"), "errors": len(m.get("errors") or []),
+            "child_maxrss_kib": m.get("child_maxrss_kib")}
+    j, why = jload(ev / f"{name}.judge.json")
+    row["judge"] = ident(ev / f"{name}.judge.json") | (
+        {"verdict": j.get("verdict"), "failed": j.get("failed"), "execution_validity": j.get("execution_validity"),
+         "experimental_result": j.get("experimental_result")} if j else {"read": why})
+    for k in ("leftover_1.json", "leftover_2.json", "kill.json"):
+        d, why = jload(ev / f"{name}.{k}")
+        row[k] = ident(ev / f"{name}.{k}") | (
+            {"alive_count": d.get("alive_count"), "errors": len(d.get("errors") or [])} if d and k.startswith("leftover")
+            else {"actions": [r.get("action") for r in d.get("results") or []]} if d else {"read": why})
+    fr, why = jload(ev / f"frozen_{name}.json")
+    row["frozen"] = ident(ev / f"frozen_{name}.json") | ({"rows": len(fr.get("rows") or [])} if fr else {"read": why})
+    return row
+
+
+def main(argv=None) -> int:
+    a = list(sys.argv[1:] if argv is None else argv)
+    me = Path(__file__)
+    if len(a) != 2:
+        sys.stderr.write("거부: 인자 — <E> '<이름 확인 JSON>'\n")
+        return 2
+    ev = Path(a[0])
+    if ev.parent != BMS / "evidence" or not EVIDENCE_NAME.match(ev.name) or ev.is_symlink() or not ev.is_dir():
+        sys.stderr.write(f"거부: 증거 폴더 규칙 밖: {ev}\n")
+        return 2
+    if me.is_symlink() or me.resolve() != (ev / "00_end_writer.py").resolve():
+        sys.stderr.write(f"거부: 이 파일이 그 증거 폴더의 00_end_writer.py 가 아니다: {me}\n")
+        return 2
+    outp = ev / OUT
+    if outp.exists() or outp.is_symlink():
+        sys.stderr.write(f"거부: 이미 있다: {outp}\n")
+        return 2
+    try:
+        chk = json.loads(a[1])
+        name_check = {"git_env_names": list(chk.get("git_env_names") or []), "outside_allowlist": list(chk.get("outside_allowlist") or [])}
+    except (ValueError, AttributeError, TypeError) as e:
+        name_check = {"why": f"이름 확인 JSON 을 읽지 못함 {e.__class__.__name__}"}
+    probe = ev / "01_probe"
+    rec = {"kind": "REIL_E113_END", "utc": utc(), "evidence": str(ev),
+           "copies": {c: ident(ev / c) for c in COPIES}, "launcher": ident(LAUNCHER),
+           "probe": {str(p.relative_to(ev)): ident(p) for p in sorted(probe.rglob("*")) if p.is_file()} if probe.is_dir() else {"why": "없음"},
+           "read_path": ident(ev / "03_read_path.json") | (lambda d: {"status": d[0].get("status")} if d[0] else {"read": d[1]})(
+               jload(ev / "03_read_path.json")),
+           "steps": {step: step_row(ev, name) for step, name in STEPS.items()},
+           "git_name_check": name_check}
+    try:
+        rec["disk_avail_bytes"] = shutil.disk_usage(BMS).free
+    except OSError as e:
+        rec["disk_avail_bytes"] = {"why": f"읽지 못함 {e.__class__.__name__}"}
+    with open(outp, "x", encoding="utf-8") as f:
+        f.write(json.dumps(rec, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
+    print(json.dumps({"written": str(outp), "judge": {s: r["judge"].get("verdict") for s, r in rec["steps"].items()},
+                      "outer_rc": {s: r["outer_rc"].get("text") for s, r in rec["steps"].items()}}, ensure_ascii=False))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
