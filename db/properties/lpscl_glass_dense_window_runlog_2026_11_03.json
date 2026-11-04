@@ -157,6 +157,8 @@
   "담금질_명령_A11": "melt_quench_uma.py --system A --n_fu 12 --seed 11 --T_melt 1200 --T_final 300 --melt_ps 100 --quench_rate 1e12 --hold_ps 50 --dt_fs 2 --save_ps 1 --turbo --fix_density 1.91347 --compress_ps 20 (카드 기계값 · --print_cmd)",
   "⚠_GPU": "3,995 MiB · 72 % 사용 중 (cascade v7 은 11-04 04:14 끝 — 다른 것이 돈다 · 확인 블록 전달) — 러너는 2,000 MiB 이하 두 번 연속일 때만 띄운다 (start_max_mib) → 지금은 GO 여도 기다린다",
   "⚠_디스크": "/ 88 % (106 GB 남음 · 10-31 정리 뒤 77 % 에서 다시 오름) — li2s-2 출력은 작다",
-  "by": "agent · 2026-11-04"
+  "by": "agent · 2026-11-04",
+  "GPU_사용자_확인": "사용자 붙여넣기 (읽기만 · nvidia-smi 표 · ps · who): 우리 잡이 아니다 — 계정 esp (기계 화면 :0 · 10-30 11:12 로그인 · 정전 재부팅 뒤) 의 그래픽 앱 둘 (apc-twin grape_twin 3,074 MiB · kiwi_twin 350 MiB · CPU 305–341 %) + 화면 송출 ffmpeg (x11grab → h264_nvenc · 306 MiB) · mediamtx · Xorg · gnome-shell — 4–5 일째. kgy 계정에는 --query-compute-apps 가 막혀 있다 ('restricted') → nvidia-smi 표 · ps 로 본다",
+  "발사에_미치는_것": "① VRAM 24 GB 중 ≈ 4 GB → 우리 MD (120 원자 ≈ 2 GB) 는 들어간다 · ② 러너 시작 문턱 --start_max_mib 기본 2,000 은 영영 안 넘는다 → 발사 때 6,000 으로 준다 (esp 바닥 ≈ 4 GB + 여유 · 무거운 잡은 여전히 막는다 · 운영 값이라 카드 개정 아님 · 발사 기록에 남긴다) · ③ 속도: 카드 1 단계 견적 (시드당 kgy 단독 15–21 h · 합 150–210 h · 상한 230 GPU-h) 은 단독 가정 — 옛 장부의 'kgy 공유' 담금질은 32–47 h 였다. esp 의 렌더링 (GPU 72 %) 이 그만큼 늦추면 10 시드가 상한에 닿아 1 단계가 미완결로 멈출 수 있다 (카드 규칙대로 그때 사용자 결정) — 첫 시드 벽시계로 확인한다. (10-12 재부팅 뒤 cascade 런 1.54 배 느려짐과 같은 원인일 수 있다 — 가설 · 확인 안 함)"
  }
 }
