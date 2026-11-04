@@ -1,0 +1,9 @@
+{
+  "kind": "REVIEWER_DATA_TOOL_ERROR",
+  "chunk_id": "34b27f",
+  "exit_code": 1,
+  "error": "KeyError: bms-balancing/scripts/reil_c4e_run.py",
+  "cause": "Prior identity rows span SOURCE_IDENTITIES.fetched and ADDITIONAL_IDENTITIES.fetched; first data checker assumed all paths in the former.",
+  "target_execution": 0,
+  "correction": "Merge both previously sealed identity indexes, then resume raw-byte checks. This is recipient data-checker correction; no target tests or received code were run."
+}

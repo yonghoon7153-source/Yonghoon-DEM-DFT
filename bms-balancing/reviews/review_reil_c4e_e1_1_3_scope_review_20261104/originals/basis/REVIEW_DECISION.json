@@ -1,0 +1,79 @@
+{
+  "kind": "REIL_E1_0B_A2_RESULT_REVIEW_DECISION",
+  "date_kst": "2026-11-04",
+  "pin": "f09ead06a0ec21534af327cd108b607343f43ec3",
+  "execution_end_commit": "421faa84e5e96e2cc19aafb2ccf9cf7a903aad60",
+  "request_sha256": "ae413f965e890103db175ef261b05d6c49b26f9a53048abdab8c9b8d3b234840",
+  "decision": "E1_0B_A2_LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "A2_PROC_01",
+      "priority": 3,
+      "description": "Stage a omitted print(json.dumps(...)) from the fixed Git-name-check command; preserve literal procedural deviation. Predicate/exit-rule equivalence is submitter-reported; original shell line independently unauthenticated.",
+      "disposition": "RETAIN_DISCLOSURE_NO_RETEST_REQUIRED"
+    }
+  ],
+  "questions": {
+    "Q1": "RECORDS_MATCH_WITH_DISCLOSED_COMMAND_DEVIATION_AND_PROVENANCE_LIMITS",
+    "Q2": "RED_MATCH_9_EXPECTED_FAILED_24_PASSED",
+    "Q3": "GREEN_MATCH_71_PASSED_LIMITED_E1_0B_FUNCTIONAL_CLOSURE",
+    "Q4": "MAY_PREPARE_NEXT_SCOPE_AND_APPROVAL_REQUEST_NO_NEW_EXECUTION_AUTHORIZATION"
+  },
+  "accepted": {
+    "E1_0B_functional_complete_in_sealed_test_scope": true,
+    "FUTURE_01_functional_complete_in_sealed_test_scope": true,
+    "operational_cleanup_policy_test_scope_complete": true,
+    "E1_0B_RESULT_N1_corrected_failure_cause_observed": true
+  },
+  "results": {
+    "RED": {
+      "failed_expected": 9,
+      "passed": 24,
+      "pytest_rc": 1,
+      "outer_rc": 1,
+      "judge_checks": 76,
+      "verdict": "MATCH"
+    },
+    "GREEN": {
+      "passed": 71,
+      "pytest_rc": 0,
+      "outer_rc": 0,
+      "judge_checks": 20,
+      "verdict": "MATCH"
+    }
+  },
+  "evidence": {
+    "files": 23,
+    "bytes": 138608,
+    "source_targets_per_phase": 14,
+    "stage_a_to_end_seconds_from_records": 497,
+    "start_record_to_end_seconds": 293,
+    "limit_to_end_snapshot_seconds": 7200
+  },
+  "limitations": {
+    "full_literal_procedural_compliance": false,
+    "original_user_approval_independently_authenticated": false,
+    "full_original_shell_history_authenticated": false,
+    "procedural_fetch_details": "UNVERIFIED_SUBMITTER_WORDING_NOT_PROOF_OF_REAL_E1_FETCH",
+    "actual_real_data_success": false
+  },
+  "retained": {
+    "E1_1_3_authorized": false,
+    "actual_REIL_identity_fetch_data_run_authorized": false,
+    "C4_A_B_authorized": false,
+    "COMSOL_authorized": false,
+    "previous_failed_attempt_preserved": true
+  },
+  "reviewer_actions": {
+    "received_program_import_execution": 0,
+    "tests": 0,
+    "judge_writer_execution": 0,
+    "repository_mutation_commit_push": 0,
+    "external_transmission": 0,
+    "own_data_parsing_hashing": true
+  },
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null
+}
+

@@ -1,0 +1,96 @@
+1: # REIL C4-E · E1-1–3 (실제 identity · 읽기 경로 · fetch · 자료 개봉 · run) 승인 요청 범위안 — 사용자 채택 요청 · 2026-11-04 KST
+2: 
+3: > **범위 채택을 요청하는 문서다 (실행 0).** E1-0b a2 결과 검토 회신 (상태 문서 §101 · `reviews/review_reil_c4e1_0b_a2_result_review_20261104/originals/`) 은
+4: > 한정 기능 결과를 수용했고 (`E1_0B_A2_LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION`), E1-1 이후의 범위 · 승인 요청서 작성을
+5: > 허용했다. 실행은 승인하지 않았다. 이 범위를 채택하신 뒤에만 승인 요청서 · 판정기 · 끝 기록 작성기 초안 · 사전 검토 발송문을 쓴다 (정적 검사만). 채택해도
+6: > identity · 읽기 경로 · fetch · 자료 개봉 · run 은 시작하지 않는다 — 그것은 사전 검토 뒤의 별도 사용자 승인이다. 예외는 §2 에서 A 를 고르실 때의 분리 실행
+7: > 탐침 한 번뿐이다 (연구 코드 · 네트워크 · 저장소 쓰기 0).
+8: 
+9: ## 0. 이미 정해진 것 (다시 정하지 않는다)
+10: 
+11: - **구조 (`docs/REIL_C4E_E1_0B_E1_1_3_SCOPE_20261030.md` §5 A · 채택):** E1-0b 와 E1-1–3 을 따로 승인한다. E1-0b 는 봉인된 대조 범위 (tmp fixture · 가짜
+12:   자식) 에서 기능 종결됐다 (§101).
+13: - **고정 계획 (E1-0b 요청서 `docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md` · `ae413f96…` §7):** 순서 identity (E1-1) → 읽기 경로 `add_repo` → fetch (E1-2)
+14:   → run (E1-3) · 대상 바이트 · 입력 (고정 URL · 커밋 `1188c371…` · 자료 두 파일) · launcher 명령 셋 · 배정 · 무관용 수용 · E1-3 의 두 판정 · 프록시
+15:   (`http.proxyAuthMethod=basic`) · 공개 한계.
+16: - **launcher 바이트 (같은 요청서 §8 의 16):** E1-1–3 은 launcher v6 (`2c707123…` · E1-0b GREEN 바이트) 를 바꾸지 않는다. run 의 승인 문구는 launcher 의
+17:   `REQUEST` 대로 E1-0b 요청서 경로를 인용하고 (`상태 문서 §NN (사용자 E1-1–3 승인 · docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md)`), 승인 절 §NN 이 새
+18:   요청의 승인 기록을 가리킨다. launcher 를 바꾸면 E1-0b 와 같은 RED / GREEN 이 다시 필요하다. 그래서 E1-0b 요청서는 다시 쓰지 않는다.
+19: - **오류 수용 (10-30 범위안 §4):** 단계마다 launcher 단계 판정 = precheck_ok AND child_ok AND rc 0 AND timeout 없음 AND postcheck_ok (정리 empty · 기한 안 ·
+20:   오류 0 · 기록 성공). 하나라도 거짓이면 그 단계에서 멈춘다 · 재시도 0 · 부분 수용 없음. E1-3 은 실행 유효성과 실험 결과 (`final_verdict`) 를 따로 적고, C4-A
+21:   로 가는 문은 둘 다 참일 때만 열린다 (그 문을 여는 것도 별도 승인).
+22: - **회신 Q4 의 요구:** 실제 대상 identity · 읽기 경로 · fetch · 자료 개봉 · run 각각의 정확한 대상 · 명령 · 출처 · 허용 활동 · 자원 / 시간 · 중지 조건 · 증거를
+23:   요청서에 고정하고 별도 사용자 승인을 받는다. §1 이 그 틀이다.
+24: 
+25: ## 1. 단계별 고정 틀 (요청서는 이 표를 바이트 · 명령 문자열까지 채운다)
+26: 
+27: `<E>` = `evidence/reil_c4e1_<착수 UTC 날짜 YYYYMMDD>/` (launcher 의 이름 규칙) · `SP` = 스크래치패드 · `BMS` = `bms-balancing/` (요청서는 절대 경로로 풀어 쓴다).
+28: 
+29: | 단계 | 대상 · 출처 | 명령 · 허용 활동 | 시간 · 자원 | 중지 | 증거 |
+30: |---|---|---|---|---|---|
+31: | E1-1 identity | venv `SP/reil_c4env/venv` · 봉인 `reil_c6_rebuild_20261013` (MANIFEST `4f120948…` → lock `ea91156c…`) · identity helper `00_identity_c4.py` (`92bb3bca…` · 1,506 B — `evidence/reil_c4e0_fix_20261014/` 의 같은 바이트를 `<E>` 로 복사) · `degradation-degeneracy/tools/env_profile.py` | `/usr/bin/python3.11 -I BMS/scripts/reil_c4e1_launch.py identity --evidence <E> --approval-section §NN` · 자식 argv = `build_argv` (helper → `03_identity.json`) · 사전 대조 (해시 · 탐침) · 기록 git | 자식 60 s · 탐침 ≤ 60 s · 기록 git 호출마다 60 s · 정리 공통 기한 20 s · 셸 도구 전경 (최악 약 380 s < 전경 상한 600 s) | 단계 판정 거짓 | launcher 의 `03_identity.*` · `03_identity.json` · 외곽 반환 · 판정 기록 |
+32: | 읽기 경로 | GitHub `REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics` | 세션 도구 `add_repo` (owner · repo · access `read`) 한 번. 도구가 알려 주는 clone 명령은 실행하지 않는다 · 그 저장소의 GitHub 도구 읽기 0 | 한 번 · 재시도 0 | 권한 · 정책 거부 · 사용자 확인 거절 → 멈춤. "공개 저장소라 읽기는 이미 프록시가 제공" → 붙이지 않고 다음 단계. 붙음 → 다음 단계 | 수동 기록 `<E>/03_read_path.json` (시각 · 입력 · 도구 반환의 상태 문장 — 비밀 검사 뒤 · Git 없음 · 이름이 launcher 의 증거 폴더 검사와 겹치지 않는지는 초안 때 정적으로 확인) |
+33: | E1-2 fetch | 고정 URL (`https://github.com/REIL-UConn/…Diagnostics.git`) · 커밋 `1188c371e5836df4a7e5f5acf336a34ffd4027e6` · 받는 곳 `SP/c4e1/data` (저장소 밖) | launcher `fetch` · 자식 = `reil_c4e_run.py fetch --dest SP/c4e1/data` (run 의 git: `init` · `remote add` · `fetch --depth 1 --filter=blob:none origin <커밋>` · `show <커밋>:<경로>`) · fetch env (FUTURE-01) · 네트워크는 이 단계 · 이 저장소 하나 · 한 번 | 자식 300 s · fetch 의 git 확인 ≤ 4 × 60 s · 탐침 ≤ 60 s · 기록 git ≤ 4 × 60 s · 정리 20 s · 셸 도구 배경 실행 (최악 약 860 s > 600 s · < 7,200 s) | 단계 판정 거짓 (사후 대조의 자료 두 파일 sha256 · bytes ≠ 고정값 포함) · 프록시를 못 지남 → 멈춤 · 재시도 0 | `04_fetch.*` · 외곽 반환 · 판정 기록. 자료 파일은 커밋하지 않는다 |
+34: | 자료 개봉 | `SP/c4e1/data/LFP_Data.xlsx` (10,841,377 B · `fd50e095…`) · `util_LFP.py` (33,754 B · `3c19e45e…`) | **E1-3 run 의 prep 안에서** 한다 (sha 대조 · p0 결속 · 받은 `util_LFP.py` 의 import · xlsx 읽기 — 정확한 순서는 요청서 작성 때 run 모듈 코드로 고정). 받은 외부 코드를 venv 자식 안에서 import · 실행한다 (고정 바이트만). 따로 띄우는 단계가 아니다 — 떼려면 run 모듈 변경 (새 RED / GREEN) 이 필요하다 | run 의 prep 900 s 안 | prep 실패 · sha 불일치 → 작업자 시작 전 멈춤 (run 모듈) | run 의 `IDENTITY.json` · `HEADER.json` 등 |
+35: | E1-3 run | 위 자료 · 다섯 모듈 · SOURCES.json · S1 의 둘 · 봉인 | launcher `run` · 자식 = `reil_c4e_run.py run … --out <E>/run --approval "상태 문서 §NN (사용자 E1-1–3 승인 · docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md)"` · 66 호출 · 네트워크 0 | run 모듈 기한 prep 900 · 측정 9,000 · 기록 9,900 · 단계 10,800 s (= 자식 timeout) · RSS ≤ 4 GiB · 새 산출 ≤ 1 GiB · 디스크 여유 ≥ 5 GiB · 정리 20 s · 기대 경과 약 35–45 분 (C4-E 요청 v2 §4-1 의 산술 · 보증 아님) · §2 의 방식 | 실행 유효성 (단계 판정) 거짓 → E1-3 실패. `final_verdict` INCOMPLETE → 결과대로 기록 · E1-3 통과 아님 | `05_run.*` · `<E>/run/` (ROWS · AGGREGATE · OPERATION · RESOURCES · RULE · IDENTITY · HEADER · END_RECORD · SOURCES — JSON) · 외곽 반환 · 판정 기록 |
+36: 
+37: - 각 단계는 앞 단계가 통과했을 때만 띄운다. 전체 (승인 기록 → 끝 기록) ≤ 6 h · 재시도 0.
+38: - 지금 상태 (읽기 전용 확인 · 2026-11-04): `SP/c4e1` · `evidence/reil_c4e1_*` 없음 · venv python 있음 · 디스크 여유 약 26 GB (a2 끝 기록 26,028,994,560 B).
+39: 
+40: ## 2. 정할 것 1 — 긴 run 을 어떻게 띄우나 (셸 도구 상한 < run 기한)
+41: 
+42: - **사실:** 이 세션의 셸 도구는 전경 600 s · 배경 7,200 s 가 상한이고, 배경 상한에 닿으면 명령을 멈춘다. run 의 자식 timeout 은 10,800 s, run 모듈의 측정
+43:   마감은 9,000 s 다. 그래서 E1-0b 처럼 "배경 실행으로 띄우고 끝 알림" 만으로는 run 이 2 h 를 넘을 때 셸 도구가 launcher 를 끊는다 (기록 없이).
+44: - **A (권장) — 분리 실행 + 읽기 전용 감시:**
+45:   - run 줄을 셸 도구의 호출과 떨어진 프로세스로 띄운다: `setsid nohup sh -c '<고정 run 줄>; rc=$?; set -C; printf "%s\n" "$rc" > <E>/05_run.outer_rc.txt'
+46:     > /dev/null 2>&1 < /dev/null &` (정확한 문자열은 요청서에 고정). launcher 의 timeout · 정리 · 기록은 그대로다.
+47:   - 끝은 감시 루프로 기다린다: 셸 도구 배경 실행의 `until [ -e <E>/05_run.outer_rc.txt ]; do sleep 30; done` (읽기만 · 개입 0). 감시가 2 h 상한에 닿으면
+48:     감시만 다시 건다 (run 에 영향 없음). 외곽 반환 파일이 생긴 뒤 판정기를 전경으로 띄운다.
+49:   - 위험 (공개): run 도중 세션 · 컨테이너가 끝나면 run 과 기록을 잃는다 → 멈춤 · 재시도 없음 · 결과 검토.
+50:   - **탐침 한 번 (채택하시면 · 요청서 작성 전):** `SP/detach_probe_20261104/` 에서 `sleep 150` 뒤 표지 파일 하나를 쓰는 분리 프로세스를 띄우고, 띄운 셸 호출이
+51:     돌아온 뒤 (다른 도구 호출에서) 표지가 생기는지 본다. 연구 코드 · 네트워크 · 저장소 쓰기 0 · 결과는 원장에 적는다. 안 되면 A 를 접고 C 를 다시 묻는다.
+52: - **B — 셸 도구 배경 실행 (2 h 상한):** 고정 예산 10,800 s 와 맞지 않는다 (2 h 를 넘으면 기록 없이 끊긴다). 권장하지 않는다.
+53: - **C — run 의 기한을 2 h 안으로 줄인다:** run 모듈 · launcher 바이트가 바뀌어 새 RED / GREEN · 검토가 필요하다. 권장하지 않는다.
+54: - identity 는 전경, fetch 는 셸 도구 배경 실행 (최악 약 860 s) 으로 띄운다 — A · B · C 와 관계없다.
+55: 
+56: ## 3. 정할 것 2 — 판정 · 끝 기록 (a2 방식을 이어 쓴다)
+57: 
+58: - **A (권장):** 새 고정 판정기 (E1-1–3) 와 끝 기록 작성기 v3 를 초안으로 만들어 (정적 검사만 · 실행 0) 요청서에 sha 를 적고, 첫 단계 전에 `<E>` 로 복사해
+59:   봉인한다 (`00_start.txt`). 단계마다 외곽 반환 파일 → 판정기 한 번 → 수동 판정. verdict 와 수동 판정이 다르거나 판정기가 기록을 못 쓰면 멈춘다.
+60:   - 판정기가 읽는 것: launcher meta (precheck · child · rc · timeout · postcheck · 정리 · 기록 · 원천 해시) · 외곽 반환 · run 은 `<E>/run/` 의 기록 파일 이름과
+61:     stdout 마지막 줄의 `final_verdict` — 실행 유효성과 실험 결과를 따로 적는다.
+62:   - 끝 기록 작성기 v3: 이름 규칙 `reil_c4e1_YYYYMMDD` · 세 단계의 meta · 외곽 반환 · 판정 기록 · 읽기 경로 기록 · 복사본 sha · 디스크 · 시각. Git · 네트워크 0.
+63: - **B:** 수동 판정만 + 끝 기록 작성기 v3 — 초안은 줄지만 기계 기록이 없다.
+64: 
+65: ## 4. 정할 것 3 — 실제 결과 파일의 공개 (공개 저장소)
+66: 
+67: - **사실:** 저장소는 공개다. 원자료는 `SP/c4e1/data` 에만 있고 커밋하지 않는다. run 의 산출 루트 `<E>/run` 은 저장소 안이고, run 모듈의 상한은 새 산출
+68:   1 GiB 다 (예상은 JSON 기록 아홉).
+69: - **A (권장):** 커밋 전에 검사한다 — `<E>/run` 안에 자료 두 파일과 같은 바이트 · `.xlsx` · `.py` 가 없음 · 파일 하나 ≤ 50 MB · 합 ≤ 100 MB · 비밀 검사 · URL
+70:   계정 형태. 하나라도 어긋나면 그 부분을 커밋하지 않고 멈춰 사용자에게 묻는다 (파일은 지우지 않는다).
+71: - **B:** `<E>/run` 은 목록 (경로 · 크기 · sha256) 만 커밋하고 파일은 커밋하지 않는다 — 공개 검증이 약해진다.
+72: 
+73: ## 5. 정할 것 4 — 절차 Git · 명령 문자열 (A2_PROC_01 · 회신 권고)
+74: 
+75: - **권장:** 승인 기록부터 끝 기록까지 절차 Git 은 add · commit (+ log) 만 하고, 매번 요청서의 고정 이름 확인 명령을 **문자 그대로** 앞에 둔다 (출력 생략 ·
+76:   변형 0). 작성 저장소의 fetch · push 는 끝 기록 뒤에만 하고, 기록에는 "작성 저장소 동기화 fetch" 로 적어 E1-2 의 fetch 와 나눈다.
+77: 
+78: ## 6. 순서 (요청서에서 명령 문자열까지 고정)
+79: 
+80: a 승인 기록 § · 보존 규칙 (`evidence/reil_c4e1_<날짜>/** -text`) · `<E>` 만들기 (`evidence/reil_c4e1_*` · `SP/c4e1` 가 있으면 멈춤) → b 복사 (identity
+81: helper · 판정기 · 작성기) · `00_start.txt` · 봉인 커밋 → c E1-1 identity → d 읽기 경로 → e E1-2 fetch → f E1-3 run (§2) → g 끝 기록 → 커밋 · push → 결과
+82: 기록 § · 결과 검토 발송문 → 멈춤. 각 단계 뒤 그 단계의 기록을 커밋한다 (자료 파일 제외).
+83: 
+84: ## 7. 바뀌지 않는 것
+85: 
+86: launcher v6 · 다섯 모듈 · SOURCES.json · S1 의 둘 · 봉인 · 기존 시험 · E1-0b 요청서 (`ae413f96…` — 다시 쓰지 않는다) · 기존 증거 (E0 · N1 · E1-0 · E1-0b
+87: 두 시도). A2_PROC_01 은 §101 의 문구로만 남는다.
+88: 
+89: ## 8. 정하실 것
+90: 
+91: 1. **이 범위 채택** — 채택하시면 E1-1–3 승인 요청서 · 판정기 · 끝 기록 작성기 v3 초안 · 사전 검토 발송문을 쓰고 멈춘다 (정적 검사만 · 실행 0). 예외는 2 에서
+92:    A 를 고르실 때의 분리 실행 탐침 한 번.
+93: 2. **긴 run** — **A: 분리 실행 + 읽기 전용 감시 · 탐침 한 번 (권장)** / B: 셸 도구 배경 실행 (2 h 상한) / C: 기한 줄이기 (코드 변경).
+94: 3. **판정 · 끝 기록** — **A: 판정기 + 수동 판정 + 작성기 v3 (권장)** / B: 수동 판정 + 작성기 v3.
+95: 4. **결과 공개** — **A: 검사 뒤 커밋 · 어긋나면 멈춤 (권장)** / B: 목록만 커밋.
+96: 5. **절차 Git** — **§5 의 권장안 (권장)**.

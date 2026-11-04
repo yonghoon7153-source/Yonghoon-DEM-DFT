@@ -1,0 +1,51 @@
+{
+  "pin": "d88d064b567a55e16f79ba2827ef9e8afdecf96f",
+  "attachment": {
+    "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_1_3_SCOPE_20261104.md",
+    "bytes": 13895,
+    "sha256": "ccc343de78ac0a92e2cbc694962bb4f537c286dcfb6031947193d7f6e7d365d6"
+  },
+  "attachment_equals_pinned_repository_bytes": true,
+  "sources": [
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_1_3_SCOPE_20261104.md",
+      "bytes": 13895,
+      "sha256": "ccc343de78ac0a92e2cbc694962bb4f537c286dcfb6031947193d7f6e7d365d6",
+      "git_blob_sha1": "3014cb82c59e0eb660e18eab1f2be2049b1126f3",
+      "source": "fresh connector read at d88d064b567a55e16f79ba2827ef9e8afdecf96f"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4e1_launch.py",
+      "bytes": 62639,
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf",
+      "git_blob_sha1": "3e11c6a445ab2cc7fa6d2dfd3289e441372c5779",
+      "source": "fresh connector read at d88d064b567a55e16f79ba2827ef9e8afdecf96f"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4e_run.py",
+      "bytes": 53853,
+      "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9",
+      "source": "prior pinned raw copy; unchanged path in complete compare f09ead06a0ec21534af327cd108b607343f43ec3..d88d064b567a55e16f79ba2827ef9e8afdecf96f"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "bytes": 96529,
+      "sha256": "ae413f965e890103db175ef261b05d6c49b26f9a53048abdab8c9b8d3b234840",
+      "source": "prior pinned raw copy; unchanged path in complete compare f09ead06a0ec21534af327cd108b607343f43ec3..d88d064b567a55e16f79ba2827ef9e8afdecf96f"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4e1_0b_a2_20261104/00_start.txt",
+      "bytes": 1895,
+      "sha256": "38650a378580c4970b8bee3c63d77b9ded874ac08e8d8786d9cb827fd8d2868a",
+      "source": "prior pinned raw copy; unchanged path in complete compare f09ead06a0ec21534af327cd108b607343f43ec3..d88d064b567a55e16f79ba2827ef9e8afdecf96f"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4e1_0b_a2_20261104/03_end.json",
+      "bytes": 2436,
+      "sha256": "8a82fe6e8639f2a756e51f980df45f02ba5990d2007389f1e73bfcf1ab5c0a89",
+      "source": "prior pinned raw copy; unchanged path in complete compare f09ead06a0ec21534af327cd108b607343f43ec3..d88d064b567a55e16f79ba2827ef9e8afdecf96f"
+    }
+  ],
+  "fresh_launcher_equals_previously_accepted_v6": true,
+  "status_excerpt_note": "API excerpt lines 2917–2960, not a raw full-file copy; reported git blob identity is retained only in STATUS_EXCERPT_CAPTURE.json."
+}

@@ -1,0 +1,26 @@
+{
+  "kind": "RECIPIENT_SCOPE_STATIC_DATA_REVIEW",
+  "pin": "d88d064b567a55e16f79ba2827ef9e8afdecf96f",
+  "attachment_matches_repository": true,
+  "launcher_v6_unchanged": true,
+  "unchanged_reused_paths": [
+    "bms-balancing/scripts/reil_c4e_run.py",
+    "bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+    "bms-balancing/evidence/reil_c4e1_0b_a2_20261104/00_start.txt",
+    "bms-balancing/evidence/reil_c4e1_0b_a2_20261104/03_end.json"
+  ],
+  "preserved_existing_evidence": "evidence/reil_c4e1_0b_a2_20261104",
+  "broad_glob_matches_preserved_a2": true,
+  "configured_timeout_sums": {
+    "identity": 380,
+    "fetch": 860
+  },
+  "timeout_sum_is_proven_wall_clock_bound": false,
+  "target_imports": 0,
+  "received_program_execution": 0,
+  "test_execution": 0,
+  "detach_probe_execution": 0,
+  "production_or_authoring_repository_mutations": 0,
+  "attachment_preserved": true,
+  "scope": "Text, raw hashes, comparison metadata and arithmetic only; no independent observation of remote runtime state."
+}

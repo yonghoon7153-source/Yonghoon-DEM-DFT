@@ -1,0 +1,90 @@
+{
+  "kind": "REIL_E1_1_3_SCOPE_DOCUMENT_REVIEW",
+  "date": "2026-11-04",
+  "pin": "d88d064b567a55e16f79ba2827ef9e8afdecf96f",
+  "decision": "SCOPE_REVISION_REQUIRED_BEFORE_USER_SELECTION",
+  "scope_direction_reasonable": true,
+  "required_document_corrections": 3,
+  "findings": [
+    {
+      "id": "E113_N1",
+      "priority": "P2",
+      "lines": [
+        38,
+        80
+      ],
+      "title": "실제 실행 증거 namespace와 과거 시험 증거 분리",
+      "status": "OPEN",
+      "closure": "부재 주장과 시작 guard를 실제 날짜형 이름/정확 착수 경로로 좁히고 과거 증거 보존"
+    },
+    {
+      "id": "E113_N2",
+      "priority": "P2",
+      "lines": [
+        31,
+        33,
+        45,
+        46,
+        47,
+        48,
+        49,
+        54
+      ],
+      "title": "외곽 실패 증거·완전한 반환 게시·유한 감시 종결",
+      "status": "OPEN",
+      "closure": "외부 출력과 실행 식별 보존, 완전한 rc 게시 확인, 재등록에도 유지되는 마감/미완·잔류 책임; timeout 합을 실제 반환 상한으로 표현하지 않기"
+    },
+    {
+      "id": "E113_N3",
+      "priority": "P2",
+      "lines": [
+        6,
+        7,
+        50,
+        51,
+        91,
+        92,
+        93
+      ],
+      "title": "즉시 탐침의 구체 실행 범위와 한계",
+      "status": "OPEN",
+      "closure": "문서 방향과 탐침 승인 분리 또는 이번 선택 전에 정확한 단일 탐침 명세 고정"
+    }
+  ],
+  "prior_a2_acceptance_retained": true,
+  "prior_procedural_deviation_retained": "A2_PROC_01",
+  "e1_0b_retest_required": false,
+  "deferred_not_new_blockers": [
+    "정확 자료 개봉 순서",
+    "child stdout의 실제 final 필드 명세",
+    "새 판정기/작성기 바이트 봉인",
+    "절차 Git 문자열과 결과 공개 검사 세부",
+    "과거 디스크 관측 시점 표현"
+  ],
+  "user_choices_recorded": false,
+  "scope_adopted": false,
+  "probe_authorized": false,
+  "e1_1_3_execution_authorized": false,
+  "c4_a_b_authorized": false,
+  "comsol_authorized": false,
+  "performed": {
+    "received_code_execution": 0,
+    "target_imports": 0,
+    "tests": 0,
+    "detach_probe": 0,
+    "actual_reil_identity_fetch_run": 0,
+    "repo_commit_push": 0,
+    "external_transmission": 0,
+    "static_data_checks": true,
+    "official_document_read": true
+  },
+  "numeric_review_budget": null,
+  "whole_work_elapsed_claim": null,
+  "limitations": [
+    "검토 pin 기준",
+    "원격 runtime/디스크/venv 상태 미관측",
+    "설치본 셸/관리 도구의 실제 수명 미검증",
+    "이 검토는 범위 선택 및 실행 승인이 아님"
+  ]
+}
+

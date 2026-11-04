@@ -1,0 +1,83 @@
+{
+ "copies_sha256": {
+  "bms-balancing/evidence/reil_c4e1_0b_a2_20261104/00_end_writer.py": "2f316acc348412cafd8607ef7fe0d19a579237e21c4535ab2a657ca090a5472b",
+  "bms-balancing/evidence/reil_c4e1_0b_a2_20261104/00_judge.py": "3749b32edd3954fdfa4bfe92336d9eafaf2121b6275c9bd0b3584ece42dc60c4",
+  "bms-balancing/evidence/reil_c4e1_0b_a2_20261104/00_step_runner.py": "e284f8a14a5f15f405b566ab668a58f069a6ab465a25e391a36ce28f1fdf9059",
+  "bms-balancing/scripts/reil_c4e1_launch.py": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf",
+  "bms-balancing/tests/test_reil_c4e1_launch.py": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001",
+  "bms-balancing/tests/test_reil_c4e1_runner.py": "b34fb9a98eb6e852d4c30038ee988adee57d03c2b138e767ca742ea327a45e13"
+ },
+ "disk_avail_bytes": 26028994560,
+ "git_name_check_e": {
+  "git_env_names": [
+   "GIT_ASKPASS",
+   "GIT_CONFIG_COUNT",
+   "GIT_CONFIG_KEY_0",
+   "GIT_CONFIG_KEY_1",
+   "GIT_CONFIG_KEY_2",
+   "GIT_CONFIG_VALUE_0",
+   "GIT_CONFIG_VALUE_1",
+   "GIT_CONFIG_VALUE_2",
+   "GIT_EDITOR",
+   "GIT_SSL_CAINFO",
+   "GIT_TERMINAL_PROMPT"
+  ],
+  "outside_allowlist": []
+ },
+ "kind": "REIL_C4E1_0B_END",
+ "steps": {
+  "01_red_e1_0b": {
+   "cleanup_status": "empty",
+   "deadline_hit": false,
+   "head_end": "334e17f4be552a526cf9fcb04bc037b50bdd93e0",
+   "head_start": "334e17f4be552a526cf9fcb04bc037b50bdd93e0",
+   "judge": {
+    "bytes": 12484,
+    "failed": [],
+    "sha256": "e2f0f036a3c562484bc2e83d83e6c1e20e4f80b81612cd78faa6cde043332511",
+    "verdict": "MATCH"
+   },
+   "outer_rc": {
+    "rc": 1,
+    "text": "1\n"
+   },
+   "rc": 1,
+   "runner_ok": true,
+   "started": true,
+   "timed_out": false,
+   "times": {
+    "child_s": 16.73,
+    "cleanup_s": 0.001,
+    "records_s": 0.04,
+    "total_s": 17.21
+   }
+  },
+  "02_green_e1_0b": {
+   "cleanup_status": "empty",
+   "deadline_hit": false,
+   "head_end": "a8139f58fa69e37f01bfe1b885befd26e55080aa",
+   "head_start": "a8139f58fa69e37f01bfe1b885befd26e55080aa",
+   "judge": {
+    "bytes": 4559,
+    "failed": [],
+    "sha256": "e9a8a0b07c5c9ef7bd036836e7b2ff8dfbfca355bba800a5cd7e7a5c7274a89f",
+    "verdict": "MATCH"
+   },
+   "outer_rc": {
+    "rc": 0,
+    "text": "0\n"
+   },
+   "rc": 0,
+   "runner_ok": true,
+   "started": true,
+   "timed_out": false,
+   "times": {
+    "child_s": 23.252,
+    "cleanup_s": 0.002,
+    "records_s": 0.043,
+    "total_s": 23.342
+   }
+  }
+ },
+ "utc": "2026-11-04T02:00:05Z"
+}
