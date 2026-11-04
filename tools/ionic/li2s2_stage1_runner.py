@@ -62,7 +62,7 @@ DI 수정:
      잠금 · STOP.json (닫는 사건이면 거부 · 아니면 --ack_stop <stop_id> 가 있어야 이어감) · 장부의 도는 중 런 (프로세스 그룹이
      살아 있으면 거부 · 죽었으면 고아 런으로 비용 어림 마감) · 장부의 closes_system · 판정 파일 다시 판정 → 묶음 판정 (멈춤이면 거부)
   ② 시드마다: 판정이 pass · fail 이면 건너뜀 · 판정이 미완 · 무효거나 판정 없이 런 폴더만 있으면 **멈춤** (끊긴 런을 덮어쓰지 않는다)
-  ③ 상한: 누적 + 한 시드 최악 (관측 최댓값 · 없으면 --seed_worst_h) > 상한이면 새 시드를 안 띄우고 미완결로 멈춤 ·
+  ③ 상한: 누적 + 한 시드 최악 (끝난 런 관측 벽시계와 --seed_worst_h 중 큰 값) > 상한이면 새 시드를 안 띄우고 미완결로 멈춤 ·
      실행 중 poll 마다 누적 + 경과 ≥ 상한이면 그 담금질을 멈추고 미완결
   ④ GPU 가 빌 때까지 기다린다 (memory.used ≤ --start_max_mib 두 번 연속 — cascade 가 끝나면 열린다)
   ⑤ 담금질을 띄운다 (카드 기계값에서 만든 명령 · --print_cmd 로 미리 볼 수 있다) — 계의 **첫 시드**면 --poll_s 마다
@@ -102,7 +102,11 @@ DI 수정:
 from __future__ import annotations
 import argparse, datetime, hashlib, importlib.util, json, os, pathlib, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "ebaff2f3d2237ac8"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "158d994ed5a66af6"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_VALUES_SHA16 = "086de59c484f9c32"     # 카드 기계_판독_값 (mq.values_sha16) — ⭐ DO 전 리뷰 P2-12: 카드 값 (상한 포함) 을 바꾸면 이 줄도
+                                               #   같이 바꾸고 다시 리뷰한다 (카드 파일만 고쳐서는 상한 멈춤을 넘기지 못한다)
+STOP_KEYS = ("at", "code", "reason", "terminal", "stop_id", "run_id", "sys", "seed", "cleanup", "rc", "verdict", "melt", "summary",
+             "cum_h", "worst_h", "cap_h")   # 확인 때 stop_history 로 옮기는 열쇠 (⭐ DO 전 리뷰 P2-6 — STOP.json 안의 declaration 등은 옮기지 않는다)
 DECISION = "D-2026-11-03-li2s2-dense-window"
 CARD_REL = "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json"
 DRIVER_REL = "tools/ionic/melt_quench_uma.py"
@@ -318,6 +322,11 @@ def _recovery_clock():
         return None
 
 
+def _is_num(x):
+    """수 타입 (int · float) 이고 유한 — bool · 글자 ('100') 는 아니다 (⭐ DO 전 리뷰 P1-3)."""
+    return isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x)
+
+
 def _orphan_upper_hours(ent, now):
     start = ent.get("start_recovery_clock")
     if not isinstance(start, dict) or not isinstance(now, dict):
@@ -325,10 +334,13 @@ def _orphan_upper_hours(ent, now):
     keys = ("host", "boot_id", "kind")
     if any(not start.get(k) or start.get(k) != now.get(k) for k in keys):
         return None
+    lo_ = ent.get("wall_h_so_far", 0.0)
+    if not (_is_num(now.get("seconds")) and _is_num(start.get("seconds")) and _is_num(lo_)):
+        return None
     try:
         elapsed = (float(now["seconds"]) - float(start["seconds"])) / 3600.0
-        lower = float(ent.get("wall_h_so_far", 0.0))
-    except (KeyError, TypeError, ValueError):
+        lower = float(lo_)
+    except (KeyError, TypeError, ValueError, OverflowError):
         return None
     return elapsed if math.isfinite(elapsed) and math.isfinite(lower) and elapsed >= max(0.0, lower) else None
 
@@ -336,7 +348,7 @@ def _orphan_upper_hours(ent, now):
 
 def _gpu_used_mib():
     out = subprocess.run(["nvidia-smi", "--query-gpu=memory.used", "--format=csv,noheader,nounits"],
-                         capture_output=True, text=True, check=True).stdout
+                         capture_output=True, text=True, check=True, timeout=60).stdout   # ⭐ DO 전 리뷰 P2-18 — 멈춘 GPU 에 매달리지 않는다
     return int(out.split()[0])
 
 
@@ -417,7 +429,7 @@ def retry_eligibility(attempts, stop_history, inventory, values, mq):
         if rec is None:
             return {"ok": False, "code": "resume", "why": f"이전 실행 {tag} 폴더를 못 찾는다 (invalid 런 포함) — 같은 계 폴더 안에 옆으로 옮겨 보존해야 한다 "
                                                          "(지우거나 run_root 밖으로 옮기지 않는다)"}
-        rk = mq.run_kind(x, rec["path"])                     # ⭐ 회신 DK P0-2 — 소비자 · 확인 검사와 같은 분류
+        rk = mq.run_kind(x, rec["path"], values)             # ⭐ 회신 DK P0-2 — 소비자 · 확인 검사와 같은 분류 (DO 전 리뷰 — 보존 폴더 녹음까지)
         if rk == "scientific":
             return {"ok": False, "code": "invalid", "why": f"이전 실행 {tag} 에 과학적 판정 (장부 · 폴더) 이 있다 — 다시 담금질하지 않는다"}
         if rk == "unreadable":
@@ -445,7 +457,8 @@ def retry_eligibility(attempts, stop_history, inventory, values, mq):
     prev, kind, st = attempts[-1], kinds[-1], stages[-1]
     codes = mq.RETRY_BIND_CODES[kind]
     rejudge = kind == "invalid" and st in ("final", "md_complete")
-    bound = [(h, mq.declaration_problems(h.get("declaration"), kind, values, rejudge_needed=rejudge, prev_status=prev.get("status")))
+    bound = [(h, mq.declaration_problems(h.get("declaration"), kind, values, rejudge_needed=rejudge,
+                                         prev_status=prev.get("status_before_orphan") or prev.get("status")))
              for h in stop_history if h.get("acked_at") and h.get("run_id") == prev.get("run_id") and h.get("code") in codes]
     good = [h for h, pr in bound if not pr]
     if not good:
@@ -480,7 +493,7 @@ def ack_declaration_problems(decl, sp, led, values, mq, run_root):
         return [f"장부에 run_id {str(rid)[:8]} 런이 {len(hit)} 개"]
     inv_, _ = mq.attempt_inventory(run_root)
     rec = inv_.get(rid)
-    kind = mq.run_kind(hit[0], rec["path"] if rec else None)   # 그 실행의 종류 (code 가 아니라 실행에서 · 회신 DK P0-2 — 한 분류)
+    kind = mq.run_kind(hit[0], rec["path"] if rec else None, values)   # 그 실행의 종류 (code 가 아니라 실행에서 · 회신 DK P0-2 — 한 분류)
     if kind == "scientific":
         return ["이 실행에는 과학적 판정 (pass · fail) 이 있다 — 재시도 대상이 아니다 (선언을 받지 않는다)"]
     if kind == "unreadable":
@@ -489,7 +502,7 @@ def ack_declaration_problems(decl, sp, led, values, mq, run_root):
         return [f"이 멈춤 ({code}) 은 이 실행 ({kind}) 의 재시도 영수증이 될 수 없다 — 묶는 code {list(mq.RETRY_BIND_CODES[kind])}"]
     st = mq.folder_stage(rec["path"]) if rec else None
     return mq.declaration_problems(decl, kind, values, rejudge_needed=(kind == "invalid" and st in ("final", "md_complete")),
-                                   prev_status=hit[0].get("status"))
+                                   prev_status=hit[0].get("status_before_orphan") or hit[0].get("status"))
 
 
 def _btime():
@@ -610,10 +623,21 @@ def attest_cost(run_root, run_id, values, hours=None, fields=None, deps=None):
 
 
 def _write_json_atomic(path, obj):
+    """임시 파일에 쓰고 fsync → 이름 교체 → 디렉터리 fsync (⭐ DO 전 리뷰 P2-14 — 장부 · STOP · 실행 전 기록이 정전 뒤 빈 파일로 돌아오지 않게.
+    저장장치 쓰기 캐시까지 보증하지는 않는다)."""
     path = pathlib.Path(path)
     tmp = path.with_name(path.name + ".tmp")
-    tmp.write_text(json.dumps(obj, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+    with open(tmp, "w", encoding="utf-8") as fh:
+        fh.write(json.dumps(obj, ensure_ascii=False, indent=1, default=str))
+        fh.flush()
+        os.fsync(fh.fileno())
     os.replace(tmp, path)
+    if os.name == "posix":
+        fd = os.open(str(path.parent), os.O_RDONLY)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
 
 
 def run(a, deps=None):
@@ -686,6 +710,12 @@ def run(a, deps=None):
             build_cmd(a.python, W, R, s, vals["first_seed"], vals, mq)
     except Exception as e:
         log(f"⛔ 카드 값 · 순서를 못 받았다 ({type(e).__name__}: {e}) — 시작하지 않는다"); logf.close(); return RC["refused"]
+    want_v = getattr(a, "expect_values_sha16", None)
+    if want_v is not None and mq.values_sha16(vals) != want_v:   # ⭐ DO 전 리뷰 P2-12 — 카드 값 (상한 포함) 은 러너 고정값과 같아야 한다
+        log(f"⛔ 카드 기계_판독_값 지문 {mq.values_sha16(vals)} ≠ 러너 고정값 {want_v} — 카드 값을 바꿨으면 러너 고정값도 같이 바꾸고 다시 리뷰한다 "
+            "(시작하지 않는다)"); logf.close(); return RC["refused"]
+    if not deps.get("python_ok", lambda x_: shutil.which(x_) is not None)(a.python):   # ⭐ DO 전 리뷰 P2-8 — 발사 실패가 재시도 한도를 먹지 않게
+        log(f"⛔ --python {a.python!r} 를 실행할 수 없다 — 시작하지 않는다"); logf.close(); return RC["refused"]
     cap_base = float(vals["stage1_cap_gpu_h"])               # 상한 = 카드 값뿐 (정전 손실로 늘리지 않는다 — 회신 DK · 카드 v3)
     lock = _Lock(R / "stage1.lock")
     if not lock.acquire():
@@ -709,8 +739,15 @@ def run(a, deps=None):
         led.update({"decision": DECISION, "driver_sha16": s16, "card": CARD_REL, "cap_h": cap_base,
                     "card_values_sha16": mq.values_sha16(vals)})
         # ①-1 STOP.json — 닫는 사건은 넘기지 않는다 · 나머지는 사람이 stop_id 로 확인해야 이어간다 (회신 DG P0-1)
-        if stop_p.is_file():
-            sp = json.loads(stop_p.read_text(encoding="utf-8"))
+        if os.path.lexists(stop_p):
+            try:                                             # ⭐ DO 전 리뷰 P2-5 · P2-7 — 못 읽는 STOP 은 덮어쓰지 않고 거부 · stop_id 없는 STOP 을 조용히 넘기지 않는다
+                sp = mq.loads_strict(stop_p.read_text(encoding="utf-8"))
+                if not (isinstance(sp, dict) and isinstance(sp.get("stop_id"), str) and sp["stop_id"].strip()
+                        and isinstance(sp.get("code"), str) and sp["code"].strip()):
+                    raise ValueError("stop_id · code 가 글자가 아니다")
+            except Exception as e:
+                log(f"⛔ STOP.json 을 못 읽는다 ({type(e).__name__}: {str(e)[:80]}) — 원본을 덮어쓰지 않고 시작하지 않는다 (사람이 본다)")
+                return RC["refused"]
             code = sp.get("code")
             if code in TERMINAL_STOPS:
                 log(f"⛔ 이 run_root 는 닫혔다 ({code} · {sp.get('reason')}) — 재시작으로 다시 열지 않는다 (새 카드 · 새 run_root)")
@@ -718,8 +755,9 @@ def run(a, deps=None):
             if a.ack_stop != sp.get("stop_id"):
                 log(f"⛔ 앞선 멈춤이 남아 있다 ({code} · {sp.get('reason')}) — 확인했으면 --ack_stop {sp.get('stop_id')}")
                 return RC.get(code, RC["refused"])
-            if code == "cap" and not (cap_base > float(sp.get("cap_h", cap_base)) + 1e-9):
-                log(f"⛔ 상한 멈춤은 카드 상한이 올라갔을 때만 넘긴다 (멈춤 {sp.get('cap_h')} · 지금 {cap_base:g} — 바꾸려면 결정 · 카드 개정)")
+            if code == "cap" and not (_is_num(sp.get("cap_h")) and cap_base > float(sp["cap_h"]) + 1e-9):
+                log(f"⛔ 상한 멈춤은 카드 상한이 올라갔을 때만 넘긴다 (멈춤 {sp.get('cap_h')!r} · 지금 {cap_base:g} — 바꾸려면 결정 · 카드 개정 · "
+                    "러너 고정값)")
                 return RC["cap"]
             decl = declaration_from_args(a)                  # ⭐ 회신 DJ Q1 — 재시도 선언은 확인 때 붙이고 그 자리에서 검사한다
             if decl is not None:
@@ -727,9 +765,11 @@ def run(a, deps=None):
                 if dprob:
                     log(f"⛔ 재시도 선언을 받지 않는다 — {' · '.join(dprob)} (멈춤은 그대로 · 고쳐서 다시 확인)")
                     return RC["refused"]
-            led["stop_history"].append({**sp, "acked_at": _now(), **({"declaration": decl} if decl else {})})
+            if not any(isinstance(h_, dict) and h_.get("stop_id") == sp["stop_id"] and h_.get("acked_at") for h_ in led["stop_history"]):
+                led["stop_history"].append({**{k_: sp[k_] for k_ in STOP_KEYS if k_ in sp}, "acked_at": _now(),
+                                            **({"declaration": decl} if decl else {})})
+            save_ledger()                                    # ⭐ DO 전 리뷰 P2-15 — 확인 기록을 먼저 남기고 STOP 을 지운다
             stop_p.unlink()
-            save_ledger()
             log(f"  앞선 멈춤 {code} (stop_id {sp.get('stop_id')}) 확인" + (f" · 재시도 선언 {decl['reason']} ({decl['event']})" if decl else "")
                 + " — 장부 stop_history 로 옮기고 이어간다")
         elif declaration_from_args(a) is not None:           # 확인할 멈춤이 없는데 선언만 주면 조용히 버리지 않는다
@@ -739,11 +779,16 @@ def run(a, deps=None):
         for ent in led["runs"]:
             if ent.get("end") is None:
                 pg = ent.get("pgid")
-                alive = pg_alive(pg) if pg is not None else None
+                rc_now, rc_st = recovery_clock(), ent.get("start_recovery_clock")
+                rebooted = bool(isinstance(rc_now, dict) and isinstance(rc_st, dict) and rc_now.get("boot_id") and rc_st.get("boot_id")
+                                and rc_now.get("boot_id") != rc_st.get("boot_id"))   # ⭐ DO 전 리뷰 P2-10 — 다른 부팅이면 그 그룹은 죽었다 (pgid 재사용)
+                alive = False if rebooted else (pg_alive(pg) if pg is not None else None)
                 if alive is not False:
                     log(f"⛔ 장부의 {ent['system']}{ent['seed']} 담금질 (프로세스 그룹 {pg}) 이 살아 있거나 종료 확인 불가다 — 시작하지 않는다")
                     return RC["refused"]
                 lo = ent.get("wall_h_so_far")
+                ent.setdefault("status_before_orphan", ent.get("status"))   # ⭐ DO 전 리뷰 P0-1 (b) — 고아 마감이 앞 상태 · rc 를 지우지 않는다
+                ent.setdefault("rc_before_orphan", ent.get("rc"))
                 hi = _orphan_upper_hours(ent, recovery_clock())
                 if hi is not None:
                     ent.update(end=_now(), wall_h=hi, wall_h_lower=lo, rc="unknown_runner_died", status="orphaned",
@@ -833,13 +878,20 @@ def run(a, deps=None):
                    "status": "starting", "end": None, "wall_h": None, "wall_h_so_far": 0.0, "cum_before_h": cum}
             led["runs"].append(ent); state["entry"], state["t0"] = ent, t0
             save_ledger()
-            h = launch(cmd, R / f"quench_{sysn}{seed}.log")
-            state["h"] = h
-            ent.update(pgid=getattr(h, "pid", None), status="running")
-            save_ledger()                                    # ⭐ 띄운 직후 — 러너가 죽어도 시작 사실이 남는다 (회신 DG P0-2)
+            hold_sig = hasattr(signal, "pthread_sigmask") and threading.current_thread() is threading.main_thread()
+            old_mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGHUP, signal.SIGINT}) if hold_sig else None
+            try:                                             # ⭐ DO 전 리뷰 P2-9 — 신호는 손잡이를 적은 뒤에 받는다 (띄운 자식을 놓치지 않게)
+                h = launch(cmd, R / f"quench_{sysn}{seed}.log")
+                state["h"] = h
+                ent.update(pgid=getattr(h, "pid", None), status="running")
+                save_ledger()                                # ⭐ 띄운 직후 — 러너가 죽어도 시작 사실이 남는다 (회신 DG P0-2)
+            finally:
+                if hold_sig:
+                    signal.pthread_sigmask(signal.SIG_SETMASK, old_mask)
             need_melt = (seed == vals["first_seed"])
             while h.poll() is None:
-                sleep(a.poll_s)
+                left_s = (cap - cum) * 3600.0 - (clock() - t0)  # ⭐ DO 전 리뷰 P2-11 — 상한 검사를 상한보다 늦게 하지 않는다
+                sleep(max(1.0, min(a.poll_s, left_s)))
                 el = (clock() - t0) / 3600.0
                 ent["wall_h_so_far"], ent["last_seen"] = el, _now()
                 save_ledger()
@@ -863,14 +915,28 @@ def run(a, deps=None):
                         log(f"  ⚠ {sysn}{seed}: 녹음 판정 예외 ({type(e).__name__}: {e}) — 다음 poll 에 다시 (끝난 뒤 판정에서도 본다)")
                         continue
                     if mw["verdict"] in ("fail", "invalid"):
+                        # ⭐ DO 전 리뷰 P0-1 — 녹음 판정을 담금질을 멈추기 **전에** 장부에 적는다: 정리 실패 · 판정 도중 중단 · 재부팅 ·
+                        #   고아 마감에도 남는다 (fail = 그 계를 닫는다 · invalid = 실행 종류 invalid)
+                        ent["melt_check"] = {"verdict": mw["verdict"], "message": str(mw.get("message"))[:300], "at": _now()}
+                        if mw["verdict"] == "fail":
+                            ent["closes_system"] = True
+                            ent["closes_basis"] = "first_seed_melt_window_check"
+                        save_ledger()
                         cl = stop_child(f"{sysn}{seed} 첫 시드 녹음 판정 {mw['verdict']}")
                         if not finish(ent, "killed_melt", mw["verdict"], (clock() - t0) / 3600.0, cleanup=cl):
-                            return stop("abnormal", f"{sysn}{seed} 를 멈추려 했는데 그룹이 남았다 (pid {cl.get('left')}) — 손으로 정리",
-                                        sys=sysn, seed=seed, cleanup=cl, run_id=rid)
+                            if mw["verdict"] == "fail":
+                                return stop("melt", f"{sysn}{seed} (계의 첫 시드) 녹음 판정 fail — {mw.get('message')} · 그 계가 닫혀 트랙 전체 멈춤 "
+                                                    f"(장부에 먼저 적었다) · ⚠ 담금질 그룹이 남았다 (pid {cl.get('left')}) — 손으로 정리",
+                                            sys=sysn, seed=seed, cleanup=cl, run_id=rid)
+                            return stop("abnormal", f"{sysn}{seed} 를 녹음 판정 invalid 로 멈추려 했는데 그룹이 남았다 (pid {cl.get('left')}) — "
+                                                    "손으로 정리 (장부 melt_check = invalid)", sys=sysn, seed=seed, cleanup=cl, run_id=rid)
                         v = mq.stage1_verdict(rd, values=vals, log=log, reason=f"첫 시드 녹음 판정 {mw['verdict']} — 러너가 멈춤")
-                        ent["verdict"], ent["closes_system"] = v.get("status"), bool(v.get("closes_system"))
+                        ent["verdict"] = v.get("status")
+                        if mw["verdict"] == "fail" and not v.get("closes_system"):
+                            ent["verdict_disagrees"] = f"녹음 판정 fail 인데 시드 판정 {v.get('status')} · closes_system {v.get('closes_system')}"
+                            log(f"  ⚠ {sysn}{seed}: {ent['verdict_disagrees']} — 장부의 닫힘 (녹음 판정) 을 그대로 둔다 (사람이 본다)")
                         save_ledger()
-                        if v.get("closes_system"):                  # 과학적 종료 — 판정이 그 계를 닫는다고 했을 때만 (회신 DH P1-4)
+                        if mw["verdict"] == "fail":                  # 과학적 종료 — 첫 시드 녹음 판정 (카드 S1 ②)
                             return stop("melt", f"{sysn}{seed} (계의 첫 시드) 녹음 판정 fail — {mw.get('message')} · "
                                                 "그 계가 닫혀 트랙 전체 멈춤", sys=sysn, seed=seed, verdict=v.get("status"), run_id=rid)
                         return stop("invalid", f"{sysn}{seed} (계의 첫 시드) 녹음 판정 {mw['verdict']} · 시드 판정 {v.get('status')} — "
@@ -1001,6 +1067,7 @@ def _selftest():
             self.melt, self.final, self._rc = sc.get("melt", "pass"), sc.get("final", "ok"), sc.get("rc", 0)
             self.n_polls, self.raise_on = max(4, sc.get("polls", 5)), sc.get("raise_on_poll")
             self.group_stuck = sc.get("group_stuck", False)
+            self.torn = sc.get("torn_tail", False)            # 죽일 때 traj 마지막 프레임이 반쪽 (쓰기 도중 SIGTERM — DO 전 리뷰 t9)
             self.k, self.stopped, self.killed, self.pid, self.t_written = 0, False, False, 990000 + len(launched or []), -1
             self.sym, self.base, self.cell = BASE[self.sys]
             rng = np.random.default_rng(1000 * self.seed + ord(self.sys))
@@ -1076,6 +1143,9 @@ def _selftest():
         def stop(self, grace_s=60):
             if self.k <= self.n_polls and not self.stopped:
                 self.killed = True                            # 도는 중에 죽임 (끝난 뒤 그룹 정리와 가른다)
+                if self.torn and (self.rd / "traj.xyz").is_file():
+                    with open(self.rd / "traj.xyz", "a", encoding="utf-8") as fh_:
+                        fh_.write(f"{len(self.sym)}\nLattice=\"5 0")
             self.stopped = True
             return {"leader_rc": -15 if self.k <= self.n_polls else self._rc, "group_empty": not self.group_stuck,
                     "signals": ["TERM"], "left": [self.pid + 1] if self.group_stuck else []}
@@ -1092,10 +1162,14 @@ def _selftest():
         return td
 
     def go(wt, scen=None, poll_s=3600.0, order=DEFAULT_ORDER, expect=None, rr=None, ack=None, mq=None,
-           gpu=None, sleep_hook=None, pg_alive=None, seed_worst_h=21.0, cleanup_s=0.0, default_clock=False, boot="fixture", declare=None):
-        launched, clock = [], [0.0]
+           gpu=None, sleep_hook=None, pg_alive=None, seed_worst_h=21.0, cleanup_s=0.0, default_clock=False, boot="fixture", declare=None,
+           expect_values=None, python_ok=None, launch_signal=False):
+        launched, clock, sig_sent = [], [0.0], [False]
         def launch(cmd, lp):
             h = FakeQuench(cmd, lp, scen=scen, launched=launched)
+            if launch_signal and not sig_sent[0]:            # 띄운 직후 · 손잡이를 적기 전에 SIGTERM (DO 전 리뷰 P2-9)
+                sig_sent[0] = True
+                os.kill(os.getpid(), signal.SIGTERM)
             original_stop = h.stop
             def cleanup(*args, **kwargs):
                 clock[0] += cleanup_s
@@ -1114,11 +1188,11 @@ def _selftest():
                 sleep_hook(clock[0])
         rr = rr or pathlib.Path(tempfile.mkdtemp(dir=tmp_root))
         a = argparse.Namespace(worktree=str(wt), run_root=str(rr), python="python3", seed_worst_h=seed_worst_h,
-                               poll_s=poll_s, gpu_poll_s=60.0, start_max_mib=2000, order=order, ack_stop=ack,
+                               poll_s=poll_s, gpu_poll_s=60.0, start_max_mib=2000, order=order, ack_stop=ack, expect_values_sha16=expect_values,
                                expect_sha=expect or sha16(pathlib.Path(wt) / DRIVER_REL),
                                **{k: (declare or {}).get(k) for k in ("retry_reason", "retry_event", "retry_evidence", "declared_by",
                                                                       "rejudge_impossible_reason")})
-        deps = {"mq": mq or real, "launch": launch, "gpu_used": gpu_used, "sleep": sleep,
+        deps = {"mq": mq or real, "launch": launch, "gpu_used": gpu_used, "sleep": sleep, **({"python_ok": python_ok} if python_ok else {}),
                 "pg_alive": pg_alive or (lambda pg: False),
                 "recovery_clock": lambda: {"host": "fixture", "boot_id": boot, "kind": "CLOCK_BOOTTIME", "seconds": 7200.0}}
         if not default_clock:
@@ -1230,8 +1304,10 @@ def _selftest():
                 if st_ == "final":
                     shutil.copy(canon / "final.xyz", d / "final.xyz"); shutil.copy(canon / "result.json", d / "result.json")
             dm_stage(d, st_, th_full=(canon / "thermo.csv").read_text(encoding="utf-8").splitlines(keepends=True), src_full=canon)
-            row = {"system": sysn, "seed": seed, "run_id": rid_, "start": "t", "end": "t", "status": pv.get("status", "interrupted"),
-                   "rc": pv.get("rc", "killed_runner_exit"), "wall_h": pv.get("wall_h", 1.0), "cost_basis": "measured"}
+            inv_kind = pv.get("kind") == "invalid"             # invalid 종류는 끝난 런의 판정이다 (DO 전 리뷰 — 끊긴 런의 invalid 판정은 종류를 안 바꾼다)
+            row = {"system": sysn, "seed": seed, "run_id": rid_, "start": "t", "end": "t",
+                   "status": pv.get("status", "ended" if inv_kind else "interrupted"),
+                   "rc": pv.get("rc", 0 if inv_kind else "killed_runner_exit"), "wall_h": pv.get("wall_h", 1.0), "cost_basis": "measured"}
             if pv.get("kind") == "invalid":
                 (d / "stage1_verdict.json").write_text(json.dumps({"status": "invalid"}), encoding="utf-8")
                 if pv.get("ledger_verdict", True):           # False = 폴더에만 판정 (회신 DK P0-2 대조)
@@ -1516,9 +1592,11 @@ def _selftest():
     rc_g, L_g, rr_g = go(wt, scen={("A", 11): {"melt": "fail", "polls": 8, "group_stuck": True}})
     eg, sg = J(rr_g / "stage1_ledger.json")["runs"][0], J(rr_g / "STOP.json")
     rc_g2, L_g2, _ = go(wt, rr=rr_g, ack=sg["stop_id"], pg_alive=lambda pg: True)
-    chk(rc_g == RC["abnormal"] and eg["status"] == "stop_failed" and eg["end"] is None and sg["code"] == "abnormal"
-        and rc_g2 == RC["refused"] and not L_g2,
-        "⛔음성 DH P0-3: 멈추려 했는데 그룹이 남으면 '멈췄다' · 비용 확정으로 안 적는다 (stop_failed · 끝 없음) · 그룹이 사는 동안 재시작 거부")
+    chk(rc_g == RC["melt"] and eg["status"] == "stop_failed" and eg["end"] is None and sg["code"] == "melt" and sg["terminal"] is True
+        and eg.get("closes_system") is True and (eg.get("melt_check") or {}).get("verdict") == "fail"
+        and rc_g2 == RC["melt"] and not L_g2,
+        "⛔음성 DH P0-3 · DO 전 리뷰 P0-1: 첫 시드 녹음 fail 인데 그룹이 남으면 — 비용 확정으로 안 적고 (stop_failed · 끝 없음) · **닫힘은 멈추기 전에 "
+        "장부에 적고** (closes_system · melt_check) · 멈춤은 melt (닫힘 · 확인으로 못 넘김) · 재시작 거부")
     rc_g3, L_g3, rr_g3 = go(wt, scen={("B", 11): {"group_stuck": True}})
     e3 = [x for x in J(rr_g3 / "stage1_ledger.json")["runs"] if x["system"] == "B"][0]
     chk(rc_g3 == RC["abnormal"] and e3["status"] == "stop_failed" and e3["end"] is None and len(L_g3) == 2,
@@ -1709,10 +1787,13 @@ def _selftest():
         f"⛔음성 DL P0 (Codex 재현): MD 완료 폴더에서 plan.json 만 지움 · 완료 기록을 임시 이름으로만 (os.replace 직전 끊김) · 기록 없이 "
         f"끝 경계까지 → 선언이 맞아도 재담금질 0 · 보류 · 폴더 파일 그대로 ({dl_cases})")
     # ⭐ 회신 DM P0-1 · P0-2 (Codex 재현) — 러너 발사 0 · 폴더 그대로 / 대조: 진짜 plan 전 판정 · 명확한 도중 끊김은 그대로 재시도
+    def _post_md_gone(d):                                    # 끝까지 돈 B13 을 판정할 때 생긴 MD 뒤 산출물 (md_init_raw.xyz) — 도중 끊김 폴더엔 없다
+        (d / real.SEED_GATE_RAW).unlink(missing_ok=True)
     def _strip_raw(d):
-        for x_ in ("plan.json", "traj.xyz", "thermo.csv", real.MD_DONE_NAME):
+        for x_ in ("plan.json", "traj.xyz", "thermo.csv", real.MD_DONE_NAME, real.SEED_GATE_RAW):
             (d / x_).unlink(missing_ok=True)
     def _cut_front(d, keep=2):
+        _post_md_gone(d)
         (d / real.MD_DONE_NAME).unlink(missing_ok=True)
         tl = (d / "traj.xyz").read_text(encoding="utf-8").splitlines(keepends=True); fr_ = int(tl[0]) + 2
         (d / "traj.xyz").write_text("".join(tl[:keep * fr_]), encoding="utf-8")
@@ -1726,7 +1807,7 @@ def _selftest():
     def _end_row(d):
         th_ = _cut_front(d); open(d / "thermo.csv", "a", encoding="utf-8").write(th_[-1])
     def _frames_only(d, as_str):                             # 회신 DN P1 재현 — thermo 없음 · 궤적 완주 · FIRE 미완 폴더를 진짜 판정 → 완료 기록 · 궤적 꼬리 소실
-        (d / "thermo.csv").unlink()
+        (d / "thermo.csv").unlink(); _post_md_gone(d)
         _note_md_judge(_judge_as_seed(d, "selftest — thermo 없음 · 궤적 완주 · FIRE 미완 판정"), kind="frames")
         (d / real.MD_DONE_NAME).unlink()
         tl = (d / "traj.xyz").read_text(encoding="utf-8").splitlines(keepends=True); fr_ = int(tl[0]) + 2
@@ -1740,7 +1821,15 @@ def _selftest():
                            ("judged_md_then_cut", lambda d: (_note_md_judge(_judge_as_seed(d, "selftest — MD 완료 · FIRE 미완 판정")),
                                                              _cut_front(d)), False),
                            ("frames_only_int", lambda d: _frames_only(d, as_str=False), False),   # 회신 DN P1 표 첫 줄 (정상 타입 → 보류)
+                           # DO 전 리뷰 (소비자 P1 t7) — 완주한 thermo · traj 에 NUL 꼬리 → 진짜 판정이 일정 끝 · 프레임 다 참을 그대로 적는다 → 꼬리 소실 뒤 보류
+                           ("nul_tails_judged", lambda d: (_post_md_gone(d), open(d / "thermo.csv", "ab").write(b"\x00" * 64),
+                                                           open(d / "traj.xyz", "ab").write(b"\x00" * 64),
+                                                           _note_md_judge(_judge_as_seed(d, "selftest — NUL 꼬리 · MD 완료 · FIRE 미완 판정")),
+                                                           _cut_front(d)), False),
                            ("frames_only_strn", lambda d: _frames_only(d, as_str=True), False),   # 회신 DN P1 반례 (n:"130" → 보류)
+                           # ⭐ DO 전 리뷰 F1 — 판정 · final · 완료 기록 · 꼬리가 다 사라져도 MD 뒤 산출물 (md_init_raw.xyz · 일정 끝 시각) 이 남으면 보류
+                           ("post_md_file_kept", lambda d: (shutil.copy(d / real.SEED_GATE_RAW, d.parent / "_raw_keep"), _cut_front(d),
+                                                            shutil.move(str(d.parent / "_raw_keep"), str(d / real.SEED_GATE_RAW))), False),
                            ("ctrl_noplan_judged", lambda d: (_keep_attempt_only(d), dm_stage(d, "noplan_judged")), True),
                            ("ctrl_mid_cut", lambda d: _cut_front(d), True)):
         c_x = clone(c_m); (c_x / "STOP.json").unlink(missing_ok=True)
@@ -1749,8 +1838,9 @@ def _selftest():
         before, st0 = snap(), real.folder_stage(fc_)
         rc_x, L_x, _ = go(wt, rr=c_x)
         sp_ = J(c_x / "STOP.json") if (c_x / "STOP.json").is_file() else {}
-        (dm_ctrl if ctrl else dm_cases)[nm_] = (rc_x, len(L_x), "완료 단계를 못 읽는다" in (sp_.get("reason") or ""), st0, snap() == before)
-    chk(all(v_ == (RC["resume"], 0, True, "unreadable", True) for v_ in dm_cases.values())
+        held_ = any(w_ in (sp_.get("reason") or "") for w_ in ("완료 단계를 못 읽는다", "과학적 판정", "판정을 못 읽는다"))
+        (dm_ctrl if ctrl else dm_cases)[nm_] = (rc_x if not held_ else "held", len(L_x), held_, st0, snap() == before)
+    chk(all(v_ == ("held", 0, True, "unreadable", True) for v_ in dm_cases.values())
         and dm_ctrl["ctrl_noplan_judged"][:2] == (0, 1) and dm_ctrl["ctrl_noplan_judged"][3] == "no_plan"
         and dm_ctrl["ctrl_mid_cut"][:2] == (0, 1) and dm_ctrl["ctrl_mid_cut"][3] == "md_incomplete"
         and all(v_[4] for v_ in dm_ctrl.values()),
@@ -1877,8 +1967,8 @@ def _selftest():
              "move_out": inv_(s_mo, "보존 누락"), "md_complete": inv_(s_mc, "MD 까지"), "final": inv_(s_fn, "끝까지"),
              "dl_noplan": inv_(s_dlnp, "완료 단계를 못 읽는데"), "dl_tmp": inv_(s_dltp, "완료 단계를 못 읽는데"),
              "dl_end": inv_(s_dlen, "완료 단계를 못 읽는데"),
-             "dm_end_row": inv_(s_dmer, "완료 단계를 못 읽는데"), "dm_noplan_hist": inv_(s_dmhp, "완료 단계를 못 읽는데"),
-             "dm_noplan_vtmp": inv_(s_dmvt, "완료 단계를 못 읽는데"), "dm_noplan_judged": s_dmjd["track"],
+             "dm_end_row": inv_(s_dmer, "완료 단계를 못 읽는데"), "dm_noplan_hist": inv_(s_dmhp, "과학적 판정"),
+             "dm_noplan_vtmp": inv_(s_dmvt, "판정을 못 읽는데"), "dm_noplan_judged": s_dmjd["track"],
              "dm_judged_md": inv_(s_dmjm, "완료 단계를 못 읽는데"), "dn_frames_strn": inv_(s_dnfs, "완료 단계를 못 읽는데"),
              "invalid_final_no_reason": inv_(s_ivn, "다시 판정할 수 없다"), "invalid_final_reason": s_ivy["track"],
              "cap_run_outage_reason": inv_(s_cpo, "상한으로 멈춘 런"), "runner_on_stripped": (rc_sl, len(L_sl)),
@@ -1924,7 +2014,8 @@ def _selftest():
             (d / "stage1_verdict.json").write_text(verdict, encoding="utf-8")
         return {"path": str(d)}
     R0, R1 = "9" * 32, "7" * 32
-    run0 = lambda **k: {"run_id": R0, "end": "t", "cost_basis": "measured", "status": "interrupted", **k}
+    run0 = lambda **k: {"run_id": R0, "end": "t", "cost_basis": "measured",
+                        "status": "ended" if k.get("verdict") == "invalid" else "interrupted", **k}
     rcpt = lambda code="interrupted", decl=OUT, rid=R0: [{"stop_id": "u1", "code": code, "run_id": rid, "acked_at": "t",
                                                          **({"declaration": DECL(decl)} if decl else {})}]
     E = lambda atts, hist_, inv: retry_eligibility(atts, hist_, inv, vals_t, real)
@@ -1975,7 +2066,7 @@ def _selftest():
              "inv_wrong_code": (False, "invalid"), "inv_outage_reason": (False, "invalid"), "cap_outage": (False, "resume"),
              "cap_raise": (True, None), "two": (False, "invalid"), "inv_then_int": (True, None),
              "dl_noplan_done": (False, "resume"), "dl_tmp": (False, "resume"), "dl_end": (False, "resume"), "dl_inv_tmp": (False, "resume"),
-             "dm_end_row": (False, "resume"), "dm_noplan_hist": (False, "resume"), "dm_noplan_vtmp": (False, "resume"),
+             "dm_end_row": (False, "resume"), "dm_noplan_hist": (False, "invalid"), "dm_noplan_vtmp": (False, "invalid"),
              "dm_noplan_judged": (True, None), "dm_judged_md": (False, "resume"), "dn_frames_strn": (False, "resume")}
     got_u = {k: (v["ok"], v["code"]) for k, v in cases.items()}
     chk(got_u == exp_u and "한도" in cases["two"]["why"] and "FIRE" in cases["fire"]["why"] and "못 찾는다" in cases["missing_invalid"]["why"]
@@ -2149,6 +2240,163 @@ def _selftest():
     chk(s6["track"] == "invalid" and any("과학적 판정" in x for x in s6["cost"]["invalid"])
         and s8["track"] == "invalid" and any("근거" in x for x in s8["cost"]["invalid"]),
         "⛔음성 정전 복구 (소비자): 장부에 과학적 판정 뒤 같은 시드 실행 · 근거 없는 증언 상한 → 묶음 무효")
+    # ═══ DO 전 리뷰 (독립 리뷰 셋) — 반례를 진짜 판독 · 판정 함수로 ═══
+    class _IntJudge:                                         # S1b — 첫 시드 녹음 fail 로 멈춘 뒤 판정 도중 Ctrl-C
+        def __init__(self):
+            self.armed = True
+        def __getattr__(self, k):
+            return getattr(real, k)
+        def stage1_verdict(self, rd, **kw):
+            if self.armed and "첫 시드 녹음 판정" in (kw.get("reason") or ""):
+                self.armed = False
+                raise KeyboardInterrupt("시험: 판정 도중 Ctrl-C")
+            return real.stage1_verdict(rd, **kw)
+    rc_b1, L_b1, rr_b = go(wt, scen={("A", 11): {"melt": "fail", "polls": 8}}, mq=_IntJudge())
+    eb_, sb1_ = J(rr_b / "stage1_ledger.json")["runs"][0], J(rr_b / "STOP.json")
+    rc_b2, L_b2, _ = go(wt, rr=rr_b, ack=sb1_["stop_id"])
+    sb2_ = J(rr_b / "STOP.json") if (rr_b / "STOP.json").is_file() else {}
+    smb_ = summ(rr_b)
+    chk(rc_b1 == RC["interrupted"] and eb_.get("closes_system") is True and (eb_.get("melt_check") or {}).get("verdict") == "fail"
+        and rc_b2 == RC["melt"] and not L_b2 and sb2_.get("code") == "melt" and smb_["track"] == "stop_track",
+        "⛔음성 DO 전 리뷰 P0-1 (S1b): 첫 시드 녹음 fail 로 멈춘 뒤 판정 도중 러너가 끊겨도 닫힘은 이미 장부에 있다 → 확인해도 재시작이 melt 로 "
+        f"멈추고 발사 0 · 소비자 stop_track ({rc_b1} · {rc_b2} · {sb2_.get('code')} · {smb_['track']})")
+    rc_a3, L_a3, _ = go(wt, rr=rr_g, ack=sg["stop_id"], boot="b-new")
+    sma_ = summ(rr_g)
+    chk(rc_a3 == RC["melt"] and not L_a3 and sma_["track"] == "stop_track",
+        "⛔음성 DO 전 리뷰 P0-1 (S1a): 첫 시드 녹음 fail · 정리 실패 뒤 재부팅해도 닫힘 (melt · 장부) 은 그대로 · 발사 0 · 소비자 stop_track "
+        f"({rc_a3} · {sma_['track']})")
+    rc_c1, L_c1, rr_c = go(wt, scen={("A", 11): {"melt": "species_swap", "polls": 8, "group_stuck": True}})
+    ec1_, sc1_ = J(rr_c / "stage1_ledger.json")["runs"][0], J(rr_c / "STOP.json")
+    go(wt, rr=rr_c, ack=sc1_["stop_id"], boot="b-new")      # 재부팅 → 고아 마감 (앞 상태를 지우지 않는다)
+    ec2_ = J(rr_c / "stage1_ledger.json")["runs"][0]
+    kc_ = real.run_kind(ec2_, str(rr_c / "A/seed11"), vals_t)
+    chk(rc_c1 == RC["abnormal"] and (ec1_.get("melt_check") or {}).get("verdict") == "invalid" and ec1_.get("closes_system") is not True
+        and ec2_.get("status") == "orphaned" and ec2_.get("status_before_orphan") == "stop_failed" and kc_ == "invalid",
+        "⛔음성 DO 전 리뷰 P1-2 (S1c): 첫 시드 녹음 invalid · 정리 실패 → 장부 melt_check 를 먼저 적고 · 재부팅 고아 마감이 앞 상태를 남긴다 → "
+        f"실행 종류 invalid (끊긴 런으로 바뀌지 않는다) ({rc_c1} · {ec2_.get('status')} · {ec2_.get('status_before_orphan')} · {kc_})")
+    def _after_window(root_, sd_):                           # S1d · t12 — 녹음 창이 다 찬 직후 (판정 전) 정전
+        st_ = {"done": False}
+        def hook(_c):
+            th_ = root_ / "A" / f"seed{sd_}" / "thermo.csv"
+            if not st_["done"] and th_.is_file():
+                rows_ = [x_ for x_ in th_.read_text(encoding="utf-8").splitlines()[1:] if x_.strip()]
+                if rows_ and float(rows_[-1].split(",")[0]) >= 100.0:
+                    st_["done"] = True
+                    raise KeyboardInterrupt("시험: 녹음 창이 찬 직후 정전")
+        return hook
+    res_w = {}
+    for nm_, sd_, scen_ in (("S1d_first_seed", 11, {("A", 11): {"melt": "fail", "polls": 8}}),
+                            ("t12_second_seed", 12, {("A", 12): {"melt": "fail", "polls": 8}})):
+        rw_ = pathlib.Path(tempfile.mkdtemp(dir=tmp_root))
+        rc1_, L1_, _ = go(wt, rr=rw_, scen=scen_, sleep_hook=_after_window(rw_, sd_))
+        sw1_ = J(rw_ / "STOP.json")
+        mwv_ = real.melt_window_check(rw_ / "A" / f"seed{sd_}", values=vals_t, log=lambda *m: None)["verdict"]
+        rc2_, L2_, _ = go(wt, rr=rw_, ack=sw1_["stop_id"], declare=OUT)       # 정전 선언으로 확인 → 과학적이라 받지 않는다
+        led_w_ = J(rw_ / "stage1_ledger.json")
+        row_ = [x_ for x_ in led_w_["runs"] if (x_["system"], x_["seed"]) == ("A", sd_)][-1]
+        res_w[nm_] = (rc1_ == RC["interrupted"], mwv_, rc2_ == RC["refused"], len(L2_),
+                      real.run_kind(row_, str(rw_ / "A" / f"seed{sd_}"), vals_t))
+    chk(all(v_ == (True, "fail", True, 0, "scientific") for v_ in res_w.values()),
+        "⛔음성 DO 전 리뷰 S1d · t12: 녹음 창이 다 찼고 fail 인 채 (판정 전) 정전으로 끊긴 런은 정전 선언으로 다시 돌리지 않는다 — 첫 시드든 둘째 "
+        f"시드든 실행 종류 과학적 (결과가 정해졌다) · 발사 0 ({res_w})")
+    rc_p1, L_p1, rr_p = go(wt, scen={("B", 11): {"raise_on_poll": 3, "polls": 8}})
+    (rr_p / "B/seed11").rename(rr_p / "B/seed11.cut1")
+    vp_ = real.stage1_verdict(rr_p / "B/seed11.cut1", values=vals_t, log=lambda *m: None, reason="selftest — 보존 폴더 제자리 판정")
+    rowp_ = [x_ for x_ in J(rr_p / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("B", 11)][-1]
+    kp_ = real.run_kind(rowp_, str(rr_p / "B/seed11.cut1"), vals_t)
+    chk(vp_["status"] == "incomplete" and (vp_["checks"]["identity"] or {}).get("preserved") is True and kp_ == "interrupted",
+        "⛔음성 DO 전 리뷰 (소비자 P0 a · t3): 보존 폴더를 제자리에서 판정해도 이름 때문에 invalid 가 되지 않는다 (incomplete) → 실행 종류는 끊긴 런 · "
+        f"한도를 우회하는 invalid 재시도로 바뀌지 않는다 ({vp_['status']} · {kp_})")
+    rc_f1, L_f1, rr_f = go(wt, scen={("A", 12): {"final": "ps4_broken", "rc": 1}})
+    sf1_ = J(rr_f / "STOP.json")
+    (rr_f / "A/seed12").rename(rr_f / "A/seed12.rc1")
+    vf_ = real.stage1_verdict(rr_f / "A/seed12.rc1", values=vals_t, log=lambda *m: None, reason="selftest — 러너가 시킨 제자리 판정")
+    rc_f2, L_f2, _ = go(wt, rr=rr_f, ack=sf1_["stop_id"], declare={**FIX, "rejudge_impossible_reason": "selftest"})
+    chk(rc_f1 == RC["abnormal"] and vf_["status"] == "fail" and rc_f2 == RC["refused"] and not L_f2,
+        "⛔음성 DO 전 리뷰 (소비자 P0 b · t8): 끝까지 돌았는데 PS₄ fail 인 런 (드라이버 rc 1) 을 보존해 제자리 판정하면 fail 그대로 → 원인 고침 선언으로도 "
+        f"다시 돌리지 않는다 ({rc_f1} · {vf_['status']} · {rc_f2})")
+    rc_tt, L_tt, rr_tt = go(wt, scen={("A", 11): {"melt": "fail", "polls": 8, "torn_tail": True}})
+    vtt_ = J(rr_tt / "A/seed11/stage1_verdict.json")
+    chk(rc_tt == RC["melt"] and vtt_["status"] == "fail" and vtt_.get("closes_system") is True and L_tt[0].killed,
+        "⛔음성 DO 전 리뷰 (소비자 P0 c · t9): 첫 시드 녹음 fail 로 죽일 때 traj 마지막 프레임이 반쪽이어도 판정은 fail · closes_system (invalid 로 "
+        f"닫힘이 꺼지지 않는다) ({rc_tt} · {vtt_['status']} · {vtt_.get('closes_system')})")
+    rc_t1, _, rr_t = go(wt, scen={("A", 11): {"raise_on_poll": 3}})
+    good_stop = (rr_t / "STOP.json").read_bytes(); trunc = good_stop[:20]
+    (rr_t / "STOP.json").write_bytes(trunc)
+    rc_t2, L_t2, _ = go(wt, rr=rr_t)
+    keep_ok = (rr_t / "STOP.json").read_bytes() == trunc
+    h0_ = J(rr_t / "stage1_ledger.json").get("stop_history")
+    (rr_t / "STOP.json").write_text(json.dumps({"code": "interrupted", "reason": "x"}), encoding="utf-8")
+    rc_t3, L_t3, _ = go(wt, rr=rr_t)
+    h1_ = J(rr_t / "stage1_ledger.json").get("stop_history")
+    sp_ok = json.loads(good_stop)
+    (rr_t / "STOP.json").write_text(json.dumps({**sp_ok, "declaration": DECL(OUT)}), encoding="utf-8")
+    rc_t4, L_t4, _ = go(wt, rr=rr_t, ack=sp_ok["stop_id"])
+    h2_ = J(rr_t / "stage1_ledger.json").get("stop_history") or []
+    acked_ = [x_ for x_ in h2_ if x_.get("stop_id") == sp_ok["stop_id"]]
+    chk(rc_t2 == RC["refused"] and not L_t2 and keep_ok and rc_t3 == RC["refused"] and not L_t3 and h1_ == h0_
+        and len(acked_) == 1 and "declaration" not in acked_[0] and not L_t4,
+        "⛔음성 DO 전 리뷰 P2-5 · 6 · 7: 잘린 STOP 은 덮어쓰지 않고 거부 (원본 그대로) · stop_id 없는 STOP 을 조용히 확인하지 않는다 · STOP 안에 "
+        f"끼운 declaration 은 확인 기록으로 옮기지 않는다 ({rc_t2} · {keep_ok} · {rc_t3} · {acked_[:1]})")
+    c_r = clone(rr_g3); sg3_ = J(c_r / "STOP.json")
+    go(wt, rr=c_r, ack=sg3_["stop_id"], pg_alive=lambda pg: True, boot="b-new")
+    er_ = [x_ for x_ in J(c_r / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("B", 11)][-1]
+    chk(er_.get("status") == "orphaned" and er_.get("status_before_orphan") == "stop_failed",
+        "⛔음성 DO 전 리뷰 P2-10: 재부팅 뒤 (boot_id 다름) 같은 pgid 가 다른 프로세스에 쓰여도 그 그룹은 죽었다 — 영원히 거부하지 않고 고아로 마감 "
+        f"(앞 상태 남김) ({er_.get('status')} · {er_.get('status_before_orphan')})")
+    wt_cap = mk_wt(card=mk_card(stage1_cap_gpu_h=7.5))
+    rc_k, L_k, rr_k = go(wt_cap, scen={("A", 11): {"polls": 50}}, poll_s=5 * 3600.0, seed_worst_h=1.0)
+    ek_ = J(rr_k / "stage1_ledger.json")["runs"][0]
+    chk(rc_k == RC["cap"] and ek_.get("wall_h") is not None and ek_["wall_h"] <= 7.5 + 0.01,
+        f"⛔음성 DO 전 리뷰 P2-11: 실행 중 상한 검사는 상한보다 늦지 않다 (poll 5 h · 상한 7.5 h → 멈춘 벽시계 {ek_.get('wall_h')} h)")
+    rc_v1, L_v1, _ = go(wt, expect_values="0" * 16)
+    rc_v2, L_v2, _ = go(wt, python_ok=lambda p_: False)
+    rc_v3, L_v3, _ = go(wt, expect_values=real.values_sha16(vals_t))
+    chk(rc_v1 == RC["refused"] and not L_v1 and rc_v2 == RC["refused"] and not L_v2 and rc_v3 == RC["pass"] and L_v3,
+        "⛔음성 DO 전 리뷰 P2-12 · P2-8: 카드 값 지문이 러너 고정값과 다르면 · --python 을 실행할 수 없으면 시작하지 않는다 (맞으면 돈다)")
+    rc_sg, L_sg, rr_sg = go(wt, launch_signal=True)
+    es_, ss_ = J(rr_sg / "stage1_ledger.json")["runs"][0], J(rr_sg / "STOP.json")
+    chk(rc_sg == RC["interrupted"] and L_sg and L_sg[0].stopped and ss_.get("run_id") == es_.get("run_id") and es_.get("end") is not None,
+        "⛔음성 DO 전 리뷰 P2-9: 띄운 직후 (손잡이를 적기 전) SIGTERM 이 와도 손잡이를 적은 뒤에 받아 그 담금질을 멈추고 마감한다 (놓친 자식 없음)")
+    fs_calls, _of = [], os.fsync
+    os.fsync = lambda fd: (fs_calls.append(fd), _of(fd))[1]
+    try:
+        _write_json_atomic(pathlib.Path(tempfile.mkdtemp(dir=tmp_root)) / "x.json", {"a": 1})
+    finally:
+        os.fsync = _of
+    chk(len(fs_calls) >= 2, f"⛔음성 DO 전 리뷰 P2-14: 장부 · STOP · 실행 전 기록 쓰기는 파일과 디렉터리를 fsync 한다 ({len(fs_calls)})")
+    def _led_edit(fn=None, raw=None):
+        c_ = clone(rr_d)
+        if raw is not None:
+            (c_ / "stage1_ledger.json").write_text(raw(J(c_ / "stage1_ledger.json")), encoding="utf-8")
+        else:
+            l_ = J(c_ / "stage1_ledger.json"); fn(l_); _write_json_atomic(c_ / "stage1_ledger.json", l_)
+        return summ(c_)
+    def _big(l_):
+        l_["runs"][0]["wall_h"] = 0
+        return json.dumps(l_).replace('"wall_h": 0,', '"wall_h": 1' + "0" * 400 + ",", 1)
+    led_t = {"wall_str": (_led_edit(lambda l_: l_["runs"][0].update(wall_h=str(l_["runs"][0]["wall_h"]))), "유한한 비음수"),
+             "end_false": (_led_edit(lambda l_: l_["runs"][0].update(end=False)), "끝 시각"),
+             "seed_float": (_led_edit(lambda l_: l_["runs"][0].update(seed=float(l_["runs"][0]["seed"]))), "계 · 시드 꼴"),
+             "closes_str": (_led_edit(lambda l_: l_["runs"][0].update(closes_system="true")), "참거짓"),
+             "melt_check_str": (_led_edit(lambda l_: l_["runs"][0].update(melt_check="fail")), "melt_check"),
+             "dup_key": (_led_edit(raw=lambda l_: json.dumps(l_).replace('"runs":', '"runs": [], "runs":', 1)), "같은 열쇠"),
+             "huge": (_led_edit(raw=_big), "유한한 비음수"),
+             "below_heartbeat": (_led_edit(lambda l_: l_["runs"][0].update(wall_h_so_far=float(l_["runs"][0]["wall_h"]) + 5.0)), "자기 하한")}
+    s_close = _led_edit(lambda l_: l_["runs"][0].update(closes_system=True, melt_check={"verdict": "fail", "message": "x"}))
+    c_tv = clone(rr_d); (c_tv / "A/seed11/stage1_verdict.json").write_text('{"status": "pa', encoding="utf-8")
+    s_tv = summ(c_tv)
+    got_l = {k: inv_(v_, w_) for k, (v_, w_) in led_t.items()}
+    chk(all(got_l.values()) and s_close["track"] == "stop_track" and s_tv["track"] == "invalid" and "A11" in (s_tv.get("stale_verdicts") or []),
+        "⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · "
+        "10^400 · heartbeat 보다 작은 측정 비용 → 무효 (죽지 않음) · 장부에만 적힌 첫 시드 닫힘 → stop_track · 잘린 현재 판정 → 무효 (죽지 않음) "
+        f"({ {k: x for k, x in got_l.items() if not x} } · {s_close['track']} · {s_tv['track']})")
+    cu_ = {"cap_orphan_outage": E([run0(status="orphaned", status_before_orphan="cap")], rcpt("cap", OUT), {R0: ufold("cpo")}),
+           "cap_orphan_raise": E([run0(status="orphaned", status_before_orphan="cap")],
+                                 rcpt("cap", {**OUT, "retry_reason": "budget_cap_raised"}), {R0: ufold("cpr")})}
+    chk((cu_["cap_orphan_outage"]["ok"], cu_["cap_orphan_raise"]["ok"]) == (False, True),
+        "⛔음성 DO 전 리뷰 P2-4: 상한으로 멈춘 런이 고아로 마감돼도 (앞 상태 cap 을 남김) 상한 규칙 그대로 — 정전 사유 거부 · 상한 인상 사유만 "
+        f"({cu_['cap_orphan_outage']['ok']} · {cu_['cap_orphan_raise']['ok']})")
     # 7) 진짜 프로세스 그룹 (POSIX) — _Proc.stop 이 자기 그룹 (자식 · 손자) 만 멈추고 기다린다 · 옆 프로세스는 안 건드린다
     #    (회신 DG: '실제 Linux 프로세스 그룹 종료는 하지 않았다' — 가짜 담금질 시험이 못 보는 자리)
     if os.name == "posix":
@@ -2225,7 +2473,8 @@ def main():
     ap.add_argument("--run_root", help="담금질 출력 루트 → <run_root>/<A|B>/seed<S>/")
     ap.add_argument("--python", default=sys.executable, help="담금질을 돌릴 python (uma env 절대경로)")
     ap.add_argument("--order", default=DEFAULT_ORDER)
-    ap.add_argument("--seed_worst_h", type=float, default=21.0, help="관측이 없을 때 한 시드 최악 (카드 견적 상단 · 착수 판단용 예상치)")
+    ap.add_argument("--seed_worst_h", type=float, default=21.0,
+                    help="한 시드 최악 예상 (카드 견적 상단) — 끝난 런의 관측 벽시계와 같이 최댓값으로 착수 판단에 쓴다 (관측이 있어도 쓴다)")
     ap.add_argument("--poll_s", type=float, default=300.0, help="첫 시드 녹음 판정 · 상한 · heartbeat 를 볼 간격")
     ap.add_argument("--gpu_poll_s", type=float, default=60.0)
     ap.add_argument("--start_max_mib", type=int, default=2000, help="이 이하가 두 번 연속이면 띄운다")
@@ -2246,8 +2495,9 @@ def main():
     g2.add_argument("--attest_derivation", default=None, help="H 를 어떻게 냈나")
     g2.add_argument("--attest_confirmer", default=None, help="확인한 사람")
     ap.add_argument("--print_cmd", default=None, metavar="SYS:SEED", help="그 시드의 담금질 명령을 카드 기계값에서 만들어 찍고 끝난다")
-    ap.add_argument("--expect_sha", default=EXPECTED_DRIVER_SHA16)
     a = ap.parse_args()
+    # ⭐ DO 전 리뷰 P2-13 — 드라이버 · 카드 값 고정값은 명령줄로 바꾸지 않는다 (바꾸려면 이 파일의 고정값을 고치고 다시 리뷰)
+    a.expect_sha, a.expect_values_sha16 = EXPECTED_DRIVER_SHA16, EXPECTED_VALUES_SHA16
     if a.selftest:
         return _selftest()
     if not (a.worktree and a.run_root):

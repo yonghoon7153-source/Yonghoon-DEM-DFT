@@ -58,7 +58,7 @@
      압축 **뒤** 반쪽 창 [melt_ps/2, melt_ps] 에서 골격 확산을 본다) · 옵션을 안 주면 옛 NPT 경로와 바이트까지 같은 동작이다.
 """
 from __future__ import annotations
-import argparse, datetime, hashlib, json, math, os, pathlib, re, sys, time
+import argparse, datetime, hashlib, json, math, numbers, os, pathlib, re, sys, time
 import numpy as np
 
 MASS = {"Li": 6.94, "P": 30.974, "S": 32.06, "Cl": 35.45}
@@ -538,12 +538,13 @@ COST_BASES = ("measured", "upper_bound", "attested_upper_bound")    # 장부 런
 
 
 def _fin(x):
-    """유한한 수인가 — None · NaN · inf · 문자열 · bool 은 아니다."""
-    if isinstance(x, bool):
+    """유한한 수인가 — 수 타입 (int · float · numpy 수) 만. None · NaN · inf · bool · **숫자 글자 ('12.5')** · float 로 못 바꾸는 큰 정수는
+    아니다 (⭐ DO 전 리뷰 · 회신 DN P1 — 글자를 수로 바꿔 읽지 않는다)."""
+    if isinstance(x, bool) or not isinstance(x, numbers.Real):
         return False
     try:
-        return x is not None and math.isfinite(float(x))
-    except (TypeError, ValueError):
+        return math.isfinite(float(x))
+    except (OverflowError, ValueError, TypeError):
         return False
 
 
@@ -963,7 +964,7 @@ def combine_stage1(plan, values, gate, melt, seedg, files, checks=None):
     closes = bool(first is not None and plan.get("seed") == first and mv == "fail" and not reasons["invalid"])
     if reasons["invalid"]:
         status = "invalid"
-    elif closes:
+    elif closes or mv == "fail":                         # ⭐ DO 전 리뷰 — 녹음 창이 다 찼고 fail 이면 결과가 정해졌다 (일정 미완 · 최종 파일 없음이어도)
         status = "fail"
     else:
         status = next((s for s in ("incomplete", "fail") if reasons[s]), "pass")
@@ -984,15 +985,31 @@ def identity_check(run_dir, plan):
     폴더를 통째로 복사하면 (A11 → A12) plan 의 시드가 폴더와 달라 여기서 무효가 된다 · plan 시드까지 고치면 run_id 가 겹치거나
     장부의 그 run_id 런이 다른 시드라서 묶음 (stage1_summary) 에서 무효가 된다."""
     fs, fsd = folder_identity(run_dir)
-    why = []
+    why, preserved = [], False
+    if fs is None:                                           # ⭐ DO 전 리뷰 (소비자 P0) — 보존 폴더 seed<N>.<붙임> 은 실행 전 기록으로 묶이면 받는다
+        rd_ = pathlib.Path(run_dir)
+        m_ = re.fullmatch(r"seed(\d+)\.(.+)", rd_.name)
+        att_ = None
+        if m_:
+            try:
+                att_ = json.loads((rd_ / ATTEMPT_NAME).read_text(encoding="utf-8"))
+            except (OSError, ValueError, RecursionError):
+                att_ = None
+        if (m_ and isinstance(att_, dict) and att_.get("system") == rd_.parent.name and type(att_.get("seed")) is int
+                and att_.get("seed") == int(m_.group(1)) and isinstance(plan.get("run_id"), str) and att_.get("run_id") == plan.get("run_id")):
+            fs, fsd, preserved = rd_.parent.name, int(m_.group(1)), True
+        else:
+            why.append(f"폴더 이름 {rd_.name!r} 이 seed<번호> 꼴이 아니다 (보존 폴더 seed<번호>.<붙임> 은 실행 전 기록의 계 · 시드 · "
+                       "run_id 가 plan 과 같아야 한다)")
     if fs is None:
-        why.append(f"폴더 이름 {pathlib.Path(run_dir).name!r} 이 seed<번호> 꼴이 아니다")
+        pass
     elif (plan.get("system"), plan.get("seed")) != (fs, fsd):
         why.append(f"폴더 ({fs}, {fsd}) ≠ plan ({plan.get('system')}, {plan.get('seed')}) — 다른 시드의 폴더를 옮겨 왔거나 잘못 회수했다")
     rid = plan.get("run_id")
     if not (isinstance(rid, str) and RUN_ID_RE.match(rid)):
         why.append(f"plan.json 에 실행 식별자 run_id 가 없다 ({rid!r}) — 러너 밖에서 돌린 담금질은 장부에 안 잡힌다")
-    return {"folder": [fs, fsd], "plan": [plan.get("system"), plan.get("seed")], "run_id": rid, "ok": not why, "why": why}
+    return {"folder": [fs, fsd], "plan": [plan.get("system"), plan.get("seed")], "run_id": rid, "ok": not why, "why": why,
+            "preserved": preserved}
 
 
 def _append_history(run, prev, res, reason):
@@ -1009,6 +1026,8 @@ def _append_history(run, prev, res, reason):
            "prev_provenance": pp, "new_provenance": npv, "prev": prev}
     with open(pathlib.Path(run) / VERDICT_HISTORY, "a", encoding="utf-8") as fh:
         fh.write(json.dumps(rec, ensure_ascii=False, default=str) + "\n")
+        _fsync_handle(fh)                                    # ⭐ DO 전 리뷰 P2-14 — 판정 기록도 저장장치까지 (정전 뒤 사라지지 않게 · 보증은 아님)
+    _fsync_dir(pathlib.Path(run))
     return rec
 
 
@@ -1039,7 +1058,7 @@ def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print, reason="
             try:
                 gate = gate_check(run, win_ps=float(v["gate_check"]["win_ps"]), log=lambda *a: None)
             except Exception as e:
-                gate = {"schedule_complete": False, "error": f"{type(e).__name__}: {e}"}
+                gate = {"schedule_complete": None, "error": f"{type(e).__name__}: {e}"}   # 모름 — False 로 적지 않는다 (DO 전 리뷰)
         if files["traj.xyz"]:
             melt = melt_window_check(run, values=v, log=lambda *a: None)
             n_fr = _xyz_frames(run / "traj.xyz")
@@ -1078,8 +1097,11 @@ def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print, reason="
         h = _append_history(run, prev, res, reason)
         res["history"] = {"file": VERDICT_HISTORY, "prev_status": h["prev_status"], "changed": h["changed"]}
     tmp = vf.with_name(vf.name + ".tmp")
-    tmp.write_text(json.dumps(res, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+    with open(tmp, "w", encoding="utf-8") as fh:
+        fh.write(json.dumps(res, ensure_ascii=False, indent=1, default=str))
+        _fsync_handle(fh)
     os.replace(tmp, vf)
+    _fsync_dir(run)
     log(f"  [stage1] {run} → {res['status']}" + (" · ⛔ 그 계를 닫는 사건" if res.get("closes_system") else "") + "  "
         + "; ".join(str(x) for k in ("invalid", "incomplete", "fail") for x in res["reasons"].get(k, [])))
     return res
@@ -1101,8 +1123,9 @@ def summarize_stage1(verdicts, values, cost=None):
         if vv is not None and vv.get("run_id"):
             rid_at.setdefault(vv["run_id"], []).append(f"{s}{sd}")
     dup = {k: x for k, x in rid_at.items() if len(x) > 1}
+    led_closing = [(x[0], x[1]) for x in ((cost or {}).get("closing") or []) if isinstance(x, (list, tuple)) and len(x) >= 2]
     for s in ("A", "B"):
-        st, closed = {}, []
+        st, closed = {}, sorted({sd for (s_, sd) in led_closing if s_ == s and sd == values.get("first_seed")})
         for sd in seeds:
             vv = verdicts.get((s, sd))
             x = "missing" if vv is None else vv.get("status")
@@ -1114,7 +1137,7 @@ def summarize_stage1(verdicts, values, cost=None):
                 if vv.get("run_id") in dup:
                     ident.append(f"{s}{sd} 의 run_id 가 {dup[vv['run_id']]} 와 같다 (한 실행을 여러 시드로)"); x = "invalid"
             st[sd] = x
-            if vv is not None and vv.get("closes_system") is True:
+            if vv is not None and vv.get("closes_system") is True and sd not in closed:
                 closed.append(sd)
         n_pass = sum(1 for x in st.values() if x == "pass")
         n_fail = sum(1 for x in st.values() if x == "fail")
@@ -1213,18 +1236,34 @@ def attempt_inventory(out_root):
 MD_DONE_NAME = "md_done.json"   # 회신 DK P0-1 · P1-1 — run_melt_quench 가 MD 루프 직후 (FIRE 전) 원자적으로 쓰는 완료 기록
 MD_DONE_TMP = MD_DONE_NAME + ".tmp"   # 회신 DL P0 — 이것이 남아 있으면 기록 도중 끊김 (완료로 승인하지 않고 보류)
 NON_MD_FILES = frozenset({ATTEMPT_NAME, ATTEMPT_NAME + ".tmp", "stage1_verdict.json", "stage1_verdict.json.tmp", VERDICT_HISTORY})
+MID_RUN_FILES = frozenset({"plan.json", "initial.xyz", "prerelax.log", "traj.xyz", "thermo.csv"}) | NON_MD_FILES
+# ⭐ DO 전 리뷰 F1 — plan 이 있는데 완료 기록이 없는 폴더에 있어도 되는 것 = 드라이버가 MD 루프가 끝나기 전에 쓰는 것 + 실행 전 · 판정 기록.
+#   그 밖의 것 (md_init_raw.xyz · gate_check.json · seed_gate.json · final.vasp · gr_partials.csv · 모르는 파일) 이 하나라도 있으면 보류
+#   — MD 뒤 산출물에는 일정 끝이 적혀 있을 수 있다.
 # ⭐ 회신 DL P0 — plan.json 이 없는 폴더에 있어도 되는 것 = MD 산출물이 아닌 기록 (러너의 실행 전 기록 · 판정 기록). 그 밖의 것이 하나라도 있으면 보류
 
 
+PLAN_NUM_MAX = 1.0e7   # ps · fs — 일정 값이 이보다 크면 손상으로 본다 (스텝 수가 넘치는 것을 막는다)
+
+
+def _plan_num(plan, k, *, positive=False):
+    """plan 의 일정 값 하나 — 수 타입 · 유한 · (positive 면 > 0 · 아니면 ≥ 0) · ≤ PLAN_NUM_MAX. 아니면 ValueError (보류 갈래로).
+    ⭐ DO 전 리뷰 F5 — '1' · true · ' 2 ' 를 수로 바꿔 읽지 않고 · save_ps 0 · 음수 dt · hold 를 받아 주지 않는다."""
+    x = plan.get(k) if isinstance(plan, dict) else None
+    if not _fin(x) or not (float(x) > 0 if positive else float(x) >= 0) or float(x) > PLAN_NUM_MAX:
+        raise ValueError(f"plan {k} = {x!r} — {'양수' if positive else '0 이상'} 수가 아니다 (글자 · 참거짓 · 비유한 · 너무 큰 값 안 받음)")
+    return float(x)
+
+
 def planned_md_steps(plan):
-    """plan 의 일정에서 MD 스텝 수 — run_melt_quench 와 같은 셈 (단계마다 반올림한 스텝 수의 합)."""
-    dt = float(plan["dt_fs"])
-    return sum(int(round(float(plan[k]) * 1000.0 / dt)) for k in ("melt_ps", "quench_ps", "hold_ps"))
+    """plan 의 일정에서 MD 스텝 수 — run_melt_quench 와 같은 셈 (단계마다 반올림한 스텝 수의 합). 일정 값이 수가 아니면 ValueError."""
+    dt = _plan_num(plan, "dt_fs", positive=True)
+    return sum(int(round(_plan_num(plan, k) * 1000.0 / dt)) for k in ("melt_ps", "quench_ps", "hold_ps"))
 
 
 def save_interval_steps(plan):
-    """plan 의 저장 간격 (스텝) — run_melt_quench 의 save_int 와 같은 셈."""
-    return max(1, int(round(float(plan["save_ps"]) * 1000.0 / float(plan["dt_fs"]))))
+    """plan 의 저장 간격 (스텝) — run_melt_quench 의 save_int 와 같은 셈. 일정 값이 수가 아니거나 0 이하면 ValueError."""
+    return max(1, int(round(_plan_num(plan, "save_ps", positive=True) * 1000.0 / _plan_num(plan, "dt_fs", positive=True))))
 
 
 def _fsync_file(path):
@@ -1295,10 +1334,13 @@ def _thermo_last_step(path, plan):
         (그 줄에 남은 시각이 끝 시각일 수 있다 — 버리지 않는다)
       · 첫 칸이 쓰이다 말았다 (쉼표 없음) → 다음 기록 시각 문자열 (드라이버 꼴 '%.3f') 의 앞부분이어야 센다 · 아니면 보류
       · NUL 뒤에 다른 글자가 있다 · 앞 줄과 이어지지 않는다 → 보류"""
-    save_int, dt = save_interval_steps(plan), float(plan["dt_fs"])
-    lines = path.read_bytes().decode("utf-8", errors="replace").split("\n")
+    save_int, dt = save_interval_steps(plan), _plan_num(plan, "dt_fs", positive=True)
+    raw = path.read_bytes()
+    lines = raw.decode("utf-8", errors="replace").split("\n")
     idx = [i for i, ln in enumerate(lines) if not _junk(ln)]
     if not idx:
+        if raw:                                        # ⭐ DO 전 리뷰 F7 — 크기는 있는데 읽을 줄이 없다 (NUL · 공백뿐) → 진행량을 모른다
+            return None, f"thermo.csv 가 비어 있지 않은데 ({len(raw)} B) 읽을 줄이 없다 (NUL · 공백뿐) — 진행량을 복원하지 못한다"
         return None, None
     if idx[0] != 0 or lines[0].split(",")[0].strip() != "t_ps":
         return None, "thermo.csv 첫 줄이 머리 (t_ps,…) 가 아니다"
@@ -1341,8 +1383,11 @@ def _traj_last_step(path, plan):
     """traj.xyz (extxyz) 에서 **시작된** 마지막 프레임의 스텝 — (스텝 | None, 문제 | None). 프레임 수로 완료를 승인하지 않는다
     (회신 DK P1-1) — 이것은 '끝까지 갔을 수도 있다' 를 가려 보류하는 데만 쓴다 (회신 DL Q2). 덜 써진 마지막 프레임도 시작된 기록으로 센다."""
     save_int = save_interval_steps(plan)
-    lines = path.read_bytes().decode("utf-8", errors="replace").split("\n")
+    raw = path.read_bytes()
+    lines = raw.decode("utf-8", errors="replace").split("\n")
     last = max((i for i, ln in enumerate(lines) if not _junk(ln)), default=-1)
+    if last < 0 and raw:                                 # ⭐ DO 전 리뷰 F7 — 크기는 있는데 읽을 줄이 없다
+        return None, f"traj.xyz 가 비어 있지 않은데 ({len(raw)} B) 읽을 줄이 없다 (NUL · 공백뿐) — 진행량을 복원하지 못한다"
     i, n, nat0 = 0, 0, None
     while i <= last:
         try:
@@ -1383,17 +1428,28 @@ def md_last_recorded_step(folder, plan):
     return best, None
 
 
+PRE_RUN_VERDICT_KEYS = frozenset({"status", "reasons", "run", "provenance", "reason", "history"})   # stage1_verdict 가 plan 없는 폴더에 쓰는 열쇠
+PRE_RUN_PROVENANCE_KEYS = frozenset({"files_sha256", "card_values_sha16", "driver_sha16", "⛔"})
+
+
 def _verdict_is_pre_run(v):
     """plan 전 끊김에서만 생기는 판정인가 — stage1_verdict 가 plan.json 없는 폴더에 쓰는 꼴 그대로 (회신 DM P0-2):
     status incomplete · 이유가 정확히 {"incomplete": ["plan.json 없음"]} (다른 열쇠 · 빈 값 · 다른 타입이 섞이면 아니다 — 회신 DN P1) ·
     원자료 지문 (PROVENANCE_FILES) 이 전부 있고 전부 None."""
-    if not isinstance(v, dict) or v.get("status") != "incomplete":
+    if not isinstance(v, dict) or v.get("status") != "incomplete" or not set(v) <= PRE_RUN_VERDICT_KEYS:
+        return False                                          # ⭐ DO 전 리뷰 F3 — 진짜 함수가 안 쓰는 열쇠 (gate_check · checks 등) 가 붙으면 아니다
+    if not all(v.get(k) is None or isinstance(v.get(k), str) for k in ("run", "reason")):
         return False
+    hs = v.get("history")
+    if hs is not None and not (isinstance(hs, dict) and hs.get("prev_status") in (None, "incomplete")):
+        return False                                          # 재판정 요약에 이전 과학적 판정 · 다른 꼴이 적혀 있으면 plan 전 판정이 아니다
     rs = v.get("reasons")
     if rs != {"incomplete": ["plan.json 없음"]}:
         return False
     pv = v.get("provenance")
-    fs = pv.get("files_sha256") if isinstance(pv, dict) else None
+    if not (isinstance(pv, dict) and set(pv) <= PRE_RUN_PROVENANCE_KEYS):
+        return False
+    fs = pv.get("files_sha256")
     return isinstance(fs, dict) and set(PROVENANCE_FILES) <= set(fs) and all(fs.get(x) is None for x in PROVENANCE_FILES)
 
 
@@ -1426,7 +1482,11 @@ def _verdict_records(folder):
                 return [], f"판정 이력 {k} 번째 줄을 못 읽는다"
             if not isinstance(h, dict):
                 return [], f"판정 이력 {k} 번째 줄이 객체가 아니다"
-            recs.append((f"판정 이력 {k} 의 이전 판정", h.get("prev"), False))
+            pv_ = h.get("prev")
+            if isinstance(pv_, dict) and ("prev_status" in h and h.get("prev_status") != pv_.get("status")
+                                          or "prev_provenance" in h and h.get("prev_provenance") != (pv_.get("provenance") or {})):
+                return [], f"판정 이력 {k} 번째 줄의 prev_status · prev_provenance 가 prev 와 다르다 — 해석할 수 없는 기록"   # ⭐ DO 전 리뷰 F4
+            recs.append((f"판정 이력 {k} 의 이전 판정", pv_, False))
             recs.append((f"판정 이력 {k} 의 새 판정", {"status": h.get("new_status"),   # 지문은 그대로 — 타입이 틀리면 검사가 보류한다 (회신 DN P1)
                                                    "provenance": h.get("new_provenance")}, True))
     return recs, None
@@ -1459,11 +1519,16 @@ def _completion_fields_problem(r, partial, where):
             return f"{where} 의 {x} 지문 ({str(h)[:20]!r}) 이 64 자리 16진수 글자가 아니다 — 해석할 수 없는 기록"
     if partial:
         return None
-    for key in ("gate_check", "checks"):
+    for key in ("gate_check", "checks", "history"):
         p = bad(r, key, (dict,), where)
         if p:
             return p
     p = bad(r.get("gate_check") or {}, "schedule_complete", (bool,), f"{where} 의 gate_check")
+    if p:
+        return p
+    if (r.get("gate_check") or {}).get("error"):            # ⭐ DO 전 리뷰 (소비자 P1) — gate 오류 = 일정 끝 여부를 모른다 ('False' 로 읽지 않는다)
+        return f"{where} 의 gate_check 에 오류가 적혀 있다 ({str(r['gate_check']['error'])[:60]}) — 일정 끝 여부를 모른다 · 해석할 수 없는 기록"
+    p = bad(r.get("history") or {}, "prev_status", (str,), f"{where} 의 history")
     if p:
         return p
     ck = r.get("checks") or {}
@@ -1493,6 +1558,13 @@ def _verdict_evidence(folder, pre_run_only):
     recs, prob = _verdict_records(folder)
     if prob:
         return prob
+    plan_frames = None                                       # ⭐ DO 전 리뷰 F4 — 기록에 expected 가 없으면 plan 에서 (stage1_verdict 와 같은 셈)
+    try:
+        pl_ = json.loads((pathlib.Path(folder) / "plan.json").read_text(encoding="utf-8"))
+        if all(_fin(pl_.get(k)) for k in ("melt_ps", "quench_ps", "hold_ps", "save_ps")) and float(pl_["save_ps"]) > 0:
+            plan_frames = int(round((float(pl_["melt_ps"]) + float(pl_["quench_ps"]) + float(pl_["hold_ps"])) / float(pl_["save_ps"]))) + 1
+    except (OSError, ValueError, AttributeError, OverflowError, RecursionError):
+        plan_frames = None
     for where, r, partial in recs:
         if not isinstance(r, dict):
             return f"{where} 을 못 읽는다"
@@ -1523,6 +1595,16 @@ def _verdict_evidence(folder, pre_run_only):
                 n_, ex_ = (tf.get("n"), tf.get("expected")) if isinstance(tf, dict) else (None, None)
                 if type(n_) is int and type(ex_) is int and ex_ > 0 and n_ >= ex_:
                     return f"{where} 에 궤적 프레임이 다 찼다고 적혀 있다 ({n_}/{ex_}) — MD 가 끝났던 흔적"
+                if type(n_) is int and ex_ is None and plan_frames and n_ >= plan_frames:
+                    return f"{where} 에 궤적 프레임 {n_} 이 적혀 있다 (plan 계획 {plan_frames} 이상) — MD 가 끝났던 흔적"
+                ck_ = r.get("checks") or {}
+                for k_, why_ in (("final_structure", "최종 구조 판정"), ("seed_gate_error", "시드 게이트 오류")):
+                    if ck_.get(k_) is not None:
+                        return f"{where} 에 {why_} ({k_}) 이 적혀 있다 — final.xyz 가 있던 흔적"
+                if r.get("seed_gate_view") is not None:
+                    return f"{where} 에 시드 게이트 값 (seed_gate_view) 이 적혀 있다 — final.xyz 가 있던 흔적"
+                if (r.get("history") or {}).get("prev_status") in ("pass", "fail"):
+                    return f"{where} 의 재판정 요약에 이전 과학적 판정 ({r['history']['prev_status']}) 이 적혀 있다"
     return None
 
 
@@ -1540,10 +1622,22 @@ def folder_stage_detail(folder):
                       다름 포함 — 회신 DM P0-1) · **판정 기록에 과학적 판정 · 해석할 수 없는 상태 (못 읽은 이전 판정 포함) ·
                       최종 산출물 지문 · MD 완료 흔적 (일정 끝 · 프레임 다 참) · 임시 판정이 있음** (회신 DM P0-2) ·
                       **그 흔적의 필드가 있는데 타입이 틀림** (회신 DN P1)
-    프레임 · 시각은 완료 승인에 안 쓴다 (회신 DK P1-1) — 끝까지 갔을 수도 있는 실행을 보류하는 데만 쓴다 (회신 DL Q2)."""
+    프레임 · 시각은 완료 승인에 안 쓴다 (회신 DK P1-1) — 끝까지 갔을 수도 있는 실행을 보류하는 데만 쓴다 (회신 DL Q2).
+    ⭐ DO 전 리뷰 — plan 이 있는 도중 끊김 후보도 폴더의 파일 목록을 본다 (MID_RUN_FILES 밖이면 보류 · F1) · result.json · final.xyz 자리에
+       파일이 아닌 것 (디렉터리 · 깨진 링크) 은 보류 (F2) · 판독 중 예외 (깊은 JSON 의 RecursionError · OverflowError 등) 는 분류 대신
+       죽지 않고 보류 (F6)."""
+    try:
+        return _folder_stage_detail(folder)
+    except Exception as e:                                   # ⭐ DO 전 리뷰 F6 — 판독 예외는 보류 (러너 · 소비자가 멈춰 서지 않게)
+        return "unreadable", f"판독 예외 ({type(e).__name__}) — 보류"
+
+
+def _folder_stage_detail(folder):
     f = pathlib.Path(folder)
     if any((f / x).is_file() for x in ("result.json", "final.xyz")):
         return "final", "result.json · final.xyz 가 있다"
+    if any(os.path.lexists(f / x) for x in ("result.json", "final.xyz")):
+        return "unreadable", "result.json · final.xyz 자리에 파일이 아닌 것 (디렉터리 · 깨진 링크) 이 있다 — 보류"
     if not (f / "plan.json").is_file():
         try:
             extra = sorted(p.name for p in f.iterdir() if p.name not in NON_MD_FILES)
@@ -1559,8 +1653,8 @@ def folder_stage_detail(folder):
         plan = json.loads((f / "plan.json").read_text(encoding="utf-8"))
         want = planned_md_steps(plan)
         save_int = save_interval_steps(plan)
-    except (OSError, ValueError, KeyError, TypeError, ZeroDivisionError, AttributeError):
-        return "unreadable", "plan.json 을 못 읽는다 (일정 · 저장 간격)"
+    except (OSError, ValueError, KeyError, TypeError, ZeroDivisionError, AttributeError, OverflowError, RecursionError):
+        return "unreadable", "plan.json 을 못 읽는다 (일정 · 저장 간격 — 수가 아닌 값 포함)"
     if os.path.lexists(f / MD_DONE_TMP):
         return "unreadable", "MD 완료 기록 임시 파일이 남았다 — 기록 도중 끊김 (완료로 승인하지 않고 보류)"
     md = f / MD_DONE_NAME
@@ -1579,6 +1673,13 @@ def folder_stage_detail(folder):
                ("unreadable", "MD 완료 기록이 plan · 궤적 · thermo 와 안 맞는다 (기록 뒤 바뀜 포함)")
     if os.path.lexists(f / "final_relax.log"):
         return "unreadable", "FIRE 로그가 있는데 MD 완료 기록이 없다 — 보류"
+    try:
+        extra = sorted(x.name for x in f.iterdir() if x.name not in MID_RUN_FILES)
+    except OSError as e:
+        return "unreadable", f"폴더를 못 읽는다 ({type(e).__name__})"
+    if extra:                                                # ⭐ DO 전 리뷰 F1 — MD 뒤 산출물 · 모르는 파일
+        return "unreadable", (f"완료 기록은 없는데 MD 중 기록 밖의 파일이 있다 ({' · '.join(extra[:4])}{' …' if len(extra) > 4 else ''}) — "
+                              "MD 뒤 산출물 (seed_gate · g(r) · final.vasp 등) 일 수 있다 · 보류")
     last, prob = md_last_recorded_step(f, plan)
     if prob:
         return "unreadable", prob + " — 보류"
@@ -1606,25 +1707,59 @@ def verdict_file_status(folder):
         return None
     try:
         st = json.loads(vf.read_text(encoding="utf-8")).get("status")
-    except (OSError, ValueError, AttributeError):
+    except Exception:                                        # OSError · ValueError · AttributeError · RecursionError (DO 전 리뷰 F6)
         return "unreadable"
     return st if st in LI2S2_STATUSES else "unreadable"
 
 
-def run_kind(row, folder):
-    """⭐ 회신 DK P0-2 — 한 실행의 상태를 **한 곳에서** 정한다 (러너 재시도 자격 · 확인 때 선언 검사 · 소비자 이력 검사가 같은 답을 읽는다).
-    장부 판정과 보존 폴더 판정 (verdict_file_status) 을 같이 본다 — 판정을 어디에 적었는지로 답이 바뀌지 않는다:
-      'scientific'  어느 쪽이든 pass · fail
-      'unreadable'  폴더 판정 파일을 못 읽음 · 장부 판정이 모르는 값
-      'invalid'     어느 쪽이든 invalid
-      'interrupted' 그 밖 (판정 없음 · incomplete)"""
-    v = row.get("verdict") if isinstance(row, dict) else None
-    vfs = verdict_file_status(folder) if folder else None
-    if v in ("pass", "fail") or vfs in ("pass", "fail"):
-        return "scientific"
-    if vfs == "unreadable" or v not in (None, "pass", "fail", "invalid", "incomplete"):
+RUN_STATUSES_ENDED = ("ended", "invalid")   # 장부 status — 끝난 런 · 러너가 녹음 invalid 로 멈춘 런 (이 둘의 invalid 판정만 실행 종류 invalid)
+
+
+def run_kind(row, folder, values=None):
+    """⭐ 회신 DK P0-2 · DO 전 리뷰 — 한 실행의 종류를 **한 곳에서** 정한다 (러너 재시도 자격 · 확인 때 선언 검사 · 소비자 이력 검사).
+      'scientific'  장부 verdict · closes_system · melt_check (러너가 첫 시드 녹음 fail 로 멈춤) · 폴더 판정 기록 (현재 · 이력의 이전 · 새 판정)
+                    어디든 pass · fail · (values 를 주면) 보존 폴더의 녹음 창이 다 찼고 fail
+      'unreadable'  판정 기록 · 장부 값을 못 읽음 · 모르는 값 · 판정 임시 파일 · 판독 예외
+      'invalid'     러너가 녹음 invalid 로 멈춤 (melt_check invalid) · **끝난 런 (status ended · invalid)** 의 invalid 판정 ·
+                    (values) 보존 폴더의 녹음 판정 invalid
+      'interrupted' 그 밖 — 끊긴 런 (interrupted · orphaned · stop_failed · cap …) 의 폴더를 판정해 invalid 가 나와도 종류는 끊긴 런이다
+                    (일찍 끊긴 폴더 · 덜 써진 꼬리 · 보존 이름은 판정이 invalid 로 낼 수 있다 — 그것으로 끊긴 런 한도를 우회하지 않는다)"""
+    try:
+        return _run_kind(row, folder, values)
+    except Exception:
         return "unreadable"
-    if v == "invalid" or vfs == "invalid":
+
+
+def _run_kind(row, folder, values):
+    if not isinstance(row, dict):
+        return "unreadable"
+    v, mc, cs = row.get("verdict"), row.get("melt_check"), row.get("closes_system")
+    if v not in (None, "pass", "fail", "invalid", "incomplete"):
+        return "unreadable"
+    if mc is not None and not (isinstance(mc, dict) and mc.get("verdict") in ("fail", "invalid")):
+        return "unreadable"
+    if cs is not None and not isinstance(cs, bool):
+        return "unreadable"
+    if v in ("pass", "fail") or cs is True or (mc or {}).get("verdict") == "fail":
+        return "scientific"
+    recs, prob = _verdict_records(folder) if folder else ([], None)
+    if prob:
+        return "unreadable"
+    sts = [r_.get("status") if isinstance(r_, dict) else "?" for _, r_, _ in recs]
+    if any(x in ("pass", "fail") for x in sts):
+        return "scientific"
+    if any(x not in LI2S2_STATUSES and x is not None for x in sts):
+        return "unreadable"
+    if values is not None and folder and os.path.lexists(pathlib.Path(folder) / "traj.xyz"):
+        mw = melt_window_check(folder, values=values, log=lambda *a: None)     # ⭐ DO 전 리뷰 S1d · t12 — 녹음 결과가 이미 정해졌나
+        if mw.get("verdict") == "fail":
+            return "scientific"
+        if mw.get("verdict") == "invalid":
+            return "invalid"
+    if (mc or {}).get("verdict") == "invalid":
+        return "invalid"
+    st_ = row.get("status_before_orphan") or row.get("status")
+    if (v == "invalid" or "invalid" in sts) and st_ in RUN_STATUSES_ENDED:
         return "invalid"
     return "interrupted"
 
@@ -1654,7 +1789,30 @@ def declaration_problems(decl, kind, values, rejudge_needed=False, prev_status=N
     return why
 
 
+def _no_dup_pairs(pairs):
+    d = {}
+    for k, v in pairs:
+        if k in d:
+            raise ValueError(f"같은 열쇠 {k!r} 가 둘")
+        d[k] = v
+    return d
+
+
+def loads_strict(text):
+    """JSON — 같은 열쇠가 둘이면 ValueError (뒤 값이 조용히 이기지 않게 · DO 전 리뷰)."""
+    return json.loads(text, object_pairs_hook=_no_dup_pairs)
+
+
 def ledger_check(out_root, verdicts, values):
+    """장부 검사 — 판독 예외가 나도 죽지 않고 invalid 로 돌린다 (DO 전 리뷰 F6). 아래 _ledger_check 의 설명을 본다."""
+    try:
+        return _ledger_check(out_root, verdicts, values)
+    except Exception as e:
+        return {"total_h": float("nan"), "cap_h": float(values["stage1_cap_gpu_h"]), "invalid": [f"장부 판독 예외 ({type(e).__name__})"],
+                "pending": [], "runs": 0, "attested": [], "closing": [], "source": str(pathlib.Path(out_root) / LEDGER_NAME)}
+
+
+def _ledger_check(out_root, verdicts, values):
     """⭐ 회신 DH P0-1 · DI · DJ — 장부 = **실행 목록**. 장부가 없으면 None (확인 못 함 → 통과 안 됨).
     invalid: 장부 꼴 · run_id 꼴 · 중복 · 비용이 유한한 비음수가 아님 · 근거가 측정 · 보수 상한 · 증언 상한이 아님 · 증언 상한의 근거 필드
              (카드 attestation_required_fields) · 하한 (유한 · heartbeat 이상 · 증언 때 하한과 같음) · 폴더 ↔ 장부 양쪽 (보존 누락 포함) ·
@@ -1667,17 +1825,17 @@ def ledger_check(out_root, verdicts, values):
         return None
     invalid, pending, by_id, attested = [], [], {}, []
     try:
-        led = json.loads(p.read_text(encoding="utf-8"))
+        led = loads_strict(p.read_text(encoding="utf-8"))
         runs, stop_hist = led.get("runs"), led.get("stop_history", [])
-    except (json.JSONDecodeError, UnicodeDecodeError, AttributeError) as e:
-        return {"total_h": float("nan"), "cap_h": float(values["stage1_cap_gpu_h"]), "invalid": [f"장부를 못 읽었다 ({type(e).__name__})"],
-                "pending": [], "runs": 0, "attested": [], "source": str(p)}
+    except (ValueError, UnicodeDecodeError, AttributeError, RecursionError) as e:
+        return {"total_h": float("nan"), "cap_h": float(values["stage1_cap_gpu_h"]), "invalid": [f"장부를 못 읽었다 ({type(e).__name__}: {str(e)[:60]})"],
+                "pending": [], "runs": 0, "attested": [], "closing": [], "source": str(p)}
     if not isinstance(runs, list):
         invalid.append("장부 runs 가 목록이 아니다"); runs = []
     if not isinstance(stop_hist, list):
         invalid.append("장부 stop_history 가 목록이 아니다"); stop_hist = []
     req_att = list(values.get("attestation_required_fields") or [])
-    tot = 0.0
+    tot, closing = 0.0, []
     for r in runs:
         if not isinstance(r, dict):
             invalid.append("장부 runs 원소가 객체가 아니다"); continue
@@ -1688,12 +1846,29 @@ def ledger_check(out_root, verdicts, values):
         if rid in by_id:
             invalid.append(f"장부에 run_id {rid[:8]} 가 둘 ({key})")
         by_id[rid] = r
+        if r.get("system") not in ("A", "B") or type(r.get("seed")) is not int:          # ⭐ DO 전 리뷰 — 계 · 시드 꼴 (12.0 · '12' 안 받음)
+            invalid.append(f"{key} 런의 계 · 시드 꼴이 아니다 ({r.get('system')!r} · {r.get('seed')!r})"); continue
+        cs, mc = r.get("closes_system"), r.get("melt_check")
+        if cs is not None and not isinstance(cs, bool):
+            invalid.append(f"{key} 런의 closes_system {cs!r} — 참거짓이 아니다"); continue
+        if mc is not None and not (isinstance(mc, dict) and mc.get("verdict") in ("fail", "invalid")):
+            invalid.append(f"{key} 런의 melt_check {str(mc)[:40]!r} — 꼴이 아니다"); continue
+        if cs is True:                                    # ⭐ DO 전 리뷰 P0 — 첫 시드 녹음 fail 은 장부에도 남는다 (판정이 없어도 그 계를 닫는다)
+            closing.append((r["system"], r["seed"], rid))
         if r.get("end") is None:
             pending.append(f"{key} 런이 끝나지 않았다 (상태 {r.get('status')} · 비용 미확정 — heartbeat {r.get('wall_h_so_far')} h 는 하한)")
             continue
+        if not (isinstance(r.get("end"), str) and r["end"].strip()):
+            invalid.append(f"{key} 런의 end {r.get('end')!r} — 끝 시각 글자가 아니다 (False · 0 · 빈 글자를 '끝남' 으로 세지 않는다)"); continue
         w = r.get("wall_h")
         if not (_fin(w) and float(w) >= 0.0):
             invalid.append(f"{key} 런 비용 {w!r} — 유한한 비음수가 아니다"); continue
+        hb_, lo_ = r.get("wall_h_so_far"), r.get("wall_h_lower")
+        if r.get("cost_basis") in ("measured", "upper_bound"):      # ⭐ DO 전 리뷰 P2-17 — 측정 · 보수 상한도 자기 하한과 대조 (증언 상한은 아래에서 따로)
+            if any(x is not None and not (_fin(x) and float(x) >= 0) for x in (hb_, lo_)):
+                invalid.append(f"{key} 런 heartbeat · 하한 ({hb_!r} · {lo_!r}) — 유한한 비음수가 아니다"); continue
+            if any(x is not None and float(w) < float(x) - 1e-9 for x in (hb_, lo_)):
+                invalid.append(f"{key} 런 비용 {w} h 가 자기 하한 (heartbeat {hb_} · 하한 {lo_}) 보다 작다"); continue
         if r.get("cost_basis") not in COST_BASES:
             invalid.append(f"{key} 런 비용 근거 {r.get('cost_basis')!r} — 측정 · 보수 상한 · 증언 상한이 아니면 확정 비용이 아니다"); continue
         if r.get("cost_basis") == "attested_upper_bound":       # 정전 복구 · 회신 DJ P0-3 · Q3 — 증언 상한
@@ -1755,7 +1930,7 @@ def ledger_check(out_root, verdicts, values):
             p_ = rr_[i_ - 1]
             pf = (inventory.get(p_.get("run_id")) or {}).get("path")
             pfs = verdict_file_status(pf) if pf else None
-            pk = run_kind(p_, pf)                          # 회신 DK P0-2 — 러너와 같은 분류
+            pk = run_kind(p_, pf, values)                  # 회신 DK P0-2 — 러너와 같은 분류 (DO 전 리뷰 — 보존 폴더 녹음 판정까지)
             if pk == "scientific":
                 invalid.append(f"{tag}: 과학적 판정 ({p_.get('verdict') or pfs}) 뒤에 같은 시드를 다시 돌렸다"); continue
             if pk == "unreadable":
@@ -1772,7 +1947,7 @@ def ledger_check(out_root, verdicts, values):
                 invalid.append(f"{tag}: 실행 {r['run_id'][:8]} 이 앞 실행에 묶여 확인된 STOP ({' · '.join(RETRY_BIND_CODES[kind])}) 과 안 묶인다")
             else:
                 st_ = folder_stage(pf) if pf else None
-                dp = declaration_problems(h.get("declaration"), kind, values, prev_status=p_.get("status"),
+                dp = declaration_problems(h.get("declaration"), kind, values, prev_status=p_.get("status_before_orphan") or p_.get("status"),
                                           rejudge_needed=(kind == "invalid" and st_ in ("final", "md_complete")))
                 if dp:
                     invalid.append(f"{tag}: 재시도 선언 — " + " · ".join(dp))
@@ -1802,7 +1977,7 @@ def ledger_check(out_root, verdicts, values):
         elif (r.get("system"), r.get("seed")) != (s, sd):
             invalid.append(f"{s}{sd} 판정의 run_id {rid[:8]} 는 장부에서 {r.get('system')}{r.get('seed')} 런이다")
     return {"total_h": tot, "cap_h": float(values["stage1_cap_gpu_h"]), "invalid": invalid, "pending": pending,
-            "runs": len(runs), "attested": attested, "source": str(p)}
+            "runs": len(runs), "attested": attested, "closing": closing, "source": str(p)}
 
 
 def stage1_summary(out_root, *, values=None, card=LI2S2_CARD, log=print):
@@ -1819,7 +1994,15 @@ def stage1_summary(out_root, *, values=None, card=LI2S2_CARD, log=print):
             p = rd / "stage1_verdict.json"
             if not p.is_file():
                 ver[(s, sd)] = None; continue
-            vv = json.loads(p.read_text(encoding="utf-8"))
+            try:
+                vv = loads_strict(p.read_text(encoding="utf-8"))
+                if not isinstance(vv, dict):
+                    raise ValueError("판정이 객체가 아니다")
+            except (ValueError, UnicodeDecodeError, RecursionError) as e:     # ⭐ DO 전 리뷰 — 잘린 판정에 죽지 않는다
+                ver[(s, sd)] = {"status": "invalid", "system": s, "seed": sd, "closes_system": False,
+                                "reasons": {"invalid": [f"판정 파일을 못 읽는다 ({type(e).__name__}) → --stage1_verdict 로 다시 판정"]}}
+                stale.append(f"{s}{sd}")
+                continue
             pv = vv.get("provenance") or {}
             bad = []
             if pv.get("files_sha256") != run_provenance(rd):
@@ -2056,7 +2239,8 @@ def mode_stress(run, card, device="cuda", log=print):
 # ───────────────────────── --gate_check: 기록이 게이트를 먹여주는가 ─────────────────────────
 def read_thermo(path):
     """thermo.csv → {열이름: np.array}. 열이 없으면 **죽는다** (없는 값을 0 으로 그리지 않는다)."""
-    lines = pathlib.Path(path).read_text(encoding="utf-8").strip().splitlines()
+    lines = [ln for ln in pathlib.Path(path).read_bytes().decode("utf-8", errors="replace").split("\n") if not _junk(ln)]
+    lines = [ln.rstrip("\r") for ln in lines]                 # 정전 꼬리 (NUL · 빈 줄) 는 건너뛴다 · 덜 써진 줄은 그대로 (그러면 실패 → 오류)
     if len(lines) < 2:
         raise ValueError(f"{path}: 자료 줄이 없다")
     keys = lines[0].split(",")
@@ -2259,15 +2443,25 @@ def _gate_view(at):
 
 
 def _xyz_frames(path):
-    """extxyz 프레임 수 — 프레임마다 (원자수 + 2) 줄이라는 것만 쓴다. 안 맞으면 None (세지 못함 ≠ 0)."""
-    with open(path, encoding="utf-8", errors="replace") as f:
-        first = f.readline().strip()
-        n_lines = 1 + sum(1 for _ in f)
-    try:
-        nat = int(first)
-    except ValueError:
-        return None
-    return n_lines // (nat + 2) if n_lines % (nat + 2) == 0 else None
+    """extxyz **온전한** 프레임 수 — 프레임마다 (원자수 + 2) 줄. 꼬리의 NUL · 빈 줄과 덜 써진 마지막 프레임은 세지 않는다
+    (끊긴 · 멈춘 런의 정상 모양 — ⭐ DO 전 리뷰: 전에는 None → invalid 로 첫 시드 닫힘까지 꺼졌다). 꼬리가 아닌 자리에서 머리 (원자수) 가
+    깨지거나 원자수가 바뀌면 None (세지 못함 ≠ 0)."""
+    lines = pathlib.Path(path).read_bytes().decode("utf-8", errors="replace").split("\n")
+    last = max((i for i, ln in enumerate(lines) if not _junk(ln)), default=-1)
+    i, n, nat0 = 0, 0, None
+    while i <= last:
+        try:
+            nat = int(lines[i].strip())
+        except ValueError:
+            nat = None
+        if nat is None or nat <= 0 or (nat0 is not None and nat != nat0):
+            if nat0 is not None and last - i + 1 < nat0 + 2:   # 꼬리에서 머리째 덜 써짐 — 세지 않는다
+                return n
+            return None
+        if i + nat + 1 > last:                               # 덜 써진 마지막 프레임 — 세지 않는다
+            return n
+        nat0, n, i = nat, n + 1, i + nat + 2
+    return n
 
 
 def seed_gate(run, write_raw=True, log=print):
@@ -3188,6 +3382,13 @@ def _selftest():
     chk(c_first["status"] == "fail" and c_first["closes_system"] and not c_second["closes_system"] and c_second["status"] == "fail"
         and c_bad["status"] == "invalid" and not c_bad["closes_system"],
         "DG P0-1: 첫 시드 (11) 녹음 미충족 → fail + closes_system (일정 미완이어도) · 둘째 시드는 일반 탈락 · 카드와 다른 런이면 닫지 않고 무효")
+    c_m2 = combine_stage1(plan_ok, VAL, dict(g_ok, schedule_complete=False), {"verdict": "fail", "message": "x"}, None,
+                          dict(f_ok, **{"final.xyz": False, "result.json": False}))
+    c_m2_pass = combine_stage1(plan_ok, VAL, dict(g_ok, schedule_complete=False), {"verdict": "pass", "message": "x"}, None,
+                               dict(f_ok, **{"final.xyz": False, "result.json": False}))
+    chk(c_m2["status"] == "fail" and not c_m2["closes_system"] and c_m2_pass["status"] == "incomplete",
+        "⛔음성 DO 전 리뷰 (규칙 M): 둘째 시드도 녹음 창이 다 찼고 fail 이면 일정 미완 · 최종 파일 없음이어도 fail (결과가 정해졌다 — 끊긴 뒤 재시도로 "
+        f"지우지 않는다) · 녹음 pass 면 미완 그대로 ({c_m2['status']} · {c_m2_pass['status']})")
     def _v(st, fc="2.21.0"):
         return {"status": st, "software": {"inference": "turbo", "fairchem-core": fc}}
     ver = {("A", 11): _v("fail"), ("A", 12): _v("pass"), ("A", 13): _v("pass"), ("A", 14): _v("pass"), ("A", 15): _v("pass"),
@@ -3288,7 +3489,10 @@ def _selftest():
                 (d / "plan.json").write_text(json.dumps(pl), encoding="utf-8")
             elif isinstance(pl, str):
                 (d / "plan.json").write_text(pl, encoding="utf-8")
-            plq = pl if isinstance(pl, dict) and "dt_fs" in pl and "save_ps" in pl else PLAN0
+            try:                                             # 손상된 plan (글자 · 0 · 너무 큰 값) 이면 thermo 는 정상 plan 꼴로 쓴다 (판독이 plan 을 보고 보류하는지 본다)
+                plq = pl if isinstance(pl, dict) and save_interval_steps(pl) and planned_md_steps(pl) >= 0 else PLAN0
+            except (ValueError, TypeError, KeyError, AttributeError, OverflowError):
+                plq = PLAN0
             if traj is not None:
                 (d / "traj.xyz").write_text(FR(traj), encoding="utf-8")
             nth = (traj or 0) if thermo == "same" else thermo
@@ -3306,6 +3510,32 @@ def _selftest():
         def _tmp_only(d):                                    # 회신 DL P0 반례 2 — 기록을 임시 이름으로만 (os.replace 직전 끊김)
             (d / MD_DONE_TMP).write_text(json.dumps({"run_id": RIDF, "n_steps_planned": 2000, "n_steps_done": 2000}), encoding="utf-8")
         P07 = {**PLAN0, "save_ps": 0.7}
+        # ⭐ DO 전 리뷰 — 수 · 프레임 · thermo · 보존 폴더 단위 시험
+        num_ok = (not _fin("12.5") and not _fin(True) and not _fin(10 ** 400) and _fin(np.float64(1.5)) and _fin(3)
+                  and not _same("100.0", 100.0) and _same(100, 100.0))
+        chk(num_ok, "⛔음성 DO 전 리뷰 P1-3: 수 판정은 수 타입만 — '12.5' · True · 10**400 은 수가 아니다 · numpy 수는 수 · '100.0' 은 100 과 같지 않다")
+        tdx = pathlib.Path(td_) / "_frames"; tdx.mkdir()
+        (tdx / "full_nul.xyz").write_bytes(FR(5).encode() + b"\x00" * 64)
+        (tdx / "torn.xyz").write_text(FR(5) + "2\nLattice=\"5 0", encoding="utf-8")
+        (tdx / "mid_bad.xyz").write_text(FR(2) + "x\n" + FR(2), encoding="utf-8")
+        fr_ = {k: _xyz_frames(tdx / f"{k}.xyz") for k in ("full_nul", "torn", "mid_bad")}
+        (tdx / "th.csv").write_bytes(TH(3).encode() + b"\x00" * 40)
+        th_rows = len(read_thermo(tdx / "th.csv")["t_ps"])
+        chk(fr_ == {"full_nul": 5, "torn": 5, "mid_bad": None} and th_rows == 3,
+            "⛔음성 DO 전 리뷰 (소비자 P1 · P0 t9): 프레임 수는 NUL 꼬리 · 덜 써진 마지막 프레임을 빼고 온전한 것만 센다 (끊긴 런이 invalid 로 "
+            f"새지 않게) · 중간이 깨지면 None · thermo 의 NUL 꼬리는 건너뛴다 ({fr_} · {th_rows})")
+        pz = pathlib.Path(td_) / "_ident" / "A"; pz.mkdir(parents=True)
+        idn = {}
+        for nm_, att_ in (("seed11.cut1", {"system": "A", "seed": 11, "run_id": RIDF}), ("seed11.cut2", None),
+                          ("seed11.cut3", {"system": "A", "seed": 12, "run_id": RIDF}), ("seed11", None)):
+            dz = pz / nm_; dz.mkdir()
+            if att_ is not None:
+                (dz / ATTEMPT_NAME).write_text(json.dumps(att_), encoding="utf-8")
+            r_ = identity_check(dz, {"system": "A", "seed": 11, "run_id": RIDF})
+            idn[nm_] = (r_["ok"], r_.get("preserved"))
+        chk(idn == {"seed11.cut1": (True, True), "seed11.cut2": (False, False), "seed11.cut3": (False, False), "seed11": (True, False)},
+            "⛔음성 DO 전 리뷰 (소비자 P0 a): 보존 폴더 seed<N>.<붙임> 은 실행 전 기록의 계 · 시드 · run_id 가 plan 과 같을 때만 같은 실행으로 "
+            f"식별 (판정이 이름 때문에 invalid 로 새지 않게) · 기록이 없거나 다르면 아니다 ({idn})")
         PASSV = {"status": "pass", "reasons": {}, "run_id": RIDF,
                  "provenance": {"files_sha256": {"plan.json": "a" * 64, "thermo.csv": "b" * 64, "traj.xyz": "c" * 64,
                                                  "final.xyz": "d" * 64, "result.json": "e" * 64}}}
@@ -3358,7 +3588,7 @@ def _selftest():
                "save07_end": _fs("k", plan=P07, traj=6), "save07_mid": _fs("k2", plan=P07, traj=3),
                "save07_done": _fs("l", plan=P07, traj=6, done=True),
                "no_dt": _fs("d", plan={k: v for k, v in PLAN0.items() if k != "dt_fs"}, done=True),
-               # 진행량 판독 — 정전 꼬리는 받아 주고 (시작된 기록으로 센다) · 꼬리가 아닌 깨짐은 보류
+               # 진행량 판독 — 시각의 유효한 앞부분이 남은 꼬리는 시작된 기록으로 세고 · NUL 만 남은 꼬리는 건너뛴다 (복원 못 함) · 꼬리가 아닌 깨짐은 보류
                "thermo_nul_tail": _fs("q1", traj=2, after=lambda d: open(d / "thermo.csv", "ab").write(b"\x00" * 64)),
                "thermo_partial_mid": _fs("q2", traj=2, after=lambda d: open(d / "thermo.csv", "a").write("1.0")),   # '1.0' ≠ '2.000' 앞부분 → 보류
                # ⭐ 회신 DM P0-1 재현 — 완료 기록 없음 · 궤적 앞부분만 · thermo 에 온전한 0 · 1 · 4 ps (= 끝) 행 → 남은 끝 시각을 버리지 않는다
@@ -3436,6 +3666,44 @@ def _selftest():
                                                                               "checks": {"traj_frames": {"n": None, "expected": None}}})),
                "no_plan_reasons_extra": _fs("ye", plan=False, traj=None, thermo=None, after=lambda d: (d / "stage1_verdict.json").write_text(
                    json.dumps({**PRERUN(d), "reasons": {"incomplete": ["plan.json 없음"], "fail": ""}}), encoding="utf-8")),
+               # ⭐ DO 전 리뷰 F1 — 완료 기록 없는 폴더의 MD 뒤 산출물 · 모르는 파일 → 보류 / MD 중 파일만 → 미완 (대조 x5)
+               "post_md_raw": _fs("x1", traj=2, after=lambda d: (d / SEED_GATE_RAW).write_text("x", encoding="utf-8")),
+               "post_md_gr": _fs("x2", traj=2, after=lambda d: (d / "gr_partials.csv").write_text("r,g\n", encoding="utf-8")),
+               "post_md_vasp": _fs("x3", traj=2, after=lambda d: (d / "final.vasp").write_text("x", encoding="utf-8")),
+               "mid_unknown_file": _fs("x4", traj=2, after=lambda d: (d / "gate_check.json").write_text("{}", encoding="utf-8")),
+               "mid_allowed_files_ok": _fs("x5", traj=2, after=lambda d: [(d / "initial.xyz").write_text("x", encoding="utf-8"),
+                                                                          (d / "prerelax.log").write_text("x", encoding="utf-8")]),
+               # F2 — final · result 자리에 파일이 아닌 것
+               "final_is_dir": _fs("x6", traj=2, after=lambda d: (d / "final.xyz").mkdir()),
+               "result_dangling": _fs("x7", traj=2, after=lambda d: os.symlink(str(d / "nowhere.json"), str(d / "result.json"))),
+               # F5 — plan 일정 값의 타입 · 범위
+               "plan_save_str": _fs("x8", plan={**PLAN0, "save_ps": "1"}, traj=2),
+               "plan_dt_bool": _fs("x9", plan={**PLAN0, "dt_fs": True}, traj=2),
+               "plan_save_zero": _fs("xa", plan={**PLAN0, "save_ps": 0}, traj=2),
+               "plan_hold_neg": _fs("xb", plan={**PLAN0, "hold_ps": -3.0}, traj=2),
+               "plan_huge": _fs("xc", plan={**PLAN0, "melt_ps": 1e308}, traj=2),
+               # F6 — 깊은 JSON (RecursionError) 은 죽지 않고 보류
+               "plan_deep": _fs("xd", plan="[" * 100000 + "]" * 100000, traj=2),
+               "verdict_deep": _fs("xe", traj=2, after=lambda d: (d / "stage1_verdict.json").write_text("[" * 100000 + "]" * 100000,
+                                                                                                      encoding="utf-8")),
+               # F7 — 크기는 있는데 NUL 뿐
+               "thermo_all_nul": _fs("xf", traj=None, after=lambda d: (d / "thermo.csv").write_bytes(b"\x00" * 4096)),
+               "traj_all_nul": _fs("xg", traj=2, thermo=None, after=lambda d: (d / "traj.xyz").write_bytes(b"\x00" * 4096)),
+               # 판정 기록의 흔적 (소비자 P1 · F4)
+               "mid_gate_error": _fs("xh", traj=2, after=lambda d: _wv(d, {**MIDV, "gate_check": {"schedule_complete": None, "error": "x"}})),
+               "mid_final_structure": _fs("xi", traj=2, after=lambda d: _wv(d, {**MIDV, "checks": {"final_structure": {"ok": True}}})),
+               "mid_seed_gate_view": _fs("xj", traj=2, after=lambda d: _wv(d, {**MIDV, "seed_gate_view": {"PS4_fraction": 1.0}})),
+               "mid_frames_plan": _fs("xk", traj=2, after=lambda d: _wv(d, {**MIDV, "checks": {"traj_frames": {"n": 5, "expected": None}}})),
+               "mid_frames_plan_ok": _fs("xl", traj=2, after=lambda d: _wv(d, {**MIDV, "checks": {"traj_frames": {"n": 2, "expected": None}}})),
+               "mid_hist_line_mismatch": _fs("xm", traj=2, after=lambda d: [_wv(d, MIDV), (d / VERDICT_HISTORY).write_text(json.dumps(
+                   {"prev": MIDV, "prev_status": "pass", "new_status": "incomplete", "new_provenance": MIDV["provenance"]}) + "\n",
+                   encoding="utf-8")]),
+               "mid_hist_summary_pass": _fs("xn", traj=2, after=lambda d: _wv(d, {**MIDV, "history": {"prev_status": "pass"}})),
+               # F3 — plan 전 판정에 진짜 함수가 안 쓰는 열쇠 · 재판정 요약의 과학적 판정
+               "no_plan_extra_key": _fs("xo", plan=False, traj=None, thermo=None, after=lambda d: (d / "stage1_verdict.json").write_text(
+                   json.dumps({**PRERUN(d), "gate_check": {"schedule_complete": True}}), encoding="utf-8")),
+               "no_plan_hist_summary_pass": _fs("xp", plan=False, traj=None, thermo=None, after=lambda d: (d / "stage1_verdict.json").write_text(
+                   json.dumps({**PRERUN(d), "history": {"prev_status": "pass"}}), encoding="utf-8")),
                # 덜 써진 마지막 줄 — 첫 칸부터 NUL 이 섞인 조각 (온전한 행으로 읽히면 꼬리 규칙을 안 거친다 · DL 깨기 N6 이 잡은 시험 구멍)
                "thermo_partial_end": _fs("q3", traj=4, after=lambda d: open(d / "thermo.csv", "ab").write(b"4.0\x00\x00\x00")),
                "thermo_garbage_mid": _fs("q4", traj=3, after=lambda d: (d / "thermo.csv").write_text(
@@ -3477,6 +3745,14 @@ def _selftest():
                   "mid_checks_not_dict": "unreadable", "mid_tf_not_dict": "unreadable", "mid_prov_not_dict": "unreadable",
                   "mid_fs_not_dict": "unreadable", "mid_final_hash_empty": "unreadable", "mid_hist_new_prov_bad": "unreadable",
                   "mid_none_fields_ok": "md_incomplete", "no_plan_reasons_extra": "unreadable",
+                  "post_md_raw": "unreadable", "post_md_gr": "unreadable", "post_md_vasp": "unreadable", "mid_unknown_file": "unreadable",
+                  "mid_allowed_files_ok": "md_incomplete", "final_is_dir": "unreadable", "result_dangling": "unreadable",
+                  "plan_save_str": "unreadable", "plan_dt_bool": "unreadable", "plan_save_zero": "unreadable", "plan_hold_neg": "unreadable",
+                  "plan_huge": "unreadable", "plan_deep": "unreadable", "verdict_deep": "unreadable", "thermo_all_nul": "unreadable",
+                  "traj_all_nul": "unreadable", "mid_gate_error": "unreadable", "mid_final_structure": "unreadable",
+                  "mid_seed_gate_view": "unreadable", "mid_frames_plan": "unreadable", "mid_frames_plan_ok": "md_incomplete",
+                  "mid_hist_line_mismatch": "unreadable", "mid_hist_summary_pass": "unreadable", "no_plan_extra_key": "unreadable",
+                  "no_plan_hist_summary_pass": "unreadable",
                   "thermo_garbage_mid": "unreadable", "thermo_bad_cadence": "unreadable", "thermo_no_header": "unreadable", "thermo_wrong_header": "unreadable",
                   "traj_partial_end": "unreadable", "traj_garbage_mid": "unreadable", "traj_nul_tail": "md_incomplete"}
         chk(fs_ == exp_fs,
@@ -3570,18 +3846,39 @@ def _selftest():
             if txt is not None:
                 (d / "stage1_verdict.json").write_text(txt, encoding="utf-8")
             return str(d)
-        rk = {"none": run_kind({}, _vf("a", None)), "ledger_invalid": run_kind({"verdict": "invalid"}, _vf("b", None)),
-              "folder_invalid": run_kind({}, _vf("c", '{"status": "invalid"}')),
-              "both_invalid": run_kind({"verdict": "invalid"}, _vf("d", '{"status": "invalid"}')),
+        END = {"status": "ended"}                              # invalid 판정은 끝난 런의 것이어야 실행 종류 invalid (DO 전 리뷰)
+        rk = {"none": run_kind({}, _vf("a", None)), "ledger_invalid": run_kind({**END, "verdict": "invalid"}, _vf("b", None)),
+              "folder_invalid": run_kind(END, _vf("c", '{"status": "invalid"}')),
+              "both_invalid": run_kind({**END, "verdict": "invalid"}, _vf("d", '{"status": "invalid"}')),
               "folder_pass": run_kind({}, _vf("e", '{"status": "pass"}')), "ledger_fail": run_kind({"verdict": "fail"}, _vf("f", None)),
               "folder_cut": run_kind({}, _vf("g", '{"status": "in')), "ledger_unknown": run_kind({"verdict": "maybe"}, _vf("h", None)),
-              "incomplete": run_kind({"verdict": "incomplete"}, _vf("i", '{"status": "incomplete"}')), "no_folder": run_kind({}, None)}
+              "incomplete": run_kind({"verdict": "incomplete"}, _vf("i", '{"status": "incomplete"}')), "no_folder": run_kind({}, None),
+              # ⭐ DO 전 리뷰 — 끊긴 런 (status interrupted · orphaned) 폴더의 invalid 판정은 종류를 바꾸지 않는다 (한도 우회 막기)
+              "cut_folder_invalid": run_kind({"status": "interrupted"}, _vf("j", '{"status": "invalid"}')),
+              "orphan_was_ended": run_kind({"status": "orphaned", "status_before_orphan": "ended", "verdict": "invalid"}, _vf("k", None)),
+              "melt_invalid_kill": run_kind({"status": "orphaned", "melt_check": {"verdict": "invalid"}}, _vf("l", None)),
+              # 첫 시드 녹음 fail 은 판정이 없어도 과학적 (장부 melt_check · closes_system)
+              "melt_fail_kill": run_kind({"status": "stop_failed", "melt_check": {"verdict": "fail"}}, _vf("m", None)),
+              "closes_true": run_kind({"status": "orphaned", "closes_system": True}, _vf("n", None)),
+              "closes_str": run_kind({"closes_system": "true"}, _vf("o", None)),
+              "melt_check_bad": run_kind({"melt_check": "fail"}, _vf("p", None)),
+              # 판정 이력의 과학적 판정 (현재 판정이 incomplete 여도)
+              "history_fail": run_kind({}, _vf("q", '{"status": "incomplete"}')),
+              "verdict_tmp": run_kind({}, _vf("r", None))}
+        _append_history(pathlib.Path(td_) / "q", {"status": "fail", "provenance": {}}, {"status": "incomplete", "provenance": {}}, "selftest")
+        rk["history_fail"] = run_kind({}, str(pathlib.Path(td_) / "q"))
+        (pathlib.Path(td_) / "r" / "stage1_verdict.json.tmp").write_text('{"status": "pass"}', encoding="utf-8")
+        rk["verdict_tmp"] = run_kind({}, str(pathlib.Path(td_) / "r"))
+        rk["bad_row"] = run_kind(["not", "a", "row"], None)
     exp_rk = {"none": "interrupted", "ledger_invalid": "invalid", "folder_invalid": "invalid", "both_invalid": "invalid",
               "folder_pass": "scientific", "ledger_fail": "scientific", "folder_cut": "unreadable", "ledger_unknown": "unreadable",
-              "incomplete": "interrupted", "no_folder": "interrupted"}
+              "incomplete": "interrupted", "no_folder": "interrupted", "cut_folder_invalid": "interrupted", "orphan_was_ended": "invalid",
+              "melt_invalid_kill": "invalid", "melt_fail_kill": "scientific", "closes_true": "scientific", "closes_str": "unreadable",
+              "melt_check_bad": "unreadable", "history_fail": "scientific", "verdict_tmp": "unreadable", "bad_row": "unreadable"}
     chk(rk == exp_rk,
-        "⛔음성 DK P0-2: 실행 상태 한 곳 (run_kind) — 판정이 장부에만 · 폴더에만 · 둘 다 있어도 같은 답 (invalid) · 과학적 · 판독 불가 · "
-        f"판정 없음 / incomplete = 끊긴 런 ({ {k: rk[k] for k in rk if rk[k] != exp_rk[k]} })")
+        "⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid "
+        "판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = invalid · 녹음 fail · closes_system · 이력의 fail = 과학적 · 꼴이 틀린 "
+        f"값 · 임시 판정 = 판독 불가 ({ {k: rk[k] for k in rk if rk[k] != exp_rk[k]} })")
     # ④ 배로스탯 대조 잡 — LJ 결정(fcc)으로 배선만. 같은 BARO 를 쓰는지까지 본다
     from ase.build import bulk
     with tempfile.TemporaryDirectory() as td:
