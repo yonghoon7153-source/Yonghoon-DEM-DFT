@@ -3174,3 +3174,27 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   `…JUDGE_DRAFT_v2_…` · `…END_WRITER_DRAFT_v2_…`) · 발송문 v2 의 작성과 정적 검사 (AST · symtable 이름 · ruff · 비밀 · 명령 줄의 물리 줄 · 파일 집합 대조)
   뿐이다. 초안 · 탐침 · E1-1–3 · COMSOL 의 실행 승인이 아니다.
 - 유지: §105 의 여섯 선택 · 요청서 v1 · 초안 셋 v1 · 범위안 v1–v3 · 정정 범위안 v1 · 보존 회신 (그대로 둔다).
+
+## §110 C4-E · E1-1–3 — 승인 요청서 v2 · 초안 v2 셋 (외곽 도구 · 판정기 · 끝 기록 작성기) · 사전 검토 발송문 v2 · 정적 검사만 · 초안 실행 0 (2026-11-04 KST · 덧붙임 — 위 §0–§109 는 그대로)
+
+- **고정한 것 (새 경로 · v1 은 그대로):**
+  - 요청서 v2 `docs/REIL_C4E_E1_1_3_APPROVAL_REQUEST_v2_20261104.md` (`d52a3d5e276739b724642923bf2e6d194bf5d8daca1d3cd29a1e64cd7c4e36e1` · 48,063 B).
+  - 외곽 도구 v2 `docs/REIL_C4E1_E113_OUTER_DRAFT_v2_20261104.py.txt` (`e107d566bc0dc9af37e2a53839720678be8ab6f15624ec54c605755b0001251e` · 36,733 B).
+  - 판정기 v2 `docs/REIL_C4E1_E113_JUDGE_DRAFT_v2_20261104.py.txt` (`ad986c19905723a233abac667cd846f41c1427a7197e522eb78bc1c4d0d738c0` · 18,578 B).
+  - 끝 기록 작성기 v2 `docs/REIL_C4E1_E113_END_WRITER_DRAFT_v2_20261104.py.txt` (`0827723f6de7a6208e643c5851c206c537a664ed7cedf40c004c945743447f5a` · 10,368 B).
+  - 발송문 v2 `docs/REIL_C4E_E1_1_3_PREREVIEW_SEND_v2_20261104.md`.
+- **정정 범위안 v2 의 반영:** PRE_01 (b8 한 물리 줄 · b9 sha 행 20 · 전체 23 · p5 / p6 · d3 한 줄) · PRE_02 (run 결과 여덟) · PRE_03 + FIX_SCOPE_01 (끝 기록 →
+  반환 · `observed_epoch ≤ deadline_epoch` 만 `published` · 기한 뒤 첫 관측 `late`) · FIX_SCOPE_02 (`wait` 진입 규칙 0–4 · 호출 / 조각 6,600 s / 끝 기록 · 재진입은
+  반환 15 뒤에만 · 시작 경로를 wrapper 의 link 와 감시의 `O_EXCL` 묘비가 다툼 · wrapper 의 착수 전 확인) · PRE_04 (`00_overall.json` · 착수 조건 `epoch + 감시 여유
+  ≤ T_end − R` · f 는 T_a + 7,200 s 안 · g3 반환 기록 `07_g3_return_<i>.txt`) · PRE_05 + FIX_SCOPE_03 (작성기 · `freeze` 의 쓰기 시도 · 반환 5 · 미완 · 그 뒤
+  멈춤) · PRE_06 (커밋 관문 x1–x6 · `check` 모드가 staged 집합 · blob 과 검사한 버퍼를 대조) · C1 (null 셋은 키가 있어야 함).
+- **새로 정한 것 (정정 범위안 v2 의 뜻 안 · 재검토 대상):** 외곽 도구의 여섯째 모드 `check` (커밋 관문 — 범위안 v2 §1 의 PRE_06 "검사 목록 = staged 집합 ·
+  staged blob = 검사한 바이트" 를 구현) · 커밋 관문을 b · d · g 의 증거 커밋에도 같이 건다 · 절차 Git 에 관문의 읽기 둘 (`diff --cached --name-only -z` ·
+  `ls-files -s -z --full-name`) · g3 의 push 만 원격 · 네트워크 오류일 때 저장소 규칙대로 재시도 (최대 다섯 시도 · 2 · 4 · 8 · 16 s).
+- **정적 검사 (실행 0):** 초안 셋 — AST 파싱 통과 · symtable 이름 검사의 미해결은 `__file__` 뿐 · `ruff check --select E,F,W,B --ignore E501` 0 (스크래치 `.py`
+  사본) · 비밀 검사 0. 요청서 — 명령 줄 51 (§4 45 · §7-3 6) 의 물리 줄 검사 어긋남 0 · 파일 집합 대조 (run 여덟 · c 열여덟 = 상수 집합 · 수 b 14 · c 18 · e 17 ·
+  f 25 / 27 · 부재 이름 ⊂ 외곽 이름 · 외곽 ↔ 판정기 상수 일치) · 비밀 검사 0 · URL 계정 형태 0. 검사 도구 `SP/e113_v2_tools/consistency.py` 의 첫 판은 행 선택
+  (§3 표의 행을 집음) · `leftover_2` 이름 형태의 검사 쪽 잘못으로 거짓 셋을 냈고, 도구를 고친 뒤 모두 참이다 (대상 문서 · 초안은 그때 바꾸지 않았다). 정적 검사
+  통과는 동작 보장이 아니다.
+- **실행 0:** 외곽 도구 · 판정기 · 작성기 · 탐침 · `add_repo` · identity · fetch · run · COMSOL 0 회.
+- **다음:** 사용자가 발송문 v2 를 Codex 에 보낸다 → 사전 검토 회신 보존 → 별도 사용자 E1-1–3 실행 승인. 이 기록은 어느 단계의 실행 승인도 아니다.
