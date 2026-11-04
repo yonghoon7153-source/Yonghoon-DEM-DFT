@@ -3121,3 +3121,43 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - **실행 승인 아님:** `approval_request_accepted` · `exact_commands_ready` false. 실제 실행 · 탐침 · launcher 변경 · 재시험 요구 없음.
 - **다음:** 정정 범위안 (`docs/REIL_C4E_E1_1_3_PRE_FIX_SCOPE_20261104.md`) → 사용자 채택 → 요청서 v2 · 초안 v2 (새 경로 · v1 은 그대로) · 정적 검사 · 발송문 v2 →
   재검토 → 별도 사용자 실행 승인. 이 기록은 어느 단계의 실행 승인도 아니다.
+
+## §108 C4-E · E1-1–3 정정 범위안 검토 회신 접수 — 방향 수용 (PRE_01 · 02 · 04 · 06 · C1) · 보완 셋 (E113_FIX_SCOPE_01–03) · PRE_03 은 A 권고 (B 는 종결 대안 아님) · R = 1,800 s 는 정책 제안 (미채택) · 사용자 채택 · 실행 승인 아님 (2026-11-04 KST · 덧붙임 — 위 §0–§107 은 그대로)
+
+- **받은 것 · 보존:** 사용자 업로드 `REIL_C4E_E1_1_3_PRE_FIX_SCOPE_REVIEW_20261104.zip` (83,849 B · `285b2edc8036419b267c2f2fdabdb9f3b44077f6307ad11d007e2afadef29bf0`).
+  이번에는 전달 영수증 · 포장 도구 반환이 대화에 붙지 않았다 — ZIP sha 를 대조할 영수증이 없고, 업로드 바이트를 그대로 보존했다.
+  - 커밋 `c3be7638` (보존 규칙) · `5fef9448` (바이트): `reviews/review_reil_c4e_e1_1_3_pre_fix_scope_review_20261104/` — ZIP (업로드와 cmp 일치) + `originals/` 17
+    (안전 추출) · PACKAGE_MANIFEST (`03341403…` · 2,859 B · `files` 16/16 · 목록 밖 없음) · blob 18/18 · 비밀 검사 18 파일 0 건 · URL 계정 형태 0.
+  - `input/` = 정정 범위안 v1 (`2dc6ba7a` · `b6642003…` · 8,307 B) · `basis/source/` 여섯 (요청서 · 초안 셋 · `reil_c4e_run.py` · `reil_c4_monitor.py`) = 고정
+    `26a6c3a4` = 현재 HEAD · `basis/prior_review/` 셋 = §107 보존본 · `INPUT_NUMBERED.txt` 는 줄 번호를 빼면 원본과 같다 (50 행). `LOCAL_INPUT_PRESERVATION.json` =
+    검토자 로컬 원본 10 개의 전후 identity (all_match · 원격 감사 아님). 검토자 도구는 묶음에 없다.
+  - push: 첫 push · 곧 이은 재시도 · 4 s · 8 s 뒤 재시도가 원격 `Internal Server Error` (remote rejected) 로 거부됐고, 16 s 뒤 다섯 번째 시도에서 성공했다
+    (local = origin `5fef9448`). 프록시 쪽 실패 기록은 없었다.
+- **판정 (`REVIEW_DECISION.json`):** `REVISION_SCOPE_DIRECTION_ACCEPTABLE_CLARIFICATIONS_REQUIRED_NOT_ADOPTED` (이전 고정 `26a6c3a4`). 방향 수용: PRE_01 · PRE_02 ·
+  PRE_04 · PRE_06 · C1 · A 를 전제한 정상 수 b 14 / c 17 / e 16 / f 24. b3 의 sha 행은 20 그대로 (b 커밋 수와 다른 집합 — `00_overall.json` 이 해시 행을 21 로
+  만들지 않는다). PRE_06 은 v2 에서 검사 목록 · 바이트와 실제 커밋 집합의 일치까지 · C1 은 다른 필수 필드도 누락과 명시적 null 을 나눈다.
+  - **E113_FIX_SCOPE_01 (P1 · 범위안 21 행 · PRE_03):** `published` 를 반환 형식과 launcher 종료 시각 ≤ 기한에만 묶으면, 기한 900 · 종료 899 · 반환 게시 901 의
+    정적 반례에서 늦은 게시가 정상이 된다. `outer_end` 는 rc 게시 전에 쓰므로 그 안의 "게시 시각" 은 뒤의 rc 게시 완료의 증명이 아니다. 정정: 종료 시각 · 쓰기 전
+    snapshot · 완전한 반환의 검증 관측 시각을 나누고, 정상 수용을 같은 실행의 유효 반환을 기한 안에 확인한 근거에 묶는다 (기한 뒤 첫 관측은 다른 근거 없으면
+    late / unknown). **내 설계 결함이다** (v1 의 `published` 조건).
+  - **E113_FIX_SCOPE_02 (P1 · 21 행 · PRE_03):** "도구에 끊긴 감시는 기록을 남기지 않는다" 는 성립하지 않는다 — 게시 (임시 → fsync → link → 임시 제거) 의 어디서
+    끊기느냐에 따라 완전한 기록 · 부분 / 임시 흔적 · 없음 (관측 뒤 게시 전) 이 다 가능하다. 기록 부재만으로 이전 실패가 없었다고 볼 수 없다. 또 `start_missing`
+    을 확정한 뒤 늦게 살아난 wrapper 가 launcher 를 띄울 수 있다 (판정기의 사후 검사는 예방하지 못한다). 정정: 완전한 기록은 보존 · 소비 (두 번째 끝 상태 없음) ·
+    부분 / 게시 실패 / 불명은 정상 진행 차단 · 비종결 중단이 확인될 때만 같은 기산점 / 마감으로 재감시 (확인 불가면 미완) · launcher 착수 전 시작 창 · 기존 실패 ·
+    감시 소유권 확인과 시작 게시 / 착수 ↔ 감시 실패 확정의 경합 순서 명세 (launcher 변경 요구 아님 · 단순 사전 검사로 해결됐다고 쓰지 않는다). **내 문구 · 설계
+    결함이다.**
+  - **E113_FIX_SCOPE_03 (P2 · 23 행 · PRE_05):** "`06_end.json` 은 늘 쓴다" 는 출력 생성 · 쓰기 · 게시 실패를 덮는다. 정정: 오류를 모아 배타 생성을 시도 · 기록
+    자체가 실패하면 도구 반환 / 오류 · 부분 산출 보존 · 미완 (도구 채널도 없으면 미확인 · 성공 아님) · 자동 재시도 · 삭제 · 정상 승격 없음. 한 번 읽기 = 같은
+    버퍼의 해시 · 크기 · 본문 결속이지 쓰는 중인 원본의 원자 snapshot 이 아니다 (F3 의 비원자 한계 유지). **내 문구 결함이다** (v1 의 "다른 시점의 바이트가 섞이지
+    않음" 도 같은 과장).
+  - **v2 에서 결속할 것 (새 선택 아님):** 같은 단계 · 승인 구간의 launch · start · end · watch · overall 의 시각 필수 키 · 형식 · 범위 · 순서 · `start.deadline =
+    start.epoch + ALLOW_S` · `start.deadline ≤ T_end − R` · 재진입으로 기한 초기화 없음 · `sid` 유효 정수 + `sid_error` null 은 따로 필수 · g3 까지 예산을 주장하려면
+    push 의 실제 반환 경계를 push 전 `06_end.json` 과 따로 보존 (초과 / 반환 미확인 = 미완 · 준수 주장 없음) · 새 기록을 작성기 · 판정기 · 정상 / 실패 집합 · 수 ·
+    해시 · 발송문에 함께 반영.
+  - **PRE_03 방식 · reserve:** A 를 보완과 함께 권고 (`A_WITH_CLARIFICATIONS`) · B 는 최초 감시 실패를 보존하지 않아 PRE_03 종결 대안이 아니다
+    (`PRE03_B_satisfies_first_failure_preservation` false). R = 1,800 s 는 가능한 정책 제안 — 정리 · 파일 I/O · 네트워크 · 반환의 물리 상한 증명이 아니고 검토가
+    채택하지 않았다.
+- **유지 · 열림:** §105 의 여섯 선택 · P2_02 종결 · 이전 종결은 유지. PRE_01–06 · C1 은 v2 제출 전 `AWAITING_V2_IMPLEMENTATION_REVIEW`. 정정 범위 채택 · PRE_03
+  방식 · reserve 는 사용자 결정으로 남았다 (검토가 대신하지 않음). 실행 승인 · 재시험 · launcher 변경 요구 없음.
+- **다음:** 정정 범위안 v2 (`docs/REIL_C4E_E1_1_3_PRE_FIX_SCOPE_v2_20261104.md` · v1 은 그대로) → 사용자 채택 (범위 · A · R) → 요청서 v2 · 초안 v2 셋 · 정적 검사 ·
+  발송문 v2 → 재검토 → 별도 사용자 실행 승인. 이 기록은 어느 단계의 실행 승인도 아니다.
