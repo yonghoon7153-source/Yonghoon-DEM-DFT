@@ -1159,7 +1159,7 @@ $PY -u scripts/mpm3d_compaction.py --am-scaffold docs/data/case15_corner_2026100
 | `nvidia-smi` 총 · 여유 (③ 16 · 팔마다 ④ 18) | `49140, 48539` (건식 1 차 앞 점검) · 발사 러너가 앞머리 · 팔마다 다시 적는다 |
 | 건식 표 (팔 · rc · 상태 줄 · frame_lines · JSON 필드 수 · 걸린 시간 · `3D MPM` 줄의 grid · pts) | 12-7-2 건식 1 차 (확인 런) · 건식 2 차 (corner 셋) 표 |
 | 발사 러너 (팔 넷 = 위 등록 문안 · 앞머리 = `SEAL_COMMIT` · md5 · sha256 넷 · 여유 메모리 · `[m]pm3d` 검사 · 시작 줄 `§12-7 시작`) md5 · 옮기는 법 | `docs/reviews/fam_s127_runner/run_s127.sh` md5 `6e4b12b8cd296ec7b00376de07cf46b4` (시험 747 / 747 · 변이 18 / 18 · `docs/reviews/fam_s127_runner/README.md`) · 옮기는 법 = 12-7-3 (gabia 에서 `git show` → md5 대조) |
-| 발사 시각 (= 러너의 `§12-7 시작` 줄) | ⬜ 발사 전 채움 (= 1저자) |
+| 발사 시각 (= 러너의 `§12-7 시작` 줄) | **2026-11-04 14:14:11 KST** (1저자 · gabia · tmux 세션 `fam127` · 러너 앞머리 `HEADER ok` = 봉인 표지 · 사본 커밋 · mpm3d md5 · CSV 넷 · 출력 8 없음 · STOP 없음 · 기한 전 · pgrep 없음 · GPU total 49140 free 48539 · 판 python 3.10.21 · numpy 2.2.6 · scipy 1.15.3 · taichi 1.7.3 · 러너 md5 6e4b12b8cd296ec7b00376de07cf46b4) |
 
 #### 12-7-2. 건식 1 차 기록 · corner argv 개정 (11-04 · 결과 0 건 · 1저자 11-04 *"다 권고대로"*)
 
@@ -1219,4 +1219,5 @@ $PY -u scripts/mpm3d_compaction.py --am-scaffold docs/data/case15_corner_2026100
 6. 지켜보기 (아무 때나 · 값 줄 없음) — `tail -5 ~/fam_s127/batch_s127.log`
 7. 일찍 멈추기 (1저자만 · Rint R 에 gabia 를 비울 때 등) — `touch ~/fam_s127/STOP` (60 s 안 TERM · 다음 팔 없음)
 
-- 발사 시각 = 5 의 `§12-7 시작` 줄 → 봉인 칸에 적는다.  확인 런이 기술 관문을 못 넘으면 러너가 `CONFIRM_GATE_FAIL` 로 멈춘다 (corner 없음 · 1저자에게).
+- 발사 시각 = 5 의 `§12-7 시작` 줄 → 봉인 칸에 적는다.
+- **11-04 실제 발사**: 1–2 대신 파일 (채팅 전달 · 1저자 다운로드) → `scp` → gabia `md5sum ~/run_s127.sh` = 6e4b12b8cd296ec7b00376de07cf46b4 (같은 바이트 · 본 가지 push 전이라 `git show` 대신) · 3 앞 점검 = `49140, 48539` · pgrep 줄 없음 · `dryrun dryrun_r2` 만 · 4 발사 · 5 = `HEADER ok` → `§12-7 시작 2026-11-04 14:14:11 KST` → `PRE confirm_fb ok` → `RUN confirm_fb` → `ARGV confirm_fb` (등록 문안 그대로).  확인 런이 기술 관문을 못 넘으면 러너가 `CONFIRM_GATE_FAIL` 로 멈춘다 (corner 없음 · 1저자에게).
