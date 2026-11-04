@@ -1,5 +1,5 @@
 ---
-title: "DP 프롬프트 — li2s-2 DO 고침 + DP 발송 전 독립 리뷰 둘 고침 (__BASE__): 복구 · 확인 · 재판정에서 본 과학적 결과를 장부에 · 모든 기록 엄격 판독 · 못 읽은 장부를 다시 쓰지 않음 · 남은 임시 파일 · 요약 fail-closed · 신호 — 첫 담금질 GO 여부"
+title: "DP 프롬프트 — li2s-2 DO 고침 + DP 발송 전 독립 리뷰 둘 고침 (4a269bac): 복구 · 확인 · 재판정에서 본 과학적 결과를 장부에 · 모든 기록 엄격 판독 · 못 읽은 장부를 다시 쓰지 않음 · 남은 임시 파일 · 요약 fail-closed · 신호 — 첫 담금질 GO 여부"
 date: 2026-11-04
 updated: 2026-11-04
 tags: [review, li2s, glass, md, uma, density, quench, runner, codex, prompt, letter]
@@ -7,7 +7,7 @@ letter: DP
 track: li2s
 channel: codex
 kind: prompt
-status: 초안 → 발송 대기 · 기준 커밋 __BASE__
+status: 초안 → 발송 대기 · 기준 커밋 4a269bac
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -18,7 +18,7 @@ evidenceScope: multi-source-primary
 ---
 
 > 트랙 = li2s-2 (논문 1저자 = 외부 · 위임 10-30). DO (802290db · NO-GO · P0 1 · P1 2 · P2 2) 다음 편지다.
-> ⛔ li2s 절대 수송값은 싣지 않는다. 기준 커밋 `__BASE__` (브랜치 `claude/friendly-meitner-lldvar` · 기록까지 들어간 커밋). ⬇ 아래 **보내는 글**만 발송한다.
+> ⛔ li2s 절대 수송값은 싣지 않는다. 기준 커밋 `4a269bac` (브랜치 `claude/friendly-meitner-lldvar` · 기록까지 들어간 커밋). ⬇ 아래 **보내는 글**만 발송한다.
 > 회신이 오면 `codex_DP_reply_li2s2_do_fixes_2026_11_04.md` 로 원문 보존.
 
 ---
@@ -36,7 +36,7 @@ DO 가 닫힘으로 본 항목 (DN P1 · P2 · 실시간 첫 시드 fail 보존 
 
 ## 1. 보는 범위
 
-- `git diff 802290db __BASE__ -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
+- `git diff 802290db 4a269bac -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
 - 카드 `개정_DO_고침_v8_2026_11_04` · `개정_DP_전_리뷰_v9_2026_11_04` (규칙 · 못 하는 것) — 결과 0 건 · 카드 값은 안 바뀜
 - 리뷰 둘의 지적과 처리: `db/raw/li2s2_pre_dp_review_2026_11_04/README.md`
 - 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 232) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 113 · Linux)
