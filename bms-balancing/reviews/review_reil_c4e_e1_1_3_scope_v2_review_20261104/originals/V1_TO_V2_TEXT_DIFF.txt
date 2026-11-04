@@ -1,0 +1,205 @@
+--- v1
++++ v2
+@@ -1,96 +1,137 @@
+-# REIL C4-E · E1-1–3 (실제 identity · 읽기 경로 · fetch · 자료 개봉 · run) 승인 요청 범위안 — 사용자 채택 요청 · 2026-11-04 KST
++# REIL C4-E · E1-1–3 (실제 identity · 읽기 경로 · fetch · 자료 개봉 · run) 승인 요청 범위안 v2 — 사용자 선택 요청 · 2026-11-04 KST
+ 
+-> **범위 채택을 요청하는 문서다 (실행 0).** E1-0b a2 결과 검토 회신 (상태 문서 §101 · `reviews/review_reil_c4e1_0b_a2_result_review_20261104/originals/`) 은
+-> 한정 기능 결과를 수용했고 (`E1_0B_A2_LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION`), E1-1 이후의 범위 · 승인 요청서 작성을
+-> 허용했다. 실행은 승인하지 않았다. 이 범위를 채택하신 뒤에만 승인 요청서 · 판정기 · 끝 기록 작성기 초안 · 사전 검토 발송문을 쓴다 (정적 검사만). 채택해도
+-> identity · 읽기 경로 · fetch · 자료 개봉 · run 은 시작하지 않는다 — 그것은 사전 검토 뒤의 별도 사용자 승인이다. 예외는 §2 에서 A 를 고르실 때의 분리 실행
+-> 탐침 한 번뿐이다 (연구 코드 · 네트워크 · 저장소 쓰기 0).
++> **범위 선택을 요청하는 문서다 (실행 0).** v1 (`docs/REIL_C4E_E1_1_3_SCOPE_20261104.md` · `d88d064b` — 그대로 둔다) 의 범위 검토 회신 (상태 문서 §102 ·
++> `reviews/review_reil_c4e_e1_1_3_scope_review_20261104/originals/`) 은 `SCOPE_REVISION_REQUIRED_BEFORE_USER_SELECTION` 이다 — 방향은 타당하고, 선택 전에 정정
++> 셋 (E113_N1–N3 · P2) 이 필요하다. v2 는 그 셋과 회신이 요청서로 미룬 표현 셋 (자료 개봉 순서 · 결과 필드 · 디스크 시점) 을 고쳤다. 선택하신 뒤에만 승인
++> 요청서 · 판정기 · 끝 기록 작성기 초안 · 사전 검토 발송문을 쓴다 (정적 검사만). 선택해도 identity · 읽기 경로 · fetch · 자료 개봉 · run 은 시작하지 않는다.
++> 예외는 §4 에서 P2 를 고르실 때의 탐침 한 번뿐이고, 그 명령 · 기한 · 실패 처리는 §4 에 그대로 고정했다.
+ 
+-## 0. 이미 정해진 것 (다시 정하지 않는다)
++## 0. 이미 정해진 것 (다시 정하지 않는다 · 회신 §3 이 확인)
+ 
+-- **구조 (`docs/REIL_C4E_E1_0B_E1_1_3_SCOPE_20261030.md` §5 A · 채택):** E1-0b 와 E1-1–3 을 따로 승인한다. E1-0b 는 봉인된 대조 범위 (tmp fixture · 가짜
+-  자식) 에서 기능 종결됐다 (§101).
+-- **고정 계획 (E1-0b 요청서 `docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md` · `ae413f96…` §7):** 순서 identity (E1-1) → 읽기 경로 `add_repo` → fetch (E1-2)
+-  → run (E1-3) · 대상 바이트 · 입력 (고정 URL · 커밋 `1188c371…` · 자료 두 파일) · launcher 명령 셋 · 배정 · 무관용 수용 · E1-3 의 두 판정 · 프록시
+-  (`http.proxyAuthMethod=basic`) · 공개 한계.
+-- **launcher 바이트 (같은 요청서 §8 의 16):** E1-1–3 은 launcher v6 (`2c707123…` · E1-0b GREEN 바이트) 를 바꾸지 않는다. run 의 승인 문구는 launcher 의
+-  `REQUEST` 대로 E1-0b 요청서 경로를 인용하고 (`상태 문서 §NN (사용자 E1-1–3 승인 · docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md)`), 승인 절 §NN 이 새
+-  요청의 승인 기록을 가리킨다. launcher 를 바꾸면 E1-0b 와 같은 RED / GREEN 이 다시 필요하다. 그래서 E1-0b 요청서는 다시 쓰지 않는다.
+-- **오류 수용 (10-30 범위안 §4):** 단계마다 launcher 단계 판정 = precheck_ok AND child_ok AND rc 0 AND timeout 없음 AND postcheck_ok (정리 empty · 기한 안 ·
+-  오류 0 · 기록 성공). 하나라도 거짓이면 그 단계에서 멈춘다 · 재시도 0 · 부분 수용 없음. E1-3 은 실행 유효성과 실험 결과 (`final_verdict`) 를 따로 적고, C4-A
+-  로 가는 문은 둘 다 참일 때만 열린다 (그 문을 여는 것도 별도 승인).
+-- **회신 Q4 의 요구:** 실제 대상 identity · 읽기 경로 · fetch · 자료 개봉 · run 각각의 정확한 대상 · 명령 · 출처 · 허용 활동 · 자원 / 시간 · 중지 조건 · 증거를
+-  요청서에 고정하고 별도 사용자 승인을 받는다. §1 이 그 틀이다.
++- **구조:** E1-0b 와 E1-1–3 을 따로 승인한다 (`docs/REIL_C4E_E1_0B_E1_1_3_SCOPE_20261030.md` §5 A). E1-0b 는 봉인된 대조 범위 (tmp fixture · 가짜 자식) 에서
++  기능 종결됐다 (§101) — 실제 REIL 자료의 fetch · run 성공이 아니다.
++- **고정 계획:** E1-0b 요청서 (`docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md` · `ae413f96…`) §7 — 순서 identity (E1-1) → 읽기 경로 `add_repo` → fetch (E1-2)
++  → run (E1-3) · 대상 바이트 · 입력 (고정 URL · 커밋 `1188c371…` · 자료 두 파일) · launcher 명령 셋 · 자식 timeout · 무관용 수용 · 프록시 · 공개 한계.
++- **launcher 바이트 (같은 요청서 §8 의 16 · `build_argv` 381–385 행):** launcher v6 (`2c707123…`) 를 바꾸지 않는다. run 의 승인 문구는 E1-0b 요청서 경로를
++  인용하고 승인 절 §NN 이 새 요청의 승인 기록을 가리킨다. 그래서 E1-0b 요청서를 다시 쓰지 않는다.
++- **수용:** 단계마다 launcher 단계 판정 (precheck · 자식 · rc 0 · timeout 없음 · postcheck — 정리 empty · 기한 안 · 오류 0 · 기록 성공) 이 참이어야 다음 단계로
++  간다 · 재시도 0 · 부분 수용 없음. E1-3 은 실행 유효성과 실험 결과를 따로 적고, C4-A 로 가는 문은 둘 다 참일 때만 열린다 (그것도 별도 승인).
+ 
+-## 1. 단계별 고정 틀 (요청서는 이 표를 바이트 · 명령 문자열까지 채운다)
++## 1. 단계별 틀 (요청서는 바이트 · 명령 문자열까지 채운다)
+ 
+-`<E>` = `evidence/reil_c4e1_<착수 UTC 날짜 YYYYMMDD>/` (launcher 의 이름 규칙) · `SP` = 스크래치패드 · `BMS` = `bms-balancing/` (요청서는 절대 경로로 풀어 쓴다).
++`<E>` = `evidence/reil_c4e1_<착수 UTC 날짜 YYYYMMDD>/` — launcher 의 이름 규칙 `^reil_c4e1_20[0-9]{6}$` (launcher 121 행) · `SP` = 스크래치패드 · `BMS` =
++`bms-balancing/` (요청서는 절대 경로로 풀어 쓴다). 세 launcher 단계는 모두 §3 의 방식으로 띄운다.
+ 
+ | 단계 | 대상 · 출처 | 명령 · 허용 활동 | 시간 · 자원 | 중지 | 증거 |
+ |---|---|---|---|---|---|
+-| E1-1 identity | venv `SP/reil_c4env/venv` · 봉인 `reil_c6_rebuild_20261013` (MANIFEST `4f120948…` → lock `ea91156c…`) · identity helper `00_identity_c4.py` (`92bb3bca…` · 1,506 B — `evidence/reil_c4e0_fix_20261014/` 의 같은 바이트를 `<E>` 로 복사) · `degradation-degeneracy/tools/env_profile.py` | `/usr/bin/python3.11 -I BMS/scripts/reil_c4e1_launch.py identity --evidence <E> --approval-section §NN` · 자식 argv = `build_argv` (helper → `03_identity.json`) · 사전 대조 (해시 · 탐침) · 기록 git | 자식 60 s · 탐침 ≤ 60 s · 기록 git 호출마다 60 s · 정리 공통 기한 20 s · 셸 도구 전경 (최악 약 380 s < 전경 상한 600 s) | 단계 판정 거짓 | launcher 의 `03_identity.*` · `03_identity.json` · 외곽 반환 · 판정 기록 |
++| E1-1 identity | venv `SP/reil_c4env/venv` · 봉인 `reil_c6_rebuild_20261013` (MANIFEST `4f120948…` → lock `ea91156c…`) · identity helper `00_identity_c4.py` (`92bb3bca…` · 1,506 B — `evidence/reil_c4e0_fix_20261014/` 의 같은 바이트를 `<E>` 로 복사) · `degradation-degeneracy/tools/env_profile.py` | launcher `identity --evidence <E> --approval-section §NN` · 자식 argv = `build_argv` (helper → `03_identity.json`) · 사전 대조 (해시 · 탐침) · 기록 git | 자식 60 s · 탐침 60 s · 기록 git 호출마다 60 s · 정리 공통 기한 20 s (명시 timeout 의 산술 합 380 s 는 전체 반환의 상한이 아니다 — 기한 전에 시작한 /proc 관측 · 해시 · 파일 I/O 는 묶이지 않는다) · 감시 기한 착수 + 900 s (§3) | 단계 판정 거짓 · §3 의 실패 종결 | launcher 의 `03_identity.*` · `03_identity.json` · §3 의 외곽 기록 · 판정 기록 |
+ | 읽기 경로 | GitHub `REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics` | 세션 도구 `add_repo` (owner · repo · access `read`) 한 번. 도구가 알려 주는 clone 명령은 실행하지 않는다 · 그 저장소의 GitHub 도구 읽기 0 | 한 번 · 재시도 0 | 권한 · 정책 거부 · 사용자 확인 거절 → 멈춤. "공개 저장소라 읽기는 이미 프록시가 제공" → 붙이지 않고 다음 단계. 붙음 → 다음 단계 | 수동 기록 `<E>/03_read_path.json` (시각 · 입력 · 도구 반환의 상태 문장 — 비밀 검사 뒤 · Git 없음 · 이름이 launcher 의 증거 폴더 검사와 겹치지 않는지는 초안 때 정적으로 확인) |
+-| E1-2 fetch | 고정 URL (`https://github.com/REIL-UConn/…Diagnostics.git`) · 커밋 `1188c371e5836df4a7e5f5acf336a34ffd4027e6` · 받는 곳 `SP/c4e1/data` (저장소 밖) | launcher `fetch` · 자식 = `reil_c4e_run.py fetch --dest SP/c4e1/data` (run 의 git: `init` · `remote add` · `fetch --depth 1 --filter=blob:none origin <커밋>` · `show <커밋>:<경로>`) · fetch env (FUTURE-01) · 네트워크는 이 단계 · 이 저장소 하나 · 한 번 | 자식 300 s · fetch 의 git 확인 ≤ 4 × 60 s · 탐침 ≤ 60 s · 기록 git ≤ 4 × 60 s · 정리 20 s · 셸 도구 배경 실행 (최악 약 860 s > 600 s · < 7,200 s) | 단계 판정 거짓 (사후 대조의 자료 두 파일 sha256 · bytes ≠ 고정값 포함) · 프록시를 못 지남 → 멈춤 · 재시도 0 | `04_fetch.*` · 외곽 반환 · 판정 기록. 자료 파일은 커밋하지 않는다 |
+-| 자료 개봉 | `SP/c4e1/data/LFP_Data.xlsx` (10,841,377 B · `fd50e095…`) · `util_LFP.py` (33,754 B · `3c19e45e…`) | **E1-3 run 의 prep 안에서** 한다 (sha 대조 · p0 결속 · 받은 `util_LFP.py` 의 import · xlsx 읽기 — 정확한 순서는 요청서 작성 때 run 모듈 코드로 고정). 받은 외부 코드를 venv 자식 안에서 import · 실행한다 (고정 바이트만). 따로 띄우는 단계가 아니다 — 떼려면 run 모듈 변경 (새 RED / GREEN) 이 필요하다 | run 의 prep 900 s 안 | prep 실패 · sha 불일치 → 작업자 시작 전 멈춤 (run 모듈) | run 의 `IDENTITY.json` · `HEADER.json` 등 |
+-| E1-3 run | 위 자료 · 다섯 모듈 · SOURCES.json · S1 의 둘 · 봉인 | launcher `run` · 자식 = `reil_c4e_run.py run … --out <E>/run --approval "상태 문서 §NN (사용자 E1-1–3 승인 · docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md)"` · 66 호출 · 네트워크 0 | run 모듈 기한 prep 900 · 측정 9,000 · 기록 9,900 · 단계 10,800 s (= 자식 timeout) · RSS ≤ 4 GiB · 새 산출 ≤ 1 GiB · 디스크 여유 ≥ 5 GiB · 정리 20 s · 기대 경과 약 35–45 분 (C4-E 요청 v2 §4-1 의 산술 · 보증 아님) · §2 의 방식 | 실행 유효성 (단계 판정) 거짓 → E1-3 실패. `final_verdict` INCOMPLETE → 결과대로 기록 · E1-3 통과 아님 | `05_run.*` · `<E>/run/` (ROWS · AGGREGATE · OPERATION · RESOURCES · RULE · IDENTITY · HEADER · END_RECORD · SOURCES — JSON) · 외곽 반환 · 판정 기록 |
++| E1-2 fetch | 고정 URL · 커밋 `1188c371e5836df4a7e5f5acf336a34ffd4027e6` · 받는 곳 `SP/c4e1/data` (저장소 밖) | launcher `fetch` · 자식 = `reil_c4e_run.py fetch --dest SP/c4e1/data` (run 의 git: `init` · `remote add` · `fetch --depth 1 --filter=blob:none origin <커밋>` · `show <커밋>:<경로>`) · fetch env (FUTURE-01) · 네트워크는 이 단계 · 이 저장소 하나 · 한 번 | 자식 300 s · fetch 의 git 확인 4 × 60 s · 탐침 60 s · 기록 git 4 × 60 s · 정리 20 s (산술 합 860 s — 상한 아님) · 감시 기한 착수 + 1,800 s | 단계 판정 거짓 (사후 대조의 자료 두 파일 sha256 · bytes ≠ 고정값 포함) · 프록시를 못 지남 · §3 의 실패 종결 → 멈춤 · 재시도 0 | `04_fetch.*` · 외곽 기록 · 판정 기록. 자료 파일은 커밋하지 않는다 |
++| 자료 개봉 | `SP/c4e1/data/LFP_Data.xlsx` (10,841,377 B · `fd50e095…`) · `util_LFP.py` (33,754 B · `3c19e45e…`) | **E1-3 run 의 prep 안에서** 한다 — run 581–593 행의 순서: 시작 바이트 식별 대조 → 발췌 · 경로 확인 → 새 산출 폴더 → P0 기록 읽기 → `util_LFP.py` import (sha 대조 뒤 · 받은 외부 코드를 venv 자식 안에서 실행) → 자료 적재 → 적재 결과 / P0 결속 대조. 따로 띄우는 단계가 아니다 — 떼려면 run 모듈 변경 (새 RED / GREEN) 이 필요하다 | run 의 prep 900 s 안 | 식별 불일치 · 결속 불일치 → optimizer 전에 멈춤 (run 모듈) | run 의 `IDENTITY.json` · `HEADER.json` 등 |
++| E1-3 run | 위 자료 · 다섯 모듈 · SOURCES.json · S1 의 둘 · 봉인 | launcher `run` · 자식 = `reil_c4e_run.py run … --out <E>/run --approval "상태 문서 §NN (사용자 E1-1–3 승인 · docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md)"` · 66 호출 · 네트워크 0 | run 모듈 기한 prep 900 · 측정 9,000 · 기록 9,900 · 단계 10,800 s (= 자식 timeout) · RSS ≤ 4 GiB · 새 산출 ≤ 1 GiB · 디스크 여유 ≥ 5 GiB · 정리 20 s · 기대 경과 약 35–45 분 (C4-E 요청 v2 §4-1 의 산술 · 보증 아님) · 감시 기한 착수 + 12,600 s | 실행 유효성 (launcher 단계 판정) 거짓 → E1-3 실패. 실험 결과는 자식 `05_run.stdout.log` 마지막 JSON 의 `final.complete` · `final.E3a` · `final.c4a_gate` (launcher 자신의 단계 요약 stdout 과 다르다 · 최상위 `final_verdict` 키는 없다). INCOMPLETE → 결과대로 기록 · E1-3 통과 아님. launcher 단계 판정도 `final.complete` 를 쓰므로 두 판정은 독립이 아니다 | `05_run.*` · `<E>/run/` (ROWS · AGGREGATE · OPERATION · RESOURCES · RULE · IDENTITY · HEADER · END_RECORD · SOURCES — JSON) · 외곽 기록 · 판정 기록 |
+ 
+-- 각 단계는 앞 단계가 통과했을 때만 띄운다. 전체 (승인 기록 → 끝 기록) ≤ 6 h · 재시도 0.
+-- 지금 상태 (읽기 전용 확인 · 2026-11-04): `SP/c4e1` · `evidence/reil_c4e1_*` 없음 · venv python 있음 · 디스크 여유 약 26 GB (a2 끝 기록 26,028,994,560 B).
++- 각 단계는 앞 단계가 통과했을 때만 띄운다. 전체 (승인 기록 → 끝 기록) ≤ 6 h · 재시도 0. 감시 기한의 합은 15,300 s (4.25 h) 이고, 나머지 (복사 · 읽기 경로 ·
++  판정 · 끝 기록) 를 더해도 6 h 안에 들도록 정했다. 미완 · 끝 기록 시각을 6 h 안에서 어떻게 남기는지는 요청서에 고정한다.
++- 디스크: 26,028,994,560 B 는 a2 끝 기록 (2026-11-04T02:00:05Z) 당시 값이다 — 지금 값이 아니다. 착수 때 다시 잰다.
+ 
+-## 2. 정할 것 1 — 긴 run 을 어떻게 띄우나 (셸 도구 상한 < run 기한)
++## 2. 착수 경로 검사 (E113_N1 — v1 의 사실 오류 정정)
+ 
+-- **사실:** 이 세션의 셸 도구는 전경 600 s · 배경 7,200 s 가 상한이고, 배경 상한에 닿으면 명령을 멈춘다. run 의 자식 timeout 은 10,800 s, run 모듈의 측정
+-  마감은 9,000 s 다. 그래서 E1-0b 처럼 "배경 실행으로 띄우고 끝 알림" 만으로는 run 이 2 h 를 넘을 때 셸 도구가 launcher 를 끊는다 (기록 없이).
+-- **A (권장) — 분리 실행 + 읽기 전용 감시:**
+-  - run 줄을 셸 도구의 호출과 떨어진 프로세스로 띄운다: `setsid nohup sh -c '<고정 run 줄>; rc=$?; set -C; printf "%s\n" "$rc" > <E>/05_run.outer_rc.txt'
+-    > /dev/null 2>&1 < /dev/null &` (정확한 문자열은 요청서에 고정). launcher 의 timeout · 정리 · 기록은 그대로다.
+-  - 끝은 감시 루프로 기다린다: 셸 도구 배경 실행의 `until [ -e <E>/05_run.outer_rc.txt ]; do sleep 30; done` (읽기만 · 개입 0). 감시가 2 h 상한에 닿으면
+-    감시만 다시 건다 (run 에 영향 없음). 외곽 반환 파일이 생긴 뒤 판정기를 전경으로 띄운다.
+-  - 위험 (공개): run 도중 세션 · 컨테이너가 끝나면 run 과 기록을 잃는다 → 멈춤 · 재시도 없음 · 결과 검토.
+-  - **탐침 한 번 (채택하시면 · 요청서 작성 전):** `SP/detach_probe_20261104/` 에서 `sleep 150` 뒤 표지 파일 하나를 쓰는 분리 프로세스를 띄우고, 띄운 셸 호출이
+-    돌아온 뒤 (다른 도구 호출에서) 표지가 생기는지 본다. 연구 코드 · 네트워크 · 저장소 쓰기 0 · 결과는 원장에 적는다. 안 되면 A 를 접고 C 를 다시 묻는다.
++- **v1 의 "`evidence/reil_c4e1_*` 없음" 은 틀렸다 (§102).** 그 glob 에는 보존된 시험 증거 셋 (`reil_c4e1_0_20261030` · `reil_c4e1_0b_20261103` ·
++  `reil_c4e1_0b_a2_20261104`) 이 맞는다. 그대로면 착수 검사가 늘 멈춘다. 이 셋은 실제 실행 이름 규칙 밖이고, 지우거나 · 이름을 바꾸거나 · 다시 쓰지 않는다.
++- **정정한 검사 (a 단계 · 요청서에 명령으로 고정):** `evidence/` 아래에 launcher 규칙 `^reil_c4e1_20[0-9]{6}$` 에 맞는 항목이 **하나라도** 있거나 · 착수 경로
++  `<E>` 가 있거나 · `SP/c4e1` 이 있으면 멈춘다. 날짜와 관계없이 규칙에 맞는 항목이 있으면 멈추므로, 지난 E1-1–3 시도가 남긴 폴더를 새 날짜 이름으로 비켜
++  재시도할 수 없다.
++- **지금 상태 (2026-11-04 · 읽기 전용 · 이 규칙으로 다시 확인):** 규칙에 맞는 항목 0 · `SP/c4e1` 없음 · venv python 있음.
++
++## 3. 정할 것 1 — launcher 를 어떻게 띄우나 (E113_N2)
++
++- **사실:** 셸 도구의 상한은 전경 600 s · 배경 7,200 s 이고, 배경 상한에 닿으면 명령을 멈춘다. run 의 자식 timeout 은 10,800 s 이고, identity · fetch 도 명시
++  timeout 의 합이 실제 반환의 상한이 아니다 (§1). launcher 는 자식을 새 세션으로 띄운다 (786 행) · meta 쓰기에 실패하면 외부 stderr 에 첫 오류
++  (`meta_write_failed`) 를 쓰고 rc 4 를 낸다 (908–912 행) · 그 밖에는 외부 stdout 에 단계 요약 한 줄을 쓰고 0 (complete) / 1 을 낸다.
++- **A (권장) — 세 단계 모두 같은 분리 실행 wrapper + 읽기 전용 감시 + 정해 둔 실패 종결.** 범위의 요구는 아래이고, 정확한 명령 · 형식 · 관측과 허용 정리
++  행위는 요청서에 고정해 승인을 받는다.
++  1. **외부 출력 보존:** wrapper 가 launcher 의 stdout · stderr 를 `<E>/<단계>.outer_stdout.txt` · `<E>/<단계>.outer_stderr.txt` 로 배타 생성해 받는다
++     (`/dev/null` 0). 자식의 `<단계>.stdout.log` · `stderr.log` 와 다른 자료다.
++  2. **실행 식별 · 시작 상태:** wrapper 가 launcher 를 띄우기 전에 `<E>/<단계>.outer_start.txt` 를 배타 생성한다 — UTC · wrapper PID (= `setsid` 의 세션 id) ·
++     감시 절대 기한.
++  3. **완전한 반환 게시:** wrapper 는 launcher 반환을 임시 이름에 쓰고 닫은 뒤 최종 이름 `<E>/<단계>.outer_rc.txt` 로 배타 게시한다 (이미 있으면 실패 — 최종
++     이름이 보이는 순간 내용이 완전하다). 감시와 판정은 최종 이름의 존재와 형식 (`^[0-9]+\n$`) 을 함께 본다 — 존재만으로 판정을 시작하지 않는다.
++  4. **첫 절대 감시 기한:** 시작 기록의 절대 시각 하나 — identity 착수 + 900 s · fetch + 1,800 s · run + 12,600 s (자식 timeout + 여유 · 여유는 정책 값이지 실제
++     반환 상한의 보증이 아니다). 감시는 셸 도구 배경 실행의 읽기 전용 루프이고, 도구 상한 (2 h) 에 끊기면 같은 절대 시각으로 다시 건다 — 새로 세지 않는다.
++     감시를 다시 거는 것은 run 을 다시 띄우는 것이 아니다.
++  5. **실패 종결 (모두 다음 단계 차단 · 재시도 0 · 미완 기록 · 끝 기록 작성기가 사유를 그대로 남김):** 시작 실패 (띄운 뒤 60 s 안에 시작 기록 · 외부 출력
++     파일이 없음) · 기한까지 반환 미게시 · 형식이 틀린 반환 (부분 기록 · 임시 이름만 남음) · 감시 기한 도달. 반환이 0 이 아니면 launcher 의 단계 실패다.
++  6. **잔류 책임 (감시 종료는 실행 종료가 아니다):** 감시가 끝나면 (정상 · 실패 모두) 실행자 (작성자) 가 읽기 전용 잔류 관측을 한 번 하고 기록한다 — /proc 에서
++     시작 기록의 세션 id · launcher meta 의 자식 `pgid` (meta 가 있으면) · cmdline 의 `<E>` 경로에 맞는 프로세스. 자식의 정리 상태는 launcher meta 의 `cleanup`
++     이 근거이고, meta 가 없으면 "미확인" 이다. 잔류가 있을 때 (정할 것 1 의 R):
++     - **R1 (권장):** cmdline 의 `<E>` 를 다시 확인한 뒤 기록한 그룹에만 SIGKILL 한 번 → 다시 관측 → 기록 → 멈춤 (PID 재사용 위험은 공개 · E1-0b 요청서 §8 의
++       17 과 같은 종류).
++     - **R2:** 관측 · 기록만 하고 멈춘다. 잔류가 `<E>/run` 에 계속 쓸 수 있으므로 그 폴더는 커밋하지 않고 사용자에게 묻는다.
++  7. **identity · fetch 도 같은 wrapper 로 띄운다** — 셸 도구 상한 (600 · 7,200 s) 에 launcher 가 끊길 일이 없다.
++  8. **위험 (공개):** run 도중 세션 · 컨테이너가 끝나면 run 과 기록을 잃는다 → 멈춤 · 재시도 없음 · 결과 검토. §4 의 탐침은 이것을 보증하지 않는다.
+ - **B — 셸 도구 배경 실행 (2 h 상한):** 고정 예산 10,800 s 와 맞지 않는다 (2 h 를 넘으면 기록 없이 끊긴다). 권장하지 않는다.
+ - **C — run 의 기한을 2 h 안으로 줄인다:** run 모듈 · launcher 바이트가 바뀌어 새 RED / GREEN · 검토가 필요하다. 권장하지 않는다.
+-- identity 는 전경, fetch 는 셸 도구 배경 실행 (최악 약 860 s) 으로 띄운다 — A · B · C 와 관계없다.
+ 
+-## 3. 정할 것 2 — 판정 · 끝 기록 (a2 방식을 이어 쓴다)
++## 4. 정할 것 2 — 분리 실행 탐침 (E113_N3)
++
++- **P1 — 방향만 고른다:** A 는 문서 방향으로만 고르고, 탐침은 승인 요청서의 첫 단계로 명세해 E1-1–3 승인과 함께 따로 승인받는다 (실패하면 identity 전에
++  멈춘다). 지금 실행 0.
++- **P2 (권장) — 지금 탐침 한 번 (아래 그대로 · 요청서 작성 전):** 요청서를 분리 실행에 맞춰 쓰기 전에 이 환경에서 그것이 되는지 본다.
++  - **경로:** `SP/detach_probe_20261104/` — 저장소 밖. 이미 있으면 멈춘다 (다른 이름으로 바꾸지 않는다).
++  - **띄우기 (셸 도구 전경 한 번 · SP 는 절대 경로):**
++    `test ! -e SP/detach_probe_20261104 && mkdir SP/detach_probe_20261104 && cd SP/detach_probe_20261104 && date -u +%s > t0.txt && { setsid nohup sh -c 'echo $$ > pid.txt; sleep 150; date -u +%Y-%m-%dT%H:%M:%SZ > done.tmp && mv done.tmp done.txt' > out.txt 2> err.txt < /dev/null & }`
++    (배경으로 보내는 것은 중괄호 안의 `setsid` 하나뿐이다 — 앞의 검사 · `mkdir` 이 실패하면 그 호출에서 바로 보이고 아무것도 띄우지 않는다)
++  - **관측 (띄운 호출이 돌아온 뒤 · 셸 도구 배경 실행 한 번 · 절대 기한 t0 + 300 s):**
++    `cd SP/detach_probe_20261104 && until [ -e done.txt ] || [ "$(date -u +%s)" -ge "$(( $(cat t0.txt) + 300 ))" ]; do sleep 5; done` → 그 뒤 전경에서 읽기만:
++    `t0.txt` · `pid.txt` · `done.txt` 의 내용 · `done.tmp` 유무 · `/proc/<pid>` 유무 · `out.txt` · `err.txt` 크기.
++  - **성공:** 기한 안에 `done.txt` 가 생기고 그 내용이 UTC 한 줄 형식 · `done.tmp` 없음 · 끝남 (`/proc/<pid>` 가 없거나 상태 Z — 컨테이너의 PID 1 이 회수하지
++    않으면 좀비로 남을 수 있다).
++  - **실패:** `pid.txt` 없음 (시작 실패) · 기한까지 `done.txt` 없음 · `done.tmp` 만 남음 (부분 기록) · 기한 뒤에도 `/proc/<pid>` 가 Z 아닌 상태로 있음 (미종결 →
++    그 세션 그룹에만 SIGKILL 한 번 → 다시 관측 → 기록). 실패하면 A 를 접고 (이 환경에서 분리 실행이 안 됨) 다시 묻는다. 재시도 0.
++  - **기록 · 잔류:** 결과 (t0 · done 시각 · pid · 판정 · `out.txt` / `err.txt` 크기 · 잔류 관측) 를 원장에 적는다. 폴더는 SP 에 두고 지우거나 커밋하지 않는다.
++  - **한계:** 띄운 도구 호출이 돌아온 뒤 약 150 s 동안 분리 프로세스가 살아 있고 끝나는지만 본다. 7,200 s 도구 관리 상한을 넘는 동작 · 10,800 s run ·
++    컨테이너 소실 · launcher 정리는 보증하지 않는다. 연구 코드 · 네트워크 · 저장소 쓰기 0.
++
++## 5. 정할 것 3 — 판정 · 끝 기록 (a2 방식을 이어 쓴다)
+ 
+ - **A (권장):** 새 고정 판정기 (E1-1–3) 와 끝 기록 작성기 v3 를 초안으로 만들어 (정적 검사만 · 실행 0) 요청서에 sha 를 적고, 첫 단계 전에 `<E>` 로 복사해
+-  봉인한다 (`00_start.txt`). 단계마다 외곽 반환 파일 → 판정기 한 번 → 수동 판정. verdict 와 수동 판정이 다르거나 판정기가 기록을 못 쓰면 멈춘다.
+-  - 판정기가 읽는 것: launcher meta (precheck · child · rc · timeout · postcheck · 정리 · 기록 · 원천 해시) · 외곽 반환 · run 은 `<E>/run/` 의 기록 파일 이름과
+-    stdout 마지막 줄의 `final_verdict` — 실행 유효성과 실험 결과를 따로 적는다.
+-  - 끝 기록 작성기 v3: 이름 규칙 `reil_c4e1_YYYYMMDD` · 세 단계의 meta · 외곽 반환 · 판정 기록 · 읽기 경로 기록 · 복사본 sha · 디스크 · 시각. Git · 네트워크 0.
++  봉인한다 (`00_start.txt`). 단계마다 외곽 반환 게시 → 판정기 한 번 → 수동 판정. verdict 와 수동 판정이 다르거나 판정기가 기록을 못 쓰면 멈춘다.
++  - 판정기가 읽는 것: launcher meta (precheck · 자식 · rc · timeout · postcheck · 정리 · 기록 · 원천 해시) · §3 의 외곽 기록 넷 (시작 · stdout · stderr · 반환) ·
++    run 은 자식 `05_run.stdout.log` 마지막 JSON 의 `final.complete` · `final.E3a` · `final.c4a_gate` 와 launcher 의 단계 요약 (외곽 stdout) 을 따로 — 정확한
++    파일 · 필드 · 실패 조건은 요청서에 고정한다.
++  - 끝 기록 작성기 v3: 이름 규칙 `reil_c4e1_YYYYMMDD` · 세 단계의 meta · 외곽 기록 · 판정 기록 · 감시 결과 · 잔류 관측 · 읽기 경로 기록 · 복사본 sha · 디스크 ·
++    시각. Git · 네트워크 0.
+ - **B:** 수동 판정만 + 끝 기록 작성기 v3 — 초안은 줄지만 기계 기록이 없다.
+ 
+-## 4. 정할 것 3 — 실제 결과 파일의 공개 (공개 저장소)
++## 6. 정할 것 4 — 실제 결과 파일의 공개 (공개 저장소 · v1 과 같다)
+ 
+-- **사실:** 저장소는 공개다. 원자료는 `SP/c4e1/data` 에만 있고 커밋하지 않는다. run 의 산출 루트 `<E>/run` 은 저장소 안이고, run 모듈의 상한은 새 산출
+-  1 GiB 다 (예상은 JSON 기록 아홉).
+-- **A (권장):** 커밋 전에 검사한다 — `<E>/run` 안에 자료 두 파일과 같은 바이트 · `.xlsx` · `.py` 가 없음 · 파일 하나 ≤ 50 MB · 합 ≤ 100 MB · 비밀 검사 · URL
+-  계정 형태. 하나라도 어긋나면 그 부분을 커밋하지 않고 멈춰 사용자에게 묻는다 (파일은 지우지 않는다).
+-- **B:** `<E>/run` 은 목록 (경로 · 크기 · sha256) 만 커밋하고 파일은 커밋하지 않는다 — 공개 검증이 약해진다.
++- **A (권장):** 커밋 전에 `<E>/run` 안에 자료 두 파일과 같은 바이트 · `.xlsx` · `.py` 가 없음 · 파일 하나 ≤ 50 MB · 합 ≤ 100 MB · 비밀 검사 · URL 계정 형태를
++  본다. 하나라도 어긋나면 그 부분을 커밋하지 않고 멈춰 사용자에게 묻는다 (파일은 지우지 않는다).
++- **B:** `<E>/run` 은 목록 (경로 · 크기 · sha256) 만 커밋한다 — 공개 검증이 약해진다.
+ 
+-## 5. 정할 것 4 — 절차 Git · 명령 문자열 (A2_PROC_01 · 회신 권고)
++## 7. 정할 것 5 — 절차 Git · 명령 문자열 (A2_PROC_01 · v1 과 같다)
+ 
+ - **권장:** 승인 기록부터 끝 기록까지 절차 Git 은 add · commit (+ log) 만 하고, 매번 요청서의 고정 이름 확인 명령을 **문자 그대로** 앞에 둔다 (출력 생략 ·
+   변형 0). 작성 저장소의 fetch · push 는 끝 기록 뒤에만 하고, 기록에는 "작성 저장소 동기화 fetch" 로 적어 E1-2 의 fetch 와 나눈다.
+ 
+-## 6. 순서 (요청서에서 명령 문자열까지 고정)
++## 8. 순서 (요청서에서 명령 문자열까지 고정)
+ 
+-a 승인 기록 § · 보존 규칙 (`evidence/reil_c4e1_<날짜>/** -text`) · `<E>` 만들기 (`evidence/reil_c4e1_*` · `SP/c4e1` 가 있으면 멈춤) → b 복사 (identity
+-helper · 판정기 · 작성기) · `00_start.txt` · 봉인 커밋 → c E1-1 identity → d 읽기 경로 → e E1-2 fetch → f E1-3 run (§2) → g 끝 기록 → 커밋 · push → 결과
+-기록 § · 결과 검토 발송문 → 멈춤. 각 단계 뒤 그 단계의 기록을 커밋한다 (자료 파일 제외).
++a 승인 기록 § · 보존 규칙 (`evidence/reil_c4e1_<날짜>/** -text`) · §2 의 착수 검사 · `<E>` 만들기 → b 복사 (identity helper · 판정기 · 작성기) · `00_start.txt` ·
++봉인 커밋 → c E1-1 identity → d 읽기 경로 → e E1-2 fetch → f E1-3 run → g 끝 기록 → 커밋 · 작성 저장소 동기화 fetch · push → 결과 기록 § · 결과 검토 발송문 →
++멈춤. c · e · f 는 §3 의 wrapper · 감시 · 실패 종결 · 잔류 관측을 거친다. 어느 단계든 멈추면 그 단계까지의 기록을 커밋하고 g 를 한다 (자료 파일 제외).
+ 
+-## 7. 바뀌지 않는 것
++## 9. 바뀌지 않는 것
+ 
+-launcher v6 · 다섯 모듈 · SOURCES.json · S1 의 둘 · 봉인 · 기존 시험 · E1-0b 요청서 (`ae413f96…` — 다시 쓰지 않는다) · 기존 증거 (E0 · N1 · E1-0 · E1-0b
++launcher v6 · 다섯 모듈 · SOURCES.json · S1 의 둘 · 봉인 · 기존 시험 · E1-0b 요청서 (`ae413f96…`) · 범위안 v1 (`d88d064b`) · 기존 증거 (E0 · N1 · E1-0 · E1-0b
+ 두 시도). A2_PROC_01 은 §101 의 문구로만 남는다.
+ 
+-## 8. 정하실 것
++## 10. 정하실 것
+ 
+-1. **이 범위 채택** — 채택하시면 E1-1–3 승인 요청서 · 판정기 · 끝 기록 작성기 v3 초안 · 사전 검토 발송문을 쓰고 멈춘다 (정적 검사만 · 실행 0). 예외는 2 에서
+-   A 를 고르실 때의 분리 실행 탐침 한 번.
+-2. **긴 run** — **A: 분리 실행 + 읽기 전용 감시 · 탐침 한 번 (권장)** / B: 셸 도구 배경 실행 (2 h 상한) / C: 기한 줄이기 (코드 변경).
+-3. **판정 · 끝 기록** — **A: 판정기 + 수동 판정 + 작성기 v3 (권장)** / B: 수동 판정 + 작성기 v3.
+-4. **결과 공개** — **A: 검사 뒤 커밋 · 어긋나면 멈춤 (권장)** / B: 목록만 커밋.
+-5. **절차 Git** — **§5 의 권장안 (권장)**.
++1. **이 범위 (v2) 선택** — 선택하시면 E1-1–3 승인 요청서 · 판정기 · 끝 기록 작성기 v3 초안 · 사전 검토 발송문을 쓰고 멈춘다 (정적 검사만 · 실행 0). 예외는 3
++   에서 P2 를 고르실 때의 탐침 한 번.
++2. **띄우는 방식** — **A: 세 단계 같은 wrapper + 읽기 전용 감시 + 실패 종결 (권장)** · 잔류가 있을 때 **R1: 기록한 그룹에만 SIGKILL 한 번 (권장)** / R2: 관측 ·
++   기록만 / B: 셸 도구 배경 실행 (2 h 상한) / C: 기한 줄이기 (코드 변경).
++3. **탐침** — **P2: 지금 §4 그대로 한 번 (권장)** / P1: 요청서의 첫 단계로 따로 승인.
++4. **판정 · 끝 기록** — **A: 판정기 + 수동 판정 + 작성기 v3 (권장)** / B: 수동 판정 + 작성기 v3.
++5. **결과 공개** — **A: 검사 뒤 커밋 · 어긋나면 멈춤 (권장)** / B: 목록만 커밋.
++6. **절차 Git** — **§7 의 권장안 (권장)**.

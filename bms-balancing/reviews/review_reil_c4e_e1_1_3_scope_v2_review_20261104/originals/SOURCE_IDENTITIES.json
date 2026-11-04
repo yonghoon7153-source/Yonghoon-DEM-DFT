@@ -1,0 +1,39 @@
+{
+  "pin": "c54217a8e5f9ab53713f0c5ce26de0937935f040",
+  "attachment": {
+    "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_1_3_SCOPE_v2_20261104.md",
+    "bytes": 20255,
+    "sha256": "f101f0a28f79a068a7d6cf1a1fcde944c12fc3103cb0b20fe4c69b13c8cba415"
+  },
+  "repository_blob_sha1": "947bfa1788300d8bd4356813b358bbbc2ea7c91a",
+  "attachment_equals_pinned_repository_bytes": true,
+  "reused_sources": [
+    {
+      "path": "bms-balancing/scripts/reil_c4e1_launch.py",
+      "bytes": 62639,
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf",
+      "source": "Prior reviewed raw copy; no path change in complete pinned comparison."
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4e_run.py",
+      "bytes": 53853,
+      "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9",
+      "source": "Prior reviewed raw copy; no path change in complete pinned comparison."
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "bytes": 96529,
+      "sha256": "ae413f965e890103db175ef261b05d6c49b26f9a53048abdab8c9b8d3b234840",
+      "source": "Prior reviewed raw copy; no path change in complete pinned comparison."
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_1_3_SCOPE_20261104.md",
+      "bytes": 13895,
+      "sha256": "ccc343de78ac0a92e2cbc694962bb4f537c286dcfb6031947193d7f6e7d365d6",
+      "source": "Prior reviewed raw copy; no path change in complete pinned comparison."
+    }
+  ],
+  "received_program_execution": 0,
+  "probe_execution": 0,
+  "scope": "Static text/identity and complete commit-difference comparison; no current remote runtime observation."
+}

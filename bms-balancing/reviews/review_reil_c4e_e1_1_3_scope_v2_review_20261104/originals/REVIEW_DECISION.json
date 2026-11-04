@@ -1,0 +1,92 @@
+{
+  "kind": "REIL_E113_SCOPE_V2_REVIEW_DECISION",
+  "date": "2026-11-04",
+  "decision": "DOCUMENT_ONLY_DIRECTION_ACCEPTABLE_P2_PROBE_REQUIRES_CORRECTION",
+  "pin": "c54217a8e5f9ab53713f0c5ce26de0937935f040",
+  "input": {
+    "name": "REIL_C4E_E1_1_3_SCOPE_v2_20261104.md",
+    "bytes": 20255,
+    "sha256": "f101f0a28f79a068a7d6cf1a1fcde944c12fc3103cb0b20fe4c69b13c8cba415"
+  },
+  "closures": {
+    "E113_N1": "CLOSED",
+    "E113_N2": "FOLLOWUP_REQUIREMENTS_BEFORE_EXECUTION_APPROVAL",
+    "E113_N3": "P1_ACCEPTABLE_P2_NOT_READY"
+  },
+  "p1_document_direction_acceptable": true,
+  "p2_immediate_probe_ready": false,
+  "p1_drafting_blocked_by_n2": false,
+  "user_choices_recorded": false,
+  "probe_authorized": false,
+  "actual_execution_authorized": false,
+  "prior_acceptance": {
+    "E1_0b_a2": "RETAINED",
+    "A2_PROC_01": "RETAINED",
+    "retest_requested": false,
+    "launcher_change_requested": false
+  },
+  "findings": [
+    {
+      "id": "P2_01",
+      "priority": "P2",
+      "lines": [
+        82,
+        87,
+        88,
+        92
+      ],
+      "scope": "P2 immediate probe only",
+      "issue": "sleep failure may still publish a valid done marker and satisfy SUCCESS",
+      "required": "Success-gate preparation/PID/wait; preserve failing stage/rc/stderr and bind intended observation interval to launching-call return.",
+      "blocks_p1_document_drafting": false
+    },
+    {
+      "id": "N2_F1",
+      "priority": "FOLLOWUP_BEFORE_EXECUTION_APPROVAL",
+      "lines": [
+        65,
+        66
+      ],
+      "issue": "meta.cleanup does not exist in sealed v6",
+      "required": "Bind actual child.group.status/deadline_hit/errors and conditional timed_out/exited_after_kill plus postcheck/stage; missing means unverified."
+    },
+    {
+      "id": "N2_F2",
+      "priority": "FOLLOWUP_BEFORE_EXECUTION_APPROVAL",
+      "lines": [
+        70,
+        92,
+        93
+      ],
+      "issue": "Unproved guarantee against tool lifetime limits",
+      "required": "Qualify detachment intent and long-duration management uncertainty; no new long test demanded."
+    },
+    {
+      "id": "N2_F3",
+      "priority": "FOLLOWUP_BEFORE_EXECUTION_APPROVAL",
+      "lines": [
+        53,
+        57,
+        69,
+        121
+      ],
+      "issue": "Unconfirmed live writers can mutate outer evidence beyond run directory",
+      "required": "Retain originals; distinguish frozen observation copies/INCOMPLETE from final sealed outputs, without cross-file atomic snapshot claim."
+    }
+  ],
+  "performed": {
+    "static_text_identity_review": true,
+    "official_shell_document_read": true,
+    "received_program_execution": 0,
+    "probe_execution": 0,
+    "identity_fetch_run": 0,
+    "signal_delivery": 0,
+    "COMSOL": 0,
+    "source_changes": 0,
+    "git_mutations": 0,
+    "external_transmission": 0
+  },
+  "numeric_review_budget_seconds": null,
+  "whole_work_elapsed_claim": null
+}
+
