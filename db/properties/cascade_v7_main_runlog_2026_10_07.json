@@ -267,5 +267,14 @@
   "남은": "2 런 (도는 런 포함) · 평균 12.43 h 어림 → 끝 어림 11-04 · 상한 여유 충분 (594 − 494 ≈ 98 GPU-h 대 2 × 20.685)",
   "판독": "없음 — 40 런 뒤 한 번 (중간 집계 금지 · 카드 그대로)",
   "by": "agent · 2026-11-03"
+ },
+ "✅_본라운드_끝_2026_11_04": {
+  "출처": "사용자 붙여넣기 2026-11-04 09:12:11 KST (kgy watch · tail cascade_v7_main_1007.log + cv7_watch · 읽기만)",
+  "상태": "러너 PID 33590 끝남 · tmux cv7main 없음 · 러너 로그 마지막 줄 04:14:32 '판정은 사람이 친다 (이 러너는 D·집계를 안 연다)' + 판정 명령 한 줄 (judge_eprime.py --card v7 --probe_json … --out_root …)",
+  "비용": "누적 513.10 / 상한 592.0 GPU-h (결정 D-2026-10-28-cascade-v7-main-round-cap2) · 끝난 런 40 / 40 · 남은 0",
+  "판독": "아직 없음 — 40 런 뒤 한 번 (카드 §5 · 중간 집계 금지) → 판정 명령은 사람이 친다 (아래 ⏭)",
+  "판독기": "tools/doping/judge_eprime.py 는 10-08 (45c66ffc · Codex CT) 뒤로 안 바뀜 — worktree wt_cv7main_1028 의 판독기 = 레포 판독기 · 판독기 수정이 없어 과거 마감 재현 대조 대상 아님",
+  "⏭": "kgy: 러너가 찍은 판정 명령을 그대로 (tmux cv7judge · 로그 ~/cv7_judge_1104.log · CPU 파이썬 분석 · QE 아님) → cascade_v7_judgement.json → 새 worktree 에서 db/raw/cascade_v7_main_2026_10_07/ 회수 커밋 · 푸시 (궤적 · msd 는 sha256 만) → 레포에서 카드 대로 읽기 (상대차만 · 절대 D 인용 금지)",
+  "by": "agent · 2026-11-04"
  }
 }
