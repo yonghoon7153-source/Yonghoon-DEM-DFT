@@ -1,0 +1,220 @@
+{
+  "kind": "STATIC_JUDGE_AND_END_WRITER_PREREVIEW",
+  "pin": "396c83804708b5f2102e210919d480e658b5fa69",
+  "scope": "Q4 judge against approval request sections 4-3/4-5; end-writer boundary; author self-check provenance",
+  "method": {
+    "received_code_execution": 0,
+    "received_imports": 0,
+    "tests_fixtures_or_synthetic_probes": 0,
+    "static_text_AST_literal_data_only": true
+  },
+  "judge_implementation_recommendation": "Q4_RULE_SCOPE_CLARIFICATION_REQUIRED_BEFORE_APPROVAL",
+  "required_code_findings": [],
+  "checks": [
+    {
+      "id": "J01",
+      "topic": "Fixed RED table and sets",
+      "result": "MATCH_STATICALLY",
+      "request_lines": [
+        315,
+        361
+      ],
+      "judge_lines": [
+        37,
+        85,
+        223,
+        241
+      ],
+      "details": "Nine exception rows and 24 pass names occur in the request; disjoint union equals the sealed v8 control file 33 top-level test functions. Expected messages and prefixes match."
+    },
+    {
+      "id": "J02",
+      "topic": "Final line and section boundaries",
+      "result": "MATCH_STATICALLY",
+      "request_lines": [
+        293,
+        307,
+        325,
+        326
+      ],
+      "judge_lines": [
+        142,
+        186,
+        268,
+        272,
+        330,
+        335
+      ],
+      "details": "Only one terminal empty split component is removed. Header scan excludes last line; section end excludes final summary. This avoids the prior summary misclassification. Extra summaries, invalid totals or unsupported final categories reject; warning(s) are recorded only."
+    },
+    {
+      "id": "J03",
+      "topic": "Failure location/exception matching",
+      "result": "MATCH_STATICALLY",
+      "request_lines": [
+        317,
+        324
+      ],
+      "judge_lines": [
+        238,
+        266
+      ],
+      "details": "One failure section per expected name; first matching traceback entry requires exact path and full test name. E-prefixed lines must form a nonempty contiguous block; first E line must decode as exception type/message. Chained exceptions and RED unexpected-cause marker reject. Predicted line equality is INFO only."
+    },
+    {
+      "id": "J04",
+      "topic": "Common result terms",
+      "result": "MATCH_STATICALLY",
+      "request_lines": [
+        309,
+        311
+      ],
+      "judge_lines": [
+        199,
+        220,
+        267,
+        291
+      ],
+      "details": "Started/timed_out/runner_ok use exact booleans; cleanup empty/deadline/errors and end/errors checked separately; outer rc must be exact LF bytes; pytest rc rejects booleans and must be expected integer. A null first_error alone is not used."
+    },
+    {
+      "id": "J05",
+      "topic": "Input source binding and GREEN sets",
+      "result": "MATCH_STATICALLY",
+      "request_lines": [
+        304,
+        307,
+        363,
+        366
+      ],
+      "judge_lines": [
+        126,
+        139,
+        275,
+        296
+      ],
+      "details": "AST is parsed as text data, not imported. Each input test file must match source_end bytes/SHA. GREEN requires 21/6/33/11 test functions, complete unique 71 PASSED set, no FAILED entries in the short summary, no FAILURES header, correct totals/rc, no defined error/interruption markers."
+    },
+    {
+      "id": "J06",
+      "topic": "Entry refusal, exceptions and output",
+      "result": "MATCH_WITH_DOCUMENTED_STOP_ON_WRITE_FAILURE",
+      "request_lines": [
+        241,
+        242,
+        387,
+        392
+      ],
+      "judge_lines": [
+        299,
+        350
+      ],
+      "details": "Wrong arguments/step/path relation or preexisting output refuse with 2 before output. Judgment-time exceptions append false judge.exception. Output uses exclusive creation; failed checks produce STOP/1, otherwise MATCH/0. Errors while writing/digesting final output cannot guarantee a judge record; request explicitly stops when record absent/exception, without retry."
+    },
+    {
+      "id": "J07",
+      "topic": "End writer does not adjudicate",
+      "result": "MATCH_STATICALLY",
+      "request_lines": [
+        393,
+        400
+      ],
+      "writer_lines": [
+        24,
+        61,
+        64,
+        98
+      ],
+      "details": "Reads judgment bytes and copies only hash/size/verdict/failed IDs, retains missing-read reason, records six copy hashes and both step summaries, exclusive 03_end.json. It cannot turn absent GREEN or STOP into MATCH and does not replace the executor/manual decision."
+    },
+    {
+      "id": "J08",
+      "topic": "Author scratch self-check evidence",
+      "result": "AUTHOR_REPORT_ONLY",
+      "request_lines": [
+        553,
+        557
+      ],
+      "details": "Reported old RED/synthetic GREEN/negative-shape checks were not rerun here. Scratch command/output raw records are not in this submitted source set. Their asserted counts and outcomes are not independent runtime evidence or accepted E1-0b RED/GREEN results."
+    }
+  ],
+  "static_source_sets": {
+    "source\\bms-balancing\\docs\\REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v8_20261103.py.txt": 33,
+    "source\\bms-balancing\\tests\\test_reil_c4e.py": 21,
+    "source\\bms-balancing\\tests\\test_reil_c4e_fix.py": 6,
+    "source\\bms-balancing\\docs\\REIL_C4E1_RUNNER_CONTROLS_DRAFT_v5_20261103.py.txt": 11
+  },
+  "historical_stdout_read": {
+    "path": "outputs/reil_c4e1_0b_result_review_20261103/source/bms-balancing/evidence/reil_c4e1_0b_20261103/01_red_e1_0b.stdout.log",
+    "last_line": "9 failed, 24 passed in 14.25s",
+    "old_l33_E_head": "assert expression, no ExceptionType: prefix",
+    "inference": "Old l33 would fail exception-heading condition; not a rerun of the judge."
+  },
+  "procedure_disclosure_requiring_parent_review": {
+    "issue": "Static-only authorization versus author-reported execution of approval-target judge/end-writer drafts",
+    "scope_lines": [
+      69,
+      73,
+      94,
+      100
+    ],
+    "approval_static_claim_lines": [
+      57,
+      89
+    ],
+    "approval_execution_disclosure_lines": [
+      553,
+      557
+    ],
+    "analysis": "Scope permits writing/static examination and reserves copied judge execution for later approved c/d. The current request calls all drafts execution 0 yet reports actual scratch execution of judge/end-writer drafts. These are the approval-target drafts themselves, not merely reviewer-created AST/hash helpers. Launcher/pytest/Git-fixture execution 0 may still be true; total draft execution 0 is inconsistent with the disclosed activity. Preserve originals and state the limited procedural difference and provenance without retroactive approval or rerun. Parent will assign final finding/approval disposition.",
+    "independently_observed_author_execution": false
+  },
+  "operational_authorization_created": false,
+  "E1_0B_complete": false,
+  "new_RED_GREEN_results_observed": false,
+  "required_contract_findings": [
+    {
+      "id": "Q4_UNEXPECTED_MARKER_SCOPE",
+      "priority": 2,
+      "title": "Align the documented anywhere-stdout unexpected-cause rule with RED-only implementation",
+      "request_locations": [
+        {
+          "file": "REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "lines": [
+            306,
+            307
+          ]
+        },
+        {
+          "file": "REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "lines": [
+            548,
+            552
+          ]
+        }
+      ],
+      "code_locations": [
+        {
+          "file": "REIL_C4E1_0B_JUDGE_DRAFT_20261103.py.txt",
+          "lines": [
+            265,
+            266
+          ]
+        },
+        {
+          "file": "REIL_C4E1_0B_JUDGE_DRAFT_20261103.py.txt",
+          "lines": [
+            275,
+            296
+          ]
+        }
+      ],
+      "finding": "The general reading rules and disclosed strict additions say any stdout occurrence of UNEXPECTED_RED_CAUSE stops. The implementation enforces that rule only in judge_red. judge_green has no marker check.",
+      "static_counterexample": "Consider an otherwise conforming GREEN stdout with an extra non-header line containing only UNEXPECTED_RED_CAUSE before the recognized sections. This does not alter the PASSED set, terminal total, source binding, common metadata, FAILURES-header absence, or ERROR/INTERNALERROR/Interrupted/!!!! marker tests. No GREEN check reads this marker, so its checks remain true. Under the common-scope reading of the written rule, manual judgment must stop while machine verdict can remain MATCH.",
+      "evidence_method": "Control-flow and predicates inspected only. No synthetic file was constructed and no received function or judge was executed.",
+      "limitation": "This is a contract/implementation scope mismatch, not a demonstrated actual fixed GREEN run or proof that normal 71-pass output will contain the marker. The RED-specific repetition at request lines 323–324 makes author intent ambiguous.",
+      "required_resolution": "Author must select and state the rule scope consistently: if RED-only, qualify the general reading rule/disclosure/send text; if both steps, enforce it in common or GREEN logic. Update affected identities and prereview. Do not silently resolve a mismatch during execution.",
+      "manual_comparison": "The stop-on-disagreement rule prevents continuing when the executor notices the disagreement, but it does not make the two specified criteria equivalent."
+    }
+  ]
+}

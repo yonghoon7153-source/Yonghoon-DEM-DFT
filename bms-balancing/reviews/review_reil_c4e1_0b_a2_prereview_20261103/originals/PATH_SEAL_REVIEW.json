@@ -1,0 +1,111 @@
+{
+  "kind": "INDEPENDENT_E1_0B_A2_PATH_SEAL_AND_PROCEDURE_STATIC_REVIEW",
+  "pin": "396c83804708b5f2102e210919d480e658b5fa69",
+  "assigned_questions": ["Q3", "Q5 paths/seals/procedure subset"],
+  "result": "NO_CONFIRMED_REQUIRED_CORRECTION_IN_ASSIGNED_SCOPE",
+  "required_findings": [],
+  "method": {
+    "source_text_and_AST_only": true,
+    "hash_and_literal_data_comparison": true,
+    "received_code_import_or_execution": false,
+    "tests_fixture_launcher_runner_judge_writer_execution": false,
+    "repository_changes": false,
+    "OS_Job_CIM_COMSOL_experiments": false,
+    "basis_link": "COMPARE_FROM_RESULT.json links the previous a38c878f capture to the pin (ahead 4, behind 0); the preserved dependency files and old evidence are absent from the change set.",
+    "working_tree_claim_limit": "The author's 27 comparisons include their HEAD/worktree pairs. This reviewer independently matched 15 semantic seal rows against captured pinned bytes or unchanged prior captured bytes; no current remote worktree observation is claimed."
+  },
+  "method_notes": [
+    {
+      "event": "Reviewer data extractor correction",
+      "initial_tool_chunk": "ba1832",
+      "initial_rc": 1,
+      "reason": "Reviewer-owned ast.literal_eval assumed TARGETS was wholly literal, but its first element is the Name LAUNCH.",
+      "correction": "Connected that Name only to the separately parsed literal LAUNCH string; no received function/module was executed.",
+      "corrected_tool_chunk": "e1e28f",
+      "corrected_rc": 0,
+      "impact": "The failed extractor wrote no artifact and changed no input. Not a target test failure or submission defect."
+    }
+  ],
+  "checks": [
+    {
+      "id": "PATH-01",
+      "topic": "New a2 names agree across all participating documents",
+      "result": "MATCH",
+      "locations": [
+        "APPROVAL_REQUEST lines 68-71, 233-234, 248-284",
+        "STEP_RUNNER_v8 lines 53-57, 71, 433-434, 449-454",
+        "RUNNER_CONTROLS_v5 lines 33-40 and _rtree",
+        "END_WRITER_v2 lines 64-71",
+        "JUDGE lines 302-309"
+      ],
+      "reason": "Evidence reil_c4e1_0b_a2_YYYYMMDD, work SP/c4e1_0b_a2_steps and per-stage pycache agree. Test runner selection points to that evidence directory's 00_step_runner.py. Fixed RED/GREEN step names remain inside the new directory; no old evidence/work location is selected for new output."
+    },
+    {
+      "id": "PATH-02",
+      "topic": "Start guard and prior-attempt preservation",
+      "result": "CONSISTENT",
+      "locations": ["APPROVAL_REQUEST lines 85-87, 233, 252, 278-279, 565-568"],
+      "reason": "The stated start guard stops on any a2 evidence name or existing a2 work path. Placeholders BMS/SP/E are expressly expanded to absolute paths before use, so quoted BMS is a document placeholder rather than a literal runtime directory. Prior evidence/work/drafts are not deleted, renamed or reused. Only active tests copies are explicitly overwritten at b, with old versions retained in commit history. This guard was reviewed as text, not run."
+    },
+    {
+      "id": "PATH-03",
+      "topic": "Copy count and pre-test seal",
+      "result": "MATCH",
+      "locations": ["APPROVAL_REQUEST lines 59-66, 234, 253-260, 370-378, 393-405"],
+      "reason": "Six drafts include the unchanged launcher v6, installed only at d. Step b copies five: two controls, step runner, end writer and judge. 00_start has twelve SHA rows (six drafts + five copies + installed v5 launcher). 03_end hashes six installed copies (the same five plus launcher). The three tool copies are sealed before RED and later identified; their self hashes are records rather than self-authenticating constants."
+    },
+    {
+      "id": "PATH-04",
+      "topic": "EXPECT and current byte identities",
+      "result": "MATCH",
+      "locations": ["STEP_RUNNER_v8 lines 73-103", "APPROVAL_REQUEST lines 117-118, 372-378"],
+      "reason": "Thirteen _FIXED rows plus RED_LAUNCH and IMPL make fifteen distinct seal rows; all match bytes/SHA. TARGETS has exactly fourteen distinct paths, equal to _FIXED plus launcher. RED and GREEN EXPECT differ only in launcher identity. Data are in PATH_SEAL_DATA.json."
+    },
+    {
+      "id": "PATH-05",
+      "topic": "Narrow AST changes and unchanged production candidate",
+      "result": "MATCH",
+      "locations": ["APPROVAL_REQUEST lines 218-224", "PATH_SEAL_DATA.json / AST"],
+      "reason": "Controls v7->v8: two changed nodes (module docstring,l33),77 unchanged. Runner controls v4->v5: four changed nodes (docstring,V4,collection refusal,_rtree),48 unchanged. Runner v7->v8: five changed nodes (docstring,WORK,EVIDENCE_NAME,_FIXED,run_step refusal),56 unchanged. Launcher v6 is byte-identical to prior captured candidate; current pinned launcher remains v5 with the expected identity. Existing cleanup/recording logic is unchanged in this correction."
+    },
+    {
+      "id": "PATH-06",
+      "topic": "Record creation and commit lists",
+      "result": "MATCH",
+      "locations": ["APPROVAL_REQUEST lines 235-242, 261-266, 382-406", "STEP_RUNNER_v8 lines 435-436", "END_WRITER_v2 lines 69-98", "JUDGE lines 306-308, 343-346"],
+      "reason": "Each executed step has seven runner files plus outer_rc and judge JSON, nine records. The commit list includes these nine with forced addition for ignored .log files. Outer return is recorded immediately by the same shell command with noclobber; judge and end writer use exclusive creation. A STOP, mismatch, missing judge result or refusal prevents the next test stage. The end writer records missing later files as reasons instead of fabricating GREEN."
+    },
+    {
+      "id": "PATH-07",
+      "topic": "End writer delta",
+      "result": "SCOPED",
+      "locations": ["END_WRITER_v2 lines 50-61, 64-71, 82-98", "APPROVAL_REQUEST lines 393-400"],
+      "reason": "Compared to preserved v1, changes are the declared documentation/a2 name, adding judge copy identity, reading judge byte identity/verdict/failed list, and reporting that summary. It is not the gate judge and does not replace manual comparison or outer-runner checks."
+    },
+    {
+      "id": "PATH-08",
+      "topic": "Budget and execution boundary",
+      "result": "CONSISTENT_WITH_SCOPED_REQUEST",
+      "locations": ["APPROVAL_REQUEST lines 235-246, 280-285, 459-474, 563-574"],
+      "reason": "The prospective RED child allocation remains 120 seconds, GREEN 600 seconds, cleanup has the inherited common 15-second deadline, and record work is separately described. Whole a-through-end-record budget is two hours; later commits/push/document work is not silently included in its snapshot. GREEN background launch is explicitly required for tool foreground-limit compatibility. No numerical resource or timing limit was exercised by this review."
+    },
+    {
+      "id": "PATH-09",
+      "topic": "Approval requested only after prereview",
+      "result": "CONSISTENT",
+      "locations": ["APPROVAL_REQUEST header and lines 570-574", "PREREVIEW_SEND_v3 section 7"],
+      "reason": "The prior approval was consumed. This correction/request is inactive, and a new user approval for a2 is required after review. Neither scope adoption nor this static review authorizes the RED/GREEN run, E1-1 through E1-3, real fetch/run, C4-A/B or COMSOL."
+    }
+  ],
+  "seal_row_count": 15,
+  "seal_row_mismatches": 0,
+  "target_count": 14,
+  "remote_worktree_independently_checked": false,
+  "runtime_path_nonexistence_checked": false,
+  "prior_production_launcher_v6_bytes_unchanged": true,
+  "Q3_recommendation": "New paths and linked names accepted statically; execute start guard only under future a2 approval.",
+  "Q5_assigned_scope_recommendation": "No path, seal or procedure blocker found. Overall prereview decision still depends on root integration of Q1/Q2/Q4 and scope history.",
+  "E1_0B_executed": false,
+  "E1_0B_complete": false,
+  "new_execution_authorized": false
+}

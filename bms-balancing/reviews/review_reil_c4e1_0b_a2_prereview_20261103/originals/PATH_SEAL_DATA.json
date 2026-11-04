@@ -1,0 +1,242 @@
+{
+  "kind": "REVIEWER_STATIC_AST_AND_SEAL_DATA",
+  "pin": "396c83804708b5f2102e210919d480e658b5fa69",
+  "method": "Text parsing and literal AST/hash comparisons; received code was not imported or executed.",
+  "AST": [
+    {
+      "old": "REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v7_20261030.py.txt",
+      "new": "REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v8_20261103.py.txt",
+      "total_top_level_nodes": 79,
+      "same": 77,
+      "changed": [
+        {
+          "old_node": "<docstring>",
+          "new_node": "<docstring>",
+          "old_line": 1,
+          "new_line": 1
+        },
+        {
+          "old_node": "test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty",
+          "new_node": "test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty",
+          "old_line": 1048,
+          "new_line": 1053
+        }
+      ]
+    },
+    {
+      "old": "REIL_C4E1_RUNNER_CONTROLS_DRAFT_v4_20261030.py.txt",
+      "new": "REIL_C4E1_RUNNER_CONTROLS_DRAFT_v5_20261103.py.txt",
+      "total_top_level_nodes": 52,
+      "same": 48,
+      "changed": [
+        {
+          "old_node": "<docstring>",
+          "new_node": "<docstring>",
+          "old_line": 1,
+          "new_line": 1
+        },
+        {
+          "old_node": "V4",
+          "new_node": "V4",
+          "old_line": 34,
+          "new_line": 35
+        },
+        {
+          "old_node": "if UNDER_TEST != V2 and (not V4.fullmatch(UNDER_TEST)):",
+          "new_node": "if UNDER_TEST != V2 and (not V4.fullmatch(UNDER_TEST)):",
+          "old_line": 38,
+          "new_line": 39
+        },
+        {
+          "old_node": "_rtree",
+          "new_node": "_rtree",
+          "old_line": 181,
+          "new_line": 182
+        }
+      ]
+    },
+    {
+      "old": "REIL_C4E1_STEP_RUNNER_DRAFT_v7_20261030.py.txt",
+      "new": "REIL_C4E1_STEP_RUNNER_DRAFT_v8_20261103.py.txt",
+      "total_top_level_nodes": 61,
+      "same": 56,
+      "changed": [
+        {
+          "old_node": "<docstring>",
+          "new_node": "<docstring>",
+          "old_line": 1,
+          "new_line": 1
+        },
+        {
+          "old_node": "WORK",
+          "new_node": "WORK",
+          "old_line": 56,
+          "new_line": 57
+        },
+        {
+          "old_node": "EVIDENCE_NAME",
+          "new_node": "EVIDENCE_NAME",
+          "old_line": 70,
+          "new_line": 71
+        },
+        {
+          "old_node": "_FIXED",
+          "new_node": "_FIXED",
+          "old_line": 80,
+          "new_line": 81
+        },
+        {
+          "old_node": "run_step",
+          "new_node": "run_step",
+          "old_line": 426,
+          "new_line": 427
+        }
+      ]
+    }
+  ],
+  "seal_rows": [
+    {
+      "seal_key": "bms-balancing/tests/test_reil_c4e1_launch.py",
+      "actual_file": "outputs\\reil_c4e1_0b_a2_prereview_20261103\\source\\bms-balancing\\docs\\REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v8_20261103.py.txt",
+      "identity": {
+        "bytes": 74542,
+        "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001"
+      },
+      "match": true
+    },
+    {
+      "seal_key": "bms-balancing/tests/test_reil_c4e1_runner.py",
+      "actual_file": "outputs\\reil_c4e1_0b_a2_prereview_20261103\\source\\bms-balancing\\docs\\REIL_C4E1_RUNNER_CONTROLS_DRAFT_v5_20261103.py.txt",
+      "identity": {
+        "bytes": 37003,
+        "sha256": "b34fb9a98eb6e852d4c30038ee988adee57d03c2b138e767ca742ea327a45e13"
+      },
+      "match": true
+    },
+    {
+      "seal_key": "bms-balancing/tests/test_reil_c4e.py",
+      "actual_file": "outputs\\reil_c4e1_0b_a2_prereview_20261103\\source\\bms-balancing\\tests\\test_reil_c4e.py",
+      "identity": {
+        "bytes": 57482,
+        "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e"
+      },
+      "match": true
+    },
+    {
+      "seal_key": "bms-balancing/tests/test_reil_c4e_fix.py",
+      "actual_file": "outputs\\reil_c4e1_0b_a2_prereview_20261103\\source\\bms-balancing\\tests\\test_reil_c4e_fix.py",
+      "identity": {
+        "bytes": 19506,
+        "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2"
+      },
+      "match": true
+    },
+    {
+      "seal_key": "bms-balancing/scripts/reil_c4e_run.py",
+      "actual_file": "outputs\\reil_c4e1_0b_result_review_20261103\\basis\\unchanged_at_pin\\bms-balancing\\scripts\\reil_c4e_run.py",
+      "identity": {
+        "bytes": 53853,
+        "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+      },
+      "match": true
+    },
+    {
+      "seal_key": "bms-balancing/scripts/reil_c4_e3a.py",
+      "actual_file": "outputs\\reil_c4e1_0b_result_review_20261103\\basis\\unchanged_at_pin\\bms-balancing\\scripts\\reil_c4_e3a.py",
+      "identity": {
+        "bytes": 32311,
+        "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+      },
+      "match": true
+    },
+    {
+      "seal_key": "bms-balancing/scripts/reil_c4_monitor.py",
+      "actual_file": "outputs\\reil_c4e1_0b_result_review_20261103\\basis\\unchanged_at_pin\\bms-balancing\\scripts\\reil_c4_monitor.py",
+      "identity": {
+        "bytes": 21546,
+        "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+      },
+      "match": true
+    },
+    {
+      "seal_key": "bms-balancing/scripts/reil_c5_pilot.py",
+      "actual_file": "outputs\\reil_c4e1_0b_result_review_20261103\\basis\\unchanged_at_pin\\bms-balancing\\scripts\\reil_c5_pilot.py",
+      "identity": {
+        "bytes": 47164,
+        "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+      },
+      "match": true
+    },
+    {
+      "seal_key": "bms-balancing/scripts/reil_p0.py",
+      "actual_file": "outputs\\reil_c4e1_0b_result_review_20261103\\basis\\unchanged_at_pin\\bms-balancing\\scripts\\reil_p0.py",
+      "identity": {
+        "bytes": 23941,
+        "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+      },
+      "match": true
+    },
+    {
+      "seal_key": "bms-balancing/scripts/reil_c6_profile.py",
+      "actual_file": "outputs\\reil_c4e1_0b_result_review_20261103\\basis\\unchanged_at_pin\\bms-balancing\\scripts\\reil_c6_profile.py",
+      "identity": {
+        "bytes": 15915,
+        "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"
+      },
+      "match": true
+    },
+    {
+      "seal_key": "degradation-degeneracy/tools/env_profile.py",
+      "actual_file": "outputs\\reil_c4e1_0b_result_review_20261103\\basis\\unchanged_at_pin\\degradation-degeneracy\\tools\\env_profile.py",
+      "identity": {
+        "bytes": 22333,
+        "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"
+      },
+      "match": true
+    },
+    {
+      "seal_key": "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "actual_file": "outputs\\reil_c4e1_0b_result_review_20261103\\basis\\unchanged_at_pin\\bms-balancing\\evidence\\reil_c4e0_fix_20261014\\04_sources\\SOURCES.json",
+      "identity": {
+        "bytes": 1100,
+        "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52"
+      },
+      "match": true
+    },
+    {
+      "seal_key": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "actual_file": "outputs\\reil_c4e1_0b_result_review_20261103\\basis\\unchanged_at_pin\\bms-balancing\\docs\\REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "identity": {
+        "bytes": 12849,
+        "sha256": "aae2ec14c4d652ef9a9e5b1c45bf52896d2234dce16eac77942911e596669fed"
+      },
+      "match": true
+    },
+    {
+      "seal_key": "RED_LAUNCH",
+      "actual_file": "outputs\\reil_c4e1_0b_a2_prereview_20261103\\source\\bms-balancing\\scripts\\reil_c4e1_launch.py",
+      "identity": {
+        "bytes": 51957,
+        "sha256": "2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396"
+      },
+      "match": true
+    },
+    {
+      "seal_key": "IMPL",
+      "actual_file": "outputs\\reil_c4e1_0b_a2_prereview_20261103\\source\\bms-balancing\\docs\\REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt",
+      "identity": {
+        "bytes": 62639,
+        "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+      },
+      "match": true
+    }
+  ],
+  "TARGETS_count": 14,
+  "TARGETS_exact_set": true,
+  "production_v6_unchanged": true,
+  "reviewer_tool_event": {
+    "chunk": "ba1832",
+    "exit_code": 1,
+    "reason": "Initial reviewer-owned extractor treated TARGETS containing Name(LAUNCH) as an ast.literal_eval literal. Corrected extractor follows only the separately parsed constant LAUNCH string. No received function was executed; no artifact had been written by the failed extraction."
+  }
+}

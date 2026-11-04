@@ -242,5 +242,5 @@ reviews/review_reil_c4e_e1_0b_v2_prereview_20261103/** -text
 evidence/reil_c4e1_0b_20261103/** -text
 # 2026-11-03: REIL C4-E · E1-0b 결과 검토 회신 (STOP_HANDLING_ACCEPTED_E1_0B_INCOMPLETE_TEST_CORRECTION_REQUIRED · 필수 정정 E1_0B_RESULT_N1 · 고정 HEAD a38c878f · 실행 승인 아님 · source/ · basis/ · input/ = 검토자가 본 저장소 · 발송문 사본 · *.py = 검토자 도구 사본, 실행하지 않음) — bytes 그대로
 reviews/review_reil_c4e1_0b_result_20261103/** -text
-# 2026-11-04: REIL C4-E · E1-0b a2 사전 검토 회신 (E1_0B_A2_PREREVIEW_CLARIFICATIONS_REQUIRED_BEFORE_APPROVAL · 필수 정정 둘 · 고정 HEAD 396c8380 · 실행 승인 아님 · source/ · basis/ · input/ = 검토자가 본 저장소 · 발송문 사본 · *.py = 검토자 도구 사본, 실행하지 않음) — bytes 그대로
+# 2026-11-04: REIL C4-E · E1-0b a2 사전 검토 회신 (E1_0B_A2_PREREVIEW_CLARIFICATIONS_REQUIRED_BEFORE_APPROVAL · 필수 정정 둘 · 고정 HEAD 396c8380 · 실행 승인 아님 · source/ · basis/ · input/ = 검토자가 본 저장소 · 이전 고정 · 발송문 사본 · 검토자 도구 없음 · *.py = 저장소 파일 사본, 실행하지 않음) — bytes 그대로
 reviews/review_reil_c4e1_0b_a2_prereview_20261103/** -text

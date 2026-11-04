@@ -1,0 +1,98 @@
+{
+  "kind": "REIL_E1_0B_A2_L33_AND_DEFAULTS_STATIC_PREREVIEW",
+  "source_commit": "396c83804708b5f2102e210919d480e658b5fa69",
+  "scope": ["Q1 l33 fixture correction and expected v5/v6 distinction", "Q2 module-constant defaults, local aliases, kwargs, helper paths, runner proc paths and relevant runtime defaults"],
+  "review_method": "Read source text and use reviewer-owned AST/hash/diff data analysis only. Received modules, tests, fixtures, launchers, runners and judge were not imported or executed.",
+  "required_findings": [],
+  "decision": "NO_ADDITIONAL_REQUIRED_DOCUMENT_OR_FIXTURE_CORRECTION_FOUND_IN_Q1_Q2_STATIC_SCOPE",
+  "q1": {
+    "prior_finding": "E1_0B_RESULT_N1",
+    "status": "STATIC_CORRECTION_ACCEPTABLE_RUNTIME_RED_GREEN_NOT_OBSERVED",
+    "control_file": "docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v8_20261103.py.txt",
+    "control_bytes": 74542,
+    "control_sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001",
+    "minimal_change": "Against the previously reviewed test_reil_c4e1_launch.py, changes are the module docstring, l33 docstring and the l33 postcheck call's extra/data/data_files fixture bindings. The l33 assertion and expected failure message are retained.",
+    "correction": {
+      "lines": "1067-1068",
+      "finding": "The direct L.postcheck call now passes extra=t.extra, data=t.data and data_files=t.data_files, removing the previous production extra-file identities from this fixture call."
+    },
+    "fixture_trace": [
+      {"lines": "158-188", "finding": "_tree creates the temporary repo/bms/module and extra files, computes their identities, and provides fixture data/data_files and seal identities."},
+      {"lines": "191-200", "finding": "_pre binds repo/bms/data/sources/extra and seal identities to the temporary fixture and returns the source-entry list used by postcheck."},
+      {"lines": "1059-1068", "finding": "l33 passes the fixture source entries, fake successful identity records, empty group, deadline_hit=false and no errors to the baseline postcheck."},
+      {"lines": "1070-1072", "finding": "Baseline problems must be empty before the deadline_hit=true mutation is assessed; the discriminating assertion is at line 1072."},
+      {"lines": "1073-1075", "finding": "Subsequent group-status and error checks remain present and are separate from the deadline_hit assertion."}
+    ],
+    "expected_v5": {
+      "file": "scripts/reil_c4e1_launch.py",
+      "lines": "536-568",
+      "finding": "postcheck checks fixture files, records, group status, timed_out and errors, but does not inspect deadline_hit. With the corrected baseline, deadline_hit=true alone is therefore still accepted by v5 and reaches the expected assertion.",
+      "expected_assertion_line": 1072,
+      "expected_message": "('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])",
+      "observed_execution": false
+    },
+    "expected_v6": {
+      "file": "docs/REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt",
+      "lines": "601-635",
+      "guard_lines": "627-628",
+      "finding": "The added deadline_hit is not False guard rejects the mutation while deadline_hit=false leaves the corrected baseline unaffected. Group/error rejection is retained.",
+      "observed_execution": false
+    },
+    "precheck_boundary": {
+      "control_lines": "195-200,1059-1068",
+      "v5_lines": "484-488,506-508,539",
+      "v6_lines": "549-553,570-573,604",
+      "finding": "The l33 identity precheck does not provide a fixture helper hash and is not a successful identity precheck. l33 intentionally consumes pre.sources.entries rather than pre.ok. Helper/precheck failure must not be described as successful identity validation. It does not contaminate this postcheck baseline because postcheck does not consume those precheck problems or pre.ok."
+    },
+    "production_unchanged": [
+      {"file": "scripts/reil_c4e1_launch.py", "bytes": 51957, "sha256": "2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396", "comparison": "Byte-equal to prior result review source copy."},
+      {"file": "docs/REIL_C4E1_LAUNCHER_DRAFT_v6_20261030.py.txt", "bytes": 62639, "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf", "comparison": "Byte-equal to prior result review unchanged_at_pin basis copy."}
+    ]
+  },
+  "q2": {
+    "status": "NO_ADDITIONAL_UNINTENDED_PRODUCTION_FILE_OR_IDENTITY_DEFAULT_FOUND",
+    "appendix_inventory": {
+      "approval_request": "docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "lines": "576-639",
+      "launcher_v6": {"determinate_rows": 17, "kwargs_manual_rows": 1, "total_rows": 18},
+      "launcher_v5": {"determinate_rows": 13, "kwargs_manual_rows": 1, "total_rows": 14},
+      "runner_v8": {"determinate_rows": 12, "total_rows": 12},
+      "finding": "Independent AST analysis agrees with the stated row counts when the unresolved _launch(**opts) row is included. The module-constant scan is deliberately restricted to ast.Name defaults bound by top-level assignments; it is not a proof about all system operations or arbitrary dynamic dispatch."
+    },
+    "launcher_manual_paths": [
+      {"file": "docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v8_20261103.py.txt", "lines": "203-208", "finding": "_launch builds opts with fixture repo/py/venv/seal/work/data/data_files/sources and identities, extra/timeouts/env; opts.update(kw) is checked at actual callers. No _launch(identity) call was found. The remaining helper hash default is not consumed by these fetch/run calls."},
+      {"file": "docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v8_20261103.py.txt", "lines": "191-200,1059", "finding": "_pre leaves helper_sha256 unchanged, but only l33 uses the identity step and intentionally does not assert pre.ok. The venv default in build_argv constructs an argv string; the fake fixture run program does not load that venv."},
+      {"file": "docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v8_20261103.py.txt", "lines": "362-372,839,902-913,978", "finding": "MODULE_RELPATHS, git timeout, fetch_env config and fetch_source_postcheck config/local_keys are retained policy constants. The data-reading repo, URL, commit and environment arguments are explicitly controlled where applicable. Local aliases, including fetch_env, were followed."},
+      {"file": "docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v8_20261103.py.txt", "lines": "1011,1046", "finding": "cleanup_group local alias calls bind the clock, sleep, process-reader and termination/reap functions to the test fixtures."},
+      {"file": "docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v8_20261103.py.txt", "lines": "495-512", "finding": "build_argv defaults here are deliberately checked as fixed argv strings. L.main calls fail approval/evidence validation before launch."},
+      {"file": "docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v8_20261103.py.txt", "lines": "386-419,573-624,823-826", "finding": "Actual temporary-child/process-group lifecycle behavior in _launch tests is intentional existing scope, including the l11/l19 cases. Other group_status/proc_members calls pass fake proc/read roots. Retained PROC and real clock/sleep defaults must not be reclassified as all-fake or all-system-zero evidence."}
+    ],
+    "runner_manual_paths": [
+      {"file": "docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v5_20261103.py.txt", "lines": "57-81,206-212", "finding": "The DRIVER string and _drive explicitly convey fixture repo/bms/e/work/expect/targets/environ. Their subprocess/time defaults belong to intentional child-lifecycle tests r6-r8. The driver string was read manually because it is not a regular AST call in the containing source."},
+      {"file": "docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v5_20261103.py.txt", "lines": "219-290,464-523", "finding": "r1/r2/r3/r9/r10 monkeypatch R.proc_table; calls to settle/cleanup can retain proc=PROC syntactically, but the patched function does not read that path. Clock and process-action injections were traced through direct and aliased cleanup calls."},
+      {"file": "docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v5_20261103.py.txt", "lines": "219-231", "finding": "r1 leaves the real monotonic clock and getpid default in place, but the fake proc_table supplies an empty table. The settle path cannot reach actual killer or waitpid calls for that empty table. This is a static path argument, not runtime observation."},
+      {"file": "docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_v5_20261103.py.txt", "lines": "526-576", "finding": "r11 first calls observe with a temporary proc tree, then monkeypatches proc_table with a wrapper that explicitly passes that same temporary tree to the captured original. settle's default PROC is therefore ignored by the wrapper. The git call uses a temporary cwd."},
+      {"file": "docs/REIL_C4E1_STEP_RUNNER_DRAFT_v8_20261103.py.txt", "lines": "228-260,307-427", "finding": "The proc_table→observe→settle/cleanup data paths support the foregoing fixture analysis. Missing PROC is not itself evidence of an actual /proc read when proc_table is replaced."}
+    ],
+    "outside_automatic_inventory": {
+      "defaults": ["time.monotonic", "time.sleep", "subprocess.Popen", "os.killpg", "os.kill", "os.waitpid"],
+      "finding": "These Attribute-valued defaults are outside the appendix's Name-default count. They were checked separately for actual control calls. Existing deliberate child lifecycle operations and explicit fake injections were found; no new unintended production file/hash path was identified."
+    }
+  },
+  "reviewer_data_events": [
+    {"event": "A reviewer-owned text range reader attempted a line beyond the source length and raised IndexError. The range was bounded and the text read repeated successfully.", "scope": "Reviewer text extraction only; no received code execution, target failure, source mutation or target retry."}
+  ],
+  "retained_boundaries": {
+    "received_code_execution": 0,
+    "functional_tests": 0,
+    "fixtures_executed": 0,
+    "COMSOL_execution": 0,
+    "repository_changes": 0,
+    "external_transmission": 0,
+    "runtime_pass_claim": false,
+    "execution_authorized_by_this_review": false,
+    "historical_results_rewritten": false,
+    "native_ready_changed": false,
+    "note": "This Q1/Q2 finding does not replace the other prereview checks or new user execution approval. Prior a1 RED results and unrun GREEN remain historical records. Future a2 RED/GREEN results have not been observed."
+  }
+}

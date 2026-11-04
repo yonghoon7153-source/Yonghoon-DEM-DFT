@@ -1,0 +1,30 @@
+{
+  "kind": "REVIEWER_PRIOR_STATIC_REVIEW_CORRECTION",
+  "date": "2026-11-03",
+  "finding": "E1_0B_RESULT_N1",
+  "reviewer_responsibility": "The reviewer missed l33's omitted fixture extra argument. Prior l33 baseline/expected-path static acceptance was incorrect.",
+  "prior_review": "reil_c4e_e1_0b_v2_prereview_20261103",
+  "prior_review_commit": "421d746e3676f7444fbf18355aecbf8d2da8bcf3",
+  "prior_archive_sha256": "c3d3399b0268abdfb1d7f4d4497fc36d6207b658f4d813f1d4c61f860ebb8537",
+  "corrections": [
+    {
+      "file": "REVIEW_KO.txt",
+      "line": 34,
+      "scope": "l33 baseline and no regression statement",
+      "before": "l33은 정상 기준 결과를 확인한 뒤 deadline_hit을 바꾸며 기대 메시지의 빈 문제 목록이 정확 일치 조건이다.",
+      "after": "That baseline is not reachable as a successful assertion with the sealed fixture: L.postcheck inherits production EXTRA_EXECUTED because extra=t.extra is omitted; two fake dependency identities differ."
+    },
+    {
+      "scope": "Q2 expected-path no-static-contradiction and approval-readiness conclusion as applied to l33",
+      "after": "Superseded for l33. Any new attempt requires test correction, linked seals/paths, prereview and a new scoped user authorization."
+    }
+  ],
+  "retained": [
+    "Original review bytes and prior code/evidence remain unchanged",
+    "E1_0B_N1 static closure for l23/l29/l30 remains distinct",
+    "E1_0 prior result and E1_0_N1 historical deviation unchanged"
+  ],
+  "observed_result": "RED expectation mismatch, stop correctly applied; GREEN not observed",
+  "target_execution_by_reviewer": 0,
+  "source_evidence": "L33_CAUSE_REVIEW.json"
+}
