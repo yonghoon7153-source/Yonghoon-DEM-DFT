@@ -1,0 +1,12 @@
+{
+  "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "branch": "claude/14-gate-code-review-9qkx05",
+  "sha": "2621b4b21f138005c4d74b3b9f4b146c2ace7928",
+  "message": "REIL §103 — E1-1–3 범위안 v2 재검토 회신 접수 (E113_N1 종결 · P1 방향 수용 · P2_01 · F1–F3) · 범위안 v3 (사용자 선택 요청 · 실행 0)\n\n- §103: DOCUMENT_ONLY_DIRECTION_ACCEPTABLE_P2_PROBE_REQUIRES_CORRECTION (고정 c54217a8) · 보존 9a2e0302 · eb972f97\n- 범위안 v3 (docs/REIL_C4E_E1_1_3_SCOPE_v3_20261104.md · v1 · v2 그대로) 가 바꾼 셋:\n  - P2_01: 탐침에서 PID 기록 · sleep 성공이 완료 게시의 선행 조건 · 실패 단계 / 반환은 fail.txt · 반환 경계 t_ret 뒤의 생존 관측 (obs1) · done 값 ≥ t0+150 · err/out 0 B\n  - F1: v6 meta 에 없는 \"cleanup\" 대신 child.group.status · child.deadline_hit · child.errors · child.timed_out / exited_after_kill · postcheck · stage\n  - F2: \"셸 도구 상한에 끊길 일이 없다\" 단정 삭제 → 호출 분리 의도 · 장시간 관리 영향 미확인\n  - F3: 종료 미확인 작성 주체의 외곽 파일은 최종 봉인으로 다루지 않음 (원본 보존 · 고정 관측 사본 · INCOMPLETE)\n  - 탐침 권장을 P1 으로 (회신 수용 방향 · 정정 명세를 요청서 사전 검토에 같이) · P1 의 탐침은 <E> 를 만들기 전\n- 선택 · 탐침 · 실행 승인 아님\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_0157zrP6GFu6cJF5x8CwZaEm",
+  "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/2621b4b21f138005c4d74b3b9f4b146c2ace7928",
+  "changed_paths": [
+    "bms-balancing/docs/REIL_C4E_E1_1_3_SCOPE_v3_20261104.md",
+    "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md"
+  ],
+  "scope": "Read-only GitHub connector observation; not remote runtime verification."
+}

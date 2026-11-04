@@ -1,0 +1,133 @@
+{
+  "kind": "REVIEW_PACKAGE_MANIFEST",
+  "payload_count": 25,
+  "manifest_self_excluded": true,
+  "files": [
+    {
+      "path": "basis/V2_CODEX_REPLY_KO.txt",
+      "bytes": 2831,
+      "sha256": "2341894c38db9e9d2d20b5900336f14ea6016985012da352cfbc21b1fc1284be"
+    },
+    {
+      "path": "basis/V2_DELIVERY_RECEIPT.json",
+      "bytes": 1477,
+      "sha256": "c6ab48fdbb60c0f782599714c7ed95293bfdf3aec3047b97c2cd2923a5fabe5d"
+    },
+    {
+      "path": "basis/V2_PACKAGE_TOOL_RETURN.json",
+      "bytes": 1656,
+      "sha256": "403f789a04758890bb989095232824ec7cbdf763ac9a70d7032cd2253b9e74ba"
+    },
+    {
+      "path": "basis/V2_REVIEW_DECISION.json",
+      "bytes": 2896,
+      "sha256": "3105ecd436d3010a5d23434bdc418dfbd111e10297b0b82da900104e9a0dd7dc"
+    },
+    {
+      "path": "basis/V2_SOURCE_IDENTITIES.json",
+      "bytes": 1690,
+      "sha256": "a9cb27eaf34c2ba48120b34576b3fe0ef22a84bee59c63f26b619ce3fb11a62e"
+    },
+    {
+      "path": "CODEX_REPLY_KO.txt",
+      "bytes": 1963,
+      "sha256": "2f1b751025359e19db942023509ba6525c73fe9728e8ac326e930dab373ee511"
+    },
+    {
+      "path": "COMPARE_FROM_V2.json",
+      "bytes": 8044,
+      "sha256": "9d25c605f5748c6b9764b55bc6a175e55276aa6c11cf8fca6f2e1e736d54a718"
+    },
+    {
+      "path": "HEAD_AT_CLOSE.json",
+      "bytes": 354,
+      "sha256": "0d6a63c6ce3bf0c018b726edbd7747cec5a8fb3140d0e4a4158131d59c000c68"
+    },
+    {
+      "path": "HEAD_AT_INTAKE.json",
+      "bytes": 1908,
+      "sha256": "d4a3ee3ddfb21d2e9afaf6b81072f3739bd053e62583d5eef59409292b73f3b7"
+    },
+    {
+      "path": "input/REIL_C4E_E1_1_3_SCOPE_v3_20261104.md",
+      "bytes": 23619,
+      "sha256": "88ecc9ce457304c2bd0c0edb6fa470d515bc55e743810f409f5a944d41fc5f78"
+    },
+    {
+      "path": "input/SCOPE_V3_NUMBERED.txt",
+      "bytes": 24281,
+      "sha256": "7c419da785aecfd445734c1bc5cfda59867bc339b5d00dd5c2a548426b1057f1"
+    },
+    {
+      "path": "package_review_data.py",
+      "bytes": 5258,
+      "sha256": "687d30bc25a1fdfcee5a293f9bf23d1e15021e121488191080091dc824dea3f7"
+    },
+    {
+      "path": "prepare_review_data.py",
+      "bytes": 3139,
+      "sha256": "efb72bee89d81775c6be51e8416bf275aa6363063bdad0fd6cb22ab0382d221b"
+    },
+    {
+      "path": "REVIEW_DECISION.json",
+      "bytes": 2059,
+      "sha256": "2cba045acf7f945e396f06fd074244e7648eb3261ea158601416b7406b5c5cf0"
+    },
+    {
+      "path": "REVIEW_KO.txt",
+      "bytes": 7342,
+      "sha256": "ffd04f136566d383b711c1b240bfb49dead543857b2058db4d2283eed0ea64c6"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "bytes": 96529,
+      "sha256": "ae413f965e890103db175ef261b05d6c49b26f9a53048abdab8c9b8d3b234840"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E_E1_1_3_SCOPE_20261104.md",
+      "bytes": 13895,
+      "sha256": "ccc343de78ac0a92e2cbc694962bb4f537c286dcfb6031947193d7f6e7d365d6"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E_E1_1_3_SCOPE_v2_20261104.md",
+      "bytes": 20255,
+      "sha256": "f101f0a28f79a068a7d6cf1a1fcde944c12fc3103cb0b20fe4c69b13c8cba415"
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E_E1_1_3_SCOPE_v3_20261104.md",
+      "bytes": 23619,
+      "sha256": "88ecc9ce457304c2bd0c0edb6fa470d515bc55e743810f409f5a944d41fc5f78"
+    },
+    {
+      "path": "source/bms-balancing/scripts/reil_c4e1_launch.py",
+      "bytes": 62639,
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+    },
+    {
+      "path": "source/bms-balancing/scripts/reil_c4e_run.py",
+      "bytes": 53853,
+      "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+    },
+    {
+      "path": "SOURCE_CAPTURE.json",
+      "bytes": 32876,
+      "sha256": "334b4511066fbfc41a62e25ec7b851ec4a09479835be066ab9cf475a05620822"
+    },
+    {
+      "path": "SOURCE_IDENTITIES.json",
+      "bytes": 2076,
+      "sha256": "bd81844d9b589d23766fe6aac1c454f539e46d3cc0b403fb3979100b84c71dc1"
+    },
+    {
+      "path": "SOURCE_PRESERVATION_CHECK.json",
+      "bytes": 1799,
+      "sha256": "7ac60d06a4731fc8d0ef8a595edac51ae7b4b1cfa6fa549bc236d313bd8d5f6b"
+    },
+    {
+      "path": "V2_TO_V3_TEXT_DIFF.txt",
+      "bytes": 26852,
+      "sha256": "ae132ba7ab365b2b81bd8771e18779619348ae7b24803926572b79e346723f6a"
+    }
+  ],
+  "scope": "Static review and review-data tools; received source copies are evidence, not execution authorization."
+}

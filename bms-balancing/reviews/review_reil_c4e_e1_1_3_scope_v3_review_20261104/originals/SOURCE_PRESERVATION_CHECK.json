@@ -1,0 +1,46 @@
+{
+  "kind": "REVIEW_SOURCE_IDENTITY_RECHECK",
+  "utc": "2026-11-04T07:53:45.563686+00:00",
+  "original_attachment": {
+    "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_1_3_SCOPE_v3_20261104.md",
+    "bytes": 23619,
+    "sha256": "88ecc9ce457304c2bd0c0edb6fa470d515bc55e743810f409f5a944d41fc5f78"
+  },
+  "original_attachment_matches_intake": true,
+  "fixed_source_copies": [
+    {
+      "path": "source/bms-balancing/scripts/reil_c4e1_launch.py",
+      "bytes": 62639,
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf",
+      "matches_prior_review_copy": true
+    },
+    {
+      "path": "source/bms-balancing/scripts/reil_c4e_run.py",
+      "bytes": 53853,
+      "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9",
+      "matches_prior_review_copy": true
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "bytes": 96529,
+      "sha256": "ae413f965e890103db175ef261b05d6c49b26f9a53048abdab8c9b8d3b234840",
+      "matches_prior_review_copy": true
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E_E1_1_3_SCOPE_20261104.md",
+      "bytes": 13895,
+      "sha256": "ccc343de78ac0a92e2cbc694962bb4f537c286dcfb6031947193d7f6e7d365d6",
+      "matches_prior_review_copy": true
+    },
+    {
+      "path": "source/bms-balancing/docs/REIL_C4E_E1_1_3_SCOPE_v2_20261104.md",
+      "bytes": 20255,
+      "sha256": "f101f0a28f79a068a7d6cf1a1fcde944c12fc3103cb0b20fe4c69b13c8cba415",
+      "matches_prior_review_copy": true
+    }
+  ],
+  "original_attachment_count": 1,
+  "fixed_source_copy_count": 5,
+  "scope": "One local original attachment and five previously reviewed raw source copies; not a remote runtime or whole-filesystem audit.",
+  "received_program_execution": 0
+}

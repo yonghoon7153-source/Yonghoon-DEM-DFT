@@ -1,0 +1,45 @@
+{
+  "pin": "2621b4b21f138005c4d74b3b9f4b146c2ace7928",
+  "attachment": {
+    "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_1_3_SCOPE_v3_20261104.md",
+    "bytes": 23619,
+    "sha256": "88ecc9ce457304c2bd0c0edb6fa470d515bc55e743810f409f5a944d41fc5f78"
+  },
+  "repository_blob_sha1": "16a84574d248005c6d5eb705b1a9e9835d482f12",
+  "attachment_equals_pinned_repository_bytes": true,
+  "reused_sources": [
+    {
+      "path": "bms-balancing/scripts/reil_c4e1_launch.py",
+      "bytes": 62639,
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf",
+      "provenance": "Prior reviewed raw copy; same path unchanged in complete pinned comparison from v2."
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4e_run.py",
+      "bytes": 53853,
+      "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9",
+      "provenance": "Prior reviewed raw copy; same path unchanged in complete pinned comparison from v2."
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "bytes": 96529,
+      "sha256": "ae413f965e890103db175ef261b05d6c49b26f9a53048abdab8c9b8d3b234840",
+      "provenance": "Prior reviewed raw copy; same path unchanged in complete pinned comparison from v2."
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_1_3_SCOPE_20261104.md",
+      "bytes": 13895,
+      "sha256": "ccc343de78ac0a92e2cbc694962bb4f537c286dcfb6031947193d7f6e7d365d6",
+      "provenance": "Prior reviewed raw copy; same path unchanged in complete pinned comparison from v2."
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_1_3_SCOPE_v2_20261104.md",
+      "bytes": 20255,
+      "sha256": "f101f0a28f79a068a7d6cf1a1fcde944c12fc3103cb0b20fe4c69b13c8cba415",
+      "provenance": "Prior reviewed raw copy; same path unchanged in complete pinned comparison from v2."
+    }
+  ],
+  "received_program_execution": 0,
+  "probe_execution": 0,
+  "scope": "Static local attachment and saved source identity / complete pinned commit difference only. No remote runtime observation."
+}

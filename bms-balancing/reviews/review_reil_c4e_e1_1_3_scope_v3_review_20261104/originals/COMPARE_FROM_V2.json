@@ -1,0 +1,238 @@
+{
+  "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "base": "c54217a8e5f9ab53713f0c5ce26de0937935f040",
+  "head": "2621b4b21f138005c4d74b3b9f4b146c2ace7928",
+  "status": "ahead",
+  "ahead_by": 3,
+  "behind_by": 0,
+  "total_commits": 3,
+  "too_large": null,
+  "base_commit": {
+    "sha": "c54217a8e5f9ab53713f0c5ce26de0937935f040",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/c54217a8e5f9ab53713f0c5ce26de0937935f040",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/c54217a8e5f9ab53713f0c5ce26de0937935f040"
+  },
+  "merge_base_commit": {
+    "sha": "c54217a8e5f9ab53713f0c5ce26de0937935f040",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/c54217a8e5f9ab53713f0c5ce26de0937935f040",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/c54217a8e5f9ab53713f0c5ce26de0937935f040"
+  },
+  "files": [
+    {
+      "filename": "bms-balancing/.gitattributes",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/docs/REIL_C4E_E1_1_3_SCOPE_v3_20261104.md",
+      "status": "added",
+      "additions": 154,
+      "deletions": 0,
+      "changes": 154,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "status": "modified",
+      "additions": 28,
+      "deletions": 0,
+      "changes": 28,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/REIL_C4E_E1_1_3_SCOPE_V2_REVIEW_20261104.zip",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/CODEX_REPLY_KO.txt",
+      "status": "added",
+      "additions": 20,
+      "deletions": 0,
+      "changes": 20,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/COMPARE_FROM_V1.json",
+      "status": "added",
+      "additions": 270,
+      "deletions": 0,
+      "changes": 270,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/HEAD_AT_CLOSE.json",
+      "status": "added",
+      "additions": 10,
+      "deletions": 0,
+      "changes": 10,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/HEAD_AT_INTAKE.json",
+      "status": "added",
+      "additions": 44,
+      "deletions": 0,
+      "changes": 44,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/PACKAGE_MANIFEST.json",
+      "status": "added",
+      "additions": 118,
+      "deletions": 0,
+      "changes": 118,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/REVIEW_DECISION.json",
+      "status": "added",
+      "additions": 92,
+      "deletions": 0,
+      "changes": 92,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/REVIEW_KO.txt",
+      "status": "added",
+      "additions": 89,
+      "deletions": 0,
+      "changes": 89,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/SOURCE_CAPTURE.json",
+      "status": "added",
+      "additions": 7,
+      "deletions": 0,
+      "changes": 7,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/SOURCE_IDENTITIES.json",
+      "status": "added",
+      "additions": 39,
+      "deletions": 0,
+      "changes": 39,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/SOURCE_PRESERVATION_CHECK.json",
+      "status": "added",
+      "additions": 40,
+      "deletions": 0,
+      "changes": 40,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/V1_TO_V2_TEXT_DIFF.txt",
+      "status": "added",
+      "additions": 205,
+      "deletions": 0,
+      "changes": 205,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/basis/V1_CODEX_REPLY_KO.txt",
+      "status": "added",
+      "additions": 24,
+      "deletions": 0,
+      "changes": 24,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/basis/V1_REVIEW_DECISION.json",
+      "status": "added",
+      "additions": 90,
+      "deletions": 0,
+      "changes": 90,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/basis/V1_SOURCE_IDENTITIES.json",
+      "status": "added",
+      "additions": 51,
+      "deletions": 0,
+      "changes": 51,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/input/REIL_C4E_E1_1_3_SCOPE_v2_20261104.md",
+      "status": "added",
+      "additions": 137,
+      "deletions": 0,
+      "changes": 137,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/input/SCOPE_V2_NUMBERED.txt",
+      "status": "added",
+      "additions": 137,
+      "deletions": 0,
+      "changes": 137,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/package_review_data.py",
+      "status": "added",
+      "additions": 134,
+      "deletions": 0,
+      "changes": 134,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/prepare_review_data.py",
+      "status": "added",
+      "additions": 37,
+      "deletions": 0,
+      "changes": 37,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+      "status": "added",
+      "additions": 703,
+      "deletions": 0,
+      "changes": 703,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/source/bms-balancing/docs/REIL_C4E_E1_1_3_SCOPE_20261104.md",
+      "status": "added",
+      "additions": 96,
+      "deletions": 0,
+      "changes": 96,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/source/bms-balancing/docs/REIL_C4E_E1_1_3_SCOPE_v2_20261104.md",
+      "status": "added",
+      "additions": 137,
+      "deletions": 0,
+      "changes": 137,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/source/bms-balancing/scripts/reil_c4e1_launch.py",
+      "status": "added",
+      "additions": 933,
+      "deletions": 0,
+      "changes": 933,
+      "previous_filename": null
+    },
+    {
+      "filename": "bms-balancing/reviews/review_reil_c4e_e1_1_3_scope_v2_review_20261104/originals/source/bms-balancing/scripts/reil_c4e_run.py",
+      "status": "added",
+      "additions": 842,
+      "deletions": 0,
+      "changes": 842,
+      "previous_filename": null
+    }
+  ]
+}
