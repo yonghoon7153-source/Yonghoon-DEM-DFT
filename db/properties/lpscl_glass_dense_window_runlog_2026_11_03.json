@@ -148,5 +148,15 @@
    "시험": "드라이버 212/212 · 러너 83/83 (Linux) — 드라이버 fixture 14 (보류 13 · None 대조 1) + 보류 이유 문구 · 러너 = Codex 재현 그대로 (thermo 없음 · 궤적 완주 · FIRE 미완을 진짜 판정 → 완료 기록 · 궤적 꼬리 소실 · 정수 n 보류 · 글자 n 보류) · 발사 0 · 파일 보존 · 재시도 자격 거부 · 소비자 재시도 무효 · fixture 뜻 확인 / 대조 유지 (정상 incomplete · invalid · plan 전 끊김 두 번 판정 · 명확한 도중 끊김)",
    "깨기": "__MUT__"
   }
+ },
+ "발사_전_점검_kgy_2026_11_04": {
+  "출처": "사용자 붙여넣기 2026-11-04 (kgy · 검사용 — selftest · 명령 미리 보기 · 담금질 아님 · GPU 안 씀)",
+  "worktree": "~/wt_li2s2 = 359e1559 (새로 만듦 · git -C ~/lldvar worktree add --detach)",
+  "환경": "uma env /home/kgy/apps/miniforge3/envs/uma/bin/python — fairchem-core 2.21.0 · ase 3.29.0 · torch 2.8.0+cu128 (카드 software_required 는 판 값을 고정하지 않고 '있다' 만 본다 · 통과 시드끼리 판이 같아야)",
+  "selftest_kgy": "드라이버 212/212 · 러너 83/83 — 생산 기계 (Linux) 에서 Linux 전용 2 건 (진짜 프로세스 그룹) 포함 통과 (Codex 는 Windows 라 81)",
+  "담금질_명령_A11": "melt_quench_uma.py --system A --n_fu 12 --seed 11 --T_melt 1200 --T_final 300 --melt_ps 100 --quench_rate 1e12 --hold_ps 50 --dt_fs 2 --save_ps 1 --turbo --fix_density 1.91347 --compress_ps 20 (카드 기계값 · --print_cmd)",
+  "⚠_GPU": "3,995 MiB · 72 % 사용 중 (cascade v7 은 11-04 04:14 끝 — 다른 것이 돈다 · 확인 블록 전달) — 러너는 2,000 MiB 이하 두 번 연속일 때만 띄운다 (start_max_mib) → 지금은 GO 여도 기다린다",
+  "⚠_디스크": "/ 88 % (106 GB 남음 · 10-31 정리 뒤 77 % 에서 다시 오름) — li2s-2 출력은 작다",
+  "by": "agent · 2026-11-04"
  }
 }

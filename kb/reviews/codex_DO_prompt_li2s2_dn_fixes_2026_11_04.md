@@ -36,7 +36,7 @@ DN 이 해제로 본 항목 (DM P0-1 · P0-2 · 정상 중단 대조 · 같은 �
 
 - `git diff acc648b0 __BASE__ -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
 - 카드 `개정_완료_기록_v6_2026_11_04` (결과 0 건 · 카드 값은 안 바뀜)
-- 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 212) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 83 · Linux)
+- 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 212) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 83 · Linux) — **생산 기계 kgy 에서도 212 · 83** (Linux 전용 진짜 프로세스 그룹 2 건 포함 · 같은 커밋의 기록 앞 판 359e1559 · 코드는 같다)
 - 깨기 (변이) **__MUT__** — DM 판 165 개를 가져오되 plan 전 판정 이유 검사를 다시 써서 자리가 바뀐 `O9_prerun_reasons_off` 를 새 자리로 옮기고, DN 자리 9 개 (`DN1_completion_fields_off` ~ `DN9_n_not_checked`) 를 더했다 (174 · 전체 이름이 모두 다르다). `db/raw/li2s2_dn_mutation_2026_11_04/`
 
 ## 2. DN 지적별로 한 것
