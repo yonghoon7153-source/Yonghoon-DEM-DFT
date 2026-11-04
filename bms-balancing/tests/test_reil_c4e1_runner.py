@@ -1,16 +1,17 @@
-"""REIL C4-E · E1-0b 외곽 단계 실행기 대조 11 · v4 (승인 요청 `docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md` §6 · v2 사전 검토 §76 의 V2-01–05 ·
-v3 사전 검토 §78 의 V3-01–03 · V3-N1 · v4 사전 검토 §80 의 V4-01 · 자체 발견 S4 · S5 · S6) — 시험할 실행기 파일은 env `REIL_C4E1_RUNNER_UNDER_TEST` 가
-정한다. 값이 두 형태 밖이면 수집 단계에서 멈추고 (RuntimeError), 값이 없으면 (단계 밖) 이 파일 전체를 건너뛴다 — 단계의 기준은 skipped 0 이므로 단계
-안에서 빠지면 기준이 깨진다. v3 (E1-0) 와 다른 것은 시험할 실행기의 증거 폴더 이름 규칙 (`reil_c4e1_0b_YYYYMMDD`) · driver tmp 증거 폴더 이름 · r5 의
-봉인 표 단계 이름 (E1-0b 의 둘) 뿐이다.
+"""REIL C4-E · E1-0b 외곽 단계 실행기 대조 11 · v5 (승인 요청 `docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md` §6 · v2 사전 검토 §76 의 V2-01–05 ·
+v3 사전 검토 §78 의 V3-01–03 · V3-N1 · v4 사전 검토 §80 의 V4-01 · 자체 발견 S4 · S5 · S6 · E1-0b 결과 검토 §93 의 E1_0B_RESULT_N1 · 사용자 채택 §94)
+— 시험할 실행기 파일은 env `REIL_C4E1_RUNNER_UNDER_TEST` 가 정한다. 값이 두 형태 밖이면 수집 단계에서 멈추고 (RuntimeError), 값이 없으면 (단계 밖) 이
+파일 전체를 건너뛴다 — 단계의 기준은 skipped 0 이므로 단계 안에서 빠지면 기준이 깨진다. v3 (E1-0) 와 다른 것은 시험할 실행기의 증거 폴더 이름 규칙
+(`reil_c4e1_0b_a2_YYYYMMDD`) · driver tmp 증거 폴더 이름 · r5 의 봉인 표 단계 이름 (E1-0b 의 둘) 뿐이다. v4 와 다른 것은 이름 규칙의 시도 표지 `a2`
+(지난 시도의 `evidence/reil_c4e1_0b_20261103` 과 겹치지 않는다) · 수집 오류 문구 · driver tmp 증거 폴더 이름뿐이고 시험 본문의 입력 · 기대는 같다.
 
 E1-0 의 RED (`02_red_runner`) 는 v2 실행기 초안 `docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt` 를 시험했다 (§85 — r1 AssertionError · r2–r11
-AttributeError). E1-0b 는 실행기 대조의 RED 를 하지 않고, GREEN (`02_green_e1_0b`) 에서 `<E0b>/00_step_runner.py` (v6) 로 11 개 모두 통과해야 한다
-(정리 · 기록 규칙은 v5 와 같은 바이트 경로 — 회귀 확인). r1–r5 · r9–r11 은 이 프로세스 안 (가짜 /proc 표 · tmp 가짜 /proc 폴더 · 관측마다 시간을
-쓰는 가짜 시계 · 가짜 kill / waitpid · tmp 로컬 git), r6–r8 은 driver 하위 프로세스 (`-I -B -X pycache_prefix`) 가 실행기 모듈을 경로로 적재해 (`main`
-미실행) `run_step` 을 tmp 경로로 부른다 — driver 가 subreaper 가 되고, r8 은 실제 자식 + 다른 세션 손주를 쓴다. 우리 실행 모듈 다섯 · launcher · 실제
-자료 · optimizer · 네트워크를 쓰지 않는다. fixture 가 직접 부르는 git 은 상속 `GIT_*` · 비밀 형태 이름을 모두 빼고 시스템 · 사용자 설정을 읽지 않는다
-(V2-02 · S3).
+AttributeError). E1-0b 는 실행기 대조의 RED 를 하지 않고, GREEN (`02_green_e1_0b`) 에서 `evidence/reil_c4e1_0b_a2_YYYYMMDD/00_step_runner.py` (실행기
+v8) 로 11 개 모두 통과해야 한다 (정리 · 기록 규칙은 v5 와 같은 바이트 경로 — 회귀 확인). r1–r5 · r9–r11 은 이 프로세스 안 (가짜 /proc 표 · tmp 가짜
+/proc 폴더 · 관측마다 시간을 쓰는 가짜 시계 · 가짜 kill / waitpid · tmp 로컬 git), r6–r8 은 driver 하위 프로세스 (`-I -B -X pycache_prefix`) 가 실행기
+모듈을 경로로 적재해 (`main` 미실행) `run_step` 을 tmp 경로로 부른다 — driver 가 subreaper 가 되고, r8 은 실제 자식 + 다른 세션 손주를 쓴다. 우리 실행
+모듈 다섯 · launcher · 실제 자료 · optimizer · 네트워크를 쓰지 않는다. fixture 가 직접 부르는 git 은 상속 `GIT_*` · 비밀 형태 이름을 모두 빼고 시스템 ·
+사용자 설정을 읽지 않는다 (V2-02 · S3).
 """
 from __future__ import annotations
 
@@ -31,12 +32,12 @@ import pytest
 
 BMS = "/home/user/Yonghoon-DEM-DFT/bms-balancing"
 V2 = f"{BMS}/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt"
-V4 = re.compile(re.escape(BMS) + r"/evidence/reil_c4e1_0b_20[0-9]{6}/00_step_runner\.py")
+V4 = re.compile(re.escape(BMS) + r"/evidence/reil_c4e1_0b_a2_20[0-9]{6}/00_step_runner\.py")
 UNDER_TEST = os.environ.get("REIL_C4E1_RUNNER_UNDER_TEST")
 if UNDER_TEST is None:
     pytest.skip("REIL_C4E1_RUNNER_UNDER_TEST 없음 — 단계 밖에서는 이 파일을 시험하지 않는다", allow_module_level=True)
 if UNDER_TEST != V2 and not V4.fullmatch(UNDER_TEST):
-    raise RuntimeError(f"REIL_C4E1_RUNNER_UNDER_TEST 는 {V2} 또는 <E0b>/00_step_runner.py 여야 한다: {UNDER_TEST!r}")
+    raise RuntimeError(f"REIL_C4E1_RUNNER_UNDER_TEST 는 {V2} 또는 {BMS}/evidence/reil_c4e1_0b_a2_YYYYMMDD/00_step_runner.py 여야 한다: {UNDER_TEST!r}")
 GITID = ["-c", "user.name=fixture", "-c", "user.email=fixture@example.invalid"]
 SECRETISH = re.compile(r"TOKEN|SECRET|PASSW|ACCESS_KEY|CREDENTIAL|COOKIE", re.I)
 
@@ -179,12 +180,12 @@ def _sentinels(tmp: Path) -> tuple:
 
 
 def _rtree(tmp: Path, *, git: bool = True) -> SimpleNamespace:
-    """driver 용 tmp 트리 — repo (git) · bms-balancing · evidence/reil_c4e1_0b_20990101 · 원천 둘 · 봉인 표 · 작업 폴더 (만들지 않음)."""
+    """driver 용 tmp 트리 — repo (git) · bms-balancing · evidence/reil_c4e1_0b_a2_20990101 · 원천 둘 · 봉인 표 · 작업 폴더 (만들지 않음)."""
     tmp.mkdir(parents=True, exist_ok=True)
     tmp = tmp.resolve()
     repo = tmp / "repo"
     bms = repo / "bms-balancing"
-    e = bms / "evidence" / "reil_c4e1_0b_20990101"
+    e = bms / "evidence" / "reil_c4e1_0b_a2_20990101"
     e.mkdir(parents=True)
     files = {"bms-balancing/a.py": b"a = 1\n", "bms-balancing/b.txt": b"b\n"}
     for rel, b in files.items():

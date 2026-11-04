@@ -1,11 +1,16 @@
 """REIL C4-E · E1 단계 실행기 v6 대조 33 (승인 요청 `docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md` §6) — 독립 사전 대조 · 고정 명령 · 유한 정리 ·
 외부 단계 판정 · 사전 검토 §74 의 N1–N4 · 자체 발견 S1 · v2 사전 검토 §76 의 V2-02 · V2-04 · 자체 발견 S2–S4 · v3 사전 검토 §78 의 V3-02 · V3-03 ·
 자체 발견 S5 · v4 사전 검토 §80 의 V4-01 · 자체 발견 S6 · E1-0 결과 검토 §86 의 Q3 (FUTURE-01 · launcher 운영 정리 정책 · 사용자 채택 §87) · E1-0b
-사전 검토 §88 의 E1_0B_N1 (RED 원인 결속 · 사용자 채택 §89 — 대조 정정판 v7 · launcher 는 v6 그대로).
+사전 검토 §88 의 E1_0B_N1 (RED 원인 결속 · 사용자 채택 §89 — 대조 정정판 v7) · E1-0b 결과 검토 §93 의 E1_0B_RESULT_N1 (l33 의 직접 호출 fixture
+결속 · 사용자 채택 §94 — 대조 정정판 v8 · launcher 는 v6 그대로).
 
 E1_0B_N1 — l23 · l29 · l30 은 기대 assert 바로 앞에서 원인을 구분한다. 관측한 결과 (사전 대조의 ok · launch 반환) 로 분기하고, v5 의 알려진 결함
 분기는 그 fixture 가 심은 원인만 문제인지 · v6 의 정상 / 거부 분기는 정상 실행에 심은 원인의 거부만 있는지를 raw 기록 (설정 목록 · 유효 출처 · meta) 과
 문제 목록으로 같이 확인한다. 그 밖이면 RED 표에 없는 `('UNEXPECTED_RED_CAUSE', …)` 로 실패한다. 원인 구분은 v5 에 없는 이름을 쓰지 않는다.
+
+E1_0B_RESULT_N1 — tmp fixture 시험이 launcher 함수를 직접 부를 때 실파일 · 실해시를 가리키는 기본값 (`EXTRA_EXECUTED` · `DATA` · `DATA_FILES`) 을
+남기지 않는다. l33 의 `post()` 는 `extra` · `data` · `data_files` 를 fixture 값으로 넘긴다 (v7 은 `extra` 를 빠뜨려 tmp 의 가짜 파일 둘을 실제 두 파일의
+sha · bytes 와 대조했고, 기대한 정리 기한 실패 전에 기본 기록 단언에서 먼저 실패했다 — 상태 문서 §92). 시험 수 · 이름 · 기대 assert · 메시지는 v7 과 같다.
 
 E1-0b 의 RED 는 v5 고정 구현 (`scripts/reil_c4e1_launch.py` = `2269d775…` · E1-0 GREEN 의 바이트) 에서 이 파일의 33 개 중 바뀌거나 새로 넣은 9 개
 (l14 · l23 · l25 · l28–l33) 만 nodeid 별로 정한 최종 예외로 실패하고 나머지 24 개는 통과해야 한다 (각 시험의 docstring 첫 줄 · 요청서 §4-3 의 표). GREEN
@@ -1048,7 +1053,8 @@ def test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_an
 def test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty(tmp_path):
     """[RED 실패 — v5: AssertionError ('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])] (launcher 운영 정리 정책 · 차단 기준) 같은 사전 대조 ·
     Git 기록에 자식 기록만 바꿔 넣는다 — 끝 상태 empty · 기한 안 · 오류 0 → 문제 0 / empty 인데 deadline_hit → 실패 / killed · unverified · unknown →
-    각각 실패 / 정리 오류 → 실패. 판정은 `first_error` 가 아니라 정리 기록 (그룹 끝 상태 · 기한 도달 · 오류) 을 본다."""
+    각각 실패 / 정리 오류 → 실패. 판정은 `first_error` 가 아니라 정리 기록 (그룹 끝 상태 · 기한 도달 · 오류) 을 본다. 직접 호출 `L.postcheck` 는
+    fixture 의 `extra` · `data` · `data_files` 를 넘긴다 — 실파일을 가리키는 기본값을 남기지 않는다 (E1_0B_RESULT_N1)."""
     t = _tree(tmp_path)
     pre = _pre(t, "identity")
     prefix = t.work / "pycache" / "pre_identity"
@@ -1058,7 +1064,8 @@ def test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_o
 
     def post(**child):
         base = {"started": True, "rc": 0, "timed_out": False, "group": {"status": "empty"}, "deadline_hit": False, "errors": []}
-        return L.postcheck("identity", t.ev, pre, prefix, {**base, **child}, env=env, repo=t.repo, records=records)
+        return L.postcheck("identity", t.ev, pre, prefix, {**base, **child}, env=env, repo=t.repo, records=records, extra=t.extra, data=t.data,
+                           data_files=t.data_files)
 
     assert post()["problems"] == []
     r = post(deadline_hit=True)
