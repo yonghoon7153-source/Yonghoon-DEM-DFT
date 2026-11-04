@@ -10818,10 +10818,12 @@
    "supersedes": [],
    "amends": null,
    "evidence": [
+    "kb/reviews/codex_DO_reply_li2s2_dn_fixes_2026_11_04.md (DO NO-GO · P0 1 · P1 2 · P2 2) → 고침 115aa9eb · 카드 v8",
+    "db/raw/li2s2_dp_mutation_2026_11_04/ (깨기 __MUT__)",
+    "tools/ionic/melt_quench_uma.py (0d945e790c7bb8b7 · selftest 223/223)",
+    "tools/ionic/li2s2_stage1_runner.py (selftest 105/105 Linux — Windows 는 POSIX 전용 4 개를 건너뜀)",
     "db/raw/li2s2_pre_do_review_2026_11_04/README.md (DO 전 독립 리뷰 셋 — P0 3 갈래 · P1 · P2 재현 → a5666b7c 고침 · 카드 v7 · 리뷰어 스크립트 재실행 모두 막힘)",
     "db/raw/li2s2_do_mutation_2026_11_04/ (깨기 222 / 222 빨강 (전체 실행 218 · 39c02ed7 + 시험 구멍 넷을 이유 검사로 고친 뒤 다시 4 / 4 · 0e0c8739))",
-    "tools/ionic/melt_quench_uma.py (e0ab597b426158d6 · selftest 220/220 · Windows 흉내 220/220)",
-    "tools/ionic/li2s2_stage1_runner.py (selftest 100/100 Linux — 진짜 판독 · 판정 함수 · 진짜 프로세스 그룹 · 리뷰어 반례 · Windows 는 POSIX 전용 3 개를 건너뜀)",
     "kb/reviews/codex_DN_reply_li2s2_dm_fixes_2026_11_04.md (NO-GO · DM P0 두 건 해제 · P1 1 · P2 1 → 091689c2 고침 · 카드 v6)",
     "db/raw/li2s2_dn_mutation_2026_11_04/ (DN 판 174 — 091689c2 에서 144/174 빨강 · 초록 0 일 때 멈춤 · DO 판 222 에 그대로 들어감)",
     "kb/reviews/codex_DM_reply_li2s2_dl_fixes_2026_11_04.md (NO-GO · P0 2 → 206d9d52 · 3d97d145 고침 · 카드 v5)",
@@ -10917,6 +10919,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "DO 전 독립 리뷰 셋 (사용자 'codex go 받을 수 있게 확실히') → P0 3 갈래 · P1 · P2 고침 (a5666b7c · 카드 v7) · 깨기가 드러낸 시험 구멍 일곱 메움 (07abd5e1 · d3165b1a · 0e0c8739) · Windows 대비 (39c02ed7) · 깨기 222 / 222 빨강 (전체 실행 218 · 39c02ed7 + 시험 구멍 넷을 이유 검사로 고친 뒤 다시 4 / 4 · 0e0c8739) · Codex DO 대기"
+    },
+    {
+     "at": "2026-11-04",
+     "state": "proposed",
+     "by": "agent",
+     "note": "회신 DO NO-GO (복구 때 본 녹음 fail 미보존 · 같은 열쇠 둘 · 장부 정규화 · 요약 예외 · 자식 신호 마스크) → 같은 꼴 전체 고침 (115aa9eb · 카드 v8) · 깨기 __MUT__ · Codex DP 대기"
     }
    ]
   },

@@ -6,7 +6,7 @@ date: 2026-11-04
 track: li2s
 channel: codex
 kind: reply
-status: 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운 링크와 JSON 의 Codex 로컬 경로 머리만 `<codex>` 로 줄임 · 탭으로 붙은 표는 표 꼴로 · JSON 은 코드 블록 · 붙여넣기 끝의 '오후 7:44' 는 사용자 화면 시각) → 반영 중
+status: 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운 링크와 JSON 의 Codex 로컬 경로 머리만 `<codex>` 로 줄임 · 탭으로 붙은 표는 표 꼴로 · JSON 은 코드 블록 · 붙여넣기 끝의 '오후 7:44' 는 사용자 화면 시각) → 반영 중 (DP)
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-11-04
