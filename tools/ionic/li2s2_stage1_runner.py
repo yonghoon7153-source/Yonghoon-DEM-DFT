@@ -1417,7 +1417,10 @@ def _selftest():
             h = FakeQuench(cmd, lp, scen=scen, launched=launched)
             if launch_signal and not sig_sent[0]:            # 띄운 직후 · 손잡이를 적기 전에 SIGTERM (DO 전 리뷰 P2-9)
                 sig_sent[0] = True
-                os.kill(os.getpid(), signal.SIGTERM)
+                if launch_signal == "direct":                # 다른 스레드가 받은 신호 — 파이썬 처리기가 주 스레드에서 바로 돈다 (부모 마스크와 무관 · 깨기 DP68)
+                    signal.getsignal(signal.SIGTERM)(signal.SIGTERM, None)
+                else:
+                    os.kill(os.getpid(), signal.SIGTERM)
             original_stop = h.stop
             def cleanup(*args, **kwargs):
                 clock[0] += cleanup_s
@@ -2713,6 +2716,36 @@ def _selftest():
             "⛔음성 DO 전 리뷰 P2-9: 띄운 직후 (손잡이를 적기 전) SIGTERM 이 와도 손잡이를 적은 뒤에 받아 그 담금질을 멈추고 마감한다 (놓친 자식 없음)")
     else:
         print("  · 건너뜀 (POSIX 전용) DO 전 리뷰 P2-9 띄우는 순간 신호 — 이 OS 에는 pthread_sigmask 가 없다")
+    # ⭐ 깨기 DP67 · DP68 이 드러낸 시험 구멍 — 두 미룸 구간 (쓰기 · 띄우고 손잡이 적기) 이 서로를 덮어 하나씩 끄면 안 잡혔다 → 따로 본다
+    rc_sd, L_sd, rr_sd = go(wt, launch_signal="direct")
+    es_d = J(rr_sd / "stage1_ledger.json")["runs"][0]
+    chk(rc_sd == RC["interrupted"] and L_sd and L_sd[0].stopped and es_d.get("pgid") is not None and es_d.get("end") is not None,
+        "⛔음성 DP 전 리뷰 (둘째) F4 · 깨기 DP68: 띄우는 구간 안에서 처리기가 바로 돌아도 (다른 스레드가 받은 신호 — 부모 마스크와 무관) 손잡이를 적은 "
+        f"뒤에 받아 그 담금질을 멈추고 마감한다 ({rc_sd} · 멈춤 {bool(L_sd and L_sd[0].stopped)} · pgid {es_d.get('pgid')})")
+    import types as _ty3
+    _os0 = globals()["os"]
+    st67 = {"armed": False, "fired": False}
+    def _open_sig(path_, flags, *a_, **k_):
+        fd_ = _os0.open(path_, flags, *a_, **k_)
+        if st67["armed"] and not st67["fired"] and str(path_).endswith("stage1_ledger.json.tmp"):
+            st67["fired"] = True                             # 임시 파일을 만든 직후 처리기가 돈다 (2026-11-04 실측 자리 · 다른 스레드가 받은 신호)
+            signal.getsignal(signal.SIGTERM)(signal.SIGTERM, None)
+        return fd_
+    osp_ = _ty3.SimpleNamespace(**{k_: getattr(_os0, k_) for k_ in dir(_os0) if not k_.startswith("__")})
+    osp_.open = _open_sig
+    def _arm67(t_):
+        if t_ >= 3600.0:                                     # 첫 poll 뒤 — 띄우기 구간 밖 (실행 중 장부 저장)
+            st67["armed"] = True
+    globals()["os"] = osp_
+    try:
+        rc67, L67, rr67 = go(wt, sleep_hook=_arm67)
+    finally:
+        globals()["os"] = _os0
+    e67 = J(rr67 / "stage1_ledger.json")["runs"][0]
+    chk(st67["fired"] and rc67 == RC["interrupted"] and not (rr67 / "stage1_ledger.json.tmp").exists() and L67 and L67[0].stopped
+        and e67.get("status") == "interrupted",
+        "⛔음성 DP 전 리뷰 (둘째) F2 · F4 · 깨기 DP67: 실행 중 장부 임시 파일을 만든 직후 처리기가 돌아도 쓰기를 마친 뒤 받는다 — 임시 파일이 안 남고 "
+        f"그 담금질을 멈추고 마감 · 중단 STOP 까지 간다 ({st67['fired']} · {rc67} · {e67.get('status')})")
     fs_calls, _of = [], os.fsync
     os.fsync = lambda fd: (fs_calls.append(fd), _of(fd))[1]
     try:
