@@ -15156,6 +15156,69 @@
       "opened_in": "docs/reviews/codex_rint2_rr_round2_request_20261103.md",
       "title": "scripts/test_ca_ext_runner.py N12f 가 부하 아래 한 번 실패 — 첫 러너 호출 (r0 · 시도 꼴 · 새 OUTDIR) 이 rc 1 이라 옛 파일 이름이 'p2_none.json' 으로 떨어지고 r7 이 rc 0 (kgy 판 Python 3.8.20 · 150 PASS · 1 FAIL) · 같은 판을 다시 (끝-끝 하나만 같이 돎) = 151 PASS · 0 FAIL · 3.11 홀로 = 151/151 — r0 실패 원인 미확인 (러너 화면을 시험이 r7 것만 남긴다)",
       "note": "관찰 (원인 미확인) · Q3 · Q5 의 코드 (carbon_junction.py 한정어 문구 · rint_r_chain.py 다시 판정 보고) 와 이어지는 근거 없음 (러너 · payload 경로 · 3.11 홀로 통과 · 3.8 다시 통과) · 다음 = N12f 실패 때 r0 의 러너 화면 (rc · 마지막 줄) 을 시험 출력에 싣고 부하 아래 되풀이로 원인 찾기 · 판정 · 보정 · 생산 런 영향 = 없음으로 보임 (시험 고정물 · 추정) · 로그 docs/reviews/rint2_rr_fix_evidence_20261023/reverify_bytes_20261103/logs/kgy/ca_ext_runner.log (실패) · logs/kgy_rerun_ca_ext_runner.log (다시)."
+    },
+    {
+      "id": "SELF-152",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "자기 점검 (11-04 오전 컨테이너 재시작 둘 · 10:14 · 10:53 KST)",
+      "opened_in": "docs/session_20260923_progress.md",
+      "title": "게이트 + 에이전트 여섯을 동시에 띄웠다 (작업 트리 하나 ≈ 950 MB) — 디스크 한도를 넘긴 것으로 보이고 (추정) 컨테이너가 두 번 재시작해 에이전트 작업 ≈ 2.5 h · 벽시계 ≈ 1 h 를 잃었다 (추정) · CLAUDE.md 재시작 대비 ③ (무거운 작업 동시에 두세 개까지) 위반",
+      "note": "새 규칙 = 게이트 + 작업 트리 에이전트 하나 (+ 작업 트리 없는 가벼운 에이전트 하나) · 띄우기 전 df ≥ 5 GB · 에이전트는 일찍 커밋 (진행 기록 11-04 줄).  규칙이 지켜지는지는 다음 세션들이 본다 — 그래서 open."
+    },
+    {
+      "id": "SELF-153",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "FAM §12-7 건식 2 차 (11-04 · corner_fb 확인 함수가 '기대와 다름')",
+      "opened_in": "docs/reviews/fam_platen_prereg_20260812.md",
+      "title": "12-7-1 건식 기대 표에 `pts= ≤ 94,649,442` 를 '12-5-9 산술 상한' 이라 적었다 — 실제는 점 수 어림 (65,866 × 1,437) 이고 상한이 아니다 · 실측 95,874,312 (어림의 1.0129 배) 라 corner_fb 건식 2 차가 기대와 다름으로 멈췄다",
+      "note": "1저자 11-04 Q4 *\"권고대로\"* = corner 세 팔 기대 = corner_fb 와 같은 pts (셋 다 95,874,312 · 같음).  메모리 산술 21.06 GiB 도 점 수 어림을 써서 실측 점 수로는 +1.3 % 남짓 크다 (어림 · 건식 할당 성공).",
+      "claimed_fixed_sha": "f4fbf32251655b7540461af7d41c7e1fc9cd3dc8",
+      "evidence_tests": [
+        "docs/reviews/fam_platen_prereg_20260812.md 12-7-2 건식 2 차 표 + pts 기준 개정 기록 — 문서 · 시험 없음"
+      ]
+    },
+    {
+      "id": "SELF-154",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "자기 점검 (11-04 · 1저자가 붙인 건식 2 차 화면)",
+      "opened_in": "docs/reviews/fam_platen_prereg_20260812.md",
+      "title": "FAM 건식 확인 명령의 '기대와 다름' 가지가 로그 끝 8 줄 (`tail -8`) 을 찍어 1 프레임 런 SystemExit 문구의 wallP_end 값 줄이 1저자 화면에 나왔다 — 건식 열람 규칙 (12-7-1 · 12-6-2 `SELF-80` 과 같은 부류) 이탈 · 같은 날 corner rc · 시각 확인 명령의 첫 판에 한글 문구를 넣었다 (12-7-1 붙여 넣기 규칙 '명령 안에는 영문 · 숫자 · 기호만' 어김 · 쓰기 전에 영문판으로 바꿈)",
+      "note": "그 값은 1 프레임 중단 값이라 판정에 쓰이지 않는다 (판정 = 본 런 서보 수렴 두께).  고침 = 둘째 블록부터 상태 줄만 (확인 함수 chk2) · 발사 러너는 팔 로그의 줄 · 값을 옮기지 않는다 (시험 = 가짜 값 줄 LEAKCANARY 가 러너 화면 · 배치 기록에 안 나오는지 · 변이 'END 줄이 로그 줄을 찍음' 잡힘).",
+      "claimed_fixed_sha": "f4fbf32251655b7540461af7d41c7e1fc9cd3dc8",
+      "evidence_tests": [
+        "docs/reviews/fam_s127_runner/after.log — 747/747 (값 줄 새는지 검사 포함)",
+        "docs/reviews/fam_s127_runner/mutation.log — 변이 18/18 (END 줄 로그 줄 출력 변이 잡힘)"
+      ]
+    },
+    {
+      "id": "SELF-155",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "kgy S0 단계 1 (11-04 · 출력 없이 끝남 → 진단 = 메모리 52.1 GB 에서 신호 kill)",
+      "opened_in": "docs/reviews/rint2_kgy_commands_20261020.md",
+      "title": "kgy 명령 문서에 S0 단계 1 의 메모리를 '침대당 RAM 수 GB (se_dump 1.6 GB 의 몇 배)' 로 어림했다 — 실측은 52.1 GB 에서 신호로 끝났다 (도구는 파이썬 예외면 '거부' 를 찍으므로 빈 출력 = 신호)",
+      "note": "그 줄에 철회 표지 (FAM 묶음 커밋).  고침 = 메모리 재기 → 도구 고침 (시험 먼저 · 출력 바이트 같게) → 게이트 → push → kgy 새 폴더에서 다시 (1저자 11-04 Q2 권고대로) — 그 전까지 open · 시간 어림 (침대당 15–30 분) 도 실측 전."
+    },
+    {
+      "id": "SELF-156",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "Codex DEM 실무 창 첫 답 (11-04 · 'D3 는 이미 v2 와 후보 판독기를 반입했다')",
+      "opened_in": "docs/handoff_codex_nonrint_20261104.md",
+      "title": "Codex 비 Rint 인계서 (11-04 · 보낸 판) §3-3 의 D3 상태를 10-21 시점으로 적었다 — 리포엔 v2 설계 (10-23) · 후보 판독기 (10-24) · Codex 10-27 '입력 조건부 유한 후보 판독기 범위 GO' 가 이미 있었다 (인계서를 쓸 때 리포 대조를 빠뜨림)",
+      "note": "답장 프롬프트로 정정을 먼저 전달 · 리포 판 §3-3 고침 + 머리 정정 표지.",
+      "claimed_fixed_sha": "9afbcc6b1d447bf5b5d08df2728c62eaa5ee13d9",
+      "evidence_tests": [
+        "docs/handoff_codex_nonrint_20261104.md 머리 정정 표지 · §3-3 — 문서 · 시험 없음"
+      ]
     }
   ]
 }
