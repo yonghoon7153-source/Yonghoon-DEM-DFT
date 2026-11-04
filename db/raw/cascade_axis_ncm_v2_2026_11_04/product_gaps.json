@@ -1,0 +1,3541 @@
+{
+  "note": "MP PBE/PBE+U band gaps of decomposition/SEI product phases. Nd-bearing gaps are lower bounds (4f mis-placement). Wide gaps => electronically insulating interphase.",
+  "caveat": "PBE gaps underestimate systematically - use ORDER, not absolute eV. min_product_gap is the bottleneck: one metallic product makes the whole interphase electronically leaky (no self-limiting passivation).",
+  "gaps": {
+    "Li3PO4": {
+      "material_id": "mp-13725",
+      "formula": "Li3PO4",
+      "band_gap_MP_eV": 5.818,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Pmn2_1",
+      "spacegroup_number": 31,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "~8 (exp)",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "Li2S": {
+      "material_id": "mp-1153",
+      "formula": "Li2S",
+      "band_gap_MP_eV": 3.386,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 5
+    },
+    "Ni3S2": {
+      "material_id": "mp-362",
+      "formula": "Ni3S2",
+      "band_gap_MP_eV": 0.0,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "R32",
+      "spacegroup_number": 155,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 4
+    },
+    "LiCl": {
+      "material_id": "mp-22905",
+      "formula": "LiCl",
+      "band_gap_MP_eV": 6.25,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "~9.4 (exp)",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "Li2SO4": {
+      "material_id": "mp-4556",
+      "formula": "Li2SO4",
+      "band_gap_MP_eV": 6.023,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P2_1/c",
+      "spacegroup_number": 14,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 4
+    },
+    "Ag": {
+      "material_id": "mp-8566",
+      "formula": "Ag",
+      "band_gap_MP_eV": 0.0,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P6_3/mmc",
+      "spacegroup_number": 194,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 5
+    },
+    "Ni": {
+      "material_id": "mp-23",
+      "formula": "Ni",
+      "band_gap_MP_eV": 0.0,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 6
+    },
+    "LiAlO2": {
+      "material_id": "mp-8001",
+      "formula": "LiAlO2",
+      "band_gap_MP_eV": 6.118,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "R-3m",
+      "spacegroup_number": 166,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 3
+    },
+    "LiAl5O8": {
+      "material_id": "mp-530399",
+      "formula": "LiAl5O8",
+      "band_gap_MP_eV": 5.249,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P4_332",
+      "spacegroup_number": 212,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "AlPO4": {
+      "material_id": "mp-5331",
+      "formula": "AlPO4",
+      "band_gap_MP_eV": 5.618,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P3_121",
+      "spacegroup_number": 152,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 45
+    },
+    "Li5AlO4": {
+      "material_id": "mp-15960",
+      "formula": "Li5AlO4",
+      "band_gap_MP_eV": 4.662,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Pbca",
+      "spacegroup_number": 61,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "LiBr": {
+      "material_id": "mp-976280",
+      "formula": "LiBr",
+      "band_gap_MP_eV": 4.935,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P6_3mc",
+      "spacegroup_number": 186,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "LiF": {
+      "material_id": "mp-1138",
+      "formula": "LiF",
+      "band_gap_MP_eV": 8.716,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 3
+    },
+    "LiI": {
+      "material_id": "mp-570935",
+      "formula": "LiI",
+      "band_gap_MP_eV": 4.382,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P6_3mc",
+      "spacegroup_number": 186,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 3
+    },
+    "N2": {
+      "material_id": "mp-154",
+      "formula": "N2",
+      "band_gap_MP_eV": 7.377,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P2_13",
+      "spacegroup_number": 198,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 17
+    },
+    "Ni3N": {
+      "material_id": "mp-2033",
+      "formula": "Ni3N",
+      "band_gap_MP_eV": 0.0,
+      "e_above_hull": 0.0147,
+      "is_stable": false,
+      "spacegroup_symbol": "P6_322",
+      "spacegroup_number": 182,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Li2O": {
+      "material_id": "mp-1960",
+      "formula": "Li2O",
+      "band_gap_MP_eV": 4.899,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "~7.99 (exp)",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 6
+    },
+    "Li3AsO4": {
+      "material_id": "mp-9197",
+      "formula": "Li3AsO4",
+      "band_gap_MP_eV": 4.127,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Pmn2_1",
+      "spacegroup_number": 31,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "Li3BO3": {
+      "material_id": "mp-27275",
+      "formula": "Li3BO3",
+      "band_gap_MP_eV": 5.147,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P2_1/c",
+      "spacegroup_number": 14,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Li3B7O12": {
+      "material_id": "mp-16828",
+      "formula": "Li3B7O12",
+      "band_gap_MP_eV": 5.605,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P-1",
+      "spacegroup_number": 2,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "NiCl2": {
+      "material_id": "mp-27396",
+      "formula": "NiCl2",
+      "band_gap_MP_eV": 0.0,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "R-3m",
+      "spacegroup_number": 166,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "BaCl2": {
+      "material_id": "mp-568662",
+      "formula": "BaCl2",
+      "band_gap_MP_eV": 5.429,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 3
+    },
+    "CaO": {
+      "material_id": "mp-2605",
+      "formula": "CaO",
+      "band_gap_MP_eV": 3.636,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 8
+    },
+    "Co9S8": {
+      "material_id": "mp-1513",
+      "formula": "Co9S8",
+      "band_gap_MP_eV": 0.0,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "LiCrO2": {
+      "material_id": "mp-18793",
+      "formula": "LiCrO2",
+      "band_gap_MP_eV": 3.117,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "R-3m",
+      "spacegroup_number": 166,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 5
+    },
+    "Cr2O3": {
+      "material_id": "mp-19399",
+      "formula": "Cr2O3",
+      "band_gap_MP_eV": 0.0,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "R-3c",
+      "spacegroup_number": 167,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 14
+    },
+    "Cu": {
+      "material_id": "mp-30",
+      "formula": "Cu",
+      "band_gap_MP_eV": 0.0,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 8
+    },
+    "Li5FeO4": {
+      "material_id": "mp-19511",
+      "formula": "Li5FeO4",
+      "band_gap_MP_eV": 3.055,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Pbca",
+      "spacegroup_number": 61,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 7
+    },
+    "FeNi35S32": {
+      "material_id": "mp-1225604",
+      "formula": "FeNi35S32",
+      "band_gap_MP_eV": 0.0,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "I222",
+      "spacegroup_number": 23,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "LiFeO2": {
+      "material_id": "mp-755709",
+      "formula": "LiFeO2",
+      "band_gap_MP_eV": 1.617,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fd-3m",
+      "spacegroup_number": 227,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 9
+    },
+    "Li5GaO4": {
+      "material_id": "mp-4657",
+      "formula": "Li5GaO4",
+      "band_gap_MP_eV": 3.763,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Pbca",
+      "spacegroup_number": 61,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 3
+    },
+    "Ga2NiO4": {
+      "material_id": "mp-35236",
+      "formula": "Ga2NiO4",
+      "band_gap_MP_eV": 1.503,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Imma",
+      "spacegroup_number": 74,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 5
+    },
+    "LiGaO2": {
+      "material_id": "mp-5854",
+      "formula": "LiGaO2",
+      "band_gap_MP_eV": 3.198,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Pna2_1",
+      "spacegroup_number": 33,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 3
+    },
+    "LiGa5O8": {
+      "material_id": "mp-28146",
+      "formula": "LiGa5O8",
+      "band_gap_MP_eV": 2.522,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P4_332",
+      "spacegroup_number": 212,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "Gd2O3": {
+      "material_id": "mp-504886",
+      "formula": "Gd2O3",
+      "band_gap_MP_eV": 2.941,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Ia-3",
+      "spacegroup_number": 206,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 5
+    },
+    "Li4GeO4": {
+      "material_id": "mp-4558",
+      "formula": "Li4GeO4",
+      "band_gap_MP_eV": 4.096,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Cmcm",
+      "spacegroup_number": 63,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Li2GeO3": {
+      "material_id": "mp-15349",
+      "formula": "Li2GeO3",
+      "band_gap_MP_eV": 3.568,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Cmc2_1",
+      "spacegroup_number": 36,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Li6Hf2O7": {
+      "material_id": "mp-772185",
+      "formula": "Li6Hf2O7",
+      "band_gap_MP_eV": 4.413,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "C2/c",
+      "spacegroup_number": 15,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "LiInO2": {
+      "material_id": "mp-5488",
+      "formula": "LiInO2",
+      "band_gap_MP_eV": 1.814,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "I4_1/amd",
+      "spacegroup_number": 141,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "In2O3": {
+      "material_id": "mp-22598",
+      "formula": "In2O3",
+      "band_gap_MP_eV": 0.929,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Ia-3",
+      "spacegroup_number": 206,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 9
+    },
+    "La2SO2": {
+      "material_id": "mp-4511",
+      "formula": "La2SO2",
+      "band_gap_MP_eV": 3.064,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P-3m1",
+      "spacegroup_number": 164,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "La2O3": {
+      "material_id": "mp-1968",
+      "formula": "La2O3",
+      "band_gap_MP_eV": 3.828,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P-3m1",
+      "spacegroup_number": 164,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 6
+    },
+    "MgO": {
+      "material_id": "mp-1265",
+      "formula": "MgO",
+      "band_gap_MP_eV": 4.429,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 23
+    },
+    "LiMnO2": {
+      "material_id": "mp-754656",
+      "formula": "LiMnO2",
+      "band_gap_MP_eV": 1.187,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "C2/m",
+      "spacegroup_number": 12,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 24
+    },
+    "Li4MoO5": {
+      "material_id": "mp-19117",
+      "formula": "Li4MoO5",
+      "band_gap_MP_eV": 3.167,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P-1",
+      "spacegroup_number": 2,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 4
+    },
+    "Li2MoO4": {
+      "material_id": "mp-18050",
+      "formula": "Li2MoO4",
+      "band_gap_MP_eV": 4.118,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "R-3",
+      "spacegroup_number": 148,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "NaCl": {
+      "material_id": "mp-22862",
+      "formula": "NaCl",
+      "band_gap_MP_eV": 5.004,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 3
+    },
+    "NaI": {
+      "material_id": "mp-23268",
+      "formula": "NaI",
+      "band_gap_MP_eV": 3.569,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 3
+    },
+    "Li8Nb2O9": {
+      "material_id": "mp-28030",
+      "formula": "Li8Nb2O9",
+      "band_gap_MP_eV": 3.209,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P-1",
+      "spacegroup_number": 2,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "LiNbO3": {
+      "material_id": "mp-3731",
+      "formula": "LiNbO3",
+      "band_gap_MP_eV": 3.336,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "R3c",
+      "spacegroup_number": 161,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 12
+    },
+    "NiO": {
+      "material_id": "mp-19009",
+      "formula": "NiO",
+      "band_gap_MP_eV": 2.387,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "Li3NbO4": {
+      "material_id": "mp-31488",
+      "formula": "Li3NbO4",
+      "band_gap_MP_eV": 3.776,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "I-43m",
+      "spacegroup_number": 217,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "Nd2SO2": {
+      "material_id": "mp-3211",
+      "formula": "Nd2SO2",
+      "band_gap_MP_eV": 2.867,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P-3m1",
+      "spacegroup_number": 164,
+      "Nd_bearing_gap_is_LOWER_BOUND": true,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Nd3PO7": {
+      "material_id": "mp-1203311",
+      "formula": "Nd3PO7",
+      "band_gap_MP_eV": 4.284,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Cm",
+      "spacegroup_number": 8,
+      "Nd_bearing_gap_is_LOWER_BOUND": true,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "Nd2O3": {
+      "material_id": "mp-1045",
+      "formula": "Nd2O3",
+      "band_gap_MP_eV": 3.708,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Ia-3",
+      "spacegroup_number": 206,
+      "Nd_bearing_gap_is_LOWER_BOUND": true,
+      "exp_anchor": "~4.7 (exp)",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 6
+    },
+    "Li5SbO5": {
+      "material_id": "mp-29364",
+      "formula": "Li5SbO5",
+      "band_gap_MP_eV": 2.914,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "C2/m",
+      "spacegroup_number": 12,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Li3Ni2SbO6": {
+      "material_id": "mp-1102490",
+      "formula": "Li3Ni2SbO6",
+      "band_gap_MP_eV": 2.809,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "C2/m",
+      "spacegroup_number": 12,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "LiScO2": {
+      "material_id": "mp-5840",
+      "formula": "LiScO2",
+      "band_gap_MP_eV": 3.904,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "I4_1/amd",
+      "spacegroup_number": 141,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Sc2O3": {
+      "material_id": "mp-216",
+      "formula": "Sc2O3",
+      "band_gap_MP_eV": 3.814,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Ia-3",
+      "spacegroup_number": 206,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 6
+    },
+    "Li8SiO6": {
+      "material_id": "mp-28549",
+      "formula": "Li8SiO6",
+      "band_gap_MP_eV": 4.45,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P6_3cm",
+      "spacegroup_number": 185,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Li2SiO3": {
+      "material_id": "mp-5012",
+      "formula": "Li2SiO3",
+      "band_gap_MP_eV": 5.077,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Cmc2_1",
+      "spacegroup_number": 36,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Li4SiO4": {
+      "material_id": "mp-11737",
+      "formula": "Li4SiO4",
+      "band_gap_MP_eV": 4.784,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P-1",
+      "spacegroup_number": 2,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 5
+    },
+    "Sm2O3": {
+      "material_id": "mp-218",
+      "formula": "Sm2O3",
+      "band_gap_MP_eV": 3.782,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Ia-3",
+      "spacegroup_number": 206,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 5
+    },
+    "Sm3PO7": {
+      "material_id": "mp-2750423",
+      "formula": "Sm3PO7",
+      "band_gap_MP_eV": 4.755,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "C2/m",
+      "spacegroup_number": 12,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "Sm2SO2": {
+      "material_id": "mp-5598",
+      "formula": "Sm2SO2",
+      "band_gap_MP_eV": 2.983,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P-3m1",
+      "spacegroup_number": 164,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Li8SnO6": {
+      "material_id": "mp-4527",
+      "formula": "Li8SnO6",
+      "band_gap_MP_eV": 3.813,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "R-3",
+      "spacegroup_number": 148,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "SnO2": {
+      "material_id": "mp-856",
+      "formula": "SnO2",
+      "band_gap_MP_eV": 0.661,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P4_2/mnm",
+      "spacegroup_number": 136,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 30
+    },
+    "Li2SnO3": {
+      "material_id": "mp-3540",
+      "formula": "Li2SnO3",
+      "band_gap_MP_eV": 3.127,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "C2/c",
+      "spacegroup_number": 15,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "SrS": {
+      "material_id": "mp-1087",
+      "formula": "SrS",
+      "band_gap_MP_eV": 2.497,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "SrCl2": {
+      "material_id": "mp-23209",
+      "formula": "SrCl2",
+      "band_gap_MP_eV": 5.227,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Li5TaO5": {
+      "material_id": "mp-755013",
+      "formula": "Li5TaO5",
+      "band_gap_MP_eV": 3.714,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "C2/m",
+      "spacegroup_number": 12,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "LiTaO3": {
+      "material_id": "mp-3666",
+      "formula": "LiTaO3",
+      "band_gap_MP_eV": 3.7,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "R3c",
+      "spacegroup_number": 161,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 5
+    },
+    "Li3TaO4": {
+      "material_id": "mp-3151",
+      "formula": "Li3TaO4",
+      "band_gap_MP_eV": 4.567,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "C2/c",
+      "spacegroup_number": 15,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 3
+    },
+    "Li4TiO4": {
+      "material_id": "mp-9172",
+      "formula": "Li4TiO4",
+      "band_gap_MP_eV": 4.557,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Cmcm",
+      "spacegroup_number": 63,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 3
+    },
+    "Li2TiO3": {
+      "material_id": "mp-2931",
+      "formula": "Li2TiO3",
+      "band_gap_MP_eV": 3.034,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "C2/c",
+      "spacegroup_number": 15,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 7
+    },
+    "Li3VO4": {
+      "material_id": "mp-19219",
+      "formula": "Li3VO4",
+      "band_gap_MP_eV": 4.034,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Pmn2_1",
+      "spacegroup_number": 31,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 2
+    },
+    "Li4WO5": {
+      "material_id": "mp-555377",
+      "formula": "Li4WO5",
+      "band_gap_MP_eV": 3.889,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P-1",
+      "spacegroup_number": 2,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 4
+    },
+    "NiWO4": {
+      "material_id": "mp-21179",
+      "formula": "NiWO4",
+      "band_gap_MP_eV": 3.015,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P2/c",
+      "spacegroup_number": 13,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Y2O3": {
+      "material_id": "mp-2652",
+      "formula": "Y2O3",
+      "band_gap_MP_eV": 4.097,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Ia-3",
+      "spacegroup_number": 206,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 14
+    },
+    "ZnS": {
+      "material_id": "mp-554820",
+      "formula": "ZnS",
+      "band_gap_MP_eV": 2.021,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P3m1",
+      "spacegroup_number": 156,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 146
+    },
+    "ZnO": {
+      "material_id": "mp-2133",
+      "formula": "ZnO",
+      "band_gap_MP_eV": 0.732,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P6_3mc",
+      "spacegroup_number": 186,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 12
+    },
+    "Li6Zr2O7": {
+      "material_id": "mp-5418",
+      "formula": "Li6Zr2O7",
+      "band_gap_MP_eV": 3.944,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "C2/c",
+      "spacegroup_number": 15,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Li2ZrO3": {
+      "material_id": "mp-4156",
+      "formula": "Li2ZrO3",
+      "band_gap_MP_eV": 3.734,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "C2/c",
+      "spacegroup_number": 15,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "ZrO2": {
+      "material_id": "mp-2858",
+      "formula": "ZrO2",
+      "band_gap_MP_eV": 3.532,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P2_1/c",
+      "spacegroup_number": 14,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 20
+    },
+    "Co3S4": {
+      "material_id": "mp-943",
+      "formula": "Co3S4",
+      "band_gap_MP_eV": 0.0,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fd-3m",
+      "spacegroup_number": 227,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Co3(BO3)2": {
+      "material_id": "mp-22632",
+      "formula": "Co3(BO3)2",
+      "band_gap_MP_eV": 0.0,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Pnnm",
+      "spacegroup_number": 58,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "CaS": {
+      "material_id": "mp-1672",
+      "formula": "CaS",
+      "band_gap_MP_eV": 2.377,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Co2CuS4": {
+      "material_id": "mp-3925",
+      "formula": "Co2CuS4",
+      "band_gap_MP_eV": 0.0,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fd-3m",
+      "spacegroup_number": 227,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "FeS2": {
+      "material_id": "mp-1522",
+      "formula": "FeS2",
+      "band_gap_MP_eV": 0.881,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Pnnm",
+      "spacegroup_number": 58,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 8
+    },
+    "Gd2SO2": {
+      "material_id": "mp-4805",
+      "formula": "Gd2SO2",
+      "band_gap_MP_eV": 2.041,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P-3m1",
+      "spacegroup_number": 164,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "LiGdO2": {
+      "material_id": "mp-21332",
+      "formula": "LiGdO2",
+      "band_gap_MP_eV": 3.28,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Pnma",
+      "spacegroup_number": 62,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 3
+    },
+    "Li2HfO3": {
+      "material_id": "mp-2724101",
+      "formula": "Li2HfO3",
+      "band_gap_MP_eV": 4.057,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Cmmm",
+      "spacegroup_number": 65,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 4
+    },
+    "LiInS2": {
+      "material_id": "mp-1188392",
+      "formula": "LiInS2",
+      "band_gap_MP_eV": 2.196,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Pna2_1",
+      "spacegroup_number": 33,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "MnO": {
+      "material_id": "mp-1232659",
+      "formula": "MnO",
+      "band_gap_MP_eV": 1.156,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Pmmn",
+      "spacegroup_number": 59,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 6
+    },
+    "MoS2": {
+      "material_id": "mp-1434",
+      "formula": "MoS2",
+      "band_gap_MP_eV": 1.384,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "R3m",
+      "spacegroup_number": 160,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 12
+    },
+    "Co2NiS4": {
+      "material_id": "mp-22658",
+      "formula": "Co2NiS4",
+      "band_gap_MP_eV": 0.0,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fd-3m",
+      "spacegroup_number": 227,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Co": {
+      "material_id": "mp-102",
+      "formula": "Co",
+      "band_gap_MP_eV": 0.0,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "Fm-3m",
+      "spacegroup_number": 225,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 8
+    },
+    "WS2": {
+      "material_id": "mp-224",
+      "formula": "WS2",
+      "band_gap_MP_eV": 1.566,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P6_3/mmc",
+      "spacegroup_number": 194,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 7
+    },
+    "LiYO2": {
+      "material_id": "mp-7020",
+      "formula": "LiYO2",
+      "band_gap_MP_eV": 4.108,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P2_1/c",
+      "spacegroup_number": 14,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Y2SO2": {
+      "material_id": "mp-12894",
+      "formula": "Y2SO2",
+      "band_gap_MP_eV": 2.998,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P-3m1",
+      "spacegroup_number": 164,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    },
+    "Li6ZnO4": {
+      "material_id": "mp-14495",
+      "formula": "Li6ZnO4",
+      "band_gap_MP_eV": 3.512,
+      "e_above_hull": 0.0,
+      "is_stable": true,
+      "spacegroup_symbol": "P4_2/nmc",
+      "spacegroup_number": 137,
+      "Nd_bearing_gap_is_LOWER_BOUND": false,
+      "exp_anchor": "",
+      "selection": "lowest_e_above_hull",
+      "n_polymorphs_in_MP": 1
+    }
+  },
+  "per_reaction": {
+    "Ag2O|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.932 LiNiO2 + 0.06796 Li22Ag2P4S19Cl4O -> 0.2718 Li3PO4 + 0.4587 Li2S + 0.3107 Ni3S2 + 0.2718 LiCl + 0.2112 Li2SO4 + 0.1359 Ag"
+    },
+    "Ag2O|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9643 Li0.5Ni1O2 + 0.03571 Li22Ag2P4S19Cl4O -> 0.1429 Li3PO4 + 0.1652 Ni3S2 + 0.1429 LiCl + 0.3482 Li2SO4 + 0.07143 Ag + 0.4688 Ni"
+    },
+    "Al2O3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06422 Li17Al2P4S16Cl5O3 + 0.9358 LiNiO2 -> 0.1284 LiAlO2 + 0.2569 Li3PO4 + 0.3119 Ni3S2 + 0.2087 Li2S + 0.3211 LiCl + 0.195 Li2SO4"
+    },
+    "Al2O3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05535 Li17Al2P4S16Cl5O3 + 0.9446 Li0.5Ni1O2 -> 0.2022 Li3PO4 + 0.3149 Ni3S2 + 0.2768 LiCl + 0.2558 Li2SO4 + 0.0183 LiAl5O8 + 0.01922 AlPO4"
+    },
+    "Al2S3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05147 Li18Al2P4S23Cl + 0.9485 LiNiO2 -> 0.1029 LiAlO2 + 0.2059 Li3PO4 + 0.3162 Ni3S2 + 0.3346 Li2S + 0.05147 LiCl + 0.2169 Li2SO4"
+    },
+    "Al2S3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.03979 Li18Al2P4S23Cl + 0.9602 Li0.5Ni1O2 -> 0.01238 Li5AlO4 + 0.0672 LiAlO2 + 0.1592 Li3PO4 + 0.3201 Ni3S2 + 0.03979 LiCl + 0.275 Li2SO4"
+    },
+    "AlBr3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06604 Li21AlP4S17Br3Cl4 + 0.934 LiNiO2 -> 0.1698 Li2SO4 + 0.3113 Ni3S2 + 0.2642 Li3PO4 + 0.06604 LiAlO2 + 0.3302 Li2S + 0.1981 LiBr + 0.2642 LiCl"
+    },
+    "AlBr3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.04762 Li21AlP4S17Br3Cl4 + 0.9524 Li0.5Ni1O2 -> 0.2619 Li2SO4 + 0.2738 Ni3S2 + 0.1905 Li3PO4 + 0.04762 LiAlO2 + 0.1429 LiBr + 0.1905 LiCl + 0.131 Ni"
+    },
+    "AlCl3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06087 Li21AlP4(S5Cl)4 + 0.9391 LiNiO2 -> 0.06087 LiAlO2 + 0.2435 Li3PO4 + 0.313 Ni3S2 + 0.3957 Li2S + 0.2435 LiCl + 0.1957 Li2SO4"
+    },
+    "AlCl3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04478 Li21AlP4(S5Cl)4 + 0.9552 Li0.5Ni1O2 -> 0.03483 Li5AlO4 + 0.00995 LiAlO2 + 0.1791 Li3PO4 + 0.3184 Ni3S2 + 0.1791 LiCl + 0.2587 Li2SO4"
+    },
+    "AlF3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06087 Li21AlP4S20ClF3 + 0.9391 LiNiO2 -> 0.313 Ni3S2 + 0.1957 Li2SO4 + 0.06087 LiAlO2 + 0.1826 LiF + 0.3957 Li2S + 0.06087 LiCl + 0.2435 Li3PO4"
+    },
+    "AlF3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.04478 Li21AlP4S20ClF3 + 0.9552 Li0.5Ni1O2 -> 0.3184 Ni3S2 + 0.2587 Li2SO4 + 0.03483 Li5AlO4 + 0.00995 LiAlO2 + 0.1343 LiF + 0.04478 LiCl + 0.1791 Li3PO4"
+    },
+    "AlI3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06087 Li21AlP4S20I3Cl + 0.9391 LiNiO2 -> 0.2435 Li3PO4 + 0.1957 Li2SO4 + 0.313 Ni3S2 + 0.06087 LiAlO2 + 0.1826 LiI + 0.3957 Li2S + 0.06087 LiCl"
+    },
+    "AlI3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.04478 Li21AlP4S20I3Cl + 0.9552 Li0.5Ni1O2 -> 0.1791 Li3PO4 + 0.2587 Li2SO4 + 0.3184 Ni3S2 + 0.03483 Li5AlO4 + 0.00995 LiAlO2 + 0.1343 LiI + 0.04478 LiCl"
+    },
+    "AlN|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.9358 LiNiO2 + 0.06422 Li21AlP4S19NCl4 -> 0.1789 Li2SO4 + 0.2569 Li3PO4 + 0.3119 Ni3S2 + 0.06422 LiAlO2 + 0.4174 Li2S + 0.2569 LiCl + 0.03211 N2"
+    },
+    "AlN|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.963 Li0.5Ni1O2 + 0.03704 Li21AlP4S19NCl4 -> 0.3148 Li2SO4 + 0.1481 Li3PO4 + 0.03704 Ni3N + 0.1944 Ni3S2 + 0.03704 LiAlO2 + 0.1481 LiCl + 0.2685 Ni"
+    },
+    "As2S3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.08187 Li14AsP(S5Cl)2 + 0.9591 LiNiO2 -> 0.08187 Li3PO4 + 0.3197 Ni3S2 + 0.5458 Li2O + 0.1637 LiCl + 0.08187 Li3AsO4 + 0.1793 Li2SO4"
+    },
+    "As2S3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04878 Li14AsP(S5Cl)2 + 0.9756 Li0.5Ni1O2 -> 0.04878 Li3PO4 + 0.04878 Ni3S2 + 0.09756 LiCl + 0.04878 Li3AsO4 + 0.3902 Li2SO4 + 0.8293 Ni"
+    },
+    "B2O3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9421 LiNiO2 + 0.05785 Li17B2P4S16Cl5O3 -> 0.1157 Li3BO3 + 0.1963 Li2SO4 + 0.314 Ni3S2 + 0.1012 Li2S + 0.2893 LiCl + 0.2314 Li3PO4"
+    },
+    "B2O3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9464 Li0.5Ni1O2 + 0.05361 Li17B2P4S16Cl5O3 -> 0.01532 Li3B7O12 + 0.253 Li2SO4 + 0.3023 Ni3S2 + 0.03941 NiCl2 + 0.1892 LiCl + 0.2144 Li3PO4"
+    },
+    "BaCl2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06796 BaLi22P4(S5Cl)4 + 0.932 LiNiO2 -> 0.1942 Li2SO4 + 0.06796 BaCl2 + 0.3107 Ni3S2 + 0.5437 Li2S + 0.1359 LiCl + 0.2718 Li3PO4"
+    },
+    "BaCl2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.0303 BaLi22P4(S5Cl)4 + 0.9697 Li0.5Ni1O2 -> 0.3636 Li2SO4 + 0.0303 BaCl2 + 0.1212 Ni3S2 + 0.06061 LiCl + 0.1212 Li3PO4 + 0.6061 Ni"
+    },
+    "BaO|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9278 LiNiO2 + 0.07216 BaLi22P4S19Cl4O -> 0.1933 Li2SO4 + 0.07216 BaCl2 + 0.3093 Ni3S2 + 0.5593 Li2S + 0.1443 LiCl + 0.2887 Li3PO4"
+    },
+    "BaO|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9687 Li0.5Ni1O2 + 0.03125 BaLi22P4S19Cl4O -> 0.3672 Li2SO4 + 0.03125 BaCl2 + 0.1133 Ni3S2 + 0.0625 LiCl + 0.125 Li3PO4 + 0.6289 Ni"
+    },
+    "Ca3N2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06422 Li18Ca3P4S18(NCl2)2 + 0.9358 LiNiO2 -> 0.1628 Li2SO4 + 0.3119 Ni3S2 + 0.2569 LiCl + 0.1927 CaO + 0.3693 Li2S + 0.2569 Li3PO4 + 0.06422 N2"
+    },
+    "Ca3N2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.04167 Li18Ca3P4S18(NCl2)2 + 0.9583 Li0.5Ni1O2 -> 0.2812 Li2SO4 + 0.2344 Ni3S2 + 0.08333 Ni3N + 0.1667 LiCl + 0.125 CaO + 0.1667 Li3PO4 + 0.005208 Ni"
+    },
+    "CaBr2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06422 Li22CaP4S20(BrCl)2 + 0.9358 LiNiO2 -> 0.1284 LiBr + 0.195 Li2SO4 + 0.3119 Ni3S2 + 0.1284 LiCl + 0.06422 CaO + 0.4656 Li2S + 0.2569 Li3PO4"
+    },
+    "CaBr2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.03333 Li22CaP4S20(BrCl)2 + 0.9667 Li0.5Ni1O2 -> 0.06667 LiBr + 0.3417 Li2SO4 + 0.1625 Ni3S2 + 0.06667 LiCl + 0.03333 CaO + 0.1333 Li3PO4 + 0.4792 Ni"
+    },
+    "CaCl2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06422 Li22CaP4(S5Cl)4 + 0.9358 LiNiO2 -> 0.3119 Ni3S2 + 0.2569 Li3PO4 + 0.4656 Li2S + 0.2569 LiCl + 0.195 Li2SO4 + 0.06422 CaO"
+    },
+    "CaCl2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.03333 Li22CaP4(S5Cl)4 + 0.9667 Li0.5Ni1O2 -> 0.1625 Ni3S2 + 0.1333 Li3PO4 + 0.1333 LiCl + 0.3417 Li2SO4 + 0.03333 CaO + 0.4792 Ni"
+    },
+    "CaF2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06422 Li22CaP4S20(ClF)2 + 0.9358 LiNiO2 -> 0.3119 Ni3S2 + 0.4656 Li2S + 0.1284 LiCl + 0.2569 Li3PO4 + 0.195 Li2SO4 + 0.06422 CaO + 0.1284 LiF"
+    },
+    "CaF2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.03333 Li22CaP4S20(ClF)2 + 0.9667 Li0.5Ni1O2 -> 0.1625 Ni3S2 + 0.06667 LiCl + 0.1333 Li3PO4 + 0.3417 Li2SO4 + 0.03333 CaO + 0.06667 LiF + 0.4792 Ni"
+    },
+    "CaO|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.932 LiNiO2 + 0.06796 Li22CaP4S19Cl4O -> 0.3107 Ni3S2 + 0.2718 Li3PO4 + 0.4757 Li2S + 0.2718 LiCl + 0.1942 Li2SO4 + 0.06796 CaO"
+    },
+    "CaO|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9655 Li0.5Ni1O2 + 0.03448 Li22CaP4S19Cl4O -> 0.1552 Ni3S2 + 0.1379 Li3PO4 + 0.1379 LiCl + 0.3448 Li2SO4 + 0.03448 CaO + 0.5 Ni"
+    },
+    "CaS|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06422 Li22CaP4(S5Cl)4 + 0.9358 LiNiO2 -> 0.3119 Ni3S2 + 0.2569 Li3PO4 + 0.4656 Li2S + 0.2569 LiCl + 0.195 Li2SO4 + 0.06422 CaO"
+    },
+    "CaS|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.03333 Li22CaP4(S5Cl)4 + 0.9667 Li0.5Ni1O2 -> 0.1625 Ni3S2 + 0.1333 Li3PO4 + 0.1333 LiCl + 0.3417 Li2SO4 + 0.03333 CaO + 0.4792 Ni"
+    },
+    "CoO|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07167 Li22CoP4S19Cl4O + 0.9283 LiNiO2 -> 0.007964 Co9S8 + 0.2867 Li3PO4 + 0.3094 Ni3S2 + 0.4838 Li2S + 0.2867 LiCl + 0.1954 Li2SO4"
+    },
+    "CoO|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.03571 Li22CoP4S19Cl4O + 0.9643 Li0.5Ni1O2 -> 0.003968 Co9S8 + 0.1429 Li3PO4 + 0.1493 Ni3S2 + 0.1429 LiCl + 0.3482 Li2SO4 + 0.5164 Ni"
+    },
+    "Cr2O3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9358 LiNiO2 + 0.06422 Li18Cr2P4S17Cl4O3 -> 0.1284 LiCrO2 + 0.195 Li2SO4 + 0.3119 Ni3S2 + 0.2569 Li3PO4 + 0.2729 Li2S + 0.2569 LiCl"
+    },
+    "Cr2O3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9477 Li0.5Ni1O2 + 0.05226 Li18Cr2P4S17Cl4O3 -> 0.06504 LiCrO2 + 0.2567 Li2SO4 + 0.3159 Ni3S2 + 0.2091 Li3PO4 + 0.01974 Cr2O3 + 0.2091 LiCl"
+    },
+    "CrCl3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06604 Li21CrP4S17Cl7 + 0.934 LiNiO2 -> 0.06604 LiCrO2 + 0.1698 Li2SO4 + 0.3113 Ni3S2 + 0.2642 Li3PO4 + 0.3302 Li2S + 0.4623 LiCl"
+    },
+    "CrCl3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04762 Li21CrP4S17Cl7 + 0.9524 Li0.5Ni1O2 -> 0.04762 LiCrO2 + 0.2619 Li2SO4 + 0.2738 Ni3S2 + 0.1905 Li3PO4 + 0.3333 LiCl + 0.131 Ni"
+    },
+    "CrO3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.934 LiNiO2 + 0.06604 Li18CrP4S17Cl4O3 -> 0.06604 LiCrO2 + 0.2193 Li2SO4 + 0.3113 Ni3S2 + 0.2642 Li3PO4 + 0.2807 Li2S + 0.2642 LiCl"
+    },
+    "CrO3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9466 Li0.5Ni1O2 + 0.05338 Li18CrP4S17Cl4O3 -> 0.02728 LiCrO2 + 0.2764 Li2SO4 + 0.3155 Ni3S2 + 0.2135 Li3PO4 + 0.01305 Cr2O3 + 0.2135 LiCl"
+    },
+    "Cu2O|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.932 LiNiO2 + 0.06796 Li22Cu2P4S19Cl4O -> 0.4587 Li2S + 0.2718 Li3PO4 + 0.3107 Ni3S2 + 0.2718 LiCl + 0.2112 Li2SO4 + 0.1359 Cu"
+    },
+    "Cu2O|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9643 Li0.5Ni1O2 + 0.03571 Li22Cu2P4S19Cl4O -> 0.1429 Li3PO4 + 0.1652 Ni3S2 + 0.1429 LiCl + 0.3482 Li2SO4 + 0.4688 Ni + 0.07143 Cu"
+    },
+    "Fe2O3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9407 LiNiO2 + 0.05929 Li18Fe2P4S17Cl4O3 -> 0.0917 Li5FeO4 + 0.1478 Li2SO4 + 0.2372 Li3PO4 + 0.02688 FeNi35S32 + 0.1526 Li2O + 0.2372 LiCl"
+    },
+    "Fe2O3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9375 Li0.5Ni1O2 + 0.06253 Li18Fe2P4S17Cl4O3 -> 0.07735 LiFeO2 + 0.02093 Li5FeO4 + 0.2059 Li2SO4 + 0.2501 Li3PO4 + 0.02678 FeNi35S32 + 0.2501 LiCl"
+    },
+    "FeCl3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06915 Li21FeP4(S5Cl)4 + 0.9309 LiNiO2 -> 0.04255 Li5FeO4 + 0.1463 Li2SO4 + 0.2766 Li3PO4 + 0.0266 FeNi35S32 + 0.3856 Li2S + 0.2766 LiCl"
+    },
+    "FeCl3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05365 Li21FeP4(S5Cl)4 + 0.9463 Li0.5Ni1O2 -> 0.02662 Li5FeO4 + 0.2079 Li2SO4 + 0.2146 Li3PO4 + 0.02704 FeNi35S32 + 0.09632 Li2O + 0.2146 LiCl"
+    },
+    "Ga2O3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9474 LiNiO2 + 0.05263 Li18Ga2P4S17Cl4O3 -> 0.1053 Li5GaO4 + 0.2105 Li3PO4 + 0.3158 Ni3S2 + 0.06579 Li2S + 0.2105 LiCl + 0.1974 Li2SO4"
+    },
+    "Ga2O3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9485 Li0.5Ni1O2 + 0.0515 Li18Ga2P4S17Cl4O3 -> 0.206 Li3PO4 + 0.3101 Ni3S2 + 0.206 LiCl + 0.2554 Li2SO4 + 0.01824 Ga2NiO4 + 0.06652 LiGaO2"
+    },
+    "Ga2S3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.1102 Li9GaP2(S5Cl)2 + 0.9449 LiNiO2 -> 0.2205 Li3PO4 + 0.315 Ni3S2 + 0.2756 Li2S + 0.2205 LiCl + 0.1969 Li2SO4 + 0.1102 LiGaO2"
+    },
+    "Ga2S3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.08955 Li9GaP2(S5Cl)2 + 0.9552 Li0.5Ni1O2 -> 0.1791 Li3PO4 + 0.00995 LiGa5O8 + 0.3184 Ni3S2 + 0.1791 LiCl + 0.2587 Li2SO4 + 0.0398 LiGaO2"
+    },
+    "GaCl3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05932 Li21GaP4S17Cl7 + 0.9407 LiNiO2 -> 0.05932 Li5GaO4 + 0.2373 Li3PO4 + 0.3136 Ni3S2 + 0.2076 Li2S + 0.4153 LiCl + 0.1737 Li2SO4"
+    },
+    "GaCl3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04762 Li21GaP4S17Cl7 + 0.9524 Li0.5Ni1O2 -> 0.1905 Li3PO4 + 0.2738 Ni3S2 + 0.3333 LiCl + 0.2619 Li2SO4 + 0.04762 LiGaO2 + 0.131 Ni"
+    },
+    "GaN|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.05785 Li21GaP4S19NCl4 + 0.9421 LiNiO2 -> 0.05785 Li5GaO4 + 0.1818 Li2SO4 + 0.314 Ni3S2 + 0.2893 Li2S + 0.2314 LiCl + 0.2314 Li3PO4 + 0.02893 N2"
+    },
+    "GaN|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.03704 Li21GaP4S19NCl4 + 0.963 Li0.5Ni1O2 -> 0.03704 Ni3N + 0.3148 Li2SO4 + 0.1944 Ni3S2 + 0.03704 LiGaO2 + 0.1481 LiCl + 0.1481 Li3PO4 + 0.2685 Ni"
+    },
+    "Gd2O3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.932 LiNiO2 + 0.06796 Li18Gd2P4S17Cl4O3 -> 0.3107 Ni3S2 + 0.06796 Gd2O3 + 0.2718 Li3PO4 + 0.1942 Li2SO4 + 0.3398 Li2S + 0.2718 LiCl"
+    },
+    "Gd2O3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9524 Li0.5Ni1O2 + 0.04762 Li18Gd2P4S17Cl4O3 -> 0.2619 Ni3S2 + 0.04762 Gd2O3 + 0.1905 Li3PO4 + 0.2857 Li2SO4 + 0.1905 LiCl + 0.1667 Ni"
+    },
+    "GeO2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9536 LiNiO2 + 0.04636 Li25GeP3S18(Cl2O)2 -> 0.3179 Ni3S2 + 0.04636 Li4GeO4 + 0.1391 Li3PO4 + 0.4636 Li2O + 0.1854 LiCl + 0.1987 Li2SO4"
+    },
+    "GeO2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9706 Li0.5Ni1O2 + 0.02941 Li25GeP3S18(Cl2O)2 -> 0.06985 Ni3S2 + 0.08824 Li3PO4 + 0.1176 LiCl + 0.3897 Li2SO4 + 0.02941 Li2GeO3 + 0.761 Ni"
+    },
+    "GeS2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04192 Li25GeP3(S5Cl)4 + 0.9581 LiNiO2 -> 0.3194 Ni3S2 + 0.04192 Li4GeO4 + 0.1257 Li3PO4 + 0.4471 Li2O + 0.1677 LiCl + 0.1996 Li2SO4"
+    },
+    "GeS2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.02778 Li25GeP3(S5Cl)4 + 0.9722 Li0.5Ni1O2 -> 0.08681 Ni3S2 + 0.08333 Li3PO4 + 0.1111 LiCl + 0.3819 Li2SO4 + 0.02778 Li2GeO3 + 0.7118 Ni"
+    },
+    "HfCl4|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9435 LiNiO2 + 0.05645 Li20HfP4(S5Cl)4 -> 0.2258 Li3PO4 + 0.02823 Li6Hf2O7 + 0.1966 Li2SO4 + 0.3034 Li2S + 0.3145 Ni3S2 + 0.2258 LiCl"
+    },
+    "HfCl4|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9552 Li0.5Ni1O2 + 0.04478 Li20HfP4(S5Cl)4 -> 0.002488 Li2O + 0.1791 Li3PO4 + 0.02239 Li6Hf2O7 + 0.2587 Li2SO4 + 0.3184 Ni3S2 + 0.1791 LiCl"
+    },
+    "HfO2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.0625 Li20HfP4S18(Cl2O)2 + 0.9375 LiNiO2 -> 0.25 Li3PO4 + 0.03125 Li6Hf2O7 + 0.1953 Li2SO4 + 0.3047 Li2S + 0.3125 Ni3S2 + 0.25 LiCl"
+    },
+    "HfO2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04878 Li20HfP4S18(Cl2O)2 + 0.9512 Li0.5Ni1O2 -> 0.1951 Li3PO4 + 0.02439 Li6Hf2O7 + 0.2622 Li2SO4 + 0.3079 Ni3S2 + 0.1951 LiCl + 0.02744 Ni"
+    },
+    "In2O3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9358 LiNiO2 + 0.06422 Li18In2P4S17Cl4O3 -> 0.1284 LiInO2 + 0.2569 LiCl + 0.2569 Li3PO4 + 0.3119 Ni3S2 + 0.2729 Li2S + 0.195 Li2SO4"
+    },
+    "In2O3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9524 Li0.5Ni1O2 + 0.04762 Li18In2P4S17Cl4O3 -> 0.1905 LiCl + 0.1905 Li3PO4 + 0.2619 Ni3S2 + 0.04762 In2O3 + 0.2857 Li2SO4 + 0.1667 Ni"
+    },
+    "La2O3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9278 LiNiO2 + 0.07216 Li18La2P4S17Cl4O3 -> 0.3428 Li2S + 0.1933 Li2SO4 + 0.07216 La2SO2 + 0.2887 Li3PO4 + 0.3093 Ni3S2 + 0.2887 LiCl"
+    },
+    "La2O3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9524 Li0.5Ni1O2 + 0.04762 Li18La2P4S17Cl4O3 -> 0.2857 Li2SO4 + 0.1905 Li3PO4 + 0.2619 Ni3S2 + 0.1905 LiCl + 0.04762 La2O3 + 0.1667 Ni"
+    },
+    "LaCl3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07 Li21LaP4S17Cl7 + 0.93 LiNiO2 -> 0.3675 Li2S + 0.1675 Li2SO4 + 0.035 La2SO2 + 0.28 Li3PO4 + 0.31 Ni3S2 + 0.49 LiCl"
+    },
+    "LaCl3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04444 Li21LaP4S17Cl7 + 0.9556 Li0.5Ni1O2 -> 0.2833 Li2SO4 + 0.1778 Li3PO4 + 0.2361 Ni3S2 + 0.3111 LiCl + 0.02222 La2O3 + 0.2472 Ni"
+    },
+    "LaF3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06422 Li21LaP4S20ClF3 + 0.9358 LiNiO2 -> 0.1927 LiF + 0.03211 La2SO2 + 0.4335 Li2S + 0.06422 LiCl + 0.3119 Ni3S2 + 0.195 Li2SO4 + 0.2569 Li3PO4"
+    },
+    "LaF3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.03509 Li21LaP4S20ClF3 + 0.9649 Li0.5Ni1O2 -> 0.1053 LiF + 0.03509 LiCl + 0.1864 Ni3S2 + 0.3289 Li2SO4 + 0.1404 Li3PO4 + 0.01754 La2O3 + 0.4057 Ni"
+    },
+    "Li2O|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.07216 Li24P4S19Cl4O + 0.9278 LiNiO2 -> 0.5593 Li2S + 0.2887 Li3PO4 + 0.3093 Ni3S2 + 0.2887 LiCl + 0.1933 Li2SO4"
+    },
+    "Li2O|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.03125 Li24P4S19Cl4O + 0.9688 Li0.5Ni1O2 -> 0.125 Li3PO4 + 0.1133 Ni3S2 + 0.125 LiCl + 0.3672 Li2SO4 + 0.6289 Ni"
+    },
+    "Li2S|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.932 LiNiO2 + 0.2718 Li6PS5Cl -> 0.5437 Li2S + 0.2718 Li3PO4 + 0.3107 Ni3S2 + 0.2718 LiCl + 0.1942 Li2SO4"
+    },
+    "Li2S|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.9697 Li0.5Ni1O2 + 0.1212 Li6PS5Cl -> 0.1212 Li3PO4 + 0.1212 Ni3S2 + 0.1212 LiCl + 0.3636 Li2SO4 + 0.6061 Ni"
+    },
+    "Li3N|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07216 Li24P4S19NCl4 + 0.9278 LiNiO2 -> 0.2887 Li3PO4 + 0.1753 Li2SO4 + 0.5773 Li2S + 0.3093 Ni3S2 + 0.2887 LiCl + 0.03608 N2"
+    },
+    "Li3N|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.0303 Li24P4S19NCl4 + 0.9697 Li0.5Ni1O2 -> 0.1212 Li3PO4 + 0.3636 Li2SO4 + 0.0303 Ni3N + 0.1061 Ni3S2 + 0.1212 LiCl + 0.5606 Ni"
+    },
+    "LiBr|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06796 Li24P4S20BrCl3 + 0.932 LiNiO2 -> 0.5437 Li2S + 0.2718 Li3PO4 + 0.06796 LiBr + 0.3107 Ni3S2 + 0.2039 LiCl + 0.1942 Li2SO4"
+    },
+    "LiBr|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.0303 Li24P4S20BrCl3 + 0.9697 Li0.5Ni1O2 -> 0.1212 Li3PO4 + 0.0303 LiBr + 0.1212 Ni3S2 + 0.09091 LiCl + 0.3636 Li2SO4 + 0.6061 Ni"
+    },
+    "LiCl|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.93 LiNiO2 + 0.07 Li24P4S19Cl5 -> 0.525 Li2S + 0.28 Li3PO4 + 0.31 Ni3S2 + 0.35 LiCl + 0.185 Li2SO4"
+    },
+    "LiCl|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.9677 Li0.5Ni1O2 + 0.03226 Li24P4S19Cl5 -> 0.129 Li3PO4 + 0.129 Ni3S2 + 0.1613 LiCl + 0.3548 Li2SO4 + 0.5806 Ni"
+    },
+    "LiF|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.932 LiNiO2 + 0.06796 Li24P4S20Cl3F -> 0.3107 Ni3S2 + 0.1942 Li2SO4 + 0.2718 Li3PO4 + 0.5437 Li2S + 0.2039 LiCl + 0.06796 LiF"
+    },
+    "LiF|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9697 Li0.5Ni1O2 + 0.0303 Li24P4S20Cl3F -> 0.1212 Ni3S2 + 0.3636 Li2SO4 + 0.1212 Li3PO4 + 0.09091 LiCl + 0.0303 LiF + 0.6061 Ni"
+    },
+    "LiI|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06796 Li24P4S20ICl3 + 0.932 LiNiO2 -> 0.5437 Li2S + 0.3107 Ni3S2 + 0.2718 Li3PO4 + 0.06796 LiI + 0.2039 LiCl + 0.1942 Li2SO4"
+    },
+    "LiI|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.0303 Li24P4S20ICl3 + 0.9697 Li0.5Ni1O2 -> 0.1212 Ni3S2 + 0.1212 Li3PO4 + 0.0303 LiI + 0.09091 LiCl + 0.3636 Li2SO4 + 0.6061 Ni"
+    },
+    "Mg3N2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06422 Li18Mg3P4S18(NCl2)2 + 0.9358 LiNiO2 -> 0.2569 Li3PO4 + 0.1628 Li2SO4 + 0.3693 Li2S + 0.3119 Ni3S2 + 0.2569 LiCl + 0.1927 MgO + 0.06422 N2"
+    },
+    "Mg3N2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.04167 Li18Mg3P4S18(NCl2)2 + 0.9583 Li0.5Ni1O2 -> 0.1667 Li3PO4 + 0.08333 Ni3N + 0.2812 Li2SO4 + 0.2344 Ni3S2 + 0.1667 LiCl + 0.125 MgO + 0.005208 Ni"
+    },
+    "MgBr2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.932 LiNiO2 + 0.06796 Li22MgP4S18(BrCl2)2 -> 0.2718 Li3PO4 + 0.3107 Ni3S2 + 0.06796 MgO + 0.4248 Li2S + 0.2718 LiCl + 0.1359 LiBr + 0.1772 Li2SO4"
+    },
+    "MgBr2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.9615 Li0.5Ni1O2 + 0.03846 Li22MgP4S18(BrCl2)2 -> 0.1538 Li3PO4 + 0.1875 Ni3S2 + 0.03846 MgO + 0.1538 LiCl + 0.07692 LiBr + 0.3173 Li2SO4 + 0.399 Ni"
+    },
+    "MgCl2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9358 LiNiO2 + 0.06422 Li22MgP4(S5Cl)4 -> 0.2569 Li3PO4 + 0.4656 Li2S + 0.3119 Ni3S2 + 0.2569 LiCl + 0.195 Li2SO4 + 0.06422 MgO"
+    },
+    "MgCl2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9667 Li0.5Ni1O2 + 0.03333 Li22MgP4(S5Cl)4 -> 0.1333 Li3PO4 + 0.1625 Ni3S2 + 0.1333 LiCl + 0.3417 Li2SO4 + 0.03333 MgO + 0.4792 Ni"
+    },
+    "MgF2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.9358 LiNiO2 + 0.06422 Li22MgP4S20(ClF)2 -> 0.3119 Ni3S2 + 0.195 Li2SO4 + 0.1284 LiF + 0.2569 Li3PO4 + 0.4656 Li2S + 0.1284 LiCl + 0.06422 MgO"
+    },
+    "MgF2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.9667 Li0.5Ni1O2 + 0.03333 Li22MgP4S20(ClF)2 -> 0.1625 Ni3S2 + 0.3417 Li2SO4 + 0.06667 LiF + 0.1333 Li3PO4 + 0.06667 LiCl + 0.03333 MgO + 0.4792 Ni"
+    },
+    "MgI2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06422 Li22MgP4S20(ICl)2 + 0.9358 LiNiO2 -> 0.3119 Ni3S2 + 0.195 Li2SO4 + 0.2569 Li3PO4 + 0.4656 Li2S + 0.1284 LiCl + 0.06422 MgO + 0.1284 LiI"
+    },
+    "MgI2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.03333 Li22MgP4S20(ICl)2 + 0.9667 Li0.5Ni1O2 -> 0.1625 Ni3S2 + 0.3417 Li2SO4 + 0.1333 Li3PO4 + 0.06667 LiCl + 0.03333 MgO + 0.06667 LiI + 0.4792 Ni"
+    },
+    "MgO|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06796 Li21MgP4S18Cl5O + 0.932 LiNiO2 -> 0.2718 Li3PO4 + 0.4078 Li2S + 0.3107 Ni3S2 + 0.3398 LiCl + 0.1942 Li2SO4 + 0.06796 MgO"
+    },
+    "MgO|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04 Li21MgP4S18Cl5O + 0.96 Li0.5Ni1O2 -> 0.16 Li3PO4 + 0.2 Ni3S2 + 0.2 LiCl + 0.32 Li2SO4 + 0.04 MgO + 0.36 Ni"
+    },
+    "MgS|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9358 LiNiO2 + 0.06422 Li22MgP4(S5Cl)4 -> 0.2569 Li3PO4 + 0.4656 Li2S + 0.3119 Ni3S2 + 0.2569 LiCl + 0.195 Li2SO4 + 0.06422 MgO"
+    },
+    "MgS|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9667 Li0.5Ni1O2 + 0.03333 Li22MgP4(S5Cl)4 -> 0.1333 Li3PO4 + 0.1625 Ni3S2 + 0.1333 LiCl + 0.3417 Li2SO4 + 0.03333 MgO + 0.4792 Ni"
+    },
+    "MnO|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06604 Li22MnP4S19Cl4O + 0.934 LiNiO2 -> 0.1863 Li2SO4 + 0.3113 Ni3S2 + 0.06604 LiMnO2 + 0.2642 Li3PO4 + 0.4458 Li2S + 0.2642 LiCl"
+    },
+    "MnO|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.03571 Li22MnP4S19Cl4O + 0.9643 Li0.5Ni1O2 -> 0.3304 Li2SO4 + 0.1741 Ni3S2 + 0.03571 LiMnO2 + 0.1429 Li3PO4 + 0.1429 LiCl + 0.442 Ni"
+    },
+    "MoO3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04895 Li23MoP3S17Cl4O3 + 0.951 LiNiO2 -> 0.317 Ni3S2 + 0.1981 Li2SO4 + 0.1469 Li3PO4 + 0.04895 Li4MoO5 + 0.4242 Li2O + 0.1958 LiCl"
+    },
+    "MoO3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.03333 Li23MoP3S17Cl4O3 + 0.9667 Li0.5Ni1O2 -> 0.09583 Ni3S2 + 0.03333 Li2MoO4 + 0.375 Li2SO4 + 0.1 Li3PO4 + 0.1333 LiCl + 0.6792 Ni"
+    },
+    "Na2O|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9278 LiNiO2 + 0.07216 Na2Li22P4S19Cl4O -> 0.2887 Li3PO4 + 0.3093 Ni3S2 + 0.5593 Li2S + 0.1443 NaCl + 0.1443 LiCl + 0.1933 Li2SO4"
+    },
+    "Na2O|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9687 Li0.5Ni1O2 + 0.03125 Na2Li22P4S19Cl4O -> 0.125 Li3PO4 + 0.1133 Ni3S2 + 0.0625 NaCl + 0.0625 LiCl + 0.3672 Li2SO4 + 0.6289 Ni"
+    },
+    "Na2S|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.1359 NaLi11P2(S5Cl)2 + 0.932 LiNiO2 -> 0.2718 Li3PO4 + 0.3107 Ni3S2 + 0.5437 Li2S + 0.1359 NaCl + 0.1359 LiCl + 0.1942 Li2SO4"
+    },
+    "Na2S|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06061 NaLi11P2(S5Cl)2 + 0.9697 Li0.5Ni1O2 -> 0.1212 Li3PO4 + 0.1212 Ni3S2 + 0.06061 NaCl + 0.06061 LiCl + 0.3636 Li2SO4 + 0.6061 Ni"
+    },
+    "NaI|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.932 LiNiO2 + 0.06796 NaLi23P4S20ICl3 -> 0.1942 Li2SO4 + 0.3107 Ni3S2 + 0.06796 NaI + 0.5437 Li2S + 0.2039 LiCl + 0.2718 Li3PO4"
+    },
+    "NaI|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9697 Li0.5Ni1O2 + 0.0303 NaLi23P4S20ICl3 -> 0.3636 Li2SO4 + 0.1212 Ni3S2 + 0.0303 NaI + 0.09091 LiCl + 0.1212 Li3PO4 + 0.6061 Ni"
+    },
+    "Nb2O5|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.02439 Li24Nb2P2S15Cl4O5 + 0.9756 LiNiO2 -> 0.3659 Li2SO4 + 0.02439 Li8Nb2O9 + 0.04878 Li3PO4 + 0.1951 Li2O + 0.09756 LiCl + 0.9756 Ni"
+    },
+    "Nb2O5|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.02703 Li24Nb2P2S15Cl4O5 + 0.973 Li0.5Ni1O2 -> 0.4054 Li2SO4 + 0.05405 LiNbO3 + 0.05405 Li3PO4 + 0.08108 NiO + 0.1081 LiCl + 0.8919 Ni"
+    },
+    "NbCl5|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.947 LiNiO2 + 0.05303 Li24NbP3(S5Cl3)3 -> 0.1641 Li2SO4 + 0.3157 Ni3S2 + 0.02652 Li8Nb2O9 + 0.1591 Li3PO4 + 0.3624 Li2O + 0.4773 LiCl"
+    },
+    "NbCl5|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9565 Li0.5Ni1O2 + 0.04348 Li24NbP3(S5Cl3)3 -> 0.3043 Li2SO4 + 0.1739 Ni3S2 + 0.04348 Li3NbO4 + 0.1304 Li3PO4 + 0.3913 LiCl + 0.4348 Ni"
+    },
+    "Nd2O3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07216 Li17Nd2P4S16Cl5O3 + 0.9278 LiNiO2 -> 0.3093 Ni3S2 + 0.1933 Li2SO4 + 0.2887 Li3PO4 + 0.2706 Li2S + 0.07216 Nd2SO2 + 0.3608 LiCl"
+    },
+    "Nd2O3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05535 Li17Nd2P4S16Cl5O3 + 0.9446 Li0.5Ni1O2 -> 0.3149 Ni3S2 + 0.01312 Nd3PO7 + 0.2558 Li2SO4 + 0.2083 Li3PO4 + 0.2768 LiCl + 0.03567 Nd2O3"
+    },
+    "NdCl3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06422 Li21NdP4(S5Cl)4 + 0.9358 LiNiO2 -> 0.3119 Ni3S2 + 0.195 Li2SO4 + 0.2569 Li3PO4 + 0.4335 Li2S + 0.03211 Nd2SO2 + 0.2569 LiCl"
+    },
+    "NdCl3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.03509 Li21NdP4(S5Cl)4 + 0.9649 Li0.5Ni1O2 -> 0.1864 Ni3S2 + 0.3289 Li2SO4 + 0.1404 Li3PO4 + 0.1404 LiCl + 0.01754 Nd2O3 + 0.4057 Ni"
+    },
+    "NdF3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06422 Li21NdP4S20ClF3 + 0.9358 LiNiO2 -> 0.195 Li2SO4 + 0.4335 Li2S + 0.03211 Nd2SO2 + 0.3119 Ni3S2 + 0.1927 LiF + 0.06422 LiCl + 0.2569 Li3PO4"
+    },
+    "NdF3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.03509 Li21NdP4S20ClF3 + 0.9649 Li0.5Ni1O2 -> 0.3289 Li2SO4 + 0.1864 Ni3S2 + 0.1053 LiF + 0.03509 LiCl + 0.1404 Li3PO4 + 0.01754 Nd2O3 + 0.4057 Ni"
+    },
+    "NiO|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.9293 LiNiO2 + 0.07071 Li22NiP4S19Cl4O -> 0.4773 Li2S + 0.2828 Li3PO4 + 0.3333 Ni3S2 + 0.2828 LiCl + 0.1995 Li2SO4"
+    },
+    "NiO|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.9643 Li0.5Ni1O2 + 0.03571 Li22NiP4S19Cl4O -> 0.1429 Li3PO4 + 0.1652 Ni3S2 + 0.1429 LiCl + 0.3482 Li2SO4 + 0.5045 Ni"
+    },
+    "Sb2O5|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9756 LiNiO2 + 0.02439 Li24Sb2P2S15Cl4O5 -> 0.04878 Li3PO4 + 0.04878 Li5SbO5 + 0.09756 LiCl + 0.1707 Li2O + 0.3659 Li2SO4 + 0.9756 Ni"
+    },
+    "Sb2O5|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9778 Li0.5Ni1O2 + 0.02222 Li24Sb2P2S15Cl4O5 -> 0.04444 Li3Ni2SbO6 + 0.04444 Li3PO4 + 0.08889 LiCl + 0.2889 NiO + 0.3333 Li2SO4 + 0.6 Ni"
+    },
+    "Sb2S3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.03646 Li28Sb2P2S23Cl + 0.9635 LiNiO2 -> 0.3212 Ni3S2 + 0.07292 Li3PO4 + 0.07292 Li5SbO5 + 0.03646 LiCl + 0.4861 Li2O + 0.1962 Li2SO4"
+    },
+    "Sb2S3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.01961 Li28Sb2P2S23Cl + 0.9804 Li0.5Ni1O2 -> 0.02941 Ni3S2 + 0.03922 Li3Ni2SbO6 + 0.03922 Li3PO4 + 0.01961 LiCl + 0.3922 Li2SO4 + 0.8137 Ni"
+    },
+    "Sc2O3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9358 LiNiO2 + 0.06422 Li18Sc2P4S17Cl4O3 -> 0.3119 Ni3S2 + 0.195 Li2SO4 + 0.1284 LiScO2 + 0.2729 Li2S + 0.2569 Li3PO4 + 0.2569 LiCl"
+    },
+    "Sc2O3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9477 Li0.5Ni1O2 + 0.05226 Li18Sc2P4S17Cl4O3 -> 0.3159 Ni3S2 + 0.2567 Li2SO4 + 0.06504 LiScO2 + 0.2091 Li3PO4 + 0.2091 LiCl + 0.01974 Sc2O3"
+    },
+    "ScCl3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06087 Li21ScP4(S5Cl)4 + 0.9391 LiNiO2 -> 0.313 Ni3S2 + 0.1957 Li2SO4 + 0.06087 LiScO2 + 0.3957 Li2S + 0.2435 Li3PO4 + 0.2435 LiCl"
+    },
+    "ScCl3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.03704 Li21ScP4(S5Cl)4 + 0.963 Li0.5Ni1O2 -> 0.213 Ni3S2 + 0.3148 Li2SO4 + 0.03704 LiScO2 + 0.1481 Li3PO4 + 0.1481 LiCl + 0.3241 Ni"
+    },
+    "ScF3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06087 Li21ScP4S20ClF3 + 0.9391 LiNiO2 -> 0.1957 Li2SO4 + 0.06087 LiScO2 + 0.3957 Li2S + 0.313 Ni3S2 + 0.1826 LiF + 0.06087 LiCl + 0.2435 Li3PO4"
+    },
+    "ScF3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.03704 Li21ScP4S20ClF3 + 0.963 Li0.5Ni1O2 -> 0.3148 Li2SO4 + 0.03704 LiScO2 + 0.213 Ni3S2 + 0.1111 LiF + 0.03704 LiCl + 0.1481 Li3PO4 + 0.3241 Ni"
+    },
+    "SiO2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04636 Li25SiP3S18(Cl2O)2 + 0.9536 LiNiO2 -> 0.04636 Li8SiO6 + 0.1987 Li2SO4 + 0.3179 Ni3S2 + 0.3709 Li2O + 0.1854 LiCl + 0.1391 Li3PO4"
+    },
+    "SiO2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.02941 Li25SiP3S18(Cl2O)2 + 0.9706 Li0.5Ni1O2 -> 0.3897 Li2SO4 + 0.06985 Ni3S2 + 0.02941 Li2SiO3 + 0.1176 LiCl + 0.08824 Li3PO4 + 0.761 Ni"
+    },
+    "SiS2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9358 LiNiO2 + 0.06422 Li25SiP3(S11Cl)2 -> 0.06422 Li4SiO4 + 0.211 Li2SO4 + 0.3119 Ni3S2 + 0.578 Li2S + 0.1284 LiCl + 0.1927 Li3PO4"
+    },
+    "SiS2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.973 Li0.5Ni1O2 + 0.02703 Li25SiP3(S11Cl)2 -> 0.02703 Li4SiO4 + 0.3784 Li2SO4 + 0.1081 Ni3S2 + 0.05405 LiCl + 0.08108 Li3PO4 + 0.6486 Ni"
+    },
+    "Sm2O3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06796 Li17Sm2P4S16Cl5O3 + 0.932 LiNiO2 -> 0.1942 Li2SO4 + 0.3107 Ni3S2 + 0.2718 Li3PO4 + 0.2718 Li2S + 0.3398 LiCl + 0.06796 Sm2O3"
+    },
+    "Sm2O3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05535 Li17Sm2P4S16Cl5O3 + 0.9446 Li0.5Ni1O2 -> 0.01312 Sm3PO7 + 0.2558 Li2SO4 + 0.3149 Ni3S2 + 0.2083 Li3PO4 + 0.2768 LiCl + 0.03567 Sm2O3"
+    },
+    "SmCl3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06422 Li21SmP4(S5Cl)4 + 0.9358 LiNiO2 -> 0.195 Li2SO4 + 0.3119 Ni3S2 + 0.2569 Li3PO4 + 0.03211 Sm2SO2 + 0.4335 Li2S + 0.2569 LiCl"
+    },
+    "SmCl3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.03509 Li21SmP4(S5Cl)4 + 0.9649 Li0.5Ni1O2 -> 0.3289 Li2SO4 + 0.1864 Ni3S2 + 0.1404 Li3PO4 + 0.1404 LiCl + 0.01754 Sm2O3 + 0.4057 Ni"
+    },
+    "SnO2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04636 Li25SnP3S18(Cl2O)2 + 0.9536 LiNiO2 -> 0.3179 Ni3S2 + 0.04636 Li8SnO6 + 0.1391 Li3PO4 + 0.1854 LiCl + 0.3709 Li2O + 0.1987 Li2SO4"
+    },
+    "SnO2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.02703 Li25SnP3S18(Cl2O)2 + 0.973 Li0.5Ni1O2 -> 0.04054 Ni3S2 + 0.08108 Li3PO4 + 0.1081 LiCl + 0.02703 SnO2 + 0.4054 Li2SO4 + 0.8514 Ni"
+    },
+    "SnS2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04192 Li25SnP3(S5Cl)4 + 0.9581 LiNiO2 -> 0.3194 Ni3S2 + 0.04192 Li8SnO6 + 0.1257 Li3PO4 + 0.1677 LiCl + 0.3633 Li2O + 0.1996 Li2SO4"
+    },
+    "SnS2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.02778 Li25SnP3(S5Cl)4 + 0.9722 Li0.5Ni1O2 -> 0.08681 Ni3S2 + 0.02778 Li2SnO3 + 0.08333 Li3PO4 + 0.1111 LiCl + 0.3819 Li2SO4 + 0.7118 Ni"
+    },
+    "SrCl2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07216 SrLi22P4(S3Cl)6 + 0.9278 LiNiO2 -> 0.1753 Li2SO4 + 0.433 LiCl + 0.433 Li2S + 0.07216 SrS + 0.3093 Ni3S2 + 0.2887 Li3PO4"
+    },
+    "SrCl2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.03448 SrLi22P4(S3Cl)6 + 0.9655 Li0.5Ni1O2 -> 0.3448 Li2SO4 + 0.1379 LiCl + 0.03448 SrCl2 + 0.1379 Ni3S2 + 0.1379 Li3PO4 + 0.5517 Ni"
+    },
+    "SrO|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9278 LiNiO2 + 0.07216 SrLi22P4S19Cl4O -> 0.1933 Li2SO4 + 0.2887 LiCl + 0.4871 Li2S + 0.07216 SrS + 0.3093 Ni3S2 + 0.2887 Li3PO4"
+    },
+    "SrO|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9688 Li0.5Ni1O2 + 0.03125 SrLi22P4S19Cl4O -> 0.3672 Li2SO4 + 0.0625 LiCl + 0.03125 SrCl2 + 0.1133 Ni3S2 + 0.125 Li3PO4 + 0.6289 Ni"
+    },
+    "Ta2O5|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05512 Li24Ta2P2S15Cl4O5 + 0.9449 LiNiO2 -> 0.1102 Li5TaO5 + 0.315 Ni3S2 + 0.1969 Li2SO4 + 0.1102 Li3PO4 + 0.3858 Li2O + 0.2205 LiCl"
+    },
+    "Ta2O5|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.02941 Li24Ta2P2S15Cl4O5 + 0.9706 Li0.5Ni1O2 -> 0.01103 Ni3S2 + 0.4191 Li2SO4 + 0.05882 LiTaO3 + 0.05882 Li3PO4 + 0.1176 LiCl + 0.9375 Ni"
+    },
+    "TaCl5|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9255 LiNiO2 + 0.07447 Li24TaP3(S5Cl3)3 -> 0.07447 Li5TaO5 + 0.3537 Li2S + 0.3085 Ni3S2 + 0.1463 Li2SO4 + 0.2234 Li3PO4 + 0.6702 LiCl"
+    },
+    "TaCl5|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9565 Li0.5Ni1O2 + 0.04348 Li24TaP3(S5Cl3)3 -> 0.1739 Ni3S2 + 0.3043 Li2SO4 + 0.04348 Li3TaO4 + 0.1304 Li3PO4 + 0.3913 LiCl + 0.4348 Ni"
+    },
+    "TiCl4|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05036 Li25TiP3(S2Cl)8 + 0.9496 LiNiO2 -> 0.05036 Li4TiO4 + 0.1727 Li2SO4 + 0.3165 Ni3S2 + 0.4029 Li2O + 0.4029 LiCl + 0.1511 Li3PO4"
+    },
+    "TiCl4|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.03571 Li25TiP3(S2Cl)8 + 0.9643 Li0.5Ni1O2 -> 0.3482 Li2SO4 + 0.1116 Ni3S2 + 0.03571 Li2TiO3 + 0.2857 LiCl + 0.1071 Li3PO4 + 0.6295 Ni"
+    },
+    "TiF4|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.932 LiNiO2 + 0.06796 Li25TiP3(S5F)4 -> 0.3107 Ni3S2 + 0.06796 Li4TiO4 + 0.5437 Li2S + 0.2039 Li3PO4 + 0.2718 LiF + 0.1942 Li2SO4"
+    },
+    "TiF4|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9722 Li0.5Ni1O2 + 0.02778 Li25TiP3(S5F)4 -> 0.02778 Li2TiO3 + 0.08681 Ni3S2 + 0.08333 Li3PO4 + 0.1111 LiF + 0.3819 Li2SO4 + 0.7118 Ni"
+    },
+    "TiO2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9536 LiNiO2 + 0.04636 Li25TiP3S18(Cl2O)2 -> 0.04636 Li4TiO4 + 0.1987 Li2SO4 + 0.3179 Ni3S2 + 0.4636 Li2O + 0.1854 LiCl + 0.1391 Li3PO4"
+    },
+    "TiO2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9706 Li0.5Ni1O2 + 0.02941 Li25TiP3S18(Cl2O)2 -> 0.3897 Li2SO4 + 0.06985 Ni3S2 + 0.02941 Li2TiO3 + 0.1176 LiCl + 0.08824 Li3PO4 + 0.761 Ni"
+    },
+    "V2O5|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.02439 Li24V2P2S15Cl4O5 + 0.9756 LiNiO2 -> 0.04878 Li3VO4 + 0.3659 Li2SO4 + 0.2195 Li2O + 0.09756 LiCl + 0.04878 Li3PO4 + 0.9756 Ni"
+    },
+    "V2O5|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.02222 Li24V2P2S15Cl4O5 + 0.9778 Li0.5Ni1O2 -> 0.04444 Li3VO4 + 0.3333 Li2SO4 + 0.3778 NiO + 0.08889 LiCl + 0.04444 Li3PO4 + 0.6 Ni"
+    },
+    "WO3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06087 Li17P4WS16Cl5O3 + 0.9391 LiNiO2 -> 0.1957 Li2SO4 + 0.06087 Li4WO5 + 0.1522 Li2S + 0.2435 Li3PO4 + 0.313 Ni3S2 + 0.3043 LiCl"
+    },
+    "WO3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.0524 Li17P4WS16Cl5O3 + 0.9476 Li0.5Ni1O2 -> 0.2511 Li2SO4 + 0.0524 NiWO4 + 0.2096 Li3PO4 + 0.2937 Ni3S2 + 0.01419 NiCl2 + 0.2336 LiCl"
+    },
+    "Y2O3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06796 Li18Y2P4S17Cl4O3 + 0.932 LiNiO2 -> 0.3107 Ni3S2 + 0.1942 Li2SO4 + 0.2718 Li3PO4 + 0.3398 Li2S + 0.2718 LiCl + 0.06796 Y2O3"
+    },
+    "Y2O3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04762 Li18Y2P4S17Cl4O3 + 0.9524 Li0.5Ni1O2 -> 0.2619 Ni3S2 + 0.2857 Li2SO4 + 0.1905 Li3PO4 + 0.1905 LiCl + 0.04762 Y2O3 + 0.1667 Ni"
+    },
+    "YCl3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.0625 Li21YP4(S5Cl)4 + 0.9375 LiNiO2 -> 0.3125 Ni3S2 + 0.1953 Li2SO4 + 0.25 Li3PO4 + 0.4297 Li2S + 0.25 LiCl + 0.03125 Y2O3"
+    },
+    "YCl3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.03509 Li21YP4(S5Cl)4 + 0.9649 Li0.5Ni1O2 -> 0.1864 Ni3S2 + 0.3289 Li2SO4 + 0.1404 Li3PO4 + 0.1404 LiCl + 0.01754 Y2O3 + 0.4057 Ni"
+    },
+    "YF3|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.0625 Li21YP4S20ClF3 + 0.9375 LiNiO2 -> 0.1953 Li2SO4 + 0.4297 Li2S + 0.3125 Ni3S2 + 0.1875 LiF + 0.0625 LiCl + 0.25 Li3PO4 + 0.03125 Y2O3"
+    },
+    "YF3|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.03509 Li21YP4S20ClF3 + 0.9649 Li0.5Ni1O2 -> 0.3289 Li2SO4 + 0.1864 Ni3S2 + 0.1053 LiF + 0.03509 LiCl + 0.1404 Li3PO4 + 0.01754 Y2O3 + 0.4057 Ni"
+    },
+    "ZnO|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07216 Li21ZnP4S18Cl5O + 0.9278 LiNiO2 -> 0.3093 Ni3S2 + 0.2887 Li3PO4 + 0.07216 ZnS + 0.4149 Li2S + 0.3608 LiCl + 0.1933 Li2SO4"
+    },
+    "ZnO|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04 Li21ZnP4S18Cl5O + 0.96 Li0.5Ni1O2 -> 0.2 Ni3S2 + 0.16 Li3PO4 + 0.04 ZnO + 0.2 LiCl + 0.32 Li2SO4 + 0.36 Ni"
+    },
+    "ZrBr4|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04192 Li25ZrP3(S5Br)4 + 0.9581 LiNiO2 -> 0.4681 Li2O + 0.3194 Ni3S2 + 0.02096 Li6Zr2O7 + 0.1996 Li2SO4 + 0.1677 LiBr + 0.1257 Li3PO4"
+    },
+    "ZrBr4|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.02778 Li25ZrP3(S5Br)4 + 0.9722 Li0.5Ni1O2 -> 0.02778 Li2ZrO3 + 0.08681 Ni3S2 + 0.3819 Li2SO4 + 0.1111 LiBr + 0.08333 Li3PO4 + 0.7118 Ni"
+    },
+    "ZrCl4|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.0625 Li20ZrP4(S2Cl)8 + 0.9375 LiNiO2 -> 0.03125 Li6Zr2O7 + 0.1641 Li2SO4 + 0.2109 Li2S + 0.3125 Ni3S2 + 0.25 Li3PO4 + 0.5 LiCl"
+    },
+    "ZrCl4|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05376 Li20ZrP4(S2Cl)8 + 0.9462 Li0.5Ni1O2 -> 0.2294 Li2SO4 + 0.007168 Li2ZrO3 + 0.3154 Ni3S2 + 0.2151 Li3PO4 + 0.4301 LiCl + 0.04659 ZrO2"
+    },
+    "ZrF4|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9581 LiNiO2 + 0.04192 Li25ZrP3(S5F)4 -> 0.4681 Li2O + 0.3194 Ni3S2 + 0.02096 Li6Zr2O7 + 0.1996 Li2SO4 + 0.1677 LiF + 0.1257 Li3PO4"
+    },
+    "ZrF4|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9722 Li0.5Ni1O2 + 0.02778 Li25ZrP3(S5F)4 -> 0.02778 Li2ZrO3 + 0.08681 Ni3S2 + 0.3819 Li2SO4 + 0.1111 LiF + 0.08333 Li3PO4 + 0.7118 Ni"
+    },
+    "ZrO2|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9536 LiNiO2 + 0.04636 Li25ZrP3S18(Cl2O)2 -> 0.02318 Li6Zr2O7 + 0.1987 Li2SO4 + 0.3179 Ni3S2 + 0.4868 Li2O + 0.1391 Li3PO4 + 0.1854 LiCl"
+    },
+    "ZrO2|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.973 Li0.5Ni1O2 + 0.02703 Li25ZrP3S18(Cl2O)2 -> 0.4054 Li2SO4 + 0.04054 Ni3S2 + 0.08108 Li3PO4 + 0.1081 LiCl + 0.02703 ZrO2 + 0.8514 Ni"
+    },
+    "Ag2O|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9201 LiCoO2 + 0.07987 Li22Ag2P4S19Cl4O -> 0.1022 Co9S8 + 0.3195 Li3PO4 + 0.5391 Li2S + 0.3195 LiCl + 0.1605 Li2SO4 + 0.1597 Ag"
+    },
+    "Ag2O|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9444 Li0.5Co1O2 + 0.05561 Li22Ag2P4S19Cl4O -> 0.1049 Co9S8 + 0.2225 Li3PO4 + 0.1857 Li2O + 0.2225 LiCl + 0.2172 Li2SO4 + 0.1112 Ag"
+    },
+    "Al2O3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.09735 Li17Al2P4S16Cl5O3 + 0.9027 LiCoO2 -> 0.3164 Li2S + 0.1947 LiAlO2 + 0.3894 Li3PO4 + 0.3009 Co3S4 + 0.4867 LiCl + 0.03761 Li2SO4"
+    },
+    "Al2O3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06456 Li17Al2P4S16Cl5O3 + 0.9354 Li0.5Co1O2 -> 0.04892 LiAlO2 + 0.2582 Li3PO4 + 0.1039 Co9S8 + 0.3228 LiCl + 0.2014 Li2SO4 + 0.01604 LiAl5O8"
+    },
+    "Al2S3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07857 Li18Al2P4S23Cl + 0.9214 LiCoO2 -> 0.5107 Li2S + 0.1571 LiAlO2 + 0.3143 Li3PO4 + 0.3071 Co3S4 + 0.07857 LiCl + 0.06786 Li2SO4"
+    },
+    "Al2S3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05031 Li18Al2P4S23Cl + 0.9497 Li0.5Co1O2 -> 0.08957 Li2S + 0.1006 LiAlO2 + 0.2012 Li3PO4 + 0.1055 Co9S8 + 0.05031 LiCl + 0.2233 Li2SO4"
+    },
+    "AlBr3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.1 Li21AlP4S17Br3Cl4 + 0.9 LiCoO2 -> 0.4 Li3PO4 + 0.1 LiAlO2 + 0.5 Li2S + 0.3 Co3S4 + 0.3 LiBr + 0.4 LiCl"
+    },
+    "AlBr3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.05975 Li21AlP4S17Br3Cl4 + 0.9402 Li0.5Co1O2 -> 0.1045 Co9S8 + 0.239 Li3PO4 + 0.04247 Li5AlO4 + 0.18 Li2SO4 + 0.01729 LiAlO2 + 0.1793 LiBr + 0.239 LiCl"
+    },
+    "AlCl3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.09244 Li21AlP4(S5Cl)4 + 0.9076 LiCoO2 -> 0.6008 Li2S + 0.09244 LiAlO2 + 0.3697 Li3PO4 + 0.3025 Co3S4 + 0.3697 LiCl + 0.03782 Li2SO4"
+    },
+    "AlCl3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05388 Li21AlP4(S5Cl)4 + 0.9461 Li0.5Co1O2 -> 0.05388 Li5AlO4 + 0.03285 Li2S + 0.2155 Li3PO4 + 0.1051 Co9S8 + 0.2155 LiCl + 0.2037 Li2SO4"
+    },
+    "AlF3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.09244 Li21AlP4S20ClF3 + 0.9076 LiCoO2 -> 0.03782 Li2SO4 + 0.3025 Co3S4 + 0.09244 LiAlO2 + 0.2773 LiF + 0.6008 Li2S + 0.09244 LiCl + 0.3697 Li3PO4"
+    },
+    "AlF3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.05388 Li21AlP4S20ClF3 + 0.9461 Li0.5Co1O2 -> 0.2037 Li2SO4 + 0.05388 Li5AlO4 + 0.1051 Co9S8 + 0.1616 LiF + 0.03285 Li2S + 0.05388 LiCl + 0.2155 Li3PO4"
+    },
+    "AlI3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.09244 Li21AlP4S20I3Cl + 0.9076 LiCoO2 -> 0.3697 Li3PO4 + 0.03782 Li2SO4 + 0.3025 Co3S4 + 0.09244 LiAlO2 + 0.2773 LiI + 0.6008 Li2S + 0.09244 LiCl"
+    },
+    "AlI3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.05388 Li21AlP4S20I3Cl + 0.9461 Li0.5Co1O2 -> 0.2155 Li3PO4 + 0.1051 Co9S8 + 0.2037 Li2SO4 + 0.05388 Li5AlO4 + 0.1616 LiI + 0.03285 Li2S + 0.05388 LiCl"
+    },
+    "AlN|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.9027 LiCoO2 + 0.09735 Li21AlP4S19NCl4 -> 0.01327 Li2SO4 + 0.3894 Li3PO4 + 0.3009 Co3S4 + 0.09735 LiAlO2 + 0.6327 Li2S + 0.3894 LiCl + 0.04867 N2"
+    },
+    "AlN|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.9434 Li0.5Co1O2 + 0.05655 Li21AlP4S19NCl4 -> 0.189 Li2SO4 + 0.2262 Li3PO4 + 0.05655 Li5AlO4 + 0.1048 Co9S8 + 0.0469 Li2S + 0.2262 LiCl + 0.02828 N2"
+    },
+    "As2S3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.1805 Li14AsP(S5Cl)2 + 0.9097 LiCoO2 -> 0.1805 Li3PO4 + 0.9025 Li2S + 0.1011 Co9S8 + 0.361 LiCl + 0.1805 Li3AsO4 + 0.09386 Li2SO4"
+    },
+    "As2S3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.1022 Li14AsP(S5Cl)2 + 0.9489 Li0.5Co1O2 -> 0.1022 Li3PO4 + 0.1054 Co9S8 + 0.3652 Li2O + 0.2044 LiCl + 0.1022 Li3AsO4 + 0.1787 Li2SO4"
+    },
+    "B2O3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.912 LiCoO2 + 0.088 Li17B2P4S16Cl5O3 -> 0.176 Li3BO3 + 0.038 Li2SO4 + 0.154 Li2S + 0.304 Co3S4 + 0.44 LiCl + 0.352 Li3PO4"
+    },
+    "B2O3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9427 Li0.5Co1O2 + 0.0573 Li17B2P4S16Cl5O3 -> 0.02433 Li3BO3 + 0.1992 Li2SO4 + 0.0897 Co9S8 + 0.04513 Co3(BO3)2 + 0.2865 LiCl + 0.2292 Li3PO4"
+    },
+    "BaCl2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07987 BaLi22P4(S5Cl)4 + 0.9201 LiCoO2 -> 0.639 Li2S + 0.1022 Co9S8 + 0.1597 LiCl + 0.1406 Li2SO4 + 0.07987 BaCl2 + 0.3195 Li3PO4"
+    },
+    "BaCl2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06645 BaLi22P4(S5Cl)4 + 0.9335 Li0.5Co1O2 -> 0.2982 Li2S + 0.1037 Co9S8 + 0.1329 LiCl + 0.201 Li2SO4 + 0.06645 BaCl2 + 0.2658 Li3PO4"
+    },
+    "BaO|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9153 LiCoO2 + 0.08475 BaLi22P4S19Cl4O -> 0.6568 Li2S + 0.1017 Co9S8 + 0.1695 LiCl + 0.1398 Li2SO4 + 0.08475 BaCl2 + 0.339 Li3PO4"
+    },
+    "BaO|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9451 Li0.5Co1O2 + 0.05492 BaLi22P4S19Cl4O -> 0.105 Co9S8 + 0.1098 LiCl + 0.2525 Li2O + 0.2035 Li2SO4 + 0.05492 BaCl2 + 0.2197 Li3PO4"
+    },
+    "Ca3N2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.09025 Li18Ca3P4S18(NCl2)2 + 0.9097 LiCoO2 -> 0.09386 Li2SO4 + 0.1011 Co9S8 + 0.361 LiCl + 0.4513 Li2S + 0.2708 CaS + 0.361 Li3PO4 + 0.09025 N2"
+    },
+    "Ca3N2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.05632 Li18Ca3P4S18(NCl2)2 + 0.9437 Li0.5Co1O2 -> 0.1173 Li2O + 0.175 Li2SO4 + 0.1049 Co9S8 + 0.2253 LiCl + 0.169 CaO + 0.2253 Li3PO4 + 0.05632 N2"
+    },
+    "CaBr2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.07987 Li22CaP4S20(BrCl)2 + 0.9201 LiCoO2 -> 0.1406 Li2SO4 + 0.1022 Co9S8 + 0.1597 LiBr + 0.1597 LiCl + 0.5591 Li2S + 0.07987 CaS + 0.3195 Li3PO4"
+    },
+    "CaBr2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06279 Li22CaP4S20(BrCl)2 + 0.9372 Li0.5Co1O2 -> 0.2018 Li2SO4 + 0.1041 Co9S8 + 0.1256 LiBr + 0.1256 LiCl + 0.06279 CaO + 0.2209 Li2S + 0.2511 Li3PO4"
+    },
+    "CaCl2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07987 Li22CaP4(S5Cl)4 + 0.9201 LiCoO2 -> 0.3195 Li3PO4 + 0.1022 Co9S8 + 0.5591 Li2S + 0.07987 CaS + 0.3195 LiCl + 0.1406 Li2SO4"
+    },
+    "CaCl2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06279 Li22CaP4(S5Cl)4 + 0.9372 Li0.5Co1O2 -> 0.2511 Li3PO4 + 0.1041 Co9S8 + 0.2209 Li2S + 0.2511 LiCl + 0.2018 Li2SO4 + 0.06279 CaO"
+    },
+    "CaF2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.07987 Li22CaP4S20(ClF)2 + 0.9201 LiCoO2 -> 0.3195 Li3PO4 + 0.1022 Co9S8 + 0.5591 Li2S + 0.1597 LiCl + 0.1406 Li2SO4 + 0.07987 CaS + 0.1597 LiF"
+    },
+    "CaF2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06279 Li22CaP4S20(ClF)2 + 0.9372 Li0.5Co1O2 -> 0.2511 Li3PO4 + 0.1041 Co9S8 + 0.2209 Li2S + 0.1256 LiCl + 0.2018 Li2SO4 + 0.06279 CaO + 0.1256 LiF"
+    },
+    "CaO|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9153 LiCoO2 + 0.08475 Li22CaP4S19Cl4O -> 0.339 Li3PO4 + 0.1017 Co9S8 + 0.572 Li2S + 0.08475 CaS + 0.339 LiCl + 0.1398 Li2SO4"
+    },
+    "CaO|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9451 Li0.5Co1O2 + 0.05492 Li22CaP4S19Cl4O -> 0.2197 Li3PO4 + 0.105 Co9S8 + 0.1976 Li2O + 0.2197 LiCl + 0.2035 Li2SO4 + 0.05492 CaO"
+    },
+    "CaS|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07987 Li22CaP4(S5Cl)4 + 0.9201 LiCoO2 -> 0.3195 Li3PO4 + 0.1022 Co9S8 + 0.5591 Li2S + 0.07987 CaS + 0.3195 LiCl + 0.1406 Li2SO4"
+    },
+    "CaS|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06279 Li22CaP4(S5Cl)4 + 0.9372 Li0.5Co1O2 -> 0.2511 Li3PO4 + 0.1041 Co9S8 + 0.2209 Li2S + 0.2511 LiCl + 0.2018 Li2SO4 + 0.06279 CaO"
+    },
+    "CoO|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.08418 Li22CoP4S19Cl4O + 0.9158 LiCoO2 -> 0.5682 Li2S + 0.3367 Li3PO4 + 0.1111 Co9S8 + 0.3367 LiCl + 0.1423 Li2SO4"
+    },
+    "CoO|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.05755 Li22CoP4S19Cl4O + 0.9425 Li0.5Co1O2 -> 0.2302 Li3PO4 + 0.1111 Co9S8 + 0.2038 Li2O + 0.2302 LiCl + 0.2045 Li2SO4"
+    },
+    "Cr2O3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9245 LiCoO2 + 0.07553 Li18Cr2P4S17Cl4O3 -> 0.1027 Co9S8 + 0.3021 Li3PO4 + 0.1511 LiCrO2 + 0.321 Li2S + 0.1412 Li2SO4 + 0.3021 LiCl"
+    },
+    "Cr2O3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.939 Li0.5Co1O2 + 0.06099 Li18Cr2P4S17Cl4O3 -> 0.0326 Li2O + 0.1043 Co9S8 + 0.244 Li3PO4 + 0.122 LiCrO2 + 0.2021 Li2SO4 + 0.244 LiCl"
+    },
+    "CrCl3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07764 Li21CrP4S17Cl7 + 0.9224 LiCoO2 -> 0.1025 Co9S8 + 0.3106 Li3PO4 + 0.07764 LiCrO2 + 0.3882 Li2S + 0.1118 Li2SO4 + 0.5435 LiCl"
+    },
+    "CrCl3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06457 Li21CrP4S17Cl7 + 0.9354 Li0.5Co1O2 -> 0.1039 Co9S8 + 0.2583 Li3PO4 + 0.06457 LiCrO2 + 0.08898 Li2S + 0.1772 Li2SO4 + 0.452 LiCl"
+    },
+    "CrO3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9224 LiCoO2 + 0.07764 Li18CrP4S17Cl4O3 -> 0.1025 Co9S8 + 0.3106 Li3PO4 + 0.07764 LiCrO2 + 0.33 Li2S + 0.17 Li2SO4 + 0.3106 LiCl"
+    },
+    "CrO3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9354 Li0.5Co1O2 + 0.06457 Li18CrP4S17Cl4O3 -> 0.1039 Co9S8 + 0.2583 Li3PO4 + 0.06457 LiCrO2 + 0.04055 Li2S + 0.2256 Li2SO4 + 0.2583 LiCl"
+    },
+    "Cu2O|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.8927 LiCoO2 + 0.1073 Li22Cu2P4S19Cl4O -> 0.2146 Co2CuS4 + 0.0515 Co9S8 + 0.4292 Li3PO4 + 0.7242 Li2S + 0.4292 LiCl + 0.04399 Li2SO4"
+    },
+    "Cu2O|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9444 Li0.5Co1O2 + 0.05561 Li22Cu2P4S19Cl4O -> 0.1049 Co9S8 + 0.2225 Li3PO4 + 0.1857 Li2O + 0.2225 LiCl + 0.2172 Li2SO4 + 0.1112 Cu"
+    },
+    "Fe2O3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.8963 LiCoO2 + 0.1037 Li18Fe2P4S17Cl4O3 -> 0.111 Li2SO4 + 0.09959 Co9S8 + 0.4149 Li3PO4 + 0.4409 Li2S + 0.2075 FeS2 + 0.4149 LiCl"
+    },
+    "Fe2O3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.939 Li0.5Co1O2 + 0.06099 Li18Fe2P4S17Cl4O3 -> 0.1057 LiFeO2 + 0.0163 Li5FeO4 + 0.2021 Li2SO4 + 0.1043 Co9S8 + 0.244 Li3PO4 + 0.244 LiCl"
+    },
+    "FeCl3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.08224 Li21FeP4(S5Cl)4 + 0.9178 LiCoO2 -> 0.1299 Li2SO4 + 0.102 Co9S8 + 0.3289 Li3PO4 + 0.5345 Li2S + 0.08224 FeS2 + 0.3289 LiCl"
+    },
+    "FeCl3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05388 Li21FeP4(S5Cl)4 + 0.9461 Li0.5Co1O2 -> 0.05388 Li5FeO4 + 0.2037 Li2SO4 + 0.1051 Co9S8 + 0.2155 Li3PO4 + 0.03285 Li2S + 0.2155 LiCl"
+    },
+    "Ga2O3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9245 LiCoO2 + 0.07553 Li18Ga2P4S17Cl4O3 -> 0.3021 Li3PO4 + 0.1027 Co9S8 + 0.321 Li2S + 0.3021 LiCl + 0.1412 Li2SO4 + 0.1511 LiGaO2"
+    },
+    "Ga2O3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.939 Li0.5Co1O2 + 0.06099 Li18Ga2P4S17Cl4O3 -> 0.244 Li3PO4 + 0.1043 Co9S8 + 0.0163 Li5GaO4 + 0.244 LiCl + 0.2021 Li2SO4 + 0.1057 LiGaO2"
+    },
+    "Ga2S3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.1299 Li9GaP2(S5Cl)2 + 0.9351 LiCoO2 -> 0.2597 Li3PO4 + 0.1039 Co9S8 + 0.3247 Li2S + 0.2597 LiCl + 0.1429 Li2SO4 + 0.1299 LiGaO2"
+    },
+    "Ga2S3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.1046 Li9GaP2(S5Cl)2 + 0.9477 Li0.5Co1O2 -> 0.2093 Li3PO4 + 0.1053 Co9S8 + 0.01645 Li5GaO4 + 0.2093 LiCl + 0.204 Li2SO4 + 0.08819 LiGaO2"
+    },
+    "GaCl3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07764 Li21GaP4S17Cl7 + 0.9224 LiCoO2 -> 0.3106 Li3PO4 + 0.1025 Co9S8 + 0.3882 Li2S + 0.5435 LiCl + 0.1118 Li2SO4 + 0.07764 LiGaO2"
+    },
+    "GaCl3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05975 Li21GaP4S17Cl7 + 0.9402 Li0.5Co1O2 -> 0.239 Li3PO4 + 0.1045 Co9S8 + 0.04247 Li5GaO4 + 0.4183 LiCl + 0.18 Li2SO4 + 0.01729 LiGaO2"
+    },
+    "GaN|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.07553 Li21GaP4S19NCl4 + 0.9245 LiCoO2 -> 0.07553 LiGaO2 + 0.1224 Li2SO4 + 0.1027 Co9S8 + 0.4909 Li2S + 0.3021 LiCl + 0.3021 Li3PO4 + 0.03776 N2"
+    },
+    "GaN|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.05655 Li21GaP4S19NCl4 + 0.9434 Li0.5Co1O2 -> 0.05655 Li5GaO4 + 0.189 Li2SO4 + 0.1048 Co9S8 + 0.0469 Li2S + 0.2262 LiCl + 0.2262 Li3PO4 + 0.02828 N2"
+    },
+    "Gd2O3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9153 LiCoO2 + 0.08475 Li18Gd2P4S17Cl4O3 -> 0.1017 Co9S8 + 0.1398 Li2SO4 + 0.4025 Li2S + 0.339 Li3PO4 + 0.08475 Gd2SO2 + 0.339 LiCl"
+    },
+    "Gd2O3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.939 Li0.5Co1O2 + 0.06099 Li18Gd2P4S17Cl4O3 -> 0.1043 Co9S8 + 0.2021 Li2SO4 + 0.0326 Li2O + 0.244 Li3PO4 + 0.122 LiGdO2 + 0.244 LiCl"
+    },
+    "GeO2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9097 LiCoO2 + 0.09025 Li25GeP3S18(Cl2O)2 -> 0.2708 Li3PO4 + 0.09025 Li4GeO4 + 0.1011 Co9S8 + 0.6769 Li2S + 0.361 LiCl + 0.139 Li2SO4"
+    },
+    "GeO2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9422 Li0.5Co1O2 + 0.0578 Li25GeP3S18(Cl2O)2 -> 0.1734 Li3PO4 + 0.0578 Li4GeO4 + 0.1047 Co9S8 + 0.2639 Li2O + 0.2312 LiCl + 0.2028 Li2SO4"
+    },
+    "GeS2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07987 Li25GeP3(S5Cl)4 + 0.9201 LiCoO2 -> 0.2396 Li3PO4 + 0.07987 Li4GeO4 + 0.1022 Co9S8 + 0.639 Li2S + 0.3195 LiCl + 0.1406 Li2SO4"
+    },
+    "GeS2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05232 Li25GeP3(S5Cl)4 + 0.9477 Li0.5Co1O2 -> 0.157 Li3PO4 + 0.05232 Li4GeO4 + 0.1053 Co9S8 + 0.2422 Li2O + 0.2093 LiCl + 0.204 Li2SO4"
+    },
+    "HfCl4|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.912 LiCoO2 + 0.088 Li20HfP4(S5Cl)4 -> 0.038 Li2SO4 + 0.088 Li2HfO3 + 0.506 Li2S + 0.352 Li3PO4 + 0.304 Co3S4 + 0.352 LiCl"
+    },
+    "HfCl4|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9448 Li0.5Co1O2 + 0.05518 Li20HfP4(S5Cl)4 -> 0.105 Co9S8 + 0.02759 Li6Hf2O7 + 0.2034 Li2SO4 + 0.0604 Li2S + 0.2207 Li3PO4 + 0.2207 LiCl"
+    },
+    "HfO2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07553 Li20HfP4S18(Cl2O)2 + 0.9245 LiCoO2 -> 0.1027 Co9S8 + 0.1412 Li2SO4 + 0.07553 Li2HfO3 + 0.3965 Li2S + 0.3021 Li3PO4 + 0.3021 LiCl"
+    },
+    "HfO2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.0611 Li20HfP4S18(Cl2O)2 + 0.9389 Li0.5Co1O2 -> 0.1043 Co9S8 + 0.03055 Li6Hf2O7 + 0.2021 Li2SO4 + 0.06315 Li2S + 0.2444 Li3PO4 + 0.2444 LiCl"
+    },
+    "In2O3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9035 LiCoO2 + 0.09653 Li18In2P4S17Cl4O3 -> 0.3861 Li3PO4 + 0.1931 LiInS2 + 0.3137 Li2S + 0.3861 LiCl + 0.1004 Co9S8 + 0.138 Li2SO4"
+    },
+    "In2O3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.939 Li0.5Co1O2 + 0.06099 Li18In2P4S17Cl4O3 -> 0.122 LiInO2 + 0.244 Li3PO4 + 0.244 LiCl + 0.1043 Co9S8 + 0.0326 Li2O + 0.2021 Li2SO4"
+    },
+    "La2O3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9153 LiCoO2 + 0.08475 Li18La2P4S17Cl4O3 -> 0.339 Li3PO4 + 0.1017 Co9S8 + 0.1398 Li2SO4 + 0.4025 Li2S + 0.08475 La2SO2 + 0.339 LiCl"
+    },
+    "La2O3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9354 Li0.5Co1O2 + 0.06456 Li18La2P4S17Cl4O3 -> 0.2582 Li3PO4 + 0.1039 Co9S8 + 0.2014 Li2SO4 + 0.06456 La2SO2 + 0.09704 Li2O + 0.2582 LiCl"
+    },
+    "LaCl3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.08224 Li21LaP4S17Cl7 + 0.9178 LiCoO2 -> 0.3289 Li3PO4 + 0.102 Co9S8 + 0.1094 Li2SO4 + 0.4317 Li2S + 0.04112 La2SO2 + 0.5757 LiCl"
+    },
+    "LaCl3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06845 Li21LaP4S17Cl7 + 0.9316 Li0.5Co1O2 -> 0.2738 Li3PO4 + 0.1035 Co9S8 + 0.1749 Li2SO4 + 0.1265 Li2S + 0.03422 La2SO2 + 0.4791 LiCl"
+    },
+    "LaF3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.07553 Li21LaP4S20ClF3 + 0.9245 LiCoO2 -> 0.1027 Co9S8 + 0.2266 LiF + 0.03776 La2SO2 + 0.5098 Li2S + 0.07553 LiCl + 0.1412 Li2SO4 + 0.3021 Li3PO4"
+    },
+    "LaF3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06279 Li21LaP4S20ClF3 + 0.9372 Li0.5Co1O2 -> 0.1041 Co9S8 + 0.1884 LiF + 0.03139 La2SO2 + 0.1895 Li2S + 0.06279 LiCl + 0.2018 Li2SO4 + 0.2511 Li3PO4"
+    },
+    "Li2O|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.08475 Li24P4S19Cl4O + 0.9153 LiCoO2 -> 0.6568 Li2S + 0.339 Li3PO4 + 0.1017 Co9S8 + 0.339 LiCl + 0.1398 Li2SO4"
+    },
+    "Li2O|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.05492 Li24P4S19Cl4O + 0.9451 Li0.5Co1O2 -> 0.2197 Li3PO4 + 0.105 Co9S8 + 0.2525 Li2O + 0.2197 LiCl + 0.2035 Li2SO4"
+    },
+    "Li2S|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.9201 LiCoO2 + 0.3195 Li6PS5Cl -> 0.639 Li2S + 0.3195 Li3PO4 + 0.1022 Co9S8 + 0.3195 LiCl + 0.1406 Li2SO4"
+    },
+    "Li2S|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.9477 Li0.5Co1O2 + 0.2093 Li6PS5Cl -> 0.2093 Li3PO4 + 0.1053 Co9S8 + 0.2422 Li2O + 0.2093 LiCl + 0.204 Li2SO4"
+    },
+    "Li3N|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.08475 Li24P4S19NCl4 + 0.9153 LiCoO2 -> 0.1186 Li2SO4 + 0.678 Li2S + 0.339 Li3PO4 + 0.1017 Co9S8 + 0.339 LiCl + 0.04237 N2"
+    },
+    "Li3N|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05425 Li24P4S19NCl4 + 0.9458 Li0.5Co1O2 -> 0.19 Li2SO4 + 0.217 Li3PO4 + 0.1051 Co9S8 + 0.2634 Li2O + 0.217 LiCl + 0.02712 N2"
+    },
+    "LiBr|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07987 Li24P4S20BrCl3 + 0.9201 LiCoO2 -> 0.07987 LiBr + 0.3195 Li3PO4 + 0.639 Li2S + 0.1022 Co9S8 + 0.2396 LiCl + 0.1406 Li2SO4"
+    },
+    "LiBr|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05232 Li24P4S20BrCl3 + 0.9477 Li0.5Co1O2 -> 0.05232 LiBr + 0.2093 Li3PO4 + 0.1053 Co9S8 + 0.2422 Li2O + 0.157 LiCl + 0.204 Li2SO4"
+    },
+    "LiCl|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.9178 LiCoO2 + 0.08224 Li24P4S19Cl5 -> 0.6168 Li2S + 0.3289 Li3PO4 + 0.102 Co9S8 + 0.4112 LiCl + 0.1299 Li2SO4"
+    },
+    "LiCl|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.9454 Li0.5Co1O2 + 0.05458 Li24P4S19Cl5 -> 0.2183 Li3PO4 + 0.105 Co9S8 + 0.2307 Li2O + 0.2729 LiCl + 0.1967 Li2SO4"
+    },
+    "LiF|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9201 LiCoO2 + 0.07987 Li24P4S20Cl3F -> 0.1022 Co9S8 + 0.1406 Li2SO4 + 0.3195 Li3PO4 + 0.639 Li2S + 0.2396 LiCl + 0.07987 LiF"
+    },
+    "LiF|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9477 Li0.5Co1O2 + 0.05232 Li24P4S20Cl3F -> 0.1053 Co9S8 + 0.2422 Li2O + 0.204 Li2SO4 + 0.2093 Li3PO4 + 0.157 LiCl + 0.05232 LiF"
+    },
+    "LiI|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07987 Li24P4S20ICl3 + 0.9201 LiCoO2 -> 0.639 Li2S + 0.07987 LiI + 0.3195 Li3PO4 + 0.1022 Co9S8 + 0.2396 LiCl + 0.1406 Li2SO4"
+    },
+    "LiI|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05232 Li24P4S20ICl3 + 0.9477 Li0.5Co1O2 -> 0.05232 LiI + 0.2093 Li3PO4 + 0.1053 Co9S8 + 0.2422 Li2O + 0.157 LiCl + 0.204 Li2SO4"
+    },
+    "Mg3N2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.07553 Li18Mg3P4S18(NCl2)2 + 0.9245 LiCoO2 -> 0.3021 Li3PO4 + 0.1027 Co9S8 + 0.2266 MgO + 0.1035 Li2SO4 + 0.4343 Li2S + 0.3021 LiCl + 0.07553 N2"
+    },
+    "Mg3N2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06279 Li18Mg3P4S18(NCl2)2 + 0.9372 Li0.5Co1O2 -> 0.2511 Li3PO4 + 0.1041 Co9S8 + 0.1884 MgO + 0.1704 Li2SO4 + 0.1267 Li2S + 0.2511 LiCl + 0.06279 N2"
+    },
+    "MgBr2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.9201 LiCoO2 + 0.07987 Li22MgP4S18(BrCl2)2 -> 0.3195 Li3PO4 + 0.07987 MgO + 0.4992 Li2S + 0.3195 LiCl + 0.1597 LiBr + 0.1022 Co9S8 + 0.1206 Li2SO4"
+    },
+    "MgBr2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.9335 Li0.5Co1O2 + 0.06645 Li22MgP4S18(BrCl2)2 -> 0.2658 Li3PO4 + 0.06645 MgO + 0.1819 Li2S + 0.2658 LiCl + 0.1329 LiBr + 0.1037 Co9S8 + 0.1844 Li2SO4"
+    },
+    "MgCl2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9245 LiCoO2 + 0.07553 Li22MgP4(S5Cl)4 -> 0.5476 Li2S + 0.1027 Co9S8 + 0.3021 Li3PO4 + 0.07553 MgO + 0.3021 LiCl + 0.1412 Li2SO4"
+    },
+    "MgCl2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9372 Li0.5Co1O2 + 0.06279 Li22MgP4(S5Cl)4 -> 0.2209 Li2S + 0.1041 Co9S8 + 0.2511 Li3PO4 + 0.06279 MgO + 0.2511 LiCl + 0.2018 Li2SO4"
+    },
+    "MgF2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.9245 LiCoO2 + 0.07553 Li22MgP4S20(ClF)2 -> 0.1412 Li2SO4 + 0.3021 Li3PO4 + 0.1027 Co9S8 + 0.1511 LiF + 0.5476 Li2S + 0.1511 LiCl + 0.07553 MgO"
+    },
+    "MgF2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.9372 Li0.5Co1O2 + 0.06279 Li22MgP4S20(ClF)2 -> 0.2018 Li2SO4 + 0.2511 Li3PO4 + 0.1041 Co9S8 + 0.1256 LiF + 0.2209 Li2S + 0.1256 LiCl + 0.06279 MgO"
+    },
+    "MgI2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.07553 Li22MgP4S20(ICl)2 + 0.9245 LiCoO2 -> 0.3021 Li3PO4 + 0.1027 Co9S8 + 0.5476 Li2S + 0.1511 LiCl + 0.07553 MgO + 0.1511 LiI + 0.1412 Li2SO4"
+    },
+    "MgI2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06279 Li22MgP4S20(ICl)2 + 0.9372 Li0.5Co1O2 -> 0.2511 Li3PO4 + 0.1041 Co9S8 + 0.2209 Li2S + 0.1256 LiCl + 0.06279 MgO + 0.1256 LiI + 0.2018 Li2SO4"
+    },
+    "MgO|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07987 Li21MgP4S18Cl5O + 0.9201 LiCoO2 -> 0.4792 Li2S + 0.1022 Co9S8 + 0.3195 Li3PO4 + 0.07987 MgO + 0.3994 LiCl + 0.1406 Li2SO4"
+    },
+    "MgO|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06645 Li21MgP4S18Cl5O + 0.9335 Li0.5Co1O2 -> 0.1653 Li2S + 0.1037 Co9S8 + 0.2658 Li3PO4 + 0.06645 MgO + 0.3323 LiCl + 0.201 Li2SO4"
+    },
+    "MgS|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9245 LiCoO2 + 0.07553 Li22MgP4(S5Cl)4 -> 0.5476 Li2S + 0.1027 Co9S8 + 0.3021 Li3PO4 + 0.07553 MgO + 0.3021 LiCl + 0.1412 Li2SO4"
+    },
+    "MgS|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9372 Li0.5Co1O2 + 0.06279 Li22MgP4(S5Cl)4 -> 0.2209 Li2S + 0.1041 Co9S8 + 0.2511 Li3PO4 + 0.06279 MgO + 0.2511 LiCl + 0.2018 Li2SO4"
+    },
+    "MnO|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07987 Li22MnP4S19Cl4O + 0.9201 LiCoO2 -> 0.1406 Li2SO4 + 0.1022 Co9S8 + 0.3195 Li3PO4 + 0.07987 MnO + 0.5591 Li2S + 0.3195 LiCl"
+    },
+    "MnO|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05458 Li22MnP4S19Cl4O + 0.9454 Li0.5Co1O2 -> 0.1967 Li2SO4 + 0.05458 LiMnO2 + 0.105 Co9S8 + 0.2183 Li3PO4 + 0.1761 Li2O + 0.2183 LiCl"
+    },
+    "MoO3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.122 Li23MoP3S17Cl4O3 + 0.878 LiCoO2 -> 0.3659 Li3PO4 + 0.1646 Li2SO4 + 0.09756 Co9S8 + 0.122 MoS2 + 0.8841 Li2S + 0.4878 LiCl"
+    },
+    "MoO3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06099 Li23MoP3S17Cl4O3 + 0.939 Li0.5Co1O2 -> 0.183 Li3PO4 + 0.2021 Li2SO4 + 0.06099 Li4MoO5 + 0.1043 Co9S8 + 0.2156 Li2O + 0.244 LiCl"
+    },
+    "Na2O|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9153 LiCoO2 + 0.08475 Na2Li22P4S19Cl4O -> 0.1017 Co9S8 + 0.339 Li3PO4 + 0.6568 Li2S + 0.1695 NaCl + 0.1695 LiCl + 0.1398 Li2SO4"
+    },
+    "Na2O|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9451 Li0.5Co1O2 + 0.05492 Na2Li22P4S19Cl4O -> 0.105 Co9S8 + 0.2197 Li3PO4 + 0.1098 NaCl + 0.2525 Li2O + 0.1098 LiCl + 0.2035 Li2SO4"
+    },
+    "Na2S|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.1597 NaLi11P2(S5Cl)2 + 0.9201 LiCoO2 -> 0.1022 Co9S8 + 0.3195 Li3PO4 + 0.639 Li2S + 0.1597 NaCl + 0.1597 LiCl + 0.1406 Li2SO4"
+    },
+    "Na2S|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.1046 NaLi11P2(S5Cl)2 + 0.9477 Li0.5Co1O2 -> 0.1053 Co9S8 + 0.2093 Li3PO4 + 0.1046 NaCl + 0.2422 Li2O + 0.1046 LiCl + 0.204 Li2SO4"
+    },
+    "NaI|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9201 LiCoO2 + 0.07987 NaLi23P4S20ICl3 -> 0.1022 Co9S8 + 0.1406 Li2SO4 + 0.07987 NaI + 0.639 Li2S + 0.2396 LiCl + 0.3195 Li3PO4"
+    },
+    "NaI|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9477 Li0.5Co1O2 + 0.05232 NaLi23P4S20ICl3 -> 0.1053 Co9S8 + 0.204 Li2SO4 + 0.2422 Li2O + 0.05232 NaI + 0.157 LiCl + 0.2093 Li3PO4"
+    },
+    "Nb2O5|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.1037 Li24Nb2P2S15Cl4O5 + 0.8963 LiCoO2 -> 0.1037 Li8Nb2O9 + 0.09959 Co9S8 + 0.1369 Li2SO4 + 0.2075 Li3PO4 + 0.6224 Li2S + 0.4149 LiCl"
+    },
+    "Nb2O5|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06856 Li24Nb2P2S15Cl4O5 + 0.9314 Li0.5Co1O2 -> 0.06856 Li8Nb2O9 + 0.1035 Co9S8 + 0.2005 Li2SO4 + 0.1371 Li3PO4 + 0.238 Li2O + 0.2743 LiCl"
+    },
+    "NbCl5|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9067 LiCoO2 + 0.09328 Li24NbP3(S5Cl3)3 -> 0.1007 Co9S8 + 0.08022 Li2SO4 + 0.09328 Li3NbO4 + 0.2799 Li3PO4 + 0.5131 Li2S + 0.8396 LiCl"
+    },
+    "NbCl5|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.934 Li0.5Co1O2 + 0.066 Li24NbP3(S5Cl3)3 -> 0.033 Li8Nb2O9 + 0.1038 Co9S8 + 0.1598 Li2SO4 + 0.198 Li3PO4 + 0.1397 Li2O + 0.594 LiCl"
+    },
+    "Nd2O3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.08475 Li17Nd2P4S16Cl5O3 + 0.9153 LiCoO2 -> 0.1017 Co9S8 + 0.1398 Li2SO4 + 0.339 Li3PO4 + 0.3178 Li2S + 0.08475 Nd2SO2 + 0.4237 LiCl"
+    },
+    "Nd2O3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06856 Li17Nd2P4S16Cl5O3 + 0.9314 Li0.5Co1O2 -> 0.1035 Co9S8 + 0.2005 Li2SO4 + 0.2743 Li3PO4 + 0.03234 Li2O + 0.06856 Nd2SO2 + 0.3428 LiCl"
+    },
+    "NdCl3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07553 Li21NdP4(S5Cl)4 + 0.9245 LiCoO2 -> 0.1027 Co9S8 + 0.1412 Li2SO4 + 0.3021 Li3PO4 + 0.5098 Li2S + 0.03776 Nd2SO2 + 0.3021 LiCl"
+    },
+    "NdCl3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06279 Li21NdP4(S5Cl)4 + 0.9372 Li0.5Co1O2 -> 0.1041 Co9S8 + 0.2018 Li2SO4 + 0.2511 Li3PO4 + 0.1895 Li2S + 0.03139 Nd2SO2 + 0.2511 LiCl"
+    },
+    "NdF3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.07553 Li21NdP4S20ClF3 + 0.9245 LiCoO2 -> 0.1412 Li2SO4 + 0.1027 Co9S8 + 0.3021 Li3PO4 + 0.03776 Nd2SO2 + 0.5098 Li2S + 0.2266 LiF + 0.07553 LiCl"
+    },
+    "NdF3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.06279 Li21NdP4S20ClF3 + 0.9372 Li0.5Co1O2 -> 0.2018 Li2SO4 + 0.1041 Co9S8 + 0.2511 Li3PO4 + 0.03139 Nd2SO2 + 0.1895 Li2S + 0.1884 LiF + 0.06279 LiCl"
+    },
+    "NiO|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9084 LiCoO2 + 0.09158 Li22NiP4S19Cl4O -> 0.08059 Co9S8 + 0.3663 Li3PO4 + 0.6181 Li2S + 0.09158 Co2NiS4 + 0.3663 LiCl + 0.1108 Li2SO4"
+    },
+    "NiO|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9429 Li0.5Co1O2 + 0.05705 Li22NiP4S19Cl4O -> 0.1048 Co9S8 + 0.2282 Li3PO4 + 0.01902 Ni3S2 + 0.1991 Li2O + 0.2282 LiCl + 0.2078 Li2SO4"
+    },
+    "Sb2O5|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9035 LiCoO2 + 0.09653 Li24Sb2P2S15Cl4O5 -> 0.1931 Li5SbO5 + 0.1004 Co9S8 + 0.5068 Li2S + 0.1931 Li3PO4 + 0.3861 LiCl + 0.138 Li2SO4"
+    },
+    "Sb2O5|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9545 Li0.5Co1O2 + 0.04545 Li24Sb2P2S15Cl4O5 -> 0.09091 Li5SbO5 + 0.04403 Co9S8 + 0.09091 Li3PO4 + 0.1818 LiCl + 0.3295 Li2SO4 + 0.5582 Co"
+    },
+    "Sb2S3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07353 Li28Sb2P2S23Cl + 0.9265 LiCoO2 -> 0.1471 Li5SbO5 + 0.1029 Co9S8 + 0.7353 Li2S + 0.1471 Li3PO4 + 0.07353 LiCl + 0.1324 Li2SO4"
+    },
+    "Sb2S3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.04557 Li28Sb2P2S23Cl + 0.9544 Li0.5Co1O2 -> 0.09114 Li5SbO5 + 0.106 Co9S8 + 0.09114 Li3PO4 + 0.04557 LiCl + 0.2895 Li2O + 0.1998 Li2SO4"
+    },
+    "Sc2O3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9245 LiCoO2 + 0.07553 Li18Sc2P4S17Cl4O3 -> 0.1511 LiScO2 + 0.1412 Li2SO4 + 0.1027 Co9S8 + 0.321 Li2S + 0.3021 Li3PO4 + 0.3021 LiCl"
+    },
+    "Sc2O3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9372 Li0.5Co1O2 + 0.06279 Li18Sc2P4S17Cl4O3 -> 0.1256 LiScO2 + 0.2018 Li2SO4 + 0.1041 Co9S8 + 0.03254 Li2S + 0.2511 Li3PO4 + 0.2511 LiCl"
+    },
+    "ScCl3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07163 Li21ScP4(S5Cl)4 + 0.9284 LiCoO2 -> 0.07163 LiScO2 + 0.1418 Li2SO4 + 0.1032 Co9S8 + 0.4656 Li2S + 0.2865 Li3PO4 + 0.2865 LiCl"
+    },
+    "ScCl3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05951 Li21ScP4(S5Cl)4 + 0.9405 Li0.5Co1O2 -> 0.05951 LiScO2 + 0.2025 Li2SO4 + 0.1045 Co9S8 + 0.1517 Li2S + 0.238 Li3PO4 + 0.238 LiCl"
+    },
+    "ScF3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.07163 Li21ScP4S20ClF3 + 0.9284 LiCoO2 -> 0.1032 Co9S8 + 0.07163 LiScO2 + 0.1418 Li2SO4 + 0.4656 Li2S + 0.2149 LiF + 0.07163 LiCl + 0.2865 Li3PO4"
+    },
+    "ScF3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.05951 Li21ScP4S20ClF3 + 0.9405 Li0.5Co1O2 -> 0.1045 Co9S8 + 0.05951 LiScO2 + 0.2025 Li2SO4 + 0.1517 Li2S + 0.1785 LiF + 0.05951 LiCl + 0.238 Li3PO4"
+    },
+    "SiO2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.09025 Li25SiP3S18(Cl2O)2 + 0.9097 LiCoO2 -> 0.139 Li2SO4 + 0.09025 Li4SiO4 + 0.1011 Co9S8 + 0.6769 Li2S + 0.361 LiCl + 0.2708 Li3PO4"
+    },
+    "SiO2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.0578 Li25SiP3S18(Cl2O)2 + 0.9422 Li0.5Co1O2 -> 0.2028 Li2SO4 + 0.1483 Li2O + 0.1047 Co9S8 + 0.0578 Li8SiO6 + 0.2312 LiCl + 0.1734 Li3PO4"
+    },
+    "SiS2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9245 LiCoO2 + 0.07553 Li25SiP3(S11Cl)2 -> 0.1601 Li2SO4 + 0.07553 Li4SiO4 + 0.1027 Co9S8 + 0.6798 Li2S + 0.1511 LiCl + 0.2266 Li3PO4"
+    },
+    "SiS2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9517 Li0.5Co1O2 + 0.04831 Li25SiP3(S11Cl)2 -> 0.217 Li2SO4 + 0.1659 Li2O + 0.1057 Co9S8 + 0.04831 Li8SiO6 + 0.09663 LiCl + 0.1449 Li3PO4"
+    },
+    "Sm2O3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.08475 Li17Sm2P4S16Cl5O3 + 0.9153 LiCoO2 -> 0.339 Li3PO4 + 0.1017 Co9S8 + 0.3178 Li2S + 0.1398 Li2SO4 + 0.08475 Sm2SO2 + 0.4237 LiCl"
+    },
+    "Sm2O3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06645 Li17Sm2P4S16Cl5O3 + 0.9335 Li0.5Co1O2 -> 0.2658 Li3PO4 + 0.1037 Co9S8 + 0.03241 Li2S + 0.201 Li2SO4 + 0.3323 LiCl + 0.06645 Sm2O3"
+    },
+    "SmCl3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07553 Li21SmP4(S5Cl)4 + 0.9245 LiCoO2 -> 0.3021 Li3PO4 + 0.1027 Co9S8 + 0.5098 Li2S + 0.1412 Li2SO4 + 0.03776 Sm2SO2 + 0.3021 LiCl"
+    },
+    "SmCl3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.0611 Li21SmP4(S5Cl)4 + 0.9389 Li0.5Co1O2 -> 0.2444 Li3PO4 + 0.1043 Co9S8 + 0.1854 Li2S + 0.2021 Li2SO4 + 0.2444 LiCl + 0.03055 Sm2O3"
+    },
+    "SnO2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.09653 Li25SnP3S18(Cl2O)2 + 0.9035 LiCoO2 -> 0.2896 Li3PO4 + 0.09653 Li2SnO3 + 0.1004 Co9S8 + 0.3861 LiCl + 0.7963 Li2S + 0.138 Li2SO4"
+    },
+    "SnO2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.0578 Li25SnP3S18(Cl2O)2 + 0.9422 Li0.5Co1O2 -> 0.0578 Li8SnO6 + 0.1734 Li3PO4 + 0.1047 Co9S8 + 0.2312 LiCl + 0.1483 Li2O + 0.2028 Li2SO4"
+    },
+    "SnS2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.08475 Li25SnP3(S5Cl)4 + 0.9153 LiCoO2 -> 0.2542 Li3PO4 + 0.08475 Li2SnO3 + 0.1017 Co9S8 + 0.339 LiCl + 0.7415 Li2S + 0.1398 Li2SO4"
+    },
+    "SnS2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05232 Li25SnP3(S5Cl)4 + 0.9477 Li0.5Co1O2 -> 0.05232 Li8SnO6 + 0.157 Li3PO4 + 0.1053 Co9S8 + 0.2093 LiCl + 0.1375 Li2O + 0.204 Li2SO4"
+    },
+    "SrCl2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.08475 SrLi22P4(S3Cl)6 + 0.9153 LiCoO2 -> 0.1186 Li2SO4 + 0.1017 Co9S8 + 0.08475 SrS + 0.5085 LiCl + 0.5085 Li2S + 0.339 Li3PO4"
+    },
+    "SrCl2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06016 SrLi22P4(S3Cl)6 + 0.9398 Li0.5Co1O2 -> 0.1873 Li2SO4 + 0.1044 Co9S8 + 0.06016 SrS + 0.361 LiCl + 0.168 Li2O + 0.2406 Li3PO4"
+    },
+    "SrO|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9153 LiCoO2 + 0.08475 SrLi22P4S19Cl4O -> 0.1398 Li2SO4 + 0.1017 Co9S8 + 0.08475 SrS + 0.339 LiCl + 0.572 Li2S + 0.339 Li3PO4"
+    },
+    "SrO|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9422 Li0.5Co1O2 + 0.0578 SrLi22P4S19Cl4O -> 0.2028 Li2SO4 + 0.1047 Co9S8 + 0.0578 SrS + 0.2312 LiCl + 0.2061 Li2O + 0.2312 Li3PO4"
+    },
+    "Ta2O5|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.09653 Li24Ta2P2S15Cl4O5 + 0.9035 LiCoO2 -> 0.1931 Li5TaO5 + 0.1004 Co9S8 + 0.138 Li2SO4 + 0.1931 Li3PO4 + 0.5068 Li2S + 0.3861 LiCl"
+    },
+    "Ta2O5|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06856 Li24Ta2P2S15Cl4O5 + 0.9314 Li0.5Co1O2 -> 0.1371 Li5TaO5 + 0.1035 Co9S8 + 0.2005 Li2SO4 + 0.1371 Li3PO4 + 0.1695 Li2O + 0.2743 LiCl"
+    },
+    "TaCl5|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9067 LiCoO2 + 0.09328 Li24TaP3(S5Cl3)3 -> 0.1007 Co9S8 + 0.09328 Li3TaO4 + 0.08022 Li2SO4 + 0.2799 Li3PO4 + 0.5131 Li2S + 0.8396 LiCl"
+    },
+    "TaCl5|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.934 Li0.5Co1O2 + 0.066 Li24TaP3(S5Cl3)3 -> 0.066 Li5TaO5 + 0.1038 Co9S8 + 0.1598 Li2SO4 + 0.198 Li3PO4 + 0.1067 Li2O + 0.594 LiCl"
+    },
+    "TiCl4|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.09653 Li25TiP3(S2Cl)8 + 0.9035 LiCoO2 -> 0.09653 Li2TiO3 + 0.6515 Li2S + 0.08977 Li2SO4 + 0.1004 Co9S8 + 0.7722 LiCl + 0.2896 Li3PO4"
+    },
+    "TiCl4|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06272 Li25TiP3(S2Cl)8 + 0.9373 Li0.5Co1O2 -> 0.1893 Li2O + 0.06272 Li4TiO4 + 0.1704 Li2SO4 + 0.1041 Co9S8 + 0.5018 LiCl + 0.1882 Li3PO4"
+    },
+    "TiF4|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9153 LiCoO2 + 0.08475 Li25TiP3(S5F)4 -> 0.08475 Li2TiO3 + 0.2542 Li3PO4 + 0.1017 Co9S8 + 0.7415 Li2S + 0.339 LiF + 0.1398 Li2SO4"
+    },
+    "TiF4|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9477 Li0.5Co1O2 + 0.05232 Li25TiP3(S5F)4 -> 0.2422 Li2O + 0.157 Li3PO4 + 0.1053 Co9S8 + 0.05232 Li4TiO4 + 0.2093 LiF + 0.204 Li2SO4"
+    },
+    "TiO2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9097 LiCoO2 + 0.09025 Li25TiP3S18(Cl2O)2 -> 0.6769 Li2S + 0.09025 Li4TiO4 + 0.139 Li2SO4 + 0.1011 Co9S8 + 0.361 LiCl + 0.2708 Li3PO4"
+    },
+    "TiO2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9422 Li0.5Co1O2 + 0.0578 Li25TiP3S18(Cl2O)2 -> 0.2639 Li2O + 0.0578 Li4TiO4 + 0.2028 Li2SO4 + 0.1047 Co9S8 + 0.2312 LiCl + 0.1734 Li3PO4"
+    },
+    "V2O5|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.1121 Li24V2P2S15Cl4O5 + 0.8879 LiCoO2 -> 0.2242 Li3VO4 + 0.7567 Li2S + 0.1357 Li2SO4 + 0.09865 Co9S8 + 0.4484 LiCl + 0.2242 Li3PO4"
+    },
+    "V2O5|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.03571 Li24V2P2S15Cl4O5 + 0.9643 Li0.5Co1O2 -> 0.07143 Li3VO4 + 0.3839 Li2SO4 + 0.01897 Co9S8 + 0.1429 LiCl + 0.07143 Li3PO4 + 0.7935 Co"
+    },
+    "WO3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07163 Li17P4WS16Cl5O3 + 0.9284 LiCoO2 -> 0.2865 Li3PO4 + 0.1418 Li2SO4 + 0.1032 Co9S8 + 0.07163 Li4WO5 + 0.1791 Li2S + 0.3582 LiCl"
+    },
+    "WO3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07313 Li17P4WS16Cl5O3 + 0.9269 Li0.5Co1O2 -> 0.2925 Li3PO4 + 0.2158 Li2SO4 + 0.06519 WS2 + 0.103 Co9S8 + 0.007943 Li4WO5 + 0.3657 LiCl"
+    },
+    "Y2O3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07987 Li18Y2P4S17Cl4O3 + 0.9201 LiCoO2 -> 0.3195 Li3PO4 + 0.1406 Li2SO4 + 0.3994 Li2S + 0.1022 Co9S8 + 0.3195 LiCl + 0.07987 Y2O3"
+    },
+    "Y2O3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06099 Li18Y2P4S17Cl4O3 + 0.939 Li0.5Co1O2 -> 0.244 Li3PO4 + 0.2021 Li2SO4 + 0.122 LiYO2 + 0.1043 Co9S8 + 0.0326 Li2O + 0.244 LiCl"
+    },
+    "YCl3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.07553 Li21YP4(S5Cl)4 + 0.9245 LiCoO2 -> 0.3021 Li3PO4 + 0.1412 Li2SO4 + 0.03776 Y2SO2 + 0.5098 Li2S + 0.1027 Co9S8 + 0.3021 LiCl"
+    },
+    "YCl3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.0611 Li21YP4(S5Cl)4 + 0.9389 Li0.5Co1O2 -> 0.2444 Li3PO4 + 0.2021 Li2SO4 + 0.1854 Li2S + 0.1043 Co9S8 + 0.2444 LiCl + 0.03055 Y2O3"
+    },
+    "YF3|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.07553 Li21YP4S20ClF3 + 0.9245 LiCoO2 -> 0.03776 Y2SO2 + 0.5098 Li2S + 0.1412 Li2SO4 + 0.1027 Co9S8 + 0.2266 LiF + 0.07553 LiCl + 0.3021 Li3PO4"
+    },
+    "YF3|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.0611 Li21YP4S20ClF3 + 0.9389 Li0.5Co1O2 -> 0.1854 Li2S + 0.2021 Li2SO4 + 0.1043 Co9S8 + 0.1833 LiF + 0.0611 LiCl + 0.2444 Li3PO4 + 0.03055 Y2O3"
+    },
+    "ZnO|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.08475 Li21ZnP4S18Cl5O + 0.9153 LiCoO2 -> 0.4873 Li2S + 0.339 Li3PO4 + 0.1017 Co9S8 + 0.08475 ZnS + 0.4237 LiCl + 0.1398 Li2SO4"
+    },
+    "ZnO|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05824 Li21ZnP4S18Cl5O + 0.9418 Li0.5Co1O2 -> 0.04973 Li6ZnO4 + 0.233 Li3PO4 + 0.1046 Co9S8 + 0.008514 ZnS + 0.2912 LiCl + 0.2027 Li2SO4"
+    },
+    "ZrBr4|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.08475 Li25ZrP3(S5Br)4 + 0.9153 LiCoO2 -> 0.08475 Li2ZrO3 + 0.1398 Li2SO4 + 0.1017 Co9S8 + 0.7415 Li2S + 0.339 LiBr + 0.2542 Li3PO4"
+    },
+    "ZrBr4|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.05232 Li25ZrP3(S5Br)4 + 0.9477 Li0.5Co1O2 -> 0.2683 Li2O + 0.204 Li2SO4 + 0.1053 Co9S8 + 0.02616 Li6Zr2O7 + 0.2093 LiBr + 0.157 Li3PO4"
+    },
+    "ZrCl4|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.09524 Li20ZrP4(S2Cl)8 + 0.9048 LiCoO2 -> 0.381 Li3PO4 + 0.2718 Co3S4 + 0.3571 Li2S + 0.09524 Li2ZrO3 + 0.009921 Co9S8 + 0.7619 LiCl"
+    },
+    "ZrCl4|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.06272 Li20ZrP4(S2Cl)8 + 0.9373 Li0.5Co1O2 -> 0.2509 Li3PO4 + 0.06036 Li2ZrO3 + 0.1704 Li2SO4 + 0.1041 Co9S8 + 0.001183 Li6Zr2O7 + 0.5018 LiCl"
+    },
+    "ZrF4|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9153 LiCoO2 + 0.08475 Li25ZrP3(S5F)4 -> 0.08475 Li2ZrO3 + 0.1017 Co9S8 + 0.1398 Li2SO4 + 0.7415 Li2S + 0.339 LiF + 0.2542 Li3PO4"
+    },
+    "ZrF4|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9477 Li0.5Co1O2 + 0.05232 Li25ZrP3(S5F)4 -> 0.2683 Li2O + 0.1053 Co9S8 + 0.02616 Li6Zr2O7 + 0.204 Li2SO4 + 0.2093 LiF + 0.157 Li3PO4"
+    },
+    "ZrO2|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9067 LiCoO2 + 0.09328 Li25ZrP3S18(Cl2O)2 -> 0.2799 Li3PO4 + 0.7346 Li2S + 0.1385 Li2SO4 + 0.1007 Co9S8 + 0.04664 Li6Zr2O7 + 0.3731 LiCl"
+    },
+    "ZrO2|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 6,
+      "metallic_product": true,
+      "reaction": "0.9422 Li0.5Co1O2 + 0.0578 Li25ZrP3S18(Cl2O)2 -> 0.1734 Li3PO4 + 0.2928 Li2O + 0.2028 Li2SO4 + 0.1047 Co9S8 + 0.0289 Li6Zr2O7 + 0.2312 LiCl"
+    },
+    "HOST|LNO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.7742 LiNiO2 + 0.2258 Li6PS5Cl -> 0.4516 Li2S + 0.2258 Li3PO4 + 0.2581 Ni3S2 + 0.2258 LiCl + 0.1613 Li2SO4"
+    },
+    "HOST|LNO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.8889 Li0.5Ni1O2 + 0.1111 Li6PS5Cl -> 0.1111 Li3PO4 + 0.1111 Ni3S2 + 0.1111 LiCl + 0.3333 Li2SO4 + 0.5556 Ni"
+    },
+    "HOST|LCO_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.7423 LiCoO2 + 0.2577 Li6PS5Cl -> 0.5155 Li2S + 0.2577 Li3PO4 + 0.08247 Co9S8 + 0.2577 LiCl + 0.1134 Li2SO4"
+    },
+    "HOST|LCO_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 5,
+      "metallic_product": true,
+      "reaction": "0.8191 Li0.5Co1O2 + 0.1809 Li6PS5Cl -> 0.1809 Li3PO4 + 0.09101 Co9S8 + 0.2093 Li2O + 0.1809 LiCl + 0.1763 Li2SO4"
+    },
+    "HOST|NCM_full": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.7767 Li1Mn0.1Co0.1Ni0.8O2 + 0.2233 Li6PS5Cl -> 0.1262 Li2SO4 + 0.1942 Ni3S2 + 0.07767 LiMnO2 + 0.03883 Co2NiS4 + 0.4466 Li2S + 0.2233 LiCl + 0.2233 Li3PO4"
+    },
+    "HOST|NCM_half": {
+      "min_product_gap_eV": 0.0,
+      "n_products": 7,
+      "metallic_product": true,
+      "reaction": "0.8889 Li0.5Mn0.1Co0.1Ni0.8O2 + 0.1111 Li6PS5Cl -> 0.2889 Li2SO4 + 0.009877 Co9S8 + 0.09383 Ni3S2 + 0.08889 LiMnO2 + 0.1111 LiCl + 0.1111 Li3PO4 + 0.4296 Ni"
+    }
+  }
+}
