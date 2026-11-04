@@ -1787,6 +1787,7 @@ def _selftest():
         "ok": E([run0()], rcpt(), {R0: ufold("ok")}),
         "no_plan_ok": E([run0()], rcpt(), {R0: ufold("np", stage="no_plan")}),
         "ledger_fail": E([run0(verdict="fail")], rcpt(), {R0: ufold("lf")}),
+        "ledger_fail_no_folder": E([run0(verdict="fail")], rcpt(), {}),        # 장부의 과학적 판정은 폴더가 없어도 먼저 막는다
         "missing_invalid": E([run0(verdict="invalid")], rcpt("invalid", FIX), {}),
         "folder_pass": E([run0()], rcpt(), {R0: ufold("fp", verdict='{"status": "pass"}')}),
         "folder_cut": E([run0()], rcpt(), {R0: ufold("fc", verdict='{"status": "in')}),
@@ -1808,7 +1809,8 @@ def _selftest():
         "inv_then_int": E([run0(verdict="invalid"), run0(run_id=R1)], [{**rcpt(rid=R1)[0], "stop_id": "u3"}],
                           {R0: ufold("v0", verdict=INV), R1: ufold("v1")}),
     }
-    exp_u = {"ok": (True, None), "no_plan_ok": (True, None), "ledger_fail": (False, "invalid"), "missing_invalid": (False, "resume"),
+    exp_u = {"ok": (True, None), "no_plan_ok": (True, None), "ledger_fail": (False, "invalid"), "ledger_fail_no_folder": (False, "invalid"),
+             "missing_invalid": (False, "resume"),
              "folder_pass": (False, "invalid"), "folder_cut": (False, "invalid"), "cost": (False, "resume"), "stage_bad": (False, "resume"),
              "final": (False, "resume"), "fire": (False, "resume"), "no_receipt": (False, "resume"), "no_decl": (False, "resume"),
              "other_run": (False, "resume"), "unacked": (False, "resume"), "inv_needs_rejudge": (False, "invalid"), "inv_rejudge_ok": (True, None),

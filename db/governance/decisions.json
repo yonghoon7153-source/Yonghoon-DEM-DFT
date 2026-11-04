@@ -10822,6 +10822,7 @@
     "tools/ionic/li2s2_stage1_runner.py (5f794e30 · selftest 80/80 Linux — 진짜 판독 함수 · 진짜 프로세스 그룹)",
     "kb/reviews/codex_DJ_reply_li2s2_outage_rule_2026_11_03.md (NO-GO · 정전 복구 방향 찬성 → 89d48885 · 2c36eac9 · 172daf67 고침)",
     "kb/reviews/codex_DK_reply_li2s2_dj_fixes_2026_11_03.md (NO-GO · P0 2 · P1 2 → 5f794e30 고침 · 카드 v3)",
+    "db/raw/li2s2_dk_mutation_2026_11_04/ (깨기 125 / 125 빨강)",
     "db/raw/li2s2_dj_mutation_2026_11_03/ (깨기 116 / 116 빨강)",
     "kb/reviews/codex_DI_reply_li2s2_dh_fixes_2026_11_03.md (NO-GO → Codex 고침 묶음 적용 b7d11f81)",
     "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json §개정_정전_복구_v2_2026_11_03 (회신 DJ — 결과와 무관한 재시도 사유 · MD/FIRE 구분 · 증언 필드 · 정전 추가 예산)",
