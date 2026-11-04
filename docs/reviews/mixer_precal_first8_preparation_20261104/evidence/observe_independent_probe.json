@@ -1,0 +1,26 @@
+{
+  "scope": "one bounded independent synthetic fixture probe; preparation binding mocked as in existing unit fixture; no research data",
+  "source_sha256": "e3084594c958632f489abd6c0f9f328f8745d4bced7359db023e224ecd8e9770",
+  "explicit_error_log": {
+    "status": "OK",
+    "contact_present": true,
+    "reasons": []
+  },
+  "aba_frame_parser": {
+    "status": "OK",
+    "calls": 1,
+    "restored_original_bytes": true,
+    "provenance_hash_matches_original": true,
+    "original_pairs": {
+      "SE-SE": 0,
+      "AM_P-SE": 0,
+      "AM_S-SE": 0
+    },
+    "returned_pairs": {
+      "SE-SE": 0,
+      "AM_P-SE": 1,
+      "AM_S-SE": 1
+    },
+    "reasons": []
+  }
+}

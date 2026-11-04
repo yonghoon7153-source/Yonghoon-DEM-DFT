@@ -1,0 +1,401 @@
+{
+  "python": "3.11.17",
+  "cases": [
+    {
+      "case_id": "PRECAL_R1_B1_U",
+      "valid_binding_stop": [
+        "missing/duplicate t0"
+      ],
+      "forged_hash_stop": [
+        "metadata does not bind actual deck bytes"
+      ],
+      "inputs_unchanged": true,
+      "both_refusals_without_metrics": true,
+      "module_sha256": {
+        "mixer_precal_prepare": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_prepare.py",
+          "sha256": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6"
+        },
+        "mixer_contact_reader": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_contact_reader.py",
+          "sha256": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de"
+        },
+        "measure_mixing_index": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py",
+          "sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a"
+        },
+        "measure_bed_aspect": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py",
+          "sha256": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880"
+        },
+        "make_mixer_deck": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py",
+          "sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27"
+        },
+        "mixer_deck_readback": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_readback.py",
+          "sha256": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f"
+        },
+        "mixer_deck_diff": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_diff.py",
+          "sha256": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3"
+        },
+        "make_mixer_resume": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_resume.py",
+          "sha256": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e"
+        },
+        "mixer_precal_observe": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_observe.py",
+          "sha256": "56dd81f00073a3f065831573275b4af94369cfb4108e7ee576993420484099af"
+        }
+      }
+    },
+    {
+      "case_id": "PRECAL_R1_B1_C",
+      "valid_binding_stop": [
+        "missing/duplicate t0"
+      ],
+      "forged_hash_stop": [
+        "metadata does not bind actual deck bytes"
+      ],
+      "inputs_unchanged": true,
+      "both_refusals_without_metrics": true,
+      "module_sha256": {
+        "mixer_precal_prepare": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_prepare.py",
+          "sha256": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6"
+        },
+        "mixer_contact_reader": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_contact_reader.py",
+          "sha256": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de"
+        },
+        "measure_mixing_index": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py",
+          "sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a"
+        },
+        "measure_bed_aspect": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py",
+          "sha256": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880"
+        },
+        "make_mixer_deck": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py",
+          "sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27"
+        },
+        "mixer_deck_readback": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_readback.py",
+          "sha256": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f"
+        },
+        "mixer_deck_diff": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_diff.py",
+          "sha256": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3"
+        },
+        "make_mixer_resume": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_resume.py",
+          "sha256": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e"
+        },
+        "mixer_precal_observe": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_observe.py",
+          "sha256": "56dd81f00073a3f065831573275b4af94369cfb4108e7ee576993420484099af"
+        }
+      }
+    },
+    {
+      "case_id": "PRECAL_R1_B2_U",
+      "valid_binding_stop": [
+        "missing/duplicate t0"
+      ],
+      "forged_hash_stop": [
+        "metadata does not bind actual deck bytes"
+      ],
+      "inputs_unchanged": true,
+      "both_refusals_without_metrics": true,
+      "module_sha256": {
+        "mixer_precal_prepare": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_prepare.py",
+          "sha256": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6"
+        },
+        "mixer_contact_reader": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_contact_reader.py",
+          "sha256": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de"
+        },
+        "measure_mixing_index": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py",
+          "sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a"
+        },
+        "measure_bed_aspect": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py",
+          "sha256": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880"
+        },
+        "make_mixer_deck": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py",
+          "sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27"
+        },
+        "mixer_deck_readback": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_readback.py",
+          "sha256": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f"
+        },
+        "mixer_deck_diff": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_diff.py",
+          "sha256": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3"
+        },
+        "make_mixer_resume": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_resume.py",
+          "sha256": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e"
+        },
+        "mixer_precal_observe": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_observe.py",
+          "sha256": "56dd81f00073a3f065831573275b4af94369cfb4108e7ee576993420484099af"
+        }
+      }
+    },
+    {
+      "case_id": "PRECAL_R1_B2_C",
+      "valid_binding_stop": [
+        "missing/duplicate t0"
+      ],
+      "forged_hash_stop": [
+        "metadata does not bind actual deck bytes"
+      ],
+      "inputs_unchanged": true,
+      "both_refusals_without_metrics": true,
+      "module_sha256": {
+        "mixer_precal_prepare": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_prepare.py",
+          "sha256": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6"
+        },
+        "mixer_contact_reader": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_contact_reader.py",
+          "sha256": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de"
+        },
+        "measure_mixing_index": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py",
+          "sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a"
+        },
+        "measure_bed_aspect": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py",
+          "sha256": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880"
+        },
+        "make_mixer_deck": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py",
+          "sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27"
+        },
+        "mixer_deck_readback": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_readback.py",
+          "sha256": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f"
+        },
+        "mixer_deck_diff": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_diff.py",
+          "sha256": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3"
+        },
+        "make_mixer_resume": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_resume.py",
+          "sha256": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e"
+        },
+        "mixer_precal_observe": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_observe.py",
+          "sha256": "56dd81f00073a3f065831573275b4af94369cfb4108e7ee576993420484099af"
+        }
+      }
+    },
+    {
+      "case_id": "PRECAL_R1_B3_U",
+      "valid_binding_stop": [
+        "missing/duplicate t0"
+      ],
+      "forged_hash_stop": [
+        "metadata does not bind actual deck bytes"
+      ],
+      "inputs_unchanged": true,
+      "both_refusals_without_metrics": true,
+      "module_sha256": {
+        "mixer_precal_prepare": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_prepare.py",
+          "sha256": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6"
+        },
+        "mixer_contact_reader": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_contact_reader.py",
+          "sha256": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de"
+        },
+        "measure_mixing_index": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py",
+          "sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a"
+        },
+        "measure_bed_aspect": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py",
+          "sha256": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880"
+        },
+        "make_mixer_deck": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py",
+          "sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27"
+        },
+        "mixer_deck_readback": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_readback.py",
+          "sha256": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f"
+        },
+        "mixer_deck_diff": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_diff.py",
+          "sha256": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3"
+        },
+        "make_mixer_resume": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_resume.py",
+          "sha256": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e"
+        },
+        "mixer_precal_observe": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_observe.py",
+          "sha256": "56dd81f00073a3f065831573275b4af94369cfb4108e7ee576993420484099af"
+        }
+      }
+    },
+    {
+      "case_id": "PRECAL_R1_B3_C",
+      "valid_binding_stop": [
+        "missing/duplicate t0"
+      ],
+      "forged_hash_stop": [
+        "metadata does not bind actual deck bytes"
+      ],
+      "inputs_unchanged": true,
+      "both_refusals_without_metrics": true,
+      "module_sha256": {
+        "mixer_precal_prepare": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_prepare.py",
+          "sha256": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6"
+        },
+        "mixer_contact_reader": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_contact_reader.py",
+          "sha256": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de"
+        },
+        "measure_mixing_index": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py",
+          "sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a"
+        },
+        "measure_bed_aspect": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py",
+          "sha256": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880"
+        },
+        "make_mixer_deck": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py",
+          "sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27"
+        },
+        "mixer_deck_readback": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_readback.py",
+          "sha256": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f"
+        },
+        "mixer_deck_diff": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_diff.py",
+          "sha256": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3"
+        },
+        "make_mixer_resume": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_resume.py",
+          "sha256": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e"
+        },
+        "mixer_precal_observe": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_observe.py",
+          "sha256": "56dd81f00073a3f065831573275b4af94369cfb4108e7ee576993420484099af"
+        }
+      }
+    },
+    {
+      "case_id": "PRECAL_N0",
+      "valid_binding_stop": [
+        "missing/duplicate t0"
+      ],
+      "forged_hash_stop": [
+        "metadata does not bind actual deck bytes"
+      ],
+      "inputs_unchanged": true,
+      "both_refusals_without_metrics": true,
+      "module_sha256": {
+        "mixer_precal_prepare": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_prepare.py",
+          "sha256": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6"
+        },
+        "mixer_contact_reader": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_contact_reader.py",
+          "sha256": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de"
+        },
+        "measure_mixing_index": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py",
+          "sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a"
+        },
+        "measure_bed_aspect": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py",
+          "sha256": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880"
+        },
+        "make_mixer_deck": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py",
+          "sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27"
+        },
+        "mixer_deck_readback": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_readback.py",
+          "sha256": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f"
+        },
+        "mixer_deck_diff": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_diff.py",
+          "sha256": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3"
+        },
+        "make_mixer_resume": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_resume.py",
+          "sha256": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e"
+        },
+        "mixer_precal_observe": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_observe.py",
+          "sha256": "56dd81f00073a3f065831573275b4af94369cfb4108e7ee576993420484099af"
+        }
+      }
+    },
+    {
+      "case_id": "PRECAL_E0",
+      "valid_binding_stop": [
+        "missing/duplicate t0"
+      ],
+      "forged_hash_stop": [
+        "metadata does not bind actual deck bytes"
+      ],
+      "inputs_unchanged": true,
+      "both_refusals_without_metrics": true,
+      "module_sha256": {
+        "mixer_precal_prepare": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_prepare.py",
+          "sha256": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6"
+        },
+        "mixer_contact_reader": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_contact_reader.py",
+          "sha256": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de"
+        },
+        "measure_mixing_index": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py",
+          "sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a"
+        },
+        "measure_bed_aspect": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py",
+          "sha256": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880"
+        },
+        "make_mixer_deck": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py",
+          "sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27"
+        },
+        "mixer_deck_readback": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_readback.py",
+          "sha256": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f"
+        },
+        "mixer_deck_diff": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_deck_diff.py",
+          "sha256": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3"
+        },
+        "make_mixer_resume": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/make_mixer_resume.py",
+          "sha256": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e"
+        },
+        "mixer_precal_observe": {
+          "path": "/workspace/nonrint-1104/mixer/scripts/mixer_precal_observe.py",
+          "sha256": "56dd81f00073a3f065831573275b4af94369cfb4108e7ee576993420484099af"
+        }
+      }
+    }
+  ],
+  "valid_bindings_reaching_missing_frame": 8,
+  "forged_hashes_rejected": 8,
+  "mock_used": false,
+  "limitation": "Negative input-binding boundary only; no positive 100000-particle pipeline, frames, research result, simulator, host or physical qualification."
+}

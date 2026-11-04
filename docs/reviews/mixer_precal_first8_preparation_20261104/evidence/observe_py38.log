@@ -1,0 +1,125 @@
+test_bad_meta_and_changed_deck (__main__.DiskContract) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppos15xu0/e0/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppos15xu0/e0/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_changed_metadata_and_frame_discard_metrics (__main__.DiskContract) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpa64vqhrv/deck_meta.json/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpa64vqhrv/deck_meta.json/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpa64vqhrv/post_dump_200.liggghts/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpa64vqhrv/post_dump_200.liggghts/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_e0_real_small_dump_and_no_bin (__main__.DiskContract) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_9k6cf75/e0/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_9k6cf75/e0/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_late_failure_never_computes_partial_metrics (__main__.DiskContract) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpgx1g_vij/u/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpgx1g_vij/u/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpgx1g_vij/u/post/dump_400.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpgx1g_vij/u/post/dump_450.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpgx1g_vij/u/post/dump_500.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpgx1g_vij/u/post/dump_550.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_missing_dependency_source_is_tech (__main__.DiskContract) ... ok
+test_missing_duplicate_malformed_frame (__main__.DiskContract) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpl1v5xign/missing/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpl1v5xign/duplicate/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpl1v5xign/malformed/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpl1v5xign/malformed/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpl1v5xign/malformed/post/dump_400.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_no_se_is_undefined_not_zero (__main__.DiskContract) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpal0p4mgb/e0/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpal0p4mgb/e0/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_reference_wrong_id_and_runtime_bad_binding (__main__.DiskContract) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_pa9vw7o/u/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_pa9vw7o/u/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_pa9vw7o/u/post/dump_400.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_pa9vw7o/u/post/dump_450.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_pa9vw7o/u/post/dump_500.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_pa9vw7o/u/post/dump_550.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_rotating_wiring_with_explicit_cell_stats_unit_mock (__main__.DiskContract) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvgp_s3av/u/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvgp_s3av/u/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvgp_s3av/u/post/dump_400.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvgp_s3av/u/post/dump_450.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvgp_s3av/u/post/dump_500.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvgp_s3av/u/post/dump_550.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvgp_s3av/e0/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvgp_s3av/e0/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_d13_zero_ten_eleven_and_excess (__main__.Qualification) ... ok
+test_hand_contact_clusters_and_overlapping_am_fractions (__main__.Qualification) ... ok
+test_hand_m_no_clipping_and_undefined (__main__.Qualification) ... ok
+test_id_sequence_type_radius_and_late_change (__main__.Qualification) ... ok
+test_phase_allocation_differs_without_new_threshold (__main__.Qualification) ... ok
+test_reference_geometry_seed_and_role (__main__.Qualification) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.321s
+
+OK

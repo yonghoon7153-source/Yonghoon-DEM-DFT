@@ -1,0 +1,70 @@
+test_bad_meta_and_changed_deck (__main__.DiskContract.test_bad_meta_and_changed_deck) ... ok
+test_changed_metadata_and_frame_discard_metrics (__main__.DiskContract.test_changed_metadata_and_frame_discard_metrics) ... ok
+test_e0_real_small_dump_and_no_bin (__main__.DiskContract.test_e0_real_small_dump_and_no_bin) ... ok
+test_frozen_dump_strict_headers_and_shape (__main__.DiskContract.test_frozen_dump_strict_headers_and_shape) ... ok
+test_frozen_parser_raw_survives_path_aba (__main__.DiskContract.test_frozen_parser_raw_survives_path_aba) ... ok
+test_interrupted_missing_short_or_extra_log_is_tech (__main__.DiskContract.test_interrupted_missing_short_or_extra_log_is_tech) ... ok
+test_late_failure_never_computes_partial_metrics (__main__.DiskContract.test_late_failure_never_computes_partial_metrics) ... ok
+test_log_header_and_each_run_endpoint (__main__.DiskContract.test_log_header_and_each_run_endpoint) ... 
+  test_log_header_and_each_run_endpoint (__main__.DiskContract.test_log_header_and_each_run_endpoint) (log='1 3 0 0 1\nLoop time of 1 on 20 procs for 1 steps with 3 atoms\n101 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\n201 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\n201 3 0 0 1\nLoop time of 1 on 20 procs for 0 steps with 3 atoms\n') ... FAIL
+  test_log_header_and_each_run_endpoint (__main__.DiskContract.test_log_header_and_each_run_endpoint) (log='Step Atoms KinEng c_rke Volume\n1 3 0 0 1\nLoop time of 1 on 20 procs for 1 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n101 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n200 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n200 3 0 0 1\nLoop time of 1 on 20 procs for 0 steps with 3 atoms\n201 3 0 0 1\n') ... FAIL
+  test_log_header_and_each_run_endpoint (__main__.DiskContract.test_log_header_and_each_run_endpoint) (log='Step Atoms KinEng c_rke Volume\n1 3 0 0 1\nLoop time of 1 on 20 procs for 1 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n100 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n201 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n201 3 0 0 1\nLoop time of 1 on 20 procs for 0 steps with 3 atoms\n') ... FAIL
+  test_log_header_and_each_run_endpoint (__main__.DiskContract.test_log_header_and_each_run_endpoint) (log='Step Atoms KinEng c_rke Volume\n1 3 0 0 1\nLoop time of 1 on 20 procs for 1 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n101 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n201 3 nan 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n201 3 nan 0 1\nLoop time of 1 on 20 procs for 0 steps with 3 atoms\n') ... FAIL
+  test_log_header_and_each_run_endpoint (__main__.DiskContract.test_log_header_and_each_run_endpoint) (log='Step Atoms KinEng c_rke Volume\n1 3 0 0 1\nLoop time of 1 on 20 procs for 1 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n101 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n201 3 0 0\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n201 3 0 0\nLoop time of 1 on 20 procs for 0 steps with 3 atoms\n') ... FAIL
+test_missing_dependency_source_is_tech (__main__.DiskContract.test_missing_dependency_source_is_tech) ... ok
+test_missing_duplicate_malformed_frame (__main__.DiskContract.test_missing_duplicate_malformed_frame) ... ok
+test_no_se_is_undefined_not_zero (__main__.DiskContract.test_no_se_is_undefined_not_zero) ... ok
+test_raw_aba_cannot_change_metrics (__main__.DiskContract.test_raw_aba_cannot_change_metrics) ... ok
+test_reference_wrong_id_and_runtime_bad_binding (__main__.DiskContract.test_reference_wrong_id_and_runtime_bad_binding) ... ok
+test_rotating_wiring_with_explicit_cell_stats_unit_mock (__main__.DiskContract.test_rotating_wiring_with_explicit_cell_stats_unit_mock) ... ok
+test_d13_zero_ten_eleven_and_excess (__main__.Qualification.test_d13_zero_ten_eleven_and_excess) ... ok
+test_hand_contact_clusters_and_overlapping_am_fractions (__main__.Qualification.test_hand_contact_clusters_and_overlapping_am_fractions) ... ok
+test_hand_m_no_clipping_and_undefined (__main__.Qualification.test_hand_m_no_clipping_and_undefined) ... ok
+test_id_sequence_type_radius_and_late_change (__main__.Qualification.test_id_sequence_type_radius_and_late_change) ... ok
+test_phase_allocation_differs_without_new_threshold (__main__.Qualification.test_phase_allocation_differs_without_new_threshold) ... ok
+test_reference_geometry_seed_and_role (__main__.Qualification.test_reference_geometry_seed_and_role) ... ok
+
+======================================================================
+FAIL: test_log_header_and_each_run_endpoint (__main__.DiskContract.test_log_header_and_each_run_endpoint) (log='1 3 0 0 1\nLoop time of 1 on 20 procs for 1 steps with 3 atoms\n101 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\n201 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\n201 3 0 0 1\nLoop time of 1 on 20 procs for 0 steps with 3 atoms\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/scripts/test_mixer_precal_observe.py", line 287, in test_log_header_and_each_run_endpoint
+    with self.assertRaises(O.Tech):O._log_contract(bad.encode(),runs)
+AssertionError: Tech not raised
+
+======================================================================
+FAIL: test_log_header_and_each_run_endpoint (__main__.DiskContract.test_log_header_and_each_run_endpoint) (log='Step Atoms KinEng c_rke Volume\n1 3 0 0 1\nLoop time of 1 on 20 procs for 1 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n101 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n200 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n200 3 0 0 1\nLoop time of 1 on 20 procs for 0 steps with 3 atoms\n201 3 0 0 1\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/scripts/test_mixer_precal_observe.py", line 287, in test_log_header_and_each_run_endpoint
+    with self.assertRaises(O.Tech):O._log_contract(bad.encode(),runs)
+AssertionError: Tech not raised
+
+======================================================================
+FAIL: test_log_header_and_each_run_endpoint (__main__.DiskContract.test_log_header_and_each_run_endpoint) (log='Step Atoms KinEng c_rke Volume\n1 3 0 0 1\nLoop time of 1 on 20 procs for 1 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n100 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n201 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n201 3 0 0 1\nLoop time of 1 on 20 procs for 0 steps with 3 atoms\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/scripts/test_mixer_precal_observe.py", line 287, in test_log_header_and_each_run_endpoint
+    with self.assertRaises(O.Tech):O._log_contract(bad.encode(),runs)
+AssertionError: Tech not raised
+
+======================================================================
+FAIL: test_log_header_and_each_run_endpoint (__main__.DiskContract.test_log_header_and_each_run_endpoint) (log='Step Atoms KinEng c_rke Volume\n1 3 0 0 1\nLoop time of 1 on 20 procs for 1 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n101 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n201 3 nan 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n201 3 nan 0 1\nLoop time of 1 on 20 procs for 0 steps with 3 atoms\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/scripts/test_mixer_precal_observe.py", line 287, in test_log_header_and_each_run_endpoint
+    with self.assertRaises(O.Tech):O._log_contract(bad.encode(),runs)
+AssertionError: Tech not raised
+
+======================================================================
+FAIL: test_log_header_and_each_run_endpoint (__main__.DiskContract.test_log_header_and_each_run_endpoint) (log='Step Atoms KinEng c_rke Volume\n1 3 0 0 1\nLoop time of 1 on 20 procs for 1 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n101 3 0 0 1\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n201 3 0 0\nLoop time of 1 on 20 procs for 100 steps with 3 atoms\nStep Atoms KinEng c_rke Volume\n201 3 0 0\nLoop time of 1 on 20 procs for 0 steps with 3 atoms\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/scripts/test_mixer_precal_observe.py", line 287, in test_log_header_and_each_run_endpoint
+    with self.assertRaises(O.Tech):O._log_contract(bad.encode(),runs)
+AssertionError: Tech not raised
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.612s
+
+FAILED (failures=5)

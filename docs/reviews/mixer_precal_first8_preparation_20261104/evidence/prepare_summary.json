@@ -1,0 +1,88 @@
+{
+  "scope": "fixed-first8 synthetic generation/static validation only; no simulator or research results",
+  "research_results": 0,
+  "execution_authorized": false,
+  "source_sha256": {
+    "scripts/mixer_precal_prepare.py": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6",
+    "scripts/test_mixer_precal_prepare.py": "01cf375954201bf1a916b40f13359b564ff0ba7ed7758671e52fb218fd5e291c",
+    "scripts/make_mixer_deck.py": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "scripts/mixer_deck_readback.py": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f",
+    "scripts/mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3"
+  },
+  "python311": "3.11.17",
+  "python38": "Python 3.8.20",
+  "commands": [
+    "PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /workspace/.venvs/yonghoon-dem/bin/python scripts/test_mixer_precal_prepare.py",
+    "PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin/python3.8 scripts/test_mixer_precal_prepare.py",
+    "PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /workspace/.venvs/yonghoon-dem/bin/python scripts/mixer_precal_prepare.py"
+  ],
+  "test_first": "prepare_before.log: rc1, missing implementation module",
+  "py311_final": "prepare_final_py311.log: 14 methods, OK, rc0",
+  "py38_final": "prepare_final_py38.log: 14 methods, OK, rc0",
+  "cases": [
+    {
+      "case_id": "PRECAL_R1_B1_U",
+      "status": "STATIC_VALID",
+      "deck_sha256": "bb00b3251d76d45f311139606fdcbfd842e485489e49447a7d2373d5bfa891c6"
+    },
+    {
+      "case_id": "PRECAL_R1_B1_C",
+      "status": "STATIC_VALID",
+      "deck_sha256": "7875e1f053411e8531cecd616ffe1d016044a50b57d500f515edcd197e4d0d7d"
+    },
+    {
+      "case_id": "PRECAL_R1_B2_U",
+      "status": "STATIC_VALID",
+      "deck_sha256": "b37974e5c0674947912e932c55517e9e84243293f29257183f8f70cc032f2fd7"
+    },
+    {
+      "case_id": "PRECAL_R1_B2_C",
+      "status": "STATIC_VALID",
+      "deck_sha256": "d36d199388243ccd630cbd346cbcdb6f37bf8bb92ae9c8f4e73e2e98597a6a3e"
+    },
+    {
+      "case_id": "PRECAL_R1_B3_U",
+      "status": "STATIC_VALID",
+      "deck_sha256": "caa3cda3179602a16215295ac170737124919e42d43aa58ad5a31670c7576745"
+    },
+    {
+      "case_id": "PRECAL_R1_B3_C",
+      "status": "STATIC_VALID",
+      "deck_sha256": "26bf0b8c9f90225be813025650678b8e16697cbab415981201e07f1259431d62"
+    },
+    {
+      "case_id": "PRECAL_N0",
+      "status": "STATIC_VALID",
+      "deck_sha256": "adbbc8fa8f46730779fbf4f028f95a7aaf90c27ef2697c0dbe21a9ae1b5c6de3"
+    },
+    {
+      "case_id": "PRECAL_E0",
+      "status": "STATIC_VALID",
+      "deck_sha256": "8b588b24117ab77bf72d93662237268b401f714df8515d62ef7b964d01c6e718"
+    }
+  ],
+  "pairs": [
+    {
+      "pair": "R1_B1",
+      "verdict": "PASS",
+      "failures": []
+    },
+    {
+      "pair": "R1_B2",
+      "verdict": "PASS",
+      "failures": []
+    },
+    {
+      "pair": "R1_B3",
+      "verdict": "PASS",
+      "failures": []
+    }
+  ],
+  "limitations": [
+    "exact current-source-output oracle is not independent generator physics proof",
+    "baseline controls have separate unregistered metadata and do not pass positive D2 contract",
+    "NP20 is proposed, not verified ranks",
+    "geometry uses printed mesh scale and canonical source dimensions; actual STL not inspected",
+    "existing generator deck_meta read handle emits ResourceWarning in unittest; original source unchanged"
+  ]
+}

@@ -1,0 +1,158 @@
+test_bad_meta_and_changed_deck (__main__.DiskContract.test_bad_meta_and_changed_deck) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp29z77b9i/e0/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp29z77b9i/e0/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_changed_metadata_and_frame_discard_metrics (__main__.DiskContract.test_changed_metadata_and_frame_discard_metrics) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmprhg7wctu/deck_meta.json/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmprhg7wctu/deck_meta.json/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmprhg7wctu/post_dump_200.liggghts/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmprhg7wctu/post_dump_200.liggghts/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_e0_real_small_dump_and_no_bin (__main__.DiskContract.test_e0_real_small_dump_and_no_bin) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp222ya8ky/e0/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp222ya8ky/e0/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_interrupted_missing_short_or_extra_log_is_tech (__main__.DiskContract.test_interrupted_missing_short_or_extra_log_is_tech) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp8jc97ihz/error/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp8jc97ihz/error/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_late_failure_never_computes_partial_metrics (__main__.DiskContract.test_late_failure_never_computes_partial_metrics) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpo8b1zk3j/u/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpo8b1zk3j/u/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpo8b1zk3j/u/post/dump_400.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpo8b1zk3j/u/post/dump_450.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpo8b1zk3j/u/post/dump_500.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpo8b1zk3j/u/post/dump_550.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_missing_dependency_source_is_tech (__main__.DiskContract.test_missing_dependency_source_is_tech) ... ok
+test_missing_duplicate_malformed_frame (__main__.DiskContract.test_missing_duplicate_malformed_frame) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpy9lnes_2/missing/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpy9lnes_2/duplicate/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpy9lnes_2/malformed/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpy9lnes_2/malformed/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpy9lnes_2/malformed/post/dump_400.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_no_se_is_undefined_not_zero (__main__.DiskContract.test_no_se_is_undefined_not_zero) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpjtb__aal/e0/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpjtb__aal/e0/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_raw_aba_cannot_change_metrics (__main__.DiskContract.test_raw_aba_cannot_change_metrics) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpn7qbc8t1/e0/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpn7qbc8t1/e0/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_reference_wrong_id_and_runtime_bad_binding (__main__.DiskContract.test_reference_wrong_id_and_runtime_bad_binding) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsyu5sq5e/u/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsyu5sq5e/u/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsyu5sq5e/u/post/dump_400.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsyu5sq5e/u/post/dump_450.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsyu5sq5e/u/post/dump_500.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsyu5sq5e/u/post/dump_550.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_rotating_wiring_with_explicit_cell_stats_unit_mock (__main__.DiskContract.test_rotating_wiring_with_explicit_cell_stats_unit_mock) ... /workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpt7sqk_07/u/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpt7sqk_07/u/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpt7sqk_07/u/post/dump_400.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpt7sqk_07/u/post/dump_450.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpt7sqk_07/u/post/dump_500.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpt7sqk_07/u/post/dump_550.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpt7sqk_07/e0/in.mixer' mode='r' encoding='utf-8'>
+  t = open(deck_path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py:49: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpt7sqk_07/e0/post/dump_200.liggghts' mode='r' encoding='utf-8'>
+  txt = open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_d13_zero_ten_eleven_and_excess (__main__.Qualification.test_d13_zero_ten_eleven_and_excess) ... ok
+test_hand_contact_clusters_and_overlapping_am_fractions (__main__.Qualification.test_hand_contact_clusters_and_overlapping_am_fractions) ... ok
+test_hand_m_no_clipping_and_undefined (__main__.Qualification.test_hand_m_no_clipping_and_undefined) ... ok
+test_id_sequence_type_radius_and_late_change (__main__.Qualification.test_id_sequence_type_radius_and_late_change) ... ok
+test_phase_allocation_differs_without_new_threshold (__main__.Qualification.test_phase_allocation_differs_without_new_threshold) ... ok
+test_reference_geometry_seed_and_role (__main__.Qualification.test_reference_geometry_seed_and_role) ... ok
+
+======================================================================
+FAIL: test_interrupted_missing_short_or_extra_log_is_tech (__main__.DiskContract.test_interrupted_missing_short_or_extra_log_is_tech)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/scripts/test_mixer_precal_observe.py", line 248, in test_interrupted_missing_short_or_extra_log_is_tech
+    self.assertEqual(got['status'],'TECH',got)
+AssertionError: 'OK' != 'TECH'
+- OK
++ TECH
+ : {'schema': 'mixer_precal_observe/1', 'case_id': 'PRECAL_E0', 'status': 'OK', 'reasons': [], 'registered': None, 'execution_authorized': False, 'contact': {'t0': {'step': 200, 'n': {'AM_P': 1, 'AM_S': 1, 'SE': 1}, 's1_se_clusters': {'se_frac_in_clusters': 0.0, 'largest_frac': 1.0, 'mean_size_number': 1.0, 'n_components': 1, 'largest_size': 1, 'hist_components': {'1': 1, '2': 0, '3-9': 0, '10-99': 0, '>=100': 0}}, 's2_am_se_attach': {'se_attached_any_frac': 0.0, 'se_attached_frac_AM_P': 0.0, 'se_attached_frac_AM_S': 0.0, 'se_per_am_AM_P': 0.0, 'se_per_am_AM_S': 0.0}, 'pairs': {'SE-SE': 0, 'AM_P-SE': 0, 'AM_S-SE': 0}, 'resolution': {'sigfigs_xyz': 6, 'sigfigs_radius': 6, 'half_width_max_m': 5e-08, 'pairs_lo': {'SE-SE': 0, 'AM_P-SE': 0, 'AM_S-SE': 0}, 'pairs_hi': {'SE-SE': 0, 'AM_P-SE': 0, 'AM_S-SE': 0}, 'lo': {'se_frac_in_clusters': 0.0, 'largest_frac': 1.0, 'mean_size_number': 1.0, 'se_attached_any_frac': 0.0, 'se_attached_frac_AM_P': 0.0, 'se_attached_frac_AM_S': 0.0, 'se_per_am_AM_P': 0.0, 'se_per_am_AM_S': 0.0}, 'hi': {'se_frac_in_clusters': 0.0, 'largest_frac': 1.0, 'mean_size_number': 1.0, 'se_attached_any_frac': 0.0, 'se_attached_frac_AM_P': 0.0, 'se_attached_frac_AM_S': 0.0, 'se_per_am_AM_P': 0.0, 'se_per_am_AM_S': 0.0}}}, 'bin': {'status': 'NOT_APPLICABLE', 'reason': 'E0 has t0 only'}, 'observable_label': '믹서 판독 전용 AM–SE 접촉 부착', 'attachment_definition': 'Instantaneous contact attachment; fractions use all SE atoms as denominator; not surface-area coverage.', 'attachment_note': 'AM_P and AM_S attachment fractions share the SE denominator and can overlap; their sum is not the union fraction.'}, 'mixing': {'grids': [{'grid': [16, 16, 4], 'n_min': 20, 'axis': 'x', 'r_container': 0.5, 'status': 'NOT_APPLICABLE', 't0_stats': {'s2': None, 'used': 0, 'dropped': 3, 'p': [], 'n': 3, 'vol_kept_by_type': {'1': 0.0, '2': 0.0, '3': 0.0}, 'nonempty': 3, 's2_all': 0.22222222222222224, 'am_vol_kept': 0.0, 'se_vol_kept': 0.0, 'am_n_kept': 0.0, 'se_n_kept': 0.0, 'cell_n_median': None}, 'reason': 'reference raw variance only; no self-normalized M'}, {'grid': [12, 12, 3], 'n_min': 20, 'axis': 'x', 'r_container': 0.5, 'status': 'NOT_APPLICABLE', 't0_stats': {'s2': None, 'used': 0, 'dropped': 3, 'p': [], 'n': 3, 'vol_kept_by_type': {'1': 0.0, '2': 0.0, '3': 0.0}, 'nonempty': 3, 's2_all': 0.22222222222222224, 'am_vol_kept': 0.0, 'se_vol_kept': 0.0, 'am_n_kept': 0.0, 'se_n_kept': 0.0, 'cell_n_median': None}, 'reason': 'reference raw variance only; no self-normalized M'}, {'grid': [8, 8, 2], 'n_min': 20, 'axis': 'x', 'r_container': 0.5, 'status': 'NOT_APPLICABLE', 't0_stats': {'s2': None, 'used': 0, 'dropped': 2, 'p': [], 'n': 3, 'vol_kept_by_type': {'1': 0.0, '2': 0.0, '3': 0.0}, 'nonempty': 2, 's2_all': 0.0625, 'am_vol_kept': 0.0, 'se_vol_kept': 0.0, 'am_n_kept': 0.0, 'se_n_kept': 0.0, 'cell_n_median': None}, 'reason': 'reference raw variance only; no self-normalized M'}], 'denominator': 'own t0 and qualified uniform zero-cohesion E0 t0; not theoretical Lacey'}, 'counts': {'planned_total': 3, 'observed_total': 3, 'initial_missing': 0, 'planned_by_type': {'1': 1, '2': 1, '3': 1}, 'observed_by_type': {'1': 1, '2': 1, '3': 1}, 'rule': 'D13 initial missing <=10; IDs 1..N; subsequent ID/type/radius unchanged'}, 'reference_counts': None, 'provenance': {'module_sha256': {'mixer_precal_prepare': {'path': '/workspace/nonrint-1104/mixer/scripts/mixer_precal_prepare.py', 'sha256': '6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6'}, 'mixer_contact_reader': {'path': '/workspace/nonrint-1104/mixer/scripts/mixer_contact_reader.py', 'sha256': '6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de'}, 'measure_mixing_index': {'path': '/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py', 'sha256': '4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a'}, 'measure_bed_aspect': {'path': '/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py', 'sha256': 'b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880'}, 'make_mixer_deck': {'path': '/workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py', 'sha256': '661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27'}, 'mixer_deck_readback': {'path': '/workspace/nonrint-1104/mixer/scripts/mixer_deck_readback.py', 'sha256': 'bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f'}, 'mixer_deck_diff': {'path': '/workspace/nonrint-1104/mixer/scripts/mixer_deck_diff.py', 'sha256': '3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3'}, 'mixer_precal_observe': {'path': '/workspace/nonrint-1104/mixer/scripts/mixer_precal_observe.py', 'sha256': 'e3084594c958632f489abd6c0f9f328f8745d4bced7359db023e224ecd8e9770'}}, 'binding': {'case_id': 'PRECAL_E0', 'role': 'E0', 'phases': {'AM_P': {'type': 1, 'radius_m': 0.001}, 'AM_S': {'type': 2, 'radius_m': 0.001}, 'SE': {'type': 3, 'radius_m': 0.001}}, 'n_planned': 3, 'expected_counts': {'1': 1, '2': 1, '3': 1}, 'revolutions': 0, 'seed': 32452843, 'r_container': 0.5, 'axis': 'x', 'np_proposed': 20, 'density_generation': 'lab20261014', 'geometry': {'axis': 'x', 'r_container': 0.5, 'length': 0.2, 'cgf': 151.4}, 'frame_pm': {'phases': {'AM_P': {'type': 1, 'radius_m': 0.001}, 'AM_S': {'type': 2, 'radius_m': 0.001}, 'SE': {'type': 3, 'radius_m': 0.001}}, 'n_planned': 3, 'revolutions': 0, 'meta_steps': {'t0_planned': 200, 'dump_every': 50}, 'arm': 'synthetic', 'seed': 32452843, 'n_expected_file': None}}, 'frames': [{'step': 200, 'path': '/tmp/tmp8jc97ihz/error/post/dump_200.liggghts', 'sha256': 'bd132ed40ac4f07199a685bce352d7c793be2c660d58248f7509a478cf711edb'}], 'reference_frames': [], 'reference_binding': None, 'input_sha256': {'/workspace/nonrint-1104/mixer/scripts/mixer_precal_prepare.py': '6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6', '/workspace/nonrint-1104/mixer/scripts/mixer_contact_reader.py': '6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de', '/workspace/nonrint-1104/mixer/scripts/measure_mixing_index.py': '4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a', '/workspace/nonrint-1104/mixer/scripts/measure_bed_aspect.py': 'b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880', '/workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py': '661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27', '/workspace/nonrint-1104/mixer/scripts/mixer_deck_readback.py': 'bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f', '/workspace/nonrint-1104/mixer/scripts/mixer_deck_diff.py': '3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3', '/workspace/nonrint-1104/mixer/scripts/mixer_precal_observe.py': 'e3084594c958632f489abd6c0f9f328f8745d4bced7359db023e224ecd8e9770', '/tmp/tmp8jc97ihz/error/in.mixer': '64f43b0c89e6ee4330fac39a202357a53a286f50ea074a3873d6517bd65b1cbf', '/tmp/tmp8jc97ihz/error/deck_meta.json': '083a9e02a87018acb8dd68954cbb37e46212f89252fd5978052b34e60515d930', '/tmp/tmp8jc97ihz/error/post/dump_200.liggghts': 'bd132ed40ac4f07199a685bce352d7c793be2c660d58248f7509a478cf711edb'}}, 'limitations': ['development observations only; no physical qualification', 'declared deck geometry, not measured STL geometry', 'NP20 is a proposal, not observed MPI rank verification', 'fresh-run first-eight observation only; no resume or bit-identical claim', 'observed phase allocation can differ from planned and affect observables', 'nonfinite auxiliary raw statistics serialize as null, never zero']}
+
+======================================================================
+FAIL: test_raw_aba_cannot_change_metrics (__main__.DiskContract.test_raw_aba_cannot_change_metrics)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/scripts/test_mixer_precal_observe.py", line 237, in test_raw_aba_cannot_change_metrics
+    self.assertEqual(got['contact']['t0']['pairs']['AM_P-SE'],0)
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.347s
+
+FAILED (failures=2)

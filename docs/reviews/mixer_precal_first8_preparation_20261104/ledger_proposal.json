@@ -1,0 +1,23 @@
+{
+  "append_notes": [],
+  "new_findings": [],
+  "verified_transition_proposed": false,
+  "reason": "This unit records author decisions and implementation/review preparation. Do not invent a finding ID or treat internal checks as independent closure. Shared ledgers are unchanged.",
+  "shared_record_notes": [
+    {
+      "target": "CLAUDE.md and progress record; integration owner appends when authorized",
+      "note": "Q1–Q4 adopted by author on 11-04. Prepare first8 uncalibrated mixing cases only; remaining12 and actual execution separate. Prior accepted handoff sent to Claude per user. Whole HOLD and MXD2R recheck pending."
+    },
+    {
+      "target": "DEM mixing preparation status",
+      "note": "Any ibb time estimate/submission planning applies only after 50kg D0.7 ends and author approves. D0.7 uses56 cores when running per11-03 QoS cpu-60 context; current state not queried. No current submission/queue commands."
+    },
+    {
+      "target": "Observation naming and combined experiment request",
+      "note": "AM-SE contact attachment is labelled mixer-reader-only, not coverage. Coverage definition implementation belongs to Claude. Combined experiment draft leaves same-sample mass/area/thickness/pressure/porosity/SEM/custodian fields empty for Claude under RB-01."
+    }
+  ],
+  "integration": "Only when author chooses timing; Claude cherry-pick -x. No integration performed here.",
+  "research_execution": false,
+  "whole_gate": "HOLD"
+}

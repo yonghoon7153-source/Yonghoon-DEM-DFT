@@ -1,0 +1,22 @@
+test_01_first8_physical_bindings (__main__.Preparation) ... /workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py:1122: ResourceWarning: unclosed file <_io.BufferedReader name='/workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py'>
+  generator_sha256=hashlib.sha256(open(os.path.abspath(__file__), 'rb').read()).hexdigest(),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_02_standard_d2_three_pairs (__main__.Preparation) ... ok
+test_03_zero_controls_separate_contract (__main__.Preparation) ... ok
+test_04_remaining12_and_untrusted_ids (__main__.Preparation) ... ok
+test_05_cross_case_and_baseline_swap (__main__.Preparation) ... ok
+test_06_metadata_mutations (__main__.Preparation) ... ok
+test_07_rehashed_deck_mutations (__main__.Preparation) ... ok
+test_08_bad_physical_bytes_and_types (__main__.Preparation) ... ok
+test_09_generator_state_restored_success_and_failure (__main__.Preparation) ... ok
+test_10_no_file_writes_or_stdout (__main__.Preparation) ... ok
+test_11_return_objects_not_shared (__main__.Preparation) ... ok
+test_12_cli_report_only (__main__.Preparation) ... ok
+test_13_zero_guard_beyond_source_output_oracle (__main__.Preparation) ... ok
+test_14_d2_readback_beyond_source_output_oracle (__main__.Preparation) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.927s
+
+OK
