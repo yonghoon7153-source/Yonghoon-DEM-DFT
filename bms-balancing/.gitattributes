@@ -250,3 +250,5 @@ reviews/review_reil_c4e1_0b_a2_scope_review_20261104/** -text
 reviews/review_reil_c4e1_0b_a2_v4_prereview_20261104/** -text
 # 2026-11-04: REIL C4-E · E1-0b 시도 a2 증거 — 단계 기록 · stdout / stderr · porcelain · 원천 해시 · 외곽 반환 · 판정 기록 · 외곽 실행기 · 끝 기록 작성기 · 판정기 사본 · 착수 / 끝 기록 (상태 문서 §99 · §100) — bytes 그대로
 evidence/reil_c4e1_0b_a2_20261104/** -text
+# 2026-11-04: REIL C4-E · E1-0b a2 결과 검토 회신 (E1_0B_A2_LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION · 차단 0 · 비차단 절차 이탈 A2_PROC_01 · 고정 HEAD f09ead06 · 다음 실행 승인 아님 · source/ · input/ = 검토자가 본 저장소 · 발송문 사본 · basis/ = 이전 회신 · RED 대상 launcher v5 사본 · 검토자 도구 없음 · *.py · *.py.txt = 저장소 사본, 실행하지 않음) — bytes 그대로
+reviews/review_reil_c4e1_0b_a2_result_review_20261104/** -text
