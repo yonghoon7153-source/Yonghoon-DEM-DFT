@@ -11167,6 +11167,64 @@
     "근거_발화": "사용자 2026-11-04 (이 세션): '권고대로 해줘' — 합치는 규칙 권고 (봉인된 문턱 · 등급만 · 축 ① 은 표시로만 · 가중치 없이 Pareto)",
     "decision_digest": "sha256:da58495778905281615b4bdbfe900a030bbec9d66dbcef24bd388e972bac004d"
    }
+  },
+  {
+   "id": "D-2026-11-04-cascade-axis-hydrolysis",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "cascade.dopant_screening.axis_hydrolysis",
+   "slot": "cascade_axis_hydrolysis",
+   "applies_to": {
+    "systems": [
+     "lpscl_dopant_designs"
+    ],
+    "tasks": [
+     "hydrolysis_driving_force"
+    ],
+    "methods": [
+     "mp_interfacial_reactivity"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "cascade 스크리닝 축 ② — 91 설계의 도핑 조성 + H₂O 닫힌계 가수분해: 호스트 대비 δ_hyd (R1) · H₂S 몫 Δf (R2) · O/S 짝 (R5) · 축 ① 과의 겹침 (G7)",
+   "statement": "카드 db/properties/cascade_axis_hydrolysis_estimand_2026_11_04.json 이 보고량 · 게이트 · 금지 문장이다: 대상 = 축 ① 개정 1 의 91 종 조성 · 호스트 Li6PS5Cl · 상대 H₂O · 닫힌계 pseudo-binary (M6 · 축 ① 규약) · G1b 호스트 반응 음수 + H₂S 산물 · G2 완결 · G3 같은 MP 판 · G4 IQR ≥ 10 meV/atom · G7 축 ① 과 Spearman |ρ| ≥ 0.8 이면 겹침 (Pareto 에는 축 ① 만). 합치는 규칙 연결: 위험 표시 F1_hyd δ_hyd ≤ −10 · F2_H2S Δf ≥ +0.10 · 좋은 방향 δ_hyd 큰 쪽. 판독기는 회수 전에 커밋.",
+   "rationale": "축 확장 계획 첫 묶음 ② · 합치는 규칙 (D-2026-11-04-cascade-axes-combination-rule) 이 다음 축 카드에 위험 표시 · 좋은 방향 · 겹침 기준을 결과 전에 적으라고 했다. 축 ① 과 같은 대상 · 규약이라 비교가 서고, Lee 2024 · Zhu 2020 은 다른 양이라 판정에 안 섞는다.",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "results_seen_note": "축 ② 설계 × H₂O 값 0 건 · 8 월 T11 (별도 상) · 문헌 표 · 축 ① 판독은 봤다 (카드 §0)",
+   "card": "db/properties/cascade_axis_hydrolysis_estimand_2026_11_04.json",
+   "record": "db/properties/cascade_screening_axes_plan_2026_10_15.json",
+   "depends_on": [
+    "D-2026-10-15-cascade-screening-axes-plan",
+    "D-2026-11-04-cascade-axes-combination-rule",
+    "D-2026-11-04-cascade-axis-ncm-interface"
+   ],
+   "supersedes": [],
+   "amends": null,
+   "evidence": [
+    "tools/cascade/stability_axes.py T11 (같은 계산 틀)",
+    "litdb/papers/lee2024_multicomponent_argyrodite_mixed_oxidation_mtp.md §5e · §12-C2 (할로겐 구분 못 함 — 정량 앵커 아님)"
+   ],
+   "reopen_criteria": [
+    "없음 — 다른 상대 (O₂ · CO₂) · 열린계 · 자유에너지 판은 새 카드"
+   ],
+   "enforcement": "판독기 (analyze_cathode_reactivity.py --axis_hyd) 가 게이트를 검사하고 불통과면 표를 내지 않는다 · 결정이 active 가 아니면 러너 · 판독기가 멈춘다",
+   "cost_cap": {
+    "compute": "gabia CPU · MP 조회 92 쌍 (≈ 20–25 분) · GPU 0 · SCF 0"
+   },
+   "proposed_by": "agent",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-04",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 'ㅇㅇ 가자' (② 가수분해 카드) — 결과 전 초안 · 사용자 비준 대기"
+    }
+   ]
   }
  ]
 }
