@@ -102,7 +102,7 @@ DI 수정:
 from __future__ import annotations
 import argparse, datetime, hashlib, importlib.util, json, os, pathlib, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "c000aee9d688e77c"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "cd45aa850f3f276a"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 EXPECTED_VALUES_SHA16 = "086de59c484f9c32"     # 카드 기계_판독_값 (mq.values_sha16) — ⭐ DO 전 리뷰 P2-12: 카드 값 (상한 포함) 을 바꾸면 이 줄도
                                                #   같이 바꾸고 다시 리뷰한다 (카드 파일만 고쳐서는 상한 멈춤을 넘기지 못한다)
 STOP_KEYS = ("at", "code", "reason", "terminal", "stop_id", "run_id", "sys", "seed", "cleanup", "rc", "verdict", "melt", "summary",
@@ -2358,17 +2358,21 @@ def _selftest():
     rc_v3, L_v3, _ = go(wt, expect_values=real.values_sha16(vals_t))
     chk(rc_v1 == RC["refused"] and not L_v1 and rc_v2 == RC["refused"] and not L_v2 and rc_v3 == RC["pass"] and L_v3,
         "⛔음성 DO 전 리뷰 P2-12 · P2-8: 카드 값 지문이 러너 고정값과 다르면 · --python 을 실행할 수 없으면 시작하지 않는다 (맞으면 돈다)")
-    rc_sg, L_sg, rr_sg = go(wt, launch_signal=True)
-    es_, ss_ = J(rr_sg / "stage1_ledger.json")["runs"][0], J(rr_sg / "STOP.json")
-    chk(rc_sg == RC["interrupted"] and L_sg and L_sg[0].stopped and ss_.get("run_id") == es_.get("run_id") and es_.get("end") is not None,
-        "⛔음성 DO 전 리뷰 P2-9: 띄운 직후 (손잡이를 적기 전) SIGTERM 이 와도 손잡이를 적은 뒤에 받아 그 담금질을 멈추고 마감한다 (놓친 자식 없음)")
+    if hasattr(signal, "pthread_sigmask"):                   # POSIX 신호 막기가 있는 OS 만 (Windows 는 os.kill(자기, SIGTERM) 이 프로세스를 바로 끝낸다 · 러너도 막지 않는다)
+        rc_sg, L_sg, rr_sg = go(wt, launch_signal=True)
+        es_, ss_ = J(rr_sg / "stage1_ledger.json")["runs"][0], J(rr_sg / "STOP.json")
+        chk(rc_sg == RC["interrupted"] and L_sg and L_sg[0].stopped and ss_.get("run_id") == es_.get("run_id") and es_.get("end") is not None,
+            "⛔음성 DO 전 리뷰 P2-9: 띄운 직후 (손잡이를 적기 전) SIGTERM 이 와도 손잡이를 적은 뒤에 받아 그 담금질을 멈추고 마감한다 (놓친 자식 없음)")
+    else:
+        print("  · 건너뜀 (POSIX 전용) DO 전 리뷰 P2-9 띄우는 순간 신호 — 이 OS 에는 pthread_sigmask 가 없다")
     fs_calls, _of = [], os.fsync
     os.fsync = lambda fd: (fs_calls.append(fd), _of(fd))[1]
     try:
         _write_json_atomic(pathlib.Path(tempfile.mkdtemp(dir=tmp_root)) / "x.json", {"a": 1})
     finally:
         os.fsync = _of
-    chk(len(fs_calls) >= 2, f"⛔음성 DO 전 리뷰 P2-14: 장부 · STOP · 실행 전 기록 쓰기는 파일과 디렉터리를 fsync 한다 ({len(fs_calls)})")
+    chk(len(fs_calls) >= (2 if os.name == "posix" else 1),        # 디렉터리 fsync 는 POSIX 만 (Windows 는 디렉터리를 못 연다)
+        f"⛔음성 DO 전 리뷰 P2-14: 장부 · STOP · 실행 전 기록 쓰기는 파일과 디렉터리 (POSIX) 를 fsync 한다 ({len(fs_calls)})")
     def _led_edit(fn=None, raw=None):
         c_ = clone(rr_d)
         if raw is not None:

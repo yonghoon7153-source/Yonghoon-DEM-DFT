@@ -3556,6 +3556,11 @@ def _selftest():
         MIDV = {"status": "incomplete", "reasons": {"incomplete": ["상한 멈춤 (기록용 · 미완)"]},
                 "provenance": {"files_sha256": {"plan.json": "a" * 64, "thermo.csv": "b" * 64, "traj.xyz": "c" * 64,
                                                 "final.xyz": None, "result.json": None}}}
+        def _dangling_result(d):                             # result.json 자리에 깨진 링크 — 링크를 못 만드는 기계 (Windows 권한) 는 디렉터리로 같은 검사 ('파일이 아닌 것')
+            try:
+                os.symlink(str(d / "nowhere.json"), str(d / "result.json"))
+            except (OSError, NotImplementedError, AttributeError):
+                (d / "result.json").mkdir()
         def _wv(d, v):                                       # 판정 파일을 그 값으로 (손상 재현)
             (d / "stage1_verdict.json").write_text(json.dumps(v), encoding="utf-8")
         def _judge_prerun(d):                                # 진짜 판정 함수로 plan 전 끊긴 폴더를 판정 (이미 있으면 이력이 생긴다)
@@ -3689,7 +3694,7 @@ def _selftest():
                                                                           (d / "prerelax.log").write_text("x", encoding="utf-8")]),
                # F2 — final · result 자리에 파일이 아닌 것
                "final_is_dir": _fs("x6", traj=2, after=lambda d: (d / "final.xyz").mkdir()),
-               "result_dangling": _fs("x7", traj=2, after=lambda d: os.symlink(str(d / "nowhere.json"), str(d / "result.json"))),
+               "result_dangling": _fs("x7", traj=2, after=_dangling_result),
                # F5 — plan 일정 값의 타입 · 범위
                "plan_save_str": _fs("x8", plan={**PLAN0, "save_ps": "1"}, traj=2),
                "plan_dt_bool": _fs("x9", plan={**PLAN0, "dt_fs": True}, traj=2),
