@@ -1,0 +1,25 @@
+test_01_ibb_scope_184_and_wsl_scope_30 (__main__.InventoryTests.test_01_ibb_scope_184_and_wsl_scope_30) ... ok
+test_02_missing_root_directory_and_logs_fail_closed (__main__.InventoryTests.test_02_missing_root_directory_and_logs_fail_closed) ... ok
+test_03_empty_malformed_nan_are_counts_not_eligibility (__main__.InventoryTests.test_03_empty_malformed_nan_are_counts_not_eligibility) ... ok
+test_04_exact_b7_regex_and_splitlines_semantics (__main__.InventoryTests.test_04_exact_b7_regex_and_splitlines_semantics) ... ok
+test_05_duplicate_local_logs_are_kept_separate (__main__.InventoryTests.test_05_duplicate_local_logs_are_kept_separate) ... ok
+test_06_restart_echo_and_message_not_events (__main__.InventoryTests.test_06_restart_echo_and_message_not_events) ... ok
+test_07_final_symlink_directory_and_fifo_refused (__main__.InventoryTests.test_07_final_symlink_directory_and_fifo_refused) ... ok
+test_08_case_and_out_directory_symlinks_refused (__main__.InventoryTests.test_08_case_and_out_directory_symlinks_refused) ... ok
+test_09_hostile_out_filename_count_only (__main__.InventoryTests.test_09_hostile_out_filename_count_only) ... ok
+test_10_out_symlink_refused_without_name (__main__.InventoryTests.test_10_out_symlink_refused_without_name) ... ok
+test_11_unreadable_exception_never_leaks (__main__.InventoryTests.test_11_unreadable_exception_never_leaks) ... ok
+test_12_changed_during_read_discards_counts (__main__.InventoryTests.test_12_changed_during_read_discards_counts) ... ok
+test_13_replacement_after_open_refused (__main__.InventoryTests.test_13_replacement_after_open_refused) ... ok
+test_14_guard_uses_actual_account_host_kernel (__main__.InventoryTests.test_14_guard_uses_actual_account_host_kernel) ... ok
+test_15_cli_no_root_override_or_error_leak (__main__.InventoryTests.test_15_cli_no_root_override_or_error_leak) ... ok
+test_16_home_lustre_alias_policy (__main__.InventoryTests.test_16_home_lustre_alias_policy) ... ok
+test_17_no_explicit_writes_or_external_processes (__main__.InventoryTests.test_17_no_explicit_writes_or_external_processes) ... ok
+test_18_long_line_refuses_without_payload (__main__.InventoryTests.test_18_long_line_refuses_without_payload) ... ok
+test_19_shell_syntax_and_wrong_host_run (__main__.InventoryTests.test_19_shell_syntax_and_wrong_host_run) ... ok
+test_20_growing_stream_has_a_total_read_bound (__main__.InventoryTests.test_20_growing_stream_has_a_total_read_bound) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.146s
+
+OK

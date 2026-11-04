@@ -1,0 +1,7 @@
+test_17_no_explicit_writes_or_external_processes (audit_diagnostic.InventoryTests.test_17_no_explicit_writes_or_external_processes) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.020s
+
+OK
+DIAGNOSTIC {"counted_cases": 30, "noncounted": [], "rc": 0, "root_status": {"local": "COUNTED"}}

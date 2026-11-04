@@ -1,0 +1,9 @@
+--- pressure_inventory.sh
++++ shutdown_reflush.sh
+@@ -283,5 +283,5 @@
+ if __name__ == "__main__":
+     # main flushes successful output. Immediate exit prevents a failed buffer
+     # from being flushed again during interpreter shutdown. This is a CLI.
+-    os._exit(main(sys.argv[1:]))
++    sys.exit(main(sys.argv[1:]))
+ ' "$@" 2>/dev/null

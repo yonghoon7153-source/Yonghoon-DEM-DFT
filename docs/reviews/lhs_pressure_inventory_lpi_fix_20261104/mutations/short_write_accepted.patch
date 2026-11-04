@@ -1,0 +1,12 @@
+--- pressure_inventory.sh
++++ short_write_accepted.sh
+@@ -272,8 +272,7 @@
+     # Once output starts, do not turn a write/flush error into a second JSON.
+     # A single write is not atomic; the caller must also require process rc 0.
+     try:
+-        if sys.stdout.write(payload) != len(payload):
+-            return 2
++        sys.stdout.write(payload)
+         sys.stdout.flush()
+     except BaseException:
+         return 2
