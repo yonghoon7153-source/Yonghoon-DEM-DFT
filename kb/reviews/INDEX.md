@@ -139,6 +139,7 @@ evidenceScope: multi-source-primary
 | DK | 2026-11-03 | `codex_DK_prompt_li2s2_dj_fixes_2026_11_03.md` | `codex_DK_reply_li2s2_dj_fixes_2026_11_03.md` | 발송 · 회신 수령 2026-11-04 (NO-GO · P0 2 · P1 2 · `codex_DK_reply_li2s2_dj_fixes_2026_11_03.md`) · 기준 커밋 7ac0be8e | 같은 라벨 · 주제 토큰 일치 ['dj', 'fixes', 'li2s2']; 판정 인용 1회 |
 | DL | 2026-11-04 | `codex_DL_prompt_li2s2_dk_fixes_2026_11_04.md` | `codex_DL_reply_li2s2_dk_fixes_2026_11_04.md` | 발송 · 회신 수령 2026-11-04 (NO-GO · P0 1 · P1 2 · `codex_DL_reply_li2s2_dk_fixes_2026_11_04.md`) · 기준 커밋 390441c4 | 같은 라벨 · 주제 토큰 일치 ['dk', 'fixes', 'li2s2'] |
 | DM | 2026-11-04 | `codex_DM_prompt_li2s2_dl_fixes_2026_11_04.md` | `codex_DM_reply_li2s2_dl_fixes_2026_11_04.md` | 발송 · 회신 수령 2026-11-04 (NO-GO · P0 2 · `codex_DM_reply_li2s2_dl_fixes_2026_11_04.md`) · 기준 커밋 04555774 | 같은 라벨 · 주제 토큰 일치 ['dl', 'fixes', 'li2s2'] |
+| DN | 2026-11-04 | `codex_DN_prompt_li2s2_dm_fixes_2026_11_04.md` | — | 초안 → 발송 대기 · 기준 커밋 __BASE__ | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 

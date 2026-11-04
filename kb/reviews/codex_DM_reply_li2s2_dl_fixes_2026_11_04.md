@@ -6,7 +6,7 @@ date: 2026-11-04
 track: li2s
 channel: codex
 kind: reply
-status: 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운 링크의 Codex 로컬 경로 머리만 `<codex>/` 로 줄임 · 탭으로 붙은 표는 표 꼴로 · 판정은 본문대로 NO-GO) → 반영 중
+status: 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운 링크의 Codex 로컬 경로 머리만 `<codex>/` 로 줄임 · 탭으로 붙은 표는 표 꼴로 · 판정은 본문대로 NO-GO) → 반영 (206d9d52 · 같은 갈래 3d97d145 · 카드 v5) → DN (`codex_DN_prompt_li2s2_dm_fixes_2026_11_04.md`)
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-11-04
