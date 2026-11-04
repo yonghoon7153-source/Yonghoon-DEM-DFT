@@ -1,0 +1,328 @@
+# REIL C4-E · E1-1–3 승인 요청 — 실제 identity · 읽기 경로 · fetch · 자료 개봉 · run (범위안 v3 · 사용자 선택 §105) · 2026-11-04 KST
+
+> **승인 요청서다 (이 문서를 쓰는 동안 실행 0).** 범위안 v3 (`docs/REIL_C4E_E1_1_3_SCOPE_v3_20261104.md` · `88ecc9ce…` · 재검토 수용 §104) 에서 사용자가
+> 권장 여섯을 골랐다 (§105 — A · R1 · P1 · 판정 A · 공개 A · 절차 Git 권장안). 이 요청서는 그 선택대로 단계마다 정확한 대상 · 명령 · 출처 · 허용 활동 ·
+> 시간 · 중지 조건 · 증거를 고정하고, 실행에 쓸 초안 셋 (외곽 도구 · 판정기 · 끝 기록 작성기 v3) 의 바이트를 고정한다. 초안은 정적 검사만 했고 **한 번도
+> 실행하지 않았다** (스크래치 사본 포함). 사전 검토 뒤 사용자의 E1-1–3 승인이 있어야 §4 의 a 부터 시작한다. 승인되면 첫 예상 밖 결과에서 멈추고 재시도는
+> 없다.
+
+## 0. 요약
+
+- **순서:** a 승인 기록 · 보존 규칙 → p 분리 실행 탐침 (P1 · `<E>` 전) → b 착수 검사 · `<E>` · 복사 · 봉인 → c **E1-1 identity** → d **읽기 경로**
+  (`add_repo`) → e **E1-2 fetch** → f **E1-3 run** (자료 개봉은 run 의 prep 안) → g 끝 기록 → 커밋 · 작성 저장소 동기화 · push → 결과 기록 § · 결과 검토
+  발송문 → 멈춤.
+- **launcher 단계 (c · e · f) 의 방식 (A):** 외곽 도구 `start` 를 `setsid nohup` 으로 띄워 셸 도구 호출과 떼고, `wait` (읽기 전용) 로 기다리고, 끝나면 잔류
+  관측 → (잔류가 있으면 R1: 기록한 그룹에만 SIGKILL 한 번 → 다시 관측) → (종료 미확인이면 F3 고정 사본) → 판정기 → 수동 판정 → 커밋.
+- **수용:** 단계마다 판정기 verdict MATCH 와 수동 판정이 같아야 다음 단계로 간다. launcher 단계 판정 (precheck · 자식 · rc 0 · timeout 없음 · postcheck) ·
+  외곽 기록 · 잔류 0 이 모두 참이어야 한다. E1-3 은 실행 유효성과 실험 결과 (`final.complete` · `final.E3a` · `final.c4a_gate`) 를 따로 적는다. C4-A 로 가는
+  문은 둘 다 참일 때만 열리고, 그 문을 여는 것도 별도 승인이다.
+- **예산:** 감시 기한 identity 착수 + 900 s · fetch + 1,800 s · run + 12,600 s · 탐침 t0 + 300 s · 전체 (a 의 이름 확인 → g 의 끝 기록) ≤ 6 h · 재시도 0.
+- **승인하지 않는 것 (이 요청 밖):** C4-A / B · COMSOL · 설치 · 환경 재구축 · launcher · 다섯 모듈의 변경.
+
+## 1. 고정 식별
+
+### 1-1. 이번에 고정하는 초안 셋 (정적 검사만 · 초안 실행 0)
+
+| 초안 (`bms-balancing/docs/`) | sha256 | bytes | 복사할 곳 (b) |
+|---|---|---:|---|
+| `REIL_C4E1_E113_OUTER_DRAFT_20261104.py.txt` — 외곽 도구 (`start` · `wait` · `observe` · `kill` · `freeze`) | `e11472bfc5445e43412c1cb3fefcbf0adf89d9dbd5ae538cdec7abe0a0b6cffe` | 18,313 | `<E>/00_outer.py` |
+| `REIL_C4E1_E113_JUDGE_DRAFT_20261104.py.txt` — 판정기 (단계마다 한 번) | `0786f5cc339db03b62a1630d0c32a2ac52a08ce0652839a4dce1ed2ce4f04bdf` | 12,182 | `<E>/00_judge.py` |
+| `REIL_C4E1_E113_END_WRITER_DRAFT_20261104.py.txt` — 끝 기록 작성기 v3 | `07bcaa4b1042d650a5b636b563acd0f6e762232a51cc71c7800ce642d1a10aa7` | 7,229 | `<E>/00_end_writer.py` |
+
+### 1-2. 바뀌지 않는 것 (읽기 대조만 · launcher 의 상수와 같은 값)
+
+- **launcher v6** `scripts/reil_c4e1_launch.py` (`2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf` · 62,639 B · E1-0b GREEN 바이트). `REQUEST` =
+  `docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md` (`ae413f96…` — 다시 쓰지 않는다) · run 의 승인 문구 `상태 문서 §NN (사용자 E1-1–3 승인 ·
+  docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md)` (`build_argv` 381–385 행 · E1-0b 요청서 §8 의 16).
+- **신뢰 목록** `evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json` (`2a7b2b49…` · 1,100 B) → 다섯 모듈 (`reil_c4e_run.py` · `reil_c4_e3a.py` ·
+  `reil_c4_monitor.py` · `reil_c5_pilot.py` · `reil_p0.py`). **S1 의 둘:** `scripts/reil_c6_profile.py` (`408afc4b…` · 15,915) ·
+  `degradation-degeneracy/tools/env_profile.py` (`83b0d836…` · 22,333).
+- **봉인:** `reil_c6_rebuild_20261013/MANIFEST.json` (`4f12094897b53463…` · 954) → `REIL_C6.lock.txt` (`ea91156cac99fac1…` · 4,117).
+- **identity helper:** `evidence/reil_c4e0_fix_20261014/00_identity_c4.py` (`92bb3bca2dcd56982bd4d4ddc02bb8ed84615d5b1b6af6385d69b66c8f5df900` · 1,506 B) — 같은
+  바이트를 `<E>/00_identity_c4.py` 로 복사한다 (launcher 가 그 경로 · sha 를 대조한다).
+- **원천 · 자료:** `https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git` · 커밋
+  `1188c371e5836df4a7e5f5acf336a34ffd4027e6` · `LFP_Data.xlsx` (10,841,377 B · `fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1`) ·
+  `util_LFP.py` (33,754 B · `3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76`). 받는 곳 `SP/c4e1/data` (저장소 밖 · 커밋하지 않는다).
+- 범위안 v1 · v2 · v3 · E1-0b 두 시도의 증거 · 모든 보존 회신 — 지우거나 · 이름을 바꾸거나 · 다시 쓰지 않는다.
+
+### 1-3. 전제 (a · b 에서 확인 · 다르면 멈춤)
+
+- **이 세션의 스크래치패드:** launcher 는 `SP` = `/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad` 를 상수로 가진다
+  (venv · 작업 폴더). launcher 바이트를 바꾸지 않으므로 E1-1–3 은 이 경로가 있는 세션에서만 할 수 있다. `SP/reil_c4env/venv/bin/python` 이 있어야 한다.
+- `evidence/` 아래에 이름 규칙 `^reil_c4e1_20[0-9]{6}$` 에 맞는 항목 0 (날짜 무관 — 보존된 시험 증거 `reil_c4e1_0_20261030` · `reil_c4e1_0b_20261103` ·
+  `reil_c4e1_0b_a2_20261104` 는 규칙 밖) · `<E>` · `SP/c4e1` · `SP/detach_probe_*` 없음.
+- 디스크 여유 ≥ 5 GiB (run 모듈의 하한 · b 의 `00_start.txt` 에 기록). 26,028,994,560 B 는 a2 끝 기록 당시 값이라 이 전제의 근거로 쓰지 않는다.
+
+### 1-4. 정적 검사 (초안 셋 · 실행 0)
+
+- AST 파싱 셋 다 통과 · symtable 이름 검사 (`SP/c4_0a/lint/names.py`) 의 미해결 이름은 `__file__` 뿐 (실행 때 정해지는 모듈 속성) · `ruff check --select
+  E,F,W,B --ignore E501` 셋 다 0 · 비밀 검사 0. 외곽 도구 · 판정기 · 작성기는 한 번도 띄우지 않았다 (E1_0B_A2_N2 의 교훈).
+- launcher v6 의 읽은 근거 (다시 읽어 확인 · 줄 번호는 grep 으로 대조): 증거 파일 여섯 이름과 기존 파일 거부 (`launch` 827–839 행 — 다른 이름의 파일은 보지
+  않는다 → 외곽 기록 이름과 겹치지 않음) · 증거 폴더 조건 (`main` 924–929 행) · 자식의 새 세션 (786 행) · meta 쓰기 실패 → 외부 stderr · rc 4 (908–912 행) ·
+  단계 요약 stdout 한 줄 · 반환 0 / 1 (913–915 행) · porcelain 은 기록만 하고 깨끗함을 요구하지 않음 (`record_problems` 507–524 행 — rc 와 HEAD 불변만) ·
+  fetch 의 사전 대조는 `SP/c4e1/data` 가 있으면 문제 (565–567 행) · run 의 사후 대조는 `<E>/run/IDENTITY.json` 을 읽는다 (619 행) · `child_result` 의 run =
+  `ok` AND `final.complete` (638–651 행).
+
+## 2. 범위안 v3 · 검토 지적 ↔ 이 요청서
+
+| 근거 | 이 요청서 |
+|---|---|
+| E113_N1 (착수 경로 · 종결) | §1-3 · §4 의 b (규칙 검사 명령) |
+| E113_N2 (외곽 실패 증거 · 완전한 반환 게시 · 유한 감시 · 잔류 책임) | 외곽 도구 (§1-1) · §4 의 c · e · f · §6 |
+| E113_N3 · P1 (탐침을 요청서에 · `<E>` 전) | §4 의 p · §5-1 |
+| P2_01 (대기 성공이 완료 게시의 선행 조건 · 실패 단계 보존 · 반환 경계 뒤 생존) | §4 의 p1 · §5-1 |
+| **P2_02** (관측 명령의 `cd` 실패 뒤 기록) | §4 의 p2 · p3 — `set -C; cd <P> \|\| exit 21` / `\|\| exit 22` (실패 원문 · 반환은 도구 기록에 남기고 다음 관측으로 가지 않는다) |
+| F1 (v6 meta 의 실제 필드 · 누락 = 미확인) | 판정기 항목 · §5-2 |
+| F2 (장시간 관리 영향 미확인) | §10 의 1 |
+| F3 (종료 미확인 작성 주체의 파일 · 고정 사본 · INCOMPLETE) | 외곽 도구 `freeze` · §6-3 · §7 |
+| 요청서로 미룬 것 — 자료 개봉 순서 · 결과 필드 · 디스크 시점 · 예산 | §3 의 f · §5-3 · §1-3 · §9 |
+
+## 3. 단계 · 배정
+
+| # | 단계 | 대상 · 허용 활동 | 시간 | 기대 | 어긋나면 |
+|---|---|---|---|---|---|
+| a | 이름 확인 → 승인 기록 § (§NN) · 보존 규칙 (`evidence/reil_c4e1_<D>/** -text`) 커밋. `D` = 이 이름 확인의 UTC 날짜 | 문서 · Git (add · commit) | — | 목록 밖 0 | 멈춤 |
+| p | **탐침 (P1)** — `SP/detach_probe_<D>` 에서 `sleep 150` 하는 분리 프로세스 하나 · 관측 둘 · 읽기 | 프로세스 하나 · SP 쓰기 · 연구 코드 · 네트워크 · 저장소 쓰기 0 | 생존 관측 t_ret + 10 s · 끝 관측 t0 + 300 s | §5-1 성공 | 멈춤 (`<E>` 를 만들지 않는다 · 결과 § · 발송문) |
+| b | 착수 검사 (§1-3) → `<E>` → 복사 넷 (helper · 외곽 도구 · 판정기 · 작성기) · 탐침 기록 여덟 → `00_start.txt` (UTC · 디스크 · sha 스물) → 복사본 sha = §1 확인 → 커밋 | 파일 복사 · Git | — | sha 일치 · 디스크 ≥ 5 GiB | 멈춤 |
+| c | **E1-1 identity** — launcher `identity` (helper · `env_profile` 를 venv 자식으로 · 사전 대조 · 기록 git) | §4 의 c | 감시 기한 착수 + 900 s | §5-2 · §5-3 | 멈춤 → g |
+| d | **읽기 경로** — 세션 도구 `add_repo` 한 번 (owner `REIL-UConn` · repo `Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics` · access `read`) → `03_read_path.json` | 세션 도구 한 번 · 제안된 clone 명령 실행 0 · 그 저장소의 GitHub 도구 읽기 0 | 한 번 | 붙음 · 또는 "공개 저장소라 읽기는 이미 프록시가 제공" | 거부 · 정책 · 확인 거절 → 멈춤 → g |
+| e | **E1-2 fetch** — launcher `fetch` → 자식 `reil_c4e_run.py fetch --dest SP/c4e1/data` (fetch env · 이 저장소 하나 · 한 번) | 네트워크는 이 단계뿐 | 감시 기한 착수 + 1,800 s (자식 300 s) | §5-2 · §5-3 (자료 두 파일 sha · bytes) | 멈춤 → g |
+| f | **E1-3 run** — launcher `run` → 자식 `reil_c4e_run.py run … --out <E>/run` · 66 호출 · 네트워크 0. **자료 개봉은 prep 안:** 시작 바이트 식별 대조 → 발췌 · 경로 확인 → 새 산출 폴더 → P0 기록 읽기 → `util_LFP.py` import (sha 대조 뒤 · 받은 외부 코드를 venv 자식 안에서 실행) → 자료 적재 → 적재 결과 / P0 결속 대조 (run 581–593 행) | run 모듈 기한 prep 900 · 측정 9,000 · 기록 9,900 · 단계 10,800 s · RSS ≤ 4 GiB · 새 산출 ≤ 1 GiB · 디스크 여유 ≥ 5 GiB | 감시 기한 착수 + 12,600 s · 기대 경과 약 35–45 분 (산술 · 보증 아님) | §5-2 · §5-3 (실행 유효성 · 실험 결과 따로) | 멈춤 → g |
+| g | 이름 확인 → 끝 기록 `06_end.json` (작성기 v3) → 비밀 검사 → 커밋 → 작성 저장소 동기화 fetch · push → 결과 기록 § → 결과 검토 발송문 → **멈춤** | 문서 · Git | — | 목록 밖 0 | 멈춤 (기록만) |
+
+- **멈춤** = 다음 실행 단계로 가지 않는다. 재시도 · 수정 · 다른 근거로의 대체 · 이름을 바꾼 재착수를 하지 않는다. c · e · f 에서 멈추면 그 단계의 기록을
+  §7 대로 커밋하고 g 를 한다. p 에서 멈추면 `<E>` 를 만들지 않고 결과 § · 발송문만 쓴다.
+
+## 4. 정확한 명령
+
+`BMS` = `/home/user/Yonghoon-DEM-DFT/bms-balancing` · `SP` = §1-3 의 스크래치패드 · `D` = a 의 UTC 날짜 · `<E>` = `BMS/evidence/reil_c4e1_<D>` · `<P>` =
+`SP/detach_probe_<D>` · `§NN` = 사용자 승인을 기록한 상태 문서 절 · `<확인>` = §8 의 이름 확인 고정 명령 · `<브랜치>` = `claude/14-gate-code-review-9qkx05`.
+실제 명령은 절대 경로로 풀어 쓰고, 그 밖의 글자는 바꾸지 않는다 (A2_PROC_01).
+
+```
+a   <확인> && git add .gitattributes docs/REIL_PREREQUISITES_STATUS_20261004.md && <확인> && git commit …
+
+p1  ! compgen -G 'SP/detach_probe_*' > /dev/null && mkdir <P> && cd <P> && date -u +%s > t0.txt && { setsid nohup sh -c 'echo $$ > pid.txt || { echo "stage=pid rc=$?" > fail.txt; exit 11; }; sleep 150; rc=$?; [ "$rc" -eq 0 ] || { echo "stage=sleep rc=$rc" > fail.txt; exit 12; }; date -u +%s > done.tmp || { echo "stage=done_write rc=$?" > fail.txt; exit 13; }; mv done.tmp done.txt || { echo "stage=publish rc=$?" > fail.txt; exit 14; }' > out.txt 2> err.txt < /dev/null & } && date -u +%s > t_ret.txt
+p2  set -C; cd <P> || exit 21; until [ -s pid.txt ] || [ "$(date -u +%s)" -ge "$(( $(cat t_ret.txt) + 10 ))" ]; do sleep 1; done; { date -u +%s; p=$(cat pid.txt 2>/dev/null); echo "pid=$p"; if [ -n "$p" ] && [ -r "/proc/$p/stat" ]; then echo "state=$(sed 's/^.*) //' "/proc/$p/stat" | cut -d' ' -f1)"; else echo "state=absent"; fi; } > obs1.txt
+p3  set -C; cd <P> || exit 22; until [ -e done.txt ] || [ -e fail.txt ] || [ "$(date -u +%s)" -ge "$(( $(cat t0.txt) + 300 ))" ]; do sleep 5; done; date -u +%s > t_obs2.txt
+p4  cd <P> || exit 23; for f in t0.txt t_ret.txt pid.txt obs1.txt done.txt fail.txt t_obs2.txt; do printf '== %s\n' "$f"; cat "$f" 2>/dev/null || echo '(없음)'; done; ls -l done.tmp out.txt err.txt 2>&1; cat err.txt; p=$(cat pid.txt 2>/dev/null); if [ -n "$p" ] && [ -r "/proc/$p/stat" ]; then sed 's/^.*) //' "/proc/$p/stat" | cut -d' ' -f1; else echo absent; fi
+p5  (p4 에서 t0 + 300 s 뒤에도 Z 아닌 상태일 때만) kill -KILL -- -<pid> → p4 의 마지막 /proc 확인을 다시 한다
+
+b1  /usr/bin/python3.11 -I -c 'import os, re, sys; e = sorted(n for n in os.listdir("BMS/evidence") if re.fullmatch(r"reil_c4e1_20[0-9]{6}", n)); print(e); sys.exit(1 if e else 0)' && test ! -e <E> && test ! -e SP/c4e1 && test -x SP/reil_c4env/venv/bin/python && mkdir <E>
+b2  cp BMS/evidence/reil_c4e0_fix_20261014/00_identity_c4.py <E>/00_identity_c4.py
+    cp BMS/docs/REIL_C4E1_E113_OUTER_DRAFT_20261104.py.txt <E>/00_outer.py
+    cp BMS/docs/REIL_C4E1_E113_JUDGE_DRAFT_20261104.py.txt <E>/00_judge.py
+    cp BMS/docs/REIL_C4E1_E113_END_WRITER_DRAFT_20261104.py.txt <E>/00_end_writer.py
+    mkdir <E>/01_probe && cp <P>/t0.txt <P>/t_ret.txt <P>/pid.txt <P>/obs1.txt <P>/done.txt <P>/t_obs2.txt <P>/out.txt <P>/err.txt <E>/01_probe/
+b3  set -C; { date -u +%Y-%m-%dT%H:%M:%SZ; df -B1 --output=avail /home/user/Yonghoon-DEM-DFT;
+              sha256sum <초안 셋> BMS/evidence/reil_c4e0_fix_20261014/00_identity_c4.py <E>/00_identity_c4.py <E>/00_outer.py <E>/00_judge.py
+                        <E>/00_end_writer.py <E>/01_probe/t0.txt <E>/01_probe/t_ret.txt <E>/01_probe/pid.txt <E>/01_probe/obs1.txt
+                        <E>/01_probe/done.txt <E>/01_probe/t_obs2.txt <E>/01_probe/out.txt <E>/01_probe/err.txt BMS/scripts/reil_c4e1_launch.py
+                        BMS/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json BMS/reil_c6_rebuild_20261013/MANIFEST.json
+                        BMS/reil_c6_rebuild_20261013/REIL_C6.lock.txt; } > <E>/00_start.txt
+b4  <확인> && git add -f <E>/00_identity_c4.py <E>/00_outer.py <E>/00_judge.py <E>/00_end_writer.py <E>/01_probe <E>/00_start.txt && <확인> && git commit …
+
+c1  test ! -e <E>/03_identity.wrapper_output.txt && { set -C; setsid nohup /usr/bin/python3.11 -I <E>/00_outer.py start identity <E> §NN > <E>/03_identity.wrapper_output.txt 2>&1 < /dev/null & } && date -u +%Y-%m-%dT%H:%M:%SZ
+c2  /usr/bin/python3.11 -I <E>/00_outer.py wait identity <E>
+c3  /usr/bin/python3.11 -I <E>/00_outer.py observe identity <E> 1
+c4  (c3 반환 ≠ 0 일 때만) /usr/bin/python3.11 -I <E>/00_outer.py kill identity <E>
+    → /usr/bin/python3.11 -I <E>/00_outer.py observe identity <E> 2 → (반환 ≠ 0 일 때만) /usr/bin/python3.11 -I <E>/00_outer.py freeze identity <E>
+c5  /usr/bin/python3.11 -I <E>/00_judge.py <E> identity §NN
+c6  수동 판정 (§5) → <확인> && git add -f <§7-1 의 identity 파일> && <확인> && git commit …
+
+d1  (세션 도구 · 앞뒤로 date -u) add_repo owner="REIL-UConn" repo="Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics" access="read"
+d2  set -C; cat > <E>/03_read_path.json <<'EOF'   (§7-2 의 형식 · 도구 반환의 상태 문장은 비밀 검사 뒤)
+    EOF
+d3  <확인> && git add -f <E>/03_read_path.json && <확인> && git commit …
+
+e1  test ! -e <E>/04_fetch.wrapper_output.txt && { set -C; setsid nohup /usr/bin/python3.11 -I <E>/00_outer.py start fetch <E> §NN > <E>/04_fetch.wrapper_output.txt 2>&1 < /dev/null & } && date -u +%Y-%m-%dT%H:%M:%SZ
+e2–e6  c2–c6 과 같고 identity 를 fetch 로 바꾼다
+
+f1  test ! -e <E>/05_run.wrapper_output.txt && { set -C; setsid nohup /usr/bin/python3.11 -I <E>/00_outer.py start run <E> §NN > <E>/05_run.wrapper_output.txt 2>&1 < /dev/null & } && date -u +%Y-%m-%dT%H:%M:%SZ
+f2–f5  c2–c5 와 같고 identity 를 run 으로 바꾼다
+f6  수동 판정 → §7-3 의 공개 검사 → <확인> && git add -f <§7-1 의 run 파일> && <확인> && git commit …
+
+g1  chk=$(<확인>) && /usr/bin/python3.11 -I <E>/00_end_writer.py <E> "$chk"
+g2  비밀 검사 · URL 계정 형태 · 50 MB → <확인> && git add -f <E>/06_end.json && <확인> && git commit …
+g3  <확인> && git fetch -q origin <브랜치> && git merge-base --is-ancestor origin/<브랜치> HEAD && <확인> && git push -u origin <브랜치>
+```
+
+- **셸 도구의 실행 방식:** p1 · b · c1 · e1 · f1 · c3–c6 · d · g 는 전경. p2 · p3 · c2 · e2 · f2 (감시) 는 셸 도구의 배경 실행 (도구 timeout 은 7,200,000 ms 까지)
+  으로 띄우고 끝 알림을 받는다. 감시가 도구 상한에 끊기면 **같은 명령을 다시** 띄운다 — `wait` 는 시작 기록의 같은 절대 기한을 읽으므로 기한이 새로 시작되지
+  않고, 다시 띄우는 것은 감시이지 run 이 아니다. f2 는 run 의 감시 기한 (12,600 s) 이 도구 상한보다 길어 다시 띄울 수 있다.
+- c1 · e1 · f1 은 곧바로 돌아온다 (wrapper 는 떨어져 돈다). 돌아온 직후 c2 · e2 · f2 를 띄운다 — `wait` 는 띄운 뒤 60 s 안에 시작 기록이 없으면 시작 실패로
+  끝난다.
+- p1 의 `{ … & }` 는 `setsid` 하나만 배경으로 보낸다 (앞의 검사 · `mkdir` 이 실패하면 아무것도 띄우지 않는다). p2 · p3 은 `cd` 가 실패하면 그 자리에서 21 ·
+  22 로 끝나고 아무 기록도 쓰지 않는다 (P2_02).
+
+## 5. 판정 — 첫 예상 밖 결과에서 멈춘다
+
+### 5-1. 탐침 (p · 수동 판정 — 판정기 밖)
+
+- **성공 (모두):** (1) `obs1.txt` 의 시각 > `t_ret` 이고 상태가 S · R · D (띄운 호출이 돌아온 뒤 살아 있었다) · (2) `done.txt` 가 정수 하나 v 이고 `t0` + 150 ≤ v ≤
+  `t0` + 300 (PID 기록 · 150 s 대기가 성공한 뒤 쓰였다 — P2_01) · (3) `fail.txt` · `done.tmp` 없음 · `out.txt` · `err.txt` 0 B · (4) p4 의 마지막 확인에서
+  `/proc/<pid>` 없음 또는 상태 Z · (5) p2 · p3 이 21 · 22 로 끝나지 않았다.
+- **실패 (그 밖 모두):** `fail.txt` 의 단계 · 반환 · `err.txt` 원문을 그대로 두고 성공으로 분류하지 않는다. 기한 뒤에도 Z 아닌 상태면 p5 를 한 번 한다. 실패하면
+  A 를 이 환경에서 쓸 수 없다는 뜻이므로 멈추고 (`<E>` 를 만들지 않는다) 결과를 적고 묻는다.
+- **한계:** 띄운 도구 호출이 돌아온 뒤 분리 프로세스가 살아 있었고 150 s 대기를 마쳤는지만 본다 (§10 의 1).
+
+### 5-2. launcher 단계 공통 (c · e · f — 판정기 항목 = 수동 판정 항목)
+
+판정기 (`<E>/00_judge.py` = §1-1 의 `0786f5cc…`) 가 같은 기준으로 `<name>.judge.json` 을 배타 생성하고 (항목마다 ok · 관측값), 실행자가 같은 위치를 원파일에서
+직접 읽어 수동 판정한다. verdict 와 수동 판정이 다르거나, 판정기가 기록을 쓰지 못하면 (반환 2 · 예외 · 파일 없음) 그 자리에서 멈춘다 — 판정기 출력을 고치거나
+다시 돌리지 않는다. 필요한 파일 · 필드가 없으면 그 항목은 거짓 ("미확인").
+
+- **외곽 기록:** 시작 기록이 있고 kind · 단계 · 이름 · argv (= `[/usr/bin/python3.11, -I, BMS/scripts/reil_c4e1_launch.py, <단계>, --evidence, <E>,
+  --approval-section, §NN]`) · launcher sha = §1-2 · `pid = sid = pgid` (`setsid` 의 세션 리더) · 감시 여유 (900 / 1,800 / 12,600) 가 맞다 · 반환 파일 바이트
+  `0\n` · `outer_error.json` · 임시 이름 셋 · `kill.json` · `leftover_2.json` 없음 · `outer_stderr.txt` · `wrapper_output.txt` 0 B · `outer_stdout.txt` 마지막
+  줄 = `{"step": <단계>, "launched": true, "complete": true, "rc": 0, "timed_out": false, "errors": 0}`.
+- **잔류:** `leftover_1.json` 의 살아 있는 것 0 · 읽기 오류 0 · 세션 id = 시작 기록 · `frozen_<name>` 없음.
+- **launcher meta (F1 — v6 의 실제 필드):** `step` · `name` · `request` (= E1-0b 요청서 경로) · `approval_section` (= §NN) · `launcher.sha256` · `launcher.path` ·
+  `stage.complete` true 이고 다섯 항 (`precheck_ok` · `child_ok` · `rc_0` · `timeout_false` · `postcheck_ok`) 모두 true · `precheck_ok` true · `postcheck.ok` true ·
+  `postcheck.problems` [] · `errors` [] · `first_error` null · `launched` · `child.started` true · `child.rc` 0 · `child.timed_out` false ·
+  `child.group.status` "empty" · `child.deadline_hit` false · `child.errors` [] · `records` 의 `head_start` = `head_end` (40 hex).
+
+### 5-3. 단계별
+
+- **identity (c):** `child_result.ok` true · `03_identity.json` (helper 출력) 있음.
+- **fetch (e):** `postcheck.data` 의 두 파일이 각각 `ok` true · sha256 · bytes = §1-2 · `child_result.ok` true.
+- **run (f):** 실행 유효성 = 위 공통 + `child_result` (`ok` true · `final_complete` true · `E3a` "COMPLETE") + `<E>/run/` 의 파일 집합 = `AGGREGATE.json` ·
+  `END_RECORD.json` · `HEADER.json` · `IDENTITY.json` · `OPERATION.json` · `RESOURCES.json` · `ROWS.json` · `RULE.json` · `SOURCES.json` (정확히 아홉).
+  **실험 결과** = 자식 `05_run.stdout.log` 마지막 JSON 의 `ok` true · `final.complete` true · `final.E3a` "COMPLETE" · `final.c4a_gate` true (`final.record_state`
+  는 기록만) — launcher 자신의 단계 요약 stdout (`outer_stdout.txt`) 과 다르고, 최상위 `final_verdict` 키는 없다. 판정기는 둘을 따로 적는다
+  (`execution_validity` · `experimental_result`). launcher 단계 판정도 `final.complete` 를 쓰므로 둘은 독립이 아니다. INCOMPLETE 는 결과대로 기록하되 E1-3
+  통과가 아니고, C4-A 의 문은 열리지 않는다.
+
+### 5-4. 읽기 경로 (d · 수동 판정)
+
+- 진행: 도구가 붙였다고 답함 · 또는 "공개 저장소라 읽기는 이미 프록시가 제공" 이라고 답함. 멈춤: 권한 · 정책 거부 · 사용자 확인 거절 · 그 밖의 오류. 재시도 0.
+  도구가 알려 주는 clone 명령은 실행하지 않는다 (fetch 는 e 의 launcher 만).
+
+## 6. 실패 종결 · 잔류 (R1) · F3
+
+### 6-1. `wait` 의 반환 (c2 · e2 · f2)
+
+| 반환 | 뜻 | 다음 |
+|---|---|---|
+| 0 | 반환 게시 (형식 `^[0-9]+\n$`) · wrapper 끝남 대기 최대 10 s · 그 상태 기록 | c3 (잔류 관측) |
+| 10 | 감시 절대 기한 도달 (반환 미게시) | c3 → (잔류) c4 → 판정기 (STOP) → 멈춤 |
+| 11 | 반환 파일 형식이 틀림 (부분 기록) | 같음 |
+| 12 | 외곽 오류 기록 (`outer_error.json` — launcher sha 불일치 · 띄우기 · 게시 실패) | 같음 |
+| 13 · 14 | 시작 기록이 60 s 안에 없음 · 못 읽음 (시작 실패) | 같음 |
+| (돌아오지 않음) | 셸 도구가 감시를 끊음 | 같은 `wait` 명령을 다시 (§4) |
+
+### 6-2. 잔류 처리 (R1 · 사용자 선택)
+
+- 감시가 끝나면 (정상 · 실패 모두) `observe … 1` 을 한 번 한다 — 표지 = 시작 기록의 세션 id · cmdline 의 `pycache_prefix=SP/c4e1/pycache/<name>` (launcher 의
+  세 자식이 모두 가진다 — `interp` 346–348 행) · cmdline 의 `<E>` 경로. 감시 종료는 실행 종료가 아니다 — 자식의 정리 상태는 meta 의 `child.group.status` ·
+  `child.deadline_hit` · `child.errors` 가 근거이고, meta 가 없으면 미확인이다.
+- 살아 있는 것 (Z 아님) 이 있거나 읽기 오류가 있으면: `kill` — `leftover_1` 의 그룹마다, 관측한 구성원 하나의 시작 시각 (`/proc/<pid>/stat` 22 번째) · 그룹이
+  그대로일 때만 SIGKILL 한 번 (pgid ≤ 1 · 자기 · 조상의 그룹 제외) → `observe … 2` → 그 단계는 STOP (판정기의 `kill.json` · `leftover_2.json` 부재 항목) → 멈춤.
+
+### 6-3. F3 — 종료를 확인하지 못한 작성 주체의 파일
+
+- `observe … 2` 에서도 살아 있는 것 · 읽기 오류가 남으면 `freeze` 를 한 번 한다: 그 단계의 가변 파일 (launcher 기록 여섯 · 외곽 기록 · identity 면
+  `03_identity.json` · run 이면 `<E>/run/**`) 을 읽은 그대로 `frozen_<name>/` 에 사본 + `frozen_<name>.json` (파일마다 bytes · sha256 · 읽은 시각).
+- 그때 커밋하는 것은 고정 사본 · 목록 · 끝난 기록 (`leftover_1` · `kill` · `leftover_2` · `judge`) 이고, **가변 원본은 최종 봉인된 증거로 다루지 않는다** —
+  지우지 않고 그 자리에 두며 커밋하지 않는다. 사본도 여러 파일의 원자적 · 동시 시점이라고 주장하지 않는다. 결과 §에 INCOMPLETE 와 그 사유를 적는다.
+
+## 7. 기록 · 커밋 · 공개 검사
+
+### 7-1. 증거 폴더와 커밋 단위
+
+| 커밋 | 파일 (`<E>/` 안) | 수 |
+|---|---|---:|
+| a | 상태 문서 §NN · `.gitattributes` | 2 |
+| b | `00_identity_c4.py` · `00_outer.py` · `00_judge.py` · `00_end_writer.py` · `01_probe/` 여덟 · `00_start.txt` | 13 |
+| c | `03_identity.{precheck.json, meta.json, stdout.log, stderr.log, porcelain_start.txt, porcelain_end.txt}` · `03_identity.{outer_start.json, outer_stdout.txt, outer_stderr.txt, outer_rc.txt, wrapper_output.txt}` · `03_identity.leftover_1.json` · `03_identity.judge.json` · `03_identity.json` | 14 |
+| d | `03_read_path.json` | 1 |
+| e | `04_fetch.` 의 같은 열세 (helper 출력 없음) | 13 |
+| f | `05_run.` 의 같은 열세 · `run/` 아홉 (§7-3 통과 때만) | 22 |
+| g | `06_end.json` (+ 결과 기록 § · 발송문은 그 뒤 커밋) | 1 |
+
+- 정상 경로의 수다. 실패 · R1 · F3 이면 그때 있는 파일을 있는 그대로 (F3 은 §6-3 대로) 커밋하고 수를 결과 §에 적는다. 증거는 `git add -f` 로 넣는다 (`.log` 는
+  무시 규칙에 걸린다). 커밋 뒤 그 단계의 파일 수 = 커밋된 파일 수 · blob = 작업 트리를 확인한다. 커밋하지 않음: `SP/c4e1/` (자료 · pycache · 작업) · `<P>`.
+- 커밋 전마다: 비밀 검사 (`SP/c4_0a/lint/secret_scan.py`) · URL 계정 정보 형태 · 파일 하나 ≤ 50 MB.
+
+### 7-2. 읽기 경로 기록 `03_read_path.json` (수동 · Git 없음)
+
+`{"kind": "REIL_E113_READ_PATH", "utc_before": …, "utc_after": …, "input": {"owner": "REIL-UConn", "repo":
+"Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics", "access": "read"}, "status": "attached" | "public_served" | "refused" |
+"declined" | "error", "tool_result_summary": "<도구 반환의 상태 문장 — 비밀 검사 뒤 · 계정 정보 형태가 있으면 적지 않고 그 사실만>", "clone_command_executed":
+false}`
+
+### 7-3. run 결과의 공개 검사 (사용자 선택 A — f6 의 커밋 전)
+
+```
+/usr/bin/python3.11 -I - <E> <<'EOF'
+import hashlib, sys
+from pathlib import Path
+ev = Path(sys.argv[1])
+data = {"fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1", "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"}
+rows = [(p, p.stat().st_size, hashlib.sha256(p.read_bytes()).hexdigest()) for p in sorted((ev / "run").rglob("*")) if p.is_file()]
+bad = [str(p) for p, n, h in rows if h in data or p.suffix in (".xlsx", ".py") or n > 50 * 2 ** 20]
+total = sum(n for _, n, _ in rows)
+print(len(rows), total, bad)
+sys.exit(1 if bad or total > 100 * 2 ** 20 else 0)
+EOF
+```
+
+- 반환 0 + 비밀 검사 0 + URL 계정 형태 0 일 때만 `run/` 을 커밋한다. 하나라도 어긋나면 `run/` 을 커밋하지 않고 (지우지 않는다) 멈춰 사용자에게 묻는다.
+
+### 7-4. 끝 기록 `06_end.json` (작성기 v3 · g1)
+
+- 읽기 = 복사본 넷 · launcher 의 sha · `01_probe/` · `03_read_path.json` · 세 단계의 외곽 기록 · meta 요약 · 판정 기록 · 잔류 · kill · frozen · 디스크 · 시각 ·
+  이름 확인 결과 (이름만). 기록을 모을 뿐 판정하지 않는다. 읽지 못한 파일은 사유를 남긴다. 커밋 · push · 문서 전 snapshot 이다.
+
+## 8. 절차 Git (A2_PROC_01 · 범위안 v3 §7 의 권장안)
+
+- **이름 확인 (고정 명령 · 출력 생략 · 변형 0):**
+
+  ```
+  /usr/bin/python3.11 -I -c 'import json, os, re, sys; n = sorted(k for k in os.environ if k.startswith("GIT_")); bad = [k for k in n if not re.fullmatch(r"GIT_(ASKPASS|CONFIG_COUNT|CONFIG_(KEY|VALUE)_[0-9]+|EDITOR|SSL_CAINFO|TERMINAL_PROMPT)", k)]; print(json.dumps({"git_env_names": n, "outside_allowlist": bad})); sys.exit(1 if bad else 0)'
+  ```
+
+- a 부터 g 의 끝 기록까지 절차 Git 은 add · commit (+ log) 만 한다. 매번 같은 셸 명령 줄에서 위 명령을 **문자 그대로** 앞에 둔다 (`<확인> && git …`). 목록
+  밖 이름이 하나라도 있으면 멈춘다. 시점 기록: a 는 승인 기록 §에, g 는 `06_end.json` 에 이름만.
+- 작성 저장소의 fetch · push 는 g 의 끝 기록 뒤에만 한다 (g3). 기록에는 **"작성 저장소 동기화 fetch"** (이 저장소 `origin` 의 이 브랜치) 로 적어 E1-2 의 fetch
+  (REIL 저장소의 자료) 와 나눈다.
+
+## 9. 예산 · 시간
+
+| 구간 | 상한 | 근거 |
+|---|---|---|
+| p 탐침 | 생존 관측 `t_ret` + 10 s · 끝 관측 `t0` + 300 s | §5-1 |
+| c identity | 감시 기한 = wrapper 시작 + 900 s (자식 60 · 탐침 60 · 기록 git 호출마다 60 · 정리 20 — 산술 합 380 s 는 상한 아님) | 외곽 도구 `ALLOW_S` |
+| e fetch | + 1,800 s (자식 300 · fetch 의 git 확인 4 × 60 · 탐침 60 · 기록 git 4 × 60 · 정리 20 — 산술 합 860 s 는 상한 아님) | 같음 |
+| f run | + 12,600 s (자식 timeout 10,800 · run 모듈 prep 900 · 측정 9,000 · 기록 9,900 · 정리 20) · 기대 경과 약 35–45 분 (보증 아님) | 같음 · launcher `TIMEOUTS` · run `LIMITS` |
+| 전체 | a 의 이름 확인 → g 의 끝 기록 ≤ 6 h · 재시도 0 · 예산 변경 0 | 감시 기한의 합 15,300 s (4.25 h) + 그 밖 |
+
+- 6 h 에 닿으면 그 자리에서 멈추고 (진행 중인 감시는 그 단계의 실패로) §6 대로 잔류 처리 · 기록 커밋 뒤 g 를 한다. 숫자는 기다림의 상한이지 전체 소요 보증이
+  아니다. 끝 기록 뒤의 커밋 · push · 문서 시간은 이 예산 밖이다.
+
+## 10. 밝힐 것 (공개 한계)
+
+1. **F2 — 장시간 관리:** 세 단계를 셸 도구의 호출에서 떼어 놓으려는 방식이다. 셸 도구 관리자 · 세션 · 컨테이너의 장시간 수명에 대한 영향은 미확인이고, 탐침의
+   성공이나 분리 명령의 채택만으로 7,200 s · 10,800 s 의 동작을 보증하지 않는다. run 도중 세션 · 컨테이너가 끝나면 run 과 기록을 잃는다 → 멈춤 · 재시도 없음.
+2. **잔류 식별:** 표지 (세션 id · pycache 경로 · `<E>` 경로) 밖의 프로세스는 보지 않는다. /proc 관측은 원자적이지 않고, PID 재사용은 시작 시각 대조로 줄일 뿐
+   없애지 못한다 (E1-0b 요청서 §8 의 17 과 같은 종류).
+3. **외곽 도구의 기다림:** wrapper 는 launcher 를 기다리기만 하고 죽이지 않는다. launcher 가 멈추면 wrapper 도 남고, 감시 기한 뒤 R1 이 둘의 그룹을 정리한다.
+4. **외부 코드 실행:** E1-3 의 prep 은 받은 `util_LFP.py` (고정 sha) 를 venv 자식 안에서 import · 실행한다. sha 대조가 바이트를 묶지만, 그 코드의 행동을
+   이 저장소가 검증한 것은 아니다.
+5. **두 판정의 관계:** 실행 유효성과 실험 결과는 따로 적지만 독립이 아니다 (§5-3).
+6. **읽기 경로:** `add_repo` 는 세션에 저장소를 붙이는 바깥 동작이다 (공개 저장소면 붙이지 않고 프록시가 읽기를 이미 제공한다고 답할 수 있다). 그 응답의 상태
+   문장만 기록한다.
+7. **승인 문구:** run 의 승인 문구는 launcher 의 `REQUEST` 대로 E1-0b 요청서 경로를 인용한다. 이 요청서와 §NN 의 결속은 상태 문서의 승인 기록이 맡는다.
+8. **분리 실행 명령의 셸 의미:** POSIX 목록 · `setsid` · `nohup` 의 공개 의미에만 기댄다. 이 환경의 `/bin/sh` 종류 · 설치본의 실제 동작을 이 요청서가
+   관측한 것은 아니다 — 탐침 (p) 이 그 첫 관측이다.
+9. **E1-0b a2 의 범위:** 그 수용은 봉인된 대조 범위의 기능 종결이고, 실제 자료 성공이 아니다 (§101). A2_PROC_01 은 §101 의 문구로만 남는다.
+
+## 11. 하지 않는 것
+
+C4-A / B (`c4a_gate` 가 참이어도 문을 여는 것은 별도 승인) · COMSOL · launcher · 다섯 모듈 · 봉인 · 시험의 변경 · 설치 · 환경 재구축 · 실패 뒤 재시도 · 이름을
+바꾼 재착수 · `SP/c4e1/data` 의 커밋 · 결과의 외부 발송.
+
+## 12. 정하실 것
+
+1. **사전 검토** — 이 요청서와 초안 셋을 Codex 에 보낸다 (권장 · 발송문 `docs/REIL_C4E_E1_1_3_PREREVIEW_SEND_20261104.md`).
+2. (검토 수용 뒤) **E1-1–3 승인** — 승인하시면 그 답을 상태 문서 §NN 에 적고 §4 의 a 부터 한다. 승인은 이 요청서의 a–g 한 번에만 쓴다.
