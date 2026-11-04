@@ -1,0 +1,11 @@
+cases     run_upto                             readback=1 pair=1 plan=1 traceback=False
+cases     late_timestep                        readback=1 pair=1 plan=1 traceback=False
+cases     insert_start_late                    readback=1 pair=1 plan=1 traceback=False
+cases     front_period                         readback=1 pair=1 plan=1 traceback=False
+cases     exclude_SE_SE                        readback=1 pair=1 plan=1 traceback=False
+cases     crlf_lf_metadata                     readback=1 pair=1 plan=1 traceback=False
+cases     crlf_crlf_metadata                   readback=1 pair=1 plan=1 traceback=False
+controls  normal                               readback=0 pair=0 plan=0 traceback=False
+controls  friction_missing                     readback=1 pair=1 plan=1 traceback=False
+controls  negative_control_bad_gravity         readback=1 pair=1 plan=1 traceback=False
+controls  negative_control_remove_integrator   readback=1 pair=1 plan=1 traceback=False

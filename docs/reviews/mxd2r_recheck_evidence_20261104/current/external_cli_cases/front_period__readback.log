@@ -1,0 +1,2 @@
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  D2 development contract: ValueError: D2 rotation contract: every wall mesh must rotate with the Drum period (common rotation) — Back 0.782508 s · Drum 0.782508 s · Front 0.1 s

@@ -1,0 +1,176 @@
+{
+ "tool": "preattack_outside_scope.py",
+ "python": "3.11.17",
+ "rows": [
+  {
+   "case": "boundary_periodic",
+   "kind": "global setting",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 4 `boundary p …` token 1 `p` (generator `f`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same"
+  },
+  {
+   "case": "newton_on",
+   "kind": "global setting",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 5 `newton on …` token 1 `on` (generator `off`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the sa"
+  },
+  {
+   "case": "atom_style_sphere",
+   "kind": "global setting",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 1 `atom_style sphere …` token 1 `sphere` (generator `granular`) — every command must be the make_mixer_deck.deck() tokens (a different s"
+  },
+  {
+   "case": "communicate_cutoff",
+   "kind": "global setting",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 6 `communicate single …` token 2 `cutoff` (generator `vel`) — every command must be the make_mixer_deck.deck() tokens (a different spell"
+  },
+  {
+   "case": "hard_particles_no",
+   "kind": "global setting",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 3 `hard_particles no …` token 1 `no` (generator `yes`) — every command must be the make_mixer_deck.deck() tokens (a different spelling o"
+  },
+  {
+   "case": "atom_modify_sort",
+   "kind": "global setting",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 2 `atom_modify map …` token 4 `1000` (generator `0`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of "
+  },
+  {
+   "case": "thermo_lost_error",
+   "kind": "output/lost-atom policy",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 38 `thermo_modify lost …` token 2 `error` (generator `ignore`) — every command must be the make_mixer_deck.deck() tokens (a different sp"
+  },
+  {
+   "case": "neighbor_nsq",
+   "kind": "neighbor build style",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 10 `neighbor 7.57e-05 …` token 2 `nsq` (generator `bin`) — every command must be the make_mixer_deck.deck() tokens (a different spelling"
+  },
+  {
+   "case": "template_extra_option",
+   "kind": "particletemplate/sphere trailing option",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 27 `fix pt1 …` token 13 `volume_limit` (generator `(end)`) — every command must be the make_mixer_deck.deck() tokens (a different spelli"
+  },
+  {
+   "case": "template_quote_hash",
+   "kind": "particletemplate/sphere quoted # (unpinned line)",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 111: command text must be printable ASCII without quotes or $ — 'fix pt1 all particletemplate/sphere 1048' (our parser splits on Unicode wh"
+  },
+  {
+   "case": "pdd_seed",
+   "kind": "RNG seed (distribution)",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 30 `fix pddA …` token 4 `15485863` (generator `32452867`) — every command must be the make_mixer_deck.deck() tokens (a different spellin"
+  },
+  {
+   "case": "insert_b_seed",
+   "kind": "RNG seed (2nd insertion)",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 47 `fix insB …` token 5 `15485867` (generator `32452867`) — every command must be the make_mixer_deck.deck() tokens (a different spellin"
+  },
+  {
+   "case": "insert_region_geometry",
+   "kind": "geometry (supplied input)",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 32 `region ins_reg …` token 6 `0.0100000` (generator `0.0113249`) — every command must be the make_mixer_deck.deck() tokens (a different"
+  },
+  {
+   "case": "mesh_scale",
+   "kind": "geometry (supplied input)",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 23 `fix Drum …` token 9 `0.0250000` (generator `0.0251665`) — every command must be the make_mixer_deck.deck() tokens (a different spell"
+  },
+  {
+   "case": "dump_modify_added",
+   "kind": "output only",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 44 `dump_modify dmp …` token 0 `dump_modify` (generator `run`) — every command must be the make_mixer_deck.deck() tokens (a different sp"
+  },
+  {
+   "case": "thermo_every",
+   "kind": "output only",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 37 `thermo 1000 …` token 1 `1000` (generator `5000`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of "
+  },
+  {
+   "case": "write_restart_removed",
+   "kind": "checkpoint only",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 50 `fix mvD …` token 0 `fix` (generator `write_restart`) — every command must be the make_mixer_deck.deck() tokens (a different spelling"
+  }
+ ]
+}

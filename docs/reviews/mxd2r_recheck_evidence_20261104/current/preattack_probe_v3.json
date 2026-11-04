@@ -1,0 +1,1506 @@
+{
+ "tool": "preattack_probe_v3.py",
+ "python": "3.11.17",
+ "n": 93,
+ "n_ok": 93,
+ "rows": [
+  {
+   "case": "tab_in_code",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "control character",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 54: control character(s) U+0009 — LF is the only line end (TAB · NUL · other C0/C1 controls are not generator output; a NUL ends a C-string line early)",
+   "semantics": "TAB separates tokens for both parsers — same command, not the generator spelling"
+  },
+  {
+   "case": "tab_in_comment",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "control character",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 1: control character(s) U+0009 — LF is the only line end (TAB · NUL · other C0/C1 controls are not generator output; a NUL ends a C-string line early)",
+   "semantics": "no control character anywhere"
+  },
+  {
+   "case": "form_feed_in_code",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "control character",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 64: control character(s) U+000C — LF is the only line end (TAB · NUL · other C0/C1 controls are not generator output; a NUL ends a C-string line early)",
+   "semantics": "FF = whitespace for both parsers (same tokens) — not generator output"
+  },
+  {
+   "case": "nul_in_code",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "control character",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 54: control character(s) U+0000 — LF is the only line end (TAB · NUL · other C0/C1 controls are not generator output; a NUL ends a C-string line early)",
+   "semantics": "NUL"
+  },
+  {
+   "case": "nul_in_comment",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "control character",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 1: control character(s) U+0000 — LF is the only line end (TAB · NUL · other C0/C1 controls are not generator output; a NUL ends a C-string line early)",
+   "semantics": "a C-string line ends at NUL — the rest of the physical line would not reach a C reader as written"
+  },
+  {
+   "case": "del_in_comment",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "control character",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 1: control character(s) U+007F — LF is the only line end (TAB · NUL · other C0/C1 controls are not generator output; a NUL ends a C-string line early)",
+   "semantics": "DEL"
+  },
+  {
+   "case": "nel_in_comment_middle",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "control character",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 1: control character(s) U+0085 — LF is the only line end (TAB · NUL · other C0/C1 controls are not generator output; a NUL ends a C-string line early)",
+   "semantics": "U+0085 is Python whitespace (C1 control)"
+  },
+  {
+   "case": "esc_in_comment",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "control character",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 1: control character(s) U+001B — LF is the only line end (TAB · NUL · other C0/C1 controls are not generator output; a NUL ends a C-string line early)",
+   "semantics": "C0 control"
+  },
+  {
+   "case": "nbsp_in_code",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 54: command text must be printable ASCII without quotes or $ — 'boundary        f\\xa0f f' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGHTS splits on ASCI",
+   "semantics": "Python splits on NBSP, LIGGGHTS (ASCII whitespace) would not"
+  },
+  {
+   "case": "ideographic_space_in_code",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 55: command text must be printable ASCII without quotes or $ — 'newton\\u3000off' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGHTS splits on ASCII whitesp",
+   "semantics": "U+3000"
+  },
+  {
+   "case": "line_separator_in_code",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 54: command text must be printable ASCII without quotes or $ — 'boundary        f f\\u2028f' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGHTS splits on AS",
+   "semantics": "U+2028 = Python whitespace, not a line end for either parser"
+  },
+  {
+   "case": "zero_width_space_in_code",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 54: command text must be printable ASCII without quotes or $ — 'boundary        f f f\\u200b' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGHTS splits on A",
+   "semantics": "invisible character glued to a token"
+  },
+  {
+   "case": "fullwidth_letters",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "unsupported command",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: unsupported command/control flow in development deck",
+   "semantics": "NFKC would map to \"boundary\" — no normalization before the check (an earlier check rejects the unknown command name first)"
+  },
+  {
+   "case": "cyrillic_homoglyph",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 47: command text must be printable ASCII without quotes or $ — 'atom_style      granulаr' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGHTS splits on ASCI",
+   "semantics": "Cyrillic а looks like Latin a"
+  },
+  {
+   "case": "combining_mark",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 55: command text must be printable ASCII without quotes or $ — 'newton          of́f' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGHTS splits on ASCII wh",
+   "semantics": "combining acute"
+  },
+  {
+   "case": "fullwidth_digit",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 139: command text must be printable ASCII without quotes or $ — 'thermo ５000' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGHTS splits on ASCII whitespace",
+   "semantics": "Unicode digit"
+  },
+  {
+   "case": "single_quote",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 138: command text must be printable ASCII without quotes or $ — 'thermo_style custom step atoms ke c_rke ' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGH",
+   "semantics": "LIGGGHTS strips quotes — our parser would keep them"
+  },
+  {
+   "case": "double_quote_hash_on_template",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 111: command text must be printable ASCII without quotes or $ — 'fix pt1 all particletemplate/sphere 1048' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGH",
+   "semantics": "quoted # hides options from our parser (it cuts at the first #)"
+  },
+  {
+   "case": "dollar_variable",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 139: command text must be printable ASCII without quotes or $ — 'thermo ${every}' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGHTS splits on ASCII whites",
+   "semantics": "LIGGGHTS substitutes $"
+  },
+  {
+   "case": "dollar_immediate",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 139: command text must be printable ASCII without quotes or $ — 'thermo $(5000)' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGHTS splits on ASCII whitesp",
+   "semantics": "$(...) form"
+  },
+  {
+   "case": "comment_amp_nbsp_hides_command",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "continuation must be a command line",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 65: continuation must be a command line ending exactly in ' &' (no comment · no trailing whitespace) — our parser strips trailing Unicode whitespace before testing '&', LIGGGHTS o",
+   "semantics": "our parser (Unicode rstrip) joins the exclude line into the comment; an ASCII-whitespace reader would not"
+  },
+  {
+   "case": "comment_amp_ideographic",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "continuation must be a command line",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 65: continuation must be a command line ending exactly in ' &' (no comment · no trailing whitespace) — our parser strips trailing Unicode whitespace before testing '&', LIGGGHTS o",
+   "semantics": "U+3000"
+  },
+  {
+   "case": "comment_amp_ascii",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "continuation must be a command line",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 65: continuation must be a command line ending exactly in ' &' (no comment · no trailing whitespace) — our parser strips trailing Unicode whitespace before testing '&', LIGGGHTS o",
+   "semantics": "both parsers would swallow the next line into the comment — not generator output"
+  },
+  {
+   "case": "command_amp_then_comment",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: unsupported command/control flow in development deck",
+   "semantics": "no continuation for either parser (& is a token) — rejected (rows become commands)"
+  },
+  {
+   "case": "continuation_no_space",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "continuation must be a command line",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 78: continuation must be a command line ending exactly in ' &' (no comment · no trailing whitespace) — our parser strips trailing Unicode whitespace before testing '&', LIGGGHTS o",
+   "semantics": "a C reader overwrites & with the next line (no separator)"
+  },
+  {
+   "case": "continuation_trailing_space",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "continuation must be a command line",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 78: continuation must be a command line ending exactly in ' &' (no comment · no trailing whitespace) — our parser strips trailing Unicode whitespace before testing '&', LIGGGHTS o",
+   "semantics": "trailing space after &"
+  },
+  {
+   "case": "continuation_trailing_nbsp",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 78: command text must be printable ASCII without quotes or $ — 'fix m4 all property/global coefficientFr' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGHT",
+   "semantics": "joins for our parser only (the NBSP is in the command text — the ASCII rule of the same function fires first)"
+  },
+  {
+   "case": "continuation_double_amp",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "17 values",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 contact contract: material fix coefficientFriction has 17 values != 16",
+   "semantics": "&& — the left & stays a token (an earlier material check counts 17 values)"
+  },
+  {
+   "case": "continuation_then_blank_line",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: unsupported command/control flow in development deck",
+   "semantics": "blank line ends the command early (matrix values missing) — rejected"
+  },
+  {
+   "case": "amp_only_line",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "continuation must be a command line",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 80: continuation must be a command line ending exactly in ' &' (no comment · no trailing whitespace) — our parser strips trailing Unicode whitespace before testing '&', LIGGGHTS o",
+   "semantics": "continuation line with no command text"
+  },
+  {
+   "case": "missing_final_newline",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "must end with a newline",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: deck must end with a newline (LF) — generator output",
+   "semantics": "generator output ends with LF"
+  },
+  {
+   "case": "nul_after_final_newline",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "unsupported command",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: unsupported command/control flow in development deck",
+   "semantics": "not ending with LF (an earlier check rejects the NUL token as a command first)"
+  },
+  {
+   "case": "blank_lines_added",
+   "attacks": "layout",
+   "fixture": {},
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "",
+   "semantics": "blank lines"
+  },
+  {
+   "case": "comment_lines_added",
+   "attacks": "layout",
+   "fixture": {},
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "",
+   "semantics": "comment lines (text free)"
+  },
+  {
+   "case": "nbsp_in_comment_middle",
+   "attacks": "layout",
+   "fixture": {},
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "",
+   "semantics": "comment text (not at an & end)"
+  },
+  {
+   "case": "line_separator_in_comment",
+   "attacks": "layout",
+   "fixture": {},
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "",
+   "semantics": "U+2028 in a comment — neither parser ends the line there"
+  },
+  {
+   "case": "leading_spaces_on_command",
+   "attacks": "layout",
+   "fixture": {},
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "",
+   "semantics": "same tokens for both parsers"
+  },
+  {
+   "case": "single_space_layout",
+   "attacks": "layout",
+   "fixture": {},
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "",
+   "semantics": "spacing between tokens"
+  },
+  {
+   "case": "trailing_spaces_on_command",
+   "attacks": "layout",
+   "fixture": {},
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "",
+   "semantics": "trailing ASCII spaces (no &)"
+  },
+  {
+   "case": "trailing_comment_on_command",
+   "attacks": "layout",
+   "fixture": {},
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "",
+   "semantics": "comment after a command"
+  },
+  {
+   "case": "double_final_newline",
+   "attacks": "layout",
+   "fixture": {},
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "",
+   "semantics": "one more blank line"
+  },
+  {
+   "case": "skin_nan",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 1 `nan` (generator `7.57e-05`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 10 `neighbor nan …` token 1 `nan` (generator `7.57e-05`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "nonfinite"
+  },
+  {
+   "case": "skin_inf",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 1 `inf` (generator `7.57e-05`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 10 `neighbor inf …` token 1 `inf` (generator `7.57e-05`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "nonfinite"
+  },
+  {
+   "case": "skin_empty",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 1 `bin` (generator `7.57e-05`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 10 `neighbor bin …` token 1 `bin` (generator `7.57e-05`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "missing value"
+  },
+  {
+   "case": "skin_zero",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 1 `0` (generator `7.57e-05`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 10 `neighbor 0 …` token 1 `0` (generator `7.57e-05`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "not positive"
+  },
+  {
+   "case": "skin_negative",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 1 `-7.57e-05` (generator `7.57e-05`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 10 `neighbor -7.57e-05 …` token 1 `-7.57e-05` (generator `7.57e-05`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is reject",
+   "semantics": "negative"
+  },
+  {
+   "case": "skin_extra_token",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 3 `2` (generator `(end)`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 10 `neighbor 7.57e-05 …` token 3 `2` (generator `(end)`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "extra token"
+  },
+  {
+   "case": "skin_same_value_spelling",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 1 `0.0000757` (generator `7.57e-05`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 10 `neighbor 0.0000757 …` token 1 `0.0000757` (generator `7.57e-05`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is reject",
+   "semantics": "v2 = PASS (free slot) → v3 = FAIL: same value, non-generator spelling"
+  },
+  {
+   "case": "skin_value_x1.1",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 1 `8.327000000000001e-05` (generator `7.57e-05`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 10 `neighbor 8.327000000000001e-05 …` token 1 `8.327000000000001e-05` (generator `7.57e-05`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of ",
+   "semantics": "v2 = PASS (free slot) → v3 = FAIL: common-mode skin value change"
+  },
+  {
+   "case": "skin_upper_exponent",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 1 `7.57E-05` (generator `7.57e-05`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 10 `neighbor 7.57E-05 …` token 1 `7.57E-05` (generator `7.57e-05`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected",
+   "semantics": "same value, upper-case E"
+  },
+  {
+   "case": "skin_plus_sign",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 1 `+7.57e-05` (generator `7.57e-05`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 10 `neighbor +7.57e-05 …` token 1 `+7.57e-05` (generator `7.57e-05`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is reject",
+   "semantics": "same value, + sign"
+  },
+  {
+   "case": "skin_leading_zero",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 1 `07.57e-05` (generator `7.57e-05`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 10 `neighbor 07.57e-05 …` token 1 `07.57e-05` (generator `7.57e-05`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is reject",
+   "semantics": "same value, leading zero"
+  },
+  {
+   "case": "skin_unicode_digit",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 63: command text must be printable ASCII without quotes or $ — 'neighbor        ７.57e-05 bin' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGHTS splits on ",
+   "semantics": "Unicode digit (character rule first)"
+  },
+  {
+   "case": "skin_tab_separator",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "control character",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 63: control character(s) U+0009 — LF is the only line end (TAB · NUL · other C0/C1 controls are not generator output; a NUL ends a C-string line early)",
+   "semantics": "TAB"
+  },
+  {
+   "case": "skin_nbsp_separator",
+   "attacks": "_d2_text_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 63: command text must be printable ASCII without quotes or $ — 'neighbor 7.57e-05\\xa0bin' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGHTS splits on ASCI",
+   "semantics": "NBSP"
+  },
+  {
+   "case": "skin_other_cgf_generator",
+   "attacks": "_d2_generator_form",
+   "fixture": {
+    "cgf": "302.8"
+   },
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "",
+   "semantics": "generator deck at CGF 302.8 (skin 0.0001514 = its own min(diameter)·0.5) is accepted"
+  },
+  {
+   "case": "skin_value_of_other_cgf",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 1 `0.0001514` (generator `7.57e-05`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 10 `neighbor 0.0001514 …` token 1 `0.0001514` (generator `7.57e-05`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is reject",
+   "semantics": "a valid generator skin of another plan is not this plan's skin"
+  },
+  {
+   "case": "box_nan",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: region coordinate: ASCII decimal token required before float conversion",
+   "semantics": "nonfinite"
+  },
+  {
+   "case": "mesh_scale_inf",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: mesh scale: ASCII decimal token required before float conversion",
+   "semantics": "nonfinite"
+  },
+  {
+   "case": "ced_diagonal_exponent_spelling",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "D2 generator form",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 17 `fix mC …` token 7 `102869.0` (generator `102869`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "same CED value, non-generator spelling (diagonal)"
+  },
+  {
+   "case": "material_unicode_digit",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: coefficientFriction: ASCII decimal token required before float conversion",
+   "semantics": "Unicode digit"
+  },
+  {
+   "case": "material_exponent_spelling",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 7 `9e-1` (generator `0.9`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 15 `fix m4 …` token 7 `9e-1` (generator `0.9`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "same float 0.9 — generator writes 0.9"
+  },
+  {
+   "case": "dist_b_seed_same_as_a",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 4 `32452867` (generator `32452883`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 31 `fix pddB …` token 4 `32452867` (generator `32452883`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "duplicate RNG seed"
+  },
+  {
+   "case": "insert_b_seed_same_as_a",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 5 `32452843` (generator `32452867`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 47 `fix insB …` token 5 `32452843` (generator `32452867`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "duplicate RNG seed"
+  },
+  {
+   "case": "compute_duplicated",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 0 `compute` (generator `thermo_style`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 36 `compute rke …` token 0 `compute` (generator `thermo_style`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "duplicate command"
+  },
+  {
+   "case": "thermo_modify_removed",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 0 `shell` (generator `thermo_modify`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 38 `shell mkdir …` token 0 `shell` (generator `thermo_modify`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "missing command"
+  },
+  {
+   "case": "command_appended_at_end",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "command count",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command count 55 (generator 54)",
+   "semantics": "extra command after the last run"
+  },
+  {
+   "case": "front_period_exp_spelling",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 16 `7.82508e-1` (generator `0.782508`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 52 `fix mvF …` token 16 `7.82508e-1` (generator `0.782508`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "same float as Drum — not the generator spelling (MXD2R-04 changed this row from PASS)"
+  },
+  {
+   "case": "origin_spelling",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 8 `0.0` (generator `0`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 51 `fix mvD …` token 8 `0.0` (generator `0`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "same value"
+  },
+  {
+   "case": "seed_composite",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "prime",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: insertion seed must be a prime ≤ 2^31−1 (the generator rejects composite seeds for LIGGGHTS insert/pack)",
+   "semantics": "composite seed in deck and metadata"
+  },
+  {
+   "case": "seed_prime_over_int32",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "prime",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: insertion seed must be a prime ≤ 2^31−1 (the generator rejects composite seeds for LIGGGHTS insert/pack)",
+   "semantics": "prime 2147483659 > 2^31−1"
+  },
+  {
+   "case": "dt_k1_exponent_unpadded",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "D2 generator form",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 21 `timestep 2.373e-7 …` token 1 `2.373e-7` (generator `2.373e-07`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejecte",
+   "semantics": "same dt, generator writes 2.373e-07 (metadata deck_txt changed too)"
+  },
+  {
+   "case": "dt_k1_plus_sign",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "D2 generator form",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 21 `timestep +2.373e-07 …` token 1 `+2.373e-07` (generator `2.373e-07`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rej",
+   "semantics": "same dt with + sign"
+  },
+  {
+   "case": "dt_k2_padded",
+   "attacks": "_d2_generator_form",
+   "fixture": {
+    "dt_factor": "0.5"
+   },
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "D2 generator form",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 21 `timestep 1.18650e-07 …` token 1 `1.18650e-07` (generator `1.1865e-07`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is ",
+   "semantics": "k = 2 spelling"
+  },
+  {
+   "case": "dt_k3_padded",
+   "attacks": "_d2_generator_form",
+   "fixture": {
+    "dt_factor": "0.3333333333333333"
+   },
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "D2 generator form",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 21 `timestep 7.910e-08 …` token 1 `7.910e-08` (generator `7.91e-08`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is reject",
+   "semantics": "k = 3 spelling"
+  },
+  {
+   "case": "settle_steps_not_multiple_of_k",
+   "attacks": "_d2_generator_form",
+   "fixture": {
+    "dt_factor": "0.5"
+   },
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "k × the generator plan",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: settle/rotation steps must be k × the generator plan (settle ≥ 1000 · k)",
+   "semantics": "settle steps +1 with every metadata time field consistent"
+  },
+  {
+   "case": "dump_interval_off_rule",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 4 `33000` (generator `32976`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 43 `dump dmp …` token 4 `33000` (generator `32976`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "dump interval off the generator rule (metadata consistent)"
+  },
+  {
+   "case": "restart_interval_off_rule",
+   "attacks": "_d2_generator_form",
+   "fixture": {},
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 1 `150000` (generator `200000`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 41 `restart 150000 …` token 1 `150000` (generator `200000`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "checkpoint interval off the generator rule (metadata consistent)"
+  },
+  {
+   "case": "dpf_exact",
+   "attacks": "dump_modify line",
+   "fixture": {
+    "dump_full_precision": "True"
+   },
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS",
+    "pair": "PASS",
+    "plan": "PASS"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "",
+   "semantics": "generator output with the one quoted line"
+  },
+  {
+   "case": "dpf_double_space",
+   "attacks": "dump_modify line",
+   "fixture": {
+    "dump_full_precision": "True"
+   },
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 157: command text must be printable ASCII without quotes or $ — 'dump_modify dmp  format \"%d %d %.17g %.1' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGH",
+   "semantics": "the quoted line must match exactly"
+  },
+  {
+   "case": "dpf_trailing_comment",
+   "attacks": "dump_modify line",
+   "fixture": {
+    "dump_full_precision": "True"
+   },
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 157: command text must be printable ASCII without quotes or $ — 'dump_modify dmp format \"%d %d %.17g %.17' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGH",
+   "semantics": "exact line only"
+  },
+  {
+   "case": "dpf_meta_format_mismatch",
+   "attacks": "dump_modify line",
+   "fixture": {
+    "dump_full_precision": "True"
+   },
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "metadata dump_modify_format",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: metadata dump_modify_format != generator full-precision format",
+   "semantics": "metadata claims another format than the generator line"
+  },
+  {
+   "case": "dpf_meta_and_line_changed",
+   "attacks": "dump_modify line",
+   "fixture": {
+    "dump_full_precision": "True"
+   },
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "metadata dump_modify_format",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: metadata dump_modify_format != generator full-precision format",
+   "semantics": "both changed together"
+  },
+  {
+   "case": "dpf_line_missing",
+   "attacks": "dump_modify line",
+   "fixture": {
+    "dump_full_precision": "True"
+   },
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 0 `run` (generator `dump_modify`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 44 `run 560606 …` token 0 `run` (generator `dump_modify`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "metadata declares the line, deck lacks it"
+  },
+  {
+   "case": "dpf_line_duplicated",
+   "attacks": "dump_modify line",
+   "fixture": {
+    "dump_full_precision": "True"
+   },
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "token 0 `dump_modify` (generator `run`)",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: command 45 `dump_modify dmp …` token 0 `dump_modify` (generator `run`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)",
+   "semantics": "duplicate"
+  },
+  {
+   "case": "dpf_meta_removed",
+   "attacks": "dump_modify line",
+   "fixture": {
+    "dump_full_precision": "True"
+   },
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL",
+    "pair": "FAIL",
+    "plan": "FAIL"
+   },
+   "reason": "printable ASCII without quotes or $",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 157: command text must be printable ASCII without quotes or $ — 'dump_modify dmp format \"%d %d %.17g %.17' (our parser splits on Unicode whitespace and cuts at the first #; LIGGGH",
+   "semantics": "quoted line without the metadata declaration"
+  },
+  {
+   "case": "bytes_lf",
+   "attacks": "read_d2 (bytes)",
+   "fixture": null,
+   "expect": "PASS",
+   "verdicts": {
+    "readback": "PASS"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "",
+   "semantics": "generator bytes"
+  },
+  {
+   "case": "bytes_nbsp_continuation",
+   "attacks": "read_d2 (bytes)",
+   "fixture": null,
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "reason": "continuation must be a command line",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 65: continuation must be a command line ending exactly in ' &' (no comment · no trailing whitespace) — our parser strips trailing Unicode whitespace before testing '&', LIGGGHTS o",
+   "semantics": "C2 A0 after & — ASCII-whitespace reader does not continue"
+  },
+  {
+   "case": "bytes_nul_in_comment",
+   "attacks": "read_d2 (bytes)",
+   "fixture": null,
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "reason": "control character",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 1: control character(s) U+0000 — LF is the only line end (TAB · NUL · other C0/C1 controls are not generator output; a NUL ends a C-string line early)",
+   "semantics": "NUL byte"
+  },
+  {
+   "case": "bytes_overlong_nul",
+   "attacks": "read_d2 (bytes)",
+   "fixture": null,
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "reason": "UTF-8",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck bytes are not valid UTF-8 (invalid start byte at byte 13656)",
+   "semantics": "overlong NUL (invalid UTF-8 — strict decode)"
+  },
+  {
+   "case": "bytes_crlf",
+   "attacks": "read_d2 (bytes)",
+   "fixture": null,
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "reason": "CR",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: deck contains 179 CR (0x0D) byte(s) — CRLF/CR line endings are rejected: D2 development decks are LF-only generator output (never normalized before hashing or parsing)",
+   "semantics": "CRLF (MXD2R-03 rule first)"
+  },
+  {
+   "case": "bytes_bom",
+   "attacks": "read_d2 (bytes)",
+   "fixture": null,
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "reason": null,
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: unsupported command/control flow in development deck",
+   "semantics": "UTF-8 BOM"
+  },
+  {
+   "case": "bytes_tab",
+   "attacks": "read_d2 (bytes)",
+   "fixture": null,
+   "expect": "FAIL",
+   "verdicts": {
+    "readback": "FAIL"
+   },
+   "reason": "control character",
+   "right_reason": true,
+   "ok": true,
+   "first_failure": "D2 development contract: ValueError: D2 generator form: line 54: control character(s) U+0009 — LF is the only line end (TAB · NUL · other C0/C1 controls are not generator output; a NUL ends a C-string line early)",
+   "semantics": "TAB byte"
+  }
+ ]
+}

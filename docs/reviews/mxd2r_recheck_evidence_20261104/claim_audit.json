@@ -1,0 +1,50 @@
+{
+  "frozen_base": "7b51e591e6482484d1b85b237dc0c73936fa96b6",
+  "history_base": "80095a7f0",
+  "historical_manifests": [
+    {
+      "manifest": "docs/reviews/mxd2r_fix_evidence_20261103/SHA256SUMS",
+      "entries": 80,
+      "mismatches": []
+    },
+    {
+      "manifest": "docs/reviews/mxd2r_fix_evidence_20261103/mxd2r04/SHA256SUMS",
+      "entries": 48,
+      "mismatches": []
+    }
+  ],
+  "core_matches_frozen_base": {
+    "scripts/mixer_deck_readback.py": true,
+    "scripts/mixer_deck_diff.py": true,
+    "scripts/mixer_smoke_blind.py": true,
+    "scripts/test_mixer_d2_consumers.py": true
+  },
+  "numpy_version": "2.4.6",
+  "static_fixture_assets": {
+    "dem_scripts/mixer_20260919/Drum.stl": {
+      "sha256": "fe821a8ab6db0d94151e9d84bf19cc1fad77abb417cd640bf4577c2f87279730",
+      "matches_frozen_base": true
+    },
+    "dem_scripts/mixer_20260919/Front.stl": {
+      "sha256": "443f9c3c859b2562dc041cde2af712fdfc4ab0225032ebb9420267c781843c81",
+      "matches_frozen_base": true
+    },
+    "dem_scripts/mixer_20260919/Back.stl": {
+      "sha256": "2e7b962d14ced968d8178456feaf2f6a4856edd4b151070c23a8ac1588a461e5",
+      "matches_frozen_base": true
+    }
+  },
+  "ledger_status": {
+    "MXD2-01": "open",
+    "MXD2R-01": "claimed_fixed",
+    "MXD2R-02": "claimed_fixed",
+    "MXD2R-03": "claimed_fixed",
+    "MXD2R-04": "claimed_fixed"
+  },
+  "new_output_claim_checks": {
+    "probe_93": true,
+    "outside_17_three_api_fail": true,
+    "cli_11x3_expected_rc_no_traceback": true,
+    "mutation_selected_6_killed_clean_control_pass": true
+  }
+}

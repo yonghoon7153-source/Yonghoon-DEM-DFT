@@ -1,0 +1,3 @@
+D2 개발 덱 계약 FAIL — 실제 런/코호트/발사 인증 아님
+  old: D2 development contract: ValueError: D2 time contract: only two-token `run <integer>` (generator grammar) — run options such as upto · start · stop · pre · post · every change the executed step program: `run 1 upto`
+  new: D2 development contract: ValueError: D2 time contract: only two-token `run <integer>` (generator grammar) — run options such as upto · start · stop · pre · post · every change the executed step program: `run 1 upto`

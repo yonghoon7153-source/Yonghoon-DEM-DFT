@@ -1,0 +1,1100 @@
+diff --git a/scripts/mixer_deck_diff.py b/scripts/mixer_deck_diff.py
+index 7affcf498..0cbc372db 100644
+--- a/scripts/mixer_deck_diff.py
++++ b/scripts/mixer_deck_diff.py
+@@ -167,7 +167,10 @@ def parse_deck(text):
+ 
+ 
+ def diff_d2_decks(text_ref, text_new, meta_ref, meta_new):
+-    """Explicit development-only uncoated -> coated pair; legacy allowlists unchanged."""
++    """Explicit development-only uncoated -> coated pair; legacy allowlists unchanged.
++
++    MXD2R-03: each deck may be the physical file bytes (bytes — the CLI passes them) or text (str);
++    rb.read_d2 checks metadata against those bytes (LF-only) before anything is parsed."""
+     import mixer_deck_readback as rb
+     a = rb.read_d2(text_ref, meta_ref)
+     b = rb.read_d2(text_new, meta_new)
+@@ -187,7 +190,7 @@ def diff_d2_decks(text_ref, text_new, meta_ref, meta_new):
+         ncm = [p for p in a['gamma'] if p.startswith('AM_')]
+         rb._d2_need(all(a['gamma'][p] == rho and b['gamma'][p] == 1 for p in ncm),
+                     'pair direction must be uncoated rho -> coated 1')
+-        pa, pb = parse_deck(text_ref), parse_deck(text_new)
++        pa, pb = parse_deck(rb.d2_text(text_ref)), parse_deck(rb.d2_text(text_new))      # 두 덱 모두 read_d2 PASS (UTF-8 · LF 확인) 뒤
+         rb._d2_need(pa['cmds']==pb['cmds'] and pa['ced_head']==pb['ced_head'],
+                     'non-CED command tokens differ (geometry/seed/gravity/material/time/etc.)')
+         rb._d2_need(a['expected_counts'] == b['expected_counts'], 'pair actual phase counts differ')
+@@ -842,6 +845,16 @@ def _read(path):
+         return None
+ 
+ 
++def _read_bytes(path):
++    """D2 개발 경로 (MXD2R-03) — 실제 파일 바이트 (텍스트 모드 = CRLF → LF 정규화).  못 읽으면 None (옛 `_read` 와 같은 실패 표면 = 소비자 거부 rc 1).
++    등록 표 · 코호트 경로는 `_read` 그대로다 (수정 계획 범위 밖)."""
++    try:
++        with open(path, 'rb') as stream:
++            return stream.read()
++    except OSError:
++        return None
++
++
+ def is_stiff_tag(tag):
+     """강성 축 셀 꼬리표 (`LC_ref_r2` · `E0_soft` …) 인가 — 옛 생성기 팔 이름 (`LC` · `LH` · `E0`) 은 아니다."""
+     try:
+@@ -1795,7 +1808,7 @@ def main():
+             ap.error('D2 개발: OLD NEW --allow D2 --meta-ref OLD_META --meta-new NEW_META [--json REPORT] only')
+         import mixer_deck_readback as rb
+         try:
+-            old, new = (_read(path) for path in a.decks)
++            old, new = (_read_bytes(path) for path in a.decks)          # MXD2R-03 — 실제 파일 바이트
+             d2_result = diff_d2_decks(old,new,rb.load_d2_meta(a.meta_ref),rb.load_d2_meta(a.meta_new))
+         except (OSError,ValueError) as exc:
+             ap.error(str(exc))
+diff --git a/scripts/mixer_deck_readback.py b/scripts/mixer_deck_readback.py
+index 48d04fa36..5aa9a82fe 100755
+--- a/scripts/mixer_deck_readback.py
++++ b/scripts/mixer_deck_readback.py
+@@ -949,6 +949,41 @@ D2_META_KEYS = frozenset(('schema registered generator generator_sha256 argv dec
+ D2_ADHESION_KEYS = frozenset(('rule gamma gamma_wall bo_se ratified law ceiling status wall_rule rho_uncoated_ncm').split())
+ D2_RAW_WEIGHT = {'AM_P': 56., 'AM_S': 24., 'SE': 18.}
+ D2_FORCE_REL = 2e-5                       # CED cubed + radius print rounding; fixed before comparisons.
++#: ── D2 개발 덱 문법 (MXD2R-01 · Codex 10-27 · 1저자 11-02 Q1 (가) = 생성기 자신의 문법만 · 모르는 의미는 거부) ─────────────────────────
++#:   make_mixer_deck.deck() 가 쓰는 꼴의 **사본** (생성기를 import 하지 않는다 — 생성기가 바뀌면 개발 소비자가 거부해 드러난다 · fail-closed).
++#:   LIGGGHTS 의 다른 의미 (run upto · 늦은 timestep · 삽입 start/반복 · 메시별 주기) 를 계산하지 않고 생성기 꼴 밖을 거부한다
++#:   (수정 계획 docs/reviews/mxd2r_fix_plan_20261030.md Q1 — 의미 계산은 표면이 커서 새 반례를 부른다).
++D2_RUN_COUNT = r'(?:0|[1-9][0-9]*)'       # `run <정수>` 의 정수 — ASCII 십진 (부호 · 앞자리 0 · Unicode 숫자 · 옵션 거부)
++#: insert/pack 생성기 꼴 — None 자리는 다른 검사가 값을 본다 (fix id · 시드 · 분포 · 영역 참조 · 삽입 수 = _d2_counts · _d2_lifecycle)
++D2_INSERT_FORM = ('fix', None, 'all', 'insert/pack', 'seed', None, 'distributiontemplate', None, 'maxattempt', '200',
++                  'insert_every', 'once', 'overlapcheck', 'yes', 'all_in', 'yes', 'vel', 'constant', '0.', '0.', '-0.2',
++                  'region', None, 'particles_in_region', None, 'ntry_mc', '20000')
++#: ── D2 실제 적용 접촉 (MXD2R-02 · 1저자 11-02 Q2 (가) = 접촉 제외 거부 + 재료 fix 완비성 · 적용 전 순서) ───────────────────────────
++#:   생성기 꼴의 이웃 · pair 명령만 받는다 (`neigh_modify exclude …` 는 그 쌍을 이웃 목록에서 빼 쌍 상호작용을 끈다 — LIGGGHTS 3d5c00f
++#:   doc/neigh_modify.txt · 인쇄 CED 의 Bo 산술은 그대로 맞으므로 산술이 아니라 명령 꼴로 닫는다).
++D2_NEIGH_MODIFY = ['neigh_modify', 'delay', '0']
++D2_PAIR_COEFF = ['pair_coeff', '*', '*']
++#: 지원 접촉 모델 (pair · wall = hertz · tangential history · cohesion sjkr · rolling_friction cdt) 의 재료 fix — 생성기 덱의 property/global
++#:   목록 그대로 (이름 → (형식, 생성기 상수)).  상수 None = 값은 다른 검사가 본다 (영률 · ν = 등록 표 · CED = 기하평균 힘 규칙 · 대칭 · 벽–벽 0).
++#:   사본 원본 = make_mixer_deck.COR · MU_S · MU_R · `characteristicVelocity scalar 2.0` (시험이 사본 ↔ 생성기 대조).
++D2_MATERIAL = {'youngsModulus': ('peratomtype', None), 'poissonsRatio': ('peratomtype', None),
++               'coefficientRestitution': ('peratomtypepair', 0.3), 'coefficientFriction': ('peratomtypepair', 0.9),
++               'coefficientRollingFriction': ('peratomtypepair', 0.075), 'cohesionEnergyDensity': ('peratomtypepair', None),
++               'characteristicVelocity': ('scalar', 2.0)}
++#: ── D2 생성기 꼴 전체 (MXD2R-04 · 11-03 사전 공격 · 1저자 11-03 Q1 = 권고대로 · 원리 = MXD2R-01–03 (가)) ────────────────────────────
++#:   덱의 명령을 **전부** make_mixer_deck.deck() 의 토큰으로 다시 내어 차례대로 대조한다 — 뜻이 같아도 표기가 다르면 거부 (생성기 꼴 엄격).
++#:   값은 상수 · 메타 · 등록 레시피 · 계획수에서 다시 낸다 (드럼 · 삽입 영역 = plan() · deck() 식 사본 · 같은 연산 순서).  자유 칸 없음 —
++#:   neighbor skin 도 생성기 값 min(지름)·0.5 의 .6g (11-03 밤 1저자 Q4 = 권고대로 · 첫 판의 예외 = 두 덱에 같이 바꾼 skin 을 세 소비자가
++#:   받던 같은 부류를 없앴다).  CED · 삽입 총수 · run 수 · dt 값은 기존 검사 (힘 규칙 · 계획수 · 메타) 가 묶고 여기서는 생성기 표기만 본다.
++#:   사본 원본 = deck() 템플릿 · plan() 기본값 · _next_prime · dump_columns · dump_modify_format · TPL_SEED (시험이 사본 ↔ 생성기 대조).
++D2_GLOBAL_FORM = (('atom_style', 'granular'), ('atom_modify', 'map', 'array', 'sort', '0', '0'), ('hard_particles', 'yes'),
++                  ('boundary', 'f', 'f', 'f'), ('newton', 'off'), ('communicate', 'single', 'vel', 'yes'), ('units', 'si'))
++D2_DRUM = dict(fill=0.30, pack=0.60, r_over_l=2.5)       # plan() 기본 — v_drum = v_solid/(fill·pack) · R = (r/l·v_drum/π)^(1/3) · L = R/(r/l)
++D2_DIST_SEED = (32452867, 32452883)                       # pdd · pddA · pddB (= 첫 소수 ≥ 32452867 + 2)
++D2_MESHES = ('Drum', 'Front', 'Back')                      # 배플 (--baffles) = D2 개발 계약 밖 (메타에 배플 칸이 없다)
++D2_DUMP_COLUMNS = ('id', 'type', 'x', 'y', 'z', 'vx', 'vy', 'vz', 'fx', 'fy', 'fz', 'radius')
++D2_DUMP_FORMAT = '%d %d' + ' %.17g' * 10                  # --dump-full-precision (메타 dump_modify_format 이 있을 때만 · 그 한 줄만 따옴표)
++D2_SEED_MAX = 2 ** 31 - 1                                  # LIGGGHTS 시드 = C int · 소수 (생성기가 합성수 시드를 거부한다)
+ 
+ 
+ def _d2_need(condition, message):
+@@ -1101,11 +1136,81 @@ def _d2_counts(D, meta, phases, density):
+     return {str(i+1): n for i,n in enumerate(vector)}
+ 
+ 
++def _d2_time_grammar(commands):
++    """MXD2R-01 — 시간 계약: `run <정수>` 두 토큰만 · `timestep <dt>` 는 정확히 하나 · 두 토큰 · 첫 run 전 (그 뒤 dt 불변).
++
++    LIGGGHTS 3d5c00f 소스 판독 (Codex 판정문 §3 · 우리 반입 대조): `run N upto` = 목표 누적 step − 현재 step 만큼 돈다 · 마지막 run 뒤의
++    timestep 은 실행에 쓰인 dt 를 정하지 않는다.  두 덱에 같이 넣으면 짝 비교 (CED 밖 토큰 동일) 도 못 잡는다 ⇒ 의미를 계산하지 않고
++    생성기 꼴 밖을 거부한다 (dt 를 바꾸는 다른 명령 — reset_timestep · run_style · fix dt/reset — 은 허용 명령 · fix 꼴 밖이라 이미 거부)."""
++    import re
++    runs = [i for i, t in enumerate(commands) if t[0] == 'run']
++    for i in runs:
++        t = commands[i]
++        _d2_need(len(t) == 2 and re.fullmatch(D2_RUN_COUNT, t[1]) is not None,
++                 'D2 time contract: only two-token `run <integer>` (generator grammar) — run options such as upto · start · stop · '
++                 'pre · post · every change the executed step program: `' + ' '.join(t)[:60] + '`')
++    steps = [i for i, t in enumerate(commands) if t[0] == 'timestep']
++    _d2_need(bool(runs) and len(steps) == 1 and len(commands[steps[0]]) == 2 and steps[0] < runs[0],
++             'D2 time contract: exactly one two-token `timestep <dt>` before the first run (dt set once, unchanged after) — '
++             f'found {len(steps)} at command index {steps} · first run at {runs[:1]}')
++
++
++def _d2_contact_grammar(commands, n_types):
++    """MXD2R-02 — 실제 적용 접촉 계약: 이웃 · pair 명령 = 생성기 꼴 · 재료 fix = 지원 접촉 모델이 읽는 목록의 완비성 · 형식 · 생성기 상수 ·
++    적용 전 순서 (create_box 뒤 · pair_style · wall/gran 앞 = 생성기 순서 — LIGGGHTS 가 요구하는 '첫 run 전' 보다 엄격).
++
++    ⚠ 옛 판: `neigh_modify exclude type 3 3` (SE–SE 쌍 상호작용 끔) · coefficientFriction fix 통째 삭제를 두 덱에 넣어도 세 소비자 PASS
++    (Codex exclude_SE_SE · 보조 탐침) — 허용 명령에 neigh_modify 가 있을 뿐 인자 의미 · 재료 fix 목록을 보지 않았다.  모르는 이름 · 옵션은 거부."""
++    runs = [i for i, t in enumerate(commands) if t[0] == 'run']
++    box = [i for i, t in enumerate(commands) if t[0] == 'create_box']
++    _d2_need(bool(runs) and len(box) == 1, 'D2 contact contract: create_box and runs required')
++    first, box = runs[0], box[0]
++    neigh = [(i, t) for i, t in enumerate(commands) if t[0] == 'neigh_modify']
++    _d2_need(len(neigh) == 1 and neigh[0][1] == D2_NEIGH_MODIFY and box < neigh[0][0] < first,
++             'D2 contact contract: exactly one `neigh_modify delay 0` after create_box and before the first run — exclude and other '
++             'neighbor options change which contacts are computed: '
++             + (' | '.join('`' + ' '.join(t)[:60] + '`' for _, t in neigh) or 'none'))
++    pair = [i for i, t in enumerate(commands) if t[0] == 'pair_style']
++    coeff = [(i, t) for i, t in enumerate(commands) if t[0] == 'pair_coeff']
++    _d2_need(len(pair) == 1 and len(coeff) == 1 and coeff[0][1] == D2_PAIR_COEFF and box < pair[0] < coeff[0][0] < first,
++             'D2 contact contract: one `pair_style gran …` then one `pair_coeff * *`, both after create_box and before the first run')
++    walls = [i for i, t in enumerate(commands) if t[0] == 'fix' and len(t) > 3 and t[3] == 'wall/gran']
++    found = {}
++    for i, t in enumerate(commands):
++        if not (t[0] == 'fix' and len(t) > 3 and t[3] == 'property/global'):
++            continue
++        name = t[4] if len(t) > 4 else None
++        _d2_need(name in D2_MATERIAL, f'D2 contact contract: unsupported material property {name!r} — the supported '
++                 f'hertz/sjkr/rolling_friction pair and wall model reads exactly {sorted(D2_MATERIAL)}')
++        _d2_need(name not in found, f'D2 contact contract: material fix {name} defined more than once')
++        found[name] = i
++        form, constant = D2_MATERIAL[name]
++        _d2_need(len(t) > 5 and t[5] == form, f'D2 contact contract: material fix {name} must be {form}')
++        if form == 'peratomtypepair':
++            _d2_need(len(t) > 6 and _d2_int_token(t[6], name + ' matrix size') == n_types,
++                     f'D2 contact contract: material fix {name} matrix size != create_box {n_types}')
++            values, want = t[7:], n_types * n_types
++        else:
++            values, want = t[6:], (n_types if form == 'peratomtype' else 1)
++        _d2_need(len(values) == want, f'D2 contact contract: material fix {name} has {len(values)} values != {want}')
++        if constant is not None:
++            _d2_need(all(_d2_float_token(v, name) == constant for v in values),
++                     f'D2 contact contract: {name} values != generator constant {constant:g}')
++        _d2_need(box < i < pair[0] and all(i < w for w in walls),
++                 f'D2 contact contract: material fix {name} must follow create_box and precede pair_style and wall/gran '
++                 '(generator order — defined before the contact laws that read it)')
++    missing = sorted(set(D2_MATERIAL) - set(found))
++    _d2_need(not missing, 'D2 contact contract: material fix missing for the supported hertz/sjkr/rolling_friction pair and wall '
++             'model: ' + ', '.join(missing))
++
++
+ def _d2_lifecycle(commands):
+     """Validate the supported insertion/settling/rotation program, without executing it.
+ 
+     Geometry remains supplied input; references and command lifetimes must still make
+     the planned-count interpretation meaningful. No STL/physical geometry is certified.
++    MXD2R-01: insert/pack must be the generator form (no start/repeat/other options) and every
++    wall mesh rotates with the Drum period (common rotation contract; origin/axis/start/end below).
+     """
+     runs=[i for i,t in enumerate(commands) if t[0]=='run']
+     _d2_need(len(runs)==4,'D2 requires insertion, two settling, and rotation runs')
+@@ -1147,6 +1252,7 @@ def _d2_lifecycle(commands):
+              and all(meshes[name][0]<wi<runs[0] for name in references),'wall mesh references/order')
+     moves=[(i,t) for i,t in fixes.values() if t[3]=='move/mesh']
+     moved=[]
++    periods={}
+     for i,t in moves:
+         _d2_need(len(t)==17 and t[4]=='mesh' and t[6:8]==['rotate','origin']
+                  and t[11]=='axis' and t[15]=='period','unsupported mesh motion syntax')
+@@ -1155,10 +1261,25 @@ def _d2_lifecycle(commands):
+         axis=[_d2_float_token(x,'rotation axis') for x in t[12:15]]
+         _d2_need(origin==[0.,0.,0.] and axis==[1.,0.,0.],'unsupported rotation origin/axis')
+         _d2_need(runs[2]<i<runs[3],'mesh rotation must follow both settling runs')
++        periods[t[5]]=_d2_number(_d2_float_token(t[16],'rotation period'),'rotation period')
+     _d2_need(len(moved)==len(set(moved)) and set(moved)==set(meshes),'each wall mesh must rotate exactly once')
++    # ★ MXD2R-01 — 공동 회전 계약: 모든 벽 메시 (Drum · Front · Back …) 가 Drum 과 **같은 주기** (Drum 주기 = 메타 period_s 는 read_d2 가 대조) ·
++    #   같은 원점 (0 0 0) · 축 (1 0 0) (위) · 같은 시작 (두 정착 run 뒤 · 회전 run 전 = 같은 step · 위) · 끝 (unfix 금지 = 마지막 run 끝까지 · read_d2).
++    #   ⚠ 옛 판은 Drum 주기만 메타에 묶었다 — Front 만 0.1 s 인 덱 (드럼 0.7825 s · Front 15.65 회전) 이 세 소비자 PASS (Codex front_period).
++    _d2_need('Drum' in periods and all(p==periods['Drum'] for p in periods.values()),
++             'D2 rotation contract: every wall mesh must rotate with the Drum period (common rotation) — '
++             +' · '.join(f'{k} {v:g} s' for k,v in sorted(periods.items())))
+     inserts=[(name,i,t) for name,(i,t) in fixes.items() if t[3]=='insert/pack']
+     _d2_need(len(inserts) in (1,2),'unsupported insertion count')
+     for ordinal,(name,i,t) in enumerate(inserts):
++        # ★ MXD2R-01 — 생성기 꼴만: insert_every once (반복 거부) · start 없음 (늦은 시작 = 제거 전에 삽입 기회 없음 · Codex insert_start_late) ·
++        #   maxattempt · overlapcheck · all_in · 속도 · ntry_mc = 생성기 상수 · 다른 옵션 없음
++        if not (len(t)==len(D2_INSERT_FORM) and all(w is None or t[k]==w for k,w in enumerate(D2_INSERT_FORM))):
++            k=next((k for k,w in enumerate(D2_INSERT_FORM) if k>=len(t) or (w is not None and t[k]!=w)),len(D2_INSERT_FORM))
++            got,want=(t[k] if k<len(t) else '(end)'),(D2_INSERT_FORM[k] if k<len(D2_INSERT_FORM) else '(end)')
++            _d2_need(False,'D2 insertion contract: insert/pack must be the generator form (seed S distributiontemplate D maxattempt 200 '
++                     'insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region R particles_in_region N ntry_mc 20000) '
++                     f'— start · repeat (insert_every N) · other options rejected: fix {t[1]} token {k} `{got}` (generator `{want}`)')
+         for field in ('region','distributiontemplate'):
+             _d2_need(t.count(field)==1,'missing/duplicate insertion '+field)
+         region=t[t.index('region')+1];distribution=t[t.index('distributiontemplate')+1]
+@@ -1179,24 +1300,192 @@ def _d2_lifecycle(commands):
+                          and fixes[template][0]<i for template in t[6::2]),'distribution template/reference order')
+ 
+ 
+-def read_d2(text, meta):
++def _d2_next_prime(n):
++    """n 이상의 첫 소수 — make_mixer_deck._next_prime 사본 (층상 둘째 insert/pack 시드 · 시드 소수 확인 · 시험이 생성기와 대조)."""
++    n = int(n)
++    while n < 2 or (n % 2 == 0 and n != 2) or any(n % i == 0 for i in range(3, math.isqrt(n) + 1, 2)):
++        n += 1
++    return n
++
++
++def _d2_text_form(text, meta):
++    """MXD2R-04 — 문자 꼴: 우리 파서 (_logical) 와 LIGGGHTS 가 **같은 토큰**을 읽는 꼴만 받는다 (생성기 출력 = 이 꼴).
++
++    _logical 은 유니코드 공백으로 토큰을 가르고 · 첫 # 에서 주석을 자르고 · 유니코드 rstrip 뒤 끝 '&' 로 줄을 잇는다.  LIGGGHTS 는 ASCII
++    공백으로 가르고 · 따옴표 안 # 을 주석으로 보지 않고 · $ 를 변수로 바꾸고 · 줄을 C 문자열로 읽는다 (LIGGGHTS 실행으로 확인하지 않았다 —
++    소스 규약 판독 · 생성기는 이 글자들을 쓰지 않으므로 무엇으로 읽히든 거부한다).  ⚠ 옛 판: 주석 끝 '&' 뒤 NBSP 한 글자로 다음 줄
++    `neigh_modify exclude type 3 3` 을 우리 파서는 주석으로 이어 붙여 못 보고 세 소비자 PASS (11-03 사전 공격)."""
++    fmt = meta.get('dump_modify_format')
++    dump_line = None
++    if 'dump_modify_format' in meta:
++        _d2_need(fmt == D2_DUMP_FORMAT, 'D2 generator form: metadata dump_modify_format != generator full-precision format')
++        dump_line = 'dump_modify dmp format "' + D2_DUMP_FORMAT + '"'
++    _d2_need(text.endswith('\n'), 'D2 generator form: deck must end with a newline (LF) — generator output')
++    for number, line in enumerate(text.split('\n')[:-1], 1):
++        controls = sorted({f'U+{ord(c):04X}' for c in line if ord(c) < 0x20 or 0x7f <= ord(c) <= 0x9f})
++        _d2_need(not controls, f'D2 generator form: line {number}: control character(s) {" ".join(controls)} — LF is the only line end '
++                 '(TAB · NUL · other C0/C1 controls are not generator output; a NUL ends a C-string line early)')
++        if line == dump_line:
++            continue                       # 전 정밀도 덤프 한 줄 (메타가 선언 · 문자열 그대로) — 따옴표가 허용되는 유일한 줄
++        code = line.partition('#')[0]
++        _d2_need(all(' ' <= c <= '~' and c not in '"\'$' for c in code),
++                 f'D2 generator form: line {number}: command text must be printable ASCII without quotes or $ — {code.strip()[:40]!r} '
++                 '(our parser splits on Unicode whitespace and cuts at the first #; LIGGGHTS splits on ASCII whitespace, keeps a quoted # '
++                 'and substitutes $)')
++        if line.rstrip().endswith('&'):
++            _d2_need(line.endswith(' &') and '#' not in line and line[:-2].strip() != '',
++                     f"D2 generator form: line {number}: continuation must be a command line ending exactly in ' &' (no comment · no "
++                     "trailing whitespace) — our parser strips trailing Unicode whitespace before testing '&', LIGGGHTS only ASCII "
++                     'whitespace, so one would join the next line and the other would not')
++
++
++def _d2_generator_form(commands, D, meta, names, phases, density, counts, k, cgf, stiff):
++    """MXD2R-04 — 생성기 꼴 엄격: 덱의 명령 전부 (차례 · 개수 · 토큰) = make_mixer_deck.deck() 가 이 계획에서 쓰는 토큰.
++
++    전역 설정 · 재료 · 기하 (드럼 R = 계획수 · 반지름 · 밀도에서 plan() 식 사본) · 템플릿 · 분포 · 삽입 · 적분기 · 출력 · 체크포인트 ·
++    회전 줄을 다시 내어 토큰 단위로 대조한다 — 값이 같아도 표기가 다르면 거부 (`0.01447070` · `5e3` · `1.037e9` · `0.30`→`0.3` …).
++    ⚠ 옛 판: `boundary p p p` · `newton on` · 템플릿 뒤 `volume_limit` · 분포 · 둘째 삽입 시드 · 삽입 영역 · 메시 scale · `dump_modify` ·
++    `thermo 1000` · `write_restart` 삭제 (사전 공격 17) 를 두 덱에 같이 넣어도 세 소비자 PASS.  자유 칸 없음 — neighbor skin = 생성기 값
++    min(지름)·0.5 (11-03 밤 Q4 · 첫 판은 skin 값을 비워 두 덱에 같이 바꾼 skin 을 받았다)."""
++    f6 = lambda x: format(x, '.6g')
++    neg = lambda x: '-' + f6(x)
++    N, order = len(names), [names[i] for i in range(1, len(names) + 1)]
++    seed = meta['seed']
++    _d2_need(seed <= D2_SEED_MAX and _d2_next_prime(seed) == seed,
++             'D2 generator form: insertion seed must be a prime ≤ 2^31−1 (the generator rejects composite seeds for LIGGGHTS insert/pack)')
++    inserts = [t for t in commands if t[0] == 'fix' and len(t) > 3 and t[3] == 'insert/pack']
++    totals = [t[t.index('particles_in_region') + 1] for t in inserts]          # 값 = _d2_counts (계획수 규칙 · 메타 총수) 가 묶었다
++    layered = len(inserts) == 2
++    F, n_run = D['runs'][1], D['runs'][3]
++    _d2_need(F % k == 0 and n_run % k == 0 and F // k >= 1000,
++             'D2 generator form: settle/rotation steps must be k × the generator plan (settle ≥ 1000 · k)')
++    dump_every = k * max(1000, (n_run // k) // 200)
++    restart_every = max(50_000, min(200_000, (n_run or 2 * F) // 20))
++    dt_tok = format(D['dt'], '.4g') if k == 1 else repr(float(format(D['dt'] * k, '.4g')) / k)
++    # ── 조성 · 드럼 · 삽입 영역 (plan() · deck() 사본 — 같은 연산 순서) ──
++    raw = {p: D2_RAW_WEIGHT[p] for p in phases}
++    tot_w = sum(raw[p] for p in phases)
++    wt = {p: raw[p] * 100.0 / tot_w for p in phases}
++    v = {p: wt[p] / density['SE' if p == 'SE' else 'AM'] for p in phases}
++    tot = sum(v.values())
++    phi = {p: v[p] / tot for p in v}
++    mf = {p: wt[p] / 100.0 for p in wt}
++    d = {p: REG_D_UM[p] * 1e-6 * cgf for p in phases}
++    n = {p: counts[str(i + 1)] for i, p in enumerate(phases)}
++    v_solid = n['AM_P'] * (math.pi / 6) * d['AM_P'] ** 3 / phi['AM_P']
++    v_drum = v_solid / (D2_DRUM['fill'] * D2_DRUM['pack'])
++    R = (D2_DRUM['r_over_l'] * v_drum / math.pi) ** (1 / 3.0)
++    L = R / D2_DRUM['r_over_l']
++    box, scale = R * 1.15, f6(R / 0.5)
++    seq = [list(t) for t in D2_GLOBAL_FORM]
++    seq += [['region', 'reg', 'block', neg(box), f6(box), neg(box), f6(box), neg(box), f6(box), 'units', 'box'],
++            ['create_box', str(N), 'reg'], ['neighbor', f6(min(d.values()) * 0.5), 'bin'], list(D2_NEIGH_MODIFY),
++            ['fix', 'm1', 'all', 'property/global', 'youngsModulus', 'peratomtype']
++            + [format(1e7 * stiff if p == 'SE' else REG_E_FIXED[p], '.4g') for p in order],
++            ['fix', 'm2', 'all', 'property/global', 'poissonsRatio', 'peratomtype'] + [format(REG_NU[p], '.2f') for p in order]]
++    for fid, name in (('m3', 'coefficientRestitution'), ('m4', 'coefficientFriction'), ('m5', 'coefficientRollingFriction')):
++        seq.append(['fix', fid, 'all', 'property/global', name, 'peratomtypepair', str(N)] + [format(D2_MATERIAL[name][1], 'g')] * (N * N))
++    seq += [['fix', 'mC', 'all', 'property/global', 'cohesionEnergyDensity', 'peratomtypepair', str(N)]
++            + [format(D['ced'][(i, j)], 'g') for i in range(1, N + 1) for j in range(1, N + 1)],
++            ['fix', 'm9', 'all', 'property/global', 'characteristicVelocity', 'scalar', '2.0'],
++            ['pair_style', 'gran', 'model', 'hertz', 'tangential', 'history', 'cohesion', 'sjkr', 'rolling_friction', 'cdt'],
++            list(D2_PAIR_COEFF), ['timestep', dt_tok], ['fix', 'gravi', 'all', 'gravity', '9.81', 'vector', '0.0', '0.0', '-1.0']]
++    seq += [['fix', mesh, 'all', 'mesh/surface', 'file', mesh + '.stl', 'type', str(N), 'scale', scale] for mesh in D2_MESHES]
++    seq.append(['fix', 'walls', 'all', 'wall/gran', 'model', 'hertz', 'tangential', 'history', 'cohesion', 'sjkr', 'rolling_friction',
++                'cdt', 'mesh', 'n_meshes', str(len(D2_MESHES)), 'meshes'] + list(D2_MESHES))
++    tpl_seed = {p: s for s, p in REG_TPL_SEED.items()}
++    seq += [['fix', f'pt{i}', 'all', 'particletemplate/sphere', str(tpl_seed[p]), 'atom_type', str(i), 'density', 'constant',
++             format(density['SE' if p == 'SE' else 'AM'] * 1000.0, '.0f'), 'radius', 'constant', f6(d[p] / 2)]
++            for i, p in enumerate(phases, 1)]
++    groups = ([('pdd', D2_DIST_SEED[0], phases)] if not layered else
++              [('pddA', D2_DIST_SEED[0], [p for p in phases if p.startswith('AM_')]),
++               ('pddB', D2_DIST_SEED[1], [p for p in phases if not p.startswith('AM_')])])
++    for fid, dist_seed, group in groups:
++        share = sum(mf[p] for p in group)
++        seq.append(['fix', fid, 'all', 'particledistribution/discrete', str(dist_seed), str(len(group))]
++                   + [x for p in group for x in (f'pt{phases.index(p) + 1}', format(mf[p] / share if layered else mf[p], '.6f'))])
++
++    def insert(fid, dist, region, total, insert_seed):
++        return (['fix', fid, 'all', 'insert/pack', 'seed', str(insert_seed), 'distributiontemplate', dist, 'maxattempt', '200',
++                 'insert_every', 'once', 'overlapcheck', 'yes', 'all_in', 'yes', 'vel', 'constant', '0.', '0.', '-0.2',
++                 'region', region, 'particles_in_region', total, 'ntry_mc', '20000'])
++    first = 'insA' if layered else 'ins'
++    seq += [['region', 'ins_reg', 'cylinder', 'x', '0.0', '0.0', f6(R * 0.9), neg(L * 0.45), f6(L * 0.45), 'units', 'box'],
++            insert(first, 'pddA' if layered else 'pdd', 'ins_reg', totals[0], seed),
++            ['fix', 'integrS', 'all', 'nve/sphere'], ['compute', 'rke', 'all', 'erotate/sphere'],
++            ['thermo_style', 'custom', 'step', 'atoms', 'ke', 'c_rke', 'vol'], ['thermo', '5000'],
++            ['thermo_modify', 'lost', 'ignore', 'norm', 'no'], ['shell', 'mkdir', 'post'], ['shell', 'mkdir', 'restart'],
++            ['restart', str(restart_every), 'restart/a.bin', 'restart/b.bin'], ['run', '1'],
++            ['dump', 'dmp', 'all', 'custom', str(dump_every), 'post/mix_*.liggghts'] + list(D2_DUMP_COLUMNS)]
++    if 'dump_modify_format' in meta:
++        seq.append(['dump_modify', 'dmp', 'format'] + ('"' + D2_DUMP_FORMAT + '"').split())
++    seq += [['run', str(F)], ['unfix', first]]
++    if layered:
++        v_am = sum(n[p] * (math.pi / 6) * d[p] ** 3 for p in phases if p.startswith('AM_'))
++        area = v_am / 0.60 / L                                  # 침대 단면 (plan() pack 기본 0.60) — deck() 식 그대로
++        lo, hi, th = 0.0, 2 * math.pi, 2.0
++        for _ in range(60):                                       # θ − sinθ = 2A/R² 이분법 (deck() 와 같은 60 회)
++            th = 0.5 * (lo + hi)
++            if th - math.sin(th) < 2 * area / R ** 2:
++                lo = th
++            else:
++                hi = th
++        z_lo = -R + R * (1 - math.cos(th / 2)) + d['AM_P']
++        seq += [['region', 'ins_hi', 'block', neg(L * 0.45), f6(L * 0.45), neg(R * 0.6), f6(R * 0.6), f6(z_lo), f6(0.78 * R), 'units', 'box'],
++                insert('insB', 'pddB', 'ins_hi', totals[1], _d2_next_prime(seed + 2))]
++    seq.append(['run', str(F)])
++    if layered:
++        seq.append(['unfix', 'insB'])
++    period = f6(meta['period_s'])
++    seq += [['write_restart', 'restart/settled.bin']]
++    seq += [['fix', fid, 'all', 'move/mesh', 'mesh', mesh, 'rotate', 'origin', '0', '0', '0', 'axis', '1.', '0.', '0.', 'period', period]
++            for fid, mesh in zip(('mvD', 'mvF', 'mvB'), D2_MESHES)]
++    seq.append(['run', str(n_run)])
++    for index, (got, want) in enumerate(zip(commands, seq), 1):
++        for j in range(max(len(got), len(want))):
++            g, w = (got[j] if j < len(got) else '(end)'), (want[j] if j < len(want) else '(end)')
++            _d2_need(g == w, f'D2 generator form: command {index} `{" ".join(got[:2])[:30]} …` token {j} `{g[:40]}` '
++                     f'(generator `{w[:40]}`) — every command must be the make_mixer_deck.deck() tokens '
++                     '(a different spelling of the same value is rejected)')
++    _d2_need(len(commands) == len(seq), f'D2 generator form: command count {len(commands)} (generator {len(seq)})')
++
++
++def d2_text(deck):
++    """D2 덱 입력 (bytes = 실제 파일 바이트 · str = 메모리 텍스트) → 텍스트.  read_d2 가 PASS 한 입력에만 쓴다 (엄격 UTF-8 · LF 확인 뒤)."""
++    return deck.decode('utf-8') if type(deck) is bytes else deck
++
++
++def read_d2(deck, meta):
+     """Validate explicit D2 development deck+metadata; PASS never authorizes a run.
+ 
+     Supported active phase sets are AM_P+AM_S+SE and AM_P+SE. Legacy table paths
+     remain gen1/registered contracts. This path neither names cells nor registers a cohort.
++
++    MXD2R-03 (1저자 11-02 Q3 (가)): `deck` = the **physical file bytes** (bytes — the three CLIs pass
++    `read_bytes()`) or in-memory deck text (str — its UTF-8 encoding is the file bytes).  metadata
++    deck_sha256 / deck_bytes are checked against those bytes first; the verified bytes are then decoded
++    (strict UTF-8) and parsed.  The generator writes LF only, so any CR (0x0D) byte is rejected with its
++    own reason — CRLF is never normalized away (a text-mode read used to hash the LF-normalized text).
+     """
+     result = dict(schema=D2_CONTRACT, verdict='FAIL', failures=[], registered=None,
+                   execution_authorized=False, scope='D2 development deck and planned counts only; not execution evidence')
+     try:
+-        _d2_need(isinstance(text, str), 'deck text must be a string')
++        _d2_need(type(deck) in (bytes, str), 'deck must be the physical file bytes (bytes) or the deck text (str)')
+         _d2_need(isinstance(meta, dict), 'metadata must be an object')
+         _d2_need(set(meta) <= D2_META_KEYS, 'unknown metadata keys')
+         _d2_need(meta.get('schema') == 'mixer_deck_meta/2' and meta.get('registered', False) is None
+                  and meta.get('development_contract') == 'D2-geomean/unregistered', 'D2 unregistered metadata schema required')
+-        raw = text.encode('utf-8')
++        raw = deck if type(deck) is bytes else deck.encode('utf-8')
+         digest = hashlib.sha256(raw).hexdigest()
+-        _d2_need(meta.get('deck_sha256') == digest, 'metadata SHA256 != actual deck')
+-        _d2_need(_d2_integer(meta['deck_bytes'], 'deck_bytes') == len(raw), 'metadata bytes != actual deck')
++        _d2_need(meta.get('deck_sha256') == digest, 'metadata SHA256 != actual deck file bytes')
++        _d2_need(_d2_integer(meta['deck_bytes'], 'deck_bytes') == len(raw), 'metadata bytes != actual deck file bytes')
++        n_cr = raw.count(b'\r')               # (f-string 안 백슬래시 = Python 3.8–3.11 문법 오류 → 밖에서 센다)
++        _d2_need(n_cr == 0, f'deck contains {n_cr} CR (0x0D) byte(s) — CRLF/CR line endings are rejected: '
++                 'D2 development decks are LF-only generator output (never normalized before hashing or parsing)')
++        try:
++            text = raw.decode('utf-8')
++        except UnicodeDecodeError as exc:
++            raise ValueError(f'deck bytes are not valid UTF-8 ({exc.reason} at byte {exc.start})') from None
+         generation = meta.get('dens_gen')
+         _d2_need(isinstance(generation,str) and generation in D2_DENSITY, 'unknown/missing exact density generation')
+         density = D2_DENSITY[generation]
+@@ -1254,7 +1543,9 @@ def read_d2(text, meta):
+         _d2_need(len(gravity)==1 and len(gravity[0])==9 and gravity[0][2]=='all' and gravity[0][5]=='vector', 'one explicit gravity vector required')
+         grav = _d2_number(float(gravity[0][4]), 'actual gravity')
+         _d2_need(grav==9.81 and [float(v) for v in gravity[0][6:]]==[0.,0.,-1.], 'actual gravity != declared mixer gravity')
+-        _d2_lifecycle(commands)
++        _d2_time_grammar(commands)            # MXD2R-01 — run <정수> · timestep 하나 (첫 run 전)
++        _d2_contact_grammar(commands, D['n_types'])   # MXD2R-02 — neigh_modify · pair 꼴 · 재료 fix 완비성 · 순서 · 상수
++        _d2_lifecycle(commands)               # + MXD2R-01 삽입 생성기 꼴 · 공동 회전 주기
+         adhesion = meta.get('adhesion_rule')
+         _d2_need(isinstance(adhesion,dict) and set(adhesion)==D2_ADHESION_KEYS, 'unknown/missing adhesion rule keys')
+         _d2_need(adhesion['rule']=='geomean' and adhesion['wall_rule']=='hare2026_x_rho_uncoated_ncm', 'D2 pair/wall rule differs')
+@@ -1320,11 +1611,18 @@ def read_d2(text, meta):
+         _d2_need(abs(expected_time['rotation']-expected_duration)<=expected_duration*TOL['dt_print_rel']+D['dt'],
+                  'actual rotation steps/time != declared revolutions')
+         counts=_d2_counts(D,meta,phases,density)
+-        result.update(verdict='PASS',deck_sha256=digest,density_generation=generation,phase_names=names,
++        # ★ MXD2R-04 (1저자 11-03 Q1 = 권고대로) — 기존 검사 뒤 (기존 사유가 먼저 나오게): 문자 꼴 (우리 파서 = LIGGGHTS 토큰) → 명령 전부 = 생성기 토큰
++        _d2_text_form(text, meta)
++        _d2_generator_form(commands, D, meta, names, phases, density, counts, k, cgf, stiff)
++        result.update(verdict='PASS',deck_sha256=digest,deck_bytes=len(raw),deck_hash_basis='physical file bytes (LF-only · not normalized)',
++                      density_generation=generation,phase_names=names,
+                       expected_counts=counts,n_atoms_planned=sum(counts.values()),Bo_SE=fss/weight,
+                       gravity=grav,rho_uncoated_ncm=rho,gamma=gamma,bo_se=bo,pairs=rows,
+                       tolerances=dict(absolute_Bo_relative=D2_FORCE_REL,pair_force_relative=TOL['f0_ratio']),
+-                      metadata_fields_checked='schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts')
++                      metadata_fields_checked='schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts',
++                      generator_form='every command = make_mixer_deck.deck() tokens (same value, different spelling rejected; '
++                                     'no free slot — neighbor skin = generator min(diameter)*0.5) · command text printable ASCII without '
++                                     'quotes/$ · continuation " &" only')
+     except (ValueError,TypeError,KeyError,IndexError,OverflowError,ZeroDivisionError) as exc:
+         result['failures'].append(f'D2 development contract: {type(exc).__name__}: {exc}')
+     return result
+@@ -1355,8 +1653,9 @@ def main(argv=None):
+         if a.table or a.md:
+             ap.error('--d2 DECK META [--json REPORT] cannot mix registered tables/markdown')
+         try:
+-            text = open(a.d2[0], encoding='utf-8').read()
+-            report = read_d2(text, load_d2_meta(a.d2[1]))
++            with open(a.d2[0], 'rb') as stream:       # MXD2R-03 — 실제 파일 바이트 (텍스트 모드 읽기는 CRLF 를 LF 로 바꿔 해시가 갈린다)
++                raw = stream.read()
++            report = read_d2(raw, load_d2_meta(a.d2[1]))
+         except (OSError, ValueError) as exc:
+             ap.error(str(exc))
+         raise SystemExit(_d2_cli_report(report, a.json))
+diff --git a/scripts/mixer_smoke_blind.py b/scripts/mixer_smoke_blind.py
+index 9bed13244..83b78f1b5 100644
+--- a/scripts/mixer_smoke_blind.py
++++ b/scripts/mixer_smoke_blind.py
+@@ -243,7 +243,8 @@ def _run_total(run_dir):
+ 
+ 
+ def d2_plan_check(text, meta):
+-    """Development preflight only: counts bound to the actual D2 deck, not a rest/contact cert."""
++    """Development preflight only: counts bound to the actual D2 deck, not a rest/contact cert.
++    `text` = physical file bytes (bytes — the CLI passes them · MXD2R-03) or deck text (str)."""
+     import mixer_deck_readback as rb
+     result = rb.read_d2(text, meta)
+     result['schema'] = 'mixer_d2_plan_check/1'
+@@ -982,8 +983,8 @@ def main(argv=None):
+             ap.error('--d2-plan DECK --d2-meta META [--json REPORT] only; no registered certificate mode')
+         import mixer_deck_readback as rb
+         try:
+-            text = Path(a.d2_plan).read_text(encoding='utf-8')
+-            result = d2_plan_check(text, rb.load_d2_meta(a.d2_meta))
++            raw = Path(a.d2_plan).read_bytes()        # MXD2R-03 — 실제 파일 바이트 (read_text 는 CRLF → LF 정규화)
++            result = d2_plan_check(raw, rb.load_d2_meta(a.d2_meta))
+         except (OSError,ValueError) as exc:
+             ap.error(str(exc))
+         return rb._d2_cli_report(result,a.json)
+diff --git a/scripts/test_mixer_d2_consumers.py b/scripts/test_mixer_d2_consumers.py
+index a817e9caa..f252ebe61 100644
+--- a/scripts/test_mixer_d2_consumers.py
++++ b/scripts/test_mixer_d2_consumers.py
+@@ -1,10 +1,19 @@
+ #!/usr/bin/env python3
+-"""D2 development consumer regressions; synthetic decks only, no simulator."""
++"""D2 development consumer regressions; synthetic decks only, no simulator.
++
++MXD2R-01 · 02 · 03 (Codex 10-27 재검토 HOLD · 수정 계획 docs/reviews/mxd2r_fix_plan_20261030.md · 1저자 11-02 Q1–Q3 (가)):
++반례를 고치기 **전에** 옮겼다 — 고치기 전 소비자는 아래 공통 변조 · CRLF 바이트를 세 소비자 모두 PASS / rc 0 으로 받았다.
++MXD2R-04 (11-03 사전 공격 · 1저자 11-03 Q1 = 권고대로): 범위 밖 공통 변조 17 · 같은 부류 (같은 값 다른 표기 · 이름 · 순서 · 중복 ·
++결손 · 배플) · 문자 꼴 (우리 파서와 LIGGGHTS 가 다른 토큰을 읽을 수 있는 꼴) 도 고치기 **전에** 옮겼다 (고치기 전 세 소비자 PASS).
++"""
+ import copy
+ import hashlib
++import inspect
+ import itertools
+ import json
++import math
+ from pathlib import Path
++import re
+ import subprocess
+ import sys
+ import tempfile
+@@ -17,7 +26,8 @@ import mixer_smoke_blind as smoke
+ 
+ 
+ def fixture(phases=('AM_P', 'AM_S', 'SE'), generation='lab20261014', stiff=20., rho=.3,
+-            coated=False, bo=.73, n=100000, cgf=151.4, layered=True, seed=32452843, dt_factor=1.):
++            coated=False, bo=.73, n=100000, cgf=151.4, layered=True, seed=32452843, dt_factor=1.,
++            dump_full_precision=False, fr=None):
+     old = gen.TYPES
+     try:
+         gen.set_phases(phases)
+@@ -27,9 +37,11 @@ def fixture(phases=('AM_P', 'AM_S', 'SE'), generation='lab20261014', stiff=20.,
+         arm['layered'] = layered
+         gen.ARMS['D2CONSUMER'] = arm
+         p = gen.plan(n, cgf=cgf, stiffen_se=stiff, dens_gen=generation)
+-        rpm = gen.resolve_rpm(p['R'])
+-        text = gen.deck(p, rpm, 2, seed=seed, arm='D2CONSUMER', hold_bo_pairwise=True, dt_factor=dt_factor)
+-        meta = gen.deck_meta(p, rpm, 2, seed, 'D2CONSUMER', text, hold_bo_pairwise=True, dt_factor=dt_factor)
++        rpm = gen.resolve_rpm(p['R']) if fr is None else gen.resolve_rpm(p['R'], fr=fr)
++        text = gen.deck(p, rpm, 2, seed=seed, arm='D2CONSUMER', hold_bo_pairwise=True, dt_factor=dt_factor,
++                        dump_full_precision=dump_full_precision)
++        meta = gen.deck_meta(p, rpm, 2, seed, 'D2CONSUMER', text, hold_bo_pairwise=True, dt_factor=dt_factor,
++                             dump_full_precision=dump_full_precision)
+         return text, meta, {str(i+1): int(p['n'][phase]) for i, phase in enumerate(phases)}
+     finally:
+         gen.ARMS.pop('D2CONSUMER', None)
+@@ -43,6 +55,305 @@ def rebound(text, meta):
+     return meta
+ 
+ 
++def rebound_bytes(raw, meta):
++    """Metadata that states the given physical file bytes (MXD2R-03 'CRLF metadata' direction)."""
++    meta = copy.deepcopy(meta)
++    meta['deck_sha256'] = hashlib.sha256(raw).hexdigest()
++    meta['deck_bytes'] = len(raw)
++    return meta
++
++
++def _block(fix_id, rows):
++    """Remove `fix <id> …` and its `rows` continuation lines (Codex friction_missing form)."""
++    return lambda s: re.sub(r'(?m)^fix ' + fix_id + r' [^\n]*\n(?:    [^\n]*\n){' + str(rows) + '}', '', s)
++
++
++def _move_after(pattern, anchor):
++    """Move the lines matched by `pattern` (multi-line allowed) to just after the line `anchor`."""
++    def transform(s):
++        m = re.search(pattern, s, flags=re.M)
++        assert m, pattern
++        s = s[:m.start()] + s[m.end():]
++        a = re.search(r'(?m)^' + re.escape(anchor) + r'\n', s)
++        assert a, anchor
++        return s[:a.end()] + m.group(0) + s[a.end():]
++    return transform
++
++
++def _friction_values(new):
++    def transform(s):
++        m = re.search(r'(?m)^fix m4 [^\n]*\n(?:    [^\n]*\n){4}', s)
++        return s[:m.start()] + m.group(0).replace('0.9', new) + s[m.end():]
++    return transform
++
++
++#: Codex d2/evidence/independent_probe.py 의 공통 변조 여섯 — 식 그대로 · 두 덱에 같이 · 메타 해시 · 길이 재결합.
++#: 값 = (변조, 고친 뒤 거부 사유에 있어야 할 문구 — 다른 사유로 우연히 거부된 것이 아님을 확인한다)
++CODEX_COMMON_MODE = {
++    'run_upto': (lambda s: re.sub(r'(?m)^run (\d+)$', r'run \1 upto', s), 'run <integer>'),
++    'late_timestep': (lambda s: re.sub(r'(?m)^timestep[^\n]*\n', '', s)
++                      + re.search(r'(?m)^timestep[^\n]*', s).group(0) + '\n', 'timestep <dt>'),
++    'insert_start_late': (lambda s: s.replace('insert_every once', 'insert_every once start 9000000'),
++                          'insert/pack must be the generator form'),
++    'front_period': (lambda s: re.sub(r'(fix mvF[^\n]* period )[^\s]+', r'\g<1>0.1', s), 'Drum period'),
++    'exclude_SE_SE': (lambda s: s.replace('neigh_modify    delay 0', 'neigh_modify    delay 0\nneigh_modify exclude type 3 3'),
++                      '`neigh_modify delay 0`'),
++    'friction_missing': (lambda s: re.sub(r'(?m)^fix m4[^\n]*\n(?:    [^\n]*\n){4}', '', s), 'coefficientFriction'),
++}
++
++#: 같은 부류 (생성기 문법 밖 · 고치기 전 세 소비자 PASS) — Codex 여섯 밖의 변형으로 문법이 닫혔는지 본다 (API).
++MXD2R01_SAME_CLASS = {
++    'run_pre_post': (lambda s: re.sub(r'(?m)^run (\d+)$', r'run \1 pre no post no', s), 'run <integer>'),
++    'run_start_stop': (lambda s: re.sub(r'(?m)^run (\d+)$', r'run \1 start 0 stop 99999999', s), 'run <integer>'),
++    'timestep_after_insert_run': (_move_after(r'^timestep[^\n]*\n', 'run 1'), 'timestep <dt>'),
++    'timestep_extra_token': (lambda s: re.sub(r'(?m)^(timestep\s+\S+)$', r'\1 2.373e-07', s), 'timestep <dt>'),
++    'insert_repeat_every': (lambda s: s.replace('insert_every once', 'insert_every 1000'), 'insert/pack must be the generator form'),
++    'insert_start_first_step': (lambda s: s.replace('insert_every once', 'insert_every once start 1'),
++                                'insert/pack must be the generator form'),
++    'insert_velocity': (lambda s: s.replace('vel constant 0. 0. -0.2', 'vel constant 0. 0. -2.0'),
++                        'insert/pack must be the generator form'),
++    'back_period': (lambda s: re.sub(r'(fix mvB[^\n]* period )[^\s]+', r'\g<1>0.1', s), 'Drum period'),
++}
++MXD2R02_SAME_CLASS = {
++    'exclude_AM_SE': (lambda s: s.replace('neigh_modify    delay 0', 'neigh_modify    delay 0\nneigh_modify exclude type 1 3'),
++                      '`neigh_modify delay 0`'),
++    'exclude_same_line': (lambda s: s.replace('neigh_modify    delay 0', 'neigh_modify    delay 0 exclude type 3 3'),
++                          '`neigh_modify delay 0`'),
++    'neigh_every_check_no': (lambda s: s.replace('neigh_modify    delay 0', 'neigh_modify    every 10 delay 0 check no'),
++                             '`neigh_modify delay 0`'),
++    'neigh_missing': (lambda s: s.replace('neigh_modify    delay 0\n', ''), '`neigh_modify delay 0`'),
++    'restitution_missing': (_block('m3', 4), 'coefficientRestitution'),
++    'rolling_missing': (_block('m5', 4), 'coefficientRollingFriction'),
++    'charvel_missing': (lambda s: re.sub(r'(?m)^fix m9 [^\n]*\n', '', s), 'characteristicVelocity'),
++    'friction_duplicate': (lambda s: s.replace('fix m5 all', 'fix m4b all property/global coefficientFriction peratomtypepair 4 &\n'
++                                               + '    0.1 0.1 0.1 0.1 &\n' * 3 + '    0.1 0.1 0.1 0.1\nfix m5 all', 1), 'coefficientFriction'),
++    # 사전 공격 변이 M11 생존 (11-03) — 값이 다른 중복은 상수 검사가 먼저 잡아 '중복' 규칙이 시험에 묶이지 않았다 → 같은 값 중복으로 묶는다
++    'friction_duplicate_same_values': (lambda s: s.replace('fix m5 all', 'fix m4b all property/global coefficientFriction peratomtypepair 4 &\n'
++                                                           + '    0.9 0.9 0.9 0.9 &\n' * 3 + '    0.9 0.9 0.9 0.9\nfix m5 all', 1),
++                                       'defined more than once'),
++    'friction_value': (_friction_values('0.1'), 'coefficientFriction'),
++    'friction_after_pair_style': (_move_after(r'^fix m4 [^\n]*\n(?:    [^\n]*\n){4}', 'pair_coeff      * *'), 'coefficientFriction'),
++    'unknown_property': (lambda s: s.replace('fix m9 all', 'fix mX all property/global coefficientRestitutionWall scalar 0.5\nfix m9 all', 1),
++                         'unsupported material property'),
++    'pair_style_late': (_move_after(r'^pair_style[^\n]*\npair_coeff[^\n]*\n', 'write_restart restart/settled.bin'), 'pair_coeff * *'),
++    'pair_coeff_partial': (lambda s: s.replace('pair_coeff      * *', 'pair_coeff      1 1'), 'pair_coeff * *'),
++}
++
++
++def _tok(k, got, want):
++    """MXD2R-04 거부 사유 문구 — 첫 어긋난 토큰 (명령 안 위치 · 덱 토큰 · 생성기 토큰)."""
++    return f'token {k} `{got}` (generator `{want}`)'
++
++
++def _swap(first, second):
++    """정확히 한 번씩 있는 두 줄의 자리를 바꾼다 (순서만 다른 덱)."""
++    def transform(s):
++        assert s.count(first) == 1 and s.count(second) == 1, (first, second)
++        return s.replace(first, '\0').replace(second, first).replace('\0', second)
++    return transform
++
++
++def _rep(old, new, count=1):
++    return lambda s: s.replace(old, new, count)
++
++
++#: 문자 꼴 사유 (MXD2R-04) — 우리 파서 (_logical: 유니코드 공백 · 첫 # · 유니코드 rstrip 뒤 '&') 와 LIGGGHTS (ASCII 공백 · 따옴표 안 # ·
++#:   $ 치환 · C 문자열) 가 다른 토큰을 읽을 수 있는 꼴을 토큰 대조 **전에** 거부한다.
++_CTRL, _ASCII = 'control character', 'printable ASCII without quotes or $'
++_CONT, _EOL = "continuation must be a command line ending exactly in ' &'", 'must end with a newline'
++#: MXD2R-04 — 사전 공격 (11-03) 이 보고한 MXD2R-01–03 범위 밖 공통 변조 17 (식 = docs/reviews/mxd2r_fix_evidence_20261103/tools/
++#:   preattack_outside_scope.py 그대로) · 고치기 전 세 소비자 PASS.  값 = (변조, 고친 뒤 사유 = 첫 어긋난 토큰 ↔ 생성기 토큰 · 따옴표 = 문자 꼴)
++MXD2R04_OUTSIDE_17 = {
++    'boundary_periodic': (_rep('boundary        f f f', 'boundary        p p p'), _tok(1, 'p', 'f')),
++    'newton_on': (_rep('newton          off', 'newton          on'), _tok(1, 'on', 'off')),
++    'atom_style_sphere': (_rep('atom_style      granular', 'atom_style      sphere'), _tok(1, 'sphere', 'granular')),
++    'communicate_cutoff': (_rep('communicate     single vel yes', 'communicate     single cutoff 0.001 vel yes'), _tok(2, 'cutoff', 'vel')),
++    'hard_particles_no': (_rep('hard_particles  yes', 'hard_particles  no'), _tok(1, 'no', 'yes')),
++    'atom_modify_sort': (_rep('atom_modify     map array sort 0 0', 'atom_modify     map array sort 1000 0.0'), _tok(4, '1000', '0')),
++    'thermo_lost_error': (_rep('thermo_modify lost ignore norm no', 'thermo_modify lost error norm no'), _tok(2, 'error', 'ignore')),
++    'neighbor_nsq': (lambda s: re.sub(r'(?m)^(neighbor\s+\S+) bin$', r'\1 nsq', s), _tok(2, 'nsq', 'bin')),
++    'template_extra_option': (lambda s: re.sub(r'(?m)^(fix pt1 [^\n]*radius constant \S+)$', r'\1 volume_limit 1e-30', s),
++                              _tok(13, 'volume_limit', '(end)')),
++    'template_quote_hash': (lambda s: re.sub(r'(?m)^(fix pt1 [^\n]*radius constant \S+)$', r'\1 "#" volume_limit 1e-30', s), _ASCII),
++    'pdd_seed': (_rep('particledistribution/discrete 32452867', 'particledistribution/discrete 15485863'), _tok(4, '15485863', '32452867')),
++    'insert_b_seed': (lambda s: re.sub(r'(fix insB all insert/pack seed )\d+', r'\g<1>15485867', s), _tok(5, '15485867', '32452867')),
++    'insert_region_geometry': (lambda s: re.sub(r'(region ins_reg cylinder x 0\.0 0\.0 )(\S+)', r'\g<1>0.0100000', s),
++                               _tok(6, '0.0100000', '0.0113249')),
++    'mesh_scale': (lambda s: s.replace('scale 0.0251665', 'scale 0.0250000'), _tok(9, '0.0250000', '0.0251665')),
++    'dump_modify_added': (_rep('\n# ① 채우고 정착', '\ndump_modify dmp sort id\n# ① 채우고 정착'), _tok(0, 'dump_modify', 'run')),
++    'thermo_every': (_rep('thermo 5000', 'thermo 1000'), _tok(1, '1000', '5000')),
++    'write_restart_removed': (_rep('write_restart restart/settled.bin\n', ''), _tok(0, 'fix', 'write_restart')),
++}
++#: MXD2R-04 같은 부류 — 같은 값 다른 표기 · 생성기 이름 (fix · region · 메시 · dump · 템플릿 id) · 순서 · 중복 · 결손 · 생성기 옵션 밖 (배플) ·
++#:   출력 · 체크포인트 · 이웃 skin 토큰 꼴 (고치기 전 세 소비자 PASS — 11-03 선별 기록 docs/reviews/mxd2r_fix_evidence_20261103/)
++MXD2R04_SAME_CLASS = {
++    'box_spelling': (_rep('0.0144707', '0.01447070', -1), _tok(3, '-0.01447070', '-0.0144707')),
++    'box_size': (_rep('0.0144707', '0.0150000', -1), _tok(3, '-0.0150000', '-0.0144707')),
++    'create_box_spelling': (_rep('create_box      4 reg', 'create_box      04 reg'), _tok(1, '04', '4')),
++    'young_spelling': (_rep('1.037e+09 1.037e+09', '1.037e9 1.037e9'), _tok(6, '1.037e9', '1.037e+09')),
++    'nu_spelling': (_rep('poissonsRatio peratomtype 0.25 0.25 0.30 0.30', 'poissonsRatio peratomtype 0.25 0.25 0.3 0.3'), _tok(8, '0.3', '0.30')),
++    'restitution_spelling': (lambda s: re.sub(r'(?m)^(fix m3 [^\n]*\n(?:    [^\n]*\n){4})', lambda m: m.group(1).replace('0.3', '0.30'), s),
++                             _tok(7, '0.30', '0.3')),
++    'ced_spelling': (lambda s: re.sub(r'(?m)^(fix mC [^\n]*\n(?:    [^\n]*\n){3}    [^\n]* )0$', r'\g<1>0.0', s), _tok(22, '0.0', '0')),
++    'charvel_spelling': (_rep('characteristicVelocity scalar 2.0', 'characteristicVelocity scalar 2'), _tok(6, '2', '2.0')),
++    'gravity_spelling': (_rep('gravity 9.81 vector', 'gravity 9.810 vector'), _tok(4, '9.810', '9.81')),
++    'gravity_vector_spelling': (_rep('vector 0.0 0.0 -1.0', 'vector 0 0 -1'), _tok(6, '0', '0.0')),
++    'stl_name': (_rep('file Drum.stl', 'file drum.stl'), _tok(5, 'drum.stl', 'Drum.stl')),
++    'mesh_type_spelling': (_rep('type 4 scale', 'type 04 scale', -1), _tok(7, '04', '4')),
++    'density_decimal': (_rep('density constant 4850 radius constant 0.0006813', 'density constant 4850.0 radius constant 0.0006813'),
++                        _tok(9, '4850.0', '4850')),
++    'pdd_fraction_spelling': (_rep('pt1 0.700000', 'pt1 0.7000000'), _tok(7, '0.7000000', '0.700000')),
++    'ins_hi_zlo': (lambda s: re.sub(r'(?m)^(region ins_hi block (?:\S+ ){4})\S+', r'\g<1>-0.00400000', s), _tok(7, '-0.00400000', '-0.00528143')),
++    'thermo_exp_spelling': (_rep('thermo 5000', 'thermo 5e3'), _tok(1, '5e3', '5000')),
++    'thermo_style_extra': (_rep('thermo_style custom step atoms ke c_rke vol', 'thermo_style custom step atoms ke c_rke vol press'),
++                           _tok(7, 'press', '(end)')),
++    'thermo_norm_yes': (_rep('thermo_modify lost ignore norm no', 'thermo_modify lost ignore norm yes'), _tok(4, 'yes', 'no')),
++    'communicate_multi': (_rep('communicate     single vel yes', 'communicate     multi vel yes'), _tok(1, 'multi', 'single')),
++    'atom_modify_hash': (_rep('atom_modify     map array sort 0 0', 'atom_modify     map hash sort 0 0'), _tok(2, 'hash', 'array')),
++    'restart_spelling': (lambda s: re.sub(r'(?m)^restart (\d+) ', r'restart 0\1 ', s), _tok(1, '0200000', '200000')),
++    'restart_files': (_rep('restart/a.bin restart/b.bin', 'restart/a.bin restart/a.bin'), _tok(3, 'restart/a.bin', 'restart/b.bin')),
++    'write_restart_path': (_rep('write_restart restart/settled.bin', 'write_restart restart/s.bin'), _tok(1, 'restart/s.bin', 'restart/settled.bin')),
++    'dump_every_spelling': (lambda s: re.sub(r'(?m)^(dump dmp all custom )(\d+)', r'\g<1>0\2', s), _tok(4, '032976', '32976')),
++    'dump_path': (_rep('post/mix_*.liggghts', 'post/x_*.liggghts'), _tok(5, 'post/x_*.liggghts', 'post/mix_*.liggghts')),
++    'dump_columns': (_rep('fx fy fz radius', 'fx fy fz'), _tok(17, '(end)', 'radius')),
++    'move_axis_spelling': (_rep('axis 1. 0. 0.', 'axis 1.0 0.0 0.0', -1), _tok(12, '1.0', '1.')),
++    'origin_spelling': (_rep('origin 0 0 0', 'origin 0.0 0 0', -1), _tok(8, '0.0', '0')),
++    'period_spelling': (_rep('period 0.782508', 'period 0.7825080', -1), _tok(16, '0.7825080', '0.782508')),
++    'fix_id_material': (_rep('fix m9 all property/global', 'fix m6 all property/global'), _tok(1, 'm6', 'm9')),
++    'fix_id_walls': (_rep('fix walls all wall/gran', 'fix wall all wall/gran'), _tok(1, 'wall', 'walls')),
++    'fix_id_integrator': (_rep('fix integrS all nve/sphere', 'fix integr all nve/sphere'), _tok(1, 'integr', 'integrS')),
++    'template_id': (lambda s: s.replace('fix pt1 ', 'fix ptA ').replace('pt1 0.700000', 'ptA 0.700000'), _tok(1, 'ptA', 'pt1')),
++    'region_id_rename': (lambda s: s.replace('region ins_reg ', 'region ins_cyl ').replace('region ins_reg particles_in_region',
++                                                                                          'region ins_cyl particles_in_region'),
++                         _tok(1, 'ins_cyl', 'ins_reg')),
++    'mesh_id_rename': (lambda s: s.replace('fix Front all mesh/surface', 'fix Fr all mesh/surface')
++                       .replace('meshes Drum Front Back', 'meshes Drum Fr Back').replace('mesh Front rotate', 'mesh Fr rotate'),
++                       _tok(1, 'Fr', 'Front')),
++    'dump_id_rename': (_rep('dump dmp all custom', 'dump d1 all custom'), _tok(1, 'd1', 'dmp')),
++    'pdd_entry_order': (_rep('pt1 0.700000 pt2 0.300000', 'pt2 0.300000 pt1 0.700000'), _tok(6, 'pt2', 'pt1')),
++    'template_order': (_swap('fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813',
++                             'fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028'),
++                       _tok(1, 'pt2', 'pt1')),
++    'global_order': (_swap('newton          off', 'communicate     single vel yes'), _tok(0, 'communicate', 'newton')),
++    'global_duplicate': (_rep('boundary        f f f\n', 'boundary        f f f\nboundary        f f f\n'), _tok(0, 'boundary', 'newton')),
++    'atom_modify_removed': (_rep('atom_modify     map array sort 0 0\n', ''), _tok(0, 'hard_particles', 'atom_modify')),
++    'thermo_style_removed': (_rep('thermo_style custom step atoms ke c_rke vol\n', ''), _tok(0, 'thermo', 'thermo_style')),
++    'compute_extra': (_rep('compute rke all erotate/sphere', 'compute rke all erotate/sphere\ncompute kx all ke'),
++                      _tok(0, 'compute', 'thermo_style')),
++    'shell_order': (_swap('shell mkdir post\n', 'shell mkdir restart\n'), _tok(2, 'restart', 'post')),
++    'baffle_mesh': (lambda s: (s.replace('fix Back  all mesh/surface file Back.stl  type 4 scale 0.0251665',
++                                         'fix Back  all mesh/surface file Back.stl  type 4 scale 0.0251665\n'
++                                         'fix Baffle all mesh/surface file Baffles.stl type 4 scale 0.0251665', 1)
++                               .replace('mesh n_meshes 3 meshes Drum Front Back', 'mesh n_meshes 4 meshes Drum Front Back Baffle', 1)
++                               .replace('fix mvB all move/mesh mesh Back  rotate origin 0 0 0 axis 1. 0. 0. period 0.782508',
++                                        'fix mvB all move/mesh mesh Back  rotate origin 0 0 0 axis 1. 0. 0. period 0.782508\n'
++                                        'fix mvBf all move/mesh mesh Baffle rotate origin 0 0 0 axis 1. 0. 0. period 0.782508', 1)),
++                    _tok(1, 'Baffle', 'walls')),
++    # 11-03 밤 Q4 — skin 자유 칸을 없앴다: 사유가 'neighbor skin: ASCII …' (자유 칸 수 검사) → 생성기 토큰 대조로 바뀐다 (거부는 전과 같음)
++    'neighbor_garbage_skin': (lambda s: re.sub(r'(?m)^(neighbor\s+)\S+ bin$', r'\g<1>7.57e-05x bin', s), _tok(1, '7.57e-05x', '7.57e-05')),
++    # 사전 공격 변이 M30 생존 (11-03) — 마지막 run 뒤에 붙인 명령은 차례 대조 (zip) 가 못 본다 → 개수 대조를 시험에 묶는다
++    'command_appended_at_end': (lambda s: s + 'compute kx all ke\n', 'command count'),
++}
++#: MXD2R-04 문자 꼴 — 우리 파서와 LIGGGHTS 가 다른 토큰을 읽을 수 있거나 (주석 끝 '&' + 유니코드 공백 · 주석 안 NUL · 따옴표 · $) 같은 토큰을
++#:   다른 글자로 쓴 꼴 (탭 · NBSP · 전각 공백 · 폭 없는 공백 · 이음 꼴 · 끝 줄바꿈).  고치기 전 세 소비자 PASS.
++MXD2R04_PARSER = {
++    'tab_separator': (_rep('boundary        f f f', 'boundary\tf f f'), _CTRL),
++    'nbsp_separator': (_rep('boundary        f f f', 'boundary        f f f'), _ASCII),
++    'ideographic_space': (_rep('newton          off', 'newton　off'), _ASCII),
++    'zero_width_space': (_rep('boundary        f f f', 'boundary        f f f​'), _ASCII),
++    'nul_in_comment_before_rotation': (_rep('# ② 회전', '# ②\u0000 회전'), _CTRL),
++    'comment_continuation_nbsp': (_rep('neigh_modify    delay 0\n', 'neigh_modify    delay 0\n# note & \nneigh_modify exclude type 3 3\n'),
++                                  _CONT),
++    'comment_continuation_ideographic': (_rep('neigh_modify    delay 0\n',
++                                              'neigh_modify    delay 0\n# note &　\nneigh_modify exclude type 3 3\n'), _CONT),
++    'comment_continuation_nel': (_rep('neigh_modify    delay 0\n', 'neigh_modify    delay 0\n# note &\u0085\nneigh_modify exclude type 3 3\n'),
++                                 _CTRL),
++    'continuation_no_space': (_rep('coefficientFriction peratomtypepair 4 &', 'coefficientFriction peratomtypepair 4&'), _CONT),
++    'continuation_trailing_space': (_rep('coefficientFriction peratomtypepair 4 &', 'coefficientFriction peratomtypepair 4 & '), _CONT),
++    'dollar_variable': (_rep('thermo 5000', 'thermo ${every}'), _ASCII),
++    'missing_final_newline': (lambda s: s[:-1], _EOL),
++    'dump_modify_quoted_format': (_rep('\n# ① 채우고 정착', '\ndump_modify dmp format "%d %d %g %g %g %g %g %g %g %g %g %g"\n# ① 채우고 정착'),
++                                  _ASCII),
++    # 사전 공격 변이 M25 생존 (11-03) — 주석 줄 끝 ' &' (두 파서 모두 다음 줄을 주석으로 삼킨다 · 생성기 꼴 밖) → 주석 줄 이음 금지를 묶는다
++    'comment_continuation_ascii': (_rep('neigh_modify    delay 0\n', 'neigh_modify    delay 0\n# note &\nneigh_modify exclude type 3 3\n'), _CONT),
++}
++
++
++def _set_meta(path, value):
++    """메타 한 칸 고치기 (value = 상수 또는 (meta, deck) → 값)."""
++    def edit(meta, deck):
++        node = meta
++        for part in path[:-1]:
++            node = node[part]
++        node[path[-1]] = value(meta, deck) if callable(value) else value
++    return edit
++
++
++def _seed_edit(new_seed):
++    """첫 삽입 시드 (덱) + 메타 seed 를 같이 — 소수 · 상한 규칙만 남는 차이."""
++    return (lambda s: s.replace('insert/pack seed 32452843 ', f'insert/pack seed {new_seed} ', 1)), _set_meta(('seed',), new_seed)
++
++
++def _steps_edit(fill_delta=0, dump_new=None, restart_new=None):
++    """정착 step · dump · restart 간격을 덱에서 바꾸고 메타의 시간 칸 (steps · physical_s · t0) 을 전부 맞춘다."""
++    def deck(s):
++        if fill_delta:
++            fill = int(re.search(r'(?m)^run (\d+)\nunfix', s).group(1))
++            s = s.replace(f'run {fill}\n', f'run {fill + fill_delta}\n')
++        if dump_new:
++            s = re.sub(r'(?m)^(dump dmp all custom )\d+', r'\g<1>' + str(dump_new), s)
++        if restart_new:
++            s = re.sub(r'(?m)^restart \d+ ', f'restart {restart_new} ', s)
++        return s
++
++    def meta_edit(meta, deck_text):
++        steps, physical, dt = meta['steps'], meta['physical_s'], meta['dt']['deck_s']
++        steps['fill'] += fill_delta
++        steps['dump_every'] = dump_new or steps['dump_every']
++        steps['restart_every'] = restart_new or steps['restart_every']
++        steps['t0_planned'] = (2 * steps['fill'] // steps['dump_every']) * steps['dump_every']
++        physical.update(settle=2 * steps['fill'] * dt, dump_interval=steps['dump_every'] * dt, t0_planned=steps['t0_planned'] * dt)
++    return deck, meta_edit
++#: 실제 파일 바이트로도 보는 문자 꼴 (CLI 셋)
++MXD2R04_PARSER_CLI = ('tab_separator', 'nul_in_comment_before_rotation', 'comment_continuation_nbsp', 'missing_final_newline')
++#: MXD2R-04 범위 넓힘 (1저자 11-03 밤 Q4 = 권고대로) — neighbor skin 도 생성기 꼴 (min(지름)·0.5 의 .6g = 7.57e-05 @ CGF 151.4).
++#:   두 덱에 같이 바꾼 skin (값 · 같은 값 다른 표기) — 고치기 전 (skin = 자유 칸이던 MXD2R-04 첫 판) 세 소비자 PASS = 남은 같은 부류였다.
++MXD2R04_SKIN = {
++    'skin_x1p1_repr': (_rep('neighbor        7.57e-05 bin', 'neighbor        8.327000000000001e-05 bin'),
++                       _tok(1, '8.327000000000001e-05', '7.57e-05')),
++    'skin_x1p1_g6': (_rep('neighbor        7.57e-05 bin', 'neighbor        8.327e-05 bin'), _tok(1, '8.327e-05', '7.57e-05')),
++    'skin_doubled': (_rep('neighbor        7.57e-05 bin', 'neighbor        0.0001514 bin'), _tok(1, '0.0001514', '7.57e-05')),
++    'skin_am_radius': (_rep('neighbor        7.57e-05 bin', 'neighbor        0.0006813 bin'), _tok(1, '0.0006813', '7.57e-05')),
++    'skin_tiny': (_rep('neighbor        7.57e-05 bin', 'neighbor        1e-09 bin'), _tok(1, '1e-09', '7.57e-05')),
++    'skin_same_value_decimal': (_rep('neighbor        7.57e-05 bin', 'neighbor        0.0000757 bin'), _tok(1, '0.0000757', '7.57e-05')),
++    'skin_same_value_padded': (_rep('neighbor        7.57e-05 bin', 'neighbor        7.570e-05 bin'), _tok(1, '7.570e-05', '7.57e-05')),
++}
++MXD2R04_SKIN_CLI = ('skin_x1p1_repr', 'skin_same_value_decimal')
++
++
++def _write_case(folder, old, new, old_meta, new_meta):
++    """Deck files are written as exact bytes (MXD2R-03: the CLI hashes physical bytes — text-mode writes would be CRLF on Windows)."""
++    folder = Path(folder)
++    for name, deck in (('old.in', old), ('new.in', new)):
++        (folder / name).write_bytes(deck if isinstance(deck, bytes) else deck.encode('utf-8'))
++    for name, meta in (('old.json', old_meta), ('new.json', new_meta)):
++        (folder / name).write_text(json.dumps(meta), encoding='utf-8')
++
++
++def _run_three_cli(folder):
++    """Real CLIs of the three development consumers → {consumer: (rc, stdout, stderr)}."""
++    folder, scripts = Path(folder), Path(__file__).resolve().parent
++    commands = {'readback': ['mixer_deck_readback.py', '--d2', str(folder / 'old.in'), str(folder / 'old.json')],
++                'pair': ['mixer_deck_diff.py', str(folder / 'old.in'), str(folder / 'new.in'), '--allow', 'D2',
++                         '--meta-ref', str(folder / 'old.json'), '--meta-new', str(folder / 'new.json')],
++                'plan': ['mixer_smoke_blind.py', '--d2-plan', str(folder / 'old.in'), '--d2-meta', str(folder / 'old.json')]}
++    out = {}
++    for key, cmd in commands.items():
++        proc = subprocess.run([sys.executable, '-I', '-X', 'utf8', '-B', str(scripts / cmd[0]), *cmd[1:]], capture_output=True)
++        out[key] = (proc.returncode, proc.stdout.decode('utf-8', 'replace'), proc.stderr.decode('utf-8', 'replace'))
++    return out
++
++
+ class D2Consumers(unittest.TestCase):
+     def assert_pass(self, result):
+         self.assertEqual(result['verdict'], 'PASS', result.get('failures'))
+@@ -196,7 +507,13 @@ class D2Consumers(unittest.TestCase):
+         i=next(i for i,line in enumerate(lines) if line.startswith('neighbor'))
+         tokens=lines[i].split();tokens[1]=str(float(tokens[1])*1.1);lines[i]=' '.join(tokens)
+         changed='\n'.join(lines)+'\n'
+-        self.assert_pass(rb.read_d2(changed,rebound(changed,other[1])))
++        # ★ 기대 바꿈 (MXD2R-04 범위 넓힘 · 1저자 11-03 밤 Q4 = 권고대로 · 이유 = (가) 원리 (생성기 자신의 꼴만) · 같은 부류 예외 제거):
++        #   옛 기대 = 한쪽 덱의 neighbor skin ×1.1 → 단일 덱 readback PASS (skin = 단일 덱 계약 밖 · 짝 대조만 FAIL) — 그래서 두 덱에 같이
++        #   바꾼 skin 은 세 소비자 PASS 였다 (남은 같은 부류).  새 기대 = 단일 덱도 FAIL (skin = 생성기 값 min(지름)·0.5 의 .6g) · 짝도 FAIL.
++        #   증거 docs/reviews/mxd2r_fix_evidence_20261103/mxd2r04/README.md §9 (옛 기대 → 새 기대 표).
++        single = rb.read_d2(changed,rebound(changed,other[1]))
++        self.assert_fail(single)
++        self.assertTrue(any(_tok(1, tokens[1], '7.57e-05') in f for f in single['failures']), single['failures'])
+         self.assert_fail(dd.diff_d2_decks(text,changed,meta,rebound(changed,other[1])))
+ 
+     def test_command_lifecycle(self):
+@@ -248,7 +565,8 @@ class D2Consumers(unittest.TestCase):
+         with tempfile.TemporaryDirectory() as temp:
+             b=Path(temp);a,am,_=fixture();c,cm,_=fixture(coated=True)
+             for name,text,meta in [('a',a,am),('b',c,cm)]:
+-                (b/(name+'.in')).write_text(text);(b/(name+'.json')).write_text(json.dumps(meta))
++                # MXD2R-03: the CLI hashes physical bytes — write exact LF bytes (text-mode write = CRLF on Windows)
++                (b/(name+'.in')).write_bytes(text.encode('utf-8'));(b/(name+'.json')).write_text(json.dumps(meta))
+             scripts=Path(__file__).resolve().parent
+             commands=[['mixer_deck_readback.py','--d2',str(b/'a.in'),str(b/'a.json')],
+                       ['mixer_deck_diff.py',str(b/'a.in'),str(b/'b.in'),'--allow','D2','--meta-ref',str(b/'a.json'),'--meta-new',str(b/'b.json')],
+@@ -263,6 +581,238 @@ class D2Consumers(unittest.TestCase):
+                 self.assertNotEqual(p.returncode,0)
+                 self.assertNotIn('Traceback',p.stderr)
+ 
++    # ── MXD2R (Codex 10-27 · 1저자 11-02 Q1–Q3 (가)) — 반례를 고치기 전에 옮겼다 ─────────────────────────────────
++    def _common_mode(self, transform, reason, cli=False):
++        """Same mutation in both decks, metadata hash/bytes rebound → all three consumers must reject for `reason`."""
++        a, am, _ = fixture(); b, bm, _ = fixture(coated=True)
++        aa, bb = transform(a), transform(b)
++        self.assertNotEqual(aa, a); self.assertNotEqual(bb, b)
++        ma, mb = rebound(aa, am), rebound(bb, bm)
++        results = {'readback': rb.read_d2(aa, ma), 'pair': dd.diff_d2_decks(aa, bb, ma, mb), 'plan': smoke.d2_plan_check(aa, ma)}
++        for key, result in results.items():
++            with self.subTest(api=key):
++                self.assert_fail(result)
++                self.assertTrue(any(reason in failure for failure in result['failures']), (key, reason, result['failures']))
++        if cli:
++            with tempfile.TemporaryDirectory() as temp:
++                _write_case(temp, aa, bb, ma, mb)
++                for key, (rc, out, err) in _run_three_cli(temp).items():
++                    with self.subTest(cli=key):
++                        self.assertEqual(rc, 1, out + err)
++                        self.assertIn(reason, out)
++                        self.assertNotIn('Traceback', err)
++
++    def test_mxd2r01_codex_time_insert_rotation(self):
++        """MXD2R-01 — Codex 네 공통 변조 (run upto · 늦은 timestep · 삽입 start · Front 주기): API 셋 FAIL · CLI 셋 rc 1 · 사유."""
++        for name in ('run_upto', 'late_timestep', 'insert_start_late', 'front_period'):
++            with self.subTest(case=name):
++                self._common_mode(*CODEX_COMMON_MODE[name], cli=True)
++
++    def test_mxd2r01_same_class_generator_grammar(self):
++        """MXD2R-01 같은 부류 — run 옵션 · timestep 위치/토큰 · 삽입 반복/start/속도 · Back 주기 (API 셋)."""
++        for name, (transform, reason) in MXD2R01_SAME_CLASS.items():
++            with self.subTest(case=name):
++                self._common_mode(transform, reason)
++
++    def test_mxd2r02_codex_contact_exclusion_and_friction(self):
++        """MXD2R-02 — Codex SE–SE 접촉 제외 · 보조 탐침 마찰 행렬 삭제: API 셋 FAIL · CLI 셋 rc 1 · 사유."""
++        for name in ('exclude_SE_SE', 'friction_missing'):
++            with self.subTest(case=name):
++                self._common_mode(*CODEX_COMMON_MODE[name], cli=True)
++
++    def test_mxd2r02_same_class_contact_and_materials(self):
++        """MXD2R-02 같은 부류 — 다른 제외 · 이웃 갱신 옵션 · 재료 fix 결손/중복/값/순서/모르는 이름 · pair 위치/계수 (API 셋)."""
++        for name, (transform, reason) in MXD2R02_SAME_CLASS.items():
++            with self.subTest(case=name):
++                self._common_mode(transform, reason)
++
++    def test_mxd2r02_material_copies_match_generator(self):
++        """재료 fix 목록 · 상수 = 생성기 덱에서 뽑은 것과 정확히 같다 (사본이 갈리면 여기서 드러난다 · fail-closed)."""
++        text, _, _ = fixture()
++        names = [t[4] for t in (line.split() for line in text.splitlines())
++                 if len(t) > 4 and t[0] == 'fix' and t[3] == 'property/global']
++        self.assertEqual(sorted(names), sorted(rb.D2_MATERIAL))
++        self.assertEqual(rb.D2_MATERIAL['coefficientRestitution'][1], gen.COR)
++        self.assertEqual(rb.D2_MATERIAL['coefficientFriction'][1], gen.MU_S)
++        self.assertEqual(rb.D2_MATERIAL['coefficientRollingFriction'][1], gen.MU_R)
++        self.assertIn('fix m9 all property/global characteristicVelocity scalar 2.0\n', text)
++        self.assertEqual(rb.D2_MATERIAL['characteristicVelocity'], ('scalar', 2.0))
++
++    def test_mxd2r03_physical_bytes_api(self):
++        """MXD2R-03 — API 가 실제 파일 바이트를 받는다: LF 바이트 PASS · CRLF+LF 메타 = SHA 사유 · CRLF+CRLF 메타 (바이트 · 텍스트) = LF-only 사유."""
++        a, am, _ = fixture(); b, bm, _ = fixture(coated=True)
++        ca, cb = a.replace('\n', '\r\n').encode(), b.replace('\n', '\r\n').encode()
++        cam, cbm = rebound_bytes(ca, am), rebound_bytes(cb, bm)
++        for key, result in {'readback': rb.read_d2(a.encode(), am), 'pair': dd.diff_d2_decks(a.encode(), b.encode(), am, bm),
++                            'plan': smoke.d2_plan_check(a.encode(), am)}.items():
++            with self.subTest(lf_bytes=key):
++                self.assert_pass(result)
++        for key, result in {'readback': rb.read_d2(ca, am), 'pair': dd.diff_d2_decks(ca, cb, am, bm),
++                            'plan': smoke.d2_plan_check(ca, am)}.items():
++            with self.subTest(crlf_bytes_lf_meta=key):
++                self.assert_fail(result)
++                self.assertTrue(any('SHA256' in f for f in result['failures']), result['failures'])
++        for key, result in {'readback': rb.read_d2(ca, cam), 'pair': dd.diff_d2_decks(ca, cb, cam, cbm),
++                            'plan': smoke.d2_plan_check(ca, cam), 'readback_text': rb.read_d2(ca.decode(), cam),
++                            'pair_text': dd.diff_d2_decks(ca.decode(), cb.decode(), cam, cbm)}.items():
++            with self.subTest(crlf_crlf_meta=key):
++                self.assert_fail(result)
++                self.assertTrue(any('LF-only' in f for f in result['failures']), result['failures'])
++
++    def test_mxd2r03_physical_bytes_cli_both_directions(self):
++        """MXD2R-03 — 세 CLI: LF 바이트 rc 0 · CRLF 덱 + LF 메타 rc 1 (SHA) · CRLF 덱 + CRLF 메타 rc 1 (LF-only 사유)."""
++        a, am, _ = fixture(); b, bm, _ = fixture(coated=True)
++        ca, cb = a.replace('\n', '\r\n').encode(), b.replace('\n', '\r\n').encode()
++        cases = [('lf', (a.encode(), b.encode(), am, bm), 0, '개발'),
++                 ('crlf_lf_meta', (ca, cb, am, bm), 1, 'SHA256'),
++                 ('crlf_crlf_meta', (ca, cb, rebound_bytes(ca, am), rebound_bytes(cb, bm)), 1, 'LF-only')]
++        with tempfile.TemporaryDirectory() as temp:
++            for label, decks, rc_want, reason in cases:
++                folder = Path(temp) / label
++                folder.mkdir()
++                _write_case(folder, *decks)
++                for key, (rc, out, err) in _run_three_cli(folder).items():
++                    with self.subTest(case=label, cli=key):
++                        self.assertEqual(rc, rc_want, out + err)
++                        self.assertIn(reason, out)
++                        self.assertNotIn('Traceback', err)
++
++    def test_mxd2r_positive_codex_independent_48(self):
++        """양성 보존 (판정문 §7 (4)) — Codex 독립 정상 48 조합: 세 소비자 PASS · SE Bo · 상별 계획수 독립 산술 일치 · 증서 아님."""
++        seen = 0
++        for phases, generation, rho, stiff, layered in itertools.product(
++                [('AM_P', 'AM_S', 'SE'), ('AM_P', 'SE')], ['gen1', 'lab20261014'], [.2, 1., 2.], [1., 20.], [True, False]):
++            with self.subTest(phases=phases, gen=generation, rho=rho, stiff=stiff, layered=layered):
++                kw = dict(phases=phases, generation=generation, rho=rho, stiff=stiff, layered=layered, n=90007, cgf=135, bo=1.1, seed=49979687)
++                a, am, _ = fixture(**kw); b, bm, _ = fixture(coated=True, **kw)
++                result = rb.read_d2(a, am)
++                for r in (result, dd.diff_d2_decks(a, b, am, bm), smoke.d2_plan_check(a, am)):
++                    self.assert_pass(r)
++                raw = rb.read_deck(a); se = len(phases)
++                rad, dens = raw['templates'][se]['radius'], raw['templates'][se]['density']
++                E, nu = raw['E'][se - 1], raw['nu'][se - 1]
++                es, rs, ced = E / (2 * (1 - nu * nu)), rad / 2, raw['ced'][se, se]
++                bo = ((2 * math.pi * rs * ced) ** 3 / ((4 / 3) * es * math.sqrt(rs)) ** 2) / ((4 / 3) * math.pi * rad ** 3 * dens * 9.81)
++                self.assertLess(abs(bo / 1.1 - 1), 2e-5)
++                d0 = {'gen1': {'AM': 4800, 'SE': 2000}, 'lab20261014': {'AM': 4850, 'SE': 1640}}[generation]
++                nr = [{'AM_P': 56, 'AM_S': 24, 'SE': 18}[p] / (d0['SE' if p == 'SE' else 'AM'] * ({'AM_P': 9, 'AM_S': 4, 'SE': 1}[p] ** 3))
++                      for p in phases]
++                self.assertEqual(list(result['expected_counts'].values()), [round(90007 * x / sum(nr)) for x in nr])
++                seen += 1
++        self.assertEqual(seen, 48)
++
++    # ── MXD2R-04 (11-03 사전 공격 · 1저자 11-03 Q1 = 권고대로 — 공통 변조 17 도 생성기 꼴로) — 반례를 고치기 전에 옮겼다 ──────────────
++    def test_mxd2r04_outside_scope_17_api_and_cli(self):
++        """MXD2R-04 — 사전 공격이 보고한 범위 밖 공통 변조 17 (전역 설정 · 템플릿 뒤 옵션 · 따옴표 # · RNG 시드 · 기하 · 출력 · 체크포인트):
++        API 셋 FAIL · CLI 셋 rc 1 · 사유 = 첫 어긋난 토큰 ↔ 생성기 토큰 (따옴표 = 문자 꼴)."""
++        self.assertEqual(len(MXD2R04_OUTSIDE_17), 17)
++        for name, (transform, reason) in MXD2R04_OUTSIDE_17.items():
++            with self.subTest(case=name):
++                self._common_mode(transform, reason, cli=True)
++
++    def test_mxd2r04_same_class_spelling_identity_order(self):
++        """MXD2R-04 같은 부류 — 같은 값 다른 표기 · 생성기 이름 · 순서 · 중복 · 결손 · 배플 · 출력 · 체크포인트 · skin 토큰 꼴 (API 셋)."""
++        for name, (transform, reason) in MXD2R04_SAME_CLASS.items():
++            with self.subTest(case=name):
++                self._common_mode(transform, reason)
++
++    def test_mxd2r04_parser_equivalence_characters(self):
++        """MXD2R-04 문자 꼴 — 탭 · NBSP · 전각 · 폭 없는 공백 · 주석 안 NUL · 주석 끝 '&'+유니코드 공백 · 이음 꼴 · $ · 따옴표 · 끝 줄바꿈
++        (API 셋 · 넷은 실제 파일 바이트로 CLI 셋)."""
++        for name, (transform, reason) in MXD2R04_PARSER.items():
++            with self.subTest(case=name):
++                self._common_mode(transform, reason, cli=name in MXD2R04_PARSER_CLI)
++
++    def test_mxd2r04_timestep_spelling_with_metadata(self):
++        """같은 값 다른 timestep 표기를 메타 deck_txt 에도 같이 넣은 덱 (k = 1 · 2 · 3) — 메타 결합만으로는 못 잡는다 → 생성기 표기로 거부."""
++        for factor in (1., .5, 1 / 3):
++            with self.subTest(dt_factor=factor):
++                a, am, _ = fixture(dt_factor=factor); b, bm, _ = fixture(coated=True, dt_factor=factor)
++                old = re.search(r'(?m)^timestep\s+(\S+)$', a).group(1)
++                mantissa, exponent = old.split('e')
++                new = mantissa + ('0' if '.' in mantissa else '.0') + 'e' + exponent
++                self.assertEqual(float(new), float(old)); self.assertNotEqual(new, old)
++                aa, bb = (x.replace('timestep        ' + old + '\n', 'timestep        ' + new + '\n') for x in (a, b))
++                self.assertNotEqual(aa, a)
++                ma, mb = rebound(aa, am), rebound(bb, bm)
++                for meta in (ma, mb):
++                    meta['dt']['deck_txt'] = new
++                for key, result in {'readback': rb.read_d2(aa, ma), 'pair': dd.diff_d2_decks(aa, bb, ma, mb),
++                                    'plan': smoke.d2_plan_check(aa, ma)}.items():
++                    with self.subTest(api=key):
++                        self.assert_fail(result)
++                        self.assertTrue(any(_tok(1, new, old) in f for f in result['failures']), result['failures'])
++
++    def test_mxd2r04_neighbor_skin_generator_form(self):
++        """MXD2R-04 범위 넓힘 (1저자 11-03 밤 Q4) — 두 덱에 같이 바꾼 neighbor skin (×1.1 · ×2 · AM 반지름 · 1e-9 · 같은 값 다른 표기):
++        API 셋 FAIL · 둘은 CLI 셋 rc 1 · 사유 = 생성기 skin 토큰 (min(지름)·0.5 · .6g).  다른 CGF 의 생성기 skin 은 기존 양성 시험이 지킨다."""
++        for name, (transform, reason) in MXD2R04_SKIN.items():
++            with self.subTest(case=name):
++                self._common_mode(transform, reason, cli=name in MXD2R04_SKIN_CLI)
++
++    def test_mxd2r04_metadata_coordinated_rules(self):
++        """MXD2R-04 — 메타까지 같이 바꾼 덱 (해시 재결합 + 메타가 덱과 같은 말 → 메타 결합으로는 못 잡는다): 합성수 시드 · 2^31−1 넘는 소수
++        시드 · k 배가 아닌 정착 step · 규칙 밖 dump · restart 간격 · 전 정밀도 형식 메타 ↔ 생성기 (사전 공격 변이 M28 · M32–M35 생존 → 묶음)."""
++        cases = {
++            'seed_composite': ({}, *_seed_edit(32452845), 'insertion seed must be a prime'),
++            'seed_prime_over_int32': ({}, *_seed_edit(gen._next_prime(2 ** 31)), 'insertion seed must be a prime'),
++            'settle_not_multiple_of_k': (dict(dt_factor=.5), *_steps_edit(fill_delta=1), 'k × the generator plan'),
++            'dump_interval_off_rule': ({}, *_steps_edit(dump_new=33000), _tok(4, '33000', '32976')),
++            'restart_interval_off_rule': ({}, *_steps_edit(restart_new=150000), _tok(1, '150000', '200000')),
++            'dump_format_meta_only': (dict(dump_full_precision=True), lambda s: s,
++                                      _set_meta(('dump_modify_format',), '%d %d' + ' %.16g' * 10),
++                                      'metadata dump_modify_format'),
++        }
++        for name, (kw, deck_edit, meta_edit, reason) in cases.items():
++            with self.subTest(case=name):
++                a, am, _ = fixture(**kw); b, bm, _ = fixture(coated=True, **kw)
++                aa, bb = deck_edit(a), deck_edit(b)
++                ma, mb = rebound(aa, am), rebound(bb, bm)
++                meta_edit(ma, aa); meta_edit(mb, bb)
++                self.assertNotEqual((aa, ma), (a, am))
++                for key, result in {'readback': rb.read_d2(aa, ma), 'pair': dd.diff_d2_decks(aa, bb, ma, mb),
++                                    'plan': smoke.d2_plan_check(aa, ma)}.items():
++                    with self.subTest(api=key):
++                        self.assert_fail(result)
++                        self.assertTrue(any(reason in f for f in result['failures']), (key, reason, result['failures']))
++
++    def test_mxd2r04_positive_generator_options(self):
++        """양성 보존 — 생성기 꼴 엄격이 생성기 출력 (전 정밀도 덤프 · dt/3 · 다른 Froude · 다른 소수 시드 · 균일 · 층상 · 2 · 3 상) 을 받는다."""
++        options = [dict(dump_full_precision=True), dict(dump_full_precision=True, layered=False, phases=('AM_P', 'SE')),
++                   dict(dt_factor=1 / 3), dict(dt_factor=.25, layered=False), dict(fr=.06), dict(fr=.085, phases=('AM_P', 'SE')),
++                   dict(seed=91648301), dict(seed=15485863, layered=False), dict(n=8000, cgf=302.8, generation='gen1'),
++                   dict(stiff=1., rho=10., n=100001, cgf=75.7)]
++        for kw in options:
++            with self.subTest(**{k: str(v) for k, v in kw.items()}):
++                a, am, _ = fixture(**kw); b, bm, _ = fixture(coated=True, **kw)
++                for r in (rb.read_d2(a, am), dd.diff_d2_decks(a, b, am, bm), smoke.d2_plan_check(a, am),
++                          rb.read_d2(a.encode('utf-8'), am)):
++                    self.assert_pass(r)
++
++    def test_mxd2r04_copies_match_generator(self):
++        """MXD2R-04 사본 ↔ 생성기 — 전역 설정 줄 · 드럼 기본값 · 분포 시드 · 소수 규칙 · dump 열 · 전 정밀도 형식 · 템플릿 시드 · 시드 상한."""
++        text, _, _ = fixture()
++        commands = [t for _, t in rb.read_deck(text)['cmds']]
++        self.assertEqual([tuple(t) for t in commands[:7]], list(rb.D2_GLOBAL_FORM))
++        params = inspect.signature(gen.plan).parameters
++        self.assertEqual(rb.D2_DRUM, dict(fill=params['fill'].default, pack=params['pack'].default,
++                                          r_over_l=params['drum_r_over_l'].default))
++        self.assertEqual(rb.D2_DIST_SEED, (32452867, gen._next_prime(32452867 + 2)))
++        self.assertIn('fix pddA all particledistribution/discrete 32452867 2 &', text)
++        for n in (0, 1, 2, 3, 4, 24, 32452843, 32452845, 32452869, 49979688, 2 ** 31 - 2):
++            self.assertEqual(rb._d2_next_prime(n), gen._next_prime(n), n)
++        old = gen.TYPES
++        try:
++            for phases in (('AM_P', 'AM_S', 'SE'), ('AM_P', 'SE')):
++                gen.set_phases(phases)
++                self.assertEqual(rb.D2_DUMP_COLUMNS, gen.dump_columns())
++                self.assertEqual(rb.D2_DUMP_FORMAT, gen.dump_modify_format(gen.dump_columns()))
++        finally:
++            gen.set_phases(old)
++        self.assertEqual({p: s for s, p in rb.REG_TPL_SEED.items()}, {p: gen.TPL_SEED[p] for p in ('AM_P', 'AM_S', 'SE')})
++        self.assertEqual(rb.D2_MESHES, ('Drum', 'Front', 'Back'))
++        self.assertEqual(rb.D2_SEED_MAX, 2 ** 31 - 1)
++
+ 
+ if __name__ == '__main__':
+     unittest.main(verbosity=2)

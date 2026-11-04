@@ -1,0 +1,192 @@
+{
+  "python": "3.11.17 (main, Oct  3 2026, 01:05:36) [Clang 22.1.3 ]",
+  "executable": "/workspace/.venvs/yonghoon-dem/bin/python",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "head": "7b51e591e6482484d1b85b237dc0c73936fa96b6",
+  "thread_environment": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "sources_sha256": {
+    "scripts/check_contact_validity.py": "738bf397821a94697069308c9d7ebe54b3dfb61bbb19bb2f0c7be6e6f6df60c1",
+    "scripts/make_mixer_deck.py": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "scripts/make_mixer_resume.py": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e",
+    "scripts/measure_bed_aspect.py": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880",
+    "scripts/measure_mixing_index.py": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a",
+    "scripts/mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "scripts/mixer_deck_readback.py": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f",
+    "scripts/mixer_gate_reader_diff.py": "3fdb1511cf3898add705bfef4216d9d2068d7489f08cdea0496a0cd8bc501f72",
+    "scripts/mixer_restart_phase_test.py": "d9093a2830e664be4dc4c4f73d5f58b0e87da29bc152ff873aaa599ee4bee24a",
+    "scripts/mixer_smoke_blind.py": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24",
+    "scripts/mixer_stage_gate.py": "e62df852d6cdeb031a7d5ff6418eee2477f5e00df8fae91fdd7758f3cafb21f5",
+    "scripts/test_mixer_d2_consumers.py": "2e0a1235a4f3879cf5a128cf16728ac89bef29785f4895d9775d493a46da6ccc",
+    "docs/reviews/mxd2r_fix_evidence_20261103/mxd2r04/tools/preattack_probe_v3.py": "db27cf83f403c5bf0d22d2d572bdc0f76232618aca174be33bc3de72909fd864",
+    "docs/reviews/mxd2r_fix_evidence_20261103/mxd2r04/tools/positive_extra.py": "35fa44f9ee5576461eb6064c17a0415faf0dcbff035cec6fd1b450a64b160736",
+    "docs/reviews/mxd2r_fix_evidence_20261103/mxd2r04/tools/mutation_check_v4.py": "e1f9dcea1eaa1d06b31769b8e1e31cd562632230f1105c6411d3cfc3daafc03d",
+    "docs/reviews/mxd2r_fix_evidence_20261103/mxd2r04/tools/mutation_check_v3.py": "b3918c529cc6a604ec753f8481d678ab139d0fe7ee56457d199e1b6a046c5083",
+    "docs/reviews/mxd2r_fix_evidence_20261103/tools/mutation_check.py": "cdc28940242156ff491223396952cc61353fede81c9ff808faeca3e823edc40d",
+    "docs/reviews/mxd2r_fix_evidence_20261103/tools/preattack_outside_scope.py": "f6dc46881926890323fe58ad93383d18c5575a35218139edd85b47c744eb1d0b",
+    "docs/reviews/codex_mixer_d2_review_20261027/_repro_ours_20261030/tools/run_d2_cli_cases.py": "f45aee6bf145511b0b3fa1b2dde2cc28788d27554d21bd33feb8f7f880a5a206"
+  },
+  "commands": [
+    {
+      "name": "d2_consumers",
+      "argv": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "scripts/test_mixer_d2_consumers.py"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 26.009,
+      "log": "d2_consumers.log",
+      "log_sha256": "711233751a03e636127c8fc7e751e7978393d5c2a59c7603a0bde37a4615a372"
+    },
+    {
+      "name": "readback_selftest",
+      "argv": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "scripts/mixer_deck_readback.py",
+        "--selftest"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 0.471,
+      "log": "readback_selftest.log",
+      "log_sha256": "6394905994643ad3bc6f6586dd760569f7995c1ab832926c36a52feede88e2e9"
+    },
+    {
+      "name": "diff_selftest",
+      "argv": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "scripts/mixer_deck_diff.py",
+        "--selftest"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 1.294,
+      "log": "diff_selftest.log",
+      "log_sha256": "4b5bdc4ad0cb360e6c1ab5525765bc048738f30663baed34f9079e9c0e9bc1f7"
+    },
+    {
+      "name": "smoke_selftest",
+      "argv": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "scripts/mixer_smoke_blind.py",
+        "--selftest"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 39.169,
+      "log": "smoke_selftest.log",
+      "log_sha256": "a070af830dfb232fad91ea7f3ef6b32bbfab24d624c12846e313683d03576cff"
+    },
+    {
+      "name": "external_cli_cases",
+      "argv": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "docs/reviews/codex_mixer_d2_review_20261027/_repro_ours_20261030/tools/run_d2_cli_cases.py",
+        "/workspace/nonrint-1104/mixer/scripts",
+        "/workspace/nonrint-1104/mixer/docs/reviews/codex_mixer_d2_review_20261027/d2/evidence/cases",
+        "current",
+        "/workspace/nonrint-1104/mixer/docs/reviews/mxd2r_recheck_evidence_20261104/current/external_cli_cases"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 4.492,
+      "log": "external_cli_cases.log",
+      "log_sha256": "6ddd694221df32ec71e3c3810cc60869db51e0b2bebdaf3fda18ca3d921ab850"
+    },
+    {
+      "name": "preattack_probe_v3",
+      "argv": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "docs/reviews/mxd2r_fix_evidence_20261103/mxd2r04/tools/preattack_probe_v3.py",
+        "/workspace/nonrint-1104/mixer/scripts",
+        "/workspace/nonrint-1104/mixer/docs/reviews/mxd2r_recheck_evidence_20261104/current/preattack_probe_v3.json"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 1.749,
+      "log": "preattack_probe_v3.log",
+      "log_sha256": "d410e5065d49ecce2acc8c8c653109794cf6a305900e80ceb021963c751e7d55"
+    },
+    {
+      "name": "outside_scope",
+      "argv": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "docs/reviews/mxd2r_fix_evidence_20261103/tools/preattack_outside_scope.py",
+        "/workspace/nonrint-1104/mixer/scripts",
+        "/workspace/nonrint-1104/mixer/docs/reviews/mxd2r_recheck_evidence_20261104/current/outside_scope.json"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 0.643,
+      "log": "outside_scope.log",
+      "log_sha256": "63394fefa29b3cc9a1377c75d5e135f4d5d7bb518021e665d74fd83161808a6b"
+    },
+    {
+      "name": "positive_extra",
+      "argv": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "docs/reviews/mxd2r_fix_evidence_20261103/mxd2r04/tools/positive_extra.py",
+        "/workspace/nonrint-1104/mixer/scripts"
+      ],
+      "rc": 0,
+      "elapsed_seconds": 0.669,
+      "log": "positive_extra.log",
+      "log_sha256": "a4df7703a770041623e2c5197208b405c3ec30b83caf8e6abd3513ae9c7c9dc7"
+    },
+    {
+      "name": "mutation_subset",
+      "argv": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "docs/reviews/mxd2r_fix_evidence_20261103/mxd2r04/tools/mutation_check_v4.py",
+        "/tmp/mxd2r-recheck-5__c_yaw/scripts",
+        "/workspace/nonrint-1104/mixer/docs/reviews/mxd2r_recheck_evidence_20261104/current/mutation_subset.json",
+        "M01 ",
+        "M06 ",
+        "M16 ",
+        "M21 ",
+        "M31 ",
+        "M55 "
+      ],
+      "rc": 0,
+      "elapsed_seconds": 185.764,
+      "log": "mutation_subset.log",
+      "log_sha256": "bf4172c1ac199a446bd250a86902b675d7d8b895666895a96197efbbee69dadf"
+    }
+  ],
+  "scratch_core_restored": true,
+  "sources_unchanged": true
+}
