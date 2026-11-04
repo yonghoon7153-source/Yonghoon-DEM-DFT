@@ -1,0 +1,242 @@
+"""REIL C4-E · E1-0 외곽 단계 실행기 (승인 요청 v2 §4 · 사전 검토 §74 N5) — pytest 한 번을 새 세션으로 띄우고, 실행기가 subreaper 가 되어 timeout 과
+끝에서 자손 전체 (별도 세션 포함) 를 소유 · 정리 · 확인한다 (stdlib · Linux).
+
+    /usr/bin/python3.11 -I <E>/00_step_runner.py <이름> <timeout_s> -- <argv…>        (<E> = 이 파일이 있는 증거 폴더 · reil_c4e1_0_YYYYMMDD)
+
+- cwd 는 bms-balancing/. 자식 env 에서 비밀 형태 이름을 뺀다 (이름만 기록). 재시도 없음 · 덮어쓰지 않는다.
+- 시작 전: `PR_SET_CHILD_SUBREAPER` (prctl 36) 를 켠다 — 켜지 못하면 자식을 띄우지 않고 기록한다 (rc 3). 그 뒤 고아가 된 자손은 이 실행기 밑으로 온다.
+- timeout: pytest 의 그룹을 SIGKILL 하고, `KILL_WAIT_S` 동안 /proc 의 ppid 사슬로 찾은 살아 있는 자손 (별도 세션 포함) 을 되풀이해 SIGKILL 한다. pytest 는
+  Popen 이 먼저 회수하고, 고아 좀비는 그 뒤 PID 를 지정해 회수한다 (회수 순서가 pytest 의 rc 를 덮지 않게). 제한 시간 안에 끝나지 않으면 미종료로 기록한다.
+- 끝 (정상 · timeout 모두): `SETTLE_S` 동안 살아 있는 (좀비 아닌) 자손이 스스로 끝나는지 관측한다 — 끝나면 empty. 넘으면 SIGKILL 뒤 재관측해 `killed`
+  (있었고 정리됨 · incomplete) / `alive` 로 기록한다.
+  /proc 읽기에서 PID 소멸만 "사라짐" 이고 그 밖 읽기 · 파싱 · 목록 오류는 unknown (incomplete) 이다.
+- Git 기록 (HEAD · porcelain) 의 rc · 오류를 남기고, 실패 · 단계 중 HEAD 변경은 runner_ok 를 거짓으로 둔다.
+- runner_ok = timeout 없음 AND 끝 상태 empty AND Git 기록 성공 AND 시작 성공. pytest 의 rc 해석 (RED 는 실패가 기대값) 은 승인 요청의 기준으로 한다.
+- 자원은 사후 관측이다 (RUSAGE_CHILDREN · 디스크 · 증거 바이트 — 강제 상한이 아니다).
+"""
+import ctypes
+import datetime
+import hashlib
+import json
+import os
+import re
+import resource
+import shutil
+import signal
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+REPO = Path("/home/user/Yonghoon-DEM-DFT")
+BMS = REPO / "bms-balancing"
+E = Path(__file__).resolve().parent
+SP = Path("/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad")
+WORK = SP / "c4e1_steps"
+SECRET = re.compile(r"TOKEN|SECRET|PASSW|ACCESS_KEY|CREDENTIAL|COOKIE|^GIT_CONFIG_", re.I)
+EXTRA = {"PYTHONDONTWRITEBYTECODE": "1", "MPLBACKEND": "Agg", "MPLCONFIGDIR": str(WORK / "mpl"), "TMPDIR": str(WORK / "tmp"),
+         "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1", "MKL_NUM_THREADS": "1"}
+PR_SET_CHILD_SUBREAPER = 36
+KILL_WAIT_S = 10.0
+SETTLE_S = 5.0
+PROC = Path("/proc")
+
+
+def write_new(path, text: str) -> None:
+    with open(path, "x", encoding="utf-8") as f:
+        f.write(text)
+
+
+def utc() -> str:
+    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+
+
+def git(*args) -> dict:
+    try:
+        r = subprocess.run(["git", "-C", str(REPO), *args], capture_output=True, text=True, timeout=60)
+        return {"rc": r.returncode, "out": r.stdout}
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return {"rc": None, "out": "", "error": f"{e.__class__.__name__}: {e}"}
+
+
+def proc_table() -> tuple:
+    """{pid: (ppid, 상태)} · 오류 — PID 소멸 (FileNotFoundError · ProcessLookupError) 만 건너뛰고 그 밖 읽기 · 파싱 · 목록 오류는 남긴다."""
+    table, errors = {}, []
+    try:
+        entries = [d for d in PROC.iterdir() if d.name.isdigit()]
+    except OSError as e:
+        return table, [f"list: {e.__class__.__name__}: {e}"]
+    for d in entries:
+        try:
+            s = (d / "stat").read_text()
+        except (FileNotFoundError, ProcessLookupError):
+            continue
+        except OSError as e:
+            errors.append(f"{d.name}: {e.__class__.__name__}: {e}")
+            continue
+        try:
+            rest = s[s.rindex(")") + 2:].split()
+            table[int(d.name)] = (int(rest[1]), rest[0])
+        except (ValueError, IndexError) as e:
+            errors.append(f"{d.name}: 파싱 실패 {e}")
+    return table, errors
+
+
+def descendants(root: int) -> tuple:
+    """root 의 자손 [(pid, 상태)] — ppid 사슬 (별도 세션 포함 · subreaper 라 고아도 root 밑으로 온다) · 오류."""
+    table, errors = proc_table()
+    kids = {}
+    for pid, (ppid, _) in table.items():
+        kids.setdefault(ppid, []).append(pid)
+    out, todo, seen = [], list(kids.get(root, [])), set()
+    while todo:
+        pid = todo.pop()
+        if pid in seen:
+            continue
+        seen.add(pid)
+        out.append((pid, table[pid][1]))
+        todo += kids.get(pid, [])
+    return sorted(out), errors
+
+
+def kill(pids) -> list:
+    res = []
+    for pid in pids:
+        try:
+            os.kill(pid, signal.SIGKILL)
+            res.append([pid, "sent"])
+        except ProcessLookupError:
+            res.append([pid, "no_process"])
+        except OSError as e:
+            res.append([pid, f"{e.__class__.__name__}: {e}"])
+    return res
+
+
+def reap(skip: int) -> list:
+    """이 실행기의 자식 중 좀비를 PID 지정으로 회수한다 — pytest (skip) 는 Popen 이 회수하므로 건드리지 않는다."""
+    got, me = [], os.getpid()
+    table, _ = proc_table()
+    for pid, (ppid, state) in table.items():
+        if ppid == me and pid != skip and state == "Z":
+            try:
+                if os.waitpid(pid, os.WNOHANG)[0] == pid:
+                    got.append(pid)
+            except ChildProcessError:
+                pass
+    return got
+
+
+def settle(skip: int, limit: float = SETTLE_S) -> dict:
+    """끝 확인 — limit 초 동안 살아 있는 자손이 스스로 끝나기를 관측 (회수하며) → 끝나면 empty. 넘으면 SIGKILL 뒤 limit 초 재관측 → killed (있었고 정리됨 ·
+    incomplete) / alive (정리되지 않음). 관측 오류는 그 자리에서 unknown 으로 확정한다."""
+    me, reaped, first_alive = os.getpid(), [], None
+
+    def watch(window):
+        nonlocal first_alive
+        t = time.monotonic()
+        while True:
+            reaped.extend(reap(skip))
+            desc, errors = descendants(me)
+            alive = [q for q, s in desc if s != "Z"]
+            if first_alive is None:
+                first_alive = alive
+            if errors or not alive or time.monotonic() - t > window:
+                return alive, errors, [q for q, s in desc if s == "Z"]
+            time.sleep(0.1)
+
+    alive, errors, zombies = watch(limit)
+    if errors:
+        return {"status": "unknown", "alive": alive, "first_alive": first_alive, "errors": errors, "kills": [], "reaped": reaped}
+    if not alive:
+        return {"status": "empty", "first_alive": first_alive, "zombies": zombies, "errors": [], "kills": [], "reaped": reaped}
+    kills = kill(alive)
+    alive, errors, zombies = watch(limit)
+    status = "unknown" if errors else ("alive" if alive else "killed")
+    return {"status": status, "alive": alive, "first_alive": first_alive, "zombies": zombies, "errors": errors, "kills": kills, "reaped": reaped}
+
+
+def main() -> int:
+    name, timeout = sys.argv[1], float(sys.argv[2])
+    if sys.argv[3] != "--":
+        raise SystemExit("사용: 00_step_runner.py <이름> <timeout_s> -- <argv…>")
+    argv = sys.argv[4:]
+    if E.parent != BMS / "evidence" or not re.fullmatch(r"reil_c4e1_0_20[0-9]{6}", E.name):
+        raise SystemExit(f"실행기는 {BMS / 'evidence'}/reil_c4e1_0_YYYYMMDD/ 안에 있어야 한다: {Path(__file__).resolve()}")
+    files = {k: E / f"{name}.{k}" for k in ("meta.json", "stdout.log", "stderr.log", "porcelain_start.txt", "porcelain_end.txt")}
+    taken = [str(p) for p in files.values() if p.exists()]
+    if taken:
+        raise SystemExit(f"이미 있다 — 덮어쓰지 않는다: {taken}")
+    for k in ("MPLCONFIGDIR", "TMPDIR"):
+        Path(EXTRA[k]).mkdir(parents=True, exist_ok=True)
+    env = {k: v for k, v in os.environ.items() if not SECRET.search(k)}
+    env.update(EXTRA)
+    env.update({"REIL_C4_FIX_EVIDENCE": str(E), "REIL_C4_FIX_STEP": name})
+    me = Path(__file__).resolve()
+    meta = {"step": name, "argv": argv, "cwd": str(BMS), "timeout_s": timeout, "kill_wait_s": KILL_WAIT_S, "settle_s": SETTLE_S,
+            "env_set": {**EXTRA, "REIL_C4_FIX_EVIDENCE": str(E), "REIL_C4_FIX_STEP": name},
+            "env_removed_names": sorted(k for k in os.environ if SECRET.search(k)), "runner": {"path": str(me), "sha256": None},
+            "start_utc": utc(), "disk_free_start_bytes": shutil.disk_usage(BMS).free}
+    meta["runner"]["sha256"] = hashlib.sha256(me.read_bytes()).hexdigest()  # 기록용 · 검증 아님
+    libc = ctypes.CDLL(None, use_errno=True)
+    if libc.prctl(PR_SET_CHILD_SUBREAPER, 1, 0, 0, 0) != 0:
+        meta.update(started=False, subreaper=False, subreaper_errno=ctypes.get_errno(), runner_ok=False, end_utc=utc())
+        write_new(files["meta.json"], json.dumps(meta, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
+        print(json.dumps({"step": name, "started": False, "subreaper": False}, ensure_ascii=False))
+        return 3
+    meta["subreaper"] = True
+    head0, por0 = git("rev-parse", "HEAD"), git("status", "--porcelain=v1", "--untracked-files=all")
+    write_new(files["porcelain_start.txt"], por0["out"])
+    t = time.monotonic()
+    rc, timed_out, exited, kills, start_error, p = None, False, None, [], None, None
+    with open(files["stdout.log"], "xb") as fo, open(files["stderr.log"], "xb") as fe:
+        try:
+            p = subprocess.Popen(argv, cwd=str(BMS), env=env, stdout=fo, stderr=fe, start_new_session=True)
+        except OSError as e:
+            start_error = f"{e.__class__.__name__}: {e}"
+        if p is not None:
+            try:
+                rc = p.wait(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                timed_out = True
+                try:
+                    os.killpg(p.pid, signal.SIGKILL)
+                    kills.append(["group", p.pid, "sent"])
+                except OSError as e:
+                    kills.append(["group", p.pid, f"{e.__class__.__name__}: {e}"])
+                deadline = time.monotonic() + KILL_WAIT_S
+                while time.monotonic() < deadline:
+                    desc, _ = descendants(os.getpid())
+                    live = [q for q, s in desc if s != "Z" and q != p.pid]
+                    if live:
+                        kills += [["pid", *k] for k in kill(live)]
+                    if p.poll() is not None and not live:
+                        break
+                    time.sleep(0.1)
+                try:
+                    rc = p.wait(timeout=max(0.1, deadline - time.monotonic()))
+                    exited = True
+                except subprocess.TimeoutExpired:
+                    exited = False
+    elapsed = round(time.monotonic() - t, 3)
+    end = settle(skip=p.pid if p is not None else -1)
+    por1, head1 = git("status", "--porcelain=v1", "--untracked-files=all"), git("rev-parse", "HEAD")
+    write_new(files["porcelain_end.txt"], por1["out"])
+    records = {"head_start": {"rc": head0["rc"], "out": head0["out"].strip(), "error": head0.get("error")},
+               "head_end": {"rc": head1["rc"], "out": head1["out"].strip(), "error": head1.get("error")},
+               "porcelain_start": {"rc": por0["rc"], "error": por0.get("error")}, "porcelain_end": {"rc": por1["rc"], "error": por1.get("error")}}
+    records_ok = (all(records[k]["rc"] == 0 for k in records) and re.fullmatch(r"[0-9a-f]{40}", records["head_start"]["out"]) is not None
+                  and records["head_start"]["out"] == records["head_end"]["out"])
+    runner_ok = start_error is None and not timed_out and end["status"] == "empty" and records_ok
+    meta.update(started=start_error is None, start_error=start_error, pgid=None if p is None else p.pid, rc=rc, timed_out=timed_out,
+                exited_after_kill=exited, kills=kills, elapsed_s=elapsed, end=end, records=records, records_ok=records_ok,
+                runner_ok=runner_ok, end_utc=utc(), child_maxrss_kib=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss,
+                disk_free_end_bytes=shutil.disk_usage(BMS).free)
+    meta["evidence_bytes_before_meta"] = sum(q.stat().st_size for q in E.rglob("*") if q.is_file())
+    write_new(files["meta.json"], json.dumps(meta, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
+    print(json.dumps({"step": name, "rc": rc, "timed_out": timed_out, "end": end["status"], "records_ok": records_ok,
+                      "runner_ok": runner_ok, "elapsed_s": elapsed}, ensure_ascii=False))
+    return 0 if (runner_ok and rc == 0) else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

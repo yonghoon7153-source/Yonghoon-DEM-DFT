@@ -1,0 +1,590 @@
+{
+ "kind": "REIL_C4E1_0B_JUDGE",
+ "step": "01_red_e1_0b",
+ "utc": "2026-11-04T01:56:36Z",
+ "judge": {
+  "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/00_judge.py",
+  "sha256": "3749b32edd3954fdfa4bfe92336d9eafaf2121b6275c9bd0b3584ece42dc60c4",
+  "bytes": 21889
+ },
+ "evidence": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_0b_a2_20261104",
+ "inputs": {
+  "stdout.log": {
+   "sha256": "c67925b419f3a9812669556ad98ee81354a5d1907038662b2d514a74ff7f8efb",
+   "bytes": 13412
+  },
+  "meta.json": {
+   "sha256": "4f10aadba766957cf530da95a9a4dd876199e1a8f639c4546d4b6184f9702bf7",
+   "bytes": 8836
+  },
+  "outer_rc.txt": {
+   "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+   "bytes": 2
+  },
+  "stderr.log": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "bytes": 0
+  }
+ },
+ "checks": [
+  {
+   "id": "input.stdout",
+   "ok": true,
+   "observed": {
+    "sha256": "c67925b419f3a9812669556ad98ee81354a5d1907038662b2d514a74ff7f8efb",
+    "bytes": 13412
+   }
+  },
+  {
+   "id": "input.meta",
+   "ok": true,
+   "observed": {
+    "sha256": "4f10aadba766957cf530da95a9a4dd876199e1a8f639c4546d4b6184f9702bf7",
+    "bytes": 8836
+   }
+  },
+  {
+   "id": "common.started",
+   "ok": true,
+   "observed": true
+  },
+  {
+   "id": "common.timed_out",
+   "ok": true,
+   "observed": false
+  },
+  {
+   "id": "common.cleanup_status",
+   "ok": true,
+   "observed": "empty"
+  },
+  {
+   "id": "common.cleanup_deadline_hit",
+   "ok": true,
+   "observed": false
+  },
+  {
+   "id": "common.cleanup_errors",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "common.end_problems",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "common.errors",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "common.runner_ok",
+   "ok": true,
+   "observed": true
+  },
+  {
+   "id": "common.outer_rc",
+   "ok": true,
+   "observed": "1\n"
+  },
+  {
+   "id": "red.table_bound",
+   "ok": true,
+   "observed": {
+    "file": {
+     "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001",
+     "bytes": 74542,
+     "source_end": {
+      "bytes": 74542,
+      "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001"
+     },
+     "same": true
+    },
+    "defined": 33
+   }
+  },
+  {
+   "id": "red.sections",
+   "ok": true,
+   "observed": {
+    "short test summary info": 1,
+    "FAILURES": 1
+   }
+  },
+  {
+   "id": "red.failed_set",
+   "ok": true,
+   "observed": {
+    "ok": true,
+    "count": 9,
+    "missing": [],
+    "extra": [],
+    "duplicates": []
+   }
+  },
+  {
+   "id": "red.passed_set",
+   "ok": true,
+   "observed": {
+    "ok": true,
+    "count": 24,
+    "missing": [],
+    "extra": [],
+    "duplicates": []
+   }
+  },
+  {
+   "id": "red.failure_sections",
+   "ok": true,
+   "observed": {
+    "extra": [],
+    "missing": [],
+    "repeated": []
+   }
+  },
+  {
+   "id": "red.l14.one_section",
+   "ok": true,
+   "observed": 1
+  },
+  {
+   "id": "red.l14.first_entry",
+   "ok": true,
+   "observed": "tests/test_reil_c4e1_launch.py:465: in test_l14_independence_fixed_commands_constants_and_main_rules"
+  },
+  {
+   "id": "red.l14.no_chain",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "red.l14.one_block",
+   "ok": true,
+   "observed": {
+    "e_lines": 7
+   }
+  },
+  {
+   "id": "red.l14.exception",
+   "ok": true,
+   "observed": {
+    "head": "AssertionError: ('E1-0b: 승인 문구의 요청서 경로', 'docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md')",
+    "want": [
+     "AssertionError",
+     "exact",
+     "('E1-0b: 승인 문구의 요청서 경로', 'docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md')"
+    ]
+   }
+  },
+  {
+   "id": "red.l14.not_unexpected",
+   "ok": true,
+   "observed": null
+  },
+  {
+   "id": "red.l23.one_section",
+   "ok": true,
+   "observed": 1
+  },
+  {
+   "id": "red.l23.first_entry",
+   "ok": true,
+   "observed": "tests/test_reil_c4e1_launch.py:712: in test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child"
+  },
+  {
+   "id": "red.l23.no_chain",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "red.l23.one_block",
+   "ok": true,
+   "observed": {
+    "e_lines": 2
+   }
+  },
+  {
+   "id": "red.l23.exception",
+   "ok": true,
+   "observed": {
+    "head": "AssertionError: ('rewrite', 'FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다', ['git 설정 url.https://example.invalid/.insteadof (file:/tmp/claude-0... ≠ 고정 https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git\"])",
+    "want": [
+     "AssertionError",
+     "prefix",
+     "('rewrite', 'FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다', "
+    ]
+   }
+  },
+  {
+   "id": "red.l23.not_unexpected",
+   "ok": true,
+   "observed": null
+  },
+  {
+   "id": "red.l25.one_section",
+   "ok": true,
+   "observed": 1
+  },
+  {
+   "id": "red.l25.first_entry",
+   "ok": true,
+   "observed": "tests/test_reil_c4e1_launch.py:754: in test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git"
+  },
+  {
+   "id": "red.l25.no_chain",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "red.l25.one_block",
+   "ok": true,
+   "observed": {
+    "e_lines": 5
+   }
+  },
+  {
+   "id": "red.l25.exception",
+   "ok": true,
+   "observed": {
+    "head": "AssertionError: ('FUTURE-01: fetch 자식에 고정 설정 원천이 없다', [])",
+    "want": [
+     "AssertionError",
+     "exact",
+     "('FUTURE-01: fetch 자식에 고정 설정 원천이 없다', [])"
+    ]
+   }
+  },
+  {
+   "id": "red.l25.not_unexpected",
+   "ok": true,
+   "observed": null
+  },
+  {
+   "id": "red.l28.one_section",
+   "ok": true,
+   "observed": 1
+  },
+  {
+   "id": "red.l28.first_entry",
+   "ok": true,
+   "observed": "tests/test_reil_c4e1_launch.py:902: in test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list"
+  },
+  {
+   "id": "red.l28.no_chain",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "red.l28.one_block",
+   "ok": true,
+   "observed": {
+    "e_lines": 1
+   }
+  },
+  {
+   "id": "red.l28.exception",
+   "ok": true,
+   "observed": {
+    "head": "AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'fetch_env'",
+    "want": [
+     "AttributeError",
+     "exact",
+     "module 'scripts.reil_c4e1_launch' has no attribute 'fetch_env'"
+    ]
+   }
+  },
+  {
+   "id": "red.l28.not_unexpected",
+   "ok": true,
+   "observed": null
+  },
+  {
+   "id": "red.l29.one_section",
+   "ok": true,
+   "observed": 1
+  },
+  {
+   "id": "red.l29.first_entry",
+   "ok": true,
+   "observed": "tests/test_reil_c4e1_launch.py:951: in test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child"
+  },
+  {
+   "id": "red.l29.no_chain",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "red.l29.one_block",
+   "ok": true,
+   "observed": {
+    "e_lines": 2
+   }
+  },
+  {
+   "id": "red.l29.exception",
+   "ok": true,
+   "observed": {
+    "head": "AssertionError: ('FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다', [], [\"받은 저장소의 유효 출처 'https://example.invalid/REIL-UConn/Multi-Object... ≠ 고정 https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git\"])",
+    "want": [
+     "AssertionError",
+     "prefix",
+     "('FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다', "
+    ]
+   }
+  },
+  {
+   "id": "red.l29.not_unexpected",
+   "ok": true,
+   "observed": null
+  },
+  {
+   "id": "red.l30.one_section",
+   "ok": true,
+   "observed": 1
+  },
+  {
+   "id": "red.l30.first_entry",
+   "ok": true,
+   "observed": "tests/test_reil_c4e1_launch.py:993: in test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write"
+  },
+  {
+   "id": "red.l30.no_chain",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "red.l30.one_block",
+   "ok": true,
+   "observed": {
+    "e_lines": 2
+   }
+  },
+  {
+   "id": "red.l30.exception",
+   "ok": true,
+   "observed": {
+    "head": "AssertionError: ('FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다', 'localtls')",
+    "want": [
+     "AssertionError",
+     "exact",
+     "('FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다', 'localtls')"
+    ]
+   }
+  },
+  {
+   "id": "red.l30.not_unexpected",
+   "ok": true,
+   "observed": null
+  },
+  {
+   "id": "red.l31.one_section",
+   "ok": true,
+   "observed": 1
+  },
+  {
+   "id": "red.l31.first_entry",
+   "ok": true,
+   "observed": "tests/test_reil_c4e1_launch.py:1004: in test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look"
+  },
+  {
+   "id": "red.l31.no_chain",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "red.l31.one_block",
+   "ok": true,
+   "observed": {
+    "e_lines": 1
+   }
+  },
+  {
+   "id": "red.l31.exception",
+   "ok": true,
+   "observed": {
+    "head": "AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'",
+    "want": [
+     "AttributeError",
+     "exact",
+     "module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'"
+    ]
+   }
+  },
+  {
+   "id": "red.l31.not_unexpected",
+   "ok": true,
+   "observed": null
+  },
+  {
+   "id": "red.l32.one_section",
+   "ok": true,
+   "observed": 1
+  },
+  {
+   "id": "red.l32.first_entry",
+   "ok": true,
+   "observed": "tests/test_reil_c4e1_launch.py:1035: in test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline"
+  },
+  {
+   "id": "red.l32.no_chain",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "red.l32.one_block",
+   "ok": true,
+   "observed": {
+    "e_lines": 1
+   }
+  },
+  {
+   "id": "red.l32.exception",
+   "ok": true,
+   "observed": {
+    "head": "AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'",
+    "want": [
+     "AttributeError",
+     "exact",
+     "module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'"
+    ]
+   }
+  },
+  {
+   "id": "red.l32.not_unexpected",
+   "ok": true,
+   "observed": null
+  },
+  {
+   "id": "red.l33.one_section",
+   "ok": true,
+   "observed": 1
+  },
+  {
+   "id": "red.l33.first_entry",
+   "ok": true,
+   "observed": "tests/test_reil_c4e1_launch.py:1072: in test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty"
+  },
+  {
+   "id": "red.l33.no_chain",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "red.l33.one_block",
+   "ok": true,
+   "observed": {
+    "e_lines": 2
+   }
+  },
+  {
+   "id": "red.l33.exception",
+   "ok": true,
+   "observed": {
+    "head": "AssertionError: ('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])",
+    "want": [
+     "AssertionError",
+     "exact",
+     "('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])"
+    ]
+   }
+  },
+  {
+   "id": "red.l33.not_unexpected",
+   "ok": true,
+   "observed": null
+  },
+  {
+   "id": "red.unexpected_anywhere",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "red.pytest_rc",
+   "ok": true,
+   "observed": 1
+  },
+  {
+   "id": "red.last_line",
+   "ok": true,
+   "observed": "9 failed, 24 passed in 13.89s"
+  },
+  {
+   "id": "red.error_lines",
+   "ok": true,
+   "observed": {
+    "lines": [],
+    "errors_headers": 0
+   }
+  },
+  {
+   "id": "red.internalerror",
+   "ok": true,
+   "observed": null
+  },
+  {
+   "id": "red.interrupted",
+   "ok": true,
+   "observed": []
+  }
+ ],
+ "info": {
+  "stdout_lines": 136,
+  "stderr_bytes": 0,
+  "summary_other_lines": {
+   "count": 0,
+   "first": []
+  },
+  "red_lines": {
+   "l14": {
+    "observed": 465,
+    "predicted": 465,
+    "same": true
+   },
+   "l23": {
+    "observed": 712,
+    "predicted": 712,
+    "same": true
+   },
+   "l25": {
+    "observed": 754,
+    "predicted": 754,
+    "same": true
+   },
+   "l28": {
+    "observed": 902,
+    "predicted": 902,
+    "same": true
+   },
+   "l29": {
+    "observed": 951,
+    "predicted": 951,
+    "same": true
+   },
+   "l30": {
+    "observed": 993,
+    "predicted": 993,
+    "same": true
+   },
+   "l31": {
+    "observed": 1004,
+    "predicted": 1004,
+    "same": true
+   },
+   "l32": {
+    "observed": 1035,
+    "predicted": 1035,
+    "same": true
+   },
+   "l33": {
+    "observed": 1072,
+    "predicted": 1072,
+    "same": true
+   }
+  },
+  "warnings": 0
+ },
+ "failed": [],
+ "verdict": "MATCH",
+ "note": "판정의 정본은 요청서 §4-3 · 이 기록은 그 기계 기록 · 실행자의 수동 대조와 다르면 멈춘다"
+}

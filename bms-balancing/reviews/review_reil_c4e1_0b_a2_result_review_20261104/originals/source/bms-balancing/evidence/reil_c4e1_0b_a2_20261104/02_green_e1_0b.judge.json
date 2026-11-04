@@ -1,0 +1,214 @@
+{
+ "kind": "REIL_C4E1_0B_JUDGE",
+ "step": "02_green_e1_0b",
+ "utc": "2026-11-04T01:59:00Z",
+ "judge": {
+  "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/00_judge.py",
+  "sha256": "3749b32edd3954fdfa4bfe92336d9eafaf2121b6275c9bd0b3584ece42dc60c4",
+  "bytes": 21889
+ },
+ "evidence": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_0b_a2_20261104",
+ "inputs": {
+  "stdout.log": {
+   "sha256": "be575e86e8d6ffb5c0aa2f371cc4e68515dcf00e90f0a22e1154fe345e1e9237",
+   "bytes": 14683
+  },
+  "meta.json": {
+   "sha256": "186a23354e1914ad701528f53da9447cdcaed590e7c57629860d0c09d35dde55",
+   "bytes": 9077
+  },
+  "outer_rc.txt": {
+   "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+   "bytes": 2
+  },
+  "stderr.log": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "bytes": 0
+  }
+ },
+ "checks": [
+  {
+   "id": "input.stdout",
+   "ok": true,
+   "observed": {
+    "sha256": "be575e86e8d6ffb5c0aa2f371cc4e68515dcf00e90f0a22e1154fe345e1e9237",
+    "bytes": 14683
+   }
+  },
+  {
+   "id": "input.meta",
+   "ok": true,
+   "observed": {
+    "sha256": "186a23354e1914ad701528f53da9447cdcaed590e7c57629860d0c09d35dde55",
+    "bytes": 9077
+   }
+  },
+  {
+   "id": "common.started",
+   "ok": true,
+   "observed": true
+  },
+  {
+   "id": "common.timed_out",
+   "ok": true,
+   "observed": false
+  },
+  {
+   "id": "common.cleanup_status",
+   "ok": true,
+   "observed": "empty"
+  },
+  {
+   "id": "common.cleanup_deadline_hit",
+   "ok": true,
+   "observed": false
+  },
+  {
+   "id": "common.cleanup_errors",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "common.end_problems",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "common.errors",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "common.runner_ok",
+   "ok": true,
+   "observed": true
+  },
+  {
+   "id": "common.outer_rc",
+   "ok": true,
+   "observed": "0\n"
+  },
+  {
+   "id": "green.files_bound",
+   "ok": true,
+   "observed": {
+    "tests/test_reil_c4e.py": {
+     "file": {
+      "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e",
+      "bytes": 57482,
+      "source_end": {
+       "bytes": 57482,
+       "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e"
+      },
+      "same": true
+     },
+     "defined": 21,
+     "want": 21
+    },
+    "tests/test_reil_c4e_fix.py": {
+     "file": {
+      "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2",
+      "bytes": 19506,
+      "source_end": {
+       "bytes": 19506,
+       "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2"
+      },
+      "same": true
+     },
+     "defined": 6,
+     "want": 6
+    },
+    "tests/test_reil_c4e1_launch.py": {
+     "file": {
+      "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001",
+      "bytes": 74542,
+      "source_end": {
+       "bytes": 74542,
+       "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001"
+      },
+      "same": true
+     },
+     "defined": 33,
+     "want": 33
+    },
+    "tests/test_reil_c4e1_runner.py": {
+     "file": {
+      "sha256": "b34fb9a98eb6e852d4c30038ee988adee57d03c2b138e767ca742ea327a45e13",
+      "bytes": 37003,
+      "source_end": {
+       "bytes": 37003,
+       "sha256": "b34fb9a98eb6e852d4c30038ee988adee57d03c2b138e767ca742ea327a45e13"
+      },
+      "same": true
+     },
+     "defined": 11,
+     "want": 11
+    }
+   }
+  },
+  {
+   "id": "green.sections",
+   "ok": true,
+   "observed": {
+    "short test summary info": 1,
+    "FAILURES": 0
+   }
+  },
+  {
+   "id": "green.passed_set",
+   "ok": true,
+   "observed": {
+    "ok": true,
+    "count": 71,
+    "missing": [],
+    "extra": [],
+    "duplicates": []
+   }
+  },
+  {
+   "id": "green.failed_lines",
+   "ok": true,
+   "observed": []
+  },
+  {
+   "id": "green.pytest_rc",
+   "ok": true,
+   "observed": 0
+  },
+  {
+   "id": "green.last_line",
+   "ok": true,
+   "observed": "71 passed in 22.54s"
+  },
+  {
+   "id": "green.error_lines",
+   "ok": true,
+   "observed": {
+    "lines": [],
+    "errors_headers": 0
+   }
+  },
+  {
+   "id": "green.internalerror",
+   "ok": true,
+   "observed": null
+  },
+  {
+   "id": "green.interrupted",
+   "ok": true,
+   "observed": []
+  }
+ ],
+ "info": {
+  "stdout_lines": 146,
+  "stderr_bytes": 0,
+  "summary_other_lines": {
+   "count": 0,
+   "first": []
+  },
+  "warnings": 0
+ },
+ "failed": [],
+ "verdict": "MATCH",
+ "note": "판정의 정본은 요청서 §4-3 · 이 기록은 그 기계 기록 · 실행자의 수동 대조와 다르면 멈춘다"
+}

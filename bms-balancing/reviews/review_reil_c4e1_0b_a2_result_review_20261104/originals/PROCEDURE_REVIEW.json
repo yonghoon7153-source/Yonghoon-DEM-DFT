@@ -1,0 +1,119 @@
+{
+  "kind": "REIL_E1_0B_A2_PROCEDURE_REVIEW",
+  "scope": ["Q1", "Q4"],
+  "method": "Static reading and JSON parsing of captured source/evidence/commit records; supplied code was not imported or executed; no retest, COMSOL, Git mutation, or network operation by this subreview.",
+  "decision": "ACCEPT_RECORDED_SEQUENCE_AND_BUDGET_WITH_PROCEDURAL_DEVIATION_AND_PROVENANCE_LIMITS",
+  "blocking_findings": [],
+  "q1": {
+    "answer_ko": "제출된 기록의 a–e 순서·대상 argv·단계 예산·커밋 구성은 요청서와 맞는다. GREEN 배경 실행은 사전 명시된 방식이다. 다만 a의 고정 확인 명령에서 출력문을 뺀 일은 문자 그대로의 절차 이탈이며, 전 명령 이력의 독립 인증이나 완전 무이탈 판정을 할 수는 없다.",
+    "approval": {
+      "request_sha256_checked": "ae413f965e890103db175ef261b05d6c49b26f9a53048abdab8c9b8d3b234840",
+      "request_pinned_commit": "5d87b57e",
+      "recorded_fresh_approval": "§99 records user 승인 after §98, specifically for one E1-0b a2 execution of this fixed request §4. The spent §91 approval is not reused.",
+      "approval_record_precedes_tests": true,
+      "independently_authenticated_original_user_message": false,
+      "refs": [
+        "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md:2830-2856 (§99)",
+        "COMMIT_RECORDS.json: commit 00c2e3d6c1ce2cb02ceded88161328f11698ecf8 (01:52:25Z), status + .gitattributes",
+        "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md:2819-2828 (§98 review is not execution approval)"
+      ]
+    },
+    "sequence_and_commits": [
+      {"stage": "a", "commit": "00c2e3d6c1ce2cb02ceded88161328f11698ecf8", "created_at": "2026-11-04T01:52:25Z", "files": 2, "content": "Approval record §99 and evidence -text preservation rule"},
+      {"stage": "b", "commit": "334e17f4be552a526cf9fcb04bc037b50bdd93e0", "created_at": "2026-11-04T01:55:46Z", "files": 6, "content": "Five copies and 00_start.txt; RED meta names this unchanged HEAD"},
+      {"stage": "c", "commit": "a8139f58fa69e37f01bfe1b885befd26e55080aa", "created_at": "2026-11-04T01:57:59Z", "files": 9, "content": "Nine RED evidence files; GREEN meta names this unchanged HEAD"},
+      {"stage": "d", "commit": "aedd1ce30a6480a2ac54fa1f5765e77665a27ad8", "created_at": "2026-11-04T01:59:56Z", "files": 10, "content": "Nine GREEN evidence files plus v6 launcher"},
+      {"stage": "e", "commit": "421faa84e5e96e2cc19aafb2ccf9cf7a903aad60", "created_at": "2026-11-04T02:00:28Z", "files": 1, "content": "03_end.json, generated at 02:00:05Z"}
+    ],
+    "sequence_refs": [
+      "bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md:263-276, 443-446",
+      "COMMIT_RECORDS.json: files and created_at of a–e commits",
+      "bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.meta.json: start_utc, end_utc, records.head_start/end",
+      "bms-balancing/evidence/reil_c4e1_0b_a2_20261104/02_green_e1_0b.meta.json: start_utc, end_utc, records.head_start/end"
+    ],
+    "command_and_budget_checks": {
+      "meta_argv_match_fixed_red_green_with_absolute_path_substitution": true,
+      "red": {"start": "2026-11-04T01:56:18.942Z", "end": "2026-11-04T01:56:36.152Z", "pytest_timeout_s": 120, "observed_child_s": 16.73, "cleanup_budget_s": 15, "observed_cleanup_s": 0.001, "timed_out": false},
+      "green": {"start": "2026-11-04T01:58:31.062Z", "end": "2026-11-04T01:58:54.404Z", "pytest_timeout_s": 600, "observed_child_s": 23.252, "cleanup_budget_s": 15, "observed_cleanup_s": 0.002, "timed_out": false},
+      "start_file_utc": "2026-11-04T01:55:12Z",
+      "reported_stage_a_check_utc": "2026-11-04T01:51:48Z",
+      "end_snapshot_utc": "2026-11-04T02:00:05Z",
+      "start_file_to_end_s_computed": 293,
+      "reported_a_check_to_end_s_computed": 497,
+      "whole_budget_s": 7200,
+      "budget_endpoint": "The request explicitly ends the 2-hour window at the stage-e end snapshot, not at subsequent commit/push/documentation; no broader completion-time claim is made.",
+      "refs": [
+        "bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md:265-276, 291-315, 567",
+        "bms-balancing/evidence/reil_c4e1_0b_a2_20261104/00_start.txt:1",
+        "bms-balancing/evidence/reil_c4e1_0b_a2_20261104/03_end.json:utc, steps",
+        "bms-balancing/evidence/reil_c4e1_0b_a2_20261104/{01_red_e1_0b,02_green_e1_0b}.meta.json:argv, timeout_s, cleanup_s, times"
+      ]
+    },
+    "judge_and_manual": {
+      "red_judge_utc": "2026-11-04T01:56:36Z",
+      "green_judge_utc": "2026-11-04T01:59:00Z",
+      "recorded_verdicts": ["MATCH", "MATCH"],
+      "manual_matching_verdicts": "Reported at §100 lines 2877 and 2890; the original manual reading event is not independently authenticated. Functional predicate verification belongs to Q2/Q3.",
+      "once_only_and_no_retry": "Reported and consistent with retained files/commit order; immutable artifacts cannot independently disprove transient unrecorded execution.",
+      "timestamp_precision": "Judge utc is recorded to seconds, runner end_utc to milliseconds. RED judge 01:56:36Z sharing the runner-end second is not evidence of reversed order."
+    },
+    "green_background": {
+      "deviation": false,
+      "reason": "Explicitly specified because pytest 600s + cleanup 15s + recording can exceed the foreground tool limit. Background completion followed by the judge preserves the required sequence as reported.",
+      "refs": [
+        "bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md:310-311",
+        "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md:2853-2854, 2905-2906"
+      ]
+    }
+  },
+  "procedural_findings": [
+    {
+      "id": "E1_0B_A2_PROC_N1",
+      "severity": "P3",
+      "blocking": false,
+      "title_ko": "단계 a 고정 확인 명령의 출력문 생략",
+      "fact": "§100 explicitly reports removing print(json.dumps(...)) from the fixed check on the commit line for 00c2e3d6. §4-2 defines <확인> as the fixed §4-6 command, so this is not exact command compliance.",
+      "functional_effect": "If the reported only change was deleting print, the name selection, regex and sys.exit guard are unchanged. The earlier fixed check's names and empty outside_allowlist are recorded in §99. This does not establish a RED/GREEN source, predicate, rc or budget defect.",
+      "limit": "The actual full executed shell line and raw tool return were not supplied. Same-regex/same-rc is a submitter account, not independently verified command provenance; the earlier check does not retroactively certify the later shell environment.",
+      "disposition": "Retain as a procedural qualification in closure. Do not call the run entirely unchanged-command compliant. No retest or retrospective approval is justified by this print-only disclosure alone.",
+      "refs": [
+        "bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md:281, 308, 451-461",
+        "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md:2850-2852, 2902-2904",
+        "bms-balancing/docs/REIL_C4E1_0B_A2_RESULT_REVIEW_SEND_20261104.md:stage-a deviation disclosure"
+      ]
+    }
+  ],
+  "record_notes": [
+    {
+      "id": "PROCEDURAL_FETCH_SCOPE_NOTE",
+      "blocking": false,
+      "observation": "§100 line2900 includes fetch among procedural Git, while request §4-6 line450 enumerates add/commit/push/log. The record supplies no fetch argv, target repository, remote or purpose.",
+      "interpretation": "The request separately excludes network fetch inside the RED/GREEN activity rows and actual E1-1–3 source/data fetch. A control-repository transport check is not automatically the prohibited E1-2 data operation. Conversely, the text alone does not prove which fetch occurred or make it literally enumerated in §4-6.",
+      "recommended_record_action": "If already available in the retained session history, identify that fetch's command, repository/remote and purpose in the closure record; otherwise preserve this provenance limit. This is a narrow documentary clarification, not a demand to fetch again, rerun tests or obtain blanket new approval.",
+      "refs": [
+        "bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md:267, 450, 468-471, 628-631",
+        "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md:2900-2901, 2910-2911"
+      ]
+    }
+  ],
+  "q4": {
+    "answer_ko": "Q2·Q3의 한정 결과가 수용된다면 이번 절차 검토에서 E1-1–3 승인 요청서 작성을 막을 추가 기술 보완은 없다. 종결 기록에 단계 a 절차 이탈과 검증 범위를 유지하고, 가능하면 기존 세션 기록의 절차 Git fetch 대상을 한 줄로 구분한다. 재시험·과거 실행의 소급 승인·원증거 재작성은 요구하지 않는다. 다음 실제 실행은 별도 요청·검토·사용자 승인의 대상이다.",
+    "evidence_inventory_checked": {"files": 23, "bytes": 138608},
+    "mandatory_new_execution_or_new_original_evidence": false,
+    "recommended_closure_wording_ko": "E1-0b a2의 봉인된 대조 범위 결과를 수용하고, 단계 a 고정 확인 명령의 출력문 생략을 기록된 절차 이탈로 남긴다. 실자료 identity·읽기 경로·fetch·개봉·run 성공 또는 다음 실행 승인으로 확대하지 않는다.",
+    "preserve_originals": true,
+    "no_scope_retroactivity": "§95 author checker/writer scratch runs remain outside the former scope; §99 and this review do not authorize them retroactively. They are not a2 gate evidence.",
+    "next_execution_authorized_by_this_review": false,
+    "refs": [
+      "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md:2811-2812, 2910-2916",
+      "bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md:498-512, 598-617, 626-631"
+    ]
+  },
+  "provenance_limits": [
+    "This review independently reads retained artifacts and connector-captured commit metadata, not the original author shell session or user approval message.",
+    "Commit times, file membership, hashes and meta HEAD values support consistency/order but do not prove that no transient unrecorded commands or mutations occurred.",
+    "Actual a2 path absence, old scratch-folder preservation, secret-scan execution, exact count of checker invocations and foreground/background tool flags are reported historical events rather than independently authenticated observations.",
+    "The same-line outer return files are retained values; artifacts do not independently reconstruct shell/runner/pytest transport beyond their recorded linkage.",
+    "No functional acceptance beyond the sealed E1-0b controls, no production identity/fetch/run success, and no authorization of future execution is inferred."
+  ]
+}

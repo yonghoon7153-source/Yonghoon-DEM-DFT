@@ -1,0 +1,57 @@
+{
+  "kind": "REIL_E1_0B_A2_V4_PREREVIEW_DECISION",
+  "date": "2026-11-04",
+  "pinned_commit": "5d87b57eebc63480a26021e1bbdb090d2cfefb4d",
+  "request": {
+    "bytes": 96529,
+    "sha256": "ae413f965e890103db175ef261b05d6c49b26f9a53048abdab8c9b8d3b234840"
+  },
+  "decision": "E1_0B_A2_DOCUMENT_CORRECTIONS_ACCEPTED_READY_FOR_USER_APPROVAL",
+  "required_findings": [],
+  "questions": {
+    "Q1": "ACCEPT_N1_DOCUMENT_APPLICABILITY_CORRECTION",
+    "Q2": "ACCEPT_N2_AUTHOR_EXECUTION_DISCLOSURE_CORRECTION",
+    "Q3": "ACCEPT_LIMITATION_NOTES",
+    "Q4": "MAY_REQUEST_NEW_USER_APPROVAL_FOR_E1_0B_A2_ONLY"
+  },
+  "finding_status": {
+    "E1_0B_RESULT_N1": "PRIOR_STATIC_CLOSURE_RETAINED",
+    "E1_0B_A2_N1": "CLOSED_DOCUMENT_CONSISTENCY",
+    "E1_0B_A2_N2": "CLOSED_DISCLOSURE_NOT_RETROACTIVE_AUTHORIZATION"
+  },
+  "verified": {
+    "attachment_matches_pin": true,
+    "six_drafts_raw_bytes_unchanged": true,
+    "unchanged_document_sections_or_parts": 14,
+    "prior_status_prefix_preserved": true,
+    "branch_unchanged_at_close": true
+  },
+  "limitations": {
+    "GREEN_global_marker_scan": false,
+    "prior_author_execution_independently_authenticated": false,
+    "historical_user_message_export_received": false,
+    "actual_a2_path_absence_observed": false,
+    "author_27_remote_comparisons_independently_repeated": false
+  },
+  "retained": {
+    "new_a2_execution_authorized": false,
+    "E1_0B_functionally_complete": false,
+    "GREEN_observed": false,
+    "FUTURE_01_functional_closure": false,
+    "E1_1_3_authorized": false,
+    "real_data_fetch_run_authorized": false,
+    "C4_A_B_authorized": false,
+    "COMSOL_authorized": false
+  },
+  "reviewer_performed": {
+    "fresh_pinned_files": 9,
+    "received_code_import_execution": 0,
+    "target_tests": 0,
+    "repository_mutation_commit_push": 0,
+    "external_transmission": 0,
+    "own_data_tools": true
+  },
+  "numeric_review_budget_seconds": null,
+  "elapsed_claim": null
+}
+

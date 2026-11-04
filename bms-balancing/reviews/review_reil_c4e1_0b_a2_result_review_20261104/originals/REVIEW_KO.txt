@@ -1,0 +1,83 @@
+REIL C4-E · E1-0b 시도 a2 결과 검토
+2026-11-04 · 제출 로그/소스/커밋 대조 · 재실행 없음
+
+판정
+E1_0B_A2_LIMITED_FUNCTIONAL_RESULT_ACCEPTED_WITH_RECORDED_PROCEDURAL_DEVIATION.
+RED 표 일치와 GREEN 71 passed의 한정 기능 결과를 수용한다. E1-0b의 FUTURE-01 및 운영 정리 정책은 이번 봉인 대조 범위에서 종결할 수 있다. 단계 a의 고정 명령 문자열 이탈은 별도 기록으로 유지한다. 이를 ‘절차 완전 일치’로 바꾸지 않는다.
+이번 회신은 E1-1–3 또는 실제 REIL 자료/계산의 실행 승인이 아니다. COMSOL 결과와도 별개의 검토다.
+
+1. 자료 범위와 식별
+저장소: yonghoon7153-source/Yonghoon-DEM-DFT
+브랜치: claude/14-gate-code-review-9qkx05
+고정 커밋: f09ead06a0ec21534af327cd108b607343f43ec3
+https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/f09ead06a0ec21534af327cd108b607343f43ec3
+실행 종료 기록 커밋: 421faa84e5e96e2cc19aafb2ccf9cf7a903aad60.
+첨부 발송문은 고정 커밋의 원바이트와 일치한다.
+
+증거 디렉터리: bms-balancing/evidence/reil_c4e1_0b_a2_20261104/
+정확히 23파일, 138,608 bytes. 각 파일을 GitHub 연결 도구에서 base64로 받았고 Git blob SHA-1 및 SHA-256을 대조했다.
+현 커밋 47파일과 RED launcher의 과거 커밋 사본 1개를 받았다. SOURCE_IDENTITIES/ADDITIONAL_IDENTITIES에 전체 바이트 식별과 출처 URL을 기록했다.
+
+승인 요청서: 96,529 bytes / ae413f965e890103db175ef261b05d6c49b26f9a53048abdab8c9b8d3b234840.
+앞선 v4 사전 검토 수용본과 동일하다. 초안 여섯도 원바이트 동일하다.
+고정 판정기 21,889 bytes / 3749b32edd3954fdfa4bfe92336d9eafaf2121b6275c9bd0b3584ece42dc60c4.
+runner v8 36,938 bytes / e284f8a14a5f15f405b566ab668a58f069a6ab465a25e391a36ce28f1fdf9059.
+end writer v2 4,875 bytes / 2f316acc348412cafd8607ef7fe0d19a579237e21c4535ab2a657ca090a5472b.
+검토자가 이 판정기/runner/writer를 실행한 것은 아니다.
+
+2. Q1 — 승인 범위와 절차
+상태 문서 §99(2830–2856행)는 ‘승인’이라는 사용자 답변을 직전 a2 한정 요청과 결속하고 요청서 해시·고정본·순서·예산·중지 조건을 명시한다. 승인 기록을 담은 a 커밋은 b의 시험 전 봉인보다 앞선다.
+다만 이 문서는 작성자가 기록한 승인 경위다. 플랫폼 원문 export나 원셸 전체 실행의 독립 인증을 받았다고 주장하지 않는다. 과거 사전 검토자의 문서 수용 자체를 실행 승인으로 사용한 것이 아니며 §98에도 그 구분이 명시되어 있다.
+
+커밋 연결과 변경 파일 수:
+5b283217 → a 00c2e3d6(2) → b 334e17f4(6) → c a8139f58(9) → d aedd1ce3(10) → e 421faa84(1) → 결과 문서 f09ead06(2).
+각 인접 비교는 ahead 1 / behind 0이다.
+a = 승인 기록 및 .gitattributes, b = 복사본 다섯+시작 기록, c = RED 아홉, d = GREEN 아홉+launcher v6, e = 끝 기록으로 요청서 §4-4/4-5와 맞는다.
+착수 전 5b283217 이후 전체 변경은 29경로이며 기존 a1 증거를 수정한 경로는 없다. 원격 임시 작업 폴더의 미존재·보존을 현재 독립 재관측한 것으로 확대하지 않는다.
+
+RED HEAD 시작/끝 = 334e17f4, GREEN = a8139f58.
+GREEN에서 launcher가 수정 상태인 것은 d 커밋 전 v6 복사이므로 예정된 상태다. 두 단계의 porcelain 나머지는 생성 중인 자기 증거 파일이며 시작/끝 Git 조회 rc0이다.
+실행 argv는 요청서 §4-2의 경로 치환과 일치한다. RED timeout 120초, GREEN 600초, 외곽 cleanup 배정 15초다. GREEN의 도구 배경 실행은 요청서 310–311행 및 §99가 명시한 방식이며 자체로 이탈이 아니다.
+기록 시간은 RED child 16.730초/cleanup 0.001초, GREEN child 23.252초/cleanup 0.002초다. cleanup empty, deadline_hit=false, errors=[], runner_ok=true다.
+시작 기록 01:55:12Z → 끝 기록 02:00:05Z = 293초, a 이름 확인의 제출 시각 01:51:48Z부터 = 497초로 a→e 끝 기록 7,200초 배정 이내다. 이후 commit/push/문서 시간을 포함한 전체 작업 시간이라고 쓰지 않는다. 시간은 제출 기록의 경계이며 새 실행 측정이 아니다.
+
+절차 차이 A2_PROC_01 (P3·비차단·기록 유지):
+§100 2901–2904행은 a의 커밋 줄에서 고정 <확인>의 print(json.dumps(...))를 뺐다고 밝힌다. 요청서 §4-2/4-6(281,308,451–460행)의 정확 고정 명령과 문자열이 다르므로 ‘a–e 명령 완전 일치’라고 수용할 수 없다.
+같은 이름 열거·정규식·반환 규칙이었다는 설명과 직전 고정 검사 outside_allowlist=[]는 제출 기록이다. 이 설명대로라면 출력 생략은 검사 predicate/반환 gate를 바꾸지 않으며, 받은 시험 봉인·원천 바이트·RED/GREEN 판정과 충돌하지 않는다. 결과 무효·재시험을 요구할 사유로 삼지 않는다. 다만 당시 실제 셸 줄 원문을 독립 확인했다고 쓰지 않는다.
+이 검토는 이미 발생한 이탈의 기록상 분류이며 과거 변형 명령을 소급 승인하지 않는다.
+
+§100의 절차 Git 나열에는 fetch가 있으나 §4-6의 열거는 add/commit/push/log다. 문서의 작성 저장소 동기화와 금지된 실제 E1 대상 자료 fetch는 구분해야 한다. 현 23개 실행 증거는 절차 Git의 전체 argv 이력이 아니므로 모든 셸 호출을 인증할 수 없다. 기존 세션 기록이 있으면 그 fetch의 저장소/remote/목적과 실제 명령을 정정·보충 기록에 연결하는 것이 유용하다. 새 fetch·추가 실행·재측정을 요구하지 않는다. 이 용어만으로 실제 E1-2를 실행했다고 판단하지 않는다.
+
+3. Q2 — RED 수용
+stdout 136행: 실패 9, 통과 24. 실패 집합은 l14/l23/l25/l28/l29/l30/l31/l32/l33이고 나머지 24개가 통과했다. 누락·추가·중복이 없다.
+FAILURES 절의 각 머리줄과 첫 traceback 경로/전체 시험명, 예외 블록 1개, 최종 종류 및 메시지(정확 비교 7개·접두 2개)를 사전 표에 대조했다. 줄 번호는 참고 정보이며 합격 조건으로 대신 쓰지 않았다.
+연쇄 예외·UNEXPECTED_RED_CAUSE·수집 오류·ERROR/INTERNALERROR·중단이 없다.
+메타 pytest rc1 및 외곽 파일 원바이트 1\n, stderr 0bytes, 공통 조건이 일치한다.
+판정기 기록 e2f0f036a3c562484bc2e83d83e6c1e20e4f80b81612cd78faa6cde043332511 (12,484 bytes)은 76항목 전부 true/MATCH다. 검토자의 원출력 대조와 일치한다. 제출자가 보고한 수동 MATCH와도 충돌하지 않는다.
+
+l33은 이번에 1072행의 예정 AssertionError (‘정리 기한에 닿은 기록을 사후 대조가 통과시켰다’, [])로 실패했다. v8의 직접 호출은 fixture extra/data/data_files를 넘기며, 예전의 다른 실패 원인을 새 표와 섞지 않았다.
+기존 E1_0B_RESULT_N1의 정적 정정에 이번 대조 결과가 연결된다. 지난 여덟 RED 일치를 이어 붙여 통과로 세지 않았다.
+
+4. Q3 — GREEN과 E1-0b 종결 범위
+GREEN stdout은 71 passed in 22.54s다. PASSED 집합은 봉인된 네 파일의 최상위 test_* 21/6/33/11개와 정확히 같다. AST는 함수명을 읽는 데이터 파싱으로만 사용했다.
+meta source_end가 해당 네 파일의 실제 길이/SHA와 일치한다. 누락·추가·중복·FAILURES 절·FAILED/ERROR/INTERNALERROR·중단이 없다.
+메타 pytest rc0, 외곽 파일 0\n, stderr 0bytes와 공통 조건이 일치한다.
+판정기 기록 e9a8a0b07c5c9ef7bd036836e7b2ff8dfbfca355bba800a5cd7e7a5c7274a89f (4,559 bytes)은 20항목 true/MATCH다. 독립 데이터 대조와 일치한다.
+선택 A에 따라 GREEN의 전역 UNEXPECTED_RED_CAUSE 검사는 판정 조건이 아니다. 실제 문자열 0건이라는 참고 관측을 추가 gate로 만들지 않았다.
+
+이 결과로 E1-0b의 FUTURE-01(fetch env·설정 원천 사전/사후 검사) 및 운영 정리 정책(공통 기한·관측 시작 규칙)을 봉인된 tmp fixture/가짜 자식 대조 범위에서 기능 종결할 수 있다.
+실제 REIL 저장소 identity·읽기 경로·네트워크 fetch·원자료 개봉·실제 run 검증이 완료됐다는 뜻은 아니다. 소스상 모든 환경/정책을 보편 보장하거나 실제 COMSOL 검증으로 확장하지 않는다.
+
+5. 바이트·판정·끝 기록 결속
+두 단계 각각 TARGETS 14행의 source_start = source_end = runner의 고정 표이며 실제 받은 소스 바이트와 같다. RED에서 launcher v5 51,957 bytes(2269d775...)이고 GREEN에서는 v6 62,639 bytes(2c707123...)이며 다른 13행은 같다.
+RED baseline은 334e17f4에서 별도로 받았다. sha 텍스트의 시작/끝 14행과 meta도 같다.
+00_start의 해시 열둘, 03_end의 복사본 여섯을 모두 실제 파일에 대조했다.
+각 judge의 원입력(stdout/meta/outer_rc/stderr) 길이/SHA, judge 자기 식별, runner 자기 식별, 03_end의 judge 해시·크기/verdict와 meta 요약·외곽 반환을 교차 확인했다.
+03_end는 기록 집계이며 그 자체를 별도 기능 판정으로 사용하지 않았다.
+절차 명령 문자열 전부·사용자 원채팅·옛 작성자 scratch 확인은 이 자료로 독립 인증하지 않는다. 이전 판정기 8회/writer 2회의 작성자 확인 실행은 이번 a2 근거가 아니다.
+
+6. Q4 — 다음 단계
+결과 수용과 A2_PROC_01 절차 차이를 함께 기록한 뒤 E1-1 이후의 범위·승인 요청서를 작성하여 사전 검토로 보낼 수 있다. 이번 결과를 위한 수정·추가 시험·a2 재시도는 요청하지 않는다.
+다음 요청은 실제 대상 identity·읽기 경로·fetch·자료 개봉·run 각각의 정확 대상·명령·출처·허용 활동·자원/시간·중지 조건과 증거를 고정하고 별도 사용자 승인을 받아야 한다. 이번 결과 수용은 그 승인을 대신하지 않는다.
+E1-1–3 / 실제 REIL 자료 fetch·run / C4-A·B / COMSOL은 미승인을 유지한다. 지금 검토에서는 받은 프로그램/import/판정기/작성기/시험을 실행하지 않았으며 저장소 변경·commit·push·외부 발송도 없다.
+

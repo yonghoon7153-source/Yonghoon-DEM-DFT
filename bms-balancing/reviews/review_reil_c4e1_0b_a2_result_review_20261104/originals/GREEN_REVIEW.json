@@ -1,0 +1,650 @@
+{
+  "review_kind": "STATIC_GREEN_EVIDENCE_REVIEW",
+  "step": "02_green_e1_0b",
+  "method": "Reviewer-owned stdlib data parsing only: bytes/hashes, JSON, regular expressions, ast.parse of test files. No received Python module was imported or executed. No tests, launcher, runner, judge, probe, Git fixture, fetch, or run was started.",
+  "authority": "docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md section 4-3, lines 317-405",
+  "verdict": "MATCH",
+  "blocking_findings": [],
+  "independent_checks": [
+    {
+      "id": "input.stdout",
+      "ok": true,
+      "observed": {
+        "sha256": "be575e86e8d6ffb5c0aa2f371cc4e68515dcf00e90f0a22e1154fe345e1e9237",
+        "bytes": 14683
+      }
+    },
+    {
+      "id": "input.meta",
+      "ok": true,
+      "observed": {
+        "sha256": "186a23354e1914ad701528f53da9447cdcaed590e7c57629860d0c09d35dde55",
+        "bytes": 9077
+      }
+    },
+    {
+      "id": "common.started",
+      "ok": true,
+      "observed": true
+    },
+    {
+      "id": "common.timed_out",
+      "ok": true,
+      "observed": false
+    },
+    {
+      "id": "common.cleanup_status",
+      "ok": true,
+      "observed": "empty"
+    },
+    {
+      "id": "common.cleanup_deadline_hit",
+      "ok": true,
+      "observed": false
+    },
+    {
+      "id": "common.cleanup_errors",
+      "ok": true,
+      "observed": []
+    },
+    {
+      "id": "common.end_problems",
+      "ok": true,
+      "observed": []
+    },
+    {
+      "id": "common.errors",
+      "ok": true,
+      "observed": []
+    },
+    {
+      "id": "common.runner_ok",
+      "ok": true,
+      "observed": true
+    },
+    {
+      "id": "common.outer_rc",
+      "ok": true,
+      "observed": "0\n"
+    },
+    {
+      "id": "green.files_bound",
+      "ok": true,
+      "observed": {
+        "tests/test_reil_c4e.py": {
+          "file": {
+            "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e",
+            "bytes": 57482,
+            "source_end": {
+              "bytes": 57482,
+              "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e"
+            },
+            "same": true
+          },
+          "defined": 21,
+          "want": 21
+        },
+        "tests/test_reil_c4e_fix.py": {
+          "file": {
+            "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2",
+            "bytes": 19506,
+            "source_end": {
+              "bytes": 19506,
+              "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2"
+            },
+            "same": true
+          },
+          "defined": 6,
+          "want": 6
+        },
+        "tests/test_reil_c4e1_launch.py": {
+          "file": {
+            "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001",
+            "bytes": 74542,
+            "source_end": {
+              "bytes": 74542,
+              "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001"
+            },
+            "same": true
+          },
+          "defined": 33,
+          "want": 33
+        },
+        "tests/test_reil_c4e1_runner.py": {
+          "file": {
+            "sha256": "b34fb9a98eb6e852d4c30038ee988adee57d03c2b138e767ca742ea327a45e13",
+            "bytes": 37003,
+            "source_end": {
+              "bytes": 37003,
+              "sha256": "b34fb9a98eb6e852d4c30038ee988adee57d03c2b138e767ca742ea327a45e13"
+            },
+            "same": true
+          },
+          "defined": 11,
+          "want": 11
+        }
+      }
+    },
+    {
+      "id": "green.sections",
+      "ok": true,
+      "observed": {
+        "short test summary info": 1,
+        "FAILURES": 0
+      }
+    },
+    {
+      "id": "green.passed_set",
+      "ok": true,
+      "observed": {
+        "ok": true,
+        "count": 71,
+        "missing": [],
+        "extra": [],
+        "duplicates": []
+      }
+    },
+    {
+      "id": "green.failed_lines",
+      "ok": true,
+      "observed": []
+    },
+    {
+      "id": "green.pytest_rc",
+      "ok": true,
+      "observed": 0
+    },
+    {
+      "id": "green.last_line",
+      "ok": true,
+      "observed": "71 passed in 22.54s"
+    },
+    {
+      "id": "green.error_lines",
+      "ok": true,
+      "observed": {
+        "lines": [],
+        "errors_headers": 0
+      }
+    },
+    {
+      "id": "green.internalerror",
+      "ok": true,
+      "observed": null
+    },
+    {
+      "id": "green.interrupted",
+      "ok": true,
+      "observed": []
+    }
+  ],
+  "check_count": 20,
+  "independent_info": {
+    "stdout_lines": 146,
+    "stderr_bytes": 0,
+    "summary_other_lines": {
+      "count": 0,
+      "first": []
+    },
+    "warnings": 0
+  },
+  "received_judge_comparison": {
+    "all_20_checks_exactly_equal": true,
+    "info_exactly_equal": true,
+    "inputs_exactly_bound": {
+      "stdout.log": true,
+      "meta.json": true,
+      "outer_rc.txt": true,
+      "stderr.log": true
+    },
+    "judge_bytes_sha256": {
+      "sha256": "3749b32edd3954fdfa4bfe92336d9eafaf2121b6275c9bd0b3584ece42dc60c4",
+      "bytes": 21889
+    },
+    "judge_identity_matches_record": true,
+    "failed": [],
+    "verdict": "MATCH"
+  },
+  "expected_nodeids": [
+    "tests/test_reil_c4e.py::test_m_1_a_rule_reason_is_a_global_stop_with_three_states",
+    "tests/test_reil_c4e.py::test_m_2_snapshot_coordinates_and_rule_exception_without_a_process",
+    "tests/test_reil_c4e.py::test_r_1_call_cap_active_late_between_samples_equal_and_reason",
+    "tests/test_reil_c4e.py::test_r_2_cost_projection_upper_median_returned_only_minimum_eight_and_boundary",
+    "tests/test_reil_c4e.py::test_r_3_the_rule_never_reads_result_values",
+    "tests/test_reil_c4e.py::test_r_4_rule_input_validation_raises_instead_of_dropping_or_zero_filling",
+    "tests/test_reil_c4e.py::test_r_5_judgment_raw_basis_has_every_key_and_no_result_values",
+    "tests/test_reil_c4e.py::test_r_6_call_cap_three_paths_fork_fork_and_pure_final_drain",
+    "tests/test_reil_c4e.py::test_t_1_nonzero_origin_prep_boundary_relative_deadline_and_no_start_after_stop",
+    "tests/test_reil_c4e.py::test_d_1_prepare_order_stops_before_later_steps",
+    "tests/test_reil_c4e.py::test_d_2_exact_p0_binding_or_stop_before_any_optimizer",
+    "tests/test_reil_c4e.py::test_d_3_halfcell_is_exactly_q_pe_v_pe_q_ne_v_ne_and_a_swap_fails",
+    "tests/test_reil_c4e.py::test_d_4_paths_inside_the_repo_pickles_notebooks_existing_outputs_and_fetch_targets_are_refused",
+    "tests/test_reil_c4e.py::test_d_5_fetch_takes_only_two_paths_from_the_fixed_commit_of_a_local_repo",
+    "tests/test_reil_c4e.py::test_d_6_identity_start_end_table_and_consumed_digests",
+    "tests/test_reil_c4e.py::test_s_1_the_plan_is_the_c4_0a_plan",
+    "tests/test_reil_c4e.py::test_s_2_complete_needs_66_returned_fields_operation_record_identity_and_the_stage_and",
+    "tests/test_reil_c4e.py::test_s_3_operation_and_real_finalization_failures_each_leave_incomplete",
+    "tests/test_reil_c4e.py::test_s_4_end_to_end_synthetic_run_complete_and_one_local_error_incomplete",
+    "tests/test_reil_c4e.py::test_s_5_plan_e_writes_one_plan_without_util_data_optimizer_or_network",
+    "tests/test_reil_c4e.py::test_s_6_the_observed_tally_partitions_the_66_calls",
+    "tests/test_reil_c4e_fix.py::test_n1_a_a_trusted_list_binds_the_five_modules_to_start_end_and_acceptance",
+    "tests/test_reil_c4e_fix.py::test_n1_b_missing_extra_or_malformed_entries_and_list_sha_mismatch_stop_before_util_import",
+    "tests/test_reil_c4e_fix.py::test_n1_c_unapproved_bytes_that_stay_unchanged_from_start_to_end_are_refused",
+    "tests/test_reil_c4e_fix.py::test_n1_d_a_module_changed_during_the_run_fails_acceptance_through_the_real_finalize",
+    "tests/test_reil_c4e_fix.py::test_n1_e_the_run_cli_requires_the_trusted_list_and_its_sha",
+    "tests/test_reil_c4e_fix.py::test_n1_f_seal_sources_writes_exactly_the_five_paths_and_round_trips",
+    "tests/test_reil_c4e1_launch.py::test_l1_precheck_passes_only_with_fixed_list_exact_bytes_seal_binding_clean_interpreter_and_approved_specs",
+    "tests/test_reil_c4e1_launch.py::test_l2_list_sha_schema_path_set_entry_format_and_non_json_each_block",
+    "tests/test_reil_c4e1_launch.py::test_l3_changed_same_size_missing_symlinked_module_or_linked_parent_each_block",
+    "tests/test_reil_c4e1_launch.py::test_l4_a_shadowing_scripts_package_module_zip_entry_or_our_init_blocks",
+    "tests/test_reil_c4e1_launch.py::test_l5_interpreter_flags_fixed_argv_head_and_run_script_path_are_checked",
+    "tests/test_reil_c4e1_launch.py::test_l6_stage_verdict_is_the_and_of_precheck_child_rc_timeout_and_postcheck",
+    "tests/test_reil_c4e1_launch.py::test_l7_child_result_reads_the_last_stdout_line_and_needs_final_complete_for_run",
+    "tests/test_reil_c4e1_launch.py::test_l8_identity_link_binds_the_run_import_paths_to_the_checked_paths",
+    "tests/test_reil_c4e1_launch.py::test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false",
+    "tests/test_reil_c4e1_launch.py::test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds",
+    "tests/test_reil_c4e1_launch.py::test_l11_timeout_kills_the_whole_process_group_including_grandchildren",
+    "tests/test_reil_c4e1_launch.py::test_l12_refuses_to_overwrite_records_or_reuse_a_pycache_folder",
+    "tests/test_reil_c4e1_launch.py::test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder",
+    "tests/test_reil_c4e1_launch.py::test_l14_independence_fixed_commands_constants_and_main_rules",
+    "tests/test_reil_c4e1_launch.py::test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it",
+    "tests/test_reil_c4e1_launch.py::test_l16_a_leaf_extension_module_beside_an_approved_module_blocks",
+    "tests/test_reil_c4e1_launch.py::test_l17_extra_executed_files_and_the_seal_lock_binding_each_block",
+    "tests/test_reil_c4e1_launch.py::test_l18_process_observation_errors_stay_unknown_and_only_vanished_pids_are_gone",
+    "tests/test_reil_c4e1_launch.py::test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited",
+    "tests/test_reil_c4e1_launch.py::test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state",
+    "tests/test_reil_c4e1_launch.py::test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output",
+    "tests/test_reil_c4e1_launch.py::test_l22_child_env_keeps_only_the_ca_among_git_variables_and_removes_secrets",
+    "tests/test_reil_c4e1_launch.py::test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child",
+    "tests/test_reil_c4e1_launch.py::test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source",
+    "tests/test_reil_c4e1_launch.py::test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git",
+    "tests/test_reil_c4e1_launch.py::test_l26_preparation_failures_are_recorded_as_phase_prepare_and_never_start_the_child",
+    "tests/test_reil_c4e1_launch.py::test_l27_decode_failures_in_proc_reads_and_git_output_are_recorded_not_escaped",
+    "tests/test_reil_c4e1_launch.py::test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list",
+    "tests/test_reil_c4e1_launch.py::test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child",
+    "tests/test_reil_c4e1_launch.py::test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write",
+    "tests/test_reil_c4e1_launch.py::test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look",
+    "tests/test_reil_c4e1_launch.py::test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline",
+    "tests/test_reil_c4e1_launch.py::test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty",
+    "tests/test_reil_c4e1_runner.py::test_r1_an_observation_error_followed_by_a_clean_empty_observation_stays_unknown",
+    "tests/test_reil_c4e1_runner.py::test_r2_observation_errors_during_the_timeout_loop_are_kept_to_the_end",
+    "tests/test_reil_c4e1_runner.py::test_r3_cleanup_never_starts_an_observation_past_one_common_deadline_even_when_observations_take_time",
+    "tests/test_reil_c4e1_runner.py::test_r4_the_runner_cleans_inherited_git_variables_before_its_first_git_call",
+    "tests/test_reil_c4e1_runner.py::test_r5_source_table_hashes_the_fixed_targets_and_any_difference_from_the_sealed_table_is_a_problem",
+    "tests/test_reil_c4e1_runner.py::test_r6_a_normal_step_writes_both_source_tables_and_records_from_the_right_repo_with_a_clean_child_env",
+    "tests/test_reil_c4e1_runner.py::test_r7_preparation_failures_stop_before_the_child_and_intentional_refusals_write_nothing",
+    "tests/test_reil_c4e1_runner.py::test_r8_a_real_timeout_kills_the_group_and_an_orphaned_other_session_grandchild_within_the_deadline",
+    "tests/test_reil_c4e1_runner.py::test_r9_an_observation_started_before_the_deadline_that_returns_after_it_is_followed_only_by_immediate_actions",
+    "tests/test_reil_c4e1_runner.py::test_r10_an_exception_late_in_cleanup_is_recorded_and_handled_under_the_same_deadline",
+    "tests/test_reil_c4e1_runner.py::test_r11_proc_reads_are_bytes_and_every_per_pid_read_or_parse_error_is_recorded_without_stopping_the_scan"
+  ],
+  "passed_nodeids": [
+    "tests/test_reil_c4e.py::test_m_1_a_rule_reason_is_a_global_stop_with_three_states",
+    "tests/test_reil_c4e.py::test_m_2_snapshot_coordinates_and_rule_exception_without_a_process",
+    "tests/test_reil_c4e.py::test_r_1_call_cap_active_late_between_samples_equal_and_reason",
+    "tests/test_reil_c4e.py::test_r_2_cost_projection_upper_median_returned_only_minimum_eight_and_boundary",
+    "tests/test_reil_c4e.py::test_r_3_the_rule_never_reads_result_values",
+    "tests/test_reil_c4e.py::test_r_4_rule_input_validation_raises_instead_of_dropping_or_zero_filling",
+    "tests/test_reil_c4e.py::test_r_5_judgment_raw_basis_has_every_key_and_no_result_values",
+    "tests/test_reil_c4e.py::test_r_6_call_cap_three_paths_fork_fork_and_pure_final_drain",
+    "tests/test_reil_c4e.py::test_t_1_nonzero_origin_prep_boundary_relative_deadline_and_no_start_after_stop",
+    "tests/test_reil_c4e.py::test_d_1_prepare_order_stops_before_later_steps",
+    "tests/test_reil_c4e.py::test_d_2_exact_p0_binding_or_stop_before_any_optimizer",
+    "tests/test_reil_c4e.py::test_d_3_halfcell_is_exactly_q_pe_v_pe_q_ne_v_ne_and_a_swap_fails",
+    "tests/test_reil_c4e.py::test_d_4_paths_inside_the_repo_pickles_notebooks_existing_outputs_and_fetch_targets_are_refused",
+    "tests/test_reil_c4e.py::test_d_5_fetch_takes_only_two_paths_from_the_fixed_commit_of_a_local_repo",
+    "tests/test_reil_c4e.py::test_d_6_identity_start_end_table_and_consumed_digests",
+    "tests/test_reil_c4e.py::test_s_1_the_plan_is_the_c4_0a_plan",
+    "tests/test_reil_c4e.py::test_s_2_complete_needs_66_returned_fields_operation_record_identity_and_the_stage_and",
+    "tests/test_reil_c4e.py::test_s_3_operation_and_real_finalization_failures_each_leave_incomplete",
+    "tests/test_reil_c4e.py::test_s_4_end_to_end_synthetic_run_complete_and_one_local_error_incomplete",
+    "tests/test_reil_c4e.py::test_s_5_plan_e_writes_one_plan_without_util_data_optimizer_or_network",
+    "tests/test_reil_c4e.py::test_s_6_the_observed_tally_partitions_the_66_calls",
+    "tests/test_reil_c4e_fix.py::test_n1_a_a_trusted_list_binds_the_five_modules_to_start_end_and_acceptance",
+    "tests/test_reil_c4e_fix.py::test_n1_b_missing_extra_or_malformed_entries_and_list_sha_mismatch_stop_before_util_import",
+    "tests/test_reil_c4e_fix.py::test_n1_c_unapproved_bytes_that_stay_unchanged_from_start_to_end_are_refused",
+    "tests/test_reil_c4e_fix.py::test_n1_d_a_module_changed_during_the_run_fails_acceptance_through_the_real_finalize",
+    "tests/test_reil_c4e_fix.py::test_n1_e_the_run_cli_requires_the_trusted_list_and_its_sha",
+    "tests/test_reil_c4e_fix.py::test_n1_f_seal_sources_writes_exactly_the_five_paths_and_round_trips",
+    "tests/test_reil_c4e1_launch.py::test_l1_precheck_passes_only_with_fixed_list_exact_bytes_seal_binding_clean_interpreter_and_approved_specs",
+    "tests/test_reil_c4e1_launch.py::test_l2_list_sha_schema_path_set_entry_format_and_non_json_each_block",
+    "tests/test_reil_c4e1_launch.py::test_l3_changed_same_size_missing_symlinked_module_or_linked_parent_each_block",
+    "tests/test_reil_c4e1_launch.py::test_l4_a_shadowing_scripts_package_module_zip_entry_or_our_init_blocks",
+    "tests/test_reil_c4e1_launch.py::test_l5_interpreter_flags_fixed_argv_head_and_run_script_path_are_checked",
+    "tests/test_reil_c4e1_launch.py::test_l6_stage_verdict_is_the_and_of_precheck_child_rc_timeout_and_postcheck",
+    "tests/test_reil_c4e1_launch.py::test_l7_child_result_reads_the_last_stdout_line_and_needs_final_complete_for_run",
+    "tests/test_reil_c4e1_launch.py::test_l8_identity_link_binds_the_run_import_paths_to_the_checked_paths",
+    "tests/test_reil_c4e1_launch.py::test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false",
+    "tests/test_reil_c4e1_launch.py::test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds",
+    "tests/test_reil_c4e1_launch.py::test_l11_timeout_kills_the_whole_process_group_including_grandchildren",
+    "tests/test_reil_c4e1_launch.py::test_l12_refuses_to_overwrite_records_or_reuse_a_pycache_folder",
+    "tests/test_reil_c4e1_launch.py::test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder",
+    "tests/test_reil_c4e1_launch.py::test_l14_independence_fixed_commands_constants_and_main_rules",
+    "tests/test_reil_c4e1_launch.py::test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it",
+    "tests/test_reil_c4e1_launch.py::test_l16_a_leaf_extension_module_beside_an_approved_module_blocks",
+    "tests/test_reil_c4e1_launch.py::test_l17_extra_executed_files_and_the_seal_lock_binding_each_block",
+    "tests/test_reil_c4e1_launch.py::test_l18_process_observation_errors_stay_unknown_and_only_vanished_pids_are_gone",
+    "tests/test_reil_c4e1_launch.py::test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited",
+    "tests/test_reil_c4e1_launch.py::test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state",
+    "tests/test_reil_c4e1_launch.py::test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output",
+    "tests/test_reil_c4e1_launch.py::test_l22_child_env_keeps_only_the_ca_among_git_variables_and_removes_secrets",
+    "tests/test_reil_c4e1_launch.py::test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child",
+    "tests/test_reil_c4e1_launch.py::test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source",
+    "tests/test_reil_c4e1_launch.py::test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git",
+    "tests/test_reil_c4e1_launch.py::test_l26_preparation_failures_are_recorded_as_phase_prepare_and_never_start_the_child",
+    "tests/test_reil_c4e1_launch.py::test_l27_decode_failures_in_proc_reads_and_git_output_are_recorded_not_escaped",
+    "tests/test_reil_c4e1_launch.py::test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list",
+    "tests/test_reil_c4e1_launch.py::test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child",
+    "tests/test_reil_c4e1_launch.py::test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write",
+    "tests/test_reil_c4e1_launch.py::test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look",
+    "tests/test_reil_c4e1_launch.py::test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline",
+    "tests/test_reil_c4e1_launch.py::test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty",
+    "tests/test_reil_c4e1_runner.py::test_r1_an_observation_error_followed_by_a_clean_empty_observation_stays_unknown",
+    "tests/test_reil_c4e1_runner.py::test_r2_observation_errors_during_the_timeout_loop_are_kept_to_the_end",
+    "tests/test_reil_c4e1_runner.py::test_r3_cleanup_never_starts_an_observation_past_one_common_deadline_even_when_observations_take_time",
+    "tests/test_reil_c4e1_runner.py::test_r4_the_runner_cleans_inherited_git_variables_before_its_first_git_call",
+    "tests/test_reil_c4e1_runner.py::test_r5_source_table_hashes_the_fixed_targets_and_any_difference_from_the_sealed_table_is_a_problem",
+    "tests/test_reil_c4e1_runner.py::test_r6_a_normal_step_writes_both_source_tables_and_records_from_the_right_repo_with_a_clean_child_env",
+    "tests/test_reil_c4e1_runner.py::test_r7_preparation_failures_stop_before_the_child_and_intentional_refusals_write_nothing",
+    "tests/test_reil_c4e1_runner.py::test_r8_a_real_timeout_kills_the_group_and_an_orphaned_other_session_grandchild_within_the_deadline",
+    "tests/test_reil_c4e1_runner.py::test_r9_an_observation_started_before_the_deadline_that_returns_after_it_is_followed_only_by_immediate_actions",
+    "tests/test_reil_c4e1_runner.py::test_r10_an_exception_late_in_cleanup_is_recorded_and_handled_under_the_same_deadline",
+    "tests/test_reil_c4e1_runner.py::test_r11_proc_reads_are_bytes_and_every_per_pid_read_or_parse_error_is_recorded_without_stopping_the_scan"
+  ],
+  "all_14_source_binding": {
+    "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt": {
+      "expected": {
+        "bytes": 12849,
+        "sha256": "aae2ec14c4d652ef9a9e5b1c45bf52896d2234dce16eac77942911e596669fed"
+      },
+      "actual": {
+        "sha256": "aae2ec14c4d652ef9a9e5b1c45bf52896d2234dce16eac77942911e596669fed",
+        "bytes": 12849
+      },
+      "source_start_same": true,
+      "matches": true
+    },
+    "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json": {
+      "expected": {
+        "bytes": 1100,
+        "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52"
+      },
+      "actual": {
+        "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52",
+        "bytes": 1100
+      },
+      "source_start_same": true,
+      "matches": true
+    },
+    "bms-balancing/scripts/reil_c4_e3a.py": {
+      "expected": {
+        "bytes": 32311,
+        "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+      },
+      "actual": {
+        "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3",
+        "bytes": 32311
+      },
+      "source_start_same": true,
+      "matches": true
+    },
+    "bms-balancing/scripts/reil_c4_monitor.py": {
+      "expected": {
+        "bytes": 21546,
+        "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+      },
+      "actual": {
+        "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b",
+        "bytes": 21546
+      },
+      "source_start_same": true,
+      "matches": true
+    },
+    "bms-balancing/scripts/reil_c4e1_launch.py": {
+      "expected": {
+        "bytes": 62639,
+        "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+      },
+      "actual": {
+        "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf",
+        "bytes": 62639
+      },
+      "source_start_same": true,
+      "matches": true
+    },
+    "bms-balancing/scripts/reil_c4e_run.py": {
+      "expected": {
+        "bytes": 53853,
+        "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+      },
+      "actual": {
+        "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9",
+        "bytes": 53853
+      },
+      "source_start_same": true,
+      "matches": true
+    },
+    "bms-balancing/scripts/reil_c5_pilot.py": {
+      "expected": {
+        "bytes": 47164,
+        "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+      },
+      "actual": {
+        "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6",
+        "bytes": 47164
+      },
+      "source_start_same": true,
+      "matches": true
+    },
+    "bms-balancing/scripts/reil_c6_profile.py": {
+      "expected": {
+        "bytes": 15915,
+        "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"
+      },
+      "actual": {
+        "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d",
+        "bytes": 15915
+      },
+      "source_start_same": true,
+      "matches": true
+    },
+    "bms-balancing/scripts/reil_p0.py": {
+      "expected": {
+        "bytes": 23941,
+        "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+      },
+      "actual": {
+        "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a",
+        "bytes": 23941
+      },
+      "source_start_same": true,
+      "matches": true
+    },
+    "bms-balancing/tests/test_reil_c4e.py": {
+      "expected": {
+        "bytes": 57482,
+        "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e"
+      },
+      "actual": {
+        "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e",
+        "bytes": 57482
+      },
+      "source_start_same": true,
+      "matches": true
+    },
+    "bms-balancing/tests/test_reil_c4e1_launch.py": {
+      "expected": {
+        "bytes": 74542,
+        "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001"
+      },
+      "actual": {
+        "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001",
+        "bytes": 74542
+      },
+      "source_start_same": true,
+      "matches": true
+    },
+    "bms-balancing/tests/test_reil_c4e1_runner.py": {
+      "expected": {
+        "bytes": 37003,
+        "sha256": "b34fb9a98eb6e852d4c30038ee988adee57d03c2b138e767ca742ea327a45e13"
+      },
+      "actual": {
+        "sha256": "b34fb9a98eb6e852d4c30038ee988adee57d03c2b138e767ca742ea327a45e13",
+        "bytes": 37003
+      },
+      "source_start_same": true,
+      "matches": true
+    },
+    "bms-balancing/tests/test_reil_c4e_fix.py": {
+      "expected": {
+        "bytes": 19506,
+        "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2"
+      },
+      "actual": {
+        "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2",
+        "bytes": 19506
+      },
+      "source_start_same": true,
+      "matches": true
+    },
+    "degradation-degeneracy/tools/env_profile.py": {
+      "expected": {
+        "bytes": 22333,
+        "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"
+      },
+      "actual": {
+        "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563",
+        "bytes": 22333
+      },
+      "source_start_same": true,
+      "matches": true
+    }
+  },
+  "source_tables": {
+    "source_sha256.txt": {
+      "rows": 14,
+      "exact_sha_set_match": true
+    },
+    "source_sha256_end.txt": {
+      "rows": 14,
+      "exact_sha_set_match": true
+    }
+  },
+  "supplemental_metadata": {
+    "pytest_argv_tail_matches_approved": true,
+    "argv": [
+      "/usr/bin/env",
+      "PYTHONPATH=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/pytest_t",
+      "REIL_C4E1_RUNNER_UNDER_TEST=/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/00_step_runner.py",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python",
+      "-X",
+      "pycache_prefix=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/c4e1_0b_a2_steps/pycache/02_green_e1_0b",
+      "-m",
+      "pytest",
+      "-p",
+      "no:cacheprovider",
+      "-x",
+      "tests/test_reil_c4e.py",
+      "tests/test_reil_c4e_fix.py",
+      "tests/test_reil_c4e1_launch.py",
+      "tests/test_reil_c4e1_runner.py",
+      "-q",
+      "-rA",
+      "--tb=short"
+    ],
+    "source_start_equals_end": true,
+    "launcher_v6_hash": {
+      "bytes": 62639,
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+    },
+    "runner_file_sha256_matches_meta": true,
+    "head_start": "a8139f58fa69e37f01bfe1b885befd26e55080aa",
+    "head_end": "a8139f58fa69e37f01bfe1b885befd26e55080aa",
+    "head_unchanged": true,
+    "record_rc_all_zero": true,
+    "timeout_s": 600.0,
+    "times": {
+      "child_s": 23.252,
+      "cleanup_s": 0.002,
+      "records_s": 0.043,
+      "total_s": 23.342
+    },
+    "cleanup": {
+      "cleanup_s": 0.002,
+      "deadline_hit": false,
+      "emergency": false,
+      "errors": [],
+      "exited_after_kill": null,
+      "kills": [],
+      "rc_after_kill": null,
+      "settle": {
+        "alive": [],
+        "deadline_hit": false,
+        "errors": [],
+        "first_alive": [],
+        "first_error": null,
+        "kills": [],
+        "reaped": [
+          1956,
+          2042
+        ],
+        "status": "empty",
+        "zombies": [
+          1956,
+          2042
+        ]
+      },
+      "status": "empty",
+      "timed_out": false
+    },
+    "first_error": null,
+    "problems": [],
+    "stderr_bytes": 0,
+    "start_utc": "2026-11-04T01:58:31.062Z",
+    "end_utc": "2026-11-04T01:58:54.404Z",
+    "pytest_full_argv_matches_approved_with_SP_E_expanded": true
+  },
+  "functional_assessment": {
+    "green_condition_satisfied": true,
+    "scope": "E1-0b a2 sealed controls: FUTURE-01 fetch configuration source isolation and launcher cleanup policy. Supports E1-0b closure when paired with accepted RED and complete provenance/end-record review.",
+    "future_01_controls": [
+      "l23 user-level rewrite/proxy/TLS settings excluded from checks and child",
+      "l25 inherited Git location/trace variables removed; fixed configuration source present",
+      "l28 every inherited GIT_CONFIG source removed; only fixed command list installed; idempotence and input non-mutation",
+      "l29 fetch-directory-only conditional configuration excluded from checks and child",
+      "l30 allowed local configuration accepted; local TLS-off and include rejected"
+    ],
+    "cleanup_controls": [
+      "l31 common absolute deadline; bounded observation and sleep; unverified when unable to observe",
+      "l32 cleanup exceptions preserved; emergency actions share original deadline",
+      "l33 postcheck rejects deadline reached, non-empty terminal group states, and cleanup errors; fixture extra/data/data_files explicitly passed"
+    ],
+    "implementation_refs": {
+      "fetch_env": "scripts/reil_c4e1_launch.py:398",
+      "fetch_source_precheck": "scripts/reil_c4e1_launch.py:462",
+      "fetch_source_postcheck": "scripts/reil_c4e1_launch.py:478",
+      "postcheck": "scripts/reil_c4e1_launch.py:601",
+      "cleanup_group": "scripts/reil_c4e1_launch.py:731",
+      "run_child": "scripts/reil_c4e1_launch.py:777"
+    },
+    "green_unexpected_red_cause_scope": "Adopted A2 N1 option A does not add a global GREEN UNEXPECTED_RED_CAUSE rule. The received GREEN stdout in fact has no such marker.",
+    "green_marker_occurrences": 0,
+    "e1_1_through_e1_3": "No authorization or completion is implied. Production identity/read-path/fetch/data-open/run require a separate request, review, and user approval. Synthetic fixture step=fetch/run lines in pytest PASSES are not production execution evidence.",
+    "limitations": [
+      "Validates received records and frozen test scope, not an independent reproduction on the original host.",
+      "71 passes do not establish all future environments or authorize E1-1 through E1-3.",
+      "Approval provenance, RED criteria and end-record sequence are reviewed separately."
+    ],
+    "control_refs": {
+      "23": "tests/test_reil_c4e1_launch.py:683",
+      "25": "tests/test_reil_c4e1_launch.py:731",
+      "28": "tests/test_reil_c4e1_launch.py:898",
+      "29": "tests/test_reil_c4e1_launch.py:916",
+      "30": "tests/test_reil_c4e1_launch.py:957",
+      "31": "tests/test_reil_c4e1_launch.py:998",
+      "32": "tests/test_reil_c4e1_launch.py:1030",
+      "33": "tests/test_reil_c4e1_launch.py:1053"
+    }
+  }
+}

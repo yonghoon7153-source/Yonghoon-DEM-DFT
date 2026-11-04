@@ -1,0 +1,31 @@
+{
+  "kind": "REIL_A2_RESULT_EVIDENCE_LINKAGE",
+  "pin": "f09ead06a0ec21534af327cd108b607343f43ec3",
+  "evidence_files": 23,
+  "evidence_bytes": 138608,
+  "request_unchanged": true,
+  "six_drafts_unchanged": true,
+  "source_identity_per_step": 14,
+  "source_start_end_and_fixed_table_match": true,
+  "fresh_sources_bound": 14,
+  "red_baseline_fetched_at": "334e17f4",
+  "start_sha_rows_verified": 12,
+  "end_copy_hashes_verified": 6,
+  "judge_inputs_and_self_hashes_verified": true,
+  "judge_checks": {
+    "RED": 76,
+    "GREEN": 20
+  },
+  "end_records_match": true,
+  "stage_history_adjacent_forward_commits": 6,
+  "changed_paths_since_preexecution": 29,
+  "previous_evidence_modified_paths": [],
+  "recorded_elapsed_start_to_end_seconds": 293,
+  "recorded_elapsed_stage_a_to_end_seconds": 497,
+  "approved_a_to_e_end_limit_seconds": 7200,
+  "whole_submission_elapsed_claim": false,
+  "historical_raw_shell_execution_independently_observed": false,
+  "received_code_import_execution": 0,
+  "target_tests": 0,
+  "reviewer_git_mutations": 0
+}

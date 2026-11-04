@@ -1,0 +1,2076 @@
+{
+  "review": "E1-0b a2 RED static result review",
+  "source_pin": "f09ead06 (intake pin supplied by parent)",
+  "method": "Read original UTF-8 records, parse JSON, hash bytes, AST-parse test declarations and literal judge constants only. Reviewer-owned script; no received code import/evaluation/execution, no judge/launcher/pytest/probe/fixture/run/retest.",
+  "verdict": "RED_RECORDS_MATCH_SECTION_4_3",
+  "blocking_findings": [],
+  "identities": {
+    "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md": {
+      "sha256": "ae413f965e890103db175ef261b05d6c49b26f9a53048abdab8c9b8d3b234840",
+      "bytes": 96529
+    },
+    "source/bms-balancing/tests/test_reil_c4e1_launch.py": {
+      "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001",
+      "bytes": 74542
+    },
+    "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/00_judge.py": {
+      "sha256": "3749b32edd3954fdfa4bfe92336d9eafaf2121b6275c9bd0b3584ece42dc60c4",
+      "bytes": 21889
+    },
+    "basis/red_launcher.py.txt": {
+      "sha256": "2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396",
+      "bytes": 51957
+    },
+    "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.judge.json": {
+      "sha256": "e2f0f036a3c562484bc2e83d83e6c1e20e4f80b81612cd78faa6cde043332511",
+      "bytes": 12484
+    },
+    "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.meta.json": {
+      "sha256": "4f10aadba766957cf530da95a9a4dd876199e1a8f639c4546d4b6184f9702bf7",
+      "bytes": 8836
+    },
+    "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.outer_rc.txt": {
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2
+    },
+    "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.porcelain_end.txt": {
+      "sha256": "63046db69bd82217db5007a03dfc75921d6edd61f18f01c7c97e6d1313cd2988",
+      "bytes": 166
+    },
+    "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.porcelain_start.txt": {
+      "sha256": "ce6f2cdd5175d57ceefe4cfab010a4125b89d1354ccd5de815eb99d5396130ff",
+      "bytes": 82
+    },
+    "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.source_sha256.txt": {
+      "sha256": "f3143cba7be7d57a058eb04b7b1804cd16499e3835f44251b7b5a20144d2be44",
+      "bytes": 1732
+    },
+    "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.source_sha256_end.txt": {
+      "sha256": "f3143cba7be7d57a058eb04b7b1804cd16499e3835f44251b7b5a20144d2be44",
+      "bytes": 1732
+    },
+    "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log": {
+      "sha256": "c67925b419f3a9812669556ad98ee81354a5d1907038662b2d514a74ff7f8efb",
+      "bytes": 13412
+    }
+  },
+  "request_judge_table_same": true,
+  "request_judge_pass24_same": true,
+  "input_bindings": {
+    "stdout.log": {
+      "actual": {
+        "sha256": "c67925b419f3a9812669556ad98ee81354a5d1907038662b2d514a74ff7f8efb",
+        "bytes": 13412
+      },
+      "recorded": {
+        "sha256": "c67925b419f3a9812669556ad98ee81354a5d1907038662b2d514a74ff7f8efb",
+        "bytes": 13412
+      },
+      "same": true
+    },
+    "meta.json": {
+      "actual": {
+        "sha256": "4f10aadba766957cf530da95a9a4dd876199e1a8f639c4546d4b6184f9702bf7",
+        "bytes": 8836
+      },
+      "recorded": {
+        "sha256": "4f10aadba766957cf530da95a9a4dd876199e1a8f639c4546d4b6184f9702bf7",
+        "bytes": 8836
+      },
+      "same": true
+    },
+    "outer_rc.txt": {
+      "actual": {
+        "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "bytes": 2
+      },
+      "recorded": {
+        "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "bytes": 2
+      },
+      "same": true
+    },
+    "stderr.log": {
+      "actual": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "recorded": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "same": true
+    }
+  },
+  "sealed_judge_same": true,
+  "all_source_start_end_rows_same": true,
+  "source_hash_text_start_end_same": true,
+  "red_v5_basis_matches_meta": true,
+  "defined_tests": 33,
+  "passed_nodeids": [
+    "tests/test_reil_c4e1_launch.py::test_l1_precheck_passes_only_with_fixed_list_exact_bytes_seal_binding_clean_interpreter_and_approved_specs",
+    "tests/test_reil_c4e1_launch.py::test_l2_list_sha_schema_path_set_entry_format_and_non_json_each_block",
+    "tests/test_reil_c4e1_launch.py::test_l3_changed_same_size_missing_symlinked_module_or_linked_parent_each_block",
+    "tests/test_reil_c4e1_launch.py::test_l4_a_shadowing_scripts_package_module_zip_entry_or_our_init_blocks",
+    "tests/test_reil_c4e1_launch.py::test_l5_interpreter_flags_fixed_argv_head_and_run_script_path_are_checked",
+    "tests/test_reil_c4e1_launch.py::test_l6_stage_verdict_is_the_and_of_precheck_child_rc_timeout_and_postcheck",
+    "tests/test_reil_c4e1_launch.py::test_l7_child_result_reads_the_last_stdout_line_and_needs_final_complete_for_run",
+    "tests/test_reil_c4e1_launch.py::test_l8_identity_link_binds_the_run_import_paths_to_the_checked_paths",
+    "tests/test_reil_c4e1_launch.py::test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false",
+    "tests/test_reil_c4e1_launch.py::test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds",
+    "tests/test_reil_c4e1_launch.py::test_l11_timeout_kills_the_whole_process_group_including_grandchildren",
+    "tests/test_reil_c4e1_launch.py::test_l12_refuses_to_overwrite_records_or_reuse_a_pycache_folder",
+    "tests/test_reil_c4e1_launch.py::test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder",
+    "tests/test_reil_c4e1_launch.py::test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it",
+    "tests/test_reil_c4e1_launch.py::test_l16_a_leaf_extension_module_beside_an_approved_module_blocks",
+    "tests/test_reil_c4e1_launch.py::test_l17_extra_executed_files_and_the_seal_lock_binding_each_block",
+    "tests/test_reil_c4e1_launch.py::test_l18_process_observation_errors_stay_unknown_and_only_vanished_pids_are_gone",
+    "tests/test_reil_c4e1_launch.py::test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited",
+    "tests/test_reil_c4e1_launch.py::test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state",
+    "tests/test_reil_c4e1_launch.py::test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output",
+    "tests/test_reil_c4e1_launch.py::test_l22_child_env_keeps_only_the_ca_among_git_variables_and_removes_secrets",
+    "tests/test_reil_c4e1_launch.py::test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source",
+    "tests/test_reil_c4e1_launch.py::test_l26_preparation_failures_are_recorded_as_phase_prepare_and_never_start_the_child",
+    "tests/test_reil_c4e1_launch.py::test_l27_decode_failures_in_proc_reads_and_git_output_are_recorded_not_escaped"
+  ],
+  "failed_nodeids": [
+    "tests/test_reil_c4e1_launch.py::test_l14_independence_fixed_commands_constants_and_main_rules",
+    "tests/test_reil_c4e1_launch.py::test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child",
+    "tests/test_reil_c4e1_launch.py::test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git",
+    "tests/test_reil_c4e1_launch.py::test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list",
+    "tests/test_reil_c4e1_launch.py::test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child",
+    "tests/test_reil_c4e1_launch.py::test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write",
+    "tests/test_reil_c4e1_launch.py::test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look",
+    "tests/test_reil_c4e1_launch.py::test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline",
+    "tests/test_reil_c4e1_launch.py::test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty"
+  ],
+  "summary_other_lines": [],
+  "final_summary": {
+    "line": 136,
+    "value": "9 failed, 24 passed in 13.89s",
+    "warnings": 0
+  },
+  "failure_details": [
+    {
+      "name": "test_l14_independence_fixed_commands_constants_and_main_rules",
+      "exception": "AssertionError",
+      "mode": "exact",
+      "message": "('E1-0b: 승인 문구의 요청서 경로', 'docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md')",
+      "predicted": 465,
+      "request_line": 363,
+      "stdout_section": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 3,
+        "end_line": 12
+      },
+      "stdout_first_entry": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 4
+      },
+      "stdout_exception_head": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 6
+      },
+      "actual_type": "AssertionError",
+      "actual_message": "('E1-0b: 승인 문구의 요청서 경로', 'docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md')",
+      "actual_source_line": 465,
+      "predicted_line_same": true,
+      "predicted_line_is_criterion": false,
+      "message_matches": true,
+      "e_lines": 7
+    },
+    {
+      "name": "test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child",
+      "exception": "AssertionError",
+      "mode": "prefix",
+      "message": "('rewrite', 'FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다', ",
+      "predicted": 712,
+      "request_line": 364,
+      "stdout_section": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 13,
+        "end_line": 17
+      },
+      "stdout_first_entry": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 14
+      },
+      "stdout_exception_head": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 16
+      },
+      "actual_type": "AssertionError",
+      "actual_message": "('rewrite', 'FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다', ['git 설정 url.https://example.invalid/.insteadof (file:/tmp/claude-0... ≠ 고정 https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git\"])",
+      "actual_source_line": 712,
+      "predicted_line_same": true,
+      "predicted_line_is_criterion": false,
+      "message_matches": true,
+      "e_lines": 2
+    },
+    {
+      "name": "test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git",
+      "exception": "AssertionError",
+      "mode": "exact",
+      "message": "('FUTURE-01: fetch 자식에 고정 설정 원천이 없다', [])",
+      "predicted": 754,
+      "request_line": 365,
+      "stdout_section": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 18,
+        "end_line": 27
+      },
+      "stdout_first_entry": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 19
+      },
+      "stdout_exception_head": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 21
+      },
+      "actual_type": "AssertionError",
+      "actual_message": "('FUTURE-01: fetch 자식에 고정 설정 원천이 없다', [])",
+      "actual_source_line": 754,
+      "predicted_line_same": true,
+      "predicted_line_is_criterion": false,
+      "message_matches": true,
+      "e_lines": 5
+    },
+    {
+      "name": "test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list",
+      "exception": "AttributeError",
+      "mode": "exact",
+      "message": "module 'scripts.reil_c4e1_launch' has no attribute 'fetch_env'",
+      "predicted": 902,
+      "request_line": 366,
+      "stdout_section": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 28,
+        "end_line": 32
+      },
+      "stdout_first_entry": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 29
+      },
+      "stdout_exception_head": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 32
+      },
+      "actual_type": "AttributeError",
+      "actual_message": "module 'scripts.reil_c4e1_launch' has no attribute 'fetch_env'",
+      "actual_source_line": 902,
+      "predicted_line_same": true,
+      "predicted_line_is_criterion": false,
+      "message_matches": true,
+      "e_lines": 1
+    },
+    {
+      "name": "test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child",
+      "exception": "AssertionError",
+      "mode": "prefix",
+      "message": "('FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다', ",
+      "predicted": 951,
+      "request_line": 367,
+      "stdout_section": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 33,
+        "end_line": 39
+      },
+      "stdout_first_entry": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 34
+      },
+      "stdout_exception_head": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 36
+      },
+      "actual_type": "AssertionError",
+      "actual_message": "('FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다', [], [\"받은 저장소의 유효 출처 'https://example.invalid/REIL-UConn/Multi-Object... ≠ 고정 https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git\"])",
+      "actual_source_line": 951,
+      "predicted_line_same": true,
+      "predicted_line_is_criterion": false,
+      "message_matches": true,
+      "e_lines": 2
+    },
+    {
+      "name": "test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write",
+      "exception": "AssertionError",
+      "mode": "exact",
+      "message": "('FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다', 'localtls')",
+      "predicted": 993,
+      "request_line": 368,
+      "stdout_section": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 40,
+        "end_line": 46
+      },
+      "stdout_first_entry": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 41
+      },
+      "stdout_exception_head": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 43
+      },
+      "actual_type": "AssertionError",
+      "actual_message": "('FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다', 'localtls')",
+      "actual_source_line": 993,
+      "predicted_line_same": true,
+      "predicted_line_is_criterion": false,
+      "message_matches": true,
+      "e_lines": 2
+    },
+    {
+      "name": "test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look",
+      "exception": "AttributeError",
+      "mode": "exact",
+      "message": "module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'",
+      "predicted": 1004,
+      "request_line": 369,
+      "stdout_section": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 47,
+        "end_line": 51
+      },
+      "stdout_first_entry": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 48
+      },
+      "stdout_exception_head": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 51
+      },
+      "actual_type": "AttributeError",
+      "actual_message": "module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'",
+      "actual_source_line": 1004,
+      "predicted_line_same": true,
+      "predicted_line_is_criterion": false,
+      "message_matches": true,
+      "e_lines": 1
+    },
+    {
+      "name": "test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline",
+      "exception": "AttributeError",
+      "mode": "exact",
+      "message": "module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'",
+      "predicted": 1035,
+      "request_line": 370,
+      "stdout_section": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 52,
+        "end_line": 56
+      },
+      "stdout_first_entry": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 53
+      },
+      "stdout_exception_head": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 56
+      },
+      "actual_type": "AttributeError",
+      "actual_message": "module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'",
+      "actual_source_line": 1035,
+      "predicted_line_same": true,
+      "predicted_line_is_criterion": false,
+      "message_matches": true,
+      "e_lines": 1
+    },
+    {
+      "name": "test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty",
+      "exception": "AssertionError",
+      "mode": "exact",
+      "message": "('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])",
+      "predicted": 1072,
+      "request_line": 371,
+      "stdout_section": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 57,
+        "end_line": 61
+      },
+      "stdout_first_entry": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 58
+      },
+      "stdout_exception_head": {
+        "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+        "line": 60
+      },
+      "actual_type": "AssertionError",
+      "actual_message": "('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])",
+      "actual_source_line": 1072,
+      "predicted_line_same": true,
+      "predicted_line_is_criterion": false,
+      "message_matches": true,
+      "e_lines": 2
+    }
+  ],
+  "checks": [
+    {
+      "id": "input.stdout",
+      "independent_ok": true,
+      "observed": {
+        "sha256": "c67925b419f3a9812669556ad98ee81354a5d1907038662b2d514a74ff7f8efb",
+        "bytes": 13412
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 1
+        }
+      ],
+      "judge_json_line": 31
+    },
+    {
+      "id": "input.meta",
+      "independent_ok": true,
+      "observed": {
+        "sha256": "4f10aadba766957cf530da95a9a4dd876199e1a8f639c4546d4b6184f9702bf7",
+        "bytes": 8836
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.meta.json",
+          "line": 1
+        }
+      ],
+      "judge_json_line": 39
+    },
+    {
+      "id": "common.started",
+      "independent_ok": true,
+      "observed": true,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.meta.json",
+          "line": 264
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 341,
+          "end_line": 343
+        }
+      ],
+      "judge_json_line": 47
+    },
+    {
+      "id": "common.timed_out",
+      "independent_ok": true,
+      "observed": false,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.meta.json",
+          "line": 284
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 341,
+          "end_line": 343
+        }
+      ],
+      "judge_json_line": 52
+    },
+    {
+      "id": "common.cleanup_status",
+      "independent_ok": true,
+      "observed": "empty",
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.meta.json",
+          "line": 43
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 341,
+          "end_line": 343
+        }
+      ],
+      "judge_json_line": 57
+    },
+    {
+      "id": "common.cleanup_deadline_hit",
+      "independent_ok": true,
+      "observed": false,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.meta.json",
+          "line": 20
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 341,
+          "end_line": 343
+        }
+      ],
+      "judge_json_line": 62
+    },
+    {
+      "id": "common.cleanup_errors",
+      "independent_ok": true,
+      "observed": [],
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.meta.json",
+          "line": 22
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 341,
+          "end_line": 343
+        }
+      ],
+      "judge_json_line": 67
+    },
+    {
+      "id": "common.end_problems",
+      "independent_ok": true,
+      "observed": [],
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.meta.json",
+          "line": 50
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 341,
+          "end_line": 343
+        }
+      ],
+      "judge_json_line": 72
+    },
+    {
+      "id": "common.errors",
+      "independent_ok": true,
+      "observed": [],
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.meta.json",
+          "line": 84
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 341,
+          "end_line": 343
+        }
+      ],
+      "judge_json_line": 77
+    },
+    {
+      "id": "common.runner_ok",
+      "independent_ok": true,
+      "observed": true,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.meta.json",
+          "line": 145
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 341,
+          "end_line": 343
+        }
+      ],
+      "judge_json_line": 82
+    },
+    {
+      "id": "common.outer_rc",
+      "independent_ok": true,
+      "observed": "1\n",
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.outer_rc.txt",
+          "line": 1
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 343
+        }
+      ],
+      "judge_json_line": 87
+    },
+    {
+      "id": "red.table_bound",
+      "independent_ok": true,
+      "observed": {
+        "file": {
+          "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001",
+          "bytes": 74542,
+          "source_end": {
+            "bytes": 74542,
+            "sha256": "49d3fa36b5928b92584da158a3ac234ddf83bbc79c7d3c349fd96bc5c1bf9001"
+          },
+          "same": true
+        },
+        "defined": 33
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/tests/test_reil_c4e1_launch.py",
+          "line": 1
+        },
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.meta.json",
+          "line": 188,
+          "end_line": 191
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 334,
+          "end_line": 335
+        }
+      ],
+      "judge_json_line": 92
+    },
+    {
+      "id": "red.sections",
+      "independent_ok": true,
+      "observed": {
+        "short test summary info": 1,
+        "FAILURES": 1
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 2
+        },
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 102
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 327
+        }
+      ],
+      "judge_json_line": 108
+    },
+    {
+      "id": "red.failed_set",
+      "independent_ok": true,
+      "observed": {
+        "ok": true,
+        "count": 9,
+        "missing": [],
+        "extra": [],
+        "duplicates": []
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 127,
+          "end_line": 135
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 347,
+          "end_line": 348
+        }
+      ],
+      "judge_json_line": 116
+    },
+    {
+      "id": "red.passed_set",
+      "independent_ok": true,
+      "observed": {
+        "ok": true,
+        "count": 24,
+        "missing": [],
+        "extra": [],
+        "duplicates": []
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 103,
+          "end_line": 126
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 347,
+          "end_line": 348
+        }
+      ],
+      "judge_json_line": 127
+    },
+    {
+      "id": "red.failure_sections",
+      "independent_ok": true,
+      "observed": {
+        "extra": [],
+        "missing": [],
+        "repeated": []
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 3,
+          "end_line": 61
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 349,
+          "end_line": 353
+        }
+      ],
+      "judge_json_line": 138
+    },
+    {
+      "id": "red.l14.one_section",
+      "independent_ok": true,
+      "observed": 1,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 3,
+          "end_line": 12
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 363
+        }
+      ],
+      "judge_json_line": 147
+    },
+    {
+      "id": "red.l14.first_entry",
+      "independent_ok": true,
+      "observed": "tests/test_reil_c4e1_launch.py:465: in test_l14_independence_fixed_commands_constants_and_main_rules",
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 4
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 350
+        }
+      ],
+      "judge_json_line": 152
+    },
+    {
+      "id": "red.l14.no_chain",
+      "independent_ok": true,
+      "observed": [],
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 3,
+          "end_line": 12
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 363
+        }
+      ],
+      "judge_json_line": 157
+    },
+    {
+      "id": "red.l14.one_block",
+      "independent_ok": true,
+      "observed": {
+        "e_lines": 7
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 3,
+          "end_line": 12
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 363
+        }
+      ],
+      "judge_json_line": 162
+    },
+    {
+      "id": "red.l14.exception",
+      "independent_ok": true,
+      "observed": {
+        "head": "AssertionError: ('E1-0b: 승인 문구의 요청서 경로', 'docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md')",
+        "want": [
+          "AssertionError",
+          "exact",
+          "('E1-0b: 승인 문구의 요청서 경로', 'docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md')"
+        ]
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 6
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 363
+        }
+      ],
+      "judge_json_line": 169
+    },
+    {
+      "id": "red.l14.not_unexpected",
+      "independent_ok": true,
+      "observed": null,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 3,
+          "end_line": 12
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 363
+        }
+      ],
+      "judge_json_line": 181
+    },
+    {
+      "id": "red.l23.one_section",
+      "independent_ok": true,
+      "observed": 1,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 13,
+          "end_line": 17
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 364
+        }
+      ],
+      "judge_json_line": 186
+    },
+    {
+      "id": "red.l23.first_entry",
+      "independent_ok": true,
+      "observed": "tests/test_reil_c4e1_launch.py:712: in test_l23_user_level_rewrite_proxy_and_tls_off_settings_reach_neither_the_fetch_checks_nor_the_child",
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 14
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 350
+        }
+      ],
+      "judge_json_line": 191
+    },
+    {
+      "id": "red.l23.no_chain",
+      "independent_ok": true,
+      "observed": [],
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 13,
+          "end_line": 17
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 364
+        }
+      ],
+      "judge_json_line": 196
+    },
+    {
+      "id": "red.l23.one_block",
+      "independent_ok": true,
+      "observed": {
+        "e_lines": 2
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 13,
+          "end_line": 17
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 364
+        }
+      ],
+      "judge_json_line": 201
+    },
+    {
+      "id": "red.l23.exception",
+      "independent_ok": true,
+      "observed": {
+        "head": "AssertionError: ('rewrite', 'FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다', ['git 설정 url.https://example.invalid/.insteadof (file:/tmp/claude-0... ≠ 고정 https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git\"])",
+        "want": [
+          "AssertionError",
+          "prefix",
+          "('rewrite', 'FUTURE-01: 사용자 설정이 fetch 사전 대조에 보였다', "
+        ]
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 16
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 364
+        }
+      ],
+      "judge_json_line": 208
+    },
+    {
+      "id": "red.l23.not_unexpected",
+      "independent_ok": true,
+      "observed": null,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 13,
+          "end_line": 17
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 364
+        }
+      ],
+      "judge_json_line": 220
+    },
+    {
+      "id": "red.l25.one_section",
+      "independent_ok": true,
+      "observed": 1,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 18,
+          "end_line": 27
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 365
+        }
+      ],
+      "judge_json_line": 225
+    },
+    {
+      "id": "red.l25.first_entry",
+      "independent_ok": true,
+      "observed": "tests/test_reil_c4e1_launch.py:754: in test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git",
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 19
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 350
+        }
+      ],
+      "judge_json_line": 230
+    },
+    {
+      "id": "red.l25.no_chain",
+      "independent_ok": true,
+      "observed": [],
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 18,
+          "end_line": 27
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 365
+        }
+      ],
+      "judge_json_line": 235
+    },
+    {
+      "id": "red.l25.one_block",
+      "independent_ok": true,
+      "observed": {
+        "e_lines": 5
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 18,
+          "end_line": 27
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 365
+        }
+      ],
+      "judge_json_line": 240
+    },
+    {
+      "id": "red.l25.exception",
+      "independent_ok": true,
+      "observed": {
+        "head": "AssertionError: ('FUTURE-01: fetch 자식에 고정 설정 원천이 없다', [])",
+        "want": [
+          "AssertionError",
+          "exact",
+          "('FUTURE-01: fetch 자식에 고정 설정 원천이 없다', [])"
+        ]
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 21
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 365
+        }
+      ],
+      "judge_json_line": 247
+    },
+    {
+      "id": "red.l25.not_unexpected",
+      "independent_ok": true,
+      "observed": null,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 18,
+          "end_line": 27
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 365
+        }
+      ],
+      "judge_json_line": 259
+    },
+    {
+      "id": "red.l28.one_section",
+      "independent_ok": true,
+      "observed": 1,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 28,
+          "end_line": 32
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 366
+        }
+      ],
+      "judge_json_line": 264
+    },
+    {
+      "id": "red.l28.first_entry",
+      "independent_ok": true,
+      "observed": "tests/test_reil_c4e1_launch.py:902: in test_l28_fetch_env_drops_every_inherited_config_source_and_adds_only_the_fixed_list",
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 29
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 350
+        }
+      ],
+      "judge_json_line": 269
+    },
+    {
+      "id": "red.l28.no_chain",
+      "independent_ok": true,
+      "observed": [],
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 28,
+          "end_line": 32
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 366
+        }
+      ],
+      "judge_json_line": 274
+    },
+    {
+      "id": "red.l28.one_block",
+      "independent_ok": true,
+      "observed": {
+        "e_lines": 1
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 28,
+          "end_line": 32
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 366
+        }
+      ],
+      "judge_json_line": 279
+    },
+    {
+      "id": "red.l28.exception",
+      "independent_ok": true,
+      "observed": {
+        "head": "AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'fetch_env'",
+        "want": [
+          "AttributeError",
+          "exact",
+          "module 'scripts.reil_c4e1_launch' has no attribute 'fetch_env'"
+        ]
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 32
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 366
+        }
+      ],
+      "judge_json_line": 286
+    },
+    {
+      "id": "red.l28.not_unexpected",
+      "independent_ok": true,
+      "observed": null,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 28,
+          "end_line": 32
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 366
+        }
+      ],
+      "judge_json_line": 298
+    },
+    {
+      "id": "red.l29.one_section",
+      "independent_ok": true,
+      "observed": 1,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 33,
+          "end_line": 39
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 367
+        }
+      ],
+      "judge_json_line": 303
+    },
+    {
+      "id": "red.l29.first_entry",
+      "independent_ok": true,
+      "observed": "tests/test_reil_c4e1_launch.py:951: in test_l29_a_conditional_config_matching_only_the_fetch_folder_reaches_neither_the_checks_nor_the_child",
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 34
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 350
+        }
+      ],
+      "judge_json_line": 308
+    },
+    {
+      "id": "red.l29.no_chain",
+      "independent_ok": true,
+      "observed": [],
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 33,
+          "end_line": 39
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 367
+        }
+      ],
+      "judge_json_line": 313
+    },
+    {
+      "id": "red.l29.one_block",
+      "independent_ok": true,
+      "observed": {
+        "e_lines": 2
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 33,
+          "end_line": 39
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 367
+        }
+      ],
+      "judge_json_line": 318
+    },
+    {
+      "id": "red.l29.exception",
+      "independent_ok": true,
+      "observed": {
+        "head": "AssertionError: ('FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다', [], [\"받은 저장소의 유효 출처 'https://example.invalid/REIL-UConn/Multi-Object... ≠ 고정 https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git\"])",
+        "want": [
+          "AssertionError",
+          "prefix",
+          "('FUTURE-01: 받은 저장소 폴더에만 걸린 조건부 설정이 fetch 에 닿았다', "
+        ]
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 36
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 367
+        }
+      ],
+      "judge_json_line": 325
+    },
+    {
+      "id": "red.l29.not_unexpected",
+      "independent_ok": true,
+      "observed": null,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 33,
+          "end_line": 39
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 367
+        }
+      ],
+      "judge_json_line": 337
+    },
+    {
+      "id": "red.l30.one_section",
+      "independent_ok": true,
+      "observed": 1,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 40,
+          "end_line": 46
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 368
+        }
+      ],
+      "judge_json_line": 342
+    },
+    {
+      "id": "red.l30.first_entry",
+      "independent_ok": true,
+      "observed": "tests/test_reil_c4e1_launch.py:993: in test_l30_the_received_repository_may_hold_only_the_local_keys_that_init_remote_and_partial_fetch_write",
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 41
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 350
+        }
+      ],
+      "judge_json_line": 347
+    },
+    {
+      "id": "red.l30.no_chain",
+      "independent_ok": true,
+      "observed": [],
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 40,
+          "end_line": 46
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 368
+        }
+      ],
+      "judge_json_line": 352
+    },
+    {
+      "id": "red.l30.one_block",
+      "independent_ok": true,
+      "observed": {
+        "e_lines": 2
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 40,
+          "end_line": 46
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 368
+        }
+      ],
+      "judge_json_line": 357
+    },
+    {
+      "id": "red.l30.exception",
+      "independent_ok": true,
+      "observed": {
+        "head": "AssertionError: ('FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다', 'localtls')",
+        "want": [
+          "AssertionError",
+          "exact",
+          "('FUTURE-01: 받은 저장소의 local 설정 밖 키가 통과했다', 'localtls')"
+        ]
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 43
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 368
+        }
+      ],
+      "judge_json_line": 364
+    },
+    {
+      "id": "red.l30.not_unexpected",
+      "independent_ok": true,
+      "observed": null,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 40,
+          "end_line": 46
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 368
+        }
+      ],
+      "judge_json_line": 376
+    },
+    {
+      "id": "red.l31.one_section",
+      "independent_ok": true,
+      "observed": 1,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 47,
+          "end_line": 51
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 369
+        }
+      ],
+      "judge_json_line": 381
+    },
+    {
+      "id": "red.l31.first_entry",
+      "independent_ok": true,
+      "observed": "tests/test_reil_c4e1_launch.py:1004: in test_l31_cleanup_starts_observations_only_before_one_common_deadline_and_reports_unverified_when_it_cannot_look",
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 48
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 350
+        }
+      ],
+      "judge_json_line": 386
+    },
+    {
+      "id": "red.l31.no_chain",
+      "independent_ok": true,
+      "observed": [],
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 47,
+          "end_line": 51
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 369
+        }
+      ],
+      "judge_json_line": 391
+    },
+    {
+      "id": "red.l31.one_block",
+      "independent_ok": true,
+      "observed": {
+        "e_lines": 1
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 47,
+          "end_line": 51
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 369
+        }
+      ],
+      "judge_json_line": 396
+    },
+    {
+      "id": "red.l31.exception",
+      "independent_ok": true,
+      "observed": {
+        "head": "AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'",
+        "want": [
+          "AttributeError",
+          "exact",
+          "module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'"
+        ]
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 51
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 369
+        }
+      ],
+      "judge_json_line": 403
+    },
+    {
+      "id": "red.l31.not_unexpected",
+      "independent_ok": true,
+      "observed": null,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 47,
+          "end_line": 51
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 369
+        }
+      ],
+      "judge_json_line": 415
+    },
+    {
+      "id": "red.l32.one_section",
+      "independent_ok": true,
+      "observed": 1,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 52,
+          "end_line": 56
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 370
+        }
+      ],
+      "judge_json_line": 420
+    },
+    {
+      "id": "red.l32.first_entry",
+      "independent_ok": true,
+      "observed": "tests/test_reil_c4e1_launch.py:1035: in test_l32_an_exception_inside_cleanup_is_caught_and_only_an_emergency_kill_and_observation_follow_under_the_same_deadline",
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 53
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 350
+        }
+      ],
+      "judge_json_line": 425
+    },
+    {
+      "id": "red.l32.no_chain",
+      "independent_ok": true,
+      "observed": [],
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 52,
+          "end_line": 56
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 370
+        }
+      ],
+      "judge_json_line": 430
+    },
+    {
+      "id": "red.l32.one_block",
+      "independent_ok": true,
+      "observed": {
+        "e_lines": 1
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 52,
+          "end_line": 56
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 370
+        }
+      ],
+      "judge_json_line": 435
+    },
+    {
+      "id": "red.l32.exception",
+      "independent_ok": true,
+      "observed": {
+        "head": "AttributeError: module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'",
+        "want": [
+          "AttributeError",
+          "exact",
+          "module 'scripts.reil_c4e1_launch' has no attribute 'cleanup_group'"
+        ]
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 56
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 370
+        }
+      ],
+      "judge_json_line": 442
+    },
+    {
+      "id": "red.l32.not_unexpected",
+      "independent_ok": true,
+      "observed": null,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 52,
+          "end_line": 56
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 370
+        }
+      ],
+      "judge_json_line": 454
+    },
+    {
+      "id": "red.l33.one_section",
+      "independent_ok": true,
+      "observed": 1,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 57,
+          "end_line": 61
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 371
+        }
+      ],
+      "judge_json_line": 459
+    },
+    {
+      "id": "red.l33.first_entry",
+      "independent_ok": true,
+      "observed": "tests/test_reil_c4e1_launch.py:1072: in test_l33_postcheck_fails_the_stage_for_a_cleanup_that_reached_its_deadline_or_did_not_end_empty",
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 58
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 350
+        }
+      ],
+      "judge_json_line": 464
+    },
+    {
+      "id": "red.l33.no_chain",
+      "independent_ok": true,
+      "observed": [],
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 57,
+          "end_line": 61
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 371
+        }
+      ],
+      "judge_json_line": 469
+    },
+    {
+      "id": "red.l33.one_block",
+      "independent_ok": true,
+      "observed": {
+        "e_lines": 2
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 57,
+          "end_line": 61
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 371
+        }
+      ],
+      "judge_json_line": 474
+    },
+    {
+      "id": "red.l33.exception",
+      "independent_ok": true,
+      "observed": {
+        "head": "AssertionError: ('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])",
+        "want": [
+          "AssertionError",
+          "exact",
+          "('정리 기한에 닿은 기록을 사후 대조가 통과시켰다', [])"
+        ]
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 60
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 371
+        }
+      ],
+      "judge_json_line": 481
+    },
+    {
+      "id": "red.l33.not_unexpected",
+      "independent_ok": true,
+      "observed": null,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 57,
+          "end_line": 61
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 371
+        }
+      ],
+      "judge_json_line": 493
+    },
+    {
+      "id": "red.unexpected_anywhere",
+      "independent_ok": true,
+      "observed": [],
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 1,
+          "end_line": 136
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 355,
+          "end_line": 356
+        }
+      ],
+      "judge_json_line": 498
+    },
+    {
+      "id": "red.pytest_rc",
+      "independent_ok": true,
+      "observed": 1,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.meta.json",
+          "line": 90
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 357
+        }
+      ],
+      "judge_json_line": 503
+    },
+    {
+      "id": "red.last_line",
+      "independent_ok": true,
+      "observed": "9 failed, 24 passed in 13.89s",
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 136
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 357,
+          "end_line": 358
+        }
+      ],
+      "judge_json_line": 508
+    },
+    {
+      "id": "red.error_lines",
+      "independent_ok": true,
+      "observed": {
+        "lines": [],
+        "errors_headers": 0
+      },
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 1,
+          "end_line": 136
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 333
+        }
+      ],
+      "judge_json_line": 513
+    },
+    {
+      "id": "red.internalerror",
+      "independent_ok": true,
+      "observed": null,
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 1,
+          "end_line": 136
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 333
+        }
+      ],
+      "judge_json_line": 521
+    },
+    {
+      "id": "red.interrupted",
+      "independent_ok": true,
+      "observed": [],
+      "recorded_ok": true,
+      "same_ok": true,
+      "same_observed": true,
+      "evidence": [
+        {
+          "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+          "line": 1,
+          "end_line": 136
+        },
+        {
+          "path": "source/bms-balancing/docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+          "line": 333
+        }
+      ],
+      "judge_json_line": 526
+    }
+  ],
+  "checks_summary": {
+    "independently_checked": 76,
+    "recorded": 76,
+    "all_true": true,
+    "ids_unique": true,
+    "same_id_set": true,
+    "same_ok_everywhere": true,
+    "same_observed_everywhere": true,
+    "recorded_failed": [],
+    "recorded_verdict": "MATCH"
+  },
+  "l33_correction": {
+    "status": "Resolved in this RED evidence",
+    "fixture_arguments": {
+      "path": "source/bms-balancing/tests/test_reil_c4e1_launch.py",
+      "line": 1067,
+      "end_line": 1068
+    },
+    "baseline_assert": {
+      "path": "source/bms-balancing/tests/test_reil_c4e1_launch.py",
+      "line": 1070
+    },
+    "deadline_assert": {
+      "path": "source/bms-balancing/tests/test_reil_c4e1_launch.py",
+      "line": 1071,
+      "end_line": 1072
+    },
+    "observed_failure": {
+      "path": "source/bms-balancing/evidence/reil_c4e1_0b_a2_20261104/01_red_e1_0b.stdout.log",
+      "line": 57,
+      "end_line": 61
+    },
+    "reason": "Fixture-bound postcheck passes baseline assertion and reaches expected deadline_hit=True assertion at line 1072; final head exactly matches request. This resolves former wrong baseline cause for this submitted RED.",
+    "limit": "RED stops l33 at 1072, so subsequent statuses/errors assertions are not exercised by RED. GREEN review belongs to the separate reviewer."
+  },
+  "limits": [
+    "Static consistency of submitted evidence does not independently attest the historical process execution or absence of unrecorded activity.",
+    "Only l23 and l29 use allowed prefix comparison; truncated suffixes are not reconstructed.",
+    "Predicted source line numbers are reference values, not acceptance criteria.",
+    "Raw per-test temporary fixture meta files are not supplied; cause discrimination is supported by sealed test assertions and observed failure position, not independent replay."
+  ]
+}
