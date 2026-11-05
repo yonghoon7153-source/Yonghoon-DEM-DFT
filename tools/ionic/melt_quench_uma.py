@@ -4529,7 +4529,8 @@ def _selftest():
         mi_cut = run_kind_detail({"status": "interrupted"}, d_mi, VAL)
         mi_end = run_kind_detail({"status": "ended"}, d_mi, VAL)
         mi_orph = run_kind_detail({"status": "orphaned", "status_before_orphan": "running"}, d_mi, VAL)
-    chk(fv_fail[0] == "scientific" and fv_fail[1] == {"source": "folder_verdict", "status": "fail", "closes_system": True, "provenance": None, "prior": None}
+    chk(fv_fail[0] == "scientific" and fv_fail[1] == {"source": "folder_verdict", "status": "fail", "closes_system": True, "provenance": None,
+                                                      "prior": [{"status": "fail", "provenance": None}]}
         and fv_pass[0] == "scientific" and fv_pass[1].get("status") == "pass" and fv_pass[1].get("closes_system") is False
         and raw_unr[0] == "unreadable" and mh_bad[0] == "unreadable" and mh_ok[0] == "interrupted"
         and mi_cut[0] == "interrupted" and mi_end == ("invalid", {"source": "folder_melt_window"}) and mi_orph[0] == "interrupted",
