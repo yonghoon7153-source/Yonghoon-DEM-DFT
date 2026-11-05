@@ -1,0 +1,13 @@
+{
+ "end_snapshot_epoch": 1793864228.588313,
+ "kind": "REIL_E113_OUTER_END",
+ "launcher_exit_epoch": 1793864228.5882099,
+ "launcher_pid": 1218,
+ "name": "05_run",
+ "note": "end_snapshot_epoch 는 이 파일을 쓰기 직전의 값이다 — 그 뒤 이 파일 · outer_rc 의 게시 완료를 증명하지 않는다",
+ "rc": 0,
+ "returncode": 0,
+ "start_sha256": "bd6b55716860a57302186cc34daf2a7640983862ef172a2300b9a15ed378bf2d",
+ "step": "run",
+ "utc": "2026-11-05T07:37:08.588Z"
+}
