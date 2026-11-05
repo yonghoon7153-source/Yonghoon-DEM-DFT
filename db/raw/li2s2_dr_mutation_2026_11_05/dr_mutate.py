@@ -172,7 +172,16 @@ NEW = [
  # ── DR 전 리뷰 7 차 (6 차의 '지금 규칙의 비과학적 판정이 있으면 다른 규칙 기록 무시' 를 되돌림 · DR76 은 그 되돌림을 다시 깨는 자리로 바꿨다)
  F("DR76_any_now_frees", "        if not sci_now:                                      # 다른 규칙 (손 판정",
    "        if not sci_now and not any(_now_rules(r_) for _, r_, _ in recs if isinstance(r_, dict)):  # 다른 규칙 (손 판정"),
- F("DR77_ack_unreadable_why_off", "                + (f\" · {kd.get('why')}\" if kd.get(\"why\") else \"\")]", "                + \"\"]", "run", RUNR),
+ F("DR77_ack_unreadable_why_off", "                + (kd.get(\"why\") or \"원자료로 --stage1_verdict 다시 판정한 뒤 확인한다\") + \" (선언을 받지 않는다)\"]",
+   "                + \"원자료로 --stage1_verdict 다시 판정한 뒤 확인한다\" + \" (선언을 받지 않는다)\"]", "run", RUNR),
+ # ── DR 전 리뷰 8 차 (이중 방어 — 산출물 폴더 목록 문제면 재시도 자격 · 확인 선언 거부 · 판독 불가 거부 문구는 까닭이 출구)
+ F("DR78_retry_inv_problems_off", "    if inventory_problems:\n        return {\"ok\": False, \"code\": \"invalid\",",
+   "    if False:\n        return {\"ok\": False, \"code\": \"invalid\",", "run", RUNR),
+ F("DR79_loop_inv_problems_dropped", "inv_, vals, mq, inventory_problems=inv_bad_)", "inv_, vals, mq, inventory_problems=None)", "run", RUNR),
+ F("DR80_ack_inv_problems_off", "    if inv_bad_:                                             # ⭐ DR 전 8차 리뷰 P3",
+   "    if False:                                             # ⭐ DR 전 8차 리뷰 P3", "run", RUNR),
+ F("DR81_retry_unreadable_why_generic", "+ (rk_d.get(\"why\") or \"원자료로 --stage1_verdict 다시 판정한 뒤 다시\")}",
+   "+ \"원자료로 --stage1_verdict 다시 판정한 뒤 다시\"}", "run", RUNR),
  F("DR56_persist_before_stop_off", "                if rk_ != \"scientific\" or rkd_.get(\"source\") not in (\"folder_verdict\", \"folder_melt_window\"):",
    "                if True:", "run", RUNR),
  F2("DR19_derived_write_direct", [

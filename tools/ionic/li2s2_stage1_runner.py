@@ -489,7 +489,7 @@ def _folder_run_id(rd):
     return None
 
 
-def retry_eligibility(attempts, stop_history, inventory, values, mq):
+def retry_eligibility(attempts, stop_history, inventory, values, mq, inventory_problems=None):
     """⭐ 정전 복구 · 회신 DJ — 같은 계 · 시드의 이전 실행 **전부** (장부 순서 · invalid 런 포함) 를 보고 다시 돌려도 되는지 가른다.
     실행마다:
       · 장부 판정 pass · fail → invalid (과학적 판정 — 다시 담금질하지 않는다)
@@ -504,7 +504,13 @@ def retry_eligibility(attempts, stop_history, inventory, values, mq):
     마지막 실행에 묶여 확인된 STOP (종류별 code — mq.RETRY_BIND_CODES) 중 **재시도 선언이 맞는 것** (mq.declaration_problems — 결과와
     무관한 사유 · 사건 · 근거 · 선언자 · MD 까지 돈 invalid 런이면 다시 판정 못 하는 이유 · 상한 런 규칙 · 회신 DJ Q1 · Q4) 이 없으면 그 종류의
     code (invalid · resume) 로 멈춘다 — 그 멈춤을 선언과 함께 --ack_stop 하면 영수증이 된다.
+    산출물 폴더 목록 문제 (inventory_problems = attempt_inventory 의 둘째 값 — 같은 run_id 폴더 둘 · 신원 못 읽음 · 실행 전 기록과 plan 이 다름) 가 있으면
+    어느 폴더가 어느 실행인지 못 정하므로 invalid (⭐ DR 전 8차 리뷰 P3 — 시작 때 요약도 막지만 여기서도 막는다 · 이중 방어).
     반환 {"ok", "code", "why", "retry_of", "stop_id", "kind", "stage"}."""
+    if inventory_problems:
+        return {"ok": False, "code": "invalid",
+                "why": f"산출물 폴더 목록에 문제가 있다 ({' · '.join(str(p_)[:160] for p_ in list(inventory_problems)[:3])}) — 어느 폴더가 어느 실행인지 "
+                       "정할 수 없다 · 재시도 자격을 내지 않는다 (사본 폴더를 정리하고 다시 · 사람이 본다)"}
     n_int, kinds, stages = 0, [], []
     for x in attempts:
         rid = x.get("run_id")
@@ -529,9 +535,8 @@ def retry_eligibility(attempts, stop_history, inventory, values, mq):
                                "다시 담금질하지 않는다 (묶음에 넣으려면 그 폴더를 seed 자리로 되돌려 --stage1_verdict)"}
             return {"ok": False, "code": "invalid", "why": f"이전 실행 {tag} 에 과학적 판정 (장부 · 폴더) 이 있다 — 다시 담금질하지 않는다"}
         if rk == "unreadable":
-            return {"ok": False, "code": "invalid", "why": f"이전 실행 {tag} 의 판정을 못 읽는다 (폴더 판정 파일 · 장부 값) — '판정 없음' 으로 읽지 않는다 "
-                                                          "(원자료로 --stage1_verdict 다시 판정한 뒤 다시)"
-                                                          + (f" · {rk_d.get('why')}" if rk_d.get("why") else "")}   # ⭐ DR 전 5차 — 판독 불가 까닭 · 출구
+            return {"ok": False, "code": "invalid", "why": f"이전 실행 {tag} 의 판정을 못 읽는다 (폴더 판정 파일 · 장부 값) — '판정 없음' 으로 읽지 않는다 · "
+                                                          + (rk_d.get("why") or "원자료로 --stage1_verdict 다시 판정한 뒤 다시")}   # ⭐ DR 전 5 · 8차 — 까닭이 있으면 그것이 출구
         if x.get("end") is None or x.get("cost_basis") not in mq.COST_BASES:
             return {"ok": False, "code": "resume", "why": f"이전 실행 {tag} 비용이 확정 안 됐다 ({x.get('cost_basis')}) — 고아 런이면 --attest_cost {rid}"}
         st, st_why = mq.folder_stage_detail(rec["path"])
@@ -588,7 +593,10 @@ def ack_declaration_problems(decl, sp, led, values, mq, run_root, observed=None)
     hit = [r for r in led.get("runs", []) if isinstance(r, dict) and r.get("run_id") == rid]
     if len(hit) != 1:
         return [f"장부에 run_id {str(rid)[:8]} 런이 {len(hit)} 개"]
-    inv_, _ = mq.attempt_inventory(run_root)
+    inv_, inv_bad_ = mq.attempt_inventory(run_root)
+    if inv_bad_:                                             # ⭐ DR 전 8차 리뷰 P3 — 산출물 폴더 목록 문제면 어느 폴더가 이 실행인지 못 정한다 (재시도 자격과 같은 거부)
+        return [f"산출물 폴더 목록에 문제가 있다 ({' · '.join(str(p_)[:160] for p_ in list(inv_bad_)[:3])}) — 어느 폴더가 이 실행인지 정할 수 없다 "
+                "(선언을 받지 않는다 · 사본 폴더를 정리하고 다시 확인)"]
     rec = inv_.get(rid)
     kind, kd = mq.run_kind_detail(hit[0], rec["path"] if rec else None, values)   # 그 실행의 종류 (code 가 아니라 실행에서 · 회신 DK P0-2 — 한 분류)
     if kind == "scientific":
@@ -599,8 +607,8 @@ def ack_declaration_problems(decl, sp, led, values, mq, run_root, observed=None)
                              "provenance": kd.get("provenance"), "prior": kd.get("prior")})
         return ["이 실행에는 과학적 판정 (pass · fail) 이 있다 — 재시도 대상이 아니다 (선언을 받지 않는다)"]
     if kind == "unreadable":                                 # ⭐ DR 전 7차 — 판독 불가 까닭 · 출구도 붙인다 (재시도 자격 검사와 같은 꼴 · 끊긴 런은 다시 판정해도 안 풀린다)
-        return ["이 실행의 판정을 못 읽는다 (폴더 판정 파일 · 장부 값) — 원자료로 --stage1_verdict 다시 판정한 뒤 확인한다 (선언을 받지 않는다)"
-                + (f" · {kd.get('why')}" if kd.get("why") else "")]
+        return ["이 실행의 판정을 못 읽는다 (폴더 판정 파일 · 장부 값) — "            # ⭐ DR 전 8차 — 까닭이 있으면 그것이 출구 (끊긴 런을 '다시 판정하라' 로 맴돌게 하지 않는다)
+                + (kd.get("why") or "원자료로 --stage1_verdict 다시 판정한 뒤 확인한다") + " (선언을 받지 않는다)"]
     if code not in mq.RETRY_BIND_CODES[kind]:
         return [f"이 멈춤 ({code}) 은 이 실행 ({kind}) 의 재시도 영수증이 될 수 없다 — 묶는 code {list(mq.RETRY_BIND_CODES[kind])}"]
     st = mq.folder_stage(rec["path"]) if rec else None
@@ -1166,8 +1174,8 @@ def run(a, deps=None):
             attempts = [x for x in led["runs"] if (x.get("system"), x.get("seed")) == (sysn, seed)]
             retry_of, retry_stop, retry_kind = None, None, None
             if attempts:
-                inv_, _ = mq.attempt_inventory(R)
-                el_ = retry_eligibility(attempts, led["stop_history"], inv_, vals, mq)
+                inv_, inv_bad_ = mq.attempt_inventory(R)
+                el_ = retry_eligibility(attempts, led["stop_history"], inv_, vals, mq, inventory_problems=inv_bad_)   # ⭐ DR 전 8차 리뷰 P3
                 if not el_["ok"]:
                     if el_.get("observed"):                      # ⭐ 회신 DO P0 · DP 전 리뷰 F1 · F2 — 거부하기 전에 장부에 · 첫 시드면 그 계를 닫는다
                         try:
@@ -2473,6 +2481,12 @@ def _selftest():
         "resume 영수증 · invalid 에 정전 사유 · 상한 런에 정전 사유 · 두 번 끊김 (한도) · **완료 폴더에서 plan 만 없음 · 임시 기록만 · "
         "기록 없이 끝 경계 · invalid 런의 임시 기록 (회신 DL)** → 거부 / 맞으면 통과 (plan 전 끊김 · 상한 사유 · "
         f"invalid 다음 끊김 1 회) ({ {k: got_u[k] for k in got_u if got_u[k] != exp_u[k]} })")
+    # ⭐ DR 전 8차 리뷰 P3 (이중 방어) — 산출물 폴더 목록 문제 (같은 run_id 폴더 둘 · 신원 못 읽음) 면 영수증이 맞는 끊긴 런도 재시도 자격 invalid · 빈 목록이면 그대로
+    el_ip = retry_eligibility([run0()], rcpt(), {R0: ufold("ip")}, vals_t, real, inventory_problems=[f"run_id {R0} 산출물 폴더가 둘: a · b"])
+    el_ip0 = retry_eligibility([run0()], rcpt(), {R0: ufold("ip0")}, vals_t, real, inventory_problems=[])
+    chk(el_ip["ok"] is False and el_ip["code"] == "invalid" and "산출물 폴더 목록" in el_ip["why"] and el_ip0["ok"] is True and el_ip0["kind"] == "interrupted",
+        "⛔음성 DR 전 8차 리뷰 P3: 산출물 폴더 목록 문제 (같은 run_id 폴더 둘) 면 영수증이 맞는 끊긴 런도 재시도 자격 invalid · 문제 없으면 그대로 통과 "
+        f"({el_ip.get('ok')} · {el_ip.get('code')} · {el_ip0.get('ok')})")
     want_mj = {"full": ("incomplete", True, True), "frames": ("incomplete", False, True)}
     chk(sum(x_[0] == "full" for x_ in md_judged) >= 3 and sum(x_[0] == "frames" for x_ in md_judged) >= 4
         and all(x_[1:] == want_mj[x_[0]] for x_ in md_judged) and "MD 가 끝났던 흔적" in (cases["dm_judged_md"]["why"] or "")
@@ -2488,6 +2502,11 @@ def _selftest():
         info = ufold("ack_" + name, stage=stage, verdict=verdict)
         shutil.copytree(info["path"], d)
         _write_json_atomic(d / real.ATTEMPT_NAME, {"system": "A", "seed": 11, "run_id": rid_, "retry_of": None, "retry_stop_id": None, "retry_kind": None})
+        pj_a = d / "plan.json"                               # ⭐ DR 전 8차 — plan 신원도 이 실행으로 (원본 plan 을 복사한 여섯 폴더가 같은 run_id 면 산출물 폴더 목록 문제다 —
+        if pj_a.is_file():                                   #   확인 검사가 이제 그 문제를 거부한다) · MD 완료 기록의 run_id 도 plan 과 같게
+            pl_a = J(pj_a); pl_a.update(run_id=rid_, system="A", seed=11); _write_json_atomic(pj_a, pl_a)
+            if (d / real.MD_DONE_NAME).is_file():
+                n_a = real.planned_md_steps(pl_a); real.write_md_done(d, run_id=rid_, n_steps_planned=n_a, n_steps_done=n_a)
     RA, RB, RC_, RD = "1" * 32, "2" * 32, "3" * 32, "4" * 32
     RE_, RF_ = "6" * 32, "8" * 32
     afold("seed11.a", RA); afold("seed11.b", RB, verdict=INV); afold("seed11.c", RC_, stage="final", verdict=INV); afold("seed11.d", RD)
@@ -2496,6 +2515,8 @@ def _selftest():
                       {"run_id": RC_, "status": "ended", "verdict": "invalid"}, {"run_id": RD, "status": "cap"},
                       {"run_id": RE_, "status": "interrupted"}, {"run_id": RF_, "status": "interrupted"}]}
     A_ = lambda decl, code, rid_: ack_declaration_problems(DECL(decl), {"run_id": rid_, "code": code}, led_a, vals_t, real, ar)
+    chk(not real.attempt_inventory(ar)[1] and real.folder_stage(str(ar / "A" / "seed11.c")) == "final",
+        f"fixture: 확인 검사 바탕의 산출물 폴더 목록이 깨끗하다 (같은 run_id 폴더 · 신원 불일치 없음) · seed11.c 는 final 단계 ({real.attempt_inventory(ar)[1][:2]})")
     ack_cases = {"no_run": bool(ack_declaration_problems(DECL(OUT), {"code": "resume"}, led_a, vals_t, real, ar)),
                  "unknown_run": bool(A_(OUT, "resume", "5" * 32)),
                  "int_run_invalid_code": bool(A_(FIX, "invalid", RA)), "inv_run_resume_code": bool(A_(FIX, "resume", RB)),
@@ -2510,6 +2531,10 @@ def _selftest():
     chk(ack_cases == exp_a,
         "⛔음성 DJ Q1 (확인 때 선언 검사 단위): run_id 없음 · 장부에 없는 런 · 끊긴 런에 invalid code · invalid 런에 resume code · 끝까지 돈 invalid 런에 "
         f"이유 없음 · 상한 런에 정전 사유 → 문제 / 맞는 조합은 통과 ({ {k: ack_cases[k] for k in ack_cases if ack_cases[k] != exp_a[k]} })")
+    shutil.copytree(ar / "A" / "seed11.a", ar / "A" / "seed11.a_copy")     # ⭐ DR 전 8차 리뷰 P3 — 같은 run_id 폴더 둘 (판정 기록 없는 사본 · 이 뒤로 ar 를 안 쓴다)
+    dup_a = A_(OUT, "interrupted", RA)
+    chk(any("산출물 폴더 목록" in x_ for x_ in dup_a),
+        f"⛔음성 DR 전 8차 리뷰 P3: 확인의 재시도 선언 검사 — 같은 run_id 폴더가 둘 (사본) 이면 맞는 정전 선언도 받지 않는다 ({[x_[:120] for x_ in dup_a]})")
     # 회신 DK (카드 v3) — 정전 손실은 상한을 늘리지 않는다: 러너 사전 검사 · 소비자 모두 카드 상한 그대로
     wt_c = mk_wt(card=mk_card(stage1_cap_gpu_h=50.5))
     rc_q1, L_q1, rr_q = go(wt_c, seed_worst_h=5.0, scen={("B", 12): {"raise_on_poll": 3, "polls": 6}})
@@ -3609,6 +3634,7 @@ def _selftest():
     row_x = [r_ for r_ in J(rr_x / "stage1_ledger.json")["runs"] if (r_["system"], r_["seed"]) == ("A", 12)][-1]
     k_x, kd_x = real.run_kind_detail(row_x, str(rr_x / "A/old12"), vals_t)
     rc_x2, L_x2, _ = go(wt, rr=rr_x, ack=J(rr_x / "STOP.json")["stop_id"])
+    rs_x2 = str(J(rr_x / "STOP.json").get("reason"))                # 재시도 자격의 판독 불가 STOP — 까닭이 출구 (DR 전 8차 — '다시 판정한 뒤 다시' 를 앞세우지 않는다)
     rc_x3, L_x3, _ = go(wt, rr=rr_x, ack=J(rr_x / "STOP.json")["stop_id"],
                         declare={**FIX, "rejudge_impossible_reason": "폴더 이름 식별 invalid — 다시 판정할 수 없다 (selftest)"})
     rows_x = [r_ for r_ in J(rr_x / "stage1_ledger.json")["runs"] if (r_["system"], r_["seed"]) == ("A", 12)]
@@ -3617,7 +3643,8 @@ def _selftest():
     chk(v_x1.get("status") == "fail" and (v_x1.get("provenance") or {}).get("driver_sha16") == "0123456789abcdef" and v_x2.get("status") == "invalid"
         and k_x == "unreadable" and "다시 판정해 과학적 판정" in (kd_x.get("why") or "")
         and not L_x1 and not L_x2 and not L_x3 and rc_x3 != RC["pass"] and (J(rr_x / "STOP.json") if (rr_x / "STOP.json").is_file() else None) is not None
-        and len(rows_x) == 1 and rows_x[0].get("verdict") is None and sm_x.get("track") != "stage1_pass" and ps_x != "pass",
+        and len(rows_x) == 1 and rows_x[0].get("verdict") is None and sm_x.get("track") != "stage1_pass" and ps_x != "pass"
+        and "다시 판정해 과학적 판정" in rs_x2 and "다시 판정한 뒤 다시" not in rs_x2,
         "⛔음성 DR 전 7차 리뷰 P0: 옛 도구로 난 진짜 fail 이 장부에 안 적힌 채 폴더를 old12 로 옮기고 지금 도구로 다시 판정 (폴더 이름 때문에 invalid) 해도 판독 불가 — "
         f"invalid 재시도 선언으로 확인해도 발사 0 · 재시도 행 없음 · 묶음 통과 아님 ({v_x1.get('status')} · {v_x2.get('status')} · {k_x} · "
         f"발사 {len(L_x1)}/{len(L_x2)}/{len(L_x3)} · rc {rc_x3} · 행 {len(rows_x)} · {sm_x.get('track')} · A12 {ps_x})")
@@ -3643,12 +3670,45 @@ def _selftest():
     rc_b2a, L_b2a, _ = go(wt, rr=rr_b2, ack=sp_b2["stop_id"], declare=OUT)
     row_b2a = [r_ for r_ in J(rr_b2 / "stage1_ledger.json")["runs"] if (r_["system"], r_["seed"]) == ("A", 11)]
     chk(rc_b2r == RC["resume"] and v_b2o.get("status") == "fail" and v_b2o.get("closes_system") is True and v_b2n.get("status") == "incomplete"
-        and k_b2 == "unreadable" and any("끊긴 런" in x_ and "사람이 본다" in x_ for x_ in dp_b2)
+        and k_b2 == "unreadable" and any("끊긴 런" in x_ and "사람이 본다" in x_ for x_ in dp_b2) and not any("다시 판정한 뒤 확인한다" in x_ for x_ in dp_b2)
         and rc_b2a == RC["refused"] and not L_b2a and J(rr_b2 / "STOP.json").get("stop_id") == sp_b2["stop_id"]
         and len(row_b2a) == 1 and row_b2a[0].get("closes_system") is not True and row_b2a[0].get("verdict") is None,
         "⛔음성 DR 전 7차 리뷰 P3 (알려진 한계): 끊긴 첫 시드 폴더에 다른 규칙의 fail + 닫힘 · 지금 규칙 incomplete — 판독 불가로 정전 재시도 선언을 거부 "
         f"(발사 0 · STOP 그대로 · 닫힘 안 옮김) · 거부 문구가 끊긴 런은 사람이 본다고 말한다 ({rc_b2r} · {v_b2o.get('status')} · {v_b2n.get('status')} · "
         f"{k_b2} · {rc_b2a} · 발사 {len(L_b2a)} · {[x_[-80:] for x_ in dp_b2]})")
+    # ⭐ DR 전 8차 리뷰 P3 (이중 방어) — 평소에는 시작 때 요약이 같은 run_id 폴더 둘을 먼저 막는다. 그 요약을 거치지 않고 러너 자신의 두 자리를 보려고
+    #    러너가 쓰는 도구 모듈의 attempt_inventory 에만 목록 문제를 넣는다 (요약은 드라이버 안의 진짜 목록을 본다) — ① 확인의 재시도 선언 검사 (첫 부름)
+    #    → 거부 · STOP 그대로 · 발사 0 ② 확인을 지난 뒤 시드 루프의 재시도 자격 (둘째 부름) → invalid · 발사 0 · 대조: 문제 없으면 A11 재시도
+    import types as _ty8
+    hk_ip = {"armed": True}
+    def _cut_ip(t_):
+        if hk_ip["armed"] and t_ >= 3600.0 * 3 + 1:
+            hk_ip["armed"] = False
+            raise KeyboardInterrupt("selftest: 첫 시드 도중 정전")
+    _, _, rr_ip = go(wt, sleep_hook=_cut_ip)
+    go(wt, rr=rr_ip, ack=J(rr_ip / "STOP.json")["stop_id"])
+    sp_ip = J(rr_ip / "STOP.json")
+    (rr_ip / "A/seed11").rename(rr_ip / "A/seed11.cut")
+    def _mq_inv(after_):
+        n_ = {"c": 0}
+        def inv_(root_):
+            f_, bad_ = real.attempt_inventory(root_)
+            n_["c"] += 1
+            return f_, (list(bad_) + ["selftest: 주입한 산출물 폴더 목록 문제 (같은 run_id 폴더 둘)"] if n_["c"] > after_ else bad_)
+        ns_ = _ty8.SimpleNamespace(**{k: getattr(real, k) for k in dir(real) if not k.startswith("__")})
+        ns_.attempt_inventory = inv_
+        return ns_
+    res_ip = {}
+    for nm_, mq_ in (("control", None), ("ack", _mq_inv(0)), ("loop", _mq_inv(1))):
+        c_ = clone(rr_ip)
+        rc_, L_, _ = go(wt, rr=c_, ack=sp_ip["stop_id"], declare=OUT, mq=mq_)
+        sp_ = J(c_ / "STOP.json") if (c_ / "STOP.json").is_file() else {}
+        res_ip[nm_] = (rc_, tag(L_)[:1], sp_.get("code"), sp_.get("stop_id") == sp_ip["stop_id"], "산출물 폴더 목록" in str(sp_.get("reason")))
+    chk(sp_ip.get("code") == "resume" and res_ip["control"][0] != RC["refused"] and res_ip["control"][1] == [("A", 11)]
+        and res_ip["ack"][:4] == (RC["refused"], [], "resume", True)
+        and res_ip["loop"][0] == RC["invalid"] and res_ip["loop"][1] == [] and res_ip["loop"][2] == "invalid" and res_ip["loop"][4],
+        "⛔음성 DR 전 8차 리뷰 P3 (이중 방어): 러너가 보는 산출물 폴더 목록에 문제 (같은 run_id 폴더 둘) 가 있으면 확인의 재시도 선언 검사가 거부 (STOP 그대로 · "
+        f"발사 0) · 확인을 지난 뒤면 시드 루프의 재시도 자격이 invalid (발사 0) · 대조: 문제 없으면 A11 재시도 ({sp_ip.get('code')} · {res_ip})")
     # ⭐ DR 전 5차 리뷰 P2 — 첫 시드 (A11) 가 녹음 창이 찬 채 실행 중 상한으로 멈춤 → 상한 판정 fail + 계 닫힘 → (문서대로) 상한을 올린 카드로 · 폴더를 옆으로
     #    옮기고 확인 → 상한 칸은 판정 규칙이 아니라서 그 판정 기록은 지금 규칙의 것 → 장부에 닫힘 · 닫는 STOP melt (상한을 올린 것이 진짜 닫힘을 지우지 않는다)
     rc_cp, L_cp, rr_cp = go(mk_wt(card=mk_card(stage1_cap_gpu_h=3.0)), seed_worst_h=1.0, scen={("A", 11): {"melt": "fail"}})
