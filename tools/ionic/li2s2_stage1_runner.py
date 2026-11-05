@@ -3194,12 +3194,16 @@ def _selftest():
     def _no_hist(c_):
         l_ = J(c_ / "stage1_ledger.json"); l_.pop("stop_history", None)
         (c_ / "stage1_ledger.json").write_text(json.dumps(l_), encoding="utf-8")
+    def _hist_dict(c_):                                      # ⭐ DQ 깨기 설계 — 빈 객체 stop_history 는 뒤 원소 검사가 못 본다 (꼴 검사만 잡는다)
+        l_ = J(c_ / "stage1_ledger.json"); l_["stop_history"] = {}
+        (c_ / "stage1_ledger.json").write_text(json.dumps(l_), encoding="utf-8")
     res_s = {k_: _sum_case(f_) for k_, f_ in (("ledger_tmp", _led_tmp), ("stop_tmp", _stop_tmp), ("same_run_fail", _same_run_fail),
-                                               ("same_run_melt_fail", _same_run_melt), ("no_stop_history", _no_hist))}
+                                               ("same_run_melt_fail", _same_run_melt), ("no_stop_history", _no_hist),
+                                               ("stop_history_empty_obj", _hist_dict))}
     s_ok_ = summ(clone(rr_d))
     chk(s_ok_["track"] == "stage1_pass" and all(v_ == ("invalid", None) for v_ in res_s.values()),
         "⛔음성 회신 DP P1-2 (Codex 재현): 다 통과한 묶음에 장부 임시 파일 (A11 녹음 fail · 닫힘) · STOP 임시 파일 · 같은 실행의 장부 fail ↔ 폴더 pass · "
-        f"장부 녹음 fail ↔ 폴더 pass · stop_history 누락 → 독립 요약도 invalid · 2 단계 없음 (손 안 댄 묶음은 통과) ({s_ok_['track']} · {res_s})")
+        f"장부 녹음 fail ↔ 폴더 pass · stop_history 누락 · 빈 객체 → 독립 요약도 invalid · 2 단계 없음 (손 안 댄 묶음은 통과) ({s_ok_['track']} · {res_s})")
     # ⭐ 회신 DP P0-1 · P2-1 (교체 뒤 실패) — 파일 교체는 끝났는데 디렉터리 fsync 가 실패하면 (_AfterReplace) 메모리를 되돌리지 않고 · STOP 은 확정으로 둔다
     if os.name == "posix":
         import stat as _st5
@@ -3280,6 +3284,40 @@ def _selftest():
     rc_we, L_we, rr_we = go(wt, mq=mq_with(stage1_verdict=_sv_end))
     chk(rc_we == RC["invalid"] and len(L_we) == 1 and "쓰지 못했다" in J(rr_we / "STOP.json").get("reason", ""),
         f"⛔음성 회신 DP P1-1: 담금질 끝 판정을 쓰지 못하면 (written False) 다음 시드로 가지 않고 invalid ({rc_we} · 발사 {len(L_we)})")
+    # ⭐ DQ 편지 §3-3 확인 — 끝 처리의 쓰기 구간 안에 두 번째 신호 (Ctrl-C 두 번): 끝 처리가 STOP interrupted 를 못 쓰고 나가도
+    #   조용히 이어가지 않고 (예외가 밖으로) · 장부 행은 끝남 (interrupted) · 다음 시작은 판정 없는 폴더를 보고 resume 으로 멈춘다 (발사 0 · 덮지 않음)
+    hk2 = {"armed": True}
+    def _ctrl_c_first(t):
+        if hk2["armed"] and t >= 3600.0 * 7 + 1:             # A11 (5 h) 끝난 뒤 B11 도중 — 첫째 Ctrl-C
+            hk2["armed"] = False; raise KeyboardInterrupt("시험: 첫째 Ctrl-C")
+    arm_2 = {"on": True, "fired": False}
+    def _replace_2nd(src_, dst_, _arm=arm_2):
+        _os4.replace(src_, dst_)
+        if _arm["on"] and not hk2["armed"] and str(dst_).endswith("stage1_ledger.json"):
+            runs_ = json.loads(pathlib.Path(dst_).read_text(encoding="utf-8")).get("runs") or [{}]
+            if runs_[-1].get("status") == "interrupted":     # 끝 처리 (finish) 가 그 행을 끝낸 장부 교체 — 그 순간 둘째 신호가 미뤄져 있다
+                _arm["on"], _arm["fired"] = False, True
+                _PENDING.append("SIGINT")
+    os2_ = _ty4.SimpleNamespace(**{k_: getattr(_os4, k_) for k_ in dir(_os4) if not k_.startswith("__")}); os2_.replace = _replace_2nd
+    rr_2s = pathlib.Path(tempfile.mkdtemp(dir=tmp_root))
+    exc_2s = None
+    globals()["os"] = os2_
+    try:
+        try:
+            go(wt, rr=rr_2s, sleep_hook=_ctrl_c_first)
+        except KeyboardInterrupt as e_:
+            exc_2s = e_
+    finally:
+        globals()["os"] = _os4
+    led_2s = J(rr_2s / "stage1_ledger.json")
+    lk2 = _Lock(rr_2s / "stage1.lock"); got_lk2 = lk2.acquire(); lk2.release()
+    rc_2r, L_2r, _ = go(wt, rr=rr_2s)
+    sp_2r = J(rr_2s / "STOP.json")
+    chk(arm_2["fired"] and exc_2s is not None and led_2s["runs"][-1]["status"] == "interrupted" and led_2s["runs"][-1].get("end")
+        and got_lk2 and rc_2r == RC["resume"] and not L_2r and sp_2r.get("code") == "resume"
+        and sp_2r.get("run_id") == led_2s["runs"][-1]["run_id"],
+        "⛔음성 DQ 편지 §3-3: 끝 처리의 장부 교체 직후 둘째 신호 → 조용히 이어가지 않고 (예외) · 장부 행은 끝남 · 잠금 풀림 · "
+        f"다음 시작은 판정 없는 폴더에서 resume STOP (그 실행에 묶임 · 발사 0) ({arm_2['fired']} · {type(exc_2s).__name__} · {rc_2r} · {len(L_2r)})")
     shutil.rmtree(tmp_root, ignore_errors=True)
     print(f"li2s2_stage1_runner selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1

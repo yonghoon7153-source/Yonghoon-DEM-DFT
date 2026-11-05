@@ -1,0 +1,24 @@
+변이 304 개 (DP 판 287 · 자리 옮김 4 · DQ 17) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 4 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_dqnew_w*
+R4_launch_ledger                 ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ 진짜 판독 함수: 10 담금질 · A/B 번갈아 · 띄운 직후 장부에 시작 (첫 poll 전) · 판정에 원자료 지문 · 1 단계 통과 · 2 단계 시드 [11, 12] (rc 0)
+DP51_persist_revert_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 F4 · (둘째) F2 · F6: 본 결과를 장부에 적다가 저장이 실패하면 — 메모리도 되돌린다 (끝 저장이 반쯤 적은 것을 쓰지 않는다) · 확인 경로는 거부 (앞 STOP · 장부 바이트 그대로) · 재시도 경로는 invalid 멈춤 (
+DQ1_persist_section_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P0-1 (Codex 재현): 본 녹음 fail 을 적은 장부 교체가 끝나는 순간 미룬 신호가 와도 — 메모리를 되돌리지 않고 (적기 · 확정을 한 구간) 끝 저장이 그 행을 지키고 (첫 시드는 closes_system) · 뒤 궤적 손상 + 
+DP58_ledger_elems_off            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F1 · F2 · F6: runs · stop_history 가 없거나 원소가 객체가 아닌 장부는 채워 넣지 않고 거부 (원본 그대로) · 앞 쓰기가 남긴 장부 · STOP 임시 파일이 있으면 거부 (임시 · 장부 그대로) · 원자
+DP57_ledger_keys_optional        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F1 · F2 · F6: runs · stop_history 가 없거나 원소가 객체가 아닌 장부는 채워 넣지 않고 거부 (원본 그대로) · 앞 쓰기가 남긴 장부 · STOP 임시 파일이 있으면 거부 (임시 · 장부 그대로) · 원자
+DQ3_stop_section_off             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P2-1: terminal STOP (melt) 교체가 끝나는 순간 미룬 신호가 와도 끝 처리가 interrupted 로 덮지 않는다 (26 · interrupted · False)
+DQ2_after_replace_revert         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P0-1 · P2-1 (교체 뒤 실패): 본 녹음 fail 을 적은 장부 교체 뒤 디렉터리 fsync 가 실패해도 메모리를 되돌리지 않는다 — 확인은 거부 · 재시도는 invalid · 장부에 fail 이 남는다 · terminal STOP 교
+DQ4_stop_after_replace_flag_off  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P0-1 · P2-1 (교체 뒤 실패): 본 녹음 fail 을 적은 장부 교체 뒤 디렉터리 fsync 가 실패해도 메모리를 되돌리지 않는다 — 확인은 거부 · 재시도는 invalid · 장부에 fail 이 남는다 · terminal STOP 교
+DQ5_after_replace_plain          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P0-1 · P2-1 (교체 뒤 실패): 본 녹음 fail 을 적은 장부 교체 뒤 디렉터리 fsync 가 실패해도 메모리를 되돌리지 않는다 — 확인은 거부 · 재시도는 invalid · 장부에 fail 이 남는다 · terminal STOP 교
+DQ6_attempt_section_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP (같은 꼴): 실행 전 기록 교체가 끝나는 순간 미룬 신호가 와도 장부에 그 실행 행이 생기고 (발사 전) 마감된다 — 장부에 없는 폴더를 안 남긴다 (True · 26 · 발사 0 · 행 0)
+DQ7_rejudge_written_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P1-1 (Codex 재현): 8 실행까지만 끝난 묶음에서 A11 에 판정 임시 파일 (다시 판정 못 함 · written False) · 깨진 이력 줄 · 같은 열쇠 판정 (재판정 뒤 원문만 남은 이전 판정) → 새 실행 0 · invalid
+DQ8_end_written_off              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P1-1: 담금질 끝 판정을 쓰지 못하면 (written False) 다음 시드로 가지 않고 invalid (25 · 발사 10)
+DQ9_summary_unresolved_off       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P1-1 (Codex 재현): 8 실행까지만 끝난 묶음에서 A11 에 판정 임시 파일 (다시 판정 못 함 · written False) · 깨진 이력 줄 · 같은 열쇠 판정 (재판정 뒤 원문만 남은 이전 판정) → 새 실행 0 · invalid
+DQ10_summary_none_status_off     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P1-1 (Codex 재현): 8 실행까지만 끝난 묶음에서 A11 에 판정 임시 파일 (다시 판정 못 함 · written False) · 깨진 이력 줄 · 같은 열쇠 판정 (재판정 뒤 원문만 남은 이전 판정) → 새 실행 0 · invalid
+DQ11_record_tmp_off              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P1-2 (Codex 재현): 다 통과한 묶음에 장부 임시 파일 (A11 녹음 fail · 닫힘) · STOP 임시 파일 · 같은 실행의 장부 fail ↔ 폴더 pass · 장부 녹음 fail ↔ 폴더 pass · stop_history 누락 
+DQ12_same_run_conflict_off       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P1-2 (Codex 재현): 다 통과한 묶음에 장부 임시 파일 (A11 녹음 fail · 닫힘) · STOP 임시 파일 · 같은 실행의 장부 fail ↔ 폴더 pass · 장부 녹음 fail ↔ 폴더 pass · stop_history 누락 
+DQ15_band_strict_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DP P2-2: 직접 진입에서도 같은 열쇠 둘을 받지 않는다 — 카드 기계_판독_값 · G4 밴드 카드 · gate_check · seed_gate 의 plan ({'card': True, 'band': False, 'gate_check': True
+DQ14_card_strict_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DP P2-2: 직접 진입에서도 같은 열쇠 둘을 받지 않는다 — 카드 기계_판독_값 · G4 밴드 카드 · gate_check · seed_gate 의 plan ({'card': False, 'band': True, 'gate_check': True
+DQ16_gate_plan_strict_off        ⭕ 빨강 [melt_quench_uma] · FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp7n02qlw8/_gate_plan_dup/thermo.csv'
+DQ17_seed_gate_plan_strict_off   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DP P2-2: 직접 진입에서도 같은 열쇠 둘을 받지 않는다 — 카드 기계_판독_값 · G4 밴드 카드 · gate_check · seed_gate 의 plan ({'card': True, 'band': True, 'gate_check': True,
+DQ13_same_run_melt_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P1-2 (Codex 재현): 다 통과한 묶음에 장부 임시 파일 (A11 녹음 fail · 닫힘) · STOP 임시 파일 · 같은 실행의 장부 fail ↔ 폴더 pass · 장부 녹음 fail ↔ 폴더 pass · stop_history 누락 
+끝: 빨강 21 / 21
