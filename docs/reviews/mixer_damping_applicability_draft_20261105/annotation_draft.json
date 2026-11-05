@@ -1,0 +1,307 @@
+{
+  "schema": "mixer_damping_annotation_draft/1",
+  "kind": "registration companion draft, not an implemented reader output",
+  "basis_pin": "b5331d89e9029a1e372d320acee31cddce41474e",
+  "accepted_observation_code_pin": "ec484c2719d6a444214ddc9c48fe683a7735688b",
+  "active_registration_changed": false,
+  "actual_case_results": 0,
+  "execution_authorized": false,
+  "whole_gate": "HOLD",
+  "case_static_annotations": [
+    {
+      "case_id": "PRECAL_R1_B1_U",
+      "deck_sha256": "bb00b3251d76d45f311139606fdcbfd842e485489e49447a7d2373d5bfa891c6",
+      "role": "U",
+      "viscous_body_drag": {
+        "applicability": "NOT_CONFIGURED_IN_FIXED_DECK",
+        "coefficient_c_v": null,
+        "group": null
+      },
+      "damping_resistance_at_pressure_stop": {
+        "status": "NOT_APPLICABLE",
+        "value": null,
+        "sample_step": null,
+        "stop_judgment_step": null,
+        "denominator_force": null,
+        "reason": "No viscous fix or pressure-controlled compression plate/pressure stop in this fixed generated deck"
+      },
+      "contact_damping_share": {
+        "status": "NOT_MEASURED",
+        "value": null,
+        "reason": "Restitution/friction present; component forces not measured"
+      },
+      "planned_time_markers": {
+        "observation_t0_step": 1121184,
+        "settled_write_restart_steps": [
+          1121213
+        ],
+        "fixed_run_end_step": 7716595,
+        "dump_every_steps": 32976
+      },
+      "actual_time_markers": {
+        "sample_step": null,
+        "run_end_step": null
+      }
+    },
+    {
+      "case_id": "PRECAL_R1_B1_C",
+      "deck_sha256": "7875e1f053411e8531cecd616ffe1d016044a50b57d500f515edcd197e4d0d7d",
+      "role": "C",
+      "viscous_body_drag": {
+        "applicability": "NOT_CONFIGURED_IN_FIXED_DECK",
+        "coefficient_c_v": null,
+        "group": null
+      },
+      "damping_resistance_at_pressure_stop": {
+        "status": "NOT_APPLICABLE",
+        "value": null,
+        "sample_step": null,
+        "stop_judgment_step": null,
+        "denominator_force": null,
+        "reason": "No viscous fix or pressure-controlled compression plate/pressure stop in this fixed generated deck"
+      },
+      "contact_damping_share": {
+        "status": "NOT_MEASURED",
+        "value": null,
+        "reason": "Restitution/friction present; component forces not measured"
+      },
+      "planned_time_markers": {
+        "observation_t0_step": 1121184,
+        "settled_write_restart_steps": [
+          1121213
+        ],
+        "fixed_run_end_step": 7716595,
+        "dump_every_steps": 32976
+      },
+      "actual_time_markers": {
+        "sample_step": null,
+        "run_end_step": null
+      }
+    },
+    {
+      "case_id": "PRECAL_R1_B2_U",
+      "deck_sha256": "b37974e5c0674947912e932c55517e9e84243293f29257183f8f70cc032f2fd7",
+      "role": "U",
+      "viscous_body_drag": {
+        "applicability": "NOT_CONFIGURED_IN_FIXED_DECK",
+        "coefficient_c_v": null,
+        "group": null
+      },
+      "damping_resistance_at_pressure_stop": {
+        "status": "NOT_APPLICABLE",
+        "value": null,
+        "sample_step": null,
+        "stop_judgment_step": null,
+        "denominator_force": null,
+        "reason": "No viscous fix or pressure-controlled compression plate/pressure stop in this fixed generated deck"
+      },
+      "contact_damping_share": {
+        "status": "NOT_MEASURED",
+        "value": null,
+        "reason": "Restitution/friction present; component forces not measured"
+      },
+      "planned_time_markers": {
+        "observation_t0_step": 1121184,
+        "settled_write_restart_steps": [
+          1121213
+        ],
+        "fixed_run_end_step": 7716595,
+        "dump_every_steps": 32976
+      },
+      "actual_time_markers": {
+        "sample_step": null,
+        "run_end_step": null
+      }
+    },
+    {
+      "case_id": "PRECAL_R1_B2_C",
+      "deck_sha256": "d36d199388243ccd630cbd346cbcdb6f37bf8bb92ae9c8f4e73e2e98597a6a3e",
+      "role": "C",
+      "viscous_body_drag": {
+        "applicability": "NOT_CONFIGURED_IN_FIXED_DECK",
+        "coefficient_c_v": null,
+        "group": null
+      },
+      "damping_resistance_at_pressure_stop": {
+        "status": "NOT_APPLICABLE",
+        "value": null,
+        "sample_step": null,
+        "stop_judgment_step": null,
+        "denominator_force": null,
+        "reason": "No viscous fix or pressure-controlled compression plate/pressure stop in this fixed generated deck"
+      },
+      "contact_damping_share": {
+        "status": "NOT_MEASURED",
+        "value": null,
+        "reason": "Restitution/friction present; component forces not measured"
+      },
+      "planned_time_markers": {
+        "observation_t0_step": 1121184,
+        "settled_write_restart_steps": [
+          1121213
+        ],
+        "fixed_run_end_step": 7716595,
+        "dump_every_steps": 32976
+      },
+      "actual_time_markers": {
+        "sample_step": null,
+        "run_end_step": null
+      }
+    },
+    {
+      "case_id": "PRECAL_R1_B3_U",
+      "deck_sha256": "caa3cda3179602a16215295ac170737124919e42d43aa58ad5a31670c7576745",
+      "role": "U",
+      "viscous_body_drag": {
+        "applicability": "NOT_CONFIGURED_IN_FIXED_DECK",
+        "coefficient_c_v": null,
+        "group": null
+      },
+      "damping_resistance_at_pressure_stop": {
+        "status": "NOT_APPLICABLE",
+        "value": null,
+        "sample_step": null,
+        "stop_judgment_step": null,
+        "denominator_force": null,
+        "reason": "No viscous fix or pressure-controlled compression plate/pressure stop in this fixed generated deck"
+      },
+      "contact_damping_share": {
+        "status": "NOT_MEASURED",
+        "value": null,
+        "reason": "Restitution/friction present; component forces not measured"
+      },
+      "planned_time_markers": {
+        "observation_t0_step": 1121184,
+        "settled_write_restart_steps": [
+          1121213
+        ],
+        "fixed_run_end_step": 7716595,
+        "dump_every_steps": 32976
+      },
+      "actual_time_markers": {
+        "sample_step": null,
+        "run_end_step": null
+      }
+    },
+    {
+      "case_id": "PRECAL_R1_B3_C",
+      "deck_sha256": "26bf0b8c9f90225be813025650678b8e16697cbab415981201e07f1259431d62",
+      "role": "C",
+      "viscous_body_drag": {
+        "applicability": "NOT_CONFIGURED_IN_FIXED_DECK",
+        "coefficient_c_v": null,
+        "group": null
+      },
+      "damping_resistance_at_pressure_stop": {
+        "status": "NOT_APPLICABLE",
+        "value": null,
+        "sample_step": null,
+        "stop_judgment_step": null,
+        "denominator_force": null,
+        "reason": "No viscous fix or pressure-controlled compression plate/pressure stop in this fixed generated deck"
+      },
+      "contact_damping_share": {
+        "status": "NOT_MEASURED",
+        "value": null,
+        "reason": "Restitution/friction present; component forces not measured"
+      },
+      "planned_time_markers": {
+        "observation_t0_step": 1121184,
+        "settled_write_restart_steps": [
+          1121213
+        ],
+        "fixed_run_end_step": 7716595,
+        "dump_every_steps": 32976
+      },
+      "actual_time_markers": {
+        "sample_step": null,
+        "run_end_step": null
+      }
+    },
+    {
+      "case_id": "PRECAL_N0",
+      "deck_sha256": "adbbc8fa8f46730779fbf4f028f95a7aaf90c27ef2697c0dbe21a9ae1b5c6de3",
+      "role": "N0",
+      "viscous_body_drag": {
+        "applicability": "NOT_CONFIGURED_IN_FIXED_DECK",
+        "coefficient_c_v": null,
+        "group": null
+      },
+      "damping_resistance_at_pressure_stop": {
+        "status": "NOT_APPLICABLE",
+        "value": null,
+        "sample_step": null,
+        "stop_judgment_step": null,
+        "denominator_force": null,
+        "reason": "No viscous fix or pressure-controlled compression plate/pressure stop in this fixed generated deck"
+      },
+      "contact_damping_share": {
+        "status": "NOT_MEASURED",
+        "value": null,
+        "reason": "Restitution/friction present; component forces not measured"
+      },
+      "planned_time_markers": {
+        "observation_t0_step": 1121184,
+        "settled_write_restart_steps": [
+          1121213
+        ],
+        "fixed_run_end_step": 7716595,
+        "dump_every_steps": 32976
+      },
+      "actual_time_markers": {
+        "sample_step": null,
+        "run_end_step": null
+      }
+    },
+    {
+      "case_id": "PRECAL_E0",
+      "deck_sha256": "8b588b24117ab77bf72d93662237268b401f714df8515d62ef7b964d01c6e718",
+      "role": "E0",
+      "viscous_body_drag": {
+        "applicability": "NOT_CONFIGURED_IN_FIXED_DECK",
+        "coefficient_c_v": null,
+        "group": null
+      },
+      "damping_resistance_at_pressure_stop": {
+        "status": "NOT_APPLICABLE",
+        "value": null,
+        "sample_step": null,
+        "stop_judgment_step": null,
+        "denominator_force": null,
+        "reason": "No viscous fix or pressure-controlled compression plate/pressure stop in this fixed generated deck"
+      },
+      "contact_damping_share": {
+        "status": "NOT_MEASURED",
+        "value": null,
+        "reason": "Restitution/friction present; component forces not measured"
+      },
+      "planned_time_markers": {
+        "observation_t0_step": 1121000,
+        "settled_write_restart_steps": [
+          1121213
+        ],
+        "fixed_run_end_step": 1121213,
+        "dump_every_steps": 1000
+      },
+      "actual_time_markers": {
+        "sample_step": null,
+        "run_end_step": null
+      }
+    }
+  ],
+  "future_uniform_viscous_formula": "F_damp_axis = -c_v * sum(v_axis over the active fix group); ratio_signed = F_damp_axis / contemporaneous measured plate_force_axis",
+  "future_preconditions": [
+    "separate c_v from adhesion surface gamma ratios",
+    "confirm actual active damping law/coefficient/group and complete finite atom rows",
+    "same execution segment, coordinate/sign and unit basis",
+    "same exact stop step or same predeclared averaging window",
+    "record sample step and stop judgment step separately; a nearby dump is not the stop value",
+    "measured plate-force definition fixed before value access; nominal750N is not a universal denominator",
+    "zero/nonfinite/missing denominator: UNDEFINED, no numerical replacement",
+    "no clamp to0..1; no new acceptance threshold"
+  ],
+  "future_damping_or_plate_change": "Separate author decision and review before changing the fixed deck/registration/collector",
+  "raw_data_read": false,
+  "host_access": false,
+  "simulation_runs": 0
+}
