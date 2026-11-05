@@ -1,0 +1,9 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "numpy": "2.5.3",
+  "scipy": "1.16.3",
+  "executable": "C:/Users/Administrator/Documents/Codex/lhs28/venv/Scripts/python.exe",
+  "flags": ["-I", "-B", "-X", "utf8"],
+  "path_policy": "Explicit scratch module sys.path; tempfile.tempdir explicitly set below the scratch copy",
+  "initial_attempt": "Eight fixture probes stopped before observation because the default Windows temporary directory denied child directory creation. Four bootstrap/equivalence probes completed. The complete failed-attempt record is preserved in initial_environment_failure.json. After fixing only the probe temporary directory, all twelve probes completed and passed."
+}

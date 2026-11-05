@@ -1,0 +1,15 @@
+{
+  "append_notes": [],
+  "new_findings": [],
+  "verified_transition_proposed": false,
+  "external_disposition_for_integration": [
+    {"id": "PRE8-01", "severity": "P2", "accepted_code_pin": "ec484c2719d6a444214ddc9c48fe683a7735688b", "disposition": "External original-counterexample closure possible, scoped acceptance; real symlink21 conditions not executed on Windows"},
+    {"id": "PRE8-02", "severity": "P2", "accepted_code_pin": "ec484c2719d6a444214ddc9c48fe683a7735688b", "disposition": "External original-counterexample closure possible, captured source-execution binding accepted within code/small synthetic scope"}
+  ],
+  "note": "Integration owner records the external disposition and limits when authorized. No shared ledger mutation or automatic verified/closed transition occurred here.",
+  "external_resident_suite": "27 OK, 1 ERROR, rc1 on Windows3.12; do not label external28/28 PASS or combine with author Linux28 PASS on3.8/3.11",
+  "whole_gate": "HOLD",
+  "real_execution_authorized": false,
+  "integration": "Author chooses timing; Claude cherry-pick -x",
+  "remaining": ["External real-symlink dynamics not verified", "Full-size positive pipeline and actual log/binary/MPI/physics qualification not verified", "MXD2R independent recheck remains separate", "D0.7 end and author approval precede ibb followup"]
+}

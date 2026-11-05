@@ -1,0 +1,31 @@
+{
+  "schema": "precal_pre8_external_receipt/1",
+  "accepted_code_pin": "ec484c2719d6a444214ddc9c48fe683a7735688b",
+  "previous_review_pin": "189930cc68b6e58beb6b4546d80353dc03852195",
+  "receipt_scope": "Documentation and evidence receipt only; no scientific/source changes or repeated tests",
+  "external_verdict": "ACCEPT_WITHIN_PRE8_BINDING_SCOPE",
+  "PRE8-01": {
+    "original_counterexample_closed_per_external_verdict": true,
+    "accepted": "initial absence and regular-file input binding",
+    "real_symlink_external_dynamic_test": "NOT_EXECUTED_Windows_WinError1314",
+    "planned_symlink_conditions_not_executed": 21
+  },
+  "PRE8-02": {
+    "original_counterexample_closed_per_external_verdict": true,
+    "accepted": "captured dependency bytes execution and observer code-equivalence boundary"
+  },
+  "external_resident_suite": {"methods": 28, "ok": 27, "error": 1, "rc": 1},
+  "author_prior_suites": {"python3.8.20": "28 PASS", "python3.11.17": "28 PASS", "repeated_for_receipt": false},
+  "new_findings": [],
+  "nonblocking_test_suggestion": "Confirm symlink creation occurred and assert expected refusal reason; not a new required fix or real-host execution request",
+  "checkpoint_scope": "Document transmission only, not independent P1 numerical verification",
+  "evidence_packaging_omission": "One 279-byte historical metadata JSON absent from external input/; separately recovered from original submitted ZIP and accepted Git pin. External archive unchanged.",
+  "whole_gate": "HOLD",
+  "ledger_closed_here": false,
+  "shared_records_changed": false,
+  "research_execution": false,
+  "active_registration_changed": false,
+  "deployment_authorized": false,
+  "integration_performed": false,
+  "MXD2R_separate_recheck_replaced": false
+}

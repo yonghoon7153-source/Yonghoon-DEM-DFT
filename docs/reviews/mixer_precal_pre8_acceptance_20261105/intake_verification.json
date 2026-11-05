@@ -1,0 +1,27 @@
+{
+  "accepted_code_pin": "ec484c2719d6a444214ddc9c48fe683a7735688b",
+  "external_zip_bytes": 3052006,
+  "external_zip_sha256": "9d82c14919a3137fd3be1248a75ad404c1cc6a6b419bc25c5f2dcb03e764b16d",
+  "external_members": 144,
+  "external_hash_entries_verified": 143,
+  "pasted_verdict_bytes_identical": true,
+  "received_snapshot_files_verified": 88,
+  "manifest_expected_snapshot_files": 89,
+  "submitted_original_and_git_snapshot_files_verified": 89,
+  "received_input_package_hashes_verified": 105,
+  "manifest_expected_input_package_hashes": 106,
+  "omitted_input_members": [
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/bundle_validation.json",
+      "bytes": 279,
+      "sha256": "bd7f4828e54652ca41ab9592465ad52e16ade7787ae4dad72c93b016814ee942",
+      "source": "original submitted ZIP, also identical to accepted Git pin"
+    }
+  ],
+  "recovery_kept_separate": true,
+  "received_zip_or_extracted_input_modified": false,
+  "submitted_zip_bytes": 2636322,
+  "submitted_zip_sha256": "a98c72a6930a2029b6e2ea21b8948503610a112e95315a85b62e6b6b0bbfc77c",
+  "remote_verification": "External reviewer record; not repeated during receipt.",
+  "tests_rerun": false
+}

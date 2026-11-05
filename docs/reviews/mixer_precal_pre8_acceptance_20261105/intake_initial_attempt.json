@@ -1,0 +1,5 @@
+{
+  "stage": "strict received snapshot comparison",
+  "outcome": "FileNotFoundError on omitted bundle_validation.json",
+  "repair": "Original submitted ZIP and accepted Git bytes verified; separately preserved one missing metadata file. External archive/input not edited."
+}
