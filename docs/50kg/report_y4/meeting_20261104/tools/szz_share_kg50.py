@@ -22,7 +22,7 @@ OUT = Path(sys.argv[2])
 ARGS = sys.argv[3:]
 LOOSE = dict(a.split('=', 1) for a in (ARGS[i + 1] for i, x in enumerate(ARGS) if x == '--loose'))
 BEDS = [a for i, a in enumerate(ARGS) if a != '--loose' and (i == 0 or ARGS[i - 1] != '--loose')] or ['D3', 'D2', 'D1']
-LABEL = {'D3': 'SE3um', 'D2': 'SE2um', 'D1': 'SE1um'}
+LABEL = {'D3': 'SE3um', 'D2': 'SE2um', 'D1': 'SE1um', 'D0.7': 'SE0p7um'}   # D0.7 = 11-05 (따로 출력 폴더 · 기본 셋 출력 그대로)
 sys.path.insert(0, str(REPO / 'scripts'))
 PLS = importlib.import_module('plane_load_share')
 

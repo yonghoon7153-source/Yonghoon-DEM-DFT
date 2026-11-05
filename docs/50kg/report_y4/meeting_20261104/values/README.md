@@ -20,3 +20,10 @@
 - **1 µm 는 이완 끝 판 압력이 156 MPa** (2 µm 280 · 3 µm 291) — 같은 정의의 끝 상태지만 같은 압력 상태가 아니다 (`KG50-20`).  1 µm 의 응력 · σzz 기여 (AM–AM 56.9 % 등) 는 그 상태의 값이고, 3 · 2 µm 와의 차이를 입도 효과만으로 읽을 수 없다.  1 µm σzz 계산 상태 = CHECK (단면 하중 보존 1.0229 > 허용 1.02 — 값은 내되 사유 기록).
 - 영률 SE 1.35 GPa = DEM 입력 유효 영률 (재료값 22 GPa 의 연화 대리) — 이종기술 14쪽 표는 재료값 22 를 적었다 (발표 표기 규약).  표에 어느 쪽을 적을지는 1저자 결정.
 - 실측 전극 기공도 (18쪽 Experiment 막대 같은 것) · EIS 전극 이온전도도 = 50kg 에는 없음.
+
+## 11-05 — 0.7 µm (D0.7) 칸 더한 판
+
+- 1저자 11-05 *"d0.7 관련해서 이종기술, 50kg에서 했던 parameter 추출들 진행해봐"* → `docs/50kg/report_y4/meeting_20261104/values/values_D123_D07.csv` (`docs/50kg/report_y4/meeting_20261104/tools/compile_values_kg50.py` `--with-d07` · 같은 행 · 같은 정의 · 옮김뿐) — 기본 셋 표 `docs/50kg/report_y4/meeting_20261104/values/values_D123.csv` 는 바이트 그대로 (회의 덱 원천).
+- 원천 = `docs/50kg/report_y4/draft2/data/D0.7/metrics_D0.7.json` (11-05 · 로그 두 실행 이음 = `docs/50kg/report_y4/draft2/log_stitch.py`) · σzz 기여 = `docs/50kg/report_y4/meeting_20261104/values/szz_share_d07/` (같은 도구 · D0.7 만 따로 출력 · 기본 셋 출력 그대로) · 끝 묶음 기록 = `docs/data/kg50_d07_end_20261105/README.md`.
+- pellet 0.7 µm 칸 = 개발 SE D50 0.66 µm 시료 2.25 mS/cm (킥오프 4 장 · 같은 시료인지 미확인 ⬜).
+- ⚠ **0.7 µm 이완 끝 판 압력 45.5 MPa** (1 µm 156 · 2 µm 280 · 3 µm 291) — 감쇠 저항 가설과 같은 방향 · 정량 미분리 (`KG50-20`) → 0.7 µm 의 응력 · 접촉 · 피복 · 수송 값은 다른 정적 압력 상태의 값 · 입도 효과로 읽지 않는다.
