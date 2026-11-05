@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-11-04
-updated: 2026-11-04
+date: 2026-11-05
+updated: 2026-11-05
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-11-04
+verifiedAt: 2026-11-05
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -141,7 +141,7 @@ evidenceScope: multi-source-primary
 | DM | 2026-11-04 | `codex_DM_prompt_li2s2_dl_fixes_2026_11_04.md` | `codex_DM_reply_li2s2_dl_fixes_2026_11_04.md` | 발송 · 회신 수령 2026-11-04 (NO-GO · P0 2 · `codex_DM_reply_li2s2_dl_fixes_2026_11_04.md`) · 기준 커밋 04555774 | 같은 라벨 · 주제 토큰 일치 ['dl', 'fixes', 'li2s2'] |
 | DN | 2026-11-04 | `codex_DN_prompt_li2s2_dm_fixes_2026_11_04.md` | `codex_DN_reply_li2s2_dm_fixes_2026_11_04.md` | 발송 · 회신 수령 2026-11-04 (NO-GO · P1 1 · P2 1 · `codex_DN_reply_li2s2_dm_fixes_2026_11_04.md`) · 기준 커밋 acc648b0 (깨기 165/165) | 같은 라벨 · 주제 토큰 일치 ['dm', 'fixes', 'li2s2']; 판정 인용 1회 |
 | DO | 2026-11-04 | `codex_DO_prompt_li2s2_dn_fixes_2026_11_04.md` | `codex_DO_reply_li2s2_dn_fixes_2026_11_04.md` | 발송 · 회신 수령 2026-11-04 (NO-GO · P0 1 · P1 2 · P2 2 · `codex_DO_reply_li2s2_dn_fixes_2026_11_04.md`) · 기준 커밋 802290db (깨기 222/222) | 같은 라벨 · 주제 토큰 일치 ['dn', 'fixes', 'li2s2'] |
-| DP | 2026-11-04 | `codex_DP_prompt_li2s2_do_fixes_2026_11_04.md` | — | 초안 → 발송 대기 · 기준 커밋 4a269bac | — |
+| DP | 2026-11-04 | `codex_DP_prompt_li2s2_do_fixes_2026_11_04.md` | `codex_DP_reply_li2s2_do_fixes_2026_11_04.md` | answered — 회신 codex_DP_reply_li2s2_do_fixes_2026_11_04.md (2026-11-05 · NO-GO · P0 1 · P1 2 · P2 2) · 기준 커밋 4a269bac | 같은 라벨 · 주제 토큰 일치 ['do', 'fixes', 'li2s2'] |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
