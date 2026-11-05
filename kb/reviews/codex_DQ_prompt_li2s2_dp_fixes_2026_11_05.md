@@ -33,8 +33,11 @@ DP 재승인 조건 셋을 반례로 깨 보라고 줬고, 리뷰어가 **조건
 (충돌 관측이 계를 닫음 · 판정 도중 일시 오류가 출구 없는 충돌로 굳음) 과 P3 몇을 냈고 (고침 4b71cc21), 3 차로 그 판을 주자 2 차 지적은 닫혔다고 확인하고
 새 P1 하나 (끝 판정을 쓴 뒤 장부에 적기 전 신호 · SIGKILL 로 장부 판정이 비면 보류 규칙이 비교할 것이 없다) 와 P3 하나를 재현했다 (고침 ebf6b2ee). 4 차에서
 3 차 지적은 닫혔고, 같은 꼴의 P1 하나 (장부가 빈 상태의 기준을 한 단계 이력만 봐서 다시 판정 한 번이 증거를 밀어냄) 를 더 재현했다 (고침 5e08f724). 5 차에서
-그것도 닫혔고 P2 하나 (첫 판정은 이력에 안 남아 판정 파일을 지우면 사라짐) 와 P3 둘 (잘못 보류 쪽) 이 나왔다 — P2 는 고쳤고 (⏳FIXC) P3 둘은 한계로 적고 아래
-§3 에서 묻는다. 결과 0 건 · 카드 값 그대로 (값 지문 086de59c484f9c32).
+그것도 닫혔고 P2 하나 (첫 판정은 이력에 안 남아 판정 파일을 지우면 사라짐) 와 P3 둘 (잘못 보류 쪽) 이 나왔다 — P2 는 고쳤고 (70f5b96a) P3 둘은 한계로 적고 아래
+§3 에서 묻는다. 6 차 (70f5b96a) 는 5 차 지적이 닫혔고 평소 흐름 (정상 묶음 · 손으로 한 번 판정한 고아 런 · 상한 멈춤 뒤 재시도 · 첫 시드 녹음 invalid 뒤 재시도 ·
+판정 없이 끊긴 런) 이 그대로 도는 것을 재현으로 확인했다 — P3 를 넘는 지적 없음. 결과 0 건 · 카드 값 그대로 (값 지문 086de59c484f9c32).
+고침 커밋: 091353ed (DP 고침) · e1455a2d · 698e1a8d (시험) · a06ca37a (1 차) · 4b71cc21 (2 차) · ebf6b2ee (3 차) · 5e08f724 (4 차) · 70f5b96a (5 차) — 리뷰 기록은
+`db/raw/li2s2_dq_mutation_2026_11_05/README.md` 의 표.
 
 **물음: DP 재승인 조건 셋이 닫혔는가 · DP P2 둘이 닫혔는가 · 고치면서 새 구멍이 생겼는가 · 1 단계를 띄워도 되는가 (GO / 조건부 GO / NO-GO).**
 
@@ -50,8 +53,9 @@ DP 가 닫힘으로 본 항목 (DO P1-2 · DO P2-1 기존 결함 · DO P2-2 코�
 
 - `git diff 4a269bac ⏳BASE -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
 - 카드 `개정_DP_회신_고침_v10_2026_11_05` (규칙 · 못 하는 것) — 결과 0 건 · 카드 값은 안 바뀜
-- 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 233) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 120 · Linux)
-  - Windows 에서는 러너의 POSIX 전용 6 개를 건너뛴다 (DP 때 5 개 + 교체 뒤 디렉터리 fsync 실패 1 — Windows 는 디렉터리 fsync 를 안 한다) → **114** 가 맞다. 드라이버는 그대로 233.
+- 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 240) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 135 · Linux)
+  - Windows 에서는 러너의 POSIX 전용 6 개를 건너뛴다 (DP 때 5 개 + 교체 뒤 디렉터리 fsync 실패 1 — Windows 는 디렉터리 fsync 를 안 한다) → **129** 가 맞다. 드라이버는 그대로 240.
+  - ⚠ 시험을 돌리는 동안 드라이버 파일을 고치면 도구 지문이 시험 도중 바뀌어 러너 시험이 엉뚱하게 빨강이 된다 (내가 한 번 겪었다 — 코드 결함 아님).
   - 새 '미룬 신호' 시험은 OS 신호를 쓰지 않는다 — 처리기가 쓰기 구간 안에서 불린 상태 (`_PENDING`) 를 교체 직후에 만든다 (Codex DP 주입 자리) → Windows 에서도 돈다.
 - 깨기 (변이) ⏳MUT — `db/raw/li2s2_dq_mutation_2026_11_05/` (README · 하네스 · 로그 · SHA256SUMS).
 
@@ -155,7 +159,8 @@ DP 가 닫힘으로 본 항목 (DO P1-2 · DO P2-1 기존 결함 · DO P2-2 코�
   `summarize_stage1` (닫는 STOP ↔ 기록 대조 · 첫 시드 아닌 판정의 closes_system) · `_verdict_records` (이력 줄 prev · 상태 꼴).
 - 러너: `_AfterReplace` · `_write_json_atomic` (교체 뒤 실패를 따로) · `HELD_SIGNALS` 는 있는 신호만 건다 (Windows 에 SIGHUP 없음) · `state["stop_code"]` ·
   장부 행 `verdict_provenance` · `verdict_superseded` · `verdict_observed_conflict` (상태 · closes · 이유 · 어디서 · 시각) ·
-  장부 `driver_sha16` = 불러온 도구 모듈의 지문 (시작 때 저장) · 고정값 `EXPECTED_DRIVER_SHA16 = ⏳DRV` (`EXPECTED_VALUES_SHA16` 그대로).
+  장부 `driver_sha16` = 불러온 도구 모듈의 지문 (시작 때 저장) · 고정값 `EXPECTED_DRIVER_SHA16 = 1bc927e52d2aa1ac` (`EXPECTED_VALUES_SHA16` 그대로).
+- 드라이버 판정 이력: 첫 판정도 한 줄 (`first` · 앞 판정 없음) — 이력이 판정 쓰기 전부의 덧붙이기 기록.
 
 ## 3. 이것을 특히 봐 달라
 
