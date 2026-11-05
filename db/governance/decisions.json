@@ -10840,7 +10840,9 @@
     "kb/reviews/codex_DH_reply_li2s2_dg_fixes_2026_11_03.md · codex_DG_reply… · codex_DF_reply… (앞선 NO-GO 들)",
     "db/properties/lpscl_smallcell_glass_track_closed_2026_10_30.json §6 (설계 초안)",
     "db/raw/li2s2_pre_dp_review_2026_11_04/README.md (DP 발송 전 독립 리뷰 둘 · 지적과 처리)",
-    "카드 개정_DP_전_리뷰_v9_2026_11_04 (도구 c8e7f1fc · 드라이버 sha16 15e9a718cefb856a · 값 지문 086de59c484f9c32 그대로)"
+    "카드 개정_DP_전_리뷰_v9_2026_11_04 (도구 c8e7f1fc · 드라이버 sha16 15e9a718cefb856a · 값 지문 086de59c484f9c32 그대로)",
+    "kb/reviews/codex_DP_reply_li2s2_do_fixes_2026_11_04.md (NO-GO · P0 1 · P1 2 · P2 2 → 091353ed · e1455a2d · 698e1a8d 고침 · 카드 v10)",
+    "db/raw/li2s2_dq_mutation_2026_11_05/ (368 / 368 빨강 — db/raw/li2s2_dq_mutation_2026_11_05 (최종 70f5b96a · DP 판 287 + 자리 옮김 11 + DQ 81 · 새 자리 실행의 초록 3 = DP55 · DQ49 시험 보강 · DQ66 같은 결과로 뺌 · 예외로 잡힘 20))"
    ],
    "reopen_criteria": [
     "없음 — 셀 키움 · 긴 런 · D3 · 다른 온도 · 다른 밀도는 새 카드",
@@ -10933,6 +10935,12 @@
      "state": "proposed",
      "by": "agent (위임 10-30)",
      "note": "DP 발송 전 독립 리뷰 둘 (첫째 P0 1 · P1 2 · P2 2 · 둘째 P1 2 · P2 4 · 잔 항목) → 고침 (c8e7f1fc · 카드 v9 · selftest 232 · 113) · 깨기 287 / 287 빨강 (전체 6eb03a10 빨강 264 · 무효 20 (주석 중간 자리 — 하네스 고침) · 초록 3 (DP18 · DP67 · DP68 — 시험 보강) → c8e7f1fc 에서 그 23 개 23 / 23) · Codex DP 대기"
+    },
+    {
+     "at": "2026-11-05",
+     "state": "proposed",
+     "by": "agent (위임 10-30)",
+     "note": "회신 DP NO-GO (저장 경계 신호 · 현재 폴더 미해결 기록 · 요약 장부 검사 · STOP 경계 · 변이 설명) → 같은 꼴 전체 고침 (카드 v10 · selftest 233 · 121) · 깨기 368 / 368 빨강 — db/raw/li2s2_dq_mutation_2026_11_05 (최종 70f5b96a · DP 판 287 + 자리 옮김 11 + DQ 81 · 새 자리 실행의 초록 3 = DP55 · DQ49 시험 보강 · DQ66 같은 결과로 뺌 · 예외로 잡힘 20) · Codex DQ 대기"
     }
    ]
   },

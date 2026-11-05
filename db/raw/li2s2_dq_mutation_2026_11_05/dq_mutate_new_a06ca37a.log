@@ -1,0 +1,43 @@
+변이 334 개 (DP 판 287 · 자리 옮김 9 · DQ 47) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 4 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_dqnew2_w*
+D10_closes_summary               ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P0-1: A11 이 계를 닫으면 (첫 시드 녹음 미충족) 나머지 아홉이 통과해도 (A 4/5) 트랙 멈춤 — 일반 탈락과 다르다
+DO9_hist_line_consistency_off    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DP48_persist_verdict_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 F1 · F2: 끊긴 런 폴더를 사람이 판정해 fail 이 나오면 (폴더 판정 기록) 확인 · 재시도 검사가 거부 전에 장부 verdict 에 적는다 · 첫 시드면 closes_system → 재시도 경로는 STOP melt · 확인 경로는
+DO27_ledger_closing_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P0-1 (S1b): 첫 시드 녹음 fail 로 멈춘 뒤 판정 도중 러너가 끊겨도 닫힘은 이미 장부에 있다 → 확인해도 재시작이 melt 로 멈추고 발사 0 · 소비자 stop_track (26 · 21 · melt · invalid)
+DQ2_after_replace_revert         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P0-1 · P2-1 (교체 뒤 실패): 본 녹음 fail 을 적은 장부 교체 뒤 디렉터리 fsync 가 실패해도 메모리를 되돌리지 않는다 — 확인은 거부 · 재시도는 invalid · 장부에 fail 이 남는다 · terminal STOP 교
+DP55_rejudge_disagree_off        ⛔ 초록 (못 잡음) · li2s2_stage1_runner selftest: ⭕ 130 · ⛔ 0
+DQ12_same_run_conflict_narrow    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 ({'inv_pass': False, 'inc_fail': False})
+DQ13_same_run_melt_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 ({'melt_pass': False})
+DQ3_stop_section_off             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P2-1 · DQ 전 리뷰 P3: terminal STOP (melt) 교체가 끝나는 순간 미룬 신호가 와도 끝 처리가 interrupted 로 덮지 않고 · 그 STOP 의 코드로 끝난다 (26 · interrupted · False)
+DQ4_stop_after_replace_flag_off  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P0-1 · P2-1 (교체 뒤 실패): 본 녹음 fail 을 적은 장부 교체 뒤 디렉터리 fsync 가 실패해도 메모리를 되돌리지 않는다 — 확인은 거부 · 재시도는 invalid · 장부에 fail 이 남는다 · terminal STOP 교
+DQ20_conflict_unknown_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 ({'PASS_none': False})
+DQ21_conflict_recorded_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 ({'rec_on': False})
+DQ19_runner_ledger_shape_off     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F1 · F2 · F6: runs · stop_history 가 없거나 원소가 객체가 아닌 장부는 채워 넣지 않고 거부 (원본 그대로) · 앞 쓰기가 남긴 장부 · STOP 임시 파일이 있으면 거부 (임시 · 장부 그대로) · 원자
+DQ18_consumer_ledger_shape_off   ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P1-2 (Codex 재현): 다 통과한 묶음에 장부 임시 파일 (A11 녹음 fail · 닫힘) · STOP 임시 파일 · 같은 실행의 장부 fail ↔ 폴더 pass · 장부 녹음 fail ↔ 폴더 pass · stop_history 누락 
+DQ22_rows_verdict_values_off     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete · 'PASS' ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 적힌 충돌 관측 · 이력 prev 없음 · null · 모르는 상
+DQ23_rows_conflict_record_off    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete · 'PASS' ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 적힌 충돌 관측 · 이력 prev 없음 · null · 모르는 상
+DQ26_closes_nonfirst_verdict_off ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D: 닫는 STOP 인데 기록 판정은 통과 → invalid (2 단계 없음) · 기록도 닫힘이면 stop_track 그대로 · 첫 시드 아닌 판정의 closes_system → invalid (invalid · stop_track ·
+DQ27_terminal_stop_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D: 닫는 STOP 인데 기록 판정은 통과 → invalid (2 단계 없음) · 기록도 닫힘이면 stop_track 그대로 · 첫 시드 아닌 판정의 closes_system → invalid (stage1_pass · stop_tra
+DQ24_rows_conflict_shape_off     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete · 'PASS' ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 적힌 충돌 관측 · 이력 prev 없음 · null · 모르는 상
+DQ25_closes_nonfirst_ledger_off  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete · 'PASS' ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 적힌 충돌 관측 · 이력 prev 없음 · null · 모르는 상
+DQ31_stop_terminal_flag_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 = 못 읽음 · 닫는 코드 · terminal 표시 = 닫힘 · invalid 를 포함한 그 밖 = 확인 안 된 멈춤 ({'absent': 'absent', 'tru
+DQ33_ledger_card_fp_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-G: 장부의 카드 값 · 도구 지문이 지금과 다르면 invalid (같으면 그 이유로 안 막는다) ([] · 0 · 1)
+DQ32_stop_shape_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 = 못 읽음 · 닫는 코드 · terminal 표시 = 닫힘 · invalid 를 포함한 그 밖 = 확인 안 된 멈춤 ({'absent': 'absent', 'tru
+DQ35_hist_prev_shape_off         ⭕ 빨강 [melt_quench_uma] · AttributeError: 'NoneType' object has no attribute 'get'
+DQ34_ledger_driver_fp_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-G: 장부의 카드 값 · 도구 지문이 지금과 다르면 invalid (같으면 그 이유로 안 막는다) ([] · 1 · 0)
+DQ36_hist_prev_status_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-C: 이력 줄의 prev 없음 · null · 모르는 이전 상태 · 모르는 새 상태 = 해석할 수 없는 기록 (상태 없는 원문 판정은 기록으로 남겨 요약이 따로 본다) ({'prev_null': False, 'no_prev': Fals
+DQ37_hist_new_status_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-C: 이력 줄의 prev 없음 · null · 모르는 이전 상태 · 모르는 새 상태 = 해석할 수 없는 기록 (상태 없는 원문 판정은 기록으로 남겨 요약이 따로 본다) ({'prev_null': False, 'no_prev': Fals
+DQ28_stop_unreadable_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete · 'PASS' ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 적힌 충돌 관측 · 이력 prev 없음 · null · 모르는 상
+DQ38_mark_summary_noop           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-F: 낡은 통과 요약을 '지금 판정 아님' (pending · not_current · 2 단계 없음) 으로 바꾼다 · 요약이 없으면 안 만든다 (False · False · stage1_pass)
+DQ30_stop_open_off               ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete · 'PASS' ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 적힌 충돌 관측 · 이력 prev 없음 · null · 모르는 상
+DQ41_stop_pending_init_off       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F1 · F2 · F6: runs · stop_history 가 없거나 원소가 객체가 아닌 장부는 채워 넣지 않고 거부 (원본 그대로) · 앞 쓰기가 남긴 장부 · STOP 임시 파일이 있으면 거부 (임시 · 장부 그대로) · 원자
+DQ39_persist_conflict_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · P2-B: 장부 판정 invalid 인 실행을 재판정이 pass 로 내면 러너는 덮지 않고 충돌 관측으로 남기고 invalid (발사 0) · 로그에 '충돌 관측' (27 · 발사 0 · invalid · None)
+DQ42_stop_code_return_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P2-1 · DQ 전 리뷰 P3: terminal STOP (melt) 교체가 끝나는 순간 미룬 신호가 와도 끝 처리가 interrupted 로 덮지 않고 · 그 STOP 의 코드로 끝난다 (26 · melt · True)
+DQ43_rejudge_verdict_not_critical ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-E: 러너가 판정을 쓰는 네 자리 (담금질 끝 · 시작 전 재판정 · 첫 시드 녹음 멈춤 · 실행 중 상한) 모두 — 판정 파일의 임시 → 교체 사이에 신호가 와도 교체를 끝낸 뒤 받는다 · 판정 임시 파일이 안 남는다 ({'rejud
+DQ44_cap_verdict_not_critical    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-E: 러너가 판정을 쓰는 네 자리 (담금질 끝 · 시작 전 재판정 · 첫 시드 녹음 멈춤 · 실행 중 상한) 모두 — 판정 파일의 임시 → 교체 사이에 신호가 와도 교체를 끝낸 뒤 받는다 · 판정 임시 파일이 안 남는다 ({'cap':
+DQ45_melt_verdict_not_critical   ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-E: 러너가 판정을 쓰는 네 자리 (담금질 끝 · 시작 전 재판정 · 첫 시드 녹음 멈춤 · 실행 중 상한) 모두 — 판정 파일의 임시 → 교체 사이에 신호가 와도 교체를 끝낸 뒤 받는다 · 판정 임시 파일이 안 남는다 ({'melt'
+DQ46_end_verdict_not_critical    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-E: 러너가 판정을 쓰는 네 자리 (담금질 끝 · 시작 전 재판정 · 첫 시드 녹음 멈춤 · 실행 중 상한) 모두 — 판정 파일의 임시 → 교체 사이에 신호가 와도 교체를 끝낸 뒤 받는다 · 판정 임시 파일이 안 남는다 ({'end':
+DQ47_closes_bad_runner_off       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · P2-C: 첫 시드 아닌 장부 닫힘 → 러너 invalid (닫는 STOP 아님 · 발사 0) · 이력 prev null → 러너 invalid (발사 0) (21 · 27)
+DQ48_mark_summary_call_off       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-F: 통과 요약이 있던 묶음에서 러너가 거부해도 (판정 임시 파일 → invalid · 장부 임시 파일 → 거부) 그 요약이 stage1_pass 로 안 남는다 (27 · stage1_pass · 10 · stage1_pass)
+DQ49_persist_log_conflict_off    ⛔ 초록 (못 잡음) · li2s2_stage1_runner selftest: ⭕ 130 · ⛔ 0
+끝: 빨강 38 / 40
