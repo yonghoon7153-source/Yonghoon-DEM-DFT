@@ -145,7 +145,9 @@ class _critical:
 
 
 class _AfterReplace(OSError):
-    """⭐ 회신 DP P0-1 — 파일 교체는 끝났는데 그 뒤 (디렉터리 fsync) 가 실패 — 디스크에는 새 내용이 있다. 부르는 쪽은 메모리를 되돌리지 않는다."""
+    """⭐ 회신 DP P0-1 — 파일 교체는 끝났는데 그 뒤 (디렉터리 fsync) 가 실패 — 디스크에는 새 내용이 **보인다**. 부르는 쪽은 메모리를 되돌리지 않는다
+    (그래도 멈춘다). ⭐ 회신 DQ Q2 — 뜻은 '교체되어 보이는 상태' 이지 '정전 뒤에도 남는다' 는 보증이 아니다 (파일 fsync 로 디렉터리 항목의
+    내구성까지 보장되지 않는다) · 디렉터리 동기화가 계속 실패하는 환경에서는 첫 저장부터 멈춘다 (보수적 제한)."""
 
 
 class _PersistFailed(Exception):
@@ -986,12 +988,11 @@ def run(a, deps=None):
         # ①-1 STOP.json — 닫는 사건은 넘기지 않는다 · 나머지는 사람이 stop_id 로 확인해야 이어간다 (회신 DG P0-1)
         if os.path.lexists(stop_p):                          # (stop_pending 은 잠금 직후에 이미 켰다 — 지우기 전까지 끝 처리가 이 STOP 을 덮지 않는다)
             try:                                             # ⭐ DO 전 리뷰 P2-5 · P2-7 — 못 읽는 STOP 은 덮어쓰지 않고 거부 · stop_id 없는 STOP 을 조용히 넘기지 않는다
-                sp = mq.loads_strict(stop_p.read_text(encoding="utf-8"))
-                if not (isinstance(sp, dict) and isinstance(sp.get("stop_id"), str) and sp["stop_id"].strip()
-                        and isinstance(sp.get("code"), str) and sp["code"].strip()):
-                    raise ValueError("stop_id · code 가 글자가 아니다")
+                st_sp, sp = mq.stop_record(R)                # ⭐ 회신 DQ P2-1 — 소비자와 같은 함수 (모르는 코드 · terminal 모순 = 판독 불가)
             except Exception as e:
-                log(f"⛔ STOP.json 을 못 읽는다 ({type(e).__name__}: {str(e)[:80]}) — 원본을 덮어쓰지 않고 시작하지 않는다 (사람이 본다)")
+                st_sp, sp = "unreadable", f"{type(e).__name__}: {str(e)[:80]}"
+            if st_sp != "terminal" and st_sp != "open":
+                log(f"⛔ STOP.json 을 받을 수 없다 ({str(sp)[:160]}) — 원본을 덮어쓰거나 확인으로 지우지 않고 시작하지 않는다 (사람이 본다)")
                 return RC["refused"]
             code = sp.get("code")
             if code in TERMINAL_STOPS:
@@ -1069,6 +1070,14 @@ def run(a, deps=None):
         closed = [f"{r['system']}{r['seed']}" for r in led["runs"] if r.get("closes_system") is True]
         if closed:
             return stop("melt", f"장부에 계를 닫은 사건이 있다 ({closed} · 첫 시드 녹음 미충족) — 재시작으로 다시 열지 않는다")
+        # ①-3b ⭐ 회신 DQ P1-2 — 정본 판정 없이 판정 기록 (이력 · 임시 파일) 만 남은 현재 시드 폴더가 하나라도 있으면 아무것도 띄우지 않는다
+        #       (실행 순서와 무관하게 전부 먼저 본다 · 판정을 시도하지 않은 정상 미완료 폴더는 아니다 · 자동 승격 · 다시 판정하지 않는다)
+        ur_all = [(s_, d_, mq.unresolved_first_write(R / s_ / f"seed{d_}")) for s_ in ("A", "B") for d_ in vals["seeds"]]
+        ur_all = [x_ for x_ in ur_all if x_[2]]
+        if ur_all:
+            s_, d_, why_ = ur_all[0]
+            return stop("invalid", f"{s_}{d_} {why_} · 같은 상태 {[f'{x_[0]}{x_[1]}' for x_ in ur_all]} — 새 실행 0 (순서를 바꿔도 같다)",
+                        sys=s_, seed=d_, run_id=_folder_run_id(R / s_ / f"seed{d_}"))
         # ①-4 판정 파일을 믿지 않는다 — 원자료로 다시 판정 → 묶음 판정 (회신 DG P1-4)
         rejudged = []
         for sysn, seed in order:
@@ -3368,6 +3377,8 @@ def _selftest():
         f"다음 시작은 판정 없는 폴더에서 resume STOP (그 실행에 묶임 · 발사 0) ({arm_2['fired']} · {type(exc_2s).__name__} · {rc_2r} · {len(L_2r)})")
     # ⭐ DQ 전 리뷰 (독립 · 2026-11-05) 재현 — 러너가 거부하는 기록을 요약도 거부 · 확인 안 된 STOP 을 덮지 않음 · 판정 쓰기 구간 · 낡은 요약
     chk(tuple(TERMINAL_STOPS) == tuple(real.STOP_TERMINAL_CODES), f"러너 닫는 STOP 코드 {TERMINAL_STOPS} = 소비자 {real.STOP_TERMINAL_CODES} (DQ 전 리뷰 P2-D)")
+    chk(sorted(k_ for k_ in RC if k_ not in ("pass", "refused")) == sorted(real.STOP_CODES),
+        f"러너 STOP 코드 {sorted(k_ for k_ in RC if k_ not in ('pass', 'refused'))} = 소비자 STOP_CODES {sorted(real.STOP_CODES)} (회신 DQ P2-1)")
     def _led_row(c_, sys_, sd_, **kv):
         l_ = J(c_ / "stage1_ledger.json")
         [x_ for x_ in l_["runs"] if (x_["system"], x_["seed"]) == (sys_, sd_)][-1].update(kv)
@@ -3383,6 +3394,11 @@ def _selftest():
     def _prov_changed(c_, sys_, sd_):
         pv_ = dict(J(c_ / sys_ / f"seed{sd_}" / "stage1_verdict.json")["provenance"])
         pv_["files_sha256"] = {**pv_["files_sha256"], "traj.xyz": "0" * 64}
+        return pv_
+    def _prov_judge_err(c_, sys_, sd_, mismatch=False):     # ⭐ 회신 DQ P1-1 — 지금 판정의 지문 + 판정 성격 (판정 도중 예외 · 또는 입력 불일치)
+        pv_ = dict(J(c_ / sys_ / f"seed{sd_}" / "stage1_verdict.json")["provenance"])
+        pv_["judge_nature"] = ({"errors": [], "input_mismatch": ["md_init_raw.xyz 불일치 (selftest)"]} if mismatch
+                               else {"errors": ["seed_gate OSError: selftest"], "input_mismatch": []})
         return pv_
     def _stop_put(c_, txt_):
         (c_ / "STOP.json").write_text(txt_, encoding="utf-8")
@@ -3413,9 +3429,17 @@ def _selftest():
         # P2-G — 장부를 쓴 러너의 카드 값 · 도구 지문
         "led_card_fp": lambda c_: _led_top(c_, card_values_sha16="0" * 16),
         "led_driver_fp": lambda c_: _led_top(c_, driver_sha16="0" * 16),
+        # ⭐ 회신 DQ P1-1 — 같은 지문이어도 앞 판정이 판정 도중 예외가 아니면 (예외 없이 끝남 · 입력 불일치) 대체하지 않는다
+        "led_invalid_same_noerr": lambda c_: _led_row(c_, "A", 12, verdict="invalid"),
+        "led_invalid_same_mismatch": lambda c_: _led_row(c_, "A", 12, verdict="invalid", verdict_provenance=_prov_judge_err(c_, "A", 12, mismatch=True)),
+        # ⭐ 회신 DQ P2-1 — 모순된 STOP (interrupted + true · melt + false) · 모르는 코드 · terminal 없음 = 판독 불가
+        "stop_contra": lambda c_: _stop_put(c_, STOPJ("interrupted", True)),
+        "stop_melt_false": lambda c_: _stop_put(c_, STOPJ("melt", False)),
+        "stop_bogus": lambda c_: _stop_put(c_, STOPJ("bogus")),
+        "stop_noterm": lambda c_: _stop_put(c_, json.dumps({"at": "x", "code": "invalid", "reason": "selftest", "stop_id": "ab" * 8})),
     }
     res_q = {k_: _sum_case(f_) for k_, f_ in cases_q.items()}
-    same_q = _sum_case(lambda c_: _led_row(c_, "A", 12, verdict="invalid"))     # 지문 그대로 (그때 판정의 지문 = 지금) — 판정 도중 오류였던 것 → 대체 (통과)
+    same_q = _sum_case(lambda c_: _led_row(c_, "A", 12, verdict="invalid", verdict_provenance=_prov_judge_err(c_, "A", 12)))   # 지문 그대로 · 판정 도중 예외 → 대체 (통과)
     open_q = (_sum_case(lambda c_: _stop_put(c_, STOPJ("interrupted"))), _sum_case(lambda c_: _stop_put(c_, STOPJ("invalid"))))
     chk(all(v_ == ("invalid", None) for v_ in res_q.values()) and open_q == (("pending", None), ("pending", None)) and s_ok_["track"] == "stage1_pass"
         and same_q[0] == "stage1_pass",
@@ -3423,7 +3447,20 @@ def _selftest():
         "장부 invalid ↔ 폴더 fail · 장부 지문 · 대체 기록 꼴 · 적힌 충돌 관측 · "
         "이력 prev 없음 · null · 모르는 상태 · 잘린 STOP · 닫는 STOP (기록은 통과) · 첫 시드 아닌 닫힘 (장부 · 판정) · 장부의 모르는 판정 (판정 파일 없이) · "
         "충돌 관측 꼴 · 장부 카드 · 도구 지문 → 요약 invalid · 2 단계 없음 · 확인 안 된 다른 STOP (interrupted · invalid) → pending "
-        f"· 장부 invalid 인데 그때 지문 = 지금 (판정 도중 오류) → 통과 ({ {k: v for k, v in res_q.items() if v != ('invalid', None)} } · {open_q} · {same_q})")
+        f"· 장부 invalid 인데 그때 지문 = 지금 (판정 도중 예외) → 통과 · (회신 DQ) 같은 지문이어도 예외 없이 끝난 · 입력 불일치 판정 → invalid · 모순된 · "
+        f"모르는 · terminal 없는 STOP → invalid ({ {k: v for k, v in res_q.items() if v != ('invalid', None)} } · {open_q} · {same_q})")
+    # ⭐ 회신 DQ P2-1 (러너) — 모순된 STOP · 모르는 코드 · terminal 없음은 확인으로 지우지 않는다 (거부 · STOP 바이트 그대로 · 발사 0 · 요약 invalid)
+    res_p21 = {}
+    for nm_, txt_ in (("contra", STOPJ("interrupted", True)), ("melt_false", STOPJ("melt", False)), ("bogus", STOPJ("bogus")),
+                      ("noterm", json.dumps({"at": "x", "code": "invalid", "reason": "selftest", "stop_id": "ab" * 8}))):
+        c_ = clone(rr_d)
+        _stop_put(c_, txt_)
+        b0_ = (c_ / "STOP.json").read_bytes()
+        rc_x, L_x, _ = go(wt, rr=c_, ack="ab" * 8)
+        res_p21[nm_] = (rc_x, len(L_x), (c_ / "STOP.json").read_bytes() == b0_, real.stage1_summary(c_, values=vals_t, log=lambda *m: None)["track"])
+    chk(all(v_ == (RC["refused"], 0, True, "invalid") for v_ in res_p21.values()),
+        f"⛔음성 회신 DQ P2-1 (Codex 재현): interrupted + terminal true · melt + false · 모르는 코드 · terminal 없는 STOP 은 --ack_stop 으로 지우지 않는다 "
+        f"(러너 거부 · STOP 그대로 · 발사 0) · 독립 요약도 invalid — 같은 함수 ({res_p21})")
     # 닫는 STOP 이 기록과 맞으면 (첫 시드 녹음 fail · 장부 closes_system) 요약은 stop_track 그대로
     rc_cq, L_cq, rr_cq = go(wt, scen={("A", 11): {"melt": "fail", "polls": 8}})
     sm_cq = summ(rr_cq)
@@ -3462,6 +3499,66 @@ def _selftest():
         and not row_n3b.get("verdict_observed_conflict") and J(rr_n3 / "stage1_summary.json")["track"] == "stage1_pass",
         f"⛔음성 DQ 전 2차 리뷰 N3: 끝 판정 도중 일시 오류로 장부 invalid → 확인 뒤 같은 원자료 · 카드 · 도구의 재판정 pass 가 대체하고 (기록) 이어 돌린다 · "
         f"통과 ({rc_n3} · 발사 {len(L_n3)} · {rc_n3b} · 발사 {len(L_n3b)} · {row_n3b.get('verdict_superseded')})")
+    # ⭐ 회신 DQ P1-1 (Codex 재현) — A12 의 md_init_raw.xyz 가 traj 원시와 다르면 판정은 입력 불일치 (invalid · rc 27) · 그 파일을 다른 이름으로 보존하고
+    #    일반 확인 → 다시 만든 판정 pass 를 '판정 도중 오류' 로 자동 대체하지 않는다 (발사 0 · 충돌 관측 · 독립 요약 invalid)
+    from ase.io import read as _rd_t, write as _wr_t
+    n_mm = {"left": 1}
+    def _sg_mm(run_, *a_, **k_):
+        rp_ = pathlib.Path(run_)
+        if n_mm["left"] and rp_.name == "seed12" and rp_.parent.name == "A":
+            n_mm["left"] -= 1
+            at_ = _rd_t(str(rp_ / "traj.xyz"), index=-1); at_.wrap(); at_.positions[0] += 0.5
+            _wr_t(str(rp_ / real.SEED_GATE_RAW), at_, format="extxyz")
+        return _sg0(run_, *a_, **k_)
+    real.seed_gate = _sg_mm
+    try:
+        rc_mm, L_mm, rr_mm = go(wt)
+    finally:
+        real.seed_gate = _sg0
+    row_mm = [x_ for x_ in J(rr_mm / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
+    nat_mm = (row_mm.get("verdict_provenance") or {}).get("judge_nature") or {}
+    (rr_mm / "A/seed12" / real.SEED_GATE_RAW).rename(rr_mm / "A/seed12" / (real.SEED_GATE_RAW + ".kept"))
+    rc_mm2, L_mm2, _ = go(wt, rr=rr_mm, ack=J(rr_mm / "STOP.json")["stop_id"])
+    row_mm2 = [x_ for x_ in J(rr_mm / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
+    sm_mm2 = real.stage1_summary(rr_mm, values=vals_t, log=lambda *m: None)
+    chk(rc_mm == RC["invalid"] and len(L_mm) == 3 and row_mm.get("verdict") == "invalid" and nat_mm.get("input_mismatch") and not nat_mm.get("errors")
+        and rc_mm2 == RC["invalid"] and not L_mm2 and row_mm2.get("verdict") == "invalid" and len(row_mm2.get("verdict_observed_conflict") or []) == 1
+        and not row_mm2.get("verdict_superseded") and "자동 대체 조건이 아니다" in J(rr_mm / "STOP.json").get("reason", "")
+        and (rr_mm / "A/seed12" / real.SEED_GATE_RAW).is_file() and sm_mm2["track"] == "invalid" and not sm_mm2.get("stage2"),
+        "⛔음성 회신 DQ P1-1 (Codex 재현): md_init_raw.xyz 불일치 = 입력 불일치 판정 (invalid · rc 27 · 판정 도중 예외 아님) → 그 파일을 보존하고 확인해도 "
+        "다시 만든 판정 pass 로 자동 대체하지 않는다 (발사 0 · 충돌 관측 하나 · 요약 invalid · 2 단계 없음) "
+        f"({rc_mm} · 발사 {len(L_mm)} · {nat_mm} · {rc_mm2} · 발사 {len(L_mm2)} · {row_mm2.get('verdict_superseded')} · {sm_mm2['track']})")
+    # ⭐ 회신 DQ P1-2 (Codex 재현) — 허용된 순서로 B14 를 A14 보다 먼저 · B14 첫 판정의 정본 교체가 한 번 실패 (이력 · 임시 판정만 남는다) →
+    #    독립 요약 invalid · STOP 을 확인하고 기본 순서로 다시 시작해도 · 그 순서로 다시 시작해도 발사 0
+    import types as _ty_u
+    ORD_B14 = "A:11,B:11,A:12,B:12,A:13,B:13,B:14,A:14,A:15,B:15"
+    _os_r = real.os
+    arm_v = {"fired": False}
+    def _rep_v(src_, dst_):
+        if not arm_v["fired"] and str(dst_).replace("\\", "/").endswith("B/seed14/stage1_verdict.json"):
+            arm_v["fired"] = True
+            raise OSError("selftest — 첫 정본 판정 교체 실패")
+        return _os_r.replace(src_, dst_)
+    osv_ = _ty_u.SimpleNamespace(**{k_: getattr(_os_r, k_) for k_ in dir(_os_r) if not k_.startswith("__")}); osv_.replace = _rep_v
+    real.os = osv_
+    try:
+        rc_u1, L_u1, rr_u1 = go(wt, order=ORD_B14, scen={("B", 14): {"melt": "fail"}})
+    finally:
+        real.os = _os_r
+    b14_ = rr_u1 / "B/seed14"
+    left_u = (os.path.lexists(b14_ / real.VERDICT_HISTORY), os.path.lexists(b14_ / "stage1_verdict.json.tmp"), os.path.lexists(b14_ / "stage1_verdict.json"))
+    sm_u1 = real.stage1_summary(rr_u1, values=vals_t, log=lambda *m: None)
+    rc_u2, L_u2, _ = go(wt, rr=rr_u1, ack=J(rr_u1 / "STOP.json")["stop_id"])               # 기본 순서 (A14 가 B14 앞)
+    sp_u2 = J(rr_u1 / "STOP.json")
+    rc_u3, L_u3, _ = go(wt, rr=rr_u1, ack=sp_u2["stop_id"], order=ORD_B14)                # 그 순서로 한 번 더
+    chk(arm_v["fired"] and rc_u1 == RC["interrupted"] and tag(L_u1)[-1] == ("B", 14) and left_u == (True, True, False)
+        and sm_u1["track"] == "invalid" and "B14" in (sm_u1.get("stale_verdicts") or [])
+        and rc_u2 == RC["invalid"] and not L_u2 and "B14" in sp_u2.get("reason", "") and "정본 판정" in sp_u2.get("reason", "")
+        and rc_u3 == RC["invalid"] and not L_u3,
+        "⛔음성 회신 DQ P1-2 (Codex 재현): B14 를 A14 보다 먼저 돌려 B14 첫 정본 판정 교체가 실패 (이력 · 임시 판정만 · 정본 없음) → 독립 요약 invalid · "
+        "STOP 을 확인하고 기본 순서로 다시 시작해도 (A14 를 띄우지 않는다) · 그 순서로 한 번 더 해도 발사 0 "
+        f"({arm_v['fired']} · {rc_u1} · {tag(L_u1)[-2:]} · {left_u} · {sm_u1['track']} · {sm_u1.get('stale_verdicts')} · {rc_u2} · 발사 {len(L_u2)} · "
+        f"{sp_u2.get('reason', '')[:80]} · {rc_u3} · 발사 {len(L_u3)})")
     # ⭐ DQ 전 2차 리뷰 N1 · N2 — 재판정이 장부 판정 (pass) 과 다른 fail + closes 를 내면 충돌 관측으로만 (계를 닫지 않음) · 재시작해도 같은 관측은 한 번만
     def _sv_flip(rd_, **k_):
         r_ = real.stage1_verdict(rd_, **k_)
@@ -3483,7 +3580,7 @@ def _selftest():
     rr_x = clone(rr_d)
     real.stage1_verdict(rr_x / "A/seed12", values=vals_t, log=lambda *m: None, reason="selftest — 이력 한 줄")   # 지금 판정에 history 를 만든다
     fdp_ = rr_x / "A" / "seed12.cut1"; (rr_x / "A/seed12").rename(fdp_)
-    vx_ = J(fdp_ / "stage1_verdict.json"); ridx = vx_["run_id"]
+    vx0_ = J(fdp_ / "stage1_verdict.json"); ridx = vx0_["run_id"]
     rowx = {"system": "A", "seed": 12, "run_id": ridx, "status": "ended", "end": "x", "verdict": "invalid"}
     def _obs_pair():
         el_ = retry_eligibility([rowx], [], {ridx: {"path": str(fdp_)}}, vals_t, real)
@@ -3491,15 +3588,21 @@ def _selftest():
         ack_declaration_problems({}, {"run_id": ridx, "code": "invalid"}, {"runs": [rowx]}, vals_t,
                                  mq_with(attempt_inventory=lambda r_: ({ridx: {"path": str(fdp_)}}, [])), rr_x, observed=ob_)
         return el_.get("observed") or {}, (ob_ or [{}])[0]
+    o0a_, o0b_ = _obs_pair()                                 # ⭐ 회신 DQ P1-1 — 이름을 바꾸기 전 판정: 보존 폴더에서는 폴더 이름 · 실행 전 기록도 판정 입력 → 지금이 아니다
+    real.stage1_verdict(fdp_, values=vals_t, log=lambda *m: None, reason="selftest — 보존 폴더에서 다시 판정")
+    vx_ = J(fdp_ / "stage1_verdict.json")
     o1_, o2_ = _obs_pair()
     with open(fdp_ / "result.json", "a", encoding="utf-8") as fh_:      # 보존 폴더의 원자료를 판정 뒤에 바꾼다 — 기록된 지문은 이제 낡았다
         fh_.write("\n")
     o3_, o4_ = _obs_pair()
     ch_x = real.folder_verdict_chain(fdp_)
     chk(o1_.get("provenance") == vx_["provenance"] and o2_.get("provenance") == vx_["provenance"] and o1_.get("prior") == ch_x
-        and o2_.get("prior") == ch_x and len(ch_x) >= 3 and o3_.get("provenance") is None and o4_.get("provenance") is None,
-        "⛔음성 DQ 전 2차 · 3차 · 4차 리뷰: 재시도 자격 · 확인 경로의 폴더 판정 관측에 지금 판정의 지문 · 폴더 판정 기록 전체가 실린다 · 판정 뒤 원자료가 바뀐 보존 폴더의 "
-        f"낡은 지문은 싣지 않는다 (대체 못 함) ({o1_.get('provenance') == vx_['provenance']} · {o3_.get('provenance')} · {o4_.get('provenance')})")
+        and o2_.get("prior") == ch_x and len(ch_x) >= 3 and o3_.get("provenance") is None and o4_.get("provenance") is None
+        and o0a_.get("provenance") is None and o0b_.get("provenance") is None and real.ATTEMPT_NAME in vx_["provenance"]["files_sha256"]
+        and real.ATTEMPT_NAME not in vx0_["provenance"]["files_sha256"],
+        "⛔음성 DQ 전 2차 · 3차 · 4차 리뷰 · 회신 DQ P1-1: 재시도 자격 · 확인 경로의 폴더 판정 관측에 지금 판정의 지문 · 폴더 판정 기록 전체가 실린다 · 판정 뒤 원자료가 "
+        "바뀐 보존 폴더의 낡은 지문 · 보존 폴더로 이름을 바꾸기 전 판정의 지문 (그 자리에선 실행 전 기록까지 판정 입력) 은 싣지 않는다 (대체 못 함) "
+        f"({o1_.get('provenance') == vx_['provenance']} · {o3_.get('provenance')} · {o4_.get('provenance')} · {o0a_.get('provenance')})")
     # ⭐ DQ 전 3차 리뷰 P1 — 장부 판정이 빈 채 (판정을 쓴 뒤 장부에 적기 전에 SIGKILL · 정전) 폴더의 앞 판정과 다른 결과가 나오면 보류 (러너 · 요약 같은 규칙)
     def _crash_state(c_, sd_, **vf_kv):
         _vf_edit(c_, "A", sd_, **vf_kv); _led_row(c_, "A", sd_, verdict=None, verdict_provenance=None)
@@ -3507,8 +3610,10 @@ def _selftest():
     rc_k1, L_k1, _ = go(wt, rr=rr_k1)
     rr_k2 = clone(rr_d); _crash_state(rr_k2, 12, status="invalid", provenance=_prov_changed(rr_k2, "A", 12))   # 앞 invalid · 그 뒤 원자료가 바뀜
     rc_k2, L_k2, _ = go(wt, rr=rr_k2)
-    rr_k3 = clone(rr_d); _crash_state(rr_k3, 12, status="invalid")                                 # 앞 invalid · 같은 원자료 → 대체 (이어 감)
+    rr_k3 = clone(rr_d); _crash_state(rr_k3, 12, status="invalid", provenance=_prov_judge_err(rr_k3, "A", 12))   # 앞 invalid · 같은 입력 · 판정 도중 예외 → 대체 (이어 감)
     rc_k3, L_k3, _ = go(wt, rr=rr_k3)
+    rr_k3b = clone(rr_d); _crash_state(rr_k3b, 12, status="invalid")                              # ⭐ 회신 DQ P1-1 — 같은 입력이어도 예외 없이 끝난 invalid → 보류
+    rc_k3b, L_k3b, _ = go(wt, rr=rr_k3b)
     rr_k4 = clone(rr_d); _crash_state(rr_k4, 12, status="fail")                                    # 4차 — 끊긴 뒤 사람이 한 번 더 다시 판정
     real.stage1_verdict(rr_k4 / "A/seed12", values=vals_t, log=lambda *m: None, reason="selftest — 사람의 다시 판정")
     rc_k4, L_k4, _ = go(wt, rr=rr_k4)
@@ -3527,7 +3632,7 @@ def _selftest():
     row_k3 = [x_ for x_ in J(rr_k3 / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
     chk(rc_k1 == RC["invalid"] and not L_k1 and "A12 재판정" in J(rr_k1 / "STOP.json").get("reason", "")[:12] and row_k1.get("verdict") is None
         and len(row_k1.get("verdict_observed_conflict") or []) == 1 and rc_k2 == RC["invalid"] and not L_k2
-        and rc_k3 == RC["pass"] and not L_k3 and row_k3.get("verdict") == "pass"
+        and rc_k3 == RC["pass"] and not L_k3 and row_k3.get("verdict") == "pass" and rc_k3b == RC["invalid"] and not L_k3b
         and rc_k4 == RC["invalid"] and not L_k4 and rc_k5 == RC["invalid"] and not L_k5
         and s_k6 == "invalid" and rc_k6 == RC["invalid"] and not L_k6,
         f"⛔음성 DQ 전 3차 리뷰 P1: 장부 판정이 빈 끊긴 상태에서 폴더의 앞 판정 fail → 지금 pass · 앞 invalid → 원자료가 바뀐 뒤 pass 면 러너가 보류 (발사 0) · "
@@ -3539,11 +3644,13 @@ def _selftest():
         real.stage1_verdict(c_ / "A" / f"seed{sd_}", values=vals_t, log=lambda *m: None, reason="selftest — 끊긴 뒤 다시 판정")
     sum_k = {"flip": _sum_case(lambda c_: _crash_rejudged(c_, 12, status="fail")),
              "nonsci_changed": _sum_case(lambda c_: _crash_rejudged(c_, 12, status="invalid", provenance=_prov_changed(c_, "A", 12))),
-             "nonsci_same": _sum_case(lambda c_: _crash_rejudged(c_, 12, status="invalid")),
+             "nonsci_same": _sum_case(lambda c_: _crash_rejudged(c_, 12, status="invalid", provenance=_prov_judge_err(c_, "A", 12))),
+             "nonsci_same_noerr": _sum_case(lambda c_: _crash_rejudged(c_, 12, status="invalid")),      # ⭐ 회신 DQ P1-1 — 예외 없이 끝난 invalid
+             "nonsci_same_mismatch": _sum_case(lambda c_: _crash_rejudged(c_, 12, status="invalid", provenance=_prov_judge_err(c_, "A", 12, mismatch=True))),
              "flip_twice": _sum_case(lambda c_: (_crash_rejudged(c_, 12, status="fail"),
                                                  real.stage1_verdict(c_ / "A/seed12", values=vals_t, log=lambda *m: None, reason="selftest — 한 번 더")))}
     chk(sum_k == {"flip": ("invalid", None), "nonsci_changed": ("invalid", None), "nonsci_same": ("stage1_pass", sum_k["nonsci_same"][1]),
-                  "flip_twice": ("invalid", None)}
+                  "nonsci_same_noerr": ("invalid", None), "nonsci_same_mismatch": ("invalid", None), "flip_twice": ("invalid", None)}
         and sum_k["nonsci_same"][1] is not None,
         f"⛔음성 DQ 전 3차 리뷰 P1 (요약): 장부 판정이 빈 끊긴 상태의 다시 낸 판정 — 앞 fail → pass · 앞 invalid → 원자료가 바뀐 뒤 pass 면 요약 invalid · "
         f"같은 원자료면 통과 ({sum_k})")
