@@ -1,0 +1,28 @@
+{
+  "schema": "bounded_document_review/v1",
+  "date": "2026-11-05",
+  "review_pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+  "verdict": "ACCEPT_DOCUMENT_STATIC_SCOPE_ONLY",
+  "new_findings": [],
+  "global_gate": "HOLD",
+  "execution_authorized": false,
+  "value_collection_authorized": false,
+  "registration_authorized": false,
+  "deployment_authorized": false,
+  "integration_authorized": false,
+  "ledger_closure_performed": false,
+  "actual_research_results": 0,
+  "actual_host_access": false,
+  "inventory_executed_or_imported": false,
+  "simulator_executed": false,
+  "regression_or_full_gate_rerun": false,
+  "local_runtime": {
+    "os": "Windows",
+    "python": "3.12.14"
+  },
+  "evidence_counts_are_separate": true,
+  "actual_template_fields_null": 26,
+  "static_predicates": 25,
+  "static_decks_in_memory": 0,
+  "inventory_source_sha256": "2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634"
+}

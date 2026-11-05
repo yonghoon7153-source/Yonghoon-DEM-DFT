@@ -1,0 +1,143 @@
+{
+  "schema": "lhs_companion_boundary_static_review/v1",
+  "review_date_kst": "2026-11-05",
+  "requested_pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+  "verdict": "BOUNDED_ACCEPTANCE_NO_NEW_FINDINGS",
+  "new_findings": [],
+  "observation_template_field_count": 26,
+  "observation_template_null_field_count": 26,
+  "checks": {
+    "snapshot_declared_pin_matches_task": true,
+    "strict_json_parse_no_duplicate_keys_or_nonfinite_tokens": true,
+    "draft_not_registered": true,
+    "measured_rows_zero_and_rows_empty": true,
+    "template_not_collected": true,
+    "template_observation_fields_all_null": true,
+    "execution_value_access_registration_reader_flags_false": true,
+    "inventory_schema_reference_unchanged": true,
+    "inventory_source_contains_declared_schema": true,
+    "inventory_source_hash_matches_closed_baseline": true,
+    "inventory_modified_flag_false": true,
+    "context_hash_matches_companion": true,
+    "cross_track_values_not_lhs_observations": true,
+    "reported_sample_and_stop_steps_differ": true,
+    "same_step_stop_ratio_not_established": true,
+    "remote_section4_not_available": true,
+    "future_access_order_preserved": true,
+    "new_submission_plan_false": true,
+    "priority_rint_round2": true,
+    "context_execution_registration_closure_integration_flags_false": true,
+    "context_research_results_zero": true,
+    "ledger_apply_closure_registration_flags_false": true,
+    "ledger_upserts_empty": true,
+    "supplied_static_report_claims_no_physical_results_no_full_gate": true,
+    "all_reviewed_manifest_members_match_local_bytes": true
+  },
+  "all_static_checks_pass": true,
+  "reviewed_file_hashes": [
+    {
+      "path": "REQUEST.md",
+      "bytes": 1307,
+      "sha256": "f48a85beceb21767f26a39befc02d665786e6f2b9108e974e16a021a30be1abc",
+      "snapshot_manifest_match": null
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/README.md",
+      "bytes": 4684,
+      "sha256": "7ed65f8729e920893fc8472fbbc244aec116db440d7fa891ad2eacaac20bac5a",
+      "snapshot_manifest_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/companion_draft.json",
+      "bytes": 2509,
+      "sha256": "fdb15d127e840423ccca90275a1d4e1fb80c855916b71aef12973a220bcb70b7",
+      "snapshot_manifest_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/source_context.json",
+      "bytes": 1968,
+      "sha256": "a44013d6b1e8aa19ad1647c1f764cb5ee3efb0e3022704cb6af48f19d90201c0",
+      "snapshot_manifest_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/ledger_proposal.json",
+      "bytes": 572,
+      "sha256": "35760291b39dc1b8e40258d39585a9fa5c3d54204442934274da56b5e00465ea",
+      "snapshot_manifest_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/static_validation.json",
+      "bytes": 485,
+      "sha256": "a3e39f473f6a73085b56cf1da20131d1cd4934606d346c2113f67ad641452d5b",
+      "snapshot_manifest_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/README.md",
+      "bytes": 10133,
+      "sha256": "08d7baa6273b872e4b3d719be51f986cee164c697a89cbca4a147947de637980",
+      "snapshot_manifest_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/pressure_inventory.sh",
+      "bytes": 11122,
+      "sha256": "2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634",
+      "snapshot_manifest_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_closure_20261104/README.md",
+      "bytes": 5589,
+      "sha256": "a2703749176513c51d3a4193310dea8cfe241cf289feaeca2ddbdc0101c108b3",
+      "snapshot_manifest_match": true
+    },
+    {
+      "path": "docs/data/lhs_network214_35f032737_20261030/s5_judgment/README.md",
+      "bytes": 58834,
+      "sha256": "2e375eea67b6a2a7e90acaf16efb5836dc3283441c046a2f3ef70921bde98768",
+      "snapshot_manifest_match": true
+    },
+    {
+      "path": "README_DELIVERY.md",
+      "bytes": 1146,
+      "sha256": "2a3396424b25e46722c1fb83823c58db9200da94217745273abbf50d39f66ea6",
+      "snapshot_manifest_match": null
+    },
+    {
+      "path": "SNAPSHOT_MANIFEST.json",
+      "bytes": 3047,
+      "sha256": "b73f388cfc99edff2abc0539ac4176d5578aca3a1bc5d1e2c87aad91897967d6",
+      "snapshot_manifest_match": null
+    }
+  ],
+  "inventory_key_preservation_evidence": {
+    "method": "Exact local command SHA256 equals the already accepted command SHA256 stated in closure README and current companion. Identical command bytes preserve output schema and keys; no runtime output was obtained.",
+    "sha256": "2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634",
+    "executed": false,
+    "imported": false,
+    "legacy_lpi_reaudit_opened": false
+  },
+  "manual_boundary_checks": {
+    "inventory_counts_not_pressure_eligibility_or_same_execution_proof": "PASS",
+    "canonical_inventory_then_A_C_then_separate_collection_order": "PASS",
+    "resources_are_relayed_not_live_scheduler": "PASS",
+    "lpi_01_02_disposition_remains_limited": "PASS",
+    "timing_risk_and_obs_historical_cause_uncertainty_remain_open": "PASS",
+    "whole_gate_hold_and_p1_ownership_preserved": "PASS",
+    "q1_q7_and_refused_tsv_not_overridden": "PASS"
+  },
+  "not_performed": [
+    "inventory command execution or import",
+    "raw dump or actual measurement access",
+    "host or scheduler query",
+    "physical calculation",
+    "existing synthetic or regression suite",
+    "full gate",
+    "legacy LPI re-audit",
+    "remote pin authentication (parent scope)",
+    "scratch-original byte authentication (not supplied)"
+  ],
+  "source_mutations": [],
+  "limitations": [
+    "Document and local byte consistency only. This report is not execution, value-access, registration, ledger closure, stage A, integration or release authorization.",
+    "Manifest and closure hash comparisons do not independently authenticate a remote Git object."
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+  "checks": [
+    {
+      "path": "docs/collab/codex_to_claude/20261105-0425_lhs-damping-draft.md",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/data/lhs_network214_35f032737_20261030/s5_judgment/README.md",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/README.md",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/companion_draft.json",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/ledger_proposal.json",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/review_request.md",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/source_context.json",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/static_validation.json",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/README.md",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/pressure_inventory.sh",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_closure_20261104/README.md",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    }
+  ],
+  "parent_match": true,
+  "changes_only_added_documents": true
+}
