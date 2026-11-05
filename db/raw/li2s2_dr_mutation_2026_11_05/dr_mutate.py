@@ -45,6 +45,13 @@ MOVED_DR = {
                               "    if True:\n        return True\n    fa, fb = a.get(\"files_sha256\"), b.get(\"files_sha256\")"),
  "DQ52_nonsci_conflict_off": F("DQ52_nonsci_conflict_off", "        if v_ in (\"invalid\", \"incomplete\"):\n            sb_ = supersede_block(row.get(",
                                "        if False:\n            sb_ = supersede_block(row.get("),
+ # DR 전 2차 리뷰 P1 — 폴더 기록 규칙이 장부 판정 None · invalid · incomplete 로 넓어짐 (그 줄 · 요약의 인자 줄이 바뀜)
+ "DQ69_folder_prior_off": F("DQ69_folder_prior_off",
+                            "        if (v_ is None or v_ in (\"invalid\", \"incomplete\")) and isinstance(folder_prior, list):", "        if False:"),
+ "DQ72_summary_prior_off": F2("DQ72_summary_prior_off", [
+     ("                                          folder_prior=(folder_verdict_chain(pathlib.Path(out_root) / s / f\"seed{sd}\")\n"
+      "                                                        if r.get(\"verdict\") in (None, \"invalid\", \"incomplete\") else None))",
+      "                                          folder_prior=None)")]),
  "DQ70_prior_nonsci_changed_off": F("DQ70_prior_nonsci_changed_off", "                if st_ in (\"invalid\", \"incomplete\"):\n                    sb_ = supersede_block(rec_.get(",
                                     "                if False:\n                    sb_ = supersede_block(rec_.get("),
 }
@@ -96,11 +103,25 @@ NEW = [
  F("DR46_folder_current_off", "    if pv.get(\"folder\") != [fo_.parent.name, fo_.name]:", "    if False:"),
  F("DR47_folder_record_off", "                         \"folder\": [run.parent.name, run.name], \"derived_written\"",
    "                         \"folder\": None, \"derived_written\""),
- F("DR48_preserved_runner_off", "                                                   for s_, d_, nm_, why_ in mq.preserved_unresolved(R)]",
+ F("DR48_preserved_runner_off", "                                                   for s_, d_, nm_, why_ in mq.preserved_unresolved(R, vals[\"seeds\"])]",
    "                                                   for s_, d_, nm_, why_ in []]", "run", RUNR),
- F("DR49_preserved_summary_off", "    invalid.extend(f\"보존 폴더 {s_}/{nm_} 의 미해결 판정 기록 — {why_}\" for s_, _, nm_, why_ in preserved_unresolved(out_root))",
-   "    pass"),
- F("DR50_preserved_records_off", "            why_ = unresolved_first_write(p_) or _verdict_records(p_)[1]", "            why_ = unresolved_first_write(p_)"),
+ F("DR49_preserved_summary_off", "                   for s_, _, nm_, why_ in preserved_unresolved(out_root, values.get(\"seeds\")))",
+   "                   for s_, _, nm_, why_ in [])"),
+ # DR50 (2차로 바뀜) — 보존 폴더 판독 기준이 folder_record_problem 으로 (판정 기록 문제 · 모르는 상태까지)
+ F("DR50_preserved_records_off", "    recs_, prob_ = _verdict_records(folder)\n    if prob_:\n        return prob_",
+   "    recs_, prob_ = _verdict_records(folder)\n    if False:\n        return prob_"),
+ # ── DR 전 리뷰 2 차 (P1 장부 판정이 비과학적이어도 폴더 기록 전체 · P2-B 이름 꼴과 무관 · P3 멈추기 전에 장부에)
+ F("DR51_chain_nonsci_ledger_off", "        if (v_ is None or v_ in (\"invalid\", \"incomplete\")) and isinstance(folder_prior, list):",
+   "        if v_ is None and isinstance(folder_prior, list):"),
+ F("DR52_summary_chain_nonsci_off", "                                                        if r.get(\"verdict\") in (None, \"invalid\", \"incomplete\") else None))",
+   "                                                        if r.get(\"verdict\") is None else None))"),
+ F("DR53_preserved_name_pattern", "            if (p_.name in cur_) if cur_ is not None else re.fullmatch(r\"seed\\d+\", p_.name):",
+   "            if not re.fullmatch(r\"seed\\d+\\..+\", p_.name):"),
+ F("DR54_record_status_check_off", "    if any(x_ is None or x_ not in LI2S2_STATUSES for x_ in sts_):", "    if False:"),
+ F("DR55_preserved_seeds_off", "    out, cur_ = [], ({f\"seed{x_}\" for x_ in seeds} if seeds is not None else None)",
+   "    out, cur_ = [], set()"),
+ F("DR56_persist_before_stop_off", "                if rk_ != \"scientific\" or rkd_.get(\"source\") not in (\"folder_verdict\", \"folder_melt_window\"):",
+   "                if True:", "run", RUNR),
  F2("DR19_derived_write_direct", [
      ("            with open(tmp_, \"w\", encoding=\"utf-8\") as fh_:\n                write(fh_, clean, format=\"extxyz\")",
       "            with open(out, \"w\", encoding=\"utf-8\") as fh_:\n                write(fh_, clean, format=\"extxyz\")"),
