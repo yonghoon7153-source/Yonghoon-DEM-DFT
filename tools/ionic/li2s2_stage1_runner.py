@@ -2428,7 +2428,8 @@ def _selftest():
         "ledger_fail": E([run0(verdict="fail")], rcpt(), {R0: ufold("lf")}),
         "ledger_fail_no_folder": E([run0(verdict="fail")], rcpt(), {}),        # 장부의 과학적 판정은 폴더가 없어도 먼저 막는다
         "missing_invalid": E([run0(verdict="invalid")], rcpt("invalid", FIX), {}),
-        "folder_pass": E([run0()], rcpt(), {R0: ufold("fp", verdict='{"status": "pass"}')}),
+        "folder_pass": E([run0()], rcpt(), {R0: ufold("fp", verdict=json.dumps({**PASSV, "provenance": {**PASSV["provenance"],   # ⭐ DR 전 9차 — 지금 규칙의 pass
+            "card_values_sha16": real.values_sha16(vals_t), "judge_values_sha16": real.judge_values_sha16(vals_t), "driver_sha16": real.driver_sha16()}}))}),
         "folder_cut": E([run0()], rcpt(), {R0: ufold("fc", verdict='{"status": "in')}),
         "cost": E([run0(cost_basis="unknown")], rcpt(), {R0: ufold("co")}),
         "stage_bad": E([run0()], rcpt(), {R0: ufold("sb", stage="unreadable")}),
@@ -2473,6 +2474,7 @@ def _selftest():
     got_u = {k: (v["ok"], v["code"]) for k, v in cases.items()}
     chk(got_u == exp_u and "한도" in cases["two"]["why"] and "FIRE" in cases["fire"]["why"] and "못 찾는다" in cases["missing_invalid"]["why"]
         and "못 읽는다" in cases["folder_cut"]["why"] and "선언 문제" in cases["no_decl"]["why"] and cases["ok"]["kind"] == "interrupted"
+        and "과학적 판정 (pass)" in cases["folder_pass"]["why"]
         and cases["inv_rejudge_ok"]["kind"] == "invalid" and cases["inv_then_int"]["retry_of"] == R1
         and all("완료 단계를 못 읽는다" in cases[k]["why"] for k in ("dl_noplan_done", "dl_tmp", "dl_end", "dl_inv_tmp"))
         and "임시" in cases["dl_tmp"]["why"] and "끝 경계" in cases["dl_end"]["why"] and "plan.json 없이" in cases["dl_noplan_done"]["why"],
@@ -2497,26 +2499,31 @@ def _selftest():
     # 확인 때 선언 검사 단위 (ack_declaration_problems) — 종류는 실행에서 · code 는 그 종류의 묶는 code · 상한 규칙 · 다시 판정 못 하는 이유
     ar = pathlib.Path(tempfile.mkdtemp(dir=tmp_root))
     def afold(name, rid_, stage="md_incomplete", verdict=None):
-        d = ar / "A" / name
+        d = ar / "B" / name                                  # ⭐ DR 전 9차 리뷰 P3 — 바탕 원본 (src_ = B/seed13) 의 계 · 시드 그대로 (B 자료를 A 로 이름만 바꾸지 않는다)
         d.parent.mkdir(parents=True, exist_ok=True)
         info = ufold("ack_" + name, stage=stage, verdict=verdict)
         shutil.copytree(info["path"], d)
-        _write_json_atomic(d / real.ATTEMPT_NAME, {"system": "A", "seed": 11, "run_id": rid_, "retry_of": None, "retry_stop_id": None, "retry_kind": None})
-        pj_a = d / "plan.json"                               # ⭐ DR 전 8차 — plan 신원도 이 실행으로 (원본 plan 을 복사한 여섯 폴더가 같은 run_id 면 산출물 폴더 목록 문제다 —
+        _write_json_atomic(d / real.ATTEMPT_NAME, {"system": "B", "seed": 13, "run_id": rid_, "retry_of": None, "retry_stop_id": None, "retry_kind": None})
+        pj_a = d / "plan.json"                               # ⭐ DR 전 8차 — plan 의 run_id 도 이 실행으로 (원본 plan 을 복사한 여섯 폴더가 같은 run_id 면 산출물 폴더 목록 문제다 —
         if pj_a.is_file():                                   #   확인 검사가 이제 그 문제를 거부한다) · MD 완료 기록의 run_id 도 plan 과 같게
-            pl_a = J(pj_a); pl_a.update(run_id=rid_, system="A", seed=11); _write_json_atomic(pj_a, pl_a)
+            pl_a = J(pj_a); pl_a.update(run_id=rid_); _write_json_atomic(pj_a, pl_a)
             if (d / real.MD_DONE_NAME).is_file():
                 n_a = real.planned_md_steps(pl_a); real.write_md_done(d, run_id=rid_, n_steps_planned=n_a, n_steps_done=n_a)
     RA, RB, RC_, RD = "1" * 32, "2" * 32, "3" * 32, "4" * 32
     RE_, RF_ = "6" * 32, "8" * 32
-    afold("seed11.a", RA); afold("seed11.b", RB, verdict=INV); afold("seed11.c", RC_, stage="final", verdict=INV); afold("seed11.d", RD)
-    afold("seed11.e", RE_, verdict='{"status": "pass"}'); afold("seed11.f", RF_, verdict='{"status": "in')
+    PASSV_NOW = json.dumps({**PASSV, "provenance": {**PASSV["provenance"], "card_values_sha16": real.values_sha16(vals_t),   # ⭐ DR 전 9차 리뷰 P3 — 지금 규칙의
+                                                    "judge_values_sha16": real.judge_values_sha16(vals_t), "driver_sha16": real.driver_sha16()}})   # pass (과학적 기록)
+    afold("seed13.a", RA); afold("seed13.b", RB, verdict=INV); afold("seed13.c", RC_, stage="final", verdict=INV); afold("seed13.d", RD)
+    afold("seed13.e", RE_, verdict=PASSV_NOW); afold("seed13.f", RF_, verdict='{"status": "in')
     led_a = {"runs": [{"run_id": RA, "status": "interrupted"}, {"run_id": RB, "status": "invalid", "verdict": "invalid"},
                       {"run_id": RC_, "status": "ended", "verdict": "invalid"}, {"run_id": RD, "status": "cap"},
                       {"run_id": RE_, "status": "interrupted"}, {"run_id": RF_, "status": "interrupted"}]}
     A_ = lambda decl, code, rid_: ack_declaration_problems(DECL(decl), {"run_id": rid_, "code": code}, led_a, vals_t, real, ar)
-    chk(not real.attempt_inventory(ar)[1] and real.folder_stage(str(ar / "A" / "seed11.c")) == "final",
-        f"fixture: 확인 검사 바탕의 산출물 폴더 목록이 깨끗하다 (같은 run_id 폴더 · 신원 불일치 없음) · seed11.c 는 final 단계 ({real.attempt_inventory(ar)[1][:2]})")
+    kd_e = real.run_kind_detail(led_a["runs"][4], str(ar / "B" / "seed13.e"), vals_t)
+    chk(not real.attempt_inventory(ar)[1] and real.folder_stage(str(ar / "B" / "seed13.c")) == "final" and kd_e[0] == "scientific"
+        and real.run_kind_detail(led_a["runs"][0], str(ar / "B" / "seed13.a"), vals_t)[0] == "interrupted",
+        f"fixture: 확인 검사 바탕의 산출물 폴더 목록이 깨끗하다 (같은 run_id 폴더 · 신원 불일치 없음) · seed13.c 는 final 단계 · seed13.e 는 지금 규칙의 "
+        f"pass (과학적) · seed13.a 는 끊긴 런 ({real.attempt_inventory(ar)[1][:2]} · {kd_e[0]})")
     ack_cases = {"no_run": bool(ack_declaration_problems(DECL(OUT), {"code": "resume"}, led_a, vals_t, real, ar)),
                  "unknown_run": bool(A_(OUT, "resume", "5" * 32)),
                  "int_run_invalid_code": bool(A_(FIX, "invalid", RA)), "inv_run_resume_code": bool(A_(FIX, "resume", RB)),
@@ -2528,10 +2535,10 @@ def _selftest():
     exp_a = {"no_run": True, "unknown_run": True, "int_run_invalid_code": True, "inv_run_resume_code": True, "inv_run_ok": False,
              "inv_final_no_reason": True, "inv_final_reason": False, "int_run_ok": False, "cap_run_outage": True, "cap_run_raise": False,
              "folder_pass_run": True, "folder_cut_run": True}
-    chk(ack_cases == exp_a,
+    chk(ack_cases == exp_a and any("과학적 판정" in x_ for x_ in A_(OUT, "interrupted", RE_)),
         "⛔음성 DJ Q1 (확인 때 선언 검사 단위): run_id 없음 · 장부에 없는 런 · 끊긴 런에 invalid code · invalid 런에 resume code · 끝까지 돈 invalid 런에 "
         f"이유 없음 · 상한 런에 정전 사유 → 문제 / 맞는 조합은 통과 ({ {k: ack_cases[k] for k in ack_cases if ack_cases[k] != exp_a[k]} })")
-    shutil.copytree(ar / "A" / "seed11.a", ar / "A" / "seed11.a_copy")     # ⭐ DR 전 8차 리뷰 P3 — 같은 run_id 폴더 둘 (판정 기록 없는 사본 · 이 뒤로 ar 를 안 쓴다)
+    shutil.copytree(ar / "B" / "seed13.a", ar / "B" / "seed13.a_copy")     # ⭐ DR 전 8차 리뷰 P3 — 같은 run_id 폴더 둘 (판정 기록 없는 사본 · 이 뒤로 ar 를 안 쓴다)
     dup_a = A_(OUT, "interrupted", RA)
     chk(any("산출물 폴더 목록" in x_ for x_ in dup_a),
         f"⛔음성 DR 전 8차 리뷰 P3: 확인의 재시도 선언 검사 — 같은 run_id 폴더가 둘 (사본) 이면 맞는 정전 선언도 받지 않는다 ({[x_[:120] for x_ in dup_a]})")
