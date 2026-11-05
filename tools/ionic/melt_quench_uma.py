@@ -1798,8 +1798,11 @@ def _run_kind(row, folder, values):
     sts = [r_.get("status") if isinstance(r_, dict) else "?" for _, r_, _ in recs]
     sci = [r_ for _, r_, _ in recs if isinstance(r_, dict) and r_.get("status") in ("pass", "fail")]
     if sci:                                                  # ⭐ DP 전 리뷰 F1 · F2 — 판정 기록으로 본 과학적 결과도 러너가 거부 전에 장부에 적는다
-        return "scientific", {"source": "folder_verdict", "status": "fail" if any(r_.get("status") == "fail" for r_ in sci) else "pass",
-                              "closes_system": any(r_.get("closes_system") is True for r_ in sci)}
+        st_sci = "fail" if any(r_.get("status") == "fail" for r_ in sci) else "pass"
+        cur_ = next((r_ for w_, r_, _ in recs if w_ == "현재 판정"), None)       # ⭐ DQ 전 2차 리뷰 N3 — 지금 판정이 그 상태면 그 지문 (아니면 없음 = 대체 못 함)
+        return "scientific", {"source": "folder_verdict", "status": st_sci,
+                              "closes_system": any(r_.get("closes_system") is True for r_ in sci),
+                              "provenance": (cur_.get("provenance") if isinstance(cur_, dict) and cur_.get("status") == st_sci else None)}
     if any(x is None for x in sts):                          # ⭐ DP 전 리뷰 F1 — 못 읽은 이전 판정 (raw_b64 자리 · 상태 없음) = 판독 불가 (흔적 없음이 아니다)
         return "unreadable", {"source": "unreadable"}
     if any(x not in LI2S2_STATUSES for x in sts):
@@ -1880,16 +1883,35 @@ LEDGER_VERDICTS = (None, "pass", "fail", "invalid", "incomplete")   # 장부 행
 STOP_TERMINAL_CODES = ("melt", "track")                  # ⭐ DQ 전 리뷰 P2-D — 닫는 STOP (러너 TERMINAL_STOPS 와 같아야 한다 · 러너 selftest 가 대조)
 
 
-def ledger_verdict_conflict(row, folder_status, recorded=True):
-    """⭐ DQ 전 리뷰 P1-A — 같은 실행의 장부 행과 폴더 판정이 어긋나는가 (러너 ①-4 · persist · 소비자 _ledger_check 가 **같은 함수** 를 쓴다).
-    반환: 문제 글 | None. 규칙: 장부 verdict 가 허용 값 밖이면 문제 · 폴더 판정이 pass · fail 이고 장부 verdict 가 있는데 다르면 (incomplete · invalid
-    포함) 충돌 · 장부 녹음 fail 인데 폴더 판정 pass 면 충돌 · recorded 면 장부에 적힌 충돌 관측 (verdict_observed_conflict) 도 충돌."""
+def same_judge_inputs(a, b):
+    """⭐ DQ 전 2차 리뷰 N3 — 두 판정이 같은 원자료 · 카드 값 · 도구로 났는가 (provenance 의 files_sha256 · card_values_sha16 · driver_sha16 가
+    **다 있고** 같을 때만 True). 기록이 없거나 하나라도 다르면 False (확인할 수 없다 = 같다고 보지 않는다)."""
+    if not (isinstance(a, dict) and isinstance(b, dict)):
+        return False
+    for k in ("files_sha256", "card_values_sha16", "driver_sha16"):
+        if a.get(k) is None or b.get(k) is None or a.get(k) != b.get(k):
+            return False
+    return isinstance(a.get("files_sha256"), dict)
+
+
+def ledger_verdict_conflict(row, folder_status, recorded=True, folder_provenance=None):
+    """⭐ DQ 전 리뷰 P1-A · 2차 N3 — 같은 실행의 장부 행과 폴더 판정이 어긋나는가 (러너 ①-4 · persist · 소비자 _ledger_check 가 **같은 함수** 를 쓴다).
+    반환: 문제 글 | None. 규칙:
+      · 장부 verdict 가 허용 값 밖이면 문제.
+      · 폴더 판정이 pass · fail 일 때 — 장부가 pass · fail 인데 다르면 충돌 (과학적 결과가 바뀌었다) · 장부가 invalid · incomplete 면 **장부에 적힌 그 판정의
+        지문 (verdict_provenance) 과 지금 폴더 판정의 지문이 같은 원자료 · 카드 · 도구일 때만** 충돌 아님 (같은 입력의 결정적 판정이 앞에서 못 끝났던 것 —
+        판정 도중 오류) · 지문이 다르거나 기록이 없으면 충돌 (원자료 복구 · 추가 · 수동 변경일 수 있다 — 사람이 본다 · 회신 DP Q2).
+      · 장부 녹음 fail 인데 폴더 판정 pass 면 충돌.
+      · recorded 면 장부에 적힌 충돌 관측 (verdict_observed_conflict) 도 충돌."""
     v_ = row.get("verdict")
     if v_ not in LEDGER_VERDICTS:
         return f"장부 판정 {v_!r} 를 모른다 (허용 {list(LEDGER_VERDICTS)})"
     if folder_status in ("pass", "fail"):
-        if v_ is not None and v_ != folder_status:
+        if v_ in ("pass", "fail") and v_ != folder_status:
             return f"장부 판정 {v_} ≠ 폴더 판정 {folder_status}"
+        if v_ in ("invalid", "incomplete") and not same_judge_inputs(row.get("verdict_provenance"), folder_provenance):
+            return (f"장부 판정 {v_} → 폴더 판정 {folder_status} 인데 그때와 같은 원자료 · 카드 · 도구라고 확인할 수 없다 "
+                    "(지문이 다르거나 장부에 지문이 없다 — 원자료가 바뀌었을 수 있다)")
         mc_ = row.get("melt_check")
         if folder_status == "pass" and isinstance(mc_, dict) and mc_.get("verdict") == "fail":
             return "장부 녹음 fail ↔ 폴더 판정 pass"
@@ -1990,6 +2012,12 @@ def _ledger_check(out_root, verdicts, values):
             invalid.append(f"{key} 런의 verdict_observed_conflict {str(vc_)[:40]!r} — 목록이 아니다"); continue
         if vc_:
             invalid.append(f"{key} 런에 같은 실행의 다른 판정 관측이 있다 ({len(vc_)} 건 · 장부 판정 {r.get('verdict')!r}) — 사람이 본다")
+        vp_, vs_ = r.get("verdict_provenance"), r.get("verdict_superseded")   # ⭐ DQ 전 2차 리뷰 N3 — 장부 판정의 지문 · 대체 기록 꼴
+        if vp_ is not None and not isinstance(vp_, dict):
+            invalid.append(f"{key} 런의 verdict_provenance {str(vp_)[:40]!r} — 객체가 아니다"); continue
+        if vs_ is not None and not (isinstance(vs_, list) and all(isinstance(x_, dict) and x_.get("from") in ("invalid", "incomplete")
+                                                                   and x_.get("to") in ("pass", "fail") for x_ in vs_)):
+            invalid.append(f"{key} 런의 verdict_superseded {str(vs_)[:60]!r} — 비과학적 판정 → 과학적 판정의 목록이 아니다"); continue
         if mc is not None and not (isinstance(mc, dict) and mc.get("verdict") in ("fail", "invalid")):
             invalid.append(f"{key} 런의 melt_check {str(mc)[:40]!r} — 꼴이 아니다"); continue
         mh = r.get("melt_check_history")                    # ⭐ DP 전 리뷰 F4 — 앞 녹음 판정의 보관 목록
@@ -2129,7 +2157,7 @@ def _ledger_check(out_root, verdicts, values):
         elif (r.get("system"), r.get("seed")) != (s, sd):
             invalid.append(f"{s}{sd} 판정의 run_id {rid[:8]} 는 장부에서 {r.get('system')}{r.get('seed')} 런이다")
         else:                                                 # ⭐ 회신 DP P1-2 · DQ 전 리뷰 P1-A — 같은 실행의 판정 충돌 (러너 ①-4 와 같은 함수)
-            cf_ = ledger_verdict_conflict(r, vv.get("status"), recorded=False)
+            cf_ = ledger_verdict_conflict(r, vv.get("status"), recorded=False, folder_provenance=vv.get("provenance"))
             if cf_:
                 invalid.append(f"{s}{sd}: 같은 실행 {rid[:8]} — {cf_} · 원자료 · 도구가 바뀌었거나 덮인 기록 (사람이 본다)")
     return {"total_h": tot, "cap_h": float(values["stage1_cap_gpu_h"]), "invalid": invalid, "pending": pending,
@@ -2171,12 +2199,19 @@ def _summary_failed(why):
 
 
 def mark_summary_not_current(out_root, why):
-    """⭐ DQ 전 리뷰 P2-F — 러너가 이 run_root 로 시작하면 이전 묶음 요약 (stage1_summary.json · 예 stage1_pass) 을 '지금 기록의 판정이 아님'
+    """⭐ DQ 전 리뷰 P2-F — 러너가 이 run_root 로 시작하면 이전 묶음 요약이 **통과 (stage1_pass) 이거나 못 읽는 것** 이면 '지금 기록의 판정이 아님'
     (track pending · not_current) 으로 바꾼다 — 시작 점검에서 거부 · 멈춰도 낡은 통과 요약이 남지 않게 (다시 판정하면 새 요약이 덮는다).
-    요약 파일이 없으면 아무것도 안 한다 (False). 쓰기가 실패하면 이전 요약을 지우고 다시 던진다 (_summary_write_or_drop)."""
+    통과가 아닌 요약 (stop_track · invalid · pending) 은 그대로 둔다 (낡아도 통과로 읽히지 않는다 · 2차 리뷰). 요약 파일이 없으면 아무것도 안 한다 (False).
+    쓰기가 실패하면 이전 요약을 지우고 다시 던진다 (_summary_write_or_drop)."""
     q = pathlib.Path(out_root) / "stage1_summary.json"
     if not os.path.lexists(q):
         return False
+    try:                                                     # ⭐ DQ 전 2차 리뷰 — 통과가 아닌 요약 (stop_track · invalid · pending) 은 그대로 둔다 (낡아도 통과로 읽히지 않는다)
+        old_ = loads_strict(q.read_text(encoding="utf-8"))
+        if isinstance(old_, dict) and old_.get("track") != "stage1_pass":
+            return False
+    except (OSError, ValueError, UnicodeDecodeError, RecursionError):
+        pass                                                 # 못 읽는 요약은 '지금 판정 아님' 으로 바꾼다
     per = {s_: {"status": "pending", "per_seed": {}, "n_pass": 0, "n_fail": 0, "n_open": 0, "closed_by_first_seed": []} for s_ in ("A", "B")}
     _summary_write_or_drop(q, {"per_system": per, "software_variants": [], "stage2": None, "unknown_status": [], "identity_problems": [],
                                "cost": None, "track": "pending", "not_current": True, "stale_verdicts": [],
@@ -4233,16 +4268,27 @@ def _selftest():
         chk("과학적 fail 실행을 다른 실행으로 대체했다" in lc_inv and "stop_id s1 가 둘" in lc_inv and "B13 런의 melt_check_history" in lc_inv,
             f"⛔음성 DP 전 리뷰 (둘째): 소비자 — 장부에 녹음 fail (판정 없이) 로 적힌 실행을 다른 실행으로 대체해도 잡는다 · 같은 stop_id 둘 · melt_check_history 가 목록이 아님 = invalid ({lc_inv[:300]})")
         # ⭐ DQ 전 리뷰 (독립 · 2026-11-05) — 러너와 같이 쓰는 함수를 직접: 같은 실행 충돌 규칙 · STOP 판독 · 이력 꼴 · 낡은 요약 표시
+        PV = {"files_sha256": {"traj.xyz": "c" * 64}, "card_values_sha16": "1" * 16, "driver_sha16": "2" * 16}
+        PV2 = {**PV, "files_sha256": {"traj.xyz": "d" * 64}}
         cf_t = {"none_pass": ({}, "pass", True), "pass_pass": ({"verdict": "pass"}, "pass", True), "inv_pass": ({"verdict": "invalid"}, "pass", True),
                 "inc_fail": ({"verdict": "incomplete"}, "fail", True), "PASS_none": ({"verdict": "PASS"}, None, True),
+                "fail_pass": ({"verdict": "fail", "verdict_provenance": PV}, "pass", True),
                 "melt_pass": ({"melt_check": {"verdict": "fail"}}, "pass", True), "melt_fail": ({"melt_check": {"verdict": "fail"}}, "fail", True),
                 "pass_incomplete": ({"verdict": "pass"}, "incomplete", True),
                 "rec_on": ({"verdict_observed_conflict": [{"status": "fail"}]}, None, True),
                 "rec_off": ({"verdict_observed_conflict": [{"status": "fail"}]}, None, False)}
-        got_cf = {k_: ledger_verdict_conflict(r_, f_, recorded=rc_) is not None for k_, (r_, f_, rc_) in cf_t.items()}
-        want_cf = {"none_pass": False, "pass_pass": False, "inv_pass": True, "inc_fail": True, "PASS_none": True, "melt_pass": True,
-                   "melt_fail": False, "pass_incomplete": False, "rec_on": True, "rec_off": False}
-        chk(got_cf == want_cf, f"⛔음성 DQ 전 리뷰 P1-A: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 "
+        got_cf = {k_: ledger_verdict_conflict(r_, f_, recorded=rc_, folder_provenance=PV) is not None for k_, (r_, f_, rc_) in cf_t.items()}
+        got_cf.update({"inv_same_prov": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV) is not None,
+                       "inc_same_prov": ledger_verdict_conflict({"verdict": "incomplete", "verdict_provenance": PV}, "fail", folder_provenance=PV) is not None,
+                       "inv_prov_diff": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV2) is not None,
+                       "inv_prov_nocard": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": {**PV, "card_values_sha16": None}}, "pass",
+                                                                  folder_provenance={**PV, "card_values_sha16": None}) is not None,
+                       "inv_folder_noprov": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=None) is not None})
+        want_cf = {"none_pass": False, "pass_pass": False, "inv_pass": True, "inc_fail": True, "PASS_none": True, "fail_pass": True, "melt_pass": True,
+                   "melt_fail": False, "pass_incomplete": False, "rec_on": True, "rec_off": False,
+                   "inv_same_prov": False, "inc_same_prov": False, "inv_prov_diff": True, "inv_prov_nocard": True, "inv_folder_noprov": True}
+        chk(got_cf == want_cf, f"⛔음성 DQ 전 리뷰 P1-A · 2차 N3: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 — 비과학적 장부 판정은 "
+                               "그때 지문 = 지금 (원자료 · 카드 · 도구 다 있고 같음) 일 때만 대체 "
                                f"({ {k_: v_ for k_, v_ in got_cf.items() if v_ != want_cf[k_]} })")
         rsr_ = pathlib.Path(td_) / "_stop_rec"; rsr_.mkdir()
         sr_ = {"absent": stop_record(rsr_)[0]}
@@ -4274,10 +4320,16 @@ def _selftest():
         (rmq_ / "stage1_summary.json").write_text(json.dumps({"track": "stage1_pass", "stage2": {"seeds": [11, 12]}}), encoding="utf-8")
         m1_ = mark_summary_not_current(rmq_, "selftest")
         sm_m = json.loads((rmq_ / "stage1_summary.json").read_text(encoding="utf-8"))
+        (rmq_ / "stage1_summary.json").write_text(json.dumps({"track": "stop_track", "why": "selftest"}), encoding="utf-8")
+        m2_ = mark_summary_not_current(rmq_, "selftest")
+        st_m2 = json.loads((rmq_ / "stage1_summary.json").read_text(encoding="utf-8"))["track"]
+        (rmq_ / "stage1_summary.json").write_text('{"track": "stage1_pass", "track": "x"', encoding="utf-8")
+        m3_ = mark_summary_not_current(rmq_, "selftest")
+        st_m3 = json.loads((rmq_ / "stage1_summary.json").read_text(encoding="utf-8"))["track"]
         chk(m0_ is False and m1_ is True and sm_m["track"] == "pending" and sm_m["not_current"] is True and sm_m["stage2"] is None
-            and not (rmq_ / "stage1_summary.json.tmp").exists(),
-            f"⛔음성 DQ 전 리뷰 P2-F: 낡은 통과 요약을 '지금 판정 아님' (pending · not_current · 2 단계 없음) 으로 바꾼다 · 요약이 없으면 안 만든다 "
-            f"({m0_} · {m1_} · {sm_m['track']})")
+            and not (rmq_ / "stage1_summary.json.tmp").exists() and m2_ is False and st_m2 == "stop_track" and m3_ is True and st_m3 == "pending",
+            f"⛔음성 DQ 전 리뷰 P2-F · 2차: 낡은 통과 요약 · 못 읽는 요약을 '지금 판정 아님' (pending · not_current · 2 단계 없음) 으로 바꾼다 · 통과가 아닌 요약 "
+            f"(stop_track) 은 그대로 · 요약이 없으면 안 만든다 ({m0_} · {m1_} · {sm_m['track']} · {m2_} · {st_m2} · {m3_} · {st_m3})")
         # 장부 지문 — 같은 카드 · 도구면 그 이유로 막지 않고, 다르면 막는다 (P2-G)
         rfp_ = pathlib.Path(td_) / "_led_fp"; rfp_.mkdir()
         led_fp = {"runs": [], "stop_history": [], "card_values_sha16": values_sha16(VAL), "driver_sha16": driver_sha16()}
@@ -4427,13 +4479,22 @@ def _selftest():
         mi_cut = run_kind_detail({"status": "interrupted"}, d_mi, VAL)
         mi_end = run_kind_detail({"status": "ended"}, d_mi, VAL)
         mi_orph = run_kind_detail({"status": "orphaned", "status_before_orphan": "running"}, d_mi, VAL)
-    chk(fv_fail[0] == "scientific" and fv_fail[1] == {"source": "folder_verdict", "status": "fail", "closes_system": True}
+    chk(fv_fail[0] == "scientific" and fv_fail[1] == {"source": "folder_verdict", "status": "fail", "closes_system": True, "provenance": None}
         and fv_pass[0] == "scientific" and fv_pass[1].get("status") == "pass" and fv_pass[1].get("closes_system") is False
         and raw_unr[0] == "unreadable" and mh_bad[0] == "unreadable" and mh_ok[0] == "interrupted"
         and mi_cut[0] == "interrupted" and mi_end == ("invalid", {"source": "folder_melt_window"}) and mi_orph[0] == "interrupted",
         "⛔음성 DP 전 리뷰 F1 · F3 · F4: 폴더 판정 fail · pass 는 근거 (상태 · closes_system) 를 같이 → 러너가 장부에 적는다 · 못 읽은 이전 판정 "
         "(상태 없음) = 판독 불가 · 끊긴 런 (고아 마감 전 running 포함) 의 녹음 invalid 는 끊긴 런 (한도 우회 막기) · 끝난 런이면 invalid · "
         f"melt_check_history 가 목록이 아니면 판독 불가 ({[fv_fail, fv_pass, raw_unr[0], mh_bad[0], mh_ok[0], mi_cut[0], mi_end, mi_orph[0]]})")
+    with tempfile.TemporaryDirectory() as td_:                # ⭐ DQ 전 2차 리뷰 N3 — 관측에 실리는 지문 (_vf2 는 지금 td_ 를 쓴다)
+        PVk = {"files_sha256": {"traj.xyz": "c" * 64}, "card_values_sha16": "1" * 16, "driver_sha16": "2" * 16}
+        fv_prov = run_kind_detail({}, _vf2("pv", json.dumps({"status": "pass", "provenance": PVk})))
+        d_pm = _vf2("pm", json.dumps({"status": "pass", "provenance": PVk}))         # 지금 판정 pass · 이력의 이전 판정 fail
+        _append_history(pathlib.Path(d_pm), {"status": "fail", "provenance": PVk}, {"status": "pass", "provenance": PVk}, "selftest")
+        fv_prov_mix = run_kind_detail({}, d_pm)
+        chk(fv_prov[1].get("provenance") == PVk and fv_prov_mix[1].get("status") == "fail" and fv_prov_mix[1].get("provenance") is None,
+            "⛔음성 DQ 전 2차 리뷰 N3: 폴더 판정 관측에 지금 판정의 지문이 실린다 (재시도 · 확인 경로도 ①-4 와 같은 대체 규칙) · 관측 상태 (이력의 fail) 가 "
+            f"지금 판정 (pass) 과 다르면 지문을 싣지 않는다 (대체 못 함) ({fv_prov[1].get('provenance') == PVk} · {fv_prov_mix[1]})")
     chk(rk == exp_rk,
         "⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid "
         "판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = invalid · 녹음 fail · closes_system · 이력의 fail = 과학적 · 꼴이 틀린 "

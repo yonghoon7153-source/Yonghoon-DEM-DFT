@@ -10,6 +10,10 @@
   · 확인 경로의 '적기 실패 → 거부' return 끄기 — 그 실행이 과학적이라 선언 문제 목록이 늘 비어 있지 않아 바로 아래가 같은 코드로 거부한다 (회신 DP 동의).
   · 확인 구간 (확인 기록 저장 · STOP 지우기 · 확인 끝 표시) 끄기 — 그 사이 신호로 끊겨도 확인 기록은 저장되고 STOP 이 남아 다음 확인이 같은 기록을
     다시 쓰지 않는다 (같은 결과 · 구간은 기록 정리용).
+  · 살아 있는 녹음 멈춤 판정의 지문 기록 (ent verdict_provenance) 끄기 — 그 판정은 일정을 못 마친 런 (담금질을 멈춤) 이라 같은 입력의 재판정이 pass · fail 로
+    바뀔 수 없다 (그래서 대체가 일어나지 않는다) · 지문 기록은 일관성용이다.
+  · ①-4 확인의 폴더 지문 (ledger_verdict_conflict(…, folder_provenance=…)) 끄기 — persist 가 같은 입력이면 장부 판정을 이미 바꿔 두어 그 뒤 확인에서
+    지문이 결과를 가르지 않는다 (같은 입력 → 장부 = 폴더 · 다른 입력 · 기록 없음 → 지문 없이도 충돌).
   (처음엔 _ledger_check 의 꼴 검사 끄기도 '뒤 원소 검사가 같은 장부를 invalid 로' 라고 뺐는데 틀렸다 — 빈 객체 stop_history ({}) 는 뒤 원소 검사가
    못 본다. 시험 (요약 · stop_history 빈 객체) 을 더하고 DQ18 (소비자) · DQ19 (러너) 로 깬다.)"""
 import importlib.util, pathlib, sys
@@ -32,8 +36,12 @@ MOVED = {
       "            if False and (\"prev_status\" in h and h.get(\"prev_status\") != pv_.get(\"status\")")], "drv"),
  "DO27_ledger_closing_off": ("DO27_ledger_closing_off", DRVR, [
      ("        elif cs is True:                                  # ⭐ DO 전 리뷰 P0", "        elif False:                                  # ⭐ DO 전 리뷰 P0")], "both"),
- "DP48_persist_verdict_off": ("DP48_persist_verdict_off", RUNR, [
-     ('                elif v0 is None:\n                    new_["verdict"] = obs["status"]', '                elif False:\n                    new_["verdict"] = obs["status"]')], "run"),
+ "DP48_persist_verdict_off": ("DP48_persist_verdict_off", RUNR, [            # 2차: 대체 규칙 안으로 — 판정을 적지 않는다
+     ('                        new_["verdict"], new_["verdict_provenance"] = obs["status"], obs.get("provenance")', '                        pass')], "run"),
+ "DP29_kind_verdict_status_off": ("DP29_kind_verdict_status_off", DRVR, [                 # 2차: 관측 상태를 st_sci 로 먼저 계산
+     ('        st_sci = "fail" if any(r_.get("status") == "fail" for r_ in sci) else "pass"', '        st_sci = None')], "both"),
+ "DP30_kind_closes_off": ("DP30_kind_closes_off", DRVR, [
+     ('                              "closes_system": any(r_.get("closes_system") is True for r_ in sci),', '                              "closes_system": False,')], "both"),
  "DP55_rejudge_disagree_off": ("DP55_rejudge_disagree_off", RUNR, [            # 같은 실행 충돌이 공통 함수로 (DQ 전 리뷰 P1-A) — ①-4 의 멈춤을 끈다
      ('            if cf_ is not None:\n                return stop("invalid", f"{sysn}{seed} 재판정',
       '            if False:\n                return stop("invalid", f"{sysn}{seed} 재판정')], "run"),
@@ -74,7 +82,7 @@ NEW = [
    "            if False:", "both"),
  # ── P1-2: 요약의 장부 검사
  F("DQ11_record_tmp_off", "    invalid.extend(record_tmp_problems(out_root))", "    pass", "both"),
- F("DQ12_same_run_conflict_narrow", "        if v_ is not None and v_ != folder_status:", "        if v_ in (\"pass\", \"fail\") and v_ != folder_status:", "both"),
+ F("DQ12_flip_conflict_off", "        if v_ in (\"pass\", \"fail\") and v_ != folder_status:", "        if False:", "both"),
  F("DQ13_same_run_melt_off", "        if folder_status == \"pass\" and isinstance(mc_, dict) and mc_.get(\"verdict\") == \"fail\":", "        if False:", "both"),
  # ── P2-2: 직접 진입 엄격 판독 (DP 판에서 '같은 결과' 로 뺐던 넷)
  F("DQ14_card_strict_off", "    d = loads_strict(pathlib.Path(card).read_text(encoding=\"utf-8\"))   # ⭐ 회신 DO P1 — 카드도",
@@ -125,12 +133,39 @@ NEW = [
  F("DQ48_mark_summary_call_off", "        mq.mark_summary_not_current(R, \"러너가 이 run_root 로 시작했다 (시작 점검 · 재판정 뒤에 새로 낸다)\")",
    "        pass", "run", RUNR),
  F("DQ49_persist_log_conflict_off", "        if conflict_:                                        # ⭐ DQ 전 리뷰 P2-B", "        if False:", "run", RUNR),
+ # ── DQ 전 2차 독립 리뷰 (2026-11-05) 고침 자리
+ F("DQ50_same_inputs_always", "    if not (isinstance(a, dict) and isinstance(b, dict)):\n        return False\n    for k in (\"files_sha256\"",
+   "    if True:\n        return True\n    for k in (\"files_sha256\"", "both"),
+ F("DQ51_same_inputs_missing_ok", "        if a.get(k) is None or b.get(k) is None or a.get(k) != b.get(k):", "        if a.get(k) != b.get(k):", "both"),
+ F("DQ52_nonsci_conflict_off", "        if v_ in (\"invalid\", \"incomplete\") and not same_judge_inputs(row.get(\"verdict_provenance\"), folder_provenance):",
+   "        if False:", "both"),
+ F("DQ53_consumer_prov_off", "            cf_ = ledger_verdict_conflict(r, vv.get(\"status\"), recorded=False, folder_provenance=vv.get(\"provenance\"))",
+   "            cf_ = ledger_verdict_conflict(r, vv.get(\"status\"), recorded=False, folder_provenance=r.get(\"verdict_provenance\"))", "both"),
+ F("DQ54_runkind_prov_off", "                              \"provenance\": (cur_.get(\"provenance\") if isinstance(cur_, dict) and cur_.get(\"status\") == st_sci else None)}",
+   "                              \"provenance\": None}", "both"),
+ F("DQ55_rows_prov_shape_off", "        if vp_ is not None and not isinstance(vp_, dict):", "        if False:", "both"),
+ F("DQ56_rows_superseded_shape_off", "        if vs_ is not None and not (isinstance(vs_, list) and all(isinstance(x_, dict) and x_.get(\"from\") in (\"invalid\", \"incomplete\")",
+   "        if False and (isinstance(vs_, list) and all(isinstance(x_, dict) and x_.get(\"from\") in (\"invalid\", \"incomplete\")", "both"),
+ F("DQ57_mark_nonpass_kept_off", "        if isinstance(old_, dict) and old_.get(\"track\") != \"stage1_pass\":\n            return False",
+   "        if False:\n            return False", "both"),
+ F("DQ58_conflict_closes", "                    closes_, basis_ = False, None            # ⭐ 2차 N1",
+   "                    closes_, basis_ = first_ and obs.get(\"closes_system\") is True, \"x\"            # ⭐ 2차 N1", "run", RUNR),
+ F("DQ59_conflict_dedupe_off", "                    if not any({k_: x_.get(k_) for k_ in ent_} == ent_ for x_ in (vc0 or [])):", "                    if True:", "run", RUNR),
+ F("DQ60_supersede_off", "                    if v0 is None or v0 in (\"invalid\", \"incomplete\"):   # ⭐ 2차 N3", "                    if v0 is None:   # ⭐ 2차 N3", "run", RUNR),
+ F("DQ61_supersede_record_off", "                        if v0 is not None:\n                            new_[\"verdict_superseded\"]",
+   "                        if False:\n                            new_[\"verdict_superseded\"]", "run", RUNR),
+ F("DQ62_end_prov_record_off", "            ent[\"verdict_provenance\"] = v.get(\"provenance\")          # ⭐ DQ 전 2차 리뷰 N3", "            pass          # ⭐ DQ 전 2차 리뷰 N3", "run", RUNR),
+ F("DQ63_rejudge_obs_prov_off", "\"status\": now_[\"status\"], \"provenance\": now_.get(\"provenance\"),", "\"status\": now_[\"status\"],", "run", RUNR),
+ F("DQ64_retry_obs_prov_off", "                                     \"provenance\": rk_d.get(\"provenance\")},", "                                     \"provenance\": None},", "run", RUNR),
+ F("DQ65_ack_obs_prov_off", "                             \"provenance\": kd.get(\"provenance\")})", "                             \"provenance\": None})", "run", RUNR),
+ F("DQ66_persist_prov_record_off", "                        new_[\"verdict\"], new_[\"verdict_provenance\"] = obs[\"status\"], obs.get(\"provenance\")",
+   "                        new_[\"verdict\"] = obs[\"status\"]", "run", RUNR),
  F("DQ17_seed_gate_plan_strict_off", "    plan = loads_strict((run / \"plan.json\").read_text(encoding=\"utf-8\")) if (run / \"plan.json\").exists() else {}",
    "    plan = json.loads((run / \"plan.json\").read_text(encoding=\"utf-8\")) if (run / \"plan.json\").exists() else {}"),
 ]
 
 _dp_names = {m[0] for m in dp.MUT}
-assert set(MOVED) <= _dp_names, f"옮길 변이가 DP 판에 없다: {sorted(set(MOVED) - _dp_names)}"   # 옮긴 아홉 (DP 고침 4 · DQ 전 리뷰 고침 5)   # 이름이 틀리면 옮김이 조용히 빠진다
+assert set(MOVED) <= _dp_names, f"옮길 변이가 DP 판에 없다: {sorted(set(MOVED) - _dp_names)}"   # 옮긴 열하나 (DP 고침 4 · DQ 전 리뷰 고침 5 · 2차 2)   # 이름이 틀리면 옮김이 조용히 빠진다
 MUT = [MOVED.get(m[0], m) for m in dp.MUT] + NEW
 MUT = [(m[0], m[1], dp._keep_comment(m[2]), m[3]) for m in MUT]   # 옮긴 것까지 (이미 '#' 가 있으면 그대로)
 dl.MUT = MUT
