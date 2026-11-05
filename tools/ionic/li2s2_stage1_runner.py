@@ -103,7 +103,7 @@ from __future__ import annotations
 import argparse
 import copy, datetime, hashlib, importlib.util, json, os, pathlib, re, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "e5cdec3ceee52165"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "bb1c7cf329681e28"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 EXPECTED_VALUES_SHA16 = "086de59c484f9c32"     # 카드 기계_판독_값 (mq.values_sha16) — ⭐ DO 전 리뷰 P2-12: 카드 값 (상한 포함) 을 바꾸면 이 줄도
                                                #   같이 바꾸고 다시 리뷰한다 (카드 파일만 고쳐서는 상한 멈춤을 넘기지 못한다)
 STOP_KEYS = ("at", "code", "reason", "terminal", "stop_id", "run_id", "sys", "seed", "cleanup", "rc", "verdict", "melt", "summary",
@@ -598,8 +598,9 @@ def ack_declaration_problems(decl, sp, led, values, mq, run_root, observed=None)
             observed.append({"kind": "verdict", "run_id": rid, "status": kd.get("status"), "closes_system": kd.get("closes_system") is True,
                              "provenance": kd.get("provenance"), "prior": kd.get("prior")})
         return ["이 실행에는 과학적 판정 (pass · fail) 이 있다 — 재시도 대상이 아니다 (선언을 받지 않는다)"]
-    if kind == "unreadable":
-        return ["이 실행의 판정을 못 읽는다 (폴더 판정 파일 · 장부 값) — 원자료로 --stage1_verdict 다시 판정한 뒤 확인한다 (선언을 받지 않는다)"]
+    if kind == "unreadable":                                 # ⭐ DR 전 7차 — 판독 불가 까닭 · 출구도 붙인다 (재시도 자격 검사와 같은 꼴 · 끊긴 런은 다시 판정해도 안 풀린다)
+        return ["이 실행의 판정을 못 읽는다 (폴더 판정 파일 · 장부 값) — 원자료로 --stage1_verdict 다시 판정한 뒤 확인한다 (선언을 받지 않는다)"
+                + (f" · {kd.get('why')}" if kd.get("why") else "")]
     if code not in mq.RETRY_BIND_CODES[kind]:
         return [f"이 멈춤 ({code}) 은 이 실행 ({kind}) 의 재시도 영수증이 될 수 없다 — 묶는 code {list(mq.RETRY_BIND_CODES[kind])}"]
     st = mq.folder_stage(rec["path"]) if rec else None
@@ -3580,6 +3581,74 @@ def _selftest():
     chk(rc_cr == RC["invalid"] and len(L_cr) == 3 and rc_cr2 == RC["pass"] and len(L_cr2) == 7 and sup_(rr_cr) == [("invalid", "pass")],
         "⛔음성 DR 전 6차 리뷰 P2: 끝 판정 일시 오류로 장부 invalid 뒤 상한을 올린 카드 (카드 값 지문 다름 · 판정 규칙 같음) 로 확인해도 재판정 pass 가 대체하고 이어 간다 "
         f"({rc_cr} · 발사 {len(L_cr)} · {rc_cr2} · 발사 {len(L_cr2)} · {sup_(rr_cr)})")
+    # ⭐ DR 전 7차 리뷰 P0 — A12 끝 판정의 진짜 fail 이 옛 도구 (고정값 갱신 전) 로 났고 장부 쓰기를 잃었다 (SIGKILL 창 — 장부를 비워 흉내) →
+    #    폴더를 아무 이름 (old12) 으로 옮김 → STOP 권고대로 제자리 다시 판정 (지금 도구 · 폴더 이름 때문에 invalid) → invalid 재시도 선언
+    #    (+ rejudge_impossible_reason) 으로 확인해도 발사 0 · fail 이 pass 로 바뀌지 않는다 (과학적 판정 기록이 있는 폴더에서는 재시도 종류를 안 끌어낸다)
+    _sv0_x, _dsh0_x = real.stage1_verdict, real.driver_sha16
+    def _sv_olddrv(rd_, **k_):
+        rp_ = pathlib.Path(rd_)
+        if rp_.name == "seed12" and rp_.parent.name == "A" and k_.get("reason") == "담금질 끝":
+            real.driver_sha16 = lambda: "0123456789abcdef"
+            try:
+                return _sv0_x(rd_, **k_)
+            finally:
+                real.driver_sha16 = _dsh0_x
+        return _sv0_x(rd_, **k_)
+    real.stage1_verdict = _sv_olddrv
+    try:
+        rc_x, L_x, rr_x = go(wt, scen={("A", 12): {"final": "ps4_broken"}})
+    finally:
+        real.stage1_verdict = _sv0_x
+    v_x1 = J(rr_x / "A/seed12/stage1_verdict.json")
+    l_x = J(rr_x / "stage1_ledger.json")
+    [r_ for r_ in l_x["runs"] if (r_["system"], r_["seed"]) == ("A", 12)][-1].update(verdict=None, verdict_provenance=None)
+    _write_json_atomic(rr_x / "stage1_ledger.json", l_x)
+    (rr_x / "A/seed12").rename(rr_x / "A/old12")
+    rc_x1, L_x1, _ = go(wt, rr=rr_x)
+    v_x2 = real.stage1_verdict(rr_x / "A/old12", values=vals_t, log=lambda *m: None, reason="selftest: STOP 권고대로 제자리 다시 판정")
+    row_x = [r_ for r_ in J(rr_x / "stage1_ledger.json")["runs"] if (r_["system"], r_["seed"]) == ("A", 12)][-1]
+    k_x, kd_x = real.run_kind_detail(row_x, str(rr_x / "A/old12"), vals_t)
+    rc_x2, L_x2, _ = go(wt, rr=rr_x, ack=J(rr_x / "STOP.json")["stop_id"])
+    rc_x3, L_x3, _ = go(wt, rr=rr_x, ack=J(rr_x / "STOP.json")["stop_id"],
+                        declare={**FIX, "rejudge_impossible_reason": "폴더 이름 식별 invalid — 다시 판정할 수 없다 (selftest)"})
+    rows_x = [r_ for r_ in J(rr_x / "stage1_ledger.json")["runs"] if (r_["system"], r_["seed"]) == ("A", 12)]
+    sm_x = real.stage1_summary(rr_x, values=vals_t, log=lambda *m: None)
+    ps_x = (((sm_x.get("per_system") or {}).get("A") or {}).get("per_seed") or {}).get(12)
+    chk(v_x1.get("status") == "fail" and (v_x1.get("provenance") or {}).get("driver_sha16") == "0123456789abcdef" and v_x2.get("status") == "invalid"
+        and k_x == "unreadable" and "다시 판정해 과학적 판정" in (kd_x.get("why") or "")
+        and not L_x1 and not L_x2 and not L_x3 and rc_x3 != RC["pass"] and (J(rr_x / "STOP.json") if (rr_x / "STOP.json").is_file() else None) is not None
+        and len(rows_x) == 1 and rows_x[0].get("verdict") is None and sm_x.get("track") != "stage1_pass" and ps_x != "pass",
+        "⛔음성 DR 전 7차 리뷰 P0: 옛 도구로 난 진짜 fail 이 장부에 안 적힌 채 폴더를 old12 로 옮기고 지금 도구로 다시 판정 (폴더 이름 때문에 invalid) 해도 판독 불가 — "
+        f"invalid 재시도 선언으로 확인해도 발사 0 · 재시도 행 없음 · 묶음 통과 아님 ({v_x1.get('status')} · {v_x2.get('status')} · {k_x} · "
+        f"발사 {len(L_x1)}/{len(L_x2)}/{len(L_x3)} · rc {rc_x3} · 행 {len(rows_x)} · {sm_x.get('track')} · A12 {ps_x})")
+    # ⭐ DR 전 7차 리뷰 P3 (알려진 한계 · 보수적 보류) — 첫 시드 A11 이 실시간 녹음 pass 뒤 끊김 · 폴더를 옆으로 (seed11.cut) · 다른 규칙 (더 엄한 문턱) 으로
+    #    손 판정 fail + 닫힘 · 지금 규칙으로 다시 판정하면 incomplete → 판독 불가 — 정전 재시도 선언으로 확인해도 발사 0 · 다른 규칙의 닫힘은 장부로 안 옮긴다 ·
+    #    거부 문구가 '끊긴 런은 사람이 본다' 를 말한다 (다시 판정해도 안 풀린다 — 제자리 다시 판정을 맴돌게 하지 않는다)
+    hk_b2 = {"armed": True}
+    def _cut_b2(t_):
+        if hk_b2["armed"] and t_ >= 3600.0 * 3 + 1:
+            hk_b2["armed"] = False
+            raise KeyboardInterrupt("selftest: 첫 시드 녹음 pass 뒤 정전")
+    rc_b2, L_b2, rr_b2 = go(wt, sleep_hook=_cut_b2)
+    rc_b2r, L_b2r, _ = go(wt, rr=rr_b2, ack=J(rr_b2 / "STOP.json")["stop_id"])
+    sp_b2 = J(rr_b2 / "STOP.json")
+    (rr_b2 / "A/seed11").rename(rr_b2 / "A/seed11.cut")
+    strict_b2 = copy.deepcopy(vals_t); strict_b2["melt_window"]["D_threshold_cm2_s"] = 1.0
+    v_b2o = real.stage1_verdict(rr_b2 / "A/seed11.cut", values=strict_b2, log=lambda *m: None, reason="selftest: 다른 규칙 손 판정")
+    v_b2n = real.stage1_verdict(rr_b2 / "A/seed11.cut", values=vals_t, log=lambda *m: None, reason="selftest: 지금 규칙으로 제자리 다시 판정")
+    row_b2 = [r_ for r_ in J(rr_b2 / "stage1_ledger.json")["runs"] if (r_["system"], r_["seed"]) == ("A", 11)][-1]
+    k_b2, kd_b2 = real.run_kind_detail(row_b2, str(rr_b2 / "A/seed11.cut"), vals_t)
+    dp_b2 = ack_declaration_problems({"reason": "power_outage", "event": "정전 (selftest)", "evidence": "UPS (selftest)", "declared_by": "selftest",
+                                      "declared_at": "2026-11-03 00:00:00"}, sp_b2, J(rr_b2 / "stage1_ledger.json"), vals_t, real, rr_b2)
+    rc_b2a, L_b2a, _ = go(wt, rr=rr_b2, ack=sp_b2["stop_id"], declare=OUT)
+    row_b2a = [r_ for r_ in J(rr_b2 / "stage1_ledger.json")["runs"] if (r_["system"], r_["seed"]) == ("A", 11)]
+    chk(rc_b2r == RC["resume"] and v_b2o.get("status") == "fail" and v_b2o.get("closes_system") is True and v_b2n.get("status") == "incomplete"
+        and k_b2 == "unreadable" and any("끊긴 런" in x_ and "사람이 본다" in x_ for x_ in dp_b2)
+        and rc_b2a == RC["refused"] and not L_b2a and J(rr_b2 / "STOP.json").get("stop_id") == sp_b2["stop_id"]
+        and len(row_b2a) == 1 and row_b2a[0].get("closes_system") is not True and row_b2a[0].get("verdict") is None,
+        "⛔음성 DR 전 7차 리뷰 P3 (알려진 한계): 끊긴 첫 시드 폴더에 다른 규칙의 fail + 닫힘 · 지금 규칙 incomplete — 판독 불가로 정전 재시도 선언을 거부 "
+        f"(발사 0 · STOP 그대로 · 닫힘 안 옮김) · 거부 문구가 끊긴 런은 사람이 본다고 말한다 ({rc_b2r} · {v_b2o.get('status')} · {v_b2n.get('status')} · "
+        f"{k_b2} · {rc_b2a} · 발사 {len(L_b2a)} · {[x_[-80:] for x_ in dp_b2]})")
     # ⭐ DR 전 5차 리뷰 P2 — 첫 시드 (A11) 가 녹음 창이 찬 채 실행 중 상한으로 멈춤 → 상한 판정 fail + 계 닫힘 → (문서대로) 상한을 올린 카드로 · 폴더를 옆으로
     #    옮기고 확인 → 상한 칸은 판정 규칙이 아니라서 그 판정 기록은 지금 규칙의 것 → 장부에 닫힘 · 닫는 STOP melt (상한을 올린 것이 진짜 닫힘을 지우지 않는다)
     rc_cp, L_cp, rr_cp = go(mk_wt(card=mk_card(stage1_cap_gpu_h=3.0)), seed_worst_h=1.0, scen={("A", 11): {"melt": "fail"}})

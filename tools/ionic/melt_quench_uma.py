@@ -1942,14 +1942,12 @@ def _run_kind(row, folder, values):
                 return False
             return pv_r.get("judge_values_sha16") == jv_ if "judge_values_sha16" in pv_r else pv_r.get("card_values_sha16") == cv_
         sci_now = [r_ for r_ in sci if _now_rules(r_)]
-        any_now = any(_now_rules(r_) for _, r_, _ in recs if isinstance(r_, dict))   # ⭐ DR 전 6차 리뷰 P3 — 지금 규칙의 판정이 (비과학적이어도) 있으면
-        if not sci_now and any_now:                          # 다른 규칙의 과학적 기록은 무시하고 지금 규칙의 판정으로 간다 (다시 판정해도 영영 막히지 않게)
-            sci = []
-        elif not sci_now:                                    # 다른 규칙 (손 판정의 다른 카드 · 다른 checkout · 옛 도구) 의 결과 · 닫힘은 장부로 옮기지 않는다
-            return "unreadable", {"source": "unreadable", "why": "과학적 판정 기록이 모두 다른 판정 규칙 (카드 판정 값 · 도구 · 또는 지문 없음) 으로 났다 — "
-                                                                  "지금 카드 · 도구로 그 폴더를 --stage1_verdict 로 다시 판정하면 읽는다"}
-        else:
-            sci = sci_now                                    # 지금 규칙의 기록이 있으면 다른 규칙의 기록은 무시한다 (한 줄이 폴더를 영영 막지 않게)
+        if not sci_now:                                      # 다른 규칙 (손 판정의 다른 카드 · 다른 checkout · 옛 도구) 의 결과 · 닫힘은 장부로 옮기지 않는다 —
+            return "unreadable", {"source": "unreadable",      # ⭐ DR 전 7차 리뷰 P0: 과학적 판정 기록이 (어떤 규칙이든) 있는 폴더에서는 재시도할 수 있는 종류를
+                                  "why": "과학적 판정 기록이 모두 다른 판정 규칙 (카드 판정 값 · 도구 · 또는 지문 없음) 으로 났다 — 지금 카드 · "   # 끌어내지 않는다
+                                         "도구로 그 폴더를 --stage1_verdict 로 다시 판정해 과학적 판정 (pass · fail) 이 나오면 그것으로 읽는다 · 끊긴 런 "
+                                         "(다시 판정해도 incomplete) 은 사람이 본다"}
+        sci = sci_now                                        # 지금 규칙의 과학적 기록이 있으면 다른 규칙의 기록은 무시한다 (그 둘이 다르면 장부에 적을 때 폴더 기록 규칙이 충돌로 막는다)
     if sci:                                                  # ⭐ DP 전 리뷰 F1 · F2 — 판정 기록으로 본 과학적 결과도 러너가 거부 전에 장부에 적는다
         st_sci = "fail" if any(r_.get("status") == "fail" for r_ in sci) else "pass"
         cur_ = next((r_ for w_, r_, _ in recs if w_ == "현재 판정"), None)       # ⭐ DQ 전 2차 리뷰 N3 — 지금 판정이 그 상태면 그 지문 (아니면 없음 = 대체 못 함)
@@ -5034,7 +5032,7 @@ def _selftest():
         _append_history(d_al4, {"status": "fail", "closes_system": True, "provenance": PVthr_}, {"status": "pass", "provenance": PVnow_}, "selftest — 지금 카드")
         (d_al4 / "stage1_verdict.json").write_text(json.dumps({"status": "pass", "provenance": PVnow_}), encoding="utf-8")
         rk_al4 = _run_kind({}, d_al4, VAL)
-        d_al5 = pathlib.Path(td_) / "dq_al5"; d_al5.mkdir()          # ⭐ DR 전 6차 리뷰 P3 — 다른 규칙의 fail + 지금 규칙으로 다시 판정한 incomplete (끊긴 런)
+        d_al5 = pathlib.Path(td_) / "dq_al5"; d_al5.mkdir()          # ⭐ DR 전 7차 리뷰 P0 — 다른 규칙의 fail + 지금 규칙으로 다시 판정한 비과학적 판정 → 판독 불가 (재시도 아님)
         _append_history_first(d_al5, {"status": "fail", "closes_system": True, "provenance": PVthr_}, "selftest — 다른 카드 손 판정")
         _append_history(d_al5, {"status": "fail", "closes_system": True, "provenance": PVthr_}, {"status": "incomplete", "provenance": PVnow_}, "selftest — 지금 카드")
         (d_al5 / "stage1_verdict.json").write_text(json.dumps({"status": "incomplete", "provenance": PVnow_}), encoding="utf-8")
@@ -5050,11 +5048,12 @@ def _selftest():
         chk(judge_values_sha16(VALcap) == judge_values_sha16(VAL) and judge_values_sha16(VALthr) != judge_values_sha16(VAL)
             and rk_al3[0] == "scientific" and rk_al3[1].get("closes_system") is True
             and rk_al4[0] == "scientific" and rk_al4[1].get("status") == "pass" and rk_al4[1].get("closes_system") is False
-            and rk_al5[0] not in ("unreadable", "scientific")
+            and rk_al5[0] == "unreadable" and "다시 판정해 과학적 판정" in rk_al5[1].get("why", "")
             and acc_ and acc_ <= set(JUDGE_VALUE_KEYS),
             "⛔음성 DR 전 5차 리뷰 P2: 판정 규칙 지문은 판정이 읽는 카드 값만 (상한을 올려도 같고 · 녹음 문턱이 다르면 다르다) · 상한만 다른 카드로 낸 fail · 닫힘은 "
             "과학적 판정 그대로 · 다른 문턱의 손 판정 (이력) 과 지금 규칙의 판정 (정본) 이 같이 있으면 지금 규칙만 (닫힘을 옮기지 않는다) · 판정은 JUDGE_VALUE_KEYS "
-            f"밖의 카드 열쇠를 읽지 않는다 · (6차 P3) 다른 규칙의 fail 뒤 지금 규칙으로 다시 판정한 incomplete 면 판독 불가가 아니다 (재시도 길이 열린다) "
+            f"밖의 카드 열쇠를 읽지 않는다 · (7차 P0) 다른 규칙의 fail 뒤 지금 규칙으로 다시 판정한 비과학적 판정 (incomplete · invalid) 이 있어도 판독 불가 — "
+            f"과학적 판정 기록이 있는 폴더에서 재시도할 수 있는 종류를 끌어내지 않는다 "
             f"({rk_al3} · {rk_al4} · {rk_al5[0]} · {sorted(acc_ - set(JUDGE_VALUE_KEYS))})")
         chk([x_["status"] for x_ in ch_or] == ["invalid", "incomplete", "pass"] and ch_or[1]["provenance"] == PB_ and len(ch_or) == 3
             and ch_or2 == [{"status": "invalid", "provenance": PA_}, {"status": "pass", "provenance": PC_}]

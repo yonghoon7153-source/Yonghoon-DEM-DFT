@@ -56,6 +56,9 @@ MOVED_DR = {
                                     "                if st_ in (\"invalid\", \"incomplete\") and (k_ is None or i_ > k_):",
                                     "                if False:"),
  # DR 전 3차 리뷰 P2 — 이력의 새 판정 줄에 closes_system 이 붙음 (DN 판 변이 — 그 줄의 지문을 객체로만 받기)
+ # DR 전 7차 리뷰 — 확인 거부의 판독 불가 줄에 까닭 주석이 붙음 (DK 판 변이 · 뜻 그대로)
+ "L11_ack_unreadable_ok": F("L11_ack_unreadable_ok", "    if kind == \"unreadable\":                                 # ⭐ DR 전 7차",
+                            "    if False:                                 # ⭐ DR 전 7차", "run", RUNR),
  "DN6_history_provenance_coerced": F("DN6_history_provenance_coerced",
      "                                                   \"provenance\": h.get(\"new_provenance\"), \"closes_system\": h.get(\"new_closes_system\")}, True))",
      "                                                   \"provenance\": h.get(\"new_provenance\") if isinstance(h.get(\"new_provenance\"), dict) else None, "
@@ -153,7 +156,8 @@ NEW = [
  # ── DR 전 리뷰 5 차 (판정 규칙 지문 · 지금 규칙 기록 우선 · 첫 기준)
  F("DR70_judge_values_full_card", "            return pv_r.get(\"judge_values_sha16\") == jv_ if \"judge_values_sha16\" in pv_r else pv_r.get(\"card_values_sha16\") == cv_",
    "            return pv_r.get(\"card_values_sha16\") == cv_"),
- F("DR71_alien_poisons", "            sci = sci_now                                    # 지금 규칙의 기록이 있으면", "            sci = sci if len(sci_now) == len(sci) else []  # 지금 규칙의 기록이 있으면"),
+ F("DR71_alien_poisons", "        sci = sci_now                                        # 지금 규칙의 과학적 기록이 있으면",
+   "        sci = sci if len(sci_now) == len(sci) else []        # 지금 규칙의 과학적 기록이 있으면"),
  F("DR72_judge_keys_include_cap", "                    \"thermo_required_columns\", \"uma_inference_mode\")",
    "                    \"thermo_required_columns\", \"uma_inference_mode\", \"stage1_cap_gpu_h\")"),
  F("DR73_judge_keys_drop_melt", "JUDGE_VALUE_KEYS = (\"composition\", \"first_seed\", \"fix_density_g_cm3\", \"gate_check\", \"melt_window\", \"schedule\",",
@@ -165,7 +169,10 @@ NEW = [
    "    if False:   # ⭐ DR 전 6차 리뷰 P2"),
  F("DR75_supersede_rules_ignored", "        if a[\"judge_values_sha16\"] != b[\"judge_values_sha16\"]:",
    "        if False:"),
- F("DR76_now_nonsci_ignored", "        if not sci_now and any_now:", "        if False:"),
+ # ── DR 전 리뷰 7 차 (6 차의 '지금 규칙의 비과학적 판정이 있으면 다른 규칙 기록 무시' 를 되돌림 · DR76 은 그 되돌림을 다시 깨는 자리로 바꿨다)
+ F("DR76_any_now_frees", "        if not sci_now:                                      # 다른 규칙 (손 판정",
+   "        if not sci_now and not any(_now_rules(r_) for _, r_, _ in recs if isinstance(r_, dict)):  # 다른 규칙 (손 판정"),
+ F("DR77_ack_unreadable_why_off", "                + (f\" · {kd.get('why')}\" if kd.get(\"why\") else \"\")]", "                + \"\"]", "run", RUNR),
  F("DR56_persist_before_stop_off", "                if rk_ != \"scientific\" or rkd_.get(\"source\") not in (\"folder_verdict\", \"folder_melt_window\"):",
    "                if True:", "run", RUNR),
  F2("DR19_derived_write_direct", [
