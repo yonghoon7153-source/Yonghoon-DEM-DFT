@@ -1942,10 +1942,14 @@ def _run_kind(row, folder, values):
                 return False
             return pv_r.get("judge_values_sha16") == jv_ if "judge_values_sha16" in pv_r else pv_r.get("card_values_sha16") == cv_
         sci_now = [r_ for r_ in sci if _now_rules(r_)]
-        if not sci_now:                                      # 다른 규칙 (손 판정의 다른 카드 · 다른 checkout · 옛 도구) 의 결과 · 닫힘은 장부로 옮기지 않는다
+        any_now = any(_now_rules(r_) for _, r_, _ in recs if isinstance(r_, dict))   # ⭐ DR 전 6차 리뷰 P3 — 지금 규칙의 판정이 (비과학적이어도) 있으면
+        if not sci_now and any_now:                          # 다른 규칙의 과학적 기록은 무시하고 지금 규칙의 판정으로 간다 (다시 판정해도 영영 막히지 않게)
+            sci = []
+        elif not sci_now:                                    # 다른 규칙 (손 판정의 다른 카드 · 다른 checkout · 옛 도구) 의 결과 · 닫힘은 장부로 옮기지 않는다
             return "unreadable", {"source": "unreadable", "why": "과학적 판정 기록이 모두 다른 판정 규칙 (카드 판정 값 · 도구 · 또는 지문 없음) 으로 났다 — "
                                                                   "지금 카드 · 도구로 그 폴더를 --stage1_verdict 로 다시 판정하면 읽는다"}
-        sci = sci_now                                        # 지금 규칙의 기록이 있으면 다른 규칙의 기록은 무시한다 (한 줄이 폴더를 영영 막지 않게)
+        else:
+            sci = sci_now                                    # 지금 규칙의 기록이 있으면 다른 규칙의 기록은 무시한다 (한 줄이 폴더를 영영 막지 않게)
     if sci:                                                  # ⭐ DP 전 리뷰 F1 · F2 — 판정 기록으로 본 과학적 결과도 러너가 거부 전에 장부에 적는다
         st_sci = "fail" if any(r_.get("status") == "fail" for r_ in sci) else "pass"
         cur_ = next((r_ for w_, r_, _ in recs if w_ == "현재 판정"), None)       # ⭐ DQ 전 2차 리뷰 N3 — 지금 판정이 그 상태면 그 지문 (아니면 없음 = 대체 못 함)
@@ -2072,12 +2076,13 @@ def stop_shape_problem(d_, acked=False):
     return None
 
 
-JUDGE_INPUT_KEYS = ("card_values_sha16", "driver_sha16", "band_sha16", "runtime", "folder")   # files_sha256 밖의 판정 입력 칸 (⭐ 회신 DQ P1-1 · DR 전 리뷰 P3-A)
+JUDGE_INPUT_KEYS = ("driver_sha16", "band_sha16", "runtime", "folder")   # files_sha256 · 판정 규칙 밖의 판정 입력 칸 (⭐ 회신 DQ P1-1 · DR 전 리뷰 P3-A)
 
 
 def same_judge_inputs(a, b):
     """⭐ DQ 전 2차 리뷰 N3 · ⭐ 회신 DQ P1-1 — 두 판정 (a = 앞 · b = 새) 이 판정이 **읽은 입력 전부** 가 같은 상태에서 났는가:
-    files_sha256 (BOUND_FILES 전부 — 원자료 다섯 · md_init_raw.xyz · stage1_attempt.json) · 카드 값 · 도구 · G4 밴드 카드 · 실행 환경이
+    files_sha256 (BOUND_FILES 전부 — 원자료 다섯 · md_init_raw.xyz · stage1_attempt.json) · 판정 규칙 (judge_values_sha16 — 둘 다 있으면 · 아니면 카드 값 전체) ·
+    도구 · G4 밴드 카드 · 실행 환경 · 폴더 이름이
     **다 있고** 같을 때만 True. 기록이 없거나 하나라도 다르면 False (확인할 수 없다 = 같다고 보지 않는다).
     파생 파일 (JUDGE_DERIVED_FILES) 하나만 예외 — 앞 판정 뒤에 없었고 (None) 지금 있으면 같다고 본다: 앞 판정은 그 파일을 읽지 않았고,
     새 판정이 과학적 (pass · fail — 이 함수를 부르는 supersede_block 은 그때만 불린다) 이면 그 seed_gate 가 파일을 묶인 traj 원시와 대조해 맞다고 봤거나
@@ -2092,6 +2097,11 @@ def same_judge_inputs(a, b):
     for k in JUDGE_INPUT_KEYS:
         if a.get(k) is None or b.get(k) is None or a.get(k) != b.get(k):
             return False
+    if a.get("judge_values_sha16") is not None and b.get("judge_values_sha16") is not None:   # ⭐ DR 전 6차 리뷰 P2 — 판정 규칙 지문 (상한 · 재시도 칸을 올려도
+        if a["judge_values_sha16"] != b["judge_values_sha16"]:                                # 판정 규칙은 그대로 — 그 사이 문서대로 상한을 올린 회복을 막지 않게)
+            return False
+    elif a.get("card_values_sha16") is None or a.get("card_values_sha16") != b.get("card_values_sha16"):   # 옛 기록 — 카드 값 전체
+        return False
     for f in fa:
         if fa[f] == fb[f]:
             continue
@@ -4727,6 +4737,10 @@ def _selftest():
                   "inv_det_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
                                                                    folder_prior=[PVDET, {"status": "invalid", "provenance": PV},
                                                                                  {"status": "pass", "provenance": PV}]) is not None,
+                  # ⭐ DR 전 6차 리뷰 P2 — 자동 대체도 판정 규칙 지문으로: 그 사이 상한만 올린 카드 (카드 값 다름 · 판정 규칙 같음) 는 같은 입력 · 판정 규칙이 다르면 충돌
+                  "inv_cap_raised": _inv({**PV, "judge_values_sha16": "7" * 16}, {**PV, "card_values_sha16": "6" * 16, "judge_values_sha16": "7" * 16}),
+                  "inv_rules_differ": _inv({**PV, "judge_values_sha16": "7" * 16}, {**PV, "judge_values_sha16": "5" * 16}),
+                  "inv_old_rec_card": _inv(PV, {**PV, "card_values_sha16": "6" * 16, "judge_values_sha16": "7" * 16}),
                   "inv_anchor_first": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
                                                                   folder_prior=[{"status": "invalid", "provenance": PV}, PVDET, {"status": "invalid", "provenance": PV},
                                                                                 {"status": "pass", "provenance": PV}]) is not None}
@@ -4738,7 +4752,7 @@ def _selftest():
                    "inv_ledger_chain_ok": False, "inc_ledger_chain_unreadable": True, "sci_ledger_ignores_chain": False,
                    "inv_ledger_chain_midrun": False, "none_ledger_chain_midrun": True, "inv_ledger_chain_nonature": True,
                    "inv_after_det_invalid": True, "inv_after_transient": False, "inv_anchor_missing": True, "inv_det_before_anchor": False,
-                   "inv_anchor_first": True}   # DR 전 5차 — 같은 바이트의 판정이 뒤에 또 있어도 기준은 첫 기록 (그 사이 결정적 invalid → 충돌)
+                   "inv_anchor_first": True, "inv_cap_raised": False, "inv_rules_differ": True, "inv_old_rec_card": True}   # DR 전 5차 — 같은 바이트의 판정이 뒤에 또 있어도 기준은 첫 기록 (그 사이 결정적 invalid → 충돌)
         chk(got_dq == want_dq and JUDGE_DERIVED_FILES == (SEED_GATE_RAW,) and set(PROVENANCE_FILES) < set(BOUND_FILES),
             "⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 "
             "같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_init_raw.xyz 를 옮기고 다시 만든 것 · 입력 불일치 판정 · 성격 기록 없음 · "
@@ -5020,6 +5034,11 @@ def _selftest():
         _append_history(d_al4, {"status": "fail", "closes_system": True, "provenance": PVthr_}, {"status": "pass", "provenance": PVnow_}, "selftest — 지금 카드")
         (d_al4 / "stage1_verdict.json").write_text(json.dumps({"status": "pass", "provenance": PVnow_}), encoding="utf-8")
         rk_al4 = _run_kind({}, d_al4, VAL)
+        d_al5 = pathlib.Path(td_) / "dq_al5"; d_al5.mkdir()          # ⭐ DR 전 6차 리뷰 P3 — 다른 규칙의 fail + 지금 규칙으로 다시 판정한 incomplete (끊긴 런)
+        _append_history_first(d_al5, {"status": "fail", "closes_system": True, "provenance": PVthr_}, "selftest — 다른 카드 손 판정")
+        _append_history(d_al5, {"status": "fail", "closes_system": True, "provenance": PVthr_}, {"status": "incomplete", "provenance": PVnow_}, "selftest — 지금 카드")
+        (d_al5 / "stage1_verdict.json").write_text(json.dumps({"status": "incomplete", "provenance": PVnow_}), encoding="utf-8")
+        rk_al5 = _run_kind({}, d_al5, VAL)
         acc_ = set()
         class _TrackVals(dict):                              # 판정이 카드 값의 어느 열쇠를 읽는가 (JUDGE_VALUE_KEYS 밖을 읽으면 지문이 판정 규칙을 다 못 묶는다)
             def __getitem__(self, k_):
@@ -5031,10 +5050,12 @@ def _selftest():
         chk(judge_values_sha16(VALcap) == judge_values_sha16(VAL) and judge_values_sha16(VALthr) != judge_values_sha16(VAL)
             and rk_al3[0] == "scientific" and rk_al3[1].get("closes_system") is True
             and rk_al4[0] == "scientific" and rk_al4[1].get("status") == "pass" and rk_al4[1].get("closes_system") is False
+            and rk_al5[0] not in ("unreadable", "scientific")
             and acc_ and acc_ <= set(JUDGE_VALUE_KEYS),
             "⛔음성 DR 전 5차 리뷰 P2: 판정 규칙 지문은 판정이 읽는 카드 값만 (상한을 올려도 같고 · 녹음 문턱이 다르면 다르다) · 상한만 다른 카드로 낸 fail · 닫힘은 "
             "과학적 판정 그대로 · 다른 문턱의 손 판정 (이력) 과 지금 규칙의 판정 (정본) 이 같이 있으면 지금 규칙만 (닫힘을 옮기지 않는다) · 판정은 JUDGE_VALUE_KEYS "
-            f"밖의 카드 열쇠를 읽지 않는다 ({rk_al3} · {rk_al4} · {sorted(acc_ - set(JUDGE_VALUE_KEYS))})")
+            f"밖의 카드 열쇠를 읽지 않는다 · (6차 P3) 다른 규칙의 fail 뒤 지금 규칙으로 다시 판정한 incomplete 면 판독 불가가 아니다 (재시도 길이 열린다) "
+            f"({rk_al3} · {rk_al4} · {rk_al5[0]} · {sorted(acc_ - set(JUDGE_VALUE_KEYS))})")
         chk([x_["status"] for x_ in ch_or] == ["invalid", "incomplete", "pass"] and ch_or[1]["provenance"] == PB_ and len(ch_or) == 3
             and ch_or2 == [{"status": "invalid", "provenance": PA_}, {"status": "pass", "provenance": PC_}]
             and rk_al[0] == "unreadable" and rk_al2[0] == "scientific" and rk_al2[1].get("closes_system") is True,

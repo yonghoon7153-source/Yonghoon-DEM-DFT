@@ -3568,6 +3568,18 @@ def _selftest():
     chk(all(v_ == (RC["invalid"], 0, RC["invalid"], 0, "invalid", 1, False, "invalid") for v_ in r1_.values()),
         "⛔음성 DR 전 2차 리뷰 P1: 일시 오류 장부 invalid 뒤 러너의 재판정이 md_init_raw.xyz 불일치를 본 다음 사람이 맞는 파일로 바꾸거나 지우고 확인해도 — "
         f"폴더 판정 기록의 입력 불일치 때문에 자동 대체하지 않는다 (발사 0 · 충돌 관측 하나 · 요약 invalid) ({r1_})")
+    # ⭐ DR 전 6차 리뷰 P2 — 끝 판정의 일시 오류 (장부 invalid · 카드 C1) 뒤 문서대로 상한을 올린 카드 C2 로 확인 → 판정 규칙이 같으니 재판정 pass 가 대체 · 이어 감
+    wt_cr = mk_wt(card=mk_card(stage1_cap_gpu_h=229.0))
+    n_sg["left"] = 1
+    real.seed_gate = _sg_flaky
+    try:
+        rc_cr, L_cr, rr_cr = go(wt_cr)
+    finally:
+        real.seed_gate = _sg0
+    rc_cr2, L_cr2, _ = go(wt, rr=rr_cr, ack=J(rr_cr / "STOP.json")["stop_id"])
+    chk(rc_cr == RC["invalid"] and len(L_cr) == 3 and rc_cr2 == RC["pass"] and len(L_cr2) == 7 and sup_(rr_cr) == [("invalid", "pass")],
+        "⛔음성 DR 전 6차 리뷰 P2: 끝 판정 일시 오류로 장부 invalid 뒤 상한을 올린 카드 (카드 값 지문 다름 · 판정 규칙 같음) 로 확인해도 재판정 pass 가 대체하고 이어 간다 "
+        f"({rc_cr} · 발사 {len(L_cr)} · {rc_cr2} · 발사 {len(L_cr2)} · {sup_(rr_cr)})")
     # ⭐ DR 전 5차 리뷰 P2 — 첫 시드 (A11) 가 녹음 창이 찬 채 실행 중 상한으로 멈춤 → 상한 판정 fail + 계 닫힘 → (문서대로) 상한을 올린 카드로 · 폴더를 옆으로
     #    옮기고 확인 → 상한 칸은 판정 규칙이 아니라서 그 판정 기록은 지금 규칙의 것 → 장부에 닫힘 · 닫는 STOP melt (상한을 올린 것이 진짜 닫힘을 지우지 않는다)
     rc_cp, L_cp, rr_cp = go(mk_wt(card=mk_card(stage1_cap_gpu_h=3.0)), seed_worst_h=1.0, scen={("A", 11): {"melt": "fail"}})
