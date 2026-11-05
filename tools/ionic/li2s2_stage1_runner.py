@@ -3716,6 +3716,18 @@ def _selftest():
         and res_ip["loop"][0] == RC["invalid"] and res_ip["loop"][1] == [] and res_ip["loop"][2] == "invalid" and res_ip["loop"][4],
         "⛔음성 DR 전 8차 리뷰 P3 (이중 방어): 러너가 보는 산출물 폴더 목록에 문제 (같은 run_id 폴더 둘) 가 있으면 확인의 재시도 선언 검사가 거부 (STOP 그대로 · "
         f"발사 0) · 확인을 지난 뒤면 시드 루프의 재시도 자격이 invalid (발사 0) · 대조: 문제 없으면 A11 재시도 ({sp_ip.get('code')} · {res_ip})")
+    # ⭐ DR 전체 깨기 (DQ22 가 e9474b7d 전체 실행에서 살아남음) — 장부 꼴 검사가 모르는 장부 판정 값을 거부하는지는 같은 실행의 폴더 판정이 **없는** 행에서만
+    #    가른다 ('PASS' 행에 폴더 판정이 있으면 장부 · 폴더 대조가 같은 어휘로 같이 거부하고 · 판정 파일을 지우면 '판정에 run_id 없음' 이 같이 난다) —
+    #    끊긴 첫 시드 (판정 없음 · 확인 안 된 STOP) 의 장부 행이 'PASS' 면 요약 invalid (꼴 검사의 까닭) · 대조: 그대로면 pending
+    c_pv = clone(rr_ip)
+    l_pv = J(c_pv / "stage1_ledger.json")
+    [r_ for r_ in l_pv["runs"] if (r_["system"], r_["seed"]) == ("A", 11)][-1]["verdict"] = "PASS"
+    _write_json_atomic(c_pv / "stage1_ledger.json", l_pv)
+    sm_pv, sm_pv0 = summ(c_pv), summ(clone(rr_ip))
+    inv_pv = (sm_pv.get("cost") or {}).get("invalid") or []
+    chk(sm_pv["track"] == "invalid" and any("런의 verdict 'PASS' 를 모른다" in x_ for x_ in inv_pv) and sm_pv0["track"] == "pending",
+        "⛔음성 DQ 전 리뷰 P1-A (DR 전체 깨기 DQ22): 폴더 판정이 없는 장부 행 (끊긴 첫 시드) 의 판정 값이 'PASS' 면 장부 꼴 검사가 요약을 invalid 로 — "
+        f"대조는 pending ({sm_pv['track']} · {sm_pv0['track']} · {inv_pv[:2]})")
     # ⭐ DR 전 5차 리뷰 P2 — 첫 시드 (A11) 가 녹음 창이 찬 채 실행 중 상한으로 멈춤 → 상한 판정 fail + 계 닫힘 → (문서대로) 상한을 올린 카드로 · 폴더를 옆으로
     #    옮기고 확인 → 상한 칸은 판정 규칙이 아니라서 그 판정 기록은 지금 규칙의 것 → 장부에 닫힘 · 닫는 STOP melt (상한을 올린 것이 진짜 닫힘을 지우지 않는다)
     rc_cp, L_cp, rr_cp = go(mk_wt(card=mk_card(stage1_cap_gpu_h=3.0)), seed_worst_h=1.0, scen={("A", 11): {"melt": "fail"}})

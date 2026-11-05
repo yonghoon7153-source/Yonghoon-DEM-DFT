@@ -1,0 +1,451 @@
+변이 448 개 (DQ 판 368 − 뺌 1 · 자리 옮김 13 · DR 81) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 4 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_full_e9474b7d_w*
+R1_terminal_stop                 ⭕ 빨강 [li2s2_stage1_runner] · FileNotFoundError: [Errno 2] No such file or directory: '/tmp/li2s2_runner_st_wwictss2/tmp966rw8x3/STOP.json'
+R4_launch_ledger                 ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ 진짜 판독 함수: 10 담금질 · A/B 번갈아 · 띄운 직후 장부에 시작 (첫 poll 전) · 판정에 원자료 지문 · 1 단계 통과 · 2 단계 시드 [11, 12] (rc 0)
+R2_ledger_closes                 ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-1: STOP 을 지워도 장부가 막고 · 장부까지 지우면 러너는 빈 장부를 안 만들고 거부 · 판정 파일 (closes_system) 은 묶음에서 그 계를 닫는다 (rc 20 · 10 · 묶음 stop_track)
+R3_cleanup_paths                 ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-2: 담금질 중 Ctrl-C → 그 담금질을 멈추고 · 장부에 끝 · 경과 · STOP 을 쓴 뒤 잠금을 푼다
+R6_rejudge                       ⭕ 빨강 [li2s2_stage1_runner] · FileNotFoundError: [Errno 2] No such file or directory: '/tmp/li2s2_runner_st_ijt75vkv/tmpvvag_dxk/A/seed11/stage1_verdict_history.jsonl'
+R5_inrun_cap                     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-3: 마지막 런이 60 h 여도 누적 230 h 에서 그 담금질을 멈추고 미완결 (wall 50.0 h · 묶음 cap_incomplete)
+R7_flock                         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P1-6: 잠금을 잡은 러너가 있으면 거부 · 잠금은 한 번의 flock (둘째 획득 실패) · 놓으면 다시 잡힌다
+R10_ack_match                    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-2: 중단 뒤 재시작은 --ack_stop <stop_id> 가 맞아야 이어가고 · 끊긴 시드 폴더에서 멈춘다 (덮어쓰지 않는다)
+R8_order_check                   ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성: 순서가 카드 시드 전부가 아니거나 첫 시드 ≠ 카드 first_seed 면 거부
+R12_melt_kill                    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DF Q-DF-3 · DG P0-1: A11 녹음 미충족 → 그 담금질을 실제로 멈추고 · 판정 fail + closes_system · STOP (닫는 사건)
+R13_cmd_repr                     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ 담금질 명령: 카드 기계값 그대로 (밀도 repr · 압축 20 · turbo · n_fu 12/15 = 카드 조성의 P 수)
+R15_empty_ledger_guard           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-1: STOP 을 지워도 장부가 막고 · 장부까지 지우면 러너는 빈 장부를 안 만들고 거부 · 판정 파일 (closes_system) 은 묶음에서 그 계를 닫는다 (rc 21 · 27 · 묶음 invalid)
+R11_cap_ack                      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-3: 상한 멈춤은 --ack_stop 만으로 안 넘어간다 (STOP 그대로 · 이력에 안 옮김 — 카드 상한이 올라가야)
+R9_orphan_alive                  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ DI 음성: 이전 그룹 조회 불가(None)면 종료 확정 없이 재개 거부
+R16_orphan_lower_bound           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-2 · DH P0-1: 장부의 도는 중 런 — 그룹이 살아 있으면 거부 · 죽었으면 고아 런 · 비용은 보수 상한 (1.50 h ≥ 하한 1.50) · 끊긴 폴더에서 멈춤
+R19_finish_ignores_group         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-3 · DO 전 리뷰 P0-1: 첫 시드 녹음 fail 인데 그룹이 남으면 — 비용 확정으로 안 적고 (stop_failed · 끝 없음) · **닫힘은 멈추기 전에 장부에 적고** (closes_system · melt_check) · 멈춤은
+R20_no_cleanup_after_finish      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-3: 대표가 rc 0 으로 끝나도 그룹에 일꾼이 남으면 정리 실패로 멈춘다 (끝 · 비용 확정 안 함 · 다음 시드 안 띄움)
+R22_summary_invalid_as_track     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P1-4: final.xyz 에 5 원자 PS₄ 를 넣으면 진짜 stage1_verdict 가 무효 → 멈춤 (자료 오류 · 과학적 종료 아님 · 통과 아님)
+R23_no_run_id                    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ 진짜 판독 함수: 10 담금질 · A/B 번갈아 · 띄운 직후 장부에 시작 (첫 poll 전) · 판정에 원자료 지문 · 1 단계 통과 · 2 단계 시드 None (rc 27)
+D1_plan_missing                  ⭕ 빨강 [melt_quench_uma] · FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpbmpk_c21/plan.json'
+R21_invalid_as_melt              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P1-4: 첫 시드 녹음 판정 invalid (0 번 프레임 종 바뀜) → 멈추되 과학적 종료 (melt · terminal) 로 적지 않는다
+R14_term_leader_only             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ 진짜 프로세스 그룹: TERM 이 그룹 전체 (손자까지) 에 가서 KILL 없이 비고 기다린다 · 옆 프로세스는 산다 (대표 rc -15 · ['TERM', 'KILL'] · 5.1 s)
+R17_kill_leader_only             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-3 (진짜 프로세스): 대표가 TERM 에 죽고 일꾼은 TERM 을 무시 → 그룹에 KILL · 비움 (['TERM']) / 대표가 rc 0 으로 먼저 끝나고 일꾼이 남음 → 그룹을 보고 KILL · 비움 (['TERM'])
+D2_species                       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P1-7: 0 번 프레임의 종 배치만 바꾸면 판정이 바뀌지 않고 '무효' (pass)
+D3a_estimator_check              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P1-7: 카드 estimator 를 다른 이름으로 바꾸면 window_mto_v1 을 돌리지 않고 '무효'
+D3b_estimator_validate           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P1-7: 카드 값 검사가 모르는 estimator 를 거부한다
+D7_final_wiring                  ⭕ 빨강 [li2s2_stage1_runner] · FileNotFoundError: [Errno 2] No such file or directory: '/tmp/li2s2_runner_st_vcco51jb/tmpp4jrl6w7/A/seed11/stage1_verdict.json'
+D4_same_nan                      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — plan 목표 밀도 NaN (DG) → invalid (받음 pass)
+D5_software                      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — 소프트웨어 fairchem·inference 만 (DG) → invalid (받음 pass)
+D6_pressure_cols                 ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P1-7: thermo 에서 virial 압력 열을 지우면 '압력 기록 없음' · 열 꼴 불일치 (통과 못 한다)
+D8_all_decided                   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P1-5: 11–14 통과 · 15 미완 (또는 판정 없음) 이면 묶음은 통과가 아니라 대기 (stage1_pass · stage1_pass)
+D9_unknown_status                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P1-7: 판정 상태 'unknown' 은 통과 · 대기가 아니라 무효
+D10_closes_summary               ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P0-1: A11 이 계를 닫으면 (첫 시드 녹음 미충족) 나머지 아홉이 통과해도 (A 4/5) 트랙 멈춤 — 일반 탈락과 다르다
+D11_provenance                   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+D12_cost_cap                     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG P0-3: 비용 240 > 상한 230 → 미완결 · 장부 없음 → 대기 · 비유한 → 미완결 (stage1_pass · pending · stage1_pass)
+D13_closes_combine               ⭕ 빨강 [melt_quench_uma] ·   ⛔ DG P0-1: 첫 시드 (11) 녹음 미충족 → fail + closes_system (일정 미완이어도) · 둘째 시드는 일반 탈락 · 카드와 다른 런이면 닫지 않고 무효
+D14_unknown_melt                 ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — 녹음 상태 'unknown' (DG) → invalid (받음 pass)
+D15_traj_frames                  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — thermo 끝났는데 traj 잘림 (DG) → invalid (받음 pass)
+D16_thermo_header                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — thermo 머리줄에 virial 없음 (DG) → invalid (받음 pass)
+D17_first_seed_validate          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DG: 카드 값 검사가 거부한다 — first_seed 12 (seeds[0] 아님)
+D18_gate_target                  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — gate 목표 밀도 NaN (DG) → invalid (받음 pass)
+D19_composition                  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — 조성 다름 (DG) → invalid (받음 pass)
+D20_summary_ledger               ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-3 (소비자): 다 통과해도 장부 합 > 상한이면 미완결 · 장부가 없으면 대기 (stage1_pass · stage1_pass · stage1_pass)
+D22_ledger_missing_run           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-1 (이유): 장부에서 빠진 행의 판정 → '판정의 run_id 가 장부에 없다' · 음수 비용 → '유한한 비음수가 아니다' (['장부 판독 예외 (AttributeError)'] · ['A11 런 비용 -10.0 — 유한한 비음수가 아니다'
+D23_ledger_negative              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-1 (이유): 장부에서 빠진 행의 판정 → '판정의 run_id 가 장부에 없다' · 음수 비용 → '유한한 비음수가 아니다' (['보존 포함 실행 9da1616a55d74c7a9ccf4d7c92b3e251 (/tmp/li2s2_runner_s
+D24_ledger_unfinished            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-1: 빈 장부 · 한 행 누락 · 음수 비용 · 하한 근거 → 무효 · 모든 행이 안 끝남 → 대기 (invalid · invalid · invalid · invalid · invalid)
+D21_card_vals_sha                ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P1-4: 다른 카드 값으로 낸 판정은 묶음에서 무효 (카드 값 지문 · 같은 카드면 그대로 통과)
+D25_ledger_basis                 ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-1: 빈 장부 · 한 행 누락 · 음수 비용 · 하한 근거 → 무효 · 모든 행이 안 끝남 → 대기 (invalid · invalid · invalid · stage1_pass · pending)
+D26_identity_folder              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DH P0-2: 폴더 seed12 에 plan 시드 11 → 무효 · run_id 없음 → 무효 · 폴더 이름 꼴 아님 → 무효 (맞으면 통과)
+D27_dup_run_id                   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DH P0-2: A11 판정을 A12 자리에 · 모든 자리에 · 시드만 고쳐서 (run_id 같음) → 한 실행을 여러 시드로 못 센다 (invalid · invalid · stage1_pass)
+D28_slot_check                   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DH P0-2: A12 · A13 판정 파일이 서로 자리를 바꾸면 (run_id 는 각자 하나) 자리 ≠ 판정 이라 무효
+D30_history                      ⭕ 빨강 [li2s2_stage1_runner] · FileNotFoundError: [Errno 2] No such file or directory: '/tmp/li2s2_runner_st_17vpyfkn/tmpkw9ts4xo/A/seed11/stage1_verdict_history.jsonl'
+D29_ledger_mapping               ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-2: 장부 행의 시드 표시가 바뀌면 (A11 ↔ A12) 판정의 run_id 가 장부에서 다른 시드 런이라 무효
+DI3_archive_cost_join            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-1 (이유): 장부에서 빠진 행의 판정 → '판정의 run_id 가 장부에 없다' · 음수 비용 → '유한한 비음수가 아니다' (['장부 판독 예외 (AttributeError)'] · ['A11 런 비용 -10.0 — 유한한 비음수가 아니다'
+DI5_proc_error_swallowed         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ DI 음성: /proc 권한 오류는 빈 그룹이 아니며 정리 완료로 기록하지 않는다
+DI9_no_attempt_file              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ 진짜 판독 함수: 10 담금질 · A/B 번갈아 · 띄운 직후 장부에 시작 (첫 poll 전) · 판정에 원자료 지문 · 1 단계 통과 · 2 단계 시드 None (rc 27)
+DI6_cleanup_time_omitted         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ DI 음성: 정상 종료 뒤 그룹 정리 60초도 비용에 포함하여 상한을 넘을 열 번째 실행을 차단한다
+DI7_wallclock_default            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ DI 음성: 실제 러너 기본 시계 경로에서 벽시계가 4h 역행해도 실행 비용은 줄지 않는다
+DI8_cross_boot_accepted          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ DI 음성/양성: 고아 상한은 같은 부팅의 단조 시계만 · 부팅 변경/역행/근거 없음은 None
+DI10_unknown_as_dead             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ DI 음성: /proc 권한 오류는 빈 그룹이 아니며 정리 완료로 기록하지 않는다
+O6_unknown_cost_stop             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ 정전 복구: 재부팅을 넘긴 고아 런은 비용 미확정으로 멈추고 --attest_cost 를 알려 준다 · 하한 (1.5 h) 미만 · 확인자 없음 거부 · 근거를 다 적으면 증언 상한
+O9_consumer_rerun_after_verdict  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+O10_consumer_retry_limit         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+O11_consumer_attest_evidence     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-3 (소비자): 증언 상한 0 h 에 하한이 null · NaN · −1 이면 비용 0 으로 통과시키지 않고 무효 · 하한이 맞아도 0 h < 하한이면 무효 · 고아 런이 아닌 행 (정상 끝) 을 증언 상한으로 바꾸면 무효 · 증언 때 적은 h
+O12_interrupted_stop_run_id      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ Q1: 선언 없는 확인은 재시도 영수증이 아니다 (그 run_id 에 묶여 멈춤) · 허용 밖 사유 (Ctrl-C) · 상한 아닌 런에 상한 사유 · 선언자 없음 → 확인 자체를 거부 (STOP 그대로 · 발사 0)
+J1_retry_of_optional             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+O13_resume_stop_run_id           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ 정전 복구: 증언 상한으로 비용을 닫고 · 끊긴 폴더를 옆으로 옮겨 그 run_id 의 STOP 을 정전 선언과 함께 확인하면 A11 을 한 번 다시 돌려 1 단계를 마친다 (증언 비용은 묶음에 드러나고 상한은 카드 230 그대로)
+J2_count_by_field                ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+J3_retry_kind_unchecked          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+J4_receipt_unbound               ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+J5_consumer_no_declaration       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+J6_attempt_mismatch_ignored      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+J7_attempt_file_optional         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+J9_ledger_to_folder              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-2 (Codex 재현): 끊긴 B12 보존 폴더의 판정 파일이 잘리면 '판정 없음' 으로 읽지 않고 확인 단계에서 선언을 거부 (STOP 그대로) · 기술적 invalid A11 폴더를 run_root 밖으로 옮기면 invalid 런이어도 다시
+J8_unreadable_prev_verdict       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+J10_md_complete_retry_ok         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+J11_consumer_rejudge_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+J18_reason_allowlist             ⭕ 빨강 [li2s2_stage1_runner] · FileNotFoundError: [Errno 2] No such file or directory: '/tmp/li2s2_runner_st_v4b0pmsh/tmp9lysd5tt/STOP.json'
+J12_attest_lower_validity        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-3 (소비자): 증언 상한 0 h 에 하한이 null · NaN · −1 이면 비용 0 으로 통과시키지 않고 무효 · 하한이 맞아도 0 h < 하한이면 무효 · 고아 런이 아닌 행 (정상 끝) 을 증언 상한으로 바꾸면 무효 · 증언 때 적은 h
+J13_attest_any_status            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-3 (소비자): 증언 상한 0 h 에 하한이 null · NaN · −1 이면 비용 0 으로 통과시키지 않고 무효 · 하한이 맞아도 0 h < 하한이면 무효 · 고아 런이 아닌 행 (정상 끝) 을 증언 상한으로 바꾸면 무효 · 증언 때 적은 h
+J20_unknown_verdict_status       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ P0-2: 판정 파일 없음 (None) 과 있는데 못 읽음 (잘림 · 모르는 상태 · 객체 아님 = unreadable) 을 가른다 (None · pass · unreadable · maybe · unreadable)
+J17_cap_reason_rule              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+J21_cap_reasons_validate         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째): --melt_window_check CLI 는 판정을 화면에만 내고 런 폴더에 파일을 안 남긴다 (모르는 파일 = 폴더 판독 보류) ([] · rc 1)
+J22_heartbeat_at_attest          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-3 (소비자): 증언 상한 0 h 에 하한이 null · NaN · −1 이면 비용 0 으로 통과시키지 않고 무효 · 하한이 맞아도 0 h < 하한이면 무효 · 고아 런이 아닌 행 (정상 끝) 을 증언 상한으로 바꾸면 무효 · 증언 때 적은 h
+K1_ledger_scientific             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ (러너 재시도 자격 단위): 과학적 판정 · 보존 누락 (invalid 런 포함) · 폴더 판정 pass · 판정 잘림 · 비용 미확정 · 단계 판독 불가 · 최종 (판정하라) · MD 완료 (FIRE 보류) · 영수증 없음 · 선언 없음 · 다른 
+K2_invalid_skips_folder          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ (러너 재시도 자격 단위): 과학적 판정 · 보존 누락 (invalid 런 포함) · 폴더 판정 pass · 판정 잘림 · 비용 미확정 · 단계 판독 불가 · 최종 (판정하라) · MD 완료 (FIRE 보류) · 영수증 없음 · 선언 없음 · 다른 
+K3_unreadable_as_none            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ (러너 재시도 자격 단위): 과학적 판정 · 보존 누락 (invalid 런 포함) · 폴더 판정 pass · 판정 잘림 · 비용 미확정 · 단계 판독 불가 · 최종 (판정하라) · MD 완료 (FIRE 보류) · 영수증 없음 · 선언 없음 · 다른 
+K4_fire_hold_off                 ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ Q2: MD 는 끝났고 FIRE 만 못 마친 런은 선언이 맞아도 재담금질하지 않고 보류 (FIRE 복구는 새 결정)
+K6_no_count                      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 정전 복구: 같은 시드가 두 번 끊기면 (카드 한도 1) 선언이 맞아도 세 번째는 안 돌린다 — 새 결정 없이는
+K5_stage_unreadable_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DK P0-1 (Codex 재현): MD 가 끝난 (완료 기록 있는) 궤적의 첫 원자 수만 바꾸거나 첫 줄을 NUL 로 → '미완' 이 아니라 판독 불가 → 재담금질 · 발사 0 (보류) ({'atomcount': (27, 1, False, 'unread
+K7_declaration_ignored           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ Q1: 선언 없는 확인은 재시도 영수증이 아니다 (그 run_id 에 묶여 멈춤) · 허용 밖 사유 (Ctrl-C) · 상한 아닌 런에 상한 사유 · 선언자 없음 → 확인 자체를 거부 (STOP 그대로 · 발사 0)
+K11_ack_unvalidated              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ Q1: 선언 없는 확인은 재시도 영수증이 아니다 (그 run_id 에 묶여 멈춤) · 허용 밖 사유 (Ctrl-C) · 상한 아닌 런에 상한 사유 · 선언자 없음 → 확인 자체를 거부 (STOP 그대로 · 발사 0)
+K8_receipt_any_run               ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 정전 복구: 확인된 STOP (선언 포함) 이 다른 run_id 에 묶여 있으면 다시 안 돌린다
+K9_receipt_any_code              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ (러너 재시도 자격 단위): 과학적 판정 · 보존 누락 (invalid 런 포함) · 폴더 판정 pass · 판정 잘림 · 비용 미확정 · 단계 판독 불가 · 최종 (판정하라) · MD 완료 (FIRE 보류) · 영수증 없음 · 선언 없음 · 다른 
+K10_runner_rejudge_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ (러너 재시도 자격 단위): 과학적 판정 · 보존 누락 (invalid 런 포함) · 폴더 판정 pass · 판정 잘림 · 비용 미확정 · 단계 판독 불가 · 최종 (판정하라) · MD 완료 (FIRE 보류) · 영수증 없음 · 선언 없음 · 다른 
+K13_declaration_not_stored       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ DH P1-4 · DJ Q1: 자료 오류는 고친 뒤 (폴더를 옆으로 · --ack_stop + 원인 고침 선언) 다시 돌린다 — 앞 런 비용은 장부에 남는다 (11 런) — rc 27 · 발사 0 · STOP A11: 이전 실행 c36762c7 (invalid)
+K12_ack_rejudge_off              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-2: 끝까지 돈 invalid 런 (final.xyz 5 원자) 은 '다시 판정 못 하는 이유' 없이는 재시도 선언을 안 받고 (STOP 그대로) · 이유를 적으면 다시 돌아 1 단계를 마친다
+K14_attest_reads_before_lock     ⭕ 빨강 [li2s2_stage1_runner] · ValueError: 같은 열쇠 'wall_h_lower' 가 둘
+K16_attest_lower_off             ⭕ 빨강 [li2s2_stage1_runner] · TypeError: float() argument must be a string or a real number, not 'NoneType'
+K17_attest_zero_ok               ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-3 (Codex 재현): 하한이 null · NaN · −1 · heartbeat 미만이면 0 h · 6 h 어느 증언도 안 받고 장부를 안 건드린다 (비용 미확정 그대로) · 하한이 맞으면 0 h 는 거부 · 6 h 는 받고 증언 때 하한 ·
+K23_attempt_no_retry_fields      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ DH P1-4 · DJ Q1: 자료 오류는 고친 뒤 (폴더를 옆으로 · --ack_stop + 원인 고침 선언) 다시 돌린다 — 앞 런 비용은 장부에 남는다 (11 런) — rc 27 · 발사 1 · STOP 묶음 판정 invalid (자료 · 기록 오류 — 과
+K24_final_retry_ok               ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 정전 복구: 끝까지 돈 런 (결과 파일 있음 · 판정 없음) 은 선언이 맞아도 재시도가 아니라 판정해야 한다
+K18_attest_fields_off            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ Q3: 증언 근거 필드 (사건 · 시각 기준 · 불확실성 · H 산출 · 확인자) 가 하나라도 없거나 불확실성이 NaN 이면 거부 (비용 미확정 그대로)
+K25_limit_off                    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 정전 복구: 같은 시드가 두 번 끊기면 (카드 한도 1) 선언이 맞아도 세 번째는 안 돌린다 — 새 결정 없이는
+K11b_ack_unvalidated             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ Q1: 선언 없는 확인은 재시도 영수증이 아니다 (그 run_id 에 묶여 멈춤) · 허용 밖 사유 (Ctrl-C) · 상한 아닌 런에 상한 사유 · 선언자 없음 → 확인 자체를 거부 (STOP 그대로 · 발사 0)
+K26_folder_scientific            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ (러너 재시도 자격 단위): 과학적 판정 · 보존 누락 (invalid 런 포함) · 폴더 판정 pass · 판정 잘림 · 비용 미확정 · 단계 판독 불가 · 최종 (판정하라) · MD 완료 (FIRE 보류) · 영수증 없음 · 선언 없음 · 다른 
+K27_cost_unconfirmed_ok          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ (러너 재시도 자격 단위): 과학적 판정 · 보존 누락 (invalid 런 포함) · 폴더 판정 pass · 판정 잘림 · 비용 미확정 · 단계 판독 불가 · 최종 (판정하라) · MD 완료 (FIRE 보류) · 영수증 없음 · 선언 없음 · 다른 
+K12b_ack_rejudge_off             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-2: 끝까지 돈 invalid 런 (final.xyz 5 원자) 은 '다시 판정 못 하는 이유' 없이는 재시도 선언을 안 받고 (STOP 그대로) · 이유를 적으면 다시 돌아 1 단계를 마친다
+L1_no_md_done_write              ⭕ 빨강 [melt_quench_uma] · FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpg10ipxmb/md_done.json'
+K29_orphan_declaration_dropped   ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ Q1: 확인할 멈춤이 없는데 재시도 선언만 주면 조용히 버리지 않고 거부 (발사 0)
+K28_ack_kind_from_code           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ Q1: 확인 때 영수증 종류는 멈춤 code 가 아니라 그 실행에서 정한다 — 끊긴 런에 묶인 invalid 멈춤 (한도) 에 '원인 고침' 선언 → 거부 (STOP 그대로)
+L3_marker_thermo_sha_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+L2_marker_traj_sha_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DK P0-1 (Codex 재현): MD 가 끝난 (완료 기록 있는) 궤적의 첫 원자 수만 바꾸거나 첫 줄을 NUL 로 → '미완' 이 아니라 판독 불가 → 재담금질 · 발사 0 (보류) ({'atomcount': (24, 0, False, 'md_com
+L4_marker_runid_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+K30_ack_binding_off              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ Q1 (확인 때 선언 검사 단위): run_id 없음 · 장부에 없는 런 · 끊긴 런에 invalid code · invalid 런에 resume code · 끝까지 돈 invalid 런에 이유 없음 · 상한 런에 정전 사유 → 문제 / 맞는 조합은
+L5_marker_steps_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+L10_gone_keys_ok                 ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ: 카드 값 검사가 거부한다 — 없앤 정전 추가 예산이 남음 (카드 v3)
+L8_run_kind_ledger_only          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-2 (Codex 재현): 끊긴 B12 보존 폴더의 판정 파일이 잘리면 '판정 없음' 으로 읽지 않고 확인 단계에서 선언을 거부 (STOP 그대로) · 기술적 invalid A11 폴더를 run_root 밖으로 옮기면 invalid 런이어도 다시
+L9_attest_positive_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-3 (소비자): 증언 상한 0 h 에 하한이 null · NaN · −1 이면 비용 0 으로 통과시키지 않고 무효 · 하한이 맞아도 0 h < 하한이면 무효 · 고아 런이 아닌 행 (정상 끝) 을 증언 상한으로 바꾸면 무효 · 증언 때 적은 h
+L11_ack_unreadable_ok            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-2 (Codex 재현): 끊긴 B12 보존 폴더의 판정 파일이 잘리면 '판정 없음' 으로 읽지 않고 확인 단계에서 선언을 거부 (STOP 그대로) · 기술적 invalid A11 폴더를 run_root 밖으로 옮기면 invalid 런이어도 다시
+N1_tmp_ignored                   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+L12_ack_scientific_ok            ⭕ 빨강 [li2s2_stage1_runner] · KeyError: 'scientific'
+N2_noplan_extras_ignored         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+L13_runner_kind_ledger_only      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ (러너 재시도 자격 단위): 과학적 판정 · 보존 누락 (invalid 런 포함) · 폴더 판정 pass · 판정 잘림 · 비용 미확정 · 단계 판독 불가 · 최종 (판정하라) · MD 완료 (FIRE 보류) · 영수증 없음 · 선언 없음 · 다른 
+N3_end_boundary_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+L14_consumer_kind_ledger_only    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+N5_fire_log_rule_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DL Q3: FIRE 로그만 있고 MD 완료 기록이 없으면 그 이유로 보류한다 (MD 중 파일 목록 검사와 구별 · 사람이 보는 보류 이유 · 깨기 N5 가 드러낸 시험 구멍) (완료 기록은 없는데 MD 중 기록 밖의 파일이 있다 (final_rel
+N4_end_is_planned                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N6_thermo_tail_not_counted       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N7_traj_tail_not_counted         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N8_thermo_mid_garbage_ok         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N9_cadence_off                   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N10_traj_mid_garbage_ok          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N11_progress_thermo_only         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N12_progress_traj_only           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N18_header_check_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N19_nonmd_verdict_missing        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N22_mid_cut_as_complete          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-3 (소비자): 다 통과해도 장부 합 > 상한이면 미완결 · 장부가 없으면 대기 (stage1_pass · invalid · pending)
+N24_tmp_as_complete              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N13_no_data_fsync                ⭕ 빨강 [melt_quench_uma] ·   ⛔ 회신 DL P1-1: 완료 기록 순서 = traj · thermo fsync (기록 전) → 임시 기록 fsync (교체 전) → 교체 → 디렉터리 fsync ([('handle', True, False), ('dir', False, True)])
+N23_bad_marker_incomplete        ⭕ 빨강 [li2s2_stage1_runner] · FileNotFoundError: [Errno 2] No such file or directory: '/tmp/li2s2_runner_st_t86322os/tmpz30coiuo/r/STOP.json'
+N14_no_tmp_fsync                 ⭕ 빨강 [melt_quench_uma] ·   ⛔ 회신 DL P1-1: 완료 기록 순서 = traj · thermo fsync (기록 전) → 임시 기록 fsync (교체 전) → 교체 → 디렉터리 fsync ([('file', 'traj.xyz', False), ('file', 'thermo.csv', Fal
+N21_consumer_unreadable_ok       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+N15_no_dir_fsync                 ⭕ 빨강 [melt_quench_uma] ·   ⛔ 회신 DL P1-1: 완료 기록 순서 = traj · thermo fsync (기록 전) → 임시 기록 fsync (교체 전) → 교체 → 디렉터리 fsync ([('file', 'traj.xyz', False), ('file', 'thermo.csv', Fal
+N16_dir_fsync_before_replace     ⭕ 빨강 [melt_quench_uma] ·   ⛔ 회신 DL P1-1: 완료 기록 순서 = traj · thermo fsync (기록 전) → 임시 기록 fsync (교체 전) → 교체 → 디렉터리 fsync ([('file', 'traj.xyz', False), ('file', 'thermo.csv', Fal
+N17_md_done_after_fire           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DL P1-2: FIRE 진입 순간 이미 MD 완료 기록이 맞다 (folder_stage = md_complete · final 없음) — 기록 호출을 FIRE 뒤로 옮기면 빨개진다 ([('unreadable', False, False)])
+O1_tail_time_mismatch_ok         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+O2_tail_prefix_off               ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+O3_tail_gap_ok                   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+N25_runner_stage_plain           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 정전 복구: 끝까지 돈 런 (결과 파일 있음 · 판정 없음) 은 선언이 맞아도 재시도가 아니라 판정해야 한다
+O4_tail_nul_text_ok              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+O5_noplan_verdict_check_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+O6_mid_verdict_check_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 P1 (소비자 t4): 판정 중 gate_check 예외는 False 가 아니라 모름 (None + 오류) 으로 적고, 그 판정 기록이 남은 도중 끊김 폴더는 보류 (재시도 아님) — 쓰는 쪽까지 ({'schedule_complete': N
+O7_verdict_tmp_ignored           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+O8_history_ignored               ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+O9_prerun_reasons_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+O10_prerun_provenance_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+O11_mid_final_hash_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+O12_mid_pass_fail_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DM P0-2: 도중 끊김 후보의 pass 이력은 '과학적 판정' 이유로 보류한다 — 해석할 수 없는 상태와 구별 (사람이 보는 보류 이유 · DM 깨기 O12 가 드러낸 시험 구멍) ({'v6': "진행 기록은 도중이지만 판정 이력 1 의 이전 판정 의
+O13_history_new_part_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+O14_mid_status_check_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+O15_mid_sched_done_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+O16_mid_frames_full_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+O17_mid_full_record_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+O18_invalid_held                 ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DN1_completion_fields_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 P1 (소비자 t4): 판정 중 gate_check 예외는 False 가 아니라 모름 (None + 오류) 으로 적고, 그 판정 기록이 남은 도중 끊김 폴더는 보류 (재시도 아님) — 쓰는 쪽까지 ({'schedule_complete': N
+DN2_type_check_off               ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DN3_bool_as_int                  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DN4_hash_format_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DN5_range_off                    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DN6_history_provenance_coerced   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DN7_prerun_reasons_loose         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DN8_container_type_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DN P1 (이유): 판정 기록의 gate_check · checks 가 객체가 아니면 '타입 오류' 로 보류한다 (판독 예외로 새지 않는다 · 깨기 DN8 이 드러낸 시험 구멍) ({'y6': '판독 예외 (AttributeError) — 보류',
+DN9_n_not_checked                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO1_fin_accepts_str              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 P1-3: 수 판정은 수 타입만 — '12.5' · True · 10**400 은 수가 아니다 · numpy 수는 수 · '100.0' 은 100 과 같지 않다
+DO2_plan_num_coerce              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO3_thermo_all_nul_ok            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO4_traj_all_nul_ok              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO5_mid_allowlist_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO7_stage_exception_crash        ⭕ 빨강 [melt_quench_uma] · RecursionError: maximum recursion depth exceeded while decoding a JSON array from a unicode string
+DO6_final_lexists_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 F2: final · result 자리에 디렉터리 · 깨진 링크가 있으면 그 이유로 보류한다 (MD 중 파일 목록 검사와 구별 · 사람이 보는 보류 이유 · 깨기 DO6 이 드러낸 시험 구멍) ({'x6': '완료 기록은 없는데 MD 중 기
+DO8_prerun_keys_loose            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO9_hist_line_consistency_off    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO10_gate_error_ok               ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 P1 (소비자 t4): 판정 중 gate_check 예외는 False 가 아니라 모름 (None + 오류) 으로 적고, 그 판정 기록이 남은 도중 끊김 폴더는 보류 (재시도 아님) — 쓰는 쪽까지 ({'schedule_complete': N
+DO11_final_traces_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO12_plan_frames_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO13_history_summary_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO14_history_status_type_off     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO16_read_thermo_junk_kept       ⭕ 빨강 [melt_quench_uma] · ValueError: could not convert string to float: '\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+DO15_xyz_frames_strict           ⭕ 빨강 [melt_quench_uma] ·   ⛔ 쓰는 중인 반쪽 프레임에서 멈추고 '미완' (죽지 않는다)
+DO17_identity_preserved_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P0 a): 보존 폴더 seed<N>.<붙임> 은 실행 전 기록의 계 · 시드 · run_id 가 plan 과 같을 때만 같은 실행으로 식별 (판정이 이름 때문에 invalid 로 새지 않게) · 기록이 없거나 다르면 아니다 ({'
+DO18_rule_m_off                  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 (규칙 M): 둘째 시드도 녹음 창이 다 찼고 fail 이면 일정 미완 · 최종 파일 없음이어도 fail (결과가 정해졌다 — 끊긴 뒤 재시도로 지우지 않는다) · 녹음 pass 면 미완 그대로 (incomplete · incomplete)
+DO19_gate_error_as_false         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 P1 (소비자 t4): 판정 중 gate_check 예외는 False 가 아니라 모름 (None + 오류) 으로 적고, 그 판정 기록이 남은 도중 끊김 폴더는 보류 (재시도 아님) — 쓰는 쪽까지 ({'schedule_complete': F
+DO20_kind_invalid_any_status     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid 판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = 
+DO21_kind_melt_check_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid 판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = 
+DO22_kind_folder_melt_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 F1 · F3 · F4: 폴더 판정 fail · pass 는 근거 (상태 · closes_system) 를 같이 → 러너가 장부에 적는다 · 못 읽은 이전 판정 (상태 없음) = 판독 불가 · 끊긴 런 (고아 마감 전 running 포함) 
+DO23_kind_records_scientific_off ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 5차 리뷰 P2: 판정 규칙 지문은 판정이 읽는 카드 값만 (상한을 올려도 같고 · 녹음 문턱이 다르면 다르다) · 상한만 다른 카드로 낸 fail · 닫힘은 과학적 판정 그대로 · 다른 문턱의 손 판정 (이력) 과 지금 규칙의 판정 (정본) 이
+DO24_kind_melt_check_type_off    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid 판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = 
+DO25_kind_closes_type_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid 판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = 
+DO26_kind_orphan_status_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid 판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = 
+DO27_ledger_closing_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P0-1 (S1b): 첫 시드 녹음 fail 로 멈춘 뒤 판정 도중 러너가 끊겨도 닫힘은 이미 장부에 있다 → 확인해도 재시작이 melt 로 멈추고 발사 0 · 소비자 stop_track (26 · 21 · melt · invalid)
+DO28_ledger_row_types_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · 10^400 · heartbeat 보다 작은 측정 
+DO29_ledger_end_type_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · 10^400 · heartbeat 보다 작은 측정 
+DO30_ledger_bounds_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · 10^400 · heartbeat 보다 작은 측정 
+DO34_dup_keys_ok                 ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DO P1: 실행 전 기록 목록 (attempt_inventory) 은 같은 열쇠 둘인 기록을 마지막 값으로 묶지 않고 못 읽음으로 적는다 (['55555555555555555555555555555555'] · [])
+DO31_ledger_bound_types_off      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · 10^400 · heartbeat 보다 작은 측정 
+DO36_melt_check_not_first        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P0-1: STOP 을 지워도 장부가 막고 · 장부까지 지우면 러너는 빈 장부를 안 만들고 거부 · 판정 파일 (closes_system) 은 묶음에서 그 계를 닫는다 (rc 20 · 10 · 묶음 stop_track)
+DO32_ledger_closes_type_off      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · 10^400 · heartbeat 보다 작은 측정 
+DO33_ledger_melt_check_type_off  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · 10^400 · heartbeat 보다 작은 측정 
+DO37_melt_fail_stuck_abnormal    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-3 · DO 전 리뷰 P0-1: 첫 시드 녹음 fail 인데 그룹이 남으면 — 비용 확정으로 안 적고 (stop_failed · 끝 없음) · **닫힘은 멈추기 전에 장부에 적고** (closes_system · melt_check) · 멈춤은
+DO35_consumer_verdict_crash      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · 10^400 · heartbeat 보다 작은 측정 
+DO39_stop_id_not_required        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · 회신 DQ P2-1: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 · 모르는 코드 · terminal 없음 · 참거짓 아님 · 코드와 모순 (interrupted + true · melt + false) = 
+DO38_orphan_status_lost          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P1-2 (S1c): 첫 시드 녹음 invalid · 정리 실패 → 장부 melt_check 를 먼저 적고 · 재부팅 고아 마감이 앞 상태를 남긴다 → 실행 종류 invalid (끊긴 런으로 바뀌지 않는다) (23 · orphaned · N
+DO40_stop_unreadable_overwritten ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P2-5 · 6 · 7: 잘린 STOP 은 덮어쓰지 않고 거부 (원본 그대로) · stop_id 없는 STOP 을 조용히 확인하지 않는다 · STOP 안에 끼운 declaration 은 확인 기록으로 옮기지 않는다 (26 · True · 2
+DO41_stop_keys_all               ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P2-5 · 6 · 7: 잘린 STOP 은 덮어쓰지 않고 거부 (원본 그대로) · stop_id 없는 STOP 을 조용히 확인하지 않는다 · STOP 안에 끼운 declaration 은 확인 기록으로 옮기지 않는다 (10 · True · 1
+DO42_reboot_alive_ignored        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P2-10: 재부팅 뒤 (boot_id 다름) 같은 pgid 가 다른 프로세스에 쓰여도 그 그룹은 죽었다 — 영원히 거부하지 않고 고아로 마감 (앞 상태 남김) (stop_failed · None)
+DO43_signal_unmasked             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P2 (진짜 프로세스): 띄우는 동안 부모는 TERM 을 막지만 (_held) 자식은 막기 전 마스크로 시작한다 → TERM 만으로 그룹이 빈다 (KILL 없음) · 부모 마스크도 돌아온다 (부모 막힘 False · 자식 SigBlk 0x0 ·
+DO44_cap_sleep_full              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P2-11: 실행 중 상한 검사는 상한보다 늦지 않다 (poll 5 h · 상한 7.5 h → 멈춘 벽시계 10.0 h)
+DO45_values_pin_off              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P2-12 · P2-8: 카드 값 지문이 러너 고정값과 다르면 · --python 을 실행할 수 없으면 시작하지 않는다 (맞으면 돈다)
+DO46_python_check_off            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P2-12 · P2-8: 카드 값 지문이 러너 고정값과 다르면 · --python 을 실행할 수 없으면 시작하지 않는다 (맞으면 돈다)
+DO47_fsync_off                   ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P2-14: 장부 · STOP · 실행 전 기록 쓰기는 파일과 디렉터리 (POSIX) 를 fsync 한다 (1)
+DO48_orphan_numbers_loose        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P1-3 (러너): 고아 런 상한의 시계 · 하한이 글자 · 참거짓이면 상한을 내지 않는다 (비용 미확정 → 증언) ({'ok': 2.0, 'start_str': 2.0, 'now_bool': None, 'lower_str': 2.0})
+DP1_retry_observed_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P0 (Codex 재현): 녹음 창이 다 찼고 fail 인 끊긴 런을 확인 · 재시도 검사가 계산하면 거부 전에 장부에 melt_check fail (첫 시드는 closes_system) 을 적는다 → 궤적 원소를 손상해 녹음 판정이 inval
+DP2_ack_observed_off             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P0 (Codex 재현): 녹음 창이 다 찼고 fail 인 끊긴 런을 확인 · 재시도 검사가 계산하면 거부 전에 장부에 melt_check fail (첫 시드는 closes_system) 을 적는다 → 궤적 원소를 손상해 녹음 판정이 inval
+DP3_persist_melt_off             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P0 (Codex 재현): 녹음 창이 다 찼고 fail 인 끊긴 런을 확인 · 재시도 검사가 계산하면 거부 전에 장부에 melt_check fail (첫 시드는 closes_system) 을 적는다 → 궤적 원소를 손상해 녹음 판정이 inval
+DP4_persist_no_close             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P0 (Codex 재현): 녹음 창이 다 찼고 fail 인 끊긴 런을 확인 · 재시도 검사가 계산하면 거부 전에 장부에 melt_check fail (첫 시드는 closes_system) 을 적는다 → 궤적 원소를 손상해 녹음 판정이 inval
+DP6_ack_persist_call_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P0 (Codex 재현): 녹음 창이 다 찼고 fail 인 끊긴 런을 확인 · 재시도 검사가 계산하면 거부 전에 장부에 melt_check fail (첫 시드는 closes_system) 을 적는다 → 궤적 원소를 손상해 녹음 판정이 inval
+DP7_loop_persist_call_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P0 (Codex 재현): 녹음 창이 다 찼고 fail 인 끊긴 런을 확인 · 재시도 검사가 계산하면 거부 전에 장부에 melt_check fail (첫 시드는 closes_system) 을 적는다 → 궤적 원소를 손상해 녹음 판정이 inval
+DP10_verdict_records_loose       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DP11_history_loose               ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DP13_plan_stage_loose            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DP8_loop_melt_stop_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P0 (Codex 재현): 녹음 창이 다 찼고 fail 인 끊긴 런을 확인 · 재시도 검사가 계산하면 거부 전에 장부에 melt_check fail (첫 시드는 closes_system) 을 적는다 → 궤적 원소를 손상해 녹음 판정이 inval
+DP9_kind_detail_no_melt          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P0 (Codex 재현): 녹음 창이 다 찼고 fail 인 끊긴 런을 확인 · 재시도 검사가 계산하면 거부 전에 장부에 melt_check fail (첫 시드는 closes_system) 을 적는다 → 궤적 원소를 손상해 녹음 판정이 inval
+DP14_md_done_loose               ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DP15_identity_attempt_loose      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DO P1: 실행 전 기록 · 판정 파일의 같은 열쇠 둘은 마지막 값으로 읽지 않는다 (보존 폴더 식별 안 함 · 판정 상태 판독 불가) ((True, True) · unreadable)
+DP16_verdict_status_loose        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DO P1: 실행 전 기록 · 판정 파일의 같은 열쇠 둘은 마지막 값으로 읽지 않는다 (보존 폴더 식별 안 함 · 판정 상태 판독 불가) ((False, False) · incomplete)
+DP18_stage1_plan_loose           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DO P1 (판정): plan.json 에 같은 열쇠 둘이면 판정은 '못 읽음' (미완) — 마지막 값으로 판정하지 않는다 (깨기 DP18 이 드러낸 시험 구멍) (invalid · ['result.json 없음', 'final.xyz 없음', 't
+DP17_inventory_loose             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DO P1: 실행 전 기록 목록 (attempt_inventory) 은 같은 열쇠 둘인 기록을 마지막 값으로 묶지 않고 못 읽음으로 적는다 (['55555555555555555555555555555555'] · [])
+DP12_prev_loose                  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DM P0-1 · P0-2 (Codex 재현): 궤적 앞부분 + thermo 에 온전한 끝 시각 행 · pass 판정이 있던 폴더를 원자료 소실 뒤 재판정 · pass 판정이 임시 파일에만 · (같은 갈래) MD 완료 · FIRE 미완 폴더를 진짜 판정한
+DP19_driver_strict_hook_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DO P1: 실행 전 기록 목록 (attempt_inventory) 은 같은 열쇠 둘인 기록을 마지막 값으로 묶지 않고 못 읽음으로 적는다 (['55555555555555555555555555555555'] · [])
+DP21_attest_view_loose           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P1-2 (Codex 재현): 장부에 wall_h 가 둘 → 러너가 거부하고 원본 바이트를 그대로 둔다 (두 번째 실행도 거부 · 소비자 무효 그대로) · 고아 런 하한 wall_h_lower 가 둘 → 근거 보기 · 증언 모두 거부 · 원본 
+DP20_ledger_run_loose            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P1-2 (Codex 재현): 장부에 wall_h 가 둘 → 러너가 거부하고 원본 바이트를 그대로 둔다 (두 번째 실행도 거부 · 소비자 무효 그대로) · 고아 런 하한 wall_h_lower 가 둘 → 근거 보기 · 증언 모두 거부 · 원본 
+DP22_attest_lock_loose           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P1-2 (Codex 재현): 장부에 wall_h 가 둘 → 러너가 거부하고 원본 바이트를 그대로 둔다 (두 번째 실행도 거부 · 소비자 무효 그대로) · 고아 런 하한 wall_h_lower 가 둘 → 근거 보기 · 증언 모두 거부 · 원본 
+DP23_runner_strict_hook_off      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P1: 결정 원장에 같은 열쇠 둘 (decision_state proposed · active) 이면 '모름' (시작하지 않는다) · 대조는 active (active · active)
+DP26_summary_failclosed_off      ⭕ 빨강 [melt_quench_uma] · RuntimeError: selftest summary boom
+DP25_summary_shape_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DO P2 (Codex 재현): 판정 기록의 중첩 꼴 (provenance [1] · software [1] · run_id {} · reasons [] · files_sha256 [1]) → 그 시드 invalid · 요약이 죽지 않고 invali
+DP29_kind_verdict_status_off     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 5차 리뷰 P2: 판정 규칙 지문은 판정이 읽는 카드 값만 (상한을 올려도 같고 · 녹음 문턱이 다르면 다르다) · 상한만 다른 카드로 낸 fail · 닫힘은 과학적 판정 그대로 · 다른 문턱의 손 판정 (이력) 과 지금 규칙의 판정 (정본) 이
+DP30_kind_closes_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 5차 리뷰 P2: 판정 규칙 지문은 판정이 읽는 카드 값만 (상한을 올려도 같고 · 녹음 문턱이 다르면 다르다) · 상한만 다른 카드로 낸 fail · 닫힘은 과학적 판정 그대로 · 다른 문턱의 손 판정 (이력) 과 지금 규칙의 판정 (정본) 이
+DP24_decision_loose              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P1: 결정 원장에 같은 열쇠 둘 (decision_state proposed · active) 이면 '모름' (시작하지 않는다) · 대조는 active (active · active)
+DP31_kind_none_status_regress    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 F1 · F3 · F4: 폴더 판정 fail · pass 는 근거 (상태 · closes_system) 를 같이 → 러너가 장부에 적는다 · 못 읽은 이전 판정 (상태 없음) = 판독 불가 · 끊긴 런 (고아 마감 전 running 포함) 
+DP27_child_mask_off              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P2 (진짜 프로세스): 띄우는 동안 부모는 TERM 을 막지만 (_held) 자식은 막기 전 마스크로 시작한다 → TERM 만으로 그룹이 빈다 (KILL 없음) · 부모 마스크도 돌아온다 (부모 막힘 True · 자식 SigBlk 0x4003
+DP32_kind_cut_melt_invalid       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 F1 · F3 · F4: 폴더 판정 fail · pass 는 근거 (상태 · closes_system) 를 같이 → 러너가 장부에 적는다 · 못 읽은 이전 판정 (상태 없음) = 판독 불가 · 끊긴 런 (고아 마감 전 running 포함) 
+DP28_child_restore_noop          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DO P2 (진짜 프로세스): 띄우는 동안 부모는 TERM 을 막지만 (_held) 자식은 막기 전 마스크로 시작한다 → TERM 만으로 그룹이 빈다 (KILL 없음) · 부모 마스크도 돌아온다 (부모 막힘 True · 자식 SigBlk 0x4003
+DP33_kind_history_type_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 F1 · F3 · F4: 폴더 판정 fail · pass 는 근거 (상태 · closes_system) 를 같이 → 러너가 장부에 적는다 · 못 읽은 이전 판정 (상태 없음) = 판독 불가 · 끊긴 런 (고아 마감 전 running 포함) 
+DP34_ledger_history_type_off     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째): 소비자 — 장부에 녹음 fail (판정 없이) 로 적힌 실행을 다른 실행으로 대체해도 잡는다 · 같은 stop_id 둘 · melt_check_history 가 목록이 아님 = invalid (장부의 카드 값 지문 None ≠ 지
+DP35_verdict_tmp_overwrite       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F2: 판정 임시 파일이 남은 폴더는 다시 판정해도 아무것도 안 쓴다 (앞 쓰기의 흔적을 덮지 않는다) (incomplete)
+DP36_raw_lossy                   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째): 못 읽은 이전 판정 (같은 열쇠 둘 · UTF-8 아닌 바이트) 은 이력에 바이트 그대로 (raw_b64) · 상태 없음
+DP38_cli_writes_folder           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째): --melt_window_check CLI 는 판정을 화면에만 내고 런 폴더에 파일을 안 남긴다 (모르는 파일 = 폴더 판독 보류) (['melt_window_check.json'] · rc 4)
+DP37_history_splitlines          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째): 이력 글자 안의 U+2028 · U+2029 · U+0085 에서 줄을 자르지 않는다 (판정 이력 1 번째 줄을 못 읽는다 (JSONDecodeError: Unterminated string starting at: line 1 c
+DP39_summary_base_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F3: 요약 쓰기가 실패하면 (임시 자리가 디렉터리) 이전 stage1_pass 를 지우고 예외를 다시 던진다 (남의 임시 자리는 안 지운다) · 요약 중 신호 (KeyboardInterrupt) 면 invalid 요약을 쓰고 다시
+DP40_summary_drop_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F3: 요약 쓰기가 실패하면 (임시 자리가 디렉터리) 이전 stage1_pass 를 지우고 예외를 다시 던진다 (남의 임시 자리는 안 지운다) · 요약 중 신호 (KeyboardInterrupt) 면 invalid 요약을 쓰고 다시
+DP41_early_frame_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F5: 6 번째 프레임 좌표 · 머리 한 곳이 깨지면 (온전한 프레임은 더 있음) '무효' — 영원히 '미완' 으로 기다리지 않는다 (incomplete · None · incomplete)
+DP42_early_frame_header_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F5: 6 번째 프레임 좌표 · 머리 한 곳이 깨지면 (온전한 프레임은 더 있음) '무효' — 영원히 '미완' 으로 기다리지 않는다 (invalid · 101 · incomplete)
+DP43_consumer_melt_replace_off   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째): 소비자 — 장부에 녹음 fail (판정 없이) 로 적힌 실행을 다른 실행으로 대체해도 잡는다 · 같은 stop_id 둘 · melt_check_history 가 목록이 아님 = invalid (장부의 카드 값 지문 None ≠ 지
+DP44_consumer_stopid_dup_off     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째): 소비자 — 장부에 녹음 fail (판정 없이) 로 적힌 실행을 다른 실행으로 대체해도 잡는다 · 같은 stop_id 둘 · melt_check_history 가 목록이 아님 = invalid (장부의 카드 값 지문 None ≠ 지
+DP46_retry_verdict_observed_off  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DJ (러너 재시도 자격 단위): 과학적 판정 · 보존 누락 (invalid 런 포함) · 폴더 판정 pass · 판정 잘림 · 비용 미확정 · 단계 판독 불가 · 최종 (판정하라) · MD 완료 (FIRE 보류) · 영수증 없음 · 선언 없음 · 다른 
+DP47_ack_verdict_observed_off    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 F1 · F2: 끊긴 런 폴더를 사람이 판정해 fail 이 나오면 (폴더 판정 기록) 확인 · 재시도 검사가 거부 전에 장부 verdict 에 적는다 · 첫 시드면 closes_system → 재시도 경로는 STOP melt · 확인 경로는
+DP48_persist_verdict_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 F1 · F2: 끊긴 런 폴더를 사람이 판정해 fail 이 나오면 (폴더 판정 기록) 확인 · 재시도 검사가 거부 전에 장부 verdict 에 적는다 · 첫 시드면 closes_system → 재시도 경로는 STOP melt · 확인 경로는
+DP49_persist_verdict_closes_off  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 F1 · F2: 끊긴 런 폴더를 사람이 판정해 fail 이 나오면 (폴더 판정 기록) 확인 · 재시도 검사가 거부 전에 장부 verdict 에 적는다 · 첫 시드면 closes_system → 재시도 경로는 STOP melt · 확인 경로는
+DP50_persist_shape_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 F2 · F4: 시작 전 재판정 (①-4) 의 fail 도 장부 verdict 에 적는다 · 재판정이 장부 판정과 다르면 덮지 않고 invalid 로 멈춘다 · 장부 행 꼴이 틀려 못 적으면 invalid (0 · fail · 27 · A1
+DP51_persist_revert_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 F4 · (둘째) F2 · F6: 본 결과를 장부에 적다가 저장이 실패하면 — 메모리도 되돌린다 (끝 저장이 반쯤 적은 것을 쓰지 않는다) · 확인 경로는 거부 (앞 STOP · 장부 바이트 그대로) · 재시도 경로는 invalid 멈춤 (
+DP53_loop_persist_fail_stop_off  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 F4 · (둘째) F2 · F6: 본 결과를 장부에 적다가 저장이 실패하면 — 메모리도 되돌린다 (끝 저장이 반쯤 적은 것을 쓰지 않는다) · 확인 경로는 거부 (앞 STOP · 장부 바이트 그대로) · 재시도 경로는 invalid 멈춤 (
+DP54_rejudge_persist_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 F2 · F4: 시작 전 재판정 (①-4) 의 fail 도 장부 verdict 에 적는다 · 재판정이 장부 판정과 다르면 덮지 않고 invalid 로 멈춘다 · 장부 행 꼴이 틀려 못 적으면 invalid (0 · None · 27 · 시작
+DP55_rejudge_disagree_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · P2-B: 장부 판정 invalid 인 실행을 재판정이 pass 로 내면 러너는 덮지 않고 충돌 관측으로 남기고 invalid (발사 0) · 로그에 '충돌 관측' (27 · 발사 0 · invalid · [{'status': 
+DP56_first_seed_undecided_off    ⭕ 빨강 [li2s2_stage1_runner] · FileNotFoundError: [Errno 2] No such file or directory: '/tmp/li2s2_runner_st_zydni24z/tmpk02nuuvw/STOP.json'
+DP58_ledger_elems_off            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F1 · F2 · F6: runs · stop_history 가 없거나 원소가 객체가 아닌 장부는 채워 넣지 않고 거부 (원본 그대로) · 앞 쓰기가 남긴 장부 · STOP 임시 파일이 있으면 거부 (임시 · 장부 그대로) · 원자
+DP57_ledger_keys_optional        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F1 · F2 · F6: runs · stop_history 가 없거나 원소가 객체가 아닌 장부는 채워 넣지 않고 거부 (원본 그대로) · 앞 쓰기가 남긴 장부 · STOP 임시 파일이 있으면 거부 (임시 · 장부 그대로) · 원자
+DP59_tmp_start_check_off         ⭕ 빨강 [li2s2_stage1_runner] · FileExistsError: [Errno 17] File exists: '/tmp/li2s2_runner_st_nh4382jt/tmp2geexfx4/STOP.json.tmp'
+DP60_write_excl_off              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 F4 · (둘째) F2 · F6: 본 결과를 장부에 적다가 저장이 실패하면 — 메모리도 되돌린다 (끝 저장이 반쯤 적은 것을 쓰지 않는다) · 확인 경로는 거부 (앞 STOP · 장부 바이트 그대로) · 재시도 경로는 invalid 멈춤 (
+DP61_attest_tmp_off              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F1 · F2 · F6: runs · stop_history 가 없거나 원소가 객체가 아닌 장부는 채워 넣지 않고 거부 (원본 그대로) · 앞 쓰기가 남긴 장부 · STOP 임시 파일이 있으면 거부 (임시 · 장부 그대로) · 원자
+DP62_stop_pending_off            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F1 · F2 · F6: runs · stop_history 가 없거나 원소가 객체가 아닌 장부는 채워 넣지 않고 거부 (원본 그대로) · 앞 쓰기가 남긴 장부 · STOP 임시 파일이 있으면 거부 (임시 · 장부 그대로) · 원자
+DP63_held_outer_off              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F4 (진짜 프로세스): 러너가 TERM 을 막은 채 시작해도 · _held 를 겹쳐 불러도 자식은 TERM 이 풀려 있다 → TERM 만으로 그룹이 빈다 · 겹친 _held 뒤 막기 전 마스크 자리가 비워진다 ({'inherite
+DP64_child_unblock_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F4 (진짜 프로세스): 러너가 TERM 을 막은 채 시작해도 · _held 를 겹쳐 불러도 자식은 TERM 이 풀려 있다 → TERM 만으로 그룹이 빈다 · 겹친 _held 뒤 막기 전 마스크 자리가 비워진다 ({'inherite
+DP66_signal_defer_off            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F4 · 깨기 DP68: 띄우는 구간 안에서 처리기가 바로 돌아도 (다른 스레드가 받은 신호 — 부모 마스크와 무관) 손잡이를 적은 뒤에 받아 그 담금질을 멈추고 마감한다 (26 · 멈춤 False · pgid None)
+DP67_write_not_critical          ⭕ 빨강 [li2s2_stage1_runner] · FileExistsError: [Errno 17] File exists: '/tmp/li2s2_runner_st__opxefh3/tmpbkpdmvbh/stage1_ledger.json.tmp'
+DP68_launch_not_critical         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F4 · 깨기 DP68: 띄우는 구간 안에서 처리기가 바로 돌아도 (다른 스레드가 받은 신호 — 부모 마스크와 무관) 손잡이를 적은 뒤에 받아 그 담금질을 멈추고 마감한다 (26 · 멈춤 False · pgid None)
+DP65_final_save_raises           ⭕ 빨강 [li2s2_stage1_runner] · FileExistsError: [Errno 17] File exists: '/tmp/li2s2_runner_st_z3blxi2n/tmp9xnal133/stage1_ledger.json.tmp'
+DQ1_persist_section_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P0-1 (Codex 재현): 본 녹음 fail 을 적은 장부 교체가 끝나는 순간 미룬 신호가 와도 — 메모리를 되돌리지 않고 (적기 · 확정을 한 구간) 끝 저장이 그 행을 지키고 (첫 시드는 closes_system) · 뒤 궤적 손상 + 
+DQ2_after_replace_revert         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P0-1 · P2-1 (교체 뒤 실패): 본 녹음 fail 을 적은 장부 교체 뒤 디렉터리 fsync 가 실패해도 메모리를 되돌리지 않는다 — 확인은 거부 · 재시도는 invalid · 장부에 fail 이 남는다 · terminal STOP 교
+DQ3_stop_section_off             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P2-1 · DQ 전 리뷰 P3: terminal STOP (melt) 교체가 끝나는 순간 미룬 신호가 와도 끝 처리가 interrupted 로 덮지 않고 · 그 STOP 의 코드로 끝난다 (26 · interrupted · False)
+DQ4_stop_after_replace_flag_off  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P0-1 · P2-1 (교체 뒤 실패): 본 녹음 fail 을 적은 장부 교체 뒤 디렉터리 fsync 가 실패해도 메모리를 되돌리지 않는다 — 확인은 거부 · 재시도는 invalid · 장부에 fail 이 남는다 · terminal STOP 교
+DQ5_after_replace_plain          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P0-1 · P2-1 (교체 뒤 실패): 본 녹음 fail 을 적은 장부 교체 뒤 디렉터리 fsync 가 실패해도 메모리를 되돌리지 않는다 — 확인은 거부 · 재시도는 invalid · 장부에 fail 이 남는다 · terminal STOP 교
+DQ6_attempt_section_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP (같은 꼴): 실행 전 기록 교체가 끝나는 순간 미룬 신호가 와도 장부에 그 실행 행이 생기고 (발사 전) 마감된다 — 장부에 없는 폴더를 안 남긴다 (True · 26 · 발사 0 · 행 0)
+DQ7_rejudge_written_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P1-1 (Codex 재현): 8 실행까지만 끝난 묶음에서 A11 에 판정 임시 파일 (다시 판정 못 함 · written False) · 깨진 이력 줄 · 같은 열쇠 판정 (재판정 뒤 원문만 남은 이전 판정) → 새 실행 0 · invalid
+DQ8_end_written_off              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P1-1: 담금질 끝 판정을 쓰지 못하면 (written False) 다음 시드로 가지 않고 invalid (25 · 발사 10)
+DQ12_flip_conflict_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 — 비과학적 장부 판정은 그때 지문 = 지금 (판정 입력 전부 다 있고 같음 · 앞 판정이 판정 도중 예외) 일 때만 대체 ({'f
+DQ9_summary_unresolved_off       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P1-1 (Codex 재현): 8 실행까지만 끝난 묶음에서 A11 에 판정 임시 파일 (다시 판정 못 함 · written False) · 깨진 이력 줄 · 같은 열쇠 판정 (재판정 뒤 원문만 남은 이전 판정) → 새 실행 0 · invalid
+DQ13_same_run_melt_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 — 비과학적 장부 판정은 그때 지문 = 지금 (판정 입력 전부 다 있고 같음 · 앞 판정이 판정 도중 예외) 일 때만 대체 ({'m
+DQ10_summary_none_status_off     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P1-1 (Codex 재현): 8 실행까지만 끝난 묶음에서 A11 에 판정 임시 파일 (다시 판정 못 함 · written False) · 깨진 이력 줄 · 같은 열쇠 판정 (재판정 뒤 원문만 남은 이전 판정) → 새 실행 0 · invalid
+DQ14_card_strict_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DP P2-2: 직접 진입에서도 같은 열쇠 둘을 받지 않는다 — 카드 기계_판독_값 · G4 밴드 카드 · gate_check · seed_gate 의 plan ({'card': False, 'band': True, 'gate_check': True
+DQ16_gate_plan_strict_off        ⭕ 빨강 [melt_quench_uma] · FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp68z4hn10/_gate_plan_dup/thermo.csv'
+DQ15_band_strict_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DP P2-2: 직접 진입에서도 같은 열쇠 둘을 받지 않는다 — 카드 기계_판독_값 · G4 밴드 카드 · gate_check · seed_gate 의 plan ({'card': True, 'band': False, 'gate_check': True
+DQ11_record_tmp_off              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P1-2 (Codex 재현): 다 통과한 묶음에 장부 임시 파일 (A11 녹음 fail · 닫힘) · STOP 임시 파일 · 같은 실행의 장부 fail ↔ 폴더 pass · 장부 녹음 fail ↔ 폴더 pass · stop_history 누락 
+DQ20_conflict_unknown_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 — 비과학적 장부 판정은 그때 지문 = 지금 (판정 입력 전부 다 있고 같음 · 앞 판정이 판정 도중 예외) 일 때만 대체 ({'P
+DQ21_conflict_recorded_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 — 비과학적 장부 판정은 그때 지문 = 지금 (판정 입력 전부 다 있고 같음 · 앞 판정이 판정 도중 예외) 일 때만 대체 ({'r
+DQ19_runner_ledger_shape_off     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F1 · F2 · F6: runs · stop_history 가 없거나 원소가 객체가 아닌 장부는 채워 넣지 않고 거부 (원본 그대로) · 앞 쓰기가 남긴 장부 · STOP 임시 파일이 있으면 거부 (임시 · 장부 그대로) · 원자
+DQ18_consumer_ledger_shape_off   ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P1-2 (Codex 재현): 다 통과한 묶음에 장부 임시 파일 (A11 녹음 fail · 닫힘) · STOP 임시 파일 · 같은 실행의 장부 fail ↔ 폴더 pass · 장부 녹음 fail ↔ 폴더 pass · stop_history 누락 
+DQ23_rows_conflict_record_off    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3 · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete (지문 없음 · 원자료 지문 다름) · 'PASS' · fail ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 장
+DQ26_closes_nonfirst_verdict_off ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D: 닫는 STOP 인데 기록 판정은 통과 → invalid (2 단계 없음) · 기록도 닫힘이면 stop_track 그대로 · 첫 시드 아닌 판정의 closes_system → invalid (invalid · stop_track ·
+DQ22_rows_verdict_values_off     ⛔ 초록 (못 잡음) · li2s2_stage1_runner selftest: ⭕ 152 · ⛔ 0
+DQ27_terminal_stop_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D: 닫는 STOP 인데 기록 판정은 통과 → invalid (2 단계 없음) · 기록도 닫힘이면 stop_track 그대로 · 첫 시드 아닌 판정의 closes_system → invalid (stage1_pass · stop_tra
+DQ24_rows_conflict_shape_off     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3 · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete (지문 없음 · 원자료 지문 다름) · 'PASS' · fail ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 장
+DQ25_closes_nonfirst_ledger_off  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3 · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete (지문 없음 · 원자료 지문 다름) · 'PASS' · fail ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 장
+DQ32_stop_shape_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · 회신 DQ P2-1: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 · 모르는 코드 · terminal 없음 · 참거짓 아님 · 코드와 모순 (interrupted + true · melt + false) = 
+DQ33_ledger_card_fp_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-G: 장부의 카드 값 · 도구 지문이 지금과 다르면 invalid (같으면 그 이유로 안 막는다) ([] · 0 · 1)
+DQ34_ledger_driver_fp_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-G: 장부의 카드 값 · 도구 지문이 지금과 다르면 invalid (같으면 그 이유로 안 막는다) ([] · 1 · 0)
+DQ35_hist_prev_shape_off         ⭕ 빨강 [melt_quench_uma] · AttributeError: 'NoneType' object has no attribute 'get'
+DQ36_hist_prev_status_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-C: 이력 줄의 prev 없음 · null · 모르는 이전 상태 · 모르는 새 상태 = 해석할 수 없는 기록 (상태 없는 원문 판정은 기록으로 남겨 요약이 따로 본다) ({'prev_null': False, 'no_prev': Fals
+DQ37_hist_new_status_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-C: 이력 줄의 prev 없음 · null · 모르는 이전 상태 · 모르는 새 상태 = 해석할 수 없는 기록 (상태 없는 원문 판정은 기록으로 남겨 요약이 따로 본다) ({'prev_null': False, 'no_prev': Fals
+DQ38_mark_summary_noop           ⭕ 빨강 [melt_quench_uma] · json.decoder.JSONDecodeError: Expecting ',' delimiter: line 1 column 38 (char 37)
+DQ28_stop_unreadable_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3 · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete (지문 없음 · 원자료 지문 다름) · 'PASS' · fail ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 장
+DQ30_stop_open_off               ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3 · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete (지문 없음 · 원자료 지문 다름) · 'PASS' · fail ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 장
+DQ41_stop_pending_init_off       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 (둘째) F1 · F2 · F6: runs · stop_history 가 없거나 원소가 객체가 아닌 장부는 채워 넣지 않고 거부 (원본 그대로) · 앞 쓰기가 남긴 장부 · STOP 임시 파일이 있으면 거부 (임시 · 장부 그대로) · 원자
+DQ39_persist_conflict_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · P2-B: 장부 판정 invalid 인 실행을 재판정이 pass 로 내면 러너는 덮지 않고 충돌 관측으로 남기고 invalid (발사 0) · 로그에 '충돌 관측' (0 · 발사 0 · pass · None)
+DQ42_stop_code_return_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P2-1 · DQ 전 리뷰 P3: terminal STOP (melt) 교체가 끝나는 순간 미룬 신호가 와도 끝 처리가 interrupted 로 덮지 않고 · 그 STOP 의 코드로 끝난다 (26 · melt · True)
+DQ43_rejudge_verdict_not_critical ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-E: 러너가 판정을 쓰는 네 자리 (담금질 끝 · 시작 전 재판정 · 첫 시드 녹음 멈춤 · 실행 중 상한) 모두 — 판정 파일의 임시 → 교체 사이에 신호가 와도 교체를 끝낸 뒤 받는다 · 판정 임시 파일이 안 남는다 · (3차 P1
+DQ44_cap_verdict_not_critical    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-E: 러너가 판정을 쓰는 네 자리 (담금질 끝 · 시작 전 재판정 · 첫 시드 녹음 멈춤 · 실행 중 상한) 모두 — 판정 파일의 임시 → 교체 사이에 신호가 와도 교체를 끝낸 뒤 받는다 · 판정 임시 파일이 안 남는다 · (3차 P1
+DQ45_melt_verdict_not_critical   ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-E: 러너가 판정을 쓰는 네 자리 (담금질 끝 · 시작 전 재판정 · 첫 시드 녹음 멈춤 · 실행 중 상한) 모두 — 판정 파일의 임시 → 교체 사이에 신호가 와도 교체를 끝낸 뒤 받는다 · 판정 임시 파일이 안 남는다 · (3차 P1
+DQ46_end_verdict_not_critical    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-E: 러너가 판정을 쓰는 네 자리 (담금질 끝 · 시작 전 재판정 · 첫 시드 녹음 멈춤 · 실행 중 상한) 모두 — 판정 파일의 임시 → 교체 사이에 신호가 와도 교체를 끝낸 뒤 받는다 · 판정 임시 파일이 안 남는다 · (3차 P1
+DQ50_same_inputs_always          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DQ51_same_inputs_missing_ok      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DQ47_closes_bad_runner_off       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · P2-C: 첫 시드 아닌 장부 닫힘 → 러너 invalid (닫는 STOP 아님 · 발사 0) · 이력 prev null → 러너 invalid (발사 0) (21 · 27)
+DQ52_nonsci_conflict_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DQ54_runkind_prov_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 폴더 판정 관측에 지금 판정의 지문이 실린다 (재시도 · 확인 경로도 ①-4 와 같은 대체 규칙) · 관측 상태 (이력의 fail) 가 지금 판정 (pass) 과 다르면 지문을 싣지 않는다 (대체 못 함) · (3차 P3) 지문
+DQ49_persist_log_conflict_off    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · P2-B: 장부 판정 invalid 인 실행을 재판정이 pass 로 내면 러너는 덮지 않고 충돌 관측으로 남기고 invalid (발사 0) · 로그에 '충돌 관측' (27 · 발사 0 · invalid · [{'status': 
+DQ48_mark_summary_call_off       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-F: 통과 요약이 있던 묶음에서 러너가 거부해도 (판정 임시 파일 → invalid · 장부 임시 파일 → 거부) 그 요약이 stage1_pass 로 안 남는다 (27 · stage1_pass · 10 · stage1_pass)
+DQ57_mark_nonpass_kept_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-F · 2차: 낡은 통과 요약 · 못 읽는 요약을 '지금 판정 아님' (pending · not_current · 2 단계 없음) 으로 바꾼다 · 통과가 아닌 요약 (stop_track) 은 그대로 · 요약이 없으면 안 만든다 (Fal
+DQ53_consumer_prov_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 3차 리뷰 P1 (요약): 장부 판정이 빈 끊긴 상태의 다시 낸 판정 — 앞 fail → pass · 앞 invalid → 원자료가 바뀐 뒤 pass 면 요약 invalid · 같은 원자료면 통과 ({'flip': ('invalid', None)
+DQ55_rows_prov_shape_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3 · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete (지문 없음 · 원자료 지문 다름) · 'PASS' · fail ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 장
+DQ56_rows_superseded_shape_off   ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3 · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete (지문 없음 · 원자료 지문 다름) · 'PASS' · fail ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 장
+DQ58_conflict_closes             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N1 · N2: 재판정이 장부 pass 와 다른 fail + closes 면 충돌 관측으로만 남기고 계를 닫지 않는다 (닫는 STOP 아님) · 재시작해도 같은 관측은 한 번만 (27 · 21 · closes True · 관측 1)
+DQ60_supersede_off               ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 끝 판정 도중 일시 오류로 장부 invalid → 확인 뒤 같은 원자료 · 카드 · 도구의 재판정 pass 가 대체하고 (기록) 이어 돌린다 · 통과 (27 · 발사 3 · 0 · 발사 7 · None)
+DQ61_supersede_record_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 끝 판정 도중 일시 오류로 장부 invalid → 확인 뒤 같은 원자료 · 카드 · 도구의 재판정 pass 가 대체하고 (기록) 이어 돌린다 · 통과 (27 · 발사 3 · 0 · 발사 7 · None)
+DQ59_conflict_dedupe_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N1 · N2: 재판정이 장부 pass 와 다른 fail + closes 면 충돌 관측으로만 남기고 계를 닫지 않는다 (닫는 STOP 아님) · 재시작해도 같은 관측은 한 번만 (27 · 27 · closes False · 관측 2)
+DQ62_end_prov_record_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 끝 판정 도중 일시 오류로 장부 invalid → 확인 뒤 같은 원자료 · 카드 · 도구의 재판정 pass 가 대체하고 (기록) 이어 돌린다 · 통과 (27 · 발사 3 · 27 · 발사 0 · None)
+DQ63_rejudge_obs_prov_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 끝 판정 도중 일시 오류로 장부 invalid → 확인 뒤 같은 원자료 · 카드 · 도구의 재판정 pass 가 대체하고 (기록) 이어 돌린다 · 통과 (27 · 발사 3 · 27 · 발사 0 · None)
+DQ64_retry_obs_prov_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 · 3차 · 4차 리뷰 · 회신 DQ P1-1: 재시도 자격 · 확인 경로의 폴더 판정 관측에 지금 판정의 지문 · 폴더 판정 기록 전체가 실린다 · 판정 뒤 원자료가 바뀐 보존 폴더의 낡은 지문 · 보존 폴더로 이름을 바꾸기 전 판정의 지
+DQ65_ack_obs_prov_off            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 · 3차 · 4차 리뷰 · 회신 DQ P1-1: 재시도 자격 · 확인 경로의 폴더 판정 관측에 지금 판정의 지문 · 폴더 판정 기록 전체가 실린다 · 판정 뒤 원자료가 바뀐 보존 폴더의 낡은 지문 · 보존 폴더로 이름을 바꾸기 전 판정의 지
+DQ69_folder_prior_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DQ70_prior_nonsci_changed_off    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DQ71_prior_unreadable_ok         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DQ80_prior_sci_diff_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DQ67_end_ledger_outside_section  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-E: 러너가 판정을 쓰는 네 자리 (담금질 끝 · 시작 전 재판정 · 첫 시드 녹음 멈춤 · 실행 중 상한) 모두 — 판정 파일의 임시 → 교체 사이에 신호가 와도 교체를 끝낸 뒤 받는다 · 판정 임시 파일이 안 남는다 · (3차 P1
+DQ81_chain_prob_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 폴더 판정 관측에 지금 판정의 지문이 실린다 (재시도 · 확인 경로도 ①-4 와 같은 대체 규칙) · 관측 상태 (이력의 fail) 가 지금 판정 (pass) 과 다르면 지문을 싣지 않는다 (대체 못 함) · (3차 P3) 지문
+DQ68_melt_ledger_outside_section ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-E: 러너가 판정을 쓰는 네 자리 (담금질 끝 · 시작 전 재판정 · 첫 시드 녹음 멈춤 · 실행 중 상한) 모두 — 판정 파일의 임시 → 교체 사이에 신호가 와도 교체를 끝낸 뒤 받는다 · 판정 임시 파일이 안 남는다 · (3차 P1
+DQ73_rejudge_obs_prior_off       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 2차 리뷰 P1: 일시 오류 장부 invalid 뒤 러너의 재판정이 md_init_raw.xyz 불일치를 본 다음 사람이 맞는 파일로 바꾸거나 지우고 확인해도 — 폴더 판정 기록의 입력 불일치 때문에 자동 대체하지 않는다 (발사 0 · 충돌 관측
+DQ72_summary_prior_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3 · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete (지문 없음 · 원자료 지문 다름) · 'PASS' · fail ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 장
+DQ74_rejudge_check_prior_off     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 3차 리뷰 P1: 장부 판정이 빈 끊긴 상태에서 폴더의 앞 판정 fail → 지금 pass · 앞 invalid → 원자료가 바뀐 뒤 pass 면 러너가 보류 (발사 0) · 같은 원자료면 적고 이어 간다 · (4차) 끊긴 뒤 사람이 한 번 더 
+DQ75_persist_prior_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 2차 리뷰 P1: 일시 오류 장부 invalid 뒤 러너의 재판정이 md_init_raw.xyz 불일치를 본 다음 사람이 맞는 파일로 바꾸거나 지우고 확인해도 — 폴더 판정 기록의 입력 불일치 때문에 자동 대체하지 않는다 (발사 0 · 충돌 관측
+DQ78_runkind_prov_current_check_off ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 폴더 판정 관측에 지금 판정의 지문이 실린다 (재시도 · 확인 경로도 ①-4 와 같은 대체 규칙) · 관측 상태 (이력의 fail) 가 지금 판정 (pass) 과 다르면 지문을 싣지 않는다 (대체 못 함) · (3차 P3) 지문
+DQ79_runkind_prior_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 F1 · F3 · F4: 폴더 판정 fail · pass 는 근거 (상태 · closes_system) 를 같이 → 러너가 장부에 적는다 · 못 읽은 이전 판정 (상태 없음) = 판독 불가 · 끊긴 런 (고아 마감 전 running 포함) 
+DQ82_first_line_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-2: 정본 판정 없이 이력 (빈 파일 포함) · 판정 임시 파일 · 정본 자리의 디렉터리가 남은 폴더는 미해결 기록 (묶음 판정 invalid · stale) · 기록이 없는 폴더는 판정 안 함 (pending) · 손 판정은 앞 이력 줄
+DQ83_first_read_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DQ84_first_shape_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-C: 이력 줄의 prev 없음 · null · 모르는 이전 상태 · 모르는 새 상태 = 해석할 수 없는 기록 (상태 없는 원문 판정은 기록으로 남겨 요약이 따로 본다) ({'prev_null': False, 'no_prev': Fals
+DQ17_seed_gate_plan_strict_off   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DP P2-2: 직접 진입에서도 같은 열쇠 둘을 받지 않는다 — 카드 기계_판독_값 · G4 밴드 카드 · gate_check · seed_gate 의 plan ({'card': True, 'band': True, 'gate_check': True,
+DR1_same_inputs_keyset_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DQ76_retry_obs_prior_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 · 3차 · 4차 리뷰 · 회신 DQ P1-1: 재시도 자격 · 확인 경로의 폴더 판정 관측에 지금 판정의 지문 · 폴더 판정 기록 전체가 실린다 · 판정 뒤 원자료가 바뀐 보존 폴더의 낡은 지문 · 보존 폴더로 이름을 바꾸기 전 판정의 지
+DQ77_ack_obs_prior_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 · 3차 · 4차 리뷰 · 회신 DQ P1-1: 재시도 자격 · 확인 경로의 폴더 판정 관측에 지금 판정의 지문 · 폴더 판정 기록 전체가 실린다 · 판정 뒤 원자료가 바뀐 보존 폴더의 낡은 지문 · 보존 폴더로 이름을 바꾸기 전 판정의 지
+DR2_same_inputs_keys_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR3_derived_any_change           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR4_derived_exception_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR5_mismatch_check_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR6_errors_check_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR7_nature_missing_ok            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR8_row_rule_same_inputs         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR9_chain_rule_same_inputs       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR11_derived_written_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR10_mismatch_as_error           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR13_bind_raw_off                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR12_derived_from_status         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR14_bind_attempt_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR15_current_band_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P3-B · P3-A: 밴드를 안 읽은 판정 (NVT 길) 은 밴드 지문을 not_read 로 적고 지금 밴드 카드와 대조하지 않는다 · 읽은 판정은 대조한다 · 폴더 이름을 바꾸면 그 전 판정은 지금이 아니다 ([] · [] · ["판정을
+DR16_band_sha_const              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR17_runtime_python_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR18_band_in_provenance_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR42_band_always_read            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P3-B · P3-A: 밴드를 안 읽은 판정 (NVT 길) 은 밴드 지문을 not_read 로 적고 지금 밴드 카드와 대조하지 않는다 · 읽은 판정은 대조한다 · 폴더 이름을 바꾸면 그 전 판정은 지금이 아니다 (['G4 밴드 카드 지문 2
+DR43_band_never_read             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR44_band_notread_compared       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P3-B · P3-A: 밴드를 안 읽은 판정 (NVT 길) 은 밴드 지문을 not_read 로 적고 지금 밴드 카드와 대조하지 않는다 · 읽은 판정은 대조한다 · 폴더 이름을 바꾸면 그 전 판정은 지금이 아니다 (['G4 밴드 카드 지문 n
+DR45_folder_key_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR46_folder_current_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P3-B · P3-A: 밴드를 안 읽은 판정 (NVT 길) 은 밴드 지문을 not_read 로 적고 지금 밴드 카드와 대조하지 않는다 · 읽은 판정은 대조한다 · 폴더 이름을 바꾸면 그 전 판정은 지금이 아니다 ([] · ['G4 밴드 카드
+DR47_folder_record_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR49_preserved_summary_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P2-B · 2차: 현재 시드 폴더가 아닌 모든 폴더 (이름 꼴과 무관 — seed14.moved · old14 · seed15_moved · seed12-old) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일 · 모르는 상태 ('P
+DR50_preserved_records_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P2-B · 2차: 현재 시드 폴더가 아닌 모든 폴더 (이름 꼴과 무관 — seed14.moved · old14 · seed15_moved · seed12-old) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일 · 모르는 상태 ('P
+DR51_chain_nonsci_ledger_off     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR53_preserved_name_pattern      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P2-B · 2차: 현재 시드 폴더가 아닌 모든 폴더 (이름 꼴과 무관 — seed14.moved · old14 · seed15_moved · seed12-old) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일 · 모르는 상태 ('P
+DR54_record_status_check_off     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P2-B · 2차: 현재 시드 폴더가 아닌 모든 폴더 (이름 꼴과 무관 — seed14.moved · old14 · seed15_moved · seed12-old) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일 · 모르는 상태 ('P
+DR55_preserved_seeds_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P2-B · 2차: 현재 시드 폴더가 아닌 모든 폴더 (이름 꼴과 무관 — seed14.moved · old14 · seed15_moved · seed12-old) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일 · 모르는 상태 ('P
+DR57_hist_first_closes_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 3차 리뷰 P2: 이력 줄 (첫 판정 · 바꿈) 이 새 판정의 closes_system 을 적고 판정 기록이 그것을 읽는다 — 정본 없이 이력만 남은 첫 시드의 닫힘이 장부로 넘어간다 · 참거짓이 아닌 표시는 해석할 수 없는 기록 (('scien
+DR58_hist_line_closes_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 3차 리뷰 P2: 이력 줄 (첫 판정 · 바꿈) 이 새 판정의 closes_system 을 적고 판정 기록이 그것을 읽는다 — 정본 없이 이력만 남은 첫 시드의 닫힘이 장부로 넘어간다 · 참거짓이 아닌 표시는 해석할 수 없는 기록 (('scien
+DR59_first_line_closes_unread    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 3차 리뷰 P2: 이력 줄 (첫 판정 · 바꿈) 이 새 판정의 closes_system 을 적고 판정 기록이 그것을 읽는다 — 정본 없이 이력만 남은 첫 시드의 닫힘이 장부로 넘어간다 · 참거짓이 아닌 표시는 해석할 수 없는 기록 (('scien
+DR48_preserved_runner_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DQ P1-2 (Codex 재현): B14 를 A14 보다 먼저 돌려 B14 첫 정본 판정 교체가 실패 (이력 · 임시 판정만 · 정본 없음) → 독립 요약 invalid · STOP 을 확인하고 기본 순서로 다시 시작해도 (A14 를 띄우지 않는다
+DR60_closes_type_check_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 3차 리뷰 P2: 이력 줄 (첫 판정 · 바꿈) 이 새 판정의 closes_system 을 적고 판정 기록이 그것을 읽는다 — 정본 없이 이력만 남은 첫 시드의 닫힘이 장부로 넘어간다 · 참거짓이 아닌 표시는 해석할 수 없는 기록 (('scien
+DR61_anchor_off                  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR62_after_anchor_ignored        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR63_anchor_last_not_first       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR52_summary_chain_nonsci_off    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3 · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete (지문 없음 · 원자료 지문 다름) · 'PASS' · fail ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 장
+DR65_chain_dup_prev              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 4차 리뷰 P1 · P2: 폴더 판정 기록은 쓴 순서대로 (겹침 없이 · 판정 밖에서 바뀐 앞 판정도 그 자리에) · 다른 카드 값으로 낸 과학적 판정 기록 (손 판정 · 다른 checkout) 은 판독 불가 — 그 결과 · 닫힘을 장부로 옮기지
+DR66_chain_oob_prev_dropped      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 4차 리뷰 P1 · P2: 폴더 판정 기록은 쓴 순서대로 (겹침 없이 · 판정 밖에서 바뀐 앞 판정도 그 자리에) · 다른 카드 값으로 낸 과학적 판정 기록 (손 판정 · 다른 checkout) 은 판독 불가 — 그 결과 · 닫힘을 장부로 옮기지
+DR67_chain_current_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 F1 · F3 · F4: 폴더 판정 fail · pass 는 근거 (상태 · closes_system) 를 같이 → 러너가 장부에 적는다 · 못 읽은 이전 판정 (상태 없음) = 판독 불가 · 끊긴 런 (고아 마감 전 running 포함) 
+DR68_alien_card_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 5차 리뷰 P2: 판정 규칙 지문은 판정이 읽는 카드 값만 (상한을 올려도 같고 · 녹음 문턱이 다르면 다르다) · 상한만 다른 카드로 낸 fail · 닫힘은 과학적 판정 그대로 · 다른 문턱의 손 판정 (이력) 과 지금 규칙의 판정 (정본) 이
+DR70_judge_values_full_card      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 5차 리뷰 P2: 판정 규칙 지문은 판정이 읽는 카드 값만 (상한을 올려도 같고 · 녹음 문턱이 다르면 다르다) · 상한만 다른 카드로 낸 fail · 닫힘은 과학적 판정 그대로 · 다른 문턱의 손 판정 (이력) 과 지금 규칙의 판정 (정본) 이
+DR71_alien_poisons               ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 5차 리뷰 P2: 판정 규칙 지문은 판정이 읽는 카드 값만 (상한을 올려도 같고 · 녹음 문턱이 다르면 다르다) · 상한만 다른 카드로 낸 fail · 닫힘은 과학적 판정 그대로 · 다른 문턱의 손 판정 (이력) 과 지금 규칙의 판정 (정본) 이
+DR72_judge_keys_include_cap      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 5차 리뷰 P2: 판정 규칙 지문은 판정이 읽는 카드 값만 (상한을 올려도 같고 · 녹음 문턱이 다르면 다르다) · 상한만 다른 카드로 낸 fail · 닫힘은 과학적 판정 그대로 · 다른 문턱의 손 판정 (이력) 과 지금 규칙의 판정 (정본) 이
+DR73_judge_keys_drop_melt        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 5차 리뷰 P2: 판정 규칙 지문은 판정이 읽는 카드 값만 (상한을 올려도 같고 · 녹음 문턱이 다르면 다르다) · 상한만 다른 카드로 낸 fail · 닫힘은 과학적 판정 그대로 · 다른 문턱의 손 판정 (이력) 과 지금 규칙의 판정 (정본) 이
+DR74_supersede_full_card         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR75_supersede_rules_ignored     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR64_stop_seed_from_name         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DQ P1-2 (Codex 재현): B14 를 A14 보다 먼저 돌려 B14 첫 정본 판정 교체가 실패 (이력 · 임시 판정만 · 정본 없음) → 독립 요약 invalid · STOP 을 확인하고 기본 순서로 다시 시작해도 (A14 를 띄우지 않는다
+DR76_any_now_frees               ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 5차 리뷰 P2: 판정 규칙 지문은 판정이 읽는 카드 값만 (상한을 올려도 같고 · 녹음 문턱이 다르면 다르다) · 상한만 다른 카드로 낸 fail · 닫힘은 과학적 판정 그대로 · 다른 문턱의 손 판정 (이력) 과 지금 규칙의 판정 (정본) 이
+DR78_retry_inv_problems_off      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 8차 리뷰 P3: 산출물 폴더 목록 문제 (같은 run_id 폴더 둘) 면 영수증이 맞는 끊긴 런도 재시도 자격 invalid · 문제 없으면 그대로 통과 (True · None · True)
+DR69_immediate_melt_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 3차 리뷰 P2 · 4차 P3: 첫 시드의 녹음 fail · 계 닫힘이 이력 줄에만 남은 폴더 (정본 없음) — 시작 점검이 장부에 fail 과 closes_system 을 적고 그 자리에서 닫는 STOP melt (발사 0 · 확인으로 못 넘김
+DR77_ack_unreadable_why_off      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 7차 리뷰 P3 (알려진 한계): 끊긴 첫 시드 폴더에 다른 규칙의 fail + 닫힘 · 지금 규칙 incomplete — 판독 불가로 정전 재시도 선언을 거부 (발사 0 · STOP 그대로 · 닫힘 안 옮김) · 거부 문구가 끊긴 런은 사람이 
+DR79_loop_inv_problems_dropped   ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 8차 리뷰 P3 (이중 방어): 러너가 보는 산출물 폴더 목록에 문제 (같은 run_id 폴더 둘) 가 있으면 확인의 재시도 선언 검사가 거부 (STOP 그대로 · 발사 0) · 확인을 지난 뒤면 시드 루프의 재시도 자격이 invalid (발사 
+DR80_ack_inv_problems_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 8차 리뷰 P3: 확인의 재시도 선언 검사 — 같은 run_id 폴더가 둘 (사본) 이면 맞는 정전 선언도 받지 않는다 ([])
+DR19_derived_write_direct        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR20_err_gate_off                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 P1 (소비자 t4): 판정 중 gate_check 예외는 False 가 아니라 모름 (None + 오류) 으로 적고, 그 판정 기록이 남은 도중 끊김 폴더는 보류 (재시도 아님) — 쓰는 쪽까지 ({'schedule_complete': N
+DR21_err_melt_off                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR22_err_seedgate_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR81_retry_unreadable_why_generic ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 7차 리뷰 P0: 옛 도구로 난 진짜 fail 이 장부에 안 적힌 채 폴더를 old12 로 옮기고 지금 도구로 다시 판정 (폴더 이름 때문에 invalid) 해도 판독 불가 — invalid 재시도 선언으로 확인해도 발사 0 · 재시도 행 없음 
+DR23_err_identity_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR24_err_lastframe_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR25_err_final_off               ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR26_final_judge_errors_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (성격 · 숨은 복구): 못 읽는 final.xyz · 녹음 판정의 프레임 세기 OSError 도 판정 도중 예외로 모은다 · 다른 md_init_raw.xyz 가 있던 채 seed_gate 가 읽기 전에 예외가 난 판정 (불일치를 못
+DR27_identity_read_err_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR56_persist_before_stop_off     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 3차 리뷰 P2 · 4차 P3: 첫 시드의 녹음 fail · 계 닫힘이 이력 줄에만 남은 폴더 (정본 없음) — 시작 점검이 장부에 fail 과 closes_system 을 적고 그 자리에서 닫는 STOP melt (발사 0 · 확인으로 못 넘김
+DR28_melt_io_error_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (성격 · 숨은 복구): 못 읽는 final.xyz · 녹음 판정의 프레임 세기 OSError 도 판정 도중 예외로 모은다 · 다른 md_init_raw.xyz 가 있던 채 seed_gate 가 읽기 전에 예외가 난 판정 (불일치를 못
+DR29_unresolved_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P2-B · 2차: 현재 시드 폴더가 아닌 모든 폴더 (이름 꼴과 무관 — seed14.moved · old14 · seed15_moved · seed12-old) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일 · 모르는 상태 ('P
+DR30_unresolved_history_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P2-B · 2차: 현재 시드 폴더가 아닌 모든 폴더 (이름 꼴과 무관 — seed14.moved · old14 · seed15_moved · seed12-old) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일 · 모르는 상태 ('P
+DR31_unresolved_tmp_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-2: 정본 판정 없이 이력 (빈 파일 포함) · 판정 임시 파일 · 정본 자리의 디렉터리가 남은 폴더는 미해결 기록 (묶음 판정 invalid · stale) · 기록이 없는 폴더는 판정 안 함 (pending) · 손 판정은 앞 이력 줄
+DR32_unresolved_nonfile_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-2: 정본 판정 없이 이력 (빈 파일 포함) · 판정 임시 파일 · 정본 자리의 디렉터리가 남은 폴더는 미해결 기록 (묶음 판정 invalid · stale) · 기록이 없는 폴더는 판정 안 함 (pending) · 손 판정은 앞 이력 줄
+DR33_summary_unresolved_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-2: 정본 판정 없이 이력 (빈 파일 포함) · 판정 임시 파일 · 정본 자리의 디렉터리가 남은 폴더는 미해결 기록 (묶음 판정 invalid · stale) · 기록이 없는 폴더는 판정 안 함 (pending) · 손 판정은 앞 이력 줄
+DR35_hist_marker_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-2: 정본 판정 없이 이력 (빈 파일 포함) · 판정 임시 파일 · 정본 자리의 디렉터리가 남은 폴더는 미해결 기록 (묶음 판정 invalid · stale) · 기록이 없는 폴더는 판정 안 함 (pending) · 손 판정은 앞 이력 줄
+DR36_stop_vocab_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · 회신 DQ P2-1: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 · 모르는 코드 · terminal 없음 · 참거짓 아님 · 코드와 모순 (interrupted + true · melt + false) = 
+DR37_stop_term_consistency_off   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · 회신 DQ P2-1: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 · 모르는 코드 · terminal 없음 · 참거짓 아님 · 코드와 모순 (interrupted + true · melt + false) = 
+DR38_stop_term_type_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · 회신 DQ P2-1: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 · 모르는 코드 · terminal 없음 · 참거짓 아님 · 코드와 모순 (interrupted + true · melt + false) = 
+DR39_ack_terminal_code_ok        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · 회신 DQ P2-1: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 · 모르는 코드 · terminal 없음 · 참거짓 아님 · 코드와 모순 (interrupted + true · melt + false) = 
+DR40_ledger_stop_history_off     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · 회신 DQ P2-1: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 · 모르는 코드 · terminal 없음 · 참거짓 아님 · 코드와 모순 (interrupted + true · melt + false) = 
+DR41_runner_ack_shared_off       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P2-5 · 6 · 7: 잘린 STOP 은 덮어쓰지 않고 거부 (원본 그대로) · stop_id 없는 STOP 을 조용히 확인하지 않는다 · STOP 안에 끼운 declaration 은 확인 기록으로 옮기지 않는다 (10 · True · 2
+DR34_runner_start_check_off      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 3차 리뷰 P2 · 4차 P3: 첫 시드의 녹음 fail · 계 닫힘이 이력 줄에만 남은 폴더 (정본 없음) — 시작 점검이 장부에 fail 과 closes_system 을 적고 그 자리에서 닫는 STOP melt (발사 0 · 확인으로 못 넘김
+끝: 빨강 447 / 448
