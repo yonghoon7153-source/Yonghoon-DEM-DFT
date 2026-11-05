@@ -3514,14 +3514,24 @@ def _selftest():
     rr_k5 = clone(rr_d); _crash_state(rr_k5, 12, status="invalid", provenance=_prov_changed(rr_k5, "A", 12))
     real.stage1_verdict(rr_k5 / "A/seed12", values=vals_t, log=lambda *m: None, reason="selftest — 사람의 다시 판정")
     rc_k5, L_k5, _ = go(wt, rr=rr_k5)
+    rr_k6 = clone(rr_d)                                                    # 5차 P2 — 판정 파일을 지우고 다시 판정해도 이력의 첫 판정 (fail) 이 남는다
+    _led_row(rr_k6, "A", 12, verdict=None, verdict_provenance=None)
+    rd_k6 = rr_k6 / "A/seed12"
+    real._append_history_first(rd_k6, {"status": "fail", "provenance": J(rd_k6 / "stage1_verdict.json")["provenance"]}, "selftest — 첫 판정 fail")
+    (rd_k6 / "stage1_verdict.json").unlink()
+    real.stage1_verdict(rd_k6, values=vals_t, log=lambda *m: None, reason="selftest — 판정 파일을 지운 뒤 다시 판정")
+    s_k6 = summ(clone(rr_k6))["track"]
+    rc_k6, L_k6, _ = go(wt, rr=rr_k6)
     row_k1 = [x_ for x_ in J(rr_k1 / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
     row_k3 = [x_ for x_ in J(rr_k3 / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
     chk(rc_k1 == RC["invalid"] and not L_k1 and "A12 재판정" in J(rr_k1 / "STOP.json").get("reason", "")[:12] and row_k1.get("verdict") is None
         and len(row_k1.get("verdict_observed_conflict") or []) == 1 and rc_k2 == RC["invalid"] and not L_k2
         and rc_k3 == RC["pass"] and not L_k3 and row_k3.get("verdict") == "pass"
-        and rc_k4 == RC["invalid"] and not L_k4 and rc_k5 == RC["invalid"] and not L_k5,
+        and rc_k4 == RC["invalid"] and not L_k4 and rc_k5 == RC["invalid"] and not L_k5
+        and s_k6 == "invalid" and rc_k6 == RC["invalid"] and not L_k6,
         f"⛔음성 DQ 전 3차 리뷰 P1: 장부 판정이 빈 끊긴 상태에서 폴더의 앞 판정 fail → 지금 pass · 앞 invalid → 원자료가 바뀐 뒤 pass 면 러너가 보류 (발사 0) · "
-        f"같은 원자료면 적고 이어 간다 · (4차) 끊긴 뒤 사람이 한 번 더 다시 판정해도 앞 판정이 증거로 남는다 ({rc_k1} · {rc_k2} · {rc_k3} · {rc_k4} · {rc_k5} · "
+        f"같은 원자료면 적고 이어 간다 · (4차) 끊긴 뒤 사람이 한 번 더 다시 판정해도 · (5차) 판정 파일을 지우고 다시 판정해도 앞 판정이 증거로 남는다 "
+        f"(요약 · 러너) ({rc_k1} · {rc_k2} · {rc_k3} · {rc_k4} · {rc_k5} · {s_k6} · {rc_k6} · "
         f"{row_k1.get('verdict_observed_conflict')})")
     def _crash_rejudged(c_, sd_, **vf_kv):                   # 같은 상태를 러너 없이 — 사람이 --stage1_verdict 로 다시 판정한 뒤 요약
         _crash_state(c_, sd_, **vf_kv)

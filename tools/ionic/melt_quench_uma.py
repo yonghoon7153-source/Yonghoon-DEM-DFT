@@ -1041,6 +1041,18 @@ def _append_history(run, prev, res, reason):
     return rec
 
 
+def _append_history_first(run, res, reason):
+    """⭐ DQ 전 5차 리뷰 P2 — 앞 판정 파일이 없을 때 쓰는 판정도 이력에 한 줄 (first) — 이력이 판정 쓰기 전부를 적는 덧붙이기 기록이 되어, 판정 파일이
+    지워져도 첫 판정이 기록 사슬 (folder_verdict_chain) 에 남는다. 앞 판정이 없으니 prev 는 없다 (_verdict_records 가 first 줄로 따로 읽는다)."""
+    rec = {"at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "reason": reason, "first": True,
+           "new_status": res.get("status"), "new_provenance": res.get("provenance") or {}}
+    with open(pathlib.Path(run) / VERDICT_HISTORY, "a", encoding="utf-8") as fh:
+        fh.write(json.dumps(rec, ensure_ascii=False, default=str) + "\n")
+        _fsync_handle(fh)
+    _fsync_dir(pathlib.Path(run))
+    return rec
+
+
 def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print, reason="수동 (--stage1_verdict)"):
     """li2s-2 1 단계 시드 판정을 **원자료에서 새로 계산해서** 낸다 (gate_check · melt_window_check · seed_gate · 최종 구조 ·
     traj 프레임 수 · thermo 열 · 실행 식별) → stage1_verdict.json. 판정에는 원자료 지문 · 카드 값 지문 · 도구 지문을 같이 적는다
@@ -1120,6 +1132,8 @@ def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print, reason="
                     "raw_text_head": raw_.decode("utf-8", errors="replace")[:400]}
         h = _append_history(run, prev, res, reason)
         res["history"] = {"file": VERDICT_HISTORY, "prev_status": h["prev_status"], "changed": h["changed"]}
+    else:
+        _append_history_first(run, res, reason)              # ⭐ DQ 전 5차 리뷰 P2 — 첫 판정도 이력에 (판정 파일이 지워져도 사슬에 남는다)
     tmp = vf.with_name(vf.name + ".tmp")
     with open(tmp, "w", encoding="utf-8") as fh:
         fh.write(json.dumps(res, ensure_ascii=False, indent=1, default=str))
@@ -1512,6 +1526,11 @@ def _verdict_records(folder):
                 return [], f"판정 이력 {k} 번째 줄을 못 읽는다 ({type(e).__name__}: {str(e)[:60]})"
             if not isinstance(h, dict):
                 return [], f"판정 이력 {k} 번째 줄이 객체가 아니다"
+            if h.get("first") is True:                       # ⭐ DQ 전 5차 리뷰 P2 — 첫 판정 줄 (앞 판정 없음 · prev 가 있으면 해석할 수 없다)
+                if "prev" in h or h.get("new_status") not in LI2S2_STATUSES:
+                    return [], f"판정 이력 {k} 번째 줄 (첫 판정) 의 꼴이 아니다 (prev 가 있거나 상태 {h.get('new_status')!r} 를 모른다)"
+                recs.append((f"판정 이력 {k} 의 첫 판정", {"status": h.get("new_status"), "provenance": h.get("new_provenance")}, True))
+                continue
             pv_ = h.get("prev")
             if not isinstance(pv_, dict):                    # ⭐ DQ 전 리뷰 P2-C — prev 없음 · null · 객체 아님 = 해석할 수 없는 기록 (_run_kind 와 같은 판독)
                 return [], f"판정 이력 {k} 번째 줄의 prev 가 객체가 아니다 ({type(pv_).__name__}) — 해석할 수 없는 기록"
@@ -4550,12 +4569,22 @@ def _selftest():
         d_pm = _vf2("pm", json.dumps({"status": "pass", "provenance": PVk}))         # 지금 판정 pass · 이력의 이전 판정 fail
         _append_history(pathlib.Path(d_pm), {"status": "fail", "provenance": PVk}, {"status": "pass", "provenance": PVk}, "selftest")
         fv_prov_mix = run_kind_detail({}, d_pm)
+        d_fr = _vf2("fr", None)                                                     # 앞 판정 파일 없음 → 첫 판정 줄
+        r_fr = stage1_verdict(d_fr, values=VAL, log=lambda *a: None, reason="selftest 첫 판정")
+        h_fr = [loads_strict(x_) for x_ in (pathlib.Path(d_fr) / VERDICT_HISTORY).read_text(encoding="utf-8").split("\n") if x_.strip()]
+        (pathlib.Path(d_fr) / "stage1_verdict.json").unlink()                          # 판정 파일을 지워도
+        ch_fr = folder_verdict_chain(d_fr)
+        d_ff = _vf2("ff", None)                                                     # 판정 파일은 지워졌고 이력에 첫 판정 fail 만 남은 폴더
+        _append_history_first(pathlib.Path(d_ff), {"status": "fail", "provenance": PVk}, "selftest — 지워진 첫 판정")
+        cf_fr = ledger_verdict_conflict({}, "pass", folder_provenance=PVk, folder_prior=folder_verdict_chain(d_ff))
         d_tm = _vf2("tm", '{"status": "pass"}')
         (pathlib.Path(d_tm) / "stage1_verdict.json.tmp").write_text('{"status": "fail"}', encoding="utf-8")
         ch_tm, ch_none = folder_verdict_chain(d_tm), folder_verdict_chain(str(pathlib.Path(td_) / "nope"))
         chk(fv_prov[1].get("provenance") == PVreal and fv_prov[1].get("prior") == [{"status": "pass", "provenance": PVreal}]
             and folder_verdict_chain(d_pm) == [{"status": "pass", "provenance": PVk}, {"status": "fail", "provenance": PVk}, {"status": "pass", "provenance": PVk}]
             and len(ch_tm) == 1 and ch_tm[0].get("status") is None and ch_none == []
+            and len(h_fr) == 1 and h_fr[0].get("first") is True and "prev" not in h_fr[0] and ch_fr == [{"status": r_fr["status"], "provenance": r_fr["provenance"]}]
+            and cf_fr is not None
             and fv_prov_noval[1].get("provenance") is None
             and fv_prov_fake[1].get("provenance") is None and fv_prov_mix[1].get("status") == "fail" and fv_prov_mix[1].get("provenance") is None,
             "⛔음성 DQ 전 2차 리뷰 N3: 폴더 판정 관측에 지금 판정의 지문이 실린다 (재시도 · 확인 경로도 ①-4 와 같은 대체 규칙) · 관측 상태 (이력의 fail) 가 "

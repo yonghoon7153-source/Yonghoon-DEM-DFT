@@ -189,6 +189,10 @@ NEW = [
    "        if False and (isinstance(pv_cur, dict) and values is not None and pv_cur.get(\"files_sha256\") == run_provenance(folder)", "both"),
  F("DQ79_runkind_prior_off", "                              \"provenance\": pv_cur, \"prior\": folder_verdict_chain(folder)}",
    "                              \"provenance\": pv_cur, \"prior\": None}", "both"),
+ # ── DQ 전 5차 독립 리뷰 (2026-11-05) 고침 자리 — 첫 판정도 이력에
+ F("DQ82_first_line_off", "    else:\n        _append_history_first(run, res, reason)", "    else:\n        pass", "both"),
+ F("DQ83_first_read_off", "            if h.get(\"first\") is True:                       # ⭐ DQ 전 5차 리뷰 P2", "            if False:", "both"),
+ F("DQ84_first_shape_off", "                if \"prev\" in h or h.get(\"new_status\") not in LI2S2_STATUSES:", "                if False:", "both"),
  F("DQ17_seed_gate_plan_strict_off", "    plan = loads_strict((run / \"plan.json\").read_text(encoding=\"utf-8\")) if (run / \"plan.json\").exists() else {}",
    "    plan = json.loads((run / \"plan.json\").read_text(encoding=\"utf-8\")) if (run / \"plan.json\").exists() else {}"),
 ]
