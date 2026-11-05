@@ -1,0 +1,10 @@
+{
+  "kind": "REVIEW_BRANCH_HEAD_RECHECK",
+  "branch": "claude/14-gate-code-review-9qkx05",
+  "pin": "9b440a3deeda0f9160e10e546c5ea3499ccbbee6",
+  "observed_head": "9b440a3deeda0f9160e10e546c5ea3499ccbbee6",
+  "matches_pin": true,
+  "source_url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits?sha=claude%2F14-gate-code-review-9qkx05&per_page=1",
+  "boundary": "Read-only recheck before review report and packaging; not a promise about future branch state",
+  "intake_note": "Two prior reads using an encoded branch path were rejected INVALID_ARGUMENT; a local parser expected absent content on the first. Corrected this reviewer-only read via the supported commits collection. No target execution or source mutation."
+}

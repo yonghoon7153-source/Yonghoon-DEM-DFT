@@ -1,0 +1,80 @@
+REIL C4-E · E1-1–3 재개 실행 결과 검토
+2026-11-05 · 독립적인 파일/소스/JSON 대조 · 추가 실행 없음
+
+판정: E1_2_E1_3_RESULTS_ACCEPTED_C4A_GATE_CONDITIONS_MET_NO_EXECUTION_APPROVAL
+새 차단 지적: 0
+
+1. 세 질문에 대한 답
+
+(1) 제출 기록은 E1-2 fetch와 E1-3 run의 통과를 고정 요청서·판정 소스의 정의 안에서 뒷받침합니다. 판정 결과 문구뿐 아니라 입력 원파일, 66개 반환 행, 시작/끝 식별, 종료·잔류·감시·예산 및 실제 커밋 집합을 대조했습니다. 원격 실행의 모든 명령·수동 판단을 독립 관측했다는 의미는 아닙니다.
+(2) 폴더 이름표 20261106과 실제 실행일 2026-11-05 UTC는 공개된 §120 사용자 변경에 따라 구분됩니다. 이름표로 시각을 하루 이동시키지 않았고 실제 기산점·승인절·경로·해시 연결에 불일치가 없습니다. 향후 인용에서도 이 구분과 기존 이름표 재사용 금지를 유지하면 됩니다.
+(3) 이번 결과 수용을 위한 추가 수정·재시험은 요구하지 않습니다. 다음은 C4-A 문 개방 여부에 대한 별도 사용자 승인입니다. 승인 요청에는 수치 경고가 있었음과 COMPLETE의 한정 의미를 유지해야 합니다. C4-A 실행 범위 자체를 이 결과 검토에서 승인하지 않습니다.
+
+2. 검토 대상과 원본
+
+저장소: yonghoon7153-source/Yonghoon-DEM-DFT
+브랜치: claude/14-gate-code-review-9qkx05
+결과 pin: 9b440a3deeda0f9160e10e546c5ea3499ccbbee6
+이전 재개 v2 수용 pin: 782bfe5fdc0de1bbc4330c50d6f8fcffbe94b0a5
+원 첨부: REIL_C4E_E1_1_3_RESUME_RESULT_SEND_20261105.md
+2,452 bytes / SHA-256 d36127c18d91d1f1f8323ba5c7fa94aa6c39522aa197af95d0cadd846a0fea8a
+
+원 첨부는 결과 pin의 파일과 원바이트가 같습니다. 현재 pin에서 61개(새 증거 59개와 문서 2개)를 원바이트로 받았습니다. 이전 수용 검토의 42개 고정 자료는 전체 비교 변경집합에 없음을 확인하고, 이전 수신본의 크기·SHA-256·Git blob을 대조해 보존 사본으로 연결했습니다. 합계 103개이며 중복 집계를 새 원본 수로 세지 않습니다. SOURCE_IDENTITIES.json에 두 취득 경로를 구분했습니다.
+
+비교는 이전 pin을 공통 조상으로 하는 10커밋·134변경 파일의 완전 집합입니다. 실행 고정 소스의 변경은 없습니다. 결과 작성 직전 브랜치 HEAD도 같은 pin입니다. 이는 이후 브랜치 변화까지 보장하지 않습니다.
+
+3. 승인 경계와 실제 날짜
+
+source/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md:3378–3387은 사용자 ‘승인’ 및 ‘그냥 오늘 시작해’, 오늘 수행을 택한 해석, 기존 R3와 §5-5 대체를 보존합니다. 원 채팅 export를 독립 검증한 것은 아니며, 원장에 공개된 변경과 결과 기록의 일관성을 수용한 것입니다.
+
+00_overall.json은 §120, T_a=1793863173 (2026-11-05 07:19:33 UTC), T_end=1793884773, R=1800을 보존합니다. fetch/run outer_start, meta, judge, HEADER의 §120과 overall SHA가 일치합니다. HEADER에 남은 구 승인요청 파일명은 고정 launcher 상수이며, 재개 v2에서 미리 공개한 구조입니다.
+
+고정 launcher/outer/judge/end_writer는 폴더의 이름 형식을 검사하며 실제 달력 날짜와 같아야 한다는 검사는 없습니다. 이 소스 사실이 사용자 변경을 대신 승인하는 것은 아닙니다. 수용 근거는 공개된 사용자 선택과 실제 시각의 일관성입니다.
+
+03_read_path.json은 d0 06:32:21Z, d2 06:33:03Z, public_served, clone_command_executed=false를 기록합니다. 모두 T_a보다 앞입니다. 새 폴더에 03_identity.*가 없고 06_end의 identity가 null인 것은 c 재실행을 제외하고 기존 §116 E1-1을 인용한 재개 범위와 맞습니다. 이전 20261105 증거 22개도 이전 수신본과 동일합니다.
+
+4. 시작·단계 판정·외부 감시
+
+00_start.txt의 20개 SHA 행은 수신한 해당 파일의 실제 바이트와 일치합니다. 탐침 보존 자료에서는 반환 후 4초의 S 상태, done=t0+150초, 실패 표지 부재, 빈 stdout/stderr가 확인됩니다. 탐침의 최종 /proc 부재와 원 호출 반환은 §121의 수동 관측 기록으로 구분합니다.
+
+fetch 판정 43항목/실패 0과 입력 12개, run 판정 44항목/실패 0과 입력 13개의 크기·SHA가 원파일과 맞습니다. overall→outer_start→outer_end→watch의 연결, launcher/outer/judge 식별도 일치합니다. 각 단계는 watch begin 1개·slice 0개·published·내부 rc0이고 실패/임시/kill/frozen 자료가 없습니다. outer_stderr와 wrapper_output은 0 B입니다.
+
+meta는 child started, rc0, timeout=false, group empty, 오류 없음을 보존합니다. leftover sid가 해당 wrapper와 결속되고 alive=0, errors=[], sid_error=null입니다. 06_end의 path·bytes·SHA 38행도 수신본과 일치합니다.
+
+단, 59개 증거 파일에는 각 감시 도구 반환을 별도로 저장한 원문이 없습니다. §121:3410–3414의 ‘감시의 도구 반환 0’은 저자가 남긴 수동 확인입니다. watch 내부 rc0을 원도구 반환의 독립 확인으로 바꾸지 않았습니다. 수동 관문·비밀 검사·첫 시도 통과 및 명령 펼침 도구의 정확 실행 역시 원장 기록과 구분합니다. 현재 자료에 이를 뒤집는 실패 기록은 없으며, 새 원도구 증거 의무를 소급해 부과하지 않습니다.
+
+5. E1-2 fetch
+
+04_fetch.stdout.log의 고정 원천 commit은 1188c371e5836df4a7e5f5acf336a34ffd4027e6입니다. LFP_Data.xlsx는 10,841,377 B / fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1, util_LFP.py는 33,754 B / 3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76으로 expected와 맞습니다. 이 둘의 식별은 run IDENTITY 시작/끝, HEADER의 expected·source와 같습니다.
+
+이는 제출된 취득·소비 기록의 결속 확인입니다. 검토자가 원격 XLSX나 util을 새로 받아 실행·계산한 것은 아닙니다. 과거의 자료 내용 또는 C6 전체 기능시험을 다시 인증하지 않습니다.
+
+6. E1-3 run과 COMPLETE의 의미
+
+ROWS는 계획 ID 0–65 정확히 66개이며, 6사례×11행의 배정·worker·목적함수 선택, 필수 40필드, COMPLETED/returned와 error=null이 일치합니다. HEADER의 모델/halfcell/추출 행과도 연결됩니다. AGGREGATE는 returned 66, error/not_started/interrupted/other 0, global_stop=null입니다.
+
+run 출력은 정확히 8파일이고 합계 993,069 B입니다. 각 원파일 크기·SHA가 stdout 마지막 JSON의 final_record와 일치합니다. IDENTITY 필수 10행은 시작/끝/expected가 같고 changed=[]입니다. 동봉된 고정 모듈 5개는 실제 원바이트도 일치합니다.
+
+작업자 4개는 종료 기록·rc0, drain_ok=true, owned_alive_after=0입니다. 수신 RESOURCES의 RSS 753표본은 최대 925,716,480 B·최대 간격 약 1.00844초, disk 127표본은 최대 간격 약 5.99940초·최저 여유 25,933,361,152 B로 기록된 한도 안입니다. 원장의 launcher 자식 최대 RSS 215,564 KiB와는 관측 대상·단위가 다른 값이므로 합치지 않습니다. RULE 최종 66표본의 wall/n_eval 위쪽 중앙값 0.0016073403750909055는 반환 행 계산과 맞고 stop은 null입니다. 가장 긴 반환 호출은 약 165.0477초로 1,800초 cap 안이며 최종 기록 snapshot은 682.6222807900001초입니다.
+
+수치 경고는 남아 있습니다. ROWS의 66행 모두 warnings_count가 있고 3종 RuntimeWarning 계수 합계가 21,896,160입니다. 이는 66개 추가 실패나 독립 경고 사건 수가 아니라 실행 코드가 집계한 경고 발생 횟수입니다. 탐색 중 영역 밖 평가 1,169,477회, G 위반 평가 48,457회도 기록되어 있습니다. 05_run.stderr.log는 20,339 B이며 divide-by-zero/invalid-value 경고를 보존합니다. 빈 파일 조건은 outer_stderr/wrapper_output에 적용되므로 이 사실 자체가 해당 조건 위반은 아닙니다.
+
+최종 반환 X/F/G 2,747개의 배열 형태·유한성, 최종 G/box 위반 0은 기록과 맞습니다. 그러나 success_reported는 true 11행/null 55행이고 success_is_evidence는 전부 false입니다. 고정 reil_c4e_run.py:345–389의 pre_verdict/final_verdict는 무경고·탐색 중 위반 0·과학적 fitting 성공을 COMPLETE 조건으로 삼지 않습니다. 따라서 오류 0을 무경고나 수렴 보장으로 쓰면 안 됩니다. 경고가 과학적 해석에 주는 영향은 이번 실행·기록 수용과 별개입니다.
+
+고정 정의 안에서 실행 유효성, final.E3a=COMPLETE, final.c4a_gate=true를 수용합니다. 승인요청 v3:25–30,416–417과 상태 문서:3419–3427의 별도 승인 경계를 그대로 유지합니다.
+
+7. 커밋 집합과 시간
+
+a→b→d→e→f→g→r의 7커밋은 단일 부모 사슬이며 결과 r이 검토 pin입니다. a는 원장 §120·보존 규칙 2파일, b는 14파일, d는 1파일, e는 17파일, f는 25파일, g는 1파일, r은 반환 기록·원장·발송문 3파일입니다. 현재 수신 원바이트와 커밋 blob을 대조했습니다. a 원장과 r 덧붙임도 따로 대조해 승인 기록이 결과 기록보다 앞선 커밋에 있음을 확인했습니다. 자세한 집합은 PROCEDURE_COMMIT_CHECK.json에 있습니다. 커밋 결과의 집합·blob 확인을 당시 모든 관문 명령의 독립 실행 관측으로 확대하지 않습니다.
+
+a의 .gitattributes는 전체 원바이트 수신 범위에 없으므로 patch의 추가 2행·삭제 0과 해당 이름표 보존 규칙만 확인했습니다. b–r의 원바이트 대조는 61개이며 a 원장 1개는 후속 추가 행을 제거한 재구성 blob 대조입니다.
+
+f 시작은 outer wrapper의 실제 epoch 기준 T_a+371.9289556초로 7,200초 시작 한도 이내입니다. fetch/run 관측은 각각 단계 기한과 상위 T_end−R 이내입니다. 07_g3_return_1.txt의 attempt=1, push_rc=0, return_epoch=1793864324에서 계산한 a→g3는 1,151초로 21,600초 이내입니다. 원장에 공개한 r 커밋 및 이후 push는 이 실행 예산 밖입니다. 원시 push 도구 반환 전체나 원격 총 시간의 독립 감사라고 부르지 않습니다.
+
+8. 이번 검토의 수행 범위
+
+받은 프로그램·판정기·탐침의 실행/import, target identity/fetch/run, 재시험, COMSOL, 저장소 변경·커밋·push, 외부 발송은 0입니다. 검토자가 작성한 자료 처리로 JSON/텍스트/해시/ZIP 및 기록 산술을 비교했습니다. 원 첨부 1개와 기존 검토 기록 6개는 전후 식별을 남깁니다. 103개 수신 사본은 포장 직전 다시 식별하며 원격 전체 원본 보존 감사라고 하지 않습니다.
+
+자료 읽기 도구에 관해: HEAD 재확인 시 인코딩한 branch 경로 2회가 INVALID_ARGUMENT로 거절됐고 첫 응답 처리에서 content가 없다는 로컬 파싱 오류가 있었습니다. 지원되는 commits 조회로 바로잡아 같은 pin을 확인했습니다. 이는 검토자 자료 취득 오류이며 대상 실행 실패·재시험이 아닙니다. 받은 실행 절차의 첫 오류 중지 규칙을 새 검토 도구 전체로 확장하지 않습니다.
+
+이 검토에는 새 수치 작업 예산이 부여되지 않았습니다. 기록된 원 실행 예산만 해당 경계 안에서 대조하며 검토 전체 시간·과거 예산의 재측정을 주장하지 않습니다. 검토 산출물 전달로 마치며 C4-A 문을 열거나 실행을 시작하지 않습니다.

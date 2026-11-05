@@ -1,0 +1,41 @@
+{
+  "count": 7,
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_1_3_RESUME_RESULT_SEND_20261105.md",
+      "bytes": 2452,
+      "sha256": "d36127c18d91d1f1f8323ba5c7fa94aa6c39522aa197af95d0cadd846a0fea8a"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_v2_review_20261105\\REVIEW_DECISION.json",
+      "bytes": 3495,
+      "sha256": "78dac0ab93526b1c3e7f93ba66ae66e820c82dc5ec2c092af8256f45b806f624"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_v2_review_20261105\\REVIEW_KO.txt",
+      "bytes": 5850,
+      "sha256": "f1fe1aa6eba8ec775ca0d720295e7161a6de994073aa384da9ebf578fbeaaa48"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_v2_review_20261105\\CODEX_REPLY_KO.txt",
+      "bytes": 1684,
+      "sha256": "9942e3b2040a49ddc53658488367257a016466ca0694d102ab5813536f62e1f0"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_v2_review_20261105\\DELIVERY_RECEIPT.json",
+      "bytes": 2066,
+      "sha256": "33f5db11527c61a59f42f66cec650943d99381b882f764b4bce94b2ba41d4524"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_v2_review_20261105\\PACKAGE_TOOL_RETURN.json",
+      "bytes": 2150,
+      "sha256": "6c165669f326cc1b0f169862fdf7dabee960ad6794fa19cefaeb99c9152f585f"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_v2_review_20261105\\SOURCE_IDENTITIES.json",
+      "bytes": 35330,
+      "sha256": "40ca692a2b3279bbebd5245ca0e59f2dac8cc24b5c9d913c5ad197d563ef71b5"
+    }
+  ],
+  "scope": "One original result attachment and six prior local review records, captured during intake before packaging."
+}

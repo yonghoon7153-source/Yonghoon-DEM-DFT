@@ -1,0 +1,717 @@
+{
+  "kind": "REIL_RESUME_RESULT_STATIC_PROCEDURE_COMMIT_CHECK",
+  "method": "Read-only commit metadata, exact path sets, local git blob recomputation, append reconstruction; no received program/import/gate/test execution",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "pin": "9b440a3deeda0f9160e10e546c5ea3499ccbbee6",
+  "pin_is_r": true,
+  "commit_count": 7,
+  "rows": [
+    {
+      "step": "a",
+      "commit": "fc2c19dcdcdbf52fcadf53dae55c10c031f75960",
+      "parents": [
+        "1daf9951e4b1d4d5211815f23cd7b2f92bfdcda0"
+      ],
+      "parent_chain_match": true,
+      "committer_date": "2026-11-05T07:20:24Z",
+      "expected_count": 2,
+      "actual_count": 2,
+      "exact_path_set_match": true,
+      "files": [
+        {
+          "path": "bms-balancing/.gitattributes",
+          "git_blob": "7588f19c59750212b2b6b6dc98c8fff2fedbffd0",
+          "status": "modified",
+          "verification": "Separate ledger reconstruction or gitattributes patch"
+        },
+        {
+          "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+          "git_blob": "b876ee4e649366172ae7e20cf49bc27c42ee7ab8",
+          "status": "modified",
+          "verification": "Separate ledger reconstruction or gitattributes patch"
+        }
+      ]
+    },
+    {
+      "step": "b",
+      "commit": "089d6148353e19602045639e9411b8c9397fe901",
+      "parents": [
+        "fc2c19dcdcdbf52fcadf53dae55c10c031f75960"
+      ],
+      "parent_chain_match": true,
+      "committer_date": "2026-11-05T07:23:49Z",
+      "expected_count": 14,
+      "actual_count": 14,
+      "exact_path_set_match": true,
+      "files": [
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/00_end_writer.py",
+          "status": "added",
+          "bytes": 10368,
+          "commit_blob": "dff3049f0042cbae3b1e0be8c500f04e3d24a419",
+          "source_blob": "dff3049f0042cbae3b1e0be8c500f04e3d24a419",
+          "recomputed_blob": "dff3049f0042cbae3b1e0be8c500f04e3d24a419",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/00_identity_c4.py",
+          "status": "added",
+          "bytes": 1506,
+          "commit_blob": "d29186ee0914992c67a23e9915a68c2d81077f8b",
+          "source_blob": "d29186ee0914992c67a23e9915a68c2d81077f8b",
+          "recomputed_blob": "d29186ee0914992c67a23e9915a68c2d81077f8b",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/00_judge.py",
+          "status": "added",
+          "bytes": 18578,
+          "commit_blob": "9b8ef1888f45dcf6443fdb98fb3e17a80677f5a8",
+          "source_blob": "9b8ef1888f45dcf6443fdb98fb3e17a80677f5a8",
+          "recomputed_blob": "9b8ef1888f45dcf6443fdb98fb3e17a80677f5a8",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/00_outer.py",
+          "status": "added",
+          "bytes": 36733,
+          "commit_blob": "63ae7eae1c6f3de1c4ae35ca3d8979c5e66d1a00",
+          "source_blob": "63ae7eae1c6f3de1c4ae35ca3d8979c5e66d1a00",
+          "recomputed_blob": "63ae7eae1c6f3de1c4ae35ca3d8979c5e66d1a00",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/00_overall.json",
+          "status": "added",
+          "bytes": 101,
+          "commit_blob": "1107e3148a279189f2ae4f88af412d0f51acb7cf",
+          "source_blob": "1107e3148a279189f2ae4f88af412d0f51acb7cf",
+          "recomputed_blob": "1107e3148a279189f2ae4f88af412d0f51acb7cf",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/00_start.txt",
+          "status": "added",
+          "bytes": 3115,
+          "commit_blob": "3e98b3893dae7aba760828aea6c8ef30e619c5a8",
+          "source_blob": "3e98b3893dae7aba760828aea6c8ef30e619c5a8",
+          "recomputed_blob": "3e98b3893dae7aba760828aea6c8ef30e619c5a8",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/done.txt",
+          "status": "added",
+          "bytes": 11,
+          "commit_blob": "6f7ff8f6aec03f8c3ccb87808df467a84c7a4eaf",
+          "source_blob": "6f7ff8f6aec03f8c3ccb87808df467a84c7a4eaf",
+          "recomputed_blob": "6f7ff8f6aec03f8c3ccb87808df467a84c7a4eaf",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/err.txt",
+          "status": "added",
+          "bytes": 0,
+          "commit_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "source_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "recomputed_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/obs1.txt",
+          "status": "added",
+          "bytes": 27,
+          "commit_blob": "6aeb23688de4ef44236781ed8fbd0320c82728b4",
+          "source_blob": "6aeb23688de4ef44236781ed8fbd0320c82728b4",
+          "recomputed_blob": "6aeb23688de4ef44236781ed8fbd0320c82728b4",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/out.txt",
+          "status": "added",
+          "bytes": 0,
+          "commit_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "source_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "recomputed_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/pid.txt",
+          "status": "added",
+          "bytes": 4,
+          "commit_blob": "d9061d95de9d31740c4e77082c7b52d63b5622fb",
+          "source_blob": "d9061d95de9d31740c4e77082c7b52d63b5622fb",
+          "recomputed_blob": "d9061d95de9d31740c4e77082c7b52d63b5622fb",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/t0.txt",
+          "status": "added",
+          "bytes": 11,
+          "commit_blob": "44ea38a51e54003bc83f8b21a010a02206ee6e05",
+          "source_blob": "44ea38a51e54003bc83f8b21a010a02206ee6e05",
+          "recomputed_blob": "44ea38a51e54003bc83f8b21a010a02206ee6e05",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/t_obs2.txt",
+          "status": "added",
+          "bytes": 11,
+          "commit_blob": "6f7ff8f6aec03f8c3ccb87808df467a84c7a4eaf",
+          "source_blob": "6f7ff8f6aec03f8c3ccb87808df467a84c7a4eaf",
+          "recomputed_blob": "6f7ff8f6aec03f8c3ccb87808df467a84c7a4eaf",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/t_ret.txt",
+          "status": "added",
+          "bytes": 11,
+          "commit_blob": "44ea38a51e54003bc83f8b21a010a02206ee6e05",
+          "source_blob": "44ea38a51e54003bc83f8b21a010a02206ee6e05",
+          "recomputed_blob": "44ea38a51e54003bc83f8b21a010a02206ee6e05",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "step": "d",
+      "commit": "f363cec5150e455d3fb79a36910b4241744f3467",
+      "parents": [
+        "089d6148353e19602045639e9411b8c9397fe901"
+      ],
+      "parent_chain_match": true,
+      "committer_date": "2026-11-05T07:24:05Z",
+      "expected_count": 1,
+      "actual_count": 1,
+      "exact_path_set_match": true,
+      "files": [
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/03_read_path.json",
+          "status": "added",
+          "bytes": 676,
+          "commit_blob": "444dd47fa9f686de9df0045ecb95d9c10affe4d9",
+          "source_blob": "444dd47fa9f686de9df0045ecb95d9c10affe4d9",
+          "recomputed_blob": "444dd47fa9f686de9df0045ecb95d9c10affe4d9",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "step": "e",
+      "commit": "da2b1a981062445283e29324f9340909fdb89d29",
+      "parents": [
+        "f363cec5150e455d3fb79a36910b4241744f3467"
+      ],
+      "parent_chain_match": true,
+      "committer_date": "2026-11-05T07:25:38Z",
+      "expected_count": 17,
+      "actual_count": 17,
+      "exact_path_set_match": true,
+      "files": [
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.judge.json",
+          "status": "added",
+          "bytes": 7816,
+          "commit_blob": "45b8e5bc604c759e3dd02e6d7928ce7616aff68b",
+          "source_blob": "45b8e5bc604c759e3dd02e6d7928ce7616aff68b",
+          "recomputed_blob": "45b8e5bc604c759e3dd02e6d7928ce7616aff68b",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.launch_epoch.txt",
+          "status": "added",
+          "bytes": 11,
+          "commit_blob": "683406c6e4578c1eb7f9075f312ac7e19b54b487",
+          "source_blob": "683406c6e4578c1eb7f9075f312ac7e19b54b487",
+          "recomputed_blob": "683406c6e4578c1eb7f9075f312ac7e19b54b487",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.leftover_1.json",
+          "status": "added",
+          "bytes": 476,
+          "commit_blob": "33ee840243bdc8c1586b09e33b0a42feae3c258b",
+          "source_blob": "33ee840243bdc8c1586b09e33b0a42feae3c258b",
+          "recomputed_blob": "33ee840243bdc8c1586b09e33b0a42feae3c258b",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.meta.json",
+          "status": "added",
+          "bytes": 9567,
+          "commit_blob": "913619c69aaf9a3deb0129c2e676a54c9f1f0cbd",
+          "source_blob": "913619c69aaf9a3deb0129c2e676a54c9f1f0cbd",
+          "recomputed_blob": "913619c69aaf9a3deb0129c2e676a54c9f1f0cbd",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.outer_end.json",
+          "status": "added",
+          "bytes": 486,
+          "commit_blob": "5c15d97f9813201261f11c705ca2221409dc8d9d",
+          "source_blob": "5c15d97f9813201261f11c705ca2221409dc8d9d",
+          "recomputed_blob": "5c15d97f9813201261f11c705ca2221409dc8d9d",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.outer_rc.txt",
+          "status": "added",
+          "bytes": 2,
+          "commit_blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56",
+          "source_blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56",
+          "recomputed_blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.outer_start.json",
+          "status": "added",
+          "bytes": 1274,
+          "commit_blob": "0a8aa309754fc0169a81b56ba219f428d8b2a869",
+          "source_blob": "0a8aa309754fc0169a81b56ba219f428d8b2a869",
+          "recomputed_blob": "0a8aa309754fc0169a81b56ba219f428d8b2a869",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.outer_stderr.txt",
+          "status": "added",
+          "bytes": 0,
+          "commit_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "source_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "recomputed_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.outer_stdout.txt",
+          "status": "added",
+          "bytes": 96,
+          "commit_blob": "48289de4a445e416059bd99db599b5762d4c096e",
+          "source_blob": "48289de4a445e416059bd99db599b5762d4c096e",
+          "recomputed_blob": "48289de4a445e416059bd99db599b5762d4c096e",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.porcelain_end.txt",
+          "status": "added",
+          "bytes": 572,
+          "commit_blob": "641e4ebe1edb162a70b0807c2d6183c54a378277",
+          "source_blob": "641e4ebe1edb162a70b0807c2d6183c54a378277",
+          "recomputed_blob": "641e4ebe1edb162a70b0807c2d6183c54a378277",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.porcelain_start.txt",
+          "status": "added",
+          "bytes": 425,
+          "commit_blob": "c2070ff55a12f66763aaa11504cb944f951651ee",
+          "source_blob": "c2070ff55a12f66763aaa11504cb944f951651ee",
+          "recomputed_blob": "c2070ff55a12f66763aaa11504cb944f951651ee",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.precheck.json",
+          "status": "added",
+          "bytes": 7066,
+          "commit_blob": "e3eec78fb978c1f984b4787f49bb902194bef09f",
+          "source_blob": "e3eec78fb978c1f984b4787f49bb902194bef09f",
+          "recomputed_blob": "e3eec78fb978c1f984b4787f49bb902194bef09f",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.stderr.log",
+          "status": "added",
+          "bytes": 0,
+          "commit_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "source_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "recomputed_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.stdout.log",
+          "status": "added",
+          "bytes": 2907,
+          "commit_blob": "8b03fae83a2b879b136a27c956beb646866ea029",
+          "source_blob": "8b03fae83a2b879b136a27c956beb646866ea029",
+          "recomputed_blob": "8b03fae83a2b879b136a27c956beb646866ea029",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.watch.json",
+          "status": "added",
+          "bytes": 586,
+          "commit_blob": "a6ad16facd11d21988b394516ddfe64dbb296885",
+          "source_blob": "a6ad16facd11d21988b394516ddfe64dbb296885",
+          "recomputed_blob": "a6ad16facd11d21988b394516ddfe64dbb296885",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.watch_1.begin.json",
+          "status": "added",
+          "bytes": 233,
+          "commit_blob": "3cccabd5478212c8e8e9a3883307dc4ab3b3e2c7",
+          "source_blob": "3cccabd5478212c8e8e9a3883307dc4ab3b3e2c7",
+          "recomputed_blob": "3cccabd5478212c8e8e9a3883307dc4ab3b3e2c7",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/04_fetch.wrapper_output.txt",
+          "status": "added",
+          "bytes": 0,
+          "commit_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "source_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "recomputed_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "step": "f",
+      "commit": "ef73579edeb7e808f5a0e02e521bd6b99f0fcef7",
+      "parents": [
+        "da2b1a981062445283e29324f9340909fdb89d29"
+      ],
+      "parent_chain_match": true,
+      "committer_date": "2026-11-05T07:38:10Z",
+      "expected_count": 25,
+      "actual_count": 25,
+      "exact_path_set_match": true,
+      "files": [
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.judge.json",
+          "status": "added",
+          "bytes": 8183,
+          "commit_blob": "922ebce2a1916c5503757c05a21939a51cb9bd31",
+          "source_blob": "922ebce2a1916c5503757c05a21939a51cb9bd31",
+          "recomputed_blob": "922ebce2a1916c5503757c05a21939a51cb9bd31",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.launch_epoch.txt",
+          "status": "added",
+          "bytes": 11,
+          "commit_blob": "65de6f9b25a4afbc137ee563936ef2702ead1f56",
+          "source_blob": "65de6f9b25a4afbc137ee563936ef2702ead1f56",
+          "recomputed_blob": "65de6f9b25a4afbc137ee563936ef2702ead1f56",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.leftover_1.json",
+          "status": "added",
+          "bytes": 475,
+          "commit_blob": "fbd6495228ac41ef9e865a81292e078a87b148f1",
+          "source_blob": "fbd6495228ac41ef9e865a81292e078a87b148f1",
+          "recomputed_blob": "fbd6495228ac41ef9e865a81292e078a87b148f1",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.meta.json",
+          "status": "added",
+          "bytes": 8327,
+          "commit_blob": "26f4793df7b8c3b83577c99c94dffedb583ba0ee",
+          "source_blob": "26f4793df7b8c3b83577c99c94dffedb583ba0ee",
+          "recomputed_blob": "26f4793df7b8c3b83577c99c94dffedb583ba0ee",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.outer_end.json",
+          "status": "added",
+          "bytes": 483,
+          "commit_blob": "30c10d70302a25940a2b358374e2aa3f7f094d43",
+          "source_blob": "30c10d70302a25940a2b358374e2aa3f7f094d43",
+          "recomputed_blob": "30c10d70302a25940a2b358374e2aa3f7f094d43",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.outer_rc.txt",
+          "status": "added",
+          "bytes": 2,
+          "commit_blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56",
+          "source_blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56",
+          "recomputed_blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.outer_start.json",
+          "status": "added",
+          "bytes": 1272,
+          "commit_blob": "f67066fbeb79c4debc995d17cf3beb434b7a8582",
+          "source_blob": "f67066fbeb79c4debc995d17cf3beb434b7a8582",
+          "recomputed_blob": "f67066fbeb79c4debc995d17cf3beb434b7a8582",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.outer_stderr.txt",
+          "status": "added",
+          "bytes": 0,
+          "commit_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "source_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "recomputed_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.outer_stdout.txt",
+          "status": "added",
+          "bytes": 94,
+          "commit_blob": "bd510af20790b9b01f000be9ca6dca0c47aed8a8",
+          "source_blob": "bd510af20790b9b01f000be9ca6dca0c47aed8a8",
+          "recomputed_blob": "bd510af20790b9b01f000be9ca6dca0c47aed8a8",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.porcelain_end.txt",
+          "status": "added",
+          "bytes": 1055,
+          "commit_blob": "931924b3071f34a91b0d13c59289d4503d6ec709",
+          "source_blob": "931924b3071f34a91b0d13c59289d4503d6ec709",
+          "recomputed_blob": "931924b3071f34a91b0d13c59289d4503d6ec709",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.porcelain_start.txt",
+          "status": "added",
+          "bytes": 413,
+          "commit_blob": "307a665926cc7aeed16a96398394eed9e98b8693",
+          "source_blob": "307a665926cc7aeed16a96398394eed9e98b8693",
+          "recomputed_blob": "307a665926cc7aeed16a96398394eed9e98b8693",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.precheck.json",
+          "status": "added",
+          "bytes": 7085,
+          "commit_blob": "0d209a9cf227b39d27abedbce333eed7ac58fd3f",
+          "source_blob": "0d209a9cf227b39d27abedbce333eed7ac58fd3f",
+          "recomputed_blob": "0d209a9cf227b39d27abedbce333eed7ac58fd3f",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.stderr.log",
+          "status": "added",
+          "bytes": 20339,
+          "commit_blob": "3cced5367645647eb241ab6f4382bd95d8dbe043",
+          "source_blob": "3cced5367645647eb241ab6f4382bd95d8dbe043",
+          "recomputed_blob": "3cced5367645647eb241ab6f4382bd95d8dbe043",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.stdout.log",
+          "status": "added",
+          "bytes": 1973,
+          "commit_blob": "a2e479679bfc3458eaf9403551b7eb0a0395f531",
+          "source_blob": "a2e479679bfc3458eaf9403551b7eb0a0395f531",
+          "recomputed_blob": "a2e479679bfc3458eaf9403551b7eb0a0395f531",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.watch.json",
+          "status": "added",
+          "bytes": 583,
+          "commit_blob": "ac0e1fc5948c1860f7cf06b350d5ba8d75a409b4",
+          "source_blob": "ac0e1fc5948c1860f7cf06b350d5ba8d75a409b4",
+          "recomputed_blob": "ac0e1fc5948c1860f7cf06b350d5ba8d75a409b4",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.watch_1.begin.json",
+          "status": "added",
+          "bytes": 232,
+          "commit_blob": "fb9c565f3942f1d27c6b87970c0447231488489f",
+          "source_blob": "fb9c565f3942f1d27c6b87970c0447231488489f",
+          "recomputed_blob": "fb9c565f3942f1d27c6b87970c0447231488489f",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/05_run.wrapper_output.txt",
+          "status": "added",
+          "bytes": 0,
+          "commit_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "source_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "recomputed_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/run/AGGREGATE.json",
+          "status": "added",
+          "bytes": 291,
+          "commit_blob": "8ef5c9b5034e36a42f559491c7ba8763f6ea4cd3",
+          "source_blob": "8ef5c9b5034e36a42f559491c7ba8763f6ea4cd3",
+          "recomputed_blob": "8ef5c9b5034e36a42f559491c7ba8763f6ea4cd3",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/run/END_RECORD.json",
+          "status": "added",
+          "bytes": 639,
+          "commit_blob": "90d0a089dbd3cdf79ca4c477bed265d9a7886d4a",
+          "source_blob": "90d0a089dbd3cdf79ca4c477bed265d9a7886d4a",
+          "recomputed_blob": "90d0a089dbd3cdf79ca4c477bed265d9a7886d4a",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/run/HEADER.json",
+          "status": "added",
+          "bytes": 11965,
+          "commit_blob": "b8aa127b405653d7d6be39cea89cc829166318ab",
+          "source_blob": "b8aa127b405653d7d6be39cea89cc829166318ab",
+          "recomputed_blob": "b8aa127b405653d7d6be39cea89cc829166318ab",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/run/IDENTITY.json",
+          "status": "added",
+          "bytes": 6997,
+          "commit_blob": "5c2e01bc83b0fb6b102e49d5b6d549bb20420960",
+          "source_blob": "5c2e01bc83b0fb6b102e49d5b6d549bb20420960",
+          "recomputed_blob": "5c2e01bc83b0fb6b102e49d5b6d549bb20420960",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/run/OPERATION.json",
+          "status": "added",
+          "bytes": 615,
+          "commit_blob": "f222e3b1d0d84480603f49f84eccbfb579194bec",
+          "source_blob": "f222e3b1d0d84480603f49f84eccbfb579194bec",
+          "recomputed_blob": "f222e3b1d0d84480603f49f84eccbfb579194bec",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/run/RESOURCES.json",
+          "status": "added",
+          "bytes": 172480,
+          "commit_blob": "6858a0dd8ba9752534965863cdad560273a1ea03",
+          "source_blob": "6858a0dd8ba9752534965863cdad560273a1ea03",
+          "recomputed_blob": "6858a0dd8ba9752534965863cdad560273a1ea03",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/run/ROWS.json",
+          "status": "added",
+          "bytes": 791178,
+          "commit_blob": "7af60bbaed4394666a13c3de8a0cdc5cd46fd0e0",
+          "source_blob": "7af60bbaed4394666a13c3de8a0cdc5cd46fd0e0",
+          "recomputed_blob": "7af60bbaed4394666a13c3de8a0cdc5cd46fd0e0",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/run/RULE.json",
+          "status": "added",
+          "bytes": 8904,
+          "commit_blob": "589a9e4a4b3d8f619c0947eabef4e742cb50d2b0",
+          "source_blob": "589a9e4a4b3d8f619c0947eabef4e742cb50d2b0",
+          "recomputed_blob": "589a9e4a4b3d8f619c0947eabef4e742cb50d2b0",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "step": "g",
+      "commit": "7634ad2f5a8e1102746d9f1867f8e42deb56e75b",
+      "parents": [
+        "ef73579edeb7e808f5a0e02e521bd6b99f0fcef7"
+      ],
+      "parent_chain_match": true,
+      "committer_date": "2026-11-05T07:38:32Z",
+      "expected_count": 1,
+      "actual_count": 1,
+      "exact_path_set_match": true,
+      "files": [
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/06_end.json",
+          "status": "added",
+          "bytes": 17860,
+          "commit_blob": "afa984581b82b27049ce91f3465867053fc9cb5f",
+          "source_blob": "afa984581b82b27049ce91f3465867053fc9cb5f",
+          "recomputed_blob": "afa984581b82b27049ce91f3465867053fc9cb5f",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "step": "r",
+      "commit": "9b440a3deeda0f9160e10e546c5ea3499ccbbee6",
+      "parents": [
+        "7634ad2f5a8e1102746d9f1867f8e42deb56e75b"
+      ],
+      "parent_chain_match": true,
+      "committer_date": "2026-11-05T07:40:18Z",
+      "expected_count": 3,
+      "actual_count": 3,
+      "exact_path_set_match": true,
+      "files": [
+        {
+          "path": "bms-balancing/docs/REIL_C4E_E1_1_3_RESUME_RESULT_SEND_20261105.md",
+          "status": "added",
+          "bytes": 2452,
+          "commit_blob": "13fe25a7660758517f2f0823622bf17423ea7308",
+          "source_blob": "13fe25a7660758517f2f0823622bf17423ea7308",
+          "recomputed_blob": "13fe25a7660758517f2f0823622bf17423ea7308",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+          "status": "modified",
+          "bytes": 467978,
+          "commit_blob": "92fc6d3ab7f1a577359a2b6ee59258b1155a1db9",
+          "source_blob": "92fc6d3ab7f1a577359a2b6ee59258b1155a1db9",
+          "recomputed_blob": "92fc6d3ab7f1a577359a2b6ee59258b1155a1db9",
+          "matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/07_g3_return_1.txt",
+          "status": "added",
+          "bytes": 44,
+          "commit_blob": "2da29e740c7723776b65418e11f3fe5fe33d3fa1",
+          "source_blob": "2da29e740c7723776b65418e11f3fe5fe33d3fa1",
+          "recomputed_blob": "2da29e740c7723776b65418e11f3fe5fe33d3fa1",
+          "matches": true
+        }
+      ]
+    }
+  ],
+  "direct_raw_blob_matches_count": 61,
+  "approval_ledger": {
+    "a_git_blob": "b876ee4e649366172ae7e20cf49bc27c42ee7ab8",
+    "reconstructed_git_blob": "b876ee4e649366172ae7e20cf49bc27c42ee7ab8",
+    "current_ledger_minus_r_append_matches_a": true,
+    "r_additions_exact_current_tail": true,
+    "a_additions_exact_reconstructed_tail": true,
+    "section120_precedes_results": true,
+    "section121_added_only_at_r": true
+  },
+  "gitattributes": {
+    "scope": "a patch only; full raw file not in SOURCE_IDENTITIES",
+    "additions": 2,
+    "deletions": 0,
+    "raw_byte_rule_present": true,
+    "actual_date_label_distinction_disclosed": true
+  },
+  "boundary_order": {
+    "a_after_Ta": true,
+    "a_before_probe": true,
+    "b_before_d": true,
+    "d_before_fetch": true,
+    "e_before_run": true,
+    "f_before_end_record": true,
+    "g_after_end_record": true,
+    "g_before_g3_return": true,
+    "r_after_g3_return": true
+  },
+  "budget": {
+    "T_a": 1793863173,
+    "T_end": 1793884773,
+    "g3_return_epoch": 1793864324,
+    "a_to_g3_seconds": 1151,
+    "g3_push_rc": 0,
+    "later_r_excluded": true
+  },
+  "errors": [],
+  "limitations": [
+    "Repository commit timestamps are not independent observation of original shell/tool returns.",
+    "Actual x1-x6 gate invocation, secret-scan execution, manual MATCH, approval-card interaction and push response are not independently certified by path/blob matching.",
+    "a gitattributes reviewed by exact metadata and patch only; a ledger independently reconstructed and blob matched.",
+    "No C4-A/B or COMSOL authorization created."
+  ],
+  "references": [
+    "resume v2:39-45,64,70-75",
+    "approval v3:300-309,322-339,349-353",
+    "ledger:3376-3400,3402-3427"
+  ]
+}

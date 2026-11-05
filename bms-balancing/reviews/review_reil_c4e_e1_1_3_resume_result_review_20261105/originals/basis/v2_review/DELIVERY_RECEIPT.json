@@ -1,0 +1,45 @@
+{
+  "kind": "REIL_E113_RESUME_V2_REVIEW_DELIVERY_RECEIPT",
+  "recipient": null,
+  "archive": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_v2_review_20261105\\REIL_C4E_E1_1_3_RESUME_V2_REVIEW_20261105.zip",
+    "bytes": 997883,
+    "sha256": "1cc4326c41b4496ce14dbedc10abd97c6fac319cbcd30ea9186e724686870c91"
+  },
+  "manifest": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_v2_review_20261105\\PACKAGE_MANIFEST.json",
+    "bytes": 13454,
+    "sha256": "8e17ea1b7f398d1ce9f4040da4bf15a8ee93888cd60e6d36c94f74ba8f30e4a0"
+  },
+  "post_package": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_v2_review_20261105\\SELECTED_LOCAL_SOURCES_POST_PACKAGE.json",
+    "bytes": 3457,
+    "sha256": "a6841e8e7535ac5e18ccc3aa9121879d2a71f3929f92935fff0c6ed2e21c0ccb"
+  },
+  "payload_count": 70,
+  "entries": 71,
+  "verification": "Exact member set, safe case-unique relative paths, non-link metadata, decompressed size/SHA256 and independently recomputed CRC32 matched.",
+  "pin": "782bfe5fdc0de1bbc4330c50d6f8fcffbe94b0a5",
+  "decision": "RESUME_REQUEST_V2_DOCUMENT_REVIEW_ACCEPTED_NOT_EXECUTION_AUTHORIZED",
+  "findings": 0,
+  "closed": [
+    "E113_RESUME_N1",
+    "E113_RESUME_N2"
+  ],
+  "resume_request_accepted": true,
+  "actual_execution_authorized_by_review": false,
+  "user_resume_approval_created": false,
+  "source_files": 43,
+  "current_raw_fetches": 3,
+  "reused_prior_raw_files_unchanged_at_pin": 40,
+  "selected_local_sources_preserved": 11,
+  "received_program_execution": 0,
+  "tests": 0,
+  "probe_execution": 0,
+  "identity_fetch_run": 0,
+  "COMSOL": 0,
+  "git_mutations": 0,
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null,
+  "boundary": "After ZIP verification and local originals rehash; before this receipt write/readback and actual tool return."
+}

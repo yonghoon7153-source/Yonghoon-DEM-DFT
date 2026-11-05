@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_REIL_E113_RESUME_V2_REVIEW_PACKAGE_TOOL_RETURN",
+  "provenance": "Exact exec_command result received during this review and serialized afterward. Outside the completed ZIP; not this file's own future write return, a whole-review time measurement, or independent remote execution audit.",
+  "tool_result": {
+    "chunk_id": "dd3892",
+    "wall_time_seconds": 0.6006575,
+    "exit_code": 0,
+    "original_token_count": 376,
+    "output": "{\r\n  \"kind\": \"REIL_E113_RESUME_V2_REVIEW_PACKAGE_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4e_e1_1_3_resume_v2_review_20261105\\\\REIL_C4E_E1_1_3_RESUME_V2_REVIEW_20261105.zip\",\r\n    \"bytes\": 997883,\r\n    \"sha256\": \"1cc4326c41b4496ce14dbedc10abd97c6fac319cbcd30ea9186e724686870c91\"\r\n  },\r\n  \"receipt\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4e_e1_1_3_resume_v2_review_20261105\\\\DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 2066,\r\n    \"sha256\": \"33f5db11527c61a59f42f66cec650943d99381b882f764b4bce94b2ba41d4524\"\r\n  },\r\n  \"post_package\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4e_e1_1_3_resume_v2_review_20261105\\\\SELECTED_LOCAL_SOURCES_POST_PACKAGE.json\",\r\n    \"bytes\": 3457,\r\n    \"sha256\": \"a6841e8e7535ac5e18ccc3aa9121879d2a71f3929f92935fff0c6ed2e21c0ccb\"\r\n  },\r\n  \"payload_count\": 70,\r\n  \"entries\": 71,\r\n  \"decision\": \"RESUME_REQUEST_V2_DOCUMENT_REVIEW_ACCEPTED_NOT_EXECUTION_AUTHORIZED\",\r\n  \"closed\": [\r\n    \"E113_RESUME_N1\",\r\n    \"E113_RESUME_N2\"\r\n  ],\r\n  \"findings\": 0,\r\n  \"resume_request_accepted\": true,\r\n  \"actual_execution_authorized_by_review\": false,\r\n  \"received_program_execution\": 0,\r\n  \"tests\": 0,\r\n  \"boundary\": \"After review ZIP and receipt write/readback; before this actual tool return and later transcription.\"\r\n}\r\n"
+  }
+}

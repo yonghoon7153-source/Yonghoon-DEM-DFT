@@ -1,0 +1,171 @@
+{
+  "kind": "REVIEWER_STATIC_RECORD_LINK_CHECK",
+  "checks": [
+    {
+      "check": "start_seal_twenty_files",
+      "match": true,
+      "detail": [
+        {
+          "path": "bms-balancing/docs/REIL_C4E1_E113_OUTER_DRAFT_v2_20261104.py.txt",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/docs/REIL_C4E1_E113_JUDGE_DRAFT_v2_20261104.py.txt",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/docs/REIL_C4E1_E113_END_WRITER_DRAFT_v2_20261104.py.txt",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e0_fix_20261014/00_identity_c4.py",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/00_identity_c4.py",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/00_outer.py",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/00_judge.py",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/00_end_writer.py",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/t0.txt",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/t_ret.txt",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/pid.txt",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/obs1.txt",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/done.txt",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/t_obs2.txt",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/out.txt",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e1_20261106/01_probe/err.txt",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/scripts/reil_c4e1_launch.py",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json",
+          "exists": true,
+          "sha256_matches": true
+        },
+        {
+          "path": "bms-balancing/reil_c6_rebuild_20261013/REIL_C6.lock.txt",
+          "exists": true,
+          "sha256_matches": true
+        }
+      ]
+    },
+    {
+      "check": "probe_persisted_time_state_and_empty_logs",
+      "match": true,
+      "detail": {
+        "t0": 1793863228,
+        "return": 1793863228,
+        "first_observation": [
+          "1793863232",
+          "pid=375",
+          "state=S"
+        ],
+        "done": 1793863378,
+        "scope": "Persisted observations only. Final /proc check and original tool return codes are author manual claims, not independently reproduced."
+      }
+    },
+    {
+      "check": "fetch_to_run_identity_link",
+      "match": true,
+      "detail": {
+        "files": [
+          {
+            "name": "LFP_Data.xlsx",
+            "bytes": 10841377,
+            "sha256": "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1",
+            "match": true
+          },
+          {
+            "name": "util_LFP.py",
+            "bytes": 33754,
+            "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76",
+            "match": true
+          }
+        ],
+        "commit": "1188c371e5836df4a7e5f5acf336a34ffd4027e6",
+        "scope": "Record-to-record identity; the remote input spreadsheet and util were not freshly fetched/executed by reviewer."
+      }
+    },
+    {
+      "check": "warning_claim_boundary",
+      "match": true,
+      "detail": {
+        "rows": 66,
+        "row_errors": 0,
+        "rows_with_warnings": 66,
+        "warning_counts": {
+          "RuntimeWarning: divide by zero encountered in divide": 8211060,
+          "RuntimeWarning: invalid value encountered in add": 5474040,
+          "RuntimeWarning: invalid value encountered in divide": 8211060
+        },
+        "warning_count_total": 21896160,
+        "out_of_domain_evaluations": 1169477,
+        "constraint_violated_evaluations": 48457,
+        "reported_success_true": 11,
+        "reported_success_null": 55,
+        "all_success_is_evidence_false": true,
+        "stderr_bytes": 20339
+      }
+    }
+  ],
+  "all_match": true,
+  "scope": "Independent hash/JSON/text analysis only; no received program/import/probe/judge/fetch/run/COMSOL execution."
+}

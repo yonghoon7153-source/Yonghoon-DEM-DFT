@@ -1,0 +1,109 @@
+{
+  "kind": "REIL_E113_RESUME_RESULT_RECIPIENT_REVIEW_DECISION",
+  "date": "2026-11-05",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "pin": "9b440a3deeda0f9160e10e546c5ea3499ccbbee6",
+  "prior_review_pin": "782bfe5fdc0de1bbc4330c50d6f8fcffbe94b0a5",
+  "decision": "E1_2_E1_3_RESULTS_ACCEPTED_C4A_GATE_CONDITIONS_MET_NO_EXECUTION_APPROVAL",
+  "new_blocking_findings": [],
+  "finding_count": 0,
+  "answers": {
+    "E1_2_fetch": "ACCEPTED_WITHIN_FIXED_EXECUTION_AND_RECORD_CRITERIA",
+    "E1_3_run": "ACCEPTED_WITHIN_FIXED_EXECUTION_AND_RECORD_CRITERIA",
+    "date_label": "USER_AMENDMENT_DISCLOSED_AND_ACTUAL_EPOCH_BINDING_CONSISTENT",
+    "before_C4A_user_choice": "NO_NEW_BLOCKING_CORRECTION_OR_RETEST_REQUIRED; preserve warning/scientific-scope and date-label disclosures"
+  },
+  "supported": {
+    "fetch_judge_items": 43,
+    "run_judge_items": 44,
+    "execution_validity": true,
+    "E3a": "COMPLETE",
+    "c4a_gate_condition": true,
+    "planned": 66,
+    "returned": 66,
+    "row_errors": 0,
+    "run_output_files": 8,
+    "run_output_bytes": 993069,
+    "a_to_g3_recorded_seconds": 1151,
+    "a_to_g3_limit_seconds": 21600
+  },
+  "date_binding": {
+    "actual_execution_UTC_date": "2026-11-05",
+    "evidence_label": "reil_c4e1_20261106",
+    "section": "§120",
+    "T_a": 1793863173,
+    "T_end": 1793884773,
+    "R": 1800,
+    "changed_condition": "Prior calendar/R3 condition replaced by user direction recorded in §120",
+    "independent_original_user_chat_authentication": false,
+    "prior_codex_acceptance_of_change_claimed": false
+  },
+  "warnings": {
+    "rows": 66,
+    "row_errors": 0,
+    "rows_with_warnings": 66,
+    "warning_counts": {
+      "RuntimeWarning: divide by zero encountered in divide": 8211060,
+      "RuntimeWarning: invalid value encountered in add": 5474040,
+      "RuntimeWarning: invalid value encountered in divide": 8211060
+    },
+    "warning_count_total": 21896160,
+    "out_of_domain_evaluations": 1169477,
+    "constraint_violated_evaluations": 48457,
+    "reported_success_true": 11,
+    "reported_success_null": 55,
+    "all_success_is_evidence_false": true,
+    "stderr_bytes": 20339
+  },
+  "retained_boundaries": {
+    "warning_free_claim": false,
+    "scientific_fitting_acceptance": false,
+    "convergence_proven": false,
+    "C4A_opened_by_review": false,
+    "C4A_B_COMSOL_execution_authorized_by_review": false,
+    "new_user_execution_approval_created": false,
+    "prior_resume_v2_N1_N2_closure_retained": true
+  },
+  "evidence_limits": [
+    "Remote spreadsheet/util/P0 identity is a submitted-record link, not fresh reviewer runtime measurement.",
+    "Original user messages, manual probe final check, watch tool returns, gate execution/secret scans/first-attempt claims and push return are not independently observed by reviewer.",
+    "Actual commit sets and received raw Git blobs were checked; a .gitattributes is patch-only and a ledger was reconstructed from the exact r append.",
+    "Recorded a-to-g3 budget excludes later r commit/push and this review."
+  ],
+  "checks": {
+    "source_copies": 103,
+    "current_pin_raw_fetches": 61,
+    "new_evidence_files": 59,
+    "prior_unchanged_source_copies": 42,
+    "start_seal_sha_rows": 20,
+    "commit_chain": 7,
+    "commit_raw_blob_matches": 61,
+    "end_record_identity_rows": 38,
+    "selected_local_originals": 7
+  },
+  "performed_this_review": {
+    "received_program_execution": 0,
+    "received_program_import": 0,
+    "judge_execution": 0,
+    "probe_execution": 0,
+    "identity_fetch_run_execution": 0,
+    "retest": 0,
+    "COMSOL": 0,
+    "repository_mutations": 0,
+    "external_send": 0,
+    "reviewer_only_text_JSON_hash_ZIP_analysis": true
+  },
+  "review_tooling_note": "Two encoded branch-path read requests were rejected; first response parsing failed locally. Corrected via supported commits collection. No target program execution or target failure was created.",
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null,
+  "artifacts": [
+    "REVIEW_KO.txt",
+    "CODEX_REPLY_KO.txt",
+    "ROOT_STATIC_DATA_CHECK.json",
+    "OUTER_STATIC_DATA_CHECK.json",
+    "RUN_STATIC_REVIEW.json",
+    "PROCEDURE_COMMIT_CHECK.json",
+    "SOURCE_IDENTITIES.json",
+    "EXECUTION_COMMITS.json"
+  ]
+}
