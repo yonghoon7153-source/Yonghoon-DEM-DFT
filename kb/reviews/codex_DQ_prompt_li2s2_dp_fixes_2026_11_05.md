@@ -31,7 +31,8 @@ DP 의 P0-1 · P1-1 · P1-2 · P2-1 · P2-2 를 고쳤다 (091353ed · e1455a2d 
 DP 재승인 조건 셋을 반례로 깨 보라고 줬고, 리뷰어가 **조건 ③ 이 아직 안 닫혔다** (요약의 같은 실행 규칙이 러너보다 좁다 · P1) 와 P2 일곱 · P3 둘을
 재현했다 — 그것도 같은 꼴 전체로 고쳤다 (a06ca37a). 같은 리뷰어에게 그 판을 다시 줬더니 앞 지적은 모두 닫혔다고 재현으로 확인했고, 새로 P2 둘
 (충돌 관측이 계를 닫음 · 판정 도중 일시 오류가 출구 없는 충돌로 굳음) 과 P3 몇을 냈고 (고침 4b71cc21), 3 차로 그 판을 주자 2 차 지적은 닫혔다고 확인하고
-새 P1 하나 (끝 판정을 쓴 뒤 장부에 적기 전 신호 · SIGKILL 로 장부 판정이 비면 보류 규칙이 비교할 것이 없다) 와 P3 하나를 재현했다 — 그것도 고쳤다 (⏳FIXC ·
+새 P1 하나 (끝 판정을 쓴 뒤 장부에 적기 전 신호 · SIGKILL 로 장부 판정이 비면 보류 규칙이 비교할 것이 없다) 와 P3 하나를 재현했다 (고침 ebf6b2ee). 4 차에서
+3 차 지적은 닫혔고, 같은 꼴의 P1 하나 (장부가 빈 상태의 기준을 한 단계 이력만 봐서 다시 판정 한 번이 증거를 밀어냄) 를 더 재현했다 — 그것도 고쳤다 (⏳FIXC ·
 §2 끝). 결과 0 건 · 카드 값 그대로 (값 지문 086de59c484f9c32).
 
 **물음: DP 재승인 조건 셋이 닫혔는가 · DP P2 둘이 닫혔는가 · 고치면서 새 구멍이 생겼는가 · 1 단계를 띄워도 되는가 (GO / 조건부 GO / NO-GO).**
@@ -129,6 +130,10 @@ DP 가 닫힘으로 본 항목 (DO P1-2 · DO P2-1 기존 결함 · DO P2-2 코�
   **없으면** 지금 폴더 판정이 적어 둔 바로 앞 판정 (`history` — prev_status · changed) 을 기준으로 같은 규칙을 쓴다: 앞이 pass · fail 인데 지금과 다르면 충돌 · 앞이
   invalid · incomplete 인데 그 사이 원자료 · 카드 · 도구가 바뀌었으면 충돌 (바뀐 것 기록이 없으면 바뀌었다고 본다). 러너 ①-4 · persist · 요약 · 재시도 · 확인
   관측이 모두 같은 함수 · 같은 입력 (`folder_prior`) 으로 판정한다.
+- **4 차 P1 (같은 꼴 · 재현)** — (b) 의 기준을 처음엔 지금 판정의 한 단계 이력 (`history`) 으로만 잡아, 끊긴 뒤 다시 판정이 한 번 더 있으면 (사람의
+  `--stage1_verdict` · ①-4 도중 끊긴 재시작) 앞 판정 (fail · 원자료가 바뀌기 전 invalid) 이 밀려나 러너가 stage1_pass + 2 단계 [11, 12] 를 냈다 (요약은 그 전까지
+  invalid — 둘이 어긋남). → 기준을 **폴더 판정 기록 전체** (`folder_verdict_chain` — 지금 판정 · 이력의 앞 판정 · 새 판정) 로: 못 읽는 판정이 있으면 충돌 · pass · fail
+  판정이 하나라도 지금과 다르면 충돌 · invalid · incomplete 판정이 하나라도 지금 판정과 원자료 · 카드 · 도구가 다르면 (또는 지문 없음) 충돌.
 - **P3 재시도 · 확인 경로가 보존 폴더의 낡은 지문으로 대체** (재현: 판정 뒤 보존 폴더의 result.json 을 바꿔도 기록된 지문으로 대체 — 거짓 통과는 못 찾음).
   → 폴더 판정 관측의 지문은 **지금 파일 (`run_provenance`) · 카드 값 · 도구와 같을 때만** 싣는다 (아니면 없음 = 대체 못 함).
 - 리뷰어가 괜찮다고 본 것 (3 차): 지문 밖 파일 (md_init_raw.xyz 는 바뀌면 traj 와 어긋나 다른 판정 · 판정이 md_done · 이력 · 실행 전 기록을 안 읽음) · 카드의 기계 값 밖
@@ -138,8 +143,8 @@ DP 가 닫힘으로 본 항목 (DO P1-2 · DO P2-1 기존 결함 · DO P2-2 코�
 **인터페이스가 바뀐 곳**
 - 드라이버: `ledger_shape_problems` · `record_tmp_problems` · `RECORD_TMP_NAMES` · `_stage1_summary_core` (현재 폴더 미해결 기록) · `_ledger_check` (공통 꼴 검사 · 임시 파일 ·
   장부 지문 · STOP · 첫 시드 아닌 닫힘 · 충돌 관측 · 판정 지문 · 대체 기록 꼴) · `LEDGER_VERDICTS` · `same_judge_inputs` · `ledger_verdict_conflict(row, folder_status,
-  recorded, folder_provenance, folder_prior)` · `STOP_TERMINAL_CODES` · `stop_record` · `mark_summary_not_current` · `run_kind_detail` (폴더 판정 관측에 지금 판정의
-  지문 — 지금 파일 · 카드 · 도구와 맞을 때만 — 과 앞 판정 `prior`) ·
+  recorded, folder_provenance, folder_prior)` · `STOP_TERMINAL_CODES` · `stop_record` · `mark_summary_not_current` · `folder_verdict_chain` · `run_kind_detail` (폴더 판정 관측에
+  지금 판정의 지문 — 지금 파일 · 카드 · 도구와 맞을 때만 — 과 폴더 판정 기록 전체 `prior`) ·
   `summarize_stage1` (닫는 STOP ↔ 기록 대조 · 첫 시드 아닌 판정의 closes_system) · `_verdict_records` (이력 줄 prev · 상태 꼴).
 - 러너: `_AfterReplace` · `_write_json_atomic` (교체 뒤 실패를 따로) · `HELD_SIGNALS` 는 있는 신호만 건다 (Windows 에 SIGHUP 없음) · `state["stop_code"]` ·
   장부 행 `verdict_provenance` · `verdict_superseded` · `verdict_observed_conflict` (상태 · closes · 이유 · 어디서 · 시각) ·
@@ -154,8 +159,8 @@ DP 가 닫힘으로 본 항목 (DO P1-2 · DO P2-1 기존 결함 · DO P2-2 코�
 5. **같은 실행 충돌의 범위 (1 차 P1-A · 2 차 N3 뒤)** — pass · fail 끼리 다르면 늘 충돌 · 비과학적 장부 판정 (invalid · incomplete) → 과학적 폴더 판정은 그때 판정의
    지문 (원자료 · 카드 · 도구) 이 지금과 다 있고 같을 때만 대체 (기록) · 지문이 다르거나 없으면 충돌 (멈추고 사람이 본다). DP Q2 의 'incomplete → pass 는 구분' 과
    '원자료 복구 · 추가 · 수동 변경이면 보류' 를 이렇게 읽었다 — 맞는가. 같은 지문이면 판정이 결정적이라 앞의 비과학적 판정은 판정 도중 오류였다고 보는 것이 맞는가
-   (판정이 원자료 · 카드 · 도구 말고 다른 것에 기대는 자리가 있으면 이 대체는 틀린다). 장부 판정이 빈 끊긴 상태에서 폴더의 앞 판정을 기준으로 삼는 것
-   (3 차 P1 (b)) 도 맞는가 — 앞 판정 기록 (`history`) 을 지우거나 고친 경우는 못 잡는다 (꾸민 기록).
+   (판정이 원자료 · 카드 · 도구 말고 다른 것에 기대는 자리가 있으면 이 대체는 틀린다). 장부 판정이 빈 끊긴 상태에서 폴더 판정 기록 전체를 기준으로 삼는 것
+   (3 · 4 차 P1) 도 맞는가 — 판정 기록 (이력 파일) 을 지우거나 고친 경우는 못 잡는다 (꾸민 기록).
 6. **확인 안 된 STOP 의 요약 처리** — 닫는 STOP 은 기록과 대조 (안 맞으면 invalid) · 그 밖은 pending. 확인 안 된 멈춤이 있는 동안 요약이 통과로 안 오르는 것이
    운영상 맞는가 (끝난 뒤 신호로 interrupted STOP 이 남으면 사람이 확인해야 통과가 된다).
 7. **시작 때 바로 저장하는 것** — 러너는 잠금 뒤 낡은 요약을 '지금 판정 아님' 으로 바꾸고 · 장부 지문을 바로 저장한다 (거부로 끝나도). 시작 점검의 부작용이 이 둘뿐인 것이 맞는가.

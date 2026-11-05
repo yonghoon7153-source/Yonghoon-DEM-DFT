@@ -1090,12 +1090,12 @@ def run(a, deps=None):
         for sysn, seed, now_ in rejudged:                    # ⭐ DP 전 리뷰 F2 — 재판정의 과학적 결과도 장부에 (첫 시드 닫힘 포함) · 장부 판정과 다르면 멈춤
             try:
                 r_ = persist_observed({"kind": "verdict", "run_id": now_["run_id"], "status": now_["status"], "provenance": now_.get("provenance"),
-                                       "prior": now_.get("history"),
+                                       "prior": mq.folder_verdict_chain(R / sysn / f"seed{seed}"),   # ⭐ 4차 P1 — 폴더 판정 기록 전체
                                        "closes_system": now_.get("closes_system") is True}, "시작 전 재판정 (①-4)")
             except _PersistFailed as e_:
                 return stop("invalid", f"{sysn}{seed} 재판정 결과를 장부에 못 적었다 ({e_}) — 사람이 본다", sys=sysn, seed=seed, run_id=now_["run_id"])
             cf_ = (mq.ledger_verdict_conflict(r_, now_["status"], recorded=False, folder_provenance=now_.get("provenance"),   # ⭐ DQ 전 리뷰 P1-A — 소비자와 같은 함수
-                                              folder_prior=now_.get("history"))
+                                              folder_prior=mq.folder_verdict_chain(R / sysn / f"seed{seed}"))
                    if r_ is not None else None)
             if cf_ is not None:
                 return stop("invalid", f"{sysn}{seed} 재판정 {now_['status']} — {cf_} · 원자료 · 도구가 바뀌었을 수 있다 · "
@@ -3494,9 +3494,10 @@ def _selftest():
     with open(fdp_ / "result.json", "a", encoding="utf-8") as fh_:      # 보존 폴더의 원자료를 판정 뒤에 바꾼다 — 기록된 지문은 이제 낡았다
         fh_.write("\n")
     o3_, o4_ = _obs_pair()
-    chk(o1_.get("provenance") == vx_["provenance"] and o2_.get("provenance") == vx_["provenance"] and o1_.get("prior") == vx_["history"]
-        and o2_.get("prior") == vx_["history"] and o3_.get("provenance") is None and o4_.get("provenance") is None,
-        "⛔음성 DQ 전 2차 · 3차 리뷰: 재시도 자격 · 확인 경로의 폴더 판정 관측에 지금 판정의 지문 · 앞 판정 (history) 이 실린다 · 판정 뒤 원자료가 바뀐 보존 폴더의 "
+    ch_x = real.folder_verdict_chain(fdp_)
+    chk(o1_.get("provenance") == vx_["provenance"] and o2_.get("provenance") == vx_["provenance"] and o1_.get("prior") == ch_x
+        and o2_.get("prior") == ch_x and len(ch_x) >= 3 and o3_.get("provenance") is None and o4_.get("provenance") is None,
+        "⛔음성 DQ 전 2차 · 3차 · 4차 리뷰: 재시도 자격 · 확인 경로의 폴더 판정 관측에 지금 판정의 지문 · 폴더 판정 기록 전체가 실린다 · 판정 뒤 원자료가 바뀐 보존 폴더의 "
         f"낡은 지문은 싣지 않는다 (대체 못 함) ({o1_.get('provenance') == vx_['provenance']} · {o3_.get('provenance')} · {o4_.get('provenance')})")
     # ⭐ DQ 전 3차 리뷰 P1 — 장부 판정이 빈 채 (판정을 쓴 뒤 장부에 적기 전에 SIGKILL · 정전) 폴더의 앞 판정과 다른 결과가 나오면 보류 (러너 · 요약 같은 규칙)
     def _crash_state(c_, sd_, **vf_kv):
@@ -3507,20 +3508,31 @@ def _selftest():
     rc_k2, L_k2, _ = go(wt, rr=rr_k2)
     rr_k3 = clone(rr_d); _crash_state(rr_k3, 12, status="invalid")                                 # 앞 invalid · 같은 원자료 → 대체 (이어 감)
     rc_k3, L_k3, _ = go(wt, rr=rr_k3)
+    rr_k4 = clone(rr_d); _crash_state(rr_k4, 12, status="fail")                                    # 4차 — 끊긴 뒤 사람이 한 번 더 다시 판정
+    real.stage1_verdict(rr_k4 / "A/seed12", values=vals_t, log=lambda *m: None, reason="selftest — 사람의 다시 판정")
+    rc_k4, L_k4, _ = go(wt, rr=rr_k4)
+    rr_k5 = clone(rr_d); _crash_state(rr_k5, 12, status="invalid", provenance=_prov_changed(rr_k5, "A", 12))
+    real.stage1_verdict(rr_k5 / "A/seed12", values=vals_t, log=lambda *m: None, reason="selftest — 사람의 다시 판정")
+    rc_k5, L_k5, _ = go(wt, rr=rr_k5)
     row_k1 = [x_ for x_ in J(rr_k1 / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
     row_k3 = [x_ for x_ in J(rr_k3 / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
     chk(rc_k1 == RC["invalid"] and not L_k1 and "A12 재판정" in J(rr_k1 / "STOP.json").get("reason", "")[:12] and row_k1.get("verdict") is None
         and len(row_k1.get("verdict_observed_conflict") or []) == 1 and rc_k2 == RC["invalid"] and not L_k2
-        and rc_k3 == RC["pass"] and not L_k3 and row_k3.get("verdict") == "pass",
+        and rc_k3 == RC["pass"] and not L_k3 and row_k3.get("verdict") == "pass"
+        and rc_k4 == RC["invalid"] and not L_k4 and rc_k5 == RC["invalid"] and not L_k5,
         f"⛔음성 DQ 전 3차 리뷰 P1: 장부 판정이 빈 끊긴 상태에서 폴더의 앞 판정 fail → 지금 pass · 앞 invalid → 원자료가 바뀐 뒤 pass 면 러너가 보류 (발사 0) · "
-        f"같은 원자료면 적고 이어 간다 ({rc_k1} · {rc_k2} · {rc_k3} · {row_k1.get('verdict_observed_conflict')})")
+        f"같은 원자료면 적고 이어 간다 · (4차) 끊긴 뒤 사람이 한 번 더 다시 판정해도 앞 판정이 증거로 남는다 ({rc_k1} · {rc_k2} · {rc_k3} · {rc_k4} · {rc_k5} · "
+        f"{row_k1.get('verdict_observed_conflict')})")
     def _crash_rejudged(c_, sd_, **vf_kv):                   # 같은 상태를 러너 없이 — 사람이 --stage1_verdict 로 다시 판정한 뒤 요약
         _crash_state(c_, sd_, **vf_kv)
         real.stage1_verdict(c_ / "A" / f"seed{sd_}", values=vals_t, log=lambda *m: None, reason="selftest — 끊긴 뒤 다시 판정")
     sum_k = {"flip": _sum_case(lambda c_: _crash_rejudged(c_, 12, status="fail")),
              "nonsci_changed": _sum_case(lambda c_: _crash_rejudged(c_, 12, status="invalid", provenance=_prov_changed(c_, "A", 12))),
-             "nonsci_same": _sum_case(lambda c_: _crash_rejudged(c_, 12, status="invalid"))}
-    chk(sum_k == {"flip": ("invalid", None), "nonsci_changed": ("invalid", None), "nonsci_same": ("stage1_pass", sum_k["nonsci_same"][1])}
+             "nonsci_same": _sum_case(lambda c_: _crash_rejudged(c_, 12, status="invalid")),
+             "flip_twice": _sum_case(lambda c_: (_crash_rejudged(c_, 12, status="fail"),
+                                                 real.stage1_verdict(c_ / "A/seed12", values=vals_t, log=lambda *m: None, reason="selftest — 한 번 더")))}
+    chk(sum_k == {"flip": ("invalid", None), "nonsci_changed": ("invalid", None), "nonsci_same": ("stage1_pass", sum_k["nonsci_same"][1]),
+                  "flip_twice": ("invalid", None)}
         and sum_k["nonsci_same"][1] is not None,
         f"⛔음성 DQ 전 3차 리뷰 P1 (요약): 장부 판정이 빈 끊긴 상태의 다시 낸 판정 — 앞 fail → pass · 앞 invalid → 원자료가 바뀐 뒤 pass 면 요약 invalid · "
         f"같은 원자료면 통과 ({sum_k})")
