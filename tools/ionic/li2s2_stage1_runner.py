@@ -1616,7 +1616,8 @@ def _selftest():
             th_ = (d / "thermo.csv").read_text(encoding="utf-8").splitlines(keepends=True)
             (d / "thermo.csv").write_text("".join(th_) + th_full[-1], encoding="utf-8")
         elif st_ == "noplan_hist_pass":                     # P0-2 반례 1 — pass 판정이 있던 폴더에서 원자료 소실 뒤 진짜 재판정
-            (d / "stage1_verdict.json").write_text(json.dumps(PASSV), encoding="utf-8")
+            pv_np = {**PASSV["provenance"], "card_values_sha16": real.values_sha16(vals_t), "driver_sha16": real.driver_sha16()}   # DR 전 4차 P2 — 지금
+            (d / "stage1_verdict.json").write_text(json.dumps({**PASSV, "provenance": pv_np}), encoding="utf-8")   # 카드 · 도구로 낸 pass (과학적 기록)
             real.stage1_verdict(d, values=vals_t, log=lambda *m: None, reason="selftest — 원자료 소실 뒤 재판정")
         elif st_ == "noplan_vtmp_pass":                     # P0-2 반례 2 — pass 판정이 임시 파일에만
             (d / "stage1_verdict.json.tmp").write_text(json.dumps(PASSV), encoding="utf-8")

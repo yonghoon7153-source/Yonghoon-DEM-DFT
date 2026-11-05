@@ -4973,6 +4973,11 @@ def _selftest():
         _append_history(d_or, {"status": "incomplete", "provenance": PB_}, {"status": "pass", "provenance": PC_}, "selftest 2 — 앞 판정이 판정 밖에서 바뀜")
         (d_or / "stage1_verdict.json").write_text(json.dumps({"status": "pass", "provenance": PC_}), encoding="utf-8")
         ch_or = folder_verdict_chain(d_or)
+        d_or2 = pathlib.Path(td_) / "dq_or2"; d_or2.mkdir()       # 보통의 두 번 쓰기 (첫 줄 → 바꿈 줄) — 바꿈 줄의 앞 판정은 겹침이라 한 번만
+        _append_history_first(d_or2, {"status": "invalid", "provenance": PA_}, "selftest 1")
+        _append_history(d_or2, {"status": "invalid", "provenance": PA_}, {"status": "pass", "provenance": PC_}, "selftest 2")
+        (d_or2 / "stage1_verdict.json").write_text(json.dumps({"status": "pass", "provenance": PC_}), encoding="utf-8")
+        ch_or2 = folder_verdict_chain(d_or2)
         d_al = pathlib.Path(td_) / "dq_al"; d_al.mkdir()
         PVal_ = {"files_sha256": {}, "card_values_sha16": "0" * 16, "driver_sha16": driver_sha16()}
         (d_al / "stage1_verdict.json").write_text(json.dumps({"status": "fail", "closes_system": True, "provenance": PVal_}), encoding="utf-8")
@@ -4981,6 +4986,7 @@ def _selftest():
                                                               "provenance": {**PVal_, "card_values_sha16": values_sha16(VAL)}}), encoding="utf-8")
         rk_al2 = _run_kind({}, d_al, VAL)
         chk([x_["status"] for x_ in ch_or] == ["invalid", "incomplete", "pass"] and ch_or[1]["provenance"] == PB_ and len(ch_or) == 3
+            and ch_or2 == [{"status": "invalid", "provenance": PA_}, {"status": "pass", "provenance": PC_}]
             and rk_al[0] == "unreadable" and rk_al2[0] == "scientific" and rk_al2[1].get("closes_system") is True,
             "⛔음성 DR 전 4차 리뷰 P1 · P2: 폴더 판정 기록은 쓴 순서대로 (겹침 없이 · 판정 밖에서 바뀐 앞 판정도 그 자리에) · 다른 카드 값으로 낸 과학적 판정 기록 "
             f"(손 판정 · 다른 checkout) 은 판독 불가 — 그 결과 · 닫힘을 장부로 옮기지 않는다 · 같은 카드면 그대로 ({ch_or} · {rk_al} · {rk_al2[0]})")
