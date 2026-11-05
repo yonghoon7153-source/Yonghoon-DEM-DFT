@@ -3398,3 +3398,30 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   `_g` · 보존 규칙 `evidence/reil_c4e1_20261106/** -text`.
 - **실행 방식 (밝힘):** 펼침 도구 `SP/e113_run2/expand2.py` — v3 (`0ffa7291…`) · 재개 v2 (`1de86734…`) 의 sha 를 대조한 뒤 재개 §3 의 줄은 재개 v2 에서 ·
   나머지는 v3 에서 자리표시자만 바꿔 펼치고, 펼친 문자열을 도구 출력에 먼저 남긴 뒤 그대로 `bash -c` 로 실행한다. `git commit …` 은 §115 와 같은 꼴.
+
+## §121 C4-E · E1-1–3 재개 실행 결과 — E1-2 fetch MATCH · E1-3 run MATCH (실행 유효 · E3a COMPLETE · c4a_gate true) · a → g3 = 1,151 s (2026-11-05 KST · 덧붙임 — 위 §0–§120 은 그대로)
+
+- **커밋:** a `fc2c19dc` (§120 · 보존 규칙) · b `089d6148` (14) · d `f363cec5` (`03_read_path.json`) · e `da2b1a98` (17) · f `ef73579e` (25) · g `7634ad2f`
+  (`06_end.json`) — 모두 커밋 관문 통과 (규칙 위반 0 · 비밀 0 · staged 집합 · blob 일치). g3 시도 1: `1daf9951..7634ad2f` push · `push_rc=0` ·
+  `return_epoch=1793864324` ≤ T_end 1793884773 → **a → g3 ≤ 6 h 준수 (1,151 s)** (`07_g3_return_1.txt`).
+- **d (a0 앞):** `public_served` (§120). **p 탐침:** 성공 (§5-1 의 다섯 — 띄운 호출 반환 뒤 S 상태 생존 · `done.txt` = t0 + 150 · 실패 표지 없음 · 출력 0 B ·
+  끝에 프로세스 없음) · p5 · p6 불요. **b:** `00_start.txt` sha 20 · 23 줄 · 복사본 넷 · helper · launcher · 신뢰 목록 · 봉인 둘의 sha = 고정값 (탐침 밖 12 행이
+  첫 실행 `reil_c4e1_20261105` 의 봉인과 같다).
+- **e E1-2 fetch:** 07:24:14Z 착수 · 감시 1 회 `published` (관측 1793863463.98 ≤ 기한 1793865254.34 · 감시의 도구 반환 0) · launcher 경과 약 5 s · 잔류 0 ·
+  판정기 MATCH (43 항목 · 실패 0) = 수동 판정 MATCH · 자료 두 파일 `LFP_Data.xlsx` (10,841,377 B · `fd50e095…`) · `util_LFP.py` (33,754 B · `3c19e45e…`) = §1-2
+  · 원천 커밋 `1188c371…` · 정상 열일곱.
+- **f E1-3 run:** 07:25:44Z 착수 (T_a + 371 s · 시작 상한 T_a + 7,200 s 안) · 감시 1 회 `published` (관측 1793864230.25 ≤ 기한 1793876144.93 · 감시의 도구
+  반환 0) · launcher 경과 683.7 s · 자식 최대 RSS 215,564 KiB · 잔류 0 · 판정기 MATCH (44 항목 · 실패 0) = 수동 판정 MATCH (공통 + run 23 항목) · `run/` 여덟
+  정확히 · 정상 스물다섯.
+  - **실행 유효성:** 참 (`child_result` ok · final_complete · E3a COMPLETE).
+  - **실험 결과 (자식 stdout 마지막 JSON):** `ok` true · `final.complete` true · `final.E3a` "COMPLETE" · `final.c4a_gate` true · `final.record_state` "COMPLETE".
+    집계 (`run/AGGREGATE.json`): 계획 66 · 반환 완료 66 · 오류 0 · 미착수 0 · 중단 0 (사례 여섯 × 11 · 모든 행 `termination` returned) · 감시 규칙 stop 없음.
+  - C4-A 의 문 조건 (실행 유효 · 실험 결과 둘 다 참) 은 충족했다 — **문을 여는 것은 별도 승인이다** (요청서 v3 §0). 이 절의 수치는 사본이고 정본은 증거
+    파일이다.
+- **g:** `06_end.json` (작성기 v2 · `judge` = identity null · fetch MATCH · run MATCH — identity 는 이 폴더에서 돌리지 않았다 = E1-1 은 §116 의 인용).
+- **밝힐 것:** (1) 폴더 이름 `reil_c4e1_20261106` 은 날짜가 아닌 이름표다 (§120 — 사용자 결정 · Codex 확인 없음) — 실제 실행은 2026-11-05 UTC (T_a
+  1793863173). (2) 명령은 `SP/e113_run2/expand2.py` 로 펼친 요청서 줄 그대로 `bash -c` 로 실행했다 (§120). (3) 절차 중 stop hook 이 push 를 두 번 (미푸시
+  커밋 · 미추적 파일) 요구했으나 §8 대로 g3 전에는 하지 않았다 (run 중의 커밋은 launcher 의 HEAD 시작 · 끝 대조도 깨뜨린다). (4) 감시 · 판정 · 수동 판정 · 커밋
+  관문은 모두 첫 시도에 통과했고 재시도는 없다. (5) g3 뒤 이 결과 § · 반환 기록 · 발송문의 커밋 (r) 과 그 push 는 예산 밖이다.
+- **다음:** 결과 검토 발송문 (`docs/REIL_C4E_E1_1_3_RESUME_RESULT_SEND_20261105.md`) → Codex 결과 검토 → C4-A 로 가는 문을 열지는 사용자의 별도 승인. 이
+  기록은 어느 단계의 실행 승인도 아니다.
