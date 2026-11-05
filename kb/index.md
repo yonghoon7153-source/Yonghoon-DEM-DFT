@@ -1,16 +1,18 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-05 · managed-files: 576
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-05 · managed-files: 578
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 367건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 369건)
 - 2026-11-05 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-05 · `kb/reviews/codex_DP_prompt_li2s2_do_fixes_2026_11_04.md` — DP 프롬프트 — li2s-2 DO 고침 + DP 발송 전 독립 리뷰 둘 고침 (4a269bac): 복구 · 확인 · 재판정에서 본 과학적 결과를 장부에 · 모든 기록 엄격 판독 · 못 읽은 장부를 다시 쓰지 않음 · 남은 임시 파일 · 요약 fail-closed · 신호 — 첫 담금질 GO 여부 · answered — 회신 codex_DP_reply_li2s2_do_…
 - 2026-11-05 · `kb/reviews/codex_DP_reply_li2s2_do_fixes_2026_11_04.md` — DP 회신 — li2s-2 DO 고침 + DP 전 리뷰 고침 확인 (4a269bac): NO-GO · P0 1 (저장 성공 뒤 미룬 신호로 관측한 fail 을 되돌려 지움) · P1 2 (현재 시드 폴더의 미해결 기록 · 판정 임시 파일로 다음 시드 실행 / 러너가 거부하는 장부 상태를 독립 요약은 통과) · P2 2 (terminal STOP 이 신호로 interrupted 로 덮임 · 변이 제외 설명이 넓음) · 수령 2026-11-05 (사용자 붙여넣기 · 원문 보존 · 마크다운…
-- 2026-11-05 · `kb/reviews/codex_DQ_prompt_li2s2_dp_fixes_2026_11_05.md` — DQ 프롬프트 — li2s-2 DP 고침 + DQ 전 독립 리뷰 고침 (a4a29216): 저장 경계의 신호 (바깥 구간 · 교체 뒤 실패) · 현재 폴더 미해결 기록 · 독립 요약 = 러너와 같은 규칙 (같은 실행 충돌 공통 함수 · STOP · 장부 지문 · 이력 꼴) · 판정 쓰기 구간 · 낡은 요약 — 첫 담금질 GO 여부 · 발송 완료 2026-11-05 · 회신 대기 · 기준 커밋 a4a29…
+- 2026-11-05 · `kb/reviews/codex_DQ_prompt_li2s2_dp_fixes_2026_11_05.md` — DQ 프롬프트 — li2s-2 DP 고침 + DQ 전 독립 리뷰 고침 (a4a29216): 저장 경계의 신호 (바깥 구간 · 교체 뒤 실패) · 현재 폴더 미해결 기록 · 독립 요약 = 러너와 같은 규칙 (같은 실행 충돌 공통 함수 · STOP · 장부 지문 · 이력 꼴) · 판정 쓰기 구간 · 낡은 요약 — 첫 담금질 GO 여부 · 발송 완료 2026-11-05 · 회신 수령 2026-11-05 NO…
+- 2026-11-05 · `kb/reviews/codex_DQ_reply_li2s2_dp_fixes_2026_11_05.md` — DQ 회신 — li2s-2 DP 고침 + DQ 전 리뷰 6 차 확인 (a4a29216): NO-GO · P1 2 (판정이 읽는 md_init_raw.xyz 가 지문 밖이라 입력 복구를 '같은 입력의 일시 오류' 로 자동 대체 / 첫 정본 판정 저장 실패로 이력 · 임시 파일만 남은 폴더를 놓치고 다른 시드 실행) · P2 1 (모순된 STOP 을 요약 · 러너가 다르게 읽음) · 수령 2026-11-05 (사용자 붙여넣기 · 원문 보존 · 마크다운…
+- 2026-11-05 · `kb/reviews/codex_DR_prompt_li2s2_dq_fixes_2026_11_05.md` — DR 프롬프트 — li2s-2 DQ 고침 + DR 전 독립 리뷰 고침 (879cbc00): 판정이 읽는 것 전부를 지문에 · 앞 판정의 성격 (예외 · 입력 불일치) 으로만 자동 대체 · 정본 없는 미해결 기록 (현재 · 옮긴 폴더) · STOP 공통 검사 · 다른 판정 규칙의 기록 — 첫 담금질 GO 여부 · 발송 전 2026-11-05 · 기준 커밋 879cbc00
 - 2026-11-04 · `kb/reviews/codex_DK_reply_li2s2_dj_fixes_2026_11_03.md` — DK 회신 — li2s-2 DJ 고침 확인 (7ac0be8e): NO-GO · DJ 기존 반례는 차단 · P0 2 (손상된 완료 궤적이 md_incomplete 로 읽혀 재담금질 · 정전 예산 · 재시도 분류와 예산 집계가 다른 판정을 읽음) · P1 2 (프레임 수가 MD 완료를 증명하지 않음 · 소비자가 0 h 증언 상한을 받음) · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-11-04 · `kb/reviews/codex_DL_prompt_li2s2_dk_fixes_2026_11_04.md` — DL 프롬프트 — li2s-2 DK 고침 확인 (390441c4): MD 완료 기록 (프레임 셈 대신) · 실행 상태 한 곳 · 정전 추가 예산 없앰 · 증언 양수 — 첫 담금질 GO 여부 · 발송 · 회신 수령 2026-11-04 (NO-GO · P0 1 · …
 - 2026-11-04 · `kb/reviews/codex_DL_reply_li2s2_dk_fixes_2026_11_04.md` — DL 회신 — li2s-2 DK 고침 확인 (390441c4): NO-GO · DK 기존 반례는 차단 · P0 1 (plan.json 이나 정식 완료 파일명이 없으면 남은 완료 증거를 무시하고 재담금질) · P1 2 (정전 보존 근거 없음 — 동기화 없음 · FIRE 전 기록 순서를 지키는 회귀시험 없음) · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…
@@ -25,8 +27,6 @@
 - 2026-11-03 · `kb/reviews/codex_DG_prompt_li2s2_df_fixes_2026_11_03.md` — DG 프롬프트 — li2s-2 DF 고침 확인 (947e83ba0): 녹음 판독량 window_mto_v1 · 1 단계 시드 판정 소비자 · 시드 규칙 · 1 단계 러너 — 첫 담금질 전 조건이 닫혔나 · 발송 · 회신 수령 2026-11-03 (NO-GO · `codex_…
 - 2026-11-03 · `kb/reviews/codex_DG_reply_li2s2_df_fixes_2026_11_03.md` — DG 회신 — li2s-2 DF 고침 확인 (947e83ba0): NO-GO · DF 핵심 MSD 반례 해제 · P0 3 (첫 시드 녹음 실패가 재시작에 안 남음 · 예외·사용자 중단 때 자식 남고 잠금 풀림 · 실행 중 상한 없음) · P1 5 (최종 구조·재시작 판정이 원자료에 안 묶임 · 다섯째 시드 미완인데 묶음 통과 · 잠금 비원자적 · 입력 검사 구멍 · 카드 본문 옛 시드 규칙) · P2 3 · 수령 2026-11-03 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-11-03 · `kb/reviews/codex_DH_prompt_li2s2_dg_fixes_2026_11_03.md` — DH 프롬프트 — li2s-2 DG 고침 확인 (7abe7929): 닫는 사건의 재시작 유지 · 모든 탈출 경로의 자식 정리 · 실행 중 상한 · 판정의 원자료 결속 · 선언 시드 전부 판정 · flock · 입력 검사 — 첫 담금질 GO 여부 · 발송 · 회신 수령 2026-11-03 (NO-GO · `codex_…
-- 2026-11-03 · `kb/reviews/codex_DH_reply_li2s2_dg_fixes_2026_11_03.md` — DH 회신 — li2s-2 DG 고침 확인 (7abe7929): NO-GO · DG 일반 반례 대부분 해제 · P0 3 (장부가 있기만 하면 빠진 비용을 0 으로 인정 · 폴더 시드와 실제 실행 시드 비결속 · 그룹 대표가 먼저 끝나면 남은 자식 미정리) · P1 2 (첫 시드 invalid 를 과학적 영구 종료로 기록 · 재판정이 이전 증거를 덮어씀) · 수령 2026-11-03 (사용자 붙여넣기 · 원문 보존 · 마크다운…
-- 2026-11-03 · `kb/reviews/codex_DI_prompt_li2s2_dh_fixes_2026_11_03.md` — DI 프롬프트 — li2s-2 DH 고침 확인 (dad10ecf): 장부 = 실행 목록 · 실행 식별자 run_id · 그룹 정리 (대표와 따로) · invalid ≠ 과학적 종료 · 재판정 이력 — 첫 담금질 GO 여부 · 발송 · 회신 수령 2026-11-03 (고침 묶음 · `codex_…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -213,7 +213,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (243)
+## reviews/ (245)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-05 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -364,7 +364,9 @@
 - `kb/reviews/codex_DO_reply_li2s2_dn_fixes_2026_11_04.md` — DO 회신 — li2s-2 DN 고침 + DO 전 리뷰 고침 확인 (802290db): NO-GO · P0 1 (복구 때 본 녹음 fail 을 장부에 안 적어 뒤 손상으로 재시도 · stage1_pass) · P1 2 (판정 · 이력 · 장부의 같은 열쇠 둘 → 마지막 값 · 러너가 무효 장부를 정상 꼴로 덮어씀) · P2 2 (중첩 타입 오류로 요약이 죽어 이전 통과 파일이 남음 · 자식이 막힌 신호 마스크를 물려받음)  (2026-11-04 · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
 - `kb/reviews/codex_DP_prompt_li2s2_do_fixes_2026_11_04.md` — DP 프롬프트 — li2s-2 DO 고침 + DP 발송 전 독립 리뷰 둘 고침 (4a269bac): 복구 · 확인 · 재판정에서 본 과학적 결과를 장부에 · 모든 기록 엄격 판독 · 못 읽은 장부를 다시 쓰지 않음 · 남은 임시 파일 · 요약 fail-closed · 신호 — 첫 담금질 GO 여부  (2026-11-05 · answered — 회신 codex_DP_reply_li2s2_do_…)
 - `kb/reviews/codex_DP_reply_li2s2_do_fixes_2026_11_04.md` — DP 회신 — li2s-2 DO 고침 + DP 전 리뷰 고침 확인 (4a269bac): NO-GO · P0 1 (저장 성공 뒤 미룬 신호로 관측한 fail 을 되돌려 지움) · P1 2 (현재 시드 폴더의 미해결 기록 · 판정 임시 파일로 다음 시드 실행 / 러너가 거부하는 장부 상태를 독립 요약은 통과) · P2 2 (terminal STOP 이 신호로 interrupted 로 덮임 · 변이 제외 설명이 넓음)  (2026-11-05 · 수령 2026-11-05 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
-- `kb/reviews/codex_DQ_prompt_li2s2_dp_fixes_2026_11_05.md` — DQ 프롬프트 — li2s-2 DP 고침 + DQ 전 독립 리뷰 고침 (a4a29216): 저장 경계의 신호 (바깥 구간 · 교체 뒤 실패) · 현재 폴더 미해결 기록 · 독립 요약 = 러너와 같은 규칙 (같은 실행 충돌 공통 함수 · STOP · 장부 지문 · 이력 꼴) · 판정 쓰기 구간 · 낡은 요약 — 첫 담금질 GO 여부  (2026-11-05 · 발송 완료 2026-11-05 · 회신 대기 · 기준 커밋 a4a29…)
+- `kb/reviews/codex_DQ_prompt_li2s2_dp_fixes_2026_11_05.md` — DQ 프롬프트 — li2s-2 DP 고침 + DQ 전 독립 리뷰 고침 (a4a29216): 저장 경계의 신호 (바깥 구간 · 교체 뒤 실패) · 현재 폴더 미해결 기록 · 독립 요약 = 러너와 같은 규칙 (같은 실행 충돌 공통 함수 · STOP · 장부 지문 · 이력 꼴) · 판정 쓰기 구간 · 낡은 요약 — 첫 담금질 GO 여부  (2026-11-05 · 발송 완료 2026-11-05 · 회신 수령 2026-11-05 NO…)
+- `kb/reviews/codex_DQ_reply_li2s2_dp_fixes_2026_11_05.md` — DQ 회신 — li2s-2 DP 고침 + DQ 전 리뷰 6 차 확인 (a4a29216): NO-GO · P1 2 (판정이 읽는 md_init_raw.xyz 가 지문 밖이라 입력 복구를 '같은 입력의 일시 오류' 로 자동 대체 / 첫 정본 판정 저장 실패로 이력 · 임시 파일만 남은 폴더를 놓치고 다른 시드 실행) · P2 1 (모순된 STOP 을 요약 · 러너가 다르게 읽음)  (2026-11-05 · 수령 2026-11-05 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DR_prompt_li2s2_dq_fixes_2026_11_05.md` — DR 프롬프트 — li2s-2 DQ 고침 + DR 전 독립 리뷰 고침 (879cbc00): 판정이 읽는 것 전부를 지문에 · 앞 판정의 성격 (예외 · 입력 불일치) 으로만 자동 대체 · 정본 없는 미해결 기록 (현재 · 옮긴 폴더) · STOP 공통 검사 · 다른 판정 규칙의 기록 — 첫 담금질 GO 여부  (2026-11-05 · 발송 전 2026-11-05 · 기준 커밋 879cbc00)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
 - `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)
