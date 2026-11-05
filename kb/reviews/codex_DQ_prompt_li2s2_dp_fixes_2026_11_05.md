@@ -1,5 +1,5 @@
 ---
-title: "DQ 프롬프트 — li2s-2 DP 고침 (⏳BASE): 저장 경계의 신호 (바깥 구간 · 교체 뒤 실패) · 현재 폴더 미해결 기록 (written False · 요약) · 독립 요약의 장부 검사 · 직접 진입 엄격 판독 시험 · 변이 제외 설명 좁힘 — 첫 담금질 GO 여부"
+title: "DQ 프롬프트 — li2s-2 DP 고침 + DQ 전 독립 리뷰 고침 (⏳BASE): 저장 경계의 신호 (바깥 구간 · 교체 뒤 실패) · 현재 폴더 미해결 기록 · 독립 요약 = 러너와 같은 규칙 (같은 실행 충돌 공통 함수 · STOP · 장부 지문 · 이력 꼴) · 판정 쓰기 구간 · 낡은 요약 — 첫 담금질 GO 여부"
 date: 2026-11-05
 updated: 2026-11-05
 tags: [review, li2s, glass, md, uma, density, quench, runner, codex, prompt, letter]
@@ -27,8 +27,9 @@ evidenceScope: multi-source-primary
 
 ## 0. 무엇을 묻나
 
-DP 의 P0-1 · P1-1 · P1-2 · P2-1 · P2-2 를 고쳤다 (091353ed · e1455a2d · ⏳FIXC). 결과 0 건 · 카드 값 그대로 (값 지문 086de59c484f9c32).
-고치면서 DP 가 짚은 자리만이 아니라 **같은 꼴** (기록 쓰기와 메모리 확정이 둘로 나뉜 자리 · 러너가 거부하는데 요약은 받는 기록) 을 같이 찾아 고쳤다.
+DP 의 P0-1 · P1-1 · P1-2 · P2-1 · P2-2 를 고쳤다 (091353ed · e1455a2d · 698e1a8d). 그 판을 바로 보내지 않고 **결과를 모르는 독립 리뷰어 하나**에게
+DP 재승인 조건 셋을 반례로 깨 보라고 줬고, 리뷰어가 **조건 ③ 이 아직 안 닫혔다** (요약의 같은 실행 규칙이 러너보다 좁다 · P1) 와 P2 일곱 · P3 둘을
+재현했다 — 그것도 같은 꼴 전체로 고쳤다 (⏳FIXC · §2 끝). 결과 0 건 · 카드 값 그대로 (값 지문 086de59c484f9c32).
 
 **물음: DP 재승인 조건 셋이 닫혔는가 · DP P2 둘이 닫혔는가 · 고치면서 새 구멍이 생겼는가 · 1 단계를 띄워도 되는가 (GO / 조건부 GO / NO-GO).**
 
@@ -78,9 +79,37 @@ DP 가 닫힘으로 본 항목 (DO P1-2 · DO P2-1 기존 결함 · DO P2-2 코�
   4. 확인 구간 (확인 기록 저장 · STOP 지우기 · 확인 끝 표시) 끄기 — 그 사이 신호로 끊겨도 확인 기록은 저장됐고 STOP 이 남아 (`stop_pending` 이라 끝 처리가 안 덮는다) 다음 확인이 같은 stop_id 의 기록을 다시 쓰지 않고 지운다 (같은 결과).
 - ⭐ 깨기를 설계하다 내 설명 하나가 또 틀린 것을 찾았다 — `_ledger_check` 의 꼴 검사 끄기를 '뒤 원소 검사가 같은 장부를 invalid 로' 라고 빼려 했는데, **빈 객체 `stop_history` (`{}`)** 는 뒤 원소 검사가 못 본다. 요약 시험을 더하고 DQ18 (소비자) · DQ19 (러너) 로 깬다.
 
+**DQ 전 독립 리뷰 (2026-11-05 · 결과 모름 · 재현으로 확인) — 지적과 고침** (`db/raw/li2s2_dq_mutation_2026_11_05/README.md` 에 표)
+- **P1-A 같은 실행 규칙이 요약에서 좁았다** (재현: 장부 판정 invalid · incomplete · 'PASS' ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail → 요약 stage1_pass + 2 단계 · 러너는 27).
+  → **한 함수** `ledger_verdict_conflict(row, folder_status)` 를 러너 ①-4 · persist · 소비자 `_ledger_check` 가 같이 쓴다: 장부 판정이 허용 값 밖이면 문제 · 폴더 판정이
+  pass · fail 이고 장부 판정이 있는데 다르면 (incomplete · invalid 포함) 충돌 · 장부 녹음 fail ↔ 폴더 pass 충돌. 요약은 판정 파일이 없는 행의 모르는 판정 값도 invalid.
+- **P2-B 러너가 '장부에 적었다' 고 말했는데 아무것도 안 적혔다** (장부 판정이 이미 있으면 덮지 않음). → 충돌이면 덮지 않고 그 행에 `verdict_observed_conflict`
+  (상태 · 어디서 · 시각 · 이유) 로 남기고 멈춘다 · 로그는 한 일을 그대로 (적음 · 충돌 관측 · 이미 같음) · 요약도 충돌 관측이 있는 행 = invalid.
+- **P2-A 시작 점검 도중 신호가 확인 안 된 닫는 STOP 을 interrupted 로 덮었다** (재현: STOP melt + `_leftover_tmps` 안 SIGTERM → rc 26 · STOP 바뀜).
+  → `stop_pending` 을 잠금 직후 · 처리기를 걸기 **전에** 켠다 (잠금 뒤라 다른 러너가 새 STOP 을 못 쓴다).
+- **P2-C 요약의 미해결 기록 검사가 `_run_kind` 보다 좁았다** (이력 줄 prev null · 없음 · 모르는 상태 → 요약 통과). → `_verdict_records` 가 이력 줄의 prev 꼴 ·
+  이전 · 새 판정 상태를 본다 (상태 없는 원문 판정은 기록으로 남겨 요약이 따로 본다).
+- **P2-D 러너는 거부하는데 요약은 통과** (잘린 STOP · 기록은 통과인데 닫는 STOP · 첫 시드가 아닌 실행의 closes_system). → 소비자가 STOP.json 을 읽는다
+  (`stop_record`): 못 읽음 = invalid · 닫는 STOP (melt · track · terminal) 인데 기록 판정이 닫힘이 아니면 invalid · 그 밖의 확인 안 된 멈춤 = pending (통과로 안 올림) —
+  러너는 invalid 코드를 기록 오류에도 '과학적 결과가 있어 재시도 거부' 같은 운영 멈춤에도 써서, 코드로 기록 오류를 가르지 않는다. 첫 시드 아닌 closes_system 은
+  러너 ①-3 · 요약 (장부 · 판정 파일) 둘 다 **기록 오류 (invalid)** 로 본다 (전에는 러너가 닫는 STOP melt 로 받았다 — 카드: 첫 시드 녹음만 계를 닫는다).
+- **P2-E 판정 파일 쓰기가 `_critical` 밖이었다** (재현: 끝 판정 교체 직전 SIGTERM → 판정 임시 파일이 남아 그 뒤 시작마다 resume). → 러너가 판정을 쓰는 네 자리
+  (담금질 끝 · 시작 전 재판정 · 첫 시드 녹음 멈춤 · 실행 중 상한) 를 구간 안에서.
+- **P2-F 거부해도 낡은 통과 요약 파일이 남았다**. → 러너가 잠금을 잡으면 먼저 기존 `stage1_summary.json` 을 '지금 판정 아님' (pending · `not_current` · 2 단계 없음)
+  으로 바꾼다 — 다시 판정하면 새 요약이 덮는다.
+- **P2-G 요약에 카드 · 도구 고정이 없었다** (카드 값만 바꿔 모든 시드를 다시 판정하면 요약은 통과 · 러너는 고정값으로 거부). → 장부의 `card_values_sha16` ·
+  `driver_sha16` 를 지금 판정에 쓰는 카드 값 · 도구와 대조 (러너는 불러온 도구 모듈의 지문을 장부에 적고, 시작 때 바로 저장한다 — ①-4 요약이 디스크 장부를 읽는다).
+- **P3** 요약 로그 문구 ('지문 불일치' → '판정 무효 (지문 · 미해결 기록 · 꼴)') · 이 실행이 STOP 을 쓴 뒤 끊기면 (교체 뒤 실패 · 미룬 신호) 그 STOP 의 코드로 끝낸다
+  (전에는 26 · 디스크 STOP 은 맞았다).
+- 리뷰어가 괜찮다고 본 것 (재현): 조건 ① (실제 `os.kill` 을 교체 직후에 · 확인 · 재시도 × 첫 · 둘째 시드) · 조건 ② (판정 임시 파일 · 깨진 이력 · 원문 판정 × A11 · B14) ·
+  확인 구간 · 교체 뒤 실패 처리 · 공통 꼴 검사.
+
 **인터페이스가 바뀐 곳**
-- 드라이버: `ledger_shape_problems` · `record_tmp_problems` · `RECORD_TMP_NAMES` · `_stage1_summary_core` (현재 폴더 미해결 기록 · 같은 실행 충돌) · `_ledger_check` (공통 꼴 검사 · 임시 파일).
-- 러너: `_AfterReplace` · `_write_json_atomic` (교체 뒤 실패를 따로) · `HELD_SIGNALS` 는 있는 신호만 건다 (Windows 에 SIGHUP 없음) · 고정값 `EXPECTED_DRIVER_SHA16 = 3a876a9322e4a52e` (`EXPECTED_VALUES_SHA16` 그대로).
+- 드라이버: `ledger_shape_problems` · `record_tmp_problems` · `RECORD_TMP_NAMES` · `_stage1_summary_core` (현재 폴더 미해결 기록) · `_ledger_check` (공통 꼴 검사 · 임시 파일 ·
+  장부 지문 · STOP · 첫 시드 아닌 닫힘 · 충돌 관측) · `LEDGER_VERDICTS` · `ledger_verdict_conflict` · `STOP_TERMINAL_CODES` · `stop_record` · `mark_summary_not_current` ·
+  `summarize_stage1` (닫는 STOP ↔ 기록 대조 · 첫 시드 아닌 판정의 closes_system) · `_verdict_records` (이력 줄 prev · 상태 꼴).
+- 러너: `_AfterReplace` · `_write_json_atomic` (교체 뒤 실패를 따로) · `HELD_SIGNALS` 는 있는 신호만 건다 (Windows 에 SIGHUP 없음) · `state["stop_code"]` ·
+  장부 `driver_sha16` = 불러온 도구 모듈의 지문 (시작 때 저장) · 고정값 `EXPECTED_DRIVER_SHA16 = ⏳DRV` (`EXPECTED_VALUES_SHA16` 그대로).
 
 ## 3. 이것을 특히 봐 달라
 
@@ -88,9 +117,14 @@ DP 가 닫힘으로 본 항목 (DO P1-2 · DO P2-1 기존 결함 · DO P2-2 코�
 2. **`_AfterReplace` 를 '저장됨' 으로 본다** — 디렉터리 fsync 실패는 내구성이 불확실할 뿐 내용은 새 것이다. 그 뒤 멈추는 코드 (확인 = refused · 루프 = invalid) 가 맞는가. 디렉터리 fsync 가 늘 실패하는 파일 시스템이면 첫 저장부터 멈춘다 (전과 같음) — 받아들일 만한가.
 3. **미룬 신호와 예외** — 구간이 예외로 끝나면 미룬 신호를 버리고 그 예외를 둔다. 구간 안 예외를 잡고 **계속 도는** 호출자가 있으면 신호를 잃는다 — 내가 본 범위에서는 없다 (예외는 모두 멈춤 · 거부 · 끝 처리로 간다). 빠진 자리가 있는가. 또 끝 처리 쓰기 구간 안에 두 번째 신호 (Ctrl-C 두 번) 가 오면 끝 처리가 STOP interrupted 를 못 쓰고 예외로 나간다 — 시험으로 확인한 것: 조용히 이어가지 않고 · 장부 행은 끝남 (interrupted) · 잠금 풀림 · 다음 시작은 판정 없는 폴더를 보고 그 실행에 묶인 resume STOP 으로 멈춘다 (발사 0 · 덮지 않음 — 한 번 Ctrl-C 때와 같은 자리에 STOP 하나 덜 거쳐 온다). 이 처리가 맞는가 (끝 처리에서 미룬 신호를 버려야 하는가).
 4. **요약의 '미해결 판정 기록'** — 판정 임시 파일 · 깨진 이력 줄 · 상태 없는 이전 판정. 다른 미해결 꼴이 있는가.
-5. **같은 실행 충돌의 범위** — pass / fail 끼리만 충돌로 본다 (incomplete · invalid 는 아님). 장부 판정이 incomplete 인데 폴더가 pass 인 정상 경로 (끝까지 돈 뒤 다시 판정) 를 막지 않으려는 것이다. 맞는가.
-6. **변이 제외 넷** (위) — 범위를 좁힌 설명이 맞는가.
-7. 새로 생긴 조용히 틀린 경로가 있는가.
+5. **같은 실행 충돌의 범위 (리뷰 P1-A 뒤 넓힘)** — 장부 판정이 있으면 (incomplete · invalid 포함) 폴더의 pass · fail 과 다를 때 충돌이다 (러너 ①-4 와 같다). 그래서
+   장부가 incomplete · invalid 인 실행을 사람이 원자료를 고쳐 pass 로 다시 판정하면 러너 · 요약 둘 다 멈춘다 (사람이 장부를 보고 정한다). DP Q2 의 'incomplete → pass 는
+   구분' 을 이렇게 (멈추고 사람이 본다) 읽었다 — 맞는가, 아니면 incomplete → pass 를 두 쪽 같이 허용해야 하는가.
+6. **확인 안 된 STOP 의 요약 처리** — 닫는 STOP 은 기록과 대조 (안 맞으면 invalid) · 그 밖은 pending. 확인 안 된 멈춤이 있는 동안 요약이 통과로 안 오르는 것이
+   운영상 맞는가 (끝난 뒤 신호로 interrupted STOP 이 남으면 사람이 확인해야 통과가 된다).
+7. **시작 때 바로 저장하는 것** — 러너는 잠금 뒤 낡은 요약을 '지금 판정 아님' 으로 바꾸고 · 장부 지문을 바로 저장한다 (거부로 끝나도). 시작 점검의 부작용이 이 둘뿐인 것이 맞는가.
+8. **변이 제외 넷** (위) — 범위를 좁힌 설명이 맞는가.
+9. 새로 생긴 조용히 틀린 경로가 있는가.
 
 ## 4. 회신 꼴
 

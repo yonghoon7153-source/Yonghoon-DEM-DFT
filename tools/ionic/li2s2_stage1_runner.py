@@ -103,7 +103,7 @@ from __future__ import annotations
 import argparse
 import copy, datetime, hashlib, importlib.util, json, os, pathlib, re, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "3a876a9322e4a52e"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "6d0d54f119f2ceca"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 EXPECTED_VALUES_SHA16 = "086de59c484f9c32"     # 카드 기계_판독_값 (mq.values_sha16) — ⭐ DO 전 리뷰 P2-12: 카드 값 (상한 포함) 을 바꾸면 이 줄도
                                                #   같이 바꾸고 다시 리뷰한다 (카드 파일만 고쳐서는 상한 멈춤을 넘기지 못한다)
 STOP_KEYS = ("at", "code", "reason", "terminal", "stop_id", "run_id", "sys", "seed", "cleanup", "rc", "verdict", "melt", "summary",
@@ -519,10 +519,10 @@ def retry_eligibility(attempts, stop_history, inventory, values, mq):
             if rk_d.get("source") == "folder_verdict":         # ⭐ DP 전 리뷰 F1 · F2 — 폴더 판정 기록으로 본 과학적 결과도 거부 전에 장부에
                 return {"ok": False, "code": "invalid",
                         "observed": {"kind": "verdict", "run_id": rid, "status": rk_d.get("status"), "closes_system": rk_d.get("closes_system") is True},
-                        "why": f"이전 실행 {tag} 폴더의 판정 기록에 과학적 판정 ({rk_d.get('status')}) 이 있다 — 장부에 적었다 · 다시 담금질하지 않는다"}
+                        "why": f"이전 실행 {tag} 폴더의 판정 기록에 과학적 판정 ({rk_d.get('status')}) 이 있다 — 장부에 남긴다 (장부 판정과 다르면 덮지 않고 충돌 관측으로) · 다시 담금질하지 않는다"}
             if rk_d.get("source") == "folder_melt_window":     # ⭐ 회신 DO P0 — 지금 계산한 녹음 fail 을 러너가 거부 전에 장부에 적는다
                 return {"ok": False, "code": "invalid", "observed": {"kind": "melt", "run_id": rid, **(rk_d.get("melt") or {})},
-                        "why": f"이전 실행 {tag} 의 녹음 창이 다 찼고 fail (보존 폴더에서 지금 계산 · 규칙 M) — 그 시드는 fail · 장부에 적었다 · "
+                        "why": f"이전 실행 {tag} 의 녹음 창이 다 찼고 fail (보존 폴더에서 지금 계산 · 규칙 M) — 그 시드는 fail · 장부에 남긴다 · "
                                "다시 담금질하지 않는다 (묶음에 넣으려면 그 폴더를 seed 자리로 되돌려 --stage1_verdict)"}
             return {"ok": False, "code": "invalid", "why": f"이전 실행 {tag} 에 과학적 판정 (장부 · 폴더) 이 있다 — 다시 담금질하지 않는다"}
         if rk == "unreadable":
@@ -783,7 +783,7 @@ def run(a, deps=None):
         line = f"[{_now()}] " + " ".join(str(x) for x in m)
         print(line, flush=True); logf.write(line + "\n"); logf.flush()
     led_p, stop_p = R / "stage1_ledger.json", R / "STOP.json"
-    state = {"h": None, "entry": None, "t0": None, "ledger": None, "stopped": False, "stop_pending": False}
+    state = {"h": None, "entry": None, "t0": None, "ledger": None, "stopped": False, "stop_pending": False, "stop_code": None}
     _CRIT[0] = 0; _PENDING.clear()                           # 앞 실행 (같은 프로세스의 시험) 이 남긴 구간 깊이 · 미룬 신호를 잇지 않는다
     def save_ledger():
         if state["ledger"] is not None:
@@ -795,9 +795,9 @@ def run(a, deps=None):
             try:
                 _write_json_atomic(stop_p, rec)
             except _AfterReplace:
-                state["stopped"] = True                      # 디스크에 이 STOP 이 있다 — 끝 처리가 덮지 않게
+                state["stopped"], state["stop_code"] = True, code   # 디스크에 이 STOP 이 있다 — 끝 처리가 덮지 않게 · 그 코드로 끝낸다
                 raise
-            state["stopped"] = True
+            state["stopped"], state["stop_code"] = True, code
         log(f"⛔ 멈춤 ({code}) — {reason} · stop_id {rec['stop_id']}")
         return RC[code]
     def finish(ent, rc, status, wall_h, cleanup=None):
@@ -838,8 +838,11 @@ def run(a, deps=None):
                 raise ValueError(f"melt_check_history 가 목록이 아니다 ({type(mh0).__name__})")
             if mc0 is not None and not (isinstance(mc0, dict) and mc0.get("verdict") in ("fail", "invalid")):
                 raise ValueError(f"melt_check {str(mc0)[:40]!r} 꼴이 아니다")
-            if v0 not in (None, "pass", "fail", "invalid", "incomplete"):
+            if v0 not in mq.LEDGER_VERDICTS:                 # ⭐ DQ 전 리뷰 P1-A — 소비자와 같은 허용 값
                 raise ValueError(f"verdict {v0!r} 를 모른다")
+            vc0 = new_.get("verdict_observed_conflict")
+            if vc0 is not None and not (isinstance(vc0, list) and all(isinstance(x_, dict) for x_ in vc0)):
+                raise ValueError(f"verdict_observed_conflict 가 목록이 아니다 ({type(vc0).__name__})")
             if obs.get("kind") == "melt":
                 if not (isinstance(mc0, dict) and mc0.get("verdict") == "fail"):
                     if mc0 is not None:
@@ -848,7 +851,10 @@ def run(a, deps=None):
                                           **{k: obs.get(k) for k in ("D_framework_cm2_s", "window_used_ps", "n_frames_read", "estimator")}}
                 closes_, basis_ = first_, "first_seed_melt_window_check (복구 때 관측)"
             elif obs.get("kind") == "verdict" and obs.get("status") in ("pass", "fail"):
-                if v0 is None:
+                cf_ = mq.ledger_verdict_conflict(r_, obs["status"], recorded=False)   # ⭐ DQ 전 리뷰 P1-A · P2-B — 소비자와 같은 함수
+                if cf_ is not None:                          # 장부를 덮지 않고 충돌 관측으로 남긴다 (호출자가 멈춘다)
+                    new_["verdict_observed_conflict"] = list(vc0 or []) + [{"status": obs["status"], "in": where, "at": _now(), "why": cf_}]
+                elif v0 is None:
                     new_["verdict"] = obs["status"]
                     new_["verdict_observed"] = {"in": where, "at": _now()}
                 closes_, basis_ = first_ and obs.get("closes_system") is True, f"first_seed 판정 closes_system ({where} 에서 관측)"
@@ -856,7 +862,9 @@ def run(a, deps=None):
                 raise ValueError(f"모르는 관측 ({obs.get('kind')!r} · {obs.get('status')!r})")
             if closes_ and cs0 is not True:
                 new_["closes_system"], new_["closes_basis"] = True, basis_
-            if new_ != r_:
+            changed_ = new_ != r_
+            conflict_ = new_.get("verdict_observed_conflict") != r_.get("verdict_observed_conflict")
+            if changed_:
                 old_ = copy.deepcopy(r_)
                 with _critical():                            # ⭐ 회신 DP P0-1 — 메모리 변경 → 저장 → 성공 확정을 한 구간으로 (저장 뒤 미룬 신호가 되돌림으로 안 간다)
                     r_.clear(); r_.update(new_)
@@ -870,8 +878,13 @@ def run(a, deps=None):
         except Exception as e_:
             raise _PersistFailed(f"{type(e_).__name__}: {str(e_)[:120]}") from e_
         what_ = "녹음 fail (보존 폴더에서 계산)" if obs.get("kind") == "melt" else f"폴더 판정 {obs.get('status')}"
-        log(f"  ⭐ {r_.get('system')}{r_.get('seed')} 실행 {str(obs.get('run_id'))[:8]} 의 {what_} ({where}) 을 장부에 적었다"
-            + (" · 계의 첫 시드 — 그 계를 닫는다" if r_.get("closes_system") is True else ""))
+        tag_ = f"  ⭐ {r_.get('system')}{r_.get('seed')} 실행 {str(obs.get('run_id'))[:8]} 의 {what_} ({where})"
+        if conflict_:                                        # ⭐ DQ 전 리뷰 P2-B — 한 일을 그대로 말한다
+            log(f"{tag_} — 장부 판정 {r_.get('verdict')!r} 와 달라 덮지 않고 충돌 관측 (verdict_observed_conflict) 으로 적었다")
+        elif changed_:
+            log(f"{tag_} 을 장부에 적었다" + (" · 계의 첫 시드 — 그 계를 닫는다" if r_.get("closes_system") is True else ""))
+        else:
+            log(f"{tag_} — 장부에 이미 같은 기록이 있다 (그대로)")
         return r_
     def cost_so_far():
         return sum(float(r["wall_h"] if r.get("wall_h") is not None else (r.get("wall_h_so_far") or 0.0))
@@ -916,6 +929,8 @@ def run(a, deps=None):
     lock = _Lock(R / "stage1.lock")
     if not lock.acquire():
         log("⛔ 같은 run_root 로 러너가 이미 잠금을 잡고 있다 — 시작하지 않는다"); logf.close(); return RC["refused"]
+    state["stop_pending"] = os.path.lexists(stop_p)          # ⭐ DQ 전 리뷰 P2-A · DP 전 리뷰 F4 — 신호 처리기를 걸기 **전에**: 시작 점검 도중 신호가 와도
+    #                                                          끝 처리가 확인 안 된 앞 STOP (닫는 STOP 포함) 을 덮지 않는다 (잠금 뒤라 다른 러너가 새로 못 쓴다)
     old = {}
     if threading.current_thread() is threading.main_thread():
         def _raise_sig(signum, frame):
@@ -929,6 +944,7 @@ def run(a, deps=None):
         for sg in [getattr(signal, n_) for n_ in HELD_SIGNALS if hasattr(signal, n_)]:   # Windows 에는 SIGHUP 이 없다
             old[sg] = signal.signal(sg, _raise_sig)
     try:
+        mq.mark_summary_not_current(R, "러너가 이 run_root 로 시작했다 (시작 점검 · 재판정 뒤에 새로 낸다)")   # ⭐ DQ 전 리뷰 P2-F — 거부해도 낡은 통과 요약이 안 남게
         left_ = _leftover_tmps(led_p, stop_p)
         if left_:                                            # ⭐ DP 전 리뷰 (둘째) F2 — 남은 임시 파일을 무시 · 덮지 않는다
             log(f"⛔ 앞 쓰기가 끊겨 남은 임시 파일이 있다 ({left_}) — 그 안이 더 새 장부 · 멈춤일 수 있다 · 시작하지 않는다 (사람이 보고 정리)")
@@ -952,11 +968,11 @@ def run(a, deps=None):
         else:
             state["ledger"] = {"runs": [], "stop_history": []}
         led = state["ledger"]
-        led.update({"decision": DECISION, "driver_sha16": s16, "card": CARD_REL, "cap_h": cap_base,
-                    "card_values_sha16": mq.values_sha16(vals)})
+        led.update({"decision": DECISION, "driver_sha16": mq.driver_sha16(), "card": CARD_REL, "cap_h": cap_base,   # ⭐ DQ 전 리뷰 P2-G — 판정을 낸
+                    "card_values_sha16": mq.values_sha16(vals)})   # 도구 (불러온 모듈) 의 지문 · 소비자 _ledger_check 가 지금 도구 · 카드 값과 대조 (운영에선 = 고정값 s16)
+        save_ledger()                                        # ⭐ DQ 전 리뷰 P2-G — 지문을 바로 디스크에 (①-4 묶음 판정이 디스크 장부를 읽는다 · 고정된 새 도구로 이어 갈 때도 맞게)
         # ①-1 STOP.json — 닫는 사건은 넘기지 않는다 · 나머지는 사람이 stop_id 로 확인해야 이어간다 (회신 DG P0-1)
-        if os.path.lexists(stop_p):
-            state["stop_pending"] = True                     # ⭐ DP 전 리뷰 F4 · (둘째) F6 — 지우기 전까지 끝 처리가 이 STOP 을 덮지 않는다
+        if os.path.lexists(stop_p):                          # (stop_pending 은 잠금 직후에 이미 켰다 — 지우기 전까지 끝 처리가 이 STOP 을 덮지 않는다)
             try:                                             # ⭐ DO 전 리뷰 P2-5 · P2-7 — 못 읽는 STOP 은 덮어쓰지 않고 거부 · stop_id 없는 STOP 을 조용히 넘기지 않는다
                 sp = mq.loads_strict(stop_p.read_text(encoding="utf-8"))
                 if not (isinstance(sp, dict) and isinstance(sp.get("stop_id"), str) and sp["stop_id"].strip()
@@ -1032,7 +1048,13 @@ def run(a, deps=None):
                                   "--attest_uncertainty_h U --attest_derivation '…' --attest_confirmer '…' 로 상한을 적은 뒤 다시 (하한 미상이면 증언을 안 받는다)",
                         sys=e0["system"], seed=e0["seed"], run_id=e0.get("run_id"))
         # ①-3 장부에 그 계를 닫은 사건이 있으면 거부 (STOP 을 지워도)
-        closed = [f"{r['system']}{r['seed']}" for r in led["runs"] if r.get("closes_system")]
+        cl_bad = [f"{r.get('system')}{r.get('seed')}" for r in led["runs"]
+                  if not (r.get("closes_system") is None or type(r.get("closes_system")) is bool)
+                  or (r.get("closes_system") is True and r.get("seed") != vals["first_seed"])]
+        if cl_bad:                                           # ⭐ DQ 전 리뷰 P2-D — 카드: 첫 시드 녹음만 계를 닫는다 (소비자 _ledger_check 와 같은 규칙)
+            return stop("invalid", f"장부 closes_system 이 기록 규칙과 안 맞는다 ({cl_bad} — 첫 시드 ({vals['first_seed']}) 아님 · 참거짓 아님) — "
+                                   "기록 오류 (사람이 본다 · 과학적 닫힘으로 읽지 않는다)")
+        closed = [f"{r['system']}{r['seed']}" for r in led["runs"] if r.get("closes_system") is True]
         if closed:
             return stop("melt", f"장부에 계를 닫은 사건이 있다 ({closed} · 첫 시드 녹음 미충족) — 재시작으로 다시 열지 않는다")
         # ①-4 판정 파일을 믿지 않는다 — 원자료로 다시 판정 → 묶음 판정 (회신 DG P1-4)
@@ -1040,7 +1062,8 @@ def run(a, deps=None):
         for sysn, seed in order:
             rd = R / sysn / f"seed{seed}"
             if (rd / "stage1_verdict.json").is_file():
-                now_ = mq.stage1_verdict(rd, values=vals, log=lambda *m: None, reason="러너 재시작 — 판정 파일을 믿지 않고 원자료로 다시 판정")
+                with _critical():                            # ⭐ DQ 전 리뷰 P2-E — 판정 파일 쓰기 (임시 → 교체) 가 신호로 반쯤 끊기지 않게
+                    now_ = mq.stage1_verdict(rd, values=vals, log=lambda *m: None, reason="러너 재시작 — 판정 파일을 믿지 않고 원자료로 다시 판정")
                 if now_.get("written") is False:             # ⭐ 회신 DP P1-1 — 다시 판정하지 못했다 (판정 임시 파일) = 보류 · 디스크의 옛 판정으로 가지 않는다
                     return stop("invalid", f"{sysn}{seed} 판정을 다시 쓰지 못했다 — {' · '.join((now_.get('reasons') or {}).get('invalid', []))[:200]}",
                                 sys=sysn, seed=seed, run_id=_folder_run_id(rd))
@@ -1058,9 +1081,10 @@ def run(a, deps=None):
                                        "closes_system": now_.get("closes_system") is True}, "시작 전 재판정 (①-4)")
             except _PersistFailed as e_:
                 return stop("invalid", f"{sysn}{seed} 재판정 결과를 장부에 못 적었다 ({e_}) — 사람이 본다", sys=sysn, seed=seed, run_id=now_["run_id"])
-            if r_ is not None and r_.get("verdict") != now_["status"]:
-                return stop("invalid", f"{sysn}{seed} 재판정 {now_['status']} ≠ 장부 판정 {r_.get('verdict')} — 원자료 · 도구가 바뀌었을 수 있다 · "
-                                       "장부를 덮지 않는다 (사람이 본다)", sys=sysn, seed=seed, run_id=now_["run_id"])
+            cf_ = mq.ledger_verdict_conflict(r_, now_["status"], recorded=False) if r_ is not None else None   # ⭐ DQ 전 리뷰 P1-A — 소비자와 같은 함수
+            if cf_ is not None:
+                return stop("invalid", f"{sysn}{seed} 재판정 {now_['status']} — {cf_} · 원자료 · 도구가 바뀌었을 수 있다 · "
+                                       "장부를 덮지 않는다 (충돌 관측으로 남김 · 사람이 본다)", sys=sysn, seed=seed, run_id=now_["run_id"])
         sm = mq.stage1_summary(R, values=vals, log=log)
         if sm["track"] == "stop_track":
             return stop("track", f"시작 전 묶음 판정 stop_track — {sm.get('why')}", summary=sm)
@@ -1156,7 +1180,8 @@ def run(a, deps=None):
                         return stop("abnormal", f"{sysn}{seed} 상한으로 멈추려 했는데 그룹이 남았다 (pid {cl.get('left')}) — 손으로 정리",
                                     sys=sysn, seed=seed, cleanup=cl, run_id=rid)
                     try:
-                        mq.stage1_verdict(rd, values=vals, log=log, reason="상한 멈춤 (기록용 · 미완)")
+                        with _critical():                    # ⭐ DQ 전 리뷰 P2-E — 판정 파일 쓰기를 신호로 반쯤 끊지 않게
+                            mq.stage1_verdict(rd, values=vals, log=log, reason="상한 멈춤 (기록용 · 미완)")
                     except Exception as e:
                         log(f"  (기록용 판정 실패 {type(e).__name__}: {e})")
                     return stop("cap", f"{sysn}{seed} 실행 중 누적 {cum + el:.1f} h ≥ 상한 {cap:g} h — 그 담금질을 멈추고 미완결",
@@ -1185,7 +1210,8 @@ def run(a, deps=None):
                                             sys=sysn, seed=seed, cleanup=cl, run_id=rid)
                             return stop("abnormal", f"{sysn}{seed} 를 녹음 판정 invalid 로 멈추려 했는데 그룹이 남았다 (pid {cl.get('left')}) — "
                                                     "손으로 정리 (장부 melt_check = invalid)", sys=sysn, seed=seed, cleanup=cl, run_id=rid)
-                        v = mq.stage1_verdict(rd, values=vals, log=log, reason=f"첫 시드 녹음 판정 {mw['verdict']} — 러너가 멈춤")
+                        with _critical():                    # ⭐ DQ 전 리뷰 P2-E
+                            v = mq.stage1_verdict(rd, values=vals, log=log, reason=f"첫 시드 녹음 판정 {mw['verdict']} — 러너가 멈춤")
                         ent["verdict"] = v.get("status")
                         if mw["verdict"] == "fail" and not v.get("closes_system"):
                             ent["verdict_disagrees"] = f"녹음 판정 fail 인데 시드 판정 {v.get('status')} · closes_system {v.get('closes_system')}"
@@ -1209,7 +1235,8 @@ def run(a, deps=None):
             if rc != 0:
                 return stop("abnormal", f"{sysn}{seed} 담금질 rc {rc} — 비정상 종료 (사용자 결정 · 그 계를 어떻게 할지)", sys=sysn, seed=seed, rc=rc,
                             run_id=rid)
-            v = mq.stage1_verdict(rd, values=vals, log=log, reason="담금질 끝")
+            with _critical():                                # ⭐ DQ 전 리뷰 P2-E — 끝 판정 쓰기 (임시 → 교체) 가 신호로 반쯤 끊기지 않게
+                v = mq.stage1_verdict(rd, values=vals, log=log, reason="담금질 끝")
             if v.get("written") is False:                    # ⭐ 회신 DP P1-1 — 판정을 쓰지 못했다 (판정 임시 파일) = 보류
                 return stop("invalid", f"{sysn}{seed} 판정을 쓰지 못했다 — {' · '.join((v.get('reasons') or {}).get('invalid', []))[:200]}",
                             sys=sysn, seed=seed, run_id=rid)
@@ -1254,11 +1281,13 @@ def run(a, deps=None):
             finish(ent, "killed_runner_exit", "interrupted", (clock() - state["t0"]) / 3600.0, cleanup=cl)
         log("  " + traceback.format_exc().strip().replace("\n", "\n  "))
         if state.get("stop_pending"):                        # ⭐ DP 전 리뷰 F4 · (둘째) F6 — 확인 안 된 앞 STOP 을 덮지 않는다
-            log(f"  ⛔ 앞선 STOP.json 을 확인하는 중에 끊겼다 ({why}) — 그 STOP 을 그대로 둔다 (덮지 않는다 · 다시 확인)")
+            log(f"  ⛔ 확인 안 된 앞 STOP.json 이 있는 채로 끊겼다 ({why}) — 그 STOP 을 그대로 둔다 (덮지 않는다 · 다시 확인)")
         elif not state["stopped"]:
             stop("interrupted", f"러너 중단 — {why} · " + ("돌던 담금질 그룹을 비웠다" if cl.get("group_empty")
                                                          else f"⛔ 담금질 그룹이 남았을 수 있다 (pid {cl.get('left')}) — 손으로 본다")
                  + " · 그 시드 폴더는 사람이 정한다", cleanup=cl, run_id=ent_rid)
+        elif state.get("stop_code") in RC:                   # ⭐ DQ 전 리뷰 P3 — 이 실행이 STOP 을 쓴 뒤 끊겼으면 (교체 뒤 실패 · 미룬 신호) 그 STOP 의 코드로
+            return RC[state["stop_code"]]
         return RC["interrupted"]
     finally:
         try:
@@ -2991,7 +3020,7 @@ def _selftest():
     rc_d2, L_d2, _ = go(wt, rr=rr_d0, ack=sd1_["stop_id"])
     sd2_ = J(rr_d0 / "STOP.json")
     chk(rc_rj == RC["pass"] and row_rj.get("verdict") == "fail" and "①-4" in str((row_rj.get("verdict_observed") or {}).get("in"))
-        and rc_d0 == RC["pass"] and rc_d1 == RC["invalid"] and not L_d1 and "≠ 장부 판정" in sd1_.get("reason", "")
+        and rc_d0 == RC["pass"] and rc_d1 == RC["invalid"] and not L_d1 and "장부 판정 fail ≠ 폴더 판정 pass" in sd1_.get("reason", "")
         and rc_d2 == RC["invalid"] and not L_d2 and "못 적었다" in sd2_.get("reason", ""),
         "⛔음성 DP 전 리뷰 F2 · F4: 시작 전 재판정 (①-4) 의 fail 도 장부 verdict 에 적는다 · 재판정이 장부 판정과 다르면 덮지 않고 invalid 로 멈춘다 · "
         f"장부 행 꼴이 틀려 못 적으면 invalid ({rc_rj} · {row_rj.get('verdict')} · {rc_d1} · {sd1_.get('reason', '')[:60]} · {rc_d2})")
@@ -3148,8 +3177,9 @@ def _selftest():
     finally:
         globals()["os"] = _os4
     sps_ = J(rr_ps / "STOP.json")
-    chk(arm_s["fired"] and rc_ps == RC["interrupted"] and sps_.get("code") == "melt" and sps_.get("terminal") is True,
-        f"⛔음성 회신 DP P2-1: terminal STOP (melt) 교체가 끝나는 순간 미룬 신호가 와도 끝 처리가 interrupted 로 덮지 않는다 ({rc_ps} · {sps_.get('code')} · {sps_.get('terminal')})")
+    chk(arm_s["fired"] and rc_ps == RC["melt"] and sps_.get("code") == "melt" and sps_.get("terminal") is True,
+        f"⛔음성 회신 DP P2-1 · DQ 전 리뷰 P3: terminal STOP (melt) 교체가 끝나는 순간 미룬 신호가 와도 끝 처리가 interrupted 로 덮지 않고 · 그 STOP 의 코드로 끝난다 "
+        f"({rc_ps} · {sps_.get('code')} · {sps_.get('terminal')})")
     # ⭐ 회신 DP P1-1 (Codex 재현) — 8 실행까지만 끝난 묶음 (상한 멈춤) 에서 A11 에 판정 임시 파일 · 깨진 이력 · 같은 열쇠 판정 → 추가 실행 0
     rc_8a, L_8a, rr_8a = go(wt)
     wl_ = [float(x_["wall_h"]) for x_ in J(rr_8a / "stage1_ledger.json")["runs"]]
@@ -3251,8 +3281,8 @@ def _selftest():
             rc_sa, L_sa, rr_sa = go(wt, scen={("A", 11): {"melt": "fail", "polls": 8}})
         finally:
             globals()["os"], globals()["_write_json_atomic"] = _os5, _wja5
-        res_ar["stop_terminal"] = (arm_st["fired"], J(rr_sa / "STOP.json").get("code"))
-        exp_ar = {"ack": (True, RC["refused"], 0, "fail"), "loop": (True, RC["invalid"], 0, "fail"), "stop_terminal": (True, "melt")}
+        res_ar["stop_terminal"] = (arm_st["fired"], J(rr_sa / "STOP.json").get("code"), rc_sa)
+        exp_ar = {"ack": (True, RC["refused"], 0, "fail"), "loop": (True, RC["invalid"], 0, "fail"), "stop_terminal": (True, "melt", RC["melt"])}
         chk(res_ar == exp_ar,
             "⛔음성 회신 DP P0-1 · P2-1 (교체 뒤 실패): 본 녹음 fail 을 적은 장부 교체 뒤 디렉터리 fsync 가 실패해도 메모리를 되돌리지 않는다 — 확인은 거부 · "
             f"재시도는 invalid · 장부에 fail 이 남는다 · terminal STOP 교체 뒤 실패도 끝 처리가 덮지 않는다 ({ {k: v for k, v in res_ar.items() if v != exp_ar.get(k)} })")
@@ -3318,6 +3348,134 @@ def _selftest():
         and sp_2r.get("run_id") == led_2s["runs"][-1]["run_id"],
         "⛔음성 DQ 편지 §3-3: 끝 처리의 장부 교체 직후 둘째 신호 → 조용히 이어가지 않고 (예외) · 장부 행은 끝남 · 잠금 풀림 · "
         f"다음 시작은 판정 없는 폴더에서 resume STOP (그 실행에 묶임 · 발사 0) ({arm_2['fired']} · {type(exc_2s).__name__} · {rc_2r} · {len(L_2r)})")
+    # ⭐ DQ 전 리뷰 (독립 · 2026-11-05) 재현 — 러너가 거부하는 기록을 요약도 거부 · 확인 안 된 STOP 을 덮지 않음 · 판정 쓰기 구간 · 낡은 요약
+    chk(tuple(TERMINAL_STOPS) == tuple(real.STOP_TERMINAL_CODES), f"러너 닫는 STOP 코드 {TERMINAL_STOPS} = 소비자 {real.STOP_TERMINAL_CODES} (DQ 전 리뷰 P2-D)")
+    def _led_row(c_, sys_, sd_, **kv):
+        l_ = J(c_ / "stage1_ledger.json")
+        [x_ for x_ in l_["runs"] if (x_["system"], x_["seed"]) == (sys_, sd_)][-1].update(kv)
+        _write_json_atomic(c_ / "stage1_ledger.json", l_)
+    def _led_top(c_, **kv):
+        l_ = J(c_ / "stage1_ledger.json"); l_.update(kv); _write_json_atomic(c_ / "stage1_ledger.json", l_)
+    def _vf_edit(c_, sys_, sd_, **kv):
+        vf_ = c_ / sys_ / f"seed{sd_}" / "stage1_verdict.json"; v_ = J(vf_); v_.update(kv)
+        vf_.write_text(json.dumps(v_, ensure_ascii=False), encoding="utf-8")
+    def _hist_add(c_, line_):
+        with open(c_ / "A/seed11" / real.VERDICT_HISTORY, "a", encoding="utf-8") as fh_:
+            fh_.write(line_ + "\n")
+    def _stop_put(c_, txt_):
+        (c_ / "STOP.json").write_text(txt_, encoding="utf-8")
+    STOPJ = lambda code_, term_=False: json.dumps({"at": "x", "code": code_, "reason": "selftest", "terminal": term_, "stop_id": "ab" * 8})
+    cases_q = {
+        # P1-A — 같은 실행의 장부 판정 ↔ 폴더 판정 (러너 ①-4 와 같은 함수)
+        "led_invalid": lambda c_: _led_row(c_, "A", 12, verdict="invalid"),
+        "led_incomplete": lambda c_: _led_row(c_, "A", 12, verdict="incomplete"),
+        "led_PASS": lambda c_: _led_row(c_, "A", 12, verdict="PASS"),
+        "led_inv_folder_fail": lambda c_: (_led_row(c_, "A", 13, verdict="invalid"), _vf_edit(c_, "A", 13, status="fail")),
+        "led_conflict_rec": lambda c_: _led_row(c_, "A", 12, verdict_observed_conflict=[{"status": "fail", "in": "selftest"}]),
+        # P2-C — 이력 줄의 prev · 상태 꼴
+        "hist_prev_null": lambda c_: _hist_add(c_, '{"prev": null, "new_status": "pass"}'),
+        "hist_no_prev": lambda c_: _hist_add(c_, '{"new_status": "pass"}'),
+        "hist_prev_garbage": lambda c_: _hist_add(c_, '{"prev": {"status": "garbage"}, "new_status": "pass"}'),
+        "hist_new_garbage": lambda c_: _hist_add(c_, '{"prev": {"status": "pass"}, "new_status": "garbage"}'),
+        # P2-D — STOP.json · 첫 시드 아닌 닫힘
+        "stop_trunc": lambda c_: _stop_put(c_, '{"code": "melt", "stop_id": "a'),
+        "stop_terminal": lambda c_: _stop_put(c_, STOPJ("melt", True)),
+        "closes_nonfirst_ledger": lambda c_: _led_row(c_, "A", 12, closes_system=True),
+        "led_PASS_noverdict": lambda c_: (_led_row(c_, "A", 12, verdict="PASS"), (c_ / "A/seed12/stage1_verdict.json").unlink()),
+        "led_conflict_badshape": lambda c_: _led_row(c_, "A", 12, verdict_observed_conflict={}),
+        "closes_nonfirst_verdict": lambda c_: _vf_edit(c_, "A", 12, closes_system=True),
+        # P2-G — 장부를 쓴 러너의 카드 값 · 도구 지문
+        "led_card_fp": lambda c_: _led_top(c_, card_values_sha16="0" * 16),
+        "led_driver_fp": lambda c_: _led_top(c_, driver_sha16="0" * 16),
+    }
+    res_q = {k_: _sum_case(f_) for k_, f_ in cases_q.items()}
+    open_q = (_sum_case(lambda c_: _stop_put(c_, STOPJ("interrupted"))), _sum_case(lambda c_: _stop_put(c_, STOPJ("invalid"))))
+    chk(all(v_ == ("invalid", None) for v_ in res_q.values()) and open_q == (("pending", None), ("pending", None)) and s_ok_["track"] == "stage1_pass",
+        "⛔음성 DQ 전 리뷰 P1-A · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete · 'PASS' ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 적힌 충돌 관측 · "
+        "이력 prev 없음 · null · 모르는 상태 · 잘린 STOP · 닫는 STOP (기록은 통과) · 첫 시드 아닌 닫힘 (장부 · 판정) · 장부의 모르는 판정 (판정 파일 없이) · "
+        "충돌 관측 꼴 · 장부 카드 · 도구 지문 → 요약 invalid · 2 단계 없음 · 확인 안 된 다른 STOP (interrupted · invalid) → pending "
+        f"({ {k: v for k, v in res_q.items() if v != ('invalid', None)} } · {open_q})")
+    # 닫는 STOP 이 기록과 맞으면 (첫 시드 녹음 fail · 장부 closes_system) 요약은 stop_track 그대로
+    rc_cq, L_cq, rr_cq = go(wt, scen={("A", 11): {"melt": "fail", "polls": 8}})
+    sm_cq = summ(rr_cq)
+    chk(rc_cq == RC["melt"] and J(rr_cq / "STOP.json").get("code") == "melt" and sm_cq["track"] == "stop_track",
+        f"DQ 전 리뷰 P2-D 양성: 닫는 STOP 이 기록 (첫 시드 녹음 fail) 과 맞으면 요약은 stop_track ({rc_cq} · {sm_cq['track']})")
+    # P1-A · P2-B — 러너 ①-4: 장부 판정 invalid ↔ 재판정 pass → 덮지 않고 충돌 관측으로 남기고 invalid (발사 0) · 로그는 한 일을 그대로
+    rr_q1 = clone(rr_d); _led_row(rr_q1, "A", 12, verdict="invalid")
+    rc_q1, L_q1, _ = go(wt, rr=rr_q1)
+    row_q1 = [x_ for x_ in J(rr_q1 / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
+    log_q1 = (rr_q1 / "stage1.log").read_text(encoding="utf-8")
+    chk(rc_q1 == RC["invalid"] and not L_q1 and row_q1.get("verdict") == "invalid"
+        and [x_.get("status") for x_ in row_q1.get("verdict_observed_conflict") or []] == ["pass"]
+        and "충돌 관측" in log_q1 and "A12 실행" in log_q1 and "≠ 폴더 판정 pass" in J(rr_q1 / "STOP.json").get("reason", ""),
+        f"⛔음성 DQ 전 리뷰 P1-A · P2-B: 장부 판정 invalid 인 실행을 재판정이 pass 로 내면 러너는 덮지 않고 충돌 관측으로 남기고 invalid (발사 0) · "
+        f"로그에 '충돌 관측' ({rc_q1} · 발사 {len(L_q1)} · {row_q1.get('verdict')} · {row_q1.get('verdict_observed_conflict')})")
+    # P2-D — 러너 ①-3: 첫 시드 아닌 장부 닫힘 = 기록 오류 (invalid · 닫는 STOP 아님) · P2-C 러너도 이력 꼴 오류에서 발사 0
+    rr_q2 = clone(rr_d); _led_row(rr_q2, "A", 12, closes_system=True)
+    rc_q2, L_q2, _ = go(wt, rr=rr_q2)
+    rr_q3 = clone(rr_d); _hist_add(rr_q3, '{"prev": null, "new_status": "pass"}')
+    rc_q3, L_q3, _ = go(wt, rr=rr_q3)
+    chk(rc_q2 == RC["invalid"] and not L_q2 and J(rr_q2 / "STOP.json").get("code") == "invalid" and rc_q3 == RC["invalid"] and not L_q3,
+        f"⛔음성 DQ 전 리뷰 P2-D · P2-C: 첫 시드 아닌 장부 닫힘 → 러너 invalid (닫는 STOP 아님 · 발사 0) · 이력 prev null → 러너 invalid (발사 0) ({rc_q2} · {rc_q3})")
+    # P2-A — 시작 점검 도중 신호가 와도 확인 안 된 닫는 STOP 을 덮지 않는다
+    rr_q4 = clone(rr_d); _stop_put(rr_q4, STOPJ("melt", True)); sp_q4 = (rr_q4 / "STOP.json").read_bytes()
+    _lt0 = globals()["_leftover_tmps"]
+    def _lt_sig(*a_):
+        signal.getsignal(signal.SIGTERM)(signal.SIGTERM, None)     # 처리기를 직접 부른다 (이식 가능 · 구간 밖이라 바로 던진다)
+        return _lt0(*a_)
+    globals()["_leftover_tmps"] = _lt_sig
+    try:
+        rc_q4, L_q4, _ = go(wt, rr=rr_q4)
+    finally:
+        globals()["_leftover_tmps"] = _lt0
+    chk(rc_q4 == RC["interrupted"] and not L_q4 and (rr_q4 / "STOP.json").read_bytes() == sp_q4,
+        f"⛔음성 DQ 전 리뷰 P2-A: 시작 점검 도중 (STOP 을 읽기 전) 신호가 와도 확인 안 된 닫는 STOP 을 덮지 않는다 ({rc_q4} · STOP 그대로)")
+    # P2-E — 판정 파일 쓰기 (임시 → 교체) 사이에 온 신호는 구간 끝에서 받는다 (판정 임시 파일이 안 남는다) — 러너가 판정을 쓰는 네 자리 모두
+    _ros = real.os
+    def _verdict_signal_run(call_, seed_dir="seed11"):
+        arm_vw = {"on": True, "fired": False}
+        def _drv_replace(src_, dst_, _arm=arm_vw):
+            if _arm["on"] and pathlib.Path(dst_).name == "stage1_verdict.json" and pathlib.Path(dst_).parent.name == seed_dir:
+                _arm["on"], _arm["fired"] = False, True
+                signal.getsignal(signal.SIGTERM)(signal.SIGTERM, None)   # 처리기를 직접 — 구간 안이면 미뤄지고 · 밖이면 교체 전에 던진다
+            return _ros.replace(src_, dst_)
+        osd_ = _ty4.SimpleNamespace(**{k_: getattr(_ros, k_) for k_ in dir(_ros) if not k_.startswith("__")}); osd_.replace = _drv_replace
+        real.os = osd_
+        try:
+            rc_, L_, rr_ = call_()
+        finally:
+            real.os = _ros
+        vd_ = rr_ / "A" / seed_dir
+        return (arm_vw["fired"], rc_, not (vd_ / "stage1_verdict.json.tmp").exists(), (vd_ / "stage1_verdict.json").is_file()), len(L_)
+    rr_vr = clone(rr_d)
+    res_vw = {"end": _verdict_signal_run(lambda: go(wt)),
+              "rejudge": _verdict_signal_run(lambda: go(wt, rr=rr_vr)),
+              "melt": _verdict_signal_run(lambda: go(wt, scen={("A", 11): {"melt": "fail", "polls": 8}})),
+              "cap": _verdict_signal_run(lambda: go(mk_wt(card=mk_card(stage1_cap_gpu_h=3.0)), seed_worst_h=1.0))}
+    exp_vw = {"end": ((True, RC["interrupted"], True, True), 1), "rejudge": ((True, RC["interrupted"], True, True), 0),
+              "melt": ((True, RC["interrupted"], True, True), 1), "cap": ((True, RC["interrupted"], True, True), 1)}
+    chk(res_vw == exp_vw,
+        "⛔음성 DQ 전 리뷰 P2-E: 러너가 판정을 쓰는 네 자리 (담금질 끝 · 시작 전 재판정 · 첫 시드 녹음 멈춤 · 실행 중 상한) 모두 — 판정 파일의 임시 → 교체 사이에 "
+        f"신호가 와도 교체를 끝낸 뒤 받는다 · 판정 임시 파일이 안 남는다 ({ {k: v for k, v in res_vw.items() if v != exp_vw[k]} })")
+    # P2-F — 러너가 시작 점검 · 재판정에서 거부해도 낡은 통과 요약이 남지 않는다
+    rr_q5 = clone(rr_d); (rr_q5 / "A/seed11/stage1_verdict.json.tmp").write_text('{"status": "pass"}', encoding="utf-8")
+    rc_q5, L_q5, _ = go(wt, rr=rr_q5)
+    rr_q6 = clone(rr_d); (rr_q6 / "stage1_ledger.json.tmp").write_text("{}", encoding="utf-8")
+    rc_q6, L_q6, _ = go(wt, rr=rr_q6)
+    sq5, sq6 = J(rr_q5 / "stage1_summary.json"), J(rr_q6 / "stage1_summary.json")
+    chk(J(rr_d / "stage1_summary.json")["track"] == "stage1_pass" and rc_q5 == RC["invalid"] and rc_q6 == RC["refused"] and not L_q5 and not L_q6
+        and sq5["track"] != "stage1_pass" and sq5.get("stage2") is None and sq6.get("not_current") is True and sq6["track"] == "pending",
+        f"⛔음성 DQ 전 리뷰 P2-F: 통과 요약이 있던 묶음에서 러너가 거부해도 (판정 임시 파일 → invalid · 장부 임시 파일 → 거부) 그 요약이 stage1_pass 로 안 남는다 "
+        f"({rc_q5} · {sq5['track']} · {rc_q6} · {sq6['track']})")
+    # P2-G — 카드 값만 바꿔 모든 시드를 다시 판정해도 장부의 카드 값 지문이 막는다
+    rr_q7 = clone(rr_d)
+    vals_e = dict(vals_t, stage1_cap_gpu_h=float(vals_t["stage1_cap_gpu_h"]) + 1.0)
+    for s_ in SYSTEMS:
+        for sd_ in vals_t["seeds"]:
+            real.stage1_verdict(rr_q7 / s_ / f"seed{sd_}", values=vals_e, log=lambda *m: None, reason="selftest — 카드 값만 바꿔 다시 판정")
+    sm_q7 = real.stage1_summary(rr_q7, values=vals_e, log=lambda *m: None)
+    chk(sm_q7["track"] == "invalid" and any("카드 값 지문" in x_ for x_ in (sm_q7.get("cost") or {}).get("invalid", [])),
+        f"⛔음성 DQ 전 리뷰 P2-G: 카드 값만 바꿔 (상한) 모든 시드를 다시 판정해도 장부의 카드 값 지문이 달라 요약 invalid ({sm_q7['track']})")
     shutil.rmtree(tmp_root, ignore_errors=True)
     print(f"li2s2_stage1_runner selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1

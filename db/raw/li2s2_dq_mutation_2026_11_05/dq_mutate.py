@@ -24,6 +24,19 @@ dl = dp.dl
 RUNR, DRVR = dl.RUNR, dl.DRVR
 
 MOVED = {
+ # ── DQ 전 독립 리뷰 고침으로 자리가 바뀐 다섯 (뜻 그대로 · 2026-11-05)
+ "D10_closes_summary": ("D10_closes_summary", DRVR, [
+     ("            elif vv is not None and vv.get(\"closes_system\") is True and sd not in closed:", "            elif False:")], "drv"),
+ "DO9_hist_line_consistency_off": ("DO9_hist_line_consistency_off", DRVR, [
+     ("            if (\"prev_status\" in h and h.get(\"prev_status\") != pv_.get(\"status\")",
+      "            if False and (\"prev_status\" in h and h.get(\"prev_status\") != pv_.get(\"status\")")], "drv"),
+ "DO27_ledger_closing_off": ("DO27_ledger_closing_off", DRVR, [
+     ("        elif cs is True:                                  # ⭐ DO 전 리뷰 P0", "        elif False:                                  # ⭐ DO 전 리뷰 P0")], "both"),
+ "DP48_persist_verdict_off": ("DP48_persist_verdict_off", RUNR, [
+     ('                elif v0 is None:\n                    new_["verdict"] = obs["status"]', '                elif False:\n                    new_["verdict"] = obs["status"]')], "run"),
+ "DP55_rejudge_disagree_off": ("DP55_rejudge_disagree_off", RUNR, [            # 같은 실행 충돌이 공통 함수로 (DQ 전 리뷰 P1-A) — ①-4 의 멈춤을 끈다
+     ('            if cf_ is not None:\n                return stop("invalid", f"{sysn}{seed} 재판정',
+      '            if False:\n                return stop("invalid", f"{sysn}{seed} 재판정')], "run"),
  "R4_launch_ledger": ("R4_launch_ledger", RUNR, [
      ("                led[\"runs\"].append(ent); state[\"entry\"], state[\"t0\"] = ent, t0\n                save_ledger()",
       "                led[\"runs\"].append(ent); state[\"entry\"], state[\"t0\"] = ent, t0\n                pass"),
@@ -46,8 +59,8 @@ NEW = [
    "                    except ZeroDivisionError:\n                        raise                                # 디스크에 새 행이 있다", "run", RUNR),
  F("DQ3_stop_section_off", "        with _critical():                                    # ⭐ 회신 DP P2-1",
    f"        with {NC}:                                    # ⭐ 회신 DP P2-1", "run", RUNR),
- F("DQ4_stop_after_replace_flag_off", "            except _AfterReplace:\n                state[\"stopped\"] = True                      # 디스크에 이 STOP 이 있다",
-   "            except ZeroDivisionError:\n                state[\"stopped\"] = True                      # 디스크에 이 STOP 이 있다", "run", RUNR),
+ F("DQ4_stop_after_replace_flag_off", "            except _AfterReplace:\n                state[\"stopped\"], state[\"stop_code\"] = True, code   # 디스크에 이 STOP 이 있다",
+   "            except ZeroDivisionError:\n                state[\"stopped\"], state[\"stop_code\"] = True, code   # 디스크에 이 STOP 이 있다", "run", RUNR),
  F("DQ5_after_replace_plain", "                raise _AfterReplace(f\"교체 뒤 디렉터리 fsync 실패 ({type(e_).__name__}: {e_})\") from e_",
    "                raise", "run", RUNR),
  F("DQ6_attempt_section_off", "            with _critical():                                # ⭐ 회신 DP — 폴더 · 실행 전 기록 · 장부 행을",
@@ -61,8 +74,8 @@ NEW = [
    "            if False:", "both"),
  # ── P1-2: 요약의 장부 검사
  F("DQ11_record_tmp_off", "    invalid.extend(record_tmp_problems(out_root))", "    pass", "both"),
- F("DQ12_same_run_conflict_off", "            if st_l in (\"pass\", \"fail\") and st_f in (\"pass\", \"fail\") and st_l != st_f:", "            if False:", "both"),
- F("DQ13_same_run_melt_off", "            elif mf_ and st_f == \"pass\":", "            elif False:", "both"),
+ F("DQ12_same_run_conflict_narrow", "        if v_ is not None and v_ != folder_status:", "        if v_ in (\"pass\", \"fail\") and v_ != folder_status:", "both"),
+ F("DQ13_same_run_melt_off", "        if folder_status == \"pass\" and isinstance(mc_, dict) and mc_.get(\"verdict\") == \"fail\":", "        if False:", "both"),
  # ── P2-2: 직접 진입 엄격 판독 (DP 판에서 '같은 결과' 로 뺐던 넷)
  F("DQ14_card_strict_off", "    d = loads_strict(pathlib.Path(card).read_text(encoding=\"utf-8\"))   # ⭐ 회신 DO P1 — 카드도",
    "    d = json.loads(pathlib.Path(card).read_text(encoding=\"utf-8\"))   # ⭐ 회신 DO P1 — 카드도"),
@@ -74,12 +87,50 @@ NEW = [
    "        if False:\n            raise ValueError(\" · \".join(shp_))\n        runs, stop_hist = led[\"runs\"], led[\"stop_history\"]", "both"),
  F("DQ19_runner_ledger_shape_off", "                if shp_:\n                    raise ValueError(\"장부 꼴이 아니다 — \" + \" · \".join(shp_))",
    "                if False:\n                    raise ValueError(\"장부 꼴이 아니다 — \" + \" · \".join(shp_))", "run", RUNR),
+ # ── DQ 전 독립 리뷰 (2026-11-05) 고침 자리
+ F("DQ20_conflict_unknown_off", "    if v_ not in LEDGER_VERDICTS:\n        return f\"장부 판정", "    if False:\n        return f\"장부 판정", "both"),
+ F("DQ21_conflict_recorded_off", "    if recorded and row.get(\"verdict_observed_conflict\"):", "    if False:", "both"),
+ F("DQ22_rows_verdict_values_off", "        if r.get(\"verdict\") not in LEDGER_VERDICTS:          # ⭐ DQ 전 리뷰 P1-A", "        if False:", "both"),
+ F("DQ23_rows_conflict_record_off", "        if vc_:\n            invalid.append(", "        if False:\n            invalid.append(", "both"),
+ F("DQ24_rows_conflict_shape_off", "        if vc_ is not None and not (isinstance(vc_, list) and all(isinstance(x_, dict) for x_ in vc_)):", "        if False:", "both"),
+ F("DQ25_closes_nonfirst_ledger_off", "        if cs is True and r[\"seed\"] != values.get(\"first_seed\"):   # ⭐ DQ 전 리뷰 P2-D", "        if False:", "both"),
+ F("DQ26_closes_nonfirst_verdict_off", "            if vv is not None and vv.get(\"closes_system\") is True and sd != values.get(\"first_seed\"):   # ⭐ DQ 전 리뷰 P2-D",
+   "            if False:", "both"),
+ F("DQ27_terminal_stop_off", "    if ts_ and out[\"track\"] != \"stop_track\":", "    if False:", "both"),
+ F("DQ28_stop_unreadable_off", "    if st_k == \"unreadable\":", "    if False:", "both"),
+ F("DQ30_stop_open_off", "    elif st_k == \"open\":", "    elif False:", "both"),
+ F("DQ31_stop_terminal_flag_off", "    if d_[\"code\"] in STOP_TERMINAL_CODES or d_.get(\"terminal\") is True:", "    if d_[\"code\"] in STOP_TERMINAL_CODES:", "both"),
+ F("DQ32_stop_shape_off", "    if not (isinstance(d_, dict) and isinstance(d_.get(\"stop_id\"), str) and d_[\"stop_id\"].strip()",
+   "    if False and (isinstance(d_, dict) and isinstance(d_.get(\"stop_id\"), str) and d_[\"stop_id\"].strip()", "both"),
+ F("DQ33_ledger_card_fp_off", "    if led.get(\"card_values_sha16\") != values_sha16(values):", "    if False:", "both"),
+ F("DQ34_ledger_driver_fp_off", "    if led.get(\"driver_sha16\") != driver_sha16():", "    if False:", "both"),
+ F("DQ35_hist_prev_shape_off", "            if not isinstance(pv_, dict):                    # ⭐ DQ 전 리뷰 P2-C", "            if False:", "both"),
+ F("DQ36_hist_prev_status_off", "            if pv_.get(\"status\") is not None and pv_.get(\"status\") not in LI2S2_STATUSES:", "            if False:", "both"),
+ F("DQ37_hist_new_status_off", "            if h.get(\"new_status\") not in LI2S2_STATUSES:", "            if False:", "both"),
+ F("DQ38_mark_summary_noop", "    q = pathlib.Path(out_root) / \"stage1_summary.json\"\n    if not os.path.lexists(q):",
+   "    q = pathlib.Path(out_root) / \"stage1_summary.json\"\n    if True:", "both"),
+ F("DQ39_persist_conflict_off", "                if cf_ is not None:                          # 장부를 덮지 않고 충돌 관측으로 남긴다", "                if False:", "run", RUNR),
+ F("DQ41_stop_pending_init_off", "    state[\"stop_pending\"] = os.path.lexists(stop_p)          # ⭐ DQ 전 리뷰 P2-A",
+   "    state[\"stop_pending\"] = False          # ⭐ DQ 전 리뷰 P2-A", "run", RUNR),
+ F("DQ42_stop_code_return_off", "        elif state.get(\"stop_code\") in RC:", "        elif False:", "run", RUNR),
+ F("DQ43_rejudge_verdict_not_critical", "                with _critical():                            # ⭐ DQ 전 리뷰 P2-E — 판정 파일 쓰기 (임시 → 교체)",
+   "                with __import__(\"contextlib\").nullcontext():                            # ⭐ DQ 전 리뷰 P2-E — 판정 파일 쓰기 (임시 → 교체)", "run", RUNR),
+ F("DQ44_cap_verdict_not_critical", "                        with _critical():                    # ⭐ DQ 전 리뷰 P2-E — 판정 파일 쓰기를",
+   "                        with __import__(\"contextlib\").nullcontext():                    # ⭐ DQ 전 리뷰 P2-E — 판정 파일 쓰기를", "run", RUNR),
+ F("DQ45_melt_verdict_not_critical", "                        with _critical():                    # ⭐ DQ 전 리뷰 P2-E\n",
+   "                        with __import__(\"contextlib\").nullcontext():                    # ⭐ DQ 전 리뷰 P2-E\n", "run", RUNR),
+ F("DQ46_end_verdict_not_critical", "            with _critical():                                # ⭐ DQ 전 리뷰 P2-E — 끝 판정 쓰기",
+   "            with __import__(\"contextlib\").nullcontext():                                # ⭐ DQ 전 리뷰 P2-E — 끝 판정 쓰기", "run", RUNR),
+ F("DQ47_closes_bad_runner_off", "        if cl_bad:                                           # ⭐ DQ 전 리뷰 P2-D", "        if False:", "run", RUNR),
+ F("DQ48_mark_summary_call_off", "        mq.mark_summary_not_current(R, \"러너가 이 run_root 로 시작했다 (시작 점검 · 재판정 뒤에 새로 낸다)\")",
+   "        pass", "run", RUNR),
+ F("DQ49_persist_log_conflict_off", "        if conflict_:                                        # ⭐ DQ 전 리뷰 P2-B", "        if False:", "run", RUNR),
  F("DQ17_seed_gate_plan_strict_off", "    plan = loads_strict((run / \"plan.json\").read_text(encoding=\"utf-8\")) if (run / \"plan.json\").exists() else {}",
    "    plan = json.loads((run / \"plan.json\").read_text(encoding=\"utf-8\")) if (run / \"plan.json\").exists() else {}"),
 ]
 
 _dp_names = {m[0] for m in dp.MUT}
-assert set(MOVED) <= _dp_names, f"옮길 변이가 DP 판에 없다: {sorted(set(MOVED) - _dp_names)}"   # 이름이 틀리면 옮김이 조용히 빠진다
+assert set(MOVED) <= _dp_names, f"옮길 변이가 DP 판에 없다: {sorted(set(MOVED) - _dp_names)}"   # 옮긴 아홉 (DP 고침 4 · DQ 전 리뷰 고침 5)   # 이름이 틀리면 옮김이 조용히 빠진다
 MUT = [MOVED.get(m[0], m) for m in dp.MUT] + NEW
 MUT = [(m[0], m[1], dp._keep_comment(m[2]), m[3]) for m in MUT]   # 옮긴 것까지 (이미 '#' 가 있으면 그대로)
 dl.MUT = MUT
