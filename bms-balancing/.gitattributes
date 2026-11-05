@@ -274,3 +274,5 @@ evidence/reil_c4e1_20261105/** -text
 reviews/review_reil_c4e_e1_1_3_resume_review_20261105/** -text
 # 2026-11-05: REIL C4-E · E1-1–3 재개 요청 v2 검토 회신 (RESUME_REQUEST_V2_DOCUMENT_REVIEW_ACCEPTED_NOT_EXECUTION_AUTHORIZED · E113_RESUME_N1 · N2 종결 · 새 지적 0 · 고정 HEAD 782bfe5f · 실행 승인 아님 · source/ · input/ · basis/ · numbered/ 의 *.py · *.py.txt = 실행하지 않음) — bytes 그대로
 reviews/review_reil_c4e_e1_1_3_resume_v2_review_20261105/** -text
+# 2026-11-05: REIL C4-E · E1-1–3 재개 실행 증거 (재개 요청서 v2 · 승인 §120 · 이름표 20261106 = 날짜 아님 · 실제 실행 2026-11-05 UTC) — bytes 그대로
+evidence/reil_c4e1_20261106/** -text
