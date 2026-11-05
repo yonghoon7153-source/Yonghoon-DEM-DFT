@@ -11366,6 +11366,71 @@
     "근거_발화": "사용자 2026-11-04 (이 세션 · AskUserQuestion): 축 ③ Li 금속 음극 카드 '비준 — 바로 진행 (Recommended)'",
     "decision_digest": "sha256:db2d0aa4619acc7971f65ab61b04f79f179fab1037ac844af1aa7795232416f6"
    }
+  },
+  {
+   "id": "D-2026-11-05-cascade-axes-bundle-closed",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": "cascade.dopant_screening.axes_bundle_1",
+   "slot": "cascade_axes_bundle_1_closure",
+   "applies_to": {
+    "systems": [
+     "lpscl_dopant_designs"
+    ],
+    "tasks": [
+     "cascade_axes_combination"
+    ],
+    "methods": [
+     "mp_interfacial_reactivity",
+     "mp_band_gap_grades"
+    ],
+    "use_cases": [
+     "closure"
+    ]
+   },
+   "title": "cascade 다축 스크리닝 첫 묶음 (축 ① NCM 계면 · ② 가수분해 · ③ Li 금속 음극) 을 닫는다 — 봉인 첫 선택 V2O5 (R2 모름) + +U 산물 사후 민감도 (Sb2O5 · SiO2 · 강건하지 않음) 를 같이 봉인 (사용자 = cascade 1저자)",
+   "statement": "마감 기록 db/properties/cascade_axes_bundle_closed_2026_11_05.json 이 확정 · 허용 · 금지 서술 · 재개 조건이다: 축 ① · ② · ③ 카드 판독과 합치는 규칙 R3 의 첫 선택 집합 = V2O5 (축 ① · ③ R2 모름 — +U 전이금속 산물) · +U 산물을 미판정으로 두는 규칙 하나를 같은 봉인 문턱의 MP 갭 등급으로 바꾼 사후 민감도 (맹검 아님) 의 선택 = Sb2O5 · SiO2 → 첫 선택은 그 규칙에 강건하지 않다. 선택 집합은 DFT 확인으로 가는 후보이지 결론이 아니다 (R6).",
+   "rationale": "축 계획 · 합치는 규칙이 정한 끝점 (R3 의 첫 선택 집합) 에 닿았다. 선택의 '모름' 을 가리려던 V 산물 확인 카드는 V 산물 MP 갭이 회수 파일에 이미 있어 맹검이 안 됐고, 대신 봉인 판독을 재현한 뒤 규칙 하나만 바꾼 사후 민감도로 기록했다. 닫는 조건이 결과 전에 따로 박히지 않았으므로 닫는 범위를 넓히지 않는다 — 판독 · 합치기 결과를 그대로 봉인할 뿐 재해석 · 순위 · 추가 거르기를 하지 않는다.",
+   "decision_state": "proposed",
+   "record_kind": "closure",
+   "results_seen": true,
+   "results_seen_note": "축 ① · ② · ③ 판독 · 합치기 · 사후 민감도를 본 뒤 사용자 결정 (닫는 조건이 결과 전에 따로 없었다 — 마감 기록 ⚠_순서)",
+   "card": "db/properties/cascade_axes_bundle_closed_2026_11_05.json",
+   "record": "db/properties/cascade_screening_axes_plan_2026_10_15.json",
+   "amends": [],
+   "depends_on": [
+    "D-2026-11-04-cascade-axis-ncm-interface",
+    "D-2026-11-04-cascade-axis-hydrolysis",
+    "D-2026-11-04-cascade-axis-li-anode",
+    "D-2026-11-04-cascade-axes-combination-rule"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/properties/cascade_axes_bundle_closed_2026_11_05.json",
+    "db/properties/cascade_axis_li_readout_2026_11_05.json (combination)",
+    "db/properties/cascade_axes_plusU_gap_sensitivity_2026_11_05.json",
+    "db/properties/cascade_axis_ncm_readout_2026_11_04.json",
+    "db/properties/cascade_axis_hyd_readout_2026_11_04.json",
+    "tools/cascade/analyze_cathode_reactivity.py (--axis_li · --sens_plusU_gap)"
+   ],
+   "reopen_criteria": [
+    "① V2O5 의 '모름' 을 가르는 우리 DFT 확인 카드 (V12P7 등 +U 산물 금속성 · 결과 전 문턱 봉인 · 비준) 로 R2 처리를 새 결정으로 바꾸는 경우",
+    "② 새 축 카드 (결과 전 위험 표시 · 좋은 방향 · 겹침 기준 · 비준) — 새 묶음으로 R3 를 다시 낸다 (이 묶음의 선택을 고치지 않는다)",
+    "③ 선택 집합 후보의 DFT 확인 (R6) — 새 카드",
+    "④ MP 판 (G3) 이 바뀌어 다시 조회 — 새 결정",
+    "⛔ 재개 사유가 아닌 것: 다른 등급 규칙을 하나 더 돌려 본 것 · 순위를 매겨 보려는 것 · 한 설계의 산물을 따로 다시 보는 것"
+   ],
+   "enforcement": "① 마감 기록 2_허용_서술 밖으로 쓰지 않는다 ② 민감도 선택 (Sb2O5 · SiO2) 을 봉인 선택처럼 쓰지 않는다 ③ 선택 집합을 '좋은 · 안정한 도펀트' 로 쓰지 않는다 · 순위를 매기지 않는다 ④ MP 갭 · 반응 에너지 절대값을 인용하지 않는다",
+   "proposed_by": "agent",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-05",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 2026-11-05 (이 세션): 'cascade 권고대로' — ① 민감도를 같이 봉인해 축 ①②③ 묶음 마감 · 마감 기록 초안 → 비준"
+    }
+   ]
   }
  ]
 }
