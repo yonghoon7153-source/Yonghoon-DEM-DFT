@@ -1,0 +1,12 @@
+{
+  "schema": "ledger_proposal/draft",
+  "apply_now": false,
+  "upsert_findings": [],
+  "closure_claimed": false,
+  "active_registration_change_proposed": false,
+  "note": "This is a nullable observation-field proposal, not a finding fix or a ledger closure. Preserve LPI-01/02 limited external disposition, unresolved timing risk and OBS-AUDIT-01 historical-cause uncertainty; whole gate HOLD remains.",
+  "evidence": [
+    "docs/reviews/lhs_pressure_damping_companion_draft_20261105/README.md",
+    "docs/reviews/lhs_pressure_inventory_closure_20261104/README.md"
+  ]
+}

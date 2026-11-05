@@ -1,0 +1,60 @@
+{
+  "date_kst": "2026-11-05",
+  "source": "User relayed Claude 11-05 status; remote documentation read only",
+  "claude_main_pin_read": "cc1a96796bc8dcffaf035af81168fccf405c1fc9",
+  "remote_document": "docs/data/kg50_d07_end_20261105/README.md",
+  "remote_document_sha256": "87bde2a8c169f6e56b203ed14f3040d9c47b26a06cd937bca1382d50a96c06a3",
+  "remote_sections_seen": [
+    1,
+    2,
+    3
+  ],
+  "requested_section4_available": false,
+  "D07_completion": {
+    "job": 338349,
+    "end_step": 2135002,
+    "status": "CORROBORATED_BY_REMOTE_DOCUMENT; no host query"
+  },
+  "D07_drag_report": {
+    "sample_step": 2000000,
+    "drag_percent": 93.4,
+    "viscous_coefficient_reported": 0.5,
+    "atoms_reported": 488285,
+    "plate_speed_reported": 0.01,
+    "source": "User-relayed Claude message; not recomputed or verified against unpublished section4"
+  },
+  "remote_document_stop_step": 2035002,
+  "same_step_stop_ratio_established": false,
+  "resources": {
+    "used_cores_reported": 60,
+    "qos_core_limit_reported": 60,
+    "jobs_reported": {
+      "th3_75": 4,
+      "th9_80": 56
+    },
+    "source": "User-relayed observation only; not a live scheduler query",
+    "new_submission_plan": false
+  },
+  "priority": {
+    "first": "Rint round2",
+    "status_reported": "HOLD, fixes underway",
+    "target_reported": "2026-11-20 GO target; not a guarantee"
+  },
+  "allowed_current_scope": [
+    "documents",
+    "registration drafts",
+    "static synthetic checks"
+  ],
+  "actual_execution_authorized": false,
+  "active_registration_changed": false,
+  "ledger_closure_authorized": false,
+  "integration_authorized": false,
+  "mixer_handoff_received": {
+    "receipt_pin": "b5331d89e9029a1e372d320acee31cddce41474e",
+    "zip_bytes": 7830591,
+    "zip_sha256": "c7a909b31d58452c202e5a7f47b4f78995f0d05e93f5ae01717b48ee3225e1f1",
+    "source": "Claude receipt relayed by user",
+    "integration_performed_reported": false
+  },
+  "research_results_in_this_unit": 0
+}
