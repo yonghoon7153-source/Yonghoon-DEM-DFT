@@ -1,0 +1,77 @@
+[
+  {
+    "label": "int_failure",
+    "rc": 1,
+    "recovery": [
+      0,
+      0
+    ],
+    "result": {
+      "by": "recover",
+      "cause": "runner_rc",
+      "folder": "attempt_1",
+      "folder_sha256": "4d60222af10aee9a54cf5240202ffbd43f2e9996bf0b7161be55b434be18aa48",
+      "kind": "result",
+      "n": 1,
+      "resume_ok": false,
+      "side": "post",
+      "status": "interrupted",
+      "stop": null,
+      "utc": "2026-11-05T00:18:21Z"
+    },
+    "next_resume_problem": [
+      "RESUME_NOT_ALLOWED",
+      "재실행 사슬 끝 attempt_1 = interrupted · 원인 runner_rc · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+    ],
+    "ledger": "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr_round2_review_20261105\\runtime_review\\scratch_1793837894415472900\\rc_ledger_int_failure",
+    "attempt": "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr_round2_review_20261105\\runtime_review\\scratch_1793837894415472900\\rc_attempts_int_failure\\attempt_1"
+  },
+  {
+    "label": "boolean_false",
+    "rc": false,
+    "recovery": [
+      0,
+      0
+    ],
+    "result": {
+      "by": "recover",
+      "cause": "parent_dead",
+      "folder": "attempt_1",
+      "folder_sha256": "bf2fc16955396e0391a327998ad92c9b9488d9db0b814188923f3bce048bfc3a",
+      "kind": "result",
+      "n": 1,
+      "resume_ok": true,
+      "side": "post",
+      "status": "interrupted",
+      "stop": null,
+      "utc": "2026-11-05T00:18:22Z"
+    },
+    "next_resume_problem": null,
+    "ledger": "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr_round2_review_20261105\\runtime_review\\scratch_1793837894415472900\\rc_ledger_boolean_false",
+    "attempt": "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr_round2_review_20261105\\runtime_review\\scratch_1793837894415472900\\rc_attempts_boolean_false\\attempt_1"
+  },
+  {
+    "label": "float_zero",
+    "rc": 0.0,
+    "recovery": [
+      0,
+      0
+    ],
+    "result": {
+      "by": "recover",
+      "cause": "parent_dead",
+      "folder": "attempt_1",
+      "folder_sha256": "5f4bc70db6717c1ed58016174d92a8c0286e418db1b8121e8a41da6dbe3e42bd",
+      "kind": "result",
+      "n": 1,
+      "resume_ok": true,
+      "side": "post",
+      "status": "interrupted",
+      "stop": null,
+      "utc": "2026-11-05T00:18:23Z"
+    },
+    "next_resume_problem": null,
+    "ledger": "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr_round2_review_20261105\\runtime_review\\scratch_1793837894415472900\\rc_ledger_float_zero",
+    "attempt": "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr_round2_review_20261105\\runtime_review\\scratch_1793837894415472900\\rc_attempts_float_zero\\attempt_1"
+  }
+]

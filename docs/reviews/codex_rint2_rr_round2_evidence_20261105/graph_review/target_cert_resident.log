@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\outputs\rint2_rr_round2_review_20261105\received\repo\scripts\test_step3_target_cert.py", line 1985, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\outputs\rint2_rr_round2_review_20261105\received\repo\scripts\test_step3_target_cert.py", line 1951, in main
+    import step3_sigma as _s3
+  File "C:\Users\Administrator\Documents\Codex\outputs\rint2_rr_round2_review_20261105\received\repo\scripts\step3_sigma.py", line 119, in <module>
+    import se_material  # single source of truth for σ_ion(SE) + its temperature convention
+    ^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'se_material'

@@ -1,0 +1,30 @@
+Exception in thread Thread-8 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1599, in _readerthread
+    buffer.append(fh.read())
+                  ^^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xc0 in position 33: invalid start byte
+  PASS  F01 CG 해 → 표지 한 번 · kind cg_solution · σ 칸 없음 · 그룹 표지 실림 · payload 가 σ 를 찍기 전에 표지가 있다 · 임시 파일 남지 않음
+  PASS  F02 CG 없는 조기 반환 해 (σ 0) → 표지 (kind solve_return) · σ 를 찍기 전
+  PASS  F03 조립만 결과 (graph_only) → 표지 없음
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\outputs\rint2_rr_round2_review_20261105\root_review\run_first_result.py", line 7, in <module>
+    runpy.run_path(str(p),run_name='__main__')
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\Administrator\Documents\Codex\outputs\rint2_rr_round2_review_20261105\received\repo\scripts\test_rint_first_result.py", line 136, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\outputs\rint2_rr_round2_review_20261105\received\repo\scripts\test_rint_first_result.py", line 108, in main
+    rc, so = run(td, 'cg', m4)
+             ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\outputs\rint2_rr_round2_review_20261105\received\repo\scripts\test_rint_first_result.py", line 84, in run
+    return p.returncode, p.stdout + p.stderr
+                         ~~~~~~~~~^~~~~~~~~~
+TypeError: can only concatenate str (not "NoneType") to str

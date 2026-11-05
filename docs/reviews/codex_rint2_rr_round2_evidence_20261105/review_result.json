@@ -1,0 +1,22 @@
+{
+  "schema": "independent_review_summary/v1",
+  "pin": "6917c3c9fa397936d3381ba1c1785562c5232e46",
+  "date": "2026-11-05",
+  "verdict": "HOLD",
+  "scope": "Rint II RR round2 code/design/synthetic re-review",
+  "new_findings": [
+    {"id":"RR2-01","severity":"P2","title":"Malformed rc grants post-result recovery resume eligibility"},
+    {"id":"RR2-02","severity":"P3","title":"Active same-process wording contradicts fresh-child contract"},
+    {"id":"RR2-03","severity":"P3","title":"BAN8 restricted qualifier not fully propagated to registration/design"}
+  ],
+  "existing_preseal_action": ["PC6-05"],
+  "physical_campaign_go": false,
+  "deployment_go": false,
+  "ledger_closed_by_this_review": false,
+  "native_linux_process_containment_independently_run": false,
+  "provided_e18_independently_rerun": false,
+  "original_zip_entries_unchanged": 619,
+  "remote_repo_blobs_matched": 606,
+  "literature_card_blobs_matched": 12,
+  "note": "Counts of assertions, authored suites, circuit variants and document checks are not additive research experiments."
+}

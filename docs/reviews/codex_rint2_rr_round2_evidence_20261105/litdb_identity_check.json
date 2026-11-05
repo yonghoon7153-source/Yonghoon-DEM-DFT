@@ -1,0 +1,50 @@
+[
+  {
+    "file": "banerjee2019_tunneling_tlm_parallel_nanoscale_contacts.md",
+    "match": true
+  },
+  {
+    "file": "endo2001_vgcf_basic_properties_battery_applications.md",
+    "match": true
+  },
+  {
+    "file": "fuhrer2000_crossed_nanotube_junctions.md",
+    "match": true
+  },
+  {
+    "file": "hamasaki2022_single_parallel_contact_mwcnt_conductivity.md",
+    "match": true
+  },
+  {
+    "file": "ketter2025_resistor_network_models_predict_transport_properties.md",
+    "match": true
+  },
+  {
+    "file": "lee2026_unveiling_ptfe_dry_electrode_digital_twin.md",
+    "match": true
+  },
+  {
+    "file": "li2007_tunneling_resistance_cnt_composites.md",
+    "match": true
+  },
+  {
+    "file": "lindblad2005_surface_area_weighted_local_configurations.md",
+    "match": true
+  },
+  {
+    "file": "neumann2021_garnet_3d_structure_grain_boundaries_li_transport.md",
+    "match": true
+  },
+  {
+    "file": "nirmalraj2009_swcnt_network_junction_resistance.md",
+    "match": true
+  },
+  {
+    "file": "windreich2003_voxel_based_surface_area_estimation.md",
+    "match": true
+  },
+  {
+    "file": "ziegel2010_surface_area_measure_digitizations.md",
+    "match": true
+  }
+]
