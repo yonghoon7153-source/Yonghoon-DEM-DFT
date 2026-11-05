@@ -600,8 +600,12 @@ def _band_card_path(card=BAND_CARD):
     return q if q.exists() else pathlib.Path(__file__).resolve().parents[2] / card
 
 
+BAND_NOT_READ = "not_read"    # ⭐ DR 전 리뷰 P3-B — 판정이 G4 밴드 카드를 안 읽었다 (li2s-2 고정 밀도 NVT 는 gate_check 가 밴드 전에 돌아간다)
+
+
 def band_card_sha16(card=BAND_CARD):
-    """⭐ 회신 DQ P1-1 — gate_check 가 read_band 로 읽는 G4 밴드 카드 파일의 지문 (못 읽으면 None — 같다고 보지 않는다)."""
+    """⭐ 회신 DQ P1-1 — gate_check 가 read_band 로 읽는 G4 밴드 카드 파일의 지문 (못 읽으면 None — 같다고 보지 않는다).
+    판정은 gate_check 가 **실제로 밴드를 읽었을 때만** 이 지문을 적는다 (아니면 BAND_NOT_READ — 안 읽은 파일을 묶어 작업 폴더에 따라 낡음이 되지 않게)."""
     try:
         return _sha256_file(_band_card_path(card))[:16]
     except OSError:
@@ -1128,6 +1132,7 @@ def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print, reason="
         plan = None
         res = {"status": "incomplete", "reasons": {"incomplete": [f"plan.json 을 못 읽는다 ({type(e).__name__})"]}, "run": str(run)}
     judge_err, input_mismatch, derived_written = [], [], []   # ⭐ 회신 DQ P1-1 — 앞 판정의 성격 (자동 대체는 판정 도중 예외만 · 입력 불일치는 사람)
+    band_read = False
     if plan is not None:
         files = {f: (run / f).is_file() for f in ("result.json", "final.xyz", "thermo.csv", "traj.xyz")}
         checks = {}
@@ -1143,6 +1148,8 @@ def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print, reason="
             except Exception as e:
                 gate = {"schedule_complete": None, "error": f"{type(e).__name__}: {e}"}   # 모름 — False 로 적지 않는다 (DO 전 리뷰)
                 judge_err.append(f"gate_check {type(e).__name__}: {str(e)[:80]}")
+            if isinstance(gate, dict) and "band_center" in gate:   # ⭐ DR 전 리뷰 P3-B — gate_check 가 G4 밴드 카드를 읽었다 (그때만 묶는다)
+                band_read = True
         if files["traj.xyz"]:
             melt = melt_window_check(run, values=v, log=lambda *a: None)
             for k_ in ("read_stop", "io_error"):             # 녹음 판정이 traj 를 읽다 멈춘 예외 (같은 바이트면 다시 같다 · 지문이 가른다)
@@ -1181,7 +1188,8 @@ def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print, reason="
         res.update({"run": str(run), "gate_check": gate, "melt_window_check": melt, "checks": checks,
                     "seed_gate_view": (seedg or {}).get(v["seed_gate"]["version"])})
     res["provenance"] = {"files_sha256": run_provenance(run), "card_values_sha16": values_sha16(v), "driver_sha16": driver_sha16(),
-                         "band_sha16": band_card_sha16(), "runtime": judge_runtime(), "derived_written": derived_written,
+                         "band_sha16": band_card_sha16() if band_read else BAND_NOT_READ, "runtime": judge_runtime(),
+                         "folder": [run.parent.name, run.name], "derived_written": derived_written,   # ⭐ DR 전 리뷰 P3-A — 폴더 이름도 판정 입력 (식별)
                          "judge_nature": {"errors": judge_err, "input_mismatch": input_mismatch},
                          "⛔": "묶음 판정 (stage1_summary) 이 이 지문을 지금 파일 · 카드 값 · 도구 · G4 밴드 카드와 다시 잰다 — 안 맞으면 그 시드는 "
                                "무효 (다시 판정) · 비과학적 판정을 과학적 판정이 자동 대체하는 것은 judge_nature.errors 가 있고 input_mismatch 가 "
@@ -1542,7 +1550,7 @@ def md_last_recorded_step(folder, plan):
 
 PRE_RUN_VERDICT_KEYS = frozenset({"status", "reasons", "run", "provenance", "reason", "history"})   # stage1_verdict 가 plan 없는 폴더에 쓰는 열쇠
 PRE_RUN_PROVENANCE_KEYS = frozenset({"files_sha256", "card_values_sha16", "driver_sha16", "⛔",
-                                     "band_sha16", "runtime", "derived_written", "judge_nature"})   # ⭐ 회신 DQ P1-1 — 판정 입력 · 성격 칸
+                                     "band_sha16", "runtime", "derived_written", "judge_nature", "folder"})   # ⭐ 회신 DQ P1-1 · DR 전 리뷰 — 판정 입력 · 성격 칸
 
 
 def _verdict_is_pre_run(v):
@@ -1874,13 +1882,18 @@ def provenance_current_problems(pv, folder, values):
     bad = []
     if pv.get("files_sha256") != run_provenance(folder):
         bad.append("원자료 지문이 지금 파일과 다르다 (판정 뒤 파일이 바뀌었거나 판정만 복사됐다 · md_init_raw.xyz · 실행 전 기록까지)")
-    cur_vals, cur_drv, cur_band = values_sha16(values), driver_sha16(), band_card_sha16()
+    cur_vals, cur_drv = values_sha16(values), driver_sha16()
     if pv.get("card_values_sha16") != cur_vals:
         bad.append(f"카드 값 지문 {pv.get('card_values_sha16')} ≠ 지금 {cur_vals}")
     if pv.get("driver_sha16") != cur_drv:
         bad.append(f"도구 지문 {pv.get('driver_sha16')} ≠ 지금 {cur_drv}")
-    if cur_band is None or pv.get("band_sha16") != cur_band:
-        bad.append(f"G4 밴드 카드 지문 {pv.get('band_sha16')} ≠ 지금 {cur_band}")
+    if pv.get("band_sha16") != BAND_NOT_READ:                # ⭐ DR 전 리뷰 P3-B — 판정이 밴드 카드를 읽었을 때만 지금 카드와 대조한다
+        cur_band = band_card_sha16()
+        if cur_band is None or pv.get("band_sha16") != cur_band:
+            bad.append(f"G4 밴드 카드 지문 {pv.get('band_sha16')} ≠ 지금 {cur_band}")
+    fo_ = pathlib.Path(folder)
+    if pv.get("folder") != [fo_.parent.name, fo_.name]:      # ⭐ DR 전 리뷰 P3-A — 판정을 낸 폴더 이름 (식별 입력) 이 지금과 다르다 (옮김 · 보존 폴더로 이름 바꿈)
+        bad.append(f"판정을 낸 폴더 {pv.get('folder')} ≠ 지금 {[fo_.parent.name, fo_.name]} (폴더 이름도 판정 입력이다)")
     return bad
 
 
@@ -2029,16 +2042,18 @@ def stop_shape_problem(d_, acked=False):
     return None
 
 
-JUDGE_INPUT_KEYS = ("card_values_sha16", "driver_sha16", "band_sha16", "runtime")   # files_sha256 밖의 판정 입력 칸 (⭐ 회신 DQ P1-1)
+JUDGE_INPUT_KEYS = ("card_values_sha16", "driver_sha16", "band_sha16", "runtime", "folder")   # files_sha256 밖의 판정 입력 칸 (⭐ 회신 DQ P1-1 · DR 전 리뷰 P3-A)
 
 
 def same_judge_inputs(a, b):
     """⭐ DQ 전 2차 리뷰 N3 · ⭐ 회신 DQ P1-1 — 두 판정 (a = 앞 · b = 새) 이 판정이 **읽은 입력 전부** 가 같은 상태에서 났는가:
     files_sha256 (BOUND_FILES 전부 — 원자료 다섯 · md_init_raw.xyz · stage1_attempt.json) · 카드 값 · 도구 · G4 밴드 카드 · 실행 환경이
     **다 있고** 같을 때만 True. 기록이 없거나 하나라도 다르면 False (확인할 수 없다 = 같다고 보지 않는다).
-    파생 파일 (JUDGE_DERIVED_FILES) 하나만 예외 — 앞 판정 뒤에 없었고 (None) 새 판정이 처음 만들었으면 (b.derived_written) 같다고 본다
-    (앞 판정이 그 파일을 읽지 않았다 · 새 파일은 묶인 traj 에서 정해진 대로 나온다). 앞 판정 뒤에 있던 파일이 바뀌었거나 사라졌으면 다르다
-    (회신 DQ P1-1 재현: 다른 md_init_raw.xyz 를 옮기고 다시 만든 것)."""
+    파생 파일 (JUDGE_DERIVED_FILES) 하나만 예외 — 앞 판정 뒤에 없었고 (None) 지금 있으면 같다고 본다: 앞 판정은 그 파일을 읽지 않았고,
+    새 판정이 과학적 (pass · fail — 이 함수를 부르는 supersede_block 은 그때만 불린다) 이면 그 seed_gate 가 파일을 묶인 traj 원시와 대조해 맞다고 봤거나
+    (안 맞으면 입력 불일치로 invalid) 아예 읽지 않았다 (final.xyz 없음 — 그 판정의 입력이 아니다). 누가 만들었는지 (이 판정 · 중간 판정 · 사람의
+    --seed_gate) 는 보지 않는다 (⭐ DR 전 리뷰 P2-A — '이 판정이 만들었을 때만' 은 중간 판정 한 번 · 재판정 뒤 Ctrl-C 로 일시 오류 회복을 영구 보류로
+    굳혔다). 앞 판정 뒤에 **있던** 파일이 바뀌었거나 사라졌으면 다르다 (회신 DQ P1-1 재현: 다른 md_init_raw.xyz 를 옮기고 다시 만든 것)."""
     if not (isinstance(a, dict) and isinstance(b, dict)):
         return False
     fa, fb = a.get("files_sha256"), b.get("files_sha256")
@@ -2047,11 +2062,10 @@ def same_judge_inputs(a, b):
     for k in JUDGE_INPUT_KEYS:
         if a.get(k) is None or b.get(k) is None or a.get(k) != b.get(k):
             return False
-    wb = b.get("derived_written")
     for f in fa:
         if fa[f] == fb[f]:
             continue
-        if f in JUDGE_DERIVED_FILES and fa[f] is None and fb[f] is not None and isinstance(wb, list) and f in wb:
+        if f in JUDGE_DERIVED_FILES and fa[f] is None and fb[f] is not None:
             continue
         return False
     return True
@@ -2063,8 +2077,10 @@ def supersede_block(prior, new):
     그리고 끝까지 보고 찾은 입력 불일치가 없다 (judge_nature.input_mismatch 가 빈 목록). 성격 기록이 없는 앞 판정은 대체하지 않는다 (사람이 본다).
     ⛔ 못 하는 것: 예외의 원인 (일시 I/O 인지 · 같은 바이트에서 다시 나는 파싱 오류인지) 은 가르지 않는다 — 같은 입력에서 결과가 달라졌다는 것
     자체가 그 예외가 비결정적이었다는 뜻이고, 입력이 하나라도 다르면 ① 이 막는다."""
+    if not (isinstance(prior, dict) and isinstance(new, dict)):
+        return "앞 판정 또는 지금 판정의 지문이 없다 — 같은 입력이라고 확인할 수 없다"
     if not same_judge_inputs(prior, new):
-        return ("판정이 읽은 입력 (원자료 · md_init_raw.xyz · 실행 전 기록 · 카드 값 · 도구 · G4 밴드 카드 · 실행 환경) 이 그때와 같다고 "
+        return ("판정이 읽은 입력 (원자료 · md_init_raw.xyz · 실행 전 기록 · 폴더 이름 · 카드 값 · 도구 · G4 밴드 카드 · 실행 환경) 이 그때와 같다고 "
                 "확인할 수 없다 (지문이 다르거나 없다 — 입력이 바뀌었거나 복구됐을 수 있다)")
     jn = prior.get("judge_nature")
     if not (isinstance(jn, dict) and isinstance(jn.get("errors"), list) and isinstance(jn.get("input_mismatch"), list)
@@ -2142,6 +2158,25 @@ def unresolved_first_write(folder):
             "(그 안에 과학적 결과가 있을 수 있다 · 자동 승격 · 다시 판정하지 않는다 · 사람이 본다)")
 
 
+def preserved_unresolved(out_root):
+    """⭐ DR 전 리뷰 P2-B — 보존 폴더 (<계>/seed<N>.<붙임> — 사람이 옆으로 옮긴 폴더) 의 미해결 판정 기록: 정본 없는 판정 기록 (unresolved_first_write) ·
+    정본이 있어도 판정 임시 파일 · 못 읽는 판정 · 이력 (_verdict_records 의 문제). 목록 [(계, 시드, 폴더 이름, 이유)]. 러너는 시작에서 · 요약은 장부
+    검사에서 하나라도 있으면 막는다 (그 폴더에 닿기 전에 다른 시드를 돌리지 않게 · 통과로 올리지 않게)."""
+    out = []
+    for s_ in ("A", "B"):
+        d_ = pathlib.Path(out_root) / s_
+        if not d_.is_dir():
+            continue
+        for p_ in sorted(d_.iterdir()):
+            m_ = re.fullmatch(r"seed(\d+)\.(.+)", p_.name)
+            if not (m_ and p_.is_dir()):
+                continue
+            why_ = unresolved_first_write(p_) or _verdict_records(p_)[1]
+            if why_:
+                out.append((s_, int(m_.group(1)), p_.name, why_))
+    return out
+
+
 def folder_verdict_chain(folder):
     """⭐ 4차 P1 — 폴더 판정 기록 전체 (지금 판정 · 이력의 앞 판정 · 새 판정) 를 [{"status", "provenance"}] 로. 기록을 못 읽으면 (임시 파일 ·
     깨진 줄 · 꼴) [{"status": None}] — 비교할 수 없다 (충돌로 읽힌다). 폴더가 없거나 판정 기록이 없으면 []."""
@@ -2209,6 +2244,7 @@ def _ledger_check(out_root, verdicts, values):
         return {"total_h": float("nan"), "cap_h": float(values["stage1_cap_gpu_h"]), "invalid": [f"장부를 못 읽었다 ({type(e).__name__}: {str(e)[:60]})"],
                 "pending": [], "runs": 0, "attested": [], "closing": [], "source": str(p)}
     invalid.extend(record_tmp_problems(out_root))            # ⭐ 회신 DP P1-2 — 장부 · STOP 임시 파일 = 미해결 기록
+    invalid.extend(f"보존 폴더 {s_}/{nm_} 의 미해결 판정 기록 — {why_}" for s_, _, nm_, why_ in preserved_unresolved(out_root))   # ⭐ DR 전 리뷰 P2-B
     if led.get("card_values_sha16") != values_sha16(values):  # ⭐ DQ 전 리뷰 P2-G — 장부를 쓴 러너의 카드 값 · 도구와 지금 판정에 쓰는 것이 같아야 한다
         invalid.append(f"장부의 카드 값 지문 {led.get('card_values_sha16')!r} ≠ 지금 {values_sha16(values)} — 다른 카드로 낸 묶음 판정은 받지 않는다")
     if led.get("driver_sha16") != driver_sha16():
@@ -2419,6 +2455,9 @@ def _verdict_shape_problem(vv):
     jn = pv.get("judge_nature")
     if jn is not None and not all(isinstance(jn.get(k), list) and all(isinstance(e, str) for e in jn[k]) for k in ("errors", "input_mismatch")):
         return "provenance 의 judge_nature 가 errors · input_mismatch 글자 목록이 아니다"
+    fo = pv.get("folder")
+    if fo is not None and not (isinstance(fo, list) and len(fo) == 2 and all(isinstance(x, str) for x in fo)):
+        return "provenance 의 folder 가 [계 폴더, 시드 폴더] 글자 둘이 아니다"
     for k, x in (vv.get("reasons") or {}).items():
         if not isinstance(x, list):
             return f"reasons 의 {k} 가 목록이 아니다 ({type(x).__name__})"
@@ -4512,7 +4551,7 @@ def _selftest():
         # ⭐ DQ 전 리뷰 (독립 · 2026-11-05) — 러너와 같이 쓰는 함수를 직접: 같은 실행 충돌 규칙 · STOP 판독 · 이력 꼴 · 낡은 요약 표시
         FS0 = {f_: ("c" * 64 if f_ == "traj.xyz" else None) for f_ in BOUND_FILES}   # ⭐ 회신 DQ P1-1 — 판정이 읽는 파일 전부 · 판정 입력 칸 · 성격
         PV = {"files_sha256": FS0, "card_values_sha16": "1" * 16, "driver_sha16": "2" * 16, "band_sha16": "3" * 16, "runtime": {"python": "x"},
-              "derived_written": [], "judge_nature": {"errors": ["seed_gate OSError: selftest"], "input_mismatch": []}}
+              "folder": ["A", "seed12"], "derived_written": [], "judge_nature": {"errors": ["seed_gate OSError: selftest"], "input_mismatch": []}}
         PV2 = {**PV, "files_sha256": {**FS0, "traj.xyz": "d" * 64}}
         cf_t = {"none_pass": ({}, "pass", True), "pass_pass": ({"verdict": "pass"}, "pass", True), "inv_pass": ({"verdict": "invalid"}, "pass", True),
                 "inc_fail": ({"verdict": "incomplete"}, "fail", True), "PASS_none": ({"verdict": "PASS"}, None, True),
@@ -4556,9 +4595,12 @@ def _selftest():
                   "inv_nonature": _inv({k_: v_ for k_, v_ in PV.items() if k_ != "judge_nature"}, PV),
                   "inv_nature_badshape": _inv({**PV, "judge_nature": {"errors": "x", "input_mismatch": []}}, PV),
                   "inv_raw_repaired": _inv(PVR_old, PVR_new), "inv_raw_gone": _inv(PVR_old, PV),
-                  "inv_raw_first_made": _inv(PV, PVR_first), "inv_raw_first_not_ours": _inv(PV, PVR_other),
+                  "inv_raw_first_made": _inv(PV, PVR_first), "inv_raw_first_other": _inv(PV, PVR_other),   # DR 전 리뷰 P2-A — 중간 판정 · 사람이 만든 것도
                   "inv_raw_same": _inv(PVR_old, {**PVR_old, "derived_written": []}),
                   "inv_band": _inv(PV, {**PV, "band_sha16": "4" * 16}), "inv_band_none": _inv({**PV, "band_sha16": None}, {**PV, "band_sha16": None}),
+                  "inv_band_notread": _inv({**PV, "band_sha16": BAND_NOT_READ}, {**PV, "band_sha16": BAND_NOT_READ}),
+                  "inv_band_read_vs_not": _inv({**PV, "band_sha16": BAND_NOT_READ}, PV),
+                  "inv_folder": _inv(PV, {**PV, "folder": ["A", "seed12.moved"]}), "inv_folder_none": _inv({**PV, "folder": None}, {**PV, "folder": None}),
                   "inv_runtime": _inv(PV, {**PV, "runtime": {"python": "y"}}),
                   "inv_attempt": _inv(PV, {**PV, "files_sha256": {**FS0, ATTEMPT_NAME: "a" * 64}}),
                   "inv_oldfmt": _inv({**PV, "files_sha256": {"traj.xyz": "c" * 64}}, {**PV, "files_sha256": {"traj.xyz": "c" * 64}}),
@@ -4566,13 +4608,14 @@ def _selftest():
                   "chain_raw_repaired": ledger_verdict_conflict({}, "pass", folder_provenance=PVR_new,
                                                                 folder_prior=[{"status": "invalid", "provenance": PVR_old}]) is not None}
         want_dq = {"inv_mismatch": True, "inv_mismatch_and_err": True, "inv_noerr": True, "inv_nonature": True, "inv_nature_badshape": True,
-                   "inv_raw_repaired": True, "inv_raw_gone": True, "inv_raw_first_made": False, "inv_raw_first_not_ours": True, "inv_raw_same": False,
-                   "inv_band": True, "inv_band_none": True, "inv_runtime": True, "inv_attempt": True, "inv_oldfmt": True,
+                   "inv_raw_repaired": True, "inv_raw_gone": True, "inv_raw_first_made": False, "inv_raw_first_other": False, "inv_raw_same": False,
+                   "inv_band": True, "inv_band_none": True, "inv_band_notread": False, "inv_band_read_vs_not": True,
+                   "inv_folder": True, "inv_folder_none": True, "inv_runtime": True, "inv_attempt": True, "inv_oldfmt": True,
                    "chain_mismatch": True, "chain_raw_repaired": True}
         chk(got_dq == want_dq and JUDGE_DERIVED_FILES == (SEED_GATE_RAW,) and set(PROVENANCE_FILES) < set(BOUND_FILES),
             "⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 "
             "같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_init_raw.xyz 를 옮기고 다시 만든 것 · 입력 불일치 판정 · 성격 기록 없음 · "
-            "밴드 · 환경 · 실행 전 기록 다름 · 옛 꼴 지문은 충돌 · 앞에 없던 파생 파일을 새 판정이 처음 만든 것만 같다 "
+            "밴드 · 환경 · 실행 전 기록 · 폴더 이름 다름 · 옛 꼴 지문은 충돌 · 앞에 없던 파생 파일이 지금 있으면 (누가 만들었든) 같다 · 둘 다 밴드를 안 읽었으면 같다 "
             f"({ {k_: v_ for k_, v_ in got_dq.items() if v_ != want_dq[k_]} })")
         # ⭐ 회신 DQ P1-1 — 진짜 판정 함수가 성격 · 처음 만듦을 적는가 (입력 불일치 = input_mismatch · 판정 도중 예외 = errors) · 그 기록으로 대체 규칙이 가르는가
         from ase.io import read as _rd_dq, write as _wr_dq
@@ -4613,6 +4656,16 @@ def _selftest():
         finally:
             globals()["seed_gate"] = _sg0_dq
         v_tr2 = _jv(d_tr, "다시")
+        v_tr3 = _jv(d_tr, "한 번 더 (중간 판정 뒤)")             # ⭐ DR 전 리뷰 P2-A — 파생 파일을 앞 판정이 만들었어도
+        d_tg = _dq_run("dq_tg")                              # ⭐ DR 전 리뷰 P2-A (FH5) — 일시 오류 뒤 사람이 --seed_gate (파생 파일을 씀) 로 들여다보고 다시 판정
+        n_dq["left"] = 1
+        globals()["seed_gate"] = _sg_once
+        try:
+            v_tg1 = _jv(d_tg, "일시 오류")
+        finally:
+            globals()["seed_gate"] = _sg0_dq
+        seed_gate(d_tg, write_raw=True, log=lambda *a: None)
+        v_tg2 = _jv(d_tg, "사람이 --seed_gate 뒤")
         _fsc0 = globals()["final_structure_check"]
         def _fsc_err(*a_, **k_):
             return {"ok": False, "why": ["selftest"], "judge_errors": ["final.xyz 읽기 OSError: selftest"]}
@@ -4638,10 +4691,15 @@ def _selftest():
             and v_ta2["provenance"]["derived_written"] == [] and v_ta2["provenance"]["files_sha256"][RAWN] == v_ta1["provenance"]["files_sha256"][RAWN]
             and sb_["mm_repair"] is not None and "입력 불일치" in str(supersede_block(v_mm2["provenance"], v_mm2["provenance"]))
             and nat1["errors"] == [] and sb_["mm_first_vs_mm3"] is not None and "예외 없이" in sb_["mm_first_vs_mm3"]
-            and sb_["tr"] is None and sb_["ta"] is None and v_tr1["provenance"]["judge_nature"]["errors"] == ["seed_gate OSError: selftest — 판정 도중 일시 오류"],
+            and sb_["tr"] is None and sb_["ta"] is None and v_tr1["provenance"]["judge_nature"]["errors"] == ["seed_gate OSError: selftest — 판정 도중 일시 오류"]
+            and v_tr3["provenance"]["derived_written"] == [] and supersede_block(v_tr1["provenance"], v_tr3["provenance"]) is None
+            and v_tg2["provenance"]["derived_written"] == [] and v_tg2["status"] == v_tr2["status"] and supersede_block(v_tg1["provenance"], v_tg2["provenance"]) is None
+            and v_mm1["provenance"]["folder"] == [d_mm.parent.name, d_mm.name],
             "⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · "
             "판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 지문에 G4 밴드 카드 · 실행 환경 · 일시 예외 (파생을 만들기 전 · 만든 뒤) "
-            f"의 재판정은 대체 가능 ({sb_} · {nat2} · {v_tr1['provenance']['judge_nature']} · {v_ta1['provenance']['judge_nature']})")
+            "의 재판정은 대체 가능 · (DR 전 리뷰 P2-A) 중간 판정 한 번 · 사람의 --seed_gate 뒤의 재판정도 대체 가능 "
+            f"({sb_} · {nat2} · {v_tr1['provenance']['judge_nature']} · {v_ta1['provenance']['judge_nature']} · "
+            f"{supersede_block(v_tr1['provenance'], v_tr3['provenance'])} · {supersede_block(v_tg1['provenance'], v_tg2['provenance'])})")
         # ⭐ 회신 DQ P1-1 — 묶는 범위 · 성격을 모으는 자리 하나씩 (보존 폴더의 실행 전 기록 · G4 밴드 카드 · 쓴 뒤 예외 · 파생 교체 실패 · 마지막 프레임 · 녹음 판독)
         (pathlib.Path(td_) / "_dqp" / "A").mkdir(parents=True)
         _fs("_dqp/A/seed11.dq", traj=5)
@@ -4746,6 +4804,47 @@ def _selftest():
             "⛔음성 회신 DQ P1-1 (성격 · 숨은 복구): 못 읽는 final.xyz · 녹음 판정의 프레임 세기 OSError 도 판정 도중 예외로 모은다 · 다른 md_init_raw.xyz 가 있던 채 "
             "seed_gate 가 읽기 전에 예외가 난 판정 (불일치를 못 찾음) 뒤 그 파일을 지우고 다시 만든 판정은 — 앞 판정이 판정 도중 예외여도 — 파생 파일 지문이 달라 "
             f"자동 대체 불가 ({er_(v_fg)} · {er_(v_io)} · {er_(v_hr1)} · {supersede_block(v_hr1['provenance'], v_hr2['provenance'])})")
+        # ⭐ DR 전 리뷰 P3-B · P3-A — 밴드 카드는 판정이 읽었을 때만 묶는다 (li2s-2 고정 밀도 NVT 는 안 읽는다 — 작업 폴더 · 카드가 달라도 낡음이 아니다) ·
+        #    폴더 이름은 판정 입력 (이름을 바꾸면 그 전 판정은 지금이 아니다)
+        def _gc_nvt(*a_, **k_):                               # NVT 길처럼 밴드를 안 읽고 끝나는 gate_check
+            return {"schedule_complete": None, "error": None, "thermo_columns_ok": True}
+        d_nv = _dq_run("dq_nv")
+        globals()["gate_check"] = _gc_nvt
+        try:
+            v_nv = _jv(d_nv, "밴드 안 읽음")
+        finally:
+            globals()["gate_check"] = _gc0
+        _bcs0 = globals()["band_card_sha16"]
+        globals()["band_card_sha16"] = lambda *a_, **k_: "f" * 16    # 지금 밴드 카드가 (다른 작업 폴더에서) 다르게 보인다
+        try:
+            nv_cur = provenance_current_problems(v_nv["provenance"], d_nv, VAL)
+            rd_cur = provenance_current_problems(v_mm3["provenance"], d_mm, VAL)
+        finally:
+            globals()["band_card_sha16"] = _bcs0
+        d_rn = d_mm.with_name("dq_mm.moved"); d_mm.rename(d_rn)
+        rn_cur = provenance_current_problems(v_mm3["provenance"], d_rn, VAL)
+        d_rn.rename(d_mm)
+        chk(v_nv["provenance"]["band_sha16"] == BAND_NOT_READ and v_mm1["provenance"]["band_sha16"] == band_card_sha16() and nv_cur == []
+            and any("G4 밴드" in x_ for x_ in rd_cur) and any("판정을 낸 폴더" in x_ for x_ in rn_cur)
+            and provenance_current_problems(v_mm3["provenance"], d_mm, VAL) == [],
+            "⛔음성 DR 전 리뷰 P3-B · P3-A: 밴드를 안 읽은 판정 (NVT 길) 은 밴드 지문을 not_read 로 적고 지금 밴드 카드와 대조하지 않는다 · 읽은 판정은 대조한다 · "
+            f"폴더 이름을 바꾸면 그 전 판정은 지금이 아니다 ({nv_cur} · {rd_cur} · {rn_cur})")
+        # ⭐ DR 전 리뷰 P2-B — 옆으로 옮긴 보존 폴더의 미해결 판정 기록도 막는다 (러너 시작 · 요약 장부 검사)
+        rp_ = pathlib.Path(td_) / "_dq_pres"
+        (rp_ / "A").mkdir(parents=True); (rp_ / "B").mkdir()
+        (rp_ / "A" / "seed14.moved").mkdir(); (rp_ / "A" / "seed14.moved" / VERDICT_HISTORY).write_text('{"first": true, "new_status": "fail"}\n', encoding="utf-8")
+        (rp_ / "B" / "seed13.cut1").mkdir(); (rp_ / "B" / "seed13.cut1" / "stage1_verdict.json").write_text('{"status": "pass"}', encoding="utf-8")
+        (rp_ / "B" / "seed13.cut1" / "stage1_verdict.json.tmp").write_text('{"status": "fail"}', encoding="utf-8")
+        (rp_ / "B" / "seed12.ok").mkdir(); (rp_ / "B" / "seed12.ok" / "stage1_verdict.json").write_text('{"status": "invalid"}', encoding="utf-8")
+        (rp_ / "A" / "seed11").mkdir(); (rp_ / "A" / "seed11" / VERDICT_HISTORY).write_text("", encoding="utf-8")   # 현재 폴더는 이 함수가 안 본다
+        pu_ = preserved_unresolved(rp_)
+        (rp_ / LEDGER_NAME).write_text(json.dumps({"runs": [], "stop_history": [], "card_values_sha16": values_sha16(VAL), "driver_sha16": driver_sha16()}),
+                                       encoding="utf-8")
+        lc_pu = " | ".join(ledger_check(rp_, {}, VAL)["invalid"])
+        chk([(s_, sd_, nm_) for s_, sd_, nm_, _ in pu_] == [("A", 14, "seed14.moved"), ("B", 13, "seed13.cut1")]
+            and "보존 폴더 A/seed14.moved" in lc_pu and "보존 폴더 B/seed13.cut1" in lc_pu and "seed12.ok" not in lc_pu,
+            "⛔음성 DR 전 리뷰 P2-B: 보존 폴더 (seed<N>.<붙임>) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일은 미해결 기록 (목록 · 요약 장부 검사 invalid) · "
+            f"깨끗한 보존 폴더 · 현재 폴더는 이 목록에 안 든다 ({[x_[:3] for x_ in pu_]} · {lc_pu[:200]})")
         # ⭐ 회신 DQ P1-2 — 정본 없이 판정 기록만 남은 폴더 (첫 판정 쓰기 끊김) ≠ 판정 안 한 폴더 · 묶음 판정 invalid · 손 판정은 그 사실을 이력에 적는다
         ru_ = pathlib.Path(td_) / "_dq_unres"
         for s_ in ("A", "B"):
@@ -4998,7 +5097,8 @@ def _selftest():
         PVk = {"files_sha256": {"traj.xyz": "c" * 64}, "card_values_sha16": "1" * 16, "driver_sha16": "2" * 16}
         d_pv = _vf2("pv", None)
         PVreal = {"files_sha256": run_provenance(d_pv), "card_values_sha16": values_sha16(VAL), "driver_sha16": driver_sha16(),
-                  "band_sha16": band_card_sha16()}                # ⭐ 회신 DQ P1-1 — 지금과의 대조에 G4 밴드 카드도 든다
+                  "band_sha16": band_card_sha16(),                 # ⭐ 회신 DQ P1-1 — 지금과의 대조에 G4 밴드 카드 (읽었을 때) ·
+                  "folder": [pathlib.Path(d_pv).parent.name, pathlib.Path(d_pv).name]}   # 폴더 이름 (DR 전 리뷰 P3-A) 도 든다
         d_pb = _vf2("pb", None)                              # ⭐ 회신 DQ P1-1 (음성) — 밴드 카드 지문만 다른 판정은 지금과 안 맞는다
         (pathlib.Path(d_pb) / "stage1_verdict.json").write_text(json.dumps({"status": "pass", "provenance": {**PVreal, "files_sha256": run_provenance(d_pb),
                                                                                                          "band_sha16": "0" * 16}}), encoding="utf-8")
