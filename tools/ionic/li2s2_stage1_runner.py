@@ -530,7 +530,8 @@ def retry_eligibility(attempts, stop_history, inventory, values, mq):
             return {"ok": False, "code": "invalid", "why": f"이전 실행 {tag} 에 과학적 판정 (장부 · 폴더) 이 있다 — 다시 담금질하지 않는다"}
         if rk == "unreadable":
             return {"ok": False, "code": "invalid", "why": f"이전 실행 {tag} 의 판정을 못 읽는다 (폴더 판정 파일 · 장부 값) — '판정 없음' 으로 읽지 않는다 "
-                                                          "(원자료로 --stage1_verdict 다시 판정한 뒤 다시)"}
+                                                          "(원자료로 --stage1_verdict 다시 판정한 뒤 다시)"
+                                                          + (f" · {rk_d.get('why')}" if rk_d.get("why") else "")}   # ⭐ DR 전 5차 — 판독 불가 까닭 · 출구
         if x.get("end") is None or x.get("cost_basis") not in mq.COST_BASES:
             return {"ok": False, "code": "resume", "why": f"이전 실행 {tag} 비용이 확정 안 됐다 ({x.get('cost_basis')}) — 고아 런이면 --attest_cost {rid}"}
         st, st_why = mq.folder_stage_detail(rec["path"])
@@ -3567,6 +3568,18 @@ def _selftest():
     chk(all(v_ == (RC["invalid"], 0, RC["invalid"], 0, "invalid", 1, False, "invalid") for v_ in r1_.values()),
         "⛔음성 DR 전 2차 리뷰 P1: 일시 오류 장부 invalid 뒤 러너의 재판정이 md_init_raw.xyz 불일치를 본 다음 사람이 맞는 파일로 바꾸거나 지우고 확인해도 — "
         f"폴더 판정 기록의 입력 불일치 때문에 자동 대체하지 않는다 (발사 0 · 충돌 관측 하나 · 요약 invalid) ({r1_})")
+    # ⭐ DR 전 5차 리뷰 P2 — 첫 시드 (A11) 가 녹음 창이 찬 채 실행 중 상한으로 멈춤 → 상한 판정 fail + 계 닫힘 → (문서대로) 상한을 올린 카드로 · 폴더를 옆으로
+    #    옮기고 확인 → 상한 칸은 판정 규칙이 아니라서 그 판정 기록은 지금 규칙의 것 → 장부에 닫힘 · 닫는 STOP melt (상한을 올린 것이 진짜 닫힘을 지우지 않는다)
+    rc_cp, L_cp, rr_cp = go(mk_wt(card=mk_card(stage1_cap_gpu_h=3.0)), seed_worst_h=1.0, scen={("A", 11): {"melt": "fail"}})
+    v_cp = J(rr_cp / "A/seed11/stage1_verdict.json")
+    (rr_cp / "A/seed11").rename(rr_cp / "A/seed11.cap")
+    rc_cp2, L_cp2, _ = go(wt, rr=rr_cp, ack=J(rr_cp / "STOP.json")["stop_id"])
+    row_cp = [x_ for x_ in J(rr_cp / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 11)][-1]
+    chk(v_cp.get("status") == "fail" and v_cp.get("closes_system") is True
+        and v_cp["provenance"]["card_values_sha16"] != real.values_sha16(vals_t) and v_cp["provenance"]["judge_values_sha16"] == real.judge_values_sha16(vals_t)
+        and rc_cp2 == RC["melt"] and not L_cp2 and row_cp.get("closes_system") is True and J(rr_cp / "STOP.json").get("code") == "melt",
+        "⛔음성 DR 전 5차 리뷰 P2: 첫 시드가 실행 중 상한으로 멈춘 판정 fail · 계 닫힘 — 문서대로 상한을 올린 카드 (카드 값 지문은 다르고 판정 규칙 지문은 같다) 로 "
+        f"폴더를 옆으로 옮기고 확인해도 장부에 닫힘 · 닫는 STOP melt (발사 0) ({v_cp.get('status')} · {v_cp.get('closes_system')} · {rc_cp2} · {row_cp.get('closes_system')})")
     # ⭐ DR 전 4차 리뷰 P1 — 일시 오류로 장부 invalid → 원자료 (final.xyz) 가 바뀜 → 러너의 재판정이 결정적 invalid (예외 없음 · 불일치 기록 없음) → 원래
     #    바이트로 되돌리고 확인 → 장부 판정 뒤의 그 기록 때문에 자동 대체하지 않는다 (회신 DP Q2 '원자료 복구 → 보류' · 발사 0)
     c_rs = clone(rr_n3m0)

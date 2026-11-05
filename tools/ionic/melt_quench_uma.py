@@ -586,6 +586,18 @@ def driver_sha16():
     return _sha256_file(__file__)[:16]
 
 
+#: ⭐ DR 전 5차 리뷰 P2 — 판정 (stage1_verdict 와 그 아래 combine_stage1 · melt_window_check · final_structure_check) 이 **읽는** 카드 기계_판독_값 열쇠.
+#:   상한 (stage1_cap_gpu_h) · 재시도 · 증언 · 시드 · 2 단계 칸은 판정이 안 읽는다 — 문서대로 상한을 올려도 판정 규칙은 그대로다. selftest 가 판정이 이 밖의
+#:   열쇠를 읽지 않는지 본다 (읽기 추적).
+JUDGE_VALUE_KEYS = ("composition", "first_seed", "fix_density_g_cm3", "gate_check", "melt_window", "schedule", "seed_gate", "software_required",
+                    "thermo_required_columns", "uma_inference_mode")
+
+
+def judge_values_sha16(v):
+    """⭐ DR 전 5차 리뷰 P2 — 판정 규칙의 지문 (JUDGE_VALUE_KEYS 만) — 보존 폴더의 과학적 판정 기록이 지금 규칙으로 났는지 가른다 (_run_kind)."""
+    return values_sha16({k: v.get(k) for k in JUDGE_VALUE_KEYS})
+
+
 def run_provenance(run):
     """판정이 기댄 파일의 지문 (회신 DG P1-4 · ⭐ DQ P1-1 — 원자료 다섯 + 판정이 읽는 파생 · 실행 전 기록 = BOUND_FILES) — 없으면 None 으로
     적는다 ('없음' 도 지문이다). 판정 **뒤** 의 상태다 (판정이 md_init_raw.xyz 를 처음 만들었으면 만든 것의 지문 · 그 사실은 derived_written)."""
@@ -1190,6 +1202,7 @@ def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print, reason="
         res.update({"run": str(run), "gate_check": gate, "melt_window_check": melt, "checks": checks,
                     "seed_gate_view": (seedg or {}).get(v["seed_gate"]["version"])})
     res["provenance"] = {"files_sha256": run_provenance(run), "card_values_sha16": values_sha16(v), "driver_sha16": driver_sha16(),
+                         "judge_values_sha16": judge_values_sha16(v),   # ⭐ DR 전 5차 리뷰 P2 — 판정 규칙만의 지문
                          "band_sha16": band_card_sha16() if band_read else BAND_NOT_READ, "runtime": judge_runtime(),
                          "folder": [run.parent.name, run.name], "derived_written": derived_written,   # ⭐ DR 전 리뷰 P3-A — 폴더 이름도 판정 입력 (식별)
                          "judge_nature": {"errors": judge_err, "input_mismatch": input_mismatch},
@@ -1552,7 +1565,7 @@ def md_last_recorded_step(folder, plan):
 
 PRE_RUN_VERDICT_KEYS = frozenset({"status", "reasons", "run", "provenance", "reason", "history"})   # stage1_verdict 가 plan 없는 폴더에 쓰는 열쇠
 PRE_RUN_PROVENANCE_KEYS = frozenset({"files_sha256", "card_values_sha16", "driver_sha16", "⛔",
-                                     "band_sha16", "runtime", "derived_written", "judge_nature", "folder"})   # ⭐ 회신 DQ P1-1 · DR 전 리뷰 — 판정 입력 · 성격 칸
+                                     "band_sha16", "runtime", "derived_written", "judge_nature", "folder", "judge_values_sha16"})   # ⭐ 회신 DQ P1-1 · DR 전 리뷰 — 판정 입력 · 성격 칸
 
 
 def _verdict_is_pre_run(v):
@@ -1921,11 +1934,18 @@ def _run_kind(row, folder, values):
         return "unreadable", {"source": "unreadable"}
     sts = [r_.get("status") if isinstance(r_, dict) else "?" for _, r_, _ in recs]
     sci = [r_ for _, r_, _ in recs if isinstance(r_, dict) and r_.get("status") in ("pass", "fail")]
-    if sci and values is not None:                           # ⭐ DR 전 4차 리뷰 P2 — 다른 카드 값 · 도구로 낸 과학적 판정 기록 (손 판정 · 다른 checkout) 은 그 결과 ·
-        cv_, cd_ = values_sha16(values), driver_sha16()      # 닫힘을 장부로 옮기지 않는다 (판독 불가 — 지금 규칙의 결과가 아니다)
-        if any(not (isinstance(r_.get("provenance"), dict) and r_["provenance"].get("card_values_sha16") == cv_
-                    and r_["provenance"].get("driver_sha16") == cd_) for r_ in sci):
-            return "unreadable", {"source": "unreadable", "why": "다른 카드 값 · 도구 (또는 지문 없음) 로 낸 과학적 판정 기록"}
+    if sci and values is not None:                           # ⭐ DR 전 4 · 5차 리뷰 P2 — 과학적 판정 기록은 **지금 판정 규칙** (판정이 읽는 카드 값 · 도구) 으로 난 것만 쓴다
+        cv_, jv_, cd_ = values_sha16(values), judge_values_sha16(values), driver_sha16()
+        def _now_rules(r_):                                  # 판정 규칙 지문 (상한 · 재시도 칸 제외) · 도구 — 옛 꼴 기록은 카드 값 전체가 같으면
+            pv_r = r_.get("provenance")
+            if not (isinstance(pv_r, dict) and pv_r.get("driver_sha16") == cd_):
+                return False
+            return pv_r.get("judge_values_sha16") == jv_ if "judge_values_sha16" in pv_r else pv_r.get("card_values_sha16") == cv_
+        sci_now = [r_ for r_ in sci if _now_rules(r_)]
+        if not sci_now:                                      # 다른 규칙 (손 판정의 다른 카드 · 다른 checkout · 옛 도구) 의 결과 · 닫힘은 장부로 옮기지 않는다
+            return "unreadable", {"source": "unreadable", "why": "과학적 판정 기록이 모두 다른 판정 규칙 (카드 판정 값 · 도구 · 또는 지문 없음) 으로 났다 — "
+                                                                  "지금 카드 · 도구로 그 폴더를 --stage1_verdict 로 다시 판정하면 읽는다"}
+        sci = sci_now                                        # 지금 규칙의 기록이 있으면 다른 규칙의 기록은 무시한다 (한 줄이 폴더를 영영 막지 않게)
     if sci:                                                  # ⭐ DP 전 리뷰 F1 · F2 — 판정 기록으로 본 과학적 결과도 러너가 거부 전에 장부에 적는다
         st_sci = "fail" if any(r_.get("status") == "fail" for r_ in sci) else "pass"
         cur_ = next((r_ for w_, r_, _ in recs if w_ == "현재 판정"), None)       # ⭐ DQ 전 2차 리뷰 N3 — 지금 판정이 그 상태면 그 지문 (아니면 없음 = 대체 못 함)
@@ -2115,7 +2135,7 @@ def ledger_verdict_conflict(row, folder_status, recorded=True, folder_provenance
       · ⭐ 3차 · 4차 P1 — 장부 판정이 **없으면** (판정을 쓴 뒤 장부에 적기 전에 SIGKILL · 정전 · 러너가 죽은 뒤 끝난 담금질을 사람이 판정 ·
         상한 기록용 판정) — ⭐ DR 전 2차 리뷰 P1: 장부 판정이 **비과학적 (invalid · incomplete) 일 때도** (러너의 재판정이 입력 불일치를 봤는데 장부엔
         안 적힌 채 사람이 파일을 고친 경우 · 재판정 fail 을 쓰고 장부에 적기 전에 끊긴 경우) — 그 폴더의 판정 기록 **전체** (folder_prior =
-        folder_verdict_chain — 판정을 쓴 순서) 를 기준으로 (⭐ DR 전 3 · 4차 리뷰 — 장부 판정이 비과학적이면 장부 판정 자신의 기록 (같은 상태 · 지문 · 마지막) 을
+        folder_verdict_chain — 판정을 쓴 순서) 를 기준으로 (⭐ DR 전 3 · 4 · 5차 리뷰 — 장부 판정이 비과학적이면 장부 판정 자신의 기록 (같은 상태 · 지문 · 첫 것) 을
         찾아 그 **앞** 의 비과학적 기록 (실행 중 들여다본 incomplete 같은 앞선 상태) 은 막지 않고 그 **뒤** 의 비과학적 기록은 하나하나 대체 규칙을 받는다 —
         그 뒤 재판정이 본 입력 변경 · 불일치를 되돌린 복구는 보류 · 장부 판정의 기록을 못 찾으면 전부 대체 규칙):
         못 읽는 판정 (상태 없음) 이 있으면 충돌 · pass · fail 판정이 하나라도 지금과 다르면 충돌 · invalid · incomplete 판정이 하나라도 지금 판정으로
@@ -2139,8 +2159,9 @@ def ledger_verdict_conflict(row, folder_status, recorded=True, folder_provenance
             return "장부 녹음 fail ↔ 폴더 판정 pass"
         if (v_ is None or v_ in ("invalid", "incomplete")) and isinstance(folder_prior, list):   # ⭐ 3차 · 4차 P1 · DR 전 2차 리뷰 P1 — 장부가 비었거나
                                                                                                     # 비과학적이면 폴더 판정 기록 전체를 기준으로
-            vp_ = row.get("verdict_provenance")             # ⭐ DR 전 4차 리뷰 P1 — 장부 판정 자신의 기록 (같은 상태 · 같은 지문 · 마지막) 이 어디인가 (순서 기록)
-            k_ = (max((i_ for i_, r_ in enumerate(folder_prior) if isinstance(r_, dict) and r_.get("status") == v_ and r_.get("provenance") == vp_),
+            vp_ = row.get("verdict_provenance")             # ⭐ DR 전 4 · 5차 리뷰 — 장부 판정 자신의 기록 (같은 상태 · 같은 지문 · **첫** 것 — 장부의 쓰기가 가장 이르다 ·
+                                                            # 뒤에 같은 바이트의 판정이 또 생겨도 기준이 밀리지 않게) 이 어디인가 (순서 기록)
+            k_ = (min((i_ for i_, r_ in enumerate(folder_prior) if isinstance(r_, dict) and r_.get("status") == v_ and r_.get("provenance") == vp_),
                       default=None) if (v_ is not None and isinstance(vp_, dict)) else None)
             for i_, rec_ in enumerate(folder_prior):
                 st_ = rec_.get("status") if isinstance(rec_, dict) else None
@@ -2503,7 +2524,7 @@ def _verdict_shape_problem(vv):
         if x is not None and (not isinstance(x, kinds) or (isinstance(x, bool) and bool not in kinds)):
             return f"{k} 타입이 {type(x).__name__} 이다 (기대 {' · '.join(t.__name__ for t in kinds)})"
     pv = vv.get("provenance") or {}
-    for k, kinds in (("files_sha256", (dict,)), ("card_values_sha16", (str,)), ("driver_sha16", (str,)),
+    for k, kinds in (("files_sha256", (dict,)), ("card_values_sha16", (str,)), ("driver_sha16", (str,)), ("judge_values_sha16", (str,)),
                      ("band_sha16", (str,)), ("runtime", (dict,)), ("derived_written", (list,)), ("judge_nature", (dict,))):   # ⭐ 회신 DQ P1-1
         x = pv.get(k)
         if x is not None and not isinstance(x, kinds):
@@ -4706,7 +4727,7 @@ def _selftest():
                   "inv_det_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
                                                                    folder_prior=[PVDET, {"status": "invalid", "provenance": PV},
                                                                                  {"status": "pass", "provenance": PV}]) is not None,
-                  "inv_anchor_last_wins": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
+                  "inv_anchor_first": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
                                                                   folder_prior=[{"status": "invalid", "provenance": PV}, PVDET, {"status": "invalid", "provenance": PV},
                                                                                 {"status": "pass", "provenance": PV}]) is not None}
         want_dq = {"inv_mismatch": True, "inv_mismatch_and_err": True, "inv_noerr": True, "inv_nonature": True, "inv_nature_badshape": True,
@@ -4717,7 +4738,7 @@ def _selftest():
                    "inv_ledger_chain_ok": False, "inc_ledger_chain_unreadable": True, "sci_ledger_ignores_chain": False,
                    "inv_ledger_chain_midrun": False, "none_ledger_chain_midrun": True, "inv_ledger_chain_nonature": True,
                    "inv_after_det_invalid": True, "inv_after_transient": False, "inv_anchor_missing": True, "inv_det_before_anchor": False,
-                   "inv_anchor_last_wins": False}
+                   "inv_anchor_first": True}   # DR 전 5차 — 같은 바이트의 판정이 뒤에 또 있어도 기준은 첫 기록 (그 사이 결정적 invalid → 충돌)
         chk(got_dq == want_dq and JUDGE_DERIVED_FILES == (SEED_GATE_RAW,) and set(PROVENANCE_FILES) < set(BOUND_FILES),
             "⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 "
             "같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_init_raw.xyz 를 옮기고 다시 만든 것 · 입력 불일치 판정 · 성격 기록 없음 · "
@@ -4985,6 +5006,35 @@ def _selftest():
         (d_al / "stage1_verdict.json").write_text(json.dumps({"status": "fail", "closes_system": True,
                                                               "provenance": {**PVal_, "card_values_sha16": values_sha16(VAL)}}), encoding="utf-8")
         rk_al2 = _run_kind({}, d_al, VAL)
+        # ⭐ DR 전 5차 리뷰 P2 — 판정 규칙 지문 (상한 · 재시도 칸 제외) · 지금 규칙의 기록이 있으면 다른 규칙 기록은 무시 (한 줄이 폴더를 영영 막지 않게)
+        VALcap = {**VAL, "stage1_cap_gpu_h": float(VAL.get("stage1_cap_gpu_h") or 0) + 99.0}
+        VALthr = {**VAL, "melt_window": {**VAL["melt_window"], "D_threshold_cm2_s": float(VAL["melt_window"]["D_threshold_cm2_s"]) * 2}}
+        d_al3 = pathlib.Path(td_) / "dq_al3"; d_al3.mkdir()          # 상한만 다른 카드로 낸 fail + 닫힘 (문서대로 상한을 올린 뒤의 재시도)
+        PVcap_ = {"files_sha256": {}, "card_values_sha16": values_sha16(VALcap), "judge_values_sha16": judge_values_sha16(VALcap), "driver_sha16": driver_sha16()}
+        (d_al3 / "stage1_verdict.json").write_text(json.dumps({"status": "fail", "closes_system": True, "provenance": PVcap_}), encoding="utf-8")
+        rk_al3 = _run_kind({}, d_al3, VAL)
+        d_al4 = pathlib.Path(td_) / "dq_al4"; d_al4.mkdir()          # 다른 녹음 문턱의 fail (이력) + 지금 규칙의 pass (정본) → 지금 규칙만
+        PVthr_ = {"files_sha256": {}, "card_values_sha16": values_sha16(VALthr), "judge_values_sha16": judge_values_sha16(VALthr), "driver_sha16": driver_sha16()}
+        PVnow_ = {"files_sha256": {}, "card_values_sha16": values_sha16(VAL), "judge_values_sha16": judge_values_sha16(VAL), "driver_sha16": driver_sha16()}
+        _append_history_first(d_al4, {"status": "fail", "closes_system": True, "provenance": PVthr_}, "selftest — 다른 카드 손 판정")
+        _append_history(d_al4, {"status": "fail", "closes_system": True, "provenance": PVthr_}, {"status": "pass", "provenance": PVnow_}, "selftest — 지금 카드")
+        (d_al4 / "stage1_verdict.json").write_text(json.dumps({"status": "pass", "provenance": PVnow_}), encoding="utf-8")
+        rk_al4 = _run_kind({}, d_al4, VAL)
+        acc_ = set()
+        class _TrackVals(dict):                              # 판정이 카드 값의 어느 열쇠를 읽는가 (JUDGE_VALUE_KEYS 밖을 읽으면 지문이 판정 규칙을 다 못 묶는다)
+            def __getitem__(self, k_):
+                acc_.add(k_); return dict.__getitem__(self, k_)
+            def get(self, k_, *d_):
+                acc_.add(k_); return dict.get(self, k_, *d_)
+        d_tk = _dq_run("dq_tk")
+        stage1_verdict(d_tk, values=_TrackVals(VAL), log=lambda *a: None, reason="selftest — 읽는 열쇠")
+        chk(judge_values_sha16(VALcap) == judge_values_sha16(VAL) and judge_values_sha16(VALthr) != judge_values_sha16(VAL)
+            and rk_al3[0] == "scientific" and rk_al3[1].get("closes_system") is True
+            and rk_al4[0] == "scientific" and rk_al4[1].get("status") == "pass" and rk_al4[1].get("closes_system") is False
+            and acc_ and acc_ <= set(JUDGE_VALUE_KEYS),
+            "⛔음성 DR 전 5차 리뷰 P2: 판정 규칙 지문은 판정이 읽는 카드 값만 (상한을 올려도 같고 · 녹음 문턱이 다르면 다르다) · 상한만 다른 카드로 낸 fail · 닫힘은 "
+            "과학적 판정 그대로 · 다른 문턱의 손 판정 (이력) 과 지금 규칙의 판정 (정본) 이 같이 있으면 지금 규칙만 (닫힘을 옮기지 않는다) · 판정은 JUDGE_VALUE_KEYS "
+            f"밖의 카드 열쇠를 읽지 않는다 ({rk_al3} · {rk_al4} · {sorted(acc_ - set(JUDGE_VALUE_KEYS))})")
         chk([x_["status"] for x_ in ch_or] == ["invalid", "incomplete", "pass"] and ch_or[1]["provenance"] == PB_ and len(ch_or) == 3
             and ch_or2 == [{"status": "invalid", "provenance": PA_}, {"status": "pass", "provenance": PC_}]
             and rk_al[0] == "unreadable" and rk_al2[0] == "scientific" and rk_al2[1].get("closes_system") is True,
