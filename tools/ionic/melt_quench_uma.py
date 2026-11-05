@@ -2146,10 +2146,11 @@ def ledger_verdict_conflict(row, folder_status, recorded=True, folder_provenance
                 if st_ in ("invalid", "incomplete") and v_ is not None:   # ⭐ DR 전 3차 리뷰 P3 — 장부 판정이 기준 (입력이 그때와 같은지는 위 장부 규칙이 본다):
                     pv_r = rec_.get("provenance")                         # 폴더 기록에서는 입력 불일치를 찾은 판정만 막는다 (실행 중 들여다본 incomplete 같은 앞선
                     jn_r = pv_r.get("judge_nature") if isinstance(pv_r, dict) else None   # 상태는 막지 않는다) · 성격을 모르면 막는다
-                    if not (isinstance(jn_r, dict) and isinstance(jn_r.get("input_mismatch"), list)):
+                    mm_r = jn_r.get("input_mismatch") if isinstance(jn_r, dict) else None
+                    if not isinstance(mm_r, list):
                         return f"장부 판정 {v_!r} · 폴더 판정 기록의 {st_} 판정에 성격 기록이 없다 — 입력 불일치를 찾았는지 모른다"
-                    if jn_r["input_mismatch"]:
-                        return (f"장부 판정 {v_!r} · 폴더 판정 기록에 입력 불일치를 찾은 {st_} 판정이 있다 ({'; '.join(map(str, jn_r['input_mismatch']))[:100]}) — "
+                    if mm_r:
+                        return (f"장부 판정 {v_!r} · 폴더 판정 기록에 입력 불일치를 찾은 {st_} 판정이 있다 ({'; '.join(map(str, mm_r))[:100]}) — "
                                 "그 뒤의 복구는 자동 대체하지 않는다")
     if recorded and row.get("verdict_observed_conflict"):
         return "장부에 같은 실행의 다른 판정 관측이 있다 (verdict_observed_conflict)"
@@ -4927,7 +4928,12 @@ def _selftest():
         rk_cl = _run_kind({}, d_cl, None)
         d_cl2 = pathlib.Path(td_) / "dq_cl2"; d_cl2.mkdir()
         (d_cl2 / VERDICT_HISTORY).write_text(json.dumps({"first": True, "new_status": "fail", "new_closes_system": "yes"}) + "\n", encoding="utf-8")
+        d_cl3 = pathlib.Path(td_) / "dq_cl3"; d_cl3.mkdir()          # 바꿈 줄 (앞 판정 → 새 판정) 의 닫힘 — 새 판정을 쓰기 전에 끊겨 정본이 앞 판정 그대로/없음
+        _append_history(d_cl3, {"status": "incomplete", "provenance": {"files_sha256": {}}},
+                        {"status": "fail", "closes_system": True, "provenance": {"files_sha256": {}}}, "selftest — 바꿈 줄 닫힘")
+        rk_cl3 = _run_kind({}, d_cl3, None)
         chk(rk_cl[0] == "scientific" and rk_cl[1].get("closes_system") is True and rk_cl[1].get("status") == "fail"
+            and rk_cl3[0] == "scientific" and rk_cl3[1].get("closes_system") is True
             and loads_strict((d_cl / VERDICT_HISTORY).read_text(encoding="utf-8").strip()).get("new_closes_system") is True
             and _verdict_records(d_cl2)[1] is not None and _run_kind({}, d_cl2, None)[0] == "unreadable",
             "⛔음성 DR 전 3차 리뷰 P2: 이력 줄 (첫 판정 · 바꿈) 이 새 판정의 closes_system 을 적고 판정 기록이 그것을 읽는다 — 정본 없이 이력만 남은 첫 시드의 닫힘이 "
