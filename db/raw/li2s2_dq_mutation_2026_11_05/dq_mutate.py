@@ -14,6 +14,10 @@
     바뀔 수 없다 (그래서 대체가 일어나지 않는다) · 지문 기록은 일관성용이다.
   · ①-4 확인의 폴더 지문 (ledger_verdict_conflict(…, folder_provenance=…)) 끄기 — persist 가 같은 입력이면 장부 판정을 이미 바꿔 두어 그 뒤 확인에서
     지문이 결과를 가르지 않는다 (같은 입력 → 장부 = 폴더 · 다른 입력 · 기록 없음 → 지문 없이도 충돌).
+  · persist 가 과학적 장부 판정과 같이 적는 지문 (DQ66 · 뺐다) — 과학적 장부 판정의 지문은 규칙이 쓰지 않는다 (pass · fail 끼리는 지문과 상관없이 충돌) ·
+    대체할 때는 지문이 같은 입력이라 결과가 갈리지 않는다 · 기록용.
+  · 판정 구간 안의 장부 저장 (끝 · 녹음 멈춤) 끄기 — 같은 프로세스 안에서는 끝 처리 (finally) 가 메모리 장부 (판정이 적힌) 를 저장한다 · SIGKILL · 정전은
+    이 시험 틀로 재현하지 않는다 (그 경우는 장부가 빈 상태를 폴더 앞 판정으로 막는 규칙 — DQ69–DQ77 — 이 맡는다).
   (처음엔 _ledger_check 의 꼴 검사 끄기도 '뒤 원소 검사가 같은 장부를 invalid 로' 라고 뺐는데 틀렸다 — 빈 객체 stop_history ({}) 는 뒤 원소 검사가
    못 본다. 시험 (요약 · stop_history 빈 객체) 을 더하고 DQ18 (소비자) · DQ19 (러너) 로 깬다.)"""
 import importlib.util, pathlib, sys
@@ -125,10 +129,10 @@ NEW = [
    "                with __import__(\"contextlib\").nullcontext():                            # ⭐ DQ 전 리뷰 P2-E — 판정 파일 쓰기 (임시 → 교체)", "run", RUNR),
  F("DQ44_cap_verdict_not_critical", "                        with _critical():                    # ⭐ DQ 전 리뷰 P2-E — 판정 파일 쓰기를",
    "                        with __import__(\"contextlib\").nullcontext():                    # ⭐ DQ 전 리뷰 P2-E — 판정 파일 쓰기를", "run", RUNR),
- F("DQ45_melt_verdict_not_critical", "                        with _critical():                    # ⭐ DQ 전 리뷰 P2-E\n",
-   "                        with __import__(\"contextlib\").nullcontext():                    # ⭐ DQ 전 리뷰 P2-E\n", "run", RUNR),
- F("DQ46_end_verdict_not_critical", "            with _critical():                                # ⭐ DQ 전 리뷰 P2-E — 끝 판정 쓰기",
-   "            with __import__(\"contextlib\").nullcontext():                                # ⭐ DQ 전 리뷰 P2-E — 끝 판정 쓰기", "run", RUNR),
+ F("DQ45_melt_verdict_not_critical", "                        with _critical():                    # ⭐ DQ 전 리뷰 P2-E · 3차 P1 — 판정 쓰기 · 장부 적기",
+   "                        with __import__(\"contextlib\").nullcontext():                    # ⭐ DQ 전 리뷰 P2-E · 3차 P1 — 판정 쓰기 · 장부 적기", "run", RUNR),
+ F("DQ46_end_verdict_not_critical", "            with _critical():                                # ⭐ DQ 전 리뷰 P2-E · 3차 P1 — 끝 판정 쓰기",
+   "            with __import__(\"contextlib\").nullcontext():                                # ⭐ DQ 전 리뷰 P2-E · 3차 P1 — 끝 판정 쓰기", "run", RUNR),
  F("DQ47_closes_bad_runner_off", "        if cl_bad:                                           # ⭐ DQ 전 리뷰 P2-D", "        if False:", "run", RUNR),
  F("DQ48_mark_summary_call_off", "        mq.mark_summary_not_current(R, \"러너가 이 run_root 로 시작했다 (시작 점검 · 재판정 뒤에 새로 낸다)\")",
    "        pass", "run", RUNR),
@@ -139,10 +143,10 @@ NEW = [
  F("DQ51_same_inputs_missing_ok", "        if a.get(k) is None or b.get(k) is None or a.get(k) != b.get(k):", "        if a.get(k) != b.get(k):", "both"),
  F("DQ52_nonsci_conflict_off", "        if v_ in (\"invalid\", \"incomplete\") and not same_judge_inputs(row.get(\"verdict_provenance\"), folder_provenance):",
    "        if False:", "both"),
- F("DQ53_consumer_prov_off", "            cf_ = ledger_verdict_conflict(r, vv.get(\"status\"), recorded=False, folder_provenance=vv.get(\"provenance\"))",
-   "            cf_ = ledger_verdict_conflict(r, vv.get(\"status\"), recorded=False, folder_provenance=r.get(\"verdict_provenance\"))", "both"),
- F("DQ54_runkind_prov_off", "                              \"provenance\": (cur_.get(\"provenance\") if isinstance(cur_, dict) and cur_.get(\"status\") == st_sci else None)}",
-   "                              \"provenance\": None}", "both"),
+ F("DQ53_consumer_prov_off", "            cf_ = ledger_verdict_conflict(r, vv.get(\"status\"), recorded=False, folder_provenance=vv.get(\"provenance\"),",
+   "            cf_ = ledger_verdict_conflict(r, vv.get(\"status\"), recorded=False, folder_provenance=r.get(\"verdict_provenance\"),", "both"),
+ F("DQ54_runkind_prov_off", "                              \"provenance\": pv_cur, \"prior\": (cur_.get(\"history\") if ok_cur else None)}",
+   "                              \"provenance\": None, \"prior\": (cur_.get(\"history\") if ok_cur else None)}", "both"),
  F("DQ55_rows_prov_shape_off", "        if vp_ is not None and not isinstance(vp_, dict):", "        if False:", "both"),
  F("DQ56_rows_superseded_shape_off", "        if vs_ is not None and not (isinstance(vs_, list) and all(isinstance(x_, dict) and x_.get(\"from\") in (\"invalid\", \"incomplete\")",
    "        if False and (isinstance(vs_, list) and all(isinstance(x_, dict) and x_.get(\"from\") in (\"invalid\", \"incomplete\")", "both"),
@@ -154,12 +158,33 @@ NEW = [
  F("DQ60_supersede_off", "                    if v0 is None or v0 in (\"invalid\", \"incomplete\"):   # ⭐ 2차 N3", "                    if v0 is None:   # ⭐ 2차 N3", "run", RUNR),
  F("DQ61_supersede_record_off", "                        if v0 is not None:\n                            new_[\"verdict_superseded\"]",
    "                        if False:\n                            new_[\"verdict_superseded\"]", "run", RUNR),
- F("DQ62_end_prov_record_off", "            ent[\"verdict_provenance\"] = v.get(\"provenance\")          # ⭐ DQ 전 2차 리뷰 N3", "            pass          # ⭐ DQ 전 2차 리뷰 N3", "run", RUNR),
+ F("DQ62_end_prov_record_off", "                    ent[\"verdict_provenance\"] = v.get(\"provenance\")  # ⭐ DQ 전 2차 리뷰 N3", "                    pass  # ⭐ DQ 전 2차 리뷰 N3", "run", RUNR),
  F("DQ63_rejudge_obs_prov_off", "\"status\": now_[\"status\"], \"provenance\": now_.get(\"provenance\"),", "\"status\": now_[\"status\"],", "run", RUNR),
- F("DQ64_retry_obs_prov_off", "                                     \"provenance\": rk_d.get(\"provenance\")},", "                                     \"provenance\": None},", "run", RUNR),
- F("DQ65_ack_obs_prov_off", "                             \"provenance\": kd.get(\"provenance\")})", "                             \"provenance\": None})", "run", RUNR),
- F("DQ66_persist_prov_record_off", "                        new_[\"verdict\"], new_[\"verdict_provenance\"] = obs[\"status\"], obs.get(\"provenance\")",
-   "                        new_[\"verdict\"] = obs[\"status\"]", "run", RUNR),
+ F("DQ64_retry_obs_prov_off", "\"provenance\": rk_d.get(\"provenance\"), \"prior\": rk_d.get(\"prior\")},", "\"provenance\": None, \"prior\": rk_d.get(\"prior\")},", "run", RUNR),
+ F("DQ65_ack_obs_prov_off", "\"provenance\": kd.get(\"provenance\"), \"prior\": kd.get(\"prior\")})", "\"provenance\": None, \"prior\": kd.get(\"prior\")})", "run", RUNR),
+ # ── DQ 전 3차 독립 리뷰 (2026-11-05) 고침 자리
+ ("DQ67_end_ledger_outside_section", RUNR, [                 # 3차 P1 이전 꼴 — 장부 적기 · 저장을 판정 구간 밖으로 (미룬 신호가 그 사이에서 장부를 비운다)
+     ('                if v.get("written") is not False:\n                    ent["verdict"], ent["closes_system"] = v.get("status"), bool(v.get("closes_system"))',
+      '                pass\n            if v.get("written") is not False:\n                    ent["verdict"], ent["closes_system"] = v.get("status"), bool(v.get("closes_system"))')], "run"),
+ ("DQ68_melt_ledger_outside_section", RUNR, [
+     ('                            v = mq.stage1_verdict(rd, values=vals, log=log, reason=f"첫 시드 녹음 판정 {mw[\'verdict\']} — 러너가 멈춤")\n'
+      '                            ent["verdict"], ent["verdict_provenance"] = v.get("status"), v.get("provenance")',
+      '                            v = mq.stage1_verdict(rd, values=vals, log=log, reason=f"첫 시드 녹음 판정 {mw[\'verdict\']} — 러너가 멈춤")\n'
+      '                        if True:\n                            ent["verdict"], ent["verdict_provenance"] = v.get("status"), v.get("provenance")')], "run"),
+ F("DQ69_folder_prior_off", "        if v_ is None and isinstance(folder_prior, dict):", "        if False:", "both"),
+ F("DQ70_prior_nonsci_changed_off", "            if ps_ in (\"invalid\", \"incomplete\") and (ch_.get(\"files\") or ch_.get(\"card_values\") or ch_.get(\"driver\")):",
+   "            if False:", "both"),
+ F("DQ71_prior_missing_changed_ok", "            ch_ = ch_ if isinstance(ch_, dict) else {\"files\": [\"?\"]}", "            ch_ = ch_ if isinstance(ch_, dict) else {}", "both"),
+ F("DQ72_summary_prior_off", "                                          folder_prior=vv.get(\"history\"))", "                                          folder_prior=None)", "both"),
+ F("DQ73_rejudge_obs_prior_off", "                                       \"prior\": now_.get(\"history\"),", "                                       \"prior\": None,", "run", RUNR),
+ F("DQ74_rejudge_check_prior_off", "                                              folder_prior=now_.get(\"history\"))", "                                              folder_prior=None)", "run", RUNR),
+ F("DQ75_persist_prior_off", "folder_provenance=obs.get(\"provenance\"), folder_prior=obs.get(\"prior\"))", "folder_provenance=obs.get(\"provenance\"), folder_prior=None)", "run", RUNR),
+ F("DQ76_retry_obs_prior_off", "\"provenance\": rk_d.get(\"provenance\"), \"prior\": rk_d.get(\"prior\")},", "\"provenance\": rk_d.get(\"provenance\"), \"prior\": None},", "run", RUNR),
+ F("DQ77_ack_obs_prior_off", "\"provenance\": kd.get(\"provenance\"), \"prior\": kd.get(\"prior\")})", "\"provenance\": kd.get(\"provenance\"), \"prior\": None})", "run", RUNR),
+ F("DQ78_runkind_prov_current_check_off", "        if not (isinstance(pv_cur, dict) and values is not None and pv_cur.get(\"files_sha256\") == run_provenance(folder)",
+   "        if False and (isinstance(pv_cur, dict) and values is not None and pv_cur.get(\"files_sha256\") == run_provenance(folder)", "both"),
+ F("DQ79_runkind_prior_off", "                              \"provenance\": pv_cur, \"prior\": (cur_.get(\"history\") if ok_cur else None)}",
+   "                              \"provenance\": pv_cur, \"prior\": None}", "both"),
  F("DQ17_seed_gate_plan_strict_off", "    plan = loads_strict((run / \"plan.json\").read_text(encoding=\"utf-8\")) if (run / \"plan.json\").exists() else {}",
    "    plan = json.loads((run / \"plan.json\").read_text(encoding=\"utf-8\")) if (run / \"plan.json\").exists() else {}"),
 ]

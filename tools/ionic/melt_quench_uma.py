@@ -1800,9 +1800,14 @@ def _run_kind(row, folder, values):
     if sci:                                                  # ⭐ DP 전 리뷰 F1 · F2 — 판정 기록으로 본 과학적 결과도 러너가 거부 전에 장부에 적는다
         st_sci = "fail" if any(r_.get("status") == "fail" for r_ in sci) else "pass"
         cur_ = next((r_ for w_, r_, _ in recs if w_ == "현재 판정"), None)       # ⭐ DQ 전 2차 리뷰 N3 — 지금 판정이 그 상태면 그 지문 (아니면 없음 = 대체 못 함)
+        ok_cur = isinstance(cur_, dict) and cur_.get("status") == st_sci
+        pv_cur = cur_.get("provenance") if ok_cur else None
+        if not (isinstance(pv_cur, dict) and values is not None and pv_cur.get("files_sha256") == run_provenance(folder)   # ⭐ 3차 P3 — 기록된 지문이
+                and pv_cur.get("card_values_sha16") == values_sha16(values) and pv_cur.get("driver_sha16") == driver_sha16()):   # 지금 파일 · 카드 · 도구와 같을 때만
+            pv_cur = None
         return "scientific", {"source": "folder_verdict", "status": st_sci,
                               "closes_system": any(r_.get("closes_system") is True for r_ in sci),
-                              "provenance": (cur_.get("provenance") if isinstance(cur_, dict) and cur_.get("status") == st_sci else None)}
+                              "provenance": pv_cur, "prior": (cur_.get("history") if ok_cur else None)}
     if any(x is None for x in sts):                          # ⭐ DP 전 리뷰 F1 — 못 읽은 이전 판정 (raw_b64 자리 · 상태 없음) = 판독 불가 (흔적 없음이 아니다)
         return "unreadable", {"source": "unreadable"}
     if any(x not in LI2S2_STATUSES for x in sts):
@@ -1894,7 +1899,7 @@ def same_judge_inputs(a, b):
     return isinstance(a.get("files_sha256"), dict)
 
 
-def ledger_verdict_conflict(row, folder_status, recorded=True, folder_provenance=None):
+def ledger_verdict_conflict(row, folder_status, recorded=True, folder_provenance=None, folder_prior=None):
     """⭐ DQ 전 리뷰 P1-A · 2차 N3 — 같은 실행의 장부 행과 폴더 판정이 어긋나는가 (러너 ①-4 · persist · 소비자 _ledger_check 가 **같은 함수** 를 쓴다).
     반환: 문제 글 | None. 규칙:
       · 장부 verdict 가 허용 값 밖이면 문제.
@@ -1902,6 +1907,9 @@ def ledger_verdict_conflict(row, folder_status, recorded=True, folder_provenance
         지문 (verdict_provenance) 과 지금 폴더 판정의 지문이 같은 원자료 · 카드 · 도구일 때만** 충돌 아님 (같은 입력의 결정적 판정이 앞에서 못 끝났던 것 —
         판정 도중 오류) · 지문이 다르거나 기록이 없으면 충돌 (원자료 복구 · 추가 · 수동 변경일 수 있다 — 사람이 본다 · 회신 DP Q2).
       · 장부 녹음 fail 인데 폴더 판정 pass 면 충돌.
+      · ⭐ 3차 P1 — 장부 판정이 **없으면** (판정을 쓴 뒤 장부에 적기 전에 끊김 · SIGKILL · 정전) 폴더 판정 기록의 바로 앞 판정
+        (folder_prior = 지금 판정의 history — prev_status · changed) 을 기준으로 같은 규칙: 앞이 pass · fail 인데 지금과 다르면 충돌 · 앞이 invalid ·
+        incomplete 인데 그 사이 원자료 · 카드 · 도구가 바뀌었으면 충돌.
       · recorded 면 장부에 적힌 충돌 관측 (verdict_observed_conflict) 도 충돌."""
     v_ = row.get("verdict")
     if v_ not in LEDGER_VERDICTS:
@@ -1915,6 +1923,13 @@ def ledger_verdict_conflict(row, folder_status, recorded=True, folder_provenance
         mc_ = row.get("melt_check")
         if folder_status == "pass" and isinstance(mc_, dict) and mc_.get("verdict") == "fail":
             return "장부 녹음 fail ↔ 폴더 판정 pass"
+        if v_ is None and isinstance(folder_prior, dict):    # ⭐ 3차 P1 — 장부가 비었으면 폴더의 앞 판정을 기준으로
+            ps_, ch_ = folder_prior.get("prev_status"), folder_prior.get("changed")
+            ch_ = ch_ if isinstance(ch_, dict) else {"files": ["?"]}          # 바뀐 것 기록이 없으면 바뀌었다고 본다
+            if ps_ in ("pass", "fail") and ps_ != folder_status:
+                return f"장부에 판정이 없고 폴더의 앞 판정 {ps_} ≠ 지금 {folder_status} (끊긴 뒤 원자료 · 도구가 바뀌었을 수 있다)"
+            if ps_ in ("invalid", "incomplete") and (ch_.get("files") or ch_.get("card_values") or ch_.get("driver")):
+                return f"장부에 판정이 없고 폴더의 앞 판정 {ps_} → 지금 {folder_status} 사이에 원자료 · 카드 · 도구가 바뀌었다"
     if recorded and row.get("verdict_observed_conflict"):
         return "장부에 같은 실행의 다른 판정 관측이 있다 (verdict_observed_conflict)"
     return None
@@ -2157,7 +2172,8 @@ def _ledger_check(out_root, verdicts, values):
         elif (r.get("system"), r.get("seed")) != (s, sd):
             invalid.append(f"{s}{sd} 판정의 run_id {rid[:8]} 는 장부에서 {r.get('system')}{r.get('seed')} 런이다")
         else:                                                 # ⭐ 회신 DP P1-2 · DQ 전 리뷰 P1-A — 같은 실행의 판정 충돌 (러너 ①-4 와 같은 함수)
-            cf_ = ledger_verdict_conflict(r, vv.get("status"), recorded=False, folder_provenance=vv.get("provenance"))
+            cf_ = ledger_verdict_conflict(r, vv.get("status"), recorded=False, folder_provenance=vv.get("provenance"),
+                                          folder_prior=vv.get("history"))
             if cf_:
                 invalid.append(f"{s}{sd}: 같은 실행 {rid[:8]} — {cf_} · 원자료 · 도구가 바뀌었거나 덮인 기록 (사람이 본다)")
     return {"total_h": tot, "cap_h": float(values["stage1_cap_gpu_h"]), "invalid": invalid, "pending": pending,
@@ -4283,10 +4299,19 @@ def _selftest():
                        "inv_prov_diff": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV2) is not None,
                        "inv_prov_nocard": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": {**PV, "card_values_sha16": None}}, "pass",
                                                                   folder_provenance={**PV, "card_values_sha16": None}) is not None,
-                       "inv_folder_noprov": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=None) is not None})
+                       "inv_folder_noprov": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=None) is not None,
+                       "none_prior_flip": ledger_verdict_conflict({}, "pass", folder_prior={"prev_status": "fail", "changed": {"files": []}}) is not None,
+                       "none_prior_same_sci": ledger_verdict_conflict({}, "pass", folder_prior={"prev_status": "pass", "changed": {"files": ["x"]}}) is not None,
+                       "none_prior_nonsci_changed": ledger_verdict_conflict({}, "pass", folder_prior={"prev_status": "invalid", "changed": {"files": ["traj.xyz"]}}) is not None,
+                       "none_prior_nonsci_driver": ledger_verdict_conflict({}, "fail", folder_prior={"prev_status": "incomplete", "changed": {"files": [], "driver": True}}) is not None,
+                       "none_prior_nonsci_same": ledger_verdict_conflict({}, "pass", folder_prior={"prev_status": "invalid", "changed": {"files": [], "card_values": False, "driver": False}}) is not None,
+                       "none_prior_no_changed": ledger_verdict_conflict({}, "pass", folder_prior={"prev_status": "invalid"}) is not None,
+                       "set_ledger_ignores_prior": ledger_verdict_conflict({"verdict": "pass"}, "pass", folder_prior={"prev_status": "fail", "changed": {}}) is not None})
         want_cf = {"none_pass": False, "pass_pass": False, "inv_pass": True, "inc_fail": True, "PASS_none": True, "fail_pass": True, "melt_pass": True,
                    "melt_fail": False, "pass_incomplete": False, "rec_on": True, "rec_off": False,
-                   "inv_same_prov": False, "inc_same_prov": False, "inv_prov_diff": True, "inv_prov_nocard": True, "inv_folder_noprov": True}
+                   "inv_same_prov": False, "inc_same_prov": False, "inv_prov_diff": True, "inv_prov_nocard": True, "inv_folder_noprov": True,
+                   "none_prior_flip": True, "none_prior_same_sci": False, "none_prior_nonsci_changed": True, "none_prior_nonsci_driver": True,
+                   "none_prior_nonsci_same": False, "none_prior_no_changed": True, "set_ledger_ignores_prior": False}
         chk(got_cf == want_cf, f"⛔음성 DQ 전 리뷰 P1-A · 2차 N3: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 — 비과학적 장부 판정은 "
                                "그때 지문 = 지금 (원자료 · 카드 · 도구 다 있고 같음) 일 때만 대체 "
                                f"({ {k_: v_ for k_, v_ in got_cf.items() if v_ != want_cf[k_]} })")
@@ -4479,7 +4504,7 @@ def _selftest():
         mi_cut = run_kind_detail({"status": "interrupted"}, d_mi, VAL)
         mi_end = run_kind_detail({"status": "ended"}, d_mi, VAL)
         mi_orph = run_kind_detail({"status": "orphaned", "status_before_orphan": "running"}, d_mi, VAL)
-    chk(fv_fail[0] == "scientific" and fv_fail[1] == {"source": "folder_verdict", "status": "fail", "closes_system": True, "provenance": None}
+    chk(fv_fail[0] == "scientific" and fv_fail[1] == {"source": "folder_verdict", "status": "fail", "closes_system": True, "provenance": None, "prior": None}
         and fv_pass[0] == "scientific" and fv_pass[1].get("status") == "pass" and fv_pass[1].get("closes_system") is False
         and raw_unr[0] == "unreadable" and mh_bad[0] == "unreadable" and mh_ok[0] == "interrupted"
         and mi_cut[0] == "interrupted" and mi_end == ("invalid", {"source": "folder_melt_window"}) and mi_orph[0] == "interrupted",
@@ -4488,13 +4513,22 @@ def _selftest():
         f"melt_check_history 가 목록이 아니면 판독 불가 ({[fv_fail, fv_pass, raw_unr[0], mh_bad[0], mh_ok[0], mi_cut[0], mi_end, mi_orph[0]]})")
     with tempfile.TemporaryDirectory() as td_:                # ⭐ DQ 전 2차 리뷰 N3 — 관측에 실리는 지문 (_vf2 는 지금 td_ 를 쓴다)
         PVk = {"files_sha256": {"traj.xyz": "c" * 64}, "card_values_sha16": "1" * 16, "driver_sha16": "2" * 16}
-        fv_prov = run_kind_detail({}, _vf2("pv", json.dumps({"status": "pass", "provenance": PVk})))
+        d_pv = _vf2("pv", None)
+        PVreal = {"files_sha256": run_provenance(d_pv), "card_values_sha16": values_sha16(VAL), "driver_sha16": driver_sha16()}
+        (pathlib.Path(d_pv) / "stage1_verdict.json").write_text(json.dumps({"status": "pass", "provenance": PVreal, "history": {"prev_status": "incomplete"}}),
+                                                               encoding="utf-8")
+        fv_prov = run_kind_detail({}, d_pv, VAL)
+        fv_prov_noval = run_kind_detail({}, d_pv)
+        d_fk = _vf2("fk", json.dumps({"status": "pass", "provenance": PVk}))            # 지금 파일과 안 맞는 (꾸민 · 낡은) 지문
+        fv_prov_fake = run_kind_detail({}, d_fk, VAL)
         d_pm = _vf2("pm", json.dumps({"status": "pass", "provenance": PVk}))         # 지금 판정 pass · 이력의 이전 판정 fail
         _append_history(pathlib.Path(d_pm), {"status": "fail", "provenance": PVk}, {"status": "pass", "provenance": PVk}, "selftest")
         fv_prov_mix = run_kind_detail({}, d_pm)
-        chk(fv_prov[1].get("provenance") == PVk and fv_prov_mix[1].get("status") == "fail" and fv_prov_mix[1].get("provenance") is None,
+        chk(fv_prov[1].get("provenance") == PVreal and fv_prov[1].get("prior") == {"prev_status": "incomplete"} and fv_prov_noval[1].get("provenance") is None
+            and fv_prov_fake[1].get("provenance") is None and fv_prov_mix[1].get("status") == "fail" and fv_prov_mix[1].get("provenance") is None,
             "⛔음성 DQ 전 2차 리뷰 N3: 폴더 판정 관측에 지금 판정의 지문이 실린다 (재시도 · 확인 경로도 ①-4 와 같은 대체 규칙) · 관측 상태 (이력의 fail) 가 "
-            f"지금 판정 (pass) 과 다르면 지문을 싣지 않는다 (대체 못 함) ({fv_prov[1].get('provenance') == PVk} · {fv_prov_mix[1]})")
+            f"지금 판정 (pass) 과 다르면 지문을 싣지 않는다 (대체 못 함) · (3차 P3) 지문은 지금 파일 · 카드 · 도구와 같을 때만 · 앞 판정 (history) 도 싣는다 "
+            f"({fv_prov[1].get('provenance') == PVreal} · {fv_prov_noval[1].get('provenance')} · {fv_prov_fake[1].get('provenance')} · {fv_prov_mix[1]})")
     chk(rk == exp_rk,
         "⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid "
         "판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = invalid · 녹음 fail · closes_system · 이력의 fail = 과학적 · 꼴이 틀린 "
