@@ -1,0 +1,10 @@
+[2026-11-05 09:17:24] 시작 · AXIS=li · 결정 D-2026-11-04-cascade-axis-li-anode active · OUT=/data/work/wt_axis_ncm/db/raw/cascade_axis_li_2026_11_04 · PY=/data/apps/miniforge3/envs/uma/bin/python · resume=0
+[2026-11-05 09:17:25] selftest 둘 통과
+[2026-11-05 09:17:34] manifest 앞 기록
+[2026-11-05 09:17:34] 갈래 발사 (PID 1181118 1181119  · 대상 91 종 · db/properties/cascade_interface_90.jsonl) — 기대 줄 수 91 · 1
+[2026-11-05 09:21:23] 갈래 끝 · rc designs_li host_li = 0 0 0
+  designs_li   rc 0 · 줄 91 · ok 91 · 중복 0
+  host_li      rc 0 · 줄 1 · ok 1 · 중복 0
+[2026-11-05 09:21:28] MP 판 앞뒤: same
+[2026-11-05 09:22:02] 산물 갭 rc=0
+[2026-11-05 09:22:02] 끝 — 회수 블록은 판독기 커밋 뒤에 받는다 (카드 §8 ③)
