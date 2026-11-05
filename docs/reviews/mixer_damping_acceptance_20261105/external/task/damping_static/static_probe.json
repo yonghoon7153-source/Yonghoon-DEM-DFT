@@ -1,0 +1,3614 @@
+{
+  "schema": "independent_mixer_damping_static_probe/1",
+  "pin": "eb400b9dde3d630d8d4571d48b879ef5093d08e5",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "execution_flags": {
+    "isolated": 1,
+    "dont_write_bytecode": 1
+  },
+  "scope": "new damping draft documentation only; independent in-memory fixed-first8 command and timing reconstruction",
+  "source_sha256": {
+    "scripts/mixer_precal_prepare.py": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6",
+    "scripts/make_mixer_deck.py": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "scripts/mixer_deck_readback.py": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f",
+    "scripts/mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3"
+  },
+  "source_sha_matches_saved_audit": {
+    "scripts/mixer_precal_prepare.py": true,
+    "scripts/make_mixer_deck.py": true,
+    "scripts/mixer_deck_readback.py": true,
+    "scripts/mixer_deck_diff.py": true
+  },
+  "input_snapshot_unchanged": true,
+  "checked_input_files": 32,
+  "in_memory_cases": 8,
+  "disk_decks_written": 0,
+  "simulation_runs": 0,
+  "raw_dumps_read": 0,
+  "validator_or_full_gate_runs": 0,
+  "host_access": false,
+  "execution_authorized": false,
+  "forbidden_side_effect_attempts": [],
+  "comparisons": [
+    {
+      "case_id": "PRECAL_R1_B1_U",
+      "audit_sha_matches": true,
+      "annotation_sha_matches": true,
+      "audit_size_matches": true,
+      "audit_fix_inventory_matches": true,
+      "audit_run_steps_match": true,
+      "audit_run_boundaries_match": true,
+      "audit_t0_matches": true,
+      "audit_restarts_match": true,
+      "audit_dump_interval_matches": true,
+      "annotation_time_markers_match": true
+    },
+    {
+      "case_id": "PRECAL_R1_B1_C",
+      "audit_sha_matches": true,
+      "annotation_sha_matches": true,
+      "audit_size_matches": true,
+      "audit_fix_inventory_matches": true,
+      "audit_run_steps_match": true,
+      "audit_run_boundaries_match": true,
+      "audit_t0_matches": true,
+      "audit_restarts_match": true,
+      "audit_dump_interval_matches": true,
+      "annotation_time_markers_match": true
+    },
+    {
+      "case_id": "PRECAL_R1_B2_U",
+      "audit_sha_matches": true,
+      "annotation_sha_matches": true,
+      "audit_size_matches": true,
+      "audit_fix_inventory_matches": true,
+      "audit_run_steps_match": true,
+      "audit_run_boundaries_match": true,
+      "audit_t0_matches": true,
+      "audit_restarts_match": true,
+      "audit_dump_interval_matches": true,
+      "annotation_time_markers_match": true
+    },
+    {
+      "case_id": "PRECAL_R1_B2_C",
+      "audit_sha_matches": true,
+      "annotation_sha_matches": true,
+      "audit_size_matches": true,
+      "audit_fix_inventory_matches": true,
+      "audit_run_steps_match": true,
+      "audit_run_boundaries_match": true,
+      "audit_t0_matches": true,
+      "audit_restarts_match": true,
+      "audit_dump_interval_matches": true,
+      "annotation_time_markers_match": true
+    },
+    {
+      "case_id": "PRECAL_R1_B3_U",
+      "audit_sha_matches": true,
+      "annotation_sha_matches": true,
+      "audit_size_matches": true,
+      "audit_fix_inventory_matches": true,
+      "audit_run_steps_match": true,
+      "audit_run_boundaries_match": true,
+      "audit_t0_matches": true,
+      "audit_restarts_match": true,
+      "audit_dump_interval_matches": true,
+      "annotation_time_markers_match": true
+    },
+    {
+      "case_id": "PRECAL_R1_B3_C",
+      "audit_sha_matches": true,
+      "annotation_sha_matches": true,
+      "audit_size_matches": true,
+      "audit_fix_inventory_matches": true,
+      "audit_run_steps_match": true,
+      "audit_run_boundaries_match": true,
+      "audit_t0_matches": true,
+      "audit_restarts_match": true,
+      "audit_dump_interval_matches": true,
+      "annotation_time_markers_match": true
+    },
+    {
+      "case_id": "PRECAL_N0",
+      "audit_sha_matches": true,
+      "annotation_sha_matches": true,
+      "audit_size_matches": true,
+      "audit_fix_inventory_matches": true,
+      "audit_run_steps_match": true,
+      "audit_run_boundaries_match": true,
+      "audit_t0_matches": true,
+      "audit_restarts_match": true,
+      "audit_dump_interval_matches": true,
+      "annotation_time_markers_match": true
+    },
+    {
+      "case_id": "PRECAL_E0",
+      "audit_sha_matches": true,
+      "annotation_sha_matches": true,
+      "audit_size_matches": true,
+      "audit_fix_inventory_matches": true,
+      "audit_run_steps_match": true,
+      "audit_run_boundaries_match": true,
+      "audit_t0_matches": true,
+      "audit_restarts_match": true,
+      "audit_dump_interval_matches": true,
+      "annotation_time_markers_match": true
+    }
+  ],
+  "records": [
+    {
+      "case_id": "PRECAL_R1_B1_U",
+      "role": "U",
+      "deck_sha256": "bb00b3251d76d45f311139606fdcbfd842e485489e49447a7d2373d5bfa891c6",
+      "deck_bytes": 14125,
+      "metadata_sha_binding_matches": true,
+      "fix_inventory": [
+        {
+          "line": 70,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "id": "m1",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 71,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "id": "m2",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 73,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "id": "m3",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 78,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "id": "m4",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 83,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "id": "m5",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 90,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 47265.9 55569 56825.1 22875.5 55569 61935.9 59100.5 29975.4 56825.1 59100.5 72124.5 30886.4 22875.5 29975.4 30886.4 0",
+          "id": "mC",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 95,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "id": "m9",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 101,
+          "command": "fix gravi all gravity 9.81 vector 0.0 0.0 -1.0",
+          "id": "gravi",
+          "group": "all",
+          "style": "gravity"
+        },
+        {
+          "line": 104,
+          "command": "fix Drum all mesh/surface file Drum.stl type 4 scale 0.0251665",
+          "id": "Drum",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 105,
+          "command": "fix Front all mesh/surface file Front.stl type 4 scale 0.0251665",
+          "id": "Front",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 106,
+          "command": "fix Back all mesh/surface file Back.stl type 4 scale 0.0251665",
+          "id": "Back",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 107,
+          "command": "fix walls all wall/gran model hertz tangential history cohesion sjkr rolling_friction cdt mesh n_meshes 3 meshes Drum Front Back",
+          "id": "walls",
+          "group": "all",
+          "style": "wall/gran"
+        },
+        {
+          "line": 111,
+          "command": "fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813",
+          "id": "pt1",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 112,
+          "command": "fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028",
+          "id": "pt2",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 113,
+          "command": "fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 1640 radius constant 7.57e-05",
+          "id": "pt3",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 116,
+          "command": "fix pddA all particledistribution/discrete 32452867 2 pt1 0.700000 pt2 0.300000",
+          "id": "pddA",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 118,
+          "command": "fix pddB all particledistribution/discrete 32452883 1 pt3 1.000000",
+          "id": "pddB",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 122,
+          "command": "fix insA all insert/pack seed 32452843 distributiontemplate pddA maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_reg particles_in_region 842 ntry_mc 20000",
+          "id": "insA",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 135,
+          "command": "fix integrS all nve/sphere",
+          "id": "integrS",
+          "group": "all",
+          "style": "nve/sphere"
+        },
+        {
+          "line": 169,
+          "command": "fix insB all insert/pack seed 32452867 distributiontemplate pddB maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_hi particles_in_region 99158 ntry_mc 20000",
+          "id": "insB",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 179,
+          "command": "fix mvD all move/mesh mesh Drum rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvD",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 180,
+          "command": "fix mvF all move/mesh mesh Front rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvF",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 181,
+          "command": "fix mvB all move/mesh mesh Back rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvB",
+          "group": "all",
+          "style": "move/mesh"
+        }
+      ],
+      "run_timeline": [
+        {
+          "line": 151,
+          "command": "run 1",
+          "steps": 1,
+          "before": 0,
+          "after": 1,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insA"
+          ],
+          "duration_seconds": "2.373E-7",
+          "before_seconds": "0E-10",
+          "after_seconds": "2.373E-7"
+        },
+        {
+          "line": 163,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 1,
+          "after": 560607,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insA"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "2.373E-7",
+          "after_seconds": "0.1330320411"
+        },
+        {
+          "line": 172,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 560607,
+          "after": 1121213,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insB"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "0.1330320411",
+          "after_seconds": "0.2660638449"
+        },
+        {
+          "line": 182,
+          "command": "run 6595382",
+          "steps": 6595382,
+          "before": 1121213,
+          "after": 7716595,
+          "active_rotation": [
+            "mvD",
+            "mvF",
+            "mvB"
+          ],
+          "active_viscous": [],
+          "active_insertion": [],
+          "duration_seconds": "1.5650841486",
+          "before_seconds": "0.2660638449",
+          "after_seconds": "1.8311479935"
+        }
+      ],
+      "unfix_timeline": [
+        {
+          "line": 164,
+          "command": "unfix insA",
+          "step": 560607,
+          "removed_style": "insert/pack"
+        },
+        {
+          "line": 173,
+          "command": "unfix insB",
+          "step": 1121213,
+          "removed_style": "insert/pack"
+        }
+      ],
+      "settled_restart_boundaries": [
+        {
+          "line": 176,
+          "command": "write_restart restart/settled.bin",
+          "step": 1121213
+        }
+      ],
+      "pressure_or_stop_candidates": [],
+      "dynamic_or_external_control_commands": [],
+      "properties": {
+        "youngsModulus": {
+          "line": 70,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "values": [
+            "1.037e+09",
+            "1.037e+09",
+            "2e+08",
+            "1.48e+09"
+          ]
+        },
+        "poissonsRatio": {
+          "line": 71,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "values": [
+            "0.25",
+            "0.25",
+            "0.30",
+            "0.30"
+          ]
+        },
+        "coefficientRestitution": {
+          "line": 73,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "values": [
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3"
+          ]
+        },
+        "coefficientFriction": {
+          "line": 78,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "values": [
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9"
+          ]
+        },
+        "coefficientRollingFriction": {
+          "line": 83,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "values": [
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075"
+          ]
+        },
+        "cohesionEnergyDensity": {
+          "line": 90,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 47265.9 55569 56825.1 22875.5 55569 61935.9 59100.5 29975.4 56825.1 59100.5 72124.5 30886.4 22875.5 29975.4 30886.4 0",
+          "values": [
+            "47265.9",
+            "55569",
+            "56825.1",
+            "22875.5",
+            "55569",
+            "61935.9",
+            "59100.5",
+            "29975.4",
+            "56825.1",
+            "59100.5",
+            "72124.5",
+            "30886.4",
+            "22875.5",
+            "29975.4",
+            "30886.4",
+            "0"
+          ]
+        },
+        "characteristicVelocity": {
+          "line": 95,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "values": [
+            "2.0"
+          ]
+        }
+      },
+      "evidence_commands": [
+        {
+          "line": 57,
+          "command": "units si"
+        },
+        {
+          "line": 98,
+          "command": "pair_style gran model hertz tangential history cohesion sjkr rolling_friction cdt"
+        },
+        {
+          "line": 100,
+          "command": "timestep 2.373e-07"
+        },
+        {
+          "line": 137,
+          "command": "compute rke all erotate/sphere"
+        },
+        {
+          "line": 138,
+          "command": "thermo_style custom step atoms ke c_rke vol"
+        },
+        {
+          "line": 154,
+          "command": "dump dmp all custom 32976 post/mix_*.liggghts id type x y z vx vy vz fx fy fz radius"
+        },
+        {
+          "line": 157,
+          "command": "dump_modify dmp format %d %d %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g"
+        }
+      ],
+      "time": {
+        "dt_printed_seconds": "2.373E-7",
+        "dt_rule_seconds": 2.372896783030651e-07,
+        "inserted_steps": 1,
+        "settling_run_steps": 1121212,
+        "settling_duration_seconds": "0.2660636076",
+        "t0_planned_step": 1121184,
+        "t0_planned_seconds": "0.2660569632",
+        "t0_formula": "floor((run2 + run3) / dump_interval) * dump_interval",
+        "settled_write_restart_step": 1121213,
+        "settled_write_restart_seconds": "0.2660638449",
+        "t0_to_settled_gap_steps": 29,
+        "t0_to_settled_gap_seconds": "0.0000068817",
+        "rotation_run_steps": 6595382,
+        "rotation_duration_seconds": "1.5650841486",
+        "final_planned_step": 7716595,
+        "final_planned_seconds": "1.8311479935",
+        "dump_interval_steps": 32976,
+        "dump_interval_seconds": "0.0078252048"
+      },
+      "metadata_crosscheck": {
+        "t0_planned_matches": true,
+        "dt_matches": true,
+        "run_steps_matches": true,
+        "fill_steps_matches": true
+      },
+      "surface_gamma": {
+        "AM_P": 0.1,
+        "AM_S": 0.1,
+        "SE": 1.0
+      },
+      "surface_gamma_wall": 0.00256,
+      "viscosity_coefficient": null,
+      "interpretation": "Static planned values only; not observed particles, runtime state, dump existence, actual stop, or execution authorization."
+    },
+    {
+      "case_id": "PRECAL_R1_B1_C",
+      "role": "C",
+      "deck_sha256": "7875e1f053411e8531cecd616ffe1d016044a50b57d500f515edcd197e4d0d7d",
+      "deck_bytes": 14117,
+      "metadata_sha_binding_matches": true,
+      "fix_inventory": [
+        {
+          "line": 70,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "id": "m1",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 71,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "id": "m2",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 73,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "id": "m3",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 78,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "id": "m4",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 83,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "id": "m5",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 90,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 101831 119720 83407.8 33576.6 119720 133437 86747.7 43997.9 83407.8 86747.7 72124.5 30886.4 33576.6 43997.9 30886.4 0",
+          "id": "mC",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 95,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "id": "m9",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 101,
+          "command": "fix gravi all gravity 9.81 vector 0.0 0.0 -1.0",
+          "id": "gravi",
+          "group": "all",
+          "style": "gravity"
+        },
+        {
+          "line": 104,
+          "command": "fix Drum all mesh/surface file Drum.stl type 4 scale 0.0251665",
+          "id": "Drum",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 105,
+          "command": "fix Front all mesh/surface file Front.stl type 4 scale 0.0251665",
+          "id": "Front",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 106,
+          "command": "fix Back all mesh/surface file Back.stl type 4 scale 0.0251665",
+          "id": "Back",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 107,
+          "command": "fix walls all wall/gran model hertz tangential history cohesion sjkr rolling_friction cdt mesh n_meshes 3 meshes Drum Front Back",
+          "id": "walls",
+          "group": "all",
+          "style": "wall/gran"
+        },
+        {
+          "line": 111,
+          "command": "fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813",
+          "id": "pt1",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 112,
+          "command": "fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028",
+          "id": "pt2",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 113,
+          "command": "fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 1640 radius constant 7.57e-05",
+          "id": "pt3",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 116,
+          "command": "fix pddA all particledistribution/discrete 32452867 2 pt1 0.700000 pt2 0.300000",
+          "id": "pddA",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 118,
+          "command": "fix pddB all particledistribution/discrete 32452883 1 pt3 1.000000",
+          "id": "pddB",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 122,
+          "command": "fix insA all insert/pack seed 32452843 distributiontemplate pddA maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_reg particles_in_region 842 ntry_mc 20000",
+          "id": "insA",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 135,
+          "command": "fix integrS all nve/sphere",
+          "id": "integrS",
+          "group": "all",
+          "style": "nve/sphere"
+        },
+        {
+          "line": 169,
+          "command": "fix insB all insert/pack seed 32452867 distributiontemplate pddB maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_hi particles_in_region 99158 ntry_mc 20000",
+          "id": "insB",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 179,
+          "command": "fix mvD all move/mesh mesh Drum rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvD",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 180,
+          "command": "fix mvF all move/mesh mesh Front rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvF",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 181,
+          "command": "fix mvB all move/mesh mesh Back rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvB",
+          "group": "all",
+          "style": "move/mesh"
+        }
+      ],
+      "run_timeline": [
+        {
+          "line": 151,
+          "command": "run 1",
+          "steps": 1,
+          "before": 0,
+          "after": 1,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insA"
+          ],
+          "duration_seconds": "2.373E-7",
+          "before_seconds": "0E-10",
+          "after_seconds": "2.373E-7"
+        },
+        {
+          "line": 163,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 1,
+          "after": 560607,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insA"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "2.373E-7",
+          "after_seconds": "0.1330320411"
+        },
+        {
+          "line": 172,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 560607,
+          "after": 1121213,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insB"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "0.1330320411",
+          "after_seconds": "0.2660638449"
+        },
+        {
+          "line": 182,
+          "command": "run 6595382",
+          "steps": 6595382,
+          "before": 1121213,
+          "after": 7716595,
+          "active_rotation": [
+            "mvD",
+            "mvF",
+            "mvB"
+          ],
+          "active_viscous": [],
+          "active_insertion": [],
+          "duration_seconds": "1.5650841486",
+          "before_seconds": "0.2660638449",
+          "after_seconds": "1.8311479935"
+        }
+      ],
+      "unfix_timeline": [
+        {
+          "line": 164,
+          "command": "unfix insA",
+          "step": 560607,
+          "removed_style": "insert/pack"
+        },
+        {
+          "line": 173,
+          "command": "unfix insB",
+          "step": 1121213,
+          "removed_style": "insert/pack"
+        }
+      ],
+      "settled_restart_boundaries": [
+        {
+          "line": 176,
+          "command": "write_restart restart/settled.bin",
+          "step": 1121213
+        }
+      ],
+      "pressure_or_stop_candidates": [],
+      "dynamic_or_external_control_commands": [],
+      "properties": {
+        "youngsModulus": {
+          "line": 70,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "values": [
+            "1.037e+09",
+            "1.037e+09",
+            "2e+08",
+            "1.48e+09"
+          ]
+        },
+        "poissonsRatio": {
+          "line": 71,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "values": [
+            "0.25",
+            "0.25",
+            "0.30",
+            "0.30"
+          ]
+        },
+        "coefficientRestitution": {
+          "line": 73,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "values": [
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3"
+          ]
+        },
+        "coefficientFriction": {
+          "line": 78,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "values": [
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9"
+          ]
+        },
+        "coefficientRollingFriction": {
+          "line": 83,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "values": [
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075"
+          ]
+        },
+        "cohesionEnergyDensity": {
+          "line": 90,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 101831 119720 83407.8 33576.6 119720 133437 86747.7 43997.9 83407.8 86747.7 72124.5 30886.4 33576.6 43997.9 30886.4 0",
+          "values": [
+            "101831",
+            "119720",
+            "83407.8",
+            "33576.6",
+            "119720",
+            "133437",
+            "86747.7",
+            "43997.9",
+            "83407.8",
+            "86747.7",
+            "72124.5",
+            "30886.4",
+            "33576.6",
+            "43997.9",
+            "30886.4",
+            "0"
+          ]
+        },
+        "characteristicVelocity": {
+          "line": 95,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "values": [
+            "2.0"
+          ]
+        }
+      },
+      "evidence_commands": [
+        {
+          "line": 57,
+          "command": "units si"
+        },
+        {
+          "line": 98,
+          "command": "pair_style gran model hertz tangential history cohesion sjkr rolling_friction cdt"
+        },
+        {
+          "line": 100,
+          "command": "timestep 2.373e-07"
+        },
+        {
+          "line": 137,
+          "command": "compute rke all erotate/sphere"
+        },
+        {
+          "line": 138,
+          "command": "thermo_style custom step atoms ke c_rke vol"
+        },
+        {
+          "line": 154,
+          "command": "dump dmp all custom 32976 post/mix_*.liggghts id type x y z vx vy vz fx fy fz radius"
+        },
+        {
+          "line": 157,
+          "command": "dump_modify dmp format %d %d %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g"
+        }
+      ],
+      "time": {
+        "dt_printed_seconds": "2.373E-7",
+        "dt_rule_seconds": 2.372896783030651e-07,
+        "inserted_steps": 1,
+        "settling_run_steps": 1121212,
+        "settling_duration_seconds": "0.2660636076",
+        "t0_planned_step": 1121184,
+        "t0_planned_seconds": "0.2660569632",
+        "t0_formula": "floor((run2 + run3) / dump_interval) * dump_interval",
+        "settled_write_restart_step": 1121213,
+        "settled_write_restart_seconds": "0.2660638449",
+        "t0_to_settled_gap_steps": 29,
+        "t0_to_settled_gap_seconds": "0.0000068817",
+        "rotation_run_steps": 6595382,
+        "rotation_duration_seconds": "1.5650841486",
+        "final_planned_step": 7716595,
+        "final_planned_seconds": "1.8311479935",
+        "dump_interval_steps": 32976,
+        "dump_interval_seconds": "0.0078252048"
+      },
+      "metadata_crosscheck": {
+        "t0_planned_matches": true,
+        "dt_matches": true,
+        "run_steps_matches": true,
+        "fill_steps_matches": true
+      },
+      "surface_gamma": {
+        "AM_P": 1.0,
+        "AM_S": 1.0,
+        "SE": 1.0
+      },
+      "surface_gamma_wall": 0.00256,
+      "viscosity_coefficient": null,
+      "interpretation": "Static planned values only; not observed particles, runtime state, dump existence, actual stop, or execution authorization."
+    },
+    {
+      "case_id": "PRECAL_R1_B2_U",
+      "role": "U",
+      "deck_sha256": "b37974e5c0674947912e932c55517e9e84243293f29257183f8f70cc032f2fd7",
+      "deck_bytes": 14112,
+      "metadata_sha_binding_matches": true,
+      "fix_inventory": [
+        {
+          "line": 70,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "id": "m1",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 71,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "id": "m2",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 73,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "id": "m3",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 78,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "id": "m4",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 83,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "id": "m5",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 90,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 219389 257928 263759 106179 257928 287481 274320 139133 263759 274320 334772 143362 106179 139133 143362 0",
+          "id": "mC",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 95,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "id": "m9",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 101,
+          "command": "fix gravi all gravity 9.81 vector 0.0 0.0 -1.0",
+          "id": "gravi",
+          "group": "all",
+          "style": "gravity"
+        },
+        {
+          "line": 104,
+          "command": "fix Drum all mesh/surface file Drum.stl type 4 scale 0.0251665",
+          "id": "Drum",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 105,
+          "command": "fix Front all mesh/surface file Front.stl type 4 scale 0.0251665",
+          "id": "Front",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 106,
+          "command": "fix Back all mesh/surface file Back.stl type 4 scale 0.0251665",
+          "id": "Back",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 107,
+          "command": "fix walls all wall/gran model hertz tangential history cohesion sjkr rolling_friction cdt mesh n_meshes 3 meshes Drum Front Back",
+          "id": "walls",
+          "group": "all",
+          "style": "wall/gran"
+        },
+        {
+          "line": 111,
+          "command": "fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813",
+          "id": "pt1",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 112,
+          "command": "fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028",
+          "id": "pt2",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 113,
+          "command": "fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 1640 radius constant 7.57e-05",
+          "id": "pt3",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 116,
+          "command": "fix pddA all particledistribution/discrete 32452867 2 pt1 0.700000 pt2 0.300000",
+          "id": "pddA",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 118,
+          "command": "fix pddB all particledistribution/discrete 32452883 1 pt3 1.000000",
+          "id": "pddB",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 122,
+          "command": "fix insA all insert/pack seed 32452843 distributiontemplate pddA maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_reg particles_in_region 842 ntry_mc 20000",
+          "id": "insA",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 135,
+          "command": "fix integrS all nve/sphere",
+          "id": "integrS",
+          "group": "all",
+          "style": "nve/sphere"
+        },
+        {
+          "line": 169,
+          "command": "fix insB all insert/pack seed 32452867 distributiontemplate pddB maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_hi particles_in_region 99158 ntry_mc 20000",
+          "id": "insB",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 179,
+          "command": "fix mvD all move/mesh mesh Drum rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvD",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 180,
+          "command": "fix mvF all move/mesh mesh Front rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvF",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 181,
+          "command": "fix mvB all move/mesh mesh Back rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvB",
+          "group": "all",
+          "style": "move/mesh"
+        }
+      ],
+      "run_timeline": [
+        {
+          "line": 151,
+          "command": "run 1",
+          "steps": 1,
+          "before": 0,
+          "after": 1,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insA"
+          ],
+          "duration_seconds": "2.373E-7",
+          "before_seconds": "0E-10",
+          "after_seconds": "2.373E-7"
+        },
+        {
+          "line": 163,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 1,
+          "after": 560607,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insA"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "2.373E-7",
+          "after_seconds": "0.1330320411"
+        },
+        {
+          "line": 172,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 560607,
+          "after": 1121213,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insB"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "0.1330320411",
+          "after_seconds": "0.2660638449"
+        },
+        {
+          "line": 182,
+          "command": "run 6595382",
+          "steps": 6595382,
+          "before": 1121213,
+          "after": 7716595,
+          "active_rotation": [
+            "mvD",
+            "mvF",
+            "mvB"
+          ],
+          "active_viscous": [],
+          "active_insertion": [],
+          "duration_seconds": "1.5650841486",
+          "before_seconds": "0.2660638449",
+          "after_seconds": "1.8311479935"
+        }
+      ],
+      "unfix_timeline": [
+        {
+          "line": 164,
+          "command": "unfix insA",
+          "step": 560607,
+          "removed_style": "insert/pack"
+        },
+        {
+          "line": 173,
+          "command": "unfix insB",
+          "step": 1121213,
+          "removed_style": "insert/pack"
+        }
+      ],
+      "settled_restart_boundaries": [
+        {
+          "line": 176,
+          "command": "write_restart restart/settled.bin",
+          "step": 1121213
+        }
+      ],
+      "pressure_or_stop_candidates": [],
+      "dynamic_or_external_control_commands": [],
+      "properties": {
+        "youngsModulus": {
+          "line": 70,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "values": [
+            "1.037e+09",
+            "1.037e+09",
+            "2e+08",
+            "1.48e+09"
+          ]
+        },
+        "poissonsRatio": {
+          "line": 71,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "values": [
+            "0.25",
+            "0.25",
+            "0.30",
+            "0.30"
+          ]
+        },
+        "coefficientRestitution": {
+          "line": 73,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "values": [
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3"
+          ]
+        },
+        "coefficientFriction": {
+          "line": 78,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "values": [
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9"
+          ]
+        },
+        "coefficientRollingFriction": {
+          "line": 83,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "values": [
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075"
+          ]
+        },
+        "cohesionEnergyDensity": {
+          "line": 90,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 219389 257928 263759 106179 257928 287481 274320 139133 263759 274320 334772 143362 106179 139133 143362 0",
+          "values": [
+            "219389",
+            "257928",
+            "263759",
+            "106179",
+            "257928",
+            "287481",
+            "274320",
+            "139133",
+            "263759",
+            "274320",
+            "334772",
+            "143362",
+            "106179",
+            "139133",
+            "143362",
+            "0"
+          ]
+        },
+        "characteristicVelocity": {
+          "line": 95,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "values": [
+            "2.0"
+          ]
+        }
+      },
+      "evidence_commands": [
+        {
+          "line": 57,
+          "command": "units si"
+        },
+        {
+          "line": 98,
+          "command": "pair_style gran model hertz tangential history cohesion sjkr rolling_friction cdt"
+        },
+        {
+          "line": 100,
+          "command": "timestep 2.373e-07"
+        },
+        {
+          "line": 137,
+          "command": "compute rke all erotate/sphere"
+        },
+        {
+          "line": 138,
+          "command": "thermo_style custom step atoms ke c_rke vol"
+        },
+        {
+          "line": 154,
+          "command": "dump dmp all custom 32976 post/mix_*.liggghts id type x y z vx vy vz fx fy fz radius"
+        },
+        {
+          "line": 157,
+          "command": "dump_modify dmp format %d %d %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g"
+        }
+      ],
+      "time": {
+        "dt_printed_seconds": "2.373E-7",
+        "dt_rule_seconds": 2.372896783030651e-07,
+        "inserted_steps": 1,
+        "settling_run_steps": 1121212,
+        "settling_duration_seconds": "0.2660636076",
+        "t0_planned_step": 1121184,
+        "t0_planned_seconds": "0.2660569632",
+        "t0_formula": "floor((run2 + run3) / dump_interval) * dump_interval",
+        "settled_write_restart_step": 1121213,
+        "settled_write_restart_seconds": "0.2660638449",
+        "t0_to_settled_gap_steps": 29,
+        "t0_to_settled_gap_seconds": "0.0000068817",
+        "rotation_run_steps": 6595382,
+        "rotation_duration_seconds": "1.5650841486",
+        "final_planned_step": 7716595,
+        "final_planned_seconds": "1.8311479935",
+        "dump_interval_steps": 32976,
+        "dump_interval_seconds": "0.0078252048"
+      },
+      "metadata_crosscheck": {
+        "t0_planned_matches": true,
+        "dt_matches": true,
+        "run_steps_matches": true,
+        "fill_steps_matches": true
+      },
+      "surface_gamma": {
+        "AM_P": 0.1,
+        "AM_S": 0.1,
+        "SE": 1.0
+      },
+      "surface_gamma_wall": 0.00256,
+      "viscosity_coefficient": null,
+      "interpretation": "Static planned values only; not observed particles, runtime state, dump existence, actual stop, or execution authorization."
+    },
+    {
+      "case_id": "PRECAL_R1_B2_C",
+      "role": "C",
+      "deck_sha256": "d36d199388243ccd630cbd346cbcdb6f37bf8bb92ae9c8f4e73e2e98597a6a3e",
+      "deck_bytes": 14104,
+      "metadata_sha_binding_matches": true,
+      "fix_inventory": [
+        {
+          "line": 70,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "id": "m1",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 71,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "id": "m2",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 73,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "id": "m3",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 78,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "id": "m4",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 83,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "id": "m5",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 90,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 472659 555690 387145 155849 555690 619359 402647 204220 387145 402647 334772 143362 155849 204220 143362 0",
+          "id": "mC",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 95,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "id": "m9",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 101,
+          "command": "fix gravi all gravity 9.81 vector 0.0 0.0 -1.0",
+          "id": "gravi",
+          "group": "all",
+          "style": "gravity"
+        },
+        {
+          "line": 104,
+          "command": "fix Drum all mesh/surface file Drum.stl type 4 scale 0.0251665",
+          "id": "Drum",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 105,
+          "command": "fix Front all mesh/surface file Front.stl type 4 scale 0.0251665",
+          "id": "Front",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 106,
+          "command": "fix Back all mesh/surface file Back.stl type 4 scale 0.0251665",
+          "id": "Back",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 107,
+          "command": "fix walls all wall/gran model hertz tangential history cohesion sjkr rolling_friction cdt mesh n_meshes 3 meshes Drum Front Back",
+          "id": "walls",
+          "group": "all",
+          "style": "wall/gran"
+        },
+        {
+          "line": 111,
+          "command": "fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813",
+          "id": "pt1",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 112,
+          "command": "fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028",
+          "id": "pt2",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 113,
+          "command": "fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 1640 radius constant 7.57e-05",
+          "id": "pt3",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 116,
+          "command": "fix pddA all particledistribution/discrete 32452867 2 pt1 0.700000 pt2 0.300000",
+          "id": "pddA",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 118,
+          "command": "fix pddB all particledistribution/discrete 32452883 1 pt3 1.000000",
+          "id": "pddB",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 122,
+          "command": "fix insA all insert/pack seed 32452843 distributiontemplate pddA maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_reg particles_in_region 842 ntry_mc 20000",
+          "id": "insA",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 135,
+          "command": "fix integrS all nve/sphere",
+          "id": "integrS",
+          "group": "all",
+          "style": "nve/sphere"
+        },
+        {
+          "line": 169,
+          "command": "fix insB all insert/pack seed 32452867 distributiontemplate pddB maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_hi particles_in_region 99158 ntry_mc 20000",
+          "id": "insB",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 179,
+          "command": "fix mvD all move/mesh mesh Drum rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvD",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 180,
+          "command": "fix mvF all move/mesh mesh Front rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvF",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 181,
+          "command": "fix mvB all move/mesh mesh Back rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvB",
+          "group": "all",
+          "style": "move/mesh"
+        }
+      ],
+      "run_timeline": [
+        {
+          "line": 151,
+          "command": "run 1",
+          "steps": 1,
+          "before": 0,
+          "after": 1,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insA"
+          ],
+          "duration_seconds": "2.373E-7",
+          "before_seconds": "0E-10",
+          "after_seconds": "2.373E-7"
+        },
+        {
+          "line": 163,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 1,
+          "after": 560607,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insA"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "2.373E-7",
+          "after_seconds": "0.1330320411"
+        },
+        {
+          "line": 172,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 560607,
+          "after": 1121213,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insB"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "0.1330320411",
+          "after_seconds": "0.2660638449"
+        },
+        {
+          "line": 182,
+          "command": "run 6595382",
+          "steps": 6595382,
+          "before": 1121213,
+          "after": 7716595,
+          "active_rotation": [
+            "mvD",
+            "mvF",
+            "mvB"
+          ],
+          "active_viscous": [],
+          "active_insertion": [],
+          "duration_seconds": "1.5650841486",
+          "before_seconds": "0.2660638449",
+          "after_seconds": "1.8311479935"
+        }
+      ],
+      "unfix_timeline": [
+        {
+          "line": 164,
+          "command": "unfix insA",
+          "step": 560607,
+          "removed_style": "insert/pack"
+        },
+        {
+          "line": 173,
+          "command": "unfix insB",
+          "step": 1121213,
+          "removed_style": "insert/pack"
+        }
+      ],
+      "settled_restart_boundaries": [
+        {
+          "line": 176,
+          "command": "write_restart restart/settled.bin",
+          "step": 1121213
+        }
+      ],
+      "pressure_or_stop_candidates": [],
+      "dynamic_or_external_control_commands": [],
+      "properties": {
+        "youngsModulus": {
+          "line": 70,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "values": [
+            "1.037e+09",
+            "1.037e+09",
+            "2e+08",
+            "1.48e+09"
+          ]
+        },
+        "poissonsRatio": {
+          "line": 71,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "values": [
+            "0.25",
+            "0.25",
+            "0.30",
+            "0.30"
+          ]
+        },
+        "coefficientRestitution": {
+          "line": 73,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "values": [
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3"
+          ]
+        },
+        "coefficientFriction": {
+          "line": 78,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "values": [
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9"
+          ]
+        },
+        "coefficientRollingFriction": {
+          "line": 83,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "values": [
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075"
+          ]
+        },
+        "cohesionEnergyDensity": {
+          "line": 90,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 472659 555690 387145 155849 555690 619359 402647 204220 387145 402647 334772 143362 155849 204220 143362 0",
+          "values": [
+            "472659",
+            "555690",
+            "387145",
+            "155849",
+            "555690",
+            "619359",
+            "402647",
+            "204220",
+            "387145",
+            "402647",
+            "334772",
+            "143362",
+            "155849",
+            "204220",
+            "143362",
+            "0"
+          ]
+        },
+        "characteristicVelocity": {
+          "line": 95,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "values": [
+            "2.0"
+          ]
+        }
+      },
+      "evidence_commands": [
+        {
+          "line": 57,
+          "command": "units si"
+        },
+        {
+          "line": 98,
+          "command": "pair_style gran model hertz tangential history cohesion sjkr rolling_friction cdt"
+        },
+        {
+          "line": 100,
+          "command": "timestep 2.373e-07"
+        },
+        {
+          "line": 137,
+          "command": "compute rke all erotate/sphere"
+        },
+        {
+          "line": 138,
+          "command": "thermo_style custom step atoms ke c_rke vol"
+        },
+        {
+          "line": 154,
+          "command": "dump dmp all custom 32976 post/mix_*.liggghts id type x y z vx vy vz fx fy fz radius"
+        },
+        {
+          "line": 157,
+          "command": "dump_modify dmp format %d %d %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g"
+        }
+      ],
+      "time": {
+        "dt_printed_seconds": "2.373E-7",
+        "dt_rule_seconds": 2.372896783030651e-07,
+        "inserted_steps": 1,
+        "settling_run_steps": 1121212,
+        "settling_duration_seconds": "0.2660636076",
+        "t0_planned_step": 1121184,
+        "t0_planned_seconds": "0.2660569632",
+        "t0_formula": "floor((run2 + run3) / dump_interval) * dump_interval",
+        "settled_write_restart_step": 1121213,
+        "settled_write_restart_seconds": "0.2660638449",
+        "t0_to_settled_gap_steps": 29,
+        "t0_to_settled_gap_seconds": "0.0000068817",
+        "rotation_run_steps": 6595382,
+        "rotation_duration_seconds": "1.5650841486",
+        "final_planned_step": 7716595,
+        "final_planned_seconds": "1.8311479935",
+        "dump_interval_steps": 32976,
+        "dump_interval_seconds": "0.0078252048"
+      },
+      "metadata_crosscheck": {
+        "t0_planned_matches": true,
+        "dt_matches": true,
+        "run_steps_matches": true,
+        "fill_steps_matches": true
+      },
+      "surface_gamma": {
+        "AM_P": 1.0,
+        "AM_S": 1.0,
+        "SE": 1.0
+      },
+      "surface_gamma_wall": 0.00256,
+      "viscosity_coefficient": null,
+      "interpretation": "Static planned values only; not observed particles, runtime state, dump existence, actual stop, or execution authorization."
+    },
+    {
+      "case_id": "PRECAL_R1_B3_U",
+      "role": "U",
+      "deck_sha256": "caa3cda3179602a16215295ac170737124919e42d43aa58ad5a31670c7576745",
+      "deck_bytes": 14112,
+      "metadata_sha_binding_matches": true,
+      "fix_inventory": [
+        {
+          "line": 70,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "id": "m1",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 71,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "id": "m2",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 73,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "id": "m3",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 78,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "id": "m4",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 83,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "id": "m5",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 90,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 472659 555690 568251 228755 555690 619359 591005 299754 568251 591005 721245 308864 228755 299754 308864 0",
+          "id": "mC",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 95,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "id": "m9",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 101,
+          "command": "fix gravi all gravity 9.81 vector 0.0 0.0 -1.0",
+          "id": "gravi",
+          "group": "all",
+          "style": "gravity"
+        },
+        {
+          "line": 104,
+          "command": "fix Drum all mesh/surface file Drum.stl type 4 scale 0.0251665",
+          "id": "Drum",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 105,
+          "command": "fix Front all mesh/surface file Front.stl type 4 scale 0.0251665",
+          "id": "Front",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 106,
+          "command": "fix Back all mesh/surface file Back.stl type 4 scale 0.0251665",
+          "id": "Back",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 107,
+          "command": "fix walls all wall/gran model hertz tangential history cohesion sjkr rolling_friction cdt mesh n_meshes 3 meshes Drum Front Back",
+          "id": "walls",
+          "group": "all",
+          "style": "wall/gran"
+        },
+        {
+          "line": 111,
+          "command": "fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813",
+          "id": "pt1",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 112,
+          "command": "fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028",
+          "id": "pt2",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 113,
+          "command": "fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 1640 radius constant 7.57e-05",
+          "id": "pt3",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 116,
+          "command": "fix pddA all particledistribution/discrete 32452867 2 pt1 0.700000 pt2 0.300000",
+          "id": "pddA",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 118,
+          "command": "fix pddB all particledistribution/discrete 32452883 1 pt3 1.000000",
+          "id": "pddB",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 122,
+          "command": "fix insA all insert/pack seed 32452843 distributiontemplate pddA maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_reg particles_in_region 842 ntry_mc 20000",
+          "id": "insA",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 135,
+          "command": "fix integrS all nve/sphere",
+          "id": "integrS",
+          "group": "all",
+          "style": "nve/sphere"
+        },
+        {
+          "line": 169,
+          "command": "fix insB all insert/pack seed 32452867 distributiontemplate pddB maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_hi particles_in_region 99158 ntry_mc 20000",
+          "id": "insB",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 179,
+          "command": "fix mvD all move/mesh mesh Drum rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvD",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 180,
+          "command": "fix mvF all move/mesh mesh Front rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvF",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 181,
+          "command": "fix mvB all move/mesh mesh Back rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvB",
+          "group": "all",
+          "style": "move/mesh"
+        }
+      ],
+      "run_timeline": [
+        {
+          "line": 151,
+          "command": "run 1",
+          "steps": 1,
+          "before": 0,
+          "after": 1,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insA"
+          ],
+          "duration_seconds": "2.373E-7",
+          "before_seconds": "0E-10",
+          "after_seconds": "2.373E-7"
+        },
+        {
+          "line": 163,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 1,
+          "after": 560607,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insA"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "2.373E-7",
+          "after_seconds": "0.1330320411"
+        },
+        {
+          "line": 172,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 560607,
+          "after": 1121213,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insB"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "0.1330320411",
+          "after_seconds": "0.2660638449"
+        },
+        {
+          "line": 182,
+          "command": "run 6595382",
+          "steps": 6595382,
+          "before": 1121213,
+          "after": 7716595,
+          "active_rotation": [
+            "mvD",
+            "mvF",
+            "mvB"
+          ],
+          "active_viscous": [],
+          "active_insertion": [],
+          "duration_seconds": "1.5650841486",
+          "before_seconds": "0.2660638449",
+          "after_seconds": "1.8311479935"
+        }
+      ],
+      "unfix_timeline": [
+        {
+          "line": 164,
+          "command": "unfix insA",
+          "step": 560607,
+          "removed_style": "insert/pack"
+        },
+        {
+          "line": 173,
+          "command": "unfix insB",
+          "step": 1121213,
+          "removed_style": "insert/pack"
+        }
+      ],
+      "settled_restart_boundaries": [
+        {
+          "line": 176,
+          "command": "write_restart restart/settled.bin",
+          "step": 1121213
+        }
+      ],
+      "pressure_or_stop_candidates": [],
+      "dynamic_or_external_control_commands": [],
+      "properties": {
+        "youngsModulus": {
+          "line": 70,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "values": [
+            "1.037e+09",
+            "1.037e+09",
+            "2e+08",
+            "1.48e+09"
+          ]
+        },
+        "poissonsRatio": {
+          "line": 71,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "values": [
+            "0.25",
+            "0.25",
+            "0.30",
+            "0.30"
+          ]
+        },
+        "coefficientRestitution": {
+          "line": 73,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "values": [
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3"
+          ]
+        },
+        "coefficientFriction": {
+          "line": 78,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "values": [
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9"
+          ]
+        },
+        "coefficientRollingFriction": {
+          "line": 83,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "values": [
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075"
+          ]
+        },
+        "cohesionEnergyDensity": {
+          "line": 90,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 472659 555690 568251 228755 555690 619359 591005 299754 568251 591005 721245 308864 228755 299754 308864 0",
+          "values": [
+            "472659",
+            "555690",
+            "568251",
+            "228755",
+            "555690",
+            "619359",
+            "591005",
+            "299754",
+            "568251",
+            "591005",
+            "721245",
+            "308864",
+            "228755",
+            "299754",
+            "308864",
+            "0"
+          ]
+        },
+        "characteristicVelocity": {
+          "line": 95,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "values": [
+            "2.0"
+          ]
+        }
+      },
+      "evidence_commands": [
+        {
+          "line": 57,
+          "command": "units si"
+        },
+        {
+          "line": 98,
+          "command": "pair_style gran model hertz tangential history cohesion sjkr rolling_friction cdt"
+        },
+        {
+          "line": 100,
+          "command": "timestep 2.373e-07"
+        },
+        {
+          "line": 137,
+          "command": "compute rke all erotate/sphere"
+        },
+        {
+          "line": 138,
+          "command": "thermo_style custom step atoms ke c_rke vol"
+        },
+        {
+          "line": 154,
+          "command": "dump dmp all custom 32976 post/mix_*.liggghts id type x y z vx vy vz fx fy fz radius"
+        },
+        {
+          "line": 157,
+          "command": "dump_modify dmp format %d %d %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g"
+        }
+      ],
+      "time": {
+        "dt_printed_seconds": "2.373E-7",
+        "dt_rule_seconds": 2.372896783030651e-07,
+        "inserted_steps": 1,
+        "settling_run_steps": 1121212,
+        "settling_duration_seconds": "0.2660636076",
+        "t0_planned_step": 1121184,
+        "t0_planned_seconds": "0.2660569632",
+        "t0_formula": "floor((run2 + run3) / dump_interval) * dump_interval",
+        "settled_write_restart_step": 1121213,
+        "settled_write_restart_seconds": "0.2660638449",
+        "t0_to_settled_gap_steps": 29,
+        "t0_to_settled_gap_seconds": "0.0000068817",
+        "rotation_run_steps": 6595382,
+        "rotation_duration_seconds": "1.5650841486",
+        "final_planned_step": 7716595,
+        "final_planned_seconds": "1.8311479935",
+        "dump_interval_steps": 32976,
+        "dump_interval_seconds": "0.0078252048"
+      },
+      "metadata_crosscheck": {
+        "t0_planned_matches": true,
+        "dt_matches": true,
+        "run_steps_matches": true,
+        "fill_steps_matches": true
+      },
+      "surface_gamma": {
+        "AM_P": 0.1,
+        "AM_S": 0.1,
+        "SE": 1.0
+      },
+      "surface_gamma_wall": 0.00256,
+      "viscosity_coefficient": null,
+      "interpretation": "Static planned values only; not observed particles, runtime state, dump existence, actual stop, or execution authorization."
+    },
+    {
+      "case_id": "PRECAL_R1_B3_C",
+      "role": "C",
+      "deck_sha256": "26bf0b8c9f90225be813025650678b8e16697cbab415981201e07f1259431d62",
+      "deck_bytes": 14122,
+      "metadata_sha_binding_matches": true,
+      "fix_inventory": [
+        {
+          "line": 70,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "id": "m1",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 71,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "id": "m2",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 73,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "id": "m3",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 78,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "id": "m4",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 83,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "id": "m5",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 90,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 1.01831e+06 1.1972e+06 834078 335766 1.1972e+06 1.33437e+06 867477 439979 834078 867477 721245 308864 335766 439979 308864 0",
+          "id": "mC",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 95,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "id": "m9",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 101,
+          "command": "fix gravi all gravity 9.81 vector 0.0 0.0 -1.0",
+          "id": "gravi",
+          "group": "all",
+          "style": "gravity"
+        },
+        {
+          "line": 104,
+          "command": "fix Drum all mesh/surface file Drum.stl type 4 scale 0.0251665",
+          "id": "Drum",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 105,
+          "command": "fix Front all mesh/surface file Front.stl type 4 scale 0.0251665",
+          "id": "Front",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 106,
+          "command": "fix Back all mesh/surface file Back.stl type 4 scale 0.0251665",
+          "id": "Back",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 107,
+          "command": "fix walls all wall/gran model hertz tangential history cohesion sjkr rolling_friction cdt mesh n_meshes 3 meshes Drum Front Back",
+          "id": "walls",
+          "group": "all",
+          "style": "wall/gran"
+        },
+        {
+          "line": 111,
+          "command": "fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813",
+          "id": "pt1",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 112,
+          "command": "fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028",
+          "id": "pt2",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 113,
+          "command": "fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 1640 radius constant 7.57e-05",
+          "id": "pt3",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 116,
+          "command": "fix pddA all particledistribution/discrete 32452867 2 pt1 0.700000 pt2 0.300000",
+          "id": "pddA",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 118,
+          "command": "fix pddB all particledistribution/discrete 32452883 1 pt3 1.000000",
+          "id": "pddB",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 122,
+          "command": "fix insA all insert/pack seed 32452843 distributiontemplate pddA maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_reg particles_in_region 842 ntry_mc 20000",
+          "id": "insA",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 135,
+          "command": "fix integrS all nve/sphere",
+          "id": "integrS",
+          "group": "all",
+          "style": "nve/sphere"
+        },
+        {
+          "line": 169,
+          "command": "fix insB all insert/pack seed 32452867 distributiontemplate pddB maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_hi particles_in_region 99158 ntry_mc 20000",
+          "id": "insB",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 179,
+          "command": "fix mvD all move/mesh mesh Drum rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvD",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 180,
+          "command": "fix mvF all move/mesh mesh Front rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvF",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 181,
+          "command": "fix mvB all move/mesh mesh Back rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvB",
+          "group": "all",
+          "style": "move/mesh"
+        }
+      ],
+      "run_timeline": [
+        {
+          "line": 151,
+          "command": "run 1",
+          "steps": 1,
+          "before": 0,
+          "after": 1,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insA"
+          ],
+          "duration_seconds": "2.373E-7",
+          "before_seconds": "0E-10",
+          "after_seconds": "2.373E-7"
+        },
+        {
+          "line": 163,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 1,
+          "after": 560607,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insA"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "2.373E-7",
+          "after_seconds": "0.1330320411"
+        },
+        {
+          "line": 172,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 560607,
+          "after": 1121213,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insB"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "0.1330320411",
+          "after_seconds": "0.2660638449"
+        },
+        {
+          "line": 182,
+          "command": "run 6595382",
+          "steps": 6595382,
+          "before": 1121213,
+          "after": 7716595,
+          "active_rotation": [
+            "mvD",
+            "mvF",
+            "mvB"
+          ],
+          "active_viscous": [],
+          "active_insertion": [],
+          "duration_seconds": "1.5650841486",
+          "before_seconds": "0.2660638449",
+          "after_seconds": "1.8311479935"
+        }
+      ],
+      "unfix_timeline": [
+        {
+          "line": 164,
+          "command": "unfix insA",
+          "step": 560607,
+          "removed_style": "insert/pack"
+        },
+        {
+          "line": 173,
+          "command": "unfix insB",
+          "step": 1121213,
+          "removed_style": "insert/pack"
+        }
+      ],
+      "settled_restart_boundaries": [
+        {
+          "line": 176,
+          "command": "write_restart restart/settled.bin",
+          "step": 1121213
+        }
+      ],
+      "pressure_or_stop_candidates": [],
+      "dynamic_or_external_control_commands": [],
+      "properties": {
+        "youngsModulus": {
+          "line": 70,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "values": [
+            "1.037e+09",
+            "1.037e+09",
+            "2e+08",
+            "1.48e+09"
+          ]
+        },
+        "poissonsRatio": {
+          "line": 71,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "values": [
+            "0.25",
+            "0.25",
+            "0.30",
+            "0.30"
+          ]
+        },
+        "coefficientRestitution": {
+          "line": 73,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "values": [
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3"
+          ]
+        },
+        "coefficientFriction": {
+          "line": 78,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "values": [
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9"
+          ]
+        },
+        "coefficientRollingFriction": {
+          "line": 83,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "values": [
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075"
+          ]
+        },
+        "cohesionEnergyDensity": {
+          "line": 90,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 1.01831e+06 1.1972e+06 834078 335766 1.1972e+06 1.33437e+06 867477 439979 834078 867477 721245 308864 335766 439979 308864 0",
+          "values": [
+            "1.01831e+06",
+            "1.1972e+06",
+            "834078",
+            "335766",
+            "1.1972e+06",
+            "1.33437e+06",
+            "867477",
+            "439979",
+            "834078",
+            "867477",
+            "721245",
+            "308864",
+            "335766",
+            "439979",
+            "308864",
+            "0"
+          ]
+        },
+        "characteristicVelocity": {
+          "line": 95,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "values": [
+            "2.0"
+          ]
+        }
+      },
+      "evidence_commands": [
+        {
+          "line": 57,
+          "command": "units si"
+        },
+        {
+          "line": 98,
+          "command": "pair_style gran model hertz tangential history cohesion sjkr rolling_friction cdt"
+        },
+        {
+          "line": 100,
+          "command": "timestep 2.373e-07"
+        },
+        {
+          "line": 137,
+          "command": "compute rke all erotate/sphere"
+        },
+        {
+          "line": 138,
+          "command": "thermo_style custom step atoms ke c_rke vol"
+        },
+        {
+          "line": 154,
+          "command": "dump dmp all custom 32976 post/mix_*.liggghts id type x y z vx vy vz fx fy fz radius"
+        },
+        {
+          "line": 157,
+          "command": "dump_modify dmp format %d %d %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g"
+        }
+      ],
+      "time": {
+        "dt_printed_seconds": "2.373E-7",
+        "dt_rule_seconds": 2.372896783030651e-07,
+        "inserted_steps": 1,
+        "settling_run_steps": 1121212,
+        "settling_duration_seconds": "0.2660636076",
+        "t0_planned_step": 1121184,
+        "t0_planned_seconds": "0.2660569632",
+        "t0_formula": "floor((run2 + run3) / dump_interval) * dump_interval",
+        "settled_write_restart_step": 1121213,
+        "settled_write_restart_seconds": "0.2660638449",
+        "t0_to_settled_gap_steps": 29,
+        "t0_to_settled_gap_seconds": "0.0000068817",
+        "rotation_run_steps": 6595382,
+        "rotation_duration_seconds": "1.5650841486",
+        "final_planned_step": 7716595,
+        "final_planned_seconds": "1.8311479935",
+        "dump_interval_steps": 32976,
+        "dump_interval_seconds": "0.0078252048"
+      },
+      "metadata_crosscheck": {
+        "t0_planned_matches": true,
+        "dt_matches": true,
+        "run_steps_matches": true,
+        "fill_steps_matches": true
+      },
+      "surface_gamma": {
+        "AM_P": 1.0,
+        "AM_S": 1.0,
+        "SE": 1.0
+      },
+      "surface_gamma_wall": 0.00256,
+      "viscosity_coefficient": null,
+      "interpretation": "Static planned values only; not observed particles, runtime state, dump existence, actual stop, or execution authorization."
+    },
+    {
+      "case_id": "PRECAL_N0",
+      "role": "N0",
+      "deck_sha256": "adbbc8fa8f46730779fbf4f028f95a7aaf90c27ef2697c0dbe21a9ae1b5c6de3",
+      "deck_bytes": 12096,
+      "metadata_sha_binding_matches": true,
+      "fix_inventory": [
+        {
+          "line": 54,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "id": "m1",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 55,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "id": "m2",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 57,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "id": "m3",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 62,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "id": "m4",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 67,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "id": "m5",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 74,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0",
+          "id": "mC",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 79,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "id": "m9",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 85,
+          "command": "fix gravi all gravity 9.81 vector 0.0 0.0 -1.0",
+          "id": "gravi",
+          "group": "all",
+          "style": "gravity"
+        },
+        {
+          "line": 88,
+          "command": "fix Drum all mesh/surface file Drum.stl type 4 scale 0.0251665",
+          "id": "Drum",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 89,
+          "command": "fix Front all mesh/surface file Front.stl type 4 scale 0.0251665",
+          "id": "Front",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 90,
+          "command": "fix Back all mesh/surface file Back.stl type 4 scale 0.0251665",
+          "id": "Back",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 91,
+          "command": "fix walls all wall/gran model hertz tangential history cohesion sjkr rolling_friction cdt mesh n_meshes 3 meshes Drum Front Back",
+          "id": "walls",
+          "group": "all",
+          "style": "wall/gran"
+        },
+        {
+          "line": 95,
+          "command": "fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813",
+          "id": "pt1",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 96,
+          "command": "fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028",
+          "id": "pt2",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 97,
+          "command": "fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 1640 radius constant 7.57e-05",
+          "id": "pt3",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 100,
+          "command": "fix pddA all particledistribution/discrete 32452867 2 pt1 0.700000 pt2 0.300000",
+          "id": "pddA",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 102,
+          "command": "fix pddB all particledistribution/discrete 32452883 1 pt3 1.000000",
+          "id": "pddB",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 106,
+          "command": "fix insA all insert/pack seed 32452843 distributiontemplate pddA maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_reg particles_in_region 842 ntry_mc 20000",
+          "id": "insA",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 119,
+          "command": "fix integrS all nve/sphere",
+          "id": "integrS",
+          "group": "all",
+          "style": "nve/sphere"
+        },
+        {
+          "line": 153,
+          "command": "fix insB all insert/pack seed 32452867 distributiontemplate pddB maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_hi particles_in_region 99158 ntry_mc 20000",
+          "id": "insB",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 163,
+          "command": "fix mvD all move/mesh mesh Drum rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvD",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 164,
+          "command": "fix mvF all move/mesh mesh Front rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvF",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 165,
+          "command": "fix mvB all move/mesh mesh Back rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvB",
+          "group": "all",
+          "style": "move/mesh"
+        }
+      ],
+      "run_timeline": [
+        {
+          "line": 135,
+          "command": "run 1",
+          "steps": 1,
+          "before": 0,
+          "after": 1,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insA"
+          ],
+          "duration_seconds": "2.373E-7",
+          "before_seconds": "0E-10",
+          "after_seconds": "2.373E-7"
+        },
+        {
+          "line": 147,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 1,
+          "after": 560607,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insA"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "2.373E-7",
+          "after_seconds": "0.1330320411"
+        },
+        {
+          "line": 156,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 560607,
+          "after": 1121213,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "insB"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "0.1330320411",
+          "after_seconds": "0.2660638449"
+        },
+        {
+          "line": 166,
+          "command": "run 6595382",
+          "steps": 6595382,
+          "before": 1121213,
+          "after": 7716595,
+          "active_rotation": [
+            "mvD",
+            "mvF",
+            "mvB"
+          ],
+          "active_viscous": [],
+          "active_insertion": [],
+          "duration_seconds": "1.5650841486",
+          "before_seconds": "0.2660638449",
+          "after_seconds": "1.8311479935"
+        }
+      ],
+      "unfix_timeline": [
+        {
+          "line": 148,
+          "command": "unfix insA",
+          "step": 560607,
+          "removed_style": "insert/pack"
+        },
+        {
+          "line": 157,
+          "command": "unfix insB",
+          "step": 1121213,
+          "removed_style": "insert/pack"
+        }
+      ],
+      "settled_restart_boundaries": [
+        {
+          "line": 160,
+          "command": "write_restart restart/settled.bin",
+          "step": 1121213
+        }
+      ],
+      "pressure_or_stop_candidates": [],
+      "dynamic_or_external_control_commands": [],
+      "properties": {
+        "youngsModulus": {
+          "line": 54,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "values": [
+            "1.037e+09",
+            "1.037e+09",
+            "2e+08",
+            "1.48e+09"
+          ]
+        },
+        "poissonsRatio": {
+          "line": 55,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "values": [
+            "0.25",
+            "0.25",
+            "0.30",
+            "0.30"
+          ]
+        },
+        "coefficientRestitution": {
+          "line": 57,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "values": [
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3"
+          ]
+        },
+        "coefficientFriction": {
+          "line": 62,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "values": [
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9"
+          ]
+        },
+        "coefficientRollingFriction": {
+          "line": 67,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "values": [
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075"
+          ]
+        },
+        "cohesionEnergyDensity": {
+          "line": 74,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0",
+          "values": [
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "characteristicVelocity": {
+          "line": 79,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "values": [
+            "2.0"
+          ]
+        }
+      },
+      "evidence_commands": [
+        {
+          "line": 41,
+          "command": "units si"
+        },
+        {
+          "line": 82,
+          "command": "pair_style gran model hertz tangential history cohesion sjkr rolling_friction cdt"
+        },
+        {
+          "line": 84,
+          "command": "timestep 2.373e-07"
+        },
+        {
+          "line": 121,
+          "command": "compute rke all erotate/sphere"
+        },
+        {
+          "line": 122,
+          "command": "thermo_style custom step atoms ke c_rke vol"
+        },
+        {
+          "line": 138,
+          "command": "dump dmp all custom 32976 post/mix_*.liggghts id type x y z vx vy vz fx fy fz radius"
+        },
+        {
+          "line": 141,
+          "command": "dump_modify dmp format %d %d %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g"
+        }
+      ],
+      "time": {
+        "dt_printed_seconds": "2.373E-7",
+        "dt_rule_seconds": 2.372896783030651e-07,
+        "inserted_steps": 1,
+        "settling_run_steps": 1121212,
+        "settling_duration_seconds": "0.2660636076",
+        "t0_planned_step": 1121184,
+        "t0_planned_seconds": "0.2660569632",
+        "t0_formula": "floor((run2 + run3) / dump_interval) * dump_interval",
+        "settled_write_restart_step": 1121213,
+        "settled_write_restart_seconds": "0.2660638449",
+        "t0_to_settled_gap_steps": 29,
+        "t0_to_settled_gap_seconds": "0.0000068817",
+        "rotation_run_steps": 6595382,
+        "rotation_duration_seconds": "1.5650841486",
+        "final_planned_step": 7716595,
+        "final_planned_seconds": "1.8311479935",
+        "dump_interval_steps": 32976,
+        "dump_interval_seconds": "0.0078252048"
+      },
+      "metadata_crosscheck": {
+        "t0_planned_matches": true,
+        "dt_matches": true,
+        "run_steps_matches": true,
+        "fill_steps_matches": true
+      },
+      "surface_gamma": null,
+      "surface_gamma_wall": null,
+      "viscosity_coefficient": null,
+      "interpretation": "Static planned values only; not observed particles, runtime state, dump existence, actual stop, or execution authorization."
+    },
+    {
+      "case_id": "PRECAL_E0",
+      "role": "E0",
+      "deck_sha256": "8b588b24117ab77bf72d93662237268b401f714df8515d62ef7b964d01c6e718",
+      "deck_bytes": 11347,
+      "metadata_sha_binding_matches": true,
+      "fix_inventory": [
+        {
+          "line": 54,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "id": "m1",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 55,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "id": "m2",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 57,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "id": "m3",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 62,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "id": "m4",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 67,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "id": "m5",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 74,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0",
+          "id": "mC",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 79,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "id": "m9",
+          "group": "all",
+          "style": "property/global"
+        },
+        {
+          "line": 85,
+          "command": "fix gravi all gravity 9.81 vector 0.0 0.0 -1.0",
+          "id": "gravi",
+          "group": "all",
+          "style": "gravity"
+        },
+        {
+          "line": 88,
+          "command": "fix Drum all mesh/surface file Drum.stl type 4 scale 0.0251665",
+          "id": "Drum",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 89,
+          "command": "fix Front all mesh/surface file Front.stl type 4 scale 0.0251665",
+          "id": "Front",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 90,
+          "command": "fix Back all mesh/surface file Back.stl type 4 scale 0.0251665",
+          "id": "Back",
+          "group": "all",
+          "style": "mesh/surface"
+        },
+        {
+          "line": 91,
+          "command": "fix walls all wall/gran model hertz tangential history cohesion sjkr rolling_friction cdt mesh n_meshes 3 meshes Drum Front Back",
+          "id": "walls",
+          "group": "all",
+          "style": "wall/gran"
+        },
+        {
+          "line": 95,
+          "command": "fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813",
+          "id": "pt1",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 96,
+          "command": "fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028",
+          "id": "pt2",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 97,
+          "command": "fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 1640 radius constant 7.57e-05",
+          "id": "pt3",
+          "group": "all",
+          "style": "particletemplate/sphere"
+        },
+        {
+          "line": 100,
+          "command": "fix pdd all particledistribution/discrete 32452867 3 pt1 0.571429 pt2 0.244898 pt3 0.183673",
+          "id": "pdd",
+          "group": "all",
+          "style": "particledistribution/discrete"
+        },
+        {
+          "line": 104,
+          "command": "fix ins all insert/pack seed 32452843 distributiontemplate pdd maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_reg particles_in_region 100000 ntry_mc 20000",
+          "id": "ins",
+          "group": "all",
+          "style": "insert/pack"
+        },
+        {
+          "line": 117,
+          "command": "fix integrS all nve/sphere",
+          "id": "integrS",
+          "group": "all",
+          "style": "nve/sphere"
+        },
+        {
+          "line": 153,
+          "command": "fix mvD all move/mesh mesh Drum rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvD",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 154,
+          "command": "fix mvF all move/mesh mesh Front rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvF",
+          "group": "all",
+          "style": "move/mesh"
+        },
+        {
+          "line": 155,
+          "command": "fix mvB all move/mesh mesh Back rotate origin 0 0 0 axis 1. 0. 0. period 0.782508",
+          "id": "mvB",
+          "group": "all",
+          "style": "move/mesh"
+        }
+      ],
+      "run_timeline": [
+        {
+          "line": 133,
+          "command": "run 1",
+          "steps": 1,
+          "before": 0,
+          "after": 1,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "ins"
+          ],
+          "duration_seconds": "2.373E-7",
+          "before_seconds": "0E-10",
+          "after_seconds": "2.373E-7"
+        },
+        {
+          "line": 145,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 1,
+          "after": 560607,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [
+            "ins"
+          ],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "2.373E-7",
+          "after_seconds": "0.1330320411"
+        },
+        {
+          "line": 147,
+          "command": "run 560606",
+          "steps": 560606,
+          "before": 560607,
+          "after": 1121213,
+          "active_rotation": [],
+          "active_viscous": [],
+          "active_insertion": [],
+          "duration_seconds": "0.1330318038",
+          "before_seconds": "0.1330320411",
+          "after_seconds": "0.2660638449"
+        },
+        {
+          "line": 156,
+          "command": "run 0",
+          "steps": 0,
+          "before": 1121213,
+          "after": 1121213,
+          "active_rotation": [
+            "mvD",
+            "mvF",
+            "mvB"
+          ],
+          "active_viscous": [],
+          "active_insertion": [],
+          "duration_seconds": "0E-10",
+          "before_seconds": "0.2660638449",
+          "after_seconds": "0.2660638449"
+        }
+      ],
+      "unfix_timeline": [
+        {
+          "line": 146,
+          "command": "unfix ins",
+          "step": 560607,
+          "removed_style": "insert/pack"
+        }
+      ],
+      "settled_restart_boundaries": [
+        {
+          "line": 150,
+          "command": "write_restart restart/settled.bin",
+          "step": 1121213
+        }
+      ],
+      "pressure_or_stop_candidates": [],
+      "dynamic_or_external_control_commands": [],
+      "properties": {
+        "youngsModulus": {
+          "line": 54,
+          "command": "fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 2e+08 1.48e+09",
+          "values": [
+            "1.037e+09",
+            "1.037e+09",
+            "2e+08",
+            "1.48e+09"
+          ]
+        },
+        "poissonsRatio": {
+          "line": 55,
+          "command": "fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30",
+          "values": [
+            "0.25",
+            "0.25",
+            "0.30",
+            "0.30"
+          ]
+        },
+        "coefficientRestitution": {
+          "line": 57,
+          "command": "fix m3 all property/global coefficientRestitution peratomtypepair 4 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3",
+          "values": [
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3",
+            "0.3"
+          ]
+        },
+        "coefficientFriction": {
+          "line": 62,
+          "command": "fix m4 all property/global coefficientFriction peratomtypepair 4 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9",
+          "values": [
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9",
+            "0.9"
+          ]
+        },
+        "coefficientRollingFriction": {
+          "line": 67,
+          "command": "fix m5 all property/global coefficientRollingFriction peratomtypepair 4 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075 0.075",
+          "values": [
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075",
+            "0.075"
+          ]
+        },
+        "cohesionEnergyDensity": {
+          "line": 74,
+          "command": "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0",
+          "values": [
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "characteristicVelocity": {
+          "line": 79,
+          "command": "fix m9 all property/global characteristicVelocity scalar 2.0",
+          "values": [
+            "2.0"
+          ]
+        }
+      },
+      "evidence_commands": [
+        {
+          "line": 41,
+          "command": "units si"
+        },
+        {
+          "line": 82,
+          "command": "pair_style gran model hertz tangential history cohesion sjkr rolling_friction cdt"
+        },
+        {
+          "line": 84,
+          "command": "timestep 2.373e-07"
+        },
+        {
+          "line": 119,
+          "command": "compute rke all erotate/sphere"
+        },
+        {
+          "line": 120,
+          "command": "thermo_style custom step atoms ke c_rke vol"
+        },
+        {
+          "line": 136,
+          "command": "dump dmp all custom 1000 post/mix_*.liggghts id type x y z vx vy vz fx fy fz radius"
+        },
+        {
+          "line": 139,
+          "command": "dump_modify dmp format %d %d %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g"
+        }
+      ],
+      "time": {
+        "dt_printed_seconds": "2.373E-7",
+        "dt_rule_seconds": 2.372896783030651e-07,
+        "inserted_steps": 1,
+        "settling_run_steps": 1121212,
+        "settling_duration_seconds": "0.2660636076",
+        "t0_planned_step": 1121000,
+        "t0_planned_seconds": "0.2660133000",
+        "t0_formula": "floor((run2 + run3) / dump_interval) * dump_interval",
+        "settled_write_restart_step": 1121213,
+        "settled_write_restart_seconds": "0.2660638449",
+        "t0_to_settled_gap_steps": 213,
+        "t0_to_settled_gap_seconds": "0.0000505449",
+        "rotation_run_steps": 0,
+        "rotation_duration_seconds": "0E-10",
+        "final_planned_step": 1121213,
+        "final_planned_seconds": "0.2660638449",
+        "dump_interval_steps": 1000,
+        "dump_interval_seconds": "0.0002373000"
+      },
+      "metadata_crosscheck": {
+        "t0_planned_matches": true,
+        "dt_matches": true,
+        "run_steps_matches": true,
+        "fill_steps_matches": true
+      },
+      "surface_gamma": null,
+      "surface_gamma_wall": null,
+      "viscosity_coefficient": null,
+      "interpretation": "Static planned values only; not observed particles, runtime state, dump existence, actual stop, or execution authorization."
+    }
+  ]
+}

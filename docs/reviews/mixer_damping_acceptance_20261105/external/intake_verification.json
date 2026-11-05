@@ -1,0 +1,231 @@
+{
+  "pin": "eb400b9dde3d630d8d4571d48b879ef5093d08e5",
+  "pin_txt_match": true,
+  "checks": [
+    {
+      "path": "docs/collab/codex_to_claude/20261105-0425_mixer-damping-draft.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/README.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/annotation_draft.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/ledger_proposal.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/mixer_static_audit.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/review_request.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/source_context.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/static_validation.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_exploration_registration_draft_20261104.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/README.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_pre8_acceptance_20261105/README.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    },
+    {
+      "path": "scripts/mixer_precal_prepare.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true
+    }
+  ],
+  "package_checks": [
+    {
+      "path": "CHANGE.patch",
+      "ok": true
+    },
+    {
+      "path": "CLAUDE_PROMPT.md",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/changed_path_ban.json",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/doc_refs.log",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/findings.log",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/publication.json",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/scope.json",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/static_validation.json",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/whitespace.log",
+      "ok": true
+    },
+    {
+      "path": "PARENT_PIN.txt",
+      "ok": true
+    },
+    {
+      "path": "PIN.txt",
+      "ok": true
+    },
+    {
+      "path": "README_DELIVERY.md",
+      "ok": true
+    },
+    {
+      "path": "REQUEST.md",
+      "ok": true
+    },
+    {
+      "path": "REVIEW_PROMPT.md",
+      "ok": true
+    },
+    {
+      "path": "SNAPSHOT_MANIFEST.json",
+      "ok": true
+    },
+    {
+      "path": "docs/collab/codex_to_claude/20261105-0425_mixer-damping-draft.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/README.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/annotation_draft.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/ledger_proposal.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/mixer_static_audit.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/review_request.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/source_context.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/static_validation.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_exploration_registration_draft_20261104.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/README.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_pre8_acceptance_20261105/README.md",
+      "ok": true
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_precal_prepare.py",
+      "ok": true
+    }
+  ],
+  "d07_readme_sha256": "87bde2a8c169f6e56b203ed14f3040d9c47b26a06cd937bca1382d50a96c06a3",
+  "d07_expected_sha_match": true,
+  "main_request_matches": true
+}

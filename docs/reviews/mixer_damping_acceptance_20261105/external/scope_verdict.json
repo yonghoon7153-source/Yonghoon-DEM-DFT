@@ -1,0 +1,29 @@
+{
+  "schema": "bounded_document_review/v1",
+  "date": "2026-11-05",
+  "review_pin": "eb400b9dde3d630d8d4571d48b879ef5093d08e5",
+  "verdict": "ACCEPT_DOCUMENT_STATIC_SCOPE_ONLY",
+  "new_findings": [],
+  "global_gate": "HOLD",
+  "execution_authorized": false,
+  "value_collection_authorized": false,
+  "registration_authorized": false,
+  "deployment_authorized": false,
+  "integration_authorized": false,
+  "ledger_closure_performed": false,
+  "actual_research_results": 0,
+  "actual_host_access": false,
+  "inventory_executed_or_imported": false,
+  "simulator_executed": false,
+  "regression_or_full_gate_rerun": false,
+  "local_runtime": {
+    "os": "Windows",
+    "python": "3.12.14"
+  },
+  "evidence_counts_are_separate": true,
+  "static_decks_in_memory": 8,
+  "optional_wording_notes": [
+    "관측 t0 → 계획 관측 t0",
+    "함께 회전 → 같은 회전 구동이 선언되며 E0는 run 0"
+  ]
+}

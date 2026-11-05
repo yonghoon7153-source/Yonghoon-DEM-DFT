@@ -1,0 +1,64 @@
+{
+  "kind": "receipt identity verification only",
+  "accepted_pin": "eb400b9dde3d630d8d4571d48b879ef5093d08e5",
+  "raw_review_zip_bytes": 989353,
+  "raw_review_zip_sha256": "1848b598ab954b71daf8dce9c448515cb87e3c69ca6095260e7f6bd03ad923ee",
+  "outer_manifest_entries_verified": 99,
+  "original_request_zip_bytes": 283273,
+  "original_request_zip_sha256": "b85a0e960a2d216cefd0370c4737cf4a3aef43d5b5a6bf004d623c531b4744d8",
+  "input_package_hashes_verified": 31,
+  "accepted_snapshot_files_compared_to_git": 16,
+  "review_input_members_equal_original": true,
+  "pasted_mixer_report_equal_archive": true,
+  "preserved_external_files": {
+    "external/codex_review_mixer_damping_draft_20261105.md": {
+      "bytes": 8778,
+      "sha256": "69c5daf4a2d3203c4216fd4039637a8dace68aed46b14c0e5cab2a2220c700ce",
+      "archive_member": "mixer/codex_review_mixer_damping_draft_20261105.md"
+    },
+    "external/scope_verdict.json": {
+      "bytes": 937,
+      "sha256": "749194c06950811f7571072f6dcf6ce714793ad11962eae00d60e38869d3d338",
+      "archive_member": "mixer/scope_verdict.json"
+    },
+    "external/intake_verification.json": {
+      "bytes": 5815,
+      "sha256": "a8701324eb40ba8e32a32200449d4e4377cd8982889f21a5408ccf6657653bc5",
+      "archive_member": "mixer/intake_verification.json"
+    },
+    "external/remote_verification.json": {
+      "bytes": 2710,
+      "sha256": "41cbf6c943039b2e41fd4fd1d9796e37a61544a487fcc77a64f8582e9999a86e",
+      "archive_member": "mixer/remote_verification.json"
+    },
+    "external/remote_commit_scope.json": {
+      "bytes": 2479,
+      "sha256": "2726a3259b974eae62228025dca724a6d5bbc65eddf5de9219725ccf0f6ebe69",
+      "archive_member": "mixer/remote_commit_scope.json"
+    },
+    "external/REPRODUCE.md": {
+      "bytes": 2149,
+      "sha256": "042571617b6ae222781471aca9a560cbe2bbd41738126657ebb56814070d20c4",
+      "archive_member": "mixer/REPRODUCE.md"
+    },
+    "external/original_review_evidence.zip": {
+      "bytes": 989353,
+      "sha256": "1848b598ab954b71daf8dce9c448515cb87e3c69ca6095260e7f6bd03ad923ee",
+      "archive_member": null
+    },
+    "external/task/damping_static/static_probe.json": {
+      "bytes": 117988,
+      "sha256": "86e141144c479dd9d06fbb16ed50dff85f6b029647ee713b4096b32cf2e43514",
+      "archive_member": "mixer/task/damping_static/static_probe.json"
+    },
+    "external/task/damping_static/static_probe.py": {
+      "bytes": 11193,
+      "sha256": "4059b0eebf875cf303f68b8c91d0c9a8e9b262f1f6cb8771ae4947778439869d",
+      "archive_member": "mixer/task/damping_static/static_probe.py"
+    }
+  },
+  "external_scripts_executed": false,
+  "scientific_tests_rerun": false,
+  "whole_gate": "HOLD",
+  "reference_completion": "Preserved initial missing-reference check; added four archive members across the two tracks, without editing external verdict bytes or accepted source."
+}
