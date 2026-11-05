@@ -3459,15 +3459,23 @@ def _selftest():
     }
     res_q = {k_: _sum_case(f_) for k_, f_ in cases_q.items()}
     same_q = _sum_case(lambda c_: _led_row(c_, "A", 12, verdict="invalid", verdict_provenance=_prov_judge_err(c_, "A", 12)))   # 지문 그대로 · 판정 도중 예외 → 대체 (통과)
+    def _hist_mm(c_):                                         # ⭐ DR 전 2차 리뷰 P1 (요약) — 장부 invalid (판정 도중 예외 · 같은 입력) 인데 폴더 이력에 입력 불일치 판정이
+        _led_row(c_, "A", 12, verdict="invalid", verdict_provenance=_prov_judge_err(c_, "A", 12))   # 있다 (러너가 충돌 관측을 적기 전 — 요약만으로 가른다)
+        cur_ = J(c_ / "A/seed12" / "stage1_verdict.json")
+        with open(c_ / "A/seed12" / real.VERDICT_HISTORY, "a", encoding="utf-8") as fh_:
+            fh_.write(json.dumps({"prev": {"status": "invalid", "provenance": _prov_judge_err(c_, "A", 12, mismatch=True)},
+                                  "new_status": cur_["status"], "new_provenance": cur_["provenance"]}, ensure_ascii=False) + "\n")
+    mm_q = _sum_case(_hist_mm)
     open_q = (_sum_case(lambda c_: _stop_put(c_, STOPJ("interrupted"))), _sum_case(lambda c_: _stop_put(c_, STOPJ("invalid"))))
     chk(all(v_ == ("invalid", None) for v_ in res_q.values()) and open_q == (("pending", None), ("pending", None)) and s_ok_["track"] == "stage1_pass"
-        and same_q[0] == "stage1_pass",
+        and same_q[0] == "stage1_pass" and mm_q[0] == "invalid",
         "⛔음성 DQ 전 리뷰 P1-A · 2차 N3 · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete (지문 없음 · 원자료 지문 다름) · 'PASS' · fail ↔ 폴더 pass · "
         "장부 invalid ↔ 폴더 fail · 장부 지문 · 대체 기록 꼴 · 적힌 충돌 관측 · "
         "이력 prev 없음 · null · 모르는 상태 · 잘린 STOP · 닫는 STOP (기록은 통과) · 첫 시드 아닌 닫힘 (장부 · 판정) · 장부의 모르는 판정 (판정 파일 없이) · "
         "충돌 관측 꼴 · 장부 카드 · 도구 지문 → 요약 invalid · 2 단계 없음 · 확인 안 된 다른 STOP (interrupted · invalid) → pending "
         f"· 장부 invalid 인데 그때 지문 = 지금 (판정 도중 예외) → 통과 · (회신 DQ) 같은 지문이어도 예외 없이 끝난 · 입력 불일치 판정 → invalid · 모순된 · "
-        f"모르는 · terminal 없는 STOP → invalid ({ {k: v for k, v in res_q.items() if v != ('invalid', None)} } · {open_q} · {same_q})")
+        f"모르는 · terminal 없는 STOP → invalid · (DR 전 2차) 장부 invalid 여도 폴더 이력의 입력 불일치 판정 → invalid "
+        f"({ {k: v for k, v in res_q.items() if v != ('invalid', None)} } · {open_q} · {same_q} · {mm_q})")
     # ⭐ 회신 DQ P2-1 (러너) — 모순된 STOP · 모르는 코드 · terminal 없음은 확인으로 지우지 않는다 (거부 · STOP 바이트 그대로 · 발사 0 · 요약 invalid)
     res_p21 = {}
     for nm_, txt_ in (("contra", STOPJ("interrupted", True)), ("melt_false", STOPJ("melt", False)), ("bogus", STOPJ("bogus")),
