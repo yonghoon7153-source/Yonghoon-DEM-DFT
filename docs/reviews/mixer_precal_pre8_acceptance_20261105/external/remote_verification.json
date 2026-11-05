@@ -1,0 +1,539 @@
+{
+  "pin": "ec484c2719d6a444214ddc9c48fe683a7735688b",
+  "checks": [
+    {
+      "path": ".github/workflows/discipline.yml",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/collab/codex_to_claude/20261104-1155_mixer-first8-preparation.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/collab/codex_to_claude/20261105-0018_pre8-binding-recheck.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/codex_mixer_mxd2r_recheck_request_20261104.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/codex_mixer_precal_first8_recheck_request_20261105.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/codex_mixer_precal_first8_review_request_20261104.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_candidate_reader_contract_20261024.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_measurement_sop_draft_20261104.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_experiment_request_combined_draft_20261104.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_experiment_request_outline_20261104.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_exploration_registration_draft_20261104.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/README.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/author_decisions.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/.gitattributes",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_before.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_final_sha256.txt",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_independent_probe.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_independent_recheck.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_py311.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_py38.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_review_before.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_review_py311.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_review_py38.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_thermo_before.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_thermo_py311.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_thermo_py38.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_after_initial_py311.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_before.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_final_py311.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_final_py38.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_static_report.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_static_report.stderr",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_summary.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/probe_unmocked_binding.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/unmocked_binding.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/unmocked_binding.stderr",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/validation_summary.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/ledger_proposal.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/README.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/.gitattributes",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_baseline.stderr.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_baseline.stdout.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_binding_probe_expected_fixed.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_binding_probe_original.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_fixed.stderr.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_fixed.stdout.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_probe_expectations.diff",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/internal_source_probe.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/internal_source_review.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/observe_final_py311.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/observe_final_py38.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/observe_source_sha256.txt",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_01_after.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_01_before.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_02_before.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_02_boundary_after.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_02_targeted_after.log",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/unmocked_binding.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/unmocked_binding.stderr",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/validation_summary.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/.gitattributes",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/bundle_validation.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/codex_mixer_precal_first8_review_evidence_20261104.zip",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/codex_review_mixer_precal_first8_20261104.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/direct_test_results.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/intake_verification.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/observe_binding_review/probe_observe_binding.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/observe_binding_review/probe_results.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/prior_common_file_comparison.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/scope_verdict.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/ledger_proposal.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/README.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/planning_arithmetic.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/proposed_cells.tsv",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/source_basis.json",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_fix_plan_20261030.md",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "scripts/check_all.sh",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "scripts/measure_bed_aspect.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "scripts/mixer_contact_reader.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "scripts/mixer_precal_observe.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "scripts/mixer_precal_prepare.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "scripts/test_mixer_precal_observe.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    },
+    {
+      "path": "scripts/test_mixer_precal_prepare.py",
+      "remote_present": true,
+      "remote_blob_ok": true,
+      "remote_size_ok": true
+    }
+  ]
+}

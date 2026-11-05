@@ -1,0 +1,1273 @@
+{
+  "pin": "ec484c2719d6a444214ddc9c48fe683a7735688b",
+  "previous_pin": "189930cc68b6e58beb6b4546d80353dc03852195",
+  "manifest_files": [
+    {
+      "path": ".github/workflows/discipline.yml",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "a148563403d9c8249da4db8efab1fa30afade3d2"
+    },
+    {
+      "path": "docs/collab/codex_to_claude/20261104-1155_mixer-first8-preparation.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "00b6ce02657a9c4ad71331a1bf63e41681acc70b"
+    },
+    {
+      "path": "docs/collab/codex_to_claude/20261105-0018_pre8-binding-recheck.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "4730c08eedc29b4b6bd379e51d553d4d145d7273"
+    },
+    {
+      "path": "docs/reviews/codex_mixer_mxd2r_recheck_request_20261104.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "5f7c4a4f407d29bfd71912dc61530e1837ee7aa9"
+    },
+    {
+      "path": "docs/reviews/codex_mixer_precal_first8_recheck_request_20261105.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "14acedbd3b68d8fd2f5eb9c5ad678e2657a6d257"
+    },
+    {
+      "path": "docs/reviews/codex_mixer_precal_first8_review_request_20261104.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "8c28cfee29641046ef8d05181adb4aeee1d600df"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_candidate_reader_contract_20261024.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "bc919f1461e5700189ef9d6f480bd55506d254c8"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_measurement_sop_draft_20261104.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "9ac5165eb7eaf241147cf1ab13d782ac9747ccc8"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "939fa72fbe65592d282729125a893e31626c9db7"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_experiment_request_combined_draft_20261104.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "6b1466f659efa0eed35967125087436c09ad05dc"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_experiment_request_outline_20261104.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "85b7a60174d162d85c8814e9d53e686f581017cd"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_exploration_registration_draft_20261104.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "7a76abd36c6725099b228d2ced115d42343f4673"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/README.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "a96049cd9749c1dd873f2bac0cd5229ad6479c18"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/author_decisions.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "6f98daa85696fd2d17da2e10b0667e77f3714297"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/.gitattributes",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "dc21e74a63ce50a5402c8b8ffba17d7598dca559"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_before.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "d1038d8d717d4107509116999753882da22b7b40"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_final_sha256.txt",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "0dd3eaa438eb453dd95c2dd40b4a72404334b348"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_independent_probe.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "55e852f809d0e7038e2793737cfd9d01c3a127ec"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_independent_recheck.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "746ce9f2b8504356f07fbdea5d87cdcd045e02d2"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_py311.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "338d4bcb3c01655220f0a88451c085ef4ef91236"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_py38.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "f44138051fc49c6b6245532feac30822fab38802"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_review_before.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "54511315dfce9e9eb113605d6f77a7ead70d66fb"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_review_py311.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "ae1943ec66ca1d54cfa6291b534bec3b11e13117"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_review_py38.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "2dae7eb352dc818637e02baa6c6ae8119f0efaec"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_thermo_before.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "cfc76837b21e91257739f6713a132bf0b1924a72"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_thermo_py311.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "216fccf84a42f254fd193f6d54254b63e8d5fd76"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_thermo_py38.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "d74c0fcaa9c600c557595e4342271d0cbda0ea20"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_after_initial_py311.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "5fdf77d792694917ab2686303973da8667f12a78"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_before.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "7267c089e728aa00d4b3668a4b128a48f185db19"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_final_py311.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "15af8a197e29d2ff26f13d832f60b5357094e1fe"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_final_py38.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "27f3e466160ee1323b65b1437db802fd50c9cf7b"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_static_report.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "82b8930435e85980347450f291bca7203b82193a"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_static_report.stderr",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_summary.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "1a9c0522e28df7915b36eb14b6a3712df8959a03"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/probe_unmocked_binding.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "1e054d9026842858522054e0db81cd9b9fee4f75"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/unmocked_binding.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "c2d02fe0583cf5a11dfd640ebcfc0a67e40e994c"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/unmocked_binding.stderr",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/validation_summary.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "ce96ec5b779256bd7916ac75346e44cf2350c99a"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/ledger_proposal.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "af42a503814dbf095643e9c44cda5243ec036496"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/README.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "e382424131cb059efea7a6349bb1881bb25a8cee"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/.gitattributes",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "413ee48d91cedde30dc302f6ad66c91e4eab57ca"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_baseline.stderr.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_baseline.stdout.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "01f2333c4080bf595d3111e81de8cfc84ae9a29d"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_binding_probe_expected_fixed.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "5b751aa9e5b7d5f9a4e4be436e6668bcf6992d86"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_binding_probe_original.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "677c0212f2f19249e6b74e81a661f87cca333bd3"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_fixed.stderr.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_fixed.stdout.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "b5a943c0da7239ab6ec8f30845397e8b94c9338f"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_probe_expectations.diff",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "96d46145aa24842f14769b776450e0812519d2b4"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/internal_source_probe.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "c7b46b0394fc063fea743bc5255f36f3ef6e1730"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/internal_source_review.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "1f4cd632bb666b0df7162dd232a8e1573ba0e7e7"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/observe_final_py311.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "5349a2360c24b618cd3629b6cff0ecbe69e09650"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/observe_final_py38.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "e4d37a1af9a775daa17179c57fbe37f9a04c4f8e"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/observe_source_sha256.txt",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "42225dd39a07289e5aaec778988801ddb9824cc9"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_01_after.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "70b4eda9fdce63aa1d0d9f16670879860abb9427"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_01_before.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "f14ee7fe3943434015de9fc26a7d01980601b4fe"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_02_before.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "f31896e2e33e52e7d65748ab1c7440eb20f2dcb2"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_02_boundary_after.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "1552c7c6f0fc3b464b1ffa776ca0918a8a135fd1"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_02_targeted_after.log",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "241e2aec196b4f49246f49a158a6963ea1afb296"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/unmocked_binding.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "ec0e2ad9eecdd2d0f26cfdcd49ada37d2c60a543"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/unmocked_binding.stderr",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/validation_summary.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "fd86d04fef5218df850f40748cc4202ce0076d96"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/.gitattributes",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "bd2de00cda30e433943ceb23971ade38d5a3fc86"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/bundle_validation.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "55ca0881691668659d7b3f125f718b04f6b3d34a"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/codex_mixer_precal_first8_review_evidence_20261104.zip",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "de9e7e2f735ef3a53ea0b74eb79b7573f1ce4ade"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/codex_review_mixer_precal_first8_20261104.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "1b8cad4ff43c6b8059c2cac4d616c77d170aa47c"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/direct_test_results.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "142cbef97b4727286d69262912c5e3978749004e"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/intake_verification.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "079dd3112051b01887acf4f3c26dec52f20e4d6f"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/observe_binding_review/probe_observe_binding.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "677c0212f2f19249e6b74e81a661f87cca333bd3"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/observe_binding_review/probe_results.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "b81f664c8fa09b07e21602b2d9846e9b8490873e"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/prior_common_file_comparison.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "821c495d29d612bc25dfab8d4e036eb9e4f9c5f6"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/scope_verdict.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "de8f8fd61bb4c2897da029f9fa616d77ace5b663"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/ledger_proposal.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "6295410811310d84b4c67b254b1582cc1749bb93"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/README.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "63677da105676786c0d62c7234c442db89462c88"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/planning_arithmetic.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "3f66749a3ab24f51c1447c7c883669a516701cf3"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/proposed_cells.tsv",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "596849cd2e707d4f9255dec660bd9959a8712ae8"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/source_basis.json",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "2f5e9bee60407e4bf039631320bbf72af438f696"
+    },
+    {
+      "path": "docs/reviews/mxd2r_fix_plan_20261030.md",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "29fba5e7d4f58f75b3da60819a90f04542e4f8a1"
+    },
+    {
+      "path": "scripts/check_all.sh",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "f12d6db925fbc2d89c04dbecb23d233124474a75"
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "26d811642f16459f44939291999f22324f0bd5d6"
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "7909d7fb4afee8e9e2b7c31b012854eadeb1db8d"
+    },
+    {
+      "path": "scripts/measure_bed_aspect.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "9daca2e7b8eca82d49c0c7b26efc56ae8d94c321"
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "7b45bc5862ab81840e82109d1fd9790264183e45"
+    },
+    {
+      "path": "scripts/mixer_contact_reader.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "1bff13b9e905530839a91edf71b4946fc63a238a"
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "0cbc372dbbdc1c66e81db39c0ea13055a848511e"
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "5aa9a82fed4bd144d3b9befae9412dce4dd86b1a"
+    },
+    {
+      "path": "scripts/mixer_precal_observe.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "98fe91b7160089ca2b1cde5f42e98939cb4a2d6e"
+    },
+    {
+      "path": "scripts/mixer_precal_prepare.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "e514a2f285157a2458db98aa75bb785ff0be9a28"
+    },
+    {
+      "path": "scripts/test_mixer_precal_observe.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "69b375b84f640fd803c088fc349bf4a94ff95d85"
+    },
+    {
+      "path": "scripts/test_mixer_precal_prepare.py",
+      "size_ok": true,
+      "sha256_ok": true,
+      "blob_ok": true,
+      "blob": "48d0d8cc77648a248247a9a64cc61b5edfe14f1f"
+    }
+  ],
+  "package_files": [
+    {
+      "path": ".github/workflows/discipline.yml",
+      "ok": true
+    },
+    {
+      "path": "CHANGE.patch",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/changed_path_ban.json",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/doc_refs.log",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/doc_refs_initial.log",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/findings.log",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/handoff_check_status.json",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/publication.json",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/scope_check.json",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/selftest_inventory.log",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/validation_status.json",
+      "ok": true
+    },
+    {
+      "path": "DELIVERY_VALIDATION/whitespace.log",
+      "ok": true
+    },
+    {
+      "path": "PIN.txt",
+      "ok": true
+    },
+    {
+      "path": "PREVIOUSLY_REVIEWED_PIN.txt",
+      "ok": true
+    },
+    {
+      "path": "README_DELIVERY.md",
+      "ok": true
+    },
+    {
+      "path": "REQUEST.md",
+      "ok": true
+    },
+    {
+      "path": "REVIEW_PROMPT.md",
+      "ok": true
+    },
+    {
+      "path": "SNAPSHOT_MANIFEST.json",
+      "ok": true
+    },
+    {
+      "path": "docs/collab/codex_to_claude/20261104-1155_mixer-first8-preparation.md",
+      "ok": true
+    },
+    {
+      "path": "docs/collab/codex_to_claude/20261105-0018_pre8-binding-recheck.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/codex_mixer_mxd2r_recheck_request_20261104.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/codex_mixer_precal_first8_recheck_request_20261105.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/codex_mixer_precal_first8_review_request_20261104.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_candidate_reader_contract_20261024.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_measurement_sop_draft_20261104.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_experiment_request_combined_draft_20261104.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_experiment_request_outline_20261104.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_exploration_registration_draft_20261104.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/README.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/author_decisions.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/.gitattributes",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_before.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_final_sha256.txt",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_independent_probe.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_independent_recheck.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_py311.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_py38.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_review_before.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_review_py311.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_review_py38.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_thermo_before.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_thermo_py311.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_thermo_py38.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_after_initial_py311.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_before.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_final_py311.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_final_py38.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_static_report.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_static_report.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_summary.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/probe_unmocked_binding.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/unmocked_binding.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/unmocked_binding.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/validation_summary.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/ledger_proposal.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/README.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/.gitattributes",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_baseline.stderr.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_baseline.stdout.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_binding_probe_expected_fixed.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_binding_probe_original.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_fixed.stderr.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_fixed.stdout.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/external_probe_expectations.diff",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/internal_source_probe.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/internal_source_review.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/observe_final_py311.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/observe_final_py38.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/observe_source_sha256.txt",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_01_after.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_01_before.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_02_before.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_02_boundary_after.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/pre8_02_targeted_after.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/unmocked_binding.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/unmocked_binding.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/evidence/validation_summary.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/.gitattributes",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/bundle_validation.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/codex_mixer_precal_first8_review_evidence_20261104.zip",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/codex_review_mixer_precal_first8_20261104.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/direct_test_results.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/intake_verification.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/observe_binding_review/probe_observe_binding.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/observe_binding_review/probe_results.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/prior_common_file_comparison.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/external/scope_verdict.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/ledger_proposal.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/README.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/planning_arithmetic.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/proposed_cells.tsv",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/source_basis.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_fix_plan_20261030.md",
+      "ok": true
+    },
+    {
+      "path": "scripts/check_all.sh",
+      "ok": true
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/measure_bed_aspect.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_contact_reader.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_precal_observe.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_precal_prepare.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/test_mixer_precal_observe.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/test_mixer_precal_prepare.py",
+      "ok": true
+    }
+  ],
+  "previous_common": [
+    {
+      "path": ".github/workflows/discipline.yml",
+      "identical": true
+    },
+    {
+      "path": "docs/collab/codex_to_claude/20261104-1155_mixer-first8-preparation.md",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/codex_mixer_mxd2r_recheck_request_20261104.md",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/codex_mixer_precal_first8_review_request_20261104.md",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_candidate_reader_contract_20261024.md",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_measurement_sop_draft_20261104.md",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_experiment_request_combined_draft_20261104.md",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_experiment_request_outline_20261104.md",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_exploration_registration_draft_20261104.md",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/README.md",
+      "identical": false
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/author_decisions.json",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/.gitattributes",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_before.log",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_final_sha256.txt",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_independent_probe.json",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_independent_recheck.json",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_py311.log",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_py38.log",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_review_before.log",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_review_py311.log",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_review_py38.log",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_thermo_before.log",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_thermo_py311.log",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/observe_thermo_py38.log",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_after_initial_py311.log",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_before.log",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_final_py311.log",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_final_py38.log",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_static_report.json",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_static_report.stderr",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/prepare_summary.json",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/probe_unmocked_binding.py",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/unmocked_binding.json",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/unmocked_binding.stderr",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/evidence/validation_summary.json",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/ledger_proposal.json",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/README.md",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/planning_arithmetic.json",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/proposed_cells.tsv",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/source_basis.json",
+      "identical": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_fix_plan_20261030.md",
+      "identical": true
+    },
+    {
+      "path": "scripts/check_all.sh",
+      "identical": true
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "identical": true
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "identical": true
+    },
+    {
+      "path": "scripts/measure_bed_aspect.py",
+      "identical": true
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "identical": true
+    },
+    {
+      "path": "scripts/mixer_contact_reader.py",
+      "identical": true
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "identical": true
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "identical": true
+    },
+    {
+      "path": "scripts/mixer_precal_observe.py",
+      "identical": false
+    },
+    {
+      "path": "scripts/mixer_precal_prepare.py",
+      "identical": true
+    },
+    {
+      "path": "scripts/test_mixer_precal_observe.py",
+      "identical": false
+    },
+    {
+      "path": "scripts/test_mixer_precal_prepare.py",
+      "identical": true
+    }
+  ]
+}

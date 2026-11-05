@@ -1,0 +1,71 @@
+{
+  "target_pin": "ec484c2719d6a444214ddc9c48fe683a7735688b",
+  "reviewer_scope": "Independent cross-check of PRE8-02 observer self-code equivalence, bootstrap failures, runtime entry, repeat invocation and private-generator cleanup; README checkpoint correction scope only.",
+  "verdict": "BOUNDED_ACCEPT_NO_NEW_FINDING",
+  "findings": [],
+  "scope_exclusions": [
+    "Does not independently decide PRE8-01 optional-input closure or duplicate the sibling review of stale sys.modules/pyc/internal imports.",
+    "No DEM, real host access, research execution, full gate, active registration, experiment, deployment, Claude integration, ledger closure, P1 rerun or MXD2R replacement.",
+    "No positive 100000-particle full path or physical/statistical qualification."
+  ],
+  "code_observations": [
+    {
+      "path": "scripts/mixer_precal_observe.py",
+      "lines": "19-21, 86-104",
+      "observation": "Executing module code is captured before research imports. Recorded self bytes are compiled with the same filename/optimization and compared to executing code. Equivalent comment text can differ, intentionally; non-equivalent code sets _BOOT_ERROR.",
+      "evidence": ["self_equivalent_comment", "self_non_equivalent_code", "optimized_observer_entry"]
+    },
+    {
+      "path": "scripts/mixer_precal_observe.py",
+      "lines": "419-438, 476-487",
+      "observation": "Bootstrap errors return TECH before contact.Undefined/contact.Tech are evaluated. Self deletion, missing initial dependency, syntax-invalid dependency and non-equivalent self code return no contact/mixing/counts/reference_counts. Actual CLI returns one JSON response and exit 2 for missing/syntax dependencies. Partial recorded hashes do not imply successful full-set loading.",
+      "evidence": ["self_non_equivalent_code", "self_deleted_before_boot", "missing_dependency_actual_cli", "syntax_dependency_actual_cli"]
+    },
+    {
+      "path": "scripts/mixer_precal_observe.py",
+      "lines": "439-473",
+      "observation": "Each invocation gets fresh source/listing/optional dictionaries and a fresh result. A metadata error or post-import source mismatch does not contaminate the next call once disk bytes are restored. Non-OK calls return cleared values.",
+      "evidence": ["repeated_calls_and_generator_cleanup"]
+    },
+    {
+      "path": "scripts/mixer_precal_prepare.py",
+      "lines": "71-105",
+      "observation": "The newly private generator module retains the preexisting serialized temporary-state cleanup: repeated U/C/E0 preparation and an explicitly injected deck_meta failure restore TYPES identity and ARMS content. Later preparation reproduces the first deck digest.",
+      "evidence": ["repeated_calls_and_generator_cleanup"]
+    }
+  ],
+  "documentation_observations": [
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/README.md",
+      "line": 33,
+      "observation": "The received correction expressly denies write_restart bit identity, requires defining comparisons between values recomputed the same way, and limits force_normal to projection of the total pair force onto the center line. The 334/3111 observation is attributed to Claude's message, not this review's independent execution. No P1 rerun, tolerance change or restart approval is inferred."
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_recheck_20261105/README.md",
+      "lines": "3, 18-20, 26, 32-34",
+      "observation": "First-eight static preparation acceptance is preserved; PRE8-01/02 remain external recheck-pending in the submitted author record. Whole HOLD, source-equivalence limitations, partial bootstrap hashes and exclusions for runtime/dependencies outside the eight bound modules remain explicit. The checkpoint summary matches the preparation README correction. No acceptance-scope expansion was found."
+    }
+  ],
+  "minimal_fix": "None indicated by these probes and the bounded static review.",
+  "evidence_file": "results.json",
+  "probe_source": "probe_boundary.py",
+  "actual_probe_groups": 7,
+  "actual_python": "3.12.14",
+  "invocation": "C:/Users/Administrator/Documents/Codex/lhs28/venv/Scripts/python.exe -I -B -X utf8 task/pre8_boundary/probe_boundary.py",
+  "input_source_hashes_verified_unchanged": 10,
+  "mock_boundary": "The three-particle fixture replaces only validate_case. The context-cleanup test separately injects a deck_meta ValueError. These are explicit synthetic boundaries, not source-memory attestation or a real research run.",
+  "wrapper_history": [
+    {
+      "attempt": 1,
+      "exit_code": 1,
+      "classification": "Harness/environment failure, before the first E0 observation completed",
+      "reason": "Fixture default tempfile destination under the Windows app-container temporary directory denied creation of e0/post (WinError 5).",
+      "fix": "Set child tempfile.tempdir to the copied-source directory inside task/pre8_boundary. No target/input file changed."
+    },
+    {
+      "attempt": 2,
+      "exit_code": 0,
+      "classification": "All seven independent bounded probe groups passed"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "pin": "ec484c2719d6a444214ddc9c48fe683a7735688b",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "scope": "Independent source self-equivalence, bootstrap CLI, repeat-call and cleanup boundaries only",
+  "probes": [
+    {
+      "name": "self_equivalent_comment",
+      "result": "PASS",
+      "observations": {
+        "status": "OK",
+        "historical_bytes_differ": true,
+        "compiled_equivalence_passed": true,
+        "recorded_hash": "a2f2f9a8a7ec2a7c980230485733ef9cc1122db9c0f16d7712e0da7095ec75cd"
+      },
+      "child_rc": 0,
+      "stderr": ""
+    },
+    {
+      "name": "self_non_equivalent_code",
+      "result": "PASS",
+      "observations": {
+        "status": "TECH",
+        "reasons": [
+          "source bootstrap failed: recorded observer bytes do not compile to executing module code"
+        ],
+        "main_rc": 2,
+        "no_contact_class_available": true,
+        "partial_hashes": 1
+      },
+      "child_rc": 0,
+      "stderr": ""
+    },
+    {
+      "name": "self_deleted_before_boot",
+      "result": "PASS",
+      "observations": {
+        "status": "TECH",
+        "reasons": [
+          "source bootstrap failed: [WinError 2] 지정된 파일을 찾을 수 없습니다: 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\outputs\\\\mixer_precal_pre8_recheck_20261105\\\\task\\\\pre8_boundary\\\\self_deleted_before_boot_wxhwkldr\\\\mixer_precal_observe.py'"
+        ],
+        "partial_hashes": 0
+      },
+      "child_rc": 0,
+      "stderr": ""
+    },
+    {
+      "name": "missing_dependency_actual_cli",
+      "result": "PASS",
+      "child_rc": 2,
+      "observations": {
+        "status": "TECH",
+        "reasons": [
+          "source bootstrap failed: [WinError 2] 지정된 파일을 찾을 수 없습니다: 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\outputs\\\\mixer_precal_pre8_recheck_20261105\\\\task\\\\pre8_boundary\\\\missing_dependency_lucofuk6\\\\mixer_precal_prepare.py'"
+        ],
+        "partial_hashes": 1
+      },
+      "stderr": ""
+    },
+    {
+      "name": "syntax_dependency_actual_cli",
+      "result": "PASS",
+      "child_rc": 2,
+      "observations": {
+        "status": "TECH",
+        "reasons": [
+          "source bootstrap failed: '(' was never closed (mixer_precal_prepare.py, line 236)"
+        ],
+        "partial_hashes": 9
+      },
+      "stderr": ""
+    },
+    {
+      "name": "repeated_calls_and_generator_cleanup",
+      "result": "PASS",
+      "observations": {
+        "status_sequence": [
+          "OK",
+          "TECH",
+          "OK",
+          "TECH",
+          "OK"
+        ],
+        "source_binding_records": 9,
+        "repeated_prepare_identical": true,
+        "successful_and_failed_cleanup": true
+      },
+      "child_rc": 0,
+      "stderr": ""
+    },
+    {
+      "name": "optimized_observer_entry",
+      "result": "PASS",
+      "observations": {
+        "status": "OK",
+        "optimization": 1,
+        "source_binding_records": 9
+      },
+      "child_rc": 0,
+      "stderr": ""
+    }
+  ],
+  "probe_groups": 7,
+  "input_source_hashes_unchanged": true,
+  "source_sha256": {
+    "mixer_precal_observe": "df22dcf03fcd628901ffb6ac7362579faee6e94285404a3163bed44d3666f013",
+    "mixer_precal_prepare": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6",
+    "mixer_contact_reader": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de",
+    "measure_mixing_index": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a",
+    "measure_bed_aspect": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880",
+    "make_mixer_deck": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "mixer_deck_readback": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f",
+    "mixer_deck_diff": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "make_mixer_resume": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e",
+    "test_mixer_precal_observe": "df1a230b0c6a3ea836a522933918d023b596a3f681de73edc6857c8a1bcd3570"
+  },
+  "limitations": [
+    "Three-particle fixture mocks only validate_case; real tiny E0 metrics are exercised.",
+    "Generator exception is an explicit in-memory injection to verify cleanup only.",
+    "Equivalent comment source acceptance is the documented compiled-code boundary, not a new defect.",
+    "No actual research run, DEM, host access, full gate, P1 rerun or positive100000 path."
+  ]
+}

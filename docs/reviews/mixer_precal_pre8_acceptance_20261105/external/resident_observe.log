@@ -1,0 +1,45 @@
+{"python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]", "platform": "Windows-11-10.0.26300-SP0", "numpy": "2.5.3", "scipy": "1.16.3", "scope": "resident observe only; no prepare/fullgate", "source_unmodified": true}
+test_bad_meta_and_changed_deck (__main__.DiskContract.test_bad_meta_and_changed_deck) ... ok
+test_changed_metadata_and_frame_discard_metrics (__main__.DiskContract.test_changed_metadata_and_frame_discard_metrics) ... ok
+test_e0_real_small_dump_and_no_bin (__main__.DiskContract.test_e0_real_small_dump_and_no_bin) ... ok
+test_frozen_dump_strict_headers_and_shape (__main__.DiskContract.test_frozen_dump_strict_headers_and_shape) ... ok
+test_frozen_parser_raw_survives_path_aba (__main__.DiskContract.test_frozen_parser_raw_survives_path_aba) ... ok
+test_interrupted_missing_short_or_extra_log_is_tech (__main__.DiskContract.test_interrupted_missing_short_or_extra_log_is_tech) ... ok
+test_late_failure_never_computes_partial_metrics (__main__.DiskContract.test_late_failure_never_computes_partial_metrics) ... ok
+test_log_header_and_each_run_endpoint (__main__.DiskContract.test_log_header_and_each_run_endpoint) ... ok
+test_missing_dependency_source_is_tech (__main__.DiskContract.test_missing_dependency_source_is_tech) ... ok
+test_missing_duplicate_malformed_frame (__main__.DiskContract.test_missing_duplicate_malformed_frame) ... ok
+test_no_se_is_undefined_not_zero (__main__.DiskContract.test_no_se_is_undefined_not_zero) ... ok
+test_optional_n_expected_creation_is_tech (__main__.DiskContract.test_optional_n_expected_creation_is_tech) ... ok
+test_optional_n_expected_initial_presence_contract (__main__.DiskContract.test_optional_n_expected_initial_presence_contract) ... ERROR
+test_raw_aba_cannot_change_metrics (__main__.DiskContract.test_raw_aba_cannot_change_metrics) ... ok
+test_reference_wrong_id_and_runtime_bad_binding (__main__.DiskContract.test_reference_wrong_id_and_runtime_bad_binding) ... ok
+test_rotating_wiring_with_explicit_cell_stats_unit_mock (__main__.DiskContract.test_rotating_wiring_with_explicit_cell_stats_unit_mock) ... ok
+test_d13_zero_ten_eleven_and_excess (__main__.Qualification.test_d13_zero_ten_eleven_and_excess) ... ok
+test_hand_contact_clusters_and_overlapping_am_fractions (__main__.Qualification.test_hand_contact_clusters_and_overlapping_am_fractions) ... ok
+test_hand_m_no_clipping_and_undefined (__main__.Qualification.test_hand_m_no_clipping_and_undefined) ... ok
+test_id_sequence_type_radius_and_late_change (__main__.Qualification.test_id_sequence_type_radius_and_late_change) ... ok
+test_phase_allocation_differs_without_new_threshold (__main__.Qualification.test_phase_allocation_differs_without_new_threshold) ... ok
+test_reference_geometry_seed_and_role (__main__.Qualification.test_reference_geometry_seed_and_role) ... ok
+test_fresh_process_executes_the_new_captured_dependency (__main__.SourceBoundary.test_fresh_process_executes_the_new_captured_dependency) ... ok
+test_fresh_registry_ignores_stale_canonical_modules (__main__.SourceBoundary.test_fresh_registry_ignores_stale_canonical_modules) ... ok
+test_generator_source_open_is_captured (__main__.SourceBoundary.test_generator_source_open_is_captured) ... ok
+test_import_then_dependency_disk_change (__main__.SourceBoundary.test_import_then_dependency_disk_change) ... ok
+test_import_then_observer_disk_change (__main__.SourceBoundary.test_import_then_observer_disk_change) ... ok
+test_observer_executing_code_must_match_captured_bytes (__main__.SourceBoundary.test_observer_executing_code_must_match_captured_bytes) ... ok
+
+======================================================================
+ERROR: test_optional_n_expected_initial_presence_contract (__main__.DiskContract.test_optional_n_expected_initial_presence_contract)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\outputs\mixer_precal_pre8_recheck_20261105\input\scripts\test_mixer_precal_observe.py", line 418, in test_optional_n_expected_initial_presence_contract
+    elif kind=='dangling_symlink':path.symlink_to(run/'missing')
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py", line 1386, in symlink_to
+    os.symlink(target, self, target_is_directory)
+OSError: [WinError 1314] 클라이언트가 필요한 권한을 가지고 있지 않습니다: 'C:\\Users\\Administrator\\Documents\\Codex\\outputs\\mixer_precal_pre8_recheck_20261105\\resident_scratch\\tmpjfjn8wuq\\optional_dangling_symlink\\missing' -> 'C:\\Users\\Administrator\\Documents\\Codex\\outputs\\mixer_precal_pre8_recheck_20261105\\resident_scratch\\tmpjfjn8wuq\\optional_dangling_symlink\\n_expected'
+
+----------------------------------------------------------------------
+Ran 28 tests in 7.334s
+
+FAILED (errors=1)
