@@ -1093,9 +1093,13 @@ def run(a, deps=None):
                 except _PersistFailed as e_:
                     return stop("invalid", f"{lab_} 미해결 판정 기록 폴더의 과학적 결과를 장부에 못 적었다 ({e_}) — 사람이 본다", sys=s_, seed=d_, run_id=rid_)
             s_, d_, lab_, rd_, why_ = ur_all[0]
+            rid0_ = _folder_run_id(rd_)
+            row0_ = [r_ for r_ in led["runs"] if isinstance(r_, dict) and r_.get("run_id") == rid0_] if rid0_ else []
+            if len(row0_) == 1:                              # ⭐ DR 전 3차 리뷰 P3 — 계 · 시드는 그 실행의 장부 행에서 (폴더 이름에서 읽지 않는다)
+                s_, d_ = row0_[0].get("system"), row0_[0].get("seed")
             return stop("invalid", f"{lab_} 미해결 판정 기록 — {why_} · 같은 상태 {[x_[2] for x_ in ur_all]} — 새 실행 0 (순서를 바꿔도 · 폴더를 옆으로 "
                                    "옮겨도 같다 · 사람이 본다)",
-                        sys=s_, seed=d_, run_id=_folder_run_id(rd_))
+                        sys=s_, seed=d_, run_id=rid0_)
         # ①-4 판정 파일을 믿지 않는다 — 원자료로 다시 판정 → 묶음 판정 (회신 DG P1-4)
         rejudged = []
         for sysn, seed in order:
@@ -3559,6 +3563,41 @@ def _selftest():
     chk(all(v_ == (RC["invalid"], 0, RC["invalid"], 0, "invalid", 1, False, "invalid") for v_ in r1_.values()),
         "⛔음성 DR 전 2차 리뷰 P1: 일시 오류 장부 invalid 뒤 러너의 재판정이 md_init_raw.xyz 불일치를 본 다음 사람이 맞는 파일로 바꾸거나 지우고 확인해도 — "
         f"폴더 판정 기록의 입력 불일치 때문에 자동 대체하지 않는다 (발사 0 · 충돌 관측 하나 · 요약 invalid) ({r1_})")
+    # ⭐ DR 전 3차 리뷰 P3 — 실행 중에 사람이 --stage1_verdict 로 한 번 들여다본 (incomplete · 예외 없음) 기록이 있어도 끝 판정의 일시 오류는 회복된다
+    rr_pk = pathlib.Path(tempfile.mkdtemp(dir=tmp_root))
+    pk_ = {"done": False}
+    def _peek(_c):
+        d_ = rr_pk / "A/seed12"
+        if not pk_["done"] and (d_ / "plan.json").is_file() and (d_ / "traj.xyz").is_file() and not (d_ / "final.xyz").exists():
+            pk_["done"] = True
+            pk_["st"] = real.stage1_verdict(d_, values=vals_t, log=lambda *m: None, reason="selftest — 실행 중 들여다봄")["status"]
+    n_sg["left"] = 1
+    real.seed_gate = _sg_flaky
+    try:
+        rc_pk, L_pk, _ = go(wt, rr=rr_pk, sleep_hook=_peek)
+    finally:
+        real.seed_gate = _sg0
+    rc_pk2, L_pk2, _ = go(wt, rr=rr_pk, ack=J(rr_pk / "STOP.json")["stop_id"])
+    chk(pk_.get("st") == "incomplete" and rc_pk == RC["invalid"] and len(L_pk) == 3 and rc_pk2 == RC["pass"] and len(L_pk2) == 7
+        and sup_(rr_pk) == [("invalid", "pass")],
+        "⛔음성 DR 전 3차 리뷰 P3: 실행 중 들여다본 incomplete 기록 (예외 없음 · 그때의 짧은 원자료) 이 폴더 이력에 있어도 — 장부 판정 (끝 판정의 일시 오류) 과 같은 "
+        f"입력의 재판정이 대체하고 이어 간다 ({pk_.get('st')} · {rc_pk} · 발사 {len(L_pk)} · {rc_pk2} · 발사 {len(L_pk2)})")
+    # ⭐ DR 전 3차 리뷰 P2 — 첫 시드 (A11) 의 닫힘이 이력 줄에만 있어도 (정본 없음) 시작 점검이 장부에 fail · closes_system 을 적고 다음 시작은 닫는 STOP (melt)
+    rr_cl = clone(rr_d)
+    d11_ = rr_cl / "A/seed11"
+    pv11_ = J(d11_ / "stage1_verdict.json")["provenance"]
+    for f_ in ("stage1_verdict.json", real.VERDICT_HISTORY):
+        (d11_ / f_).unlink(missing_ok=True)
+    _led_row(rr_cl, "A", 11, verdict=None, verdict_provenance=None)
+    real._append_history_first(d11_, {"status": "fail", "closes_system": True, "provenance": pv11_}, "selftest — 첫 시드 녹음 fail (정본 쓰기 끊김)")
+    (rr_cl / "STOP.json").unlink(missing_ok=True)
+    rc_cl1, L_cl1, _ = go(wt, rr=rr_cl)
+    row_cl = [x_ for x_ in J(rr_cl / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 11)][-1]
+    rc_cl2, L_cl2, _ = go(wt, rr=rr_cl, ack=J(rr_cl / "STOP.json")["stop_id"])
+    chk(rc_cl1 == RC["invalid"] and not L_cl1 and row_cl.get("verdict") == "fail" and row_cl.get("closes_system") is True
+        and rc_cl2 == RC["melt"] and not L_cl2 and J(rr_cl / "STOP.json").get("code") == "melt",
+        "⛔음성 DR 전 3차 리뷰 P2: 첫 시드의 녹음 fail · 계 닫힘이 이력 줄에만 남은 폴더 (정본 없음) — 시작 점검이 멈추기 전에 장부에 fail 과 closes_system 을 "
+        f"적고 (발사 0) 다음 시작은 닫는 STOP melt ({rc_cl1} · {row_cl.get('verdict')} · {row_cl.get('closes_system')} · {rc_cl2})")
     # ⭐ 회신 DQ P1-1 (Codex 재현) — A12 의 md_init_raw.xyz 가 traj 원시와 다르면 판정은 입력 불일치 (invalid · rc 27) · 그 파일을 다른 이름으로 보존하고
     #    일반 확인 → 다시 만든 판정 pass 를 '판정 도중 오류' 로 자동 대체하지 않는다 (발사 0 · 충돌 관측 · 독립 요약 invalid)
     from ase.io import read as _rd_t, write as _wr_t
@@ -3630,6 +3669,7 @@ def _selftest():
         and rc_u4 == RC["invalid"] and not L_u4 and "B/seed14.moved" in sp_u4.get("reason", "") and sm_u4["track"] == "invalid"
         and hl_(rr_u4) == h0_u4 and sp_u4.get("reason", "").startswith("B/seed14.moved 미해결 판정 기록")
         and rc_u5 == RC["invalid"] and not L_u5 and "B/old14" in J(rr_u5 / "STOP.json").get("reason", "")
+        and (J(rr_u5 / "STOP.json").get("sys"), J(rr_u5 / "STOP.json").get("seed")) == ("B", 14)   # ⭐ DR 전 3차 P3 — 계 · 시드는 장부 행에서
         and rc_u6 == RC["invalid"] and not L_u6 and row_u6.get("verdict") == "fail" and row_u6.get("verdict_observed") is not None,
         "⛔음성 회신 DQ P1-2 (Codex 재현): B14 를 A14 보다 먼저 돌려 B14 첫 정본 판정 교체가 실패 (이력 · 임시 판정만 · 정본 없음) → 독립 요약 invalid · "
         "STOP 을 확인하고 기본 순서로 다시 시작해도 (A14 를 띄우지 않는다) · 그 순서로 한 번 더 해도 발사 0 "

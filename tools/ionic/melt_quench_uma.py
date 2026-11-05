@@ -1081,7 +1081,8 @@ def _append_history(run, prev, res, reason):
                        "card_values": pp.get("card_values_sha16") != npv.get("card_values_sha16"),
                        "driver": pp.get("driver_sha16") != npv.get("driver_sha16"),
                        "run_id": prev.get("run_id") != res.get("run_id")},
-           "prev_provenance": pp, "new_provenance": npv, "prev": prev}
+           "prev_provenance": pp, "new_provenance": npv, "prev": prev,
+           "new_closes_system": res.get("closes_system") is True}   # ⭐ DR 전 3차 리뷰 P2
     with open(pathlib.Path(run) / VERDICT_HISTORY, "a", encoding="utf-8") as fh:
         fh.write(json.dumps(rec, ensure_ascii=False, default=str) + "\n")
         _fsync_handle(fh)                                    # ⭐ DO 전 리뷰 P2-14 — 판정 기록도 저장장치까지 (정전 뒤 사라지지 않게 · 보증은 아님)
@@ -1095,7 +1096,8 @@ def _append_history_first(run, res, reason):
     ⭐ 회신 DQ P1-2 — 정본 없이 이력이 이미 있던 폴더 (첫 판정 쓰기가 끊긴 뒤 사람이 --stage1_verdict 로 다시 판정) 면 그 줄 수를
     history_lines_before 로 적는다 (러너는 이런 폴더를 판정하지 않는다 — 이 길은 사람의 손 판정뿐이다)."""
     rec = {"at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "reason": reason, "first": True,
-           "new_status": res.get("status"), "new_provenance": res.get("provenance") or {}}
+           "new_status": res.get("status"), "new_provenance": res.get("provenance") or {},
+           "new_closes_system": res.get("closes_system") is True}   # ⭐ DR 전 3차 리뷰 P2 — 첫 시드 닫힘도 이력 줄에 (정본이 없어도 장부에 옮길 수 있게)
     hp_ = pathlib.Path(run) / VERDICT_HISTORY
     if hp_.is_file():
         n_ = sum(1 for ln in hp_.read_text(encoding="utf-8", errors="replace").split("\n") if ln.strip())
@@ -1603,10 +1605,13 @@ def _verdict_records(folder):
                 return [], f"판정 이력 {k} 번째 줄을 못 읽는다 ({type(e).__name__}: {str(e)[:60]})"
             if not isinstance(h, dict):
                 return [], f"판정 이력 {k} 번째 줄이 객체가 아니다"
+            if "new_closes_system" in h and type(h.get("new_closes_system")) is not bool:   # ⭐ DR 전 3차 리뷰 P2 — 닫힘 표시는 참거짓만
+                return [], f"판정 이력 {k} 번째 줄의 new_closes_system {h.get('new_closes_system')!r} 가 참거짓이 아니다 — 해석할 수 없는 기록"
             if h.get("first") is True:                       # ⭐ DQ 전 5차 리뷰 P2 — 첫 판정 줄 (앞 판정 없음 · prev 가 있으면 해석할 수 없다)
                 if "prev" in h or h.get("new_status") not in LI2S2_STATUSES:
                     return [], f"판정 이력 {k} 번째 줄 (첫 판정) 의 꼴이 아니다 (prev 가 있거나 상태 {h.get('new_status')!r} 를 모른다)"
-                recs.append((f"판정 이력 {k} 의 첫 판정", {"status": h.get("new_status"), "provenance": h.get("new_provenance")}, True))
+                recs.append((f"판정 이력 {k} 의 첫 판정", {"status": h.get("new_status"), "provenance": h.get("new_provenance"),
+                                                         "closes_system": h.get("new_closes_system")}, True))
                 continue
             pv_ = h.get("prev")
             if not isinstance(pv_, dict):                    # ⭐ DQ 전 리뷰 P2-C — prev 없음 · null · 객체 아님 = 해석할 수 없는 기록 (_run_kind 와 같은 판독)
@@ -1620,7 +1625,7 @@ def _verdict_records(folder):
                 return [], f"판정 이력 {k} 번째 줄의 prev_status · prev_provenance 가 prev 와 다르다 — 해석할 수 없는 기록"   # ⭐ DO 전 리뷰 F4
             recs.append((f"판정 이력 {k} 의 이전 판정", pv_, False))
             recs.append((f"판정 이력 {k} 의 새 판정", {"status": h.get("new_status"),   # 지문은 그대로 — 타입이 틀리면 검사가 보류한다 (회신 DN P1)
-                                                   "provenance": h.get("new_provenance")}, True))
+                                                   "provenance": h.get("new_provenance"), "closes_system": h.get("new_closes_system")}, True))
     return recs, None
 
 
@@ -2105,7 +2110,8 @@ def ledger_verdict_conflict(row, folder_status, recorded=True, folder_provenance
       · ⭐ 3차 · 4차 P1 — 장부 판정이 **없으면** (판정을 쓴 뒤 장부에 적기 전에 SIGKILL · 정전 · 러너가 죽은 뒤 끝난 담금질을 사람이 판정 ·
         상한 기록용 판정) — ⭐ DR 전 2차 리뷰 P1: 장부 판정이 **비과학적 (invalid · incomplete) 일 때도** (러너의 재판정이 입력 불일치를 봤는데 장부엔
         안 적힌 채 사람이 파일을 고친 경우 · 재판정 fail 을 쓰고 장부에 적기 전에 끊긴 경우) — 그 폴더의 판정 기록 **전체** (folder_prior =
-        folder_verdict_chain — 지금 판정 · 이력의 앞 판정 · 새 판정) 를 기준으로:
+        folder_verdict_chain — 지금 판정 · 이력의 앞 판정 · 새 판정) 를 기준으로 (⭐ DR 전 3차 리뷰 P3 — 장부 판정이 비과학적이면 비과학적 기록은 입력 불일치를
+        찾은 것만 막는다: 입력이 그 장부 판정 때와 같은지는 장부 규칙이 이미 보고, 실행 중 들여다본 incomplete 같은 앞선 상태는 증거가 아니다):
         못 읽는 판정 (상태 없음) 이 있으면 충돌 · pass · fail 판정이 하나라도 지금과 다르면 충돌 · invalid · incomplete 판정이 하나라도 지금 판정으로
         자동 대체할 수 없으면 (supersede_block — 위와 같은 규칙) 충돌. 한 단계 이력만 보면 다시 판정 한 번 (사람의 --stage1_verdict · 끊긴 재시작) 이 앞
         판정을 밀어내 증거가 안 보인다 (4차 리뷰 재현).
@@ -2133,10 +2139,18 @@ def ledger_verdict_conflict(row, folder_status, recorded=True, folder_provenance
                     return f"장부 판정 {v_!r} · 폴더 판정 기록에 못 읽는 판정이 있다 — 비교할 수 없다"
                 if st_ in ("pass", "fail") and st_ != folder_status:
                     return f"장부 판정 {v_!r} · 폴더 판정 기록의 {st_} ≠ 지금 {folder_status} (끊긴 뒤 원자료 · 도구가 바뀌었을 수 있다)"
-                if st_ in ("invalid", "incomplete"):
+                if st_ in ("invalid", "incomplete") and v_ is None:   # 장부가 비면 기준이 없다 — 비과학적 판정 하나하나가 대체 규칙을 받는다
                     sb_ = supersede_block(rec_.get("provenance"), folder_provenance)   # ⭐ 회신 DQ P1-1 — 같은 대체 규칙
                     if sb_ is not None:
                         return f"장부 판정 {v_!r} · 폴더 판정 기록의 {st_} 판정을 지금 {folder_status} 판정이 대체할 수 없다 ({sb_})"
+                if st_ in ("invalid", "incomplete") and v_ is not None:   # ⭐ DR 전 3차 리뷰 P3 — 장부 판정이 기준 (입력이 그때와 같은지는 위 장부 규칙이 본다):
+                    pv_r = rec_.get("provenance")                         # 폴더 기록에서는 입력 불일치를 찾은 판정만 막는다 (실행 중 들여다본 incomplete 같은 앞선
+                    jn_r = pv_r.get("judge_nature") if isinstance(pv_r, dict) else None   # 상태는 막지 않는다) · 성격을 모르면 막는다
+                    if not (isinstance(jn_r, dict) and isinstance(jn_r.get("input_mismatch"), list)):
+                        return f"장부 판정 {v_!r} · 폴더 판정 기록의 {st_} 판정에 성격 기록이 없다 — 입력 불일치를 찾았는지 모른다"
+                    if jn_r["input_mismatch"]:
+                        return (f"장부 판정 {v_!r} · 폴더 판정 기록에 입력 불일치를 찾은 {st_} 판정이 있다 ({'; '.join(map(str, jn_r['input_mismatch']))[:100]}) — "
+                                "그 뒤의 복구는 자동 대체하지 않는다")
     if recorded and row.get("verdict_observed_conflict"):
         return "장부에 같은 실행의 다른 판정 관측이 있다 (verdict_observed_conflict)"
     return None
@@ -2194,7 +2208,7 @@ def preserved_unresolved(out_root, seeds=None):
                 continue
             why_ = folder_record_problem(p_)
             if why_:
-                m_ = re.match(r"\D*(\d+)", p_.name)
+                m_ = re.match(r"seed(\d+)", p_.name)            # ⭐ DR 전 3차 리뷰 P3 — 시드는 seed<N> 꼴 이름에서만 (backup_2026_11_05 를 시드 2026 으로 읽지 않는다)
                 out.append((s_, int(m_.group(1)) if m_ else None, p_.name, why_))
     return out
 
@@ -4611,6 +4625,8 @@ def _selftest():
             return ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": prior_}, "pass", folder_provenance=new_) is not None
         PVM = {**PV, "judge_nature": {"errors": [], "input_mismatch": [f"{RAW_} 불일치 (selftest)"]}}
         PVR_old = {**PV, "files_sha256": {**FS0, RAW_: "e" * 64}}
+        PVMID = {"status": "incomplete", "provenance": {**PV, "files_sha256": {**FS0, "traj.xyz": "9" * 64},
+                                                        "judge_nature": {"errors": [], "input_mismatch": []}}}   # 실행 중 들여다본 판정
         PVR_new = {**PV, "files_sha256": {**FS0, RAW_: "f" * 64}, "derived_written": [RAW_]}
         PVR_first = {**PV, "files_sha256": {**FS0, RAW_: "f" * 64}, "derived_written": [RAW_]}
         PVR_other = {**PV, "files_sha256": {**FS0, RAW_: "f" * 64}, "derived_written": []}
@@ -4644,13 +4660,25 @@ def _selftest():
                   "inc_ledger_chain_unreadable": ledger_verdict_conflict({"verdict": "incomplete", "verdict_provenance": PV}, "fail", folder_provenance=PV,
                                                                          folder_prior=[{"status": None}]) is not None,
                   "sci_ledger_ignores_chain": ledger_verdict_conflict({"verdict": "pass", "verdict_provenance": PV}, "pass", folder_provenance=PV,
-                                                                      folder_prior=[{"status": "invalid", "provenance": PVM}]) is not None}
+                                                                      folder_prior=[{"status": "invalid", "provenance": PVM}]) is not None,
+                  # ⭐ DR 전 3차 리뷰 P3 — 장부 판정이 비과학적이면 폴더 기록의 앞선 incomplete (실행 중 들여다봄 · 예외 없음 · 다른 원자료) 는 막지 않는다 ·
+                  #    장부가 비면 그대로 엄격 · 성격을 모르는 기록은 막는다
+                  "inv_ledger_chain_midrun": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
+                                                                     folder_prior=[PVMID, {"status": "invalid", "provenance": PV},
+                                                                                   {"status": "pass", "provenance": PV}]) is not None,
+                  "none_ledger_chain_midrun": ledger_verdict_conflict({}, "pass", folder_provenance=PV,
+                                                                      folder_prior=[PVMID, {"status": "invalid", "provenance": PV},
+                                                                                    {"status": "pass", "provenance": PV}]) is not None,
+                  "inv_ledger_chain_nonature": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
+                                                                       folder_prior=[{"status": "incomplete", "provenance": {"files_sha256": FS0}},
+                                                                                     {"status": "pass", "provenance": PV}]) is not None}
         want_dq = {"inv_mismatch": True, "inv_mismatch_and_err": True, "inv_noerr": True, "inv_nonature": True, "inv_nature_badshape": True,
                    "inv_raw_repaired": True, "inv_raw_gone": True, "inv_raw_first_made": False, "inv_raw_first_other": False, "inv_raw_same": False,
                    "inv_band": True, "inv_band_none": True, "inv_band_notread": False, "inv_band_read_vs_not": True,
                    "inv_folder": True, "inv_folder_none": True, "inv_runtime": True, "inv_attempt": True, "inv_oldfmt": True,
                    "chain_mismatch": True, "chain_raw_repaired": True, "inv_ledger_chain_mismatch": True, "inv_ledger_chain_fail": True,
-                   "inv_ledger_chain_ok": False, "inc_ledger_chain_unreadable": True, "sci_ledger_ignores_chain": False}
+                   "inv_ledger_chain_ok": False, "inc_ledger_chain_unreadable": True, "sci_ledger_ignores_chain": False,
+                   "inv_ledger_chain_midrun": False, "none_ledger_chain_midrun": True, "inv_ledger_chain_nonature": True}
         chk(got_dq == want_dq and JUDGE_DERIVED_FILES == (SEED_GATE_RAW,) and set(PROVENANCE_FILES) < set(BOUND_FILES),
             "⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 "
             "같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_init_raw.xyz 를 옮기고 다시 만든 것 · 입력 불일치 판정 · 성격 기록 없음 · "
@@ -4886,13 +4914,24 @@ def _selftest():
         (rp_ / LEDGER_NAME).write_text(json.dumps({"runs": [], "stop_history": [], "card_values_sha16": values_sha16(VAL), "driver_sha16": driver_sha16()}),
                                        encoding="utf-8")
         lc_pu = " | ".join(ledger_check(rp_, {}, VAL)["invalid"])
-        chk(sorted((s_, sd_, nm_) for s_, sd_, nm_, _ in pu_) == [("A", 12, "seed12-old"), ("A", 14, "seed14.moved"), ("B", 13, "seed13.cut1"),
-                                                                 ("B", 14, "old14"), ("B", 15, "seed15_moved")]
+        chk(sorted(((s_, sd_, nm_) for s_, sd_, nm_, _ in pu_), key=lambda x_: (x_[0], x_[2]))
+            == [("A", 12, "seed12-old"), ("A", 14, "seed14.moved"), ("B", None, "old14"), ("B", 13, "seed13.cut1"), ("B", 15, "seed15_moved")]
             and "보존 폴더 A/seed14.moved" in lc_pu and "보존 폴더 B/seed13.cut1" in lc_pu and "보존 폴더 B/old14" in lc_pu and "seed12.ok" not in lc_pu
             and "notes" not in lc_pu and folder_record_problem(rp_ / "B" / "seed12.ok") is None,
             "⛔음성 DR 전 리뷰 P2-B · 2차: 현재 시드 폴더가 아닌 모든 폴더 (이름 꼴과 무관 — seed14.moved · old14 · seed15_moved · seed12-old) 의 정본 없는 "
             "판정 기록 · 정본 옆 판정 임시 파일 · 모르는 상태 ('PASS') · 원문만 남은 이전 판정은 미해결 기록 (목록 · 요약 장부 검사 invalid) · "
             f"깨끗한 보존 폴더 · 현재 폴더는 이 목록에 안 든다 ({[x_[:3] for x_ in pu_]} · {lc_pu[:200]})")
+        # ⭐ DR 전 3차 리뷰 P2 — 이력 줄도 새 판정의 계 닫힘 (closes_system) 을 적는다 → 정본 없이 이력만 남아도 _run_kind 가 닫힘을 장부로 넘긴다
+        d_cl = pathlib.Path(td_) / "dq_cl"; d_cl.mkdir()
+        _append_history_first(d_cl, {"status": "fail", "closes_system": True, "provenance": {"files_sha256": {}}}, "selftest — 첫 시드 닫힘")
+        rk_cl = _run_kind({}, d_cl, None)
+        d_cl2 = pathlib.Path(td_) / "dq_cl2"; d_cl2.mkdir()
+        (d_cl2 / VERDICT_HISTORY).write_text(json.dumps({"first": True, "new_status": "fail", "new_closes_system": "yes"}) + "\n", encoding="utf-8")
+        chk(rk_cl[0] == "scientific" and rk_cl[1].get("closes_system") is True and rk_cl[1].get("status") == "fail"
+            and loads_strict((d_cl / VERDICT_HISTORY).read_text(encoding="utf-8").strip()).get("new_closes_system") is True
+            and _verdict_records(d_cl2)[1] is not None and _run_kind({}, d_cl2, None)[0] == "unreadable",
+            "⛔음성 DR 전 3차 리뷰 P2: 이력 줄 (첫 판정 · 바꿈) 이 새 판정의 closes_system 을 적고 판정 기록이 그것을 읽는다 — 정본 없이 이력만 남은 첫 시드의 닫힘이 "
+            f"장부로 넘어간다 · 참거짓이 아닌 표시는 해석할 수 없는 기록 ({rk_cl} · {_verdict_records(d_cl2)[1]})")
         # ⭐ 회신 DQ P1-2 — 정본 없이 판정 기록만 남은 폴더 (첫 판정 쓰기 끊김) ≠ 판정 안 한 폴더 · 묶음 판정 invalid · 손 판정은 그 사실을 이력에 적는다
         ru_ = pathlib.Path(td_) / "_dq_unres"
         for s_ in ("A", "B"):

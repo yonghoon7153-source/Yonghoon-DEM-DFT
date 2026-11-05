@@ -52,8 +52,14 @@ MOVED_DR = {
      ("                                          folder_prior=(folder_verdict_chain(pathlib.Path(out_root) / s / f\"seed{sd}\")\n"
       "                                                        if r.get(\"verdict\") in (None, \"invalid\", \"incomplete\") else None))",
       "                                          folder_prior=None)")]),
- "DQ70_prior_nonsci_changed_off": F("DQ70_prior_nonsci_changed_off", "                if st_ in (\"invalid\", \"incomplete\"):\n                    sb_ = supersede_block(rec_.get(",
-                                    "                if False:\n                    sb_ = supersede_block(rec_.get("),
+ "DQ70_prior_nonsci_changed_off": F("DQ70_prior_nonsci_changed_off",            # DR 전 3차: 장부가 빈 때의 엄격 규칙 줄로
+                                    "                if st_ in (\"invalid\", \"incomplete\") and v_ is None:   # 장부가 비면 기준이 없다",
+                                    "                if False:   # 장부가 비면 기준이 없다"),
+ # DR 전 3차 리뷰 P2 — 이력의 새 판정 줄에 closes_system 이 붙음 (DN 판 변이 — 그 줄의 지문을 객체로만 받기)
+ "DN6_history_provenance_coerced": F("DN6_history_provenance_coerced",
+     "                                                   \"provenance\": h.get(\"new_provenance\"), \"closes_system\": h.get(\"new_closes_system\")}, True))",
+     "                                                   \"provenance\": h.get(\"new_provenance\") if isinstance(h.get(\"new_provenance\"), dict) else None, "
+     "\"closes_system\": h.get(\"new_closes_system\")}, True))", "drv"),
 }
 #: DQ 판 변이 중 DQ 고침으로 뜻이 없어진 것 — 이유를 적고 뺀다
 DROPPED_DR = {
@@ -120,6 +126,21 @@ NEW = [
  F("DR54_record_status_check_off", "    if any(x_ is None or x_ not in LI2S2_STATUSES for x_ in sts_):", "    if False:"),
  F("DR55_preserved_seeds_off", "    out, cur_ = [], ({f\"seed{x_}\" for x_ in seeds} if seeds is not None else None)",
    "    out, cur_ = [], set()"),
+ # ── DR 전 리뷰 3 차 (P2 이력 줄의 닫힘 · P3 비과학적 장부 판정의 폴더 기록은 입력 불일치만 · P3 시드는 장부 행에서)
+ F("DR57_hist_first_closes_off", "           \"new_closes_system\": res.get(\"closes_system\") is True}   # ⭐ DR 전 3차 리뷰 P2 — 첫 시드 닫힘도",
+   "           \"new_closes_system\": False}   # ⭐ DR 전 3차 리뷰 P2 — 첫 시드 닫힘도", "drv"),
+ F("DR58_hist_line_closes_off", "           \"new_closes_system\": res.get(\"closes_system\") is True}   # ⭐ DR 전 3차 리뷰 P2\n",
+   "           \"new_closes_system\": False}   # ⭐ DR 전 3차 리뷰 P2\n"),
+ F("DR59_first_line_closes_unread", "                                                         \"closes_system\": h.get(\"new_closes_system\")}, True))",
+   "                                                         \"closes_system\": None}, True))"),
+ F("DR60_closes_type_check_off", "            if \"new_closes_system\" in h and type(h.get(\"new_closes_system\")) is not bool:", "            if False:"),
+ F("DR61_nonsci_chain_mismatch_off", "                    if jn_r[\"input_mismatch\"]:", "                    if False:"),
+ F("DR62_nonsci_chain_nature_off", "                    if not (isinstance(jn_r, dict) and isinstance(jn_r.get(\"input_mismatch\"), list)):",
+   "                    if False:"),
+ F("DR63_nonsci_chain_strict_again", "                if st_ in (\"invalid\", \"incomplete\") and v_ is None:   # 장부가 비면",
+   "                if st_ in (\"invalid\", \"incomplete\"):   # 장부가 비면"),
+ F("DR64_stop_seed_from_name", "            if len(row0_) == 1:                              # ⭐ DR 전 3차 리뷰 P3", "            if False:                              # ⭐ DR 전 3차 리뷰 P3",
+   "run", RUNR),
  F("DR56_persist_before_stop_off", "                if rk_ != \"scientific\" or rkd_.get(\"source\") not in (\"folder_verdict\", \"folder_melt_window\"):",
    "                if True:", "run", RUNR),
  F2("DR19_derived_write_direct", [
