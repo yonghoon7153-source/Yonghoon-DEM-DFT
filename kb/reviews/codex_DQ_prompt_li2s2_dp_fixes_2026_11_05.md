@@ -1,5 +1,5 @@
 ---
-title: "DQ 프롬프트 — li2s-2 DP 고침 + DQ 전 독립 리뷰 고침 (⏳BASE): 저장 경계의 신호 (바깥 구간 · 교체 뒤 실패) · 현재 폴더 미해결 기록 · 독립 요약 = 러너와 같은 규칙 (같은 실행 충돌 공통 함수 · STOP · 장부 지문 · 이력 꼴) · 판정 쓰기 구간 · 낡은 요약 — 첫 담금질 GO 여부"
+title: "DQ 프롬프트 — li2s-2 DP 고침 + DQ 전 독립 리뷰 고침 (a4a29216): 저장 경계의 신호 (바깥 구간 · 교체 뒤 실패) · 현재 폴더 미해결 기록 · 독립 요약 = 러너와 같은 규칙 (같은 실행 충돌 공통 함수 · STOP · 장부 지문 · 이력 꼴) · 판정 쓰기 구간 · 낡은 요약 — 첫 담금질 GO 여부"
 date: 2026-11-05
 updated: 2026-11-05
 tags: [review, li2s, glass, md, uma, density, quench, runner, codex, prompt, letter]
@@ -7,7 +7,7 @@ letter: DQ
 track: li2s
 channel: codex
 kind: prompt
-status: draft — 발송 대기 · 기준 커밋 ⏳BASE
+status: 발송 대기 · 기준 커밋 a4a29216
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -18,7 +18,7 @@ evidenceScope: multi-source-primary
 ---
 
 > 트랙 = li2s-2 (논문 1저자 = 외부 · 위임 10-30). DP (4a269bac · NO-GO · P0 1 · P1 2 · P2 2) 다음 편지다.
-> ⛔ li2s 절대 수송값은 싣지 않는다. 기준 커밋 `⏳BASE` (브랜치 `claude/friendly-meitner-lldvar` · 기록까지 들어간 커밋). ⬇ 아래 **보내는 글**만 발송한다.
+> ⛔ li2s 절대 수송값은 싣지 않는다. 기준 커밋 `a4a29216` (브랜치 `claude/friendly-meitner-lldvar` · 기록까지 들어간 커밋). ⬇ 아래 **보내는 글**만 발송한다.
 > 회신이 오면 `codex_DQ_reply_li2s2_dp_fixes_2026_11_05.md` 로 원문 보존.
 
 ---
@@ -51,13 +51,13 @@ DP 가 닫힘으로 본 항목 (DO P1-2 · DO P2-1 기존 결함 · DO P2-2 코�
 
 ## 1. 보는 범위
 
-- `git diff 4a269bac ⏳BASE -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
+- `git diff 4a269bac a4a29216 -- tools/ionic/melt_quench_uma.py tools/ionic/li2s2_stage1_runner.py db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json`
 - 카드 `개정_DP_회신_고침_v10_2026_11_05` (규칙 · 못 하는 것) — 결과 0 건 · 카드 값은 안 바뀜
 - 시험: `python3 tools/ionic/melt_quench_uma.py --selftest` (⭕ 240) · `python3 tools/ionic/li2s2_stage1_runner.py --selftest` (⭕ 135 · Linux)
   - Windows 에서는 러너의 POSIX 전용 6 개를 건너뛴다 (DP 때 5 개 + 교체 뒤 디렉터리 fsync 실패 1 — Windows 는 디렉터리 fsync 를 안 한다) → **129** 가 맞다. 드라이버는 그대로 240.
   - ⚠ 시험을 돌리는 동안 드라이버 파일을 고치면 도구 지문이 시험 도중 바뀌어 러너 시험이 엉뚱하게 빨강이 된다 (내가 한 번 겪었다 — 코드 결함 아님).
   - 새 '미룬 신호' 시험은 OS 신호를 쓰지 않는다 — 처리기가 쓰기 구간 안에서 불린 상태 (`_PENDING`) 를 교체 직후에 만든다 (Codex DP 주입 자리) → Windows 에서도 돈다.
-- 깨기 (변이) ⏳MUT — `db/raw/li2s2_dq_mutation_2026_11_05/` (README · 하네스 · 로그 · SHA256SUMS).
+- 깨기 (변이) **368 / 368 빨강** (최종 70f5b96a) — DP 판 287 개 · 고침으로 자리가 바뀐 11 개를 옮기고 · DQ 자리 81 개 (DQ29 · DQ40 · DQ66 은 뺌 — 머리글) · 새 자리 실행에서 초록 3 (DP55 · DQ49 → 시험 보강 · DQ66 → 같은 결과로 뺌) · 예외로 잡힘 20 · `db/raw/li2s2_dq_mutation_2026_11_05/` (README 의 리뷰 표 · 하네스 · 로그 · SHA256SUMS).
 
 ## 2. 한 것
 
