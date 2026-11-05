@@ -1,0 +1,87 @@
+{
+  "kind": "N1_SCOPE_REVIEW_SELECTED_IDENTITIES",
+  "count": 16,
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_1_3_V2_N1_FIX_SCOPE_20261104.md",
+      "bytes": 10939,
+      "sha256": "816eef90a86984dc2b9d6dde745579698ad59fe6e65f0f65f56028e3606a7ffa"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\source\\bms-balancing\\docs\\REIL_C4E_E1_1_3_APPROVAL_REQUEST_v2_20261104.md",
+      "bytes": 48063,
+      "sha256": "d52a3d5e276739b724642923bf2e6d194bf5d8daca1d3cd29a1e64cd7c4e36e1"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\source\\bms-balancing\\docs\\REIL_C4E1_E113_JUDGE_DRAFT_v2_20261104.py.txt",
+      "bytes": 18578,
+      "sha256": "ad986c19905723a233abac667cd846f41c1427a7197e522eb78bc1c4d0d738c0"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\source\\bms-balancing\\docs\\REIL_C4E1_E113_END_WRITER_DRAFT_v2_20261104.py.txt",
+      "bytes": 10368,
+      "sha256": "0827723f6de7a6208e643c5851c206c537a664ed7cedf40c004c945743447f5a"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\source\\bms-balancing\\docs\\REIL_C4E_E1_1_3_PRE_FIX_SCOPE_v2_20261104.md",
+      "bytes": 24902,
+      "sha256": "4986ce430d2f166262a0299ddaa65f5ddf2ae37718bc5f8018addffc1f9325e5"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\source\\bms-balancing\\docs\\REIL_C4E_E1_1_3_PREREVIEW_SEND_v2_20261104.md",
+      "bytes": 6067,
+      "sha256": "911c1c63e66f4bdd6e442ff33170a7ae77c113566a7d3cbeff8e5d8066bdd68e"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\source\\bms-balancing\\docs\\REIL_PREREQUISITES_STATUS_20261004.md",
+      "bytes": 433451,
+      "sha256": "dc8fddc9293ec3e52a19ca334db798ae65fba205c1b4a54b24febc167a78a6e2"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\source\\bms-balancing\\docs\\REIL_C4E1_E113_OUTER_DRAFT_v2_20261104.py.txt",
+      "bytes": 36733,
+      "sha256": "e107d566bc0dc9af37e2a53839720678be8ab6f15624ec54c605755b0001251e"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\REVIEW_DECISION.json",
+      "bytes": 5309,
+      "sha256": "09dc4a3aaf008564ac5b77e8e64b7c32b202bb68beafc7c85b49a67861c84237"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\CODEX_REPLY_KO.txt",
+      "bytes": 2216,
+      "sha256": "d74c229917ebbfd1ae6bc046c85915fa189396273e394cbf607ee4f7d3ba00c1"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\REVIEW_KO.txt",
+      "bytes": 10946,
+      "sha256": "94d46d24790e4964302b439af7c9a4b0ea34fba558a9b6c400f2f618cdf10f61"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\SOURCE_IDENTITIES.json",
+      "bytes": 4745,
+      "sha256": "035d10b003e474e190ff4d6d9e5be9e6158683b372cb0c717b4f64ff8826f40d"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\HEAD_CONFIRMATION.json",
+      "bytes": 531,
+      "sha256": "8f44e8620958f08612515e5fd646e766762cdac973915d14e65cfc631b77c463"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\delivery\\DELIVERY_RECEIPT.json",
+      "bytes": 1457,
+      "sha256": "8cac99e0f0fef7fdf52cd6deca39bb058ed8ec438e7167f21d0a11ce8bae690f"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\delivery\\PACKAGE_TOOL_RETURN.json",
+      "bytes": 2037,
+      "sha256": "fa6182dbe36959e908260cf815f5e2ff4f895a9e0fb2029f3548b09d2977ea1f"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\delivery\\REIL_C4E_E1_1_3_PREREVIEW_V2_REVIEW_20261104.zip",
+      "bytes": 814594,
+      "sha256": "2833edb01204cb9372ca1e4880c9c8286a16894776b9e7d118c81718987f8275"
+    }
+  ],
+  "scope": "One current attachment plus local copies of the previous pinned review and its final archive. No new remote HEAD or section111 retrieval."
+}
