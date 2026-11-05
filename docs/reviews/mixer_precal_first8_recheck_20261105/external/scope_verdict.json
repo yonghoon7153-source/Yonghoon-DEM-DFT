@@ -1,0 +1,30 @@
+{
+  "pin": "189930cc68b6e58beb6b4546d80353dc03852195",
+  "branch": "codex/mixer-1104",
+  "preparation_static_scope": "ACCEPTED",
+  "observation_contract": "HOLD",
+  "new_findings": [
+    {"id": "PRE8-01", "severity": "P2", "status": "OPEN", "subject": "Optional n_expected absence not retained across qualification"},
+    {"id": "PRE8-02", "severity": "P2", "status": "OPEN", "subject": "Loaded dependency code can differ from recorded disk source SHA"}
+  ],
+  "new_P1": 0,
+  "new_P2": 2,
+  "new_P3": 0,
+  "full_gate": "HOLD_NOT_RERUN",
+  "physical_execution_authorized": false,
+  "registration_authorized": false,
+  "deployment_authorized": false,
+  "integration_authorized": false,
+  "ledger_closure_performed": false,
+  "no_real_host_or_research_data_access": true,
+  "independent_environment": "Windows Python 3.12.14, NumPy 2.5.3, SciPy 1.16.3",
+  "submitted_test_methods": {"prepare": 14, "observe": 20},
+  "independent_probe_scopes_not_summed": {"prepare_checks": 208, "semantics_groups": 5, "log_positive_cases": 2, "log_negative_mutations": 24},
+  "synthetic_limitations": [
+    "Observation disk fixtures mock preparation binding for small particle counts",
+    "Submitted rotating wiring test also mocks cell_stats",
+    "Independent semantics probes use real contact and cell_stats, at most 80 particles",
+    "E0 provenance counterexamples retain raw mixing statistics, not a finite normalized M",
+    "No unmocked 100000-particle positive end-to-end path or real LIGGGHTS log compatibility qualification"
+  ]
+}

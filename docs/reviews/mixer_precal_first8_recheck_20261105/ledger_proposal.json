@@ -1,0 +1,30 @@
+{
+  "append_notes": [],
+  "new_findings": [],
+  "verified_transition_proposed": false,
+  "reason": "Integration owner maps the external findings below to the shared ledger. This file does not append or close shared ledger records.",
+  "external_findings_for_integration": [
+    {
+      "id": "PRE8-01",
+      "severity": "P2",
+      "title": "Optional n_expected absence not bound during observation",
+      "reviewed_pin": "189930cc68b6e58beb6b4546d80353dc03852195",
+      "state": "OPEN; fix candidate awaits independent recheck"
+    },
+    {
+      "id": "PRE8-02",
+      "severity": "P2",
+      "title": "Loaded code can differ from recorded disk-source hash",
+      "reviewed_pin": "189930cc68b6e58beb6b4546d80353dc03852195",
+      "state": "OPEN; fix candidate awaits independent recheck"
+    }
+  ],
+  "shared_record_notes": [
+    "First8 static preparation accepted within external scope; observation binding remains HOLD pending independent recheck of PRE8-01/02.",
+    "Author relayed Claude checkpoint correction: write_restart does not guarantee bit-identical original end-step dump; define same-method recomputation comparison first. force_normal projects total pair force. No P1 work performed here.",
+    "Fresh-only first8, D0.7-end plus author approval before ibb followup, no current queue plan; old18/SOP/shared files unchanged."
+  ],
+  "research_results": 0,
+  "research_execution": false,
+  "whole_gate": "HOLD"
+}

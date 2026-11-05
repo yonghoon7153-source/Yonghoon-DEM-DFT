@@ -1,0 +1,7 @@
+test_import_then_dependency_disk_change (__main__.SourceBoundary.test_import_then_dependency_disk_change) ... ok
+test_import_then_observer_disk_change (__main__.SourceBoundary.test_import_then_observer_disk_change) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 12.121s
+
+OK

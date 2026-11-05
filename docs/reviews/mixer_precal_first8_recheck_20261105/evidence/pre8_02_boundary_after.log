@@ -1,0 +1,11 @@
+test_fresh_registry_ignores_stale_canonical_modules (__main__.SourceBoundary.test_fresh_registry_ignores_stale_canonical_modules) ... ok
+test_generator_source_open_is_captured (__main__.SourceBoundary.test_generator_source_open_is_captured) ... ok
+test_import_then_dependency_disk_change (__main__.SourceBoundary.test_import_then_dependency_disk_change) ... ok
+test_import_then_observer_disk_change (__main__.SourceBoundary.test_import_then_observer_disk_change) ... ok
+test_observer_executing_code_must_match_captured_bytes (__main__.SourceBoundary.test_observer_executing_code_must_match_captured_bytes) ... ok
+test_missing_dependency_source_is_tech (__main__.DiskContract.test_missing_dependency_source_is_tech) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 7.636s
+
+OK

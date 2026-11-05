@@ -1,0 +1,29 @@
+test_import_then_dependency_disk_change (__main__.SourceBoundary.test_import_then_dependency_disk_change) ... FAIL
+test_import_then_observer_disk_change (__main__.SourceBoundary.test_import_then_observer_disk_change) ... FAIL
+
+======================================================================
+FAIL: test_import_then_dependency_disk_change (__main__.SourceBoundary.test_import_then_dependency_disk_change)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/scripts/test_mixer_precal_observe.py", line 87, in test_import_then_dependency_disk_change
+    self.assertEqual(got['status'],'TECH',got)
+AssertionError: 'OK' != 'TECH'
+- OK
++ TECH
+ : {'status': 'OK', 'reasons': []}
+
+======================================================================
+FAIL: test_import_then_observer_disk_change (__main__.SourceBoundary.test_import_then_observer_disk_change)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/scripts/test_mixer_precal_observe.py", line 91, in test_import_then_observer_disk_change
+    self.assertEqual(got['status'],'TECH',got)
+AssertionError: 'OK' != 'TECH'
+- OK
++ TECH
+ : {'status': 'OK', 'reasons': []}
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.768s
+
+FAILED (failures=2)

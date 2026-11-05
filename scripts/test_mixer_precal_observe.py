@@ -2,6 +2,8 @@
 import copy
 import importlib.util
 import json
+import subprocess
+import shutil
 from pathlib import Path
 import sys
 import tempfile
@@ -51,6 +53,90 @@ def completion_log(runs, n=3):
                       '%d %d 0 0 1'%(total,n),
                       'Loop time of 1 on 20 procs for %d steps with %d atoms'%(r,n)])
     return '\n'.join(lines)+'\n'
+
+
+class SourceBoundary(unittest.TestCase):
+    def child(self, action, before_import=""):
+
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            names=('mixer_precal_observe','mixer_precal_prepare','mixer_contact_reader',
+                   'measure_mixing_index','measure_bed_aspect','make_mixer_deck',
+                   'mixer_deck_readback','mixer_deck_diff','make_mixer_resume',
+                   'test_mixer_precal_observe')
+            for name in names:shutil.copyfile(HERE/(name+'.py'),root/(name+'.py'))
+            code="""import sys,json,importlib.util
+from pathlib import Path
+sys.path.insert(0,sys.argv[1])
+"""+before_import+"""
+import test_mixer_precal_observe as T
+O=T.O
+fixture=T.DiskContract();fixture.setUp()
+run,B=fixture.make_run('e0')
+"""+action+"""
+result=fixture.invoke(run,B)
+print(json.dumps({'status':result['status'],'reasons':result['reasons']}))
+fixture.doCleanups()
+"""
+            proc=subprocess.run([sys.executable,'-I','-B','-c',code,str(root)],
+                                text=True,capture_output=True,timeout=20)
+            self.assertEqual(proc.returncode,0,proc.stderr)
+            self.assertFalse(list(root.rglob('*.pyc')))
+            return json.loads(proc.stdout)
+
+    def test_import_then_dependency_disk_change(self):
+        got=self.child("p=Path(sys.argv[1])/'mixer_contact_reader.py'\np.write_bytes(p.read_bytes()+b'\\nSENTINEL_PRE8=1\\n')\n")
+        self.assertEqual(got['status'],'TECH',got)
+
+    def test_import_then_observer_disk_change(self):
+        got=self.child("p=Path(sys.argv[1])/'mixer_precal_observe.py'\np.write_bytes(p.read_bytes()+b'\\n# changed self\\n')\n")
+        self.assertEqual(got['status'],'TECH',got)
+
+    def test_fresh_registry_ignores_stale_canonical_modules(self):
+        before="""import types
+names=('mixer_precal_prepare','mixer_contact_reader','measure_mixing_index',
+       'measure_bed_aspect','make_mixer_deck','mixer_deck_readback','mixer_deck_diff','make_mixer_resume')
+stale={n:types.ModuleType(n) for n in names}
+sys.modules.update(stale)
+"""
+        action="""assert all(sys.modules[n] is stale[n] for n in names)
+assert all(O._REGISTRY[n] is not stale[n] for n in names)
+assert O.preparation.gen is O._REGISTRY['make_mixer_deck']
+assert O.preparation.diff.logical_commands is O._REGISTRY['make_mixer_resume'].logical_commands
+assert O.contact.frame_quantities.__globals__ is O.contact.__dict__
+"""
+        self.assertEqual(self.child(action,before)['status'],'OK')
+
+    def test_observer_executing_code_must_match_captured_bytes(self):
+        before="""from unittest import mock
+original_read=Path.read_bytes
+def changed_read(path):
+    raw=original_read(path)
+    return raw+b'\\nSOURCE_BOUNDARY_SENTINEL=1\\n' if path.name=='mixer_precal_observe.py' else raw
+patcher=mock.patch.object(Path,'read_bytes',changed_read);patcher.start()
+"""
+        self.assertEqual(self.child('patcher.stop()\n',before)['status'],'TECH')
+
+    def test_fresh_process_executes_the_new_captured_dependency(self):
+        before="""p=Path(sys.argv[1])/'mixer_contact_reader.py'
+with p.open('a') as stream:
+    stream.write('\\n_original_frame=frame_quantities\\ndef frame_quantities(*args):\\n    out=_original_frame(*args)\\n    out["fresh_source_sentinel"]=991\\n    return out\\n')
+"""
+        action="""assert O.contact.frame_quantities(T.data(),T.binding()['frame_pm'])['fresh_source_sentinel']==991
+assert O._BOUND_RAW['mixer_contact_reader']==(Path(sys.argv[1])/'mixer_contact_reader.py').read_bytes()
+"""
+        self.assertEqual(self.child(action,before)['status'],'OK')
+
+    def test_generator_source_open_is_captured(self):
+        action="""p=Path(sys.argv[1])/'make_mixer_deck.py'
+raw=p.read_bytes();p.write_bytes(raw+b'\\n# temporary ABA\\n')
+try:
+    with O.preparation.gen.__dict__['__builtins__']['open'](str(p),'rb') as stream:
+        assert stream.read()==raw
+finally:p.write_bytes(raw)
+"""
+        self.assertEqual(self.child(action)['status'],'OK')
+
 
 
 class Qualification(unittest.TestCase):
@@ -171,7 +257,7 @@ class DiskContract(unittest.TestCase):
 
     def test_missing_dependency_source_is_tech(self):
         run,B=self.make_run('e0')
-        with mock.patch.object(O.mixing,'__file__',str(self.root/'missing.py')):
+        with mock.patch.dict(O._BOUND_PATHS, {'measure_mixing_index':str(self.root/'missing.py')}):
             got=self.invoke(run,B)
         self.assertEqual(got['status'],'TECH')
         self.assertIsNone(got['contact'])
@@ -295,6 +381,43 @@ class DiskContract(unittest.TestCase):
                     raw.replace(b'id type',b'id id'),
                     raw+b'1 2 3\n',raw.replace(b'-1 1',b'1 -1')):
             with self.assertRaises(O.Tech):O._parse_dump(bad,200)
+
+    def test_optional_n_expected_creation_is_tech(self):
+        for where in ('run','reference'):
+            for when in ('after_load','metrics'):
+                for kind in ('regular','dangling_symlink'):
+                    with self.subTest(where=where,when=when,kind=kind):
+                        tag=where+when+kind
+                        run,B=self.make_run(tag+'u','U');ref,_=self.make_run(tag+'e0')
+                        target=run if where=='run' else ref
+                        def create():
+                            path=target/'n_expected'
+                            if kind=='regular':path.write_text('3')
+                            else:path.symlink_to(target/'does_not_exist')
+                        original=O._load
+                        def load(*args,**kw):
+                            result=original(*args,**kw)
+                            if Path(args[1])==target:create()
+                            return result
+                        def metric(*args):
+                            if when=='metrics':create()
+                            return {},{}
+                        with mock.patch.object(O,'_metrics',side_effect=metric):
+                            if when=='after_load':
+                                with mock.patch.object(O,'_load',side_effect=load):got=self.invoke(run,B,ref)
+                            else:got=self.invoke(run,B,ref)
+                        self.assertEqual(got['status'],'TECH',got)
+                        self.assertIsNone(got['contact']);self.assertIsNone(got['mixing'])
+
+    def test_optional_n_expected_initial_presence_contract(self):
+        for kind in ('absent','valid','wrong','dangling_symlink'):
+            run,B=self.make_run('optional_'+kind)
+            path=run/'n_expected'
+            if kind=='valid':path.write_text('3')
+            elif kind=='wrong':path.write_text('4')
+            elif kind=='dangling_symlink':path.symlink_to(run/'missing')
+            got=self.invoke(run,B)
+            self.assertEqual(got['status'],'OK' if kind in ('absent','valid') else 'TECH')
 
     def test_no_se_is_undefined_not_zero(self):
         run,B=self.make_run('e0',n=2)

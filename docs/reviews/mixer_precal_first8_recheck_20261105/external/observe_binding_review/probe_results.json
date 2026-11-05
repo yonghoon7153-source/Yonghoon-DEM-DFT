@@ -1,0 +1,147 @@
+{
+  "pin": "189930cc68b6e58beb6b4546d80353dc03852195",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "mock_scope": "validate_case only; no contact/cell_stats/hash/parser mocks",
+  "received_source_sha256": {
+    "mixer_precal_observe.py": "56dd81f00073a3f065831573275b4af94369cfb4108e7ee576993420484099af",
+    "test_mixer_precal_observe.py": "ffec066c43af8f7762aba9878e790371e0da2ce30dbf824aee9853c112caa354",
+    "mixer_precal_prepare.py": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6",
+    "mixer_contact_reader.py": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de",
+    "measure_mixing_index.py": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a",
+    "measure_bed_aspect.py": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880",
+    "make_mixer_deck.py": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "mixer_deck_readback.py": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f",
+    "mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "make_mixer_resume.py": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e"
+  },
+  "probes": {
+    "control": {
+      "status": "OK",
+      "reasons": [],
+      "has_contact": true,
+      "has_mixing": true,
+      "counts": {
+        "planned_total": 3,
+        "observed_total": 3,
+        "initial_missing": 0,
+        "planned_by_type": {
+          "1": 1,
+          "2": 1,
+          "3": 1
+        },
+        "observed_by_type": {
+          "1": 1,
+          "2": 1,
+          "3": 1
+        },
+        "rule": "D13 initial missing <=10; IDs 1..N; subsequent ID/type/radius unchanged"
+      }
+    },
+    "optional_n_expected_created_after_load": {
+      "status": "OK",
+      "reasons": [],
+      "has_contact": true,
+      "has_mixing": true,
+      "counts": {
+        "planned_total": 3,
+        "observed_total": 3,
+        "initial_missing": 0,
+        "planned_by_type": {
+          "1": 1,
+          "2": 1,
+          "3": 1
+        },
+        "observed_by_type": {
+          "1": 1,
+          "2": 1,
+          "3": 1
+        },
+        "rule": "D13 initial missing <=10; IDs 1..N; subsequent ID/type/radius unchanged"
+      },
+      "final_n_expected": "999",
+      "n_expected_in_hashes": false
+    },
+    "same_files_next_invocation": {
+      "status": "TECH",
+      "reasons": [
+        "n_expected differs from planned count"
+      ],
+      "has_contact": false,
+      "has_mixing": false,
+      "counts": null
+    },
+    "post_listing_added_after_load": {
+      "status": "TECH",
+      "reasons": [
+        "frame set changed: C:\\Users\\Administrator\\Documents\\Codex\\outputs\\mixer_precal_first8_review_20261104\\observe_binding_review\\q34_46u78tdc\\runs\\listing_changed\\post"
+      ],
+      "has_contact": false,
+      "has_mixing": false,
+      "counts": null
+    },
+    "dependency_changed_after_load": {
+      "status": "TECH",
+      "reasons": [
+        "input changed after qualification: C:\\Users\\Administrator\\Documents\\Codex\\outputs\\mixer_precal_first8_review_20261104\\observe_binding_review\\q34_46u78tdc\\scripts\\measure_mixing_index.py"
+      ],
+      "has_contact": false,
+      "has_mixing": false,
+      "counts": null
+    },
+    "dependency_changed_after_import_before_entry": {
+      "status": "OK",
+      "reasons": [],
+      "has_contact": true,
+      "has_mixing": true,
+      "counts": {
+        "planned_total": 3,
+        "observed_total": 3,
+        "initial_missing": 0,
+        "planned_by_type": {
+          "1": 1,
+          "2": 1,
+          "3": 1
+        },
+        "observed_by_type": {
+          "1": 1,
+          "2": 1,
+          "3": 1
+        },
+        "rule": "D13 initial missing <=10; IDs 1..N; subsequent ID/type/radius unchanged"
+      },
+      "original_sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a",
+      "current_file_sha256": "9f3bb091c49b3dafec3243ae5c27030ad27c95f7e6360c717d659f35876c6448",
+      "recorded_sha256": "9f3bb091c49b3dafec3243ae5c27030ad27c95f7e6360c717d659f35876c6448",
+      "recorded_source_contains_raising_sentinel": true
+    },
+    "fresh_process_same_recorded_source": {
+      "status": "TECH",
+      "reasons": [
+        "Q34_STALE_MODULE_SENTINEL"
+      ],
+      "has_contact": false,
+      "has_mixing": false
+    },
+    "D13_reordered_same_inventory_at_missing10": {
+      "planned_total": 13,
+      "observed_total": 3,
+      "initial_missing": 10,
+      "planned_by_type": {
+        "1": 1,
+        "2": 1,
+        "3": 11
+      },
+      "observed_by_type": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "rule": "D13 initial missing <=10; IDs 1..N; subsequent ID/type/radius unchanged"
+    },
+    "D13_same_totals_changed_ID_type": {
+      "status": "TECH",
+      "reason": "later ID/type/radius changed"
+    }
+  },
+  "received_unchanged": true
+}

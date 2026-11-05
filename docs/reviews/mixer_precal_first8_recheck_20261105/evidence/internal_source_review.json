@@ -1,0 +1,83 @@
+{
+  "scope": "PRE8-02 loading/source binding only; three independent scratch probe groups; unit fixture mocks preparation binding only; no research data, no full suite",
+  "python": "3.11.17",
+  "source_sha256": {
+    "mixer_precal_observe.py": "df22dcf03fcd628901ffb6ac7362579faee6e94285404a3163bed44d3666f013",
+    "mixer_precal_prepare.py": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6",
+    "mixer_contact_reader.py": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de",
+    "measure_mixing_index.py": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a",
+    "measure_bed_aspect.py": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880",
+    "make_mixer_deck.py": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "mixer_deck_readback.py": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f",
+    "mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "make_mixer_resume.py": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e",
+    "test_mixer_precal_observe.py": "df1a230b0c6a3ea836a522933918d023b596a3f681de73edc6857c8a1bcd3570"
+  },
+  "probes": {
+    "post_import_sentinel_and_fresh_process": {
+      "loaded": {
+        "rc": 0,
+        "stdout": "{\"status\": \"TECH\", \"reasons\": [\"bound source changed: measure_mixing_index\"], \"no_values\": true, \"old_sha\": \"4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a\", \"new_sha\": \"730a7d8763e6f0c30ef7f80c68acc069a7329f50272d3448e5acb9dfa89ce626\", \"recorded_sha\": \"4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a\"}\n",
+        "stderr": "",
+        "data": {
+          "status": "TECH",
+          "reasons": [
+            "bound source changed: measure_mixing_index"
+          ],
+          "no_values": true,
+          "old_sha": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a",
+          "new_sha": "730a7d8763e6f0c30ef7f80c68acc069a7329f50272d3448e5acb9dfa89ce626",
+          "recorded_sha": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a"
+        }
+      },
+      "fresh": {
+        "rc": 0,
+        "stdout": "{\"status\": \"TECH\", \"reasons\": [\"INDEPENDENT_PRE8_STALE_SENTINEL\"], \"no_values\": true, \"recorded_sha\": \"730a7d8763e6f0c30ef7f80c68acc069a7329f50272d3448e5acb9dfa89ce626\"}\n",
+        "stderr": "",
+        "data": {
+          "status": "TECH",
+          "reasons": [
+            "INDEPENDENT_PRE8_STALE_SENTINEL"
+          ],
+          "no_values": true,
+          "recorded_sha": "730a7d8763e6f0c30ef7f80c68acc069a7329f50272d3448e5acb9dfa89ce626"
+        }
+      }
+    },
+    "stale_timestamp_pyc_and_canonical_module": {
+      "rc": 0,
+      "stdout": "{\"status\": \"OK\", \"reasons\": [], \"canonical_marker\": \"OLD\", \"private_marker\": \"NEW\", \"metric_marker\": \"NEW\", \"canonical_unchanged\": true, \"different_module_objects\": true, \"recorded_current_source\": true}\n",
+      "stderr": "",
+      "data": {
+        "status": "OK",
+        "reasons": [],
+        "canonical_marker": "OLD",
+        "private_marker": "NEW",
+        "metric_marker": "NEW",
+        "canonical_unchanged": true,
+        "different_module_objects": true,
+        "recorded_current_source": true
+      }
+    },
+    "bootstrap_compile_failure": {
+      "rc": 0,
+      "stdout": "{\"status\": \"TECH\", \"reasons\": [\"source bootstrap failed: '(' was never closed (measure_mixing_index.py, line 1274)\"], \"no_values\": true, \"bootstrap_error_present\": true}\n",
+      "stderr": "",
+      "data": {
+        "status": "TECH",
+        "reasons": [
+          "source bootstrap failed: '(' was never closed (measure_mixing_index.py, line 1274)"
+        ],
+        "no_values": true,
+        "bootstrap_error_present": true
+      }
+    }
+  },
+  "passed": true,
+  "read_only_review": [
+    "private dependency imports, including from-import/lazy paths, use captured raw-byte registry",
+    "observer self-code comparison states compile equivalence, not unique historical source text",
+    "generator builtins open for its own source returns captured bytes, not disk; reviewed, not independently executed here",
+    "entry and return checks compare current source to captured bytes; provenance uses fixed digest table, not canonical sys.modules"
+  ]
+}
