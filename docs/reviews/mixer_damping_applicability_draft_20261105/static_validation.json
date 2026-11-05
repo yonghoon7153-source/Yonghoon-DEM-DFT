@@ -1,0 +1,12 @@
+{
+  "scope": "draft JSON and source-byte consistency only, not observation code or research run",
+  "mixer_fixed_deck_annotations": 8,
+  "mixer_viscous_or_pressure_stop_found": 0,
+  "lhs_measured_rows": 0,
+  "all_current_observation_values_null": true,
+  "same_context_bytes": true,
+  "sealed_inventory_command_sha256": "2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634",
+  "tracked_existing_files_changed": false,
+  "physical_results": 0,
+  "full_gate_rerun": false
+}
