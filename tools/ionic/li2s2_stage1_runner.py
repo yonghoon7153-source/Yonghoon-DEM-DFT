@@ -2067,6 +2067,7 @@ def _selftest():
     b13 = [x for x in led_cd["runs"] if (x["system"], x["seed"]) == ("B", 13)][0]
     b13.pop("verdict", None)
     (c_d / "B/seed13/stage1_verdict.json").unlink()
+    (c_d / "B/seed13" / real.VERDICT_HISTORY).unlink()       # ⭐ 5차 P2 뒤 — 첫 판정도 이력에 남으니 '판정한 적 없음' 은 이력까지 없는 상태다
     (c_d / "B/seed13").rename(c_d / "B/seed13.unjudged")
     led_cd["stop_history"] = list(led_cd.get("stop_history") or []) + [{"code": "interrupted", "run_id": b13["run_id"], "stop_id": "selftest",
                                                                       "acked_at": "t", "declaration": DECL(OUT)}]
@@ -2078,7 +2079,7 @@ def _selftest():
     led_cm = J(c_m / "stage1_ledger.json")
     b13m = [x for x in led_cm["runs"] if (x["system"], x["seed"]) == ("B", 13)][0]
     b13m.pop("verdict", None); b13m.update(status="interrupted", rc="killed_runner_exit")
-    for f_ in ("stage1_verdict.json", "final.xyz", "result.json"):
+    for f_ in ("stage1_verdict.json", "final.xyz", "result.json", real.VERDICT_HISTORY):   # ⭐ 5차 P2 뒤 — 판정한 적 없는 상태 = 이력도 없음
         (c_m / "B/seed13" / f_).unlink()
     (c_m / "B/seed13").rename(c_m / "B/seed13.fire_cut")
     led_cm["stop_history"] = list(led_cm.get("stop_history") or []) + [{"code": "interrupted", "run_id": b13m["run_id"], "stop_id": "selftest_m",
