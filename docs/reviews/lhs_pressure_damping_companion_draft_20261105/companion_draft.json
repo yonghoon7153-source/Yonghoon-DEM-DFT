@@ -1,0 +1,65 @@
+{
+  "schema": "lhs_pressure_damping_companion_draft/v0",
+  "status": "DRAFT_NOT_REGISTERED",
+  "measured_rows": 0,
+  "rows": [],
+  "execution_authorized": false,
+  "value_access_authorized": false,
+  "active_registration_changed": false,
+  "new_reader_provided": false,
+  "inventory_contract": {
+    "path": "docs/reviews/lhs_pressure_inventory_20261104/pressure_inventory.sh",
+    "schema": "lhs_pressure_inventory/v1",
+    "sha256": "2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634",
+    "modified": false
+  },
+  "source_context": {
+    "path": "source_context.json",
+    "sha256": "a44013d6b1e8aa19ad1647c1f764cb5ee3efb0e3022704cb6af48f19d90201c0",
+    "cross_track_numbers_are_lhs_observations": false
+  },
+  "template": {
+    "status": "NOT_COLLECTED",
+    "case_id": null,
+    "run_path": null,
+    "same_execution_binding": null,
+    "source_file_hashes": null,
+    "stop_rule": null,
+    "stop_step": null,
+    "observation_step": null,
+    "instant_or_window": null,
+    "window_definition": null,
+    "damping_fix_style": null,
+    "damping_group_definition": null,
+    "atom_id_membership": null,
+    "c_v": null,
+    "c_v_units": null,
+    "velocity_units": null,
+    "velocity_reference_frame": null,
+    "sum_v_z": null,
+    "damping_force_z": null,
+    "force_units": null,
+    "plate_force_definition": null,
+    "plate_force_measured": null,
+    "plate_force_step": null,
+    "nominal_load_if_separately_documented": null,
+    "sign_convention": null,
+    "damping_resistance_share": null,
+    "undefined_reason": null
+  },
+  "candidate_definition": {
+    "applicability": "Only a verified common linear uniform per-atom force F=-c_v*v on the declared group",
+    "signed_numerator": "-c_v * sum(v_z) over the same-step declared damping group",
+    "denominator": "Measured plate force with defined component, sign and sampling convention; not a substituted nominal fixed 750 N",
+    "coefficient_is_surface_gamma": false,
+    "clamping_allowed": false,
+    "decision_threshold": null,
+    "missing_zero_nonfinite_policy": "Keep value null; missing data NOT_COLLECTED, established invalid denominator/result UNDEFINED; never replace by zero"
+  },
+  "future_access_order": [
+    "existing inventory procedure and author-authorized result",
+    "ratify A/C selection and value-access rules",
+    "separately authorize source collection and observation"
+  ],
+  "current_scope": "Document/template preparation only; no LHS values, dumps, host commands or physical calculation"
+}
