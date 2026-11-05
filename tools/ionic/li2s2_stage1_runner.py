@@ -103,7 +103,7 @@ from __future__ import annotations
 import argparse
 import copy, datetime, hashlib, importlib.util, json, os, pathlib, re, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "1bc927e52d2aa1ac"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "df201638b71ca697"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 EXPECTED_VALUES_SHA16 = "086de59c484f9c32"     # 카드 기계_판독_값 (mq.values_sha16) — ⭐ DO 전 리뷰 P2-12: 카드 값 (상한 포함) 을 바꾸면 이 줄도
                                                #   같이 바꾸고 다시 리뷰한다 (카드 파일만 고쳐서는 상한 멈춤을 넘기지 못한다)
 STOP_KEYS = ("at", "code", "reason", "terminal", "stop_id", "run_id", "sys", "seed", "cleanup", "rc", "verdict", "melt", "summary",
@@ -1078,7 +1078,8 @@ def run(a, deps=None):
                                                    for s_, d_, nm_, why_ in mq.preserved_unresolved(R)]
         if ur_all:
             s_, d_, lab_, rd_, why_ = ur_all[0]
-            return stop("invalid", f"{lab_} {why_} · 같은 상태 {[x_[2] for x_ in ur_all]} — 새 실행 0 (순서를 바꿔도 · 폴더를 옆으로 옮겨도 같다)",
+            return stop("invalid", f"{lab_} 미해결 판정 기록 — {why_} · 같은 상태 {[x_[2] for x_ in ur_all]} — 새 실행 0 (순서를 바꿔도 · 폴더를 옆으로 "
+                                   "옮겨도 같다 · 사람이 본다)",
                         sys=s_, seed=d_, run_id=_folder_run_id(rd_))
         # ①-4 판정 파일을 믿지 않는다 — 원자료로 다시 판정 → 묶음 판정 (회신 DG P1-4)
         rejudged = []
@@ -2198,7 +2199,8 @@ def _selftest():
         before, st0 = snap(), real.folder_stage(fc_)
         rc_x, L_x, _ = go(wt, rr=c_x)
         sp_ = J(c_x / "STOP.json") if (c_x / "STOP.json").is_file() else {}
-        held_ = any(w_ in (sp_.get("reason") or "") for w_ in ("완료 단계를 못 읽는다", "과학적 판정", "판정을 못 읽는다"))
+        held_ = any(w_ in (sp_.get("reason") or "") for w_ in ("완료 단계를 못 읽는다", "과학적 판정", "판정을 못 읽는다",
+                                                                "미해결 판정 기록"))   # ⭐ DR 전 리뷰 P2-B — 보존 폴더의 못 읽는 기록은 시작 점검이 먼저 막는다
         (dm_ctrl if ctrl else dm_cases)[nm_] = (rc_x if not held_ else "held", len(L_x), held_, st0, snap() == before)
     chk(all(v_ == ("held", 0, True, "unreadable", True) for v_ in dm_cases.values())
         and dm_ctrl["ctrl_noplan_judged"][:2] == (0, 1) and dm_ctrl["ctrl_noplan_judged"][3] == "no_plan"
