@@ -100,5 +100,10 @@
   "무엇": "사후 민감도 (규칙 변경 아님) — 축 ① · ③ 의 '+U · Cu 음이온 산물 = 미판정' 을 같은 봉인 문턱의 MP 갭 등급으로 바꿔 R3 를 다시 냄",
   "결과": "선택 봉인 [V2O5] → 민감도 [Sb2O5, SiO2] · 표시 66 → 68 · db/properties/cascade_axes_plusU_gap_sensitivity_2026_11_05.json (sha16 c5bce8851f854e7b)",
   "⛔": "이 규칙 (R0–R6) 은 바뀌지 않았다 · 민감도 선택을 봉인 선택처럼 쓰지 않는다 · 자세한 것은 cascade_screening_axes_plan_2026_10_15.json '+U_민감도_2026_11_05'"
+ },
+ "묶음_마감_2026_11_05": {
+  "무엇": "이 규칙으로 낸 축 ① · ② · ③ 첫 묶음을 닫았다 (규칙 R0–R6 는 그대로 · 새 축이 오면 새 묶음으로 R3 를 다시 낸다)",
+  "결정": "D-2026-11-05-cascade-axes-bundle-closed (active · 사용자 2026-11-05 (이 세션): 'cascade 권고대로')",
+  "마감_기록": "db/properties/cascade_axes_bundle_closed_2026_11_05.json"
  }
 }

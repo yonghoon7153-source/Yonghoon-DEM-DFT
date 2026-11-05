@@ -13,7 +13,7 @@
   "by": "agent · 2026-11-03"
  },
  "리뷰": "Codex DF — NO-GO → 반영 (위) → 확인 리뷰 DG (고친 곳만) 뒤 활성 · 발사",
- "⏭": "Codex DQ 발송 (kb/reviews/codex_DQ_prompt_li2s2_dp_fixes_2026_11_05.md) → GO 면 결정 활성 · kgy 1 단계 발사 (--start_max_mib 6000 · esp 계정 GPU 앱은 그대로 둔다)",
+ "⏭": "Codex DQ 회신 대기 (발송 2026-11-05 · 기준 커밋 a4a29216) → 회신 원문 저장 → GO 면 결정 D-2026-11-03-li2s2-dense-window 활성 · kgy 1 단계 발사 (--start_max_mib 6000 · esp 계정 GPU 앱은 그대로 둔다) · NO-GO 면 같은 꼴 전체 고침",
  "회신_DF_2026_11_03": {
   "판정": "NO-GO (ff795d669 그대로 실행 보류) · 고정 밀도 NVT 방향 조건부 찬성 · P0 1 · P1 5 · P2 4",
   "원문": "kb/reviews/codex_DF_reply_li2s2_dense_window_card_2026_11_03.md",
@@ -227,5 +227,9 @@
    "도구_커밋": "091353ed (DP 고침) · e1455a2d · 698e1a8d (시험) · a06ca37a · 4b71cc21 · ebf6b2ee · 5e08f724 · 70f5b96a (DQ 전 독립 리뷰 1–5 차 고침)",
    "by": "agent (위임 10-30) · 2026-11-05"
   }
+ },
+ "DQ_발송_2026_11_05": {
+  "발송": "사용자 2026-11-05 ('보냈고') · 편지 kb/reviews/codex_DQ_prompt_li2s2_dp_fixes_2026_11_05.md · 기준 커밋 a4a29216 (코드 70f5b96a · 드라이버 sha16 1bc927e52d2aa1ac)",
+  "정정": "결정 D-2026-11-03-li2s2-dense-window status_history 11-05 줄의 'selftest 233 · 121' 은 중간 값이다 — 70f5b96a 최종은 드라이버 240 · 러너 135 (Windows 129) · 카드 v10 이 맞다"
  }
 }
