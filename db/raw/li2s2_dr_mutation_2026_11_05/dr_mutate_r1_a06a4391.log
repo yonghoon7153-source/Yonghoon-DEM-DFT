@@ -1,0 +1,16 @@
+변이 417 개 (DQ 판 368 − 뺌 1 · 자리 옮김 9 · DR 50) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 2 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_drr1_w*
+DQ50_same_inputs_always          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR3_derived_any_change           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR18_band_in_provenance_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR4_derived_exception_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR42_band_always_read            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P3-B · P3-A: 밴드를 안 읽은 판정 (NVT 길) 은 밴드 지문을 not_read 로 적고 지금 밴드 카드와 대조하지 않는다 · 읽은 판정은 대조한다 · 폴더 이름을 바꾸면 그 전 판정은 지금이 아니다 (['G4 밴드 카드 지문 2
+DR43_band_never_read             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR44_band_notread_compared       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P3-B · P3-A: 밴드를 안 읽은 판정 (NVT 길) 은 밴드 지문을 not_read 로 적고 지금 밴드 카드와 대조하지 않는다 · 읽은 판정은 대조한다 · 폴더 이름을 바꾸면 그 전 판정은 지금이 아니다 (['G4 밴드 카드 지문 n
+DR45_folder_key_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR46_folder_current_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P3-B · P3-A: 밴드를 안 읽은 판정 (NVT 길) 은 밴드 지문을 not_read 로 적고 지금 밴드 카드와 대조하지 않는다 · 읽은 판정은 대조한다 · 폴더 이름을 바꾸면 그 전 판정은 지금이 아니다 ([] · ['G4 밴드 카드
+DR47_folder_record_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR49_preserved_summary_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P2-B: 보존 폴더 (seed<N>.<붙임>) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일은 미해결 기록 (목록 · 요약 장부 검사 invalid) · 깨끗한 보존 폴더 · 현재 폴더는 이 목록에 안 든다 ([('A', 14, '
+DR50_preserved_records_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P2-B: 보존 폴더 (seed<N>.<붙임>) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일은 미해결 기록 (목록 · 요약 장부 검사 invalid) · 깨끗한 보존 폴더 · 현재 폴더는 이 목록에 안 든다 ([('A', 14, '
+DR48_preserved_runner_off        ⛔ 초록 (못 잡음) · li2s2_stage1_runner selftest: ⭕ 140 · ⛔ 0
+끝: 빨강 12 / 13
