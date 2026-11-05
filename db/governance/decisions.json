@@ -10842,7 +10842,9 @@
     "db/raw/li2s2_pre_dp_review_2026_11_04/README.md (DP 발송 전 독립 리뷰 둘 · 지적과 처리)",
     "카드 개정_DP_전_리뷰_v9_2026_11_04 (도구 c8e7f1fc · 드라이버 sha16 15e9a718cefb856a · 값 지문 086de59c484f9c32 그대로)",
     "kb/reviews/codex_DP_reply_li2s2_do_fixes_2026_11_04.md (NO-GO · P0 1 · P1 2 · P2 2 → 091353ed · e1455a2d · 698e1a8d 고침 · 카드 v10)",
-    "db/raw/li2s2_dq_mutation_2026_11_05/ (368 / 368 빨강 — db/raw/li2s2_dq_mutation_2026_11_05 (최종 70f5b96a · DP 판 287 + 자리 옮김 11 + DQ 81 · 새 자리 실행의 초록 3 = DP55 · DQ49 시험 보강 · DQ66 같은 결과로 뺌 · 예외로 잡힘 20))"
+    "db/raw/li2s2_dq_mutation_2026_11_05/ (368 / 368 빨강 — db/raw/li2s2_dq_mutation_2026_11_05 (최종 70f5b96a · DP 판 287 + 자리 옮김 11 + DQ 81 · 새 자리 실행의 초록 3 = DP55 · DQ49 시험 보강 · DQ66 같은 결과로 뺌 · 예외로 잡힘 20))",
+    "kb/reviews/codex_DQ_reply_li2s2_dp_fixes_2026_11_05.md (NO-GO · P1 2 · P2 1 → c947a83c 고침 · 카드 v11)",
+    "db/raw/li2s2_dr_mutation_2026_11_05/ (DR 전 독립 리뷰 1–9 차 표 · 448 / 448 빨강 — db/raw/li2s2_dr_mutation_2026_11_05 (최종 5652bc84 · DQ 판 368 − 뺌 1 (DQ31) + 자리 옮김 13 + DR 81 · 고침 차마다 그 자리 실행 · 차 실행의 초록 3 = DR48 · DR52 · DR58 → 시험 보강 · 예외로만 잡힘 DQ50 · DR62 → 단정이 잡게 코드를 바꿈 · e9474b7d 전체 실행의 초록 1 = DQ22 → 폴더 판정이 없는 장부 행의 시험을 더함))"
    ],
    "reopen_criteria": [
     "없음 — 셀 키움 · 긴 런 · D3 · 다른 온도 · 다른 밀도는 새 카드",
@@ -10947,6 +10949,12 @@
      "state": "proposed",
      "by": "agent (위임 10-30)",
      "note": "Codex DQ 발송 (사용자 11-05 · 기준 커밋 a4a29216 · 코드 70f5b96a) · 회신 대기 · ⚠ 앞 줄의 selftest 233 · 121 은 중간 값 — 최종은 드라이버 240 · 러너 135 (Windows 129) · 카드 v10"
+    },
+    {
+     "at": "2026-11-05",
+     "state": "proposed",
+     "by": "agent (위임 10-30)",
+     "note": "회신 DQ NO-GO (P1 2 · P2 1 · 새 P0 없음) → 같은 꼴 전체 고침 (c947a83c · 카드 v11) · DR 전 독립 리뷰 9 차 (2–7 차에 내 고침의 퇴행 여섯을 잡음 · 7 차 P0 되돌림 · 8 · 9 차 P0 · P1 · P2 없음) · 드라이버 250 · 러너 153 (Windows 147) · 깨기 448 / 448 빨강 — db/raw/li2s2_dr_mutation_2026_11_05 (최종 5652bc84) · Codex DR 대기"
     }
    ]
   },
