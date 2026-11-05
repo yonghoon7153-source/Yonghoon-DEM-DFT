@@ -52,9 +52,9 @@ MOVED_DR = {
      ("                                          folder_prior=(folder_verdict_chain(pathlib.Path(out_root) / s / f\"seed{sd}\")\n"
       "                                                        if r.get(\"verdict\") in (None, \"invalid\", \"incomplete\") else None))",
       "                                          folder_prior=None)")]),
- "DQ70_prior_nonsci_changed_off": F("DQ70_prior_nonsci_changed_off",            # DR 전 3차: 장부가 빈 때의 엄격 규칙 줄로
-                                    "                if st_ in (\"invalid\", \"incomplete\") and v_ is None:   # 장부가 비면 기준이 없다",
-                                    "                if False:   # 장부가 비면 기준이 없다"),
+ "DQ70_prior_nonsci_changed_off": F("DQ70_prior_nonsci_changed_off",            # DR 전 3 · 4차: 대체 규칙을 받는 기록 줄로
+                                    "                if st_ in (\"invalid\", \"incomplete\") and (k_ is None or i_ > k_):",
+                                    "                if False:"),
  # DR 전 3차 리뷰 P2 — 이력의 새 판정 줄에 closes_system 이 붙음 (DN 판 변이 — 그 줄의 지문을 객체로만 받기)
  "DN6_history_provenance_coerced": F("DN6_history_provenance_coerced",
      "                                                   \"provenance\": h.get(\"new_provenance\"), \"closes_system\": h.get(\"new_closes_system\")}, True))",
@@ -134,11 +134,23 @@ NEW = [
  F("DR59_first_line_closes_unread", "                                                         \"closes_system\": h.get(\"new_closes_system\")}, True))",
    "                                                         \"closes_system\": None}, True))"),
  F("DR60_closes_type_check_off", "            if \"new_closes_system\" in h and type(h.get(\"new_closes_system\")) is not bool:", "            if False:"),
- F("DR61_nonsci_chain_mismatch_off", "                    if mm_r:", "                    if False:"),
- F("DR62_nonsci_chain_nature_off", "                    if not isinstance(mm_r, list):", "                    if False:"),
- F("DR63_nonsci_chain_strict_again", "                if st_ in (\"invalid\", \"incomplete\") and v_ is None:   # 장부가 비면",
-   "                if st_ in (\"invalid\", \"incomplete\"):   # 장부가 비면"),
+ # DR61–DR63 (DR 전 4차로 바뀜) — 비과학적 장부 판정의 폴더 기록 규칙이 '입력 불일치만' 에서 '장부 판정 자신의 기록 뒤는 엄격' 으로
+ F("DR61_anchor_off", "            k_ = (max((i_ for i_, r_ in enumerate(folder_prior) if isinstance(r_, dict) and r_.get(\"status\") == v_ and r_.get(\"provenance\") == vp_),",
+   "            k_ = None and (max((i_ for i_, r_ in enumerate(folder_prior) if isinstance(r_, dict) and r_.get(\"status\") == v_ and r_.get(\"provenance\") == vp_),"),
+ F("DR62_after_anchor_ignored", "                if st_ in (\"invalid\", \"incomplete\") and (k_ is None or i_ > k_):",
+   "                if st_ in (\"invalid\", \"incomplete\") and k_ is None:"),
+ F("DR63_anchor_first_not_last", "            k_ = (max((i_ for i_, r_ in enumerate(folder_prior) if isinstance(r_, dict) and r_.get(\"status\") == v_ and r_.get(\"provenance\") == vp_),",
+   "            k_ = (min((i_ for i_, r_ in enumerate(folder_prior) if isinstance(r_, dict) and r_.get(\"status\") == v_ and r_.get(\"provenance\") == vp_),"),
  F("DR64_stop_seed_from_name", "            if len(row0_) == 1:                              # ⭐ DR 전 3차 리뷰 P3", "            if False:                              # ⭐ DR 전 3차 리뷰 P3",
+   "run", RUNR),
+ # ── DR 전 리뷰 4 차 (쓴 순서의 판정 기록 · 다른 카드 판정 기록 · 즉시 melt)
+ F("DR65_chain_dup_prev", "            if not writes or writes[-1] != x_:               # 앞 줄의 새 판정과 같으면 겹침",
+   "            if True:               # 앞 줄의 새 판정과 같으면 겹침"),
+ F("DR66_chain_oob_prev_dropped", "            if not writes or writes[-1] != x_:               # 앞 줄의 새 판정과 같으면 겹침",
+   "            if not writes:               # 앞 줄의 새 판정과 같으면 겹침"),
+ F("DR67_chain_current_off", "    if cur is not None and (not writes or writes[-1] != cur):", "    if False:"),
+ F("DR68_alien_card_off", "    if sci and values is not None:                           # ⭐ DR 전 4차 리뷰 P2", "    if False:                           # ⭐ DR 전 4차 리뷰 P2"),
+ F("DR69_immediate_melt_off", "            if closed_:                                      # ⭐ DR 전 4차 리뷰 P3", "            if False:                                      # ⭐ DR 전 4차 리뷰 P3",
    "run", RUNR),
  F("DR56_persist_before_stop_off", "                if rk_ != \"scientific\" or rkd_.get(\"source\") not in (\"folder_verdict\", \"folder_melt_window\"):",
    "                if True:", "run", RUNR),
