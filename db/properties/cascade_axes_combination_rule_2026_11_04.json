@@ -89,5 +89,11 @@
   "규칙": "R3 은 G4 를 넘은 연속 축 둘 이상일 때만 — 하나뿐 → R4 표시만",
   "결과": "Pareto 축 ['delta_NCM_LNO_half_meV'] · 표시 43 / 91 · 선택 없음 (cascade_axis_hyd_readout_2026_11_04.json combination)",
   "⛔": "결과를 본 뒤 G4 문턱 (10 meV/atom) · R3 조건을 바꾸지 않는다 (R0 새 숫자 없음)"
+ },
+ "축_③_적용_2026_11_05": {
+  "축": "① NCM 계면 (G4 ⭕ · IQR 26) · ② 가수분해 (G4 ⛔ · IQR 4.37 — 표시만) · ③ Li 금속 음극 (G4 ⭕ · IQR 46.12 · G7 축 ① 과 ρ 0.608 안 겹침)",
+  "규칙": "R3 — G4 를 넘고 안 겹친 연속 축 둘 → 위험 표시 (세 축) 없는 설계의 Pareto 비지배 집합 (가중치 · 순위 없음) · R2 모름은 빼지도 통과시키지도 않음",
+  "결과": "Pareto 축 ['delta_NCM_LNO_half_meV', 'delta_Li_meV'] · 표시 66 / 91 · 남은 25 · 선택 ['V2O5'] (cascade_axis_li_readout_2026_11_05.json combination) · V2O5 는 축 ① · ③ R2 모름",
+  "⛔": "결과를 본 뒤 G4 · G7 문턱 · R2 모름 처리 · 위험 표시를 바꾸지 않는다 (R0 새 숫자 없음)"
  }
 }
