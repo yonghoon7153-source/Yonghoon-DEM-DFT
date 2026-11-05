@@ -3425,3 +3425,24 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   관문은 모두 첫 시도에 통과했고 재시도는 없다. (5) g3 뒤 이 결과 § · 반환 기록 · 발송문의 커밋 (r) 과 그 push 는 예산 밖이다.
 - **다음:** 결과 검토 발송문 (`docs/REIL_C4E_E1_1_3_RESUME_RESULT_SEND_20261105.md`) → Codex 결과 검토 → C4-A 로 가는 문을 열지는 사용자의 별도 승인. 이
   기록은 어느 단계의 실행 승인도 아니다.
+
+## §122 C4-E · E1-1–3 재개 실행 결과 검토 회신 — E1-2 · E1-3 결과 수용 (E1_2_E1_3_RESULTS_ACCEPTED_C4A_GATE_CONDITIONS_MET_NO_EXECUTION_APPROVAL · 새 지적 0 · 수치 경고 유지) (2026-11-05 KST · 덧붙임 — 위 §0–§121 은 그대로)
+
+- **회신 보존:** `reviews/review_reil_c4e_e1_1_3_resume_result_review_20261105/` — ZIP (1,741,577 B · `a7b206a49d742ace…` = 영수증의 archive sha) + originals
+  127 (안전 풀기) · 커밋 `427bedb8` (보존 규칙) · `a7e9dae9` (바이트 · 128 blob 일치). 패키지 manifest 126/126 일치 (남는 것은 manifest 자신) · `source/` 103 =
+  고정 HEAD `9b440a3d` 의 바이트 · `input/` 1 = 결과 검토 발송문 · `basis/v2_review/` 의 넷 = §119 의 보존 회신과 같은 바이트 · 나머지 둘 (그 회신의 영수증 ·
+  포장 반환) 은 그 회신 ZIP sha (`1cc4326c…`) 와 영수증 sha (`33f5db11…`) 를 가리킨다 · 비밀 검사 128 파일 hits 0. ZIP 밖 영수증 · 보존 기록 · 실제 도구 반환은
+  사용자가 대화에 붙인 JSON 이다.
+- **판정 (검토자):** E1-2 fetch · E1-3 run 결과를 고정 판정 기준 범위에서 수용 · 새 차단 지적 0. fetch 43 · run 44 항목 · 판정 입력 · 출력 원파일 식별 · 66 개
+  계획 / 반환 행 · 종료 · 잔류 · 기록 · 예산 연결 일치 → 실행 유효성 · `final.E3a` = COMPLETE · `final.c4a_gate` = true 를 뒷받침. 실제 실행일은 2026-11-05 UTC 이고
+  `reil_c4e1_20261106` 은 증거 이름표 (§120 의 사용자 선택으로 날짜 조건을 대체 · T_a · 승인 절 · 경로 · 해시 결속 불일치 없음 · 이 선택을 사전 Codex 수용으로
+  바꾸지 않는다). a → g3 1,151 s 는 그 실행 기록의 경계다.
+- **수용 범위의 한계 (검토자 · 그대로 유지):** "오류 0" 은 반환 행의 오류 집계일 뿐이다 — 66 행 모두 수치 경고가 있고 `05_run.stderr.log` 는 비어 있지 않다.
+  COMPLETE 는 승인된 실행 · 기록 조건의 충족이고 **무경고 · 수렴 · 과학적 fitting 합격을 뜻하지 않는다.** 원도구 반환이 따로 없는 수동 감시 · 관문 확인은 저자의
+  원장 기록으로 구분한다. 내 §121 · 사용자 보고의 "오류 0" 도 이 뜻으로만 읽는다.
+- **경고의 크기 (증거에서 읽기만 · 사본):** `run/ROWS.json` 66 행 모두 `warnings_count` 있음 · 합 21,896,160 (`RuntimeWarning: divide by zero encountered in divide`
+  8,211,060 · `invalid value encountered in divide` 8,211,060 · `invalid value encountered in add` 5,474,040) · 행의 `n_nonfinite` 0 · `error` 0. `05_run.stderr.log`
+  20,339 B · 154 줄 — 경고 위치는 venv 의 numpy `lib/_function_base_impl` 의 비균등 간격 계수 (`a = -(dx2) / (dx1 * (dx1 + dx2))` 등 · 간격 0 의 나눗셈) 다. 이것이
+  목적함수에 닿는지는 확인하지 않았다.
+- **다음:** C4-A (H Phase A · 9,856 호출 — `docs/REIL_C4_APPROVAL_REQUEST_20261007.md` 의 단계 분할) 로 가는 문을 열지는 사용자의 별도 승인이다. 그 승인 요청에도
+  위 경고 · 수용 범위 · 실제 실행일 / 증거 이름표의 구분을 유지한다. 이 회신은 C4-A / B · COMSOL · 추가 실행의 승인이 아니다.
