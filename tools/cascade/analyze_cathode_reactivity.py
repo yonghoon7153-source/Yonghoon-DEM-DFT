@@ -333,6 +333,9 @@ AX_CARD_TEXT = ("MP 갭 ≥ 2.0 eV", "0.1 ≤ MP 갭 < 2.0 eV", "MP 갭 < 0.1 eV
                 "|δ| ≥ 10 meV/atom", "(IQR) 가 10 meV/atom 미만", "0.5–2.0 배", "둘 다 0.5–2.0")
 AX_HOST_ELEMS = frozenset({"Li", "P", "S", "Cl", "O"})
 AX_TM_U = frozenset({"Co", "Cr", "Fe", "Mn", "Mo", "Ni", "V", "W", "Cu"})
+#: ⭐ 사후 민감도 전용 스위치 (2026-11-05 · --sens_plusU_gap) — True 면 +U · Cu 분기를 건너뛰고 **같은 봉인 문턱** (AX wide_eV · metal_eV)
+#: 으로 MP 갭 등급을 매긴다. 봉인 판독 (--axis_ncm · --axis_li · --axis_hyd) 은 늘 False 로 돈다 (sens_plusU 가 끝에 되돌린다).
+AX_SENS = {"plusU_by_gap": False}
 AX_4F = frozenset({"Nd", "Sm", "Gd"})
 AX_NONMETAL = frozenset({"H", "B", "C", "N", "O", "F", "Si", "P", "S", "Cl", "Ge", "As", "Se", "Br", "Sb", "Te", "I"})
 AX_CATH_TM = {"LNO": "Ni", "LCO": "Co", "NCM": None}
@@ -389,7 +392,7 @@ def ax_product_class(f, gaps):
         return "undetermined", "화학식을 못 읽는다"
     if len(el) == 1 and next(iter(el)) not in AX_NONMETAL:
         return "metallic", "원소 금속"
-    if set(el) & AX_TM_U:
+    if set(el) & AX_TM_U and not AX_SENS["plusU_by_gap"]:
         return "undetermined", "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
     g = gaps.get(f) if isinstance(gaps, dict) else None
     gap = g.get("band_gap_MP_eV") if isinstance(g, dict) else None
@@ -1672,9 +1675,217 @@ def li_selftest():
     return 0 if ok_all else 1
 
 
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════════
+# ⑤ +U 산물 사후 민감도 (2026-11-05 · 사용자 'V 산물 확인 카드' 선택 → 결과를 이미 본 뒤라 **사후 민감도** 로 기록)
+#   실행:  python3 tools/cascade/analyze_cathode_reactivity.py --sens_plusU_gap [--out <json>]
+#   한 규칙만 바꾼다: 축 ① · ③ 의 '+U 전이금속 · Cu 가 든 음이온 산물 = 미판정' 을 빼고 **같은 봉인 문턱** 으로 MP 갭 등급.
+#   그 밖 (문턱 · 몫 규칙 · 합금 규칙 · 4f 하한 · 위험 표시 · Pareto) 은 그대로 · 모든 설계에 같이 (V 만 고르지 않는다).
+#   ⛔ 이 민감도가 못 하는 것:
+#     · 맹검이 아니다 — V12P7 · Li3VO4 등의 MP 갭은 회수 파일 (product_gaps.json) 에 이미 있었고 선택 뒤에 읽었다.
+#     · MP 갭이 +U 산물에서 믿을 만한지는 말하지 않는다 — MP 는 산화물 · 불화물의 +U 원소에만 U 를 건다 (그 밖은 일반 GGA ·
+#       'MP_U_적용_추정' 은 화학식에 O · F 가 있는지로만 어림한 것 · 엔트리의 실제 계산 설정을 확인하지 않았다) · 자성 바닥상태도 확인 안 했다.
+#     · 봉인 판독 · 봉인 선택을 고치지 않는다 — 나란히 적는 기록이다. 봉인 판독을 같은 도구로 재현하지 못하면 아무것도 내지 않는다.
+# ══════════════════════════════════════════════════════════════════════════════════════════════════
+SENS_SEALED = {"ncm": PROP / "cascade_axis_ncm_readout_2026_11_04.json", "hyd": PROP / "cascade_axis_hyd_readout_2026_11_04.json",
+               "li": PROP / "cascade_axis_li_readout_2026_11_05.json"}
+SENS_OUT = PROP / "cascade_axes_plusU_gap_sensitivity_2026_11_05.json"
+SENS_CMP = {"ncm": ("class_LNO_half", "delta_LNO_half_meV", "class_LCO_half", "fate_LNO_half"),
+            "li": ("class", "delta_Li_meV", "F1_Li", "F2_Li", "unknown", "fate"),
+            "comb": ("flags", "unknown", "pareto")}
+
+
+def _sens_repro(sealed, mine, keys, tag):
+    """봉인 판독 rows 와 지금 도구의 rows 가 같은가 — 다른 곳 목록 (빈 목록 = 재현)."""
+    if not isinstance(sealed, dict) or not isinstance(sealed.get("rows"), list) or not isinstance(mine, dict) or not isinstance(mine.get("rows"), list):
+        return [f"{tag}: rows 가 없다"]
+    a = {r.get("species"): r for r in sealed["rows"]}
+    b = {r.get("species"): r for r in mine["rows"]}
+    out = [f"{tag}: 설계 목록이 다르다 ({sorted(set(a) ^ set(b))})"] if set(a) != set(b) else []
+    out += [f"{tag}: {sp} {k} 봉인 {a[sp].get(k)!r} ≠ 지금 {b[sp].get(k)!r}" for sp in sorted(set(a) & set(b)) for k in keys
+            if a[sp].get(k) != b[sp].get(k)]
+    return out
+
+
+def _sens_mp_u(formula):
+    """MP 가 그 산물에 U 를 걸었을지 어림 — +U 원소 (Cu 제외) 가 있고 O · F 가 있으면 True (MP 혼합 규약의 문서 기준 · 엔트리 설정 확인 아님)."""
+    el = set(_ax_pf(formula))
+    return bool(el & (AX_TM_U - {"Cu"}) and el & {"O", "F"})
+
+
+def _sens_changes(base, sens, ckey, fkey, gaps):
+    """등급이 바뀐 설계 — 종 · 전 · 후 · 도펀트 산물 (MP id · 갭 · MP U 어림)."""
+    a = {r["species"]: r for r in base["rows"]}
+    out = []
+    for r in sens["rows"]:
+        b0 = a[r["species"]]
+        if b0[ckey] == r[ckey]:
+            continue
+        prods = []
+        for E, d in (r.get(fkey) or {}).items():
+            for p_ in (d.get("products") or []) if isinstance(d, dict) else []:
+                g = gaps.get(p_["product"]) if isinstance(gaps, dict) else None
+                prods.append({"element": E, "product": p_["product"], "share": p_.get("share"), "class_after": p_.get("class"),
+                              "basis_after": p_.get("basis"), "material_id": (g or {}).get("material_id"),
+                              "band_gap_MP_eV": (g or {}).get("band_gap_MP_eV"), "MP_U_적용_추정": _sens_mp_u(p_["product"])})
+        out.append({"species": r["species"], "before": b0[ckey], "after": r[ckey], "products": prods})
+    return out
+
+
+def sens_plusU(ncm_dir, li_dir, hyd, sealed_ncm, sealed_li, _ax=None, _li=None, _gaps=None):
+    """사후 민감도 — 봉인 판독을 먼저 재현하고 (못 하면 ⛔ · 아무것도 안 냄) 그 다음 +U 규칙 하나만 바꿔 다시 판독 · 합치기.
+    _ax · _li · _gaps 는 selftest 용 (기본 = 진짜 판독 함수 · 회수 파일의 갭). 스위치는 예외가 나도 끝에 False 로 되돌린다."""
+    _ax = _ax or ax_readout
+    _li = _li or li_readout
+    AX_SENS["plusU_by_gap"] = False
+    try:
+        bn = _ax(ncm_dir)
+        bl = _li(li_dir, ncm=bn, hyd=hyd)
+        if bn.get("blocking") or bl.get("blocking"):
+            return {"⛔": f"막는 게이트 불통과 (축 ① {bn.get('blocking')} · 축 ③ {bl.get('blocking')}) — 민감도를 내지 않는다"}
+        bc = ax_combine(bn, hyd, bl)
+        rep = (_sens_repro(sealed_ncm, bn, SENS_CMP["ncm"], "축 ①") + _sens_repro(sealed_li, bl, SENS_CMP["li"], "축 ③")
+               + _sens_repro((sealed_li or {}).get("combination"), bc, SENS_CMP["comb"], "합치기"))
+        if (sealed_li or {}).get("combination", {}).get("selection") != bc.get("selection"):
+            rep.append(f"합치기: 선택 봉인 {(sealed_li or {}).get('combination', {}).get('selection')} ≠ 지금 {bc.get('selection')}")
+        if rep:
+            return {"⛔": "봉인 판독을 지금 도구로 재현하지 못했다 — 민감도를 내지 않는다", "problems": rep}
+        AX_SENS["plusU_by_gap"] = True
+        sn = _ax(ncm_dir)
+        sl = _li(li_dir, ncm=sn, hyd=hyd)
+        sc = ax_combine(sn, hyd, sl)
+    finally:
+        AX_SENS["plusU_by_gap"] = False
+    g1 = _gaps["ncm"] if _gaps else ((ax_load(ncm_dir).get("gaps") or {}).get("gaps") or {})
+    g3 = _gaps["li"] if _gaps else (li_load(li_dir)["gaps"]["gaps"])
+    cb = {r["species"]: r for r in bc["rows"]}
+    flag_ch = [{"species": r["species"], "flags_before": cb[r["species"]]["flags"], "flags_after": r["flags"],
+                "unknown_before": cb[r["species"]]["unknown"], "unknown_after": r["unknown"]}
+               for r in sc["rows"] if (r["flags"], r["unknown"]) != (cb[r["species"]]["flags"], cb[r["species"]]["unknown"])]
+    return {"reproduced_sealed": True, "rule_changed": "축 ① · ③ '+U 전이금속 · Cu 가 든 음이온 산물 = 미판정' → 같은 봉인 문턱으로 MP 갭 등급",
+            "thresholds_unchanged": {k: AX[k] for k in ("wide_eV", "metal_eV", "frac_metal", "frac_wide", "frac_und")},
+            "axis1_class_changes": _sens_changes(bn, sn, "class_LNO_half", "fate_LNO_half", g1),
+            "axis3_class_changes": _sens_changes(bl, sl, "class", "fate", g3),
+            "flag_changes": flag_ch,
+            "selection_sealed": bc["selection"], "selection_sensitivity": sc["selection"],
+            "axes_in_pareto": sc.get("axes_in_pareto"), "rule": sc.get("rule"),
+            "pareto_rows_sensitivity": [{k: r.get(k) for k in ("species", "unknown", *sc.get("axes_in_pareto", []))}
+                                        for r in sc["rows"] if r.get("pareto")],
+            "counts": {"axis1_class_sealed": bn["summary"]["class_LNO_half"], "axis1_class_sensitivity": sn["summary"]["class_LNO_half"],
+                       "axis3_class_sealed": bl["summary"]["class"], "axis3_class_sensitivity": sl["summary"]["class"],
+                       "n_flagged_sealed": bc.get("n_flagged"), "n_flagged_sensitivity": sc.get("n_flagged")}}
+
+
+def _sens_out_refused(out):
+    """봉인 판독 파일 (또는 '_readout_' 이름) 에는 민감도를 쓰지 않는다."""
+    return "_readout_" in Path(out).name or Path(out).resolve() in {p.resolve() for p in SENS_SEALED.values()}
+
+
+def sens_main(argv):
+    out = Path(argv[argv.index("--out") + 1]) if "--out" in argv else SENS_OUT
+    if _sens_out_refused(out):
+        print(f"⛔ --out {out} — 봉인 판독 파일 이름에는 쓰지 않는다 (민감도는 따로)")
+        return 2
+    sealed = {k: json.loads(p.read_text(encoding="utf-8")) for k, p in SENS_SEALED.items()}
+    res = sens_plusU(sealed["ncm"]["run_dir"], sealed["li"]["run_dir"], sealed["hyd"], sealed["ncm"], sealed["li"])
+    if "⛔" in res:
+        print(res["⛔"]); [print("   ", x) for x in res.get("problems", [])[:20]]
+        return 2
+    res = {"kind": "post_hoc_sensitivity", "tool": "tools/cascade/analyze_cathode_reactivity.py --sens_plusU_gap",
+           "sealed_readouts": {k: "db/properties/" + p.name for k, p in SENS_SEALED.items()}, **res}
+    out.write_text(json.dumps(res, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print(f"봉인 재현 ⭕ · 축 ① 등급 바뀜 {len(res['axis1_class_changes'])} · 축 ③ 등급 바뀜 {len(res['axis3_class_changes'])} · "
+          f"표시 바뀜 {len(res['flag_changes'])} · 선택 봉인 {res['selection_sealed']} → 민감도 {res['selection_sensitivity']}")
+    print(f"→ {out}")
+    return 0
+
+
+def sens_selftest():
+    """+U 사후 민감도 — 스위치 · 재현 검사 · 되돌림 · 봉인 파일 보호 (양성 · 음성)."""
+    ok_all, n = True, [0, 0]
+    def chk(c, msg):
+        nonlocal ok_all
+        n[0 if c else 1] += 1
+        ok_all &= bool(c)
+        print(("  ⭕ " if c else "  ⛔ ") + msg)
+    G = {"V12P7": {"band_gap_MP_eV": 0.0, "material_id": "mp-1"}, "Li3VO4": {"band_gap_MP_eV": 4.034, "material_id": "mp-2"},
+         "Cu2S": {"band_gap_MP_eV": 0.5}}
+    chk([ax_product_class(f, G)[0] for f in ("V12P7", "Li3VO4", "Cu2S", "Mo3P")] == ["undetermined"] * 4,
+        "기본 (봉인 판독): +U · Cu 산물은 MP 갭과 상관없이 미판정")
+    AX_SENS["plusU_by_gap"] = True
+    try:
+        got = [ax_product_class(f, G)[0] for f in ("V12P7", "Li3VO4", "Cu2S", "Mo3P")]
+        li_alloy = li_product_class("LiV2", G)[0]
+    finally:
+        AX_SENS["plusU_by_gap"] = False
+    chk(got == ["metallic", "wide", "narrow", "undetermined"] and li_alloy == "metallic",
+        f"스위치 켜면 같은 문턱으로 MP 갭 등급 (V12P7 0 → 금속성 · Li3VO4 4.034 → 넓음 · Cu2S 0.5 → 좁음 · 갭 없음 → 미판정 · 합금 규칙 그대로) {got}")
+    chk(AX_SENS["plusU_by_gap"] is False and ax_product_class("V12P7", G)[0] == "undetermined", "⛔음성: 스위치는 끝나면 꺼진다")
+    chk(_sens_mp_u("Li3VO4") and not _sens_mp_u("V12P7") and not _sens_mp_u("Cu2O") and _sens_mp_u("MoO2F2"),
+        "MP U 어림: +U 원소 (Cu 제외) + O · F 일 때만")
+
+    def mk_ncm(cls_v):
+        return {"blocking": [], "gates": {"G4": {"discriminates": True}}, "summary": {"class_LNO_half": {}},
+                "rows": [{"species": sp, "class_LNO_half": c, "delta_LNO_half_meV": d, "class_LCO_half": c, "fate_LNO_half": {}}
+                         for sp, c, d in (("V2O5", cls_v, 100.0), ("SiO2", "intermediate", 30.0), ("Sb2O5", "intermediate", 90.0))]}
+
+    def mk_li(cls_v):
+        return {"blocking": [], "gates": {"G4": {"discriminates": True}, "G7": {"overlap": False}}, "summary": {"class": {}},
+                "rows": [{"species": sp, "class": c, "delta_Li_meV": d, "F1_Li": c == "metallic", "F2_Li": d <= -10,
+                          "unknown": c == "undetermined",
+                          "fate": {"V": {"products": [{"product": "V12P7", "share": 1.0, "class": c}]}} if sp == "V2O5" else {}}
+                         for sp, c, d in (("V2O5", cls_v, 150.0), ("SiO2", "intermediate", 80.0), ("Sb2O5", "intermediate", 70.0))]}
+    HYD = {"blocking": [], "gates": {"G4": {"discriminates": False}, "G7": {"overlap": None}},
+           "rows": [{"species": sp, "delta_hyd_meV": 0.0, "F1_hyd": False, "F2_H2S": False, "unknown": False} for sp in ("V2O5", "SiO2", "Sb2O5")]}
+    fa = lambda d: mk_ncm("wide" if AX_SENS["plusU_by_gap"] else "undetermined")
+    fl = lambda d, ncm=None, hyd=None: mk_li("metallic" if AX_SENS["plusU_by_gap"] else "undetermined")
+    s_n, s_l = mk_ncm("undetermined"), mk_li("undetermined")
+    s_l["combination"] = ax_combine(s_n, HYD, s_l)
+    GG = {"ncm": {}, "li": G}
+    r = sens_plusU("n", "l", HYD, s_n, s_l, _ax=fa, _li=fl, _gaps=GG)
+    chk(r.get("reproduced_sealed") and r["selection_sealed"] == ["V2O5"] and r["selection_sensitivity"] == ["Sb2O5", "SiO2"]
+        and [c["species"] for c in r["axis3_class_changes"]] == ["V2O5"] and r["axis3_class_changes"][0]["products"][0]["band_gap_MP_eV"] == 0.0
+        and r["flag_changes"][0]["flags_after"] == ["축③F1_Li금속성"] and AX_SENS["plusU_by_gap"] is False,
+        f"합성 계: V2O5 축 ③ 금속성 → 빠지고 선택 {r.get('selection_sensitivity')} · 봉인 {r.get('selection_sealed')} · 스위치 꺼짐")
+    bad = mk_li("undetermined"); bad["rows"][1]["class"] = "wide"; bad["combination"] = s_l["combination"]
+    r2 = sens_plusU("n", "l", HYD, s_n, bad, _ax=fa, _li=fl, _gaps=GG)
+    chk("⛔" in r2 and any("SiO2 class" in x for x in r2["problems"]), "⛔음성: 봉인 판독과 지금 도구가 한 칸이라도 다르면 민감도를 내지 않는다")
+    bad2 = {**s_l, "combination": {**s_l["combination"], "selection": ["SiO2"]}}
+    r3 = sens_plusU("n", "l", HYD, s_n, bad2, _ax=fa, _li=fl, _gaps=GG)
+    chk("⛔" in r3 and any("선택" in x for x in r3["problems"]), "⛔음성: 봉인 선택이 다르면 내지 않는다")
+
+    fa_b = lambda d: {**mk_ncm("undetermined"), "blocking": ["G1"]}
+    r4 = sens_plusU("n", "l", HYD, s_n, s_l, _ax=fa_b, _li=fl, _gaps=GG)
+    chk("⛔" in r4 and "막는 게이트" in r4["⛔"] and "selection_sensitivity" not in r4,
+        "⛔음성: 축 ① · ③ 중 막는 게이트 불통과가 있으면 민감도를 내지 않는다")
+
+    def boom(d, ncm=None, hyd=None):
+        if AX_SENS["plusU_by_gap"]:
+            raise RuntimeError("selftest")
+        return mk_li("undetermined")
+    try:
+        sens_plusU("n", "l", HYD, s_n, s_l, _ax=fa, _li=boom, _gaps=GG)
+        raised = False
+    except RuntimeError:
+        raised = True
+    chk(raised and AX_SENS["plusU_by_gap"] is False, "⛔음성: 민감도 판독 중 예외가 나도 스위치는 꺼진다 (봉인 판독이 켜진 채로 돌지 않는다)")
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:                # ⚠ 진짜 봉인 경로로 sens_main 을 부르지 않는다 (거부가 깨지면 덮어쓴다)
+        q_ = Path(td) / "cascade_axis_li_readout_2099_01_01.json"
+        rc = sens_main(["x", "--out", str(q_)])
+        made = q_.exists()
+    chk(rc == 2 and not made and _sens_out_refused(SENS_SEALED["li"]) and _sens_out_refused(SENS_SEALED["ncm"])
+        and _sens_out_refused(SENS_SEALED["hyd"]) and not _sens_out_refused(SENS_OUT),
+        "⛔음성: 봉인 판독 파일 · '_readout_' 이름에는 쓰지 않는다 (rc 2 · 파일 안 생김 · 민감도 기본 경로는 허용)")
+    print(f"sens_plusU selftest: ⭕ {n[0]} · ⛔ {n[1]}")
+    return 0 if ok_all else 1
+
+
 if __name__ == "__main__":
     if "--selftest" in sys.argv:
-        raise SystemExit(max(ax_selftest(), hy_selftest(), li_selftest()))
+        raise SystemExit(max(ax_selftest(), hy_selftest(), li_selftest(), sens_selftest()))
+    if "--sens_plusU_gap" in sys.argv:
+        raise SystemExit(sens_main(sys.argv))
     if "--axis_ncm" in sys.argv:
         raise SystemExit(ax_main(sys.argv))
     if "--axis_hyd" in sys.argv:

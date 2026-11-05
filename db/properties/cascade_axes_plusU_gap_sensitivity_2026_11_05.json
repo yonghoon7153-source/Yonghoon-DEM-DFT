@@ -1,0 +1,977 @@
+{
+ "kind": "post_hoc_sensitivity",
+ "tool": "tools/cascade/analyze_cathode_reactivity.py --sens_plusU_gap",
+ "sealed_readouts": {
+  "ncm": "db/properties/cascade_axis_ncm_readout_2026_11_04.json",
+  "hyd": "db/properties/cascade_axis_hyd_readout_2026_11_04.json",
+  "li": "db/properties/cascade_axis_li_readout_2026_11_05.json"
+ },
+ "reproduced_sealed": true,
+ "rule_changed": "축 ① · ③ '+U 전이금속 · Cu 가 든 음이온 산물 = 미판정' → 같은 봉인 문턱으로 MP 갭 등급",
+ "thresholds_unchanged": {
+  "wide_eV": 2.0,
+  "metal_eV": 0.1,
+  "frac_metal": 0.01,
+  "frac_wide": 0.9,
+  "frac_und": 0.1
+ },
+ "axis1_class_changes": [
+  {
+   "species": "AlN",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Al",
+     "product": "LiAlO2",
+     "share": 1.0,
+     "class_after": "wide",
+     "basis_after": "MP 갭 6.118",
+     "material_id": "mp-8001",
+     "band_gap_MP_eV": 6.118,
+     "MP_U_적용_추정": false
+    },
+    {
+     "element": "N",
+     "product": "Ni3N",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-2033",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "Ca3N2",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Ca",
+     "product": "CaO",
+     "share": 1.0,
+     "class_after": "wide",
+     "basis_after": "MP 갭 3.636",
+     "material_id": "mp-2605",
+     "band_gap_MP_eV": 3.636,
+     "MP_U_적용_추정": false
+    },
+    {
+     "element": "N",
+     "product": "Ni3N",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-2033",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "CoO",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Co",
+     "product": "Co9S8",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-1513",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "Cr2O3",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Cr",
+     "product": "LiCrO2",
+     "share": 0.6223,
+     "class_after": "wide",
+     "basis_after": "MP 갭 3.117",
+     "material_id": "mp-18793",
+     "band_gap_MP_eV": 3.117,
+     "MP_U_적용_추정": true
+    },
+    {
+     "element": "Cr",
+     "product": "Cr2O3",
+     "share": 0.3777,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-19399",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": true
+    }
+   ]
+  },
+  {
+   "species": "CrCl3",
+   "before": "undetermined",
+   "after": "wide",
+   "products": [
+    {
+     "element": "Cr",
+     "product": "LiCrO2",
+     "share": 1.0,
+     "class_after": "wide",
+     "basis_after": "MP 갭 3.117",
+     "material_id": "mp-18793",
+     "band_gap_MP_eV": 3.117,
+     "MP_U_적용_추정": true
+    }
+   ]
+  },
+  {
+   "species": "CrO3",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Cr",
+     "product": "LiCrO2",
+     "share": 0.5111,
+     "class_after": "wide",
+     "basis_after": "MP 갭 3.117",
+     "material_id": "mp-18793",
+     "band_gap_MP_eV": 3.117,
+     "MP_U_적용_추정": true
+    },
+    {
+     "element": "Cr",
+     "product": "Cr2O3",
+     "share": 0.4889,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-19399",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": true
+    }
+   ]
+  },
+  {
+   "species": "Fe2O3",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Fe",
+     "product": "LiFeO2",
+     "share": 0.6185,
+     "class_after": "narrow",
+     "basis_after": "MP 갭 1.617",
+     "material_id": "mp-755709",
+     "band_gap_MP_eV": 1.617,
+     "MP_U_적용_추정": true
+    },
+    {
+     "element": "Fe",
+     "product": "FeNi35S32",
+     "share": 0.2141,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-1225604",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    },
+    {
+     "element": "Fe",
+     "product": "Li5FeO4",
+     "share": 0.1674,
+     "class_after": "wide",
+     "basis_after": "MP 갭 3.055",
+     "material_id": "mp-19511",
+     "band_gap_MP_eV": 3.055,
+     "MP_U_적용_추정": true
+    }
+   ]
+  },
+  {
+   "species": "FeCl3",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Fe",
+     "product": "FeNi35S32",
+     "share": 0.5039,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-1225604",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    },
+    {
+     "element": "Fe",
+     "product": "Li5FeO4",
+     "share": 0.4961,
+     "class_after": "wide",
+     "basis_after": "MP 갭 3.055",
+     "material_id": "mp-19511",
+     "band_gap_MP_eV": 3.055,
+     "MP_U_적용_추정": true
+    }
+   ]
+  },
+  {
+   "species": "Ga2O3",
+   "before": "undetermined",
+   "after": "intermediate",
+   "products": [
+    {
+     "element": "Ga",
+     "product": "LiGaO2",
+     "share": 0.6458,
+     "class_after": "wide",
+     "basis_after": "MP 갭 3.198",
+     "material_id": "mp-5854",
+     "band_gap_MP_eV": 3.198,
+     "MP_U_적용_추정": false
+    },
+    {
+     "element": "Ga",
+     "product": "Ga2NiO4",
+     "share": 0.3542,
+     "class_after": "narrow",
+     "basis_after": "MP 갭 1.503",
+     "material_id": "mp-35236",
+     "band_gap_MP_eV": 1.503,
+     "MP_U_적용_추정": true
+    }
+   ]
+  },
+  {
+   "species": "GaN",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Ga",
+     "product": "LiGaO2",
+     "share": 1.0,
+     "class_after": "wide",
+     "basis_after": "MP 갭 3.198",
+     "material_id": "mp-5854",
+     "band_gap_MP_eV": 3.198,
+     "MP_U_적용_추정": false
+    },
+    {
+     "element": "N",
+     "product": "Ni3N",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-2033",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "Li3N",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "N",
+     "product": "Ni3N",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-2033",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "Mg3N2",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Mg",
+     "product": "MgO",
+     "share": 1.0,
+     "class_after": "wide",
+     "basis_after": "MP 갭 4.429",
+     "material_id": "mp-1265",
+     "band_gap_MP_eV": 4.429,
+     "MP_U_적용_추정": false
+    },
+    {
+     "element": "N",
+     "product": "Ni3N",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-2033",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "MnO",
+   "before": "undetermined",
+   "after": "intermediate",
+   "products": [
+    {
+     "element": "Mn",
+     "product": "LiMnO2",
+     "share": 1.0,
+     "class_after": "narrow",
+     "basis_after": "MP 갭 1.187",
+     "material_id": "mp-754656",
+     "band_gap_MP_eV": 1.187,
+     "MP_U_적용_추정": true
+    }
+   ]
+  },
+  {
+   "species": "MoO3",
+   "before": "undetermined",
+   "after": "wide",
+   "products": [
+    {
+     "element": "Mo",
+     "product": "Li2MoO4",
+     "share": 1.0,
+     "class_after": "wide",
+     "basis_after": "MP 갭 4.118",
+     "material_id": "mp-18050",
+     "band_gap_MP_eV": 4.118,
+     "MP_U_적용_추정": true
+    }
+   ]
+  },
+  {
+   "species": "Sb2O5",
+   "before": "undetermined",
+   "after": "wide",
+   "products": [
+    {
+     "element": "Sb",
+     "product": "Li3Ni2SbO6",
+     "share": 1.0,
+     "class_after": "wide",
+     "basis_after": "MP 갭 2.809",
+     "material_id": "mp-1102490",
+     "band_gap_MP_eV": 2.809,
+     "MP_U_적용_추정": true
+    }
+   ]
+  },
+  {
+   "species": "Sb2S3",
+   "before": "undetermined",
+   "after": "wide",
+   "products": [
+    {
+     "element": "Sb",
+     "product": "Li3Ni2SbO6",
+     "share": 1.0,
+     "class_after": "wide",
+     "basis_after": "MP 갭 2.809",
+     "material_id": "mp-1102490",
+     "band_gap_MP_eV": 2.809,
+     "MP_U_적용_추정": true
+    }
+   ]
+  },
+  {
+   "species": "V2O5",
+   "before": "undetermined",
+   "after": "wide",
+   "products": [
+    {
+     "element": "V",
+     "product": "Li3VO4",
+     "share": 1.0,
+     "class_after": "wide",
+     "basis_after": "MP 갭 4.034",
+     "material_id": "mp-19219",
+     "band_gap_MP_eV": 4.034,
+     "MP_U_적용_추정": true
+    }
+   ]
+  },
+  {
+   "species": "WO3",
+   "before": "undetermined",
+   "after": "wide",
+   "products": [
+    {
+     "element": "W",
+     "product": "NiWO4",
+     "share": 1.0,
+     "class_after": "wide",
+     "basis_after": "MP 갭 3.015",
+     "material_id": "mp-21179",
+     "band_gap_MP_eV": 3.015,
+     "MP_U_적용_추정": true
+    }
+   ]
+  }
+ ],
+ "axis3_class_changes": [
+  {
+   "species": "CoO",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Co",
+     "product": "Li2Co12P7",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-1191829",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "Cr2O3",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Cr",
+     "product": "Cr3P",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-7806",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "CrCl3",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Cr",
+     "product": "Cr3P",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-7806",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "CrO3",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Cr",
+     "product": "Cr3P",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-7806",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "Cu2O",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Cu",
+     "product": "Li2CuP",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-12029",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "Fe2O3",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Fe",
+     "product": "LiFeP",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-20049",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "FeCl3",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Fe",
+     "product": "LiFeP",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-20049",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "MnO",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Mn",
+     "product": "Mn2P",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-2019629",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "MoO3",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Mo",
+     "product": "Mo3P",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-10004",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "NiO",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "Ni",
+     "product": "Li5Ni9P7",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-1211138",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  },
+  {
+   "species": "V2O5",
+   "before": "undetermined",
+   "after": "metallic",
+   "products": [
+    {
+     "element": "V",
+     "product": "V12P7",
+     "share": 1.0,
+     "class_after": "metallic",
+     "basis_after": "MP 갭 0 < 0.1",
+     "material_id": "mp-684675",
+     "band_gap_MP_eV": 0.0,
+     "MP_U_적용_추정": false
+    }
+   ]
+  }
+ ],
+ "flag_changes": [
+  {
+   "species": "AlN",
+   "flags_before": [
+    "축①F2_반응증가",
+    "축②F1_가수분해증가",
+    "축③F2_Li반응증가"
+   ],
+   "flags_after": [
+    "축①F1_금속성",
+    "축①F2_반응증가",
+    "축②F1_가수분해증가",
+    "축③F2_Li반응증가"
+   ],
+   "unknown_before": [
+    "축①R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "Ca3N2",
+   "flags_before": [
+    "축②F1_가수분해증가"
+   ],
+   "flags_after": [
+    "축①F1_금속성",
+    "축②F1_가수분해증가"
+   ],
+   "unknown_before": [
+    "축①R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "CoO",
+   "flags_before": [
+    "축③F2_Li반응증가"
+   ],
+   "flags_after": [
+    "축①F1_금속성",
+    "축③F1_Li금속성",
+    "축③F2_Li반응증가"
+   ],
+   "unknown_before": [
+    "축①R2",
+    "축③R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "Cr2O3",
+   "flags_before": [
+    "축②F2_H2S증가",
+    "축③F2_Li반응증가"
+   ],
+   "flags_after": [
+    "축①F1_금속성",
+    "축②F2_H2S증가",
+    "축③F1_Li금속성",
+    "축③F2_Li반응증가"
+   ],
+   "unknown_before": [
+    "축①R2",
+    "축③R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "CrCl3",
+   "flags_before": [
+    "축②F2_H2S증가"
+   ],
+   "flags_after": [
+    "축②F2_H2S증가",
+    "축③F1_Li금속성"
+   ],
+   "unknown_before": [
+    "축①R2",
+    "축③R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "CrO3",
+   "flags_before": [
+    "축②F2_H2S증가",
+    "축③F2_Li반응증가"
+   ],
+   "flags_after": [
+    "축①F1_금속성",
+    "축②F2_H2S증가",
+    "축③F1_Li금속성",
+    "축③F2_Li반응증가"
+   ],
+   "unknown_before": [
+    "축①R2",
+    "축③R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "Cu2O",
+   "flags_before": [
+    "축①F1_금속성",
+    "축③F2_Li반응증가"
+   ],
+   "flags_after": [
+    "축①F1_금속성",
+    "축③F1_Li금속성",
+    "축③F2_Li반응증가"
+   ],
+   "unknown_before": [
+    "축③R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "Fe2O3",
+   "flags_before": [
+    "축③F2_Li반응증가"
+   ],
+   "flags_after": [
+    "축①F1_금속성",
+    "축③F1_Li금속성",
+    "축③F2_Li반응증가"
+   ],
+   "unknown_before": [
+    "축①R2",
+    "축③R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "FeCl3",
+   "flags_before": [
+    "축①F2_반응증가",
+    "축③F2_Li반응증가"
+   ],
+   "flags_after": [
+    "축①F1_금속성",
+    "축①F2_반응증가",
+    "축③F1_Li금속성",
+    "축③F2_Li반응증가"
+   ],
+   "unknown_before": [
+    "축①R2",
+    "축③R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "Ga2O3",
+   "flags_before": [
+    "축②F2_H2S증가",
+    "축③F1_Li금속성",
+    "축③F2_Li반응증가"
+   ],
+   "flags_after": [
+    "축②F2_H2S증가",
+    "축③F1_Li금속성",
+    "축③F2_Li반응증가"
+   ],
+   "unknown_before": [
+    "축①R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "GaN",
+   "flags_before": [
+    "축③F1_Li금속성",
+    "축③F2_Li반응증가"
+   ],
+   "flags_after": [
+    "축①F1_금속성",
+    "축③F1_Li금속성",
+    "축③F2_Li반응증가"
+   ],
+   "unknown_before": [
+    "축①R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "Li3N",
+   "flags_before": [
+    "축②F1_가수분해증가"
+   ],
+   "flags_after": [
+    "축①F1_금속성",
+    "축②F1_가수분해증가"
+   ],
+   "unknown_before": [
+    "축①R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "Mg3N2",
+   "flags_before": [
+    "축①F2_반응증가",
+    "축②F1_가수분해증가"
+   ],
+   "flags_after": [
+    "축①F1_금속성",
+    "축①F2_반응증가",
+    "축②F1_가수분해증가"
+   ],
+   "unknown_before": [
+    "축①R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "MnO",
+   "flags_before": [
+    "축③F2_Li반응증가"
+   ],
+   "flags_after": [
+    "축③F1_Li금속성",
+    "축③F2_Li반응증가"
+   ],
+   "unknown_before": [
+    "축①R2",
+    "축③R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "MoO3",
+   "flags_before": [],
+   "flags_after": [
+    "축③F1_Li금속성"
+   ],
+   "unknown_before": [
+    "축①R2",
+    "축③R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "NiO",
+   "flags_before": [
+    "축③F2_Li반응증가"
+   ],
+   "flags_after": [
+    "축③F1_Li금속성",
+    "축③F2_Li반응증가"
+   ],
+   "unknown_before": [
+    "축①R2",
+    "축③R2"
+   ],
+   "unknown_after": [
+    "축①R2"
+   ]
+  },
+  {
+   "species": "Sb2O5",
+   "flags_before": [],
+   "flags_after": [],
+   "unknown_before": [
+    "축①R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "Sb2S3",
+   "flags_before": [],
+   "flags_after": [],
+   "unknown_before": [
+    "축①R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "V2O5",
+   "flags_before": [],
+   "flags_after": [
+    "축③F1_Li금속성"
+   ],
+   "unknown_before": [
+    "축①R2",
+    "축③R2"
+   ],
+   "unknown_after": []
+  },
+  {
+   "species": "WO3",
+   "flags_before": [
+    "축②F2_H2S증가",
+    "축③F1_Li금속성",
+    "축③F2_Li반응증가"
+   ],
+   "flags_after": [
+    "축②F2_H2S증가",
+    "축③F1_Li금속성",
+    "축③F2_Li반응증가"
+   ],
+   "unknown_before": [
+    "축①R2"
+   ],
+   "unknown_after": []
+  }
+ ],
+ "selection_sealed": [
+  "V2O5"
+ ],
+ "selection_sensitivity": [
+  "Sb2O5",
+  "SiO2"
+ ],
+ "axes_in_pareto": [
+  "delta_NCM_LNO_half_meV",
+  "delta_Li_meV"
+ ],
+ "rule": "R3 — 표시 없는 설계의 Pareto 비지배 집합 (가중치 없음 · 순위 없음)",
+ "pareto_rows_sensitivity": [
+  {
+   "species": "Sb2O5",
+   "unknown": [],
+   "delta_NCM_LNO_half_meV": 101.13,
+   "delta_Li_meV": 73.29
+  },
+  {
+   "species": "SiO2",
+   "unknown": [],
+   "delta_NCM_LNO_half_meV": 33.0,
+   "delta_Li_meV": 81.37
+  }
+ ],
+ "counts": {
+  "axis1_class_sealed": {
+   "metallic": 2,
+   "wide": 64,
+   "undetermined": 18,
+   "intermediate": 3,
+   "na": 4
+  },
+  "axis1_class_sensitivity": {
+   "metallic": 12,
+   "wide": 70,
+   "intermediate": 5,
+   "na": 4
+  },
+  "axis3_class_sealed": {
+   "metallic": 30,
+   "intermediate": 25,
+   "wide": 17,
+   "undetermined": 16,
+   "na": 3
+  },
+  "axis3_class_sensitivity": {
+   "metallic": 41,
+   "intermediate": 25,
+   "wide": 17,
+   "undetermined": 5,
+   "na": 3
+  },
+  "n_flagged_sealed": 66,
+  "n_flagged_sensitivity": 68
+ }
+}

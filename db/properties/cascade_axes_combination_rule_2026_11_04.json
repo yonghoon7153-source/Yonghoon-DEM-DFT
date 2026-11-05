@@ -95,5 +95,10 @@
   "규칙": "R3 — G4 를 넘고 안 겹친 연속 축 둘 → 위험 표시 (세 축) 없는 설계의 Pareto 비지배 집합 (가중치 · 순위 없음) · R2 모름은 빼지도 통과시키지도 않음",
   "결과": "Pareto 축 ['delta_NCM_LNO_half_meV', 'delta_Li_meV'] · 표시 66 / 91 · 남은 25 · 선택 ['V2O5'] (cascade_axis_li_readout_2026_11_05.json combination) · V2O5 는 축 ① · ③ R2 모름",
   "⛔": "결과를 본 뒤 G4 · G7 문턱 · R2 모름 처리 · 위험 표시를 바꾸지 않는다 (R0 새 숫자 없음)"
+ },
+ "+U_민감도_2026_11_05": {
+  "무엇": "사후 민감도 (규칙 변경 아님) — 축 ① · ③ 의 '+U · Cu 음이온 산물 = 미판정' 을 같은 봉인 문턱의 MP 갭 등급으로 바꿔 R3 를 다시 냄",
+  "결과": "선택 봉인 [V2O5] → 민감도 [Sb2O5, SiO2] · 표시 66 → 68 · db/properties/cascade_axes_plusU_gap_sensitivity_2026_11_05.json (sha16 c5bce8851f854e7b)",
+  "⛔": "이 규칙 (R0–R6) 은 바뀌지 않았다 · 민감도 선택을 봉인 선택처럼 쓰지 않는다 · 자세한 것은 cascade_screening_axes_plan_2026_10_15.json '+U_민감도_2026_11_05'"
  }
 }
