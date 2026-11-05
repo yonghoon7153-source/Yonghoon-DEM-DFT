@@ -4378,10 +4378,14 @@ def _selftest():
                          ("prev_bad", '{"prev": {"status": "garbage"}, "new_status": "pass"}'),
                          ("new_bad", '{"prev": {"status": "pass"}, "new_status": "x"}'),
                          ("ok", '{"prev": {"status": "incomplete"}, "new_status": "pass"}'),
-                         ("ok_raw", '{"prev": {"status": null, "raw_b64": ""}, "new_status": "pass"}')):
+                         ("ok_raw", '{"prev": {"status": null, "raw_b64": ""}, "new_status": "pass"}'),
+                         ("first_ok", '{"first": true, "new_status": "pass", "new_provenance": {}}'),
+                         ("first_with_prev", '{"first": true, "prev": {"status": "fail"}, "new_status": "pass"}'),
+                         ("first_bad_status", '{"first": true, "new_status": "x"}')):
             (rhs_ / VERDICT_HISTORY).write_text(ln_ + "\n", encoding="utf-8")
             hres_[nm_] = _verdict_records(rhs_)[1] is None
-        want_h = {"prev_null": False, "no_prev": False, "prev_bad": False, "new_bad": False, "ok": True, "ok_raw": True}
+        want_h = {"prev_null": False, "no_prev": False, "prev_bad": False, "new_bad": False, "ok": True, "ok_raw": True,
+                  "first_ok": True, "first_with_prev": False, "first_bad_status": False}
         chk(hres_ == want_h, "⛔음성 DQ 전 리뷰 P2-C: 이력 줄의 prev 없음 · null · 모르는 이전 상태 · 모르는 새 상태 = 해석할 수 없는 기록 "
                              f"(상태 없는 원문 판정은 기록으로 남겨 요약이 따로 본다) ({hres_})")
         rmq_ = pathlib.Path(td_) / "_mark_summary"; rmq_.mkdir()
