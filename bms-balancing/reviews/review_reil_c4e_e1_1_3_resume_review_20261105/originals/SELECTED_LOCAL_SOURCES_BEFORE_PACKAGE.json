@@ -1,0 +1,46 @@
+{
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_1_3_RESUME_SEND_20261105.md",
+      "bytes": 2768,
+      "sha256": "cf52dbd87f072994d220efc0ea9cf332c5507d83031dd4bf92e364944a55f464"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_1_3_RESUME_REQUEST_20261105.md",
+      "bytes": 10493,
+      "sha256": "4eea24d685c92e8bbfc4f8fd01e040486a46bf5007c110e3deb4be59273bf5c6"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v3_20261105\\REVIEW_DECISION.json",
+      "bytes": 3367,
+      "sha256": "d0a51202b539860f265e24ed2b13c327f8eacd1548b7d9a054307dbd69b41429"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v3_20261105\\REVIEW_KO.txt",
+      "bytes": 6058,
+      "sha256": "d329d7670ccdb4d3c8c3815967a10f5f9ad85c343de54ff68b99a5a5c1b99435"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v3_20261105\\SOURCE_IDENTITIES.json",
+      "bytes": 8712,
+      "sha256": "642cb4ac580c4fc923b37c9dffe737fbf40086036c3fdb013128415d404f4db4"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v3_20261105\\CODEX_REPLY_KO.txt",
+      "bytes": 1947,
+      "sha256": "e028c971fc000daf517a58e09da52b9e624479055d44a7a044ebc38e81b47762"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v3_20261105\\DELIVERY_RECEIPT.json",
+      "bytes": 1926,
+      "sha256": "e2955c165919e87709c26a80eaf418d45b88de228e7c88b6e98973b4c4746b9b"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v3_20261105\\PACKAGE_TOOL_RETURN.json",
+      "bytes": 2123,
+      "sha256": "9bbec9b3553e5abc11c0312d9f3d94e79da569da1a8d6c95b21bbbc1ad352c06"
+    }
+  ],
+  "count": 8,
+  "scope": "Original local attachments and selected prior local review records only."
+}

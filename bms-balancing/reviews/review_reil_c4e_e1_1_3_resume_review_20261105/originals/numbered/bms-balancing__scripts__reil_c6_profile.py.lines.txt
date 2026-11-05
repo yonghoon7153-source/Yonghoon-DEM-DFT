@@ -1,0 +1,260 @@
+1: """REIL C6 — 판 · 환경 고정의 측정 · 봉인 (`docs/REIL_PREREQUISITES_STATUS_20261004.md` §8-2). 버리는 venv 의 python 으로 실행한다.
+2: 
+3:     <venv>/bin/python bms-balancing/scripts/reil_c6_profile.py emit  <out_dir>   # 측정 → 봉인 파일 (결정적인 것만)
+4:     <venv>/bin/python bms-balancing/scripts/reil_c6_profile.py check <out_dir>   # 같은 venv 에서 다시 만들어 바이트 대조 (다르면 rc 1)
+5: 
+6: 재는 것: 판 · 플랫폼 · 설치 배포판 전부 (lock — `degradation-degeneracy/tools/env_profile.py` 의 `measure()` 를 venv 의 site-packages 에만) ·
+7: NumPy · SciPy 의 빌드 의존성 (BLAS · LAPACK) · COBYQA 옵션 8 개 (부속 A §3-1) 의 이름 · 설명과 실제 전달 (합성 이차 함수 하나 — REIL 자료
+8: 아님) · Sobol Phase A 시작점 배열 (부속 A §3-2 · d = 4 · 64 점 · seed 0 · 1 · 단위 입방체와 상자 둘) 의 sha256 식별 · seed 인자 이름
+9: (rng= · 옛 seed= 가 같은 배열을 내는지).
+10: 
+11: 재지 않는 것: REIL xlsx · pkl · 노트북 · P0 · 맞춤 · max_q 에 기대는 배열 · label seed 배열 (부속 A §3-6 · 부속 B §2-1 의 둘째 시점).
+12: 봉인 파일에 시각 · 커널 판 · CPU 런타임 특성 · 해 x 의 비트는 넣지 않는다 (같은 판의 다른 기계에서도 같아야 하는 것만 봉인한다).
+13: """
+14: from __future__ import annotations
+15: 
+16: import filecmp
+17: import hashlib
+18: import importlib.metadata as md
+19: import importlib.util
+20: import inspect
+21: import json
+22: import platform
+23: import sys
+24: import tempfile
+25: import warnings
+26: from pathlib import Path
+27: 
+28: REPO = Path(__file__).resolve().parents[2]
+29: ENV_PROFILE = REPO / "degradation-degeneracy" / "tools" / "env_profile.py"
+30: 
+31: #: 부속 A §3-1 — 판 기본값에 기대지 않고 모두 명시해 전달한다
+32: COBYQA_OPTIONS = {"maxfev": 2000, "maxiter": 4000, "f_target": float("-inf"), "feasibility_tol": 1e-12,
+33:                   "scale": True, "initial_tr_radius": 1.0, "final_tr_radius": 1e-6, "disp": False}
+34: #: x = (m_P, m_N, d_P, d_N) — A0 = 그들 상자 (v2 §1-1) · A1 · A2 = 넓힌 상자 (v2 §4-1)
+35: BOXES = {"A0_their_box": ([0.6, 0.5, 0.005, 0.0], [1.1, 1.1, 0.5, 1.0]),
+36:          "A1_A2_wide_box": ([0.3, 0.3, -0.5, -0.5], [1.5, 1.5, 1.5, 1.5])}
+37: SOBOL_D, SOBOL_M, SOBOL_SEEDS = 4, 6, (0, 1)          # 2**6 = 64 점 (부속 A §3-2)
+38: PACKAGES = ("numpy", "scipy", "pandas", "openpyxl", "matplotlib", "seaborn", "pymoo")
+39: FILES = ("REIL_C6.lock.txt", "PROFILE.json", "COBYQA_OPTIONS.json", "SOBOL_PHASE_A.json")
+40: #: 봉인 밖 사람용 기록 (시각 · 커널 판이 들어 결정적이지 않다) — MANIFEST 에 넣지 않고 check 도 대조하지 않는다. 그 밖의 파일은 전부 대조한다
+41: HUMAN_RECORDS = ("README.md", "C6_RUN.log")
+42: 
+43: 
+44: def _dump(obj) -> str:
+45:     return json.dumps(obj, ensure_ascii=False, sort_keys=True, indent=1) + "\n"
+46: 
+47: 
+48: def _sha(b: bytes) -> str:
+49:     return hashlib.sha256(b).hexdigest()
+50: 
+51: 
+52: def _site_packages() -> list[str]:
+53:     if sys.prefix == sys.base_prefix:
+54:         raise SystemExit("venv 밖이다 — 버리는 venv 의 python 으로만 실행한다 (운영 환경을 재지 않는다)")
+55:     sp = [p for p in sys.path if p.startswith(sys.prefix) and p.endswith("site-packages")]
+56:     if len(sp) != 1:
+57:         raise SystemExit(f"venv site-packages 를 하나로 정하지 못했다: {sp}")
+58:     return sp
+59: 
+60: 
+61: def record_index(paths, normalize) -> dict:
+62:     """배포판마다 RECORD 의 {경로: 해시} — 같은 경로를 여러 배포판이 주장하는지 보려고."""
+63:     import csv
+64:     index = {}
+65:     for dist in md.distributions(path=paths):
+66:         rows = csv.reader((dist.read_text("RECORD") or "").splitlines())
+67:         index[normalize(dist.metadata["Name"])] = {r[0]: r[1] for r in rows if len(r) >= 2 and r[1]}
+68:     return index
+69: 
+70: 
+71: #: ★ 2026-10-06 C6-N1 — '설명된 충돌' 의 **허용 목록** (정확 일치만 통과). 2026-10-05 첫 emit 에서 관측된 한 건 그대로: pymoo →
+72: #: alive-progress → about-time 의 두 wheel 이 venv 꼭대기 LICENSE 를 함께 주장하고 나중에 깔린 alive-progress 가 덮었다. 판 · RECORD 파일
+73: #: sha256 은 봉인 lock (`reil_c6_20261005/REIL_C6.lock.txt` 13 · 14 행). 예전 규칙 (`../` 로 시작 + 다른 RECORD 가 디스크와 같음) 은
+74: #: `../../../bin/tool` 같은 실행 파일 충돌도 통과시켰다 (Codex `prereview_reil_v2_annexD_c6_20261006` C6-N1). 새 충돌은 봉인 거부 → 사람
+75: #: 판단 → 이 목록 개정은 새 등록이다.
+76: EXPLAINED_COLLISIONS = (
+77:     {"path": "../../../LICENSE",
+78:      "covered": ("about-time", "4.2.1", "e5a630322aead38c00d7d20ca0050eb7cd2024eb035505a6ef7bab8e5329f0bd"),
+79:      "disk_owner": ("alive-progress", "3.3.0", "00c80da0799ae100798d538d9946e030259eae3b2b39cb70f99e7ff6ac7e9be8")},
+80: )
+81: 
+82: 
+83: def _ident(dists, name) -> tuple:
+84:     d = dists.get(name) or {}
+85:     return (name, d.get("version"), d.get("record"))
+86: 
+87: 
+88: def classify_record_mismatches(mismatches, index, dists=None) -> tuple[list, list]:
+89:     """RECORD 불일치를 둘로 — `EXPLAINED_COLLISIONS` 의 한 항목과 **정확히** 맞는 것 (경로 문자열 · 두 주장자만 · 덮인 쪽 · 디스크 쪽의 이름 ·
+90:     판 · RECORD 파일 sha256 · 방향 · 디스크 해시 = 디스크 쪽 RECORD 값) 만 기록하고 통과, 그 밖은 전부 fatal (봉인 거부). `dists` (=
+91:     `measure()["dists"]`) 가 없으면 판 · RECORD 를 대조할 수 없으므로 전부 fatal. 통과한 충돌은 해시 셋을 lock 에 값으로 남긴다."""
+92:     fatal, collisions = [], []
+93:     for name, rel, want, got in mismatches:
+94:         others = sorted(n for n, rows in index.items() if n != name and rel in rows)
+95:         allowed = None
+96:         if dists is not None and len(others) == 1 and index[others[0]][rel] == got:
+97:             owner = others[0]
+98:             allowed = next((a for a in EXPLAINED_COLLISIONS
+99:                             if rel == a["path"] and _ident(dists, name) == a["covered"]
+100:                             and _ident(dists, owner) == a["disk_owner"]), None)
+101:         if allowed is None:
+102:             fatal.append((name, rel, want, got))
+103:             continue
+104:         collisions.append({"path": rel, "dist": name, "claimed_by": sorted([name, owner]), "disk_matches": owner,
+105:                            "covered": {"version": allowed["covered"][1], "record_sha256": allowed["covered"][2], "expected": want},
+106:                            "disk_owner": {"version": allowed["disk_owner"][1], "record_sha256": allowed["disk_owner"][2],
+107:                                           "expected": index[owner][rel]},
+108:                            "disk": got})
+109:     return fatal, collisions
+110: 
+111: 
+112: def lock_text() -> str:
+113:     spec = importlib.util.spec_from_file_location("reil_c6_env_profile", ENV_PROFILE)
+114:     ep = importlib.util.module_from_spec(spec)
+115:     spec.loader.exec_module(ep)
+116:     paths = _site_packages()
+117:     prof = ep.measure(paths=paths)
+118:     bad, collisions = classify_record_mismatches(prof["files"]["mismatches"], record_index(paths, ep.normalize),
+119:                                                dists=prof["dists"])
+120:     if bad or prof["shadowed"]:
+121:         raise SystemExit(f"설치 파일 RECORD 불일치 (설명 안 됨) {bad} · 가려진 배포판 {prof['shadowed']} — 봉인하지 않는다")
+122:     head = ["# REIL C6 lock — 버리는 venv 의 site-packages 만 (degradation-degeneracy/tools/env_profile.py measure() · 그 파일 sha256 "
+123:             + _sha(ENV_PROFILE.read_bytes()) + ")",
+124:             "# 이름==판 · RECORD 파일의 sha256 · 설치 파일은 RECORD 와 전부 대조했다 (아래 files · 설명된 충돌만 collision 줄로)",
+125:             f'#@ profile "REIL-C6"']
+126:     head += [f"#@ {k} {json.dumps(prof[k], ensure_ascii=False)}" for k in ("python", "implementation", "system", "machine", "libc")]
+127:     head += [f"#@ files {json.dumps({'verified': prof['files']['verified'], 'unhashed': prof['files']['unhashed'], 'mismatches': len(prof['files']['mismatches']), 'explained_collisions': len(collisions)})}"]
+128:     head += [f"#@ collision {json.dumps(c, ensure_ascii=False, sort_keys=True)}" for c in collisions]
+129:     head += [f"#@ dists_without_record {json.dumps(prof['dists_without_record'])}", ""]
+130:     body = [f"{n}=={d['version']}  # record-sha256 {d['record']}" for n, d in sorted(prof["dists"].items())]
+131:     return "\n".join(head + body) + "\n"
+132: 
+133: 
+134: def profile() -> dict:
+135:     import numpy as np
+136:     import scipy
+137:     import scipy._lib.cobyqa as cobyqa
+138:     np_cfg = np.show_config(mode="dicts")
+139:     sp_cfg = scipy.show_config(mode="dicts")
+140:     return {
+141:         "python": {"version": platform.python_version(), "implementation": platform.python_implementation(), "build": list(platform.python_build())},
+142:         "platform": {"system": platform.system(), "machine": platform.machine(), "libc": " ".join(platform.libc_ver()).strip()},
+143:         "packages": {p: md.version(p) for p in PACKAGES},
+144:         "build_dependencies": {"numpy": np_cfg.get("Build Dependencies"), "scipy": sp_cfg.get("Build Dependencies")},
+145:         "cobyqa_implementation": {"module": cobyqa.__name__, "version": getattr(cobyqa, "__version__", None)},
+146:     }
+147: 
+148: 
+149: def cobyqa_options() -> dict:
+150:     import numpy as np
+151:     from scipy.optimize import Bounds, minimize, show_options
+152:     import scipy
+153:     text = show_options("minimize", "cobyqa", disp=False)
+154:     lines = text.splitlines()
+155:     table = {}
+156:     for name, value in COBYQA_OPTIONS.items():
+157:         hit = [i for i, ln in enumerate(lines) if " : " in ln and not ln.startswith(" ") and ln.split(" : ")[0].strip() == name]
+158:         desc = []
+159:         if hit:
+160:             for ln in lines[hit[0] + 1:]:
+161:                 if not ln.startswith(" "):
+162:                     break
+163:                 desc.append(ln.strip())
+164:         table[name] = {"planned": repr(value), "documented": bool(hit), "type": lines[hit[0]].split(" : ", 1)[1].strip() if hit else None,
+165:                        "description": " ".join(desc) or None}
+166:     impl = Path(scipy.__file__).parent / "_lib" / "cobyqa"
+167:     impl_files = {f"scipy/_lib/cobyqa/{n}": _sha((impl / n).read_bytes()) for n in ("main.py", "problem.py", "framework.py", "settings.py")}
+168:     with warnings.catch_warnings(record=True) as caught:
+169:         warnings.simplefilter("always")
+170:         res = minimize(lambda x: float(np.sum((x - 0.3) ** 2)), np.full(4, 0.9), method="COBYQA",
+171:                        bounds=Bounds([0.0] * 4, [1.0] * 4), options=dict(COBYQA_OPTIONS))
+172:     messages = sorted({f"{w.category.__name__}: {w.message}" for w in caught})
+173:     unknown = [m for m in messages if "Unknown solver options" in m]
+174:     return {
+175:         "options": table,
+176:         "implementation_files_sha256": impl_files,
+177:         "all_documented": all(v["documented"] for v in table.values()),
+178:         "synthetic_call": {"function": "sum((x - 0.3)**2) · x0 = 0.9 × 4 · bounds [0, 1]^4 (REIL 자료 아님)",
+179:                            "warnings": messages, "unknown_option_warnings": unknown, "success": bool(res.success),
+180:                            "x_within_1e-6_of_0.3": bool(np.all(np.abs(res.x - 0.3) <= 1e-6))},
+181:         "accepted": all(v["documented"] for v in table.values()) and not unknown and bool(res.success),
+182:     }
+183: 
+184: 
+185: def sobol(out: Path) -> dict:
+186:     import numpy as np
+187:     from scipy.stats import qmc
+188:     params = inspect.signature(qmc.Sobol).parameters
+189:     kw = "rng" if "rng" in params else "seed"
+190:     arrays, warn = {}, []
+191:     for seed in SOBOL_SEEDS:
+192:         with warnings.catch_warnings(record=True) as caught:
+193:             warnings.simplefilter("always")
+194:             unit = qmc.Sobol(d=SOBOL_D, scramble=True, **{kw: seed}).random_base2(m=SOBOL_M)
+195:         warn += [f"{w.category.__name__}: {w.message}" for w in caught]
+196:         arrays[f"unit_seed{seed}"] = unit
+197:         for box, (lo, hi) in BOXES.items():
+198:             arrays[f"{box}_seed{seed}"] = qmc.scale(unit, lo, hi)
+199:     # 부속 A §3-1 "판에 따라 seed 인자 이름과 생성 배열이 다를 수 있으므로" — 옛 이름 seed= 가 같은 정수로 같은 배열을 내는지 (1.17.1: 아니다 · 경고 없음)
+200:     legacy = {}
+201:     if kw == "rng" and "seed" in params:
+202:         for seed in SOBOL_SEEDS:
+203:             with warnings.catch_warnings(record=True) as caught:
+204:                 warnings.simplefilter("always")
+205:                 old = qmc.Sobol(d=SOBOL_D, scramble=True, seed=seed).random_base2(m=SOBOL_M)
+206:             gen = qmc.Sobol(d=SOBOL_D, scramble=True, rng=np.random.default_rng(seed)).random_base2(m=SOBOL_M)
+207:             legacy[f"seed{seed}"] = {"seed_keyword_same_array_as_rng": bool(np.array_equal(old, arrays[f"unit_seed{seed}"])),
+208:                                      "seed_keyword_warnings": sorted({f"{w.category.__name__}: {w.message}" for w in caught}),
+209:                                      "rng_default_rng_same_array_as_rng_int": bool(np.array_equal(gen, arrays[f"unit_seed{seed}"]))}
+210:     rec = {}
+211:     for name, a in sorted(arrays.items()):
+212:         a = np.ascontiguousarray(a, dtype="<f8")
+213:         np.save(out / f"sobol_{name}.npy", a, allow_pickle=False)
+214:         rec[name] = {"shape": list(a.shape), "raw_float64_le_sha256": _sha(a.tobytes()),
+215:                      "npy_sha256": _sha((out / f"sobol_{name}.npy").read_bytes())}
+216:     return {"call": f"scipy.stats.qmc.Sobol(d={SOBOL_D}, scramble=True, {kw}=<seed>).random_base2(m={SOBOL_M})",
+217:             "seed_keyword": kw, "signature": str(inspect.signature(qmc.Sobol)), "boxes": BOXES,
+218:             "warnings": sorted(set(warn)), "arrays": rec, "legacy_seed_keyword": legacy,
+219:             "seal_note": "식별 — 정식 봉인은 부속 B §2-1 의 '맞춤 전 (P0 뒤 · 첫 지역 실행 전)' 에 같은 판에서 다시 만들어 이 sha256 과 대조"}
+220: 
+221: 
+222: def emit(out: Path) -> None:
+223:     out.mkdir(parents=True, exist_ok=True)
+224:     if any(out.iterdir()):
+225:         raise SystemExit(f"{out} 가 비어 있지 않다 — emit 은 빈 디렉터리에만 쓴다 (봉인을 덮어쓰지 않는다 · 다시 대조는 check)")
+226:     (out / "REIL_C6.lock.txt").write_text(lock_text(), encoding="utf-8")
+227:     (out / "PROFILE.json").write_text(_dump(profile()), encoding="utf-8")
+228:     cob = cobyqa_options()
+229:     (out / "COBYQA_OPTIONS.json").write_text(_dump(cob), encoding="utf-8")
+230:     if not cob["accepted"]:   # 실패 기록은 남기고 Sobol · MANIFEST 는 쓰지 않는다 (완결된 봉인처럼 보이지 않게)
+231:         raise SystemExit("COBYQA 옵션 대조 실패 — 부속 A §3-1 의 fail-closed: 실행하지 않고 표를 새 등록으로 고친다")
+232:     (out / "SOBOL_PHASE_A.json").write_text(_dump(sobol(out)), encoding="utf-8")
+233:     names = sorted(p.name for p in out.iterdir() if p.is_file() and p.name != "MANIFEST.json")
+234:     (out / "MANIFEST.json").write_text(_dump({n: _sha((out / n).read_bytes()) for n in names}), encoding="utf-8")
+235: 
+236: 
+237: def check(sealed: Path) -> int:
+238:     man = json.loads((sealed / "MANIFEST.json").read_text(encoding="utf-8"))
+239:     bad = [n for n, h in man.items() if not (sealed / n).is_file() or _sha((sealed / n).read_bytes()) != h]
+240:     with tempfile.TemporaryDirectory() as tmp:
+241:         fresh = Path(tmp) / "fresh"
+242:         emit(fresh)
+243:         # MANIFEST.json 도 대조 (항목을 뺀 MANIFEST 를 잡는다) · 봉인 쪽에만 있는 파일도 대조 대상 (fresh 에 없으니 다름)
+244:         names = sorted((set(man) | {p.name for p in fresh.iterdir()} | {p.name for p in sealed.iterdir()}) - set(HUMAN_RECORDS))
+245:         bad += [n for n in names if not (sealed / n).is_file() or not (fresh / n).is_file()
+246:                 or not filecmp.cmp(sealed / n, fresh / n, shallow=False)]
+247:     for n in sorted(set(bad)):
+248:         print("다름:", n)
+249:     print("check", "OK" if not bad else f"FAIL ({len(set(bad))})")
+250:     return 0 if not bad else 1
+251: 
+252: 
+253: if __name__ == "__main__":
+254:     if len(sys.argv) != 3 or sys.argv[1] not in ("emit", "check"):
+255:         raise SystemExit(__doc__)
+256:     if sys.argv[1] == "emit":
+257:         emit(Path(sys.argv[2]))
+258:         print("emit OK", sys.argv[2])
+259:     else:
+260:         sys.exit(check(Path(sys.argv[2])))

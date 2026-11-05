@@ -1,0 +1,21 @@
+{
+  "pin": "2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c",
+  "raw_sources_count": 41,
+  "S1_fixed_values_matched": true,
+  "fixed_SOURCE_list_sha_matched": true,
+  "identity_helper_sha_matched": true,
+  "prior_judge_items": 43,
+  "all_items_ok_reported": true,
+  "prior_judge_inputs_hashes_matched": 13,
+  "prior_identity_files_unchanged": 18,
+  "watch_state_reported": "published",
+  "watch_rc_reported": 0,
+  "watch_links_match": true,
+  "watch_observation_within_reported_deadline": true,
+  "previous_push_return_minus_Ta_seconds": 11021,
+  "new_target_or_judge_execution": 0,
+  "limitations": [
+    "Static evidence check, not a fresh env observation or independent remote runtime audit.",
+    "Working-directory types on remote machine were not inspected."
+  ]
+}

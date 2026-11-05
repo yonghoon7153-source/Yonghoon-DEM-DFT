@@ -1,0 +1,177 @@
+1: {
+2:  "data": null,
+3:  "extra_executed": {
+4:   "bms-balancing/scripts/reil_c6_profile.py": {
+5:    "bytes": 15915,
+6:    "expected": {
+7:     "bytes": 15915,
+8:     "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"
+9:    },
+10:    "ok": true,
+11:    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c6_profile.py",
+12:    "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"
+13:   },
+14:   "degradation-degeneracy/tools/env_profile.py": {
+15:    "bytes": 22333,
+16:    "expected": {
+17:     "bytes": 22333,
+18:     "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"
+19:    },
+20:    "ok": true,
+21:    "path": "/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tools/env_profile.py",
+22:    "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"
+23:   }
+24:  },
+25:  "git": "/usr/bin/git",
+26:  "helper": {
+27:   "expected": "92bb3bca2dcd56982bd4d4ddc02bb8ed84615d5b1b6af6385d69b66c8f5df900",
+28:   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/00_identity_c4.py",
+29:   "sha256": "92bb3bca2dcd56982bd4d4ddc02bb8ed84615d5b1b6af6385d69b66c8f5df900",
+30:   "why": null
+31:  },
+32:  "modules": {
+33:   "scripts/reil_c4_e3a.py": {
+34:    "bytes": 32311,
+35:    "expected": {
+36:     "bytes": 32311,
+37:     "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+38:    },
+39:    "ok": true,
+40:    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py",
+41:    "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+42:   },
+43:   "scripts/reil_c4_monitor.py": {
+44:    "bytes": 21546,
+45:    "expected": {
+46:     "bytes": 21546,
+47:     "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+48:    },
+49:    "ok": true,
+50:    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py",
+51:    "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+52:   },
+53:   "scripts/reil_c4e_run.py": {
+54:    "bytes": 53853,
+55:    "expected": {
+56:     "bytes": 53853,
+57:     "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+58:    },
+59:    "ok": true,
+60:    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4e_run.py",
+61:    "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+62:   },
+63:   "scripts/reil_c5_pilot.py": {
+64:    "bytes": 47164,
+65:    "expected": {
+66:     "bytes": 47164,
+67:     "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+68:    },
+69:    "ok": true,
+70:    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py",
+71:    "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+72:   },
+73:   "scripts/reil_p0.py": {
+74:    "bytes": 23941,
+75:    "expected": {
+76:     "bytes": 23941,
+77:     "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+78:    },
+79:    "ok": true,
+80:    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_p0.py",
+81:    "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+82:   }
+83:  },
+84:  "ok": true,
+85:  "probe": {
+86:   "dont_write_bytecode": 1,
+87:   "executable": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python",
+88:   "ignore_environment": 1,
+89:   "isolated": 1,
+90:   "meta_path": [
+91:    "_distutils_hack.DistutilsMetaFinder",
+92:    "_frozen_importlib.BuiltinImporter",
+93:    "_frozen_importlib.FrozenImporter",
+94:    "_frozen_importlib_external.PathFinder"
+95:   ],
+96:   "no_user_site": 1,
+97:   "path": [
+98:    "/usr/lib/python311.zip",
+99:    "/usr/lib/python3.11",
+100:    "/usr/lib/python3.11/lib-dynload",
+101:    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/lib/python3.11/site-packages"
+102:   ],
+103:   "prefix": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv",
+104:   "pycache_prefix": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/c4e1/pycache/03_identity",
+105:   "safe_path": true,
+106:   "sitecustomize": "/usr/lib/python3.11/sitecustomize.py",
+107:   "specs": {
+108:    "scripts": {
+109:     "finder": "_frozen_importlib_external.PathFinder",
+110:     "found": true,
+111:     "loader": null,
+112:     "locations": [
+113:      "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts"
+114:     ],
+115:     "origin": null
+116:    },
+117:    "scripts.reil_c4_e3a": {
+118:     "finder": "_frozen_importlib_external.PathFinder",
+119:     "found": true,
+120:     "loader": "_frozen_importlib_external.SourceFileLoader",
+121:     "locations": null,
+122:     "origin": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py"
+123:    },
+124:    "scripts.reil_c4_monitor": {
+125:     "finder": "_frozen_importlib_external.PathFinder",
+126:     "found": true,
+127:     "loader": "_frozen_importlib_external.SourceFileLoader",
+128:     "locations": null,
+129:     "origin": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py"
+130:    },
+131:    "scripts.reil_c5_pilot": {
+132:     "finder": "_frozen_importlib_external.PathFinder",
+133:     "found": true,
+134:     "loader": "_frozen_importlib_external.SourceFileLoader",
+135:     "locations": null,
+136:     "origin": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py"
+137:    }
+138:   },
+139:   "version": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]"
+140:  },
+141:  "problems": [],
+142:  "seal_lock": {
+143:   "lock_first_line": "# REIL C6 lock — 버리는 venv 의 site-packages 만 (degradation-degeneracy/tools/env_profile.py measure() · 그 파일 sha256 83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563)",
+144:   "lock_sha256": "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa",
+145:   "manifest_lock_entry": "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa",
+146:   "manifest_sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc"
+147:  },
+148:  "source": null,
+149:  "sources": {
+150:   "entries": {
+151:    "scripts/reil_c4_e3a.py": {
+152:     "bytes": 32311,
+153:     "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+154:    },
+155:    "scripts/reil_c4_monitor.py": {
+156:     "bytes": 21546,
+157:     "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+158:    },
+159:    "scripts/reil_c4e_run.py": {
+160:     "bytes": 53853,
+161:     "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+162:    },
+163:    "scripts/reil_c5_pilot.py": {
+164:     "bytes": 47164,
+165:     "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+166:    },
+167:    "scripts/reil_p0.py": {
+168:     "bytes": 23941,
+169:     "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+170:    }
+171:   },
+172:   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+173:   "sha256_fixed": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52"
+174:  },
+175:  "step": "identity",
+176:  "utc": "2026-11-05T01:19:09.728Z"
+177: }

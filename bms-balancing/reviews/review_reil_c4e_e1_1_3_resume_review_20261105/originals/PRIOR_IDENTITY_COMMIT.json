@@ -1,0 +1,118 @@
+{
+  "sha": "b5decbbeab84997d58073539bde870af28bb00dc",
+  "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/b5decbbeab84997d58073539bde870af28bb00dc",
+  "message": "REIL C4-E · E1-1–3 c — E1-1 identity (감시 published · 잔류 0 · 판정기 MATCH = 수동 판정 · 열여덟) · 커밋 관문 통과\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_0157zrP6GFu6cJF5x8CwZaEm",
+  "parents": [
+    "7f13afa8d804953f279b0261d9f84d4dc36016be"
+  ],
+  "files": [
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.json",
+      "sha": "3df21137b342dfac889cd5ed04e3e03ec6c9067d",
+      "status": "added",
+      "changes": 18
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.judge.json",
+      "sha": "e45bcaad23c255b69ef935c47f9ba38e0ee94812",
+      "status": "added",
+      "changes": 396
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.launch_epoch.txt",
+      "sha": "b488487940ffa80ca71cf2889090c392f50fc102",
+      "status": "added",
+      "changes": 1
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.leftover_1.json",
+      "sha": "32516f546c430748c4af1936156e508af82c3da6",
+      "status": "added",
+      "changes": 22
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.meta.json",
+      "sha": "f545c60c536a80c2e89142e05afd33b0df465e23",
+      "status": "added",
+      "changes": 240
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_end.json",
+      "sha": "8b6c9c0021005bb95702f1c51a2bd3d591555114",
+      "status": "added",
+      "changes": 13
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_rc.txt",
+      "sha": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56",
+      "status": "added",
+      "changes": 1
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_start.json",
+      "sha": "42ca8928333863691edb6358d4dff68fbeea6fc4",
+      "status": "added",
+      "changes": 40
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_stderr.txt",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "status": "added",
+      "changes": 0
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_stdout.txt",
+      "sha": "f0e1e09a4e1f2fc444e91e5bfcb97732c0dbcb1e",
+      "status": "added",
+      "changes": 1
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.porcelain_end.txt",
+      "sha": "c7c05a2a90248d1d19d404ca0e56dac045fc0172",
+      "status": "added",
+      "changes": 9
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.porcelain_start.txt",
+      "sha": "308e988ad6ff11390da86a12002ca1975019f688",
+      "status": "added",
+      "changes": 6
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.precheck.json",
+      "sha": "34e080cb2279845ee51f6eea5de9cff8dbdeb5b6",
+      "status": "added",
+      "changes": 177
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.stderr.log",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "status": "added",
+      "changes": 0
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.stdout.log",
+      "sha": "f937346f0986d1fbf954437c0afc2aa1908415f6",
+      "status": "added",
+      "changes": 1
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.watch.json",
+      "sha": "fe702cf94302073ecf3b227aa7f5e1177bfffddf",
+      "status": "added",
+      "changes": 17
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.watch_1.begin.json",
+      "sha": "aa42fddac5caebba333736b2d2effae9cd11c6d5",
+      "status": "added",
+      "changes": 12
+    },
+    {
+      "filename": "bms-balancing/evidence/reil_c4e1_20261105/03_identity.wrapper_output.txt",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "status": "added",
+      "changes": 0
+    }
+  ]
+}

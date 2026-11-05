@@ -1,0 +1,12 @@
+1: {
+2:  "epoch": 1793841552.6725602,
+3:  "k": 1,
+4:  "kind": "REIL_E113_WATCH_BEGIN",
+5:  "launch_epoch": 1793841548,
+6:  "name": "03_identity",
+7:  "pid": 722,
+8:  "prev_sha256": null,
+9:  "slice_s": 6600.0,
+10:  "step": "identity",
+11:  "utc": "2026-11-05T01:19:12.672Z"
+12: }

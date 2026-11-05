@@ -1,0 +1,432 @@
+1: """REIL P0 — 자료를 처음 여는 결정적 단계 (맞춤 0 · 목적함수 호출 0 · 최적화 0).
+2: 
+3: 승인: `docs/REIL_P0_APPROVAL_REQUEST_20261006.md` (사용자 승인 · 상태 문서 §17 · §19). 규칙 원문: v2 §1-3 · §1-5 · §3 · §4-2 ·
+4: 부속 A §2-5 · 부속 C §4 · 부속 D §3. 판정 함수는 `tests/test_reil_p0.py` 가 합성 입력으로 고정한다 (자료를 열기 전에 RED → GREEN).
+5: 
+6:     <venv>/bin/python -I bms-balancing/scripts/reil_p0.py run <xlsx> <util_LFP.py> <notebook.ipynb> <excerpts.json> <out.json>
+7: 
+8: - 그들 추출 경로 (`visualize_LFP_data` · `extract_battery_data`) 를 **고치지 않고** 부른다. 실패한 입력은 `P0_UNFIT` (다른 경로로 대신하지 않는다).
+9: - raw 대응표 (부속 D §3-1) 의 행 범위는 그들 함수가 돌려주지 않으므로 같은 분절 규칙을 다시 계산해 적고, 그 배열이 그들 출력과 같은지 대조한다.
+10: - 노트북은 JSON 텍스트로만 읽는다 (실행 0). `results/*.pkl` 은 열지 않는다. `util_LFP.py` 는 import 전에 AST 로 최상위 문장을 검사한다.
+11: - 중단 (rc 3): sha256 불일치 · 노트북 상수 불일치 · util 최상위 부작용 · 시트 이름 집합 차이. 예외 (rc 4). 정상 (rc 0).
+12: """
+13: from __future__ import annotations
+14: 
+15: import ast
+16: import hashlib
+17: import json
+18: import math
+19: import re
+20: import sys
+21: from fractions import Fraction as F
+22: 
+23: #: v2 §1-3 · 노트북 셀 9 `theoretical` — 십진 문자열 (판정은 이 문자열의 정확한 유리수로)
+24: NOMINAL = [("1", "1", "1"), ("1", "1", "0.9"), ("1", "1", "0.8"), ("0.64", "1", "1"), ("1", "0.56", "1"), ("0.64", "1", "0.64"),
+25:            ("0.64", "1", "0.58"), ("1", "0.56", "0.9"), ("1", "0.56", "0.8"), ("0.64", "0.56", "0.58"), ("0.64", "0.56", "0.51")]
+26: LABELS = ["Fresh", "LLI-1", "LLI-2", "LAM_PE-1", "LAM_NE-1", "LAM_PE,LLI-1", "LAM_PE,LLI-2", "LAM_NE,LLI-1", "LAM_NE,LLI-2",
+27:           "All mode-1", "All mode-2"]
+28: #: 부속 D §3-3 — 분석 11 · 기준 2 · 밖 6 (C1-core 기록 §1 의 집합 · 실제 xlsx 를 본 목록이 아니다)
+29: SHEETS_ANALYSIS = ["15-LFP 16-Gr Full-cell @ C_20", "15-LFP 16-Gr SOC-10", "15-LFP 16-Gr SOC-20", "12-LFP 16-Gr SOC-100",
+30:                    "15-LFP 12-Gr Full-cell @ C_20", "Full cell after FM SOC 0", "Full cell after FM SOC 10", "15-LFP 12-Gr SOC-10",
+31:                    "15-LFP 12-Gr SOC-20", "12-LFP 12-Gr SOC-10", "12-LFP 12-Gr SOC-20"]
+32: SHEETS_REF = ["12-LFP C_20 Updated", "12-Graphite Half-cell @ C_20"]
+33: SHEETS_OUTSIDE = ["12-LFP 16-Gr Full-cell @ C_20", "12-LFP 16-Gr SOC-10", "12-LFP Half-cell @ C_20", "12-Graphite Half-cell @ C_30",
+34:                   "Half cell after FM", "12-14 12-15"]
+35: SHEETS_ALL = SHEETS_ANALYSIS + SHEETS_REF + SHEETS_OUTSIDE
+36: #: 노트북 셀 8 — 고치지 않는다 (P0 는 노트북 원문과 대조만)
+37: CELL_IDX = [1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0]
+38: STEP_IDX = [6, 6, 6, 7, 6, 0, 0, 6, 6, 6, 6]
+39: #: 노트북 셀 6 — 반쪽전지 기준 (시트 · step 6 · 셀 index 1)
+40: REF_STEP, REF_CELL = 6, 1
+41: 
+42: TAUS = ("0", "0.02", "0.05")
+43: #: v2 §4-1 · 부속 A §2-5 — m 상자 · Δ = d_P − d_N 의 영역별 구간 D
+44: BOX_M = {"A0": (("0.6", "1.1"), ("0.5", "1.1")), "A1": (("0.3", "1.5"), ("0.3", "1.5")), "A2": (("0.3", "1.5"), ("0.3", "1.5"))}
+45: D_INT = {"A0": ("1e-4", "0.5"), "A1": ("1e-4", "2"), "A2": ("-2", "2")}
+46: 
+47: #: 기대 sha256 (v1 §2 · wiki raw 2026-10-03)
+48: SHA_XLSX = "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1"
+49: SHA_UTIL = "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"
+50: SHA_NOTEBOOK = "388f2a6f101abf42ef8c7c1c627b7046e8bf900b913d22f83435b39eb81a9e29"
+51: SIZE_XLSX = 10_841_377
+52: NOTEBOOK_CELLS = (3, 4, 6, 8, 9, 11)          # 검토 묶음 `NOTEBOOK_SOURCE_EXCERPTS.json` 의 셀 — 원문 바이트 대조
+53: UTIL_IMPORT_ALLOW = {"numpy", "pandas", "datetime", "scipy", "pickle", "matplotlib", "seaborn", "pymoo"}
+54: 
+55: #: 부속 D §3-1 — 기대 전극 반응 (방향 축의 "기대")
+56: EXPECTED_REACTION = {"analysis": "완전지 충전 = PE 탈리튬 · NE 리튬화", SHEETS_REF[0]: "LFP 탈리튬", SHEETS_REF[1]: "흑연 리튬화"}
+57: 
+58: 
+59: # ---------------------------------------------------------------- 사전 양립성 (부속 A §2-5)
+60: def _fr(x) -> str:
+61:     return f"{x.numerator}/{x.denominator}" if x.denominator != 1 else str(x.numerator)
+62: 
+63: 
+64: def _dec(x) -> str:
+65:     return f"{float(x):.12g}"
+66: 
+67: 
+68: def _iv(lo, hi):
+69:     return {"fraction": [_fr(lo), _fr(hi)], "decimal": [_dec(lo), _dec(hi)]}
+70: 
+71: 
+72: def _clip(c, tau, box):
+73:     lo, hi = max(c - tau, F(box[0])), min(c + tau, F(box[1]))
+74:     return (lo, hi) if lo <= hi else None
+75: 
+76: 
+77: def _max_q_fraction(max_q):
+78:     if max_q is None or isinstance(max_q, bool):
+79:         return None
+80:     if isinstance(max_q, F):
+81:         return max_q if max_q > 0 else None
+82:     try:
+83:         q = float(max_q)
+84:     except (TypeError, ValueError):
+85:         return None
+86:     if not math.isfinite(q) or q <= 0:
+87:         return None
+88:     return F(q)                                    # float 값 그대로의 정확한 유리수
+89: 
+90: 
+91: def prior_compat(nominal, tau, region, max_q) -> dict:
+92:     """{x ∈ A : ‖h(x) − h_true‖∞ ≤ τ} ≠ ∅ — 양립 ⇔ P ≠ ∅ 且 N ≠ ∅ 且 [min P − max I, max P − min I] ∩ D/max_q ≠ ∅ (닫힌 구간)."""
+93:     t = F(tau)
+94:     mp, mn, lii = (F(v) for v in nominal)
+95:     q = _max_q_fraction(max_q)
+96:     out = {"nominal": list(nominal), "tau": tau, "region": region, "D": list(D_INT[region]),
+97:            "max_q_fraction": _fr(q) if q is not None else None}
+98:     if q is None:
+99:         return {**out, "status": "P0_UNFIT", "reason": "max_q 가 유한한 양수가 아님", "P": None, "N": None, "I": None,
+100:                 "lhs": None, "rhs": None}
+101:     P, N = _clip(mp, t, BOX_M[region][0]), _clip(mn, t, BOX_M[region][1])
+102:     I = (lii - t, lii + t)
+103:     dlo, dhi = (F(v) for v in D_INT[region])
+104:     rhs = (dlo / q, dhi / q)
+105:     out.update(P=_iv(*P) if P else None, N=_iv(*N) if N else None, I=_iv(*I), rhs=_iv(*rhs))
+106:     if P is None or N is None:
+107:         return {**out, "status": "PRIOR_INCOMPATIBLE", "reason": "상자 ∩ 허용오차 구간이 빔", "lhs": None}
+108:     lhs = (P[0] - I[1], P[1] - I[0])
+109:     ok = lhs[0] <= rhs[1] and rhs[0] <= lhs[1]
+110:     return {**out, "status": "PRIOR_COMPATIBLE" if ok else "PRIOR_INCOMPATIBLE",
+111:             "reason": "구간 교차" if ok else "m_P − LII 구간과 D/max_q 가 교차하지 않음", "lhs": _iv(*lhs)}
+112: 
+113: 
+114: def prior_table(max_q) -> list:
+115:     return [{"row": i, "label": LABELS[i], **prior_compat(NOMINAL[i], tau, region, max_q)}
+116:             for i in range(11) for tau in TAUS for region in ("A0", "A1", "A2")]
+117: 
+118: 
+119: # ---------------------------------------------------------------- σ̂_v (v2 §3)
+120: def sigma_v(v):
+121:     import numpy as np
+122:     from scipy.signal import savgol_filter
+123:     try:
+124:         a = np.asarray(v, dtype=float)
+125:     except (TypeError, ValueError):
+126:         return None, "UNFIT"
+127:     if a.ndim != 1 or a.size < 21 or not np.all(np.isfinite(a)):
+128:         return None, "UNFIT"
+129:     r = a - savgol_filter(a, 21, 3, mode="interp")
+130:     return float(np.sqrt(np.mean(r ** 2))), "OK"
+131: 
+132: 
+133: # ---------------------------------------------------------------- 세 상태 (부속 D §3-2)
+134: def combine(c, d) -> str:
+135:     if "불일치" in (c, d):
+136:         return "불일치"
+137:     if c == d == "일치":
+138:         return "일치"
+139:     return "판정 불가"
+140: 
+141: 
+142: def cycle_state(cycle_cols, values, n_cells):
+143:     """명시적 cycle 열이 하나이고 셀이 하나인 시트에서만 선택 행에 결속한다 (그 밖은 결속 근거 없음 → 판정 불가). 추정 금지."""
+144:     if not cycle_cols:
+145:         return "판정 불가", "cycle 메타데이터 없음 (NaN 분절 번호 · step 순번 · 곡선 모양으로 채우지 않는다)"
+146:     if len(cycle_cols) != 1:
+147:         return "판정 불가", f"cycle 열 {len(cycle_cols)} 개 — 선택 셀에 결속할 근거 없음"
+148:     if n_cells != 1:
+149:         return "판정 불가", f"셀 {n_cells} 개 시트의 cycle 열 하나 — 선택 셀에 결속할 근거 없음"
+150:     vals = []
+151:     for v in values or []:
+152:         try:
+153:             f = float(v)
+154:         except (TypeError, ValueError):
+155:             return "판정 불가", "cycle 값 비수치"
+156:         if not math.isfinite(f):
+157:             return "판정 불가", "cycle 값 결측 · 비유한"
+158:         vals.append(f)
+159:     if not vals:
+160:         return "판정 불가", "선택 행 없음"
+161:     if all(f == 5 for f in vals):
+162:         return "일치", f"열 {cycle_cols[0]!r} 의 선택 행 전부 5"
+163:     return "불일치", f"열 {cycle_cols[0]!r} 의 선택 행 값 {sorted(set(vals))[:10]}"
+164: 
+165: 
+166: def direction_state(step_values, current_sign, convention):
+167:     """확인된 부호 규약 (장비 · 전지 문서) 이 있어야 판정한다. P0 입력에는 그런 문서가 없다 → raw 만 적고 판정 불가."""
+168:     if convention is None:
+169:         return "판정 불가", "부호 규약 · step 뜻을 정하는 문서가 P0 입력에 없음 (raw 칸에 보존 · 추측으로 통과시키지 않는다)"
+170:     raise ValueError("이번 등록에 부호 규약 문서는 없다 — 규약을 쓰려면 새 등록")
+171: 
+172: 
+173: # ---------------------------------------------------------------- 시트 이름 · util 정적 검사
+174: def sheet_set_diff(actual) -> dict:
+175:     a, want = list(actual), set(SHEETS_ALL)
+176:     missing = [s for s in SHEETS_ALL if s not in set(a)]
+177:     extra = [s for s in a if s not in want]
+178:     return {"missing": missing, "extra": extra, "same": not missing and not extra and len(a) == len(set(a))}
+179: 
+180: 
+181: def _is_docstring(node) -> bool:
+182:     return isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str)
+183: 
+184: 
+185: def util_static_check(text, allowed=None) -> dict:
+186:     """최상위 문장이 import · 함수 정의 · 문서 문자열뿐인가 (import 시 실행되는 코드 = 부작용 후보). allowed 가 주어지면 import 최상위 이름도 대조."""
+187:     tree = ast.parse(text)
+188:     bad, imports = [], []
+189:     for node in tree.body:
+190:         if isinstance(node, (ast.Import, ast.ImportFrom)):
+191:             names = [a.name for a in node.names] if isinstance(node, ast.Import) else [node.module or ""]
+192:             imports += names
+193:             if allowed is not None and any(n.split(".")[0] not in allowed for n in names):
+194:                 bad.append((node.lineno, "허용 밖 import " + ",".join(names)))
+195:         elif isinstance(node, ast.FunctionDef) or _is_docstring(node):
+196:             continue
+197:         elif (isinstance(node, ast.ClassDef) and not node.decorator_list and not node.keywords
+198:               and all(isinstance(b, ast.Name) for b in node.bases)
+199:               and all(isinstance(n, ast.FunctionDef) or _is_docstring(n) for n in node.body)):
+200:             continue                               # 메서드 정의만 있는 클래스 — 본문이 import 때 실행할 코드가 없다
+201:         else:
+202:             bad.append((node.lineno, type(node).__name__))
+203:     return {"ok": not bad, "bad": bad, "imports": imports,
+204:             "functions": [n.name for n in tree.body if isinstance(n, ast.FunctionDef)]}
+205: 
+206: 
+207: # ---------------------------------------------------------------- 실행 (자료 개봉)
+208: class Stop(Exception):
+209:     pass
+210: 
+211: 
+212: def _sha_file(p) -> tuple:
+213:     b = open(p, "rb").read()
+214:     return hashlib.sha256(b).hexdigest(), len(b), b
+215: 
+216: 
+217: def _notebook_check(nb_bytes, excerpts) -> dict:
+218:     nb = json.loads(nb_bytes.decode("utf-8"))
+219:     cells = nb["cells"]
+220:     exc = {c["cell_index"]: c["source"] for c in excerpts["cells"]}
+221:     diffs = [i for i in NOTEBOOK_CELLS if "".join(cells[i]["source"]) != "".join(exc[i])]
+222:     src = {i: "".join(cells[i]["source"]) for i in NOTEBOOK_CELLS}
+223:     lit = {}
+224:     for i in (4, 8, 9):
+225:         for node in ast.parse(src[i]).body:
+226:             if isinstance(node, ast.Assign) and isinstance(node.targets[0], ast.Name):
+227:                 try:
+228:                     lit[node.targets[0].id] = ast.literal_eval(node.value)
+229:                 except ValueError:
+230:                     lit[node.targets[0].id] = ast.unparse(node.value)
+231:     const = {"sheets": lit.get("sheets") == SHEETS_ANALYSIS, "cell_idx": lit.get("cell_idx") == CELL_IDX,
+232:              "step_idx": lit.get("step_idx") == STEP_IDX,
+233:              "theoretical": [[F(str(x)) for x in r] for r in lit.get("theoretical", [])] == [[F(x) for x in r] for r in NOMINAL],
+234:              "LFP_mass_factor": lit.get("LFP_mass_factor") == 20.16, "Gr_mass_factor": lit.get("Gr_mass_factor") == 11.4,
+235:              "area": lit.get("area") == "0.25 * np.pi * 1.2 ** 2", "LFP_mass_12": lit.get("LFP_mass_12") == "13.5 * area",
+236:              "Gr_mass_12": lit.get("Gr_mass_12") == "5.77 * area",
+237:              "cell6_refs": all(s in src[6] for s in (f"sheet_name='{SHEETS_REF[0]}'", f"sheet_name='{SHEETS_REF[1]}'", "step_idx=6",
+238:                                                      "PE_data = LFP_data[1]", "NE_data = Gr_data[1]"))}
+239:     return {"cells_equal_excerpts": not diffs, "cells_differing": diffs, "constants": const, "ok": not diffs and all(const.values())}
+240: 
+241: 
+242: def _sign(series) -> str:
+243:     import pandas as pd
+244:     s = pd.to_numeric(series, errors="coerce")
+245:     if s.isna().any():
+246:         return "비수치 · 결측 포함"
+247:     if (s > 0).all():
+248:         return "양"
+249:     if (s < 0).all():
+250:         return "음"
+251:     if (s == 0).all():
+252:         return "0"
+253:     return "섞임"
+254: 
+255: 
+256: def _their_drop(df):
+257:     """visualize_LFP_data 47–61 행과 같은 열 제거 (기록용 재계산 — 그들 함수 결과와 배열 대조)."""
+258:     import datetime
+259:     try:
+260:         dt = [c for c in df.columns if isinstance(c, datetime.datetime)][-1]
+261:         df = df.iloc[:, df.columns.get_loc(dt) + 1:]
+262:         dt_found = str(dt)
+263:     except Exception:  # noqa: BLE001 — 그들 코드의 bare except 와 같은 분기
+264:         dt_found = None
+265:     return df.drop(columns=[c for c in df.columns if "Unnamed" in c or c.startswith("S")]), dt_found
+266: 
+267: 
+268: def _raw_entry(xlsx, sheet, cell, step, their_arr, util):
+269:     import numpy as np
+270:     import pandas as pd
+271:     df = pd.read_excel(xlsx, sheet_name=sheet)
+272:     post, dt_found = _their_drop(df)
+273:     n_cells = len(range(0, post.shape[1] - 1, 2))
+274:     col = 2 * cell
+275:     miss = post[post.iloc[:, col].isna()].index.to_list()
+276:     miss.insert(0, 0)
+277:     miss.append(post.shape[0])
+278:     s0, s1 = miss[step], miss[step + 1]
+279:     cc_end = post.iloc[s0:s1, col].idxmax()
+280:     rows = list(range(s0 + 1, cc_end))
+281:     mine = util.filter_first_occurrences_by_column(np.array([post.iloc[s0 + 1:cc_end, col], post.iloc[s0 + 1:cc_end, col + 1]]), 0)
+282:     same = bool(their_arr is not None and mine.shape == their_arr.shape and np.array_equal(mine, their_arr, equal_nan=True))
+283:     headers = [str(c) for c in df.columns]
+284:     post_headers = [str(c) for c in post.columns]
+285:     cyc = [str(c) for c in df.columns if re.search(r"cycle", str(c), re.I)]
+286:     stepc = [str(c) for c in df.columns if re.search(r"step|mode|state", str(c), re.I)]
+287:     curc = [str(c) for c in df.columns if re.search(r"current|curr|\(m?A\)", str(c), re.I)]
+288:     cyc_vals = df.loc[rows, cyc[0]].tolist() if len(cyc) == 1 and rows else None
+289:     raw = {"sheet": sheet, "cell_idx": cell, "step_idx": step, "nan_segment": step, "nan_segments_total": len(miss) - 1,
+290:            "segment_rows_df_index": [int(s0), int(s1)], "cc_end_df_index": int(cc_end),
+291:            "selected_rows_df_index": [rows[0], rows[-1]] if rows else None, "selected_rows_excel": [rows[0] + 2, rows[-1] + 2] if rows else None,
+292:            "n_selected_rows": len(rows), "cycle_columns": cyc,
+293:            "cycle_values_unique": sorted({str(v) for v in cyc_vals})[:20] if cyc_vals is not None else "없음",
+294:            "step_columns": {c: sorted({str(v) for v in df.loc[rows, c].tolist()})[:20] for c in stepc} if rows else {},
+295:            "current_columns_sign": {c: _sign(df.loc[rows, c]) for c in curc} if rows else {},
+296:            "q_v_columns": [post_headers[col], post_headers[col + 1]]}
+297:     c_state, c_why = cycle_state(cyc, cyc_vals, n_cells)
+298:     d_state, d_why = direction_state(raw["step_columns"], raw["current_columns_sign"], None)
+299:     cells_list = {"n_cells": n_cells, "headers_after_their_drop": post_headers,
+300:                   "cell_columns": [[post_headers[c], post_headers[c + 1]] for c in range(0, post.shape[1] - 1, 2)],
+301:                   "cell_idx_points_to": [post_headers[col], post_headers[col + 1]]}
+302:     extraction = {"datetime_header_found": dt_found, "headers_original": headers,
+303:                   "dropped_columns": [h for h in headers if h not in set(post_headers)], "replicate_equals_their_output": same}
+304:     return raw, (c_state, c_why), (d_state, d_why), cells_list, extraction
+305: 
+306: 
+307: def run(xlsx, util_path, nb_path, excerpts_path, out_path) -> int:
+308:     import importlib.util
+309:     import numpy as np
+310:     import pandas as pd
+311:     import scipy
+312: 
+313:     res = {"schema": "reil-p0/v1", "stopped": None, "fitting_calls": 0, "objective_calls": 0, "optimizer_calls": 0}
+314:     try:
+315:         # 1. 식별
+316:         sx, nx, _ = _sha_file(xlsx)
+317:         su, _, ub = _sha_file(util_path)
+318:         sn, nn, nbb = _sha_file(nb_path)
+319:         res["identity"] = {"xlsx": {"sha256": sx, "bytes": nx, "ok": sx == SHA_XLSX and nx == SIZE_XLSX},
+320:                            "util_LFP.py": {"sha256": su, "ok": su == SHA_UTIL},
+321:                            "notebook": {"sha256": sn, "bytes": nn, "ok": sn == SHA_NOTEBOOK}}
+322:         if not all(v["ok"] for v in res["identity"].values()):
+323:             raise Stop("sha256 불일치 (§6-2)")
+324:         res["notebook_check"] = _notebook_check(nbb, json.load(open(excerpts_path, encoding="utf-8")))
+325:         if not res["notebook_check"]["ok"]:
+326:             raise Stop("노트북 상수 · 셀 원문 불일치 (§6-4)")
+327:         res["util_static"] = util_static_check(ub.decode("utf-8"), UTIL_IMPORT_ALLOW)
+328:         if not res["util_static"]["ok"]:
+329:             raise Stop("util_LFP.py 최상위 부작용 후보 (§6-3)")
+330:         names = pd.ExcelFile(xlsx).sheet_names
+331:         res["sheet_names"] = {"actual": names, **sheet_set_diff(names)}
+332:         if not res["sheet_names"]["same"]:
+333:             raise Stop("시트 이름 집합 차이 — 그 뒤 범위는 사용자 결정 (§6-4 · 부속 D §3-3)")
+334: 
+335:         spec = importlib.util.spec_from_file_location("util_LFP", util_path)
+336:         util = importlib.util.module_from_spec(spec)
+337:         spec.loader.exec_module(util)
+338:         res["versions"] = {"python": sys.version.split()[0], "numpy": np.__version__, "scipy": scipy.__version__, "pandas": pd.__version__}
+339: 
+340:         # 2–3. 반쪽전지 기준 · max_q (노트북 셀 4 · 6 그대로)
+341:         area = 0.25 * np.pi * 1.2 ** 2
+342:         LFP_mass_12, Gr_mass_12 = 13.5 * area, 5.77 * area
+343:         inputs, max_q = [], None
+344:         ref = {}
+345:         for sheet in SHEETS_REF:
+346:             ent = {"sheet": sheet, "kind": "reference", "cell_idx": REF_CELL, "step_idx": REF_STEP}
+347:             try:
+348:                 d = util.visualize_LFP_data(data_file=xlsx, sheet_name=sheet, step_idx=REF_STEP)
+349:                 arr = d[REF_CELL]
+350:                 ref[sheet] = arr
+351:                 ent.update(status="OK", n_points=int(arr.shape[1]), V_first=float(arr[1][0]), V_last=float(arr[1][-1]),
+352:                            Q_first=float(arr[0][0]), Q_last=float(arr[0][-1]))
+353:             except Exception as e:  # noqa: BLE001 — 그들 함수 실패 = 그 입력 P0_UNFIT (다른 경로로 대신하지 않는다)
+354:                 ent.update(status="P0_UNFIT", reason=f"{type(e).__name__}: {e}")
+355:             inputs.append(ent)
+356:         if SHEETS_REF[0] in ref:
+357:             PE = ref[SHEETS_REF[0]]
+358:             q_PE_hc = PE[0][np.argmin(PE[0]):np.argmax(PE[0])] / LFP_mass_12 * 20.16
+359:             mq = float(np.max(q_PE_hc.flatten())) if q_PE_hc.size else float("nan")
+360:             res["max_q"] = {"float": mq, "repr": repr(mq), "fraction": _fr(F(mq)) if math.isfinite(mq) else None,
+361:                             "n_q_PE_hc": int(q_PE_hc.size), "status": "OK" if _max_q_fraction(mq) is not None else "P0_UNFIT",
+362:                             "path": "노트북 셀 6 (PE_data = LFP_data[1] · [argmin:argmax] / LFP_mass_12 × 20.16) · util 718–719 np.max"}
+363:             max_q = mq
+364:         else:
+365:             res["max_q"] = {"status": "P0_UNFIT", "reason": "PE 기준 추출 실패"}
+366:         if SHEETS_REF[1] in ref:
+367:             NE = ref[SHEETS_REF[1]]
+368:             q_NE_hc = NE[0][np.argmin(NE[0]):np.argmax(NE[0])] / Gr_mass_12 * 11.4
+369:             res["q_NE_hc_max_record_only"] = float(np.max(q_NE_hc)) if q_NE_hc.size else None
+370: 
+371:         # 2 · 5. 분석 11 — 추출 기록 · σ̂_v
+372:         their = {}
+373:         res["sigma_v"] = []
+374:         for i, sheet in enumerate(SHEETS_ANALYSIS):
+375:             ent = {"sheet": sheet, "kind": "analysis", "row": i, "label": LABELS[i], "cell_idx": CELL_IDX[i], "step_idx": STEP_IDX[i]}
+376:             try:
+377:                 d = util.visualize_LFP_data(data_file=xlsx, sheet_name=sheet, step_idx=STEP_IDX[i], visualize=False)
+378:                 m = util.extract_battery_data(data=d, idx=CELL_IDX[i])
+379:                 their[sheet] = d[CELL_IDX[i]]
+380:                 ent.update(status="OK", n_points=int(len(m["Q_exp"])), V_first=float(m["V_exp"][0]), V_last=float(m["V_exp"][-1]),
+381:                            Q_first=float(m["Q_exp"][0]), Q_exp_max=float(m["Q_exp_max"]))
+382:                 val, s = sigma_v(m["V_exp"])
+383:             except Exception as e:  # noqa: BLE001
+384:                 ent.update(status="P0_UNFIT", reason=f"{type(e).__name__}: {e}")
+385:                 val, s = None, "UNFIT"
+386:             inputs.append(ent)
+387:             res["sigma_v"].append({"row": i, "sheet": sheet, "sigma_v_V": val, "status": s,
+388:                                    "rule": "SG polyorder 3 · window 21 · mode=interp · 그들 경로의 V (중복 제거 뒤 · 보간 전) · 표본 순서"})
+389:         res["extraction"] = inputs
+390: 
+391:         # 4. 사전 양립성 99 칸
+392:         res["prior_table"] = prior_table(max_q)
+393: 
+394:         # 6 · 7. 대응표 · 셀 열 목록 (입력 13)
+395:         res["correspondence"], res["cell_columns"] = [], []
+396:         jobs = [(s, CELL_IDX[i], STEP_IDX[i], their.get(s), "analysis") for i, s in enumerate(SHEETS_ANALYSIS)]
+397:         jobs += [(s, REF_CELL, REF_STEP, ref.get(s), s) for s in SHEETS_REF]
+398:         for sheet, cell, step, arr, kind in jobs:
+399:             try:
+400:                 raw, cy, di, cl, ex = _raw_entry(xlsx, sheet, cell, step, arr, util)
+401:                 res["correspondence"].append({"raw": raw, "cycle": {"state": cy[0], "basis": cy[1]},
+402:                                               "direction": {"expected": EXPECTED_REACTION[kind], "state": di[0], "basis": di[1]},
+403:                                               "overall": combine(cy[0], di[0])})
+404:                 res["cell_columns"].append({"sheet": sheet, **cl, **ex})
+405:             except Exception as e:  # noqa: BLE001
+406:                 res["correspondence"].append({"raw": {"sheet": sheet}, "error": f"{type(e).__name__}: {e}", "overall": "판정 불가"})
+407: 
+408:         # 7. 밖 6 시트 — 이름 · 열 머리 · 행 수만
+409:         res["outside_sheets"] = []
+410:         for sheet in SHEETS_OUTSIDE:
+411:             df = pd.read_excel(xlsx, sheet_name=sheet)
+412:             res["outside_sheets"].append({"sheet": sheet, "headers": [str(c) for c in df.columns], "n_rows": int(df.shape[0])})
+413:         rc = 0
+414:     except Stop as e:
+415:         res["stopped"] = str(e)
+416:         rc = 3
+417:     except Exception as e:  # noqa: BLE001
+418:         res["stopped"] = f"예외 (§6-5): {type(e).__name__}: {e}"
+419:         rc = 4
+420:     with open(out_path, "w", encoding="utf-8", newline="\n") as f:
+421:         json.dump(res, f, ensure_ascii=False, indent=1, sort_keys=True, default=str)
+422:         f.write("\n")
+423:     print(json.dumps({"rc": rc, "stopped": res["stopped"], "max_q": res.get("max_q"),
+424:                       "statuses": {k: sum(1 for r in res.get("prior_table", []) if r["status"] == k)
+425:                                    for k in ("PRIOR_COMPATIBLE", "PRIOR_INCOMPATIBLE", "P0_UNFIT")}}, ensure_ascii=False))
+426:     return rc
+427: 
+428: 
+429: if __name__ == "__main__":
+430:     if len(sys.argv) != 7 or sys.argv[1] != "run":
+431:         raise SystemExit(__doc__)
+432:     sys.exit(run(*sys.argv[2:7]))

@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_REIL_E113_V3_PREREVIEW_PACKAGE_TOOL_RETURN",
+  "provenance": "Exact received exec_command result, serialized after return outside the completed review ZIP. Not its own future write return, whole-review timing, or independent remote execution audit.",
+  "tool_result": {
+    "chunk_id": "9e0b6d",
+    "wall_time_seconds": 0.562733,
+    "exit_code": 0,
+    "original_token_count": 377,
+    "output": "{\r\n  \"kind\": \"REIL_E113_V3_PREREVIEW_PACKAGE_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4e_e1_1_3_prereview_v3_20261105\\\\REIL_C4E_E1_1_3_PREREVIEW_V3_REVIEW_20261105.zip\",\r\n    \"bytes\": 1312121,\r\n    \"sha256\": \"492405e59f21b64300ef2654003ca5a38db00d3d44a0f128225eced655af816a\"\r\n  },\r\n  \"receipt\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4e_e1_1_3_prereview_v3_20261105\\\\DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 1926,\r\n    \"sha256\": \"e2955c165919e87709c26a80eaf418d45b88de228e7c88b6e98973b4c4746b9b\"\r\n  },\r\n  \"post_package\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4e_e1_1_3_prereview_v3_20261105\\\\SELECTED_LOCAL_SOURCES_POST_PACKAGE.json\",\r\n    \"bytes\": 4031,\r\n    \"sha256\": \"a7ae4654882a215c1ffe63e02114cc367482cfecbd628a8a7637ecf0b9c59148\"\r\n  },\r\n  \"payload_count\": 49,\r\n  \"entries\": 50,\r\n  \"decision\": \"APPROVAL_REQUEST_V3_DOCUMENT_REVIEW_ACCEPTED_NOT_EXECUTION_AUTHORIZED\",\r\n  \"new_findings\": 0,\r\n  \"closed\": [\r\n    \"E113_V2_N1\",\r\n    \"E113_PRE_03\",\r\n    \"E113_FIX_SCOPE_02\"\r\n  ],\r\n  \"approval_request_accepted\": true,\r\n  \"received_program_execution\": 0,\r\n  \"tests\": 0,\r\n  \"actual_execution_authorized_by_review\": false,\r\n  \"boundary\": \"After ZIP and receipt write/readback; before actual tool return and its later transcription.\"\r\n}\r\n"
+  }
+}

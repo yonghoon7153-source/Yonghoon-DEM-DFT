@@ -1,0 +1,396 @@
+1: {
+2:  "execution_validity": true,
+3:  "failed": [],
+4:  "inputs": {
+5:   "00_overall.json": {
+6:    "bytes": 101,
+7:    "sha256": "88c44e3cde84a781e9c008335ea48d27d8429ecf610ba78d082df97352c59dd5"
+8:   },
+9:   "03_identity.json": {
+10:    "bytes": 1116,
+11:    "sha256": "483dfda676c5dc030c3ded1951ac210dd6fde11ebd171e98c6f7ab41484ec224"
+12:   },
+13:   "03_identity.launch_epoch.txt": {
+14:    "bytes": 11,
+15:    "sha256": "46a2a9ffbb591ea111b16f1b880ed4e518f425392bb8314010b5381127eb582c"
+16:   },
+17:   "03_identity.leftover_1.json": {
+18:    "bytes": 482,
+19:    "sha256": "a8834f574b588a0a8369335d84ca403fde4f71dfd30edb17c39587fcda9d8d0c"
+20:   },
+21:   "03_identity.meta.json": {
+22:    "bytes": 6877,
+23:    "sha256": "e41f95458a74c8a5a33e1442c16f082bcf1bd91281a69c91cf6f39f0a064657c"
+24:   },
+25:   "03_identity.outer_end.json": {
+26:    "bytes": 492,
+27:    "sha256": "68f062f2459b2278760cd3ed738b66834e0466551352d7a56047f1bcb1040c76"
+28:   },
+29:   "03_identity.outer_rc.txt": {
+30:    "bytes": 2,
+31:    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+32:   },
+33:   "03_identity.outer_start.json": {
+34:    "bytes": 1282,
+35:    "sha256": "b1d4ec6cb042c40f0646b488af6cb6c60921e66edc638a03af1c3bd8688a1bdf"
+36:   },
+37:   "03_identity.outer_stderr.txt": {
+38:    "bytes": 0,
+39:    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+40:   },
+41:   "03_identity.outer_stdout.txt": {
+42:    "bytes": 99,
+43:    "sha256": "22d9898ce2baddefad15b9acfebee10a13cf79bbe1557dfebdcecb2b32f4905e"
+44:   },
+45:   "03_identity.watch.json": {
+46:    "bytes": 591,
+47:    "sha256": "a1932892618d743311e11f1ee393cefbc795c9dc32e8ccea52a437d5da007291"
+48:   },
+49:   "03_identity.watch_1.begin.json": {
+50:    "bytes": 241,
+51:    "sha256": "7d66f976e77830b16414c12666ccdc2982b3d26341da872f9ca53993e3abd354"
+52:   },
+53:   "03_identity.wrapper_output.txt": {
+54:    "bytes": 0,
+55:    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+56:   }
+57:  },
+58:  "items": [
+59:   {
+60:    "id": "overall.values",
+61:    "observed": {
+62:     "R": 1800,
+63:     "T_a": 1793841301,
+64:     "T_end": 1793862901,
+65:     "kind": "REIL_E113_OVERALL",
+66:     "section": "§115"
+67:    },
+68:    "ok": true
+69:   },
+70:   {
+71:    "id": "launch.epoch",
+72:    "observed": [
+73:     "1793841548\n",
+74:     1793841301
+75:    ],
+76:    "ok": true
+77:   },
+78:   {
+79:    "id": "outer.start_kind_step",
+80:    "observed": [
+81:     "REIL_E113_OUTER_START",
+82:     "identity",
+83:     "03_identity",
+84:     "§115"
+85:    ],
+86:    "ok": true
+87:   },
+88:   {
+89:    "id": "outer.start_argv",
+90:    "observed": [
+91:     "/usr/bin/python3.11",
+92:     "-I",
+93:     "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4e1_launch.py",
+94:     "identity",
+95:     "--evidence",
+96:     "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105",
+97:     "--approval-section",
+98:     "§115"
+99:    ],
+100:    "ok": true
+101:   },
+102:   {
+103:    "id": "outer.start_launcher",
+104:    "observed": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf",
+105:    "ok": true
+106:   },
+107:   {
+108:    "id": "outer.start_session_leader",
+109:    "observed": [
+110:     693,
+111:     693,
+112:     693
+113:    ],
+114:    "ok": true
+115:   },
+116:   {
+117:    "id": "outer.start_allow",
+118:    "observed": 900.0,
+119:    "ok": true
+120:   },
+121:   {
+122:    "id": "outer.start_deadline",
+123:    "observed": [
+124:     1793841548.9310858,
+125:     1793842448.9310858
+126:    ],
+127:    "ok": true
+128:   },
+129:   {
+130:    "id": "outer.start_window",
+131:    "observed": [
+132:     1793841548,
+133:     1793841548,
+134:     0.9310858249664307
+135:    ],
+136:    "ok": true
+137:   },
+138:   {
+139:    "id": "outer.start_budget",
+140:    "observed": [
+141:     1793842448.9310858,
+142:     1793862901,
+143:     1800,
+144:     "88c44e3cde84a781e9c008335ea48d27d8429ecf610ba78d082df97352c59dd5",
+145:     "88c44e3cde84a781e9c008335ea48d27d8429ecf610ba78d082df97352c59dd5"
+146:    ],
+147:    "ok": true
+148:   },
+149:   {
+150:    "id": "outer.rc",
+151:    "observed": "300a",
+152:    "ok": true
+153:   },
+154:   {
+155:    "id": "outer.end",
+156:    "observed": {
+157:     "end_snapshot_epoch": 1793841568.7971966,
+158:     "kind": "REIL_E113_OUTER_END",
+159:     "launcher_exit_epoch": 1793841568.797122,
+160:     "rc": 0,
+161:     "start_sha256": "b1d4ec6cb042c40f0646b488af6cb6c60921e66edc638a03af1c3bd8688a1bdf"
+162:    },
+163:    "ok": true
+164:   },
+165:   {
+166:    "id": "outer.absent.outer_error.json",
+167:    "observed": null,
+168:    "ok": true
+169:   },
+170:   {
+171:    "id": "outer.absent.outer_start.json.tmp",
+172:    "observed": null,
+173:    "ok": true
+174:   },
+175:   {
+176:    "id": "outer.absent.outer_end.json.tmp",
+177:    "observed": null,
+178:    "ok": true
+179:   },
+180:   {
+181:    "id": "outer.absent.outer_rc.txt.tmp",
+182:    "observed": null,
+183:    "ok": true
+184:   },
+185:   {
+186:    "id": "outer.absent.outer_error.json.tmp",
+187:    "observed": null,
+188:    "ok": true
+189:   },
+190:   {
+191:    "id": "outer.absent.kill.json",
+192:    "observed": null,
+193:    "ok": true
+194:   },
+195:   {
+196:    "id": "outer.absent.leftover_2.json",
+197:    "observed": null,
+198:    "ok": true
+199:   },
+200:   {
+201:    "id": "outer.empty.outer_stderr.txt",
+202:    "observed": 0,
+203:    "ok": true
+204:   },
+205:   {
+206:    "id": "outer.empty.wrapper_output.txt",
+207:    "observed": 0,
+208:    "ok": true
+209:   },
+210:   {
+211:    "id": "outer.stdout_summary",
+212:    "observed": {
+213:     "complete": true,
+214:     "errors": 0,
+215:     "launched": true,
+216:     "rc": 0,
+217:     "step": "identity",
+218:     "timed_out": false
+219:    },
+220:    "ok": true
+221:   },
+222:   {
+223:    "id": "watch.calls",
+224:    "observed": {
+225:     "begins": [
+226:      1
+227:     ],
+228:     "max": 1,
+229:     "slices": []
+230:    },
+231:    "ok": true
+232:   },
+233:   {
+234:    "id": "watch.chain",
+235:    "observed": [
+236:     {
+237:      "k": 1,
+238:      "ok": true
+239:     }
+240:    ],
+241:    "ok": true
+242:   },
+243:   {
+244:    "id": "watch.published",
+245:    "observed": {
+246:     "deadline_epoch": 1793842448.9310858,
+247:     "k": 1,
+248:     "kind": "REIL_E113_WATCH",
+249:     "observed_epoch": 1793841572.794614,
+250:     "rc": 0,
+251:     "state": "published"
+252:    },
+253:    "ok": true
+254:   },
+255:   {
+256:    "id": "watch.no_tmp",
+257:    "observed": [],
+258:    "ok": true
+259:   },
+260:   {
+261:    "id": "leftover.1",
+262:    "observed": [
+263:     0,
+264:     0,
+265:     693,
+266:     null
+267:    ],
+268:    "ok": true
+269:   },
+270:   {
+271:    "id": "leftover.not_frozen",
+272:    "observed": null,
+273:    "ok": true
+274:   },
+275:   {
+276:    "id": "meta.present",
+277:    "observed": null,
+278:    "ok": true
+279:   },
+280:   {
+281:    "id": "meta.identity",
+282:    "observed": [
+283:     "identity",
+284:     "03_identity",
+285:     "docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md",
+286:     "§115"
+287:    ],
+288:    "ok": true
+289:   },
+290:   {
+291:    "id": "meta.launcher",
+292:    "observed": {
+293:     "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4e1_launch.py",
+294:     "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+295:    },
+296:    "ok": true
+297:   },
+298:   {
+299:    "id": "meta.stage",
+300:    "observed": {
+301:     "complete": true,
+302:     "rule": "precheck_ok AND child_ok AND rc_0 AND timeout_false AND postcheck_ok",
+303:     "terms": {
+304:      "child_ok": true,
+305:      "postcheck_ok": true,
+306:      "precheck_ok": true,
+307:      "rc_0": true,
+308:      "timeout_false": true
+309:     }
+310:    },
+311:    "ok": true
+312:   },
+313:   {
+314:    "id": "meta.precheck_ok",
+315:    "observed": true,
+316:    "ok": true
+317:   },
+318:   {
+319:    "id": "meta.postcheck",
+320:    "observed": [],
+321:    "ok": true
+322:   },
+323:   {
+324:    "id": "meta.errors",
+325:    "observed": [
+326:     [],
+327:     null
+328:    ],
+329:    "ok": true
+330:   },
+331:   {
+332:    "id": "meta.child_started",
+333:    "observed": [
+334:     true,
+335:     true
+336:    ],
+337:    "ok": true
+338:   },
+339:   {
+340:    "id": "meta.child_rc",
+341:    "observed": [
+342:     0,
+343:     false
+344:    ],
+345:    "ok": true
+346:   },
+347:   {
+348:    "id": "meta.child_group_empty",
+349:    "observed": "empty",
+350:    "ok": true
+351:   },
+352:   {
+353:    "id": "meta.child_deadline",
+354:    "observed": false,
+355:    "ok": true
+356:   },
+357:   {
+358:    "id": "meta.child_errors",
+359:    "observed": [],
+360:    "ok": true
+361:   },
+362:   {
+363:    "id": "meta.head_unchanged",
+364:    "observed": [
+365:     "7f13afa8d804953f279b0261d9f84d4dc36016be",
+366:     "7f13afa8d804953f279b0261d9f84d4dc36016be"
+367:    ],
+368:    "ok": true
+369:   },
+370:   {
+371:    "id": "identity.child_ok",
+372:    "observed": {
+373:     "ok": true,
+374:     "problems": [],
+375:     "stop": null
+376:    },
+377:    "ok": true
+378:   },
+379:   {
+380:    "id": "identity.helper_output",
+381:    "observed": null,
+382:    "ok": true
+383:   }
+384:  ],
+385:  "judge": {
+386:   "bytes": 18578,
+387:   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/00_judge.py",
+388:   "sha256": "ad986c19905723a233abac667cd846f41c1427a7197e522eb78bc1c4d0d738c0"
+389:  },
+390:  "kind": "REIL_E113_JUDGE",
+391:  "name": "03_identity",
+392:  "section": "§115",
+393:  "step": "identity",
+394:  "utc": "2026-11-05T01:19:45Z",
+395:  "verdict": "MATCH"
+396: }

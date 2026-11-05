@@ -1,0 +1,29 @@
+{
+  "kind": "READ_ONLY_PREVIOUS_IDENTITY_EVIDENCE_LINKS",
+  "prior_commit": "b5decbbeab84997d58073539bde870af28bb00dc",
+  "identity_files": 18,
+  "same_blobs_at_current_pin": true,
+  "judge_input_identity_count": 13,
+  "judge_input_identities_matched": [
+    "00_overall.json",
+    "03_identity.json",
+    "03_identity.launch_epoch.txt",
+    "03_identity.leftover_1.json",
+    "03_identity.meta.json",
+    "03_identity.outer_end.json",
+    "03_identity.outer_rc.txt",
+    "03_identity.outer_start.json",
+    "03_identity.outer_stderr.txt",
+    "03_identity.outer_stdout.txt",
+    "03_identity.watch.json",
+    "03_identity.watch_1.begin.json",
+    "03_identity.wrapper_output.txt"
+  ],
+  "judge_failed": [],
+  "judge_execution_validity_reported": true,
+  "launcher_rc_reported": 0,
+  "identity_ok_reported": true,
+  "new_identity_execution": 0,
+  "new_judge_execution": 0,
+  "scope": "Static received records and hashes only. Manual wait-tool-return observation is author-recorded in status section116, not independently re-observed by reviewer."
+}

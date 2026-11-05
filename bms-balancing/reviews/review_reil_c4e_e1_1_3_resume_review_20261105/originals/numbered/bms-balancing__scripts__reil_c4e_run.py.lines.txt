@@ -1,0 +1,842 @@
+1: """REIL C4-E — E3a 66 호출 실행 진입점 (`fetch` · `plan-e` · `run`) · 호출당 상한 · 비용 투영 규칙 (v3 · 상태 문서 §66).
+2: 
+3:     <venv>/bin/python -I bms-balancing/scripts/reil_c4e_run.py plan-e --venv V --seal S --seal-manifest-sha256 H --out <새 폴더>
+4:     <venv>/bin/python -I bms-balancing/scripts/reil_c4e_run.py fetch  --dest <저장소 밖 새 폴더>
+5:     <venv>/bin/python -I bms-balancing/scripts/reil_c4e_run.py seal-sources --out <새 폴더>
+6:     <venv>/bin/python -I bms-balancing/scripts/reil_c4e_run.py run    --venv V --seal S --seal-manifest-sha256 H --xlsx X --util U
+7:                                                                       --sources <SOURCES.json> --sources-sha256 <목록 sha256>
+8:                                                                       --out <새 폴더> --approval <상태 문서 절>
+9: 
+10: 승인 · 범위: `docs/REIL_C4E_APPROVAL_REQUEST_v3_20261014.md` (§3 · §4 · §5 · §6 · 수용 §65) · 상태 문서 §66. **E0 은 대조와 `plan-e` 만
+11: 부른다 — `fetch` · `run` 은 E1 (E0 결과 검토 수용 뒤 별도 GO) 에서만 쓴다.** 봉인 경로 · MANIFEST sha256 은 기본값이 없다 (C4 규칙).
+12: 
+13: - **`fetch`** (v3 §3 2): 저장소 밖 새 폴더에 `git init` → 이름 있는 remote `origin` (= 고정 공개 URL) → `fetch --depth 1 --filter=blob:none`
+14:   고정 커밋 → `git show <커밋>:<경로>` 를 두 경로에만. checkout · 전체 clone 없음. 부분 clone 의 지연 blob 읽기는 등록된 promisor remote 를
+15:   쓰므로 URL 을 이름 있는 remote 로 둔다 (같은 URL · 커밋 · filter · 경로). sha · bytes 대조. 기록은 argv · cwd · 시각 · sha · bytes 만.
+16: - **`plan-e`** (E0 건조): identity · 원천 sha · P0 · 발췌 · 계획 · 규칙 매개변수 · 기대 자료 식별 → `PLAN_E.json` 하나. util import · 자료 ·
+17:   optimizer · 네트워크 0.
+18: - **`run`** (v3 §3 2 의 1–13): 원점 → identity · 원천 / 입력 시작 sha → 경로 → util import → 적재 → P0 정확 대조 → 소비 digest → 계획 →
+19:   감시 (`stop_rule` = 호출당 상한 + 비용 투영) → 사후 집계 → 끝 식별 재해시 → 사전 판정 → `final_record` 한 번 (끝 기록 포함 · 단계 안
+20:   마지막 쓰기) → 최종 판정 stdout (snapshot 뒤 외부 반환 · 산출 루트 밖 · 루트 안에는 더 쓰지 않는다).
+21: - 판정 (v3 §4-7): 관측 집계와 E3a COMPLETE 를 나눈다. 사전 판정 = 조건 1–4 · 6 · 최종 판정 = 사전 AND `final_record` COMPLETE AND 위반 0 ·
+22:   단계 판정 = 최종 AND 단계 실행기 rc 0 · timeout 없음 (`stage_verdict` — run 밖의 meta 로).
+23: - **신뢰 소스 목록** (C4E-E0-N1 · 상태 문서 §69): `seal-sources` 가 다섯 모듈 (`MODULE_RELPATHS`) 의 바이트 sha256 · 크기를 새 폴더의
+24:   `SOURCES.json` 으로 쓴다. 목록의 신뢰는 그 파일이 아니라 결과 기록 · 검토 회신 · 사용자 E1 승인 기록에 고정한 목록 sha256 에서 온다 —
+25:   `run` CLI 는 `--sources` · `--sources-sha256` 를 기본값 없이 요구한다. 목록 sha · 경로 집합 (정확히 다섯) · 항목 형식이 어긋나거나 모듈
+26:   바이트가 목록과 다르면 util import · 자료 적재 · 작업자 시작 전에 멈춘다. 같은 기대값이 시작 · 끝 식별 표에 들어가고, 수용 판정은 필수 행
+27:   (입력 다섯 + 모듈 다섯) 의 행 없음 · 기대 누락 · 시작 / 끝 불일치 · 실행 중 변화를 INCOMPLETE 로 본다. 목록 없이 부르는 라이브러리 경로
+28:   (E0 시험) 는 예전 그대로이며 기록에 legacy 로 남는다.
+29: """
+30: from __future__ import annotations
+31: 
+32: import argparse
+33: import datetime
+34: import json
+35: import math
+36: import os
+37: import struct
+38: import subprocess
+39: import sys
+40: import time
+41: from pathlib import Path
+42: 
+43: HERE = Path(__file__).resolve()
+44: BMS = HERE.parents[1]
+45: REPO = HERE.parents[2]
+46: if str(BMS) not in sys.path:      # `-I` 실행은 스크립트 폴더를 sys.path 에 넣지 않는다 — 시험과 같은 `scripts.` 모듈 객체를 쓴다
+47:     sys.path.insert(0, str(BMS))
+48: from scripts import reil_c4_e3a as e3a  # noqa: E402
+49: from scripts import reil_c4_monitor as mon  # noqa: E402
+50: from scripts import reil_c5_pilot as c5  # noqa: E402
+51: 
+52: p0 = c5.p0
+53: E3aStop = e3a.E3aStop
+54: _sha = c5._sha
+55: 
+56: #: 원자료 출처 (P0 고정 · 상태 문서 §20 · v3 §1) — 다른 출처는 쓰지 않는다
+57: SOURCE_URL = "https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git"
+58: SOURCE_COMMIT = "1188c371e5836df4a7e5f5acf336a34ffd4027e6"
+59: UTIL_BYTES = 33_754                                         # 고정 커밋의 util 원본 (CRLF 846 · 끝 줄바꿈 없음 · §11-3 = 원본)
+60: FETCH_FILES = {"LFP_Data.xlsx": {"bytes": p0.SIZE_XLSX, "sha256": p0.SHA_XLSX},
+61:                "util_LFP.py": {"bytes": UTIL_BYTES, "sha256": p0.SHA_UTIL}}
+62: FETCH_TIMEOUT_S = 240.0
+63: P0_RESULT = BMS / "evidence" / "reil_p0_20261006" / "P0_RESULT.json"
+64: P0_RESULT_SHA = "3875e65092b38c9b08c907926bd8d1f4ee25674c97c28b5ada935e9027d12a90"
+65: MODULES = (HERE, Path(e3a.__file__).resolve(), Path(mon.__file__).resolve(), Path(c5.__file__).resolve(), Path(p0.__file__).resolve())
+66: #: C4E-E0-N1 — 신뢰 소스 목록의 경로 집합 (bms-balancing 기준 · 정확히 다섯 · `_module_files` 와 같은 순서) · 목록 형식 · run 의 필수 식별 행
+67: MODULE_RELPATHS = ("scripts/reil_c4e_run.py", "scripts/reil_c4_e3a.py", "scripts/reil_c4_monitor.py", "scripts/reil_c5_pilot.py",
+68:                    "scripts/reil_p0.py")
+69: SOURCES_SCHEMA = "reil-c4e-sources-v1"
+70: INPUT_NAMES = ("LFP_Data.xlsx", "util_LFP.py", "P0_RESULT.json", "NOTEBOOK_SOURCE_EXCERPTS.json", "MANIFEST.json")
+71: REQUIRED_IDENTITY = INPUT_NAMES + MODULE_RELPATHS
+72: 
+73: N_WORKERS = 4
+74: TICK_S = 1.0
+75: CALL_CAP_S = 1800.0
+76: COST_MIN_SAMPLES = 8
+77: #: v3 §4-1 · §4-4 — 원점 t0 = run 시작 (monotonic). record = final_record 최종 snapshot 의 한도 · stage = 단계 실행기의 run timeout (기록만)
+78: LIMITS = {"prep": 900.0, "measure": 9000.0, "record": 9900.0, "stage": 10800.0, "grace": 60.0,
+79:           "rss": 4 * 2 ** 30, "rss_gap": 5.0, "disk_new": 2 ** 30, "disk_free": 5 * 2 ** 30, "disk_gap": 15.0}
+80: COST_REASON = "비용 중단 — 고정 비용 투영 모형에서 측정 마감 초과로 추정"
+81: #: final_record 의 쓰기 순서 — 끝 기록 (사전 판정과 근거) 이 단계 안의 마지막 쓰기다 (v3 §3 2 의 12)
+82: RECORD_FILES = ("ROWS.json", "AGGREGATE.json", "OPERATION.json", "RESOURCES.json", "RULE.json", "IDENTITY.json", "HEADER.json",
+83:                 "END_RECORD.json")
+84: OPERATION_KEYS = ("global_stop", "structural", "workers", "worker_end", "worker_deadline", "exitcodes", "owned_alive_after",
+85:                   "drain_ok", "t_stop", "deadline_rel")
+86: #: C4-0a 기록 필드 (`e3a.run_e3a_call` 의 returned 행 + 감시 `_states` 의 t_start_rel) — 조건 2
+87: REQUIRED_FIELDS = ("task_id", "call_id", "case", "row", "obj_selection", "algorithm", "worker",
+88:                    "n_eval", "n_nonfinite", "n_nonfinite_any_of_4", "n_out_eval_PE", "n_out_eval_NE", "n_out_eval_any",
+89:                    "n_out_unknown_eval", "n_dvdq_observed", "n_eval_x_out_of_box", "n_eval_G_violated",
+90:                    "extraction", "model_digest", "halfcell_digest", "warnings_count", "warnings_distinct_overflow",
+91:                    "success_is_evidence", "n_eval_minus_expected",
+92:                    "termination", "error", "X", "F", "G", "G_status", "n_solutions", "F_nonfinite_count", "G_violation_recomputed",
+93:                    "G_violation_exact", "box_violation_exact", "success_reported",
+94:                    "wall", "cpu", "state", "t_start_rel")
+95: ROW_KEYS = ("n_points", "V_first", "V_last", "Q_first", "Q_exp_max")
+96: REF_KEYS = ("sheet", "step_idx", "cell_idx", "n_points", "V_first", "V_last", "Q_first", "Q_last")
+97: 
+98: 
+99: class RuleInputError(ValueError):
+100:     """규칙 입력 검증 실패 (v3 §4-3) — 감시가 우리 구조 오류로 기록한다. 표본을 빼거나 0 으로 채우지 않는다."""
+101: 
+102: 
+103: def _utc() -> str:
+104:     return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+105: 
+106: 
+107: def _is_int(v) -> bool:
+108:     return isinstance(v, int) and not isinstance(v, bool)
+109: 
+110: 
+111: def _finite(v) -> bool:
+112:     return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+113: 
+114: 
+115: def _same(a, b) -> bool:
+116:     """정확 일치 — float 는 비트까지 (1 ulp 도 다르다) · 그 밖은 형과 값."""
+117:     if isinstance(a, float) or isinstance(b, float):
+118:         return isinstance(a, float) and isinstance(b, float) and struct.pack("<d", a) == struct.pack("<d", b)
+119:     return type(a) is type(b) and a == b
+120: 
+121: 
+122: def _tid_key(t):
+123:     """task 번호 정렬 — 정수는 수 순서 · 그 밖 (검증에서 걸러질 값) 은 뒤에 문자열 순서."""
+124:     return (0, t, "") if _is_int(t) else (1, 0, str(t))
+125: 
+126: 
+127: def _stop(message: str, record=None):
+128:     err = E3aStop(message)
+129:     err.record = record
+130:     return err
+131: 
+132: 
+133: # ---------------------------------------------------------------- 계획 (C4-0a 그대로)
+134: def plan() -> list:
+135:     """C4-0a 계획 (`e3a.plan_calls(4)`) — 66 호출 · 번호 = case × 11 + 행 · 작업자 = 번호 mod 4 · 알고리즘 · 기대 평가 (산술 · 한도 아님)."""
+136:     return e3a.plan_calls(N_WORKERS)
+137: 
+138: 
+139: # ---------------------------------------------------------------- 규칙 (v3 §4-2 · §4-3) — 결과값 (X · F · G) 은 읽지 않는다
+140: def validate(snap, plan_by_id) -> None:
+141:     """계산 전 입력 검증 — 하나라도 어긋나면 `RuleInputError` (빼기 · 0 채우기 없음). 완료 행에서는 wall · n_eval · termination 만 본다."""
+142:     planned = list(snap["planned"])
+143:     pset = set(planned)
+144:     if len(pset) != len(planned) or pset != set(plan_by_id):
+145:         raise RuleInputError(f"계획 집합이 다르다 (snapshot {len(planned)} · 계획 {len(plan_by_id)})")
+146:     started, done, prog = snap["started"], snap["done"], snap["progress"]
+147:     if not _finite(snap["now_rel"]):
+148:         raise RuleInputError(f"now_rel 이 유한하지 않다: {snap['now_rel']!r}")
+149:     out = sorted(set(started) - pset, key=_tid_key)
+150:     if out:
+151:         raise RuleInputError(f"계획 밖 task 가 시작됐다: {out}")
+152:     out = sorted(set(done) - set(started), key=_tid_key)
+153:     if out:
+154:         raise RuleInputError(f"done ⊄ started — 시작 사건 없이 완료: {out}")
+155:     if set(prog) != pset:
+156:         raise RuleInputError("progress 의 task 집합이 계획과 다르다")
+157:     for tid in planned:
+158:         if not _is_int(prog[tid]) or prog[tid] < 0:
+159:             raise RuleInputError(f"task {tid} progress {prog[tid]!r} — 정수 ≥ 0 이 아니다")
+160:     for tid in sorted(started, key=_tid_key):
+161:         if not _finite(started[tid]):
+162:             raise RuleInputError(f"task {tid} 시작 상대 시각 {started[tid]!r} 이 유한하지 않다")
+163:     for tid in sorted(done, key=_tid_key):
+164:         d = done[tid]
+165:         term, wall = d.get("termination"), d.get("wall")
+166:         if term not in ("returned", "error"):
+167:             raise RuleInputError(f"task {tid} termination {term!r} — returned / error 가 아니다")
+168:         if not _finite(wall) or wall < 0:
+169:             raise RuleInputError(f"task {tid} wall {wall!r} — 유한 · ≥ 0 이 아니다")
+170:         if term == "returned":
+171:             n = d.get("n_eval")
+172:             if not _is_int(n) or n < 1:
+173:                 raise RuleInputError(f"task {tid} n_eval {n!r} — returned 행은 정수 ≥ 1")
+174: 
+175: 
+176: def call_cap(snap, cap=CALL_CAP_S) -> dict:
+177:     """호출당 상한 (v3 §4-2) — 진행 중 = now_rel − started · 완료 = 행의 wall · 엄격한 > (같으면 넘지 않음). 늦은 완료를 먼저 적는다."""
+178:     now, started, done = snap["now_rel"], snap["started"], snap["done"]
+179:     active = [{"task_id": tid, "elapsed_observed": now - started[tid], "detected_rel": now}
+180:               for tid in sorted(started, key=_tid_key) if tid not in done and now - started[tid] > cap]
+181:     late = [{"task_id": tid, "wall": done[tid]["wall"], "detected_rel": now}
+182:             for tid in sorted(done, key=_tid_key) if done[tid]["wall"] > cap]
+183:     parts = []
+184:     if late:
+185:         parts.append("호출당 상한 (늦은 완료 · " + ", ".join(f"{x['task_id']}: wall {x['wall']:.3f} s" for x in late) + f" > {cap} s)")
+186:     if active:
+187:         parts.append("호출당 상한 (진행 중 · " + ", ".join(f"{x['task_id']}: {x['elapsed_observed']:.3f} s" for x in active)
+188:                      + f" > {cap} s)")
+189:     return {"cap": cap, "active_over": active, "late": late, "reason": " · ".join(parts) if parts else None}
+190: 
+191: 
+192: def cost_projection(snap, plan, *, min_samples=COST_MIN_SAMPLES, measure=LIMITS["measure"]) -> dict:
+193:     """비용 투영 (v3 §4-3) — 완료 returned 의 c = wall / n_eval · 위쪽 중앙 순서통계 m (오름차순 0-기반 ⌊n/2⌋) · 최소 표본 · 누적 창 ·
+194:     작업자 w 마다 R_w = (미착수 배정 호출의 기대 평가 합 + 진행 중 호출의 max(기대 평가 − progress, 0)) × m · now_rel + max R_w > 경계 → 중지."""
+195:     by_id = plan if isinstance(plan, dict) else {t["task_id"]: t for t in plan}
+196:     done, started, prog = snap["done"], snap["started"], snap["progress"]
+197:     ret = sorted((tid for tid in done if done[tid]["termination"] == "returned"), key=_tid_key)
+198:     samples = [{"task_id": tid, "wall": done[tid]["wall"], "n_eval": done[tid]["n_eval"],
+199:                 "c": done[tid]["wall"] / done[tid]["n_eval"]} for tid in ret]
+200:     rec = {"now_rel": snap["now_rel"], "returned_ids": ret, "n_samples": len(samples), "samples": samples,
+201:            "min_samples": int(min_samples), "boundary": float(measure), "m": None, "judged": False,
+202:            "remaining_expected_evals": None, "R": None, "value": None, "stop": False, "reason": None}
+203:     if len(samples) < min_samples:
+204:         return rec
+205:     cs = sorted(s["c"] for s in samples)
+206:     m = cs[len(cs) // 2]
+207:     rem = {}
+208:     for tid in snap["planned"]:
+209:         t = by_id[tid]
+210:         w, exp = t["worker"], t["algorithm"]["expected_evals"]
+211:         rem.setdefault(w, 0)
+212:         if tid not in started:
+213:             rem[w] += exp
+214:         elif tid not in done:
+215:             rem[w] += max(exp - prog[tid], 0)
+216:     r_w = {w: v * m for w, v in rem.items()}
+217:     value = snap["now_rel"] + (max(r_w.values()) if r_w else 0.0)
+218:     stop = value > measure
+219:     rec.update(m=m, judged=True, remaining_expected_evals={str(w): rem[w] for w in sorted(rem)},
+220:                R={str(w): r_w[w] for w in sorted(r_w)}, value=value, stop=stop,
+221:                reason=(f"{COST_REASON} (now_rel {snap['now_rel']:.3f} + max R_w {value - snap['now_rel']:.3f} = {value:.3f} s > "
+222:                        f"{measure} s · m {m:.6g} s/평가 · 표본 {len(samples)})") if stop else None)
+223:     return rec
+224: 
+225: 
+226: class StopRule:
+227:     """감시가 tick 마다 부르는 규칙 (v3 §4-2 · §4-3): 입력 검증 → 호출당 상한 → 비용 투영. 상태는 바꾸지 않고 사유와 기록만 남긴다.
+228:     진행 중 초과는 '중단 요청 대상' 으로 적고, 최종 상태는 감시의 마지막 drain 뒤 사후 집계 (`aggregate`) 가 붙인다."""
+229: 
+230:     def __init__(self, plan, *, cap=CALL_CAP_S, min_samples=COST_MIN_SAMPLES, measure=LIMITS["measure"]):
+231:         self.plan = {t["task_id"]: t for t in plan}
+232:         self.cap, self.min_samples, self.measure = float(cap), int(min_samples), float(measure)
+233:         self.active_over: list = []
+234:         self.late_seen: list = []
+235:         self.stop = None
+236:         self.last = None
+237:         self.n_calls = 0
+238: 
+239:     def __call__(self, snap):
+240:         self.n_calls += 1
+241:         validate(snap, self.plan)
+242:         cap = call_cap(snap, self.cap)
+243:         if cap["reason"] is not None:
+244:             self.active_over += cap["active_over"]
+245:             self.late_seen += cap["late"]
+246:             self.stop = {"kind": "call_cap", "now_rel": snap["now_rel"], **cap}
+247:             return cap["reason"]
+248:         cost = cost_projection(snap, self.plan, min_samples=self.min_samples, measure=self.measure)
+249:         self.last = cost
+250:         if cost["stop"]:
+251:             self.stop = {"kind": "cost", **cost}
+252:             return cost["reason"]
+253:         return None
+254: 
+255:     def params(self) -> dict:
+256:         return {"cap_s": self.cap, "compare": "엄격한 > (같으면 넘지 않음)", "min_samples": self.min_samples, "measure_s": self.measure,
+257:                 "statistic": "위쪽 중앙 순서통계 — returned 의 c = wall / n_eval 오름차순 0-기반 index ⌊n/2⌋",
+258:                 "window": "누적 (완료된 returned 전부) · tick 마다 다시 계산",
+259:                 "projection": "R_w = (미착수 배정 호출의 기대 평가 합 + 진행 중 호출의 max(기대 평가 − progress, 0)) × m",
+260:                 "boundary": "now_rel + max_w R_w > measure 이면 중지", "inputs": "snapshot 의 wall · n_eval · termination · progress 만"}
+261: 
+262:     def record(self) -> dict:
+263:         return {"params": self.params(), "n_calls": self.n_calls, "stop": self.stop, "last": self.last,
+264:                 "active_over": list(self.active_over), "late_seen": list(self.late_seen)}
+265: 
+266: 
+267: # ---------------------------------------------------------------- 사후 집계 · 판정 (v3 §4-2 · §4-7)
+268: def aggregate(sup, plan, rule) -> dict:
+269:     """감시의 마지막 drain 뒤 상태 (done 우선 · 원행) 위의 사후 집계 — 상태 · 행은 바꾸지 않는다. 관측 집계 · 모든 COMPLETED 행의 wall 대조
+270:     (마지막 drain 에서 처음 받은 행 포함) · 중단 요청 대상에 최종 상태를 붙인다. 이미 걸린 global_stop 은 그대로 둔다."""
+271:     states = list(sup["states"])
+272:     planned = [t["task_id"] for t in plan]
+273:     ids = [s.get("task_id") for s in states]
+274:     problems = []
+275:     if len(ids) != len(set(ids)) or sorted(ids, key=_tid_key) != sorted(planned, key=_tid_key):
+276:         problems.append(f"감시 상태의 task 집합이 계획과 다르다 (상태 {len(ids)} · 고유 {len(set(ids))} · 계획 {len(planned)})")
+277:     obs = {"planned": len(planned), "COMPLETED_returned": 0, "COMPLETED_error": 0, "STARTED_INTERRUPTED": 0, "NOT_STARTED": 0,
+278:            "other": 0}
+279:     for s in states:
+280:         st, term = s.get("state"), s.get("termination")
+281:         if st == "COMPLETED" and term in ("returned", "error"):
+282:             obs[f"COMPLETED_{term}"] += 1
+283:         elif st in ("STARTED_INTERRUPTED", "NOT_STARTED"):
+284:             obs[st] += 1
+285:         else:
+286:             obs["other"] += 1
+287:     obs["sum"] = obs["COMPLETED_returned"] + obs["COMPLETED_error"] + obs["STARTED_INTERRUPTED"] + obs["NOT_STARTED"] + obs["other"]
+288:     if obs["other"] or obs["sum"] != len(planned):
+289:         problems.append(f"관측 집계가 계획을 나누지 않는다: {obs}")
+290:     late = []
+291:     for s in states:
+292:         if s.get("state") != "COMPLETED":
+293:             continue
+294:         w = s.get("wall")
+295:         if not _finite(w) or w < 0:
+296:             problems.append(f"task {s.get('task_id')} COMPLETED 행의 wall {w!r} — 상한 대조 불가")
+297:         elif w > rule.cap:
+298:             late.append({"task_id": s.get("task_id"), "wall": w, "termination": s.get("termination")})
+299:     by_id = {s.get("task_id"): s for s in states}
+300:     over = []
+301:     for rec in rule.active_over:
+302:         s = by_id.get(rec["task_id"], {})
+303:         fin = s.get("state")
+304:         over.append({**rec, "final_state": fin, "termination": s.get("termination") if fin == "COMPLETED" else None})
+305:     return {"observed": obs, "late_completions": late, "over_cap_active": over, "cap_s": rule.cap,
+306:             "global_stop": sup.get("global_stop"), "structural_n": len(sup.get("structural") or []), "problems": problems}
+307: 
+308: 
+309: def identity_table(files: dict, expected: dict) -> dict:
+310:     """{이름: 경로} → {이름: 경로 · 기대 · sha256 · bytes} (읽기만 · 못 읽으면 sha256 None)."""
+311:     out = {}
+312:     for name, p in files.items():
+313:         try:
+314:             b = Path(p).read_bytes()
+315:             sha, n = _sha(b), len(b)
+316:         except OSError:
+317:             sha, n = None, None
+318:         out[name] = {"path": str(p), "expected": expected.get(name), "sha256": sha, "bytes": n}
+319:     return out
+320: 
+321: 
+322: def identity_problems(table: dict, required=()) -> list:
+323:     """기대값과 다른 행 · 필수 행 (`required`) 의 행 없음 · 기대 누락 (C4E-E0-N1). required 를 주지 않으면 기대 None 행은 건너뛴다 (예전 그대로)."""
+324:     probs = []
+325:     for name in required:
+326:         row = table.get(name)
+327:         if row is None:
+328:             probs.append(f"{name}: 식별 행이 없다 (필수)")
+329:         elif row.get("expected") is None:
+330:             probs.append(f"{name}: 기대 항목 누락 (필수 · 신뢰 기대값 없이 통과시키지 않는다)")
+331:     for name, row in table.items():
+332:         exp = row.get("expected")
+333:         if exp is None:
+334:             continue
+335:         if row.get("sha256") != exp.get("sha256") or ("bytes" in exp and row.get("bytes") != exp["bytes"]):
+336:             probs.append(f"{name}: sha256 {row.get('sha256')} · {row.get('bytes')} B ≠ 기대 {exp}")
+337:     return probs
+338: 
+339: 
+340: def identity_changed(start: dict, end: dict) -> list:
+341:     return sorted(n for n in set(start) | set(end)
+342:                   if (start.get(n) or {}).get("sha256") != (end.get(n) or {}).get("sha256") or (start.get(n) or {}).get("sha256") is None)
+343: 
+344: 
+345: def pre_verdict(plan, agg, sup, ident_start, ident_end, *, n_workers=N_WORKERS, required=()) -> dict:
+346:     """사전 판정 (v3 §4-7 조건 1–4 · 6) — `final_record` 전의 판정이다. 최종 판정은 끝 기록까지 쓴 final_record 뒤에만 (`final_verdict`).
+347:     조건 6 은 시작 · 끝 두 표를 같은 기대값과 대조한다 — 필수 행 (`required`) 의 행 없음 · 기대 누락도 문제다 (C4E-E0-N1)."""
+348:     states, reasons = sup["states"], []
+349:     ret = [s for s in states if s.get("state") == "COMPLETED" and s.get("termination") == "returned"]
+350:     c1 = len(ret) == len(plan) and not agg["problems"]
+351:     if not c1:
+352:         reasons.append(f"조건 1: returned {len(ret)} / {len(plan)} · 관측 {agg['observed']} · {agg['problems']}")
+353:     missing = {s.get("task_id"): [k for k in REQUIRED_FIELDS if k not in s] for s in ret}
+354:     missing = {k: v for k, v in missing.items() if v}
+355:     c2 = not missing
+356:     if not c2:
+357:         reasons.append(f"조건 2: 기록 필드 누락 {missing}")
+358:     c3 = sup.get("global_stop") is None and not sup.get("structural")
+359:     if not c3:
+360:         reasons.append(f"조건 3: global_stop {sup.get('global_stop')!r} · structural {len(sup.get('structural') or [])}")
+361:     ws = set(range(n_workers))
+362:     ends = {int(k) for k in (sup.get("worker_end") or {})}
+363:     codes = {int(k): v for k, v in (sup.get("exitcodes") or {}).items()}
+364:     c4 = (ends == ws and not sup.get("worker_deadline") and codes == {w: 0 for w in ws}
+365:           and sup.get("owned_alive_after") == 0 and sup.get("drain_ok") is True)
+366:     if not c4:
+367:         reasons.append(f"조건 4: worker_end {sorted(ends)} · worker_deadline {sup.get('worker_deadline')} · exitcodes {codes} · "
+368:                        f"owned_alive_after {sup.get('owned_alive_after')} · drain_ok {sup.get('drain_ok')}")
+369:     changed = identity_changed(ident_start, ident_end)
+370:     probs, end_probs = identity_problems(ident_start, required), identity_problems(ident_end, required)
+371:     c6 = not changed and not probs and not end_probs and not agg["late_completions"] and not agg["over_cap_active"]
+372:     if not c6:
+373:         reasons.append(f"조건 6: 시작 / 끝 식별 변화 {changed} · 시작 식별 문제 {probs} · 끝 식별 문제 {end_probs} · 늦은 완료 "
+374:                        f"{[x['task_id'] for x in agg['late_completions']]} · 진행 중 초과 {[x['task_id'] for x in agg['over_cap_active']]}")
+375:     complete = c1 and c2 and c3 and c4 and c6
+376:     return {"kind": "사전 판정 (v3 §4-7 조건 1–4 · 6) — 최종 판정이 아니다", "complete": complete,
+377:             "conditions": {"1": c1, "2": c2, "3": c3, "4": c4, "6": c6}, "reasons": reasons, "required_identity": list(required)}
+378: 
+379: 
+380: def final_verdict(pre, fr) -> dict:
+381:     """run 최종 판정 = 사전 판정 AND `final_record` COMPLETE AND 위반 0 (v3 §4-7 조건 5). 앞선 판정으로 뒤의 실패를 가리지 않는다."""
+382:     rec_ok = fr.get("record_state") == "COMPLETE" and not fr.get("limit_violations")
+383:     complete = bool(pre.get("complete")) and rec_ok
+384:     reasons = list(pre.get("reasons") or [])
+385:     if not rec_ok:
+386:         reasons.append(f"조건 5: record_state {fr.get('record_state')} · 위반 {fr.get('limit_violations')} · {fr.get('problems')}")
+387:     return {"kind": "run 최종 판정 (조건 1–6) — 단계 판정은 단계 실행기 meta 와 AND (stage_verdict)", "complete": complete,
+388:             "E3a": "COMPLETE" if complete else "INCOMPLETE", "c4a_gate": complete, "record_state": fr.get("record_state"),
+389:             "limit_violations": fr.get("limit_violations"), "final_snapshot_s": fr.get("final_snapshot_s"), "reasons": reasons}
+390: 
+391: 
+392: def stage_verdict(final, meta) -> dict:
+393:     """단계 판정 = run 최종 판정 AND 단계 실행기 rc 0 · timeout 없음 (v3 §4-7 조건 7 — run 자신이 아니라 단계 실행기 meta 로)."""
+394:     runner_ok = meta.get("rc") == 0 and meta.get("timed_out") is False
+395:     complete = bool((final or {}).get("complete")) and runner_ok
+396:     return {"kind": "단계 판정 (v3 §4-7 조건 7)", "complete": complete, "E3a": "COMPLETE" if complete else "INCOMPLETE",
+397:             "c4a_gate": complete, "runner": {"rc": meta.get("rc"), "timed_out": meta.get("timed_out"), "elapsed_s": meta.get("elapsed_s")},
+398:             "final_received": final is not None}
+399: 
+400: 
+401: # ---------------------------------------------------------------- 자료 결속 (v3 §4-6)
+402: def check_paths(*, xlsx, util, out) -> None:
+403:     """경로 경계 (v3 §3 2 의 3): 자료 파일은 저장소 밖 · `.pkl` · `.ipynb` 거부 · 출력 폴더는 새로."""
+404:     for name, p in (("xlsx", xlsx), ("util", util)):
+405:         rp = Path(p).resolve()
+406:         if mon.owned(rp, [REPO.resolve()]):
+407:             raise E3aStop(f"{name} 경로가 저장소 안이다: {rp} — 원자료는 저장소 밖에서만 읽는다")
+408:     for p in (xlsx, util, out):
+409:         if str(p).lower().endswith((".pkl", ".ipynb")):
+410:             raise E3aStop(f"금지 경로 (.pkl · .ipynb): {p}")
+411:     if Path(out).exists():
+412:         raise E3aStop(f"출력 폴더가 이미 있다: {out} — 새로 만든다 (덮어쓰기 · 재사용 없음)")
+413: 
+414: 
+415: def load_inputs(util, xlsx) -> dict:
+416:     """P0 (`reil_p0.py:341–380`) · C5 (`reil_c5_pilot.py:871–885`) 와 같은 그들 함수 · 같은 인자 — Model 11 · halfcell · 대조용 기록."""
+417:     import numpy as np
+418:     area = 0.25 * np.pi * 1.2 ** 2
+419:     lfp_mass_12, gr_mass_12 = 13.5 * area, 5.77 * area
+420:     refs, ref_rec = {}, []
+421:     for sheet in p0.SHEETS_REF:
+422:         arr = util.visualize_LFP_data(data_file=str(xlsx), sheet_name=sheet, step_idx=p0.REF_STEP)[p0.REF_CELL]
+423:         refs[sheet] = arr
+424:         ref_rec.append({"sheet": sheet, "kind": "reference", "step_idx": p0.REF_STEP, "cell_idx": p0.REF_CELL,
+425:                         "n_points": int(arr.shape[1]), "V_first": float(arr[1][0]), "V_last": float(arr[1][-1]),
+426:                         "Q_first": float(arr[0][0]), "Q_last": float(arr[0][-1])})
+427:     pe, ne = refs[p0.SHEETS_REF[0]], refs[p0.SHEETS_REF[1]]
+428:     q_pe = pe[0][np.argmin(pe[0]):np.argmax(pe[0])] / lfp_mass_12 * 20.16
+429:     v_pe = pe[1][np.argmin(pe[0]):np.argmax(pe[0])]
+430:     q_ne = ne[0][np.argmin(ne[0]):np.argmax(ne[0])] / gr_mass_12 * 11.4
+431:     v_ne = ne[1][np.argmin(ne[0]):np.argmax(ne[0])]
+432:     models, rows = {}, []
+433:     for i in e3a.ROWS:
+434:         d = util.visualize_LFP_data(data_file=str(xlsx), sheet_name=p0.SHEETS_ANALYSIS[i], step_idx=p0.STEP_IDX[i], visualize=False)
+435:         m = util.extract_battery_data(data=d, idx=p0.CELL_IDX[i])
+436:         models[i] = m
+437:         rows.append({"row": i, "sheet": p0.SHEETS_ANALYSIS[i], "cell_idx": p0.CELL_IDX[i], "step_idx": p0.STEP_IDX[i],
+438:                      "n_points": int(len(m["Q_exp"])), "V_first": float(m["V_exp"][0]), "V_last": float(m["V_exp"][-1]),
+439:                      "Q_first": float(m["Q_exp"][0]), "Q_exp_max": float(m["Q_exp_max"])})
+440:     return {"models": models, "halfcell": [q_pe, v_pe, q_ne, v_ne], "rows": rows, "references": ref_rec,
+441:             "PE": {"max_q": float(np.max(q_pe.flatten())), "n_q_PE_hc": int(q_pe.size)},
+442:             "NE": {"q_NE_hc_max_record_only": float(np.max(q_ne))}}
+443: 
+444: 
+445: def binding_problems(loaded, res) -> list:
+446:     """P0 기록과 정확 대조 (float 비트 동일 · 조정 · 재추출 없음) — 분석 11 행 · reference 둘 · PE max_q / 길이 · NE 최대."""
+447:     probs, ext = [], res.get("extraction") or []
+448:     ana = {e.get("row"): e for e in ext if e.get("kind") == "analysis"}
+449:     refs = {e.get("sheet"): e for e in ext if e.get("kind") == "reference"}
+450:     if set(ana) != set(e3a.ROWS) or any(e.get("status") != "OK" for e in ana.values()):
+451:         probs.append(f"P0 분석 기록이 #0–#10 전부 OK 가 아니다: {sorted(ana, key=str)}")
+452:     for r in loaded["rows"]:
+453:         want = ana.get(r["row"]) or {}
+454:         for k in ROW_KEYS:
+455:             if k not in want or not _same(want[k], r[k]):
+456:                 probs.append(f"분석 행 #{r['row']} {k}: 적재 {r[k]!r} ≠ P0 {want.get(k)!r}")
+457:     if set(refs) != set(p0.SHEETS_REF) or any(e.get("status") != "OK" for e in refs.values()):
+458:         probs.append(f"P0 reference 기록이 둘 다 OK 가 아니다: {sorted(refs, key=str)}")
+459:     for r in loaded["references"]:
+460:         want = refs.get(r["sheet"]) or {}
+461:         for k in REF_KEYS:
+462:             if k not in want or not _same(want[k], r[k]):
+463:                 probs.append(f"reference {r['sheet']} {k}: 적재 {r[k]!r} ≠ P0 {want.get(k)!r}")
+464:     mq = res.get("max_q") or {}
+465:     if not _same(mq.get("float"), loaded["PE"]["max_q"]):
+466:         probs.append(f"PE max_q: 적재 {loaded['PE']['max_q']!r} ≠ P0 {mq.get('float')!r}")
+467:     if not _same(mq.get("n_q_PE_hc"), loaded["PE"]["n_q_PE_hc"]):
+468:         probs.append(f"PE n_q_PE_hc: 적재 {loaded['PE']['n_q_PE_hc']!r} ≠ P0 {mq.get('n_q_PE_hc')!r}")
+469:     if not _same(res.get("q_NE_hc_max_record_only"), loaded["NE"]["q_NE_hc_max_record_only"]):
+470:         probs.append(f"NE q_NE_hc_max_record_only: 적재 {loaded['NE']['q_NE_hc_max_record_only']!r} ≠ P0 "
+471:                      f"{res.get('q_NE_hc_max_record_only')!r}")
+472:     return probs
+473: 
+474: 
+475: def consumed(models, halfcell) -> dict:
+476:     """실제로 넘긴 입력의 digest 와 선택 인자 (v3 §4-6) — 기록만으로 잘못된 적재가 교정되지는 않는다 (d_3 의 합성 대조가 함께 필요)."""
+477:     import numpy as np
+478:     area = 0.25 * np.pi * 1.2 ** 2
+479:     return {"models": {str(r): c5.model_digest(models[r]) for r in sorted(models)}, "halfcell": c5.model_digest(halfcell),
+480:             "selection": {"call": "visualize_LFP_data(data_file, sheet_name, step_idx, visualize=False) → extract_battery_data(data, idx)",
+481:                           "sheets": list(p0.SHEETS_ANALYSIS), "step_idx": list(p0.STEP_IDX), "cell_idx": list(p0.CELL_IDX),
+482:                           "reference": {"sheets": list(p0.SHEETS_REF), "step_idx": p0.REF_STEP, "cell_idx": p0.REF_CELL},
+483:                           "mass": {"area": "0.25 π 1.2²", "LFP_mass_12": 13.5 * area, "Gr_mass_12": 5.77 * area},
+484:                           "scale": {"PE": 20.16, "NE": 11.4}, "slice": "[argmin(Q) : argmax(Q)]",
+485:                           "halfcell": "[q_PE, v_PE, q_NE, v_NE]"}}
+486: 
+487: 
+488: def expected_identity(manifest_sha256, override=None) -> dict:
+489:     exp = {"LFP_Data.xlsx": dict(FETCH_FILES["LFP_Data.xlsx"]), "util_LFP.py": dict(FETCH_FILES["util_LFP.py"]),
+490:            "P0_RESULT.json": {"sha256": P0_RESULT_SHA}, "NOTEBOOK_SOURCE_EXCERPTS.json": {"sha256": e3a.EXCERPTS_SHA},
+491:            "MANIFEST.json": {"sha256": manifest_sha256}}
+492:     exp.update(override or {})
+493:     return exp
+494: 
+495: 
+496: def _module_files() -> dict:
+497:     return {f"scripts/{m.name}": m for m in MODULES}
+498: 
+499: 
+500: def _is_sha256(v) -> bool:
+501:     return isinstance(v, str) and len(v) == 64 and all(c in "0123456789abcdef" for c in v)
+502: 
+503: 
+504: def load_sources(path, sha256) -> dict:
+505:     """신뢰 소스 목록 읽기 (C4E-E0-N1) — 목록 바이트의 sha256 = 승인 기록에 고정한 값 · 형식 (`SOURCES_SCHEMA`) · 경로 집합 = 정확히
+506:     `MODULE_RELPATHS` (누락 · 목록 밖 모두 거부) · 항목마다 sha256 (소문자 16 진 64) · bytes (정수 ≥ 0). 하나라도 어긋나면 `E3aStop`."""
+507:     if tuple(_module_files()) != MODULE_RELPATHS:
+508:         raise E3aStop(f"실행 모듈 경로 집합이 목록 정의와 다르다: {tuple(_module_files())}")
+509:     if not _is_sha256(sha256):
+510:         raise E3aStop(f"소스 목록 sha256 인자가 소문자 16 진 64 자가 아니다: {sha256!r}")
+511:     b = e3a._read(path)
+512:     if _sha(b) != sha256:
+513:         raise E3aStop(f"소스 목록 sha256 {_sha(b)} ≠ 승인 고정값 {sha256}")
+514:     try:
+515:         doc = json.loads(b)
+516:     except ValueError as e:
+517:         raise E3aStop(f"소스 목록이 JSON 이 아니다: {e}") from None
+518:     files = doc.get("files") if isinstance(doc, dict) else None
+519:     if not isinstance(files, dict) or doc.get("schema") != SOURCES_SCHEMA:
+520:         raise E3aStop(f"소스 목록 형식이 다르다 (schema {SOURCES_SCHEMA} · files)")
+521:     missing = [p for p in MODULE_RELPATHS if p not in files]
+522:     extra = sorted(set(files) - set(MODULE_RELPATHS))
+523:     if missing or extra:
+524:         raise E3aStop(f"소스 목록 경로 집합이 다르다 — 기대 항목 누락 {missing} · 목록 밖 {extra}")
+525:     out = {}
+526:     for p in MODULE_RELPATHS:
+527:         e = files[p]
+528:         sha, n = (e.get("sha256"), e.get("bytes")) if isinstance(e, dict) else (None, None)
+529:         if not _is_sha256(sha) or not _is_int(n) or n < 0:
+530:             raise E3aStop(f"소스 목록 항목 {p} 이 sha256 (소문자 16 진 64) · bytes (정수 ≥ 0) 가 아니다: {e!r}")
+531:         out[p] = {"sha256": sha, "bytes": n}
+532:     return out
+533: 
+534: 
+535: def seal_sources(out) -> dict:
+536:     """신뢰 소스 목록 쓰기 (C4E-E0-N1) — 다섯 모듈의 지금 바이트 sha256 · 크기 → 새 폴더의 `SOURCES.json` 하나. 목록의 신뢰는 이 파일이
+537:     아니라 결과 기록 · 검토 회신 · 사용자 E1 승인 기록에 고정하는 목록 sha256 에서 온다 (run 은 그 값을 명시 인자로만 받는다)."""
+538:     out = Path(out)
+539:     e3a._guard([out])
+540:     if out.exists():
+541:         raise E3aStop(f"{out} 가 이미 있다 — 덮어쓰지 않는다")
+542:     mods = _module_files()
+543:     if tuple(mods) != MODULE_RELPATHS:
+544:         raise E3aStop(f"실행 모듈 경로 집합이 목록 정의와 다르다: {tuple(mods)}")
+545:     files = {}
+546:     for rel, p in mods.items():
+547:         b = e3a._read(p)
+548:         files[rel] = {"sha256": _sha(b), "bytes": len(b)}
+549:     doc = {"schema": SOURCES_SCHEMA, "base": "bms-balancing/", "files": files,
+550:            "scope": "C4-E E1 실행 모듈 다섯의 승인 대상 바이트 (C4E-E0-N1 · 상태 문서 §69)",
+551:            "trust": "이 파일 자체는 신뢰의 근거가 아니다 — 목록 바이트의 sha256 을 결과 기록 · 검토 회신 · 사용자 E1 승인 기록에 고정하고 "
+552:                     "run 은 그 값을 명시 인자 (--sources-sha256) 로만 받는다"}
+553:     data = mon._dump(doc)
+554:     out.mkdir(parents=True)
+555:     (out / "SOURCES.json").write_bytes(data)
+556:     if (out / "SOURCES.json").read_bytes() != data:
+557:         raise E3aStop("SOURCES.json 을 다시 읽은 바이트가 쓴 것과 다르다")
+558:     return {"ok": True, "out": str(out), "sources_sha256": _sha(data), "files": files}
+559: 
+560: 
+561: # ---------------------------------------------------------------- run (v3 §3 2 의 1–13)
+562: def prepare(*, venv, seal, manifest_sha256, xlsx, util_path, out, p0_result=P0_RESULT, excerpts=e3a.EXCERPTS, expected=None,
+563:             env_identity=None, load_util=None, header=None, sources=None, sources_sha256=None) -> dict:
+564:     """run 의 2–7: identity → (신뢰 소스 목록) → 원천 · 입력 시작 sha → 경로 (출력 폴더 새로) → util import → 적재 → P0 정확 대조 →
+565:     소비 digest → 계획. 앞에서 어긋나면 `E3aStop` — 뒤 단계 (util import · 그들 적재 함수 · optimizer) 는 부르지 않는다.
+566:     `sources` · `sources_sha256` (C4E-E0-N1) 를 주면 다섯 모듈의 기대값을 목록에서 채우고 필수 행 (`REQUIRED_IDENTITY`) 을 강제한다 ·
+567:     하나만 주면 멈춘다 · 둘 다 없으면 legacy (E0 시험 경로 — 기록에 남긴다 · E1 CLI 는 목록을 요구한다)."""
+568:     seal, out = Path(seal), Path(out)
+569:     if (sources is None) != (sources_sha256 is None):
+570:         raise E3aStop("신뢰 소스 목록 (sources) 과 그 sha256 은 함께 준다 — 하나만 주면 멈춘다 (C4E-E0-N1)")
+571:     ident = e3a.identity(venv=venv, seal=seal, manifest_sha256=manifest_sha256, env_identity=env_identity)
+572:     if not ident["ok"]:
+573:         raise E3aStop(f"identity 실패: {ident['problems']}")
+574:     files = {"LFP_Data.xlsx": Path(xlsx), "util_LFP.py": Path(util_path), "P0_RESULT.json": Path(p0_result),
+575:              "NOTEBOOK_SOURCE_EXCERPTS.json": Path(excerpts), "MANIFEST.json": seal / "MANIFEST.json", **_module_files()}
+576:     exp = expected_identity(manifest_sha256, expected)
+577:     required = ()
+578:     if sources is not None:
+579:         exp.update(load_sources(sources, sources_sha256))
+580:         required = REQUIRED_IDENTITY
+581:     id_start = identity_table(files, exp)
+582:     probs = identity_problems(id_start, required)
+583:     if probs:
+584:         raise E3aStop("시작 식별 불일치 — " + "; ".join(probs))
+585:     nb = e3a.notebook_case_table(excerpts)
+586:     check_paths(xlsx=xlsx, util=util_path, out=out)
+587:     out.mkdir(parents=True)
+588:     res = json.loads(Path(p0_result).read_bytes())
+589:     util, uf = (load_util or c5.load_util)(util_path, exp["util_LFP.py"]["sha256"])
+590:     loaded = load_inputs(util, xlsx)
+591:     probs = binding_problems(loaded, res)
+592:     if probs:
+593:         raise E3aStop("P0 적재 대조 불일치 — optimizer 를 부르지 않는다: " + "; ".join(probs[:20]))
+594:     ext = {e["row"]: e for e in res["extraction"] if e.get("kind") == "analysis"}
+595:     ctx = {"util": util, "util_file": uf, "models": loaded["models"], "halfcell": loaded["halfcell"],
+596:            "extraction": {r: ext[r] for r in e3a.ROWS}}
+597:     calls = plan()
+598:     hdr = {"argv": list(sys.argv), "cwd": os.getcwd(), "identity": ident, "notebook": nb, "expected": exp,
+599:            "consumed": consumed(loaded["models"], loaded["halfcell"]),
+600:            "binding": {"equal": True, "rows": loaded["rows"], "references": loaded["references"], "PE": loaded["PE"],
+601:                        "NE": loaded["NE"], "p0_result": str(p0_result)},
+602:            "util_file": uf, "xlsx": str(xlsx), "out": str(out), "blas_env_set": {k: os.environ.get(k) for k in c5.BLAS_VARS},
+603:            "sources": ({"path": str(sources), "sha256": sources_sha256, "files": {p: exp[p] for p in MODULE_RELPATHS},
+604:                         "required_identity": list(required)} if sources is not None else
+605:                        {"mode": "legacy — 신뢰 소스 목록 없음 (E0 시험 경로 · 모듈 기대값 없음 · E1 CLI 는 목록을 요구한다)"}),
+606:            **(header or {})}
+607:     return {"out": out, "plan": calls, "ctx": ctx, "files": files, "expected": exp, "id_start": id_start, "header": hdr,
+608:             "required": required}
+609: 
+610: 
+611: def record_parts(*, header, sup, agg, rule, ident_start, ident_end, pre) -> dict:
+612:     """final_record 에 넘길 기록 (쓰기 순서 = `RECORD_FILES`) — 시각 값은 넣지 않는다 (snapshot 은 final_record 가 잰다)."""
+613:     return {"ROWS.json": sup["states"], "AGGREGATE.json": agg, "OPERATION.json": {k: sup.get(k) for k in OPERATION_KEYS},
+614:             "RESOURCES.json": sup.get("samples"), "RULE.json": rule.record(),
+615:             "IDENTITY.json": {"start": ident_start, "end": ident_end, "changed": identity_changed(ident_start, ident_end)},
+616:             "HEADER.json": header,
+617:             "END_RECORD.json": {"pre_verdict": pre, "note": "사전 판정 — 최종 판정은 이 파일까지 쓴 final_record 의 snapshot 뒤 (stdout)"}}
+618: 
+619: 
+620: def finalize(out, *, plan, sup, rule, ident_start, rehash, header, limits, roots, clock=time.monotonic, t0=0.0,
+621:              n_workers=N_WORKERS, required=()) -> dict:
+622:     """run 의 9–13: 사후 집계 → 끝 식별 재해시 → 사전 판정 → `final_record` 한 번 (끝 기록 포함 · 단계 안 마지막 쓰기 · 재읽기 · 해시 →
+623:     같은 산출 루트 크기 · 최종 snapshot) → 최종 판정. 그 뒤 산출 루트 안에는 쓰지 않는다 (반환값은 호출자가 stdout 으로)."""
+624:     agg = aggregate(sup, plan, rule)
+625:     ident_end = rehash()
+626:     pre = pre_verdict(plan, agg, sup, ident_start, ident_end, n_workers=n_workers, required=required)
+627:     parts = record_parts(header=header, sup=sup, agg=agg, rule=rule, ident_start=ident_start, ident_end=ident_end, pre=pre)
+628:     fr = mon.final_record(out, parts, roots=roots, limit_bytes=limits["disk_new"], clock=clock, t0=t0, limit_s=limits["record"])
+629:     return {"final": final_verdict(pre, fr), "pre": pre, "final_record": fr, "observed": agg["observed"],
+630:             "global_stop": sup.get("global_stop")}
+631: 
+632: 
+633: def execute(prep, *, t0, clock=time.monotonic, limits=None, n_workers=N_WORKERS, tick=TICK_S, disk_every=5.0, supervise=None,
+634:             rss_fn=None, disk_fn=None, rehash=None) -> dict:
+635:     """prep 경계 → 감시 (stop_rule) → 종결. 원점 t0 는 run 시작 — 측정 마감 = t0 + measure (감시가 상대로 계산)."""
+636:     limits = dict(LIMITS if limits is None else limits)
+637:     if clock() - t0 > limits["prep"]:
+638:         raise E3aStop(f"단계 경계 — prep {limits['prep']} s 초과 (원점 기준) · 작업자를 시작하지 않는다")
+639:     rule = StopRule(prep["plan"], cap=CALL_CAP_S, min_samples=COST_MIN_SAMPLES, measure=limits["measure"])
+640:     out = Path(prep["out"])
+641:     sup = (supervise or mon.supervise)(prep["plan"], prep["ctx"], e3a.run_e3a_call, n_workers=n_workers, limits=limits, t0=t0,
+642:                                        clock=clock, rss_fn=rss_fn, disk_fn=disk_fn, out_roots=[out], free_path=out, tick=tick,
+643:                                        disk_every=disk_every, stop_rule=rule)
+644:     header = {**prep["header"], "limits": limits, "rule": rule.params(), "n_workers": n_workers, "tick_s": tick, "t0_monotonic": t0}
+645:     return finalize(out, plan=prep["plan"], sup=sup, rule=rule, ident_start=prep["id_start"],
+646:                     rehash=rehash or (lambda: identity_table(prep["files"], prep["expected"])), header=header, limits=limits,
+647:                     roots=[out], clock=clock, t0=t0, n_workers=n_workers, required=prep.get("required", ()))
+648: 
+649: 
+650: def run(out, *, venv, seal, manifest_sha256, xlsx, util_path, approval, p0_result=P0_RESULT, excerpts=e3a.EXCERPTS, expected=None,
+651:         env_identity=None, load_util=None, n_workers=N_WORKERS, tick=TICK_S, limits=None, clock=time.monotonic, rss_fn=None,
+652:         disk_fn=None, sources=None, sources_sha256=None) -> dict:
+653:     """E1 의 run 1 회 (v3 §3 2 의 1–13). 반환값 = 최종 판정 (호출자가 stdout 으로 · 산출 루트 밖)."""
+654:     t0 = clock()
+655:     if not approval:
+656:         raise E3aStop("run 은 별도 GO 의 승인 기록 (--approval) 없이 시작하지 않는다")
+657:     prep = prepare(venv=venv, seal=seal, manifest_sha256=manifest_sha256, xlsx=xlsx, util_path=util_path, out=out,
+658:                    p0_result=p0_result, excerpts=excerpts, expected=expected, env_identity=env_identity, load_util=load_util,
+659:                    header={"approval": approval, "start_utc": _utc(), "source": {"url": SOURCE_URL, "commit": SOURCE_COMMIT}},
+660:                    sources=sources, sources_sha256=sources_sha256)
+661:     return execute(prep, t0=t0, clock=clock, limits=limits, n_workers=n_workers, tick=tick, rss_fn=rss_fn, disk_fn=disk_fn)
+662: 
+663: 
+664: # ---------------------------------------------------------------- fetch (E1 · E0 에서는 가짜 로컬 git 저장소로만 시험)
+665: def fetch_steps(git_dir, repo_url, commit) -> list:
+666:     """`git init` → 이름 있는 remote `origin` → `fetch --depth 1 --filter=blob:none origin <커밋>` (checkout · clone 없음)."""
+667:     gd = str(git_dir)
+668:     return [["git", "init", "-q", gd], ["git", "-C", gd, "remote", "add", "origin", str(repo_url)],
+669:             ["git", "-C", gd, "fetch", "--depth", "1", "--filter=blob:none", "origin", str(commit)]]
+670: 
+671: 
+672: def show_argv(git_dir, commit, path) -> list:
+673:     return ["git", "-C", str(git_dir), "show", f"{commit}:{path}"]
+674: 
+675: 
+676: def fetch(dest, *, repo_url=SOURCE_URL, commit=SOURCE_COMMIT, files=None, allow_protocol="https", run=subprocess.run,
+677:           timeout=FETCH_TIMEOUT_S) -> dict:
+678:     """저장소 밖 새 폴더에 고정 커밋의 두 경로만 받는다 — sha · bytes 대조 · 기록 (파일 바이트 없음). GIT_ALLOW_PROTOCOL 로 프로토콜을 하나로 묶는다."""
+679:     files = dict(FETCH_FILES if files is None else files)
+680:     extra = sorted(set(files) - set(FETCH_FILES))
+681:     if extra or not files:
+682:         raise E3aStop(f"fetch 는 두 경로 ({sorted(FETCH_FILES)}) 만 — 요청 밖 {extra}")
+683:     dest = Path(dest).resolve()
+684:     if dest.exists():
+685:         raise E3aStop(f"fetch 목적지가 이미 있다: {dest} — 새 폴더만")
+686:     if mon.owned(dest, [REPO.resolve()]):
+687:         raise E3aStop(f"fetch 목적지가 저장소 안이다: {dest}")
+688:     dest.mkdir(parents=True)
+689:     gd = dest / "git"
+690:     env = dict(os.environ, GIT_ALLOW_PROTOCOL=allow_protocol, GIT_TERMINAL_PROMPT="0")
+691:     rec = {"repo_url": str(repo_url), "commit": str(commit), "dest": str(dest), "cwd": str(dest), "allow_protocol": allow_protocol,
+692:            "start_utc": _utc(), "steps": [], "files": {}}
+693:     t = time.monotonic()
+694: 
+695:     def step(argv, stdout):
+696:         s = {"argv": list(argv), "start_utc": _utc()}
+697:         t1 = time.monotonic()
+698:         r = run(argv, cwd=str(dest), env=env, stdout=stdout, stderr=subprocess.PIPE, timeout=timeout)
+699:         s.update(rc=r.returncode, elapsed_s=round(time.monotonic() - t1, 3),
+700:                  stderr=(r.stderr or b"").decode("utf-8", "replace")[-2000:])
+701:         rec["steps"].append(s)
+702:         if r.returncode != 0:
+703:             raise _stop(f"git 단계 실패 (rc {r.returncode}): {' '.join(argv)} — {s['stderr'][-300:]}", rec)
+704: 
+705:     for argv in fetch_steps(gd, repo_url, commit):
+706:         step(argv, subprocess.PIPE)
+707:     for name, want in files.items():
+708:         target = dest / name
+709:         with open(target, "xb") as fo:
+710:             step(show_argv(gd, commit, name), fo)
+711:         b = target.read_bytes()
+712:         rec["files"][name] = {"path": str(target), "sha256": _sha(b), "bytes": len(b), "expected": dict(want)}
+713:         if _sha(b) != want["sha256"] or len(b) != want["bytes"]:
+714:             raise _stop(f"fetch 대조 불일치 — {name}: sha256 {_sha(b)} · {len(b)} B ≠ 기대 {want}", rec)
+715:     rec.update(end_utc=_utc(), elapsed_s=round(time.monotonic() - t, 3), ok=True)
+716:     return rec
+717: 
+718: 
+719: # ---------------------------------------------------------------- plan-e (E0 건조)
+720: def _p0_record_problems(res) -> list:
+721:     ext = res.get("extraction") or []
+722:     ana = {e.get("row"): e for e in ext if e.get("kind") == "analysis"}
+723:     refs = {e.get("sheet"): e for e in ext if e.get("kind") == "reference"}
+724:     probs = []
+725:     if set(ana) != set(e3a.ROWS) or any(e.get("status") != "OK" for e in ana.values()):
+726:         probs.append("분석 기록 #0–#10 이 전부 OK 가 아니다")
+727:     if set(refs) != set(p0.SHEETS_REF) or any(e.get("status") != "OK" for e in refs.values()):
+728:         probs.append("reference 기록 둘이 OK 가 아니다")
+729:     if not _finite((res.get("max_q") or {}).get("float")) or not _is_int((res.get("max_q") or {}).get("n_q_PE_hc")):
+730:         probs.append("PE max_q / n_q_PE_hc 가 없다")
+731:     if not _finite(res.get("q_NE_hc_max_record_only")):
+732:         probs.append("NE q_NE_hc_max_record_only 가 없다")
+733:     if (res.get("notebook_check") or {}).get("ok") is not True:
+734:         probs.append("P0 의 노트북 대조가 ok 가 아니다")
+735:     return probs
+736: 
+737: 
+738: def plan_e(out, *, venv, seal, manifest_sha256, p0_result=P0_RESULT, excerpts=e3a.EXCERPTS, env_identity=None) -> dict:
+739:     """E0 건조 — identity · 원천 sha · P0 · 발췌 · 계획 · 규칙 매개변수 · 기대 자료 식별 → `PLAN_E.json` 하나 (util import · 자료 · optimizer ·
+740:     네트워크 0)."""
+741:     out, seal = Path(out), Path(seal)
+742:     e3a._guard([out, seal, p0_result, excerpts])
+743:     if out.exists():
+744:         raise E3aStop(f"{out} 가 이미 있다 — 덮어쓰지 않는다")
+745:     t0 = time.monotonic()
+746:     ident = e3a.identity(venv=venv, seal=seal, manifest_sha256=manifest_sha256, env_identity=env_identity)
+747:     if not ident["ok"]:
+748:         raise E3aStop(f"identity 실패: {ident['problems']}")
+749:     files = {"P0_RESULT.json": Path(p0_result), "NOTEBOOK_SOURCE_EXCERPTS.json": Path(excerpts), "MANIFEST.json": seal / "MANIFEST.json",
+750:              **_module_files()}
+751:     table = identity_table(files, expected_identity(manifest_sha256))
+752:     probs = identity_problems(table)
+753:     if probs:
+754:         raise E3aStop("식별 불일치 — " + "; ".join(probs))
+755:     nb = e3a.notebook_case_table(excerpts)
+756:     res = json.loads(Path(p0_result).read_bytes())
+757:     probs = _p0_record_problems(res)
+758:     if probs:
+759:         raise E3aStop("P0 기록 — " + "; ".join(probs))
+760:     calls = plan()
+761:     by_worker: dict = {}
+762:     for c in calls:
+763:         by_worker[c["worker"]] = by_worker.get(c["worker"], 0) + c["algorithm"]["expected_evals"]
+764:     doc = {
+765:         "schema": "reil-c4e-plan-e-v1",
+766:         "scope": "C4-E · E0 건조 (v3 §3 · 상태 문서 §66) — 계획 · 규칙 매개변수 · 기대 자료 식별만. util import · 자료 · optimizer · 네트워크 0",
+767:         "util_imported": False, "data_opened": False, "optimizer_calls": 0, "objective_calls": 0, "network": 0,
+768:         "identity": ident, "identity_table": table, "notebook": nb,
+769:         "p0": {"path": str(p0_result), "sha256": table["P0_RESULT.json"]["sha256"], "max_q": res["max_q"]["float"],
+770:                "n_q_PE_hc": res["max_q"]["n_q_PE_hc"], "q_NE_hc_max_record_only": res["q_NE_hc_max_record_only"],
+771:                "references": [{k: e.get(k) for k in REF_KEYS} for e in res["extraction"] if e.get("kind") == "reference"],
+772:                "analysis_rows": len([e for e in res["extraction"] if e.get("kind") == "analysis"])},
+773:         "plan": calls, "n_calls": len(calls), "n_workers": N_WORKERS,
+774:         "expected_evals_total": sum(c["algorithm"]["expected_evals"] for c in calls),
+775:         "expected_evals_by_worker": {str(w): v for w, v in sorted(by_worker.items())},
+776:         "optimizer_runs_total": sum(len(c["algorithm"]["seeds"]) for c in calls),
+777:         "limits": LIMITS, "tick_s": TICK_S, "rule": StopRule(calls).params(), "cost_reason": COST_REASON,
+778:         "expected_data": FETCH_FILES, "util_choice": "고정 커밋 원본 (v3 §11-3 · 상태 문서 §66)",
+779:         "source": {"url": SOURCE_URL, "commit": SOURCE_COMMIT},
+780:         "fetch_steps_template": fetch_steps("<dest>/git", SOURCE_URL, SOURCE_COMMIT)
+781:         + [show_argv("<dest>/git", SOURCE_COMMIT, n) for n in FETCH_FILES],
+782:         "record_files": list(RECORD_FILES), "required_fields": list(REQUIRED_FIELDS),
+783:         "not_this_step": "E1 (fetch · run 66 호출) — E0 결과 검토 수용 뒤 별도 GO",
+784:         "elapsed_s": time.monotonic() - t0,
+785:     }
+786:     data = mon._dump(doc)
+787:     out.mkdir(parents=True)
+788:     (out / "PLAN_E.json").write_bytes(data)
+789:     if (out / "PLAN_E.json").read_bytes() != data:
+790:         raise E3aStop("PLAN_E.json 을 다시 읽은 바이트가 쓴 것과 다르다")
+791:     return {"ok": True, "out": str(out), "plan_e_sha256": _sha(data), "n_calls": len(calls), "optimizer_calls": 0,
+792:             "util_imported": False, "identity_ok": True}
+793: 
+794: 
+795: # ---------------------------------------------------------------- CLI
+796: def build_parser() -> argparse.ArgumentParser:
+797:     ap = argparse.ArgumentParser(prog="reil_c4e_run", description=(__doc__ or "").splitlines()[0])
+798:     sub = ap.add_subparsers(dest="cmd", required=True)
+799:     for name in ("plan-e", "run"):
+800:         s = sub.add_parser(name)
+801:         s.add_argument("--venv", required=True)
+802:         s.add_argument("--seal", required=True, type=Path)
+803:         s.add_argument("--seal-manifest-sha256", required=True)
+804:         s.add_argument("--out", required=True, type=Path)
+805:         if name == "run":
+806:             s.add_argument("--xlsx", required=True, type=Path)
+807:             s.add_argument("--util", required=True, type=Path)
+808:             s.add_argument("--approval", required=True)
+809:             s.add_argument("--sources", required=True, type=Path)            # C4E-E0-N1 — 기본값 없음
+810:             s.add_argument("--sources-sha256", required=True)
+811:     f = sub.add_parser("fetch")
+812:     f.add_argument("--dest", required=True, type=Path)
+813:     g = sub.add_parser("seal-sources")
+814:     g.add_argument("--out", required=True, type=Path)
+815:     return ap
+816: 
+817: 
+818: def main(argv=None) -> int:
+819:     a = build_parser().parse_args(argv)
+820:     try:
+821:         if a.cmd == "plan-e":
+822:             summary = plan_e(a.out, venv=a.venv, seal=a.seal, manifest_sha256=a.seal_manifest_sha256)
+823:         elif a.cmd == "fetch":
+824:             summary = fetch(a.dest)
+825:         elif a.cmd == "seal-sources":
+826:             summary = seal_sources(a.out)
+827:         else:
+828:             for k in c5.BLAS_VARS:
+829:                 os.environ[k] = "1"
+830:             res = run(a.out, venv=a.venv, seal=a.seal, manifest_sha256=a.seal_manifest_sha256, xlsx=a.xlsx, util_path=a.util,
+831:                       approval=a.approval, sources=a.sources, sources_sha256=a.sources_sha256)
+832:             summary = {"ok": res["final"]["complete"], **res}
+833:     except E3aStop as e:
+834:         print(json.dumps(c5._jsonable({"ok": False, "stop": str(e), "record": getattr(e, "record", None)}), ensure_ascii=False,
+835:                          sort_keys=True))
+836:         return 3
+837:     print(json.dumps(c5._jsonable(summary), ensure_ascii=False, sort_keys=True))
+838:     return 0 if summary.get("ok") else 2
+839: 
+840: 
+841: if __name__ == "__main__":
+842:     sys.exit(main())

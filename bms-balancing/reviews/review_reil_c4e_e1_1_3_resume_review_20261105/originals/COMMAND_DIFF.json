@@ -1,0 +1,67 @@
+{
+  "explicit_rows": [
+    {
+      "id": "d0",
+      "before": "d0  date -u +%Y-%m-%dT%H:%M:%SZ",
+      "after": "d0  date -u +%Y-%m-%dT%H:%M:%SZ",
+      "unchanged": true
+    },
+    {
+      "id": "d1",
+      "before": "d1  [세션 도구] add_repo owner=\"REIL-UConn\" repo=\"Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics\" access=\"read\"",
+      "after": "d1  [세션 도구] add_repo owner=\"REIL-UConn\" repo=\"Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics\" access=\"read\"",
+      "unchanged": true
+    },
+    {
+      "id": "d2",
+      "before": "d2  date -u +%Y-%m-%dT%H:%M:%SZ",
+      "after": "d2  date -u +%Y-%m-%dT%H:%M:%SZ",
+      "unchanged": true
+    },
+    {
+      "id": "d3",
+      "before": "d3  /usr/bin/python3.11 -I -c 'import json, sys; d = {\"kind\": \"REIL_E113_READ_PATH\", \"utc_before\": sys.argv[1], \"utc_after\": sys.argv[2], \"input\": {\"owner\": \"REIL-UConn\", \"repo\": \"Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics\", \"access\": \"read\"}, \"status\": sys.argv[3], \"tool_result_summary\": sys.argv[4], \"clone_command_executed\": False}; sys.exit(3) if d[\"status\"] not in (\"attached\", \"public_served\", \"refused\", \"declined\", \"error\") else None; open(sys.argv[5], \"x\", encoding=\"utf-8\").write(json.dumps(d, ensure_ascii=False, indent=1, sort_keys=True) + \"\\n\")' '<d0 의 출력>' '<d2 의 출력>' '<status>' '<요약>' <E>/03_read_path.json",
+      "after": "d3  /usr/bin/python3.11 -I -c 'import json, sys; d = {\"kind\": \"REIL_E113_READ_PATH\", \"utc_before\": sys.argv[1], \"utc_after\": sys.argv[2], \"input\": {\"owner\": \"REIL-UConn\", \"repo\": \"Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics\", \"access\": \"read\"}, \"status\": sys.argv[3], \"tool_result_summary\": sys.argv[4], \"clone_command_executed\": False}; sys.exit(3) if d[\"status\"] not in (\"attached\", \"public_served\", \"refused\", \"declined\", \"error\") else None; open(sys.argv[5], \"x\", encoding=\"utf-8\").write(json.dumps(d, ensure_ascii=False, indent=1, sort_keys=True) + \"\\n\")' '<d0 의 출력>' '<d2 의 출력>' '<status>' '<요약>' SP/e113_resume_read_path.json",
+      "unchanged": false
+    },
+    {
+      "id": "p1",
+      "before": "p1  ! compgen -G 'SP/detach_probe_*' > /dev/null && mkdir <P> && cd <P> && date -u +%s > t0.txt && { setsid nohup sh -c 'echo $$ > pid.txt || { echo \"stage=pid rc=$?\" > fail.txt; exit 11; }; sleep 150; rc=$?; [ \"$rc\" -eq 0 ] || { echo \"stage=sleep rc=$rc\" > fail.txt; exit 12; }; date -u +%s > done.tmp || { echo \"stage=done_write rc=$?\" > fail.txt; exit 13; }; mv done.tmp done.txt || { echo \"stage=publish rc=$?\" > fail.txt; exit 14; }' > out.txt 2> err.txt < /dev/null & } && date -u +%s > t_ret.txt",
+      "after": "p1  [ \"$(compgen -G 'SP/detach_probe_*')\" = \"SP/detach_probe_20261105\" ] && mkdir <P> && cd <P> && date -u +%s > t0.txt && { setsid nohup sh -c 'echo $$ > pid.txt || { echo \"stage=pid rc=$?\" > fail.txt; exit 11; }; sleep 150; rc=$?; [ \"$rc\" -eq 0 ] || { echo \"stage=sleep rc=$rc\" > fail.txt; exit 12; }; date -u +%s > done.tmp || { echo \"stage=done_write rc=$?\" > fail.txt; exit 13; }; mv done.tmp done.txt || { echo \"stage=publish rc=$?\" > fail.txt; exit 14; }' > out.txt 2> err.txt < /dev/null & } && date -u +%s > t_ret.txt",
+      "unchanged": false
+    },
+    {
+      "id": "b1",
+      "before": "b1  /usr/bin/python3.11 -I -c 'import os, re, sys; e = sorted(n for n in os.listdir(\"BMS/evidence\") if re.fullmatch(r\"reil_c4e1_20[0-9]{6}\", n)); print(e); sys.exit(1 if e else 0)' && test ! -e <E> && test ! -e SP/c4e1 && ! compgen -G 'SP/e113_commit_*' > /dev/null && test -x SP/reil_c4env/venv/bin/python && mkdir <E>",
+      "after": "b1  /usr/bin/python3.11 -I -c 'import os, re, sys; e = sorted(n for n in os.listdir(\"BMS/evidence\") if re.fullmatch(r\"reil_c4e1_20[0-9]{6}\", n)); print(e); sys.exit(0 if e == [\"reil_c4e1_20261105\"] else 1)' && test ! -e <E> && /usr/bin/python3.11 -I -c 'import os, sys; w = sys.argv[1]; s = sorted(os.path.relpath(os.path.join(r, n), w) for r, d, f in os.walk(w) for n in d + f); print(s); sys.exit(0 if s == [\"mpl\", \"pycache\", \"pycache/03_identity\", \"tmp\"] else 1)' SP/c4e1 && ! compgen -G 'SP/e113_commit_<D>_*' > /dev/null && test -x SP/reil_c4env/venv/bin/python && mkdir <E>",
+      "unchanged": false
+    },
+    {
+      "id": "d4",
+      "before": null,
+      "after": "d4  test ! -e <E>/03_read_path.json && cp SP/e113_resume_read_path.json <E>/03_read_path.json && cmp SP/e113_resume_read_path.json <E>/03_read_path.json",
+      "unchanged": false
+    }
+  ],
+  "changed_existing_rows": [
+    "d3",
+    "p1",
+    "b1"
+  ],
+  "new_row": "d4",
+  "unchanged_repeated_rows": [
+    "d0",
+    "d1",
+    "d2"
+  ],
+  "declarative_changes": [
+    "R1 order/remove c",
+    "R2 d3 path/d4 copy",
+    "R3 earliest a0/date exclusion",
+    "R4 p1 precheck",
+    "R5 b1 precheck",
+    "R6 commit tag namespace",
+    "R7 section reference",
+    "R8 early-d stop before a0"
+  ]
+}
