@@ -1,0 +1,72 @@
+{
+  "pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+  "parents": [
+    "73895add198eae4926b1944b6e1f05a54ca57d13"
+  ],
+  "tree": "f5494351bea8e2f2cb25890df0d9193c82311d49",
+  "message": "Draft LHS damping observation companion without value access",
+  "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/bb6e86ac44f70a27b154db62fc14a624cab944df",
+  "stats": {
+    "total": 205,
+    "additions": 205,
+    "deletions": 0
+  },
+  "files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261105-0425_lhs-damping-draft.md",
+      "status": "added",
+      "sha": "9f94e84746e8dd706ff452219b515844eca1ad81",
+      "additions": 10,
+      "deletions": 0,
+      "changes": 10
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/README.md",
+      "status": "added",
+      "sha": "c51fd5f8a913f714f8e2d5dd2dd6b022086c8e54",
+      "additions": 35,
+      "deletions": 0,
+      "changes": 35
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/companion_draft.json",
+      "status": "added",
+      "sha": "078b797d7f030d2e0d934faba07cf6fd8781e05f",
+      "additions": 65,
+      "deletions": 0,
+      "changes": 65
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/ledger_proposal.json",
+      "status": "added",
+      "sha": "7ebdfd3f728a624cbf2c06085fcf12a19bf7931c",
+      "additions": 12,
+      "deletions": 0,
+      "changes": 12
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/review_request.md",
+      "status": "added",
+      "sha": "35ab19c748b41c43bf86db5002f99033f37888b8",
+      "additions": 11,
+      "deletions": 0,
+      "changes": 11
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/source_context.json",
+      "status": "added",
+      "sha": "87499f251ee9b4b19fe4d9acf69f31d718dba8ab",
+      "additions": 60,
+      "deletions": 0,
+      "changes": 60
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/static_validation.json",
+      "status": "added",
+      "sha": "898321ae38e7774559b258f22fb752404a64d5f2",
+      "additions": 12,
+      "deletions": 0,
+      "changes": 12
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "kind": "receipt identity verification only",
+  "accepted_pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+  "raw_review_zip_bytes": 989353,
+  "raw_review_zip_sha256": "1848b598ab954b71daf8dce9c448515cb87e3c69ca6095260e7f6bd03ad923ee",
+  "outer_manifest_entries_verified": 99,
+  "original_request_zip_bytes": 119393,
+  "original_request_zip_sha256": "4369eec3be7e8df50a11f45d0cff53584a1202be036de1c2499149d47b59f491",
+  "input_package_hashes_verified": 26,
+  "accepted_snapshot_files_compared_to_git": 11,
+  "review_input_members_equal_original": true,
+  "pasted_mixer_report_equal_archive": true,
+  "preserved_external_files": {
+    "external/codex_review_lhs_damping_draft_20261105.md": {
+      "bytes": 7877,
+      "sha256": "d1cb9e8c2833cd8e243a7ef0e3f966deaf5625e89d6cb508d4f146bdd94f773a",
+      "archive_member": "lhs/codex_review_lhs_damping_draft_20261105.md"
+    },
+    "external/scope_verdict.json": {
+      "bytes": 951,
+      "sha256": "8ed5f9c5a3a16f1f76acff883a5b6cf0838f30e50808c52a364c40c27cbe56b1",
+      "archive_member": "lhs/scope_verdict.json"
+    },
+    "external/intake_verification.json": {
+      "bytes": 4722,
+      "sha256": "6cca7dc1055ddcc2963e5bb3a53eb3b80052801182c8a85a9745df521d0d3711",
+      "archive_member": "lhs/intake_verification.json"
+    },
+    "external/remote_verification.json": {
+      "bytes": 2046,
+      "sha256": "e73f5dd36bafe5c5b4e1c6e8293abf3ea17eada4dab71a73baf83e34c99aa39a",
+      "archive_member": "lhs/remote_verification.json"
+    },
+    "external/remote_commit_scope.json": {
+      "bytes": 2238,
+      "sha256": "d7af5d6fd21ef2a87c4df6b0a2cecfacdec595b43facdb7f1eaf965e8e308435",
+      "archive_member": "lhs/remote_commit_scope.json"
+    },
+    "external/REPRODUCE.md": {
+      "bytes": 1814,
+      "sha256": "10f154eb9b8aa0c873a92db89213272f87ee751ce8118f93ab71934235f0ff19",
+      "archive_member": "lhs/REPRODUCE.md"
+    },
+    "external/original_review_evidence.zip": {
+      "bytes": 989353,
+      "sha256": "1848b598ab954b71daf8dce9c448515cb87e3c69ca6095260e7f6bd03ad923ee",
+      "archive_member": null
+    },
+    "external/task/lhs_boundary/static_comparison.json": {
+      "bytes": 6195,
+      "sha256": "ca679a00cecbccdd853d81420c45cd845a9b8944caa0ec8dea587b845e4cdcf5",
+      "archive_member": "lhs/task/lhs_boundary/static_comparison.json"
+    },
+    "external/s5_judgment/README.md": {
+      "bytes": 58834,
+      "sha256": "2e375eea67b6a2a7e90acaf16efb5836dc3283441c046a2f3ef70921bde98768",
+      "archive_member": "lhs/input/docs/data/lhs_network214_35f032737_20261030/s5_judgment/README.md"
+    }
+  },
+  "external_scripts_executed": false,
+  "scientific_tests_rerun": false,
+  "whole_gate": "HOLD",
+  "reference_completion": "Preserved initial missing-reference check; added four archive members across the two tracks, without editing external verdict bytes or accepted source.",
+  "supporting_reference_files_from_accepted_pin": {
+    "external/s5_judgment/tools/s5_q1_records.py": {
+      "source_path": "docs/data/lhs_network214_35f032737_20261030/s5_judgment/tools/s5_q1_records.py",
+      "source_pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+      "bytes": 15026,
+      "sha256": "a1f22154be8a805122e7b0b4fd3e636279ca6b8f768f4675fcd75f9899160238",
+      "executed": false
+    },
+    "external/s5_judgment/tools/s5_q1_validate_real14.sh": {
+      "source_path": "docs/data/lhs_network214_35f032737_20261030/s5_judgment/tools/s5_q1_validate_real14.sh",
+      "source_pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+      "bytes": 4158,
+      "sha256": "c02112371a8955e6a32e580ed9f1a627ea6c75839cc87b5da1d3c18e218c9db6",
+      "executed": false
+    },
+    "external/s5_judgment/tools/s5_q1_validate_fixtures.py": {
+      "source_path": "docs/data/lhs_network214_35f032737_20261030/s5_judgment/tools/s5_q1_validate_fixtures.py",
+      "source_pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+      "bytes": 6479,
+      "sha256": "1610743fc643e0bdfef68037f571d7d5b18df195b0c454391c3f8c6dfc0b9963",
+      "executed": false
+    },
+    "external/s5_judgment/tools/s5_q1_electrode_settle.py": {
+      "source_path": "docs/data/lhs_network214_35f032737_20261030/s5_judgment/tools/s5_q1_electrode_settle.py",
+      "source_pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+      "bytes": 16206,
+      "sha256": "40d01184b0b5793eb17d475f600a28e1af158b3d13249712661f2a0522b7a0e7",
+      "executed": false
+    }
+  }
+}
