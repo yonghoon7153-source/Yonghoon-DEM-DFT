@@ -1,0 +1,72 @@
+{
+  "kind": "REIL_E113_V2_N1_FIX_SCOPE_REVIEW_DECISION",
+  "date": "2026-11-04",
+  "decision": "CORRECTION_SCOPE_ACCEPTABLE_AWAITING_USER_ADOPTION_AND_V3_REVIEW",
+  "new_blocking_findings": [],
+  "N1_minimal_correction_direction_satisfied": true,
+  "verified_requirements": [
+    "Unknown final tool return is manual failure regardless of interruption phase",
+    "Possible judge MATCH preserved; never rewritten or rerun to force STOP",
+    "No wait reentry without observed rc15",
+    "Existing-watch rc20 is procedural deviation, never recovery",
+    "Only observed tool return/errors recorded, no invented return or timestamps",
+    "Last wait return0 is a manual-only additional success condition",
+    "rc16 competing or still-active watcher can leave a later normal chain",
+    "Start-window check is not a physical fsync/link/Popen completion bound",
+    "Prior source bytes and commands retained; user choice, v3 review, and runtime approval separated"
+  ],
+  "nonblocking_advisories": [
+    {
+      "id": "E113_V2_N1_A1",
+      "file": "REIL_C4E_E1_1_3_V2_N1_FIX_SCOPE_20261104.md",
+      "lines": [
+        20,
+        43
+      ],
+      "topic": "Qualify rc19 STOP reasoning by single-watcher/no-reentry assumptions and surviving record defects",
+      "text": "반환19는 항상 수동 실패 종결이다. 단일 감시·실패 후 재진입 금지 전제에서, 판정 시 필요한 기록 부재·사슬 미완·임시파일 잔존이 확인되면 판정기는 STOP이다. 반환19 자체가 판정기 입력인 것은 아니며, MATCH가 나와도 원출력 보존과 수동 실패는 유지한다.",
+      "classification_basis": "Single-watcher paths already fail the judge on missing chain/watch or temporary files. A MATCH counterpath needs an additional prohibited watcher plus a separate recoverable file-creation error; not a new normal-path blocker. Manual failure already prevents normal progression.",
+      "code_change_required": false,
+      "retest_required": false
+    }
+  ],
+  "closure_state": {
+    "E113_V2_N1": "CORRECTION_DIRECTION_ACCEPTED_V3_APPLICATION_REVIEW_PENDING",
+    "E113_PRE_03": "CORE_FIX_RETAINED_FULL_DOCUMENT_CLOSURE_PENDING_V3",
+    "E113_FIX_SCOPE_02": "CORE_FIX_RETAINED_FULL_DOCUMENT_CLOSURE_PENDING_V3",
+    "eight_prior_static_closures": "RETAINED",
+    "P2_02": "RETAINED"
+  },
+  "recommended_user_choices": {
+    "adopt_document_correction": true,
+    "request_file": "NEW_PATH_V3",
+    "machine_STOP_change": false
+  },
+  "user_choices_recorded_by_this_review": false,
+  "prior_section109_choices_reopened": false,
+  "operating_reserve_policy_seconds_unchanged": 1800,
+  "code_and_commands": {
+    "prior_draft_files": 3,
+    "baseline_command_rows": 51,
+    "source_changes": 0,
+    "v3_created": false,
+    "future_v3_byte_invariance_verified": false
+  },
+  "performed": {
+    "static_text_review": true,
+    "received_program_execution": 0,
+    "received_program_import": 0,
+    "tests": 0,
+    "probe_execution": 0,
+    "identity_fetch_run": 0,
+    "COMSOL": 0,
+    "signal_delivery": 0,
+    "git_mutations": 0,
+    "external_transmission": 0,
+    "new_network_queries": 0,
+    "review_data_file_tools_used": true
+  },
+  "actual_execution_authorized_by_review": false,
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null
+}

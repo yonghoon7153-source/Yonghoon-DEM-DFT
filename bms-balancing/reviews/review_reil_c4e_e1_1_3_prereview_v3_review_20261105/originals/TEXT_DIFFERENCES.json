@@ -1,0 +1,161 @@
+{
+  "hunks": [
+    {
+      "tag": "replace",
+      "v2_start": 1,
+      "v2_end": 1,
+      "v3_start": 1,
+      "v3_end": 1,
+      "before": "# REIL C4-E · E1-1–3 승인 요청 v2 — 실제 identity · 읽기 경로 · fetch · 자료 개봉 · run (정정 범위안 v2 · 사용자 채택 §109) · 2026-11-04 KST\n",
+      "after": "# REIL C4-E · E1-1–3 승인 요청 v3 — 실제 identity · 읽기 경로 · fetch · 자료 개봉 · run (정정 범위안 v2 · §109 · E113_V2_N1 정정 · §113) · 2026-11-05 KST\n"
+    },
+    {
+      "tag": "replace",
+      "v2_start": 3,
+      "v2_end": 3,
+      "v3_start": 3,
+      "v3_end": 8,
+      "before": "> **승인 요청서 v2 다 (이 문서를 쓰는 동안 실행 0).** 요청서 v1 (`docs/REIL_C4E_E1_1_3_APPROVAL_REQUEST_20261104.md` · `b7e5a5e6…` · 그대로 둔다) 의 사전 검토\n",
+      "after": "> **승인 요청서 v3 다 (이 문서를 쓰는 동안 실행 0).** v2 (`docs/REIL_C4E_E1_1_3_APPROVAL_REQUEST_v2_20261104.md` · `d52a3d5e…` · 그대로 둔다) 의 사전 검토 (§111) 가\n> 남긴 문서 경계 한 건 (E113_V2_N1) 을 정정안 (`docs/REIL_C4E_E1_1_3_V2_N1_FIX_SCOPE_20261104.md` · `816eef90…` · 검토 §112) 과 검토 권고 A1 대로 고쳤고, 사용자가\n> 채택했다 (§113 — \"권고대로해\"). **v2 와 다른 곳은 §2 의 한 행 · §4 의 c · e · f 문단 · §5-2 · §6-1 · §10 의 문구뿐이다** — 초안 셋 · 명령 51 줄 · 수 · 예산은\n> 같다. 아래는 v2 의 머리말 그대로다.\n>\n> 요청서 v1 (`docs/REIL_C4E_E1_1_3_APPROVAL_REQUEST_20261104.md` · `b7e5a5e6…` · 그대로 둔다) 의 사전 검토\n"
+    },
+    {
+      "tag": "insert",
+      "v2_start": 96,
+      "v2_end": 95,
+      "v3_start": 101,
+      "v3_end": 101,
+      "before": "",
+      "after": "| **E113_V2_N1 + A1** (도구 반환 미확인의 수동 / 기계 판정 구분) | §4 의 c · e · f 문단 · §5-2 (제목 · 수동 판정만의 항목) · §6-1 (실패 행 · 20 행 · 마지막 행 · 표 아래) · §10 의 11 · 14 |\n"
+    },
+    {
+      "tag": "insert",
+      "v2_start": 179,
+      "v2_end": 178,
+      "v3_start": 185,
+      "v3_end": 185,
+      "before": "",
+      "after": "  **2 의 도구 반환을 확인하지 못하면** (끊음 · 돌아오지 않음) 끊긴 시점과 무관하게 수동 실패 종결이다 — 2 를 다시 띄우지 않고 §6-1 의 마지막 행대로 한다.\n"
+    },
+    {
+      "tag": "replace",
+      "v2_start": 192,
+      "v2_end": 192,
+      "v3_start": 199,
+      "v3_end": 199,
+      "before": "### 5-2. launcher 단계 공통 (c · e · f — 판정기 항목 = 수동 판정 항목)\n",
+      "after": "### 5-2. launcher 단계 공통 (c · e · f — 수동 판정 = 판정기 항목 + 도구 반환 확인 · 판정기 입력 밖)\n"
+    },
+    {
+      "tag": "insert",
+      "v2_start": 197,
+      "v2_end": 196,
+      "v3_start": 204,
+      "v3_end": 207,
+      "before": "",
+      "after": "\n**수동 판정만의 항목 (E113_V2_N1):** 그 단계 감시의 마지막 호출이 셸 도구의 반환 (배경 실행의 끝 알림 · 반환 값) 으로 끝났고 그 값이 0 임을 확인했다. 확인하지\n못하면 판정기 verdict 와 무관하게 수동 판정은 실패다 — 판정기가 MATCH 면 불일치이므로 그 자리에서 멈추고, 판정기 원출력은 STOP 으로 고치거나 다시 돌리지\n않는다.\n"
+    },
+    {
+      "tag": "replace",
+      "v2_start": 239,
+      "v2_end": 239,
+      "v3_start": 250,
+      "v3_end": 250,
+      "before": "| 10 · 17 | `deadline` · `late` (기한 뒤 첫 관측) | `watch.json` | 3 → (잔류) 4 · 5 · 6 → 7 (STOP) → 커밋 관문 → 멈춤 → g |\n",
+      "after": "| 10 · 17 | `deadline` · `late` (기한 뒤 첫 관측) | `watch.json` | 3 → (잔류) 4 · 5 · 6 → 7 (원출력 그대로) → 수동 판정 실패 → 커밋 관문 → 멈춤 → g |\n"
+    },
+    {
+      "tag": "replace",
+      "v2_start": 246,
+      "v2_end": 246,
+      "v3_start": 257,
+      "v3_end": 257,
+      "before": "| 20 | 끝 기록이 이미 있음 (소비) | 없음 | 기록된 상태대로 |\n",
+      "after": "| 20 | 끝 기록이 이미 있음 (소비) | 없음 | 회복 · 재개 근거가 아니다 — 정상 절차에서는 나오지 않는다 (재호출은 15 뒤에만 · 15 를 낸 호출은 끝 기록을 쓰지 않는다). 나오면 절차 이탈로 적고 실패 종결 |\n"
+    },
+    {
+      "tag": "replace",
+      "v2_start": 248,
+      "v2_end": 248,
+      "v3_start": 259,
+      "v3_end": 259,
+      "before": "| (돌아오지 않음 · 도구가 끊음) | 불명 | — | 같은 2 를 다시 띄우지 않는다 → 3 → … → 7 (STOP) → 멈춤 → g |\n",
+      "after": "| (돌아오지 않음 · 도구가 끊음 · 도구 반환 미확인) | 불명 | — | **수동 실패 종결 · 정상 다음 단계 금지** — 2 를 다시 띄우지 않는다 → 3 → (잔류면 4 · 5 · 6) → 7 (원출력 그대로 · 정상 `watch.json` 이 이미 게시됐다면 MATCH 일 수 있고 그래도 이 중단을 해제하지 않는다) → 수동 판정 실패 → 커밋 관문 → g → 멈춤 · 결과 §에 중단 사실과 원도구 반환 / 오류 (있는 대로 · 없는 것을 만들지 않는다) |\n"
+    },
+    {
+      "tag": "insert",
+      "v2_start": 252,
+      "v2_end": 251,
+      "v3_start": 263,
+      "v3_end": 270,
+      "before": "",
+      "after": "- **판정기 STOP 의 범위 (E113_V2_N1 · A1):** 표의 \"수동 판정 실패\" 는 판정기가 STOP 을 낸다는 보장이 아니다. 끝 상태가 `published` 밖으로 기록된 행 (10 · 17 ·\n  11 · 18 · 12 · 13 · 14 · 21) 은 판정기도 STOP 이다 (끝 기록은 배타 게시라 하나뿐). 반환19는 항상 수동 실패 종결이다. 단일 감시·실패 후 재진입 금지 전제에서,\n  판정 시 필요한 기록 부재·사슬 미완·임시파일 잔존이 확인되면 판정기는 STOP이다. 반환19 자체가 판정기 입력인 것은 아니며, MATCH가 나와도 원출력 보존과 수동 실패는\n  유지한다. 16 (소유권 경합 · 이전 호출이 아직 돎) · 20 (소비) · 도구 반환 미확인은 판정기가 MATCH 를 낼 수 있다 — 어느 경우든 수동 판정은 실패이고 원출력은\n  그대로 둔다.\n- **재호출 · 소비 · 기록:** 반환 15 를 확인하지 않았으면 wait 를 다시 부르지 않는다 (불명 중단을 확인하려는 재호출도 없다). 완전한 기존 watch 의 소비 (20) 는\n  회복 · 재개 근거가 아니다. 중단 사실과 관측 가능한 원도구 반환 · 오류 (끝 알림 · 출력 파일 · 반환 값 — 있는 대로) 를 결과 §에 그대로 연결하고, 없는 반환 ·\n  시각을 만들어 채우지 않는다.\n"
+    },
+    {
+      "tag": "replace",
+      "v2_start": 386,
+      "v2_end": 386,
+      "v3_start": 405,
+      "v3_end": 405,
+      "before": "11. **보수적 실패:** poll 5 s 때문에 기한 직전의 게시가 기한 뒤에 처음 관측되면 `late` 다. 도구가 조각 기록 전에 감시를 끊거나 게시 도중 남은 임시 이름이 있으면\n",
+      "after": "11. **보수적 실패:** poll 5 s 때문에 기한 직전의 게시가 기한 뒤에 처음 관측되면 `late` 다. 감시의 도구 반환을 확인하지 못하거나 (끊긴 시점과 무관) 게시 도중 남은 임시 이름이 있으면\n"
+    },
+    {
+      "tag": "insert",
+      "v2_start": 392,
+      "v2_end": 391,
+      "v3_start": 411,
+      "v3_end": 412,
+      "before": "",
+      "after": "14. **시작 창의 뜻:** 시작 창 검사는 wrapper 가 `t` 를 잰 시점의 비교다 — 그 뒤 fsync · link · Popen 이 60 s 안에 끝난다는 증거가 아니다. 범위안 v2 §2-3 의\n    \"60 s 뒤의 wrapper 는 link 하지 않는다\" 는 \"60 s 뒤에 확인한 wrapper 는 link 하지 않는다\" 로 읽는다.\n"
+    }
+  ],
+  "diff_hunk_count": 12,
+  "declared_editorial_replacements": 12,
+  "note": "Diff hunk count and editorial replacement count need not match; adjacent title/body or table replacements can share a hunk.",
+  "command_rows": 51,
+  "command_rows_raw_text_equal": true,
+  "fenced_blocks": 3,
+  "all_fenced_blocks_raw_bytes_equal": true,
+  "unchanged_current_pin_source_files": [
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v3_20261105\\source\\bms-balancing\\docs\\REIL_C4E_E1_1_3_APPROVAL_REQUEST_v2_20261104.md",
+      "bytes": 48063,
+      "sha256": "d52a3d5e276739b724642923bf2e6d194bf5d8daca1d3cd29a1e64cd7c4e36e1"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v3_20261105\\source\\bms-balancing\\docs\\REIL_C4E1_E113_JUDGE_DRAFT_v2_20261104.py.txt",
+      "bytes": 18578,
+      "sha256": "ad986c19905723a233abac667cd846f41c1427a7197e522eb78bc1c4d0d738c0"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v3_20261105\\source\\bms-balancing\\docs\\REIL_C4E1_E113_END_WRITER_DRAFT_v2_20261104.py.txt",
+      "bytes": 10368,
+      "sha256": "0827723f6de7a6208e643c5851c206c537a664ed7cedf40c004c945743447f5a"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v3_20261105\\source\\bms-balancing\\docs\\REIL_C4E_E1_1_3_PRE_FIX_SCOPE_v2_20261104.md",
+      "bytes": 24902,
+      "sha256": "4986ce430d2f166262a0299ddaa65f5ddf2ae37718bc5f8018addffc1f9325e5"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v3_20261105\\source\\bms-balancing\\docs\\REIL_C4E1_E113_OUTER_DRAFT_v2_20261104.py.txt",
+      "bytes": 36733,
+      "sha256": "e107d566bc0dc9af37e2a53839720678be8ab6f15624ec54c605755b0001251e"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v3_20261105\\source\\bms-balancing\\scripts\\reil_c4e1_launch.py",
+      "bytes": 62639,
+      "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v3_20261105\\source\\bms-balancing\\scripts\\reil_c4e_run.py",
+      "bytes": 53853,
+      "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v3_20261105\\source\\bms-balancing\\scripts\\reil_c4_monitor.py",
+      "bytes": 21546,
+      "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+    }
+  ]
+}

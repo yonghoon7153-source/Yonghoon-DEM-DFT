@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_REIL_E113_V2_N1_SCOPE_REVIEW_PACKAGE_RETURN",
+  "provenance": "Exact exec_command result received in this review, serialized afterward outside the completed ZIP. Does not certify its own future write return, whole-review elapsed time or independent remote execution.",
+  "tool_result": {
+    "chunk_id": "f6ec01",
+    "wall_time_seconds": 0.4515122,
+    "exit_code": 0,
+    "original_token_count": 387,
+    "output": "{\r\n  \"kind\": \"REIL_E113_V2_N1_SCOPE_REVIEW_PACKAGE_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4e_e1_1_3_v2_n1_fix_scope_review_20261104\\\\REIL_C4E_E1_1_3_V2_N1_FIX_SCOPE_REVIEW_20261104.zip\",\r\n    \"bytes\": 229457,\r\n    \"sha256\": \"b5befe02df3cac17b58ead4c8ec71497433833d99b6affd4733c3abf64325558\"\r\n  },\r\n  \"receipt\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4e_e1_1_3_v2_n1_fix_scope_review_20261104\\\\DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 1893,\r\n    \"sha256\": \"348a1f41121805d96f5e0c266e04a7dc099625b178d06cc6151f00807fb869bf\"\r\n  },\r\n  \"post_package\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4e_e1_1_3_v2_n1_fix_scope_review_20261104\\\\SELECTED_LOCAL_SOURCES_POST_PACKAGE.json\",\r\n    \"bytes\": 5431,\r\n    \"sha256\": \"67cdcbf159499afeb9c94d45d49ab9c06b12129a7974027d75cb655f619198f1\"\r\n  },\r\n  \"payload_count\": 21,\r\n  \"entries\": 22,\r\n  \"decision\": \"CORRECTION_SCOPE_ACCEPTABLE_AWAITING_USER_ADOPTION_AND_V3_REVIEW\",\r\n  \"new_blocking_findings\": 0,\r\n  \"nonblocking_advisories\": 1,\r\n  \"selected_local_sources_preserved\": 16,\r\n  \"received_program_execution\": 0,\r\n  \"tests\": 0,\r\n  \"user_adoption_recorded\": false,\r\n  \"actual_execution_authorized_by_review\": false,\r\n  \"boundary\": \"After review ZIP and receipt write/readback; before actual tool return and its later transcription.\"\r\n}\r\n"
+  }
+}

@@ -1,0 +1,933 @@
+1: """REIL C4-E · E1 단계 실행기 v6 — 독립 사전 대조 · 고정 명령 · 유한 정리 · 외부 단계 판정 (stdlib 만 · 실행 모듈을 import 하지 않는다).
+2: 
+3:     /usr/bin/python3.11 -I bms-balancing/scripts/reil_c4e1_launch.py <identity|fetch|run>
+4:                         --evidence /home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_YYYYMMDD --approval-section §NN
+5: 
+6: 승인 · 범위: `docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md` (E1-0b 승인 요청 · E1-1–3 의 고정 명령) · 정정 범위
+7: `docs/REIL_C4E_E1_REVISION_SCOPE_20261015.md` (사전 검토 §74 의 N1–N6 · 자체 발견 S1 · 사용자 채택 §75) ·
+8: `docs/REIL_C4E_E1_REVISION_SCOPE_v3_20261021.md` (v2 사전 검토 §76 의 V2-01–05 · 자체 발견 S2–S4 · 사용자 채택 §77) ·
+9: `docs/REIL_C4E_E1_REVISION_SCOPE_v4_20261021.md` (v3 사전 검토 §78 의 V3-01–04 · V3-N1 · 자체 발견 S5 · 사용자 채택 §79) ·
+10: `docs/REIL_C4E_E1_REVISION_SCOPE_v5_20261027.md` (v4 사전 검토 §80 의 V4-01 · V4-N1 · 자체 발견 S6 · 사용자 채택 §81) ·
+11: `docs/REIL_C4E_E1_0B_E1_1_3_SCOPE_20261030.md` (E1-0 결과 검토 §86 의 Q3 — FUTURE-01 · launcher 운영 정리 정책 · 사용자 채택 §87). 자식 argv 는
+12: 이 파일이 고정한다 (`build_argv`) — 인자로 바뀌는 것은 증거 폴더 (이름 규칙 · 미리 만든 폴더) 와 승인 절 번호뿐이다.
+13: 
+14: 단계마다:
+15: 0. **준비 (V2-04 — 기록되는 단계 `prepare`)** — 의도된 거부 (단계 이름 · 기존 기록 파일 · 기존 pycache 폴더) 는 어떤 파일 · 폴더도 만들기 전 SystemExit
+16:    (기록용 `except Exception` 은 SystemExit 를 잡지 않는다). 기존 항목은 lstat 으로 본다 — 끊어진 심볼릭 링크도 "있음" (V3-02 · `entry_exists`). 그 뒤
+17:    pycache · mpl · tmp 폴더 · 자식 env 정제 (첫 Git 호출 전 · V2-02) · argv · 자기 sha · 디스크 조회의 예외는 첫 오류 (`phase` prepare) 로 남고 자식은 0 이다.
+18: 1. **사전 대조 (자식 시작 전 · 실패하면 자식 0)** — 신뢰 목록 바이트 sha256 · 형식 · 경로 다섯 → 다섯 모듈과 목록 밖 실행 파일 둘 (S1 — c5 가 경로로 실행하는
+19:    `reil_c6_profile.py` · env_identity 가 실행하는 `env_profile.py`) 의 실제 바이트 (일반 파일 · resolve 일치 · 크기 · sha256) · env_profile 고정값 = C6 봉인
+20:    lock 머리줄 (MANIFEST → lock → 머리줄) · 실행 스크립트 · 해석기 플래그 · 개별 모듈 가림 (N1 — `scripts/<이름>/__init__*` · 같은 이름 확장 파일) · 탐침 (같은
+21:    해석기 · 플래그 · env · cwd · `-c` · json / sys 만): 플래그 · sys.path 의 `scripts` 가림 · `sys.meta_path` 의 finder 에 `find_spec` 만 물어 본 `scripts`
+22:    (네임스페이스) 와 셋 (`reil_c4_e3a` · `reil_c4_monitor` · `reil_c5_pilot`) 의 origin · loader = 승인 소스 (부모 import · 대상 실행 0) · (run) 자료 두 파일 ·
+23:    (fetch) 자료 폴더 없음 · fetch env (FUTURE-01 — 아래) 의 설정 원천이 command line 고정 목록뿐 (빈 임시 폴더에서 `--show-scope --show-origin`) · URL 바꿈 ·
+24:    프록시 · 자격 도우미 · TLS 검증 끔이 없음 · `ls-remote --get-url` 의 유효 출처 = 고정 URL (원격 접속 0).
+25: 2. **시작 기록 · 자식 · 정리 (launcher 운영 정리 정책 · V3-01 규칙)** — HEAD · porcelain 시작 기록이 실패하면 자식을 띄우지 않는다 (S4). 자식은 새 세션 ·
+26:    `-I -B -X pycache_prefix=<새 빈 폴더>`. 자식이 끝나거나 timeout 이 되면 정리 단계에 들어가며 공통 절대 기한 (원점 + `CLEANUP_S` 20 s = kill 대기 10 +
+27:    그룹 관측 5 + 재관측 5) 을 한 번 만든다 (`cleanup_group` 은 받기만 한다). timeout 이면 그룹 SIGKILL → 자식 종료를 비차단으로 확인 (kill 대기 · 기한 안)
+28:    → 그룹 관측 창 (`GROUP_GRACE_S` · 기한 안) → 살아 있으면 그룹 SIGKILL (기한 뒤라도 보낸다) → 재관측 창. 모든 관측 · sleep 은 기한 **전에만** 시작한다 —
+29:    기한을 넘을 수 있는 것은 기한 전에 시작한 관측 하나이고, 그 길이에는 상한이 없다 (감시 스레드 없음). 기한 뒤에는 즉시 동작 (SIGKILL) · 비차단 확인
+30:    (`poll`) · 기록만 한다. 끝 상태 = empty (재kill 없이 비어 있음) · killed (재kill 뒤 비어 있음) · alive · unverified (관측을 못 함 · 재kill 뒤 재관측을 못
+31:    함) · unknown (관측 오류 · 정리 안의 예외 — 우선). 정리 안의 예외는 정리가 잡아 같은 기한으로 비상 동작 (자식이 살아 있으면 그룹 SIGKILL · 관측) 만 한다
+32:    — 새 기한은 없다. 대기 (`wait_s`) 와 정리 (`cleanup_s`) 시간을 따로 남긴다 (S2). `/proc` 는 바이트로 읽고 comm 은 해석하지 않는다 (V3-03). PID 소멸만
+33:    "사라짐" 이고 그 밖의 모든 읽기 예외 (권한 · I/O · 디코딩 등) · 파싱 · 목록 오류는 그 PID 의 오류로 남아 unknown 으로 끝까지 간다 (N2).
+34: 3. **사후 대조** — 다섯 모듈 · 실행 파일 둘 다시 · (fetch · run) 자료 두 파일 다시 · (fetch) `remote.origin.url` · 유효 출처 · `.git/shallow` = 고정 커밋 ·
+35:    alternates 없음 · 받은 저장소의 설정 원천 = command line 고정 목록 + local 허용 키 (`FETCH_LOCAL_KEYS` — FUTURE-01) · (run) run 의 `IDENTITY.json` 시작 ·
+36:    끝 표 모듈 행 = 대조 경로 · 목록 · pycache 폴더 파일 0 · 정리 끝 상태 empty · 기한 안 (`deadline_hit` false) · 미종료 0 · 자식 단계 오류 0 · Git 기록
+37:    (HEAD · porcelain) 성공 · 단계 중 HEAD 불변. 판정과 소비자는 `first_error` 하나로 정리의 성공을 판단하지 않는다 (`child.group.status` · `deadline_hit` ·
+38:    `errors`).
+39: 4. **단계 판정** = precheck_ok AND child_ok AND rc_0 AND timeout_false AND postcheck_ok. run 모듈의 `stage_verdict` 는 쓰지 않는다 (사전 대조를 포함하지
+40:    않는다).
+41: 
+42: 기록 (N3 · V2-04): 단계 (준비 · 사전 대조 · 기록 · 시작 · 사후 대조 · 끝 관측 · meta) 마다 예외를 잡아 순서대로 남기고 첫 오류를 따로 적는다.
+43: `launched` 는 자식 시작이 성공한 뒤에만 참이다. 오류가 하나라도 있으면 단계 판정은 false 다. meta 를 쓸 수 없으면 stderr 한 줄 (첫 오류 포함) · 반환 4.
+44: 자식 env (N4): 비밀 형태 이름 · `GIT_SSL_CAINFO` 밖의 모든 `GIT_*` · `SSH_ASKPASS` 를 뺀다 (이름만 기록) · 프록시 · CA 변수는 둔다 · BLAS 스레드 1 ·
+45: MPL Agg · TMPDIR · GIT_TERMINAL_PROMPT=0. 이 정제 env 는 탐침 · fetch 검사 · 기록용 git (`git_out`) 에도 쓴다 (V2-02 — 상속 env 로 부르는 git 은 없다).
+46: fetch env (FUTURE-01 · fetch 단계 전체): 정제 env 에서 남은 `GIT_CONFIG*` 를 다시 빼고 `GIT_CONFIG_NOSYSTEM=1` · `GIT_CONFIG_GLOBAL=/dev/null` 로 시스템 ·
+47: 사용자 · XDG 설정 (그 안의 `includeIf` 포함) 을 끈 뒤, 고정 목록 (`FETCH_GIT_CONFIG`) 만 command line 설정 (`GIT_CONFIG_COUNT` / `KEY_n` / `VALUE_n`) 으로
+48: 넣는다. run 의 fetch 는 자식 env 를 그대로 물려받으므로 (run l.690) 다섯 모듈을 바꾸지 않고 자식의 모든 git 호출에 걸린다.
+49: git 출력은 UTF-8 로 읽는다 — `encoding="utf-8"` · `errors="replace"` (S5 — 비 UTF-8 출력이 기록 밖 예외가 되지 않게 · S6 — 해석이 실행 환경의
+50: locale 에 기대지 않게). 재시도 없음 · 덮어쓰지 않는다. 자원은 사후 관측이다 (강제 상한이 아니다).
+51: """
+52: from __future__ import annotations
+53: 
+54: import argparse
+55: import datetime
+56: import hashlib
+57: import importlib.machinery
+58: import json
+59: import os
+60: import re
+61: import resource
+62: import shutil
+63: import signal
+64: import stat
+65: import subprocess
+66: import sys
+67: import time
+68: import zipfile
+69: from pathlib import Path
+70: 
+71: REPO = Path("/home/user/Yonghoon-DEM-DFT")
+72: BMS = REPO / "bms-balancing"
+73: SP = Path("/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad")
+74: WORK = SP / "c4e1"
+75: VENV = SP / "reil_c4env" / "venv"
+76: PY = VENV / "bin" / "python"
+77: SEAL = BMS / "reil_c6_rebuild_20261013"
+78: SEAL_MANIFEST_SHA256 = "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc"
+79: #: C6 봉인의 lock (MANIFEST 가 덮는 항목) — 머리줄에 env_profile 의 sha256 이 적혀 있다
+80: C6_LOCK = "REIL_C6.lock.txt"
+81: C6_LOCK_SHA256 = "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa"
+82: #: 신뢰 소스 목록 (C4E-E0-N1 · 상태 문서 §71 · 검토 회신 §72 가 구현 커밋 61b9037e 의 바이트와 대조)
+83: SOURCES = BMS / "evidence" / "reil_c4e0_fix_20261014" / "04_sources" / "SOURCES.json"
+84: SOURCES_SHA256 = "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52"
+85: SOURCES_SCHEMA = "reil-c4e-sources-v1"
+86: MODULE_RELPATHS = ("scripts/reil_c4e_run.py", "scripts/reil_c4_e3a.py", "scripts/reil_c4_monitor.py", "scripts/reil_c5_pilot.py",
+87:                    "scripts/reil_p0.py")
+88: RUN_SCRIPT = "scripts/reil_c4e_run.py"
+89: #: 패키지 import (`from scripts import …` — run :48–50 · e3a :39–40 · identity helper) 로 적재되는 셋. p0 · c6_profile 은 c5 가 경로로 읽는다
+90: LEAVES = ("reil_c4_e3a", "reil_c4_monitor", "reil_c5_pilot")
+91: #: S1 — 신뢰 목록 밖에서 경로로 실행되는 저장소 파일 (REPO 기준 · 구현 커밋 61b9037e 와 같은 바이트 · env_profile = C6 봉인 lock 머리줄)
+92: ENV_PROFILE = "degradation-degeneracy/tools/env_profile.py"
+93: EXTRA_EXECUTED = {"bms-balancing/scripts/reil_c6_profile.py": {"bytes": 15_915,
+94:                                                               "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"},
+95:                   ENV_PROFILE: {"bytes": 22_333, "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"}}
+96: #: identity helper — E0 · N1 정정 증거와 같은 바이트를 E1 증거 폴더에 복사해 쓴다
+97: IDENTITY_HELPER = "00_identity_c4.py"
+98: IDENTITY_HELPER_SHA256 = "92bb3bca2dcd56982bd4d4ddc02bb8ed84615d5b1b6af6385d69b66c8f5df900"
+99: #: 원자료 출처 · 식별 (P0 고정 · 상태 문서 §20 · v3 §1) — 저장소 밖 새 폴더에만 받는다
+100: SOURCE_URL = "https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git"
+101: SOURCE_COMMIT = "1188c371e5836df4a7e5f5acf336a34ffd4027e6"
+102: DATA = WORK / "data"
+103: DATA_FILES = {"LFP_Data.xlsx": {"bytes": 10_841_377, "sha256": "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1"},
+104:               "util_LFP.py": {"bytes": 33_754, "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"}}
+105: STEPS = {"identity": "03_identity", "fetch": "04_fetch", "run": "05_run"}
+106: TIMEOUTS = {"identity": 60.0, "fetch": 300.0, "run": 10_800.0}
+107: PROBE_TIMEOUT_S = 60.0
+108: GIT_TIMEOUT_S = 60.0
+109: KILL_WAIT_S = 10.0
+110: GROUP_GRACE_S = 5.0
+111: #: launcher 운영 정리 정책 (§87) — 정리 단계의 공통 절대 기한 = kill 대기 10 + 그룹 관측 5 + 재관측 5 (명목 배정 그대로 · 각 창은 이 기한 안)
+112: CLEANUP_S = 20.0
+113: POLL_S = 0.1
+114: PROC = Path("/proc")
+115: #: FUTURE-01 (§87) — fetch 단계의 git 설정은 이 command line 목록뿐이다. 값은 사용자 설정에서 한 번 읽었다 (2026-10-30 · 프록시 인증 방식 이름 · §87)
+116: FETCH_GIT_CONFIG = (("http.proxyAuthMethod", "basic"),)
+117: #: 받은 저장소 (`data/git`) 의 local 설정에 허용하는 키 — `init` · `remote add` · `fetch --filter` (부분 받기 등록) 가 쓰는 것뿐 (include · includeIf 없음)
+118: FETCH_LOCAL_KEYS = frozenset({"core.repositoryformatversion", "core.filemode", "core.bare", "core.logallrefupdates", "remote.origin.url",
+119:                               "remote.origin.fetch", "remote.origin.promisor", "remote.origin.partialclonefilter", "extensions.partialclone"})
+120: REQUEST = "docs/REIL_C4E_E1_0B_APPROVAL_REQUEST_20261030.md"
+121: EVIDENCE_NAME = re.compile(r"^reil_c4e1_20[0-9]{6}$")
+122: SECTION = re.compile(r"^§[0-9]{2,3}$")
+123: SECRET = re.compile(r"TOKEN|SECRET|PASSW|ACCESS_KEY|CREDENTIAL|COOKIE|^GIT_CONFIG_", re.I)
+124: GIT_KEEP = ("GIT_SSL_CAINFO",)
+125: DROP = ("SSH_ASKPASS",)
+126: ENV_SET_KEYS = ("MPLBACKEND", "MPLCONFIGDIR", "TMPDIR", "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "GIT_TERMINAL_PROMPT")
+127: #: N4 — 유효 출처를 바꾸거나 우회하는 Git 설정 (`git config --list` 의 소문자 키)
+128: GIT_CONFIG_DENY = re.compile(r"^(url\..+\.(insteadof|pushinsteadof)|https?\.proxy|https?\..+\.proxy|core\.gitproxy|core\.sshcommand|"
+129:                              r"credential\.helper|credential\..+\.helper)$")
+130: GIT_SSLVERIFY = re.compile(r"^https?\.(.+\.)?sslverify$")
+131: PATHFINDER = "_frozen_importlib_external.PathFinder"
+132: SOURCE_LOADER = "_frozen_importlib_external.SourceFileLoader"
+133: #: 네임스페이스 spec 의 loader 표기 (find_spec 시점에는 보통 없음 — 판에 따라 NamespaceLoader) · 일반 패키지 (SourceFileLoader · origin `__init__.py`) 는 아님
+134: NAMESPACE_LOADERS = (None, "_frozen_importlib_external.NamespaceLoader", "_frozen_importlib_external._NamespaceLoader")
+135: #: 탐침 (`-c`) — 앞에 `BMS = …` · `LEAVES = …` 두 줄을 붙여 쓴다. json · sys 만 쓰고, finder 에 find_spec 만 묻는다 (import · 실행 0)
+136: PROBE = '''import json, sys
+137: m = sys.modules.get("sitecustomize")
+138: def name(o):
+139:     t = o if isinstance(o, type) else type(o)
+140:     return t.__module__ + "." + t.__qualname__
+141: out = {"path": list(sys.path), "executable": sys.executable, "prefix": sys.prefix, "version": sys.version,
+142:        "isolated": sys.flags.isolated, "ignore_environment": sys.flags.ignore_environment, "no_user_site": sys.flags.no_user_site,
+143:        "safe_path": sys.flags.safe_path, "dont_write_bytecode": sys.flags.dont_write_bytecode, "pycache_prefix": sys.pycache_prefix,
+144:        "sitecustomize": getattr(m, "__file__", None), "meta_path": [name(f) for f in sys.meta_path]}
+145: sys.path.insert(0, BMS)
+146: def find(fullname, path):
+147:     for f in sys.meta_path:
+148:         fs = getattr(f, "find_spec", None)
+149:         s = fs(fullname, path) if fs is not None else None
+150:         if s is not None:
+151:             return name(f), s
+152:     return None, None
+153: def desc(f, s):
+154:     if s is None:
+155:         return {"finder": f, "found": False}
+156:     loc = s.submodule_search_locations
+157:     return {"finder": f, "found": True, "origin": s.origin, "loader": None if s.loader is None else name(s.loader),
+158:             "locations": None if loc is None else [str(x) for x in loc]}
+159: specs = {"scripts": desc(*find("scripts", None))}
+160: locs = specs["scripts"].get("locations") or []
+161: for leaf in LEAVES:
+162:     specs["scripts." + leaf] = desc(*find("scripts." + leaf, list(locs)))
+163: out["specs"] = specs
+164: print(json.dumps(out))
+165: '''
+166: 
+167: 
+168: def utc() -> str:
+169:     return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+170: 
+171: 
+172: def sha256(b: bytes) -> str:
+173:     return hashlib.sha256(b).hexdigest()
+174: 
+175: 
+176: def is_sha256(v) -> bool:
+177:     return isinstance(v, str) and len(v) == 64 and all(c in "0123456789abcdef" for c in v)
+178: 
+179: 
+180: def dump(obj) -> str:
+181:     return json.dumps(obj, ensure_ascii=False, indent=1, sort_keys=True, default=str) + "\n"
+182: 
+183: 
+184: def write_new(path, text: str) -> None:
+185:     with open(path, "x", encoding="utf-8") as f:
+186:         f.write(text)
+187: 
+188: 
+189: def entry_exists(path) -> bool:
+190:     """항목 자체가 있는가 — lstat 이라 끊어진 심볼릭 링크도 "있음" 이다 (V3-02 · `Path.exists` 는 대상을 따라간다). 없음 (FileNotFoundError) 만 false 이고
+191:     그 밖 lstat 오류는 그대로 올린다 (준비 오류로 남는다)."""
+192:     try:
+193:         os.lstat(path)
+194:     except FileNotFoundError:
+195:         return False
+196:     return True
+197: 
+198: 
+199: # ---------------------------------------------------------------- 대조 부품
+200: def read_regular(path) -> tuple:
+201:     """일반 파일만 읽는다 → (바이트, None) · 아니면 (None, 사유). 절대 경로 · resolve 가 자기 자신 (링크된 상위 폴더 거부) · 읽기 오류도 사유로."""
+202:     p = Path(path)
+203:     if not p.is_absolute():
+204:         return None, "절대 경로가 아니다"
+205:     try:
+206:         st = os.lstat(p)
+207:     except OSError as e:
+208:         return None, f"없음 ({e.__class__.__name__})"
+209:     if not stat.S_ISREG(st.st_mode):
+210:         return None, "일반 파일이 아니다 (심볼릭 링크 · 디렉터리 등)"
+211:     try:
+212:         if p.resolve() != p:
+213:             return None, f"resolve 경로가 다르다: {p.resolve()}"
+214:         return p.read_bytes(), None
+215:     except OSError as e:
+216:         return None, f"읽기 실패 ({e.__class__.__name__}: {e})"
+217: 
+218: 
+219: def load_sources(path, want_sha256, *, relpaths=MODULE_RELPATHS, schema=SOURCES_SCHEMA) -> tuple:
+220:     """신뢰 목록 → ({경로: {sha256, bytes}}, 문제). 목록 바이트 sha256 = 고정값 · schema · 경로 정확히 relpaths · 항목 형식."""
+221:     b, why = read_regular(path)
+222:     if b is None:
+223:         return None, [f"목록 {path}: {why}"]
+224:     got = sha256(b)
+225:     if got != want_sha256:
+226:         return None, [f"목록 sha256 {got} ≠ 고정값 {want_sha256}"]
+227:     try:
+228:         doc = json.loads(b)
+229:     except ValueError as e:
+230:         return None, [f"목록이 JSON 이 아니다: {e}"]
+231:     files = doc.get("files") if isinstance(doc, dict) else None
+232:     if not isinstance(files, dict) or doc.get("schema") != schema:
+233:         return None, [f"목록 형식이 다르다 (schema {schema} · files)"]
+234:     missing, extra = [r for r in relpaths if r not in files], sorted(set(files) - set(relpaths))
+235:     if missing or extra:
+236:         return None, [f"목록 경로 집합이 다르다 — 누락 {missing} · 목록 밖 {extra}"]
+237:     out = {}
+238:     for rel in relpaths:
+239:         e = files[rel]
+240:         s, n = (e.get("sha256"), e.get("bytes")) if isinstance(e, dict) else (None, None)
+241:         if not is_sha256(s) or not isinstance(n, int) or isinstance(n, bool) or n < 0:
+242:             return None, [f"목록 항목 {rel} 형식 (sha256 소문자 16 진 64 · bytes 정수 ≥ 0): {e!r}"]
+243:         out[rel] = {"sha256": s, "bytes": n}
+244:     return out, []
+245: 
+246: 
+247: def check_files(base, expected: dict) -> tuple:
+248:     """base/<이름> 의 실제 바이트 (일반 파일 · resolve 일치) 를 기대 sha256 · bytes 와 대조 → (행, 문제)."""
+249:     rows, probs = {}, []
+250:     for rel, want in expected.items():
+251:         p = Path(base) / rel
+252:         b, why = read_regular(p)
+253:         row = {"path": str(p), "expected": dict(want)}
+254:         if b is None:
+255:             row.update(ok=False, why=why)
+256:             probs.append(f"{rel}: {why}")
+257:         else:
+258:             row.update(sha256=sha256(b), bytes=len(b))
+259:             row["ok"] = row["sha256"] == want["sha256"] and row["bytes"] == want["bytes"]
+260:             if not row["ok"]:
+261:                 probs.append(f"{rel}: sha256 {row['sha256']} · {row['bytes']} B ≠ 기대 {want}")
+262:         rows[rel] = row
+263:     return rows, probs
+264: 
+265: 
+266: def seal_lock_problems(seal, manifest_sha256, lock_sha256, env_profile_sha256) -> tuple:
+267:     """S1 — env_profile 고정값의 근거: 봉인 MANIFEST (고정 sha) → 그 안의 lock 항목 (고정 sha) → lock 바이트 → 머리줄에 env_profile sha256."""
+268:     rec = {}
+269:     b, why = read_regular(Path(seal) / "MANIFEST.json")
+270:     if b is None:
+271:         return rec, [f"봉인 MANIFEST: {why}"]
+272:     rec["manifest_sha256"] = sha256(b)
+273:     if rec["manifest_sha256"] != manifest_sha256:
+274:         return rec, [f"봉인 MANIFEST sha256 {rec['manifest_sha256']} ≠ 고정값 {manifest_sha256}"]
+275:     try:
+276:         doc = json.loads(b)
+277:     except ValueError as e:
+278:         return rec, [f"봉인 MANIFEST 가 JSON 이 아니다: {e}"]
+279:     rec["manifest_lock_entry"] = doc.get(C6_LOCK) if isinstance(doc, dict) else None
+280:     if rec["manifest_lock_entry"] != lock_sha256:
+281:         return rec, [f"MANIFEST 의 {C6_LOCK} 항목 {rec['manifest_lock_entry']!r} ≠ 고정값 {lock_sha256}"]
+282:     b2, why = read_regular(Path(seal) / C6_LOCK)
+283:     if b2 is None:
+284:         return rec, [f"봉인 lock: {why}"]
+285:     rec["lock_sha256"] = sha256(b2)
+286:     if rec["lock_sha256"] != lock_sha256:
+287:         return rec, [f"봉인 lock sha256 {rec['lock_sha256']} ≠ 고정값 {lock_sha256}"]
+288:     rec["lock_first_line"] = b2.split(b"\n", 1)[0].decode("utf-8", "replace")
+289:     if not is_sha256(env_profile_sha256) or f"sha256 {env_profile_sha256}" not in rec["lock_first_line"]:
+290:         return rec, [f"봉인 lock 머리줄에 env_profile sha256 {env_profile_sha256} 이 없다"]
+291:     return rec, []
+292: 
+293: 
+294: def leaf_shadow_problems(bms=BMS, leaves=LEAVES) -> list:
+295:     """N1 — 승인 `<이름>.py` 보다 먼저 잡히는 것: 같은 이름 패키지 (`<이름>/__init__*` — FileFinder 는 패키지를 모듈 파일보다 먼저) · 같은 이름 확장 모듈
+296:     (확장 접미사는 `.py` 보다 먼저)."""
+297:     d, probs = Path(bms) / "scripts", []
+298:     for leaf in leaves:
+299:         probs += [f"{d / leaf / ('__init__' + s)} 가 있다 — 승인 {leaf}.py 보다 먼저 잡히는 패키지" for s in importlib.machinery.all_suffixes()
+300:                   if (d / leaf / f"__init__{s}").exists()]
+301:         probs += [f"{d / (leaf + s)} 가 있다 — 승인 {leaf}.py 보다 먼저 잡히는 확장 모듈" for s in importlib.machinery.EXTENSION_SUFFIXES
+302:                   if (d / f"{leaf}{s}").exists()]
+303:     return probs
+304: 
+305: 
+306: def shadow_problems(entries, bms=BMS) -> list:
+307:     """`scripts` 최상위 이름이 우리 `bms-balancing/scripts/` 로만 가는가 — 우리 쪽은 `__init__` · 같은 이름 모듈 파일 없는 네임스페이스여야 하고, 자식
+308:     sys.path 의 어느 항목에도 `scripts` 정규 패키지 · 모듈 (소스 · 바이트코드 · 확장 · zip 안) 이 없어야 한다."""
+309:     suffixes = tuple(importlib.machinery.all_suffixes())
+310:     names = [f"scripts/__init__{s}" for s in suffixes] + [f"scripts{s}" for s in suffixes]
+311:     probs = [f"{Path(bms) / n} 가 있다 — 우리 `scripts` 는 `__init__` · 같은 이름 모듈 없는 네임스페이스여야 한다" for n in names
+312:              if (Path(bms) / n).exists()]
+313:     if not isinstance(entries, list):
+314:         return probs + [f"탐침 sys.path 가 목록이 아니다: {entries!r}"]
+315:     for e in entries:
+316:         if not isinstance(e, str) or not e:
+317:             probs.append(f"sys.path 항목 {e!r} (빈 항목 = 현재 폴더)")
+318:             continue
+319:         p = Path(e)
+320:         if p.is_dir():
+321:             probs += [f"{p / n} — `scripts` 를 가린다" for n in names if (p / n).exists()]
+322:         elif p.is_file() and zipfile.is_zipfile(p):
+323:             with zipfile.ZipFile(p) as z:
+324:                 inside = set(z.namelist())
+325:             probs += [f"{p}!{n} — zip 안의 `scripts` 가 가린다" for n in names if n in inside]
+326:     return probs
+327: 
+328: 
+329: def spec_problems(specs, bms=BMS, leaves=LEAVES) -> list:
+330:     """N1 — 탐침이 finder 에 물은 적재 선택: `scripts` = PathFinder 의 네임스페이스 (loader 없음 · 첫 위치 = 우리 scripts) · 셋 = PathFinder ·
+331:     SourceFileLoader · origin = 승인 `.py` 절대 경로 · 패키지 아님."""
+332:     probs, want_loc = [], str(Path(bms) / "scripts")
+333:     top = specs.get("scripts") if isinstance(specs, dict) else None
+334:     if (not isinstance(top, dict) or top.get("finder") != PATHFINDER or top.get("loader") not in NAMESPACE_LOADERS
+335:             or top.get("origin") not in (None, "namespace") or not top.get("locations") or top["locations"][0] != want_loc):
+336:         probs.append(f"scripts 가 {want_loc} 를 첫 위치로 하는 PathFinder 네임스페이스가 아니다: {top}")
+337:     for leaf in leaves:
+338:         s = specs.get(f"scripts.{leaf}") if isinstance(specs, dict) else None
+339:         want = str(Path(bms) / "scripts" / f"{leaf}.py")
+340:         if (not isinstance(s, dict) or s.get("finder") != PATHFINDER or s.get("loader") != SOURCE_LOADER or s.get("origin") != want
+341:                 or s.get("locations") is not None):
+342:             probs.append(f"scripts.{leaf} 의 적재 선택이 승인 소스가 아니다 (기대 {want} · SourceFileLoader · PathFinder): {s}")
+343:     return probs
+344: 
+345: 
+346: def interp(py, prefix) -> list:
+347:     """자식 · 탐침 공통의 해석기 · 플래그 (고정)."""
+348:     return [str(py), "-I", "-B", "-X", f"pycache_prefix={prefix}"]
+349: 
+350: 
+351: def flag_problems(probe_doc: dict, prefix, py) -> list:
+352:     want = {"executable": str(py), "isolated": 1, "ignore_environment": 1, "no_user_site": 1, "safe_path": True,
+353:             "dont_write_bytecode": 1, "pycache_prefix": str(prefix)}
+354:     return [f"탐침 {k}: {probe_doc.get(k)!r} ≠ {v!r}" for k, v in want.items() if probe_doc.get(k) != v]
+355: 
+356: 
+357: def probe(py, prefix, *, env, cwd, bms=BMS, timeout=PROBE_TIMEOUT_S) -> tuple:
+358:     """자식과 같은 해석기 · 플래그 · env · cwd 로 플래그 · sys.path · 적재 선택만 읽는다 (우리 모듈 import · 실행 0) → (문서, None) · (None, 사유)."""
+359:     code = f"BMS = {json.dumps(str(bms))}\nLEAVES = {json.dumps(list(LEAVES))}\n{PROBE}"
+360:     try:
+361:         r = subprocess.run(interp(py, prefix) + ["-c", code], cwd=str(cwd), env=env, capture_output=True, timeout=timeout)
+362:     except (OSError, subprocess.TimeoutExpired) as e:
+363:         return None, f"탐침 실패 ({e.__class__.__name__})"
+364:     if r.returncode != 0:
+365:         return None, f"탐침 rc {r.returncode}: {r.stderr.decode('utf-8', 'replace')[-300:]}"
+366:     try:
+367:         doc = json.loads(r.stdout)
+368:     except ValueError as e:
+369:         return None, f"탐침 출력이 JSON 이 아니다: {e}"
+370:     return (doc, None) if isinstance(doc, dict) else (None, "탐침 출력이 객체가 아니다")
+371: 
+372: 
+373: def build_argv(step, evidence, section, prefix, *, py=PY, bms=BMS, venv=VENV, seal=SEAL, data=DATA, sources=SOURCES,
+374:                sources_sha256=SOURCES_SHA256, seal_manifest_sha256=SEAL_MANIFEST_SHA256) -> list:
+375:     """세 단계의 고정 argv (승인 요청 v2 §6). 바뀌는 것은 증거 폴더 · 승인 절 · pycache 폴더뿐이다."""
+376:     head, ev, run_script = interp(py, prefix), Path(evidence), str(Path(bms) / RUN_SCRIPT)
+377:     if step == "identity":
+378:         return head + [str(ev / IDENTITY_HELPER), str(venv), str(seal), seal_manifest_sha256, str(ev / "03_identity.json")]
+379:     if step == "fetch":
+380:         return head + [run_script, "fetch", "--dest", str(data)]
+381:     if step == "run":
+382:         return head + [run_script, "run", "--venv", str(venv), "--seal", str(seal), "--seal-manifest-sha256", seal_manifest_sha256,
+383:                        "--xlsx", str(Path(data) / "LFP_Data.xlsx"), "--util", str(Path(data) / "util_LFP.py"),
+384:                        "--sources", str(sources), "--sources-sha256", sources_sha256, "--out", str(ev / "run"),
+385:                        "--approval", f"상태 문서 {section} (사용자 E1-1–3 승인 · {REQUEST})"]
+386:     raise ValueError(f"단계는 {sorted(STEPS)} 뿐이다: {step!r}")
+387: 
+388: 
+389: def child_env(base: dict, work=WORK) -> tuple:
+390:     """자식 env → (env, 뺀 이름). 비밀 형태 · `GIT_SSL_CAINFO` 밖의 `GIT_*` · `SSH_ASKPASS` 를 뺀다 (N4). 값은 기록하지 않는다."""
+391:     removed = sorted(k for k in base if SECRET.search(k) or k in DROP or (k.startswith("GIT_") and k not in GIT_KEEP))
+392:     env = {k: v for k, v in base.items() if k not in removed}
+393:     env.update({"MPLBACKEND": "Agg", "MPLCONFIGDIR": str(Path(work) / "mpl"), "TMPDIR": str(Path(work) / "tmp"), "OMP_NUM_THREADS": "1",
+394:                 "OPENBLAS_NUM_THREADS": "1", "MKL_NUM_THREADS": "1", "GIT_TERMINAL_PROMPT": "0"})
+395:     return env, removed
+396: 
+397: 
+398: def fetch_env(env: dict, config=FETCH_GIT_CONFIG) -> dict:
+399:     """fetch 단계의 env (FUTURE-01) — 받은 env 의 사본에서 `GIT_CONFIG*` (COUNT · KEY · VALUE · PARAMETERS · GLOBAL · SYSTEM · 옛 GIT_CONFIG) 를 모두
+400:     빼고, 시스템 · 사용자 · XDG 설정 (그 안의 `includeIf` 포함) 을 끈 뒤 (`GIT_CONFIG_NOSYSTEM=1` · `GIT_CONFIG_GLOBAL=/dev/null`) 고정 목록만 command
+401:     line 설정 (`GIT_CONFIG_COUNT` / `KEY_n` / `VALUE_n`) 으로 넣는다. 그 밖 이름 · 값은 그대로 · 받은 env 는 바꾸지 않는다 · 두 번 적용해도 같다."""
+402:     out = {k: v for k, v in env.items() if not k.startswith("GIT_CONFIG")}
+403:     out.update(GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_COUNT=str(len(config)))
+404:     for i, (k, v) in enumerate(config):
+405:         out[f"GIT_CONFIG_KEY_{i}"], out[f"GIT_CONFIG_VALUE_{i}"] = k, v
+406:     return out
+407: 
+408: 
+409: # ---------------------------------------------------------------- Git (기록 · 출처)
+410: def git_run(args, *, env=None, cwd=None, timeout=GIT_TIMEOUT_S) -> dict:
+411:     """git 하나 → {argv, rc, out, err[, error]} — 실패를 빈 정상 출력으로 바꾸지 않는다 (rc · 오류를 그대로 둔다). 출력은 UTF-8 로 읽는다
+412:     (`encoding="utf-8"` · `errors="replace"` — S5 · S6: 비 UTF-8 출력은 대체 문자로 남고 기록 밖 예외가 되지 않으며, 해석이 locale 에 기대지 않는다)."""
+413:     argv = ["git", *[str(a) for a in args]]
+414:     try:
+415:         r = subprocess.run(argv, cwd=None if cwd is None else str(cwd), env=env, capture_output=True, text=True, encoding="utf-8",
+416:                            errors="replace", timeout=timeout)
+417:         return {"argv": argv, "rc": r.returncode, "out": r.stdout, "err": r.stderr[-500:]}
+418:     except (OSError, subprocess.TimeoutExpired) as e:
+419:         return {"argv": argv, "rc": None, "out": "", "err": "", "error": f"{e.__class__.__name__}: {e}"}
+420: 
+421: 
+422: def git_config_entries(listing: str) -> list:
+423:     """`git config --list --show-scope --show-origin` 출력 → [(scope, origin, 소문자 key, value)]. 세 칸이 아닌 줄은 ("?", 그 줄, "", "") 로 남긴다
+424:     (원천 검사에서 문제가 된다)."""
+425:     out = []
+426:     for line in listing.splitlines():
+427:         parts = line.split("\t", 2)
+428:         if len(parts) != 3:
+429:             out.append(("?", line, "", ""))
+430:             continue
+431:         key, _, val = parts[2].partition("=")
+432:         out.append((parts[0], parts[1], key.strip().lower(), val))
+433:     return out
+434: 
+435: 
+436: def git_config_problems(listing: str) -> list:
+437:     """설정 목록 (`--show-scope --show-origin`) 에서 유효 출처를 바꾸거나 우회하는 설정 (URL 바꿈 · 프록시 · 자격 도우미 · TLS 검증 끔) — 원천과
+438:     관계없이."""
+439:     probs = []
+440:     for scope, origin, k, val in git_config_entries(listing):
+441:         if GIT_CONFIG_DENY.match(k):
+442:             probs.append(f"git 설정 {k} ({scope} {origin}) — URL 바꿈 · 프록시 · 자격 도우미는 허용하지 않는다")
+443:         elif GIT_SSLVERIFY.match(k) and val.strip().lower() in ("false", "no", "off", "0", ""):
+444:             probs.append(f"git 설정 {k}={val.strip()} ({scope} {origin}) — TLS 검증을 끄지 않는다")
+445:     return probs
+446: 
+447: 
+448: def config_source_problems(listing: str, config=FETCH_GIT_CONFIG, local_keys=None) -> list:
+449:     """설정 원천 (FUTURE-01) — command line 항목 = 고정 목록 (소문자 키 · 값) 정확히. 그 밖의 원천은 local_keys 가 주어질 때 local 의 허용 키만 둔다.
+450:     시스템 · 사용자 · worktree 원천 · 허용 밖 local 키 (include · includeIf 포함) · 형식이 다른 줄이 하나라도 있으면 문제."""
+451:     entries = git_config_entries(listing)
+452:     want = sorted((k.lower(), v) for k, v in config)
+453:     got = sorted((k, v) for s, _, k, v in entries if s == "command")
+454:     probs = [] if got == want else [f"command line 설정 {got} ≠ 고정 목록 {want}"]
+455:     for s, o, k, _ in entries:
+456:         if s == "command" or (local_keys is not None and s == "local" and k in local_keys):
+457:             continue
+458:         probs.append(f"설정 원천 {s} ({o}) 의 {k or '(형식 밖)'} — 고정 목록 · 허용 local 키 밖")
+459:     return probs
+460: 
+461: 
+462: def fetch_source_precheck(env, cwd, url=SOURCE_URL, config=FETCH_GIT_CONFIG) -> tuple:
+463:     """N4 · FUTURE-01 (fetch 전 · 원격 접속 0) — fetch env 로 작업 폴더 (저장소 밖) 에서: 설정 원천이 command line 고정 목록뿐 · 금지 키 없음 ·
+464:     `ls-remote --get-url` (rewrite 적용 URL) = 고정 URL. 받은 env 가 fetch env 가 아니어도 여기서 fetch env 로 만든다."""
+465:     fenv = fetch_env(env, config)
+466:     c = git_run(["config", "--list", "--show-scope", "--show-origin"], env=fenv, cwd=cwd)
+467:     g = git_run(["ls-remote", "--get-url", url], env=fenv, cwd=cwd)
+468:     probs = []
+469:     if c["rc"] != 0:
+470:         probs.append(f"git config --list 실패 (rc {c['rc']} {c.get('error', '')})")
+471:     else:
+472:         probs += git_config_problems(c["out"]) + config_source_problems(c["out"], config)
+473:     if g["rc"] != 0 or g["out"].strip() != url:
+474:         probs.append(f"유효 출처 {g['out'].strip()!r} (rc {g['rc']} {g.get('error', '')}) ≠ 고정 {url}")
+475:     return {"config": c, "get_url": g, "env_git_config": {k: fenv[k] for k in sorted(fenv) if k.startswith("GIT_CONFIG")}}, probs
+476: 
+477: 
+478: def fetch_source_postcheck(env, data, url=SOURCE_URL, commit=SOURCE_COMMIT, config=FETCH_GIT_CONFIG, local_keys=FETCH_LOCAL_KEYS) -> tuple:
+479:     """N4 · FUTURE-01 (fetch 뒤 · 원격 접속 0) — fetch env 로: 받은 저장소의 `remote.origin.url` · 유효 출처 = 고정 URL · 설정 원천 = command line 고정
+480:     목록 + local 허용 키 · 금지 키 없음 · `.git/shallow` = 고정 커밋 하나 · alternates 없음. FETCH_HEAD 는 기록만 한다."""
+481:     fenv = fetch_env(env, config)
+482:     gd = Path(data) / "git"
+483:     u = git_run(["-C", gd, "config", "--get", "remote.origin.url"], env=fenv, cwd=data)
+484:     g = git_run(["-C", gd, "ls-remote", "--get-url", "origin"], env=fenv, cwd=data)
+485:     c = git_run(["-C", gd, "config", "--list", "--show-scope", "--show-origin"], env=fenv, cwd=data)
+486:     probs = []
+487:     if u["rc"] != 0 or u["out"].strip() != url:
+488:         probs.append(f"remote.origin.url {u['out'].strip()!r} (rc {u['rc']}) ≠ 고정 {url}")
+489:     if g["rc"] != 0 or g["out"].strip() != url:
+490:         probs.append(f"받은 저장소의 유효 출처 {g['out'].strip()!r} (rc {g['rc']}) ≠ 고정 {url}")
+491:     if c["rc"] != 0:
+492:         probs.append(f"받은 저장소의 git config --list 실패 (rc {c['rc']} {c.get('error', '')})")
+493:     else:
+494:         probs += git_config_problems(c["out"]) + config_source_problems(c["out"], config, local_keys)
+495:     sh, why = read_regular(gd / ".git" / "shallow")
+496:     shallow = sh.decode("utf-8", "replace").split() if sh is not None else None
+497:     if shallow != [commit]:
+498:         probs.append(f".git/shallow {shallow if sh is not None else why} ≠ [{commit}]")
+499:     alt = gd / ".git" / "objects" / "info" / "alternates"
+500:     if alt.exists() or alt.is_symlink():
+501:         probs.append(f"{alt} 가 있다 — 객체를 다른 곳에서 빌려 오지 않는다")
+502:     fh, _ = read_regular(gd / ".git" / "FETCH_HEAD")
+503:     return ({"remote_url": u, "get_url": g, "config": c, "shallow": shallow,
+504:              "fetch_head": None if fh is None else fh.decode("utf-8", "replace")[:500]}, probs)
+505: 
+506: 
+507: def record_problems(records: dict, heads=("head_start", "head_end"), porcelains=("porcelain_start", "porcelain_end")) -> list:
+508:     """N3 — Git 기록 (기본: HEAD 시작 · 끝 · porcelain 시작 · 끝) 이 성공했고 단계 중 HEAD 가 그대로인가. 시작 기록만 볼 때는 heads · porcelains 에 시작 키만
+509:     준다 (S4 — 자식 시작 전)."""
+510:     probs, seen = [], {}
+511:     for k in heads:
+512:         r = records.get(k) or {}
+513:         h = (r.get("out") or "").strip()
+514:         if r.get("rc") != 0 or not re.fullmatch(r"[0-9a-f]{40}", h):
+515:             probs.append(f"Git 기록 {k} 실패 (rc {r.get('rc')} {r.get('error', '')})")
+516:         else:
+517:             seen[k] = h
+518:     for k in porcelains:
+519:         r = records.get(k) or {}
+520:         if r.get("rc") != 0:
+521:             probs.append(f"Git 기록 {k} 실패 (rc {r.get('rc')} {r.get('error', '')})")
+522:     if len(seen) == 2 and seen.get("head_start") != seen.get("head_end"):
+523:         probs.append(f"단계 중 HEAD 가 바뀌었다: {seen.get('head_start')} → {seen.get('head_end')}")
+524:     return probs
+525: 
+526: 
+527: # ---------------------------------------------------------------- 사전 · 사후 대조 · 판정
+528: def precheck(step, evidence, argv, prefix, *, env, repo=REPO, py=PY, seal=SEAL, work=WORK, data=DATA, data_files=DATA_FILES,
+529:              sources=SOURCES, sources_sha256=SOURCES_SHA256, seal_manifest_sha256=SEAL_MANIFEST_SHA256, lock_sha256=C6_LOCK_SHA256,
+530:              extra=EXTRA_EXECUTED, helper_sha256=IDENTITY_HELPER_SHA256) -> dict:
+531:     """자식 시작 전 대조 (모듈 docstring 의 1). 문제가 하나라도 있으면 ok false — 자식을 띄우지 않는다."""
+532:     bms, probs = Path(repo) / "bms-balancing", []
+533:     entries, p = load_sources(sources, sources_sha256)
+534:     probs += p
+535:     modules, p = check_files(bms, entries) if entries else ({}, [])
+536:     probs += p
+537:     extra_rows, p = check_files(repo, extra)
+538:     probs += p
+539:     seal_rec, p = seal_lock_problems(seal, seal_manifest_sha256, lock_sha256, (extra.get(ENV_PROFILE) or {}).get("sha256"))
+540:     probs += p
+541:     probs += leaf_shadow_problems(bms)
+542:     if list(argv[:5]) != interp(py, prefix):
+543:         probs.append(f"해석기 · 플래그가 고정값과 다르다: {list(argv[:5])}")
+544:     script = argv[5] if len(argv) > 5 else None
+545:     helper = None
+546:     if step in ("fetch", "run"):
+547:         if script != str(bms / RUN_SCRIPT) or script != (modules.get(RUN_SCRIPT) or {}).get("path"):
+548:             probs.append(f"실행 스크립트 {script} ≠ 대조한 run 모듈 경로")
+549:     elif step == "identity":
+550:         b, why = read_regular(script) if script else (None, "argv 에 없음")
+551:         helper = {"path": script, "sha256": sha256(b) if b is not None else None, "expected": helper_sha256, "why": why}
+552:         if b is None or helper["sha256"] != helper_sha256 or Path(script) != Path(evidence) / IDENTITY_HELPER:
+553:             probs.append(f"identity helper {script}: {why or helper['sha256']} ≠ 고정 {helper_sha256}")
+554:     else:
+555:         probs.append(f"단계 {step!r}")
+556:     doc, why = probe(py, prefix, env=env, cwd=bms, bms=bms)
+557:     if doc is None:
+558:         probs.append(why)
+559:     else:
+560:         probs += flag_problems(doc, prefix, py) + shadow_problems(doc.get("path"), bms) + spec_problems(doc.get("specs"), bms)
+561:     data_rows = source = None
+562:     if step == "run":
+563:         data_rows, p = check_files(data, data_files)
+564:         probs += p
+565:     if step == "fetch":
+566:         if Path(data).exists() or Path(data).is_symlink():
+567:             probs.append(f"자료 폴더 {data} 가 이미 있다 — fetch 는 새 폴더에만")
+568:         source, p = fetch_source_precheck(env, work)
+569:         probs += p
+570:     return {"ok": not probs, "problems": probs, "utc": utc(), "step": step,
+571:             "sources": {"path": str(sources), "sha256_fixed": sources_sha256, "entries": entries}, "modules": modules,
+572:             "extra_executed": extra_rows, "seal_lock": seal_rec, "helper": helper, "probe": doc, "data": data_rows, "source": source,
+573:             "git": shutil.which("git", path=env.get("PATH"))}
+574: 
+575: 
+576: def identity_link(path, modules: dict, *, relpaths=MODULE_RELPATHS) -> list:
+577:     """run 의 IDENTITY.json (시작 · 끝 표) 모듈 행의 경로 · sha256 · bytes = 사전 대조의 경로 · 목록 (실제 적재 경로 ↔ 대조 경로)."""
+578:     if set(modules) != set(relpaths):
+579:         return [f"사전 대조 모듈 집합이 다섯이 아니다: {sorted(modules)}"]
+580:     try:
+581:         rec = json.loads(Path(path).read_text(encoding="utf-8"))
+582:     except (OSError, ValueError) as e:
+583:         return [f"{path} 를 읽지 못했다 ({e.__class__.__name__})"]
+584:     probs = []
+585:     for side in ("start", "end"):
+586:         table = rec.get(side) if isinstance(rec, dict) else None
+587:         if not isinstance(table, dict):
+588:             probs.append(f"IDENTITY.json {side} 표가 없다")
+589:             continue
+590:         for rel, row in modules.items():
+591:             r = table.get(rel)
+592:             if not isinstance(r, dict):
+593:                 probs.append(f"{side} · {rel}: 행이 없다")
+594:             elif r.get("path") != row["path"]:
+595:                 probs.append(f"{side} · {rel}: 적재 경로 {r.get('path')} ≠ 대조 경로 {row['path']}")
+596:             elif r.get("sha256") != row["expected"]["sha256"] or r.get("bytes") != row["expected"]["bytes"]:
+597:                 probs.append(f"{side} · {rel}: sha256 · bytes 가 목록과 다르다")
+598:     return probs
+599: 
+600: 
+601: def postcheck(step, evidence, pre, prefix, child, *, env, repo=REPO, data=DATA, data_files=DATA_FILES, extra=EXTRA_EXECUTED,
+602:               records=None) -> dict:
+603:     """자식이 끝난 뒤 대조 (모듈 docstring 의 3)."""
+604:     entries = (pre.get("sources") or {}).get("entries")
+605:     if not entries:
+606:         return {"ok": False, "problems": ["사전 대조의 목록 항목이 없다"], "utc": utc()}
+607:     child = child or {}
+608:     modules, probs = check_files(Path(repo) / "bms-balancing", entries)
+609:     extra_rows, p = check_files(repo, extra)
+610:     probs += p
+611:     data_rows = link = source = None
+612:     if step in ("fetch", "run"):
+613:         data_rows, p = check_files(data, data_files)
+614:         probs += p
+615:     if step == "fetch":
+616:         source, p = fetch_source_postcheck(env, data)
+617:         probs += p
+618:     if step == "run":
+619:         link = identity_link(Path(evidence) / "run" / "IDENTITY.json", pre.get("modules") or {})
+620:         probs += link
+621:     left = sorted(str(x) for x in Path(prefix).rglob("*")) if Path(prefix).is_dir() else ["(pycache 폴더가 없다)"]
+622:     if left:
+623:         probs.append(f"pycache 폴더에 남은 것 {left[:5]}")
+624:     group = child.get("group") or {}
+625:     if group.get("status") != "empty":
+626:         probs.append(f"자식 프로세스 그룹 상태 {group.get('status')!r} — 비어 있음이 확인되지 않았다")
+627:     if child.get("deadline_hit") is not False:
+628:         probs.append(f"정리 공통 기한 도달 표시 {child.get('deadline_hit')!r} — 기한 안에 끝난 정리가 아니다")
+629:     if child.get("timed_out") and not child.get("exited_after_kill"):
+630:         probs.append("timeout 뒤 자식이 제한 시간 안에 끝나지 않았다 (미종료)")
+631:     if child.get("errors"):
+632:         probs.append(f"자식 단계 오류 {child['errors']}")
+633:     probs += record_problems(records or {})
+634:     return {"ok": not probs, "problems": probs, "utc": utc(), "modules": modules, "extra_executed": extra_rows, "data": data_rows,
+635:             "source": source, "identity_link": link}
+636: 
+637: 
+638: def child_result(step, stdout_text: str) -> tuple:
+639:     """자식 stdout 의 마지막 비어 있지 않은 줄 (JSON 객체) → (ok, 요약). run 은 ok AND final.complete."""
+640:     lines = [x for x in stdout_text.splitlines() if x.strip()]
+641:     try:
+642:         doc = json.loads(lines[-1]) if lines else None
+643:     except ValueError:
+644:         doc = None
+645:     if not isinstance(doc, dict):
+646:         return False, {"why": "stdout 마지막 줄이 JSON 객체가 아니다"}
+647:     if step == "run":
+648:         fin = doc.get("final") if isinstance(doc.get("final"), dict) else {}
+649:         return (doc.get("ok") is True and fin.get("complete") is True,
+650:                 {"ok": doc.get("ok"), "final_complete": fin.get("complete"), "E3a": fin.get("E3a"), "stop": doc.get("stop")})
+651:     return doc.get("ok") is True, {"ok": doc.get("ok"), "stop": doc.get("stop"), "problems": doc.get("problems")}
+652: 
+653: 
+654: def stage_verdict(*, precheck_ok, child_ok, rc, timed_out, postcheck_ok) -> dict:
+655:     """단계 판정 = 다섯 항의 AND (§72 조건 3 의 넷 + 사후 대조)."""
+656:     terms = {"precheck_ok": precheck_ok is True, "child_ok": child_ok is True,
+657:              "rc_0": isinstance(rc, int) and not isinstance(rc, bool) and rc == 0, "timeout_false": timed_out is False,
+658:              "postcheck_ok": postcheck_ok is True}
+659:     return {"rule": "precheck_ok AND child_ok AND rc_0 AND timeout_false AND postcheck_ok", "terms": terms, "complete": all(terms.values())}
+660: 
+661: 
+662: # ---------------------------------------------------------------- 자식 · 프로세스 그룹 (N2 · N3)
+663: def proc_members(pgid, *, proc=PROC, read=None) -> dict:
+664:     """/proc 에서 프로세스 그룹 pgid 의 구성원 [(pid, 상태)] · 사라진 PID 수 · 오류. 바이트로 읽고 comm (괄호 안) 은 해석하지 않는다 (V3-03 — UTF-8 이
+665:     아닌 이름도 실패하지 않는다 · 주입한 read 가 문자열을 돌려줘도 같은 파싱). PID 소멸 (FileNotFoundError · ProcessLookupError) 만 "사라짐" 이고, 그 밖의
+666:     모든 읽기 예외 (권한 · I/O · 디코딩 등) 와 파싱 · 목록 실패는 오류로 남기고 스캔을 계속한다 (관측 불능을 "구성원 없음" 으로 바꾸지 않는다)."""
+667:     read = read or (lambda p: p.read_bytes())
+668:     out = {"members": [], "vanished": 0, "errors": []}
+669:     try:
+670:         entries = [d for d in Path(proc).iterdir() if d.name.isdigit()]
+671:     except Exception as e:  # noqa: BLE001 — 목록 실패는 관측 불능
+672:         out["errors"].append({"where": "list", "error": f"{e.__class__.__name__}: {e}"})
+673:         return out
+674:     for d in entries:
+675:         try:
+676:             s = read(d / "stat")
+677:         except (FileNotFoundError, ProcessLookupError):
+678:             out["vanished"] += 1
+679:             continue
+680:         except Exception as e:  # noqa: BLE001 — 소멸이 아닌 모든 읽기 예외 (권한 · I/O · 디코딩 등) 는 그 PID 의 오류
+681:             out["errors"].append({"pid": d.name, "error": f"{e.__class__.__name__}: {e}"})
+682:             continue
+683:         try:
+684:             b = s if isinstance(s, bytes) else s.encode("utf-8", "surrogateescape")
+685:             rest = b[b.rindex(b")") + 2:].split()
+686:             state, pgrp = rest[0].decode("ascii"), int(rest[2])
+687:         except Exception as e:  # noqa: BLE001 — 파싱 · 디코딩 실패
+688:             out["errors"].append({"pid": d.name, "error": f"파싱 실패: {e.__class__.__name__}: {e}"})
+689:             continue
+690:         if pgrp == pgid:
+691:             out["members"].append((int(d.name), state))
+692:     return out
+693: 
+694: 
+695: def group_status(pgid, *, grace=GROUP_GRACE_S, until=None, clock=time.monotonic, sleep=time.sleep, proc=PROC, read=None) -> dict:
+696:     """그룹 관측 창 — 관측은 `until` (주지 않으면 지금 + grace) 전에만 시작한다 (V3-01 규칙 · 관측 하나의 길이는 묶지 않는다). 좀비 아닌 구성원 0 ·
+697:     오류 0 → empty · 관측 오류 → unknown (바로 돌아간다 · 뒤의 관측으로 지우지 않는다) · 창 끝까지 살아 있음 → alive · 관측을 하나도 시작하지 못함 →
+698:     unverified. sleep 은 남은 시간만큼만 잔다 (0 이하이면 자지 않는다)."""
+699:     until = clock() + grace if until is None else until
+700:     n, alive, zombies = 0, None, []
+701:     while clock() < until:
+702:         o = proc_members(pgid, proc=proc, read=read)
+703:         n += 1
+704:         alive = [m for m in o["members"] if m[1] != "Z"]
+705:         zombies = [m for m in o["members"] if m[1] == "Z"]
+706:         if o["errors"]:
+707:             return {"status": "unknown", "alive": alive, "zombies": zombies, "errors": o["errors"], "observations": n}
+708:         if not alive:
+709:             return {"status": "empty", "alive": [], "zombies": zombies, "errors": [], "observations": n}
+710:         left = until - clock()
+711:         if left > 0:
+712:             sleep(min(POLL_S, left))
+713:     if n == 0:
+714:         return {"status": "unverified", "alive": None, "zombies": [], "errors": [], "observations": 0}
+715:     return {"status": "alive", "alive": alive, "zombies": zombies, "errors": [], "observations": n}
+716: 
+717: 
+718: def kill_group(pgid, killpg=os.killpg) -> dict:
+719:     """그룹 SIGKILL 요청 — 결과를 버리지 않고 돌려준다 (보냄 · 이미 없음 · 권한 · 그 밖)."""
+720:     try:
+721:         killpg(pgid, signal.SIGKILL)
+722:         return {"utc": utc(), "result": "sent"}
+723:     except ProcessLookupError:
+724:         return {"utc": utc(), "result": "no_process"}
+725:     except PermissionError as e:
+726:         return {"utc": utc(), "result": "permission", "error": str(e)}
+727:     except OSError as e:
+728:         return {"utc": utc(), "result": "error", "error": f"{e.__class__.__name__}: {e}"}
+729: 
+730: 
+731: def cleanup_group(p, timed_out, *, deadline, clock=time.monotonic, sleep=time.sleep, killpg=os.killpg, kill_wait=KILL_WAIT_S,
+732:                   grace=GROUP_GRACE_S, proc=PROC, read=None) -> dict:
+733:     """정리 (launcher 운영 정리 정책 · V3-01 규칙) — 기한 (`deadline` · run_child 가 정리 단계에 들어갈 때 한 번 만든 절대 시각) 은 받기만 한다.
+734:     timeout 이면 그룹 SIGKILL → 자식 종료를 비차단 확인 (`poll`) 하며 기다림 (kill_wait · 기한 안) → 그룹 관측 창 (grace · 기한 안) → 살아 있으면 그룹
+735:     SIGKILL (기한 뒤라도 보낸다 — 기다리지 않는 동작) → 재관측 창 (grace · 기한 안). 관측 · sleep 은 기한 전에만 시작한다. 끝 상태 = empty (재kill 없이
+736:     비어 있음) · killed (재kill 뒤 비어 있음) · alive · unverified (관측을 못 함 · 재kill 뒤 재관측을 못 함) · unknown (관측 오류 · 정리 안의 예외 — 우선).
+737:     안의 예외는 여기서 잡아 같은 기한으로 비상 동작 (자식이 살아 있으면 그룹 SIGKILL · 관측) 만 한다 — 새 기한은 없다."""
+738:     t0 = clock()
+739:     rec = {"kill": [], "exited_after_kill": None, "rc_after_kill": None, "group_first": None, "group": None, "errors": [], "emergency": False}
+740: 
+741:     def window():
+742:         return group_status(p.pid, until=min(deadline, clock() + grace), clock=clock, sleep=sleep, proc=proc, read=read)
+743: 
+744:     try:
+745:         if timed_out:
+746:             rec["kill"].append(kill_group(p.pid, killpg))
+747:             until = min(deadline, t0 + kill_wait)
+748:             while p.poll() is None and clock() < until:
+749:                 left = until - clock()
+750:                 if left > 0:
+751:                     sleep(min(POLL_S, left))
+752:             rec["exited_after_kill"] = p.poll() is not None
+753:             if rec["exited_after_kill"]:
+754:                 rec["rc_after_kill"] = p.returncode
+755:         g = window()
+756:         if g["status"] == "alive":
+757:             rec["group_first"] = g
+758:             rec["kill"].append(kill_group(p.pid, killpg))
+759:             g2 = window()
+760:             g = dict(g2, status="killed") if g2["status"] == "empty" else g2
+761:         rec["group"] = g
+762:     except Exception as e:  # noqa: BLE001 — 정리 안의 예외 — 같은 기한으로 비상 동작만 (새 기한 없음)
+763:         rec["errors"].append(f"{e.__class__.__name__}: {e}")
+764:         rec["emergency"] = True
+765:         try:
+766:             if p.poll() is None:
+767:                 rec["kill"].append(kill_group(p.pid, killpg))
+768:             rec["group"] = group_status(p.pid, until=deadline, clock=clock, sleep=sleep, proc=proc, read=read)
+769:         except Exception as e2:  # noqa: BLE001
+770:             rec["errors"].append(f"비상 동작 {e2.__class__.__name__}: {e2}")
+771:     status = "unknown" if rec["errors"] else (rec["group"] or {}).get("status", "unknown")
+772:     rec["group"] = dict(rec["group"] or {}, status=status)
+773:     rec.update(status=status, deadline_hit=clock() >= deadline, cleanup_s=round(clock() - t0, 3))
+774:     return rec
+775: 
+776: 
+777: def run_child(argv, *, cwd, env, stdout, stderr, timeout, popen=subprocess.Popen, killpg=os.killpg, kill_wait=KILL_WAIT_S,
+778:               grace=GROUP_GRACE_S, cleanup_s=CLEANUP_S, proc=PROC, read=None, clock=time.monotonic, sleep=time.sleep) -> dict:
+779:     """새 세션에서 자식을 띄우고 기다린다 (N3). 자식이 끝나거나 timeout 이 되면 정리 단계에 들어가며 공통 절대 기한 (원점 + cleanup_s) 을 한 번 만들어
+780:     `cleanup_group` 에 넘긴다 (launcher 운영 정리 정책 · V3-01). 시작 실패 · timeout · kill 결과 · 비차단 종료 확인 · 그룹 상태 · 기한 도달을 모두
+781:     기록하고, 어느 대기도 무기한이 아니다. 시간은 대기 (`wait_s` — 시작 → 종료 또는 timeout) 와 정리 (`cleanup_s` — 정리 원점부터 · kill 뒤 대기 ·
+782:     관측 · 재kill · 재관측) 로 나눠 남긴다 (S2)."""
+783:     rec = {"started": False, "rc": None, "timed_out": None, "errors": []}
+784:     t = clock()
+785:     try:
+786:         p = popen(argv, cwd=str(cwd), env=env, stdout=stdout, stderr=stderr, start_new_session=True)
+787:     except Exception as e:  # noqa: BLE001 — 시작 실패는 기록하고 돌아간다
+788:         rec["start_error"] = f"{e.__class__.__name__}: {e}"
+789:         return rec
+790:     rec.update(started=True, pgid=p.pid, start_utc=utc())
+791:     try:
+792:         rec["rc"], rec["timed_out"] = p.wait(timeout=timeout), False
+793:     except subprocess.TimeoutExpired:
+794:         rec["timed_out"] = True
+795:     except Exception as e:  # noqa: BLE001 — 대기 자체의 예외도 기록하고 정리로 간다 (timed_out 이 None 이라 판정은 false)
+796:         rec["errors"].append(f"wait {e.__class__.__name__}: {e}")
+797:     t_c0 = clock()
+798:     rec["wait_s"] = round(t_c0 - t, 3)
+799:     c = cleanup_group(p, rec["timed_out"] is True, deadline=t_c0 + cleanup_s, clock=clock, sleep=sleep, killpg=killpg, kill_wait=kill_wait,
+800:                       grace=grace, proc=proc, read=read)
+801:     if rec["timed_out"] and c["exited_after_kill"]:
+802:         rec["rc"] = c["rc_after_kill"]
+803:     rec.update(kill=c["kill"], exited_after_kill=c["exited_after_kill"], group=c["group"], group_first=c["group_first"],
+804:                deadline_hit=c["deadline_hit"], emergency=c["emergency"], cleanup_deadline_s=cleanup_s)
+805:     rec["errors"] += c["errors"]
+806:     rec["cleanup_s"] = round(clock() - t_c0, 3)
+807:     return rec
+808: 
+809: 
+810: def git_out(repo, *args, env) -> dict:
+811:     """기록용 git (HEAD · porcelain) — 정제 env 를 반드시 받는다 (기본값 없음 · 상속 env 로 부르지 않는다 · V2-02). rc · 오류를 그대로 남긴다."""
+812:     return git_run(["-C", repo, *args], env=env)
+813: 
+814: 
+815: # ---------------------------------------------------------------- 단계 하나
+816: def launch(step, evidence, section, *, repo=REPO, py=PY, venv=VENV, seal=SEAL, work=WORK, data=DATA, data_files=DATA_FILES,
+817:            sources=SOURCES, sources_sha256=SOURCES_SHA256, seal_manifest_sha256=SEAL_MANIFEST_SHA256, lock_sha256=C6_LOCK_SHA256,
+818:            extra=EXTRA_EXECUTED, helper_sha256=IDENTITY_HELPER_SHA256, timeouts=TIMEOUTS, env_base=None, popen=subprocess.Popen,
+819:            killpg=os.killpg, kill_wait=KILL_WAIT_S, grace=GROUP_GRACE_S, cleanup_s=CLEANUP_S, proc=PROC, read=None) -> int:
+820:     """준비 → 사전 대조 → (통과할 때만) 시작 기록 → (성공할 때만) 자식 → 끝 기록 → 사후 대조 → 끝 관측 → 단계 판정 → meta. 반환 0 = 단계 판정
+821:     complete · 1 = 아님 (meta 있음 · 자식 시작 여부는 `launched`) · 4 = meta 를 쓰지 못함 (stderr 한 줄 · 첫 오류 포함). 의도된 거부 (단계 이름 · 기존 기록
+822:     파일 · 기존 pycache 폴더 — lstat 기준 · 끊어진 링크 포함) 는 어떤 파일 · 폴더도 만들기 전 SystemExit 이고, 기록용 `except Exception` 은 SystemExit 를
+823:     잡지 않는다 (V2-04 · V3-02)."""
+824:     if step not in STEPS:
+825:         raise SystemExit(f"단계는 {sorted(STEPS)} 뿐이다: {step!r}")
+826:     ev, name, bms = Path(evidence), STEPS[step], Path(repo) / "bms-balancing"
+827:     files = {k: ev / f"{name}.{k}" for k in ("precheck.json", "meta.json", "stdout.log", "stderr.log", "porcelain_start.txt",
+828:                                              "porcelain_end.txt")}
+829:     prefix = Path(work) / "pycache" / name
+830:     meta = {"step": step, "name": name, "cwd": str(bms), "timeout_s": timeouts[step], "kill_wait_s": kill_wait, "group_grace_s": grace,
+831:             "cleanup_deadline_s": cleanup_s, "pycache_prefix": str(prefix), "request": REQUEST, "approval_section": section,
+832:             "start_utc": utc()}
+833:     errors, records, phase = [], {}, "prepare"
+834:     pre = child = post = detail = None
+835:     ok = False
+836:     try:
+837:         taken = [str(p) for p in files.values() if entry_exists(p)]
+838:         if taken:
+839:             raise SystemExit(f"이미 있다 — 덮어쓰지 않는다: {taken}")
+840:         if entry_exists(prefix):
+841:             raise SystemExit(f"pycache 폴더 {prefix} 가 이미 있다 — 새 빈 폴더만")
+842:         prefix.mkdir(parents=True)
+843:         for k in ("mpl", "tmp"):
+844:             (Path(work) / k).mkdir(parents=True, exist_ok=True)
+845:         env, removed = child_env(dict(os.environ if env_base is None else env_base), work)
+846:         if step == "fetch":  # FUTURE-01 — fetch 단계 전체 (사전 · 자식 · 사후 · 기록 git) 가 같은 fetch env
+847:             env = fetch_env(env)
+848:         meta.update(env_removed_names=removed, env_set={k: env[k] for k in ENV_SET_KEYS},
+849:                     env_git_config={k: env[k] for k in sorted(env) if k.startswith("GIT_CONFIG")})
+850:         argv = build_argv(step, ev, section, prefix, py=py, bms=bms, venv=venv, seal=seal, data=data, sources=sources,
+851:                           sources_sha256=sources_sha256, seal_manifest_sha256=seal_manifest_sha256)
+852:         meta["argv"] = argv
+853:         me = Path(__file__).resolve()
+854:         meta["launcher"] = {"path": str(me), "sha256": sha256(me.read_bytes())}
+855:         meta["disk_free_start_bytes"] = shutil.disk_usage(bms).free
+856:         phase = "precheck"
+857:         try:
+858:             pre = precheck(step, ev, argv, prefix, env=env, repo=repo, py=py, seal=seal, work=work, data=data, data_files=data_files,
+859:                            sources=sources, sources_sha256=sources_sha256, seal_manifest_sha256=seal_manifest_sha256,
+860:                            lock_sha256=lock_sha256, extra=extra, helper_sha256=helper_sha256)
+861:         except Exception as e:  # noqa: BLE001
+862:             errors.append({"phase": "precheck", "type": e.__class__.__name__, "message": str(e)[:500]})
+863:             pre = {"ok": False, "problems": [f"사전 대조 예외 {e.__class__.__name__}: {e}"]}
+864:         phase = "record"
+865:         write_new(files["precheck.json"], dump(pre))
+866:         if pre.get("ok") is True and not errors:
+867:             records["head_start"] = git_out(repo, "rev-parse", "HEAD", env=env)
+868:             records["porcelain_start"] = git_out(repo, "status", "--porcelain=v1", "--untracked-files=all", env=env)
+869:             write_new(files["porcelain_start.txt"], records["porcelain_start"]["out"])
+870:             start_bad = record_problems(records, heads=("head_start",), porcelains=("porcelain_start",))
+871:             if start_bad:  # S4 — 시작 기록이 실패하면 자식을 띄우지 않는다 (사후 false 를 기다리지 않는다)
+872:                 errors.append({"phase": "record", "type": "GitRecordFailed", "message": "; ".join(start_bad)[:500]})
+873:             else:
+874:                 phase = "start"
+875:                 with open(files["stdout.log"], "xb") as fo, open(files["stderr.log"], "xb") as fe:
+876:                     child = run_child(argv, cwd=bms, env=env, stdout=fo, stderr=fe, timeout=timeouts[step], popen=popen, killpg=killpg,
+877:                                       kill_wait=kill_wait, grace=grace, cleanup_s=cleanup_s, proc=proc, read=read)
+878:                 if not child.get("started"):
+879:                     errors.append({"phase": "start", "type": "StartError", "message": str(child.get("start_error"))[:500]})
+880:                 errors += [{"phase": "wait", "type": "ChildError", "message": str(msg)[:500]} for msg in child.get("errors") or []]
+881:                 phase = "record"
+882:                 records["porcelain_end"] = git_out(repo, "status", "--porcelain=v1", "--untracked-files=all", env=env)
+883:                 write_new(files["porcelain_end.txt"], records["porcelain_end"]["out"])
+884:                 records["head_end"] = git_out(repo, "rev-parse", "HEAD", env=env)
+885:                 if child.get("started"):
+886:                     ok, detail = child_result(step, files["stdout.log"].read_text(encoding="utf-8", errors="replace"))
+887:                 phase = "postcheck"
+888:                 post = postcheck(step, ev, pre, prefix, child, env=env, repo=repo, data=data, data_files=data_files, extra=extra,
+889:                                  records=records)
+890:     except Exception as e:  # noqa: BLE001 — 어느 단계의 예외든 기록하고 판정을 false 로 둔다 (SystemExit 는 잡지 않는다)
+891:         errors.append({"phase": phase, "type": e.__class__.__name__, "message": str(e)[:500]})
+892:     for key, look in (("disk_free_end_bytes", lambda: shutil.disk_usage(bms).free),
+893:                       ("evidence_bytes_before_meta", lambda: sum(p.stat().st_size for p in ev.rglob("*") if p.is_file()))):
+894:         try:
+895:             meta[key] = look()
+896:         except Exception as e:  # noqa: BLE001 — 끝 관측의 실패도 오류로 남기고 meta 는 계속 쓴다
+897:             errors.append({"phase": "end", "type": e.__class__.__name__, "message": str(e)[:500]})
+898:     launched = bool(child and child.get("started"))
+899:     stage = stage_verdict(precheck_ok=bool(pre and pre.get("ok") is True), child_ok=ok, rc=(child or {}).get("rc"),
+900:                           timed_out=(child or {}).get("timed_out"), postcheck_ok=bool(post and post.get("ok") is True) and not errors)
+901:     meta.update(launched=launched, child=child, child_result=detail, postcheck=post, stage=stage, errors=errors,
+902:                 first_error=errors[0] if errors else None, precheck_ok=bool(pre and pre.get("ok") is True),
+903:                 precheck_problems=(pre or {}).get("problems"),
+904:                 records={k: {kk: vv for kk, vv in v.items() if kk != "out"} | ({"out": v.get("out", "").strip()} if k.startswith("head") else {})
+905:                          for k, v in records.items()},
+906:                 end_utc=utc(), child_maxrss_kib=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss)
+907:     try:
+908:         write_new(files["meta.json"], dump(meta))
+909:     except Exception as e:  # noqa: BLE001 — 기록 자체가 불가능하면 외부 stderr · rc 4 로 한계를 분리한다
+910:         sys.stderr.write(json.dumps({"step": step, "meta_write_failed": f"{e.__class__.__name__}: {e}", "launched": launched,
+911:                                      "first_error": errors[0] if errors else None, "complete": False}, ensure_ascii=False) + "\n")
+912:         return 4
+913:     print(json.dumps({"step": step, "launched": launched, "complete": stage["complete"], "rc": (child or {}).get("rc"),
+914:                       "timed_out": (child or {}).get("timed_out"), "errors": len(errors)}, ensure_ascii=False))
+915:     return 0 if stage["complete"] else 1
+916: 
+917: 
+918: def main(argv=None) -> int:
+919:     ap = argparse.ArgumentParser(prog="reil_c4e1_launch", description=(__doc__ or "").splitlines()[0])
+920:     ap.add_argument("step", choices=sorted(STEPS))
+921:     ap.add_argument("--evidence", required=True, type=Path)
+922:     ap.add_argument("--approval-section", required=True)
+923:     a = ap.parse_args(argv)
+924:     if not SECTION.match(a.approval_section):
+925:         raise SystemExit(f"승인 절은 §NN 형식이어야 한다: {a.approval_section!r}")
+926:     ev = a.evidence
+927:     if ev.parent != BMS / "evidence" or not EVIDENCE_NAME.match(ev.name) or not ev.is_dir():
+928:         raise SystemExit(f"증거 폴더는 {BMS / 'evidence'}/reil_c4e1_YYYYMMDD (미리 만든 폴더) 여야 한다: {ev}")
+929:     return launch(a.step, ev, a.approval_section)
+930: 
+931: 
+932: if __name__ == "__main__":
+933:     sys.exit(main())

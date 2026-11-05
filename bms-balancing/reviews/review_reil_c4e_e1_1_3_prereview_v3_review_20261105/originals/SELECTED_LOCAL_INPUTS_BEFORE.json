@@ -1,0 +1,30 @@
+{
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_1_3_PREREVIEW_SEND_v3_20261105.md",
+      "bytes": 2448,
+      "sha256": "87917f5d9cb8b08d9ab998a0a80e7a8dd4989524180537727116ae9afabb7e90"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4E_E1_1_3_V2_N1_FIX_SCOPE_20261104.md",
+      "bytes": 10939,
+      "sha256": "816eef90a86984dc2b9d6dde745579698ad59fe6e65f0f65f56028e3606a7ffa"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\REVIEW_DECISION.json",
+      "bytes": 5309,
+      "sha256": "09dc4a3aaf008564ac5b77e8e64b7c32b202bb68beafc7c85b49a67861c84237"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\REVIEW_KO.txt",
+      "bytes": 10946,
+      "sha256": "94d46d24790e4964302b439af7c9a4b0ea34fba558a9b6c400f2f618cdf10f61"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_prereview_v2_20261104\\SOURCE_IDENTITIES.json",
+      "bytes": 4745,
+      "sha256": "035d10b003e474e190ff4d6d9e5be9e6158683b372cb0c717b4f64ff8826f40d"
+    }
+  ],
+  "boundary": "Local input hashes captured during recipient data intake; no remote preservation or whole filesystem audit."
+}

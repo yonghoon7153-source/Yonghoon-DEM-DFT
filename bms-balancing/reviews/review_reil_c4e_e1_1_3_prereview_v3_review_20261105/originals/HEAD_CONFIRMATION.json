@@ -1,0 +1,8 @@
+{
+  "kind": "PINNED_HEAD_RECHECK",
+  "pin": "610bea290779c48ba39d25e67c70030ac80341e6",
+  "observed_head": "610bea290779c48ba39d25e67c70030ac80341e6",
+  "matches_pin": true,
+  "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits?sha=claude%2F14-gate-code-review-9qkx05&per_page=1",
+  "scope": "Read-only branch head at recipient review close. Not a guarantee about later HEAD or remote execution."
+}

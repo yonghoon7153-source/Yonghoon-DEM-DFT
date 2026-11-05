@@ -1,0 +1,25 @@
+{
+  "kind": "V3_EXACT_DOCUMENT_REVISION_CHECK",
+  "pin": "610bea290779c48ba39d25e67c70030ac80341e6",
+  "request_v2_sha256": "d52a3d5e276739b724642923bf2e6d194bf5d8daca1d3cd29a1e64cd7c4e36e1",
+  "request_v3_sha256": "0ffa72919a2ed048c29fc98fa6fd3893cc4238663dd37b41922a2b521967b31e",
+  "request_v3_bytes": 51936,
+  "diff_blocks": 12,
+  "declared_change_locations_match": true,
+  "forward_full_bytes_match": true,
+  "reverse_full_bytes_match": true,
+  "all_51_command_rows_equal": true,
+  "all_three_fenced_blocks_raw_bytes_equal": true,
+  "prior_eight_fixed_files_unchanged": true,
+  "A1_text_complete_whitespace_only_normalization": true,
+  "prior_ledger_raw_prefix_preserved": true,
+  "new_ledger_sections": [
+    111,
+    112,
+    113
+  ],
+  "complete_compare_commits": 7,
+  "compare_file_count": 64,
+  "production_script_changes_in_compare": 0,
+  "scope": "Text/byte comparison only; no received program execution, test rerun, operational timing or author-check execution claim."
+}

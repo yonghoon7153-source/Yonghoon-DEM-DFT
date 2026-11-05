@@ -1,0 +1,191 @@
+1: """REIL C4-E · E1-1–3 끝 기록 작성기 초안 v2 (2026-11-04 · 정정 범위안 v2 §3 · 사용자 채택 §109) — 고정 뒤 `<E>/00_end_writer.py` 로 복사해 쓴다.
+2: 
+3: python -I <E>/00_end_writer.py <E> '<절차 Git 이름 확인 JSON>'
+4: 
+5: 읽기 (파일마다 한 번의 보호된 읽기 — 같은 버퍼에서 sha256 · bytes · 작은 파일의 본문 · 사유를 만든다. 그 버퍼가 쓰는 중인 원본의 한 시점이라는 뜻은
+6: 아니다): 복사본 넷 (`00_outer.py` · `00_judge.py` · `00_end_writer.py` · `00_identity_c4.py`) 과 launcher · `00_overall.json` · `00_start.txt` · 탐침 사본
+7: `01_probe/` · 읽기 경로 기록 `03_read_path.json` · 세 단계마다 기산점 · 외곽 기록 (시작 또는 묘비 · 끝 · 반환 · 오류 · 임시) · 감시 기록 (호출 · 조각 · 끝 ·
+8: 임시 — 있는 대로) · launcher meta 의 요약 · 판정 기록 · 잔류 관측 (1 · 2) · kill · frozen 목록 · 디스크 · 시각. Git · 네트워크 · 하위 프로세스 · 신호 0.
+9: 
+10: 기록을 모을 뿐 판정하지 않는다. 읽지 못한 파일 · 항목 · 단계의 예외는 그 자리에 사유로 남긴다 (대신 채우지 않는다). 이름 확인 결과는 받은 JSON 의 이름
+11: 목록만 담는다. 쓰기 = `06_end.json` 의 배타 생성 **시도** 하나 (임시 → fsync → link). 기록 자체가 실패하면 (임시 생성 · 쓰기 · fsync · link · 임시 제거
+12: 중 어느 단계든) stdout 한 줄 (`end_written` · 단계 · 오류) · 반환 5 → 미완. 부분 임시 파일은 지우거나 고치지 않고 다시 하지 않는다. stdout 마저 쓸 수
+13: 없으면 미확인이지 성공이 아니다. 폴더 이름 규칙 밖 · 이 파일이 그 폴더의 `00_end_writer.py` 가 아님 · `06_end.json` 또는 그 임시 파일이 이미 있음이면
+14: 아무것도 쓰지 않고 반환 2.
+15: """
+16: import hashlib
+17: import json
+18: import os
+19: import re
+20: import shutil
+21: import sys
+22: from datetime import datetime, timezone
+23: from pathlib import Path
+24: 
+25: BMS = Path("/home/user/Yonghoon-DEM-DFT/bms-balancing")
+26: LAUNCHER = BMS / "scripts" / "reil_c4e1_launch.py"
+27: EVIDENCE_NAME = re.compile(r"^reil_c4e1_20[0-9]{6}$")
+28: STEPS = {"identity": "03_identity", "fetch": "04_fetch", "run": "05_run"}
+29: COPIES = ("00_outer.py", "00_judge.py", "00_end_writer.py", "00_identity_c4.py")
+30: OUT = "06_end.json"
+31: TEXT_MAX = 200
+32: 
+33: 
+34: def utc() -> str:
+35:     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+36: 
+37: 
+38: def take(p: Path):
+39:     """한 번의 보호된 읽기 → (행, 바이트 또는 None). 행의 sha · bytes · 본문은 그 한 버퍼에서만 만든다."""
+40:     row = {"path": str(p)}
+41:     try:
+42:         if p.is_symlink() or not p.is_file():
+43:             row["why"] = "없음 또는 일반 파일 아님"
+44:             return row, None
+45:         b = p.read_bytes()
+46:     except OSError as e:
+47:         row["why"] = f"읽지 못함 {e.__class__.__name__}: {e}"[:300]
+48:         return row, None
+49:     row.update(sha256=hashlib.sha256(b).hexdigest(), bytes=len(b))
+50:     if len(b) <= TEXT_MAX:
+51:         row["text"] = b.decode("utf-8", "replace")
+52:     return row, b
+53: 
+54: 
+55: def jtake(p: Path):
+56:     """한 번 읽은 같은 버퍼를 JSON 으로 → (행, 객체 또는 None)."""
+57:     row, b = take(p)
+58:     if b is None:
+59:         return row, None
+60:     try:
+61:         doc = json.loads(b)
+62:     except ValueError as e:
+63:         row["why"] = f"JSON: {e}"[:200]
+64:         return row, None
+65:     if not isinstance(doc, dict):
+66:         row["why"] = "JSON 객체 아님"
+67:         return row, None
+68:     return row, doc
+69: 
+70: 
+71: def pick(doc, keys) -> dict:
+72:     return {"fields": {k: doc.get(k) for k in keys}} if isinstance(doc, dict) else {}
+73: 
+74: 
+75: def step_row(ev: Path, name: str) -> dict:
+76:     row = {}
+77:     r, d = jtake(ev / f"{name}.outer_start.json")
+78:     row["outer_start"] = r | pick(d, ("kind", "utc", "epoch", "deadline_epoch", "launch_epoch", "sid", "overall_sha256"))
+79:     r, d = jtake(ev / f"{name}.outer_end.json")
+80:     row["outer_end"] = r | pick(d, ("kind", "rc", "start_sha256", "launcher_exit_epoch", "end_snapshot_epoch"))
+81:     r, d = jtake(ev / f"{name}.outer_error.json")
+82:     row["outer_error"] = r | pick(d, ("kind", "phase", "message"))
+83:     for k in ("launch_epoch.txt", "outer_rc.txt", "outer_stderr.txt", "wrapper_output.txt"):
+84:         row[k] = take(ev / f"{name}.{k}")[0]
+85:     row["outer_tmp"] = {x.name: take(x)[0] for x in sorted(ev.glob(f"{name}.outer_*.tmp"))}
+86:     watch = {}
+87:     for x in sorted(ev.glob(f"{name}.watch*")):
+88:         if x.suffix == ".json":
+89:             r, d = jtake(x)
+90:             watch[x.name] = r | pick(d, ("kind", "k", "state", "observed_epoch", "deadline_epoch", "rc", "prev_sha256", "begin_sha256"))
+91:         else:
+92:             watch[x.name] = take(x)[0]
+93:     row["watch"] = watch
+94:     r, m = jtake(ev / f"{name}.meta.json")
+95:     if m is None:
+96:         row["meta"] = r
+97:     else:
+98:         child = m.get("child") if isinstance(m.get("child"), dict) else {}
+99:         stage = m.get("stage") if isinstance(m.get("stage"), dict) else {}
+100:         group = child.get("group") if isinstance(child.get("group"), dict) else {}
+101:         row["meta"] = r | {
+102:             "start_utc": m.get("start_utc"), "end_utc": m.get("end_utc"), "stage_complete": stage.get("complete"),
+103:             "stage_terms": stage.get("terms"), "child_rc": child.get("rc"), "child_timed_out": child.get("timed_out"),
+104:             "child_group_status": group.get("status"), "child_deadline_hit": child.get("deadline_hit"),
+105:             "errors": len(m.get("errors") or []), "child_maxrss_kib": m.get("child_maxrss_kib")}
+106:     r, j = jtake(ev / f"{name}.judge.json")
+107:     row["judge"] = r | pick(j, ("verdict", "failed", "execution_validity", "experimental_result"))
+108:     for k in ("leftover_1.json", "leftover_2.json"):
+109:         r, d = jtake(ev / f"{name}.{k}")
+110:         row[k] = r | ({"alive_count": d.get("alive_count"), "errors": len(d.get("errors") or []), "sid": d.get("sid"),
+111:                        "sid_error": d.get("sid_error", "(키 없음)")} if d else {})
+112:     r, d = jtake(ev / f"{name}.kill.json")
+113:     row["kill.json"] = r | ({"actions": [x.get("action") for x in d.get("results") or [] if isinstance(x, dict)]} if d else {})
+114:     r, d = jtake(ev / f"frozen_{name}.json")
+115:     row["frozen"] = r | ({"rows": len(d.get("rows") or []), "counts": d.get("counts")} if d else {})
+116:     fz = ev / f"frozen_{name}"
+117:     if fz.is_dir() and not fz.is_symlink():
+118:         row["frozen_files"] = {str(x.relative_to(ev)): take(x)[0] for x in sorted(fz.rglob("*")) if x.is_file() or x.is_symlink()}
+119:     return row
+120: 
+121: 
+122: def main(argv=None) -> int:
+123:     a = list(sys.argv[1:] if argv is None else argv)
+124:     me = Path(__file__)
+125:     if len(a) != 2:
+126:         sys.stderr.write("거부: 인자 — <E> '<이름 확인 JSON>'\n")
+127:         return 2
+128:     ev = Path(a[0])
+129:     if ev.parent != BMS / "evidence" or not EVIDENCE_NAME.match(ev.name) or ev.is_symlink() or not ev.is_dir():
+130:         sys.stderr.write(f"거부: 증거 폴더 규칙 밖: {ev}\n")
+131:         return 2
+132:     if me.is_symlink() or me.resolve() != (ev / "00_end_writer.py").resolve():
+133:         sys.stderr.write(f"거부: 이 파일이 그 증거 폴더의 00_end_writer.py 가 아니다: {me}\n")
+134:         return 2
+135:     outp = ev / OUT
+136:     tmp = outp.with_name(outp.name + ".tmp")
+137:     if os.path.lexists(outp) or os.path.lexists(tmp):
+138:         sys.stderr.write(f"거부: 이미 있다 (자동 재시도 없음): {outp} 또는 {tmp}\n")
+139:         return 2
+140:     try:
+141:         chk = json.loads(a[1])
+142:         name_check = {"git_env_names": list(chk.get("git_env_names") or []), "outside_allowlist": list(chk.get("outside_allowlist") or [])}
+143:     except (ValueError, AttributeError, TypeError) as e:
+144:         name_check = {"why": f"이름 확인 JSON 을 읽지 못함 {e.__class__.__name__}"}
+145:     rec = {"kind": "REIL_E113_END", "utc": utc(), "evidence": str(ev), "git_name_check": name_check,
+146:            "note": "모으기만 한다 (판정 아님) · 파일마다 한 번 읽은 같은 버퍼 · 원자 snapshot 아님 · push 전 기록이라 g3 의 반환을 담지 않는다"}
+147:     sections = {
+148:         "copies": lambda: {c: take(ev / c)[0] for c in COPIES},
+149:         "launcher": lambda: take(LAUNCHER)[0],
+150:         "overall": lambda: (lambda r_d: r_d[0] | pick(r_d[1], ("kind", "section", "T_a", "T_end", "R")))(jtake(ev / "00_overall.json")),
+151:         "start_seal": lambda: take(ev / "00_start.txt")[0],
+152:         "probe": lambda: {str(x.relative_to(ev)): take(x)[0] for x in sorted((ev / "01_probe").rglob("*")) if x.is_file() or x.is_symlink()},
+153:         "read_path": lambda: (lambda r_d: r_d[0] | pick(r_d[1], ("status",)))(jtake(ev / "03_read_path.json")),
+154:         "disk_avail_bytes": lambda: shutil.disk_usage(BMS).free,
+155:     }
+156:     for key, fn in sections.items():
+157:         try:
+158:             rec[key] = fn()
+159:         except Exception as e:  # noqa: BLE001 — 항목마다 예외를 사유로 남기고 다음 항목으로
+160:             rec[key] = {"why": f"예외 {e.__class__.__name__}: {e}"[:300]}
+161:     rec["steps"] = {}
+162:     for step, name in STEPS.items():
+163:         try:
+164:             rec["steps"][step] = step_row(ev, name)
+165:         except Exception as e:  # noqa: BLE001 — 단계마다 예외를 사유로 남기고 다음 단계로
+166:             rec["steps"][step] = {"why": f"예외 {e.__class__.__name__}: {e}"[:300]}
+167:     phase = "encode"
+168:     try:
+169:         data = (json.dumps(rec, ensure_ascii=False, indent=1, sort_keys=True, default=str) + "\n").encode("utf-8")
+170:         phase = "tmp_create"
+171:         with open(tmp, "xb") as f:
+172:             phase = "write"
+173:             f.write(data)
+174:             phase = "fsync"
+175:             f.flush()
+176:             os.fsync(f.fileno())
+177:         phase = "link"
+178:         os.link(tmp, outp)
+179:         phase = "unlink_tmp"
+180:         os.unlink(tmp)
+181:     except Exception as e:  # noqa: BLE001 — 기록 자체의 실패 = 미완 (부분 임시 파일은 그대로 · 다시 하지 않는다)
+182:         print(json.dumps({"end_written": False, "final_exists": os.path.lexists(outp), "phase": phase,
+183:                           "error": f"{e.__class__.__name__}: {e}"[:300], "path": str(outp)}, ensure_ascii=False))
+184:         return 5
+185:     judges = {s: (r.get("judge") or {}).get("fields", {}).get("verdict") if isinstance(r, dict) else None for s, r in rec["steps"].items()}
+186:     print(json.dumps({"end_written": True, "written": str(outp), "judge": judges}, ensure_ascii=False))
+187:     return 0
+188: 
+189: 
+190: if __name__ == "__main__":
+191:     sys.exit(main())

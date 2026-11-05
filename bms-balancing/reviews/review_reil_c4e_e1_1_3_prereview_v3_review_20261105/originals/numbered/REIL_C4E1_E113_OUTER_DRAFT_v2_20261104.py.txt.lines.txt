@@ -1,0 +1,662 @@
+1: """REIL C4-E · E1-1–3 외곽 도구 초안 v2 (2026-11-04 · 정정 범위안 v2 · 사용자 채택 §109) — 고정 뒤 `<E>/00_outer.py` 로 복사해 쓴다.
+2: 
+3: 세 launcher 단계 (identity · fetch · run) 의 분리 실행 wrapper · 감시 · 잔류 관측 · R1 정리 · F3 고정 사본 · 커밋 전 공개 검사. 모드 여섯:
+4: 
+5:   start   <step> <E> <§NN>   띄우는 셸 줄이 `set -C` 로 `<name>.launch_epoch.txt` 를 만든 뒤 `setsid nohup` 으로만 띄운다. 착수 전 확인 — 기존 기록 →
+6:                              기산점 · `00_overall.json` · launcher sha → 시작 창 (0 ≤ t − 기산점 ≤ 60 s) · 단계 기한 (t + 감시 여유 ≤ T_end − R) → 시작
+7:                              기록을 배타 link (시작 경로의 소유 — 감시의 묘비가 먼저면 실패) → link 가 성공했을 때만 launcher 를 자식으로 띄운다. launcher
+8:                              반환 뒤 끝 기록 (`outer_end.json`) → 반환 (`outer_rc.txt`) 순서로 배타 게시. launcher 를 죽이지 않는다.
+9:                              반환 0 = 게시 · 2 = 거부 (기존 기록 · 아무것도 쓰지 않음) · 3 = 착수 전 / 띄우기 실패 (외곽 오류 게시) · 4 = 게시 실패.
+10:   wait    <step> <E>         감시 호출 하나 (정정 범위안 v2 §2-2 · §2-5). 진입 규칙 → 호출 기록 → 시작 대기 (기산점 + 60 s · 없으면 묘비) → 관측 → 끝 기록
+11:                              (`watch.json`) 또는 조각 기록 (`watch_<k>.slice.json` · 조각 6,600 s). 정상 수용은 rc 와 끝 기록을 검증한 직후의 관측 시각 ≤
+12:                              기한일 때만. run 에 개입하지 않는다 (신호 · launcher 파일 쓰기 없음 — 묘비는 시작 기록이 없을 때만 생긴다). 반환은 §2-5 의 표
+13:                              (0 · 10–21 · 2).
+14:   observe <step> <E> <1|2>   /proc 의 잔류 관측 (읽기) → `<name>.leftover_<n>.json` 배타 생성. 표지 = 시작 기록의 세션 id · cmdline 의
+15:                              `pycache_prefix=<WORK>/pycache/<name>` · cmdline 의 `<E>` 경로. 자기와 조상은 뺀다. 반환 0 = 살아 있는 것 0 · 읽기 오류 0 · 세션
+16:                              id 확인 (`sid_error` null) · 1 = 그 밖.
+17:   kill    <step> <E>         R1. `leftover_1` 의 살아 있는 (Z 아닌) 그룹마다, 관측한 구성원 하나의 시작 시각 · 그룹이 그대로일 때만 SIGKILL 한 번 →
+18:                              `<name>.kill.json` 배타 생성. pgid ≤ 1 · 자기 · 조상의 그룹은 건드리지 않는다. 반환 0.
+19:   freeze  <step> <E>         F3. 그 단계의 가변 파일을 읽은 그대로 `frozen_<name>/` 에 사본 · 파일마다 성공 / 실패 · 사유 · 읽은 시각 → 목록
+20:                              `frozen_<name>.json` 배타 게시. 목록을 게시하지 못하면 stdout 한 줄 · 반환 5. 부분 사본은 지우거나 고치지 않고 다시 하지 않는다.
+21:   check   <E> <cached|-> <index|-> <path>…
+22:                              커밋 전 공개 검사 (쓰기 0). 파일마다 한 번 읽은 버퍼에서 원자료 sha · 확장자 · 크기 · URL 계정 형태와 git blob id 를 만든다
+23:                              (`.py` 는 `<E>` 바로 아래의 고정 사본 넷만 — 그 sha 는 `00_start.txt` 가 묶는다). `git diff --cached --name-only -z` · `git
+24:                              ls-files -s -z --full-name -- <path>…` 의 출력 파일을 받으면 staged 집합 = 경로 집합 · staged blob = 검사한 버퍼의 blob 까지
+25:                              본다. 반환 0 = 통과 · 1 = 어긋남 · 2 = 거부.
+26: 
+27: 공통: 증거 폴더 = BMS/evidence/reil_c4e1_YYYYMMDD (있는 폴더 · 링크 아님) 이고 이 파일이 그 폴더의 `00_outer.py` 일 때만 움직인다. 기록은 모두 배타
+28: 생성이다 (덮어쓰지 않는다 · 임시 → fsync → link · 실패한 게시의 임시 파일은 지우지 않는다). 의도된 거부는 아무것도 쓰지 않고 반환 2. 네트워크 · Git 0
+29: (check 는 Git 이 이미 쓴 출력 파일을 읽기만 한다). 한 번 읽기는 같은 버퍼에서 sha · 본문을 만든다는 뜻이지 쓰는 중인 원본의 한 시점이라는 뜻이 아니다.
+30: 같은 호스트의 실시간 시계 · 로컬 파일 시스템의 원자적 link · O_EXCL 의 공개 의미에 기댄다 (실제 동작을 이 초안이 관측한 것은 아니다).
+31: """
+32: import hashlib
+33: import json
+34: import os
+35: import re
+36: import signal
+37: import subprocess
+38: import sys
+39: import time
+40: from datetime import datetime, timezone
+41: from pathlib import Path
+42: 
+43: REPO = Path("/home/user/Yonghoon-DEM-DFT")
+44: BMS = REPO / "bms-balancing"
+45: SP = Path("/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad")
+46: WORK = SP / "c4e1"
+47: PROC = Path("/proc")
+48: PY = "/usr/bin/python3.11"
+49: LAUNCHER = BMS / "scripts" / "reil_c4e1_launch.py"
+50: LAUNCHER_SHA256 = "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+51: STEPS = {"identity": "03_identity", "fetch": "04_fetch", "run": "05_run"}
+52: ALLOW_S = {"identity": 900.0, "fetch": 1800.0, "run": 12600.0}
+53: START_WAIT_S = 60.0
+54: START_POLL_S = 1.0
+55: POLL_S = 5.0
+56: WAIT_SLICE_S = 6600.0
+57: WRAPPER_EXIT_S = 10.0
+58: TOTAL_S = 21600
+59: RESERVE_S = 1800
+60: OVERALL = "00_overall.json"
+61: FIXED_COPIES = ("00_identity_c4.py", "00_outer.py", "00_judge.py", "00_end_writer.py")
+62: DATA_SHA256 = {"fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1",
+63:                "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"}
+64: FILE_MAX = 50 * 2 ** 20
+65: COMMIT_MAX = 100 * 2 ** 20
+66: EVIDENCE_NAME = re.compile(r"^reil_c4e1_20[0-9]{6}$")
+67: SECTION = re.compile(r"^§[0-9]{2,3}$")
+68: RC_FORMAT = re.compile(rb"[0-9]+\n")
+69: EPOCH_FORMAT = re.compile(rb"[0-9]{10}\n")
+70: URL_ACCOUNT = re.compile(rb"[A-Za-z][A-Za-z0-9+.-]*://[^/\s\"@]+@")
+71: LAUNCHER_FILES = ("precheck.json", "meta.json", "stdout.log", "stderr.log", "porcelain_start.txt", "porcelain_end.txt")
+72: OUTER_RECORDS = ("outer_start.json", "outer_end.json", "outer_rc.txt", "outer_error.json")
+73: OUTER_FILES = OUTER_RECORDS + tuple(f"{k}.tmp" for k in OUTER_RECORDS) + ("outer_stdout.txt", "outer_stderr.txt")
+74: SHELL_FILES = ("launch_epoch.txt", "wrapper_output.txt")
+75: WATCH = ("watch.json", "watch.json.tmp")
+76: MODES = ("start", "wait", "observe", "kill", "freeze", "check")
+77: K_START, K_MISSING, K_END, K_ERROR = "REIL_E113_OUTER_START", "REIL_E113_START_MISSING", "REIL_E113_OUTER_END", "REIL_E113_OUTER_ERROR"
+78: K_BEGIN, K_SLICE, K_WATCH, K_OVERALL = "REIL_E113_WATCH_BEGIN", "REIL_E113_WATCH_SLICE", "REIL_E113_WATCH", "REIL_E113_OVERALL"
+79: 
+80: 
+81: class Refusal(Exception):
+82:     """의도된 거부 — 아무것도 쓰지 않고 반환 2."""
+83: 
+84: 
+85: def utc() -> str:
+86:     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+87: 
+88: 
+89: def sha256(b: bytes) -> str:
+90:     return hashlib.sha256(b).hexdigest()
+91: 
+92: 
+93: def blob_id(b: bytes) -> str:
+94:     """git 의 blob id (`blob <길이>\\0` + 바이트의 sha1) — git 을 부르지 않고 같은 버퍼에서 만든다."""
+95:     return hashlib.sha1(b"blob %d\0" % len(b) + b).hexdigest()
+96: 
+97: 
+98: def dump(obj) -> bytes:
+99:     return (json.dumps(obj, ensure_ascii=False, indent=1, sort_keys=True) + "\n").encode("utf-8")
+100: 
+101: 
+102: def is_int(x) -> bool:
+103:     return isinstance(x, int) and not isinstance(x, bool)
+104: 
+105: 
+106: def is_num(x) -> bool:
+107:     return isinstance(x, (int, float)) and not isinstance(x, bool) and x == x and abs(x) != float("inf")
+108: 
+109: 
+110: def write_new(path, data: bytes) -> None:
+111:     """배타 생성 (있으면 FileExistsError)."""
+112:     with open(path, "xb") as f:
+113:         f.write(data)
+114: 
+115: 
+116: def publish(path: Path, data: bytes) -> None:
+117:     """임시 이름에 쓰고 fsync · 닫은 뒤 최종 이름으로 배타 link (이미 있으면 FileExistsError) → 임시 이름을 지운다. 최종 이름이 보이는 순간 내용이
+118:     완전하다. 어느 단계에서 실패하든 남은 임시 파일은 지우지 않는다 (부르는 쪽이 실패로 다룬다)."""
+119:     tmp = path.with_name(path.name + ".tmp")
+120:     with open(tmp, "xb") as f:
+121:         f.write(data)
+122:         f.flush()
+123:         os.fsync(f.fileno())
+124:     os.link(tmp, path)
+125:     os.unlink(tmp)
+126: 
+127: 
+128: def read_once(p: Path):
+129:     """한 번의 보호된 읽기 → (바이트, None) 또는 (None, 사유)."""
+130:     try:
+131:         if p.is_symlink() or not p.is_file():
+132:             return None, "absent_or_not_regular"
+133:         return p.read_bytes(), None
+134:     except OSError as e:
+135:         return None, f"{e.__class__.__name__}: {e}"[:300]
+136: 
+137: 
+138: def load(p: Path):
+139:     """한 번 읽어 (바이트, JSON 객체 또는 None, 사유)."""
+140:     b, why = read_once(p)
+141:     if b is None:
+142:         return None, None, why
+143:     try:
+144:         doc = json.loads(b)
+145:     except ValueError as e:
+146:         return b, None, f"JSON: {e}"[:300]
+147:     return (b, doc, None) if isinstance(doc, dict) else (b, None, "JSON 객체 아님")
+148: 
+149: 
+150: def names(ev: Path, step: str) -> dict:
+151:     name = STEPS[step]
+152:     return {k: ev / f"{name}.{k}" for k in LAUNCHER_FILES + OUTER_FILES + SHELL_FILES + WATCH}
+153: 
+154: 
+155: def watch_part(ev: Path, name: str, k: int, part: str) -> Path:
+156:     return ev / f"{name}.watch_{k}.{part}.json"
+157: 
+158: 
+159: def watch_numbers(ev: Path, name: str, part: str) -> list:
+160:     pat = re.compile(rf"{re.escape(name)}\.watch_([1-9][0-9]*)\.{part}\.json")
+161:     return sorted(int(m.group(1)) for m in (pat.fullmatch(x.name) for x in ev.iterdir()) if m)
+162: 
+163: 
+164: def launch_epoch(p: dict) -> int:
+165:     b, why = read_once(p["launch_epoch.txt"])
+166:     if b is None or not EPOCH_FORMAT.fullmatch(b):
+167:         raise ValueError(f"launch_epoch.txt — {why or b[:20].hex()}")
+168:     return int(b)
+169: 
+170: 
+171: def overall(ev: Path, section: str):
+172:     b, d, why = load(ev / OVERALL)
+173:     if d is None:
+174:         raise ValueError(f"{OVERALL} — {why}")
+175:     if not (d.get("kind") == K_OVERALL and d.get("section") == section and is_int(d.get("T_a")) and is_int(d.get("T_end"))
+176:             and d["T_end"] == d["T_a"] + TOTAL_S and is_int(d.get("R")) and d["R"] == RESERVE_S):
+177:         raise ValueError(f"{OVERALL} — 필수 키 · 값이 맞지 않다: {sorted(d)}")
+178:     return d, b
+179: 
+180: 
+181: def stat_fields(pid: int) -> dict:
+182:     """/proc/<pid>/stat → 상태 · ppid · pgid · 세션 · 시작 시각 (괄호 안 comm 의 공백 · 괄호와 무관하게 마지막 ')' 뒤를 읽는다)."""
+183:     raw = (PROC / str(pid) / "stat").read_bytes()
+184:     rest = raw[raw.rindex(b")") + 2:].split()
+185:     return {"state": rest[0].decode("ascii", "replace"), "ppid": int(rest[1]), "pgid": int(rest[2]), "sid": int(rest[3]),
+186:             "starttime": int(rest[19])}
+187: 
+188: 
+189: def ancestors() -> set:
+190:     """자기와 조상 pid (셸 도구의 셸 포함) — 관측 · 정리에서 뺀다."""
+191:     seen, pid = set(), os.getpid()
+192:     while pid > 1 and pid not in seen:
+193:         seen.add(pid)
+194:         try:
+195:             pid = stat_fields(pid)["ppid"]
+196:         except (OSError, ValueError, IndexError):
+197:             break
+198:     return seen
+199: 
+200: 
+201: # ---------------------------------------------------------------- start
+202: def start(step: str, ev: Path, section: str) -> int:
+203:     p, name = names(ev, step), STEPS[step]
+204:     taken = [k for k in OUTER_FILES + WATCH if os.path.lexists(p[k])]
+205:     if taken:
+206:         raise Refusal(f"이 단계의 기록이 이미 있다 — 띄우지 않는다: {taken}")
+207: 
+208:     def fail(phase: str, message: str, code: int = 3, **kw) -> int:
+209:         doc = {"kind": K_ERROR, "step": step, "name": name, "phase": phase, "utc": utc(), "epoch": time.time(), "message": message[:500], **kw}
+210:         try:
+211:             publish(p["outer_error.json"], dump(doc))
+212:         except Exception as e:  # noqa: BLE001 — 외곽 오류마저 게시하지 못하면 stdout 한 줄 · 반환 4
+213:             print(json.dumps({"step": step, "outer_error_published": False, "phase": phase, "message": message[:300],
+214:                               "error": f"{e.__class__.__name__}: {e}"[:300]}, ensure_ascii=False))
+215:             return 4
+216:         return code
+217: 
+218:     try:
+219:         le = launch_epoch(p)
+220:         ov, ov_bytes = overall(ev, section)
+221:         lb = LAUNCHER.read_bytes()
+222:         me = Path(__file__).resolve()
+223:         me_sha = sha256(me.read_bytes())
+224:     except (OSError, ValueError) as e:
+225:         return fail("precheck", f"{e.__class__.__name__}: {e}")
+226:     lsha = sha256(lb)
+227:     if lsha != LAUNCHER_SHA256:
+228:         return fail("precheck", f"launcher sha256 {lsha} ≠ 고정 {LAUNCHER_SHA256}")
+229:     argv = [PY, "-I", str(LAUNCHER), step, "--evidence", str(ev), "--approval-section", section]
+230:     t = time.time()
+231:     deadline = t + ALLOW_S[step]
+232:     if not 0.0 <= t - le <= START_WAIT_S:
+233:         return fail("window", f"시작 창 밖 — t − launch_epoch = {t - le:.3f} s", launch_epoch=le, epoch=t)
+234:     if deadline > ov["T_end"] - ov["R"]:
+235:         return fail("budget", f"단계 기한 {deadline:.3f} > T_end − R = {ov['T_end'] - ov['R']}", epoch=t, deadline_epoch=deadline)
+236:     rec = {"kind": K_START, "step": step, "name": name, "section": section, "utc": utc(), "epoch": t, "deadline_epoch": deadline,
+237:            "allow_s": ALLOW_S[step], "launch_epoch": le, "overall_sha256": sha256(ov_bytes), "T_a": ov["T_a"], "T_end": ov["T_end"],
+238:            "R": ov["R"], "pid": os.getpid(), "ppid": os.getppid(), "sid": os.getsid(0), "pgid": os.getpgid(0), "argv": argv,
+239:            "cwd": str(BMS), "outer": {"path": str(me), "sha256": me_sha},
+240:            "launcher": {"path": str(LAUNCHER), "sha256": lsha, "expected": LAUNCHER_SHA256}, "python": sys.version}
+241:     start_bytes = dump(rec)
+242:     try:
+243:         publish(p["outer_start.json"], start_bytes)
+244:     except OSError as e:  # EEXIST = 감시의 묘비 (또는 다른 기록) 가 시작 경로를 먼저 가졌다 → launcher 를 띄우지 않는다
+245:         return fail("claim", f"시작 경로를 가지지 못했다 — {e.__class__.__name__}: {e}")
+246:     try:
+247:         with open(p["outer_stdout.txt"], "xb") as fo, open(p["outer_stderr.txt"], "xb") as fe:
+248:             child = subprocess.Popen(argv, cwd=str(BMS), stdin=subprocess.DEVNULL, stdout=fo, stderr=fe)
+249:             raw_rc = child.wait()
+250:     except Exception as e:  # noqa: BLE001 — 띄우기 · 기다리기의 실패는 외곽 오류로 남기고 반환을 게시하지 않는다
+251:         return fail("launch", f"{e.__class__.__name__}: {e}")
+252:     t_exit = time.time()
+253:     ret = raw_rc if raw_rc >= 0 else 128 - raw_rc  # 시그널로 끝나면 셸 관례 128 + 번호
+254:     end = {"kind": K_END, "step": step, "name": name, "start_sha256": sha256(start_bytes), "launcher_pid": child.pid, "rc": ret,
+255:            "returncode": raw_rc, "launcher_exit_epoch": t_exit, "utc": utc(),
+256:            "note": "end_snapshot_epoch 는 이 파일을 쓰기 직전의 값이다 — 그 뒤 이 파일 · outer_rc 의 게시 완료를 증명하지 않는다"}
+257:     end["end_snapshot_epoch"] = time.time()
+258:     try:
+259:         publish(p["outer_end.json"], dump(end))
+260:     except Exception as e:  # noqa: BLE001 — 끝 기록을 게시하지 못하면 rc 를 게시하지 않는다
+261:         return fail("end_publish", f"{e.__class__.__name__}: {e}", code=4, rc=ret)
+262:     try:
+263:         publish(p["outer_rc.txt"], f"{ret}\n".encode("ascii"))
+264:     except Exception as e:  # noqa: BLE001
+265:         return fail("rc_publish", f"{e.__class__.__name__}: {e}", code=4, rc=ret)
+266:     return 0
+267: 
+268: 
+269: # ---------------------------------------------------------------- wait (감시 호출 하나)
+270: def end_problems(end, step: str, name: str, start_sha: str, rc: int, epoch0) -> str:
+271:     if end is None:
+272:         return "끝 기록 없음 · 못 읽음"
+273:     if end.get("kind") != K_END or end.get("step") != step or end.get("name") != name:
+274:         return "kind · 단계 · 이름"
+275:     if end.get("start_sha256") != start_sha:
+276:         return "start_sha256 불일치 (같은 실행이 아니다)"
+277:     if not is_int(end.get("rc")) or end["rc"] != rc:
+278:         return "rc 불일치"
+279:     a, b = end.get("launcher_exit_epoch"), end.get("end_snapshot_epoch")
+280:     if not (is_num(a) and is_num(b) and epoch0 <= a <= b):
+281:         return "시각 순서 (epoch ≤ launcher_exit_epoch ≤ end_snapshot_epoch)"
+282:     return ""
+283: 
+284: 
+285: def observe_return(step: str, p: dict, name: str, le: int, begin_sha: str, start_sha, slice_end: float):
+286:     """시작 대기 → 관측. (상태, 반환, 필드). 쓰는 것은 묘비 하나뿐 (시작 창이 끝나도 시작 기록이 없을 때)."""
+287:     while not os.path.lexists(p["outer_start.json"]):
+288:         if os.path.lexists(p["outer_error.json"]):
+289:             return "outer_error", 12, {"launch_epoch": le, "error": load(p["outer_error.json"])[1]}
+290:         if time.time() >= le + START_WAIT_S:
+291:             tomb = dump({"kind": K_MISSING, "step": step, "name": name, "utc": utc(), "epoch": time.time(), "launch_epoch": le,
+292:                          "begin_sha256": begin_sha, "pid": os.getpid()})
+293:             try:
+294:                 fd = os.open(p["outer_start.json"], os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+295:             except FileExistsError:
+296:                 break  # 그사이 wrapper 가 시작 경로를 가졌다 → 아래에서 읽어 확인한다
+297:             with os.fdopen(fd, "wb") as f:
+298:                 f.write(tomb)
+299:                 f.flush()
+300:                 os.fsync(f.fileno())
+301:             return "start_missing", 13, {"launch_epoch": le, "tombstone_sha256": sha256(tomb)}
+302:         time.sleep(START_POLL_S)
+303:     sb, st, why = load(p["outer_start.json"])
+304:     ok = (st is not None and st.get("kind") == K_START and st.get("step") == step and st.get("name") == name
+305:           and is_num(st.get("epoch")) and is_num(st.get("deadline_epoch")) and st["deadline_epoch"] == st["epoch"] + ALLOW_S[step]
+306:           and is_int(st.get("launch_epoch")) and st["launch_epoch"] == le and 0.0 <= st["epoch"] - le <= START_WAIT_S
+307:           and is_int(st.get("pid")) and (start_sha is None or sha256(sb) == start_sha))
+308:     if not ok:
+309:         return "start_unreadable", 14, {"launch_epoch": le, "why": why, "kind": None if st is None else st.get("kind"),
+310:                                         "start_sha256": None if sb is None else sha256(sb)}
+311:     s_sha, deadline, epoch0 = sha256(sb), st["deadline_epoch"], st["epoch"]
+312:     base = {"deadline_epoch": deadline, "start_sha256": s_sha, "wrapper_pid": st["pid"]}
+313:     while True:
+314:         now = time.time()
+315:         if os.path.lexists(p["outer_error.json"]):
+316:             return "outer_error", 12, {**base, "observed_epoch": now, "error": load(p["outer_error.json"])[1]}
+317:         if os.path.lexists(p["outer_rc.txt"]):
+318:             rb, why = read_once(p["outer_rc.txt"])
+319:             if rb is None or not RC_FORMAT.fullmatch(rb):
+320:                 return "malformed", 11, {**base, "observed_epoch": time.time(), "why": why,
+321:                                          "raw_hex": None if rb is None else rb[:20].hex()}
+322:             rc = int(rb)
+323:             eb, end, why = load(p["outer_end.json"])
+324:             bad = end_problems(end, step, name, s_sha, rc, epoch0)
+325:             if bad:
+326:                 return "end_invalid", 18, {**base, "observed_epoch": time.time(), "rc": rc, "why": why or bad,
+327:                                            "end_sha256": None if eb is None else sha256(eb)}
+328:             t_obs = time.time()  # rc 와 끝 기록을 읽고 검증을 마친 직후 — 정상 수용의 유일한 시각
+329:             state, code = ("published", 0) if t_obs <= deadline else ("late", 17)
+330:             return state, code, {**base, "observed_epoch": t_obs, "rc": rc, "end_sha256": sha256(eb),
+331:                                  "launcher_exit_epoch": end["launcher_exit_epoch"], "end_snapshot_epoch": end["end_snapshot_epoch"]}
+332:         if now >= deadline:
+333:             return "deadline", 10, {**base, "observed_epoch": now}
+334:         if now >= slice_end:
+335:             return "continue", 15, {**base, "last_poll_epoch": now, "slice_end_epoch": slice_end}
+336:         time.sleep(POLL_S)
+337: 
+338: 
+339: def wrapper_exit(pid) -> str:
+340:     """게시 뒤 wrapper 가 끝날 때까지 (없음 또는 Z) 최대 WRAPPER_EXIT_S 를 읽기만 하며 기다린다 — 결과는 stdout 에만."""
+341:     if not is_int(pid):
+342:         return "unknown"
+343:     t0 = time.time()
+344:     while True:
+345:         try:
+346:             state = stat_fields(pid)["state"]
+347:         except (OSError, ValueError, IndexError):
+348:             return "absent"
+349:         if state == "Z" or time.time() - t0 >= WRAPPER_EXIT_S:
+350:             return state
+351:         time.sleep(0.5)
+352: 
+353: 
+354: def wait(step: str, ev: Path) -> int:
+355:     p, name = names(ev, step), STEPS[step]
+356:     t_begin = time.time()
+357: 
+358:     def say(state: str, code: int, **kw) -> int:
+359:         print(json.dumps({"step": step, "state": state, "code": code, "utc": utc(), "waited_s": round(time.time() - t_begin, 1), **kw},
+360:                          ensure_ascii=False, default=str))
+361:         return code
+362: 
+363:     # 0. 기산점 — 없거나 형식이 틀리면 거부 (띄우는 줄보다 먼저 감시를 걸지 않는다)
+364:     try:
+365:         le = launch_epoch(p)
+366:     except (OSError, ValueError) as e:
+367:         raise Refusal(f"기산점: {e}") from e
+368:     # 1. 끝 기록이 있으면 소비 (새로 쓰지 않는다)
+369:     if os.path.lexists(p["watch.json"]):
+370:         _, doc, why = load(p["watch.json"])
+371:         if doc is None or doc.get("kind") != K_WATCH:
+372:             return say("unknown", 16, why="watch.json 을 읽지 못함", detail=why)
+373:         return say("consumed", 20, recorded=doc)
+374:     # 2. 감시 기록의 임시 파일
+375:     tmps = sorted(x.name for x in ev.glob(f"{name}.watch*.tmp"))
+376:     if tmps:
+377:         return say("unknown", 16, why="감시 기록의 임시 파일", tmp=tmps)
+378:     # 3. 이전 호출의 사슬 — 모두 조각 기록 (continue) 으로 끝났어야 한다
+379:     begins, slices = watch_numbers(ev, name, "begin"), watch_numbers(ev, name, "slice")
+380:     if begins != list(range(1, len(begins) + 1)) or slices != begins:
+381:         return say("unknown", 16, why="이전 호출의 결과 불명 (조각 기록 없음 · 번호 틈)", begins=begins, slices=slices)
+382:     prev_sha, start_sha = None, None
+383:     for k in begins:
+384:         bb, bd, why1 = load(watch_part(ev, name, k, "begin"))
+385:         sb, sd, why2 = load(watch_part(ev, name, k, "slice"))
+386:         if (bd is None or sd is None or bd.get("kind") != K_BEGIN or bd.get("step") != step or bd.get("k") != k
+387:                 or "prev_sha256" not in bd or bd["prev_sha256"] != prev_sha or sd.get("kind") != K_SLICE or sd.get("k") != k
+388:                 or sd.get("state") != "continue" or sd.get("begin_sha256") != sha256(bb) or not isinstance(sd.get("start_sha256"), str)
+389:                 or (start_sha is not None and sd["start_sha256"] != start_sha)):
+390:             return say("unknown", 16, why=f"호출 {k} 의 기록이 맞지 않다", detail=[why1, why2])
+391:         prev_sha, start_sha = sha256(sb), sd["start_sha256"]
+392:     k = len(begins) + 1
+393:     # 4. 호출 기록 (무엇을 관측하기 전에)
+394:     begin = {"kind": K_BEGIN, "step": step, "name": name, "k": k, "utc": utc(), "epoch": time.time(), "pid": os.getpid(),
+395:              "launch_epoch": le, "prev_sha256": prev_sha, "slice_s": WAIT_SLICE_S}
+396:     begin_bytes = dump(begin)
+397:     try:
+398:         publish(watch_part(ev, name, k, "begin"), begin_bytes)
+399:     except FileExistsError:
+400:         return say("unknown", 16, why=f"호출 {k} 를 다른 감시가 먼저 가졌다 (소유권)")
+401:     except OSError as e:
+402:         return say("publish_failed", 19, observed="begin", error=f"{e.__class__.__name__}: {e}"[:300])
+403:     begin_sha = sha256(begin_bytes)
+404:     try:
+405:         state, code, fields = observe_return(step, p, name, le, begin_sha, start_sha, begin["epoch"] + WAIT_SLICE_S)
+406:     except Exception as e:  # noqa: BLE001 — 관측 중 예상 밖 예외는 끝 상태 watch_error
+407:         state, code, fields = "watch_error", 21, {"error": f"{e.__class__.__name__}: {e}"[:300]}
+408:     kind, target = (K_SLICE, watch_part(ev, name, k, "slice")) if state == "continue" else (K_WATCH, p["watch.json"])
+409:     doc = {"kind": kind, "step": step, "name": name, "k": k, "state": state, "begin_sha256": begin_sha, "utc": utc(), **fields}
+410:     try:
+411:         publish(target, dump(doc))
+412:     except Exception as e:  # noqa: BLE001 — 관측했으나 기록을 게시하지 못함 (부분 임시 파일은 그대로)
+413:         return say("publish_failed", 19, observed=state, error=f"{e.__class__.__name__}: {e}"[:300], record=doc)
+414:     if state == "published":
+415:         return say(state, code, wrapper_state=wrapper_exit(fields.get("wrapper_pid")), **fields)
+416:     return say(state, code, **fields)
+417: 
+418: 
+419: # ---------------------------------------------------------------- observe (읽기 · 기록 하나)
+420: def observe(step: str, ev: Path, rnd: str) -> int:
+421:     p, name = names(ev, step), STEPS[step]
+422:     outp = ev / f"{name}.leftover_{rnd}.json"
+423:     if os.path.lexists(outp):
+424:         raise Refusal(f"이미 있다: {outp}")
+425:     sid, sid_error = None, None
+426:     _, st, why = load(p["outer_start.json"])
+427:     if st is None or st.get("kind") != K_START:
+428:         sid_error = f"시작 기록 없음 · 묘비 · 못 읽음: {why or (st or {}).get('kind')}"
+429:     elif not is_int(st.get("sid")) or st["sid"] <= 1:
+430:         sid_error = f"sid 가 1 보다 큰 정수가 아니다: {st.get('sid')!r}"
+431:     else:
+432:         sid = st["sid"]
+433:     markers = [f"pycache_prefix={WORK / 'pycache' / name}".encode(), str(ev).encode()]
+434:     skip = ancestors()
+435:     rows, errors = [], []
+436:     for d in sorted((x for x in PROC.iterdir() if x.name.isdigit()), key=lambda x: int(x.name)):
+437:         pid = int(d.name)
+438:         if pid in skip:
+439:             continue
+440:         try:
+441:             stf = stat_fields(pid)
+442:             argv = (d / "cmdline").read_bytes().split(b"\0")
+443:         except (FileNotFoundError, ProcessLookupError):
+444:             continue  # 관측 사이에 끝난 프로세스
+445:         except (OSError, ValueError, IndexError) as e:
+446:             errors.append({"pid": pid, "type": e.__class__.__name__, "message": str(e)[:200]})
+447:             continue
+448:         why_m = (["sid"] if sid is not None and stf["sid"] == sid else []) + \
+449:                 [f"marker{i}" for i, m in enumerate(markers) if any(m in a for a in argv)]
+450:         if why_m:
+451:             rows.append({"pid": pid, **stf, "matched": why_m, "argv": [a.decode("utf-8", "replace")[:300] for a in argv if a][:40]})
+452:     alive = [r for r in rows if r["state"] != "Z"]
+453:     write_new(outp, dump({"kind": "REIL_E113_LEFTOVER", "step": step, "round": rnd, "utc": utc(), "sid": sid, "sid_error": sid_error,
+454:                           "markers": [m.decode() for m in markers], "skipped_self_and_ancestors": sorted(skip), "rows": rows,
+455:                           "alive_count": len(alive), "errors": errors}))
+456:     print(json.dumps({"step": step, "round": rnd, "rows": len(rows), "alive": len(alive), "errors": len(errors), "sid_error": sid_error},
+457:                      ensure_ascii=False))
+458:     return 0 if not alive and not errors and sid_error is None else 1
+459: 
+460: 
+461: # ---------------------------------------------------------------- kill (R1)
+462: def kill(step: str, ev: Path) -> int:
+463:     name = STEPS[step]
+464:     src, outp = ev / f"{name}.leftover_1.json", ev / f"{name}.kill.json"
+465:     if os.path.lexists(outp):
+466:         raise Refusal(f"이미 있다: {outp}")
+467:     raw, obs, why = load(src)
+468:     if obs is None:
+469:         raise Refusal(f"잔류 관측 1 을 읽지 못함: {why}")
+470:     skip = ancestors()
+471:     own = {os.getpgid(0)}
+472:     for a in skip:
+473:         try:
+474:             own.add(stat_fields(a)["pgid"])
+475:         except (OSError, ValueError, IndexError):
+476:             pass
+477:     groups = {}
+478:     for r in obs.get("rows") or []:
+479:         if r.get("state") != "Z":
+480:             groups.setdefault(int(r["pgid"]), []).append(r)
+481:     results = []
+482:     for pgid, members in sorted(groups.items()):
+483:         if pgid <= 1 or pgid in own:
+484:             results.append({"pgid": pgid, "action": "skip", "why": "1 이하 · 자기 · 조상의 그룹"})
+485:             continue
+486:         same = None
+487:         for m in members:
+488:             try:
+489:                 stf = stat_fields(int(m["pid"]))
+490:             except (OSError, ValueError, IndexError):
+491:                 continue
+492:             if stf["starttime"] == m.get("starttime") and stf["pgid"] == pgid:
+493:                 same = int(m["pid"])
+494:                 break
+495:         if same is None:
+496:             results.append({"pgid": pgid, "action": "skip", "why": "관측한 구성원이 없거나 시작 시각 · 그룹이 바뀌었다"})
+497:             continue
+498:         try:
+499:             os.killpg(pgid, signal.SIGKILL)
+500:             results.append({"pgid": pgid, "action": "SIGKILL", "ok": True, "verified_pid": same})
+501:         except OSError as e:
+502:             results.append({"pgid": pgid, "action": "SIGKILL", "ok": False, "verified_pid": same, "type": e.__class__.__name__,
+503:                             "message": str(e)[:200]})
+504:     write_new(outp, dump({"kind": "REIL_E113_KILL", "step": step, "utc": utc(), "source": {"path": str(src), "sha256": sha256(raw)},
+505:                           "results": results}))
+506:     print(json.dumps({"step": step, "groups": len(groups), "results": [r["action"] for r in results]}, ensure_ascii=False))
+507:     return 0
+508: 
+509: 
+510: # ---------------------------------------------------------------- freeze (F3)
+511: def freeze(step: str, ev: Path) -> int:
+512:     name = STEPS[step]
+513:     dst, man = ev / f"frozen_{name}", ev / f"frozen_{name}.json"
+514:     if os.path.lexists(dst) or os.path.lexists(man) or os.path.lexists(man.with_name(man.name + ".tmp")):
+515:         raise Refusal(f"이미 있다: {dst} 또는 {man}")
+516:     p = names(ev, step)
+517:     files = [p[k] for k in LAUNCHER_FILES + OUTER_FILES + SHELL_FILES + WATCH]
+518:     files += sorted(x for x in ev.glob(f"{name}.watch_*") if x not in files)
+519:     if step == "identity":
+520:         files.append(ev / "03_identity.json")
+521:     if step == "run" and (ev / "run").is_dir() and not (ev / "run").is_symlink():
+522:         files += sorted(x for x in (ev / "run").rglob("*") if x.is_file() or x.is_symlink())
+523:     try:
+524:         dst.mkdir()
+525:     except OSError as e:
+526:         print(json.dumps({"step": step, "manifest_written": False, "phase": "mkdir", "error": f"{e.__class__.__name__}: {e}"[:300]},
+527:                          ensure_ascii=False))
+528:         return 5
+529:     rows = []
+530:     for f in files:
+531:         rel = f.relative_to(ev)
+532:         t = utc()
+533:         b, why = read_once(f)
+534:         if b is None:
+535:             rows.append({"path": str(rel), "state": "not_read", "why": why, "read_utc": t})
+536:             continue
+537:         row = {"path": str(rel), "bytes": len(b), "sha256": sha256(b), "read_utc": t}
+538:         try:
+539:             target = dst / rel
+540:             target.parent.mkdir(parents=True, exist_ok=True)
+541:             write_new(target, b)
+542:             row["state"] = "copied"
+543:         except Exception as e:  # noqa: BLE001 — 파일마다 남기고 다음 파일로 (부분 사본은 지우지 않는다)
+544:             row.update(state="copy_failed", why=f"{e.__class__.__name__}: {e}"[:300])
+545:         rows.append(row)
+546:     counts = {s: sum(1 for r in rows if r["state"] == s) for s in ("copied", "copy_failed", "not_read")}
+547:     doc = {"kind": "REIL_E113_FROZEN", "step": step, "utc": utc(), "rows": rows, "counts": counts,
+548:            "note": "읽은 범위의 고정 관측 사본 — 원본은 그대로 · 여러 파일의 원자적 · 동시 시점이 아니다 · 한 번 읽기는 같은 버퍼 결속일 뿐"}
+549:     try:
+550:         publish(man, dump(doc))
+551:     except Exception as e:  # noqa: BLE001 — 목록을 게시하지 못함: 도구 반환으로만 남는다
+552:         print(json.dumps({"step": step, "manifest_written": False, "phase": "manifest", "error": f"{e.__class__.__name__}: {e}"[:300],
+553:                           **counts}, ensure_ascii=False))
+554:         return 5
+555:     print(json.dumps({"step": step, "manifest_written": True, **counts}, ensure_ascii=False))
+556:     return 0
+557: 
+558: 
+559: # ---------------------------------------------------------------- check (커밋 전 공개 검사 · 쓰기 0)
+560: def staged(cached: str, index: str):
+561:     """git 이 쓴 두 출력 파일 → (staged 이름 집합, {경로: (blob, stage)}) 또는 사유."""
+562:     cb, why1 = read_once(Path(cached))
+563:     ib, why2 = read_once(Path(index))
+564:     if cb is None or ib is None:
+565:         return None, None, f"git 출력을 읽지 못함: {why1} · {why2}"
+566:     try:
+567:         cached_names = sorted(x.decode("utf-8") for x in cb.split(b"\0") if x)
+568:         entries = {}
+569:         for e in (x for x in ib.split(b"\0") if x):
+570:             meta, tab, path = e.partition(b"\t")
+571:             mode, blob, stage = meta.decode("ascii").split(" ")
+572:             if not tab or path.decode("utf-8") in entries:
+573:                 raise ValueError(f"index 항목 형식: {e[:80]!r}")
+574:             entries[path.decode("utf-8")] = (blob, stage)
+575:     except (ValueError, UnicodeDecodeError) as e:
+576:         return None, None, f"git 출력 형식: {e}"[:300]
+577:     return cached_names, entries, ""
+578: 
+579: 
+580: def check(ev: Path, cached: str, index: str, paths: list) -> int:
+581:     if not paths or (cached == "-") != (index == "-"):
+582:         raise Refusal("check 는 <cached|-> <index|-> <경로 하나 이상> — cached · index 는 둘 다 주거나 둘 다 - 이다")
+583:     rows, bad, total, rels = [], [], 0, []
+584:     for a in paths:
+585:         f = Path(a)
+586:         if not f.is_absolute() or ev not in f.parents:
+587:             raise Refusal(f"증거 폴더 밖의 경로: {a}")
+588:         rel = str(f.relative_to(REPO))
+589:         if rel in rels:
+590:             raise Refusal(f"같은 경로가 두 번: {a}")
+591:         rels.append(rel)
+592:         b, why = read_once(f)
+593:         if b is None:
+594:             bad.append({"path": rel, "why": why})
+595:             continue
+596:         h = sha256(b)
+597:         fixed = f.parent == ev and f.name in FIXED_COPIES
+598:         why_b = (["원자료 sha"] if h in DATA_SHA256 else []) + (["확장자"] if f.suffix == ".xlsx" or (f.suffix == ".py" and not fixed) else []) \
+599:             + (["50 MiB 초과"] if len(b) > FILE_MAX else []) + (["URL 계정 형태"] if URL_ACCOUNT.search(b) else [])
+600:         if why_b:
+601:             bad.append({"path": rel, "why": why_b})
+602:         rows.append({"path": rel, "bytes": len(b), "sha256": h, "blob": blob_id(b)})
+603:         total += len(b)
+604:     if total > COMMIT_MAX:
+605:         bad.append({"path": "(합)", "why": f"{total} B > 100 MiB"})
+606:     out = {"files": len(rels), "total_bytes": total, "bad": bad, "staged_checked": cached != "-", "rows": rows}
+607:     if cached != "-":
+608:         cached_names, entries, why = staged(cached, index)
+609:         if cached_names is None:
+610:             bad.append({"path": "(git 출력)", "why": why})
+611:         else:
+612:             out["set_equal"] = cached_names == sorted(rels)
+613:             out["blob_equal"] = len(rows) == len(rels) and sorted(entries) == sorted(rels) and all(
+614:                 entries.get(r["path"]) == (r["blob"], "0") for r in rows)
+615:             if not out["set_equal"]:
+616:                 bad.append({"path": "(staged 집합)", "why": {"staged_only": sorted(set(cached_names) - set(rels)),
+617:                                                            "listed_only": sorted(set(rels) - set(cached_names))}})
+618:             if not out["blob_equal"]:
+619:                 bad.append({"path": "(staged blob)", "why": "staged blob ≠ 검사한 버퍼의 blob (또는 stage ≠ 0)"})
+620:     print(json.dumps(out, ensure_ascii=False))
+621:     return 0 if not bad else 1
+622: 
+623: 
+624: # ---------------------------------------------------------------- main
+625: def evidence(arg: str) -> Path:
+626:     ev = Path(arg)
+627:     if ev.parent != BMS / "evidence" or not EVIDENCE_NAME.match(ev.name) or ev.is_symlink() or not ev.is_dir():
+628:         raise Refusal(f"증거 폴더 규칙 밖: {arg}")
+629:     me = Path(__file__)
+630:     if me.is_symlink() or me.resolve() != (ev / "00_outer.py").resolve():
+631:         raise Refusal(f"이 파일이 그 증거 폴더의 00_outer.py 가 아니다: {me}")
+632:     return ev
+633: 
+634: 
+635: def main(argv=None) -> int:
+636:     a = list(sys.argv[1:] if argv is None else argv)
+637:     try:
+638:         if a[:1] == ["check"]:
+639:             if len(a) < 5:
+640:                 raise Refusal(f"인자 — check <E> <cached|-> <index|-> <경로…>: {a}")
+641:             return check(evidence(a[1]), a[2], a[3], a[4:])
+642:         if len(a) < 3 or a[0] not in MODES or a[1] not in STEPS:
+643:             raise Refusal(f"인자 — <{'|'.join(MODES)}> <{'|'.join(STEPS)}> <E> …: {a}")
+644:         mode, step, ev = a[0], a[1], evidence(a[2])
+645:         if mode == "start":
+646:             if len(a) != 4 or not SECTION.match(a[3]):
+647:                 raise Refusal(f"start 는 승인 절 §NN 하나를 더 받는다: {a[3:]}")
+648:             return start(step, ev, a[3])
+649:         if mode == "observe":
+650:             if len(a) != 4 or a[3] not in ("1", "2"):
+651:                 raise Refusal(f"observe 는 차례 1 또는 2 를 더 받는다: {a[3:]}")
+652:             return observe(step, ev, a[3])
+653:         if len(a) != 3:
+654:             raise Refusal(f"{mode} 는 인자 셋이다: {a}")
+655:         return {"wait": wait, "kill": kill, "freeze": freeze}[mode](step, ev)
+656:     except Refusal as e:
+657:         sys.stderr.write(f"거부: {e}\n")
+658:         return 2
+659: 
+660: 
+661: if __name__ == "__main__":
+662:     sys.exit(main())
