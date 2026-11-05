@@ -1,0 +1,7 @@
+{
+  "kind": "REIL_RESUME_V2_REVIEW_HEAD_CONFIRMATION",
+  "pin": "782bfe5fdc0de1bbc4330c50d6f8fcffbe94b0a5",
+  "observed_head": "782bfe5fdc0de1bbc4330c50d6f8fcffbe94b0a5",
+  "matches_pin": true,
+  "scope": "Read-only GitHub branch observation before review packaging. No future branch stability or runtime claim."
+}

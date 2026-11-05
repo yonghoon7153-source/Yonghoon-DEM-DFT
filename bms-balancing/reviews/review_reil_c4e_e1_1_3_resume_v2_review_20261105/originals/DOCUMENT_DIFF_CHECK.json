@@ -1,0 +1,153 @@
+{
+  "kind": "STATIC_V1_V2_DOCUMENT_DIFF",
+  "newline_handling": "Universal newline read to LF; original bytes separately preserved and hashed.",
+  "changes": [
+    {
+      "tag": "replace",
+      "v1_lines": [
+        1,
+        1
+      ],
+      "v2_lines": [
+        1,
+        1
+      ],
+      "before": [
+        "# REIL C4-E · E1-1–3 재개 요청 — 남은 d · e · f (읽기 경로 · E1-2 fetch · E1-3 run = E3a 66 호출) · 2026-11-05 KST\n"
+      ],
+      "after": [
+        "# REIL C4-E · E1-1–3 재개 요청 v2 — 남은 d · e · f (읽기 경로 · E1-2 fetch · E1-3 run = E3a 66 호출) · E113_RESUME_N1 · N2 정정 · 2026-11-05 KST\n"
+      ]
+    },
+    {
+      "tag": "insert",
+      "v1_lines": [
+        3,
+        2
+      ],
+      "v2_lines": [
+        3,
+        6
+      ],
+      "before": [],
+      "after": [
+        "> **재개 요청서 v2 다 (이 문서를 쓰는 동안 실행 0).** v1 (`docs/REIL_C4E_E1_1_3_RESUME_REQUEST_20261105.md` · `4eea24d6…` · 그대로 둔다) 의 검토\n",
+        "> (§118 — 방향 수용 · 정정 둘 E113_RESUME_N1 · N2) 대로 고쳤다. **v1 과 다른 곳은 이 머리말 · §1 의 한 문장 · §2 의 R5 · §3 의 b1 과 그 아래 한 항목 · §5 의\n",
+        "> 1 뿐이다.** 아래는 v1 의 머리말 그대로다.\n",
+        ">\n"
+      ]
+    },
+    {
+      "tag": "replace",
+      "v1_lines": [
+        25,
+        25
+      ],
+      "v2_lines": [
+        29,
+        31
+      ],
+      "before": [
+        "  두 파일 대조 (613 행) 와 `run/IDENTITY.json` 의 모듈 다섯 시작 · 끝 행 = 사전 대조 (`identity_link` 576 · 619 행) 다.\n"
+      ],
+      "after": [
+        "  두 파일 대조 (613 행) 와 `run/IDENTITY.json` 의 모듈 다섯 시작 · 끝 행 = 사전 대조 (`identity_link` 576 · 619 행) 다. 또 f 의 준비 단계는 기존 환경\n",
+        "  identity 대조를 그대로 한다 — `reil_c4e_run.py` 657–660 행 run → prepare · 571 행 `e3a.identity` → `reil_c4_e3a.py` 427–441 행 `c5.env_identity`\n",
+        "  (`reil_c5_pilot.py` 658–701 행: 지금의 interpreter · prefix · 봉인 MANIFEST · 설치 lock · profile · COBYQA 를 봉인과 대조).\n"
+      ]
+    },
+    {
+      "tag": "replace",
+      "v1_lines": [
+        37,
+        37
+      ],
+      "v2_lines": [
+        43,
+        43
+      ],
+      "before": [
+        "| R5 | b1 — 이름 규칙에 맞는 항목 0 · `SP/c4e1` 없음 · `SP/e113_commit_*` 없음 | 항목 = 정확히 `[\"reil_c4e1_20261105\"]` · `SP/c4e1` 안 = 정확히 빈 폴더 넷 (§1) · `SP/e113_commit_<D>_*` 없음 (나머지 그대로) | §1 의 남은 것 |\n"
+      ],
+      "after": [
+        "| R5 | b1 — 이름 규칙에 맞는 항목 0 · `SP/c4e1` 없음 · `SP/e113_commit_*` 없음 | 항목 = 정확히 `[\"reil_c4e1_20261105\"]` · `SP/c4e1` 과 그 안의 네 경로 (§1) 가 링크 아닌 실제 디렉터리 (`lstat`) · 그 아래 항목 = 정확히 그 넷 (파일 · 링크 · 추가 항목 · 열거 실패는 거부) · `SP/e113_commit_<D>_*` 없음 (나머지 그대로) | §1 의 남은 것 · launcher 는 `mpl` · `tmp` 를 `mkdir(exist_ok=True)` 뒤 자식의 `MPLCONFIGDIR` · `TMPDIR` 로 넘긴다 (843–844 · 393–394 행) |\n"
+      ]
+    },
+    {
+      "tag": "replace",
+      "v1_lines": [
+        52,
+        52
+      ],
+      "v2_lines": [
+        58,
+        58
+      ],
+      "before": [
+        "b1  /usr/bin/python3.11 -I -c 'import os, re, sys; e = sorted(n for n in os.listdir(\"BMS/evidence\") if re.fullmatch(r\"reil_c4e1_20[0-9]{6}\", n)); print(e); sys.exit(0 if e == [\"reil_c4e1_20261105\"] else 1)' && test ! -e <E> && /usr/bin/python3.11 -I -c 'import os, sys; w = sys.argv[1]; s = sorted(os.path.relpath(os.path.join(r, n), w) for r, d, f in os.walk(w) for n in d + f); print(s); sys.exit(0 if s == [\"mpl\", \"pycache\", \"pycache/03_identity\", \"tmp\"] else 1)' SP/c4e1 && ! compgen -G 'SP/e113_commit_<D>_*' > /dev/null && test -x SP/reil_c4env/venv/bin/python && mkdir <E>\n"
+      ],
+      "after": [
+        "b1  /usr/bin/python3.11 -I -c 'import os, re, sys; e = sorted(n for n in os.listdir(\"BMS/evidence\") if re.fullmatch(r\"reil_c4e1_20[0-9]{6}\", n)); print(e); sys.exit(0 if e == [\"reil_c4e1_20261105\"] else 1)' && test ! -e <E> && /usr/bin/python3.11 -I -c 'import os, stat, sys; w = sys.argv[1]; x = [\"mpl\", \"pycache\", \"pycache/03_identity\", \"tmp\"]; s = sorted(os.path.relpath(os.path.join(r, n), w) for r, d, f in os.walk(w, onerror=lambda e: sys.exit(f\"walk_error {e!r}\")) for n in d + f); t = [stat.S_ISDIR(os.lstat(p).st_mode) for p in [w] + [os.path.join(w, q) for q in x]]; print(s, t); sys.exit(0 if s == x and all(t) else 1)' SP/c4e1 && ! compgen -G 'SP/e113_commit_<D>_*' > /dev/null && test -x SP/reil_c4env/venv/bin/python && mkdir <E>\n"
+      ]
+    },
+    {
+      "tag": "insert",
+      "v1_lines": [
+        60,
+        59
+      ],
+      "v2_lines": [
+        66,
+        66
+      ],
+      "before": [],
+      "after": [
+        "  b1 의 작업 폴더 검사는 v2 에서 바뀌었다 (N2): 현재 상태에서 반환 0. 스크래치의 시험 폴더 여섯 (정상 · `mpl` 디렉터리 링크 · `tmp` 일반 파일 · 작업 루트 링크 · 추가 항목 · 없음) 에 v1 · v2 의 검사를 글자 그대로 돌려, v1 은 정상 · 링크 · 일반 파일 · 루트 링크를 통과시키고 (N2 재현) v2 는 정상만 통과시켰다 (반환 0 · 나머지 다섯은 1).\n"
+      ]
+    },
+    {
+      "tag": "replace",
+      "v1_lines": [
+        74,
+        75
+      ],
+      "v2_lines": [
+        81,
+        82
+      ],
+      "before": [
+        "1. **E1-1 은 2026-11-05 의 결과다.** 재개 시점에 venv 의 환경 identity (`env_profile`) 를 다시 확인하지 않는다 (launcher 가 막고 · 바꾸는 것은 범위 밖 —\n",
+        "   §1). fetch · run 의 launcher 사전 검사와 run 의 `IDENTITY.json` 모듈 대조는 그대로 돈다.\n"
+      ],
+      "after": [
+        "1. **E1-1 은 2026-11-05 의 결과를 인용하며 별도 c 단계와 새 `03_identity.*` 기록은 만들지 않는다.** fetch · run 의 launcher 사전 검사와 f 준비 단계의\n",
+        "   기존 환경 identity 대조 (§1), `run/IDENTITY.json` 의 모듈 대조는 유지한다.\n"
+      ]
+    }
+  ],
+  "reverse_diff_exact": true,
+  "command_ids": [
+    "d0",
+    "d1",
+    "d2",
+    "d3",
+    "p1",
+    "b1",
+    "d4"
+  ],
+  "changed_command_ids": [
+    "b1"
+  ],
+  "b1_only_work_tree_subcommand_changed": true,
+  "unchanged_commands": [
+    "d0",
+    "d1",
+    "d2",
+    "d3",
+    "p1",
+    "d4"
+  ],
+  "b1_worktree_ast_parsed": true,
+  "received_program_execution": 0,
+  "tests": 0
+}

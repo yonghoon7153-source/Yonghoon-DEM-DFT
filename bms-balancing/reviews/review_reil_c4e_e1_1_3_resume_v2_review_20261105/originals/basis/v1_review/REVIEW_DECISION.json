@@ -1,0 +1,109 @@
+{
+  "kind": "REIL_E113_RESUME_DOCUMENT_REVIEW",
+  "date": "2026-11-05",
+  "pin": "2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c",
+  "decision": "RESUME_DIRECTION_ACCEPTABLE_TWO_CORRECTIONS_REQUIRED_BEFORE_APPROVAL",
+  "resume_direction_acceptable": true,
+  "resume_request_accepted": false,
+  "findings": [
+    {
+      "id": "E113_RESUME_N1",
+      "priority": 2,
+      "file": "bms-balancing/docs/REIL_C4E_E1_1_3_RESUME_REQUEST_20261105.md",
+      "lines": [
+        74,
+        75
+      ],
+      "title": "Separate skipped c stage from retained f environment identity check",
+      "problem": "The text says env_profile is not rechecked, but fixed run.prepare calls e3a.identity then c5.env_identity, including current lock/profile comparison.",
+      "minimum_correction": "State that only the separate c step and new 03_identity records are omitted; retained launcher prechecks and f prepare environment identity and module checks still run.",
+      "code_evidence": [
+        "scripts/reil_c4e_run.py:571",
+        "scripts/reil_c4e_run.py:657",
+        "scripts/reil_c4_e3a.py:431",
+        "scripts/reil_c5_pilot.py:675",
+        "scripts/reil_c5_pilot.py:682"
+      ]
+    },
+    {
+      "id": "E113_RESUME_N2",
+      "priority": 2,
+      "file": "bms-balancing/docs/REIL_C4E_E1_1_3_RESUME_REQUEST_20261105.md",
+      "lines": [
+        37,
+        52,
+        78
+      ],
+      "title": "Check directory types when admitting the preserved work tree",
+      "problem": "os.walk d+f name comparison does not enforce the declared actual empty-directory structure. Directory links mpl/tmp can pass and are used by the child environment.",
+      "minimum_correction": "Before reuse, require the work root and four paths to be actual non-link directories, reject files/extra entries and fail closed on enumeration errors. Preserve original stopped/finished work paths.",
+      "code_evidence": [
+        "scripts/reil_c4e1_launch.py:393",
+        "scripts/reil_c4e1_launch.py:843"
+      ],
+      "not_claimed": [
+        "No actual link, tampering, unauthorized execution or damage was observed.",
+        "No full concurrent-adversary redesign or new functional test is required."
+      ]
+    }
+  ],
+  "finding_count": 2,
+  "findings_sufficiently_addressable_in_request_text_and_b1": true,
+  "question_1": "No undeclared execution-scope expansion found; explicit repeated/changed command rows map to R1-R8, but R5 precheck is insufficient for its declared types.",
+  "question_2": "R1 timing relocation and historical E1-1 citation acceptable in direction; correct N1/N2 before presenting the complete request for separate user resume approval.",
+  "accepted": {
+    "d_before_a0": true,
+    "d_and_calendar_wait_outside_new_clock_disclosed": true,
+    "new_Ta_is_actual_a0_after_2026_11_06T00_00_00Z": true,
+    "prior_E1_identity_historical_citation": true,
+    "new_c_execution_omitted": true,
+    "new_end_record_c_missing_disclosed": true,
+    "date_namespaced_commit_stems": true,
+    "total_seconds": 21600,
+    "reserve_seconds": 1800,
+    "f_start_from_Ta_seconds": 7200,
+    "unchanged_prior_v3_static_closures": "RETAINED"
+  },
+  "source_checks": {
+    "attachments_match_pin": true,
+    "raw_sources": 41,
+    "prior_fixed_files_byte_equal": 7,
+    "five_modules_match_trusted_source_list": true,
+    "S1_two_match_fixed_values": true,
+    "explicit_command_rows": 7,
+    "unchanged_repeated": [
+      "d0",
+      "d1",
+      "d2"
+    ],
+    "modified": [
+      "d3",
+      "p1",
+      "b1"
+    ],
+    "added": [
+      "d4"
+    ],
+    "d3_only_last_path_changed": true,
+    "identity_files_at_prior_commit": 18,
+    "judge_input_identities_matched": 13,
+    "judge_items_ok_reported": 43
+  },
+  "historical_correction_scope": "Status section117 records add_repo called once but not executed; it is an author-recorded retrospective correction, not independent tool audit.",
+  "performed": {
+    "received_program_execution": 0,
+    "received_program_import": 0,
+    "tests": 0,
+    "probe_execution": 0,
+    "identity_fetch_run": 0,
+    "COMSOL": 0,
+    "signals": 0,
+    "source_changes": 0,
+    "git_mutations": 0,
+    "external_transmission": 0
+  },
+  "actual_execution_authorized_by_review": false,
+  "C4A_gate_opened": false,
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null
+}

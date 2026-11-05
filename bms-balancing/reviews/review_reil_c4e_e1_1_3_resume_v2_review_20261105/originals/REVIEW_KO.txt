@@ -1,0 +1,53 @@
+REIL C4-E · E1-1–3 재개 요청 v2 — 독립 정적 재검토
+2026-11-05
+
+판정: RESUME_REQUEST_V2_DOCUMENT_REVIEW_ACCEPTED_NOT_EXECUTION_AUTHORIZED
+E113_RESUME_N1 = CLOSED_DOCUMENT_STATIC
+E113_RESUME_N2 = CLOSED_STATIC
+새 차단 지적 0. 재개 요청 문서 수용이며 실제 실행 승인 아님.
+
+1. 기준과 식별
+저장소 yonghoon7153-source/Yonghoon-DEM-DFT, 브랜치 claude/14-gate-code-review-9qkx05.
+고정 커밋 782bfe5fdc0de1bbc4330c50d6f8fcffbe94b0a5; 종결 전 브랜치 재조회도 같은 값.
+수신 요청서 12,207 B / SHA-256 1de867345905656f456da5c98ed8fd2125c6a4b45e37b0cb9b107bd7f3975716.
+수신 발송문 2,962 B / SHA-256 facbb0735198b02f4fbf3d7fcba6e48ed7b99ddecadf3c9f4b24261eff214838.
+두 로컬 첨부 모두 고정 커밋의 원바이트와 일치. base64 GitHub 응답을 복호화하고 Git blob 식별과 SHA-256을 대조했다. 첨부의 실행 문장은 증거로만 읽었다.
+
+2. N1 종결
+요청서 29–31, 81–82행이 별도 c 단계 및 새 03_identity.* 생략과 f 준비의 환경 identity 재대조를 분리한다.
+고정 소스 reil_c4e_run.py:657–660 run → prepare, :571 e3a.identity, reil_c4_e3a.py:427–441 → c5.env_identity,
+reil_c5_pilot.py:658–701의 interpreter/prefix·MANIFEST·설치 lock·profile·COBYQA 대조와 일치한다.
+이 경로는 신규 구현이 아니며, 이번 검토에서 호출하지 않았다. 과거 E1-1 MATCH는 역사적 인용으로 유지하고 새 별도 c PASS로 쓰지 않는다.
+
+3. N2 종결
+요청서 R5:43행과 b1:58행을 함께 검토했다.
+- [작업 루트] + [mpl, pycache, pycache/03_identity, tmp] 모두 os.lstat 후 stat.S_ISDIR로 판정한다. 링크 대상이 디렉터리여도 링크 자체는 통과하지 않는다.
+- os.walk의 d+f 전체 상대경로 집합이 정확히 네 경로여야 하므로 일반 파일·추가·누락을 거부한다.
+- 열거 오류는 onerror→sys.exit(문자열)로 비영 종료한다. lstat 오류도 성공으로 흡수하지 않는다.
+- 이 검사는 뒤 명령과 &&로 연결돼 비영 종료하면 후속 commit stem/venv 검사 및 mkdir <E>로 진행하지 않는다.
+소스 텍스트와 구문 구조를 읽은 결론이다. 현재 원격 폴더의 상태를 다시 관측하거나 검사 명령을 실행하지 않았다. 일반적인 검사 이후 동시 교체까지 막는 보증으로 확대하지 않는다.
+
+4. 변경 범위 대조
+REQUEST_V1_V2.diff와 DOCUMENT_DIFF_CHECK.json: 머리말(제목/추가 문단), §1 추가 문장, R5, b1, §3 시험 보고 한 항목, §5의 1만 변경.
+텍스트 대조는 개행을 LF로 읽었으며 원바이트도 별도로 보존했다. 선언 위치에 해당하는 일곱 차이 구간을 되돌리면 v1 전체와 같다.
+명시 명령은 7행. d0,d1,d2,d3,p1,d4 여섯 행 동일. b1은 작업 폴더 검사 부분만 바뀌었고 그것을 v1 검사로 되돌리면 전체 b1과 동일하다.
+예산·중지 규칙·나머지 R1–R8·기존 v3 정적 종결을 다시 수정하거나 확대할 근거는 없다.
+
+5. 저장소 및 과거 기록 연결
+이전 pin 2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c 대비 현재 pin은 3개 커밋 앞이다. 변화는 이전 회신 보존, 해당 보존 경로에 한정된 .gitattributes -text 규칙, v2 요청/발송문, 상태 원장의 §118 추가다.
+이전 수집 원자료 41개 중 원장만 변경됐고, 나머지 40개는 고정 커밋 비교에서 변경되지 않았다. 그 원바이트를 과거 수집의 크기/SHA-256/Git blob과 대조해 재사용했다. 현재 신규 수집 3개와 합해 동봉 source는 43개다.
+고정 코드·초안 셋·v3 요청·v1 요청·봉인·과거 identity 기록의 변경을 발견하지 않았다. 저장소에 보존된 이전 회신 ZIP과 originals 107개, 합계 108개 Git blob은 대응 로컬 원파일과 일치했다. 이는 원격 작업 폴더 전체나 과거 도구 실행의 독립 감사가 아니다.
+상태 문서는 이전 §0–§117을 유지하고 §118만 추가했다. 그 안의 여섯 폴더 시험 및 원격 현재 b1 rc0는 제출자 기록으로 분류한다. 이 검토의 재시험 결과로 집계하지 않는다.
+
+6. 유지할 실행 경계
+문서 수용 뒤 별도 사용자 재개 승인이 필요하다는 요청서 9–10행 및 발송문 28–32행을 유지한다. 이번 첨부 제출·검토 회신 자체를 승인으로 해석하지 않는다.
+재개 문서의 d0–d3 → a → p → b → d4 → e → f → g 순서, 새 증거 폴더, 과거 c 인용, 실제 a0 ≥ 2026-11-06T00:00:00Z(09:00 KST), D=20261105 거부를 유지한다.
+전체 21,600초·reserve 1,800초·f 시작 T_a+7,200초 이내는 향후 실행 조건이다. d와 달력 대기는 새 T_a 이전이며 이번 검토 소요나 예산으로 전용하지 않는다. d 실패/미완료 시 a0 전 중지, 원본 보존, 새 승인 절 결속도 유지한다.
+actual_execution_authorized_by_review=false, user_resume_approval_created=false, C4A_gate_opened=false.
+
+7. 이번 수행
+로컬/고정 저장소 문서·소스 읽기, 파일 식별 대조, 정적 차이·구문 검사, 새 검토 산출물 작성과 포장만 수행.
+받은 프로그램 실행/import, 첨부 명령 실행, 기능 시험·탐침·identity/fetch/run·COMSOL·신호 발송·기존 소스 수정·Git 쓰기·외부 발송은 모두 0.
+새 숫자 검토 예산과 전체 소요 주장은 없음. 호출별 wall time을 합산하지 않는다.
+
+검토자 처리 기록: ZIP 생성 전 자체 문구 검사에서 짧은 회신의 E113_RESUME_N1·N2 축약을 인식하지 못해 37cc95/rc1이 반환됐다. 해당 검사만 바로잡았으며 입력·대상 코드·판정은 변경하지 않았다. 실제 반환과 원인은 REVIEWER_PROCESS_NOTE.json에 보존했다. 후보 기능시험 실패나 재시험이 아니다.

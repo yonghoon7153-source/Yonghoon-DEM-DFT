@@ -1,0 +1,63 @@
+{
+  "pin": "2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c",
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_review_20261105\\source\\bms-balancing\\scripts\\reil_c4_e3a.py",
+      "bytes": 32311,
+      "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3",
+      "repository_path": "bms-balancing/scripts/reil_c4_e3a.py",
+      "git_blob_sha": "2c5e614eb5b565e9c9bab410ae741ffec1d2fca5",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c/bms-balancing/scripts/reil_c4_e3a.py"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_review_20261105\\source\\bms-balancing\\scripts\\reil_c5_pilot.py",
+      "bytes": 47164,
+      "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6",
+      "repository_path": "bms-balancing/scripts/reil_c5_pilot.py",
+      "git_blob_sha": "0e5a9f3a83ca419d311f27e0a63d9f0f7ade0d6b",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c/bms-balancing/scripts/reil_c5_pilot.py"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_review_20261105\\source\\bms-balancing\\scripts\\reil_p0.py",
+      "bytes": 23941,
+      "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a",
+      "repository_path": "bms-balancing/scripts/reil_p0.py",
+      "git_blob_sha": "b7ef272f412e1b10f35ae841d961377ff4854d64",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c/bms-balancing/scripts/reil_p0.py"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_review_20261105\\source\\bms-balancing\\evidence\\reil_c4e0_fix_20261014\\04_sources\\SOURCES.json",
+      "bytes": 1100,
+      "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52",
+      "repository_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "git_blob_sha": "37a868862d8f74a3e72a332424dfa8b94e82cc3b",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c/bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_review_20261105\\source\\bms-balancing\\evidence\\reil_c4e0_fix_20261014\\00_identity_c4.py",
+      "bytes": 1506,
+      "sha256": "92bb3bca2dcd56982bd4d4ddc02bb8ed84615d5b1b6af6385d69b66c8f5df900",
+      "repository_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/00_identity_c4.py",
+      "git_blob_sha": "d29186ee0914992c67a23e9915a68c2d81077f8b",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c/bms-balancing/evidence/reil_c4e0_fix_20261014/00_identity_c4.py"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_review_20261105\\source\\bms-balancing\\reil_c6_rebuild_20261013\\MANIFEST.json",
+      "bytes": 954,
+      "sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+      "repository_path": "bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json",
+      "git_blob_sha": "cd54ebec8949abbcf05c7cf7147178289a32196d",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c/bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_review_20261105\\source\\bms-balancing\\reil_c6_rebuild_20261013\\REIL_C6.lock.txt",
+      "bytes": 4117,
+      "sha256": "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa",
+      "repository_path": "bms-balancing/reil_c6_rebuild_20261013/REIL_C6.lock.txt",
+      "git_blob_sha": "21c2e71a7586d975e22123319dbdc486d9518e70",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c/bms-balancing/reil_c6_rebuild_20261013/REIL_C6.lock.txt"
+    }
+  ],
+  "five_modules_match_sources": true,
+  "manifest_and_lock_match_prior_identity": true
+}

@@ -1,0 +1,42 @@
+{
+  "kind": "REIL_E113_RESUME_REVIEW_DELIVERY_RECEIPT",
+  "recipient": null,
+  "archive": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_review_20261105\\REIL_C4E_E1_1_3_RESUME_REVIEW_20261105.zip",
+    "bytes": 1218509,
+    "sha256": "28250632c476d28ef0eb6b1e18b3c494da5261fcbe3475f881708d608a55c038"
+  },
+  "manifest": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_review_20261105\\PACKAGE_MANIFEST.json",
+    "bytes": 21282,
+    "sha256": "b12037a17a68ecfc0dd17a693a7cb9bcbb3f37d1c6019fb6d833f929433826c5"
+  },
+  "post_package": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_review_20261105\\SELECTED_LOCAL_SOURCES_POST_PACKAGE.json",
+    "bytes": 2516,
+    "sha256": "4add34397a35e3d04da0543fd6bec9b41558bc5bc16efbb847d194cc0d1eaa74"
+  },
+  "payload_count": 106,
+  "entries": 107,
+  "verification": "Exact member set, safe case-unique relative paths, non-link metadata, decompressed size/SHA256 and independently recomputed CRC32 matched.",
+  "pin": "2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c",
+  "decision": "RESUME_DIRECTION_ACCEPTABLE_TWO_CORRECTIONS_REQUIRED_BEFORE_APPROVAL",
+  "findings": [
+    "E113_RESUME_N1",
+    "E113_RESUME_N2"
+  ],
+  "resume_direction_acceptable": true,
+  "resume_request_accepted": false,
+  "actual_execution_authorized_by_review": false,
+  "raw_pinned_source_files": 41,
+  "selected_local_sources_preserved": 8,
+  "received_program_execution": 0,
+  "tests": 0,
+  "probe_execution": 0,
+  "identity_fetch_run": 0,
+  "COMSOL": 0,
+  "git_mutations": 0,
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null,
+  "boundary": "After ZIP verification and local originals rehash; before this receipt write/readback and actual tool return."
+}

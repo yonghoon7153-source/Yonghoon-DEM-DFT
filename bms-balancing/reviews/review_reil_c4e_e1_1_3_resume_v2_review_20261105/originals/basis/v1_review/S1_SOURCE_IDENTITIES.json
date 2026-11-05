@@ -1,0 +1,22 @@
+{
+  "pin": "2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c",
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_review_20261105\\source\\bms-balancing\\scripts\\reil_c6_profile.py",
+      "bytes": 15915,
+      "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d",
+      "repository_path": "bms-balancing/scripts/reil_c6_profile.py",
+      "git_blob_sha": "c32ecdc3c4cdb456514e3abc14975103f412f32d",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c/bms-balancing/scripts/reil_c6_profile.py"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4e_e1_1_3_resume_review_20261105\\source\\degradation-degeneracy\\tools\\env_profile.py",
+      "bytes": 22333,
+      "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563",
+      "repository_path": "degradation-degeneracy/tools/env_profile.py",
+      "git_blob_sha": "ea21b76f32050e07b9619ac6b8546a39d5c99b2a",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/2e7254f00a60fd50e5c4d41e2caf3c5ed9fdeb4c/degradation-degeneracy/tools/env_profile.py"
+    }
+  ],
+  "launcher_fixed_values_match": true
+}

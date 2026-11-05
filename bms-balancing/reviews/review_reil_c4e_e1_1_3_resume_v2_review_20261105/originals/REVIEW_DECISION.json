@@ -1,0 +1,104 @@
+{
+  "kind": "REIL_E113_RESUME_V2_DOCUMENT_REVIEW",
+  "date": "2026-11-05",
+  "pin": "782bfe5fdc0de1bbc4330c50d6f8fcffbe94b0a5",
+  "decision": "RESUME_REQUEST_V2_DOCUMENT_REVIEW_ACCEPTED_NOT_EXECUTION_AUTHORIZED",
+  "resume_direction_acceptable": true,
+  "resume_request_accepted": true,
+  "acceptance_scope": "Request document and static closure of two prior findings only",
+  "finding_count": 0,
+  "findings": [],
+  "closures": [
+    {
+      "id": "E113_RESUME_N1",
+      "status": "CLOSED_DOCUMENT_STATIC",
+      "request_lines": [
+        29,
+        30,
+        31,
+        81,
+        82
+      ],
+      "basis": "Separate c and new 03_identity files are omitted; f prepare retains current environment identity and module checks.",
+      "code_evidence": [
+        "scripts/reil_c4e_run.py:571",
+        "scripts/reil_c4e_run.py:657",
+        "scripts/reil_c4_e3a.py:431",
+        "scripts/reil_c5_pilot.py:658",
+        "scripts/reil_c5_pilot.py:675",
+        "scripts/reil_c5_pilot.py:682"
+      ]
+    },
+    {
+      "id": "E113_RESUME_N2",
+      "status": "CLOSED_STATIC",
+      "request_lines": [
+        43,
+        58
+      ],
+      "basis": "Root and all four expected paths checked with lstat/S_ISDIR; exact full descendant-name set; walk/lstat errors fail; && blocks later actions on nonzero.",
+      "not_claimed": "No current remote work-tree inspection, concurrent replacement guarantee or functional rerun."
+    }
+  ],
+  "document_diff": {
+    "declared_regions_only": true,
+    "diff_hunks": 7,
+    "explicit_commands": 7,
+    "changed_commands": [
+      "b1"
+    ],
+    "unchanged_commands": [
+      "d0",
+      "d1",
+      "d2",
+      "d3",
+      "p1",
+      "d4"
+    ],
+    "b1_only_work_tree_subcommand_changed": true,
+    "newline_normalization": "LF for textual comparison; raw input bytes preserved"
+  },
+  "source_checks": {
+    "attachments_match_pin": true,
+    "current_raw_files": 3,
+    "prior_raw_files_unchanged_in_pin_comparison": 40,
+    "source_files_in_review": 43,
+    "repository_preserved_prior_review_objects_matched": 108,
+    "prior_v1_unchanged": true,
+    "fixed_programs_and_seals_unchanged": true,
+    "head_unchanged_at_final_observation": true
+  },
+  "retained": {
+    "prior_v3_static_closures": "RETAINED",
+    "R1_R8": "Retained with R5 minimum directory-type correction",
+    "c_rerun": false,
+    "historical_E1_identity": "2026-11-05 citation, not fresh identity execution",
+    "a0_not_before_utc": "2026-11-06T00:00:00Z",
+    "a0_not_before_kst": "2026-11-06T09:00:00+09:00",
+    "total_seconds": 21600,
+    "reserve_seconds": 1800,
+    "f_start_from_Ta_seconds": 7200,
+    "d_before_a0": true,
+    "source_execution_changes": 0
+  },
+  "scratch_test_provenance": "Six-directory-shape checks and current remote b1 rc0 are author-reported in request/ledger; not independently executed or observed here.",
+  "next_step": "Separate explicit user resume approval; no add_repo/probe/identity/fetch/run begins from this review.",
+  "actual_execution_authorized_by_review": false,
+  "user_resume_approval_created": false,
+  "C4A_gate_opened": false,
+  "performed": {
+    "received_program_execution": 0,
+    "received_program_import": 0,
+    "received_command_execution": 0,
+    "tests": 0,
+    "probe_execution": 0,
+    "identity_fetch_run": 0,
+    "COMSOL": 0,
+    "signals": 0,
+    "source_changes": 0,
+    "git_mutations": 0,
+    "external_transmission": 0
+  },
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null
+}

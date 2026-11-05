@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_REIL_E113_RESUME_REVIEW_PACKAGE_TOOL_RETURN",
+  "provenance": "Exact exec_command result received in this review, serialized afterward outside the completed review ZIP. Not this file own future write return, whole-review timing or independent remote execution audit.",
+  "tool_result": {
+    "chunk_id": "804fe2",
+    "wall_time_seconds": 0.6681165,
+    "exit_code": 0,
+    "original_token_count": 365,
+    "output": "{\r\n  \"kind\": \"REIL_E113_RESUME_REVIEW_PACKAGE_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4e_e1_1_3_resume_review_20261105\\\\REIL_C4E_E1_1_3_RESUME_REVIEW_20261105.zip\",\r\n    \"bytes\": 1218509,\r\n    \"sha256\": \"28250632c476d28ef0eb6b1e18b3c494da5261fcbe3475f881708d608a55c038\"\r\n  },\r\n  \"receipt\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4e_e1_1_3_resume_review_20261105\\\\DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 1972,\r\n    \"sha256\": \"b98df5b7d5e408031cf894bcb4be15da253714aa6b803d82e91475a63675dc16\"\r\n  },\r\n  \"post_package\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4e_e1_1_3_resume_review_20261105\\\\SELECTED_LOCAL_SOURCES_POST_PACKAGE.json\",\r\n    \"bytes\": 2516,\r\n    \"sha256\": \"4add34397a35e3d04da0543fd6bec9b41558bc5bc16efbb847d194cc0d1eaa74\"\r\n  },\r\n  \"payload_count\": 106,\r\n  \"entries\": 107,\r\n  \"decision\": \"RESUME_DIRECTION_ACCEPTABLE_TWO_CORRECTIONS_REQUIRED_BEFORE_APPROVAL\",\r\n  \"findings\": 2,\r\n  \"resume_direction_acceptable\": true,\r\n  \"resume_request_accepted\": false,\r\n  \"actual_execution_authorized_by_review\": false,\r\n  \"received_program_execution\": 0,\r\n  \"tests\": 0,\r\n  \"boundary\": \"After review ZIP and receipt write/readback; before actual tool return and later transcription.\"\r\n}\r\n"
+  }
+}
