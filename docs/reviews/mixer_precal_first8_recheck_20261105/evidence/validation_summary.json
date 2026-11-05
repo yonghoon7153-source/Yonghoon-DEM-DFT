@@ -1,0 +1,115 @@
+{
+  "parent_review_pin": "189930cc68b6e58beb6b4546d80353dc03852195",
+  "scope": "PRE8-01/02 input and loaded-source binding; no physical run",
+  "direct_observation_suites": {
+    "3.11.17": {
+      "methods": 28,
+      "result": "OK",
+      "rc": 0,
+      "log": "observe_final_py311.log"
+    },
+    "3.8.20": {
+      "methods": 28,
+      "result": "OK",
+      "rc": 0,
+      "log": "observe_final_py38.log"
+    }
+  },
+  "source_sha256": {
+    "scripts/mixer_precal_observe.py": "df22dcf03fcd628901ffb6ac7362579faee6e94285404a3163bed44d3666f013",
+    "scripts/mixer_precal_prepare.py": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6",
+    "scripts/mixer_contact_reader.py": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de",
+    "scripts/measure_mixing_index.py": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a",
+    "scripts/measure_bed_aspect.py": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880",
+    "scripts/make_mixer_deck.py": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "scripts/mixer_deck_readback.py": "bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f",
+    "scripts/mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "scripts/make_mixer_resume.py": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e",
+    "scripts/test_mixer_precal_observe.py": "df1a230b0c6a3ea836a522933918d023b596a3f681de73edc6857c8a1bcd3570"
+  },
+  "unchanged_preparation_and_scientific_sources": [
+    "mixer_precal_prepare.py",
+    "mixer_contact_reader.py",
+    "measure_mixing_index.py",
+    "measure_bed_aspect.py",
+    "make_mixer_deck.py",
+    "mixer_deck_readback.py",
+    "mixer_deck_diff.py",
+    "make_mixer_resume.py",
+    "test_mixer_precal_prepare.py"
+  ],
+  "previous_preparation14_methods": "Not rerun; source and test unchanged; previous external scope acceptance retained.",
+  "external_probe_replay": {
+    "before": "external_baseline.stdout.json",
+    "after": "external_fixed.stdout.json",
+    "observations_each": 9,
+    "baseline_defects_reproduced": 2,
+    "fixed_both_tech_without_metrics": true,
+    "original_received_files_unchanged": true,
+    "expectation_diff": "external_probe_expectations.diff",
+    "scope": "Original external callback and small fixture; prepare binding mock only; local temporary copies."
+  },
+  "internal_independent_source_probes": {
+    "groups": 3,
+    "passed": true,
+    "python": "3.11.17",
+    "evidence": "internal_source_review.json",
+    "scope": "sentinel/fresh process, stale timestamp-size pyc/canonical module, bootstrap compile error; not external closure"
+  },
+  "unmocked_api_boundary": {
+    "cases": 8,
+    "normal_bindings_stop_at_missing_frame": 8,
+    "forged_hashes_rejected": 8,
+    "mock_used": false,
+    "inputs_unchanged": true,
+    "scope": "negative boundary under new private loading; no positive full-size particle pipeline"
+  },
+  "test_first": {
+    "pre8_01_before.log": "2 targeted methods, 8 failing subcases before presence sealing",
+    "pre8_02_before.log": "2 targeted methods failed before loaded-source binding",
+    "intermediate_after_logs": "Preserved intermediate checks; final source evidence is the 28-method dual-version logs and independent source hashes."
+  },
+  "binding_limits": [
+    "Eight dependency modules are compiled from captured hashed bytes; observer recorded bytes compile to the executing module code.",
+    "Observer equality is not unique historical source-text proof for comment-only equivalent bytes.",
+    "Bootstrap failure may retain partial captured hashes; it does not claim all modules loaded successfully.",
+    "Trusted Python/stdlib/numpy/scipy and arbitrary in-memory monkeypatch attestation are outside this boundary.",
+    "Optional path and disk states are checked at boundaries, not a filesystem event history; source ABA cannot replace captured executed bytes.",
+    "Unit fixture prepare binding and one rotating cell_stats mock remain explicit; counts from distinct scopes are not summed.",
+    "Existing generator, scientific formulas, SOP, conditions, old18 and shared ledgers are unchanged.",
+    "No real LIGGGHTS log compatibility, positive100000-particle pipeline or physical/statistical qualification."
+  ],
+  "common_gate": {
+    "existing_direct_suite_wiring_unchanged": true,
+    "full_gate_run": false,
+    "status": "HOLD"
+  },
+  "external_recheck": "PENDING",
+  "self_closure": false,
+  "research_results": 0,
+  "actual_host_access": false,
+  "research_execution": false,
+  "active_registration_changed": false,
+  "raw_evidence_sha256": {
+    ".gitattributes": "5ec10f93561f18d0f1d8168e4afa5e6661756f1cce9172b536695d27825c617a",
+    "external_baseline.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "external_baseline.stdout.json": "41cecac3b4e30b2bcf3a8f42c66f0dda0c93837d410a4493d2e7816c7f8ac663",
+    "external_binding_probe_expected_fixed.py": "767874523270ef18096612f1f5d88ac9f3569704e9e9bd448e82005113441e2e",
+    "external_binding_probe_original.py": "969a72d7b2bd4744e1f082b3950c5e54187a4ceed5e2b19c33b8cf0b46f573e4",
+    "external_fixed.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "external_fixed.stdout.json": "db4b114742064dd9cbd0ce2b7b38b3156df3fe9e408a100b55fca6df04753b37",
+    "external_probe_expectations.diff": "315cd9778b5b02929ba420a842dddff1550727d8b5acdbfb764a8d264b998aa8",
+    "internal_source_probe.py": "7b1914f5c3547725cfcfba12f2155c5d6114236387105c911b822331e3d8af67",
+    "internal_source_review.json": "59fceb4e5826d1cd7bfb690392b904575dfd9692aaf70eb0988c85a757a45ce7",
+    "observe_final_py311.log": "419e62b96904cb01fcc9726539d8224dd56f7afaba74dfa2d72b48be4ce78a96",
+    "observe_final_py38.log": "bf780de1b13f8ee0f4fce3177e42aa81d85afbf05e8348a5d2f172aece5b48ec",
+    "observe_source_sha256.txt": "9e751c00d2e5db57888c9f0ce2eeb0fc430ad14fbdb603cd441c146ced0014fb",
+    "pre8_01_after.log": "0e139cc86f0e29a62fef5babd4dd49235350fe5d0422a5b6ca4fb161faaef8b3",
+    "pre8_01_before.log": "13387d9131d1c4373f025b26c173a4f0713309203d9dba26fb0133299b1d99e1",
+    "pre8_02_before.log": "5036f5732148e4db9d1e418ee41fb7b47f85dd9e929d7b1b0ee2648e89d449b9",
+    "pre8_02_boundary_after.log": "d6834d6a8e82d776cf022f21c84f09ed02ce0be9c65448fb105c9d42e0b5c01c",
+    "pre8_02_targeted_after.log": "a4fc2565594aa092fda421090da5fd56a84769b0da0b08080893d4788ad0feb9",
+    "unmocked_binding.json": "74207e9d7d97af20d1b56ae77605e346bc76ec13d9eb003d992d863152f1f4a1",
+    "unmocked_binding.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

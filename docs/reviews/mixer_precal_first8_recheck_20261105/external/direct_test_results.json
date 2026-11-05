@@ -1,0 +1,39 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "results": [
+    {
+      "test": "test_mixer_precal_prepare.py",
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\lhs28\\venv\\Scripts\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "-c",
+        "import sys,tempfile,runpy;sys.path.insert(0,sys.argv[1]);tempfile.tempdir=sys.argv[2];target=sys.argv[3];sys.argv=[target];runpy.run_path(target,run_name=\"__main__\")",
+        "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\mixer_precal_first8_review_20261104\\received\\scripts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\mixer_precal_first8_review_20261104\\scratch",
+        "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\mixer_precal_first8_review_20261104\\received\\scripts\\test_mixer_precal_prepare.py"
+      ],
+      "returncode": 0,
+      "tail": "state_restored_success_and_failure (__main__.Preparation.test_09_generator_state_restored_success_and_failure) ... ok\r\ntest_10_no_file_writes_or_stdout (__main__.Preparation.test_10_no_file_writes_or_stdout) ... ok\r\ntest_11_return_objects_not_shared (__main__.Preparation.test_11_return_objects_not_shared) ... ok\r\ntest_12_cli_report_only (__main__.Preparation.test_12_cli_report_only) ... ok\r\ntest_13_zero_guard_beyond_source_output_oracle (__main__.Preparation.test_13_zero_guard_beyond_source_output_oracle) ... ok\r\ntest_14_d2_readback_beyond_source_output_oracle (__main__.Preparation.test_14_d2_readback_beyond_source_output_oracle) ... ok\r\n\r\n----------------------------------------------------------------------\r\nRan 14 tests in 0.367s\r\n\r\nOK\r\n"
+    },
+    {
+      "test": "test_mixer_precal_observe.py",
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\lhs28\\venv\\Scripts\\python.exe",
+        "-I",
+        "-X",
+        "utf8",
+        "-B",
+        "-c",
+        "import sys,tempfile,runpy;sys.path.insert(0,sys.argv[1]);tempfile.tempdir=sys.argv[2];target=sys.argv[3];sys.argv=[target];runpy.run_path(target,run_name=\"__main__\")",
+        "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\mixer_precal_first8_review_20261104\\received\\scripts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\mixer_precal_first8_review_20261104\\scratch",
+        "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\mixer_precal_first8_review_20261104\\received\\scripts\\test_mixer_precal_observe.py"
+      ],
+      "returncode": 0,
+      "tail": "en_and_excess) ... ok\r\ntest_hand_contact_clusters_and_overlapping_am_fractions (__main__.Qualification.test_hand_contact_clusters_and_overlapping_am_fractions) ... ok\r\ntest_hand_m_no_clipping_and_undefined (__main__.Qualification.test_hand_m_no_clipping_and_undefined) ... ok\r\ntest_id_sequence_type_radius_and_late_change (__main__.Qualification.test_id_sequence_type_radius_and_late_change) ... ok\r\ntest_phase_allocation_differs_without_new_threshold (__main__.Qualification.test_phase_allocation_differs_without_new_threshold) ... ok\r\ntest_reference_geometry_seed_and_role (__main__.Qualification.test_reference_geometry_seed_and_role) ... ok\r\n\r\n----------------------------------------------------------------------\r\nRan 20 tests in 0.739s\r\n\r\nOK\r\n"
+    }
+  ]
+}

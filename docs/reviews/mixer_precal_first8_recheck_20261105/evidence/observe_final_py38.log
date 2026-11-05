@@ -1,0 +1,33 @@
+test_bad_meta_and_changed_deck (__main__.DiskContract) ... ok
+test_changed_metadata_and_frame_discard_metrics (__main__.DiskContract) ... ok
+test_e0_real_small_dump_and_no_bin (__main__.DiskContract) ... ok
+test_frozen_dump_strict_headers_and_shape (__main__.DiskContract) ... ok
+test_frozen_parser_raw_survives_path_aba (__main__.DiskContract) ... ok
+test_interrupted_missing_short_or_extra_log_is_tech (__main__.DiskContract) ... ok
+test_late_failure_never_computes_partial_metrics (__main__.DiskContract) ... ok
+test_log_header_and_each_run_endpoint (__main__.DiskContract) ... ok
+test_missing_dependency_source_is_tech (__main__.DiskContract) ... ok
+test_missing_duplicate_malformed_frame (__main__.DiskContract) ... ok
+test_no_se_is_undefined_not_zero (__main__.DiskContract) ... ok
+test_optional_n_expected_creation_is_tech (__main__.DiskContract) ... ok
+test_optional_n_expected_initial_presence_contract (__main__.DiskContract) ... ok
+test_raw_aba_cannot_change_metrics (__main__.DiskContract) ... ok
+test_reference_wrong_id_and_runtime_bad_binding (__main__.DiskContract) ... ok
+test_rotating_wiring_with_explicit_cell_stats_unit_mock (__main__.DiskContract) ... ok
+test_d13_zero_ten_eleven_and_excess (__main__.Qualification) ... ok
+test_hand_contact_clusters_and_overlapping_am_fractions (__main__.Qualification) ... ok
+test_hand_m_no_clipping_and_undefined (__main__.Qualification) ... ok
+test_id_sequence_type_radius_and_late_change (__main__.Qualification) ... ok
+test_phase_allocation_differs_without_new_threshold (__main__.Qualification) ... ok
+test_reference_geometry_seed_and_role (__main__.Qualification) ... ok
+test_fresh_process_executes_the_new_captured_dependency (__main__.SourceBoundary) ... ok
+test_fresh_registry_ignores_stale_canonical_modules (__main__.SourceBoundary) ... ok
+test_generator_source_open_is_captured (__main__.SourceBoundary) ... ok
+test_import_then_dependency_disk_change (__main__.SourceBoundary) ... ok
+test_import_then_observer_disk_change (__main__.SourceBoundary) ... ok
+test_observer_executing_code_must_match_captured_bytes (__main__.SourceBoundary) ... ok
+
+----------------------------------------------------------------------
+Ran 28 tests in 3.751s
+
+OK

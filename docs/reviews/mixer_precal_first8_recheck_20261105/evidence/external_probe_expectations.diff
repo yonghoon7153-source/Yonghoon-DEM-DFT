@@ -1,0 +1,31 @@
+--- original_probe
++++ fixed_expected_probe
+@@ -17,7 +17,7 @@
+ 
+ ROOT = Path(__file__).resolve().parent
+ RECEIVED = ROOT.parent / 'received'
+-PIN = '189930cc68b6e58beb6b4546d80353dc03852195'
++PIN = 'uncommitted PRE8 fix; use received_source_sha256 for exact source identity'
+ FILES = ['mixer_precal_observe.py', 'test_mixer_precal_observe.py',
+          'mixer_precal_prepare.py', 'mixer_contact_reader.py',
+          'measure_mixing_index.py', 'measure_bed_aspect.py',
+@@ -84,7 +84,7 @@
+         record.update(final_n_expected=(run/'n_expected').read_text().strip(),
+                       n_expected_in_hashes=str(run/'n_expected') in result['provenance']['input_sha256'])
+         results['probes']['optional_n_expected_created_after_load'] = record
+-        assert result['status'] == 'OK' and result['contact'] is not None, result
++        assert result['status'] == 'TECH' and result['contact'] is None and result['mixing'] is None, result
+         # The same final files are refused without further modification.
+         rerun = run_with_event(O,fixture,run,B)
+         assert rerun['status'] == 'TECH', rerun
+@@ -115,8 +115,8 @@
+         results['probes']['dependency_changed_after_import_before_entry'] = dict(
+             **compact(result), original_sha256=hashlib.sha256(original).hexdigest(),
+             current_file_sha256=sha(mixing_path), recorded_sha256=module_record['sha256'],
+-            recorded_source_contains_raising_sentinel=True)
+-        assert result['status'] == 'OK' and module_record['sha256'] == sha(mixing_path), result
++            recorded_source_contains_raising_sentinel=False)
++        assert result['status'] == 'TECH' and result['contact'] is None and result['mixing'] is None and module_record['sha256'] == hashlib.sha256(original).hexdigest() and module_record['sha256'] != sha(mixing_path), result
+ 
+         # A fresh process loads the exact bytes claimed by the previous result.
+         child = """import importlib.util,json,sys

@@ -1,0 +1,7 @@
+test_optional_n_expected_creation_is_tech (__main__.DiskContract.test_optional_n_expected_creation_is_tech) ... ok
+test_optional_n_expected_initial_presence_contract (__main__.DiskContract.test_optional_n_expected_initial_presence_contract) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.221s
+
+OK

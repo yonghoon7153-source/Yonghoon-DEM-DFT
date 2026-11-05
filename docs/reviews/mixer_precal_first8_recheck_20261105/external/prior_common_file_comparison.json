@@ -1,0 +1,58 @@
+{
+  "old_pin": "0f284e7db65278acb52dd4666b1b22151604e9ba",
+  "new_pin": "189930cc68b6e58beb6b4546d80353dc03852195",
+  "common": [
+    {
+      "path": "docs/reviews/codex_mixer_mxd2r_recheck_request_20261104.md",
+      "same": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_candidate_reader_contract_20261024.md",
+      "same": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_measurement_sop_draft_20261104.md",
+      "same": true
+    },
+    {
+      "path": "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "same": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_experiment_request_outline_20261104.md",
+      "same": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_exploration_registration_draft_20261104.md",
+      "same": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/README.md",
+      "same": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/planning_arithmetic.json",
+      "same": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/proposed_cells.tsv",
+      "same": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_map_draft_evidence_20261104/source_basis.json",
+      "same": true
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "same": true
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "same": true
+    },
+    {
+      "path": "scripts/mixer_contact_reader.py",
+      "same": true
+    }
+  ]
+}

@@ -16,11 +16,92 @@ import sys
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import mixer_contact_reader as contact
-import measure_mixing_index as mixing
-import measure_bed_aspect as bed
-from measure_bed_aspect import frames
+# Capture the executing module code before any research-module import. Equality
+# proves these recorded bytes compile to this code, not a unique historical text.
+_EXECUTING_CODE = sys._getframe().f_code
+import builtins
+import io
+import types
+
+_DEPENDENCIES = ('mixer_precal_prepare', 'mixer_contact_reader',
+                 'measure_mixing_index', 'measure_bed_aspect', 'make_mixer_deck',
+                 'mixer_deck_readback', 'mixer_deck_diff', 'make_mixer_resume')
+_BOUND_RAW, _BOUND_PATHS, _REGISTRY = {}, {}, {}
+_BOOT_ERROR = None
+_REAL_IMPORT = builtins.__import__
+_REAL_OPEN = builtins.open
+
+
+def _capture_source(path):
+    first = path.lstat()
+    if not stat.S_ISREG(first.st_mode):
+        raise ValueError('source must be regular non-symlink: '+str(path))
+    raw = path.read_bytes()
+    last = path.lstat()
+    fields = ('st_dev','st_ino','st_size','st_mtime_ns','st_ctime_ns','st_mode')
+    if any(getattr(first,k) != getattr(last,k) for k in fields):
+        raise ValueError('source changed during capture: '+str(path))
+    return raw
+
+
+def _private_import(name, globals=None, locals=None, fromlist=(), level=0):
+    if level == 0 and name in _DEPENDENCIES:
+        return _load_private(name)
+    return _REAL_IMPORT(name, globals, locals, fromlist, level)
+
+
+def _source_open(name):
+    def source_open(file, mode='r', *args, **kwargs):
+        try:
+            own = os.path.abspath(os.fspath(file)) == _BOUND_PATHS[name]
+        except TypeError:
+            own = False
+        if own:
+            if mode not in ('r','rt','rb'):
+                raise ValueError('bound module source is read-only')
+            stream = io.BytesIO(_BOUND_RAW[name])
+            if mode == 'rb':return stream
+            # These sealed modules use encoding= explicitly for textual reads.
+            return io.TextIOWrapper(stream, encoding=kwargs.get('encoding') or 'utf-8',
+                                    errors=kwargs.get('errors'), newline=kwargs.get('newline'))
+        return _REAL_OPEN(file, mode, *args, **kwargs)
+    return source_open
+
+
+def _load_private(name):
+    if name in _REGISTRY:return _REGISTRY[name]
+    module = types.ModuleType(name)
+    module.__file__ = _BOUND_PATHS[name]
+    module.__package__ = ''
+    local_builtins = dict(vars(builtins))
+    local_builtins.update(__import__=_private_import, open=_source_open(name))
+    module.__dict__['__builtins__'] = local_builtins
+    _REGISTRY[name] = module
+    exec(compile(_BOUND_RAW[name], module.__file__, 'exec',
+                 dont_inherit=True, optimize=sys.flags.optimize), module.__dict__)
+    return module
+
+
+try:
+    _self_path = Path(__file__).absolute()
+    _BOUND_PATHS['mixer_precal_observe'] = str(_self_path)
+    _BOUND_RAW['mixer_precal_observe'] = _capture_source(_self_path)
+    if compile(_BOUND_RAW['mixer_precal_observe'], _EXECUTING_CODE.co_filename,
+               'exec', dont_inherit=True, optimize=sys.flags.optimize) != _EXECUTING_CODE:
+        raise ValueError('recorded observer bytes do not compile to executing module code')
+    for _name in _DEPENDENCIES:
+        _path = _self_path.parent/(_name+'.py')
+        _BOUND_PATHS[_name] = str(_path)
+        _BOUND_RAW[_name] = _capture_source(_path)
+    for _name in _DEPENDENCIES:_load_private(_name)
+    preparation = _REGISTRY['mixer_precal_prepare']
+    contact = _REGISTRY['mixer_contact_reader']
+    mixing = _REGISTRY['measure_mixing_index']
+    bed = _REGISTRY['measure_bed_aspect']
+    frames = bed.frames
+except Exception as _error:
+    _BOOT_ERROR = str(_error)
+_BOUND_DIGESTS = {name: hashlib.sha256(raw).hexdigest() for name, raw in _BOUND_RAW.items()}
 
 SCHEMA = 'mixer_precal_observe/1'
 GRIDS = ((16, 4), (12, 3), (8, 2))
@@ -38,8 +119,7 @@ class Undefined(ValueError):
 def validate_case(case_id, deck, meta):
     # Lazy import permits the small unit fixtures to isolate the observation
     # layer; production always calls the actual independent preparation contract.
-    from mixer_precal_prepare import validate_case as validate
-    return validate(case_id, deck, meta)
+    return preparation.validate_case(case_id, deck, meta)
 
 
 def _need(ok, reason):
@@ -82,7 +162,26 @@ def _read(path, sources):
     return raw
 
 
-def _verify_sources(sources, listings):
+def _present(path):
+    # lstat includes dangling symlinks; only ENOENT is absence.
+    try:
+        Path(path).lstat()
+        return True
+    except FileNotFoundError:
+        return False
+
+
+def _verify_bound():
+    _need(_BOOT_ERROR is None, 'source bootstrap failed: '+str(_BOOT_ERROR))
+    for name, raw in _BOUND_RAW.items():
+        _need(_capture_source(Path(_BOUND_PATHS[name])) == raw,
+              'bound source changed: '+name)
+
+
+def _verify_sources(sources, listings, optional):
+    _verify_bound()
+    for path, present in optional.items():
+        _need(_present(path) == present, 'optional input presence changed: '+path)
     for path, digest in list(sources.items()):
         _need(_sha(_read(path, {})) == digest, 'input changed after qualification: '+path)
     for directory, names in listings.items():
@@ -182,7 +281,6 @@ def _parse_dump(raw, step):
 
 
 def _frozen_plan(deck, B, listing):
-    import mixer_precal_prepare as preparation
     D = preparation.rb.read_deck(deck.decode('utf-8'))
     runs, dt, period, de = D['runs'], D['dt'], D['period'], D['dump_every']
     _need(len(runs) == 4 and runs[0] == 1 and runs[1] == runs[2] and runs[1] > 0 and runs[3] >= 0, 'fresh four-run structure required')
@@ -239,15 +337,16 @@ def _log_contract(raw, runs):
                 limitation='completion log conditions only; not exitcode, MPI rank, host or same-execution certification')
 
 
-def _load(case_id, directory, sources, listings):
+def _load(case_id, directory, sources, listings, optional):
     directory = Path(directory).absolute()
     _need(directory.is_dir() and not directory.is_symlink(), 'run directory must be non-symlink')
+    ne = directory/'n_expected'
+    optional[str(ne)] = _present(ne)
     deck = _read(directory/'in.mixer', sources)
     meta = _strict_json(_read(directory/'deck_meta.json', sources))
     B = validate_case(case_id, deck, meta)
     _check_binding(B, case_id)
-    ne = directory/'n_expected'
-    if ne.exists() or ne.is_symlink():
+    if optional[str(ne)]:
         raw = _read(ne, sources).decode('ascii').strip()
         _need(raw.isdigit() and int(raw) == B['n_planned'], 'n_expected differs from planned count')
     post = directory/'post'
@@ -327,28 +426,30 @@ def analyse_run(case_id, run_dir, reference_dir=None):
                     'fresh-run first-eight observation only; no resume or bit-identical claim',
                     'observed phase allocation can differ from planned and affect observables',
                     'nonfinite auxiliary raw statistics serialize as null, never zero'])
-    sources, listings = {}, {}
+    result['provenance']['module_sha256'] = {
+        name: dict(path=_BOUND_PATHS[name], sha256=digest)
+        for name, digest in _BOUND_DIGESTS.items()}
+    result['provenance']['source_binding'] = (
+        'private dependencies compiled from recorded bytes; observer recorded bytes '
+        'compile to executing module code; not unique historical source-text proof')
+    # Bootstrap failures must not evaluate contact exception classes before load.
+    if _BOOT_ERROR is not None:
+        result['reasons'] = ['source bootstrap failed: '+_BOOT_ERROR]
+        return result
+    sources, listings, optional = {}, {}, {}
     try:
-        import mixer_precal_prepare as preparation
-        modules = (preparation, contact, mixing, bed,
-                   preparation.gen, preparation.rb, preparation.diff,
-                   sys.modules[preparation.diff.logical_commands.__module__])
-        module_paths = {m.__name__: str(Path(m.__file__).absolute()) for m in modules}
-        module_paths['mixer_precal_observe'] = str(Path(__file__).absolute())
-        result['provenance']['module_sha256'] = {
-            name: dict(path=path, sha256=_sha(_read(path, sources)))
-            for name, path in module_paths.items()}
-        run = _load(case_id, run_dir, sources, listings)
+        _verify_bound()
+        run = _load(case_id, run_dir, sources, listings, optional)
         ref = None
         if run['binding']['role'] != 'E0':
             _need(reference_dir is not None, 'rotating case requires E0 reference')
-            ref = _load('PRECAL_E0', reference_dir, sources, listings)
+            ref = _load('PRECAL_E0', reference_dir, sources, listings, optional)
             qualify_reference(run['binding'], ref['binding'])
         else:
             _need(reference_dir is None, 'E0 is a reference, not a rotating comparison')
-        _verify_sources(sources, listings)
+        _verify_sources(sources, listings, optional)
         cq, mq = _metrics(run, ref)
-        _verify_sources(sources, listings)
+        _verify_sources(sources, listings, optional)
         result.update(status='OK', contact=cq, mixing=mq, counts=run['counts'],
                       reference_counts=ref['counts'] if ref else None)
         result['provenance'].update(binding=run['binding'], frames=run['frames'],
@@ -361,13 +462,14 @@ def analyse_run(case_id, run_dir, reference_dir=None):
     except (ValueError, OSError, TypeError, KeyError, IndexError, OverflowError, SystemExit, contact.Tech) as exc:
         result.update(status='TECH', reasons=[str(exc)])
     try:
-        _verify_sources(sources, listings)
+        _verify_sources(sources, listings, optional)
     except (ValueError, OSError) as exc:
         result.update(status='TECH', reasons=[str(exc)])
     if result['status'] != 'OK':
         result.update(contact=None, mixing=None, counts=None, reference_counts=None)
     result['provenance']['input_sha256'] = dict(sources)
     result['provenance']['frame_listing_snapshot'] = dict(listings)
+    result['provenance']['optional_presence_snapshot'] = dict(optional)
     return _clean(result)
 
 

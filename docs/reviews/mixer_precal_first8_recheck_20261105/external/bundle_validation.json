@@ -1,0 +1,9 @@
+{
+  "pin": "189930cc68b6e58beb6b4546d80353dc03852195",
+  "zip_sha256": "51abe64c003c5767dcf791aee4cd582a4855793ffdb7b96d98ad078b8f740d92",
+  "zip_bytes": 474146,
+  "manifest_entries": 54,
+  "package_entries": 71,
+  "checks": "PASS",
+  "remote_blob_and_size_match": 54
+}

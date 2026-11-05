@@ -1,0 +1,10 @@
+{
+  "external_zip_bytes": 1041859,
+  "external_zip_sha256": "908d6194f3e522d50aadc826bafeefa68801401c7880b9e27336a7872764f949",
+  "members": 106,
+  "evidence_hash_entries_verified": 105,
+  "original_submitted_zip_bytes_identical": true,
+  "pasted_verdict_bytes_identical": true,
+  "local_fixed_pin_snapshot_files_verified": 54,
+  "remote_metadata": "external reviewer record; not repeated here"
+}
