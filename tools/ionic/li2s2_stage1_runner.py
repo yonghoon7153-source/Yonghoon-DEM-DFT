@@ -3172,7 +3172,10 @@ def _selftest():
         s8_ = J(c8_ / "STOP.json")
         rc_x8, L_x8, _ = go(wt, rr=c8_, ack=s8_["stop_id"])          # 상한을 올린 카드 (230 h) 로 상한 멈춤을 확인하고 이어가려 한다
         res_8[nm_] = (len(L_x8), rc_x8, summ(c8_)["track"])
-    chk(rc_8 == RC["cap"] and n8_ == 8 and all(v_ == (0, RC["invalid"], "invalid") for v_ in res_8.values()),
+        if nm_ == "verdict_tmp":
+            res_8["verdict_tmp_reason"] = "다시 쓰지 못했다" in J(c8_ / "STOP.json").get("reason", "")
+    chk(rc_8 == RC["cap"] and n8_ == 8 and res_8.pop("verdict_tmp_reason", False) is True
+        and all(v_ == (0, RC["invalid"], "invalid") for v_ in res_8.values()),
         "⛔음성 회신 DP P1-1 (Codex 재현): 8 실행까지만 끝난 묶음에서 A11 에 판정 임시 파일 (다시 판정 못 함 · written False) · 깨진 이력 줄 · 같은 열쇠 판정 "
         f"(재판정 뒤 원문만 남은 이전 판정) → 새 실행 0 · invalid 멈춤 · 요약 invalid ({rc_8} · {n8_} 실행 · {res_8})")
     # ⭐ 회신 DP P1-2 (Codex 재현) — 러너가 거부하는 장부 상태를 독립 요약도 통과시키지 않는다 (invalid · 2 단계 없음)
@@ -3197,6 +3200,86 @@ def _selftest():
     chk(s_ok_["track"] == "stage1_pass" and all(v_ == ("invalid", None) for v_ in res_s.values()),
         "⛔음성 회신 DP P1-2 (Codex 재현): 다 통과한 묶음에 장부 임시 파일 (A11 녹음 fail · 닫힘) · STOP 임시 파일 · 같은 실행의 장부 fail ↔ 폴더 pass · "
         f"장부 녹음 fail ↔ 폴더 pass · stop_history 누락 → 독립 요약도 invalid · 2 단계 없음 (손 안 댄 묶음은 통과) ({s_ok_['track']} · {res_s})")
+    # ⭐ 회신 DP P0-1 · P2-1 (교체 뒤 실패) — 파일 교체는 끝났는데 디렉터리 fsync 가 실패하면 (_AfterReplace) 메모리를 되돌리지 않고 · STOP 은 확정으로 둔다
+    if os.name == "posix":
+        import stat as _st5
+        _os5 = globals()["os"]
+        def _os_with_dirfail(arm_):
+            def _fsync_fail(fd_, _arm=arm_):
+                if _arm["on"] and _st5.S_ISDIR(_os5.fstat(fd_).st_mode):
+                    _arm["on"], _arm["fired"] = False, True
+                    raise OSError(5, "selftest — 디렉터리 fsync 실패 (교체 뒤)")
+                return _os5.fsync(fd_)
+            ns_ = _ty4.SimpleNamespace(**{k_: getattr(_os5, k_) for k_ in dir(_os5) if not k_.startswith("__")}); ns_.fsync = _fsync_fail
+            return ns_
+        res_ar = {}
+        for nm_ in ("ack", "loop"):
+            rw_ = pathlib.Path(tempfile.mkdtemp(dir=tmp_root))
+            go(wt, rr=rw_, scen={("A", 12): {"melt": "fail", "polls": 8}}, sleep_hook=_after_window(rw_, 12))
+            sw1_ = J(rw_ / "STOP.json")
+            fd_ = rw_ / "A/seed12"
+            if nm_ == "loop":
+                fd_.rename(fd_.with_name("seed12.cut1"))
+            arm_ar = {"on": False, "fired": False}
+            def _rkd_ar(*a_, _arm=arm_ar, **k_):
+                r_ = real.run_kind_detail(*a_, **k_)
+                if r_[0] == "scientific" and not _arm["fired"]:
+                    _arm["on"] = True
+                return r_
+            globals()["os"] = _os_with_dirfail(arm_ar)
+            try:
+                rc_ar, L_ar, _ = go(wt, rr=rw_, ack=sw1_["stop_id"], declare=OUT if nm_ == "ack" else None, mq=mq_with(run_kind_detail=_rkd_ar))
+            finally:
+                globals()["os"] = _os5
+            row_ = [x_ for x_ in J(rw_ / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
+            res_ar[nm_] = (arm_ar["fired"], rc_ar, len(L_ar), (row_.get("melt_check") or {}).get("verdict"))
+        arm_st = {"on": False, "fired": False}
+        def _rkd_none(*a_, **k_):
+            return real.run_kind_detail(*a_, **k_)
+        osx_ = _os_with_dirfail(arm_st)
+        _wja5 = globals()["_write_json_atomic"]
+        def _wja_stop(path_, obj_, _arm=arm_st):            # 녹음 fail 로 쓰는 terminal STOP 의 디렉터리 fsync 만 실패
+            if pathlib.Path(path_).name == "STOP.json" and isinstance(obj_, dict) and obj_.get("code") == "melt" and not _arm["fired"]:
+                _arm["on"] = True
+            return _wja5(path_, obj_)
+        globals()["os"], globals()["_write_json_atomic"] = osx_, _wja_stop
+        try:
+            rc_sa, L_sa, rr_sa = go(wt, scen={("A", 11): {"melt": "fail", "polls": 8}})
+        finally:
+            globals()["os"], globals()["_write_json_atomic"] = _os5, _wja5
+        res_ar["stop_terminal"] = (arm_st["fired"], J(rr_sa / "STOP.json").get("code"))
+        exp_ar = {"ack": (True, RC["refused"], 0, "fail"), "loop": (True, RC["invalid"], 0, "fail"), "stop_terminal": (True, "melt")}
+        chk(res_ar == exp_ar,
+            "⛔음성 회신 DP P0-1 · P2-1 (교체 뒤 실패): 본 녹음 fail 을 적은 장부 교체 뒤 디렉터리 fsync 가 실패해도 메모리를 되돌리지 않는다 — 확인은 거부 · "
+            f"재시도는 invalid · 장부에 fail 이 남는다 · terminal STOP 교체 뒤 실패도 끝 처리가 덮지 않는다 ({ {k: v for k, v in res_ar.items() if v != exp_ar.get(k)} })")
+    else:
+        print("  · 건너뜀 (POSIX 전용) 회신 DP 교체 뒤 디렉터리 fsync 실패 — 이 OS 는 디렉터리 fsync 를 하지 않는다")
+    # ⭐ 회신 DP (같은 꼴) — 실행 전 기록 · 장부 행을 한 구간으로: 실행 전 기록 교체가 끝나는 순간 미룬 신호가 와도 장부에 그 실행 행이 있다
+    arm_at = {"fired": False}
+    def _replace_att(src_, dst_, _arm=arm_at):
+        _os4.replace(src_, dst_)
+        if not _arm["fired"] and str(dst_).endswith(real.ATTEMPT_NAME):
+            _arm["fired"] = True
+            _PENDING.append("SIGTERM")
+    osa_ = _ty4.SimpleNamespace(**{k_: getattr(_os4, k_) for k_ in dir(_os4) if not k_.startswith("__")}); osa_.replace = _replace_att
+    globals()["os"] = osa_
+    try:
+        rc_at2, L_at2, rr_at2 = go(wt)
+    finally:
+        globals()["os"] = _os4
+    att_rid = J(rr_at2 / "A/seed11" / real.ATTEMPT_NAME)["run_id"]
+    rows_at = [x_ for x_ in J(rr_at2 / "stage1_ledger.json")["runs"] if x_.get("run_id") == att_rid]
+    chk(arm_at["fired"] and rc_at2 == RC["interrupted"] and not L_at2 and len(rows_at) == 1 and rows_at[0].get("end") is not None,
+        "⛔음성 회신 DP (같은 꼴): 실행 전 기록 교체가 끝나는 순간 미룬 신호가 와도 장부에 그 실행 행이 생기고 (발사 전) 마감된다 — 장부에 없는 폴더를 안 남긴다 "
+        f"({arm_at['fired']} · {rc_at2} · 발사 {len(L_at2)} · 행 {len(rows_at)})")
+    # ⭐ 회신 DP P1-1 — 담금질 끝 판정을 쓰지 못하면 (written False) 다음 시드로 가지 않고 invalid
+    def _sv_end(rd_, **k_):
+        if k_.get("reason") == "담금질 끝":
+            return {"status": "invalid", "written": False, "closes_system": False, "reasons": {"invalid": ["selftest — 판정 임시 파일이 남았다"]}}
+        return real.stage1_verdict(rd_, **k_)
+    rc_we, L_we, rr_we = go(wt, mq=mq_with(stage1_verdict=_sv_end))
+    chk(rc_we == RC["invalid"] and len(L_we) == 1 and "쓰지 못했다" in J(rr_we / "STOP.json").get("reason", ""),
+        f"⛔음성 회신 DP P1-1: 담금질 끝 판정을 쓰지 못하면 (written False) 다음 시드로 가지 않고 invalid ({rc_we} · 발사 {len(L_we)})")
     shutil.rmtree(tmp_root, ignore_errors=True)
     print(f"li2s2_stage1_runner selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
