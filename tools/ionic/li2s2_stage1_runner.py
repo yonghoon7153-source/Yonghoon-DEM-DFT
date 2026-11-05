@@ -103,7 +103,7 @@ from __future__ import annotations
 import argparse
 import copy, datetime, hashlib, importlib.util, json, os, pathlib, re, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "15e9a718cefb856a"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "3a876a9322e4a52e"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 EXPECTED_VALUES_SHA16 = "086de59c484f9c32"     # 카드 기계_판독_값 (mq.values_sha16) — ⭐ DO 전 리뷰 P2-12: 카드 값 (상한 포함) 을 바꾸면 이 줄도
                                                #   같이 바꾸고 다시 리뷰한다 (카드 파일만 고쳐서는 상한 멈춤을 넘기지 못한다)
 STOP_KEYS = ("at", "code", "reason", "terminal", "stop_id", "run_id", "sys", "seed", "cleanup", "rc", "verdict", "melt", "summary",
@@ -142,6 +142,10 @@ class _critical:
                     raise KeyboardInterrupt(f"신호 {nm_} (쓰기 구간 뒤에 받음)")
                 raise _RunnerSignal(f"신호 {nm_} (쓰기 구간 뒤에 받음)")
         return False
+
+
+class _AfterReplace(OSError):
+    """⭐ 회신 DP P0-1 — 파일 교체는 끝났는데 그 뒤 (디렉터리 fsync) 가 실패 — 디스크에는 새 내용이 있다. 부르는 쪽은 메모리를 되돌리지 않는다."""
 
 
 class _PersistFailed(Exception):
@@ -757,11 +761,14 @@ def _write_json_atomic(path, obj):
                 pass
             raise
         if os.name == "posix":
-            fd = os.open(str(path.parent), os.O_RDONLY)
             try:
-                os.fsync(fd)
-            finally:
-                os.close(fd)
+                fd = os.open(str(path.parent), os.O_RDONLY)
+                try:
+                    os.fsync(fd)
+                finally:
+                    os.close(fd)
+            except OSError as e_:                            # ⭐ 회신 DP P0-1 — 교체 뒤 실패는 '저장 실패' 가 아니다 (부르는 쪽이 되돌리지 않게 따로 알린다)
+                raise _AfterReplace(f"교체 뒤 디렉터리 fsync 실패 ({type(e_).__name__}: {e_})") from e_
 
 
 def run(a, deps=None):
@@ -784,8 +791,13 @@ def run(a, deps=None):
     def stop(code, reason, **detail):
         rec = {"at": _now(), "code": code, "reason": reason, "terminal": code in TERMINAL_STOPS, **detail}
         rec["stop_id"] = hashlib.sha256(json.dumps(rec, sort_keys=True, ensure_ascii=False, default=str).encode()).hexdigest()[:16]
-        _write_json_atomic(stop_p, rec)
-        state["stopped"] = True
+        with _critical():                                    # ⭐ 회신 DP P2-1 — STOP 저장과 종료 확정을 한 구간으로 (미룬 신호는 확정 뒤에 받는다)
+            try:
+                _write_json_atomic(stop_p, rec)
+            except _AfterReplace:
+                state["stopped"] = True                      # 디스크에 이 STOP 이 있다 — 끝 처리가 덮지 않게
+                raise
+            state["stopped"] = True
         log(f"⛔ 멈춤 ({code}) — {reason} · stop_id {rec['stop_id']}")
         return RC[code]
     def finish(ent, rc, status, wall_h, cleanup=None):
@@ -846,12 +858,15 @@ def run(a, deps=None):
                 new_["closes_system"], new_["closes_basis"] = True, basis_
             if new_ != r_:
                 old_ = copy.deepcopy(r_)
-                r_.clear(); r_.update(new_)
-                try:
-                    save_ledger()
-                except BaseException:
-                    r_.clear(); r_.update(old_)              # 저장 못 했으면 메모리도 되돌린다 (끝 처리가 반쯤 적은 것을 저장하지 않게)
-                    raise
+                with _critical():                            # ⭐ 회신 DP P0-1 — 메모리 변경 → 저장 → 성공 확정을 한 구간으로 (저장 뒤 미룬 신호가 되돌림으로 안 간다)
+                    r_.clear(); r_.update(new_)
+                    try:
+                        save_ledger()
+                    except _AfterReplace:
+                        raise                                # 디스크에 새 행이 있다 — 메모리를 되돌리지 않는다 (호출자는 그래도 멈춘다)
+                    except BaseException:
+                        r_.clear(); r_.update(old_)          # 교체 전 실패 — 메모리도 되돌린다 (끝 처리가 반쯤 적은 것을 저장하지 않게)
+                        raise
         except Exception as e_:
             raise _PersistFailed(f"{type(e_).__name__}: {str(e_)[:120]}") from e_
         what_ = "녹음 fail (보존 폴더에서 계산)" if obs.get("kind") == "melt" else f"폴더 판정 {obs.get('status')}"
@@ -927,10 +942,9 @@ def run(a, deps=None):
         if led_p.is_file():                                  # ⭐ 회신 DO P1 — 엄격히 읽는다 · 못 읽으면 state 에 안 넣고 거부 (끝 처리가 원본을 다시 쓰지 않게)
             try:
                 led0_ = _loads_strict(led_p.read_text(encoding="utf-8"))
-                if not (isinstance(led0_, dict) and isinstance(led0_.get("runs"), list) and isinstance(led0_.get("stop_history"), list)
-                        and all(isinstance(x_, dict) for x_ in led0_["runs"])
-                        and all(isinstance(x_, dict) for x_ in led0_["stop_history"])):   # ⭐ DP 전 리뷰 (둘째) F1 — 열쇠가 없어도 채워 넣지 않는다
-                    raise ValueError("장부 꼴이 아니다 (runs · stop_history 가 있고 객체 목록)")
+                shp_ = mq.ledger_shape_problems(led0_)       # ⭐ DP 전 리뷰 (둘째) F1 · 회신 DP P1-2 — 소비자와 같은 꼴 검사 (열쇠가 없어도 채워 넣지 않는다)
+                if shp_:
+                    raise ValueError("장부 꼴이 아니다 — " + " · ".join(shp_))
             except (OSError, ValueError, RecursionError) as e_:
                 log(f"⛔ 비용 장부를 엄격히 못 읽는다 ({type(e_).__name__}: {str(e_)[:80]}) — 원본을 덮어쓰지 않고 시작하지 않는다 (사람이 본다)")
                 return RC["refused"]
@@ -978,9 +992,10 @@ def run(a, deps=None):
             if not any(isinstance(h_, dict) and h_.get("stop_id") == sp["stop_id"] and h_.get("acked_at") for h_ in led["stop_history"]):
                 led["stop_history"].append({**{k_: sp[k_] for k_ in STOP_KEYS if k_ in sp}, "acked_at": _now(),
                                             **({"declaration": decl} if decl else {})})
-            save_ledger()                                    # ⭐ DO 전 리뷰 P2-15 — 확인 기록을 먼저 남기고 STOP 을 지운다
-            stop_p.unlink()
-            state["stop_pending"] = False
+            with _critical():                                # ⭐ 회신 DP — 확인 기록 저장 · STOP 지우기 · 확인 끝 표시를 한 구간으로
+                save_ledger()                                # ⭐ DO 전 리뷰 P2-15 — 확인 기록을 먼저 남기고 STOP 을 지운다
+                stop_p.unlink()
+                state["stop_pending"] = False
             log(f"  앞선 멈춤 {code} (stop_id {sp.get('stop_id')}) 확인" + (f" · 재시도 선언 {decl['reason']} ({decl['event']})" if decl else "")
                 + " — 장부 stop_history 로 옮기고 이어간다")
         elif declaration_from_args(a) is not None:           # 확인할 멈춤이 없는데 선언만 주면 조용히 버리지 않는다
@@ -1026,6 +1041,9 @@ def run(a, deps=None):
             rd = R / sysn / f"seed{seed}"
             if (rd / "stage1_verdict.json").is_file():
                 now_ = mq.stage1_verdict(rd, values=vals, log=lambda *m: None, reason="러너 재시작 — 판정 파일을 믿지 않고 원자료로 다시 판정")
+                if now_.get("written") is False:             # ⭐ 회신 DP P1-1 — 다시 판정하지 못했다 (판정 임시 파일) = 보류 · 디스크의 옛 판정으로 가지 않는다
+                    return stop("invalid", f"{sysn}{seed} 판정을 다시 쓰지 못했다 — {' · '.join((now_.get('reasons') or {}).get('invalid', []))[:200]}",
+                                sys=sysn, seed=seed, run_id=_folder_run_id(rd))
                 if now_.get("status") in ("pass", "fail") and isinstance(now_.get("run_id"), str):
                     rejudged.append((sysn, seed, now_))
                 hh = now_.get("history") or {}
@@ -1108,14 +1126,15 @@ def run(a, deps=None):
             cmd = build_cmd(a.python, W, R, sysn, seed, vals, mq, run_id=rid)
             t0 = clock()
             log(f"▶ {sysn}{seed} 담금질 — " + " ".join(cmd[2:]))
-            rd.mkdir(parents=True, exist_ok=False)
-            _write_json_atomic(rd / mq.ATTEMPT_NAME, {"system": sysn, "seed": seed, "run_id": rid,
-                                                     "retry_of": retry_of, "retry_stop_id": retry_stop, "retry_kind": retry_kind})
-            ent = {"system": sysn, "seed": seed, "run_id": rid, "start": _now(), "start_epoch": wall(), "pgid": None,
-                   "start_recovery_clock": recovery_clock(), "retry_of": retry_of, "retry_stop_id": retry_stop, "retry_kind": retry_kind,
-                   "status": "starting", "end": None, "wall_h": None, "wall_h_so_far": 0.0, "cum_before_h": cum}
-            led["runs"].append(ent); state["entry"], state["t0"] = ent, t0
-            save_ledger()
+            with _critical():                                # ⭐ 회신 DP — 폴더 · 실행 전 기록 · 장부 행을 한 구간으로 (그 사이 신호로 장부에 없는 폴더를 안 남긴다)
+                rd.mkdir(parents=True, exist_ok=False)
+                _write_json_atomic(rd / mq.ATTEMPT_NAME, {"system": sysn, "seed": seed, "run_id": rid,
+                                                         "retry_of": retry_of, "retry_stop_id": retry_stop, "retry_kind": retry_kind})
+                ent = {"system": sysn, "seed": seed, "run_id": rid, "start": _now(), "start_epoch": wall(), "pgid": None,
+                       "start_recovery_clock": recovery_clock(), "retry_of": retry_of, "retry_stop_id": retry_stop, "retry_kind": retry_kind,
+                       "status": "starting", "end": None, "wall_h": None, "wall_h_so_far": 0.0, "cum_before_h": cum}
+                led["runs"].append(ent); state["entry"], state["t0"] = ent, t0
+                save_ledger()
             def _launch_and_record():                        # ⭐ DO 전 리뷰 P2-9 — 신호는 손잡이를 적은 뒤에 받는다 (띄운 자식을 놓치지 않게)
                 with _critical():                            # ⭐ DP 전 리뷰 (둘째) F4 — 다른 스레드가 받은 신호도 (처리기는 주 스레드) 구간 끝에서
                     h_ = launch(cmd, R / f"quench_{sysn}{seed}.log")
@@ -1191,6 +1210,9 @@ def run(a, deps=None):
                 return stop("abnormal", f"{sysn}{seed} 담금질 rc {rc} — 비정상 종료 (사용자 결정 · 그 계를 어떻게 할지)", sys=sysn, seed=seed, rc=rc,
                             run_id=rid)
             v = mq.stage1_verdict(rd, values=vals, log=log, reason="담금질 끝")
+            if v.get("written") is False:                    # ⭐ 회신 DP P1-1 — 판정을 쓰지 못했다 (판정 임시 파일) = 보류
+                return stop("invalid", f"{sysn}{seed} 판정을 쓰지 못했다 — {' · '.join((v.get('reasons') or {}).get('invalid', []))[:200]}",
+                            sys=sysn, seed=seed, run_id=rid)
             ent["verdict"], ent["closes_system"] = v.get("status"), bool(v.get("closes_system"))
             save_ledger()
             if cum + el > cap:                               # 끝난 뒤에도 넘었으면 통과로 올리지 않는다 (회신 DG P0-3)
@@ -2773,7 +2795,12 @@ def _selftest():
              "dup_key": (_led_edit(raw=lambda l_: json.dumps(l_).replace('"runs":', '"runs": [], "runs":', 1)), "같은 열쇠"),
              "huge": (_led_edit(raw=_big), "유한한 비음수"),
              "below_heartbeat": (_led_edit(lambda l_: l_["runs"][0].update(wall_h_so_far=float(l_["runs"][0]["wall_h"]) + 5.0)), "자기 하한")}
-    s_close = _led_edit(lambda l_: l_["runs"][0].update(closes_system=True, melt_check={"verdict": "fail", "message": "x"}))
+    c_cl = clone(rr_d)                                       # 장부에만 적힌 첫 시드 닫힘 — 폴더 판정은 닫힘을 모른다 (끊긴 런 · incomplete) · ⭐ 회신 DP: pass 면 같은 실행 충돌 (invalid · 아래)
+    l_cl = J(c_cl / "stage1_ledger.json"); l_cl["runs"][0].update(closes_system=True, melt_check={"verdict": "fail", "message": "x"})
+    _write_json_atomic(c_cl / "stage1_ledger.json", l_cl)
+    v_cl = J(c_cl / "A/seed11/stage1_verdict.json"); v_cl["status"] = "incomplete"
+    (c_cl / "A/seed11/stage1_verdict.json").write_text(json.dumps(v_cl, ensure_ascii=False), encoding="utf-8")
+    s_close = summ(c_cl)
     c_tv = clone(rr_d); (c_tv / "A/seed11/stage1_verdict.json").write_text('{"status": "pa', encoding="utf-8")
     s_tv = summ(c_tv)
     got_l = {k: inv_(v_, w_) for k, (v_, w_) in led_t.items()}
@@ -3063,6 +3090,113 @@ def _selftest():
         "⛔음성 DP 전 리뷰 (둘째) F1 · F2 · F6: runs · stop_history 가 없거나 원소가 객체가 아닌 장부는 채워 넣지 않고 거부 (원본 그대로) · 앞 쓰기가 남긴 "
         "장부 · STOP 임시 파일이 있으면 거부 (임시 · 장부 그대로) · 원자 쓰기는 남은 임시 파일을 덮지 않는다 · 증언도 거부 · 확인 중 예외는 앞 STOP 을 "
         f"덮지 않는다 ({ {k: v for k, v in res_sh.items() if v != exp_sh[k]} })")
+    # ⭐ 회신 DP P0-1 (Codex 재현) — 본 결과를 장부에 적은 **교체가 끝나는 순간** 미룬 신호 → 끝 처리가 옛 행을 다시 쓰지 않는다 ·
+    #   그 뒤 궤적 손상 + 원인 고침 선언으로도 재담금질하지 않는다 (확인 · 재시도 × 첫 · 둘째 시드)
+    import types as _ty4
+    _os4 = globals()["os"]
+    res_b = {}
+    for nm_, sd_, path_ in (("ack_first", 11, "ack"), ("ack_second", 12, "ack"), ("loop_first", 11, "loop"), ("loop_second", 12, "loop")):
+        rw_ = pathlib.Path(tempfile.mkdtemp(dir=tmp_root))
+        go(wt, rr=rw_, scen={("A", sd_): {"melt": "fail", "polls": 8}}, sleep_hook=_after_window(rw_, sd_))
+        sw1_ = J(rw_ / "STOP.json")
+        fd_ = rw_ / "A" / f"seed{sd_}"
+        if path_ == "loop":
+            fd_.rename(fd_.with_name(f"seed{sd_}.cut1")); fd_ = fd_.with_name(f"seed{sd_}.cut1")
+        arm_b = {"on": False, "fired": False}
+        def _rkd_arm(*a_, _arm=arm_b, **k_):
+            r_ = real.run_kind_detail(*a_, **k_)
+            if r_[0] == "scientific" and not _arm["fired"]:
+                _arm["on"] = True
+            return r_
+        def _replace_pend(src_, dst_, _arm=arm_b):
+            _os4.replace(src_, dst_)
+            if _arm["on"] and str(dst_).endswith("stage1_ledger.json"):
+                _arm["on"], _arm["fired"] = False, True
+                _PENDING.append("SIGTERM")                   # 처리기가 쓰기 구간 안에서 불려 미뤄 둔 상태 — 교체가 끝나는 순간 (Codex 주입 자리)
+        osb_ = _ty4.SimpleNamespace(**{k_: getattr(_os4, k_) for k_ in dir(_os4) if not k_.startswith("__")}); osb_.replace = _replace_pend
+        globals()["os"] = osb_
+        try:
+            rc2_, L2_, _ = go(wt, rr=rw_, ack=sw1_["stop_id"], declare=OUT if path_ == "ack" else None, mq=mq_with(run_kind_detail=_rkd_arm))
+        finally:
+            globals()["os"] = _os4
+        row_ = [x_ for x_ in J(rw_ / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", sd_)][-1]
+        kept_ = ((row_.get("melt_check") or {}).get("verdict"), row_.get("closes_system") is True)
+        _damage_species(fd_)
+        st_now = J(rw_ / "STOP.json")
+        if path_ == "ack":
+            rc3_, L3_, _ = go(wt, rr=rw_, ack=st_now["stop_id"], declare={**FIX, "rejudge_impossible_reason": "selftest"})
+        else:
+            rc3_, L3_, _ = go(wt, rr=rw_, ack=st_now["stop_id"])
+        res_b[nm_] = (arm_b["fired"], rc2_, len(L2_), kept_, len(L3_), summ(rw_)["track"] != "stage1_pass")
+    exp_b = {"ack_first": (True, RC["interrupted"], 0, ("fail", True), 0, True), "ack_second": (True, RC["interrupted"], 0, ("fail", False), 0, True),
+             "loop_first": (True, RC["interrupted"], 0, ("fail", True), 0, True), "loop_second": (True, RC["interrupted"], 0, ("fail", False), 0, True)}
+    chk(res_b == exp_b,
+        "⛔음성 회신 DP P0-1 (Codex 재현): 본 녹음 fail 을 적은 장부 교체가 끝나는 순간 미룬 신호가 와도 — 메모리를 되돌리지 않고 (적기 · 확정을 한 구간) 끝 저장이 "
+        "그 행을 지키고 (첫 시드는 closes_system) · 뒤 궤적 손상 + 원인 고침 선언으로도 재발사 0 · stage1_pass 아님 "
+        f"({ {k: v for k, v in res_b.items() if v != exp_b[k]} })")
+    # ⭐ 회신 DP P2-1 — terminal STOP (melt) 교체가 끝나는 순간 미룬 신호 → 끝 처리가 interrupted 로 덮지 않는다
+    arm_s = {"fired": False}
+    def _replace_stop(src_, dst_, _arm=arm_s):
+        _os4.replace(src_, dst_)
+        if not _arm["fired"] and str(dst_).endswith("STOP.json"):
+            _arm["fired"] = True
+            _PENDING.append("SIGTERM")
+    oss_ = _ty4.SimpleNamespace(**{k_: getattr(_os4, k_) for k_ in dir(_os4) if not k_.startswith("__")}); oss_.replace = _replace_stop
+    globals()["os"] = oss_
+    try:
+        rc_ps, L_ps, rr_ps = go(wt, scen={("A", 11): {"melt": "fail", "polls": 8}})
+    finally:
+        globals()["os"] = _os4
+    sps_ = J(rr_ps / "STOP.json")
+    chk(arm_s["fired"] and rc_ps == RC["interrupted"] and sps_.get("code") == "melt" and sps_.get("terminal") is True,
+        f"⛔음성 회신 DP P2-1: terminal STOP (melt) 교체가 끝나는 순간 미룬 신호가 와도 끝 처리가 interrupted 로 덮지 않는다 ({rc_ps} · {sps_.get('code')} · {sps_.get('terminal')})")
+    # ⭐ 회신 DP P1-1 (Codex 재현) — 8 실행까지만 끝난 묶음 (상한 멈춤) 에서 A11 에 판정 임시 파일 · 깨진 이력 · 같은 열쇠 판정 → 추가 실행 0
+    rc_8a, L_8a, rr_8a = go(wt)
+    wl_ = [float(x_["wall_h"]) for x_ in J(rr_8a / "stage1_ledger.json")["runs"]]
+    cap8 = sum(wl_[:8]) + max(wl_[:8] + [21.0]) - 0.5          # 8 번째 뒤 '누적 + 최악 > 상한' (7 번째 뒤는 아님)
+    wt_8 = mk_wt(card=mk_card(stage1_cap_gpu_h=cap8))
+    rc_8, L_8, rr_8 = go(wt_8)
+    n8_ = len(J(rr_8 / "stage1_ledger.json")["runs"])
+    def _vtmp(d_):
+        (d_ / "stage1_verdict.json.tmp").write_text('{"status": "pass"}', encoding="utf-8")
+    def _hist_broken(d_):
+        with open(d_ / real.VERDICT_HISTORY, "a", encoding="utf-8") as fh_:
+            fh_.write('{"prev": {"status": "fa\n')
+    def _dup_verdict(d_):
+        vf_ = d_ / "stage1_verdict.json"; t_ = vf_.read_text(encoding="utf-8")
+        vf_.write_text(t_.replace('"status": "pass"', '"status": "fail", "status": "pass"', 1), encoding="utf-8")
+    res_8 = {}
+    for nm_, fn_ in (("verdict_tmp", _vtmp), ("history_broken", _hist_broken), ("dup_key_verdict", _dup_verdict)):
+        c8_ = clone(rr_8)
+        fn_(c8_ / "A/seed11")
+        s8_ = J(c8_ / "STOP.json")
+        rc_x8, L_x8, _ = go(wt, rr=c8_, ack=s8_["stop_id"])          # 상한을 올린 카드 (230 h) 로 상한 멈춤을 확인하고 이어가려 한다
+        res_8[nm_] = (len(L_x8), rc_x8, summ(c8_)["track"])
+    chk(rc_8 == RC["cap"] and n8_ == 8 and all(v_ == (0, RC["invalid"], "invalid") for v_ in res_8.values()),
+        "⛔음성 회신 DP P1-1 (Codex 재현): 8 실행까지만 끝난 묶음에서 A11 에 판정 임시 파일 (다시 판정 못 함 · written False) · 깨진 이력 줄 · 같은 열쇠 판정 "
+        f"(재판정 뒤 원문만 남은 이전 판정) → 새 실행 0 · invalid 멈춤 · 요약 invalid ({rc_8} · {n8_} 실행 · {res_8})")
+    # ⭐ 회신 DP P1-2 (Codex 재현) — 러너가 거부하는 장부 상태를 독립 요약도 통과시키지 않는다 (invalid · 2 단계 없음)
+    def _sum_case(fn_):
+        c_ = clone(rr_d); fn_(c_); r_ = summ(c_)
+        return (r_["track"], r_.get("stage2"))
+    def _led_tmp(c_):
+        l_ = J(c_ / "stage1_ledger.json"); l_["runs"][0].update(melt_check={"verdict": "fail"}, closes_system=True)
+        (c_ / "stage1_ledger.json.tmp").write_text(json.dumps(l_), encoding="utf-8")
+    def _stop_tmp(c_):
+        (c_ / "STOP.json.tmp").write_text(json.dumps({"code": "melt", "terminal": True, "stop_id": "x" * 16}), encoding="utf-8")
+    def _same_run_fail(c_):
+        l_ = J(c_ / "stage1_ledger.json"); l_["runs"][2]["verdict"] = "fail"; _write_json_atomic(c_ / "stage1_ledger.json", l_)
+    def _same_run_melt(c_):
+        l_ = J(c_ / "stage1_ledger.json"); l_["runs"][2]["melt_check"] = {"verdict": "fail"}; _write_json_atomic(c_ / "stage1_ledger.json", l_)
+    def _no_hist(c_):
+        l_ = J(c_ / "stage1_ledger.json"); l_.pop("stop_history", None)
+        (c_ / "stage1_ledger.json").write_text(json.dumps(l_), encoding="utf-8")
+    res_s = {k_: _sum_case(f_) for k_, f_ in (("ledger_tmp", _led_tmp), ("stop_tmp", _stop_tmp), ("same_run_fail", _same_run_fail),
+                                               ("same_run_melt_fail", _same_run_melt), ("no_stop_history", _no_hist))}
+    s_ok_ = summ(clone(rr_d))
+    chk(s_ok_["track"] == "stage1_pass" and all(v_ == ("invalid", None) for v_ in res_s.values()),
+        "⛔음성 회신 DP P1-2 (Codex 재현): 다 통과한 묶음에 장부 임시 파일 (A11 녹음 fail · 닫힘) · STOP 임시 파일 · 같은 실행의 장부 fail ↔ 폴더 pass · "
+        f"장부 녹음 fail ↔ 폴더 pass · stop_history 누락 → 독립 요약도 invalid · 2 단계 없음 (손 안 댄 묶음은 통과) ({s_ok_['track']} · {res_s})")
     shutil.rmtree(tmp_root, ignore_errors=True)
     print(f"li2s2_stage1_runner selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1

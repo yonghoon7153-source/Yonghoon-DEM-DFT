@@ -1845,6 +1845,31 @@ def loads_strict(text):
     return json.loads(text, object_pairs_hook=_no_dup_pairs)
 
 
+RECORD_TMP_NAMES = (LEDGER_NAME + ".tmp", "STOP.json.tmp")   # ⭐ 회신 DP P1-2 — 러너의 원자 쓰기가 끊기면 남는 임시 파일 (그 안이 더 새 기록일 수 있다)
+
+
+def ledger_shape_problems(led):
+    """⭐ 회신 DP P1-2 — 장부 꼴 검사 한 곳 (러너 · 소비자가 같이 쓴다): 객체 · runs 와 stop_history 가 **있고** 둘 다 객체 목록.
+    없는 열쇠를 [] 로 채워 읽지 않는다 (러너는 거부하는데 소비자는 통과시키던 갈래 — stop_history 누락)."""
+    if not isinstance(led, dict):
+        return ["장부가 객체가 아니다"]
+    out = []
+    for k in ("runs", "stop_history"):
+        if k not in led:
+            out.append(f"장부에 {k} 가 없다")
+        elif not isinstance(led[k], list):
+            out.append(f"장부 {k} 가 목록이 아니다")
+        elif not all(isinstance(x, dict) for x in led[k]):
+            out.append(f"장부 {k} 원소가 객체가 아니다")
+    return out
+
+
+def record_tmp_problems(out_root):
+    """⭐ 회신 DP P1-2 — run_root 에 남은 장부 · STOP 임시 파일 = 미해결 기록 (러너는 시작을 거부한다 · 소비자도 통과시키지 않는다 · 자동 승격 안 함)."""
+    return [f"{n} 이 남았다 — 앞 쓰기가 끊겼다 · 그 안이 더 새 기록일 수 있다 (사람이 내용과 계보를 보고 정리)"
+            for n in RECORD_TMP_NAMES if os.path.lexists(pathlib.Path(out_root) / n)]
+
+
 def ledger_check(out_root, verdicts, values):
     """장부 검사 — 판독 예외가 나도 죽지 않고 invalid 로 돌린다 (DO 전 리뷰 F6). 아래 _ledger_check 의 설명을 본다."""
     try:
@@ -1868,14 +1893,14 @@ def _ledger_check(out_root, verdicts, values):
     invalid, pending, by_id, attested = [], [], {}, []
     try:
         led = loads_strict(p.read_text(encoding="utf-8"))
-        runs, stop_hist = led.get("runs"), led.get("stop_history", [])
+        shp_ = ledger_shape_problems(led)                    # ⭐ 회신 DP P1-2 — 러너와 같은 꼴 검사 (없는 열쇠를 채우지 않는다)
+        if shp_:
+            raise ValueError(" · ".join(shp_))
+        runs, stop_hist = led["runs"], led["stop_history"]
     except (ValueError, UnicodeDecodeError, AttributeError, RecursionError) as e:
         return {"total_h": float("nan"), "cap_h": float(values["stage1_cap_gpu_h"]), "invalid": [f"장부를 못 읽었다 ({type(e).__name__}: {str(e)[:60]})"],
                 "pending": [], "runs": 0, "attested": [], "closing": [], "source": str(p)}
-    if not isinstance(runs, list):
-        invalid.append("장부 runs 가 목록이 아니다"); runs = []
-    if not isinstance(stop_hist, list):
-        invalid.append("장부 stop_history 가 목록이 아니다"); stop_hist = []
+    invalid.extend(record_tmp_problems(out_root))            # ⭐ 회신 DP P1-2 — 장부 · STOP 임시 파일 = 미해결 기록
     req_att = list(values.get("attestation_required_fields") or [])
     tot, closing = 0.0, []
     for r in runs:
@@ -2029,6 +2054,13 @@ def _ledger_check(out_root, verdicts, values):
             invalid.append(f"{s}{sd} 판정의 run_id {rid[:8]} 가 장부에 없다 — 비용이 안 잡힌 실행")
         elif (r.get("system"), r.get("seed")) != (s, sd):
             invalid.append(f"{s}{sd} 판정의 run_id {rid[:8]} 는 장부에서 {r.get('system')}{r.get('seed')} 런이다")
+        else:                                                 # ⭐ 회신 DP P1-2 · Q2 — 같은 실행의 과학적 판정 충돌 (러너 ①-4 와 같은 규칙)
+            st_f, st_l = vv.get("status"), r.get("verdict")
+            mf_ = isinstance(r.get("melt_check"), dict) and r["melt_check"].get("verdict") == "fail"
+            if st_l in ("pass", "fail") and st_f in ("pass", "fail") and st_l != st_f:
+                invalid.append(f"{s}{sd}: 같은 실행 {rid[:8]} 의 장부 판정 {st_l} ≠ 폴더 판정 {st_f} — 원자료 · 도구가 바뀌었을 수 있다 (사람이 본다)")
+            elif mf_ and st_f == "pass":
+                invalid.append(f"{s}{sd}: 같은 실행 {rid[:8]} 이 장부에 녹음 fail 인데 폴더 판정은 pass — 과학적 탈락을 덮을 수 없다 (사람이 본다)")
     return {"total_h": tot, "cap_h": float(values["stage1_cap_gpu_h"]), "invalid": invalid, "pending": pending,
             "runs": len(runs), "attested": attested, "closing": closing, "source": str(p)}
 
@@ -2134,6 +2166,16 @@ def _stage1_summary_core(root, v):
             except (ValueError, UnicodeDecodeError, RecursionError) as e:     # ⭐ DO 전 리뷰 — 잘린 판정에 죽지 않는다
                 ver[(s, sd)] = {"status": "invalid", "system": s, "seed": sd, "closes_system": False,
                                 "reasons": {"invalid": [f"판정 파일을 못 읽는다 ({type(e).__name__}) → --stage1_verdict 로 다시 판정"]}}
+                stale.append(f"{s}{sd}")
+                continue
+            recs_, rprob_ = _verdict_records(rd)              # ⭐ 회신 DP P1-1 — 현재 폴더의 미해결 기록 (판정 임시 파일 · 깨진 이력 · 원문만 남은 판정)
+            if rprob_ is None and any(isinstance(r_, dict) and r_.get("status") is None for _, r_, part_ in recs_ if not part_):
+                rprob_ = ("판정 이력에 못 읽은 이전 판정 (상태 없음 · 원문만) 이 있다 — 그 원문이 과학적 판정이었는지 모른다 · 최신 판정으로 "
+                          "자동 해제하지 않는다 (사람이 원문을 보고 정한다)")
+            if rprob_:
+                ver[(s, sd)] = {"status": "invalid", "system": s, "seed": sd, "closes_system": vv.get("closes_system") is True,
+                                "run_id": vv.get("run_id") if isinstance(vv.get("run_id"), str) else None,
+                                "reasons": {"invalid": [f"미해결 판정 기록 — {rprob_}"]}}
                 stale.append(f"{s}{sd}")
                 continue
             shp = _verdict_shape_problem(vv)                  # ⭐ 회신 DO P2 — 중첩 꼴 (provenance [1] · software [1] · run_id {} …)
@@ -4041,6 +4083,25 @@ def _selftest():
             and (rv_ / "stage1_verdict.json.tmp").read_text(encoding="utf-8") == '{"status": "pass"}'
             and (rv_ / "stage1_verdict.json").read_text(encoding="utf-8") == '{"status": "incomplete"}' and not (rv_ / VERDICT_HISTORY).exists(),
             f"⛔음성 DP 전 리뷰 (둘째) F2: 판정 임시 파일이 남은 폴더는 다시 판정해도 아무것도 안 쓴다 (앞 쓰기의 흔적을 덮지 않는다) ({vt_['status']})")
+        # ⭐ 회신 DP P2-2 — 직접 진입 엄격 판독: 카드 기계_판독_값 · G4 밴드 카드 · gate_check · seed_gate 의 plan 에 같은 열쇠 둘 (마지막 값이 정본이어도) = 거부
+        def _raises_dup(fn_):
+            try:
+                fn_(); return False
+            except ValueError as e_:
+                return "같은 열쇠" in str(e_)
+        card_t = LI2S2_CARD.read_text(encoding="utf-8") if hasattr(LI2S2_CARD, "read_text") else pathlib.Path(LI2S2_CARD).read_text(encoding="utf-8")
+        cdup_ = pathlib.Path(td_) / "_card_dup.json"
+        cdup_.write_text(card_t.replace('"기계_판독_값": ', '"기계_판독_값": {"x": 1}, "기계_판독_값": ', 1), encoding="utf-8")
+        band_q = pathlib.Path(BAND_CARD) if pathlib.Path(BAND_CARD).exists() else pathlib.Path(__file__).resolve().parents[2] / BAND_CARD
+        bdup_ = pathlib.Path(td_) / "_band_dup.json"
+        bdup_.write_text(band_q.read_text(encoding="utf-8").replace(f'"{BAND_PATH[0]}": ', f'"{BAND_PATH[0]}": {{"x": 1}}, "{BAND_PATH[0]}": ', 1), encoding="utf-8")
+        gdup_ = pathlib.Path(td_) / "_gate_plan_dup"; gdup_.mkdir()
+        (gdup_ / "plan.json").write_text('{"melt_ps": 100.0, "melt_ps": 1.0}', encoding="utf-8")
+        dd_ = {"card": _raises_dup(lambda: read_li2s2_values(cdup_)), "band": _raises_dup(lambda: read_band(bdup_)),
+               "gate_check": _raises_dup(lambda: gate_check(gdup_, log=lambda *a: None)),
+               "seed_gate": _raises_dup(lambda: seed_gate(gdup_, write_raw=False, log=lambda *a: None))}
+        chk(all(dd_.values()) and card_t.count('"기계_판독_값"') == 1,
+            f"⛔음성 회신 DP P2-2: 직접 진입에서도 같은 열쇠 둘을 받지 않는다 — 카드 기계_판독_값 · G4 밴드 카드 · gate_check · seed_gate 의 plan ({dd_})")
         # ⭐ DP 깨기 DP18 (살아남음) — 판정의 plan 읽기도 같은 열쇠 둘 = 못 읽음 (마지막 값으로 판정하지 않는다)
         rp_ = pathlib.Path(td_) / "_verdict_plan_dup"; rp_.mkdir()
         (rp_ / "plan.json").write_text('{"melt_ps": 100.0, "melt_ps": 1.0, "save_ps": 1.0}', encoding="utf-8")
