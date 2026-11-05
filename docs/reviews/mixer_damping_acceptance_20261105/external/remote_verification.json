@@ -1,0 +1,103 @@
+{
+  "pin": "eb400b9dde3d630d8d4571d48b879ef5093d08e5",
+  "checks": [
+    {
+      "path": "docs/collab/codex_to_claude/20261105-0425_mixer-damping-draft.md",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/README.md",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/annotation_draft.json",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/ledger_proposal.json",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/mixer_static_audit.json",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/review_request.md",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/source_context.json",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/static_validation.json",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_exploration_registration_draft_20261104.md",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/README.md",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_precal_pre8_acceptance_20261105/README.md",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    },
+    {
+      "path": "scripts/mixer_precal_prepare.py",
+      "found": true,
+      "blob_ok": true,
+      "size_ok": true
+    }
+  ],
+  "parent_match": true,
+  "changes_only_added_documents": true
+}

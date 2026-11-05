@@ -1,0 +1,80 @@
+{
+  "pin": "eb400b9dde3d630d8d4571d48b879ef5093d08e5",
+  "parents": [
+    "b5331d89e9029a1e372d320acee31cddce41474e"
+  ],
+  "tree": "f5d0af6f7d979c566e77484cb3993e5ab4ba519c",
+  "message": "Draft mixer damping applicability and resource update",
+  "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/eb400b9dde3d630d8d4571d48b879ef5093d08e5",
+  "stats": {
+    "total": 3421,
+    "additions": 3421,
+    "deletions": 0
+  },
+  "files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261105-0425_mixer-damping-draft.md",
+      "status": "added",
+      "sha": "01e0bb008facdc72a24f5e027385815e32aaf1d9",
+      "additions": 9,
+      "deletions": 0,
+      "changes": 9
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/README.md",
+      "status": "added",
+      "sha": "72d4422c0934948b298e06eecc007e35c61b409e",
+      "additions": 42,
+      "deletions": 0,
+      "changes": 42
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/annotation_draft.json",
+      "status": "added",
+      "sha": "de724bb24e2f83da005a22a70555cf74efb714c6",
+      "additions": 307,
+      "deletions": 0,
+      "changes": 307
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/ledger_proposal.json",
+      "status": "added",
+      "sha": "2aec78c08989983c0283eb9bafb980f13bd69eee",
+      "additions": 16,
+      "deletions": 0,
+      "changes": 16
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/mixer_static_audit.json",
+      "status": "added",
+      "sha": "828f552419c5beae2fc62e826e289cab9088232b",
+      "additions": 2965,
+      "deletions": 0,
+      "changes": 2965
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/review_request.md",
+      "status": "added",
+      "sha": "fce381274c358b55d49597e006e38c9c69a963c7",
+      "additions": 10,
+      "deletions": 0,
+      "changes": 10
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/source_context.json",
+      "status": "added",
+      "sha": "87499f251ee9b4b19fe4d9acf69f31d718dba8ab",
+      "additions": 60,
+      "deletions": 0,
+      "changes": 60
+    },
+    {
+      "path": "docs/reviews/mixer_damping_applicability_draft_20261105/static_validation.json",
+      "status": "added",
+      "sha": "898321ae38e7774559b258f22fb752404a64d5f2",
+      "additions": 12,
+      "deletions": 0,
+      "changes": 12
+    }
+  ]
+}

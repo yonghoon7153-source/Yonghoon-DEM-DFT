@@ -1,0 +1,24 @@
+{
+  "kind": "external scoped acceptance receipt",
+  "externally_accepted_pin": "eb400b9dde3d630d8d4571d48b879ef5093d08e5",
+  "external_verdict": "ACCEPT_DOCUMENT_STATIC_SCOPE_ONLY",
+  "new_findings": [],
+  "accepted_sources_changed": false,
+  "mandatory_corrections": [],
+  "optional_wording_notes": [
+    "관측 t0 → 계획 관측 t0",
+    "함께 회전 → 같은 회전 구동이 선언되며 E0는 run 0"
+  ],
+  "optional_wording_applied": false,
+  "repeat_external_review_requested": false,
+  "new_receipt_external_review_claimed": false,
+  "whole_gate": "HOLD",
+  "actual_value_access": false,
+  "actual_value_collection": false,
+  "research_execution": false,
+  "active_registration_changed": false,
+  "deployment": false,
+  "integration": false,
+  "ledger_closed_here": false,
+  "new_research_results": 0
+}
