@@ -1,0 +1,17 @@
+{
+ "begin_sha256": "457893764906df9dd8b9923986b2fd505d622e423a5fc8181f5ab54fc4a46eca",
+ "deadline_epoch": 1793865254.3372905,
+ "end_sha256": "acd3473c6281ab9e7aa8c9521a354e01a8c6a1a17298050e2ddbb58e0684a838",
+ "end_snapshot_epoch": 1793863460.050101,
+ "k": 1,
+ "kind": "REIL_E113_WATCH",
+ "launcher_exit_epoch": 1793863460.0500367,
+ "name": "04_fetch",
+ "observed_epoch": 1793863463.9789076,
+ "rc": 0,
+ "start_sha256": "cf5b0eacfd6624c4cb36342df46232a20cc578840454d50fa2b91f137c5cd362",
+ "state": "published",
+ "step": "fetch",
+ "utc": "2026-11-05T07:24:23.978Z",
+ "wrapper_pid": 901
+}
