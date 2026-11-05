@@ -270,3 +270,5 @@ reviews/review_reil_c4e_e1_1_3_v2_n1_fix_scope_review_20261104/** -text
 reviews/review_reil_c4e_e1_1_3_prereview_v3_review_20261105/** -text
 # 2026-11-05: REIL C4-E · E1-1–3 실행 증거 (요청서 v3 · 승인 §115) — bytes 그대로
 evidence/reil_c4e1_20261105/** -text
+# 2026-11-05: REIL C4-E · E1-1–3 재개 요청 검토 회신 (RESUME_DIRECTION_ACCEPTABLE_TWO_CORRECTIONS_REQUIRED_BEFORE_APPROVAL · E113_RESUME_N1 · N2 · 고정 HEAD 2e7254f0 · 실행 승인 아님 · source/ · input/ · basis/ · numbered/ 의 *.py · *.py.txt = 실행하지 않음) — bytes 그대로
+reviews/review_reil_c4e_e1_1_3_resume_review_20261105/** -text
