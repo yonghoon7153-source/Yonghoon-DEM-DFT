@@ -1,0 +1,53 @@
+변이 408 개 (DQ 판 368 − 뺌 1 · 자리 옮김 9 · DR 41) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 3 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_drnew_w*
+D11_provenance                   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DO39_stop_id_not_required        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · 회신 DQ P2-1: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 · 모르는 코드 · terminal 없음 · 참거짓 아님 · 코드와 모순 (interrupted + true · melt + false) = 
+D21_card_vals_sha                ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DG P1-4: 다른 카드 값으로 낸 판정은 묶음에서 무효 (카드 값 지문 · 같은 카드면 그대로 통과)
+DQ50_same_inputs_always          ⭕ 빨강 [melt_quench_uma] · AttributeError: 'NoneType' object has no attribute 'get'
+DQ32_stop_shape_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · 회신 DQ P2-1: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 · 모르는 코드 · terminal 없음 · 참거짓 아님 · 코드와 모순 (interrupted + true · melt + false) = 
+DQ70_prior_nonsci_changed_off    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DQ52_nonsci_conflict_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DQ78_runkind_prov_current_check_off ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 폴더 판정 관측에 지금 판정의 지문이 실린다 (재시도 · 확인 경로도 ①-4 와 같은 대체 규칙) · 관측 상태 (이력의 fail) 가 지금 판정 (pass) 과 다르면 지문을 싣지 않는다 (대체 못 함) · (3차 P3) 지문
+DR1_same_inputs_keyset_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DO40_stop_unreadable_overwritten ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P2-5 · 6 · 7: 잘린 STOP 은 덮어쓰지 않고 거부 (원본 그대로) · stop_id 없는 STOP 을 조용히 확인하지 않는다 · STOP 안에 끼운 declaration 은 확인 기록으로 옮기지 않는다 (26 · True · 2
+DR2_same_inputs_keys_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR3_derived_any_change           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR4_derived_not_ours             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR5_mismatch_check_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR6_errors_check_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR7_nature_missing_ok            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR8_row_rule_same_inputs         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR9_chain_rule_same_inputs       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR10_mismatch_as_error           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR11_derived_written_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR13_bind_raw_off                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR12_derived_from_status         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR14_bind_attempt_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR15_current_band_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 폴더 판정 관측에 지금 판정의 지문이 실린다 (재시도 · 확인 경로도 ①-4 와 같은 대체 규칙) · 관측 상태 (이력의 fail) 가 지금 판정 (pass) 과 다르면 지문을 싣지 않는다 (대체 못 함) · (3차 P3) 지문
+DR16_band_sha_const              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR17_runtime_python_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR18_band_in_provenance_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR19_derived_write_direct        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR20_err_gate_off                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 P1 (소비자 t4): 판정 중 gate_check 예외는 False 가 아니라 모름 (None + 오류) 으로 적고, 그 판정 기록이 남은 도중 끊김 폴더는 보류 (재시도 아님) — 쓰는 쪽까지 ({'schedule_complete': N
+DR21_err_melt_off                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR22_err_seedgate_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR23_err_identity_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR24_err_lastframe_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR25_err_final_off               ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR26_final_judge_errors_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (성격 · 숨은 복구): 못 읽는 final.xyz · 녹음 판정의 프레임 세기 OSError 도 판정 도중 예외로 모은다 · 다른 md_init_raw.xyz 가 있던 채 seed_gate 가 읽기 전에 예외가 난 판정 (불일치를 못
+DR28_melt_io_error_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (성격 · 숨은 복구): 못 읽는 final.xyz · 녹음 판정의 프레임 세기 OSError 도 판정 도중 예외로 모은다 · 다른 md_init_raw.xyz 가 있던 채 seed_gate 가 읽기 전에 예외가 난 판정 (불일치를 못
+DR27_identity_read_err_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (묶는 범위 · 성격 수집): 보존 폴더만 실행 전 기록을 묶고 (바뀌면 지금과 안 맞음 · 깨지면 판정 도중 예외) · 현재 폴더는 안 묶는다 · G4 밴드 카드 바이트가 바뀌면 지문이 바뀐다 · seed_gate 가 쓴 뒤 예외여도
+DR29_unresolved_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-2: 정본 판정 없이 이력 (빈 파일 포함) · 판정 임시 파일 · 정본 자리의 디렉터리가 남은 폴더는 미해결 기록 (묶음 판정 invalid · stale) · 기록이 없는 폴더는 판정 안 함 (pending) · 손 판정은 앞 이력 줄
+DR30_unresolved_history_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-2: 정본 판정 없이 이력 (빈 파일 포함) · 판정 임시 파일 · 정본 자리의 디렉터리가 남은 폴더는 미해결 기록 (묶음 판정 invalid · stale) · 기록이 없는 폴더는 판정 안 함 (pending) · 손 판정은 앞 이력 줄
+DR31_unresolved_tmp_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-2: 정본 판정 없이 이력 (빈 파일 포함) · 판정 임시 파일 · 정본 자리의 디렉터리가 남은 폴더는 미해결 기록 (묶음 판정 invalid · stale) · 기록이 없는 폴더는 판정 안 함 (pending) · 손 판정은 앞 이력 줄
+DR32_unresolved_nonfile_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-2: 정본 판정 없이 이력 (빈 파일 포함) · 판정 임시 파일 · 정본 자리의 디렉터리가 남은 폴더는 미해결 기록 (묶음 판정 invalid · stale) · 기록이 없는 폴더는 판정 안 함 (pending) · 손 판정은 앞 이력 줄
+DR33_summary_unresolved_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-2: 정본 판정 없이 이력 (빈 파일 포함) · 판정 임시 파일 · 정본 자리의 디렉터리가 남은 폴더는 미해결 기록 (묶음 판정 invalid · stale) · 기록이 없는 폴더는 판정 안 함 (pending) · 손 판정은 앞 이력 줄
+DR35_hist_marker_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-2: 정본 판정 없이 이력 (빈 파일 포함) · 판정 임시 파일 · 정본 자리의 디렉터리가 남은 폴더는 미해결 기록 (묶음 판정 invalid · stale) · 기록이 없는 폴더는 판정 안 함 (pending) · 손 판정은 앞 이력 줄
+DR36_stop_vocab_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · 회신 DQ P2-1: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 · 모르는 코드 · terminal 없음 · 참거짓 아님 · 코드와 모순 (interrupted + true · melt + false) = 
+DR37_stop_term_consistency_off   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · 회신 DQ P2-1: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 · 모르는 코드 · terminal 없음 · 참거짓 아님 · 코드와 모순 (interrupted + true · melt + false) = 
+DR38_stop_term_type_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · 회신 DQ P2-1: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 · 모르는 코드 · terminal 없음 · 참거짓 아님 · 코드와 모순 (interrupted + true · melt + false) = 
+DR39_ack_terminal_code_ok        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · 회신 DQ P2-1: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 · 모르는 코드 · terminal 없음 · 참거짓 아님 · 코드와 모순 (interrupted + true · melt + false) = 
+DR40_ledger_stop_history_off     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-D · 회신 DQ P2-1: 소비자의 STOP 판독 — 잘림 · 열쇠 없음 · 같은 열쇠 둘 · 모르는 코드 · terminal 없음 · 참거짓 아님 · 코드와 모순 (interrupted + true · melt + false) = 
+DR34_runner_start_check_off      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DQ P1-2 (Codex 재현): B14 를 A14 보다 먼저 돌려 B14 첫 정본 판정 교체가 실패 (이력 · 임시 판정만 · 정본 없음) → 독립 요약 invalid · STOP 을 확인하고 기본 순서로 다시 시작해도 (A14 를 띄우지 않는다
+DR41_runner_ack_shared_off       ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P2-5 · 6 · 7: 잘린 STOP 은 덮어쓰지 않고 거부 (원본 그대로) · stop_id 없는 STOP 을 조용히 확인하지 않는다 · STOP 안에 끼운 declaration 은 확인 기록으로 옮기지 않는다 (10 · True · 2
+끝: 빨강 50 / 50
