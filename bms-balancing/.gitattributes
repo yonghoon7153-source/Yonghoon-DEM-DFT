@@ -280,3 +280,5 @@ evidence/reil_c4e1_20261106/** -text
 reviews/review_reil_c4e_e1_1_3_resume_result_review_20261105/** -text
 # 2026-11-06: REIL C4-A 범위안 검토 회신 (방향 타당 · 구현 요청 전 문서 보완 넷 — 경고 · 실행 수 · 입력 / 판정 계약 · 예산 · U1 · U3 방향 수용 · U2 미채택 · 고정 HEAD c8792ed3 · 실행 승인 아님 · source/ · input/ · basis/ 의 *.py · *.py.txt = 실행하지 않음) — bytes 그대로
 reviews/review_reil_c4a_scope_review_20261106/** -text
+# 2026-11-06: REIL C4-A 범위안 v2 검토 회신 (SCOPE_V2_ACCEPTED_N1_N4_CLOSED_FOR_IMPLEMENTATION_REQUEST_BASELINE · 새 지적 0 · U1–U3 사용자 몫 · 고정 HEAD c97cd115 · 실행 승인 아님 · source/ · input/ · basis/ 의 *.py · *.py.txt = 실행하지 않음) — bytes 그대로
+reviews/review_reil_c4a_scope_v2_review_20261106/** -text
