@@ -4893,6 +4893,22 @@ def _selftest():
                                                                       folder_prior=[{"status": "incomplete", "provenance": {k_: v_ for k_, v_ in PVMID["provenance"].items()
                                                                                                                              if k_ != "judge_nature"}},
                                                                                     {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
+                  # ⭐ 깨기 d26cbe98 전체 실행의 초록 둘 — 면제 꼴 (진행 중 · MD 출력 같음) 인데 상태가 invalid 인 기준 앞 기록 (판정 도중 예외로 끝난
+                  #    진행 중 들여다봄 · 같은 입력의 결정적 invalid) 은 면제가 아니다 (DS2) · 기준은 첫 기록 — 면제 꼴의 incomplete 가 기준 뒤에 있고
+                  #    같은 바이트의 장부 판정 사본이 그 뒤에 또 있어도 그 incomplete 는 대체 규칙을 받는다 (DR63 — 옛 시험은 사이 기록이 결정적 invalid 라
+                  #    회신 DR P1-1 고침 뒤로는 기준이 밀려도 결과가 같았다)
+                  "inv_midrun_err_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
+                                                                          folder_prior=[{"status": "invalid", "provenance": {**PVMID["provenance"], "judge_nature": {
+                                                                              "errors": ["gate_check OSError: selftest"], "input_mismatch": []}}},
+                                                                                        {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
+                  "inv_det_same_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
+                                                                        folder_prior=[{"status": "invalid", "provenance": {**PV, "judge_nature": {"errors": [], "input_mismatch": []}}},
+                                                                                      {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
+                  "inv_anchor_first_exempt_shape": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
+                                                                           folder_prior=[{"status": "invalid", "provenance": PV},
+                                                                                         {"status": "incomplete", "provenance": {**PV, "judge_nature": {"errors": [], "input_mismatch": []},
+                                                                                                                                 "md_done": "d" * 64}},
+                                                                                         {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
                   # ⭐ 회신 DR P1-2 — 파생 파일 생성 예외는 진짜 부재 → 정상 파일만 (디렉터리를 치운 복구 · 링크 · 특수 파일은 다르다)
                   "inv_raw_dir_repaired": _inv({**PV, "files_sha256": {**FS0, RAW_: "nonfile:dir"}}, PVR_first),
                   "inv_raw_link_made": _inv(PV, {**PV, "files_sha256": {**FS0, RAW_: "link:" + "f" * 64}}),
@@ -4925,7 +4941,8 @@ def _selftest():
                    "inv_after_det_invalid": True, "inv_after_transient": False, "inv_anchor_missing": True, "inv_det_before_anchor": True,   # 회신 DR P1-1 (앞이어도 완료된 invalid)
                    "inv_anchor_first": True, "inv_cap_raised": False, "inv_rules_differ": True, "inv_old_rec_card": True,
                    "inv_mismatch_before_anchor": True, "inc_mismatch_before_anchor": True, "inv_transient_before_anchor": False,
-                   "inc_oldfmt_before_anchor": False, "inv_raw_dir_repaired": True, "inv_raw_link_made": True, "inv_raw_nonfile_made": True,
+                   "inc_oldfmt_before_anchor": False, "inv_midrun_err_before_anchor": True, "inv_det_same_before_anchor": True,
+                   "inv_anchor_first_exempt_shape": True, "inv_raw_dir_repaired": True, "inv_raw_link_made": True, "inv_raw_nonfile_made": True,
                    "inv_raw_dir_same": False, "inc_mddone_same": False, "inc_mddone_md_edited": True, "inc_mddone_late_changed": True,
                    "inc_mdunknown_same": False, "inc_mdunknown_traj_diff": True, "inc_mdnone_but_complete": True}   # DR 전 5차 — 같은 바이트의 판정이 뒤에 또 있어도 기준은 첫 기록 (그 사이 결정적 invalid → 충돌)
         chk(got_dq == want_dq and JUDGE_DERIVED_FILES == (SEED_GATE_RAW,) and set(PROVENANCE_FILES) < set(BOUND_FILES),
@@ -4936,6 +4953,19 @@ def _selftest():
             f"({ {k_: v_ for k_, v_ in got_dq.items() if v_ != want_dq[k_]} })")
         # ⭐ 회신 DR P1-2 — 경로 상태: 없음 · 정상 파일 · 파일을 가리키는 링크 (내용 지문) · 디렉터리 · 깨진 링크 · 디렉터리 링크 · 특수 파일을 가른다
         #    (링크 · FIFO 를 못 만드는 OS 면 그 하위 항목만 빠진다 — 시험 수는 같다) · 지문 칸 값의 꼴 (link: · nonfile: 도 알려진 값) · 완료 필드 검사가 받는다
+        def _no_hang(fn_, secs_=20):                         # ⭐ 깨기 d26cbe98 — FIFO 시험이 (변이 아래) FIFO 를 열어 멈추면 selftest 가 끝나지 않는다 (DS4 가 30 분
+            import signal as _sg_nh                          #   시간 제한까지 매달림) → 알람으로 끊어 '멈춤' 값을 돌려 검사가 빨강이 되게 (POSIX · FIFO 시험만 쓴다)
+            def _h_nh(*a_):
+                raise TimeoutError("FIFO 에서 멈춤")
+            old_nh = _sg_nh.signal(_sg_nh.SIGALRM, _h_nh)
+            _sg_nh.alarm(secs_)
+            try:
+                return fn_()
+            except TimeoutError:
+                return "멈춤 (FIFO 를 열었다)"
+            finally:
+                _sg_nh.alarm(0)
+                _sg_nh.signal(_sg_nh.SIGALRM, old_nh)
         import tempfile as _tf_ps, shutil as _sh_ps
         ps_root = pathlib.Path(_tf_ps.mkdtemp())
         try:
@@ -4949,7 +4979,7 @@ def _selftest():
             except (OSError, NotImplementedError, AttributeError):
                 pass
             if hasattr(os, "mkfifo"):
-                os.mkfifo(ps_root / "p"); got_ps["fifo"] = path_state(ps_root / "p"); want_ps["fifo"] = "nonfile:other"
+                os.mkfifo(ps_root / "p"); got_ps["fifo"] = _no_hang(lambda: path_state(ps_root / "p")); want_ps["fifo"] = "nonfile:other"
             okv_ = [None, "a" * 64, "link:" + "b" * 64, *NONFILE_STATES]
             badv_ = ["", "nonfile:x", "link:abc", "A" * 64, 123, ["x"]]
             cf_ok = _completion_fields_problem({"provenance": {"files_sha256": {"final.xyz": "nonfile:dir", "result.json": "link:" + "c" * 64}}}, True, "t")
@@ -5153,11 +5183,12 @@ def _selftest():
             pass
         if hasattr(os, "mkfifo"):
             d_ff = _dq_run("ds_ff"); os.mkfifo(d_ff / SEED_GATE_RAW)
-            v_ff = _jv(d_ff, "raw FIFO")
-            got_dsj["fifo_raw"] = (bool(v_ff["provenance"]["judge_nature"]["input_mismatch"]), v_ff["provenance"]["files_sha256"][SEED_GATE_RAW])
+            v_ff = _no_hang(lambda: _jv(d_ff, "raw FIFO"))
+            got_dsj["fifo_raw"] = ((bool(v_ff["provenance"]["judge_nature"]["input_mismatch"]), v_ff["provenance"]["files_sha256"][SEED_GATE_RAW])
+                                   if isinstance(v_ff, dict) else v_ff)
             want_dsj["fifo_raw"] = (True, "nonfile:other")
             d_ft = _dq_run("ds_ft"); (d_ft / "final.xyz").unlink(); (d_ft / "traj.xyz").unlink(); os.mkfifo(d_ft / "traj.xyz")
-            got_dsj["fifo_traj_stage"] = folder_stage_detail(d_ft)[0]
+            got_dsj["fifo_traj_stage"] = _no_hang(lambda: folder_stage_detail(d_ft)[0])
             want_dsj["fifo_traj_stage"] = "unreadable"
         chk(got_dsj == want_dsj,
             "⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → "

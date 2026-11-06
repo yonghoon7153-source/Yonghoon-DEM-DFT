@@ -3,7 +3,7 @@
 주석 중간 자리는 '  #' — DP 판 _keep_comment). 옵션: --dry · --only=접두 (쉼표로 여럿) · --tag=이름 · --failfast · --workers=N.
 
 뺀 것: 없음 (DR 판 머리글의 제외 설명은 그대로 — 회신 DR Q7 이 그 범위에 동의했다 · 전체 실행은 우리 쪽 실행이지 독립 재실행이 아니다)."""
-import importlib.util, pathlib, sys
+import importlib.util, pathlib, subprocess, sys
 
 REPO = pathlib.Path("/home/user/Yonghoon-DEM-DFT")
 _spec = importlib.util.spec_from_file_location("dr_mutate", REPO / "db/raw/li2s2_dr_mutation_2026_11_05/dr_mutate.py")
@@ -132,7 +132,10 @@ if __name__ == "__main__":
                 mu = q.get_nowait()
             except queue.Empty:
                 return
-            line = dl.run_one((mu, m))
+            try:
+                line = dl.run_one((mu, m))
+            except subprocess.TimeoutExpired:                # ⭐ d26cbe98 전체 실행 — DS4 가 FIFO 시험에 매달려 작업자가 죽을 뻔했다 → 판정 없이 ⚠ 로 남긴다
+                line = f"{mu[0]:<32s} ⚠ 시간 제한 — selftest 가 끝나지 않았다 (멈춤 · 빨강도 초록도 아님 · 사람이 본다)"
             with lock:
                 results.append(line)
                 print(line, flush=True)
