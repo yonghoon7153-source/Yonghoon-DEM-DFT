@@ -1,0 +1,147 @@
+{
+ "BASE": {
+  "rc": 0,
+  "summary": "test_rint_r_chain: 36/36 PASS (43.3 s)",
+  "seconds": 43.9
+ },
+ "X1": {
+  "item": "GU table drops exit_ok",
+  "status": "KILLED",
+  "failed": [
+   "CT01",
+   "LG01",
+   "LG02",
+   "PD02",
+   "PD02c",
+   "PD13",
+   "RN01",
+   "RN02",
+   "RS02"
+  ],
+  "seconds": 42.3
+ },
+ "X2": {
+  "item": "TL table drops killed:timeout",
+  "status": "KILLED",
+  "failed": [
+   "AL19",
+   "CT01",
+   "CT04",
+   "LG01",
+   "PD02",
+   "PD02c"
+  ],
+  "seconds": 44.3
+ },
+ "X3": {
+  "item": "RUNNER_RC table drops killed:signal_after",
+  "status": "KILLED",
+  "failed": [
+   "CT01",
+   "LG01",
+   "PD02",
+   "PD02c"
+  ],
+  "seconds": 44.6
+ },
+ "X4": {
+  "item": "TL table drops none (pre-run gate)",
+  "status": "KILLED",
+  "failed": [
+   "CT01",
+   "LG01",
+   "SU01"
+  ],
+  "seconds": 45.0
+ },
+ "X4b": {
+  "item": "RUNNER_RC table drops killed:signal",
+  "status": "KILLED",
+  "failed": [
+   "AL19",
+   "CT01",
+   "CT04",
+   "LG01",
+   "PD02",
+   "PD02c"
+  ],
+  "seconds": 45.5
+ },
+ "X4c": {
+  "item": "GU table drops killed:timeout",
+  "status": "KILLED",
+  "failed": [
+   "CT01",
+   "PD13",
+   "RN01",
+   "RN02"
+  ],
+  "seconds": 46.9
+ },
+ "X5": {
+  "item": "TL none: drop RUN_DIR_RE name check",
+  "status": "SURVIVED",
+  "failed": [],
+  "seconds": 50.3
+ },
+ "X6": {
+  "item": "run_traces: unreadable folder = no traces",
+  "status": "SURVIVED",
+  "failed": [],
+  "seconds": 49.3
+ },
+ "X8": {
+  "item": "orphan by chain (cause, rc) check only when cause None",
+  "status": "KILLED",
+  "failed": [
+   "CT02"
+  ],
+  "seconds": 45.3
+ },
+ "X10": {
+  "item": "rejected_record json.loads (dup key / NaN accepted)",
+  "status": "KILLED",
+  "failed": [
+   "CT03"
+  ],
+  "seconds": 48.6
+ },
+ "X12": {
+  "item": "run_record_shape: falsy group_cause = None",
+  "status": "SURVIVED",
+  "failed": [],
+  "seconds": 50.0
+ },
+ "X13": {
+  "item": "killed cause + rc 0 accepted",
+  "status": "KILLED",
+  "failed": [
+   "CT01"
+  ],
+  "seconds": 47.6
+ },
+ "X16": {
+  "item": "record table only for GU (old PB-01 scope)",
+  "status": "KILLED",
+  "failed": [
+   "CT01",
+   "CT04",
+   "LG01",
+   "PD02",
+   "PD02c"
+  ],
+  "seconds": 48.4
+ },
+ "X17": {
+  "item": "end_record_known accepts bool rc",
+  "status": "KILLED",
+  "failed": [
+   "CT02",
+   "RC01",
+   "RC02",
+   "RN01"
+  ],
+  "seconds": 49.0
+ },
+ "_restored": true
+}

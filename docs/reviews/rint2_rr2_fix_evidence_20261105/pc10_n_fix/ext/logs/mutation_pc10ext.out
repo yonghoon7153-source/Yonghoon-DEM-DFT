@@ -1,0 +1,38 @@
+BASE {'rc': 0, 'summary': 'test_rint_r_chain: 40/40 PASS (63.5 s)', 'seconds': 64.0}
+A01 W rejected_in_folder: 칸 대조 뺌 KILLED ['CT05'] 62.3s
+A02 W rejected_in_folder: 폴더 대조 뺌 KILLED ['CT05'] 59.9s
+A03 W 폴더 대조: 남는 것 (흔적) 무시 KILLED ['CT05'] 60.7s
+A04 W 폴더 대조: 링크 · 특수 파일 받음 KILLED ['CT05'] 64.0s
+A05 W 칸 대조: 칸 더 있음 받음 (부분집합만) KILLED ['CT05'] 61.5s
+A06 W 칸 대조: n = bool 받음 KILLED ['CT05'] 64.2s
+A07 W 칸 대조: 시작 커밋 결합 → 40 hex 꼴만 KILLED ['CT05'] 63.1s
+A08 W 칸 대조: code = 글이면 무엇이든 KILLED ['CT05'] 62.3s
+A09 W 칸 대조: cause · utc 꼴 안 봄 KILLED ['CT05'] 53.1s
+A10 W 칸 대조: schema 안 봄 KILLED ['CT05'] 60.1s
+A11 W recover_ledger = 옛 읽기 (rejected_record) KILLED ['CT03', 'CT05'] 60.1s
+A12 W result_recount 폴더 = 옛 읽기 (rejected_record) KILLED ['CT03', 'CT05'] 61.0s
+A13 W attempt.json 없음 받음 (그 대조 건너뜀) KILLED ['CT05'] 66.3s
+B01 W ① runs 마지막 대조 뺌 KILLED ['CT06'] 62.5s
+B02 W ② outdir 접두 (<런> · <런>_arm) 뺌 KILLED ['CT06'] 55.0s
+B03 W ② outdir RUN_DIR_RE 뺌 KILLED ['CT06'] 57.7s
+B04 W ③ arms_read 대조 뺌 KILLED ['CT06'] 56.6s
+B05 L ③ arms_read 칸 없음 = 틀림 (한정 행 · 칸 없는 고정물이 잡아야) KILLED ['CT01', 'CT04', 'CT06', 'LG01', 'PD02', 'PD02c', 'PD13', 'RN01', 'RN02'] 56.8s
+B06 W ④ GU 끝 기록 대조 뺌 KILLED ['CT06'] 57.4s
+B07 L ④ GU = 확인 True 요구 (뒤집음 · 생산자 꼴 거부) KILLED ['CT06', 'LG02', 'PD13r', 'RN02', 'RS02'] 56.0s
+B08 W chain_confirmed: by recover = 못 읽음 (chain_end 안 봄) KILLED ['CT06'] 54.4s
+B09 W chain_confirmed: by chain = 못 읽음 KILLED ['CT06'] 56.2s
+B10 W chain_confirmed: 꼴 틀린 값 = 못 읽음 ('bad' → None) KILLED ['CT06'] 55.4s
+B11 W chain_confirmed: 모르는 by = 못 읽음 KILLED ['CT06'] 57.1s
+B12 W chain_confirmed: chain_end 객체 아님 = 못 읽음 KILLED ['CT06'] 58.6s
+B13 W stop_record_problem 이 기록 안 대조를 안 부름 KILLED ['CT06'] 62.8s
+B14 W ② 요청 칸 정확한 outdir 대조 뺌 (접두만) KILLED ['CT06'] 55.2s
+B15 W record_outdir: 꼴 틀린 요청 칸 = 대조 안 함 (None) KILLED ['CT06'] 117.0s
+B16 W record_outdir: arm_list 무시 KILLED ['CT06'] 53.7s
+B17 L record_outdir: 요청 칸 없는 기록 = 틀림 (한정 행 · 칸 없는 고정물이 잡아야) KILLED ['CT01', 'CT04', 'CT06', 'LG01', 'PD02', 'PD02c', 'PD13', 'RN01', 'RN02'] 52.1s
+B18 W record_outdir: bool arms 받음 KILLED ['CT06'] 53.3s
+C01 W result_fields 가 칸 꼴 대조를 안 부름 KILLED ['CT07'] 52.6s
+C02 W stop 꼴 안 봄 KILLED ['CT07'] 53.2s
+C03 W runs 목록 꼴 안 봄 (원소 대조는 남음) KILLED ['CT07'] 54.0s
+C04 W runs 원소 객체 꼴 안 봄 KILLED ['CT07'] 55.2s
+C05 W outdir 꼴 안 봄 KILLED ['CT07'] 53.2s
+count {'total': 36, 'killed': 36, 'killed_other': [], 'survived': [], 'skipped': []} restored True

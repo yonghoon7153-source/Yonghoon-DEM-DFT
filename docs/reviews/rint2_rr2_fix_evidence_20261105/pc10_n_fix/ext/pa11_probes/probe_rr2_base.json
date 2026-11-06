@@ -1,0 +1,113 @@
+{
+ "N4s_outdir_dict": {
+  "error": "TypeError: unsupported operand type(s) for /: 'PosixPath' and 'dict'",
+  "where": [
+   "rr, _od = _stopped_run(s, folder)",
+   "^^^^^^^^^^^^^^^^^^^^^^^",
+   "File \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/preattack11/mixed/scripts/rint_r_chain.py\", line 3757, in _stopped_run",
+   "return (rr[-1] if rr else None), (Path(folder) / rr[-1]['outdir'] if rr and rr[-1].get('outdir') else None)",
+   "~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~",
+   "TypeError: unsupported operand type(s) for /: 'PosixPath' and 'dict'"
+  ]
+ },
+ "N4s_outdir_int": {
+  "error": "TypeError: unsupported operand type(s) for /: 'PosixPath' and 'int'",
+  "where": [
+   "rr, _od = _stopped_run(s, folder)",
+   "^^^^^^^^^^^^^^^^^^^^^^^",
+   "File \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/preattack11/mixed/scripts/rint_r_chain.py\", line 3757, in _stopped_run",
+   "return (rr[-1] if rr else None), (Path(folder) / rr[-1]['outdir'] if rr and rr[-1].get('outdir') else None)",
+   "~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~",
+   "TypeError: unsupported operand type(s) for /: 'PosixPath' and 'int'"
+  ]
+ },
+ "N4s_runs_dict": {
+  "error": "AttributeError: 'str' object has no attribute 'get'",
+  "where": [
+   "rr = [r for r in (s.get('runs') or []) if r.get('name') == run] if run else []",
+   "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "File \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/preattack11/mixed/scripts/rint_r_chain.py\", line 3756, in <listcomp>",
+   "rr = [r for r in (s.get('runs') or []) if r.get('name') == run] if run else []",
+   "^^^^^",
+   "AttributeError: 'str' object has no attribute 'get'"
+  ]
+ },
+ "N4s_runs_list_of_int": {
+  "error": "AttributeError: 'int' object has no attribute 'get'",
+  "where": [
+   "rr = [r for r in (s.get('runs') or []) if r.get('name') == run] if run else []",
+   "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "File \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/preattack11/mixed/scripts/rint_r_chain.py\", line 3756, in <listcomp>",
+   "rr = [r for r in (s.get('runs') or []) if r.get('name') == run] if run else []",
+   "^^^^^",
+   "AttributeError: 'int' object has no attribute 'get'"
+  ]
+ },
+ "N4s_runs_str": {
+  "error": "AttributeError: 'str' object has no attribute 'get'",
+  "where": [
+   "rr = [r for r in (s.get('runs') or []) if r.get('name') == run] if run else []",
+   "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "File \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/preattack11/mixed/scripts/rint_r_chain.py\", line 3756, in <listcomp>",
+   "rr = [r for r in (s.get('runs') or []) if r.get('name') == run] if run else []",
+   "^^^^^",
+   "AttributeError: 'str' object has no attribute 'get'"
+  ]
+ },
+ "N4s_stop_list": {
+  "error": "AttributeError: 'list' object has no attribute 'get'",
+  "where": [
+   "f = result_fields(folder, s, unreadable=unreadable)",
+   "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "File \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/preattack11/mixed/scripts/rint_r_chain.py\", line 4059, in result_fields",
+   "stop = None if done else {'code': sr.get('code') or s.get('status'), 'run': sr.get('run'), 'reason': sr.get('reason')}",
+   "^^^^^^",
+   "AttributeError: 'list' object has no attribute 'get'"
+  ]
+ },
+ "N4s_stop_str": {
+  "error": "AttributeError: 'str' object has no attribute 'get'",
+  "where": [
+   "f = result_fields(folder, s, unreadable=unreadable)",
+   "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "File \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/preattack11/mixed/scripts/rint_r_chain.py\", line 4059, in result_fields",
+   "stop = None if done else {'code': sr.get('code') or s.get('status'), 'run': sr.get('run'), 'reason': sr.get('reason')}",
+   "^^^^^^",
+   "AttributeError: 'str' object has no attribute 'get'"
+  ]
+ },
+ "TR_forged_outdir_oom_trace": {
+  "orphan": [
+   "resource",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "resource",
+   "resume_ok": true,
+   "status": "stopped"
+  },
+  "resume_rc": 0,
+  "tail": [
+   "recover — 그룹 기록 0 개 정리 · 미확인 0",
+   "  recover attempt_1: 결과 줄 stopped · 결과 post · 원인 resource · 재실행 자격 True"
+  ]
+ },
+ "TR_honest_oom_trace": {
+  "orphan": [
+   "resource",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "resource",
+   "resume_ok": false,
+   "status": "stopped"
+  },
+  "resume_rc": 3,
+  "tail": [
+   "recover — 그룹 기록 0 개 정리 · 미확인 0",
+   "  recover attempt_1: 결과 줄 stopped · 결과 post · 원인 resource · 재실행 자격 False"
+  ]
+ }
+}

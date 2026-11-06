@@ -1,0 +1,919 @@
+{
+ "CT01": {
+  "GROUP_UNCONFIRMED/exception_null/oom": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/exception_null/tb": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/false_null/oom": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/false_null/tb": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/gcNone_false/oom": [
+   "resource",
+   false
+  ],
+  "GROUP_UNCONFIRMED/gcNone_false/tb": [
+   "runner_rc",
+   false
+  ],
+  "GROUP_UNCONFIRMED/gcNone_float0/oom": [
+   "resource",
+   false
+  ],
+  "GROUP_UNCONFIRMED/gcNone_float0/tb": [
+   "runner_rc",
+   false
+  ],
+  "GROUP_UNCONFIRMED/gcNone_null/oom": [
+   "resource",
+   false
+  ],
+  "GROUP_UNCONFIRMED/gcNone_null/tb": [
+   "runner_rc",
+   false
+  ],
+  "GROUP_UNCONFIRMED/gcNone_rc0/oom": [
+   "group_unconfirmed",
+   true
+  ],
+  "GROUP_UNCONFIRMED/gcNone_rc0/tb": [
+   "group_unconfirmed",
+   true
+  ],
+  "GROUP_UNCONFIRMED/gcNone_rc1/oom": [
+   "resource",
+   true
+  ],
+  "GROUP_UNCONFIRMED/gcNone_rc1/tb": [
+   "runner_rc",
+   false
+  ],
+  "GROUP_UNCONFIRMED/gcNone_rcm9/oom": [
+   "resource",
+   true
+  ],
+  "GROUP_UNCONFIRMED/gcNone_rcm9/tb": [
+   "runner_rc",
+   false
+  ],
+  "GROUP_UNCONFIRMED/gcNone_str1/oom": [
+   "resource",
+   false
+  ],
+  "GROUP_UNCONFIRMED/gcNone_str1/tb": [
+   "runner_rc",
+   false
+  ],
+  "GROUP_UNCONFIRMED/gcNone_true/oom": [
+   "resource",
+   false
+  ],
+  "GROUP_UNCONFIRMED/gcNone_true/tb": [
+   "runner_rc",
+   false
+  ],
+  "GROUP_UNCONFIRMED/nogc_null/oom": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/nogc_null/tb": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/nogc_rc1/oom": [
+   "resource",
+   false
+  ],
+  "GROUP_UNCONFIRMED/nogc_rc1/tb": [
+   "runner_rc",
+   false
+  ],
+  "GROUP_UNCONFIRMED/none/oom": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/none/tb": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/norc_gcNone/oom": [
+   "resource",
+   false
+  ],
+  "GROUP_UNCONFIRMED/norc_gcNone/tb": [
+   "runner_rc",
+   false
+  ],
+  "GROUP_UNCONFIRMED/norc_timeout/oom": [
+   "group_unconfirmed",
+   true
+  ],
+  "GROUP_UNCONFIRMED/norc_timeout/tb": [
+   "group_unconfirmed",
+   true
+  ],
+  "GROUP_UNCONFIRMED/signal_after_null/oom": [
+   "group_unconfirmed",
+   true
+  ],
+  "GROUP_UNCONFIRMED/signal_after_null/tb": [
+   "group_unconfirmed",
+   true
+  ],
+  "GROUP_UNCONFIRMED/signal_after_rc0/oom": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/signal_after_rc0/tb": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/signal_null/oom": [
+   "group_unconfirmed",
+   true
+  ],
+  "GROUP_UNCONFIRMED/signal_null/tb": [
+   "group_unconfirmed",
+   true
+  ],
+  "GROUP_UNCONFIRMED/signal_rc0/oom": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/signal_rc0/tb": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/signal_rc1/oom": [
+   "resource",
+   false
+  ],
+  "GROUP_UNCONFIRMED/signal_rc1/tb": [
+   "runner_rc",
+   false
+  ],
+  "GROUP_UNCONFIRMED/timeout_null/oom": [
+   "group_unconfirmed",
+   true
+  ],
+  "GROUP_UNCONFIRMED/timeout_null/tb": [
+   "group_unconfirmed",
+   true
+  ],
+  "GROUP_UNCONFIRMED/timeout_rc0/oom": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/timeout_rc0/tb": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/timeout_rc1/oom": [
+   "resource",
+   false
+  ],
+  "GROUP_UNCONFIRMED/timeout_rc1/tb": [
+   "runner_rc",
+   false
+  ],
+  "GROUP_UNCONFIRMED/timeout_rcm9/oom": [
+   "resource",
+   false
+  ],
+  "GROUP_UNCONFIRMED/timeout_rcm9/tb": [
+   "runner_rc",
+   false
+  ],
+  "GROUP_UNCONFIRMED/weird_null/oom": [
+   "group_unconfirmed",
+   false
+  ],
+  "GROUP_UNCONFIRMED/weird_null/tb": [
+   "group_unconfirmed",
+   false
+  ],
+  "RUNNER_RC/exception_null/oom": [
+   "resource",
+   false
+  ],
+  "RUNNER_RC/exception_null/tb": [
+   "runner_rc",
+   false
+  ],
+  "RUNNER_RC/false_null/oom": [
+   "resource",
+   false
+  ],
+  "RUNNER_RC/false_null/tb": [
+   "runner_rc",
+   false
+  ],
+  "RUNNER_RC/gcNone_false/oom": [
+   "resource",
+   false
+  ],
+  "RUNNER_RC/gcNone_false/tb": [
+   "runner_rc",
+   false
+  ],
+  "RUNNER_RC/gcNone_float0/oom": [
+   "resource",
+   false
+  ],
+  "RUNNER_RC/gcNone_float0/tb": [
+   "runner_rc",
+   false
+  ],
+  "RUNNER_RC/gcNone_null/oom": [
+   "resource",
+   false
+  ],
+  "RUNNER_RC/gcNone_null/tb": [
+   "runner_rc",
+   false
+  ],
+  "RUNNER_RC/gcNone_rc0/oom": [
+   "resource",
+   false
+  ],
+  "RUNNER_RC/gcNone_rc0/tb": [
+   "runner_rc",
+   false
+  ],
+  "RUNNER_RC/gcNone_rc1/oom": [
+   "resource",
+   true
+  ],
+  "RUNNER_RC/gcNone_rc1/tb": [
+   "runner_rc",
+   false
+  ],
+  "RUNNER_RC/gcNone_rcm9/oom": [
+   "resource",
+   true
+  ],
+  "RUNNER_RC/gcNone_rcm9/tb": [
+   "runner_rc",
+   false
+  ],
+  "RUNNER_RC/gcNone_str1/oom": [
+   "resource",
+   false
+  ],
+  "RUNNER_RC/gcNone_str1/tb": [
+   "runner_rc",
+   false
+  ],
+  "RUNNER_RC/gcNone_true/oom": [
+   "resource",
+   false
+  ],
+  "RUNNER_RC/gcNone_true/tb": [
+   "runner_rc",
+   false
+  ],
+  "RUNNER_RC/nogc_null/oom": [
+   "resource",
+   false
+  ],
+  "RUNNER_RC/nogc_null/tb": [
+   "runner_rc",
+   false
+  ],
+  "RUNNER_RC/nogc_rc1/oom": [
+   "resource",
+   false
+  ],
+  "RUNNER_RC/nogc_rc1/tb": [
+   "runner_rc",
+   false
+  ],
+  "RUNNER_RC/none/oom": [
+   "resource",
+   false
+  ],
+  "RUNNER_RC/none/tb": [
+   "runner_rc",
+   false
+  ],
+  "RUNNER_RC/norc_gcNone/oom": [
+   "resource",
+   false
+  ],
+  "RUNNER_RC/norc_gcNone/tb": [
+   "runner_rc",
+   false
+  ],
+  "RUNNER_RC/norc_timeout/oom": [
+   "timeout",
+   false
+  ],
+  "RUNNER_RC/norc_timeout/tb": [
+   "timeout",
+   false
+  ],
+  "RUNNER_RC/signal_after_null/oom": [
+   "signal",
+   true
+  ],
+  "RUNNER_RC/signal_after_null/tb": [
+   "signal",
+   true
+  ],
+  "RUNNER_RC/signal_after_rc0/oom": [
+   "signal",
+   false
+  ],
+  "RUNNER_RC/signal_after_rc0/tb": [
+   "signal",
+   false
+  ],
+  "RUNNER_RC/signal_null/oom": [
+   "signal",
+   true
+  ],
+  "RUNNER_RC/signal_null/tb": [
+   "signal",
+   true
+  ],
+  "RUNNER_RC/signal_rc0/oom": [
+   "signal",
+   false
+  ],
+  "RUNNER_RC/signal_rc0/tb": [
+   "signal",
+   false
+  ],
+  "RUNNER_RC/signal_rc1/oom": [
+   "signal",
+   false
+  ],
+  "RUNNER_RC/signal_rc1/tb": [
+   "signal",
+   false
+  ],
+  "RUNNER_RC/timeout_null/oom": [
+   "timeout",
+   false
+  ],
+  "RUNNER_RC/timeout_null/tb": [
+   "timeout",
+   false
+  ],
+  "RUNNER_RC/timeout_rc0/oom": [
+   "timeout",
+   false
+  ],
+  "RUNNER_RC/timeout_rc0/tb": [
+   "timeout",
+   false
+  ],
+  "RUNNER_RC/timeout_rc1/oom": [
+   "timeout",
+   false
+  ],
+  "RUNNER_RC/timeout_rc1/tb": [
+   "timeout",
+   false
+  ],
+  "RUNNER_RC/timeout_rcm9/oom": [
+   "timeout",
+   false
+  ],
+  "RUNNER_RC/timeout_rcm9/tb": [
+   "timeout",
+   false
+  ],
+  "RUNNER_RC/weird_null/oom": [
+   "resource",
+   false
+  ],
+  "RUNNER_RC/weird_null/tb": [
+   "runner_rc",
+   false
+  ],
+  "TIME_LIMIT/exception_null/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/exception_null/tb": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/false_null/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/false_null/tb": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/gcNone_false/oom": [
+   "resource",
+   false
+  ],
+  "TIME_LIMIT/gcNone_false/tb": [
+   "runner_rc",
+   false
+  ],
+  "TIME_LIMIT/gcNone_float0/oom": [
+   "resource",
+   false
+  ],
+  "TIME_LIMIT/gcNone_float0/tb": [
+   "runner_rc",
+   false
+  ],
+  "TIME_LIMIT/gcNone_null/oom": [
+   "resource",
+   false
+  ],
+  "TIME_LIMIT/gcNone_null/tb": [
+   "runner_rc",
+   false
+  ],
+  "TIME_LIMIT/gcNone_rc0/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/gcNone_rc0/tb": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/gcNone_rc1/oom": [
+   "resource",
+   false
+  ],
+  "TIME_LIMIT/gcNone_rc1/tb": [
+   "runner_rc",
+   false
+  ],
+  "TIME_LIMIT/gcNone_rcm9/oom": [
+   "resource",
+   false
+  ],
+  "TIME_LIMIT/gcNone_rcm9/tb": [
+   "runner_rc",
+   false
+  ],
+  "TIME_LIMIT/gcNone_str1/oom": [
+   "resource",
+   false
+  ],
+  "TIME_LIMIT/gcNone_str1/tb": [
+   "runner_rc",
+   false
+  ],
+  "TIME_LIMIT/gcNone_true/oom": [
+   "resource",
+   false
+  ],
+  "TIME_LIMIT/gcNone_true/tb": [
+   "runner_rc",
+   false
+  ],
+  "TIME_LIMIT/nogc_null/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/nogc_null/tb": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/nogc_rc1/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/nogc_rc1/tb": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/none/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/none/tb": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/norc_gcNone/oom": [
+   "resource",
+   false
+  ],
+  "TIME_LIMIT/norc_gcNone/tb": [
+   "runner_rc",
+   false
+  ],
+  "TIME_LIMIT/norc_timeout/oom": [
+   "timeout",
+   true
+  ],
+  "TIME_LIMIT/norc_timeout/tb": [
+   "timeout",
+   true
+  ],
+  "TIME_LIMIT/prestart_nolog": [
+   "timeout",
+   true
+  ],
+  "TIME_LIMIT/signal_after_null/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/signal_after_null/tb": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/signal_after_rc0/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/signal_after_rc0/tb": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/signal_null/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/signal_null/tb": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/signal_rc0/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/signal_rc0/tb": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/signal_rc1/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/signal_rc1/tb": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/timeout_null/oom": [
+   "timeout",
+   true
+  ],
+  "TIME_LIMIT/timeout_null/tb": [
+   "timeout",
+   true
+  ],
+  "TIME_LIMIT/timeout_rc0/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/timeout_rc0/tb": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/timeout_rc1/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/timeout_rc1/tb": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/timeout_rcm9/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/timeout_rcm9/tb": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/weird_null/oom": [
+   "timeout",
+   false
+  ],
+  "TIME_LIMIT/weird_null/tb": [
+   "timeout",
+   false
+  ]
+ },
+ "CT02": {
+  "ce_none_false_oom": [
+   "resource",
+   false,
+   false
+  ],
+  "ce_none_null_oom": [
+   "resource",
+   false,
+   false
+  ],
+  "ce_timeout_true_tb": [
+   "parent_dead",
+   false,
+   false
+  ],
+  "chain_none_false_oom": [
+   "resource",
+   false,
+   false
+  ],
+  "chain_none_float0_oom": [
+   "resource",
+   false,
+   false
+  ],
+  "chain_none_null_oom": [
+   "resource",
+   false,
+   false
+  ],
+  "chain_none_null_tb": [
+   "runner_rc",
+   false,
+   false
+  ],
+  "chain_none_str1_oom": [
+   "resource",
+   false,
+   false
+  ],
+  "chain_none_true_oom": [
+   "resource",
+   false,
+   false
+  ],
+  "chain_signal_float0_tb": [
+   "signal",
+   false,
+   false
+  ],
+  "chain_timeout_true_tb": [
+   "timeout",
+   false,
+   false
+  ],
+  "ctl_ce_none_rc1_oom": [
+   "resource",
+   true,
+   true
+  ],
+  "ctl_ce_timeout_m9_oom": [
+   "resource",
+   true,
+   true
+  ],
+  "ctl_chain_exception_null_tb": [
+   "chain_exception",
+   true,
+   false
+  ],
+  "ctl_chain_none_rc0_tb": [
+   "parent_dead",
+   true,
+   true
+  ],
+  "ctl_chain_none_rc1_oom": [
+   "resource",
+   true,
+   true
+  ],
+  "ctl_chain_none_rcm9_tb": [
+   "runner_rc",
+   true,
+   false
+  ],
+  "ctl_chain_signal_rc0_tb": [
+   "signal",
+   true,
+   true
+  ],
+  "ctl_chain_timeout_null_tb": [
+   "timeout",
+   true,
+   true
+  ],
+  "ctl_chain_timeout_rc1_tb": [
+   "timeout",
+   true,
+   true
+  ],
+  "ctl_noce_oom": [
+   "resource",
+   true,
+   true
+  ]
+ },
+ "CT03": {
+  "deep": {
+   "ledger_same": true,
+   "recount": "Stop ATTEMPT_LEDGER_MISMATCH",
+   "recover": [
+    1,
+    0
+   ],
+   "result": null,
+   "said": true
+  },
+  "dup": {
+   "ledger_same": true,
+   "recount": "Stop ATTEMPT_LEDGER_MISMATCH",
+   "recover": [
+    1,
+    0
+   ],
+   "result": null,
+   "said": true
+  },
+  "list": {
+   "ledger_same": true,
+   "recount": "Stop ATTEMPT_LEDGER_MISMATCH",
+   "recover": [
+    1,
+    0
+   ],
+   "result": null,
+   "said": true
+  },
+  "nan": {
+   "ledger_same": true,
+   "recount": "Stop ATTEMPT_LEDGER_MISMATCH",
+   "recover": [
+    1,
+    0
+   ],
+   "result": null,
+   "said": true
+  },
+  "null": {
+   "ledger_same": true,
+   "recount": "Stop ATTEMPT_LEDGER_MISMATCH",
+   "recover": [
+    1,
+    0
+   ],
+   "result": null,
+   "said": true
+  },
+  "str": {
+   "ledger_same": true,
+   "recount": "Stop ATTEMPT_LEDGER_MISMATCH",
+   "recover": [
+    1,
+    0
+   ],
+   "result": null,
+   "said": true
+  },
+  "true": {
+   "ledger_same": true,
+   "recount": "Stop ATTEMPT_LEDGER_MISMATCH",
+   "recover": [
+    1,
+    0
+   ],
+   "result": null,
+   "said": true
+  },
+  "truncated": {
+   "ledger_same": true,
+   "recount": "Stop ATTEMPT_LEDGER_MISMATCH",
+   "recover": [
+    1,
+    0
+   ],
+   "result": null,
+   "said": true
+  },
+  "zero": {
+   "ledger_same": true,
+   "recount": "Stop ATTEMPT_LEDGER_MISMATCH",
+   "recover": [
+    1,
+    0
+   ],
+   "result": null,
+   "said": true
+  }
+ },
+ "CT04": {
+  "N1": {
+   "ledger_same": true,
+   "not_allowed": true,
+   "orphan": [
+    "runner_rc",
+    true
+   ],
+   "recover_rc": 0,
+   "result": {
+    "by": "recover",
+    "cause": "runner_rc",
+    "resume_ok": false,
+    "side": "post",
+    "status": "stopped"
+   },
+   "resume_rc": 3
+  },
+  "N2_signal": {
+   "ledger_same": true,
+   "not_allowed": true,
+   "orphan": [
+    "runner_rc",
+    true
+   ],
+   "recover_rc": 0,
+   "result": {
+    "by": "recover",
+    "cause": "signal",
+    "resume_ok": false,
+    "side": "post",
+    "status": "stopped"
+   },
+   "resume_rc": 3
+  },
+  "N2_timeout": {
+   "ledger_same": true,
+   "not_allowed": true,
+   "orphan": [
+    "runner_rc",
+    true
+   ],
+   "recover_rc": 0,
+   "result": {
+    "by": "recover",
+    "cause": "timeout",
+    "resume_ok": false,
+    "side": "post",
+    "status": "stopped"
+   },
+   "resume_rc": 3
+  },
+  "N4": {
+   "ledger_same": true,
+   "rc": 3,
+   "result": null,
+   "said": true
+  },
+  "ctl_rc1": {
+   "ledger_same": true,
+   "not_allowed": true,
+   "orphan": [
+    "runner_rc",
+    true
+   ],
+   "recover_rc": 0,
+   "result": {
+    "by": "recover",
+    "cause": "runner_rc",
+    "resume_ok": false,
+    "side": "post",
+    "status": "stopped"
+   },
+   "resume_rc": 3
+  },
+  "ctl_signal": {
+   "ledger_same": null,
+   "not_allowed": false,
+   "orphan": [
+    "signal",
+    true
+   ],
+   "recover_rc": 0,
+   "result": {
+    "by": "recover",
+    "cause": "signal",
+    "resume_ok": true,
+    "side": "post",
+    "status": "stopped"
+   },
+   "resume_rc": 0
+  },
+  "ctl_timeout": {
+   "ledger_same": null,
+   "not_allowed": false,
+   "orphan": [
+    "timeout",
+    true
+   ],
+   "recover_rc": 0,
+   "result": {
+    "by": "recover",
+    "cause": "timeout",
+    "resume_ok": true,
+    "side": "post",
+    "status": "stopped"
+   },
+   "resume_rc": 0
+  }
+ },
+ "module_sha256": "f3d6a40f0dc230766e2fad83bbfe476168c18ad29ce5428f1617861484d02089",
+ "test_sha256": "4982c064c39272bae549d8c4741a054409ceb7b5bcc3a7c45b5b8e7ac4da262c"
+}

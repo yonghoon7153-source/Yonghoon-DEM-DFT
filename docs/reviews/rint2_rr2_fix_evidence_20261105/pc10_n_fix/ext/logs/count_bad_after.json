@@ -1,0 +1,69 @@
+{
+ "checks": {
+  "AL12c": {
+   "bad_keys": null,
+   "detail": null,
+   "n": null,
+   "n_bad": null,
+   "pass": true
+  },
+  "CT01": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 150,
+   "n_bad": 0,
+   "pass": true
+  },
+  "CT02": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 21,
+   "n_bad": 0,
+   "pass": true
+  },
+  "CT03": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 21,
+   "n_bad": 0,
+   "pass": true
+  },
+  "CT04": {
+   "bad_keys": [],
+   "detail": null,
+   "n": null,
+   "n_bad": 0,
+   "pass": true
+  },
+  "CT05": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 31,
+   "n_bad": 0,
+   "pass": true
+  },
+  "CT06": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 61,
+   "n_bad": 0,
+   "pass": true
+  },
+  "CT07": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 9,
+   "n_bad": 0,
+   "pass": true
+  },
+  "CT08": {
+   "bad_keys": null,
+   "detail": null,
+   "n": null,
+   "n_bad": null,
+   "pass": true
+  }
+ },
+ "module_sha256": "0d72d11bb043a4bb2559aa402feec46261d9229a0109418aa7688054dc78ee3d",
+ "test_sha256": "4982c064c39272bae549d8c4741a054409ceb7b5bcc3a7c45b5b8e7ac4da262c"
+}

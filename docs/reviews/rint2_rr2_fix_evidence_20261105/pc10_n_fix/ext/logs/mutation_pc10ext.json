@@ -1,0 +1,480 @@
+{
+ "_only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF,CE,SU,AL19,RS02",
+ "BASE": {
+  "rc": 0,
+  "summary": "test_rint_r_chain: 40/40 PASS (63.5 s)",
+  "seconds": 64.0
+ },
+ "A01": {
+  "kind": "W",
+  "item": "rejected_in_folder: 칸 대조 뺌",
+  "status": "KILLED",
+  "want": [
+   "CT05"
+  ],
+  "failed": [
+   "CT05"
+  ],
+  "seconds": 62.3
+ },
+ "A02": {
+  "kind": "W",
+  "item": "rejected_in_folder: 폴더 대조 뺌",
+  "status": "KILLED",
+  "want": [
+   "CT05"
+  ],
+  "failed": [
+   "CT05"
+  ],
+  "seconds": 59.9
+ },
+ "A03": {
+  "kind": "W",
+  "item": "폴더 대조: 남는 것 (흔적) 무시",
+  "status": "KILLED",
+  "want": [
+   "CT05"
+  ],
+  "failed": [
+   "CT05"
+  ],
+  "seconds": 60.7
+ },
+ "A04": {
+  "kind": "W",
+  "item": "폴더 대조: 링크 · 특수 파일 받음",
+  "status": "KILLED",
+  "want": [
+   "CT05"
+  ],
+  "failed": [
+   "CT05"
+  ],
+  "seconds": 64.0
+ },
+ "A05": {
+  "kind": "W",
+  "item": "칸 대조: 칸 더 있음 받음 (부분집합만)",
+  "status": "KILLED",
+  "want": [
+   "CT05"
+  ],
+  "failed": [
+   "CT05"
+  ],
+  "seconds": 61.5
+ },
+ "A06": {
+  "kind": "W",
+  "item": "칸 대조: n = bool 받음",
+  "status": "KILLED",
+  "want": [
+   "CT05"
+  ],
+  "failed": [
+   "CT05"
+  ],
+  "seconds": 64.2
+ },
+ "A07": {
+  "kind": "W",
+  "item": "칸 대조: 시작 커밋 결합 → 40 hex 꼴만",
+  "status": "KILLED",
+  "want": [
+   "CT05"
+  ],
+  "failed": [
+   "CT05"
+  ],
+  "seconds": 63.1
+ },
+ "A08": {
+  "kind": "W",
+  "item": "칸 대조: code = 글이면 무엇이든",
+  "status": "KILLED",
+  "want": [
+   "CT05"
+  ],
+  "failed": [
+   "CT05"
+  ],
+  "seconds": 62.3
+ },
+ "A09": {
+  "kind": "W",
+  "item": "칸 대조: cause · utc 꼴 안 봄",
+  "status": "KILLED",
+  "want": [
+   "CT05"
+  ],
+  "failed": [
+   "CT05"
+  ],
+  "seconds": 53.1
+ },
+ "A10": {
+  "kind": "W",
+  "item": "칸 대조: schema 안 봄",
+  "status": "KILLED",
+  "want": [
+   "CT05"
+  ],
+  "failed": [
+   "CT05"
+  ],
+  "seconds": 60.1
+ },
+ "A11": {
+  "kind": "W",
+  "item": "recover_ledger = 옛 읽기 (rejected_record)",
+  "status": "KILLED",
+  "want": [
+   "CT05"
+  ],
+  "failed": [
+   "CT03",
+   "CT05"
+  ],
+  "seconds": 60.1
+ },
+ "A12": {
+  "kind": "W",
+  "item": "result_recount 폴더 = 옛 읽기 (rejected_record)",
+  "status": "KILLED",
+  "want": [
+   "CT05"
+  ],
+  "failed": [
+   "CT03",
+   "CT05"
+  ],
+  "seconds": 61.0
+ },
+ "A13": {
+  "kind": "W",
+  "item": "attempt.json 없음 받음 (그 대조 건너뜀)",
+  "status": "KILLED",
+  "want": [
+   "CT05"
+  ],
+  "failed": [
+   "CT05"
+  ],
+  "seconds": 66.3
+ },
+ "B01": {
+  "kind": "W",
+  "item": "① runs 마지막 대조 뺌",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 62.5
+ },
+ "B02": {
+  "kind": "W",
+  "item": "② outdir 접두 (<런> · <런>_arm) 뺌",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 55.0
+ },
+ "B03": {
+  "kind": "W",
+  "item": "② outdir RUN_DIR_RE 뺌",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 57.7
+ },
+ "B04": {
+  "kind": "W",
+  "item": "③ arms_read 대조 뺌",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 56.6
+ },
+ "B05": {
+  "kind": "L",
+  "item": "③ arms_read 칸 없음 = 틀림 (한정 행 · 칸 없는 고정물이 잡아야)",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT01",
+   "CT04",
+   "CT06",
+   "LG01",
+   "PD02",
+   "PD02c",
+   "PD13",
+   "RN01",
+   "RN02"
+  ],
+  "seconds": 56.8
+ },
+ "B06": {
+  "kind": "W",
+  "item": "④ GU 끝 기록 대조 뺌",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 57.4
+ },
+ "B07": {
+  "kind": "L",
+  "item": "④ GU = 확인 True 요구 (뒤집음 · 생산자 꼴 거부)",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06",
+   "LG02",
+   "PD13r",
+   "RN02",
+   "RS02"
+  ],
+  "seconds": 56.0
+ },
+ "B08": {
+  "kind": "W",
+  "item": "chain_confirmed: by recover = 못 읽음 (chain_end 안 봄)",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 54.4
+ },
+ "B09": {
+  "kind": "W",
+  "item": "chain_confirmed: by chain = 못 읽음",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 56.2
+ },
+ "B10": {
+  "kind": "W",
+  "item": "chain_confirmed: 꼴 틀린 값 = 못 읽음 ('bad' → None)",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 55.4
+ },
+ "B11": {
+  "kind": "W",
+  "item": "chain_confirmed: 모르는 by = 못 읽음",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 57.1
+ },
+ "B12": {
+  "kind": "W",
+  "item": "chain_confirmed: chain_end 객체 아님 = 못 읽음",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 58.6
+ },
+ "B13": {
+  "kind": "W",
+  "item": "stop_record_problem 이 기록 안 대조를 안 부름",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 62.8
+ },
+ "B14": {
+  "kind": "W",
+  "item": "② 요청 칸 정확한 outdir 대조 뺌 (접두만)",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 55.2
+ },
+ "B15": {
+  "kind": "W",
+  "item": "record_outdir: 꼴 틀린 요청 칸 = 대조 안 함 (None)",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 117.0
+ },
+ "B16": {
+  "kind": "W",
+  "item": "record_outdir: arm_list 무시",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 53.7
+ },
+ "B17": {
+  "kind": "L",
+  "item": "record_outdir: 요청 칸 없는 기록 = 틀림 (한정 행 · 칸 없는 고정물이 잡아야)",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT01",
+   "CT04",
+   "CT06",
+   "LG01",
+   "PD02",
+   "PD02c",
+   "PD13",
+   "RN01",
+   "RN02"
+  ],
+  "seconds": 52.1
+ },
+ "B18": {
+  "kind": "W",
+  "item": "record_outdir: bool arms 받음",
+  "status": "KILLED",
+  "want": [
+   "CT06"
+  ],
+  "failed": [
+   "CT06"
+  ],
+  "seconds": 53.3
+ },
+ "C01": {
+  "kind": "W",
+  "item": "result_fields 가 칸 꼴 대조를 안 부름",
+  "status": "KILLED",
+  "want": [
+   "CT07"
+  ],
+  "failed": [
+   "CT07"
+  ],
+  "seconds": 52.6
+ },
+ "C02": {
+  "kind": "W",
+  "item": "stop 꼴 안 봄",
+  "status": "KILLED",
+  "want": [
+   "CT07"
+  ],
+  "failed": [
+   "CT07"
+  ],
+  "seconds": 53.2
+ },
+ "C03": {
+  "kind": "W",
+  "item": "runs 목록 꼴 안 봄 (원소 대조는 남음)",
+  "status": "KILLED",
+  "want": [
+   "CT07"
+  ],
+  "failed": [
+   "CT07"
+  ],
+  "seconds": 54.0
+ },
+ "C04": {
+  "kind": "W",
+  "item": "runs 원소 객체 꼴 안 봄",
+  "status": "KILLED",
+  "want": [
+   "CT07"
+  ],
+  "failed": [
+   "CT07"
+  ],
+  "seconds": 55.2
+ },
+ "C05": {
+  "kind": "W",
+  "item": "outdir 꼴 안 봄",
+  "status": "KILLED",
+  "want": [
+   "CT07"
+  ],
+  "failed": [
+   "CT07"
+  ],
+  "seconds": 53.2
+ },
+ "_tree": {
+  "start_sha256": {
+   "scripts/rint_r_chain.py": "0d72d11bb043a4bb2559aa402feec46261d9229a0109418aa7688054dc78ee3d",
+   "scripts/test_rint_r_chain.py": "4982c064c39272bae549d8c4741a054409ceb7b5bcc3a7c45b5b8e7ac4da262c"
+  },
+  "end_sha256": {
+   "scripts/rint_r_chain.py": "0d72d11bb043a4bb2559aa402feec46261d9229a0109418aa7688054dc78ee3d",
+   "scripts/test_rint_r_chain.py": "4982c064c39272bae549d8c4741a054409ceb7b5bcc3a7c45b5b8e7ac4da262c"
+  },
+  "restored": true
+ },
+ "_count": {
+  "total": 36,
+  "killed": 36,
+  "killed_other": [],
+  "survived": [],
+  "skipped": []
+ }
+}

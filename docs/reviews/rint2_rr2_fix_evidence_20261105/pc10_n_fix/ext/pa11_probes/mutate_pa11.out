@@ -1,0 +1,17 @@
+BASE {'rc': 0, 'summary': 'test_rint_r_chain: 36/36 PASS (43.3 s)', 'seconds': 43.9}
+X1 GU table drops exit_ok KILLED ['CT01', 'LG01', 'LG02', 'PD02', 'PD02c', 'PD13', 'RN01', 'RN02', 'RS02'] 42.3s
+X2 TL table drops killed:timeout KILLED ['AL19', 'CT01', 'CT04', 'LG01', 'PD02', 'PD02c'] 44.3s
+X3 RUNNER_RC table drops killed:signal_after KILLED ['CT01', 'LG01', 'PD02', 'PD02c'] 44.6s
+X4 TL table drops none (pre-run gate) KILLED ['CT01', 'LG01', 'SU01'] 45.0s
+X4b RUNNER_RC table drops killed:signal KILLED ['AL19', 'CT01', 'CT04', 'LG01', 'PD02', 'PD02c'] 45.5s
+X4c GU table drops killed:timeout KILLED ['CT01', 'PD13', 'RN01', 'RN02'] 46.9s
+X5 TL none: drop RUN_DIR_RE name check SURVIVED [] 50.3s
+X6 run_traces: unreadable folder = no traces SURVIVED [] 49.3s
+X8 orphan by chain (cause, rc) check only when cause None KILLED ['CT02'] 45.3s
+X10 rejected_record json.loads (dup key / NaN accepted) KILLED ['CT03'] 48.6s
+X12 run_record_shape: falsy group_cause = None SURVIVED [] 50.0s
+X13 killed cause + rc 0 accepted KILLED ['CT01'] 47.6s
+X16 record table only for GU (old PB-01 scope) KILLED ['CT01', 'CT04', 'LG01', 'PD02', 'PD02c'] 48.4s
+X17 end_record_known accepts bool rc KILLED ['CT02', 'RC01', 'RC02', 'RN01'] 49.0s
+restored True
+rc=0

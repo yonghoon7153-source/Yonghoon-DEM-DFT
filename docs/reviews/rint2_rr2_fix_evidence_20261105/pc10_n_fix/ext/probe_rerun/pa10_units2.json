@@ -1,0 +1,45 @@
+{
+ "module_sha256": "0d72d11bb043a4bb2559aa402feec46261d9229a0109418aa7688054dc78ee3d",
+ "td": "/tmp/pa10_u2_raj_vwpu",
+ "rows": {
+  "F1_orphan_cause_fifo_end": [
+   "parent_dead",
+   false
+  ],
+  "F2_attempt_groups_problem_fifo_end": [
+   "그룹 attempt_1/L01_floor 종료 미확인"
+  ],
+  "F3_orphan_cause_fifo_launch": [
+   "parent_dead",
+   false
+  ],
+  "F4_read_attempt_fifo": [
+   null
+  ],
+  "F5_stage_summary_read_fifo": [
+   null,
+   "unreadable"
+  ],
+  "G5_gu_no_run_record_traceback": {
+   "cause": "group_unconfirmed",
+   "resume_ok": false
+  },
+  "G6_gu_rec_no_group_cause_key_rcnull": {
+   "cause": "group_unconfirmed",
+   "resume_ok": false
+  },
+  "G7_gu_rec_rc1_ctl": {
+   "cause": "runner_rc",
+   "resume_ok": false
+  },
+  "S1_stop_list": {
+   "exc": "Stop"
+  },
+  "S2_runs_str": {
+   "exc": "Stop"
+  },
+  "S3_runs_list_of_str": {
+   "exc": "Stop"
+  }
+ }
+}

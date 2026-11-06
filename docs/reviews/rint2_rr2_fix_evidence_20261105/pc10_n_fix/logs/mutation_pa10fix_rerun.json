@@ -1,0 +1,425 @@
+{
+ "B1": {
+  "expected_any": [
+   "RN01",
+   "RN02",
+   "RC04",
+   "PE03u",
+   "PD13o"
+  ],
+  "expected_hit": [
+   "RN01",
+   "RN02",
+   "RC04",
+   "PE03u",
+   "PD13o"
+  ],
+  "failed": [
+   "PD13o",
+   "PE03u",
+   "RC04",
+   "RN01",
+   "RN02"
+  ],
+  "item": "PB-01",
+  "only": "RN,RC04,PE03u,PD13,LG01",
+  "rc": 1,
+  "seconds": 8.7,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 5/10 PASS (8.2 s)   FAILED: ['PD13o', 'PE03u', 'RC04', 'RN01', 'RN02']"
+ },
+ "B2": {
+  "item": "PB-01",
+  "status": "SKIP",
+  "why": "옛 글이 0 번 (scripts/rint_r_chain.py)"
+ },
+ "B3": {
+  "item": "PB-01",
+  "status": "SKIP",
+  "why": "옛 글이 0 번 (scripts/rint_r_chain.py)"
+ },
+ "B4": {
+  "item": "PB-01",
+  "status": "SKIP",
+  "why": "옛 글이 0 번 (scripts/rint_r_chain.py)"
+ },
+ "B5": {
+  "item": "PB-01",
+  "status": "SKIP",
+  "why": "옛 글이 0 번 (scripts/rint_r_chain.py)"
+ },
+ "B6": {
+  "expected_any": [
+   "RN01",
+   "RN02",
+   "LG01"
+  ],
+  "expected_hit": [
+   "RN01",
+   "RN02",
+   "LG01"
+  ],
+  "failed": [
+   "LG01",
+   "PD13",
+   "RN01",
+   "RN02"
+  ],
+  "item": "PB-01",
+  "only": "RN,RC04,PE03u,PD13,LG01",
+  "rc": 1,
+  "seconds": 9.6,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 6/10 PASS (9.2 s)   FAILED: ['PD13', 'LG01', 'RN01', 'RN02']"
+ },
+ "B7": {
+  "expected_any": [
+   "RN01"
+  ],
+  "expected_hit": [
+   "RN01"
+  ],
+  "failed": [
+   "LG01",
+   "PD13",
+   "RN01"
+  ],
+  "item": "PB-01",
+  "only": "RN,RC04,PE03u,PD13,LG01",
+  "rc": 1,
+  "seconds": 10.0,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 7/10 PASS (9.5 s)   FAILED: ['PD13', 'LG01', 'RN01']"
+ },
+ "B8": {
+  "item": "PB-01",
+  "status": "SKIP",
+  "why": "옛 글이 0 번 (scripts/rint_r_chain.py)"
+ },
+ "BASE": {
+  "clean": true,
+  "rows": [
+   {
+    "only": "FF01",
+    "rc": 0,
+    "seconds": 1.4,
+    "summary": "test_rint_r_chain: 1/1 PASS (1.0 s)"
+   },
+   {
+    "only": "LG01",
+    "rc": 0,
+    "seconds": 1.5,
+    "summary": "test_rint_r_chain: 1/1 PASS (1.0 s)"
+   },
+   {
+    "only": "RC01",
+    "rc": 0,
+    "seconds": 1.8,
+    "summary": "test_rint_r_chain: 1/1 PASS (1.4 s)"
+   },
+   {
+    "only": "RN,RC04,PE03u,PD13,LG01",
+    "rc": 0,
+    "seconds": 8.3,
+    "summary": "test_rint_r_chain: 10/10 PASS (7.8 s)"
+   },
+   {
+    "only": "SU03,SU04",
+    "rc": 0,
+    "seconds": 18.3,
+    "summary": "test_rint_r_chain: 2/2 PASS (17.9 s)"
+   }
+  ]
+ },
+ "C1": {
+  "expected_any": [
+   "SU03"
+  ],
+  "expected_hit": [
+   "SU03"
+  ],
+  "failed": [
+   "SU03"
+  ],
+  "item": "PB-02",
+  "only": "SU03,SU04",
+  "rc": 1,
+  "seconds": 20.1,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 1/2 PASS (19.6 s)   FAILED: ['SU03']"
+ },
+ "C2": {
+  "expected_any": [
+   "SU04"
+  ],
+  "expected_hit": [
+   "SU04"
+  ],
+  "failed": [
+   "SU04"
+  ],
+  "item": "PB-02",
+  "only": "SU03,SU04",
+  "rc": 1,
+  "seconds": 19.3,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 1/2 PASS (18.8 s)   FAILED: ['SU04']"
+ },
+ "C3": {
+  "expected_any": [
+   "SU04"
+  ],
+  "expected_hit": [
+   "SU04"
+  ],
+  "failed": [
+   "SU04"
+  ],
+  "item": "PB-02",
+  "only": "SU03,SU04",
+  "rc": 1,
+  "seconds": 18.7,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 1/2 PASS (18.2 s)   FAILED: ['SU04']"
+ },
+ "D1": {
+  "expected_any": [
+   "FF01"
+  ],
+  "expected_hit": [
+   "FF01"
+  ],
+  "failed": [
+   "FF01"
+  ],
+  "item": "PB-03",
+  "only": "FF01",
+  "rc": 1,
+  "seconds": 76.7,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (76.2 s)   FAILED: ['FF01']"
+ },
+ "D2": {
+  "expected_any": [
+   "FF01"
+  ],
+  "expected_hit": [
+   "FF01"
+  ],
+  "failed": [
+   "FF01"
+  ],
+  "item": "PB-03",
+  "only": "FF01",
+  "rc": 1,
+  "seconds": 16.5,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (16.1 s)   FAILED: ['FF01']"
+ },
+ "D3": {
+  "item": "PB-03",
+  "status": "SKIP",
+  "why": "옛 글이 0 번 (scripts/rint_r_chain.py)"
+ },
+ "D4": {
+  "item": "PB-03",
+  "status": "SKIP",
+  "why": "옛 글이 0 번 (scripts/rint_r_chain.py)"
+ },
+ "E1": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.7,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.3 s)   FAILED: ['RC01']"
+ },
+ "E2": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.9,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.4 s)   FAILED: ['RC01']"
+ },
+ "E3": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.8,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.4 s)   FAILED: ['RC01']"
+ },
+ "E4": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.8,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.4 s)   FAILED: ['RC01']"
+ },
+ "E5": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.8,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.4 s)   FAILED: ['RC01']"
+ },
+ "E6": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.8,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.3 s)   FAILED: ['RC01']"
+ },
+ "E7": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.9,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.4 s)   FAILED: ['RC01']"
+ },
+ "E8": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.9,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.4 s)   FAILED: ['RC01']"
+ },
+ "E9": {
+  "item": "PB-04",
+  "status": "SKIP",
+  "why": "옛 글이 0 번 (scripts/rint_r_chain.py)"
+ },
+ "F1": {
+  "expected_any": [
+   "LG01"
+  ],
+  "expected_hit": [
+   "LG01"
+  ],
+  "failed": [
+   "LG01"
+  ],
+  "item": "PB-06",
+  "only": "LG01",
+  "rc": 1,
+  "seconds": 1.5,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.0 s)   FAILED: ['LG01']"
+ },
+ "F2": {
+  "expected_any": [
+   "LG01"
+  ],
+  "expected_hit": [
+   "LG01"
+  ],
+  "failed": [
+   "LG01"
+  ],
+  "item": "PB-06",
+  "only": "LG01",
+  "rc": 1,
+  "seconds": 1.5,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.0 s)   FAILED: ['LG01']"
+ },
+ "F3": {
+  "item": "PB-06",
+  "status": "SKIP",
+  "why": "옛 글이 0 번 (scripts/rint_r_chain.py)"
+ },
+ "F4": {
+  "item": "PB-06",
+  "status": "SKIP",
+  "why": "옛 글이 0 번 (scripts/rint_r_chain.py)"
+ },
+ "_tree": {
+  "end_sha256": {
+   "scripts/rint_r_chain.py": "f3d6a40f0dc230766e2fad83bbfe476168c18ad29ce5428f1617861484d02089",
+   "scripts/test_rint_r_chain.py": "f7f1c0f7135433a2f1d62255d0a898a02889e9a4e7eae17b9358d22c72506f3c"
+  },
+  "restored": true,
+  "start_sha256": {
+   "scripts/rint_r_chain.py": "f3d6a40f0dc230766e2fad83bbfe476168c18ad29ce5428f1617861484d02089",
+   "scripts/test_rint_r_chain.py": "f7f1c0f7135433a2f1d62255d0a898a02889e9a4e7eae17b9358d22c72506f3c"
+  }
+ }
+}

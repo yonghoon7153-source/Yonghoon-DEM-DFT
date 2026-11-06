@@ -1,0 +1,7 @@
+K1 B5 짝 — 모르는 글 group_cause 를 죽인 원인으로 SURVIVED rc=0 failed=[] (42.3 s)
+K2 D3 짝 — 거부 기록 읽기 = read_bytes (FIFO 막힘) KILLED rc=1 failed=['FF01'] (99.2 s)
+K3 F3 짝 — 런 폴더 흔적 = 늘 없음 KILLED rc=1 failed=['LG01'] (69.0 s)
+K4 F4 짝 — 런 폴더 흔적 = 이름만 (_arm 꼴 놓침) KILLED rc=1 failed=['LG01'] (61.5 s)
+K5 E9 짝 — rc 읽기에 기본값 (RC01 허용 문맥 밖) KILLED rc=1 failed=['RC01'] (39.8 s)
+K6 B8 짝 — group_cause 칸 없음을 None 으로 (run_exit_failed) KILLED rc=1 failed=['CT01', 'LG01', 'RN01', 'RN02'] (43.6 s)
+변이 24 · 잡힘 23 · 다른 검사로 잡힘 0 · 생존 1 · 건너뜀 0 · 사본 되돌림 True

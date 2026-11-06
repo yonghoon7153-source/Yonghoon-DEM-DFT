@@ -1,0 +1,266 @@
+{
+ "candidate_fix_identical": true,
+ "integration": {
+  "boolean_false": {
+   "next_resume_problem": "RESUME_NOT_ALLOWED",
+   "result": {
+    "by": "recover",
+    "cause": "runner_rc",
+    "resume_ok": false,
+    "side": "post",
+    "status": "interrupted"
+   }
+  },
+  "float_zero": {
+   "next_resume_problem": "RESUME_NOT_ALLOWED",
+   "result": {
+    "by": "recover",
+    "cause": "runner_rc",
+    "resume_ok": false,
+    "side": "post",
+    "status": "interrupted"
+   }
+  },
+  "int_failure": {
+   "next_resume_problem": "RESUME_NOT_ALLOWED",
+   "result": {
+    "by": "recover",
+    "cause": "runner_rc",
+    "resume_ok": false,
+    "side": "post",
+    "status": "interrupted"
+   }
+  }
+ },
+ "integration_codex": {
+  "boolean_false": {
+   "next_resume_problem": null,
+   "result": {
+    "by": "recover",
+    "cause": "parent_dead",
+    "resume_ok": true,
+    "side": "post",
+    "status": "interrupted"
+   }
+  },
+  "float_zero": {
+   "next_resume_problem": null,
+   "result": {
+    "by": "recover",
+    "cause": "parent_dead",
+    "resume_ok": true,
+    "side": "post",
+    "status": "interrupted"
+   }
+  },
+  "int_failure": {
+   "next_resume_problem": "RESUME_NOT_ALLOWED",
+   "result": {
+    "by": "recover",
+    "cause": "runner_rc",
+    "resume_ok": false,
+    "side": "post",
+    "status": "interrupted"
+   }
+  }
+ },
+ "probe_rc": 1,
+ "probe_sha256": "12f3b4c9d3b37d18888ea4c5b9e89c2ce710f19dee943a436efedf9ebf98c9ee",
+ "probe_tail": "{\"environment\": {\"platform\": \"Linux-6.18.44-fc-v242-x86_64-with-glibc2.39\", \"python\": \"3.11.18 (main, Oct 26 2026, 15:28:55) [GCC 13.3.0]\", \"mode\": \"synthetic-only; Linux identity mocked; Git sequential lock shim; no production runs\"}, \"passed\": 303, \"total\": 311}",
+ "residual_fields_equal_candidate_table": {
+  "\"0\"": true,
+  "0": true,
+  "0.0": true,
+  "1": true,
+  "false": true,
+  "null": true
+ },
+ "residual_orphan": {
+  "\"0\"": [
+   "runner_rc",
+   false
+  ],
+  "0": [
+   "parent_dead",
+   true
+  ],
+  "0.0": [
+   "runner_rc",
+   false
+  ],
+  "1": [
+   "runner_rc",
+   true
+  ],
+  "false": [
+   "runner_rc",
+   false
+  ],
+  "null": [
+   "runner_rc",
+   false
+  ]
+ },
+ "residual_orphan_codex": {
+  "\"0\"": [
+   "runner_rc",
+   true
+  ],
+  "0": [
+   "parent_dead",
+   true
+  ],
+  "0.0": [
+   "parent_dead",
+   true
+  ],
+  "1": [
+   "runner_rc",
+   true
+  ],
+  "false": [
+   "parent_dead",
+   true
+  ],
+  "null": [
+   "runner_rc",
+   true
+  ]
+ },
+ "results": {
+  "codex": [
+   311,
+   311
+  ],
+  "ours": [
+   303,
+   311
+  ],
+  "rows_differ": [
+   {
+    "codex": {
+     "expected": true,
+     "got": true,
+     "name": "known_PC6_05_summary_missing_log_resume",
+     "pass": true
+    },
+    "name": "known_PC6_05_summary_missing_log_resume",
+    "ours": {
+     "expected": true,
+     "got": false,
+     "name": "known_PC6_05_summary_missing_log_resume",
+     "pass": false
+    }
+   },
+   {
+    "codex": {
+     "expected": "timeout",
+     "got": "timeout",
+     "name": "summary_cupy_oom_TIME_LIMIT_None",
+     "pass": true
+    },
+    "name": "summary_cupy_oom_TIME_LIMIT_None",
+    "ours": {
+     "expected": "timeout",
+     "got": "resource",
+     "name": "summary_cupy_oom_TIME_LIMIT_None",
+     "pass": false
+    }
+   },
+   {
+    "codex": {
+     "expected": "timeout",
+     "got": "timeout",
+     "name": "summary_disk_TIME_LIMIT_None",
+     "pass": true
+    },
+    "name": "summary_disk_TIME_LIMIT_None",
+    "ours": {
+     "expected": "timeout",
+     "got": "resource",
+     "name": "summary_disk_TIME_LIMIT_None",
+     "pass": false
+    }
+   },
+   {
+    "codex": {
+     "expected": "timeout",
+     "got": "timeout",
+     "name": "summary_gpu_TIME_LIMIT_None",
+     "pass": true
+    },
+    "name": "summary_gpu_TIME_LIMIT_None",
+    "ours": {
+     "expected": "timeout",
+     "got": "resource",
+     "name": "summary_gpu_TIME_LIMIT_None",
+     "pass": false
+    }
+   },
+   {
+    "codex": {
+     "expected": "timeout",
+     "got": "timeout",
+     "name": "summary_host_TIME_LIMIT_None",
+     "pass": true
+    },
+    "name": "summary_host_TIME_LIMIT_None",
+    "ours": {
+     "expected": "timeout",
+     "got": "resource",
+     "name": "summary_host_TIME_LIMIT_None",
+     "pass": false
+    }
+   },
+   {
+    "codex": {
+     "expected": "timeout",
+     "got": "timeout",
+     "name": "summary_oom_TIME_LIMIT_None",
+     "pass": true
+    },
+    "name": "summary_oom_TIME_LIMIT_None",
+    "ours": {
+     "expected": "timeout",
+     "got": "resource",
+     "name": "summary_oom_TIME_LIMIT_None",
+     "pass": false
+    }
+   },
+   {
+    "codex": {
+     "expected": "timeout",
+     "got": "timeout",
+     "name": "summary_plain_TIME_LIMIT_None",
+     "pass": true
+    },
+    "name": "summary_plain_TIME_LIMIT_None",
+    "ours": {
+     "expected": "timeout",
+     "got": "runner_rc",
+     "name": "summary_plain_TIME_LIMIT_None",
+     "pass": false
+    }
+   },
+   {
+    "codex": {
+     "expected": "timeout",
+     "got": "timeout",
+     "name": "summary_python_TIME_LIMIT_None",
+     "pass": true
+    },
+    "name": "summary_python_TIME_LIMIT_None",
+    "ours": {
+     "expected": "timeout",
+     "got": "runner_rc",
+     "name": "summary_python_TIME_LIMIT_None",
+     "pass": false
+    }
+   }
+  ]
+ },
+ "tested_sha256": {
+  "scripts/rint_first_result.py": "36049f80c39cd8dc026d0c11447d2c3d18b7ac50159f6dc937471303d8de36fb",
+  "scripts/rint_r_chain.py": "f3d6a40f0dc230766e2fad83bbfe476168c18ad29ce5428f1617861484d02089"
+ }
+}

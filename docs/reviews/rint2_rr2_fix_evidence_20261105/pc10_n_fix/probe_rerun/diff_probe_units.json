@@ -1,0 +1,82 @@
+{
+ "n_rows": 57,
+ "n_diff": 9,
+ "diff": {
+  "R1_bychain_conf_rcnull": {
+   "reviewer_fixed_version": {
+    "cause": "runner_rc",
+    "readable": true,
+    "result_cause": "runner_rc",
+    "resume_ok": false
+   },
+   "after_this_fix": {
+    "cause": "runner_rc",
+    "readable": false,
+    "result_cause": "runner_rc",
+    "resume_ok": false
+   }
+  },
+  "R2_recover_chainend_rcnull": {
+   "reviewer_fixed_version": {
+    "cause": "runner_rc",
+    "readable": true,
+    "result_cause": "runner_rc",
+    "resume_ok": false
+   },
+   "after_this_fix": {
+    "cause": "runner_rc",
+    "readable": false,
+    "result_cause": "runner_rc",
+    "resume_ok": false
+   }
+  },
+  "R6_recover_chainend_rcfalse": {
+   "reviewer_fixed_version": {
+    "cause": "runner_rc",
+    "readable": true,
+    "result_cause": "runner_rc",
+    "resume_ok": false
+   },
+   "after_this_fix": {
+    "cause": "runner_rc",
+    "readable": false,
+    "result_cause": "runner_rc",
+    "resume_ok": false
+   }
+  },
+  "R7_recover_chainend_rc_str0": {
+   "reviewer_fixed_version": {
+    "cause": "runner_rc",
+    "readable": true,
+    "result_cause": "runner_rc",
+    "resume_ok": false
+   },
+   "after_this_fix": {
+    "cause": "runner_rc",
+    "readable": false,
+    "result_cause": "runner_rc",
+    "resume_ok": false
+   }
+  },
+  "V0_predict_only": {
+   "reviewer_fixed_version": "Stop REGISTRATION_UNREADABLE: /tmp/pa10_units_lmbsmpam/no_such_reg.md (FileNotFoundError)",
+   "after_this_fix": "Stop REGISTRATION_UNREADABLE: /tmp/pa10_units_3xunqp_0/no_such_reg.md (FileNotFoundError)"
+  },
+  "V1_extra_ladder_list": {
+   "reviewer_fixed_version": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_lmbsmpam/v/V1: 단계 요약 ['ladder_summary.json'] 이 있는데 못 읽는다 (잘린 · 객",
+   "after_this_fix": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_3xunqp_0/v/V1: 단계 요약 ['ladder_summary.json'] 이 있는데 못 읽는다 (잘린 · 객"
+  },
+  "V2_extra_ladder_zero": {
+   "reviewer_fixed_version": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_lmbsmpam/v/V2: 단계 요약 ['ladder_summary.json'] 이 있는데 못 읽는다 (잘린 · 객",
+   "after_this_fix": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_3xunqp_0/v/V2: 단계 요약 ['ladder_summary.json'] 이 있는데 못 읽는다 (잘린 · 객"
+  },
+  "V3_extra_ladder_trunc": {
+   "reviewer_fixed_version": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_lmbsmpam/v/V3: 단계 요약 ['ladder_summary.json'] 이 있는데 못 읽는다 (잘린 · 객",
+   "after_this_fix": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_3xunqp_0/v/V3: 단계 요약 ['ladder_summary.json'] 이 있는데 못 읽는다 (잘린 · 객"
+  },
+  "V4_extra_ladder_true": {
+   "reviewer_fixed_version": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_lmbsmpam/v/V4: 단계 요약 ['ladder_summary.json'] 이 있는데 못 읽는다 (잘린 · 객",
+   "after_this_fix": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_3xunqp_0/v/V4: 단계 요약 ['ladder_summary.json'] 이 있는데 못 읽는다 (잘린 · 객"
+  }
+ }
+}

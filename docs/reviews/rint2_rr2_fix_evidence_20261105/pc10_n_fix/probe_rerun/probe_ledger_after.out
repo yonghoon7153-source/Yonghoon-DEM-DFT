@@ -1,0 +1,6 @@
+A_orphan_unconf_rcnull               orphan ['runner_rc', False] | recover rc 0 | result {'cause': 'runner_rc', 'resume_ok': False} | --add --resume rc 3 NOT_ALLOWED | tb True
+A_orphan_unconf_rc1_ctl              orphan ['runner_rc', True] | recover rc 0 | result {'cause': 'runner_rc', 'resume_ok': False} | --add --resume rc 3 NOT_ALLOWED | tb True
+A_orphan_conf_rcnull_ctl             orphan ['runner_rc', False] | recover rc 0 | result {'cause': 'runner_rc', 'resume_ok': False} | --add --resume rc 3 NOT_ALLOWED | tb True
+B_summary_gu_rcnull_gcnull           orphan ['runner_rc', False] | recover rc 0 | result {'cause': 'runner_rc', 'resume_ok': False} | --add --resume rc 3 NOT_ALLOWED | tb True
+B_summary_gu_rc1_ctl                 orphan ['runner_rc', True] | recover rc 0 | result {'cause': 'runner_rc', 'resume_ok': False} | --add --resume rc 3 NOT_ALLOWED | tb True
+B_summary_gu_rcnull_gctimeout_ctl    orphan ['timeout', True] | recover rc 0 | result {'cause': 'group_unconfirmed', 'resume_ok': True} | --add --resume rc 0 allowed | tb True

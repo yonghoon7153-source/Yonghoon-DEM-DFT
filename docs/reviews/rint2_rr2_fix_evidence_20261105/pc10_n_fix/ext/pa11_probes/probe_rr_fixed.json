@@ -1,0 +1,254 @@
+{
+ "S1_forged_code_GU": {
+  "not_allowed": false,
+  "orphan": [
+   "parent_dead",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "group_unconfirmed",
+   "resume_ok": true,
+   "status": "stopped"
+  },
+  "resume_rc": 0
+ },
+ "S1_forged_code_GU_noarms": {
+  "not_allowed": false,
+  "orphan": [
+   "parent_dead",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "group_unconfirmed",
+   "resume_ok": true,
+   "status": "stopped"
+  },
+  "resume_rc": 0
+ },
+ "S1_honest_check_GENERATION": {
+  "not_allowed": true,
+  "orphan": [
+   "parent_dead",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "check",
+   "resume_ok": false,
+   "status": "stopped"
+  },
+  "resume_rc": 3
+ },
+ "S2_forged_GU_rc0": {
+  "not_allowed": false,
+  "orphan": [
+   "runner_rc",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "group_unconfirmed",
+   "resume_ok": true,
+   "status": "stopped"
+  },
+  "resume_rc": 0
+ },
+ "S2_honest_GU_rc1": {
+  "not_allowed": true,
+  "orphan": [
+   "runner_rc",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "status": "stopped"
+  },
+  "resume_rc": 3
+ },
+ "S2_honest_RUNNER_RC_rc1": {
+  "not_allowed": true,
+  "orphan": [
+   "runner_rc",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "status": "stopped"
+  },
+  "resume_rc": 3
+ },
+ "S3_dup_last_signal": {
+  "not_allowed": false,
+  "orphan": [
+   "runner_rc",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "signal",
+   "resume_ok": true,
+   "status": "stopped"
+  },
+  "resume_rc": 0
+ },
+ "S4_forged_GU_run_L00": {
+  "not_allowed": false,
+  "orphan": [
+   "runner_rc",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "group_unconfirmed",
+   "resume_ok": true,
+   "status": "stopped"
+  },
+  "resume_rc": 0
+ },
+ "S4_honest_GU_L01_rc1": {
+  "not_allowed": true,
+  "orphan": [
+   "runner_rc",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "status": "stopped"
+  },
+  "resume_rc": 3
+ },
+ "S5_TL_timeout_with_arms_copied": {
+  "not_allowed": false,
+  "orphan": [
+   "timeout",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "timeout",
+   "resume_ok": true,
+   "status": "stopped"
+  },
+  "resume_rc": 0
+ },
+ "S6_TL_timeout_no_rc_key": {
+  "not_allowed": false,
+  "orphan": [
+   "timeout",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "timeout",
+   "resume_ok": true,
+   "status": "stopped"
+  },
+  "resume_rc": 0
+ },
+ "S7_orphan_forged_signal_after_rc1": {
+  "not_allowed": false,
+  "orphan": [
+   "signal",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "signal",
+   "resume_ok": true,
+   "status": "interrupted"
+  },
+  "resume_rc": 0
+ },
+ "S7_orphan_forged_timeout_rc1": {
+  "not_allowed": false,
+  "orphan": [
+   "timeout",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "timeout",
+   "resume_ok": true,
+   "status": "interrupted"
+  },
+  "resume_rc": 0
+ },
+ "S7_orphan_honest_none_rc1": {
+  "not_allowed": true,
+  "orphan": [
+   "runner_rc",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "status": "interrupted"
+  },
+  "resume_rc": 3
+ },
+ "S8_N1_TL_gcNone_rc1": {
+  "not_allowed": true,
+  "orphan": [
+   "runner_rc",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "status": "stopped"
+  },
+  "resume_rc": 3
+ },
+ "S8_N2_RR_signal_after_rc1": {
+  "not_allowed": true,
+  "orphan": [
+   "runner_rc",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "signal",
+   "resume_ok": false,
+   "status": "stopped"
+  },
+  "resume_rc": 3
+ },
+ "S8_N2_RR_timeout_rc1": {
+  "not_allowed": true,
+  "orphan": [
+   "runner_rc",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "timeout",
+   "resume_ok": false,
+   "status": "stopped"
+  },
+  "resume_rc": 3
+ },
+ "S9_TL_timeout_null_vs_end_none_rc1": {
+  "not_allowed": false,
+  "orphan": [
+   "runner_rc",
+   true
+  ],
+  "recover_rc": 0,
+  "result": {
+   "cause": "timeout",
+   "resume_ok": true,
+   "status": "stopped"
+  },
+  "resume_rc": 0
+ }
+}

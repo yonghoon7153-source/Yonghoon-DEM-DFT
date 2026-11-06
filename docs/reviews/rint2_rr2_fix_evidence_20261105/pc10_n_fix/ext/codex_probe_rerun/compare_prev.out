@@ -1,0 +1,18 @@
+{
+ "candidate_fix_identical": "same",
+ "integration": "same",
+ "integration_codex": "same",
+ "probe_rc": "same",
+ "probe_sha256": "same",
+ "probe_tail": "same",
+ "residual_fields_equal_candidate_table": "same",
+ "residual_orphan": "same",
+ "residual_orphan_codex": "same",
+ "results": "same",
+ "tested_sha256": "DIFF"
+}
+rows_differ (prev 8933b6781): ['known_PC6_05_summary_missing_log_resume', 'summary_cupy_oom_TIME_LIMIT_None', 'summary_disk_TIME_LIMIT_None', 'summary_gpu_TIME_LIMIT_None', 'summary_host_TIME_LIMIT_None', 'summary_oom_TIME_LIMIT_None', 'summary_plain_TIME_LIMIT_None', 'summary_python_TIME_LIMIT_None']
+rows_differ (ext)           : ['known_PC6_05_summary_missing_log_resume', 'summary_cupy_oom_TIME_LIMIT_None', 'summary_disk_TIME_LIMIT_None', 'summary_gpu_TIME_LIMIT_None', 'summary_host_TIME_LIMIT_None', 'summary_oom_TIME_LIMIT_None', 'summary_plain_TIME_LIMIT_None', 'summary_python_TIME_LIMIT_None']
+rows_differ same names: True · same content: True
+results (prev/ext): [303, 311] [311, 311] / [303, 311] [311, 311]
+tested_sha256 ext: {'scripts/rint_first_result.py': '36049f80c39cd8dc026d0c11447d2c3d18b7ac50159f6dc937471303d8de36fb', 'scripts/rint_r_chain.py': '0d72d11bb043a4bb2559aa402feec46261d9229a0109418aa7688054dc78ee3d'}

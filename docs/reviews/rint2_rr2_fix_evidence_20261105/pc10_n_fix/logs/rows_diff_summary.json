@@ -1,0 +1,480 @@
+{
+ "CT01": {
+  "accepted_rows_changed": [],
+  "cause_changed": {
+   "TIME_LIMIT/gcNone_false/oom": [
+    "timeout",
+    "resource"
+   ],
+   "TIME_LIMIT/gcNone_false/tb": [
+    "timeout",
+    "runner_rc"
+   ],
+   "TIME_LIMIT/gcNone_float0/oom": [
+    "timeout",
+    "resource"
+   ],
+   "TIME_LIMIT/gcNone_float0/tb": [
+    "timeout",
+    "runner_rc"
+   ],
+   "TIME_LIMIT/gcNone_null/oom": [
+    "timeout",
+    "resource"
+   ],
+   "TIME_LIMIT/gcNone_null/tb": [
+    "timeout",
+    "runner_rc"
+   ],
+   "TIME_LIMIT/gcNone_rc1/oom": [
+    "timeout",
+    "resource"
+   ],
+   "TIME_LIMIT/gcNone_rc1/tb": [
+    "timeout",
+    "runner_rc"
+   ],
+   "TIME_LIMIT/gcNone_rcm9/oom": [
+    "timeout",
+    "resource"
+   ],
+   "TIME_LIMIT/gcNone_rcm9/tb": [
+    "timeout",
+    "runner_rc"
+   ],
+   "TIME_LIMIT/gcNone_str1/oom": [
+    "timeout",
+    "resource"
+   ],
+   "TIME_LIMIT/gcNone_str1/tb": [
+    "timeout",
+    "runner_rc"
+   ],
+   "TIME_LIMIT/gcNone_true/oom": [
+    "timeout",
+    "resource"
+   ],
+   "TIME_LIMIT/gcNone_true/tb": [
+    "timeout",
+    "runner_rc"
+   ],
+   "TIME_LIMIT/norc_gcNone/oom": [
+    "timeout",
+    "resource"
+   ],
+   "TIME_LIMIT/norc_gcNone/tb": [
+    "timeout",
+    "runner_rc"
+   ]
+  },
+  "changed": 90,
+  "resume_false_to_true": 0,
+  "resume_true_to_false": 90,
+  "rows": 151
+ },
+ "CT02": {
+  "changed": {
+   "ce_none_false_oom": [
+    [
+     "resource",
+     true,
+     true
+    ],
+    [
+     "resource",
+     false,
+     false
+    ]
+   ],
+   "ce_none_null_oom": [
+    [
+     "resource",
+     true,
+     true
+    ],
+    [
+     "resource",
+     false,
+     false
+    ]
+   ],
+   "ce_timeout_true_tb": [
+    [
+     "parent_dead",
+     true,
+     true
+    ],
+    [
+     "parent_dead",
+     false,
+     false
+    ]
+   ],
+   "chain_none_false_oom": [
+    [
+     "resource",
+     true,
+     true
+    ],
+    [
+     "resource",
+     false,
+     false
+    ]
+   ],
+   "chain_none_float0_oom": [
+    [
+     "resource",
+     true,
+     true
+    ],
+    [
+     "resource",
+     false,
+     false
+    ]
+   ],
+   "chain_none_null_oom": [
+    [
+     "resource",
+     true,
+     true
+    ],
+    [
+     "resource",
+     false,
+     false
+    ]
+   ],
+   "chain_none_null_tb": [
+    [
+     "runner_rc",
+     true,
+     false
+    ],
+    [
+     "runner_rc",
+     false,
+     false
+    ]
+   ],
+   "chain_none_str1_oom": [
+    [
+     "resource",
+     true,
+     true
+    ],
+    [
+     "resource",
+     false,
+     false
+    ]
+   ],
+   "chain_none_true_oom": [
+    [
+     "resource",
+     true,
+     true
+    ],
+    [
+     "resource",
+     false,
+     false
+    ]
+   ],
+   "chain_signal_float0_tb": [
+    [
+     "signal",
+     true,
+     true
+    ],
+    [
+     "signal",
+     false,
+     false
+    ]
+   ],
+   "chain_timeout_true_tb": [
+    [
+     "timeout",
+     true,
+     true
+    ],
+    [
+     "timeout",
+     false,
+     false
+    ]
+   ]
+  },
+  "ctl_changed": [],
+  "rows": 21
+ },
+ "CT03": {
+  "deep": {
+   "recount": [
+    "Stop ATTEMPT_LEDGER_MISMATCH",
+    "Stop ATTEMPT_LEDGER_MISMATCH"
+   ],
+   "recover": [
+    "RecursionError",
+    [
+     1,
+     0
+    ]
+   ],
+   "said": [
+    false,
+    true
+   ]
+  },
+  "dup": {
+   "recount": [
+    "Stop ATTEMPT_LEDGER_MISMATCH",
+    "Stop ATTEMPT_LEDGER_MISMATCH"
+   ],
+   "recover": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     0
+    ]
+   ],
+   "said": [
+    true,
+    true
+   ]
+  },
+  "list": {
+   "recount": [
+    "Stop ATTEMPT_LEDGER_MISMATCH",
+    "Stop ATTEMPT_LEDGER_MISMATCH"
+   ],
+   "recover": [
+    "AttributeError",
+    [
+     1,
+     0
+    ]
+   ],
+   "said": [
+    false,
+    true
+   ]
+  },
+  "nan": {
+   "recount": [
+    "Stop ATTEMPT_LEDGER_MISMATCH",
+    "Stop ATTEMPT_LEDGER_MISMATCH"
+   ],
+   "recover": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     0
+    ]
+   ],
+   "said": [
+    true,
+    true
+   ]
+  },
+  "null": {
+   "recount": [
+    "Stop ATTEMPT_LEDGER_MISMATCH",
+    "Stop ATTEMPT_LEDGER_MISMATCH"
+   ],
+   "recover": [
+    "AttributeError",
+    [
+     1,
+     0
+    ]
+   ],
+   "said": [
+    false,
+    true
+   ]
+  },
+  "str": {
+   "recount": [
+    "Stop ATTEMPT_LEDGER_MISMATCH",
+    "Stop ATTEMPT_LEDGER_MISMATCH"
+   ],
+   "recover": [
+    "AttributeError",
+    [
+     1,
+     0
+    ]
+   ],
+   "said": [
+    false,
+    true
+   ]
+  },
+  "true": {
+   "recount": [
+    "Stop ATTEMPT_LEDGER_MISMATCH",
+    "Stop ATTEMPT_LEDGER_MISMATCH"
+   ],
+   "recover": [
+    "AttributeError",
+    [
+     1,
+     0
+    ]
+   ],
+   "said": [
+    false,
+    true
+   ]
+  },
+  "truncated": {
+   "recount": [
+    "Stop ATTEMPT_LEDGER_MISMATCH",
+    "Stop ATTEMPT_LEDGER_MISMATCH"
+   ],
+   "recover": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     0
+    ]
+   ],
+   "said": [
+    true,
+    true
+   ]
+  },
+  "zero": {
+   "recount": [
+    "Stop ATTEMPT_LEDGER_MISMATCH",
+    "Stop ATTEMPT_LEDGER_MISMATCH"
+   ],
+   "recover": [
+    "AttributeError",
+    [
+     1,
+     0
+    ]
+   ],
+   "said": [
+    false,
+    true
+   ]
+  }
+ },
+ "CT04": {
+  "N1": {
+   "cause": [
+    "timeout",
+    "runner_rc"
+   ],
+   "resume_ok": [
+    true,
+    false
+   ],
+   "resume_rc": [
+    0,
+    3
+   ]
+  },
+  "N2_signal": {
+   "cause": [
+    "signal",
+    "signal"
+   ],
+   "resume_ok": [
+    true,
+    false
+   ],
+   "resume_rc": [
+    0,
+    3
+   ]
+  },
+  "N2_timeout": {
+   "cause": [
+    "timeout",
+    "timeout"
+   ],
+   "resume_ok": [
+    true,
+    false
+   ],
+   "resume_rc": [
+    0,
+    3
+   ]
+  },
+  "N4": {
+   "rc": [
+    "AttributeError",
+    3
+   ],
+   "result": [
+    null,
+    null
+   ],
+   "said": [
+    false,
+    true
+   ]
+  },
+  "ctl_rc1": {
+   "cause": [
+    "runner_rc",
+    "runner_rc"
+   ],
+   "resume_ok": [
+    false,
+    false
+   ],
+   "resume_rc": [
+    3,
+    3
+   ]
+  },
+  "ctl_signal": {
+   "cause": [
+    "signal",
+    "signal"
+   ],
+   "resume_ok": [
+    true,
+    true
+   ],
+   "resume_rc": [
+    0,
+    0
+   ]
+  },
+  "ctl_timeout": {
+   "cause": [
+    "timeout",
+    "timeout"
+   ],
+   "resume_ok": [
+    true,
+    true
+   ],
+   "resume_rc": [
+    0,
+    0
+   ]
+  }
+ },
+ "after_module_sha256": "f3d6a40f0dc230766e2fad83bbfe476168c18ad29ce5428f1617861484d02089",
+ "before_module_sha256": "da4c2ef699335b1df27e287c8a3ce6780d4bf82fe35e82fcc720718d209f9f16",
+ "test_sha256": "f7f1c0f7135433a2f1d62255d0a898a02889e9a4e7eae17b9358d22c72506f3c"
+}

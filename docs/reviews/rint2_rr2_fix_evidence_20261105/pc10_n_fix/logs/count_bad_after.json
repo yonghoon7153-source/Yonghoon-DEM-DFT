@@ -1,0 +1,83 @@
+{
+ "checks": {
+  "CT01": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 150,
+   "n_bad": 0,
+   "pass": true
+  },
+  "CT02": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 21,
+   "n_bad": 0,
+   "pass": true
+  },
+  "CT03": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 10,
+   "n_bad": 0,
+   "pass": true
+  },
+  "CT04": {
+   "bad_keys": [],
+   "detail": null,
+   "n": null,
+   "n_bad": 0,
+   "pass": true
+  },
+  "LG01": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 63,
+   "n_bad": 0,
+   "pass": true
+  },
+  "PD02": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 200,
+   "n_bad": 0,
+   "pass": true
+  },
+  "PD02c": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 99,
+   "n_bad": 0,
+   "pass": true
+  },
+  "PD13": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 78,
+   "n_bad": 0,
+   "pass": true
+  },
+  "PE03u": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 44,
+   "n_bad": 0,
+   "pass": true
+  },
+  "RC02": {
+   "bad_keys": [],
+   "detail": null,
+   "n": null,
+   "n_bad": 0,
+   "pass": true
+  },
+  "RN01": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 112,
+   "n_bad": 0,
+   "pass": true
+  }
+ },
+ "module_sha256": "f3d6a40f0dc230766e2fad83bbfe476168c18ad29ce5428f1617861484d02089",
+ "test_sha256": "f7f1c0f7135433a2f1d62255d0a898a02889e9a4e7eae17b9358d22c72506f3c"
+}

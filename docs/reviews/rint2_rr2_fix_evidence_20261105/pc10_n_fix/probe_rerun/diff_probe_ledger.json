@@ -1,0 +1,206 @@
+{
+ "n_rows": 6,
+ "n_diff": 3,
+ "diff": {
+  "A_orphan_conf_rcnull_ctl": {
+   "reviewer_fixed_version": {
+    "orphan": [
+     "runner_rc",
+     true
+    ],
+    "recover_rc": 0,
+    "result": {
+     "status": "interrupted",
+     "side": "post",
+     "cause": "runner_rc",
+     "resume_ok": false,
+     "by": "recover"
+    },
+    "resume_rc": 3,
+    "not_allowed": true,
+    "ledger_same": true,
+    "tail": [
+     "recover — 그룹 기록 0 개 정리 · 미확인 0",
+     "  recover attempt_1: 결과 줄 interrupted · 결과 post · 원인 runner_rc · 재실행 자격 False"
+    ],
+    "end_after_recover": {
+     "by": "chain",
+     "rc": null,
+     "cause": null,
+     "confirmed": true,
+     "chain_end": null
+    },
+    "log_has_traceback": true
+   },
+   "after_this_fix": {
+    "orphan": [
+     "runner_rc",
+     false
+    ],
+    "recover_rc": 0,
+    "result": {
+     "status": "interrupted",
+     "side": "post",
+     "cause": "runner_rc",
+     "resume_ok": false,
+     "by": "recover"
+    },
+    "resume_rc": 3,
+    "not_allowed": true,
+    "ledger_same": true,
+    "tail": [
+     "recover — 그룹 기록 0 개 정리 · 미확인 0",
+     "  recover attempt_1: 결과 줄 interrupted · 결과 post · 원인 runner_rc · 재실행 자격 False"
+    ],
+    "end_after_recover": {
+     "by": "chain",
+     "rc": null,
+     "cause": null,
+     "confirmed": true,
+     "chain_end": null
+    },
+    "log_has_traceback": true
+   }
+  },
+  "A_orphan_unconf_rcnull": {
+   "reviewer_fixed_version": {
+    "orphan": [
+     "runner_rc",
+     true
+    ],
+    "recover_rc": 0,
+    "result": {
+     "status": "interrupted",
+     "side": "post",
+     "cause": "runner_rc",
+     "resume_ok": false,
+     "by": "recover"
+    },
+    "resume_rc": 3,
+    "not_allowed": true,
+    "ledger_same": true,
+    "tail": [
+     "recover — 그룹 기록 1 개 정리 · 미확인 0",
+     "  recover attempt_1: 결과 줄 interrupted · 결과 post · 원인 runner_rc · 재실행 자격 False"
+    ],
+    "end_after_recover": {
+     "by": "recover",
+     "rc": null,
+     "cause": "parent_dead",
+     "confirmed": true,
+     "chain_end": {
+      "cause": null,
+      "confirmed": false,
+      "ended_utc": "2026-10-28T00:00:00Z",
+      "rc": null
+     }
+    },
+    "log_has_traceback": true
+   },
+   "after_this_fix": {
+    "orphan": [
+     "runner_rc",
+     false
+    ],
+    "recover_rc": 0,
+    "result": {
+     "status": "interrupted",
+     "side": "post",
+     "cause": "runner_rc",
+     "resume_ok": false,
+     "by": "recover"
+    },
+    "resume_rc": 3,
+    "not_allowed": true,
+    "ledger_same": true,
+    "tail": [
+     "recover — 그룹 기록 1 개 정리 · 미확인 0",
+     "  recover attempt_1: 결과 줄 interrupted · 결과 post · 원인 runner_rc · 재실행 자격 False"
+    ],
+    "end_after_recover": {
+     "by": "recover",
+     "rc": null,
+     "cause": "parent_dead",
+     "confirmed": true,
+     "chain_end": {
+      "cause": null,
+      "confirmed": false,
+      "ended_utc": "2026-10-28T00:00:00Z",
+      "rc": null
+     }
+    },
+    "log_has_traceback": true
+   }
+  },
+  "B_summary_gu_rcnull_gcnull": {
+   "reviewer_fixed_version": {
+    "orphan": [
+     "runner_rc",
+     true
+    ],
+    "recover_rc": 0,
+    "result": {
+     "status": "stopped",
+     "side": "post",
+     "cause": "runner_rc",
+     "resume_ok": false,
+     "by": "recover"
+    },
+    "resume_rc": 3,
+    "not_allowed": true,
+    "ledger_same": true,
+    "tail": [
+     "recover — 그룹 기록 1 개 정리 · 미확인 0",
+     "  recover attempt_1: 결과 줄 stopped · 결과 post · 원인 runner_rc · 재실행 자격 False"
+    ],
+    "end_after_recover": {
+     "by": "recover",
+     "rc": null,
+     "cause": "parent_dead",
+     "confirmed": true,
+     "chain_end": {
+      "cause": null,
+      "confirmed": false,
+      "ended_utc": "2026-10-28T00:00:00Z",
+      "rc": null
+     }
+    },
+    "log_has_traceback": true
+   },
+   "after_this_fix": {
+    "orphan": [
+     "runner_rc",
+     false
+    ],
+    "recover_rc": 0,
+    "result": {
+     "status": "stopped",
+     "side": "post",
+     "cause": "runner_rc",
+     "resume_ok": false,
+     "by": "recover"
+    },
+    "resume_rc": 3,
+    "not_allowed": true,
+    "ledger_same": true,
+    "tail": [
+     "recover — 그룹 기록 1 개 정리 · 미확인 0",
+     "  recover attempt_1: 결과 줄 stopped · 결과 post · 원인 runner_rc · 재실행 자격 False"
+    ],
+    "end_after_recover": {
+     "by": "recover",
+     "rc": null,
+     "cause": "parent_dead",
+     "confirmed": true,
+     "chain_end": {
+      "cause": null,
+      "confirmed": false,
+      "ended_utc": "2026-10-28T00:00:00Z",
+      "rc": null
+     }
+    },
+    "log_has_traceback": true
+   }
+  }
+ }
+}

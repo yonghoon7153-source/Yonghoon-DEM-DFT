@@ -1,0 +1,953 @@
+{
+ "CT05": {
+  "ok": false,
+  "seconds": 3.9,
+  "why": {
+   "bad": {
+    "A_empty": {
+     "add": [
+      [
+       0,
+       "ADDED"
+      ],
+      [
+       3,
+       "ATTEMPT_ORDER_MISMATCH"
+      ]
+     ],
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      0,
+      3
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "None"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "A_full_exact": {
+     "add": [
+      [
+       0,
+       "ADDED"
+      ],
+      [
+       3,
+       "ATTEMPT_ORDER_MISMATCH"
+      ]
+     ],
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      0,
+      3
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "MACHINE_NOT_ALLOWED"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "A_full_foreign": {
+     "add": [
+      [
+       0,
+       "ADDED"
+      ],
+      [
+       3,
+       "ATTEMPT_ORDER_MISMATCH"
+      ]
+     ],
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      0,
+      3
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "MACHINE_NOT_ALLOWED"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "C_cause_int": {
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "MACHINE_NOT_ALLOWED"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "C_cause_null": {
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "MACHINE_NOT_ALLOWED"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "C_code_empty": {
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       ""
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "C_code_int": {
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "3"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "C_code_lower": {
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "x"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "C_commit_other": {
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "MACHINE_NOT_ALLOWED"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "C_commit_short": {
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "MACHINE_NOT_ALLOWED"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "C_extra_key": {
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "MACHINE_NOT_ALLOWED"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "C_n_bool": {
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "MACHINE_NOT_ALLOWED"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "C_n_other": {
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "MACHINE_NOT_ALLOWED"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "C_n_str": {
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "MACHINE_NOT_ALLOWED"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    }
+   },
+   "n": 29,
+   "n_bad": 26
+  }
+ },
+ "CT06": {
+  "ok": false,
+  "seconds": 1.7,
+  "why": {
+   "bad": {
+    "cli/S1_forged_code_GU": [
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     "group_unconfirmed"
+    ],
+    "cli/S1_forged_code_GU_noarms": [
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     "group_unconfirmed"
+    ],
+    "cli/S2_forged_GU_rc0": [
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     "group_unconfirmed"
+    ],
+    "cli/S4_forged_GU_run_L00": [
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     "group_unconfirmed"
+    ],
+    "cli/S5_TL_timeout_with_arms": [
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     "timeout"
+    ],
+    "cli/TR_forged_outdir_oom_trace": [
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     "resource"
+    ],
+    "f_arms_dict": {
+     "got": [
+      "signal",
+      true
+     ],
+     "prob": null,
+     "want": [
+      "signal",
+      false
+     ]
+    },
+    "f_arms_null": {
+     "got": [
+      "signal",
+      true
+     ],
+     "prob": null,
+     "want": [
+      "signal",
+      false
+     ]
+    },
+    "f_arms_str": {
+     "got": [
+      "signal",
+      true
+     ],
+     "prob": null,
+     "want": [
+      "signal",
+      false
+     ]
+    },
+    "f_gu_arms": {
+     "got": [
+      "group_unconfirmed",
+      true
+     ],
+     "prob": null,
+     "want": [
+      "group_unconfirmed",
+      false
+     ]
+    },
+    "f_gu_by_weird": {
+     "got": [
+      "group_unconfirmed",
+      true
+     ],
+     "prob": null,
+     "want": [
+      "group_unconfirmed",
+      false
+     ]
+    },
+    "f_gu_ce_list": {
+     "got": [
+      "group_unconfirmed",
+      true
+     ],
+     "prob": null,
+     "want": [
+      "group_unconfirmed",
+      false
+     ]
+    },
+    "f_gu_ce_null": {
+     "got": [
+      "group_unconfirmed",
+      true
+     ],
+     "prob": null,
+     "want": [
+      "group_unconfirmed",
+      false
+     ]
+    },
+    "f_gu_ce_true": {
+     "got": [
+      "group_unconfirmed",
+      true
+     ],
+     "prob": null,
+     "want": [
+      "group_unconfirmed",
+      false
+     ]
+    },
+    "f_gu_chain_one": {
+     "got": [
+      "group_unconfirmed",
+      true
+     ],
+     "prob": null,
+     "want": [
+      "group_unconfirmed",
+      false
+     ]
+    },
+    "f_gu_chain_true": {
+     "got": [
+      "group_unconfirmed",
+      true
+     ],
+     "prob": null,
+     "want": [
+      "group_unconfirmed",
+      false
+     ]
+    }
+   },
+   "n": 49,
+   "n_bad": 28
+  }
+ },
+ "CT07": {
+  "ok": false,
+  "seconds": 1.4,
+  "why": {
+   "bad": {
+    "outdir_dict": {
+     "r2": [
+      null,
+      "interrupted"
+     ],
+     "recount": [
+      "TypeError",
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      "TypeError",
+      [
+       1,
+       0
+      ]
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "outdir_int": {
+     "r2": [
+      null,
+      "interrupted"
+     ],
+     "recount": [
+      "TypeError",
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      "TypeError",
+      [
+       1,
+       0
+      ]
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "runs_dict": {
+     "r2": [
+      null,
+      "interrupted"
+     ],
+     "recount": [
+      "AttributeError",
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      "AttributeError",
+      [
+       1,
+       0
+      ]
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "runs_list_int": {
+     "r2": [
+      null,
+      "interrupted"
+     ],
+     "recount": [
+      "AttributeError",
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      "AttributeError",
+      [
+       1,
+       0
+      ]
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "runs_str": {
+     "r2": [
+      null,
+      "interrupted"
+     ],
+     "recount": [
+      "AttributeError",
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      "AttributeError",
+      [
+       1,
+       0
+      ]
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "stop_list": {
+     "r2": [
+      null,
+      "interrupted"
+     ],
+     "recount": [
+      "AttributeError",
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      "AttributeError",
+      [
+       1,
+       0
+      ]
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "stop_str": {
+     "r2": [
+      null,
+      "interrupted"
+     ],
+     "recount": [
+      "AttributeError",
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      "AttributeError",
+      [
+       1,
+       0
+      ]
+     ],
+     "said": [
+      false,
+      true
+     ]
+    }
+   },
+   "n": 8
+  }
+ },
+ "CT08": {
+  "ok": false,
+  "seconds": 0.0,
+  "why": {
+   "missing": [
+    "end_rc_known"
+   ],
+   "names": [
+    "STOP_RUN_SHAPES",
+    "end_rc_known",
+    "rejected_record",
+    "run_exit_failed",
+    "run_record_shape",
+    "stop_record_problem"
+   ]
+  }
+ }
+}

@@ -1,0 +1,1224 @@
+{
+ "probes": {
+  "pa10_ledger": {
+   "diff": {},
+   "n_diff": 0,
+   "n_rows": 6,
+   "probe": "preattack10/probe_ledger.py",
+   "probe_sha256": "b5012ccb8521d361857bda486b9458fb3f77dac682a4f41c85b2296836734afa",
+   "rc": 0
+  },
+  "pa10_rcscan": {
+   "diff": {
+    "source": {
+     "ext": {
+      "hits": [
+       {
+        "fn": "run_in_group",
+        "kind": "name",
+        "line": 2767,
+        "parent": "Compare",
+        "seg": "rc is None"
+       },
+       {
+        "fn": "run_in_group",
+        "kind": "const",
+        "line": 2786,
+        "parent": "Dict",
+        "seg": "{'schema': GROUP_SCHEMA, 'name': name, 'token': token, 'rc': rc, 'cause': cause, 'signal': (signal_name(sig) i"
+       },
+       {
+        "fn": "run_in_group",
+        "kind": "name",
+        "line": 2786,
+        "parent": "Dict",
+        "seg": "{'schema': GROUP_SCHEMA, 'name': name, 'token': token, 'rc': rc, 'cause': cause, 'signal': (signal_name(sig) i"
+       },
+       {
+        "fn": "run_in_group",
+        "kind": "name",
+        "line": 2795,
+        "parent": "Tuple",
+        "seg": "rc, 'signal_after', dict(end, signal_after=signal_name(pending[0]))"
+       },
+       {
+        "fn": "run_in_group",
+        "kind": "name",
+        "line": 2796,
+        "parent": "Tuple",
+        "seg": "rc, cause, end"
+       },
+       {
+        "fn": "rc_kind",
+        "kind": "name",
+        "line": 3809,
+        "parent": "Compare",
+        "seg": "rc is None"
+       },
+       {
+        "fn": "rc_kind",
+        "kind": "name",
+        "line": 3811,
+        "parent": "Call",
+        "seg": "type(rc)"
+       },
+       {
+        "fn": "rc_kind",
+        "kind": "name",
+        "line": 3812,
+        "parent": "Compare",
+        "seg": "rc == 0"
+       },
+       {
+        "fn": "rc_success",
+        "kind": "name",
+        "line": 3818,
+        "parent": "Call",
+        "seg": "rc_kind(rc)"
+       },
+       {
+        "fn": "runner_rc_failed",
+        "kind": "name",
+        "line": 3826,
+        "parent": "Call",
+        "seg": "rc_kind(rc)"
+       },
+       {
+        "fn": "chain_end_failed",
+        "kind": "const",
+        "line": 3836,
+        "parent": "Call",
+        "seg": "ce.get('rc')"
+       },
+       {
+        "fn": "end_record_known",
+        "kind": "const",
+        "line": 3869,
+        "parent": "Call",
+        "seg": "er.get('rc')"
+       },
+       {
+        "fn": "run_record_shape",
+        "kind": "const",
+        "line": 3977,
+        "parent": "Call",
+        "seg": "rr.get('rc')"
+       },
+       {
+        "fn": "run_exit_failed",
+        "kind": "const",
+        "line": 4082,
+        "parent": "Call",
+        "seg": "rec.get('rc')"
+       },
+       {
+        "fn": "stop_cause",
+        "kind": "const",
+        "line": 4126,
+        "parent": "Call",
+        "seg": "rec.get('rc')"
+       },
+       {
+        "fn": "orphan_cause",
+        "kind": "const",
+        "line": 4168,
+        "parent": "Call",
+        "seg": "er.get('rc')"
+       },
+       {
+        "fn": "orphan_cause",
+        "kind": "name",
+        "line": 4169,
+        "parent": "Call",
+        "seg": "rc_success(rc)"
+       },
+       {
+        "fn": "_execute",
+        "kind": "kwarg",
+        "line": 4833,
+        "parent": "Call",
+        "seg": "dict(req, outdir=outdir.name, rc=None, seconds=None, arms_read=[], machine=self.machine)"
+       },
+       {
+        "fn": "_execute",
+        "kind": "const",
+        "line": 4841,
+        "parent": "Subscript",
+        "seg": "rec['rc']"
+       },
+       {
+        "fn": "_execute",
+        "kind": "name",
+        "line": 4841,
+        "parent": "IfExp",
+        "seg": "rc if cause is None else None"
+       },
+       {
+        "fn": "_execute",
+        "kind": "const",
+        "line": 4846,
+        "parent": "Subscript",
+        "seg": "rec[\"rc\"]"
+       },
+       {
+        "fn": "_execute",
+        "kind": "name",
+        "line": 4855,
+        "parent": "Call",
+        "seg": "rc_success(rc)"
+       },
+       {
+        "fn": "_execute",
+        "kind": "name",
+        "line": 4856,
+        "parent": "FormattedValue",
+        "seg": "f'rc {rc} (로그 {logp})'"
+       },
+       {
+        "fn": "_src_done",
+        "kind": "const",
+        "line": 4907,
+        "parent": "Call",
+        "seg": "er.get('rc')"
+       },
+       {
+        "fn": "_copy",
+        "kind": "kwarg",
+        "line": 4938,
+        "parent": "Call",
+        "seg": "dict(req, outdir=outdir.name, rc=0, seconds=None, arms_read=[], machine=self.machine, group_cause=None, copied"
+       },
+       {
+        "fn": "__call__",
+        "kind": "const",
+        "line": 4999,
+        "parent": "Dict",
+        "seg": "{'name': name, 'run': req.get('name'), 'arm': arm, 'rc': None, 'seconds': None, 'status': 'failed', 'why': Non"
+       },
+       {
+        "fn": "_run",
+        "kind": "const",
+        "line": 5041,
+        "parent": "Subscript",
+        "seg": "rec['rc']"
+       },
+       {
+        "fn": "_run",
+        "kind": "name",
+        "line": 5041,
+        "parent": "IfExp",
+        "seg": "rc if cause is None else None"
+       },
+       {
+        "fn": "_run",
+        "kind": "name",
+        "line": 5049,
+        "parent": "Call",
+        "seg": "rc_success(rc)"
+       },
+       {
+        "fn": "_run",
+        "kind": "name",
+        "line": 5050,
+        "parent": "FormattedValue",
+        "seg": "f'러너 rc {rc} (로그 {logp.name})'"
+       },
+       {
+        "fn": "run",
+        "kind": "const",
+        "line": 5100,
+        "parent": "Call",
+        "seg": "r.get('rc')"
+       },
+       {
+        "fn": "run",
+        "kind": "const",
+        "line": 5101,
+        "parent": "Call",
+        "seg": "r.get(\"rc\")"
+       },
+       {
+        "fn": "noop_check",
+        "kind": "const",
+        "line": 5384,
+        "parent": "Call",
+        "seg": "x.get('rc')"
+       },
+       {
+        "fn": "load_ladders",
+        "kind": "const",
+        "line": 5883,
+        "parent": "Call",
+        "seg": "r.get('rc')"
+       },
+       {
+        "fn": "load_ladders",
+        "kind": "const",
+        "line": 5884,
+        "parent": "Call",
+        "seg": "r.get(\"rc\")"
+       },
+       {
+        "fn": "run",
+        "kind": "kwarg",
+        "line": 6263,
+        "parent": "Call",
+        "seg": "dict(req, outdir=rel, rc=rec0.get('rc'), seconds=rec0.get('seconds'), arms_read=[], machine=u['machine'], grou"
+       },
+       {
+        "fn": "run",
+        "kind": "const",
+        "line": 6263,
+        "parent": "Call",
+        "seg": "rec0.get('rc')"
+       },
+       {
+        "fn": "run",
+        "kind": "const",
+        "line": 6266,
+        "parent": "Call",
+        "seg": "rec0.get('rc')"
+       },
+       {
+        "fn": "run",
+        "kind": "const",
+        "line": 6268,
+        "parent": "Call",
+        "seg": "rec0.get(\"rc\")"
+       },
+       {
+        "fn": "recover_group",
+        "kind": "const",
+        "line": 7396,
+        "parent": "Tuple",
+        "seg": "('rc', 'cause', 'confirmed', 'ended_utc')"
+       },
+       {
+        "fn": "recover_group",
+        "kind": "const",
+        "line": 7443,
+        "parent": "Dict",
+        "seg": "{'schema': GROUP_SCHEMA, 'name': nm, 'token': tok, 'rc': None, 'cause': 'parent_dead', 'signal': None, 'confir"
+       }
+      ],
+      "n_attr": 0,
+      "n_hits": 41,
+      "n_match": 0,
+      "path": "<tmp>",
+      "rc_scan_raw": []
+     },
+     "prev_8933b6781": {
+      "hits": [
+       {
+        "fn": "run_in_group",
+        "kind": "name",
+        "line": 2761,
+        "parent": "Compare",
+        "seg": "rc is None"
+       },
+       {
+        "fn": "run_in_group",
+        "kind": "const",
+        "line": 2780,
+        "parent": "Dict",
+        "seg": "{'schema': GROUP_SCHEMA, 'name': name, 'token': token, 'rc': rc, 'cause': cause, 'signal': (signal_name(sig) i"
+       },
+       {
+        "fn": "run_in_group",
+        "kind": "name",
+        "line": 2780,
+        "parent": "Dict",
+        "seg": "{'schema': GROUP_SCHEMA, 'name': name, 'token': token, 'rc': rc, 'cause': cause, 'signal': (signal_name(sig) i"
+       },
+       {
+        "fn": "run_in_group",
+        "kind": "name",
+        "line": 2789,
+        "parent": "Tuple",
+        "seg": "rc, 'signal_after', dict(end, signal_after=signal_name(pending[0]))"
+       },
+       {
+        "fn": "run_in_group",
+        "kind": "name",
+        "line": 2790,
+        "parent": "Tuple",
+        "seg": "rc, cause, end"
+       },
+       {
+        "fn": "rc_kind",
+        "kind": "name",
+        "line": 3803,
+        "parent": "Compare",
+        "seg": "rc is None"
+       },
+       {
+        "fn": "rc_kind",
+        "kind": "name",
+        "line": 3805,
+        "parent": "Call",
+        "seg": "type(rc)"
+       },
+       {
+        "fn": "rc_kind",
+        "kind": "name",
+        "line": 3806,
+        "parent": "Compare",
+        "seg": "rc == 0"
+       },
+       {
+        "fn": "rc_success",
+        "kind": "name",
+        "line": 3812,
+        "parent": "Call",
+        "seg": "rc_kind(rc)"
+       },
+       {
+        "fn": "runner_rc_failed",
+        "kind": "name",
+        "line": 3820,
+        "parent": "Call",
+        "seg": "rc_kind(rc)"
+       },
+       {
+        "fn": "chain_end_failed",
+        "kind": "const",
+        "line": 3830,
+        "parent": "Call",
+        "seg": "ce.get('rc')"
+       },
+       {
+        "fn": "end_record_known",
+        "kind": "const",
+        "line": 3862,
+        "parent": "Call",
+        "seg": "er.get('rc')"
+       },
+       {
+        "fn": "run_record_shape",
+        "kind": "const",
+        "line": 3970,
+        "parent": "Call",
+        "seg": "rr.get('rc')"
+       },
+       {
+        "fn": "run_exit_failed",
+        "kind": "const",
+        "line": 4008,
+        "parent": "Call",
+        "seg": "rec.get('rc')"
+       },
+       {
+        "fn": "stop_cause",
+        "kind": "const",
+        "line": 4052,
+        "parent": "Call",
+        "seg": "rec.get('rc')"
+       },
+       {
+        "fn": "orphan_cause",
+        "kind": "const",
+        "line": 4094,
+        "parent": "Call",
+        "seg": "er.get('rc')"
+       },
+       {
+        "fn": "orphan_cause",
+        "kind": "name",
+        "line": 4095,
+        "parent": "Call",
+        "seg": "rc_success(rc)"
+       },
+       {
+        "fn": "_execute",
+        "kind": "kwarg",
+        "line": 4642,
+        "parent": "Call",
+        "seg": "dict(req, outdir=outdir.name, rc=None, seconds=None, arms_read=[], machine=self.machine)"
+       },
+       {
+        "fn": "_execute",
+        "kind": "const",
+        "line": 4650,
+        "parent": "Subscript",
+        "seg": "rec['rc']"
+       },
+       {
+        "fn": "_execute",
+        "kind": "name",
+        "line": 4650,
+        "parent": "IfExp",
+        "seg": "rc if cause is None else None"
+       },
+       {
+        "fn": "_execute",
+        "kind": "const",
+        "line": 4655,
+        "parent": "Subscript",
+        "seg": "rec[\"rc\"]"
+       },
+       {
+        "fn": "_execute",
+        "kind": "name",
+        "line": 4664,
+        "parent": "Call",
+        "seg": "rc_success(rc)"
+       },
+       {
+        "fn": "_execute",
+        "kind": "name",
+        "line": 4665,
+        "parent": "FormattedValue",
+        "seg": "f'rc {rc} (로그 {logp})'"
+       },
+       {
+        "fn": "_src_done",
+        "kind": "const",
+        "line": 4716,
+        "parent": "Call",
+        "seg": "er.get('rc')"
+       },
+       {
+        "fn": "_copy",
+        "kind": "kwarg",
+        "line": 4747,
+        "parent": "Call",
+        "seg": "dict(req, outdir=outdir.name, rc=0, seconds=None, arms_read=[], machine=self.machine, group_cause=None, copied"
+       },
+       {
+        "fn": "__call__",
+        "kind": "const",
+        "line": 4808,
+        "parent": "Dict",
+        "seg": "{'name': name, 'run': req.get('name'), 'arm': arm, 'rc': None, 'seconds': None, 'status': 'failed', 'why': Non"
+       },
+       {
+        "fn": "_run",
+        "kind": "const",
+        "line": 4850,
+        "parent": "Subscript",
+        "seg": "rec['rc']"
+       },
+       {
+        "fn": "_run",
+        "kind": "name",
+        "line": 4850,
+        "parent": "IfExp",
+        "seg": "rc if cause is None else None"
+       },
+       {
+        "fn": "_run",
+        "kind": "name",
+        "line": 4858,
+        "parent": "Call",
+        "seg": "rc_success(rc)"
+       },
+       {
+        "fn": "_run",
+        "kind": "name",
+        "line": 4859,
+        "parent": "FormattedValue",
+        "seg": "f'러너 rc {rc} (로그 {logp.name})'"
+       },
+       {
+        "fn": "run",
+        "kind": "const",
+        "line": 4909,
+        "parent": "Call",
+        "seg": "r.get('rc')"
+       },
+       {
+        "fn": "run",
+        "kind": "const",
+        "line": 4910,
+        "parent": "Call",
+        "seg": "r.get(\"rc\")"
+       },
+       {
+        "fn": "noop_check",
+        "kind": "const",
+        "line": 5193,
+        "parent": "Call",
+        "seg": "x.get('rc')"
+       },
+       {
+        "fn": "load_ladders",
+        "kind": "const",
+        "line": 5692,
+        "parent": "Call",
+        "seg": "r.get('rc')"
+       },
+       {
+        "fn": "load_ladders",
+        "kind": "const",
+        "line": 5693,
+        "parent": "Call",
+        "seg": "r.get(\"rc\")"
+       },
+       {
+        "fn": "run",
+        "kind": "kwarg",
+        "line": 6072,
+        "parent": "Call",
+        "seg": "dict(req, outdir=rel, rc=rec0.get('rc'), seconds=rec0.get('seconds'), arms_read=[], machine=u['machine'], grou"
+       },
+       {
+        "fn": "run",
+        "kind": "const",
+        "line": 6072,
+        "parent": "Call",
+        "seg": "rec0.get('rc')"
+       },
+       {
+        "fn": "run",
+        "kind": "const",
+        "line": 6075,
+        "parent": "Call",
+        "seg": "rec0.get('rc')"
+       },
+       {
+        "fn": "run",
+        "kind": "const",
+        "line": 6077,
+        "parent": "Call",
+        "seg": "rec0.get(\"rc\")"
+       },
+       {
+        "fn": "recover_group",
+        "kind": "const",
+        "line": 7205,
+        "parent": "Tuple",
+        "seg": "('rc', 'cause', 'confirmed', 'ended_utc')"
+       },
+       {
+        "fn": "recover_group",
+        "kind": "const",
+        "line": 7252,
+        "parent": "Dict",
+        "seg": "{'schema': GROUP_SCHEMA, 'name': nm, 'token': tok, 'rc': None, 'cause': 'parent_dead', 'signal': None, 'confir"
+       }
+      ],
+      "n_attr": 0,
+      "n_hits": 41,
+      "n_match": 0,
+      "path": "scripts/rint_r_chain.py",
+      "rc_scan_raw": []
+     }
+    }
+   },
+   "n_diff": 1,
+   "n_rows": 3,
+   "probe": "preattack10/probe_rcscan.py",
+   "probe_sha256": "5db45e728677e1b8076d4df975c9801f469dece802085984261f7272e4ff8a35",
+   "rc": 0
+  },
+  "pa10_units": {
+   "diff": {
+    "G3_gu_rcnull_gc_timeout": {
+     "ext": {
+      "cause": "group_unconfirmed",
+      "resume_ok": false,
+      "status": "stopped"
+     },
+     "prev_8933b6781": {
+      "cause": "group_unconfirmed",
+      "resume_ok": true,
+      "status": "stopped"
+     }
+    }
+   },
+   "n_diff": 1,
+   "n_rows": 57,
+   "probe": "preattack10/probe_units.py",
+   "probe_sha256": "0e6d913a198239878d0330dc913b79ba0b6d757bef4fec75c329321ffbc79656",
+   "rc": 0
+  },
+  "pa10_units2": {
+   "diff": {
+    "S1_stop_list": {
+     "ext": {
+      "exc": "Stop"
+     },
+     "prev_8933b6781": {
+      "exc": "AttributeError"
+     }
+    },
+    "S2_runs_str": {
+     "ext": {
+      "exc": "Stop"
+     },
+     "prev_8933b6781": {
+      "exc": "AttributeError"
+     }
+    },
+    "S3_runs_list_of_str": {
+     "ext": {
+      "exc": "Stop"
+     },
+     "prev_8933b6781": {
+      "exc": "AttributeError"
+     }
+    }
+   },
+   "n_diff": 3,
+   "n_rows": 11,
+   "probe": "preattack10/probe_units2.py",
+   "probe_sha256": "842007ecba663d54008cc3a49d75ef0ac89ff449e1dbfd648f5ea03b1c3f86cb",
+   "rc": 0
+  },
+  "pa11_rej": {
+   "diff": {
+    "forged_rejected_empty_obj": {
+     "ext": {
+      "add_fresh_n": null,
+      "add_fresh_rc": 3,
+      "add_tail": [
+       "멈춤 [ATTEMPT_ORDER_MISMATCH] 같은 대상 시도 차례 위반 (앞 항목 결과 줄 전에 다음 항목 · 시작 커밋이 원장 커밋의 조상이 아님 · 시작 커밋의 원장이 바이트 접두가 아님 · 시작 커밋에 같은 대상 앞 결과 줄이 없음 · Q9 §3-5 개정 3 · R4-07) — 같은 대상 (ladder:P0) 앞 항목 1 의 결과 줄이 아직 없다 (차례로만 · 그룹 미확인 · 시도 중 = recover · 끝 먼저)"
+      ],
+      "adoption": {
+       "adopted": null,
+       "chain": [],
+       "effective": null,
+       "problems": [
+        [
+         "ATTEMPT_LEDGER_MISMATCH",
+         "항목 1 (ladder:P0) 의 결과 줄이 없다 (시도 중 · 사슬 부모 사망 = --stage recover 먼저)"
+        ]
+       ]
+      },
+      "folder_side": "post",
+      "recount": "Stop ATTEMPT_LEDGER_MISMATCH",
+      "recover_rc": 3,
+      "result": {
+       "cause": null,
+       "resume_ok": null,
+       "side": null,
+       "status": null
+      }
+     },
+     "prev_8933b6781": {
+      "add_fresh_n": 2,
+      "add_fresh_rc": 0,
+      "add_tail": [
+       "ATTEMPT_ADDED n=2 target=ladder:P0 machine=kgy commit=<sha> — 이 번호로 --ledger <tmp> --attempt 2 (풀기 전 대조 = 이 항목의 지문)"
+      ],
+      "adoption": {
+       "adopted": null,
+       "chain": [],
+       "effective": null,
+       "problems": [
+        [
+         "ATTEMPT_LEDGER_MISMATCH",
+         "항목 2 (ladder:P0) 의 결과 줄이 없다 (시도 중 · 사슬 부모 사망 = --stage recover 먼저)"
+        ]
+       ]
+      },
+      "folder_side": "post",
+      "recount": {
+       "cause": "presolve",
+       "resume_ok": false,
+       "side": "pre",
+       "status": "rejected"
+      },
+      "recover_rc": 0,
+      "result": {
+       "cause": "presolve",
+       "resume_ok": false,
+       "side": "pre",
+       "status": "rejected"
+      }
+     }
+    },
+    "forged_rejected_full_keys": {
+     "ext": {
+      "add_fresh_n": null,
+      "add_fresh_rc": 3,
+      "add_tail": [
+       "멈춤 [ATTEMPT_ORDER_MISMATCH] 같은 대상 시도 차례 위반 (앞 항목 결과 줄 전에 다음 항목 · 시작 커밋이 원장 커밋의 조상이 아님 · 시작 커밋의 원장이 바이트 접두가 아님 · 시작 커밋에 같은 대상 앞 결과 줄이 없음 · Q9 §3-5 개정 3 · R4-07) — 같은 대상 (ladder:P0) 앞 항목 1 의 결과 줄이 아직 없다 (차례로만 · 그룹 미확인 · 시도 중 = recover · 끝 먼저)"
+      ],
+      "adoption": {
+       "adopted": null,
+       "chain": [],
+       "effective": null,
+       "problems": [
+        [
+         "ATTEMPT_LEDGER_MISMATCH",
+         "항목 1 (ladder:P0) 의 결과 줄이 없다 (시도 중 · 사슬 부모 사망 = --stage recover 먼저)"
+        ]
+       ]
+      },
+      "folder_side": "post",
+      "recount": "Stop ATTEMPT_LEDGER_MISMATCH",
+      "recover_rc": 3,
+      "result": {
+       "cause": null,
+       "resume_ok": null,
+       "side": null,
+       "status": null
+      }
+     },
+     "prev_8933b6781": {
+      "add_fresh_n": 2,
+      "add_fresh_rc": 0,
+      "add_tail": [
+       "ATTEMPT_ADDED n=2 target=ladder:P0 machine=kgy commit=<sha> — 이 번호로 --ledger <tmp> --attempt 2 (풀기 전 대조 = 이 항목의 지문)"
+      ],
+      "adoption": {
+       "adopted": null,
+       "chain": [],
+       "effective": null,
+       "problems": [
+        [
+         "ATTEMPT_LEDGER_MISMATCH",
+         "항목 2 (ladder:P0) 의 결과 줄이 없다 (시도 중 · 사슬 부모 사망 = --stage recover 먼저)"
+        ]
+       ]
+      },
+      "folder_side": "post",
+      "recount": {
+       "cause": "presolve",
+       "resume_ok": false,
+       "side": "pre",
+       "status": "rejected"
+      },
+      "recover_rc": 0,
+      "result": {
+       "cause": "presolve",
+       "resume_ok": false,
+       "side": "pre",
+       "status": "rejected"
+      }
+     }
+    }
+   },
+   "n_diff": 2,
+   "n_rows": 3,
+   "probe": "pc10_n_fix/ext/pa11_probes/probe_rej.py",
+   "probe_sha256": "977d09c4a1a8342e4b7062b4679547d221914c39924d1d00a7309fe2aa950d0f",
+   "rc": 0
+  },
+  "pa11_rr": {
+   "diff": {
+    "S1_forged_code_GU": {
+     "ext": {
+      "not_allowed": true,
+      "orphan": [
+       "parent_dead",
+       true
+      ],
+      "recover_rc": 0,
+      "result": {
+       "cause": "group_unconfirmed",
+       "resume_ok": false,
+       "status": "stopped"
+      },
+      "resume_rc": 3
+     },
+     "prev_8933b6781": {
+      "not_allowed": false,
+      "orphan": [
+       "parent_dead",
+       true
+      ],
+      "recover_rc": 0,
+      "result": {
+       "cause": "group_unconfirmed",
+       "resume_ok": true,
+       "status": "stopped"
+      },
+      "resume_rc": 0
+     }
+    },
+    "S1_forged_code_GU_noarms": {
+     "ext": {
+      "not_allowed": true,
+      "orphan": [
+       "parent_dead",
+       true
+      ],
+      "recover_rc": 0,
+      "result": {
+       "cause": "group_unconfirmed",
+       "resume_ok": false,
+       "status": "stopped"
+      },
+      "resume_rc": 3
+     },
+     "prev_8933b6781": {
+      "not_allowed": false,
+      "orphan": [
+       "parent_dead",
+       true
+      ],
+      "recover_rc": 0,
+      "result": {
+       "cause": "group_unconfirmed",
+       "resume_ok": true,
+       "status": "stopped"
+      },
+      "resume_rc": 0
+     }
+    },
+    "S2_forged_GU_rc0": {
+     "ext": {
+      "not_allowed": true,
+      "orphan": [
+       "runner_rc",
+       true
+      ],
+      "recover_rc": 0,
+      "result": {
+       "cause": "group_unconfirmed",
+       "resume_ok": false,
+       "status": "stopped"
+      },
+      "resume_rc": 3
+     },
+     "prev_8933b6781": {
+      "not_allowed": false,
+      "orphan": [
+       "runner_rc",
+       true
+      ],
+      "recover_rc": 0,
+      "result": {
+       "cause": "group_unconfirmed",
+       "resume_ok": true,
+       "status": "stopped"
+      },
+      "resume_rc": 0
+     }
+    },
+    "S4_forged_GU_run_L00": {
+     "ext": {
+      "not_allowed": true,
+      "orphan": [
+       "runner_rc",
+       true
+      ],
+      "recover_rc": 0,
+      "result": {
+       "cause": "group_unconfirmed",
+       "resume_ok": false,
+       "status": "stopped"
+      },
+      "resume_rc": 3
+     },
+     "prev_8933b6781": {
+      "not_allowed": false,
+      "orphan": [
+       "runner_rc",
+       true
+      ],
+      "recover_rc": 0,
+      "result": {
+       "cause": "group_unconfirmed",
+       "resume_ok": true,
+       "status": "stopped"
+      },
+      "resume_rc": 0
+     }
+    },
+    "S5_TL_timeout_with_arms_copied": {
+     "ext": {
+      "not_allowed": true,
+      "orphan": [
+       "timeout",
+       true
+      ],
+      "recover_rc": 0,
+      "result": {
+       "cause": "timeout",
+       "resume_ok": false,
+       "status": "stopped"
+      },
+      "resume_rc": 3
+     },
+     "prev_8933b6781": {
+      "not_allowed": false,
+      "orphan": [
+       "timeout",
+       true
+      ],
+      "recover_rc": 0,
+      "result": {
+       "cause": "timeout",
+       "resume_ok": true,
+       "status": "stopped"
+      },
+      "resume_rc": 0
+     }
+    }
+   },
+   "n_diff": 5,
+   "n_rows": 18,
+   "probe": "pc10_n_fix/ext/pa11_probes/probe_rr.py",
+   "probe_sha256": "2b11b78dad3862f760fc8113d690614bd8afc0f58d1df80ebbb198ac4927d875",
+   "rc": 0
+  },
+  "pa11_rr2": {
+   "diff": {
+    "N4s_outdir_dict": {
+     "ext": {
+      "orphan": [
+       "runner_rc",
+       true
+      ],
+      "recover_rc": 3,
+      "result": {
+       "cause": null,
+       "resume_ok": null,
+       "status": null
+      },
+      "resume_rc": 3,
+      "tail": [
+       "recover — 그룹 기록 0 개 정리 · 미확인 0",
+       "멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — attempt_1: 단계 요약 칸 꼴 — runs[0].outdir = dict (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 글 · 결과 줄 없음 · ★ 11-06 PC10 P3-5)"
+      ]
+     },
+     "prev_8933b6781": {
+      "error": "TypeError: unsupported operand type(s) for /: 'PosixPath' and 'dict'",
+      "where": [
+       "rr, _od = _stopped_run(s, folder)",
+       "^^^^^^^^^^^^^^^^^^^^^^^",
+       "File \"<tmp>\", line 3762, in _stopped_run",
+       "return (rr[-1] if rr else None), (Path(folder) / rr[-1]['outdir'] if rr and rr[-1].get('outdir') else None)",
+       "~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~",
+       "TypeError: unsupported operand type(s) for /: 'PosixPath' and 'dict'"
+      ]
+     }
+    },
+    "N4s_outdir_int": {
+     "ext": {
+      "orphan": [
+       "runner_rc",
+       true
+      ],
+      "recover_rc": 3,
+      "result": {
+       "cause": null,
+       "resume_ok": null,
+       "status": null
+      },
+      "resume_rc": 3,
+      "tail": [
+       "recover — 그룹 기록 0 개 정리 · 미확인 0",
+       "멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — attempt_1: 단계 요약 칸 꼴 — runs[0].outdir = int (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 글 · 결과 줄 없음 · ★ 11-06 PC10 P3-5)"
+      ]
+     },
+     "prev_8933b6781": {
+      "error": "TypeError: unsupported operand type(s) for /: 'PosixPath' and 'int'",
+      "where": [
+       "rr, _od = _stopped_run(s, folder)",
+       "^^^^^^^^^^^^^^^^^^^^^^^",
+       "File \"<tmp>\", line 3762, in _stopped_run",
+       "return (rr[-1] if rr else None), (Path(folder) / rr[-1]['outdir'] if rr and rr[-1].get('outdir') else None)",
+       "~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~",
+       "TypeError: unsupported operand type(s) for /: 'PosixPath' and 'int'"
+      ]
+     }
+    },
+    "N4s_runs_dict": {
+     "ext": {
+      "orphan": [
+       "runner_rc",
+       true
+      ],
+      "recover_rc": 3,
+      "result": {
+       "cause": null,
+       "resume_ok": null,
+       "status": null
+      },
+      "resume_rc": 3,
+      "tail": [
+       "recover — 그룹 기록 0 개 정리 · 미확인 0",
+       "멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — attempt_1: 단계 요약 칸 꼴 — runs = dict (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 글 · 결과 줄 없음 · ★ 11-06 PC10 P3-5)"
+      ]
+     },
+     "prev_8933b6781": {
+      "error": "AttributeError: 'str' object has no attribute 'get'",
+      "where": [
+       "rr = [r for r in (s.get('runs') or []) if r.get('name') == run] if run else []",
+       "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+       "File \"<tmp>\", line 3761, in <listcomp>",
+       "rr = [r for r in (s.get('runs') or []) if r.get('name') == run] if run else []",
+       "^^^^^",
+       "AttributeError: 'str' object has no attribute 'get'"
+      ]
+     }
+    },
+    "N4s_runs_list_of_int": {
+     "ext": {
+      "orphan": [
+       "runner_rc",
+       true
+      ],
+      "recover_rc": 3,
+      "result": {
+       "cause": null,
+       "resume_ok": null,
+       "status": null
+      },
+      "resume_rc": 3,
+      "tail": [
+       "recover — 그룹 기록 0 개 정리 · 미확인 0",
+       "멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — attempt_1: 단계 요약 칸 꼴 — runs[0] = int (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 글 · 결과 줄 없음 · ★ 11-06 PC10 P3-5)"
+      ]
+     },
+     "prev_8933b6781": {
+      "error": "AttributeError: 'int' object has no attribute 'get'",
+      "where": [
+       "rr = [r for r in (s.get('runs') or []) if r.get('name') == run] if run else []",
+       "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+       "File \"<tmp>\", line 3761, in <listcomp>",
+       "rr = [r for r in (s.get('runs') or []) if r.get('name') == run] if run else []",
+       "^^^^^",
+       "AttributeError: 'int' object has no attribute 'get'"
+      ]
+     }
+    },
+    "N4s_runs_str": {
+     "ext": {
+      "orphan": [
+       "runner_rc",
+       true
+      ],
+      "recover_rc": 3,
+      "result": {
+       "cause": null,
+       "resume_ok": null,
+       "status": null
+      },
+      "resume_rc": 3,
+      "tail": [
+       "recover — 그룹 기록 0 개 정리 · 미확인 0",
+       "멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — attempt_1: 단계 요약 칸 꼴 — runs = str (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 글 · 결과 줄 없음 · ★ 11-06 PC10 P3-5)"
+      ]
+     },
+     "prev_8933b6781": {
+      "error": "AttributeError: 'str' object has no attribute 'get'",
+      "where": [
+       "rr = [r for r in (s.get('runs') or []) if r.get('name') == run] if run else []",
+       "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+       "File \"<tmp>\", line 3761, in <listcomp>",
+       "rr = [r for r in (s.get('runs') or []) if r.get('name') == run] if run else []",
+       "^^^^^",
+       "AttributeError: 'str' object has no attribute 'get'"
+      ]
+     }
+    },
+    "N4s_stop_list": {
+     "ext": {
+      "orphan": [
+       "runner_rc",
+       true
+      ],
+      "recover_rc": 3,
+      "result": {
+       "cause": null,
+       "resume_ok": null,
+       "status": null
+      },
+      "resume_rc": 3,
+      "tail": [
+       "recover — 그룹 기록 0 개 정리 · 미확인 0",
+       "멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — attempt_1: 단계 요약 칸 꼴 — stop = list (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 글 · 결과 줄 없음 · ★ 11-06 PC10 P3-5)"
+      ]
+     },
+     "prev_8933b6781": {
+      "error": "AttributeError: 'list' object has no attribute 'get'",
+      "where": [
+       "f = result_fields(folder, s, unreadable=unreadable)",
+       "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+       "File \"<tmp>\", line 4141, in result_fields",
+       "stop = None if done else {'code': sr.get('code') or s.get('status'), 'run': sr.get('run'), 'reason': sr.get('reason')}",
+       "^^^^^^",
+       "AttributeError: 'list' object has no attribute 'get'"
+      ]
+     }
+    },
+    "N4s_stop_str": {
+     "ext": {
+      "orphan": [
+       "runner_rc",
+       true
+      ],
+      "recover_rc": 3,
+      "result": {
+       "cause": null,
+       "resume_ok": null,
+       "status": null
+      },
+      "resume_rc": 3,
+      "tail": [
+       "recover — 그룹 기록 0 개 정리 · 미확인 0",
+       "멈춤 [ATTEMPT_LEDGER_MISMATCH] 시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — attempt_1: 단계 요약 칸 꼴 — stop = str (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 글 · 결과 줄 없음 · ★ 11-06 PC10 P3-5)"
+      ]
+     },
+     "prev_8933b6781": {
+      "error": "AttributeError: 'str' object has no attribute 'get'",
+      "where": [
+       "f = result_fields(folder, s, unreadable=unreadable)",
+       "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+       "File \"<tmp>\", line 4141, in result_fields",
+       "stop = None if done else {'code': sr.get('code') or s.get('status'), 'run': sr.get('run'), 'reason': sr.get('reason')}",
+       "^^^^^^",
+       "AttributeError: 'str' object has no attribute 'get'"
+      ]
+     }
+    },
+    "TR_forged_outdir_oom_trace": {
+     "ext": {
+      "orphan": [
+       "resource",
+       true
+      ],
+      "recover_rc": 0,
+      "result": {
+       "cause": "resource",
+       "resume_ok": false,
+       "status": "stopped"
+      },
+      "resume_rc": 3,
+      "tail": [
+       "recover — 그룹 기록 0 개 정리 · 미확인 0",
+       "  recover attempt_1: 결과 줄 stopped · 결과 post · 원인 resource · 재실행 자격 False"
+      ]
+     },
+     "prev_8933b6781": {
+      "orphan": [
+       "resource",
+       true
+      ],
+      "recover_rc": 0,
+      "result": {
+       "cause": "resource",
+       "resume_ok": true,
+       "status": "stopped"
+      },
+      "resume_rc": 0,
+      "tail": [
+       "recover — 그룹 기록 0 개 정리 · 미확인 0",
+       "  recover attempt_1: 결과 줄 stopped · 결과 post · 원인 resource · 재실행 자격 True"
+      ]
+     }
+    }
+   },
+   "n_diff": 8,
+   "n_rows": 9,
+   "probe": "pc10_n_fix/ext/pa11_probes/probe_rr2.py",
+   "probe_sha256": "877f626d0a5b0f9b6c879d8218177b120a68143c9e43b7e17541f0cc54a60662",
+   "rc": 0
+  },
+  "pc10_new": {
+   "diff": {},
+   "n_diff": 0,
+   "n_rows": 6,
+   "probe": "preattack10_fix/new_findings/probe_new.py",
+   "probe_sha256": "6f51206efaaeb11ca56d5573c12654d6a95a8c2ede7f0875145986821d79905f",
+   "rc": 0
+  }
+ },
+ "tree_chain_sha256": "0d72d11bb043a4bb2559aa402feec46261d9229a0109418aa7688054dc78ee3d",
+ "tree_test_sha256": "4982c064c39272bae549d8c4741a054409ceb7b5bcc3a7c45b5b8e7ac4da262c"
+}

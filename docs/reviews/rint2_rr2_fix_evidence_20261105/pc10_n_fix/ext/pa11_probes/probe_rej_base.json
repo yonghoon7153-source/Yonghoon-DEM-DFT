@@ -1,0 +1,95 @@
+{
+ "honest_no_rejected": {
+  "folder_side": "post",
+  "recover_rc": 0,
+  "result": {
+   "status": "stopped",
+   "side": "post",
+   "cause": "check",
+   "resume_ok": false
+  },
+  "recount": {
+   "status": "stopped",
+   "side": "post",
+   "cause": "check",
+   "resume_ok": false
+  },
+  "add_fresh_rc": 3,
+  "add_fresh_n": null,
+  "add_tail": [
+   "멈춤 [ATTEMPT_AFTER_ADOPTED] 채택된 시도 (결과 전이 아닌 첫 시도) 뒤 같은 대상의 새 시도 (풀기 전 거부 · 대조를 거치지 않고 돈 흔적 · Q9 §3-4 · R4-03) — ladder:P0 은 이미 채택 시도 attempt_1 가 있다 (결과 뒤 멈춤 · 완주 = 같은 등록의 재시도가 아니다 · 재실행은 --resume)"
+  ],
+  "adoption": {
+   "adopted": 1,
+   "chain": [
+    1
+   ],
+   "effective": 1,
+   "problems": []
+  }
+ },
+ "forged_rejected_empty_obj": {
+  "folder_side": "post",
+  "recover_rc": 0,
+  "result": {
+   "status": "rejected",
+   "side": "pre",
+   "cause": "presolve",
+   "resume_ok": false
+  },
+  "recount": {
+   "status": "rejected",
+   "side": "pre",
+   "cause": "presolve",
+   "resume_ok": false
+  },
+  "add_fresh_rc": 0,
+  "add_fresh_n": 2,
+  "add_tail": [
+   "ATTEMPT_ADDED n=2 target=ladder:P0 machine=kgy commit=aa7f5b1e9727bb382e4550e1252901419958f846 — 이 번호로 --ledger /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/preattack11/tmp/pa11_rej_jj2qs9b5/ledgers/PA11r_forged --attempt 2 (풀기 전 대조 = 이 항목의 지문)"
+  ],
+  "adoption": {
+   "adopted": null,
+   "chain": [],
+   "effective": null,
+   "problems": [
+    [
+     "ATTEMPT_LEDGER_MISMATCH",
+     "항목 2 (ladder:P0) 의 결과 줄이 없다 (시도 중 · 사슬 부모 사망 = --stage recover 먼저)"
+    ]
+   ]
+  }
+ },
+ "forged_rejected_full_keys": {
+  "folder_side": "post",
+  "recover_rc": 0,
+  "result": {
+   "status": "rejected",
+   "side": "pre",
+   "cause": "presolve",
+   "resume_ok": false
+  },
+  "recount": {
+   "status": "rejected",
+   "side": "pre",
+   "cause": "presolve",
+   "resume_ok": false
+  },
+  "add_fresh_rc": 0,
+  "add_fresh_n": 2,
+  "add_tail": [
+   "ATTEMPT_ADDED n=2 target=ladder:P0 machine=kgy commit=826af61da723038d7ac31ee157d4c1fde4c97d2c — 이 번호로 --ledger /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/preattack11/tmp/pa11_rej_jj2qs9b5/ledgers/PA11r_forged2 --attempt 2 (풀기 전 대조 = 이 항목의 지문)"
+  ],
+  "adoption": {
+   "adopted": null,
+   "chain": [],
+   "effective": null,
+   "problems": [
+    [
+     "ATTEMPT_LEDGER_MISMATCH",
+     "항목 2 (ladder:P0) 의 결과 줄이 없다 (시도 중 · 사슬 부모 사망 = --stage recover 먼저)"
+    ]
+   ]
+  }
+ }
+}

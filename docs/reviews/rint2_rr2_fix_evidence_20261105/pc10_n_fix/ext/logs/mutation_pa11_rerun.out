@@ -1,0 +1,16 @@
+BASE {'rc': 0, 'summary': 'test_rint_r_chain: 40/40 PASS (63.1 s)', 'seconds': 63.5}
+X1 GU table drops exit_ok KILLED ['CT01', 'CT06', 'LG01', 'LG02', 'PD02', 'PD02c', 'PD13', 'RN01', 'RN02', 'RS02'] 59.6s
+X2 TL table drops killed:timeout KILLED ['AL19', 'CT01', 'CT04', 'CT06', 'LG01', 'PD02', 'PD02c'] 60.4s
+X3 RUNNER_RC table drops killed:signal_after KILLED ['CT01', 'CT06', 'LG01', 'PD02', 'PD02c'] 60.9s
+X4 TL table drops none (pre-run gate) KILLED ['CT01', 'LG01', 'SU01'] 63.2s
+X4b RUNNER_RC table drops killed:signal KILLED ['AL19', 'CT01', 'CT04', 'CT06', 'LG01', 'PD02', 'PD02c'] 62.0s
+X4c GU table drops killed:timeout KILLED ['CT01', 'CT06', 'PD13', 'RN01', 'RN02'] 64.4s
+X5 TL none: drop RUN_DIR_RE name check KILLED ['CT06'] 63.8s
+X6 run_traces: unreadable folder = no traces KILLED ['CT06'] 61.7s
+X8 orphan by chain (cause, rc) check only when cause None KILLED ['CT02'] 53.6s
+X10 rejected_record json.loads (dup key / NaN accepted) KILLED ['CT03'] 60.2s
+X12 run_record_shape: falsy group_cause = None KILLED ['CT06'] 59.1s
+X13 killed cause + rc 0 accepted KILLED ['CT01'] 60.4s
+X16 record table only for GU (old PB-01 scope) KILLED ['CT01', 'CT04', 'CT06', 'LG01', 'PD02', 'PD02c'] 67.4s
+X17 end_record_known accepts bool rc KILLED ['CT02', 'RC01', 'RC02', 'RN01'] 63.5s
+restored True

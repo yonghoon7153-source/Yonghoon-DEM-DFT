@@ -1,0 +1,187 @@
+{
+ "checks": {
+  "CT01": {
+   "bad_keys": [
+    "GROUP_UNCONFIRMED/gcNone_false/oom",
+    "GROUP_UNCONFIRMED/gcNone_float0/oom",
+    "GROUP_UNCONFIRMED/gcNone_null/oom",
+    "GROUP_UNCONFIRMED/gcNone_str1/oom",
+    "GROUP_UNCONFIRMED/gcNone_true/oom",
+    "GROUP_UNCONFIRMED/norc_gcNone/oom",
+    "GROUP_UNCONFIRMED/signal_after_rc0/oom",
+    "GROUP_UNCONFIRMED/signal_after_rc0/tb",
+    "GROUP_UNCONFIRMED/signal_rc0/oom",
+    "GROUP_UNCONFIRMED/signal_rc0/tb",
+    "GROUP_UNCONFIRMED/signal_rc1/oom",
+    "GROUP_UNCONFIRMED/timeout_rc0/oom",
+    "GROUP_UNCONFIRMED/timeout_rc0/tb",
+    "GROUP_UNCONFIRMED/timeout_rc1/oom",
+    "GROUP_UNCONFIRMED/timeout_rcm9/oom",
+    "RUNNER_RC/exception_null/oom",
+    "RUNNER_RC/false_null/oom",
+    "RUNNER_RC/gcNone_false/oom",
+    "RUNNER_RC/gcNone_float0/oom",
+    "RUNNER_RC/gcNone_null/oom",
+    "RUNNER_RC/gcNone_rc0/oom",
+    "RUNNER_RC/gcNone_str1/oom",
+    "RUNNER_RC/gcNone_true/oom",
+    "RUNNER_RC/nogc_null/oom"
+   ],
+   "detail": null,
+   "n": 150,
+   "n_bad": 91,
+   "pass": false
+  },
+  "CT02": {
+   "bad_keys": [
+    "ce_none_false_oom",
+    "ce_none_null_oom",
+    "ce_timeout_true_tb",
+    "chain_none_false_oom",
+    "chain_none_float0_oom",
+    "chain_none_null_oom",
+    "chain_none_null_tb",
+    "chain_none_str1_oom",
+    "chain_none_true_oom",
+    "chain_signal_float0_tb",
+    "chain_timeout_true_tb",
+    "end_record_known"
+   ],
+   "detail": null,
+   "n": 21,
+   "n_bad": 12,
+   "pass": false
+  },
+  "CT03": {
+   "bad_keys": [
+    "deep",
+    "list",
+    "null",
+    "str",
+    "true",
+    "zero"
+   ],
+   "detail": null,
+   "n": 10,
+   "n_bad": 6,
+   "pass": false
+  },
+  "CT04": {
+   "bad_keys": [
+    "N1",
+    "N2_signal",
+    "N2_timeout",
+    "N4"
+   ],
+   "detail": null,
+   "n": null,
+   "n_bad": 4,
+   "pass": false
+  },
+  "LG01": {
+   "bad_keys": [
+    "prestart_TIME_LIMIT/clean",
+    "timeout/clean"
+   ],
+   "detail": null,
+   "n": 63,
+   "n_bad": 2,
+   "pass": false
+  },
+  "PD02": {
+   "bad_keys": [
+    "disk_full/rc_timeout",
+    "host_memory/rc_timeout",
+    "oom_and_launch/rc_timeout",
+    "oom_cupy/rc_timeout",
+    "oom_driver/rc_timeout",
+    "oom_runtime/rc_timeout",
+    "plain/rc_timeout"
+   ],
+   "detail": null,
+   "n": 200,
+   "n_bad": 7,
+   "pass": false
+  },
+  "PD02c": {
+   "bad_keys": [
+    "cublas_alloc_and_oom/rc_timeout",
+    "cuda_error_oom_drvcode/rc_timeout"
+   ],
+   "detail": null,
+   "n": 99,
+   "n_bad": 2,
+   "pass": false
+  },
+  "PD13": {
+   "bad_keys": [
+    "disk_full/None/'0'",
+    "disk_full/None/0.0",
+    "disk_full/None/False",
+    "disk_full/None/None",
+    "disk_full/None/True",
+    "oom_cupy/None/'0'",
+    "oom_cupy/None/0.0",
+    "oom_cupy/None/False",
+    "oom_cupy/None/None",
+    "oom_cupy/None/True"
+   ],
+   "detail": null,
+   "n": 78,
+   "n_bad": 10,
+   "pass": false
+  },
+  "PE03u": {
+   "bad_keys": [
+    "none_rcNone/illegal",
+    "none_rcNone/oom",
+    "none_rcNone/plain",
+    "none_rcNone/python"
+   ],
+   "detail": null,
+   "n": 44,
+   "n_bad": 4,
+   "pass": false
+  },
+  "RC02": {
+   "bad_keys": [
+    "false",
+    "float0",
+    "negzero",
+    "none",
+    "str0",
+    "true"
+   ],
+   "detail": null,
+   "n": null,
+   "n_bad": 6,
+   "pass": false
+  },
+  "RN01": {
+   "bad_keys": [
+    "a/chain/false/illegal",
+    "a/chain/false/oom",
+    "a/chain/false/tb",
+    "a/chain/float0/illegal",
+    "a/chain/float0/oom",
+    "a/chain/float0/tb",
+    "a/chain/negzero/illegal",
+    "a/chain/negzero/oom",
+    "a/chain/negzero/tb",
+    "a/chain/none/illegal",
+    "a/chain/none/oom",
+    "a/chain/none/tb",
+    "a/chain/str0/illegal",
+    "a/chain/str0/oom",
+    "a/chain/str0/tb",
+    "a/chain/true/illegal"
+   ],
+   "detail": null,
+   "n": 112,
+   "n_bad": 42,
+   "pass": false
+  }
+ },
+ "module_sha256": "da4c2ef699335b1df27e287c8a3ce6780d4bf82fe35e82fcc720718d209f9f16",
+ "test_sha256": "f7f1c0f7135433a2f1d62255d0a898a02889e9a4e7eae17b9358d22c72506f3c"
+}

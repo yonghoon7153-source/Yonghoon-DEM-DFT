@@ -1,0 +1,85 @@
+{
+ "honest_no_rejected": {
+  "folder_side": "post",
+  "recover_rc": 0,
+  "result": {
+   "status": "stopped",
+   "side": "post",
+   "cause": "check",
+   "resume_ok": false
+  },
+  "recount": {
+   "status": "stopped",
+   "side": "post",
+   "cause": "check",
+   "resume_ok": false
+  },
+  "add_fresh_rc": 3,
+  "add_fresh_n": null,
+  "add_tail": [
+   "멈춤 [ATTEMPT_AFTER_ADOPTED] 채택된 시도 (결과 전이 아닌 첫 시도) 뒤 같은 대상의 새 시도 (풀기 전 거부 · 대조를 거치지 않고 돈 흔적 · Q9 §3-4 · R4-03) — ladder:P0 은 이미 채택 시도 attempt_1 가 있다 (결과 뒤 멈춤 · 완주 = 같은 등록의 재시도가 아니다 · 재실행은 --resume)"
+  ],
+  "adoption": {
+   "adopted": 1,
+   "chain": [
+    1
+   ],
+   "effective": 1,
+   "problems": []
+  }
+ },
+ "forged_rejected_empty_obj": {
+  "folder_side": "post",
+  "recover_rc": 3,
+  "result": {
+   "status": null,
+   "side": null,
+   "cause": null,
+   "resume_ok": null
+  },
+  "recount": "Stop ATTEMPT_LEDGER_MISMATCH",
+  "add_fresh_rc": 3,
+  "add_fresh_n": null,
+  "add_tail": [
+   "멈춤 [ATTEMPT_ORDER_MISMATCH] 같은 대상 시도 차례 위반 (앞 항목 결과 줄 전에 다음 항목 · 시작 커밋이 원장 커밋의 조상이 아님 · 시작 커밋의 원장이 바이트 접두가 아님 · 시작 커밋에 같은 대상 앞 결과 줄이 없음 · Q9 §3-5 개정 3 · R4-07) — 같은 대상 (ladder:P0) 앞 항목 1 의 결과 줄이 아직 없다 (차례로만 · 그룹 미확인 · 시도 중 = recover · 끝 먼저)"
+  ],
+  "adoption": {
+   "adopted": null,
+   "chain": [],
+   "effective": null,
+   "problems": [
+    [
+     "ATTEMPT_LEDGER_MISMATCH",
+     "항목 1 (ladder:P0) 의 결과 줄이 없다 (시도 중 · 사슬 부모 사망 = --stage recover 먼저)"
+    ]
+   ]
+  }
+ },
+ "forged_rejected_full_keys": {
+  "folder_side": "post",
+  "recover_rc": 3,
+  "result": {
+   "status": null,
+   "side": null,
+   "cause": null,
+   "resume_ok": null
+  },
+  "recount": "Stop ATTEMPT_LEDGER_MISMATCH",
+  "add_fresh_rc": 3,
+  "add_fresh_n": null,
+  "add_tail": [
+   "멈춤 [ATTEMPT_ORDER_MISMATCH] 같은 대상 시도 차례 위반 (앞 항목 결과 줄 전에 다음 항목 · 시작 커밋이 원장 커밋의 조상이 아님 · 시작 커밋의 원장이 바이트 접두가 아님 · 시작 커밋에 같은 대상 앞 결과 줄이 없음 · Q9 §3-5 개정 3 · R4-07) — 같은 대상 (ladder:P0) 앞 항목 1 의 결과 줄이 아직 없다 (차례로만 · 그룹 미확인 · 시도 중 = recover · 끝 먼저)"
+  ],
+  "adoption": {
+   "adopted": null,
+   "chain": [],
+   "effective": null,
+   "problems": [
+    [
+     "ATTEMPT_LEDGER_MISMATCH",
+     "항목 1 (ladder:P0) 의 결과 줄이 없다 (시도 중 · 사슬 부모 사망 = --stage recover 먼저)"
+    ]
+   ]
+  }
+ }
+}

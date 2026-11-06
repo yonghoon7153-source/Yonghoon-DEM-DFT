@@ -157,6 +157,17 @@
   한 읽기 (원인 None · group_cause None = 러너가 스스로 끝난 자리 = 정확한 정수 0 만 성공 · `chain_end_failed` · `stop_cause` · GROUP_UNCONFIRMED 런 기록 꼴
   = `stop_record_readable`) · PB-02 판정 입력 · 합치기 남은 런 목록 = 있는데 못 읽는 요약 = 멈춤 · PB-03 그룹 기록 · attempt.json · rejected.json 읽기 =
   `read_regular_file` · PB-05 A1b 두 길 = 같은 재실행 자격 (원인 글은 로그 낱말에 따라 다를 수 있다) · PB-06 런 전 TIME_LIMIT 예외 = 그 런 흔적 없음
+★ 11-06 PC10-08 · 09 · 10 (그 고침 뒤 남은 N1 · N2 · N4 · 1저자 11-06 "권고대로" = 규칙 하나: 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 · 보고
+  `docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md`): 요약 있는 길 멈춤 코드 ↔ 멈춘 런 기록 꼴 = 생산자 표 (`STOP_RUN_SHAPES` ·
+  `run_record_shape` · `stop_record_problem` — TIME_LIMIT + group_cause ≠ timeout · 사슬이 죽인 원인 + rc 있음 · RUNNER_RC + timeout · 꼴 틀린 rc = 읽음 False) ·
+  N1 멈춤 코드와 무관하게 group_cause None 이면 정확한 정수 0 만 성공 (`run_exit_failed`) · 같은 부류 = 요약 없는 길 끝 기록 (원인, rc) 꼴 (`end_record_known` ·
+  ★ 11-06 확장 정정 — 옛 글 = 없는 이름 end_rc_known) · N4 거부 기록 읽기 한 함수 (`rejected_record` · recover --ledger 도 객체 아닌 JSON · 깊은 중첩 = 멈춤)
+★ 11-06 PC10 확장 (사전 공격 11 회차 P2-A · P2-B · P3-5 · P3-6 · 같은 규칙 · 보고 `docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/`): 시도 폴더 안
+  거부 기록 = 생산자 꼴일 때만 (`rejected_in_folder` — 폴더 = attempt.json + rejected.json 뿐 `rejected_folder_problem` · 칸 = `REJECTED_KEYS` · 번호 · 시작
+  커밋 = attempt.json `rejected_form_problem` · 그 밖 = 멈춤 · 결과 줄 없음 · 옛 = 결과 본 시도에 {} 하나로 rejected · 결과 전) · 요약 있는 길 멈춘 런 기록 안
+  대조 (`stopped_record_problem` — runs 의 마지막 · outdir = <런> | <런>_arm… 이고 요청 칸이 있으면 정확히 `record_outdir` (`run_outdir_suffix` = 생산자와
+  한 함수) · arms_read = [] · GROUP_UNCONFIRMED = 그 런 끝 기록의 사슬 쪽 확인 False `chain_confirmed`) · 단계 요약 칸 꼴 (`summary_shape_problem` — stop ·
+  runs · outdir 꼴 틀림 = 폴더마다 멈춤 · 뒤 폴더 계속 · 옛 = traceback)
 """
 import argparse
 import contextlib
@@ -3834,7 +3845,8 @@ def chain_end_failed(er):
 CHAIN_END_FIXED = {'exception': 'chain_exception'}
 #: ★ 11-05 RR2-01 같은 부류 (독립 사전 공격 · A1b) — 그룹 끝 기록의 사슬 원인 칸 (by chain 끝 기록의 `cause` · recover 끝 기록이 품은 `chain_end` 의
 #:   `cause` — `recover_group` 이 같은 값을 옮긴다) 의 아는 값 = `run_in_group` 이 디스크에 쓰는 값 (None · timeout · signal · exception) + signal_after
-#:   (정리 중 신호 — 돌려주는 dict 칸 · 옛 기록 · 시험 꼴 · signal 로 읽는다).  그 밖 (모르는 글 · false · 0 · "" · [] · {} …) = 두 길이 같은 재실행 자격 =
+#:   (정리 중 신호 — 돌려주는 dict 칸 · signal 로 읽는다 · ★ 11-06 PC10 확장 정정: 디스크 끝 기록에 이 원인을 쓴 판은 없다 — C2b 4ed966b5d 부터
+#:   `run_in_group` 의 디스크 원인 = None · 받는 근거 = 시험 고정물 꼴뿐 · 옛 글 "옛 기록" = 근거 없음 · 받는 결정 = A1b 그대로 · 한정).  그 밖 (모르는 글 · false · 0 · "" · [] · {} …) = 두 길이 같은 재실행 자격 =
 #:   읽음 False (`chain_cause_known` · 옛 = by chain 가지만 읽음 False · recover 가지는 읽음 True = rc 1 + traceback 이어도 재실행 자격) · ★ 11-06 사전 공격
 #:   10 회차 PB-05 정정 — 같은 것은 재실행 자격뿐이고 원인 글은 로그 낱말에 따라 다를 수 있다 (by chain 가지 = parent_dead · recover 가지 = 낱말 · 기본
 #:   parent_dead — 예 메모리 낱말 = resource · 잘못된 주소 = runner_rc · 옛 문장 "두 길이 같은 읽기" 는 원인 글까지 같다는 뜻으로 읽혔다).
@@ -3844,6 +3856,18 @@ CHAIN_END_CAUSES = (None, 'timeout', 'signal', 'signal_after', 'exception')
 def chain_cause_known(gc):
     """끝 기록의 사슬 원인 값이 아는 원인인가 (`CHAIN_END_CAUSES` · 글은 정확히 같은 글만 · bool · 수 · 목록 · 객체 = 모름) — ★ 11-05 A1b 한 읽기."""
     return gc is None or (type(gc) is str and gc in CHAIN_END_CAUSES)
+
+
+def end_record_known(er):
+    """★ 11-06 PC10 (같은 부류 · 1저자 11-06 "생산자가 쓰지 않는 칸 조합 = 재실행 자격 없음") — 그룹 끝 기록 (by chain) · recover 끝 기록이 품은 chain_end (그
+    사본 · `recover_group`) 의 (원인, rc) 가 `run_in_group` 이 디스크에 쓰는 꼴인가: 원인 None (러너가 스스로 끝남) ⇒ rc = Popen.wait 정수 · 원인 timeout ·
+    signal · exception (· 시험 꼴 signal_after — 디스크에 쓴 판 없음 · ★ 11-06 확장 정정) ⇒ rc = 정수 (SIGKILL 뒤 회수 · 기다림이 끝난 뒤 받은 신호면 러너 스스로의 값 — 시간 초과 · 신호 +
+    rc 1 · 0 = 생산자 경합 꼴과 구별 불가 · 발견 아님) 또는 null (회수 못 함 · Popen 실패).  그 밖 (원인 None + rc null · 꼴 틀린 rc = bool · 실수 · 글 ·
+    목록 …) · dict 아님 = False (`orphan_cause` 의 읽음 False · 원인 글 그대로 · 원인 칸의 아는 값 대조 = `chain_cause_known` 따로)."""
+    if not isinstance(er, dict):
+        return False
+    k = rc_kind(er.get('rc'))
+    return k in ('ok', 'fail') or (k == 'none' and er.get('cause') is not None)
 
 
 def chain_end_fixed(er):
@@ -3896,45 +3920,166 @@ def stop_log_readable(s, folder, state):
     (끊긴 링크 = 있음 · lexists) · 런 폴더 (이 폴더의 그 런 이름 · <런>_arm… 항목 — `Runner._prepare` 의 출력 폴더 꼴) 도 없음 (옛 = 시작 기록 자리만 봄 →
     끝 기록 · 런 폴더만 남긴 손 편집 = 자격 True · 생산자는 그 꼴을 만들지 않는다 — 시간 상한 관문이 로그 · 그룹 기록 · 런 폴더보다 먼저).  ⚠ 한정 (11-05 ·
     1저자 = 한정만 · 고치지 않음): 봉인 원천 런 (G01_<런>_a<i> · 로그 = graph_src/logs) 도중 사슬이 받은 신호 = 멈춤 RUNNER_RC · 그 이름의 런 기록 · 이 폴더
-    로그 없음 → 원인 runner_rc · 읽음 False (안전 쪽 · 재실행 없음)."""
+    로그 없음 → 원인 runner_rc · 읽음 False (안전 쪽 · 재실행 없음).  ★ 11-06 PC10-08 — 흔적 판독 = `run_traces` (같은 판독 · 로그가 읽혀도 런 기록 없는
+    TIME_LIMIT 는 `stop_record_problem` 이 같은 함수로 본다)."""
     if state == 'ok':
         return True
     sr = s.get('stop') or {}
     if state != 'missing' or (sr.get('code') or s.get('status')) != 'TIME_LIMIT':
         return False
     rr, _od = _stopped_run(s, folder)
-    run, base = sr.get('run'), Path(folder)
+    run = sr.get('run')
     if rr is not None or not isinstance(run, str):
         return False
+    return not run_traces(folder, run)
+
+
+def run_traces(folder, run):
+    """★ 11-06 PB-06 (사전 공격 10 회차 · `stop_log_readable` 에서 옮김 · 판독 그대로) · PC10-08 — 그 런 이름의 흔적이 시도 폴더에 하나라도 있나: 그룹 시작 ·
+    끝 기록 자리 · 로그 자리 (끊긴 링크 = 있음 · lexists) · 런 폴더 (그 런 이름 · <런>_arm… 항목 = `Runner._prepare` 의 출력 폴더 꼴) → True · 폴더를 못
+    읽음 = True (보수).  런 전 시간 상한 관문 (`Runner._execute`) 은 그 런의 로그 · 그룹 기록 · 런 폴더 · 런 기록보다 먼저 = 흔적 없음."""
+    base = Path(folder)
     if any(os.path.lexists(str(p)) for p in (base / GROUPS_DIR / f'{run}.launch.json', base / GROUPS_DIR / f'{run}.end.json',
                                             base / 'logs' / f'{run}.log')):
-        return False
+        return True
     try:
         names = os.listdir(str(base))
     except OSError:
-        return False
-    return not any(nm == run or nm.startswith(run + '_arm') for nm in names)   # ★ 11-06 PB-06 — 런 폴더 흔적 (`Runner._prepare` 출력 폴더 꼴)
+        return True
+    return any(nm == run or nm.startswith(run + '_arm') for nm in names)   # ★ 11-06 PB-06 — 런 폴더 흔적 (`Runner._prepare` 출력 폴더 꼴)
 
 
 #: ★ 11-06 사전 공격 10 회차 PB-01 (1저자 11-06 "권고대로") — 런 기록 rc null 이 "사슬이 죽인 런" (러너 rc 를 모름 · 실패 아님) 인 group_cause.  `Runner._execute`
 #:   의 런 기록 rc = 러너가 스스로 끝났을 때 (group_cause None) 만 `run_in_group` 의 정수 · 그 밖 (시간 초과 · 신호 · 정리 중 신호) = None · group_cause 칸 =
 #:   늘 씀 (exception = 다시 올라가 이 칸에 오지 않는다).
 RUN_KILLED_CAUSES = ('timeout', 'signal', 'signal_after')
+#: ★ 11-06 PC10-08 · 09 (N1 · N2 · 1저자 11-06 "권고대로" = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음) — 요약 있는 길 멈춤 코드 → 생산자가 그
+#:   멈춘 런 기록에 쓰는 꼴 (`run_record_shape` 이름 · `Runner._execute` · `ResumeRunner._copy` · group_cause 칸이 생긴 10-27 판 ae8ea5ebd 부터 같다):
+#:   TIME_LIMIT = 'none' (런 전 시간 상한 관문 · 그 런 흔적 없음 = `run_traces`) · {timeout · rc null} (시간 초과 · 종료 확인) / RUNNER_RC = {signal ·
+#:   signal_after · rc null} · {None · 정수 0 아닌 정수} (봉인 원천 런 G<n>_… 의 신호 멈춤 = 그 이름의 런 기록 없음 = 읽음 False 그대로 · 원천 기록 =
+#:   `sv_graph_source`) / GROUP_UNCONFIRMED = {timeout · signal · signal_after · rc null} · {None · 정수}.  그 밖 (N1 TIME_LIMIT + {None · rc 1} · N2
+#:   RUNNER_RC + {timeout · signal · rc 1} · RUNNER_RC + timeout · {None · rc null} · 꼴 틀린 rc · group_cause 칸 없음 · 모르는 값 …) = 읽음 False (원인 글 =
+#:   `stop_cause`).  이 표에 없는 멈춤 (관문 · 검사 · 사슬 예외) = 원인 자체가 재실행 자격 원인이 아니다 (gate · check · chain_exception · 런 기록 꼴 무관).
+STOP_RUN_SHAPES = {'TIME_LIMIT': frozenset({'none', 'killed:timeout'}),
+                   'RUNNER_RC': frozenset({'killed:signal', 'killed:signal_after', 'exit_fail'}),
+                   'GROUP_UNCONFIRMED': frozenset({'killed:timeout', 'killed:signal', 'killed:signal_after', 'exit_ok', 'exit_fail'})}
+
+
+def run_record_shape(rr):
+    """★ 11-06 PC10-08 · 09 — 멈춘 런 기록 → 꼴 이름: 'none' (그 이름의 런 기록 없음) · 'killed:<원인>' (group_cause = `RUN_KILLED_CAUSES` · rc null = 사슬이
+    죽인 런) · 'exit_ok' · 'exit_fail' (group_cause None = 러너가 스스로 끝남 · rc = 정확한 정수 0 · 그 밖 정수 · `rc_kind`) · 'bad' (그 밖 = 생산자가 쓰지
+    않는 꼴: group_cause 칸 없음 · 모르는 group_cause · 사슬이 죽인 원인 + rc 있음 · group_cause None + rc null · 꼴 틀린 rc).  ⚠ 한정: rc 칸 없음 = null 과
+    같은 읽기 (다른 판독과 같은 `get` · RC01 = 판독 함수 밖 rc 읽기 0 · 생산자는 늘 rc 칸을 쓴다 · 칸을 지운 손 = 값을 null 로 고친 손과 같은 효과)."""
+    if rr is None:
+        return 'none'
+    if not isinstance(rr, dict) or 'group_cause' not in rr:
+        return 'bad'
+    gc, k = rr['group_cause'], rc_kind(rr.get('rc'))
+    if gc is None:
+        return {'ok': 'exit_ok', 'fail': 'exit_fail'}.get(k, 'bad')
+    if type(gc) is str and gc in RUN_KILLED_CAUSES and k == 'none':
+        return f'killed:{gc}'
+    return 'bad'
+
+
+def stop_record_problem(s, folder):
+    """★ 11-06 PC10-08 · 09 — 요약 있는 길: 멈춤 코드 ↔ 멈춘 런 기록 꼴이 생산자 꼴 (`STOP_RUN_SHAPES`) 인가 → None | 사유 글 (재실행 자격 False · 원인 글은
+    `stop_cause` 그대로).  런 기록 없는 TIME_LIMIT = 런 전 시간 상한 관문 = 런 이름 (`RUN_DIR_RE`) · 그 런 흔적 없음 (`run_traces` — 로그가 읽혀도 · 옛 =
+    읽히는 로그면 자격 True) 일 때만.  ★ 11-06 PB-01 의 GROUP_UNCONFIRMED 행 (런 기록 없음 · group_cause 칸 없음 · 모르는 값 = False) 을 품는다.  표에 없는
+    멈춤 = None (원인이 자격 원인이 아니다)."""
+    sr = s.get('stop') or {}
+    code = sr.get('code') or s.get('status')
+    allowed = STOP_RUN_SHAPES.get(code) if isinstance(code, str) else None
+    if allowed is None:
+        return None
+    run = sr.get('run')
+    rr, _od = _stopped_run(s, folder)
+    shape = run_record_shape(rr)
+    if shape not in allowed:
+        return f'멈춤 {code} 의 런 {run!r} 기록 꼴 {shape} = 생산자가 쓰지 않는 칸 조합 (생산자 꼴 {sorted(allowed)} · ★ 11-06 PC10)'
+    if shape == 'none' and (not (isinstance(run, str) and RUN_DIR_RE.fullmatch(run)) or run_traces(folder, run)):
+        return f'멈춤 {code} · 런 {run!r} 기록 없음인데 그 런 흔적 (로그 · 그룹 기록 · 런 폴더) 이 있다 (런 전 시간 상한 관문 = 흔적 없음 · ★ 11-06 PC10)'
+    why = stopped_record_problem(s, folder, code, run, rr)    # ★ 11-06 PC10 확장 P2-B — 기록 안 대조 (runs 마지막 · outdir · arms_read · GU 끝 기록)
+    if why:
+        return why
+    return None
+
+
+def stopped_record_problem(s, folder, code, run, rr):
+    """★ 11-06 PC10 확장 P2-B (사전 공격 11 회차 · 바탕에도 있던 꼴 · 1저자 11-06 규칙) — 요약 있는 길 멈춘 런 기록 rr (`_stopped_run` · 멈춤 = `STOP_RUN_SHAPES`
+    행 · 꼴 이름 = 생산자 꼴) 의 기록 안 대조 → 사유 | None.  생산자 (`Runner._execute`) = 런 기록을 붙인 뒤 그 런에서 Stop:
+      ① 그 기록 = runs 의 마지막 (옛 = 멈춘 런 이름만 앞의 끝난 런으로 바꾼 GROUP_UNCONFIRMED = 그 기록 {None · 0} 으로 재실행 자격)
+      ② outdir = <런> | <런>_arm… (`Runner._prepare` 출력 폴더 꼴 · RUN_DIR_RE) 이고 그 기록의 요청 칸 (arms · arm_list) 이 있으면 정확히 그 이름
+         (`record_outdir` · `run_outdir_suffix` = 생산자와 한 함수 · 옛 = outdir 만 다른 곳 · 옆 이름 <런>_arm9 = 검사 실패 흔적 (`check_trace`) 을 비켜 재실행
+         자격 · ⚠ 한정 = 요청 칸 없는 기록 (시험 고정물 꼴) = 접두 규칙만)
+      ③ arms_read = [] (팔을 읽기 전 멈춤 · 옛 = 검사 멈춤 기록의 멈춤 이름만 GROUP_UNCONFIRMED · TIME_LIMIT 기록에 팔 읽음 · ⚠ 한정 = 칸 없음 = [] 같은 읽기 —
+         시험 고정물 · 생산자는 늘 쓴다 · rc 칸 없음 = null 과 같은 부류)
+      ④ GROUP_UNCONFIRMED = 그 런 끝 기록의 사슬 쪽 확인 False (`chain_confirmed` · 읽힐 때만 — 시작 기록 없음 · 결합 안 됨 · chain_end 없는 옛 recover 끝 기록 =
+         이 대조 안 함 · 옛 = 끝 기록 확인 True 인 런에 멈춤 이름만 GROUP_UNCONFIRMED · GU 기록 rc 1 → 0 = 재실행 자격).
+    런 기록 없음 (런 전 TIME_LIMIT · 'none') = None (이 대조 밖).  ⚠ 한정 (고치지 않음): 런 기록 ↔ 그룹 끝 기록 (원인 · rc) 교차 대조 · 같은 이름 런 기록 둘 ·
+    다른 칸 (copied_from · seconds · machine …) · 런 전 TIME_LIMIT 이름 차례."""
+    if rr is None:
+        return None
+    runs = s.get('runs')
+    if not (isinstance(runs, list) and runs and runs[-1] is rr):
+        return f'멈춤 {code} 의 런 {run!r} 기록이 runs 의 마지막이 아니다 (생산자 = 멈춘 런 기록이 마지막 · ★ 11-06 PC10 P2-B)'
+    od = rr.get('outdir')
+    if not (isinstance(od, str) and RUN_DIR_RE.fullmatch(od) and isinstance(run, str) and (od == run or od.startswith(run + '_arm'))):
+        return f'멈춤 {code} 의 런 {run!r} 기록 outdir {od!r} ≠ <런> · <런>_arm… (`Runner._prepare` 출력 폴더 꼴 · ★ 11-06 PC10 P2-B)'
+    want = record_outdir(rr)                                 # 요청 칸이 정하는 정확한 이름 (접두만 맞춘 옆 이름 <런>_arm9 = 검사 실패 흔적 비킴)
+    if want is not None and od != want:
+        return (f'멈춤 {code} 의 런 {run!r} 기록 outdir {od!r} ≠ 그 기록의 요청 칸 (arms · arm_list) 이 정하는 출력 폴더 {want!r} (`Runner._prepare` · '
+                f'★ 11-06 PC10 P2-B)')
+    ar = rr.get('arms_read', [])
+    if not (type(ar) is list and not ar):
+        return (f'멈춤 {code} 의 런 {run!r} 기록 arms_read = {("팔 " + str(len(ar))) if type(ar) is list else type(ar).__name__} (생산자 = 팔을 읽기 전 '
+                f'멈춤 = [] · ★ 11-06 PC10 P2-B)')
+    if code == 'GROUP_UNCONFIRMED':
+        cf = chain_confirmed(folder, run)
+        if cf is not None and cf is not False:
+            return f'멈춤 GROUP_UNCONFIRMED 인데 런 {run!r} 끝 기록의 사슬 쪽 확인 = {cf!r} (생산자 = 확인 False 일 때만 이 멈춤 · ★ 11-06 PC10 P2-B)'
+    return None
+
+
+def chain_confirmed(folder, run):
+    """★ 11-06 PC10 확장 P2-B — 그 런 그룹 끝 기록 (시작 기록에 결합 · `group_pair`) 의 사슬 쪽 종료 확인 → True | False (그 값) · None (못 읽음 = 이름 RUN_DIR_RE
+    밖 · 시작 기록 없음 · 결합 안 됨 · chain_end 칸 없는 recover 끝 기록 = 옛 판) · 'bad' (읽었는데 생산자 꼴 아님 = 확인 값이 bool 아님 · chain_end 가 객체
+    아님 · by 가 chain · recover 아님).  사슬 쪽 = by chain 끝 기록의 confirmed (`run_in_group`) · by recover 끝 기록의 chain_end.confirmed (`recover_group` 이
+    옮긴 사본 · recover 는 확인 안 된 끝 기록만 갈아 쓴다 = 생산자 꼴에서 늘 False)."""
+    if not (isinstance(run, str) and RUN_DIR_RE.fullmatch(run)):
+        return None
+    lp = Path(folder) / GROUPS_DIR / f'{run}.launch.json'
+    if not os.path.lexists(str(lp)):
+        return None
+    _L, er, bound = group_pair(lp)
+    if not bound:
+        return None
+    by = er.get('by')
+    if by == 'chain':
+        v = er.get('confirmed')
+    elif by == 'recover':
+        if 'chain_end' not in er:
+            return None
+        ce = er['chain_end']
+        if not isinstance(ce, dict):
+            return 'bad'
+        v = ce.get('confirmed')
+    else:
+        return 'bad'
+    return v if type(v) is bool else 'bad'
 
 
 def stop_record_readable(s, folder):
-    """★ 11-06 PB-01 — 요약 있는 길: 멈춤 GROUP_UNCONFIRMED 의 멈춘 런 기록 꼴 → 재실행 자격을 읽을 수 있나 (그 밖 멈춤 = True).  그 멈춤을 내는 유일한
-    자리 (`Runner._execute`) = 그 이름의 런 기록 + group_cause 칸 (값 = None · `RUN_KILLED_CAUSES`) 이 늘 있다 — 런 기록 없음 · group_cause 칸 없음 (옛 판
-    꼴) · 모르는 값 (모르는 글 · false · 0 · "" · [] · {} · exception …) = False (재개 미확인 · 원인 글은 `stop_cause` 그대로 · 옛 = 그 꼴도
-    group_unconfirmed · 재실행 자격)."""
-    sr = s.get('stop') or {}
-    if (sr.get('code') or s.get('status')) != 'GROUP_UNCONFIRMED':
-        return True
-    rr, _od = _stopped_run(s, folder)
-    if not isinstance(rr, dict) or 'group_cause' not in rr:
-        return False
-    gc = rr['group_cause']
-    return gc is None or (type(gc) is str and gc in RUN_KILLED_CAUSES)
+    """★ 11-06 PB-01 · PC10-08 · 09 — 요약 있는 길: 멈춘 런 기록이 그 멈춤의 생산자 꼴이면 True (`stop_record_problem` 사유 없음 · 재실행 자격을 읽을 수
+    있다) · 옛 (PB-01) = GROUP_UNCONFIRMED 만 보고 rc 를 보지 않았다 (사슬이 죽인 원인 + rc 1 · group_cause None + rc null 도 True)."""
+    return stop_record_problem(s, folder) is None
+
+
+def run_exit_failed(rec):
+    """★ 11-06 PB-01 · PC10-08 (N1) — 런 기록 dict 가 "러너가 스스로 끝났는데 (group_cause 칸 있음 · None) 정확한 정수 0 이 아님 (rc null · 꼴 틀린 값 포함)"
+    인가 — 멈춤 코드 (GROUP_UNCONFIRMED · TIME_LIMIT) 와 무관한 한 읽기 (`stop_cause` · 옛 = GROUP_UNCONFIRMED 자리에만 같은 식 · TIME_LIMIT 는 런 기록을
+    보지 않았다)."""
+    return 'group_cause' in rec and rec['group_cause'] is None and not rc_success(rec.get('rc'))
 
 
 def stop_cause(s, folder, txt=None):
@@ -3947,7 +4092,9 @@ def stop_cause(s, folder, txt=None):
     ★ 11-05 PC6-05 — txt = 이미 읽은 그 런 로그 글 (`result_fields` 가 한 번 읽어 원인 · 읽음을 같은 글 · 상태로 · 없으면 여기서 `run_log_text`) · 로그를
     못 읽음 · 없음은 여기서 원인을 바꾸지 않는다 (재실행 자격 = `stop_log_readable`).  ★ 11-06 사전 공격 10 회차 PB-01 — 그룹 미확인 + 런 기록 group_cause
     None (러너가 스스로 끝남) 이면 정확한 정수 0 만 끝난 런 (rc null 도 러너 rc 길 · 옛 = null 을 실패 아님으로 · 재실행 자격) · 런 기록 꼴이 생산자 꼴이
-    아니면 원인 글은 그대로 · 재실행 자격 = `stop_record_readable`."""
+    아니면 원인 글은 그대로 · 재실행 자격 = `stop_record_readable`.  ★ 11-06 PC10-08 (N1 · 1저자 11-06 "권고대로") — 멈춤 코드와 무관하게 group_cause None
+    이면 정확한 정수 0 만 성공 (`run_exit_failed` · TIME_LIMIT 도 · 옛 = TIME_LIMIT 는 런 기록을 보지 않고 timeout) · 생산자 꼴이 아닌 런 기록의 재실행 자격 =
+    `stop_record_problem` (읽음 False)."""
     code = (s.get('stop') or {}).get('code') or s.get('status')
     if txt is None:
         txt = run_log_text(folder, (s.get('stop') or {}).get('run'))[0]
@@ -3963,15 +4110,20 @@ def stop_cause(s, folder, txt=None):
         else:
             return words_cause(txt, 'runner_rc')
     elif code == 'TIME_LIMIT':
+        rr, _od = _stopped_run(s, folder)
+        #  ★ 11-06 PC10-08 (N1) — 러너가 스스로 끝난 런 기록 (group_cause None) + 정확한 정수 0 아님 = 러너 rc 길 (생산자의 TIME_LIMIT 런 기록 = {timeout ·
+        #    null} 뿐 · 그 꼴 = 모순 · 재실행 자격은 `stop_record_problem` 이 막는다 · 옛 = timeout · 자격 True)
+        if run_exit_failed(rr if isinstance(rr, dict) else {}):
+            return words_cause(txt, 'runner_rc')
         base = 'timeout'
     elif code == 'GROUP_UNCONFIRMED':
         rr, _od = _stopped_run(s, folder)
         rec = rr if isinstance(rr, dict) else {}
-        rc = rec.get('rc')
         #  ★ 11-02 PC6-13 — 러너 rc 길과 같은 규칙 (그룹 미확인이 러너 rc ≠ 0 을 가리지 않는다) · ★ 11-06 PB-01 — 러너가 스스로 끝난 런 (group_cause 칸 있음 ·
         #    None) = 정확한 정수 0 만 끝남 (rc null = 실패 · 요약 없는 길 by chain 과 같은 읽기 · 옛 = null 을 실패 아님으로 = 재실행 자격) · rc null 이 실패
-        #    아님 = 사슬이 죽인 런 (`RUN_KILLED_CAUSES`) 일 때만 · 런 기록 없음 · 칸 없음 · 모르는 값 = 원인 글 그대로 · 읽음 False (`stop_record_readable`)
-        if runner_rc_failed(rc) or ('group_cause' in rec and rec['group_cause'] is None and not rc_success(rc)):
+        #    아님 = 사슬이 죽인 런 (`RUN_KILLED_CAUSES`) 일 때만 · 런 기록 없음 · 칸 없음 · 모르는 값 = 원인 글 그대로 · 읽음 False (`stop_record_readable`) ·
+        #    ★ 11-06 PC10-08 — 뒤 식 = `run_exit_failed` (TIME_LIMIT 와 한 읽기 · 값 그대로)
+        if runner_rc_failed(rec.get('rc')) or run_exit_failed(rec):
             return words_cause(txt, 'runner_rc')
         base = 'group_unconfirmed'
     else:
@@ -3997,7 +4149,9 @@ def orphan_cause(folder):
         recover 가지 = 낱말 · 기본 parent_dead (예 메모리 낱말 = resource · 잘못된 주소 = runner_rc · 둘 다 읽음 False))
     런 여럿 = 재실행 불가 원인이 하나라도 있으면 그것 (시작 차례 첫) · 아니면 마지막 · 끝나지 않은 런이 없으면 parent_dead (런 사이 사망) · 그룹 기록이 하나도
     없음 · 기록 · 그 런 로그를 못 읽음 (★ 11-05 PC6-05 = `run_log_text` 상태 ok 아님 — 없음 · 폴더 · FIFO · 장치 · 권한 · 이름이 RUN_DIR_RE 밖) · 모르는
-    꼴 · ★ 11-04 PC8-02 끝 기록이 그 시작 기록에 결합 안 됨 (`group_pair` · 다른 런의 끝 기록) = 읽음 False (재실행 자격 없음 · 보수)."""
+    꼴 · ★ 11-04 PC8-02 끝 기록이 그 시작 기록에 결합 안 됨 (`group_pair` · 다른 런의 끝 기록) = 읽음 False (재실행 자격 없음 · 보수) · ★ 11-06 PC10
+    (같은 부류) — by chain 끝 기록 · chain_end 의 (원인, rc) 가 생산자 꼴이 아님 (`end_record_known` — 원인 None + rc null · 꼴 틀린 rc) = 읽음 False (원인 글
+    그대로 · 옛 = 읽음 True · 메모리 낱말이면 resource · 재실행 자격)."""
     folder = Path(folder)
     rows, ok = [], True
     for lp in folder.rglob(f'{GROUPS_DIR}/*.launch.json'):
@@ -4017,10 +4171,12 @@ def orphan_cause(folder):
         txt, lst = run_log_text(base, nm)                   # ★ 11-05 PC6-05 — 요약 있는 길과 같은 읽기 (일반 파일만 · FIFO 에 막히지 않음 · 이름 = RUN_DIR_RE)
         if lst != 'ok':
             ok = False
+        if by == 'chain' and not end_record_known(er):
+            ok = False                                        # ★ 11-06 PC10 (같은 부류) — 생산자가 쓰지 않는 (원인, rc) = 읽음 False (원인 글 = 아래 그대로)
         if by == 'recover':
             ce = er.get('chain_end')
-            if 'chain_end' in er and not (isinstance(ce, dict) and chain_cause_known(ce.get('cause'))):
-                ok = False                                    # ★ 11-05 A1b — chain_end 꼴 틀림 · 모르는 사슬 원인 = 읽음 False (by chain 가지와 같은 재실행 자격 · 원인 글 = 아래 낱말 · ★ 11-06 PB-05)
+            if 'chain_end' in er and not (isinstance(ce, dict) and chain_cause_known(ce.get('cause')) and end_record_known(ce)):
+                ok = False                                    # ★ 11-05 A1b — chain_end 꼴 틀림 · 모르는 사슬 원인 = 읽음 False (by chain 가지와 같은 재실행 자격 · 원인 글 = 아래 낱말 · ★ 11-06 PB-05 · PC10 = (원인, rc) 꼴도)
             c = chain_end_fixed(er) or words_cause(txt, 'runner_rc' if chain_end_failed(er) else 'parent_dead')   # ★ 11-02 PC7-03 · PC6-13
         elif by != 'chain':
             c, ok = 'parent_dead', False
@@ -4037,11 +4193,34 @@ def orphan_cause(folder):
     return (bad[0] if bad else (causes[-1] if causes else 'parent_dead')), ok
 
 
+def summary_shape_problem(s):
+    """★ 11-06 PC10 확장 P3-5 (사전 공격 11 회차) — 단계 요약 s (객체 · status 글 = `stage_summary_read`) 에서 결과 줄 셈 (`result_fields`) 이 읽는 칸의 꼴 →
+    사유 | None: stop = null · 객체 / runs = null · 목록 / 그 원소 = 객체 / 원소의 outdir = 없음 · null · 글 (생산자 = `summary_base` · 러너 기록 · outdir =
+    출력 폴더 이름).  옛 = 글 · 목록 stop · 정수 목록 · 글 · 객체 runs · 객체 · 정수 outdir 이 AttributeError · TypeError 로 recover --ledger 를 끝내 같은
+    바탕의 뒤 시도 폴더를 셈하지 못했다 (지금 = 그 폴더 멈춤 · 사유 · 뒤 폴더 계속)."""
+    st = s.get('stop')
+    if st is not None and not isinstance(st, dict):
+        return f'stop = {type(st).__name__}'
+    runs = s.get('runs')
+    if runs is None:
+        return None
+    if not isinstance(runs, list):
+        return f'runs = {type(runs).__name__}'
+    for i, r in enumerate(runs):
+        if not isinstance(r, dict):
+            return f'runs[{i}] = {type(r).__name__}'
+        od = r.get('outdir')
+        if od is not None and not isinstance(od, str):
+            return f'runs[{i}].outdir = {type(od).__name__}'
+    return None
+
+
 def result_fields(folder, s, unreadable=False):
     """단계 요약 (없으면 None = 요약 없는 시도) → 결과 줄의 셈한 칸 (status · stop · side · cause · resume_ok) — 결과 줄 (사슬 · recover) 과 다시 셈 (판정 ·
     합치기 · 풀기 전 대조) 이 같은 함수.  ★ 11-05 PC6-05 — 요약 있는 길도 멈춘 런 로그를 읽었을 때만 재실행 자격 (`stop_log_readable` · 요약 없는 길의 읽음
     과 같은 규칙 · 원인 글은 그대로).  ★ 11-05 A2b — unreadable = 단계 요약이 있는데 못 읽음 (`stage_summary_read`) → interrupted · 멈춤 없음 · 원인
-    summary_unreadable · 재실행 자격 False (요약 없는 길로 읽지 않는다)."""
+    summary_unreadable · 재실행 자격 False (요약 없는 길로 읽지 않는다).  ★ 11-06 PC10 확장 P3-5 — 읽는 칸 (stop · runs · outdir) 꼴 틀림
+    (`summary_shape_problem`) = Stop ATTEMPT_LEDGER_MISMATCH (결과 줄 없음 · recover 는 그 폴더만 못 쓴 수로 · 뒤 폴더 계속)."""
     folder = Path(folder)
     side = folder_side(folder)
     readable = True
@@ -4053,6 +4232,10 @@ def result_fields(folder, s, unreadable=False):
         cause, readable = orphan_cause(folder)                 # ★ 10-28 밤 PC5-06 — 옛 = parent_dead 고정
         trace = check_trace(folder)
     else:
+        why = summary_shape_problem(s)                         # ★ 11-06 PC10 확장 P3-5 — 읽는 칸 꼴 틀림 = 멈춤 (옛 = AttributeError · TypeError traceback)
+        if why:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{folder.name}: 단계 요약 칸 꼴 — {why} (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 글 · '
+                                                  f'결과 줄 없음 · ★ 11-06 PC10 P3-5)')
         done = s.get('status') in DONE_STATUSES
         status = 'completed' if done else 'stopped'
         sr = s.get('stop') or {}
@@ -4080,22 +4263,102 @@ def attempt_result_line(n, folder, s, by, unreadable=False):
     return dict({'kind': 'result', 'n': n}, **f, folder=folder.name, folder_sha256=dg, by=by, utc=_utc())
 
 
+def rejected_record(rj, label):
+    """★ 11-06 PC10-10 (N4 · 1저자 11-06 "권고대로") — 거부 기록 파일 rj → dict (JSON 객체) · 못 읽음 (`read_regular_file` 상태 ok 아님 · ★ 11-06 PB-03) ·
+    JSON 아님 · 중복 칸 · NaN · 깊은 중첩 (RecursionError) · 객체 아닌 JSON (목록 · 글 · 수 · null · 참거짓) = Stop ATTEMPT_LEDGER_MISMATCH (사유 = label ·
+    상태 · 예외 이름 · fail-closed — 결과 줄 · 재실행 자격 없음).  다시 셈 (`result_recount`) · recover (`recover_ledger`) 가 이 한 함수 (옛 = recover 가
+    객체 검사 없이 rec.get → AttributeError · 깊은 중첩 RecursionError 를 잡지 않아 traceback 으로 끝났다 · 다시 셈은 이미 이 읽기)."""
+    raw, rst = read_regular_file(rj)                          # ★ 11-06 PB-03 — is_file 뒤 바꿔치기 (FIFO) 에 막히지 않는다 (한 번 연 fd)
+    if rst != 'ok':
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{label}: 거부 기록을 못 읽는다 ({rst} · 확인 뒤 바뀐 자리 · ★ 11-06 PB-03)')
+    try:
+        rec = _json_strict(raw)
+    except Exception as e:                                    # noqa: BLE001 — 못 읽음 = 대조 실패 (RecursionError 포함)
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{label}: 거부 기록을 못 읽는다 ({type(e).__name__})')
+    if not isinstance(rec, dict):
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{label}: 거부 기록 꼴')
+    return rec
+
+
+#: ★ 11-06 PC10 확장 (사전 공격 11 회차 P2-A · 1저자 11-06 규칙) — 생산자가 시도 폴더 안에 거부 기록을 쓰는 자리 = 풀기 전 (`attempt_open`: 폴더 · attempt.json ·
+#:   시작 기록 커밋 → 풀기 전 대조 → `attempt_reject`) · 그때 그 폴더의 것 = 이 둘뿐 (단계 요약 · 그룹 기록 · 로그 · 런 폴더 · 결과 흔적 전)
+REJECTED_FOLDER_NAMES = (ATTEMPT_FILE, REJECTED_FILE)
+#: 멈춤 이름 꼴 (`STOPS` 의 이름 · `Stop.code` — 대문자 · 숫자 · _)
+STOP_CODE_RE = re.compile(r'[A-Z][A-Z0-9_]*')
+
+
+def rejected_form_problem(rec, att):
+    """★ 11-06 PC10 확장 P2-A — 시도 폴더 안 거부 기록 rec (dict) ↔ 그 폴더의 attempt.json (`read_attempt` 결과 att · None = 없음 · 꼴 틀림) → 사유 | None.
+    생산자 꼴 (`attempt_reject` · C1b ae8ea5ebd 부터 같은 칸) = 칸 = `REJECTED_KEYS` · schema · n = 시도 번호 (정수 · bool 아님) · code = 멈춤 이름 (`Stop.code`) ·
+    cause = 글 (`Stop.cause` = str) · ledger_commit = attempt.json 의 시작 커밋 (둘 다 `attempt_open` 의 같은 HEAD) · utc = 글 (`al07_foreign_ok` 의 옆 기록
+    대조와 같은 꼴 + 번호 · 시작 커밋 결합 · ⚠ 한정 = utc 글의 시각 꼴은 보지 않는다)."""
+    if att is None:
+        return 'attempt.json 이 없거나 꼴이 틀리다 (생산자는 attempt.json 뒤에만 거부 기록을 쓴다)'
+    if set(rec) != REJECTED_KEYS:
+        return f'칸 {sorted(map(str, rec))} ≠ {sorted(REJECTED_KEYS)}'
+    if rec['schema'] != REJECTED_SCHEMA:
+        return f'schema {rec["schema"]!r}'
+    if type(rec['n']) is not int or rec['n'] != att['n']:
+        return f'n {rec["n"]!r} ≠ 시도 번호 {att["n"]}'
+    if not (type(rec['code']) is str and STOP_CODE_RE.fullmatch(rec['code'])):
+        return f'code {rec["code"]!r} (멈춤 이름 꼴 아님)'
+    if type(rec['cause']) is not str or type(rec['utc']) is not str:
+        return f'cause · utc = 글이 아니다 ({type(rec["cause"]).__name__} · {type(rec["utc"]).__name__})'
+    if rec['ledger_commit'] != att['ledger_commit']:
+        return f'시작 커밋 {str(rec["ledger_commit"])[:12]!r} ≠ attempt.json 의 {att["ledger_commit"][:12]}'
+    return None
+
+
+def rejected_folder_problem(folder):
+    """★ 11-06 PC10 확장 P2-A — 거부 기록이 있는 시도 폴더의 것이 정확히 attempt.json + rejected.json (둘 다 일반 파일 · 링크 아님) 인가 → 사유 | None.  그 밖
+    (단계 요약 · 그룹 기록 · 로그 · 런 폴더 · 첫 결과 표지 · payload · 그 밖 파일 · 폴더를 못 읽음) = 생산자의 풀기 전 거부 자리가 아니다 (결과 본 시도 폴더에
+    손으로 넣은 거부 기록 = 사전 공격 11 P2-A)."""
+    try:
+        names = sorted(os.listdir(str(folder)))
+    except OSError as e:
+        return f'시도 폴더를 못 읽는다 ({type(e).__name__})'
+    extra = [nm for nm in names if nm not in REJECTED_FOLDER_NAMES]
+    miss = [nm for nm in REJECTED_FOLDER_NAMES if nm not in names]
+    if extra or miss:
+        return f'거부 기록 옆 흔적 {extra[:6]}{" …" if len(extra) > 6 else ""}' + (f' · 없음 {miss}' if miss else '')
+    for nm in REJECTED_FOLDER_NAMES:
+        try:
+            m = os.lstat(str(Path(folder) / nm)).st_mode
+        except OSError as e:
+            return f'{nm} 를 못 본다 ({type(e).__name__})'
+        if not stat.S_ISREG(m):
+            return f'{nm} = 일반 파일이 아니다 (링크 · 특수 파일)'
+    return None
+
+
+def rejected_in_folder(folder, label):
+    """★ 11-06 PC10 확장 P2-A (사전 공격 11 회차 · 바탕 766e1e80c 에도 있던 꼴 · 1저자 11-06 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순) — 시도 폴더 안 rejected.json
+    → dict (생산자 꼴일 때만) · 그 밖 = Stop ATTEMPT_LEDGER_MISMATCH (사유 = label · 결과 줄 · 재실행 자격 없음).  읽기 = `rejected_record` (못 읽음 · JSON 아님 ·
+    객체 아님 = 옛 사유 그대로) → 칸 (`rejected_form_problem`) → 폴더 (`rejected_folder_problem`).  recover --ledger (`recover_ledger`) · 다시 셈
+    (`result_recount`) 이 이 한 함수.  옛 = 객체면 무엇이든 거부 기록 → 결과 본 시도 폴더 (단계 요약 · 그룹 기록 · 첫 결과 표지) 에 {} 하나로 recover 가 결과
+    줄 rejected · 결과 전 · presolve → 채택에서 빠짐 · 같은 대상 새 --add rc 0.  옆 거부 기록 파일 (attempt_<n>.rejected.json) 은 이 함수 몫 아님 (그대로 —
+    `result_recount` = 객체 검사 · `al07_foreign_ok` = 꼴 · recover 는 옆 기록에 결과 줄을 쓰지 않는다)."""
+    folder = Path(folder)
+    rec = rejected_record(folder / REJECTED_FILE, label)
+    why = rejected_form_problem(rec, read_attempt(folder)) or rejected_folder_problem(folder)
+    if why:
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{label}: 거부 기록이 생산자 꼴이 아니다 — {why} (생산자 = 풀기 전 · 폴더 = attempt.json + rejected.json 뿐 · '
+                                              f'칸 = REJECTED_KEYS · 결과 줄 없음 · ★ 11-06 PC10 P2-A)')
+    return rec
+
+
 def result_recount(p):
     """★ 10-28 밤 PC5-01 (사전 공격 5 회차 PC-01) — 시도 폴더 (또는 옆 거부 기록 파일) 의 증거에서 결과 줄의 셈한 칸을 다시 센다 — 결과 줄을 쓴 함수와 같은
     함수 (거부 기록 = rejected · presolve · 결과 전 · 멈춤 = 그 기록의 이름 / 단계 요약 (사다리 · 예측 · 단위 · 점 차례) = `result_fields` / 요약 없음 =
-    같은 함수의 요약 없는 길) · 못 읽는 거부 기록 = Stop."""
+    같은 함수의 요약 없는 길) · 못 읽는 거부 기록 = Stop.  ★ 11-06 PC10 확장 P2-A — 시도 폴더 안 거부 기록 = `rejected_in_folder` (생산자 꼴만 · recover 와
+    같은 함수) · 옆 거부 기록 파일 = 그대로 (`rejected_record`)."""
     p = Path(p)
-    rj = p if p.is_file() else p / REJECTED_FILE
-    if rj.is_file():
-        raw, rst = read_regular_file(rj)                      # ★ 11-06 PB-03 — is_file 뒤 바꿔치기 (FIFO) 에 막히지 않는다 (한 번 연 fd)
-        if rst != 'ok':
-            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: 거부 기록을 못 읽는다 ({rst} · 확인 뒤 바뀐 자리 · ★ 11-06 PB-03)')
-        try:
-            rec = _json_strict(raw)
-        except Exception as e:                                # noqa: BLE001 — 못 읽음 = 대조 실패
-            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: 거부 기록을 못 읽는다 ({type(e).__name__})')
-        if not isinstance(rec, dict):
-            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: 거부 기록 꼴')
+    rec = None
+    if p.is_file():
+        rec = rejected_record(p, p.name)                      # ★ 11-06 PC10-10 — recover --ledger 와 같은 읽기 (한 함수 · 사유 글 그대로)
+    elif (p / REJECTED_FILE).is_file():
+        rec = rejected_in_folder(p, p.name)                   # ★ 11-06 PC10 확장 P2-A — recover --ledger 와 같은 함수 (생산자 꼴만)
+    if rec is not None:
         return {'status': 'rejected', 'stop': {'code': str(rec.get('code')), 'run': None, 'reason': None}, 'side': 'pre', 'cause': 'presolve',
                 'resume_ok': False}
     s, sst = stage_summary_read(p)                       # ★ 11-05 A2b — 있는데 못 읽는 요약 ≠ 요약 없음
@@ -4498,6 +4761,27 @@ def run_request(prefix, n, kit, role, law, c, rj, arms, sv_cf, variant):
     return name, req, key
 
 
+def run_outdir_suffix(n_arms, al):
+    """런 출력 폴더 접미사 (러너가 강제하는 꼴 · `Runner._prepare`) — 8 팔 · 고르기 없음 = '' · 그 밖 `_arm<N>` · 팔 고르기면 + `_arml<목록>`.  ★ 11-06 PC10 확장
+    P2-B — 멈춘 런 기록의 outdir 대조 (`record_outdir`) 와 같은 한 함수 (옛 = `_prepare` 안 식 · 값 그대로)."""
+    sfx = '' if n_arms == 8 and al is None else f'_arm{n_arms}'
+    if al is not None:
+        sfx += '_arml' + '-'.join(str(i) for i in al)
+    return sfx
+
+
+def record_outdir(rr):
+    """★ 11-06 PC10 확장 P2-B — 런 기록 rr 의 요청 칸 (name · arms · arm_list = `run_request` 가 쓴 꼴) → 생산자의 출력 폴더 이름 (name + `run_outdir_suffix`) ·
+    None (arms 칸 없음 = 요청 칸 없는 기록 · 시험 고정물 꼴 · ⚠ 한정 = 이때는 outdir 접두 규칙만 — 생산자 기록에는 늘 있다) · '' (칸 꼴 틀림 = 어떤
+    outdir 와도 다름 · name 글 아님 · arms 정수 아님 (bool 포함) · arm_list 가 null · 정수 목록 아님)."""
+    if 'arms' not in rr:
+        return None
+    n, al, name = rr.get('arms'), rr.get('arm_list'), rr.get('name')
+    if not (isinstance(name, str) and type(n) is int and (al is None or (isinstance(al, list) and all(type(i) is int for i in al)))):
+        return ''
+    return name + run_outdir_suffix(n, al)
+
+
 class Runner:
     def __init__(self, runner, root, out, plan, variant, deadline, contract, dry=False, parent_env=None, prefix='R', machine=None):
         self.runner, self.root, self.out = Path(runner), Path(root), Path(out)
@@ -4533,11 +4817,9 @@ class Runner:
         if key in self.keys:
             raise Stop('DUPLICATE_RUN', f'{kit} · {law} · c {c} · R_j {disp_rj(rj)} · 팔 {arm_indices(req)} 를 두 번 요청', name)
         self.keys.add(key)
-        #  출력 폴더 = 러너가 강제하는 접미사 그대로 (`_arm<N>` · 팔 고르기면 `_arml<목록>`) — 다르면 러너가 다른 폴더에 쓴다
-        sfx = '' if n_arms == 8 and al is None else f'_arm{n_arms}'
-        if al is not None:
-            sfx += '_arml' + '-'.join(str(i) for i in al)
-        outdir = self.out / f'{name}{sfx}'
+        #  출력 폴더 = 러너가 강제하는 접미사 그대로 (`_arm<N>` · 팔 고르기면 `_arml<목록>`) — 다르면 러너가 다른 폴더에 쓴다 · ★ 11-06 PC10 확장 P2-B —
+        #    접미사 = 한 함수 (`run_outdir_suffix` · 멈춘 런 기록의 outdir 대조 `record_outdir` 와 같은 함수 · 값 그대로)
+        outdir = self.out / f'{name}{run_outdir_suffix(n_arms, al)}'
         return name, req, outdir, self.env_delta(req, outdir)
 
     def _execute(self, name, req, outdir, delta):
@@ -7287,10 +7569,10 @@ def recover_ledger(root, repo, operator=None):
                 continue
             rj = f / REJECTED_FILE
             if rj.is_file():
-                raw_rj, rst = read_regular_file(rj)             # ★ 11-06 PB-03 — is_file 뒤 바꿔치기 (FIFO) 에 막히지 않는다 (한 번 연 fd)
-                if rst != 'ok':
-                    raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{f.name}: 거부 기록을 못 읽는다 ({rst} · 확인 뒤 바뀐 자리 · ★ 11-06 PB-03)')
-                rec = _json_strict(raw_rj)
+                #  ★ 11-06 PC10-10 (N4) — 다시 셈과 같은 읽기 (`rejected_record` · 객체 아닌 JSON · 깊은 중첩 = Stop → 못 쓴 수 · 결과 줄 없음 · 옛 =
+                #    AttributeError · RecursionError 를 잡지 않음) · ★ 11-06 PC10 확장 P2-A — 생산자 꼴만 (`rejected_in_folder` · 폴더 = attempt.json +
+                #    rejected.json 뿐 · 칸 · 번호 · 시작 커밋 · 옛 = 결과 본 시도 폴더의 {} 하나도 rejected · 결과 전 결과 줄)
+                rec = rejected_in_folder(f, f.name)
                 res = {'kind': 'result', 'n': n, 'status': 'rejected', 'stop': {'code': str(rec.get('code')), 'run': None, 'reason': None},
                        'side': 'pre', 'cause': 'presolve', 'resume_ok': False, 'folder': f.name, 'folder_sha256': folder_digest(f),
                        'by': 'recover', 'utc': _utc()}

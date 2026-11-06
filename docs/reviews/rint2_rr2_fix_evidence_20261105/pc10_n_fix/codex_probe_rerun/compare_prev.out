@@ -1,0 +1,17 @@
+{
+ "candidate_fix_identical": "same",
+ "integration": "same",
+ "integration_codex": "same",
+ "probe_rc": "same",
+ "probe_sha256": "same",
+ "probe_tail": "DIFF",
+ "residual_fields_equal_candidate_table": "same",
+ "residual_orphan": "DIFF",
+ "residual_orphan_codex": "same",
+ "results": "DIFF",
+ "tested_sha256": "DIFF"
+}
+rows_differ (prev): ['known_PC6_05_summary_missing_log_resume']
+rows_differ (now) : ['known_PC6_05_summary_missing_log_resume', 'summary_cupy_oom_TIME_LIMIT_None', 'summary_disk_TIME_LIMIT_None', 'summary_gpu_TIME_LIMIT_None', 'summary_host_TIME_LIMIT_None', 'summary_oom_TIME_LIMIT_None', 'summary_plain_TIME_LIMIT_None', 'summary_python_TIME_LIMIT_None']
+results (prev/now): [310, 311] [311, 311] / [303, 311] [311, 311]
+tested_sha256 now : {'scripts/rint_first_result.py': '36049f80c39cd8dc026d0c11447d2c3d18b7ac50159f6dc937471303d8de36fb', 'scripts/rint_r_chain.py': 'f3d6a40f0dc230766e2fad83bbfe476168c18ad29ce5428f1617861484d02089'}

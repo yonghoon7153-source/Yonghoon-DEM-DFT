@@ -1,0 +1,595 @@
+{
+ "BASE": {
+  "clean": true,
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 0,
+  "seconds": 21.9,
+  "summary": "test_rint_r_chain: 26/26 PASS (21.5 s)"
+ },
+ "G1": {
+  "expected_any": [
+   "CT01",
+   "CT04",
+   "LG01",
+   "PD02",
+   "PD13",
+   "RN01"
+  ],
+  "expected_hit": [
+   "CT01",
+   "CT04",
+   "LG01",
+   "PD02",
+   "PD13",
+   "RN01"
+  ],
+  "failed": [
+   "CT01",
+   "CT04",
+   "LG01",
+   "PD02",
+   "PD02c",
+   "PD13",
+   "RN01",
+   "RN02"
+  ],
+  "item": "N1·N2 표 통째로",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 27.2,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 18/26 PASS (26.8 s)   FAILED: ['PD02', 'PD13', 'PD02c', 'LG01', 'RN01', 'RN02', 'CT01', 'CT04']"
+ },
+ "G10": {
+  "expected_any": [
+   "CT01",
+   "CT04",
+   "LG01",
+   "PD02",
+   "PD13",
+   "RN01"
+  ],
+  "expected_hit": [
+   "CT01",
+   "CT04",
+   "LG01",
+   "PD02",
+   "PD13",
+   "RN01"
+  ],
+  "failed": [
+   "CT01",
+   "CT04",
+   "LG01",
+   "PD02",
+   "PD02c",
+   "PD13",
+   "RN01",
+   "RN02"
+  ],
+  "item": "result_fields 가 표를 안 봄",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 28.1,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 18/26 PASS (27.6 s)   FAILED: ['PD02', 'PD13', 'PD02c', 'LG01', 'RN01', 'RN02', 'CT01', 'CT04']"
+ },
+ "G11": {
+  "expected_any": [
+   "CT01",
+   "CT04",
+   "PD13",
+   "RN01",
+   "RC04"
+  ],
+  "expected_hit": [
+   "CT01",
+   "CT04",
+   "PD13",
+   "RN01",
+   "RC04"
+  ],
+  "failed": [
+   "CT01",
+   "CT04",
+   "PD13",
+   "RC04",
+   "RN01",
+   "RN02"
+  ],
+  "item": "run_exit_failed = 늘 False",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 26.5,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 20/26 PASS (26.0 s)   FAILED: ['PD13', 'RC04', 'RN01', 'RN02', 'CT01', 'CT04']"
+ },
+ "G2": {
+  "expected_any": [
+   "CT01",
+   "CT04"
+  ],
+  "expected_hit": [
+   "CT01"
+  ],
+  "failed": [
+   "CT01"
+  ],
+  "item": "N1 TIME_LIMIT 표에 exit_fail",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 23.6,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 25/26 PASS (23.1 s)   FAILED: ['CT01']"
+ },
+ "G3": {
+  "expected_any": [
+   "CT01",
+   "LG01",
+   "PD02"
+  ],
+  "expected_hit": [
+   "CT01",
+   "LG01",
+   "PD02"
+  ],
+  "failed": [
+   "CT01",
+   "LG01",
+   "PD02",
+   "PD02c"
+  ],
+  "item": "N2 RUNNER_RC 표에 killed:timeout",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 24.3,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 22/26 PASS (23.8 s)   FAILED: ['PD02', 'PD02c', 'LG01', 'CT01']"
+ },
+ "G4": {
+  "expected_any": [
+   "CT01",
+   "CT04"
+  ],
+  "expected_hit": [
+   "CT01",
+   "CT04"
+  ],
+  "failed": [
+   "CT01",
+   "CT04"
+  ],
+  "item": "N2 사슬이 죽인 원인 + rc 있음 허용",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 24.5,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 24/26 PASS (24.0 s)   FAILED: ['CT01', 'CT04']"
+ },
+ "G5": {
+  "expected_any": [
+   "CT01",
+   "PD13",
+   "RN01"
+  ],
+  "expected_hit": [
+   "CT01",
+   "PD13",
+   "RN01"
+  ],
+  "failed": [
+   "CT01",
+   "PD13",
+   "RN01"
+  ],
+  "item": "group_cause None + rc null 허용",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 25.3,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 23/26 PASS (24.9 s)   FAILED: ['PD13', 'RN01', 'CT01']"
+ },
+ "G6": {
+  "expected_any": [
+   "CT01",
+   "PD13",
+   "RN01"
+  ],
+  "expected_hit": [
+   "CT01",
+   "PD13",
+   "RN01"
+  ],
+  "failed": [
+   "CT01",
+   "PD13",
+   "RN01"
+  ],
+  "item": "group_cause None + 꼴 틀린 rc 허용",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 25.3,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 23/26 PASS (24.8 s)   FAILED: ['PD13', 'RN01', 'CT01']"
+ },
+ "G7": {
+  "expected_any": [
+   "CT01",
+   "LG01"
+  ],
+  "expected_hit": [
+   "CT01",
+   "LG01"
+  ],
+  "failed": [
+   "CT01",
+   "LG01"
+  ],
+  "item": "런 기록 없는 TIME_LIMIT 흔적 판독 뺌",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 26.1,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 24/26 PASS (25.6 s)   FAILED: ['LG01', 'CT01']"
+ },
+ "G8": {
+  "expected_any": [
+   "CT01",
+   "CT04"
+  ],
+  "expected_hit": [
+   "CT01",
+   "CT04"
+  ],
+  "failed": [
+   "CT01",
+   "CT04"
+  ],
+  "item": "N1 원인 (TIME_LIMIT 러너 rc 길) 뺌",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 26.0,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 24/26 PASS (25.5 s)   FAILED: ['CT01', 'CT04']"
+ },
+ "G9": {
+  "expected_any": [
+   "CT01",
+   "RN01",
+   "RN02"
+  ],
+  "expected_hit": [
+   "CT01",
+   "RN01"
+  ],
+  "failed": [
+   "CT01",
+   "RN01"
+  ],
+  "item": "group_cause 칸 없음 = None",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 26.5,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 24/26 PASS (26.0 s)   FAILED: ['RN01', 'CT01']"
+ },
+ "H1": {
+  "expected_any": [
+   "CT02",
+   "RN01",
+   "RC02"
+  ],
+  "expected_hit": [
+   "CT02",
+   "RN01",
+   "RC02"
+  ],
+  "failed": [
+   "CT02",
+   "RC02",
+   "RN01"
+  ],
+  "item": "by chain (원인, rc) 판독 뺌",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 26.5,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 23/26 PASS (26.1 s)   FAILED: ['RC02', 'RN01', 'CT02']"
+ },
+ "H2": {
+  "expected_any": [
+   "CT02",
+   "RN01",
+   "PE03u"
+  ],
+  "expected_hit": [
+   "CT02",
+   "RN01",
+   "PE03u"
+  ],
+  "failed": [
+   "CT02",
+   "PE03u",
+   "RN01"
+  ],
+  "item": "chain_end (원인, rc) 판독 뺌",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 26.6,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 23/26 PASS (26.1 s)   FAILED: ['PE03u', 'RN01', 'CT02']"
+ },
+ "H3": {
+  "expected_any": [
+   "CT02",
+   "RN01",
+   "RC02",
+   "PE03u"
+  ],
+  "expected_hit": [
+   "CT02",
+   "RN01",
+   "RC02",
+   "PE03u"
+  ],
+  "failed": [
+   "CT02",
+   "PE03u",
+   "RC02",
+   "RN01"
+  ],
+  "item": "원인 None + rc null 허용",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 25.4,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 22/26 PASS (25.0 s)   FAILED: ['PE03u', 'RC02', 'RN01', 'CT02']"
+ },
+ "H4": {
+  "expected_any": [
+   "CT02",
+   "RN01",
+   "RC02"
+  ],
+  "expected_hit": [
+   "CT02",
+   "RN01",
+   "RC02"
+  ],
+  "failed": [
+   "CT02",
+   "RC02",
+   "RN01"
+  ],
+  "item": "꼴 틀린 rc 허용",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 39.8,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 23/26 PASS (39.3 s)   FAILED: ['RC02', 'RN01', 'CT02']"
+ },
+ "J1": {
+  "expected_any": [
+   "CT03",
+   "CT04"
+  ],
+  "expected_hit": [
+   "CT03",
+   "CT04"
+  ],
+  "failed": [
+   "CT03",
+   "CT04"
+  ],
+  "item": "객체 검사 뺌",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 27.5,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 24/26 PASS (27.0 s)   FAILED: ['CT03', 'CT04']"
+ },
+ "J2": {
+  "expected_any": [
+   "CT03"
+  ],
+  "expected_hit": [
+   "CT03"
+  ],
+  "failed": [
+   "CT03"
+  ],
+  "item": "예외 = ValueError 만 (RecursionError 샘)",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 26.7,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 25/26 PASS (26.2 s)   FAILED: ['CT03']"
+ },
+ "J3": {
+  "expected_any": [
+   "CT03",
+   "CT04"
+  ],
+  "expected_hit": [
+   "CT03",
+   "CT04"
+  ],
+  "failed": [
+   "CT03",
+   "CT04",
+   "FF01"
+  ],
+  "item": "recover 옛 읽기로",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 27.7,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 23/26 PASS (27.2 s)   FAILED: ['FF01', 'CT03', 'CT04']"
+ },
+ "K1": {
+  "expected_any": [
+   "CT01",
+   "RN01",
+   "RN02"
+  ],
+  "expected_hit": [],
+  "failed": [],
+  "item": "B5 짝 — 모르는 글 group_cause 를 죽인 원인으로",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 0,
+  "seconds": 42.3,
+  "status": "SURVIVED",
+  "summary": "test_rint_r_chain: 26/26 PASS (41.9 s)"
+ },
+ "K1b": {
+  "expected_any": [
+   "CT01",
+   "RN01",
+   "RN02"
+  ],
+  "expected_hit": [
+   "CT01"
+  ],
+  "failed": [
+   "CT01",
+   "LG01",
+   "PD02",
+   "PD02c"
+  ],
+  "item": "B5 짝 — 허용 집합이 모든 killed:<글> 을 받음",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 24.2,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 22/26 PASS (23.7 s)   FAILED: ['PD02', 'PD02c', 'LG01', 'CT01']"
+ },
+ "K1c": {
+  "expected_any": [
+   "CT01",
+   "RN01",
+   "RN02"
+  ],
+  "expected_hit": [
+   "CT01",
+   "RN01",
+   "RN02"
+  ],
+  "failed": [
+   "CT01",
+   "LG01",
+   "PD02",
+   "PD02c",
+   "RN01",
+   "RN02"
+  ],
+  "item": "B5 짝 — 두 겹 함께 (모르는 글 group_cause = 자격)",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 25.6,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 20/26 PASS (25.1 s)   FAILED: ['PD02', 'PD02c', 'LG01', 'RN01', 'RN02', 'CT01']"
+ },
+ "K2": {
+  "expected_any": [
+   "FF01"
+  ],
+  "expected_hit": [
+   "FF01"
+  ],
+  "failed": [
+   "FF01"
+  ],
+  "item": "D3 짝 — 거부 기록 읽기 = read_bytes (FIFO 막힘)",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 99.2,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 25/26 PASS (98.8 s)   FAILED: ['FF01']"
+ },
+ "K3": {
+  "expected_any": [
+   "LG01"
+  ],
+  "expected_hit": [
+   "LG01"
+  ],
+  "failed": [
+   "LG01"
+  ],
+  "item": "F3 짝 — 런 폴더 흔적 = 늘 없음",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 69.0,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 25/26 PASS (68.5 s)   FAILED: ['LG01']"
+ },
+ "K4": {
+  "expected_any": [
+   "LG01"
+  ],
+  "expected_hit": [
+   "LG01"
+  ],
+  "failed": [
+   "LG01"
+  ],
+  "item": "F4 짝 — 런 폴더 흔적 = 이름만 (_arm 꼴 놓침)",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 61.5,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 25/26 PASS (61.1 s)   FAILED: ['LG01']"
+ },
+ "K5": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "E9 짝 — rc 읽기에 기본값 (RC01 허용 문맥 밖)",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 39.8,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 25/26 PASS (39.4 s)   FAILED: ['RC01']"
+ },
+ "K6": {
+  "expected_any": [
+   "CT01",
+   "RN01",
+   "RN02"
+  ],
+  "expected_hit": [
+   "CT01",
+   "RN01",
+   "RN02"
+  ],
+  "failed": [
+   "CT01",
+   "LG01",
+   "RN01",
+   "RN02"
+  ],
+  "item": "B8 짝 — group_cause 칸 없음을 None 으로 (run_exit_failed)",
+  "only": "CT,RN,RC0,PE03,PD13,PD02,LG,FF",
+  "rc": 1,
+  "seconds": 43.6,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 22/26 PASS (43.2 s)   FAILED: ['LG01', 'RN01', 'RN02', 'CT01']"
+ },
+ "_tree": {
+  "end_sha256": {
+   "scripts/rint_r_chain.py": "f3d6a40f0dc230766e2fad83bbfe476168c18ad29ce5428f1617861484d02089",
+   "scripts/test_rint_r_chain.py": "f7f1c0f7135433a2f1d62255d0a898a02889e9a4e7eae17b9358d22c72506f3c"
+  },
+  "restored": true,
+  "start_sha256": {
+   "scripts/rint_r_chain.py": "f3d6a40f0dc230766e2fad83bbfe476168c18ad29ce5428f1617861484d02089",
+   "scripts/test_rint_r_chain.py": "f7f1c0f7135433a2f1d62255d0a898a02889e9a4e7eae17b9358d22c72506f3c"
+  }
+ }
+}

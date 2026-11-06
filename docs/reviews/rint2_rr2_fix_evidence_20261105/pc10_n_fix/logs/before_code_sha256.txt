@@ -1,0 +1,2 @@
+da4c2ef699335b1df27e287c8a3ce6780d4bf82fe35e82fcc720718d209f9f16  scripts/rint_r_chain.py
+d662ab0f54f976e7e7f75cbe3d0a47a628699f76859b21a9472d1c8ccca5b0ac  scripts/test_rint_r_chain.py

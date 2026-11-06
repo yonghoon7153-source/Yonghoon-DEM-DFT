@@ -1,0 +1,21 @@
+{
+ "checks": {
+  "CT06": {
+   "bad_keys": [
+    "cli/TR_forged_outdir_sibling_req_trace",
+    "f_req_8_vs_arm1",
+    "f_req_arml_dropped",
+    "f_req_arml_str",
+    "f_req_arms_bool",
+    "f_req_arms_str",
+    "f_req_sibling"
+   ],
+   "detail": null,
+   "n": 61,
+   "n_bad": 7,
+   "pass": false
+  }
+ },
+ "module_sha256": "8ef1bf85fd19a2fcc47ebf0ba0a82b33a734abf39c47d9a90120675260b575f0",
+ "test_sha256": "4982c064c39272bae549d8c4741a054409ceb7b5bcc3a7c45b5b8e7ac4da262c"
+}

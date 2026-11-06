@@ -1,0 +1,112 @@
+{
+ "checks": {
+  "AL12c": {
+   "bad_keys": null,
+   "detail": null,
+   "n": null,
+   "n_bad": null,
+   "pass": true
+  },
+  "CT01": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 150,
+   "n_bad": 0,
+   "pass": true
+  },
+  "CT02": {
+   "bad_keys": [],
+   "detail": null,
+   "n": 21,
+   "n_bad": 0,
+   "pass": true
+  },
+  "CT03": {
+   "bad_keys": [
+    "ctl_traced"
+   ],
+   "detail": null,
+   "n": 21,
+   "n_bad": 1,
+   "pass": false
+  },
+  "CT04": {
+   "bad_keys": [],
+   "detail": null,
+   "n": null,
+   "n_bad": 0,
+   "pass": true
+  },
+  "CT05": {
+   "bad_keys": [
+    "A_empty",
+    "A_full_exact",
+    "A_full_foreign",
+    "C_cause_int",
+    "C_cause_null",
+    "C_code_empty",
+    "C_code_int",
+    "C_code_lower",
+    "C_commit_other",
+    "C_commit_short",
+    "C_extra_key",
+    "C_n_bool",
+    "C_n_other",
+    "C_n_str"
+   ],
+   "detail": null,
+   "n": 31,
+   "n_bad": 28,
+   "pass": false
+  },
+  "CT06": {
+   "bad_keys": [
+    "cli/S1_forged_code_GU",
+    "cli/S1_forged_code_GU_noarms",
+    "cli/S2_forged_GU_rc0",
+    "cli/S4_forged_GU_run_L00",
+    "cli/S5_TL_timeout_with_arms",
+    "cli/TR_forged_outdir_oom_trace",
+    "cli/TR_forged_outdir_sibling_req_trace",
+    "f_arms_dict",
+    "f_arms_null",
+    "f_arms_str",
+    "f_gu_arms",
+    "f_gu_by_weird",
+    "f_gu_ce_list",
+    "f_gu_ce_null",
+    "f_gu_ce_true",
+    "f_gu_chain_one"
+   ],
+   "detail": null,
+   "n": 61,
+   "n_bad": 35,
+   "pass": false
+  },
+  "CT07": {
+   "bad_keys": [
+    "outdir_dict",
+    "outdir_int",
+    "runs_dict",
+    "runs_int",
+    "runs_list_int",
+    "runs_str",
+    "stop_list",
+    "stop_str"
+   ],
+   "detail": null,
+   "n": 9,
+   "n_bad": 8,
+   "pass": false
+  },
+  "CT08": {
+   "bad_keys": null,
+   "detail": null,
+   "n": null,
+   "n_bad": null,
+   "pass": false
+  }
+ },
+ "module_sha256": "f3d6a40f0dc230766e2fad83bbfe476168c18ad29ce5428f1617861484d02089",
+ "test_sha256": "4982c064c39272bae549d8c4741a054409ceb7b5bcc3a7c45b5b8e7ac4da262c"
+}

@@ -1,0 +1,44 @@
+evade (True = 잡힘): {'dict_value_launder': True, 'dict_kw_launder': True, 'subscript_target_launder': True, 'attribute_rc': True, 'dict_get_unbound': True, 'pop': True, 'setdefault': True, 'itemgetter': True, 'match_mapping': True, 'variable_key': True, 'closure_alias': True, 'starred_arg': True, 'getattr_get': True, 'items_loop': True, 'fstring_compare': True, 'json_text': True, 'ifexp_launder': True}
+ctrl  (True = 잡힘): {'alias_eq': True, 'truthy': True, 'int_wrap': True, 'walrus': True, 'return_alias': True}
+source rc_scan raw: 0 · rc 낱말 자리 41 · 속성 .rc 0 · match 0
+   2767 name   run_in_group             Compare      rc is None
+   2786 const  run_in_group             Dict         {'schema': GROUP_SCHEMA, 'name': name, 'token': token, 'rc': rc, 'cause': cause, 'signal': (signal_name(sig) i
+   2786 name   run_in_group             Dict         {'schema': GROUP_SCHEMA, 'name': name, 'token': token, 'rc': rc, 'cause': cause, 'signal': (signal_name(sig) i
+   2795 name   run_in_group             Tuple        rc, 'signal_after', dict(end, signal_after=signal_name(pending[0]))
+   2796 name   run_in_group             Tuple        rc, cause, end
+   3809 name   rc_kind                  Compare      rc is None
+   3811 name   rc_kind                  Call         type(rc)
+   3812 name   rc_kind                  Compare      rc == 0
+   3818 name   rc_success               Call         rc_kind(rc)
+   3826 name   runner_rc_failed         Call         rc_kind(rc)
+   3836 const  chain_end_failed         Call         ce.get('rc')
+   3869 const  end_record_known         Call         er.get('rc')
+   3977 const  run_record_shape         Call         rr.get('rc')
+   4082 const  run_exit_failed          Call         rec.get('rc')
+   4126 const  stop_cause               Call         rec.get('rc')
+   4168 const  orphan_cause             Call         er.get('rc')
+   4169 name   orphan_cause             Call         rc_success(rc)
+   4833 kwarg  _execute                 Call         dict(req, outdir=outdir.name, rc=None, seconds=None, arms_read=[], machine=self.machine)
+   4841 const  _execute                 Subscript    rec['rc']
+   4841 name   _execute                 IfExp        rc if cause is None else None
+   4846 const  _execute                 Subscript    rec["rc"]
+   4855 name   _execute                 Call         rc_success(rc)
+   4856 name   _execute                 FormattedValue f'rc {rc} (로그 {logp})'
+   4907 const  _src_done                Call         er.get('rc')
+   4938 kwarg  _copy                    Call         dict(req, outdir=outdir.name, rc=0, seconds=None, arms_read=[], machine=self.machine, group_cause=None, copied
+   4999 const  __call__                 Dict         {'name': name, 'run': req.get('name'), 'arm': arm, 'rc': None, 'seconds': None, 'status': 'failed', 'why': Non
+   5041 const  _run                     Subscript    rec['rc']
+   5041 name   _run                     IfExp        rc if cause is None else None
+   5049 name   _run                     Call         rc_success(rc)
+   5050 name   _run                     FormattedValue f'러너 rc {rc} (로그 {logp.name})'
+   5100 const  run                      Call         r.get('rc')
+   5101 const  run                      Call         r.get("rc")
+   5384 const  noop_check               Call         x.get('rc')
+   5883 const  load_ladders             Call         r.get('rc')
+   5884 const  load_ladders             Call         r.get("rc")
+   6263 kwarg  run                      Call         dict(req, outdir=rel, rc=rec0.get('rc'), seconds=rec0.get('seconds'), arms_read=[], machine=u['machine'], grou
+   6263 const  run                      Call         rec0.get('rc')
+   6266 const  run                      Call         rec0.get('rc')
+   6268 const  run                      Call         rec0.get("rc")
+   7396 const  recover_group            Tuple        ('rc', 'cause', 'confirmed', 'ended_utc')
+   7443 const  recover_group            Dict         {'schema': GROUP_SCHEMA, 'name': nm, 'token': tok, 'rc': None, 'cause': 'parent_dead', 'signal': None, 'confir
