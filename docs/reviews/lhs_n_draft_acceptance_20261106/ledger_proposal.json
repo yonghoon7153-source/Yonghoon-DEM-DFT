@@ -1,0 +1,17 @@
+{
+  "apply_now": false,
+  "upsert_findings": [],
+  "closure_claimed": false,
+  "claimed_fixed": false,
+  "progress_append_proposal": "LHS N 의존 초안 fe90b0bd0212는 비활성 문서·정적 정의 범위 외부 수용. 새 finding 없음. 코호트/선행6침대 중복·이완 종점·불확실성·실제 덱 미확정; 전체 HOLD.",
+  "claude_md_append_proposal": "N 초안 수용은 완성된 사전등록·통계/구현 인증·값 열람/실행 GO 아님. 실제 원자료 열람 전 구체 정의와 저자 비준 필요. Rint② 우선.",
+  "pending": [
+    "Actual original/effective deck, include and restart lineage",
+    "Frozen cohort, pair IDs, strata, exclusions and prior-observation overlap treatment",
+    "Relaxation completion, exact endpoint/frame, N event/group",
+    "Uncertainty reporting and independent unit",
+    "Author ratification and separate A/C/value-access/collection authorization"
+  ],
+  "shared_files_changed": false,
+  "active_registration_changed": false
+}

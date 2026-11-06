@@ -1,0 +1,39 @@
+{
+  "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+  "date": "2026-11-06",
+  "verdict": "ACCEPT_INACTIVE_DOCUMENT_STATIC_DEFINITION_DRAFT_ONLY",
+  "new_findings": [],
+  "Q1": "ACCEPT_SEPARATE_DRAFT_AND_PRESERVED_ACCEPTED_COMPANION",
+  "Q2": "ACCEPT_EXTERNAL_NUMBERS_AS_PRIOR_CONTEXT_ONLY",
+  "Q3": "ACCEPT_DESCRIPTIVE_RULE_AND_INTERPRETATION_LIMITS_NOT_IMPLEMENTATION_OR_STATISTICAL_APPROVAL",
+  "Q4": "ACCEPT_HONEST_SOURCE_AND_PENDING_FACT_BOUNDARIES",
+  "snapshot_files_verified": 13,
+  "package_hash_entries_verified": 35,
+  "pinned_commit_added_files": 8,
+  "pinned_commit_modified_existing_files": 0,
+  "source_inventory_hashes_verified": 9,
+  "accepted_companion_baseline_comparisons": 3,
+  "D07_source_base_comparison": 1,
+  "actual_template_null_fields": 36,
+  "static_rule_examples": 7,
+  "counts_are_not_additive": true,
+  "measured_research_rows": 0,
+  "review_runtime": "Windows Python 3.12.14; standard library; static checks and synthetic exact arithmetic only",
+  "pending": [
+    "Actual original/effective deck, include and restart lineage",
+    "Frozen cohort, pair IDs, strata, exclusions and prior-observation overlap treatment",
+    "Relaxation completion, exact endpoint/frame, N event/group",
+    "Uncertainty reporting and independent unit",
+    "Author ratification and separate A/C/value-access/collection authorization"
+  ],
+  "not_independently_reproduced": [
+    "Author tracked/loose workspace deck search",
+    "Member listings of the three research archives",
+    "D0.7 raw damping calculation",
+    "Six prior observations and their identities"
+  ],
+  "whole_gate": "HOLD",
+  "execution_go": false,
+  "value_access_authorized": false,
+  "deploy_integrate_or_close_ledger": false
+}
