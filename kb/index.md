@@ -1,15 +1,16 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-06 · managed-files: 579
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-06 · managed-files: 580
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 370건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 371건)
+- 2026-11-06 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-06 · `kb/reviews/codex_DR_prompt_li2s2_dq_fixes_2026_11_05.md` — DR 프롬프트 — li2s-2 DQ 고침 + DR 전 독립 리뷰 고침 (879cbc00): 판정이 읽는 것 전부를 지문에 · 앞 판정의 성격 (예외 · 입력 불일치) 으로만 자동 대체 · 정본 없는 미해결 기록 (현재 · 옮긴 폴더) · STOP 공통 검사 · 다른 판정 규칙의 기록 — 첫 담금질 GO 여부 · 발송 완료 · 회신 수령 2026-11-06 NO-GO (`codex…
 - 2026-11-06 · `kb/reviews/codex_DR_reply_li2s2_dq_fixes_2026_11_05.md` — DR 회신 — li2s-2 DQ 고침 + DR 전 리뷰 9 차 확인 (879cbc00): NO-GO · 새 P1 2 (장부 기준 앞의 완료된 입력 불일치 판정을 무시하고 자동 대체 / 경로가 있지만 파일이 아닌 md_init_raw.xyz 를 '없음' 으로 기록해 입력 복구를 최초 생성으로 승인) · P2 1 (Q5 요약문이 구현보다 좁음) · 수령 2026-11-06 (사용자 붙여넣기 · 원문 보존 · 마크다운…
-- 2026-11-05 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-11-06 · `kb/reviews/codex_DS_prompt_li2s2_dr_fixes_2026_11_06.md` — DS 프롬프트 — li2s-2 DR 고침 + DS 전 독립 리뷰 고침 (6b124717): 기준 앞 면제는 실제 진행 중 incomplete 만 (입력 불일치는 앞뒤 없이 보류) · 경로 상태 (부재 / 정상 파일 / 링크 / 그 밖) · 생성 예외는 부재 → 정상 파일만 · seed_gate 가 비정상 경로를 입력 불일치로 · Q5 문구 — 첫 담금질 GO 여부 · 발송 전 2026-11-06 · 기준 커밋 6b124717
 - 2026-11-05 · `kb/reviews/codex_DP_prompt_li2s2_do_fixes_2026_11_04.md` — DP 프롬프트 — li2s-2 DO 고침 + DP 발송 전 독립 리뷰 둘 고침 (4a269bac): 복구 · 확인 · 재판정에서 본 과학적 결과를 장부에 · 모든 기록 엄격 판독 · 못 읽은 장부를 다시 쓰지 않음 · 남은 임시 파일 · 요약 fail-closed · 신호 — 첫 담금질 GO 여부 · answered — 회신 codex_DP_reply_li2s2_do_…
 - 2026-11-05 · `kb/reviews/codex_DP_reply_li2s2_do_fixes_2026_11_04.md` — DP 회신 — li2s-2 DO 고침 + DP 전 리뷰 고침 확인 (4a269bac): NO-GO · P0 1 (저장 성공 뒤 미룬 신호로 관측한 fail 을 되돌려 지움) · P1 2 (현재 시드 폴더의 미해결 기록 · 판정 임시 파일로 다음 시드 실행 / 러너가 거부하는 장부 상태를 독립 요약은 통과) · P2 2 (terminal STOP 이 신호로 interrupted 로 덮임 · 변이 제외 설명이 넓음) · 수령 2026-11-05 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-11-05 · `kb/reviews/codex_DQ_prompt_li2s2_dp_fixes_2026_11_05.md` — DQ 프롬프트 — li2s-2 DP 고침 + DQ 전 독립 리뷰 고침 (a4a29216): 저장 경계의 신호 (바깥 구간 · 교체 뒤 실패) · 현재 폴더 미해결 기록 · 독립 요약 = 러너와 같은 규칙 (같은 실행 충돌 공통 함수 · STOP · 장부 지문 · 이력 꼴) · 판정 쓰기 구간 · 낡은 요약 — 첫 담금질 GO 여부 · 발송 완료 2026-11-05 · 회신 수령 2026-11-05 NO…
@@ -26,7 +27,6 @@
 - 2026-11-03 · `kb/reviews/codex_DF_prompt_li2s2_dense_window_card_2026_11_03.md` — DF 프롬프트 — li2s-2 새 트랙 설계: 실험 밀도에 고정해 다시 담금질한 두 유리 (a-Li₄PS₄Cl · a-Li₃PS₄) 의 측정 온도 창 → D 비 · Ea 차 + melt_quench_uma.py --fix_density · 발송 2026-11-03 (사용자 · 기준 커밋 ff795d669) …
 - 2026-11-03 · `kb/reviews/codex_DF_reply_li2s2_dense_window_card_2026_11_03.md` — DF 회신 — li2s-2 새 트랙 설계 (ff795d669): NO-GO · 고정 밀도 NVT 방향은 조건부 찬성 · P0 1 (melt_check 시간창 ≠ 판정량) · P1 5 (종료코드 ≠ 카드 통과 · 시드 11·12 고정 빈 경로 · MD 압력 미기록 · T₅₀ 로 과냉각 액체 추론 철회 · 비용 합계·회계) · P2 4 · 수령 2026-11-03 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-11-03 · `kb/reviews/codex_DG_prompt_li2s2_df_fixes_2026_11_03.md` — DG 프롬프트 — li2s-2 DF 고침 확인 (947e83ba0): 녹음 판독량 window_mto_v1 · 1 단계 시드 판정 소비자 · 시드 규칙 · 1 단계 러너 — 첫 담금질 전 조건이 닫혔나 · 발송 · 회신 수령 2026-11-03 (NO-GO · `codex_…
-- 2026-11-03 · `kb/reviews/codex_DG_reply_li2s2_df_fixes_2026_11_03.md` — DG 회신 — li2s-2 DF 고침 확인 (947e83ba0): NO-GO · DF 핵심 MSD 반례 해제 · P0 3 (첫 시드 녹음 실패가 재시작에 안 남음 · 예외·사용자 중단 때 자식 남고 잠금 풀림 · 실행 중 상한 없음) · P1 5 (최종 구조·재시작 판정이 원자료에 안 묶임 · 다섯째 시드 미완인데 묶음 통과 · 잠금 비원자적 · 입력 검사 구멍 · 카드 본문 옛 시드 규칙) · P2 3 · 수령 2026-11-03 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -213,9 +213,9 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (246)
+## reviews/ (247)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
-- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-05 · 자동생성)
+- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-06 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
 - `kb/reviews/cascade_preflight_audit_2026_09_09.md` — cascade_preflight_audit_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트  (2026-08-29 · 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_…)
@@ -368,6 +368,7 @@
 - `kb/reviews/codex_DQ_reply_li2s2_dp_fixes_2026_11_05.md` — DQ 회신 — li2s-2 DP 고침 + DQ 전 리뷰 6 차 확인 (a4a29216): NO-GO · P1 2 (판정이 읽는 md_init_raw.xyz 가 지문 밖이라 입력 복구를 '같은 입력의 일시 오류' 로 자동 대체 / 첫 정본 판정 저장 실패로 이력 · 임시 파일만 남은 폴더를 놓치고 다른 시드 실행) · P2 1 (모순된 STOP 을 요약 · 러너가 다르게 읽음)  (2026-11-05 · 수령 2026-11-05 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
 - `kb/reviews/codex_DR_prompt_li2s2_dq_fixes_2026_11_05.md` — DR 프롬프트 — li2s-2 DQ 고침 + DR 전 독립 리뷰 고침 (879cbc00): 판정이 읽는 것 전부를 지문에 · 앞 판정의 성격 (예외 · 입력 불일치) 으로만 자동 대체 · 정본 없는 미해결 기록 (현재 · 옮긴 폴더) · STOP 공통 검사 · 다른 판정 규칙의 기록 — 첫 담금질 GO 여부  (2026-11-06 · 발송 완료 · 회신 수령 2026-11-06 NO-GO (`codex…)
 - `kb/reviews/codex_DR_reply_li2s2_dq_fixes_2026_11_05.md` — DR 회신 — li2s-2 DQ 고침 + DR 전 리뷰 9 차 확인 (879cbc00): NO-GO · 새 P1 2 (장부 기준 앞의 완료된 입력 불일치 판정을 무시하고 자동 대체 / 경로가 있지만 파일이 아닌 md_init_raw.xyz 를 '없음' 으로 기록해 입력 복구를 최초 생성으로 승인) · P2 1 (Q5 요약문이 구현보다 좁음)  (2026-11-06 · 수령 2026-11-06 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DS_prompt_li2s2_dr_fixes_2026_11_06.md` — DS 프롬프트 — li2s-2 DR 고침 + DS 전 독립 리뷰 고침 (6b124717): 기준 앞 면제는 실제 진행 중 incomplete 만 (입력 불일치는 앞뒤 없이 보류) · 경로 상태 (부재 / 정상 파일 / 링크 / 그 밖) · 생성 예외는 부재 → 정상 파일만 · seed_gate 가 비정상 경로를 입력 불일치로 · Q5 문구 — 첫 담금질 GO 여부  (2026-11-06 · 발송 전 2026-11-06 · 기준 커밋 6b124717)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
 - `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)
