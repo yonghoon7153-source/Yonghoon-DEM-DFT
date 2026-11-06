@@ -1,0 +1,271 @@
+{
+  "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+  "snapshot": [
+    {
+      "path": "docs/collab/codex_to_claude/20261106-0455_lhs-n-preparation.md",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/data/kg50_d07_end_20261105/README.md",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_damping_acceptance_20261105/README.md",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/README.md",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/companion_draft.json",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/README.md",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/ledger_proposal.json",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/prospective_definition.json",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/review_request.md",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/source_inventory.json",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/static_analysis.md",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/static_validation.json",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "scripts/lhs_ext_materialize.py",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    }
+  ],
+  "packaging": [
+    {
+      "path": "CHANGE.patch",
+      "match": true
+    },
+    {
+      "path": "CLAUDE_PROMPT.md",
+      "match": true
+    },
+    {
+      "path": "INTEGRATION.json",
+      "match": true
+    },
+    {
+      "path": "PARENT_PIN.txt",
+      "match": true
+    },
+    {
+      "path": "PIN.txt",
+      "match": true
+    },
+    {
+      "path": "README.md",
+      "match": true
+    },
+    {
+      "path": "REQUEST.md",
+      "match": true
+    },
+    {
+      "path": "REVIEW_PROMPT.md",
+      "match": true
+    },
+    {
+      "path": "SNAPSHOT_MANIFEST.json",
+      "match": true
+    },
+    {
+      "path": "SOURCE_BASE.txt",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/README.md",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/changed_path_ban.json",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/checks.json",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/doc_refs.log",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/findings.log",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/initial_checks/changed_path_ban.json",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/initial_checks/checks.json",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/initial_checks/doc_refs.log",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/initial_checks/findings.log",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/publication.json",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/scope.json",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/whitespace.log",
+      "match": true
+    },
+    {
+      "path": "docs/collab/codex_to_claude/20261106-0455_lhs-n-preparation.md",
+      "match": true
+    },
+    {
+      "path": "docs/data/kg50_d07_end_20261105/README.md",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_damping_acceptance_20261105/README.md",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/README.md",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/companion_draft.json",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/README.md",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/ledger_proposal.json",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/prospective_definition.json",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/review_request.md",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/source_inventory.json",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/static_analysis.md",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/static_validation.json",
+      "match": true
+    },
+    {
+      "path": "scripts/lhs_ext_materialize.py",
+      "match": true
+    }
+  ],
+  "remote_new_files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261106-0455_lhs-n-preparation.md",
+      "remote_blob_match": true,
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/README.md",
+      "remote_blob_match": true,
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/ledger_proposal.json",
+      "remote_blob_match": true,
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/prospective_definition.json",
+      "remote_blob_match": true,
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/review_request.md",
+      "remote_blob_match": true,
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/source_inventory.json",
+      "remote_blob_match": true,
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/static_analysis.md",
+      "remote_blob_match": true,
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/static_validation.json",
+      "remote_blob_match": true,
+      "status": "added"
+    }
+  ],
+  "new_patch_files": 8,
+  "patch_reconstructed_bytes_match": true,
+  "template_null_fields": 36,
+  "scope": "byte and static-invariant checks only"
+}

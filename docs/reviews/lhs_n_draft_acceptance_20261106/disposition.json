@@ -1,0 +1,53 @@
+{
+  "kind": "external scoped acceptance receipt",
+  "externally_accepted_pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+  "external_verdict": "ACCEPT_INACTIVE_DOCUMENT_STATIC_DEFINITION_DRAFT_ONLY",
+  "new_findings": [],
+  "mandatory_corrections": [],
+  "optional_citation_notes": [
+    {
+      "file": "scripts/lhs_ext_materialize.py",
+      "range": "8–44",
+      "purpose": "template path citation"
+    },
+    {
+      "file": "scripts/lhs_ext_materialize.py",
+      "range": "87–111",
+      "purpose": "height transformation including assignment"
+    },
+    {
+      "file": "scripts/press_units.py",
+      "range": "33–39",
+      "purpose": "conversion constants"
+    }
+  ],
+  "optional_notes_applied_to_accepted_source": false,
+  "accepted_sources_changed": false,
+  "repeat_external_review_requested": false,
+  "new_receipt_external_review_claimed": false,
+  "external_static_arithmetic_examples": 7,
+  "production_classifier_tested": false,
+  "actual_null_fields_reported": 36,
+  "completed_preregistration_approved": false,
+  "prior_six_bed_identity_and_overlap": "NOT_ESTABLISHED",
+  "pending": [
+    "Actual original/effective deck, include and restart lineage",
+    "Frozen cohort, pair IDs, strata, exclusions and prior-observation overlap treatment",
+    "Relaxation completion, exact endpoint/frame, N event/group",
+    "Uncertainty reporting and independent unit",
+    "Author ratification and separate A/C/value-access/collection authorization"
+  ],
+  "whole_gate": "HOLD",
+  "actual_value_access": false,
+  "research_execution": false,
+  "active_registration_changed": false,
+  "deployment": false,
+  "integration": false,
+  "ledger_closed_here": false,
+  "new_research_results": 0,
+  "other_unit_status": {
+    "lhs_inventory_14773e25b32e": "SEPARATELY_ACCEPTED_DOCUMENT_STATIC_LIMITED_MOCK_ONLY",
+    "mixer_launch_b57fe91503ba": "EXTERNAL_REVIEW_PENDING",
+    "mxd2r": "SEPARATE_RECHECK_PENDING"
+  }
+}

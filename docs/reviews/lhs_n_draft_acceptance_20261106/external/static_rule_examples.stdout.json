@@ -1,0 +1,116 @@
+{
+  "scope": "reviewer synthetic exact arithmetic; no classifier exists in the draft",
+  "examples": [
+    {
+      "name": "empty",
+      "delta_N_particles_delta_P_MPa": [],
+      "nonzero_N_products_particle_MPa": [],
+      "naive_all_negative": true,
+      "has_nonzero_N_pair": false,
+      "document_reading": "NOT_ESTABLISHED or NOT_IDENTIFIABLE according to the documented reason; never directional"
+    },
+    {
+      "name": "zero_N_only",
+      "delta_N_particles_delta_P_MPa": [
+        [
+          0,
+          "-9"
+        ]
+      ],
+      "nonzero_N_products_particle_MPa": [],
+      "naive_all_negative": true,
+      "has_nonzero_N_pair": false,
+      "document_reading": "No usable N contrast; NOT_IDENTIFIABLE, retained separately"
+    },
+    {
+      "name": "negative_plus_zero_N",
+      "delta_N_particles_delta_P_MPa": [
+        [
+          10,
+          "-2"
+        ],
+        [
+          0,
+          "9"
+        ]
+      ],
+      "nonzero_N_products_particle_MPa": [
+        "-20"
+      ],
+      "naive_all_negative": true,
+      "has_nonzero_N_pair": true,
+      "document_reading": "Negative direction on nonzero-N pair only; zero-N pair retained separately"
+    },
+    {
+      "name": "positive",
+      "delta_N_particles_delta_P_MPa": [
+        [
+          10,
+          "2"
+        ]
+      ],
+      "nonzero_N_products_particle_MPa": [
+        "20"
+      ],
+      "naive_all_negative": false,
+      "has_nonzero_N_pair": true,
+      "document_reading": "DIRECTION_OPPOSITE if all other eligibility conditions hold"
+    },
+    {
+      "name": "mixed",
+      "delta_N_particles_delta_P_MPa": [
+        [
+          10,
+          "-2"
+        ],
+        [
+          20,
+          "1"
+        ]
+      ],
+      "nonzero_N_products_particle_MPa": [
+        "-20",
+        "20"
+      ],
+      "naive_all_negative": false,
+      "has_nonzero_N_pair": true,
+      "document_reading": "DIRECTION_MIXED_OR_TIED"
+    },
+    {
+      "name": "pressure_tie",
+      "delta_N_particles_delta_P_MPa": [
+        [
+          10,
+          "0"
+        ]
+      ],
+      "nonzero_N_products_particle_MPa": [
+        "0"
+      ],
+      "naive_all_negative": false,
+      "has_nonzero_N_pair": true,
+      "document_reading": "DIRECTION_MIXED_OR_TIED; no equivalence claim"
+    },
+    {
+      "name": "tiny_negative",
+      "delta_N_particles_delta_P_MPa": [
+        [
+          10,
+          "-0.000001"
+        ]
+      ],
+      "nonzero_N_products_particle_MPa": [
+        "-1/100000"
+      ],
+      "naive_all_negative": true,
+      "has_nonzero_N_pair": true,
+      "document_reading": "Negative arithmetic direction only; no significance or practical-strength claim"
+    }
+  ],
+  "not_proven": [
+    "statistical significance",
+    "independent N causality",
+    "pressure equivalence",
+    "production implementation"
+  ]
+}

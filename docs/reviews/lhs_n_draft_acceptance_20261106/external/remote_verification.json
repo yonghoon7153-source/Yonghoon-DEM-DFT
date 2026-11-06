@@ -1,0 +1,132 @@
+{
+  "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+  "snapshot": [
+    {
+      "path": "docs/collab/codex_to_claude/20261106-0455_lhs-n-preparation.md",
+      "match": true,
+      "via": "fixed_commit_blob"
+    },
+    {
+      "path": "docs/data/kg50_d07_end_20261105/README.md",
+      "match": true,
+      "via": "fixed_pin_raw_content"
+    },
+    {
+      "path": "docs/reviews/lhs_damping_acceptance_20261105/README.md",
+      "match": true,
+      "via": "fixed_pin_raw_content"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/README.md",
+      "match": true,
+      "via": "fixed_pin_raw_content"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/companion_draft.json",
+      "match": true,
+      "via": "fixed_pin_raw_content"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/README.md",
+      "match": true,
+      "via": "fixed_commit_blob"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/ledger_proposal.json",
+      "match": true,
+      "via": "fixed_commit_blob"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/prospective_definition.json",
+      "match": true,
+      "via": "fixed_commit_blob"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/review_request.md",
+      "match": true,
+      "via": "fixed_commit_blob"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/source_inventory.json",
+      "match": true,
+      "via": "fixed_commit_blob"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/static_analysis.md",
+      "match": true,
+      "via": "fixed_commit_blob"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/static_validation.json",
+      "match": true,
+      "via": "fixed_commit_blob"
+    },
+    {
+      "path": "scripts/lhs_ext_materialize.py",
+      "match": true,
+      "via": "fixed_pin_raw_content"
+    }
+  ],
+  "source_inventory_hashes": [
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/README.md",
+      "sha256_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/companion_draft.json",
+      "sha256_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/source_context.json",
+      "sha256_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_damping_acceptance_20261105/disposition.json",
+      "sha256_match": true
+    },
+    {
+      "path": "scripts/lhs_ext_materialize.py",
+      "sha256_match": true
+    },
+    {
+      "path": "scripts/press_units.py",
+      "sha256_match": true
+    },
+    {
+      "path": "scripts/lhs_pressure_record.py",
+      "sha256_match": true
+    },
+    {
+      "path": "scripts/lhs_descriptor_harvest.py",
+      "sha256_match": true
+    },
+    {
+      "path": "scripts/lhs_release_build.py",
+      "sha256_match": true
+    }
+  ],
+  "additional_baseline_comparisons": [
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/README.md",
+      "baseline_pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/companion_draft.json",
+      "baseline_pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/source_context.json",
+      "baseline_pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/data/kg50_d07_end_20261105/README.md",
+      "baseline_pin": "18bb6a2e41ad58129657a68450f4c88157f3d5a6",
+      "bytes_unchanged": true
+    }
+  ],
+  "remote_source_tools_executed": false,
+  "archive_or_research_result_opened": false
+}

@@ -1,0 +1,93 @@
+{
+  "accepted_pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+  "prior_local_tip": "ac8cdbc89dd161e5bdaf2878c41f5e5750691251",
+  "external_zip_bytes": 768766,
+  "external_zip_sha256": "6a5eb4344c5d5d4ec9ef0222e1a31bfd140c4bd833412e95610fed5b71f2a21f",
+  "evidence_manifest_entries_verified": 63,
+  "original_package_members_byte_equal": 36,
+  "original_package_sha256": "1e07b3e4030c99d2f89675f30cd8db8c7ba5d413460c52f5637ed1cf1999ddb9",
+  "package_hash_entries_verified": 35,
+  "snapshot_git_bytes_hash_size_blob_matches": 13,
+  "accepted_snapshot_unchanged_at_parent": true,
+  "stored_remote_source_copies_match_local_git": [
+    {
+      "pin": "18bb6a2e41ad58129657a68450f4c88157f3d5a6",
+      "path": "docs/data/kg50_d07_end_20261105/README.md",
+      "sha256": "da06ee50e221608d97925f586b74bc7e1fd1051494f08601b6cc8d79a1cdb562"
+    },
+    {
+      "pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/companion_draft.json",
+      "sha256": "fdb15d127e840423ccca90275a1d4e1fb80c855916b71aef12973a220bcb70b7"
+    },
+    {
+      "pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/README.md",
+      "sha256": "7ed65f8729e920893fc8472fbbc244aec116db440d7fa891ad2eacaac20bac5a"
+    },
+    {
+      "pin": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/source_context.json",
+      "sha256": "a44013d6b1e8aa19ad1647c1f764cb5ee3efb0e3022704cb6af48f19d90201c0"
+    },
+    {
+      "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "path": "docs/data/kg50_d07_end_20261105/README.md",
+      "sha256": "da06ee50e221608d97925f586b74bc7e1fd1051494f08601b6cc8d79a1cdb562"
+    },
+    {
+      "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "path": "docs/reviews/lhs_damping_acceptance_20261105/disposition.json",
+      "sha256": "213e42c6a7c89d466402f3e0868208f9c5e7e4430a31bd1567e7918a045c36ef"
+    },
+    {
+      "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "path": "docs/reviews/lhs_damping_acceptance_20261105/README.md",
+      "sha256": "194088880b67da3839bcc2b338a7eb3c986f15a03bcabb27de3df5d516f2c6f0"
+    },
+    {
+      "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/companion_draft.json",
+      "sha256": "fdb15d127e840423ccca90275a1d4e1fb80c855916b71aef12973a220bcb70b7"
+    },
+    {
+      "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/README.md",
+      "sha256": "7ed65f8729e920893fc8472fbbc244aec116db440d7fa891ad2eacaac20bac5a"
+    },
+    {
+      "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/source_context.json",
+      "sha256": "a44013d6b1e8aa19ad1647c1f764cb5ee3efb0e3022704cb6af48f19d90201c0"
+    },
+    {
+      "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "path": "scripts/lhs_descriptor_harvest.py",
+      "sha256": "96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e"
+    },
+    {
+      "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "path": "scripts/lhs_ext_materialize.py",
+      "sha256": "96d207ad7fb7bfa31f766ef3a77e5090e92278a119c7ebb951c809042162bbfc"
+    },
+    {
+      "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "path": "scripts/lhs_pressure_record.py",
+      "sha256": "34eb74142884489505590501840ccc6423a014a508989c82f135020146283ad3"
+    },
+    {
+      "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "path": "scripts/lhs_release_build.py",
+      "sha256": "3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383"
+    },
+    {
+      "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "path": "scripts/press_units.py",
+      "sha256": "493fcc42f2ed4b880362c81766004cf96d0f3a3ed8514aeff9cfe6ed387842dd"
+    }
+  ],
+  "pasted_verdict_byte_equal": true,
+  "external_code_executed": false,
+  "actual_host_access": false,
+  "limits": "Offline bytes/provenance only. External seven synthetic arithmetic examples are received evidence, not rerun or production classifier tests."
+}
