@@ -1,0 +1,40 @@
+{
+  "kind": "document canonical-selection receipt; not new scientific definitions",
+  "canonical_draft_pin": "6fbd066832d3273d56037005ea26eb884b73646a",
+  "canonical_questions": 12,
+  "canonical_external_review": "PENDING",
+  "superseded_draft_pin": "288929658dca6f7b23473bc42c911113f308ed82",
+  "superseded_questions": 8,
+  "superseded_branch": "codex/lhs-n-definitions-1106",
+  "do_not_cherry_pick_for_LHS": [
+    "docs/collab/codex_to_claude/20261106-0802_lhs-n-definitions-and-mxd2r.md",
+    "docs/reviews/lhs_pressure_n_definition_extension_20261106.json",
+    "docs/reviews/lhs_pressure_n_definition_extension_20261106.md"
+  ],
+  "do_not_delete_historical_branch_or_artifacts": true,
+  "accepted_predecessor": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+  "scope": "LHS definitions only; the old mailbox MXD2R verdict relay remains historical provenance",
+  "mix_automatically": false,
+  "scientific_results": 0,
+  "whole_gate": "HOLD",
+  "active_registration_changed": false,
+  "differences": [
+    "12-question draft fixes exact strata/planned adjacent nonoverlapping pairs; 8-question draft has two possible contrast types",
+    "12-question draft proposes last-fifth diagnostic window; 8-question draft leaves its length unset",
+    "12-question draft retains inventory HOLD pending POSIX/time-stop preparation; no automatic execution permission from either draft"
+  ],
+  "old_changed_files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261106-0802_lhs-n-definitions-and-mxd2r.md",
+      "sha256": "a2ac6332170601bd8f707d1db0cf0c95da8c3c338f60d9601d87ec0087f8c7f6"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_definition_extension_20261106.json",
+      "sha256": "67293ef34f39ac05048c681a38d716eaf2404e3afe4ceb38cba94035b14e60e3"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_n_definition_extension_20261106.md",
+      "sha256": "81b878f44506f161b510271086e535d68c3cfd361e2f93d8a1da7ddd53cf3dab"
+    }
+  ]
+}
