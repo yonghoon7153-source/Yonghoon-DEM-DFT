@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+# Review text only. Run on the designated WSL only after specific author GO.
+# Stage the byte-identical inventory file separately; never overwrite an existing one.
+# No SSH, transfer, output redirection, pressure-record run or retry is included.
+set -u
+lhs_inventory_file='/home/yonghoon71/lhs_pressure_inventory_20261106.sh'
+lhs_inventory_expected='2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634'
+if [ "$(id -un)" != 'yonghoon71' ] || [ ! -f "$lhs_inventory_file" ] || [ -L "$lhs_inventory_file" ]; then
+  printf '%s\n' 'HOLD: wrong account or missing/nonregular/symlink inventory command' >&2
+  exit 2
+fi
+if ! command -v python3 >/dev/null 2>&1; then
+  printf '%s\n' 'HOLD: python3 unavailable' >&2
+  exit 2
+fi
+lhs_inventory_hash_line=$(sha256sum -- "$lhs_inventory_file") || exit 2
+lhs_inventory_hash=${lhs_inventory_hash_line%% *}
+if [ "$lhs_inventory_hash" != "$lhs_inventory_expected" ]; then
+  printf '%s\n' 'HOLD: inventory command hash mismatch' >&2
+  exit 2
+fi
+# The sealed command checks Linux/WSL identity and fixed roots itself.
+# Hash precheck is not an atomic code-loading or filesystem-snapshot guarantee.
+sh "$lhs_inventory_file" wsl
+lhs_inventory_rc=$?
+printf 'inventory_process_rc=%s; require complete JSON and rc0; no automatic retry\n' "$lhs_inventory_rc" >&2
+exit "$lhs_inventory_rc"
