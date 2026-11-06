@@ -358,7 +358,15 @@
   "GPU": "5,501 MiB · 88 % (esp 앱 ≈ 4.0 GB + 우리 MD ≈ 1.5 GB) — 러너가 6,000 이하 두 번 연속을 보고 1 분 뒤 띄움",
   "worktree": "~/wt_li2s2 = 9e18cd4e (tools · 카드 · 결정 = 5a8a019a)",
   "운영값": "--start_max_mib 6000 (사용자 11-04 · esp 앱 그대로)",
-  "시계_영역": "clock_domain_start.txt (런 뿌리) — 내용 회수 대기 (카드 v14 운영_범위 ③)",
+  "시계_영역": {
+   "파일": "/home/kgy/work/runs/li2s2_dense_1103/clock_domain_start.txt (사용자 붙여넣기 2026-11-06)",
+   "host": "esp-Z590-AORUS-MASTER",
+   "boot_id": "fddca72b-d45e-4ae9-a9e6-68e301949eeb",
+   "boot_at": "2026-10-30 13:49:48 (KST · 10-30 정전 뒤 부팅)",
+   "utc_now": "2026-11-06T12:22:27.780642440Z (= 21:22:27 KST · 러너 ▶ 시작 21:22:28 과 맞음)",
+   "timedatectl": "Timezone=Asia/Seoul · NTP=yes · NTPSynchronized=yes",
+   "확인_전_대조": "STOP 뒤 --ack_stop 전에 같은 다섯 줄을 다시 재서 host · boot_id 가 같고 NTPSynchronized=yes 이며 그동안 시계를 손대지 않았으면 그대로 · boot_id 가 다르거나 (재부팅) 다른 기계의 판정 기록이 끼었으면 시각 비교에 기대는 복구는 확인하지 않고 사람이 본다 (카드 v14 운영_범위 ③)"
+  },
   "다음": "첫 시드 녹음 판정 (100 ps 창) · A11 벽시계로 속도 확인 (카드 견적 시드당 kgy 단독 15–21 h · 상한 230 GPU-h)",
   "by": "agent (위임 10-30) · 2026-11-06"
  }
