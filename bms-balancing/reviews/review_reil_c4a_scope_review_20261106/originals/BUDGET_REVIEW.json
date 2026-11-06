@@ -1,0 +1,37 @@
+{
+  "kind": "C4A_SCOPE_INDEPENDENT_BUDGET_APPROVAL_REVIEW",
+  "date": "2026-11-06",
+  "mode": "STATIC_TEXT_ONLY",
+  "target_execution": 0,
+  "user_choices_recorded_by_review": false,
+  "findings": [
+    {
+      "id": "BUDGET_REFERENCE_REGRESSION",
+      "priority": 2,
+      "scope_lines": [8, 51, 53],
+      "finding": "The scope cites the original C4 request and restores 'worst ≈7h', while adopted v2 explicitly replaced 'worst' with a saturation estimate under C5 same-cost assumptions. The 8h/900s numbers persist, but their governing limits and estimation qualification must come from v2.",
+      "evidence": ["docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md:23", "docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md:102", "docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md:109", "docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md:121", "docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md:127"],
+      "correction": "Reference v2 as the governing C4 scope; label 1.3h/7h as estimates, not worst-case guarantees. Include v2 reserve, cost-stop, resource/output and first-failure boundaries among implementation/execution contract deliverables. Keep the v1 source unchanged."
+    },
+    {
+      "id": "BUDGET_BOUNDARIES_UNSPECIFIED",
+      "priority": 2,
+      "scope_lines": [47, 53, 61],
+      "finding": "The scope calls 8h both the C4-A stage limit and outer monitoring allowance. The preliminary total10h proposal is plausible, but it does not yet define the stage origin/closing point, runtime vs launcher vs outer publication intervals, unit900s interval, or how all pre/post-stage work and reserve fit the global deadline.",
+      "evidence": ["docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md:128", "docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md:131", "scripts/reil_c4e_run.py:78", "scripts/reil_c4e1_launch.py:106", "docs/REIL_C4E1_E113_OUTER_DRAFT_v2_20261104.py.txt:52", "docs/REIL_C4E1_E113_OUTER_DRAFT_v2_20261104.py.txt:231"],
+      "arithmetic": {"stage_seconds": 28800, "reserve_seconds": 1800, "proposed_total_seconds": 36000, "remaining_unallocated_seconds": 5400},
+      "correction": "Retain 10h as an unselected policy proposal and explicitly list the timing/stop relations to fix before execution approval. Stage8h includes preparation through owned cleanup and final recording per v2. Distinguish its external return/wait allowance; bind the allowed stage start to T_end−R. Define unit900s start/close, concurrency and waiting treatment, cost-stop statistic/minimum sample/window/stop boundary, and partial-result preservation. Do not assume new timing numbers or repurpose E's stop-rule constants."
+    }
+  ],
+  "choices": {
+    "U1": "RECOMMENDED_DIRECTION_SUPPORTED: implementation request, implementation/dataless tests, result review, then separate execution request. No immediate implementation or test authority is created by this scope review.",
+    "U2": "10h is a reasonable policy candidate, not currently adopted and not a completion guarantee. 8h+1800s=8.5h, leaving5400s; that remainder should be explicitly allocated instead of presenting10h as the direct sum.",
+    "U3": "Reusing E1-2 pinned XLSX/util bytes after size/SHA256 checks is supported and avoids unnecessary re-fetch. Future C4-A start still requires fresh environment/source/seal/P0/input checks and changed-input refusal; E1 acceptance does not certify the future runtime environment."
+  },
+  "non_findings": [
+    "77×900s exceeds8h if interpreted as a serial sum of all maximum unit durations; this does not invalidate an8h stop policy or the approximate7h estimate. The unit scheduling and cap interval are the missing contract, not a demonstrated arithmetic impossibility.",
+    "No need to rerun E3a, C5, fetch, or any probe to resolve these document issues.",
+    "Ledger §123 records gate opening/request preparation only; no actual C4-A execution permission follows from it.",
+    "The existing requirement to preserve warning/scientific-fit limits remains appropriate."
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "kind": "REIL_C4A_WARNING_STATIC_REVIEW",
+  "pin": "c8792ed302d5da7fb420f46cc2219571bbb83400",
+  "performed": {
+    "received_program_execution": 0,
+    "received_program_import": 0,
+    "tests": 0,
+    "data_opening": 0,
+    "own_JSON_aggregation": true
+  },
+  "supported": [
+    {
+      "claim": "The four gradient outputs from dVdQ_hc are unpacked but not used by objective_fun's f1-f4 computation.",
+      "evidence": [
+        "external/util_LFP.py:130-155",
+        "external/util_LFP.py:173-236"
+      ]
+    },
+    {
+      "claim": "E3a recorded 66 returned rows, 1,501,500 objective evaluations, zero reported selected/all-four/final-F nonfinite counts; all 1,501,500 calls observed dVdQ_hc return.",
+      "evidence": [
+        "bms-balancing/scripts/reil_c4_e3a.py:246-262",
+        "bms-balancing/scripts/reil_c4_e3a.py:285-299",
+        "bms-balancing/evidence/reil_c4e1_20261106/run/ROWS.json"
+      ]
+    },
+    {
+      "claim": "The selected sources support explaining gradient warnings as a plausible source without modifying fixed util bytes or repeating E3a.",
+      "evidence": [
+        "external/util_LFP.py:141",
+        "external/util_LFP.py:143",
+        "external/util_LFP.py:152",
+        "external/util_LFP.py:153"
+      ]
+    }
+  ],
+  "statistics": {
+    "rows": 66,
+    "n_eval": 1501500,
+    "n_dvdq_observed": 1501500,
+    "n_nonfinite": 0,
+    "n_nonfinite_any_of_4": 0,
+    "F_nonfinite_count": 0,
+    "n_out_eval_any": 1169477,
+    "row_errors": 0,
+    "warnings_distinct_overflow": 0,
+    "warning_counts": {
+      "RuntimeWarning: divide by zero encountered in divide": 8211060,
+      "RuntimeWarning: invalid value encountered in divide": 8211060,
+      "RuntimeWarning: invalid value encountered in add": 5474040
+    },
+    "total_warnings": 21896160
+  },
+  "findings": [
+    {
+      "id": "WARNING_PROVENANCE_LIMIT",
+      "severity": "P2_DOCUMENT_CORRECTION",
+      "scope_location": "bms-balancing/docs/REIL_C4A_SCOPE_20261105.md:11-12,29-38",
+      "problem": "Exclusive attribution of all recorded warnings to discarded gradient arrays and categorical no-impact claim exceed available records. _WarnCount receives filename/lineno but retains only category/message; the hook spans the entire optimizer call, not only objective_fun/dVdQ_hc. Stderr records numpy gradient internals but does not bind each grouped warning or its caller; prepare/load_inputs performs extract_battery_data outside that hook.",
+      "evidence": [
+        "bms-balancing/scripts/reil_c4_e3a.py:173-186",
+        "bms-balancing/scripts/reil_c4_e3a.py:267-271",
+        "bms-balancing/scripts/reil_c4e_run.py:415-440",
+        "bms-balancing/scripts/reil_c4e_run.py:589-590",
+        "bms-balancing/evidence/reil_c4e1_20261106/05_run.stderr.log:1-14"
+      ],
+      "fix": "State separately: four gradient values are not consumed by objective f1-f4; recorded objective nonfinite counts are zero; discarded gradients plausibly explain warnings but exclusive provenance is not established. Preserve no convergence/scientific fitting claim. No new E3a execution is needed to narrow prose."
+    },
+    {
+      "id": "C4A_WARNING_CONTRACT",
+      "severity": "P2_IMPLEMENTATION_SCOPE_REQUIREMENT",
+      "scope_location": "bms-balancing/docs/REIL_C4A_SCOPE_20261105.md:37-38,44-49",
+      "problem": "The E3a record-only warning policy cannot be transplanted as-is without a C4-A classification/storage contract. H uses COBYQA and J_V/J_D/rho/J_Vs paths; its existing local runner stores every warning in memory before deduplication, unlike E3a's bounded counter. Unknown solver options must remain structural stops.",
+      "evidence": [
+        "bms-balancing/scripts/reil_c4_h.py:467-480",
+        "bms-balancing/scripts/reil_c4_h.py:531-544",
+        "bms-balancing/scripts/reil_c4_h.py:712-734",
+        "bms-balancing/scripts/reil_c4_h.py:836-859",
+        "bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_20261007.md:81-85"
+      ],
+      "fix": "Add warning-class policy and bounded storage/counting with overflow handling to implementation-request deliverables and dataless tests. Preserve existing unknown-options/structural-error/nonfinite-witness handling. Do not claim C4-A will have identical warning counts or that all future warnings are merely informational.",
+      "limitation": "This is an explicit implementation requirement, not an already-observed C4-A runtime failure or request to rerun E3a."
+    }
+  ],
+  "suggested_KO": "고정 util의 dVdQ_hc가 반환하는 기울기 배열 넷은 objective_fun의 f1–f4 계산에 사용되지 않으며, E3a 기록상 1,501,500회 평가의 목적값 비유한 수는 0이다. 이 경로는 경고의 유력한 설명이지만 기존 집계가 호출 위치를 보존하지 않아 모든 경고의 원인을 확정하지 않는다. C4-A의 경고 분류·유한 저장·비유한 판정 및 기존 중지 조건은 별도 구현 명세로 결속한다. util 원본과 기존 E3a 수용을 유지하며 새 조사 실행은 요구하지 않는다."
+}

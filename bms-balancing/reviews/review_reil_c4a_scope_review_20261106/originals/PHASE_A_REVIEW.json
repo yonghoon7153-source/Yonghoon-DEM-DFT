@@ -1,0 +1,42 @@
+{
+  "kind": "INDEPENDENT_STATIC_PHASE_A_SCOPE_REVIEW",
+  "pin": "c8792ed302d5da7fb420f46cc2219571bbb83400",
+  "received_program_execution": 0,
+  "tests": 0,
+  "data_opening": 0,
+  "findings": [
+    {
+      "topic": "Registered versus executable/completed run counts and preserved gates",
+      "severity": "P2_DOCUMENT_CORRECTION",
+      "scope_lines": [1, 8, 47],
+      "evidence": [
+        "scripts/reil_c4_h.py:52-54, 698-709: 77 registered units; 128 starts per unit",
+        "scripts/reil_c4_h.py:1048-1074: separates registered_runs from endpoint-gated runs; J_D mask and rho prerequisites remain",
+        "docs/REIL_PREREQUISITES_STATUS_20261004.md:960, 1024-1029, 1187-1192, 1237-1239: accepted fixed-input H4 endpoint failure for all 22 units; endpoint-only planned count7040, not executable/completed count",
+        "scripts/reil_c4_hb.py:1005-1017, 1082-1175: endpoint/J_D/rho NOT_RUN categories and stopped/incomplete predecessor rejection"
+      ],
+      "finding": "The scope repeatedly calls 9856 actual executions and proposes it as a stage judge count. Existing accepted endpoint gates already remove2816 H4 starts, leaving7040 endpoint-only planned starts, with further JD/rho gates. A flat9856 completion criterion can demand forbidden H4 work or reject valid declared skips.",
+      "correction": "State registered77unit/9856starts, existing H4endpoint22unitNOT_RUN, endpoint-onlyplan55unit/7040starts; keep actualeligible/started/completed/interrupted/notstarted counts separate and explicitly bind JDmask, rho predecessor completion and finite-positive denominators. UnitUNFIT must not replace interrupted/incomplete states. No retest or new fitting required to make this document correction."
+    },
+    {
+      "topic": "Phase A controller inventory and source/input/output contract deliverables",
+      "severity": "P2_IMPLEMENTATION_REQUEST_SCOPE_COMPLETION",
+      "scope_lines": [21, 44, 45, 48, 49],
+      "evidence": [
+        "scripts/reil_c4_hb.py:11, 1020-1045, 1082-1175: stage_a, phase_a_complete, rho_wave implement C4-A control flow despite module's PhaseB label",
+        "scripts/reil_c4e_run.py:65-71, 504-531: existing trusted source registry has exactfive E modules and excludesH/HB",
+        "scripts/reil_c4e_run.py:86-94, 345-389: E3a requiredfields and returned66 completion gate cannot serve H local-run witness/UNFIT records unchanged",
+        "scripts/reil_c4_h.py:679-694, 1024-1077: C6-boundPhaseAarrays, options, P0andHmanifest/actualbytes checks",
+        "docs/REIL_PREREQUISITES_STATUS_20261004.md:1394, 1406-1414: later wrapper must authenticate trustedmanifestsha, exactarrays/P0/consumedbytes, rejectNPY+INDEX jointchanges beforeobjective/optimizer; counts are reportfunctions not authentication"
+      ],
+      "finding": "Scope lists hb as C4-B-only and defines inputcontract primarily through E3a END_RECORD/IDENTITY. Reuse of E preparation alone does not bind H/HB sources or actual PhaseA arrays and doesn't preserve H completion/witness state semantics.",
+      "correction": "Name existing stage_a/phase_a_complete/rho_wave reuse or equivalent behavior in implementation request; include trusted exact new source set and approvedmanifesthash, originalP0/util/data identity, C6/PhaseAarraymanifest+exactfiles+consumedbytes and option identity, H record/output judge schemas and C4-B handoff with no PhaseB execution. Add dataless controls for changedNPY+INDEX, missing/duplicate runIDs, mismatchstarts, gate skips, stopped predecessor preventingrho, and no scientificpass fromcomplete. These are requested deliverables, not claims implementation currently exists."
+    }
+  ],
+  "accepted": [
+    "A real-data CLI entrypoint is still absent; core local-run/controller functions do not constitute production execution readiness.",
+    "U1 separated implementation request and review before execution request is appropriate.",
+    "U3 reuse of byte-identified existing data is compatible with scope, subject to read-time identity and consumed-data/P0 bindings.",
+    "No reopening of accepted C4-0b1/0b2 or E3a limited results is needed; preserve their recorded limitations."
+  ]
+}

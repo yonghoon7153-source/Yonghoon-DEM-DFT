@@ -1,0 +1,45 @@
+{
+  "kind": "C4A_SCOPE_STATIC_EVIDENCE_CHECK",
+  "pin": "c8792ed302d5da7fb420f46cc2219571bbb83400",
+  "attachments_match_pinned_blobs": true,
+  "prior_ledger_prefix_preserved": true,
+  "e3a_recorded": {
+    "rows": 66,
+    "n_eval": 1501500,
+    "warnings_total": 21896160,
+    "warnings_by_type_message": {
+      "RuntimeWarning: divide by zero encountered in divide": 8211060,
+      "RuntimeWarning: invalid value encountered in add": 5474040,
+      "RuntimeWarning: invalid value encountered in divide": 8211060
+    },
+    "all_n_nonfinite_zero": true,
+    "all_n_nonfinite_any_of_4_zero": true,
+    "all_F_nonfinite_count_zero": true,
+    "warnings_distinct_overflow": 0,
+    "n_out_eval_any": 1169477
+  },
+  "plan_arithmetic_not_execution": {
+    "registered_units": 77,
+    "runs_per_unit": 128,
+    "registered_runs": 9856,
+    "historically_reported_endpoint_excluded_units": 22,
+    "endpoint_only_remaining_units": 55,
+    "endpoint_only_remaining_runs": 7040,
+    "further_JD_and_rho_gates_unresolved": true
+  },
+  "budget_arithmetic_not_approval": {
+    "proposed_stage_seconds": 28800,
+    "proposed_R_seconds": 1800,
+    "proposed_total_seconds": 36000,
+    "difference_seconds": 5400,
+    "stage_boundary_requires_v2_definition": true
+  },
+  "adopted_C4v2": {
+    "file": "docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md",
+    "sha256": "22dcc8e5ef6430253f55834743e10808b0c3547c8fb560d0ad415dce77da8f87",
+    "status_ledger_sections": [
+      36
+    ]
+  },
+  "scope": "Reviewer-authored JSON/statistics and source-text comparison only. No target import/execution, xlsx opening, fitting, tests, or new runtime observations."
+}
