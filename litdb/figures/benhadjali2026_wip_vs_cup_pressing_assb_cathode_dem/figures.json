@@ -163,10 +163,11 @@
     686.2
    ],
    "w": 2090,
-   "h": 2067,
+   "h": 1958,
    "dpi": 300,
    "src": "72. Warm Isostatic vs. Cold Uniaxial Pressing in All-Solid-State Battery Cathodes Linking Microstructure Transport and Mechano-Electrochemical Response.pdf",
-   "blank": 0.773
+   "blank": 0.773,
+   "recrop": "2026-11-06 손 고침 — 도구 크롭 위쪽에 본문 낱말 (\"increases.\") 이 들어가 위에서 109 px 를 잘라냄 (도구 크롭 2090x2067 → 2090x1958)"
   },
   {
    "key": "t1",
@@ -183,10 +184,11 @@
     810.9
    ],
    "w": 1943,
-   "h": 602,
+   "h": 661,
    "dpi": 300,
    "src": "72. Warm Isostatic vs. Cold Uniaxial Pressing in All-Solid-State Battery Cathodes Linking Microstructure Transport and Mechano-Electrochemical Response.pdf",
-   "blank": 0.912
+   "blank": 0.912,
+   "manual_crop": "2026-11-06 손 작업 — 표가 9 쪽 (캡션 · 머리 · 미가압 행) 과 10 쪽 (CUP · WIP 행) 에 걸쳐 도구 크롭에 CUP · WIP 행이 빠짐 → 9 쪽 [65.8, 666.6, 531.9, 770.0] + 10 쪽 [65.8, 66.0, 531.9, 118.0] 을 300 dpi 로 이어 붙임"
   },
   {
    "key": "t2",
