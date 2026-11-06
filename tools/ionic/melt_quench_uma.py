@@ -598,12 +598,40 @@ def judge_values_sha16(v):
     return values_sha16({k: v.get(k) for k in JUDGE_VALUE_KEYS})
 
 
+NONFILE_STATES = ("nonfile:dir", "nonfile:symlink", "nonfile:other")   # ⭐ 회신 DR P1-2 — 경로는 있는데 정상 파일이 아니다 (디렉터리 · 깨진 링크 · 특수 파일)
+_SHA256_RE = re.compile(r"[0-9a-f]{64}")
+
+
+def path_state(p):
+    """⭐ 회신 DR P1-2 — 판정 입력 경로 하나의 상태 (지문 칸의 값): 없음 → None · 정상 파일 (링크 아님) → sha256 · 파일을 가리키는 링크 →
+    'link:' + 그 내용의 sha256 (내용이 바뀌면 잡힌다 · 정상 파일과는 다르다) · 그 밖 (디렉터리 · 깨진 링크 · 디렉터리를 가리키는 링크 · 특수 파일) →
+    NONFILE_STATES 중 하나. 진짜 부재와 '경로는 있는데 파일이 아님' 을 같은 None 으로 접지 않는다 (파생 파일 생성 예외가 부재 → 정상 파일에만 걸리게)."""
+    p = pathlib.Path(p)
+    if p.is_symlink():
+        return ("link:" + _sha256_file(p)) if p.is_file() else "nonfile:symlink"
+    if p.is_file():
+        return _sha256_file(p)
+    if os.path.lexists(p):
+        return "nonfile:dir" if p.is_dir() else "nonfile:other"
+    return None
+
+
+def path_state_problem(h):
+    """지문 칸 값의 꼴 — None · 64 자리 16진수 · 'link:' + 64 자리 16진수 · NONFILE_STATES 만 받는다 (아니면 이유 · 받으면 None)."""
+    if h is None or h in NONFILE_STATES:
+        return None
+    if isinstance(h, str) and (_SHA256_RE.fullmatch(h) or (h.startswith("link:") and _SHA256_RE.fullmatch(h[5:]))):
+        return None
+    return f"지문 ({str(h)[:20]!r}) 이 64 자리 16진수 글자도 경로 상태 (link: · nonfile:) 도 아니다"
+
+
 def run_provenance(run):
-    """판정이 기댄 파일의 지문 (회신 DG P1-4 · ⭐ DQ P1-1 — 원자료 다섯 + 판정이 읽는 파생 · 실행 전 기록 = BOUND_FILES) — 없으면 None 으로
-    적는다 ('없음' 도 지문이다). 판정 **뒤** 의 상태다 (판정이 md_init_raw.xyz 를 처음 만들었으면 만든 것의 지문 · 그 사실은 derived_written)."""
+    """판정이 기댄 파일의 지문 (회신 DG P1-4 · ⭐ DQ P1-1 — 원자료 다섯 + 판정이 읽는 파생 · 실행 전 기록 = BOUND_FILES) — 경로 상태 (path_state):
+    없음 → None ('없음' 도 지문이다) · 정상 파일 → sha256 · 링크 · 디렉터리 · 특수 파일은 따로 (⭐ 회신 DR P1-2). 판정 **뒤** 의 상태다 (판정이
+    md_init_raw.xyz 를 처음 만들었으면 만든 것의 지문 · 그 사실은 derived_written)."""
     run = pathlib.Path(run)
     names = JUDGE_FILES + ((ATTEMPT_NAME,) if _judge_reads_attempt(run) else ())   # 판정이 읽는 것만 (현재 폴더의 실행 전 기록은 판정이 안 읽는다)
-    return {f: (_sha256_file(run / f) if (run / f).is_file() else None) for f in names}
+    return {f: path_state(run / f) for f in names}
 
 
 def _band_card_path(card=BAND_CARD):
@@ -1646,7 +1674,7 @@ def _completion_fields_problem(r, partial, where):
     """⭐ 회신 DN P1 — 완료 판단에 쓰는 판정 기록 필드의 꼴 (도중 끊김 후보에서). 반환: 문제 | None.
     없음 · None 은 허용 (그 흔적이 없다) · **있는데 타입이 다르거나 값이 말이 안 되면 해석할 수 없는 기록** (보류). 정수로 바꿔 읽지 않는다
     (n:"130" 은 130 이 아니라 못 읽는 값 · True 는 정수 자리에서 타입 오류).
-      provenance → dict · files_sha256 → dict · final.xyz · result.json 지문 → 64 자리 16진수 글자
+      provenance → dict · files_sha256 → dict · final.xyz · result.json 지문 → 경로 상태 (없음 · 64 자리 16진수 · link: · nonfile: — path_state_problem)
       (전체 기록만) gate_check → dict · schedule_complete → bool · checks → dict · traj_frames → dict · n → 0 이상 정수 · expected → 1 이상 정수"""
     def bad(d, key, kinds, at):
         v = d.get(key)
@@ -1664,9 +1692,9 @@ def _completion_fields_problem(r, partial, where):
         return p
     fs = pv.get("files_sha256") or {}
     for x in ("final.xyz", "result.json"):
-        h = fs.get(x)
-        if h is not None and not (isinstance(h, str) and re.fullmatch(r"[0-9a-f]{64}", h)):
-            return f"{where} 의 {x} 지문 ({str(h)[:20]!r}) 이 64 자리 16진수 글자가 아니다 — 해석할 수 없는 기록"
+        ph_ = path_state_problem(fs.get(x))                  # ⭐ 회신 DR P1-2 — 경로 상태 (link: · nonfile:) 도 알려진 값이다
+        if ph_:
+            return f"{where} 의 {x} {ph_} — 해석할 수 없는 기록"
     if partial:
         return None
     for key in ("gate_check", "checks", "history"):
@@ -2086,7 +2114,9 @@ def same_judge_inputs(a, b):
     새 판정이 과학적 (pass · fail — 이 함수를 부르는 supersede_block 은 그때만 불린다) 이면 그 seed_gate 가 파일을 묶인 traj 원시와 대조해 맞다고 봤거나
     (안 맞으면 입력 불일치로 invalid) 아예 읽지 않았다 (final.xyz 없음 — 그 판정의 입력이 아니다). 누가 만들었는지 (이 판정 · 중간 판정 · 사람의
     --seed_gate) 는 보지 않는다 (⭐ DR 전 리뷰 P2-A — '이 판정이 만들었을 때만' 은 중간 판정 한 번 · 재판정 뒤 Ctrl-C 로 일시 오류 회복을 영구 보류로
-    굳혔다). 앞 판정 뒤에 **있던** 파일이 바뀌었거나 사라졌으면 다르다 (회신 DQ P1-1 재현: 다른 md_init_raw.xyz 를 옮기고 다시 만든 것)."""
+    굳혔다). 앞 판정 뒤에 **있던** 파일이 바뀌었거나 사라졌으면 다르다 (회신 DQ P1-1 재현: 다른 md_init_raw.xyz 를 옮기고 다시 만든 것).
+    ⭐ 회신 DR P1-2 — 예외는 **진짜 부재 (None) → 정상 파일 (64 자리 16진수)** 에만: 그 자리에 디렉터리 · 링크 · 특수 파일이 있었다가 (path_state)
+    치우고 다시 만든 것은 입력 상태를 복구한 것이라 다르다 (사람이 본다)."""
     if not (isinstance(a, dict) and isinstance(b, dict)):
         return False
     fa, fb = a.get("files_sha256"), b.get("files_sha256")
@@ -2103,8 +2133,8 @@ def same_judge_inputs(a, b):
     for f in fa:
         if fa[f] == fb[f]:
             continue
-        if f in JUDGE_DERIVED_FILES and fa[f] is None and fb[f] is not None:
-            continue
+        if f in JUDGE_DERIVED_FILES and fa[f] is None and isinstance(fb[f], str) and _SHA256_RE.fullmatch(fb[f]):
+            continue                                         # ⭐ 회신 DR P1-2 — 진짜 부재 → 정상 파일만 (디렉터리 · 링크 · 특수 파일을 치운 복구는 다르다)
         return False
     return True
 
@@ -2131,6 +2161,18 @@ def supersede_block(prior, new):
     return None
 
 
+def pre_anchor_exempt(rec):
+    """⭐ 회신 DR P1-1 — 장부 판정 자신의 기록 **앞** 의 비과학적 판정 기록 중 대체 규칙을 받지 않는 것: 판정이 스스로 '덜 끝남' 으로 분류한
+    incomplete (실제 진행 중 — 실행 중 사람이 들여다본 판정) 이고 입력 불일치를 찾지 않은 것뿐 (판정 성격 기록이 없는 옛 꼴 incomplete 도).
+    완료된 판정 (invalid — 입력 불일치 · 결정적 실패 · 일시 오류) 은 앞에 있어도 뒤 기록과 같은 대체 규칙을 받는다 — 입력 불일치는 앞뒤와 무관하게
+    보류 근거로 남는다."""
+    if not (isinstance(rec, dict) and rec.get("status") == "incomplete"):
+        return False
+    pv_ = rec.get("provenance")
+    jn_ = pv_.get("judge_nature") if isinstance(pv_, dict) else None
+    return jn_ is None or (isinstance(jn_, dict) and jn_.get("input_mismatch") == [])
+
+
 def ledger_verdict_conflict(row, folder_status, recorded=True, folder_provenance=None, folder_prior=None):
     """⭐ DQ 전 리뷰 P1-A · 2차 N3 — 같은 실행의 장부 행과 폴더 판정이 어긋나는가 (러너 ①-4 · persist · 소비자 _ledger_check 가 **같은 함수** 를 쓴다).
     반환: 문제 글 | None. 규칙:
@@ -2144,14 +2186,16 @@ def ledger_verdict_conflict(row, folder_status, recorded=True, folder_provenance
         상한 기록용 판정) — ⭐ DR 전 2차 리뷰 P1: 장부 판정이 **비과학적 (invalid · incomplete) 일 때도** (러너의 재판정이 입력 불일치를 봤는데 장부엔
         안 적힌 채 사람이 파일을 고친 경우 · 재판정 fail 을 쓰고 장부에 적기 전에 끊긴 경우) — 그 폴더의 판정 기록 **전체** (folder_prior =
         folder_verdict_chain — 판정을 쓴 순서) 를 기준으로 (⭐ DR 전 3 · 4 · 5차 리뷰 — 장부 판정이 비과학적이면 장부 판정 자신의 기록 (같은 상태 · 지문 · 첫 것) 을
-        찾아 그 **앞** 의 비과학적 기록 (실행 중 들여다본 incomplete 같은 앞선 상태) 은 막지 않고 그 **뒤** 의 비과학적 기록은 하나하나 대체 규칙을 받는다 —
+        찾아 그 **앞** 의 진행 중 incomplete (실행 중 들여다본 판정 · 입력 불일치 없음 — pre_anchor_exempt) 는 막지 않고 그 밖의 비과학적 기록 (그 **뒤** 의
+        기록 · ⭐ 회신 DR P1-1 그 앞이어도 완료된 invalid · 입력 불일치) 은 하나하나 대체 규칙을 받는다 —
         그 뒤 재판정이 본 입력 변경 · 불일치를 되돌린 복구는 보류 · 장부 판정의 기록을 못 찾으면 전부 대체 규칙):
         못 읽는 판정 (상태 없음) 이 있으면 충돌 · pass · fail 판정이 하나라도 지금과 다르면 충돌 · invalid · incomplete 판정이 하나라도 지금 판정으로
         자동 대체할 수 없으면 (supersede_block — 위와 같은 규칙) 충돌. 한 단계 이력만 보면 다시 판정 한 번 (사람의 --stage1_verdict · 끊긴 재시작) 이 앞
         판정을 밀어내 증거가 안 보인다 (4차 리뷰 재현).
       · recorded 면 장부에 적힌 충돌 관측 (verdict_observed_conflict) 도 충돌.
-    ⛔ 못 하는 것 (⭐ 회신 DQ Q5): 장부 판정이 이미 있으면 그 장부 판정과 지금 폴더 판정만 본다 (폴더 기록 전체는 장부가 빌 때만) — 모든 과거 수동
-       판정 사이의 충돌을 영구히 보류한다는 보장은 아니다 (시험된 정책). 충돌을 푸는 명령은 없다 (Q7 — 실제 사건이 생기면 절차를 정한다)."""
+    ⛔ 못 하는 것 (⭐ 회신 DQ Q5 · 회신 DR P2-1 문구): 장부 판정이 pass · fail 로 확정돼 있으면 그 장부 판정과 지금 폴더 판정을 우선한다 · 장부
+       판정이 없거나 invalid · incomplete 면 위 폴더 판정 기록 규칙을 적용한다 — 모든 과거 수동 판정 사이의 충돌을 영구히 보류한다는 보장은 아니다
+       (시험된 정책). 충돌을 푸는 명령은 없다 (Q7 — 실제 사건이 생기면 절차를 정한다)."""
     v_ = row.get("verdict")
     if v_ not in LEDGER_VERDICTS:
         return f"장부 판정 {v_!r} 를 모른다 (허용 {list(LEDGER_VERDICTS)})"
@@ -2177,11 +2221,14 @@ def ledger_verdict_conflict(row, folder_status, recorded=True, folder_provenance
                     return f"장부 판정 {v_!r} · 폴더 판정 기록에 못 읽는 판정이 있다 — 비교할 수 없다"
                 if st_ in ("pass", "fail") and st_ != folder_status:
                     return f"장부 판정 {v_!r} · 폴더 판정 기록의 {st_} ≠ 지금 {folder_status} (끊긴 뒤 원자료 · 도구가 바뀌었을 수 있다)"
-                if st_ in ("invalid", "incomplete") and (k_ is None or i_ > k_):   # ⭐ DR 전 4차 리뷰 P1 — 장부가 비었거나 · 장부 판정의 기록을 못 찾았거나 ·
-                    sb_ = supersede_block(rec_.get("provenance"), folder_provenance)   # 그 **뒤** 의 기록이면 하나하나 같은 대체 규칙 (같은 입력 + 판정 도중 예외)
-                    if sb_ is not None:                              # — 그 뒤 재판정이 본 입력 변경 · 불일치는 되돌려도 보류 (회신 DP Q2 '원자료 복구')
-                        return f"장부 판정 {v_!r} · 폴더 판정 기록의 {st_} 판정을 지금 {folder_status} 판정이 대체할 수 없다 ({sb_})"
-                # 장부 판정 자신 · 그 **앞** 의 비과학적 기록 (실행 중 들여다본 incomplete 같은 앞선 상태) 은 막지 않는다 — 입력이 장부 판정 때와 같은지는 위 장부 규칙이 본다
+                if st_ in ("invalid", "incomplete") and (k_ is None or i_ > k_ or (i_ < k_ and not pre_anchor_exempt(rec_))):
+                    sb_ = supersede_block(rec_.get("provenance"), folder_provenance)   # ⭐ DR 전 4차 리뷰 P1 — 장부가 비었거나 · 장부 판정의 기록을 못 찾았거나 ·
+                    if sb_ is not None:                              # 그 **뒤** 의 기록이면 · ⭐ 회신 DR P1-1 그 **앞** 이어도 진행 중 incomplete 가 아니면
+                        return (f"장부 판정 {v_!r} · 폴더 판정 기록의 {st_} 판정"     # (완료된 판정 · 입력 불일치) 하나하나 같은 대체 규칙 (같은 입력 + 판정 도중 예외)
+                                + (" (장부 판정의 기록 앞 · 진행 중 incomplete 아님)" if (k_ is not None and i_ < k_) else "")
+                                + f" 을 지금 {folder_status} 판정이 대체할 수 없다 ({sb_})")
+                # 장부 판정 자신 · 그 **앞** 의 진행 중 incomplete (실행 중 들여다본 판정 · 입력 불일치 없음) 는 막지 않는다 — 입력이 장부 판정 때와 같은지는
+                # 위 장부 규칙이 본다 (⭐ 회신 DR P1-1 — 앞에 있어도 완료된 입력 불일치 판정은 보류 근거로 남는다)
     if recorded and row.get("verdict_observed_conflict"):
         return "장부에 같은 실행의 다른 판정 관측이 있다 (verdict_observed_conflict)"
     return None
@@ -4741,7 +4788,29 @@ def _selftest():
                   "inv_old_rec_card": _inv(PV, {**PV, "card_values_sha16": "6" * 16, "judge_values_sha16": "7" * 16}),
                   "inv_anchor_first": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
                                                                   folder_prior=[{"status": "invalid", "provenance": PV}, PVDET, {"status": "invalid", "provenance": PV},
-                                                                                {"status": "pass", "provenance": PV}]) is not None}
+                                                                                {"status": "pass", "provenance": PV}]) is not None,
+                  # ⭐ 회신 DR P1-1 — 장부 판정 자신의 기록 **앞** 이어도 완료된 invalid (입력 불일치 · 결정적) 는 대체 규칙 · 입력 불일치는 앞뒤 무관 보류 ·
+                  #    진행 중 incomplete (입력 불일치 없음 · 옛 꼴) 만 막지 않는다 · 앞의 일시 오류 (같은 입력) 는 대체
+                  "inv_mismatch_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
+                                                                        folder_prior=[{"status": "invalid", "provenance": PVM}, {"status": "invalid", "provenance": PV},
+                                                                                      {"status": "pass", "provenance": PV}]) is not None,
+                  "inc_mismatch_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
+                                                                        folder_prior=[{"status": "incomplete", "provenance": {**PVMID["provenance"], "judge_nature": {
+                                                                            "errors": [], "input_mismatch": ["y"]}}},
+                                                                                      {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
+                  "inv_transient_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
+                                                                         folder_prior=[{"status": "invalid", "provenance": {**PV, "judge_nature": {"errors": ["once"],
+                                                                                                                                                     "input_mismatch": []}}},
+                                                                                       {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
+                  "inc_oldfmt_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
+                                                                      folder_prior=[{"status": "incomplete", "provenance": {k_: v_ for k_, v_ in PVMID["provenance"].items()
+                                                                                                                             if k_ != "judge_nature"}},
+                                                                                    {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
+                  # ⭐ 회신 DR P1-2 — 파생 파일 생성 예외는 진짜 부재 → 정상 파일만 (디렉터리를 치운 복구 · 링크 · 특수 파일은 다르다)
+                  "inv_raw_dir_repaired": _inv({**PV, "files_sha256": {**FS0, RAW_: "nonfile:dir"}}, PVR_first),
+                  "inv_raw_link_made": _inv(PV, {**PV, "files_sha256": {**FS0, RAW_: "link:" + "f" * 64}}),
+                  "inv_raw_nonfile_made": _inv(PV, {**PV, "files_sha256": {**FS0, RAW_: "nonfile:other"}}),
+                  "inv_raw_dir_same": _inv({**PV, "files_sha256": {**FS0, RAW_: "nonfile:dir"}}, {**PV, "files_sha256": {**FS0, RAW_: "nonfile:dir"}})}
         want_dq = {"inv_mismatch": True, "inv_mismatch_and_err": True, "inv_noerr": True, "inv_nonature": True, "inv_nature_badshape": True,
                    "inv_raw_repaired": True, "inv_raw_gone": True, "inv_raw_first_made": False, "inv_raw_first_other": False, "inv_raw_same": False,
                    "inv_band": True, "inv_band_none": True, "inv_band_notread": False, "inv_band_read_vs_not": True,
@@ -4749,14 +4818,45 @@ def _selftest():
                    "chain_mismatch": True, "chain_raw_repaired": True, "inv_ledger_chain_mismatch": True, "inv_ledger_chain_fail": True,
                    "inv_ledger_chain_ok": False, "inc_ledger_chain_unreadable": True, "sci_ledger_ignores_chain": False,
                    "inv_ledger_chain_midrun": False, "none_ledger_chain_midrun": True, "inv_ledger_chain_nonature": True,
-                   "inv_after_det_invalid": True, "inv_after_transient": False, "inv_anchor_missing": True, "inv_det_before_anchor": False,
-                   "inv_anchor_first": True, "inv_cap_raised": False, "inv_rules_differ": True, "inv_old_rec_card": True}   # DR 전 5차 — 같은 바이트의 판정이 뒤에 또 있어도 기준은 첫 기록 (그 사이 결정적 invalid → 충돌)
+                   "inv_after_det_invalid": True, "inv_after_transient": False, "inv_anchor_missing": True, "inv_det_before_anchor": True,   # 회신 DR P1-1 (앞이어도 완료된 invalid)
+                   "inv_anchor_first": True, "inv_cap_raised": False, "inv_rules_differ": True, "inv_old_rec_card": True,
+                   "inv_mismatch_before_anchor": True, "inc_mismatch_before_anchor": True, "inv_transient_before_anchor": False,
+                   "inc_oldfmt_before_anchor": False, "inv_raw_dir_repaired": True, "inv_raw_link_made": True, "inv_raw_nonfile_made": True,
+                   "inv_raw_dir_same": False}   # DR 전 5차 — 같은 바이트의 판정이 뒤에 또 있어도 기준은 첫 기록 (그 사이 결정적 invalid → 충돌)
         chk(got_dq == want_dq and JUDGE_DERIVED_FILES == (SEED_GATE_RAW,) and set(PROVENANCE_FILES) < set(BOUND_FILES),
             "⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 "
             "같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_init_raw.xyz 를 옮기고 다시 만든 것 · 입력 불일치 판정 · 성격 기록 없음 · "
             "(DR 전 2차) 장부 판정이 비과학적이어도 폴더 기록 사이의 입력 불일치 · 다른 과학적 판정 · 못 읽는 판정은 충돌 (장부 판정이 과학적이면 장부 우선 — Q5) · "
             "밴드 · 환경 · 실행 전 기록 · 폴더 이름 다름 · 옛 꼴 지문은 충돌 · 앞에 없던 파생 파일이 지금 있으면 (누가 만들었든) 같다 · 둘 다 밴드를 안 읽었으면 같다 "
             f"({ {k_: v_ for k_, v_ in got_dq.items() if v_ != want_dq[k_]} })")
+        # ⭐ 회신 DR P1-2 — 경로 상태: 없음 · 정상 파일 · 파일을 가리키는 링크 (내용 지문) · 디렉터리 · 깨진 링크 · 디렉터리 링크 · 특수 파일을 가른다
+        #    (링크 · FIFO 를 못 만드는 OS 면 그 하위 항목만 빠진다 — 시험 수는 같다) · 지문 칸 값의 꼴 (link: · nonfile: 도 알려진 값) · 완료 필드 검사가 받는다
+        import tempfile as _tf_ps, shutil as _sh_ps
+        ps_root = pathlib.Path(_tf_ps.mkdtemp())
+        try:
+            (ps_root / "f").write_text("abc", encoding="utf-8"); (ps_root / "d").mkdir()
+            got_ps = {"absent": path_state(ps_root / "x"), "file": path_state(ps_root / "f"), "dir": path_state(ps_root / "d")}
+            want_ps = {"absent": None, "file": _sha256_file(ps_root / "f"), "dir": "nonfile:dir"}
+            try:
+                os.symlink(ps_root / "f", ps_root / "lf"); os.symlink(ps_root / "nowhere", ps_root / "lb"); os.symlink(ps_root / "d", ps_root / "ld")
+                got_ps.update(link_file=path_state(ps_root / "lf"), link_broken=path_state(ps_root / "lb"), link_dir=path_state(ps_root / "ld"))
+                want_ps.update(link_file="link:" + _sha256_file(ps_root / "f"), link_broken="nonfile:symlink", link_dir="nonfile:symlink")
+            except (OSError, NotImplementedError, AttributeError):
+                pass
+            if hasattr(os, "mkfifo"):
+                os.mkfifo(ps_root / "p"); got_ps["fifo"] = path_state(ps_root / "p"); want_ps["fifo"] = "nonfile:other"
+            okv_ = [None, "a" * 64, "link:" + "b" * 64, *NONFILE_STATES]
+            badv_ = ["", "nonfile:x", "link:abc", "A" * 64, 123, ["x"]]
+            cf_ok = _completion_fields_problem({"provenance": {"files_sha256": {"final.xyz": "nonfile:dir", "result.json": "link:" + "c" * 64}}}, True, "t")
+            cf_bad = _completion_fields_problem({"provenance": {"files_sha256": {"final.xyz": "nonfile:x"}}}, True, "t")
+            chk(got_ps == want_ps and all(path_state_problem(v_) is None for v_ in okv_) and all(path_state_problem(v_) for v_ in badv_)
+                and cf_ok is None and bool(cf_bad) and run_provenance(ps_root)[SEED_GATE_RAW] is None,
+                "⛔음성 회신 DR P1-2: 경로 상태 — 없음 None · 정상 파일 sha256 · 디렉터리 nonfile:dir · 파일 링크 link:+내용 지문 · 깨진 링크 · 디렉터리 링크 "
+                "nonfile:symlink · FIFO nonfile:other (진짜 부재와 '있는데 파일 아님' 을 같은 None 으로 접지 않는다) · 지문 칸 값 꼴 · 완료 필드 검사가 경로 "
+                f"상태를 받는다 ({ {k_: (got_ps.get(k_), want_ps.get(k_)) for k_ in set(got_ps) | set(want_ps) if got_ps.get(k_) != want_ps.get(k_)} } · "
+                f"{[v_ for v_ in okv_ if path_state_problem(v_)]} · {[v_ for v_ in badv_ if not path_state_problem(v_)]} · {cf_ok} · {cf_bad})")
+        finally:
+            _sh_ps.rmtree(ps_root, ignore_errors=True)
         # ⭐ 회신 DQ P1-1 — 진짜 판정 함수가 성격 · 처음 만듦을 적는가 (입력 불일치 = input_mismatch · 판정 도중 예외 = errors) · 그 기록으로 대체 규칙이 가르는가
         from ase.io import read as _rd_dq, write as _wr_dq
         _u3 = 2.05 / math.sqrt(3.0)                         # P–S 사면체 하나 + Li (seed_gate 의 PS₄ 판독이 서는 최소 구조 — FR 의 Li 둘은 seed_gate 로그에서 KeyError)

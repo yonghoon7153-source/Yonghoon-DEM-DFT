@@ -103,7 +103,7 @@ from __future__ import annotations
 import argparse
 import copy, datetime, hashlib, importlib.util, json, os, pathlib, re, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "bb1c7cf329681e28"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "89092d08b2aa6425"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 EXPECTED_VALUES_SHA16 = "086de59c484f9c32"     # 카드 기계_판독_값 (mq.values_sha16) — ⭐ DO 전 리뷰 P2-12: 카드 값 (상한 포함) 을 바꾸면 이 줄도
                                                #   같이 바꾸고 다시 리뷰한다 (카드 파일만 고쳐서는 상한 멈춤을 넘기지 못한다)
 STOP_KEYS = ("at", "code", "reason", "terminal", "stop_id", "run_id", "sys", "seed", "cleanup", "rc", "verdict", "melt", "summary",
@@ -3728,6 +3728,76 @@ def _selftest():
     chk(sm_pv["track"] == "invalid" and any("런의 verdict 'PASS' 를 모른다" in x_ for x_ in inv_pv) and sm_pv0["track"] == "pending",
         "⛔음성 DQ 전 리뷰 P1-A (DR 전체 깨기 DQ22): 폴더 판정이 없는 장부 행 (끊긴 첫 시드) 의 판정 값이 'PASS' 면 장부 꼴 검사가 요약을 invalid 로 — "
         f"대조는 pending ({sm_pv['track']} · {sm_pv0['track']} · {inv_pv[:2]})")
+    # ⭐ 회신 DR P1-1 (Codex 재현) — A12 출력이 다 나온 뒤 러너의 끝 판정 전에 사람이 판정 (잘못된 md_init_raw.xyz → 입력 불일치 invalid · 예외 없음) →
+    #    잘못된 raw 를 다른 이름으로 보존 → 러너의 첫 끝 판정은 일시 I/O 오류 (장부 기준 invalid) → 확인 → 재시작의 재판정 pass 가 있어도 기준 **앞** 의
+    #    입력 불일치 판정 때문에 자동 대체하지 않는다 (발사 0 · 요약 통과 아님) · 대조 = 진행 중 incomplete 를 들여다본 회복 (DR 전 3차 시험 그대로)
+    _sv0_d1, _sg0_d1 = real.stage1_verdict, real.seed_gate
+    st_d1 = {"armed": True}
+    def _sv_d1(rd_, **k_):
+        rp_ = pathlib.Path(rd_)
+        if st_d1["armed"] and rp_.name == "seed12" and rp_.parent.name == "A" and k_.get("reason") == "담금질 끝":
+            st_d1["armed"] = False
+            _wrong_raw(rp_)
+            st_d1["manual"] = _sv0_d1(rp_, values=k_.get("values"), log=lambda *m: None, reason="selftest: 출력이 다 나온 뒤 끝 판정 전 사람 판정")
+            (rp_ / real.SEED_GATE_RAW).rename(rp_ / (real.SEED_GATE_RAW + ".bad"))
+            n_d1 = {"left": 1}
+            def _sg_once_d1(run_, *a_, **kk_):
+                if n_d1["left"]:
+                    n_d1["left"] -= 1
+                    raise OSError("selftest: 끝 판정의 일시 I/O 오류")
+                return _sg0_d1(run_, *a_, **kk_)
+            real.seed_gate = _sg_once_d1
+            try:
+                return _sv0_d1(rd_, **k_)
+            finally:
+                real.seed_gate = _sg0_d1
+        return _sv0_d1(rd_, **k_)
+    real.stage1_verdict = _sv_d1
+    try:
+        rc_d1, L_d1, rr_d1 = go(wt)
+    finally:
+        real.stage1_verdict = _sv0_d1
+    jn_d1m = ((st_d1.get("manual") or {}).get("provenance") or {}).get("judge_nature") or {}
+    row_d1 = [x_ for x_ in J(rr_d1 / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
+    rc_d1b, L_d1b, _ = go(wt, rr=rr_d1, ack=J(rr_d1 / "STOP.json")["stop_id"])
+    row_d1b = [x_ for x_ in J(rr_d1 / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
+    sm_d1 = summ(rr_d1)
+    chk((st_d1.get("manual") or {}).get("status") == "invalid" and jn_d1m.get("input_mismatch") and not jn_d1m.get("errors")
+        and rc_d1 == RC["invalid"] and len(L_d1) == 3 and row_d1.get("verdict") == "invalid"
+        and (((row_d1.get("verdict_provenance") or {}).get("judge_nature") or {}).get("errors"))
+        and rc_d1b == RC["invalid"] and not L_d1b and row_d1b.get("verdict") == "invalid" and not row_d1b.get("verdict_superseded")
+        and sm_d1["track"] != "stage1_pass",
+        "⛔음성 회신 DR P1-1 (Codex 재현): 출력이 다 나온 뒤 사람 판정이 입력 불일치를 찾고 · 잘못된 raw 를 옮기고 · 끝 판정 일시 오류가 장부 기준이 되어도 — "
+        f"확인 뒤 재판정 pass 가 기준 앞의 입력 불일치 판정 때문에 자동 대체하지 않는다 (발사 0) ({(st_d1.get('manual') or {}).get('status')} · {jn_d1m} · "
+        f"{rc_d1} · 발사 {len(L_d1)} · {rc_d1b} · 발사 {len(L_d1b)} · {row_d1b.get('verdict')} · {sm_d1['track']})")
+    # ⭐ 회신 DR P1-2 (Codex 재현) — A12 의 md_init_raw.xyz 자리에 디렉터리 → 끝 판정의 seed_gate 오류 (지문 nonfile:dir · errors · rc 27) → 디렉터리를 다른
+    #    이름으로 보존 → 확인 → 재판정이 정상 raw 를 만들어 pass 여도 자동 대체하지 않는다 (발사 0) · 대조 = 진짜 부재의 일시 오류 회복 (DQ 전 2차 N3 시험 그대로)
+    _sv0_d2 = real.stage1_verdict
+    st_d2 = {"armed": True}
+    def _sv_d2(rd_, **k_):
+        rp_ = pathlib.Path(rd_)
+        if st_d2["armed"] and rp_.name == "seed12" and rp_.parent.name == "A" and k_.get("reason") == "담금질 끝":
+            st_d2["armed"] = False
+            (rp_ / real.SEED_GATE_RAW).mkdir()
+        return _sv0_d2(rd_, **k_)
+    real.stage1_verdict = _sv_d2
+    try:
+        rc_d2, L_d2, rr_d2 = go(wt)
+    finally:
+        real.stage1_verdict = _sv0_d2
+    row_d2 = [x_ for x_ in J(rr_d2 / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
+    pv_d2 = row_d2.get("verdict_provenance") or {}
+    (rr_d2 / "A/seed12" / real.SEED_GATE_RAW).rename(rr_d2 / "A/seed12" / (real.SEED_GATE_RAW + ".dir"))
+    rc_d2b, L_d2b, _ = go(wt, rr=rr_d2, ack=J(rr_d2 / "STOP.json")["stop_id"])
+    row_d2b = [x_ for x_ in J(rr_d2 / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
+    sm_d2 = summ(rr_d2)
+    chk(rc_d2 == RC["invalid"] and len(L_d2) == 3 and row_d2.get("verdict") == "invalid"
+        and (pv_d2.get("files_sha256") or {}).get(real.SEED_GATE_RAW) == "nonfile:dir" and (pv_d2.get("judge_nature") or {}).get("errors")
+        and rc_d2b == RC["invalid"] and not L_d2b and row_d2b.get("verdict") == "invalid" and not row_d2b.get("verdict_superseded")
+        and sm_d2["track"] != "stage1_pass",
+        "⛔음성 회신 DR P1-2 (Codex 재현): raw 자리의 디렉터리 때문에 끝 판정이 오류 (지문 nonfile:dir) 였으면 디렉터리를 치우고 정상 raw 가 생겨도 '없음 → 생성' "
+        f"으로 자동 대체하지 않는다 (발사 0) ({rc_d2} · 발사 {len(L_d2)} · {(pv_d2.get('files_sha256') or {}).get(real.SEED_GATE_RAW)} · "
+        f"{rc_d2b} · 발사 {len(L_d2b)} · {row_d2b.get('verdict')} · {sm_d2['track']})")
     # ⭐ DR 전 5차 리뷰 P2 — 첫 시드 (A11) 가 녹음 창이 찬 채 실행 중 상한으로 멈춤 → 상한 판정 fail + 계 닫힘 → (문서대로) 상한을 올린 카드로 · 폴더를 옆으로
     #    옮기고 확인 → 상한 칸은 판정 규칙이 아니라서 그 판정 기록은 지금 규칙의 것 → 장부에 닫힘 · 닫는 STOP melt (상한을 올린 것이 진짜 닫힘을 지우지 않는다)
     rc_cp, L_cp, rr_cp = go(mk_wt(card=mk_card(stage1_cap_gpu_h=3.0)), seed_worst_h=1.0, scen={("A", 11): {"melt": "fail"}})
