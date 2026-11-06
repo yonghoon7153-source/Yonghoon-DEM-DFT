@@ -1,0 +1,28 @@
+{
+  "kind": "external scoped acceptance receipt",
+  "externally_accepted_pin": "14773e25b32eec187366b58168e2cf98fd4730c7",
+  "external_verdict": "ACCEPT_DOCUMENT_STATIC_PREPARATION_AND_LIMITED_MOCK_ONLY",
+  "new_findings": [],
+  "mandatory_corrections": [],
+  "accepted_sources_changed": false,
+  "repeat_external_review_requested": false,
+  "new_receipt_external_review_claimed": false,
+  "producer_posix_runs": "received evidence only; not independent rerun",
+  "external_shell_syntax": "initialization failed before parsing; neither PASS nor source FAIL",
+  "historical_audit_cause": "UNRESOLVED",
+  "whole_gate": "HOLD",
+  "actual_value_access": false,
+  "actual_inventory_run": false,
+  "research_execution": false,
+  "active_registration_changed": false,
+  "deployment": false,
+  "integration": false,
+  "ledger_closed_here": false,
+  "new_research_results": 0,
+  "other_unit_status": {
+    "lhs_n_fe90b0bd0212": "EXTERNAL_REVIEW_PENDING",
+    "mixer_launch_b57fe91503ba": "EXTERNAL_REVIEW_PENDING",
+    "mxd2r": "SEPARATE_RECHECK_PENDING"
+  },
+  "external_os_mock_observations": 3
+}

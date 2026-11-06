@@ -1,0 +1,297 @@
+{
+  "archive_bytes": 194781,
+  "archive_sha256": "09c44bb074894d2546cd991b2d3d199ef3819140fd1e2e88f5619925c03ebe07",
+  "pin": "14773e25b32eec187366b58168e2cf98fd4730c7",
+  "snapshot": [
+    {
+      "path": "docs/collab/codex_to_claude/20261106-0455_lhs-inventory-preparation.md",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/README.md",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/RUN_AFTER_AUTHOR_GO.sh.txt",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/guard_mutation_py312.log",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/synthetic_py312.log",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/synthetic_py38.log",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/validation.json",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/ledger_proposal.json",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/pressure_inventory.sh",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/replay_guard_mutation.py",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/review_request.md",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/test_ancestor_diagnostics.py",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/README.md",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/pressure_inventory.sh",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/received/20261104-0233_lhs-pressure-refusal.md",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/test_pressure_inventory.py",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_closure_20261104/README.md",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_closure_20261104/_repro_ours_20261104/probe_obs_audit.py",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_closure_20261104/external_verdict.txt",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    },
+    {
+      "path": "scripts/lhs_pressure_record.py",
+      "bytes_match": true,
+      "sha256_match": true,
+      "blob_match": true
+    }
+  ],
+  "packaging": [
+    {
+      "path": "CHANGE.patch",
+      "match": true
+    },
+    {
+      "path": "CLAUDE_PROMPT.md",
+      "match": true
+    },
+    {
+      "path": "INTEGRATION.json",
+      "match": true
+    },
+    {
+      "path": "PARENT_PIN.txt",
+      "match": true
+    },
+    {
+      "path": "PIN.txt",
+      "match": true
+    },
+    {
+      "path": "README.md",
+      "match": true
+    },
+    {
+      "path": "REQUEST.md",
+      "match": true
+    },
+    {
+      "path": "REVIEW_PROMPT.md",
+      "match": true
+    },
+    {
+      "path": "SNAPSHOT_MANIFEST.json",
+      "match": true
+    },
+    {
+      "path": "SOURCE_BASE.txt",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/README.md",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/changed_path_ban.json",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/checks.json",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/doc_refs.log",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/findings.log",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/initial_checks/changed_path_ban.json",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/initial_checks/checks.json",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/initial_checks/doc_refs.log",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/initial_checks/findings.log",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/publication.json",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/scope.json",
+      "match": true
+    },
+    {
+      "path": "VALIDATION/whitespace.log",
+      "match": true
+    },
+    {
+      "path": "docs/collab/codex_to_claude/20261106-0455_lhs-inventory-preparation.md",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/README.md",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/RUN_AFTER_AUTHOR_GO.sh.txt",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/guard_mutation_py312.log",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/synthetic_py312.log",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/synthetic_py38.log",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/validation.json",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/ledger_proposal.json",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/pressure_inventory.sh",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/replay_guard_mutation.py",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/review_request.md",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/test_ancestor_diagnostics.py",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/README.md",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/pressure_inventory.sh",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/received/20261104-0233_lhs-pressure-refusal.md",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/test_pressure_inventory.py",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_closure_20261104/README.md",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_closure_20261104/_repro_ours_20261104/probe_obs_audit.py",
+      "match": true
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_closure_20261104/external_verdict.txt",
+      "match": true
+    },
+    {
+      "path": "scripts/lhs_pressure_record.py",
+      "match": true
+    }
+  ]
+}

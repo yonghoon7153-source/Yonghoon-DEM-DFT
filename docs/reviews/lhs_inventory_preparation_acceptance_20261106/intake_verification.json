@@ -1,0 +1,16 @@
+{
+  "accepted_pin": "14773e25b32eec187366b58168e2cf98fd4730c7",
+  "prior_local_tip": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+  "external_zip_bytes": 250040,
+  "external_zip_sha256": "82ba74bab8573630f3f9e3c1bf379fcd610094ca883782eaefcbe0957c21d55a",
+  "evidence_manifest_entries_verified": 55,
+  "original_package_members_byte_equal": 43,
+  "original_package_sha256": "09c44bb074894d2546cd991b2d3d199ef3819140fd1e2e88f5619925c03ebe07",
+  "package_hash_entries_verified": 42,
+  "snapshot_git_bytes_hash_size_blob_matches": 20,
+  "accepted_snapshot_unchanged_at_parent": true,
+  "pasted_verdict_byte_equal": true,
+  "external_code_executed": false,
+  "actual_host_access": false,
+  "limits": "Offline byte/provenance intake only; independent mock result is received evidence, not rerun; no new POSIX/CLI certification"
+}

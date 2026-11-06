@@ -1,0 +1,109 @@
+# LHS inventory 새 준비 단위 — 독립 반박 검토
+
+검토일: 2026-11-06  
+대상: `14773e25b32eec187366b58168e2cf98fd4730c7` · `codex/lhs-v13-1104`  
+판정: **문서·정적 준비 및 A01의 한정 모의 관측 범위 수용. 새 P1/P2/P3 없음. 전체 HOLD 유지. 실제 실행 GO 아님.**
+
+## 1. 대상과 신원
+
+입력 ZIP: `codex_lhs_inventory_20261106_14773e25b32e.zip`, 194,781 B. 검토자가 계산한 SHA256은 `09c44bb074894d2546cd991b2d3d199ef3819140fd1e2e88f5619925c03ebe07`이다. 요청에 별도 ZIP 해시가 주어지지 않았으므로 이것은 이번 수령 바이트의 지문이며, 별도 전달 해시와 일치했다고 주장하지 않는다.
+
+| 대조 | 결과 |
+|---|---|
+| 사용자 핀 ↔ PIN.txt ↔ SNAPSHOT_MANIFEST.json | 일치 |
+| snapshot 20개 | 크기·SHA256·Git blob SHA1 전부 일치 |
+| 포장 SHA256SUMS의 42개 | 전부 일치; SHA256SUMS 자신은 목록 밖 |
+| 원격 고정 핀 ↔ snapshot | 20개 일치: 신규 12개는 커밋의 blob ID, 기존 8개는 고정 핀 원문으로 계산한 blob ID 대조 |
+| SOURCE_BASE의 기존 명령 | 별도 1건 대조 일치; 위 20개와 합산해 snapshot 21개라 하지 않음 |
+| CHANGE.patch | 새 파일 12개를 재구성하면 전달 바이트와 일치 |
+| 원격 부모 대비 diff | 12개 추가, 625줄 추가, 0줄 삭제; 기존 파일 수정 없음 |
+
+원격 부모는 `5ee9cd5351c3d35a7c2c84c6701b820f9edb55d7`, 소스 기준은 `18bb6a2e41ad58129657a68450f4c88157f3d5a6`이다. `INTEGRATION.json`의 기존 반입 내역과 후속 단위는 구분했다. 후속 단위나 현재 가지 끝으로 검토 대상을 바꾸지 않았다. 전체 저장소 검사는 이번 결론에 필요하지 않았다.
+
+원격 근거: [고정 커밋](https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/14773e25b32eec187366b58168e2cf98fd4730c7). 조회 응답과 비교 결과는 `evidence/github_commit_metadata.json`, `remote_fetched_sources.json`, `remote_pin_verification.json`에 보존했다. 해시 일치는 실행·현장 자격·내용의 과학적 타당성 인증이 아니다.
+
+## 2. 질문별 판정
+
+아래 `PREP`는 `docs/reviews/lhs_inventory_execution_preparation_20261106/`, `OLD`는 `docs/reviews/lhs_pressure_inventory_20261104/`, `CLOSURE`는 `docs/reviews/lhs_pressure_inventory_closure_20261104/`다. 행 번호는 고정 핀 및 ZIP의 해당 파일 기준이다. 증거 ZIP의 `package/` 아래에 같은 파일을 보존했다.
+
+### Q1. 214건 거부 기록과 A01 기전, 최초 audit 원인 — 수용
+
+`PREP/README.md:11–18`은 다음 세 층을 분리한다.
+
+1. A01: 조상 디렉터리의 stat→open→fstat 사이 메타데이터가 변하면 선택 로그 바이트가 그대로여도 CHANGED/rc2를 낼 수 있다는 기전.
+2. 최초 audit 실패: 당시 root/case/errno 상세가 없어 실제 원인은 미확정. 후속 성공이나 합성 재현으로 역사 원인을 확정하지 않음.
+3. 기존 압력 기록 214건: 보고된 164건 후보 0, 30건 복수 후보, 20건 디렉터리 후보 열기 실패. 새 현장 관측이나 압력 도달 판정이 아님.
+
+보존 보고 `OLD/received/20261104-0233_lhs-pressure-refusal.md:24–39`와 부합한다. `scripts/lhs_pressure_record.py:128–139`는 읽을 수 없는 후보를 건너뛴 뒤 판정 줄이 있는 후보가 0개 또는 복수면 거부한다. 이것은 A01의 조상 메타데이터 비교와 다른 경로다. 로그 전송 누락설 및 두 로그가 동일 실행 사본이라는 설도 사실로 승격하지 않았다.
+
+`CLOSURE/external_verdict.txt:63–73`의 최초 실패/후속 관측 경계도 유지된다. rc 단언이 쓰기 audit 단언보다 먼저 실패했으므로 최초 실패를 “쓰기 검출”로 해석할 근거가 없다.
+
+**종결 가능한 것:** 이번 문서의 사건 구분·한정이 보존됐다는 확인. **종결하지 않는 것:** 최초 실패의 역사적 원인, 실제 214건의 현재 로그 상태, 압력 적격성.
+
+### Q2. 명령 보존과 WSL30/ibb184 구분 — 수용
+
+새 사본, `OLD/pressure_inventory.sh`, SOURCE_BASE의 해당 파일은 같은 바이트다.
+
+- SHA256: `2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634`
+- Git blob: `43ab80f0bbdc83125adbe6d3d65675eb55d8699c`
+
+명령의 고정 경로, 별칭, 계획 집합, 신원 가드, 출력 구조는 각각 `PREP/pressure_inventory.sh:23–25,72–76,180–186,249–266,234–238`과 대조했다. B7 원문 SHA256도 `34eb74142884489505590501840ccc6423a014a508989c82f135020146283ad3`으로 명령에 박힌 값과 같다. B7을 실행하거나 압력값을 읽지는 않았다.
+
+`PREP/README.md:48–53`은 WSL 30건과 ibb 184건을 분리하며, WSL 결과를 전체 214건 재고로 쓰지 않는다. 지정 경로의 현재 존재·배치, Python 실제 경로/버전도 `:28–34`에서 미측정으로 남긴다. ibb 접속·전송을 WSL 명령에 덧붙이지 않았다.
+
+**종결 가능한 것:** 기존 명령의 바이트·범위 보존 및 준비 문서의 구분. **미확인:** 실제 호스트의 신원·파일 배치·로그·POSIX/Lustre 동작.
+
+### Q3. 합성 진단과 가드 제거 대조 — 한정 수용
+
+새 시험은 전체 파일 변경 방어를 새로 인증하는 시험이 아니다. **조상 메타데이터 변경 거부 한 경로와 root/case 진단 전파를 겨냥한 시험**으로 수용한다.
+
+`PREP/test_ancestor_diagnostics.py:12–17`은 명령 속 Python을 `synthetic_inventory` 모듈로 적재하므로 `__main__` CLI를 부르지 않는다. `:28–42`는 임시 루트와 30건×2개 빈 로그를 만든다. `:46–57`에서 sibling 생성·삭제를 stat/open 사이에 삽입하고, `:59–67`은 실제 metadata 변화, rc2, root CHANGED, counted=0, 30개 거부 사유 및 선택 로그 바이트 보존을 검사한다. 이 시험은 의도적으로 임시 sibling을 쓰므로 “무쓰기 audit 통과”가 아니다.
+
+`PREP/replay_guard_mutation.py:9–20`은 비교 구문이 정확히 한 곳인지 확인하고 임시 사본의 그 비교만 제거한다. 전달된 `evidence/guard_mutation_py312.log:7–9`의 실패는 실제 rc 단언에서 expected 2 / observed 0으로 발생했다. 받은 로그에서는 환경 오류를 의도한 검출로 오인한 흔적이 없다. runner rc0과 mutant rc1은 서로 다른 의미이며 정상 시험 PASS 수로 합산하지 않는다. `timeout=30`은 이 음성 대조의 실행 예산일 뿐 원래 재고 명령의 시간 상한이 아니다.
+
+이번 독립 실행은 Windows Python 3.12.14에서 수행한 **작은 OS 모의 시험 3관측**이다. 원문에서 Refusal/error_code/stamp/open_dir/plan/inventory의 AST를 추출하고, 디렉터리·로그 접근은 가짜 객체로 대체했다.
+
+| 모의 입력 | 실제 관측 |
+|---|---|
+| 변경 없음, 원 가드 | rc0, INVENTORY_COMPLETE, COUNTED 30 |
+| stat/open 사이 조상 metadata 변경 | rc2, NOT_ESTABLISHED, root CHANGED, COUNTED 0, 30개 CHANGED |
+| 같은 변경 + 비교 가드 제거 | rc0, INVENTORY_COMPLETE, COUNTED 30 |
+
+세 경우 모두 모의 열린 descriptor는 종료 뒤 0이었다. 이 관측은 가드와 거부 전파의 인과를 지지하지만, 실제 파일시스템 race·전체 무쓰기·CLI·현장 신원을 증명하지 않는다. 원래 POSIX 합성 시험의 독립 재실행으로 세지 않는다.
+
+작성 측 Python 3.12.14/3.8.20의 각각 1/1 및 음성 대조 1건은 **수령 증거**로만 구분했다. 이번 독립 실행 숫자로 옮기지 않았다. 최초 audit 원인도 여전히 미확정이다.
+
+### Q4. 승인 후 WSL 절차·결과 확인·중단 경계 — 문서 절차로 수용
+
+`PREP/RUN_AFTER_AUTHOR_GO.sh.txt:8–20`은 계정·파일 종류·symlink·Python 가용성·명령 SHA를 사전 점검한다. 실제 Linux/WSL 신원은 봉인 명령에서 다시 확인한다. `:24–27`은 명령을 한 번 호출하고 실제 종료코드를 보존하며, 안내는 stderr에만 쓴다. 재시도·연결 실행·추가 JSON 출력은 없다.
+
+**이 보조 스크립트는 JSON 내용의 자동 검산기가 아니다.** 수용 대상은 `PREP/README.md:57–59`까지 포함한 운영자 확인 절차다. 그 절차는 프로세스 rc0, 완전한 JSON 정확히 하나, 최상위 status/rc, schema/mode, expected/count=30, 고정 case 집합을 모두 요구한다. 셸 rc0 하나만으로 다음 단계를 허용하는 근거로 쓰면 이번 수용 범위를 벗어난다.
+
+`README.md:44`는 해시 검사와 실행 사이의 원자성 부재를 명시하고 실행 중 파일 불변을 운영 조건으로 둔다. `:59`는 시작/신호/출력 실패, 장시간 대기·중단을 완료로 추정하지 않으며 시간 위험 해결도 주장하지 않는다. `:61`은 COUNTED가 빈 로그·0개 판정 줄·NaN 토큰·중복 로그와 양립함을 밝힌다. `:63`은 기존 거부 기록 보존 및 A/C·값 열람·압력 기록·단계 A의 별도 결정을 유지한다.
+
+`PREP/ledger_proposal.json:2–5,8–12,17–20`은 즉시 적용·종결·claimed_fixed를 만들지 않고 열린 조건과 A01을 남긴다. 문서 수용을 현장 실행·통합·원장 종결로 확대하지 않는다.
+
+## 3. 미실행·환경 한계
+
+현재 검토 환경은 Windows다. 실제 ibb/사용자 WSL, 연구 ROOTS, 원로그 및 압력값에 접근하지 않았다. 원래 POSIX 합성 시험·전체 suite·전체 게이트·시간 반례를 반복 실행하지 않았다.
+
+Git for Windows `sh.exe -n`으로 두 셸 파일의 구문 확인을 시도했으나, 둘 다 셸 초기화의 `NtCreateDirectoryObject(...): 0xC0000022` 오류로 파싱 전에 종료했다(rc -1073741502). **구문 검사 통과도 소스 구문 실패도 아니다.** 이 환경 제한을 피하려고 WSL을 호출하거나 권한을 확대하지 않았다. 작성 측 `sh -n` PASS는 수령 기록으로만 남는다. 세부 내용은 `evidence/review_environment.json`에 기록했다.
+
+## 4. 비차단 편집 메모
+
+`docs/collab/codex_to_claude/20261106-0455_lhs-inventory-preparation.md:3`에는 `<<sha:Prepare LHS inventory diagnosis and guarded WSL procedure>>` 자리표시자가 남는다. 이번 ZIP은 PIN/manifest/원격 blob으로 신원이 유일해 판정 차단이나 새 finding으로 세지 않았다. 이 쪽지만 단독 전달할 때는 실제 핀을 함께 적는 것이 좋다.
+
+## 5. 증거 및 재현
+
+독립 증거: `package_verification.json`, `remote_pin_verification.json`, `evidence/github_commit_metadata.json`, `remote_fetched_sources.json`, `evidence/probe_ancestor_mock.py`, `evidence/probe_ancestor_mock.stdout.json`. 원본 전달 내용은 `package/`에 보존했다.
+
+증거 ZIP을 푼 디렉터리에서 아래 명령은 패키지 바이트 대조 및 가짜 OS 객체만 사용하는 작은 모의 시험이다. 실제 WSL/ibb 재고 명령이 아니다.
+
+```text
+python -I -B evidence/verify_packaged_bytes.py
+python -I -B evidence/probe_ancestor_mock.py
+```
+
+새 P1/P2/P3: **없음(이번 한정 범위)**. 수정 요구나 기존 수용 재개봉 없음. A01 역사 원인·현재 현장 재고·시간 위험·실제 실행 승인·A/C 및 값 열람 규칙은 남는다. 발송·진행 순서는 1저자, Rint② 우선이다.
+
+**최종: 문서·정적 준비·한정 모의 관측 수용 / 전체 HOLD / 실제 실행·배포·통합·원장 종결 미승인.**
