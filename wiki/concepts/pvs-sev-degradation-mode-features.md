@@ -2,7 +2,7 @@
 title: PVS·SEV — 열화 모드 진단용 physics-inspired feature 2종
 description: "ICA 할선 기울기(PVS)와 스케일링된 충전종료 전압강하(SEV)의 정의, 물리 귀속, 그리고 모드별 부호 구조"
 created: 2026-09-03
-updated: 2026-09-22
+updated: 2026-11-06
 type: concept
 tags: [battery, degradation, research]
 sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/rhyu2025_systematic-feature-design-formation.md]
@@ -171,6 +171,22 @@ p.8) 가 discussion point ③ 을 실행했다 — PVS 를 **0.05C pOCV ICA 가 
 (c) 두 덱 모두 PVS 를 **Ah 축**에서 계산한다 → [[pvs-sev-lli-lampe-separability]]
 Status Log (10) 의 Gap 이 닫혔다 (총용량 정보가 섞이며, 그것은 이미 입력 SOH 다).
 **SEV 는 이 덱에 나오지 않는다.**
+
+## 정상 열화 자료에서는 피처의 몫이 드러나지 않는다 (2026-11-06 · 정성만)
+
+같은 연구실 후속 세미나 (2026-11-06) 의 학습 결과와 질의응답에서 나온 관찰을 수치 없이 적는다. 덱 · 녹취는 공개 저장소에 두지 않고
+(2026-10-13 결정), 질의응답에서 특허 준비가 언급돼 피처 정의 · 학습 설계의 새 세부도 적지 않는다.
+
+- **관찰:** 모드 용량을 예측하는 학습에서 중요도를 저율 용량 하나가 거의 다 가져갔다. 그 자료는 같은 조건의 정상 사이클이라 모드
+  용량이 모두 사이클 수와 함께 거의 선형으로 줄었다. 질의응답의 결론은 "피처를 뺄 것이 아니라 (BMS 는 잔존 용량을 늘 잰다) 피처가
+  역할을 할 조건 — 저온 Li 석출 · 고온 양극 손상처럼 모드가 따로 움직이는 비정상 열화, 조건을 바꿔 가는 사이클 — 을 실험 설계로
+  만들어야 한다" 였다.
+- `[해석]` 우리 축으로 옮기면 세 가지다. (a) 모드가 함께 움직이는 자료에서는 어떤 입력이든 모든 모드를 "예측" 한다 — 피처의 성공이
+  아니라 자료 안 **공선성**이다 ([[data-window-identifiability]] 와 같은 구조: 정보가 없는 창에서는 무엇을 넣어도 가를 수 없다).
+  (b) 라벨이 같은 적합에서 나온 추정값이면 라벨 자체의 축퇴가 학습으로 옮겨진다 (위 p.6 의 음수 `LAM_Si` 라벨과 같은 문제).
+  (c) 서로 상관된 입력 사이에서 permutation importance 는 몫을 나눠 갖거나 한쪽에 몰아 준다 — 묶음 중요도 · 제거 실험으로 확인해야
+  한다. 피처가 모드를 가르는지는 모드가 따로 움직이는 참값 자료로만 보일 수 있다 — 합성 truth 로 그런 궤적을 만드는 일은 후보로만
+  남긴다 (미승인).
 
 ## 불확실성
 

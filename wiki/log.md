@@ -3620,3 +3620,24 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   [[pyimpspec]] (Battery-EIS-Fit 한 줄 · 저장소 원문 대조 · watch)
 - 새 페이지 0 — Battery-EIS-Fit 은 지금 EIS 를 쓰는 흐름이 없어 단발 언급 (식별 가능성은 도구 스스로 `not_assessed`)
 - 하지 않은 것: 브리핑의 작은 검증 제안 (Ai2020 방전 26.10 ↔ 수정본 — 우리 경로 밖 · 버리는 venv 라도 별도 승인) · PyBaMM 수정본 · Battery-EIS-Fit 설치 · 실행 · Zenodo 자료 열람 · requirements 변경 (RUN_SCOPE)
+
+## [2026-11-06] update | 22p 두 번째 후속 세미나 (2026-11-06 BML) — 정성 인사이트만 (원자료 · 방법 세부 비공개 · 특허 언급) · 논문 후속 P3 범위화
+- 사용자 지시: "발표자한테 보낼 필요는 없고 2,3 번 하면 될듯" (2 = 위키 정리 · 3 = 논문 후속 P3 범위). 덱 (30 쪽) · 녹취 둘 (발표 · 질의응답) 을 받았다.
+- 2026-10-13 결정 (공개 저장소 → 덱 그림 · 협업 셀 수치 · 녹취를 올리지 않음) 을 그대로 따랐고, 질의응답에서 **특허 준비**가 언급돼 방법 세부 (피처 정의 · 손실함수 설계) 도
+  적지 않았다. raw 0 · 그림 크롭 0 · 녹취 저장 0.
+- 갱신: [[22p-physics-or-degeneracy]] Status Log (관측 셋 · E-γ + E-src → P3 · status `active` 유지) · [[fitting-degeneracy]] "초기값이 답을 지배" 절 (warm start = 가지 선택) ·
+  [[halfcell-ocp-shape-invariance]] 2026-10-13 절 4 번 (Si OCP 출처 → Si 몫 민감 · 체크리스트 (c) 를 P3 에서) · [[pvs-sev-degradation-mode-features]] 새 절 (정상 열화 자료에서는 피처의
+  몫이 안 드러남 — 공선성 · 라벨 축퇴 · 상관 입력의 permutation importance) · [[pocv-nonequilibrium-mode-bias]] P3 줄.
+- 요지 `[해석]`: 다중 시작 변동은 식별 신호이고 warm start 는 가지를 고를 뿐이다 · Si 몫은 Si OCP 출처에 민감하다 · 손실의 우열이 자료마다 뒤집힌다 = 안정성 ≠ 정확성 ·
+  정상 열화에서 용량이 중요도를 독차지하는 것은 자료 공선성이다. 질의응답의 "P2D 모델로 간접 검증" 은 우리 합성 truth 기계와 같은 축.
+- 논문 후속 P3: `followups/phantom-pocv/P3_APPROVAL_REQUEST.md` (Gr ↔ Si 재배분 truth · 형상 고정 4 매개 ↔ `γ_Si` 자유 5 매개 · warm ↔ cold 다중 시작 · 선택 Si 가지 불일치 · 실행 0 ·
+  사용자 승인 대기) · 상태판 `followups/phantom-pocv/STATUS.md` P3 줄.
+- 하지 않은 것: raw digest · 그림 크롭 · 녹취 저장 · 덱 수치 인용 · 발표자 회신 · 이미 공개된 2026-09 세미나 digest · 그림 · 녹취의 정리 (특허 관련 · 사용자 결정 대상).
+
+## [2026-11-06] update | REIL entity 진행 갱신 (2026-10-06 → 11-06) · index 줄 · paper-curator 경계 한 줄
+- 사용자 지시: "우리 bms 위키도 좀 갱신하면 좋을듯 다른것들도". 위키 log 의 마지막 항목이 2026-10-14 였다. 그 뒤 바뀐 흐름은 git log 대조로 REIL (원장 §61–§127) 과
+  COMSOL (Job commit event 설계 검토 · 위키 페이지 없음) 뿐이고, 게이트 루프 · ASSB · 논문 후속 (오늘 P3 전) 은 변화가 없었다.
+- 갱신: [[isu-uconn-lfp-gr-emulated-degradation]] — "실행 진행" 절 (P0 → C5 → C4 → C4-E → C4-A 를 원장 § 번호로 안내 · 수치 0 · 수용 범위 = 무경고 · 수렴 판정 아님) ·
+  "제안 실험" 절 머리 안내 · `updated`. index 의 같은 줄 ("E1–E3 미착수" → E3a 실행 · 수용 · C4-A 구현 요청 검토 대기).
+- `.claude/agents/paper-curator.md` — 연구실 세미나 덱은 digest 하지 않는다는 경계 한 줄 (에이전트 정의가 2026-09 세미나 digest 를 선례로 들고 있어, 10-13 결정 전 것임을 적음).
+- lint 0 errors (아래 커밋 직전 실행).

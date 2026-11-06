@@ -2,7 +2,7 @@
 title: 반쪽전지 OCP 형상 불변 가정과 그 파괴 (blend 전극)
 description: "The α·β affine-rescaling premise behind every electrode-balancing diagnostic, where it breaks for Si/graphite blends, and the directional bias it leaves in LLI/LAM"
 created: 2026-09-10
-updated: 2026-10-06
+updated: 2026-11-06
 type: concept
 tags: [battery, degradation, research]
 sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
@@ -287,8 +287,12 @@ K⁻¹ 로 **부호가 바뀐다**(sum rule 위반 후보 = 재료 변화·창 �
    한 track 은 음수 LAM_NE 를 냈다. "적용" 4 번의 체크리스트 (c) — `γ_Si ↔ α_NE` 상관 — 는 이번에도 뽑지 않았다.
 3. **위치별 half-cell 에서 탭 쪽 음극의 Si 신호가 먼저 사라졌다.** 형상 변화가 전극 안에서 균일하지 않다는 뜻이다. 셀 평균 `γ_Si` 하나로
    기술하는 것 자체가 근사다 — "반대 해석 / 데이터 공백" 의 "전극 불균일" 항목의 실물 후보.
+4. **(2026-11-06 후속 세미나 · 정성만 · 원자료 · 방법 세부 비공개)** Si OCP 출처를 바꾸면 맞춘 Si 몫이 크게 달라졌다. 1 번의 "평균 RMSE 로
+   출처를 고른다" 는 Si 몫을 정하는 근거로서 판별력이 검증되지 않았다 `[해석]`. 같은 덱에서 Si 몫을 연 적합의 다중 시작 변동도 보였다
+   ([[fitting-degeneracy]] 초기값 절). 참값으로 재는 설계는 논문 후속 P3 (`followups/phantom-pocv/P3_APPROVAL_REQUEST.md` · 다리 S = Si 가지
+   불일치 · 다리 F5 = `γ_Si ↔ α_NE` 상관 — 위 체크리스트 (c) 를 우리 truth 에서 처음 뽑는다 · 실행 0).
 
-22p 카드에서의 위치는 [[22p-physics-or-degeneracy]] Evidence For 끝 항목이다.
+22p 카드에서의 위치는 [[22p-physics-or-degeneracy]] Evidence For 끝 항목이다 (2026-11-06 후속은 같은 카드 Status Log).
 
 ## 관련
 - [[fitting-degeneracy]] — 같은 증상(적합도 불변, 파라미터 이동)의 다른 원인

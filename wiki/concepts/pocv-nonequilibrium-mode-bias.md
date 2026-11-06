@@ -2,7 +2,7 @@
 title: "pOCV 의 비평형 성분이 모드로 새는 경로 — IR · 이력(가지) · 창"
 description: "A low-rate pseudo-OCV still carries ohmic drop, branch hysteresis and window boundaries, and an electrode-balancing fit projects them onto LLI/LAM parameters (phantom modes). Same symptom as fitting degeneracy, different cause. Two ways to treat IR (measured R(SOC) pre-correction vs a fitted constant offset), where our synthetic truth sits, and what transfers to the REIL charge-curve fits"
 created: 2026-10-06
-updated: 2026-10-13
+updated: 2026-11-06
 type: concept
 tags: [battery, degradation, research]
 sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md, raw/repositories/2026-10-05-ampworks-on-synthetic-truth.md, raw/repositories/2026-10-01-pyprobe-dma-on-synthetic-truth.md, raw/articles/2026-10-13-github-research-briefing.md, raw/repositories/2026-10-13-ocvfit-on-synthetic-truth.md]
@@ -87,7 +87,8 @@ U_meas(Q) = U_PE^(b)(z_PE) − U_NE^(b)(z_NE) + η_kin(z, I) + I·R_Ω        (b
   꼭대기가 무겁다) · 음극 Si 몫 고정 (원문은 `φ_Si` 자유 — 흑연 ↔ Si 재배분이 우리 적합에서는 원리적으로 안 나온다).
 - **값싼 대조**: P1 (**완료 2026-10-06 — 아래 "P1 결과"**) — §7.10 표의 ①' 격차 bias **부호**를 원문의 방향 (미보정 → LAM_PE ↓ · LAM_NE ↑ → 격차 음)
   과 대조 (먼저 '오차' 부호 규약과 지표 차이 — 보정 대비 상대 ↔ 참값 대비 격차 — 를 고정). P2 — 꼭대기 무거운 SOC 의존 오프셋 다리.
-  P3 — `φ_Si` 자유 5 매개 적합 (참값을 아는 Gr ↔ Si 재배분). P4 — 충전 가지 + 탈리튬화 기준 (가지 불일치) 적합. P5 — 위 R 열 각도.
+  P3 — `φ_Si` 자유 5 매개 적합 (참값을 아는 Gr ↔ Si 재배분 · **범위안 · 승인 요청 2026-11-06 · 실행 0** — `followups/phantom-pocv/P3_APPROVAL_REQUEST.md` ·
+  [[22p-physics-or-degeneracy]] 후보 E-γ + E-src 와 같은 실험). P4 — 충전 가지 + 탈리튬화 기준 (가지 불일치) 적합. P5 — 위 R 열 각도.
 - 관측을 늘리는 쪽 ([[mode-observability]]) 에서 보면 충전 · 방전 두 가지는 같은 전극 상태의 **관측 둘**이다 — 가지별 기준 (이력 모형) 이
   있으면 정보가 늘고, 없으면 원문처럼 한 가지를 버린다. 원문은 동시 적합을 하지 않았다.
 

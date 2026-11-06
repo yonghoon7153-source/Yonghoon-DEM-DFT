@@ -2,7 +2,7 @@
 title: Fitting Degeneracy (LLI/LAM 분리가능성)
 description: "full-cell 곡선 하나로 LLI·LAM_PE·LAM_NE 를 가를 수 있는가 — flat valley(데이터 한계)와 multimodal(최적화 난이도)의 구분"
 created: 2026-08-11
-updated: 2026-10-13
+updated: 2026-11-06
 type: concept
 tags: [battery, degradation, research]
 sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md, raw/articles/2026-10-13-github-research-briefing.md, raw/repositories/2026-10-13-ocvfit-on-synthetic-truth.md]
@@ -235,6 +235,14 @@ mechanism**."
 값은 데이터가 아니라 정칙화가 고른다")의 **야생 실측**이며, 이 계보에서 처음으로
 **관측 개수를 통제한 대조군**과 함께 나타났다. 우리는 참값을 알므로 같은 설계로
 "초기값 → 실제 오차" 를 정량할 수 있다 (기존 artifact 재집계, 미실행).
+
+`[해석]` **같은 구조의 두 번째 야생 정황 (2026-11-06 · BML 세미나 · 정성만 · 원자료
+비공개):** Si 몫을 연 5 매개 적합에서 다중 시작 횟수를 늘리자 음극 LAM 이 두 값
+사이를 오갔고, 앞 사이클 해에서 시작하는 warm start 가 추세를 매끄럽게 만들었다.
+warm start 는 초기값으로 가지를 고르는 장치라 위 Table 5 의 "초기값이 남는다" 와
+같은 구조다 — **매끄러움은 식별의 증거가 아니다.** 위 "두 실패 모드" 중 어느 쪽인지
+(평평한 골 ↔ 여러 극소) 는 참값 없이 가를 수 없다. 참값으로 재는 설계: 논문 후속 P3
+`followups/phantom-pocv/P3_APPROVAL_REQUEST.md` (다리 F5 · W · 실행 0).
 
 ## 판정 방법 (요약)
 정답을 아는 합성 격자에서 복원 오차 |err| 와 tol(2%p) 기반 degenerate 판정,

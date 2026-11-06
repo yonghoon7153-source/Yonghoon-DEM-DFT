@@ -2,7 +2,7 @@
 title: 22p 결과는 물리인가 fitting degeneracy 인가
 description: "Is the seminar 22p LLI/LAM decomposition (LAM_PE=LAM_NE=13%, LLI=17%) real physics or an artifact of non-identifiability"
 created: 2026-08-11
-updated: 2026-10-13
+updated: 2026-11-06
 type: research-question
 tags: [battery, degradation, research]
 sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md, raw/articles/2026-10-13-github-research-briefing.md, raw/repositories/2026-10-13-ocvfit-on-synthetic-truth.md]
@@ -1204,6 +1204,18 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   - **E-zone**: 두 영역 혼합 truth → 균질 적합의 편향.
   - **E-IR**: knee 뒤 음극 저항을 0.05 C 곡선에 주입 → 유령 모드의 크기.
   - **E-src**: Si OCV 출처 불일치 → RMSE 순위가 모드 정확도 순위와 맞는가.
+- **[2026-11-06]** 같은 연구실의 두 번째 후속 세미나 (2026-11-06 · BML) 와 질의응답 녹취를 받았다. 2026-10-13 결정대로 덱 · 녹취 · 수치는 저장소에
+  두지 않는다. 이번에는 질의응답에서 **특허 준비**가 언급돼 방법 세부 (피처 정의 · 손실함수 설계) 도 적지 않는다. **status 는 `active` 유지**
+  (새 근거 0 · 우리 truth 로 잰 것 없음). 이 카드에 닿는 정성 관측 셋:
+  ① Si 몫을 여는 적합에서 다중 시작 횟수에 따라 음극 LAM 이 두 값 사이를 오갔고, 앞 사이클 해에서 시작하는 warm start 로 추세가 매끄러워졌다.
+  초기 사이클에서는 Si 손실이 음수로 나오기도 했다. `[해석]` 다중 시작의 변동은 식별 문제의 신호이고, warm start 는 그중 한 가지를 고를 뿐
+  푼 것이 아니다 ([[fitting-degeneracy]] "초기값이 답을 지배" 절과 같은 구조).
+  ② Si OCP 출처에 따라 맞춘 Si 몫이 크게 달라졌다 — 위 E-src 의 실물 정황.
+  ③ 손실함수의 우열이 자료마다 뒤집혔다 (한 자료에서 나은 손실이 다른 자료에서는 덜 안정). `[해석]` 안정성 · 잔차는 정확성이 아니다.
+  참값 없이는 손실을 고를 수 없다는 것이 우리 목적함수 비교의 전제다 (`degradation-degeneracy/docs/RESULTS_PAIRED_FIXED5.md` · 수치는 정본에서).
+  → **E-γ (+ E-src) 를 논문 후속 P3 로 범위화했다** — 사본 경로라 RUN_SCOPE 변경 · 게이트가 없다: `followups/phantom-pocv/P3_APPROVAL_REQUEST.md`
+  (실행 0 · 사용자 승인 대기). 질의응답에서 "P2D 모델로 간접 검증" 이 연구실 방법의 신뢰도 근거로 거론됐다 — 이 카드가 쓰는 기계 (PyBaMM DFN
+  합성 truth → 적합 → 채점) 가 바로 그 축이다.
 
 ### 이 카드가 속한 논지 (2026-09-03)
 

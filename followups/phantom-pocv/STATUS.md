@@ -12,6 +12,7 @@
 | raw digest | `wiki/raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md` |
 | 개념 페이지 (P1–P5 정의 · P1 결과) | `wiki/concepts/pocv-nonequilibrium-mode-bias.md` |
 | 우리 쪽 비교 대상 | `degradation-degeneracy/docs/09_22P_GAP.md` §7.10 (ocpbias PE 균일 오프셋 다리 · 정본 수치) |
+| P3 범위안 · 승인 요청 | `followups/phantom-pocv/P3_APPROVAL_REQUEST.md` (2026-11-06 · 실행 0) |
 
 ## 진행표
 
@@ -19,7 +20,7 @@
 |---|---|---|---|---|
 | P1 | §7.10 격차 bias 부호 대조 (재집계 · 실행 0) | **완료** — 원점 건강 PE 오프셋 다리 5 개 모두 0 mV 대비 + (논문 IR 방향과 반대) · 성분별 부호는 원 fit 부재로 미확인 | 개념 페이지 "P1 결과" · `a11e6d27a` · `cfb6216aa` · `143e9f444` | — |
 | P2 | 꼭대기 무거운 SOC 의존 PE 오프셋 다리 (같은 평균의 균일 다리와 비교) | **닫힘 (2026-10-07 · 미리 고정한 규칙대로 · 결론 없음)** — 실행 1 회 · §5 중단 (L5 원점 a_ne 오염 · 권고 5 세트 중단) · 캐시 · L1 원점 · 조건 집합 · L2 / L3 + 부호 재현은 통과 · tilt 해석 안 함 · 규칙 사후 변경 안 함 · 진단 전용 (인용 금지) | `p2_20261006/README.md` ("종결") · `P2_APPROVAL_REQUEST.md` §8 | 다시 묻는다면 새 설계 · 새 승인 (자동 재개 없음) |
-| P3 | `φ_Si` 자유 5 매개 적합 | 대기 (P2 결정 뒤) | — | — |
+| P3 | `φ_Si` 자유 5 매개 적합 — Gr ↔ Si 재배분 truth (LAM_Si ≠ LAM_Gr) 에 형상 고정 4 매개 ↔ `γ_Si` 자유 5 매개 · warm start ↔ 독립 다중 시작 · (선택) Si 가지 불일치 | **범위안 · 승인 요청 작성 (2026-11-06 · 실행 0)** — 22p 카드 후보 E-γ (+ E-src) 와 같은 실험을 사본 경로로 · 동기 = BML 후속 세미나 둘 (10-07 · 11-06) 의 정성 관측 (덱 · 수치 비공개) | `P3_APPROVAL_REQUEST.md` | 사용자 승인 (§7 채택 문구) 또는 §4 수정 |
 | P4 | 충전 가지 + 탈리튬화 기준 (가지 불일치) 적합 | 대기 | — | REIL 해석 제한과 연결 |
 | P5 | 적합 R 오프셋 열의 각도 (PyDMA · ampworks 방식) | 대기 | — | REIL §24 의 PyDMA 비교와 연결 |
 

@@ -21,6 +21,10 @@ across scattered files again.
 
 ## 이 저장소의 경계 (어기면 안 되는 것)
 
+- **연구실 세미나 덱 · 녹취는 digest 하지 않는다.** 저장소가 공개라 raw digest · 그림 크롭 · 녹취 저장 · 덱 수치 인용을 하지 않고, 우리
+  해석만 기존 페이지에 정성으로 적는다 (2026-10-13 사용자 결정 · 2026-11-06 세미나 질의응답에서 특허 준비 언급 — `wiki/log.md` 두 항목).
+  아래에 선례로 나오는 2026-09 세미나 digest 는 그 결정 **전**의 것이다. 덱을 받으면 먼저 사용자에게 묻는다.
+
 - **RUN_SCOPE 금지**: `degradation-degeneracy/` 의 `src/ tools/ configs/
   scripts/ run.sh requirements*.txt` 는 절대 건드리지 않는다 — 게이트 리뷰
   대상 code identity 가 움직여 기존 산출물이 무효화된다 (재생성 ~28분+10시간).
