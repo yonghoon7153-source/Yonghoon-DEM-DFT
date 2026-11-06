@@ -3518,3 +3518,30 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   - 실행 단계 시간 배분안 (U2 의 입력): 전체 36,000 s = 착수 창 5,400 s + 단계 28,800 s + R 1,800 s · unit 900 s = unit 의 첫 시작 → 마지막 끝 (작업자 4 포함).
 - **발송문:** `docs/REIL_C4A_IMPL_REQUEST_SEND_20261106.md`.
 - **다음:** Codex 사전 검토 → (수용되면) 사용자의 구현 승인 · U2 선택. 이 기록은 구현 · 시험 · 실행의 승인이 아니다.
+
+## §128 C4-A 구현 요청서 v1 사전 검토 회신 (REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL · C4A-IMPL-N1–N7 · 문구 C1) (2026-11-06 KST · 덧붙임 — 위 §0–§127 은 그대로)
+
+- **회신 보존:** `reviews/review_reil_c4a_impl_prereview_20261106/` — ZIP (1,717,671 B · `590d27d9864ddada…` = 영수증의 archive sha) + originals 155 (안전 풀기) ·
+  커밋 `c048d1fe` (보존 규칙) · 바이트 보존 커밋 `dc9be360` (ZIP blob worktree = tree `3a0cdb90…`). manifest 154 / 154 일치 (남는 것은 manifest 자신) · `source/` 131 중
+  130 = 고정 HEAD `86cab053` 의 바이트 · 나머지 1 (`source/external/util_LFP.py`) = 받은 util 의 고정 sha `3c19e45e…` · `input/` 2 = 구현 요청서 v1 (`86f2d631…` ·
+  15,873 B) · 발송문 (`95bcbbb3…` · 2,571 B) · `basis/prior_scope_v2_review/` 7 중 5 = §125 의 보존 회신과 같은 바이트 · 나머지 둘 (그 회신의 영수증 · 포장 반환) 은
+  그 회신 ZIP sha (`af498741…`) 를 가리킨다 · 비밀 검사 156 파일 hits 0. ZIP 밖 영수증 · 도구 반환은 사용자가 대화에 붙인 JSON 이다 (manifest `7142d98a…` ·
+  post_package `76ff61a1…` · 도구 반환 exit 0). 그 전에 같은 날 05:52 에 받은 `REIL_C4A_SCOPE_REVIEW_20261106.zip` 은 §124 의 보존 ZIP 과 sha256 (`8bccc94e…`)
+  까지 같은 재전송이라 다시 보존하지 않았다.
+- **판정 (검토자):** 구현 · 시험 승인 전 정정 필요 — 새 지적 7 (P1 3 · P2 4) + 문구 보충 C1. 범위안 v2 수용 · C4A-SCOPE-N1–N4 종결 유지 · 기존 E1-2 / E1-3 ·
+  C4-0b1 / 0b2 한정 수용 유지 · 재시험 · 재반입 불요.
+
+| ID | 등급 | 요지 (검토자 인용 행은 고정 소스 기준) | 구현 요청서 v2 에서 할 것 |
+|---|---|---|---|
+| C4A-IMPL-N1 | P1 | 전체 회귀 GREEN 과 "실제 실행 0" 을 같이 요구할 수 없다 — `test_reil_c4_0a.py:349–364` (보존 util · 실제 NSGA2) · `test_reil_c4_0b1.py:396–415` (실제 `scipy.minimize`) · `test_reil_c4_0b2.py:307–321 · 446–456` (실제 COBYQA) · launcher 회귀 (자식 · 손주 · SIGKILL · /proc · 로컬 Git) | RED 전에 회귀 nodeid · 호출 종류 · 수 / 상한 · 환경을 고정 — 합성 실제 호출 허용 목록 또는 fake 부분집합 + 제외 공개 (선택은 사용자) |
+| C4A-IMPL-N2 | P2 | 새 경고 두 필드 ↔ 기존 exact-row 기대값 (`test_reil_c4_0b2.py:193 · 201–228`) 충돌 | 새 필드의 정상 · 오류 · partial 의미 확정 · 세 기대 행의 제한적 schema 정정을 허용 파일 · 사전 봉인에 |
+| C4A-IMPL-N3 | P1 | 최종 20 / 50 자름은 실행 중 저장 상한이 아니다 (H:836–848 전량 저장 · 조기 구조 오류 842–845 · `_partial` 737–747) | 수집 시점 상한 (키 · 문구 바이트) · 계수 · overflow · 하한 / 미확정 구분 · 정상 / 부분 공통 의미 · 상한 뒤 늦은 Unknown solver options 도 구조 중지 · `_assess` 미포착의 stderr 한도 |
+| C4A-IMPL-N4 | P1 | I1 runner 식이 중지 · 자원 · 시간 · 증거를 잇지 않는다 (HB:1074–1078 wave 마다 새 t0 · monitor `stop_rule` None · `out_roots` () · supervisor 원근거 미보존) | runner 어댑터 (wave 신원 · task→unit · StopRule_A · 출력 루트 / 여유 · 불변 절대 마감의 잔여 · supervisor 반환 보존) · unit 900 s 책임자 · 정리 20 s 의 의미 · 마감 연결 표 |
+| C4A-IMPL-N5 | P2 | 비용식 표본 자격 미정의 (n_eval 0 · 0 평가 지역 오류 → 0 나누기) | termination 별 자격 · 유한 비음수 wall · bool 제외 양의 정수 n_eval · 적격 ≥ 8 · 0 평가 지역 오류는 원기록 보존 + 표본 제외 |
+| C4A-IMPL-N6 | P2 | SOURCES_A 자체의 외부 승인 sha 결속 · 실행 틀 소스 결속 없음 · `REQUEST=` 가 실행 `--approval` 에 들어감 | implementation_basis ↔ execution_request 분리 · 실행 승인 결속이 없거나 다르면 run-a 거부 · T05 / T14 대조 |
+| C4A-IMPL-N7 | P2 | 세 집계 조건 0 이 행 신원 무결성을 보장하지 않는다 (HB:1362–1383 · 중복 대체 · 127 / 129 상쇄 — 정적 반례) | unit 별 행 수 · run_id / task_id · unit · x0 무결성을 따로 저장 · 실행 유효성 · Parent 소비 · C4-B 인계에 연결 (정당한 미완 보존) |
+| C1 | 문구 | STORE_A 를 두 번 배타 생성하는 것으로 읽힌다 | 한 번의 공통 최종 게시 또는 다른 snapshot 경로 · 쓰기 실패 뒤 처리 · 최종 sha 결속 (T09 / T13) |
+
+- **남은 것:** U2 (10 h 배분) 는 미선택 제안 그대로 · 검토는 숫자를 채택하지 않았다. 이번 회신은 구현 · 시험 · 실행 승인이 아니다 (검토자 수행: 대상 코드 · 시험 ·
+  자료 개봉 · 최적화 · COMSOL 0).
+- **다음:** 구현 요청서 v2 (v1 보존 · 새 경로) + N1–N7 · C1 대응표 → Codex 재검토. v2 를 쓰기 전 사용자 선택 하나 — N1 의 회귀 범위. 이 기록은 어느 단계의 승인도 아니다.
