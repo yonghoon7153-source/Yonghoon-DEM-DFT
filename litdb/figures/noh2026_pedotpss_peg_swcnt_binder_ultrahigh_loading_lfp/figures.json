@@ -1,0 +1,862 @@
+{
+ "slug": "noh2026_pedotpss_peg_swcnt_binder_ultrahigh_loading_lfp",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-06",
+ "sources": [
+  "70. Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+  "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic illustration of the advantages of using PEDOT:PSS/PEG (PPP) with SWCNTs as a bifunctional binder for LFP cathodes, which highlights the enhanced energy density (99 % LFP loading) and improved electrode performance enabled by PEG-induced phase separation and conductive networks of SWCNTs. 2.2. Morphological and interfacial characteristics of LFP cathodes with PEDOT:PSS/PEG binder Although the 4 % PEDOT:PSS/PEG binder ensures uniform coverage and effectively enhances electron conductivity and charge transport, the use of minimal binder content raises a reasonable concern that cohesion properties could weaken, potentially compromising the battery perfor­ mance. To address this issue, we evaluated the cohesion characteristics using a surface and interfacial cutting and analysis system (SAICAS) [61]. As schematically illustrated in Fig. 2h, the SAICAS technique employs a dia",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    328.8
+   ],
+   "w": 2228,
+   "h": 1166,
+   "dpi": 300,
+   "src": "70. Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.734
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Comparative characterization of LFP cathodes prepared with PVDF and SuperC45, or with PEDOT:PSS/PEG (PPP) bifunctional binder. (a, b) Plane-view and (c, d) cross-sectional SEM images with corresponding EDS elemental mapping of (a, c) LFP:PVDF:SuperC45 (80:10:10), and (b, d) LFP:PPP (96:04). (e) HR-TEM images of LFP particles coated with a thin PPP bifunctional binder layer. (f) Nyquist plots from EIS results for LFP:PVDF:SuperC45 (80:10:10, 90:05:05, and 96:02:02) and LFP:PPP (96:04, 97:03, 98:02, and 99:01). (g) Conductivity plots of the same electrodes. (h) Schematic diagrams of measurement by SAICAS. (i) Cohesion strengths of LFP:PVDF:SuperC45 (80:10:10, 90:05:05, and 96:02:02) and LFP:PPP (96:04, 97:03, 98:02, and 99:01). (j) Optimized interfacial structures and calculated interaction energies for LFP|PVDF, LFP|PEG and LFP|PEDOT:PSS systems. PSS demonstrated considerably stro",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    594.1
+   ],
+   "w": 2228,
+   "h": 2271,
+   "dpi": 300,
+   "src": "70. Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.603
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Comparative electrochemical performances of LFP cathodes prepared with PVDF and SuperC45, or with PEDOT:PSS/PEG (PPP) bifunctional binder. (a) Galvanostatic charge-discharge curves at a current density of 0.1 C and (b) rate capability of LFP:PVDF:SuperC45 electrodes with different ratios (80:10:10, 90:05:05, and 96:02:02). Galvanostatic electrochemical performances of LFP:PPP (96:04) cathode: (c) charge-discharge curves at different current densities (0.1 C, 0.4 C, 1 C, 3 C, and 8 C), (d) rate capability, (e) cycling performance at 3 C. (f) Plane-view and (g) cross-sectional SEM images of the LFP:PPP (96:04) electrode after 1000 cycles at 3 C. (h) Rate capability, (i) capacity retentions of each C-rate and (j) cycling performance of LFP:PVDF:SuperC45 (80:10:10) and LFP:PPP (96:04) cathodes at 60 ◦C. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    373.7,
+    565.8,
+    692.6
+   ],
+   "w": 2227,
+   "h": 1330,
+   "dpi": 300,
+   "src": "70. Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.796
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. SEM images of the LFP/SWCNT:PPP electrodes with ratios of (a) 97/03(1.0:2.0) and (b) 98/02(0.6:1.4), showing that SWCNTs (highlighted in red) were uniformly dispersed and formed a network structure throughout the LFP particles. (c) Nyquist plots from EIS results for LFP/PPP cathodes with SWCNT incorporation at different ratios (LFP/(SWCNT:PPP) = 97/03(1.0:2.0), 98/02(0.6:1.4), and 99/01(0.3:0.7)). (d) Conductivity plots and (e) cohesion strengths of the same elec­ trodes as measured by SAICAS. Galvanostatic electrochemical performances of LFP/SWCNT:PPP cathodes (97/03, and 98/02): (f) charge-discharge curves of the 97/ 03 and (g) 98/02 cathodes at different current densities (0.1 C, 0.4 C, 1 C, 3 C, and 8 C), (h) rate capability, and (i) cycling performance at 3 C. (j) Cross-sectional SEM images of the 99/01 cathodes cast on a graphite-coated Al current collector (coating layer i",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    623.8
+   ],
+   "w": 2227,
+   "h": 2393,
+   "dpi": 300,
+   "src": "70. Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.753
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Galvanostatic electrochemical performance of full-cells using the (a–c) LFP/SWCNT:PPP (98/02) cathode cast on a pristine Al current collector and the (d–f) LFP/SWCNT:PPP (99/01) cathode cast on a graphite-coated Al current collector, both paired with an MCMB graphite anode. (a, d) Charge-discharge curves at different current densities (0.1 C, 0.4 C, 1 C, 3 C, and 8 C). (b, e) Rate capability. (c, f) Cycling performance at 3 C. (g) Ragone plot comparing LFP/SWCNT:PPP (99/ 01) full cells with previously reported LIB systems using LFP cathodes [67–76]. (h) Rate capability, (i) capacity retentions of each C-rate and (j) cycling performance of LFP/SWCNT:PPP (99/01) full cells at 60 ◦C. cycling stability was maintained, with the cell retaining 96.5 % of its initial capacity after 600 cycles (Fig. 5c). Post-mortem SEM analysis further verified the robustness of the electrode (Fig. S35).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    479.8
+   ],
+   "w": 2228,
+   "h": 1793,
+   "dpi": 300,
+   "src": "70. Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.867
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1 ׀ (a) 2D GIWAX patterns of PEDOT:PSS films with and without PEG blending (b) Azimuthal intensity profiles of the characteristic PEDOT diffraction peak (c) Plot of crystallite sizes of PP and PPP estimated from the GIWAXS peak widths in the out-of-plane (qz, face-on orientation; closed symbols) and in-plane (qxy, edge-on orientation; open symbols) directions (d) Relative degree of crystallinity calculated from the integrated intensity of the (010) diffraction peak and normalized to that of the PP film.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.6,
+    532.4,
+    505.8
+   ],
+   "w": 1944,
+   "h": 1831,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.761
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2 ׀ Comparison of the characteristics of LFP cathodes containing PEDOT:PSS binders with and without PEG, evaluated by (a) Nyquist plots, (b) electrical conductivity measurements, and (c) galvanostatic charge/discharge profiles at a current density of 0.1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    535.4,
+    218.0
+   ],
+   "w": 1956,
+   "h": 634,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3 ׀ Plane-view SEM images of LFP:PVDF:Super C45 cathodes with composition ratios of (a) 80:10:10, (b) 90:05:05, and (c) 96:02:02. Red arrows denote the cracks observed on the electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.2,
+    434.2
+   ],
+   "w": 1943,
+   "h": 1535,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.626
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4 ׀ Plane-view SEM images of LFP:PPP cathodes with composition ratios of (a) 96:04, (b) 97:03, (c) 98:02, and (d) 99:01.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    555.0
+   ],
+   "w": 1944,
+   "h": 2038,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.605
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 8,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5 ׀ (a) Schematic illustration of the measurement setup for the surface and interfacial cutting analysis system (SAICAS). Cohesion strengths of LFP electrodes employing (b) PVDF and Super C45 (LFP:PVDF:Super C45 = 80:10:10, 90:05:05, and 96:02:02), and (c) PEDOT:PSS/PEG bifunctional binders (LFP:PEDOT:PSS/PEG = 96:04, 97:03, 98:02, and 99:01).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    206.2
+   ],
+   "w": 1944,
+   "h": 585,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6 ׀ Digital photographs comparing the adhesive properties of LFP electrodes employing the PEDOT:PSS/PEG (PPP) binder with those using PVDF and Super C45, evaluated by repeated scraping with a cotton swab. Panels within the green rectangle (a–d) show LFP:PVDF:Super C45 electrodes with different composition ratios (90:05:05 and 96:02:02) before (a–b) and after (c–d) four consecutive scraping tests. Panels within the blue rectangle (e–l) show LFP:PPP electrodes with different composition ratios (96:04, 97:03, 98:02, and 99:01) before (e–h) and after (i–l) four consecutive scraping tests.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    326.5
+   ],
+   "w": 1944,
+   "h": 1086,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.407
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7 ׀ Plot of cohesion strength for LFP/PEDOT:PSS (96/04) electrodes with and without PEG.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.0,
+    265.5
+   ],
+   "w": 1942,
+   "h": 832,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 11,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8 ׀ (a) Optimized interfacial structures and (b) Calculated interaction energies for SWCNT|PEG and SWCNT|PEDOT:PSS systems. The SWCNT surface is modeled as a π- conjugated sp2 carbon surface.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.2,
+    251.5
+   ],
+   "w": 1943,
+   "h": 773,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 12,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9 ׀ Galvanostatic Charge/discharge curves of LFP cathodes based on PVDF and SuperC45 (LFP:PVDF:SuperC45 = 80:10:10) at different current densities (0.1 C, 0.4 C, 1 C, 3 C, and 8 C).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    325.7
+   ],
+   "w": 1944,
+   "h": 1083,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 13,
+   "file": "fig_S10.png",
+   "caption": "Fig. S10 ׀ (a) Galvanostatic Charge/discharge curves at a current density of 0.1 C and (b) rate capability of LFP cathodes based on PEDOT:PSS/PEG (PPP) binder with different ratios (LFP:PPP = 96:04, 97:03, 98:02, and 99:01).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    264.6
+   ],
+   "w": 1944,
+   "h": 828,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 14,
+   "file": "fig_S11.png",
+   "caption": "Fig. S11 ׀ (a) Cycling performance of LFP cathodes based on PVDF and SuperC45 (LFP:PVDF:SuperC45 = 80:10:10 and 90:05:05) at 3 C. (b) Plane-view and (c) cross-sectional SEM images of the LFP:PVDF:SuperC45 (80:10:10) electrode after 1000 cycles at 3 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    401.2
+   ],
+   "w": 1944,
+   "h": 1397,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.795
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 15,
+   "file": "fig_S12.png",
+   "caption": "Fig. S12 ׀ EDS elemental mapping results of (a) LFP:PVDF:Super C45 (80:10:10) and (b) LFP:PEDOT:PSS/PEG (PPP, 96:04) cathodes after 1000 cycles at 3 C, where the left images correspond to plane-view and the right images to cross-sectional views.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    311.5
+   ],
+   "w": 1944,
+   "h": 1023,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.419
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 16,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13 ׀ (a) Plane-view and (b) cross-sectional SEM images of the LFP:PPP (96:04) cathodes after 400 cycles at 60 °C and 3 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    218.3
+   ],
+   "w": 1944,
+   "h": 635,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.273
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 17,
+   "file": "fig_S14.png",
+   "caption": "Fig. S14 ׀ (a) Schematic illustration of the preparation process for the LFP/SWCNT mixed powder. (b) SEM images of the resulting LFP/SWCNT (97/1) mixed powder, showing uniformly dispersed SWCNTs forming an interconnected network structure throughout the LFP particles (indicated by red arrows).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.0,
+    453.6
+   ],
+   "w": 1942,
+   "h": 1616,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.539
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 18,
+   "file": "fig_S15.png",
+   "caption": "Fig. S15 ׀ EIS results of LFP cathodes containing the PEDOT:PSS/PEG (PPP) binder with SWCNT incorporation (LFP:binder = 97:3) at various SWCNT-to-PPP ratios (1:2, 1:1, and 2:1).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.2,
+    308.2
+   ],
+   "w": 1943,
+   "h": 1010,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 19,
+   "file": "fig_S16.png",
+   "caption": "Fig. S16 ׀ Cross-sectional SEM images and corresponding EDS elemental mapping results of (a) LFP/SWCNT/PPP = 97/1.0/2.0 and (b) LFP/SWCNT/PPP = 98/0.6/1.4 cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.1,
+    217.7
+   ],
+   "w": 1943,
+   "h": 633,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.201
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 20,
+   "file": "fig_S17.png",
+   "caption": "Fig. S17 ׀ Low-magnification TEM images showing the distribution of SWCNTs within the LFP electrode at multiple locations.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.0,
+    183.9
+   ],
+   "w": 1942,
+   "h": 492,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.158
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 21,
+   "file": "fig_S18.png",
+   "caption": "Fig. S18 ׀ Digital optical micrographs of LFP/SWCNT/PPP (97/1.0/2.0) electrodes fabricated under (a) well-dispersed and (b) poorly dispersed SWCNT conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    67.2,
+    532.4,
+    188.8
+   ],
+   "w": 1944,
+   "h": 507,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.509
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 22,
+   "file": "fig_S19.png",
+   "caption": "Fig. S19 ׀ Plot of electronic conductivity of LFP/SWCNT/PPP (97/1.0/2.0) electrodes fabricated under poorly dispersed and well-dispersed SWCNT conditions",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    259.5
+   ],
+   "w": 1944,
+   "h": 807,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.98
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 23,
+   "file": "fig_S20.png",
+   "caption": "Fig. S20 ׀ Digital photographs comparing the adhesive properties of LFP/SWCNT:PPP electrodes cast on pristine Al current collectors. Panels (a–c) and (d–f) show the electrodes before and after four consecutive scraping tests with a cotton swab, respectively. The electrodes correspond to compositions of (a, d) 97/03 (1.0:2.0), (b, e) 98/02 (0.6:1.4), and (c, f) 99/01 (0.3:0.7).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    385.5
+   ],
+   "w": 1944,
+   "h": 1332,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.716
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 24,
+   "file": "fig_S21.png",
+   "caption": "Fig. S21 ׀ Cohesion strengths of LFP electrodes employing the PEDOT:PSS/PEG (PPP) binder with SWCNT incorporation, measured by SAICAS, at different composition ratios (LFP/SWCNT:PPP = 97/03, 98/02, and 99/01).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.3,
+    312.0
+   ],
+   "w": 1944,
+   "h": 1025,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 25,
+   "file": "fig_S22.png",
+   "caption": "Fig. S22 ׀ Electrochemical performance of the LFP/SWCNT:PPP (98/02) electrode at extended active material loadings. Galvanostatic voltage profiles measured at 0.1 C, 0.4 C, 1 C, 3 C, and 8 C for electrodes with areal loadings of (a) 5–7 mg cm-2 and (b) 8–10 mg cm-2. (c) Cycling performance of electrodes with areal loadings of 5–7 mg cm-2 (light orange) and 8–10 mg cm-2 (orange).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    356.4
+   ],
+   "w": 1944,
+   "h": 1211,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 26,
+   "file": "fig_S23.png",
+   "caption": "Fig. S23 ׀ Cycling-dependent electrochemical impedance spectra (EIS) of (a) LFP:PPP (97:03) and (b) LFP/SWCNT:PPP (97/03(1.0:2.0)) electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.0,
+    271.9
+   ],
+   "w": 1942,
+   "h": 858,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 27,
+   "file": "fig_S24.png",
+   "caption": "Fig. S24 ׀ SEM images of the LFP/SWCNT:PPP electrode after 1000 cycles at 3 C: (a, c) plane-view and (b, d) cross-sectional views of (a, b) 97/03 and (c, d) 98/02 cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    111.8,
+    532.2,
+    382.7
+   ],
+   "w": 1943,
+   "h": 1130,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.33
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 28,
+   "file": "fig_S25.png",
+   "caption": "Fig. S25 ׀ Electrical conductivity of LFP electrodes fabricated with PPP and SWCNT/PPP binders measured before and after 100 charge–discharge cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    269.1
+   ],
+   "w": 1944,
+   "h": 847,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 29,
+   "file": "fig_S26.png",
+   "caption": "Fig. S26 ׀ Plots of (a) rate capability and (b) cycling performance at 3 C for LFP/SWCNT:PPP (98/02) cathodes measured at 60 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.2,
+    255.8
+   ],
+   "w": 1943,
+   "h": 792,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 31,
+   "file": "fig_S28.png",
+   "caption": "Fig. S28 ׀ Comparison of swelling ratios of PVDF and PPP binder films in electrolyte at 60 ℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    268.8
+   ],
+   "w": 1944,
+   "h": 846,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.975
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 32,
+   "file": "fig_S29.png",
+   "caption": "Fig. S29 ׀ Digital photographs comparing the adhesive ability of the LFP/SWCNT:PPP (99/01) electrode cast on a graphite-coated Al (CC-Al) current collector. Shown are the electrodes (a) before and (b) after four consecutive scrape tests using a cotton swab.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.3,
+    220.2
+   ],
+   "w": 1943,
+   "h": 643,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.789
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": 33,
+   "file": "fig_S30.png",
+   "caption": "Fig. S30 ׀ Plot of the rate capability of the LFP/SWCNT:PPP (99/01) cathode using a pristine Al current collector (violet circles), compared with that employing a graphite-coated Al foil (purple circles) shown in Fig. 4m.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    312.0
+   ],
+   "w": 1944,
+   "h": 1025,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 34,
+   "file": "fig_S31.png",
+   "caption": "Fig. S31 ׀ Cyclic voltammetry (CV) profiles of (a) the LFP:PPP (96:04) electrode and (b) the LFP/SWCNT:PPP (99/01) electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.8,
+    532.4,
+    230.1
+   ],
+   "w": 1944,
+   "h": 627,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 35,
+   "file": "fig_S32.png",
+   "caption": "Fig. S32 ׀ SEM images of the LFP/SWCNT:PPP electrode after 1000 cycles at 3 C: (a) plane- view and (b) cross-sectional views of the 99/01 cathode. (c) Magnified cross-sectional SEM image of (b), showing SWCNTs bridging LFP particles across microcracks and maintaining electrical connectivity after prolonged cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.3,
+    172.1
+   ],
+   "w": 1944,
+   "h": 443,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.295
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": 36,
+   "file": "fig_S33.png",
+   "caption": "Fig. S33 ׀ Galvanostatic charge/discharge curves at an areal current density of 0.1 mA cm-2 of the thick LFP/SWCNT:PPP (99/01) cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    297.0
+   ],
+   "w": 1944,
+   "h": 963,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "fS34",
+   "kind": "figure",
+   "label": "S34",
+   "page": 37,
+   "file": "fig_S34.png",
+   "caption": "Fig. S34 ׀ Galvanostatic electrochemical performance of full-cells using the LFP:PVDF:SuperC45 (80:10:10) cathode paired with an MCMB graphite anode: (a) charge/discharge curves at different current densities (0.1 C, 0.4 C, 1 C, 3 C, and 8 C), (b) rate capability, and (c) cycling performance at 3 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    421.5
+   ],
+   "w": 1944,
+   "h": 1482,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "fS35",
+   "kind": "figure",
+   "label": "S35",
+   "page": 38,
+   "file": "fig_S35.png",
+   "caption": "Fig. S35 ׀ SEM images of the LFP/SWCNT:PPP (98/02) cathode paired with an MCMB graphite anode after 600 cycles at 3 C: (a) plane-view, (b) magnified plan-view (showing SWCNT networks maintaining interparticle connections after cycling), and (c) cross-sectional view.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    167.0
+   ],
+   "w": 1944,
+   "h": 421,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.32
+  },
+  {
+   "key": "fS36",
+   "kind": "figure",
+   "label": "S36",
+   "page": 39,
+   "file": "fig_S36.png",
+   "caption": "Fig. S36 ׀ (a) SEM images of the LFP/SWCNT:PPP (99/01) cathode paired with an MCMB graphite anode after 600 cycles at 3 C: a) plane-view, b) magnified plane-view (showing SWCNT networks maintaining interparticle connections after cycling), and c) cross-sectional view.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    170.5
+   ],
+   "w": 1944,
+   "h": 436,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.306
+  },
+  {
+   "key": "fS37",
+   "kind": "figure",
+   "label": "S37",
+   "page": 40,
+   "file": "fig_S37.png",
+   "caption": "Fig. S37 ׀ Plots of Full-cell electrochemical performance of an ultra-high-loading LFP:PPP (96:04) cathode with an areal loading of 5.78 mg cm⁻² paired with an MCMB graphite anode: (a) galvanostatic charge–discharge voltage profiles measured at 0.1 C, 0.4 C, 1 C, 3 C, and 8 C and (b) rate capability.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    246.2
+   ],
+   "w": 1944,
+   "h": 752,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "fS38",
+   "kind": "figure",
+   "label": "S38",
+   "page": 41,
+   "file": "fig_S38.png",
+   "caption": "Fig. S38 ׀ SEM images of the LFP/SWCNT:PPP (99/01) cathode paired with an MCMB graphite anode after 200 cycles at 60 °C and 3 C: a) plane-view, b) magnified plane-view (showing SWCNT networks maintaining interparticle connections after cycling), and c) cross- sectional view.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.4,
+    170.9
+   ],
+   "w": 1944,
+   "h": 438,
+   "dpi": 300,
+   "src": "70. Sup) Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
+   "blank": 0.305
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS27",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p30 그래픽 없음(img0/draw5)"
+   ],
+   "near_miss": []
+  }
+ ]
+}
