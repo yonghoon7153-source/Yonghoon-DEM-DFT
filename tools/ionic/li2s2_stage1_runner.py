@@ -103,7 +103,7 @@ from __future__ import annotations
 import argparse
 import copy, datetime, hashlib, importlib.util, json, os, pathlib, re, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "5cac5cc6a1f8a24b"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "2af91543073b8474"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 EXPECTED_VALUES_SHA16 = "086de59c484f9c32"     # 카드 기계_판독_값 (mq.values_sha16) — ⭐ DO 전 리뷰 P2-12: 카드 값 (상한 포함) 을 바꾸면 이 줄도
                                                #   같이 바꾸고 다시 리뷰한다 (카드 파일만 고쳐서는 상한 멈춤을 넘기지 못한다)
 STOP_KEYS = ("at", "code", "reason", "terminal", "stop_id", "run_id", "sys", "seed", "cleanup", "rc", "verdict", "melt", "summary",
@@ -3844,6 +3844,57 @@ def _selftest():
         and res_c2[7] != "stage1_pass",
         "⛔음성 DS 전 1차 리뷰 P2: MD 끝 · FIRE 대기 중 들여다본 incomplete (md_done 있음) 뒤 thermo 를 고치고 끝 판정이 일시 오류면 — 확인 뒤 자동 대체하지 않는다 "
         f"(발사 0) · 대조: 고침 없으면 회복 (C1 {res_c1} · C2 {res_c2})")
+    # ⭐ 회신 DS P1-1 (Codex 재현) — 완료 런 (출력 · final · result 다 있음) 에서 plan.json · md_done.json 을 잠시 옮기고 사람이 판정 (incomplete ·
+    #    md_complete_seen False · 지문에 final · result 있음) → 두 파일을 되돌리고 thermo 값을 고침 → 러너 끝 판정의 일시 I/O 오류 (장부 기준 invalid) →
+    #    확인 → 그 들여다봄은 md_progress 'complete' (뒤 산출물 — plan 판독과 무관) 라 '진행 중' 면제가 아니다 → 자동 대체 안 함 (발사 0 · 요약 통과 아님) ·
+    #    고침 없이 되돌리기만 해도 보류 (원자료 이동 · 복구 — DR 전 4차 규칙) · 진행 중 회복 대조는 아래 'DR 전 3차 리뷰 P3' 시험 (md_progress in_progress)
+    def _moved_plan_case(tamper):
+        st_m = {"armed": True}
+        def _sv_m(rd_, **k_):
+            rp_ = pathlib.Path(rd_)
+            if st_m["armed"] and rp_.name == "seed12" and rp_.parent.name == "A" and k_.get("reason") == "담금질 끝":
+                st_m["armed"] = False
+                for f_ in ("plan.json", real.MD_DONE_NAME):
+                    (rp_ / f_).rename(rp_ / (f_ + ".hold"))
+                st_m["peek"] = _sv0_c(rp_, values=k_.get("values"), log=lambda *m: None,
+                                      reason="selftest: 완료 런에서 plan · md_done 을 옮기고 사람이 들여다봄")
+                for f_ in ("plan.json", real.MD_DONE_NAME):
+                    (rp_ / (f_ + ".hold")).rename(rp_ / f_)
+                if tamper:
+                    ln_ = (rp_ / "thermo.csv").read_text(encoding="utf-8").split("\n")
+                    ln_[1] = ln_[1].replace("-500.0000", "-500.0001")
+                    (rp_ / "thermo.csv").write_text("\n".join(ln_), encoding="utf-8")
+                n_m = {"left": 1}
+                def _sg_once_m(run_, *a_, **kk_):
+                    if n_m["left"]:
+                        n_m["left"] -= 1
+                        raise OSError("selftest: 끝 판정의 일시 I/O 오류")
+                    return _sg0_c(run_, *a_, **kk_)
+                real.seed_gate = _sg_once_m
+                try:
+                    return _sv0_c(rd_, **k_)
+                finally:
+                    real.seed_gate = _sg0_c
+            return _sv0_c(rd_, **k_)
+        real.stage1_verdict = _sv_m
+        try:
+            rc1_, L1_, rr_ = go(wt)
+        finally:
+            real.stage1_verdict = _sv0_c
+        pk_ = st_m.get("peek") or {}
+        pv_ = pk_.get("provenance") or {}
+        fs_ = pv_.get("files_sha256") or {}
+        rc2_, L2_, _ = go(wt, rr=rr_, ack=J(rr_ / "STOP.json")["stop_id"])
+        row_ = [x_ for x_ in J(rr_ / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
+        return (pk_.get("status"), pv_.get("md_complete_seen"), pv_.get("md_progress"), fs_.get("final.xyz") is not None, fs_.get("plan.json") is None,
+                rc1_, len(L1_), rc2_, len(L2_), row_.get("verdict"), summ(rr_)["track"])
+    res_m1, res_m0 = _moved_plan_case(True), _moved_plan_case(False)
+    chk(res_m1[:5] == ("incomplete", False, "complete", True, True) and res_m1[5:9] == (RC["invalid"], 3, RC["invalid"], 0)
+        and res_m1[9] == "invalid" and res_m1[10] != "stage1_pass"
+        and res_m0[5:9] == (RC["invalid"], 3, RC["invalid"], 0) and res_m0[10] != "stage1_pass",
+        "⛔음성 회신 DS P1-1 (Codex 재현): 완료 런에서 plan · md_done 을 옮기고 들여다본 판정 (incomplete · md_complete_seen False · final · result 있음) 은 "
+        "md_progress 'complete' 라 '진행 중' 면제가 아니다 — 되돌리고 thermo 를 고친 뒤 끝 판정 일시 오류 · 확인 → 자동 대체 안 함 (발사 0) · 고침 없이 "
+        f"되돌리기만 해도 보류 (원자료 이동 · 복구) (고침 {res_m1} · 고침 없음 {res_m0})")
     # ⭐ DS 전 2차 리뷰 P3 — 현재 폴더의 판정 이력 경로가 밖의 파일을 가리키는 링크면 시작 점검 (①-3b) 이 이유를 남기고 멈춘다 (발사 0 · 요약 invalid) —
     #    재판정이 링크 너머에 덧붙이려다 예외로 죽는 (interrupted) 대신
     c_hl = clone(rr_d); hx_l = pathlib.Path(tempfile.mkdtemp(dir=tmp_root)) / "outside_history.jsonl"
@@ -3898,7 +3949,8 @@ def _selftest():
         d_ = rr_pk / "A/seed12"
         if not pk_["done"] and (d_ / "plan.json").is_file() and (d_ / "traj.xyz").is_file() and not (d_ / "final.xyz").exists():
             pk_["done"] = True
-            pk_["st"] = real.stage1_verdict(d_, values=vals_t, log=lambda *m: None, reason="selftest — 실행 중 들여다봄")["status"]
+            v_pk_ = real.stage1_verdict(d_, values=vals_t, log=lambda *m: None, reason="selftest — 실행 중 들여다봄")
+            pk_["st"], pk_["prog"] = v_pk_["status"], (v_pk_.get("provenance") or {}).get("md_progress")   # ⭐ 회신 DS P1-1 — 진행 중 '확인'
     n_sg["left"] = 1
     real.seed_gate = _sg_flaky
     try:
@@ -3906,10 +3958,10 @@ def _selftest():
     finally:
         real.seed_gate = _sg0
     rc_pk2, L_pk2, _ = go(wt, rr=rr_pk, ack=J(rr_pk / "STOP.json")["stop_id"])
-    chk(pk_.get("st") == "incomplete" and rc_pk == RC["invalid"] and len(L_pk) == 3 and rc_pk2 == RC["pass"] and len(L_pk2) == 7
+    chk(pk_.get("st") == "incomplete" and pk_.get("prog") == "in_progress" and rc_pk == RC["invalid"] and len(L_pk) == 3 and rc_pk2 == RC["pass"] and len(L_pk2) == 7
         and sup_(rr_pk) == [("invalid", "pass")],
         "⛔음성 DR 전 3차 리뷰 P3: 실행 중 들여다본 incomplete 기록 (예외 없음 · 그때의 짧은 원자료) 이 폴더 이력에 있어도 — 장부 판정 (끝 판정의 일시 오류) 과 같은 "
-        f"입력의 재판정이 대체하고 이어 간다 ({pk_.get('st')} · {rc_pk} · 발사 {len(L_pk)} · {rc_pk2} · 발사 {len(L_pk2)})")
+        f"입력의 재판정이 대체하고 이어 간다 ({pk_.get('st')} · {pk_.get('prog')} · {rc_pk} · 발사 {len(L_pk)} · {rc_pk2} · 발사 {len(L_pk2)})")
     # ⭐ DR 전 3차 리뷰 P2 — 첫 시드 (A11) 의 닫힘이 이력 줄에만 있어도 (정본 없음) 시작 점검이 장부에 fail · closes_system 을 적고 다음 시작은 닫는 STOP (melt)
     rr_cl = clone(rr_d)
     d11_ = rr_cl / "A/seed11"
