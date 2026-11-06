@@ -55,7 +55,9 @@
     "actual host/root/user and retrieval destination",
     "disk/quota/inode budget and thresholds",
     "walltime and stall threshold",
-    "host-staged deck/meta/STL identity recheck against static_asset_manifest.json"
+    "host-staged deck/meta/STL identity recheck against static_asset_manifest.json",
+    "one installation-wide approved campaign policy and actual shared filesystem admission semantics",
+    "manual scheduler reconciliation and reviewed reservation release procedure before later waves"
   ],
   "historical_binary_candidate": "/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi",
   "binary_sha256": null,
@@ -75,5 +77,11 @@
   "cpu_cap_current_verified": false,
   "no_auto_followup": true,
   "fresh_only": true,
-  "actual_deck_sha256_provenance": "local static planned bytes; not host verified"
+  "actual_deck_sha256_provenance": "local static planned bytes; not host verified",
+  "mla_recheck": {
+    "reviewed_pin": "b57fe91503ba68cec6f41aec247851262788e48f",
+    "MLA-01": "P1_OPEN_EXTERNAL_RECHECK_PENDING",
+    "MLA-02": "P2_OPEN_EXTERNAL_RECHECK_PENDING",
+    "MLA-03": "P2_OPEN_EXTERNAL_RECHECK_PENDING"
+  }
 }

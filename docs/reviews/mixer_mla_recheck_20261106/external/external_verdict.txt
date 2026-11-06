@@ -1,0 +1,162 @@
+# mixer-launch 새 준비 단위 — 독립 반박 판정
+
+작성: 2026-11-06 · 대상 핀: `b57fe91503ba68cec6f41aec247851262788e48f` · 가지: `codex/mixer-1104`
+
+**판정: 첫8 정적 덱·자산과 비활성 문서 경계는 한정 수용. 제출·작업시작 코드의 경계 수용은 HOLD. 새 P1 1건, P2 2건.**
+
+이번 판정은 첨부 ZIP의 `REQUEST.md` 질문 1–5에 대한 것이다. 실제 실행 GO를 검토하거나 발급하지 않았다. 실제 ibb/사용자 WSL 접근, SLURM 제출, MPI/LIGGGHTS 실행, 연구 원자료 열람, 활성 등록, 배포, 통합, 원장 종결은 모두 하지 않았다. 전체 HOLD·Rint② 우선·별도 저자 실행 승인 조건은 유지한다. 기존 PRE8/LPI 한정 수용을 취소하거나 재심하지 않는다.
+
+## 1. 대상 신원과 변경 범위
+
+| 항목 | 독립 대조 결과 |
+| --- | --- |
+| 입력 ZIP | `codex_mixer_launch_20261106_b57fe91503ba.zip`, 645,817 B |
+| 입력 ZIP SHA-256 | `f55bd750d601f50acbf360e39f3fb780de9132d801cc7076cd99fe63caf08803` |
+| PIN.txt | 요청 핀과 일치 |
+| SNAPSHOT_MANIFEST | 89개 파일: 크기·SHA-256·Git blob 식별자 전부 일치 |
+| 포장 SHA256SUMS | 114개 대상 전부 일치. ZIP 원래 엔트리는 SHA256SUMS 자체를 포함해 115개 |
+| 원격 고정 핀 대조 | 89개 일치: 이번 커밋의 추가 72개는 원격 commit blob 식별자로, 기존 17개는 원격 고정 핀의 실제 바이트까지 대조 |
+| CHANGE.patch | 추가 72개, 13,305줄 추가, 삭제 0. 패치에서 재구성한 바이트와 ZIP 파일 모두 일치 |
+| 직전 부모 | `527e244e4ebd6f0cb04c6cfb2ff5f3a52fb01996` |
+| 정적 자산 | 8조건 × 5파일 = 40파일 일치. 소스 봉인 12파일도 일치 |
+
+ZIP 해시는 수령한 파일에서 계산한 지문이다. 별도로 전달된 독립 운송 해시와 대조했다고 주장하지 않는다. `source_seal.json`의 부모 핀은 정적 생성에 사용한 소스 기준이고 이번 검토 핀과 역할이 다르다. 이를 핀 불일치로 세지 않았다.
+
+원격 변경 내역은 이번 72개 추가에 한정된다. 기존 생성기·판독기·옛18·D3 SOP·기존 수용 문서의 수정은 이 커밋에서 발견하지 않았다. `INTEGRATION.json`은 선행 반입/의존 설명이며 이번 검토에서 통합을 실행한 근거가 아니다.
+
+근거: `package_verification.json`, `remote_verification.json`, `evidence/github_commit_metadata.json`, `evidence/remote_existing_sources.json`.
+
+검토 도구의 초기 오류도 보존했다. 처음 패치 재구성기가 `Back.stl`의 `\ No newline at end of file` 표지를 해석하지 못해 1 B 차이를 냈다. 재구성기만 바로잡은 뒤 72개 모두 일치했다. 원본 STL·패키지는 변경하지 않았다. 이는 대상 결함이 아니다(`evidence/reviewer_harness_note.json`).
+
+## 2. 새 발견
+
+이하 `L/`은 `docs/reviews/mixer_first8_launch_preparation_20261106/`를 뜻한다. 줄 번호는 위 고정 핀의 파일 기준이다. 심각도는 이 초안을 앞으로 제출/작업시작 관문으로 사용할 때의 영향이다. 현재 실제 무승인 실행이 있었다는 뜻은 아니다.
+
+### MLA-01 · P1 — 승인한 runner 바이트와 실제 sbatch 옵션이 결속되지 않는다
+
+**위치:** `L/submit_one.py.txt:22`, `:79–91`; `L/job_start.py.txt:17–18`, `:36–41`.
+
+**무너지는 주장:** runner의 바이트가 승인본과 같으므로 실제 제출도 단일 작업·승인된 partition/QoS·자원·시간·출력 경로를 따른다는 주장.
+
+`canonical_runner()`는 해당 옵션을 `#SBATCH`에 적고 runner 문자열의 완전 일치를 검사한다. 그러나 실제 호출은 다음뿐이다.
+
+```python
+subprocess.run(['sbatch', '--parsable', '--no-requeue', runner],
+               capture_output=True, text=True, timeout=60)
+```
+
+제출 환경을 지정하거나 위험한 입력 환경변수를 거부하지 않는다. SLURM은 입력 환경변수를 스크립트의 지시문보다 우선 적용하며, 명령행 옵션은 환경변수보다 우선한다. 따라서 `--no-requeue`는 명령행에서 고정되지만 나머지 지시문은 같은 방식으로 보호되지 않는다. [SchedMD sbatch 공식 문서, INPUT ENVIRONMENT VARIABLES](https://slurm.schedmd.com/sbatch.html#SECTION_INPUT-ENVIRONMENT-VARIABLES)
+
+**실제 함수 모의 반례:** 정상적으로 봉인된 E0 승인·runner·자산을 준비하고 제출 프로세스 환경에 아래 6개만 추가했다. 실제 scheduler 대신 호출 인자를 기록하는 대역을 사용했다.
+
+| 입력 환경변수 | 반례 값 |
+| --- | --- |
+| `SBATCH_ARRAY_INX` | `0-7` |
+| `SBATCH_QOS` | `unapproved-qos` |
+| `SBATCH_PARTITION` | `unapproved-partition` |
+| `SBATCH_TIMELIMIT` | `00:01:00` |
+| `SBATCH_OUTPUT` | `/unapproved/out` |
+| `SBATCH_ERROR` | `/unapproved/err` |
+
+관측: 제출 관문 통과, fake sbatch 1회, `env_argument_present=false`, 6개 변수 모두 전달, 영수증 `SUBMITTED`. 승인 runner는 계속 `cpu/cpu-60`, 20 ranks, 1 CPU/task, 1일, 원래 출력 경로였다.
+
+작업시작 함수를 따로 실행한 대조에서도 잘못된 QoS·partition·4 CPUs/task·array 표지를 각각 넣었을 때 네 경우 모두 `returncode=0`, mock MPI 1회였다. 반면 `SLURM_NTASKS=19`는 MPI 호출 전 거부했다. 즉 현재 확인은 rank 수와 job ID에 국한되며 전체 승인 자원 계약을 재확인하지 않는다.
+
+**한계:** 환경변수의 실제 SLURM 효과는 공식 우선순위 문서에 근거하고, 이번 시험은 실제 스케줄러 수용 여부가 아니라 제출 관문·인자 전달을 검증했다. 호스트가 존재하지 않는 QoS를 거부할 수 있지만 그것은 이 코드의 승인 결속이 아니다. 또한 array로 연구 실행이 8회 된다고 주장하지 않는다. 같은 case의 `job_start.json` 배타 생성은 중복 simulator 진입을 막는다. 다만 그보다 앞선 다중 작업 제출·할당과 승인되지 않은 자원/경로 선택은 막지 못한다.
+
+**최소 수정:** sbatch 입력 환경을 통제하고 승인한 핵심 옵션을 명령행에 고정하거나, 관련 환경변수가 있으면 제출 전에 거부한다. SLURM이 읽는 별칭까지 범위를 정의해야 한다. `--export=NONE`만 추가하는 것은 작업에 전달하는 환경과 sbatch 자신의 옵션 해석을 혼동한 해결이다. 작업시작에서도 실제 할당의 승인 조건·array 금지를 확인하고, 확인 불가능한 항목은 현장 자격 조건으로 남긴다. 정상 승인 대조와 위 환경 주입 음성 대조를 함께 고정한다.
+
+**재현:** `python -I -B -X utf8 evidence/jobstart/probe_sbatch_environment.py`; 보조 `python -I -B -X utf8 evidence/jobstart/probe_jobstart.py`.
+
+**증거:** `evidence/jobstart/probe_sbatch_environment_results.json`, `probe_jobstart_results.json`, `evidence/slurm_reference.json`.
+
+### MLA-02 · P2 — case별 배타 claim은 팔 사이 동시성·불명확 제출 상태를 공유하지 않는다
+
+**위치:** `L/submit_one.py.txt:44–56`, `:85–97`; 해석 대조 `L/commands.txt:58–62`.
+
+**무너지는 주장:** 현재 자원 관측과 case별 claim만으로 승인된 첫8 동시성 상한과 후속 제출 정지를 기계적으로 보장한다는 주장.
+
+**반례:** 두 MAP 팔 `PRECAL_R1_B1_U`와 `PRECAL_R1_B1_C`를 각각 단일 팔로 승인하되, 공통 저자 승인에서 동시성은 1로 제한했다. 각 승인 `approved_concurrency=1`, 각 `wave_release=[해당 case]`, 같은 policy 식별자와 같은 신선한 live 영수증(`running_first8=0`, `reserved_cpus=0`)을 사용했다. 두 호출을 검증 후 claim 생성 직전에 만나게 했다.
+
+관측: 두 호출 모두 수용, fake sbatch **2회**. 각 case 안의 claim은 서로 다른 파일이므로 충돌하지 않는다. 두 팔 모두 승인된 상태에서 동시에 하나만 허용하려는 요구를 이 관문이 구현하지 못한다. 이는 다른 사용자가 자원을 선점하는 일반적 현장 경쟁만을 지적한 것이 아니다. 이 도구가 제출하는 첫8 집합 내부의 경쟁이다.
+
+`running_first8`에는 아직 pending인 제출 및 불명확한 제출 예약도 반영되지 않는다. 첫 팔의 반환이 불명확한 모의 입력 뒤 이미 승인된 다른 case를 수동 호출하면 두 번째 case가 통과했다(fake sbatch 총2회). 코드가 자동으로 후속 팔을 발사한다는 주장은 하지 않는다. 문서의 수동 중단 요구는 남아 있으나, 패키지 전체의 HOLD를 공유하는 관문은 없다.
+
+**살아남는 방어:** 같은 case의 정상/실패/불명확/timeout 뒤 재호출은 모두 두 번째 제출 전에 거부됐다. 같은 case의 동시 두 호출도 fake sbatch 1회였다. `O_EXCL`·실패 뒤 claim 보존 자체는 유효하다.
+
+**최소 수정:** 공통 캠페인/승인 정책 단위의 admission lock 또는 예약 원장을 두어 pending·submitted·running·uncertain을 포함한 자원/동시성 예약을 원자적으로 처리한다. 불명확한 제출은 스케줄러 수동 대조 전 예약과 다음 팔 HOLD를 유지한다. 다른 방안은 한 번에 하나뿐인 활성 wave를 공통 고정 파일로 강제하는 것이다. case별 서로 다른 singleton policy와 5분 유효 live snapshot만으로는 대체되지 않는다. 두 case 경쟁에서 fake sbatch가 상한 이하여야 하고, 같은 case 기존 방어도 유지돼야 한다.
+
+**재현:** `python -I -B -X utf8 evidence/submit/probe_submit_boundaries.py`.
+
+**증거:** `evidence/submit/submit_boundary_results.json`의 `concurrency`, `successor`, `same_case_race` 및 네 반복 시나리오. 7개 시나리오는 단위시험 메서드 수나 실제 제출 수로 합산하지 않는다.
+
+### MLA-03 · P2 — 기존 종료 영수증을 fresh 검사에서 빠뜨려 덮어쓴다
+
+**위치:** `L/submit_one.py.txt:59`; `L/job_start.py.txt:30`, `:40–42`.
+
+**무너지는 주장:** 이전 실행 흔적이 있는 경로에서는 계산 진입 전에 거부하고 기존 기록을 보존한다는 fresh/회수 계약.
+
+**최소 반례:** 나머지 조건은 정상인 임시 case에 `job_end.json` 하나를 `OLD OUTPUT`으로 미리 만들었다. `job_start.json`, simulator 표준출력/오류, `post`, `restart`, `log.liggghts`는 없다.
+
+관측: `returncode=0`, mock MPI **1회**, `job_end_prior_content_preserved=false`. `job_end.json`이 새 JSON으로 덮어써졌다. 이전 파일이 유효한 영수증인지와 무관하게 fresh가 아닌 경로의 기존 바이트를 보존해야 하는 반례다. 공격자·동시 편집·실제 연구 재실행을 가정하지 않는다.
+
+대조: `post`, `restart`, `log.liggghts`, `job_start.json`, `simulator.stdout`, `simulator.stderr`를 각각 미리 만든 경우 모두 MPI 전에 거부됐다. stdout/stderr의 배타 생성은 유효하다.
+
+**최소 수정:** 종료 영수증을 포함한 이 도구 소유의 출력/영수증 집합을 제출·시작 fresh 계약에 일치시킨다. 끝의 `write_text`도 조용한 덮어쓰기가 불가능하도록 배타 생성/소유권 예약으로 바꾼다. 초기 검사 뒤 파일이 생긴 경우도 기존 파일을 덮어쓰지 않아야 한다. 최소 회귀는 기존 종료 파일 보존+MPI 0회, 정상 새 경로 성공, 실패 실행 흔적 보존이다.
+
+**재현:** `python -I -B -X utf8 evidence/jobstart/probe_jobstart.py`의 `fresh_job_end.json`.
+
+**증거:** `evidence/jobstart/probe_jobstart_results.json`.
+
+## 3. REQUEST.md 질문별 답
+
+| 질문 | 판정 | 근거와 한계 |
+| --- | --- | --- |
+| Q1 고정 첫8·기존 정책/실행 상태 보존 | **정적 범위 수용** | 72개 추가·기존 파일 수정0, 준비물8조건·40파일, 봉인12파일 일치. 실제 생성 함수의 메모리 재구성과 `validate_case` 8조건, `diff_d2_decks` 3쌍 통과. E0는 0바퀴, 나머지7조건은 2바퀴; N0/E0는 별도 미등록 기준군. `observed_atoms=null`, `execution_authorized=false` 유지. 연구 실행 증거 아님. |
+| Q2 승인/소스/입력/job-start 결속, rank/fresh/저장공간 | **부분 / HOLD** | 입력·소스 해시, claim, rank19, 저장공간 부족/미정 문턱 등 모의 거부는 작동. 다만 MLA-01의 승인 runner→실제 할당 간극, MLA-03의 종료 파일 덮어쓰기 존재. `SLURM_NTASKS` 확인은 실제 MPI 프로세스 수·호스트 자격 실측을 대신하지 않음. |
+| Q3 실패 뒤 재시도/후속 팔, QoS/동시성 | **부분 / HOLD** | 동일 case 재시도·경쟁은 차단. 다른 case의 공유 예약/불명확 상태는 MLA-02처럼 차단하지 못함. 자동 후속 루프는 없고 문서상 수동 정지 요구는 보존. 자원 관측을 현재 현장 인증으로 승격하지 않은 점은 수용. |
+| Q4 E0 pilot/MAP/전체 HOLD/MXD2R/실제 자격 구분 | **문서 범위 수용** | `submit_one:50–51`에서 MAP은 `qualification_accepted=true`, pilot은 E0만 허용. README:24–26은 pilot protocol/risk acceptance와 완료된 100k 자격을 구분. 파일 해시는 그 내용의 물리 타당성·승인자 권한을 증명하지 않음. 실제 자격과 MXD2R 대기는 계속 미해결. |
+| Q5 비용·미확인 자원·감시/회수/중단·저자 결정 | **문서 범위 수용, 현장 기능 미검토** | README:18–22, commands:38–62는 추정·미확인·정확한 job ID·원자료 보존·실패 뒤 수동 HOLD를 구분한다. 실제 출력 회수 및 scheduler 명령은 실행하지 않았다. 추정 slot/core-hours와 별개로 E0 우선 및 실제 동시성의 달력시간은 미확정이다. 저자 NP/동시성/순서 결정이나 실행 승인이 자동 생성되지 않는다. |
+
+Q5의 수용은 운영 절차 문장에 한정된다. 이 초안의 `commands.txt`는 `DO NOT SOURCE`인 명령 형태이고 감시·회수·중단 구현 전체가 검증됐다는 뜻이 아니다. 예를 들어 `rsync --ignore-existing`만으로 완료를 인정하지 않고, 정지한 원천의 양쪽 파일 목록/해시 대조와 부분 전달 TECH/HOLD가 같이 필요하다는 문맥을 보존한다.
+
+## 4. 독립 검증과 작성 측 증거의 구분
+
+| 독립 수행 | 관측 | 검출 범위 / 한계 |
+| --- | --- | --- |
+| 바이트/원격 핀/patch 대조 | 89 snapshot·114 포장·72 patch 일치 | 해시·범위 확인. 물리·통계·호스트 인증 아님 |
+| 첫8 메모리 레시피/정적 pair 대조 | 8조건·3쌍 각각 PASS | 실제100,000입자 삽입·완주·실로그·STL 현장 자격 아님 |
+| submit 경계 | 7개 시나리오 | 대상 main 함수 불변, 로컬 POSIX 경로 대역 및 fake subprocess. 원자적 파일 claim은 로컬 파일시스템에서 관측 |
+| scheduler 환경 주입 | 6변수 동시 전달 반례 | Windows 경로를 위해 canonical_runner의 선행 `/` 조건 한 곳만 메모리에서 제거. 그 외 승인·소스·자산·runner 일치·claim 검사는 유지. 이 수정은 패키지 파일에 적용하지 않음 |
+| job-start 경계 | 29개 관측: 정상1·거부23·환경 불일치 수용4·종료 파일 덮어쓰기1 | Windows의 `statvfs`를 합성 용량으로 대체. 함수 원문은 불변. 승인/qualification 문서는 합성 fixture이며 실제 승인으로 취급하지 않음 |
+
+검토 실행 환경은 Windows Python **3.12.14**다. 새 Linux cloud/WSL 시험이나 Python3.8 재실행을 했다고 주장하지 않는다. 모든 제출/계산 subprocess는 대상 로딩 전부터 대역으로 교체했으며 실제 sbatch·MPI·LIGGGHTS 호출은 0회다. 재현 코드는 자체 임시 폴더만 생성한다.
+
+작성 측의 Python3.8/3.12 시험 및 과거 9개·최종 제출10개·작업시작8개 기록은 수령 증거다. 이를 이번 독립 실행 수로 세거나 위 관측수와 합산하지 않는다. 전체 `check_all`, 기존 PRE8 전체 회귀, shell 명령 파일의 현장 실행은 반복하지 않았다. 초기 WindowsApps Python 진입 실패는 검사 0건으로 기록했고 이후 사용 가능한 Python으로 정적 8/3 확인을 마쳤다.
+
+비차단 문구 수정 하나: `L/README.md:30`의 “8종 동작”은 `L/test_prepare_only.py:19`의 실제 입력 튜플 7개(`preflight, launch, watch, return, stop, unknown, 빈 문자열`)와 다르다. `prepare_only.sh:4–5`는 입력과 무관하게 64로 끝나는 구조다. 단순 집계 문구를 7개로 고치되, 이를 위 기능 결함과 같은 심각도로 세지 않는다.
+
+## 5. 다음 재확인의 최소 범위
+
+1. MLA-01: 제출 환경을 봉인하고 승인 옵션 이탈/array 주입을 모의 거부. 정상 runner·정상 할당 대조 보존.
+2. MLA-02: 공통 동시성/예약/불명확 상태 계약을 코드에 연결. 서로 다른 두 case 경쟁 및 불명확 첫 제출 후 다른 case 재호출 반례를 함께 차단. 같은 case의 기존 배타성 보존.
+3. MLA-03: 모든 기존 영수증·출력 바이트 보존. 기존 `job_end.json`이면 MPI 진입 0회, 실행 도중 생긴 충돌 파일도 덮어쓰기 금지.
+
+이 셋의 수정이 확인되더라도 실제 binary/MPI/호스트/실시간 QoS/쿼터/벽시간/실제100k 양성 경로, 별도 MXD2R 확인, 저자 NP·동시성·순서·범위를 지정한 실행 승인은 남는다. 물리 자격을 문서/합성 관문 수용으로 대체할 수 없다. 이번에 기존 finding을 원장에서 종결하거나 공유 파일을 고치지 않았다.
+
+**최종: 첫8 정적 준비·비활성 문서 한정 수용 / 제출·작업시작 경계 HOLD / 전체 HOLD 및 실제 실행·배포 미승인 유지.**
+
+## 6. 증거 재현
+
+증거 ZIP을 임시 로컬 폴더에 풀고 그 최상위에서 실행한다. Python3.12와 정적 자산 재현에 필요한 numpy/scipy를 사용한다. 아래는 모의 시험 명령이며 실제 제출 명령이 아니다. 재실행하면 해당 모의 결과 JSON을 갱신하므로 원본 증거를 보존하려면 ZIP을 별도 폴더에 풀어 사용한다.
+
+```text
+python -I -B -X utf8 evidence/verify_package.py
+python -I -B -X utf8 evidence/verify_remote.py
+python -I -B -X utf8 evidence/submit/probe_submit_boundaries.py
+python -I -B -X utf8 evidence/jobstart/probe_sbatch_environment.py
+python -I -B -X utf8 evidence/jobstart/probe_jobstart.py
+python -I -B -X utf8 evidence/docs/reproduce_static_assets.py
+```
+
+두 verify 스크립트는 동봉한 원격 응답 사본을 사용하며 새 네트워크 요청을 하지 않는다. 수령 자료의 `submit_one.py.txt`, `job_start.py.txt`, `commands.txt`, `.sbatch.txt`를 직접 실행하는 것은 위 재현 절차가 아니다.

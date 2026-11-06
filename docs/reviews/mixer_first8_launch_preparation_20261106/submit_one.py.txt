@@ -12,20 +12,98 @@ import subprocess
 import sys
 import shlex
 # Reviewed job-start bytes, fixed at this draft revision; never discover identity from staged code.
-REVIEWED_JOB_START_SHA256='d4a37e703d35c89b5769f9199c08f7462b8d0928138a073c03714f95c1dc57b2'
+REVIEWED_JOB_START_SHA256='5e140635336be247ee3a776be58b2b3eb8679562c02bfc9cb593e27c24276b91'
 
 def canonical_runner(c, approval_path):
     spec=c.get("runner_bindings",{})
     for k in ("python", "job_start", "stdout", "stderr"):
         require(type(spec.get(k)) is str and spec[k].startswith("/") and "\n" not in spec[k] and " " not in spec[k], "runner binding "+k)
     require(re.fullmatch(r"[0-9]+-[0-9]{2}:[0-9]{2}:[0-9]{2}",spec.get("walltime","")) is not None,"walltime binding")
-    return "\n".join(["#!/usr/bin/env bash","#SBATCH --partition=cpu","#SBATCH --qos=cpu-60","#SBATCH --ntasks=20","#SBATCH --cpus-per-task=1","#SBATCH --no-requeue","#SBATCH --time="+spec["walltime"],"#SBATCH --output="+spec["stdout"],"#SBATCH --error="+spec["stderr"],"set -euo pipefail","exec "+" ".join(shlex.quote(x) for x in (spec["python"],spec["job_start"],str(Path(approval_path).resolve())))])+"\n"
+    return "\n".join(["#!/usr/bin/env bash","#SBATCH --partition=cpu","#SBATCH --qos=cpu-60","#SBATCH --nodes=1","#SBATCH --ntasks=20","#SBATCH --cpus-per-task=1","#SBATCH --no-requeue","#SBATCH --time="+spec["walltime"],"#SBATCH --output="+spec["stdout"],"#SBATCH --error="+spec["stderr"],"set -euo pipefail","exec "+" ".join(shlex.quote(x) for x in (spec["python"],spec["job_start"],str(Path(approval_path).resolve())))])+"\n"
 
 CASES = {'PRECAL_E0','PRECAL_N0'} | {'PRECAL_R1_B%d_%s'%(b,r) for b in (1,2,3) for r in ('U','C')}
 def require(ok, why):
     if not ok: raise ValueError(why)
 def digest(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+def absent(p): return not os.path.lexists(str(p))
+def exclusive_json(p, value):
+    fd=os.open(str(p),os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
+    with os.fdopen(fd,'w') as out:
+        json.dump(value,out);out.write('\n');out.flush();os.fsync(out.fileno())
+def scheduler_environment():
+    # Reject all current/future option aliases in these namespaces, including
+    # inherited allocation variables. --export alone does not control sbatch input.
+    require(not any(k.startswith(('SBATCH_','SLURM_','SALLOC_','SRUN_')) for k in os.environ),
+            'scheduler option/allocation environment present')
+    return {k:os.environ[k] for k in ('PATH','HOME','USER','LOGNAME','LANG','LC_ALL','TMPDIR') if k in os.environ}
+def submit_reserved(c, approval_sha, live, env):
+    # One reviewed installation is one campaign. All cases share this fixed
+    # namespace; per-case approval paths cannot select independent ledgers.
+    here=Path(__file__).resolve().parent;root=Path(c['case_dir'])
+    require(root==here/'cases'/c['case'],'case outside canonical campaign root')
+    policy_ref=c.get('campaign_policy',{});policy_path=here/'campaign_policy.json'
+    require(policy_ref.get('path')==str(policy_path) and policy_path.is_file() and not policy_path.is_symlink(),'common campaign policy missing')
+    policy_raw=policy_path.read_bytes();policy_sha=hashlib.sha256(policy_raw).hexdigest()
+    require(policy_ref.get('sha256')==policy_sha,'campaign policy drift')
+    policy=json.loads(policy_raw)
+    require(policy.get('schema')=='mixer_first8_campaign/1' and policy.get('campaign_id')=='mixer_precal_first8_20261106'
+            and policy.get('execution_authorized') is True,'campaign approval absent')
+    require(policy.get('install_root')==str(here),'campaign policy belongs to another installation')
+    require(type(policy.get('max_concurrency')) is int and 1<=policy['max_concurrency']<=2
+            and c['approved_concurrency']==policy['max_concurrency'],'campaign concurrency differs')
+    require(policy.get('np')==20 and policy.get('cpu_cap')==60 and policy.get('author_go_sha256')==c['author_go']['sha256'],'campaign authority/resource mismatch')
+    admission=here/'admission'
+    if absent(admission):
+        try:admission.mkdir(mode=0o700)
+        except FileExistsError:pass
+    require(admission.is_dir() and not admission.is_symlink(),'admission directory')
+    lock=admission/'admission.lock'
+    fd=os.open(str(lock),os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
+    try:
+        with os.fdopen(fd,'w') as f:f.write(approval_sha+'\n');f.flush();os.fsync(f.fileno())
+        reserved=0
+        allowed={'admission.lock'}|{k+s for k in CASES for s in ('.reservation.json','.submission.json')}
+        require(all(p.name in allowed for p in admission.iterdir()),'unknown campaign state')
+        for case in sorted(CASES):
+            reservation=admission/(case+'.reservation.json');result=admission/(case+'.submission.json')
+            if absent(reservation):
+                require(absent(result),'orphan campaign result');continue
+            require(reservation.is_file() and not reservation.is_symlink(),'reservation type')
+            item=json.loads(reservation.read_bytes())
+            require(item.get('case')==case and item.get('campaign_policy_sha256')==policy_sha and item.get('np')==20,'reservation/policy mismatch')
+            # Missing/pending/uncertain/failed state holds every later case.
+            require(result.is_file() and not result.is_symlink(),'unresolved campaign submission')
+            outcome=json.loads(result.read_bytes())
+            require(outcome.get('state')=='SUBMITTED' and outcome.get('approval_sha256')==item.get('approval_sha256')
+                    and outcome.get('case')==case and str(outcome.get('job_id','')).isdigit(),'campaign uncertainty HOLD')
+            reserved+=1
+        # Deliberate conservative sum: live counts may already include reservations.
+        # No automatic completion/release or deduction from a stale snapshot.
+        require(reserved+live['running_first8']<policy['max_concurrency'],'campaign slots reserved')
+        require(live['reserved_cpus']+20*(reserved+1)<=60,'campaign CPU reservations')
+        entry={'case':c['case'],'np':20,'approval_sha256':approval_sha,'campaign_policy_sha256':policy_sha,'state':'ATTEMPT_RESERVED'}
+        exclusive_json(admission/(c['case']+'.reservation.json'),entry)
+        exclusive_json(root/'submission.claim.json',entry)
+        spec=c['runner_bindings']
+        argv=['sbatch','--parsable','--no-requeue','--partition=cpu','--qos=cpu-60','--nodes=1',
+              '--ntasks=20','--cpus-per-task=1','--time='+spec['walltime'],
+              '--output='+spec['stdout'],'--error='+spec['stderr'],'--chdir='+str(root),'--export=ALL',c['runner']['path']]
+        try:
+            r=subprocess.run(argv,capture_output=True,text=True,timeout=60,env=env)
+            ok=r.returncode==0 and re.fullmatch(r'[1-9][0-9]*(;[A-Za-z0-9_.-]+)?\n?',r.stdout) is not None
+            receipt={'case':c['case'],'approval_sha256':approval_sha,'returncode':r.returncode,'stdout':r.stdout,'stderr':r.stderr,
+                     'state':'SUBMITTED' if ok else 'AMBIGUOUS_OR_FAILED_HOLD','job_id':r.stdout.strip().split(';')[0] if ok else None}
+        except (OSError,subprocess.TimeoutExpired) as exc:
+            receipt={'case':c['case'],'approval_sha256':approval_sha,'state':'AMBIGUOUS_OR_FAILED_HOLD','error':str(exc),'job_id':None};ok=False
+        exclusive_json(root/'submission.receipt.json',receipt)
+        exclusive_json(admission/(c['case']+'.submission.json'),receipt)
+        require(ok,'submission failed/ambiguous; campaign HOLD, inspect scheduler manually, never retry')
+        print(json.dumps(receipt))
+    finally:
+        # A process crash can leave this lock; no stale-lock deletion or retry path.
+        lock.unlink()
 def main(path):
+    env=scheduler_environment()
     approval_raw=Path(path).read_bytes()
     approval_sha=hashlib.sha256(approval_raw).hexdigest()
     c=json.loads(approval_raw)
@@ -56,7 +134,8 @@ def main(path):
     require(c.get('wave_release')==[c['case']], 'one-case explicit wave release required')
     root=Path(c.get('case_dir',''))
     require(root.is_absolute() and root.is_dir() and not root.is_symlink(), 'case directory')
-    require(not any((root/n).exists() for n in ('log.liggghts','post','restart')), 'not fresh')
+    require(all(absent(root/n) for n in ('log.liggghts','post','restart','job_start.json','job_end.json',
+              'simulator.stdout','simulator.stderr','submission.claim.json','submission.receipt.json')), 'not fresh')
     manifest=json.loads(Path(c['source_manifest']['path']).read_text())
     require(type(manifest.get('files')) is list and bool(manifest['files']), 'empty manifest')
     paths=set()
@@ -81,21 +160,8 @@ def main(path):
     for k in ('python','job_start'):
         require(c['runner_bindings'][k] in paths,'unsealed execution dependency '+k)
     require(by_path.get(c['runner_bindings']['job_start'])==REVIEWED_JOB_START_SHA256, 'job-start differs from reviewed implementation')
-    # O_EXCL claim is retained on every outcome. Never retry an uncertain submission.
-    claim=root/'submission.claim.json'
-    fd=os.open(str(claim),os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
-    with os.fdopen(fd,'w') as out:
-        json.dump({'approval_sha256':approval_sha, 'case':c['case'],'state':'ATTEMPT_CLAIMED'},out)
-        out.flush(); os.fsync(out.fileno())
-    try:
-        r=subprocess.run(['sbatch','--parsable','--no-requeue',c['runner']['path']],capture_output=True,text=True,timeout=60)
-        ok=r.returncode==0 and re.fullmatch(r'[1-9][0-9]*(;[A-Za-z0-9_.-]+)?\n?',r.stdout) is not None
-        receipt={'case':c['case'],'returncode':r.returncode,'stdout':r.stdout,'stderr':r.stderr,'state':'SUBMITTED' if ok else 'AMBIGUOUS_OR_FAILED_HOLD','job_id':r.stdout.strip().split(';')[0] if ok else None}
-    except (OSError,subprocess.TimeoutExpired) as exc:
-        receipt={'case':c['case'],'state':'AMBIGUOUS_OR_FAILED_HOLD','error':str(exc),'job_id':None};ok=False
-    (root/'submission.receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
-    require(ok,'submission failed/ambiguous; claim retained, inspect scheduler manually, never retry')
-    print(json.dumps(receipt))
+    require(all(absent(Path(c['runner_bindings'][k])) for k in ('stdout','stderr')),'existing scheduler output')
+    submit_reserved(c,approval_sha,live,env)
 if __name__=='__main__':
     try:
         require(len(sys.argv)==2,'one approval path required');main(sys.argv[1])

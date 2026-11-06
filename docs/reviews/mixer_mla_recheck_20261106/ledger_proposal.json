@@ -1,0 +1,28 @@
+{
+  "apply_now": false,
+  "upsert_findings_proposal": [
+    {
+      "id": "MLA-01",
+      "severity": "P1",
+      "status": "OPEN_EXTERNAL_RECHECK_PENDING",
+      "candidate_fix_implemented": true
+    },
+    {
+      "id": "MLA-02",
+      "severity": "P2",
+      "status": "OPEN_EXTERNAL_RECHECK_PENDING",
+      "candidate_fix_implemented": true
+    },
+    {
+      "id": "MLA-03",
+      "severity": "P2",
+      "status": "OPEN_EXTERNAL_RECHECK_PENDING",
+      "candidate_fix_implemented": true
+    }
+  ],
+  "closure_claimed": false,
+  "claimed_fixed": false,
+  "progress_append_proposal": "MLA01/P1·02/P2·03/P2 외부 반례 수령. 제출/작업시작 초안 수정 후보와 모의/변이 검사 완료. 외부 재확인 대기, 전체 HOLD. 정적40자산/12소스봉인 보존.",
+  "shared_files_changed": false,
+  "active_registration_changed": false
+}

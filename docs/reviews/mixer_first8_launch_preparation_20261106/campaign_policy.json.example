@@ -1,0 +1,11 @@
+{
+  "schema": "mixer_first8_campaign/1",
+  "campaign_id": "mixer_precal_first8_20261106",
+  "install_root": "/home/yonghoon/mixer_precal_first8_20261106",
+  "execution_authorized": false,
+  "np": 20,
+  "cpu_cap": 60,
+  "max_concurrency": null,
+  "author_go_sha256": null,
+  "status": "INACTIVE_EXAMPLE_NOT_APPROVAL"
+}

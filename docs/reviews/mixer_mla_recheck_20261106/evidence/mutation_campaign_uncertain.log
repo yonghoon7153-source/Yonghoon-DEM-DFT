@@ -1,0 +1,35 @@
+{"case": "PRECAL_R1_B1_C", "approval_sha256": "d385d4ea0e94a91b5b17ce21a3138b8955ba950ec546c2427a2ddd04bbc202c6", "returncode": 0, "stdout": "12347\n", "stderr": "", "state": "SUBMITTED", "job_id": "12347"}
+{"case": "PRECAL_R1_B1_C", "approval_sha256": "6ca5437bb6bafb2109123ce4990dc5e0cd74a2ecab888e24d2aa25e9f3297ee5", "returncode": 0, "stdout": "12347\n", "stderr": "", "state": "SUBMITTED", "job_id": "12347"}
+{"case": "PRECAL_R1_B1_C", "approval_sha256": "11791c7a1e1b8dff51437f4f890f7b01af753abfe3df7797d2cd5d76910f63b5", "returncode": 0, "stdout": "12347\n", "stderr": "", "state": "SUBMITTED", "job_id": "12347"}
+FFF
+======================================================================
+FAIL: test_uncertain_submission_holds_other_cases (__main__.MLATests.test_uncertain_submission_holds_other_cases) (mode='ambiguous')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-_6wk0mp6/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 126, in test_uncertain_submission_holds_other_cases
+    with self.assertRaises((ValueError,OSError)):f.submit(b)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_uncertain_submission_holds_other_cases (__main__.MLATests.test_uncertain_submission_holds_other_cases) (mode='failed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-_6wk0mp6/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 126, in test_uncertain_submission_holds_other_cases
+    with self.assertRaises((ValueError,OSError)):f.submit(b)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_uncertain_submission_holds_other_cases (__main__.MLATests.test_uncertain_submission_holds_other_cases) (mode='timeout')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-_6wk0mp6/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 126, in test_uncertain_submission_holds_other_cases
+    with self.assertRaises((ValueError,OSError)):f.submit(b)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.112s
+
+FAILED (failures=3)

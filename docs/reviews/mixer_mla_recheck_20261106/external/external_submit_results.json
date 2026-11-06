@@ -1,0 +1,132 @@
+{
+  "pin": "b57fe91503ba68cec6f41aec247851262788e48f",
+  "source_sha256": "d2d19d4c3365d1f121e8f2e60c0519ae9d5b6af28e5b533add6d74812c595a1d",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "scope": "Unchanged submit function; local POSIX-path facade; all subprocess calls fake",
+  "scenarios": [
+    {
+      "scenario": "ok",
+      "outcomes": [
+        {
+          "accepted": true
+        },
+        {
+          "accepted": false,
+          "error_type": "FileExistsError",
+          "error": "[Errno 17] File exists: 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\outputs\\\\mixer_launch_review_20261106\\\\evidence\\\\submit\\\\local_submit_ff4_ssca\\\\PRECAL_R1_B1_U\\\\case\\\\submission.claim.json'"
+        }
+      ],
+      "fake_sbatch_calls": 1,
+      "approved_concurrency_each": 1,
+      "shared_running_first8_snapshot": 0,
+      "external_process_calls": 0
+    },
+    {
+      "scenario": "failed",
+      "outcomes": [
+        {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "submission failed/ambiguous; claim retained, inspect scheduler manually, never retry"
+        },
+        {
+          "accepted": false,
+          "error_type": "FileExistsError",
+          "error": "[Errno 17] File exists: 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\outputs\\\\mixer_launch_review_20261106\\\\evidence\\\\submit\\\\local_submit_3ja6ph9o\\\\PRECAL_R1_B1_U\\\\case\\\\submission.claim.json'"
+        }
+      ],
+      "fake_sbatch_calls": 1,
+      "approved_concurrency_each": 1,
+      "shared_running_first8_snapshot": 0,
+      "external_process_calls": 0
+    },
+    {
+      "scenario": "ambiguous",
+      "outcomes": [
+        {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "submission failed/ambiguous; claim retained, inspect scheduler manually, never retry"
+        },
+        {
+          "accepted": false,
+          "error_type": "FileExistsError",
+          "error": "[Errno 17] File exists: 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\outputs\\\\mixer_launch_review_20261106\\\\evidence\\\\submit\\\\local_submit_wf086hq6\\\\PRECAL_R1_B1_U\\\\case\\\\submission.claim.json'"
+        }
+      ],
+      "fake_sbatch_calls": 1,
+      "approved_concurrency_each": 1,
+      "shared_running_first8_snapshot": 0,
+      "external_process_calls": 0
+    },
+    {
+      "scenario": "timeout",
+      "outcomes": [
+        {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "submission failed/ambiguous; claim retained, inspect scheduler manually, never retry"
+        },
+        {
+          "accepted": false,
+          "error_type": "FileExistsError",
+          "error": "[Errno 17] File exists: 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\outputs\\\\mixer_launch_review_20261106\\\\evidence\\\\submit\\\\local_submit_l1qfj82f\\\\PRECAL_R1_B1_U\\\\case\\\\submission.claim.json'"
+        }
+      ],
+      "fake_sbatch_calls": 1,
+      "approved_concurrency_each": 1,
+      "shared_running_first8_snapshot": 0,
+      "external_process_calls": 0
+    },
+    {
+      "scenario": "same_case_race",
+      "outcomes": [
+        {
+          "accepted": true
+        },
+        {
+          "accepted": false,
+          "error_type": "FileExistsError",
+          "error": "[Errno 17] File exists: 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\outputs\\\\mixer_launch_review_20261106\\\\evidence\\\\submit\\\\local_submit_zbtmhek5\\\\PRECAL_R1_B1_U\\\\case\\\\submission.claim.json'"
+        }
+      ],
+      "fake_sbatch_calls": 1,
+      "approved_concurrency_each": 1,
+      "shared_running_first8_snapshot": 0,
+      "external_process_calls": 0
+    },
+    {
+      "scenario": "concurrency",
+      "outcomes": [
+        {
+          "accepted": true
+        },
+        {
+          "accepted": true
+        }
+      ],
+      "fake_sbatch_calls": 2,
+      "approved_concurrency_each": 1,
+      "shared_running_first8_snapshot": 0,
+      "external_process_calls": 0
+    },
+    {
+      "scenario": "successor",
+      "outcomes": [
+        {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "submission failed/ambiguous; claim retained, inspect scheduler manually, never retry"
+        },
+        {
+          "accepted": true
+        }
+      ],
+      "fake_sbatch_calls": 2,
+      "approved_concurrency_each": 1,
+      "shared_running_first8_snapshot": 0,
+      "external_process_calls": 0
+    }
+  ],
+  "external_process_calls": []
+}

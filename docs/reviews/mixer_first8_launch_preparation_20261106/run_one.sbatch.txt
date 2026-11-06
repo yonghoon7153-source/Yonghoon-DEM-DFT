@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 #SBATCH --partition=cpu
 #SBATCH --qos=cpu-60
+#SBATCH --nodes=1
 #SBATCH --ntasks=20
 #SBATCH --cpus-per-task=1
 #SBATCH --no-requeue
+# Only submit_one.py.txt may submit the sealed canonical runner. No raw sbatch bypass.
 # Required before seal: author-approved #SBATCH --time, --output, --error.
 # No defaults invented. These settings must be checked in runner review.
 set -euo pipefail
-APPROVAL_PATH='/home/yonghoon/mixer_precal_first8_20261106/approval.json'
+APPROVAL_PATH='UNRESOLVED_APPROVED_CASE_PATH'
 JOB_START_PATH='/home/yonghoon/mixer_precal_first8_20261106/job_start.py.txt'
 PYTHON_PATH='UNRESOLVED'
 case "$APPROVAL_PATH:$JOB_START_PATH:$PYTHON_PATH" in

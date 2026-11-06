@@ -1,0 +1,336 @@
+FFFFFFFFFFFFFF.F.FEFFFFFFFFFFFFFFFF
+======================================================================
+ERROR: test_spawn_error_keeps_tech_receipt (__main__.MLATests.test_spawn_error_keeps_tech_receipt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 169, in test_spawn_error_keeps_tech_receipt
+    end=json.loads((pathlib.Path(c['case_dir'])/'job_end.json').read_text());self.assertEqual(end['state'],'TECH_HOLD');self.assertIsNone(end['returncode'])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp2h6el8yh/cases/PRECAL_E0/job_end.json'
+
+======================================================================
+FAIL: test_campaign_limit_cannot_be_changed_per_case (__main__.MLATests.test_campaign_limit_cannot_be_changed_per_case)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 140, in test_campaign_limit_cannot_be_changed_per_case
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_existing_end_receipt_refuses_mpi (__main__.MLATests.test_existing_end_receipt_refuses_mpi)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 151, in test_existing_end_receipt_refuses_mpi
+    rc,error,calls=f.start(c,ap);self.assertIsNotNone(error);self.assertEqual(calls,[]);self.assertEqual(p.read_bytes(),b'OLD OUTPUT')
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_existing_receipts_refuse_submission (__main__.MLATests.test_existing_receipts_refuse_submission) (name='job_end.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 146, in test_existing_receipts_refuse_submission
+    with self.assertRaises((ValueError,OSError)):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_existing_receipts_refuse_submission (__main__.MLATests.test_existing_receipts_refuse_submission) (name='job_start.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 146, in test_existing_receipts_refuse_submission
+    with self.assertRaises((ValueError,OSError)):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_existing_receipts_refuse_submission (__main__.MLATests.test_existing_receipts_refuse_submission) (name='simulator.stdout')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 146, in test_existing_receipts_refuse_submission
+    with self.assertRaises((ValueError,OSError)):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_existing_receipts_refuse_submission (__main__.MLATests.test_existing_receipts_refuse_submission) (name='simulator.stderr')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 146, in test_existing_receipts_refuse_submission
+    with self.assertRaises((ValueError,OSError)):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_existing_receipts_refuse_submission (__main__.MLATests.test_existing_receipts_refuse_submission) (name='submission.receipt.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 146, in test_existing_receipts_refuse_submission
+    with self.assertRaises((ValueError,OSError)):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_job_allocation_mismatch_before_mpi (__main__.MLATests.test_job_allocation_mismatch_before_mpi) (key='SLURM_JOB_QOS')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 104, in test_job_allocation_mismatch_before_mpi
+    rc,error,calls=f.start(c,ap,env);self.assertIsNotNone(error);self.assertEqual(calls,[])
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_job_allocation_mismatch_before_mpi (__main__.MLATests.test_job_allocation_mismatch_before_mpi) (key='SLURM_JOB_PARTITION')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 104, in test_job_allocation_mismatch_before_mpi
+    rc,error,calls=f.start(c,ap,env);self.assertIsNotNone(error);self.assertEqual(calls,[])
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_job_allocation_mismatch_before_mpi (__main__.MLATests.test_job_allocation_mismatch_before_mpi) (key='SLURM_CPUS_PER_TASK')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 104, in test_job_allocation_mismatch_before_mpi
+    rc,error,calls=f.start(c,ap,env);self.assertIsNotNone(error);self.assertEqual(calls,[])
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_job_allocation_mismatch_before_mpi (__main__.MLATests.test_job_allocation_mismatch_before_mpi) (key='SLURM_JOB_NUM_NODES')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 104, in test_job_allocation_mismatch_before_mpi
+    rc,error,calls=f.start(c,ap,env);self.assertIsNotNone(error);self.assertEqual(calls,[])
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_job_allocation_mismatch_before_mpi (__main__.MLATests.test_job_allocation_mismatch_before_mpi) (key='SLURM_ARRAY_JOB_ID')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 104, in test_job_allocation_mismatch_before_mpi
+    rc,error,calls=f.start(c,ap,env);self.assertIsNotNone(error);self.assertEqual(calls,[])
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_job_allocation_mismatch_before_mpi (__main__.MLATests.test_job_allocation_mismatch_before_mpi) (key='SLURM_HET_GROUP')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 104, in test_job_allocation_mismatch_before_mpi
+    rc,error,calls=f.start(c,ap,env);self.assertIsNotNone(error);self.assertEqual(calls,[])
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_late_end_receipt_is_not_overwritten (__main__.MLATests.test_late_end_receipt_is_not_overwritten)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 156, in test_late_end_receipt_is_not_overwritten
+    self.assertIsNotNone(error);self.assertEqual(len(calls),1);self.assertEqual((pathlib.Path(c['case_dir'])/'job_end.json').read_bytes(),b'LATE OUTPUT')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_normal_submission_argv_and_environment (__main__.MLATests.test_normal_submission_argv_and_environment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 97, in test_normal_submission_argv_and_environment
+    '--time=1-00:00:00','--output='+c['runner_bindings']['stdout'],'--error='+c['runner_bindings']['stderr']):self.assertIn(arg,argv)
+                                                                                                              ^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '--partition=cpu' not found in ['sbatch', '--parsable', '--no-requeue', '/tmp/tmpvyc63q_1/approvals/PRECAL_E0/runner']
+
+======================================================================
+FAIL: test_shared_concurrency_one (__main__.MLATests.test_shared_concurrency_one)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 113, in test_shared_concurrency_one
+    self.assertEqual(sum(out),1);self.assertEqual(len(f.calls),1)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SBATCH_ARRAY_INX')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SBATCH_QOS')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SBATCH_PARTITION')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SBATCH_TIMELIMIT')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SBATCH_OUTPUT')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SBATCH_ERROR')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SLURM_CLUSTERS')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SLURM_HINT')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SLURM_EXPORT_ENV')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SALLOC_QOS')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SRUN_CPUS_PER_TASK')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_two_slots_then_third_refused (__main__.MLATests.test_two_slots_then_third_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 118, in test_two_slots_then_third_refused
+    with self.assertRaises((ValueError,OSError)):f.submit(aps[2])
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_uncertain_submission_holds_other_cases (__main__.MLATests.test_uncertain_submission_holds_other_cases) (mode='ambiguous')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 126, in test_uncertain_submission_holds_other_cases
+    with self.assertRaises((ValueError,OSError)):f.submit(b)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_uncertain_submission_holds_other_cases (__main__.MLATests.test_uncertain_submission_holds_other_cases) (mode='failed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 126, in test_uncertain_submission_holds_other_cases
+    with self.assertRaises((ValueError,OSError)):f.submit(b)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_uncertain_submission_holds_other_cases (__main__.MLATests.test_uncertain_submission_holds_other_cases) (mode='timeout')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 126, in test_uncertain_submission_holds_other_cases
+    with self.assertRaises((ValueError,OSError)):f.submit(b)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_uncertain_submission_holds_other_cases (__main__.MLATests.test_uncertain_submission_holds_other_cases) (mode='interrupt')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 126, in test_uncertain_submission_holds_other_cases
+    with self.assertRaises((ValueError,OSError)):f.submit(b)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.319s
+
+FAILED (failures=32, errors=1)
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_R1_B1_C", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_R1_B1_U", "returncode": 0, "stdout": "12347\n", "stderr": "", "state": "SUBMITTED", "job_id": "12347"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_R1_B1_U", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_R1_B1_C", "returncode": 0, "stdout": "12347\n", "stderr": "", "state": "SUBMITTED", "job_id": "12347"}
+{"case": "PRECAL_R1_B2_U", "returncode": 0, "stdout": "12348\n", "stderr": "", "state": "SUBMITTED", "job_id": "12348"}
+{"case": "PRECAL_R1_B1_C", "returncode": 0, "stdout": "12347\n", "stderr": "", "state": "SUBMITTED", "job_id": "12347"}
+{"case": "PRECAL_R1_B1_C", "returncode": 0, "stdout": "12347\n", "stderr": "", "state": "SUBMITTED", "job_id": "12347"}
+{"case": "PRECAL_R1_B1_C", "returncode": 0, "stdout": "12347\n", "stderr": "", "state": "SUBMITTED", "job_id": "12347"}
+{"case": "PRECAL_R1_B1_C", "returncode": 0, "stdout": "12347\n", "stderr": "", "state": "SUBMITTED", "job_id": "12347"}

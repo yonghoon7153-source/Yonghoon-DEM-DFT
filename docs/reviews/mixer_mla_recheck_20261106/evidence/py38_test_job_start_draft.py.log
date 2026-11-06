@@ -1,0 +1,6 @@
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.145s
+
+OK
+{"case": "PRECAL_E0", "approval_sha256": "d60878832618d71e701d0b9efefdf17d36b8644091bcc3a7a16b606f32c52bac", "returncode": 0, "stdout": "12345\n", "stderr": "", "state": "SUBMITTED", "job_id": "12345"}

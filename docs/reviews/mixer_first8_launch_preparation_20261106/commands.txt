@@ -22,12 +22,16 @@ No binary probe/run0/qualification simulation is authorized here. Identify a
 separately approved qualification receipt, or request that separate execution GO.
 
 LAUNCH (future reviewed runner only; one named case, no array/dependency/requeue)
-  sbatch --parsable --no-requeue <APPROVED_SINGLE_CASE_RUNNER>
+  python3 /home/yonghoon/mixer_precal_first8_20261106/submit_one.py.txt /home/yonghoon/mixer_precal_first8_20261106/approvals/<EXACT_CASE>/approval.json
+Do not invoke sbatch or the .sbatch draft directly. Resolve and review the final
+installation, campaign_policy.json and all approval bindings before any use.
+The guard rejects SBATCH_/SLURM_/SALLOC_/SRUN_ environment keys, supplies a curated
+input environment and pins core sbatch options on its command line.
 Runner must bind fresh working directory, stdout/stderr and log.liggghts,
 partition cpu, QoS cpu-60, --ntasks=<APPROVED_NP>, --cpus-per-task=1,
 --time=<APPROVED_WALLTIME>, OMP_NUM_THREADS=1 and library thread limits.
 Inside allocation, before MPI: compare complete input/source/policy/binary seals,
-case and author-approved choices, SLURM_NTASKS==NP, no existing outputs, and record
+case and author-approved choices, NP20/node1/CPU1/partition/QoS, no array/heterogeneous markers, no existing outputs, and record
 job/start identity. Then exactly one command shape:
   <PINNED_MPI_LAUNCHER> --oversubscribe --bind-to none -np <APPROVED_NP> <PINNED_BINARY> -in in.mixer
 Capture actual exit code and command argv; scheduler COMPLETED alone is not
@@ -60,3 +64,15 @@ STOP (only an authorized operator, exact recorded package job ID)
 Record reason/time/accounting, preserve partial inputs/outputs/checkpoints, mark
 TECH/HOLD and block later waves. No user-wide cancellation, resume, retry or
 requeue. Never treat restart files as permission or proof of bit identity.
+
+CAMPAIGN ADMISSION (inactive contract; not operator permission)
+  Canonical root: /home/yonghoon/mixer_precal_first8_20261106
+  Fixed shared policy: <root>/campaign_policy.json; cases: <root>/cases/<CASE>
+  Shared state: <root>/admission/admission.lock and per-case reservation/result JSON.
+The policy binds its exact install_root and common author GO/concurrency. Do not
+create independent singleton campaigns or copied policies to bypass its limit.
+Submitted/pending/uncertain reservations remain counted after the command exits.
+Any uncertain/missing result blocks other cases. No automatic release/reset or
+stale-lock deletion exists. Reconcile exact job IDs with the scheduler and obtain
+a reviewed manual release procedure before later waves; no deletion command is
+provided here. Actual Lustre locking semantics are not qualified by local mocks.

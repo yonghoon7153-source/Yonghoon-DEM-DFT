@@ -1,0 +1,34 @@
+[
+  {
+    "mutation": "environment",
+    "test": "test_submission_environment_injection",
+    "rc": 1,
+    "detected_by_assertion_failure": true,
+    "log": "mutation_environment.log",
+    "scope": "scratch copy only; all product subprocesses mocked"
+  },
+  {
+    "mutation": "campaign_capacity",
+    "test": "test_shared_concurrency_one",
+    "rc": 1,
+    "detected_by_assertion_failure": true,
+    "log": "mutation_campaign_capacity.log",
+    "scope": "scratch copy only; all product subprocesses mocked"
+  },
+  {
+    "mutation": "campaign_uncertain",
+    "test": "test_uncertain_submission_holds_other_cases",
+    "rc": 1,
+    "detected_by_assertion_failure": true,
+    "log": "mutation_campaign_uncertain.log",
+    "scope": "scratch copy only; all product subprocesses mocked"
+  },
+  {
+    "mutation": "end_receipt_exclusive",
+    "test": "test_late_end_receipt_is_not_overwritten",
+    "rc": 1,
+    "detected_by_assertion_failure": true,
+    "log": "mutation_end_receipt_exclusive.log",
+    "scope": "scratch copy only; all product subprocesses mocked"
+  }
+]
