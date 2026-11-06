@@ -1,0 +1,13 @@
+test_boundary_positive_api_and_cli (__main__.D2InsertionSeedBounds) ... /workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py:1122: ResourceWarning: unclosed file <_io.BufferedReader name='/workspace/nonrint-1104/mixer/scripts/make_mixer_deck.py'>
+  generator_sha256=hashlib.sha256(open(os.path.abspath(__file__), 'rb').read()).hexdigest(),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds) ... ok
+test_layered_max_seed_api_refuses_derived_overflow (__main__.D2InsertionSeedBounds) ... ok
+test_layered_max_seed_three_cli_rc_one (__main__.D2InsertionSeedBounds) ... ok
+test_valid_but_wrong_second_prime_keeps_generator_binding (__main__.D2InsertionSeedBounds) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 5.245s
+
+OK

@@ -1,0 +1,178 @@
+── selftest (검사기가 맞나) ──
+1	run_contract          --selftest
+2	check_review_findings   --selftest
+3	check_method_discipline --selftest
+4	check_all 나누기 (CHECK_ALL_RANGE · LIST · TIMES)
+5	sdcp_gain_verdict       --selftest
+6	sdcp_phase_ledger_match --selftest
+7	porosity_filter_axes    --selftest
+8	sr01_stamp_compare     --selftest
+9	mpm_webapp_payload     --selftest-temperature
+10	step3_sigma            --selftest
+11	step3_sigma            --selftest-rint
+12	repair_focus_top       --selftest
+13	webapp_env_audit       --selftest
+14	type_map_resolve       --selftest
+15	type_map_unknown_sweep --selftest
+16	gen_plots  --selftest-descriptions
+17	gen_plots  --selftest-fits
+18	eis_drt_ica            --selftest
+19	se_net_diagnostics     --selftest
+20	grade_engine          --selftest
+21	constriction_deleted  --selftest
+22	gen_plots  --selftest-temp
+23	reduce_arm_payloads     --selftest
+24	bridge_grid_verdict    --selftest
+25	ion_r_verdict          --selftest
+26	plot_cbd_contacts       --selftest
+27	plot_sigma_e_bars       --selftest
+28	colorbar_fit (JS 문법)
+29	colorbar_fit (라벨 폭)
+30	lhs_perc_extract       --selftest
+31	lhs_descriptor_harvest --selftest
+32	lhs_perc_fit           --selftest
+33	hetero_transcript      --selftest
+34	make_heckel_manifest   --selftest
+35	oat_sensitivity        --selftest
+36	build_methods_docx     --selftest
+37	check_cohort_packages  --selftest
+── 리포 실물 (리포가 맞나 — selftest 가 **대신해 주지 않는다**) ──
+38	mutation_sweep (문법 — 배터리 자신이 도는가)
+39	check_review_findings   (원장 자기일관 · 철회값 스윕 = 위 selftest 21)
+40	check_method_discipline (규칙 A~M + claims 원장)
+41	webapp: pipeline_provenance
+42	webapp: predictor_ui
+43	webapp: security_phase_a
+44	webapp: seminar_page
+45	webapp: worklog_page
+46	webapp: worklog_weekly_20261101 (주간보고 10-26 ~ 11-01 · /worklog 목록 · 본문 숫자 · 사이드바 · 모르는 이름 · 경로 탈출 404 · 봉인 app.py 무변경 · 11-01)
+47	webapp: mixer_devlog_page
+48	webapp: closed_param_labels
+49	webapp: closed_param_values
+50	webapp: closed_param_groupview
+51	webapp: cf_full_labels
+52	webapp: tortuosity_all
+53	webapp: closed_param_exact_union
+54	webapp: coverage_handover_scope
+55	webapp: am_isolation_labels
+56	webapp: percolation_labels
+57	webapp: ionic_isolation_labels
+58	webapp: mixer_bed_view
+59	webapp: png_transparent_export
+60	mixer launcher (완주 판정 · 덮어쓰기 가드)
+61	mixer D2 소비자 (합성 덱 · 결속 검증 · unittest)
+62	mixer D3 후보 판독기 (합성 계약 · unittest)
+63	mixer 보정 전 첫8 준비 (합성 덱 · unittest)
+64	mixer 보정 전 관측 연결 (합성 프레임 · unittest)
+65	ULPRI ul_reader         --selftest (언로딩 판독기)
+66	ULPRI ul_gates          --selftest (관문)
+67	ULPRI ul_runner_test    --selftest (러너 모의 · 가짜 lmp)
+68	ULPRI make_unload_decks --check (덱 = 생성 결과)
+69	ULPRI seal_kit          --check (봉인 · 활성 규칙)
+70	webapp: launcher (포트 선점)
+71	webapp: temp_pressure
+72	webapp: ledger_view
+73	webapp: meta_json_robust
+74	webapp: atoms_only_viewer
+75	webapp: atoms_only_porosity
+76	webapp: dem_pore_path_view
+77	webapp: tau_paths_view
+78	webapp: force_chain_view
+79	webapp: viewer_coordination
+80	webapp: viewer_am_contacts
+81	webapp: network_current_view
+82	webapp: net_current_density
+83	webapp: viewer_load_view
+84	webapp: viewer_lw_pnorm
+85	webapp: je_definition_label
+86	webapp: rint_scope_labels
+87	webapp: tau_labels
+88	webapp: tau_handover_status
+89	webapp: stress_lw_labels
+90	webapp: constriction_power
+91	webapp: s567_labels
+92	webapp: tau_grade_unify
+93	webapp: network_handover_chain
+94	webapp: l214r03_display
+95	webapp: web09_accepted_refresh
+96	webapp: single_null_metrics
+97	webapp: psi_generation_stamp
+98	webapp: gen2_publication_handover
+99	g2_network_reread --selftest
+100	webapp: gen2_stamp_record
+101	webapp: hetero_transcript
+102	webapp: rint_explainer (Rint 설명 정적 페이지 + 사이드바 링크 · 봉인 app.py 무변경 · 10-21)
+103	webapp: dem_method_figs (2D DEM 방법 그림 정적 페이지 · 사이드바 · 내려받기 = docs 원본 바이트 · ../ 404 · 봉인 app.py 무변경 · 11-02)
+104	sync_dem_method_figs_to_webapp --check (웹앱 그림 사본 = docs/50kg/report_y4/figs/p0_dem_method 바이트 같음)
+105	webapp: mpm_lab_cmp_absent_phase (MPM lab 비교표 · 없는 상 = — · 참 0 유지 · 10-21)
+106	rint_receipts (요청 ↔ 적용 영수증 · AST 변이 4)
+107	rint_g2_am_iface (①′ AM–AM 계약 v3.1 · 반례 먼저)
+108	ptfe_face_alpha (Rint ② S1 · 시험 먼저)
+109	webapp: ca_ext_labels (S1 표지 · 봉인 밖 템플릿)
+110	carbon_junction (Rint ② S2 · S3 · 시험 먼저)
+111	ca_ext_b6 (Rint ② B6 payload 배선 · 조합 정책 · 시험 먼저)
+112	ca_ext_runner (Rint ② B6 러너 다음 세대 손잡이 · 시험 먼저)
+113	ca_ext_verdict (Rint ② B6 판정기 소비자 검사 · 시험 먼저)
+114	ca_ext_z1 (Rint ② Z1 러너 · 판정기 굳히기 · 시험 먼저)
+115	rint_r_chain (Rint ② R 런 사슬 · 사다리 · 예측 · 판정 · 가짜 러너 · 시험 먼저)
+116	rint_first_result (Rint ② 첫 풀이 끝 표지 감싸개 · 묶음 C2b · 시험 먼저)
+117	ca_ext_z3 (Rint ② Z3 face_alpha + 탄소 접합 한 런 · 극한 런 · ARM_LIST · sid_off · CG 반복 수 · 시험 먼저)
+118	rint_r_chain_e2e (Rint ② R 사슬 · 실제 러너 끝-끝 · 픽스처 킷 · CPU)
+119	step3_target_cert (STEP3 목표량 증서 ⓓ · RCA-07 · 13 · 해 상태 · 빠른 판 · 시험 먼저)
+120	step3_conv_cert (STEP3 수렴 증서 A/B/C · 봉인 표 · 10-21 실측 115–124 s 로 게이트에 넣음)
+121	ca_s0_census (Rint ② S0 표현 원장 · 시험 먼저)
+122	resume_ckpt (재개 도구 · 가짜 SLURM)
+123	kg50_d3_cell_verdict   --selftest
+124	kg50_q5_branches      --selftest
+125	kg50_q5_verdict       --selftest
+126	kgy 판 R 경로 시험 (Python 3.8 · numpy 1.24.4 · scipy 1.10.1 · SELF-132)
+127	network boundary_rule (안 A · 동작 중립)
+128	tau_flux (이온 인계 열 · 게이트 G1–G6)
+129	reread_v12 (RGLR4-01 · 02 반례 · 원본 PASS)
+130	lhs_release v1.3 (빈칸 뜻 · ML 표 · 재적합 · 세대 g2 · τ 다시 읽기 · 발사 봉인 대조 · DRY RUN)
+131	lhs_pressure_record (DESC-06 완료 압력 · 생성기 관문)
+132	compaction_curve (로그 잇기 · 설정 줄 · 판 재부양 반례)
+133	psi default switch (L2-01 세대 2)
+134	physics area g2 (C2 ①–⑤ · L1-01/02/03)
+135	network dirichlet (L2-05 · D1–D7)
+136	network generation 2 (CF 표지 · H12 · 세대 표기)
+137	gen2 role contract (G2R-01 · 02 — 역할 · 닫힌 열거 · 옛 세대 추론)
+138	network solve certificate (G2R-03 · GEN2-01)
+139	L214R-01 증서 유한성 · 채택 단 결합 (반례 먼저)
+140	L214R-02 모형 한계 독립 표지 · 배포 HOLD (반례 먼저)
+141	L214R-05 게시 증서 유한성 (반례 먼저)
+142	L214R-06–08 같은 부류 셋 (반례 먼저)
+143	L214R-09–11 같은 부류 셋 (마지막 라운드 · 반례 먼저)
+144	L214R-R01 보류 값 게시 복원 거부 (반례 먼저)
+145	L214R-R04 게시 이온 가지 표지 ↔ 재구성 q (반례 먼저)
+146	union coverage ⑥ (C2-⑥ · LHS-25)
+147	wall near tangent (LHSC-08)
+148	coverage CLI no tracked write (LHS-27)
+149	webapp: coverage_union_display
+150	parse_case_paste ⑥ 라벨 (합집합 · legacy 줄)
+151	love_weber_stress (④b · LHS-29)
+152	constriction_power_share (④a · LHS-30)
+153	audit_coverage      --selftest
+154	claimed_sha_provenance --selftest
+155	audit_adjudication  --selftest
+156	audit_validation_flags --selftest
+157	constriction_reference --selftest
+158	transport_cap_equivalence --selftest
+159	plastic_coverage    --selftest
+160	review_before_after --selftest
+161	seal_area_cohort   --selftest
+162	measure_rho        --selftest
+163	seal_s3_prerun     --selftest
+164	run_s3_psi         --selftest
+165	check_doc_refs          --selftest
+166	check_cohort_packages  (커밋된 패키지 ↔ 원장)
+167	audit_adjudication   (원시 감사 ↔ 판정 원장)
+168	check_doc_refs         (문서가 가리키는 것이 실재하는가)
+169	lhs_ext_materialize     --selftest
+170	lhs_supp_design (보충 · 후막 설계 · 10-06)
+171	lhs_supp_design (봉인 CSV ↔ 해시 · 재검증)
+172	lhs_ext_submit_gate     --selftest
+173	lhs_ext_design (봉인 CSV ↔ 상자 ↔ 해시)
+174	selftest_inventory     (분류·레인·CI 의존)
+175	fast 자기검사 전수     (등재 기반 드라이버)
+
