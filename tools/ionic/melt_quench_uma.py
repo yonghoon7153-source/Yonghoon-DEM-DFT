@@ -4987,10 +4987,12 @@ def _selftest():
                   "inv_mismatch_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
                                                                         folder_prior=[{"status": "invalid", "provenance": PVM}, {"status": "invalid", "provenance": PV},
                                                                                       {"status": "pass", "provenance": PV}]) is not None,
-                  "inc_mismatch_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
-                                                                        folder_prior=[{"status": "incomplete", "provenance": {**PVMID["provenance"], "judge_nature": {
-                                                                            "errors": [], "input_mismatch": ["y"]}}},
-                                                                                      {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
+                  # ⭐ DT 깨기 (d888f9a7 · DS1 초록) — 입력 불일치가 적힌 incomplete 는 두 갈래 어느 쪽이든 면제가 아니다: 첫 갈래 (진행 중 확인 · 같은 plan ·
+                  #    완료 전 시각) 와 둘째 갈래 (MD 출력이 지금과 같음) 를 **다른 조건은 다 채운** 판정 (지금 판정 PVP) 으로 — 전엔 plan 없는 PV 라 새
+                  #    '같은 plan' 조건이 먼저 막아 불일치 검사를 꺼도 결과가 같았다 (DS21 · DT10 과 같은 가림) · 대조: 불일치 없음이면 면제
+                  "inc_mismatch_before_anchor": _pa({**PVMID["provenance"], "judge_nature": {"errors": [], "input_mismatch": ["y"]}}),
+                  "inc_mismatch_same_md_before_anchor": _pa({**PVP, "judge_nature": {"errors": [], "input_mismatch": ["y"]}}),
+                  "inc_same_md_before_anchor": _pa({**PVP, "judge_nature": {"errors": [], "input_mismatch": []}}),
                   "inv_transient_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
                                                                          folder_prior=[{"status": "invalid", "provenance": {**PV, "judge_nature": {"errors": ["once"],
                                                                                                                                                      "input_mismatch": []}}},
@@ -5011,10 +5013,11 @@ def _selftest():
                   #    진행 중 들여다봄 · 같은 입력의 결정적 invalid) 은 면제가 아니다 (DS2) · 기준은 첫 기록 — 면제 꼴의 incomplete 가 기준 뒤에 있고
                   #    같은 바이트의 장부 판정 사본이 그 뒤에 또 있어도 그 incomplete 는 대체 규칙을 받는다 (DR63 — 옛 시험은 사이 기록이 결정적 invalid 라
                   #    회신 DR P1-1 고침 뒤로는 기준이 밀려도 결과가 같았다)
-                  "inv_midrun_err_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
+                  #    (⭐ DT 깨기 뒤 — 첫 갈래의 다른 조건 (같은 plan · 완료 전 시각) 을 다 채운 지금 판정 PVP 로: PV 면 새 조건이 먼저 막아 DS2 를 이 줄이 못 잡았다)
+                  "inv_midrun_err_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PVP}, "pass", folder_provenance=PVP,
                                                                           folder_prior=[{"status": "invalid", "provenance": {**PVMID["provenance"], "judge_nature": {
                                                                               "errors": ["gate_check OSError: selftest"], "input_mismatch": []}}},
-                                                                                        {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
+                                                                                        {"status": "invalid", "provenance": PVP}, {"status": "pass", "provenance": PVP}]) is not None,
                   "inv_det_same_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
                                                                         folder_prior=[{"status": "invalid", "provenance": {**PV, "judge_nature": {"errors": [], "input_mismatch": []}}},
                                                                                       {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
@@ -5063,7 +5066,8 @@ def _selftest():
                    "inv_ledger_chain_midrun": False, "none_ledger_chain_midrun": True, "inv_ledger_chain_nonature": True,
                    "inv_after_det_invalid": True, "inv_after_transient": False, "inv_anchor_missing": True, "inv_det_before_anchor": True,   # 회신 DR P1-1 (앞이어도 완료된 invalid)
                    "inv_anchor_first": True, "inv_cap_raised": False, "inv_rules_differ": True, "inv_old_rec_card": True,
-                   "inv_mismatch_before_anchor": True, "inc_mismatch_before_anchor": True, "inv_transient_before_anchor": False,
+                   "inv_mismatch_before_anchor": True, "inc_mismatch_before_anchor": True, "inc_mismatch_same_md_before_anchor": True,
+                   "inc_same_md_before_anchor": False, "inv_transient_before_anchor": False,
                    "inc_oldfmt_before_anchor": False, "inc_unknown_before_anchor": True, "inc_inprog_late_present_before_anchor": True,
                    "inc_inprog_plan_changed_before_anchor": True, "inc_inprog_after_done_before_anchor": True,
                    "inc_inprog_done_time_missing_before_anchor": True, "inc_inprog_naive_time_before_anchor": True,
