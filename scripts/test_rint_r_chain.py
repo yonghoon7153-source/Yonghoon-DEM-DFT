@@ -11040,7 +11040,9 @@ def t_PD12m():
                 '몫 아님 (None) · ★ 11-02 PC7-02 (1저자 11-02 — 바뀐 설계 단언 · 옛 = attempt.json 없는 폴더 None) 원장 항목이 있는 attempt_<n> 폴더에 꼴 맞는 '
                 'attempt.json 이 없으면 (없음 · 꼴 틀림 (칸 하나 더) · 심볼릭 링크) 사유 — 예외 하나 = 그 번호의 결과 줄 rejected 이고 그 바탕에 옆 거부 기록 '
                 'attempt_<n>.rejected.json 이 있을 때 (AL07 남의 폴더 · None) · 결과 줄 rejected 인데 그 바탕에 옆 거부 기록 없음 · 결과 줄 stopped 인데 옆 거부 '
-                '기록 있음 = 사유')
+                '기록 있음 = 사유 · ★ 11-04 PC8-01 (사전 공격 8 회차 P8-01 · 1저자 11-04) 그 예외 = 증거에 묶임: 결과 줄 폴더 = 옆 거부 기록 · 그 파일 (링크 아님) 의 '
+                '요약 sha = 결과 줄 · 꼴 맞는 거부 기록 (schema · n = 번호 · OUTDIR_NOT_EMPTY = 결과 줄 멈춤) · 남의 폴더에 사슬 흔적 없음 (그룹 기록 · 결과 흔적 · '
+                '단계 요약 · attempt.json) — 하나라도 어기면 사유 (옛 = 결과 줄 rejected + 옆 파일 아무것 = None)')
 def t_PD12u():
     f = getattr(RR, 'found_attempts_problem', None)
     if f is None:
@@ -11077,18 +11079,68 @@ def t_PD12u():
     side_only3 = root / 'side3' / 'attempt_3.rejected.json'          # ★ 11-02 PC7 변이 보강 (G04) — 옆 거부 기록 파일 = 결과 줄과 무관하게 이 함수 몫 아님
     side_only3.parent.mkdir(parents=True)
     side_only3.write_text('{}', encoding='utf-8')
+    def al07(tag, rec=None, folder=None, sha=None, code='OUTDIR_NOT_EMPTY', trace=None, link=False, status='rejected', rec_over=None):
+        """★ 11-04 PC8-01 — AL07 남의 폴더 (attempt.json 없음 · 옛 파일 하나 · trace = 사슬 흔적) + 옆 거부 기록 (기본 = 사슬이 쓰는 꼴 · n 1 ·
+        OUTDIR_NOT_EMPTY) + 그 번호의 결과 줄 (rejected · 폴더 = 옆 기록 · 요약 sha = 옆 기록 · 멈춤 code) → (원장 상태, 찾은 폴더)."""
+        p = root / tag / 'attempt_1'
+        p.mkdir(parents=True)
+        (p / 'old.txt').write_text('old', encoding='utf-8')
+        if trace == 'groups':
+            (p / 'groups').mkdir()
+            (p / 'groups' / 'L01_floor.launch.json').write_text('{}', encoding='utf-8')
+        elif trace == 'post':
+            (p / PC_MARK).parent.mkdir(parents=True)
+            (p / PC_MARK).write_text('{}', encoding='utf-8')
+        elif trace == 'summary':
+            (p / 'ladder_summary.json').write_text('{}', encoding='utf-8')
+        elif trace == 'attempt_json':
+            (p / 'attempt.json').write_text('{"x": 1}', encoding='utf-8')
+        sp = root / tag / 'attempt_1.rejected.json'
+        body = rec if rec is not None else {'schema': 'rint-r-rejected-v1', 'n': 1, 'code': code, 'cause': '옛 폴더 (시험)', 'ledger_commit': 'a' * 40,
+                                            'utc': '2026-11-04T00:00:00Z'}
+        if rec_over:
+            body = dict(body, **rec_over)
+        txt = body if isinstance(body, str) else json.dumps(body)
+        if link:
+            real = root / tag / 'real_rejected.json'
+            real.write_text(txt, encoding='utf-8')
+            sp.symlink_to(real)
+        else:
+            sp.write_text(txt, encoding='utf-8')
+        r = {'status': status, 'side': 'pre', 'stop': {'code': code, 'run': None, 'reason': None}, 'folder': folder or sp.name,
+             'folder_sha256': sha or (tree_digest(real) if link else tree_digest(sp))}
+        res_ = dict(st['results'])
+        res_[1] = r
+        return {'entries': st['entries'], 'results': res_}, {1: [p, sp]}
     got = {'same': f(st, {1: mk('same', 1)}), 'target': f(st, {1: mk('target', 1, target='ladder:P0:FIBRE')}),
            'machine': f(st, {1: mk('machine', 1, machine='gabia')}), 'resume_of': f(st, {2: mk('resume', 2, resume_of=None)}),
            'no_attempt_json': f(st, {2: mk('noaj', 2, valid=False)}), 'extra_key': f(st, {1: mk('extra', 1, extra={'note': 'x'})}),
            'attempt_json_symlink': f(st, {1: mk('link', 1, link=True)}),
-           'rejected_side': f(st, {1: mk('rejside', 1, valid=False, side=True)}),
+           'rejected_side': f(*al07('al07_bound')),
            'rejected_no_side': f(st, {1: mk('rejnoside', 1, valid=False)}),
            'stopped_side': f(st, {3: mk('stopside', 3, valid=False, side=True)}),
-           'side_file': f(st, {1: [side_only]}), 'side_file_stopped': f(st, {3: [side_only3]}), 'not_in_ledger': f(st, {7: mk('n7', 7)})}
+           'side_file': f(st, {1: [side_only]}), 'side_file_stopped': f(st, {3: [side_only3]}), 'not_in_ledger': f(st, {7: mk('n7', 7)}),
+           #  ★ 11-04 PC8-01 — 예외가 증거에 묶인다 (옛 = 결과 줄 rejected + 그 바탕에 옆 거부 기록 아무것 = None)
+           'rejected_side_empty_record': f(st, {1: mk('rejside', 1, valid=False, side=True)}),
+           'al07_record_empty': f(*al07('al07_empty', rec='{}')), 'al07_digest': f(*al07('al07_digest', sha='c' * 64)),
+           'al07_folder_attempt': f(*al07('al07_infolder', folder='attempt_1')),
+           'al07_record_n': f(*al07('al07_n', rec={'schema': 'rint-r-rejected-v1', 'n': 2, 'code': 'OUTDIR_NOT_EMPTY', 'cause': 'x',
+                                                    'ledger_commit': 'a' * 40, 'utc': '2026-11-04T00:00:00Z'})),
+           'al07_code': f(*al07('al07_code', code='MACHINE_NOT_ALLOWED')), 'al07_side_link': f(*al07('al07_link', link=True)),
+           'al07_trace_groups': f(*al07('al07_groups', trace='groups')), 'al07_trace_post': f(*al07('al07_post', trace='post')),
+           'al07_trace_summary': f(*al07('al07_summary', trace='summary')), 'al07_trace_attempt_json': f(*al07('al07_aj', trace='attempt_json')),
+           #  ★ 11-04 PC8-01 변이 보강 — 증거 칸 하나씩 (결과 줄 status · 거부 기록 schema · 칸 · 시작 커밋)
+           'al07_status_stopped': f(*al07('al07_stopped', status='stopped')),
+           'al07_record_schema': f(*al07('al07_schema', rec_over={'schema': 'rint-r-rejected-v0'})),
+           'al07_record_extra': f(*al07('al07_extra', rec_over={'note': 'x'})),
+           'al07_record_commit': f(*al07('al07_commit', rec_over={'ledger_commit': 'x' * 40}))}
     none_rows = ('same', 'rejected_side', 'side_file', 'side_file_stopped', 'not_in_ledger')
-    reason_rows = ('target', 'machine', 'resume_of', 'no_attempt_json', 'extra_key', 'attempt_json_symlink', 'rejected_no_side', 'stopped_side')
+    reason_rows = ('target', 'machine', 'resume_of', 'no_attempt_json', 'extra_key', 'attempt_json_symlink', 'rejected_no_side', 'stopped_side',
+                   'rejected_side_empty_record', 'al07_record_empty', 'al07_digest', 'al07_folder_attempt', 'al07_record_n', 'al07_code',
+                   'al07_side_link', 'al07_trace_groups', 'al07_trace_post', 'al07_trace_summary', 'al07_trace_attempt_json',
+                   'al07_status_stopped', 'al07_record_schema', 'al07_record_extra', 'al07_record_commit')
     ok = (all(got[k] is None for k in none_rows) and all(isinstance(got[k], str) and 'attempt_' in got[k] for k in reason_rows))
-    return ok, got
+    return ok, {k: got[k] for k in none_rows + reason_rows if (got[k] is None) != (k in none_rows)}
 
 
 # ── ★ 11-02 PC6-11 (사전 공격 6 회차 마무리 · 변이 생존 = 시험 공백 · 보고 preattack6/PREATTACK_C2_final.md §3-2 · 탐침 final/probes/probe6f_mut_paths.py) ──
@@ -11515,8 +11567,9 @@ def t_PD02cr():
 
 # ── ★ 11-02 PC7-01 – 04 (사전 공격 7 회차 · 보고 preattack7/PREATTACK_7.md · 탐침 preattack7/probes/probe7_real.py · probe7_unit.py ·
 #    1저자 11-02 *"ㅇㅇ 권고대로"* = Codex 전에 PC7-01–04 시험 먼저 고침 · PC7-05 = 등록 R 문구) ──
-#: 시작 기록 (원장 줄 kind start · ★ 11-02 PC7-01) 의 칸 (시험 쪽 글자 · 사슬 상수의 사본 금지 짝)
-PE_START_KEYS = ('base', 'folder', 'host', 'kind', 'n', 'utc')
+#: 시작 기록 (원장 줄 kind start · ★ 11-02 PC7-01) 의 칸 (시험 쪽 글자 · 사슬 상수의 사본 금지 짝) · ★ 11-04 PC8-05 — 사슬이 쓰는 판 = 사슬 부모 칸
+#:   (chain_pid · chain_start) 을 더한 판 (옛 판 = 칸 여섯 · 읽기만 · PE05p)
+PE_START_KEYS = ('base', 'chain_pid', 'chain_start', 'folder', 'host', 'kind', 'n', 'utc')
 #: ★ 11-02 PC7-01 — 다른 기계 신원 (사슬 host_ident 를 바꿔 끼운 구동기 · 같은 원장 · 다른 바탕 = 그 기계의 새 자리)
 PE_HOST_DRIVER = r'''
 import json, os, sys
@@ -11559,9 +11612,12 @@ def pe_starts(d):
 
 
 def pe_start_ok(s, n, base):
-    """시작 기록 하나 = 칸 · 번호 · 바탕 (절대 · resolve) · 폴더 이름 · 기계 신원 (이 컨테이너 host_ident) · utc."""
+    """시작 기록 하나 = 칸 · 번호 · 바탕 (절대 · resolve) · 폴더 이름 · 기계 신원 (이 컨테이너 host_ident) · utc · ★ 11-04 PC8-05 사슬 부모 (양의 정수
+    pid · 시작 틱 = 0 이상 정수 | null)."""
     return (isinstance(s, dict) and tuple(sorted(s)) == PE_START_KEYS and s.get('n') == n and s.get('base') == str(Path(base).resolve())
-            and s.get('folder') == f'attempt_{n}' and s.get('host') == RR.host_ident() and isinstance(s.get('utc'), str))
+            and s.get('folder') == f'attempt_{n}' and s.get('host') == RR.host_ident() and isinstance(s.get('utc'), str)
+            and type(s.get('chain_pid')) is int and s['chain_pid'] > 0
+            and (s.get('chain_start') is None or (type(s.get('chain_start')) is int and s['chain_start'] >= 0)))
 
 
 @check('PE01', '★ 11-02 PC7-01 (사전 공격 7 회차 probe7_real C · P1 후보 · PC6-09 범위) — 원장 시도 (바닥 런 표지 뒤 잠) 의 사슬 부모 SIGKILL (러너 그룹 삶) '
@@ -12125,6 +12181,534 @@ def t_PE01f():
             {'status': 'interrupted', 'side': 'pre', 'cause': 'parent_dead', 'resume_ok': False, 'by': 'recover'}, 0,
             ['header', 'entry', 'result', 'entry'])
     return got == want, got
+
+
+# ── ★ 11-04 PC8 (사전 공격 8 회차 · 1저자 11-04 "다 권고대로" · 보고 preattack8/PREATTACK_8.md · 탐침 preattack8/probes/) — 시험 먼저: 아래 검사는 고치기 전
+#    판 (74150affc) 에서 옳은 까닭으로 실패한다 (기록 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_*.log)
+
+#: ★ 11-04 PC8-05 — 사슬을 정해 둔 자리에서 붙잡는 구동기 (자리 __WHERE__ = pre: 풀기 전 대조 (시작 기록 뒤 · 첫 러너 전) · read: 첫 런의 팔을 읽기 직전
+#:   (그 런의 끝 기록 = 확인 뒤 · 다음 런 전)) — 붙잡으면 <cfg>.ready 를 쓰고 <cfg>.go 가 생길 때까지 (최대 180 s) 기다린다 · 사슬 함수는 감싸기만
+PE05_DRIVER = r'''
+import json, os, sys, time
+from pathlib import Path
+cfg_p = Path(sys.argv[1])
+cfg = json.load(open(cfg_p, encoding='utf-8'))
+sys.path.insert(0, cfg['scripts'])
+import rint_r_chain as RR
+RR.HERE = Path(cfg['here'])
+os.environ.update(cfg['env'])
+ready, go = cfg_p.with_suffix('.ready'), cfg_p.with_suffix('.go')
+held = [False]
+
+
+def hold():
+    if held[0]:
+        return
+    held[0] = True
+    ready.write_text(str(os.getpid()), encoding='utf-8')
+    t_end = time.time() + 180
+    while time.time() < t_end and not go.exists():
+        time.sleep(0.05)
+
+
+NAME = 'attempt_presolve_problem' if '__WHERE__' == 'pre' else 'read_run'
+_orig = getattr(RR, NAME)
+
+
+def wrap(*a, **k):
+    hold()
+    return _orig(*a, **k)
+
+
+setattr(RR, NAME, wrap)
+sys.exit(RR.main(cfg['argv']))
+'''
+
+
+def pe05_wait(path, t):
+    t_end = time.time() + t
+    while time.time() < t_end and not Path(path).exists():
+        time.sleep(0.05)
+    return Path(path).exists()
+
+
+def pe05_live(tag, where):
+    """원장 시도 사슬 (따로 프로세스) 을 where 에서 붙잡고 → recover --ledger (산 사슬 · 그룹 기록 없음 또는 다 확인) · 다음 --add → 놓아 줌 → 사슬 끝 → 칸."""
+    d, _rc, _so = led_new(tag)
+    _r, n1, _s = led_add(d, 'ladder:P0')
+    b1 = Path(TD) / 'runs' / f'{tag}_b1'
+    f1 = b1 / f'attempt_{n1}'
+    w = world(tag)
+    pr = gr_spawn_chain(tag, ladder_argv(b1) + ['--ledger', str(d), '--attempt', str(n1)], w, driver=PE05_DRIVER.replace('__WHERE__', where),
+                        dname=f'pe05_driver_{where}.py')
+    cfgp = Path(TD) / f'{tag}_cfg.json'
+    ready, go = cfgp.with_suffix('.ready'), cfgp.with_suffix('.go')
+    out = {}
+    try:
+        out['held'] = pe05_wait(ready, 120)
+        out['alive'] = pr.poll() is None
+        out['files'] = sorted(p.relative_to(f1).as_posix() for p in f1.rglob('*') if p.is_file()) if f1.is_dir() else None
+        out['ends'] = {nm: (er or {}).get('confirmed') for nm, (_lr, er) in gr_records(f1).items()} if f1.is_dir() else None
+        raw = led_raw(d)
+        rc_r, so_r = call(['--stage', 'recover', '--out', str(f1), '--ledger', str(d)], w)
+        out['recover'] = (rc_r, led_raw(d) == raw, '사슬 부모' in so_r)
+        out['tail'] = so_r.strip().splitlines()[-2:]
+        add = led_add(d, 'ladder:P0') if where == 'pre' else led_add(d, 'ladder:P0', resume=n1)
+        out['add'] = (add[0], led_raw(d) == raw)
+    finally:
+        go.write_text('1', encoding='utf-8')
+    out['chain_rc'] = pr.wait(timeout=600)
+    out['res'] = pc_res(d, n1, keys=('status', 'side', 'by'))
+    out['status'] = (u_json(f1 / 'ladder_summary.json') or {}).get('status')
+    raw2 = led_raw(d)
+    out['recover_after'] = (call(['--stage', 'recover', '--out', str(f1), '--ledger', str(d)], w)[0], led_raw(d) == raw2)
+    out['kinds'] = [x.get('kind') for x in led_lines(d)]
+    return out
+
+
+@check('PE05', '★ 11-04 PC8-05 (사전 공격 8 회차 P8-05 (a) · P1 후보 · PC7-01 부류의 recover 쪽) — 원장 시도 사슬 (따로 프로세스) 이 시작 기록 뒤 · 첫 러너 전 (풀기 '
+               '전 대조) 에서 산 채로 멈춰 있을 때 (시도 폴더 = attempt.json 만 · 그룹 기록 없음) --stage recover --ledger → rc 3 · 원장 무변경 · 사유 = 사슬 부모 '
+               '(시작 기록의 chain_pid · chain_start) 가 살아 있다 (옛 = 결과 줄 interrupted · 결과 전 · rc 0) · 같은 대상 새 --add = rc 3 (결과 줄 없음 · 옛 = rc 0) '
+               '→ 놓아 주면 그 사슬이 CALIBRATED · 결과 줄 completed (by chain · 옛 = 결과 줄이 이미 있어 rc 3) · 그 뒤 recover = rc 0 · 원장 무변경')
+def t_PE05():
+    r = scen('PE05', lambda: pe05_live('PE05', 'pre'))
+    want = {'held': True, 'alive': True, 'files': ['attempt.json'], 'recover': (3, True, True), 'add': (3, True), 'chain_rc': 0,
+            'res': {'status': 'completed', 'side': 'post', 'by': 'chain'}, 'status': 'CALIBRATED', 'recover_after': (0, True),
+            'kinds': ['header', 'entry', 'start', 'result']}
+    got = {k: r.get(k) for k in want}
+    return got == want, (got, r.get('tail'))
+
+
+@check('PE05b', '★ 11-04 PC8-05 (P8-05 (b)) — 같은 창의 런 사이: 원장 시도 사슬이 첫 런 (바닥) 을 끝내고 (끝 기록 by chain · 확인 True) 그 팔을 읽기 전에 산 채로 '
+                '멈춰 있을 때 recover --ledger → rc 3 · 원장 무변경 · 사유 = 사슬 부모 삶 (옛 = 결과 줄 interrupted · 결과 뒤 · 재실행 자격 True · rc 0) · '
+                '--add --resume 1 = rc 3 (결과 줄 없음 · 옛 = rc 0 = 원 사슬과 재실행이 함께 돈다) → 놓아 주면 원 사슬 CALIBRATED · 결과 줄 completed')
+def t_PE05b():
+    r = scen('PE05b', lambda: pe05_live('PE05b', 'read'))
+    want = {'held': True, 'alive': True, 'ends': {'L01_floor': True}, 'recover': (3, True, True), 'add': (3, True), 'chain_rc': 0,
+            'res': {'status': 'completed', 'side': 'post', 'by': 'chain'}, 'status': 'CALIBRATED', 'recover_after': (0, True),
+            'kinds': ['header', 'entry', 'start', 'result']}
+    got = {k: r.get(k) for k in want}
+    return got == want, (got, r.get('tail'))
+
+
+def pe05_hand_start(tag, start_over, pop_chain=False):
+    """원장 (항목 1 ladder:P0) + 손 시작 기록 (기본 = 이 기계 신원 · 사슬 = 없는 pid) + 시도 폴더 (attempt.json 만 · 그룹 기록 없음) → (원장, 폴더, 번호)."""
+    d, _rc, _so = led_new(tag)
+    _r, n1, _s = led_add(d, 'ladder:P0')
+    base = Path(TD) / 'runs' / tag
+    f = base / f'attempt_{n1}'
+    f.mkdir(parents=True)
+    (f / 'attempt.json').write_text(json.dumps({'schema': 'rint-r-attempt-v1', 'n': n1, 'target': 'ladder:P0', 'machine': MACH, 'resume_of': None,
+                                                'ledger_commit': git_(d, 'rev-parse', 'HEAD')}), encoding='utf-8')
+    s = dict({'kind': 'start', 'n': n1, 'base': str(base.resolve()), 'folder': f'attempt_{n1}', 'host': RR.host_ident(), 'chain_pid': DEAD_PID,
+              'chain_start': None, 'utc': '2026-11-04T00:00:00Z'}, **start_over)
+    if pop_chain:
+        s.pop('chain_pid')
+        s.pop('chain_start')
+    led_hand(d, s, msg=f'rint-r attempt {n1} start (시험 · 손 · PC8-05)')
+    return d, f, n1
+
+
+def pe05_live_helper():
+    """산 도우미 프로세스 (따로 세션 · 120 s 잠) → (Popen, 시작 틱)."""
+    import subprocess as _sp
+    p = _sp.Popen([sys.executable, '-c', 'import time; time.sleep(120)'], start_new_session=True, stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+    t_end, st = time.time() + 10, None
+    while time.time() < t_end and st is None:
+        try:
+            st = RR.proc_stat(p.pid)
+        except OSError:
+            st = None
+        time.sleep(0.02)
+    return p, (st[1] if st else None)
+
+
+@check('PE05o', '★ 11-04 PC8-05 시작 기록의 사슬 부모 규칙 (손 시작 기록 · 시도 폴더 = attempt.json 만 · 그룹 기록 없음) — ⓐ 이 기계 · 죽은 pid = recover --ledger '
+                'rc 0 · 결과 줄 interrupted · 결과 전 (대조) ⓑ 이 기계 · 산 프로세스 (시작 틱 같음) = rc 3 · 결과 줄 없음 · 사유 사슬 부모 살아 있음 · 운영자 확인 '
+                '표지도 rc 3 (보이는 산 사슬은 덮지 않는다) → 그 프로세스가 끝나면 rc 0 ⓒ 산 pid · 시작 틱 다름 (pid 다시 쓰임) = rc 0 ⓓ 산 pid · 시작 틱 칸 '
+                'null = rc 3 (모름 = 산 것과 같이) ⓔ 다른 부팅 (boot_id) = rc 3 · 사유 여기서 볼 수 없다 · --operator-confirm = rc 0 · 결과 줄 · 원장 커밋 글에 '
+                '운영자 사유 ⓕ 옛 판 시작 기록 (11-02 PC7-01 · 사슬 칸 없음) = 읽는다 · recover rc 3 (사슬 부모 모름) · --operator-confirm = rc 0 · 결과 줄 ⓖ 표지의 '
+                '범위 = 그 시도 폴더만 (한 바탕 볼 수 없는 시도 둘 · 하나만 결과 줄 · rc 3)')
+def t_PE05o():
+    def go():
+        out = {}
+        why = '사슬 부모 끝남 확인 (ps · 시험 · PC8-05)'
+
+        def rec(d, f, extra=()):
+            raw = led_raw(d)
+            rc, so = call(['--stage', 'recover', '--out', str(f), '--ledger', str(d)] + list(extra))
+            return rc, led_raw(d) == raw, so
+        d, f, n = pe05_hand_start('PE05o_dead', {})
+        rc, same, _so = rec(d, f)
+        out['dead'] = (rc, same, pc_res(d, n, keys=('status', 'side', 'by')))
+        hp, hst = pe05_live_helper()
+        try:
+            d, f, n = pe05_hand_start('PE05o_live', {'chain_pid': hp.pid, 'chain_start': hst})
+            rc, same, so = rec(d, f)
+            rc2, same2, _so2 = rec(d, f, ['--operator-confirm', str(n), '--operator-why', why])
+            hp.kill()
+            hp.wait()
+            rc3, same3, _so3 = rec(d, f)
+            out['live'] = (hst is not None, rc, same, '사슬 부모' in so and '살아' in so, rc2, same2, rc3, same3,
+                           pc_res(d, n, keys=('status', 'side', 'by')))
+        finally:
+            if hp.poll() is None:
+                hp.kill()
+                hp.wait()
+        hp, hst = pe05_live_helper()
+        try:
+            d, f, n = pe05_hand_start('PE05o_reused', {'chain_pid': hp.pid, 'chain_start': (hst or 0) + 12345})
+            rc, same, _so = rec(d, f)
+            out['reused'] = (rc, same)
+            d, f, n = pe05_hand_start('PE05o_nostart', {'chain_pid': hp.pid, 'chain_start': None})
+            rc, same, so = rec(d, f)
+            out['nostart'] = (rc, same, '사슬 부모' in so)
+        finally:
+            hp.kill()
+            hp.wait()
+        me = RR.host_ident()
+        other = dict(me, boot_id='00000000-0000-4000-8000-0000000000e2' if me.get('boot_id') != '00000000-0000-4000-8000-0000000000e2'
+                     else '00000000-0000-4000-8000-0000000000e3')
+        d, f, n = pe05_hand_start('PE05o_other', {'host': other})
+        rc, same, so = rec(d, f)
+        rc2, same2, _so2 = rec(d, f, ['--operator-confirm', str(n), '--operator-why', why])
+        out['other'] = (rc, same, '볼 수 없다' in so and '--operator-confirm' in so, rc2, same2, pc_res(d, n, keys=('status', 'side', 'by')),
+                        why in git_(d, 'log', '-1', '--format=%B'))
+        d, f, n = pe05_hand_start('PE05o_old', {}, pop_chain=True)
+        rc, same, so = rec(d, f)
+        rc2, same2, _so2 = rec(d, f, ['--operator-confirm', str(n), '--operator-why', why])
+        out['old'] = (rc, same, '사슬' in so and '--operator-confirm' in so, rc2, same2, pc_res(d, n, keys=('status', 'side', 'by')),
+                      why in git_(d, 'log', '-1', '--format=%B'))
+        #  ⓖ 운영자 확인 표지의 범위 — 한 바탕에 볼 수 없는 사슬의 시작 기록 시도 둘 (다른 대상) · --out = 바탕 · --operator-confirm m1 → m1 만 결과 줄 ·
+        #    m2 = 결과 줄 없음 · rc 3
+        d, _rc, _so = led_new('PE05o_scope')
+        _r, m1, _s = led_add(d, 'ladder:P0')
+        _r, m2, _s = led_add(d, 'ladder:P1')
+        base = Path(TD) / 'runs' / 'PE05o_scope'
+        for m, tgt in ((m1, 'ladder:P0'), (m2, 'ladder:P1')):
+            fm = base / f'attempt_{m}'
+            fm.mkdir(parents=True)
+            (fm / 'attempt.json').write_text(json.dumps({'schema': 'rint-r-attempt-v1', 'n': m, 'target': tgt, 'machine': MACH, 'resume_of': None,
+                                                         'ledger_commit': git_(d, 'rev-parse', 'HEAD')}), encoding='utf-8')
+            led_hand(d, {'kind': 'start', 'n': m, 'base': str(base.resolve()), 'folder': f'attempt_{m}', 'host': other, 'chain_pid': DEAD_PID,
+                         'chain_start': None, 'utc': '2026-11-04T00:00:00Z'}, msg=f'rint-r attempt {m} start (시험 · 손 · PC8-05)')
+        rc = call(['--stage', 'recover', '--out', str(base), '--ledger', str(d), '--operator-confirm', str(m1), '--operator-why', why])[0]
+        out['scope'] = (rc, pc_res(d, m1, keys=('status', 'by')), led_result(d, m2))
+        return out
+    o = scen('PE05o', go)
+    res = {'status': 'interrupted', 'side': 'pre', 'by': 'recover'}
+    want = {'dead': (0, False, res), 'live': (True, 3, True, True, 3, True, 0, False, res), 'reused': (0, False), 'nostart': (3, True, True),
+            'other': (3, True, True, 0, False, res, True), 'old': (3, True, True, 0, False, res, True),
+            'scope': (3, {'status': 'interrupted', 'by': 'recover'}, None)}
+    return o == want, {k: (o.get(k), want[k]) for k in want if o.get(k) != want[k]}
+
+
+@check('PE05p', '★ 11-04 PC8-05 원장 해석 — 시작 기록 새 판 (칸 + chain_pid = 양의 정수 · chain_start = 0 이상 정수 | null) 과 옛 판 (11-02 PC7-01 · 사슬 칸 없음) '
+                '을 받는다 · 사슬 칸 꼴 틀림 (bool · 0 · 음수 · 실수 · 글 · null pid · bool · 음수 · 실수 · 글 시작 틱 · 둘 중 하나만 · 칸 더) = '
+                'ATTEMPT_LEDGER_MISMATCH · 사슬 칸은 채택 · 차례 · 다음 번호에 무관 (같은 원장의 옛 판 · 새 판 시작 기록 = 같은 상태)')
+def t_PE05p():
+    def parse(raw):
+        try:
+            return RR.ledger_parse(raw), None
+        except RR.Stop as e:
+            return None, e.code
+    new = dict(pe_start(1), chain_pid=4242, chain_start=123456)
+    ok_cases = {'new': pe_ledger(PE_HDR, pe_entry(1), new, pe_result(1)),
+                'new_start_null': pe_ledger(PE_HDR, pe_entry(1), dict(new, chain_start=None)),
+                'new_start_zero': pe_ledger(PE_HDR, pe_entry(1), dict(new, chain_start=0)),
+                'old': pe_ledger(PE_HDR, pe_entry(1), pe_start(1), pe_result(1))}
+    only_pid = {k: v for k, v in new.items() if k != 'chain_start'}
+    only_start = {k: v for k, v in new.items() if k != 'chain_pid'}
+    bad_vals = {'pid_bool': dict(new, chain_pid=True), 'pid_zero': dict(new, chain_pid=0), 'pid_neg': dict(new, chain_pid=-5),
+                'pid_float': dict(new, chain_pid=4242.0), 'pid_str': dict(new, chain_pid='4242'), 'pid_null': dict(new, chain_pid=None),
+                'start_bool': dict(new, chain_start=False), 'start_neg': dict(new, chain_start=-1), 'start_float': dict(new, chain_start=1.5),
+                'start_str': dict(new, chain_start='1'), 'only_pid': only_pid, 'only_start': only_start, 'extra': dict(new, note='x')}
+    got_ok = {k: (parse(v)[1], len((parse(v)[0] or {}).get('starts') or {})) for k, v in ok_cases.items()}
+    got_bad = {k: parse(pe_ledger(PE_HDR, pe_entry(1), v))[1] for k, v in bad_vals.items()}
+    st_old, _c = parse(pe_ledger(PE_HDR, pe_entry(1), pe_start(1), pe_result(1), pe_entry(2)))
+    st_new, _c2 = parse(pe_ledger(PE_HDR, pe_entry(1), new, pe_result(1), pe_entry(2)))
+    same = (st_old is not None and st_new is not None and st_old['entries'] == st_new['entries'] and st_old['results'] == st_new['results']
+            and RR.adoption(st_old, 'ladder:P0') == RR.adoption(st_new, 'ladder:P0'))
+    want_ok = {'new': (None, 1), 'new_start_null': (None, 1), 'new_start_zero': (None, 1), 'old': (None, 1)}
+    ok = got_ok == want_ok and all(v == 'ATTEMPT_LEDGER_MISMATCH' for v in got_bad.values()) and same
+    return ok, {'ok': got_ok, 'bad': {k: v for k, v in got_bad.items() if v != 'ATTEMPT_LEDGER_MISMATCH'}, 'same': same}
+
+
+def pe06_case(tag, src_end, confirmed):
+    """원장 시도 (바닥 런 표지 뒤 40 s 잠) 의 사슬 부모 SIGKILL (러너 그룹 삶) → 끝 기록 자리에 다른 시도의 끝 기록 (by chain · rc 0 · 다른 표지 · confirmed) →
+    단위 (attempt_groups_problem · orphan_cause) · recover --ledger · 러너 그룹 · 원장 · 끝 기록 바이트 · --add --resume."""
+    d, _rc, _so = led_new(tag)
+    _r, n1, _s = led_add(d, 'ladder:P0')
+    b1 = Path(TD) / 'runs' / f'{tag}_b1'
+    w = world(tag, dict(PW, faults=[{'do': 'msg_sleep_after_mark', 'msg': f'[p2] solving ({tag})', 's': 40.0, 'match': {'rj': 'inf'}}]))
+    seen, f1, tok = pe_kill_after(tag, d, n1, b1, w, f'solving ({tag})')
+    alive0 = bool(gr_alive(tok)) if tok else None
+    end = json.loads(Path(src_end).read_text(encoding='utf-8'))
+    end['confirmed'] = confirmed
+    ep = f1 / 'groups' / 'L01_floor.end.json'
+    ep.write_text(json.dumps(end), encoding='utf-8')
+    b0 = ep.read_bytes()
+    try:
+        unit = (RR.attempt_groups_problem(f1) is not None, RR.orphan_cause(f1)[1])
+        raw = led_raw(d)
+        rc, so = call(['--stage', 'recover', '--out', str(f1), '--ledger', str(d)], w)
+        alive1 = gr_alive(tok) if tok else None
+        rc_add, _n2, _so_add = led_add(d, 'ladder:P0', resume=n1)
+        return {'seen': seen, 'alive0': alive0, 'other_token': end.get('token') != tok, 'unit': unit, 'rc': rc, 'led_same': led_raw(d) == raw,
+                'res': led_result(d, n1), 'alive1': alive1, 'end_same': ep.read_bytes() == b0, 'add': rc_add, 'tail': so.strip().splitlines()[-3:]}
+    finally:
+        for pid in (gr_alive(tok) if tok else []):
+            try:
+                os.kill(pid, 9)
+            except OSError:
+                pass
+
+
+@check('PE06', '★ 11-04 PC8-02 (사전 공격 8 회차 P8-02 · P2 · PC7-04 부류) — 끝 기록 ↔ 시작 기록 결합 (표지 · 이름) 이 한 도우미: 원장 시도의 사슬 부모 SIGKILL (러너 '
+               '그룹 삶) 뒤 끝 기록 자리에 다른 시도의 끝 기록 (by chain · rc 0 · 다른 표지) 을 **확인 True** 로 넣음 → attempt_groups_problem = 사유 (미확인) · '
+               'orphan_cause = 읽음 False · recover --ledger = rc 3 · 결과 줄 없음 · 원장 무변경 · 러너 그룹 = recover 가 시작 기록 표지로 죽임 · 끝 기록 바이트 그대로 · '
+               '--add --resume 1 = rc 3 (옛 = 결합 검사 안 함 → 결과 줄 interrupted · 결과 뒤 · 재실행 자격 · 러너 그룹 삶 · resume rc 0) · 대조 = 같은 기록 확인 '
+               'False (PC7-04 길) 도 같은 답 · 재실행 원천의 "끝난 런" (ResumeRunner._src_done) = 결합된 rc 0 정수만 (다른 표지 · 다른 이름 · rc false = 끝난 런 아님) · '
+               'recover_group = 옮길 chain_end 없는 다른 런의 끝 기록도 미확인 (끝 기록 안 씀)')
+def t_PE06():
+    import types as _types
+    src = s_main('P0')['out'] / 'groups' / 'L01_floor.end.json'
+    rows = {'foreign_confirmed': scen('PE06f', lambda: pe06_case('PE06f', src, True)),
+            'foreign_unconfirmed': scen('PE06c', lambda: pe06_case('PE06c', src, False))}
+    want = {'seen': True, 'alive0': True, 'other_token': True, 'unit': (True, False), 'rc': 3, 'led_same': True, 'res': None, 'alive1': [],
+            'end_same': True, 'add': 3}
+    bad = {k: {f: (r.get(f), want[f]) for f in want if r.get(f) != want[f]} for k, r in rows.items()}
+    bad = {k: v for k, v in bad.items() if v}
+    sd = Path(TD) / 'pe' / 'PE06_src'
+    (sd / 'groups').mkdir(parents=True, exist_ok=True)
+    (sd / 'L01_floor_arm1').mkdir(exist_ok=True)
+    tok_a, tok_b = 'a' * 32, 'b' * 32
+    (sd / 'groups' / 'L01_floor.launch.json').write_text(json.dumps({'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': tok_a, 'pid': DEAD_PID,
+                                                                     'pgid': DEAD_PID, 'host': RR.host_ident(), 'by': 'chain',
+                                                                     'chain_pid': DEAD_PID}), encoding='utf-8')
+
+    def src_done(**over):
+        e = dict({'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': tok_a, 'rc': 0, 'cause': None, 'confirmed': True, 'by': 'chain'}, **over)
+        (sd / 'groups' / 'L01_floor.end.json').write_text(json.dumps(e), encoding='utf-8')
+        return RR.ResumeRunner._src_done(_types.SimpleNamespace(src=sd), 'L01_floor', 'L01_floor_arm1')
+    sdone = {'bound_rc0': src_done(), 'foreign_rc0': src_done(token=tok_b), 'other_name': src_done(name='L02_ceiling'), 'rc_false': src_done(rc=False),
+             'rc_float': src_done(rc=0.0)}
+    want_sd = {'bound_rc0': True, 'foreign_rc0': False, 'other_name': False, 'rc_false': False, 'rc_float': False}
+    gp = {}
+    for nm, over in (('bound', {}), ('foreign', {'token': tok_b}), ('other_name', {'name': 'L02_ceiling'})):
+        (sd / 'groups' / 'L01_floor.end.json').write_text(json.dumps(dict({'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': tok_a, 'rc': 0,
+                                                                            'cause': None, 'confirmed': True, 'by': 'chain'}, **over)), encoding='utf-8')
+        gp[nm] = RR.attempt_groups_problem(sd) is None
+    want_gp = {'bound': True, 'foreign': False, 'other_name': False}
+    #  recover_group — 옮길 chain_end 가 없는 다른 런의 끝 기록 (by recover · 미확인 · 다른 표지) 도 미확인 = 끝 기록을 쓰지 않음 · 사유 = 표지 (옛 = chain_end 를
+    #  품은 것만 보고 덮어썼다)
+    out_dir, _tq = gr_fake_launch('PE06_rg')
+    lp = out_dir / 'groups' / 'L01_floor.launch.json'
+    ep = lp.with_name('L01_floor.end.json')
+    ep.write_text(json.dumps({'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': 'e' * 32, 'rc': None, 'cause': 'parent_dead', 'confirmed': False,
+                              'by': 'recover', 'ended_utc': '2026-11-04T00:00:00Z'}), encoding='utf-8')
+    b0 = ep.read_bytes()
+    end_rg, held_rg = RR.recover_group(lp, RR.host_ident())
+    rg = (end_rg is None, held_rg is not None and '표지' in held_rg, ep.read_bytes() == b0)
+    ok = not bad and sdone == want_sd and gp == want_gp and rg == (True, True, True)
+    return ok, {'bad': bad, 'src_done': sdone, 'groups_problem_none': gp, 'recover_group_foreign_no_chain_end': rg,
+                'tail': {k: r.get('tail') for k, r in rows.items()}}
+
+
+def pe02y_variant(tag, d, n1, a_base, mode):
+    """PE02 의 위협 모형 (원장 clone · 항목 1 앞으로 되돌림 · 대상만 FIBRE 로 다시 · 시도 1 폴더의 attempt.json 지움) 위에 결과 줄 1 을 rejected 로 다시 · 바탕에
+    옆 거부 기록 (P8-01 탐침 꼴) → 같은 대상 새 시도 2 (CALIBRATED) 뒤 판정 · 예측 입력 대조."""
+    base = pc_copy_base(a_base, f'{tag}_base')
+    (base / f'attempt_{n1}' / 'attempt.json').unlink()
+    side = base / f'attempt_{n1}{RR.REJECTED_SIDE}'
+    if mode == 'bound':
+        side.write_text(json.dumps({'schema': 'rint-r-rejected-v1', 'n': n1, 'code': 'OUTDIR_NOT_EMPTY', 'cause': '시험 (PC8-01)', 'ledger_commit': 'a' * 40,
+                                    'utc': '2026-11-04T00:00:00Z'}), encoding='utf-8')
+        sha, folder = tree_digest(side), side.name
+    else:
+        side.write_text('{}', encoding='utf-8')
+        sha, folder = hashlib.sha256(b'x').hexdigest(), (side.name if mode == 'side' else f'attempt_{n1}')
+    lines = led_lines(d)
+    e1 = [x for x in lines if x.get('kind') == 'entry' and x.get('n') == n1][0]
+    r1 = [x for x in lines if x.get('kind') == 'result' and x.get('n') == n1][0]
+    dr = led_reset_before(d, tag, f'rint-r attempt {n1} entry ')
+    led_hand(dr, dict(e1, target='ladder:P0:FIBRE'), msg='항목 1 대상만 바꿈 (시험 · PC8-01)')
+    led_hand(dr, {'kind': 'result', 'n': n1, 'status': 'rejected', 'stop': {'code': 'OUTDIR_NOT_EMPTY', 'run': None, 'reason': None}, 'side': 'pre',
+                  'cause': 'presolve', 'resume_ok': False, 'folder': folder, 'folder_sha256': sha, 'by': 'chain', 'utc': r1['utc']},
+             msg='결과 줄 1 = rejected 로 다시 (시험 · PC8-01)')
+    add2 = led_add(dr, 'ladder:P0')
+    b = lad_att(f'{tag}_b', world(f'{tag}_b'), dr, add2[1], base=base) if add2[1] else None
+    v = ver_led(f'{tag}_v', [b['out']], dr) if b else None
+    vwhy = str((((v or {}).get('v') or {}).get('stop') or {}).get('cause'))
+    _r3, n3, _s3 = led_add(dr, 'ladder:P1')
+    c = lad_att(f'{tag}_P1', world(f'{tag}_c'), dr, n3, law='P1')
+    _r4, n4, _s4 = led_add(dr, 'predict')
+    wp = world(f'{tag}_p')
+    p = pred_att(f'{tag}_pred', wp, dr, n4, [b['out'], c['out']]) if b else None
+    pwhy = str((((p or {}).get('sum') or {}).get('stop') or {}).get('cause'))
+    return {'add2_rc': add2[0], 'b_status': ((b or {}).get('sum') or {}).get('status'), 'verdict': stop_code(v) if v else None,
+            'v_names_attempt1': 'attempt_1' in vwhy, 'predict': stop_code(p) if p else None, 'predict_calls': n_calls(wp),
+            'p_names_attempt1': 'attempt_1' in pwhy}
+
+
+@check('PE02y', '★ 11-04 PC8-01 (사전 공격 8 회차 P8-01 · P2 · PC7-02 부류의 AL07 예외) — PE02 위협 모형 (원장 clone · 항목 1 대상만 FIBRE · attempt.json 지움) '
+                '위에 결과 줄 1 = 꼴 맞는 rejected (OUTDIR_NOT_EMPTY · 결과 전) 로 다시 + 바탕에 옆 거부 기록: ⓐ 폴더 = 옆 기록 · 요약 sha 아무 값 · 옆 기록 {} '
+                'ⓑ 폴더 = attempt_1 ⓒ 증거를 다 맞춤 (요약 sha = 옆 기록 · 꼴 맞는 거부 기록 n = 1 · OUTDIR_NOT_EMPTY) 인데 attempt_1 에 사슬 흔적 (그룹 기록 · '
+                '팔 payload · 단계 요약) → 셋 다 같은 대상 새 시도 2 (CALIBRATED) 뒤 판정 = ATTEMPT_LEDGER_MISMATCH (사유 attempt_1) · 예측 입력 대조 = '
+                'ATTEMPT_LEDGER_MISMATCH · 러너 0 회 (옛 = 예외가 증거와 묶이지 않아 판정 원장 대조 통과 · 예측 러너 24 회 · PREDICTED)')
+def t_PE02y():
+    def go():
+        d, _rc, _so = led_new('PE02y')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        a = lad_att('PE02y', world('PE02y_a', dict(PW, faults=[{'do': 'illegal_driver_after_mark', 'match': {'rj': 'inf'}}])), d, n1)
+        return {m: pe02y_variant(f'PE02y_{m}', d, n1, a['base'], m) for m in ('side', 'infolder', 'bound')}
+    rows = scen('PE02y', go)
+    want = {'add2_rc': 0, 'b_status': 'CALIBRATED', 'verdict': 'ATTEMPT_LEDGER_MISMATCH', 'v_names_attempt1': True, 'predict': 'ATTEMPT_LEDGER_MISMATCH',
+            'predict_calls': 0, 'p_names_attempt1': True}
+    return all(rows.get(m) == want for m in ('side', 'infolder', 'bound')), rows
+
+
+#: ★ 11-04 PC8-03 · 04 · 06 · 09 — 바이트 까닭 (byte_diff_view) 의 형 엄격 값 대조 · 겹친 칸 사본 · value 뒤에도 나머지 까닭 · 수 꼴 + 다른 까닭 (변이 M26 이 산다
+#:   — 사전 공격 8 회차 §3) · 깊은 중첩 = 닫힌 목록 사유 (예외 없음)
+@check('RV07', '★ 11-04 PC8-03 · 04 · 06 · 09 (합성 · 런 없음) 바이트 까닭 — 형이 바뀐 값 (수 1 → true · true → 1 · true → 1.0 · null → false) = value (옛 = '
+               'format) · 겹친 칸의 앞 사본이 다름 = value + format · 겹친 칸 사본이 다 같음 = format · 값 + 끝 줄바꿈 없음 = value + newline · 값 + 칸 순서 + CRLF = '
+               'value + key_order + newline (옛 = value 하나에서 멈춤) · 수 꼴 1.0 + 칸 순서 = key_order + format (변이 M26 을 잡는 꼴) · 깊이 20 만 중첩 (배열 · '
+               '객체) = unreadable · 예외 없음 (옛 = RecursionError) · 다름 칸 · 처음 다른 바이트 · 길이 차 = 그대로')
+def t_RV07():
+    if not chain_q5():
+        return False, '사슬에 바이트 까닭 (byte_diff_view · BYTE_DIFF_KINDS) 이 없다'
+    obj = {'a': {'c': 'x', 'd': [1, 2.5]}, 'b': 1, 'e': None, 'f': True}
+    new = RR.canon_bytes(obj)
+
+    def dumps(o, **kw):
+        k = dict(ensure_ascii=False, indent=1, sort_keys=True)
+        k.update(kw)
+        return (json.dumps(o, **k) + '\n').encode('utf-8')
+
+    def rev(o):
+        return dict(reversed(list(o.items())))
+    cases = {
+        'int_to_true': (dumps(dict(obj, b=True)), ['value']),
+        'true_to_int': (dumps(dict(obj, f=1)), ['value']),
+        'true_to_float': (dumps(dict(obj, f=1.0)), ['value']),
+        'null_to_false': (dumps(dict(obj, e=False)), ['value']),
+        'dup_first_differs': (new.replace(b'"b": 1,', b'"b": 999,\n "b": 1,'), ['value', 'format']),
+        'dup_same': (new.replace(b'"b": 1,', b'"b": 1,\n "b": 1,'), ['format']),
+        'value_no_nl': (dumps(dict(obj, b=2))[:-1], ['value', 'newline']),
+        'value_order_crlf': (dumps(rev(dict(obj, b=2)), sort_keys=False).replace(b'\n', b'\r\n'), ['value', 'key_order', 'newline']),
+        'numform_order': (dumps(rev(dict(obj, b=1.0)), sort_keys=False), ['key_order', 'format']),
+        'deep_array': (b'[' * 200000 + b']' * 200000 + b'\n', ['unreadable']),
+        'deep_object': (b'{"k":' * 200000 + b'1' + b'}' * 200000 + b'\n', ['unreadable']),
+    }
+    got, bad = {}, []
+    for nm, (old, kinds) in cases.items():
+        try:
+            v = RR.byte_diff_view(old, new)
+        except Exception as e:                              # noqa: BLE001 — 예외 = 실패 (닫힌 목록 사유여야)
+            v = f'EXC {type(e).__name__}'
+        got[nm] = v
+        n = min(len(old), len(new))
+        off = next((i for i in range(n) if old[i] != new[i]), n)
+        ok = (isinstance(v, dict) and v.get('kinds') == kinds and v.get('differ') is True and v.get('first_diff_offset') == off
+              and v.get('len_delta') == len(new) - len(old) and all(k in RR.BYTE_DIFF_KINDS for k in v['kinds']))
+        if not ok:
+            bad.append(nm)
+    return not bad, {k: (got[k] if not isinstance(got[k], dict) else got[k].get('kinds'), cases[k][1]) for k in bad}
+
+
+@check('RV08', '★ 11-04 PC8-03 (실경로 · 가짜 러너 세계 판정 · 저장본 손대고 되돌림) — 결과 JSON 의 첫 bool 하나를 정수로 (형만 바뀜) → rc 1 REVERIFY_DIFF · 보고 '
+               'results_differ True · results_keys_differ = 그 윗단 칸 · results_bytes = [value] (옛 = False · [] · [format] = "꼴만 다름") · 판정 JSON '
+               'sentence_allowed false → 0 → rc 1 · grade_differ True · public_keys_differ [sentence_allowed] · public_bytes [value] · 판정 JSON 의 '
+               'sentence_allowed 를 겹친 칸 (앞 사본 = 다른 형) 으로 → grade_differ True · public_keys_differ [sentence_allowed] · [value, format] · 되돌리면 '
+               'REVERIFY_SAME')
+def t_RV08():
+    if not chain_q5():
+        return False, '사슬에 바이트 까닭 (byte_diff_view · BYTE_DIFF_KINDS) 이 없다'
+    v = s_verdict_main()
+    resp, pubp = v['out'] / 'verdict_results.json', v['out'] / 'verdict.json'
+    res0, pub0 = resp.read_bytes(), pubp.read_bytes()
+    before = dir_digest(v['out'])
+    r = json.loads(res0.decode('utf-8'))
+    hit = []
+
+    def flip(o, top=None):
+        if hit:
+            return o
+        if isinstance(o, dict):
+            return {k: flip(x, k if top is None else top) for k, x in o.items()}
+        if isinstance(o, list):
+            return [flip(x, top) for x in o]
+        if isinstance(o, bool):
+            hit.append(top)
+            return int(o)
+        return o
+    r2 = flip(r)
+    sa = json.loads(pub0.decode('utf-8')).get('sentence_allowed')
+    lit = b'"sentence_allowed": ' + (b'true' if sa else b'false')
+    runs = {}
+    try:
+        resp.write_bytes(RR.canon_bytes(r2))
+        runs['res_bool_int'] = rv_call(v['out'], out=Path(TD) / 'runs' / 'RV08_res') + (u_json(Path(TD) / 'runs' / 'RV08_res' / 'reverify_report.json'),)
+        resp.write_bytes(res0)
+        pubp.write_bytes(pub0.replace(lit, b'"sentence_allowed": ' + (b'1' if sa else b'0')))
+        runs['pub_bool_int'] = rv_call(v['out'], out=Path(TD) / 'runs' / 'RV08_pub') + (u_json(Path(TD) / 'runs' / 'RV08_pub' / 'reverify_report.json'),)
+        pubp.write_bytes(pub0.replace(lit, b'"sentence_allowed": ' + (b'1' if sa else b'0') + b',\n ' + lit))
+        runs['pub_dup'] = rv_call(v['out'], out=Path(TD) / 'runs' / 'RV08_dup') + (u_json(Path(TD) / 'runs' / 'RV08_dup' / 'reverify_report.json'),)
+    finally:
+        resp.write_bytes(res0)
+        pubp.write_bytes(pub0)
+    runs['back'] = rv_call(v['out'], out=Path(TD) / 'runs' / 'RV08_back') + (u_json(Path(TD) / 'runs' / 'RV08_back' / 'reverify_report.json'),)
+    keys = ('result', 'results_differ', 'results_keys_differ', 'grade_differ', 'public_keys_differ')
+    got = {nm: (rc, {k: (rep or {}).get(k) for k in keys}, ((rep or {}).get('results_bytes') or {}).get('kinds'),
+                ((rep or {}).get('public_bytes') or {}).get('kinds')) for nm, (rc, _so, rep) in runs.items()}
+    want = {'res_bool_int': (1, {'result': 'REVERIFY_DIFF', 'results_differ': True, 'results_keys_differ': hit[:1], 'grade_differ': False,
+                                 'public_keys_differ': []}, ['value'], []),
+            'pub_bool_int': (1, {'result': 'REVERIFY_DIFF', 'results_differ': False, 'results_keys_differ': [], 'grade_differ': True,
+                                 'public_keys_differ': ['sentence_allowed']}, [], ['value']),
+            'pub_dup': (1, {'result': 'REVERIFY_DIFF', 'results_differ': False, 'results_keys_differ': [], 'grade_differ': True,
+                            'public_keys_differ': ['sentence_allowed']}, [], ['value', 'format']),
+            'back': (0, {'result': 'REVERIFY_SAME', 'results_differ': False, 'results_keys_differ': [], 'grade_differ': False,
+                         'public_keys_differ': []}, [], [])}
+    ok = bool(hit) and hit[0] is not None and isinstance(sa, bool) and got == want and dir_digest(v['out']) == before
+    return ok, ({k: (got.get(k), want[k]) for k in want if got.get(k) != want[k]}, hit[:1], sa)
+
+
+@check('RV09', '★ 11-04 PC8-09 (실경로 · 저장본 손대고 되돌림) — 다시 판정의 저장본 읽기가 예외로 빠지지 않는다: 결과 JSON = 깊이 20 만 중첩 → rc 1 REVERIFY_DIFF · '
+               '보고 results_bytes [unreadable] · results_differ True (옛 = RecursionError traceback) · 판정 JSON = 깊이 20 만 중첩 · JSON 객체가 아닌 판정 JSON '
+               '([]) → rc 1 REVERIFY_DIFF · 사유 한 줄 (옛 = RecursionError · AttributeError) · 되돌리면 REVERIFY_SAME · 판정 폴더 바이트 그대로')
+def t_RV09():
+    if not chain_q5():
+        return False, '사슬에 바이트 까닭 (byte_diff_view · BYTE_DIFF_KINDS) 이 없다'
+    v = s_verdict_main()
+    resp, pubp = v['out'] / 'verdict_results.json', v['out'] / 'verdict.json'
+    res0, pub0 = resp.read_bytes(), pubp.read_bytes()
+    before = dir_digest(v['out'])
+    deep = b'[' * 200000 + b']' * 200000 + b'\n'
+
+    def run(nm):
+        out = Path(TD) / 'runs' / f'RV09_{nm}'
+        try:
+            rc, so = rv_call(v['out'], out=out)
+        except Exception as e:                              # noqa: BLE001 — 예외 = 실패
+            return f'EXC {type(e).__name__}', None
+        rep = u_json(out / 'reverify_report.json')
+        return (rc, 'REVERIFY_DIFF' in so or 'REVERIFY_SAME' in so), rep
+    got = {}
+    try:
+        resp.write_bytes(deep)
+        g, rep = run('res_deep')
+        got['res_deep'] = (g, ((rep or {}).get('results_bytes') or {}).get('kinds'), (rep or {}).get('results_differ'))
+        resp.write_bytes(res0)
+        pubp.write_bytes(deep)
+        got['pub_deep'] = run('pub_deep')[0]
+        pubp.write_bytes(b'[]\n')
+        got['pub_list'] = run('pub_list')[0]
+    finally:
+        resp.write_bytes(res0)
+        pubp.write_bytes(pub0)
+    got['back'] = run('back')[0]
+    want = {'res_deep': ((1, True), ['unreadable'], True), 'pub_deep': (1, True), 'pub_list': (1, True), 'back': (0, True)}
+    return got == want and dir_digest(v['out']) == before, {k: (got.get(k), want[k]) for k in want if got.get(k) != want[k]}
 
 
 # ═════════════════════════ 실행 ═════════════════════════

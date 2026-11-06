@@ -1,0 +1,26 @@
+{
+ "chain_alive_when_recover_ran": true,
+ "group_records_when_recover_ran": [],
+ "recover_rc": 3,
+ "result_line_after_recover": null,
+ "recover_tail": [
+  "recover — 그룹 기록 0 개 정리 · 미확인 0",
+  "  recover attempt_1: 사슬 부모 (시작 기록 pid 17983) 가 살아 있다 — 그 사슬이 결과 줄을 쓴다 · 건드리지 않음 (사슬이 끝난 뒤 다시 recover · ★ 11-04 PC8-05) — 결과 줄을 쓰지 않는다 (미확인 · 다음 시도 채택을 막는다)"
+ ],
+ "chain_rc": 0,
+ "chain_summary_status": "CALIBRATED",
+ "runner_calls": 14,
+ "folder_side_now": "post",
+ "ledger_kinds": [
+  "header:None::",
+  "entry:1::",
+  "start:1::",
+  "result:1:completed:post"
+ ],
+ "chain_log_tail": [
+  "ATTEMPT_RESULT n=1 status=completed side=post cause=None resume_ok=False",
+  "보정 = CALIBRATED · R_j,0 = 2.27e+06 Ω · R_j,lo 2.094e+06 Ω (candidate) · R_j,hi 2.457e+06 Ω (candidate) · 역상 R 비 1.174 · 런 10 · ×100 0 · 반씩 2 · 확인 1 · 국소 e ≥ e_min True · origin pass · no-op done True",
+  "요약 → /tmp/pa8_upgddc41/runs/P805_b1/attempt_1/ladder_summary.json"
+ ],
+ "next_add_rc": 3
+}

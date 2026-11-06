@@ -1,0 +1,44 @@
+[
+  {
+    "path": "scripts/rint_r_chain.py",
+    "match": true,
+    "expected": "eff2b4b47f94a4b607c92be27b500f81de6d8b4e0f27be07606e5e722d169428",
+    "actual": "eff2b4b47f94a4b607c92be27b500f81de6d8b4e0f27be07606e5e722d169428"
+  },
+  {
+    "path": "scripts/carbon_junction.py",
+    "match": true,
+    "expected": "5460dad164839b115eea07f5df21087af1ff214c221e4838d940f7de9f9ca221",
+    "actual": "5460dad164839b115eea07f5df21087af1ff214c221e4838d940f7de9f9ca221"
+  },
+  {
+    "path": "scripts/ca_ext_cjunc.py",
+    "match": true,
+    "expected": "050a41f4c2f7fabf92f15b37030f02b069e4facef2c3345fbb3f6474bfbdacc7",
+    "actual": "050a41f4c2f7fabf92f15b37030f02b069e4facef2c3345fbb3f6474bfbdacc7"
+  },
+  {
+    "path": "scripts/test_rint_r_chain.py",
+    "match": true,
+    "expected": "97f21ef973407d25afeb7cb2934f0c5e2a41b2b6caaa0e78297faf2894811c71",
+    "actual": "97f21ef973407d25afeb7cb2934f0c5e2a41b2b6caaa0e78297faf2894811c71"
+  },
+  {
+    "path": "scripts/test_rint_r_chain_e2e.py",
+    "match": true,
+    "expected": "41762029110b9951016ef8d07bb5244ea5ff93c154084cce0445e872ddfdf2a1",
+    "actual": "41762029110b9951016ef8d07bb5244ea5ff93c154084cce0445e872ddfdf2a1"
+  },
+  {
+    "path": "scripts/test_carbon_junction.py",
+    "match": true,
+    "expected": "ee4dd058b0e808f45c2dbf28b5ef581dabe14cbb3a36b3f76c2d22fa46319a66",
+    "actual": "ee4dd058b0e808f45c2dbf28b5ef581dabe14cbb3a36b3f76c2d22fa46319a66"
+  },
+  {
+    "path": "scripts/test_ca_ext_b6.py",
+    "match": true,
+    "expected": "535753fe09f51219f060cec5e79738a6089fbe92eb37ed9d747df03660b98548",
+    "actual": "535753fe09f51219f060cec5e79738a6089fbe92eb37ed9d747df03660b98548"
+  }
+]

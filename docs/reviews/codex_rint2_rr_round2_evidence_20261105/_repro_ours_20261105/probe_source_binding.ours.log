@@ -1,0 +1,34 @@
+{
+  "code": {
+    "clean": null,
+    "outside_git": "copy git HEAD 미확인 (head None · git rev-parse HEAD rc 128 · 출력 '' · fatal: not a git repository (or any of the parent directories): .git) — git 밖 사본 · 조회 실패 = 미확인 = 멈춤 (핀 커밋의 git 체크아웃에서 돌릴 것 · RCA2-02 · Q2 (가) ① · C6 #13)",
+    "untracked": "chain 작업 트리에 고쳐진 추적 파일 · ignore 밖 추적 안 된 파일이 있다 (dirty · HEAD 2b1e53c2308b3e8586050fa8a49498cdfb8442dc) — 핀 커밋 그대로의 깨끗한 트리에서 돌릴 것 (등록 R §10 (0) · Q2 (가) ② (가-1))",
+    "same_head_runner_file_drift": "한 단계 안 사슬 ↔ 러너가 다른 판이다 — 러너 폴더 코드 파일 지문 ≠ 사슬 폴더 (step3_conv_cert.py) (같은 핀 체크아웃의 사슬 · 러너로 돌릴 것 · RCA2-02 · Q2 (가) ③ · 판정문 F2)",
+    "dirty_unknown": "사슬 작업 트리 상태 미확인 (dirty None · None) — git status 실패 = 미확인 = 멈춤 (깨끗함으로 바꾸지 않는다 · RCA2-02 · Q2 (가) ① · C6 #13)",
+    "head_short": "사슬 git HEAD 미확인 (head '2b1e53c23' · None) — git 밖 사본 · 조회 실패 = 미확인 = 멈춤 (핀 커밋의 git 체크아웃에서 돌릴 것 · RCA2-02 · Q2 (가) ① · C6 #13)",
+    "env_numpy_changed": [
+      "환경 numpy '2.4.6' ≠ 'other'"
+    ]
+  },
+  "bed": {
+    "honest": "accepted",
+    "path_only_copy": "accepted",
+    "fibre_bytes_drift": {
+      "code": "S0_REPORT_MISMATCH",
+      "why": "S0_REPORT_MISMATCH: S0 단계 2 보고의 침대 ≠ 지금 킷 kit_DBE_sdcp1um_vgcf100 (역할 fibre) — 재압밀 · 재생성 침대 = 새 S0 (등록 R §2-1 · §11 · 같은 침대가 아니면 S0 단계 1 · 2 를 그 침대로 다시)"
+    },
+    "kind_bytes_drift": {
+      "code": "S0_REPORT_MISMATCH",
+      "why": "S0_REPORT_MISMATCH: S0 단계 2 보고의 침대 ≠ 지금 킷 kit_DBE_sdcp1um_vgcf100 (역할 fibre_kind) — 재압밀 · 재생성 침대 = 새 S0 (등록 R §2-1 · §11 · 같은 침대가 아니면 S0 단계 1 · 2 를 그 침대로 다시)"
+    },
+    "settings_drift": {
+      "code": "S0_REPORT_MISMATCH",
+      "why": "S0_REPORT_MISMATCH: S0 단계 2 보고의 침대 ≠ 지금 킷 kit_DBE_sdcp1um_vgcf100 (설정 (킷 run_mpm.sh 의 payload 호출부)) — 재압밀 · 재생성 침대 = 새 S0 (등록 R §2-1 · §11 · 같은 침대가 아니면 S0 단계 1 · 2 를 그 침대로 다시)"
+    },
+    "metrics_drift": {
+      "code": "S0_REPORT_MISMATCH",
+      "why": "S0_REPORT_MISMATCH: S0 단계 2 보고의 침대 ≠ 지금 킷 kit_DBE_sdcp1um_vgcf100 (역할 metrics_json · metrics um_box_um) — 재압밀 · 재생성 침대 = 새 S0 (등록 R §2-1 · §11 · 같은 침대가 아니면 S0 단계 1 · 2 를 그 침대로 다시)"
+    }
+  },
+  "scope": "Code: real Git and source byte digests. Bed: real discovery/hash/read/compare, fixed argv and settings extractor adapters only; no shell/payload execution."
+}

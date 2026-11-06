@@ -137,7 +137,8 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
   MUT-RCA (09) 반사실 변이 = 생산 서명 (certify= · ★ 10-22 backend=) · 변이 안 예외 (`_try` 가 삼킨 것 포함) = 하네스 실패 (옳은 이유 아님)
   BAN8   ★ 11-03 밤 (1저자 Q3 · 시험만 · 물리 변경 없음) 분산판 v0 = 이산 전송선 ↔ Banerjee 2019 Eq. 8 · 9
          (`litdb-canon:banerjee2019_tunneling_tlm_parallel_nanoscale_contacts`) — 나란한 두 복셀 섬유 · Rc (Eq. 4) = 손 사다리 · 닫힌 꼴 (1e-11) ·
-         Eq. 8 (허용 = 이산화 오차 주항 × 1.5) · 2 차 수렴 · 포화 = 풀이 · "길이 비례만" 거부 · 변이 lumped (`_n_sub` → 1)
+         Eq. 8 (허용 = 이산화 오차 주항 × 1.5) · 2 차 수렴 · 포화 = 풀이 · "길이 비례만" 거부 · 변이 lumped (`_n_sub` → 1) · ★ 11-04 PC8-06 ⑨ 간선
+         기하 점 = 칸 가운데 (변이 B01 ¼ 자리를 잡는다) · PC8-07 ⑩ 전달 길이 한정어 = 이 기하 (같은 두 곧은 나란한 레일) 만
 """
 import argparse
 import ast
@@ -2399,6 +2400,16 @@ def t_ban8():
             and sc is not None and sorted(sc) == [((1, 1, 2 + 2 * j), (2, 1, 2 + 2 * j)) for j in range(m)]
             and g is not None and len(g) == m and np.all(np.abs(g - 1e4 / rj) <= 1e-15 * (1e4 / rj)),
             f"{None if reg is None else (len(inst.get('fi', ())), inst.get('Lc'))} · {None if sc is None else sc[:3]} · {g if g is None else g[:3]}")
+        #  ⑨ ★ 11-04 PC8-06 (사전 공격 8 회차 · 변이 B01 = 칸의 ¼ 자리 포트가 BAN8 27/27 을 지났다 — 포트 셀만 보면 같은 셀) — 간선 기하 점 = 닿음 구간
+        #    k 등분 칸의 가운데: 정의 쪽 (A · side 0) X_i = (1.5, 1.5, 1.7 + (j + ½)·L/k) · 맞은편 X_j = B 의 같은 높이 (2.1, 1.5, ·) · 접점 = 두 점 가운데 (1e-12)
+        sub = _sub(reg) if reg is not None else None
+        zc = [1.7 + (j + 0.5) * L / m for j in range(m)]
+        ok9 = (sub is not None and len(sub['side']) == m and all(int(s) == 0 for s in sub['side'])
+               and np.allclose(sub['X_i'], [[1.5, 1.5, z] for z in zc], rtol=0.0, atol=1e-12)
+               and np.allclose(sub['X_j'], [[2.1, 1.5, z] for z in zc], rtol=0.0, atol=1e-12)
+               and np.allclose(sub['cp'], [[1.8, 1.5, z] for z in zc], rtol=0.0, atol=1e-12))
+        chk(f'BAN8 ⑨ {tag} — 간선 기하 점 = 닿음 구간 k 등분 칸 가운데 (A z = 1.7 + (j + ½)·L/k · B 같은 높이 · 접점 = 가운데 · 1e-12)', ok9,
+            f"{None if sub is None else (list(sub['side'][:3]), sub['X_i'][:2].tolist(), sub['X_j'][:2].tolist())}")
         #  ③ 구현 = 이산 전송선 — 생산 Rc ↔ 손 사다리 · 닫힌 꼴 (같은 a · b) 상대 1e-11
         lad = _ban_ladder(m, rp * LPAR, rp * LPAR, 1e4 / rj)
         cl = _ban_closed(m, rp * LPAR, 1e4 / rj)
@@ -2442,6 +2453,12 @@ def t_ban8():
             CJ._n_sub = old
     chk(f'BAN8 ⑧ 변이 lumped (`_n_sub` → 1 · 총 G 를 간선 하나에) → ④ 가 {len(BAN_CASES)} 경우 모두 실패 (훅 있음)',
         hook and len(caught) == len(BAN_CASES) and all(caught), f'hook {hook} caught {caught}')
+    #  ⑩ ★ 11-04 PC8-07 (사전 공격 8 회차 P8-07) — 전달 길이 한정어 = 이 시험이 덮는 기하만 (같은 두 곧은 나란한 레일 · 축 정렬 · 이웃 셀 · R̄sh2 = 1 ·
+    #    L_c = L_par 정수배) · 그 밖 기하 (계단 · 기운 섬유 · R̄sh2 ≠ 1) = 생산 경로 미시험 · 옛 넓은 문장 없음 (그 문장 = 증거 계약 · ca_ext_cjunc 가 글자로 대조)
+    q4 = [q for q in getattr(CJ, 'CJUNC_QUALIFIERS', ()) if '전달 길이' in q]
+    chk('BAN8 ⑩ 전달 길이 한정어 = 시험한 기하만 (같은 두 곧은 나란한 레일 · R̄sh2 = 1 · L_c = L_par 정수배 · 그 밖 = 생산 경로 미시험) · 11-03 판 넓은 문장 없음',
+        len(q4) == 1 and all(s in q4[0] for s in ('같은 두 곧은 나란한 레일', 'R̄sh2 = 1', 'L_c = L_par 정수배', '생산 경로 미시험'))
+        and '전달 길이 = 해석 시험 통과 (분산판 = 전송선 · 식 검증)' not in q4[0], q4)
 
 
 # ── RCA06 (Q4) 픽스처 — A 세로 (1,1,0..20) 아래 판 · B 는 A 아래쪽 (2.1, ·, 1.5) 에서 시작해 +x 로 (3.5) 돌아 위로 위 판 (3,1,1..21) ·

@@ -1,0 +1,20 @@
+{
+  "reviewed_pin": "67d23a4fdeab0f09c8a8c2602cfc59daecd07f20",
+  "previous_accepted_pin": "df9a4623e2f9e6302e6bc8922bd0612ab48e120c",
+  "branch": "codex/mixer-1104",
+  "zip_bytes": 227687,
+  "zip_sha256": "0e521c9a82e0dcf30ef527846543c619b1ad6b1955a1f24a8d3c6018c5a0cdca",
+  "outer_members": 6,
+  "outer_hashes": 5,
+  "input_zip_exactly_matches_prior_delivery": true,
+  "inner_hashes": 31,
+  "snapshot_git_blobs_verified": 17,
+  "offline_verifier_rc": 0,
+  "offline_result_exactly_matches_external_record": true,
+  "added_bytes": 294,
+  "new_sop_bytes": 11855,
+  "restored_sop_bytes": 11561,
+  "fresh_remote_blob_lookup": false,
+  "full_gate": "HOLD",
+  "research_execution": false
+}

@@ -39,7 +39,8 @@
   E18 ★ 11-03 (Codex 회차 ① §10 "작은 실제 producer → 판정 → 재판정" · 1저자 11-03 밤 Q2) 실물 원장 사슬 (사다리 P0 · P1 · 예측) → 판정 (원장
       판정 · 원 팔 JSON 에서 다시 계산) → 같은 입력 다시 판정 (같은 · 다른 프로세스) = REVERIFY_SAME → 판정 문턱만 옮김 · 입력 하나씩 (DBE 킷 ·
       예측 시도 팔 JSON · 등록 사본 글) · 저장된 결과 JSON 을 바꿈 = 거부 또는 REVERIFY_DIFF (원 판정 보존) → 되돌림 = REVERIFY_SAME ·
-      ★ 11-03 밤 (Q5 · RINT2-E01) 보고 바이트 칸 (`results_bytes` · `public_bytes` · 까닭 = 사슬 `BYTE_DIFF_KINDS`) — E18i [value] · E18j [trailing_whitespace]
+      ★ 11-03 밤 (Q5 · RINT2-E01) 보고 바이트 칸 (`results_bytes` · `public_bytes` · 까닭 = 사슬 `BYTE_DIFF_KINDS`) — E18i [value, newline] (★ 11-04 PC8-04
+      = value 뒤에도 모은다) · E18j [trailing_whitespace]
   ★ 3판 — 계획 `rint-r-plan-v2` (결과 전 등록 숫자 넷 = 시험 값) · S0 계획 (`ca_s0_census.make_plan` · 정준 바이트) · 등록 사본 두 줄 · `--s0-plan`
 ⚠ PASS 는 사슬 · 러너 · payload 배선이 실물로 이어진다는 증거이지 R_j 값 · 판정의 물리 검증이 아니다 (픽스처 σ 는 의미 없다).
 """
@@ -1703,11 +1704,14 @@ def t_verdict_real():
     r7 = rep_of(out7)
     with open(resp, 'wb') as f:
         f.write(res0)
-    chk('E18i 저장된 판정 결과 JSON 의 값 하나를 바꿈 (reference.G0 + 1) — 다시 판정 = rc 1 REVERIFY_DIFF · 보고 = 결과 다름 True · 다른 결과 칸 이름 = '
-        'reference 하나 (값 = 봉인 · 이름만) · 등급 다름 False · 다른 공개 칸 없음 · ★ 11-03 밤 (Q5) 결과 바이트 까닭 = [value] · 공개 바이트 같음',
+    #  ★ 11-04 PC8-04 (사전 공격 8 회차 P8-04) — 위 json.dump 는 끝 줄바꿈을 쓰지 않는다 → 까닭 = 값 + 끝 줄바꿈 수 (옛 기대 [value] = value 에서 멈춘
+    #    까닭 목록을 그대로 박았다 · 지금 = value 뒤에도 나머지 까닭을 모은다)
+    chk('E18i 저장된 판정 결과 JSON 의 값 하나를 바꿈 (reference.G0 + 1 · json.dump = 끝 줄바꿈 없음) — 다시 판정 = rc 1 REVERIFY_DIFF · 보고 = 결과 다름 True · '
+        '다른 결과 칸 이름 = reference 하나 (값 = 봉인 · 이름만) · 등급 다름 False · 다른 공개 칸 없음 · ★ 11-03 밤 (Q5) · ★ 11-04 PC8-04 결과 바이트 까닭 = '
+        '[value, newline] · 공개 바이트 같음',
         rc7 == 1 and 'REVERIFY_DIFF' in so7 and r7.get('result') == 'REVERIFY_DIFF' and r7.get('results_differ') is True
         and r7.get('results_keys_differ') == ['reference'] and r7.get('grade_differ') is False and r7.get('public_keys_differ') == []
-        and (r7.get('results_bytes') or {}).get('kinds') == ['value'] and (r7.get('public_bytes') or {}).get('differ') is False,
+        and (r7.get('results_bytes') or {}).get('kinds') == ['value', 'newline'] and (r7.get('public_bytes') or {}).get('differ') is False,
         (rc7, so7[-300:], {k: r7.get(k) for k in ('results_differ', 'results_keys_differ', 'grade_differ', 'public_keys_differ', 'results_bytes',
                                                   'public_bytes')}))
     with open(resp, 'ab') as f:

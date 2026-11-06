@@ -1,0 +1,33 @@
+{
+ "chain_alive_when_recover_ran": true,
+ "group_records_when_recover_ran": [
+  "L01_floor.end.json",
+  "L01_floor.launch.json"
+ ],
+ "recover_rc": 0,
+ "result_line": {
+  "status": "interrupted",
+  "side": "post",
+  "cause": "parent_dead",
+  "resume_ok": true,
+  "by": "recover"
+ },
+ "resume_add_while_chain_alive": [
+  0,
+  2
+ ],
+ "recover_tail": [
+  "recover — 그룹 기록 0 개 정리 · 미확인 0",
+  "  recover attempt_1: 결과 줄 interrupted · 결과 post · 원인 parent_dead · 재실행 자격 True"
+ ],
+ "chain_rc": 3,
+ "chain_summary_status": "CALIBRATED",
+ "runner_calls": 14,
+ "ledger_kinds": [
+  "header:None::",
+  "entry:1::",
+  "start:1::",
+  "result:1:interrupted:post",
+  "entry:2::"
+ ]
+}

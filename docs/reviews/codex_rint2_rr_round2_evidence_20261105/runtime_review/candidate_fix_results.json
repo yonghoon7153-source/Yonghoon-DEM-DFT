@@ -1,0 +1,68 @@
+[
+  {
+    "rc": 1,
+    "type": "int",
+    "fields": {
+      "status": "interrupted",
+      "stop": null,
+      "side": "post",
+      "cause": "runner_rc",
+      "resume_ok": false
+    }
+  },
+  {
+    "rc": false,
+    "type": "bool",
+    "fields": {
+      "status": "interrupted",
+      "stop": null,
+      "side": "post",
+      "cause": "runner_rc",
+      "resume_ok": false
+    }
+  },
+  {
+    "rc": 0.0,
+    "type": "float",
+    "fields": {
+      "status": "interrupted",
+      "stop": null,
+      "side": "post",
+      "cause": "runner_rc",
+      "resume_ok": false
+    }
+  },
+  {
+    "rc": "0",
+    "type": "str",
+    "fields": {
+      "status": "interrupted",
+      "stop": null,
+      "side": "post",
+      "cause": "runner_rc",
+      "resume_ok": false
+    }
+  },
+  {
+    "rc": null,
+    "type": "NoneType",
+    "fields": {
+      "status": "interrupted",
+      "stop": null,
+      "side": "post",
+      "cause": "runner_rc",
+      "resume_ok": false
+    }
+  },
+  {
+    "rc": 0,
+    "type": "int",
+    "fields": {
+      "status": "interrupted",
+      "stop": null,
+      "side": "post",
+      "cause": "parent_dead",
+      "resume_ok": true
+    }
+  }
+]

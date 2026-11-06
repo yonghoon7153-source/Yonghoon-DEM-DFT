@@ -1,0 +1,4 @@
+flipped path: [('in_E',)]
+results JSON bool->int : 1 {"result": "REVERIFY_DIFF", "grade_differ": false, "public_keys_differ": [], "results_differ": false, "results_keys_differ": [], "results_bytes": {"differ": true, "first_diff_offset": 5363, "kinds": ["format"], "len_delta": 3}, "public_bytes": {"differ": false, "first_diff_offset": null, "kinds": [], "len_delta": 0}}
+verdict JSON sentence_allowed bool->int : 1 {"result": "REVERIFY_DIFF", "grade_differ": false, "public_keys_differ": [], "results_differ": false, "results_keys_differ": [], "results_bytes": {"differ": false, "first_diff_offset": null, "kinds": [], "len_delta": 0}, "public_bytes": {"differ": true, "first_diff_offset": 19591, "kinds": ["format"], "len_delta": 4}}
+verdict sentence_allowed was: False

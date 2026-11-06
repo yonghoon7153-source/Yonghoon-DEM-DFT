@@ -463,6 +463,8 @@ def cjunc_block_problem(man):
         return f'sdcp| 접합 증거의 c {c_rec!r} ≠ 수정자 블록 c {sd["protocol"].get("c")!r}'
     if c_rec is None and cnt['n_contract'] != 0 and lim != 'zero':
         return 'counts| 수정자 없이 축약 instance > 0 (R_j 유한 > 0 이면 축약 = S3 c = 1 뿐 · 천장 극한만 예외)'
+    #  한정어 = producer 상수와 글자 같음 (★ 11-04 PC8-07 — 전달 길이 문장을 시험한 기하로 좁힌 판 = 다시 핀 · 11-03 판 문장을 실은 증거 = 거부 ·
+    #    시험 test_ca_ext_b6 R7 "한정어 = 11-03 판")
     if ev.get('status') != CJ.CJUNC_STATUS or ev.get('qualifiers') != list(CJ.CJUNC_QUALIFIERS):
         return 'qualifiers| 지위 · 필수 한정어가 producer 상수와 다르다'
     if ev.get('diagnostics') != DIAGNOSTICS_V0:

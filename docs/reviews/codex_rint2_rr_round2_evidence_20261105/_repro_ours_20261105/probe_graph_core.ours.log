@@ -1,0 +1,19 @@
+{
+  "RR1-02": {
+    "status": "NOT_CERTIFIABLE",
+    "ok": false,
+    "pass_a": true,
+    "pass_b": false,
+    "pass_c": false,
+    "pass_d": false
+  },
+  "exact_group_reduction": {
+    "cases": 307,
+    "permutation_checks": 921,
+    "mismatches": 0
+  },
+  "fingerprint_binding": {
+    "subulp_parallel_change_detected": true,
+    "exact_decomposition_and_orientation_invariant": true
+  }
+}

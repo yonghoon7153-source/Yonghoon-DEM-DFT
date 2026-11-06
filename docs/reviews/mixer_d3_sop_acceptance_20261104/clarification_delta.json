@@ -1,0 +1,14 @@
+{
+  "reviewed_pin": "df9a4623e2f9e6302e6bc8922bd0612ab48e120c",
+  "path": "docs/reviews/mixer_d3_measurement_sop_draft_20261104.md",
+  "added_sentence": "단위별 계산·봉인은 순차적으로 할 수 있으나, 먼저 열람한 단위 결과에 맞춰 후속 단위의 예측 생성·판독/제외·재시도 규칙을 바꾸면 기존 무맞춤 검증으로 집계하지 않고 변경 이력과 새 분석 지위를 별도로 기록한다.",
+  "exact_external_suggestion": true,
+  "only_sentence_and_blank_line_added": true,
+  "before_bytes": 11561,
+  "after_bytes": 11855,
+  "before_sha256": "4f055a1094e870465357827e0fd8a080b464c6cc503ac7cf04c09edad8d0aa43",
+  "after_sha256": "dde2857a41b847fbb1f1888588a6ddc0331aa71dfd08ad40f02618ce1bddcc38",
+  "external_recheck_of_new_pin": "pending",
+  "new_findings": [],
+  "whole_gate": "HOLD"
+}

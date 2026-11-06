@@ -1,0 +1,118 @@
+{
+  "scope": "Real producer/contract and graph-state/decision functions; not full ledger read_run or production shell execution.",
+  "exact_ratio": 1.0170715052190031,
+  "exact_ratio_fraction": "2622361786138431538572037760317075854220815933938417227459892694274037466115558439/2578345546681858924072992741525765304070001122191068504244344851318108388961766439",
+  "graphs": {
+    "rule": "solved_graph_dof_ids_pair_exact_sum_plates_v1",
+    "main": "e5afc9eae4374cd4437f1ad407f491ff2daf26f2aae2a030742ce03dbbaf34a1",
+    "lower": "99f8bdf9f151df14264a8bc3d08903656af637c5b6301b4c618bf13b83ce3a5a",
+    "upper": null
+  },
+  "counts": {
+    "n_sv_faces_cut": 1,
+    "n_reach_pairs_cut": 0,
+    "n_sdcp_components_touching": 1,
+    "n_bridging_components": 1,
+    "n_sv_faces_kept_self": 2,
+    "n_unsplit_bridging_components": 0
+  },
+  "cases": {
+    "honest": {
+      "contract": [
+        true,
+        null
+      ],
+      "graph_state": {
+        "state": "verified",
+        "kind": null,
+        "why": null
+      },
+      "flags": [
+        "SV_DEPENDENT"
+      ],
+      "interval": [
+        1.0170715052189403,
+        1.0170715052190658
+      ]
+    },
+    "original_swap": {
+      "contract": [
+        false,
+        "CAEXT|cjunc| sv_cf| 아래 끝 증서 가중 그래프 지문 (fp_cjunc_graph) e5afc9eae437… ≠ 봉인 원천에서 다시 조립한 아래 끝 그래프 99f8bdf9f151… — 그 끝에서 푼 계의 증서가 아니다 (10-26 RR1-01)"
+      ],
+      "graph_state": {
+        "state": "mismatch",
+        "kind": null,
+        "why": "sv_cf| 아래 끝 증서 가중 그래프 지문 (fp_cjunc_graph) e5afc9eae437… ≠ 봉인 원천에서 다시 조립한 아래 끝 그래프 99f8bdf9f151… — 그 끝에서 푼 계의 증서가 아니다 (10-26 RR1-01)"
+      },
+      "flags": [
+        "SV_UNCHECKED"
+      ],
+      "interval": [
+        0.9999999999999384,
+        1.0000000000000617
+      ]
+    },
+    "no_source": {
+      "contract": [
+        true,
+        null
+      ],
+      "graph_state": {
+        "state": "unverified",
+        "kind": "no_source",
+        "why": "봉인 원천 없음"
+      },
+      "flags": [
+        "SV_UNCHECKED"
+      ],
+      "interval": [
+        1.0170715052189403,
+        1.0170715052190658
+      ]
+    },
+    "declared_Q3_forgery": {
+      "contract": [
+        true,
+        null
+      ],
+      "graph_state": {
+        "state": "verified",
+        "kind": null,
+        "why": null
+      },
+      "flags": [],
+      "interval": [
+        0.9999999999999384,
+        1.0000000000000617
+      ]
+    }
+  },
+  "adjacent_mutations": {
+    "QDX": {
+      "bad_count_mutations_rejected": 28,
+      "census_edited_internal": [
+        true,
+        null
+      ],
+      "census_edited_graph_source": [
+        false,
+        "CAEXT|cjunc| sv_cf| 위 끝 풀이 기록이 없다 (못 가른 덩어리 0 꼴 · 위 = 아래) 인데 봉인 원천에서 다시 조립한 위 끝 그래프가 있다 (af797ee6508a…) — 위 끝을 지운 기록 (fp_cjunc_graph · 10-26 RR1-01)"
+      ],
+      "census_edited_S0": "증거 census n_unsplit_bridging_components 0 ≠ S0 단계 2 봉인 SV census 1 (같은 함수 · 같은 격자 · 봉인 s_min — 10-25 X6)"
+    },
+    "QD4": {
+      "bad_count_mutations_rejected": 28,
+      "census_edited_internal": [
+        true,
+        null
+      ],
+      "census_edited_graph_source": [
+        false,
+        "CAEXT|cjunc| sv_cf| 위 끝 풀이 기록이 없다 (못 가른 덩어리 0 꼴 · 위 = 아래) 인데 봉인 원천에서 다시 조립한 위 끝 그래프가 있다 (44fd573297cb…) — 위 끝을 지운 기록 (fp_cjunc_graph · 10-26 RR1-01)"
+      ],
+      "census_edited_S0": "증거 census n_unsplit_bridging_components 0 ≠ S0 단계 2 봉인 SV census 2 (같은 함수 · 같은 격자 · 봉인 s_min — 10-25 X6)"
+    }
+  },
+  "Q3_classification": "Declared coordinated certificate-fingerprint forgery limitation, not a new residual finding."
+}

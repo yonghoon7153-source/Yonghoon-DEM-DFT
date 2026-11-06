@@ -1,0 +1,1 @@
+{"scope": "Windows pure Python: actual reverify/report with mocked recomputation; not actual producer/ledger end-to-end", "python": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]", "total": 1533, "pass": 1533}

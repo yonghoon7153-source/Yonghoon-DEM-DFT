@@ -1,0 +1,90 @@
+{
+ "tool": "mutation_check_v4.py (v3.main · M31 바꿈 · M55 더함)",
+ "python": "3.11.17",
+ "selection": [
+  "M01 ",
+  "M06 ",
+  "M16 ",
+  "M21 ",
+  "M31 ",
+  "M55 "
+ ],
+ "n": 6,
+ "killed": 6,
+ "unmutated_rc": 0,
+ "rows": [
+  {
+   "mutant": "M01 run: options allowed",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=12)",
+   "failing_tests": [
+    "test_mxd2r01_codex_time_insert_rotation",
+    "test_mxd2r01_same_class_generator_grammar"
+   ]
+  },
+  {
+   "mutant": "M06 neigh_modify: any arguments",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=6)",
+   "failing_tests": [
+    "test_mxd2r02_same_class_contact_and_materials"
+   ]
+  },
+  {
+   "mutant": "M16 bytes: hash of normalized text",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=14)",
+   "failing_tests": [
+    "test_mxd2r03_physical_bytes_api",
+    "test_mxd2r03_physical_bytes_cli_both_directions"
+   ]
+  },
+  {
+   "mutant": "M21 weaken text: control characters accepted",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=15)",
+   "failing_tests": [
+    "test_mxd2r04_parser_equivalence_characters"
+   ]
+  },
+  {
+   "mutant": "M31 weaken form: skin value from deck",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=37)",
+   "failing_tests": [
+    "test_actual_command_scope",
+    "test_mxd2r04_neighbor_skin_generator_form",
+    "test_mxd2r04_outside_scope_17_api_and_cli",
+    "test_mxd2r04_same_class_spelling_identity_order"
+   ]
+  },
+  {
+   "mutant": "M55 tighten form: skin factor 0.5 → 0.6",
+   "file": "mixer_deck_readback.py",
+   "killed": true,
+   "result": "FAILED (failures=417)",
+   "failing_tests": [
+    "test_actual_command_scope",
+    "test_cli_and_duplicate_json",
+    "test_counts_are_from_actual_inputs",
+    "test_d2_pairs_and_old_contracts",
+    "test_dt_half_and_legacy_cli_positive",
+    "test_generation_and_supported_phase_positive",
+    "test_mxd2r03_physical_bytes_api",
+    "test_mxd2r03_physical_bytes_cli_both_directions",
+    "test_mxd2r04_metadata_coordinated_rules",
+    "test_mxd2r04_neighbor_skin_generator_form",
+    "test_mxd2r04_outside_scope_17_api_and_cli",
+    "test_mxd2r04_positive_generator_options",
+    "test_mxd2r04_same_class_spelling_identity_order",
+    "test_mxd2r04_timestep_spelling_with_metadata",
+    "test_mxd2r_positive_codex_independent_48"
+   ]
+  }
+ ]
+}

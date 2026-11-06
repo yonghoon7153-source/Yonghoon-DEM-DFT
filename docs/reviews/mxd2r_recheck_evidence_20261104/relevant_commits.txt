@@ -1,0 +1,11 @@
+b74fc9b75be932461b0875cb8ec4516f2719f7d9 믹서 D2 소비자 MXD2R-04 범위 넓힘 수정 — neighbor skin = 생성기 값 min(지름)·0.5 의 .6g (자유 칸 없앰)
+83ad3ba4e1b46b78ce031efd830bc447fa4a4699 믹서 D2 소비자 MXD2R-04 범위 넓힘 시험 먼저 — neighbor skin 공통 변조 7 · 기존 시험 기대 바꿈 (단일 덱 skin ×1.1 PASS → FAIL)
+42dcdc7f960a41b7cd4fba7cc21db28797a86164 믹서 D2 소비자 MXD2R-04 증거 · 원장 claimed_fixed · /mixer 개발 이력 v2.1 · 수정 계획 상태 줄
+52d84d9eb706bbd7d536b73701ec08f46c24a30e 믹서 D2 소비자 MXD2R-04 사전 공격 후속 — 변이 생존 7 (M25 · M28 · M30 · M32–M35) 을 시험에 묶음
+49608570a05b7c12f25dbb82c8565efd9c44dab4 믹서 D2 소비자 MXD2R-04 수정 — 명령 전부 = 생성기 토큰 (같은 값 다른 표기 거부) · 문자 꼴 (우리 파서 = LIGGGHTS 토큰)
+85e2d66d8e0eed4e91d06070a2424c2965297e0d 믹서 D2 소비자 MXD2R-04 시험 먼저 — 범위 밖 공통 변조 17 · 같은 부류 46 · 문자 꼴 13 · timestep 표기+메타 · 양성 보존 · 사본 대조
+f2f63e7cd6754b1359247579d951b205739d6e0a 믹서 D2 소비자 MXD2R 사전 공격 후속 — 같은 값 중복 재료 fix 시험 (변이 M11 생존 → 묶음) · 삽입 꼴 사유에 첫 어긋난 토큰
+f7c9c81b1d9f8371593a26b957779c8e46d51bc4 믹서 D2 소비자 MXD2R-03 수정 — 실제 파일 바이트로 해시 · 길이 먼저 → CR 바이트 거부 (LF 만) → 엄격 UTF-8 디코딩 뒤 파싱
+708bf881a0c8a876f345a8dfc0d3e2dc2d9702a7 믹서 D2 소비자 MXD2R-02 수정 — 접촉 제외 거부 · pair 꼴 · 재료 fix 완비성 · 적용 전 순서 · 생성기 상수
+c03de45c32f41336afcf7c8ece89f1dc2e5fa287 믹서 D2 소비자 MXD2R-01 수정 — 시간 · 삽입 · 회전 = 생성기 문법만 (run <정수> · timestep 하나 첫 run 전 · insert/pack 생성기 꼴 · 메시 공동 주기)
+f1cdd99c7edc317139e32424859ecb7202eb52ae 믹서 D2 소비자 MXD2R-01 · 02 · 03 시험 먼저 — Codex 반례 여섯 · CRLF 두 방향 · 같은 부류 · 양성 48 (고치기 전 실패 확인)

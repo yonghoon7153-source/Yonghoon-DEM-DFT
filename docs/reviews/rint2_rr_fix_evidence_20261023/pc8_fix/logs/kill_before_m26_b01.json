@@ -1,0 +1,43 @@
+{
+ "BASE_RV07": {
+  "rc": 1,
+  "killed": null,
+  "failed": [
+   "RV07 ★"
+  ],
+  "summary": [
+   "test_rint_r_chain: 2/3 PASS (5.5 s)   FAILED: ['RV07']"
+  ]
+ },
+ "M26": {
+  "rc": 1,
+  "killed": true,
+  "failed": [
+   "RV07 ★"
+  ],
+  "summary": [
+   "test_rint_r_chain: 2/3 PASS (5.7 s)   FAILED: ['RV07']"
+  ]
+ },
+ "BASE_BAN8": {
+  "rc": 1,
+  "killed": null,
+  "failed": [
+   "BAN8 ⑩"
+  ],
+  "summary": [
+   "== test_carbon_junction: 33/34 PASS"
+  ]
+ },
+ "B01": {
+  "rc": 1,
+  "killed": true,
+  "failed": [
+   "BAN8 ⑨",
+   "BAN8 ⑩"
+  ],
+  "summary": [
+   "== test_carbon_junction: 27/34 PASS"
+  ]
+ }
+}

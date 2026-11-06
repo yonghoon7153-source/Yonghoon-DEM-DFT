@@ -1,0 +1,71 @@
+{
+ "RV07": {
+  "ok": false,
+  "why": {
+   "int_to_true": [
+    [
+     "format"
+    ],
+    [
+     "value"
+    ]
+   ],
+   "true_to_int": [
+    [
+     "format"
+    ],
+    [
+     "value"
+    ]
+   ],
+   "true_to_float": [
+    [
+     "format"
+    ],
+    [
+     "value"
+    ]
+   ],
+   "dup_first_differs": [
+    [
+     "format"
+    ],
+    [
+     "value",
+     "format"
+    ]
+   ],
+   "value_no_nl": [
+    [
+     "value"
+    ],
+    [
+     "value",
+     "newline"
+    ]
+   ],
+   "value_order_crlf": [
+    [
+     "value"
+    ],
+    [
+     "value",
+     "key_order",
+     "newline"
+    ]
+   ],
+   "deep_array": [
+    "EXC RecursionError",
+    [
+     "unreadable"
+    ]
+   ],
+   "deep_object": [
+    "EXC RecursionError",
+    [
+     "unreadable"
+    ]
+   ]
+  }
+ }
+}

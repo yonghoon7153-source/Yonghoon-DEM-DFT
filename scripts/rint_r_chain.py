@@ -143,6 +143,9 @@
 ★ 11-02 사전 공격 6 회차 (PC6-01 · 02 · 09 · 12 · 13 · 1저자 11-02 "권고대로해요" · 규칙 정본 = 등록 R §10-5 아 ② · ⑥ · ⑦): 그룹 원 = 러너 세션 · 계보 ·
   CUDA 표지 (`CUDA_ERROR_WORDS` · 라이브러리 상태 문자열 · `CUDA error:`) = 모든 길 · 같은 --attempt 재입력 = 화면만 · 찾은 시도 폴더 ↔ 원장 항목
   (`found_attempts_problem`) · 그룹 미확인 + 러너 실패 rc = 러너 rc 길의 낱말 규칙 (`runner_rc_failed` · recover 끝 기록 `chain_end`)
+★ 11-04 사전 공격 8 회차 (PC8-01 – 09 · 1저자 11-04 "다 권고대로"): 시작 기록의 사슬 부모 (`chain_pid` · `chain_start`) · recover 가 산 사슬의 시도를
+  닫지 않음 (`start_chain_problem` · 그룹 기록 없는 창 · 런 사이 · 옛 판 시작 기록 = 운영자 확인 표지 뒤) · 끝 기록 ↔ 시작 기록 결합 한 도우미
+  (`group_pair`) · AL07 예외 = 증거 결합 (`al07_foreign_ok`) · 다시 판정 보고 값 대조 = 형 엄격 (`json_same`) · value 뒤에도 까닭 · 깊은 중첩 = 사유
 """
 import argparse
 import contextlib
@@ -2551,6 +2554,50 @@ def chain_parent_alive(L):
     return type(cs) is int and ps[1] == cs
 
 
+def host_seen(h, me):
+    """기록의 호스트 칸 h (그룹 시작 기록 · 시도 시작 기록) ↔ 이 프로세스 me → (여기서 그 프로세스를 볼 수 있다 bool, 못 보는 까닭 글) — 같은 부팅 (boot_id ·
+    둘 다 있음) · 같은 pid 이름공간 (둘 다 있음) · 같은 machine_id (값 비교 · 둘 다 모름 = 같음) 일 때만 (★ 10-28 밤 PC5-03 · 04 규칙 · machine_id 는 기계
+    정체가 아니다 — 복제 이미지 · 컨테이너).  ★ 11-04 PC8-05 — 그룹 (`recover_group`) · 시도 시작 기록 (`start_chain_problem`) 이 같은 함수."""
+    h = h if isinstance(h, dict) else {}
+    same_boot = h.get('boot_id') is not None and h.get('boot_id') == me.get('boot_id')
+    same_ns = h.get('pidns') is not None and h.get('pidns') == me.get('pidns')
+    same_mid = h.get('machine_id') == me.get('machine_id')      # 다름 = 다른 환경의 표지 (보수) · 같음 = 같은 기계의 증거가 아니다 (부팅 · 이름공간이 정한다)
+    what = ' · '.join(x for x, bad in (('다른 부팅 (boot_id · 모름)', not same_boot), ('다른 pid 이름공간 (모름)', not same_ns),
+                                        ('machine_id 다름', not same_mid))
+                      if bad)
+    return (same_boot and same_ns and same_mid), what
+
+
+def start_chain_problem(s0, me, operator=None):
+    """★ 11-04 PC8-05 (사전 공격 8 회차 P8-05 · PC5-03 "사슬 부모가 살아 있으면 건드리지 않는다" 를 시도 쪽에도) — recover --ledger 가 결과 줄을 쓰기 전,
+    시도 시작 기록 (원장 kind start) 의 사슬 부모 → (사유 | None, 운영자 확인 표지를 썼다 bool).  그룹 기록이 없거나 다 확인된 창 (시작 기록 뒤 첫 러너 전 ·
+    런 사이) 에도 그 사슬은 아직 돈다:
+      · 시작 기록 없음 (옛 원장 · 시작 기록을 쓰기 전 창 — 그 창의 사슬은 원장이 바뀌어 시작 기록을 못 쓰고 러너 없이 끝난다 · expect 대조) = None (그룹
+        기록 대조만 · 옛 규칙)
+      · 새 판 · 여기서 볼 수 있는 호스트 (`host_seen`) = `chain_parent_alive` — 끝남 = None · 살아 있음 · 모름 = 사유 (운영자 확인 표지로도 덮지 않는다 ·
+        보이는 사슬은 그 사슬이 결과 줄을 쓴다)
+      · 새 판 · 볼 수 없는 호스트 (다른 부팅 · pid 이름공간 · machine_id) · 옛 판 (11-02 PC7-01 · 사슬 칸 없음 = 모름) = 사유 · 그 시도의 운영자 확인 표지
+        (`--operator-confirm <그 시도> --operator-why`) 가 있으면 None + 썼다 (사유 = 원장 커밋 글 · 화면)."""
+    if s0 is None:
+        return None, False
+    if 'chain_pid' not in s0:
+        if operator is not None:
+            return None, True
+        return ('시작 기록이 옛 판 (11-02 PC7-01 · 사슬 부모 칸 없음) 이라 그 사슬이 살았는지 모른다 — 사슬이 끝났음을 확인했으면 --operator-confirm '
+                '<시도 번호> --operator-why "<사유>" (★ 11-04 PC8-05)'), False
+    seen, what = host_seen(s0.get('host'), me)
+    if seen:
+        alive = chain_parent_alive(s0)
+        if alive is False:
+            return None, False
+        return (f'사슬 부모 (시작 기록 pid {s0.get("chain_pid")!r}) 가 {"살아 있다" if alive else "살았는지 확인할 수 없다 (시작 시각 칸 · /proc)"} — '
+                f'그 사슬이 결과 줄을 쓴다 · 건드리지 않음 (사슬이 끝난 뒤 다시 recover · ★ 11-04 PC8-05)'), False
+    if operator is not None:
+        return None, True
+    return (f'{what} — 시작 기록의 사슬 부모를 여기서 볼 수 없다 (machine_id 는 기계 정체가 아니다 — 복제 이미지 · 컨테이너) · 운영자가 그 사슬이 '
+            f'끝났음을 확인했으면 --operator-confirm <시도 번호> --operator-why "<사유>" (★ 11-04 PC8-05)'), False
+
+
 def group_kill_pids(pids):
     for pid in pids:
         try:
@@ -2740,6 +2787,8 @@ LEDGER_FILE = 'rint_r_attempts.jsonl'
 LEDGER_SCHEMA = 'rint-r-ledger-v1'
 ATTEMPT_SCHEMA = 'rint-r-attempt-v1'
 REJECTED_SCHEMA = 'rint-r-rejected-v1'
+#: ★ 11-04 PC8-01 — 거부 기록 칸 (`attempt_reject` 가 쓰는 꼴 · AL07 남의 폴더 예외의 증거 대조 `al07_foreign_ok`)
+REJECTED_KEYS = frozenset({'schema', 'n', 'code', 'cause', 'ledger_commit', 'utc'})
 ATTEMPT_FILE = 'attempt.json'
 REJECTED_FILE = 'rejected.json'
 REJECTED_SIDE = '.rejected.json'
@@ -2758,7 +2807,13 @@ ATTEMPT_KEYS = frozenset({'schema', 'n', 'target', 'machine', 'resume_of', 'ledg
 #: ★ 11-02 PC7-01 (사전 공격 7 회차 · 1저자 11-02 "권고대로") — 시작 기록 (원장 줄 kind start) = 시도 폴더 + attempt.json 을 만든 뒤 · 풀기 전 대조 ·
 #:   러너 전에 커밋 (번호 · 바탕 절대 경로 (resolve) · 폴더 이름 · 기계 신원 = `host_ident` 칸 · utc) — 결과 줄 없는 같은 번호의 두 번째 입구 (다른 --out ·
 #:   다른 기계) = 화면만 거부 · recover = 바탕 대조.  시도 · 결과로 세지 않는다 (`ledger_parse` 의 'starts' · 채택 · 다시 셈 · 최대 시도 수 무관).
-START_KEYS = frozenset({'kind', 'n', 'base', 'folder', 'host', 'utc'})
+#: ★ 11-04 PC8-05 (사전 공격 8 회차 P8-05 · 1저자 11-04 "다 권고대로") — 사슬이 쓰는 시작 기록 = 위 칸 + 사슬 부모 (`chain_pid` = 사슬 프로세스 pid ·
+#:   `chain_start` = 그 시작 시각 틱 | null — 그룹 시작 기록과 같은 칸 이름 · `chain_parent_alive` 가 읽는다) — recover --ledger 는 그 사슬이 살아 있으면 (첫
+#:   러너 전 · 런 사이처럼 미확인 그룹 기록이 없는 창 포함) 결과 줄을 쓰지 않는다 (`start_chain_problem`).  옛 판 (`START_KEYS_V1` · 11-02 PC7-01 · 사슬 칸
+#:   없음) = 그대로 읽는다 (원장 꼴 · 채택 · 다음 번호 무관) · 그 시도의 recover = 사슬 부모를 모름 → 운영자 확인 표지 뒤만 결과 줄 (보수 · 생산 원장 없음 =
+#:   등록 R HOLD · 개발 원장만).
+START_KEYS_V1 = frozenset({'kind', 'n', 'base', 'folder', 'host', 'utc'})
+START_KEYS = START_KEYS_V1 | {'chain_pid', 'chain_start'}
 START_HOST_KEYS = frozenset({'machine_id', 'boot_id', 'pidns'})
 RESULT_STATUSES = ('completed', 'stopped', 'rejected', 'interrupted')
 #: ★ 10-27 묶음 C2d — 단위 · 넘침 점 시도의 완주 상태 (요약 이름 · 런 이름 앞자리 U · 결과 줄 completed)
@@ -3006,8 +3061,9 @@ def _result_problem(r):
 
 
 def _start_problem(s):
-    """★ 11-02 PC7-01 — 시작 기록 꼴 (칸 · 바탕 = 절대 경로 · 폴더 = attempt_<번호> · 기계 신원 = host_ident 세 칸 (글 | None) · utc 글) → 사유 | None."""
-    if set(s) != START_KEYS:
+    """★ 11-02 PC7-01 — 시작 기록 꼴 (칸 · 바탕 = 절대 경로 · 폴더 = attempt_<번호> · 기계 신원 = host_ident 세 칸 (글 | None) · utc 글) → 사유 | None.
+    ★ 11-04 PC8-05 — 칸 = 새 판 (`START_KEYS` · 사슬 부모 chain_pid = 양의 정수 · chain_start = 0 이상 정수 | null) 또는 옛 판 (`START_KEYS_V1`) 그대로 하나."""
+    if set(s) not in (START_KEYS, START_KEYS_V1):
         return f'칸 {sorted(set(s) ^ START_KEYS)}'
     b = s['base']
     if not (isinstance(b, str) and b and os.path.isabs(b) and '\0' not in b):
@@ -3019,6 +3075,10 @@ def _start_problem(s):
         return f'기계 신원 {h!r} (machine_id · boot_id · pidns)'
     if not isinstance(s['utc'], str):
         return 'utc 꼴'
+    if 'chain_pid' in s:
+        cp, cs = s['chain_pid'], s['chain_start']
+        if not (type(cp) is int and cp > 0 and (cs is None or (type(cs) is int and cs >= 0))):
+            return f'사슬 부모 칸 (chain_pid {cp!r} = 양의 정수 · chain_start {cs!r} = 0 이상 정수 | null · ★ 11-04 PC8-05)'
     return None
 
 
@@ -3464,7 +3524,14 @@ def attempt_open(a, stage):
     #  ★ 11-02 PC7-01 — 시작 기록 (번호 · 바탕 절대 경로 · 폴더 · 기계 신원 · utc) 을 풀기 전 대조 · 러너 전에 커밋 (읽은 원장 그대로일 때만 = expect ·
     #    덧붙인 뒤 원장 꼴 = 같은 번호 시작 기록 둘 · 결과 줄 뒤 = 멈춤) · 못 쓰면 러너 없이 rc 3 (시도 폴더 = attempt.json 만 · 같은 명령 = PC6-09 화면만 ·
     #    recover 가 결과 줄 interrupted · 결과 전 → 다음 시도).  창 (폴더 · attempt.json 을 만든 뒤 시작 기록 커밋 전 사망) = 한정 (PC6-09 · PC7-07 꼴)
-    start = {'kind': 'start', 'n': n, 'base': str(base.resolve()), 'folder': folder.name, 'host': host_ident(), 'utc': _utc()}
+    #  ★ 11-04 PC8-05 — 사슬 부모 (이 프로세스 pid · 시작 틱 = 그룹 시작 기록과 같은 칸) · recover --ledger 가 산 사슬의 시도를 닫지 않게 (그룹 기록 없는 창 ·
+    #    런 사이 포함 · `start_chain_problem`)
+    try:
+        me_stat = proc_stat(os.getpid())
+    except OSError:
+        me_stat = None
+    start = {'kind': 'start', 'n': n, 'base': str(base.resolve()), 'folder': folder.name, 'host': host_ident(), 'chain_pid': os.getpid(),
+             'chain_start': (me_stat[1] if me_stat else None), 'utc': _utc()}
     try:
         ledger_append(repo, start, f'rint-r attempt {n} start {e["target"]} {e["machine"]}', expect=raw)
     except (Stop, OSError) as ex:
@@ -3630,16 +3697,38 @@ def expansion_presolve_problem(a, e, repo, head):
     return ('UNIT_PROVENANCE_MISMATCH', why) if why else None
 
 
+def _read_group_json(p):
+    """그룹 기록 파일 → dict | None (없음 · 못 읽음 · JSON 객체 아님 · 너무 깊은 중첩)."""
+    try:
+        v = json.loads(Path(p).read_text(encoding='utf-8'))
+    except (OSError, UnicodeDecodeError, ValueError, RecursionError):
+        return None
+    return v if isinstance(v, dict) else None
+
+
+def group_pair(lp):
+    """★ 11-04 PC8-02 (사전 공격 8 회차 P8-02 · PC7-04 부류) — 그룹 시작 기록 경로 → (시작 기록 dict | None, 끝 기록 dict | None (없음 · 못 읽음), 결합 bool).
+    결합 = 그 끝 기록이 그 시작 기록의 것: 시작 기록 표지 = 32 hex · 끝 기록 표지 = 시작 기록 표지 · 끝 기록 이름 = 시작 기록 이름 = 파일 이름.  끝 기록을 믿는
+    자리 (결과 줄 전 그룹 확인 `attempt_groups_problem` · 요약 없는 시도 원인 `orphan_cause` · recover 할 그룹 고르기 `stage_recover` · 옛 끝 기록 옮기기
+    `recover_group` · 재실행 원천의 끝난 런 `ResumeRunner._src_done`) 가 이 함수 하나 — 결합 안 됨 = 미확인 (다른 런의 끝 기록 · 손 고침 · 부분 복사 · 확인
+    True 여도).  옛 = recover_group 만 표지 · 이름을 보았다 (미확인 · 없는 끝 기록만 그 자리에 닿았다)."""
+    lp = Path(lp)
+    nm = lp.name[:-len('.launch.json')]
+    L, er = _read_group_json(lp), _read_group_json(lp.with_name(nm + '.end.json'))
+    tok = (L or {}).get('token')
+    bound = (L is not None and er is not None and isinstance(tok, str) and re.fullmatch(r'[0-9a-f]{32}', tok) is not None
+             and er.get('token') == tok and L.get('name') == nm and er.get('name') == nm)
+    return L, er, bool(bound)
+
+
 def attempt_groups_problem(folder):
-    """시도 폴더의 그룹 기록 — 시작 기록마다 끝 기록 · 확인 True (아니면 사유 · 결과 줄을 쓰지 않는다 · recover 먼저)."""
+    """시도 폴더의 그룹 기록 — 시작 기록마다 끝 기록 · 확인 True · ★ 11-04 PC8-02 그 시작 기록에 결합 (`group_pair` · 표지 · 이름) (아니면 사유 · 결과 줄을
+    쓰지 않는다 · recover 먼저)."""
     for lp in sorted(Path(folder).rglob(f'{GROUPS_DIR}/*.launch.json')):
-        ep = lp.with_name(lp.name[:-len('.launch.json')] + '.end.json')
-        try:
-            er = json.loads(ep.read_text(encoding='utf-8')) if ep.exists() else None
-        except (OSError, UnicodeDecodeError, ValueError):
-            er = None
-        if not (isinstance(er, dict) and er.get('confirmed') is True):
-            return f'그룹 {lp.parent.parent.name}/{lp.name[:-len(".launch.json")]} 종료 미확인'
+        _L, er, bound = group_pair(lp)
+        if not (bound and er.get('confirmed') is True):
+            return (f'그룹 {lp.parent.parent.name}/{lp.name[:-len(".launch.json")]} 종료 미확인'
+                    + (' (끝 기록의 표지 · 이름 ≠ 시작 기록 · ★ 11-04 PC8-02)' if er is not None and not bound else ''))
     return None
 
 
@@ -3761,18 +3850,14 @@ def orphan_cause(folder):
         요약 있는 길 `stop_cause` 의 그룹 미확인 + 러너 rc 와 같은 규칙) · ★ 11-02 PC7-03 — chain_end 원인 exception (기다림 중 사슬 예외 · 그룹 미확인) =
         by chain 길과 같은 표 (`CHAIN_END_FIXED` · chain_exception · 낱말 앞) · chain_end 없음 (사슬이 끝 기록 전에 죽음 = 러너 rc 를 모름) = 옛 그대로
     런 여럿 = 재실행 불가 원인이 하나라도 있으면 그것 (시작 차례 첫) · 아니면 마지막 · 끝나지 않은 런이 없으면 parent_dead (런 사이 사망) · 그룹 기록이 하나도
-    없음 · 기록 · 그 런 로그를 못 읽음 · 모르는 꼴 = 읽음 False (재실행 자격 없음 · 보수)."""
+    없음 · 기록 · 그 런 로그를 못 읽음 · 모르는 꼴 · ★ 11-04 PC8-02 끝 기록이 그 시작 기록에 결합 안 됨 (`group_pair` · 다른 런의 끝 기록) = 읽음 False
+    (재실행 자격 없음 · 보수)."""
     folder = Path(folder)
     rows, ok = [], True
     for lp in folder.rglob(f'{GROUPS_DIR}/*.launch.json'):
         nm = lp.name[:-len('.launch.json')]
-        try:
-            L = json.loads(lp.read_text(encoding='utf-8'))
-            er = json.loads(lp.with_name(nm + '.end.json').read_text(encoding='utf-8'))
-        except (OSError, UnicodeDecodeError, ValueError):
-            ok = False
-            continue
-        if not (isinstance(L, dict) and isinstance(er, dict)):
+        L, er, bound = group_pair(lp)
+        if L is None or er is None or not bound:
             ok = False
             continue
         rows.append((str(L.get('started_utc') or ''), str(lp), nm, lp.parent.parent, er))
@@ -3886,6 +3971,44 @@ def attempt_close(att, s):
     return None
 
 
+def attempt_chain_trace(p):
+    """★ 11-04 PC8-01 — 폴더에 사슬 시도의 흔적이 있나 (attempt.json · rejected.json (링크 포함) · 단계 요약 · 그룹 기록 · 결과 흔적 = 첫 풀이 끝 표지 · 팔
+    payload) → True (못 읽음 = True · 보수)."""
+    p = Path(p)
+    try:
+        if any((p / nm).exists() or (p / nm).is_symlink() for nm in (ATTEMPT_FILE, REJECTED_FILE) + STAGE_SUMMARIES):
+            return True
+        if any(True for _x in p.rglob(f'{GROUPS_DIR}/*.json')):
+            return True
+        return folder_side(p) == 'post'
+    except OSError:
+        return True
+
+
+def al07_foreign_ok(k, p, r):
+    """★ 11-04 PC8-01 (사전 공격 8 회차 P8-01 · PC7-02 부류) — AL07 남의 폴더 예외 (`found_attempts_problem` 이 attempt.json 없는 attempt_<k> 폴더를 건너뜀)
+    의 증거 → True | False.  예외 = 사슬이 그 바탕의 남의 폴더 때문에 시도 폴더를 못 만들어 옆에 거부 기록을 쓴 꼴 (`attempt_open` OUTDIR_NOT_EMPTY) 뿐:
+    ① 그 번호의 결과 줄 = rejected · 멈춤 OUTDIR_NOT_EMPTY · 폴더 = 옆 기록 이름 (attempt_<k>.rejected.json) ② 그 옆 기록 = 보통 파일 (링크 아님) · 요약 sha =
+    결과 줄 ③ 거부 기록 꼴 (`REJECTED_KEYS` · schema · n = k · code = OUTDIR_NOT_EMPTY · 시작 커밋 40 hex) ④ 남의 폴더에 사슬 흔적 없음 (`attempt_chain_trace`).
+    하나라도 어기면 False (옛 = 결과 줄 rejected + 그 바탕에 옆 파일 아무것 = 예외 → 결과 본 시도 폴더의 attempt.json 을 지우고 결과 줄을 rejected 로 다시
+    쓴 손이 판정 · 예측 입력 대조를 비켜 갔다).  한정: 사슬 흔적까지 지운 폴더 = 결과도 지운 폴더 (원장 · 폴더를 함께 고친 손 = Q-D)."""
+    p = Path(p)
+    if not (isinstance(r, dict) and r.get('status') == 'rejected' and r.get('folder') == f'attempt_{k}{REJECTED_SIDE}'
+            and isinstance(r.get('stop'), dict) and r['stop'].get('code') == 'OUTDIR_NOT_EMPTY'):
+        return False
+    side = p.parent / r['folder']
+    if side.is_symlink() or not side.is_file() or folder_digest(side) != r.get('folder_sha256'):
+        return False
+    try:
+        rec = _json_strict(side.read_bytes())
+    except Exception:                                         # noqa: BLE001 — 못 읽음 = 증거 없음
+        return False
+    if not (isinstance(rec, dict) and set(rec) == REJECTED_KEYS and rec.get('schema') == REJECTED_SCHEMA and type(rec.get('n')) is int
+            and rec['n'] == k and rec.get('code') == 'OUTDIR_NOT_EMPTY' and _hex40(rec.get('ledger_commit'))):
+        return False
+    return not attempt_chain_trace(p)
+
+
 def found_attempts_problem(st, found):
     """★ 11-02 PC6-12 (사전 공격 6 회차 마무리 R10 · PC5-01 다시 셈의 범위) — 찾은 시도 폴더 전부 (입력 대상 밖 포함 · found {n: [경로]}) 의 attempt.json ↔
     원장 항목 (st = 대조하는 커밋의 원장): 그 번호의 원장 항목이 있고 폴더에 꼴 맞는 attempt.json (`read_attempt`) 이 있으면 대상 · 기계 · 재실행 원 시도가 원장
@@ -3893,7 +4016,8 @@ def found_attempts_problem(st, found):
     시도를 채택 · PC5-01 다시 셈은 입력 대상 항목에만 돈다) · 다른 원장의 시도 폴더.  ★ 11-02 PC7-02 (사전 공격 7 회차 · 1저자 11-02 "권고대로") — 원장 항목이
     있는 attempt_<n> 폴더에 꼴 맞는 attempt.json 이 없으면 (없음 · 꼴 틀림 · 심볼릭 링크 = `read_attempt` None) 사유 (옛 = 건너뜀 → attempt.json 하나만 지워도
     위 대조를 비켜 갔다) · 예외 하나 = 그 번호의 결과 줄이 rejected 이고 그 바탕에 옆 거부 기록 attempt_<n>.rejected.json 이 있을 때 (AL07 남의 폴더 — 폴더를
-    만들 수 없어 옆에 거부 기록 · 지금 동작 그대로).  이 함수 몫 아님: 옆 거부 기록 파일 · 원장에 없는 번호 (부르는 쪽 규칙 — 판정 = 멈춤 · 다시 판정 = PC5-10 ·
+    만들 수 없어 옆에 거부 기록) · ★ 11-04 PC8-01 그 예외 = 증거에 묶임 (`al07_foreign_ok` — 결과 줄 폴더 = 옆 기록 · 요약 sha · 거부 기록 꼴 n · OUTDIR_NOT_EMPTY ·
+    남의 폴더에 사슬 흔적 없음 · 옛 = 옆 파일 아무것).  이 함수 몫 아님: 옆 거부 기록 파일 · 원장에 없는 번호 (부르는 쪽 규칙 — 판정 = 멈춤 · 다시 판정 = PC5-10 ·
     합치기 = 멈춤).  항목 칸은 한 번 쓰면 바뀌지 않는다 (다시 판정의 옛 커밋 원장에서도 같다 — 시작 커밋 조상 대조는 입력 대상만 · 그대로).  한정: 찾는 범위 =
     부르는 쪽이 훑은 바탕 (판정 = 입력의 부모 폴더 · --attempt-dirs · 합치기 = --merge 경로 · 합친 예측 = 사본 · 예측 입력 = 사다리의 부모 폴더) — 그 밖에
     옮겨 둔 폴더 · 꼴 밖 이름으로 바꾼 폴더 (attempt_1.old 꼴 = 찾지 않음) 와 원장 항목 고침을 함께 한 손은 못 본다 (Q-D 한정)."""
@@ -3907,11 +4031,11 @@ def found_attempts_problem(st, found):
                 continue                                      # 옆 거부 기록 파일 (attempt_<n>.rejected.json) — 이 함수 몫 아님
             a = read_attempt(p)
             if a is None:
-                if r is not None and r.get('status') == 'rejected' and (Path(p).parent / f'attempt_{k}{REJECTED_SIDE}').is_file():
-                    continue                                  # AL07 남의 폴더 (결과 줄 rejected + 그 바탕의 옆 거부 기록) — 지금 동작 그대로
+                if al07_foreign_ok(k, p, r):
+                    continue                                  # AL07 남의 폴더 (결과 줄 rejected · 옆 거부 기록 · 증거 결합 · ★ 11-04 PC8-01)
                 return (f'{Path(p).name}: 원장 항목 {k} ({e["target"]}) 의 시도 폴더 자리인데 꼴 맞는 attempt.json 이 없다 (없음 · 꼴 틀림 · 심볼릭 링크 — '
-                        f'결과 본 시도 폴더의 attempt.json 을 지우거나 고쳐 원장 대조를 비켜 간 꼴 · 예외 = 결과 줄 rejected + 그 바탕의 옆 거부 기록 · '
-                        f'★ 11-02 PC7-02)')
+                        f'결과 본 시도 폴더의 attempt.json 을 지우거나 고쳐 원장 대조를 비켜 간 꼴 · 예외 = AL07 남의 폴더 (결과 줄 rejected · 폴더 = 옆 거부 '
+                        f'기록 · 요약 sha · 꼴 맞는 거부 기록 · 남의 폴더에 사슬 흔적 없음) · ★ 11-02 PC7-02 · ★ 11-04 PC8-01)')
             diff = [f for f in ('target', 'machine', 'resume_of') if a[f] != e[f]]
             if a['n'] != k or diff:
                 got = ', '.join(f'{f} {a[f]!r}' for f in diff) or f'n {a["n"]}'
@@ -4335,13 +4459,10 @@ class ResumeRunner(Runner):
 
     def _src_done(self, name, outdir_name):
         """원천의 그 런이 러너 쪽에서 끝났나 = 끝 기록 rc 0 · 런 폴더 있음.  (재실행 = 원천 결과 줄이 있어야 = 원천의 그룹 끝 기록이 다 확인됐다 · recover 가
-        다시 쓴 끝 기록 = rc None · 시간 초과 · 신호 = rc ≠ 0 — 그래서 rc 0 하나로 가른다 · 복사한 팔은 read_run 이 다시 대조한다.)"""
-        ep = self.src / GROUPS_DIR / f'{name}.end.json'
-        try:
-            er = json.loads(ep.read_text(encoding='utf-8')) if ep.is_file() else None
-        except (OSError, UnicodeDecodeError, ValueError):
-            er = None
-        return isinstance(er, dict) and er.get('rc') == 0 and (self.src / outdir_name).is_dir()
+        다시 쓴 끝 기록 = rc None · 시간 초과 · 신호 = rc ≠ 0 — 그래서 rc 0 하나로 가른다 · 복사한 팔은 read_run 이 다시 대조한다.)  ★ 11-04 PC8-02 — 그
+        끝 기록 = 그 런 시작 기록에 결합 (`group_pair` · 표지 · 이름) · rc = 정수 0 (bool · 실수 아님 — 옛 = 다른 런의 끝 기록 · rc false 도 끝난 런)."""
+        _L, er, bound = group_pair(self.src / GROUPS_DIR / f'{name}.launch.json')
+        return bound and type(er.get('rc')) is int and er['rc'] == 0 and (self.src / outdir_name).is_dir()
 
     def run(self, kit, role, law, c, rj, arms, sv_cf=False):
         name, req, outdir, delta = self._prepare(kit, role, law, c, rj, arms, sv_cf)
@@ -6398,26 +6519,118 @@ VERDICT_ENV_FILE = 'verdict_env.json'
 #   바이트만 다른 저장본 (끝 공백 · 줄바꿈 · 칸 순서 · 꼴) 의 까닭을 적지 못했다 (판정 = REVERIFY_DIFF 그대로였다 · 거짓 SAME 아님)
 REVERIFY_SCHEMA = 'rint-r-reverify-v2'
 REVERIFY_REPORT = 'reverify_report.json'
-#: 바이트 까닭 닫힌 목록 (이 차례로 보고) — missing = 한쪽 파일 없음 · unreadable = 저장본이 UTF-8 JSON 아님 · value = 파싱한 값이 다름 · key_order = 값 같고
-#   칸 순서 (문서 차례) 다름 · newline = 줄바꿈 꼴 (CR · CRLF · 끝 줄바꿈 수) · trailing_whitespace = 줄 끝 · 문서 끝 공백 · 탭 · whitespace = 그 밖 문자열 밖
-#   공백 (들여쓰기 · 간격) · format = 그 밖 직렬화 꼴 (이스케이프 · 수 꼴 1 ↔ 1.0 · 겹친 칸 등).  값 · 글은 싣지 않는다 (봉인 · 등록 R §4-1).
+#: 바이트 까닭 닫힌 목록 (이 차례로 보고) — missing = 한쪽 파일 없음 · unreadable = 저장본을 끝까지 읽지 못함 (UTF-8 · JSON 아님 · ★ 11-04 PC8-09 파이썬
+#   재귀 한도를 넘는 중첩) · value = 파싱한 값이 다름 (★ 11-04 PC8-03 형까지 엄격 — true ≠ 1 · null ≠ false · 1 = 1.0 은 같은 수 · 겹친 칸이면 사본 하나라도
+#   다르면) · key_order = 양쪽에 다 있는 칸의 순서 (문서 차례) 다름 · newline = 줄바꿈 꼴 (CR · CRLF · 끝 줄바꿈 수) · trailing_whitespace = 줄 끝 · 문서 끝
+#   공백 · 탭 · whitespace = 그 밖 문자열 밖 공백 (들여쓰기 · 간격) · format = 그 밖 직렬화 꼴 (이스케이프 · 같은 값 수의 꼴 1 ↔ 1.0 · 겹친 칸 등) — 여럿
+#   함께 (★ 11-04 PC8-04 value 뒤에도 모은다 · 옛 = value 에서 멈춤).  값 · 글은 싣지 않는다 (봉인 · 등록 R §4-1) — ⚠ 처음 다른 바이트 · 길이 차는 봉인
+#   바이트에서 나온 수다 (★ 11-04 PC8-08 · `byte_diff_view`).
 BYTE_DIFF_KINDS = ('missing', 'unreadable', 'value', 'key_order', 'newline', 'trailing_whitespace', 'whitespace', 'format')
 
 
-def _key_seq(v, pre=''):
-    """문서 차례의 칸 이름 열 (중첩 · 목록 위치 포함) — 칸 순서 대조용 (값 없음)."""
-    if isinstance(v, dict):
-        out = []
-        for k, x in v.items():
-            out.append(pre + str(k))
-            out += _key_seq(x, pre + str(k) + '.')
+class _JPairs(list):
+    """★ 11-04 PC8-03 — JSON 객체 = (칸, 값) 쌍 목록 (문서 차례 · 겹친 칸 그대로 · 저장본 값 대조 전용)."""
+
+
+#: ★ 11-04 PC8-09 — 저장본을 끝까지 읽지 못함 (UTF-8 · JSON 아님 · 너무 깊은 중첩) — 어떤 JSON 값과도 같지 않다
+_UNREAD = object()
+
+
+def _json_pairs(raw):
+    """JSON 바이트 → 값 나무 (객체 = `_JPairs` · 겹친 칸 그대로 · NaN · Infinity 받음) | `_UNREAD` (UTF-8 · JSON 아님 · 파이썬 재귀 한도를 넘는 중첩 —
+    예외 대신 · ★ 11-04 PC8-03 · 09)."""
+    try:
+        return json.loads(raw.decode('utf-8'), object_pairs_hook=_JPairs)
+    except (UnicodeDecodeError, ValueError, RecursionError):
+        return _UNREAD
+
+
+def _jkind(v):
+    """JSON 형 이름 — null · bool · num (정수 · 실수 = 같은 '수' · bool 아님) · str · obj (dict · `_JPairs`) · arr · other."""
+    if v is None:
+        return 'null'
+    if isinstance(v, bool):
+        return 'bool'
+    if isinstance(v, (int, float)):
+        return 'num'
+    if isinstance(v, str):
+        return 'str'
+    if isinstance(v, (dict, _JPairs)):
+        return 'obj'
+    if isinstance(v, (list, tuple)):
+        return 'arr'
+    return 'other'
+
+
+def _jcopies(o):
+    """JSON 객체 → {칸: [값 …]} (겹친 칸 = 사본 모두 · 처음 나온 차례)."""
+    if isinstance(o, _JPairs):
+        out = {}
+        for k, v in o:
+            out.setdefault(k, []).append(v)
         return out
-    if isinstance(v, list):
-        out = []
-        for i, x in enumerate(v):
-            out += _key_seq(x, f'{pre}{i}.')
-        return out
-    return []
+    return {k: [v] for k, v in o.items()}
+
+
+def json_same(a, b):
+    """★ 11-04 PC8-03 (사전 공격 8 회차 P8-03) — JSON 값 대조 · 형 엄격 · 되풀이 없이 (깊이 무관): bool · 수 · 글 · null · 배열 · 객체 형부터 같아야
+    (true ≠ 1 · true ≠ 1.0 · null ≠ false · 정수 1 = 실수 1.0 = 같은 수 · NaN ≠ NaN) · 객체 = 칸 집합 같고 겹친 칸이면 사본 하나하나가 맞은편 값과 같아야 ·
+    `_UNREAD` = 무엇과도 다르다.  옛 = 파이썬 == (true == 1 == 1.0 · 겹친 칸 = 마지막 사본만)."""
+    stack = [(a, b)]
+    while stack:
+        x, y = stack.pop()
+        kx, ky = _jkind(x), _jkind(y)
+        if kx != ky or kx == 'other':
+            return False
+        if kx == 'arr':
+            if len(x) != len(y):
+                return False
+            stack.extend(zip(x, y))
+        elif kx == 'obj':
+            cx, cy = _jcopies(x), _jcopies(y)
+            if set(cx) != set(cy):
+                return False
+            stack.extend((u, v) for kk in cx for u in cx[kk] for v in cy[kk])
+        elif kx != 'null' and not x == y:
+            return False
+    return True
+
+
+def _json_order_differs(a, b):
+    """두 값 나무 (dict · list) 에서 양쪽에 다 있는 객체 칸의 문서 차례가 다른가 — 값이 달라도 같은 자리끼리 (★ 11-04 PC8-04 · 되풀이 없이)."""
+    stack = [(a, b)]
+    while stack:
+        x, y = stack.pop()
+        if isinstance(x, dict) and isinstance(y, dict):
+            kx = [k for k in x if k in y]
+            if kx != [k for k in y if k in x]:
+                return True
+            stack.extend((x[k], y[k]) for k in kx)
+        elif isinstance(x, list) and isinstance(y, list):
+            stack.extend(zip(x, y))
+    return False
+
+
+def _json_numform_differs(a, b):
+    """두 값 나무의 같은 자리 수가 값은 같은데 정규 꼴이 다른가 (1 ↔ 1.0 · -0.0 ↔ 0) — 값이 다른 자리는 보지 않는다 (★ 11-04 PC8-04 · 되풀이 없이)."""
+    stack = [(a, b)]
+    while stack:
+        x, y = stack.pop()
+        if isinstance(x, dict) and isinstance(y, dict):
+            stack.extend((x[k], y[k]) for k in x if k in y)
+        elif isinstance(x, list) and isinstance(y, list):
+            stack.extend(zip(x, y))
+        elif _jkind(x) == 'num' and _jkind(y) == 'num' and x == y and json.dumps(x) != json.dumps(y):
+            return True
+    return False
+
+
+def _json_top_keys_differ(t, new):
+    """윗단 칸 이름 중 값이 다른 것 (★ 11-04 PC8-03 — 형 엄격 · 저장본 겹친 칸 = 사본 하나라도 다르면 · 한쪽에만 있는 칸 · 못 읽은 저장본 = 맞은편 칸
+    전부) — 이름만 (값 = 봉인)."""
+    ct = _jcopies(t) if _jkind(t) == 'obj' else {}
+    cn = new if isinstance(new, dict) else {}
+    return sorted(k for k in set(ct) | set(cn) if k not in ct or k not in cn or not all(json_same(v, cn[k]) for v in ct[k]))
 
 
 def _json_min(b):
@@ -6442,7 +6655,12 @@ def _json_min(b):
 
 def byte_diff_view(old, new):
     """저장본 바이트 (old) ↔ 다시 계산한 정규 바이트 (new · `canon_bytes`) → {'differ' · 'kinds' (BYTE_DIFF_KINDS 차례 · 여럿 가능) ·
-    'first_diff_offset' (처음 다른 바이트 · 한쪽이 앞부분이면 짧은 쪽 길이) · 'len_delta' (len(new) − len(old))} — 값 · 글 없음 (봉인).
+    'first_diff_offset' (처음 다른 바이트 · 한쪽이 앞부분이면 짧은 쪽 길이) · 'len_delta' (len(new) − len(old))} — 값 · 글은 싣지 않는다 (봉인).
+    ⚠ ★ 11-04 PC8-08 — 처음 다른 바이트 · 길이 차는 봉인 바이트에서 나온 수다 (봉인 값이 앞에서 몇 글자 같은지 · 길이가 드러날 수 있다 — 다시 판정 = 판정
+    뒤 · 보고 전용 · 봉인 = 값 · 글 한정).
+    ★ 11-04 PC8-03 · 04 · 09 — value = 형까지 엄격 (`json_same` · true ≠ 1 · null ≠ false · 겹친 칸이면 사본 하나라도 다르면 · NaN · Infinity 저장본 = 다름) ·
+    value 뒤에도 나머지 까닭을 모은다 (칸 순서 = 양쪽에 다 있는 칸끼리 · 수 꼴 = 값이 같은 자리끼리 · 꼴 = 저장본 자기 값의 정규 꼴과 대조) · 저장본을
+    끝까지 읽지 못함 (UTF-8 · JSON 아님 · 파이썬 재귀 한도를 넘는 중첩) = unreadable (예외 없음 · 값 대조 뒤 꼴 대조만 못 하면 value 와 함께).
     판정 (바이트 대조) 은 이 함수와 무관하다 — 다시 판정 보고 · 화면에 까닭만 적는다 (RINT2-E01)."""
     if old is None or new is None:
         d = (old is None) != (new is None)
@@ -6452,19 +6670,23 @@ def byte_diff_view(old, new):
     n = min(len(old), len(new))
     off = next((i for i in range(n) if old[i] != new[i]), n)
     view = {'differ': True, 'kinds': [], 'first_diff_offset': off, 'len_delta': len(new) - len(old)}
-    try:
-        v0 = json.loads(old.decode('utf-8'))
-    except (UnicodeDecodeError, ValueError):
+    t0 = _json_pairs(old)                                    # 겹친 칸 그대로 (값 대조) · 못 읽음 = unreadable (★ 11-04 PC8-09 깊은 중첩 포함 · 예외 없음)
+    if t0 is _UNREAD:
         view['kinds'] = ['unreadable']
         return view
     v1 = json.loads(new.decode('utf-8'))
-    if v0 != v1:                                             # NaN · inf 가 낀 저장본도 여기 (NaN ≠ NaN · 정규 바이트엔 없다)
-        view['kinds'] = ['value']
-        return view
     k = set()
-    if _key_seq(v0) != _key_seq(v1):
-        k.add('key_order')
-    ref = (json.dumps(v0, ensure_ascii=False, indent=1, sort_keys=False, allow_nan=False) + '\n').encode('utf-8')   # 저장본 칸 순서 · 정규 꼴
+    if not json_same(t0, v1):                                # ★ 11-04 PC8-03 형 엄격 · 겹친 칸 사본 · NaN · inf 저장본 (정규 바이트엔 없다) · 그 뒤에도 모은다 (PC8-04)
+        k.add('value')
+    try:
+        v0 = json.loads(old.decode('utf-8'))                 # 칸 순서 · 꼴 대조 (겹친 칸 = 첫 자리 · 마지막 사본)
+        if _json_order_differs(v0, v1):
+            k.add('key_order')
+        ref = (json.dumps(v0, ensure_ascii=False, indent=1, sort_keys=False) + '\n').encode('utf-8')   # 저장본 값 · 칸 순서 · 정규 꼴 (NaN 그대로)
+    except RecursionError:                                   # 값 대조 뒤 꼴 대조가 재귀 한도를 넘음 = 나머지는 읽지 못함 (★ 11-04 PC8-09 · 예외 없음)
+        k.add('unreadable')
+        view['kinds'] = [x for x in BYTE_DIFF_KINDS if x in k]
+        return view
     s = old
     if b'\r' in s:
         k.add('newline')
@@ -6483,7 +6705,7 @@ def byte_diff_view(old, new):
     body = b'\n'.join(stripped)
     if body != tr:
         k.add('whitespace' if _json_min(body) == _json_min(tr) else 'format')
-    if canon_bytes(v0) != new:                               # 값은 같은데 정규 꼴이 다르다 (수 꼴 1 ↔ 1.0 · -0.0 등)
+    if _json_numform_differs(v0, v1):                        # 같은 값 자리의 정규 꼴이 다르다 (수 꼴 1 ↔ 1.0 · -0.0 등 · ★ 11-04 PC8-04 값이 다른 자리 빼고)
         k.add('format')
     if not k:                                                # 남은 꼴 (설명 못 함) — 비우지 않는다
         k.add('format')
@@ -6499,24 +6721,43 @@ def verdict_grade_view(p):
             'sentence_allowed': p.get('sentence_allowed'), 'stop_code': (st or {}).get('code')}
 
 
+#: 등급 칸의 원천 칸 (`verdict_grade_view` · stop 은 그 code)
+_GRADE_KEYS = ('verdict', 'state', 'flags', 'blocking_flags', 'sentence_allowed')
+
+
+def _grade_differ(t, g1):
+    """저장본 판정 JSON (값 나무 · 겹친 칸 그대로) ↔ 다시 계산 등급 칸 (g1) → 등급이 다른가 (★ 11-04 PC8-03 — 형 엄격 · 겹친 칸 = 사본 하나라도 다르면 ·
+    없는 칸 = null · `verdict_grade_view` 와 같은 칸)."""
+    c = _jcopies(t) if _jkind(t) == 'obj' else {}
+    for f in _GRADE_KEYS:
+        if not all(json_same(v, g1.get(f)) for v in c.get(f, [None])):
+            return True
+    for st in c.get('stop', [None]):
+        codes = _jcopies(st).get('code', [None]) if _jkind(st) == 'obj' else [None]
+        if not all(json_same(x, g1.get('stop_code')) for x in codes):
+            return True
+    return False
+
+
 def reverify_report(vdir, pub0, pub, old_res, res, same, lin, old_pub=None, new_pub=None, new_res=None):
     """다시 판정 보고 (REVERIFY_SCHEMA) — 결과 JSON 은 칸 이름만 (값 = 봉인 · 화면 · 보고에 σ 없음).  ★ 11-03 밤 (Q5 · RINT2-E01) 두 JSON 의
-    바이트 칸 (`byte_diff_view` — 다름 · 까닭 · 처음 다른 바이트 · 길이 차) · old_pub · new_pub · new_res = 대조한 그 바이트 (판정 동작 무관)."""
-    try:
-        r0 = json.loads(old_res.decode('utf-8')) if old_res is not None else None
-    except (UnicodeDecodeError, ValueError):
-        r0 = None
+    바이트 칸 (`byte_diff_view` — 다름 · 까닭 · 처음 다른 바이트 · 길이 차) · old_pub · new_pub · new_res = 대조한 그 바이트 (판정 동작 무관).
+    ★ 11-04 PC8-03 · 09 — 값 칸 (results_differ · results_keys_differ · grade_differ · public_keys_differ) = 형 엄격 (`json_same` · true ≠ 1) · 저장본 겹친 칸 =
+    사본 하나라도 다르면 다름 · 한쪽에만 있는 칸 = 다름 · 다시 계산 쪽 = 정규 JSON 으로 한 번 돌린 값 · 못 읽은 저장본 (깊은 중첩 포함) = 다름 (예외 없음 ·
+    옛 = 파이썬 == · true == 1 → 값 같음 · 바이트 까닭 format 하나)."""
+    t_res = _json_pairs(old_res) if old_res is not None else None
     r1 = json.loads(canon_bytes(res).decode('utf-8')) if res is not None else None
-    rkeys = sorted(k for k in set(r0 or {}) | set(r1 or {}) if (r0 or {}).get(k) != (r1 or {}).get(k)) \
-        if isinstance(r0, dict) or isinstance(r1, dict) else []
+    rkeys = _json_top_keys_differ(t_res, r1) if (_jkind(t_res) == 'obj' or isinstance(r1, dict)) else []
     env0 = (read_summary(vdir, VERDICT_ENV_FILE)[0] or {}).get('env')
     env1 = env_record()
-    g0, g1 = verdict_grade_view(pub0), verdict_grade_view(pub)
     pc = _clean(pub)
+    pcj = json.loads(canon_bytes(pc).decode('utf-8'))
+    t_pub = _json_pairs(old_pub) if old_pub is not None else pub0
+    g0, g1 = verdict_grade_view(pub0), verdict_grade_view(pcj)
     return {'schema': REVERIFY_SCHEMA, 'verdict_dir': str(Path(vdir).resolve()), 'result': 'REVERIFY_SAME' if same else 'REVERIFY_DIFF',
-            'original': g0, 'recomputed': g1, 'grade_differ': g0 != g1,
-            'public_keys_differ': sorted(k for k in set(pc) | set(pub0) if pc.get(k) != pub0.get(k)),
-            'results_differ': (old_res is None) != (res is None) or (r0 != r1), 'results_keys_differ': rkeys,
+            'original': g0, 'recomputed': g1, 'grade_differ': _grade_differ(t_pub, g1),
+            'public_keys_differ': _json_top_keys_differ(t_pub, pcj),
+            'results_differ': (old_res is None) != (res is None) or not json_same(t_res, r1), 'results_keys_differ': rkeys,
             'public_bytes': (byte_diff_view(old_pub, new_pub if new_pub is not None else canon_bytes(pc)) if old_pub is not None else None),
             'results_bytes': byte_diff_view(old_res, new_res if new_res is not None else (canon_bytes(res) if res is not None else None)),
             'env_original': env0, 'env_now': env1, 'env_fields_differ': (_env_diff(env0, env1) if env0 is not None else None),
@@ -6589,8 +6830,11 @@ def reverify(vdir, contract, root, out=None):
     try:
         old_pub = (vdir / 'verdict.json').read_bytes()
         pub0 = json.loads(old_pub.decode('utf-8'))
-    except (OSError, UnicodeDecodeError, ValueError) as e:
+    except (OSError, UnicodeDecodeError, ValueError, RecursionError) as e:   # ★ 11-04 PC8-09 — 깊은 중첩 = 같은 사유 한 줄 (옛 = traceback)
         print(f'REVERIFY_DIFF — {vdir / "verdict.json"} 를 못 읽는다 ({type(e).__name__})')
+        return 1
+    if not isinstance(pub0, dict):                           # ★ 11-04 PC8-09 — 판정 JSON 이 객체가 아님 (옛 = AttributeError traceback)
+        print(f'REVERIFY_DIFF — {vdir / "verdict.json"} 가 판정 JSON 객체가 아니다 ({type(pub0).__name__})')
         return 1
     rp = vdir / 'verdict_results.json'
     old_res = rp.read_bytes() if rp.exists() else None
@@ -6614,7 +6858,7 @@ def reverify(vdir, contract, root, out=None):
         if out is not None:
             print(f'다시 판정 보고 → {Path(out) / REVERIFY_REPORT}')
         return 0
-    keys = sorted(k for k in set(pub) | set(pub0) if _clean(pub).get(k) != pub0.get(k))
+    keys = rep['public_keys_differ']                         # ★ 11-04 PC8-03 — 보고와 같은 형 엄격 대조 (옛 = 파이썬 == 따로)
     print(f'REVERIFY_DIFF — 다시 계산한 판정이 저장본과 다르다 (공개 칸 {keys} · 결과 {"같음" if new_res == old_res else "다름"})'
           + (f' · 멈춤 {pub["stop"]["code"]}' if pub.get('stop') else ''))
     g0, g1 = rep['original'], rep['recomputed']
@@ -6645,16 +6889,12 @@ def recover_group(lp, me, operator=None):
     새 끝 기록의 rc 는 None 그대로 (재실행 원천의 "끝난 런" = rc 0 판정 `ResumeRunner._src_done` 을 흔들지 않는다).
     ★ 11-02 PC7-04 (사전 공격 7 회차 · 1저자 11-02 "권고대로") — 옮기는 것은 그 옛 끝 기록의 표지 · 이름이 시작 기록과 같을 때만 · 다르면 (다른 런의 끝
     기록 · 손 고침 · 부분 복사 — 옛 = 다른 런의 rc 가 원인을 정했다) 그 그룹 = 미확인: (None, 사유) — 끝 기록을 쓰지 않는다 (결과 줄 없음 · recover rc 3 ·
-    사람이 본다) · 고아 찾기 · 죽이기는 시작 기록 표지로 그대로 (아래 정리를 다 한 뒤 사유를 돌려준다)."""
+    사람이 본다) · 고아 찾기 · 죽이기는 시작 기록 표지로 그대로 (아래 정리를 다 한 뒤 사유를 돌려준다).
+    ★ 11-04 PC8-02 — 그 결합 = 한 도우미 (`group_pair` · 표지 32 hex · 끝 기록 표지 · 이름 = 시작 기록 · 이름 = 파일 이름) · 옮길 chain_end 가 없는 옛 끝
+    기록도 결합 안 되면 같은 미확인 (옛 = chain_end 를 품은 것만 보고 나머지는 덮어썼다 · 확인 True 인 다른 런의 끝 기록은 여기에 오지도 않았다 =
+    `stage_recover` 가 결합으로 고른다)."""
     nm = lp.name[:-len('.launch.json')]
-    try:
-        L = json.loads(lp.read_text(encoding='utf-8'))
-    except (OSError, UnicodeDecodeError, ValueError):
-        L = None
-    try:
-        prev = json.loads(lp.with_name(nm + '.end.json').read_text(encoding='utf-8'))
-    except (OSError, UnicodeDecodeError, ValueError):
-        prev = None
+    L, prev, bound = group_pair(lp)
     chain_end = None
     if isinstance(prev, dict) and prev.get('by') == 'chain':
         chain_end = {k: prev.get(k) for k in ('rc', 'cause', 'confirmed', 'ended_utc')}
@@ -6662,21 +6902,18 @@ def recover_group(lp, me, operator=None):
         chain_end = prev['chain_end']
     tok = (L or {}).get('token') if isinstance(L, dict) else None
     other = None
-    if chain_end is not None:                              # ★ 11-02 PC7-04 — 옛 끝 기록 표지 · 이름 = 시작 기록일 때만 chain_end 로 옮긴다
+    if isinstance(prev, dict) and not bound:               # ★ 11-02 PC7-04 · ★ 11-04 PC8-02 — 옛 끝 기록이 시작 기록에 결합될 때만 옮김 · 덮어씀 · 다르면 미확인
         lname = L.get('name') if isinstance(L, dict) else None
-        if prev.get('token') != tok or prev.get('name') != lname:
-            other = (f'옛 끝 기록 (by {prev.get("by")}) 의 표지 {str(prev.get("token"))[:12]} · 이름 {prev.get("name")!r} ≠ 시작 기록의 표지 '
-                     f'{str(tok)[:12]} · 이름 {lname!r} (다른 런의 끝 기록 · 손 고침 · 부분 복사)')
-            chain_end = None
+        other = (f'옛 끝 기록 (by {prev.get("by")}) 의 표지 {str(prev.get("token"))[:12]} · 이름 {prev.get("name")!r} ≠ 시작 기록의 표지 '
+                 f'{str(tok)[:12]} · 이름 {lname!r} (다른 런의 끝 기록 · 손 고침 · 부분 복사)')
+        chain_end = None
     confirmed, left, killed, why, op_rec, unsure = False, None, 0, None, None, None
     if not (isinstance(tok, str) and re.fullmatch(r'[0-9a-f]{32}', tok)):
         why = '시작 기록 꼴 (그룹 표지) 을 못 읽는다'
     else:
         h = L.get('host') if isinstance(L.get('host'), dict) else {}
-        same_boot = h.get('boot_id') is not None and h.get('boot_id') == me.get('boot_id')
-        same_ns = h.get('pidns') is not None and h.get('pidns') == me.get('pidns')
-        same_mid = h.get('machine_id') == me.get('machine_id')      # 다름 = 다른 환경의 표지 (보수) · 같음 = 같은 기계의 증거가 아니다 (부팅 · 이름공간이 정한다)
-        if same_boot and same_ns and same_mid:
+        seen, what = host_seen(h, me)                      # ★ 11-04 PC8-05 — 시도 시작 기록과 같은 함수
+        if seen:
             alive = chain_parent_alive(L)
             if alive is not False:
                 return None, (f'사슬 부모 (pid {L.get("chain_pid")!r}) 가 {"살아 있다" if alive else "살았는지 확인할 수 없다 (시작 기록 칸 · /proc)"} — 그 사슬이 '
@@ -6697,9 +6934,6 @@ def recover_group(lp, me, operator=None):
                 ('/proc 를 못 읽는다 · environ 을 못 읽는 그룹 원 후보' + (f' (러너 세션 · 계보 안 pid {unsure[:8]})' if unsure else ''))
                 if left is None else '표지 프로세스가 대기 상한 안에 남았다')
         else:
-            what = ' · '.join(x for x, bad in (('다른 부팅 (boot_id · 모름)', not same_boot), ('다른 pid 이름공간 (모름)', not same_ns),
-                                                ('machine_id 다름', not same_mid))
-                              if bad)
             if operator is not None:
                 confirmed, left = True, []
                 why = f'운영자 확인 — {operator["why"]} (여기서 볼 수 없는 그룹: {what})'
@@ -6735,7 +6969,10 @@ def stage_recover(a):
     시도 폴더 아래 `groups/*.launch.json` 중 끝 기록이 없거나 미확인인 것마다 그룹 종료를 확인한다 (`recover_group`) → 끝 기록 (by recover) · 하나라도
     미확인 = rc 3 (다음 시도를 시작 · 채택하기 전에 사람이 본다 · "부모 사망 + 지금 표지 없음" 을 종료 증거로 쓰지 않는다).  ★ 10-28 밤 PC5-03 — 사슬 부모가
     산 그룹 = 건드리지 않음 (rc 3) · PC5-04 — 운영자 확인 표지 (`--operator-confirm <시도> --operator-why <사유>` · --ledger 와) = 그 시도 폴더의 여기서 볼 수
-    없는 그룹만 확인으로 (끝 기록 operator 칸) · 그 시도 폴더가 --out 아래 없으면 아무것도 하지 않고 rc 3 · 표지를 쓸 그룹이 없으면 rc 3."""
+    없는 그룹만 확인으로 (끝 기록 operator 칸) · 그 시도 폴더가 --out 아래 없으면 아무것도 하지 않고 rc 3 · 표지를 쓸 그룹이 없으면 rc 3.
+    ★ 11-04 PC8-02 — 고르는 그룹 = 끝 기록 없음 · 미확인 · 그 시작 기록에 결합 안 됨 (`group_pair` · 확인 True 인 다른 런의 끝 기록 포함 → `recover_group` 이
+    정리 뒤 미확인으로 넘긴다).  ★ 11-04 PC8-05 — 운영자 확인 표지는 그 시도 시작 기록의 여기서 볼 수 없는 · 모르는 사슬 부모에도 쓴다 (`recover_ledger` ·
+    `start_chain_problem` · 그룹 · 시작 기록 어느 쪽에도 쓰이지 않으면 rc 3)."""
     root = Path(a.out)
     me = host_ident()
     op, fo = None, None
@@ -6752,11 +6989,8 @@ def stage_recover(a):
     todo = []
     for lp in sorted(root.rglob(f'{GROUPS_DIR}/*.launch.json')):
         ep = lp.with_name(lp.name[:-len('.launch.json')] + '.end.json')
-        try:
-            e = json.loads(ep.read_text(encoding='utf-8')) if ep.exists() else None
-        except (OSError, UnicodeDecodeError, ValueError):
-            e = None
-        if not (isinstance(e, dict) and e.get('confirmed') is True):
+        _L, e, bound = group_pair(lp)
+        if not (bound and e.get('confirmed') is True):        # ★ 11-04 PC8-02 — 확인 True 여도 시작 기록에 결합 안 된 끝 기록 = 미확인
             todo.append((lp, ep))
     n_bad, n_used = 0, 0
     for lp, ep in todo:
@@ -6771,25 +7005,32 @@ def stage_recover(a):
         n_used += 1 if end.get('operator') else 0
         print(f'  recover {lp.parent.parent.name}/{end["name"]}: 종료 {"확인" if end["confirmed"] else "미확인"} · 죽인 프로세스 {end["killed"]}'
               + (f' · {end["why"]}' if end['why'] else ''))
-    if op is not None and n_used == 0:
-        print(f'recover — 운영자 확인 표지 (시도 {op["attempt"]}) 를 쓸 그룹 (여기서 볼 수 없는 · 끝 기록 없음 · 미확인) 이 그 시도 폴더에 없다 (rc 3)')
-        n_bad += 1
     print(f'recover — 그룹 기록 {len(todo)} 개 정리 · 미확인 {n_bad}' + (' (다음 시도 전에 사람이 본다)' if n_bad else ''))
     if getattr(a, 'ledger', None):
-        n_bad += recover_ledger(root, Path(a.ledger))
+        nb, nu = recover_ledger(root, Path(a.ledger), operator=(dict(op, folder=fo) if op is not None else None))
+        n_bad, n_used = n_bad + nb, n_used + nu
+    if op is not None and n_used == 0:
+        print(f'recover — 운영자 확인 표지 (시도 {op["attempt"]}) 를 쓸 그룹 · 시작 기록 사슬 부모 (여기서 볼 수 없는 · 모르는 · 끝 기록 없음 · 미확인) 가 그 '
+              f'시도 폴더에 없다 (rc 3)')
+        n_bad += 1
     return 0 if n_bad == 0 else 3
 
 
-def recover_ledger(root, repo):
+def recover_ledger(root, repo, operator=None):
     """★ 10-27 묶음 C1b (Q9 개정 5 ② · "supervisor / recovery 가 종료를 확인한 뒤 표지 · payload · 폴더 해시를 확정") — root (시도 폴더 · 또는 그 바탕)
     아래 시도 폴더마다: 원장 항목에 결과 줄이 없고 그 폴더의 그룹이 다 확인됐으면 결과 줄 (by recover · 단계 요약 있음 = 그 상태 · 거부 기록 = rejected ·
     없음 = interrupted · 원인 parent_dead) → 못 쓴 수 (미확인 · 원장 불일치).  ★ 11-02 PC7-01 (사전 공격 7 회차) — 결과 줄이 이미 있는데 이 폴더의 이름 ·
     요약 sha 가 결과 줄과 다르거나 (결과 줄 = 다른 바탕 · 다른 기계 · 손 고침의 폴더 · 옛 = 넘어감 rc 0), 시작 기록이 있는데 이 폴더의 바탕 (resolve) 이
-    시작 기록의 바탕과 다르면 (사본 · 옮긴 폴더) = 셈 (rc 3) + 사유 · 결과 줄 · 원장 무변경 (고아 그룹 찾기 · 죽이기 = `stage_recover` 그대로)."""
+    시작 기록의 바탕과 다르면 (사본 · 옮긴 폴더) = 셈 (rc 3) + 사유 · 결과 줄 · 원장 무변경 (고아 그룹 찾기 · 죽이기 = `stage_recover` 그대로).
+    ★ 11-04 PC8-05 (사전 공격 8 회차 P8-05 · P1 후보) — 결과 줄 전에 시작 기록의 사슬 부모 (`start_chain_problem`): 살아 있음 · 모름 · 여기서 볼 수 없음 =
+    셈 (rc 3) · 결과 줄 · 원장 무변경 (옛 = 미확인 그룹 기록이 없으면 — 시작 기록 뒤 첫 러너 전 · 런 사이 — 산 사슬의 시도에 결과 줄을 썼다 · 다음 시도 ·
+    재실행이 원 사슬과 함께 돌았다) · operator = {'attempt', 'why', 'folder'} (그 시도 폴더만 · 볼 수 없는 · 모르는 사슬만 덮는다 · 쓰면 원장 커밋 글에 사유)
+    → (못 쓴 수, 운영자 확인 표지를 쓴 수)."""
     root = Path(root)
     folders = [root] if read_attempt(root) is not None else [p for p in sorted(root.iterdir()) if p.is_dir() and read_attempt(p) is not None] \
         if root.is_dir() else []
-    bad = 0
+    bad, used = 0, 0
+    me = host_ident()
     for f in folders:
         a = read_attempt(f)
         n = a['n']
@@ -6819,6 +7060,12 @@ def recover_ledger(root, repo):
                 continue
             if r0 is not None:
                 continue
+            opx = operator if (operator is not None and f.resolve() == operator.get('folder')) else None
+            held, op_used = start_chain_problem(s0, me, opx)     # ★ 11-04 PC8-05 — 산 사슬의 시도 = 결과 줄 없음 (그룹 기록이 없거나 다 확인된 창도)
+            if held:
+                print(f'  recover {f.name}: {held} — 결과 줄을 쓰지 않는다 (미확인 · 다음 시도 채택을 막는다)')
+                bad += 1
+                continue
             why = attempt_groups_problem(f)
             if why:
                 print(f'  recover {f.name}: {why} — 결과 줄을 쓰지 않는다 (미확인 · 다음 시도 채택을 막는다)')
@@ -6835,13 +7082,18 @@ def recover_ledger(root, repo):
                 for nm in ('ladder_summary.json', 'predict_summary.json', UNIT_SUMMARY['unit'], UNIT_SUMMARY['point']):   # ★ 10-27 묶음 C2d — 단위 · 넘침 점
                     s = s or read_summary(f, nm)[0]
                 res = attempt_result_line(n, f, s, 'recover')
-            ledger_append(repo, res, f'rint-r attempt {n} result {res["status"]} (recover)', expect=raw)
+            msg = f'rint-r attempt {n} result {res["status"]} (recover)'
+            if op_used:                                       # ★ 11-04 PC8-05 — 운영자 확인 사유 = 원장 커밋 글 (그 결과 줄과 같은 커밋)
+                msg += f' · 운영자 확인 (시작 기록 사슬 부모 · 여기서 볼 수 없음 · 모름) — {opx["why"]}'
+            ledger_append(repo, res, msg, expect=raw)
+            used += 1 if op_used else 0
         except (Stop, OSError, ValueError) as ex:
             print_stop(ex if isinstance(ex, Stop) else Stop('ATTEMPT_LEDGER_MISMATCH', f'{f.name}: {type(ex).__name__}: {ex}'))
             bad += 1
             continue
-        print(f'  recover {f.name}: 결과 줄 {res["status"]} · 결과 {res["side"]} · 원인 {res["cause"]} · 재실행 자격 {res["resume_ok"]}')
-    return bad
+        print(f'  recover {f.name}: 결과 줄 {res["status"]} · 결과 {res["side"]} · 원인 {res["cause"]} · 재실행 자격 {res["resume_ok"]}'
+              + (f' · 운영자 확인 (시작 기록 사슬 부모) — {opx["why"]}' if op_used else ''))
+    return bad, used
 
 
 def stage_ledger(a):
@@ -6990,7 +7242,8 @@ def main(argv=None, contract=None):
     #  ★ 10-28 밤 PC5-04 (1저자 Q3) — 다른 부팅 · 다른 pid 이름공간 · 다른 machine_id 의 그룹 = 기본 미확인 · 운영자 확인 표지 (시도 · 사유)
     ap.add_argument('--operator-confirm', type=int, default=None, help='recover --ledger — 운영자 확인 표지: 이 시도 번호 폴더의 그룹 중 여기서 볼 수 없는 그룹 '
                                                                        '(다른 부팅 · pid 이름공간 · machine_id) 이 끝났음을 운영자가 확인했다 (--operator-why 와 · '
-                                                                       '끝 기록 operator 칸 = 사유 · 시각 · 호스트)')
+                                                                       '끝 기록 operator 칸 = 사유 · 시각 · 호스트) · ★ 11-04 PC8-05 그 시도 시작 기록의 '
+                                                                       '여기서 볼 수 없는 · 모르는 (옛 판) 사슬 부모도 (사유 = 원장 커밋 글)')
     ap.add_argument('--operator-why', default=None, help='recover --operator-confirm — 확인 사유 (빈 글 · 줄바꿈 금지 · 300 자 안 · 예 "kgy 재부팅 확인 · '
                                                          'uptime 2 h · 사슬 프로세스 없음")')
     #  ★ 10-27 묶음 C2d (Q9 설계 §3-1 · §3-2 · author 10-27 approved bundle C) — 12 단위 · 넘침 점 · 합치기 (이름 = 구현 때 정하는 꼴)
