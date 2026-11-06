@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 242편 · 생성 2026-11-03
+> digest 243편 · 생성 2026-11-06
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -149,7 +149,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (49편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (50편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -195,6 +195,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `sangros2019_dem_calendering_lib_electrode` | LIB 전극 calendering(압연)을 DEM으로 — 단일 NMC 입자 탄소성 접촉모델(나노압입 보정) + 바인더 bond 모델 + ~17% 점탄성 회복 — Sangrós Giménez (Powder Technology 2019) | DEM (in-house, 나노압입 실험 보정 + calendering 실측 검증) | 2026-06-26 | 🖼 14 |
 | `sangros2020_lib_electrode_dem_mech_elec_ionic` | LIB 전극의 역학·전기·이온 거동을 DEM으로 — calendering + 바인더 bond 모델 + 삼중 전달 — Sangrós Giménez (Energy Technology 2020) | DEM (+ analytic homogenization, exp 검증) | 2026-06-26 | 🖼 12 |
 | `sankar2026_fiber_scale_dem_carbon_felt_manufacturing` | 섬유를 한 가닥씩 DEM 으로 — 산화 PAN 탄소펠트 전구체의 웹 형성 → 웹 적층 → 니들펀칭 → 캘린더링 을 결합구 사슬(LAMMPS bpm/rotational)로 잇고 기공목 분포 · 배향텐서 A_zz · 투과 경로 · 유효확산을 잰다 — Franco 그룹의 첫 섬유-해상 제조 DEM — Sankar · Valis | DEM (LAMMPS: bpm/rotational 결합구 사슬 섬유 + granular Hertz 법선 ·  | 2026-09-27 | 🖼 18 |
+| `schmitt2026_chemomech_stability_dry_cathode_separator_sheets` | PTFE 건식 (dry-process) 양극 · 분리막 시트 vs 냉간압축 펠릿 — 시트 양극이 첫 방전 · CE · 율속에서 앞서고 계면 분해 (ToF-SIMS PO₃⁻ · SO₃⁻ · DEMS O₂) 는 더 크다 · 100 사이클 유지율은 여섯 시트 구성 중 셋만 펠릿보다 높다 (남은 용량은 다섯 [판독]) → 저자  | exp (PTFE 건식 시트 공정 · 분리막 binder 0–1 wt% EIS · 양극 DC 분극 σ_ion | 2026-11-06 | 🖼 9 |
 | `so2021_dem_mold_pressure_assb_coldpress` | 몰드압력이 ASSB 압밀·이온전도도에 미치는 영향 — 소성변형 포함 3D DEM cold-press 모델 — So (J. Power Sources 2021) | DEM | 2026-06-23 | 🖼 9 |
 | `sun2026_dem_extrusion_recirculation_dry_electrode` | 트윈스크류 압출(extrusion) + 재순환(recirculation) 무용매 공정을 DEM 으로 — 3D 프린팅용 필라멘트 미세구조 — Sun / Vigneaux / Franco (Batteries & Supercaps 2026) | DEM (LIGGGHTS: Hertz + SJKR 점착 + CDT 구름마찰; 트윈스크류 압출기 STL + 재 | 2026-09-19 | 🖼 10 |
 | `wang2026_dryprocess_thick_cathode_failure_ncm94` | 건식 후막 양극(NCM94 80 wt%, 6.5 mAh cm⁻²)의 실패 기전 — in-situ 압력 + 3전극 EIS/DRT — Wang & Wang (J. Mater. Chem. A 2026) | exp (실험 전용 — 시뮬레이션 0) | 2026-08-19 | 🖼 26 |
