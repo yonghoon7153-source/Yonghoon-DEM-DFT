@@ -1,0 +1,60 @@
+{
+ "A_PC7_01": {
+  "seen_mark": true,
+  "group_alive": true,
+  "a_same_out_after_rm": [
+   3,
+   0,
+   true
+  ],
+  "b_other_out": [
+   3,
+   0,
+   true
+  ],
+  "c_stale_clone_other_out": [
+   0,
+   14,
+   "CALIBRATED",
+   [
+    "header",
+    "entry",
+    "start",
+    "result"
+   ]
+  ]
+ },
+ "B_PC7_03": {
+  "recover_chain_end_exception": [
+   "chain_exception",
+   false
+  ],
+  "by_chain_exception_unconfirmed": [
+   "chain_exception",
+   false
+  ],
+  "recover_chain_end_exception_oomlog": [
+   "chain_exception",
+   false
+  ]
+ },
+ "C_PC7_05": {
+  "held": null,
+  "chain_end": {
+   "rc": 1,
+   "cause": null,
+   "confirmed": false,
+   "ended_utc": "x"
+  },
+  "no_summary_cause": [
+   "runner_rc",
+   true
+  ],
+  "summary_cause": "group_unconfirmed"
+ },
+ "D_PC7_04": {
+  "end_written": false,
+  "held_mentions_token": true,
+  "end_file_unchanged": true
+ }
+}

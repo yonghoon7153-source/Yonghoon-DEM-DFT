@@ -1,0 +1,393 @@
+{
+ "scope": "우리 트리 재현 — Codex 회차 ② 탐침을 고치지 않고 우리 핀 사본 (git blob 617) 에서 다시 돌린 결과와 Codex 기록의 잎 대조",
+ "json_comparisons": [
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/science_review/analytic_check.json",
+   "ours_output": "science_review/analytic_check.ours.log",
+   "ours_sha256": "3646c86d93e712306488999a93eedd8e0db63438bd6ef4c3591c3de5e1b723d1",
+   "leaves_codex": 74,
+   "leaves_ours": 74,
+   "same": 64,
+   "numeric_only": 7,
+   "max_rel_numeric": 0.11271165024008094,
+   "other": [
+    {
+     "path": "/environment/numpy",
+     "category": "environment_version"
+    },
+    {
+     "path": "/environment/python",
+     "category": "environment_version"
+    },
+    {
+     "path": "/environment/scipy",
+     "category": "environment_version"
+    }
+   ],
+   "only_codex": [],
+   "only_ours": []
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/graph_review/graph_core_results.json",
+   "ours_output": "graph_review/graph_core_results.json",
+   "ours_sha256": "3d8b5ff78910d00cfb3a93d7901c1d8cdb986c25e8ddc15d327523773ec53231",
+   "leaves_codex": 53,
+   "leaves_ours": 53,
+   "same": 53,
+   "numeric_only": 0,
+   "max_rel_numeric": 0.0,
+   "other": [],
+   "only_codex": [],
+   "only_ours": []
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/graph_review/actual_binding_results.json",
+   "ours_output": "graph_review/actual_binding_results.json",
+   "ours_sha256": "00506cd2fbc95684f4d4ac6e4097925b5b4ccea105d694424fa77e81465da2d1",
+   "leaves_codex": 58,
+   "leaves_ours": 58,
+   "same": 50,
+   "numeric_only": 8,
+   "max_rel_numeric": 2.22044604925045e-16,
+   "other": [],
+   "only_codex": [],
+   "only_ours": []
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/graph_review/actual_assemblies.json",
+   "ours_output": "graph_review/actual_assemblies.json",
+   "ours_sha256": "408d79c2a2770e8260278766c883525520d42556c666dd33c4c3ee88124bf001",
+   "leaves_codex": 1124,
+   "leaves_ours": 1124,
+   "same": 1124,
+   "numeric_only": 0,
+   "max_rel_numeric": 0.0,
+   "other": [],
+   "only_codex": [],
+   "only_ours": []
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/graph_review/honest_manifest.json",
+   "ours_output": "graph_review/honest_manifest.json",
+   "ours_sha256": "2e55258d6a2b13378375f64d0c6be3c52c6915de8365bd6ebf943d13d1c9aaa8",
+   "leaves_codex": 307,
+   "leaves_ours": 307,
+   "same": 290,
+   "numeric_only": 17,
+   "max_rel_numeric": 0.02913209930457016,
+   "other": [],
+   "only_codex": [],
+   "only_ours": []
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/graph_review/swap_manifest.json",
+   "ours_output": "graph_review/swap_manifest.json",
+   "ours_sha256": "7d9cf8181663b85b17f89dbd27f4fa9004fe1ebf149d3b400c9d1f465fe70383",
+   "leaves_codex": 307,
+   "leaves_ours": 307,
+   "same": 289,
+   "numeric_only": 18,
+   "max_rel_numeric": 0.02913209930457016,
+   "other": [],
+   "only_codex": [],
+   "only_ours": []
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/graph_review/no_source_manifest.json",
+   "ours_output": "graph_review/no_source_manifest.json",
+   "ours_sha256": "2e55258d6a2b13378375f64d0c6be3c52c6915de8365bd6ebf943d13d1c9aaa8",
+   "leaves_codex": 307,
+   "leaves_ours": 307,
+   "same": 290,
+   "numeric_only": 17,
+   "max_rel_numeric": 0.02913209930457016,
+   "other": [],
+   "only_codex": [],
+   "only_ours": []
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/graph_review/forged_manifest.json",
+   "ours_output": "graph_review/forged_manifest.json",
+   "ours_sha256": "43a2bf77f088e786ea3e45b0128627206ab53b74666ecfb608d8c3a07d2ba232",
+   "leaves_codex": 307,
+   "leaves_ours": 307,
+   "same": 289,
+   "numeric_only": 18,
+   "max_rel_numeric": 0.02913209930457016,
+   "other": [],
+   "only_codex": [],
+   "only_ours": []
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/graph_review/source_binding_results.json",
+   "ours_output": "graph_review/source_binding_results.json",
+   "ours_sha256": "e825128f2c1b506f0960cfd539a6b10a2b53cc696ba12517a9cbdd02d0e0b68b",
+   "leaves_codex": 18,
+   "leaves_ours": 18,
+   "same": 15,
+   "numeric_only": 0,
+   "max_rel_numeric": 0.0,
+   "other": [
+    {
+     "path": "/code/env_numpy_changed[0]",
+     "category": "environment_version"
+    },
+    {
+     "path": "/code/head_short",
+     "category": "scratch_fixture_git_head"
+    },
+    {
+     "path": "/code/untracked",
+     "category": "scratch_fixture_git_head"
+    }
+   ],
+   "only_codex": [],
+   "only_ours": []
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/runtime_review/results.json",
+   "ours_output": "runtime_review/results.json",
+   "ours_sha256": "448428176499453280ba47041f77d13201c4cd31954c8f544995c5f1f60d5083",
+   "leaves_codex": 1409,
+   "leaves_ours": 1409,
+   "same": 1405,
+   "numeric_only": 0,
+   "max_rel_numeric": 0.0,
+   "other": [
+    {
+     "path": "/environment/platform",
+     "category": "environment_version"
+    },
+    {
+     "path": "/environment/python",
+     "category": "environment_version"
+    }
+   ],
+   "only_codex": [
+    "/source_sha256/scripts\\rint_first_result.py",
+    "/source_sha256/scripts\\rint_r_chain.py"
+   ],
+   "only_ours": [
+    "/source_sha256/scripts/rint_first_result.py",
+    "/source_sha256/scripts/rint_r_chain.py"
+   ]
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/runtime_review/residual_rc.json",
+   "ours_output": "runtime_review/residual_rc.json",
+   "ours_sha256": "5ee250ced990978a4ed5682559e6360d703f8aa30a601fb2cf7ec8247379233f",
+   "leaves_codex": 66,
+   "leaves_ours": 66,
+   "same": 66,
+   "numeric_only": 0,
+   "max_rel_numeric": 0.0,
+   "other": [],
+   "only_codex": [],
+   "only_ours": []
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/runtime_review/residual_rc_integration.json",
+   "ours_output": "runtime_review/residual_rc_integration.json",
+   "ours_sha256": "c1361c3600e766edb4a6d1fa7ffa5f7b1ab8e0ccefaa7ed787313c6abc86bb2c",
+   "leaves_codex": 55,
+   "leaves_ours": 55,
+   "same": 43,
+   "numeric_only": 0,
+   "max_rel_numeric": 0.0,
+   "other": [
+    {
+     "path": "[0]/attempt",
+     "category": "scratch_path"
+    },
+    {
+     "path": "[0]/ledger",
+     "category": "scratch_path"
+    },
+    {
+     "path": "[0]/result/folder_sha256",
+     "category": "scratch_time_or_git_commit"
+    },
+    {
+     "path": "[0]/result/utc",
+     "category": "scratch_time_or_git_commit"
+    },
+    {
+     "path": "[1]/attempt",
+     "category": "scratch_path"
+    },
+    {
+     "path": "[1]/ledger",
+     "category": "scratch_path"
+    },
+    {
+     "path": "[1]/result/folder_sha256",
+     "category": "scratch_time_or_git_commit"
+    },
+    {
+     "path": "[1]/result/utc",
+     "category": "scratch_time_or_git_commit"
+    },
+    {
+     "path": "[2]/attempt",
+     "category": "scratch_path"
+    },
+    {
+     "path": "[2]/ledger",
+     "category": "scratch_path"
+    },
+    {
+     "path": "[2]/result/folder_sha256",
+     "category": "scratch_time_or_git_commit"
+    },
+    {
+     "path": "[2]/result/utc",
+     "category": "scratch_time_or_git_commit"
+    }
+   ],
+   "only_codex": [],
+   "only_ours": []
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/runtime_review/candidate_fix_results.json",
+   "ours_output": "runtime_review/candidate_fix_results.json",
+   "ours_sha256": "43e1ba5859e66bc19f24198b7a760a9177dc5e0fb924ee2673377c87b0dda5a0",
+   "leaves_codex": 42,
+   "leaves_ours": 42,
+   "same": 42,
+   "numeric_only": 0,
+   "max_rel_numeric": 0.0,
+   "other": [],
+   "only_codex": [],
+   "only_ours": []
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/runtime_review/self137_results.json",
+   "ours_output": "runtime_review/self137_results.json",
+   "ours_sha256": "6e774745fa09e9d5e3ac1ca729b4dab340689910214b4c1c49f2fb6320470db2",
+   "leaves_codex": 12,
+   "leaves_ours": 12,
+   "same": 12,
+   "numeric_only": 0,
+   "max_rel_numeric": 0.0,
+   "other": [],
+   "only_codex": [],
+   "only_ours": []
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/root_review/reverify_results.json",
+   "ours_output": "root_review/reverify_results.json",
+   "ours_sha256": "49d22804bad2a106458d9750021f7c7984867e504c3c1c7801573838ef5f72cc",
+   "leaves_codex": 4716,
+   "leaves_ours": 4715,
+   "same": 4710,
+   "numeric_only": 0,
+   "max_rel_numeric": 0.0,
+   "other": [
+    {
+     "path": "/checks[11]/details/stdout",
+     "category": "report_kinds_deep_nesting_python_version"
+    },
+    {
+     "path": "/checks[12]/details/stdout",
+     "category": "scratch_path"
+    },
+    {
+     "path": "/checks[13]/details/stdout",
+     "category": "scratch_path"
+    },
+    {
+     "path": "/checks[14]/details/stdout",
+     "category": "scratch_path"
+    },
+    {
+     "path": "/python",
+     "category": "environment_version"
+    }
+   ],
+   "only_codex": [
+    "/checks[29]/details/results_bytes/kinds[1]"
+   ],
+   "only_ours": []
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/science_review/geometry_mutation_check.json",
+   "ours_output": "science_review/geometry_mutation_check.ours.log",
+   "ours_sha256": "0d122aae0e1402a9dec4fed3365d2318149c563ced8ed5168682c907b1e1d5dc",
+   "leaves_codex": 32,
+   "leaves_ours": 32,
+   "same": 27,
+   "numeric_only": 0,
+   "max_rel_numeric": 0.0,
+   "other": [
+    {
+     "path": "[0]/failures[11]",
+     "category": "failure_message_numeric_tail"
+    },
+    {
+     "path": "[0]/failures[14]",
+     "category": "failure_message_numeric_tail"
+    },
+    {
+     "path": "[0]/failures[2]",
+     "category": "failure_message_numeric_tail"
+    },
+    {
+     "path": "[0]/failures[5]",
+     "category": "failure_message_numeric_tail"
+    },
+    {
+     "path": "[0]/failures[8]",
+     "category": "failure_message_numeric_tail"
+    }
+   ],
+   "only_codex": [],
+   "only_ours": []
+  }
+ ],
+ "log_comparisons": [
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/root_review/first_result_utf8.log",
+   "ours_output": "root_review/first_result.ours.log",
+   "ours_sha256": "1790b12e6be9697f3cd8d852b8b2251eb7ad8c7b71844debc8ba457a95a8bcb1",
+   "same_after_crlf_to_lf": true,
+   "lines_codex": 11,
+   "lines_ours": 11,
+   "differing_lines": 0,
+   "pass_fail_labels_same": true,
+   "n_pass_fail_lines": 9
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/science_review/M3_start.log",
+   "ours_output": "science_review/M3_start.log",
+   "ours_sha256": "e31dca77d1d12ca4013060adc2322d6616092d48bcc699592c73aed0557b3a39",
+   "same_after_crlf_to_lf": false,
+   "lines_codex": 38,
+   "lines_ours": 38,
+   "differing_lines": 5,
+   "pass_fail_labels_same": true,
+   "n_pass_fail_lines": 35
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/science_review/B01_quarter.log",
+   "ours_output": "science_review/B01_quarter.log",
+   "ours_sha256": "596ce21311acc877a673f06af166bd62f48d4df5cc3adee94cad26c27b4dbfd0",
+   "same_after_crlf_to_lf": true,
+   "lines_codex": 38,
+   "lines_ours": 38,
+   "differing_lines": 0,
+   "pass_fail_labels_same": true,
+   "n_pass_fail_lines": 35
+  },
+  {
+   "codex": "docs/reviews/codex_rint2_rr_round2_evidence_20261105/science_review/ban8_reviewer_exact_deps.log",
+   "ours_output": "science_review/ban8_unmutated.ours.log",
+   "ours_sha256": "683eca0f065ae44a708561ac007dd85b4b497bef82a151852cf6c4c46cffe73f",
+   "same_after_crlf_to_lf": true,
+   "lines_codex": 37,
+   "lines_ours": 37,
+   "differing_lines": 0,
+   "pass_fail_labels_same": true,
+   "n_pass_fail_lines": 34
+  }
+ ]
+}

@@ -1,0 +1,204 @@
+=== run_s127.sh 2026-11-04 14:14:11 KST · runner_md5=6e4b12b8cd296ec7b00376de07cf46b4 · root@kserver116-27 ===
+VERSIONS python=3.10.21 numpy=2.2.6 scipy=1.15.3 taichi=(1, 7, 3)
+TAICHI [Taichi] version 1.7.3, llvm 15.0.4, commit 5ec301be, linux, python 3.10.21
+HEADER ok · SEAL_COMMIT 7f44d6534 · HEAD 7f44d6534d864f7be2f3310fa55d213b65cc707d · md5 c31f0512021d416702e162709c6f4400 · sha256 넷 같음 · 출력 8 없음 · STOP 없음 · 기한 전 · pgrep 없음 · GPU total=49140 free=48539
+§12-7 시작 2026-11-04 14:14:11 KST
+PRE confirm_fb ok 2026-11-04 14:14:11 KST · gpu total=49140 free=48539 · pgrep 없음 · STOP 없음
+RUN confirm_fb 2026-11-04 14:14:11 KST cwd=/root/fam-wt
+ARGV confirm_fb /root/fam-mpm310/bin/python -u scripts/mpm3d_compaction.py --am-scaffold docs/data/real14_am_scaffold.csv --se-dump docs/data/real14_se_scaffold.csv --n-grid 384 --arch cuda --gpu-mem 28 --protocol servo --floor-porosity 0 --compact-to 0 --stop-freeze-probe --platen-mach 0.01 --e-se 1.53 --nu-se 0.49 --sigma-y 0.30 --target-gpa 0.30 --readout wallP --frames 400 --sub 40 --seed 3 --am-load-frac 0.8085 --save-metrics /root/fam_s127/fam_s127_confirm_fb.json
+HB 2026-11-04 14:24:11 KST confirm_fb frame_lines=15
+HB 2026-11-04 14:34:12 KST confirm_fb frame_lines=31
+HB 2026-11-04 14:44:12 KST confirm_fb frame_lines=46
+END confirm_fb rc=0 2026-11-04 14:14:11 KST → 2026-11-04 14:50:12 KST (2161 s) frame_lines=55 json=yes (73 fields) status=converged
+CONFIRM_GATE_PASS
+PRE corner_fb ok 2026-11-04 14:50:22 KST · gpu total=49140 free=48539 · pgrep 없음 · STOP 없음
+RUN corner_fb 2026-11-04 14:50:22 KST cwd=/root/fam-wt
+ARGV corner_fb /root/fam-mpm310/bin/python -u scripts/mpm3d_compaction.py --am-scaffold docs/data/case15_corner_20261001/case15_am_scaffold.csv --se-dump docs/data/case15_corner_20261001/case15_se_scaffold.csv --lateral-box 0.1 --n-grid 768 --arch cuda --gpu-mem 28 --protocol servo --floor-porosity 0 --compact-to 0 --stop-freeze-probe --platen-mach 0.0099999 --e-se 1.53 --nu-se 0.49 --sigma-y 0.30 --target-gpa 0.30 --readout wallP --frames 3000 --sub 40 --seed 3 --am-load-frac 0.9007 --save-metrics /root/fam_s127/fam_s127_corner_fb.json
+HB 2026-11-04 15:00:22 KST corner_fb frame_lines=8
+HB 2026-11-04 15:10:22 KST corner_fb frame_lines=16
+HB 2026-11-04 15:20:22 KST corner_fb frame_lines=25
+HB 2026-11-04 15:30:22 KST corner_fb frame_lines=33
+HB 2026-11-04 15:40:22 KST corner_fb frame_lines=41
+HB 2026-11-04 15:50:22 KST corner_fb frame_lines=49
+ETA corner_fb frame_lines 8→49 Δt=3000s 1줄=5프레임 remaining_frames=8759 s_per_frame=14.634 projected_end_if_all_use_3000=2026-11-06 03:26:43 KST deadline=2026-11-21 12:00 KST OK
+HB 2026-11-04 16:00:22 KST corner_fb frame_lines=57
+HB 2026-11-04 16:10:22 KST corner_fb frame_lines=66
+HB 2026-11-04 16:20:22 KST corner_fb frame_lines=74
+HB 2026-11-04 16:30:22 KST corner_fb frame_lines=82
+HB 2026-11-04 16:40:23 KST corner_fb frame_lines=90
+HB 2026-11-04 16:50:23 KST corner_fb frame_lines=98
+HB 2026-11-04 17:00:23 KST corner_fb frame_lines=106
+HB 2026-11-04 17:10:23 KST corner_fb frame_lines=114
+HB 2026-11-04 17:20:23 KST corner_fb frame_lines=122
+HB 2026-11-04 17:30:23 KST corner_fb frame_lines=130
+HB 2026-11-04 17:40:23 KST corner_fb frame_lines=138
+END corner_fb rc=0 2026-11-04 14:50:22 KST → 2026-11-04 17:50:23 KST (10801 s) frame_lines=146 json=yes (73 fields) status=converged
+PRE corner_fa ok 2026-11-04 17:50:33 KST · gpu total=49140 free=48539 · pgrep 없음 · STOP 없음
+RUN corner_fa 2026-11-04 17:50:33 KST cwd=/root/fam-wt
+ARGV corner_fa /root/fam-mpm310/bin/python -u scripts/mpm3d_compaction.py --am-scaffold docs/data/case15_corner_20261001/case15_am_scaffold.csv --se-dump docs/data/case15_corner_20261001/case15_se_scaffold.csv --lateral-box 0.1 --n-grid 768 --arch cuda --gpu-mem 28 --protocol servo --floor-porosity 0 --compact-to 0 --stop-freeze-probe --platen-mach 0.0099999 --e-se 1.53 --nu-se 0.49 --sigma-y 0.30 --target-gpa 0.30 --readout wallP --frames 3000 --sub 40 --seed 3 --am-load-frac 0.8240 --save-metrics /root/fam_s127/fam_s127_corner_fa.json
+HB 2026-11-04 18:00:33 KST corner_fa frame_lines=8
+HB 2026-11-04 18:10:33 KST corner_fa frame_lines=16
+HB 2026-11-04 18:20:33 KST corner_fa frame_lines=25
+HB 2026-11-04 18:30:33 KST corner_fa frame_lines=33
+HB 2026-11-04 18:40:34 KST corner_fa frame_lines=41
+HB 2026-11-04 18:50:34 KST corner_fa frame_lines=49
+HB 2026-11-04 19:00:34 KST corner_fa frame_lines=57
+HB 2026-11-04 19:10:34 KST corner_fa frame_lines=66
+HB 2026-11-04 19:20:34 KST corner_fa frame_lines=74
+HB 2026-11-04 19:30:34 KST corner_fa frame_lines=82
+HB 2026-11-04 19:40:34 KST corner_fa frame_lines=90
+HB 2026-11-04 19:50:34 KST corner_fa frame_lines=98
+HB 2026-11-04 20:00:34 KST corner_fa frame_lines=106
+HB 2026-11-04 20:10:34 KST corner_fa frame_lines=114
+HB 2026-11-04 20:20:34 KST corner_fa frame_lines=122
+HB 2026-11-04 20:30:34 KST corner_fa frame_lines=130
+HB 2026-11-04 20:40:34 KST corner_fa frame_lines=138
+HB 2026-11-04 20:50:34 KST corner_fa frame_lines=146
+HB 2026-11-04 21:00:34 KST corner_fa frame_lines=154
+HB 2026-11-04 21:10:35 KST corner_fa frame_lines=162
+HB 2026-11-04 21:20:35 KST corner_fa frame_lines=170
+HB 2026-11-04 21:30:35 KST corner_fa frame_lines=178
+HB 2026-11-04 21:40:35 KST corner_fa frame_lines=185
+HB 2026-11-04 21:50:35 KST corner_fa frame_lines=193
+HB 2026-11-04 22:00:35 KST corner_fa frame_lines=201
+HB 2026-11-04 22:10:35 KST corner_fa frame_lines=209
+HB 2026-11-04 22:20:35 KST corner_fa frame_lines=217
+HB 2026-11-04 22:30:35 KST corner_fa frame_lines=225
+HB 2026-11-04 22:40:35 KST corner_fa frame_lines=233
+HB 2026-11-04 22:50:35 KST corner_fa frame_lines=241
+HB 2026-11-04 23:00:35 KST corner_fa frame_lines=249
+HB 2026-11-04 23:10:35 KST corner_fa frame_lines=257
+HB 2026-11-04 23:20:35 KST corner_fa frame_lines=265
+HB 2026-11-04 23:30:36 KST corner_fa frame_lines=272
+HB 2026-11-04 23:40:36 KST corner_fa frame_lines=280
+HB 2026-11-04 23:50:36 KST corner_fa frame_lines=288
+HB 2026-11-05 00:00:36 KST corner_fa frame_lines=296
+HB 2026-11-05 00:10:36 KST corner_fa frame_lines=304
+HB 2026-11-05 00:20:36 KST corner_fa frame_lines=312
+HB 2026-11-05 00:30:36 KST corner_fa frame_lines=320
+HB 2026-11-05 00:40:36 KST corner_fa frame_lines=328
+HB 2026-11-05 00:50:36 KST corner_fa frame_lines=336
+HB 2026-11-05 01:00:36 KST corner_fa frame_lines=343
+HB 2026-11-05 01:10:36 KST corner_fa frame_lines=351
+HB 2026-11-05 01:20:36 KST corner_fa frame_lines=359
+HB 2026-11-05 01:30:36 KST corner_fa frame_lines=367
+HB 2026-11-05 01:40:36 KST corner_fa frame_lines=375
+HB 2026-11-05 01:50:37 KST corner_fa frame_lines=383
+HB 2026-11-05 02:00:37 KST corner_fa frame_lines=391
+HB 2026-11-05 02:10:37 KST corner_fa frame_lines=399
+HB 2026-11-05 02:20:37 KST corner_fa frame_lines=406
+HB 2026-11-05 02:30:37 KST corner_fa frame_lines=414
+HB 2026-11-05 02:40:37 KST corner_fa frame_lines=422
+HB 2026-11-05 02:50:37 KST corner_fa frame_lines=430
+HB 2026-11-05 03:00:37 KST corner_fa frame_lines=438
+HB 2026-11-05 03:10:37 KST corner_fa frame_lines=446
+HB 2026-11-05 03:20:37 KST corner_fa frame_lines=454
+HB 2026-11-05 03:30:37 KST corner_fa frame_lines=461
+HB 2026-11-05 03:40:37 KST corner_fa frame_lines=469
+HB 2026-11-05 03:50:37 KST corner_fa frame_lines=477
+HB 2026-11-05 04:00:37 KST corner_fa frame_lines=485
+HB 2026-11-05 04:10:38 KST corner_fa frame_lines=493
+HB 2026-11-05 04:20:38 KST corner_fa frame_lines=501
+HB 2026-11-05 04:30:38 KST corner_fa frame_lines=509
+HB 2026-11-05 04:40:38 KST corner_fa frame_lines=516
+HB 2026-11-05 04:50:38 KST corner_fa frame_lines=524
+HB 2026-11-05 05:00:38 KST corner_fa frame_lines=532
+HB 2026-11-05 05:10:38 KST corner_fa frame_lines=540
+HB 2026-11-05 05:20:38 KST corner_fa frame_lines=548
+HB 2026-11-05 05:30:38 KST corner_fa frame_lines=556
+HB 2026-11-05 05:40:38 KST corner_fa frame_lines=563
+HB 2026-11-05 05:50:38 KST corner_fa frame_lines=571
+HB 2026-11-05 06:00:38 KST corner_fa frame_lines=579
+HB 2026-11-05 06:10:38 KST corner_fa frame_lines=587
+HB 2026-11-05 06:20:38 KST corner_fa frame_lines=595
+END corner_fa rc=1 2026-11-04 17:50:33 KST → 2026-11-05 06:28:38 KST (45485 s) frame_lines=600 json=no status=not_converged_frame_budget
+PRE corner_f0 ok 2026-11-05 06:28:49 KST · gpu total=49140 free=48539 · pgrep 없음 · STOP 없음
+RUN corner_f0 2026-11-05 06:28:49 KST cwd=/root/fam-wt
+ARGV corner_f0 /root/fam-mpm310/bin/python -u scripts/mpm3d_compaction.py --am-scaffold docs/data/case15_corner_20261001/case15_am_scaffold.csv --se-dump docs/data/case15_corner_20261001/case15_se_scaffold.csv --lateral-box 0.1 --n-grid 768 --arch cuda --gpu-mem 28 --protocol servo --floor-porosity 0 --compact-to 0 --stop-freeze-probe --platen-mach 0.0099999 --e-se 1.53 --nu-se 0.49 --sigma-y 0.30 --target-gpa 0.30 --readout wallP --frames 3000 --sub 40 --seed 3 --am-load-frac 0 --allow-unconverged-servo --save-metrics /root/fam_s127/fam_s127_corner_f0.json
+HB 2026-11-05 06:38:49 KST corner_f0 frame_lines=8
+HB 2026-11-05 06:48:49 KST corner_f0 frame_lines=16
+HB 2026-11-05 06:58:49 KST corner_f0 frame_lines=25
+HB 2026-11-05 07:08:49 KST corner_f0 frame_lines=33
+HB 2026-11-05 07:18:49 KST corner_f0 frame_lines=41
+HB 2026-11-05 07:28:49 KST corner_f0 frame_lines=49
+HB 2026-11-05 07:38:49 KST corner_f0 frame_lines=57
+HB 2026-11-05 07:48:49 KST corner_f0 frame_lines=66
+HB 2026-11-05 07:58:49 KST corner_f0 frame_lines=74
+HB 2026-11-05 08:08:49 KST corner_f0 frame_lines=82
+HB 2026-11-05 08:18:49 KST corner_f0 frame_lines=90
+HB 2026-11-05 08:28:49 KST corner_f0 frame_lines=98
+HB 2026-11-05 08:38:50 KST corner_f0 frame_lines=106
+HB 2026-11-05 08:48:50 KST corner_f0 frame_lines=114
+HB 2026-11-05 08:58:50 KST corner_f0 frame_lines=122
+HB 2026-11-05 09:08:50 KST corner_f0 frame_lines=130
+HB 2026-11-05 09:18:50 KST corner_f0 frame_lines=138
+HB 2026-11-05 09:28:50 KST corner_f0 frame_lines=145
+HB 2026-11-05 09:38:50 KST corner_f0 frame_lines=153
+HB 2026-11-05 09:48:50 KST corner_f0 frame_lines=160
+HB 2026-11-05 09:58:50 KST corner_f0 frame_lines=168
+HB 2026-11-05 10:08:50 KST corner_f0 frame_lines=175
+HB 2026-11-05 10:18:50 KST corner_f0 frame_lines=182
+HB 2026-11-05 10:28:50 KST corner_f0 frame_lines=190
+HB 2026-11-05 10:38:50 KST corner_f0 frame_lines=197
+HB 2026-11-05 10:48:50 KST corner_f0 frame_lines=205
+HB 2026-11-05 10:58:51 KST corner_f0 frame_lines=212
+HB 2026-11-05 11:08:51 KST corner_f0 frame_lines=219
+HB 2026-11-05 11:18:51 KST corner_f0 frame_lines=227
+HB 2026-11-05 11:28:51 KST corner_f0 frame_lines=234
+HB 2026-11-05 11:38:51 KST corner_f0 frame_lines=241
+HB 2026-11-05 11:48:51 KST corner_f0 frame_lines=248
+HB 2026-11-05 11:58:51 KST corner_f0 frame_lines=255
+HB 2026-11-05 12:08:51 KST corner_f0 frame_lines=262
+HB 2026-11-05 12:18:51 KST corner_f0 frame_lines=270
+HB 2026-11-05 12:28:51 KST corner_f0 frame_lines=277
+HB 2026-11-05 12:38:51 KST corner_f0 frame_lines=284
+HB 2026-11-05 12:48:51 KST corner_f0 frame_lines=291
+HB 2026-11-05 12:58:51 KST corner_f0 frame_lines=298
+HB 2026-11-05 13:08:51 KST corner_f0 frame_lines=305
+HB 2026-11-05 13:18:51 KST corner_f0 frame_lines=311
+HB 2026-11-05 13:28:52 KST corner_f0 frame_lines=318
+HB 2026-11-05 13:38:52 KST corner_f0 frame_lines=325
+HB 2026-11-05 13:48:52 KST corner_f0 frame_lines=332
+HB 2026-11-05 13:58:52 KST corner_f0 frame_lines=338
+HB 2026-11-05 14:08:52 KST corner_f0 frame_lines=345
+HB 2026-11-05 14:18:52 KST corner_f0 frame_lines=352
+HB 2026-11-05 14:28:52 KST corner_f0 frame_lines=358
+HB 2026-11-05 14:38:52 KST corner_f0 frame_lines=365
+HB 2026-11-05 14:48:52 KST corner_f0 frame_lines=371
+HB 2026-11-05 14:58:52 KST corner_f0 frame_lines=378
+HB 2026-11-05 15:08:52 KST corner_f0 frame_lines=384
+HB 2026-11-05 15:18:52 KST corner_f0 frame_lines=391
+HB 2026-11-05 15:28:52 KST corner_f0 frame_lines=397
+HB 2026-11-05 15:38:52 KST corner_f0 frame_lines=404
+HB 2026-11-05 15:48:53 KST corner_f0 frame_lines=411
+HB 2026-11-05 15:58:53 KST corner_f0 frame_lines=417
+HB 2026-11-05 16:08:53 KST corner_f0 frame_lines=424
+HB 2026-11-05 16:18:53 KST corner_f0 frame_lines=430
+HB 2026-11-05 16:28:53 KST corner_f0 frame_lines=437
+HB 2026-11-05 16:38:53 KST corner_f0 frame_lines=443
+HB 2026-11-05 16:48:53 KST corner_f0 frame_lines=450
+HB 2026-11-05 16:58:53 KST corner_f0 frame_lines=456
+HB 2026-11-05 17:08:53 KST corner_f0 frame_lines=463
+HB 2026-11-05 17:18:53 KST corner_f0 frame_lines=469
+HB 2026-11-05 17:28:53 KST corner_f0 frame_lines=476
+HB 2026-11-05 17:38:53 KST corner_f0 frame_lines=482
+HB 2026-11-05 17:48:53 KST corner_f0 frame_lines=489
+HB 2026-11-05 17:58:53 KST corner_f0 frame_lines=495
+HB 2026-11-05 18:08:54 KST corner_f0 frame_lines=502
+HB 2026-11-05 18:18:54 KST corner_f0 frame_lines=508
+HB 2026-11-05 18:28:54 KST corner_f0 frame_lines=515
+HB 2026-11-05 18:38:54 KST corner_f0 frame_lines=522
+HB 2026-11-05 18:48:54 KST corner_f0 frame_lines=528
+HB 2026-11-05 18:58:54 KST corner_f0 frame_lines=535
+HB 2026-11-05 19:08:54 KST corner_f0 frame_lines=541
+HB 2026-11-05 19:18:54 KST corner_f0 frame_lines=548
+HB 2026-11-05 19:28:54 KST corner_f0 frame_lines=554
+HB 2026-11-05 19:38:54 KST corner_f0 frame_lines=561
+HB 2026-11-05 19:48:54 KST corner_f0 frame_lines=567
+HB 2026-11-05 19:58:54 KST corner_f0 frame_lines=574
+HB 2026-11-05 20:08:54 KST corner_f0 frame_lines=580
+HB 2026-11-05 20:18:54 KST corner_f0 frame_lines=587
+HB 2026-11-05 20:28:55 KST corner_f0 frame_lines=593
+HB 2026-11-05 20:38:55 KST corner_f0 frame_lines=600
+END corner_f0 rc=0 2026-11-05 06:28:49 KST → 2026-11-05 20:40:55 KST (51126 s) frame_lines=600 json=yes (72 fields) status=no_converged_marker
+§12-7 끝 2026-11-05 20:40:55 KST — 팔 넷 끝 · 분류 · 판정 = 1저자 (12-4 표 먼저)

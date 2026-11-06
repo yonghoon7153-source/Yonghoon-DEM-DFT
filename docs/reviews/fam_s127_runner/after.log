@@ -1,0 +1,751 @@
+runner = run_s127.sh
+runner md5 = 6e4b12b8cd296ec7b00376de07cf46b4
+  ok   [static] bash -n runner
+  ok   [static] bash -n harness
+  ok   [static] runner has set -u
+  ok   [static] usage: tmux launch line in first 15 lines
+  ok   [static] usage: STOP line in first 15 lines
+  ok   [static] deadline epoch literal 1795230000 (= 2026-11-21T03:00:00Z)
+  ok   [realtools] real pgrep, nothing running: rc=1 and empty output
+  ok   [realtools] real pgrep, one dummy running: rc=0 and one line
+  ok   [realtools] real date: TZ=KST-9 epoch 1795230000 → 2026-11-21 12:00:00 KST
+  ok   [happy] exit 0
+  ok   [happy] calls: version check, then confirm → corner b → a → 0
+  ok   [happy] argv confirm_fb == registration text (+ 12-7-2 on corners)
+  ok   [happy] cwd confirm_fb == WT
+  ok   [happy] argv corner_fb == registration text (+ 12-7-2 on corners)
+  ok   [happy] cwd corner_fb == WT
+  ok   [happy] argv corner_fa == registration text (+ 12-7-2 on corners)
+  ok   [happy] cwd corner_fa == WT
+  ok   [happy] argv corner_f0 == registration text (+ 12-7-2 on corners)
+  ok   [happy] cwd corner_f0 == WT
+  ok   [happy] start line exactly once
+  ok   [happy] start line = clock at launch (KST)
+  ok   [happy] start line in batch log
+  ok   [happy] order: VERSIONS < start line < RUN confirm_fb
+  ok   [happy] END confirm_fb
+  ok   [happy] END corner_fb
+  ok   [happy] END corner_fa
+  ok   [happy] END corner_f0 json=yes (57 fields)
+  ok   [happy] CONFIRM_GATE_PASS
+  ok   [happy] order: END confirm < GATE_PASS < RUN corner_fb
+  ok   [happy] batch end line
+  ok   [happy] no REFUSED/SKIP/STOPPED/GATE_FAIL/KILL/HB/ETA
+  ok   [happy] VERSIONS recorded in batch log
+  ok   [happy] version check = $PY -c "import sys,numpy,scipy,taichi; print(...)"
+  ok   [happy] runner md5 recorded in batch log
+  ok   [happy] PRE line with GPU total/free for each arm
+  ok   [happy] ARGV line per arm, no trailing space
+  ok   [happy] outputs exist: confirm_fb .log/.json
+  ok   [happy] outputs exist: corner_fb .log/.json
+  ok   [happy] outputs exist: corner_fa .log/.json
+  ok   [happy] outputs exist: corner_f0 .log/.json
+  ok   [happy] no value / log line leaks (stdout · stderr · batch log)
+  ok   [happy] stubs reported no protocol error
+  ok   [happy] nvidia-smi called only with the registered query
+  ok   [happy] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [happy] git called only as: git -C WT rev-parse HEAD
+  ok   [happy] batch log exists and every stdout line is also in it
+  ok   [hdr_seal_wrong] exit 2 (REFUSED)
+  ok   [hdr_seal_wrong] REFUSED SEAL_COMMIT
+  ok   [hdr_seal_wrong] REFUSED in batch log
+  ok   [hdr_seal_wrong] no start line
+  ok   [hdr_seal_wrong] python never called
+  ok   [hdr_seal_wrong] no arm output written
+  ok   [hdr_seal_wrong] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_seal_wrong] stubs reported no protocol error
+  ok   [hdr_seal_wrong] nvidia-smi called only with the registered query
+  ok   [hdr_seal_wrong] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_seal_wrong] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_seal_wrong] batch log exists and every stdout line is also in it
+  ok   [hdr_seal_missing] exit 2 (REFUSED)
+  ok   [hdr_seal_missing] REFUSED SEAL_COMMIT
+  ok   [hdr_seal_missing] REFUSED in batch log
+  ok   [hdr_seal_missing] no start line
+  ok   [hdr_seal_missing] python never called
+  ok   [hdr_seal_missing] no arm output written
+  ok   [hdr_seal_missing] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_seal_missing] stubs reported no protocol error
+  ok   [hdr_seal_missing] nvidia-smi called only with the registered query
+  ok   [hdr_seal_missing] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_seal_missing] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_seal_missing] batch log exists and every stdout line is also in it
+  ok   [hdr_seal_crlf] exit 2 (REFUSED)
+  ok   [hdr_seal_crlf] REFUSED SEAL_COMMIT
+  ok   [hdr_seal_crlf] REFUSED in batch log
+  ok   [hdr_seal_crlf] no start line
+  ok   [hdr_seal_crlf] python never called
+  ok   [hdr_seal_crlf] no arm output written
+  ok   [hdr_seal_crlf] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_seal_crlf] stubs reported no protocol error
+  ok   [hdr_seal_crlf] nvidia-smi called only with the registered query
+  ok   [hdr_seal_crlf] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_seal_crlf] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_seal_crlf] batch log exists and every stdout line is also in it
+  ok   [hdr_head] exit 2 (REFUSED)
+  ok   [hdr_head] REFUSED HEAD
+  ok   [hdr_head] REFUSED in batch log
+  ok   [hdr_head] no start line
+  ok   [hdr_head] python never called
+  ok   [hdr_head] no arm output written
+  ok   [hdr_head] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_head] stubs reported no protocol error
+  ok   [hdr_head] nvidia-smi called only with the registered query
+  ok   [hdr_head] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_head] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_head] batch log exists and every stdout line is also in it
+  ok   [hdr_head_short] exit 2 (REFUSED)
+  ok   [hdr_head_short] REFUSED HEAD
+  ok   [hdr_head_short] REFUSED in batch log
+  ok   [hdr_head_short] no start line
+  ok   [hdr_head_short] python never called
+  ok   [hdr_head_short] no arm output written
+  ok   [hdr_head_short] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_head_short] stubs reported no protocol error
+  ok   [hdr_head_short] nvidia-smi called only with the registered query
+  ok   [hdr_head_short] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_head_short] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_head_short] batch log exists and every stdout line is also in it
+  ok   [hdr_md5] exit 2 (REFUSED)
+  ok   [hdr_md5] REFUSED md5
+  ok   [hdr_md5] REFUSED in batch log
+  ok   [hdr_md5] no start line
+  ok   [hdr_md5] python never called
+  ok   [hdr_md5] no arm output written
+  ok   [hdr_md5] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_md5] stubs reported no protocol error
+  ok   [hdr_md5] nvidia-smi called only with the registered query
+  ok   [hdr_md5] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_md5] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_md5] batch log exists and every stdout line is also in it
+  ok   [hdr_code_missing] exit 2 (REFUSED)
+  ok   [hdr_code_missing] REFUSED md5
+  ok   [hdr_code_missing] REFUSED in batch log
+  ok   [hdr_code_missing] no start line
+  ok   [hdr_code_missing] python never called
+  ok   [hdr_code_missing] no arm output written
+  ok   [hdr_code_missing] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_code_missing] stubs reported no protocol error
+  ok   [hdr_code_missing] nvidia-smi called only with the registered query
+  ok   [hdr_code_missing] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_code_missing] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_code_missing] batch log exists and every stdout line is also in it
+  ok   [hdr_sha_c15am] exit 2 (REFUSED)
+  ok   [hdr_sha_c15am] REFUSED sha256
+  ok   [hdr_sha_c15am] REFUSED in batch log
+  ok   [hdr_sha_c15am] no start line
+  ok   [hdr_sha_c15am] python never called
+  ok   [hdr_sha_c15am] no arm output written
+  ok   [hdr_sha_c15am] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_sha_c15am] stubs reported no protocol error
+  ok   [hdr_sha_c15am] nvidia-smi called only with the registered query
+  ok   [hdr_sha_c15am] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_sha_c15am] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_sha_c15am] batch log exists and every stdout line is also in it
+  ok   [hdr_sha_c15am] names the file
+  ok   [hdr_sha_c15se] exit 2 (REFUSED)
+  ok   [hdr_sha_c15se] REFUSED sha256
+  ok   [hdr_sha_c15se] REFUSED in batch log
+  ok   [hdr_sha_c15se] no start line
+  ok   [hdr_sha_c15se] python never called
+  ok   [hdr_sha_c15se] no arm output written
+  ok   [hdr_sha_c15se] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_sha_c15se] stubs reported no protocol error
+  ok   [hdr_sha_c15se] nvidia-smi called only with the registered query
+  ok   [hdr_sha_c15se] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_sha_c15se] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_sha_c15se] batch log exists and every stdout line is also in it
+  ok   [hdr_sha_c15se] names the file
+  ok   [hdr_sha_r14am] exit 2 (REFUSED)
+  ok   [hdr_sha_r14am] REFUSED sha256
+  ok   [hdr_sha_r14am] REFUSED in batch log
+  ok   [hdr_sha_r14am] no start line
+  ok   [hdr_sha_r14am] python never called
+  ok   [hdr_sha_r14am] no arm output written
+  ok   [hdr_sha_r14am] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_sha_r14am] stubs reported no protocol error
+  ok   [hdr_sha_r14am] nvidia-smi called only with the registered query
+  ok   [hdr_sha_r14am] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_sha_r14am] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_sha_r14am] batch log exists and every stdout line is also in it
+  ok   [hdr_sha_r14am] names the file
+  ok   [hdr_sha_r14se] exit 2 (REFUSED)
+  ok   [hdr_sha_r14se] REFUSED sha256
+  ok   [hdr_sha_r14se] REFUSED in batch log
+  ok   [hdr_sha_r14se] no start line
+  ok   [hdr_sha_r14se] python never called
+  ok   [hdr_sha_r14se] no arm output written
+  ok   [hdr_sha_r14se] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_sha_r14se] stubs reported no protocol error
+  ok   [hdr_sha_r14se] nvidia-smi called only with the registered query
+  ok   [hdr_sha_r14se] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_sha_r14se] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_sha_r14se] batch log exists and every stdout line is also in it
+  ok   [hdr_sha_r14se] names the file
+  ok   [hdr_csv_missing] exit 2 (REFUSED)
+  ok   [hdr_csv_missing] REFUSED sha256
+  ok   [hdr_csv_missing] REFUSED in batch log
+  ok   [hdr_csv_missing] no start line
+  ok   [hdr_csv_missing] python never called
+  ok   [hdr_csv_missing] no arm output written
+  ok   [hdr_csv_missing] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_csv_missing] stubs reported no protocol error
+  ok   [hdr_csv_missing] nvidia-smi called only with the registered query
+  ok   [hdr_csv_missing] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_csv_missing] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_csv_missing] batch log exists and every stdout line is also in it
+  ok   [hdr_py_missing] exit 2 (REFUSED)
+  ok   [hdr_py_missing] REFUSED PY
+  ok   [hdr_py_missing] REFUSED in batch log
+  ok   [hdr_py_missing] no start line
+  ok   [hdr_py_missing] python never called
+  ok   [hdr_py_missing] no arm output written
+  ok   [hdr_py_missing] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_py_missing] stubs reported no protocol error
+  ok   [hdr_py_missing] nvidia-smi called only with the registered query
+  ok   [hdr_py_missing] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_py_missing] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_py_missing] batch log exists and every stdout line is also in it
+  ok   [hdr_py_noexec] exit 2 (REFUSED)
+  ok   [hdr_py_noexec] REFUSED PY
+  ok   [hdr_py_noexec] REFUSED in batch log
+  ok   [hdr_py_noexec] no start line
+  ok   [hdr_py_noexec] python never called
+  ok   [hdr_py_noexec] no arm output written
+  ok   [hdr_py_noexec] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_py_noexec] stubs reported no protocol error
+  ok   [hdr_py_noexec] nvidia-smi called only with the registered query
+  ok   [hdr_py_noexec] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_py_noexec] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_py_noexec] batch log exists and every stdout line is also in it
+  ok   [hdr_nv_fail] exit 2 (REFUSED)
+  ok   [hdr_nv_fail] REFUSED nvidia-smi
+  ok   [hdr_nv_fail] REFUSED in batch log
+  ok   [hdr_nv_fail] no start line
+  ok   [hdr_nv_fail] python never called
+  ok   [hdr_nv_fail] no arm output written
+  ok   [hdr_nv_fail] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_nv_fail] stubs reported no protocol error
+  ok   [hdr_nv_fail] nvidia-smi called only with the registered query
+  ok   [hdr_nv_fail] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_nv_fail] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_nv_fail] batch log exists and every stdout line is also in it
+  ok   [hdr_nv_total] exit 2 (REFUSED)
+  ok   [hdr_nv_total] REFUSED gpu_total
+  ok   [hdr_nv_total] REFUSED in batch log
+  ok   [hdr_nv_total] no start line
+  ok   [hdr_nv_total] python never called
+  ok   [hdr_nv_total] no arm output written
+  ok   [hdr_nv_total] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_nv_total] stubs reported no protocol error
+  ok   [hdr_nv_total] nvidia-smi called only with the registered query
+  ok   [hdr_nv_total] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_nv_total] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_nv_total] batch log exists and every stdout line is also in it
+  ok   [hdr_nv_garbage] exit 2 (REFUSED)
+  ok   [hdr_nv_garbage] REFUSED nvidia-smi
+  ok   [hdr_nv_garbage] REFUSED in batch log
+  ok   [hdr_nv_garbage] no start line
+  ok   [hdr_nv_garbage] python never called
+  ok   [hdr_nv_garbage] no arm output written
+  ok   [hdr_nv_garbage] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_nv_garbage] stubs reported no protocol error
+  ok   [hdr_nv_garbage] nvidia-smi called only with the registered query
+  ok   [hdr_nv_garbage] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_nv_garbage] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_nv_garbage] batch log exists and every stdout line is also in it
+  ok   [hdr_nv_two_gpus] exit 2 (REFUSED)
+  ok   [hdr_nv_two_gpus] REFUSED nvidia-smi
+  ok   [hdr_nv_two_gpus] REFUSED in batch log
+  ok   [hdr_nv_two_gpus] no start line
+  ok   [hdr_nv_two_gpus] python never called
+  ok   [hdr_nv_two_gpus] no arm output written
+  ok   [hdr_nv_two_gpus] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_nv_two_gpus] stubs reported no protocol error
+  ok   [hdr_nv_two_gpus] nvidia-smi called only with the registered query
+  ok   [hdr_nv_two_gpus] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_nv_two_gpus] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_nv_two_gpus] batch log exists and every stdout line is also in it
+  ok   [hdr_pgrep_busy] exit 2 (REFUSED)
+  ok   [hdr_pgrep_busy] REFUSED pgrep_busy
+  ok   [hdr_pgrep_busy] REFUSED in batch log
+  ok   [hdr_pgrep_busy] no start line
+  ok   [hdr_pgrep_busy] python never called
+  ok   [hdr_pgrep_busy] no arm output written
+  ok   [hdr_pgrep_busy] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_pgrep_busy] stubs reported no protocol error
+  ok   [hdr_pgrep_busy] nvidia-smi called only with the registered query
+  ok   [hdr_pgrep_busy] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_pgrep_busy] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_pgrep_busy] batch log exists and every stdout line is also in it
+  ok   [hdr_out_confirm_fb_log] exit 2 (REFUSED)
+  ok   [hdr_out_confirm_fb_log] REFUSED output_exists
+  ok   [hdr_out_confirm_fb_log] REFUSED in batch log
+  ok   [hdr_out_confirm_fb_log] no start line
+  ok   [hdr_out_confirm_fb_log] python never called
+  ok   [hdr_out_confirm_fb_log] no arm output written
+  ok   [hdr_out_confirm_fb_log] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_out_confirm_fb_log] stubs reported no protocol error
+  ok   [hdr_out_confirm_fb_log] nvidia-smi called only with the registered query
+  ok   [hdr_out_confirm_fb_log] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_out_confirm_fb_log] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_out_confirm_fb_log] batch log exists and every stdout line is also in it
+  ok   [hdr_out_confirm_fb_log] pre-existing fam_s127_confirm_fb.log untouched
+  ok   [hdr_out_confirm_fb_json] exit 2 (REFUSED)
+  ok   [hdr_out_confirm_fb_json] REFUSED output_exists
+  ok   [hdr_out_confirm_fb_json] REFUSED in batch log
+  ok   [hdr_out_confirm_fb_json] no start line
+  ok   [hdr_out_confirm_fb_json] python never called
+  ok   [hdr_out_confirm_fb_json] no arm output written
+  ok   [hdr_out_confirm_fb_json] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_out_confirm_fb_json] stubs reported no protocol error
+  ok   [hdr_out_confirm_fb_json] nvidia-smi called only with the registered query
+  ok   [hdr_out_confirm_fb_json] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_out_confirm_fb_json] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_out_confirm_fb_json] batch log exists and every stdout line is also in it
+  ok   [hdr_out_confirm_fb_json] pre-existing fam_s127_confirm_fb.json untouched
+  ok   [hdr_out_corner_fb_log] exit 2 (REFUSED)
+  ok   [hdr_out_corner_fb_log] REFUSED output_exists
+  ok   [hdr_out_corner_fb_log] REFUSED in batch log
+  ok   [hdr_out_corner_fb_log] no start line
+  ok   [hdr_out_corner_fb_log] python never called
+  ok   [hdr_out_corner_fb_log] no arm output written
+  ok   [hdr_out_corner_fb_log] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_out_corner_fb_log] stubs reported no protocol error
+  ok   [hdr_out_corner_fb_log] nvidia-smi called only with the registered query
+  ok   [hdr_out_corner_fb_log] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_out_corner_fb_log] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_out_corner_fb_log] batch log exists and every stdout line is also in it
+  ok   [hdr_out_corner_fb_log] pre-existing fam_s127_corner_fb.log untouched
+  ok   [hdr_out_corner_fb_json] exit 2 (REFUSED)
+  ok   [hdr_out_corner_fb_json] REFUSED output_exists
+  ok   [hdr_out_corner_fb_json] REFUSED in batch log
+  ok   [hdr_out_corner_fb_json] no start line
+  ok   [hdr_out_corner_fb_json] python never called
+  ok   [hdr_out_corner_fb_json] no arm output written
+  ok   [hdr_out_corner_fb_json] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_out_corner_fb_json] stubs reported no protocol error
+  ok   [hdr_out_corner_fb_json] nvidia-smi called only with the registered query
+  ok   [hdr_out_corner_fb_json] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_out_corner_fb_json] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_out_corner_fb_json] batch log exists and every stdout line is also in it
+  ok   [hdr_out_corner_fb_json] pre-existing fam_s127_corner_fb.json untouched
+  ok   [hdr_out_corner_fa_log] exit 2 (REFUSED)
+  ok   [hdr_out_corner_fa_log] REFUSED output_exists
+  ok   [hdr_out_corner_fa_log] REFUSED in batch log
+  ok   [hdr_out_corner_fa_log] no start line
+  ok   [hdr_out_corner_fa_log] python never called
+  ok   [hdr_out_corner_fa_log] no arm output written
+  ok   [hdr_out_corner_fa_log] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_out_corner_fa_log] stubs reported no protocol error
+  ok   [hdr_out_corner_fa_log] nvidia-smi called only with the registered query
+  ok   [hdr_out_corner_fa_log] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_out_corner_fa_log] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_out_corner_fa_log] batch log exists and every stdout line is also in it
+  ok   [hdr_out_corner_fa_log] pre-existing fam_s127_corner_fa.log untouched
+  ok   [hdr_out_corner_fa_json] exit 2 (REFUSED)
+  ok   [hdr_out_corner_fa_json] REFUSED output_exists
+  ok   [hdr_out_corner_fa_json] REFUSED in batch log
+  ok   [hdr_out_corner_fa_json] no start line
+  ok   [hdr_out_corner_fa_json] python never called
+  ok   [hdr_out_corner_fa_json] no arm output written
+  ok   [hdr_out_corner_fa_json] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_out_corner_fa_json] stubs reported no protocol error
+  ok   [hdr_out_corner_fa_json] nvidia-smi called only with the registered query
+  ok   [hdr_out_corner_fa_json] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_out_corner_fa_json] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_out_corner_fa_json] batch log exists and every stdout line is also in it
+  ok   [hdr_out_corner_fa_json] pre-existing fam_s127_corner_fa.json untouched
+  ok   [hdr_out_corner_f0_log] exit 2 (REFUSED)
+  ok   [hdr_out_corner_f0_log] REFUSED output_exists
+  ok   [hdr_out_corner_f0_log] REFUSED in batch log
+  ok   [hdr_out_corner_f0_log] no start line
+  ok   [hdr_out_corner_f0_log] python never called
+  ok   [hdr_out_corner_f0_log] no arm output written
+  ok   [hdr_out_corner_f0_log] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_out_corner_f0_log] stubs reported no protocol error
+  ok   [hdr_out_corner_f0_log] nvidia-smi called only with the registered query
+  ok   [hdr_out_corner_f0_log] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_out_corner_f0_log] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_out_corner_f0_log] batch log exists and every stdout line is also in it
+  ok   [hdr_out_corner_f0_log] pre-existing fam_s127_corner_f0.log untouched
+  ok   [hdr_out_corner_f0_json] exit 2 (REFUSED)
+  ok   [hdr_out_corner_f0_json] REFUSED output_exists
+  ok   [hdr_out_corner_f0_json] REFUSED in batch log
+  ok   [hdr_out_corner_f0_json] no start line
+  ok   [hdr_out_corner_f0_json] python never called
+  ok   [hdr_out_corner_f0_json] no arm output written
+  ok   [hdr_out_corner_f0_json] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_out_corner_f0_json] stubs reported no protocol error
+  ok   [hdr_out_corner_f0_json] nvidia-smi called only with the registered query
+  ok   [hdr_out_corner_f0_json] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_out_corner_f0_json] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_out_corner_f0_json] batch log exists and every stdout line is also in it
+  ok   [hdr_out_corner_f0_json] pre-existing fam_s127_corner_f0.json untouched
+  ok   [hdr_deadline_eq] exit 2 (REFUSED)
+  ok   [hdr_deadline_eq] REFUSED deadline
+  ok   [hdr_deadline_eq] REFUSED in batch log
+  ok   [hdr_deadline_eq] no start line
+  ok   [hdr_deadline_eq] python never called
+  ok   [hdr_deadline_eq] no arm output written
+  ok   [hdr_deadline_eq] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_deadline_eq] stubs reported no protocol error
+  ok   [hdr_deadline_eq] nvidia-smi called only with the registered query
+  ok   [hdr_deadline_eq] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_deadline_eq] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_deadline_eq] batch log exists and every stdout line is also in it
+  ok   [hdr_deadline_after] exit 2 (REFUSED)
+  ok   [hdr_deadline_after] REFUSED deadline
+  ok   [hdr_deadline_after] REFUSED in batch log
+  ok   [hdr_deadline_after] no start line
+  ok   [hdr_deadline_after] python never called
+  ok   [hdr_deadline_after] no arm output written
+  ok   [hdr_deadline_after] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_deadline_after] stubs reported no protocol error
+  ok   [hdr_deadline_after] nvidia-smi called only with the registered query
+  ok   [hdr_deadline_after] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_deadline_after] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_deadline_after] batch log exists and every stdout line is also in it
+  ok   [hdr_stop_present] exit 2 (REFUSED)
+  ok   [hdr_stop_present] REFUSED STOP
+  ok   [hdr_stop_present] REFUSED in batch log
+  ok   [hdr_stop_present] no start line
+  ok   [hdr_stop_present] python never called
+  ok   [hdr_stop_present] no arm output written
+  ok   [hdr_stop_present] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_stop_present] stubs reported no protocol error
+  ok   [hdr_stop_present] nvidia-smi called only with the registered query
+  ok   [hdr_stop_present] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_stop_present] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_stop_present] batch log exists and every stdout line is also in it
+  ok   [hdr_py_import] exit 2 (REFUSED)
+  ok   [hdr_py_import] REFUSED PY_import
+  ok   [hdr_py_import] REFUSED in batch log
+  ok   [hdr_py_import] no start line
+  ok   [hdr_py_import] python called only for the version check
+  ok   [hdr_py_import] no arm output written
+  ok   [hdr_py_import] no value / log line leaks (stdout · stderr · batch log)
+  ok   [hdr_py_import] stubs reported no protocol error
+  ok   [hdr_py_import] nvidia-smi called only with the registered query
+  ok   [hdr_py_import] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [hdr_py_import] git called only as: git -C WT rev-parse HEAD
+  ok   [hdr_py_import] batch log exists and every stdout line is also in it
+  ok   [gate_budget] exit 5
+  ok   [gate_budget] CONFIRM_GATE_FAIL rc=1,json_missing,no_converged_marker
+  ok   [gate_budget] only the confirm arm ran
+  ok   [gate_budget] END confirm_fb status=not_converged_frame_budget
+  ok   [gate_budget] no CONFIRM_GATE_PASS
+  ok   [gate_budget] no corner output files
+  ok   [gate_budget] no value / log line leaks (stdout · stderr · batch log)
+  ok   [gate_budget] stubs reported no protocol error
+  ok   [gate_budget] nvidia-smi called only with the registered query
+  ok   [gate_budget] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [gate_budget] git called only as: git -C WT rev-parse HEAD
+  ok   [gate_budget] batch log exists and every stdout line is also in it
+  ok   [gate_budget] END shows frame_lines=80 json=no
+  ok   [gate_probe] exit 5
+  ok   [gate_probe] CONFIRM_GATE_FAIL rc=1,json_missing,no_converged_marker
+  ok   [gate_probe] only the confirm arm ran
+  ok   [gate_probe] END confirm_fb status=not_converged_probe_not_at_rest
+  ok   [gate_probe] no CONFIRM_GATE_PASS
+  ok   [gate_probe] no corner output files
+  ok   [gate_probe] no value / log line leaks (stdout · stderr · batch log)
+  ok   [gate_probe] stubs reported no protocol error
+  ok   [gate_probe] nvidia-smi called only with the registered query
+  ok   [gate_probe] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [gate_probe] git called only as: git -C WT rev-parse HEAD
+  ok   [gate_probe] batch log exists and every stdout line is also in it
+  ok   [gate_nomarker] exit 5
+  ok   [gate_nomarker] CONFIRM_GATE_FAIL no_converged_marker
+  ok   [gate_nomarker] only the confirm arm ran
+  ok   [gate_nomarker] END confirm_fb status=no_converged_marker
+  ok   [gate_nomarker] no CONFIRM_GATE_PASS
+  ok   [gate_nomarker] no corner output files
+  ok   [gate_nomarker] no value / log line leaks (stdout · stderr · batch log)
+  ok   [gate_nomarker] stubs reported no protocol error
+  ok   [gate_nomarker] nvidia-smi called only with the registered query
+  ok   [gate_nomarker] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [gate_nomarker] git called only as: git -C WT rev-parse HEAD
+  ok   [gate_nomarker] batch log exists and every stdout line is also in it
+  ok   [gate_traceback] exit 5
+  ok   [gate_traceback] CONFIRM_GATE_FAIL traceback
+  ok   [gate_traceback] only the confirm arm ran
+  ok   [gate_traceback] END confirm_fb status=traceback
+  ok   [gate_traceback] no CONFIRM_GATE_PASS
+  ok   [gate_traceback] no corner output files
+  ok   [gate_traceback] no value / log line leaks (stdout · stderr · batch log)
+  ok   [gate_traceback] stubs reported no protocol error
+  ok   [gate_traceback] nvidia-smi called only with the registered query
+  ok   [gate_traceback] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [gate_traceback] git called only as: git -C WT rev-parse HEAD
+  ok   [gate_traceback] batch log exists and every stdout line is also in it
+  ok   [gate_cuda] exit 5
+  ok   [gate_cuda] CONFIRM_GATE_FAIL cuda_error
+  ok   [gate_cuda] only the confirm arm ran
+  ok   [gate_cuda] END confirm_fb status=cuda_error
+  ok   [gate_cuda] no CONFIRM_GATE_PASS
+  ok   [gate_cuda] no corner output files
+  ok   [gate_cuda] no value / log line leaks (stdout · stderr · batch log)
+  ok   [gate_cuda] stubs reported no protocol error
+  ok   [gate_cuda] nvidia-smi called only with the registered query
+  ok   [gate_cuda] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [gate_cuda] git called only as: git -C WT rev-parse HEAD
+  ok   [gate_cuda] batch log exists and every stdout line is also in it
+  ok   [gate_cuda_oom] exit 5
+  ok   [gate_cuda_oom] CONFIRM_GATE_FAIL rc=1,json_missing,traceback,cuda_error,no_converged_marker
+  ok   [gate_cuda_oom] only the confirm arm ran
+  ok   [gate_cuda_oom] END confirm_fb status=cuda_oom
+  ok   [gate_cuda_oom] no CONFIRM_GATE_PASS
+  ok   [gate_cuda_oom] no corner output files
+  ok   [gate_cuda_oom] no value / log line leaks (stdout · stderr · batch log)
+  ok   [gate_cuda_oom] stubs reported no protocol error
+  ok   [gate_cuda_oom] nvidia-smi called only with the registered query
+  ok   [gate_cuda_oom] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [gate_cuda_oom] git called only as: git -C WT rev-parse HEAD
+  ok   [gate_cuda_oom] batch log exists and every stdout line is also in it
+  ok   [gate_rc1] exit 5
+  ok   [gate_rc1] CONFIRM_GATE_FAIL rc=1
+  ok   [gate_rc1] only the confirm arm ran
+  ok   [gate_rc1] END confirm_fb status=converged
+  ok   [gate_rc1] no CONFIRM_GATE_PASS
+  ok   [gate_rc1] no corner output files
+  ok   [gate_rc1] no value / log line leaks (stdout · stderr · batch log)
+  ok   [gate_rc1] stubs reported no protocol error
+  ok   [gate_rc1] nvidia-smi called only with the registered query
+  ok   [gate_rc1] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [gate_rc1] git called only as: git -C WT rev-parse HEAD
+  ok   [gate_rc1] batch log exists and every stdout line is also in it
+  ok   [gate_nojson] exit 5
+  ok   [gate_nojson] CONFIRM_GATE_FAIL json_missing
+  ok   [gate_nojson] only the confirm arm ran
+  ok   [gate_nojson] END confirm_fb status=converged
+  ok   [gate_nojson] no CONFIRM_GATE_PASS
+  ok   [gate_nojson] no corner output files
+  ok   [gate_nojson] no value / log line leaks (stdout · stderr · batch log)
+  ok   [gate_nojson] stubs reported no protocol error
+  ok   [gate_nojson] nvidia-smi called only with the registered query
+  ok   [gate_nojson] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [gate_nojson] git called only as: git -C WT rev-parse HEAD
+  ok   [gate_nojson] batch log exists and every stdout line is also in it
+  ok   [free_31857] exit 3 (SKIP)
+  ok   [free_31857] SKIP corner_fb gpu_free=31857
+  ok   [free_31857] confirm ran, no corner arm
+  ok   [free_31857] END confirm_fb present
+  ok   [free_31857] no corner output files
+  ok   [free_31857] no value / log line leaks (stdout · stderr · batch log)
+  ok   [free_31857] stubs reported no protocol error
+  ok   [free_31857] nvidia-smi called only with the registered query
+  ok   [free_31857] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [free_31857] git called only as: git -C WT rev-parse HEAD
+  ok   [free_31857] batch log exists and every stdout line is also in it
+  ok   [free_31858] free = 31858 (boundary) → all four arms, exit 0
+  ok   [free_31858] calls: all four arms
+  ok   [free_31858] no value / log line leaks (stdout · stderr · batch log)
+  ok   [free_31858] stubs reported no protocol error
+  ok   [free_31858] nvidia-smi called only with the registered query
+  ok   [free_31858] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [free_31858] git called only as: git -C WT rev-parse HEAD
+  ok   [free_31858] batch log exists and every stdout line is also in it
+  ok   [free_drop_before_fa] exit 3
+  ok   [free_drop_before_fa] SKIP corner_fa gpu_free
+  ok   [free_drop_before_fa] confirm + corner_fb ran, fa/f0 not
+  ok   [free_drop_before_fa] no value / log line leaks (stdout · stderr · batch log)
+  ok   [free_drop_before_fa] stubs reported no protocol error
+  ok   [free_drop_before_fa] nvidia-smi called only with the registered query
+  ok   [free_drop_before_fa] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [free_drop_before_fa] git called only as: git -C WT rev-parse HEAD
+  ok   [free_drop_before_fa] batch log exists and every stdout line is also in it
+  ok   [stop_between] exit 3
+  ok   [stop_between] SKIP corner_fb STOP
+  ok   [stop_between] only confirm ran
+  ok   [stop_between] no value / log line leaks (stdout · stderr · batch log)
+  ok   [stop_between] stubs reported no protocol error
+  ok   [stop_between] nvidia-smi called only with the registered query
+  ok   [stop_between] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [stop_between] git called only as: git -C WT rev-parse HEAD
+  ok   [stop_between] batch log exists and every stdout line is also in it
+  ok   [deadline_between] exit 3
+  ok   [deadline_between] END confirm_fb normal (finished before the poll that saw the deadline)
+  ok   [deadline_between] SKIP corner_fb deadline
+  ok   [deadline_between] only confirm ran
+  ok   [deadline_between] no value / log line leaks (stdout · stderr · batch log)
+  ok   [deadline_between] stubs reported no protocol error
+  ok   [deadline_between] nvidia-smi called only with the registered query
+  ok   [deadline_between] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [deadline_between] git called only as: git -C WT rev-parse HEAD
+  ok   [deadline_between] batch log exists and every stdout line is also in it
+  ok   [pgrep_between] exit 3
+  ok   [pgrep_between] SKIP corner_fb pgrep_busy
+  ok   [pgrep_between] no value / log line leaks (stdout · stderr · batch log)
+  ok   [pgrep_between] stubs reported no protocol error
+  ok   [pgrep_between] nvidia-smi called only with the registered query
+  ok   [pgrep_between] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [pgrep_between] git called only as: git -C WT rev-parse HEAD
+  ok   [pgrep_between] batch log exists and every stdout line is also in it
+  ok   [total_between] exit 3
+  ok   [total_between] SKIP corner_fb gpu_total=24576
+  ok   [total_between] no value / log line leaks (stdout · stderr · batch log)
+  ok   [total_between] stubs reported no protocol error
+  ok   [total_between] nvidia-smi called only with the registered query
+  ok   [total_between] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [total_between] git called only as: git -C WT rev-parse HEAD
+  ok   [total_between] batch log exists and every stdout line is also in it
+  ok   [nvfail_between] exit 3
+  ok   [nvfail_between] SKIP corner_fb nvidia-smi
+  ok   [nvfail_between] no value / log line leaks (stdout · stderr · batch log)
+  ok   [nvfail_between] stubs reported no protocol error
+  ok   [nvfail_between] nvidia-smi called only with the registered query
+  ok   [nvfail_between] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [nvfail_between] git called only as: git -C WT rev-parse HEAD
+  ok   [nvfail_between] batch log exists and every stdout line is also in it
+  ok   [output_appears] exit 3
+  ok   [output_appears] SKIP corner_fa output_exists
+  ok   [output_appears] file that appeared is untouched (empty)
+  ok   [output_appears] no value / log line leaks (stdout · stderr · batch log)
+  ok   [output_appears] stubs reported no protocol error
+  ok   [output_appears] nvidia-smi called only with the registered query
+  ok   [output_appears] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [output_appears] git called only as: git -C WT rev-parse HEAD
+  ok   [output_appears] batch log exists and every stdout line is also in it
+  ok   [deadline_mid_fb] exit 4 (STOPPED)
+  ok   [deadline_mid_fb] STOPPED corner_fb deadline
+  ok   [deadline_mid_fb] TERM at first poll past the deadline (12:00:10 KST)
+  ok   [deadline_mid_fb] python received TERM (clock D+10..D+15)
+  ok   [deadline_mid_fb] no KILL needed
+  ok   [deadline_mid_fb] END corner_fb rc=143
+  ok   [deadline_mid_fb] no further arm
+  ok   [deadline_mid_fb] 4 heartbeats with exact frame-line counts
+  ok   [deadline_mid_fb] HB format
+  ok   [deadline_mid_fb] no ETA (arm ran < 60 min)
+  ok   [deadline_mid_fb] no value / log line leaks (stdout · stderr · batch log)
+  ok   [deadline_mid_fb] stubs reported no protocol error
+  ok   [deadline_mid_fb] nvidia-smi called only with the registered query
+  ok   [deadline_mid_fb] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [deadline_mid_fb] git called only as: git -C WT rev-parse HEAD
+  ok   [deadline_mid_fb] batch log exists and every stdout line is also in it
+  ok   [deadline_mid_fb_ignore] exit 4
+  ok   [deadline_mid_fb_ignore] STOPPED corner_fb deadline
+  ok   [deadline_mid_fb_ignore] TERM line at 12:00:10
+  ok   [deadline_mid_fb_ignore] KILL line 120 s after TERM (12:02:10)
+  ok   [deadline_mid_fb_ignore] END corner_fb rc=137
+  ok   [deadline_mid_fb_ignore] python kept running until KILL (last tick D+130)
+  ok   [deadline_mid_fb_ignore] no further arm
+  ok   [deadline_mid_fb_ignore] no value / log line leaks (stdout · stderr · batch log)
+  ok   [deadline_mid_fb_ignore] stubs reported no protocol error
+  ok   [deadline_mid_fb_ignore] nvidia-smi called only with the registered query
+  ok   [deadline_mid_fb_ignore] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [deadline_mid_fb_ignore] git called only as: git -C WT rev-parse HEAD
+  ok   [deadline_mid_fb_ignore] batch log exists and every stdout line is also in it
+  ok   [deadline_mid_confirm] header passed at D-1 (start line)
+  ok   [deadline_mid_confirm] exit 4
+  ok   [deadline_mid_confirm] STOPPED confirm_fb deadline
+  ok   [deadline_mid_confirm] gate not evaluated
+  ok   [deadline_mid_confirm] no corner arm
+  ok   [deadline_mid_confirm] no value / log line leaks (stdout · stderr · batch log)
+  ok   [deadline_mid_confirm] stubs reported no protocol error
+  ok   [deadline_mid_confirm] nvidia-smi called only with the registered query
+  ok   [deadline_mid_confirm] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [deadline_mid_confirm] git called only as: git -C WT rev-parse HEAD
+  ok   [deadline_mid_confirm] batch log exists and every stdout line is also in it
+  ok   [stop_mid_fb] exit 4
+  ok   [stop_mid_fb] STOPPED corner_fb author
+  ok   [stop_mid_fb] TERM at the first poll after STOP appeared (00:17:10)
+  ok   [stop_mid_fb] END corner_fb rc=143
+  ok   [stop_mid_fb] no further arm
+  ok   [stop_mid_fb] no value / log line leaks (stdout · stderr · batch log)
+  ok   [stop_mid_fb] stubs reported no protocol error
+  ok   [stop_mid_fb] nvidia-smi called only with the registered query
+  ok   [stop_mid_fb] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [stop_mid_fb] git called only as: git -C WT rev-parse HEAD
+  ok   [stop_mid_fb] batch log exists and every stdout line is also in it
+  ok   [stop_mid_confirm] exit 4
+  ok   [stop_mid_confirm] STOPPED confirm_fb author
+  ok   [stop_mid_confirm] no corner arm
+  ok   [stop_mid_confirm] no value / log line leaks (stdout · stderr · batch log)
+  ok   [stop_mid_confirm] stubs reported no protocol error
+  ok   [stop_mid_confirm] nvidia-smi called only with the registered query
+  ok   [stop_mid_confirm] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [stop_mid_confirm] git called only as: git -C WT rev-parse HEAD
+  ok   [stop_mid_confirm] batch log exists and every stdout line is also in it
+  ok   [corner_fb_rc1] exit 0 (batch continues past a failed corner arm)
+  ok   [corner_fb_rc1] END corner_fb rc=1 json=no status=not_converged_frame_budget
+  ok   [corner_fb_rc1] corner_fa and corner_f0 still ran
+  ok   [corner_fb_rc1] END corner_fa rc=0
+  ok   [corner_fb_rc1] END corner_f0 json=yes (57 fields)
+  ok   [corner_fb_rc1] no retry: corner_fb ran once
+  ok   [corner_fb_rc1] no value / log line leaks (stdout · stderr · batch log)
+  ok   [corner_fb_rc1] stubs reported no protocol error
+  ok   [corner_fb_rc1] nvidia-smi called only with the registered query
+  ok   [corner_fb_rc1] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [corner_fb_rc1] git called only as: git -C WT rev-parse HEAD
+  ok   [corner_fb_rc1] batch log exists and every stdout line is also in it
+  ok   [corner_crash_oom] exit 0
+  ok   [corner_crash_oom] END corner_fb status=traceback
+  ok   [corner_crash_oom] END corner_fa status=cuda_oom
+  ok   [corner_crash_oom] END corner_f0 converged json=yes (57 fields)
+  ok   [corner_crash_oom] no retry of any arm (each once)
+  ok   [corner_crash_oom] no value / log line leaks (stdout · stderr · batch log)
+  ok   [corner_crash_oom] stubs reported no protocol error
+  ok   [corner_crash_oom] nvidia-smi called only with the registered query
+  ok   [corner_crash_oom] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [corner_crash_oom] git called only as: git -C WT rev-parse HEAD
+  ok   [corner_crash_oom] batch log exists and every stdout line is also in it
+  ok   [heartbeat] exit 0
+  ok   [heartbeat] exactly 2 HB lines for confirm_fb
+  ok   [heartbeat] HB at +10 min with frame_lines=16
+  ok   [heartbeat] HB at +20 min with frame_lines=31
+  ok   [heartbeat] HB in batch log
+  ok   [heartbeat] END confirm_fb (1800 s) frame_lines=100
+  ok   [heartbeat] no value / log line leaks (stdout · stderr · batch log)
+  ok   [heartbeat] stubs reported no protocol error
+  ok   [heartbeat] nvidia-smi called only with the registered query
+  ok   [heartbeat] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [heartbeat] git called only as: git -C WT rev-parse HEAD
+  ok   [heartbeat] batch log exists and every stdout line is also in it
+  ok   [eta_ok] exit 0
+  ok   [eta_ok] exactly one ETA line
+  ok   [eta_ok] ETA s_per_frame=10.000 projected=2026-11-06 01:06:00 KST OK
+  ok   [eta_ok] ETA at the 60-min heartbeat (after HB +60 min of corner_fb)
+  ok   [eta_ok] 11 corner_fb heartbeats
+  ok   [eta_ok] no value / log line leaks (stdout · stderr · batch log)
+  ok   [eta_ok] stubs reported no protocol error
+  ok   [eta_ok] nvidia-smi called only with the registered query
+  ok   [eta_ok] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [eta_ok] git called only as: git -C WT rev-parse HEAD
+  ok   [eta_ok] batch log exists and every stdout line is also in it
+  ok   [eta_over] exit 0 (ETA is report-only)
+  ok   [eta_over] ETA OVER with projected=2026-11-22 01:59:20 KST
+  ok   [eta_over] all four arms still ran (no automatic change)
+  ok   [eta_over] no value / log line leaks (stdout · stderr · batch log)
+  ok   [eta_over] stubs reported no protocol error
+  ok   [eta_over] nvidia-smi called only with the registered query
+  ok   [eta_over] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [eta_over] git called only as: git -C WT rev-parse HEAD
+  ok   [eta_over] batch log exists and every stdout line is also in it
+  ok   [eta_na] exit 0
+  ok   [eta_na] ETA n/a when no frame-line interval in the first hour
+  ok   [eta_na] no value / log line leaks (stdout · stderr · batch log)
+  ok   [eta_na] stubs reported no protocol error
+  ok   [eta_na] nvidia-smi called only with the registered query
+  ok   [eta_na] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [eta_na] git called only as: git -C WT rev-parse HEAD
+  ok   [eta_na] batch log exists and every stdout line is also in it
+  ok   [realgit_ok] real git at sealed commit: passes HEAD check, refused later at deadline
+  ok   [realgit_ok] real git rev-parse was used
+  ok   [realgit_ok] python never called
+  ok   [realgit_ok] no value / log line leaks (stdout · stderr · batch log)
+  ok   [realgit_ok] stubs reported no protocol error
+  ok   [realgit_ok] nvidia-smi called only with the registered query
+  ok   [realgit_ok] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [realgit_ok] git called only as: git -C WT rev-parse HEAD
+  ok   [realgit_ok] batch log exists and every stdout line is also in it
+  ok   [realgit_moved] real git one commit past seal → REFUSED HEAD
+  ok   [realgit_moved] python never called
+  ok   [realgit_moved] no value / log line leaks (stdout · stderr · batch log)
+  ok   [realgit_moved] stubs reported no protocol error
+  ok   [realgit_moved] nvidia-smi called only with the registered query
+  ok   [realgit_moved] pgrep called only as: pgrep -af [m]pm3d_compaction.py
+  ok   [realgit_moved] git called only as: git -C WT rev-parse HEAD
+  ok   [realgit_moved] batch log exists and every stdout line is also in it
+
+== SUMMARY: pass 747 · fail 0 ==

@@ -1,0 +1,11 @@
+{
+  "pin": "c8a55c8ae1021ec80634ee8c6533deeebc67ce61",
+  "local_git_blob_matches": 17,
+  "received_original_zip_members_equal": 69,
+  "original_zip_sha256": "f3fa59d7c244dccbf09cbea95c4cfac85466d1c420c76027dc06b8e207de06aa",
+  "external_zip_bytes": 246243,
+  "external_zip_sha256": "00c6f07b273d55e3717bde6591ae69314dda439c97574fa6b74fe3216e3f5ef0",
+  "external_zip_manifest_checked": 88,
+  "pasted_report_equals_zip": true,
+  "scope": "Local object database and previously published package bytes; no new remote research host access."
+}

@@ -1,0 +1,19 @@
+
+── SG payload 조립만 (--step3-cjunc-graph-only) — 봉인 원천 출력 (★ 10-26 B″ · 1저자 Q1 (가) · 시험 먼저)
+  PASS  SG1 조립만 런 — rc 0 · 출력 = 봉인 원천 기록 (run_contract.cjunc_graph_only_problem 통과 · graph_only True · 규칙 = carbon_junction.CJUNC_GRAPH_FP_RULE) · 실제 SV 런 (같은 인자 · 플래그 없음) rc 0
+  PASS  SG2 지문 = 실제 SV 런 증서 지문 — 주 = 주 해 증서 · 아래 = 아래 끝 증서 · 위 = 위 끝 풀이 증서 (못 가른 덩어리 1 · 셋 다 hex64) · 소비자 대조 (ca_ext_svcf.graph_problem · run_contract.ca_ext_record_ok(graphs=)) 통과
+  PASS  SG3 결합 칸 = 실제 SV 런 주 증서의 결합 (bind_version + 격자 · σ 표 · face 계획 · 접합 원장 · 계획 행 지문 — 같은 입력에서 다시 조립했다는 증거)
+  PASS  SG4 솔브 없음 · σ 없음 — 화면에 CG 줄 없음 · 출력 칸 = 고정 칸 (CJUNC_GRAPH_ONLY_KEYS · mpm_metrics · σ 없음) · .failed 없음 · .part 없음
+  FAIL  SG5 환경 단위 = 이 인터프리터 (run_contract.env_unit_now — 사슬 env_record 와 같은 함수) · 비용 칸 (시간 둘 ≥ 0 · 최대 RSS kB int > 0)  (({'numpy': '2.5.3', 'python_minor': '3.12', 'scipy': '1.16.3'}, {'python_minor': '3.12', 'numpy': '2.5.3', 'scipy': '1.16.3'}, {'peak_rss_kb': None, 'seconds_assemble': 0.019001483917236328, 'seconds_step3': 0.03200054168701172}))
+    보고 SG (픽스처 · 의미 없음) — 조립만 STEP3 0.03200054168701172 s · 조립 0.019001483917236328 s · 최대 RSS None kB
+  PASS  SG6 SV 노브 끔 + 조립만 — rc 0 · 주 지문 = 노브 켠 조립만 주 지문 (노브는 주 계를 안 바꾼다) · 아래 · 위 None · 결합 = 계획 행 지문만 다름 (노브 켠 계획은 행 지문에 요청이 들어간다 · SP16)
+  PASS  SG7 DBE 꼴 (SDCP 점 하나 · 못 가른 덩어리 0) — 조립만 위 끝 None · 아래 끝 = 그 런 아래 끝 증서 지문 · 소비자 대조 통과 (위 끝 풀이 기록 없음 ↔ 원천 위 끝 없음)
+  PASS  SG8 입구 거부 (GPU 전 · 출력 없음) — 접합 없이 조립만 = S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC| (그 플래그 이름) · 조립만 + rasterize-only = S2_CJUNC_REFUSED|GRAPH_ONLY_RASTERIZE_ONLY| (두 출력 꼴이 겹친다)
+  PASS  SG9 쓰기 실패 = 구조화 종료 (S2_CJUNC_GRAPH_ONLY|WRITE| · rc ≠ 0 · 최종 파일 · .part 없음 — 반쯤 쓰인 원천 파일을 남기지 않는다)
+
+── SGF 조립만 기록 꼴 — 칸마다 깨 본다 (★ 10-26 B″ 변이 보강 · run_contract.cjunc_graph_only_problem · 합성 · payload 없음)
+  PASS  SGF0 정직한 합성 기록 = 문제 없음 · 조기 반환 꼴 (지문 None · 사유 글) = 문제 없음 · 최대 RSS None = 문제 없음
+  PASS  SGF1 칸 안 값이 틀린 꼴 29 — 전부 그 칸의 코드 (GRAPH_ONLY|schema|graphs|reason|bind|env|cost|) 로 거부 (예외 아님)
+
+10 PASS · 1 FAIL
+  - SG5 환경 단위 = 이 인터프리터 (run_contract.env_unit_now — 사슬 env_record 와 같은 함수) · 비용 칸 (시간 둘 ≥ 0 · 최대 RSS kB int > 0)

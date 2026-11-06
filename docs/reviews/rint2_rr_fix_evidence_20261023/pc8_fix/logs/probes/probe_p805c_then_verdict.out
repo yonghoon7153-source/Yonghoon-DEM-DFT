@@ -1,0 +1,26 @@
+{
+ "chain_alive_when_recover_ran": true,
+ "group_records_when_recover_ran": [
+  "L01_floor.end.json",
+  "L01_floor.launch.json"
+ ],
+ "recover_rc": 3,
+ "result_line": null,
+ "resume_add_while_chain_alive": [
+  3,
+  null
+ ],
+ "recover_tail": [
+  "recover — 그룹 기록 0 개 정리 · 미확인 0",
+  "  recover attempt_1: 사슬 부모 (시작 기록 pid 21239) 가 살아 있다 — 그 사슬이 결과 줄을 쓴다 · 건드리지 않음 (사슬이 끝난 뒤 다시 recover · ★ 11-04 PC8-05) — 결과 줄을 쓰지 않는다 (미확인 · 다음 시도 채택을 막는다)"
+ ],
+ "chain_rc": 0,
+ "chain_summary_status": "CALIBRATED",
+ "runner_calls": 14,
+ "ledger_kinds": [
+  "header:None::",
+  "entry:1::",
+  "start:1::",
+  "result:1:completed:post"
+ ]
+}

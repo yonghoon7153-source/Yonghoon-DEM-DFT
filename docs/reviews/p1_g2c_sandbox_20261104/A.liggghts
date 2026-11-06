@@ -1,0 +1,4 @@
+# 팔 A — 끊김 없는 원 런 (주기 restart 가 런 중간 step N 에 쓰인다)
+include fresh.inc
+include outA.inc
+run ${RA}

@@ -384,20 +384,30 @@ def eps_sphere(atoms, d, plate_z_um):
     return v, 100.0 * (1.0 - v / (d['box_x_um'] * d['box_y_um'] * plate_z_um))
 
 
-def log_curve(bed, log_path, atoms, plate_z_sim, step, d):
-    """초안 1 보조 그림과 같은 함수 (make_fig_p2_aux.branches) — 가압 가지 · 판 고정 이완 가지."""
+def log_curve(bed, log_path, atoms, plate_z_sim, step, d, stitch=None):
+    """초안 1 보조 그림과 같은 함수 (make_fig_p2_aux.branches) — 가압 가지 · 판 고정 이완 가지.
+    stitch = dict(log_a, S) 이면 압축 체크포인트 S 재개 침대 (D0.7) — log_stitch.branches_stitched (같은 식 · A 의 S 이하 + B)."""
     import make_fig_p2_aux as P2
     es = dict(atoms=atoms, plate_z_sim=plate_z_sim, plate_z_um=plate_z_sim * src.LEN_SIM_TO_UM, step=step)
-    fake = {bed: dict(case=CASE[bed], endstate=es)}
     common = dict(press_speed_sim=d['press_speed_sim'], dt=d['dt'], box_x_um=d['box_x_um'], box_y_um=d['box_y_um'],
                   target_MPa=d['target_MPa'])
-    br = P2.branches(fake, {bed: str(log_path)}, common)[bed]
+    if stitch:
+        import log_stitch as LS
+        br = LS.branches_stitched(es, CASE[bed], stitch['log_a'], log_path, stitch['S'], common, label=bed)
+    else:
+        fake = {bed: dict(case=CASE[bed], endstate=es)}
+        br = P2.branches(fake, {bed: str(log_path)}, common)[bed]
     load, relax = br['load'], br['relax']
-    return dict(log=relpath(log_path), log_sha256=br['log_sha256'], log_bytes=br['log_bytes'], compress_start_step=br['s0'],
-                stop_step=br['s_end'], n_compress_runs=br['n_runs'], plate_z0_um=br['plate_z0_um'], z_end_pred_um=br['z_end_pred_um'],
-                z_end_mesh_um=br['z_end_mesh_um'], p_t0minus_MPa=load[-1][1], p_relax_first_MPa=relax[0][1], p_end_MPa=relax[-1][1],
-                eps_sphere_fixed_pct=relax[-1][3], n_load_rows=len(load), n_relax_rows=len(relax),
-                p_threshold_display_MPa=P2.P_CONTACT_MPA), load, relax
+    out = dict(log=relpath(log_path), log_sha256=br['log_sha256'], log_bytes=br['log_bytes'], compress_start_step=br['s0'],
+               stop_step=br['s_end'], n_compress_runs=br['n_runs'], plate_z0_um=br['plate_z0_um'], z_end_pred_um=br['z_end_pred_um'],
+               z_end_mesh_um=br['z_end_mesh_um'], p_t0minus_MPa=load[-1][1], p_relax_first_MPa=relax[0][1], p_end_MPa=relax[-1][1],
+               eps_sphere_fixed_pct=relax[-1][3], n_load_rows=len(load), n_relax_rows=len(relax),
+               p_threshold_display_MPa=P2.P_CONTACT_MPA)
+    if stitch:
+        out['log_stitch'] = dict(log_a=relpath(stitch['log_a']), log_a_sha256=br['log_a_sha256'], log_a_bytes=br['log_a_bytes'],
+                                 splice=br['splice'], rule='docs/50kg/report_y4/draft2/log_stitch.py — A 의 압축 행 중 step ≤ S + B 전부 · '
+                                 'n_compress_runs = 판정 수 (S 를 담은 run 은 A · B 두 조각)')
+    return out, load, relax
 
 
 def codex_check(bed, vals):
@@ -706,8 +716,9 @@ def pick(fm, *keys):
     return {k: fm.get(k) for k in keys}
 
 
-def run_bed(bed, tgz, log, prefix=None, record=None, member_record=None, work=None, keep_work=False):
+def run_bed(bed, tgz, log, prefix=None, record=None, member_record=None, work=None, keep_work=False, stitch=None):
     need(bed in CASE, f'모르는 침대 {bed!r} (가능: {", ".join(ALL_BEDS)})')
+    need(not stitch or log, f'{bed}: --log-stitch 는 --log (이어 돈 실행의 로그) 와 함께만')
     need(log or bed not in CODEX, f'{bed}: Codex 대조 침대는 로그가 필요하다 (--log)')
     need(log or bed not in E_BEDS, f'{bed}: 영률 변형 침대는 로그가 필요하다 (--log · 끝 판 압력 · 시작 상태 대조)')
     case = CASE[bed]
@@ -745,7 +756,7 @@ def run_bed(bed, tgz, log, prefix=None, record=None, member_record=None, work=No
         print(f'[{bed}] step {info["end_step"]} · AM {n_am} · SE {n_se} · 판 {plate_z_um:.6f} µm · ε_sphere {eps:.9f} %', flush=True)
         curve = load = relax = None
         if log:
-            curve, load, relax = log_curve(bed, log, atoms, plate_z_sim, info['end_step'], d)
+            curve, load, relax = log_curve(bed, log, atoms, plate_z_sim, info['end_step'], d, stitch=stitch)
             need(abs(curve['eps_sphere_fixed_pct'] - eps) < 1e-9, '로그 판 고정 ε ≠ 끝 덤프 ε_sphere')
             print(f'[{bed}] 로그: 정지 step {curve["stop_step"]} · t=0⁻ {curve["p_t0minus_MPa"]:.5f} · 이완 첫 {curve["p_relax_first_MPa"]:.5f} · '
                   f'끝 {curve["p_end_MPa"]:.5f} MPa', flush=True)
@@ -1109,6 +1120,8 @@ def main(argv=None):
         s.add_argument('--bed', required=True, choices=ALL_BEDS)
         s.add_argument('--tgz', required=True, help='끝 세트 묶음 (atom_end · contact_end · mesh_end 같은 step + 덱)')
         s.add_argument('--log', default=None, help='LIGGGHTS 로그 (압밀 곡선 · 이완 끝 판 압력) — 없으면 그 칸 빈칸')
+        s.add_argument('--log-stitch', default=None, metavar='A_LOG:S',
+                       help='압축 체크포인트 S 에서 이어 돈 침대 (D0.7) — A = S 를 쓴 실행의 로그 · --log = 이어 돈 실행의 로그 (log_stitch.py)')
         s.add_argument('--prefix', default=None, help='묶음 안 침대 폴더 접두 (기본 <case>/)')
         s.add_argument('--record', default=None, help='묶음 · 멤버 sha256 기록 (README 표) — D2 · D3 는 자동')
         s.add_argument('--member-record', default=None, help='멤버 sha256 목록 (sha  ./path) — D3 는 자동')
@@ -1127,7 +1140,12 @@ def main(argv=None):
         DATA, OVITO = ROOT / 'data', ROOT / 'ovito'
     try:
         if a.cmd in ('run', 'add'):
-            run_bed(a.bed, a.tgz, a.log, a.prefix, a.record, a.member_record, a.work, a.keep_work)
+            stitch = None
+            if a.log_stitch:
+                la, _, s_txt = a.log_stitch.rpartition(':')
+                need(la and s_txt.isascii() and s_txt.isdigit(), f'--log-stitch {a.log_stitch!r} — A_LOG:S 꼴 (S = 정수 step)')
+                stitch = dict(log_a=la, S=int(s_txt))
+            run_bed(a.bed, a.tgz, a.log, a.prefix, a.record, a.member_record, a.work, a.keep_work, stitch=stitch)
         e_bed = getattr(a, 'bed', None) in E_BEDS
         if a.cmd == 'merge-modulus' or (a.cmd == 'add' and e_bed):
             merge_modulus()                  # 영률 변형 = 그 표만 (입도 표 · 그림 안 건드림)

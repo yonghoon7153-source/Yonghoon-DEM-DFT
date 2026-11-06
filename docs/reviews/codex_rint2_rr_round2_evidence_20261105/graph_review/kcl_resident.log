@@ -1,0 +1,9 @@
+
+── T25 ★ 10-26 묶음 B7 (Codex 회차 ① RR1-02 · P3 · 1저자 10-26 Q3 (가)) KCL 결손 진단 합 (`target_kcl_raw` · step3_conv_cert :509) 넘침 — 독립 노드 3 · gb 8e307 · gt 1 · φ 0.2 (에너지 U · 상한 유한 · 노드 결손 6.4e307 셋의 합 1.92e308 만 넘침 · 판정문 탐침 꼴) → 경고를 오류로 바꿔도 예외 없이 원장 문제 (KCL 진단 합 넘침) · certify = NOT_CERTIFIABLE · ok False · 기본 경고 설정에서 RuntimeWarning 기록 0
+  PASS  T25 [target_bracket (판정문 탐침과 같은 호출) · 경고 error] → 예외 · RuntimeWarning 없이 원장 문제 (KCL 진단 합 넘침 · 구간 · 진단 합 없음)
+  PASS  T25 [target_bracket (판정문 탐침과 같은 호출) · 경고 always] → 예외 · RuntimeWarning 없이 원장 문제 (KCL 진단 합 넘침 · 구간 · 진단 합 없음)
+  PASS  T25 [certify · 경고 error] → 예외 · RuntimeWarning 없이 원장 문제 (KCL 진단 합 넘침 · 구간 · 진단 합 없음) · NOT_CERTIFIABLE · ok False
+  PASS  T25 [certify · 경고 always] → 예외 · RuntimeWarning 없이 원장 문제 (KCL 진단 합 넘침 · 구간 · 진단 합 없음) · NOT_CERTIFIABLE · ok False
+    (T25 0.0 s)
+
+== test_step3_target_cert [빠른 판]: 4/4 PASS (0.0 s)

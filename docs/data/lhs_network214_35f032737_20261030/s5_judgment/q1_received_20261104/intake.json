@@ -1,0 +1,83 @@
+{
+  "schema": "lhs_q1_received_archive/v1",
+  "source": "user_uploaded_q1_settle_20261104.tar.gz",
+  "source_size_bytes": 2333,
+  "source_sha256": "485aca07db04462bef971c1586e6c88f52623f5caa67edc0396e59ac1e212698",
+  "archive_member_count": 6,
+  "regular_file_count": 2,
+  "method": "JSON byte preservation and recorded-value arithmetic only; no solver or WSL execution",
+  "cases": {
+    "lhs00_123": {
+      "member": "out_lhs00_123/settle_lhs00_123.json",
+      "size_bytes": 3811,
+      "sha256": "9fbe029cebde60a26e786544ff39d583fd1232c441620cbf010c22d80bc863e8",
+      "recorded_verdict": "INCLUDE",
+      "recorded_checks": {
+        "A0_inputs_equal_b7_provenance": true,
+        "A0v_inputs_equal_v12_provenance": true,
+        "A_b7_reproduced": true,
+        "B_v12_reproduced_by_old_electrode": true,
+        "case_dir_untouched": true,
+        "A_code_equals_b7_seal": true,
+        "A_run_record_chain": true,
+        "v12_solver_path": "spsolve",
+        "v12_n_perc_approx": 11228,
+        "n_perc_rebuilt": 11228
+      },
+      "full_d_electrode": 1.5297321828144916e-05,
+      "full_d_records": 0.00015257857796757433,
+      "full_sigma_adaptive": 6.553482071741239e-05,
+      "full_record_v12": 6.553e-05,
+      "absolute_gap_float64": 4.820717412388174e-09,
+      "tolerance_float64": 5.001e-09,
+      "excess_over_tolerance_float64": -1.8028258761182605e-10,
+      "B_by_branch_recomputed_from_recorded_numbers": {
+        "full": true,
+        "bulk_only": true,
+        "constriction_only": true
+      },
+      "full_delta_recomputed": 1.5297321828144916e-05,
+      "reported_shell_rc": 0,
+      "shell_rc_source": "user handoff; archive JSON has no process exit-code field",
+      "author_Q7_inclusion_decision": "tool INCLUDE"
+    },
+    "lhsx_026": {
+      "member": "out_lhsx_026/settle_lhsx_026.json",
+      "size_bytes": 3790,
+      "sha256": "e556ad99b6d6b4f52e4b39725a0b0c5a4693f8dcbd7b5c5ce2e16bd3a5cd00a8",
+      "recorded_verdict": "HOLD",
+      "recorded_checks": {
+        "A0_inputs_equal_b7_provenance": true,
+        "A0v_inputs_equal_v12_provenance": true,
+        "A_b7_reproduced": true,
+        "B_v12_reproduced_by_old_electrode": false,
+        "case_dir_untouched": true,
+        "A_code_equals_b7_seal": true,
+        "A_run_record_chain": true,
+        "v12_solver_path": "spsolve",
+        "v12_n_perc_approx": 11613,
+        "n_perc_rebuilt": 11613
+      },
+      "full_d_electrode": 0.00015229967149976709,
+      "full_d_records": 0.0001522847393870136,
+      "full_sigma_adaptive": 0.42381246501935615,
+      "full_record_v12": 0.42381246,
+      "absolute_gap_float64": 5.0193561529354724e-09,
+      "tolerance_float64": 5.001e-09,
+      "excess_over_tolerance_float64": 1.8356152935472026e-11,
+      "B_by_branch_recomputed_from_recorded_numbers": {
+        "full": false,
+        "bulk_only": true,
+        "constriction_only": true
+      },
+      "full_delta_recomputed": 0.00015229967149976709,
+      "reported_shell_rc": 3,
+      "shell_rc_source": "user handoff; archive JSON has no process exit-code field",
+      "author_Q7_inclusion_decision": "INCLUDE"
+    }
+  },
+  "stage_a_pressure_tsv_received": false,
+  "terminal_stdout_received": false,
+  "external_review_status": "NOT_REQUESTED_YET",
+  "release_status": "HOLD"
+}

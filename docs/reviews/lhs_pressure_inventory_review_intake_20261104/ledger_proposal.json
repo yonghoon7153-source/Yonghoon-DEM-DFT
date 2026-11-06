@@ -1,0 +1,31 @@
+{
+  "new_findings": [
+    {
+      "id": "LPI-01",
+      "severity": "P3",
+      "status": "open",
+      "owner": "codex",
+      "title": "stdout 실패 뒤 두 번째 JSON 출력 시도",
+      "opened_in": "docs/reviews/lhs_pressure_inventory_review_intake_20261104/external_verdict.md",
+      "claimed_fixed_sha": null,
+      "verified_sha": null,
+      "evidence_tests": [],
+      "supersedes": [],
+      "decision_note": "합성 재현 일치. 계산/출력 오류 분리·flush·종료·shell fallback 경계 보강 계획은 1저자 비준 대기. 준비 핵심 수용은 유지하며 실제 실행/배포 GO 아님; 전체 게이트 HOLD."
+    },
+    {
+      "id": "LPI-02",
+      "severity": "P3",
+      "status": "open",
+      "owner": "codex",
+      "title": "입력 크기 상한은 정규식 처리 시간 상한이 아님",
+      "opened_in": "docs/reviews/lhs_pressure_inventory_review_intake_20261104/external_verdict.md",
+      "claimed_fixed_sha": null,
+      "verified_sha": null,
+      "evidence_tests": [],
+      "supersedes": [],
+      "decision_note": "합성 재현 일치. 시간 상한 부재 명시와 반례 보존을 권고; B7·집계 정의·등록 규칙은 유지. 비준 대기. 준비 핵심 수용은 유지하며 실제 실행/배포 GO 아님; 전체 게이트 HOLD."
+    }
+  ],
+  "update_findings": []
+}

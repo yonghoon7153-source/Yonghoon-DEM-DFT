@@ -1,0 +1,383 @@
+{
+  "N": 40000,
+  "deltaMax_nonneg_A": true,
+  "contact_vs_A": {
+    "A2": {
+      "n_ref": 3111,
+      "n_x": 3111,
+      "n_common": 3111,
+      "only_ref": 0,
+      "only_x": 0,
+      "orientation_differs": 0,
+      "groups": {
+        "pos": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "force": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "force_normal": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "force_tangential": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "torque": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "deltaMax": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "shear": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "contactArea": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "delta": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "contactPoint": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        }
+      }
+    },
+    "B": {
+      "n_ref": 3111,
+      "n_x": 3111,
+      "n_common": 3111,
+      "only_ref": 0,
+      "only_x": 0,
+      "orientation_differs": 0,
+      "groups": {
+        "pos": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "force": {
+          "n_pairs": 3111,
+          "n_differ": 3111,
+          "max_abs": 0.001463440345166496,
+          "max_rel": 1.933961941647056
+        },
+        "force_normal": {
+          "n_pairs": 3111,
+          "n_differ": 3111,
+          "max_abs": 5.162889554764013e-07,
+          "max_rel": 0.06143042510347275
+        },
+        "force_tangential": {
+          "n_pairs": 3111,
+          "n_differ": 3111,
+          "max_abs": 0.0014634404682141203,
+          "max_rel": 1.9230736649182332
+        },
+        "torque": {
+          "n_pairs": 3111,
+          "n_differ": 3111,
+          "max_abs": 2.7966186736239604e-06,
+          "max_rel": 1.9355287165659207
+        },
+        "deltaMax": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "shear": {
+          "n_pairs": 3111,
+          "n_differ": 3111,
+          "max_abs": 2.528729609249099e-08,
+          "max_rel": 1.8014470813991192
+        },
+        "contactArea": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "delta": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "contactPoint": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        }
+      }
+    },
+    "B2": {
+      "n_ref": 3111,
+      "n_x": 3111,
+      "n_common": 3111,
+      "only_ref": 0,
+      "only_x": 0,
+      "orientation_differs": 0,
+      "groups": {
+        "pos": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "force": {
+          "n_pairs": 3111,
+          "n_differ": 3111,
+          "max_abs": 0.001463440345166496,
+          "max_rel": 1.933961941647056
+        },
+        "force_normal": {
+          "n_pairs": 3111,
+          "n_differ": 3111,
+          "max_abs": 5.162889554764013e-07,
+          "max_rel": 0.06143042510347275
+        },
+        "force_tangential": {
+          "n_pairs": 3111,
+          "n_differ": 3111,
+          "max_abs": 0.0014634404682141203,
+          "max_rel": 1.9230736649182332
+        },
+        "torque": {
+          "n_pairs": 3111,
+          "n_differ": 3111,
+          "max_abs": 2.7966186736239604e-06,
+          "max_rel": 1.9355287165659207
+        },
+        "deltaMax": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "shear": {
+          "n_pairs": 3111,
+          "n_differ": 3111,
+          "max_abs": 2.528729609249099e-08,
+          "max_rel": 1.8014470813991192
+        },
+        "contactArea": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "delta": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "contactPoint": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        }
+      }
+    },
+    "C": {
+      "n_ref": 3111,
+      "n_x": 3111,
+      "n_common": 3111,
+      "only_ref": 0,
+      "only_x": 0,
+      "orientation_differs": 0,
+      "groups": {
+        "pos": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "force": {
+          "n_pairs": 3111,
+          "n_differ": 334,
+          "max_abs": 0.00011797054940488247,
+          "max_rel": 1.2033363450397514
+        },
+        "force_normal": {
+          "n_pairs": 3111,
+          "n_differ": 334,
+          "max_abs": 5.163036298162695e-07,
+          "max_rel": 0.06143417399113696
+        },
+        "force_tangential": {
+          "n_pairs": 3111,
+          "n_differ": 334,
+          "max_abs": 0.00011809914851576819,
+          "max_rel": 1.9679149482600675
+        },
+        "torque": {
+          "n_pairs": 3111,
+          "n_differ": 334,
+          "max_abs": 2.8194693806563205e-07,
+          "max_rel": 1.878534636534838
+        },
+        "deltaMax": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "shear": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "contactArea": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "delta": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "contactPoint": {
+          "n_pairs": 3111,
+          "n_differ": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        }
+      }
+    }
+  },
+  "hist_vs_A_at_N": {
+    "A2": {
+      "n_common": 3111,
+      "deltaMax_equal": 3111,
+      "shear_equal": 3111,
+      "only_ref": 0,
+      "only_x": 0
+    },
+    "B": {
+      "n_common": 3111,
+      "deltaMax_equal": 3111,
+      "shear_equal": 0,
+      "only_ref": 0,
+      "only_x": 0
+    },
+    "B2": {
+      "n_common": 3111,
+      "deltaMax_equal": 3111,
+      "shear_equal": 0,
+      "only_ref": 0,
+      "only_x": 0
+    },
+    "C": {
+      "n_common": 3111,
+      "deltaMax_equal": 3111,
+      "shear_equal": 3111,
+      "only_ref": 0,
+      "only_x": 0
+    }
+  },
+  "hist_vs_A_at_Nm1": {
+    "A2": {
+      "n_common": 3111,
+      "deltaMax_equal": 3109,
+      "shear_equal": 0,
+      "only_ref": 0,
+      "only_x": 0
+    },
+    "B": {
+      "n_common": 3111,
+      "deltaMax_equal": 3109,
+      "shear_equal": 3111,
+      "only_ref": 0,
+      "only_x": 0
+    },
+    "B2": {
+      "n_common": 3111,
+      "deltaMax_equal": 3109,
+      "shear_equal": 3111,
+      "only_ref": 0,
+      "only_x": 0
+    },
+    "C": {
+      "n_common": 3111,
+      "deltaMax_equal": 3109,
+      "shear_equal": 0,
+      "only_ref": 0,
+      "only_x": 0
+    }
+  },
+  "atoms_vs_A": {
+    "A2": {
+      "n_ref": 1220,
+      "n_x": 1220,
+      "n_common": 1220,
+      "n_differ": 0
+    },
+    "B": {
+      "n_ref": 1220,
+      "n_x": 1220,
+      "n_common": 1220,
+      "n_differ": 0
+    },
+    "B2": {
+      "n_ref": 1220,
+      "n_x": 1220,
+      "n_common": 1220,
+      "n_differ": 0
+    },
+    "C": {
+      "n_ref": 1220,
+      "n_x": 1220,
+      "n_common": 1220,
+      "n_differ": 0
+    }
+  },
+  "B_detail": {
+    "old_pairs": 3111,
+    "old_pairs_shear_eq_A_Nm1": 3111,
+    "new_pairs": 0,
+    "new_pairs_shear_zero": 0,
+    "fn_differ": 3111,
+    "fn_differ_guarded_change_in_A": 0,
+    "guarded_change_pairs_in_A": 0,
+    "deltaMax_differ_vs_A_N": 0,
+    "deltaMax_differ_vs_A_N_guarded_change": 0
+  }
+}

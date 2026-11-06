@@ -1,0 +1,10 @@
+--- pressure_inventory.sh
++++ output_retry.sh
+@@ -276,6 +276,7 @@
+             return 2
+         sys.stdout.flush()
+     except BaseException:
++        print(json.dumps({"status": "NOT_ESTABLISHED", "rc": 2}))
+         return 2
+     return rc
+ 

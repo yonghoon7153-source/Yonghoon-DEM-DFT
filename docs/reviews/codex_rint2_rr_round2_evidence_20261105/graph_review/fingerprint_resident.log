@@ -1,0 +1,22 @@
+── FP
+  PASS  FP-a 객체 배열 — 같은 내용 · 다른 객체 (실행 중 만든 문자열 · UTF-8 · 빈 문자열) → 같은 지문 (원소 · dict 안 · 목록 안)
+  PASS  FP-b 한 글자 다름 (ASCII · 한글) → 다른 지문
+  PASS  FP-c 경계 · 순서 · 개수 · 모양 · 형 (길이 접두 · 순서 보존 · 형 표지) → 다른 지문
+  PASS  FP-d 섞인 원소 (None · bool · int · float · numpy 수 · bytes · 튜플) — 같은 내용 · 다른 객체 → 같은 지문
+  PASS  FP-e 숫자 배열 = dtype · 모양 · C 순서 바이트 그대로 (독립 식 · 연속 아닌 뷰 = 연속 사본) — 옛 지문 비트 유지
+  PASS  FP-f 내용 직렬화가 없는 원소 · 값 (object() · set · 구조체 객체 칸) = 거부 (주소 · 해시 순서로 지문을 만들지 않는다)
+  PASS  FP-g 같은 입력으로 다시 만든 원장 — 원장 지문 · 계획 행 지문 같음 (사유 = 실행 중 만든 다른 문자열 객체)
+  PASS  FP-h 같은 내용 새 객체로 바꾼 원장 → 지문 같음 · 계획이 받아들인다 (거짓 거부 없음)
+  PASS  FP-h 한 글자 바꾼 원장 (사유 SDCP → SDCQ) → 지문 다름 · 계획 거부 (E5)
+  PASS  FP-i 별도 `python3 -I` 하위 프로세스 둘 (힙 선할당 0 · 20000) = 이 프로세스 — carbon_junction (객체 배열 · 원장 · 계획) (11 지문)
+  PASS  FP-i 별도 `python3 -I` 하위 프로세스 둘 (힙 선할당 0 · 20000) = 이 프로세스 — ptfe_face_alpha (캡슐 · 행 · 계획 · 간선 · 격자) (6 지문)
+  PASS  FP-i 별도 `python3 -I` 하위 프로세스 둘 (힙 선할당 0 · 20000) = 이 프로세스 — ca_s0_census (계획 sha256 · 정준 바이트 · 파일 sha256) (3 지문)
+  PASS  FP-j carbon_junction._grid_fp 숫자 격자 — 같은 내용 다른 객체 = 같음 · 한 칸 다름 · dtype 다름 = 다름
+  PASS  FP-j carbon_junction._grid_fp 객체 격자 = 거부 (포인터 바이트 · 격자는 수치 배열 계약)
+  PASS  FP-j ptfe_face_alpha._grid_fp 숫자 격자 — 같은 내용 다른 객체 = 같음 · 한 칸 다름 · dtype 다름 = 다름
+  PASS  FP-j ptfe_face_alpha._grid_fp 객체 격자 = 거부 (포인터 바이트 · 격자는 수치 배열 계약)
+  PASS  FP-k ptfe_face_alpha — 캡슐 지문 (사본 · F 순서 · 연속 아닌 뷰 · 목록 = 같음 · 좌표 1 ulp = 다름) · 계획 행 · 계획 · 간선 (같은 내용 = 같음 · 1 ulp = 다름)
+  PASS  FP-l ca_s0_census — 계획 sha256 · 정준 바이트 (다른 객체로 만든 같은 계획 = 같음 · 출처 한 글자 = 다름) · 파일 sha256
+  PASS  FP-m 지문 · 해시 함수 목록 = 이 시험의 표 (새 함수 = 덮을 때까지 실패 · step3_conv_cert = 없음)
+
+== test_carbon_junction: 19/19 PASS

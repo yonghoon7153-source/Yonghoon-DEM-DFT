@@ -1,7 +1,9 @@
 """50kg D1 · D2 · D3 값 대응표 — 이종기술 3세부 2차년도 중간 발표 (10-13 · 13–19쪽) 의 DEM 지표를 같은 정의로 (1저자 11-02 "여기에 들어간 모든 값이 필요해").
 
 새 계산 없음 — 값 = draft2 metrics_<침대>.json · 끝 덱 (kg50_y4_sources.parse_deck) · values/szz_share/plane_load.json (szz_share_kg50.py) 의 옮김뿐.
-usage: python3 -I compile_values_kg50.py <리포> → <리포>/docs/50kg/report_y4/meeting_20261104/values/values_D123.csv (+ 화면 표)
+usage: python3 -I compile_values_kg50.py <리포> [--with-d07] → <리포>/docs/50kg/report_y4/meeting_20261104/values/values_D123.csv (+ 화면 표)
+  --with-d07 (11-05 · 1저자 "d0.7 관련해서 이종기술, 50kg에서 했던 parameter 추출들 진행해봐") = 0.7 µm 칸을 더한 values_D123_D07.csv —
+  기본 출력 (values_D123.csv · 11-04 회의 덱 원천) 은 바이트 그대로 (같은 함수 · 같은 행).
 """
 import csv
 import json
@@ -14,10 +16,14 @@ sys.path.insert(0, str(REPO / 'scripts'))
 import kg50_y4_sources as src  # noqa: E402
 
 OUT = REPO / 'docs/50kg/report_y4/meeting_20261104/values'
-BEDS = [('D3', 'SE3um', '3 µm'), ('D2', 'SE2um', '2 µm'), ('D1', 'SE1um', '1 µm')]
+WITH_D07 = '--with-d07' in sys.argv[2:]
+BEDS = [('D3', 'SE3um', '3 µm'), ('D2', 'SE2um', '2 µm'), ('D1', 'SE1um', '1 µm')] + ([('D0.7', 'SE0p7um', '0.7 µm')] if WITH_D07 else [])
+OUT_CSV = 'values_D123_D07.csv' if WITH_D07 else 'values_D123.csv'
 SIGMA0_REPORT = 1.5          # mS/cm — 보고 기준 (1저자 10-12) · f × 1.5 = 절대 유효 이온전도도
 M = {b: json.loads((REPO / f'docs/50kg/report_y4/draft2/data/{b}/metrics_{b}.json').read_text(encoding='utf-8')) for b, _, _ in BEDS}
 PL = json.loads((OUT / 'szz_share/plane_load.json').read_text(encoding='utf-8'))
+if WITH_D07 and (OUT / 'szz_share_d07/plane_load.json').is_file():          # D0.7 σzz = 따로 낸 출력 (szz_share_kg50.py … D0.7)
+    PL['cases'].update(json.loads((OUT / 'szz_share_d07/plane_load.json').read_text(encoding='utf-8'))['cases'])
 DK = {}
 for bd in src.BEDS:
     for b, _, _ in BEDS:
@@ -95,7 +101,8 @@ add('19 이온 수송', f'유효 이온전도도 σ_Li+ (σ₀ = {SIGMA0_REPORT}
 add('19 이온 수송', '협착 (SE–SE 접촉부) 저항 몫', '%', lambda b, l: 100 * m(b, 'constriction_power_share_ion_hertz'), 'constriction_power_share_ion_hertz', 1)
 add('19 이온 수송', 'SE 망 관통 (위·아래 연결) 입자 비율', '%', lambda b, l: m(b, 'percolation_pct'), 'calc_percolation', 1)
 add('19 이온 수송', 'SE 망과 연결된 NCM', '%', lambda b, l: m(b, 'se_connected_am_pct'), 'calc_ionic_active_am', 0)
-add('19 이온 수송', 'pellet 이온전도도 (3차년도 실측)', 'mS/cm', lambda b, l: {'D3': 5.1, 'D2': None, 'D1': 2.3}[b], 'dem_plan §0 (킥오프 · 측정 조건 미기록)')
+add('19 이온 수송', 'pellet 이온전도도 (3차년도 실측)', 'mS/cm', lambda b, l: {'D3': 5.1, 'D2': None, 'D1': 2.3, 'D0.7': 2.25}[b],
+    'dem_plan §0 (킥오프 · 측정 조건 미기록)' + (' · 0.7 µm 칸 = 개발 SE D50 0.66 µm 시료 2.25 (킥오프 4 장 · 같은 시료인지 미확인)' if WITH_D07 else ''))
 
 
 def fmt(v, nd):
@@ -108,14 +115,14 @@ def fmt(v, nd):
     return f'{v:.{nd}f}'
 
 
-with open(OUT / 'values_D123.csv', 'w', encoding='utf-8', newline='') as fh:
+with open(OUT / OUT_CSV, 'w', encoding='utf-8', newline='') as fh:
     w = csv.writer(fh, lineterminator='\n')
-    w.writerow(['이종기술 쪽', '항목', '단위', '3 µm (D3)', '2 µm (D2)', '1 µm (D1)', '출처'])
+    w.writerow(['이종기술 쪽', '항목', '단위'] + [f'{lab} ({b})' for b, _, lab in BEDS] + ['출처'])
     for r in rows:
         w.writerow([r['page'], r['item'], r['unit']] + [fmt(v, r['nd']) for v in r['vals']] + [r['src']])
 page = None
 for r in rows:
     if r['page'] != page:
         page = r['page']
-        print(f'\n### {page}\n| 항목 | 단위 | 3 µm | 2 µm | 1 µm |\n|---|---|---:|---:|---:|')
+        print(f'\n### {page}\n| 항목 | 단위 | ' + ' | '.join(lab for _, _, lab in BEDS) + ' |\n|---|---|' + '---:|' * len(BEDS))
     print(f"| {r['item']} | {r['unit']} | " + ' | '.join(fmt(v, r['nd']) for v in r['vals']) + ' |')

@@ -1,0 +1,19 @@
+M1 amend_missing: caught · == SUMMARY: pass 744 · fail 3 == · first: [happy] argv corner_fb == registration text (+ 12-7-2 on corners)
+M2 amend_on_confirm: caught · == SUMMARY: pass 746 · fail 1 == · first: [happy] argv confirm_fb == registration text (+ 12-7-2 on corners)
+M3 order_fa_fb: caught · == SUMMARY: pass 716 · fail 31 == · first: [happy] calls: version check, then confirm → corner b → a → 0
+M4 f0_no_allow_flag: caught · == SUMMARY: pass 746 · fail 1 == · first: [happy] argv corner_f0 == registration text (+ 12-7-2 on corners)
+M5 gate_skip_marker: caught · == SUMMARY: pass 739 · fail 8 == · first: [gate_budget] CONFIRM_GATE_FAIL rc=1,json_missing,no_converged_marker
+M6 gate_skip_json: caught · == SUMMARY: pass 739 · fail 8 == · first: [gate_budget] CONFIRM_GATE_FAIL rc=1,json_missing,no_converged_marker
+M7 leak_tail_in_end: caught · == SUMMARY: pass 700 · fail 47 == · first: [happy] END confirm_fb
+M8 free_le: caught · == SUMMARY: pass 745 · fail 2 == · first: [free_31858] free = 31858 (boundary) → all four arms, exit 0
+M9 header_deadline_le: caught · == SUMMARY: pass 740 · fail 7 == · first: [hdr_deadline_eq] exit 2 (REFUSED)
+M10 corner_fail_stops: caught · == SUMMARY: pass 739 · fail 8 == · first: [corner_fb_rc1] exit 0 (batch continues past a failed corner arm)
+M11 hb_every_300: caught · == SUMMARY: pass 744 · fail 3 == · first: [deadline_mid_fb] 4 heartbeats with exact frame-line counts
+M12 eta_no_x5: caught · == SUMMARY: pass 745 · fail 2 == · first: [eta_ok] ETA s_per_frame=10.000 projected=2026-11-06 01:06:00 KST OK
+M13 no_kill: caught · == SUMMARY: pass 745 · fail 3 == · first: [deadline_mid_fb_ignore] runner timed out (rc=124)
+M14 no_stop_file_poll: caught · == SUMMARY: pass 741 · fail 6 == · first: [stop_mid_fb] exit 4
+M15 start_line_first: caught · == SUMMARY: pass 691 · fail 56 == · first: [happy] start line exactly once
+M16 py_check_first: caught · == SUMMARY: pass 694 · fail 53 == · first: [happy] calls: version check, then confirm → corner b → a → 0
+M17 skip_md5: caught · == SUMMARY: pass 735 · fail 12 == · first: [hdr_md5] exit 2 (REFUSED)
+M18 no_settle_pgrep: caught · == SUMMARY: pass 745 · fail 2 == · first: [pgrep_between] exit 3
+== mutants: 18 · caught 18 · missed 0 ==

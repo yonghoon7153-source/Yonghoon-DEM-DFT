@@ -1,0 +1,6 @@
+{
+  "external_probe_sha256": "7b9ccf380e8e3caf1a1c72dca856d2fdd8b9192871efd4c092c2fb301b142b73",
+  "copied_block_sha256": "12e7326ff751096781db9dbe0b28687cd7b895036f86134b9d5500e67ac1f386",
+  "replay_sha256": "7bbcdfaf37f9efb18af96e04806a9b5f636b1261e35e7dcac740b63d6517747a",
+  "adaptation": "Extract external baseline+ancestor sibling injection block only; set D from argv to current source directory; supply original imports/record function, write JSON to stdout. Other suites/time observation not replayed."
+}

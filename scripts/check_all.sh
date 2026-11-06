@@ -13,6 +13,7 @@
 #
 # ⚠ GPU·솔브 없음.  규칙 J 의 초소형 픽스처 스모크가 가장 오래 걸린다 (수 초).
 set -uo pipefail
+_CA_SELF="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"   # 나누기 범위 검사의 목록 모드 자기 호출용 (cd 전에 절대 경로)
 cd "$(dirname "$0")/.."
 
 #  ★ preflight (2026-08-24) — 의존 부재를 **원인 이름으로** 먼저 말한다.
@@ -33,8 +34,41 @@ if [ -n "$_MISS" ]; then
 fi
 
 FAIL=0
+#  ★ 2026-11-06 (1저자 (가) *"이런건 권고 안받고 (가) 처럼하면돼"*) — 게이트를 **나눠** 돌린다 (단계는 줄이지 않는다).
+#    11-05 에 게이트 전체가 Bash 백그라운드 한도 2 h 에서 두 번 잘렸다 (122 ✓ · 126 ✓ 에서 끊김 · ✗ 0) → push 를 못 한 채
+#    커밋이 쌓였고 기계 교체로 17 개를 잃었다.  ⇒ 같은 단계를 순서대로 나눠 같은 HEAD 에서 차례로 돌린다.
+#      CHECK_ALL_LIST=1        돌리지 않고 `번호<탭>이름` 만 낸다 (나누기 계획 · 시험).  범위는 무시하고 전부.
+#      CHECK_ALL_RANGE=a-b     a 번째부터 b 번째 run 만 (1 부터 · 양끝 포함 · 1 ≤ a ≤ b ≤ N).  N 은 시작 때 목록 모드로 센다 →
+#                              틀린 범위는 아무것도 돌리기 전에 rc 2.  끝 줄 = `CHECK_ALL_PART range=a-b total=N ran=k fail=0|1`.
+#      CHECK_ALL_TIMES=파일    run 마다 `번호<탭>초<탭>ok|fail<탭>이름` 한 줄 덧붙임 (다음 나누기 계획용).
+#    push 판정 = 나눈 부분이 모두 같은 HEAD · 깨끗한 트리 · 범위가 1..N 을 빈틈 · 겹침 없이 덮음 · 모두 fail=0.
+#    시험 = scripts/test_check_all_split.sh (고치기 전 0/17 → 고친 뒤 17/17).
+_CA_I=0; _CA_RAN=0; _CA_A=1; _CA_B=0; _CA_N=0
+_ca_range_ok() { local LC_ALL=C; [[ "$1" =~ ^[0-9]{1,6}-[0-9]{1,6}$ ]]; }
+if [ -z "${CHECK_ALL_LIST:-}" ] && [ -n "${CHECK_ALL_RANGE:-}" ]; then
+  if ! _ca_range_ok "$CHECK_ALL_RANGE"; then
+    echo "✗ CHECK_ALL_RANGE='$CHECK_ALL_RANGE' — 형식은 a-b (ASCII 숫자 1–6 자리 · 공백 · 줄바꿈 없음).  아무것도 돌리지 않았다."
+    exit 2
+  fi
+  _CA_A=$((10#${CHECK_ALL_RANGE%-*})); _CA_B=$((10#${CHECK_ALL_RANGE#*-}))
+  _CA_N=$(env -u CHECK_ALL_RANGE -u CHECK_ALL_TIMES CHECK_ALL_LIST=1 bash "$_CA_SELF" 2>/dev/null | LC_ALL=C grep -c -E $'^[0-9]+\t')
+  if [ "$_CA_N" -lt 1 ] || [ "$_CA_A" -lt 1 ] || [ "$_CA_B" -lt "$_CA_A" ] || [ "$_CA_B" -gt "$_CA_N" ]; then
+    echo "✗ CHECK_ALL_RANGE=$CHECK_ALL_RANGE — 1 ≤ a ≤ b ≤ N (N = $_CA_N) 이어야 한다.  아무것도 돌리지 않았다."
+    exit 2
+  fi
+fi
 run() {
   local label="$1"; shift
+  _CA_I=$((_CA_I + 1))
+  if [ -n "${CHECK_ALL_LIST:-}" ]; then
+    printf '%d\t%s\n' "$_CA_I" "$label"
+    return 0
+  fi
+  if [ -n "${CHECK_ALL_RANGE:-}" ] && { [ "$_CA_I" -lt "$_CA_A" ] || [ "$_CA_I" -gt "$_CA_B" ]; }; then
+    return 0
+  fi
+  _CA_RAN=$((_CA_RAN + 1))
+  local _t0=$SECONDS _st=ok
   if "$@" >/tmp/_ca.$$ 2>&1; then
     printf '  ✓ %s\n' "$label"
   else
@@ -44,8 +78,12 @@ run() {
     grep -n -E '✗|FAIL' /tmp/_ca.$$ | grep -v -E '(^|[^0-9])0 FAIL' | head -15 | sed 's/^/      [실패 줄] /'
     sed 's/^/      /' /tmp/_ca.$$ | tail -25
     FAIL=1
+    _st=fail
   fi
   rm -f /tmp/_ca.$$
+  if [ -n "${CHECK_ALL_TIMES:-}" ]; then
+    printf '%d\t%d\t%s\t%s\n' "$_CA_I" "$((SECONDS - _t0))" "$_st" "$label" >> "$CHECK_ALL_TIMES"
+  fi
 }
 
 echo "── selftest (검사기가 맞나) ──"
@@ -54,6 +92,8 @@ echo "── selftest (검사기가 맞나) ──"
 run 'run_contract          --selftest' python3 scripts/run_contract.py --selftest
 run 'check_review_findings   --selftest' python3 scripts/check_review_findings.py --selftest
 run 'check_method_discipline --selftest' python3 scripts/check_method_discipline.py --selftest
+#  ★ 2026-11-06 — 게이트 나누기 (CHECK_ALL_RANGE · LIST · TIMES) 자기 시험.  나눈 실행의 판정이 이 기능에 기대므로 게이트 안에서 지킨다.
+run 'check_all 나누기 (CHECK_ALL_RANGE · LIST · TIMES)' bash scripts/test_check_all_split.sh
 run 'sdcp_gain_verdict       --selftest' python3 scripts/sdcp_gain_verdict.py --selftest
 run 'sdcp_phase_ledger_match --selftest' python3 scripts/sdcp_phase_ledger_match.py --selftest
 #  ★ 2026-09-17 (GAP3-19/20) — porosity 코퍼스의 **무효-데이터 필터**가 레짐 플래그에
@@ -459,6 +499,23 @@ run 'selftest_inventory     (분류·레인·CI 의존)' python3 scripts/check_s
 run 'fast 자기검사 전수     (등재 기반 드라이버)' python3 scripts/check_selftest_inventory.py --run-fast
 
 echo
+if [ -n "${CHECK_ALL_LIST:-}" ]; then
+  exit 0
+fi
+if [ -n "${CHECK_ALL_RANGE:-}" ]; then
+  _CA_EXP=$((_CA_B - _CA_A + 1))
+  if [ "$_CA_I" != "$_CA_N" ] || [ "$_CA_RAN" != "$_CA_EXP" ]; then
+    echo "✗ 단계 수가 어긋났다 (목록 N=$_CA_N · 이번 실행 N=$_CA_I · 돈 단계 $_CA_RAN · 기대 $_CA_EXP) — 이 부분은 통과로 치지 않는다"
+    FAIL=1
+  fi
+  if [ "$FAIL" = 0 ]; then
+    echo "✓ 이 부분 통과 (단계 $_CA_A–$_CA_B / 전체 $_CA_N) — 부분이다.  push 판정은 모든 부분이 같은 HEAD 에서 통과한 뒤"
+  else
+    echo "✗ 이 부분에 실패가 있다 (단계 $_CA_A–$_CA_B / 전체 $_CA_N) — 고치고 다시"
+  fi
+  echo "CHECK_ALL_PART range=$_CA_A-$_CA_B total=$_CA_N ran=$_CA_RAN fail=$FAIL"
+  exit "$FAIL"
+fi
 if [ "$FAIL" = 0 ]; then
   echo "✓ 전부 통과 — 커밋해도 된다 (CI 가 같은 것을 다시 돈다)"
 else

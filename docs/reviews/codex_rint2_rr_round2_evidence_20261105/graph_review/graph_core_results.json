@@ -1,0 +1,71 @@
+{
+  "RR1-02": {
+    "always": {
+      "warnings": [],
+      "record": {
+        "target_version": "target-cert-v1",
+        "target_fp": "fsum-bfs-defect-margin-v2",
+        "target_ledger_ok": false,
+        "target_ledger_problem": "φ: KCL 결손 진단 합 넘침 (비유한)",
+        "target_topology": null,
+        "target_lo": null,
+        "target_hi": null,
+        "target_U": null,
+        "target_W": null,
+        "target_flow_bot": null,
+        "target_flow_top": null,
+        "target_kcl_raw": null,
+        "target_kcl_defect_bound": null,
+        "target_n_dof": null,
+        "target_n_edges": null,
+        "target_n_plate_bot": null,
+        "target_n_plate_top": null,
+        "target_n_through_components": null,
+        "target_n_floating_nodes": null,
+        "target_tree_levels": null
+      }
+    },
+    "error": {
+      "warnings": [],
+      "record": {
+        "target_version": "target-cert-v1",
+        "target_fp": "fsum-bfs-defect-margin-v2",
+        "target_ledger_ok": false,
+        "target_ledger_problem": "φ: KCL 결손 진단 합 넘침 (비유한)",
+        "target_topology": null,
+        "target_lo": null,
+        "target_hi": null,
+        "target_U": null,
+        "target_W": null,
+        "target_flow_bot": null,
+        "target_flow_top": null,
+        "target_kcl_raw": null,
+        "target_kcl_defect_bound": null,
+        "target_n_dof": null,
+        "target_n_edges": null,
+        "target_n_plate_bot": null,
+        "target_n_plate_top": null,
+        "target_n_through_components": null,
+        "target_n_floating_nodes": null,
+        "target_tree_levels": null
+      }
+    },
+    "certify": {
+      "status": "NOT_CERTIFIABLE",
+      "ok": false,
+      "pass_a": true,
+      "pass_b": false,
+      "pass_c": false,
+      "pass_d": false
+    }
+  },
+  "exact_group_reduction": {
+    "cases": 307,
+    "permutation_checks": 921,
+    "mismatches": 0
+  },
+  "fingerprint_binding": {
+    "subulp_parallel_change_detected": true,
+    "exact_decomposition_and_orientation_invariant": true
+  }
+}

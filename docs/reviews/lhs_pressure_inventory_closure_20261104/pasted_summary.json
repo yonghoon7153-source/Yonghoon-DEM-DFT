@@ -1,0 +1,197 @@
+{
+  "pin": "edbe6eb176d22db574953d3e47d11969b353421b",
+  "priorPin": "c8a55c8ae1021ec80634ee8c6533deeebc67ce61",
+  "commandSHA256": "2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634",
+  "suites": [
+    {
+      "name": "test_pressure_inventory_py311",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-B",
+        "/workspace/scratch/lpi-independent-20261104/source/docs/reviews/lhs_pressure_inventory_20261104/test_pressure_inventory.py"
+      ],
+      "PATH_prefix": "/workspace/.venvs/yonghoon-dem/bin",
+      "version": "Python 3.11.17",
+      "rc": 0,
+      "tests": 20,
+      "passed": 20,
+      "failures": 0,
+      "errors": 0,
+      "elapsed": 0.20906060999999454
+    },
+    {
+      "name": "test_output_contract_py311",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "-B",
+        "/workspace/scratch/lpi-independent-20261104/source/docs/reviews/lhs_pressure_inventory_20261104/test_output_contract.py"
+      ],
+      "PATH_prefix": "/workspace/.venvs/yonghoon-dem/bin",
+      "version": "Python 3.11.17",
+      "rc": 0,
+      "tests": 13,
+      "passed": 13,
+      "failures": 0,
+      "errors": 0,
+      "elapsed": 0.28133689999998523
+    },
+    {
+      "name": "test_pressure_inventory_py38",
+      "command": [
+        "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin/python3.8",
+        "-I",
+        "-B",
+        "/workspace/scratch/lpi-independent-20261104/source/docs/reviews/lhs_pressure_inventory_20261104/test_pressure_inventory.py"
+      ],
+      "PATH_prefix": "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin",
+      "version": "Python 3.8.20",
+      "rc": 0,
+      "tests": 20,
+      "passed": 20,
+      "failures": 0,
+      "errors": 0,
+      "elapsed": 0.24729672000000846
+    },
+    {
+      "name": "test_output_contract_py38",
+      "command": [
+        "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin/python3.8",
+        "-I",
+        "-B",
+        "/workspace/scratch/lpi-independent-20261104/source/docs/reviews/lhs_pressure_inventory_20261104/test_output_contract.py"
+      ],
+      "PATH_prefix": "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin",
+      "version": "Python 3.8.20",
+      "rc": 0,
+      "tests": 13,
+      "passed": 13,
+      "failures": 0,
+      "errors": 0,
+      "elapsed": 0.31200598000000923
+    }
+  ],
+  "independent": [
+    {
+      "version": "3.11.17",
+      "checks": 18,
+      "passed": 18,
+      "failed": 0,
+      "rc": 0,
+      "timing_observations": 1,
+      "timing_timeout_seconds": 5,
+      "timing_target_rc": null
+    },
+    {
+      "version": "3.8.20",
+      "checks": 18,
+      "passed": 18,
+      "failed": 0,
+      "rc": 0,
+      "timing_observations": 1,
+      "timing_timeout_seconds": 5,
+      "timing_target_rc": null
+    }
+  ],
+  "independentProbeList": [
+    "real_buffer_normal",
+    "compute",
+    "serialize",
+    "first",
+    "persistent",
+    "partial",
+    "short",
+    "full_flush",
+    "real_buffer_flush",
+    "exit2",
+    "exit7",
+    "partial_exit7",
+    "sigterm",
+    "missing",
+    "nonexecutable",
+    "ancestor_baseline",
+    "ancestor_sibling_create_remove",
+    "audit17_diagnostic",
+    "slow_input_observation"
+  ],
+  "mutations": [
+    {
+      "name": "missing_flush",
+      "tests": 13,
+      "passed": 11,
+      "failures": 1,
+      "errors": 1,
+      "rc": 1,
+      "version": "Python 3.11.17"
+    },
+    {
+      "name": "output_retry",
+      "tests": 13,
+      "passed": 11,
+      "failures": 2,
+      "errors": 0,
+      "rc": 1,
+      "version": "Python 3.11.17"
+    },
+    {
+      "name": "shell_fallback",
+      "tests": 13,
+      "passed": 10,
+      "failures": 3,
+      "errors": 0,
+      "rc": 1,
+      "version": "Python 3.11.17"
+    },
+    {
+      "name": "short_write_accepted",
+      "tests": 13,
+      "passed": 12,
+      "failures": 1,
+      "errors": 0,
+      "rc": 1,
+      "version": "Python 3.11.17"
+    },
+    {
+      "name": "shutdown_reflush",
+      "tests": 13,
+      "passed": 12,
+      "failures": 1,
+      "errors": 0,
+      "rc": 1,
+      "version": "Python 3.11.17"
+    }
+  ],
+  "mutationRunnerRC": 0,
+  "newFinding": {
+    "id": "OBS-AUDIT-01",
+    "priority": "P3 follow-up",
+    "mechanism": "synthetic sibling create/remove between ancestor stat and open yields CHANGED/rc2",
+    "historicalCauseProven": false,
+    "newLPIRegression": false
+  },
+  "LPIclosurelimits": {
+    "LPI-01": "output and CLI failure handling only; eligible for closure",
+    "LPI-02": "documentation and counterexample preservation only; timing risk unresolved"
+  },
+  "initialAuditFailure": "preserved 19 pass/1 fail rc1; historical cause unresolved",
+  "wholeGateHOLD": true,
+  "actualExecutionDeploymentApproved": false,
+  "sourceFilesUnchanged": 68,
+  "originalRepositoryUnchanged": true,
+  "windowsAttachmentDirectlyInspected": false,
+  "historical7179Rerun": false,
+  "artifacts": {
+    "zip": {
+      "path": "/workspace/artifacts/lpi-independent-20261104/lpi_independent_evidence_edbe6eb176d2.zip",
+      "bytes": 415990,
+      "sha256": "4a91cfa578471ca88fa65ebc190b800a37d51f108041f5966db42b175b8a8ed0",
+      "files": 118,
+      "manifestEntries": 117
+    },
+    "verdict": {
+      "path": "/workspace/artifacts/lpi-independent-20261104/판정문.md",
+      "sha256": "cce1296c9f789801a54f23c4f66563ba2075dac812283be74e6317a1c0f962a1"
+    }
+  }
+}

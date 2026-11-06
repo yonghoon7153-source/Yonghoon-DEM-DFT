@@ -1,0 +1,98 @@
+{
+  "environment": {
+    "python": "3.11.15",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1"
+  },
+  "scope": "independent normalized circuit only; no production-kit data or production modules",
+  "cases": [
+    {
+      "m": 50,
+      "d_over_lambda": 0.2,
+      "q": 10.0,
+      "circuit": 6.005080345830806,
+      "discrete_closed": 6.005080345830347,
+      "continuum": 6.000090803982019,
+      "circuit_closed_rel": 7.646662767864614e-14,
+      "analytic_error": 0.004989541848328116,
+      "tolerance": 0.009500000000000001,
+      "error_tolerance_ratio": 0.5252149314029595
+    },
+    {
+      "m": 30,
+      "d_over_lambda": 0.2,
+      "q": 6.0,
+      "circuit": 4.010032269149437,
+      "discrete_closed": 4.01003226914933,
+      "continuum": 4.004969823313689,
+      "circuit_closed_rel": 2.657869144445182e-14,
+      "analytic_error": 0.005062445835640972,
+      "tolerance": 0.010833333333333335,
+      "error_tolerance_ratio": 0.467302692520705
+    },
+    {
+      "m": 60,
+      "d_over_lambda": 0.1,
+      "q": 6.0,
+      "circuit": 4.006237724066507,
+      "discrete_closed": 4.006237724066989,
+      "continuum": 4.004969823313689,
+      "circuit_closed_rel": 1.2038249228195418e-13,
+      "analytic_error": 0.0012679007532998554,
+      "tolerance": 0.002708333333333334,
+      "error_tolerance_ratio": 0.4681479704491773
+    },
+    {
+      "m": 30,
+      "d_over_lambda": 0.02,
+      "q": 0.6,
+      "circuit": 3.732963982611612,
+      "discrete_closed": 3.732963982613171,
+      "continuum": 3.7327384303217412,
+      "circuit_closed_rel": 4.176834341412776e-13,
+      "analytic_error": 0.00022555229142984246,
+      "tolerance": 0.00040833333333333336,
+      "error_tolerance_ratio": 0.5523729586036957
+    },
+    {
+      "m": 2,
+      "d_over_lambda": 0.2,
+      "q": 0.4,
+      "circuit": 5.300000000000039,
+      "discrete_closed": 5.299999999999999,
+      "continuum": 5.266489563439473,
+      "circuit_closed_rel": 7.541137525755782e-15,
+      "analytic_error": 0.0335104365605261,
+      "tolerance": 0.057499999999999996,
+      "error_tolerance_ratio": 0.5827902010526279
+    },
+    {
+      "m": 30,
+      "d_over_lambda": 0.6324555320336759,
+      "q": 18.973665961010276,
+      "circuit": 10.535641845008072,
+      "discrete_closed": 10.535641845008378,
+      "continuum": 10.48683299200974,
+      "circuit_closed_rel": 2.899997749274289e-14,
+      "analytic_error": 0.04880885299863813,
+      "tolerance": 0.0855409255338946,
+      "error_tolerance_ratio": 0.5705906581440738
+    }
+  ],
+  "tolerance_sweep": {
+    "n_cases": 151000,
+    "max_error_tolerance_ratio": 0.6664167677905207,
+    "at": {
+      "m": 1,
+      "d_over_lambda": 0.001
+    }
+  },
+  "second_order_error_ratio": 3.9927776858444033,
+  "saturation_junction_part_ratio": 0.9950972622655375,
+  "assertions": {
+    "circuit_closed": true,
+    "six_cases_within_allowance": true,
+    "sweep_within_allowance": true,
+    "second_order": true
+  }
+}

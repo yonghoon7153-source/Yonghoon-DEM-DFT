@@ -1,0 +1,21 @@
+[py311] HEAD 563b4019a · Python 3.11.15 · numpy 2.4.6 scipy 1.17.1 · 2026-11-04T02:51:08Z
+[py311] test_rint_r_chain rc=0 460 s · test_rint_r_chain: 451/451 PASS (459.9 s)
+[py311] test_rint_r_chain_e2e rc=0 838 s · test_rint_r_chain_e2e: 51 PASS · 0 FAIL (838.2 s)
+[py311] test_carbon_junction rc=0 17 s · == test_carbon_junction: 500/500 PASS
+[py311] test_ca_ext_b6 rc=0 43 s · 502 PASS · 0 FAIL
+[py311] test_ca_ext_runner rc=0 115 s · 151 PASS · 0 FAIL
+[py311] test_ca_ext_z3 rc=0 24 s · test_ca_ext_z3: 84 PASS · 0 FAIL (24.0 s)
+[py311] test_step3_target_cert rc=0 14 s · == test_step3_target_cert [빠른 판]: 264/264 PASS (13.1 s)
+done 2026-11-04T03:16:20Z
+[py311_r2] HEAD 355c1b6d0 · Python 3.11.15 · numpy 2.4.6 scipy 1.17.1 · 2026-11-04T03:21:59Z
+[py311_r2] test_rint_r_chain rc=0 445 s · test_rint_r_chain: 451/451 PASS (444.5 s)
+done 2026-11-04T03:29:24Z
+[py38] HEAD 355c1b6d0 · Python 3.8.20 · numpy 1.24.4 scipy 1.10.1 · 2026-11-04T03:29:24Z
+[py38] test_rint_r_chain rc=0 695 s · test_rint_r_chain: 451/451 PASS (694.1 s)
+[py38] test_rint_r_chain_e2e rc=0 706 s · test_rint_r_chain_e2e: 51 PASS · 0 FAIL (705.6 s)
+[py38] test_carbon_junction rc=0 20 s · == test_carbon_junction: 500/500 PASS
+[py38] test_ca_ext_b6 rc=0 38 s · 502 PASS · 0 FAIL
+[py38] test_ca_ext_runner rc=0 78 s · 151 PASS · 0 FAIL
+[py38] test_ca_ext_z3 rc=0 24 s · test_ca_ext_z3: 84 PASS · 0 FAIL (23.0 s)
+[py38] test_step3_target_cert rc=0 14 s · == test_step3_target_cert [빠른 판]: 264/264 PASS (13.9 s)
+done 2026-11-04T03:55:39Z

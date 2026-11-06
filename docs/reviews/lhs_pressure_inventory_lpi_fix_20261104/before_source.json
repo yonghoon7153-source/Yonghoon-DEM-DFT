@@ -1,0 +1,10 @@
+{
+  "pin": "d3a8abc09dbd77ea4b19b2edbc60f7181322e595",
+  "original_review_pin": "c8a55c8ae1021ec80634ee8c6533deeebc67ce61",
+  "command_sha256": "c989194dd204622d87fcaa435ec5e95aac5eb82904be0afaa4e2ff57ff1e718a",
+  "output_test_sha256": "4490d46fa5d1ca0243e215eee8bd5f3c98e5005f9ae6c77079b71f675d483648",
+  "output_before_rc": 1,
+  "output_before_ran": 13,
+  "output_before_failures": 6,
+  "scope": "Synthetic output contract before production change; no actual research paths"
+}

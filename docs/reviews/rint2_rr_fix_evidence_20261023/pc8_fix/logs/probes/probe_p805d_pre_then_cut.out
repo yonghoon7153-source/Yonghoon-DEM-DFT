@@ -1,0 +1,30 @@
+{
+ "chain_alive_at_recover": true,
+ "files_at_recover": [
+  "attempt.json"
+ ],
+ "recover_rc": 3,
+ "result_1": {
+  "status": null,
+  "side": null,
+  "cause": null,
+  "resume_ok": null
+ },
+ "attempt1_chain_rc": 0,
+ "attempt1_summary_status": "CALIBRATED",
+ "attempt1_runner_calls": 14,
+ "attempt2": {
+  "n": null,
+  "rc": 2,
+  "status": null
+ },
+ "verdict_before_cut": {
+  "stop": "ATTEMPT_LEDGER_MISMATCH",
+  "cause": "attempt_None: 원장 시도 폴더가 아니다 (원장 판정의 입력 = 원장 시도 · 합친 예측만)"
+ },
+ "verdict_after_cut": {
+  "stop": "ATTEMPT_LEDGER_MISMATCH",
+  "cause": "attempt_None: 원장 시도 폴더가 아니다 (원장 판정의 입력 = 원장 시도 · 합친 예측만)",
+  "adopted": null
+ }
+}

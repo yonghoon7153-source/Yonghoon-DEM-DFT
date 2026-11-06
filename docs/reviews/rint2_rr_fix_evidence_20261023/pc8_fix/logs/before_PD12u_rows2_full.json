@@ -1,0 +1,21 @@
+{
+ "PD12u": {
+  "ok": false,
+  "why": {
+   "rejected_side_empty_record": null,
+   "al07_record_empty": null,
+   "al07_digest": null,
+   "al07_folder_attempt": null,
+   "al07_record_n": null,
+   "al07_code": null,
+   "al07_side_link": null,
+   "al07_trace_groups": null,
+   "al07_trace_post": null,
+   "al07_trace_summary": null,
+   "al07_trace_attempt_json": null,
+   "al07_record_schema": null,
+   "al07_record_extra": null,
+   "al07_record_commit": null
+  }
+ }
+}

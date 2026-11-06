@@ -1,0 +1,56 @@
+donor end record: {'by': 'chain', 'cause': None, 'confirmed': True, 'ended_utc': '2026-11-04T00:45:58Z', 'killed': 0, 'left': [], 'left_after_exit': 0, 'name': 'L01_floor', 'rc': 0, 'schema': 'rint-r-group-v1', 'signal': None, 'token': '2acb43292cdd2a7c65bec1eb4964fc6c', 'unsure': None}
+{
+ "control_unconfirmed": {
+  "seen_mark": true,
+  "launch_token": "955eceb26237c85d226089d3cfbc8918",
+  "end_token": "2acb43292cdd2a7c65bec1eb4964fc6c",
+  "alive_before_recover": true,
+  "unit": {
+   "attempt_groups_problem": "그룹 attempt_1/L01_floor 종료 미확인",
+   "orphan_cause": [
+    "parent_dead",
+    true
+   ]
+  },
+  "recover_rc": 3,
+  "result_line": null,
+  "runner_group_alive_after_recover": false,
+  "recover_tail": [
+   "recover attempt_1/L01_floor: 미확인 · 옛 끝 기록 (by chain) 의 표지 2acb43292cdd · 이름 'L01_floor' ≠ 시작 기록의 표지 955eceb26237 · 이름 'L01_floor' (다른 런의 끝 기록 · 손 고침 · 부분 복사) — 끝 기록을 쓰지 않는다 · 결과 줄 없음 (사람이 본다 · 시작 기록 표지로 찾은 프로세스 = 정리 · 종료 확인 · 죽인 프로세스 1 · ★ 11-02 PC7-04)",
+   "recover — 그룹 기록 1 개 정리 · 미확인 1 (다음 시도 전에 사람이 본다)",
+   "  recover attempt_1: 그룹 attempt_1/L01_floor 종료 미확인 — 결과 줄을 쓰지 않는다 (미확인 · 다음 시도 채택을 막는다)"
+  ]
+ },
+ "foreign_confirmed": {
+  "seen_mark": true,
+  "launch_token": "ea13341ef27a80743a94b0a662765644",
+  "end_token": "2acb43292cdd2a7c65bec1eb4964fc6c",
+  "alive_before_recover": true,
+  "unit": {
+   "attempt_groups_problem": null,
+   "orphan_cause": [
+    "parent_dead",
+    true
+   ]
+  },
+  "recover_rc": 0,
+  "result_line": {
+   "status": "interrupted",
+   "side": "post",
+   "cause": "parent_dead",
+   "resume_ok": true,
+   "by": "recover"
+  },
+  "runner_group_alive_after_recover": true,
+  "recover_tail": [
+   "recover — 그룹 기록 0 개 정리 · 미확인 0",
+   "  recover attempt_1: 결과 줄 interrupted · 결과 post · 원인 parent_dead · 재실행 자격 True"
+  ],
+  "resume_add": [
+   0,
+   2
+  ]
+ }
+}
+
+HOLE — result line written while the runner group is alive: True · result line {'status': 'interrupted', 'side': 'post', 'cause': 'parent_dead', 'resume_ok': True, 'by': 'recover'}

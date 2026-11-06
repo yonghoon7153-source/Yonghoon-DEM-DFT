@@ -1,0 +1,6 @@
+[consumers_py311] webapp/test_ca_ext_labels.py rc=0 0 s · Python 3.11.15 · 93 PASS · 0 FAIL
+[consumers_py311] scripts/test_rint_receipts.py rc=0 27 s · Python 3.11.15 · 105 PASS · 0 FAIL
+[consumers_py311] scripts/test_ca_s0_census.py rc=0 17 s · Python 3.11.15 · 167 PASS · 0 FAIL
+[consumers_py38] scripts/test_rint_receipts.py rc=0 23 s · Python 3.8.20 · 105 PASS · 0 FAIL
+[consumers_py38] scripts/test_ca_s0_census.py rc=0 19 s · Python 3.8.20 · 167 PASS · 0 FAIL
+done 2026-11-04T03:57:34Z

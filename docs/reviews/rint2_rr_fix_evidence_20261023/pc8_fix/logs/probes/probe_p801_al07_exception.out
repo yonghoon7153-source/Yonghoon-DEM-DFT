@@ -1,0 +1,80 @@
+{
+ "attempt1": {
+  "rc": 3,
+  "status": "STOPPED",
+  "side": "post",
+  "result_status": "stopped"
+ },
+ "as_is": {
+  "add2_rc": 0,
+  "b_status": "CALIBRATED",
+  "verdict_stop": "ATTEMPT_LEDGER_MISMATCH",
+  "verdict_names_attempt1": true,
+  "predict_stop": "ATTEMPT_LEDGER_MISMATCH",
+  "predict_status": "STOPPED",
+  "predict_runner_calls": 0,
+  "ledger_tail": [
+   "header:None:",
+   "entry:1:",
+   "result:1:stopped",
+   "entry:2:",
+   "start:2:",
+   "result:2:completed",
+   "entry:3:",
+   "start:3:",
+   "result:3:completed",
+   "entry:4:",
+   "start:4:",
+   "result:4:stopped"
+  ]
+ },
+ "rej_side": {
+  "add2_rc": 0,
+  "b_status": "CALIBRATED",
+  "verdict_stop": "ATTEMPT_LEDGER_MISMATCH",
+  "verdict_names_attempt1": true,
+  "predict_stop": "ATTEMPT_LEDGER_MISMATCH",
+  "predict_status": "STOPPED",
+  "predict_runner_calls": 0,
+  "ledger_tail": [
+   "header:None:",
+   "entry:1:",
+   "result:1:rejected",
+   "entry:2:",
+   "start:2:",
+   "result:2:completed",
+   "entry:3:",
+   "start:3:",
+   "result:3:completed",
+   "entry:4:",
+   "start:4:",
+   "result:4:stopped"
+  ]
+ },
+ "rej_infolder": {
+  "add2_rc": 0,
+  "b_status": "CALIBRATED",
+  "verdict_stop": "ATTEMPT_LEDGER_MISMATCH",
+  "verdict_names_attempt1": true,
+  "predict_stop": "ATTEMPT_LEDGER_MISMATCH",
+  "predict_status": "STOPPED",
+  "predict_runner_calls": 0,
+  "ledger_tail": [
+   "header:None:",
+   "entry:1:",
+   "result:1:rejected",
+   "entry:2:",
+   "start:2:",
+   "result:2:completed",
+   "entry:3:",
+   "start:3:",
+   "result:3:completed",
+   "entry:4:",
+   "start:4:",
+   "result:4:stopped"
+  ]
+ }
+}
+
+control (PE02 shape, result as-is) refused: True
+bypass modes (verdict ledger check passed): []

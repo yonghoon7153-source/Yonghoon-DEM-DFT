@@ -1,0 +1,29 @@
+{
+  "python": "3.11.17 (main, Oct  3 2026, 01:05:36) [Clang 22.1.3 ]",
+  "executable": "/workspace/.venvs/yonghoon-dem/bin/python",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "source_files": {
+    "/workspace/nonrint-1104/lhs/scripts/lhs_pressure_record.py": "34eb74142884489505590501840ccc6423a014a508989c82f135020146283ad3",
+    "/workspace/nonrint-1104/lhs/docs/data/lhs_network214_35f032737_20261030/s5_judgment/README.md": "1de84226e3126e69ef81a898bb3e31b9f0db64d6ea86d8fe6e8a0e910e513efc",
+    "/workspace/attachments/dd06a4a0-736e-4d1e-aa6e-9faaca2dda5c/20261104-0233_lhs-pressure-refusal.md": "6afe50b420bbd4ff0b4a02086de166ab25b430c85810046686a8af16de08ef3a"
+  },
+  "command_sha256": "c989194dd204622d87fcaa435ec5e95aac5eb82904be0afaa4e2ff57ff1e718a",
+  "tests_sha256": "633fc2f4164d350a68a6d9546bdb31174995cec18a639084e58d0a63bafeeeeb",
+  "b7_press_line_exact_match": true,
+  "python38_ast_parse": true,
+  "actual_ibb_wsl_execution": false,
+  "test_command": "/workspace/.venvs/yonghoon-dem/bin/python -I -B test_pressure_inventory.py",
+  "tests_passed": 20,
+  "internal_qa_test_correction": "Permission-error test now uses a valid directory fd and asserts the mocked file open was called.",
+  "python38_validation": {
+    "python": "3.8.20 (default, Oct  2 2024, 16:34:12) \n[Clang 18.1.8 ]",
+    "executable": "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin/python3.8",
+    "command": "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin/python3.8 -I -B test_pressure_inventory.py",
+    "tests_passed": 20,
+    "log": "tests_after_py38.log",
+    "shell_cli_interpreter_path": "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin:/usr/bin:/bin",
+    "shell_cli_mode": "ibb",
+    "shell_cli_result": "cloud identity refused; rc2, stderr empty"
+  },
+  "internal_qa": "Read-only reviewer rechecked permission-error correction; no further must-fix in assigned scope. Reviewer did not execute tests; no external GO or actual host approval."
+}

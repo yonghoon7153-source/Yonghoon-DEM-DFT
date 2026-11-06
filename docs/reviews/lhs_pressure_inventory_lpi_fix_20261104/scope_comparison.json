@@ -1,0 +1,15 @@
+{
+  "protected_python_nodes_equal": 31,
+  "excluded_nodes": [
+    "main",
+    "__main__ entry"
+  ],
+  "b7_sha256": "34eb74142884489505590501840ccc6423a014a508989c82f135020146283ad3",
+  "b7_unchanged": true,
+  "reviewed_command_sha256": "c989194dd204622d87fcaa435ec5e95aac5eb82904be0afaa4e2ff57ff1e718a",
+  "current_command_sha256": "2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634",
+  "old_inventory_test_unchanged": true,
+  "timing_retested_this_fix": false,
+  "prior_timing_evidence": "docs/reviews/lhs_pressure_inventory_review_intake_20261104/_repro_ours_20261104/parser.stdout",
+  "note": "All parsed imports, constants, classes and functions except main and CLI entry identical; shell exec intentionally replaces fallback. Timing risk persists; no B7/parser/registration change."
+}

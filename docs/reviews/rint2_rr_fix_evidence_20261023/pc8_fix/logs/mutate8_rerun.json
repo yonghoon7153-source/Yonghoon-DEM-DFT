@@ -1,0 +1,416 @@
+{
+ "M01": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "PE01",
+  "expected_catch": "PE01 · PE01h · PE01r",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "PE01",
+   "PE01h",
+   "PE01r"
+  ],
+  "summary": [
+   "test_rint_r_chain: 4/7 PASS (8.2 s)   FAILED: ['PE01', 'PE01h', 'PE01r']"
+  ],
+  "seconds": 8.7
+ },
+ "M02": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "PE01",
+  "expected_catch": "PE01 (start record count)",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "PE01",
+   "PE01f",
+   "PE01h",
+   "PE01r",
+   "PE01s"
+  ],
+  "summary": [
+   "test_rint_r_chain: 2/7 PASS (12.4 s)   FAILED: ['PE01', 'PE01h', 'PE01r', 'PE01s', 'PE01f']"
+  ],
+  "seconds": 12.9
+ },
+ "M03": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "PE01p",
+  "expected_catch": "PE01p start_twice",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "PE01p"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['PE01p']"
+  ],
+  "seconds": 1.2
+ },
+ "M04": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "PE01p",
+  "expected_catch": "PE01p start_after_result",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "PE01p"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['PE01p']"
+  ],
+  "seconds": 1.3
+ },
+ "M05": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "PE01p",
+  "expected_catch": "PE01p start_base_relative",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "PE01p"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['PE01p']"
+  ],
+  "seconds": 1.3
+ },
+ "M06": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "PE01p",
+  "expected_catch": "PE01p host rows",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "PE01p"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/1 PASS (0.9 s)   FAILED: ['PE01p']"
+  ],
+  "seconds": 1.3
+ },
+ "M07": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "PE01p",
+  "expected_catch": "PE01p folder rows",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "PE01p"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['PE01p']"
+  ],
+  "seconds": 1.2
+ },
+ "M08": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "PE01",
+  "expected_catch": "PE01 row_copy",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "PE01"
+  ],
+  "summary": [
+   "test_rint_r_chain: 6/7 PASS (8.3 s)   FAILED: ['PE01']"
+  ],
+  "seconds": 8.8
+ },
+ "M09": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "PE01",
+  "expected_catch": "PE01 row_copy2 · PE01c",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "PE01",
+   "PE01c"
+  ],
+  "summary": [
+   "test_rint_r_chain: 5/7 PASS (8.4 s)   FAILED: ['PE01', 'PE01c']"
+  ],
+  "seconds": 8.8
+ },
+ "M10": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "PE01f",
+  "expected_catch": "PE01f",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "PE01f"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/1 PASS (2.4 s)   FAILED: ['PE01f']"
+  ],
+  "seconds": 2.8
+ },
+ "M11": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "PE01s",
+  "expected_catch": "PE01s",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "PE01s"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/1 PASS (2.3 s)   FAILED: ['PE01s']"
+  ],
+  "seconds": 2.8
+ },
+ "M12": {
+  "error": "old string occurs 0 times"
+ },
+ "M13": {
+  "error": "old string occurs 0 times"
+ },
+ "M14": {
+  "error": "old string occurs 0 times"
+ },
+ "M15": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "PE03",
+  "expected_catch": "PE03 · PE03u",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "PE03",
+   "PE03u"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/2 PASS (4.7 s)   FAILED: ['PE03', 'PE03u']"
+  ],
+  "seconds": 5.2
+ },
+ "M16": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "PE03",
+  "expected_catch": "PE03 · PE03u",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "PE03",
+   "PE03u"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/2 PASS (4.6 s)   FAILED: ['PE03', 'PE03u']"
+  ],
+  "seconds": 5.0
+ },
+ "M17": {
+  "error": "old string occurs 0 times"
+ },
+ "M18": {
+  "error": "old string occurs 0 times"
+ },
+ "M19": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "PE04",
+  "expected_catch": "PE04",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "PE04"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/1 PASS (1.3 s)   FAILED: ['PE04']"
+  ],
+  "seconds": 1.7
+ },
+ "M20": {
+  "error": "old string occurs 0 times"
+ },
+ "M21": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "RV05,RV06",
+  "expected_catch": "RV05 crlf · RV06 crlf",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "RV05",
+   "RV06"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/2 PASS (5.8 s)   FAILED: ['RV05', 'RV06']"
+  ],
+  "seconds": 6.3
+ },
+ "M22": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "RV05",
+  "expected_catch": "RV05 offsets",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "RV05"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/1 PASS (0.7 s)   FAILED: ['RV05']"
+  ],
+  "seconds": 1.2
+ },
+ "M23": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "RV06",
+  "expected_catch": "RV06 pub_nl",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "RV06"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/1 PASS (6.1 s)   FAILED: ['RV06']"
+  ],
+  "seconds": 6.6
+ },
+ "M24": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "RV06",
+  "expected_catch": "RV06 screen",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "RV06"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/1 PASS (5.9 s)   FAILED: ['RV06']"
+  ],
+  "seconds": 6.3
+ },
+ "M25": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "RV05",
+  "expected_catch": "RV05 indent2 · ascii_esc",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "RV05"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['RV05']"
+  ],
+  "seconds": 1.2
+ },
+ "M26": {
+  "error": "old string occurs 0 times"
+ },
+ "M27": {
+  "error": "old string occurs 0 times"
+ },
+ "M28": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "RV05",
+  "expected_catch": "RV05 trail_space",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "RV05"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['RV05']"
+  ],
+  "seconds": 1.2
+ },
+ "M29": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "RV06",
+  "expected_catch": "RV06 crlf/order",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "RV06"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/1 PASS (5.9 s)   FAILED: ['RV06']"
+  ],
+  "seconds": 6.4
+ },
+ "M30": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "RV05,RV06",
+  "expected_catch": "RV05 extra_nl/no_nl · RV06 pub_nl",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "RV05",
+   "RV06"
+  ],
+  "summary": [
+   "test_rint_r_chain: 0/2 PASS (5.9 s)   FAILED: ['RV05', 'RV06']"
+  ],
+  "seconds": 6.3
+ },
+ "B01": {
+  "file": "scripts/carbon_junction.py",
+  "tests": "BAN8",
+  "expected_catch": "BAN8 ②③",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "BAN8"
+  ],
+  "summary": [
+   "== test_carbon_junction: 28/34 PASS"
+  ],
+  "seconds": 4.2
+ },
+ "B02": {
+  "file": "scripts/carbon_junction.py",
+  "tests": "BAN8",
+  "expected_catch": "BAN8 ②",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "BAN8"
+  ],
+  "summary": [
+   "== test_carbon_junction: 11/34 PASS"
+  ],
+  "seconds": 4.3
+ },
+ "B03": {
+  "file": "scripts/carbon_junction.py",
+  "tests": "BAN8",
+  "expected_catch": "BAN8 ②③④",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "BAN8"
+  ],
+  "summary": [
+   "== test_carbon_junction: 14/34 PASS"
+  ],
+  "seconds": 4.3
+ },
+ "E01": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "E18",
+  "expected_catch": "E18i · E18j",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "E18i",
+   "E18j"
+  ],
+  "summary": [
+   "test_rint_r_chain_e2e: 9 PASS · 2 FAIL (378.4 s)"
+  ],
+  "seconds": 378.8
+ },
+ "E02": {
+  "file": "scripts/rint_r_chain.py",
+  "tests": "E18",
+  "expected_catch": "E18j",
+  "rc": 1,
+  "killed": true,
+  "failed_ids": [
+   "E18j"
+  ],
+  "summary": [
+   "test_rint_r_chain_e2e: 10 PASS · 1 FAIL (380.7 s)"
+  ],
+  "seconds": 381.1
+ }
+}
