@@ -17,15 +17,25 @@ dr, dq, dp, dl = ds.dr, ds.dq, ds.dp, ds.dl
 RUNR, DRVR = dl.RUNR, dl.DRVR
 F = lambda name, anchor, repl, which="both", where=DRVR: (name, where, [(anchor, repl)], which)
 
-_SHORTCUT = ("    if pv_.get(\"md_progress\") == \"in_progress\" and isinstance(fa_, dict) and all(f in fa_ and fa_[f] is None for f in LATE_FILES):")
+_SHORTCUT = ("    if (pv_.get(\"md_progress\") == \"in_progress\" and isinstance(fa_, dict) and all(f in fa_ and fa_[f] is None for f in LATE_FILES)")
+_SHORTCUT_FULL = (_SHORTCUT + "\n            and isinstance(fb_, dict) and fa_.get(\"plan.json\") is not None and fa_.get(\"plan.json\") == fb_.get(\"plan.json\")"
+                  "\n            and fa_.get(ATTEMPT_NAME) == fb_.get(ATTEMPT_NAME)"
+                  "\n            and _utc_before(pv_.get(\"judged_at_utc\"), current_provenance.get(\"md_done_at_utc\"))):")
+_TRACES1 = "MD_AFTER_TRACES = (MD_DONE_NAME, MD_DONE_TMP, \"final_relax.log\", \"final.xyz\", \"final.vasp\", \"result.json\", \"gr_partials.csv\","
 _GUARD = "        if k_ not in (None, \"file\"):\n            msg = (f\"판정 기록 자리"
 
 #: DS 판 변이 중 DS 회신 고침으로 자리가 바뀐 것 (뜻 그대로 · 새 자리) — --dry 의 '자리 0 개' 목록에서 채웠다 (2026-11-06)
 MOVED_DT = {
  # '진행 중' 지름길이 md_done · md_complete_seen 대신 md_progress (진행 중 확인) + 뒤 산출물 없음으로 (회신 DS P1-1)
- "DS10_md_done_ignored": F("DS10_md_done_ignored", _SHORTCUT, "    if True:"),
+ "DS10_md_done_ignored": F("DS10_md_done_ignored", _SHORTCUT_FULL, "    if True:"),
  "DS21_md_seen_ignored": F("DS21_md_seen_ignored", _SHORTCUT,
-                           "    if isinstance(fa_, dict) and all(f in fa_ and fa_[f] is None for f in LATE_FILES):"),
+                           "    if (isinstance(fa_, dict) and all(f in fa_ and fa_[f] is None for f in LATE_FILES)"),
+ # DT 전 1차 — 첫 시드 녹음 판정 자리에 '못 씀' 확인이 붙음 (DQ68 = 장부 쓰기를 임계 구간 밖으로 · 뜻 그대로)
+ "DQ68_melt_ledger_outside_section": ("DQ68_melt_ledger_outside_section", RUNR, [
+     ('                            v = mq.stage1_verdict(rd, values=vals, log=log, reason=f"첫 시드 녹음 판정 {mw[\'verdict\']} — 러너가 멈춤")\n'
+      '                            if v.get("written") is not False:',
+      '                            v = mq.stage1_verdict(rd, values=vals, log=log, reason=f"첫 시드 녹음 판정 {mw[\'verdict\']} — 러너가 멈춤")\n'
+      '                        if True:\n                            if v.get("written") is not False:')], "run"),
 }
 
 NEW = [
@@ -41,28 +51,24 @@ NEW = [
    "    if (isinstance(plan, dict) and isinstance(gate, dict) and \"error\" not in gate"),
  F("DT4_progress_frames_unchecked",
    "            and isinstance(tf_, dict) and type(tf_.get(\"n\")) is int and type(tf_.get(\"expected\")) is int\n"
-   "            and 0 <= tf_[\"n\"] < tf_[\"expected\"]):",
-   "            ):"),
+   "            and 0 <= tf_[\"n\"] < tf_[\"expected\"] and not extra_):",
+   "            and not extra_):"),
  F("DT5_progress_record_inprog", "                         \"md_progress\": md_progress(run, plan, gate, checks),",
    "                         \"md_progress\": \"in_progress\","),
  F("DT6_progress_record_unknown", "                         \"md_progress\": md_progress(run, plan, gate, checks),",
    "                         \"md_progress\": \"unknown\","),
- F("DT7_after_trace_result_dropped",
-   "MD_AFTER_TRACES = (MD_DONE_NAME, MD_DONE_TMP, \"final_relax.log\", \"final.xyz\", \"result.json\", \"md_init_raw.xyz\")",
-   "MD_AFTER_TRACES = (MD_DONE_NAME, MD_DONE_TMP, \"final_relax.log\", \"final.xyz\", \"md_init_raw.xyz\")"),
- F("DT8_after_trace_tmp_dropped",
-   "MD_AFTER_TRACES = (MD_DONE_NAME, MD_DONE_TMP, \"final_relax.log\", \"final.xyz\", \"result.json\", \"md_init_raw.xyz\")",
-   "MD_AFTER_TRACES = (MD_DONE_NAME, \"final_relax.log\", \"final.xyz\", \"result.json\", \"md_init_raw.xyz\")"),
- F("DT9_after_trace_fire_log_dropped",
-   "MD_AFTER_TRACES = (MD_DONE_NAME, MD_DONE_TMP, \"final_relax.log\", \"final.xyz\", \"result.json\", \"md_init_raw.xyz\")",
-   "MD_AFTER_TRACES = (MD_DONE_NAME, MD_DONE_TMP, \"final.xyz\", \"result.json\", \"md_init_raw.xyz\")"),
+ F("DT7_after_trace_result_dropped", _TRACES1, _TRACES1.replace("\"result.json\", ", "")),
+ F("DT8_after_trace_tmp_dropped", _TRACES1, _TRACES1.replace("MD_DONE_TMP, ", "")),
+ F("DT9_after_trace_fire_log_dropped", _TRACES1, _TRACES1.replace("\"final_relax.log\", ", "")),
  # ── 회신 DS P1-1: 기준 앞 '진행 중' 지름길
- F("DT10_shortcut_late_ignored", _SHORTCUT, "    if pv_.get(\"md_progress\") == \"in_progress\":"),
- F("DT11_shortcut_old_rule", _SHORTCUT,
+ F("DT10_shortcut_late_ignored", _SHORTCUT, "    if (pv_.get(\"md_progress\") == \"in_progress\" and isinstance(fa_, dict)"),
+ F("DT11_shortcut_old_rule", _SHORTCUT_FULL,
    "    if \"md_done\" in pv_ and pv_[\"md_done\"] is None and pv_.get(\"md_complete_seen\") is False:"),
  # ── 회신 DS P1-1: 기록 꼴
- F("DT12_prerun_keys_no_progress", "                                     \"md_complete_seen\", \"md_progress\"})",
-   "                                     \"md_complete_seen\"})"),
+ F("DT12_prerun_keys_no_progress", "                                     \"md_complete_seen\", \"md_progress\", \"judged_at_utc\", \"md_done_at_utc\"})",
+   "                                     \"md_complete_seen\", \"judged_at_utc\", \"md_done_at_utc\"})"),
+ F("DT27_prerun_keys_no_times", "                                     \"md_complete_seen\", \"md_progress\", \"judged_at_utc\", \"md_done_at_utc\"})",
+   "                                     \"md_complete_seen\", \"md_progress\"})"),
  F("DT13_progress_vocab_off",
    "    if pv.get(\"md_progress\") is not None and pv.get(\"md_progress\") not in MD_PROGRESS_STATES:", "    if False:"),
  # ── 회신 DS P2-1: 직접 판정도 비정상 판정 · 이력 자리를 거부
@@ -70,6 +76,25 @@ NEW = [
  F("DT15_p2_guard_verdict_only", "    for nm_ in (\"stage1_verdict.json\", VERDICT_HISTORY):", "    for nm_ in (\"stage1_verdict.json\",):"),
  F("DT16_p2_guard_history_only", "    for nm_ in (\"stage1_verdict.json\", VERDICT_HISTORY):", "    for nm_ in (VERDICT_HISTORY,):"),
  F("DT17_p2_guard_links_ok", _GUARD, "        if k_ not in (None, \"file\", \"link\"):\n            msg = (f\"판정 기록 자리"),
+ # ── DT 전 1차 리뷰 (quench_ps 대조 · 같은 plan · 완료 전 시각 · 실행 전 기록 · 모르는 파일 · 첫 시드 녹음 판정의 '못 씀')
+ F("DT18_quench_check_off", "    if q_want is None or not _same(plan.get(\"quench_ps\"), q_want):", "    if False:"),
+ F("DT19_shortcut_plan_unchecked",
+   "            and isinstance(fb_, dict) and fa_.get(\"plan.json\") is not None and fa_.get(\"plan.json\") == fb_.get(\"plan.json\")",
+   "            and isinstance(fb_, dict)"),
+ F("DT20_shortcut_time_unchecked",
+   "            and _utc_before(pv_.get(\"judged_at_utc\"), current_provenance.get(\"md_done_at_utc\"))):",
+   "            ):"),
+ F("DT21_shortcut_attempt_unchecked", "            and fa_.get(ATTEMPT_NAME) == fb_.get(ATTEMPT_NAME)\n", ""),
+ F("DT22_progress_extra_files_ok", "            and 0 <= tf_[\"n\"] < tf_[\"expected\"] and not extra_):", "            and 0 <= tf_[\"n\"] < tf_[\"expected\"]):"),
+ F("DT23_md_done_time_unread", "    q = pathlib.Path(run) / MD_DONE_NAME\n    if path_kind(q) != \"file\":\n        return None",
+   "    q = pathlib.Path(run) / MD_DONE_NAME\n    if True:\n        return None"),
+ F("DT24_judged_time_fixed",
+   "                         \"judged_at_utc\": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec=\"microseconds\"),",
+   "                         \"judged_at_utc\": \"2000-01-01T00:00:00+00:00\","),
+ F("DT25_after_trace_vasp_dropped", _TRACES1, _TRACES1.replace("\"final.vasp\", ", "")),
+ F("DT26_runner_melt_written_ignored",
+   "                            if v.get(\"written\") is not False:   # ⭐ DT 전 1차 리뷰 P3 — 판정을 쓰지 못했으면",
+   "                            if True:   # ⭐ DT 전 1차 리뷰 P3 — 판정을 쓰지 못했으면", "run", RUNR),
 ]
 
 _ds_names = {m[0] for m in ds.MUT}

@@ -103,7 +103,7 @@ from __future__ import annotations
 import argparse
 import copy, datetime, hashlib, importlib.util, json, os, pathlib, re, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "d9785b2526e0ad6b"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "61ce632ddb34a8af"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 EXPECTED_VALUES_SHA16 = "086de59c484f9c32"     # 카드 기계_판독_값 (mq.values_sha16) — ⭐ DO 전 리뷰 P2-12: 카드 값 (상한 포함) 을 바꾸면 이 줄도
                                                #   같이 바꾸고 다시 리뷰한다 (카드 파일만 고쳐서는 상한 멈춤을 넘기지 못한다)
 STOP_KEYS = ("at", "code", "reason", "terminal", "stop_id", "run_id", "sys", "seed", "cleanup", "rc", "verdict", "melt", "summary",
@@ -1271,11 +1271,16 @@ def run(a, deps=None):
                                                     "손으로 정리 (장부 melt_check = invalid)", sys=sysn, seed=seed, cleanup=cl, run_id=rid)
                         with _critical():                    # ⭐ DQ 전 리뷰 P2-E · 3차 P1 — 판정 쓰기 · 장부 적기 · 저장을 한 구간으로 (그 사이 신호로 장부가 비지 않게)
                             v = mq.stage1_verdict(rd, values=vals, log=log, reason=f"첫 시드 녹음 판정 {mw['verdict']} — 러너가 멈춤")
-                            ent["verdict"], ent["verdict_provenance"] = v.get("status"), v.get("provenance")   # ⭐ DQ 전 2차 리뷰 N3 — 장부 판정의 지문
-                            if mw["verdict"] == "fail" and not v.get("closes_system"):
-                                ent["verdict_disagrees"] = f"녹음 판정 fail 인데 시드 판정 {v.get('status')} · closes_system {v.get('closes_system')}"
-                                log(f"  ⚠ {sysn}{seed}: {ent['verdict_disagrees']} — 장부의 닫힘 (녹음 판정) 을 그대로 둔다 (사람이 본다)")
+                            if v.get("written") is not False:   # ⭐ DT 전 1차 리뷰 P3 — 판정을 쓰지 못했으면 (판정 자리 비정상 · 임시 파일) 장부에 판정을 적지 않는다
+                                ent["verdict"], ent["verdict_provenance"] = v.get("status"), v.get("provenance")   # ⭐ DQ 전 2차 리뷰 N3 — 장부 판정의 지문
+                                if mw["verdict"] == "fail" and not v.get("closes_system"):
+                                    ent["verdict_disagrees"] = f"녹음 판정 fail 인데 시드 판정 {v.get('status')} · closes_system {v.get('closes_system')}"
+                                    log(f"  ⚠ {sysn}{seed}: {ent['verdict_disagrees']} — 장부의 닫힘 (녹음 판정) 을 그대로 둔다 (사람이 본다)")
                             save_ledger()
+                        if v.get("written") is False:
+                            return stop("invalid", f"{sysn}{seed} (계의 첫 시드) 녹음 판정 {mw['verdict']} 뒤 판정을 쓰지 못했다 — "
+                                                   f"{' · '.join((v.get('reasons') or {}).get('invalid', []))[:200]} · 장부의 녹음 판정 (과 닫힘) 은 그대로 · 사람이 본다",
+                                        sys=sysn, seed=seed, run_id=rid, melt=mw.get("message"))
                         if mw["verdict"] == "fail":                  # 과학적 종료 — 첫 시드 녹음 판정 (카드 S1 ②)
                             return stop("melt", f"{sysn}{seed} (계의 첫 시드) 녹음 판정 fail — {mw.get('message')} · "
                                                 "그 계가 닫혀 트랙 전체 멈춤", sys=sysn, seed=seed, verdict=v.get("status"), run_id=rid)
@@ -3895,6 +3900,77 @@ def _selftest():
         "⛔음성 회신 DS P1-1 (Codex 재현): 완료 런에서 plan · md_done 을 옮기고 들여다본 판정 (incomplete · md_complete_seen False · final · result 있음) 은 "
         "md_progress 'complete' 라 '진행 중' 면제가 아니다 — 되돌리고 thermo 를 고친 뒤 끝 판정 일시 오류 · 확인 → 자동 대체 안 함 (발사 0) · 고침 없이 "
         f"되돌리기만 해도 보류 (원자료 이동 · 복구) (고침 {res_m1} · 고침 없음 {res_m0})")
+    # ⭐ DT 전 1차 리뷰 P1 (재현) — 완료 런에서 완료 기록 · final · result (와 그 밖의 뒤 산출물) 를 옮기고 plan 의 quench_ps 를 10 ps 늘려 들여다봄 (기대
+    #    프레임이 늘어 '진행 중' 처럼 보임) → plan 원래 바이트 · 옮긴 파일 되돌림 (+ thermo 고침) → 끝 판정 일시 오류 · 확인 → 자동 대체 안 함 (발사 0) —
+    #    그 들여다봄은 quench_ps 가 카드 유도값과 달라 invalid 이고 · plan 지문도 지금과 다르다 (두 겹)
+    def _quench_edit_case(tamper):
+        st_q = {"armed": True}
+        def _sv_q(rd_, **k_):
+            rp_ = pathlib.Path(rd_)
+            if st_q["armed"] and rp_.name == "seed12" and rp_.parent.name == "A" and k_.get("reason") == "담금질 끝":
+                st_q["armed"] = False
+                moved_ = [f_ for f_ in real.MD_AFTER_TRACES if os.path.lexists(rp_ / f_)]
+                for f_ in moved_:
+                    (rp_ / f_).rename(rp_ / (f_ + ".hold"))
+                b_pl = (rp_ / "plan.json").read_bytes()
+                pl_ = json.loads(b_pl.decode("utf-8")); pl_["quench_ps"] = float(pl_["quench_ps"]) + 10.0
+                (rp_ / "plan.json").write_text(json.dumps(pl_), encoding="utf-8")
+                st_q["peek"] = _sv0_c(rp_, values=k_.get("values"), log=lambda *m: None, reason="selftest: quench_ps 를 늘린 plan 으로 들여다봄")
+                (rp_ / "plan.json").write_bytes(b_pl)
+                for f_ in moved_:
+                    (rp_ / (f_ + ".hold")).rename(rp_ / f_)
+                if tamper:
+                    ln_ = (rp_ / "thermo.csv").read_text(encoding="utf-8").split("\n")
+                    ln_[1] = ln_[1].replace("-500.0000", "-500.0001")
+                    (rp_ / "thermo.csv").write_text("\n".join(ln_), encoding="utf-8")
+                n_q = {"left": 1}
+                def _sg_once_q(run_, *a_, **kk_):
+                    if n_q["left"]:
+                        n_q["left"] -= 1
+                        raise OSError("selftest: 끝 판정의 일시 I/O 오류")
+                    return _sg0_c(run_, *a_, **kk_)
+                real.seed_gate = _sg_once_q
+                try:
+                    return _sv0_c(rd_, **k_)
+                finally:
+                    real.seed_gate = _sg0_c
+            return _sv0_c(rd_, **k_)
+        real.stage1_verdict = _sv_q
+        try:
+            rc1_, L1_, rr_ = go(wt)
+        finally:
+            real.stage1_verdict = _sv0_c
+        pk_ = st_q.get("peek") or {}
+        rc2_, L2_, _ = go(wt, rr=rr_, ack=J(rr_ / "STOP.json")["stop_id"])
+        row_ = [x_ for x_ in J(rr_ / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
+        return (pk_.get("status"), any("quench_ps" in x_ for x_ in (pk_.get("reasons") or {}).get("invalid", [])),
+                rc1_, len(L1_), rc2_, len(L2_), row_.get("verdict"), summ(rr_)["track"])
+    res_q1, res_q0 = _quench_edit_case(True), _quench_edit_case(False)
+    chk(all(r_[:2] == ("invalid", True) and r_[2:6] == (RC["invalid"], 3, RC["invalid"], 0) and r_[6] == "invalid" and r_[7] != "stage1_pass"
+            for r_ in (res_q1, res_q0)),
+        "⛔음성 DT 전 1차 리뷰 P1 (재현): 완료 런에서 뒤 산출물을 옮기고 plan 의 quench_ps 를 늘려 들여다봄 (진행 중 모양) → 되돌림 (± thermo 고침) → 끝 판정 "
+        f"일시 오류 · 확인 → 자동 대체 안 함 (발사 0 · 그 들여다봄은 quench_ps 불일치 invalid) (고침 {res_q1} · 고침 없음 {res_q0})")
+    # ⭐ DT 전 1차 리뷰 P3 — 첫 시드 녹음 판정 fail 로 멈출 때 판정 자리가 디렉터리라 판정을 못 쓰면 장부에 지어낸 판정 ('invalid' · 지문 없음 · 엇갈림 글) 을
+    #    적지 않고 invalid 로 멈춘다 (장부의 녹음 판정 · 닫힘은 그대로 · 사람이 본다) · 대조: 판정 자리가 정상이면 melt 로 닫는다 (위 DG P0-1 시험)
+    _sv0_mj = real.stage1_verdict
+    def _sv_mj(rd_, **k_):
+        rp_ = pathlib.Path(rd_)
+        if rp_.name == "seed11" and rp_.parent.name == "A" and str(k_.get("reason", "")).startswith("첫 시드 녹음 판정"):
+            if not (rp_ / "stage1_verdict.json").exists():
+                (rp_ / "stage1_verdict.json").mkdir()
+        return _sv0_mj(rd_, **k_)
+    real.stage1_verdict = _sv_mj
+    try:
+        rc_mj, L_mj, rr_mj = go(mk_wt(), scen={("A", 11): {"melt": "fail", "polls": 8}})
+    finally:
+        real.stage1_verdict = _sv0_mj
+    row_mj = [x_ for x_ in J(rr_mj / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 11)][-1]
+    sp_mj = J(rr_mj / "STOP.json") if (rr_mj / "STOP.json").is_file() else {}
+    chk(rc_mj == RC["invalid"] and len(L_mj) == 1 and row_mj.get("verdict") is None and not row_mj.get("verdict_disagrees")
+        and row_mj.get("closes_system") is True and "판정을 쓰지 못했다" in str(sp_mj.get("reason")),
+        "⛔음성 DT 전 1차 리뷰 P3: 첫 시드 녹음 fail 때 판정을 쓰지 못하면 장부에 판정을 지어 적지 않고 invalid 로 멈춘다 (닫힘은 장부에 그대로) "
+        f"({rc_mj} · 장부 판정 {row_mj.get('verdict')!r} · 엇갈림 {row_mj.get('verdict_disagrees')!r} · 닫힘 {row_mj.get('closes_system')} · "
+        f"{str(sp_mj.get('reason'))[:100]})")
     # ⭐ DS 전 2차 리뷰 P3 — 현재 폴더의 판정 이력 경로가 밖의 파일을 가리키는 링크면 시작 점검 (①-3b) 이 이유를 남기고 멈춘다 (발사 0 · 요약 invalid) —
     #    재판정이 링크 너머에 덧붙이려다 예외로 죽는 (interrupted) 대신
     c_hl = clone(rr_d); hx_l = pathlib.Path(tempfile.mkdtemp(dir=tmp_root)) / "outside_history.jsonl"

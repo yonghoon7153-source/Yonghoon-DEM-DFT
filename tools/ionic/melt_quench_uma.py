@@ -995,6 +995,12 @@ def combine_stage1(plan, values, gate, melt, seedg, files, checks=None):
     for k, want in sched.items():
         if not _same(plan.get(k), want):
             reasons["invalid"].append(f"일정 {k} {plan.get(k)!r} ≠ 카드 {want!r}")
+    try:                                                     # ⭐ DT 전 1차 리뷰 P1 — quench_ps 는 카드에 없고 (T_melt − T_final) / quench_rate 로 정해진다 ·
+        q_want = (float(sched["T_melt_K"]) - float(sched["T_final_K"])) / float(sched["quench_rate_K_s"]) * 1e12   # gate_check 의 일정 끝 ·
+    except (KeyError, TypeError, ValueError, ZeroDivisionError):                                            # 기대 프레임이 이 값을 쓴다
+        q_want = None
+    if q_want is None or not _same(plan.get("quench_ps"), q_want):
+        reasons["invalid"].append(f"일정 quench_ps {plan.get('quench_ps')!r} ≠ 카드 유도값 (T_melt − T_final) / quench_rate = {q_want!r} ps")
     want_comp = (values.get("composition") or {}).get(sysname)
     if want_comp is None or plan.get("composition") != want_comp:
         reasons["invalid"].append(f"조성 plan {plan.get('composition')} ≠ 카드 {sysname} {want_comp}")
@@ -1274,6 +1280,8 @@ def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print, reason="
                          "md_done": path_state(run / MD_DONE_NAME),   # ⭐ DS 전 1차 리뷰 P2 — 그때 MD 가 끝났나 (MD 완료 기록) · 판정 입력 아님 (기준 앞 면제가 읽는다)
                          "md_complete_seen": md_complete_seen(run, gate, checks),   # ⭐ DS 전 2차 — 완료 기록이 없어도 일정 끝 · 프레임 다 참이면 끝난 것
                          "md_progress": md_progress(run, plan, gate, checks),   # ⭐ 회신 DS P1-1 — 완료 · 진행 중 확인 · 확인 불가 (기준 앞 면제가 읽는다)
+                         "judged_at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="microseconds"),   # ⭐ DT 전 1차 — 들여다본 시각
+                         "md_done_at_utc": _md_done_at_utc(run),   # ⭐ DT 전 1차 — 그때 MD 완료 기록의 완료 시각 (없으면 None)
                          "judge_nature": {"errors": judge_err, "input_mismatch": input_mismatch},
                          "⛔": "묶음 판정 (stage1_summary) 이 이 지문을 지금 파일 · 카드 값 · 도구 · G4 밴드 카드와 다시 잰다 — 안 맞으면 그 시드는 "
                                "무효 (다시 판정) · 비과학적 판정을 과학적 판정이 자동 대체하는 것은 judge_nature.errors 가 있고 input_mismatch 가 "
@@ -1515,7 +1523,7 @@ def write_md_done(out, *, run_id, n_steps_planned, n_steps_done):
     rec = {"run_id": run_id, "n_steps_planned": int(n_steps_planned), "n_steps_done": int(n_steps_done),
            "traj_sha256": _sha256_file(out / "traj.xyz") if (out / "traj.xyz").is_file() else None,
            "thermo_sha256": _sha256_file(out / "thermo.csv") if (out / "thermo.csv").is_file() else None,
-           "at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")}
+           "at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="microseconds")}   # ⭐ DT 전 1차 — 기준 앞 규칙이 들여다본 시각과 견준다
     tmp = out / MD_DONE_TMP
     with open(tmp, "w", encoding="utf-8") as fh:
         fh.write(json.dumps(rec, ensure_ascii=False))
@@ -1635,7 +1643,8 @@ def md_last_recorded_step(folder, plan):
 PRE_RUN_VERDICT_KEYS = frozenset({"status", "reasons", "run", "provenance", "reason", "history"})   # stage1_verdict 가 plan 없는 폴더에 쓰는 열쇠
 PRE_RUN_PROVENANCE_KEYS = frozenset({"files_sha256", "card_values_sha16", "driver_sha16", "⛔",
                                      "band_sha16", "runtime", "derived_written", "judge_nature", "folder", "judge_values_sha16", "md_done",
-                                     "md_complete_seen", "md_progress"})   # ⭐ 회신 DQ P1-1 · DR 전 리뷰 — 판정 입력 · 성격 칸 · 회신 DS P1-1
+                                     "md_complete_seen", "md_progress", "judged_at_utc", "md_done_at_utc"})   # ⭐ 회신 DQ P1-1 · DR 전 리뷰 — 판정 입력 · 성격 칸 ·
+                                                                                                          # 회신 DS P1-1 · DT 전 1차
 
 
 def _verdict_is_pre_run(v):
@@ -2226,7 +2235,33 @@ def md_complete_seen(run, gate, checks):
 
 
 MD_PROGRESS_STATES = ("complete", "in_progress", "unknown")   # ⭐ 회신 DS P1-1 — '완료' · '진행 중 확인' · '확인 불가'
-MD_AFTER_TRACES = (MD_DONE_NAME, MD_DONE_TMP, "final_relax.log", "final.xyz", "result.json", "md_init_raw.xyz")   # MD 가 끝나야 생기는 경로
+MD_AFTER_TRACES = (MD_DONE_NAME, MD_DONE_TMP, "final_relax.log", "final.xyz", "final.vasp", "result.json", "gr_partials.csv",
+                   "md_init_raw.xyz")   # MD 가 끝나야 생기는 경로 (⭐ DT 전 1차 P3 — 드라이버가 FIRE 뒤에 쓰는 final.vasp · gr_partials.csv 도)
+
+
+def _md_done_at_utc(run):
+    """⭐ DT 전 1차 리뷰 P1 — MD 완료 기록 (md_done.json) 이 적은 완료 시각 (정상 파일 · 객체 · 글자일 때만 · 아니면 None). 판정 지문에 실어
+    기준 앞 '진행 중' 지름길이 들여다본 시각과 견준다 (완료 뒤에 들여다본 판정은 어떻게 꾸며도 진행 중이 아니다)."""
+    q = pathlib.Path(run) / MD_DONE_NAME
+    if path_kind(q) != "file":
+        return None
+    try:
+        rec = loads_strict(q.read_text(encoding="utf-8"))
+    except (OSError, ValueError, UnicodeDecodeError, RecursionError):
+        return None
+    x = rec.get("at_utc") if isinstance(rec, dict) else None
+    return x if isinstance(x, str) else None
+
+
+def _utc_before(a, b):
+    """시각 글자 둘 (ISO · 시간대 있음) 을 읽어 a < b 면 True — 하나라도 못 읽거나 시간대가 없으면 False (확인할 수 없다 = 앞이라고 보지 않는다)."""
+    try:
+        ta, tb = datetime.datetime.fromisoformat(a), datetime.datetime.fromisoformat(b)
+    except (TypeError, ValueError):
+        return False
+    if ta.tzinfo is None or tb.tzinfo is None:
+        return False
+    return ta < tb
 
 
 def md_progress(run, plan, gate, checks):
@@ -2234,7 +2269,8 @@ def md_progress(run, plan, gate, checks):
       · 'complete' — 완료 흔적이 하나라도: md_complete_seen (완료 기록 경로 · 일정 끝 · 프레임 다 참) 이거나 MD 가 끝나야 생기는 경로 (완료 기록 임시
         파일 · FIRE 로그 · final.xyz · result.json · md_init_raw.xyz) 가 있다 — **plan 판독과 무관하게** 경로만 본다 (plan 을 옮겨도 뒤 산출물은 남는다).
       · 'in_progress' — 진행 중을 **확인**: plan 을 객체로 읽었고 · gate_check 가 오류 없이 일정 끝 아님 (False) 을 냈고 · 궤적 프레임을 세서
-        n < 기대이고 · 완료 흔적이 없다.
+        n < 기대이고 · 완료 흔적이 없고 · 폴더에 MD 도중에 있을 수 있는 파일 (MID_RUN_FILES — plan · initial · prerelax · traj · thermo · 실행 전 ·
+        판정 기록) 만 있다 (⭐ DT 전 1차 — 모르는 파일이 있으면 확인 불가).
       · 'unknown' — 그 밖 전부 (plan 이 없거나 못 읽음 · thermo 가 없어 gate_check 를 안 했거나 오류 · 프레임을 못 셈 · 기대 프레임을 모름).
     확인 불가를 '진행 중' 으로 승인하지 않는다 (완료를 확정하지 못해도 진행 중으로 볼 까닭은 없다 — 회신 DS).
     ⛔ 못 하는 것: 사람이 MD 출력을 일부러 잘라 '진행 중' 모양을 꾸민 경우는 못 가른다 (꾸민 기록 · 판정이 본 그대로를 믿는다)."""
@@ -2242,9 +2278,13 @@ def md_progress(run, plan, gate, checks):
     if md_complete_seen(run, gate, checks) or any(path_kind(run / x) is not None for x in MD_AFTER_TRACES):
         return "complete"
     tf_ = checks.get("traj_frames") if isinstance(checks, dict) else None
+    try:
+        extra_ = [x.name for x in run.iterdir() if x.name not in MID_RUN_FILES]
+    except OSError:
+        extra_ = ["(폴더를 못 읽음)"]
     if (isinstance(plan, dict) and isinstance(gate, dict) and "error" not in gate and gate.get("schedule_complete") is False
             and isinstance(tf_, dict) and type(tf_.get("n")) is int and type(tf_.get("expected")) is int
-            and 0 <= tf_["n"] < tf_["expected"]):
+            and 0 <= tf_["n"] < tf_["expected"] and not extra_):
         return "in_progress"
     return "unknown"
 
@@ -2254,7 +2294,9 @@ def pre_anchor_exempt(rec, current_provenance=None):
       · 상태 incomplete (판정이 스스로 '덜 끝남' 으로 분류) 이고 입력 불일치를 찾지 않았고 (성격 기록이 없는 옛 꼴도) ·
       · 그때 MD 가 아직 돌고 있었음을 판정이 **확인** 했거나 (지문의 md_progress 가 'in_progress' — plan 을 읽고 일정 끝 아님 · 프레임 n < 기대를
         셌다 — 이고 뒤 산출물 (final · result · md_init_raw) 이 그때 지문에 없었다 · 그때 파일은 지금과 다를 수밖에 없다 · ⭐ 회신 DS P1-1: 확인 불가
-        'unknown' · 옛 꼴 (md_progress 없음) 은 이 지름길을 못 탄다) ·
+        'unknown' · 옛 꼴 (md_progress 없음) 은 이 지름길을 못 탄다 · ⭐ DT 전 1차 리뷰 P1 · P2: plan.json (과 묶였으면 실행 전 기록) 이 지금과 같고 —
+        MD 가 시작된 뒤엔 안 바뀐다 — 들여다본 시각 (judged_at_utc) 이 지금 MD 완료 기록의 완료 시각 (md_done_at_utc) 보다 앞일 때만 — 완료 뒤에
+        들여다본 판정은 plan 을 고치든 출력을 숨기든 진행 중이 아니다) ·
         MD 가 끝났던 (또는 표시가 없어 모르는) 판정이면 MD 가 낸 판정 입력 (plan · thermo · traj · 실행 전 기록) 이 지금 판정 (current_provenance) 과
         같고 그 뒤에 생기는 것 (final · result · md_init_raw) 은 그때 없었거나 같을 때 (MD 가 끝난 뒤 들여다본 판정 뒤에 MD 출력이 바뀌었으면 사람이 본다).
     완료된 판정 (invalid — 입력 불일치 · 결정적 실패 · 일시 오류) 은 앞에 있어도 뒤 기록과 같은 대체 규칙을 받는다 — 입력 불일치는 앞뒤와 무관하게
@@ -2268,9 +2310,12 @@ def pre_anchor_exempt(rec, current_provenance=None):
     if not (jn_ is None or (isinstance(jn_, dict) and jn_.get("input_mismatch") == [])):
         return False
     fa_ = pv_.get("files_sha256")
-    if pv_.get("md_progress") == "in_progress" and isinstance(fa_, dict) and all(f in fa_ and fa_[f] is None for f in LATE_FILES):
-        return True                                          # ⭐ 회신 DS P1-1 — 진행 중을 확인한 판정 · 뒤 산출물이 그때 없었을 때만 (plan 판독과 따로 본다)
     fb_ = current_provenance.get("files_sha256") if isinstance(current_provenance, dict) else None
+    if (pv_.get("md_progress") == "in_progress" and isinstance(fa_, dict) and all(f in fa_ and fa_[f] is None for f in LATE_FILES)
+            and isinstance(fb_, dict) and fa_.get("plan.json") is not None and fa_.get("plan.json") == fb_.get("plan.json")
+            and fa_.get(ATTEMPT_NAME) == fb_.get(ATTEMPT_NAME)
+            and _utc_before(pv_.get("judged_at_utc"), current_provenance.get("md_done_at_utc"))):
+        return True                                          # ⭐ 회신 DS P1-1 · DT 전 1차 — 진행 중을 확인 · 뒤 산출물 없음 · 같은 plan · 완료 전에 들여다봄
     if not (isinstance(fa_, dict) and isinstance(fb_, dict)):
         return False
     same_md = MD_FINAL_FILES + ((ATTEMPT_NAME,) if (ATTEMPT_NAME in fa_ or ATTEMPT_NAME in fb_) else ())
@@ -2691,7 +2736,7 @@ def _verdict_shape_problem(vv):
     pv = vv.get("provenance") or {}
     for k, kinds in (("files_sha256", (dict,)), ("card_values_sha16", (str,)), ("driver_sha16", (str,)), ("judge_values_sha16", (str,)),
                      ("band_sha16", (str,)), ("runtime", (dict,)), ("derived_written", (list,)), ("judge_nature", (dict,)),
-                     ("md_complete_seen", (bool,))):   # ⭐ 회신 DQ P1-1 · DS 전 2차
+                     ("md_complete_seen", (bool,)), ("judged_at_utc", (str,)), ("md_done_at_utc", (str,))):   # ⭐ 회신 DQ P1-1 · DS 전 2차 · DT 전 1차
         x = pv.get(k)
         if x is not None and not isinstance(x, kinds):
             return f"provenance 의 {k} 타입이 {type(x).__name__} 이다"
@@ -4192,6 +4237,7 @@ def _selftest():
     plan_ok = {"system": "A", "seed": 12, "fix_density_g_cm3": 1.91347, "n_atoms": 120, "composition": dict(VAL["composition"]["A"]),
                "software": dict(SW_OK), **VAL["schedule"]}
     plan_ok.pop("n_atoms"); plan_ok["n_atoms"] = 120
+    plan_ok["quench_ps"] = (VAL["schedule"]["T_melt_K"] - VAL["schedule"]["T_final_K"]) / VAL["schedule"]["quench_rate_K_s"] * 1e12   # 진짜 plan 처럼 (build_plan)
     g_ok = {"schedule_complete": True, "window_in_hold": True, "density_ok": True, "pressure_recorded": True,
             "thermo_columns_ok": True, "target_density_g_cm3": 1.91347}
     m_ok = {"verdict": "pass"}; s_ok = {"relaxed": {"PS4_fraction": 1.0, "min_pair_excl_PS_A": 2.31}}
@@ -4206,6 +4252,8 @@ def _selftest():
                          ("final.xyz 없음", {"files": dict(f_ok, **{"final.xyz": False})}, "incomplete"),
                          ("밀도 1.9 로 돌림", {"plan": dict(plan_ok, fix_density_g_cm3=1.9)}, "invalid"),
                          ("melt 80 ps 로 돌림", {"plan": dict(plan_ok, melt_ps=80.0)}, "invalid"),
+                         ("quench_ps 가 카드 유도값보다 10 ps 김 (DT 전 1차 P1)", {"plan": dict(plan_ok, quench_ps=plan_ok["quench_ps"] + 10.0)}, "invalid"),
+                         ("quench_ps 없음 (DT 전 1차 P1)", {"plan": {k: x for k, x in plan_ok.items() if k != "quench_ps"}}, "invalid"),
                          ("소프트웨어 기록 없음", {"plan": {k: x for k, x in plan_ok.items() if k != "software"}}, "invalid"),
                          # 회신 DG P1-7 표 — 모르는 상태 · NaN · 반쪽 소프트웨어 · virial 열 없음 · 조성 · 최종 구조 · traj 프레임
                          ("녹음 상태 'unknown' (DG)", {"melt": {"verdict": "unknown"}}, "invalid"),
@@ -4841,9 +4889,17 @@ def _selftest():
             return ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": prior_}, "pass", folder_provenance=new_) is not None
         PVM = {**PV, "judge_nature": {"errors": [], "input_mismatch": [f"{RAW_} 불일치 (selftest)"]}}
         PVR_old = {**PV, "files_sha256": {**FS0, RAW_: "e" * 64}}
-        PVMID = {"status": "incomplete", "provenance": {**PV, "files_sha256": {**FS0, "traj.xyz": "9" * 64},
+        T_PEEK_, T_DONE_ = "2026-11-06T00:00:00.000000+00:00", "2026-11-06T01:00:00.000000+00:00"
+        PVP = {**PV, "files_sha256": {**FS0, "plan.json": "a" * 64}, "md_done_at_utc": T_DONE_}   # 지금 판정 (plan 있음 · MD 완료 기록의 완료 시각)
+        PVMID = {"status": "incomplete", "provenance": {**PVP, "files_sha256": {**PVP["files_sha256"], "traj.xyz": "9" * 64},
                                                         "judge_nature": {"errors": [], "input_mismatch": []}, "md_done": None,
-                                                        "md_complete_seen": False, "md_progress": "in_progress"}}   # 실행 중 (MD 도중) 들여다본 판정 (진행 중 확인)
+                                                        "md_complete_seen": False, "md_progress": "in_progress",
+                                                        "judged_at_utc": T_PEEK_, "md_done_at_utc": None}}   # 실행 중 (MD 도중) 들여다본 판정 (진행 중 확인)
+        def _pa(peek_pv, cur=None):                          # ⭐ DT 전 1차 — 기준 앞에 들여다본 기록 하나 · 장부 기준 (일시 오류 invalid) · 지금 pass
+            cur = PVP if cur is None else cur
+            return ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": cur}, "pass", folder_provenance=cur,
+                                           folder_prior=[{"status": "incomplete", "provenance": peek_pv}, {"status": "invalid", "provenance": cur},
+                                                         {"status": "pass", "provenance": cur}]) is not None
         PVDET = {"status": "invalid", "provenance": {**PV, "files_sha256": {**FS0, "final.xyz": "8" * 64},
                                                      "judge_nature": {"errors": [], "input_mismatch": []}}}     # 입력이 바뀐 채 낸 결정적 invalid (그 뒤 되돌림)
         PVR_new = {**PV, "files_sha256": {**FS0, RAW_: "f" * 64}, "derived_written": [RAW_]}
@@ -4885,12 +4941,12 @@ def _selftest():
                                                                       folder_prior=[{"status": "invalid", "provenance": PVM}]) is not None,
                   # ⭐ DR 전 3차 리뷰 P3 — 장부 판정이 비과학적이면 폴더 기록의 앞선 incomplete (실행 중 들여다봄 · 예외 없음 · 다른 원자료) 는 막지 않는다 ·
                   #    장부가 비면 그대로 엄격 · 성격을 모르는 기록은 막는다
-                  "inv_ledger_chain_midrun": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
-                                                                     folder_prior=[PVMID, {"status": "invalid", "provenance": PV},
-                                                                                   {"status": "pass", "provenance": PV}]) is not None,
-                  "none_ledger_chain_midrun": ledger_verdict_conflict({}, "pass", folder_provenance=PV,
-                                                                      folder_prior=[PVMID, {"status": "invalid", "provenance": PV},
-                                                                                    {"status": "pass", "provenance": PV}]) is not None,
+                  "inv_ledger_chain_midrun": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PVP}, "pass", folder_provenance=PVP,
+                                                                     folder_prior=[PVMID, {"status": "invalid", "provenance": PVP},
+                                                                                   {"status": "pass", "provenance": PVP}]) is not None,
+                  "none_ledger_chain_midrun": ledger_verdict_conflict({}, "pass", folder_provenance=PVP,
+                                                                      folder_prior=[PVMID, {"status": "invalid", "provenance": PVP},
+                                                                                    {"status": "pass", "provenance": PVP}]) is not None,
                   "inv_ledger_chain_nonature": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
                                                                        folder_prior=[{"status": "incomplete", "provenance": {"files_sha256": FS0}},
                                                                                      {"status": "pass", "provenance": PV}]) is not None,
@@ -4928,10 +4984,18 @@ def _selftest():
                                                                          folder_prior=[{"status": "invalid", "provenance": {**PV, "judge_nature": {"errors": ["once"],
                                                                                                                                                      "input_mismatch": []}}},
                                                                                        {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
-                  "inc_oldfmt_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
-                                                                      folder_prior=[{"status": "incomplete", "provenance": {k_: v_ for k_, v_ in PVMID["provenance"].items()
-                                                                                                                             if k_ != "judge_nature"}},
-                                                                                    {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
+                  "inc_oldfmt_before_anchor": _pa({k_: v_ for k_, v_ in PVMID["provenance"].items() if k_ != "judge_nature"}),
+                  # ⭐ DT 전 1차 리뷰 P1 · P2 — 진행 중 지름길은 같은 plan (과 실행 전 기록) · MD 완료 기록보다 앞선 시각일 때만: plan 이 다름 (plan 을 고쳐
+                  #    들여다본 뒤 되돌림 · 들여다본 뒤 plan 을 고침) · 완료 뒤 시각 · 지금 완료 시각 없음 · 시간대 없는 시각 · 실행 전 기록이 다름 → 대체 규칙 (충돌) ·
+                  #    대조: 실행 전 기록이 같은 보존 폴더 → 면제
+                  "inc_inprog_plan_changed_before_anchor": _pa({**PVMID["provenance"], "files_sha256": {**PVMID["provenance"]["files_sha256"], "plan.json": "b" * 64}}),
+                  "inc_inprog_after_done_before_anchor": _pa({**PVMID["provenance"], "judged_at_utc": "2026-11-06T02:00:00.000000+00:00"}),
+                  "inc_inprog_done_time_missing_before_anchor": _pa(PVMID["provenance"], cur={**PVP, "md_done_at_utc": None}),
+                  "inc_inprog_naive_time_before_anchor": _pa({**PVMID["provenance"], "judged_at_utc": "2026-11-06T00:00:00"}),
+                  "inc_inprog_attempt_changed_before_anchor": _pa({**PVMID["provenance"], "files_sha256": {**PVMID["provenance"]["files_sha256"], ATTEMPT_NAME: "1" * 64}},
+                                                                  cur={**PVP, "files_sha256": {**PVP["files_sha256"], ATTEMPT_NAME: "2" * 64}}),
+                  "inc_inprog_attempt_same_before_anchor": _pa({**PVMID["provenance"], "files_sha256": {**PVMID["provenance"]["files_sha256"], ATTEMPT_NAME: "1" * 64}},
+                                                               cur={**PVP, "files_sha256": {**PVP["files_sha256"], ATTEMPT_NAME: "1" * 64}}),
                   # ⭐ 깨기 d26cbe98 전체 실행의 초록 둘 — 면제 꼴 (진행 중 · MD 출력 같음) 인데 상태가 invalid 인 기준 앞 기록 (판정 도중 예외로 끝난
                   #    진행 중 들여다봄 · 같은 입력의 결정적 invalid) 은 면제가 아니다 (DS2) · 기준은 첫 기록 — 면제 꼴의 incomplete 가 기준 뒤에 있고
                   #    같은 바이트의 장부 판정 사본이 그 뒤에 또 있어도 그 incomplete 는 대체 규칙을 받는다 (DR63 — 옛 시험은 사이 기록이 결정적 invalid 라
@@ -4997,6 +5061,9 @@ def _selftest():
                    "inv_anchor_first": True, "inv_cap_raised": False, "inv_rules_differ": True, "inv_old_rec_card": True,
                    "inv_mismatch_before_anchor": True, "inc_mismatch_before_anchor": True, "inv_transient_before_anchor": False,
                    "inc_oldfmt_before_anchor": False, "inc_unknown_before_anchor": True, "inc_inprog_late_present_before_anchor": True,
+                   "inc_inprog_plan_changed_before_anchor": True, "inc_inprog_after_done_before_anchor": True,
+                   "inc_inprog_done_time_missing_before_anchor": True, "inc_inprog_naive_time_before_anchor": True,
+                   "inc_inprog_attempt_changed_before_anchor": True, "inc_inprog_attempt_same_before_anchor": False,
                    "inc_noprogress_before_anchor": True, "inc_moved_plan_before_anchor": True, "inv_midrun_err_before_anchor": True, "inv_det_same_before_anchor": True,
                    "inv_anchor_first_exempt_shape": True, "inv_raw_dir_repaired": True, "inv_raw_link_made": True, "inv_raw_nonfile_made": True,
                    "inv_raw_dir_same": False, "inc_mddone_same": False, "inc_mddone_md_edited": True, "inc_mddone_late_changed": True,
@@ -5249,7 +5316,8 @@ def _selftest():
         _fs("dt_nf", plan=PL_IP, traj=None, thermo=3)
         got_dsj["progress_no_traj"] = _jv(pathlib.Path(td_) / "dt_nf", "traj 없음")["provenance"].get("md_progress")
         want_dsj["progress_no_traj"] = "unknown"
-        AFTER_T = ("md_done.json", "md_done.json.tmp", "final_relax.log", "final.xyz", "result.json", "md_init_raw.xyz")   # ⭐ 깨기 DT7 · DT8 — 목록은 시험이
+        AFTER_T = ("md_done.json", "md_done.json.tmp", "final_relax.log", "final.xyz", "final.vasp", "result.json", "gr_partials.csv",
+                   "md_init_raw.xyz")   # ⭐ 깨기 DT7 · DT8 — 목록은 시험이
         tr_ = {}                                             # 정한다 (도구 상수를 돌면 빠진 원소를 시험도 같이 빠뜨린다)
         for i_, nm_ in enumerate(AFTER_T):
             _fs(f"dt_tr{i_}", plan=PL_IP, traj=3); d_tr = pathlib.Path(td_) / f"dt_tr{i_}"
@@ -5257,6 +5325,23 @@ def _selftest():
             tr_[nm_] = (_jv_safe(d_tr, f"진행 중 모양 + {nm_}").get("provenance") or {}).get("md_progress")
         got_dsj["progress_after_traces"] = (tr_, set(AFTER_T) <= set(MD_AFTER_TRACES))
         want_dsj["progress_after_traces"] = ({nm_: "complete" for nm_ in AFTER_T}, True)
+        # ⭐ DT 전 1차 리뷰 — 판정이 들여다본 시각 (시간대 있는 ISO) 과 그때 MD 완료 기록의 완료 시각 (write_md_done 이 쓴 그대로 · 마이크로초) 을 적는다 ·
+        #    완료 기록이 없으면 None · 진행 중 모양이어도 모르는 파일이 있으면 확인 불가
+        _fs("dt_mdt", plan=PL_IP, traj=5, done=True); d_mdt = pathlib.Path(td_) / "dt_mdt"
+        v_mdt = _jv_safe(d_mdt, "MD 완료 기록 있음")
+        at_rec_ = json.loads((d_mdt / MD_DONE_NAME).read_text(encoding="utf-8")).get("at_utc")
+        pv_mdt = v_mdt.get("provenance") or {}
+        try:
+            ja_ok_ = datetime.datetime.fromisoformat(pv_mdt.get("judged_at_utc")).tzinfo is not None
+        except (TypeError, ValueError):
+            ja_ok_ = False
+        got_dsj["times_recorded"] = (pv_mdt.get("md_done_at_utc") == at_rec_, "." in str(at_rec_), ja_ok_,
+                                     _utc_before(at_rec_, pv_mdt.get("judged_at_utc")),
+                                     (_jv_safe(d_ip, "완료 기록 없음").get("provenance") or {}).get("md_done_at_utc"))
+        want_dsj["times_recorded"] = (True, True, True, True, None)
+        _fs("dt_xf", plan=PL_IP, traj=3); d_xf = pathlib.Path(td_) / "dt_xf"; (d_xf / "notes.txt").write_text("x", encoding="utf-8")
+        got_dsj["progress_extra_file"] = (_jv_safe(d_xf, "진행 중 모양 + 모르는 파일").get("provenance") or {}).get("md_progress")
+        want_dsj["progress_extra_file"] = "unknown"
         got_dsj["progress_vocab"] = (_verdict_shape_problem({"provenance": {"md_progress": "bogus"}}) is not None,
                                      _verdict_shape_problem({"provenance": {"md_progress": "in_progress"}}) is None)
         want_dsj["progress_vocab"] = (True, True)
