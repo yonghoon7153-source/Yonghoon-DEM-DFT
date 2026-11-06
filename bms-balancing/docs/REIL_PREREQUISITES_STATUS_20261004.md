@@ -3545,3 +3545,23 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - **남은 것:** U2 (10 h 배분) 는 미선택 제안 그대로 · 검토는 숫자를 채택하지 않았다. 이번 회신은 구현 · 시험 · 실행 승인이 아니다 (검토자 수행: 대상 코드 · 시험 ·
   자료 개봉 · 최적화 · COMSOL 0).
 - **다음:** 구현 요청서 v2 (v1 보존 · 새 경로) + N1–N7 · C1 대응표 → Codex 재검토. v2 를 쓰기 전 사용자 선택 하나 — N1 의 회귀 범위. 이 기록은 어느 단계의 승인도 아니다.
+
+## §129 C4-A — 사용자 원문 "권고대로" (C4A-IMPL-N1 의 회귀 범위 = (가)) · 구현 요청서 v2 · 재검토 발송문 (문서만 · 실행 0) (2026-11-06 KST · 덧붙임 — 위 §0–§128 은 그대로)
+
+- **사용자 선택:** §128 보고의 "정하실 것" 에 대한 원문 "권고대로" → N1 = **(가) 전체 회귀를 유지하고 그 안의 합성 실제 호출을 허용표로 고정** (파일별 허용 종류 · 시험당
+  상한 · 환경 · RED 전 nodeid 고정 · 계수기로 강제 · 주장은 "실자료 · 생산 단계 실행 0 · 합성 실제 호출은 허용표 안에서만"). U2 는 여전히 미선택.
+- **구현 요청서 v2:** `docs/REIL_C4A_IMPL_REQUEST_v2_20261106.md` (34092 B · `d85e9a64ed3bbbbf…`) — v1 (`86f2d631…`) 보존 · §0 대응표 (N1–N7 · C1):
+  - N1 → §6-2 허용표 (K1 `scipy.minimize` · K2 `pymoo` NSGA2 · K3 Popen · K4 kill · K5 Process.start · K6 git · K7 xlsx 읽기 금지) · b0 수집만으로 `NODEIDS_A.txt` · 새 계수기
+    플러그인 `tests/c4a_callcount.py` (`-p` 로만) · 기록 위치를 요구하는 `test_reil_c4_0a_fix` 의 env 두 개 · runner 파일의 모듈 건너뜀만 허용.
+  - N2 → `tests/test_reil_c4_0b2.py` 의 세 기대 dict (205–208 · 217–219 · 228) 에 새 경고 다섯 키만 더하는 정정 (단언 삭제 · 완화 없음 · RED 전 봉인).
+  - N3 → `_WarnBox` (`showwarning` 갈고리 · 키 ≤ 20 · 키 240 B · 정확한 총수 · overflow · 고유 수의 정확 / 하한 · 잘림 수 · 상한과 무관한 모르는 옵션 표지 · 정상 / 오류 /
+    partial 공통 필드) · `_assess` 재평가 경고 = 행 포착 밖 (stderr 파일이 out_roots 안 → 감시의 새 산출 상한 · 미집계 표시 · 무경고로 세지 않음).
+  - N4 → runner 어댑터 `runner_a` (모든 wave 공통 절대 측정 마감 · StopRule_A · out_roots · supervisor 반환을 `SUPERVISOR_A.jsonl` 에 보존) · unit 900 s = StopRule_A 책임 ·
+    "정리 20 s" = terminate 뒤 공통 join 마감 (최악 40 s / wave) · §8 마감 연결표 (단계 28,800 = 준비 900 + 측정 25,800 + 정리 여유 600 + 기록 900 + launcher 300 + 여유 300).
+  - N5 → 적격 표본 (termination converged / budget · 유한 비음수 wall · bool 제외 양의 정수 n_eval · ≥ 8) · solver_error 는 원기록 보존 + 표본 제외 · 형식 틀린 정상 행은 문자열
+    사유로 전역 중지.
+  - N6 → SOURCES_A · SOURCES_A_FRAME 의 목록 sha 선대조 · implementation_basis ↔ execution_request 분리 (실행 승인 결속이 없거나 다르면 run-a · launcher_a 거부).
+  - N7 → `ROW_INTEGRITY_A` (계획 task 기준 · 정확히 한 번 · unit / run_id / x0 · 상태별 필수 필드 · 구조적 행 오류 ↔ 정당한 미완 구분 · C4-B 인계 = 무결성 + 완료).
+  - C1 → STORE_A 는 run-a 의 `finally` 에서 한 번 게시 (실패 시 덮어쓰기 · 재시도 없음 · 유효성 false).
+- **재검토 발송문:** `docs/REIL_C4A_IMPL_REQUEST_SEND_v2_20261106.md` (3990 B · `9031a651256f45f7…`).
+- **다음:** Codex 재검토 → (수용되면) 사용자의 구현 승인. 이 기록은 구현 · 시험 · 실행의 승인이 아니다.
