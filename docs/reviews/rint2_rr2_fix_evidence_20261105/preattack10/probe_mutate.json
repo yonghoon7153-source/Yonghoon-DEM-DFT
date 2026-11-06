@@ -1,0 +1,182 @@
+{
+ "tree": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/mt",
+ "start_sha256": {
+  "scripts/rint_r_chain.py": "d3775ca843654682f3c9a18327a15ccf682a309c071bac6fa542ef91556e46cb",
+  "scripts/test_rint_r_chain.py": "583b7c3d0319c8ac99535c2681b549b39a190d70c108184b753b0169f8801222"
+ },
+ "runs": {
+  "N1_float_is_none": {
+   "only": "RC05,RC02",
+   "rc": 1,
+   "fails": [
+    "RC05"
+   ],
+   "summary": [
+    "test_rint_r_chain: 1/2 PASS (2.3 s)   FAILED: ['RC05']"
+   ],
+   "want_fail": [
+    "RC05"
+   ],
+   "caught": true,
+   "seconds": 2.8,
+   "fail_detail": {
+    "RC05": [
+     "FAIL  RC05 ★ 11-05 RR2-01 판독 표 — rc_kind {0 = ok · 1 · −9 · 2⁷⁰ = fail · null = none · true · false · 0.0 · −0.0 · 1.0 · nan · \"0\" · \"\" · [] · {} · [0] = bad} · rc_success = ok · runner_rc_failed = fail | bad = 옛 식 (None 아님 · 정확한 정수 0 아님) 과 모든 값에서 같음 · 옛 느슨한 대조 (== 0) 와 성공 읽기가 갈리는 값 = false · 0.0 · −0.0 셋뿐   {'bad': {'0.0': (('none', False, False), ('bad', False, True), True), '-0.0': (('none', False, False), ('bad', False, True), True), '1.0': (('none', False, False), ('bad', False, True), True), 'nan': (('none', False, False), ('bad', False, True), True)}, 'loose_changes': ['False', '0.0', '-0.0']}"
+    ]
+   },
+   "stderr_tail": ""
+  },
+  "N2_drop_O_NONBLOCK": {
+   "only": "LG03",
+   "rc": 1,
+   "fails": [
+    "LG03"
+   ],
+   "summary": [
+    "test_rint_r_chain: 0/1 PASS (46.1 s)   FAILED: ['LG03']"
+   ],
+   "want_fail": [
+    "LG03"
+   ],
+   "caught": true,
+   "seconds": 46.6,
+   "fail_detail": {
+    "LG03": [
+     "FAIL  LG03 ★ 11-05 PC6-05 막힘 · 바꿔치기 (포크한 자식 · 시간 상한 30 s · 시험은 막히지 않는다) — FIFO 로그 (쓰는 쪽 없음 · 있음) · /dev/null 링크 = unreadable (일반 파일 검사 · 옛 길에 없던 검사를 지우면 빈 글 ok 로 샌다) · 요약 없는 길 FIFO 로그 = 읽음 False (옛 = read_text 가 막힘 → 시간 초과) · 요약 있는 길 FIFO 로그 = 자격 False · is_file 확인 직후 FIFO 로 바뀜 = 확인 없이 연 fd 로 읽음 (잘못된 주소 = runner_rc · 옛 = 막힘) · 연 직후 바뀜 = 연 대상 그대로 읽음 (ok · 그 글) · 연 뒤 읽기 중 OSError (EIO 흉내) = unreadable   {'got': {'fifo_direct': {'timeout': True}, 'fifo_writer': ['', 'unreadable'], 'device': ['', 'unreadable'], 'fifo_orphan': {'timeout': True}, 'fifo_summary': {'timeout': True}, 'swap_after_check': ['runner_rc', False], 'swap_after_open': ['ok', True], 'read_error': ['', 'unreadable']}, 'bad': {'fifo_direct': ({'timeout': True}, ['', 'unreadable']), 'fifo_orphan': ({'timeout': True}, ['timeout', False]), 'fifo_summary': ({'timeout': True}, False)}}"
+    ]
+   },
+   "stderr_tail": ""
+  },
+  "N3_timelimit_accepts_no_run": {
+   "only": "LG01",
+   "rc": 1,
+   "fails": [
+    "LG01"
+   ],
+   "summary": [
+    "test_rint_r_chain: 0/1 PASS (1.1 s)   FAILED: ['LG01']"
+   ],
+   "want_fail": [
+    "LG01"
+   ],
+   "caught": true,
+   "seconds": 1.5,
+   "fail_detail": {
+    "LG01": [
+     "FAIL  LG01 ★ 11-05 PC6-05 (판정문 §5 · 수정 계획 Q2 (가)) 표 — 요약 있는 길 멈춤 여덟 (TIME_LIMIT · RUNNER_RC + 시간 초과 · 신호 · 정리 중 신호 · GROUP_UNCONFIRMED · RUNNER_RC rc 1 + 메모리 부족 로그 · 런 전 TIME_LIMIT · 런 기록 없는 GROUP_UNCONFIRMED = 예외 아님) × 로그 여섯 (읽힘 · 없음 · 폴더 · 권한 없음 (root = uid 65534 자식 · 실제 EACCES) · 런 이름 없음 · 경로 꼴 이름 ../logs/L01_floor) → run_log_text 상태 (ok · missing · unreadable · unreadable · no_run · no_run) · 재실행 자격 = 읽힘 + 자격 원인 · 런 전 TIME_LIMIT + 로그 없음 (런 기록 · 시작 기록 없음) 만 True (옛 = 없음 · 못 읽음 · 이름 없음 · 경로 꼴이 \"낱말 없음\" 으로 자격 True) · 런 전 TIME_LIMIT 이어도 그 런 시작 기록 자리에 파일 · 폴더 · 끊긴 링크가 있으면 False · 요약 없는 길 (by chain timeout 끝 기록) × 로그 (읽힘 · 없음 · 폴더 · 권한 · RUN_DIR_RE 밖 이름) = 읽힘만 읽음 True   {'n': 56, 'perm_uid': 65534, 'bad': {'TIME_LIMIT/no_run': (['no_run', 'timeout', True], ['no_run', None, False]), 'prestart_TIME_LIMIT/no_run': (['no_run', 'timeout', True], ['no_run', None, False]), 'prestart_TIME_LIMIT/pat"
+    ]
+   },
+   "stderr_tail": ""
+  },
+  "N4_no_status_check": {
+   "only": "SU01",
+   "rc": 1,
+   "fails": [
+    "SU01"
+   ],
+   "summary": [
+    "test_rint_r_chain: 0/1 PASS (1.7 s)   FAILED: ['SU01']"
+   ],
+   "want_fail": [
+    "SU01"
+   ],
+   "caught": true,
+   "seconds": 2.2,
+   "fail_detail": {
+    "SU01": [
+     "FAIL  SU01 ★ 11-05 A2b (PC6-05 같은 부류) — 있는데 못 읽는 단계 요약 = \"요약 없음\" 이 아니다: 요약 없는 합성 시도 (첫 런 끝남 · 결과 뒤 = parent_dead · 자격 True) 에 ladder_summary.json 을 잘린 JSON · 0xff 머리 · 객체 아님 ([1, 2] · \"글\" · []) · {} · status 없는 객체 · 빈 파일 · 깊이 10 만 중첩 · 폴더 · FIFO (포크한 자식 · 시간 상한) 로 → 다시 셈 = interrupted · 결과 뒤 · summary_unreadable · 자격 False (옛 = parent_dead · True · [1, 2] = AttributeError · FIFO = 막힘) · 둘째 이름 (predict_summary.json) · 읽히는 요약 + 못 읽는 unit_summary.json = 같은 답 · 읽히는 요약만 = 그 요약대로 · 실경로 (실제 git 원장) 잘린 요약 · [1] → --stage recover --ledger 결과 줄 summary_unreadable · False → --add --resume 1 = rc 3 RESUME_NOT_ALLOWED · 요약 없음 대조 = parent_dead · rc 0   {'n': 18, 'bad': {'empty_object': ({'status': 'stopped', 'stop': {'code': None, 'run': None, 'reason': None}, 'side': 'post', 'cause': 'gate', 'resume_ok': False}, {'status': 'interrupted', 'stop': None, 'side': 'post', 'cause': 'summary_unreadable', 'r"
+    ]
+   },
+   "stderr_tail": ""
+  },
+  "N5_summary_not_atomic": {
+   "only": "SU02",
+   "rc": 1,
+   "fails": [
+    "SU02"
+   ],
+   "summary": [
+    "test_rint_r_chain: 0/1 PASS (6.0 s)   FAILED: ['SU02']"
+   ],
+   "want_fail": [
+    "SU02"
+   ],
+   "caught": true,
+   "seconds": 6.5,
+   "fail_detail": {
+    "SU02": [
+     "FAIL  SU02 ★ 11-05 A2b 단계 요약 = 원자적 쓰기 — ⓐ 사다리 · 예측 단계 (계획 밖 --max-hours = 러너 전 멈춤) · 합치기 (원장 자리가 git 저장소 아님 = 러너 전 멈춤) 의 요약 (ladder_summary.json · predict_summary.json) 이 write_json_atomic 으로 쓰이고 (같은 폴더 임시 파일 → os.replace) 그 바이트 = 그 객체의 정준 바이트 (옛 write_json 과 같은 직렬화 · canon_bytes(_clean)) ⓑ 정상 런 요약 (주 사다리 P0 · 주 예측) = 옛 write_json 으로 다시 쓴 바이트 · 새 write_summary 로 다시 쓴 바이트 · 파일 바이트 셋이 같음 ⓒ os.replace 가 실패하는 꼴 (쓰다 죽음 흉내) = 요약 없음 (반쯤 쓰인 요약이 남지 않는다 · 임시 파일 = 온전한 요약) ⓓ 원천에 단계 요약 이름으로 write_json 을 부르는 자리 0 (사다리 · 예측 · 단위 · 점 · 합치기 둘) — 옛 = 제자리 쓰기   {'got': {'a_ladder': ['NOT_REGISTERED', False, False, True, []], 'a_predict': ['NOT_REGISTERED', False, False, True, []], 'a_merge': [3, 'ATTEMPT_LEDGER_MISMATCH', False, False, True, []], 'b': {'ladder_P0': [True, True], 'predict': [True, True]}, 'c': [False, True, False], 'd': []}, 'want': {'a_ladder': ['NOT_REGISTERED', True, True, True, []], 'a_p"
+    ]
+   },
+   "stderr_tail": ""
+  },
+  "N6_recover_accepts_empty_cause": {
+   "only": "CE01",
+   "rc": 1,
+   "fails": [
+    "CE01"
+   ],
+   "summary": [
+    "test_rint_r_chain: 0/1 PASS (1.2 s)   FAILED: ['CE01']"
+   ],
+   "want_fail": [
+    "CE01"
+   ],
+   "caught": true,
+   "seconds": 1.6,
+   "fail_detail": {
+    "CE01": [
+     "FAIL  CE01 ★ 11-05 RR2-01 같은 부류 (A1b) 단위 — 끝 기록 사슬 원인이 모름 · 꼴 틀림 (false · 0 · \"\" · [] · \"weird\" · {}) · 러너 rc 1 · 로그 Traceback: by chain 가지 = (parent_dead, 읽음 False) · recover 가지 (chain_end 원인 = 같은 값) = 같은 답 (parent_dead, 읽음 False) · 재실행 자격 False (옛 = recover 가지 읽음 True · 자격 True) · chain_end 가 dict 아님 ([] · \"x\" · 1 · null · [1]) = 읽음 False (옛 = chain_end 없음과 같게 True) · 아는 원인 (None · timeout · signal · signal_after · exception) = 두 가지 모두 고치기 전 값 그대로 (읽음 True)   {'n': 27, 'bad': {'bad/recover/empty': (['parent_dead', True, True], ['parent_dead', False, False])}}"
+    ]
+   },
+   "stderr_tail": ""
+  },
+  "P1_chain_end_rc_none_is_failure": {
+   "only": "CE,RC,PE03u",
+   "rc": 1,
+   "fails": [
+    "PE03u",
+    "RC04"
+   ],
+   "summary": [
+    "test_rint_r_chain: 6/8 PASS (8.3 s)   FAILED: ['PE03u', 'RC04']"
+   ],
+   "want_fail": [],
+   "caught": null,
+   "seconds": 8.6,
+   "fail_detail": {
+    "PE03u": [
+     "FAIL  PE03u ★ 11-02 PC7-03 단위 (probe7_unit U2 · 표) — 요약 없는 길의 recover 끝 기록 chain_end 원인 표 × 로그 넷 (없음 · 파이썬 KeyError · 메모리 · 잘못된 주소): 원인 exception (rc −9 · 1 · None) = chain_exception · 재실행 자격 False · 읽음 True (옛 = parent_dead · resource · runner_rc) · 바뀌는 행 = exception 하나뿐 — chain_end 없음 · 원인 None (rc 1 · 0 · None) · timeout · signal · signal_after · 모르는 원인 = 고치기 전 값 그대로 · by chain 끝 기록 (원인 exception · 확인 True · False) = 같은 chain_exception (두 길 같은 답) · recover_group 이 by chain exception 미확인 끝 기록을 갈아 쓰면 chain_end 원인 exception 이 남는다 · ★ 11-05 A1b (RR2-01 같은 부류) — 모르는 원인 (weird) = 원인 글 그대로 · 읽음 False · 재실행 자격 False (by chain 가지와 같은 읽기 · 옛 = 읽음 True · 자격 = 낱말 원인대로)   {'n': 44, 'bad': {'none_rcNone/plain': (('interrupted', 'post', 'runner_rc', False, True), ('interrupted', 'post', 'parent_dead', True, True)), 'none_rcNone/python': (('interrupted', 'post', 'runner_rc', False, True), ('interrupt"
+    ],
+    "RC04": [
+     "FAIL  RC04 ★ 11-05 RR2-01 러너 쪽 — Runner._execute · RunnerGraphSource._run 의 rc 대조 = rc_success (run_in_group 이 false · 0.0 · −0.0 를 돌려준 꼴 → RUNNER_RC · 원천 실패 \"러너 rc\" · 팔 읽기 0 회 · 옛 = != 0 이 False 로 지나 팔을 읽음) · 정수 0 = 팔 읽기 · 그 뒤 대조 · 이미 정수만 읽던 셋 그대로 (ResumeRunner._src_done = 결합된 정수 0 만 끝난 런 · stop_cause 그룹 미확인 + 런 기록 rc = 정수 0 · None 만 group_unconfirmed · chain_end_failed = 원인 None + 정수 0 · None 아니면 실패) · 생산자 실측 (run_in_group · bash exit 0 · exit 3) = 정확한 정수 (ok · fail)   {'bad': {'chain_end_failed': ([False, True, True, True, True, True, True, True], [False, True, True, True, True, False, True, True])}}"
+    ]
+   },
+   "stderr_tail": ""
+  },
+  "P2_gu_rc_unknown_is_failure": {
+   "only": "LG01",
+   "rc": 1,
+   "fails": [
+    "LG01"
+   ],
+   "summary": [
+    "test_rint_r_chain: 0/1 PASS (1.2 s)   FAILED: ['LG01']"
+   ],
+   "want_fail": [],
+   "caught": null,
+   "seconds": 1.6,
+   "fail_detail": {
+    "LG01": [
+     "FAIL  LG01 ★ 11-05 PC6-05 (판정문 §5 · 수정 계획 Q2 (가)) 표 — 요약 있는 길 멈춤 여덟 (TIME_LIMIT · RUNNER_RC + 시간 초과 · 신호 · 정리 중 신호 · GROUP_UNCONFIRMED · RUNNER_RC rc 1 + 메모리 부족 로그 · 런 전 TIME_LIMIT · 런 기록 없는 GROUP_UNCONFIRMED = 예외 아님) × 로그 여섯 (읽힘 · 없음 · 폴더 · 권한 없음 (root = uid 65534 자식 · 실제 EACCES) · 런 이름 없음 · 경로 꼴 이름 ../logs/L01_floor) → run_log_text 상태 (ok · missing · unreadable · unreadable · no_run · no_run) · 재실행 자격 = 읽힘 + 자격 원인 · 런 전 TIME_LIMIT + 로그 없음 (런 기록 · 시작 기록 없음) 만 True (옛 = 없음 · 못 읽음 · 이름 없음 · 경로 꼴이 \"낱말 없음\" 으로 자격 True) · 런 전 TIME_LIMIT 이어도 그 런 시작 기록 자리에 파일 · 폴더 · 끊긴 링크가 있으면 False · 요약 없는 길 (by chain timeout 끝 기록) × 로그 (읽힘 · 없음 · 폴더 · 권한 · RUN_DIR_RE 밖 이름) = 읽힘만 읽음 True   {'n': 56, 'perm_uid': 65534, 'bad': {'norecord_GROUP_UNCONFIRMED/clean': (['ok', 'runner_rc', False], ['ok', None, True])}}"
+    ]
+   },
+   "stderr_tail": ""
+  }
+ },
+ "end_sha256": {
+  "scripts/rint_r_chain.py": "d3775ca843654682f3c9a18327a15ccf682a309c071bac6fa542ef91556e46cb",
+  "scripts/test_rint_r_chain.py": "583b7c3d0319c8ac99535c2681b549b39a190d70c108184b753b0169f8801222"
+ },
+ "restored": true
+}

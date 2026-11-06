@@ -1,0 +1,317 @@
+{
+ "evade": {
+  "dict_value_launder": true,
+  "dict_kw_launder": true,
+  "subscript_target_launder": true,
+  "attribute_rc": true,
+  "dict_get_unbound": true,
+  "pop": true,
+  "setdefault": true,
+  "itemgetter": true,
+  "match_mapping": true,
+  "variable_key": true,
+  "closure_alias": true,
+  "starred_arg": true,
+  "getattr_get": true,
+  "items_loop": true,
+  "fstring_compare": true,
+  "json_text": true,
+  "ifexp_launder": true
+ },
+ "ctrl": {
+  "alias_eq": true,
+  "truthy": true,
+  "int_wrap": true,
+  "walrus": true,
+  "return_alias": true
+ },
+ "source": {
+  "path": "scripts/rint_r_chain.py",
+  "rc_scan_raw": [],
+  "n_hits": 40,
+  "hits": [
+   {
+    "line": 2752,
+    "kind": "name",
+    "fn": "run_in_group",
+    "parent": "Compare",
+    "seg": "rc is None"
+   },
+   {
+    "line": 2771,
+    "kind": "const",
+    "fn": "run_in_group",
+    "parent": "Dict",
+    "seg": "{'schema': GROUP_SCHEMA, 'name': name, 'token': token, 'rc': rc, 'cause': cause, 'signal': (signal_name(sig) i"
+   },
+   {
+    "line": 2771,
+    "kind": "name",
+    "fn": "run_in_group",
+    "parent": "Dict",
+    "seg": "{'schema': GROUP_SCHEMA, 'name': name, 'token': token, 'rc': rc, 'cause': cause, 'signal': (signal_name(sig) i"
+   },
+   {
+    "line": 2780,
+    "kind": "name",
+    "fn": "run_in_group",
+    "parent": "Tuple",
+    "seg": "rc, 'signal_after', dict(end, signal_after=signal_name(pending[0]))"
+   },
+   {
+    "line": 2781,
+    "kind": "name",
+    "fn": "run_in_group",
+    "parent": "Tuple",
+    "seg": "rc, cause, end"
+   },
+   {
+    "line": 3794,
+    "kind": "name",
+    "fn": "rc_kind",
+    "parent": "Compare",
+    "seg": "rc is None"
+   },
+   {
+    "line": 3796,
+    "kind": "name",
+    "fn": "rc_kind",
+    "parent": "Call",
+    "seg": "type(rc)"
+   },
+   {
+    "line": 3797,
+    "kind": "name",
+    "fn": "rc_kind",
+    "parent": "Compare",
+    "seg": "rc == 0"
+   },
+   {
+    "line": 3803,
+    "kind": "name",
+    "fn": "rc_success",
+    "parent": "Call",
+    "seg": "rc_kind(rc)"
+   },
+   {
+    "line": 3811,
+    "kind": "name",
+    "fn": "runner_rc_failed",
+    "parent": "Call",
+    "seg": "rc_kind(rc)"
+   },
+   {
+    "line": 3821,
+    "kind": "const",
+    "fn": "chain_end_failed",
+    "parent": "Call",
+    "seg": "ce.get('rc')"
+   },
+   {
+    "line": 3951,
+    "kind": "const",
+    "fn": "stop_cause",
+    "parent": "Call",
+    "seg": "rec.get('rc')"
+   },
+   {
+    "line": 3955,
+    "kind": "name",
+    "fn": "stop_cause",
+    "parent": "Call",
+    "seg": "runner_rc_failed(rc)"
+   },
+   {
+    "line": 3955,
+    "kind": "name",
+    "fn": "stop_cause",
+    "parent": "Call",
+    "seg": "rc_success(rc)"
+   },
+   {
+    "line": 3993,
+    "kind": "const",
+    "fn": "orphan_cause",
+    "parent": "Call",
+    "seg": "er.get('rc')"
+   },
+   {
+    "line": 3994,
+    "kind": "name",
+    "fn": "orphan_cause",
+    "parent": "Call",
+    "seg": "rc_success(rc)"
+   },
+   {
+    "line": 4530,
+    "kind": "kwarg",
+    "fn": "_execute",
+    "parent": "Call",
+    "seg": "dict(req, outdir=outdir.name, rc=None, seconds=None, arms_read=[], machine=self.machine)"
+   },
+   {
+    "line": 4538,
+    "kind": "const",
+    "fn": "_execute",
+    "parent": "Subscript",
+    "seg": "rec['rc']"
+   },
+   {
+    "line": 4538,
+    "kind": "name",
+    "fn": "_execute",
+    "parent": "IfExp",
+    "seg": "rc if cause is None else None"
+   },
+   {
+    "line": 4543,
+    "kind": "const",
+    "fn": "_execute",
+    "parent": "Subscript",
+    "seg": "rec[\"rc\"]"
+   },
+   {
+    "line": 4552,
+    "kind": "name",
+    "fn": "_execute",
+    "parent": "Call",
+    "seg": "rc_success(rc)"
+   },
+   {
+    "line": 4553,
+    "kind": "name",
+    "fn": "_execute",
+    "parent": "FormattedValue",
+    "seg": "f'rc {rc} (로그 {logp})'"
+   },
+   {
+    "line": 4604,
+    "kind": "const",
+    "fn": "_src_done",
+    "parent": "Call",
+    "seg": "er.get('rc')"
+   },
+   {
+    "line": 4635,
+    "kind": "kwarg",
+    "fn": "_copy",
+    "parent": "Call",
+    "seg": "dict(req, outdir=outdir.name, rc=0, seconds=None, arms_read=[], machine=self.machine, group_cause=None, copied"
+   },
+   {
+    "line": 4696,
+    "kind": "const",
+    "fn": "__call__",
+    "parent": "Dict",
+    "seg": "{'name': name, 'run': req.get('name'), 'arm': arm, 'rc': None, 'seconds': None, 'status': 'failed', 'why': Non"
+   },
+   {
+    "line": 4738,
+    "kind": "const",
+    "fn": "_run",
+    "parent": "Subscript",
+    "seg": "rec['rc']"
+   },
+   {
+    "line": 4738,
+    "kind": "name",
+    "fn": "_run",
+    "parent": "IfExp",
+    "seg": "rc if cause is None else None"
+   },
+   {
+    "line": 4746,
+    "kind": "name",
+    "fn": "_run",
+    "parent": "Call",
+    "seg": "rc_success(rc)"
+   },
+   {
+    "line": 4747,
+    "kind": "name",
+    "fn": "_run",
+    "parent": "FormattedValue",
+    "seg": "f'러너 rc {rc} (로그 {logp.name})'"
+   },
+   {
+    "line": 4797,
+    "kind": "const",
+    "fn": "run",
+    "parent": "Call",
+    "seg": "r.get('rc')"
+   },
+   {
+    "line": 4798,
+    "kind": "const",
+    "fn": "run",
+    "parent": "Call",
+    "seg": "r.get(\"rc\")"
+   },
+   {
+    "line": 5081,
+    "kind": "const",
+    "fn": "noop_check",
+    "parent": "Call",
+    "seg": "x.get('rc')"
+   },
+   {
+    "line": 5580,
+    "kind": "const",
+    "fn": "load_ladders",
+    "parent": "Call",
+    "seg": "r.get('rc')"
+   },
+   {
+    "line": 5581,
+    "kind": "const",
+    "fn": "load_ladders",
+    "parent": "Call",
+    "seg": "r.get(\"rc\")"
+   },
+   {
+    "line": 5960,
+    "kind": "kwarg",
+    "fn": "run",
+    "parent": "Call",
+    "seg": "dict(req, outdir=rel, rc=rec0.get('rc'), seconds=rec0.get('seconds'), arms_read=[], machine=u['machine'], grou"
+   },
+   {
+    "line": 5960,
+    "kind": "const",
+    "fn": "run",
+    "parent": "Call",
+    "seg": "rec0.get('rc')"
+   },
+   {
+    "line": 5963,
+    "kind": "const",
+    "fn": "run",
+    "parent": "Call",
+    "seg": "rec0.get('rc')"
+   },
+   {
+    "line": 5965,
+    "kind": "const",
+    "fn": "run",
+    "parent": "Call",
+    "seg": "rec0.get(\"rc\")"
+   },
+   {
+    "line": 7093,
+    "kind": "const",
+    "fn": "recover_group",
+    "parent": "Tuple",
+    "seg": "('rc', 'cause', 'confirmed', 'ended_utc')"
+   },
+   {
+    "line": 7140,
+    "kind": "const",
+    "fn": "recover_group",
+    "parent": "Dict",
+    "seg": "{'schema': GROUP_SCHEMA, 'name': nm, 'token': tok, 'rc': None, 'cause': 'parent_dead', 'signal': None, 'confir"
+   }
+  ],
+  "n_attr": 0,
+  "n_match": 0
+ }
+}

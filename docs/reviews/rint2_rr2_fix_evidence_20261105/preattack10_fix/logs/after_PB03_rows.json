@@ -1,0 +1,42 @@
+{
+ "chain_sha256": "c11f6bf44fdefc74abba3ae8df770dcfe595d82271f5635051d8e7f620ffb99f",
+ "checks": {
+  "FF01": {
+   "pass": true,
+   "why": {
+    "bad": {},
+    "got": {
+     "attempt_json": null,
+     "end_groups_problem": true,
+     "end_orphan": [
+      "parent_dead",
+      false
+     ],
+     "launch_groups_problem": true,
+     "launch_orphan": [
+      "parent_dead",
+      false
+     ],
+     "recover_cli": [
+      0,
+      "recover"
+     ],
+     "recover_ledger_swap": [
+      3,
+      true,
+      true
+     ],
+     "rejected_direct_recount": [
+      "interrupted",
+      "parent_dead",
+      false
+     ],
+     "rejected_swap_recount": "ATTEMPT_LEDGER_MISMATCH"
+    }
+   }
+  }
+ },
+ "seconds": 1.0,
+ "test_sha256": "35acdd45905e6079599326dfc15b124ea8bd5bafabf5ba32ac816d3133fe9d98",
+ "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a64e0f68216ff3304"
+}

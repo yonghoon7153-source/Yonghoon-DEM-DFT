@@ -1,0 +1,164 @@
+{
+ "A_orphan_conf_rcnull_ctl": {
+  "reviewer_fixed_version": {
+   "orphan": [
+    "runner_rc",
+    true
+   ],
+   "recover_rc": 0,
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "resume_rc": 3,
+   "not_allowed": true,
+   "ledger_same": true
+  },
+  "after_this_fix": {
+   "orphan": [
+    "runner_rc",
+    true
+   ],
+   "recover_rc": 0,
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "resume_rc": 3,
+   "not_allowed": true,
+   "ledger_same": true
+  },
+  "same": true
+ },
+ "A_orphan_unconf_rc1_ctl": {
+  "reviewer_fixed_version": {
+   "orphan": [
+    "runner_rc",
+    true
+   ],
+   "recover_rc": 0,
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "resume_rc": 3,
+   "not_allowed": true,
+   "ledger_same": true
+  },
+  "after_this_fix": {
+   "orphan": [
+    "runner_rc",
+    true
+   ],
+   "recover_rc": 0,
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "resume_rc": 3,
+   "not_allowed": true,
+   "ledger_same": true
+  },
+  "same": true
+ },
+ "A_orphan_unconf_rcnull": {
+  "reviewer_fixed_version": {
+   "orphan": [
+    "runner_rc",
+    true
+   ],
+   "recover_rc": 0,
+   "cause": "parent_dead",
+   "resume_ok": true,
+   "resume_rc": 0,
+   "not_allowed": false,
+   "ledger_same": null
+  },
+  "after_this_fix": {
+   "orphan": [
+    "runner_rc",
+    true
+   ],
+   "recover_rc": 0,
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "resume_rc": 3,
+   "not_allowed": true,
+   "ledger_same": true
+  },
+  "same": false
+ },
+ "B_summary_gu_rc1_ctl": {
+  "reviewer_fixed_version": {
+   "orphan": [
+    "runner_rc",
+    true
+   ],
+   "recover_rc": 0,
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "resume_rc": 3,
+   "not_allowed": true,
+   "ledger_same": true
+  },
+  "after_this_fix": {
+   "orphan": [
+    "runner_rc",
+    true
+   ],
+   "recover_rc": 0,
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "resume_rc": 3,
+   "not_allowed": true,
+   "ledger_same": true
+  },
+  "same": true
+ },
+ "B_summary_gu_rcnull_gcnull": {
+  "reviewer_fixed_version": {
+   "orphan": [
+    "runner_rc",
+    true
+   ],
+   "recover_rc": 0,
+   "cause": "group_unconfirmed",
+   "resume_ok": true,
+   "resume_rc": 0,
+   "not_allowed": false,
+   "ledger_same": null
+  },
+  "after_this_fix": {
+   "orphan": [
+    "runner_rc",
+    true
+   ],
+   "recover_rc": 0,
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "resume_rc": 3,
+   "not_allowed": true,
+   "ledger_same": true
+  },
+  "same": false
+ },
+ "B_summary_gu_rcnull_gctimeout_ctl": {
+  "reviewer_fixed_version": {
+   "orphan": [
+    "timeout",
+    true
+   ],
+   "recover_rc": 0,
+   "cause": "group_unconfirmed",
+   "resume_ok": true,
+   "resume_rc": 0,
+   "not_allowed": false,
+   "ledger_same": null
+  },
+  "after_this_fix": {
+   "orphan": [
+    "timeout",
+    true
+   ],
+   "recover_rc": 0,
+   "cause": "group_unconfirmed",
+   "resume_ok": true,
+   "resume_rc": 0,
+   "not_allowed": false,
+   "ledger_same": null
+  },
+  "same": true
+ }
+}

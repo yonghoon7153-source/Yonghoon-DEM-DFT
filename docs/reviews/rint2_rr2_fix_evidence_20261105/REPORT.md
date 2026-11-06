@@ -9,7 +9,7 @@
 ## 0. 쉽게 말하면
 
 - **RR2-01** — 러너 rc 칸 하나를 자리마다 다르게 읽던 것을 판독 한 함수 (`rc_kind`) 로 모았다 · 요약 없는 시도의 끝 기록 rc 가 false · 0.0 · −0.0 이면 예전엔 끝난 런으로 건너뛰어 traceback 런이 parent_dead · 재실행 자격 → 이제 runner_rc · 다음 `--resume` = RESUME_NOT_ALLOWED · 읽기가 바뀐 값은 그 셋뿐.
-- **A1b** — 끝 기록의 사슬 원인 칸도 두 길이 다르게 읽었다 (by chain = 모르는 원인 → 읽음 False · recover = chain_end 로 옮긴 같은 값 → 읽음 True) → 한 읽기 · 두 길 같은 답.
+- **A1b** — 끝 기록의 사슬 원인 칸도 두 길이 다르게 읽었다 (by chain = 모르는 원인 → 읽음 False · recover = chain_end 로 옮긴 같은 값 → 읽음 True) → 한 읽기 · ~~두 길 같은 답~~ 두 길 같은 재실행 자격 (★ 11-06 정정 · 사전 공격 10 회차 PB-05 — 원인 글은 로그 낱말에 따라 다를 수 있다: 모르는 원인 + 메모리 낱말 로그 = by chain parent_dead ↔ recover resource · 잘못된 주소 로그 = by chain parent_dead ↔ recover runner_rc · 둘 다 읽음 False).
 - **PC6-05** — 요약 있는 길에서 멈춘 런 로그가 없거나 못 읽으면 "오류 낱말 없음" 으로 재실행이 열렸다 → 로그 = (글, 상태) · ok 아니면 자격 없음 (런을 띄우기 전 TIME_LIMIT 만 예외) · 한 번 연 fd 라 FIFO · 바꿔치기에 막히거나 속지 않는다.
 - **A2b** — 있는데 못 읽는 단계 요약을 "요약 없음" 으로 읽던 것 → 원인 summary_unreadable · 자격 없음 · 단계 요약 = 원자적 쓰기 (바이트 = 예전과 같음).
 - **RR2-02 · RR2-03 · Q7** — 문서만 (현행 계약 문장 · 등록 ⑫ 코드 한정어 그대로 + 시험 범위 · ⑦ = 숫자 봉인 뒤).
@@ -52,7 +52,8 @@
 ## 5. 한정 · 범위가 바뀐 것
 
 - 고치지 않음 (1저자 결정 = 한정만): 봉인 원천 런 (G01_&lt;런&gt;_a&lt;i&gt;) 도중 사슬이 받은 신호 = runner_rc · 이 폴더 로그 없음 (안전 쪽 · 재실행 없음) — `stop_log_readable` 설명.
-- 범위 바뀜 (모두 보수 쪽): load_ladders 가 rc 를 새로 읽음 · PE03u weird 행 기대 변경 · 요약 없는 길 그룹 이름 RUN_DIR_RE 밖 = 읽음 False · 못 읽는 요약 = 목록 꼴 + 깊은 중첩 · {} · status 없는 객체 · FIFO 요약의 recover = 결과 줄 없음 · rc 3 (막힘 없음) · 원자적 쓰기 = 단계 요약 넷 + 합치기 둘 · 권한 행 = 실제 EACCES · RC01 의 허용 = 지시 목록 + 조건식 두 갈래를 지난 기록 칸 대입 · 생산자 run_in_group 의 return.
+- 범위 바뀜 ~~(모두 보수 쪽)~~: load_ladders 가 rc 를 새로 읽음 · PE03u weird 행 기대 변경 · 요약 없는 길 그룹 이름 RUN_DIR_RE 밖 = 읽음 False · 못 읽는 요약 = 목록 꼴 + 깊은 중첩 · {} · status 없는 객체 · FIFO 요약의 recover = 결과 줄 없음 · rc 3 (막힘 없음) · 원자적 쓰기 = 단계 요약 넷 + 합치기 둘 · 권한 행 = 실제 EACCES · RC01 의 허용 = 지시 목록 + 조건식 두 갈래를 지난 기록 칸 대입 · 생산자 run_in_group 의 return.
+  - ★ 11-06 정정 (사전 공격 10 회차 PB-02) — "모두 보수 쪽" 은 **거짓**이었다.  A2b 의 `read_summary` (객체 아닌 JSON = None) 가 ① 판정 입력 (`_verdict_compute`) 의 "단계 요약 하나" 검사를 느슨하게 했다 — 예측 요약 + `ladder_summary.json` = `[]` · `0` · `true` 인 폴더가 옛 판 Stop INPUT_NOT_STAGE (요약 2 개) → 이 판 통과 (실경로: 주 예측 폴더 사본 + `[]` 의 판정 = rc 0) ② 합치기의 남은 런 목록 (`MergeFetch.unused_runs`) = 옛 판 예외 → 이 판 조용히 건너뜀 (보고만).  고침 = PB-02 (둘 다 `read_summary_state` · 있는데 못 읽는 요약 = 판정 입력 Stop INPUT_NOT_STAGE · 남은 런 목록 Stop UNIT_PROVENANCE_MISMATCH → 합치기 STOPPED · 잘린 JSON · `{}` 단위 요약도 이제 멈춤 = 옛보다 엄격) · 증거 `docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/`.  RC01 의 허용 (위 줄 끝) = PB-04 뒤 허용 문맥 목록 방식 (모르는 문맥 = 실패) 으로 바뀜.
 - 남은 한정: 단계 요약 칸 꼴 (stop 이 객체 아님 등) = 옛 그대로 예외 (재실행이 열리지는 않음) · 시험 = 합성 · 가짜 러너 · 실제 git 원장 · 이 컨테이너 — 실제 SIGKILL · flock 경쟁 · kgy 3.8.10 · hidepid · GPU 아님 (판정문 §9 현장 자격 별도) · 바탕 끝-끝 한 번 = A1 편집과 겹쳐 증거로 안 씀.
 - 원장 · 요청서 머리 · 진행 기록 · CLAUDE.md = 메인 세션 몫.
 
@@ -76,3 +77,19 @@ dump_rows.py · mutate_rr2fix.py · rerun_codex_probe.py · verify_rr2_03_quote.
 | PA-08 그래프 원천 런 중 신호 = 오분류 (안전 쪽) | P3 | 고치지 않음 · `stop_log_readable` 설명에 한정 |
 
 ⚠ 11-05 의 탐침 · 로그 (scratch pa2/) 는 기계 교체로 잃었다 — 이 판의 시험 (RC · CE · LG · SU 표) · 변이 40/40 · Codex 탐침 다시 310/311 이 그 자리를 대신한다.  사전 공격 10 회차 (독립) = 이 판 대상 · 다음.
+
+## 8. 사전 공격 10 회차 (11-06 · 독립 · diff 만) 발견 ↔ 고침 (★ 11-06 덧붙임)
+
+보고 원문 = `docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md` (탐침 · 산출물 같은 폴더) · 1저자 11-06 = PB-01 (P2) · PB-02 · 03 · 04 · 06 (P3 코드) 고침 (시험 먼저) · PB-05 · 07 = 문구만.  고침 증거 = `docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/` (`logs/` = 고치기 전 · 뒤 · 행 판정 · 변이 · 회귀 · 코드 sha256 · `codex_probe_rerun/` · `reviewer_probe_rerun/` · `new_findings/` · `SHA256SUMS`) · 고침 보고 글 = 작업 트리 에이전트의 마지막 보고 (그 폴더에 보고 파일 쓰기가 거부됨 → 메인 세션이 옮긴다).
+
+| 발견 | 등급 | 처분 |
+|---|---|---|
+| PB-01 rc null 을 소비자마다 반대로 읽음 (chain_end_failed · GROUP_UNCONFIRMED) | P2 | 고침 (RN01 · RN02 · 기대 변경 RC04 · PE03u · LG01 · PD13 · PD13o) |
+| PB-02 판정 입력 · 합치기 남은 런 목록의 못 읽는 요약 | P3 | 고침 (SU03 · SU04) · 위 §5 정정 |
+| PB-03 그룹 기록 · attempt.json · rejected.json 읽기가 FIFO 에 막힘 | P3 | 고침 (FF01) |
+| PB-04 RC01 스캐너 빈틈 (반례 17 중 16) | P3 | 고침 (허용 문맥 목록 · RC_SCAN_BAD 34 · GOOD 11) |
+| PB-05 A1b "두 길 같은 답" | P3 문구 | 위 §0 정정 · 코드 주석 · CE01 · CE02 제목 |
+| PB-06 런 전 TIME_LIMIT 예외 = 시작 기록 자리만 | P3 | 고침 (LG01 흔적 행 일곱) |
+| PB-07 f5b00a838 커밋 메시지 A1b 줄 "CE01 · CE02 0/3 → 3/3" | P3 문구 | 셋째 = **PE03u** (`logs/before_A1b_CE.log` = FAILED [PE03u, CE01, CE02] · 위 §1 A1b 줄은 이미 PE03u 를 적었다) · 커밋은 push 됨 = 역사 안 고침 · 이 줄이 정정 |
+
+- 이 폴더의 `SHA256SUMS` = 11-06 다시 만듦 (이 보고 정정 · preattack10/ · preattack10_fix/ 포함 · 이름이 SHA256SUMS 인 파일은 빠짐 · preattack10_fix/ 에는 자기 SHA256SUMS 도 있다).

@@ -1,0 +1,563 @@
+{
+ "chain_sha256": "d3775ca843654682f3c9a18327a15ccf682a309c071bac6fa542ef91556e46cb",
+ "checks": {
+  "LG01": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "norecord_GROUP_UNCONFIRMED/clean": [
+      [
+       "ok",
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "ok",
+       null,
+       false
+      ]
+     ]
+    },
+    "n": 56,
+    "perm_uid": 65534
+   }
+  },
+  "PD13": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "disk_full/None/None": [
+      [
+       "group_unconfirmed",
+       "post",
+       true
+      ],
+      [
+       "resource",
+       "post",
+       true
+      ]
+     ],
+     "oom_cupy/None/None": [
+      [
+       "group_unconfirmed",
+       "post",
+       true
+      ],
+      [
+       "resource",
+       "post",
+       true
+      ]
+     ],
+     "plain/None/None": [
+      [
+       "group_unconfirmed",
+       "post",
+       true
+      ],
+      [
+       "runner_rc",
+       "post",
+       false
+      ]
+     ],
+     "python_bug/None/None": [
+      [
+       "group_unconfirmed",
+       "post",
+       true
+      ],
+      [
+       "runner_rc",
+       "post",
+       false
+      ]
+     ]
+    },
+    "bad_n": 4,
+    "n": 78
+   }
+  },
+  "PD13o": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "ce_none_rc": [
+      [
+       "interrupted",
+       "parent_dead",
+       "post",
+       true
+      ],
+      [
+       "interrupted",
+       "runner_rc",
+       "post",
+       false
+      ]
+     ]
+    },
+    "n": 12
+   }
+  },
+  "PE03u": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "none_rcNone/plain": [
+      [
+       "interrupted",
+       "post",
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "interrupted",
+       "post",
+       "runner_rc",
+       false,
+       true
+      ]
+     ],
+     "none_rcNone/python": [
+      [
+       "interrupted",
+       "post",
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "interrupted",
+       "post",
+       "runner_rc",
+       false,
+       true
+      ]
+     ]
+    },
+    "n": 44
+   }
+  },
+  "RC04": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "chain_end_failed": [
+      [
+       false,
+       true,
+       true,
+       true,
+       true,
+       false,
+       true,
+       true
+      ],
+      [
+       false,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true
+      ]
+     ],
+     "stop_cause": [
+      [
+       "group_unconfirmed",
+       "runner_rc",
+       "runner_rc",
+       "runner_rc",
+       "runner_rc",
+       "group_unconfirmed",
+       "runner_rc",
+       "runner_rc"
+      ],
+      [
+       "group_unconfirmed",
+       "runner_rc",
+       "runner_rc",
+       "runner_rc",
+       "runner_rc",
+       "runner_rc",
+       "runner_rc",
+       "runner_rc"
+      ]
+     ]
+    }
+   }
+  },
+  "RN01": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "a/recover/none/tb": [
+      [
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "runner_rc",
+       true,
+       false
+      ]
+     ],
+     "a/same/none/tb": [
+      false,
+      true
+     ],
+     "b/gc_none/none/oom": [
+      [
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "resource",
+       true
+      ]
+     ],
+     "b/gc_none/none/tb": [
+      [
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "runner_rc",
+       false
+      ]
+     ],
+     "c/dict": [
+      [
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "group_unconfirmed",
+       false
+      ]
+     ],
+     "c/empty": [
+      [
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "group_unconfirmed",
+       false
+      ]
+     ],
+     "c/exception": [
+      [
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "group_unconfirmed",
+       false
+      ]
+     ],
+     "c/false": [
+      [
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "group_unconfirmed",
+       false
+      ]
+     ],
+     "c/list": [
+      [
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "group_unconfirmed",
+       false
+      ]
+     ],
+     "c/nokey_rc0": [
+      [
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "group_unconfirmed",
+       false
+      ]
+     ],
+     "c/nokey_rcnull": [
+      [
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "group_unconfirmed",
+       false
+      ]
+     ],
+     "c/norecord": [
+      [
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "group_unconfirmed",
+       false
+      ]
+     ],
+     "c/weird": [
+      [
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "group_unconfirmed",
+       false
+      ]
+     ],
+     "c/weird_rc0": [
+      [
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "group_unconfirmed",
+       false
+      ]
+     ],
+     "c/zero": [
+      [
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "group_unconfirmed",
+       false
+      ]
+     ]
+    },
+    "n": 112,
+    "n_bad": 15
+   }
+  },
+  "RN02": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "a_rcnull": {
+      "ledger_same": [
+       null,
+       true
+      ],
+      "not_allowed": [
+       false,
+       true
+      ],
+      "result": [
+       {
+        "by": "recover",
+        "cause": "parent_dead",
+        "resume_ok": true,
+        "side": "post",
+        "status": "interrupted"
+       },
+       {
+        "by": "recover",
+        "cause": "runner_rc",
+        "resume_ok": false,
+        "side": "post",
+        "status": "interrupted"
+       }
+      ],
+      "resume_rc": [
+       0,
+       3
+      ]
+     },
+     "b_rcnull": {
+      "ledger_same": [
+       null,
+       true
+      ],
+      "not_allowed": [
+       false,
+       true
+      ],
+      "result": [
+       {
+        "by": "recover",
+        "cause": "group_unconfirmed",
+        "resume_ok": true,
+        "side": "post",
+        "status": "stopped"
+       },
+       {
+        "by": "recover",
+        "cause": "runner_rc",
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped"
+       }
+      ],
+      "resume_rc": [
+       0,
+       3
+      ]
+     },
+     "c_nokey": {
+      "ledger_same": [
+       null,
+       true
+      ],
+      "not_allowed": [
+       false,
+       true
+      ],
+      "result": [
+       {
+        "by": "recover",
+        "cause": "group_unconfirmed",
+        "resume_ok": true,
+        "side": "post",
+        "status": "stopped"
+       },
+       {
+        "by": "recover",
+        "cause": "group_unconfirmed",
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped"
+       }
+      ],
+      "resume_rc": [
+       0,
+       3
+      ]
+     },
+     "c_norecord": {
+      "ledger_same": [
+       null,
+       true
+      ],
+      "not_allowed": [
+       false,
+       true
+      ],
+      "result": [
+       {
+        "by": "recover",
+        "cause": "group_unconfirmed",
+        "resume_ok": true,
+        "side": "post",
+        "status": "stopped"
+       },
+       {
+        "by": "recover",
+        "cause": "group_unconfirmed",
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped"
+       }
+      ],
+      "resume_rc": [
+       0,
+       3
+      ]
+     },
+     "c_weird": {
+      "ledger_same": [
+       null,
+       true
+      ],
+      "not_allowed": [
+       false,
+       true
+      ],
+      "result": [
+       {
+        "by": "recover",
+        "cause": "group_unconfirmed",
+        "resume_ok": true,
+        "side": "post",
+        "status": "stopped"
+       },
+       {
+        "by": "recover",
+        "cause": "group_unconfirmed",
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped"
+       }
+      ],
+      "resume_rc": [
+       0,
+       3
+      ]
+     }
+    },
+    "rows": {
+     "a_ctl_rc0": [
+      "parent_dead",
+      true,
+      0
+     ],
+     "a_ctl_rc1": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "a_rcnull": [
+      "parent_dead",
+      true,
+      0
+     ],
+     "b_ctl_rc0": [
+      "group_unconfirmed",
+      true,
+      0
+     ],
+     "b_ctl_rc1": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "b_ctl_timeout": [
+      "group_unconfirmed",
+      true,
+      0
+     ],
+     "b_rcnull": [
+      "group_unconfirmed",
+      true,
+      0
+     ],
+     "c_nokey": [
+      "group_unconfirmed",
+      true,
+      0
+     ],
+     "c_norecord": [
+      "group_unconfirmed",
+      true,
+      0
+     ],
+     "c_weird": [
+      "group_unconfirmed",
+      true,
+      0
+     ]
+    }
+   }
+  }
+ },
+ "seconds": 3.3,
+ "test_sha256": "e8ea9a354ab0046298e81e55f41926776088a1831b5d4e6984286d3fbfddd42c",
+ "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a64e0f68216ff3304"
+}

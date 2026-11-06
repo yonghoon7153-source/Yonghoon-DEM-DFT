@@ -1,0 +1,27 @@
+{
+ "tree": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/mt",
+ "start_sha256": {
+  "scripts/rint_r_chain.py": "d3775ca843654682f3c9a18327a15ccf682a309c071bac6fa542ef91556e46cb",
+  "scripts/test_rint_r_chain.py": "583b7c3d0319c8ac99535c2681b549b39a190d70c108184b753b0169f8801222"
+ },
+ "runs": {
+  "BASE": {
+   "only": "RC05,CE01,LG01,SU01,SU02",
+   "rc": 0,
+   "fails": [],
+   "summary": [
+    "test_rint_r_chain: 5/5 PASS (6.4 s)"
+   ],
+   "want_fail": [],
+   "caught": null,
+   "seconds": 6.9,
+   "fail_detail": {},
+   "stderr_tail": ""
+  }
+ },
+ "end_sha256": {
+  "scripts/rint_r_chain.py": "d3775ca843654682f3c9a18327a15ccf682a309c071bac6fa542ef91556e46cb",
+  "scripts/test_rint_r_chain.py": "583b7c3d0319c8ac99535c2681b549b39a190d70c108184b753b0169f8801222"
+ },
+ "restored": true
+}

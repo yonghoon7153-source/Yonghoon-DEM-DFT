@@ -1,0 +1,60 @@
+{
+ "n_rows": 11,
+ "n_diff": 6,
+ "diff": {
+  "F1_orphan_cause_fifo_end": {
+   "reviewer_fixed_version": {
+    "blocked_timeout_s": 6.0
+   },
+   "after_this_fix": [
+    "parent_dead",
+    false
+   ]
+  },
+  "F2_attempt_groups_problem_fifo_end": {
+   "reviewer_fixed_version": {
+    "blocked_timeout_s": 6.0
+   },
+   "after_this_fix": [
+    "그룹 attempt_1/L01_floor 종료 미확인"
+   ]
+  },
+  "F3_orphan_cause_fifo_launch": {
+   "reviewer_fixed_version": {
+    "blocked_timeout_s": 6.0
+   },
+   "after_this_fix": [
+    "parent_dead",
+    false
+   ]
+  },
+  "F4_read_attempt_fifo": {
+   "reviewer_fixed_version": {
+    "blocked_timeout_s": 6.0
+   },
+   "after_this_fix": [
+    null
+   ]
+  },
+  "G5_gu_no_run_record_traceback": {
+   "reviewer_fixed_version": {
+    "cause": "group_unconfirmed",
+    "resume_ok": true
+   },
+   "after_this_fix": {
+    "cause": "group_unconfirmed",
+    "resume_ok": false
+   }
+  },
+  "G6_gu_rec_no_group_cause_key_rcnull": {
+   "reviewer_fixed_version": {
+    "cause": "group_unconfirmed",
+    "resume_ok": true
+   },
+   "after_this_fix": {
+    "cause": "group_unconfirmed",
+    "resume_ok": false
+   }
+  }
+ }
+}

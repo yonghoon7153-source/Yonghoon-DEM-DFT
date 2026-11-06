@@ -1,0 +1,3 @@
+  PASS  FF01 ★ 11-06 사전 공격 10 회차 PB-03 (P3) FIFO · 바꿔치기 (포크한 자식 · 시간 상한 15 s · 시험은 막히지 않는다) — 그룹 끝 기록 · 시작 기록 자리 = FIFO (쓰는 쪽 없음) 의 orphan_cause = (parent_dead · 읽음 False) · attempt_groups_problem (끝 · 시작 FIFO = 종료 미확인) · attempt.json FIFO 의 read_attempt = None · rejected.json 을 is_file 로 본 뒤 FIFO 로 바뀜 = 다시 셈 Stop ATTEMPT_LEDGER_MISMATCH · recover --ledger rc 3 · 결과 줄 없음 (옛 = 모두 시간 초과 · 막힘) · CLI --stage recover (끝 기록 FIFO) = rc 0 · 끝 기록 by recover · 대조 = rejected.json 이 처음부터 FIFO = is_file 이 거름 (요약 없는 길 · 막히지 않음 · 고치기 전과 같음)
+
+test_rint_r_chain: 1/1 PASS (1.0 s)
