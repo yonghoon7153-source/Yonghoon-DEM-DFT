@@ -5014,17 +5014,10 @@ def _selftest():
                                                                                          {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
                   # ⭐ 회신 DS P1-1 — '진행 중' 지름길은 진행 중을 **확인** 한 판정 (md_progress in_progress) 이고 뒤 산출물이 그때 없었을 때만 —
                   #    확인 불가 (plan 을 못 읽음 · 검사 생략) · 뒤 산출물이 있던 판정 · 옛 꼴 (md_progress 없음) 은 대체 규칙을 받는다
-                  "inc_unknown_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
-                                                                       folder_prior=[{"status": "incomplete", "provenance": {**PVMID["provenance"], "md_progress": "unknown"}},
-                                                                                     {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
-                  "inc_inprog_late_present_before_anchor": ledger_verdict_conflict(
-                      {"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
-                      folder_prior=[{"status": "incomplete", "provenance": {**PVMID["provenance"], "files_sha256": {**PVMID["provenance"]["files_sha256"], "final.xyz": "d" * 64}}},
-                                    {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
-                  "inc_noprogress_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PV}, "pass", folder_provenance=PV,
-                                                                          folder_prior=[{"status": "incomplete", "provenance": {k_: v_ for k_, v_ in PVMID["provenance"].items()
-                                                                                                                                 if k_ != "md_progress"}},
-                                                                                        {"status": "invalid", "provenance": PV}, {"status": "pass", "provenance": PV}]) is not None,
+                  # (깨기 DS21 · DT10 — 지금 판정은 PVP 로: plan 이 같고 시각이 앞이라 진행 판정 · 뒤 산출물 조건만 가른다)
+                  "inc_unknown_before_anchor": _pa({**PVMID["provenance"], "md_progress": "unknown"}),
+                  "inc_inprog_late_present_before_anchor": _pa({**PVMID["provenance"], "files_sha256": {**PVMID["provenance"]["files_sha256"], "final.xyz": "d" * 64}}),
+                  "inc_noprogress_before_anchor": _pa({k_: v_ for k_, v_ in PVMID["provenance"].items() if k_ != "md_progress"}),
                   "inc_moved_plan_before_anchor": ledger_verdict_conflict({"verdict": "invalid", "verdict_provenance": PVC_}, "pass", folder_provenance=PVC_,
                                                                           folder_prior=[{"status": "incomplete", "provenance": PEEK_},
                                                                                         {"status": "invalid", "provenance": PVC_}, {"status": "pass", "provenance": PVC_}]) is not None,
