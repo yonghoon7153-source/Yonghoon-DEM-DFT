@@ -3668,3 +3668,10 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   `[해석]` 세미나 쪽 질문 "Si 몫을 열면 잔차가 준다 = Si 몫이 맞다?" 에 대해, 이 조건에서는 열화 없는 셀에서도 잔차가 줄며 γ 가 움직였다 — 잔차 감소는
   증거가 아니다 (진단 전용 · 수치는 followups 기록 · 위키에 옮기지 않음).
 - 갱신: [[pocv-nonequilibrium-mode-bias]] P3 줄 · 상태판 · README "자기 일관성 시험" 절. 다음은 사용자 결정 (닫기 · 또는 W · S · 분석 이어 붙이기 = 세 번째 사후 규칙 변경).
+
+## [2026-11-06] update | 논문 후속 P3 닫힘 — 진단 하나 (잔차 감소 ≠ Si 몫 증거)
+- 사용자 원문 "다 권고대로" → (A) P3 닫기. Q1–Q4 판정 없음. REIL 은 구현 요청서 v1 검토 회신 대기 그대로 (같은 메시지의 "다" 에 REIL 쪽 할 일은 없음).
+- 갱신: [[22p-physics-or-degeneracy]] Status Log (2026-11-06 (2) · status `active` 유지) · [[fitting-degeneracy]] 초기값 절 끝 ("실행 0" → 닫힘 · 진단) ·
+  [[halfcell-ocp-shape-invariance]] 10-13 절 4 번 (같은 갱신) · [[pocv-nonequilibrium-mode-bias]] P3 줄 · 상태판 · README "종결".
+- 남은 진단 `[해석]`: 모형이 정확하면 Si 몫은 유일하게 복원되지만, DFN 곡선에서는 열화 없는 셀에서도 Si 몫을 열면 값이 움직이며 잔차가 준다 — 모형 차이가 5 번째
+  매개로 흡수된다. 수치는 위키에 옮기지 않는다 (`followups/phantom-pocv/p3_20261106/README.md`).

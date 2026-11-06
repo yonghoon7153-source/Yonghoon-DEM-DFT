@@ -242,7 +242,9 @@ mechanism**."
 warm start 는 초기값으로 가지를 고르는 장치라 위 Table 5 의 "초기값이 남는다" 와
 같은 구조다 — **매끄러움은 식별의 증거가 아니다.** 위 "두 실패 모드" 중 어느 쪽인지
 (평평한 골 ↔ 여러 극소) 는 참값 없이 가를 수 없다. 참값으로 재는 설계: 논문 후속 P3
-`followups/phantom-pocv/P3_APPROVAL_REQUEST.md` (다리 F5 · W · 실행 0).
+`followups/phantom-pocv/P3_APPROVAL_REQUEST.md` — **2026-11-06 닫힘 · 다리 W 는 돌지 않았다** (미리 고정한 중단 규칙). 남은 진단: 모형이
+정확하면 5 매개 해가 유일하지만, DFN truth 에서는 열화 없는 셀에서도 Si 몫이 움직이며 잔차가 준다 — 모형 차이를 흡수하는 매개가 하나 늘면
+"잔차가 줄었다" 는 식별의 증거가 더 못 된다 (`followups/phantom-pocv/p3_20261106/README.md` · 진단 전용).
 
 ## 판정 방법 (요약)
 정답을 아는 합성 격자에서 복원 오차 |err| 와 tol(2%p) 기반 degenerate 판정,
