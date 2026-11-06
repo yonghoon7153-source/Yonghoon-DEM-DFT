@@ -1,0 +1,110 @@
+{
+  "schema": "lhs_n_definition_extension_proposal/v1",
+  "status": "DRAFT_NOT_REGISTERED",
+  "based_on_draft_pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+  "acceptance_record_pin": "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+  "original_accepted_definition_modified": false,
+  "author_ratification": "PENDING",
+  "measured_rows": 0,
+  "rows": [],
+  "value_access_authorized": false,
+  "execution_authorized": false,
+  "active_registration_changed": false,
+  "whole_gate": "HOLD",
+  "candidate_universe": {
+    "source": "existing fixed inventory scope, not observed successful records",
+    "ranges": ["lhs00_000..lhs00_129", "lhsx_001..lhsx_064", "lhss_001..lhss_020"],
+    "planned_case_count": 214,
+    "resolved_case_lineage_rows": [],
+    "frozen_cohort_sha256": null,
+    "prior_six_identities": [],
+    "prior_six_identity_status": "NOT_VERIFIED",
+    "overlap_status": "UNKNOWN",
+    "independent_unseen_validation_set_claimed": false
+  },
+  "pairing": {
+    "source": "non-outcome design and bed lineage only",
+    "pair_rows": [],
+    "frozen_pair_sha256": null,
+    "allowed_contrasts": ["same_design_replication_descriptive", "N_loading_thickness_joint_descriptive"],
+    "orientation": "second minus first, assigned by design labels before value access",
+    "zero_delta_N": "preserve pair; omit from nonzero-N directional summary",
+    "zero_eligible_pairs": "never directional consistency",
+    "post_outcome_rematching_allowed": false,
+    "independent_N_causal_effect_claimed": false
+  },
+  "strata": {
+    "source": "non-outcome protocol/design metadata",
+    "frozen_stratum_rows": [],
+    "frozen_strata_sha256": null,
+    "protocol_unknown_is_equal": false,
+    "pooled_primary_slope": false
+  },
+  "endpoint_proposal": {
+    "recommended_additional_kind": "P_end_at_registered_relaxation_stage_end",
+    "is_explicit_amendment_requiring_ratification": true,
+    "harvest_event_must_equal_relax_end_event": true,
+    "nearest_frame_substitution": false,
+    "interpolation_allowed": false,
+    "time_window_chosen_from_results": false,
+    "relax_end_event": null,
+    "harvest_event": null,
+    "relaxation_duration": null,
+    "independent_equilibrium_qualification_rule": null,
+    "equilibrium_status": "NOT_ESTABLISHED",
+    "fixed_duration_completion_is_equilibrium_proof": false,
+    "original_P_relaxed_definition_silently_replaced": false
+  },
+  "N_proposal": {
+    "primary": "original endpoint damping-group surviving count, if group and membership are defined and evidenced",
+    "secondary_candidate": "surviving stable IDs from last-moving damping reference group",
+    "reference_replaces_primary": false,
+    "group_definition": null,
+    "stable_id_lineage_map": null,
+    "N_planned": null,
+    "N_group_moving": null,
+    "N_group_stop": null,
+    "N_group_relaxed": null,
+    "N_reference_relaxed": null,
+    "N_phase_counts": null,
+    "viscous_active_at_endpoint": null,
+    "unfix_implies_zero_N": false
+  },
+  "uncertainty_proposal": {
+    "independent_unit": "original bed/insertion lineage; shared lineage, seed and pair reuse declared",
+    "reporting_unit": "all prespecified pairs and lineage/stratum-level points and ranges",
+    "frames_particles_contacts_are_independent_n": false,
+    "time_variation_window": null,
+    "inferential_CI_in_current_proposal": false,
+    "equivalence_threshold": null,
+    "prior_six_slope_used_as_threshold": false,
+    "missing_or_failed_rows_preserved": true
+  },
+  "static_identity": {
+    "actual_original_decks": [],
+    "include_dependency_graph": [],
+    "CLI_environment_variable_bindings": [],
+    "restart_lineage_DAG": [],
+    "actual_input_identity_status": "NOT_VERIFIED",
+    "static_declared_chain_is_execution_proof": false,
+    "restart_hash_is_hidden_state_qualification": false
+  },
+  "state_semantics": {
+    "NOT_COLLECTED": "not yet collected under authorization",
+    "NOT_ESTABLISHED": "required evidence or qualification is missing",
+    "UNDEFINED": "quantity or group definition is established to be inapplicable or undefined",
+    "NOT_IDENTIFIABLE": "independent N effect cannot be separated in the stated design",
+    "missing_is_zero": false
+  },
+  "decision_recommendations_not_approvals": {
+    "lhs_inventory": "separate per-host explicit author GO for existing fixed value-suppressing inventory only, after identity and command hash checks",
+    "A_C": "inventory first; A if original-log identity and chain suffice, otherwise C amendment with tests and independent review",
+    "value_access": "after frozen cohort/overlap/pair/strata/exclusions/endpoint/N/reporting and A/C ratification, separately scoped collection",
+    "mixer_NP": 20,
+    "mixer_initial_concurrency": 1,
+    "mixer_preparation_order": ["E0 qualification pilot", "accept qualification", "N0", "B1 U", "B1 C", "B2 U", "B2 C", "B3 U", "B3 C"],
+    "mixer_execution_GO": "HOLD",
+    "user_reported_resource_context": "ibb idle, qos cpu-60; not independently checked and not an allocation or GO",
+    "Rint_II_priority": true
+  }
+}
