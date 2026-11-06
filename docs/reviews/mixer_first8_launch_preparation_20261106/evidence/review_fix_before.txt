@@ -1,0 +1,20 @@
+.F........
+======================================================================
+FAIL: test_changed_job_start (__main__.Submission.test_changed_job_start)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_submit_draft.py", line 51, in test_changed_job_start
+    self.assertEqual(self.exercise('ok',change),(2,2,''))
+AssertionError: Tuples differ: (0, 2, 'x') != (2, 2, '')
+
+First differing element 0:
+0
+2
+
+- (0, 2, 'x')
++ (2, 2, '')
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.053s
+
+FAILED (failures=1)

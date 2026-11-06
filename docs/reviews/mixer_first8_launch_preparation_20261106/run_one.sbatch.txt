@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#SBATCH --partition=cpu
+#SBATCH --qos=cpu-60
+#SBATCH --ntasks=20
+#SBATCH --cpus-per-task=1
+#SBATCH --no-requeue
+# Required before seal: author-approved #SBATCH --time, --output, --error.
+# No defaults invented. These settings must be checked in runner review.
+set -euo pipefail
+APPROVAL_PATH='/home/yonghoon/mixer_precal_first8_20261106/approval.json'
+JOB_START_PATH='/home/yonghoon/mixer_precal_first8_20261106/job_start.py.txt'
+PYTHON_PATH='UNRESOLVED'
+case "$APPROVAL_PATH:$JOB_START_PATH:$PYTHON_PATH" in
+  *UNRESOLVED*) printf '%s\n' 'HOLD: unresolved reviewed bindings' >&2; exit 64;;
+esac
+# Absolute paths and script/Python environment are part of complete-source seal.
+exec "$PYTHON_PATH" "$JOB_START_PATH" "$APPROVAL_PATH"

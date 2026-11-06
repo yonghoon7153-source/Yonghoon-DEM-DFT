@@ -1,0 +1,32 @@
+{
+  "change": "Explicit local fixture load supports isolated Python; product code unchanged",
+  "prior_py38_attempts": "wrong filename then isolated sibling import failure; logs preserved; neither executed tests",
+  "final_runs": [
+    {
+      "python": "Python 3.12.14",
+      "test": "test_job_start_draft.py",
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_job_start_draft.py"
+      ],
+      "rc": 0,
+      "log": "py312_job_start_isolated_after.log",
+      "scope": "mock only"
+    },
+    {
+      "python": "Python 3.8.20",
+      "test": "test_job_start_draft.py",
+      "argv": [
+        "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin/python3.8",
+        "-I",
+        "-B",
+        "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_job_start_draft.py"
+      ],
+      "rc": 0,
+      "log": "py38_job_start_isolated_after.log",
+      "scope": "mock only"
+    }
+  ]
+}
