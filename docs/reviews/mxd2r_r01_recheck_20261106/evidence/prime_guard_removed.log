@@ -1,0 +1,141 @@
+test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) ... /tmp/mxd2rr01-nldvndww/scripts/make_mixer_deck.py:1122: ResourceWarning: unclosed file <_io.BufferedReader name='/tmp/mxd2rr01-nldvndww/scripts/make_mixer_deck.py'>
+  generator_sha256=hashlib.sha256(open(os.path.abspath(__file__), 'rb').read()).hexdigest(),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+
+  test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insA', value=1, consumer='readback') ... FAIL
+  test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insA', value=1, consumer='pair') ... FAIL
+  test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insA', value=1, consumer='plan') ... FAIL
+  test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insA', value=4, consumer='readback') ... FAIL
+  test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insA', value=4, consumer='pair') ... FAIL
+  test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insA', value=4, consumer='plan') ... FAIL
+  test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insB', value=1, consumer='readback') ... FAIL
+  test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insB', value=1, consumer='pair') ... FAIL
+  test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insB', value=1, consumer='plan') ... FAIL
+  test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insB', value=4, consumer='readback') ... FAIL
+  test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insB', value=4, consumer='pair') ... FAIL
+  test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insB', value=4, consumer='plan') ... FAIL
+
+======================================================================
+FAIL: test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insA', value=1, consumer='readback')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 878, in test_each_actual_seed_range_and_primality
+    self.assert_refusal(result, f'D2 insert/pack {fix_id} seed {value}: {why}')
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 836, in assert_refusal
+    self.assertTrue(any(reason in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['D2 development contract: ValueError: D2 generator form: insertion seed must be a prime ≤ 2^31−1 (the generator rejects composite seeds for LIGGGHTS insert/pack)']
+
+======================================================================
+FAIL: test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insA', value=1, consumer='pair')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 878, in test_each_actual_seed_range_and_primality
+    self.assert_refusal(result, f'D2 insert/pack {fix_id} seed {value}: {why}')
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 836, in assert_refusal
+    self.assertTrue(any(reason in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['old: D2 development contract: ValueError: D2 generator form: insertion seed must be a prime ≤ 2^31−1 (the generator rejects composite seeds for LIGGGHTS insert/pack)', 'new: D2 development contract: ValueError: D2 generator form: insertion seed must be a prime ≤ 2^31−1 (the generator rejects composite seeds for LIGGGHTS insert/pack)']
+
+======================================================================
+FAIL: test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insA', value=1, consumer='plan')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 878, in test_each_actual_seed_range_and_primality
+    self.assert_refusal(result, f'D2 insert/pack {fix_id} seed {value}: {why}')
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 836, in assert_refusal
+    self.assertTrue(any(reason in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['D2 development contract: ValueError: D2 generator form: insertion seed must be a prime ≤ 2^31−1 (the generator rejects composite seeds for LIGGGHTS insert/pack)']
+
+======================================================================
+FAIL: test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insA', value=4, consumer='readback')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 878, in test_each_actual_seed_range_and_primality
+    self.assert_refusal(result, f'D2 insert/pack {fix_id} seed {value}: {why}')
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 836, in assert_refusal
+    self.assertTrue(any(reason in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['D2 development contract: ValueError: D2 generator form: insertion seed must be a prime ≤ 2^31−1 (the generator rejects composite seeds for LIGGGHTS insert/pack)']
+
+======================================================================
+FAIL: test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insA', value=4, consumer='pair')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 878, in test_each_actual_seed_range_and_primality
+    self.assert_refusal(result, f'D2 insert/pack {fix_id} seed {value}: {why}')
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 836, in assert_refusal
+    self.assertTrue(any(reason in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['old: D2 development contract: ValueError: D2 generator form: insertion seed must be a prime ≤ 2^31−1 (the generator rejects composite seeds for LIGGGHTS insert/pack)', 'new: D2 development contract: ValueError: D2 generator form: insertion seed must be a prime ≤ 2^31−1 (the generator rejects composite seeds for LIGGGHTS insert/pack)']
+
+======================================================================
+FAIL: test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insA', value=4, consumer='plan')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 878, in test_each_actual_seed_range_and_primality
+    self.assert_refusal(result, f'D2 insert/pack {fix_id} seed {value}: {why}')
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 836, in assert_refusal
+    self.assertTrue(any(reason in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['D2 development contract: ValueError: D2 generator form: insertion seed must be a prime ≤ 2^31−1 (the generator rejects composite seeds for LIGGGHTS insert/pack)']
+
+======================================================================
+FAIL: test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insB', value=1, consumer='readback')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 878, in test_each_actual_seed_range_and_primality
+    self.assert_refusal(result, f'D2 insert/pack {fix_id} seed {value}: {why}')
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 836, in assert_refusal
+    self.assertTrue(any(reason in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['D2 development contract: ValueError: D2 generator form: command 47 `fix insB …` token 5 `1` (generator `32452867`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)']
+
+======================================================================
+FAIL: test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insB', value=1, consumer='pair')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 878, in test_each_actual_seed_range_and_primality
+    self.assert_refusal(result, f'D2 insert/pack {fix_id} seed {value}: {why}')
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 836, in assert_refusal
+    self.assertTrue(any(reason in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['old: D2 development contract: ValueError: D2 generator form: command 47 `fix insB …` token 5 `1` (generator `32452867`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)', 'new: D2 development contract: ValueError: D2 generator form: command 47 `fix insB …` token 5 `1` (generator `32452867`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)']
+
+======================================================================
+FAIL: test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insB', value=1, consumer='plan')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 878, in test_each_actual_seed_range_and_primality
+    self.assert_refusal(result, f'D2 insert/pack {fix_id} seed {value}: {why}')
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 836, in assert_refusal
+    self.assertTrue(any(reason in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['D2 development contract: ValueError: D2 generator form: command 47 `fix insB …` token 5 `1` (generator `32452867`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)']
+
+======================================================================
+FAIL: test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insB', value=4, consumer='readback')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 878, in test_each_actual_seed_range_and_primality
+    self.assert_refusal(result, f'D2 insert/pack {fix_id} seed {value}: {why}')
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 836, in assert_refusal
+    self.assertTrue(any(reason in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['D2 development contract: ValueError: D2 generator form: command 47 `fix insB …` token 5 `4` (generator `32452867`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)']
+
+======================================================================
+FAIL: test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insB', value=4, consumer='pair')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 878, in test_each_actual_seed_range_and_primality
+    self.assert_refusal(result, f'D2 insert/pack {fix_id} seed {value}: {why}')
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 836, in assert_refusal
+    self.assertTrue(any(reason in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['old: D2 development contract: ValueError: D2 generator form: command 47 `fix insB …` token 5 `4` (generator `32452867`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)', 'new: D2 development contract: ValueError: D2 generator form: command 47 `fix insB …` token 5 `4` (generator `32452867`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)']
+
+======================================================================
+FAIL: test_each_actual_seed_range_and_primality (__main__.D2InsertionSeedBounds.test_each_actual_seed_range_and_primality) (fix='insB', value=4, consumer='plan')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 878, in test_each_actual_seed_range_and_primality
+    self.assert_refusal(result, f'D2 insert/pack {fix_id} seed {value}: {why}')
+  File "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py", line 836, in assert_refusal
+    self.assertTrue(any(reason in f for f in result['failures']), result['failures'])
+AssertionError: False is not true : ['D2 development contract: ValueError: D2 generator form: command 47 `fix insB …` token 5 `4` (generator `32452867`) — every command must be the make_mixer_deck.deck() tokens (a different spelling of the same value is rejected)']
+
+----------------------------------------------------------------------
+Ran 1 test in 0.141s
+
+FAILED (failures=12)

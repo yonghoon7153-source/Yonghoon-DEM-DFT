@@ -814,5 +814,93 @@ class D2Consumers(unittest.TestCase):
         self.assertEqual(rb.D2_SEED_MAX, 2 ** 31 - 1)
 
 
+class D2InsertionSeedBounds(unittest.TestCase):
+    """MXD2R-R01: actual insertion seeds, including the derived layered seed.
+
+    Synthetic decks and real consumer CLIs only; no LIGGGHTS or scheduler.
+    Added before the guard fix. Metadata hashes/lengths match every test deck.
+    """
+    @staticmethod
+    def pair(**kw):
+        a, am, _ = fixture(**kw)
+        b, bm, _ = fixture(coated=True, **kw)
+        return a, b, am, bm
+
+    @staticmethod
+    def reports(a, b, am, bm):
+        return {'readback': rb.read_d2(a, am), 'pair': dd.diff_d2_decks(a, b, am, bm),
+                'plan': smoke.d2_plan_check(a, am)}
+
+    def assert_refusal(self, result, reason):
+        self.assertEqual(result['verdict'], 'FAIL', result)
+        self.assertTrue(any(reason in f for f in result['failures']), result['failures'])
+        self.assertFalse(result['execution_authorized'])
+
+    def test_layered_max_seed_api_refuses_derived_overflow(self):
+        for phases in (('AM_P', 'AM_S', 'SE'), ('AM_P', 'SE')):
+            a, b, am, bm = self.pair(seed=2147483647, phases=phases)
+            self.assertIn('fix insB all insert/pack seed 2147483659 ', a)
+            self.assertEqual(am['deck_sha256'], hashlib.sha256(a.encode()).hexdigest())
+            self.assertEqual(bm['deck_bytes'], len(b.encode()))
+            for consumer, result in self.reports(a, b, am, bm).items():
+                with self.subTest(phases=phases, consumer=consumer):
+                    self.assert_refusal(result, 'D2 insert/pack insB seed 2147483659: outside 1..2147483647')
+
+    def test_layered_max_seed_three_cli_rc_one(self):
+        for phases in (('AM_P', 'AM_S', 'SE'), ('AM_P', 'SE')):
+            with tempfile.TemporaryDirectory() as temp:
+                _write_case(temp, *self.pair(seed=2147483647, phases=phases))
+                for consumer, (rc, out, err) in _run_three_cli(temp).items():
+                    with self.subTest(phases=phases, consumer=consumer):
+                        self.assertEqual(rc, 1, out + err)
+                        self.assertIn('D2 insert/pack insB seed 2147483659: outside 1..2147483647', out)
+                        self.assertNotIn('Traceback', err)
+
+    def test_each_actual_seed_range_and_primality(self):
+        for index, fix_id in ((0, 'insA'), (1, 'insB')):
+            for value, why in ((0, 'ASCII positive integer'), (-1, 'ASCII positive integer'),
+                               (1, 'not prime'), (4, 'not prime'),
+                               (2147483648, 'outside 1..2147483647'),
+                               (2147483659, 'outside 1..2147483647')):
+                decks = []
+                for coated in (False, True):
+                    text, meta, _ = fixture(coated=coated)
+                    text, count = re.subn(r'(fix ' + fix_id + r' all insert/pack seed )\d+',
+                                          lambda m: m[1] + str(value), text)
+                    self.assertEqual(count, 1)
+                    meta = rebound(text, meta)
+                    if index == 0:
+                        meta['seed'] = value
+                    decks.append((text, meta))
+                (a, am), (b, bm) = decks
+                for consumer, result in self.reports(a, b, am, bm).items():
+                    with self.subTest(fix=fix_id, value=value, consumer=consumer):
+                        self.assert_refusal(result, f'D2 insert/pack {fix_id} seed {value}: {why}')
+
+    def test_boundary_positive_api_and_cli(self):
+        for phases in (('AM_P', 'AM_S', 'SE'), ('AM_P', 'SE')):
+            for seed, layered in ((2147483647, False), (2147483629, True)):
+                case = self.pair(seed=seed, layered=layered, phases=phases)
+                if layered:
+                    self.assertIn('fix insB all insert/pack seed 2147483647 ', case[0])
+                for consumer, result in self.reports(*case).items():
+                    with self.subTest(phases=phases, seed=seed, consumer=consumer):
+                        self.assertEqual(result['verdict'], 'PASS', result)
+                        self.assertFalse(result['execution_authorized'])
+                with tempfile.TemporaryDirectory() as temp:
+                    _write_case(temp, *case)
+                    for consumer, (rc, out, err) in _run_three_cli(temp).items():
+                        with self.subTest(phases=phases, seed=seed, cli=consumer):
+                            self.assertEqual(rc, 0, out + err)
+
+    def test_valid_but_wrong_second_prime_keeps_generator_binding(self):
+        a, b, am, bm = self.pair(seed=2147483629)
+        aa, bb = a.replace('insert/pack seed 2147483647 ', 'insert/pack seed 32452843 '), b.replace(
+            'insert/pack seed 2147483647 ', 'insert/pack seed 32452843 ')
+        for consumer, result in self.reports(aa, bb, rebound(aa, am), rebound(bb, bm)).items():
+            with self.subTest(consumer=consumer):
+                self.assert_refusal(result, '`32452843` (generator `2147483647`)')
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

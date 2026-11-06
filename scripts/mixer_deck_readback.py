@@ -1045,6 +1045,20 @@ def _d2_int_token(value, name):
     return int(value)
 
 
+def _d2_insert_seed(token, fix_id):
+    """Validate every printed insert/pack seed, independently of metadata/derivation.
+
+    MXD2R-R01: a valid first seed can derive an out-of-range layered second seed.
+    Check the bounded integer before primality; never wrap, truncate or replace it.
+    """
+    label = f'D2 insert/pack {fix_id} seed {token}'
+    rule = '; insertion seed must be a prime ≤ 2^31−1'
+    seed = _d2_int_token(token, label)
+    _d2_need(seed <= D2_SEED_MAX, label + f': outside 1..{D2_SEED_MAX}' + rule)
+    _d2_need(_d2_next_prime(seed) == seed, label + ': not prime' + rule)
+    return seed
+
+
 def _d2_close(value, expected, tol, name):
     value = _d2_number(value, name, positive=expected > 0)
     _d2_need(value == 0 if expected == 0 else abs(value / expected - 1) <= tol,
@@ -1094,7 +1108,7 @@ def _d2_counts(D, meta, phases, density):
                 _d2_need(token.count(field) == 1, 'missing/duplicate insertion ' + field)
             insertions.append((token[token.index('distributiontemplate')+1],
                                _d2_int_token(token[token.index('particles_in_region')+1], 'insert count'),
-                               _d2_int_token(token[token.index('seed')+1], 'insert seed')))
+                               _d2_insert_seed(token[token.index('seed')+1], token[1])))
     _d2_need(len(template_ids) == len(phases), 'template ids do not match active phases')
     _d2_need(len(insertions) in (1, 2) and len(distributions) == len(insertions), 'unsupported insertion partition')
     _d2_need(len({x[0] for x in insertions}) == len(insertions), 'reused insertion distribution')

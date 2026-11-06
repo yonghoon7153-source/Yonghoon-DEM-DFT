@@ -1,0 +1,13 @@
+{
+  "basis": "ad7d2d555ce4c3fd50e8c3400cac70eb713c27f2",
+  "candidate_files": {
+    "scripts/make_mixer_deck.py": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "scripts/mixer_deck_readback.py": "791f72e96bd72d1ad118d347e5dbfdc5fd67e8b30e2ee602c6fbf7109f37091a",
+    "scripts/mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "scripts/mixer_smoke_blind.py": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24",
+    "scripts/test_mixer_d2_consumers.py": "7dbee30f3cb473ed662484835ba6a99b2cc662d71adb0a6345a8a666df9c4d5e"
+  },
+  "generator_byte_unchanged": true,
+  "research_results": 0,
+  "external_recheck": "PENDING"
+}

@@ -1,0 +1,16 @@
+{
+  "apply_now": false,
+  "closure_claimed": false,
+  "whole_gate": "HOLD",
+  "new_research_results": 0,
+  "finding": "MXD2R-R01",
+  "severity": "P2",
+  "proposed_status": "claimed_fixed_pending_external_recheck",
+  "previous_MXD2R_01_03": "reported CLOSED in consumer scope; not reopened",
+  "MXD2R_04": "PARTIAL; this request is R01 only",
+  "MLA_01_03": "OPEN_external_recheck_pending",
+  "actual_execution": false,
+  "active_registration_changed": false,
+  "shared_records_modified": false,
+  "proposed_progress_line": "각 실제 insert/pack seed의 범위·소수 검사 보완, 수정전 실패/3CLI rc1/경계 양성 보존. R01 독립 재확인 대기, 전체 HOLD. LHS 정본12질문판;8질문판 LHS 정의 대체."
+}

@@ -1,0 +1,68 @@
+{
+  "commands": [
+    {
+      "name": "red_cli_probe",
+      "argv": [
+        "/workspace/nonrint-1106/mxd2r-r01-fix/probe.py",
+        "/tmp/mxd2rr01-nldvndww/scripts",
+        "/workspace/nonrint-1106/mxd2r-r01-fix/red_cli"
+      ],
+      "rc": 0,
+      "expected_rc": 0,
+      "log": "red_cli_probe.log"
+    },
+    {
+      "name": "green_cli_probe",
+      "argv": [
+        "/workspace/nonrint-1106/mxd2r-r01-fix/probe.py",
+        "/tmp/mxd2rr01-nldvndww/scripts",
+        "/workspace/nonrint-1106/mxd2r-r01-fix/green_cli"
+      ],
+      "rc": 0,
+      "expected_rc": 0,
+      "log": "green_cli_probe.log"
+    },
+    {
+      "name": "range_guard_removed",
+      "argv": [
+        "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py",
+        "D2InsertionSeedBounds.test_layered_max_seed_api_refuses_derived_overflow"
+      ],
+      "rc": 1,
+      "expected_rc": 1,
+      "log": "range_guard_removed.log"
+    },
+    {
+      "name": "prime_guard_removed",
+      "argv": [
+        "/tmp/mxd2rr01-nldvndww/scripts/test_mixer_d2_consumers.py",
+        "D2InsertionSeedBounds.test_each_actual_seed_range_and_primality"
+      ],
+      "rc": 1,
+      "expected_rc": 1,
+      "log": "prime_guard_removed.log"
+    }
+  ],
+  "scope": "temporary synthetic inputs only; no host, scheduler, MPI or DEM",
+  "source_hashes": {
+    "make_mixer_deck.py": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "mixer_deck_readback.py": "791f72e96bd72d1ad118d347e5dbfdc5fd67e8b30e2ee602c6fbf7109f37091a",
+    "mixer_deck_diff.py": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "mixer_smoke_blind.py": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24",
+    "test_mixer_d2_consumers.py": "7dbee30f3cb473ed662484835ba6a99b2cc662d71adb0a6345a8a666df9c4d5e"
+  },
+  "tracked_sources_unchanged_by_probes": true,
+  "generated_pairs_byte_preserved": 3,
+  "positive_pairs_byte_preserved": 2,
+  "negative_case": "max_layered",
+  "mutations_detected": 2,
+  "mutation_limits": {
+    "range_guard_removed": "original overflow accepted again",
+    "prime_guard_removed": "independent actual seed diagnostic lost; later form guard can still reject these composites"
+  },
+  "generator_changed": false,
+  "consumer_code_changed": [
+    "mixer_deck_readback.py"
+  ],
+  "simulation_runs": 0
+}
