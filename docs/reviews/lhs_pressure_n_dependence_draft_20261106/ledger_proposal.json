@@ -1,0 +1,16 @@
+{
+  "apply_now": false,
+  "upsert_findings": [],
+  "closure_claimed": false,
+  "claimed_fixed": false,
+  "progress_append_proposal": "값 열람 전 P_relaxed와 N의 기술적 판단선·영향받는 해석·미확인 덱 조건을 결과0건으로 등록 초안화 준비. 실제 연구 결과0건·전체 HOLD. 새 외부 검토 대기.",
+  "claude_md_append_proposal": "Rint② 우선. 비 Rint 준비 자료만 추가; 실제 실행·값 열람·제출은 별도 1저자 GO 뒤.",
+  "open_conditions": [
+    "실제 원 LHS 덱 및 include/재개 사슬의 정적 신원 확인",
+    "코호트·대응쌍·이완 완료/프레임·불확실성 규칙 비준",
+    "기존 재고와 A/C·값 열람·별도 수집 승인"
+  ],
+  "shared_files_changed": false,
+  "research_execution": false,
+  "active_registration_changed": false
+}

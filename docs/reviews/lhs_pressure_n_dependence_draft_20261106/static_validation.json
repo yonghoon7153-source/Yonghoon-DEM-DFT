@@ -1,0 +1,14 @@
+{
+  "scope": "JSON invariants and static accepted-source byte comparison only; no actual data/reader/test simulation executed",
+  "research_results": 0,
+  "checks": {
+    "zero_results": true,
+    "actual_template_null": true,
+    "all_access_flags_false": true,
+    "no_numeric_cutoff": true,
+    "no_external_correction": true,
+    "accepted_bytes_unchanged:docs/reviews/lhs_pressure_damping_companion_draft_20261105/README.md": true,
+    "accepted_bytes_unchanged:docs/reviews/lhs_pressure_damping_companion_draft_20261105/companion_draft.json": true,
+    "accepted_bytes_unchanged:docs/reviews/lhs_pressure_damping_companion_draft_20261105/source_context.json": true
+  }
+}
