@@ -59,7 +59,7 @@ NEW = [
    "    return {f: (_sha256_file(run / f) if (run / f).is_file() else None) for f in names}"),
  # ── DS 전 리뷰 1 차 (MD 가 끝난 뒤 들여다본 incomplete · seed_gate 경로 상태 · 안전한 임시 파일 · plan 경로 · 완료 단계 FIFO · 기록 경로 링크 · md_done 꼴)
  #    ⚠ FIFO 를 여는 변이 (막기를 통째로 끔) 는 넣지 않았다 — 시험이 멈추면 하네스의 시간 제한 예외가 작업자를 죽인다 · 대신 '막되 재시도 단계로' 를 깬다
- F("DS10_md_done_ignored", "    if \"md_done\" in pv_ and pv_[\"md_done\"] is None:\n        return True", "    if True:\n        return True"),
+ F("DS10_md_done_ignored", "    if \"md_done\" in pv_ and pv_[\"md_done\"] is None and pv_.get(\"md_complete_seen\") is False:", "    if True:"),
  F("DS11_md_outputs_not_compared", "    return (all(fa_.get(f) == fb_.get(f) for f in same_md)", "    return (True"),
  F("DS12_late_files_lax", "            and all(fa_.get(f) is None or fa_.get(f) == fb_.get(f) for f in LATE_FILES))", "            and True)"),
  F("DS13_md_done_marker_none", "                         \"md_done\": path_state(run / MD_DONE_NAME),", "                         \"md_done\": None,"),
@@ -76,6 +76,13 @@ NEW = [
    "        if k_ is not None and k_ not in (\"file\", \"link\"):\n            return [], f\"판정 기록 경로"),
  F("DS19_history_append_follows", "    if k_ not in (None, \"file\"):\n        raise OSError(f\"판정 이력 경로", "    if False:\n        raise OSError(f\"판정 이력 경로"),
  F("DS20_md_done_shape_off", "    if path_state_problem(pv.get(\"md_done\")):", "    if False:"),
+ # ── DS 전 리뷰 2 차 (완료 기록이 없어도 일정 끝 · 프레임 다 참이면 '진행 중' 아님 · 현재 폴더의 판정 · 이력 경로 링크는 미해결)
+ F("DS21_md_seen_ignored", "    if \"md_done\" in pv_ and pv_[\"md_done\"] is None and pv_.get(\"md_complete_seen\") is False:",
+   "    if \"md_done\" in pv_ and pv_[\"md_done\"] is None:"),
+ F("DS22_md_seen_record_false", "                         \"md_complete_seen\": md_complete_seen(run, gate, checks),",
+   "                         \"md_complete_seen\": False,"),
+ F("DS23_first_write_history_link_ok", "    if k_h not in (None, \"file\"):\n        return f\"판정 이력 자리", "    if False:\n        return f\"판정 이력 자리"),
+ F("DS24_first_write_verdict_link_ok", "    if path_kind(vf) == \"link\":", "    if False:"),
 ]
 
 _dr_names = {m[0] for m in dr.MUT}
