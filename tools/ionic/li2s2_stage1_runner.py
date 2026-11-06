@@ -3849,14 +3849,22 @@ def _selftest():
     c_hl = clone(rr_d); hx_l = pathlib.Path(tempfile.mkdtemp(dir=tmp_root)) / "outside_history.jsonl"
     hp_l = c_hl / "A/seed12" / real.VERDICT_HISTORY
     hx_l.write_text(hp_l.read_text(encoding="utf-8") if hp_l.is_file() else "", encoding="utf-8")
-    hp_l.unlink(missing_ok=True); os.symlink(hx_l, hp_l)
-    b_hl = hx_l.read_bytes()
-    rc_hl, L_hl, _ = go(wt, rr=c_hl)
-    sp_hl = J(c_hl / "STOP.json") if (c_hl / "STOP.json").is_file() else {}
-    chk(rc_hl == RC["invalid"] and not L_hl and "판정 이력 자리" in str(sp_hl.get("reason")) and hx_l.read_bytes() == b_hl
-        and summ(c_hl)["track"] == "invalid",
-        "⛔음성 DS 전 2차 리뷰 P3: 현재 폴더의 판정 이력이 밖의 파일을 가리키는 링크면 시작 점검이 이유를 남기고 멈춘다 (발사 0 · 밖의 파일 그대로 · 요약 invalid) "
-        f"({rc_hl} · 발사 {len(L_hl)} · {str(sp_hl.get('reason'))[:120]})")
+    hp_l.unlink(missing_ok=True)
+    try:
+        os.symlink(hx_l, hp_l)
+        link_ok_hl = True
+    except (OSError, NotImplementedError, AttributeError):   # Windows 에서 링크 권한이 없으면 이 시험만 건너뛴다 (POSIX 전용 여섯과 같은 꼴)
+        link_ok_hl = False
+    if link_ok_hl:
+        b_hl = hx_l.read_bytes()
+        rc_hl, L_hl, _ = go(wt, rr=c_hl)
+        sp_hl = J(c_hl / "STOP.json") if (c_hl / "STOP.json").is_file() else {}
+        chk(rc_hl == RC["invalid"] and not L_hl and "판정 이력 자리" in str(sp_hl.get("reason")) and hx_l.read_bytes() == b_hl
+            and summ(c_hl)["track"] == "invalid",
+            "⛔음성 DS 전 2차 리뷰 P3: 현재 폴더의 판정 이력이 밖의 파일을 가리키는 링크면 시작 점검이 이유를 남기고 멈춘다 (발사 0 · 밖의 파일 그대로 · 요약 invalid) "
+            f"({rc_hl} · 발사 {len(L_hl)} · {str(sp_hl.get('reason'))[:120]})")
+    else:
+        print("  · 건너뜀 (링크를 못 만드는 OS) DS 전 2차 리뷰 P3 — 현재 폴더의 판정 이력 링크")
     # ⭐ DR 전 5차 리뷰 P2 — 첫 시드 (A11) 가 녹음 창이 찬 채 실행 중 상한으로 멈춤 → 상한 판정 fail + 계 닫힘 → (문서대로) 상한을 올린 카드로 · 폴더를 옆으로
     #    옮기고 확인 → 상한 칸은 판정 규칙이 아니라서 그 판정 기록은 지금 규칙의 것 → 장부에 닫힘 · 닫는 STOP melt (상한을 올린 것이 진짜 닫힘을 지우지 않는다)
     rc_cp, L_cp, rr_cp = go(mk_wt(card=mk_card(stage1_cap_gpu_h=3.0)), seed_worst_h=1.0, scen={("A", 11): {"melt": "fail"}})
