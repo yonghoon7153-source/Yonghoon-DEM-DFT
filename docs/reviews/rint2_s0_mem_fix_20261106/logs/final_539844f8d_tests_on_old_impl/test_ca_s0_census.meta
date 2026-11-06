@@ -1,0 +1,6 @@
+cmd=python3 scripts/test_ca_s0_census.py
+in_place scripts/carbon_junction.py sha256=5460dad164839b115eea07f5df21087af1ff214c221e4838d940f7de9f9ca221
+in_place scripts/ca_s0_census.py sha256=6e527e6c7a16251c585443abb922325170975f63d953204d209065c2dc951937
+restored scripts/carbon_junction.py sha256=679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb ok=True
+restored scripts/ca_s0_census.py sha256=1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4 ok=True
+rc=1

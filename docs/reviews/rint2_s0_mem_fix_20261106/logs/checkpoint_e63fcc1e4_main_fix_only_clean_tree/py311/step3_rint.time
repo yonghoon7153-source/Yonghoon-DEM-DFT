@@ -1,0 +1,4 @@
+cmd=python3 scripts/step3_sigma.py --selftest-rint
+elapsed_s=0.5
+max_rss_kb=83104
+rc=0

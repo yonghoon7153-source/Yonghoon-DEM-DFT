@@ -1,0 +1,4 @@
+kit_A: 선분 13 · instance 0 · 파일 6 같음 True · JSON 뜻밖의 차이 0 · npz 다른 배열 0 / 41 · 다른 파일 바이트 [] · 과학 값 같음 True · JSON 다른 칸 {'cjunc_plan.json': [], 's0_stage1_kit_A.json': ['elapsed_s']}
+kit_J: 선분 106 · instance 2 · 파일 6 같음 True · JSON 뜻밖의 차이 0 · npz 다른 배열 0 / 41 · 다른 파일 바이트 [] · 과학 값 같음 True · JSON 다른 칸 {'cjunc_plan.json': [], 's0_stage1_kit_J.json': ['elapsed_s']}
+kit_RV: 선분 130 · instance 3 · 파일 6 같음 True · JSON 뜻밖의 차이 0 · npz 다른 배열 0 / 41 · 다른 파일 바이트 [] · 과학 값 같음 True · JSON 다른 칸 {'cjunc_plan.json': [], 's0_stage1_kit_RV.json': []}
+kit_L: 선분 120 · instance 5 · 파일 6 같음 True · JSON 뜻밖의 차이 0 · npz 다른 배열 0 / 41 · 다른 파일 바이트 [] · 과학 값 같음 True · JSON 다른 칸 {'cjunc_plan.json': [], 's0_stage1_kit_L.json': []}

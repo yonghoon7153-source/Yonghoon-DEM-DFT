@@ -1,0 +1,4 @@
+cmd=python3 scripts/test_carbon_junction.py
+elapsed_s=85.3
+max_rss_kb=1052584
+rc=0

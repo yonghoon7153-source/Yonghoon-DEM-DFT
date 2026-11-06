@@ -1,0 +1,4 @@
+cmd=python3 scripts/test_ca_ext_runner.py
+elapsed_s=131.3
+max_rss_kb=110756
+rc=0

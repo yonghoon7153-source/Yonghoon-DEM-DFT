@@ -1,0 +1,4 @@
+cmd=python3 scripts/test_ptfe_face_alpha.py
+elapsed_s=62.5
+max_rss_kb=556720
+rc=0

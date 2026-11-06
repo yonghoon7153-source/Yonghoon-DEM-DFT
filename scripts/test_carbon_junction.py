@@ -139,6 +139,15 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
          (`litdb-canon:banerjee2019_tunneling_tlm_parallel_nanoscale_contacts`) — 나란한 두 복셀 섬유 · Rc (Eq. 4) = 손 사다리 · 닫힌 꼴 (1e-11) ·
          Eq. 8 (허용 = 이산화 오차 주항 × 1.5) · 2 차 수렴 · 포화 = 풀이 · "길이 비례만" 거부 · 변이 lumped (`_n_sub` → 1) · ★ 11-04 PC8-06 ⑨ 간선
          기하 점 = 칸 가운데 (변이 B01 ¼ 자리를 잡는다) · PC8-07 ⑩ 전달 길이 한정어 = 이 기하 (같은 두 곧은 나란한 레일) 만
+  ── PAIR (★ 11-06 · `SELF-155` 메모리 — 실침대 S0 단계 1 이 `_distinct_instances` 의 전역 반지름 query_pairs 에서 43 GB · 시험 먼저) ──
+  PSRCH  근접 선분 쌍 후보 (`_near_seg_pairs` · 조각 중점 · 좁은 반지름) = brute force 참 쌍의 상위집합 · 정준 순서 · 유일 · L0 · 덩어리 무관
+  PEQ    `_distinct_instances` · `_self_pairs` · `_touch_len_all` = 고치기 전 판 (REF_PAIR_COMMIT) 과 모든 칸 비트 같음 × 덩어리 설정
+  PREG   `cjunc_registry` 원장 전체 (지문 포함) = 고치기 전 판 비트 같음 (손 픽스처 일곱 · 생산 단위 무작위 침대 둘 × s_min × 덩어리)
+  PS0    `ca_s0_census.junction_census` 보고 블록 · 배열 = 고치기 전 판 비트 같음 (SBE 꼴 · DBE 꼴)
+  PTIE   정준 동률 풀이 (같은 조각 쌍 · 같은 접점 두 instance = 최근접 쌍 선분 순 · 후보 순서 불변) · 옛 판의 순서 의존 실측
+  PMEM   후보 수 (옛 반지름 count_neighbors ≥ 20 × 새) · 판정 · 질의 덩어리 행 수 상한
+  PEDGE  옛 반지름 경계의 반올림 칼날 — 옛 판은 참 쌍을 놓치고 새 판은 찾는다 ("비트 같음" 의 선언된 예외 꼴)
+  PMUT   후보 검색 · 덩어리 · 동률 · 반올림 여유 변이 여섯이 값 대조에 걸린다
 """
 import argparse
 import ast
@@ -2919,9 +2928,21 @@ def t_cp_order():
     """instance 접점 (`CJUNC_CP_RULE`) 은 후보 쌍 나열 순서에 무관해야 한다 — 후보 쌍은 `cKDTree.query_pairs` 의 출력 (순서 = 구현 정의 · 트리
     모양) 이다.  그 출력을 뒤집거나 (시드 고정) 무작위로 섞어도 접점 · 포트 · 간선 원장 · 계 · σ 비트 같음 (PCP · PCP-FAR · LP 긴 접촉 ·
     CX 5 노드 꼴).  ★ 10-21 변이 M16 ('argmin 첫 쌍' = 나열 순서의 첫 최소 쌍) 이 고정 침대 전부를 통과해 (트리 순서가 우연히 사전식 최소
-    쌍을 먼저 냈다) 보탬 · 시험은 구현 뒤."""
+    쌍을 먼저 냈다) 보탬 · 시험은 구현 뒤.
+    ★ 11-06 (`SELF-155` 메모리) — 새 판은 후보 쌍을 `_near_seg_pairs` (조각 중점 · 정준 순서) 로 만들고 `query_pairs` 를 부르지 않는다 → 섞는
+    자리 = 그 함수의 출력 (그 뒤 계산이 나열 순서와 무관한지를 같은 뜻으로 본다) · 그 함수가 없는 고치기 전 판 = 옛 자리 (`query_pairs`).
+    섞은 출력 수 > 0 을 함께 본다 (섞는 자리가 실제로 불리지 않으면 공허 통과)."""
     import scipy.spatial as SPS
     real = SPS.cKDTree
+    n_perm = [0]
+
+    def _perm(out, how):
+        if not isinstance(out, np.ndarray) or len(out) < 2:
+            return out
+        n_perm[0] += 1
+        if how == 'rev':
+            return out[::-1].copy()
+        return out[np.random.default_rng(7).permutation(len(out))].copy()
 
     class _Wrap:
         def __init__(self, t, how):
@@ -2931,15 +2952,18 @@ def t_cp_order():
             return getattr(self._t, k)
 
         def query_pairs(self, *a, **k):
-            out = self._t.query_pairs(*a, **k)
-            if not isinstance(out, np.ndarray) or len(out) < 2:
-                return out
-            if self._how == 'rev':
-                return out[::-1].copy()
-            return out[np.random.default_rng(7).permutation(len(out))].copy()
+            return _perm(self._t.query_pairs(*a, **k), self._how)
 
     @contextlib.contextmanager
     def order(how):
+        if how and hasattr(CJ, '_near_seg_pairs'):
+            orig = CJ._near_seg_pairs
+            CJ._near_seg_pairs = lambda *a, **k: _perm(orig(*a, **k), how)
+            try:
+                yield
+            finally:
+                CJ._near_seg_pairs = orig
+            return
         SPS.cKDTree = (lambda *a, **k: _Wrap(real(*a, **k), how)) if how else real
         try:
             yield
@@ -2958,11 +2982,13 @@ def t_cp_order():
     for nm, P, n in beds:
         base = _try(lambda P=P, n=n: rec(P, n), None)
         for how in ('rev', 'perm'):
+            n_perm[0] = 0
             with order(how):
                 o = _try(lambda P=P, n=n: rec(P, n), None)
-            chk(f'CP-ORD {nm} · 후보 쌍 {"뒤집음" if how == "rev" else "무작위 섞음 (시드 7)"} → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음',
-                base is not None and o is not None and o == base,
-                None if (base is None or o is None) else [k for k, (x, y) in enumerate(zip(o, base)) if x != y])
+            chk(f'CP-ORD {nm} · 후보 쌍 {"뒤집음" if how == "rev" else "무작위 섞음 (시드 7)"} → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음 '
+                f'(섞은 후보 출력 {n_perm[0]} > 0)',
+                base is not None and o is not None and o == base and n_perm[0] > 0,
+                None if (base is None or o is None) else ([k for k, (x, y) in enumerate(zip(o, base)) if x != y], n_perm[0]))
 
 
 #  BR3 — 포트 규칙 ③ (같은 셀에 후보 가지 여럿 = 접점까지 그 가지 중심선 거리): B 가 머리핀으로 셀 기둥 (2,1,·) 을 두 번 지난다 —
@@ -6005,6 +6031,600 @@ def t_sv_graph_binding():
         '그 끝) · 정직한 기록 + 원천 = 받음',
         all(v[0] is None and v[1] is None and isinstance(v[2], str) and v[2].startswith('sv_cf|') and QG_KEY in v[2] and '끝 증서' in v[2]
             for v in got11.values()), f'{ {k: (v[0], v[1], (v[2] or "")[:60]) for k, v in got11.items()} }')
+
+
+# ═════════════════════════ PAIR — 근접 선분 쌍 후보 검색 (★ 11-06 · `SELF-155` 메모리 · 시험 먼저) ═════════════════════════
+#  실침대 SBE S0 단계 1 (kgy · 핀 766e1e80c) 이 `_distinct_instances` 의 `cKDTree(mid).query_pairs(2·max(선분 반 길이) + D)` 한 호출에서
+#  30 s 에 8 → 43 GB (상한 TERM · rc 137 · 옛 런 52.1 GB 신호) — 증거 docs/reviews/rint2_s0_mem_probe_20261106/.  가장 긴 선분 하나가 모든
+#  선분의 검색 반지름을 정한다 (같은 꼴 = `_self_pairs`).  고침 = 조각 중점 · 좁은 반지름 후보 (`_near_seg_pairs`) + 덩어리별 판정 ·
+#  `_touch_len_all` 묶음.  계약 = 과학 값 · 정준 배열 비트 그대로 — 기준 = 고치기 전 carbon_junction.py (커밋 `REF_PAIR_COMMIT` 의 blob
+#  131c0505 = 21cf11b29 · 766e1e80c 와 같은 blob) 를 별도 모듈로 같은 프로세스에서 부른다.
+#    PSRCH  후보 = brute force 참 쌍 (두 방향 `seg_seg_closest` d ≤ D) 의 상위집합 · int64 (m, 2) · i < j · 정준 순서 (i·n + j 증가) · 유일 ·
+#           L0 (기본 · D/3 · D · 0.25 · 7.3D) × 질의 덩어리 (1 · 5 · 37 · 기본) 마다 · 빈 입력 · 선분 하나
+#    PEQ    `_distinct_instances` · `_self_pairs` (s_min 없음 · 0.3) · `_touch_len_all` = 기준과 모든 칸 비트 같음 — 긴 선분 섞인 무작위 셋 ·
+#           조각 경계 (거리 정확히 D · 바로 밖) · 빈 결과 · 같은 fid 끊긴 조각 · 나란한 접촉 (띠 동률) · 자기 접촉 (U · 납작한 고리) ·
+#           점 선분 · 중점 겹침 (거리 0) × 덩어리 상수 (기본 · (1,1,1) · (2,3,5) · (7,2,13))
+#    PREG   `cjunc_registry` 원장 전체 (위치 · 선분 · instance · 간선 · 면 · census · 거부 · 지문) = 기준 비트 같음 — 손 픽스처 일곱 ·
+#           생산 단위 무작위 침대 (긴 선분 · PTFE · SDCP) × s_min (없음 · 0.3) × 덩어리 상수
+#    PS0    `ca_s0_census.junction_census` 보고 블록 · 배열 = 기준 (`S0.cj` 를 기준 모듈로 바꿔 부름) 비트 같음 (덩어리 상수 기본 · 작게)
+#    PTIE   정준 동률 풀이 — 같은 조각 쌍 · 같은 접점 (비트) 의 두 instance: 새 = (최근접 쌍 선분 i, j) 순 · 후보 순서 (뒤집음 · 섞음 3) 에
+#           비트 같음 / 기준 = 후보 나열 순서 (트리) 에 따라 그 둘의 순서가 바뀐다 (실측) · 두 판의 instance 집합은 같다
+#    PMEM   긴 선분 침대 — 옛 반지름의 후보 수 (count_neighbors 정확 셈 · 저장 없음) ≥ 20 × 새 후보 · 판정 (`seg_seg_closest`) 한 번의 행 수 ≤
+#           덩어리 상수 (또는 instance 하나) · 질의 덩어리 행 수 ≤ 상한 (또는 점 하나)
+#    PEDGE  옛 판 반지름 경계의 반올림 칼날 (가장 긴 두 선분 끝-끝 · 선분 거리 ≤ D · 중점 거리 > 옛 반지름) — 옛 판 = 참 쌍을 놓친다 (instance
+#           0 · 옛 결함) / 새 판 = 찾는다 (instance 1) · "비트 같음" 의 선언된 예외 꼴 (★ 구현 뒤 발견 · 고치기 전 판 실패를 따로 기록)
+#    PMUT   변이 여섯 (반지름 = D 만 · 조각 반 길이 반 · 조각 중점 → 시작점 · 판정 마지막 덩어리 버림 · 동률 키 뺌 · 반올림 여유 0) 이
+#           PEQ · PTIE · PEDGE 꼴 대조에 값으로 걸린다 (변이 전 통과 · 변이 안 예외 = 하네스 실패)
+REF_PAIR_COMMIT = '3b12fbe2d'
+_REF_CJ = {}
+PD, PT = 0.2, 0.15            # 함수 단위 D · T (µm · 생산 꼴: D = 2 r_f + tol_ff = 0.15 + 0.05 · T = 2 r_f)
+_CHUNK_CFGS = (None, (1, 1, 1), (2, 3, 5), (7, 2, 13))     # (_CLOSEST_CHUNK, _TOUCH_ENTRY_BUDGET, _PAIR_ENTRY_BUDGET) · None = 기본
+
+
+def _load_ref_cj():
+    """고치기 전 carbon_junction.py (`REF_PAIR_COMMIT`) → 별도 모듈 (이름 carbon_junction_ref_3b12f) · 한 번만."""
+    if 'm' in _REF_CJ:
+        return _REF_CJ['m'], _REF_CJ['why']
+    try:
+        src = subprocess.run(['git', '-C', ROOT, 'show', f'{REF_PAIR_COMMIT}:scripts/carbon_junction.py'],
+                             capture_output=True, check=True).stdout
+    except Exception as e:                                 # noqa: BLE001
+        _REF_CJ.update(m=None, why=f'git show 실패 {type(e).__name__}: {e}')
+        return None, _REF_CJ['why']
+    d = tempfile.mkdtemp(prefix='cjref_')
+    p = os.path.join(d, 'carbon_junction_ref_3b12f.py')
+    with open(p, 'wb') as fh:
+        fh.write(src)
+    spec = importlib.util.spec_from_file_location('carbon_junction_ref_3b12f', p)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    _REF_CJ.update(m=m, why='', blob_sha256=hashlib.sha256(src).hexdigest())
+    return m, ''
+
+
+@contextlib.contextmanager
+def _consts(mod, cfg):
+    """새 판 덩어리 상수 (_CLOSEST_CHUNK · _TOUCH_ENTRY_BUDGET · _PAIR_ENTRY_BUDGET) 를 잠시 바꾼다 — cfg 칸 None = 그대로 · 그 이름이 없는
+    모듈 (고치기 전 판) 은 손대지 않는다 (대조 = 그대로 · 덩어리 동작은 PMEM 이 따로 본다)."""
+    names = ('_CLOSEST_CHUNK', '_TOUCH_ENTRY_BUDGET', '_PAIR_ENTRY_BUDGET')
+    old = {}
+    if cfg is not None:
+        for nm, v in zip(names, cfg):
+            if v is not None and hasattr(mod, nm):
+                old[nm] = getattr(mod, nm)
+                setattr(mod, nm, v)
+    try:
+        yield
+    finally:
+        for nm, v in old.items():
+            setattr(mod, nm, v)
+
+
+def _deq(a, b, path='$', out=None, lim=8):
+    """비트 대조 → 다른 자리 목록 (앞 lim 개) — dict (키 · 키 순서) · list/tuple (형 · 길이) · ndarray (dtype · 모양 · C 순서 바이트 · 객체
+    배열 = 원소마다) · 실수 (float64 바이트 · −0.0 · NaN 비트까지) · numpy 스칼라 (바이트) · 나머지 (형 · ==)."""
+    out = [] if out is None else out
+    if len(out) >= lim:
+        return out
+    if isinstance(a, dict) or isinstance(b, dict):
+        if not (isinstance(a, dict) and isinstance(b, dict)) or list(a) != list(b):
+            out.append(f'{path}: dict 키 {list(a)[:8] if isinstance(a, dict) else type(a).__name__} ≠ '
+                       f'{list(b)[:8] if isinstance(b, dict) else type(b).__name__}')
+            return out
+        for k in a:
+            _deq(a[k], b[k], f'{path}.{k}', out, lim)
+        return out
+    if isinstance(a, (list, tuple)) or isinstance(b, (list, tuple)):
+        if type(a) is not type(b) or len(a) != len(b):
+            out.append(f'{path}: {type(a).__name__} ≠ {type(b).__name__} 또는 길이 다름')
+            return out
+        for x, (u, v) in enumerate(zip(a, b)):
+            _deq(u, v, f'{path}[{x}]', out, lim)
+        return out
+    if isinstance(a, np.ndarray) or isinstance(b, np.ndarray):
+        if not (isinstance(a, np.ndarray) and isinstance(b, np.ndarray)) or a.dtype.str != b.dtype.str or a.shape != b.shape:
+            out.append(f'{path}: 배열 {getattr(a, "dtype", type(a))} {getattr(a, "shape", "")} ≠ '
+                       f'{getattr(b, "dtype", type(b))} {getattr(b, "shape", "")}')
+            return out
+        if a.dtype.hasobject:
+            for x, (u, v) in enumerate(zip(a.reshape(-1), b.reshape(-1))):
+                _deq(u, v, f'{path}{{{x}}}', out, lim)
+            return out
+        if np.ascontiguousarray(a).tobytes() != np.ascontiguousarray(b).tobytes():
+            out.append(f'{path}: 배열 바이트 다름 {a.dtype} {a.shape}')
+        return out
+    if type(a) is not type(b):
+        out.append(f'{path}: 형 {type(a).__name__} ≠ {type(b).__name__}')
+        return out
+    if isinstance(a, (float, np.floating)):
+        if np.float64(a).tobytes() != np.float64(b).tobytes():
+            out.append(f'{path}: {a!r} ≠ {b!r}')
+        return out
+    if isinstance(a, np.generic):
+        if a.tobytes() != b.tobytes():
+            out.append(f'{path}: {a!r} ≠ {b!r}')
+        return out
+    if a != b:
+        out.append(f'{path}: {a!r} ≠ {b!r}')
+    return out
+
+
+def _walk(seed, nf, npts, step, box, n_long=0, long_len=0.0, persist=0.3, clip=False):
+    """무작위 섬유 — 걸음 (간격 step · 방향 지속) nf 개 + 곧은 두 점 섬유 n_long 개 (길이 long_len = 긴 선분 하나 · 옛 반지름을 키운다)."""
+    rng = np.random.default_rng(seed)
+    polys = []
+    for _ in range(nf):
+        p = rng.uniform(0.3, box - 0.3, 3)
+        d = rng.normal(size=3)
+        d /= np.linalg.norm(d)
+        pts = [p.copy()]
+        for _ in range(npts - 1):
+            d = d + persist * rng.normal(size=3)
+            d /= np.linalg.norm(d)
+            p = p + step * d
+            pts.append(p.copy())
+        polys.append(np.asarray(pts))
+    for _ in range(n_long):
+        p = rng.uniform(0.3, box - 0.3, 3)
+        d = rng.normal(size=3)
+        d /= np.linalg.norm(d)
+        polys.append(np.asarray([p, p + long_len * d]))
+    if clip:
+        polys = [np.clip(q, 0.05, box - 0.05) for q in polys]
+    return polys
+
+
+def _raw_rows(polys, phase=2, kind=1, fid0=10):
+    """폴리라인 점열 그대로 (조밀화 없음 — 긴 선분을 지킨다) → (add_pts, add_phase, add_fid, add_kind)."""
+    P, PH, F, K = [], [], [], []
+    for x, pts in enumerate(polys):
+        pts = np.asarray(pts, np.float64).reshape(-1, 3)
+        P.append(pts); PH.append(np.full(len(pts), phase)); F.append(np.full(len(pts), fid0 + 10 * x)); K.append(np.full(len(pts), kind))
+    return (np.vstack(P), np.concatenate(PH).astype(np.int64), np.concatenate(F).astype(np.int64),
+            np.concatenate(K).astype(np.int64))
+
+
+def _pseg(polys, gap_tol=2.0):
+    """폴리라인 → 원장과 같은 선분 표 (`_paths_of` · `_canonical_paths` · `_segments_of` — 두 판 같은 함수)."""
+    P, PH, F, K = _raw_rows(polys)
+    rej = []
+    paths = CJ._paths_of(P, PH, F, K, 2, rej, 'VGCF')
+    ok = CJ._canonical_paths([(f, r, kp) for f, r, kp in paths if kp], P, rej, 'VGCF')
+    segs, _ = CJ._segments_of(ok, P, gap_tol)
+    return segs, rej
+
+
+def _peq_fixtures():
+    """(이름, 폴리라인, gap_tol) — 함수 단위 대조 픽스처 (µm · D 0.2 · T 0.15)."""
+    fx = [('긴 선분 섞인 무작위 A', _walk(3, 40, 14, 0.07, 4.0, n_long=3, long_len=3.0), 2.0),
+          ('긴 선분 섞인 무작위 B', _walk(17, 50, 20, 0.05, 4.0, n_long=2, long_len=2.5, persist=0.6), 2.0),
+          ('긴 선분 섞인 촘촘한 무작위 C', _walk(29, 90, 24, 0.06, 2.5, n_long=2, long_len=2.0), 2.0)]
+    cr = [[(0.0, 0.0, 0.0), (1.0, 0.0, 0.0)]]                 # 길이 1.0 — 기본 L0 = max(D, 평균 길이) 의 조각 경계가 그 위에 생긴다
+    for x in (0.2, 0.4, 0.5, 0.6, 0.8):
+        cr.append([(x, -0.25, 0.2), (x, 0.25, 0.2)])           # 거리 정확히 D (0.2) · 접점 x = 조각 경계 후보
+        cr.append([(x + 0.03125, -0.25, 0.2 + 2.0 ** -40), (x + 0.03125, 0.25, 0.2 + 2.0 ** -40)])   # D 바로 밖
+    fx.append(('조각 경계 · 거리 정확히 D · 바로 밖', cr, 2.0))
+    fx.append(('빈 결과 (근접 없음)', [[(0.0, 0.0, 0.0), (0.5, 0.0, 0.0)], [(3.0, 3.0, 3.0), (3.5, 3.0, 3.0)]], 2.0))
+    g = np.column_stack([np.r_[np.arange(20) * 0.05, 1.07 + np.arange(20) * 0.05], np.zeros(40), np.zeros(40)])
+    fx.append(('같은 fid 끊긴 조각 (틈 0.12 > 2 × 중앙값)', [g, [(1.0, -0.3, 0.1), (1.0, 0.3, 0.1)]], 2.0))
+    p1 = np.column_stack([np.arange(30) * 0.05, np.zeros(30), np.zeros(30)])
+    p2 = np.column_stack([0.25 + np.arange(30) * 0.05, np.full(30, 0.14), np.zeros(30)])
+    fx.append(('나란한 접촉 (띠 동률)', [p1, p2], 2.0))
+    leg = np.arange(21) * 0.05
+    U = np.vstack([np.column_stack([np.zeros(21), np.zeros(21), leg]), [(0.08, 0.0, 1.0)],
+                   np.column_stack([np.full(21, 0.16), np.zeros(21), leg[::-1]])])
+    th = np.linspace(0.0, 2.0 * math.pi, 41)
+    ring = np.column_stack([1.5 + 0.4 * np.cos(th), 1.5 + 0.075 * np.sin(th), np.full(41, 0.5)])
+    ring[-1] = ring[0]                                         # 닫힌 경로 (첫 점 = 끝 점 비트 같음)
+    fx.append(('자기 접촉 (U · 납작한 고리)', [U, ring], 2.0))
+    fx.append(('점 선분 · 중점 겹침 (거리 0)', [[(0.5, 0.5, 0.5)], [(0.4, 0.5, 0.5), (0.6, 0.5, 0.5)],
+                                         [(0.5, 0.4, 0.5), (0.5, 0.6, 0.5)], [(0.5, 0.5, 0.45), (0.5, 0.5, 0.55)]], 2.0))
+    return fx
+
+
+def _truth_pairs(segs, D):
+    """brute force 참 쌍 — 모든 i < j 를 두 방향으로 `seg_seg_closest` (뒤 판정이 조각 순으로 뒤집어 부를 수 있다) · d ≤ D 인 쪽이 하나라도."""
+    P0, P1 = segs['P0'], segs['P1']
+    n = len(P0)
+    if n < 2:
+        return set()
+    I, J = np.triu_indices(n, 1)
+    d1 = CJ.seg_seg_closest(P0[I], P1[I], P0[J], P1[J])[0]
+    d2 = CJ.seg_seg_closest(P0[J], P1[J], P0[I], P1[I])[0]
+    m = (d1 <= D) | (d2 <= D)
+    return set(zip(I[m].tolist(), J[m].tolist()))
+
+
+@case('PSRCH')
+def t_psrch():
+    bad, n_true, n_cand, n_calls = [], 0, 0, 0
+    for nm, polys, gt in _peq_fixtures():
+        segs, _ = _pseg(polys, gt)
+        P0, P1 = segs['P0'], segs['P1']
+        n = len(P0)
+        truth = _truth_pairs(segs, PD)
+        n_true += len(truth)
+        for L0 in (None, PD / 3.0, PD, 0.25, 7.3 * PD):
+            ref_set = None
+            for bud in (1, 5, 37, None):
+                with _consts(CJ, (None, None, bud)):
+                    pr = _try(lambda P0=P0, P1=P1, L0=L0: CJ._near_seg_pairs(P0, P1, PD, L0=L0), None)
+                n_calls += 1
+                if pr is None:
+                    bad.append(f'{nm}: 호출 실패')
+                    continue
+                key = pr[:, 0].astype(np.int64) * n + pr[:, 1] if len(pr) else np.zeros(0, np.int64)
+                form = (isinstance(pr, np.ndarray) and pr.dtype == np.int64 and pr.ndim == 2 and pr.shape[1] == 2
+                        and bool(np.all(pr[:, 0] < pr[:, 1])) and bool(np.all(np.diff(key) > 0)))
+                s = set(map(tuple, pr.tolist()))
+                if not form:
+                    bad.append(f'{nm} L0 {L0} 덩어리 {bud}: 꼴 (int64 · i < j · 정준 순서 · 유일)')
+                if not truth <= s:
+                    bad.append(f'{nm} L0 {L0} 덩어리 {bud}: 참 쌍 {len(truth - s)} 개 빠짐')
+                if ref_set is None:
+                    ref_set = s
+                    n_cand += len(s)
+                elif s != ref_set:
+                    bad.append(f'{nm} L0 {L0}: 질의 덩어리 {bud} 의 후보 집합이 다르다')
+    chk(f'PSRCH 후보 = brute force 참 쌍의 상위집합 · int64 (m, 2) · i < j · 정준 순서 · 유일 · 질의 덩어리와 무관 '
+        f'(픽스처 {len(_peq_fixtures())} × L0 5 × 덩어리 4 = 호출 {n_calls} · 참 쌍 {n_true} · 후보 (L0 마다 한 번 셈) {n_cand})',
+        not bad, f'{bad[:4]}')
+    z = np.zeros((0, 3))
+    e0 = _try(lambda: CJ._near_seg_pairs(z, z, PD), None)
+    e1 = _try(lambda: CJ._near_seg_pairs(np.zeros((1, 3)), np.ones((1, 3)), PD), None)
+    rec = getattr(CJ, '_PAIR_SEARCH_LAST', {}).get('pairs') if hasattr(CJ, '_PAIR_SEARCH_LAST') else None
+    chk('PSRCH 빈 입력 · 선분 하나 → (0, 2) int64 · 검색 기록 (_PAIR_SEARCH_LAST) 이 남는다 (원장 밖 진단)',
+        e0 is not None and e1 is not None and e0.shape == (0, 2) and e1.shape == (0, 2) and e0.dtype == np.int64
+        and isinstance(rec, dict) and rec.get('n_segments') == 1, f'{None if e0 is None else e0.shape} · {rec}')
+
+
+def _peq_run(mod, segs, cfg, s_mins=(None, 0.3)):
+    """한 모듈 · 한 덩어리 설정 → (_distinct_instances, _self_pairs × s_min, _touch_len_all 직접)."""
+    with _consts(mod, cfg):
+        inst = mod._distinct_instances(segs, PD, PT)
+        sps = tuple(mod._self_pairs(segs, PD, s) for s in s_mins)
+        tl = mod._touch_len_all(inst['seg_i'], inst['seg_j'], segs, PT)
+    return inst, sps, tl
+
+
+@case('PEQ')
+def t_peq():
+    ref, why = _load_ref_cj()
+    if not chk(f'PEQ 기준 모듈 (커밋 {REF_PAIR_COMMIT} 의 carbon_junction.py) 을 읽었다', ref is not None, why):
+        return
+    nfx = 0
+    for nm, polys, gt in _peq_fixtures():
+        segs, _ = _pseg(polys, gt)
+        want = _try(lambda segs=segs: _peq_run(ref, segs, None), None)
+        diffs, n_inst, n_sp = [], 0, 0
+        for cfg in _CHUNK_CFGS:
+            got = _try(lambda segs=segs, cfg=cfg: _peq_run(CJ, segs, cfg), None)
+            if want is None or got is None:
+                diffs.append(f'덩어리 {cfg}: 호출 실패')
+                continue
+            d = _deq(want, got)
+            if d:
+                diffs.append(f'덩어리 {cfg}: {d[:3]}')
+            n_inst = len(want[0]['fi']); n_sp = len(want[1][0]['i'])
+        nfx += 1
+        chk(f'PEQ {nm} — 선분 {len(segs["P0"])} · instance {n_inst} · 자기 후보 쌍 {n_sp} · 모든 칸 비트 = 기준 '
+            f'(_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 {len(_CHUNK_CFGS)})', not diffs, f'{diffs[:2]}')
+    chk('PEQ 픽스처 수 = 9 (긴 선분 무작위 셋 · 조각 경계 · 빈 결과 · 끊긴 조각 · 나란한 접촉 · 자기 접촉 · 점 선분 + 중점 겹침)', nfx == 9,
+        f'{nfx}')
+
+
+PB_VOX, PB_BOX, PB_N = 0.15, 6.0, (40, 40, 40)
+PB_KW = dict(r_f_um=0.075, tol_ff_um=0.05, L_par_um=0.3, r_port_um=0.3, gap_tol=2.0)
+
+
+def _prod_bed(seed, sdcp=False):
+    """생산 단위 무작위 침대 (vox 0.15 · r_f 0.075 · 6 µm 상자) — VGCF 걸음 섬유 30 + 긴 두 점 섬유 3 (4 µm) + PTFE 경로 하나 (+ SDCP 점) ·
+    off 격자 (PTFE 행 뺀 스탬프 = S0 접합 원장 격자) → (sid, 입력 행)."""
+    vg = _raw_rows(_walk(seed, 30, 40, 0.06, PB_BOX, n_long=3, long_len=4.0, clip=True))
+    pt = _raw_rows([np.column_stack([np.linspace(0.3, 5.7, 60), np.full(60, 3.0), np.full(60, 3.0)])], phase=4, fid0=5000)
+    parts = [vg, pt]
+    if sdcp:
+        s = np.random.default_rng(seed + 1).uniform(0.3, PB_BOX - 0.3, (80, 3))
+        parts.append((s, np.full(80, 5, np.int64), np.full(80, 100000, np.int64), np.zeros(80, np.int64)))
+    addr = cat_rows(*parts)
+    sid, _ = bed(addr, PB_N, stamp=addr[1] != 4, vox=PB_VOX)
+    return sid, addr
+
+
+def _reg_with(mod, sid, addr, vox, kw):
+    P, PH, F, K = addr
+    return quiet(mod.cjunc_registry, sid, (0.0, 0.0, 0.0), vox, P, PH, F, K, **reg_kw(kw))
+
+
+@case('PREG')
+def t_preg():
+    ref, why = _load_ref_cj()
+    if not chk(f'PREG 기준 모듈 (커밋 {REF_PAIR_COMMIT}) 을 읽었다', ref is not None, why):
+        return
+    hand = (('F1', rows(F1), F1_N), ('F6', rows(F6), F6_N), ('K3', rows(K3), K3_N), ('LP', rows(LP), LP_N),
+            ('KU', rows(KU), KU_N), ('XC', rows(XC), XC_N), ('RING', rows([RING]), RING_N))
+    for nm, addr, n in hand:
+        sid, _ = bed(addr, n)
+        kw = dict(r_f_um=RF, tol_ff_um=TOL, L_par_um=LPAR, r_port_um=RPORT, gap_tol=2.0, s_min_um=S_MIN)
+        want = _try(lambda sid=sid, addr=addr, kw=kw: _reg_with(ref, sid, addr, H, kw), None)
+        diffs = []
+        for cfg in _CHUNK_CFGS:
+            with _consts(CJ, cfg):
+                got = _try(lambda sid=sid, addr=addr, kw=kw: _reg_with(CJ, sid, addr, H, kw), None)
+            d = ['호출 실패'] if (want is None or got is None) else _deq(want, got)
+            if d:
+                diffs.append(f'{cfg}: {d[:3]}')
+        chk(f'PREG {nm} (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 {len(_CHUNK_CFGS)} · instance '
+            f'{None if want is None else len(want["instances"]["fi"])}', not diffs, f'{diffs[:2]}')
+    for nm, seed, sdcp in (('생산 단위 무작위 (긴 선분 · PTFE)', 21, False), ('생산 단위 무작위 (긴 선분 · PTFE · SDCP)', 33, True)):
+        sid, addr = _prod_bed(seed, sdcp=sdcp)
+        for smin in (None, 0.3):
+            kw = dict(PB_KW, s_min_um=smin)
+            want = _try(lambda sid=sid, addr=addr, kw=kw: _reg_with(ref, sid, addr, PB_VOX, kw), None)
+            diffs = []
+            for cfg in (None, (7, 2, 13)):
+                with _consts(CJ, cfg):
+                    got = _try(lambda sid=sid, addr=addr, kw=kw: _reg_with(CJ, sid, addr, PB_VOX, kw), None)
+                d = ['호출 실패'] if (want is None or got is None) else _deq(want, got)
+                if d:
+                    diffs.append(f'{cfg}: {d[:3]}')
+            I = None if want is None else want['instances']
+            chk(f'PREG {nm} · s_min {smin} — 원장 전체 (지문 포함) 비트 = 기준 (덩어리 기본 · (7,2,13)) · 선분 '
+                f'{None if want is None else len(want["segments"]["P0"])} · instance {None if I is None else len(I["fi"])} '
+                f'(자기 {None if I is None else int(np.sum(I["self"]))}) · 간선 {None if want is None else len(want["subedges"]["inst"])}',
+                not diffs, f'{diffs[:2]}')
+
+
+@case('PS0')
+def t_ps0():
+    import ca_s0_census as S0
+    ref, why = _load_ref_cj()
+    if not chk(f'PS0 기준 모듈 (커밋 {REF_PAIR_COMMIT}) 을 읽었다', ref is not None, why):
+        return
+    thr = dict(tol_ff=0.05, L_par=0.3, r_port=0.3, tol_P=0.05, tol_sj=0.05, r_ptfe=0.124, r_sdcp=0.15)
+    for nm, seed, sdcp in (('SBE 꼴 (PTFE · SDCP 없음)', 21, False), ('DBE 꼴 (PTFE · SDCP)', 33, True)):
+        sid, addr = _prod_bed(seed, sdcp=sdcp)
+        kw = {'box_lo': (0.0, 0.0, 0.0), 'vox': PB_VOX, 'add_pts': addr[0], 'add_phase': addr[1], 'add_fid': addr[2],
+              'add_kind': addr[3], 'fid_gap_tol': 2.0}
+        old_cj = S0.cj
+        S0.cj = ref
+        try:
+            want = _try(lambda kw=kw, sid=sid: S0.junction_census(kw, sid, **thr), None)
+        finally:
+            S0.cj = old_cj
+        diffs = []
+        for cfg in (None, (7, 2, 13)):
+            with _consts(CJ, cfg):
+                got = _try(lambda kw=kw, sid=sid: S0.junction_census(kw, sid, **thr), None)
+            d = ['호출 실패'] if (want is None or got is None) else _deq(want, got)
+            if d:
+                diffs.append(f'{cfg}: {d[:3]}')
+        chk(f'PS0 {nm} — S0 접합 census 보고 블록 · 후보별 배열 비트 = 기준 (`S0.cj` = 기준 모듈) · 덩어리 기본 · (7,2,13) · instance '
+            f'{None if want is None else want[0]["n_instances"]}', not diffs, f'{diffs[:2]}')
+
+
+#  PEDGE — 옛 판 반지름 경계의 반올림 칼날 (★ 11-06 · 구현 뒤 변이 도구를 만들다 찾음 · 고치기 전 판에서 실패를 따로 기록): 길이가 가장 긴 두
+#  선분이 한 줄로 끝-끝 (틈 = D 를 float 으로 더한 값) — 선분 거리 0.19999999999999996 ≤ D (계약상 참 쌍) 인데 중점 거리 1.3000000000000003 >
+#  옛 반지름 2·max(반 길이) + D = 1.3 → 옛 판은 쌍을 놓친다 (instance 0 · 자기 계약 위반) · 새 판 = 여유 (상대 1e-9) 로 찾는다 (instance 1).
+#  "과학 값 비트 같음" 의 선언된 예외 꼴 (옛 판이 참 쌍을 놓친 자리에서만 새 판이 하나 더 낸다).
+EDGE_X0, EDGE_L = 0.3, 1.1
+EDGE = [[(EDGE_X0, 0.0, 0.0), (EDGE_X0 + EDGE_L, 0.0, 0.0)],
+        [(EDGE_X0 + EDGE_L + PD, 0.0, 0.0), (EDGE_X0 + 2 * EDGE_L + PD, 0.0, 0.0)]]
+
+
+def _edge_ok(mod, segs):
+    """새 판이 칼날 쌍을 찾는가 (PEDGE · PMUT 공용) → (참 쌍 = {(0, 1)}, instance 하나, 후보에 (0, 1))."""
+    truth = _truth_pairs(segs, PD)
+    inst = mod._distinct_instances(segs, PD, PT)
+    pr = mod._near_seg_pairs(segs['P0'], segs['P1'], PD)
+    return truth == {(0, 1)}, len(inst['fi']) == 1, (0, 1) in set(map(tuple, pr.tolist()))
+
+
+@case('PEDGE')
+def t_pedge():
+    ref, why = _load_ref_cj()
+    if not chk(f'PEDGE 기준 모듈 (커밋 {REF_PAIR_COMMIT}) 을 읽었다', ref is not None, why):
+        return
+    segs = _pseg(EDGE)[0]
+    P0, P1 = segs['P0'], segs['P1']
+    d = float(CJ.seg_seg_closest(P0[:1], P1[:1], P0[1:], P1[1:])[0][0])
+    mid = 0.5 * (P0 + P1)
+    rad = 2.0 * float((0.5 * np.linalg.norm(P1 - P0, axis=1)).max()) + PD
+    md = float(np.linalg.norm(mid[0] - mid[1]))
+    old = _try(lambda: ref._distinct_instances(segs, PD, PT), None)
+    chk(f'PEDGE 칼날 꼴 성립 — 선분 거리 {d!r} ≤ D · 중점 거리 {md!r} > 옛 반지름 {rad!r} → 기준 (고치기 전) 판 instance 0 (참 쌍을 놓침 = 옛 결함 · '
+        '선언된 예외)', d <= PD and md > rad and old is not None and len(old['fi']) == 0, f'{None if old is None else len(old["fi"])}')
+    r = _try(lambda: _edge_ok(CJ, segs), None)
+    chk('PEDGE 새 판 — 참 쌍 {(0, 1)} 을 후보에 담고 instance 하나를 낸다 (계약 d ≤ D 그대로 · 반올림 여유)', r is not None and all(r), f'{r}')
+
+
+TIE_A = [(-2.0, 0.0, 2.0), (0.0, 0.0, 0.0), (1.0, 0.0, 1.0)]
+TIE_B = [(-1.0, 0.5, -0.1), (1.0, 0.5, -0.1), (1.0, 0.5, -5.0), (1.0, -0.5, -5.0), (1.0, -0.5, -0.1), (-1.0, -0.5, -0.1)]
+TIE_D, TIE_T = 0.6, 0.4       # A 의 꼭짓점 V = (0,0,0) 이 B 의 두 팔 (y ±0.5 · z −0.1 · 떨어진 선분 번호) 모두의 최근접점 → 두 instance 의 접점 비트 같음
+
+
+def _tie_segs():
+    return _pseg([TIE_A, TIE_B], gap_tol=100.0)[0]
+
+
+def _tie_key(inst):
+    return [(int(inst['si_min'][q]), int(inst['sj_min'][q])) for q in range(len(inst['fi']))]
+
+
+def _tie_ok(mod, segs):
+    """정준 동률 검사 (PTIE · PMUT 공용) → (정준 순서 · 동률 실재, 후보 섞음 불변, 기록)."""
+    inst = mod._distinct_instances(segs, TIE_D, TIE_T)
+    Ci = np.asarray(inst['Ci'])
+    tied = (len(inst['fi']) == 2 and Ci[0].tobytes() == Ci[1].tobytes() and int(inst['piece_i'][0]) == int(inst['piece_i'][1])
+            and int(inst['piece_j'][0]) == int(inst['piece_j'][1]))
+    canon = tied and _tie_key(inst) == sorted(_tie_key(inst))
+    pr = mod._near_seg_pairs(segs['P0'], segs['P1'], TIE_D)
+    perms = [pr[::-1].copy()] + [pr[np.random.default_rng(s).permutation(len(pr))].copy() for s in (1, 2, 3)]
+    inv = all(not _deq(inst, mod._distinct_from_pairs(segs, q, TIE_D, TIE_T)) for q in perms)
+    return canon, inv, (_tie_key(inst), Ci.tolist(), len(pr))
+
+
+@case('PTIE')
+def t_ptie():
+    import scipy.spatial as SPS
+    ref, why = _load_ref_cj()
+    if not chk(f'PTIE 기준 모듈 (커밋 {REF_PAIR_COMMIT}) 을 읽었다', ref is not None, why):
+        return
+    segs = _tie_segs()
+    r = _try(lambda: _tie_ok(CJ, segs), None)
+    chk('PTIE 새 판 — 같은 조각 쌍 · 같은 접점 (V · 비트) 두 instance = (최근접 쌍 선분 i, j) 오름차순 (정준)',
+        r is not None and r[0], f'{None if r is None else r[2]}')
+    chk('PTIE 새 판 — 후보 쌍 순서 (뒤집음 · 무작위 섞음 3) 를 바꿔 `_distinct_from_pairs` 에 넣어도 모든 칸 비트 같음',
+        r is not None and r[1], f'{None if r is None else r[2]}')
+    real = SPS.cKDTree
+
+    class _W:
+        def __init__(self, t, seed):
+            self._t, self._s = t, seed
+
+        def __getattr__(self, k):
+            return getattr(self._t, k)
+
+        def query_pairs(self, *a, **k):
+            out = self._t.query_pairs(*a, **k)
+            if self._s == 'rev':
+                return out[::-1].copy()
+            return out[np.random.default_rng(self._s).permutation(len(out))].copy()
+    base = _try(lambda: ref._distinct_instances(segs, TIE_D, TIE_T), None)
+    orders = set()
+    for s in ('rev', 1, 2, 3, 4, 5):
+        SPS.cKDTree = lambda *a, s=s, **k: _W(real(*a, **k), s)
+        try:
+            o = _try(lambda: ref._distinct_instances(segs, TIE_D, TIE_T), None)
+        finally:
+            SPS.cKDTree = real
+        if o is not None:
+            orders.add(tuple(_tie_key(o)))
+    chk('PTIE 기준 판 (고치기 전) — 같은 입력인데 후보 나열 순서 (query_pairs 출력 순서) 에 따라 동률 두 instance 의 순서가 바뀐다 (옛 판의 순서 '
+        '의존 = 실측 · 새 판이 정준으로 고친 자리)', base is not None and len(orders | {tuple(_tie_key(base))}) == 2,
+        f'{orders} · 기준 {None if base is None else _tie_key(base)}')
+    new = _try(lambda: CJ._distinct_instances(segs, TIE_D, TIE_T), None)
+    same = False
+    if base is not None and new is not None and len(base['fi']) == len(new['fi']) == 2:
+        kb, kn = _tie_key(base), _tie_key(new)
+        same = sorted(kb) == sorted(kn)
+        for q, kq in enumerate(kn):
+            p = kb.index(kq) if kq in kb else -1
+            if p < 0 or list(base) != list(new):
+                same = False
+                continue
+            for k in base:
+                if _deq(base[k][p], new[k][q]):                # 배열 칸 = 그 행 · 목록 칸 (seg_i · seg_j) = 그 원소
+                    same = False
+    chk('PTIE 두 판의 instance 집합은 같다 — (최근접 쌍 선분) 으로 짝지으면 instance 마다 모든 칸 비트 같음 (바뀐 것 = 동률의 순서만)', same,
+        f'{None if base is None else _tie_key(base)} · {None if new is None else _tie_key(new)}')
+
+
+@case('PMEM')
+def t_pmem():
+    from scipy.spatial import cKDTree
+    segs, _ = _pseg(_walk(5, 120, 60, 0.06, 8.0, n_long=4, long_len=6.0))
+    P0, P1 = segs['P0'], segs['P1']
+    ns = len(P0)
+    half = 0.5 * np.linalg.norm(P1 - P0, axis=1)
+    rad = 2.0 * float(half.max()) + PD
+    t = cKDTree(0.5 * (P0 + P1))
+    n_old = (int(t.count_neighbors(t, rad)) - ns) // 2
+    pr = _try(lambda: CJ._near_seg_pairs(P0, P1, PD, tag='pmem'), None)
+    rec = (getattr(CJ, '_PAIR_SEARCH_LAST', {}) or {}).get('pmem') or {}
+    n_new = None if pr is None else len(pr)
+    chk(f'PMEM 후보 수 — 선분 {ns} · 옛 반지름 2·max(반 길이) + D = {rad:.4f} µm 의 후보 {n_old} 쌍 (count_neighbors 정확 셈 · 저장 없음) ≥ '
+        f'20 × 새 후보 {n_new} (반지름 {rec.get("radius_um")} µm · L0 {rec.get("L0_um")} · 조각 {rec.get("n_subpieces")})',
+        n_new is not None and n_old >= 20 * max(1, n_new), f'{n_old} · {n_new}')
+    segs2, _ = _pseg(_walk(3, 40, 14, 0.07, 4.0, n_long=3, long_len=3.0))
+    calls = []
+    real = CJ.seg_seg_closest
+
+    def spy(*a):
+        calls.append(len(np.asarray(a[0]).reshape(-1, 3)))
+        return real(*a)
+    inst = None
+    with _consts(CJ, (50, 60, 200)):
+        CJ.seg_seg_closest = spy
+        try:
+            inst = _try(lambda: CJ._distinct_instances(segs2, PD, PT), None)
+            _try(lambda: CJ._self_pairs(segs2, PD, None), None)
+        finally:
+            CJ.seg_seg_closest = real
+    one = max([2 * len(a) * len(b) for a, b in zip(inst['seg_i'], inst['seg_j'])] or [0]) if inst is not None else 0
+    bound = max(50, 60, one)
+    chk(f'PMEM 판정 덩어리 — `_distinct_instances` · `_self_pairs` 의 seg_seg_closest 한 번 행 수 ≤ max(덩어리 50 · 묶음 60 · instance 하나 '
+        f'{one}) = {bound} · 호출 여러 번 (호출 {len(calls)} · 최대 {max(calls) if calls else None})',
+        bool(calls) and max(calls) <= bound and len(calls) > 2, f'{sorted(calls)[-5:]}')
+    with _consts(CJ, (None, None, 200)):
+        _try(lambda: CJ._near_seg_pairs(segs2['P0'], segs2['P1'], PD, tag='pmem2'), None)
+    r2 = (getattr(CJ, '_PAIR_SEARCH_LAST', {}) or {}).get('pmem2') or {}
+    chk(f'PMEM 질의 덩어리 — 한 덩어리의 조각 쌍 행 수 ≤ max(상한 200 · 점 하나의 이웃 수) · 덩어리 여러 개 (기록 {r2})',
+        bool(r2) and r2.get('max_chunk_entries', 1 << 60) <= max(200, r2.get('max_point_entries', 0)) and r2.get('n_chunks', 0) > 1,
+        f'{r2}')
+
+
+_PMUT = (
+    ('반지름 = D 만 (조각 길이 항 없음)', 'r = (2.0 * float(hs.max()) + float(D))', 'r = (0.0 * float(hs.max()) + float(D))'),
+    ('조각 반 길이 반 (반지름이 작다)', 'hs = 0.5 * sl[par] / nsub[par]', 'hs = 0.25 * sl[par] / nsub[par]'),
+    ('조각 중점 → 조각 시작점', 'u = (kk + 0.5) / nsub[par]', 'u = kk / nsub[par]'),
+    ('판정 마지막 덩어리 버림', 'for c0 in range(0, len(pr), ch):', 'for c0 in range(0, (len(pr) // ch) * ch, ch):'),
+    ('동률 키 뺌 (옛 순서)', "o = np.lexsort((np.array(out['sj_min'], np.int64), np.array(out['si_min'], np.int64), ", 'o = np.lexsort(('),
+    ('반올림 여유 0 (옛 반지름과 같은 칼날)', 'r = (2.0 * float(hs.max()) + float(D)) * (1.0 + 1.0e-9) + 1.0e-12 * (1.0 + span)',
+     'r = (2.0 * float(hs.max()) + float(D)) * 1.0'),
+)
+
+
+def _pmut_module(old, new, tmpd, tag):
+    src = open(os.path.join(SCRIPTS, 'carbon_junction.py'), encoding='utf-8').read()
+    if src.count(old) != 1:
+        return None, f'변이 대상 문자열 {old!r} 이 carbon_junction.py 에 {src.count(old)} 번 (1 번이어야)'
+    p = os.path.join(tmpd, f'carbon_junction_pmut_{tag}.py')
+    with open(p, 'w', encoding='utf-8') as fh:
+        fh.write(src.replace(old, new))
+    spec = importlib.util.spec_from_file_location(f'carbon_junction_pmut_{tag}', p)
+    m = importlib.util.module_from_spec(spec)
+    quiet(spec.loader.exec_module, m)
+    return m, ''
+
+
+def _pmut_probe(mod, wants, fx_segs, tie_segs, edge_segs):
+    """변이 판별 — PEQ 꼴 (덩어리 (7,2,13)) 대조 + PTIE 정준 · 섞음 불변 + PEDGE 칼날 쌍.  wants = 기준 모듈의 PEQ 꼴 값 (픽스처마다).
+    → 통과 여부 (True = 모두 같음)."""
+    for want, segs in zip(wants, fx_segs):
+        if _deq(want, _peq_run(mod, segs, (7, 2, 13))):
+            return False
+    canon, inv, _ = _tie_ok(mod, tie_segs)
+    return bool(canon and inv and all(_edge_ok(mod, edge_segs)))
+
+
+@case('PMUT')
+def t_pmut():
+    ref, why = _load_ref_cj()
+    if not chk(f'PMUT 기준 모듈 (커밋 {REF_PAIR_COMMIT}) 을 읽었다', ref is not None, why):
+        return
+    fx_segs = [_pseg(p, g)[0] for _, p, g in _peq_fixtures()]
+    wants = [_peq_run(ref, s, None) for s in fx_segs]
+    tie_segs = _tie_segs()
+    edge_segs = _pseg(EDGE)[0]
+    _TRY_EXC[0] = 0
+    base = _try(lambda: _pmut_probe(CJ, wants, fx_segs, tie_segs, edge_segs), False)
+    chk('PMUT 변이 전 (지금 판) — 판별 탐침 통과 (PEQ 꼴 대조 · PTIE · PEDGE) · 예외 없음', base is True and _TRY_EXC[0] == 0,
+        f'{base} · 예외 {_TRY_EXC[0]}')
+    tmpd = tempfile.mkdtemp(prefix='pmut_')
+    try:
+        for x, (nm, old, new) in enumerate(_PMUT):
+            mut, why = _pmut_module(old, new, tmpd, x)
+            caught, exc = None, 0
+            if mut is not None:
+                _TRY_EXC[0] = 0
+                ok = _try(lambda mut=mut: _pmut_probe(mut, wants, fx_segs, tie_segs, edge_segs), None)
+                exc = _TRY_EXC[0]
+                caught = (ok is False) and exc == 0
+            chk(f'PMUT {nm} — 변이 사본이 값 대조에 걸린다 (변이 안 예외 = 하네스 실패)', caught is True and base is True,
+                f'{why or ""} caught {caught} 예외 {exc}')
+    finally:
+        shutil.rmtree(tmpd, ignore_errors=True)
 
 
 def main():

@@ -1,0 +1,4 @@
+cmd=python3 scripts/check_review_findings.py
+elapsed_s=25.5
+max_rss_kb=34276
+rc=0

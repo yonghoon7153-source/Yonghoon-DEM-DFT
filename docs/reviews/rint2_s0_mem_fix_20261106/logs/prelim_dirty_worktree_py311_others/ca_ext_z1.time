@@ -1,0 +1,4 @@
+cmd=python3 scripts/test_ca_ext_z1.py
+elapsed_s=28.7
+max_rss_kb=106248
+rc=0

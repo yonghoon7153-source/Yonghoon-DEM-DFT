@@ -1,0 +1,4 @@
+cmd=python3 scripts/check_review_findings.py --ban-sweep
+elapsed_s=926.2
+max_rss_kb=48132
+rc=0

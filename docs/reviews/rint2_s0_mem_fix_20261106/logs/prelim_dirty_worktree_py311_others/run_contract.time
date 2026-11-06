@@ -1,0 +1,4 @@
+cmd=python3 scripts/run_contract.py --selftest
+elapsed_s=0.6
+max_rss_kb=72176
+rc=0

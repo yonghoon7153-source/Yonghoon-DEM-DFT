@@ -1,0 +1,212 @@
+{
+ "target_sha256_before": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+ "mutants": [
+  {
+   "tag": "M1_radius_D_only",
+   "name": "반지름 = D 만 (조각 길이 항 없음)",
+   "target_count": 1,
+   "mutant_sha256": "744a5898ce26910567916312cfe786b54c3336e632e25058607b3570488d1e88",
+   "carbon_junction": {
+    "rc": 1,
+    "n_fail_lines": 23,
+    "fails": [
+     "PSRCH 후보 = brute force 참 쌍의 상위집합 · int64 (m, 2) · i < j · 정준 순서 · 유일 · 질의 덩어리와 무관 (픽스처 9 × L0 5 × 덩어리 4 = 호출 180 · 참 쌍 21414 · 후보 (L0 마다 한 번 셈) 83041)",
+     "PEQ 긴 선분 섞인 무작위 A — 선분 523 · instance 6 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)  ([\"덩어",
+     "PEQ 긴 선분 섞인 무작위 B — 선분 952 · instance 19 · 자기 후보 쌍 1240 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)  (",
+     "PEQ 긴 선분 섞인 촘촘한 무작위 C — 선분 2072 · instance 205 · 자기 후보 쌍 18 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4",
+     "PEQ 조각 경계 · 거리 정확히 D · 바로 밖 — 선분 11 · instance 25 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정",
+     "PEQ 같은 fid 끊긴 조각 (틈 0.12 > 2 × 중앙값) — 선분 39 · instance 3 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all ×",
+     "PEQ 나란한 접촉 (띠 동률) — 선분 58 · instance 1 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)  ([\"덩어리",
+     "PEQ 자기 접촉 (U · 납작한 고리) — 선분 82 · instance 0 · 자기 후보 쌍 210 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4) ",
+     "PREG F1 (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 1  ([\"None: ['$.instances.Lc: 배열 바이트 다름 float64 (1,)', '$.instances.seg_i[0]: 배열 int64 (",
+     "PREG F6 (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 2  ([\"None: ['$.instances.fi: 배열 int64 (2,) ≠ int64 (1,)', '$.instances.fj: 배열 int64 (2,",
+     "PREG K3 (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 3  ([\"None: ['$.instances.seg_i[0]: 배열 int64 (10,) ≠ int64 (8,)', '$.instances.seg_i[1]:",
+     "PREG LP (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 1  ([\"None: ['$.instances.Lc: 배열 바이트 다름 float64 (1,)', '$.instances.seg_i[0]: 배열 int64 ("
+    ],
+    "summary": "== test_carbon_junction: 24/47 PASS"
+   },
+   "ca_s0_census": {
+    "rc": 0,
+    "n_fail_lines": 0,
+    "fails": [],
+    "summary": "186 PASS · 0 FAIL"
+   },
+   "caught": true
+  },
+  {
+   "tag": "M2_half_len_half",
+   "name": "조각 반 길이 반",
+   "target_count": 1,
+   "mutant_sha256": "3f89b23612a24837c978769a317db84a3b8a4d6e50639a45758c1dcfce49545e",
+   "carbon_junction": {
+    "rc": 1,
+    "n_fail_lines": 4,
+    "fails": [
+     "PSRCH 후보 = brute force 참 쌍의 상위집합 · int64 (m, 2) · i < j · 정준 순서 · 유일 · 질의 덩어리와 무관 (픽스처 9 × L0 5 × 덩어리 4 = 호출 180 · 참 쌍 21414 · 후보 (L0 마다 한 번 셈) 337437",
+     "PEQ 긴 선분 섞인 무작위 A — 선분 523 · instance 6 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)  ([\"덩어",
+     "PREG KU (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 1  ([\"None: ['$.instances.seg_i[0]: 배열 int64 (13,) ≠ int64 (12,)', '$.instances.pair_i[0",
+     "PEDGE 새 판 — 참 쌍 {(0, 1)} 을 후보에 담고 instance 하나를 낸다 (계약 d ≤ D 그대로 · 반올림 여유)  ((True, False, False))"
+    ],
+    "summary": "== test_carbon_junction: 43/47 PASS"
+   },
+   "ca_s0_census": {
+    "rc": 1,
+    "n_fail_lines": 5,
+    "fails": [
+     "M5 새 판 — 같은 두 꼴을 찾는다 (쌍 0 · 거리 inf · 계약 그대로 · 반올림 여유)  ({'dd': 0.375, 'rq': 0.375, 'old_pairs': 0, 'new_pairs': 0, 'old_md': inf, 'new_md': inf})",
+     "M4 변이 전 (지금 판) — 판별 탐침 통과 (M1 · M2 꼴 대조 · M5 칼날) · 예외 없음",
+     "M4 변이 반지름에서 조각 반 길이 항 뺌 — 값 대조에 걸린다 (변이 안 예외 = 하네스 실패)",
+     "M4 변이 반지름 반 — 값 대조에 걸린다 (변이 안 예외 = 하네스 실패)",
+     "M4 변이 반올림 여유 0 (옛 반지름과 같은 칼날) — 값 대조에 걸린다 (변이 안 예외 = 하네스 실패)"
+    ],
+    "summary": "181 PASS · 5 FAIL"
+   },
+   "caught": true
+  },
+  {
+   "tag": "M3_mid_at_start",
+   "name": "조각 중점 → 조각 시작점",
+   "target_count": 1,
+   "mutant_sha256": "13ce25e5941d3dc436fe2eef30afbcb6c5b080af839260f3410bde855704d168",
+   "carbon_junction": {
+    "rc": 1,
+    "n_fail_lines": 3,
+    "fails": [
+     "PSRCH 후보 = brute force 참 쌍의 상위집합 · int64 (m, 2) · i < j · 정준 순서 · 유일 · 질의 덩어리와 무관 (픽스처 9 × L0 5 × 덩어리 4 = 호출 180 · 참 쌍 21414 · 후보 (L0 마다 한 번 셈) 987536",
+     "PEQ 자기 접촉 (U · 납작한 고리) — 선분 82 · instance 0 · 자기 후보 쌍 210 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4) ",
+     "PREG KU (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 1  (['None: [\\'$.instances.pair_i[0]: 배열 int64 (79,) ≠ int64 (70,)\\', \\'$.instances.pair"
+    ],
+    "summary": "== test_carbon_junction: 44/47 PASS"
+   },
+   "ca_s0_census": {
+    "rc": 1,
+    "n_fail_lines": 5,
+    "fails": [
+     "M5 새 판 — 같은 두 꼴을 찾는다 (쌍 0 · 거리 inf · 계약 그대로 · 반올림 여유)  ({'dd': 0.375, 'rq': 0.375, 'old_pairs': 0, 'new_pairs': 0, 'old_md': inf, 'new_md': inf})",
+     "M4 변이 전 (지금 판) — 판별 탐침 통과 (M1 · M2 꼴 대조 · M5 칼날) · 예외 없음",
+     "M4 변이 반지름에서 조각 반 길이 항 뺌 — 값 대조에 걸린다 (변이 안 예외 = 하네스 실패)",
+     "M4 변이 반지름 반 — 값 대조에 걸린다 (변이 안 예외 = 하네스 실패)",
+     "M4 변이 반올림 여유 0 (옛 반지름과 같은 칼날) — 값 대조에 걸린다 (변이 안 예외 = 하네스 실패)"
+    ],
+    "summary": "181 PASS · 5 FAIL"
+   },
+   "caught": true
+  },
+  {
+   "tag": "M4_drop_last_chunk",
+   "name": "판정 마지막 덩어리 버림",
+   "target_count": 1,
+   "mutant_sha256": "2c9ab398aaf2b1a365d9bda680a61779ef6adf85e4ea6b04ade6450a273558c9",
+   "carbon_junction": {
+    "rc": 1,
+    "n_fail_lines": 23,
+    "fails": [
+     "PEQ 긴 선분 섞인 무작위 A — 선분 523 · instance 6 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)  ([\"덩어",
+     "PEQ 긴 선분 섞인 무작위 B — 선분 952 · instance 19 · 자기 후보 쌍 1240 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)  (",
+     "PEQ 긴 선분 섞인 촘촘한 무작위 C — 선분 2072 · instance 205 · 자기 후보 쌍 18 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4",
+     "PEQ 조각 경계 · 거리 정확히 D · 바로 밖 — 선분 11 · instance 25 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정",
+     "PEQ 같은 fid 끊긴 조각 (틈 0.12 > 2 × 중앙값) — 선분 39 · instance 3 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all ×",
+     "PEQ 나란한 접촉 (띠 동률) — 선분 58 · instance 1 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)  ([\"덩어리",
+     "PEQ 자기 접촉 (U · 납작한 고리) — 선분 82 · instance 0 · 자기 후보 쌍 210 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4) ",
+     "PEQ 점 선분 · 중점 겹침 (거리 0) — 선분 4 · instance 6 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)  (",
+     "PREG F1 (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 1  ([\"None: ['$.instances.fi: 배열 int64 (1,) ≠ int64 (0,)', '$.instances.fj: 배열 int64 (1,",
+     "PREG F6 (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 2  ([\"None: ['$.instances.fi: 배열 int64 (2,) ≠ int64 (0,)', '$.instances.fj: 배열 int64 (2,",
+     "PREG K3 (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 3  ([\"None: ['$.instances.fi: 배열 int64 (3,) ≠ int64 (0,)', '$.instances.fj: 배열 int64 (3,",
+     "PREG LP (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 1  ([\"None: ['$.instances.fi: 배열 int64 (1,) ≠ int64 (0,)', '$.instances.fj: 배열 int64 (1,"
+    ],
+    "summary": "== test_carbon_junction: 24/47 PASS"
+   },
+   "ca_s0_census": {
+    "rc": 1,
+    "n_fail_lines": 9,
+    "fails": [
+     "E7n 단계 2 접합 census (원장 · 같은 함수 · off 격자) — VV 1 · L_c = 2√(0.15² − 0.1²) = 0.223607 · 배율 1 · 긴 접촉 0 · 자기 후보 0 · SDCP 근접 0  ({'function': 'carbon_junct",
+     "R3 손계산 — 나란한 두 섬유 (중심 간격 0.12 · 겹침 1.0 µm) → VV instance 1 · L_c = 1 + 2√(0.15² − 0.12²) = 1.180000 · 배율 L_c / 0.30 · 긴 접촉  ([])",
+     "R4 손계산 — U 자 섬유 (KU × 0.15) → 자기 후보 1 · s = 0.15 (4 + √9.04) = 1.050999 · 자기 L_c = 중심선 닿음 0.531594962 (★ 10-21 · 옛 셀 조각 0.45) · 배율 L_c/0.30 · 거르지 않음 (",
+     "R5 후보별 목록 — 긴 접촉 2 (distinct 1 · self 1) · 배율 합 = 5.705317 · 배율 > 1 수 2 · npz 키 (후보마다 L_c · 배율 · s)  ({'n_long': 0, 'n_long_distinct': 0, 'n_long_self",
+     "R7 원장 입력 = 잡은 첨가제 입력 전부 (PTFE 행 포함 · P-junc 덮임) — 접촉선 위 0.2 µm PTFE → 그 instance 만 덮임 (n_ptfe_cov 1 · 자기 후보는 아님)  (입력 점 130 ↔ 130 · n_ptfe_cov 0)",
+     "R8 포트 동률 수 (간선 단위) — T1-11 꼴 쌍의 A 접점 (셀 경계 · ε 띠) = 1 (고리 · 나란한 쌍 등분 간선은 동률 없음)  ((0, 0))",
+     "R8 긴 접촉 · 분산 간선 — 나란한 쌍 긴 instance (L_c 1.9800 · k 7) · 자기 후보 1 (k_s ≥ 1) · 간선 = 7 + 1 + k_s · 긴 접촉 간선 = 7 + (자기가 길면 k_s)  ({'n': 0, 'n_long': 0, 'n_p",
+     "R8 간선별 PTFE 덮임 — 덮인 간선 1 (첫 등분점) · 부분 덮임 instance 1 · instance 대표점 덮임 1 (옛 칸 그대로)  ({'n': 0, 'n_long': 0, 'n_ptfe_cov': 0, 'n_instances_ptfe_partial':",
+     "R8 npz — 간선별 배열 (instance 번호 · PTFE 덮임 · SDCP 근접 · 실현) · S0-2 σ · 전류 · 소산 칸 없음  (['Lc', 'a_sdcp', 'cp', 'd0', 'fi', 'fj', 'is_self', 'long', 'mult', '"
+    ],
+    "summary": "177 PASS · 9 FAIL"
+   },
+   "caught": true
+  },
+  {
+   "tag": "M5_no_tie_keys",
+   "name": "동률 키 뺌 (옛 순서)",
+   "target_count": 1,
+   "mutant_sha256": "d0248509d909036cd96c671b8de821fcb4896a998361138689e1fbbeba75889a",
+   "carbon_junction": {
+    "rc": 1,
+    "n_fail_lines": 1,
+    "fails": [
+     "PTIE 새 판 — 후보 쌍 순서 (뒤집음 · 무작위 섞음 3) 를 바꿔 `_distinct_from_pairs` 에 넣어도 모든 칸 비트 같음  (([(0, 2), (0, 6)], [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]], 17))"
+    ],
+    "summary": "== test_carbon_junction: 46/47 PASS"
+   },
+   "ca_s0_census": {
+    "rc": 0,
+    "n_fail_lines": 0,
+    "fails": [],
+    "summary": "186 PASS · 0 FAIL"
+   },
+   "caught": true
+  },
+  {
+   "tag": "M6_no_margin",
+   "name": "반올림 여유 0 (경계 칼날)",
+   "target_count": 1,
+   "mutant_sha256": "50cdf21fe60b70788e8d8d962fa97b62653dbc0a2fba309aed8f28999d066722",
+   "carbon_junction": {
+    "rc": 1,
+    "n_fail_lines": 1,
+    "fails": [
+     "PEDGE 새 판 — 참 쌍 {(0, 1)} 을 후보에 담고 instance 하나를 낸다 (계약 d ≤ D 그대로 · 반올림 여유)  ((True, False, False))"
+    ],
+    "summary": "== test_carbon_junction: 46/47 PASS"
+   },
+   "ca_s0_census": {
+    "rc": 0,
+    "n_fail_lines": 0,
+    "fails": [],
+    "summary": "186 PASS · 0 FAIL"
+   },
+   "caught": true
+  },
+  {
+   "tag": "M7_ball_no_half",
+   "name": "점 ↔ 선분 후보 반지름에서 조각 반 길이 항 뺌 (S0 쪽)",
+   "target_count": 1,
+   "mutant_sha256": "6dd13bfa9a71db9f16db45d672ddf0e81e59163f1378ebc20b5ffeee8a3230c7",
+   "carbon_junction": {
+    "rc": 0,
+    "n_fail_lines": 0,
+    "fails": [],
+    "summary": "== test_carbon_junction: 47/47 PASS"
+   },
+   "ca_s0_census": {
+    "rc": 1,
+    "n_fail_lines": 10,
+    "fails": [
+     "M1 fiber_sphere_instances AM 꼴 · tol 0 — 모든 칸 비트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · instance 133 · 쌍 127  (다른 덩어리 [None, 1, 7, 50])",
+     "M1 fiber_sphere_instances AM 꼴 · tol 0.05 — 모든 칸 비트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · instance 137 · 쌍 130  (다른 덩어리 [None, 1, 7, 50])",
+     "M1 fiber_sphere_instances 경계 (거리 정확히 R + r_f + tol · 바로 밖) · 이웃 없음 · 중점 위 (거리 0) · 꼭짓점 위 — 모든 칸 비트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · instance 3 · 쌍 3 ",
+     "M2 _min_dist_to_segments 긴 선분 섞인 경로 · 점 300 · cutoff 2.0 — 바이트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · 유한 300 / 300  (다른 덩어리 [None, 1, 7, 50])",
+     "M2 _min_dist_to_segments 같은 · cutoff 0.5 — 바이트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · 유한 93 / 300  (다른 덩어리 [None, 1, 7, 50])",
+     "M5 새 판 — 같은 두 꼴을 찾는다 (쌍 0 · 거리 inf · 계약 그대로 · 반올림 여유)  ({'dd': 0.375, 'rq': 0.375, 'old_pairs': 0, 'new_pairs': 0, 'old_md': inf, 'new_md': inf})",
+     "M4 변이 전 (지금 판) — 판별 탐침 통과 (M1 · M2 꼴 대조 · M5 칼날) · 예외 없음",
+     "M4 변이 반지름에서 조각 반 길이 항 뺌 — 값 대조에 걸린다 (변이 안 예외 = 하네스 실패)  (변이 대상 문자열 'r = (rq + float(hs.max()))' 이 carbon_junction.py 에 0 번 (1 번이어야))",
+     "M4 변이 반지름 반 — 값 대조에 걸린다 (변이 안 예외 = 하네스 실패)  (변이 대상 문자열 'r = (rq + float(hs.max()))' 이 carbon_junction.py 에 0 번 (1 번이어야))",
+     "M4 변이 반올림 여유 0 (옛 반지름과 같은 칼날) — 값 대조에 걸린다 (변이 안 예외 = 하네스 실패)  (변이 대상 문자열 'r = (rq + float(hs.max())) * (1.0 + 1.0e-9) + 1.0e-12 * (1.0 + span)' 이 carb"
+    ],
+    "summary": "176 PASS · 10 FAIL"
+   },
+   "caught": true
+  }
+ ],
+ "target_sha256_after": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+ "restored": true
+}

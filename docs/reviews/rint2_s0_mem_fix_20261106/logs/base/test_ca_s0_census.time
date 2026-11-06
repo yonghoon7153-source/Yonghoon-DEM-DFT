@@ -1,0 +1,4 @@
+cmd=python3 scripts/test_ca_s0_census.py
+elapsed_s=24.7
+max_rss_kb=1594060
+rc=0

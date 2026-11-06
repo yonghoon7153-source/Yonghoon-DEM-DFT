@@ -522,18 +522,15 @@ def vv_census(paths, r_f_um, tol_ff_um, L_par_um):
 
 def fiber_sphere_instances(paths, centers, radii, r_f_um, tol_um):
     """섬유 중심선 ↔ 구 중심 d ≤ R + r_f + tol (J2b) — (구, fid) 마다 선분 번호가 이어진 묶음 = instance 하나."""
-    from scipy.spatial import cKDTree
     sg = _segments(paths)
     C = np.asarray(centers, np.float64).reshape(-1, 3); R = np.asarray(radii, np.float64).reshape(-1)
     res = {'n_instances': 0, 'n_pairs': 0, 'gap_um': np.zeros(0), 'n_spheres_touching': 0, 'n_spheres_ge2_fibres': 0}
     if not len(sg['F']) or not len(C):
         return res
-    M = 0.5 * (sg['P0'] + sg['P1'])
-    h = 0.5 * sg['LEN']
-    tree = cKDTree(M)
-    lists = tree.query_ball_point(C, R + float(r_f_um) + float(tol_um) + float(h.max()))
-    kk = np.concatenate([np.full(len(x), q, np.int64) for q, x in enumerate(lists)]) if len(C) else np.zeros(0, int)
-    ss = np.concatenate([np.asarray(x, np.int64) for x in lists]) if len(C) else np.zeros(0, int)
+    #  ★ 11-06 (`SELF-155` 같은 꼴) — 옛 = query_ball_point(C, R + r_f + tol + max(선분 반 길이)) (가장 긴 선분 하나가 모든 구의 반지름을
+    #    키운다 · 단계 2 SDCP 구 116,532 개면 폭증 어림) → 후보 = 조각 중점 · 좁은 반지름 (`cj._ball_seg_candidates` · 상위집합 · (구, 선분)
+    #    정준 순) · 아래 판정 · 정렬 그대로 (출력 비트 같음 = 시험 M1)
+    kk, ss = cj._ball_seg_candidates(C, R + float(r_f_um) + float(tol_um), sg['P0'], sg['P1'], tag='s0_fiber_sphere')
     if not len(ss):
         return res
     dd = np.sqrt(_pt_seg_d2(C[kk], sg['P0'][ss], sg['P1'][ss]))
@@ -556,18 +553,15 @@ def fiber_sphere_instances(paths, centers, radii, r_f_um, tol_um):
 
 
 def _min_dist_to_segments(X, paths, cutoff):
-    """점 X ↔ 선분 집합 최소 거리 (cutoff + 반선분 안의 후보만 · 없으면 inf)."""
-    from scipy.spatial import cKDTree
+    """점 X ↔ 선분 집합 최소 거리 (cutoff 안의 선분을 다 담는 후보만 · 없으면 inf)."""
     X = np.asarray(X, np.float64).reshape(-1, 3)
     sg = _segments(paths)
     out = np.full(len(X), np.inf)
     if not len(X) or not len(sg['F']):
         return out
-    M = 0.5 * (sg['P0'] + sg['P1'])
-    tree = cKDTree(M)
-    lists = tree.query_ball_point(X, float(cutoff) + 0.5 * float(sg['LEN'].max()))
-    xi = np.concatenate([np.full(len(x), q, np.int64) for q, x in enumerate(lists)])
-    si = np.concatenate([np.asarray(x, np.int64) for x in lists])
+    #  ★ 11-06 (`SELF-155` 같은 꼴) — 옛 = query_ball_point(X, cutoff + max(선분 반 길이)) → 후보 = 조각 중점 · 좁은 반지름
+    #    (`cj._ball_seg_candidates` · 거리 ≤ cutoff 인 선분을 다 담는다) · 아래 최솟값 · cutoff 판정 그대로 (출력 바이트 같음 = 시험 M2)
+    xi, si = cj._ball_seg_candidates(X, float(cutoff), sg['P0'], sg['P1'], tag='s0_min_dist')
     if not len(si):
         return out
     d2 = _pt_seg_d2(X[xi], sg['P0'][si], sg['P1'][si])

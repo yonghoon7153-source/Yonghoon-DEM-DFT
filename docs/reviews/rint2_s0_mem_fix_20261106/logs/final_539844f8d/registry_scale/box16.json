@@ -1,0 +1,65 @@
+{
+ "box_um": 16.0,
+ "grid": [
+  107,
+  107,
+  107
+ ],
+ "n_vgcf_points": 37128,
+ "n_ptfe_points": 5300,
+ "n_segments": 36195,
+ "n_instances": 991,
+ "n_self": 15,
+ "n_subedges": 1198,
+ "n_faces": 170179,
+ "raster_s": 1.87,
+ "registry_s": 8.52,
+ "maxrss_before_kb": 85012,
+ "maxrss_after_kb": 163584,
+ "pair_search": {
+  "distinct": {
+   "tag": "distinct",
+   "n_segments": 36195,
+   "n_candidates": 188475,
+   "n_subpieces": 36328,
+   "L0_um": 0.2,
+   "radius_um": 0.40000000043290007,
+   "old_radius_um": 8.2,
+   "max_seg_len_um": 8.0,
+   "n_entries": 414052,
+   "n_chunks": 1,
+   "max_chunk_entries": 414052,
+   "max_point_entries": 44
+  },
+  "self": {
+   "tag": "self",
+   "n_segments": 36195,
+   "n_candidates": 188475,
+   "n_subpieces": 36328,
+   "L0_um": 0.2,
+   "radius_um": 0.40000000043290007,
+   "old_radius_um": 8.2,
+   "max_seg_len_um": 8.0,
+   "n_entries": 414052,
+   "n_chunks": 1,
+   "max_chunk_entries": 414052,
+   "max_point_entries": 44
+  }
+ },
+ "profile_top_carbon_junction": [
+  "        1    0.239    0.239    8.512    8.512 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a79fb5a8ec6b0a668/scripts/carbon_junction.py:701(cjunc_registry)",
+  "        1    0.231    0.231    3.363    3.363 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a79fb5a8ec6b0a668/scripts/carbon_junction.py:583(_positions)",
+  "    53486    0.868    0.000    2.093    0.000 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a79fb5a8ec6b0a668/scripts/carbon_junction.py:279(pt_seg_d2)",
+  "      392    0.028    0.000    2.024    0.005 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a79fb5a8ec6b0a668/scripts/carbon_junction.py:1749(_touch_runs_on)",
+  "      393    0.267    0.001    2.004    0.005 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a79fb5a8ec6b0a668/scripts/carbon_junction.py:290(_touch_intervals)",
+  "        1    0.010    0.010    2.002    2.002 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a79fb5a8ec6b0a668/scripts/carbon_junction.py:1834(_subedges)",
+  "      360    0.003    0.000    1.885    0.005 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a79fb5a8ec6b0a668/scripts/carbon_junction.py:1738(_touch_runs)",
+  "    47946    0.195    0.000    1.696    0.000 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a79fb5a8ec6b0a668/scripts/carbon_junction.py:306(fo)",
+  "   163273    0.259    0.000    0.916    0.000 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a79fb5a8ec6b0a668/scripts/carbon_junction.py:246(_dot)",
+  "        1    0.002    0.002    0.836    0.836 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a79fb5a8ec6b0a668/scripts/carbon_junction.py:1257(_distinct_instances)",
+  "        2    0.339    0.170    0.666    0.333 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a79fb5a8ec6b0a668/scripts/carbon_junction.py:1162(_near_seg_pairs)",
+  "        1    0.126    0.126    0.467    0.467 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a79fb5a8ec6b0a668/scripts/carbon_junction.py:1266(_distinct_from_pairs)",
+  "        1    0.007    0.007    0.354    0.354 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a79fb5a8ec6b0a668/scripts/carbon_junction.py:1436(_self_pairs)",
+  "        6    0.186    0.031    0.221    0.037 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a79fb5a8ec6b0a668/scripts/carbon_junction.py:643(_owner_select)"
+ ]
+}

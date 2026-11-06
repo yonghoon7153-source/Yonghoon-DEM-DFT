@@ -27,7 +27,10 @@ docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md §2-1 (문턱
       으로 부르고 보고 · npz 가 그 원장 값 그대로) · 후보별 목록 (s · L_c · 배율) · 배율 합 · σ 칸 없음 · 단계 2 (픽스처 B)
   R8  ★ 10-21 (Codex RCA-03 · 05 · Q11 일부) census 보탬 — 픽스처 RV (판정문 RCA-03 고리 · 나란한 쌍 + 시작 근처 PTFE): 같은 셀 비연속
       재방문 (쌍 · 셀 · 섬유 · s) · 포트 동률 수 · 긴 접촉 · 분산 간선 · 간선별 PTFE 덮임 · 부분 덮임 instance · npz 간선별 배열 · σ 칸 없음
+  M   ★ 11-06 (`SELF-155` 메모리 · 같은 꼴) — `fiber_sphere_instances` · `_min_dist_to_segments` 의 후보 = 조각 중점 · 좁은 반지름
+      (`carbon_junction._ball_seg_candidates`) · 고치기 전 판 (REF_S0_COMMIT) 과 비트 같음 × 질의 덩어리 · 경계 · 빈 · 거리 0 · 후보 수 · 변이
 """
+import contextlib
 import hashlib
 import json
 import math
@@ -533,6 +536,241 @@ def t_schema():
     chk('S1b 전류 · 소산 · 컨덕턴스 칸도', len(S0.schema_forbidden_keys(
         {'je_current': 1, 'dissipation_share': 2, 'conductance_g': 3, 'n_dof': 4})) == 4)
     chk('S1c 깨끗한 dict', S0.schema_forbidden_keys({'cells_by_sid': {'3': 1}, 'u_um': 0.1}) == [])
+
+
+# ── M 같은 꼴 후보 검색 (★ 11-06 · `SELF-155` 메모리 · 시험 먼저) ─────────────────────────────────────────────────────────────
+#  실침대 S0 단계 1 이 carbon_junction 의 전역 반지름 후보 검색 (가장 긴 선분 하나가 모든 반지름을 정함) 에서 메모리 폭증 — 같은 꼴 둘이 이 도구에:
+#  `fiber_sphere_instances` (구마다 반지름 R + r_f + tol + max(선분 반 길이) · 단계 2 SDCP 구 116,532 개면 폭증 어림) · `_min_dist_to_segments`
+#  (cutoff + max(선분 반 길이)).  고침 = 후보만 `carbon_junction._ball_seg_candidates` (조각 중점 · 좁은 반지름 · 덩어리 질의 · 상위집합) ·
+#  뒤 판정 · 정렬 그대로.  계약 = 고치기 전 판 (커밋 `REF_S0_COMMIT` 의 ca_s0_census.py · blob 3015e0af = 21cf11b29 · 766e1e80c) 과 비트 같음.
+#    M1  fiber_sphere_instances — AM 꼴 (반지름 1.5–2.5 · tol 0 · 0.05) · SDCP 꼴 (점 300 · 반지름 0.15) · 긴 선분 섞인 섬유 · 경계 (거리 정확히
+#        R + r_f + tol · 바로 밖) · 이웃 없는 구 · 중점 위 구 (거리 0) × 질의 덩어리 (1 · 7 · 50 · 기본) — 모든 칸 비트 같음
+#    M2  _min_dist_to_segments — 긴 선분 섞인 경로 · 점 300 · cutoff 2.0 · 0.5 · 경계 (거리 정확히 cutoff) · 빈 결과 × 덩어리 — 바이트 같음
+#    M3  후보 수 — 긴 선분 침대 · SDCP 꼴 구: 옛 반지름 후보 (query_ball_point return_length 합 · 저장 없음) ≥ 10 × 새 후보
+#    M5  옛 반지름 경계의 반올림 칼날 (선언된 예외 · carbon_junction PEDGE 와 같은 꼴 · 구현 뒤 발견) — 가장 긴 선분의 끝 연장선 위 구 · 점:
+#        옛 판 = 놓침 (쌍 0 · 거리 inf) / 새 판 = 찾음 (쌍 1 · 거리 0.5)
+#    M4  변이 (조각 반 길이 항 뺌 · 반지름 반 · 반올림 여유 0) 가 M1 · M2 · M5 대조에 값으로 걸린다 (변이 안 예외 = 하네스 실패)
+REF_S0_COMMIT = '39104710a'
+_REF_S0 = {}
+
+
+def _load_ref_s0():
+    """고치기 전 ca_s0_census.py (`REF_S0_COMMIT`) → 별도 모듈 (기하 함수만 쓴다 · 생산 쪽 SCRIPTS 는 그 모듈이 step3_sigma 위치에서 잡는다)."""
+    if 'm' in _REF_S0:
+        return _REF_S0['m'], _REF_S0['why']
+    import importlib.util
+    try:
+        src = subprocess.run(['git', '-C', ROOT, 'show', f'{REF_S0_COMMIT}:scripts/ca_s0_census.py'],
+                             capture_output=True, check=True).stdout
+    except Exception as e:                                   # noqa: BLE001
+        _REF_S0.update(m=None, why=f'git show 실패 {type(e).__name__}: {e}')
+        return None, _REF_S0['why']
+    d = tempfile.mkdtemp(prefix='s0ref_')
+    p = os.path.join(d, 'ca_s0_census_ref_3910.py')
+    with open(p, 'wb') as fh:
+        fh.write(src)
+    spec = importlib.util.spec_from_file_location('ca_s0_census_ref_3910', p)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    while d in sys.path:                                     # 그 모듈이 자기 폴더를 sys.path 앞에 넣는다 — 시험 프로세스에서 뺀다
+        sys.path.remove(d)
+    _REF_S0.update(m=m, why='')
+    return m, ''
+
+
+def _m_walk(seed, nf, npts, step, box, n_long, long_len):
+    """S0 경로 꼴 [(fid, 조각 목록)] — 걸음 섬유 nf 개 + 곧은 두 점 섬유 n_long 개 (길이 long_len · 긴 선분 하나)."""
+    rng = np.random.default_rng(seed)
+    polys = []
+    for _ in range(nf):
+        p = rng.uniform(0.3, box - 0.3, 3)
+        d = rng.normal(size=3)
+        d /= np.linalg.norm(d)
+        pts = [p.copy()]
+        for _ in range(npts - 1):
+            d = d + 0.3 * rng.normal(size=3)
+            d /= np.linalg.norm(d)
+            p = p + step * d
+            pts.append(p.copy())
+        polys.append(np.asarray(pts))
+    for _ in range(n_long):
+        p = rng.uniform(0.3, box - 0.3, 3)
+        d = rng.normal(size=3)
+        d /= np.linalg.norm(d)
+        polys.append(np.asarray([p, p + long_len * d]))
+    return [(10 + 10 * x, S0.pieces_of(q, 2.0)) for x, q in enumerate(polys)]
+
+
+def _m_same(a, b):
+    """비트 대조 — dict (키 순서) · 배열 (dtype · 모양 · 바이트) · 실수 (float64 바이트) · 나머지 (형 · ==)."""
+    if isinstance(a, dict) or isinstance(b, dict):
+        return isinstance(a, dict) and isinstance(b, dict) and list(a) == list(b) and all(_m_same(a[k], b[k]) for k in a)
+    if isinstance(a, np.ndarray) or isinstance(b, np.ndarray):
+        return (isinstance(a, np.ndarray) and isinstance(b, np.ndarray) and a.dtype.str == b.dtype.str and a.shape == b.shape
+                and np.ascontiguousarray(a).tobytes() == np.ascontiguousarray(b).tobytes())
+    if type(a) is not type(b):
+        return False
+    if isinstance(a, float):
+        return np.float64(a).tobytes() == np.float64(b).tobytes()
+    return a == b
+
+
+@contextlib.contextmanager
+def _budget(v):
+    """carbon_junction 질의 덩어리 상한 (_PAIR_ENTRY_BUDGET) 을 잠시 — None = 그대로 · 이름 없는 고치기 전 판 = 손대지 않음."""
+    cjm = S0.cj
+    old = getattr(cjm, '_PAIR_ENTRY_BUDGET', None)
+    if v is not None and old is not None:
+        cjm._PAIR_ENTRY_BUDGET = v
+    try:
+        yield
+    finally:
+        if v is not None and old is not None:
+            cjm._PAIR_ENTRY_BUDGET = old
+
+
+def _m_fixtures():
+    """(이름, 경로, 구 중심, 구 반지름, r_f, tol) — M1 픽스처."""
+    rng = np.random.default_rng(41)
+    vp = _m_walk(5, 40, 30, 0.06, 6.0, 3, 4.0)
+    fx = [('AM 꼴 · tol 0', vp, rng.uniform(0.5, 5.5, (12, 3)), rng.uniform(1.5, 2.5, 12), R_F, 0.0),
+          ('AM 꼴 · tol 0.05', vp, rng.uniform(0.5, 5.5, (12, 3)), rng.uniform(1.5, 2.5, 12), R_F, 0.05),
+          ('SDCP 꼴 (점 300 · 반지름 0.15)', vp, rng.uniform(0.3, 5.7, (300, 3)), np.full(300, 0.15), R_F, 0.05)]
+    line = [(7, S0.pieces_of(np.array([[0.0, 0.0, 0.0], [0.5, 0.0, 0.0], [1.0, 0.0, 0.0]]), 2.0))]
+    C = np.array([[0.25, 0.0, 0.375], [0.75, 0.0, 0.375 + 2.0 ** -40], [3.0, 3.0, 3.0], [0.25, 0.0, 0.0], [0.5, 0.0, 0.375]])
+    fx.append(('경계 (거리 정확히 R + r_f + tol · 바로 밖) · 이웃 없음 · 중점 위 (거리 0) · 꼭짓점 위', line, C, np.full(5, 0.25), 0.125, 0.0))
+    fx.append(('구 없음', vp, np.zeros((0, 3)), np.zeros(0), R_F, 0.0))
+    fx.append(('경로 없음', [], rng.uniform(0.5, 5.5, (4, 3)), np.full(4, 2.0), R_F, 0.0))
+    return fx
+
+
+def t_mem():
+    ref, why = _load_ref_s0()
+    if not chk(f'M0 기준 모듈 (커밋 {REF_S0_COMMIT} 의 ca_s0_census.py) 을 읽었다', ref is not None, why):
+        return
+    for nm, vp, C, R, rf, tol in _m_fixtures():
+        want = ref.fiber_sphere_instances(vp, C, R, rf, tol)
+        bad = []
+        for bud in (None, 1, 7, 50):
+            with _budget(bud):
+                got = S0.fiber_sphere_instances(vp, C, R, rf, tol)
+            if not _m_same(want, got):
+                bad.append(bud)
+        chk(f'M1 fiber_sphere_instances {nm} — 모든 칸 비트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · instance {want["n_instances"]} · '
+            f'쌍 {want["n_pairs"]}', not bad, f'다른 덩어리 {bad}')
+    rng = np.random.default_rng(43)
+    pp = _m_walk(7, 30, 40, 0.1, 6.0, 3, 4.0)
+    X = rng.uniform(0.0, 6.0, (300, 3))
+    line = [(7, S0.pieces_of(np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0]]), 2.0))]
+    Xe = np.array([[0.5, 0.0, 0.5], [0.5, 0.0, 0.5 + 2.0 ** -40], [9.0, 9.0, 9.0], [0.5, 0.0, 0.0]])
+    for nm, paths, XX, cut in (('긴 선분 섞인 경로 · 점 300 · cutoff 2.0', pp, X, 2.0), ('같은 · cutoff 0.5', pp, X, 0.5),
+                               ('경계 (거리 정확히 cutoff · 바로 밖) · 빈 결과 · 선분 위', line, Xe, 0.5), ('경로 없음', [], X[:5], 2.0),
+                               ('점 없음', pp, np.zeros((0, 3)), 2.0)):
+        want = ref._min_dist_to_segments(XX, paths, cut)
+        bad = []
+        for bud in (None, 1, 7, 50):
+            with _budget(bud):
+                got = S0._min_dist_to_segments(XX, paths, cut)
+            if not _m_same(want, got):
+                bad.append(bud)
+        chk(f'M2 _min_dist_to_segments {nm} — 바이트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · 유한 {int(np.isfinite(want).sum())} / '
+            f'{len(want)}', not bad, f'다른 덩어리 {bad}')
+    from scipy.spatial import cKDTree
+    vp2 = _m_walk(9, 80, 40, 0.06, 8.0, 4, 6.0)
+    sg = S0._segments(vp2)
+    Cs = np.random.default_rng(47).uniform(0.3, 7.7, (2000, 3))
+    rq = np.full(len(Cs), 0.15 + R_F + 0.05)
+    old_n = int(np.sum(cKDTree(0.5 * (sg['P0'] + sg['P1'])).query_ball_point(Cs, rq + float(0.5 * sg['LEN'].max()),
+                                                                               return_length=True)))
+    kk = None
+    try:
+        kk, _ = S0.cj._ball_seg_candidates(Cs, rq, sg['P0'], sg['P1'], tag='s0_test_m3')
+    except Exception as e:                                   # noqa: BLE001 — 고치기 전 판 (함수 없음) = 실패
+        print(f'    (예외 {type(e).__name__}: {e})')
+    n_new = None if kk is None else len(kk)
+    chk(f'M3 후보 수 — 선분 {len(sg["F"])} (가장 긴 {float(sg["LEN"].max()):.3f} µm) · SDCP 꼴 구 {len(Cs)}: 옛 반지름 후보 {old_n} '
+        f'(return_length 합 · 저장 없음) ≥ 10 × 새 후보 {n_new}', n_new is not None and old_n >= 10 * max(1, n_new), f'{old_n} · {n_new}')
+    e = _m_edge(ref)
+    chk('M5 옛 반지름 경계의 반올림 칼날 (선언된 예외 · carbon_junction PEDGE 와 같은 꼴) — 가장 긴 선분의 끝 연장선 위 구 (거리 '
+        f'{e["dd"]!r} ≤ R + r_f + tol {e["rq"]!r}) · 점 (거리 정확히 cutoff 0.5): 기준 (고치기 전) 판 = 놓침 (쌍 {e["old_pairs"]} · '
+        f'거리 {e["old_md"]!r})', e['dd'] <= e['rq'] and e['old_pairs'] == 0 and e['old_md'] == math.inf, str(e))
+    chk(f'M5 새 판 — 같은 두 꼴을 찾는다 (쌍 {e["new_pairs"]} · 거리 {e["new_md"]!r} · 계약 그대로 · 반올림 여유)',
+        e['new_pairs'] == 1 and e['new_md'] == 0.5, str(e))
+    _m_mutants(ref)
+
+
+EDGE_SEG = np.array([[0.7, 0.0, 0.0], [1.4, 0.0, 0.0]])     # 길이 0.7 (가장 긴 선분 = 하나뿐) · 구 R 0.25 · r_f 0.075 · tol 0.05
+EDGE_SEG2 = np.array([[0.7, 0.0, 0.0], [1.6, 0.0, 0.0]])    # 길이 0.9 · 점 = 끝에서 축으로 cutoff 0.5
+
+
+def _m_edge(ref):
+    """칼날 두 꼴 (scratch 탐색으로 찾은 값) → 기준 · 새 판 결과."""
+    rq = 0.25 + 0.075 + 0.05
+    C = np.array([[1.4 + rq, 0.0, 0.0]])
+    p1 = [(7, S0.pieces_of(EDGE_SEG, 2.0))]
+    p2 = [(7, S0.pieces_of(EDGE_SEG2, 2.0))]
+    X = np.array([[1.6 + 0.5, 0.0, 0.0]])
+    return {'dd': float(np.sqrt(S0._pt_seg_d2(C, EDGE_SEG[:1], EDGE_SEG[1:])[0])), 'rq': rq,
+            'old_pairs': ref.fiber_sphere_instances(p1, C, np.array([0.25]), 0.075, 0.05)['n_pairs'],
+            'new_pairs': S0.fiber_sphere_instances(p1, C, np.array([0.25]), 0.075, 0.05)['n_pairs'],
+            'old_md': float(ref._min_dist_to_segments(X, p2, 0.5)[0]), 'new_md': float(S0._min_dist_to_segments(X, p2, 0.5)[0])}
+
+
+_M_MUT = (
+    ('반지름에서 조각 반 길이 항 뺌', 'r = (rq + float(hs.max()))', 'r = (rq + 0.0 * float(hs.max()))'),
+    ('반지름 반', 'r = (rq + float(hs.max()))', 'r = (0.5 * rq + float(hs.max()))'),
+    ('반올림 여유 0 (옛 반지름과 같은 칼날)', 'r = (rq + float(hs.max())) * (1.0 + 1.0e-9) + 1.0e-12 * (1.0 + span)',
+     'r = (rq + float(hs.max())) * 1.0'),
+)
+
+
+def _m_probe(ref):
+    for nm, vp, C, R, rf, tol in _m_fixtures():
+        if not _m_same(ref.fiber_sphere_instances(vp, C, R, rf, tol), S0.fiber_sphere_instances(vp, C, R, rf, tol)):
+            return False
+    pp = _m_walk(7, 30, 40, 0.1, 6.0, 3, 4.0)
+    X = np.random.default_rng(43).uniform(0.0, 6.0, (300, 3))
+    for cut in (2.0, 0.5):
+        if not _m_same(ref._min_dist_to_segments(X, pp, cut), S0._min_dist_to_segments(X, pp, cut)):
+            return False
+    e = _m_edge(ref)
+    return e['new_pairs'] == 1 and e['new_md'] == 0.5
+
+
+def _m_mutants(ref):
+    import importlib.util
+    src = open(os.path.join(SCRIPTS, 'carbon_junction.py'), encoding='utf-8').read()
+    base_ok, base_exc = None, ''
+    try:
+        base_ok = _m_probe(ref)
+    except Exception as e:                                   # noqa: BLE001
+        base_exc = f'{type(e).__name__}: {e}'
+    chk('M4 변이 전 (지금 판) — 판별 탐침 통과 (M1 · M2 꼴 대조 · M5 칼날) · 예외 없음', base_ok is True, base_exc)
+    tmpd = tempfile.mkdtemp(prefix='s0mut_')
+    real = S0.cj
+    try:
+        for x, (nm, old, new) in enumerate(_M_MUT):
+            caught, why = None, ''
+            if src.count(old) != 1:
+                why = f'변이 대상 문자열 {old!r} 이 carbon_junction.py 에 {src.count(old)} 번 (1 번이어야)'
+            else:
+                p = os.path.join(tmpd, f'carbon_junction_s0mut_{x}.py')
+                with open(p, 'w', encoding='utf-8') as fh:
+                    fh.write(src.replace(old, new))
+                spec = importlib.util.spec_from_file_location(f'carbon_junction_s0mut_{x}', p)
+                mut = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mut)
+                S0.cj = mut
+                try:
+                    caught = _m_probe(ref) is False
+                except Exception as e:                       # noqa: BLE001 — 변이 안 예외 = 하네스 실패 (옳은 이유 아님)
+                    caught, why = None, f'변이 안 예외 {type(e).__name__}: {e}'
+                finally:
+                    S0.cj = real
+            chk(f'M4 변이 {nm} — 값 대조에 걸린다 (변이 안 예외 = 하네스 실패)', caught is True and base_ok is True, why)
+    finally:
+        S0.cj = real
+        shutil.rmtree(tmpd, ignore_errors=True)
 
 
 # ── 끝-끝 픽스처 (payload 실물) ────────────────────────────────────────────────────────────────
@@ -1398,6 +1636,7 @@ def main():
     print('── P 격자 원시'); run('P', t_grid)
     print('── L 계획'); run('L', t_plan); run('L3', t_plan_commit)
     print('── S 스키마'); run('S', t_schema)
+    print('── M 같은 꼴 후보 검색 (★ 11-06 · SELF-155 메모리)'); run('M', t_mem)
     tmp = tempfile.mkdtemp(prefix='s0test_')
     STATE['tmp'] = tmp
     try:

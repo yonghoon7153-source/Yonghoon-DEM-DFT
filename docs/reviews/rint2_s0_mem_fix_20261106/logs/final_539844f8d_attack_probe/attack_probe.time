@@ -1,0 +1,4 @@
+cmd=python3 docs/reviews/rint2_s0_mem_fix_20261106/tools/attack_probe.py
+elapsed_s=1.7
+max_rss_kb=128800
+rc=0

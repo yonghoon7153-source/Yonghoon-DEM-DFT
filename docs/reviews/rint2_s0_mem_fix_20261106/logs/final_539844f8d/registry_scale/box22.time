@@ -1,0 +1,4 @@
+cmd=python3 docs/reviews/rint2_s0_mem_fix_20261106/tools/registry_scale_probe.py 22 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/final2/registry_scale/box22.json
+elapsed_s=29.6
+max_rss_kb=304660
+rc=0

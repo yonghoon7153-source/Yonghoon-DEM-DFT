@@ -1,0 +1,398 @@
+{
+ "meta": {
+  "python": "3.11.18",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "ref_commit": "3b12fbe2d",
+  "ref_commit_s0": "39104710a",
+  "D_um": 0.2,
+  "T_um": 0.15,
+  "cap_gb_old": 4.0
+ },
+ "rows": [
+  {
+   "case": "A 2k (PEQ C 꼴)",
+   "n_segments": 2072,
+   "old_radius_um": 2.2,
+   "old_candidates": 1824541,
+   "max_seg_len_um": 2.0,
+   "mean_seg_len_um": 0.061872586872586864,
+   "old": {
+    "case": "A 2k (PEQ C 꼴)",
+    "mode": "old",
+    "n_segments": 2072,
+    "cap_gb": 4.0,
+    "status": "ok",
+    "n_instances": 205,
+    "n_self_pairs": 18,
+    "t_distinct_s": 3.429,
+    "t_self_s": 0.058,
+    "elapsed_s": 3.488,
+    "maxrss_before_kb": 72412,
+    "maxrss_kb": 825492
+   },
+   "new": {
+    "case": "A 2k (PEQ C 꼴)",
+    "mode": "new",
+    "n_segments": 2072,
+    "cap_gb": 0.0,
+    "status": "ok",
+    "n_instances": 205,
+    "n_self_pairs": 18,
+    "t_distinct_s": 0.193,
+    "t_self_s": 0.032,
+    "elapsed_s": 0.225,
+    "maxrss_before_kb": 69424,
+    "maxrss_kb": 83420,
+    "pair_search": {
+     "distinct": {
+      "tag": "distinct",
+      "n_segments": 2072,
+      "n_candidates": 42566,
+      "n_subpieces": 2090,
+      "L0_um": 0.2,
+      "radius_um": 0.4000000004074114,
+      "old_radius_um": 2.2,
+      "max_seg_len_um": 2.0,
+      "n_entries": 88092,
+      "n_chunks": 1,
+      "max_chunk_entries": 88092,
+      "max_point_entries": 109
+     },
+     "self": {
+      "tag": "self",
+      "n_segments": 2072,
+      "n_candidates": 42566,
+      "n_subpieces": 2090,
+      "L0_um": 0.2,
+      "radius_um": 0.4000000004074114,
+      "old_radius_um": 2.2,
+      "max_seg_len_um": 2.0,
+      "n_entries": 88092,
+      "n_chunks": 1,
+      "max_chunk_entries": 88092,
+      "max_point_entries": 109
+     }
+    }
+   }
+  },
+  {
+   "case": "B 7k (PMEM 꼴)",
+   "n_segments": 7084,
+   "old_radius_um": 6.200000000000001,
+   "old_candidates": 17701828,
+   "max_seg_len_um": 6.000000000000001,
+   "mean_seg_len_um": 0.06335403726708073,
+   "old": {
+    "case": "B 7k (PMEM 꼴)",
+    "mode": "old",
+    "n_segments": 7084,
+    "cap_gb": 4.0,
+    "status": "MemoryError (주소 공간 상한 4.0 GB) Unable to allocate 133. MiB for an array with shape (17496508,) and data type fl",
+    "elapsed_s": 12.544,
+    "maxrss_before_kb": 71832,
+    "maxrss_kb": 3532924
+   },
+   "new": {
+    "case": "B 7k (PMEM 꼴)",
+    "mode": "new",
+    "n_segments": 7084,
+    "cap_gb": 0.0,
+    "status": "ok",
+    "n_instances": 64,
+    "n_self_pairs": 324,
+    "t_distinct_s": 0.182,
+    "t_self_s": 0.092,
+    "elapsed_s": 0.274,
+    "maxrss_before_kb": 71600,
+    "maxrss_kb": 91664,
+    "pair_search": {
+     "distinct": {
+      "tag": "distinct",
+      "n_segments": 7084,
+      "n_candidates": 61131,
+      "n_subpieces": 7201,
+      "L0_um": 0.2,
+      "radius_um": 0.400000000421209,
+      "old_radius_um": 6.200000000000001,
+      "max_seg_len_um": 6.000000000000001,
+      "n_entries": 130149,
+      "n_chunks": 1,
+      "max_chunk_entries": 130149,
+      "max_point_entries": 53
+     },
+     "self": {
+      "tag": "self",
+      "n_segments": 7084,
+      "n_candidates": 61131,
+      "n_subpieces": 7201,
+      "L0_um": 0.2,
+      "radius_um": 0.400000000421209,
+      "old_radius_um": 6.200000000000001,
+      "max_seg_len_um": 6.000000000000001,
+      "n_entries": 130149,
+      "n_chunks": 1,
+      "max_chunk_entries": 130149,
+      "max_point_entries": 53
+     }
+    }
+   }
+  },
+  {
+   "case": "C 7k 긴 선분 없음 (대조)",
+   "n_segments": 7080,
+   "old_radius_um": 0.260000000000001,
+   "old_candidates": 31804,
+   "max_seg_len_um": 0.060000000000001,
+   "mean_seg_len_um": 0.060000000000000005,
+   "old": {
+    "case": "C 7k 긴 선분 없음 (대조)",
+    "mode": "old",
+    "n_segments": 7080,
+    "cap_gb": 4.0,
+    "status": "ok",
+    "n_instances": 62,
+    "n_self_pairs": 324,
+    "t_distinct_s": 0.119,
+    "t_self_s": 0.017,
+    "elapsed_s": 0.136,
+    "maxrss_before_kb": 72148,
+    "maxrss_kb": 85008
+   },
+   "new": {
+    "case": "C 7k 긴 선분 없음 (대조)",
+    "mode": "new",
+    "n_segments": 7080,
+    "cap_gb": 0.0,
+    "status": "ok",
+    "n_instances": 62,
+    "n_self_pairs": 324,
+    "t_distinct_s": 0.179,
+    "t_self_s": 0.057,
+    "elapsed_s": 0.236,
+    "maxrss_before_kb": 71600,
+    "maxrss_kb": 82692,
+    "pair_search": {
+     "distinct": {
+      "tag": "distinct",
+      "n_segments": 7080,
+      "n_candidates": 31804,
+      "n_subpieces": 7080,
+      "L0_um": 0.2,
+      "radius_um": 0.26000000028064957,
+      "old_radius_um": 0.260000000000001,
+      "max_seg_len_um": 0.060000000000001,
+      "n_entries": 70688,
+      "n_chunks": 1,
+      "max_chunk_entries": 70688,
+      "max_point_entries": 36
+     },
+     "self": {
+      "tag": "self",
+      "n_segments": 7080,
+      "n_candidates": 31804,
+      "n_subpieces": 7080,
+      "L0_um": 0.2,
+      "radius_um": 0.26000000028064957,
+      "old_radius_um": 0.260000000000001,
+      "max_seg_len_um": 0.060000000000001,
+      "n_entries": 70688,
+      "n_chunks": 1,
+      "max_chunk_entries": 70688,
+      "max_point_entries": 36
+     }
+    }
+   }
+  },
+  {
+   "case": "D 37k 실침대 밀도 (9.07 /µm³ · 간격 0.1 · 긴 선분 8 µm 4 개)",
+   "n_segments": 36274,
+   "old_radius_um": 8.2,
+   "old_candidates": 193377451,
+   "max_seg_len_um": 8.0,
+   "mean_seg_len_um": 0.10087114737828748,
+   "new": {
+    "case": "D 37k 실침대 밀도 (9.07 /µm³ · 간격 0.1 · 긴 선분 8 µm 4 개)",
+    "mode": "new",
+    "n_segments": 36274,
+    "cap_gb": 0.0,
+    "status": "ok",
+    "n_instances": 508,
+    "n_self_pairs": 0,
+    "t_distinct_s": 0.498,
+    "t_self_s": 0.337,
+    "elapsed_s": 0.835,
+    "maxrss_before_kb": 85244,
+    "maxrss_kb": 140096,
+    "pair_search": {
+     "distinct": {
+      "tag": "distinct",
+      "n_segments": 36274,
+      "n_candidates": 170817,
+      "n_subpieces": 36430,
+      "L0_um": 0.2,
+      "radius_um": 0.40000000043925565,
+      "old_radius_um": 8.2,
+      "max_seg_len_um": 8.0,
+      "n_entries": 378806,
+      "n_chunks": 1,
+      "max_chunk_entries": 378806,
+      "max_point_entries": 34
+     },
+     "self": {
+      "tag": "self",
+      "n_segments": 36274,
+      "n_candidates": 170817,
+      "n_subpieces": 36430,
+      "L0_um": 0.2,
+      "radius_um": 0.40000000043925565,
+      "old_radius_um": 8.2,
+      "max_seg_len_um": 8.0,
+      "n_entries": 378806,
+      "n_chunks": 1,
+      "max_chunk_entries": 378806,
+      "max_point_entries": 34
+     }
+    }
+   }
+  },
+  {
+   "case": "E 37k 실침대 밀도 · 긴 선분 없음",
+   "n_segments": 36270,
+   "old_radius_um": 0.30000000000000193,
+   "old_candidates": 118018,
+   "max_seg_len_um": 0.10000000000000192,
+   "mean_seg_len_um": 0.10000000000000002,
+   "new": {
+    "case": "E 37k 실침대 밀도 · 긴 선분 없음",
+    "mode": "new",
+    "n_segments": 36270,
+    "cap_gb": 0.0,
+    "status": "ok",
+    "n_instances": 504,
+    "n_self_pairs": 0,
+    "t_distinct_s": 0.449,
+    "t_self_s": 0.246,
+    "elapsed_s": 0.695,
+    "maxrss_before_kb": 86228,
+    "maxrss_kb": 123472,
+    "pair_search": {
+     "distinct": {
+      "tag": "distinct",
+      "n_segments": 36270,
+      "n_candidates": 118018,
+      "n_subpieces": 36270,
+      "L0_um": 0.2,
+      "radius_um": 0.30000000033925756,
+      "old_radius_um": 0.30000000000000193,
+      "max_seg_len_um": 0.10000000000000192,
+      "n_entries": 272306,
+      "n_chunks": 1,
+      "max_chunk_entries": 272306,
+      "max_point_entries": 20
+     },
+     "self": {
+      "tag": "self",
+      "n_segments": 36270,
+      "n_candidates": 118018,
+      "n_subpieces": 36270,
+      "L0_um": 0.2,
+      "radius_um": 0.30000000033925756,
+      "old_radius_um": 0.30000000000000193,
+      "max_seg_len_um": 0.10000000000000192,
+      "n_entries": 272306,
+      "n_chunks": 1,
+      "max_chunk_entries": 272306,
+      "max_point_entries": 20
+     }
+    }
+   }
+  }
+ ],
+ "fiber_sphere_rows": [
+  {
+   "case": "D 37k 실침대 밀도 (9.07 /µm³ · 간격 0.1 · 긴 선분 8 µm 4 개)",
+   "old": {
+    "case": "D 37k 실침대 밀도 (9.07 /µm³ · 간격 0.1 · 긴 선분 8 µm 4 개)",
+    "mode": "fiber_sphere_old",
+    "n_spheres": 2631,
+    "cap_gb": 4.0,
+    "status": "ok",
+    "n_pairs": 487,
+    "n_instances": 487,
+    "elapsed_s": 4.739,
+    "maxrss_before_kb": 86228,
+    "maxrss_kb": 1324980
+   },
+   "new": {
+    "case": "D 37k 실침대 밀도 (9.07 /µm³ · 간격 0.1 · 긴 선분 8 µm 4 개)",
+    "mode": "fiber_sphere_new",
+    "n_spheres": 2631,
+    "cap_gb": 0.0,
+    "status": "ok",
+    "n_pairs": 487,
+    "n_instances": 487,
+    "elapsed_s": 0.098,
+    "maxrss_before_kb": 86228,
+    "maxrss_kb": 86228,
+    "pair_search": {
+     "tag": "s0_fiber_sphere",
+     "n_points": 2631,
+     "n_segments": 36274,
+     "n_candidates": 2737,
+     "n_subpieces": 36590,
+     "L0_um": 0.10087114737828748,
+     "max_sub_half_um": 0.05000000000000096,
+     "old_radius_extra_um": 4.0,
+     "max_seg_len_um": 8.0,
+     "n_entries": 2748,
+     "n_chunks": 1,
+     "max_chunk_entries": 2748,
+     "max_point_entries": 17
+    }
+   }
+  },
+  {
+   "case": "E 37k 실침대 밀도 · 긴 선분 없음",
+   "old": {
+    "case": "E 37k 실침대 밀도 · 긴 선분 없음",
+    "mode": "fiber_sphere_old",
+    "n_spheres": 2631,
+    "cap_gb": 4.0,
+    "status": "ok",
+    "n_pairs": 484,
+    "n_instances": 484,
+    "elapsed_s": 0.083,
+    "maxrss_before_kb": 86228,
+    "maxrss_kb": 86228
+   },
+   "new": {
+    "case": "E 37k 실침대 밀도 · 긴 선분 없음",
+    "mode": "fiber_sphere_new",
+    "n_spheres": 2631,
+    "cap_gb": 0.0,
+    "status": "ok",
+    "n_pairs": 484,
+    "n_instances": 484,
+    "elapsed_s": 0.094,
+    "maxrss_before_kb": 86228,
+    "maxrss_kb": 86228,
+    "pair_search": {
+     "tag": "s0_fiber_sphere",
+     "n_points": 2631,
+     "n_segments": 36270,
+     "n_candidates": 2879,
+     "n_subpieces": 53987,
+     "L0_um": 0.1,
+     "max_sub_half_um": 0.05,
+     "old_radius_extra_um": 0.05000000000000096,
+     "max_seg_len_um": 0.10000000000000192,
+     "n_entries": 4026,
+     "n_chunks": 1,
+     "max_chunk_entries": 4026,
+     "max_point_entries": 22
+    }
+   }
+  }
+ ]
+}

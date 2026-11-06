@@ -1,0 +1,58 @@
+── CP-ORD
+  PASS  CP-ORD PCP · 후보 쌍 뒤집음 → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음 (섞은 후보 출력 2 > 0)
+  PASS  CP-ORD PCP · 후보 쌍 무작위 섞음 (시드 7) → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음 (섞은 후보 출력 2 > 0)
+  PASS  CP-ORD PCP-FAR · 후보 쌍 뒤집음 → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음 (섞은 후보 출력 2 > 0)
+  PASS  CP-ORD PCP-FAR · 후보 쌍 무작위 섞음 (시드 7) → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음 (섞은 후보 출력 2 > 0)
+  PASS  CP-ORD LP 긴 접촉 · 후보 쌍 뒤집음 → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음 (섞은 후보 출력 2 > 0)
+  PASS  CP-ORD LP 긴 접촉 · 후보 쌍 무작위 섞음 (시드 7) → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음 (섞은 후보 출력 2 > 0)
+  PASS  CP-ORD CX 5 노드 꼴 · 후보 쌍 뒤집음 → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음 (섞은 후보 출력 2 > 0)
+  PASS  CP-ORD CX 5 노드 꼴 · 후보 쌍 무작위 섞음 (시드 7) → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음 (섞은 후보 출력 2 > 0)
+── PSRCH
+  PASS  PSRCH 후보 = brute force 참 쌍의 상위집합 · int64 (m, 2) · i < j · 정준 순서 · 유일 · 질의 덩어리와 무관 (픽스처 9 × L0 5 × 덩어리 4 = 호출 180 · 참 쌍 21414 · 후보 (L0 마다 한 번 셈) 987637)
+  PASS  PSRCH 빈 입력 · 선분 하나 → (0, 2) int64 · 검색 기록 (_PAIR_SEARCH_LAST) 이 남는다 (원장 밖 진단)
+── PEQ
+  PASS  PEQ 기준 모듈 (커밋 3b12fbe2d 의 carbon_junction.py) 을 읽었다
+  PASS  PEQ 긴 선분 섞인 무작위 A — 선분 523 · instance 6 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)
+  PASS  PEQ 긴 선분 섞인 무작위 B — 선분 952 · instance 19 · 자기 후보 쌍 1240 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)
+  PASS  PEQ 긴 선분 섞인 촘촘한 무작위 C — 선분 2072 · instance 205 · 자기 후보 쌍 18 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)
+  PASS  PEQ 조각 경계 · 거리 정확히 D · 바로 밖 — 선분 11 · instance 25 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)
+  PASS  PEQ 빈 결과 (근접 없음) — 선분 2 · instance 0 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)
+  PASS  PEQ 같은 fid 끊긴 조각 (틈 0.12 > 2 × 중앙값) — 선분 39 · instance 3 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)
+  PASS  PEQ 나란한 접촉 (띠 동률) — 선분 58 · instance 1 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)
+  PASS  PEQ 자기 접촉 (U · 납작한 고리) — 선분 82 · instance 0 · 자기 후보 쌍 210 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)
+  PASS  PEQ 점 선분 · 중점 겹침 (거리 0) — 선분 4 · instance 6 · 자기 후보 쌍 0 · 모든 칸 비트 = 기준 (_distinct_instances · _self_pairs s_min 없음/0.3 · _touch_len_all × 덩어리 설정 4)
+  PASS  PEQ 픽스처 수 = 9 (긴 선분 무작위 셋 · 조각 경계 · 빈 결과 · 끊긴 조각 · 나란한 접촉 · 자기 접촉 · 점 선분 + 중점 겹침)
+── PREG
+  PASS  PREG 기준 모듈 (커밋 3b12fbe2d) 을 읽었다
+  PASS  PREG F1 (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 1
+  PASS  PREG F6 (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 2
+  PASS  PREG K3 (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 3
+  PASS  PREG LP (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 1
+  PASS  PREG KU (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 1
+  PASS  PREG XC (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 1
+  PASS  PREG RING (손 픽스처) — 원장 전체 (지문 포함) 비트 = 기준 × 덩어리 설정 4 · instance 0
+  PASS  PREG 생산 단위 무작위 (긴 선분 · PTFE) · s_min None — 원장 전체 (지문 포함) 비트 = 기준 (덩어리 기본 · (7,2,13)) · 선분 1173 · instance 9 (자기 2) · 간선 13
+  PASS  PREG 생산 단위 무작위 (긴 선분 · PTFE) · s_min 0.3 — 원장 전체 (지문 포함) 비트 = 기준 (덩어리 기본 · (7,2,13)) · 선분 1173 · instance 8 (자기 1) · 간선 12
+  PASS  PREG 생산 단위 무작위 (긴 선분 · PTFE · SDCP) · s_min None — 원장 전체 (지문 포함) 비트 = 기준 (덩어리 기본 · (7,2,13)) · 선분 1173 · instance 19 (자기 9) · 간선 24
+  PASS  PREG 생산 단위 무작위 (긴 선분 · PTFE · SDCP) · s_min 0.3 — 원장 전체 (지문 포함) 비트 = 기준 (덩어리 기본 · (7,2,13)) · 선분 1173 · instance 18 (자기 8) · 간선 23
+── PS0
+  PASS  PS0 기준 모듈 (커밋 3b12fbe2d) 을 읽었다
+  PASS  PS0 SBE 꼴 (PTFE · SDCP 없음) — S0 접합 census 보고 블록 · 후보별 배열 비트 = 기준 (`S0.cj` = 기준 모듈) · 덩어리 기본 · (7,2,13) · instance 9
+  PASS  PS0 DBE 꼴 (PTFE · SDCP) — S0 접합 census 보고 블록 · 후보별 배열 비트 = 기준 (`S0.cj` = 기준 모듈) · 덩어리 기본 · (7,2,13) · instance 19
+── PEDGE
+  PASS  PEDGE 기준 모듈 (커밋 3b12fbe2d) 을 읽었다
+  PASS  PEDGE 칼날 꼴 성립 — 선분 거리 0.19999999999999996 ≤ D · 중점 거리 1.3000000000000003 > 옛 반지름 1.3 → 기준 (고치기 전) 판 instance 0 (참 쌍을 놓침 = 옛 결함 · 선언된 예외)
+  FAIL  PEDGE 새 판 — 참 쌍 {(0, 1)} 을 후보에 담고 instance 하나를 낸다 (계약 d ≤ D 그대로 · 반올림 여유)  ((True, False, False))
+── PTIE
+  PASS  PTIE 기준 모듈 (커밋 3b12fbe2d) 을 읽었다
+  PASS  PTIE 새 판 — 같은 조각 쌍 · 같은 접점 (V · 비트) 두 instance = (최근접 쌍 선분 i, j) 오름차순 (정준)
+  PASS  PTIE 새 판 — 후보 쌍 순서 (뒤집음 · 무작위 섞음 3) 를 바꿔 `_distinct_from_pairs` 에 넣어도 모든 칸 비트 같음
+  PASS  PTIE 기준 판 (고치기 전) — 같은 입력인데 후보 나열 순서 (query_pairs 출력 순서) 에 따라 동률 두 instance 의 순서가 바뀐다 (옛 판의 순서 의존 = 실측 · 새 판이 정준으로 고친 자리)
+  PASS  PTIE 두 판의 instance 집합은 같다 — (최근접 쌍 선분) 으로 짝지으면 instance 마다 모든 칸 비트 같음 (바뀐 것 = 동률의 순서만)
+── PMEM
+  PASS  PMEM 후보 수 — 선분 7084 · 옛 반지름 2·max(반 길이) + D = 6.2000 µm 의 후보 17701828 쌍 (count_neighbors 정확 셈 · 저장 없음) ≥ 20 × 새 후보 61131 (반지름 0.4 µm · L0 0.2 · 조각 7201)
+  PASS  PMEM 판정 덩어리 — `_distinct_instances` · `_self_pairs` 의 seg_seg_closest 한 번 행 수 ≤ max(덩어리 50 · 묶음 60 · instance 하나 128) = 128 · 호출 여러 번 (호출 85 · 최대 128)
+  PASS  PMEM 질의 덩어리 — 한 덩어리의 조각 쌍 행 수 ≤ max(상한 200 · 점 하나의 이웃 수) · 덩어리 여러 개 (기록 {'tag': 'pmem2', 'n_segments': 523, 'n_candidates': 2738, 'n_subpieces': 565, 'L0_um': 0.2, 'radius_um': 0.4, 'old_radius_um': 3.2, 'max_seg_len_um': 3.0, 'n_entries': 6203, 'n_chunks': 33, 'max_chunk_entries': 200, 'max_point_entries': 25})
+
+== test_carbon_junction: 46/47 PASS
+FAIL: PEDGE 새 판 — 참 쌍 {(0, 1)} 을 후보에 담고 instance 하나를 낸다 (계약 d ≤ D 그대로 · 반올림 여유)

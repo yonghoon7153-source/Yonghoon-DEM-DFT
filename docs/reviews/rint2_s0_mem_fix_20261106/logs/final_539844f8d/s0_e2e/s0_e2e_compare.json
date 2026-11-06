@@ -1,0 +1,300 @@
+{
+ "ref_commits": {
+  "carbon_junction": "3b12fbe2d",
+  "ca_s0_census": "39104710a"
+ },
+ "rows": [
+  {
+   "kit": "kit_A",
+   "vox": 0.1,
+   "files_same": true,
+   "files": [
+    "cjunc_plan.json",
+    "cjunc_plan.sha256",
+    "payload_capture_kit_A.log",
+    "s0_instances_kit_A.npz",
+    "s0_junctions_kit_A.npz",
+    "s0_stage1_kit_A.json"
+   ],
+   "json_unexpected_diffs": {
+    "cjunc_plan.json": [],
+    "s0_stage1_kit_A.json": []
+   },
+   "json_all_diff_paths": {
+    "cjunc_plan.json": [
+     "source.tool_sha256"
+    ],
+    "s0_stage1_kit_A.json": [
+     "plan.sha256"
+    ]
+   },
+   "npz": {
+    "s0_instances_kit_A.npz": {
+     "n_arrays": 17,
+     "different": []
+    },
+    "s0_junctions_kit_A.npz": {
+     "n_arrays": 24,
+     "different": []
+    }
+   },
+   "other_files": {
+    "cjunc_plan.sha256": {
+     "same": false,
+     "len_old": 82,
+     "len_new": 82
+    },
+    "payload_capture_kit_A.log": {
+     "same": true,
+     "len_old": 964,
+     "len_new": 964
+    }
+   },
+   "plan_tool_sha256": {
+    "old": "6e527e6c7a16251c585443abb922325170975f63d953204d209065c2dc951937",
+    "new": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4"
+   },
+   "plan_sha256": {
+    "old": "ba53bb84bb8ed5b315db525c8ebd1183b0aa4ab79884fed2841bfb546ccbd949",
+    "new": "a131f9a04624f77156af9def0686a9a98a357f963d03f880ee9a7f0f8900df55"
+   },
+   "reported_new_file_digests": {
+    "carbon_junction.py": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+    "ca_s0_census.py": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4"
+   },
+   "blob_sha256": {
+    "carbon_junction_old": "5460dad164839b115eea07f5df21087af1ff214c221e4838d940f7de9f9ca221",
+    "carbon_junction_new": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+    "ca_s0_census_old": "6e527e6c7a16251c585443abb922325170975f63d953204d209065c2dc951937",
+    "ca_s0_census_new": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4"
+   },
+   "n_instances": 0,
+   "n_segments": 13,
+   "elapsed_s": {
+    "old": 0.1,
+    "new": 0.1
+   },
+   "science_identical": true,
+   "provenance_true": true
+  },
+  {
+   "kit": "kit_J",
+   "vox": 0.15,
+   "files_same": true,
+   "files": [
+    "cjunc_plan.json",
+    "cjunc_plan.sha256",
+    "payload_capture_kit_J.log",
+    "s0_instances_kit_J.npz",
+    "s0_junctions_kit_J.npz",
+    "s0_stage1_kit_J.json"
+   ],
+   "json_unexpected_diffs": {
+    "cjunc_plan.json": [],
+    "s0_stage1_kit_J.json": []
+   },
+   "json_all_diff_paths": {
+    "cjunc_plan.json": [
+     "source.tool_sha256"
+    ],
+    "s0_stage1_kit_J.json": [
+     "plan.sha256"
+    ]
+   },
+   "npz": {
+    "s0_instances_kit_J.npz": {
+     "n_arrays": 17,
+     "different": []
+    },
+    "s0_junctions_kit_J.npz": {
+     "n_arrays": 24,
+     "different": []
+    }
+   },
+   "other_files": {
+    "cjunc_plan.sha256": {
+     "same": false,
+     "len_old": 82,
+     "len_new": 82
+    },
+    "payload_capture_kit_J.log": {
+     "same": true,
+     "len_old": 966,
+     "len_new": 966
+    }
+   },
+   "plan_tool_sha256": {
+    "old": "6e527e6c7a16251c585443abb922325170975f63d953204d209065c2dc951937",
+    "new": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4"
+   },
+   "plan_sha256": {
+    "old": "0fe77496bd563caa88257c1926150e0959e82d229313c4187d804010ac118b63",
+    "new": "a29eb1a38126035a4d6046074065a3ac9cae992f3348d381e9321f8bc368273c"
+   },
+   "reported_new_file_digests": {
+    "carbon_junction.py": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+    "ca_s0_census.py": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4"
+   },
+   "blob_sha256": {
+    "carbon_junction_old": "5460dad164839b115eea07f5df21087af1ff214c221e4838d940f7de9f9ca221",
+    "carbon_junction_new": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+    "ca_s0_census_old": "6e527e6c7a16251c585443abb922325170975f63d953204d209065c2dc951937",
+    "ca_s0_census_new": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4"
+   },
+   "n_instances": 2,
+   "n_segments": 106,
+   "elapsed_s": {
+    "old": 0.2,
+    "new": 0.2
+   },
+   "science_identical": true,
+   "provenance_true": true
+  },
+  {
+   "kit": "kit_RV",
+   "vox": 0.15,
+   "files_same": true,
+   "files": [
+    "cjunc_plan.json",
+    "cjunc_plan.sha256",
+    "payload_capture_kit_RV.log",
+    "s0_instances_kit_RV.npz",
+    "s0_junctions_kit_RV.npz",
+    "s0_stage1_kit_RV.json"
+   ],
+   "json_unexpected_diffs": {
+    "cjunc_plan.json": [],
+    "s0_stage1_kit_RV.json": []
+   },
+   "json_all_diff_paths": {
+    "cjunc_plan.json": [
+     "source.tool_sha256"
+    ],
+    "s0_stage1_kit_RV.json": [
+     "plan.sha256"
+    ]
+   },
+   "npz": {
+    "s0_instances_kit_RV.npz": {
+     "n_arrays": 17,
+     "different": []
+    },
+    "s0_junctions_kit_RV.npz": {
+     "n_arrays": 24,
+     "different": []
+    }
+   },
+   "other_files": {
+    "cjunc_plan.sha256": {
+     "same": false,
+     "len_old": 82,
+     "len_new": 82
+    },
+    "payload_capture_kit_RV.log": {
+     "same": true,
+     "len_old": 966,
+     "len_new": 966
+    }
+   },
+   "plan_tool_sha256": {
+    "old": "6e527e6c7a16251c585443abb922325170975f63d953204d209065c2dc951937",
+    "new": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4"
+   },
+   "plan_sha256": {
+    "old": "33e95b9b8b4ed52af0c53bf23d2314adc4cdf02893853132ea6564e255e78caa",
+    "new": "16583af1976bb94465f6f16611323cb044fedbea30122f24a72a87d7d6d794c2"
+   },
+   "reported_new_file_digests": {
+    "carbon_junction.py": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+    "ca_s0_census.py": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4"
+   },
+   "blob_sha256": {
+    "carbon_junction_old": "5460dad164839b115eea07f5df21087af1ff214c221e4838d940f7de9f9ca221",
+    "carbon_junction_new": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+    "ca_s0_census_old": "6e527e6c7a16251c585443abb922325170975f63d953204d209065c2dc951937",
+    "ca_s0_census_new": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4"
+   },
+   "n_instances": 3,
+   "n_segments": 130,
+   "elapsed_s": {
+    "old": 0.2,
+    "new": 0.2
+   },
+   "science_identical": true,
+   "provenance_true": true
+  },
+  {
+   "kit": "kit_L",
+   "vox": 0.15,
+   "files_same": true,
+   "files": [
+    "cjunc_plan.json",
+    "cjunc_plan.sha256",
+    "payload_capture_kit_L.log",
+    "s0_instances_kit_L.npz",
+    "s0_junctions_kit_L.npz",
+    "s0_stage1_kit_L.json"
+   ],
+   "json_unexpected_diffs": {
+    "cjunc_plan.json": [],
+    "s0_stage1_kit_L.json": []
+   },
+   "json_all_diff_paths": {
+    "cjunc_plan.json": [
+     "source.tool_sha256"
+    ],
+    "s0_stage1_kit_L.json": [
+     "plan.sha256"
+    ]
+   },
+   "npz": {
+    "s0_instances_kit_L.npz": {
+     "n_arrays": 17,
+     "different": []
+    },
+    "s0_junctions_kit_L.npz": {
+     "n_arrays": 24,
+     "different": []
+    }
+   },
+   "other_files": {
+    "cjunc_plan.sha256": {
+     "same": false,
+     "len_old": 82,
+     "len_new": 82
+    },
+    "payload_capture_kit_L.log": {
+     "same": true,
+     "len_old": 966,
+     "len_new": 966
+    }
+   },
+   "plan_tool_sha256": {
+    "old": "6e527e6c7a16251c585443abb922325170975f63d953204d209065c2dc951937",
+    "new": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4"
+   },
+   "plan_sha256": {
+    "old": "1059898e9a03e25f5184909d9159c7c758a8712b4e9c5d8f1fcdbde64e4f8471",
+    "new": "fdf14cbb40a3fa45ad91714ed36f372c424406579bef2bbef6d02585ab890bdb"
+   },
+   "reported_new_file_digests": {
+    "carbon_junction.py": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+    "ca_s0_census.py": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4"
+   },
+   "blob_sha256": {
+    "carbon_junction_old": "5460dad164839b115eea07f5df21087af1ff214c221e4838d940f7de9f9ca221",
+    "carbon_junction_new": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+    "ca_s0_census_old": "6e527e6c7a16251c585443abb922325170975f63d953204d209065c2dc951937",
+    "ca_s0_census_new": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4"
+   },
+   "n_instances": 5,
+   "n_segments": 120,
+   "elapsed_s": {
+    "old": 0.2,
+    "new": 0.2
+   },
+   "science_identical": true,
+   "provenance_true": true
+  }
+ ]
+}

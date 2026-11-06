@@ -1,0 +1,4 @@
+cmd=python3 scripts/test_step3_conv_cert.py
+elapsed_s=441.3
+max_rss_kb=571240
+rc=0

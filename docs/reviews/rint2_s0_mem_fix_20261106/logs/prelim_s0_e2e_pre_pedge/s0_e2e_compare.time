@@ -1,0 +1,4 @@
+cmd=python3 docs/reviews/rint2_s0_mem_fix_20261106/tools/s0_e2e_compare.py --out docs/reviews/rint2_s0_mem_fix_20261106/logs/s0_e2e/s0_e2e_compare.json
+elapsed_s=2.1
+max_rss_kb=92156
+rc=0

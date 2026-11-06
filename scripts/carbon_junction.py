@@ -75,6 +75,7 @@ v3 §5 J2a–J12 · v3.1 (겹치면 뒤가 이긴다) · 1저자 10-20 N1–N18 
     `step3_sigma.solve_sigma_z(cjunc_graph_only=True)` (솔브 없음 · 같은 조립 함수) · 대조 = `ca_ext_svcf.graph_problem` · 조립된 계 (L · b) 는 바뀌지 않는다.
 """
 import hashlib
+import itertools
 import math
 import struct
 
@@ -1076,36 +1077,201 @@ def registry_fp(reg):
                reg['n_extra_dofs'], reg['self_revisit_pairs'], [x['code'] for x in reg['rejections']])
 
 
+# ═════════════════════════ 근접 선분 쌍 후보 (★ 11-06 · `SELF-155` 메모리) ═════════════════════════
+#  옛 판 (`_distinct_instances` · `_self_pairs` 둘 다) = `cKDTree(선분 중점).query_pairs(2·max(선분 반 길이) + D)` 한 번 — 가장 긴 선분 하나가
+#  모든 선분의 검색 반지름을 정해 후보 쌍이 폭증했다 (실침대 SBE S0 단계 1 · `_distinct_instances` 의 그 한 호출에서 30 s 에 8 → 43 GB · 옛 런
+#  52.1 GB 신호 · 증거 docs/reviews/rint2_s0_mem_probe_20261106/).  새 판 = `_near_seg_pairs` (조각 중점 · 좁은 반지름 · 덩어리 질의) + 덩어리별
+#  판정 (`_closest_chunks`) + `_touch_len_all` 의 instance 묶음.  바뀐 것 = 후보 집합 (참 쌍의 상위집합 그대로 · 더 좁음) 과 계산 덩어리뿐 —
+#  판정 (`seg_seg_closest` d ≤ D) 과 그 뒤 계산은 행마다 같은 식이라 과학 값 · 정준 배열이 비트 그대로다 (기준 = 고치기 전 판 · 시험
+#  `scripts/test_carbon_junction.py` PSRCH · PEQ · PREG · PS0 · PTIE · PMEM · PEDGE · PMUT).  덩어리 상수 = 메모리 손잡이 (값 무관).
+#  선언된 예외 둘 — ① 같은 조각 쌍 · 같은 접점 (비트) 두 instance 의 순서 (옛 = 후보 나열 순서 · 새 = 최근접 쌍 선분 순 · PTIE) ② 옛 판이
+#  자기 반지름 경계 (가장 긴 선분끼리 · 여유 0) 에서 반올림으로 놓친 참 쌍 (d ≤ D) 을 새 판은 찾는다 (반올림 여유 · PEDGE · S0 의 점 ↔ 선분
+#  검색 `_ball_seg_candidates` 도 같은 꼴 = test_ca_s0_census M5).
+_PAIR_ENTRY_BUDGET = 4_000_000    # 조각 쌍 질의 한 덩어리의 결과 행 수 상한 (24 B/행 · 점 하나의 이웃이 더 많으면 그 점 혼자)
+_CLOSEST_CHUNK = 1_000_000        # 선분 쌍 판정 (`_distinct_keep` · `seg_seg_closest`) 한 덩어리의 쌍 수
+_TOUCH_ENTRY_BUDGET = 1_000_000   # `_touch_len_all` 한 묶음의 (instance · 쪽 · 선분 짝) 행 수 상한 (instance 를 가르지 않는다)
+_PAIR_SEARCH_LAST = {}            # 마지막 호출의 검색 기록 (tag 마다 · 진단 — 원장 · 지문 밖 · 값 무관)
+
+
+def _subpieces(P0, P1, L0):
+    """선분 → 길이 ≤ L0 조각 (같은 길이 등분 · 조각 = 원래 선분 위 구간) → (조각 중점, 조각 반 길이, 부모 선분 번호).  L0 ≤ 0 = 나누지 않음.
+    선분 위 점은 그 점이 든 조각의 중점에서 조각 반 길이 안에 있다 — 근접 후보 상위집합의 근거 (`_near_seg_pairs` · `_ball_seg_candidates`)."""
+    dv = P1 - P0
+    sl = np.linalg.norm(dv, axis=1)
+    nsub = np.maximum(1, np.ceil(sl / L0)).astype(np.int64) if L0 > 0.0 else np.ones(len(P0), np.int64)
+    par = np.repeat(np.arange(len(P0), dtype=np.int64), nsub)
+    kk = np.arange(len(par), dtype=np.int64) - np.repeat(np.cumsum(nsub) - nsub, nsub)
+    u = (kk + 0.5) / nsub[par]
+    mid = P0[par] + u[:, None] * dv[par]
+    hs = 0.5 * sl[par] / nsub[par]
+    return mid, hs, par
+
+
+def _ball_seg_candidates(X, rq, P0, P1, tag='ball', L0=None):
+    """점 X_q (반지름 rq_q · 점마다 또는 하나) ↔ 선분 s 후보 → (q, s) int64 두 배열 · (q, s) 사전식 정준 순서 · 유일 — 점 ↔ 선분 거리 ≤ rq_q
+    인 쌍을 모두 담는 상위집합.  ★ 11-06 (`SELF-155` 같은 꼴) — S0 `ca_s0_census.fiber_sphere_instances` · `_min_dist_to_segments` 가 쓴다
+    (옛 = 반지름 rq + max(선분 반 길이) 한 번 · 가장 긴 선분 하나가 모든 점의 반지름을 키웠다).  방법 = `_subpieces` (기본 L0 = 선분 길이 평균 →
+    조각 수 ≤ 2 × 선분 수) · 조각 중점 반지름 rq + max(조각 반 길이) (+ 반올림 여유 · `_near_seg_pairs` 와 같은 꼴) · 점 덩어리별
+    query_ball_point (`_PAIR_ENTRY_BUDGET` 행).  보장: 선분의 최근접점 Y 가 든 조각 a → |X − m_a| ≤ |X − Y| + h_a."""
+    X = np.asarray(X, np.float64).reshape(-1, 3)
+    nq = len(X)
+    rq = np.broadcast_to(np.asarray(rq, np.float64), (nq,)).astype(np.float64)
+    P0 = np.asarray(P0, np.float64).reshape(-1, 3)
+    P1 = np.asarray(P1, np.float64).reshape(-1, 3)
+    ns = len(P0)
+    rec = {'tag': tag, 'n_points': int(nq), 'n_segments': int(ns), 'n_candidates': 0}
+    _PAIR_SEARCH_LAST[tag] = rec
+    z = np.zeros(0, np.int64)
+    if nq == 0 or ns == 0:
+        return z, z.copy()
+    if float(nq) * float(ns) >= 9.2e18:                       # 쌍 열쇠 q·n + s 가 int64 안
+        raise ValueError(f'② 탄소 접합: 점 {nq} × 선분 {ns} — 쌍 열쇠가 int64 를 넘는다 (구현 한계)')
+    from scipy.spatial import cKDTree
+    sl = np.linalg.norm(P1 - P0, axis=1)
+    L0 = float(sl.mean()) if L0 is None else float(L0)
+    mid, hs, par = _subpieces(P0, P1, L0)
+    span = float(np.max(np.abs(P0))) + float(np.max(np.abs(P1))) + float(np.max(np.abs(X)))
+    r = (rq + float(hs.max())) * (1.0 + 1.0e-9) + 1.0e-12 * (1.0 + span)
+    tree = cKDTree(mid)
+    cnt = np.asarray(tree.query_ball_point(X, r, return_length=True), np.int64).reshape(nq)
+    cs = np.cumsum(cnt)
+    budget = max(1, int(_PAIR_ENTRY_BUDGET))
+    keys = []
+    a = n_chunk = max_ent = 0
+    while a < nq:
+        base = int(cs[a - 1]) if a else 0
+        b = min(max(int(np.searchsorted(cs, base + budget, side='right')), a + 1), nq)
+        lists = tree.query_ball_point(X[a:b], r[a:b])
+        lens = np.asarray([len(x) for x in lists], np.int64)
+        tot = int(lens.sum())
+        n_chunk += 1
+        max_ent = max(max_ent, tot)
+        if tot:
+            sub = np.fromiter(itertools.chain.from_iterable(lists), np.int64, count=tot)
+            q = np.repeat(np.arange(a, b, dtype=np.int64), lens)
+            keys.append(np.unique(q * ns + par[sub]))
+        a = b
+    key = np.unique(np.concatenate(keys)) if keys else z
+    rec.update({'n_subpieces': int(len(mid)), 'L0_um': float(L0), 'max_sub_half_um': float(hs.max()),
+                'old_radius_extra_um': float(0.5 * float(sl.max())), 'max_seg_len_um': float(sl.max()),
+                'n_entries': int(cnt.sum()), 'n_chunks': int(n_chunk), 'max_chunk_entries': int(max_ent),
+                'max_point_entries': int(cnt.max()), 'n_candidates': int(len(key))})
+    return key // ns, key % ns
+
+
+def _near_seg_pairs(P0, P1, D, tag='pairs', L0=None):
+    """최근접 거리 ≤ D 일 수 있는 선분 쌍 후보 → (m, 2) int64 · i < j · (i, j) 사전식 정준 순서 · 유일.
+    방법 — 선분을 길이 ≤ L0 조각으로 같은 길이 등분 (기본 L0 = max(D, 선분 길이 평균) → 조각 수 ≤ 2 × 선분 수) · 조각 중점 m · 반 길이 h ·
+    반지름 r = 2·max(h) + D (+ 반올림 여유) · 조각 쌍 |m_a − m_b| ≤ r 를 덩어리별로 (`_PAIR_ENTRY_BUDGET` 행) 찾아 부모 선분 쌍으로 (같은
+    부모 버림).  보장 = 상위집합: 두 선분의 최근접점 X (조각 a 안) · Y (조각 b 안) 이면 |m_a − m_b| ≤ h_a + |X − Y| + h_b ≤ r.  (옛 판의
+    2·max(선분 반 길이) + D 도 같은 꼴의 상위집합 — 가장 긴 선분 하나가 모든 쌍의 반지름을 정한 것이 다르다.)  L0 = 성능 손잡이 (시험이 여러
+    값을 본다 · 생산은 기본).  여유 = 상대 1e-9 + 좌표 크기 × 1e-12 (중점 · 거리 계산의 반올림 몇 ulp 보다 훨씬 크다 · 성능 영향 없음)."""
+    P0 = np.asarray(P0, np.float64).reshape(-1, 3)
+    P1 = np.asarray(P1, np.float64).reshape(-1, 3)
+    ns = len(P0)
+    rec = {'tag': tag, 'n_segments': int(ns), 'n_candidates': 0}
+    _PAIR_SEARCH_LAST[tag] = rec
+    if ns < 2:
+        return np.zeros((0, 2), np.int64)
+    if ns >= 3_037_000_499:                                  # 쌍 열쇠 i·n + j 가 int64 안
+        raise ValueError(f'② 탄소 접합: 선분 {ns} 개 — 쌍 열쇠가 int64 를 넘는다 (구현 한계)')
+    from scipy.spatial import cKDTree
+    sl = np.linalg.norm(P1 - P0, axis=1)
+    L0 = max(float(D), float(sl.mean())) if L0 is None else float(L0)
+    mid, hs, par = _subpieces(P0, P1, L0)
+    span = float(np.max(np.abs(P0))) + float(np.max(np.abs(P1)))
+    r = (2.0 * float(hs.max()) + float(D)) * (1.0 + 1.0e-9) + 1.0e-12 * (1.0 + span)
+    tree = cKDTree(mid)
+    cnt = np.asarray(tree.query_ball_point(mid, r, return_length=True), np.int64)
+    cs = np.cumsum(cnt)
+    budget = max(1, int(_PAIR_ENTRY_BUDGET))
+    keys = []
+    nq = len(mid)
+    a = 0
+    n_ent = n_chunk = max_ent = 0
+    while a < nq:
+        base = int(cs[a - 1]) if a else 0
+        b = min(max(int(np.searchsorted(cs, base + budget, side='right')), a + 1), nq)
+        sdm = cKDTree(mid[a:b]).sparse_distance_matrix(tree, r, output_type='ndarray')
+        qa = np.asarray(sdm['i'], np.int64) + a
+        qb = np.asarray(sdm['j'], np.int64)
+        n_ent += len(qa)
+        n_chunk += 1
+        max_ent = max(max_ent, len(qa))
+        m = qa < qb                                          # 조각 쌍마다 한 번 (작은 번호 쪽 덩어리에서)
+        pa, pb = par[qa[m]], par[qb[m]]
+        m2 = pa != pb                                        # 같은 부모 (한 선분의 두 조각) 버림
+        pa, pb = pa[m2], pb[m2]
+        if len(pa):
+            keys.append(np.unique(np.minimum(pa, pb) * ns + np.maximum(pa, pb)))
+        a = b
+    key = np.unique(np.concatenate(keys)) if keys else np.zeros(0, np.int64)
+    rec.update({'n_subpieces': int(nq), 'L0_um': float(L0), 'radius_um': float(r),
+                'old_radius_um': float(2.0 * 0.5 * float(sl.max()) + float(D)), 'max_seg_len_um': float(sl.max()),
+                'n_entries': int(n_ent), 'n_chunks': int(n_chunk), 'max_chunk_entries': int(max_ent),
+                'max_point_entries': int(cnt.max()), 'n_candidates': int(len(key))})
+    if not len(key):
+        return np.zeros((0, 2), np.int64)
+    return np.column_stack([key // ns, key % ns]).astype(np.int64)
+
+
+def _closest_chunks(segs, pr, D, distinct):
+    """후보 쌍 → 최근접 ≤ D 인 쌍 (덩어리 `_CLOSEST_CHUNK` 마다 같은 식 — 행마다 원소별 계산이라 덩어리 경계와 무관한 비트).
+    distinct = True: `_distinct_keep` (조각이 다름) · 쌍 방향 = 정준 조각 순 / False: 같은 조각 · 쌍 방향 = i < j.
+    → (i, j, d, s, t, C1, C2) — 후보 순서 그대로 (호출자가 정준 순서를 정한다) · 근접 쌍 없음 = None."""
+    P0, P1 = segs['P0'], segs['P1']
+    acc = {k: [] for k in ('i', 'j', 'd', 's', 't', 'C1', 'C2')}
+    ch = max(1, int(_CLOSEST_CHUNK))
+    for c0 in range(0, len(pr), ch):
+        i = np.asarray(pr[c0:c0 + ch, 0], np.int64)
+        j = np.asarray(pr[c0:c0 + ch, 1], np.int64)
+        if distinct:
+            keep = np.asarray(_distinct_keep(segs, i, j), bool)
+        else:
+            keep = segs['piece'][i] == segs['piece'][j]
+        i, j = i[keep], j[keep]
+        if len(i) == 0:
+            continue
+        if distinct:
+            sw = segs['piece'][i] > segs['piece'][j]         # ★ 10-21 RCA-04 — 쌍 방향 = 정준 조각 순 (fid 라벨 아님)
+        else:
+            sw = i > j
+        i, j = np.where(sw, j, i), np.where(sw, i, j)
+        d, s, t, C1, C2 = seg_seg_closest(P0[i], P1[i], P0[j], P1[j])
+        close = d <= D
+        for k, v in (('i', i), ('j', j), ('d', d), ('s', s), ('t', t), ('C1', C1), ('C2', C2)):
+            acc[k].append(v[close])
+    if not acc['i'] or not sum(len(x) for x in acc['i']):
+        return None
+    return (np.concatenate(acc['i']), np.concatenate(acc['j']), np.concatenate(acc['d']), np.concatenate(acc['s']),
+            np.concatenate(acc['t']), np.concatenate(acc['C1']).reshape(-1, 3), np.concatenate(acc['C2']).reshape(-1, 3))
+
+
+def _distinct_empty():
+    return {'fi': np.zeros(0, np.int64), 'fj': np.zeros(0, np.int64), 'self': np.zeros(0, bool), 'd0': np.zeros(0),
+            'Lc': np.zeros(0), 'Ci': np.zeros((0, 3)), 'Cj': np.zeros((0, 3)), 'seg_i': [], 'seg_j': [],
+            'piece_i': np.zeros(0, np.int64), 'piece_j': np.zeros(0, np.int64), 'si_min': np.zeros(0, np.int64),
+            'sj_min': np.zeros(0, np.int64)}
+
+
 def _distinct_instances(segs, D, T):
     """J2a · J2c — 서로 다른 섬유 (★ 10-21 Q-A: `_distinct_keep` = 조각이 다름 · 같은 fid 의 끊긴 조각 포함) 선분 쌍 중 최근접 ≤ D ·
-    같은 조각 이웃 선분끼리 이어진 쌍 = instance 하나."""
+    같은 조각 이웃 선분끼리 이어진 쌍 = instance 하나.  ★ 11-06 (`SELF-155`) 후보 = `_near_seg_pairs` · 몸체 = `_distinct_from_pairs`."""
     P0, P1 = segs['P0'], segs['P1']
-    ns = len(P0)
-    empty = {'fi': np.zeros(0, np.int64), 'fj': np.zeros(0, np.int64), 'self': np.zeros(0, bool), 'd0': np.zeros(0),
-             'Lc': np.zeros(0), 'Ci': np.zeros((0, 3)), 'Cj': np.zeros((0, 3)), 'seg_i': [], 'seg_j': [],
-             'piece_i': np.zeros(0, np.int64), 'piece_j': np.zeros(0, np.int64), 'si_min': np.zeros(0, np.int64),
-             'sj_min': np.zeros(0, np.int64)}
-    if ns < 2:
-        return empty
-    from scipy.spatial import cKDTree
-    mid = 0.5 * (P0 + P1)
-    half = 0.5 * np.linalg.norm(P1 - P0, axis=1)
-    rad = 2.0 * float(half.max()) + D
-    pr = cKDTree(mid).query_pairs(rad, output_type='ndarray')
+    if len(P0) < 2:
+        return _distinct_empty()
+    return _distinct_from_pairs(segs, _near_seg_pairs(P0, P1, D, tag='distinct'), D, T)
+
+
+def _distinct_from_pairs(segs, pr, D, T):
+    """`_distinct_instances` 의 몸체 — 후보 쌍 pr (상위집합 · 순서 무관) → instance 표.  나열 순서가 바꿀 수 있던 것은 마지막 정렬의 동률뿐이다
+    (union-find 무리 = 연결 성분 · 무리 안 접점 · 선분 집합 · d0 · L_c = 무리 내용만) → 동률 마지막 키 = (최근접 쌍 선분 i, j) (★ 11-06)."""
     if len(pr) == 0:
-        return empty
-    i, j = pr[:, 0], pr[:, 1]
-    keep = np.asarray(_distinct_keep(segs, i, j), bool)
-    i, j = i[keep], j[keep]
-    if len(i) == 0:
-        return empty
-    sw = segs['piece'][i] > segs['piece'][j]                 # ★ 10-21 RCA-04 — 쌍 방향 = 정준 조각 순 (fid 라벨 아님)
-    i, j = np.where(sw, j, i), np.where(sw, i, j)
-    d, s, t, C1, C2 = seg_seg_closest(P0[i], P1[i], P0[j], P1[j])
-    close = d <= D
-    i, j, d, s, t, C1, C2 = i[close], j[close], d[close], s[close], t[close], C1[close], C2[close]
-    if len(i) == 0:
-        return empty
+        return _distinct_empty()
+    cl = _closest_chunks(segs, pr, D, True)
+    if cl is None:
+        return _distinct_empty()
+    i, j, d, s, t, C1, C2 = cl
     uf = _UF()
     keyof = {}
     pi_, pj_ = segs['piece'], segs['piece']
@@ -1138,8 +1304,12 @@ def _distinct_instances(segs, D, T):
         out['si_min'].append(int(i[b])); out['sj_min'].append(int(j[b]))
     out['Lc'] = _touch_len_all(out['seg_i'], out['seg_j'], segs, T)
     #  ★ 10-21 (RCA-04) — instance 순서 = (정준 조각 i, 조각 j, 접점) — fid 라벨 아님
-    o = np.lexsort((np.array([c[2] for c in out['Ci']]), np.array([c[1] for c in out['Ci']]),
-                    np.array([c[0] for c in out['Ci']]), np.array(out['piece_j']), np.array(out['piece_i'])))
+    #  ★ 11-06 (`SELF-155`) — 그 셋이 비트로 같은 두 instance (같은 조각 쌍의 떨어진 두 무리가 같은 꼭짓점을 접점으로 갖는 꼴) 를 옛 판은 무리
+    #    순서 = 후보 나열 순서 (트리 모양) 로 풀었다 → 마지막 키 (최근접 쌍 선분 i, j) 로 정준 (무리는 쌍을 나누지 않으므로 instance 마다 다르다) ·
+    #    그런 동률이 없는 침대 = 옛 순서와 같다 (뒤 키는 앞 키의 동률만 가른다 · 시험 PTIE)
+    o = np.lexsort((np.array(out['sj_min'], np.int64), np.array(out['si_min'], np.int64), np.array([c[2] for c in out['Ci']]),
+                    np.array([c[1] for c in out['Ci']]), np.array([c[0] for c in out['Ci']]), np.array(out['piece_j']),
+                    np.array(out['piece_i'])))
     res = {'fi': np.asarray(out['fi'], np.int64)[o], 'fj': np.asarray(out['fj'], np.int64)[o],
            'self': np.zeros(len(o), bool), 'd0': np.asarray(out['d0'])[o], 'Lc': np.asarray(out['Lc'])[o],
            'Ci': np.asarray(out['Ci']).reshape(-1, 3)[o], 'Cj': np.asarray(out['Cj']).reshape(-1, 3)[o],
@@ -1151,7 +1321,28 @@ def _distinct_instances(segs, D, T):
 
 def _touch_len_all(seg_i, seg_j, segs, T):
     """L_c (J8 · `CJUNC_LC_RULE`) — instance 마다 두 가닥 각각에서 상대 instance 선분까지 중심선 거리 ≤ T (닿음) 인 구간 길이
-    (선분마다 구간 합집합 · 안쪽 경계) 의 최댓값.  모든 instance · 선분 쌍을 한 번에 (이분 한 번)."""
+    (선분마다 구간 합집합 · 안쪽 경계) 의 최댓값.  instance · 선분 쌍을 묶음마다 한 번에 (이분 한 번).
+    ★ 11-06 (`SELF-155`) — 묶음 = instance 를 가르지 않고 행 (2·|A|·|B|) 합이 `_TOUCH_ENTRY_BUDGET` 이하 (instance 하나가 넘으면 그 하나) ·
+    행마다 원소별 계산 · 합산 = instance 안 (쪽 · 선분 · ua) 정렬 순서 그대로 → 묶음 경계와 무관한 비트 (옛 판 = 전부 한 묶음)."""
+    nI = len(seg_i)
+    Lc = np.zeros(nI)
+    if nI == 0:
+        return Lc
+    rows = np.asarray([2 * len(a) * len(b) for a, b in zip(seg_i, seg_j)], np.int64)
+    cs = np.cumsum(rows)
+    budget = max(1, int(_TOUCH_ENTRY_BUDGET))
+    seglen = np.linalg.norm(segs['P1'] - segs['P0'], axis=1)          # 옛 판 몸체와 같은 식 (한 번만)
+    a = 0
+    while a < nI:
+        base = int(cs[a - 1]) if a else 0
+        b = min(max(int(np.searchsorted(cs, base + budget, side='right')), a + 1), nI)
+        Lc[a:b] = _touch_len_batch(seg_i[a:b], seg_j[a:b], segs, T, seglen)
+        a = b
+    return Lc
+
+
+def _touch_len_batch(seg_i, seg_j, segs, T, seglen):
+    """`_touch_len_all` 한 묶음 (옛 판의 몸체 그대로 · instance 번호 = 묶음 안 번호 · seglen = 전체 선분 길이)."""
     P0, P1 = segs['P0'], segs['P1']
     nI = len(seg_i)
     Lc = np.zeros(nI)
@@ -1167,7 +1358,6 @@ def _touch_len_all(seg_i, seg_j, segs, T):
     _, us, _, _, _ = seg_seg_closest(P0[S], P1[S], P0[Q], P1[Q])
     ua, ub = _touch_intervals(P0[S], P1[S], P0[Q], P1[Q], T, us)
     ok = np.isfinite(ua)
-    seglen = np.linalg.norm(P1 - P0, axis=1)
     if not ok.any():
         return Lc
     K, SIDE, S, ua, ub = K[ok], SIDE[ok], S[ok], ua[ok], ub[ok]
@@ -1254,27 +1444,14 @@ def _self_pairs(segs, D, s_min):
              'C1': np.zeros((0, 3)), 'C2': np.zeros((0, 3)), 'junc': np.zeros(0, bool)}
     if ns < 2:
         return empty
-    from scipy.spatial import cKDTree
-    mid = 0.5 * (P0 + P1)
-    half = 0.5 * np.linalg.norm(P1 - P0, axis=1)
-    rad = 2.0 * float(half.max()) + D
-    pr = cKDTree(mid).query_pairs(rad, output_type='ndarray')
-    if len(pr) == 0:
+    #  ★ 11-06 (`SELF-155`) — 후보 = `_near_seg_pairs` (옛 판 = 전역 반지름 query_pairs · `_distinct_instances` 와 같은 폭증) · 판정 = 덩어리별 ·
+    #    순서 = 옛 판과 같이 (i, j) 정렬 (판정 뒤에 정렬해도 행마다 같은 값 · 열쇠 유일)
+    cl = _closest_chunks(segs, _near_seg_pairs(P0, P1, D, tag='self'), D, False)
+    if cl is None:
         return empty
-    i, j = pr[:, 0], pr[:, 1]
-    keep = segs['piece'][i] == segs['piece'][j]
-    i, j = i[keep], j[keep]
-    if len(i) == 0:
-        return empty
-    sw = i > j
-    i, j = np.where(sw, j, i), np.where(sw, i, j)
+    i, j, d, sp_, tp_, C1, C2 = cl
     o = np.lexsort((j, i))
-    i, j = i[o], j[o]
-    d, sp_, tp_, C1, C2 = seg_seg_closest(P0[i], P1[i], P0[j], P1[j])
-    close = d <= D
-    i, j, d, sp_, tp_, C1, C2 = i[close], j[close], d[close], sp_[close], tp_[close], C1[close], C2[close]
-    if len(i) == 0:
-        return empty
+    i, j, d, sp_, tp_, C1, C2 = i[o], j[o], d[o], sp_[o], tp_[o], C1[o], C2[o]
     ai = segs['arc_a'][i] + sp_ * (segs['arc_b'][i] - segs['arc_a'][i])
     aj = segs['arc_a'][j] + tp_ * (segs['arc_b'][j] - segs['arc_a'][j])
     s = np.abs(aj - ai)

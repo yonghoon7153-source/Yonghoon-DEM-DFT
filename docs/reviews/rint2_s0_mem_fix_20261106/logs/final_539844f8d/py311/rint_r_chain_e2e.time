@@ -1,0 +1,4 @@
+cmd=python3 scripts/test_rint_r_chain_e2e.py
+elapsed_s=871.0
+max_rss_kb=103648
+rc=0
