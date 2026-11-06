@@ -1,0 +1,37 @@
+......F.F........
+======================================================================
+FAIL: test_submit_approval_replacement_snapshot (__main__.JobStart.test_submit_approval_replacement_snapshot)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_job_start_draft.py", line 51, in test_submit_approval_replacement_snapshot
+    Submission().exercise('ok',hook=hook)
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_submit_draft.py", line 30, in exercise
+    if hook:return hook(c,approval,files,seal)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_job_start_draft.py", line 45, in hook
+    self.assertEqual(claim['approval_sha256'],hashlib.sha256(initial).hexdigest())
+AssertionError: '98223ee31d5f34f78b6cf58ae69c2138527fc9c52b96b4d08c497a64752c35d4' != 'f018f778bf67111beaf6583fadaa78a6008a37eb2681f93d9e55858511dd90e7'
+- 98223ee31d5f34f78b6cf58ae69c2138527fc9c52b96b4d08c497a64752c35d4
++ f018f778bf67111beaf6583fadaa78a6008a37eb2681f93d9e55858511dd90e7
+
+
+======================================================================
+FAIL: test_changed_job_start (test_submit_draft.Submission.test_changed_job_start)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_submit_draft.py", line 51, in test_changed_job_start
+    self.assertEqual(self.exercise('ok',change),(2,2,''))
+AssertionError: Tuples differ: (0, 2, 'x') != (2, 2, '')
+
+First differing element 0:
+0
+2
+
+- (0, 2, 'x')
++ (2, 2, '')
+
+----------------------------------------------------------------------
+Ran 17 tests in 1.426s
+
+FAILED (failures=2)
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12345\n", "stderr": "", "state": "SUBMITTED", "job_id": "12345"}

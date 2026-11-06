@@ -1,0 +1,6 @@
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.063s
+
+OK
+{"case": "PRECAL_E0", "returncode": 0, "stdout": "12345\n", "stderr": "", "state": "SUBMITTED", "job_id": "12345"}

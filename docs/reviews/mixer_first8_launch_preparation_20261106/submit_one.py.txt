@@ -1,0 +1,103 @@
+#!/usr/bin/env python3
+"""INACTIVE DRAFT. No invocation in this task except isolated mocked tests.
+Future use: python3 /absolute/path/submit_one.py.txt /absolute/path/approval.json
+Only one case. Approval creation is an author/reviewer operation, not this tool.
+"""
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+import shlex
+# Reviewed job-start bytes, fixed at this draft revision; never discover identity from staged code.
+REVIEWED_JOB_START_SHA256='d4a37e703d35c89b5769f9199c08f7462b8d0928138a073c03714f95c1dc57b2'
+
+def canonical_runner(c, approval_path):
+    spec=c.get("runner_bindings",{})
+    for k in ("python", "job_start", "stdout", "stderr"):
+        require(type(spec.get(k)) is str and spec[k].startswith("/") and "\n" not in spec[k] and " " not in spec[k], "runner binding "+k)
+    require(re.fullmatch(r"[0-9]+-[0-9]{2}:[0-9]{2}:[0-9]{2}",spec.get("walltime","")) is not None,"walltime binding")
+    return "\n".join(["#!/usr/bin/env bash","#SBATCH --partition=cpu","#SBATCH --qos=cpu-60","#SBATCH --ntasks=20","#SBATCH --cpus-per-task=1","#SBATCH --no-requeue","#SBATCH --time="+spec["walltime"],"#SBATCH --output="+spec["stdout"],"#SBATCH --error="+spec["stderr"],"set -euo pipefail","exec "+" ".join(shlex.quote(x) for x in (spec["python"],spec["job_start"],str(Path(approval_path).resolve())))])+"\n"
+
+CASES = {'PRECAL_E0','PRECAL_N0'} | {'PRECAL_R1_B%d_%s'%(b,r) for b in (1,2,3) for r in ('U','C')}
+def require(ok, why):
+    if not ok: raise ValueError(why)
+def digest(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+def main(path):
+    approval_raw=Path(path).read_bytes()
+    approval_sha=hashlib.sha256(approval_raw).hexdigest()
+    c=json.loads(approval_raw)
+    require(c.get('schema')=='mixer_first8_execution_approval/1', 'wrong approval schema')
+    require(c.get('execution_authorized') is True and c.get('gate') in ('QUALIFICATION_PILOT_GO','MAP_CASE_GO'), 'no explicit execution approval')
+    for k in ('author_go','qualification','mxd2r_disposition','live_preflight','source_manifest','policy','runner','binary','mpi_launcher'):
+        a=c.get(k,{})
+        p=Path(a.get('path',''))
+        require(p.is_absolute() and p.is_file() and not p.is_symlink(), 'missing physical '+k)
+        require(re.fullmatch('[0-9a-f]{64}',a.get('sha256','')) is not None and digest(p)==a['sha256'], 'identity mismatch '+k)
+    policy=json.loads(Path(c['policy']['path']).read_text())
+    require(policy.get('execution_authorized') is True and policy.get('policy_id') and policy.get('allowed_to_submit')==[c.get('case')], 'policy case authorization')
+    require(c.get('case') in CASES, 'outside first8')
+    require(c.get('author_choices_confirmed') is True, 'choices missing')
+    require(type(c.get('np')) is int and c['np']==20, 'NP20 only; changed NP needs revised review')
+    live=json.loads(Path(c['live_preflight']['path']).read_text())
+    import time
+    age=time.time()-live.get('observed_unix',0)
+    require(0 <= age <= 300, 'live preflight older than five minutes or future dated')
+    for k in ('qos_verified','disk_budget_verified','inode_budget_verified','d07_finished','paths_verified'):
+        require(live.get(k) is True, 'missing preflight '+k)
+    require(c['gate']!='MAP_CASE_GO' or live.get('qualification_accepted') is True, 'map release requires accepted qualification')
+    require(c['gate']!='QUALIFICATION_PILOT_GO' or c['case']=='PRECAL_E0', 'pilot restricted to E0')
+    require(live.get('qos')=='cpu-60' and live.get('partition')=='cpu','scheduler scope')
+    used=live.get('reserved_cpus')
+    require(type(used) is int and used>=0 and used+c['np']<=60, 'aggregate CPU cap')
+    require(type(live.get('running_first8')) is int and 0<=live['running_first8']<c.get('approved_concurrency',0)<=2,'concurrency')
+    require(c.get('wave_release')==[c['case']], 'one-case explicit wave release required')
+    root=Path(c.get('case_dir',''))
+    require(root.is_absolute() and root.is_dir() and not root.is_symlink(), 'case directory')
+    require(not any((root/n).exists() for n in ('log.liggghts','post','restart')), 'not fresh')
+    manifest=json.loads(Path(c['source_manifest']['path']).read_text())
+    require(type(manifest.get('files')) is list and bool(manifest['files']), 'empty manifest')
+    paths=set()
+    for a in manifest['files']:
+        p=Path(a['path']); require(p.is_absolute() and p.is_file() and not p.is_symlink(),'manifest path')
+        require(str(p) not in paths,'duplicate manifest path'); paths.add(str(p))
+        require(digest(p)==a['sha256'],'manifest drift')
+    assets=json.loads((Path(__file__).resolve().parent/'static_asset_manifest.json').read_text())
+    expected={Path(a['path']).name:a['sha256'] for a in assets['files'] if a['path'].startswith('planned_assets/'+c['case']+'/')}
+    for n in ('in.mixer','deck_meta.json','Drum.stl','Front.stl','Back.stl'):
+        require(str(root/n) in paths and digest(root/n)==expected.get(n), 'unsealed or changed planned input '+n)
+    seal=json.loads((Path(__file__).resolve().parent/'source_seal.json').read_text())
+    require(c.get('source_pin')==seal['source_pin'],'source pin differs')
+    source_root=Path(c.get('source_root',''))
+    require(source_root.is_absolute(),'source root missing')
+    by_path={a['path']:a['sha256'] for a in manifest['files']}
+    for a in seal['files']:
+        required=str(source_root/a['path'])
+        require(by_path.get(required)==a['sha256'],'missing or different bounded source dependency '+a['path'])
+    require(c.get('runner_reviewed') is True and c.get('walltime_approved') is True, 'runner/walltime review missing')
+    require(Path(c['runner']['path']).read_text()==canonical_runner(c,path), 'runner differs from fixed single-case command')
+    for k in ('python','job_start'):
+        require(c['runner_bindings'][k] in paths,'unsealed execution dependency '+k)
+    require(by_path.get(c['runner_bindings']['job_start'])==REVIEWED_JOB_START_SHA256, 'job-start differs from reviewed implementation')
+    # O_EXCL claim is retained on every outcome. Never retry an uncertain submission.
+    claim=root/'submission.claim.json'
+    fd=os.open(str(claim),os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
+    with os.fdopen(fd,'w') as out:
+        json.dump({'approval_sha256':approval_sha, 'case':c['case'],'state':'ATTEMPT_CLAIMED'},out)
+        out.flush(); os.fsync(out.fileno())
+    try:
+        r=subprocess.run(['sbatch','--parsable','--no-requeue',c['runner']['path']],capture_output=True,text=True,timeout=60)
+        ok=r.returncode==0 and re.fullmatch(r'[1-9][0-9]*(;[A-Za-z0-9_.-]+)?\n?',r.stdout) is not None
+        receipt={'case':c['case'],'returncode':r.returncode,'stdout':r.stdout,'stderr':r.stderr,'state':'SUBMITTED' if ok else 'AMBIGUOUS_OR_FAILED_HOLD','job_id':r.stdout.strip().split(';')[0] if ok else None}
+    except (OSError,subprocess.TimeoutExpired) as exc:
+        receipt={'case':c['case'],'state':'AMBIGUOUS_OR_FAILED_HOLD','error':str(exc),'job_id':None};ok=False
+    (root/'submission.receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+    require(ok,'submission failed/ambiguous; claim retained, inspect scheduler manually, never retry')
+    print(json.dumps(receipt))
+if __name__=='__main__':
+    try:
+        require(len(sys.argv)==2,'one approval path required');main(sys.argv[1])
+    except Exception as exc:
+        print('HOLD: '+str(exc),file=sys.stderr);sys.exit(2)

@@ -1,0 +1,62 @@
+FIRST8 FUTURE COMMAND REVIEW FILE — NOT A SHELL SCRIPT / DO NOT SOURCE
+Status: PREPARATION_ONLY. Every <...> is an unresolved binding. No live commands
+were run. prepare_only.sh refuses preflight/launch/watch/return/stop even with GO.
+The following are command shapes for a separate reviewed execution package,
+not executable instructions for this package. No SSH endpoint is known/pinned.
+
+PRE-FLIGHT (future authorized host session; save raw receipts with UTC timestamp)
+  hostname
+  date -u
+  readlink -f <APPROVED_BINARY>
+  sha256sum <APPROVED_BINARY> <APPROVED_MPI_LAUNCHER>
+  sha256sum -c <APPROVED_COMPLETE_INPUT_MANIFEST>
+  squeue -u <APPROVED_ACCOUNT_USER> -o '%i|%j|%T|%C|%q|%P'
+  sacctmgr show association user=<APPROVED_ACCOUNT_USER> format=User,Account,Partition,QOS
+  sacctmgr show qos cpu-60 format=Name,MaxTRESPU,GrpTRES
+  df -PB1 <APPROVED_RUN_ROOT>
+  df -Pi <APPROVED_RUN_ROOT>
+  quota -s
+Missing/denied/ambiguous command output = UNKNOWN/BLOCKED. Exact quota command
+may differ on the actual Lustre host: confirm first, do not infer unlimited.
+No binary probe/run0/qualification simulation is authorized here. Identify a
+separately approved qualification receipt, or request that separate execution GO.
+
+LAUNCH (future reviewed runner only; one named case, no array/dependency/requeue)
+  sbatch --parsable --no-requeue <APPROVED_SINGLE_CASE_RUNNER>
+Runner must bind fresh working directory, stdout/stderr and log.liggghts,
+partition cpu, QoS cpu-60, --ntasks=<APPROVED_NP>, --cpus-per-task=1,
+--time=<APPROVED_WALLTIME>, OMP_NUM_THREADS=1 and library thread limits.
+Inside allocation, before MPI: compare complete input/source/policy/binary seals,
+case and author-approved choices, SLURM_NTASKS==NP, no existing outputs, and record
+job/start identity. Then exactly one command shape:
+  <PINNED_MPI_LAUNCHER> --oversubscribe --bind-to none -np <APPROVED_NP> <PINNED_BINARY> -in in.mixer
+Capture actual exit code and command argv; scheduler COMPLETED alone is not
+physical/reader qualification. Binary source tag or P1 receipt alone is insufficient.
+Do not invent <APPROVED_SINGLE_CASE_RUNNER>: current repository has no first8 runner.
+A script named launch_highbo.sh does not support first8. No manual bypass of gates.
+
+WATCH (only exact recorded job IDs from this package)
+  squeue -j <EXACT_JOB_ID> -o '%i|%T|%C|%M|%l|%R'
+  sacct -j <EXACT_JOB_ID> --parsable2 --format=JobID,State,ExitCode,Elapsed,AllocCPUS,MaxRSS
+  tail -n 80 <EXACT_CASE_STDOUT>
+  tail -n 80 <EXACT_CASE_STDERR>
+  tail -n 80 <EXACT_CASE_LOG_LIGGGHTS>
+  df -PB1 <APPROVED_RUN_ROOT>
+  df -Pi <APPROVED_RUN_ROOT>
+Review ERROR/nonfinite/lost-particle messages, task count, elapsed, output progress
+and approved disk/stall thresholds. No automatic follow-on or metric tuning.
+
+RETURN (after stop/completion, only this exact case; source/dest hashes compared)
+  rsync -a --protect-args --ignore-existing <APPROVED_HOST>:<EXACT_CASE_DIR>/ <NEW_EMPTY_LOCAL_SNAPSHOT>/
+Remote source inventory must be taken at quiescence, then checked against local
+snapshot, including full dumps/restarts, STLs, inputs, all receipts/logs/accounting.
+Partial/in-flight files or hash mismatch => TECH/HOLD, no overwrite to hide it.
+  python3 scripts/mixer_precal_observe.py --case PRECAL_E0 --run <VERIFIED_E0_SNAPSHOT>
+  python3 scripts/mixer_precal_observe.py --case <EXACT_ROTATING_CASE> --run <VERIFIED_CASE_SNAPSHOT> --reference <VERIFIED_E0_SNAPSHOT>
+These are future analysis commands; log contract is not binary/rank/exit proof.
+
+STOP (only an authorized operator, exact recorded package job ID)
+  scancel <EXACT_JOB_ID>
+Record reason/time/accounting, preserve partial inputs/outputs/checkpoints, mark
+TECH/HOLD and block later waves. No user-wide cancellation, resume, retry or
+requeue. Never treat restart files as permission or proof of bit identity.

@@ -1,0 +1,79 @@
+{
+  "schema": "mixer_first8_launch_preparation/1",
+  "status": "PREPARATION_ONLY",
+  "whole_gate": "HOLD",
+  "research_results": 0,
+  "execution_authorized": false,
+  "allowed_to_submit": [],
+  "active_registration": false,
+  "source_pin": "527e244e4ebd6f0cb04c6cfb2ff5f3a52fb01996",
+  "main_baseline": "18bb6a2e41ad58129657a68450f4c88157f3d5a6",
+  "ibb_state": {
+    "value": "empty",
+    "provenance": "author relayed user report 2026-11-06",
+    "live_verified": false
+  },
+  "author_choices": {
+    "np": {
+      "proposed": 20,
+      "approved": false
+    },
+    "concurrency": {
+      "initial_proposed": 1,
+      "later_max_proposed": 2,
+      "approved": false
+    },
+    "order": {
+      "proposed": [
+        "PRECAL_E0",
+        "PRECAL_N0",
+        [
+          "PRECAL_R1_B1_U",
+          "PRECAL_R1_B1_C"
+        ],
+        [
+          "PRECAL_R1_B2_U",
+          "PRECAL_R1_B2_C"
+        ],
+        [
+          "PRECAL_R1_B3_U",
+          "PRECAL_R1_B3_C"
+        ]
+      ],
+      "approved": false
+    }
+  },
+  "unresolved": [
+    "specific first-author execution GO bound to complete final package",
+    "author NP/concurrency/order choices",
+    "separate MXD2R disposition and full HOLD prerequisites",
+    "actual100k positive pipeline qualification",
+    "real log/dump format and binary/MPI qualification",
+    "actual binary/MPI/STL identities and compatible environment",
+    "live QoS/account/current aggregate allocation and D0.7 status",
+    "approved first8 policy and independently reviewed runner",
+    "actual host/root/user and retrieval destination",
+    "disk/quota/inode budget and thresholds",
+    "walltime and stall threshold",
+    "host-staged deck/meta/STL identity recheck against static_asset_manifest.json"
+  ],
+  "historical_binary_candidate": "/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi",
+  "binary_sha256": null,
+  "actual_deck_sha256": {
+    "PRECAL_R1_B1_U": "bb00b3251d76d45f311139606fdcbfd842e485489e49447a7d2373d5bfa891c6",
+    "PRECAL_R1_B1_C": "7875e1f053411e8531cecd616ffe1d016044a50b57d500f515edcd197e4d0d7d",
+    "PRECAL_R1_B2_U": "b37974e5c0674947912e932c55517e9e84243293f29257183f8f70cc032f2fd7",
+    "PRECAL_R1_B2_C": "d36d199388243ccd630cbd346cbcdb6f37bf8bb92ae9c8f4e73e2e98597a6a3e",
+    "PRECAL_R1_B3_U": "caa3cda3179602a16215295ac170737124919e42d43aa58ad5a31670c7576745",
+    "PRECAL_R1_B3_C": "26bf0b8c9f90225be813025650678b8e16697cbab415981201e07f1259431d62",
+    "PRECAL_N0": "adbbc8fa8f46730779fbf4f028f95a7aaf90c27ef2697c0dbe21a9ae1b5c6de3",
+    "PRECAL_E0": "8b588b24117ab77bf72d93662237268b401f714df8515d62ef7b964d01c6e718"
+  },
+  "disk_budget_bytes": null,
+  "walltime_request": null,
+  "cpu_cap": 60,
+  "cpu_cap_current_verified": false,
+  "no_auto_followup": true,
+  "fresh_only": true,
+  "actual_deck_sha256_provenance": "local static planned bytes; not host verified"
+}

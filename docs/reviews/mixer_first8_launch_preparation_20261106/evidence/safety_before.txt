@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_every_action_refuses_even_with_fake_go (__main__.PrepareOnly.test_every_action_refuses_even_with_fake_go)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_prepare_only.py", line 21, in test_every_action_refuses_even_with_fake_go
+    self.assertEqual(p.returncode, 64, (action,p.stdout,p.stderr))
+AssertionError: 127 != 64 : ('preflight', '', '/bin/bash: /workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/prepare_only.sh: No such file or directory\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=1)

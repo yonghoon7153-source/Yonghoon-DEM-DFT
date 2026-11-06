@@ -1,0 +1,46 @@
+{
+  "python": "Python 3.8.20",
+  "runs": [
+    {
+      "test": "test_prepare_only.py",
+      "rc": 0,
+      "scope": "local mock only; no host/scheduler/MPI"
+    },
+    {
+      "test": "test_submit_draft.py",
+      "rc": 0,
+      "scope": "local mock only; no host/scheduler/MPI"
+    },
+    {
+      "test": "test_job_start.py",
+      "rc": 2,
+      "scope": "local mock only; no host/scheduler/MPI",
+      "outcome": "Historical invocation failure: wrong filename; zero tests executed"
+    },
+    {
+      "test": "test_job_start_draft.py",
+      "rc": 1,
+      "scope": "local mock only; corrected invocation",
+      "outcome": "Historical isolated harness import failure; zero tests executed; product code unchanged"
+    }
+  ],
+  "harness_invocation_error": {
+    "attempt": "test_job_start.py",
+    "rc": 2,
+    "cause": "wrong filename; no tests executed",
+    "preserved_log": "py38_test_job_start.py.log"
+  },
+  "actual_completed_suites": [
+    "test_prepare_only.py",
+    "test_submit_draft.py",
+    "test_job_start_draft.py"
+  ],
+  "final_job_start_validation": "isolated_job_start_validation.json",
+  "final_job_start_result": {
+    "python": "Python 3.8.20",
+    "tests": 8,
+    "rc": 0,
+    "log": "py38_job_start_isolated_after.log",
+    "harness_fix": "Explicit local fixture import supports isolated mode; production drafts unchanged"
+  }
+}

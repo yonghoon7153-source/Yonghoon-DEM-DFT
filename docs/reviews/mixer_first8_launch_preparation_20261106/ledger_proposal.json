@@ -1,0 +1,17 @@
+{
+  "apply_now": false,
+  "upsert_findings": [],
+  "closure_claimed": false,
+  "claimed_fixed": false,
+  "progress_append_proposal": "첫8 정적 덱·자산과 비활성 정책·한 팔 발사/작업시작/감시/회수/중단 초안 및 모의 경계 검사 준비. 실제 연구 결과0건·전체 HOLD. 새 외부 검토 대기.",
+  "claude_md_append_proposal": "Rint② 우선. 비 Rint 준비 자료만 추가; 실제 실행·값 열람·제출은 별도 1저자 GO 뒤.",
+  "open_conditions": [
+    "1저자 NP·동시 팔 수·순서 결정",
+    "실제 binary/MPI/런타임·경로·STL/덱 배치 신원·실시간 QoS·디스크/쿼터·시간 한계",
+    "MXD2R 별도 외부 재확인 및 해당 단계의 qualification 판정",
+    "최종 묶음과 범위를 지정한 별도 1저자 실행 GO"
+  ],
+  "shared_files_changed": false,
+  "research_execution": false,
+  "active_registration_changed": false
+}

@@ -1,0 +1,222 @@
+{
+  "schema": "mixer_precal_baseline_meta/1",
+  "registered": null,
+  "generator": "scripts/make_mixer_deck.py",
+  "generator_sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+  "argv": [],
+  "deck_file": "in.mixer",
+  "deck_sha256": "adbbc8fa8f46730779fbf4f028f95a7aaf90c27ef2697c0dbe21a9ae1b5c6de3",
+  "deck_bytes": 12096,
+  "arm": "L0",
+  "arm_desc": "§24 층상 · 점착 0 — 지표 상한 (음성 대조)",
+  "seed": 32452843,
+  "revolutions": 2,
+  "n_atoms_planned": 100000,
+  "cgf": 151.4,
+  "rpm": 76.67653377936789,
+  "period_s": 0.7825079857241121,
+  "stiffen_se": 20.0,
+  "hold_bo_pairwise": true,
+  "dt_factor": 1.0,
+  "cohesion_nonzero": false,
+  "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+  },
+  "E_soft_Pa": {
+    "AM_P": 1037000000.0,
+    "AM_S": 1037000000.0,
+    "SE": 10000000.0,
+    "WALL": 1480000000.0
+  },
+  "E_Pa": {
+    "AM_P": 1037000000.0,
+    "AM_S": 1037000000.0,
+    "SE": 200000000.0,
+    "WALL": 1480000000.0
+  },
+  "nu": {
+    "AM_P": 0.25,
+    "AM_S": 0.25,
+    "SE": 0.3,
+    "WALL": 0.3
+  },
+  "radius_m": {
+    "AM_P": 0.0006813,
+    "AM_S": 0.0003028,
+    "SE": 7.57e-05
+  },
+  "dt": {
+    "soft_rule_s": 7.091536359227548e-07,
+    "soft_set_by": "AM_S",
+    "rule_s": 2.372896783030651e-07,
+    "rule_set_by": "SE",
+    "deck_txt": "2.373e-07",
+    "deck_s": 2.373e-07,
+    "k": 1
+  },
+  "steps": {
+    "insert": 1,
+    "fill": 560606,
+    "run": 6595382,
+    "dump_every": 32976,
+    "restart_every": 200000,
+    "t0_planned": 1121184,
+    "steps_per_rev": 3297547.348184206
+  },
+  "physical_s": {
+    "settle": 0.2660636076,
+    "rotation": 1.5650841486,
+    "dump_interval": 0.007825204799999999,
+    "t0_planned": 0.2660569632
+  },
+  "pairs": [
+    {
+      "pair": "AM_P–AM_P",
+      "i": 1,
+      "j": 1,
+      "R_star_m": 0.00034065,
+      "E_star_soft_Pa": 553066666.6666666,
+      "E_star_Pa": 553066666.6666666,
+      "CED_soft": 0.0,
+      "CED": 0.0,
+      "F0_soft_N": 0.0,
+      "F0_N": 0.0,
+      "F0_ratio": null
+    },
+    {
+      "pair": "AM_P–AM_S",
+      "i": 1,
+      "j": 2,
+      "R_star_m": 0.00020963076923076926,
+      "E_star_soft_Pa": 553066666.6666666,
+      "E_star_Pa": 553066666.6666666,
+      "CED_soft": 0.0,
+      "CED": 0.0,
+      "F0_soft_N": 0.0,
+      "F0_N": 0.0,
+      "F0_ratio": null
+    },
+    {
+      "pair": "AM_P–SE",
+      "i": 1,
+      "j": 3,
+      "R_star_m": 6.813e-05,
+      "E_star_soft_Pa": 10880913.28321328,
+      "E_star_Pa": 183349982.76121184,
+      "CED_soft": 0.0,
+      "CED": 0.0,
+      "F0_soft_N": 0.0,
+      "F0_N": 0.0,
+      "F0_ratio": null
+    },
+    {
+      "pair": "AM_P–WALL",
+      "i": 1,
+      "j": 4,
+      "R_star_m": 0.0006813,
+      "E_star_soft_Pa": 658364683.8282923,
+      "E_star_Pa": 658364683.8282923,
+      "CED_soft": 0.0,
+      "CED": 0.0,
+      "F0_soft_N": 0.0,
+      "F0_N": 0.0,
+      "F0_ratio": null
+    },
+    {
+      "pair": "AM_S–AM_S",
+      "i": 2,
+      "j": 2,
+      "R_star_m": 0.0001514,
+      "E_star_soft_Pa": 553066666.6666666,
+      "E_star_Pa": 553066666.6666666,
+      "CED_soft": 0.0,
+      "CED": 0.0,
+      "F0_soft_N": 0.0,
+      "F0_N": 0.0,
+      "F0_ratio": null
+    },
+    {
+      "pair": "AM_S–SE",
+      "i": 2,
+      "j": 3,
+      "R_star_m": 6.0559999999999996e-05,
+      "E_star_soft_Pa": 10880913.28321328,
+      "E_star_Pa": 183349982.76121184,
+      "CED_soft": 0.0,
+      "CED": 0.0,
+      "F0_soft_N": 0.0,
+      "F0_N": 0.0,
+      "F0_ratio": null
+    },
+    {
+      "pair": "AM_S–WALL",
+      "i": 2,
+      "j": 4,
+      "R_star_m": 0.0003028,
+      "E_star_soft_Pa": 658364683.8282923,
+      "E_star_Pa": 658364683.8282923,
+      "CED_soft": 0.0,
+      "CED": 0.0,
+      "F0_soft_N": 0.0,
+      "F0_N": 0.0,
+      "F0_ratio": null
+    },
+    {
+      "pair": "SE–SE",
+      "i": 3,
+      "j": 3,
+      "R_star_m": 3.785e-05,
+      "E_star_soft_Pa": 5494505.494505494,
+      "E_star_Pa": 109890109.89010988,
+      "CED_soft": 0.0,
+      "CED": 0.0,
+      "F0_soft_N": 0.0,
+      "F0_N": 0.0,
+      "F0_ratio": null
+    },
+    {
+      "pair": "SE–WALL",
+      "i": 3,
+      "j": 4,
+      "R_star_m": 7.57e-05,
+      "E_star_soft_Pa": 10915259.237406887,
+      "E_star_Pa": 193615907.90162218,
+      "CED_soft": 0.0,
+      "CED": 0.0,
+      "F0_soft_N": 0.0,
+      "F0_N": 0.0,
+      "F0_ratio": null
+    },
+    {
+      "pair": "WALL–WALL",
+      "i": 4,
+      "j": 4,
+      "R_star_m": null,
+      "E_star_soft_Pa": null,
+      "E_star_Pa": null,
+      "CED_soft": 0.0,
+      "CED": 0.0,
+      "F0_soft_N": null,
+      "F0_N": null,
+      "F0_ratio": null
+    }
+  ],
+  "caveat": "F0 = B³/A² 보존 = 명목 소겹침 점착 힘 척도 (점착 지배 · 고립 접촉 근사) — SJKR 동역학 전체 불변이 아니다 (U_sep ∝ E*^(−2/3) · 접촉시간 · 접선 강성 · 감쇠 · 이력 · 영률비 · 실제 SJKR 구 교차 면적 · 메시 area_ratio).",
+  "dump_modify_format": "%d %d %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g",
+  "dens_gen": "lab20261014",
+  "dens_g_cm3": {
+    "AM": 4.85,
+    "SE": 1.64,
+    "VGCF": 2.0,
+    "PTFE": 2.2
+  },
+  "dens_carried_from_gen1": [
+    "VGCF",
+    "PTFE"
+  ],
+  "development_contract": "precal-first8-zero/unregistered",
+  "control_role": "N0"
+}
