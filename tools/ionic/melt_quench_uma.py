@@ -2276,8 +2276,9 @@ def _utc_before(a, b):
 
 def md_progress(run, plan, gate, checks):
     """⭐ 회신 DS P1-1 — 판정 때 MD 진행을 셋으로 가른다 (기준 앞 면제의 '진행 중' 지름길이 읽는다):
-      · 'complete' — 완료 흔적이 하나라도: md_complete_seen (완료 기록 경로 · 일정 끝 · 프레임 다 참) 이거나 MD 가 끝나야 생기는 경로 (완료 기록 임시
-        파일 · FIRE 로그 · final.xyz · result.json · md_init_raw.xyz) 가 있다 — **plan 판독과 무관하게** 경로만 본다 (plan 을 옮겨도 뒤 산출물은 남는다).
+      · 'complete' — 완료 흔적이 하나라도: md_complete_seen (완료 기록 경로 · 일정 끝 · 프레임 다 참) 이거나 MD 가 끝나야 생기는 경로 (MD_AFTER_TRACES —
+        완료 기록 · 그 임시 파일 · FIRE 로그 · final.xyz · final.vasp · result.json · gr_partials.csv · md_init_raw.xyz) 가 있다 — **plan 판독과 무관하게**
+        경로만 본다 (plan 을 옮겨도 뒤 산출물은 남는다).
       · 'in_progress' — 진행 중을 **확인**: plan 을 객체로 읽었고 · gate_check 가 오류 없이 일정 끝 아님 (False) 을 냈고 · 궤적 프레임을 세서
         n < 기대이고 · 완료 흔적이 없고 · 폴더에 MD 도중에 있을 수 있는 파일 (MID_RUN_FILES — plan · initial · prerelax · traj · thermo · 실행 전 ·
         판정 기록) 만 있다 (⭐ DT 전 1차 — 모르는 파일이 있으면 확인 불가).
