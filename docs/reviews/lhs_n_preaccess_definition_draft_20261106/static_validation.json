@@ -1,0 +1,41 @@
+{
+  "scope": "document JSON/source-byte/static-scope checks only; not scientific tests",
+  "new_research_results": 0,
+  "actual_data_access": false,
+  "actual_host_access": false,
+  "source_execution": false,
+  "inventory_execution": false,
+  "whole_gate": "HOLD",
+  "actual_template_null_fields": 45,
+  "empty_result_cohort_pair_arrays": true,
+  "unknown_prior_six_slots": 6,
+  "unique_planned_candidate_labels": 214,
+  "planned_labels_are_observations": false,
+  "decision_questions": 12,
+  "fixed_source_bindings_verified": 15,
+  "prior_accepted_N_files_byte_preserved": 7,
+  "sealed_inventory_command_sha256": "2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634",
+  "tracked_files_changed": [],
+  "mixer_branch_unchanged": true,
+  "full_gate_run": false,
+  "shared_CI_changed": false,
+  "independent_review": "PENDING; author-side checks are not external acceptance",
+  "known_limits": [
+    "actual input/lineage/exposure unknown",
+    "author ratification pending",
+    "protocol endpoint is not physical equilibrium",
+    "no statistical confidence or causal validation",
+    "LPI historical cause and time risks remain open",
+    "MLA external recheck pending"
+  ],
+  "checked_new_document_hashes": {
+    "docs/collab/codex_to_claude/20261106-0800_lhs-n-preaccess-definitions.md": "1d146dc7d406ed61c5b2f207b94064d6689d3af82e67b18c460fc8660e4aaa8d",
+    "docs/reviews/lhs_n_preaccess_definition_draft_20261106/README.md": "295f5ed81001fbf1f58ad7d649561ff855fd21f448276bceb08b9e9971bb587d",
+    "docs/reviews/lhs_n_preaccess_definition_draft_20261106/author_decisions.md": "96a54aa78371bcaf10bbc15e1086fa43240cc675436c4531ff4c66d51448747d",
+    "docs/reviews/lhs_n_preaccess_definition_draft_20261106/definition.json": "7b25b987463b244c6a4f07fbe67a5698974918ae36e46ad7e74c234f595a9b09",
+    "docs/reviews/lhs_n_preaccess_definition_draft_20261106/ledger_proposal.json": "ea37d10dc3a2668e50be1c2459684f14fe0558eb6e8f071881e6aa1d123f1644",
+    "docs/reviews/lhs_n_preaccess_definition_draft_20261106/review_request.md": "3591c4944bd7fa89e8ae07c8b1a7b64ff44b3a3de02a63af912f46426f151d53",
+    "docs/reviews/lhs_n_preaccess_definition_draft_20261106/source_identity.md": "b56bae600a6ddc53af8f7b2d8b9efaad053c04f5e92d5c605d2050b1922e60ff",
+    "docs/reviews/lhs_n_preaccess_definition_draft_20261106/source_manifest.json": "f12a888a236c7cb0377bc4fe8b60c59bd84f0c8cd517d5c51c53d36a41f9911e"
+  }
+}
