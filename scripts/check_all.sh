@@ -284,6 +284,7 @@ run 'webapp: gen2_publication_handover' python3 webapp/test_gen2_publication_han
 run 'g2_network_reread --selftest' python3 scripts/g2_network_reread.py --selftest  # 10-07 Codex 세대 2 재검증 §7-4 — 게시 다시 읽기 (읽기 전용): 실 생산자 게시 (관통 · 비관통 · GEN2-01) 양성 · 증서 CF → FULL · 도장 null · 기대 세대 다름 · manifest 선언 없음 반례 · ★ G2RR4-01 실 생산자 JSON = 상세 계약 (17/19 → 19/19)
 run 'webapp: gen2_stamp_record' python3 webapp/test_gen2_stamp_record.py  # 10-06 밤 G2RR-01 — 도장 ↔ 레코드 세대 대조 (실 생산자 → 게시 → 인계): Codex 도장 변이 (unknown · null · legacy · one_null_legacy_shape) · 키 하나씩 결손 · null · unknown · legacy · 타입 → τ P4 거부 · 역사 경로 = 확인된 역사 도장 스키마 (194 v1.2 실측 194/194) · 배치 manifest 기대 세대 · 웹앱 망 세대 행 (옛 코드 6/23)
 run 'webapp: hetero_transcript'   python3 webapp/test_hetero_transcript_page.py   # 10-05 이종기술 회의록 — 회의 둘 (09-18 · 10-02) 고르기 · 회의 종합 · 등록부 밖 키 404 · /hetero 논지 정본 비준 블록 (docs/hetero_thesis.md 에서 읽음 · fail-closed)
+run 'webapp: emod'                python3 webapp/test_emod_page.py   # 11-06 유효 영률 · 응력 페이지 — 정본 docs/effective_modulus_stress.md 에서 읽음 · 갱신 표지 하나 · fail-closed · 템플릿에 베끼지 않기
 run 'webapp: rint_explainer (Rint 설명 정적 페이지 + 사이드바 링크 · 봉인 app.py 무변경 · 10-21)'   python3 webapp/test_rint_explainer_page.py
 run 'webapp: dem_method_figs (2D DEM 방법 그림 정적 페이지 · 사이드바 · 내려받기 = docs 원본 바이트 · ../ 404 · 봉인 app.py 무변경 · 11-02)'   python3 webapp/test_dem_method_figs_page.py
 run 'sync_dem_method_figs_to_webapp --check (웹앱 그림 사본 = docs/50kg/report_y4/figs/p0_dem_method 바이트 같음)'   python3 scripts/sync_dem_method_figs_to_webapp.py --check

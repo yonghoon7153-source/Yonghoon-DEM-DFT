@@ -15352,7 +15352,7 @@
       "found_by": "kgy S0 단계 1 (11-04 · 출력 없이 끝남 → 진단 = 메모리 52.1 GB 에서 신호 kill)",
       "opened_in": "docs/reviews/rint2_kgy_commands_20261020.md",
       "title": "kgy 명령 문서에 S0 단계 1 의 메모리를 '침대당 RAM 수 GB (se_dump 1.6 GB 의 몇 배)' 로 어림했다 — 실측은 52.1 GB 에서 신호로 끝났다 (도구는 파이썬 예외면 '거부' 를 찍으므로 빈 출력 = 신호)",
-      "note": "그 줄에 철회 표지 (FAM 묶음 커밋).  고침 = 메모리 재기 → 도구 고침 (시험 먼저 · 출력 바이트 같게) → 게이트 → push → kgy 새 폴더에서 다시 (1저자 11-04 Q2 권고대로) — 그 전까지 open · 시간 어림 (침대당 15–30 분) 도 실측 전. ★ 11-05 Codex 회차 ② (리뷰 핀 `6917c3c9f` · docs/reviews/codex_review_rint2_rr_round2_20261105.md) §8 Q8 = 52.1 GB 신호 종료는 출력 없는 실패로 남음 · 다음 코드는 이 핀 밖 변경 · 메모리 개선 뒤 짧은 확인 = 같은 고정 합성 입력의 래스터 · instance/포트와 순서 · 동률 · 중복 처리 · L_c · s · 분위수 · 정준 지문 · 문턱 선택 대조 (chunk 경계 · 마지막 조각 · 빈 부류 · 겹친 경계 포함) · 생산 래스터와 S0 래스터가 갈라지지 않게 · 실패한 부분 census 채택 금지 · SBE 전용 · σ 비열람 · 입력 무쓰기 · 새 출력 폴더 · 실패 보존 · 새 핀의 peak RSS · 시간 · 종료 코드/신호 · 완성 산출물로 실제 개선 확인 · 리뷰 핀 → 봉인 핀 diff · S0/R 계획 해시 · 숫자 · 실행 정책 함께 확인 · \"출력 바이트 동일\" = 과학 값 · 정준 배열 정확 보존 + 바뀐 코드 출처 · 시간 = 진실한 새 값 (옛 fingerprint 를 붙여 바이트만 맞추기 금지 · ca_s0_census.py:1399–1401 · 1473–1476 · 1678–1685 · 1710).  상태 그대로 (open)."
+      "note": "그 줄에 철회 표지 (FAM 묶음 커밋).  고침 = 메모리 재기 → 도구 고침 (시험 먼저 · 출력 바이트 같게) → 게이트 → push → kgy 새 폴더에서 다시 (1저자 11-04 Q2 권고대로) — 그 전까지 open · 시간 어림 (침대당 15–30 분) 도 실측 전. ★ 11-05 Codex 회차 ② (리뷰 핀 `6917c3c9f` · docs/reviews/codex_review_rint2_rr_round2_20261105.md) §8 Q8 = 52.1 GB 신호 종료는 출력 없는 실패로 남음 · 다음 코드는 이 핀 밖 변경 · 메모리 개선 뒤 짧은 확인 = 같은 고정 합성 입력의 래스터 · instance/포트와 순서 · 동률 · 중복 처리 · L_c · s · 분위수 · 정준 지문 · 문턱 선택 대조 (chunk 경계 · 마지막 조각 · 빈 부류 · 겹친 경계 포함) · 생산 래스터와 S0 래스터가 갈라지지 않게 · 실패한 부분 census 채택 금지 · SBE 전용 · σ 비열람 · 입력 무쓰기 · 새 출력 폴더 · 실패 보존 · 새 핀의 peak RSS · 시간 · 종료 코드/신호 · 완성 산출물로 실제 개선 확인 · 리뷰 핀 → 봉인 핀 diff · S0/R 계획 해시 · 숫자 · 실행 정책 함께 확인 · \"출력 바이트 동일\" = 과학 값 · 정준 배열 정확 보존 + 바뀐 코드 출처 · 시간 = 진실한 새 값 (옛 fingerprint 를 붙여 바이트만 맞추기 금지 · ca_s0_census.py:1399–1401 · 1473–1476 · 1678–1685 · 1710).  상태 그대로 (open).  ★ 11-06 메모리 재기 (kgy · 핀 766e1e80c · 도구 그대로 · 증거 docs/reviews/rint2_s0_mem_probe_20261106/README.md): 1,562 s 까지 2–3 GB → scripts/carbon_junction.py _distinct_instances 의 cKDTree(mid).query_pairs(rad) 에서 30 s 에 43 GB (상한 · rc 137) · 원인 (관찰 · 코드 읽기) = rad = 2·max(선분 반 길이) + D 가 가장 긴 선분 하나로 전체 후보 반지름을 정함 → 고침 = 시험 먼저 · 과학 값 그대로 (다음 커밋) · 상태 그대로 (open)."
     },
     {
       "id": "SELF-156",
@@ -15601,72 +15601,128 @@
     {
       "id": "PC10-01",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "사전 공격 10 회차 (11-06 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 f5b00a838)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md",
       "title": "러너 rc null 을 소비자마다 반대로 읽음 — 끝 기록 원인 None · 런 기록 group_cause None 자리에서 rc null = by chain 길 runner_rc ↔ recover 가 chain_end 로 옮긴 뒤 · GROUP_UNCONFIRMED = 재실행 자격 (실제 git 원장 경로 --add --resume rc 0) · RR2-01 · PA-01 과 같은 부류 · 고침 전부터",
-      "note": "사전 공격 10 회차 §1 PB-01 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\"."
+      "note": "사전 공격 10 회차 §1 PB-01 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전).",
+      "claimed_fixed_sha": "766e1e80cf0a26ec3368a732922a4f35b9ba74de",
+      "evidence_tests": [
+        "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §PB-01 (PB-01 시험 3/10 → 10/10 (실경로 --add --resume rc 0 → rc 3))",
+        "scripts/test_rint_r_chain.py (전체 468/468 · Python 3.11)",
+        "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL)",
+        "scripts/check_kgy_py38.sh (11 묶음 통과)",
+        "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md (변이 28/28 · Codex 탐침 무변경 310/311 = 앞 판과 같은 한 행)"
+      ]
     },
     {
       "id": "PC10-02",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "사전 공격 10 회차 (11-06 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 f5b00a838)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md",
       "title": "판정 입력 (_verdict_compute) · 합치기 남은 런 목록이 있는데 못 읽는 단계 요약을 없음으로 읽음 — REPORT §5 \"모두 보수 쪽\" 거짓",
-      "note": "사전 공격 10 회차 §1 PB-02 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\"."
+      "note": "사전 공격 10 회차 §1 PB-02 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전).",
+      "claimed_fixed_sha": "766e1e80cf0a26ec3368a732922a4f35b9ba74de",
+      "evidence_tests": [
+        "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §PB-02 (PB-02 시험 0/2 → 2/2)",
+        "scripts/test_rint_r_chain.py (전체 468/468 · Python 3.11)",
+        "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL)",
+        "scripts/check_kgy_py38.sh (11 묶음 통과)",
+        "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md (변이 28/28 · Codex 탐침 무변경 310/311 = 앞 판과 같은 한 행)"
+      ]
     },
     {
       "id": "PC10-03",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "사전 공격 10 회차 (11-06 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 f5b00a838)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md",
       "title": "그룹 끝 기록 · 시작 기록 · attempt.json FIFO = 읽기 막힘 · rejected.json is_file 뒤 바꿔치기 창 (PA-04 와 같은 부류)",
-      "note": "사전 공격 10 회차 §1 PB-03 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\"."
+      "note": "사전 공격 10 회차 §1 PB-03 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전).",
+      "claimed_fixed_sha": "766e1e80cf0a26ec3368a732922a4f35b9ba74de",
+      "evidence_tests": [
+        "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §PB-03 (PB-03 시험 0/1 → 1/1)",
+        "scripts/test_rint_r_chain.py (전체 468/468 · Python 3.11)",
+        "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL)",
+        "scripts/check_kgy_py38.sh (11 묶음 통과)",
+        "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md (변이 28/28 · Codex 탐침 무변경 310/311 = 앞 판과 같은 한 행)"
+      ]
     },
     {
       "id": "PC10-04",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "사전 공격 10 회차 (11-06 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 f5b00a838)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md",
       "title": "RC01 스캐너가 반례 17 꼴 중 16 을 놓침 (지금 원천엔 그런 꼴 없음)",
-      "note": "사전 공격 10 회차 §1 PB-04 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\"."
+      "note": "사전 공격 10 회차 §1 PB-04 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전).",
+      "claimed_fixed_sha": "766e1e80cf0a26ec3368a732922a4f35b9ba74de",
+      "evidence_tests": [
+        "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §PB-04 (PB-04 RC01 스캐너 놓친 꼴 21 → 0)",
+        "scripts/test_rint_r_chain.py (전체 468/468 · Python 3.11)",
+        "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL)",
+        "scripts/check_kgy_py38.sh (11 묶음 통과)",
+        "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md (변이 28/28 · Codex 탐침 무변경 310/311 = 앞 판과 같은 한 행)"
+      ]
     },
     {
       "id": "PC10-05",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "사전 공격 10 회차 (11-06 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 f5b00a838)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md",
       "title": "A1b \"두 길 같은 답\" = 재실행 자격만 같음 (원인 글은 로그 낱말에 따라 다름) — 문구",
-      "note": "사전 공격 10 회차 §1 PB-05 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\"."
+      "note": "사전 공격 10 회차 §1 PB-05 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전).",
+      "claimed_fixed_sha": "766e1e80cf0a26ec3368a732922a4f35b9ba74de",
+      "evidence_tests": [
+        "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §PB-05 (PB-05 문구 (보고서 · 요청서 한정))",
+        "scripts/test_rint_r_chain.py (전체 468/468 · Python 3.11)",
+        "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL)",
+        "scripts/check_kgy_py38.sh (11 묶음 통과)",
+        "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md (변이 28/28 · Codex 탐침 무변경 310/311 = 앞 판과 같은 한 행)"
+      ]
     },
     {
       "id": "PC10-06",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "사전 공격 10 회차 (11-06 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 f5b00a838)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md",
       "title": "런 전 TIME_LIMIT 예외가 시작 기록 자리만 봄 (끝 기록 · 런 폴더 흔적 안 봄)",
-      "note": "사전 공격 10 회차 §1 PB-06 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\"."
+      "note": "사전 공격 10 회차 §1 PB-06 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전).",
+      "claimed_fixed_sha": "766e1e80cf0a26ec3368a732922a4f35b9ba74de",
+      "evidence_tests": [
+        "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §PB-06 (PB-06 시험 3/4 → 4/4)",
+        "scripts/test_rint_r_chain.py (전체 468/468 · Python 3.11)",
+        "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL)",
+        "scripts/check_kgy_py38.sh (11 묶음 통과)",
+        "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md (변이 28/28 · Codex 탐침 무변경 310/311 = 앞 판과 같은 한 행)"
+      ]
     },
     {
       "id": "PC10-07",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "사전 공격 10 회차 (11-06 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 f5b00a838)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md",
       "title": "f5b00a838 커밋 메시지 A1b 줄 \"CE01 · CE02 0/3 → 3/3\" 의 셋째 = PE03u — 문구 (push 된 커밋이라 보고서에 적음)",
-      "note": "사전 공격 10 회차 §1 PB-07 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\"."
+      "note": "사전 공격 10 회차 §1 PB-07 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전).",
+      "claimed_fixed_sha": "766e1e80cf0a26ec3368a732922a4f35b9ba74de",
+      "evidence_tests": [
+        "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §PB-07 (PB-07 문구 (push 된 커밋 메시지 = 보고서에 정정))",
+        "scripts/test_rint_r_chain.py (전체 468/468 · Python 3.11)",
+        "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL)",
+        "scripts/check_kgy_py38.sh (11 묶음 통과)",
+        "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md (변이 28/28 · Codex 탐침 무변경 310/311 = 앞 판과 같은 한 행)"
+      ]
     },
     {
       "id": "PC10-08",
@@ -15697,6 +15753,16 @@
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md",
       "title": "(N4) recover_ledger 가 객체 아닌 rejected.json 에서 잡지 않는 AttributeError",
       "note": "REPORT §7 · 실경로 미확인 · 권고 = group_cause None ⇒ 정확한 정수 0 만 성공 (멈춤 코드와 무관) · 사슬이 죽인 원인 + rc 있음 = 모순 = 읽음 False · ⬜ 1저자 (고칠지 · 한정만)."
+    },
+    {
+      "id": "SELF-157",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "게이트 2부 (11-06 · 커밋 21cf11b29 · fast 자기검사 전수 = supp20_input_receipt selftest 112/123)",
+      "opened_in": "docs/reviews/lhs_network_batch_registration_20261007_g2.md",
+      "title": "webapp/app.py 가 LHS 망 봉인 32 파일인 것을 확인하지 않고 /emod 경로를 넣어 체크아웃 봉인 지문이 바뀌었고, 대기 지문 선언 (11-02 §9-11 선례) 을 같은 커밋에 하지 않아 게이트 2부가 실패했다 (보충 20 영수증 S0 상태 undeclared)",
+      "note": "고침 = 194 등록 §9-12 · 보충 20 등록 §9-7 에 code_fp_pending 692be68cc27e39287abeb135a619340806717cb6e0737ca12c1e1bedacdcd311 선언 (옛 대기 80b95b89… = 역사) → selftest 123/123 · 게이트 다시 (두 부분) · 다음부터 webapp/app.py 를 고치는 커밋은 scripts/run_network_194_parallel.py 의 CODE_FILES 를 보고 대기 지문을 같은 커밋에 선언한다 · 잃은 것 = 게이트 1 회분 (약 85 분)."
     }
   ]
 }

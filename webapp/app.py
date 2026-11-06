@@ -5341,6 +5341,48 @@ def hetero_page():
                            inv=_hetero_inventory(), thesis=_hetero_thesis(), lv=_page_lv('hetero'))
 
 
+EMOD_MD = Path(__file__).resolve().parent.parent / 'docs' / 'effective_modulus_stress.md'
+_EMOD_UPDATED = re.compile(r'<!-- EMOD:UPDATED (\d{4}-\d{2}-\d{2}) -->')
+
+
+def _emod_doc():
+    """유효 영률 · 응력 정본 (`docs/effective_modulus_stress.md`) → {'ok', 'html', 'updated', 'error', 'redacted'}.
+
+    1저자 11-06 질문 (유효 영률로 누른 침대의 응력을 어디까지 믿나) · 요청 (궁금증 → 해결 기록 · MPM 응력장 재현 · MPM 언로딩).
+    fail-closed — 파일 없음 · 갱신 표지 (`<!-- EMOD:UPDATED YYYY-MM-DD -->`) 가 정확히 하나가 아님 · 빈 본문이면 `ok=False`
+    와 **무엇이 깨졌는지**를 낸다.  문장은 화면 · 코드에 베끼지 않는다 (정본을 고치면 화면이 같이 바뀐다 · 규율 ④).
+    `/hetero` 와 같은 관문: markdown 변환 **전에** redact.
+    """
+    out = {'ok': False, 'html': '', 'updated': '', 'error': '', 'redacted': False}
+    try:
+        src = EMOD_MD.read_text(encoding='utf-8')
+    except OSError as e:
+        out['error'] = f'{EMOD_MD.name} 을 읽지 못했다 ({type(e).__name__})'
+        return out
+    hits = _EMOD_UPDATED.findall(src)
+    if len(hits) != 1:
+        out['error'] = (f'갱신 표지가 {len(hits)} 개 — <!-- EMOD:UPDATED YYYY-MM-DD --> 가 정확히 하나여야 한다')
+        return out
+    body = ledger_view.redact(src).strip()
+    if not _EMOD_UPDATED.sub('', body).strip():
+        out['error'] = '본문이 비어 있다'
+        return out
+    out['redacted'] = body != src.strip()
+    try:
+        import markdown
+        out['html'] = markdown.markdown(body, extensions=['tables'])
+    except ImportError:
+        out['html'] = '<pre>' + body.replace('&', '&amp;').replace('<', '&lt;') + '</pre>'
+    out.update(ok=True, updated=hits[0])
+    return out
+
+
+@app.route('/emod')
+def emod_page():
+    """유효 영률 · 응력 — DEM 유효 영률로 누른 침대에서 어떤 응력을 믿나 · MPM 응력장 · 질문 기록 (읽기 전용)."""
+    return render_template('emod.html', active='emod', doc=_emod_doc(), lv=_page_lv('emod'))
+
+
 _HT_DATA = Path(__file__).resolve().parent.parent / 'docs' / 'data'
 #: 이종기술 회의록 해체본 등록부 — 키 = 회의 날짜 8 자리 (`?m=`).  등록부 밖 키는 404 — 조용히 다른 회의를 보이지 않는다.
 #:   10-02 회의 (음성 336) = 1저자 10-05 *"녹음 관련해서도 낱낱이 정리해서 이종기술 관련 원장에"* (09-19 비준 (가) 전수 규약 승계).

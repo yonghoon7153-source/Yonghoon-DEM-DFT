@@ -1,6 +1,7 @@
 # 후막 6 케이스 COMSOL 인계표 (2026-11-06)
 
 - **출처**: ibb 후막전극 6 케이스 (DEM1 도구 `docs/dem1/dem1_kit/tool/th_grid.sh` · LPSCl 1.64 = 덱 값 · 1저자가 ibb 에서 직접 가져와 웹앱에서 분석) 의 웹앱 케이스 화면 값을 1저자가 11-06 에 붙여 넣었다.  이 표는 그 화면 값을 그대로 옮긴 것이다 (새 계산 없음).
+- **4.5_75 출처 (1저자 11-06)**: ibb th45_75 는 10-30 14:04 1저자 stop (압축 중 · step 1,937,000 · 판 높이 / 고체 두께 1.32) 이고, 이 표의 4.5_75 행은 hit (BML PC WSL) 에서 이어 돌린 런의 값이다 · 나머지 5 케이스 = ibb 완주 (11-06 20:44 watch = done · ERR0).
 - **칸 (1저자 11-06 결정)**: 두께 (판 간격 · 질량 보존) · porosity (정확 union · 인계 규약) · φ_SE · φ_AM (질량 보존) · tortuosity.  coverage 는 넣지 않는다 (*"coverage는 그냥 주지말자"*).  이완 끝 판 압력 · "같은 300 MPa 상태 아님" 표지는 붙이지 않는다 (*"됐어 안붙여도돼"*).  이름은 "tortuosity" 하나 (*"그냥 수송 tortuosity라고 하지말고 tortuosity라고 보내"* · 받는 쪽이 Bruggeman 지수로 바꿔 씀).
 - **tortuosity** = 웹앱 Hertz 열 tau2 = φ·σ₀/σ_full (tortuosity factor · √ 아님).  `scripts/tau_flux.py` 정의대로 tau2 = φ_mc/f_mc (f_mc = σ_ratio·L_gap/L_mc) 라서 질량 보존 두께 · φ_SE (질량 보존) · union porosity 와 짝으로 쓴다.  여섯 다 인계 상태 OK (G1–G6) · 세대 2 계약 통과.
 - **대조 (이 세션)**: φ_SE + φ_AM + ε_union = 1 ± 0.0001 (여섯 다).

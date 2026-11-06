@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}유효 영률 · 응력{% endblock %}
+
+{% block content %}
+<style>
+  /* 앱 테마(style.css --bg/--card/--accent/--dim)를 그대로 쓴다 (hetero.html 과 같은 규칙 — 흰 카드 하드코딩 금지). */
+  .em-head { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:4px; }
+  .em-head h1 { margin:0; }
+  .em-sub { color:var(--dim); font-size:.86rem; }
+  .em-doc { max-width:120ch; line-height:1.7; }
+  .em-doc h1 { display:none; }   /* 정본의 첫 제목 = 위 머리와 같은 자리 */
+  .em-doc h2 {
+    font-size:.86rem; letter-spacing:.06em; color:var(--dim); margin:30px 0 10px; padding-bottom:6px;
+    border-bottom:1px solid var(--line, #2a2f3a);
+  }
+  .em-doc h3 { font-size:.95rem; margin:18px 0 6px; }
+  .em-doc table { border-collapse:collapse; width:100%; font-size:.86rem; margin:6px 0 12px; display:block; overflow-x:auto; }
+  .em-doc th, .em-doc td { padding:7px 11px; text-align:left; border-bottom:1px solid var(--line, #2a2f3a); vertical-align:top; }
+  .em-doc thead th { font-size:.72rem; letter-spacing:.05em; color:var(--dim); font-weight:600; }
+  .em-doc code { font-size:.84em; }
+  .em-doc li { margin:3px 0; }
+  .em-warn { background:var(--card); border:1px solid var(--line, #2a2f3a); border-left:4px solid #c0392b; padding:12px 15px; border-radius:4px; }
+</style>
+
+<div class="em-head">
+  <h1>📐 유효 영률 · 응력</h1>
+  {% if doc.ok %}<span class="em-sub">갱신 {{ doc.updated }}</span>{% endif %}
+</div>
+<p class="em-sub">
+  정본 = <code>docs/effective_modulus_stress.md</code> — 이 화면은 그 파일을 읽어 보인다 (여기에 베끼지 않는다).
+  궁금증은 그 파일의 질문 기록에 행을 보태고, 풀리면 상태 · 근거 칸을 고친다.
+  MPM 결과 보기 = <a href="/mpm-lab">/mpm-lab</a>.
+  {% if doc.redacted %} ⚠ 표시 전 가림 규칙이 본문 일부를 가렸다.{% endif %}
+</p>
+
+{% if doc.ok %}
+<div class="em-doc">{{ doc.html|safe }}</div>
+{% else %}
+<div class="em-warn"><b>⛔ 정본을 읽지 못했다.</b> {{ doc.error }} — 화면은 옛 문장을 대신 보이지 않는다.</div>
+{% endif %}
+{% endblock %}
