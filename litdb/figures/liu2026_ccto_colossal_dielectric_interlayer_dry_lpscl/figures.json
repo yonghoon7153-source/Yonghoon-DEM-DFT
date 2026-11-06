@@ -1,0 +1,1266 @@
+{
+ "slug": "liu2026_ccto_colossal_dielectric_interlayer_dry_lpscl",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-06",
+ "sources": [
+  "Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+  "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic illustration of the (a) ACIPO mechanism and (b) the cplpssal-dielectric interface engineering for ACIPO protection; Charge and discharge voltage profiles of (c) NCM811/LPSC-PTFE/Li batteries and (d) NCM811/PLIC/Li batteries. 2",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    357.4,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1517,
+   "dpi": 300,
+   "src": "Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.766
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Calculated total and partial DOS of CCTO, showing its electronic structure characteristics; (b) Electronic band structure of CCTO along the high-symmetry directions in the Brillouin zone; (c) Three-dimensional ELF isosurface of CCTO, revealing the electron distribution characteristics; (d) Two-dimensional ELF contour plot along the diagonal plane (101) of the CCTO unit cell; (e) Optimized geometric structure of the CCTO-TFSI−adsorption complex and the corresponding calculated binding energy; (f) HOMO and LUMO energy level diagram of 18 representative ionic liquid cations obtained from high-throughput DFT calculations. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    281.3,
+    565.8,
+    702.1
+   ],
+   "w": 2227,
+   "h": 1754,
+   "dpi": 300,
+   "src": "Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.667
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. AFM image of (a) PLI and (b) PLIC; Cross-sectional FESEM images in 100 μm of (c) PLI and (d) PLIC; (e) XRD spectra of PLI and PLIC; (f) Ionic conductivity (δ) of PLI and PLIC under the different temperatures; (g) Electrochemical floating test of NCM811/PLI/Li batteries and NCM811/PLIC/Li batteries; (h) CV curves of SS/ PLI/Li batteries and SS/PLIC/Li batteries form −0.25–0.5 V at the scan rate of 1 mV s−1; (i) Raman spectra of the PLI and PLIC system. reduction in activation energy indicates that the PAN/IL interphase substantially lowers the energy barrier for Li+ transport across the cathode–electrolyte interface. The modest improvement in ionic con­ ductivity of PLIC originates from the combined effects of reduced PAN crystallinity, improved interfacial wettability, and surface sites of CCTO. Together with the preceding AFM and FESEM results, it demonstrates that the incorpora",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.1,
+    566.0,
+    457.0
+   ],
+   "w": 2228,
+   "h": 1697,
+   "dpi": 300,
+   "src": "Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.715
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. RDFs and CNs of the (a) Li+-N (PAN) and (b) Li+-O(TFSI−) and (c) Li + -O (CCTO) of the PLI and PLIC system; (d) CN of Li+ in PLI and PLIC systems; (e) Li+ diffusion coefficient of PLI and PLIC systems; MD snapshot of (f) PLIC and (g) PLI; (h) Schematic diagram demonstrating the Li+ transport pathways and mechanism in the colossal-dielectric interlayer. 8",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    290.7,
+    565.8,
+    708.5
+   ],
+   "w": 2227,
+   "h": 1742,
+   "dpi": 300,
+   "src": "Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.716
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) Long-term cycling of LFP/Li batteries at 1C at RT; (b) In situ EIS spectra of LFP/Li batteries during the first charge-discharge process; The corresponding DRT analysis of LFP/Li batteries using (c) PLIC and (d) PLI; (e) Rate performance of LFP/Li batteries at RT; (f) Cycling performance of pouch battery and structure model of the LFP/Li pouch battery using PLIC (inset); (g) The pouch cell is used to power LED lights when bent, cut, or punctured. 9",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    308.9,
+    565.7,
+    711.7
+   ],
+   "w": 2227,
+   "h": 1680,
+   "dpi": 300,
+   "src": "Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.729
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. AFM image of post-cycled LFP of (a) PLI and (b) PLIC; FESEM images (inset: surface photographs of LPSC-PTFE (cathode-facing side)) of the post-cycled LFP cathode surface using (c) PLI and (d) PLIC at a scale of 50 μm; High-resolution XPS spectra survey (e) F 1s and (f) N 1s of LFP cathode surface that is separated from the LFP/Li batteries using PLI and PLIC; (g) XPS survey spectra and corresponding surface elemental composition of the LFP cathode after cycling; (h) Interfacial stabilization mechanism of colossal-dielectric interface engineering. with high ionic conductivity, high mechanical strength, and good elec­ tronic insulation, which can effectively regulate Li+ deintercalation and intercalation [72]. Therefore, the LiF-Li3N-rich CEI layer induced by CCTO fillers is one of the key factors for achieving long cycling stability. As shown in Fig. S53 and S54, the CEI layer is ",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    566.0,
+    483.0
+   ],
+   "w": 2228,
+   "h": 1806,
+   "dpi": 300,
+   "src": "Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.56
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 8,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. a and b EIS spectra of LPSC; c Ionic conductivity (δ) of SPEs under the different temperatures; d Relationship of log(δ) vs. Temperatures and ion mobilization activation energies of LPSC.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.2,
+    502.0,
+    400.4
+   ],
+   "w": 1742,
+   "h": 1373,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 10,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. FESEM images of LPSC in a 100 μm and b 40 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    70.9,
+    501.9,
+    213.4
+   ],
+   "w": 1704,
+   "h": 595,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.193
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 11,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. EDS mapping of LPSC.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.2,
+    67.0,
+    497.1,
+    356.0
+   ],
+   "w": 1651,
+   "h": 1205,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.098
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 12,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. a AIMD simulation of LPSC illustrating Li+ migration trajectories; b Mean square displacement of Li+ as a function of simulation time.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.0,
+    507.3,
+    260.4
+   ],
+   "w": 1764,
+   "h": 798,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.787
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 13,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. FESEM images of LPSC-PTFE in 100 μm, 50 μm and 20 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.1,
+    501.7,
+    167.3
+   ],
+   "w": 1741,
+   "h": 411,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.173
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 14,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. EDS mapping of LPSC-PTFE.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    66.9,
+    505.0,
+    231.4
+   ],
+   "w": 1717,
+   "h": 687,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.155
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 15,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Optical photo of LPSC-PTFE.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.4,
+    441.9,
+    290.2
+   ],
+   "w": 1492,
+   "h": 930,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.294
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 16,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Optical photo of a the LPSC-PTFE and b the thickness measurements of LPSC-PTFE.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    69.4,
+    501.9,
+    229.7
+   ],
+   "w": 1704,
+   "h": 669,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.17
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 17,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. AFM image of LPSC-PTFE.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.0,
+    473.1,
+    289.5
+   ],
+   "w": 1622,
+   "h": 904,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.757
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 18,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Cross-sectional FESEM with EDS mapping of the LPSC-PTFE.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    69.3,
+    502.1,
+    338.9
+   ],
+   "w": 1704,
+   "h": 1125,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.143
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 19,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. XRD spectra of PTFE, LPSC and LPSC-PTFE.",
+   "rotated_deg": 0,
+   "bbox": [
+    184.7,
+    102.5,
+    430.0,
+    327.1
+   ],
+   "w": 1023,
+   "h": 937,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 20,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. a and b EIS spectra of LPSC-PTFE; c Ionic conductivity (δ) of SPEs under the different temperatures; d Relationship of log(δ) vs. Temperatures and ion mobilization activation energies of LPSC-PTFE.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.9,
+    513.6,
+    401.4
+   ],
+   "w": 1791,
+   "h": 1382,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 22,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Chronoamperometry profiles and AC impedance spectra (inset) recorded before and after polarization for symmetric Li/CMEFI/Li batteries; (c) Corresponding tLi+ comparison curves",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    93.8,
+    513.1,
+    325.0
+   ],
+   "w": 1788,
+   "h": 965,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 23,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. CV curves of SS/LPSC-PTFE/Li batteries form -0.25~0.5 V at the scan rate of 1 mV s-1.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    26.0,
+    595.2,
+    338.4
+   ],
+   "w": 2480,
+   "h": 1303,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 24,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. a CV plots and b Tafel plots for Li plating/stripping from -0.1 to 0.1 V at the scan rate of 0.5 mV s-1 for Li/LPSC-PTFE/Li symmetrical batteries.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.6,
+    513.6,
+    244.8
+   ],
+   "w": 1791,
+   "h": 739,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 25,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. a CCD of the Li/CPE/Li symmetric battery; b the current-time curves during the CCD.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    70.3,
+    502.0,
+    229.6
+   ],
+   "w": 1704,
+   "h": 664,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 26,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. a Galvanostatic charge/discharge performance of Li/CPEs/Li symmetric batteries;.b Galvanostatic charge/discharge performance of Li/FAEIS/Li symmetric cell and partial magnified views at 300-310 h.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.8,
+    513.5,
+    198.0
+   ],
+   "w": 1790,
+   "h": 530,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 27,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. a Time-dependent in situ EIS of Li/LPSC-PTFE/Li battery; b, c and d the corresponding DRT analysis of Li-Li symmetric batteries using LPSC-PTFE.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.5,
+    513.4,
+    403.3
+   ],
+   "w": 1790,
+   "h": 1404,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.76
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 28,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. a Corresponding coulombic efficiency as a function of cycle number for Li/LPSC-PTFE/Cu battery; b Voltage profiles of the Li/LPSC-PTFE/Cu battery.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.5,
+    513.6,
+    242.1
+   ],
+   "w": 1791,
+   "h": 703,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 30,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Electrochemical stability window of LPSC-PTFE.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    102.2,
+    414.8,
+    325.0
+   ],
+   "w": 1379,
+   "h": 930,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 31,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. Schematic representation of the structure of CCTO.",
+   "rotated_deg": 0,
+   "bbox": [
+    148.6,
+    68.2,
+    446.7,
+    307.7
+   ],
+   "w": 1243,
+   "h": 999,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.651
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 32,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. Schematic of the fabrication procedure of Colossal-Dielectric Cathode Interface Engineering.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.8,
+    501.7,
+    214.1
+   ],
+   "w": 1741,
+   "h": 611,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.344
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 33,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Two-dimensional ELF contour plot along the (001) plane of the CCTO unit cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    84.8,
+    502.0,
+    245.3
+   ],
+   "w": 1704,
+   "h": 670,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.566
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 34,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. The price of ionic liquids.",
+   "rotated_deg": 0,
+   "bbox": [
+    124.6,
+    71.1,
+    470.7,
+    338.0
+   ],
+   "w": 1443,
+   "h": 1113,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.791
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 35,
+   "file": "fig_S28.png",
+   "caption": "Figure S28. FESEM images in 100μm of LPSC-PTFE a, b PLI and c, b PLIC.",
+   "rotated_deg": 0,
+   "bbox": [
+    92.9,
+    68.4,
+    501.7,
+    354.6
+   ],
+   "w": 1704,
+   "h": 1193,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.133
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 36,
+   "file": "fig_S29.png",
+   "caption": "Figure S29. FESEM images and EDS mapping of PLI in 20 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    72.5,
+    502.1,
+    258.7
+   ],
+   "w": 1704,
+   "h": 777,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.214
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": 37,
+   "file": "fig_S30.png",
+   "caption": "Figure S30. FESEM images and EDS mapping of PLIC in 20 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    68.7,
+    502.0,
+    338.9
+   ],
+   "w": 1704,
+   "h": 1127,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.167
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 38,
+   "file": "fig_S31.png",
+   "caption": "Figure S31. FESEM images of CCTO in a 100 μm, b 50 μm and c 20 μm; d EDS mapping of CCTO. High-resolution FESEM analysis reveals that the CCTO particles have a primary particle size of approximately 1 μm, with a significant fraction of nanoparticles present. This nanoscale dimension accounts for the absence of distinct CCTO particles on the macroscopic PLIC surface, as they are uniformly embedded within the polymer matrix. EDS elemental mapping further verifies that the constituent elements of CCTO (Ca, Cu, Ti, and O) are evenly distributed throughout the interlayer, indicating excellent dispersion of CCTO nanoparticles without aggregation. This uniform dispersion is crucial for maximizing the giant dielectric effect and enhancing the mechanical strength of the interlayer[26].",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.6,
+    514.2,
+    350.7
+   ],
+   "w": 1793,
+   "h": 1156,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.195
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 39,
+   "file": "fig_S32.png",
+   "caption": "Figure S32. Cross-sectional FESEM with EDS mapping of the PLI.",
+   "rotated_deg": 0,
+   "bbox": [
+    92.9,
+    66.3,
+    505.5,
+    325.5
+   ],
+   "w": 1720,
+   "h": 1081,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.244
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": 40,
+   "file": "fig_S33.png",
+   "caption": "Figure S33. Cross-sectional FESEM with EDS mapping of the PLIC.",
+   "rotated_deg": 0,
+   "bbox": [
+    92.9,
+    66.9,
+    505.5,
+    418.6
+   ],
+   "w": 1720,
+   "h": 1467,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.209
+  },
+  {
+   "key": "fS34",
+   "kind": "figure",
+   "label": "S34",
+   "page": 41,
+   "file": "fig_S34.png",
+   "caption": "Figure S34. Digital photographs of pristine LFP cathode and PLIC-coated LFP cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    131.1,
+    66.3,
+    467.0,
+    231.9
+   ],
+   "w": 1401,
+   "h": 691,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.196
+  },
+  {
+   "key": "fS35",
+   "kind": "figure",
+   "label": "S35",
+   "page": 42,
+   "file": "fig_S35.png",
+   "caption": "Figure S35. XRD spectra of PAN, LiTFSI and CCTO.",
+   "rotated_deg": 0,
+   "bbox": [
+    184.4,
+    104.9,
+    430.1,
+    325.0
+   ],
+   "w": 1025,
+   "h": 919,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "fS36",
+   "kind": "figure",
+   "label": "S36",
+   "page": 43,
+   "file": "fig_S36.png",
+   "caption": "Figure S36. EIS spectra of a, b PLIC and c, d PLI.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.2,
+    502.1,
+    416.0
+   ],
+   "w": 1742,
+   "h": 1438,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "fS37",
+   "kind": "figure",
+   "label": "S37",
+   "page": 44,
+   "file": "fig_S37.png",
+   "caption": "Figure S37. Relationship of log(δ) vs. Temperatures and ion mobilization activation energies of PLIC and PLI.",
+   "rotated_deg": 0,
+   "bbox": [
+    98.0,
+    67.2,
+    499.5,
+    326.5
+   ],
+   "w": 1674,
+   "h": 1082,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "fS39",
+   "kind": "figure",
+   "label": "S39",
+   "page": 46,
+   "file": "fig_S39.png",
+   "caption": "Figure S39. Electrochemical stability window of PLI and PLIC.",
+   "rotated_deg": 0,
+   "bbox": [
+    156.4,
+    76.6,
+    426.8,
+    333.1
+   ],
+   "w": 1128,
+   "h": 1070,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.701
+  },
+  {
+   "key": "fS40",
+   "kind": "figure",
+   "label": "S40",
+   "page": 47,
+   "file": "fig_S40.png",
+   "caption": "Figure S40. The molecular structure and the calculated LUMO, HOMO energy levels (eV) of PAN, LiTFSI, TFSI-, Pyr13+, and PTFE.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.7,
+    513.6,
+    257.5
+   ],
+   "w": 1791,
+   "h": 766,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.781
+  },
+  {
+   "key": "fS41",
+   "kind": "figure",
+   "label": "S41",
+   "page": 48,
+   "file": "fig_S41.png",
+   "caption": "Figure S41. The proportion of free TFSI-, SSIP/CIP and ACG in PLIC and PLI systems.",
+   "rotated_deg": 0,
+   "bbox": [
+    137.6,
+    90.3,
+    461.0,
+    270.4
+   ],
+   "w": 1348,
+   "h": 751,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.785
+  },
+  {
+   "key": "fS42",
+   "kind": "figure",
+   "label": "S42",
+   "page": 49,
+   "file": "fig_S42.png",
+   "caption": "Figure S42. Binding energy of TFSI--Li+, PAN-Li+, CCTO-Li+.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.1,
+    470.5,
+    338.0
+   ],
+   "w": 1611,
+   "h": 1113,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.822
+  },
+  {
+   "key": "fS43",
+   "kind": "figure",
+   "label": "S43",
+   "page": 50,
+   "file": "fig_S43.png",
+   "caption": "Figure S43. ESP of a PAN, b TFSI- and c Pyr13+.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    70.7,
+    502.1,
+    213.6
+   ],
+   "w": 1704,
+   "h": 596,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.828
+  },
+  {
+   "key": "fS44",
+   "kind": "figure",
+   "label": "S44",
+   "page": 51,
+   "file": "fig_S44.png",
+   "caption": "Figure S44. Charge and discharge voltage profiles of LFP/Li batteries using a PLI and b PLIC.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.3,
+    502.1,
+    245.3
+   ],
+   "w": 1742,
+   "h": 739,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "fS45",
+   "kind": "figure",
+   "label": "S45",
+   "page": 52,
+   "file": "fig_S45.png",
+   "caption": "Figure S45. Charge and discharge voltage profiles of LFP/Li batteries for rate performance using a PLI and b PLIC.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.6,
+    507.4,
+    245.3
+   ],
+   "w": 1765,
+   "h": 738,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "fS46",
+   "kind": "figure",
+   "label": "S46",
+   "page": 53,
+   "file": "fig_S46.png",
+   "caption": "Figure S46. Long-term cycling of NCM/Li batteries at 0.5 C at RT.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    93.8,
+    433.0,
+    325.0
+   ],
+   "w": 1455,
+   "h": 965,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "fS47",
+   "kind": "figure",
+   "label": "S47",
+   "page": 54,
+   "file": "fig_S47.png",
+   "caption": "Figure S47. Charge and discharge voltage profiles of NCM/Li batteries using a PLI and b PLIC.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    67.9,
+    502.0,
+    245.3
+   ],
+   "w": 1704,
+   "h": 740,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "fS48",
+   "kind": "figure",
+   "label": "S48",
+   "page": 55,
+   "file": "fig_S48.png",
+   "caption": "Figure S48. Charge and discharge voltage profiles of LFP/Li pouch cell using PLIC.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    97.8,
+    454.1,
+    354.9
+   ],
+   "w": 1542,
+   "h": 1072,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "fS49",
+   "kind": "figure",
+   "label": "S49",
+   "page": 56,
+   "file": "fig_S49.png",
+   "caption": "Figure S49. SEM images of the post-cycled LFP cathode surface using a, b PLI and c, d PLIC at a scale of 100 and 20 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.4,
+    509.1,
+    351.4
+   ],
+   "w": 1772,
+   "h": 1160,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.158
+  },
+  {
+   "key": "fS50",
+   "kind": "figure",
+   "label": "S50",
+   "page": 57,
+   "file": "fig_S50.png",
+   "caption": "Figure S50. FESEM images and EDS mapping of PLI in 20 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.1,
+    502.0,
+    338.9
+   ],
+   "w": 1742,
+   "h": 1121,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.158
+  },
+  {
+   "key": "fS51",
+   "kind": "figure",
+   "label": "S51",
+   "page": 58,
+   "file": "fig_S51.png",
+   "caption": "Figure S51. FESEM images and EDS mapping of PLIC in 20 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    71.4,
+    502.1,
+    430.8
+   ],
+   "w": 1704,
+   "h": 1498,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.135
+  },
+  {
+   "key": "fS52",
+   "kind": "figure",
+   "label": "S52",
+   "page": 59,
+   "file": "fig_S52.png",
+   "caption": "Figure S52. XPS spectra survey of a C 1s, b F 1s, c N 1s, d O 1s, e S 2p and f total elements of Pyr13-TFSI.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.8,
+    502.1,
+    307.1
+   ],
+   "w": 1742,
+   "h": 985,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "fS53",
+   "kind": "figure",
+   "label": "S53",
+   "page": 60,
+   "file": "fig_S53.png",
+   "caption": "Figure S53. XPS spectra survey of a total elements, b C 1s, c F 1s d Li 1s, e N 1s, f O 1s, g S 2p, h Cl 1s and i P 2p of LFP cathode surface that is separated from the LFP/Li batteries using PLI.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.0,
+    513.6,
+    401.4
+   ],
+   "w": 1791,
+   "h": 1390,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "fS54",
+   "kind": "figure",
+   "label": "S54",
+   "page": 61,
+   "file": "fig_S54.png",
+   "caption": "Figure S54. XPS spectra survey of a total elements, b C 1s, c F 1s d Li 1s, e N 1s, f O 1s, g S 2p, h P 2p, i Cl 1s, j Ti 2p, k Ca 2p and l Cu 2p of LFP cathode surface that is separated from the LFP/Li batteries using PLIC.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.7,
+    513.6,
+    483.5
+   ],
+   "w": 1791,
+   "h": 1737,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.822
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 62,
+   "file": "tab_S1.png",
+   "caption": "Table S1. HOMO and LUMO energy level diagram of 18 representative ionic liquid cations.",
+   "rotated_deg": 0,
+   "bbox": [
+    92.5,
+    74.5,
+    500.3,
+    659.2
+   ],
+   "w": 1700,
+   "h": 2437,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 63,
+   "file": "tab_S2.png",
+   "caption": "Table S2. The price of ionic liquids.",
+   "rotated_deg": 0,
+   "bbox": [
+    120.6,
+    74.5,
+    438.1,
+    308.2
+   ],
+   "w": 1324,
+   "h": 975,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 64,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Comparison of physical properties of SPEs.",
+   "rotated_deg": 0,
+   "bbox": [
+    95.8,
+    74.5,
+    492.9,
+    331.5
+   ],
+   "w": 1655,
+   "h": 1072,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 65,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Plot of ionic conductivity and the electrochemical windows of PLIC compared to previous reports. Ionic conductivity (mS cm-1) Electrochemical window (V) Ref. 1.44 4.62 This work 0.11 (80 °C) 4.70 Ref.[37] 0.99 4.60 Ref.[38] 0.34 4.00 Ref.[39] 0.86 4.52 Ref.[40] 0.86 4.50 Ref.[41] 0.16 4.00 Ref.[42] 0.34 4.70 Ref.[43] 0.24 4.70 Ref.[44]",
+   "rotated_deg": 0,
+   "bbox": [
+    91.3,
+    70.7,
+    494.4,
+    317.1
+   ],
+   "w": 1680,
+   "h": 1028,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 66,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Cycle performance of PLIC compared to previous reports.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.3,
+    70.7,
+    510.2,
+    660.7
+   ],
+   "w": 1771,
+   "h": 2459,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.941
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p9 그래픽 없음(img0/draw4)"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "fS14",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p21 그래픽 없음(img0/draw4)"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "fS22",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p29 그래픽 없음(img0/draw2)"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "fS38",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p45 그래픽 없음(img0/draw3)"
+   ],
+   "near_miss": []
+  }
+ ]
+}

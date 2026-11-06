@@ -1724,6 +1724,14 @@
    "a9f742ec-94._An_AIready_finetuning_framework_for_accurate_MLIPs_in_solidsolid_battery_interfaces.pdf"
   ]
  },
+ "liu2026_ccto_colossal_dielectric_interlayer_dry_lpscl": {
+  "figures": 61,
+  "generated": "2026-11-06",
+  "pdfs": [
+   "Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf"
+  ]
+ },
  "liu2026_finetuning_umlip_tutorial": {
   "figures": 9,
   "generated": "2026-09-09",
@@ -2104,7 +2112,7 @@
   ]
  },
  "noh2026_pedotpss_peg_swcnt_binder_ultrahigh_loading_lfp": {
-  "figures": 42,
+  "figures": 44,
   "generated": "2026-11-06",
   "pdfs": [
    "70. Enabling ultra-high-loading LiFePO4 cathodes via a conductive binder architecture with minimized inactive content.pdf",
