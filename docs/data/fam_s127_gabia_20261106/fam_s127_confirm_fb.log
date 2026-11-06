@@ -1,0 +1,68 @@
+[Taichi] version 1.7.3, llvm 15.0.4, commit 5ec301be, linux, python 3.10.21
+[Taichi] Starting on arch=cuda
+  scaffold: 457 fixed AM + 32832 real SE spheres → 5,733,852 SE cells (REAL positions, no targeting) (45,870,816 pts)
+  seed density: AM 59.4% / SE 20.8% / void 19.8%  (SE/solid 25.9%)  ρ_bulk≈3.27 g/cm³  bed 31.3µm
+  ⚠ [platen] --platen-mach 0.01 → step 0.000409 box/frame. WALL0→WALL_MIN 전 구간 하강에 최대 1,506 프레임이 필요한데 --frames 는 400 입니다.
+            (--platen-mach 는 --compact-to 0.25·vmax · servo 0.12·vmax · 제하 0.05·vmax 의 단위도 함께 줄입니다.)
+  [platen] v=0.0512 box/t.u.  V/c_P=0.010  V/c_S=0.07  step=0.00041 box/frame  (--platen-mach)
+3D MPM  grid=384  pts=45870816  arch=cuda  scaffold (457 fixed AM + SE se_dump REAL positions)  E_SE=1.53 σy=0.3 ν_SE=0.49 K_SE=25.50GPa  target=0.3 GPa  readout=wallP  am_load_frac=0.808 → SE_target=0.0575 GPa  xy=walls
+  frame   0 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 26.02%  wall_z=0.676  thickness=34.03µm
+  frame   5 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 25.78%  wall_z=0.674  thickness=33.92µm
+  frame  10 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 25.54%  wall_z=0.672  thickness=33.81µm
+  frame  15 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 25.29%  wall_z=0.670  thickness=33.70µm
+  frame  20 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 25.04%  wall_z=0.668  thickness=33.58µm
+  frame  25 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 24.79%  wall_z=0.665  thickness=33.47µm
+  frame  30 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 24.54%  wall_z=0.663  thickness=33.36µm
+  frame  35 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 24.29%  wall_z=0.661  thickness=33.25µm
+  frame  40 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 24.04%  wall_z=0.659  thickness=33.14µm
+  frame  45 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 23.78%  wall_z=0.657  thickness=33.03µm
+  frame  50 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 23.52%  wall_z=0.655  thickness=32.92µm
+  frame  55 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 23.26%  wall_z=0.653  thickness=32.81µm
+  frame  60 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 23.00%  wall_z=0.651  thickness=32.69µm
+  frame  65 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 22.74%  wall_z=0.649  thickness=32.58µm
+  frame  70 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 22.47%  wall_z=0.647  thickness=32.47µm
+  frame  75 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 22.21%  wall_z=0.645  thickness=32.36µm
+  frame  80 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 21.94%  wall_z=0.643  thickness=32.25µm
+  frame  85 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 21.67%  wall_z=0.641  thickness=32.14µm
+  frame  90 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 21.40%  wall_z=0.639  thickness=32.03µm
+  frame  95 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 21.12%  wall_z=0.637  thickness=31.92µm
+  frame 100 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 20.85%  wall_z=0.635  thickness=31.80µm
+  frame 105 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 20.57%  wall_z=0.633  thickness=31.69µm
+  frame 110 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 20.29%  wall_z=0.631  thickness=31.58µm
+  frame 115 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=-0.0000 f_AM_mpm=0.566 | SEfl=0.0000 fAMcut=0.892 top%=-20)  porosity= 20.01%  wall_z=0.629  thickness=31.47µm
+  frame 120 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=-0.0000 f_AM_mpm=0.326 | SEfl=0.0000 fAMcut=0.525 top%=-16)  porosity= 19.72%  wall_z=0.627  thickness=31.36µm
+  frame 125 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.129 | SEfl=0.0000 fAMcut=0.795 top%=250)  porosity= 19.44%  wall_z=0.625  thickness=31.25µm
+  frame 130 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0001 f_AM_mpm=0.578 | SEfl=0.0000 fAMcut=0.749 top%=120)  porosity= 19.15%  wall_z=0.623  thickness=31.14µm
+  frame 135 [descend]  wallP= 0.0001 GPa (wallP=0.0001 σzz_vol=0.0000 AMr=+0.0001 f_AM_mpm=0.540 | SEfl=0.0000 fAMcut=0.834 top%=115)  porosity= 18.86%  wall_z=0.620  thickness=31.03µm
+  frame 140 [descend]  wallP= 0.0001 GPa (wallP=0.0001 σzz_vol=0.0000 AMr=+0.0001 f_AM_mpm=0.502 | SEfl=0.0000 fAMcut=0.884 top%=113 PINNED)  porosity= 18.57%  wall_z=0.618  thickness=30.91µm
+  frame 145 [descend]  wallP= 0.0002 GPa (wallP=0.0002 σzz_vol=0.0000 AMr=+0.0001 f_AM_mpm=0.387 | SEfl=0.0000 fAMcut=0.906 top%=116)  porosity= 18.28%  wall_z=0.616  thickness=30.80µm
+  frame 150 [descend]  wallP= 0.0002 GPa (wallP=0.0002 σzz_vol=0.0000 AMr=+0.0002 f_AM_mpm=0.470 | SEfl=0.0000 fAMcut=0.886 top%=114)  porosity= 17.98%  wall_z=0.614  thickness=30.69µm
+  frame 155 [descend]  wallP= 0.0004 GPa (wallP=0.0004 σzz_vol=0.0001 AMr=+0.0004 f_AM_mpm=0.484 | SEfl=0.0000 fAMcut=0.941 top%=107)  porosity= 17.68%  wall_z=0.612  thickness=30.58µm
+  frame 160 [descend]  wallP= 0.0012 GPa (wallP=0.0012 σzz_vol=0.0002 AMr=+0.0012 f_AM_mpm=0.491 | SEfl=0.0000 fAMcut=0.978 top%=102 PINNED)  porosity= 17.38%  wall_z=0.610  thickness=30.47µm
+  frame 165 [descend]  wallP= 0.0056 GPa (wallP=0.0056 σzz_vol=0.0006 AMr=+0.0029 f_AM_mpm=0.343 | SEfl=0.0000 fAMcut=0.994 top%=101)  porosity= 17.08%  wall_z=0.608  thickness=30.36µm
+  frame 170 [descend]  wallP= 0.0172 GPa (wallP=0.0172 σzz_vol=0.0016 AMr=+0.0065 f_AM_mpm=0.276 | SEfl=0.0000 fAMcut=0.998 top%=99)  porosity= 16.77%  wall_z=0.606  thickness=30.25µm
+  frame 175 [descend]  wallP= 0.0151 GPa (wallP=0.0151 σzz_vol=0.0040 AMr=+0.0166 f_AM_mpm=0.523 | SEfl=0.0000 fAMcut=0.998 top%=97)  porosity= 16.47%  wall_z=0.604  thickness=30.14µm
+  frame 180 [descend]  wallP= 0.0244 GPa (wallP=0.0244 σzz_vol=0.0065 AMr=+0.0272 f_AM_mpm=0.528 | SEfl=0.0000 fAMcut=0.998 top%=90 PINNED)  porosity= 16.16%  wall_z=0.602  thickness=30.02µm
+  frame 185 [descend]  wallP= 0.0384 GPa (wallP=0.0384 σzz_vol=0.0086 AMr=+0.0367 f_AM_mpm=0.489 | SEfl=0.0000 fAMcut=0.999 top%=86)  porosity= 15.84%  wall_z=0.600  thickness=29.91µm
+  frame 190 [descend]  wallP= 0.0511 GPa (wallP=0.0511 σzz_vol=0.0109 AMr=+0.0469 f_AM_mpm=0.479 | SEfl=0.0000 fAMcut=0.999 top%=86)  porosity= 15.53%  wall_z=0.598  thickness=29.80µm
+  frame 195 [descend]  wallP= 0.0665 GPa (wallP=0.0665 σzz_vol=0.0131 AMr=+0.0576 f_AM_mpm=0.464 | SEfl=0.0000 fAMcut=0.999 top%=87)  porosity= 15.21%  wall_z=0.596  thickness=29.69µm
+  frame 200 [descend]  wallP= 0.0809 GPa (wallP=0.0809 σzz_vol=0.0130 AMr=+0.0615 f_AM_mpm=0.432 | SEfl=0.0001 fAMcut=0.999 top%=84)  porosity= 15.15%  wall_z=0.596  thickness=29.67µm
+  frame 205 [descend]  wallP= 0.0821 GPa (wallP=0.0821 σzz_vol=0.0137 AMr=+0.0623 f_AM_mpm=0.432 | SEfl=0.0001 fAMcut=0.999 top%=86)  porosity= 15.09%  wall_z=0.595  thickness=29.65µm
+  frame 210 [descend]  wallP= 0.0804 GPa (wallP=0.0804 σzz_vol=0.0142 AMr=+0.0629 f_AM_mpm=0.439 | SEfl=0.0001 fAMcut=0.999 top%=87)  porosity= 15.02%  wall_z=0.595  thickness=29.62µm
+  frame 215 [descend]  wallP= 0.0779 GPa (wallP=0.0779 σzz_vol=0.0145 AMr=+0.0635 f_AM_mpm=0.449 | SEfl=0.0001 fAMcut=0.999 top%=87)  porosity= 14.96%  wall_z=0.595  thickness=29.60µm
+  frame 220 [descend]  wallP= 0.0756 GPa (wallP=0.0756 σzz_vol=0.0147 AMr=+0.0637 f_AM_mpm=0.457 | SEfl=0.0001 fAMcut=0.999 top%=86)  porosity= 14.89%  wall_z=0.594  thickness=29.58µm
+  frame 225 [descend]  wallP= 0.0739 GPa (wallP=0.0739 σzz_vol=0.0149 AMr=+0.0633 f_AM_mpm=0.462 | SEfl=0.0001 fAMcut=0.999 top%=86)  porosity= 14.83%  wall_z=0.594  thickness=29.56µm
+  frame 230 [descend]  wallP= 0.1080 GPa (wallP=0.1080 σzz_vol=0.0164 AMr=+0.0764 f_AM_mpm=0.414 | SEfl=0.0001 fAMcut=0.999 top%=88)  porosity= 14.77%  wall_z=0.593  thickness=29.54µm
+  frame 235 [descend]  wallP= 0.0537 GPa (wallP=0.0537 σzz_vol=0.0136 AMr=+0.0547 f_AM_mpm=0.505 | SEfl=0.0001 fAMcut=0.999 top%=85)  porosity= 14.77%  wall_z=0.593  thickness=29.54µm
+  frame 240 [descend]  wallP= 0.0549 GPa (wallP=0.0549 σzz_vol=0.0139 AMr=+0.0574 f_AM_mpm=0.511 | SEfl=0.0001 fAMcut=0.999 top%=85)  porosity= 14.70%  wall_z=0.593  thickness=29.51µm
+  frame 245 [descend]  wallP= 0.0541 GPa (wallP=0.0541 σzz_vol=0.0144 AMr=+0.0593 f_AM_mpm=0.523 | SEfl=0.0001 fAMcut=0.999 top%=85 PINNED)  porosity= 14.64%  wall_z=0.593  thickness=29.49µm
+  frame 250 [descend]  wallP= 0.0574 GPa (wallP=0.0574 σzz_vol=0.0143 AMr=+0.0580 f_AM_mpm=0.502 | SEfl=0.0001 fAMcut=0.999 top%=85)  porosity= 14.64%  wall_z=0.593  thickness=29.49µm
+  frame 255 [servo]  wallP= 0.0575 GPa (wallP=0.0575 σzz_vol=0.0144 AMr=+0.0573 f_AM_mpm=0.499 | SEfl=0.0001 fAMcut=0.999 top%=85)  porosity= 14.64%  wall_z=0.593  thickness=29.49µm
+  frame 260 [servo]  wallP= 0.0572 GPa (wallP=0.0572 σzz_vol=0.0143 AMr=+0.0570 f_AM_mpm=0.499 | SEfl=0.0001 fAMcut=0.998 top%=85)  porosity= 14.64%  wall_z=0.593  thickness=29.49µm
+  frame 265 [servo]  wallP= 0.0571 GPa (wallP=0.0571 σzz_vol=0.0143 AMr=+0.0569 f_AM_mpm=0.499 | SEfl=0.0001 fAMcut=0.998 top%=85)  porosity= 14.64%  wall_z=0.593  thickness=29.49µm
+  frame 266 [servo]  wallP= 0.0571 GPa (wallP=0.0571 σzz_vol=0.0143 AMr=+0.0569 f_AM_mpm=0.499 | SEfl=0.0001 fAMcut=0.998 top%=85)  porosity= 14.64%  wall_z=0.593  thickness=29.49µm
+  ✓ converged: σzz equilibrated at target
+FINAL  wallP=0.0571 GPa  porosity(settled)=14.64%  porosity@target=14.64%  thickness=29.49µm   [MPM, scaffold, scaffold 457AM se_dump(real), n_grid=384, pts=45870816, E_SE=1.53 ν_SE=0.49 K_SE=25.5GPa, readout=wallP, xy=walls]
+  coverage AM_P by SE =  27.6%   (316,909/1,147,924 surface voxels)
+  coverage AM_S by SE =  28.8%   (437,854/1,520,230 surface voxels)
+  saved metrics → /root/fam_s127/fam_s127_confirm_fb.json  (73 fields)
