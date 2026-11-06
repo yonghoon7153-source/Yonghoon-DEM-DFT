@@ -1,0 +1,185 @@
+{
+  "pin": "14773e25b32eec187366b58168e2cf98fd4730c7",
+  "parent": "5ee9cd5351c3d35a7c2c84c6701b820f9edb55d7",
+  "remote_files_total": 12,
+  "only_12_added": true,
+  "files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261106-0455_lhs-inventory-preparation.md",
+      "local_expected_blob": "be55aa1f2feb5e888d2d7668794858be1483e6d1",
+      "remote_blob": "be55aa1f2feb5e888d2d7668794858be1483e6d1",
+      "match": true,
+      "via": "pinned_commit_files",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/README.md",
+      "local_expected_blob": "cddbdd728cf83b6f0554817de042e6612d537245",
+      "remote_blob": "cddbdd728cf83b6f0554817de042e6612d537245",
+      "match": true,
+      "via": "pinned_commit_files",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/RUN_AFTER_AUTHOR_GO.sh.txt",
+      "local_expected_blob": "19ec3e487fa379c5e4d194cd2a7fef3648eaa90b",
+      "remote_blob": "19ec3e487fa379c5e4d194cd2a7fef3648eaa90b",
+      "match": true,
+      "via": "pinned_commit_files",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/guard_mutation_py312.log",
+      "local_expected_blob": "8083f46675f028b1202ffa923da0126af9ea70cb",
+      "remote_blob": "8083f46675f028b1202ffa923da0126af9ea70cb",
+      "match": true,
+      "via": "pinned_commit_files",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/synthetic_py312.log",
+      "local_expected_blob": "4b11902bbc675e73e08df95b45aeaa3716d38485",
+      "remote_blob": "4b11902bbc675e73e08df95b45aeaa3716d38485",
+      "match": true,
+      "via": "pinned_commit_files",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/synthetic_py38.log",
+      "local_expected_blob": "f6fe6334b41390feccb7aca9d0fef6826b74e081",
+      "remote_blob": "f6fe6334b41390feccb7aca9d0fef6826b74e081",
+      "match": true,
+      "via": "pinned_commit_files",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/validation.json",
+      "local_expected_blob": "aa55080df448c14cd82d6b8fa53bd1907363a7b1",
+      "remote_blob": "aa55080df448c14cd82d6b8fa53bd1907363a7b1",
+      "match": true,
+      "via": "pinned_commit_files",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/ledger_proposal.json",
+      "local_expected_blob": "a6b298c757151524d6cbc7fc477c405652c55573",
+      "remote_blob": "a6b298c757151524d6cbc7fc477c405652c55573",
+      "match": true,
+      "via": "pinned_commit_files",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/pressure_inventory.sh",
+      "local_expected_blob": "43ab80f0bbdc83125adbe6d3d65675eb55d8699c",
+      "remote_blob": "43ab80f0bbdc83125adbe6d3d65675eb55d8699c",
+      "match": true,
+      "via": "pinned_commit_files",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/replay_guard_mutation.py",
+      "local_expected_blob": "be452a6619fde6fe149c2d7ffec4009815d5bb3a",
+      "remote_blob": "be452a6619fde6fe149c2d7ffec4009815d5bb3a",
+      "match": true,
+      "via": "pinned_commit_files",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/review_request.md",
+      "local_expected_blob": "74e63cf33f9f8673064b5e501d91fa871e993228",
+      "remote_blob": "74e63cf33f9f8673064b5e501d91fa871e993228",
+      "match": true,
+      "via": "pinned_commit_files",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/test_ancestor_diagnostics.py",
+      "local_expected_blob": "c37659d3ca44ab6fdaf4f74a0023aa0222365abe",
+      "remote_blob": "c37659d3ca44ab6fdaf4f74a0023aa0222365abe",
+      "match": true,
+      "via": "pinned_commit_files",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/README.md",
+      "pin": "14773e25b32eec187366b58168e2cf98fd4730c7",
+      "remote_blob_computed": "40113339262c99f6ee2190b7f1795fd7ad83b86f",
+      "match": true,
+      "via": "remote_fixed_pin_utf8_content"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/pressure_inventory.sh",
+      "pin": "14773e25b32eec187366b58168e2cf98fd4730c7",
+      "remote_blob_computed": "43ab80f0bbdc83125adbe6d3d65675eb55d8699c",
+      "match": true,
+      "via": "remote_fixed_pin_utf8_content"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/received/20261104-0233_lhs-pressure-refusal.md",
+      "pin": "14773e25b32eec187366b58168e2cf98fd4730c7",
+      "remote_blob_computed": "6d8c50bc73dc90d30113f1109a19d4572a2b4c1c",
+      "match": true,
+      "via": "remote_fixed_pin_utf8_content"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/test_pressure_inventory.py",
+      "pin": "14773e25b32eec187366b58168e2cf98fd4730c7",
+      "remote_blob_computed": "0c95466c0e9f57969a2264a8ea3fe3c344a469ce",
+      "match": true,
+      "via": "remote_fixed_pin_utf8_content"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_closure_20261104/README.md",
+      "pin": "14773e25b32eec187366b58168e2cf98fd4730c7",
+      "remote_blob_computed": "dc6b47120a5b26b48b90ba1f88b0b21bc1d3a100",
+      "match": true,
+      "via": "remote_fixed_pin_utf8_content"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_closure_20261104/_repro_ours_20261104/probe_obs_audit.py",
+      "pin": "14773e25b32eec187366b58168e2cf98fd4730c7",
+      "remote_blob_computed": "bbd72c1af0b526b92e665e908ab8549571f69d50",
+      "match": true,
+      "via": "remote_fixed_pin_utf8_content"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_closure_20261104/external_verdict.txt",
+      "pin": "14773e25b32eec187366b58168e2cf98fd4730c7",
+      "remote_blob_computed": "b598a306f4c6bc6127552a1a25a51a2a96d78b41",
+      "match": true,
+      "via": "remote_fixed_pin_utf8_content"
+    },
+    {
+      "path": "scripts/lhs_pressure_record.py",
+      "pin": "14773e25b32eec187366b58168e2cf98fd4730c7",
+      "remote_blob_computed": "b0a1c9884b45d1426aad15f6e72426583af2a1d1",
+      "match": true,
+      "via": "remote_fixed_pin_utf8_content"
+    },
+    {
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/pressure_inventory.sh",
+      "pin": "18bb6a2e41ad58129657a68450f4c88157f3d5a6",
+      "remote_blob_computed": "43ab80f0bbdc83125adbe6d3d65675eb55d8699c",
+      "match": true,
+      "via": "remote_fixed_pin_utf8_content"
+    }
+  ],
+  "change_patch": {
+    "new_files": 12,
+    "reconstructed_bytes_match": true,
+    "paths": [
+      "docs/collab/codex_to_claude/20261106-0455_lhs-inventory-preparation.md",
+      "docs/reviews/lhs_inventory_execution_preparation_20261106/README.md",
+      "docs/reviews/lhs_inventory_execution_preparation_20261106/RUN_AFTER_AUTHOR_GO.sh.txt",
+      "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/guard_mutation_py312.log",
+      "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/synthetic_py312.log",
+      "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/synthetic_py38.log",
+      "docs/reviews/lhs_inventory_execution_preparation_20261106/evidence/validation.json",
+      "docs/reviews/lhs_inventory_execution_preparation_20261106/ledger_proposal.json",
+      "docs/reviews/lhs_inventory_execution_preparation_20261106/pressure_inventory.sh",
+      "docs/reviews/lhs_inventory_execution_preparation_20261106/replay_guard_mutation.py",
+      "docs/reviews/lhs_inventory_execution_preparation_20261106/review_request.md",
+      "docs/reviews/lhs_inventory_execution_preparation_20261106/test_ancestor_diagnostics.py"
+    ]
+  }
+}

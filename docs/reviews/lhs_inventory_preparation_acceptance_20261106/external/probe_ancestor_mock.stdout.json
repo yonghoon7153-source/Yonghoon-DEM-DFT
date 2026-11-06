@@ -1,0 +1,58 @@
+{
+  "scope": "small mocked metadata interleaving; no real filesystem traversal, research paths, CLI or POSIX qualification",
+  "unchanged_selected_source_functions": [
+    "Refusal",
+    "error_code",
+    "stamp",
+    "open_dir",
+    "plan",
+    "inventory"
+  ],
+  "observations": [
+    {
+      "inject": false,
+      "guard_removed": false,
+      "status": "INVENTORY_COMPLETE",
+      "rc": 0,
+      "roots": {
+        "local": "COUNTED"
+      },
+      "counted_cases": 30,
+      "rows": 30,
+      "reasons": [
+        ""
+      ],
+      "open_descriptors_after": 0
+    },
+    {
+      "inject": true,
+      "guard_removed": false,
+      "status": "NOT_ESTABLISHED",
+      "rc": 2,
+      "roots": {
+        "local": "CHANGED"
+      },
+      "counted_cases": 0,
+      "rows": 30,
+      "reasons": [
+        "CHANGED"
+      ],
+      "open_descriptors_after": 0
+    },
+    {
+      "inject": true,
+      "guard_removed": true,
+      "status": "INVENTORY_COMPLETE",
+      "rc": 0,
+      "roots": {
+        "local": "COUNTED"
+      },
+      "counted_cases": 30,
+      "rows": 30,
+      "reasons": [
+        ""
+      ],
+      "open_descriptors_after": 0
+    }
+  ]
+}

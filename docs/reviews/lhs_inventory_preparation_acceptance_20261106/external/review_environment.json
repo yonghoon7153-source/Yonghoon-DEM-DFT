@@ -1,0 +1,34 @@
+{
+  "review_date": "2026-11-06",
+  "host": "Windows",
+  "python": "3.12.14",
+  "independent_probe": "evidence/probe_ancestor_mock.py",
+  "independent_probe_kind": "three observations with mocked OS and log operations; selected original AST functions",
+  "producer_posix_test_independently_run": false,
+  "shell_syntax_check_completed": false,
+  "shell_attempts": [
+    {
+      "interpreter": "C:/Program Files/Git/bin/sh.exe",
+      "args": ["-n", "package/docs/reviews/lhs_inventory_execution_preparation_20261106/RUN_AFTER_AUTHOR_GO.sh.txt"],
+      "returncode": -1073741502,
+      "error": "fatal error - NtCreateDirectoryObject(\\BaseNamedObjects\\msys-2.0S5-1888ae32e00d56aa): 0xC0000022",
+      "interpretation": "shell startup failure before parsing; neither syntax PASS nor source syntax FAIL"
+    },
+    {
+      "interpreter": "C:/Program Files/Git/bin/sh.exe",
+      "args": ["-n", "package/docs/reviews/lhs_inventory_execution_preparation_20261106/pressure_inventory.sh"],
+      "returncode": -1073741502,
+      "error": "fatal error - NtCreateDirectoryObject(\\BaseNamedObjects\\msys-2.0S5-1888ae32e00d56aa): 0xC0000022",
+      "interpretation": "shell startup failure before parsing; neither syntax PASS nor source syntax FAIL"
+    }
+  ],
+  "not_performed": [
+    "actual ibb or user WSL access",
+    "research ROOT/log/value access",
+    "real inventory CLI",
+    "original POSIX synthetic test rerun",
+    "full test suite or full gate",
+    "research simulation, MPI, launch, restart",
+    "deployment, integration, ledger closure"
+  ]
+}

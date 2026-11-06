@@ -1,0 +1,30 @@
+{
+  "pin": "14773e25b32eec187366b58168e2cf98fd4730c7",
+  "verdict": "ACCEPT_DOCUMENT_STATIC_PREPARATION_AND_LIMITED_MOCK_ONLY",
+  "new_findings": [],
+  "q1": "ACCEPT_DISTINCTION_OF_REPORTED_HISTORY_AND_SYNTHETIC_MECHANISM",
+  "q2": "ACCEPT_BYTE_PRESERVATION_AND_WSL30_IBB184_SCOPE_DISTINCTION",
+  "q3": "ACCEPT_LIMITED_ANCESTOR_GUARD_AND_DIAGNOSTIC_PROPAGATION",
+  "q4": "ACCEPT_DOCUMENTED_OPERATOR_PROCEDURE_NOT_AUTOMATIC_JSON_VALIDATOR",
+  "package_snapshot_matches": 20,
+  "package_sum_matches": 42,
+  "remote_snapshot_matches": 20,
+  "additional_remote_base_command_matches": 1,
+  "new_files_in_pinned_commit": 12,
+  "independent_mock_observations": 3,
+  "original_posix_test_independently_run": false,
+  "shell_syntax_check_completed": false,
+  "historical_audit_cause_proven": false,
+  "actual_wsl30_inventory_run": false,
+  "actual_ibb184_inventory_run": false,
+  "full_gate": "HOLD",
+  "execution_go": false,
+  "deploy_or_integrate_or_close_ledger": false,
+  "remaining": [
+    "historical first audit failure cause",
+    "current actual WSL30/ibb184 inventory",
+    "runtime and POSIX/Lustre qualification",
+    "unresolved wall-clock risk",
+    "author approval for actual inventory and later A/C/value-reading rules"
+  ]
+}
