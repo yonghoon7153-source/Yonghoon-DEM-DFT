@@ -236,7 +236,7 @@ SS 를 쓰는 셀 (SS/SS · Li/SS) 은 **SS 박도 양극과 똑같이** PLI/PLI
 - 저자 서사: **Mott-Hubbard 절연 입자 + 절연 입계 = 직렬 미세 축전기 → 거대 ε (IBLC)** · 그 절연성이 *"electronically isolate LPSC-PTFE"*. ⚠ 통상 IBLC 그림은 **반도체 입자 + 절연 입계** (전도도 대비가 있어야 Maxwell–Wagner 분극이 생긴다 — 일반 지식 · 이 digest 에서 원전 확인 안 함). '입자도 절연' 이면 그 기전이 서지 않는다 — 저자 서사 안의 모순.
 
 ### 5.5 이온성 액체 고르기 (`Fig. 2f`, `Table S1`, `Table S2`, `Fig. S40`)
-- **`Fig. 2f` · `Table S1`**: 18 양이온의 기체상 HOMO/LUMO (B3LYP) — imidazolium 류 gap 5.2–6.8 eV · 4차 암모늄 · pyrrolidinium · piperidinium 류 9.0–10.1 eV. 본문: 네 후보 *"with gaps in the range of 9.5–10 eV"* (⚠ Pyr₁₂ 는 10.12) → 가격 (`Table S2`: Pyr₁₃ 89.98 · PP₁₃ 442.9 · TPM 571.9 · Pyr₁₂ 589.9 ¥/5 g) → **Pyr₁₃⁺ 선택**, *"large energy gap (9.6 eV)"* (⚠ `Table S1` 은 **9.788545**). `Table S2` 의 음이온 이름은 *"bis(fluoromethanesulfonyl)imide"* — TFSI 가 아니다 (이름 오기 또는 다른 염 가격).
+- **`Fig. 2f` · `Table S1`**: 18 양이온의 기체상 HOMO/LUMO (B3LYP) — imidazolium · pyridinium 류 gap 5.2–6.8 eV · pyrrolidinium · piperidinium · 4차 암모늄 · phosphonium 류 7.5–10.1 eV (실란 치환 piperidinium 7.51 · phosphonium 8.99 · Pyr₁₄ 8.98 포함). 본문: 네 후보 *"with gaps in the range of 9.5–10 eV"* (⚠ Pyr₁₂ 는 10.12) → 가격 (`Table S2`: Pyr₁₃ 89.98 · PP₁₃ 442.9 · TPM 571.9 · Pyr₁₂ 589.9 ¥/5 g) → **Pyr₁₃⁺ 선택**, *"large energy gap (9.6 eV)"* (⚠ `Table S1` 은 **9.788545**). `Table S2` 의 음이온 이름은 *"bis(fluoromethanesulfonyl)imide"* — TFSI 가 아니다 (이름 오기 또는 다른 염 가격).
 - **`Fig. S40` (본 그림)**: PAN −9.29/−0.85 · LiTFSI −8.76/−1.33 · **TFSI⁻ −4.07/+4.20** · Pyr₁₃⁺ −13.13/−3.34 · PTFE −9.43/−1.23 eV. SI 본문은 *"Pyr₁₃⁺ has the lowest HOMO … significantly lower than PAN, LiTFSI, PTFE"* 라며 **TFSI⁻ 의 −4.07 eV 를 비교에서 뺐다**. 같은 논리라면 가장 먼저 산화될 것은 TFSI⁻ 다. 그리고 Pyr₁₃TFSI 는 **PLI · PLIC 둘 다 (그리고 양극에도)** 있어서 PLI ↔ PLIC 차이를 설명할 수 없다 (§10-⑧h).
 
 ### 5.6 중간층 구조 (`Fig. 3a–e`, `Fig. S28`–`Fig. S35`)
@@ -457,7 +457,7 @@ PLIC 자유 TFSI⁻ **8.5 %** (PLI 11.8) · '배위 TFSI⁻' 91.5 % (PLI 88.1). 
 **🔴 ⑦ 사후 'CEI' 는 겔 중간층의 표면이다.** P · Cl · Ti · Ca · Cu 가 하나도 안 잡힌다 (`Fig. S53` · `Fig. S54`) — XPS 는 LFP 입자 위 CEI 를 보지 못했다. LiF 1.9 → 2.6 % · 'Li₃N' 0.7 → 1.5 % 는 작고 · 한 시료 · 맞춤 의존이다. 'Li₃N' 은 그림 라벨 'LiN₃' · 위치 ≈400.7 eV (통상 Li₃N 과 멀다, 일반 문헌값) · Li 1s 'LiF₃' · O 1s 에 Li₂O 성분 없음인데 본문은 Li₂O 를 무기 CEI 로 열거한다.
 
 **🔴 ⑧ 계산.**
-- (a) **AFM 을 원시셀 Cu 에 부과** — CCTO 원시셀 (Im-3, Z = 1 · 20 원자) 에는 Cu 가 **3 개**라 보상 반강자성이 원리적으로 불가 (우리 추론) · 결과 DOS 는 α/β 가 비대칭이고 HOCO 가 다르다 (`Fig. 2a`) — 'AFM' 이 아니라 순자기모멘트가 있는 상태로 보인다. 실험 AFM 배열을 쓰려면 관용 셀 (40 원자) 이 필요하다.
+- (a) **AFM 을 원시셀 Cu 에 부과** — CCTO 원시셀 (Im-3, Z = 1 · 20 원자) 에는 Cu 가 **3 개**라 보상 반강자성이 원리적으로 불가 (우리 추론) · 결과 DOS 는 α/β 가 비대칭이고 HOCO 가 다르다 (`Fig. 2a`) — 'AFM' 이 아니라 순자기모멘트가 있는 상태로 보인다. 실험 AFM 배열을 쓰려면 관용 셀 (40 원자 · Cu 6) 이 필요하다고 본다 (우리 추론).
 - (b) **U 값 미기재** — DFT+U 에서 Mott 갭은 U 가 만든다. *"DOS unambiguously identifies CCTO as a classic Mott-Hubbard insulator"* 는 입력이 출력을 정한 순환이다.
 - (c) **PDOS · ELF 가 Γ 점뿐** — 20 원자 셀 Γ-only DOS 는 이산 준위를 넓힌 것이다 (SCF 는 9×9×9 인데 분석은 Γ).
 - (d) *"upper Hubbard band … 1.2 eV below the Fermi level"* — 물리 오기.
