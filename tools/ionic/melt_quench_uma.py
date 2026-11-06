@@ -5065,6 +5065,11 @@ def _selftest():
             return d_
         def _jv(d_, why_):
             return stage1_verdict(d_, values=VAL, log=lambda *a: None, reason=f"selftest DQ P1-1 {why_}")
+        def _jv_safe(d_, why_):                              # ⭐ 깨기 DT15 — 시험 대상 (판정) 의 예외를 둘레의 except 가 삼키지 않게 값으로 남긴다
+            try:
+                return _jv(d_, why_)
+            except Exception as e_:
+                return {"status": f"예외 {type(e_).__name__}", "provenance": {}, "checks": {}}
         RAWN = SEED_GATE_RAW
         d_mm = _dq_run("dq_mm")
         v_mm1 = _jv(d_mm, "첫 판정")                         # 파생 파일을 처음 만든다
@@ -5244,55 +5249,60 @@ def _selftest():
         _fs("dt_nf", plan=PL_IP, traj=None, thermo=3)
         got_dsj["progress_no_traj"] = _jv(pathlib.Path(td_) / "dt_nf", "traj 없음")["provenance"].get("md_progress")
         want_dsj["progress_no_traj"] = "unknown"
-        tr_ = {}
-        for i_, nm_ in enumerate(MD_AFTER_TRACES):
+        AFTER_T = ("md_done.json", "md_done.json.tmp", "final_relax.log", "final.xyz", "result.json", "md_init_raw.xyz")   # ⭐ 깨기 DT7 · DT8 — 목록은 시험이
+        tr_ = {}                                             # 정한다 (도구 상수를 돌면 빠진 원소를 시험도 같이 빠뜨린다)
+        for i_, nm_ in enumerate(AFTER_T):
             _fs(f"dt_tr{i_}", plan=PL_IP, traj=3); d_tr = pathlib.Path(td_) / f"dt_tr{i_}"
             (d_tr / nm_).write_text("x", encoding="utf-8")
-            tr_[nm_] = _jv(d_tr, f"진행 중 모양 + {nm_}")["provenance"].get("md_progress")
-        got_dsj["progress_after_traces"] = tr_
-        want_dsj["progress_after_traces"] = {nm_: "complete" for nm_ in MD_AFTER_TRACES}
+            tr_[nm_] = (_jv_safe(d_tr, f"진행 중 모양 + {nm_}").get("provenance") or {}).get("md_progress")
+        got_dsj["progress_after_traces"] = (tr_, set(AFTER_T) <= set(MD_AFTER_TRACES))
+        want_dsj["progress_after_traces"] = ({nm_: "complete" for nm_ in AFTER_T}, True)
         got_dsj["progress_vocab"] = (_verdict_shape_problem({"provenance": {"md_progress": "bogus"}}) is not None,
                                      _verdict_shape_problem({"provenance": {"md_progress": "in_progress"}}) is None)
         want_dsj["progress_vocab"] = (True, True)
         # ⭐ 회신 DS P2-1 — 판정 · 이력 자리가 정상 파일이 아니면 직접 판정도 읽기 · 이력 덧붙이기 · 교체 전에 거부 (아무것도 안 쓴다) — 디렉터리 (모든 OS)
         d_vd = _dq_run("dt_vd"); (d_vd / "stage1_verdict.json").mkdir()
-        v_vd = _jv(d_vd, "판정 자리 디렉터리")
+        v_vd = _jv_safe(d_vd, "판정 자리 디렉터리")
         got_dsj["verdict_dir_refused"] = (v_vd["status"], v_vd.get("written"), (d_vd / "stage1_verdict.json").is_dir(),
                                           os.path.lexists(d_vd / VERDICT_HISTORY), os.path.lexists(d_vd / RAWN))
         want_dsj["verdict_dir_refused"] = ("invalid", False, True, False, False)
-        try:
-            d_bl = _dq_run("ds_bl"); os.symlink(d_bl / "nowhere", d_bl / SEED_GATE_RAW)
-            v_bl = _jv(d_bl, "raw 깨진 링크")
-            got_dsj["broken_link"] = (bool(v_bl["provenance"]["judge_nature"]["input_mismatch"]), "정상 파일이 아니다" in str(v_bl["checks"].get("seed_gate_error")),
-                                      os.path.islink(d_bl / SEED_GATE_RAW), v_bl["provenance"]["files_sha256"][SEED_GATE_RAW])
-            want_dsj["broken_link"] = (True, True, True, "nonfile:symlink")
+        link_ok_ds = True
+        try:                                                 # ⭐ 깨기 DT15 — 링크 만들기만 이 안에서 (만들 수 없는 OS 면 아래 링크 경우를 통째로 건너뛴다) ·
+            d_bl = _dq_run("ds_bl"); os.symlink(d_bl / "nowhere", d_bl / SEED_GATE_RAW)   # 판정 · 판독 호출은 밖에서 (그 예외를 '링크 못 만듦' 으로 삼키지 않는다)
             d_tl = _dq_run("ds_tl"); ext_ = pathlib.Path(td_) / "ds_ext.txt"; ext_.write_text("outside", encoding="utf-8")
             os.symlink(ext_, d_tl / (SEED_GATE_RAW + ".tmp"))
-            v_tl = _jv(d_tl, "남은 임시 경로 링크")
-            got_dsj["tmp_link"] = (path_kind(d_tl / SEED_GATE_RAW), ext_.read_text(encoding="utf-8"), os.path.lexists(d_tl / (SEED_GATE_RAW + ".tmp")))
-            want_dsj["tmp_link"] = ("file", "outside", False)
             d_hl = _dq_run("ds_hl"); hx_ = pathlib.Path(td_) / "ds_hist_ext.jsonl"; hx_.write_text("", encoding="utf-8")
             os.symlink(hx_, d_hl / VERDICT_HISTORY)
+            d_vl = _dq_run("ds_vl"); os.symlink(d_mm / "stage1_verdict.json", d_vl / "stage1_verdict.json")   # DS 전 2차 — 판정 경로가 다른 판정을 가리키는 링크
+        except (OSError, NotImplementedError, AttributeError):
+            link_ok_ds = False
+        if link_ok_ds:
+            v_bl = _jv_safe(d_bl, "raw 깨진 링크")
+            pv_bl = v_bl.get("provenance") or {}
+            got_dsj["broken_link"] = (bool((pv_bl.get("judge_nature") or {}).get("input_mismatch")),
+                                      "정상 파일이 아니다" in str((v_bl.get("checks") or {}).get("seed_gate_error")),
+                                      os.path.islink(d_bl / SEED_GATE_RAW), (pv_bl.get("files_sha256") or {}).get(SEED_GATE_RAW))
+            want_dsj["broken_link"] = (True, True, True, "nonfile:symlink")
+            _jv_safe(d_tl, "남은 임시 경로 링크")
+            got_dsj["tmp_link"] = (path_kind(d_tl / SEED_GATE_RAW), ext_.read_text(encoding="utf-8"), os.path.lexists(d_tl / (SEED_GATE_RAW + ".tmp")))
+            want_dsj["tmp_link"] = ("file", "outside", False)
             try:
                 _history_path_for_append(d_hl); ha_ = "wrote"
             except OSError:
                 ha_ = "refused"
             got_dsj["hist_link"] = (_verdict_records(d_hl)[1] is not None, ha_, unresolved_first_write(d_hl) is not None)
             want_dsj["hist_link"] = (True, "refused", True)
-            d_vl = _dq_run("ds_vl"); os.symlink(d_mm / "stage1_verdict.json", d_vl / "stage1_verdict.json")   # DS 전 2차 — 판정 경로가 다른 판정을 가리키는 링크
             got_dsj["verdict_link_first_write"] = unresolved_first_write(d_vl) is not None
             want_dsj["verdict_link_first_write"] = True
             b_vt = (d_mm / "stage1_verdict.json").read_bytes()   # ⭐ 회신 DS P2-1 — 링크 너머의 판정 · 이력을 읽지도 넣지도 않고 링크를 정상 파일로 바꾸지 않는다
-            v_vl = _jv(d_vl, "판정 자리가 다른 판정을 가리키는 링크")
+            v_vl = _jv_safe(d_vl, "판정 자리가 다른 판정을 가리키는 링크")
             got_dsj["verdict_link_refused"] = (v_vl["status"], v_vl.get("written"), os.path.islink(d_vl / "stage1_verdict.json"),
                                                (d_mm / "stage1_verdict.json").read_bytes() == b_vt, os.path.lexists(d_vl / VERDICT_HISTORY))
             want_dsj["verdict_link_refused"] = ("invalid", False, True, True, False)
             b_hx = hx_.read_bytes()
-            v_hl = _jv(d_hl, "이력 자리가 밖의 파일을 가리키는 링크")
+            v_hl = _jv_safe(d_hl, "이력 자리가 밖의 파일을 가리키는 링크")
             got_dsj["history_link_refused"] = (v_hl["status"], v_hl.get("written"), hx_.read_bytes() == b_hx, os.path.lexists(d_hl / "stage1_verdict.json"))
             want_dsj["history_link_refused"] = ("invalid", False, True, False)
-        except (OSError, NotImplementedError, AttributeError):
-            pass
         if hasattr(os, "mkfifo"):
             d_ff = _dq_run("ds_ff"); os.mkfifo(d_ff / SEED_GATE_RAW)
             v_ff = _no_hang(lambda: _jv(d_ff, "raw FIFO"))
