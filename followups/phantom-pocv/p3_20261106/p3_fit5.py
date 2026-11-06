@@ -35,6 +35,18 @@ SI_KEYS = {"delithiation": "Secondary: Negative electrode delithiation OCP [V]",
            "lithiation": "Secondary: Negative electrode lithiation OCP [V]",
            "mean": "Secondary: Negative electrode OCP [V]"}
 STOP = 3                                   # §5 중단 조건 발동 종료 코드
+#: 2 차 시도 (사용자 결정 가): 1 차의 {0.05, 0.15} 는 LLI 0.05 와 함께 PE-limited guard 실패 (README) → {0.05, 0.10}
+LAM_PE_LEVELS = (0.05, 0.10)
+#: 배관 점검 — P3_PLUMB=1 이면 각 목록의 첫 두 조건 · restart 1 만 돈다 (결과는 버리는 출력 폴더에 · 해석 안 함)
+PLUMB = os.environ.get("P3_PLUMB") == "1"
+
+
+def _lim(xs: list) -> list:
+    return xs[:2] if PLUMB else xs
+
+
+def _nr(n: int) -> int:
+    return 1 if PLUMB else n
 
 # ---------------------------------------------------------------- 정의 (§2 고정)
 
@@ -66,7 +78,7 @@ def make_cond(set_: str, lli, lpe, lgr, lsi, nz, step=None) -> dict:
 def all_conditions() -> list[dict]:
     out = [make_cond("origin", 0.0, 0.0, 0.0, 0.0, 0.0)]
     for lli in (0.05, 0.15):
-        for lpe in (0.05, 0.15):
+        for lpe in LAM_PE_LEVELS:
             for lgr in (0.05, 0.15):
                 for lsi in (lgr, 0.30, 0.60):
                     for nz in NOISES:
@@ -210,7 +222,7 @@ def _f4_task(c: dict) -> dict:
             "q_mah": c["q_mah"], "r": c["q_mah"] / o["q_mah"], "truth": {**truth_of(c, G["g0"]), "set": c["set"]},
             "ref_x": np.asarray(o["x_norm"]), "ref_pe": np.asarray(o["v_pe"]), "ref_ne": np.asarray(o["v_ne"]),
             "ref_full": np.asarray(o["v_full"]), "obj_cfg": G["obj_cfg"], "objectives": G["objectives"],
-            "init": bd["init"], "lb": bd["lb"], "ub": bd["ub"], "bounds_preset": "halfcell", "n_restarts": 5,
+            "init": bd["init"], "lb": bd["lb"], "ub": bd["ub"], "bounds_preset": "halfcell", "n_restarts": _nr(5),
             "inventory": {"w_pe": None, "w_ne": None, "kappa": None}, "reference": "halfcell",
             "halfcell": G["hc"], "p_ini": G.get("p_ini4"), "warm_start": True, "adaptive": True,
             "method": "Nelder-Mead", "seed": _seed(c["cond_id"])}
@@ -227,7 +239,7 @@ def cmd_f4(copy: Path, out: Path) -> int:
     ini_rows = _fit_one({**_f4_task(G["origin"]), "p_ini": [1.0, 0.0, 1.0, 0.0]})
     G["p_ini4"] = {r["objective"]: [float(r[k]) for k in PARAM_NAMES] for r in ini_rows}
     print("p_ini4", json.dumps(G["p_ini4"]), flush=True)
-    todo = [c for c in G["curves"] if c["set"] in ("origin", "grid")]
+    todo = _lim([c for c in G["curves"] if c["set"] in ("origin", "grid")])
     with Pool(N_PROC) as pool:
         rows = [r for rs in pool.map(_f4_one, todo) for r in rs]
     _jdump({"p_ini4": G["p_ini4"], "rows": rows}, out / "f4_rows.json")
@@ -277,7 +289,7 @@ def _f5_job(job: dict) -> list:
 
 
 def _origin_p_ini5(branch: str, tag: str) -> tuple[dict, list]:
-    rows = _f5_job({"cond": G["origin"], "branch": branch, "n_restarts": 20, "init": None, "warm": False, "tag": tag})
+    rows = _f5_job({"cond": G["origin"], "branch": branch, "n_restarts": _nr(20), "init": None, "warm": False, "tag": tag})
     return {r["objective"]: r["p"] for r in rows}, rows
 
 
@@ -286,8 +298,8 @@ def cmd_f5(copy: Path, out: Path) -> int:
     _tab("delithiation")
     p_ini5, orows = _origin_p_ini5("delithiation", "F5_origin")
     print("p_ini5", json.dumps(p_ini5), flush=True)
-    jobs = [{"cond": c, "branch": "delithiation", "n_restarts": 20 if c["noise"] == 0 else 5,
-             "init": None, "warm": False, "tag": "F5"} for c in G["curves"] if c["set"] == "grid"]
+    jobs = _lim([{"cond": c, "branch": "delithiation", "n_restarts": _nr(20 if c["noise"] == 0 else 5),
+                  "init": None, "warm": False, "tag": "F5"} for c in G["curves"] if c["set"] == "grid"])
     with Pool(N_PROC) as pool:
         rows = orows + [r for rs in pool.map(_f5_job, jobs) for r in rs]
     _jdump({"p_ini5": p_ini5, "rows": rows}, out / "f5_rows.json")
@@ -304,7 +316,7 @@ def cmd_f5(copy: Path, out: Path) -> int:
 
 def _w_chain(key: tuple) -> list:
     name, nz = key
-    path = sorted([c for c in G["curves"] if c["set"] == "path" and c["noise"] == nz], key=lambda c: c["step"])
+    path = _lim(sorted([c for c in G["curves"] if c["set"] == "path" and c["noise"] == nz], key=lambda c: c["step"]))
     prev = G["p_ini5"][name]
     rows = []
     for c in path:
@@ -320,8 +332,8 @@ def cmd_w(copy: Path, out: Path) -> int:
     _ctx(copy, out)
     _tab("delithiation")
     G["p_ini5"] = json.loads((out / "f5_rows.json").read_text(encoding="utf-8"))["p_ini5"]
-    cold = [{"cond": c, "branch": "delithiation", "n_restarts": 20, "init": None, "warm": False, "tag": "W_cold"}
-            for c in G["curves"] if c["set"] == "path"]
+    cold = _lim([{"cond": c, "branch": "delithiation", "n_restarts": _nr(20), "init": None, "warm": False, "tag": "W_cold"}
+                 for c in G["curves"] if c["set"] == "path"])
     with Pool(N_PROC) as pool:
         rows = [r for rs in pool.map(_f5_job, cold) for r in rs]
         rows += [r for rs in pool.map(_w_chain, [(n, nz) for n in OBJECTIVES for nz in NOISES]) for r in rs]
@@ -337,8 +349,8 @@ def cmd_s(copy: Path, out: Path) -> int:
         _tab(branch)
         p_ini, orows = _origin_p_ini5(branch, f"S_origin_{branch}")
         res["p_ini5"][branch] = p_ini
-        jobs = [{"cond": c, "branch": branch, "n_restarts": 5, "init": None, "warm": False, "tag": f"S_{branch}"}
-                for c in G["curves"] if c["set"] == "grid" and c["noise"] == 0]
+        jobs = _lim([{"cond": c, "branch": branch, "n_restarts": _nr(5), "init": None, "warm": False, "tag": f"S_{branch}"}
+                     for c in G["curves"] if c["set"] == "grid" and c["noise"] == 0])
         with Pool(N_PROC) as pool:
             res["rows"] += orows + [r for rs in pool.map(_f5_job, jobs) for r in rs]
         print(f"branch {branch} · p_ini5 {json.dumps(p_ini)}", flush=True)
@@ -463,7 +475,9 @@ def cmd_analyze(copy: Path, out: Path) -> int:
         for r in w:
             if r["tag"] != "W_warm":
                 continue
-            cr = cold[(r["cond_id"], r["objective"])]
+            cr = cold.get((r["cond_id"], r["objective"]))
+            if cr is None:                     # 배관 점검 (목록 제한) 에서만 생긴다 — 전체 실행은 경로 12 모두 cold 가 있다
+                continue
             mw, mc = modes5(r["p"], p5[r["objective"]], r["r"]), modes5(cr["p"], p5[r["objective"]], cr["r"])
             r5.append({"objective": r["objective"], "noise": r["noise"], "step": r["step"],
                        "max_abs_dp": float(np.max(np.abs(np.subtract(r["p"], cr["p"])))),

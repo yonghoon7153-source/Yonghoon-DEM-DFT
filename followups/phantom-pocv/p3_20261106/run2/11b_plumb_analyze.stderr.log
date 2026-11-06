@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/p3_fit5.py", line 532, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/p3_fit5.py", line 527, in main
+    return {"curves": cmd_curves, "f4": cmd_f4, "f5": cmd_f5, "w": cmd_w, "s": cmd_s,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/p3_fit5.py", line 478, in cmd_analyze
+    cr = cold[(r["cond_id"], r["objective"])]
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: ('933c0377a8f9', 'pocv')

@@ -1,0 +1,11 @@
+argv: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p3/venv/bin/python -I /home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/p3_fit5.py f5 --copy /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p3/degradation-degeneracy --out /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p3/plumb
+cwd: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p3/degradation-degeneracy
+start_utc: 2026-11-06T05:30:15Z
+copy_head: ff0e416ae18e7c8690ea0ff2c94085fc34c6f4d8
+repo_head: 161592d0080f4c064138a0859a76c3b93788f927
+copy_dirty: 0
+disk_free_start: 23827423232
+end_utc: 2026-11-06T05:30:15Z
+rc: 1
+elapsed_s: 0.22
+disk_free_end: 23827419136
