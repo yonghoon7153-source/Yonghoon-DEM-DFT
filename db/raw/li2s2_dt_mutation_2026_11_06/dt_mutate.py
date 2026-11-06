@@ -92,6 +92,14 @@ NEW = [
    "                         \"judged_at_utc\": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec=\"microseconds\"),",
    "                         \"judged_at_utc\": \"2000-01-01T00:00:00+00:00\","),
  F("DT25_after_trace_vasp_dropped", _TRACES1, _TRACES1.replace("\"final.vasp\", ", "")),
+ # ── DT 전 2차 리뷰 P3 (완료 기록의 시각은 run_id · traj · thermo 해시가 맞을 때만)
+ F("DT28_md_done_hash_unchecked",
+   "    if not (isinstance(files, dict) and rec.get(\"traj_sha256\") is not None and rec.get(\"traj_sha256\") == files.get(\"traj.xyz\")\n"
+   "            and rec.get(\"thermo_sha256\") is not None and rec.get(\"thermo_sha256\") == files.get(\"thermo.csv\")):\n        return None",
+   "    if False:\n        return None"),
+ F("DT29_md_done_run_id_unchecked",
+   "    if not (isinstance(plan, dict) and isinstance(plan.get(\"run_id\"), str) and rec.get(\"run_id\") == plan.get(\"run_id\")):\n        return None",
+   "    if False:\n        return None"),
  F("DT26_runner_melt_written_ignored",
    "                            if v.get(\"written\") is not False:   # ⭐ DT 전 1차 리뷰 P3 — 판정을 쓰지 못했으면",
    "                            if True:   # ⭐ DT 전 1차 리뷰 P3 — 판정을 쓰지 못했으면", "run", RUNR),

@@ -1273,7 +1273,8 @@ def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print, reason="
         res = combine_stage1(plan, v, gate, melt, seedg, files, checks=checks)
         res.update({"run": str(run), "gate_check": gate, "melt_window_check": melt, "checks": checks,
                     "seed_gate_view": (seedg or {}).get(v["seed_gate"]["version"])})
-    res["provenance"] = {"files_sha256": run_provenance(run), "card_values_sha16": values_sha16(v), "driver_sha16": driver_sha16(),
+    fs_now = run_provenance(run)
+    res["provenance"] = {"files_sha256": fs_now, "card_values_sha16": values_sha16(v), "driver_sha16": driver_sha16(),
                          "judge_values_sha16": judge_values_sha16(v),   # ⭐ DR 전 5차 리뷰 P2 — 판정 규칙만의 지문
                          "band_sha16": band_card_sha16() if band_read else BAND_NOT_READ, "runtime": judge_runtime(),
                          "folder": [run.parent.name, run.name], "derived_written": derived_written,   # ⭐ DR 전 리뷰 P3-A — 폴더 이름도 판정 입력 (식별)
@@ -1281,7 +1282,7 @@ def stage1_verdict(run_dir, *, values=None, card=LI2S2_CARD, log=print, reason="
                          "md_complete_seen": md_complete_seen(run, gate, checks),   # ⭐ DS 전 2차 — 완료 기록이 없어도 일정 끝 · 프레임 다 참이면 끝난 것
                          "md_progress": md_progress(run, plan, gate, checks),   # ⭐ 회신 DS P1-1 — 완료 · 진행 중 확인 · 확인 불가 (기준 앞 면제가 읽는다)
                          "judged_at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="microseconds"),   # ⭐ DT 전 1차 — 들여다본 시각
-                         "md_done_at_utc": _md_done_at_utc(run),   # ⭐ DT 전 1차 — 그때 MD 완료 기록의 완료 시각 (없으면 None)
+                         "md_done_at_utc": _md_done_at_utc(run, fs_now, plan),   # ⭐ DT 전 1차 — 그때 MD 완료 기록의 완료 시각 (없으면 None)
                          "judge_nature": {"errors": judge_err, "input_mismatch": input_mismatch},
                          "⛔": "묶음 판정 (stage1_summary) 이 이 지문을 지금 파일 · 카드 값 · 도구 · G4 밴드 카드와 다시 잰다 — 안 맞으면 그 시드는 "
                                "무효 (다시 판정) · 비과학적 판정을 과학적 판정이 자동 대체하는 것은 judge_nature.errors 가 있고 input_mismatch 가 "
@@ -2239,9 +2240,11 @@ MD_AFTER_TRACES = (MD_DONE_NAME, MD_DONE_TMP, "final_relax.log", "final.xyz", "f
                    "md_init_raw.xyz")   # MD 가 끝나야 생기는 경로 (⭐ DT 전 1차 P3 — 드라이버가 FIRE 뒤에 쓰는 final.vasp · gr_partials.csv 도)
 
 
-def _md_done_at_utc(run):
+def _md_done_at_utc(run, files=None, plan=None):
     """⭐ DT 전 1차 리뷰 P1 — MD 완료 기록 (md_done.json) 이 적은 완료 시각 (정상 파일 · 객체 · 글자일 때만 · 아니면 None). 판정 지문에 실어
-    기준 앞 '진행 중' 지름길이 들여다본 시각과 견준다 (완료 뒤에 들여다본 판정은 어떻게 꾸며도 진행 중이 아니다)."""
+    기준 앞 '진행 중' 지름길이 들여다본 시각과 견준다 (완료 뒤에 들여다본 판정은 어떻게 꾸며도 진행 중이 아니다).
+    ⭐ DT 전 2차 리뷰 P3 — 그 기록의 run_id 가 plan 과 같고 traj · thermo 해시가 지금 지문 (files) 과 같을 때만 믿는다 (낡은 · 옮겨 온 완료 기록 ·
+    완료 뒤에 MD 출력이 바뀐 폴더의 시각은 None — 지름길이 안 선다). ⛔ 일부러 고쳐 쓴 완료 기록 (시각만 바꿈) 은 못 가른다 (꾸민 기록)."""
     q = pathlib.Path(run) / MD_DONE_NAME
     if path_kind(q) != "file":
         return None
@@ -2249,7 +2252,14 @@ def _md_done_at_utc(run):
         rec = loads_strict(q.read_text(encoding="utf-8"))
     except (OSError, ValueError, UnicodeDecodeError, RecursionError):
         return None
-    x = rec.get("at_utc") if isinstance(rec, dict) else None
+    if not isinstance(rec, dict):
+        return None
+    if not (isinstance(plan, dict) and isinstance(plan.get("run_id"), str) and rec.get("run_id") == plan.get("run_id")):
+        return None
+    if not (isinstance(files, dict) and rec.get("traj_sha256") is not None and rec.get("traj_sha256") == files.get("traj.xyz")
+            and rec.get("thermo_sha256") is not None and rec.get("thermo_sha256") == files.get("thermo.csv")):
+        return None
+    x = rec.get("at_utc")
     return x if isinstance(x, str) else None
 
 
@@ -5332,6 +5342,13 @@ def _selftest():
                                      _utc_before(at_rec_, pv_mdt.get("judged_at_utc")),
                                      (_jv_safe(d_ip, "완료 기록 없음").get("provenance") or {}).get("md_done_at_utc"))
         want_dsj["times_recorded"] = (True, True, True, True, None)
+        _fs("dt_mds", plan=PL_IP, traj=5, done=True); d_mds = pathlib.Path(td_) / "dt_mds"   # ⭐ DT 전 2차 P3 — 완료 뒤 thermo 가 바뀐 폴더 ·
+        (d_mds / "thermo.csv").write_text((d_mds / "thermo.csv").read_text(encoding="utf-8").replace("-500.0000", "-500.0001", 1), encoding="utf-8")
+        _fs("dt_mdr", plan=PL_IP, traj=5, done={"run_id": "selftest-other-run"}); d_mdr = pathlib.Path(td_) / "dt_mdr"   # 다른 실행의 완료 기록
+        v_mds, v_mdr = _jv_safe(d_mds, "완료 뒤 thermo 바뀜"), _jv_safe(d_mdr, "다른 실행의 완료 기록")
+        got_dsj["md_done_time_checked"] = ((v_mds.get("provenance") or {}).get("md_done_at_utc"), "md_done_at_utc" in (v_mds.get("provenance") or {}),
+                                           (v_mdr.get("provenance") or {}).get("md_done_at_utc"), "md_done_at_utc" in (v_mdr.get("provenance") or {}))
+        want_dsj["md_done_time_checked"] = (None, True, None, True)
         _fs("dt_xf", plan=PL_IP, traj=3); d_xf = pathlib.Path(td_) / "dt_xf"; (d_xf / "notes.txt").write_text("x", encoding="utf-8")
         got_dsj["progress_extra_file"] = (_jv_safe(d_xf, "진행 중 모양 + 모르는 파일").get("provenance") or {}).get("md_progress")
         want_dsj["progress_extra_file"] = "unknown"
