@@ -1,0 +1,11 @@
+argv: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p3/venv/bin/python -I -m pytest -q -p no:cacheprovider /home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py
+cwd: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p3/degradation-degeneracy
+start_utc: 2026-11-06T05:20:21Z
+copy_head: 98de1b95895fcadde965a574d70b7f3f99408f11
+repo_head: 64c2ed216f9e0d82c6f712c932ab98533a03f068
+copy_dirty: 0
+disk_free_start: 23833829376
+end_utc: 2026-11-06T05:20:21Z
+rc: 1
+elapsed_s: 0.48
+disk_free_end: 23833821184

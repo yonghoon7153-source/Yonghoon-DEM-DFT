@@ -1,0 +1,66 @@
+diff --git a/src/modes.py b/src/modes.py
+index 68b9479..da2a617 100644
+--- a/src/modes.py
++++ b/src/modes.py
+@@ -170,9 +170,15 @@ def single_mode_overrides(mode: str, i: float, b: Baseline,
+ def build_overrides(lli: float, lam_pe: float, lam_ne: float,
+                     lam_pe_type: str, lam_ne_type: str,
+                     b: Baseline, d: DischargedState,
+-                    guards: dict | None = None) -> dict:
++                    guards: dict | None = None, *,
++                    lam_gr: float | None = None,
++                    lam_si: float | None = None) -> dict:
+     """조합 격자용 override (charge_first / 완방 프레임 통일).
+ 
++    ★ P3 사본 패치 (논문 후속 · 저장소 밖 · 진단 전용) — `lam_gr` · `lam_si` 를 함께 주면
++      음극 두 상 (Gr · Si) 의 활물질 손실을 따로 적용한다. 둘이 같으면 기존 경로와 같은
++      식을 그대로 탄다 (동치 시험 a2). 둘 다 없으면 기존 동작 그대로.
++
+     적용 순서 고정: LAM_PE → LAM_NE → LLI.
+     모든 값 0이면 빈 dict (= reference 조건).
+ 
+@@ -194,7 +200,12 @@ def build_overrides(lli: float, lam_pe: float, lam_ne: float,
+     max_por = g["max_porosity"]
+     min_vf = g["min_vf"]
+ 
+-    for name, v in (("lli", lli), ("lam_pe", lam_pe), ("lam_ne", lam_ne)):
++    if (lam_gr is None) != (lam_si is None):
++        raise ValueError("lam_gr 와 lam_si 는 함께 주어야 한다 (P3 사본 패치)")
++    split = lam_gr is not None
++    l_gr, l_si = (float(lam_gr), float(lam_si)) if split else (lam_ne, lam_ne)
++    for name, v in (("lli", lli), ("lam_pe", lam_pe), ("lam_ne", lam_ne),
++                    ("lam_gr", l_gr), ("lam_si", l_si)):
+         if not 0 <= v <= max_mode:
+             raise InfeasibleConditionError(f"{name}={v} 는 [0, {max_mode}] 밖")
+     if lam_pe_type not in ("de", "li") or lam_ne_type not in ("de", "li"):
+@@ -214,14 +225,24 @@ def build_overrides(lli: float, lam_pe: float, lam_ne: float,
+             pe = pe / (1 - lam_pe)   # 죽은 PE는 비어 있었음 → 남은 PE가 재고 전량 보유
+ 
+     # 2) LAM_NE
+-    if lam_ne > 0:
++    if split and l_gr != l_si:
++        # P3: 상별 손실 — 공극은 두 상이 잃은 부피의 합만큼 는다
++        if l_gr > 0 or l_si > 0:
++            ov[P_NE1_VF] = b.ne_primary_vf * (1 - l_gr)
++            ov[P_NE2_VF] = b.ne_secondary_vf * (1 - l_si)
++            ov[P_NE_POR] = b.ne_porosity + b.ne_primary_vf * l_gr + b.ne_secondary_vf * l_si
++            if lam_ne_type == "de":
++                ne1 = ne1 / (1 - l_gr)
++                ne2 = ne2 / (1 - l_si)
++    elif l_gr > 0:
++        lam_ne_eff = l_gr               # 분리 없음 또는 두 상이 같음 → 기존 식 그대로
+         vf_tot = b.ne_primary_vf + b.ne_secondary_vf
+-        ov[P_NE1_VF] = b.ne_primary_vf * (1 - lam_ne)
+-        ov[P_NE2_VF] = b.ne_secondary_vf * (1 - lam_ne)
+-        ov[P_NE_POR] = b.ne_porosity + vf_tot * lam_ne
++        ov[P_NE1_VF] = b.ne_primary_vf * (1 - lam_ne_eff)
++        ov[P_NE2_VF] = b.ne_secondary_vf * (1 - lam_ne_eff)
++        ov[P_NE_POR] = b.ne_porosity + vf_tot * lam_ne_eff
+         if lam_ne_type == "de":
+-            ne1 = ne1 / (1 - lam_ne)
+-            ne2 = ne2 / (1 - lam_ne)
++            ne1 = ne1 / (1 - lam_ne_eff)
++            ne2 = ne2 / (1 - lam_ne_eff)
+ 
+     # 3) LLI — 마지막. 모든 저장소를 (1-lli)배 → 전체 재고가 정확히 lli만큼 감소
+     if lli > 0:

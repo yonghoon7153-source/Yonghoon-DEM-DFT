@@ -1,0 +1,3 @@
+# 대형 산출 — 저장소 밖 (스크래치패드) · sha256 만
+204eeb1973ec5e3797d0a4c5fb9283b42c12b34bb64017a7f4a4c7b9faa559a4  out/curves.json (1476225 B · 61 행 · 실패 12 포함)
+080593974ff4da7fcd01f412dd364984e6c316408f20172e4ea3fa0ac7da98d1  pip_freeze.txt

@@ -3641,3 +3641,10 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   "제안 실험" 절 머리 안내 · `updated`. index 의 같은 줄 ("E1–E3 미착수" → E3a 실행 · 수용 · C4-A 구현 요청 검토 대기).
 - `.claude/agents/paper-curator.md` — 연구실 세미나 덱은 digest 하지 않는다는 경계 한 줄 (에이전트 정의가 2026-09 세미나 digest 를 선례로 들고 있어, 10-13 결정 전 것임을 적음).
 - lint 0 errors (아래 커밋 직전 실행).
+
+## [2026-11-06] update | 논문 후속 P3 — 승인 → 실행 1 회 · 곡선 단계 §5 중단 (적합 0)
+- 사용자 원문 "나머지도 진행" → `followups/phantom-pocv/P3_APPROVAL_REQUEST.md` §4 권고 승인 (§8 에 기록). 저장소 밖 사본 · 버리는 venv · RUN_SCOPE 0.
+- 시험 RED → GREEN 14 (1 차 RED 는 시험 쪽 결함이라 고쳐 다시 봄 · 기록 보존). truth 곡선 61 중 격자 12 (LLI 0.05 × LAM_PE 0.15) 가 PE-limited guard
+  실패 → 미리 고정한 규칙대로 멈춤. 적합은 한 번도 돌지 않아 Q1–Q4 에 대해 말하는 것이 없다. 원인은 범위안의 격자 산술 누락 (`de` 종류 LAM_PE 는
+  (1 − LLI) / (1 − LAM_PE) ≤ c_max / 완방 농도 일 때만 성립).
+- 갱신: [[pocv-nonequilibrium-mode-bias]] P3 줄. 기록 `followups/phantom-pocv/p3_20261106/README.md` · 상태판 P3 줄. 다음은 사용자 결정 (격자 수정 · 36 조건 · 닫기).

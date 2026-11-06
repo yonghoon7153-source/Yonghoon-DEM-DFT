@@ -1,0 +1,122 @@
+[
+ {
+  "set": "grid",
+  "cond_id": "ef25a7b073b7",
+  "lli": 0.05,
+  "lam_pe": 0.15,
+  "lam_gr": 0.05,
+  "lam_si": 0.05,
+  "noise": 0.0,
+  "error": "infeasible: PE 초기농도 65315 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)"
+ },
+ {
+  "set": "grid",
+  "cond_id": "5268f9b605d2",
+  "lli": 0.05,
+  "lam_pe": 0.15,
+  "lam_gr": 0.05,
+  "lam_si": 0.05,
+  "noise": 0.001,
+  "error": "infeasible: PE 초기농도 65315 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)"
+ },
+ {
+  "set": "grid",
+  "cond_id": "ae01f6252aa1",
+  "lli": 0.05,
+  "lam_pe": 0.15,
+  "lam_gr": 0.05,
+  "lam_si": 0.3,
+  "noise": 0.0,
+  "error": "infeasible: PE 초기농도 65315 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)"
+ },
+ {
+  "set": "grid",
+  "cond_id": "4d41ff350428",
+  "lli": 0.05,
+  "lam_pe": 0.15,
+  "lam_gr": 0.05,
+  "lam_si": 0.3,
+  "noise": 0.001,
+  "error": "infeasible: PE 초기농도 65315 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)"
+ },
+ {
+  "set": "grid",
+  "cond_id": "35984fab2705",
+  "lli": 0.05,
+  "lam_pe": 0.15,
+  "lam_gr": 0.05,
+  "lam_si": 0.6,
+  "noise": 0.0,
+  "error": "infeasible: PE 초기농도 65315 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)"
+ },
+ {
+  "set": "grid",
+  "cond_id": "ffd86303d8be",
+  "lli": 0.05,
+  "lam_pe": 0.15,
+  "lam_gr": 0.05,
+  "lam_si": 0.6,
+  "noise": 0.001,
+  "error": "infeasible: PE 초기농도 65315 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)"
+ },
+ {
+  "set": "grid",
+  "cond_id": "b633741c8d21",
+  "lli": 0.05,
+  "lam_pe": 0.15,
+  "lam_gr": 0.15,
+  "lam_si": 0.15,
+  "noise": 0.0,
+  "error": "infeasible: PE 초기농도 65315 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)"
+ },
+ {
+  "set": "grid",
+  "cond_id": "490830c8c49c",
+  "lli": 0.05,
+  "lam_pe": 0.15,
+  "lam_gr": 0.15,
+  "lam_si": 0.15,
+  "noise": 0.001,
+  "error": "infeasible: PE 초기농도 65315 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)"
+ },
+ {
+  "set": "grid",
+  "cond_id": "ac60ea5514db",
+  "lli": 0.05,
+  "lam_pe": 0.15,
+  "lam_gr": 0.15,
+  "lam_si": 0.3,
+  "noise": 0.0,
+  "error": "infeasible: PE 초기농도 65315 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)"
+ },
+ {
+  "set": "grid",
+  "cond_id": "72db8bd1e87f",
+  "lli": 0.05,
+  "lam_pe": 0.15,
+  "lam_gr": 0.15,
+  "lam_si": 0.3,
+  "noise": 0.001,
+  "error": "infeasible: PE 초기농도 65315 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)"
+ },
+ {
+  "set": "grid",
+  "cond_id": "a7610b321592",
+  "lli": 0.05,
+  "lam_pe": 0.15,
+  "lam_gr": 0.15,
+  "lam_si": 0.6,
+  "noise": 0.0,
+  "error": "infeasible: PE 초기농도 65315 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)"
+ },
+ {
+  "set": "grid",
+  "cond_id": "688c9e890a67",
+  "lli": 0.05,
+  "lam_pe": 0.15,
+  "lam_gr": 0.15,
+  "lam_si": 0.6,
+  "noise": 0.001,
+  "error": "infeasible: PE 초기농도 65315 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)"
+ }
+]

@@ -1,0 +1,122 @@
+.....FFFFFFFFF                                                           [100%]
+=================================== FAILURES ===================================
+___________________ test_a2_equal_split_is_identical[case0] ____________________
+
+case = (0.0, 0.0, 0.0, 'de', 'de')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a2_equal_split_is_identical(case):
+        lli, lpe, lne, tpe, tne = case
+>       got = build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS, lam_gr=lne, lam_si=lne)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_overrides() got an unexpected keyword argument 'lam_gr'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:64: TypeError
+___________________ test_a2_equal_split_is_identical[case1] ____________________
+
+case = (0.05, 0.05, 0.05, 'de', 'de')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a2_equal_split_is_identical(case):
+        lli, lpe, lne, tpe, tne = case
+>       got = build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS, lam_gr=lne, lam_si=lne)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_overrides() got an unexpected keyword argument 'lam_gr'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:64: TypeError
+___________________ test_a2_equal_split_is_identical[case2] ____________________
+
+case = (0.15, 0.15, 0.15, 'de', 'de')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a2_equal_split_is_identical(case):
+        lli, lpe, lne, tpe, tne = case
+>       got = build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS, lam_gr=lne, lam_si=lne)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_overrides() got an unexpected keyword argument 'lam_gr'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:64: TypeError
+___________________ test_a2_equal_split_is_identical[case3] ____________________
+
+case = (0.1, 0.05, 0.2, 'li', 'li')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a2_equal_split_is_identical(case):
+        lli, lpe, lne, tpe, tne = case
+>       got = build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS, lam_gr=lne, lam_si=lne)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_overrides() got an unexpected keyword argument 'lam_gr'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:64: TypeError
+___________________ test_a2_equal_split_is_identical[case4] ____________________
+
+case = (0.17, 0.13, 0.13, 'de', 'li')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a2_equal_split_is_identical(case):
+        lli, lpe, lne, tpe, tne = case
+>       got = build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS, lam_gr=lne, lam_si=lne)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_overrides() got an unexpected keyword argument 'lam_gr'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:64: TypeError
+___________________________ test_a3_split_per_phase ____________________________
+
+    def test_a3_split_per_phase():
+        lli, lpe, lgr, lsi = 0.05, 0.05, 0.05, 0.60
+        lne_tot = 0.1408                      # 기록용 값 — 분리 경로에서는 vf 에 쓰이지 않는다
+>       ov = build_overrides(lli, lpe, lne_tot, "de", "de", B, D, GUARDS, lam_gr=lgr, lam_si=lsi)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_overrides() got an unexpected keyword argument 'lam_gr'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:71: TypeError
+_________________________ test_a4_half_split_rejected __________________________
+
+    def test_a4_half_split_rejected():
+        with pytest.raises(ValueError):
+>           build_overrides(0.05, 0.05, 0.05, "de", "de", B, D, GUARDS, lam_gr=0.05)
+E           TypeError: build_overrides() got an unexpected keyword argument 'lam_gr'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:82: TypeError
+__________________________ test_b1_gamma0_matches_f4 ___________________________
+
+    def test_b1_gamma0_matches_f4():
+        (P, obj_cfg, hc, ref_pe, ref_ne4, tab, reconstruct, window_shortfall,
+>        compute_features, default_scales, make_objective) = _b_setup()
+                                                             ^^^^^^^^^^
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _b_setup():
+>       import p3_fit5 as P
+E       ModuleNotFoundError: No module named 'p3_fit5'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:88: ModuleNotFoundError
+________________________ test_b2_gamma_actually_moves_j ________________________
+
+    def test_b2_gamma_actually_moves_j():
+        """음성 대조 — γ 가 목적값을 실제로 바꾸지 않으면 (b1) 은 공허하다."""
+        (P, obj_cfg, hc, ref_pe, ref_ne4, tab, reconstruct, window_shortfall,
+>        compute_features, default_scales, make_objective) = _b_setup()
+                                                             ^^^^^^^^^^
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _b_setup():
+>       import p3_fit5 as P
+E       ModuleNotFoundError: No module named 'p3_fit5'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:88: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a2_equal_split_is_identical[case0]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a2_equal_split_is_identical[case1]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a2_equal_split_is_identical[case2]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a2_equal_split_is_identical[case3]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a2_equal_split_is_identical[case4]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a3_split_per_phase
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a4_half_split_rejected
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_b1_gamma0_matches_f4
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_b2_gamma_actually_moves_j
+9 failed, 5 passed in 0.16s

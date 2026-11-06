@@ -1,0 +1,557 @@
+FFFFFFFFFFFFFF                                                           [100%]
+=================================== FAILURES ===================================
+____________________ test_a1_default_path_unchanged[case0] _____________________
+
+case = (0.0, 0.0, 0.0, 'de', 'de')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a1_default_path_unchanged(case):
+        lli, lpe, lne, tpe, tne = case
+        assert build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS) == \
+>           _orig()(lli, lpe, lne, tpe, tne, B, D, GUARDS)
+            ^^^^^^^
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:47: in _orig
+    spec.loader.exec_module(m)
+<frozen importlib._bootstrap_external>:940: in exec_module
+    ???
+<frozen importlib._bootstrap>:241: in _call_with_frames_removed
+    ???
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/modes.py:91: in <module>
+    @dataclass(frozen=True)
+     ^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/dataclasses.py:1222: in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+/usr/lib/python3.11/dataclasses.py:947: in _process_class
+    and _is_type(type, cls, dataclasses, dataclasses.KW_ONLY,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+annotation = 'float', cls = <class 'p3_modes_orig.Baseline'>
+a_module = <module 'dataclasses' from '/usr/lib/python3.11/dataclasses.py'>
+a_type = <dataclasses._KW_ONLY_TYPE object at 0x7ff293df2190>
+is_type_predicate = <function _is_kw_only at 0x7ff293bd3ec0>
+
+    def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
+        # Given a type annotation string, does it refer to a_type in
+        # a_module?  For example, when checking that annotation denotes a
+        # ClassVar, then a_module is typing, and a_type is
+        # typing.ClassVar.
+    
+        # It's possible to look up a_module given a_type, but it involves
+        # looking in sys.modules (again!), and seems like a waste since
+        # the caller already knows a_module.
+    
+        # - annotation is a string type annotation
+        # - cls is the class that this annotation was found in
+        # - a_module is the module we want to match
+        # - a_type is the type in that module we want to match
+        # - is_type_predicate is a function called with (obj, a_module)
+        #   that determines if obj is of the desired type.
+    
+        # Since this test does not do a local namespace lookup (and
+        # instead only a module (global) lookup), there are some things it
+        # gets wrong.
+    
+        # With string annotations, cv0 will be detected as a ClassVar:
+        #   CV = ClassVar
+        #   @dataclass
+        #   class C0:
+        #     cv0: CV
+    
+        # But in this example cv1 will not be detected as a ClassVar:
+        #   @dataclass
+        #   class C1:
+        #     CV = ClassVar
+        #     cv1: CV
+    
+        # In C1, the code in this function (_is_type) will look up "CV" in
+        # the module and not find it, so it will not consider cv1 as a
+        # ClassVar.  This is a fairly obscure corner case, and the best
+        # way to fix it would be to eval() the string "CV" with the
+        # correct global and local namespaces.  However that would involve
+        # a eval() penalty for every single field of every dataclass
+        # that's defined.  It was judged not worth it.
+    
+        match = _MODULE_IDENTIFIER_RE.match(annotation)
+        if match:
+            ns = None
+            module_name = match.group(1)
+            if not module_name:
+                # No module name, assume the class's module did
+                # "from dataclasses import InitVar".
+>               ns = sys.modules.get(cls.__module__).__dict__
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AttributeError: 'NoneType' object has no attribute '__dict__'
+
+/usr/lib/python3.11/dataclasses.py:712: AttributeError
+____________________ test_a1_default_path_unchanged[case1] _____________________
+
+case = (0.05, 0.05, 0.05, 'de', 'de')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a1_default_path_unchanged(case):
+        lli, lpe, lne, tpe, tne = case
+        assert build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS) == \
+>           _orig()(lli, lpe, lne, tpe, tne, B, D, GUARDS)
+            ^^^^^^^
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:47: in _orig
+    spec.loader.exec_module(m)
+<frozen importlib._bootstrap_external>:940: in exec_module
+    ???
+<frozen importlib._bootstrap>:241: in _call_with_frames_removed
+    ???
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/modes.py:91: in <module>
+    @dataclass(frozen=True)
+     ^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/dataclasses.py:1222: in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+/usr/lib/python3.11/dataclasses.py:947: in _process_class
+    and _is_type(type, cls, dataclasses, dataclasses.KW_ONLY,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+annotation = 'float', cls = <class 'p3_modes_orig.Baseline'>
+a_module = <module 'dataclasses' from '/usr/lib/python3.11/dataclasses.py'>
+a_type = <dataclasses._KW_ONLY_TYPE object at 0x7ff293df2190>
+is_type_predicate = <function _is_kw_only at 0x7ff293bd3ec0>
+
+    def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
+        # Given a type annotation string, does it refer to a_type in
+        # a_module?  For example, when checking that annotation denotes a
+        # ClassVar, then a_module is typing, and a_type is
+        # typing.ClassVar.
+    
+        # It's possible to look up a_module given a_type, but it involves
+        # looking in sys.modules (again!), and seems like a waste since
+        # the caller already knows a_module.
+    
+        # - annotation is a string type annotation
+        # - cls is the class that this annotation was found in
+        # - a_module is the module we want to match
+        # - a_type is the type in that module we want to match
+        # - is_type_predicate is a function called with (obj, a_module)
+        #   that determines if obj is of the desired type.
+    
+        # Since this test does not do a local namespace lookup (and
+        # instead only a module (global) lookup), there are some things it
+        # gets wrong.
+    
+        # With string annotations, cv0 will be detected as a ClassVar:
+        #   CV = ClassVar
+        #   @dataclass
+        #   class C0:
+        #     cv0: CV
+    
+        # But in this example cv1 will not be detected as a ClassVar:
+        #   @dataclass
+        #   class C1:
+        #     CV = ClassVar
+        #     cv1: CV
+    
+        # In C1, the code in this function (_is_type) will look up "CV" in
+        # the module and not find it, so it will not consider cv1 as a
+        # ClassVar.  This is a fairly obscure corner case, and the best
+        # way to fix it would be to eval() the string "CV" with the
+        # correct global and local namespaces.  However that would involve
+        # a eval() penalty for every single field of every dataclass
+        # that's defined.  It was judged not worth it.
+    
+        match = _MODULE_IDENTIFIER_RE.match(annotation)
+        if match:
+            ns = None
+            module_name = match.group(1)
+            if not module_name:
+                # No module name, assume the class's module did
+                # "from dataclasses import InitVar".
+>               ns = sys.modules.get(cls.__module__).__dict__
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AttributeError: 'NoneType' object has no attribute '__dict__'
+
+/usr/lib/python3.11/dataclasses.py:712: AttributeError
+____________________ test_a1_default_path_unchanged[case2] _____________________
+
+case = (0.15, 0.15, 0.15, 'de', 'de')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a1_default_path_unchanged(case):
+        lli, lpe, lne, tpe, tne = case
+        assert build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS) == \
+>           _orig()(lli, lpe, lne, tpe, tne, B, D, GUARDS)
+            ^^^^^^^
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:47: in _orig
+    spec.loader.exec_module(m)
+<frozen importlib._bootstrap_external>:940: in exec_module
+    ???
+<frozen importlib._bootstrap>:241: in _call_with_frames_removed
+    ???
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/modes.py:91: in <module>
+    @dataclass(frozen=True)
+     ^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/dataclasses.py:1222: in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+/usr/lib/python3.11/dataclasses.py:947: in _process_class
+    and _is_type(type, cls, dataclasses, dataclasses.KW_ONLY,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+annotation = 'float', cls = <class 'p3_modes_orig.Baseline'>
+a_module = <module 'dataclasses' from '/usr/lib/python3.11/dataclasses.py'>
+a_type = <dataclasses._KW_ONLY_TYPE object at 0x7ff293df2190>
+is_type_predicate = <function _is_kw_only at 0x7ff293bd3ec0>
+
+    def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
+        # Given a type annotation string, does it refer to a_type in
+        # a_module?  For example, when checking that annotation denotes a
+        # ClassVar, then a_module is typing, and a_type is
+        # typing.ClassVar.
+    
+        # It's possible to look up a_module given a_type, but it involves
+        # looking in sys.modules (again!), and seems like a waste since
+        # the caller already knows a_module.
+    
+        # - annotation is a string type annotation
+        # - cls is the class that this annotation was found in
+        # - a_module is the module we want to match
+        # - a_type is the type in that module we want to match
+        # - is_type_predicate is a function called with (obj, a_module)
+        #   that determines if obj is of the desired type.
+    
+        # Since this test does not do a local namespace lookup (and
+        # instead only a module (global) lookup), there are some things it
+        # gets wrong.
+    
+        # With string annotations, cv0 will be detected as a ClassVar:
+        #   CV = ClassVar
+        #   @dataclass
+        #   class C0:
+        #     cv0: CV
+    
+        # But in this example cv1 will not be detected as a ClassVar:
+        #   @dataclass
+        #   class C1:
+        #     CV = ClassVar
+        #     cv1: CV
+    
+        # In C1, the code in this function (_is_type) will look up "CV" in
+        # the module and not find it, so it will not consider cv1 as a
+        # ClassVar.  This is a fairly obscure corner case, and the best
+        # way to fix it would be to eval() the string "CV" with the
+        # correct global and local namespaces.  However that would involve
+        # a eval() penalty for every single field of every dataclass
+        # that's defined.  It was judged not worth it.
+    
+        match = _MODULE_IDENTIFIER_RE.match(annotation)
+        if match:
+            ns = None
+            module_name = match.group(1)
+            if not module_name:
+                # No module name, assume the class's module did
+                # "from dataclasses import InitVar".
+>               ns = sys.modules.get(cls.__module__).__dict__
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AttributeError: 'NoneType' object has no attribute '__dict__'
+
+/usr/lib/python3.11/dataclasses.py:712: AttributeError
+____________________ test_a1_default_path_unchanged[case3] _____________________
+
+case = (0.1, 0.05, 0.2, 'li', 'li')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a1_default_path_unchanged(case):
+        lli, lpe, lne, tpe, tne = case
+        assert build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS) == \
+>           _orig()(lli, lpe, lne, tpe, tne, B, D, GUARDS)
+            ^^^^^^^
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:47: in _orig
+    spec.loader.exec_module(m)
+<frozen importlib._bootstrap_external>:940: in exec_module
+    ???
+<frozen importlib._bootstrap>:241: in _call_with_frames_removed
+    ???
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/modes.py:91: in <module>
+    @dataclass(frozen=True)
+     ^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/dataclasses.py:1222: in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+/usr/lib/python3.11/dataclasses.py:947: in _process_class
+    and _is_type(type, cls, dataclasses, dataclasses.KW_ONLY,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+annotation = 'float', cls = <class 'p3_modes_orig.Baseline'>
+a_module = <module 'dataclasses' from '/usr/lib/python3.11/dataclasses.py'>
+a_type = <dataclasses._KW_ONLY_TYPE object at 0x7ff293df2190>
+is_type_predicate = <function _is_kw_only at 0x7ff293bd3ec0>
+
+    def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
+        # Given a type annotation string, does it refer to a_type in
+        # a_module?  For example, when checking that annotation denotes a
+        # ClassVar, then a_module is typing, and a_type is
+        # typing.ClassVar.
+    
+        # It's possible to look up a_module given a_type, but it involves
+        # looking in sys.modules (again!), and seems like a waste since
+        # the caller already knows a_module.
+    
+        # - annotation is a string type annotation
+        # - cls is the class that this annotation was found in
+        # - a_module is the module we want to match
+        # - a_type is the type in that module we want to match
+        # - is_type_predicate is a function called with (obj, a_module)
+        #   that determines if obj is of the desired type.
+    
+        # Since this test does not do a local namespace lookup (and
+        # instead only a module (global) lookup), there are some things it
+        # gets wrong.
+    
+        # With string annotations, cv0 will be detected as a ClassVar:
+        #   CV = ClassVar
+        #   @dataclass
+        #   class C0:
+        #     cv0: CV
+    
+        # But in this example cv1 will not be detected as a ClassVar:
+        #   @dataclass
+        #   class C1:
+        #     CV = ClassVar
+        #     cv1: CV
+    
+        # In C1, the code in this function (_is_type) will look up "CV" in
+        # the module and not find it, so it will not consider cv1 as a
+        # ClassVar.  This is a fairly obscure corner case, and the best
+        # way to fix it would be to eval() the string "CV" with the
+        # correct global and local namespaces.  However that would involve
+        # a eval() penalty for every single field of every dataclass
+        # that's defined.  It was judged not worth it.
+    
+        match = _MODULE_IDENTIFIER_RE.match(annotation)
+        if match:
+            ns = None
+            module_name = match.group(1)
+            if not module_name:
+                # No module name, assume the class's module did
+                # "from dataclasses import InitVar".
+>               ns = sys.modules.get(cls.__module__).__dict__
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AttributeError: 'NoneType' object has no attribute '__dict__'
+
+/usr/lib/python3.11/dataclasses.py:712: AttributeError
+____________________ test_a1_default_path_unchanged[case4] _____________________
+
+case = (0.17, 0.13, 0.13, 'de', 'li')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a1_default_path_unchanged(case):
+        lli, lpe, lne, tpe, tne = case
+        assert build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS) == \
+>           _orig()(lli, lpe, lne, tpe, tne, B, D, GUARDS)
+            ^^^^^^^
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:47: in _orig
+    spec.loader.exec_module(m)
+<frozen importlib._bootstrap_external>:940: in exec_module
+    ???
+<frozen importlib._bootstrap>:241: in _call_with_frames_removed
+    ???
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/modes.py:91: in <module>
+    @dataclass(frozen=True)
+     ^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/dataclasses.py:1222: in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+/usr/lib/python3.11/dataclasses.py:947: in _process_class
+    and _is_type(type, cls, dataclasses, dataclasses.KW_ONLY,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+annotation = 'float', cls = <class 'p3_modes_orig.Baseline'>
+a_module = <module 'dataclasses' from '/usr/lib/python3.11/dataclasses.py'>
+a_type = <dataclasses._KW_ONLY_TYPE object at 0x7ff293df2190>
+is_type_predicate = <function _is_kw_only at 0x7ff293bd3ec0>
+
+    def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
+        # Given a type annotation string, does it refer to a_type in
+        # a_module?  For example, when checking that annotation denotes a
+        # ClassVar, then a_module is typing, and a_type is
+        # typing.ClassVar.
+    
+        # It's possible to look up a_module given a_type, but it involves
+        # looking in sys.modules (again!), and seems like a waste since
+        # the caller already knows a_module.
+    
+        # - annotation is a string type annotation
+        # - cls is the class that this annotation was found in
+        # - a_module is the module we want to match
+        # - a_type is the type in that module we want to match
+        # - is_type_predicate is a function called with (obj, a_module)
+        #   that determines if obj is of the desired type.
+    
+        # Since this test does not do a local namespace lookup (and
+        # instead only a module (global) lookup), there are some things it
+        # gets wrong.
+    
+        # With string annotations, cv0 will be detected as a ClassVar:
+        #   CV = ClassVar
+        #   @dataclass
+        #   class C0:
+        #     cv0: CV
+    
+        # But in this example cv1 will not be detected as a ClassVar:
+        #   @dataclass
+        #   class C1:
+        #     CV = ClassVar
+        #     cv1: CV
+    
+        # In C1, the code in this function (_is_type) will look up "CV" in
+        # the module and not find it, so it will not consider cv1 as a
+        # ClassVar.  This is a fairly obscure corner case, and the best
+        # way to fix it would be to eval() the string "CV" with the
+        # correct global and local namespaces.  However that would involve
+        # a eval() penalty for every single field of every dataclass
+        # that's defined.  It was judged not worth it.
+    
+        match = _MODULE_IDENTIFIER_RE.match(annotation)
+        if match:
+            ns = None
+            module_name = match.group(1)
+            if not module_name:
+                # No module name, assume the class's module did
+                # "from dataclasses import InitVar".
+>               ns = sys.modules.get(cls.__module__).__dict__
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AttributeError: 'NoneType' object has no attribute '__dict__'
+
+/usr/lib/python3.11/dataclasses.py:712: AttributeError
+___________________ test_a2_equal_split_is_identical[case0] ____________________
+
+case = (0.0, 0.0, 0.0, 'de', 'de')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a2_equal_split_is_identical(case):
+        lli, lpe, lne, tpe, tne = case
+>       got = build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS, lam_gr=lne, lam_si=lne)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_overrides() got an unexpected keyword argument 'lam_gr'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:61: TypeError
+___________________ test_a2_equal_split_is_identical[case1] ____________________
+
+case = (0.05, 0.05, 0.05, 'de', 'de')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a2_equal_split_is_identical(case):
+        lli, lpe, lne, tpe, tne = case
+>       got = build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS, lam_gr=lne, lam_si=lne)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_overrides() got an unexpected keyword argument 'lam_gr'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:61: TypeError
+___________________ test_a2_equal_split_is_identical[case2] ____________________
+
+case = (0.15, 0.15, 0.15, 'de', 'de')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a2_equal_split_is_identical(case):
+        lli, lpe, lne, tpe, tne = case
+>       got = build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS, lam_gr=lne, lam_si=lne)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_overrides() got an unexpected keyword argument 'lam_gr'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:61: TypeError
+___________________ test_a2_equal_split_is_identical[case3] ____________________
+
+case = (0.1, 0.05, 0.2, 'li', 'li')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a2_equal_split_is_identical(case):
+        lli, lpe, lne, tpe, tne = case
+>       got = build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS, lam_gr=lne, lam_si=lne)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_overrides() got an unexpected keyword argument 'lam_gr'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:61: TypeError
+___________________ test_a2_equal_split_is_identical[case4] ____________________
+
+case = (0.17, 0.13, 0.13, 'de', 'li')
+
+    @pytest.mark.parametrize("case", CASES)
+    def test_a2_equal_split_is_identical(case):
+        lli, lpe, lne, tpe, tne = case
+>       got = build_overrides(lli, lpe, lne, tpe, tne, B, D, GUARDS, lam_gr=lne, lam_si=lne)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_overrides() got an unexpected keyword argument 'lam_gr'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:61: TypeError
+___________________________ test_a3_split_per_phase ____________________________
+
+    def test_a3_split_per_phase():
+        lli, lpe, lgr, lsi = 0.05, 0.05, 0.05, 0.60
+        lne_tot = 0.1408                      # 기록용 값 — 분리 경로에서는 vf 에 쓰이지 않는다
+>       ov = build_overrides(lli, lpe, lne_tot, "de", "de", B, D, GUARDS, lam_gr=lgr, lam_si=lsi)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_overrides() got an unexpected keyword argument 'lam_gr'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:68: TypeError
+_________________________ test_a4_half_split_rejected __________________________
+
+    def test_a4_half_split_rejected():
+        with pytest.raises(ValueError):
+>           build_overrides(0.05, 0.05, 0.05, "de", "de", B, D, GUARDS, lam_gr=0.05)
+E           TypeError: build_overrides() got an unexpected keyword argument 'lam_gr'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:79: TypeError
+__________________________ test_b1_gamma0_matches_f4 ___________________________
+
+    def test_b1_gamma0_matches_f4():
+        (P, obj_cfg, hc, ref_pe, ref_ne4, tab, reconstruct, window_shortfall,
+>        compute_features, default_scales, make_objective) = _b_setup()
+                                                             ^^^^^^^^^^
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _b_setup():
+>       import p3_fit5 as P
+E       ModuleNotFoundError: No module named 'p3_fit5'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:85: ModuleNotFoundError
+________________________ test_b2_gamma_actually_moves_j ________________________
+
+    def test_b2_gamma_actually_moves_j():
+        """음성 대조 — γ 가 목적값을 실제로 바꾸지 않으면 (b1) 은 공허하다."""
+        (P, obj_cfg, hc, ref_pe, ref_ne4, tab, reconstruct, window_shortfall,
+>        compute_features, default_scales, make_objective) = _b_setup()
+                                                             ^^^^^^^^^^
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _b_setup():
+>       import p3_fit5 as P
+E       ModuleNotFoundError: No module named 'p3_fit5'
+
+/home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py:85: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a1_default_path_unchanged[case0]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a1_default_path_unchanged[case1]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a1_default_path_unchanged[case2]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a1_default_path_unchanged[case3]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a1_default_path_unchanged[case4]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a2_equal_split_is_identical[case0]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a2_equal_split_is_identical[case1]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a2_equal_split_is_identical[case2]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a2_equal_split_is_identical[case3]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a2_equal_split_is_identical[case4]
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a3_split_per_phase
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_a4_half_split_rejected
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_b1_gamma0_matches_f4
+FAILED ../../../../../../../home/user/Yonghoon-DEM-DFT/followups/phantom-pocv/p3_20261106/test_p3.py::test_b2_gamma_actually_moves_j
+14 failed in 0.59s

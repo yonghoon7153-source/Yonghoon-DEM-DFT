@@ -97,4 +97,17 @@ Q_Si = γ̂ Q_NE · Q_Gr = (1 − γ̂) Q_NE → LAM_X = 1 − Q_X / Q_X0.
 
 ## §8 실행 전 고정값 (승인 뒤 · fit 시작 전 기록)
 
-비어 있음 — 승인 뒤 사본 sha · 패치 sha · 환경 · 잡음 설정의 실제 값 · 목적함수 가중치를 여기에 먼저 적고 시작한다.
+- **승인:** 사용자 원문 "나머지도 진행" (2026-11-06 · 직전 보고의 "사용자가 정할 것" 에 이 문서 §7 문구 · §4 수정을 올린 뒤) → §4 권고 전부 · §7 범위로 읽는다.
+  같은 메시지의 "그대로 둬 해당 브랜치만 비공개로 하자" 는 특허 항목에 대한 답이라 P3 와 무관하다.
+- **벽시계 원점:** T0 = 2026-11-06T05:15:46Z (사본 생성 시작 · P2 와 같이 "첫 실행 단계 → 마지막 계산" 으로 잰다 · 작성 시간 포함). 상한 T0 + 3 h = 08:15:46Z.
+- **저장소 HEAD** `64c2ed216f9e0d82c6f712c932ab98533a03f068` · **사본 base** `98de1b95895fcadde965a574d70b7f3f99408f11` (`git archive HEAD degradation-degeneracy` → 스크래치패드 `p3/` · `git init`).
+- 나머지 고정값 (패치 sha · 환경 · 잡음 · 목적함수 가중치 · 경계) 은 첫 곡선 생성 전에 아래에 덧붙인다.
+- **(05:24Z 덧붙임 · 첫 곡선 전)** 사본 패치 커밋 `ff0e416ae18e7c8690ea0ff2c94085fc34c6f4d8` (`src/modes.py` 만 · patch sha256 `c99bb998…`) ·
+  환경 py 3.11.17 · pybamm 26.8.0.0 · numpy 2.4.6 · scipy 1.17.1 · pandas 3.0.5 · casadi 3.7.2 (pip freeze sha256 `08059397…`) · 4 코어.
+- 시험: `01_red` 14 실패 — 시험 쪽 결함 (원본 모듈을 `sys.modules` 에 등록하지 않아 a1 이 dataclass 오류로 실패 · 의도한 RED 아님) → 시험만 고침 →
+  `01b_red` 선언대로 9 실패 (분리 인자 없음 TypeError 7 · 운전 스크립트 없음 2) · a1 5 통과 → 패치 · `p3_fit5.py` → `02_green` 14 통과.
+- 잡음 {0, 0.001} (V · `add_noise` 가우스 · seed = 101 + sha1(조건 키)[:6]) · 프로토콜 `charge_first` (`grid_protocol_override`) · n_trim 3 · n_interp 300.
+- 목적함수 `pocv` {w_pocv 1} · `pocv_dvdq` {w_pocv 1 · w_dvdq 1} (`configs/objectives.yaml`) · 경계 `halfcell` init [1.05, −0.05, 1.40, −0.40] ·
+  lb [0.5, −1.5, 0.5, −1.5] · ub [3.0, 1.0, 3.0, 1.0] + γ [0, 0.40] (시작 γ0).
+- F4 = `_fit_one` 그대로 (restart 5 · adaptive · Nelder-Mead · 원점 자기 적합 p_ini). F5 · W · S = `fit()` adaptive 끔 · 고정 restart · seed sha1(cond_id|가지).
+  **F5 · S 의 원점 자기 적합은 restart 20** (잡음 0 적합이라 F5 규칙을 따른다 — 여기서 고정).
