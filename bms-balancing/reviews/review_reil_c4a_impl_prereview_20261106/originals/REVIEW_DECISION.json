@@ -1,0 +1,193 @@
+{
+  "kind": "REIL_C4A_IMPLEMENTATION_REQUEST_PREREVIEW_DECISION",
+  "date": "2026-11-06",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "branch": "claude/14-gate-code-review-9qkx05",
+  "pin": "86cab053cf814ae516d95fb8a38a81ebdc4ac378",
+  "decision": "REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL",
+  "finding_count": 7,
+  "findings": [
+    {
+      "id": "C4A-IMPL-N1",
+      "priority": "P1",
+      "title": "전체 회귀의 실제 호출과 실행 0 경계 충돌",
+      "request_lines": "106–108,128,135–139",
+      "evidence": [
+        {
+          "file": "source/bms-balancing/tests/test_reil_c4_0a.py",
+          "lines": "349–364"
+        },
+        {
+          "file": "source/bms-balancing/tests/test_reil_c4_0b1.py",
+          "lines": "396–415"
+        },
+        {
+          "file": "source/bms-balancing/tests/test_reil_c4_0b2.py",
+          "lines": "307–321,446–456"
+        },
+        {
+          "file": "source/bms-balancing/tests/test_reil_c4e1_launch.py",
+          "lines": "203–208,386–419"
+        }
+      ],
+      "required": "RED 전 정확한 회귀 nodeid·호출 종류·허용 횟수/상한을 고정한다. 실제 util·NSGA2/COBYQA·fixture 프로세스/로컬 Git을 포함할지, 제외한 부분집합만 실행할지 명시한다. 새 T01–T15의 fake 전용 범위와 분리한다.",
+      "status": "OPEN_REQUEST_CORRECTION"
+    },
+    {
+      "id": "C4A-IMPL-N2",
+      "priority": "P2",
+      "title": "경고 필드 추가와 기존 exact-row 기대값 불일치",
+      "request_lines": "54–58,128,136",
+      "evidence": [
+        {
+          "file": "source/bms-balancing/tests/test_reil_c4_0b2.py",
+          "lines": "190–228"
+        },
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_h.py",
+          "lines": "737–747,848–859"
+        }
+      ],
+      "required": "정상·지역 오류·구조 중지 부분 행의 경고 필드를 확정하고 해당 기대 행의 제한적 schema 정정을 허용 변경 목록·사전 봉인에 포함한다. 기존 필드 단언은 보존한다.",
+      "status": "OPEN_REQUEST_CORRECTION"
+    },
+    {
+      "id": "C4A-IMPL-N3",
+      "priority": "P1",
+      "title": "경고 저장 상한·집계 범위·부분 기록 미완",
+      "request_lines": "54–57,122,157–158",
+      "evidence": [
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_h.py",
+          "lines": "737–747,773–802,836–859"
+        },
+        {
+          "file": "source/bms-balancing/docs/REIL_C4A_SCOPE_v2_20261106.md",
+          "lines": "36–38"
+        }
+      ],
+      "required": "수집 시점부터 제한되는 문구/키 저장과 초과 계수 의미를 정한다. 실행별 요약 이후 집계의 누락 범위를 밝히고 조기 구조 중지 부분 기록에도 계수/초과 정보를 보존한다. Unknown solver options 감지는 잘림 뒤에도 유지한다.",
+      "status": "OPEN_REQUEST_CORRECTION"
+    },
+    {
+      "id": "C4A-IMPL-N4",
+      "priority": "P1",
+      "title": "runner의 중지·자원·공통 기한·원근거 결속 누락",
+      "request_lines": "41–44,64–65,99,125–126,147–153",
+      "evidence": [
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_hb.py",
+          "lines": "1074–1078,1105–1114,1165–1172"
+        },
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_monitor.py",
+          "lines": "237–245,315–328,343–367"
+        },
+        {
+          "file": "source/bms-balancing/docs/REIL_C4A_SCOPE_v2_20261106.md",
+          "lines": "71–77"
+        }
+      ],
+      "required": "새 wave 어댑터가 StopRule_A, task→unit, 출력 루트/디스크 경로, 공통 절대 마감의 잔여 시간을 연결하고 전체 supervisor 반환을 보존하도록 명시한다. unit 및 정리 기한, run-a 최종 기록과 외부 종결의 닫힘을 구분한다.",
+      "status": "OPEN_REQUEST_CORRECTION"
+    },
+    {
+      "id": "C4A-IMPL-N5",
+      "priority": "P2",
+      "title": "비용식 wall/n_eval의 표본 정의역 미정",
+      "request_lines": "62–64,123",
+      "evidence": [
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_h.py",
+          "lines": "822,840–848,860–877"
+        },
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_monitor.py",
+          "lines": "224–234"
+        }
+      ],
+      "required": "H termination별 적격 표본, 유한 비음수 wall, 양의 정수 n_eval과 적격 표본 8개를 정의한다. 0평가 지역 solver 오류의 기록/제외와 잘못된 반환 행의 구조 오류를 구분한다.",
+      "status": "OPEN_REQUEST_CORRECTION"
+    },
+    {
+      "id": "C4A-IMPL-N6",
+      "priority": "P2",
+      "title": "승인된 소스 목록과 이후 실행 승인의 결속 미완",
+      "request_lines": "5,38,69–72,86,116,139,164",
+      "evidence": [
+        {
+          "file": "source/bms-balancing/scripts/reil_c4e_run.py",
+          "lines": "504–531"
+        },
+        {
+          "file": "source/bms-balancing/scripts/reil_c4e1_launch.py",
+          "lines": "375–385,824–831"
+        },
+        {
+          "file": "source/bms-balancing/docs/REIL_C4A_SCOPE_v2_20261106.md",
+          "lines": "59–61"
+        }
+      ],
+      "required": "SOURCES_A 자체의 승인 고정 SHA를 별도로 받아 목록+소스 동시 교체를 거부하도록 명시한다. launcher/외곽/판정기/끝 기록 작성기도 승인된 정확한 소스 집합에 결속한다. implementation_basis와 execution_request/승인 절을 분리한다.",
+      "status": "OPEN_REQUEST_CORRECTION"
+    },
+    {
+      "id": "C4A-IMPL-N7",
+      "priority": "P2",
+      "title": "집계 계수 0과 행 신원 무결성 혼동",
+      "request_lines": "95–104,117–118",
+      "evidence": [
+        {
+          "file": "source/bms-balancing/scripts/reil_c4_hb.py",
+          "lines": "1020–1045,1353–1388"
+        }
+      ],
+      "required": "unit별 run_id/task_id/unit/x0 무결성을 별도 판정해 실제 소비/인계 조건에 연결한다. 누락·중복이 기존 미계상 수를 자동 증가시킨다고 주장하지 않는다. 정당한 중단·조건 제외는 구조 오류와 구분한다.",
+      "status": "OPEN_REQUEST_CORRECTION"
+    }
+  ],
+  "nonblocking_clarifications": [
+    {
+      "id": "C4A-IMPL-C1",
+      "title": "STORE_A stop/final exclusive publication responsibility",
+      "request_lines": "49–50",
+      "status": "CLARIFY_IN_REQUEST"
+    }
+  ],
+  "prior_scope_review": {
+    "pin": "c97cd1156948f88d901a532d95e26c06527490bc",
+    "decision": "SCOPE_V2_ACCEPTED_N1_N4_CLOSED_FOR_IMPLEMENTATION_REQUEST_BASELINE",
+    "N1_N4": "CLOSED_DOCUMENT_SCOPE_RETAINED"
+  },
+  "user_choices": {
+    "U1": "SPLIT_IMPLEMENTATION_AND_EXECUTION_RECORDED_IN_LEDGER",
+    "U2": "UNSELECTED_10H_PROPOSAL_ONLY",
+    "U3": "REUSE_PINNED_DATA_RECORDED_IN_LEDGER",
+    "provenance": "Read-only repository ledger; no independent original-user-message authentication"
+  },
+  "source_copies": 131,
+  "selected_local_originals": 9,
+  "attachments_match_pin": true,
+  "authorizations": {
+    "implementation": false,
+    "tests": false,
+    "actual_C4A_execution": false,
+    "COMSOL": false,
+    "external_send": false
+  },
+  "performed": {
+    "static_source_document_review": true,
+    "received_program_import_or_execution": 0,
+    "tests": 0,
+    "data_xlsx_opening": 0,
+    "optimization": 0,
+    "installation": 0,
+    "OS_probe": 0,
+    "COMSOL": 0,
+    "target_repository_mutation": 0,
+    "external_transmission": 0
+  },
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null,
+  "next_artifact": "Corrected implementation request v2 and N1–N7 response map; no execution inferred."
+}

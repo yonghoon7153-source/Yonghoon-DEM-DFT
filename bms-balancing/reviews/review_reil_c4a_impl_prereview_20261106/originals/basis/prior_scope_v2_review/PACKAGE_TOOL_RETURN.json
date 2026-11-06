@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_REIL_C4A_SCOPE_V2_REVIEW_PACKAGE_TOOL_RETURN",
+  "provenance": "Exact received exec_command result serialized after its return, outside the completed review ZIP. This is not its own future write return, a whole-review elapsed-time claim, or independent remote runtime observation.",
+  "tool_result": {
+    "chunk_id": "00d55c",
+    "wall_time_seconds": 0.7666931,
+    "exit_code": 0,
+    "original_token_count": 360,
+    "output": "{\r\n  \"kind\": \"REIL_C4A_SCOPE_V2_REVIEW_PACKAGE_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4a_scope_v2_review_20261106\\\\REIL_C4A_SCOPE_V2_REVIEW_20261106.zip\",\r\n    \"bytes\": 1395894,\r\n    \"sha256\": \"af4987415b0950d8bdc9bf8d474b68e53a7c47b233ae7bea283f35dfe6b5d065\"\r\n  },\r\n  \"receipt\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4a_scope_v2_review_20261106\\\\DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 1920,\r\n    \"sha256\": \"fac2a804db223beca3b6d65782ffca95aa73c85de4f29e64ba0dc8b16ec3b5f7\"\r\n  },\r\n  \"post_package\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\reil_c4a_scope_v2_review_20261106\\\\SELECTED_LOCAL_SOURCES_POST_PACKAGE.json\",\r\n    \"bytes\": 2796,\r\n    \"sha256\": \"1aa6f4f4dd2b10c9ea1469a7669695c0ad1fd52a47eac70ed66850a65629af8a\"\r\n  },\r\n  \"payload_count\": 137,\r\n  \"entries\": 138,\r\n  \"decision\": \"SCOPE_V2_ACCEPTED_N1_N4_CLOSED_FOR_IMPLEMENTATION_REQUEST_BASELINE\",\r\n  \"N1_N4\": \"CLOSED_DOCUMENT_SCOPE\",\r\n  \"new_blocking_findings\": 0,\r\n  \"target_execution\": 0,\r\n  \"tests\": 0,\r\n  \"COMSOL\": 0,\r\n  \"new_implementation_or_execution_authorized\": false,\r\n  \"boundary\": \"After ZIP, receipt and post-package records write/readback; before actual tool return and later transcription.\"\r\n}\r\n"
+  }
+}

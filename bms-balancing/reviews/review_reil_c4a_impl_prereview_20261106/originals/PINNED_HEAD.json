@@ -1,0 +1,82 @@
+{
+  "sha": "86cab053cf814ae516d95fb8a38a81ebdc4ac378",
+  "node_id": "C_kwDORwcnfdoAKDg2Y2FiMDUzY2Y4MTRhZTUxNmQ5NWZiOGEzOGE4MWViZGM0YWMzNzg",
+  "commit": {
+    "author": {
+      "name": "Claude",
+      "email": "noreply@anthropic.com",
+      "date": "2026-11-06T04:30:27Z"
+    },
+    "committer": {
+      "name": "Claude",
+      "email": "noreply@anthropic.com",
+      "date": "2026-11-06T04:30:27Z"
+    },
+    "message": "REIL C4-A 원장 §127 — 구현 요청서 v1 (I1–I6 · 입력 / 판정 계약 · 시험 T01–T15 · 절차 · 시간 배분안) · 발송문 (문서만 · 실행 0)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_0157zrP6GFu6cJF5x8CwZaEm",
+    "tree": {
+      "sha": "8ea736f45012be6b4267b3cb91ab8215bbff41ef",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/trees/8ea736f45012be6b4267b3cb91ab8215bbff41ef"
+    },
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/commits/86cab053cf814ae516d95fb8a38a81ebdc4ac378",
+    "comment_count": 0,
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgrLzsfFISF4by8Q+FKz27YpkK1USsBB+m\namu1QkJnbDsAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAAQFLiZsoH\npityrnUglPv+Z8rqDKwq5/gf4mlsltsAeBaPo4RsfzG1a0jdRdDae9QLnlmhKqssizYNFiwcAzPU\ncwA=\n-----END SSH SIGNATURE-----",
+      "payload": "tree 8ea736f45012be6b4267b3cb91ab8215bbff41ef\nparent b1de66df3fc7c0469273c1cc235e4ab0895e9890\nauthor Claude <noreply@anthropic.com> 1793939427 +0000\ncommitter Claude <noreply@anthropic.com> 1793939427 +0000\n\nREIL C4-A 원장 §127 — 구현 요청서 v1 (I1–I6 · 입력 / 판정 계약 · 시험 T01–T15 · 절차 · 시간 배분안) · 발송문 (문서만 · 실행 0)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_0157zrP6GFu6cJF5x8CwZaEm\n",
+      "verified_at": "2026-11-06T04:30:32Z"
+    }
+  },
+  "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/86cab053cf814ae516d95fb8a38a81ebdc4ac378",
+  "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/86cab053cf814ae516d95fb8a38a81ebdc4ac378",
+  "comments_url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/86cab053cf814ae516d95fb8a38a81ebdc4ac378/comments",
+  "author": {
+    "login": "claude",
+    "id": 81847,
+    "node_id": "MDQ6VXNlcjgxODQ3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/81847?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/claude",
+    "html_url": "https://github.com/claude",
+    "followers_url": "https://api.github.com/users/claude/followers",
+    "following_url": "https://api.github.com/users/claude/following{/other_user}",
+    "gists_url": "https://api.github.com/users/claude/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/claude/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/claude/subscriptions",
+    "organizations_url": "https://api.github.com/users/claude/orgs",
+    "repos_url": "https://api.github.com/users/claude/repos",
+    "events_url": "https://api.github.com/users/claude/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/claude/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "claude",
+    "id": 81847,
+    "node_id": "MDQ6VXNlcjgxODQ3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/81847?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/claude",
+    "html_url": "https://github.com/claude",
+    "followers_url": "https://api.github.com/users/claude/followers",
+    "following_url": "https://api.github.com/users/claude/following{/other_user}",
+    "gists_url": "https://api.github.com/users/claude/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/claude/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/claude/subscriptions",
+    "organizations_url": "https://api.github.com/users/claude/orgs",
+    "repos_url": "https://api.github.com/users/claude/repos",
+    "events_url": "https://api.github.com/users/claude/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/claude/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "b1de66df3fc7c0469273c1cc235e4ab0895e9890",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/b1de66df3fc7c0469273c1cc235e4ab0895e9890",
+      "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/b1de66df3fc7c0469273c1cc235e4ab0895e9890"
+    }
+  ]
+}

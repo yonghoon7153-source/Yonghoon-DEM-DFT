@@ -1,0 +1,15 @@
+{
+  "kind": "C4A_IMPLEMENTATION_PREREVIEW_DOCUMENT_CHECK",
+  "pin": "86cab053cf814ae516d95fb8a38a81ebdc4ac378",
+  "findings": 7,
+  "evidence_paths_present": true,
+  "source_copies_size_sha256_matched": 131,
+  "git_blob_ids_matched": 131,
+  "current_repository_files": 130,
+  "prior_external_immutable_file": 1,
+  "selected_local_originals_matched": 9,
+  "report_reply_decision_consistent": true,
+  "target_execution": 0,
+  "tests": 0,
+  "scope": "Reviewer document/identity processing only; not target functional testing or original remote execution audit."
+}

@@ -1,0 +1,51 @@
+{
+  "count": 9,
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4A_IMPL_REQUEST_20261106.md",
+      "bytes": 15873,
+      "sha256": "86f2d63134cbf186c9838a2f4124f97e98ce6cfb543557b9c04147d315b917c2"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4A_IMPL_REQUEST_SEND_20261106.md",
+      "bytes": 2571,
+      "sha256": "95bcbbb3013362c7196e287a221b8929409fcf29513b6026229a411917204392"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_scope_v2_review_20261106\\REVIEW_DECISION.json",
+      "bytes": 4178,
+      "sha256": "cd23d56d8df9d7ce21e516ebb51f7b489af7d956d28dee872daacbb03b45ae45"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_scope_v2_review_20261106\\REVIEW_KO.txt",
+      "bytes": 5639,
+      "sha256": "b4bd7446c2bb163779ee3b65ab2269298781806fae34726ab58f5a3b4db4c019"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_scope_v2_review_20261106\\CODEX_REPLY_KO.txt",
+      "bytes": 1204,
+      "sha256": "47128bf0260eb6f60bf82f7ea1e6ae5e2565f68a81b524d5c0d3c5ebd0ab3809"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_scope_v2_review_20261106\\ROOT_STATIC_DATA_CHECK.json",
+      "bytes": 84967,
+      "sha256": "fd2695f48dbb5d51b703ab6baf01a6de6d7b288171f0af699fd701348ba5cc8a"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_scope_v2_review_20261106\\DELIVERY_RECEIPT.json",
+      "bytes": 1920,
+      "sha256": "fac2a804db223beca3b6d65782ffca95aa73c85de4f29e64ba0dc8b16ec3b5f7"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_scope_v2_review_20261106\\PACKAGE_TOOL_RETURN.json",
+      "bytes": 2074,
+      "sha256": "62d25dbd9188b9a63ba0e7acc5c500259612a941d1e7bf59e907664287460807"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_c4a_scope_v2_review_20261106\\SOURCE_IDENTITIES.json",
+      "bytes": 63663,
+      "sha256": "44ec9a96b0fd60a500f5c4666dd4f8b542fdca710809293947f3222445d97362"
+    }
+  ],
+  "boundary": "During intake before report/packaging"
+}

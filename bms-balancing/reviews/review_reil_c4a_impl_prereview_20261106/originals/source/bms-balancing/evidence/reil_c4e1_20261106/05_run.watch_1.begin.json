@@ -1,0 +1,12 @@
+{
+ "epoch": 1793863550.1947575,
+ "k": 1,
+ "kind": "REIL_E113_WATCH_BEGIN",
+ "launch_epoch": 1793863544,
+ "name": "05_run",
+ "pid": 1246,
+ "prev_sha256": null,
+ "slice_s": 6600.0,
+ "step": "run",
+ "utc": "2026-11-05T07:25:50.194Z"
+}

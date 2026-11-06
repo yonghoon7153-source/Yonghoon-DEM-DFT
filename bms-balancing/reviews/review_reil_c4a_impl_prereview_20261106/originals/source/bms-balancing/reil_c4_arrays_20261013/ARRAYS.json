@@ -1,0 +1,105 @@
+{
+ "arrays": {
+  "sobol_A0_their_box_seed0.npy": {
+   "c6_npy_sha256": "916ac3733713bc49618ccfdee0aa1090372d05b4cc01fabcfe89b7f40a6cd4f9",
+   "c6_raw_float64_le_sha256": "6b9d62ada1cf8a11a8a899f6131356da6aaa6e51721ce1d7d2df1737a222839b",
+   "c6_record_npy_sha256": "916ac3733713bc49618ccfdee0aa1090372d05b4cc01fabcfe89b7f40a6cd4f9",
+   "dtype": "<f8",
+   "npy_sha256": "916ac3733713bc49618ccfdee0aa1090372d05b4cc01fabcfe89b7f40a6cd4f9",
+   "raw_float64_le_sha256": "6b9d62ada1cf8a11a8a899f6131356da6aaa6e51721ce1d7d2df1737a222839b",
+   "shape": [
+    64,
+    4
+   ]
+  },
+  "sobol_A0_their_box_seed1.npy": {
+   "c6_npy_sha256": "0e8daccaf05476af5324fb3f4d227b3a1781fc980f19576af8f6132f0ebef445",
+   "c6_raw_float64_le_sha256": "569ecedbb2404e8f1df8c0abe5ec7cad924ea9699fb2342ae0f4195d95d79812",
+   "c6_record_npy_sha256": "0e8daccaf05476af5324fb3f4d227b3a1781fc980f19576af8f6132f0ebef445",
+   "dtype": "<f8",
+   "npy_sha256": "0e8daccaf05476af5324fb3f4d227b3a1781fc980f19576af8f6132f0ebef445",
+   "raw_float64_le_sha256": "569ecedbb2404e8f1df8c0abe5ec7cad924ea9699fb2342ae0f4195d95d79812",
+   "shape": [
+    64,
+    4
+   ]
+  },
+  "sobol_A1_A2_wide_box_seed0.npy": {
+   "c6_npy_sha256": "2e7ba141ddf09bac178bed803bfd82049116ede2691a5758b1055c1e730708d4",
+   "c6_raw_float64_le_sha256": "597d508bfd67497696a07ae73f1fdc4dc7a0d2b72ae608e0390673996e87c2aa",
+   "c6_record_npy_sha256": "2e7ba141ddf09bac178bed803bfd82049116ede2691a5758b1055c1e730708d4",
+   "dtype": "<f8",
+   "npy_sha256": "2e7ba141ddf09bac178bed803bfd82049116ede2691a5758b1055c1e730708d4",
+   "raw_float64_le_sha256": "597d508bfd67497696a07ae73f1fdc4dc7a0d2b72ae608e0390673996e87c2aa",
+   "shape": [
+    64,
+    4
+   ]
+  },
+  "sobol_A1_A2_wide_box_seed1.npy": {
+   "c6_npy_sha256": "72a3372631a51496e452a26cae3a96ad65582d8c4385bae99a749900fb88b872",
+   "c6_raw_float64_le_sha256": "8f45db97c6ef4335043803a8e9564f6e3254d99f0f82cf5d188a1c4875f52193",
+   "c6_record_npy_sha256": "72a3372631a51496e452a26cae3a96ad65582d8c4385bae99a749900fb88b872",
+   "dtype": "<f8",
+   "npy_sha256": "72a3372631a51496e452a26cae3a96ad65582d8c4385bae99a749900fb88b872",
+   "raw_float64_le_sha256": "8f45db97c6ef4335043803a8e9564f6e3254d99f0f82cf5d188a1c4875f52193",
+   "shape": [
+    64,
+    4
+   ]
+  }
+ },
+ "boxes": {
+  "A0_their_box": [
+   [
+    0.6,
+    0.5,
+    0.005,
+    0.0
+   ],
+   [
+    1.1,
+    1.1,
+    0.5,
+    1.0
+   ]
+  ],
+  "A1_A2_wide_box": [
+   [
+    0.3,
+    0.3,
+    -0.5,
+    -0.5
+   ],
+   [
+    1.5,
+    1.5,
+    1.5,
+    1.5
+   ]
+  ]
+ },
+ "c6_manifest_sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+ "c6_seal": "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c6_rebuild_20261013",
+ "call": "scipy.stats.qmc.Sobol(d=4, scramble=True, rng=<seed>).random_base2(m=6) → qmc.scale(unit, lo, hi)",
+ "env": {
+  "executable": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python",
+  "numpy": "2.4.6",
+  "python": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+  "scipy": "1.17.1"
+ },
+ "generation_warnings": [],
+ "not_in_this_seal": {
+  "label-seed": "label 이 seed 를 정하는 배열 (부속 A §3-6 '그 밖의 모든 Sobol' — 아래 둘 포함). 펼칠 상자가 P0 의 사전표 · max_q 와 H 격자에서 나오므로 H 실행기 (C4-0b) 의 같은 코드 경로에서 만들어 봉인한다",
+  "profile-sobol-2": "프로파일 시작 s3 · s4 — 등식 소거 뒤 자유 변수 상자 위 Sobol 2 (부속 A §3-3) → C4-0b",
+  "simultaneous-sobol-16": "동시 양립 — 상자 P × N × (d_P 상자) × (d_N 상자) 위 Sobol 16 전부 봉인 · 앞 12 사용 (부속 A §3-4) → C4-0b",
+  "timing": "v2 §4-3 — 규칙은 바꾸지 않고 C4 첫 국소 실행 전에 끝낸다. C4-0b 도 첫 국소 실행 전이다 (상태 문서 §40 에 밝힌다)"
+ },
+ "save": "np.save(np.ascontiguousarray(a, dtype='<f8'), allow_pickle=False)",
+ "schema": "reil-c4-arrays-v1",
+ "scope": "C4-0a · Phase A 넷 (C4 v2 §4-3 · 상태 문서 §39 · §40)",
+ "seeds": [
+  0,
+  1
+ ]
+}

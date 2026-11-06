@@ -1,0 +1,18 @@
+{
+ "full_c6_check": "NOT_RUN — C4-ENV check 1 회로 인정 (상태 문서 §38)",
+ "manifest_sha256_actual": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+ "manifest_sha256_expected": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+ "note": "계산 없는 식별 — 'C6 전체 기능 PASS' 가 아니다 (부록 A1)",
+ "ok": true,
+ "problems": [],
+ "record": {
+  "executable": "/usr/bin/python3.11",
+  "lock_sha256_now": "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa",
+  "prefix": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv",
+  "profile_sha256_now": "50f2c7fb176910da2df252cfd7f17a8f05a56b8696e1be3040d6ff5cf034a641",
+  "seal_manifest_sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+  "venv": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv",
+  "version": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]"
+ },
+ "seal_path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c6_rebuild_20261013"
+}
