@@ -1,0 +1,233 @@
+{
+ "slug": "benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-06",
+ "sources": [
+  "72. Warm Isostatic vs. Cold Uniaxial Pressing in All-Solid-State Battery Cathodes Linking Microstructure Transport and Mechano-Electrochemical Response.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 8,
+   "file": "fig_1.png",
+   "caption": "Figure 1 : Workflow adopted in this study for the comparative analysis of WIP and CUP cathodes. A cathode disc, prepared by either warm isostatic or conventional uniaxial pressing, was then centred on one side of the LPSCl pellet and pressed under the same load to ensure intimate interfacial contact. The counter electrode was prepared by positioning a lithium-metal disc at the center of a 9 mm diameter indium-foil disc and applying gentle manual pressure to establish a Li-In alloy contact. The resulting Li–In counter electrode was designed to provide a sufficiently large lithium reservoir and a relatively stable electrochemical potential, such that the measured cell response is predominantly governed by the composite cathode under investigation. The assembly was placed on the side of the LPSCl pellet opposite the composite cathode, with indium facing the electrolyte. A 10 mm-diameter nic",
+   "rotated_deg": 0,
+   "bbox": [
+    58.7,
+    74.2,
+    543.5,
+    450.6
+   ],
+   "w": 2021,
+   "h": 1569,
+   "dpi": 300,
+   "src": "72. Warm Isostatic vs. Cold Uniaxial Pressing in All-Solid-State Battery Cathodes Linking Microstructure Transport and Mechano-Electrochemical Response.pdf",
+   "blank": 0.766
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 14,
+   "file": "fig_2.png",
+   "caption": "Figure 2: Schematic of the DEM-based modeling workflow for the slurry-based manufacturing and pressing of the composite cathode. The dried electrode serves as the common initial structure for the CUP and WIP routes, followed by post-pressing recovery. The blue particles represent AM, the white particles SE, and the red particles CBD. 2.4.1 Dried and pressed composite cathode microstructures As illustrated in Figure 2, CUP and WIP were simulated from the same dried cathode microstructure generated from an identical slurry formulation. The DEM models were formulated as through-thickness internal representative volume element (RVE) representations of the corresponding experimental processing routes. In particular, the WIP model reproduced the experimentally observed through-thickness densification together with the prescribed thermal and loading history, including compression, holding, cool",
+   "rotated_deg": 0,
+   "bbox": [
+    64.6,
+    64.6,
+    543.6,
+    320.9
+   ],
+   "w": 1996,
+   "h": 1068,
+   "dpi": 300,
+   "src": "72. Warm Isostatic vs. Cold Uniaxial Pressing in All-Solid-State Battery Cathodes Linking Microstructure Transport and Mechano-Electrochemical Response.pdf",
+   "blank": 0.772
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 27,
+   "file": "fig_3.png",
+   "caption": "Figure 3 : Electrochemical characterization of WIP and CUP cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    135.5,
+    64.6,
+    493.3,
+    610.2
+   ],
+   "w": 1492,
+   "h": 2274,
+   "dpi": 300,
+   "src": "72. Warm Isostatic vs. Cold Uniaxial Pressing in All-Solid-State Battery Cathodes Linking Microstructure Transport and Mechano-Electrochemical Response.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 32,
+   "file": "fig_4.png",
+   "caption": "Figure 4 : Cross-sectional microstructural characterization of the unpressed, CUP, and WIP composite cathodes. a) Cross-sectional SEM micrographs showing the reduction in cathode thickness. b) Corresponding EDS elemental maps showing the spatial distributions of C, O, Ni, Co, Mn, and Al within the composite cathodes. The WIP cathode exhibits a more compact and homogeneous particle arrangement than the CUP and unpressed cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    80.9,
+    64.6,
+    548.5,
+    282.4
+   ],
+   "w": 1949,
+   "h": 908,
+   "dpi": 300,
+   "src": "72. Warm Isostatic vs. Cold Uniaxial Pressing in All-Solid-State Battery Cathodes Linking Microstructure Transport and Mechano-Electrochemical Response.pdf",
+   "blank": 0.575
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 33,
+   "file": "fig_5.png",
+   "caption": "Figure 5 : XCT results. (a) Exemplary XCT cross sections of CUP and WIP composite cathodes. The corresponding image above represents a vertical cross section and the lower an in-plane cross section. (b) 3D rendering of the segmented active material particles. (c) Perpendicular to the cathode plane/CC summed intensity. (d) In-plane summed intensity, displaying a 2D projection of the 3D binary image stack. (e) 2D distribution of the distances between the AM particles closest to the current collector and the closest to the surface particle on the opposite side in thickness direction of the cathode. If no particles are within one column from the current collector to the surface, the value is equal zero. (f) Histogram of the distance distribution of Figure 2e. Only the higher values correspond to the thickness of the cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.0,
+    85.0,
+    550.6,
+    506.8
+   ],
+   "w": 2069,
+   "h": 1758,
+   "dpi": 300,
+   "src": "72. Warm Isostatic vs. Cold Uniaxial Pressing in All-Solid-State Battery Cathodes Linking Microstructure Transport and Mechano-Electrochemical Response.pdf",
+   "blank": 0.591
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 35,
+   "file": "fig_6.png",
+   "caption": "Figure 6: Through-thickness phase distributions of the DEM-generated composite cathodes after pressing. (a) CUP and (b) WIP. The local cross-sectional fractions of pore, AM, CBD, and SE are shown as a function of distance from the current collector.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    238.8,
+    533.4,
+    466.7
+   ],
+   "w": 1953,
+   "h": 773,
+   "dpi": 300,
+   "src": "72. Warm Isostatic vs. Cold Uniaxial Pressing in All-Solid-State Battery Cathodes Linking Microstructure Transport and Mechano-Electrochemical Response.pdf",
+   "blank": 0.92,
+   "recrop": "2026-11-06 손 고침 — 도구 크롭 위쪽에 본문 한 줄 (\"analysis.\") 이 들어가 위에서 177 px 를 잘라냄 (도구 크롭 1953x950 → 1953x773)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 36,
+   "file": "fig_7.png",
+   "caption": "Figure 7: Microstructural and effective transport properties of the CUP and WIP composite cathodes. a) Specific AM-SE and AM-CBD interfacial areas. b) Pore-volume fraction as a function of pore diameter. c) Effective ionic and electronic conductivities. d) Effective diffusivity and geometric tortuosity of SE phase. Comparison between the DEM-generated microstructures and experimental measurements in terms of e) porosity, f) thickness reduction relative to the unpressed cathode, and g) apparent cathode density. h) 3D pore–throat networks extracted from the voxelized CUP and WIP microstructures using the SNOW2 algorithm implemented in PoreSpy.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    85.4,
+    531.6,
+    518.9
+   ],
+   "w": 1945,
+   "h": 1806,
+   "dpi": 300,
+   "src": "72. Warm Isostatic vs. Cold Uniaxial Pressing in All-Solid-State Battery Cathodes Linking Microstructure Transport and Mechano-Electrochemical Response.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 40,
+   "file": "fig_8.png",
+   "caption": "Figure 8: Rate-dependent mechano-electrochemical response of CUP and WIP composite cathodes. (a) Comparison between simulated and experimental voltage/capacity profiles at C/10 (0.1C) for the first cycle. (b) Simulated first-cycle voltage/capacity profiles at C/2 (0.5C) compared qualitatively with the corresponding experimental profiles obtained during the 20th cycle of the rate-capability protocol. (c) Spatial distribution of the local equivalent capacity 39",
+   "rotated_deg": 0,
+   "bbox": [
+    64.6,
+    190.1,
+    566.2,
+    686.2
+   ],
+   "w": 2090,
+   "h": 2067,
+   "dpi": 300,
+   "src": "72. Warm Isostatic vs. Cold Uniaxial Pressing in All-Solid-State Battery Cathodes Linking Microstructure Transport and Mechano-Electrochemical Response.pdf",
+   "blank": 0.773
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 9,
+   "file": "tab_1.png",
+   "caption": "Table 1 : Measured thickness and porosity of CUP and WIP samples and their corresponding percentage changes relative to unpressed cathode via thickness gauge. Measured thickness (µm) Reduction in Measured porosity (%) Reduction in porosity vs. unpressed (%) Unpressed 82 Ref 34.12 Ref thickness vs. unpressed (%) 8",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    666.6,
+    531.9,
+    810.9
+   ],
+   "w": 1943,
+   "h": 602,
+   "dpi": 300,
+   "src": "72. Warm Isostatic vs. Cold Uniaxial Pressing in All-Solid-State Battery Cathodes Linking Microstructure Transport and Mechano-Electrochemical Response.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 10,
+   "file": "tab_2.png",
+   "caption": "Table 2 : Apparent cathode density values calculated from the disc mass and its geometrical volume for each compaction technique. Apparent cathode density (g 𝐜𝐦ି𝟑) Unpressed 1.59 ± 0.04 CUP sample 1.81 ± 0.06 WIP sample 2.20 ± 0.06",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    124.1,
+    526.2,
+    244.4
+   ],
+   "w": 1893,
+   "h": 502,
+   "dpi": 300,
+   "src": "72. Warm Isostatic vs. Cold Uniaxial Pressing in All-Solid-State Battery Cathodes Linking Microstructure Transport and Mechano-Electrochemical Response.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 31,
+   "file": "tab_3.png",
+   "caption": "Table 3 : Values of resistance from EIS measurements before and after 1st cycle for both compaction techniques.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.3,
+    65.2,
+    528.9,
+    206.1
+   ],
+   "w": 1928,
+   "h": 588,
+   "dpi": 300,
+   "src": "72. Warm Isostatic vs. Cold Uniaxial Pressing in All-Solid-State Battery Cathodes Linking Microstructure Transport and Mechano-Electrochemical Response.pdf",
+   "blank": 0.911
+  }
+ ],
+ "missing_labels": []
+}

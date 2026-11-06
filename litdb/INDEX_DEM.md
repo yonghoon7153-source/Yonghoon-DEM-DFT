@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 243편 · 생성 2026-11-06
+> digest 244편 · 생성 2026-11-06
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -149,12 +149,13 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (50편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (51편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
 | `asylbekov2023_cb_fragmentation_pbe_dem_dry_mixing` | 카본블랙(CB)이 건식 고강도 혼합 중에 깨지는 것을 모델링 — DEM 은 응력·빈도만 주고, 입도변화는 population balance equation(PBE) 이 푼다 (CB 는 DEM 안에 아예 없다) — Asylbekov (Energy Technology 2023) | DEM (Rocky, coarse-grain CG=100, Hertz–Mindlin + JKR, GPU V1 | 2026-09-19 | 🖼 12 |
 | `bak2024_binder_distribution_multilayer` | Bak 2024 (Chemical Engineering Journal 483, 148913) — 바인더 z-분포 제어 다층 모델전극 + Digital-Twin | MPM | 2026-07-28 | 🖼 6 |
+| `benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem` | 온간 등방 가압 (WIP · 400 MPa · 80 °C · 5 min) vs 냉간 단축 가압 (CUP · ≈116 MPa · 상온 · 30 s) 한 습식 NMC622 : LPSCl : 탄소-바인더 69 : 27.6 : 3.4 양극 — 실험 (게이지 두께 −26 vs −12 % · 보고 기공률 10.9 vs 25.1 %  | exp (WIP vs CUP · thickness gauge · geometric porosity · SEM | 2026-11-06 | 🖼 11 |
 | `bzox_dry_zro2x_nmc_shell_coating_sulfide_assb` | → superseded by `choi2026_bzox_dry_zro2x_nmc_shell_coating.md` |  | — | — |
 | `cho2024_conflicting_roles_conductive_additive` | 필독 / 우리-랩 — Conflicting roles of conductive additives in controlling cathode performance in ASSBs — Cho, Yun, Kang, Kim, Lee (Electrochimica Acta 2024) | exp + AC-impedance decoupling (modified TLM) + DC-polarizati | 2026-06-26 | 🖼 6 |
 | `demirtas2021_mpfem_hollow_sphere_die_compaction` | 중공(hollow) 구의 다이 압밀을 3D MPFEM(입자마다 FE 메시 = 진짜 형상 소성)으로 — ★★★ 저자들이 본문에서 "DEM 은 압밀 중 변형된 입자 표면을 보정할 수 없다" 고 명시 = 우리 3층 지도 층③(입자 형상 소성 = 연속체 소관) 의 제3자 근거 — Demirtas & Klinzing (Merck, | MPFEM (Abaqus/Explicit 3D 다입자 유한요소; 입자당 C3D8R ~1650 요소, elas | 2026-08-25 | 🖼 14 |
