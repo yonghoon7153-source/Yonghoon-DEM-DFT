@@ -1,0 +1,91 @@
+{
+  "kind": "REIL_C4A_SCOPE_REVIEW_DECISION",
+  "date": "2026-11-06",
+  "pin": "c8792ed302d5da7fb420f46cc2219571bbb83400",
+  "decision": "DIRECTION_ACCEPTABLE_SCOPE_REVISION_REQUIRED_BEFORE_IMPLEMENTATION_REQUEST",
+  "finding_count": 4,
+  "findings": [
+    {
+      "id": "C4A-SCOPE-N1",
+      "priority": 2,
+      "title": "Limit warning provenance inference and specify H warning policy",
+      "scope_lines": [
+        10,
+        28,
+        39
+      ]
+    },
+    {
+      "id": "C4A-SCOPE-N2",
+      "priority": 2,
+      "title": "Separate registered9856 from endpoint-only7040 and actual counts",
+      "scope_lines": [
+        1,
+        8,
+        47
+      ]
+    },
+    {
+      "id": "C4A-SCOPE-N3",
+      "priority": 2,
+      "title": "Include existing PhaseA controller and H-specific trusted input/output contract",
+      "scope_lines": [
+        21,
+        44,
+        49
+      ]
+    },
+    {
+      "id": "C4A-SCOPE-N4",
+      "priority": 2,
+      "title": "Restore adopted C4v2 saturation estimates and budget boundaries",
+      "scope_lines": [
+        47,
+        51,
+        61
+      ]
+    }
+  ],
+  "classification": "Document and future implementation-request scope gaps; not newly observed runtime failures",
+  "choices": {
+    "U1": "separated route supported",
+    "U2": "10h proposal requires boundary allocation; unselected",
+    "U3": "hash-checked reuse supported; future input checks required",
+    "user_choices_recorded": false
+  },
+  "retained": {
+    "prior_E1_2_E1_3_acceptance": true,
+    "prior_C4_0b1_0b2_limited_closure": true,
+    "scientific_fitting_acceptance": false,
+    "convergence_claim": false,
+    "warning_free_claim": false
+  },
+  "authorizations": {
+    "new_implementation": false,
+    "new_tests": false,
+    "C4A_execution": false,
+    "C4B_execution": false,
+    "COMSOL": false
+  },
+  "performed": {
+    "received_program_execution": 0,
+    "received_program_import": 0,
+    "tests": 0,
+    "fitting": 0,
+    "xlsx_opening": 0,
+    "probe_execution": 0,
+    "installation": 0,
+    "COMSOL": 0,
+    "repository_mutations": 0,
+    "external_send": 0,
+    "reviewer_text_JSON_hash_analysis": true
+  },
+  "sources": {
+    "count": 114,
+    "current_pinned_raw_fetch": 12,
+    "prior_pinned_unchanged": 102,
+    "selected_local_originals": 8
+  },
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null
+}

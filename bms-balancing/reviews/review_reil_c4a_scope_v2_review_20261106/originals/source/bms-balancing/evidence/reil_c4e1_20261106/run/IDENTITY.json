@@ -1,0 +1,181 @@
+{
+ "changed": [],
+ "end": {
+  "LFP_Data.xlsx": {
+   "bytes": 10841377,
+   "expected": {
+    "bytes": 10841377,
+    "sha256": "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1"
+   },
+   "path": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/c4e1/data/LFP_Data.xlsx",
+   "sha256": "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1"
+  },
+  "MANIFEST.json": {
+   "bytes": 954,
+   "expected": {
+    "sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json",
+   "sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc"
+  },
+  "NOTEBOOK_SOURCE_EXCERPTS.json": {
+   "bytes": 7543,
+   "expected": {
+    "sha256": "95cca5f35aaaf72757812068251d72064b464cff6ef3f523c756f33d27d243a9"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/prereview_pybamm_reil_20261003/external/NOTEBOOK_SOURCE_EXCERPTS.json",
+   "sha256": "95cca5f35aaaf72757812068251d72064b464cff6ef3f523c756f33d27d243a9"
+  },
+  "P0_RESULT.json": {
+   "bytes": 127971,
+   "expected": {
+    "sha256": "3875e65092b38c9b08c907926bd8d1f4ee25674c97c28b5ada935e9027d12a90"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_p0_20261006/P0_RESULT.json",
+   "sha256": "3875e65092b38c9b08c907926bd8d1f4ee25674c97c28b5ada935e9027d12a90"
+  },
+  "scripts/reil_c4_e3a.py": {
+   "bytes": 32311,
+   "expected": {
+    "bytes": 32311,
+    "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py",
+   "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+  },
+  "scripts/reil_c4_monitor.py": {
+   "bytes": 21546,
+   "expected": {
+    "bytes": 21546,
+    "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py",
+   "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+  },
+  "scripts/reil_c4e_run.py": {
+   "bytes": 53853,
+   "expected": {
+    "bytes": 53853,
+    "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4e_run.py",
+   "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+  },
+  "scripts/reil_c5_pilot.py": {
+   "bytes": 47164,
+   "expected": {
+    "bytes": 47164,
+    "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py",
+   "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+  },
+  "scripts/reil_p0.py": {
+   "bytes": 23941,
+   "expected": {
+    "bytes": 23941,
+    "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_p0.py",
+   "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+  },
+  "util_LFP.py": {
+   "bytes": 33754,
+   "expected": {
+    "bytes": 33754,
+    "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"
+   },
+   "path": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/c4e1/data/util_LFP.py",
+   "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"
+  }
+ },
+ "start": {
+  "LFP_Data.xlsx": {
+   "bytes": 10841377,
+   "expected": {
+    "bytes": 10841377,
+    "sha256": "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1"
+   },
+   "path": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/c4e1/data/LFP_Data.xlsx",
+   "sha256": "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1"
+  },
+  "MANIFEST.json": {
+   "bytes": 954,
+   "expected": {
+    "sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json",
+   "sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc"
+  },
+  "NOTEBOOK_SOURCE_EXCERPTS.json": {
+   "bytes": 7543,
+   "expected": {
+    "sha256": "95cca5f35aaaf72757812068251d72064b464cff6ef3f523c756f33d27d243a9"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/prereview_pybamm_reil_20261003/external/NOTEBOOK_SOURCE_EXCERPTS.json",
+   "sha256": "95cca5f35aaaf72757812068251d72064b464cff6ef3f523c756f33d27d243a9"
+  },
+  "P0_RESULT.json": {
+   "bytes": 127971,
+   "expected": {
+    "sha256": "3875e65092b38c9b08c907926bd8d1f4ee25674c97c28b5ada935e9027d12a90"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_p0_20261006/P0_RESULT.json",
+   "sha256": "3875e65092b38c9b08c907926bd8d1f4ee25674c97c28b5ada935e9027d12a90"
+  },
+  "scripts/reil_c4_e3a.py": {
+   "bytes": 32311,
+   "expected": {
+    "bytes": 32311,
+    "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py",
+   "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+  },
+  "scripts/reil_c4_monitor.py": {
+   "bytes": 21546,
+   "expected": {
+    "bytes": 21546,
+    "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py",
+   "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+  },
+  "scripts/reil_c4e_run.py": {
+   "bytes": 53853,
+   "expected": {
+    "bytes": 53853,
+    "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4e_run.py",
+   "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+  },
+  "scripts/reil_c5_pilot.py": {
+   "bytes": 47164,
+   "expected": {
+    "bytes": 47164,
+    "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py",
+   "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+  },
+  "scripts/reil_p0.py": {
+   "bytes": 23941,
+   "expected": {
+    "bytes": 23941,
+    "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_p0.py",
+   "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+  },
+  "util_LFP.py": {
+   "bytes": 33754,
+   "expected": {
+    "bytes": 33754,
+    "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"
+   },
+   "path": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/c4e1/data/util_LFP.py",
+   "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"
+  }
+ }
+}

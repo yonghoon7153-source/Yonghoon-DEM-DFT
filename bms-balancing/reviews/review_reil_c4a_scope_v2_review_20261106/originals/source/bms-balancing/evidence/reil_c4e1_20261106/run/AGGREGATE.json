@@ -1,0 +1,17 @@
+{
+ "cap_s": 1800.0,
+ "global_stop": null,
+ "late_completions": [],
+ "observed": {
+  "COMPLETED_error": 0,
+  "COMPLETED_returned": 66,
+  "NOT_STARTED": 0,
+  "STARTED_INTERRUPTED": 0,
+  "other": 0,
+  "planned": 66,
+  "sum": 66
+ },
+ "over_cap_active": [],
+ "problems": [],
+ "structural_n": 0
+}

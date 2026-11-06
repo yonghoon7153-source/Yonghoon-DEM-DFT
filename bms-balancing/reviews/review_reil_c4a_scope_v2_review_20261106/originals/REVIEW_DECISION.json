@@ -1,0 +1,145 @@
+{
+  "kind": "REIL_C4A_SCOPE_V2_REVIEW_DECISION",
+  "date": "2026-11-06",
+  "pin": "c97cd1156948f88d901a532d95e26c06527490bc",
+  "prior_pin": "c8792ed302d5da7fb420f46cc2219571bbb83400",
+  "decision": "SCOPE_V2_ACCEPTED_N1_N4_CLOSED_FOR_IMPLEMENTATION_REQUEST_BASELINE",
+  "closures": [
+    {
+      "id": "C4A-SCOPE-N1",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "v2_lines": [
+        13,
+        14,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38
+      ],
+      "evidence": [
+        "external/util_LFP.py:173-236",
+        "bms-balancing/scripts/reil_c4_e3a.py:173-186,267-271",
+        "bms-balancing/scripts/reil_c4_h.py:836-859"
+      ],
+      "assessment": "Separates unused gradient outputs and recorded finite objectives from unconfirmed complete warning provenance; H classification/bounded storage/overflow and structural-stop requirements are future deliverables."
+    },
+    {
+      "id": "C4A-SCOPE-N2",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "v2_lines": [
+        9,
+        10,
+        11,
+        47,
+        48,
+        53,
+        54,
+        55
+      ],
+      "evidence": [
+        "bms-balancing/scripts/reil_c4_h.py:1048-1074",
+        "bms-balancing/scripts/reil_c4_hb.py:1082-1175"
+      ],
+      "assessment": "Separates9856 registered/7040 endpoint-only plan from actual counts and preserves JD/rho preconditions, stored completion and stopped predecessor rejection. Final count reporting does not defer pre-execution gate enforcement."
+    },
+    {
+      "id": "C4A-SCOPE-N3",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "v2_lines": [
+        24,
+        25,
+        26,
+        45,
+        46,
+        47,
+        48,
+        49,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64
+      ],
+      "evidence": [
+        "bms-balancing/scripts/reil_c4e_run.py:65-94,504-531",
+        "bms-balancing/scripts/reil_c4_hb.py:1020-1045,1082-1175",
+        "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md:1406-1414"
+      ],
+      "assessment": "Existing PhaseA controller and exact H source/input/array consumed-byte/option identity, H output judge and dataless controls are specified as implementation-request deliverables."
+    },
+    {
+      "id": "C4A-SCOPE-N4",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "v2_lines": [
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77
+      ],
+      "evidence": [
+        "bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md:121-133"
+      ],
+      "assessment": "Adoptedv2 saturation-estimate qualification restored; stage includes prep/cleanup/final; unit/external/global/reserve boundaries,5400s allocation and cost-stop requirements are explicitly deferred for concrete specification before execution approval."
+    }
+  ],
+  "new_blocking_findings": [],
+  "finding_count": 0,
+  "implementation_request_baseline_accepted": true,
+  "document_acceptance_only": true,
+  "scope_regression_found": false,
+  "strict_text_only_four_substitutions_claimed": false,
+  "user_choices": {
+    "U1": null,
+    "U2": null,
+    "U3": null
+  },
+  "retained": {
+    "prior_E1_2_E1_3_acceptance": true,
+    "prior_C4_0b1_0b2_limited_closure": true,
+    "warning_free_claim": false,
+    "convergence_or_scientific_fit_claim": false
+  },
+  "authorizations": {
+    "implementation": false,
+    "tests": false,
+    "installation": false,
+    "data_opening": false,
+    "fitting": false,
+    "C4A": false,
+    "C4B": false,
+    "COMSOL": false
+  },
+  "performed": {
+    "received_program_execution": 0,
+    "received_program_import": 0,
+    "tests": 0,
+    "xlsx_opening": 0,
+    "fitting": 0,
+    "probe": 0,
+    "COMSOL": 0,
+    "repository_mutations": 0,
+    "external_send": 0,
+    "reviewer_text_hash_diff_processing": true
+  },
+  "provenance": {
+    "attachments_matched": 2,
+    "source_copies": 116,
+    "current_pinned_raw_fetches": 3,
+    "prior_repository_unchanged": 112,
+    "prior_external_immutable_copy": 1,
+    "prior_review_blob_matches": 139,
+    "selected_local_originals": 9
+  },
+  "numeric_review_budget_seconds": null,
+  "whole_review_elapsed_claim": null
+}

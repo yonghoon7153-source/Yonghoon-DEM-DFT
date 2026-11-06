@@ -1,0 +1,378 @@
+{
+ "copies": {
+  "00_end_writer.py": {
+   "bytes": 10368,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/00_end_writer.py",
+   "sha256": "0827723f6de7a6208e643c5851c206c537a664ed7cedf40c004c945743447f5a"
+  },
+  "00_identity_c4.py": {
+   "bytes": 1506,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/00_identity_c4.py",
+   "sha256": "92bb3bca2dcd56982bd4d4ddc02bb8ed84615d5b1b6af6385d69b66c8f5df900"
+  },
+  "00_judge.py": {
+   "bytes": 18578,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/00_judge.py",
+   "sha256": "ad986c19905723a233abac667cd846f41c1427a7197e522eb78bc1c4d0d738c0"
+  },
+  "00_outer.py": {
+   "bytes": 36733,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/00_outer.py",
+   "sha256": "e107d566bc0dc9af37e2a53839720678be8ab6f15624ec54c605755b0001251e"
+  }
+ },
+ "disk_avail_bytes": 25976770560,
+ "evidence": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105",
+ "git_name_check": {
+  "git_env_names": [
+   "GIT_ASKPASS",
+   "GIT_CONFIG_COUNT",
+   "GIT_CONFIG_KEY_0",
+   "GIT_CONFIG_KEY_1",
+   "GIT_CONFIG_KEY_2",
+   "GIT_CONFIG_VALUE_0",
+   "GIT_CONFIG_VALUE_1",
+   "GIT_CONFIG_VALUE_2",
+   "GIT_EDITOR",
+   "GIT_SSL_CAINFO",
+   "GIT_TERMINAL_PROMPT"
+  ],
+  "outside_allowlist": []
+ },
+ "kind": "REIL_E113_END",
+ "launcher": {
+  "bytes": 62639,
+  "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4e1_launch.py",
+  "sha256": "2c70712381aec657f81c8e72c85e8c06e654364aefe9e38e5254ecfece9e4ebf"
+ },
+ "note": "모으기만 한다 (판정 아님) · 파일마다 한 번 읽은 같은 버퍼 · 원자 snapshot 아님 · push 전 기록이라 g3 의 반환을 담지 않는다",
+ "overall": {
+  "bytes": 101,
+  "fields": {
+   "R": 1800,
+   "T_a": 1793841301,
+   "T_end": 1793862901,
+   "kind": "REIL_E113_OVERALL",
+   "section": "§115"
+  },
+  "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/00_overall.json",
+  "sha256": "88c44e3cde84a781e9c008335ea48d27d8429ecf610ba78d082df97352c59dd5",
+  "text": "{\"kind\": \"REIL_E113_OVERALL\", \"section\": \"§115\", \"T_a\": 1793841301, \"T_end\": 1793862901, \"R\": 1800}\n"
+ },
+ "probe": {
+  "01_probe/done.txt": {
+   "bytes": 11,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/01_probe/done.txt",
+   "sha256": "2896bb31867e52e3a6848765a0f54335624cc4ebf2ef23bf82d2f8292161f97c",
+   "text": "1793841498\n"
+  },
+  "01_probe/err.txt": {
+   "bytes": 0,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/01_probe/err.txt",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "text": ""
+  },
+  "01_probe/obs1.txt": {
+   "bytes": 27,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/01_probe/obs1.txt",
+   "sha256": "c5e58acf84d3ece4da17c944333b1977c9898ace0843307a271e4e683015a03a",
+   "text": "1793841351\npid=314\nstate=S\n"
+  },
+  "01_probe/out.txt": {
+   "bytes": 0,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/01_probe/out.txt",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "text": ""
+  },
+  "01_probe/pid.txt": {
+   "bytes": 4,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/01_probe/pid.txt",
+   "sha256": "79d03872c65b8680b09df96eeb31d4713d439108f1bad6a0bf53369a4bb30c7a",
+   "text": "314\n"
+  },
+  "01_probe/t0.txt": {
+   "bytes": 11,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/01_probe/t0.txt",
+   "sha256": "4dd768bf867c54256742e6fe7763a2a04d0fcb8e5d480053436ff72a9c04dd8f",
+   "text": "1793841348\n"
+  },
+  "01_probe/t_obs2.txt": {
+   "bytes": 11,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/01_probe/t_obs2.txt",
+   "sha256": "2896bb31867e52e3a6848765a0f54335624cc4ebf2ef23bf82d2f8292161f97c",
+   "text": "1793841498\n"
+  },
+  "01_probe/t_ret.txt": {
+   "bytes": 11,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/01_probe/t_ret.txt",
+   "sha256": "4dd768bf867c54256742e6fe7763a2a04d0fcb8e5d480053436ff72a9c04dd8f",
+   "text": "1793841348\n"
+  }
+ },
+ "read_path": {
+  "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_read_path.json",
+  "why": "없음 또는 일반 파일 아님"
+ },
+ "start_seal": {
+  "bytes": 3115,
+  "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/00_start.txt",
+  "sha256": "c3aa57c66390a057c9546c3bec055a2fa1cdf44e4e73b17be930eb247151ea08"
+ },
+ "steps": {
+  "fetch": {
+   "frozen": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/frozen_04_fetch.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "judge": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/04_fetch.judge.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "kill.json": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/04_fetch.kill.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "launch_epoch.txt": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/04_fetch.launch_epoch.txt",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "leftover_1.json": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/04_fetch.leftover_1.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "leftover_2.json": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/04_fetch.leftover_2.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "meta": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/04_fetch.meta.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "outer_end": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/04_fetch.outer_end.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "outer_error": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/04_fetch.outer_error.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "outer_rc.txt": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/04_fetch.outer_rc.txt",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "outer_start": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/04_fetch.outer_start.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "outer_stderr.txt": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/04_fetch.outer_stderr.txt",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "outer_tmp": {},
+   "watch": {},
+   "wrapper_output.txt": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/04_fetch.wrapper_output.txt",
+    "why": "없음 또는 일반 파일 아님"
+   }
+  },
+  "identity": {
+   "frozen": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/frozen_03_identity.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "judge": {
+    "bytes": 7708,
+    "fields": {
+     "execution_validity": true,
+     "experimental_result": null,
+     "failed": [],
+     "verdict": "MATCH"
+    },
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_identity.judge.json",
+    "sha256": "95222e5d8986e2ad4122fd4fef6a7865c5323bbbcfeeaabeadf64345342b566d"
+   },
+   "kill.json": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_identity.kill.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "launch_epoch.txt": {
+    "bytes": 11,
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_identity.launch_epoch.txt",
+    "sha256": "46a2a9ffbb591ea111b16f1b880ed4e518f425392bb8314010b5381127eb582c",
+    "text": "1793841548\n"
+   },
+   "leftover_1.json": {
+    "alive_count": 0,
+    "bytes": 482,
+    "errors": 0,
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_identity.leftover_1.json",
+    "sha256": "a8834f574b588a0a8369335d84ca403fde4f71dfd30edb17c39587fcda9d8d0c",
+    "sid": 693,
+    "sid_error": null
+   },
+   "leftover_2.json": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_identity.leftover_2.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "meta": {
+    "bytes": 6877,
+    "child_deadline_hit": false,
+    "child_group_status": "empty",
+    "child_maxrss_kib": 84596,
+    "child_rc": 0,
+    "child_timed_out": false,
+    "end_utc": "2026-11-05T01:19:28.789Z",
+    "errors": 0,
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_identity.meta.json",
+    "sha256": "e41f95458a74c8a5a33e1442c16f082bcf1bd91281a69c91cf6f39f0a064657c",
+    "stage_complete": true,
+    "stage_terms": {
+     "child_ok": true,
+     "postcheck_ok": true,
+     "precheck_ok": true,
+     "rc_0": true,
+     "timeout_false": true
+    },
+    "start_utc": "2026-11-05T01:19:09.068Z"
+   },
+   "outer_end": {
+    "bytes": 492,
+    "fields": {
+     "end_snapshot_epoch": 1793841568.7971966,
+     "kind": "REIL_E113_OUTER_END",
+     "launcher_exit_epoch": 1793841568.797122,
+     "rc": 0,
+     "start_sha256": "b1d4ec6cb042c40f0646b488af6cb6c60921e66edc638a03af1c3bd8688a1bdf"
+    },
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_end.json",
+    "sha256": "68f062f2459b2278760cd3ed738b66834e0466551352d7a56047f1bcb1040c76"
+   },
+   "outer_error": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_error.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "outer_rc.txt": {
+    "bytes": 2,
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_rc.txt",
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "text": "0\n"
+   },
+   "outer_start": {
+    "bytes": 1282,
+    "fields": {
+     "deadline_epoch": 1793842448.9310858,
+     "epoch": 1793841548.9310858,
+     "kind": "REIL_E113_OUTER_START",
+     "launch_epoch": 1793841548,
+     "overall_sha256": "88c44e3cde84a781e9c008335ea48d27d8429ecf610ba78d082df97352c59dd5",
+     "sid": 693,
+     "utc": "2026-11-05T01:19:08.931Z"
+    },
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_start.json",
+    "sha256": "b1d4ec6cb042c40f0646b488af6cb6c60921e66edc638a03af1c3bd8688a1bdf"
+   },
+   "outer_stderr.txt": {
+    "bytes": 0,
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_identity.outer_stderr.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "text": ""
+   },
+   "outer_tmp": {},
+   "watch": {
+    "03_identity.watch.json": {
+     "bytes": 591,
+     "fields": {
+      "begin_sha256": "7d66f976e77830b16414c12666ccdc2982b3d26341da872f9ca53993e3abd354",
+      "deadline_epoch": 1793842448.9310858,
+      "k": 1,
+      "kind": "REIL_E113_WATCH",
+      "observed_epoch": 1793841572.794614,
+      "prev_sha256": null,
+      "rc": 0,
+      "state": "published"
+     },
+     "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_identity.watch.json",
+     "sha256": "a1932892618d743311e11f1ee393cefbc795c9dc32e8ccea52a437d5da007291"
+    },
+    "03_identity.watch_1.begin.json": {
+     "bytes": 241,
+     "fields": {
+      "begin_sha256": null,
+      "deadline_epoch": null,
+      "k": 1,
+      "kind": "REIL_E113_WATCH_BEGIN",
+      "observed_epoch": null,
+      "prev_sha256": null,
+      "rc": null,
+      "state": null
+     },
+     "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_identity.watch_1.begin.json",
+     "sha256": "7d66f976e77830b16414c12666ccdc2982b3d26341da872f9ca53993e3abd354"
+    }
+   },
+   "wrapper_output.txt": {
+    "bytes": 0,
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/03_identity.wrapper_output.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "text": ""
+   }
+  },
+  "run": {
+   "frozen": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/frozen_05_run.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "judge": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/05_run.judge.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "kill.json": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/05_run.kill.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "launch_epoch.txt": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/05_run.launch_epoch.txt",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "leftover_1.json": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/05_run.leftover_1.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "leftover_2.json": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/05_run.leftover_2.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "meta": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/05_run.meta.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "outer_end": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/05_run.outer_end.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "outer_error": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/05_run.outer_error.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "outer_rc.txt": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/05_run.outer_rc.txt",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "outer_start": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/05_run.outer_start.json",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "outer_stderr.txt": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/05_run.outer_stderr.txt",
+    "why": "없음 또는 일반 파일 아님"
+   },
+   "outer_tmp": {},
+   "watch": {},
+   "wrapper_output.txt": {
+    "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e1_20261105/05_run.wrapper_output.txt",
+    "why": "없음 또는 일반 파일 아님"
+   }
+  }
+ },
+ "utc": "2026-11-05T04:17:54Z"
+}

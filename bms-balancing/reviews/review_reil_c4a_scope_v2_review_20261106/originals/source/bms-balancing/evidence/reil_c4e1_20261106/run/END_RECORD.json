@@ -1,0 +1,27 @@
+{
+ "note": "사전 판정 — 최종 판정은 이 파일까지 쓴 final_record 의 snapshot 뒤 (stdout)",
+ "pre_verdict": {
+  "complete": true,
+  "conditions": {
+   "1": true,
+   "2": true,
+   "3": true,
+   "4": true,
+   "6": true
+  },
+  "kind": "사전 판정 (v3 §4-7 조건 1–4 · 6) — 최종 판정이 아니다",
+  "reasons": [],
+  "required_identity": [
+   "LFP_Data.xlsx",
+   "util_LFP.py",
+   "P0_RESULT.json",
+   "NOTEBOOK_SOURCE_EXCERPTS.json",
+   "MANIFEST.json",
+   "scripts/reil_c4e_run.py",
+   "scripts/reil_c4_e3a.py",
+   "scripts/reil_c4_monitor.py",
+   "scripts/reil_c5_pilot.py",
+   "scripts/reil_p0.py"
+  ]
+ }
+}

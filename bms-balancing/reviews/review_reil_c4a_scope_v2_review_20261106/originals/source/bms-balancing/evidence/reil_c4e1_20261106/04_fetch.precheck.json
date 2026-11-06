@@ -1,0 +1,203 @@
+{
+ "data": null,
+ "extra_executed": {
+  "bms-balancing/scripts/reil_c6_profile.py": {
+   "bytes": 15915,
+   "expected": {
+    "bytes": 15915,
+    "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"
+   },
+   "ok": true,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c6_profile.py",
+   "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"
+  },
+  "degradation-degeneracy/tools/env_profile.py": {
+   "bytes": 22333,
+   "expected": {
+    "bytes": 22333,
+    "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"
+   },
+   "ok": true,
+   "path": "/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tools/env_profile.py",
+   "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"
+  }
+ },
+ "git": "/usr/bin/git",
+ "helper": null,
+ "modules": {
+  "scripts/reil_c4_e3a.py": {
+   "bytes": 32311,
+   "expected": {
+    "bytes": 32311,
+    "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+   },
+   "ok": true,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py",
+   "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+  },
+  "scripts/reil_c4_monitor.py": {
+   "bytes": 21546,
+   "expected": {
+    "bytes": 21546,
+    "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+   },
+   "ok": true,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py",
+   "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+  },
+  "scripts/reil_c4e_run.py": {
+   "bytes": 53853,
+   "expected": {
+    "bytes": 53853,
+    "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+   },
+   "ok": true,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4e_run.py",
+   "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+  },
+  "scripts/reil_c5_pilot.py": {
+   "bytes": 47164,
+   "expected": {
+    "bytes": 47164,
+    "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+   },
+   "ok": true,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py",
+   "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+  },
+  "scripts/reil_p0.py": {
+   "bytes": 23941,
+   "expected": {
+    "bytes": 23941,
+    "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+   },
+   "ok": true,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_p0.py",
+   "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+  }
+ },
+ "ok": true,
+ "probe": {
+  "dont_write_bytecode": 1,
+  "executable": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python",
+  "ignore_environment": 1,
+  "isolated": 1,
+  "meta_path": [
+   "_distutils_hack.DistutilsMetaFinder",
+   "_frozen_importlib.BuiltinImporter",
+   "_frozen_importlib.FrozenImporter",
+   "_frozen_importlib_external.PathFinder"
+  ],
+  "no_user_site": 1,
+  "path": [
+   "/usr/lib/python311.zip",
+   "/usr/lib/python3.11",
+   "/usr/lib/python3.11/lib-dynload",
+   "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/lib/python3.11/site-packages"
+  ],
+  "prefix": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv",
+  "pycache_prefix": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/c4e1/pycache/04_fetch",
+  "safe_path": true,
+  "sitecustomize": "/usr/lib/python3.11/sitecustomize.py",
+  "specs": {
+   "scripts": {
+    "finder": "_frozen_importlib_external.PathFinder",
+    "found": true,
+    "loader": null,
+    "locations": [
+     "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts"
+    ],
+    "origin": null
+   },
+   "scripts.reil_c4_e3a": {
+    "finder": "_frozen_importlib_external.PathFinder",
+    "found": true,
+    "loader": "_frozen_importlib_external.SourceFileLoader",
+    "locations": null,
+    "origin": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py"
+   },
+   "scripts.reil_c4_monitor": {
+    "finder": "_frozen_importlib_external.PathFinder",
+    "found": true,
+    "loader": "_frozen_importlib_external.SourceFileLoader",
+    "locations": null,
+    "origin": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py"
+   },
+   "scripts.reil_c5_pilot": {
+    "finder": "_frozen_importlib_external.PathFinder",
+    "found": true,
+    "loader": "_frozen_importlib_external.SourceFileLoader",
+    "locations": null,
+    "origin": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py"
+   }
+  },
+  "version": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]"
+ },
+ "problems": [],
+ "seal_lock": {
+  "lock_first_line": "# REIL C6 lock — 버리는 venv 의 site-packages 만 (degradation-degeneracy/tools/env_profile.py measure() · 그 파일 sha256 83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563)",
+  "lock_sha256": "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa",
+  "manifest_lock_entry": "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa",
+  "manifest_sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc"
+ },
+ "source": {
+  "config": {
+   "argv": [
+    "git",
+    "config",
+    "--list",
+    "--show-scope",
+    "--show-origin"
+   ],
+   "err": "",
+   "out": "command\tcommand line:\thttp.proxyauthmethod=basic\n",
+   "rc": 0
+  },
+  "env_git_config": {
+   "GIT_CONFIG_COUNT": "1",
+   "GIT_CONFIG_GLOBAL": "/dev/null",
+   "GIT_CONFIG_KEY_0": "http.proxyAuthMethod",
+   "GIT_CONFIG_NOSYSTEM": "1",
+   "GIT_CONFIG_VALUE_0": "basic"
+  },
+  "get_url": {
+   "argv": [
+    "git",
+    "ls-remote",
+    "--get-url",
+    "https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git"
+   ],
+   "err": "",
+   "out": "https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git\n",
+   "rc": 0
+  }
+ },
+ "sources": {
+  "entries": {
+   "scripts/reil_c4_e3a.py": {
+    "bytes": 32311,
+    "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+   },
+   "scripts/reil_c4_monitor.py": {
+    "bytes": 21546,
+    "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+   },
+   "scripts/reil_c4e_run.py": {
+    "bytes": 53853,
+    "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+   },
+   "scripts/reil_c5_pilot.py": {
+    "bytes": 47164,
+    "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+   },
+   "scripts/reil_p0.py": {
+    "bytes": 23941,
+    "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+   }
+  },
+  "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+  "sha256_fixed": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52"
+ },
+ "step": "fetch",
+ "utc": "2026-11-05T07:24:14.723Z"
+}
