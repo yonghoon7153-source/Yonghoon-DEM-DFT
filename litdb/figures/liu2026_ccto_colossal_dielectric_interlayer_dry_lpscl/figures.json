@@ -1227,6 +1227,90 @@
    "dpi": 300,
    "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
    "blank": 0.941
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 9,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Electronic conductivity of LPSC.",
+   "rotated_deg": 0,
+   "bbox": [
+    140,
+    95,
+    432,
+    324
+   ],
+   "w": 1217,
+   "h": 955,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.937,
+   "manual_crop": "auto extractor skipped this caption as 'no graphics' (vector plot drawn with only a few large paths: img0/draw<=4 passed the size filter); clip = plot frame + axis labels above the caption, coordinates from page text blocks/drawings union (2026-11-06)"
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 21,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Electronic conductivity of LPSC-PTFE.",
+   "rotated_deg": 0,
+   "bbox": [
+    140,
+    95,
+    432,
+    324
+   ],
+   "w": 1217,
+   "h": 955,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.941,
+   "manual_crop": "auto extractor skipped this caption as 'no graphics' (vector plot drawn with only a few large paths: img0/draw<=4 passed the size filter); clip = plot frame + axis labels above the caption, coordinates from page text blocks/drawings union (2026-11-06)"
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 29,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. Charge and discharge voltage profiles of LFP/LPSC-PTFE/Li batteries.",
+   "rotated_deg": 0,
+   "bbox": [
+    140,
+    92,
+    432,
+    324
+   ],
+   "w": 1217,
+   "h": 967,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.944,
+   "manual_crop": "auto extractor skipped this caption as 'no graphics' (vector plot drawn with only a few large paths: img0/draw<=4 passed the size filter); clip = plot frame + axis labels above the caption, coordinates from page text blocks/drawings union (2026-11-06)"
+  },
+  {
+   "key": "fS38",
+   "kind": "figure",
+   "label": "S38",
+   "page": 45,
+   "file": "fig_S38.png",
+   "caption": "Figure S38. Electronic conductivity of PLI and PLIC.",
+   "rotated_deg": 0,
+   "bbox": [
+    140,
+    95,
+    432,
+    324
+   ],
+   "w": 1217,
+   "h": 955,
+   "dpi": 300,
+   "src": "Sup) Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li6PS5Cl solid-state batteries.pdf",
+   "blank": 0.925,
+   "manual_crop": "auto extractor skipped this caption as 'no graphics' (vector plot drawn with only a few large paths: img0/draw<=4 passed the size filter); clip = plot frame + axis labels above the caption, coordinates from page text blocks/drawings union (2026-11-06)"
   }
  ],
  "missing_labels": [
@@ -1236,7 +1320,8 @@
    "skipped": [
     "p9 그래픽 없음(img0/draw4)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop 2026-11-06 (litdb-curator)"
   },
   {
    "key": "fS14",
@@ -1244,7 +1329,8 @@
    "skipped": [
     "p21 그래픽 없음(img0/draw4)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop 2026-11-06 (litdb-curator)"
   },
   {
    "key": "fS22",
@@ -1252,7 +1338,8 @@
    "skipped": [
     "p29 그래픽 없음(img0/draw2)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop 2026-11-06 (litdb-curator)"
   },
   {
    "key": "fS38",
@@ -1260,7 +1347,8 @@
    "skipped": [
     "p45 그래픽 없음(img0/draw3)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop 2026-11-06 (litdb-curator)"
   }
  ]
 }
