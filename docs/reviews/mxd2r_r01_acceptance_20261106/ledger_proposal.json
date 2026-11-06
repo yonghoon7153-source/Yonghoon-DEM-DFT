@@ -1,0 +1,20 @@
+{
+  "kind": "proposal based on independent verdict; no direct shared-ledger write",
+  "apply_now": false,
+  "finding": "MXD2R-R01",
+  "severity": "P2",
+  "proposed_status": "closed",
+  "scope": "each actual insert/pack seed range and primality check in three D2 consumers only",
+  "basis": "external_verdict.txt in original independent evidence ZIP; accepted code pin in disposition.json",
+  "closed_by_this_implementation_window": false,
+  "whole_gate": "HOLD",
+  "new_findings": [],
+  "do_not_change": [
+    "MXD2R-01–03 existing scoped closures",
+    "MLA status",
+    "actual execution GO",
+    "active registrations",
+    "LHS review status"
+  ],
+  "proposed_progress_line": "MXD2R-R01/P2의 소비자 seed 검사 하위 범위 독립 CLOSED 수령. 새P1/P2/P3 없음. 코드 변경 없이 증거 보존; first8 재봉인·MLA·실행GO 별도 HOLD."
+}

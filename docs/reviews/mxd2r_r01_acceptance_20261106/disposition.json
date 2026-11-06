@@ -1,0 +1,36 @@
+{
+  "kind": "external scoped closure receipt",
+  "reviewed_code_pin": "69b6bec7ac20343dd884f8d5fa63e8bf45e7df97",
+  "external_finding": "MXD2R-R01",
+  "severity": "P2",
+  "external_status": "CLOSED_CONSUMER_ACTUAL_INSERTION_SEED_SCOPE_ONLY",
+  "external_new_findings": [],
+  "mandatory_corrections": [],
+  "repeat_same_review_requested": false,
+  "code_changed_here": false,
+  "new_receipt_independently_reviewed": false,
+  "shared_ledger_modified": false,
+  "whole_gate": "HOLD",
+  "execution_authorized": false,
+  "active_registration_changed": false,
+  "source_seal_changed": false,
+  "actual_host_access": false,
+  "research_results": 0,
+  "remaining": [
+    "generator-alone invalid layered deck output",
+    "first8 source seal repin and review",
+    "MLA-01/02/03 independent recheck",
+    "reservation release and policy transition procedure",
+    "actual binary/MPI/host/100k/time/disk qualification",
+    "author execution GO",
+    "integrated-tree verification"
+  ],
+  "lhs": {
+    "canonical_pin": "6fbd066832d3273d56037005ea26eb884b73646a",
+    "selection_receipt_pin": "349e946697b67768a5a1a209121fb90244aef485",
+    "superseded_pin": "288929658dca6f7b23473bc42c911113f308ed82",
+    "independent_definition_review": "PENDING_SEPARATE"
+  },
+  "counting": "38 cases, 114 CLI calls, 18 replay calls, 5 methods and 10005 oracle integers are different/overlapping scopes, not additive tests",
+  "intake_only_no_probe_execution": true
+}

@@ -1,0 +1,89 @@
+{
+  "source_sha256": "791f72e96bd72d1ad118d347e5dbfdc5fd67e8b30e2ee602c6fbf7109f37091a",
+  "method": "actual four function AST nodes compiled, independent trial division oracle; no deck/host/simulation execution",
+  "integer_cases": 10005,
+  "mismatches": [],
+  "lexical": [
+    {
+      "token": "0",
+      "result": "D2 insert/pack insB seed 0: ASCII positive integer token required"
+    },
+    {
+      "token": "-1",
+      "result": "D2 insert/pack insB seed -1: ASCII positive integer token required"
+    },
+    {
+      "token": "+2",
+      "result": "D2 insert/pack insB seed +2: ASCII positive integer token required"
+    },
+    {
+      "token": "02",
+      "result": "D2 insert/pack insB seed 02: ASCII positive integer token required"
+    },
+    {
+      "token": "2.0",
+      "result": "D2 insert/pack insB seed 2.0: ASCII positive integer token required"
+    },
+    {
+      "token": "2e0",
+      "result": "D2 insert/pack insB seed 2e0: ASCII positive integer token required"
+    },
+    {
+      "token": "2_0",
+      "result": "D2 insert/pack insB seed 2_0: ASCII positive integer token required"
+    },
+    {
+      "token": " 2",
+      "result": "D2 insert/pack insB seed  2: ASCII positive integer token required"
+    },
+    {
+      "token": "2 ",
+      "result": "D2 insert/pack insB seed 2 : ASCII positive integer token required"
+    },
+    {
+      "token": "２",
+      "result": "D2 insert/pack insB seed ２: ASCII positive integer token required"
+    },
+    {
+      "token": "٢",
+      "result": "D2 insert/pack insB seed ٢: ASCII positive integer token required"
+    },
+    {
+      "token": "2147483648",
+      "result": "D2 insert/pack insB seed 2147483648: outside 1..2147483647; insertion seed must be a prime ≤ 2^31−1"
+    },
+    {
+      "token": "2147483659",
+      "result": "D2 insert/pack insB seed 2147483659: outside 1..2147483647; insertion seed must be a prime ≤ 2^31−1"
+    }
+  ],
+  "order": [
+    {
+      "token": "0",
+      "prime_calls": [],
+      "result": "ValueError: D2 insert/pack insB seed 0: ASCII positive integer token required"
+    },
+    {
+      "token": "-1",
+      "prime_calls": [],
+      "result": "ValueError: D2 insert/pack insB seed -1: ASCII positive integer token required"
+    },
+    {
+      "token": "2147483648",
+      "prime_calls": [],
+      "result": "ValueError: D2 insert/pack insB seed 2147483648: outside 1..2147483647; insertion seed must be a prime ≤ 2^31−1"
+    },
+    {
+      "token": "2147483659",
+      "prime_calls": [],
+      "result": "ValueError: D2 insert/pack insB seed 2147483659: outside 1..2147483647; insertion seed must be a prime ≤ 2^31−1"
+    },
+    {
+      "token": "2",
+      "prime_calls": [
+        2
+      ],
+      "result": "RuntimeError: prime reached"
+    }
+  ]
+}

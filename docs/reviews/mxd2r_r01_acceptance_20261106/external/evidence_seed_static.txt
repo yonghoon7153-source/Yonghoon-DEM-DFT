@@ -1,0 +1,30 @@
+# MXD2R-R01 독립 소스 검토
+
+대상 pin `69b6bec7ac20343dd884f8d5fa63e8bf45e7df97`. 범위는 실제 `insert/pack` seed 범위·소수 검사 및 세 소비자의 공유 호출뿐이다. MXD2R-01–03은 재심하지 않았다. 패키지는 수정하지 않았다.
+
+## 판정
+
+이 한정 범위에서 새 P1/P2/P3 반례를 찾지 못했다. 원 R01의 결손을 직접 닫는 구현이다. 이 검토는 생성기 자체의 입력 자격·실제 LIGGGHTS seed 허용 규약 전수·실행 GO를 인증하지 않는다.
+
+## 소스 근거
+
+- `scripts/mixer_deck_readback.py:1041–1045`: 문자열 `[1-9][0-9]*`만 정수로 변환한다. `0`, 음수, 앞의 `+`, 선행 0, 실수·지수·밑줄·Unicode 숫자는 원 ASCII 양의 정수 규약으로 거부한다.
+- `:1048–1059`: 실제 명령의 fix ID와 token으로 사유를 만든 뒤, ASCII 정수 → `<= 2147483647` → 소수 순서로 검사한다. seed를 wrap/truncate/대체하지 않고 동일 정수를 반환한다.
+- `:1090–1111`: `D['cmds']`의 모든 `fix ... insert/*` 명령을 순회한다. `insert/pack` 외 삽입 style은 거부, seed 키 1개 요구, 각 명령의 실제 token에 `_d2_insert_seed(..., token[1])`를 호출한다. metadata/예상 파생 seed만 확인하는 방식이 아니다. 모든 삽입 seed 검사 이후 `:1115`에서 첫 seed와 metadata를 대조한다.
+- `:1317–1322`: `_d2_next_prime(n) == n`의 소수 판정은 n<2·짝수·제곱근까지 홀수 약수를 확인한다. 독립 trial division으로 1–10000 및 경계 5개를 대조해 불일치 0이었다.
+- `:1367–1369,1448–1449`: 원래의 metadata 첫 seed 검사·둘째 seed 생성기 꼴 대조도 유지한다. 따라서 다른 유효 소수로 둘째 seed를 바꾸는 우회도 정상 변경으로 받아들이지 않는다.
+- `:1627–1642`: 실제 seed 검사를 포함한 `_d2_counts`가 PASS 갱신 전에 실행된다. ValueError 등은 `verdict=FAIL`·구체 사유로 남고 `execution_authorized=False`는 유지한다.
+- `scripts/mixer_deck_diff.py:174–182`: 두 덱 모두 `read_d2`로 검사하고 어느 쪽이든 실패하면 pair FAIL. `:1811–1815` CLI는 실제 bytes를 읽고 공통 보고 함수 종료 코드를 반환한다.
+- `scripts/mixer_smoke_blind.py:245–252,984–990`: plan 경로도 동일 `read_d2` 결과를 사용하며 schema/scope만 바꾼다. seed 실패를 PASS로 덮지 않는다.
+- `scripts/mixer_deck_readback.py:1670–1675`: readback CLI도 실제 bytes와 공통 결과로 종료한다.
+
+## 독립 보조 탐침
+
+`seed_static_probe.py`는 네 실제 함수의 AST를 원 파일에서 읽어 compile하고, 별도 시험오라클(2부터 제곱근까지 모든 정수로 trial division)과 대조한다. 단위 helper 수준이며 전체 CLI 관측 수에 합산하지 않는다.
+
+- 정수 10005개: 1–10000, 2147483629, 2147483646, 2147483647, 2147483648, 2147483659; 불일치 0.
+- 비정상 표기 13개는 거부. 양의 정수 규약이 임의로 느슨해지지 않았다.
+- `_d2_next_prime`을 호출 시 예외 sentinel로 교체: 0/-1/2147483648/2147483659에서 호출 0회, 정상 2에서 1회. bounds-before-prime가 실제 평가 순서다.
+- JSON 결과: `seed_static_probe.json`. 소스 SHA256도 함께 기록.
+
+실제 simulator·host·scheduler·연구 값을 호출하거나 읽지 않았다. 최초 메타가 먼저 틀리거나 다른 계약 결손이 있는 파일은 더 앞 단계에서 거부될 수 있으므로 **모든 불량 파일에서 seed 사유가 반드시 첫 사유**라는 주장은 하지 않는다. seed만 변조하고 메타 bytes/hash를 다시 결속한 반례의 구체 사유를 확인하는 것이 이번 계약 범위다.

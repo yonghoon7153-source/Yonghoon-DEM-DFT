@@ -1,0 +1,943 @@
+{
+  "package_count": 130,
+  "snapshot_count": 103,
+  "package_all_ok": true,
+  "snapshot_all_ok": true,
+  "package_checks": [
+    {
+      "path": "CHANGE.patch",
+      "ok": true
+    },
+    {
+      "path": "CLAUDE_PROMPT.md",
+      "ok": true
+    },
+    {
+      "path": "CONTEXT_MANIFEST.json",
+      "ok": true
+    },
+    {
+      "path": "HISTORICAL/positive_extra_before_R01.py",
+      "ok": true
+    },
+    {
+      "path": "HISTORICAL/superseded_lhs_mail_mxd2r_relay.md",
+      "ok": true
+    },
+    {
+      "path": "LHS_SELECTION/docs/collab/codex_to_claude/20261106-1203_lhs-n-canonical-draft.md",
+      "ok": true
+    },
+    {
+      "path": "LHS_SELECTION/docs/reviews/lhs_n_canonical_selection_20261106.json",
+      "ok": true
+    },
+    {
+      "path": "PARENT_PIN.txt",
+      "ok": true
+    },
+    {
+      "path": "PIN.txt",
+      "ok": true
+    },
+    {
+      "path": "PIN_MAP.json",
+      "ok": true
+    },
+    {
+      "path": "README.md",
+      "ok": true
+    },
+    {
+      "path": "REQUEST.md",
+      "ok": true
+    },
+    {
+      "path": "REVIEW_PROMPT.md",
+      "ok": true
+    },
+    {
+      "path": "SNAPSHOT_MANIFEST.json",
+      "ok": true
+    },
+    {
+      "path": "VALIDATION/README.md",
+      "ok": true
+    },
+    {
+      "path": "VALIDATION/initial_checks/mixer_doc_refs_missing_cross_branch.log",
+      "ok": true
+    },
+    {
+      "path": "VALIDATION/lhs_changed_path_ban.json",
+      "ok": true
+    },
+    {
+      "path": "VALIDATION/lhs_doc_refs.log",
+      "ok": true
+    },
+    {
+      "path": "VALIDATION/lhs_findings.log",
+      "ok": true
+    },
+    {
+      "path": "VALIDATION/lhs_publication.json",
+      "ok": true
+    },
+    {
+      "path": "VALIDATION/mixer_changed_path_ban.json",
+      "ok": true
+    },
+    {
+      "path": "VALIDATION/mixer_doc_refs.log",
+      "ok": true
+    },
+    {
+      "path": "VALIDATION/mixer_findings.log",
+      "ok": true
+    },
+    {
+      "path": "VALIDATION/mixer_publication.json",
+      "ok": true
+    },
+    {
+      "path": "VALIDATION/mixer_whitespace.log",
+      "ok": true
+    },
+    {
+      "path": "VALIDATION/mixer_whitespace_authored.log",
+      "ok": true
+    },
+    {
+      "path": "VALIDATION/mixer_whitespace_scope.json",
+      "ok": true
+    },
+    {
+      "path": "docs/collab/codex_to_claude/20261106-1203_mxd2r-r01-seed-recheck.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_first8_launch_preparation_20261106/source_seal.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_fix_evidence_20261103/mxd2r04/tools/positive_extra.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/README.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/baseline.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/check_all_list.txt",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/diff_selftest.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/evidence.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/evidence_summary.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_all_consumers.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/new.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/new.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/old.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/old.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/pair.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/pair.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/plan.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/plan.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/readback.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/readback.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/new.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/new.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/old.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/old.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/pair.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/pair.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/plan.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/plan.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/readback.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/readback.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/new.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/new.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/old.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/old.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/pair.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/pair.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/plan.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/plan.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/readback.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/readback.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/summary.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_focused.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/positive_extra.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/prime_guard_removed.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/probe.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/py38_focused.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/range_guard_removed.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/readback_selftest.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/new.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/new.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/old.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/old.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/pair.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/pair.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/plan.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/plan.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/readback.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/readback.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/new.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/new.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/old.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/old.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/pair.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/pair.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/plan.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/plan.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/readback.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/readback.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/new.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/new.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/old.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/old.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/pair.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/pair.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/plan.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/plan.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/readback.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/readback.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/summary.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/make_mixer_deck.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/mixer_deck_diff.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/mixer_deck_readback.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/mixer_smoke_blind.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/test_mixer_d2_consumers.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/smoke_selftest.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/ledger_proposal.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/review_request.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/source_hashes.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/user_relay.md",
+      "ok": true
+    },
+    {
+      "path": "scripts/check_all.sh",
+      "ok": true
+    },
+    {
+      "path": "scripts/check_contact_validity.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/measure_bed_aspect.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_gate_reader_diff.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_restart_phase_test.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_smoke_blind.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_stage_gate.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/test_mixer_d2_consumers.py",
+      "ok": true
+    }
+  ],
+  "snapshot_checks": [
+    {
+      "path": "docs/collab/codex_to_claude/20261106-1203_mxd2r-r01-seed-recheck.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_first8_launch_preparation_20261106/source_seal.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_fix_evidence_20261103/mxd2r04/tools/positive_extra.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/README.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/baseline.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/check_all_list.txt",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/diff_selftest.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/evidence.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/evidence_summary.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_all_consumers.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/new.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/new.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/old.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/old.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/pair.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/pair.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/plan.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/plan.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/readback.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/readback.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/new.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/new.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/old.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/old.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/pair.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/pair.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/plan.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/plan.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/readback.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/readback.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/new.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/new.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/old.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/old.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/pair.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/pair.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/plan.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/plan.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/readback.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/readback.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/summary.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_focused.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/positive_extra.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/prime_guard_removed.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/probe.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/py38_focused.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/range_guard_removed.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/readback_selftest.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/new.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/new.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/old.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/old.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/pair.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/pair.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/plan.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/plan.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/readback.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/readback.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/new.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/new.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/old.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/old.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/pair.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/pair.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/plan.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/plan.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/readback.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/readback.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/new.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/new.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/old.in",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/old.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/pair.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/pair.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/plan.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/plan.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/readback.stderr",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/readback.stdout",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/summary.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/make_mixer_deck.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/mixer_deck_diff.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/mixer_deck_readback.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/mixer_smoke_blind.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/test_mixer_d2_consumers.py",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/smoke_selftest.log",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/ledger_proposal.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/review_request.md",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/source_hashes.json",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/user_relay.md",
+      "ok": true
+    },
+    {
+      "path": "scripts/check_all.sh",
+      "ok": true
+    },
+    {
+      "path": "scripts/check_contact_validity.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/measure_bed_aspect.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_gate_reader_diff.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_restart_phase_test.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_smoke_blind.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_stage_gate.py",
+      "ok": true
+    },
+    {
+      "path": "scripts/test_mixer_d2_consumers.py",
+      "ok": true
+    }
+  ],
+  "extra_package_files": []
+}
