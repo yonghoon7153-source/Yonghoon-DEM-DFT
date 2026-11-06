@@ -1,0 +1,110 @@
+{
+ "chain_sha256": "3a0063ad1fbfb8cfbd9603aa8900a3072c8515ac0e12dc3e670bc8bb04fb6cb5",
+ "checks": {
+  "LG01": {
+   "pass": true,
+   "why": {
+    "bad": {},
+    "n": 56,
+    "perm_uid": 65534
+   }
+  },
+  "PD13": {
+   "pass": true,
+   "why": {
+    "bad": {},
+    "bad_n": 0,
+    "n": 78
+   }
+  },
+  "PD13o": {
+   "pass": true,
+   "why": {
+    "bad": {},
+    "n": 12
+   }
+  },
+  "PE03u": {
+   "pass": true,
+   "why": {
+    "bad": {},
+    "n": 44
+   }
+  },
+  "RC04": {
+   "pass": true,
+   "why": {
+    "bad": {}
+   }
+  },
+  "RN01": {
+   "pass": true,
+   "why": {
+    "bad": {},
+    "n": 112,
+    "n_bad": 0
+   }
+  },
+  "RN02": {
+   "pass": true,
+   "why": {
+    "bad": {},
+    "rows": {
+     "a_ctl_rc0": [
+      "parent_dead",
+      true,
+      0
+     ],
+     "a_ctl_rc1": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "a_rcnull": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "b_ctl_rc0": [
+      "group_unconfirmed",
+      true,
+      0
+     ],
+     "b_ctl_rc1": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "b_ctl_timeout": [
+      "group_unconfirmed",
+      true,
+      0
+     ],
+     "b_rcnull": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "c_nokey": [
+      "group_unconfirmed",
+      false,
+      3
+     ],
+     "c_norecord": [
+      "group_unconfirmed",
+      false,
+      3
+     ],
+     "c_weird": [
+      "group_unconfirmed",
+      false,
+      3
+     ]
+    }
+   }
+  }
+ },
+ "seconds": 8.0,
+ "test_sha256": "e8ea9a354ab0046298e81e55f41926776088a1831b5d4e6984286d3fbfddd42c",
+ "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a64e0f68216ff3304"
+}

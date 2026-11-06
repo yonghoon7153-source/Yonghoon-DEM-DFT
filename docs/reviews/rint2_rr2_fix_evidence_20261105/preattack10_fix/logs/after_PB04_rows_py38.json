@@ -1,0 +1,40 @@
+{
+ "chain_sha256": "c11f6bf44fdefc74abba3ae8df770dcfe595d82271f5635051d8e7f620ffb99f",
+ "checks": {
+  "RC01": {
+   "pass": true,
+   "why": {
+    "consumers_without_reader": [],
+    "missing_readers": [],
+    "n_bad": 33,
+    "n_good": 11,
+    "n_raw": 0,
+    "raw_reads": [],
+    "scanner_flagged_good": [],
+    "scanner_missed_bad": [],
+    "skipped_syntax": {
+     "bad": [
+      20
+     ],
+     "good": []
+    },
+    "source_contexts": {
+     "alias_name": 2,
+     "field_copy": 1,
+     "is_none": 1,
+     "message": 6,
+     "producer_return": 2,
+     "reader_arg": 13,
+     "record_key": 3,
+     "record_keyword": 3,
+     "record_store": 2,
+     "record_value": 2,
+     "store_subscript": 2
+    }
+   }
+  }
+ },
+ "seconds": 1.3,
+ "test_sha256": "d484d8f6b47913e473ce1cedb88d9d0d5604ea4d5833fe489533d8198180047e",
+ "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a64e0f68216ff3304"
+}

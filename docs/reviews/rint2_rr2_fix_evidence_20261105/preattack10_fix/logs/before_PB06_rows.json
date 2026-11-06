@@ -1,0 +1,89 @@
+{
+ "chain_sha256": "c11f6bf44fdefc74abba3ae8df770dcfe595d82271f5635051d8e7f620ffb99f",
+ "checks": {
+  "LG01": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "prestart_TIME_LIMIT/end_dangling": [
+      [
+       "missing",
+       "timeout",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "prestart_TIME_LIMIT/end_file": [
+      [
+       "missing",
+       "timeout",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "prestart_TIME_LIMIT/log_dangling": [
+      [
+       "missing",
+       "timeout",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "prestart_TIME_LIMIT/run_dir": [
+      [
+       "missing",
+       "timeout",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "prestart_TIME_LIMIT/run_dir_arm": [
+      [
+       "missing",
+       "timeout",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "prestart_TIME_LIMIT/run_dir_arml": [
+      [
+       "missing",
+       "timeout",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ]
+    },
+    "n": 63,
+    "perm_uid": 65534
+   }
+  }
+ },
+ "seconds": 0.8,
+ "test_sha256": "d30406356b1f524c4e67ec06b10d57e17c23011bd0e67a7485da30d672387dc7",
+ "tree": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/pa10fix/pb06_before_tree"
+}

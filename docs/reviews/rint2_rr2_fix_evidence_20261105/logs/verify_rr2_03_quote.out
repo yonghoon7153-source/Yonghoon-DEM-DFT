@@ -1,0 +1,14 @@
+{
+ "quotes_in_fix": 1,
+ "quote_bytes": 285,
+ "quote_is_code_substring": true,
+ "quote_count_in_registration": 1,
+ "broad_phrases_outside_strike": [],
+ "ranges_in_fix": [
+  true,
+  true
+ ],
+ "axial_share_sentence": true,
+ "no_arbitrary_claim": true,
+ "ok": true
+}

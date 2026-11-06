@@ -1,0 +1,74 @@
+{
+ "n_rows": 57,
+ "n_diff": 9,
+ "diff": {
+  "G2_gu_rcnull_gc_none": {
+   "reviewer_fixed_version": {
+    "cause": "group_unconfirmed",
+    "resume_ok": true,
+    "status": "stopped"
+   },
+   "after_this_fix": {
+    "cause": "runner_rc",
+    "resume_ok": false,
+    "status": "stopped"
+   }
+  },
+  "R2_recover_chainend_rcnull": {
+   "reviewer_fixed_version": {
+    "cause": "parent_dead",
+    "readable": true,
+    "result_cause": "parent_dead",
+    "resume_ok": true
+   },
+   "after_this_fix": {
+    "cause": "runner_rc",
+    "readable": true,
+    "result_cause": "runner_rc",
+    "resume_ok": false
+   }
+  },
+  "T1_tl_norec_nolaunch_nolog": {
+   "reviewer_fixed_version": {
+    "cause": "timeout",
+    "resume_ok": true,
+    "status": "stopped"
+   },
+   "after_this_fix": {
+    "cause": "timeout",
+    "resume_ok": false,
+    "status": "stopped"
+   }
+  },
+  "T4_tl_end_without_launch": {
+   "reviewer_fixed_version": {
+    "cause": "timeout",
+    "resume_ok": true
+   },
+   "after_this_fix": {
+    "cause": "timeout",
+    "resume_ok": false
+   }
+  },
+  "V0_predict_only": {
+   "reviewer_fixed_version": "Stop REGISTRATION_UNREADABLE: /tmp/pa10_units_x7qi5elb/no_such_reg.md (FileNotFoundError)",
+   "after_this_fix": "Stop REGISTRATION_UNREADABLE: /tmp/pa10_units_lmbsmpam/no_such_reg.md (FileNotFoundError)"
+  },
+  "V1_extra_ladder_list": {
+   "reviewer_fixed_version": "Stop REGISTRATION_UNREADABLE: /tmp/pa10_units_x7qi5elb/no_such_reg.md (FileNotFoundError)",
+   "after_this_fix": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_lmbsmpam/v/V1: 단계 요약 ['ladder_summary.json'] 이 있는데 못 읽는다 (잘린 · 객"
+  },
+  "V2_extra_ladder_zero": {
+   "reviewer_fixed_version": "Stop REGISTRATION_UNREADABLE: /tmp/pa10_units_x7qi5elb/no_such_reg.md (FileNotFoundError)",
+   "after_this_fix": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_lmbsmpam/v/V2: 단계 요약 ['ladder_summary.json'] 이 있는데 못 읽는다 (잘린 · 객"
+  },
+  "V3_extra_ladder_trunc": {
+   "reviewer_fixed_version": "Stop REGISTRATION_UNREADABLE: /tmp/pa10_units_x7qi5elb/no_such_reg.md (FileNotFoundError)",
+   "after_this_fix": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_lmbsmpam/v/V3: 단계 요약 ['ladder_summary.json'] 이 있는데 못 읽는다 (잘린 · 객"
+  },
+  "V4_extra_ladder_true": {
+   "reviewer_fixed_version": "Stop REGISTRATION_UNREADABLE: /tmp/pa10_units_x7qi5elb/no_such_reg.md (FileNotFoundError)",
+   "after_this_fix": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_lmbsmpam/v/V4: 단계 요약 ['ladder_summary.json'] 이 있는데 못 읽는다 (잘린 · 객"
+  }
+ }
+}

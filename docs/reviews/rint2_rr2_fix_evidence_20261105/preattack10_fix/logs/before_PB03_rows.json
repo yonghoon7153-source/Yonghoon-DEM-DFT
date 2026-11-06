@@ -1,0 +1,107 @@
+{
+ "chain_sha256": "6065e916eaf8b3f34f0e0d5ddd73b788a83c7292a5aa7835d8939f4edce1eaaf",
+ "checks": {
+  "FF01": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "attempt_json": [
+      {
+       "timeout": true
+      },
+      null
+     ],
+     "end_groups_problem": [
+      {
+       "timeout": true
+      },
+      true
+     ],
+     "end_orphan": [
+      {
+       "timeout": true
+      },
+      [
+       "parent_dead",
+       false
+      ]
+     ],
+     "launch_groups_problem": [
+      {
+       "timeout": true
+      },
+      true
+     ],
+     "launch_orphan": [
+      {
+       "timeout": true
+      },
+      [
+       "parent_dead",
+       false
+      ]
+     ],
+     "recover_cli": [
+      {
+       "timeout": true
+      },
+      [
+       0,
+       "recover"
+      ]
+     ],
+     "recover_ledger_swap": [
+      {
+       "timeout": true
+      },
+      [
+       3,
+       true,
+       true
+      ]
+     ],
+     "rejected_swap_recount": [
+      {
+       "timeout": true
+      },
+      "ATTEMPT_LEDGER_MISMATCH"
+     ]
+    },
+    "got": {
+     "attempt_json": {
+      "timeout": true
+     },
+     "end_groups_problem": {
+      "timeout": true
+     },
+     "end_orphan": {
+      "timeout": true
+     },
+     "launch_groups_problem": {
+      "timeout": true
+     },
+     "launch_orphan": {
+      "timeout": true
+     },
+     "recover_cli": {
+      "timeout": true
+     },
+     "recover_ledger_swap": {
+      "timeout": true
+     },
+     "rejected_direct_recount": [
+      "interrupted",
+      "parent_dead",
+      false
+     ],
+     "rejected_swap_recount": {
+      "timeout": true
+     }
+    }
+   }
+  }
+ },
+ "seconds": 121.1,
+ "test_sha256": "35acdd45905e6079599326dfc15b124ea8bd5bafabf5ba32ac816d3133fe9d98",
+ "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a64e0f68216ff3304"
+}

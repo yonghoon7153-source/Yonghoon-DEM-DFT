@@ -1,0 +1,373 @@
+{
+ "chain_sha256": "97adad9c0f4317d4145a907d99f2e9e1654ac749ecb51e936d2e63474fc18be3",
+ "checks": {
+  "CE01": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "bad/recover/dict": [
+      [
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "parent_dead",
+       false,
+       false
+      ]
+     ],
+     "bad/recover/empty": [
+      [
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "parent_dead",
+       false,
+       false
+      ]
+     ],
+     "bad/recover/false": [
+      [
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "parent_dead",
+       false,
+       false
+      ]
+     ],
+     "bad/recover/list": [
+      [
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "parent_dead",
+       false,
+       false
+      ]
+     ],
+     "bad/recover/weird": [
+      [
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "parent_dead",
+       false,
+       false
+      ]
+     ],
+     "bad/recover/zero": [
+      [
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "parent_dead",
+       false,
+       false
+      ]
+     ],
+     "not_dict/int": [
+      [
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "parent_dead",
+       false,
+       false
+      ]
+     ],
+     "not_dict/list": [
+      [
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "parent_dead",
+       false,
+       false
+      ]
+     ],
+     "not_dict/list1": [
+      [
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "parent_dead",
+       false,
+       false
+      ]
+     ],
+     "not_dict/null": [
+      [
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "parent_dead",
+       false,
+       false
+      ]
+     ],
+     "not_dict/str": [
+      [
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "parent_dead",
+       false,
+       false
+      ]
+     ]
+    },
+    "n": 27
+   }
+  },
+  "CE02": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "false": {
+      "ledger_same": [
+       null,
+       true
+      ],
+      "not_allowed": [
+       false,
+       true
+      ],
+      "result": [
+       {
+        "by": "recover",
+        "cause": "parent_dead",
+        "resume_ok": true,
+        "side": "post",
+        "status": "interrupted"
+       },
+       {
+        "by": "recover",
+        "cause": "parent_dead",
+        "resume_ok": false,
+        "side": "post",
+        "status": "interrupted"
+       }
+      ],
+      "resume_rc": [
+       0,
+       3
+      ]
+     },
+     "list": {
+      "ledger_same": [
+       null,
+       true
+      ],
+      "not_allowed": [
+       false,
+       true
+      ],
+      "result": [
+       {
+        "by": "recover",
+        "cause": "parent_dead",
+        "resume_ok": true,
+        "side": "post",
+        "status": "interrupted"
+       },
+       {
+        "by": "recover",
+        "cause": "parent_dead",
+        "resume_ok": false,
+        "side": "post",
+        "status": "interrupted"
+       }
+      ],
+      "resume_rc": [
+       0,
+       3
+      ]
+     },
+     "weird": {
+      "ledger_same": [
+       null,
+       true
+      ],
+      "not_allowed": [
+       false,
+       true
+      ],
+      "result": [
+       {
+        "by": "recover",
+        "cause": "parent_dead",
+        "resume_ok": true,
+        "side": "post",
+        "status": "interrupted"
+       },
+       {
+        "by": "recover",
+        "cause": "parent_dead",
+        "resume_ok": false,
+        "side": "post",
+        "status": "interrupted"
+       }
+      ],
+      "resume_rc": [
+       0,
+       3
+      ]
+     }
+    },
+    "rows": {
+     "by_chain_weird": [
+      "parent_dead",
+      false,
+      3,
+      [
+       "chain",
+       "(none)"
+      ]
+     ],
+     "ctl_none_rc1": [
+      "runner_rc",
+      false,
+      3,
+      [
+       "recover",
+       null
+      ]
+     ],
+     "ctl_timeout": [
+      "parent_dead",
+      true,
+      0,
+      [
+       "recover",
+       "timeout"
+      ]
+     ],
+     "false": [
+      "parent_dead",
+      true,
+      0,
+      [
+       "recover",
+       false
+      ]
+     ],
+     "list": [
+      "parent_dead",
+      true,
+      0,
+      [
+       "recover",
+       []
+      ]
+     ],
+     "weird": [
+      "parent_dead",
+      true,
+      0,
+      [
+       "recover",
+       "weird"
+      ]
+     ]
+    }
+   }
+  },
+  "PE03u": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "weird/illegal": [
+      [
+       "interrupted",
+       "post",
+       "runner_rc",
+       false,
+       true
+      ],
+      [
+       "interrupted",
+       "post",
+       "runner_rc",
+       false,
+       false
+      ]
+     ],
+     "weird/oom": [
+      [
+       "interrupted",
+       "post",
+       "resource",
+       true,
+       true
+      ],
+      [
+       "interrupted",
+       "post",
+       "resource",
+       false,
+       false
+      ]
+     ],
+     "weird/plain": [
+      [
+       "interrupted",
+       "post",
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "interrupted",
+       "post",
+       "parent_dead",
+       false,
+       false
+      ]
+     ],
+     "weird/python": [
+      [
+       "interrupted",
+       "post",
+       "parent_dead",
+       true,
+       true
+      ],
+      [
+       "interrupted",
+       "post",
+       "parent_dead",
+       false,
+       false
+      ]
+     ]
+    },
+    "n": 44
+   }
+  }
+ },
+ "seconds": 2.0,
+ "test_sha256": "5d4ce16befa61ec9ac08e073e8650ffe85d5e4246cced077d5be931d7ed134f9",
+ "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a57dad061fd8750b0"
+}

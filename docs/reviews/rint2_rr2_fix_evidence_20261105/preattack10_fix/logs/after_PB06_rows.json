@@ -1,0 +1,16 @@
+{
+ "chain_sha256": "b24e597630a906e548c0150c24ccd9082a79e63d8271c3b4ef4ec370599f8efc",
+ "checks": {
+  "LG01": {
+   "pass": true,
+   "why": {
+    "bad": {},
+    "n": 63,
+    "perm_uid": 65534
+   }
+  }
+ },
+ "seconds": 0.8,
+ "test_sha256": "d30406356b1f524c4e67ec06b10d57e17c23011bd0e67a7485da30d672387dc7",
+ "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a64e0f68216ff3304"
+}

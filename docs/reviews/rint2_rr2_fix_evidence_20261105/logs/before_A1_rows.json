@@ -1,0 +1,659 @@
+{
+ "chain_sha256": "eff2b4b47f94a4b607c92be27b500f81de6d8b4e0f27be07606e5e722d169428",
+ "checks": {
+  "RC01": {
+   "pass": false,
+   "why": {
+    "consumers_without_reader": [
+     "orphan_cause",
+     "Replay.run",
+     "noop_check",
+     "MergeFetch.run",
+     "Runner._execute",
+     "RunnerGraphSource._run",
+     "ResumeRunner._src_done",
+     "load_ladders"
+    ],
+    "missing_readers": [
+     "rc_kind",
+     "rc_success"
+    ],
+    "n_raw": 10,
+    "raw_reads": [
+     [
+      3775,
+      "runner_rc_failed",
+      "rc == 0"
+     ],
+     [
+      3775,
+      "runner_rc_failed",
+      "type(rc)"
+     ],
+     [
+      3869,
+      "orphan_cause",
+      "rc == 0"
+     ],
+     [
+      4414,
+      "_execute",
+      "rc != 0"
+     ],
+     [
+      4465,
+      "_src_done",
+      "er['rc'] == 0"
+     ],
+     [
+      4465,
+      "_src_done",
+      "type(er.get('rc'))"
+     ],
+     [
+      4607,
+      "_run",
+      "rc != 0"
+     ],
+     [
+      4658,
+      "run",
+      "r.get('rc') != 0"
+     ],
+     [
+      4942,
+      "noop_check",
+      "x.get('rc') == 0"
+     ],
+     [
+      5786,
+      "run",
+      "rec0.get('rc') != 0"
+     ]
+    ],
+    "scanner_flagged_good": [],
+    "scanner_missed_bad": []
+   }
+  },
+  "RC02": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "false": {
+      "ledger_same": [
+       null,
+       true
+      ],
+      "not_allowed": [
+       false,
+       true
+      ],
+      "orphan": [
+       [
+        "parent_dead",
+        true
+       ],
+       [
+        "runner_rc",
+        true
+       ]
+      ],
+      "result": [
+       {
+        "by": "recover",
+        "cause": "parent_dead",
+        "resume_ok": true,
+        "side": "post",
+        "status": "interrupted"
+       },
+       {
+        "by": "recover",
+        "cause": "runner_rc",
+        "resume_ok": false,
+        "side": "post",
+        "status": "interrupted"
+       }
+      ],
+      "resume_rc": [
+       0,
+       3
+      ]
+     },
+     "float0": {
+      "ledger_same": [
+       null,
+       true
+      ],
+      "not_allowed": [
+       false,
+       true
+      ],
+      "orphan": [
+       [
+        "parent_dead",
+        true
+       ],
+       [
+        "runner_rc",
+        true
+       ]
+      ],
+      "result": [
+       {
+        "by": "recover",
+        "cause": "parent_dead",
+        "resume_ok": true,
+        "side": "post",
+        "status": "interrupted"
+       },
+       {
+        "by": "recover",
+        "cause": "runner_rc",
+        "resume_ok": false,
+        "side": "post",
+        "status": "interrupted"
+       }
+      ],
+      "resume_rc": [
+       0,
+       3
+      ]
+     },
+     "negzero": {
+      "ledger_same": [
+       null,
+       true
+      ],
+      "not_allowed": [
+       false,
+       true
+      ],
+      "orphan": [
+       [
+        "parent_dead",
+        true
+       ],
+       [
+        "runner_rc",
+        true
+       ]
+      ],
+      "result": [
+       {
+        "by": "recover",
+        "cause": "parent_dead",
+        "resume_ok": true,
+        "side": "post",
+        "status": "interrupted"
+       },
+       {
+        "by": "recover",
+        "cause": "runner_rc",
+        "resume_ok": false,
+        "side": "post",
+        "status": "interrupted"
+       }
+      ],
+      "resume_rc": [
+       0,
+       3
+      ]
+     }
+    },
+    "rows": {
+     "false": [
+      "parent_dead",
+      true,
+      0
+     ],
+     "float0": [
+      "parent_dead",
+      true,
+      0
+     ],
+     "int0": [
+      "parent_dead",
+      true,
+      0
+     ],
+     "int1": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "negzero": [
+      "parent_dead",
+      true,
+      0
+     ],
+     "none": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "str0": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "true": [
+      "runner_rc",
+      false,
+      3
+     ]
+    }
+   }
+  },
+  "RC03": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "predict": {
+      "confirm_false": [
+       [
+        0,
+        null,
+        24,
+        false
+       ],
+       [
+        3,
+        "LADDER_SET",
+        0,
+        true
+       ]
+      ],
+      "confirm_float0": [
+       [
+        0,
+        null,
+        24,
+        false
+       ],
+       [
+        3,
+        "LADDER_SET",
+        0,
+        true
+       ]
+      ],
+      "noop_false": [
+       [
+        0,
+        null,
+        24,
+        false
+       ],
+       [
+        3,
+        "LADDER_SET",
+        0,
+        true
+       ]
+      ]
+     },
+     "rc03_merge": {
+      "-0.0": [
+       [
+        "read",
+        1
+       ],
+       [
+        "UNIT_PROVENANCE_MISMATCH",
+        0
+       ]
+      ],
+      "0.0": [
+       [
+        "read",
+        1
+       ],
+       [
+        "UNIT_PROVENANCE_MISMATCH",
+        0
+       ]
+      ],
+      "False": [
+       [
+        "read",
+        1
+       ],
+       [
+        "UNIT_PROVENANCE_MISMATCH",
+        0
+       ]
+      ]
+     },
+     "rc03_noop": {
+      "-0.0": [
+       [
+        "read",
+        1
+       ],
+       [
+        "LADDER_SET",
+        0
+       ]
+      ],
+      "0.0": [
+       [
+        "read",
+        1
+       ],
+       [
+        "LADDER_SET",
+        0
+       ]
+      ],
+      "False": [
+       [
+        "read",
+        1
+       ],
+       [
+        "LADDER_SET",
+        0
+       ]
+      ]
+     },
+     "rc03_replay": {
+      "-0.0": [
+       [
+        "read",
+        1
+       ],
+       [
+        "REPLAY_MISMATCH",
+        0
+       ]
+      ],
+      "0.0": [
+       [
+        "read",
+        1
+       ],
+       [
+        "REPLAY_MISMATCH",
+        0
+       ]
+      ],
+      "False": [
+       [
+        "read",
+        1
+       ],
+       [
+        "REPLAY_MISMATCH",
+        0
+       ]
+      ]
+     }
+    },
+    "predict": {
+     "confirm_false": [
+      0,
+      null,
+      24,
+      false
+     ],
+     "confirm_float0": [
+      0,
+      null,
+      24,
+      false
+     ],
+     "noop_false": [
+      0,
+      null,
+      24,
+      false
+     ]
+    },
+    "unit": {
+     "rc03_merge": [
+      [
+       "read",
+       1
+      ],
+      [
+       "read",
+       1
+      ],
+      [
+       "read",
+       1
+      ],
+      [
+       "read",
+       1
+      ],
+      [
+       "UNIT_PROVENANCE_MISMATCH",
+       0
+      ],
+      [
+       "UNIT_PROVENANCE_MISMATCH",
+       0
+      ],
+      [
+       "UNIT_PROVENANCE_MISMATCH",
+       0
+      ],
+      [
+       "UNIT_PROVENANCE_MISMATCH",
+       0
+      ]
+     ],
+     "rc03_noop": [
+      [
+       "read",
+       1
+      ],
+      [
+       "read",
+       1
+      ],
+      [
+       "read",
+       1
+      ],
+      [
+       "read",
+       1
+      ],
+      [
+       "LADDER_SET",
+       0
+      ],
+      [
+       "LADDER_SET",
+       0
+      ],
+      [
+       "LADDER_SET",
+       0
+      ],
+      [
+       "LADDER_SET",
+       0
+      ]
+     ],
+     "rc03_replay": [
+      [
+       "read",
+       1
+      ],
+      [
+       "read",
+       1
+      ],
+      [
+       "read",
+       1
+      ],
+      [
+       "read",
+       1
+      ],
+      [
+       "REPLAY_MISMATCH",
+       0
+      ],
+      [
+       "REPLAY_MISMATCH",
+       0
+      ],
+      [
+       "REPLAY_MISMATCH",
+       0
+      ],
+      [
+       "REPLAY_MISMATCH",
+       0
+      ]
+     ]
+    }
+   }
+  },
+  "RC04": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "execute": [
+      [
+       [
+        "read",
+        1
+       ],
+       [
+        "read",
+        1
+       ],
+       [
+        "read",
+        1
+       ],
+       [
+        "read",
+        1
+       ],
+       [
+        "RUNNER_RC",
+        0
+       ],
+       [
+        "RUNNER_RC",
+        0
+       ],
+       [
+        "RUNNER_RC",
+        0
+       ],
+       [
+        "RUNNER_RC",
+        0
+       ]
+      ],
+      [
+       [
+        "read",
+        1
+       ],
+       [
+        "RUNNER_RC",
+        0
+       ],
+       [
+        "RUNNER_RC",
+        0
+       ],
+       [
+        "RUNNER_RC",
+        0
+       ],
+       [
+        "RUNNER_RC",
+        0
+       ],
+       [
+        "RUNNER_RC",
+        0
+       ],
+       [
+        "RUNNER_RC",
+        0
+       ],
+       [
+        "RUNNER_RC",
+        0
+       ]
+      ]
+     ],
+     "graph_source": [
+      [
+       "later",
+       "later",
+       "later",
+       "later",
+       "rc",
+       "rc",
+       "rc",
+       "rc"
+      ],
+      [
+       "later",
+       "rc",
+       "rc",
+       "rc",
+       "rc",
+       "rc",
+       "rc",
+       "rc"
+      ]
+     ],
+     "run_in_group": [
+      {
+       "exit0": [
+        "int",
+        0,
+        null,
+        true,
+        null
+       ],
+       "exit3": [
+        "int",
+        3,
+        null,
+        true,
+        null
+       ]
+      },
+      {
+       "exit0": [
+        "int",
+        0,
+        null,
+        true,
+        "ok"
+       ],
+       "exit3": [
+        "int",
+        3,
+        null,
+        true,
+        "fail"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "RC05": {
+   "pass": false,
+   "why": "판독 함수 없음 ['rc_kind', 'rc_success']"
+  }
+ },
+ "seconds": 13.7,
+ "test_sha256": "11656a4d24d1cedf24885e1d907e104dbe3836ff6a6fa62ea7ba74b6f6c09120",
+ "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a57dad061fd8750b0"
+}

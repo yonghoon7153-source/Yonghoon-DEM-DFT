@@ -1,0 +1,567 @@
+{
+ "B1": {
+  "expected_any": [
+   "RN01",
+   "RN02",
+   "RC04",
+   "PE03u",
+   "PD13o"
+  ],
+  "expected_hit": [
+   "RN01",
+   "RN02",
+   "RC04",
+   "PE03u",
+   "PD13o"
+  ],
+  "failed": [
+   "PD13o",
+   "PE03u",
+   "RC04",
+   "RN01",
+   "RN02"
+  ],
+  "item": "PB-01",
+  "only": "RN,RC04,PE03u,PD13,LG01",
+  "rc": 1,
+  "seconds": 5.7,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 5/10 PASS (5.3 s)   FAILED: ['PD13o', 'PE03u', 'RC04', 'RN01', 'RN02']"
+ },
+ "B2": {
+  "expected_any": [
+   "RN01",
+   "RN02",
+   "RC04",
+   "PD13"
+  ],
+  "expected_hit": [
+   "RN01",
+   "RN02",
+   "RC04",
+   "PD13"
+  ],
+  "failed": [
+   "PD13",
+   "RC04",
+   "RN01",
+   "RN02"
+  ],
+  "item": "PB-01",
+  "only": "RN,RC04,PE03u,PD13,LG01",
+  "rc": 1,
+  "seconds": 5.7,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 6/10 PASS (5.3 s)   FAILED: ['PD13', 'RC04', 'RN01', 'RN02']"
+ },
+ "B3": {
+  "expected_any": [
+   "RN01",
+   "RN02",
+   "LG01"
+  ],
+  "expected_hit": [
+   "RN01",
+   "RN02",
+   "LG01"
+  ],
+  "failed": [
+   "LG01",
+   "RN01",
+   "RN02"
+  ],
+  "item": "PB-01",
+  "only": "RN,RC04,PE03u,PD13,LG01",
+  "rc": 1,
+  "seconds": 5.9,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 7/10 PASS (5.4 s)   FAILED: ['LG01', 'RN01', 'RN02']"
+ },
+ "B4": {
+  "expected_any": [
+   "RN01",
+   "RN02"
+  ],
+  "expected_hit": [
+   "RN01",
+   "RN02"
+  ],
+  "failed": [
+   "RN01",
+   "RN02"
+  ],
+  "item": "PB-01",
+  "only": "RN,RC04,PE03u,PD13,LG01",
+  "rc": 1,
+  "seconds": 6.0,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 8/10 PASS (5.7 s)   FAILED: ['RN01', 'RN02']"
+ },
+ "B5": {
+  "expected_any": [
+   "RN01",
+   "RN02"
+  ],
+  "expected_hit": [
+   "RN01",
+   "RN02"
+  ],
+  "failed": [
+   "RN01",
+   "RN02"
+  ],
+  "item": "PB-01",
+  "only": "RN,RC04,PE03u,PD13,LG01",
+  "rc": 1,
+  "seconds": 6.7,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 8/10 PASS (6.3 s)   FAILED: ['RN01', 'RN02']"
+ },
+ "B6": {
+  "expected_any": [
+   "RN01",
+   "RN02",
+   "LG01"
+  ],
+  "expected_hit": [
+   "RN01",
+   "RN02",
+   "LG01"
+  ],
+  "failed": [
+   "LG01",
+   "RN01",
+   "RN02"
+  ],
+  "item": "PB-01",
+  "only": "RN,RC04,PE03u,PD13,LG01",
+  "rc": 1,
+  "seconds": 6.8,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 7/10 PASS (6.4 s)   FAILED: ['LG01', 'RN01', 'RN02']"
+ },
+ "B7": {
+  "expected_any": [
+   "RN01"
+  ],
+  "expected_hit": [
+   "RN01"
+  ],
+  "failed": [
+   "PD13",
+   "RN01"
+  ],
+  "item": "PB-01",
+  "only": "RN,RC04,PE03u,PD13,LG01",
+  "rc": 1,
+  "seconds": 6.6,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 8/10 PASS (6.2 s)   FAILED: ['PD13', 'RN01']"
+ },
+ "B8": {
+  "expected_any": [
+   "RN01",
+   "RN02"
+  ],
+  "expected_hit": [
+   "RN01",
+   "RN02"
+  ],
+  "failed": [
+   "RN01",
+   "RN02"
+  ],
+  "item": "PB-01",
+  "only": "RN,RC04,PE03u,PD13,LG01",
+  "rc": 1,
+  "seconds": 6.7,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 8/10 PASS (6.3 s)   FAILED: ['RN01', 'RN02']"
+ },
+ "BASE": {
+  "clean": true,
+  "rows": [
+   {
+    "only": "FF01",
+    "rc": 0,
+    "seconds": 1.5,
+    "summary": "test_rint_r_chain: 1/1 PASS (1.0 s)"
+   },
+   {
+    "only": "LG01",
+    "rc": 0,
+    "seconds": 1.3,
+    "summary": "test_rint_r_chain: 1/1 PASS (0.9 s)"
+   },
+   {
+    "only": "RC01",
+    "rc": 0,
+    "seconds": 1.7,
+    "summary": "test_rint_r_chain: 1/1 PASS (1.3 s)"
+   },
+   {
+    "only": "RN,RC04,PE03u,PD13,LG01",
+    "rc": 0,
+    "seconds": 5.6,
+    "summary": "test_rint_r_chain: 10/10 PASS (5.2 s)"
+   },
+   {
+    "only": "SU03,SU04",
+    "rc": 0,
+    "seconds": 13.0,
+    "summary": "test_rint_r_chain: 2/2 PASS (12.7 s)"
+   }
+  ]
+ },
+ "C1": {
+  "expected_any": [
+   "SU03"
+  ],
+  "expected_hit": [
+   "SU03"
+  ],
+  "failed": [
+   "SU03"
+  ],
+  "item": "PB-02",
+  "only": "SU03,SU04",
+  "rc": 1,
+  "seconds": 13.7,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 1/2 PASS (13.3 s)   FAILED: ['SU03']"
+ },
+ "C2": {
+  "expected_any": [
+   "SU04"
+  ],
+  "expected_hit": [
+   "SU04"
+  ],
+  "failed": [
+   "SU04"
+  ],
+  "item": "PB-02",
+  "only": "SU03,SU04",
+  "rc": 1,
+  "seconds": 14.4,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 1/2 PASS (14.1 s)   FAILED: ['SU04']"
+ },
+ "C3": {
+  "expected_any": [
+   "SU04"
+  ],
+  "expected_hit": [
+   "SU04"
+  ],
+  "failed": [
+   "SU04"
+  ],
+  "item": "PB-02",
+  "only": "SU03,SU04",
+  "rc": 1,
+  "seconds": 14.0,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 1/2 PASS (13.6 s)   FAILED: ['SU04']"
+ },
+ "D1": {
+  "expected_any": [
+   "FF01"
+  ],
+  "expected_hit": [
+   "FF01"
+  ],
+  "failed": [
+   "FF01"
+  ],
+  "item": "PB-03",
+  "only": "FF01",
+  "rc": 1,
+  "seconds": 76.5,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (76.0 s)   FAILED: ['FF01']"
+ },
+ "D2": {
+  "expected_any": [
+   "FF01"
+  ],
+  "expected_hit": [
+   "FF01"
+  ],
+  "failed": [
+   "FF01"
+  ],
+  "item": "PB-03",
+  "only": "FF01",
+  "rc": 1,
+  "seconds": 16.3,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (15.9 s)   FAILED: ['FF01']"
+ },
+ "D3": {
+  "expected_any": [
+   "FF01"
+  ],
+  "expected_hit": [
+   "FF01"
+  ],
+  "failed": [
+   "FF01"
+  ],
+  "item": "PB-03",
+  "only": "FF01",
+  "rc": 1,
+  "seconds": 16.3,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (15.9 s)   FAILED: ['FF01']"
+ },
+ "D4": {
+  "expected_any": [
+   "FF01"
+  ],
+  "expected_hit": [
+   "FF01"
+  ],
+  "failed": [
+   "FF01"
+  ],
+  "item": "PB-03",
+  "only": "FF01",
+  "rc": 1,
+  "seconds": 16.1,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (15.7 s)   FAILED: ['FF01']"
+ },
+ "E1": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.6,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.3 s)   FAILED: ['RC01']"
+ },
+ "E2": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.5,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.1 s)   FAILED: ['RC01']"
+ },
+ "E3": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.7,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.2 s)   FAILED: ['RC01']"
+ },
+ "E4": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.5,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.2 s)   FAILED: ['RC01']"
+ },
+ "E5": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.6,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.2 s)   FAILED: ['RC01']"
+ },
+ "E6": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.5,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.1 s)   FAILED: ['RC01']"
+ },
+ "E7": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.7,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.3 s)   FAILED: ['RC01']"
+ },
+ "E8": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.7,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.3 s)   FAILED: ['RC01']"
+ },
+ "E9": {
+  "expected_any": [
+   "RC01"
+  ],
+  "expected_hit": [
+   "RC01"
+  ],
+  "failed": [
+   "RC01"
+  ],
+  "item": "PB-04",
+  "only": "RC01",
+  "rc": 1,
+  "seconds": 1.5,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.1 s)   FAILED: ['RC01']"
+ },
+ "F1": {
+  "expected_any": [
+   "LG01"
+  ],
+  "expected_hit": [
+   "LG01"
+  ],
+  "failed": [
+   "LG01"
+  ],
+  "item": "PB-06",
+  "only": "LG01",
+  "rc": 1,
+  "seconds": 1.3,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (1.0 s)   FAILED: ['LG01']"
+ },
+ "F2": {
+  "expected_any": [
+   "LG01"
+  ],
+  "expected_hit": [
+   "LG01"
+  ],
+  "failed": [
+   "LG01"
+  ],
+  "item": "PB-06",
+  "only": "LG01",
+  "rc": 1,
+  "seconds": 1.2,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['LG01']"
+ },
+ "F3": {
+  "expected_any": [
+   "LG01"
+  ],
+  "expected_hit": [
+   "LG01"
+  ],
+  "failed": [
+   "LG01"
+  ],
+  "item": "PB-06",
+  "only": "LG01",
+  "rc": 1,
+  "seconds": 1.3,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (0.9 s)   FAILED: ['LG01']"
+ },
+ "F4": {
+  "expected_any": [
+   "LG01"
+  ],
+  "expected_hit": [
+   "LG01"
+  ],
+  "failed": [
+   "LG01"
+  ],
+  "item": "PB-06",
+  "only": "LG01",
+  "rc": 1,
+  "seconds": 1.3,
+  "status": "KILLED",
+  "summary": "test_rint_r_chain: 0/1 PASS (0.9 s)   FAILED: ['LG01']"
+ },
+ "_tree": {
+  "end_sha256": {
+   "scripts/rint_r_chain.py": "da4c2ef699335b1df27e287c8a3ce6780d4bf82fe35e82fcc720718d209f9f16",
+   "scripts/test_rint_r_chain.py": "f797fe7e83d41ca33ac7d9a3e7bc7a4a7c724843befbc11b30c6495692a08084"
+  },
+  "restored": true,
+  "start_sha256": {
+   "scripts/rint_r_chain.py": "da4c2ef699335b1df27e287c8a3ce6780d4bf82fe35e82fcc720718d209f9f16",
+   "scripts/test_rint_r_chain.py": "f797fe7e83d41ca33ac7d9a3e7bc7a4a7c724843befbc11b30c6495692a08084"
+  }
+ }
+}

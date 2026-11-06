@@ -1,0 +1,413 @@
+{
+ "chain_sha256": "3a0063ad1fbfb8cfbd9603aa8900a3072c8515ac0e12dc3e670bc8bb04fb6cb5",
+ "checks": {
+  "SU03": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "ladder_deep": [
+      [
+       "REGISTRATION_UNREADABLE",
+       false
+      ],
+      [
+       "INPUT_NOT_STAGE",
+       true
+      ]
+     ],
+     "ladder_dir": [
+      [
+       "REGISTRATION_UNREADABLE",
+       false
+      ],
+      [
+       "INPUT_NOT_STAGE",
+       true
+      ]
+     ],
+     "ladder_ff": [
+      [
+       "REGISTRATION_UNREADABLE",
+       false
+      ],
+      [
+       "INPUT_NOT_STAGE",
+       true
+      ]
+     ],
+     "ladder_fifo": [
+      [
+       "REGISTRATION_UNREADABLE",
+       false
+      ],
+      [
+       "INPUT_NOT_STAGE",
+       true
+      ]
+     ],
+     "ladder_list": [
+      [
+       "REGISTRATION_UNREADABLE",
+       false
+      ],
+      [
+       "INPUT_NOT_STAGE",
+       true
+      ]
+     ],
+     "ladder_null": [
+      [
+       "REGISTRATION_UNREADABLE",
+       false
+      ],
+      [
+       "INPUT_NOT_STAGE",
+       true
+      ]
+     ],
+     "ladder_string": [
+      [
+       "REGISTRATION_UNREADABLE",
+       false
+      ],
+      [
+       "INPUT_NOT_STAGE",
+       true
+      ]
+     ],
+     "ladder_true": [
+      [
+       "REGISTRATION_UNREADABLE",
+       false
+      ],
+      [
+       "INPUT_NOT_STAGE",
+       true
+      ]
+     ],
+     "ladder_truncated": [
+      [
+       "REGISTRATION_UNREADABLE",
+       false
+      ],
+      [
+       "INPUT_NOT_STAGE",
+       true
+      ]
+     ],
+     "ladder_zero": [
+      [
+       "REGISTRATION_UNREADABLE",
+       false
+      ],
+      [
+       "INPUT_NOT_STAGE",
+       true
+      ]
+     ],
+     "predict_list": [
+      [
+       "INPUT_NOT_STAGE",
+       false
+      ],
+      [
+       "INPUT_NOT_STAGE",
+       true
+      ]
+     ],
+     "real_verdict": [
+      [
+       0,
+       null
+      ],
+      [
+       3,
+       "INPUT_NOT_STAGE"
+      ]
+     ]
+    },
+    "n": 15
+   }
+  },
+  "SU04": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "deep": [
+      [
+       "list",
+       0,
+       null
+      ],
+      [
+       "Stop",
+       "UNIT_PROVENANCE_MISMATCH"
+      ]
+     ],
+     "dir": [
+      [
+       "list",
+       0,
+       null
+      ],
+      [
+       "Stop",
+       "UNIT_PROVENANCE_MISMATCH"
+      ]
+     ],
+     "empty_obj": [
+      [
+       "list",
+       0,
+       null
+      ],
+      [
+       "Stop",
+       "UNIT_PROVENANCE_MISMATCH"
+      ]
+     ],
+     "ff": [
+      [
+       "list",
+       0,
+       null
+      ],
+      [
+       "Stop",
+       "UNIT_PROVENANCE_MISMATCH"
+      ]
+     ],
+     "fifo": [
+      [
+       "list",
+       0,
+       null
+      ],
+      [
+       "Stop",
+       "UNIT_PROVENANCE_MISMATCH"
+      ]
+     ],
+     "list": [
+      [
+       "list",
+       0,
+       null
+      ],
+      [
+       "Stop",
+       "UNIT_PROVENANCE_MISMATCH"
+      ]
+     ],
+     "list12": [
+      [
+       "list",
+       0,
+       null
+      ],
+      [
+       "Stop",
+       "UNIT_PROVENANCE_MISMATCH"
+      ]
+     ],
+     "no_status": [
+      [
+       "list",
+       0,
+       null
+      ],
+      [
+       "Stop",
+       "UNIT_PROVENANCE_MISMATCH"
+      ]
+     ],
+     "null": [
+      [
+       "list",
+       0,
+       null
+      ],
+      [
+       "Stop",
+       "UNIT_PROVENANCE_MISMATCH"
+      ]
+     ],
+     "real_merge": [
+      [
+       0,
+       "PREDICTED",
+       null,
+       [],
+       {
+        "unit:P0_c0_R_j0": {
+         "adopted": 4,
+         "attempt": 4,
+         "chain": [
+          4
+         ],
+         "folder": "units/unit-P0_c0_R_j0/attempt_4",
+         "machine": "gabia",
+         "summary_sha256": "ccad35394a199fc776541caec37c3c8f898dbc3035af452c19a106ae5f028e4a"
+        },
+        "unit:P0_c0_R_j_hi": {
+         "adopted": 5,
+         "attempt": 5,
+         "chain": [
+          5
+         ],
+         "folder": "units/unit-P0_c0_R_j_hi/attempt_5",
+         "machine": "m1",
+         "summary_sha256": "2b102856b1522712910078ca0b04f9fd8c3442ec2ea83a54a7ee7ab7de8289c8"
+        },
+        "unit:P0_c0_R_j_lo": {
+         "adopted": 3,
+         "attempt": 3,
+         "chain": [
+          3
+         ],
+         "folder": "units/unit-P0_c0_R_j_lo/attempt_3",
+         "machine": "kgy",
+         "summary_sha256": "b36ae68bfcfa5ed817191de939a1d60905998afda7a5514bee967db08ab03702"
+        },
+        "unit:P0_c1_R_j0": {
+         "adopted": 7,
+         "attempt": 7,
+         "chain": [
+          7
+         ],
+         "folder": "units/unit-P0_c1_R_j0/attempt_7",
+         "machine": "gabia",
+         "summary_sha256": "8afcd72de2df7d9c7bc5dba666e40b46a2892e0c234ddafe09f95f807c0ac32f"
+        },
+        "unit:P0_c1_R_j_hi": {
+         "adopted": 8,
+         "attempt": 8,
+         "chain": [
+          8
+         ],
+         "folder": "units/unit-P0_c1_R_j_hi/attempt_8",
+         "machine": "m1",
+         "summary_sha256": "5ab3e73ac57ff20d313bac428147a99980b2912bee56d1ba0fefb1f99b012b35"
+        },
+        "unit:P0_c1_R_j_lo": {
+         "adopted": 6,
+         "attempt": 6,
+         "chain": [
+          6
+         ],
+         "folder": "units/unit-P0_c1_R_j_lo/attempt_6",
+         "machine": "kgy",
+         "summary_sha256": "73e10067fd15b7e267b99150164043c4a07e95542255010e5d95ec3b3b82f1e9"
+        },
+        "unit:P1_c0_R_j0": {
+         "adopted": 10,
+         "attempt": 10,
+         "chain": [
+          10
+         ],
+         "folder": "units/unit-P1_c0_R_j0/attempt_10",
+         "machine": "gabia",
+         "summary_sha256": "6bd9161d5b90ec89a2dd5b5c4030f4e849896c6f8293bd7d5a76bb60464d46d8"
+        },
+        "unit:P1_c0_R_j_hi": {
+         "adopted": 11,
+         "attempt": 11,
+         "chain": [
+          11
+         ],
+         "folder": "units/unit-P1_c0_R_j_hi/attempt_11",
+         "machine": "m1",
+         "summary_sha256": "3d2b12c25d7277b94a492395e83e5d171eb86505676eacecce2138509602a211"
+        },
+        "unit:P1_c0_R_j_lo": {
+         "adopted": 9,
+         "attempt": 9,
+         "chain": [
+          9
+         ],
+         "folder": "units/unit-P1_c0_R_j_lo/attempt_9",
+         "machine": "kgy",
+         "summary_sha256": "9df7123140dd24836a5a2d0ec83762ce5c8418f4e395b78de9b7a4b4fe234de8"
+        },
+        "unit:P1_c1_R_j0": {
+         "adopted": 13,
+         "attempt": 13,
+         "chain": [
+          13
+         ],
+         "folder": "units/unit-P1_c1_R_j0/attempt_13",
+         "machine": "gabia",
+         "summary_sha256": "c51ed08ee7815b9ac172576e6fe62e578d127d159d5fa929836c502d1ba3a7df"
+        },
+        "unit:P1_c1_R_j_hi": {
+         "adopted": 14,
+         "attempt": 14,
+         "chain": [
+          14
+         ],
+         "folder": "units/unit-P1_c1_R_j_hi/attempt_14",
+         "machine": "m1",
+         "summary_sha256": "93f63a075168de0954bee102f888d49ea666727ff45ad8e2efc9dcd730d3c251"
+        },
+        "unit:P1_c1_R_j_lo": {
+         "adopted": 12,
+         "attempt": 12,
+         "chain": [
+          12
+         ],
+         "folder": "units/unit-P1_c1_R_j_lo/attempt_12",
+         "machine": "kgy",
+         "summary_sha256": "d409f38e5aa7857957ce85310251db5294b901f81de2994d42ec94f3c091fd27"
+        }
+       }
+      ],
+      [
+       3,
+       "STOPPED",
+       "UNIT_PROVENANCE_MISMATCH",
+       [],
+       {}
+      ]
+     ],
+     "string": [
+      [
+       "list",
+       0,
+       null
+      ],
+      [
+       "Stop",
+       "UNIT_PROVENANCE_MISMATCH"
+      ]
+     ],
+     "truncated": [
+      [
+       "list",
+       0,
+       null
+      ],
+      [
+       "Stop",
+       "UNIT_PROVENANCE_MISMATCH"
+      ]
+     ],
+     "zero": [
+      [
+       "list",
+       0,
+       null
+      ],
+      [
+       "Stop",
+       "UNIT_PROVENANCE_MISMATCH"
+      ]
+     ]
+    },
+    "n": 15
+   }
+  }
+ },
+ "seconds": 16.2,
+ "test_sha256": "65c62bd9043f526155b2983d427679dcfe9f92c05af8e410248059ddb2ccad93",
+ "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a64e0f68216ff3304"
+}

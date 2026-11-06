@@ -1,0 +1,220 @@
+{
+ "is_new": false,
+ "module": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/old_mod/rint_r_chain.py",
+ "module_sha256": "eff2b4b47f94a4b607c92be27b500f81de6d8b4e0f27be07606e5e722d169428",
+ "rows": {
+  "C1_bychain_weird_mem": {
+   "cause": "parent_dead",
+   "readable": false,
+   "result_cause": "parent_dead",
+   "resume_ok": false
+  },
+  "C2_recover_weird_mem": {
+   "cause": "resource",
+   "readable": true,
+   "result_cause": "resource",
+   "resume_ok": true
+  },
+  "C3_bychain_weird_ill": {
+   "cause": "parent_dead",
+   "readable": false,
+   "result_cause": "parent_dead",
+   "resume_ok": false
+  },
+  "C4_recover_weird_ill": {
+   "cause": "runner_rc",
+   "readable": true,
+   "result_cause": "runner_rc",
+   "resume_ok": false
+  },
+  "G1_gu_rc1_gc_none": {
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "status": "stopped"
+  },
+  "G2_gu_rcnull_gc_none": {
+   "cause": "group_unconfirmed",
+   "resume_ok": true,
+   "status": "stopped"
+  },
+  "G3_gu_rcnull_gc_timeout": {
+   "cause": "group_unconfirmed",
+   "resume_ok": true,
+   "status": "stopped"
+  },
+  "G4_gu_rcfalse_gc_none": {
+   "cause": "runner_rc",
+   "resume_ok": false,
+   "status": "stopped"
+  },
+  "L_run_log_text": {
+   "''": [
+    ""
+   ],
+   "'-x'": [
+    ""
+   ],
+   "'.hidden'": [
+    ""
+   ],
+   "'L01_floor\\n'": [
+    ""
+   ],
+   "'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": [
+    ""
+   ],
+   "'absent'": [
+    ""
+   ],
+   "'dangling'": [
+    ""
+   ],
+   "'devnull'": [
+    ""
+   ],
+   "'devzero'": [
+    ""
+   ],
+   "'dir'": [
+    ""
+   ],
+   "'empty'": [
+    ""
+   ],
+   "'linkout'": [
+    "outside"
+   ],
+   "'loop1'": [
+    ""
+   ],
+   "'reg'": [
+    "hello"
+   ],
+   "'sock'": [
+    ""
+   ],
+   "'x/../reg'": [
+    ""
+   ],
+   "'١'": [
+    ""
+   ],
+   "5": [
+    ""
+   ],
+   "None": [
+    ""
+   ]
+  },
+  "R1_bychain_conf_rcnull": {
+   "cause": "runner_rc",
+   "readable": true,
+   "result_cause": "runner_rc",
+   "resume_ok": false
+  },
+  "R2_recover_chainend_rcnull": {
+   "cause": "parent_dead",
+   "readable": true,
+   "result_cause": "parent_dead",
+   "resume_ok": true
+  },
+  "R3_recover_chainend_rc1": {
+   "cause": "runner_rc",
+   "readable": true,
+   "result_cause": "runner_rc",
+   "resume_ok": false
+  },
+  "R4_recover_chainend_rc0": {
+   "cause": "parent_dead",
+   "readable": true,
+   "result_cause": "parent_dead",
+   "resume_ok": true
+  },
+  "R5_bychain_conf_rc0": {
+   "cause": "parent_dead",
+   "readable": true,
+   "result_cause": "parent_dead",
+   "resume_ok": true
+  },
+  "R6_recover_chainend_rcfalse": {
+   "cause": "runner_rc",
+   "readable": true,
+   "result_cause": "runner_rc",
+   "resume_ok": false
+  },
+  "R7_recover_chainend_rc_str0": {
+   "cause": "runner_rc",
+   "readable": true,
+   "result_cause": "runner_rc",
+   "resume_ok": false
+  },
+  "R8_recover_no_chainend": {
+   "cause": "parent_dead",
+   "readable": true,
+   "result_cause": "parent_dead",
+   "resume_ok": true
+  },
+  "SU_read": {
+   "bom": {
+    "read_summary_value": "None"
+   },
+   "dupkey": {
+    "read_summary_value": "{'status': 'CALIBRATED'}"
+   },
+   "false": {
+    "read_summary_value": "False"
+   },
+   "list": {
+    "read_summary_value": "[]"
+   },
+   "nan": {
+    "read_summary_value": "{'status': 'STOPPED', 'x': nan}"
+   },
+   "null": {
+    "read_summary_value": "None"
+   },
+   "obj_nostatus": {
+    "read_summary_value": "{}"
+   },
+   "obj_status_empty": {
+    "read_summary_value": "{'status': ''}"
+   },
+   "obj_status_int": {
+    "read_summary_value": "{'status': 1}"
+   },
+   "str": {
+    "read_summary_value": "'x'"
+   },
+   "trunc": {
+    "read_summary_value": "None"
+   },
+   "zero": {
+    "read_summary_value": "0"
+   }
+  },
+  "T1_tl_norec_nolaunch_nolog": {
+   "cause": "timeout",
+   "resume_ok": true,
+   "status": "stopped"
+  },
+  "T2_tl_rec_nolog": {
+   "cause": "timeout",
+   "resume_ok": true,
+   "status": "stopped"
+  },
+  "T3_tl_dangling_launch": {
+   "cause": "timeout",
+   "resume_ok": true
+  },
+  "T4_tl_end_without_launch": {
+   "cause": "timeout",
+   "resume_ok": true
+  },
+  "V0_predict_only": "Stop REGISTRATION_UNREADABLE: /tmp/pa10_units_y7afsnc6/no_such_reg.md (FileNotFoundError)",
+  "V1_extra_ladder_list": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_y7afsnc6/v/V1: 단계 요약 2 개 (1 이어야)",
+  "V2_extra_ladder_zero": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_y7afsnc6/v/V2: 단계 요약 2 개 (1 이어야)",
+  "V3_extra_ladder_trunc": "Stop REGISTRATION_UNREADABLE: /tmp/pa10_units_y7afsnc6/no_such_reg.md (FileNotFoundError)",
+  "V4_extra_ladder_true": "Stop INPUT_NOT_STAGE: /tmp/pa10_units_y7afsnc6/v/V4: 단계 요약 2 개 (1 이어야)"
+ },
+ "td": "/tmp/pa10_units_y7afsnc6"
+}

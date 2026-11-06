@@ -1,0 +1,15 @@
+# 고치기 전 (이 고침의 바탕 = claude/stoic-knuth-NObVQ 의 회차 ② 수정 계획 비준 기록 커밋 · git show 로 셈)
+eff2b4b47f94a4b607c92be27b500f81de6d8b4e0f27be07606e5e722d169428  scripts/rint_r_chain.py
+97f21ef973407d25afeb7cb2934f0c5e2a41b2b6caaa0e78297faf2894811c71  scripts/test_rint_r_chain.py
+# 항목 커밋마다 scripts/rint_r_chain.py (logs/*_rows*.json 의 chain_sha256 칸 = 그 시험이 돈 판 · before = 앞 항목 판)
+97adad9c0f4317d4145a907d99f2e9e1654ac749ecb51e936d2e63474fc18be3  A1 뒤
+e6d66bf11eb6651825c8253cd0c1dfc144a6427ac0522ac9267a6d4763c01fb7  A1b 뒤
+ab908d513ab054b1e5f99e8c07397969d9129df50426c517213425f1072fed3e  A2 뒤
+d3775ca843654682f3c9a18327a15ccf682a309c071bac6fa542ef91556e46cb  A2b 뒤 (= 끝)
+# 시험한 코드 (고친 판 · 끝 = A1 · A1b · A2 · A2b 뒤 · 문서 정정 A3 · A4 · A5 는 코드 무변경)
+d3775ca843654682f3c9a18327a15ccf682a309c071bac6fa542ef91556e46cb  scripts/rint_r_chain.py
+583b7c3d0319c8ac99535c2681b549b39a190d70c108184b753b0169f8801222  scripts/test_rint_r_chain.py
+36049f80c39cd8dc026d0c11447d2c3d18b7ac50159f6dc937471303d8de36fb  scripts/rint_first_result.py
+5460dad164839b115eea07f5df21087af1ff214c221e4838d940f7de9f9ca221  scripts/carbon_junction.py
+# 낱말만 고친 산식 스크립트 (출력 바이트 = 고치기 전 = q9_time_budget.json · logs/q9_time_budget_before.out · after.out)
+b9e4a5245348da3c42eecfbdc3e963aa39c267c520b92f1153353297860572b1  docs/reviews/rint2_rr_fix_evidence_20261023/q9_time_budget.py

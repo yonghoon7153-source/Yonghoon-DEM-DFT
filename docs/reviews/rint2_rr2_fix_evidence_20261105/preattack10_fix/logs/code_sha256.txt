@@ -1,0 +1,26 @@
+# 사전 공격 10 회차 고침 (11-06) — 시험한 코드 sha256 (바탕 = f5b00a838 · 항목마다 고친 뒤 · logs/*_rows.json 의 chain_sha256 · test_sha256 = 그 시험이 돈 판)
+# 바탕 (f5b00a838 = 사전 공격 10 회차 대상)
+d3775ca843654682f3c9a18327a15ccf682a309c071bac6fa542ef91556e46cb  scripts/rint_r_chain.py
+583b7c3d0319c8ac99535c2681b549b39a190d70c108184b753b0169f8801222  scripts/test_rint_r_chain.py
+41762029110b9951016ef8d07bb5244ea5ff93c154084cce0445e872ddfdf2a1  scripts/test_rint_r_chain_e2e.py
+# PB-01 — 고치기 전 시험 (before_PB01*) = 바탕 사슬 d3775ca8… + 시험 e8ea9a35… · 고친 뒤
+3a0063ad1fbfb8cfbd9603aa8900a3072c8515ac0e12dc3e670bc8bb04fb6cb5  scripts/rint_r_chain.py  (PB-01 뒤)
+e8ea9a354ab0046298e81e55f41926776088a1831b5d4e6984286d3fbfddd42c  scripts/test_rint_r_chain.py  (PB-01 뒤)
+# PB-02 — 고치기 전 시험 (before_PB02*) = 사슬 3a0063ad… (PB-01 뒤) + 시험 65c62bd9… · 고친 뒤
+6065e916eaf8b3f34f0e0d5ddd73b788a83c7292a5aa7835d8939f4edce1eaaf  scripts/rint_r_chain.py  (PB-02 뒤)
+65c62bd9043f526155b2983d427679dcfe9f92c05af8e410248059ddb2ccad93  scripts/test_rint_r_chain.py  (PB-02 뒤)
+# PB-03 — 고치기 전 시험 (before_PB03*) = 사슬 6065e916… (PB-02 뒤) + 시험 35acdd45… · 고친 뒤
+c11f6bf44fdefc74abba3ae8df770dcfe595d82271f5635051d8e7f620ffb99f  scripts/rint_r_chain.py  (PB-03 뒤)
+35acdd45905e6079599326dfc15b124ea8bd5bafabf5ba32ac816d3133fe9d98  scripts/test_rint_r_chain.py  (PB-03 뒤)
+# PB-04 (시험 가드 · 사슬 코드 무변경 c11f6bf4…) — 고치기 전 시험 (before_PB04.log) = 나쁜 꼴 34 · 좋은 꼴 11 · 옛 스캐너 판 e31def83… (그 판을 지금 판에서
+#   거꾸로 다시 만들어 같은 RC01 결과 = 놓친 꼴 [12–27, 29–33] 를 다시 냄 · 다시 만든 스크립트 = 대화 scratch) · 고친 뒤
+e31def8359f043021ac388cb5dd2bdd673cd1015f1a46a1655a542f597459389  scripts/test_rint_r_chain.py  (PB-04 고치기 전 · 옛 스캐너)
+d484d8f6b47913e473ce1cedb88d9d0d5604ea4d5833fe489533d8198180047e  scripts/test_rint_r_chain.py  (PB-04 뒤)
+# PB-06 — 고치기 전 시험 (before_PB06.log · before_PB06_rows.json = 리포 밖 사본 · 사슬 c11f6bf4… + 시험 d3040635…) · 고친 뒤
+b24e597630a906e548c0150c24ccd9082a79e63d8271c3b4ef4ec370599f8efc  scripts/rint_r_chain.py  (PB-06 뒤)
+d30406356b1f524c4e67ec06b10d57e17c23011bd0e67a7485da30d672387dc7  scripts/test_rint_r_chain.py  (PB-06 뒤)
+# PB-05 (문구 · 주석 · 독스트링 · 시험 제목만 — 동작 무변경 · CE PE03u RC01 4/4) 뒤 = 끝 (시험한 코드)
+da4c2ef699335b1df27e287c8a3ce6780d4bf82fe35e82fcc720718d209f9f16  scripts/rint_r_chain.py  (PB-05 뒤 = 끝)
+f797fe7e83d41ca33ac7d9a3e7bc7a4a7c724843befbc11b30c6495692a08084  scripts/test_rint_r_chain.py  (PB-05 뒤 = 끝)
+# 끝 회귀 (final_chain_full_py311 · final_e2e_py311 · check_kgy_py38 · 변이 · Codex 탐침 · 리뷰어 탐침) = 위 끝 판 둘 + 끝-끝 시험 (무변경)
+41762029110b9951016ef8d07bb5244ea5ff93c154084cce0445e872ddfdf2a1  scripts/test_rint_r_chain_e2e.py  (무변경)

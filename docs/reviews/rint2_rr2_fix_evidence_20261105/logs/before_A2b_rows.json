@@ -1,0 +1,362 @@
+{
+ "chain_sha256": "ab908d513ab054b1e5f99e8c07397969d9129df50426c517213425f1072fed3e",
+ "checks": {
+  "SU01": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "deep": [
+      "EXC RecursionError",
+      {
+       "cause": "summary_unreadable",
+       "resume_ok": false,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      }
+     ],
+     "empty": [
+      {
+       "cause": "parent_dead",
+       "resume_ok": true,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      },
+      {
+       "cause": "summary_unreadable",
+       "resume_ok": false,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      }
+     ],
+     "empty_list": [
+      {
+       "cause": "parent_dead",
+       "resume_ok": true,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      },
+      {
+       "cause": "summary_unreadable",
+       "resume_ok": false,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      }
+     ],
+     "empty_object": [
+      {
+       "cause": "parent_dead",
+       "resume_ok": true,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      },
+      {
+       "cause": "summary_unreadable",
+       "resume_ok": false,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      }
+     ],
+     "ff_prefix": [
+      {
+       "cause": "parent_dead",
+       "resume_ok": true,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      },
+      {
+       "cause": "summary_unreadable",
+       "resume_ok": false,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      }
+     ],
+     "fifo": [
+      {
+       "timeout": true
+      },
+      {
+       "cause": "summary_unreadable",
+       "resume_ok": false,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      }
+     ],
+     "folder": [
+      {
+       "cause": "parent_dead",
+       "resume_ok": true,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      },
+      {
+       "cause": "summary_unreadable",
+       "resume_ok": false,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      }
+     ],
+     "list": [
+      "EXC AttributeError",
+      {
+       "cause": "summary_unreadable",
+       "resume_ok": false,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      }
+     ],
+     "no_status": [
+      {
+       "cause": "gate",
+       "resume_ok": false,
+       "side": "post",
+       "status": "stopped",
+       "stop": {
+        "code": null,
+        "reason": null,
+        "run": null
+       }
+      },
+      {
+       "cause": "summary_unreadable",
+       "resume_ok": false,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      }
+     ],
+     "real/list1": [
+      {
+       "ledger_same": null,
+       "not_allowed": null,
+       "recover_rc": null,
+       "result": null,
+       "resume_rc": null
+      },
+      {
+       "ledger_same": true,
+       "not_allowed": true,
+       "recover_rc": 0,
+       "result": {
+        "by": "recover",
+        "cause": "summary_unreadable",
+        "resume_ok": false,
+        "side": "post",
+        "status": "interrupted"
+       },
+       "resume_rc": 3
+      }
+     ],
+     "real/truncated": [
+      {
+       "ledger_same": null,
+       "not_allowed": false,
+       "recover_rc": 0,
+       "result": {
+        "by": "recover",
+        "cause": "parent_dead",
+        "resume_ok": true,
+        "side": "post",
+        "status": "interrupted"
+       },
+       "resume_rc": 0
+      },
+      {
+       "ledger_same": true,
+       "not_allowed": true,
+       "recover_rc": 0,
+       "result": {
+        "by": "recover",
+        "cause": "summary_unreadable",
+        "resume_ok": false,
+        "side": "post",
+        "status": "interrupted"
+       },
+       "resume_rc": 3
+      }
+     ],
+     "second_name": [
+      {
+       "cause": "parent_dead",
+       "resume_ok": true,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      },
+      {
+       "cause": "summary_unreadable",
+       "resume_ok": false,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      }
+     ],
+     "string": [
+      "EXC AttributeError",
+      {
+       "cause": "summary_unreadable",
+       "resume_ok": false,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      }
+     ],
+     "truncated": [
+      {
+       "cause": "parent_dead",
+       "resume_ok": true,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      },
+      {
+       "cause": "summary_unreadable",
+       "resume_ok": false,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      }
+     ],
+     "valid_plus_bad": [
+      {
+       "cause": "timeout",
+       "resume_ok": true,
+       "side": "post",
+       "status": "stopped",
+       "stop": {
+        "code": "TIME_LIMIT",
+        "reason": null,
+        "run": "L02_ceiling"
+       }
+      },
+      {
+       "cause": "summary_unreadable",
+       "resume_ok": false,
+       "side": "post",
+       "status": "interrupted",
+       "stop": null
+      }
+     ]
+    },
+    "n": 18
+   }
+  },
+  "SU02": {
+   "pass": false,
+   "why": {
+    "got": {
+     "a_ladder": [
+      "NOT_REGISTERED",
+      false,
+      false,
+      true,
+      []
+     ],
+     "a_merge": [
+      3,
+      "ATTEMPT_LEDGER_MISMATCH",
+      false,
+      false,
+      true,
+      []
+     ],
+     "a_predict": [
+      "NOT_REGISTERED",
+      false,
+      false,
+      true,
+      []
+     ],
+     "b": {
+      "ladder_P0": [
+       true,
+       false
+      ],
+      "predict": [
+       true,
+       false
+      ]
+     },
+     "c": [
+      false,
+      true,
+      false
+     ],
+     "d": [
+      [
+       5425,
+       "out / 'ladder_summary.json'"
+      ],
+      [
+       5641,
+       "out / sname"
+      ],
+      [
+       6131,
+       "out / 'predict_summary.json'"
+      ],
+      [
+       6125,
+       "out / MERGE_SUMMARY"
+      ]
+     ]
+    },
+    "want": {
+     "a_ladder": [
+      "NOT_REGISTERED",
+      true,
+      true,
+      true,
+      []
+     ],
+     "a_merge": [
+      3,
+      "ATTEMPT_LEDGER_MISMATCH",
+      true,
+      true,
+      true,
+      []
+     ],
+     "a_predict": [
+      "NOT_REGISTERED",
+      true,
+      true,
+      true,
+      []
+     ],
+     "b": {
+      "ladder_P0": [
+       true,
+       true
+      ],
+      "predict": [
+       true,
+       true
+      ]
+     },
+     "c": [
+      true,
+      false,
+      true
+     ],
+     "d": []
+    }
+   }
+  }
+ },
+ "seconds": 21.0,
+ "test_sha256": "583b7c3d0319c8ac99535c2681b549b39a190d70c108184b753b0169f8801222",
+ "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a57dad061fd8750b0"
+}
