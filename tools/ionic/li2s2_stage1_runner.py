@@ -103,7 +103,7 @@ from __future__ import annotations
 import argparse
 import copy, datetime, hashlib, importlib.util, json, os, pathlib, re, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
 
-EXPECTED_DRIVER_SHA16 = "89092d08b2aa6425"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+EXPECTED_DRIVER_SHA16 = "ec3da0438b479052"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
 EXPECTED_VALUES_SHA16 = "086de59c484f9c32"     # 카드 기계_판독_값 (mq.values_sha16) — ⭐ DO 전 리뷰 P2-12: 카드 값 (상한 포함) 을 바꾸면 이 줄도
                                                #   같이 바꾸고 다시 리뷰한다 (카드 파일만 고쳐서는 상한 멈춤을 넘기지 못한다)
 STOP_KEYS = ("at", "code", "reason", "terminal", "stop_id", "run_id", "sys", "seed", "cleanup", "rc", "verdict", "melt", "summary",
@@ -3792,12 +3792,58 @@ def _selftest():
     row_d2b = [x_ for x_ in J(rr_d2 / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
     sm_d2 = summ(rr_d2)
     chk(rc_d2 == RC["invalid"] and len(L_d2) == 3 and row_d2.get("verdict") == "invalid"
-        and (pv_d2.get("files_sha256") or {}).get(real.SEED_GATE_RAW) == "nonfile:dir" and (pv_d2.get("judge_nature") or {}).get("errors")
+        and (pv_d2.get("files_sha256") or {}).get(real.SEED_GATE_RAW) == "nonfile:dir" and (pv_d2.get("judge_nature") or {}).get("input_mismatch")
         and rc_d2b == RC["invalid"] and not L_d2b and row_d2b.get("verdict") == "invalid" and not row_d2b.get("verdict_superseded")
         and sm_d2["track"] != "stage1_pass",
         "⛔음성 회신 DR P1-2 (Codex 재현): raw 자리의 디렉터리 때문에 끝 판정이 오류 (지문 nonfile:dir) 였으면 디렉터리를 치우고 정상 raw 가 생겨도 '없음 → 생성' "
         f"으로 자동 대체하지 않는다 (발사 0) ({rc_d2} · 발사 {len(L_d2)} · {(pv_d2.get('files_sha256') or {}).get(real.SEED_GATE_RAW)} · "
         f"{rc_d2b} · 발사 {len(L_d2b)} · {row_d2b.get('verdict')} · {sm_d2['track']})")
+    # ⭐ DS 전 1차 리뷰 P2 — MD 는 끝났고 FIRE 만 남았을 때 들여다본 incomplete (md_done 있음) 는 그 뒤 MD 출력 (thermo) 이 바뀌면 면제가 아니다 —
+    #    C2: 들여다봄 → thermo 값 하나 고침 → 끝 판정 일시 오류 (장부 기준) → 확인 → 발사 0 · 대조 C1: 고침 없음 → 회복 (재판정 pass 가 대체 · 7 실행)
+    _sv0_c, _sg0_c = real.stage1_verdict, real.seed_gate
+    def _fire_pending_case(tamper):
+        st_c = {"armed": True}
+        def _sv_c(rd_, **k_):
+            rp_ = pathlib.Path(rd_)
+            if st_c["armed"] and rp_.name == "seed12" and rp_.parent.name == "A" and k_.get("reason") == "담금질 끝":
+                st_c["armed"] = False
+                for f_ in ("final.xyz", "result.json"):
+                    (rp_ / f_).rename(rp_ / (f_ + ".hold"))
+                st_c["peek"] = _sv0_c(rp_, values=k_.get("values"), log=lambda *m: None, reason="selftest: MD 끝 · FIRE 대기 중 사람이 들여다봄")
+                for f_ in ("final.xyz", "result.json"):
+                    (rp_ / (f_ + ".hold")).rename(rp_ / f_)
+                if tamper:
+                    ln_ = (rp_ / "thermo.csv").read_text(encoding="utf-8").split("\n")
+                    ln_[1] = ln_[1].replace("-500.0000", "-500.0001")
+                    (rp_ / "thermo.csv").write_text("\n".join(ln_), encoding="utf-8")
+                n_c = {"left": 1}
+                def _sg_once_c(run_, *a_, **kk_):
+                    if n_c["left"]:
+                        n_c["left"] -= 1
+                        raise OSError("selftest: 끝 판정의 일시 I/O 오류")
+                    return _sg0_c(run_, *a_, **kk_)
+                real.seed_gate = _sg_once_c
+                try:
+                    return _sv0_c(rd_, **k_)
+                finally:
+                    real.seed_gate = _sg0_c
+            return _sv0_c(rd_, **k_)
+        real.stage1_verdict = _sv_c
+        try:
+            rc1_, L1_, rr_ = go(wt)
+        finally:
+            real.stage1_verdict = _sv0_c
+        pk_ = st_c.get("peek") or {}
+        rc2_, L2_, _ = go(wt, rr=rr_, ack=J(rr_ / "STOP.json")["stop_id"])
+        row_ = [x_ for x_ in J(rr_ / "stage1_ledger.json")["runs"] if (x_["system"], x_["seed"]) == ("A", 12)][-1]
+        return (pk_.get("status"), bool((pk_.get("provenance") or {}).get("md_done")), rc1_, len(L1_), rc2_, len(L2_), row_.get("verdict"),
+                summ(rr_)["track"])
+    res_c1, res_c2 = _fire_pending_case(False), _fire_pending_case(True)
+    chk(res_c1 == ("incomplete", True, RC["invalid"], 3, RC["pass"], 7, "pass", "stage1_pass")
+        and res_c2[:4] == ("incomplete", True, RC["invalid"], 3) and res_c2[4] == RC["invalid"] and res_c2[5] == 0 and res_c2[6] == "invalid"
+        and res_c2[7] != "stage1_pass",
+        "⛔음성 DS 전 1차 리뷰 P2: MD 끝 · FIRE 대기 중 들여다본 incomplete (md_done 있음) 뒤 thermo 를 고치고 끝 판정이 일시 오류면 — 확인 뒤 자동 대체하지 않는다 "
+        f"(발사 0) · 대조: 고침 없으면 회복 (C1 {res_c1} · C2 {res_c2})")
     # ⭐ DR 전 5차 리뷰 P2 — 첫 시드 (A11) 가 녹음 창이 찬 채 실행 중 상한으로 멈춤 → 상한 판정 fail + 계 닫힘 → (문서대로) 상한을 올린 카드로 · 폴더를 옆으로
     #    옮기고 확인 → 상한 칸은 판정 규칙이 아니라서 그 판정 기록은 지금 규칙의 것 → 장부에 닫힘 · 닫는 STOP melt (상한을 올린 것이 진짜 닫힘을 지우지 않는다)
     rc_cp, L_cp, rr_cp = go(mk_wt(card=mk_card(stage1_cap_gpu_h=3.0)), seed_worst_h=1.0, scen={("A", 11): {"melt": "fail"}})
