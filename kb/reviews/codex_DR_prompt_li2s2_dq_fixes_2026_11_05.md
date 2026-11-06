@@ -1,13 +1,13 @@
 ---
 title: "DR 프롬프트 — li2s-2 DQ 고침 + DR 전 독립 리뷰 고침 (879cbc00): 판정이 읽는 것 전부를 지문에 · 앞 판정의 성격 (예외 · 입력 불일치) 으로만 자동 대체 · 정본 없는 미해결 기록 (현재 · 옮긴 폴더) · STOP 공통 검사 · 다른 판정 규칙의 기록 — 첫 담금질 GO 여부"
 date: 2026-11-05
-updated: 2026-11-05
+updated: 2026-11-06
 tags: [review, li2s, glass, md, uma, density, quench, runner, codex, prompt, letter]
 letter: DR
 track: li2s
 channel: codex
 kind: prompt
-status: 발송 전 2026-11-05 · 기준 커밋 879cbc00
+status: 발송 완료 · 회신 수령 2026-11-06 NO-GO (`codex_DR_reply_li2s2_dq_fixes_2026_11_05.md` · P1 2 · P2 1) → 고침 · DS 전 독립 리뷰 3 차 → DS (`codex_DS_prompt_li2s2_dr_fixes_2026_11_06.md`) · 기준 커밋 879cbc00
 confidence: medium
 verificationStatus: unverified
 explored: false
