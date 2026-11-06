@@ -1,0 +1,36 @@
+# MXD2R-R01 — 문서·증거 한정 교차검토
+
+대상 `69b6bec7ac20343dd884f8d5fa63e8bf45e7df97`, 2026-11-06. 이 메모는 주 검토의 문서·바이트 대조 부분이다. 생성기·전체 회귀·원격 호스트·연구 계산은 실행하지 않았다. 작성 측 시험 로그의 진위를 현장 실행으로 인증하거나 자체시험 통과를 외부 종결로 전용하지 않는다.
+
+## 결과
+
+이 부분에서 새 P1/P2/P3 없음. REQUEST Q4의 한정은 문서와 동봉 바이트가 일치한다. 실제 seed 거부/양성 보존의 실행 판정은 주 검토의 독립 탐침 결과에 따른다.
+
+| 검토 | 독립 관찰 | 근거 |
+|---|---|---|
+| 생성기 보존 | 후보 `scripts/make_mixer_deck.py`, 동봉 `red_sources/make_mixer_deck.py`, 이전 외부 검토의 `f5b00a838` 보존 소스가 바이트 동일. SHA256 `661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27` | README 19행; 실제 파일 read_bytes 대조 |
+| 소비자 수정 범위 | readback 후보 SHA `791f72e96bd72d1ad118d347e5dbfdc5fd67e8b30e2ee602c6fbf7109f37091a`; 수정전은 `bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f`. diff/smoke는 후보·red·이전 보존본이 같음 | `CHANGE.patch`; `scripts/mixer_deck_readback.py:1048–1059,1111` |
+| red/green 입력 신원 | `max_layered`, `max_uniform`, `nearmax_layered`별 `old.in/new.in/old.json/new.json`이 red↔green 12/12 바이트 동일. 서로 다른 입력으로 실패/통과를 바꿔 보인 흔적 없음 | `evidence/red_cli/`, `green_cli/`; README 30–31행 |
+| 옛 잘못된 양성 기대 | `positive_extra.py`는 max-layered를 FAIL로 지정하고 정확한 `insB seed 2147483659: outside 1..2147483647` 사유까지 요구. 최대 균일·near-max 층상 양성 추가. `bad`가 있으면 도구 rc1 | `positive_extra.py:44–45,59–69`; 옛 원문 `HISTORICAL/positive_extra_before_R01.py:39,50` |
+| 소수 가드 제거 변이의 의미 | 동봉 로그에서 실패 12개는 독립 fix/토큰 `not prime` 사유가 사라졌다는 assertion이다. 1·4는 뒤 생성기 계약에 의해 여전히 FAIL이다. 문서는 이 한계를 정확히 구분 | README 32행; `evidence/prime_guard_removed.log` |
+| 범위 가드 제거 변이의 의미 | 동봉 로그 6개 실패는 2/3상×3API에서 원 overflow 입력이 다시 PASS를 받아 negative assertion이 깨진 것. 단순 사유 변경과 다른 결과임 | README 32행; `evidence/range_guard_removed.log` |
+| first8 봉인 | 기존 `source_seal.json`의 readback SHA는 수정전 `bc0dbd…`이며 후보 `791f72…`와 다름. README가 새 readback과 옛 봉인을 혼용할 수 없고 추후 별도 갱신·검토해야 한다고 명시 | README 46행; `docs/reviews/mixer_first8_launch_preparation_20261106/source_seal.json` |
+| 과장 경계 | 전체 게이트 미실행, 범위 수용과 실행 자격 구분, MLA 및 실제 binary/MPI/100k/현장 자격 별도, 생성기 단독 부적격 덱 출력 가능성을 모두 명시 | README 5·19·36·40·44·46행; `ledger_proposal.json`의 apply_now=false, closure_claimed=false |
+
+`README`는 `docs/reviews/mxd2r_r01_recheck_20261106/README.md`, `evidence`도 그 하위다. 이 경로의 `red_sources/test_mixer_d2_consumers.py`는 **수정 전 소비자에 먼저 적용한 새 시험**이므로 후보 시험과 같은 것은 정상이며, 이전 29메서드 시험과 바이트가 다르다는 사실을 생산 코드 변경으로 세지 않았다.
+
+## 재현 가능한 읽기 대조
+
+```python
+from pathlib import Path
+import hashlib
+p = Path('package')
+e = p / 'docs/reviews/mxd2r_r01_recheck_20261106/evidence'
+assert (p/'scripts/make_mixer_deck.py').read_bytes() == (e/'red_sources/make_mixer_deck.py').read_bytes()
+for case in ('max_layered', 'max_uniform', 'nearmax_layered'):
+    for name in ('old.in', 'new.in', 'old.json', 'new.json'):
+        assert (e/'red_cli'/case/name).read_bytes() == (e/'green_cli'/case/name).read_bytes()
+print(hashlib.sha256((p/'scripts/make_mixer_deck.py').read_bytes()).hexdigest())
+```
+
+이 대조는 기록 신원과 문서 범위를 확인할 뿐, 제출/실제 LIGGGHTS 성공·전체 source seal·물리 적격성·LHS 정의를 인증하지 않는다. LHS 정본 선택은 사용자 결정 기록으로 수령하며 이번 재심 대상이 아니다.

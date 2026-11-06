@@ -1,0 +1,658 @@
+{
+  "pin": "69b6bec7ac20343dd884f8d5fa63e8bf45e7df97",
+  "commit": {
+    "sha": "69b6bec7ac20343dd884f8d5fa63e8bf45e7df97",
+    "node_id": "C_kwDORwcnfdoAKDY5YjZiZWM3YWMyMDM0M2RkODg0ZjhkNWZhNjNlOGJmNDVlN2RmOTc",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/commits/69b6bec7ac20343dd884f8d5fa63e8bf45e7df97",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/69b6bec7ac20343dd884f8d5fa63e8bf45e7df97",
+    "author": {
+      "name": "An Yonghoon",
+      "email": "yonghoon7153@gmail.com",
+      "date": "2026-11-06T12:08:24Z"
+    },
+    "committer": {
+      "name": "An Yonghoon",
+      "email": "yonghoon7153@gmail.com",
+      "date": "2026-11-06T12:08:24Z"
+    },
+    "tree": {
+      "sha": "19e8883a1462c8c89857d854a3a3c2d74492a181",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/trees/19e8883a1462c8c89857d854a3a3c2d74492a181"
+    },
+    "message": "Reject every invalid D2 insertion seed with specific reasons",
+    "parents": [
+      {
+        "sha": "ad7d2d555ce4c3fd50e8c3400cac70eb713c27f2",
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/commits/ad7d2d555ce4c3fd50e8c3400cac70eb713c27f2",
+        "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/ad7d2d555ce4c3fd50e8c3400cac70eb713c27f2"
+      }
+    ],
+    "verification": {
+      "verified": false,
+      "reason": "unsigned",
+      "signature": null,
+      "payload": null,
+      "verified_at": null
+    }
+  },
+  "checks": [
+    {
+      "path": "docs/collab/codex_to_claude/20261106-1203_mxd2r-r01-seed-recheck.md",
+      "manifest_blob": "89149b06ca64328461afab77291b036f3abc7b28",
+      "remote_blob": "89149b06ca64328461afab77291b036f3abc7b28",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mixer_first8_launch_preparation_20261106/source_seal.json",
+      "manifest_blob": "730fc4133089a831576303467ebf6848f93abd70",
+      "remote_blob": "730fc4133089a831576303467ebf6848f93abd70",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_fix_evidence_20261103/mxd2r04/tools/positive_extra.py",
+      "manifest_blob": "aaf131d7f2c0718317af4cb73c3a9d5de6655113",
+      "remote_blob": "aaf131d7f2c0718317af4cb73c3a9d5de6655113",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/README.md",
+      "manifest_blob": "2eb20fed056d78121c6ddf30bd5e794badfb5d28",
+      "remote_blob": "2eb20fed056d78121c6ddf30bd5e794badfb5d28",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/baseline.json",
+      "manifest_blob": "df8d43ff790b30853caa331b0d29437fb1481e2c",
+      "remote_blob": "df8d43ff790b30853caa331b0d29437fb1481e2c",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/check_all_list.txt",
+      "manifest_blob": "4e821f586a09365eeaafa22b18bba66ff081a4a7",
+      "remote_blob": "4e821f586a09365eeaafa22b18bba66ff081a4a7",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/diff_selftest.log",
+      "manifest_blob": "4490a1c7fbc0ae17eed0b772101778268cd676e6",
+      "remote_blob": "4490a1c7fbc0ae17eed0b772101778268cd676e6",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/evidence.py",
+      "manifest_blob": "0b3da35d65f99a6f6f77b7d5aabe31de8f251b05",
+      "remote_blob": "0b3da35d65f99a6f6f77b7d5aabe31de8f251b05",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/evidence_summary.json",
+      "manifest_blob": "44ea403fe86295aa2c825e2da32cf0eecd1ce589",
+      "remote_blob": "44ea403fe86295aa2c825e2da32cf0eecd1ce589",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_all_consumers.log",
+      "manifest_blob": "a7f72e5368d9a3ffead37f93ccb2d9d85b01ca43",
+      "remote_blob": "a7f72e5368d9a3ffead37f93ccb2d9d85b01ca43",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/new.in",
+      "manifest_blob": "3eac81c1bcef006d24022fda5a9a498ef5b2fa26",
+      "remote_blob": "3eac81c1bcef006d24022fda5a9a498ef5b2fa26",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/new.json",
+      "manifest_blob": "e9bb961597c24f0e18f144b036d6859421b098e3",
+      "remote_blob": "e9bb961597c24f0e18f144b036d6859421b098e3",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/old.in",
+      "manifest_blob": "f592f6c11186ff765cbe79de84a822a277867c3b",
+      "remote_blob": "f592f6c11186ff765cbe79de84a822a277867c3b",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/old.json",
+      "manifest_blob": "65e05ac1cbadef98792f90962368eb95d1b3d046",
+      "remote_blob": "65e05ac1cbadef98792f90962368eb95d1b3d046",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/pair.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/pair.stdout",
+      "manifest_blob": "1c26285966bbf6177a40509b094a8b3f66c088ea",
+      "remote_blob": "1c26285966bbf6177a40509b094a8b3f66c088ea",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/plan.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/plan.stdout",
+      "manifest_blob": "e0c63c395e7ae635643bc4636d5fe2bee6a11239",
+      "remote_blob": "e0c63c395e7ae635643bc4636d5fe2bee6a11239",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/readback.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_layered/readback.stdout",
+      "manifest_blob": "e0c63c395e7ae635643bc4636d5fe2bee6a11239",
+      "remote_blob": "e0c63c395e7ae635643bc4636d5fe2bee6a11239",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/new.in",
+      "manifest_blob": "8c060fb28004417be36d796ea5d4087b3e1bbbb5",
+      "remote_blob": "8c060fb28004417be36d796ea5d4087b3e1bbbb5",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/new.json",
+      "manifest_blob": "e5e1a1b8ce964245aa6bc4e0126118651c13e8c9",
+      "remote_blob": "e5e1a1b8ce964245aa6bc4e0126118651c13e8c9",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/old.in",
+      "manifest_blob": "5cb725ea7f86ac9169c4555b71184ff53f1f310f",
+      "remote_blob": "5cb725ea7f86ac9169c4555b71184ff53f1f310f",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/old.json",
+      "manifest_blob": "e81b9ffe53e315359d1fa4b07bd3a7fb8eab4630",
+      "remote_blob": "e81b9ffe53e315359d1fa4b07bd3a7fb8eab4630",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/pair.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/pair.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/plan.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/plan.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/readback.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/max_uniform/readback.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/new.in",
+      "manifest_blob": "0b67e40248499a30fd6cb1f08b2ea3443e970c25",
+      "remote_blob": "0b67e40248499a30fd6cb1f08b2ea3443e970c25",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/new.json",
+      "manifest_blob": "d507fa045575d3e3c5e72f88868e4a12bbd90cdd",
+      "remote_blob": "d507fa045575d3e3c5e72f88868e4a12bbd90cdd",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/old.in",
+      "manifest_blob": "ed4bea0b688bed2d5256a00219bda16a294941ad",
+      "remote_blob": "ed4bea0b688bed2d5256a00219bda16a294941ad",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/old.json",
+      "manifest_blob": "6cbb42ea0bbc6c0b1a320f05511d3f9c3ce2ba07",
+      "remote_blob": "6cbb42ea0bbc6c0b1a320f05511d3f9c3ce2ba07",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/pair.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/pair.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/plan.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/plan.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/readback.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/nearmax_layered/readback.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_cli/summary.json",
+      "manifest_blob": "638365b9703ad478212fde5a851497f69014642a",
+      "remote_blob": "638365b9703ad478212fde5a851497f69014642a",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/green_focused.log",
+      "manifest_blob": "806e9dd67b8e15efe9162fa920c2455b55c6d046",
+      "remote_blob": "806e9dd67b8e15efe9162fa920c2455b55c6d046",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/positive_extra.log",
+      "manifest_blob": "ff8a4927c78520d470bda99a751b8dde9f0e103f",
+      "remote_blob": "ff8a4927c78520d470bda99a751b8dde9f0e103f",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/prime_guard_removed.log",
+      "manifest_blob": "2289fb0b909a6d624201166ea5b4dc80f550d0f4",
+      "remote_blob": "2289fb0b909a6d624201166ea5b4dc80f550d0f4",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/probe.py",
+      "manifest_blob": "eb6233b617f448f6f24a74fef9e06c6443575e81",
+      "remote_blob": "eb6233b617f448f6f24a74fef9e06c6443575e81",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/py38_focused.log",
+      "manifest_blob": "836258bf6d9e5ddb7e7c139563639b89abb4f4f2",
+      "remote_blob": "836258bf6d9e5ddb7e7c139563639b89abb4f4f2",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/range_guard_removed.log",
+      "manifest_blob": "170c845145fcbbaf1458652c7f51de4463135f31",
+      "remote_blob": "170c845145fcbbaf1458652c7f51de4463135f31",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/readback_selftest.log",
+      "manifest_blob": "d81a4f21f837b2b1a6ff4e3111a44be79d07f5d8",
+      "remote_blob": "d81a4f21f837b2b1a6ff4e3111a44be79d07f5d8",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red.log",
+      "manifest_blob": "a246deb68e8db64509957249e27d5bc8149094b5",
+      "remote_blob": "a246deb68e8db64509957249e27d5bc8149094b5",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/new.in",
+      "manifest_blob": "3eac81c1bcef006d24022fda5a9a498ef5b2fa26",
+      "remote_blob": "3eac81c1bcef006d24022fda5a9a498ef5b2fa26",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/new.json",
+      "manifest_blob": "e9bb961597c24f0e18f144b036d6859421b098e3",
+      "remote_blob": "e9bb961597c24f0e18f144b036d6859421b098e3",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/old.in",
+      "manifest_blob": "f592f6c11186ff765cbe79de84a822a277867c3b",
+      "remote_blob": "f592f6c11186ff765cbe79de84a822a277867c3b",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/old.json",
+      "manifest_blob": "65e05ac1cbadef98792f90962368eb95d1b3d046",
+      "remote_blob": "65e05ac1cbadef98792f90962368eb95d1b3d046",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/pair.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/pair.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/plan.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/plan.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/readback.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_layered/readback.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/new.in",
+      "manifest_blob": "8c060fb28004417be36d796ea5d4087b3e1bbbb5",
+      "remote_blob": "8c060fb28004417be36d796ea5d4087b3e1bbbb5",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/new.json",
+      "manifest_blob": "e5e1a1b8ce964245aa6bc4e0126118651c13e8c9",
+      "remote_blob": "e5e1a1b8ce964245aa6bc4e0126118651c13e8c9",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/old.in",
+      "manifest_blob": "5cb725ea7f86ac9169c4555b71184ff53f1f310f",
+      "remote_blob": "5cb725ea7f86ac9169c4555b71184ff53f1f310f",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/old.json",
+      "manifest_blob": "e81b9ffe53e315359d1fa4b07bd3a7fb8eab4630",
+      "remote_blob": "e81b9ffe53e315359d1fa4b07bd3a7fb8eab4630",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/pair.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/pair.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/plan.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/plan.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/readback.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/max_uniform/readback.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/new.in",
+      "manifest_blob": "0b67e40248499a30fd6cb1f08b2ea3443e970c25",
+      "remote_blob": "0b67e40248499a30fd6cb1f08b2ea3443e970c25",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/new.json",
+      "manifest_blob": "d507fa045575d3e3c5e72f88868e4a12bbd90cdd",
+      "remote_blob": "d507fa045575d3e3c5e72f88868e4a12bbd90cdd",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/old.in",
+      "manifest_blob": "ed4bea0b688bed2d5256a00219bda16a294941ad",
+      "remote_blob": "ed4bea0b688bed2d5256a00219bda16a294941ad",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/old.json",
+      "manifest_blob": "6cbb42ea0bbc6c0b1a320f05511d3f9c3ce2ba07",
+      "remote_blob": "6cbb42ea0bbc6c0b1a320f05511d3f9c3ce2ba07",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/pair.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/pair.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/plan.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/plan.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/readback.stderr",
+      "manifest_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/nearmax_layered/readback.stdout",
+      "manifest_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "remote_blob": "d88b44eb3569a94ca46998ef9772aabfdf6c2a46",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_cli/summary.json",
+      "manifest_blob": "dcfe87dacd9743452ea491c30f5d343bf4dc4719",
+      "remote_blob": "dcfe87dacd9743452ea491c30f5d343bf4dc4719",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/make_mixer_deck.py",
+      "manifest_blob": "26d811642f16459f44939291999f22324f0bd5d6",
+      "remote_blob": "26d811642f16459f44939291999f22324f0bd5d6",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/mixer_deck_diff.py",
+      "manifest_blob": "0cbc372dbbdc1c66e81db39c0ea13055a848511e",
+      "remote_blob": "0cbc372dbbdc1c66e81db39c0ea13055a848511e",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/mixer_deck_readback.py",
+      "manifest_blob": "5aa9a82fed4bd144d3b9befae9412dce4dd86b1a",
+      "remote_blob": "5aa9a82fed4bd144d3b9befae9412dce4dd86b1a",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/mixer_smoke_blind.py",
+      "manifest_blob": "83b78f1b595b61933f8855e6896ed6d532e927b2",
+      "remote_blob": "83b78f1b595b61933f8855e6896ed6d532e927b2",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/red_sources/test_mixer_d2_consumers.py",
+      "manifest_blob": "3c2c9e4026d83b1f2d8e454d52750feb291919de",
+      "remote_blob": "3c2c9e4026d83b1f2d8e454d52750feb291919de",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/evidence/smoke_selftest.log",
+      "manifest_blob": "c7daa3a987e783d5b6b8be6c0e4859f261c68fe9",
+      "remote_blob": "c7daa3a987e783d5b6b8be6c0e4859f261c68fe9",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/ledger_proposal.json",
+      "manifest_blob": "cb993c1e25cca27136cbd2f8d308c51f263700cd",
+      "remote_blob": "cb993c1e25cca27136cbd2f8d308c51f263700cd",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/review_request.md",
+      "manifest_blob": "e8ffaac0b074ac48bd5d34f9ae8df8b62eda7566",
+      "remote_blob": "e8ffaac0b074ac48bd5d34f9ae8df8b62eda7566",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/source_hashes.json",
+      "manifest_blob": "4a02743401aa2265074811ca85fbd3ff823f2073",
+      "remote_blob": "4a02743401aa2265074811ca85fbd3ff823f2073",
+      "ok": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_recheck_20261106/user_relay.md",
+      "manifest_blob": "85feafbb16f08be3e8dc4f87764dab730f31f1a8",
+      "remote_blob": "85feafbb16f08be3e8dc4f87764dab730f31f1a8",
+      "ok": true
+    },
+    {
+      "path": "scripts/check_all.sh",
+      "manifest_blob": "7ac65d66eb81b51ef015075bef7d44170c2c27ca",
+      "remote_blob": "7ac65d66eb81b51ef015075bef7d44170c2c27ca",
+      "ok": true
+    },
+    {
+      "path": "scripts/check_contact_validity.py",
+      "manifest_blob": "21468adeb13e5f13973f6e145e06249fe2bdfde6",
+      "remote_blob": "21468adeb13e5f13973f6e145e06249fe2bdfde6",
+      "ok": true
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "manifest_blob": "26d811642f16459f44939291999f22324f0bd5d6",
+      "remote_blob": "26d811642f16459f44939291999f22324f0bd5d6",
+      "ok": true
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "manifest_blob": "7909d7fb4afee8e9e2b7c31b012854eadeb1db8d",
+      "remote_blob": "7909d7fb4afee8e9e2b7c31b012854eadeb1db8d",
+      "ok": true
+    },
+    {
+      "path": "scripts/measure_bed_aspect.py",
+      "manifest_blob": "9daca2e7b8eca82d49c0c7b26efc56ae8d94c321",
+      "remote_blob": "9daca2e7b8eca82d49c0c7b26efc56ae8d94c321",
+      "ok": true
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "manifest_blob": "7b45bc5862ab81840e82109d1fd9790264183e45",
+      "remote_blob": "7b45bc5862ab81840e82109d1fd9790264183e45",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "manifest_blob": "0cbc372dbbdc1c66e81db39c0ea13055a848511e",
+      "remote_blob": "0cbc372dbbdc1c66e81db39c0ea13055a848511e",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "manifest_blob": "d2e0e796cd7750652fa3d3278275d1905e304e3a",
+      "remote_blob": "d2e0e796cd7750652fa3d3278275d1905e304e3a",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_gate_reader_diff.py",
+      "manifest_blob": "cc6c94e9e44cf3acecbb8d9e2271f5af9a747981",
+      "remote_blob": "cc6c94e9e44cf3acecbb8d9e2271f5af9a747981",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_restart_phase_test.py",
+      "manifest_blob": "d11ee0702ea26d33847dc9ab8187ac96e31a6f2b",
+      "remote_blob": "d11ee0702ea26d33847dc9ab8187ac96e31a6f2b",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_smoke_blind.py",
+      "manifest_blob": "83b78f1b595b61933f8855e6896ed6d532e927b2",
+      "remote_blob": "83b78f1b595b61933f8855e6896ed6d532e927b2",
+      "ok": true
+    },
+    {
+      "path": "scripts/mixer_stage_gate.py",
+      "manifest_blob": "203a7aedc145b4170c267ff4de62a34548844251",
+      "remote_blob": "203a7aedc145b4170c267ff4de62a34548844251",
+      "ok": true
+    },
+    {
+      "path": "scripts/test_mixer_d2_consumers.py",
+      "manifest_blob": "3c2c9e4026d83b1f2d8e454d52750feb291919de",
+      "remote_blob": "3c2c9e4026d83b1f2d8e454d52750feb291919de",
+      "ok": true
+    }
+  ]
+}

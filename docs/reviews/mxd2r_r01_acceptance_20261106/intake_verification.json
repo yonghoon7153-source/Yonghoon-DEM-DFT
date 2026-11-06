@@ -1,0 +1,93 @@
+{
+  "kind": "static intake verification, not test rerun",
+  "external_evidence": {
+    "file": "codex_mxd2r_r01_independent_recheck_69b6bec7ac20_20261106.zip",
+    "bytes": 2023121,
+    "sha256": "c1c191665bf46852411bcf01b6062aa1af1bbacae36e74acdc6c2c4ad1de12ef"
+  },
+  "reviewed_pin": "69b6bec7ac20343dd884f8d5fa63e8bf45e7df97",
+  "external_zip_members": 605,
+  "external_hash_entries_verified": 604,
+  "original_request_bytes": 1182184,
+  "original_request_sha256": "1cb4bf43289b6986b1eb8c7672d5fb94c91e37db1a839d77fa02a6fa5c7e36a3",
+  "original_request_members_byte_identical": 131,
+  "original_package_hash_entries_verified": 130,
+  "snapshot_files_byte_hash_git_blob_verified": 103,
+  "external_recorded_remote_tree_matches_fixed_local_git_tree": true,
+  "pasted_verdict_byte_identical": true,
+  "selected_raw_files": [
+    {
+      "zip_member": "codex_review_mxd2r_r01_recheck_20261106.md",
+      "receipt_path": "external/external_verdict.txt",
+      "bytes": 9534,
+      "sha256": "ed422adb505c5725ce0df9f75b5da4ed219a675a9e56844b2bdbef95de1972db"
+    },
+    {
+      "zip_member": "integrity.json",
+      "receipt_path": "external/integrity.json",
+      "bytes": 33822,
+      "sha256": "573dff1a50a87d7952d120031fd06ae448089a785251586218995ce8ad04e003"
+    },
+    {
+      "zip_member": "remote_verification.json",
+      "receipt_path": "external/remote_verification.json",
+      "bytes": 27397,
+      "sha256": "90070d97c2149e39c73846a1e07eda3d45acd8199f7680a5adee4c67050ba8f2"
+    },
+    {
+      "zip_member": "final_integrity.json",
+      "receipt_path": "external/final_integrity.json",
+      "bytes": 27717,
+      "sha256": "372bea3add3a0d89d9cd9e054e1c5c14a553a84ab1aae88bf4ba85858ecba3a1"
+    },
+    {
+      "zip_member": "seed_static_probe.json",
+      "receipt_path": "external/seed_static_probe.json",
+      "bytes": 2860,
+      "sha256": "37de0ab5d22c5c3a0adfb2765e11c759b60ccbf2926d1054f423b3acbb544a6f"
+    },
+    {
+      "zip_member": "evidence/results.json",
+      "receipt_path": "external/results.json",
+      "bytes": 321152,
+      "sha256": "f3f127c4626dd816e73247cc129d8b504b823e753069f8c8c5a7990f08815980"
+    },
+    {
+      "zip_member": "evidence/delivered_replay.json",
+      "receipt_path": "external/delivered_replay.json",
+      "bytes": 6298,
+      "sha256": "92d81c7632d0b1694769f7ec090881f39b5c030f2da4b1e0362e48631b880d0a"
+    },
+    {
+      "zip_member": "focused.log",
+      "receipt_path": "external/focused.log",
+      "bytes": 1221,
+      "sha256": "011b1df939c0e8a340b9badb2ce11852bb491b1bf51f209cb54e59a0dcfc0300"
+    },
+    {
+      "zip_member": "evidence_docs.md",
+      "receipt_path": "external/evidence_docs.txt",
+      "bytes": 4333,
+      "sha256": "acb5543beab2855e8a3080392351dde5d9b80aa63b65c2f02badccd45484f824"
+    },
+    {
+      "zip_member": "evidence_seed_static.md",
+      "receipt_path": "external/evidence_seed_static.txt",
+      "bytes": 3737,
+      "sha256": "e73fac572c527c8df55ff3c0cdd929605c3f40429edfcae37dfd1d3cf65f84af"
+    }
+  ],
+  "external_counts_read_from_evidence": {
+    "synthetic_cases": 38,
+    "positive": 8,
+    "negative": 30,
+    "candidate_cli_calls": 114,
+    "delivered_replay_cli_calls": 18,
+    "focused_methods": 5,
+    "helper_oracle_integers": 10005
+  },
+  "counts_are_not_additive": true,
+  "external_code_executed_here": false,
+  "research_results": 0,
+  "whole_gate": "HOLD"
+}
