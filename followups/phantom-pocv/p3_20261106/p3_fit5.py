@@ -243,10 +243,24 @@ def cmd_f4(copy: Path, out: Path) -> int:
     with Pool(N_PROC) as pool:
         rows = [r for rs in pool.map(_f4_one, todo) for r in rs]
     _jdump({"p_ini4": G["p_ini4"], "rows": rows}, out / "f4_rows.json")
-    bad = {n: p[2] for n, p in G["p_ini4"].items() if not 1.05 <= p[2] <= 1.08}
     print(f"rows {len(rows)} · origin a_ne {json.dumps({n: round(p[2], 4) for n, p in G['p_ini4'].items()})}", flush=True)
+    # ★ 3 차 시도 규칙 (승인 문서 §8 · 결과를 본 뒤의 변경으로 기록): 2 차의 고정 창 [1.05, 1.08] 대신
+    #   원점 자기 적합의 재현성 — 최적 J 근처 (1e-3·max(1,|J|)) restart ≥ 2 · 그들의 a_ne 가 최적해와 0.01 안.
+    bad = {}
+    for r in ini_rows:
+        rs = json.loads(r["restarts_json"])
+        js = np.array([d["J"] for d in rs], float)
+        an = np.array([d["p"][2] for d in rs], float)
+        ok = np.isfinite(js)
+        js, an = js[ok], an[ok]
+        jb = js.min()
+        near = np.abs(js - jb) <= 1e-3 * max(1.0, abs(jb))
+        spread = float(np.max(np.abs(an[near] - an[np.argmin(js)])))
+        print(f"origin repro {r['objective']}: n_near {int(near.sum())} / {len(js)} · a_ne spread {spread:.4f}", flush=True)
+        if near.sum() < 2 or spread > 0.01:
+            bad[r["objective"]] = {"n_near": int(near.sum()), "a_ne_spread": spread}
     if bad:
-        print(f"STOP §5: origin a_ne outside [1.05, 1.08]: {bad}", flush=True)
+        print(f"STOP §5: origin self-fit not reproducible: {bad}", flush=True)
         return STOP
     return 0
 
