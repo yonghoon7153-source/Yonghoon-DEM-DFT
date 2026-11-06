@@ -1,0 +1,61 @@
+{
+  "scope": "Local synthetic empty files and static checks only; no research root or real CLI run",
+  "historical_cause_proven": false,
+  "source_command_sha256": "2305bd2194b29ac5439008906a17b1c673968a59fd52dcdde35b03ff4da20634",
+  "command_byte_identical_to_prior": true,
+  "shell_syntax_rc": 0,
+  "runs": [
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "docs/reviews/lhs_inventory_execution_preparation_20261106/test_ancestor_diagnostics.py"
+      ],
+      "python": "3.12.14",
+      "rc": 0,
+      "tests": 1,
+      "passed": 1,
+      "log": "synthetic_py312.log"
+    },
+    {
+      "argv": [
+        "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin/python3.8",
+        "-I",
+        "-B",
+        "docs/reviews/lhs_inventory_execution_preparation_20261106/test_ancestor_diagnostics.py"
+      ],
+      "python": "3.8.20",
+      "rc": 0,
+      "tests": 1,
+      "passed": 1,
+      "log": "synthetic_py38.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "docs/reviews/lhs_inventory_execution_preparation_20261106/replay_guard_mutation.py"
+      ],
+      "python": "3.12.14",
+      "runner_rc": 0,
+      "mutant_rc": 1,
+      "mutant_failed_tests": 1,
+      "normal_test_pass_count": 0,
+      "meaning": "Intentional negative control: removing ancestor stat/open comparison lets rc0 through and diagnostic regression rejects it",
+      "log": "guard_mutation_py312.log"
+    }
+  ],
+  "not_run": [
+    "real ibb",
+    "real WSL",
+    "pressure records",
+    "pressure value access",
+    "stage A",
+    "existing full suites",
+    "slow regex observation"
+  ],
+  "future_wsl_wrapper_shell_syntax_rc": 0,
+  "future_wsl_wrapper_executed": false
+}
