@@ -1,0 +1,13 @@
+SC_A_0.0800    pocv       J_truth 0.00e+00 J_best 1.01e-12 g_true 0.0800 g_hat 0.0800 max|dp| 0.0000 unique_min
+SC_A_0.0800    pocv_dvdq  J_truth 0.00e+00 J_best 9.02e-13 g_true 0.0800 g_hat 0.0800 max|dp| 0.0000 unique_min
+SC_A_0.1651    pocv       J_truth 0.00e+00 J_best 8.87e-13 g_true 0.1651 g_hat 0.1651 max|dp| 0.0000 unique_min
+SC_A_0.1651    pocv_dvdq  J_truth 0.00e+00 J_best 8.28e-13 g_true 0.1651 g_hat 0.1651 max|dp| 0.0000 unique_min
+SC_A_0.2500    pocv       J_truth 0.00e+00 J_best 9.08e-13 g_true 0.2500 g_hat 0.2500 max|dp| 0.0000 unique_min
+SC_A_0.2500    pocv_dvdq  J_truth 0.00e+00 J_best 1.08e-12 g_true 0.2500 g_hat 0.2500 max|dp| 0.0000 unique_min
+SC_B_0.0800    pocv       J_truth 0.00e+00 J_best 8.80e-13 g_true 0.0800 g_hat 0.0800 max|dp| 0.0000 unique_min
+SC_B_0.0800    pocv_dvdq  J_truth 0.00e+00 J_best 9.66e-13 g_true 0.0800 g_hat 0.0800 max|dp| 0.0000 unique_min
+SC_B_0.1651    pocv       J_truth 0.00e+00 J_best 7.92e-13 g_true 0.1651 g_hat 0.1651 max|dp| 0.0000 unique_min
+SC_B_0.1651    pocv_dvdq  J_truth 0.00e+00 J_best 9.25e-13 g_true 0.1651 g_hat 0.1651 max|dp| 0.0000 unique_min
+SC_B_0.2500    pocv       J_truth 0.00e+00 J_best 8.67e-13 g_true 0.2500 g_hat 0.2500 max|dp| 0.0000 unique_min
+SC_B_0.2500    pocv_dvdq  J_truth 0.00e+00 J_best 9.59e-13 g_true 0.2500 g_hat 0.2500 max|dp| 0.0000 unique_min
+VERDICT V1 · V0 rows 0 · not reached 0 · reached-not-recovered 0 · rows 12

@@ -373,6 +373,78 @@ def cmd_s(copy: Path, out: Path) -> int:
     return 0
 
 
+# ---------------------------------------------------------------- sc (자기 일관성 시험)
+
+SC_J_REACH = 1e-5
+SC_G_TOL = 0.005
+
+
+def _sc_truths() -> list[dict]:
+    pa = list(G["p_ini4"]["pocv_dvdq"])
+    pb = [pa[0] * 1.10, pa[1] - 0.02, pa[2] * 1.05, pa[3] + 0.02]
+    out = []
+    for tag, p4 in (("A", pa), ("B", pb)):
+        for g in (0.08, G["g0"], 0.25):
+            out.append({"id": f"SC_{tag}_{g:.4f}", "p": [float(v) for v in p4] + [float(g)]})
+    return out
+
+
+def _sc_job(t: dict) -> list:
+    from src.fitting import build_reference_interps, fit, reconstruct
+    from src.objective import compute_features, default_scales
+    o, bd, obj_cfg = G["origin"], G["bounds"], G["obj_cfg"]
+    x = np.asarray(o["x_norm"])
+    ref_pe = build_reference_interps("halfcell", None, G["hc"])[0]
+    tab = _tab("delithiation")
+    v = reconstruct(t["p"][:4], ref_pe, ne_ref_interp(tab, t["p"][4]), x)[2]
+    target = compute_features(x, v, obj_cfg, with_peaks=True)
+    scales = default_scales(compute_features(x, np.asarray(o["v_full"]), obj_cfg))
+    obs = np.isfinite(target.v)
+    lo, hi = float(x[obs].min()), float(x[obs].max())
+    lb, ub = list(bd["lb"]) + [GAMMA_LB], list(bd["ub"]) + [GAMMA_UB]
+    rows = []
+    for name in OBJECTIVES:
+        J = make_j5(target, ref_pe, tab, x, G["objectives"][name], scales, obj_cfg, lo, hi)
+        res = fit(J, list(bd["init"]) + [G["g0"]], lb, ub, n_restarts=_nr(20), seed=_seed(t["id"]),
+                  method="Nelder-Mead", adaptive=False)
+        rows.append({"id": t["id"], "objective": name, "p_true": t["p"], "J_at_truth": float(J(t["p"])),
+                     "p": [float(q) for q in res.p], "J": float(res.J), "n_obs": int(obs.sum()),
+                     "restarts_json": json.dumps(res.restarts), "cond_id": t["id"]})
+    return rows
+
+
+def cmd_sc(copy: Path, out: Path) -> int:
+    import pandas as pd
+
+    from src.scoring import multistart_diagnostics
+    _ctx(copy, out)
+    G["p_ini4"] = json.loads((out / "f4_rows.json").read_text(encoding="utf-8"))["p_ini4"]
+    _tab("delithiation")
+    truths = _lim(_sc_truths())
+    with Pool(N_PROC) as pool:
+        rows = [r for rs in pool.map(_sc_job, truths) for r in rs]
+    ms = multistart_diagnostics(pd.DataFrame(rows))
+    kind = {(k["cond_id"], k["objective"]): k["multistart_kind"] for _, k in ms.iterrows()}
+    v0 = reach_bad = recov_bad = 0
+    for r in rows:
+        r["reached"] = r["J"] <= SC_J_REACH
+        r["gamma_err"] = r["p"][4] - r["p_true"][4]
+        r["recovered"] = abs(r["gamma_err"]) <= SC_G_TOL
+        r["max_abs_dp"] = float(np.max(np.abs(np.subtract(r["p"], r["p_true"]))))
+        r["multistart_kind"] = kind.get((r["cond_id"], r["objective"]))
+        v0 += int(r["J_at_truth"] > 1e-12)
+        reach_bad += int(not r["reached"])
+        recov_bad += int(r["reached"] and not r["recovered"])
+        print(f"{r['id']:<14} {r['objective']:<10} J_truth {r['J_at_truth']:.2e} J_best {r['J']:.2e} "
+              f"g_true {r['p_true'][4]:.4f} g_hat {r['p'][4]:.4f} max|dp| {r['max_abs_dp']:.4f} {r['multistart_kind']}", flush=True)
+    verdict = ("V0" if v0 else "V3" if reach_bad else "V2" if recov_bad else "V1")
+    _jdump({"rows": rows, "verdict": verdict, "n_v0": v0, "n_not_reached": reach_bad,
+            "n_reached_not_recovered": recov_bad, "rule": {"J_reach": SC_J_REACH, "gamma_tol": SC_G_TOL}},
+           out / "sc_rows.json")
+    print(f"VERDICT {verdict} · V0 rows {v0} · not reached {reach_bad} · reached-not-recovered {recov_bad} · rows {len(rows)}", flush=True)
+    return 0
+
+
 # ---------------------------------------------------------------- analyze
 
 def _corr(a, b) -> float | None:
@@ -532,7 +604,7 @@ def cmd_analyze(copy: Path, out: Path) -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["curves", "f4", "f5", "w", "s", "analyze"])
+    ap.add_argument("cmd", choices=["curves", "f4", "f5", "w", "s", "sc", "analyze"])
     ap.add_argument("--copy", required=True)
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
@@ -540,7 +612,7 @@ def main() -> int:
     sys.path.insert(0, str(copy))
     os.chdir(copy)
     out.mkdir(parents=True, exist_ok=True)
-    return {"curves": cmd_curves, "f4": cmd_f4, "f5": cmd_f5, "w": cmd_w, "s": cmd_s,
+    return {"curves": cmd_curves, "f4": cmd_f4, "f5": cmd_f5, "w": cmd_w, "s": cmd_s, "sc": cmd_sc,
             "analyze": cmd_analyze}[a.cmd](copy, out)
 
 

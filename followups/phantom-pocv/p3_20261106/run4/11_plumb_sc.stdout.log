@@ -1,0 +1,5 @@
+SC_A_0.0800    pocv       J_truth 0.00e+00 J_best 1.04e-12 g_true 0.0800 g_hat 0.0800 max|dp| 0.0000 unique_min
+SC_A_0.0800    pocv_dvdq  J_truth 0.00e+00 J_best 1.28e-12 g_true 0.0800 g_hat 0.0800 max|dp| 0.0000 unique_min
+SC_A_0.1651    pocv       J_truth 0.00e+00 J_best 4.23e-02 g_true 0.1651 g_hat 0.0564 max|dp| 1.4765 unique_min
+SC_A_0.1651    pocv_dvdq  J_truth 0.00e+00 J_best 1.12e-12 g_true 0.1651 g_hat 0.1651 max|dp| 0.0000 unique_min
+VERDICT V3 · V0 rows 0 · not reached 1 · reached-not-recovered 0 · rows 4
