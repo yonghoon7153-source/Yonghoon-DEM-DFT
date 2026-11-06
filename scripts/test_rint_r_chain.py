@@ -19,6 +19,7 @@
 ⚠ PASS 는 사슬 논리의 증거이지 물리 검증이 아니다 (σ 는 가짜 함수다).
 """
 import argparse
+import ast
 import contextlib
 import copy
 import glob
@@ -11998,7 +11999,8 @@ PE03_ROWS = {   # 이름: (chain_end | None, {로그: 기대 원인})
                 '주소): 원인 exception (rc −9 · 1 · None) = chain_exception · 재실행 자격 False · 읽음 True (옛 = parent_dead · resource · runner_rc) · 바뀌는 행 = '
                 'exception 하나뿐 — chain_end 없음 · 원인 None (rc 1 · 0 · None) · timeout · signal · signal_after · 모르는 원인 = 고치기 전 값 그대로 · by chain '
                 '끝 기록 (원인 exception · 확인 True · False) = 같은 chain_exception (두 길 같은 답) · recover_group 이 by chain exception 미확인 끝 기록을 갈아 '
-                '쓰면 chain_end 원인 exception 이 남는다')
+                '쓰면 chain_end 원인 exception 이 남는다 · ★ 11-05 A1b (RR2-01 같은 부류) — 모르는 원인 (weird) = 원인 글 그대로 · 읽음 False · 재실행 자격 '
+                'False (by chain 가지와 같은 읽기 · 옛 = 읽음 True · 자격 = 낱말 원인대로)')
 def t_PE03u():
     bad, n = {}, 0
     for nm, (ce, by_log) in PE03_ROWS.items():
@@ -12012,7 +12014,8 @@ def t_PE03u():
             r = RR.attempt_result_line(1, f, None, 'recover')
             cause, ok_read = RR.orphan_cause(f)
             got = (r['status'], r['side'], r['cause'], r['resume_ok'], ok_read)
-            want = ('interrupted', 'post', want_c, want_c in RR.RESUME_CAUSES, True)
+            known = nm != 'weird'                              # ★ 11-05 A1b — 모르는 원인 = 읽음 False (원인 글 그대로)
+            want = ('interrupted', 'post', want_c, known and want_c in RR.RESUME_CAUSES, known)
             if got != want:
                 bad[f'{nm}/{lk}'] = (got, want)
     for nm, conf in (('by_chain_exc_conf', True), ('by_chain_exc_unconf', False)):
@@ -12709,6 +12712,1088 @@ def t_RV09():
     got['back'] = run('back')[0]
     want = {'res_deep': ((1, True), ['unreadable'], True), 'pub_deep': (1, True), 'pub_list': (1, True), 'back': (0, True)}
     return got == want and dir_digest(v['out']) == before, {k: (got.get(k), want[k]) for k in want if got.get(k) != want[k]}
+
+
+# ── ★ 11-05 Codex 회차 ② RR2-01 (P2 · 수정 계획 docs/reviews/rint2_rr2_fix_plan_20261105.md Q1 (가) · 1저자 11-05 "권고대로") — 러너 rc 칸 하나를 ──
+#    자리마다 다르게 읽던 결함 (판정문 반례 = 요약 없는 by chain 끝 기록 rc false · 0.0 → orphan_cause 가 "정수 0 = 끝난 런" 으로 건너뜀 → parent_dead →
+#    traceback 런의 재실행 자격) · 판독 = 한 함수 `rc_kind` (ok 정확한 정수 0 · fail 그 밖 정확한 정수 · none None · bad bool · 실수 (0.0 · −0.0 포함) ·
+#    글 · 목록 · 객체 …) · `rc_success` = ok · `runner_rc_failed` = fail | bad (옛 식과 같은 값) — 이 칸의 소비자 전부가 셋 중 하나를 부른다
+RC_READERS = ('rc_kind', 'rc_success', 'runner_rc_failed')
+#: 이 칸의 소비자 (함수 · 클래스.메서드 이름) — 각자 판독 함수를 부른다 (RC01 구조 대조)
+RC_CONSUMERS = ('orphan_cause', 'Replay.run', 'noop_check', 'MergeFetch.run', 'Runner._execute', 'RunnerGraphSource._run', 'ResumeRunner._src_done',
+                'stop_cause', 'chain_end_failed', 'load_ladders')
+#: 판독 함수 밖에서 rc 를 읽는 꼴 (스캐너 자기 시험 · 하나마다 잡혀야)
+RC_SCAN_BAD = (
+    "def f(rc):\n    return rc == 0\n",
+    "def f(er):\n    return er.get('rc') != 0\n",
+    "def f(er):\n    return er['rc'] == 0\n",
+    "def f(er):\n    x = er.get('rc')\n    if x == 0:\n        return 1\n",
+    "def f(er):\n    y = er['rc']\n    z = y\n    return z > 0\n",
+    "def f(rc):\n    return int(rc)\n",
+    "def f(rc):\n    return rc or 0\n",
+    "def f(er):\n    return not er.get('rc')\n",
+    "def f(rc):\n    if rc:\n        return 1\n",
+    "def f(er):\n    return type(er.get('rc')) is int and er['rc'] == 0\n",
+    "def f(rc):\n    return 1 if rc else 0\n",
+    "def f(r):\n    return g(rc=r.get('rc'))\n",
+)
+#: 허용 꼴 (판독 함수의 바로 인자 · is None · 기록으로 그대로 옮김 · f-글 칸) — 하나도 잡히면 안 된다
+RC_SCAN_GOOD = (
+    "def f(er):\n    return rc_success(er.get('rc'))\n",
+    "def f(er):\n    x = er.get('rc')\n    return runner_rc_failed(x)\n",
+    "def f(rc):\n    return rc is None\n",
+    "def f(rc, rec):\n    rec['rc'] = rc\n    return {'rc': rc}\n",
+    "def f(r):\n    return f'rc {r.get(\"rc\")!r}'\n",
+    "def f(r, req):\n    return dict(req, rc=r.get('rc'))\n",
+    "def f(rc, cause, rec):\n    rec['rc'], rec['s'] = (rc if cause is None else None), 1\n",
+)
+#: 판독 표 (값, rc_kind) — 옛 느슨한 대조 (== 0 · != 0) 와 읽기가 갈리는 값 = False · 0.0 · −0.0 셋뿐이어야
+RC_TABLE = ((0, 'ok'), (1, 'fail'), (-9, 'fail'), (2 ** 70, 'fail'), (None, 'none'), (True, 'bad'), (False, 'bad'), (0.0, 'bad'), (-0.0, 'bad'),
+            (1.0, 'bad'), (float('nan'), 'bad'), ('0', 'bad'), ('', 'bad'), ([], 'bad'), ({}, 'bad'), ([0], 'bad'))
+#: RC02 의 끝 기록 rc 값 (이름, 값) · 로그 = 판정문 반례 그대로 (파이썬 traceback)
+RC02_VALUES = (('int0', 0), ('false', False), ('float0', 0.0), ('negzero', -0.0), ('str0', '0'), ('none', None), ('int1', 1), ('true', True))
+RC02_LOG = "[p2] run\nTraceback (most recent call last):\nKeyError: 'sigma'\n"
+
+
+def _rc_const(n, s='rc'):
+    idx = getattr(ast, 'Index', None)
+    if idx is not None and isinstance(n, idx):           # Python 3.8 — 첨자 = Index(값)
+        n = n.value
+    return isinstance(n, ast.Constant) and n.value == s
+
+
+def rc_scan(src, producer='run_in_group', reader='rc_kind'):
+    """원천 글 → 판독 함수 밖에서 rc 값을 읽는 자리 [(줄, 함수, 글)] — rc 식 = 이름 rc · X.get('rc') · X['rc'] · 그런 식을 받은 이름 (같은 함수 · 되풀이).
+    허용 = `RC_READERS` 의 바로 인자 · `is None` / `is not None` · 기록으로 그대로 옮김 (dict 칸 값 · dict(…, rc=…) · 첨자 자리에 대입 · 조건식 두 갈래를
+    지나) · f-글 칸 · 생산자 (`run_in_group`) 의 return · 판독 함수 (`rc_kind`) 몸.  그 밖 (== · != · 참거짓 · int() · type() · or · not · 다른 함수의 인자 …)
+    = 날 읽기."""
+    tree = ast.parse(src)
+    par = {}
+    for node in ast.walk(tree):
+        for ch in ast.iter_child_nodes(node):
+            par[ch] = node
+
+    def fn_of(node):
+        p = par.get(node)
+        while p is not None and not isinstance(p, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            p = par.get(p)
+        return p
+
+    def is_rc(n, names):
+        if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load):
+            return n.id == 'rc' or n.id in names
+        if isinstance(n, ast.Subscript) and isinstance(n.ctx, ast.Load):
+            return _rc_const(n.slice)
+        return (isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr == 'get' and bool(n.args)
+                and _rc_const(n.args[0]))
+
+    def target(t, i):
+        if i is not None:
+            if not (isinstance(t, (ast.Tuple, ast.List)) and len(t.elts) > i):
+                return 'bad'
+            t = t.elts[i]
+        if isinstance(t, ast.Subscript):
+            return 'ok'
+        return ('name:' + t.id) if isinstance(t, ast.Name) else 'bad'
+
+    def verdict(n, fn):
+        cur = n
+        while True:
+            p = par.get(cur)
+            if isinstance(p, ast.IfExp) and cur is not p.test:
+                cur = p
+                continue
+            if isinstance(p, ast.Call) and isinstance(p.func, ast.Name) and p.func.id in RC_READERS and any(a is cur for a in p.args):
+                return ['ok']
+            if (isinstance(p, ast.Compare) and p.left is cur and len(p.ops) == 1 and isinstance(p.ops[0], (ast.Is, ast.IsNot))
+                    and isinstance(p.comparators[0], ast.Constant) and p.comparators[0].value is None):
+                return ['ok']
+            if isinstance(p, ast.FormattedValue) or (isinstance(p, ast.Dict) and any(v is cur for v in p.values)):
+                return ['ok']
+            if isinstance(p, ast.keyword):
+                c = par.get(p)
+                return ['ok' if isinstance(c, ast.Call) and isinstance(c.func, ast.Name) and c.func.id == 'dict' else 'bad']
+            if fn is not None and fn.name == producer and (isinstance(p, ast.Return) or (isinstance(p, ast.Tuple) and isinstance(par.get(p), ast.Return))):
+                return ['ok']
+            if isinstance(p, ast.Assign) and p.value is cur:
+                return [target(t, None) for t in p.targets]
+            if isinstance(p, ast.Tuple) and isinstance(par.get(p), ast.Assign) and par[p].value is p:
+                i = [k for k, e in enumerate(p.elts) if e is cur][0]
+                return [target(t, i) for t in par[p].targets]
+            return ['bad']
+
+    names = {}
+    while True:
+        bad, grew = [], False
+        for node in ast.walk(tree):
+            fn = fn_of(node)
+            if fn is not None and fn.name == reader:
+                continue
+            if not is_rc(node, names.get(fn, set())):
+                continue
+            for v in verdict(node, fn):
+                if v.startswith('name:'):
+                    nm = v[5:]
+                    if nm != 'rc' and nm not in names.setdefault(fn, set()):
+                        names[fn].add(nm)
+                        grew = True
+                elif v == 'bad':
+                    seg = ast.get_source_segment(src, par.get(node)) or ''
+                    bad.append((getattr(node, 'lineno', 0), fn.name if fn is not None else '<모듈>', ' '.join(seg.split())[:90]))
+        if not grew:
+            return sorted(set(bad))
+
+
+def rc_consumer_calls(src):
+    """함수 (클래스.메서드) 이름 → 그 몸에서 판독 함수 (`RC_READERS`) 를 부른 수."""
+    out = {}
+
+    def walk(node, prefix):
+        for ch in ast.iter_child_nodes(node):
+            if isinstance(ch, ast.ClassDef):
+                walk(ch, prefix + ch.name + '.')
+            elif isinstance(ch, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                out[prefix + ch.name] = sum(1 for x in ast.walk(ch) if isinstance(x, ast.Call) and isinstance(x.func, ast.Name) and x.func.id in RC_READERS)
+                walk(ch, prefix + ch.name + '.')
+            else:
+                walk(ch, prefix)
+    walk(ast.parse(src), '')
+    return out
+
+
+@contextlib.contextmanager
+def rc_patch(**kw):
+    """사슬 모듈 이름 몇 개를 잠깐 바꾼다 (시험 끝에 되돌림)."""
+    old = {k: getattr(RR, k) for k in kw}
+    for k, v in kw.items():
+        setattr(RR, k, v)
+    try:
+        yield
+    finally:
+        for k, v in old.items():
+            setattr(RR, k, v)
+
+
+def rc_fake_arm():
+    """가짜 읽기 (`read_run` 자리) 의 팔 하나 — 공개 칸 · 화면 칸 · σ (값 뜻 없음)."""
+    a = {k: None for k in RR.ARM_PUBLIC}
+    a.update(cert_pass=[True], state='positive', cg_info=0, cg_iters=1, resolve_iters=0, cg_resid=0.0, imbalance=0.0, err_rel=0.0, sigma=1.0,
+             n_sdcp_near=0, dsigma_rel=0.0)
+    return a
+
+
+def rc_read_spy(calls):
+    def fake(*a, **k):
+        calls.append(1)
+        return [rc_fake_arm()]
+    return fake
+
+
+def rc_att_folder(tag, d, n, end, log, name='L01_floor'):
+    """원장 d 의 항목 n 에 결속한 손 시도 폴더 (attempt.json · 시작 기록 = 죽은 사슬 부모 · 첫 풀이 끝 표지 = 결과 뒤 · 그룹 기록 하나 · 런 로그) → 폴더.
+    끝 기록 = `pc_group` 기본 (by chain · 원인 None · rc None · 확인) 위에 end."""
+    base = Path(TD) / 'runs' / tag
+    f = base / f'attempt_{n}'
+    f.mkdir(parents=True)
+    (f / 'attempt.json').write_text(json.dumps({'schema': 'rint-r-attempt-v1', 'n': n, 'target': 'ladder:P0', 'machine': MACH, 'resume_of': None,
+                                                'ledger_commit': git_(d, 'rev-parse', 'HEAD')}), encoding='utf-8')
+    led_hand(d, {'kind': 'start', 'n': n, 'base': str(base.resolve()), 'folder': f'attempt_{n}', 'host': RR.host_ident(), 'chain_pid': DEAD_PID,
+                 'chain_start': None, 'utc': '2026-11-05T00:00:00Z'}, msg=f'start {n} (시험 · 손 시작 기록 · 죽은 사슬 부모)')
+    (f / PC_MARK).parent.mkdir(parents=True, exist_ok=True)
+    (f / PC_MARK).write_text('{}\n', encoding='utf-8')
+    pc_group(f, name, end, log)
+    return f
+
+
+def rc_recover_resume(tag, end, log, prep=None):
+    """실제 원장 (git) — 항목 1 · 손 시도 폴더 (요약 없음 · prep = 그 폴더를 더 손질하는 함수 · 예 = 단계 요약 넣기) → --stage recover --ledger → 결과 줄 →
+    --add --resume 1 (attempt_order_problem) → {orphan · recover rc · 결과 줄 · resume rc · RESUME_NOT_ALLOWED · 원장 무변경 (거부일 때)}."""
+    d, _rc, _so = led_new(tag)
+    _r, n1, _s = led_add(d, 'ladder:P0')
+    f = rc_att_folder(tag, d, n1, end, log)
+    if prep is not None:
+        prep(f)
+    orphan = list(RR.orphan_cause(f))
+    rc_rec, so_rec = call(['--stage', 'recover', '--out', str(f), '--ledger', str(d)])
+    r1 = pc_res(d, n1)
+    raw = led_raw(d)
+    rc_add, _n2, so_add = led_add(d, 'ladder:P0', resume=n1)
+    return {'orphan': orphan, 'recover_rc': rc_rec, 'result': r1, 'resume_rc': rc_add, 'not_allowed': 'RESUME_NOT_ALLOWED' in so_add,
+            'ledger_same': (led_raw(d) == raw) if rc_add else None, 'tail': so_rec.strip().splitlines()[-2:]}
+
+
+@check('RC01', '★ 11-05 RR2-01 (판정문 §1 · 수정 계획 Q1 (가)) 원천 전수 — 판독 함수 셋 (rc_kind · rc_success · runner_rc_failed) 이 있고 rint_r_chain.py 안 '
+               'rc 값 읽기 (이름 rc · X.get(\'rc\') · X[\'rc\'] · 그것을 받은 이름) 가 모두 판독 함수의 바로 인자 · is None · 기록으로 그대로 옮김 · f-글 칸 · '
+               '생산자 return 뿐 (옛 = orphan_cause rc == 0 · Replay · 합치기 · 러너 · 봉인 원천 != 0 · no-op == 0 · _src_done type() 대조 · runner_rc_failed '
+               '몸) · 소비자 열 (orphan_cause · Replay.run · noop_check · MergeFetch.run · Runner._execute · RunnerGraphSource._run · ResumeRunner._src_done · '
+               'stop_cause · chain_end_failed · load_ladders) 이 각자 판독 함수를 부른다 · 스캐너 자기 시험 = 나쁜 꼴 12 다 잡힘 · 좋은 꼴 7 안 잡힘')
+def t_RC01():
+    src = Path(RR.__file__).read_text(encoding='utf-8')
+    missing = [nm for nm in RC_READERS if not callable(getattr(RR, nm, None))]
+    raw = rc_scan(src)
+    calls = rc_consumer_calls(src)
+    no_reader = [c for c in RC_CONSUMERS if not calls.get(c)]
+    self_bad = [i for i, s in enumerate(RC_SCAN_BAD) if not rc_scan(s)]
+    self_good = [i for i, s in enumerate(RC_SCAN_GOOD) if rc_scan(s)]
+    ok = not missing and not raw and not no_reader and not self_bad and not self_good
+    return ok, {'missing_readers': missing, 'n_raw': len(raw), 'raw_reads': raw[:14], 'consumers_without_reader': no_reader,
+                'scanner_missed_bad': self_bad, 'scanner_flagged_good': self_good}
+
+
+@check('RC02', '★ 11-05 RR2-01 판정문 반례 실경로 (실제 git 원장) — 요약 없는 시도 · 첫 풀이 끝 표지 (결과 뒤) · 끝 기록 by chain · 원인 None · 확인 · 로그 = '
+               'Traceback KeyError · rc 만 바꿈 {0 · false · 0.0 · −0.0 · "0" · null · 1 · true} → --stage recover --ledger 결과 줄 → --add --resume 1: 정수 0 = '
+               '끝난 런 (parent_dead · 재실행 자격 · resume rc 0) · 그 밖 일곱 = runner_rc · 자격 False · resume rc 3 RESUME_NOT_ALLOWED · 원장 무변경 (옛 = '
+               'false · 0.0 · −0.0 = parent_dead · 자격 True · resume rc 0) · 읽기가 바뀌는 값 = false · 0.0 · −0.0 셋뿐')
+def t_RC02():
+    rows = scen('RC02', lambda: {nm: rc_recover_resume(f'RC02_{nm}', {'by': 'chain', 'cause': None, 'rc': v, 'confirmed': True}, RC02_LOG)
+                                 for nm, v in RC02_VALUES})
+    bad = {}
+    for nm, v in RC02_VALUES:
+        ok0 = type(v) is int and v == 0
+        c = 'parent_dead' if ok0 else 'runner_rc'
+        want = {'orphan': [c, True], 'recover_rc': 0, 'result': {'status': 'interrupted', 'side': 'post', 'cause': c, 'resume_ok': ok0, 'by': 'recover'},
+                'resume_rc': 0 if ok0 else 3, 'not_allowed': not ok0, 'ledger_same': None if ok0 else True}
+        got = {k: rows[nm].get(k) for k in want}
+        if got != want:
+            bad[nm] = {k: (got[k], want[k]) for k in want if got[k] != want[k]}
+    return not bad, {'bad': bad, 'rows': {nm: (r['result'].get('cause'), r['result'].get('resume_ok'), r['resume_rc']) for nm, r in rows.items()}}
+
+
+def rc03_replay(v):
+    rp = RR.Replay.__new__(RR.Replay)
+    rp.dir, rp.plan, rp.contract, rp.sid_reg, rp.graph_src = Path(TD) / 'rc03_replay', {}, None, {}, None
+    rp.variant, rp.i, rp.cert_reg, rp.s0_grid, rp.s0_census = None, 0, {}, None, None
+    rp.recs = [{'name': 'L01_floor', 'role': 'floor', 'kit': SBE_KIT, 'law': 'P0', 'c': None, 'rj': 'inf', 'arms': 1, 'arm_list': None,
+                'variant': None, 'sv_cf': False, 'rc': v, 'outdir': 'L01_floor_arm1', 'arms_read': []}]
+    calls = []
+    with rc_patch(read_run=rc_read_spy(calls)):
+        try:
+            rp.run(SBE_KIT, 'floor', 'P0', None, 'inf', 1)
+            return ['read', len(calls)]
+        except RR.Stop as e:
+            return [e.code, len(calls)]
+
+
+def rc03_noop(v):
+    k0 = '1000000.0'
+    x = {'name': 'L09_sbe_noop', 'role': 'sbe_noop', 'kit': SBE_KIT, 'law': 'P0', 'c': RR.NOOP_C, 'rj': k0, 'arms': 1, 'arm_list': None, 'variant': None,
+         'sv_cf': False, 'rc': v, 'outdir': 'L09_sbe_noop_arm1', 'arms_read': []}
+    s = {'noop': {'law': 'P0', 'rj': k0, 'status': 'done', 'ok': True, 'stop': None}, 'runs': [x]}
+    calls = []
+    with rc_patch(read_run=rc_read_spy(calls)):
+        try:
+            RR.noop_check(Path(TD) / 'rc03_noop', s, 'P0', k0, {'sigma': 1.0}, {}, None, {})
+            return ['read', len(calls)]
+        except RR.Stop as e:
+            return [e.code, len(calls)]
+
+
+def rc03_merge(v):
+    k0, lo, hi = '1000000.0', '500000.0', '2000000.0'
+    mf = RR.MergeFetch.__new__(RR.MergeFetch)
+    mf.n, mf.keys, mf.variant, mf.records = 0, set(), None, []
+    mf.lads = {'P0': {'R_j0': k0, 'R_j_lo': lo, 'R_j_hi': hi}}
+    mf.out = Path(TD) / 'rc03_merge'
+    mf.plan, mf.contract, mf.sid_reg, mf.s0_grid, mf.s0_census, mf.graph_src = {}, None, {}, None, None, None
+    iname = 'U01_corner'
+    rec0 = {'name': iname, 'role': 'corner', 'kit': DBE_KIT, 'law': 'P0', 'c': '0', 'rj': k0, 'arms': 1, 'arm_list': None, 'variant': None,
+            'sv_cf': False, 'rc': v, 'outdir': 'U01_corner_arm1', 'arms_read': [], 'seconds': 1.0, 'group_cause': None}
+    target = RR.unit_target('unit', None, RR.unit_name('0', 'P0', 'R_j0'))
+    mf.opened = {target: {'n': 1, 'sum': {'stop': None}, 'runs': {iname: rec0}, 'consumed': set(), 'machine': MACH,
+                          'rel': f'{RR.UNITS_DIR}/{RR.target_dir(target)}/attempt_1'}}
+    calls = []
+    with rc_patch(read_run=rc_read_spy(calls)), contextlib.redirect_stdout(io.StringIO()):
+        try:
+            mf.run(DBE_KIT, 'corner', 'P0', '0', k0, 1)
+            return ['read', len(calls)]
+        except RR.Stop as e:
+            return [e.code, len(calls)]
+
+
+def rc03_lad_copy(tag, law, edit):
+    """주 사다리 폴더 사본 (바이트 그대로) · edit = 요약 dict 를 고치는 함수 (None = 그대로)."""
+    dst = Path(TD) / 'runs' / tag
+    shutil.copytree(s_main(law)['out'], dst, symlinks=True)
+    if edit is not None:
+        sp = dst / 'ladder_summary.json'
+        s = json.loads(sp.read_text(encoding='utf-8'))
+        edit(s)
+        sp.write_text(json.dumps(s, ensure_ascii=False, indent=1, sort_keys=True) + '\n', encoding='utf-8')
+    return dst
+
+
+def rc03_edit_confirm(v):
+    def ed(s):
+        L = s['ladder']
+        rr = [r for r in s['runs'] if r.get('rj') == L['R_j0'] and r.get('arms') == 1 and r.get('arm_list') is None and r.get('role') in ('confirm', 'point')]
+        rr[-1]['rc'] = v
+    return ed
+
+
+def rc03_edit_noop(v):
+    def ed(s):
+        [r for r in s['runs'] if r.get('role') == 'sbe_noop'][0]['rc'] = v
+    return ed
+
+
+@check('RC03', '★ 11-05 RR2-01 런 기록 소비자 (다시 계산 Replay · 사다리 끝 no-op 대조 · 합치기 MergeFetch · 예측의 사다리 읽기 load_ladders) — 기록 rc {false · '
+               '0.0 · −0.0 · "0" · null · 1 · true} = 거부 (REPLAY_MISMATCH · LADDER_SET · UNIT_PROVENANCE_MISMATCH · 팔 읽기 0 회) · 정수 0 = 팔 읽기 (옛 = '
+               'false · 0.0 · −0.0 를 끝난 런으로 읽음) · 실경로 예측: 사다리 요약의 R_j,0 확인 팔 런 기록 rc false · 0.0 (옛 = rc 를 안 읽음) · no-op 런 기록 '
+               'rc false → 러너 0 회 · LADDER_SET (사유 = 그 기록) · 고치지 않은 사본 = 주 예측 PREDICTED')
+def t_RC03():
+    vals = [v for _nm, v in RC02_VALUES]
+    unit = {fn.__name__: [fn(v) for v in vals] for fn in (rc03_replay, rc03_noop, rc03_merge)}
+    want_code = {'rc03_replay': 'REPLAY_MISMATCH', 'rc03_noop': 'LADDER_SET', 'rc03_merge': 'UNIT_PROVENANCE_MISMATCH'}
+    bad = {}
+    for fn, got in unit.items():
+        want = [['read', 1] if (type(v) is int and v == 0) else [want_code[fn], 0] for v in vals]
+        if got != want:
+            bad[fn] = {repr(v): (g, w) for v, g, w in zip(vals, got, want) if g != w}
+
+    def go():
+        out = {}
+        for nm, ed, why in (('confirm_false', rc03_edit_confirm(False), 'R_j,0 확인 팔 런 기록 rc False'),
+                            ('confirm_float0', rc03_edit_confirm(0.0), 'R_j,0 확인 팔 런 기록 rc 0.0'),
+                            ('noop_false', rc03_edit_noop(False), 'no-op 런 기록')):
+            p0 = rc03_lad_copy(f'RC03_{nm}_P0', 'P0', ed)
+            p1 = rc03_lad_copy(f'RC03_{nm}_P1', 'P1', None)
+            w = world(f'RC03_{nm}')
+            r = predict(f'RC03_{nm}_pred', w, [p0, p1])
+            st = (r.get('sum') or {}).get('stop') or {}
+            out[nm] = [r['rc'], stop_code(r), n_calls(w), why in str(st.get('cause'))]
+        return out
+    real = scen('RC03', go)
+    want_real = {nm: [3, 'LADDER_SET', 0, True] for nm in ('confirm_false', 'confirm_float0', 'noop_false')}
+    ctl = (s_main_predict().get('sum') or {}).get('status')
+    if real != want_real:
+        bad['predict'] = {k: (real.get(k), want_real[k]) for k in want_real if real.get(k) != want_real[k]}
+    if ctl != 'PREDICTED':
+        bad['control'] = ctl
+    return not bad, {'bad': bad, 'unit': unit, 'predict': real}
+
+
+def rc04_execute(v, i):
+    out = Path(TD) / 'rc04' / f'exec_{i}'
+    out.mkdir(parents=True)
+    rn = RR.Runner(FX['runner'], FX['root'], out, {}, None, time.time() + 300, None, machine=MACH)
+    req = {'name': 'R01_floor', 'role': 'floor', 'kit': SBE_KIT, 'law': 'P0', 'c': None, 'rj': 'inf', 'arms': 1, 'arm_list': None, 'variant': None,
+           'sv_cf': False}
+    calls = []
+    end = {'confirmed': True, 'left': [], 'signal': None}
+    with rc_patch(run_in_group=lambda *a, **k: (v, None, end), read_run=rc_read_spy(calls)), contextlib.redirect_stdout(io.StringIO()):
+        try:
+            rn._execute('R01_floor', req, out / 'R01_floor_arm1', {})
+            return ['read', len(calls)]
+        except RR.Stop as e:
+            return [e.code, len(calls)]
+
+
+def rc04_graph(v, i):
+    base = Path(TD) / 'rc04g' / f'g_{i}'
+    base.mkdir(parents=True)
+    gs = RR.RunnerGraphSource(FX['runner'], FX['root'], base)
+    gs.env_delta = lambda *a, **k: {}
+    rec = {'rc': None, 'seconds': None}
+    req = {'name': 'R01_floor', 'kit': SBE_KIT}
+    with rc_patch(run_in_group=lambda *a, **k: (v, None, {'confirmed': True, 'left': []})):
+        try:
+            gs._run({'plan': {}}, req, 0, base, 'G01_R01_floor_a0', rec)
+            return 'ok'
+        except RR.GraphSourceError as e:
+            return 'rc' if str(e).startswith('러너 rc') else 'later'
+
+
+@check('RC04', '★ 11-05 RR2-01 러너 쪽 — Runner._execute · RunnerGraphSource._run 의 rc 대조 = rc_success (run_in_group 이 false · 0.0 · −0.0 를 돌려준 꼴 → '
+               'RUNNER_RC · 원천 실패 "러너 rc" · 팔 읽기 0 회 · 옛 = != 0 이 False 로 지나 팔을 읽음) · 정수 0 = 팔 읽기 · 그 뒤 대조 · 이미 정수만 읽던 셋 '
+               '그대로 (ResumeRunner._src_done = 결합된 정수 0 만 끝난 런 · stop_cause 그룹 미확인 + 런 기록 rc = 정수 0 · None 만 group_unconfirmed · '
+               'chain_end_failed = 원인 None + 정수 0 · None 아니면 실패) · 생산자 실측 (run_in_group · bash exit 0 · exit 3) = 정확한 정수 (ok · fail)')
+def t_RC04():
+    vals = [v for _nm, v in RC02_VALUES]
+    bad = {}
+    ex = [rc04_execute(v, i) for i, v in enumerate(vals)]
+    ex_want = [['read', 1] if (type(v) is int and v == 0) else ['RUNNER_RC', 0] for v in vals]
+    gr = [rc04_graph(v, i) for i, v in enumerate(vals)]
+    gr_want = ['later' if (type(v) is int and v == 0) else 'rc' for v in vals]
+    sd = Path(TD) / 'rc04' / 'src'
+    (sd / 'groups').mkdir(parents=True)
+    (sd / 'L01_floor_arm1').mkdir()
+    import types as _types
+    tok = 'c' * 32
+    (sd / 'groups' / 'L01_floor.launch.json').write_text(json.dumps({'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': tok, 'pid': DEAD_PID,
+                                                                     'host': RR.host_ident(), 'by': 'chain', 'chain_pid': DEAD_PID}), encoding='utf-8')
+    src_done, scause, cefail = [], [], []
+    for v in vals:
+        (sd / 'groups' / 'L01_floor.end.json').write_text(json.dumps({'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': tok, 'rc': v,
+                                                                      'cause': None, 'confirmed': True, 'by': 'chain'}), encoding='utf-8')
+        src_done.append(RR.ResumeRunner._src_done(_types.SimpleNamespace(src=sd), 'L01_floor', 'L01_floor_arm1'))
+        s = {'status': 'STOPPED', 'stop': {'code': 'GROUP_UNCONFIRMED', 'run': 'L01_floor', 'reason': None},
+             'runs': [{'name': 'L01_floor', 'outdir': 'L01_floor_arm1', 'rc': v, 'group_cause': None}]}
+        scause.append(RR.stop_cause(s, sd))
+        cefail.append(RR.chain_end_failed({'chain_end': {'cause': None, 'rc': v}}))
+    sd_want = [type(v) is int and v == 0 for v in vals]
+    sc_want = ['group_unconfirmed' if (v is None or (type(v) is int and v == 0)) else 'runner_rc' for v in vals]
+    ce_want = [not (v is None or (type(v) is int and v == 0)) for v in vals]
+    gdir = Path(TD) / 'rc04' / 'live'
+    gdir.mkdir(parents=True)
+    live = {}
+    for nm, cmd in (('exit0', 'exit 0'), ('exit3', 'exit 3')):
+        with open(gdir / f'{nm}.log', 'w', encoding='utf-8') as lf:
+            rc_, cause_, end_ = RR.run_in_group(['bash', '-c', cmd], str(gdir), dict(os.environ), lf, 60, gdir / 'groups', nm)
+        kind = RR.rc_kind(rc_) if callable(getattr(RR, 'rc_kind', None)) else None
+        live[nm] = [type(rc_).__name__, rc_, cause_, end_.get('confirmed'), kind]
+    live_want = {'exit0': ['int', 0, None, True, 'ok'], 'exit3': ['int', 3, None, True, 'fail']}
+    for k, got, want in (('execute', ex, ex_want), ('graph_source', gr, gr_want), ('src_done', src_done, sd_want), ('stop_cause', scause, sc_want),
+                         ('chain_end_failed', cefail, ce_want), ('run_in_group', live, live_want)):
+        if got != want:
+            bad[k] = (got, want)
+    return not bad, {'bad': bad}
+
+
+@check('RC05', '★ 11-05 RR2-01 판독 표 — rc_kind {0 = ok · 1 · −9 · 2⁷⁰ = fail · null = none · true · false · 0.0 · −0.0 · 1.0 · nan · "0" · "" · [] · {} · [0] = bad} · '
+               'rc_success = ok · runner_rc_failed = fail | bad = 옛 식 (None 아님 · 정확한 정수 0 아님) 과 모든 값에서 같음 · 옛 느슨한 대조 (== 0) 와 성공 읽기가 '
+               '갈리는 값 = false · 0.0 · −0.0 셋뿐')
+def t_RC05():
+    if not all(callable(getattr(RR, nm, None)) for nm in RC_READERS):
+        return False, f'판독 함수 없음 {[nm for nm in RC_READERS if not callable(getattr(RR, nm, None))]}'
+    bad, loose = {}, []
+    for v, want in RC_TABLE:
+        got = (RR.rc_kind(v), RR.rc_success(v), RR.runner_rc_failed(v))
+        exp = (want, want == 'ok', want in ('fail', 'bad'))
+        old = v is not None and not (type(v) is int and v == 0)
+        if got != exp or got[2] != old:
+            bad[repr(v)] = (got, exp, old)
+        if (v == 0) != got[1]:
+            loose.append(repr(v))
+    return not bad and sorted(loose) == sorted(['False', '0.0', '-0.0']), {'bad': bad, 'loose_changes': loose}
+
+
+# ── ★ 11-05 RR2-01 같은 부류 (독립 사전 공격 · A1b) — 끝 기록의 사슬 원인 칸을 두 길이 다르게 읽던 결함: by chain 가지 = 모르는 · 꼴 틀린 원인 → ──
+#    (parent_dead, 읽음 False) = 재실행 없음 · recover 가지 (recover_group 이 같은 값을 chain_end 로 옮김) → 읽음 True = rc 1 + traceback 이어도 재실행 자격.
+#    고침 = 한 읽기 (`chain_cause_known` · 아는 원인 = run_in_group 이 디스크에 쓰는 값 None · timeout · signal · exception + signal_after) · recover 가지 =
+#    chain_end 가 있는데 dict 아님 · 원인 모름 → 읽음 False · 원인 글 그대로
+CE_BAD = (('false', False), ('zero', 0), ('empty', ''), ('list', []), ('weird', 'weird'), ('dict', {}))
+CE_KNOWN = (('none', None), ('timeout', 'timeout'), ('signal', 'signal'), ('signal_after', 'signal_after'), ('exception', 'exception'))
+CE_NOT_DICT = (('list', []), ('str', 'x'), ('int', 1), ('null', None), ('list1', [1]))
+#: 아는 원인 (원인, by chain 가지 원인, recover 가지 원인) — 로그 = 파이썬 traceback (낱말 없음) · 러너 rc 1
+CE_KNOWN_WANT = {'none': ('runner_rc', 'runner_rc'), 'timeout': ('timeout', 'parent_dead'), 'signal': ('signal', 'parent_dead'),
+                 'signal_after': ('signal', 'parent_dead'), 'exception': ('chain_exception', 'chain_exception')}
+
+
+def ce_row(tag, end):
+    f = pc_folder(tag, {PC_MARK: '{}\n'})
+    pc_group(f, 'L01_floor', end, RC02_LOG)
+    c, ok = RR.orphan_cause(f)
+    return [c, ok, RR.result_fields(f, None)['resume_ok']]
+
+
+def ce_chain_end(cause, rc=1):
+    return {'by': 'recover', 'cause': 'parent_dead', 'rc': None, 'confirmed': True,
+            'chain_end': {'rc': rc, 'cause': cause, 'confirmed': False, 'ended_utc': '2026-11-05T00:00:00Z'}}
+
+
+@check('CE01', '★ 11-05 RR2-01 같은 부류 (A1b) 단위 — 끝 기록 사슬 원인이 모름 · 꼴 틀림 (false · 0 · "" · [] · "weird" · {}) · 러너 rc 1 · 로그 Traceback: '
+               'by chain 가지 = (parent_dead, 읽음 False) · recover 가지 (chain_end 원인 = 같은 값) = 같은 답 (parent_dead, 읽음 False) · 재실행 자격 False '
+               '(옛 = recover 가지 읽음 True · 자격 True) · chain_end 가 dict 아님 ([] · "x" · 1 · null · [1]) = 읽음 False (옛 = chain_end 없음과 같게 True) · 아는 '
+               '원인 (None · timeout · signal · signal_after · exception) = 두 가지 모두 고치기 전 값 그대로 (읽음 True)')
+def t_CE01():
+    rows, bad = {}, {}
+    for nm, x in CE_BAD:
+        rows[f'bad/chain/{nm}'] = (ce_row(f'CE01_c_{nm}', {'by': 'chain', 'cause': x, 'rc': 1}), ['parent_dead', False, False])
+        rows[f'bad/recover/{nm}'] = (ce_row(f'CE01_r_{nm}', ce_chain_end(x)), ['parent_dead', False, False])
+    for nm, x in CE_NOT_DICT:
+        e = ce_chain_end(None)
+        e['chain_end'] = x
+        rows[f'not_dict/{nm}'] = (ce_row(f'CE01_n_{nm}', e), ['parent_dead', False, False])
+    for nm, x in CE_KNOWN:
+        wc, wr = CE_KNOWN_WANT[nm]
+        rows[f'known/chain/{nm}'] = (ce_row(f'CE01_kc_{nm}', {'by': 'chain', 'cause': x, 'rc': 1}), [wc, True, wc in RR.RESUME_CAUSES])
+        rows[f'known/recover/{nm}'] = (ce_row(f'CE01_kr_{nm}', ce_chain_end(x)), [wr, True, wr in RR.RESUME_CAUSES])
+    for k, (got, want) in rows.items():
+        if got != want:
+            bad[k] = (got, want)
+    return not bad, {'n': len(rows), 'bad': bad}
+
+
+@check('CE02', '★ 11-05 RR2-01 같은 부류 (A1b) 실경로 (실제 git 원장) — 사슬 끝 기록 (by chain · 미확인 · 러너 rc 1 · 로그 Traceback) 의 원인 칸만 "weird" · false · '
+               '[] → --stage recover --ledger (recover_group 이 그 값을 chain_end 로 옮김) → 결과 줄 interrupted · 결과 뒤 · parent_dead (원인 글 그대로) · 재실행 '
+               '자격 False → --add --resume 1 = rc 3 RESUME_NOT_ALLOWED · 원장 무변경 (옛 = 자격 True · rc 0) · by chain 확인 끝 기록 원인 "weird" = 같은 답 · 대조 = '
+               'chain_end 원인 timeout + 낱말 없는 로그 (parent_dead · rc 0) · 원인 None + rc 1 (runner_rc · rc 3) = 그대로')
+def t_CE02():
+    cases = (('weird', {'cause': 'weird', 'rc': 1, 'confirmed': False}, RC02_LOG, 'parent_dead', False),
+             ('false', {'cause': False, 'rc': 1, 'confirmed': False}, RC02_LOG, 'parent_dead', False),
+             ('list', {'cause': [], 'rc': 1, 'confirmed': False}, RC02_LOG, 'parent_dead', False),
+             ('by_chain_weird', {'cause': 'weird', 'rc': 1, 'confirmed': True}, RC02_LOG, 'parent_dead', False),
+             ('ctl_timeout', {'cause': 'timeout', 'rc': -9, 'confirmed': False}, '[p2] run\n', 'parent_dead', True),
+             ('ctl_none_rc1', {'cause': None, 'rc': 1, 'confirmed': False}, RC02_LOG, 'runner_rc', False))
+
+    def go():
+        out = {}
+        for nm, end, log, _c, _ok in cases:
+            r = rc_recover_resume(f'CE02_{nm}', dict({'by': 'chain', 'left': [999989]}, **end), log)
+            er = json.loads((Path(TD) / 'runs' / f'CE02_{nm}' / 'attempt_1' / 'groups' / 'L01_floor.end.json').read_text(encoding='utf-8'))
+            r['end'] = [er.get('by'), (er.get('chain_end') or {}).get('cause') if isinstance(er.get('chain_end'), dict) else '(none)']
+            out[nm] = r
+        return out
+    rows = scen('CE02', go)
+    bad = {}
+    for nm, end, _log, c, ok in cases:
+        rewritten = end['confirmed'] is False
+        want = {'recover_rc': 0, 'result': {'status': 'interrupted', 'side': 'post', 'cause': c, 'resume_ok': ok, 'by': 'recover'},
+                'resume_rc': 0 if ok else 3, 'not_allowed': not ok, 'ledger_same': None if ok else True,
+                'end': ['recover', end['cause']] if rewritten else ['chain', '(none)']}
+        got = {k: rows[nm].get(k) for k in want}
+        if got != want:
+            bad[nm] = {k: (got[k], want[k]) for k in want if got[k] != want[k]}
+    return not bad, {'bad': bad, 'rows': {nm: (r['result'].get('cause'), r['result'].get('resume_ok'), r['resume_rc'], r['end']) for nm, r in rows.items()}}
+
+
+# ── ★ 11-05 Codex 회차 ② PC6-05 (봉인 전 필수 · 수정 계획 Q2 (가) · 1저자 11-05 "권고대로") — 요약 있는 길의 멈춘 런 로그가 없거나 못 읽으면 "오류 낱말 ──
+#    없음" 으로 읽혀 재실행 자격 (판정문 §5 · TIME_LIMIT + 첫 결과 표지 + 로그 없음 = resume_ok true 독립 재현) · 고침 = `run_log_text` → (글, 상태) 상태 ok
+#    (일반 파일을 읽음 · 빈 글 포함) · no_run (이름 없음 · RUN_DIR_RE 밖) · missing (없음 · 끊긴 링크) · unreadable (폴더 · FIFO · 장치 · 권한 · 그 밖 OSError)
+#    · 한 번 연 fd (O_RDONLY | O_NONBLOCK | O_NOCTTY) 의 fstat 으로 일반 파일만 · 요약 있는 길 = 상태 ok 아니면 재실행 자격 False · 예외 = 런을 띄우기 전
+#    TIME_LIMIT (런 기록 · 그룹 시작 기록 · 로그 다 없음) · 요약 없는 길 (`orphan_cause`) = 같은 읽기
+LG_PLAIN = '[p2] run\n'
+LG_OOM = 'cupy.cuda.memory.OutOfMemoryError: out of memory allocating 1024 bytes\n'
+LG_ILLEGAL = 'cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_ILLEGAL_ADDRESS: an illegal memory access was encountered\n'
+#: 요약 있는 길 멈춤 꼴 (이름, 멈춤 코드, 런 기록 칸 | None = 런 기록 없음 (런 전 TIME_LIMIT), 읽을 수 있는 로그 글, 그 로그를 읽었을 때 원인)
+LG_STOPS = (
+    ('TIME_LIMIT', 'TIME_LIMIT', {'rc': None, 'group_cause': 'timeout'}, LG_PLAIN, 'timeout'),
+    ('timeout', 'RUNNER_RC', {'rc': None, 'group_cause': 'timeout'}, LG_PLAIN, 'timeout'),
+    ('signal', 'RUNNER_RC', {'rc': None, 'group_cause': 'signal'}, LG_PLAIN, 'signal'),
+    ('signal_after', 'RUNNER_RC', {'rc': None, 'group_cause': 'signal_after'}, LG_PLAIN, 'signal'),
+    ('group_unconfirmed', 'GROUP_UNCONFIRMED', {'rc': 0, 'group_cause': None}, LG_PLAIN, 'group_unconfirmed'),
+    ('RUNNER_RC', 'RUNNER_RC', {'rc': 1, 'group_cause': None}, LG_OOM, 'resource'),
+    ('prestart_TIME_LIMIT', 'TIME_LIMIT', None, LG_PLAIN, 'timeout'),
+    ('norecord_GROUP_UNCONFIRMED', 'GROUP_UNCONFIRMED', None, LG_PLAIN, 'group_unconfirmed'),   # 런 기록 없음 · 런 전 예외 = TIME_LIMIT 만
+)
+#: 로그 꼴 — clean (읽힘) · missing (없음) · folder (그 이름 = 폴더) · perm (권한 없음 · root = 자식을 uid 65534 로 내려 실제 EACCES) · no_run (멈춤 기록 run
+#:   = None) · pathlike (run = ../logs/L01_floor — 옛 = 그 경로를 따라 같은 로그를 읽었다)
+LG_LOGS = ('clean', 'missing', 'folder', 'perm', 'no_run', 'pathlike')
+LG_STATE = {'clean': 'ok', 'missing': 'missing', 'folder': 'unreadable', 'perm': 'unreadable', 'no_run': 'no_run', 'pathlike': 'no_run'}
+LG_RUN = 'L01_floor'
+
+
+def lg_child(fn, timeout=30.0, drop=False):
+    """fn() 을 포크한 자식에서 (drop = root 면 uid · gid 65534 로 내려서 — 실제 권한 오류) → JSON 결과 · 시간 상한 안에 끝나지 않으면 (FIFO 에 막힘) 자식을 죽이고
+    {'timeout': True} — 시험 프로세스는 막히지 않는다."""
+    import select
+    import signal as _sig
+    r, w = os.pipe()
+    pid = os.fork()
+    if pid == 0:                                          # 자식 — 끝은 늘 os._exit (부모의 정리를 돌리지 않는다)
+        code = 0
+        try:
+            os.close(r)
+            if drop and os.getuid() == 0:
+                os.setgroups([])
+                os.setresgid(65534, 65534, 65534)
+                os.setresuid(65534, 65534, 65534)
+            out = fn()
+        except BaseException as e:                        # noqa: BLE001
+            out = {'error': f'{type(e).__name__}: {e}'}
+        try:
+            buf = json.dumps(out, sort_keys=True, default=repr).encode('utf-8')
+            while buf:
+                buf = buf[os.write(w, buf):]
+        except BaseException:                             # noqa: BLE001
+            code = 1
+        os._exit(code)
+    os.close(w)
+    chunks, done, t_end = [], False, time.time() + timeout
+    while time.time() < t_end:
+        rl, _w, _x = select.select([r], [], [], 0.25)
+        if rl:
+            x = os.read(r, 65536)
+            if not x:
+                done = True
+                break
+            chunks.append(x)
+    os.close(r)
+    if not done:
+        try:
+            os.kill(pid, _sig.SIGKILL)
+        except OSError:
+            pass
+    os.waitpid(pid, 0)
+    return json.loads(b''.join(chunks).decode('utf-8') or '{}') if done else {'timeout': True}
+
+
+def lg_world_dir(tag):
+    """uid 65534 자식도 지나는 폴더 (root 면 world 임시 바탕 · 0o777) · root 아니면 시험 임시 폴더."""
+    d = Path(tempfile.mkdtemp(prefix=f'lg_{tag}_', dir=pd_world_tmp() if os.getuid() == 0 else str(TD)))
+    os.chmod(d, 0o777)
+    return d
+
+
+def lg_open_tree(d):
+    """폴더 · 파일을 남 (uid 65534) 이 읽게 (폴더 0o777 · 파일 0o644) — 권한 행의 로그만 따로 0o000."""
+    for root, dirs, files in os.walk(d):
+        for x in dirs:
+            os.chmod(os.path.join(root, x), 0o777)
+        for x in files:
+            p = os.path.join(root, x)
+            if not os.path.islink(p):
+                os.chmod(p, 0o644)
+
+
+def lg_summary(code, rec, run):
+    return {'status': 'STOPPED', 'stop': {'code': code, 'run': run, 'reason': None},
+            'runs': [] if rec is None else [dict({'name': run if run is not None else LG_RUN, 'outdir': f'{LG_RUN}_arm1'}, **rec)]}
+
+
+def lg_build(base, stop, cond):
+    """요약 있는 길 합성 시도 폴더 하나 (표지 = 결과 뒤) → (폴더, 요약) — cond = LG_LOGS 하나."""
+    nm, code, rec, txt, _c = stop
+    f = Path(base) / f'{nm}_{cond}'
+    (f / PC_MARK).parent.mkdir(parents=True)
+    (f / PC_MARK).write_text('{}\n', encoding='utf-8')
+    run = None if cond == 'no_run' else ('../logs/' + LG_RUN if cond == 'pathlike' else LG_RUN)
+    lp = f / 'logs' / f'{LG_RUN}.log'
+    lp.parent.mkdir(parents=True)
+    if cond == 'folder':
+        lp.mkdir()
+    elif cond != 'missing':
+        lp.write_text(txt, encoding='utf-8')
+    return f, lg_summary(code, rec, run)
+
+
+def lg_expect(stop, cond):
+    """그 행의 재실행 자격 — 로그를 읽었고 (ok) 원인이 자격 원인 · 또는 런 전 TIME_LIMIT (멈춤 코드 TIME_LIMIT · 런 기록 없음) 이고 로그 없음."""
+    nm, code, rec, _txt, c = stop
+    return (LG_STATE[cond] == 'ok' and c in RR.RESUME_CAUSES) or (code == 'TIME_LIMIT' and rec is None and cond == 'missing')
+
+
+def lg_fields(f, s):
+    fl = RR.result_fields(f, s)
+    st = RR.run_log_text(f, (s.get('stop') or {}).get('run'))
+    return [st[1] if isinstance(st, tuple) else '(글만 · 상태 없음)', fl['cause'], fl['resume_ok']]
+
+
+@check('LG01', '★ 11-05 PC6-05 (판정문 §5 · 수정 계획 Q2 (가)) 표 — 요약 있는 길 멈춤 여덟 (TIME_LIMIT · RUNNER_RC + 시간 초과 · 신호 · 정리 중 신호 · '
+               'GROUP_UNCONFIRMED · RUNNER_RC rc 1 + 메모리 부족 로그 · 런 전 TIME_LIMIT · 런 기록 없는 GROUP_UNCONFIRMED = 예외 아님) × 로그 여섯 (읽힘 · 없음 · 폴더 · 권한 없음 (root = uid 65534 자식 · '
+               '실제 EACCES) · 런 이름 없음 · 경로 꼴 이름 ../logs/L01_floor) → run_log_text 상태 (ok · missing · unreadable · unreadable · no_run · no_run) · '
+               '재실행 자격 = 읽힘 + 자격 원인 · 런 전 TIME_LIMIT + 로그 없음 (런 기록 · 시작 기록 없음) 만 True (옛 = 없음 · 못 읽음 · 이름 없음 · 경로 꼴이 '
+               '"낱말 없음" 으로 자격 True) · 런 전 TIME_LIMIT 이어도 그 런 시작 기록 자리에 파일 · 폴더 · 끊긴 링크가 있으면 False · 요약 없는 길 (by chain '
+               'timeout 끝 기록) × 로그 (읽힘 · 없음 · 폴더 · 권한 · RUN_DIR_RE 밖 이름) = 읽힘만 읽음 True')
+def t_LG01():
+    if not callable(getattr(RR, 'run_log_text', None)):
+        return False, '사슬에 run_log_text 가 없다'
+    rows, bad = {}, {}
+    base = Path(TD) / 'lg01'
+    for stop in LG_STOPS:
+        for cond in LG_LOGS:
+            if cond == 'perm':
+                continue
+            f, s = lg_build(base, stop, cond)
+            rows[f'{stop[0]}/{cond}'] = (lg_fields(f, s), [LG_STATE[cond], None, lg_expect(stop, cond)])
+    pre = [x for x in LG_STOPS if x[0] == 'prestart_TIME_LIMIT'][0]
+    for nm in ('launch_file', 'launch_dir', 'launch_dangling'):
+        f, s = lg_build(base / nm, pre, 'missing')
+        lp = f / RR.GROUPS_DIR / f'{LG_RUN}.launch.json'
+        lp.parent.mkdir(parents=True)
+        if nm == 'launch_file':
+            lp.write_text('{}', encoding='utf-8')
+        elif nm == 'launch_dir':
+            lp.mkdir()
+        else:
+            os.symlink(str(f / 'nowhere.json'), str(lp))
+        rows[f'prestart_TIME_LIMIT/{nm}'] = (lg_fields(f, s), ['missing', None, False])
+    for cond in ('clean', 'missing', 'folder', 'odd_name'):
+        f = pc_folder(f'LG01_orphan_{cond}', {PC_MARK: '{}\n'})
+        nm = 'L 01' if cond == 'odd_name' else LG_RUN
+        pc_group(f, nm, {'by': 'chain', 'cause': 'timeout', 'rc': -9}, None)
+        lp = f / 'logs' / f'{nm}.log'
+        lp.parent.mkdir(parents=True, exist_ok=True)
+        if cond == 'folder':
+            lp.mkdir()
+        elif cond != 'missing':
+            lp.write_text(LG_PLAIN, encoding='utf-8')
+        oc = list(RR.orphan_cause(f))
+        rows[f'orphan/{cond}'] = ([oc[1], RR.result_fields(f, None)['resume_ok']], [cond == 'clean', cond == 'clean'])
+    #  권한 없음 — 남이 지나는 폴더에 만들고 로그만 0o000 · 자식 (root 면 uid 65534) 에서 읽는다 (root 는 권한을 넘어 읽으므로)
+    wd = lg_world_dir('LG01')
+    built = {}
+    for stop in LG_STOPS:
+        built[stop[0]] = lg_build(wd, stop, 'perm')
+    fo = wd / 'orphan_perm'
+    (fo / PC_MARK).parent.mkdir(parents=True)
+    (fo / PC_MARK).write_text('{}\n', encoding='utf-8')
+    pc_group(fo, LG_RUN, {'by': 'chain', 'cause': 'timeout', 'rc': -9}, LG_PLAIN)
+    lg_open_tree(wd)
+    for stop in LG_STOPS:
+        os.chmod(built[stop[0]][0] / 'logs' / f'{LG_RUN}.log', 0)
+    os.chmod(fo / 'logs' / f'{LG_RUN}.log', 0)
+
+    def perm():
+        out = {nm: lg_fields(f, s) for nm, (f, s) in built.items()}
+        oc = list(RR.orphan_cause(fo))
+        out['orphan'] = [oc[1], RR.result_fields(fo, None)['resume_ok']]
+        out['uid'] = os.getuid()
+        return out
+    pr = lg_child(perm, drop=True)
+    for stop in LG_STOPS:
+        rows[f'{stop[0]}/perm'] = (pr.get(stop[0]), ['unreadable', None, lg_expect(stop, 'perm')])
+    rows['orphan/perm'] = (pr.get('orphan'), [False, False])
+    shutil.rmtree(wd, ignore_errors=True)
+    for k, (got, want) in rows.items():
+        g = list(got) if isinstance(got, (list, tuple)) else got
+        if isinstance(g, list) and len(g) == 3:
+            g = [g[0], None, g[2]]                        # 원인 글은 보고만 (판정 = 상태 · 자격)
+        if g != want:
+            bad[k] = (got, want)
+    return not bad, {'n': len(rows), 'perm_uid': pr.get('uid'), 'bad': bad}
+
+
+def lg02_case(tag, mangle):
+    """원장 시도 (사다리 P0) · 첫 런 끝 기록 미확인 (표지 프로세스가 늘 살아 있는 꼴 = AL13) → GROUP_UNCONFIRMED · 결과 줄 없음 → 멈춘 런 로그 (mangle) →
+    --stage recover --ledger → 결과 줄 → --add --resume 1."""
+    d, _rc, _so = led_new(tag)
+    _r, n1, _s = led_add(d, 'ladder:P0')
+    old = (RR.group_members, RR.GROUP_GONE_WAIT_S)
+    RR.group_members, RR.GROUP_GONE_WAIT_S = (lambda token: [999996]), 0.2
+    try:
+        a = lad_att(tag, world(tag), d, n1)
+    finally:
+        RR.group_members, RR.GROUP_GONE_WAIT_S = old
+    res0 = led_result(d, n1)
+    lp = a['out'] / 'logs' / f'{LG_RUN}.log'
+    had = lp.is_file()
+    if mangle == 'deleted':
+        lp.unlink()
+    elif mangle == 'folder':
+        lp.unlink()
+        lp.mkdir()
+    rc_rec, so_rec = call(['--stage', 'recover', '--out', str(a['out']), '--ledger', str(d)])
+    r1 = pc_res(d, n1)
+    raw = led_raw(d)
+    rc_add, _n2, so_add = led_add(d, 'ladder:P0', resume=n1)
+    return {'stop': stop_code(a), 'res0': res0, 'had_log': had, 'recover_rc': rc_rec, 'result': r1, 'resume_rc': rc_add,
+            'not_allowed': 'RESUME_NOT_ALLOWED' in so_add, 'ledger_same': (led_raw(d) == raw) if rc_add else None}
+
+
+@check('LG02', '★ 11-05 PC6-05 실경로 (실제 git 원장) — 원장 사다리 시도의 첫 런이 그룹 미확인 (AL13 꼴 · 결과 뒤) → STOPPED GROUP_UNCONFIRMED · 결과 줄 없음 → '
+               '멈춘 런 로그를 ⓐ 그대로 ⓑ 지움 ⓒ 폴더로 바꿈 → --stage recover --ledger → 결과 줄 (by recover · stopped · group_unconfirmed) 재실행 자격 ⓐ True ⓑ ⓒ '
+               'False → --add --resume 1 = ⓐ rc 0 ⓑ ⓒ rc 3 RESUME_NOT_ALLOWED · 원장 무변경 (옛 = ⓑ ⓒ 도 자격 True · rc 0)')
+def t_LG02():
+    rows = scen('LG02', lambda: {m: lg02_case(f'LG02_{m}', m) for m in ('honest', 'deleted', 'folder')})
+    bad = {}
+    for m, r in rows.items():
+        ok = m == 'honest'
+        want = {'stop': 'GROUP_UNCONFIRMED', 'res0': None, 'had_log': True, 'recover_rc': 0,
+                'result': {'status': 'stopped', 'side': 'post', 'cause': 'group_unconfirmed', 'resume_ok': ok, 'by': 'recover'},
+                'resume_rc': 0 if ok else 3, 'not_allowed': not ok, 'ledger_same': None if ok else True}
+        got = {k: r.get(k) for k in want}
+        if got != want:
+            bad[m] = {k: (got[k], want[k]) for k in want if got[k] != want[k]}
+    return not bad, {'bad': bad, 'rows': {m: (r['result'].get('resume_ok'), r['resume_rc']) for m, r in rows.items()}}
+
+
+def lg03_fifo_dir(d, nm):
+    f = Path(d) / nm
+    (f / 'logs').mkdir(parents=True)
+    os.mkfifo(str(f / 'logs' / f'{LG_RUN}.log'))
+    return f
+
+
+def lg03_r1(d):
+    """FIFO (쓰는 쪽 없음) — 열기가 막히지 않고 unreadable."""
+    return list(RR.run_log_text(lg03_fifo_dir(d, 'r1'), LG_RUN))
+
+
+def lg03_r2(d):
+    """FIFO (쓰는 쪽 있음 · 아무것도 안 씀)."""
+    f = lg03_fifo_dir(d, 'r2')
+    hold = os.open(str(f / 'logs' / f'{LG_RUN}.log'), os.O_RDWR | os.O_NONBLOCK)
+    try:
+        return list(RR.run_log_text(f, LG_RUN))
+    finally:
+        os.close(hold)
+
+
+def lg03_r3(d):
+    """장치 (/dev/null 로 가는 링크) — 읽으면 빈 글이지만 일반 파일이 아니다."""
+    f = Path(d) / 'r3'
+    (f / 'logs').mkdir(parents=True)
+    os.symlink('/dev/null', str(f / 'logs' / f'{LG_RUN}.log'))
+    return list(RR.run_log_text(f, LG_RUN))
+
+
+def lg03_r4(d):
+    """요약 없는 길 · FIFO 로그 (옛 = read_text 가 막힘)."""
+    f = Path(d) / 'r4'
+    (f / PC_MARK).parent.mkdir(parents=True)
+    (f / PC_MARK).write_text('{}\n', encoding='utf-8')
+    pc_group(f, LG_RUN, {'by': 'chain', 'cause': 'timeout', 'rc': -9}, None)
+    (f / 'logs').mkdir(parents=True, exist_ok=True)
+    os.mkfifo(str(f / 'logs' / f'{LG_RUN}.log'))
+    return list(RR.orphan_cause(f))
+
+
+def lg03_r5(d):
+    """요약 있는 길 · FIFO 로그 · 런 기록 있는 TIME_LIMIT."""
+    pre = [x for x in LG_STOPS if x[0] == 'TIME_LIMIT'][0]
+    f, s = lg_build(Path(d) / 'r5', pre, 'missing')
+    os.mkfifo(str(f / 'logs' / f'{LG_RUN}.log'))
+    return RR.result_fields(f, s)['resume_ok']
+
+
+def lg03_r6(d):
+    """확인 뒤 바꿔치기 — 그 로그 경로를 is_file 로 본 직후 FIFO 로 바뀜 (옛 = is_file → read_text 가 막힘) · 로그 = 잘못된 주소 (읽으면 runner_rc)."""
+    import pathlib as _pl
+    pre = [x for x in LG_STOPS if x[0] == 'TIME_LIMIT'][0]
+    f, s = lg_build(Path(d) / 'r6', (pre[0], pre[1], pre[2], LG_ILLEGAL, 'runner_rc'), 'clean')
+    lp = f / 'logs' / f'{LG_RUN}.log'
+    orig = _pl.Path.is_file
+
+    def is_file_swap(self):
+        res = orig(self)
+        if res and str(self) == str(lp):
+            os.rename(str(lp), str(lp) + '.old')
+            os.mkfifo(str(lp))
+        return res
+    _pl.Path.is_file = is_file_swap
+    try:
+        fl = RR.result_fields(f, s)
+    finally:
+        _pl.Path.is_file = orig
+    return [fl['cause'], fl['resume_ok']]
+
+
+def lg03_r7(d):
+    """연 뒤 바꿔치기 — 그 로그를 연 직후 FIFO 로 바뀜 → 판정 = 연 fd 의 fstat · 읽기 (같은 대상)."""
+    pre = [x for x in LG_STOPS if x[0] == 'TIME_LIMIT'][0]
+    f, _s = lg_build(Path(d) / 'r7', (pre[0], pre[1], pre[2], LG_ILLEGAL, 'runner_rc'), 'clean')
+    lp = f / 'logs' / f'{LG_RUN}.log'
+    orig = os.open
+
+    def open_swap(p, *a, **k):
+        fd = orig(p, *a, **k)
+        if str(p) == str(lp) and not os.path.lexists(str(lp) + '.old'):
+            os.rename(str(lp), str(lp) + '.old')
+            os.mkfifo(str(lp))
+        return fd
+    os.open = open_swap
+    try:
+        t = RR.run_log_text(f, LG_RUN)
+    finally:
+        os.open = orig
+    return [t[1], 'ILLEGAL_ADDRESS' in t[0]] if isinstance(t, tuple) else ['(글만)', 'ILLEGAL_ADDRESS' in t]
+
+
+def lg03_r8(d):
+    """읽기 중 OSError (EIO 흉내 · 연 뒤 os.read 가 실패) — 없음이 아니라 unreadable."""
+    import errno
+    f = Path(d) / 'r8'
+    (f / 'logs').mkdir(parents=True)
+    (f / 'logs' / f'{LG_RUN}.log').write_text(LG_PLAIN, encoding='utf-8')
+    orig = os.read
+
+    def bad_read(fd, n):
+        raise OSError(errno.EIO, '시험 — 읽기 중 입출력 오류')
+    os.read = bad_read
+    try:
+        return list(RR.run_log_text(f, LG_RUN))
+    finally:
+        os.read = orig
+
+
+LG03_ROWS = (('fifo_direct', lg03_r1, ['', 'unreadable']), ('fifo_writer', lg03_r2, ['', 'unreadable']), ('device', lg03_r3, ['', 'unreadable']),
+             ('fifo_orphan', lg03_r4, ['timeout', False]), ('fifo_summary', lg03_r5, False), ('swap_after_check', lg03_r6, ['runner_rc', False]),
+             ('swap_after_open', lg03_r7, ['ok', True]), ('read_error', lg03_r8, ['', 'unreadable']))
+
+
+@check('LG03', '★ 11-05 PC6-05 막힘 · 바꿔치기 (포크한 자식 · 시간 상한 30 s · 시험은 막히지 않는다) — FIFO 로그 (쓰는 쪽 없음 · 있음) · /dev/null 링크 = '
+               'unreadable (일반 파일 검사 · 옛 길에 없던 검사를 지우면 빈 글 ok 로 샌다) · 요약 없는 길 FIFO 로그 = 읽음 False (옛 = read_text 가 막힘 → 시간 '
+               '초과) · 요약 있는 길 FIFO 로그 = 자격 False · is_file 확인 직후 FIFO 로 바뀜 = 확인 없이 연 fd 로 읽음 (잘못된 주소 = runner_rc · 옛 = 막힘) · 연 '
+               '직후 바뀜 = 연 대상 그대로 읽음 (ok · 그 글) · 연 뒤 읽기 중 OSError (EIO 흉내) = unreadable')
+def t_LG03():
+    if not callable(getattr(RR, 'run_log_text', None)):
+        return False, '사슬에 run_log_text 가 없다'
+    got, bad = {}, {}
+    for nm, fn, want in LG03_ROWS:
+        d = Path(TD) / 'lg03' / nm
+        d.mkdir(parents=True)
+        r = lg_child(lambda: {'v': fn(d)}, timeout=15.0)
+        got[nm] = r.get('v') if 'v' in r else r
+        if got[nm] != want:
+            bad[nm] = (got[nm], want)
+    return not bad, {'got': got, 'bad': bad}
+
+
+# ── ★ 11-05 PC6-05 같은 부류 (독립 사전 공격 · A2b) — 있는데 못 읽는 단계 요약 (잘린 JSON · 0xff 머리 · 객체 아닌 JSON · 빈 파일 · 폴더 · FIFO …) 을 ──
+#    "요약 없음" 으로 읽어 요약 없는 길 (parent_dead · 재실행 자격) 로 가던 결함 · 고침 = 결과 줄 원인 summary_unreadable · 재실행 자격 False · 단계 요약 =
+#    원자적 쓰기 (`write_json_atomic` · 바이트 = 옛 `write_json` 과 같음)
+SU_BAD = (('truncated', b'{"status": "STOPPED", "stop": {"co'), ('ff_prefix', b'\xff{"status": "STOPPED"}\n'), ('list', b'[1, 2]\n'),
+          ('string', b'"STOPPED"\n'), ('empty_list', b'[]\n'), ('empty_object', b'{}\n'), ('no_status', b'{"runs": [], "stop": null}\n'),
+          ('empty', b''), ('deep', b'[' * 100000 + b']' * 100000 + b'\n'))
+SU_UNREAD = {'status': 'interrupted', 'stop': None, 'side': 'post', 'cause': 'summary_unreadable', 'resume_ok': False}
+#: 읽히는 요약 (런 전 TIME_LIMIT · 런 기록 · 로그 · 시작 기록 없음 = 재실행 자격) — 대조 줄
+SU_VALID = {'status': 'STOPPED', 'stop': {'code': 'TIME_LIMIT', 'run': 'L02_ceiling', 'reason': None}, 'runs': []}
+
+
+def su_folder(tag):
+    """요약 없는 합성 시도 폴더 (표지 = 결과 뒤 · 첫 런 끝남 = by chain · 원인 None · rc 0) → 폴더 (요약 없음 = parent_dead · 재실행 자격)."""
+    f = pc_folder(tag, {PC_MARK: '{}\n'})
+    pc_group(f, 'L01_floor', {'by': 'chain', 'cause': None, 'rc': 0}, '[p2] run\n')
+    return f
+
+
+def su_fifo_row(d):
+    f = Path(d) / 'fifo' / 'attempt_1'
+    (f / PC_MARK).parent.mkdir(parents=True)
+    (f / PC_MARK).write_text('{}\n', encoding='utf-8')
+    pc_group(f, 'L01_floor', {'by': 'chain', 'cause': None, 'rc': 0}, '[p2] run\n')
+    os.mkfifo(str(f / 'ladder_summary.json'))
+    return RR.result_recount(f)
+
+
+@check('SU01', '★ 11-05 A2b (PC6-05 같은 부류) — 있는데 못 읽는 단계 요약 = "요약 없음" 이 아니다: 요약 없는 합성 시도 (첫 런 끝남 · 결과 뒤 = parent_dead · '
+               '자격 True) 에 ladder_summary.json 을 잘린 JSON · 0xff 머리 · 객체 아님 ([1, 2] · "글" · []) · {} · status 없는 객체 · 빈 파일 · 깊이 10 만 중첩 · '
+               '폴더 · FIFO (포크한 자식 · 시간 상한) 로 → 다시 셈 = interrupted · 결과 뒤 · summary_unreadable · 자격 False (옛 = parent_dead · True · [1, 2] = '
+               'AttributeError · FIFO = 막힘) · 둘째 이름 (predict_summary.json) · 읽히는 요약 + 못 읽는 unit_summary.json = 같은 답 · 읽히는 요약만 = 그 요약대로 · '
+               '실경로 (실제 git 원장) 잘린 요약 · [1] → --stage recover --ledger 결과 줄 summary_unreadable · False → --add --resume 1 = rc 3 '
+               'RESUME_NOT_ALLOWED · 요약 없음 대조 = parent_dead · rc 0')
+def t_SU01():
+    rows, bad = {}, {}
+    rows['absent'] = (RR.result_recount(su_folder('SU01_absent')),
+                      {'status': 'interrupted', 'stop': None, 'side': 'post', 'cause': 'parent_dead', 'resume_ok': True})
+    for nm, raw in SU_BAD:
+        f = su_folder(f'SU01_{nm}')
+        (f / 'ladder_summary.json').write_bytes(raw)
+        try:
+            got = RR.result_recount(f)
+        except Exception as e:                             # noqa: BLE001 — 옛 = 객체 아닌 요약에서 예외
+            got = f'EXC {type(e).__name__}'
+        rows[nm] = (got, SU_UNREAD)
+    f = su_folder('SU01_folder')
+    (f / 'ladder_summary.json').mkdir()
+    rows['folder'] = (RR.result_recount(f), SU_UNREAD)
+    f = su_folder('SU01_second')
+    (f / 'predict_summary.json').write_bytes(SU_BAD[0][1])
+    rows['second_name'] = (RR.result_recount(f), SU_UNREAD)
+    f = su_folder('SU01_valid_plus_bad')
+    (f / 'ladder_summary.json').write_text(json.dumps(SU_VALID), encoding='utf-8')
+    (f / 'unit_summary.json').write_bytes(SU_BAD[0][1])
+    rows['valid_plus_bad'] = (RR.result_recount(f), SU_UNREAD)
+    f = su_folder('SU01_valid')
+    (f / 'ladder_summary.json').write_text(json.dumps(SU_VALID), encoding='utf-8')
+    rows['valid'] = (RR.result_recount(f), {'status': 'stopped', 'stop': {'code': 'TIME_LIMIT', 'run': 'L02_ceiling', 'reason': None}, 'side': 'post',
+                                            'cause': 'timeout', 'resume_ok': True})
+    d = Path(TD) / 'su01_fifo'
+    d.mkdir()
+    r = lg_child(lambda: {'v': su_fifo_row(d)}, timeout=15.0)
+    rows['fifo'] = (r.get('v') if 'v' in r else r, SU_UNREAD)
+
+    def real():
+        out = {}
+        for nm, raw in (('none', None), ('truncated', SU_BAD[0][1]), ('list1', b'[1]\n')):
+            def prep(f, raw=raw):
+                if raw is not None:
+                    (f / 'ladder_summary.json').write_bytes(raw)
+            try:
+                out[nm] = rc_recover_resume(f'SU01r_{nm}', {'by': 'chain', 'cause': None, 'rc': 0, 'confirmed': True}, '[p2] run\n', prep=prep)
+            except Exception as e:                         # noqa: BLE001 — 옛 = 객체 아닌 요약에서 recover 가 예외
+                out[nm] = {'exc': f'{type(e).__name__}: {e}'[:200]}
+        return out
+    rr = scen('SU01r', real)
+    for nm, r in rr.items():
+        ok = nm == 'none'
+        c = 'parent_dead' if ok else 'summary_unreadable'
+        want = {'recover_rc': 0, 'result': {'status': 'interrupted', 'side': 'post', 'cause': c, 'resume_ok': ok, 'by': 'recover'},
+                'resume_rc': 0 if ok else 3, 'not_allowed': not ok, 'ledger_same': None if ok else True}
+        rows[f'real/{nm}'] = ({k: r.get(k) for k in want}, want)
+    for k, (got, want) in rows.items():
+        if got != want:
+            bad[k] = (got, want)
+    return not bad, {'n': len(rows), 'bad': bad}
+
+
+def su02_summary_writes(src):
+    """원천에서 단계 요약 이름 (…_summary.json 글 · sname · MERGE_SUMMARY) 으로 write_json 을 부르는 자리 (줄) — 원자적 쓰기 아님."""
+    out = []
+    for node in ast.walk(ast.parse(src)):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == 'write_json' and node.args:
+            seg = ast.get_source_segment(src, node.args[0]) or ''
+            if 'summary' in seg or 'sname' in seg or 'MERGE_SUMMARY' in seg:
+                out.append((node.lineno, seg))
+    return out
+
+
+@check('SU02', '★ 11-05 A2b 단계 요약 = 원자적 쓰기 — ⓐ 사다리 · 예측 단계 (계획 밖 --max-hours = 러너 전 멈춤) · 합치기 (원장 자리가 git 저장소 아님 = 러너 전 멈춤) '
+               '의 요약 (ladder_summary.json · predict_summary.json) 이 write_json_atomic 으로 쓰이고 (같은 폴더 임시 파일 → os.replace) 그 바이트 = 그 객체의 정준 '
+               '바이트 (옛 write_json 과 같은 직렬화 · canon_bytes(_clean)) ⓑ 정상 런 요약 (주 사다리 P0 · 주 예측) = 옛 write_json 으로 다시 쓴 바이트 · 새 '
+               'write_summary 로 다시 쓴 바이트 · 파일 바이트 셋이 같음 ⓒ os.replace 가 실패하는 꼴 (쓰다 죽음 흉내) = 요약 없음 (반쯤 쓰인 요약이 남지 않는다 · '
+               '임시 파일 = 온전한 요약) ⓓ 원천에 단계 요약 이름으로 write_json 을 부르는 자리 0 (사다리 · 예측 · 단위 · 점 · 합치기 둘) — 옛 = 제자리 쓰기')
+def t_SU02():
+    out = {}
+    names = []
+    orig = RR.write_json_atomic
+
+    def spy(path, obj):
+        names.append((Path(path).name, RR.canon_bytes(obj)))
+        return orig(path, obj)
+
+    def via(res, nm):
+        sp = res['out'] / nm
+        raw = sp.read_bytes() if sp.is_file() else b''
+        got = [b for n, b in names if n == nm]
+        return [stop_code(res), len(got) == 1, bool(got) and got[0] == raw,
+                bool(raw) and raw == RR.canon_bytes(RR._clean(json.loads(raw.decode('utf-8')))),
+                sorted(q.name for q in res['out'].iterdir() if '.tmp.' in q.name)]
+    lads = [s_main('P0')['out'], s_main('P1')['out']]
+    RR.write_json_atomic = spy
+    try:
+        a = ladder('SU02_gate', world('SU02_gate'), max_hours='3')
+        out['a_ladder'] = via(a, 'ladder_summary.json')
+        del names[:]
+        pr = predict('SU02_pgate', world('SU02_pgate'), lads, max_hours='3')
+        out['a_predict'] = via(pr, 'predict_summary.json')
+        del names[:]
+        nd = Path(TD) / 'su02_not_git'
+        nd.mkdir()
+        mo = Path(TD) / 'runs' / 'SU02_merge'
+        rc_m, _so = call(predict_argv(mo, [str(x) for x in lads]) + ['--merge', str(nd), '--ledger', str(nd)], world('SU02_merge'))
+        msum = mo / 'predict_summary.json'
+        mres = {'out': mo, 'sum': json.loads(msum.read_text(encoding='utf-8')) if msum.is_file() else None}
+        out['a_merge'] = [rc_m] + via(mres, 'predict_summary.json')
+    finally:
+        RR.write_json_atomic = orig
+    same = {}
+    for nm, q in (('ladder_P0', s_main('P0')['out'] / 'ladder_summary.json'), ('predict', s_main_predict()['out'] / 'predict_summary.json')):
+        raw = q.read_bytes()
+        obj = json.loads(raw.decode('utf-8'))
+        d = Path(TD) / 'su02' / nm
+        d.mkdir(parents=True)
+        RR.write_json(d / 'old.json', obj)
+        ws = getattr(RR, 'write_summary', None)
+        if ws is not None:
+            ws(d / 'new.json', obj)
+        new = (d / 'new.json').read_bytes() if (d / 'new.json').is_file() else None
+        same[nm] = [(d / 'old.json').read_bytes() == raw, new == raw]
+    out['b'] = same
+    real_replace = os.replace
+
+    def bad_replace(src, dst, *a, **k):
+        if str(dst).endswith('_summary.json'):
+            raise OSError('시험 — 요약 이름 바꾸기 전 죽음 흉내')
+        return real_replace(src, dst, *a, **k)
+    os.replace = bad_replace
+    err = None
+    try:
+        ladder('SU02_torn', world('SU02_torn'), max_hours='3')
+    except OSError as e:
+        err = str(e)
+    finally:
+        os.replace = real_replace
+    od = Path(TD) / 'runs' / 'SU02_torn'
+    tmp = sorted(q for q in od.iterdir() if q.name.startswith('ladder_summary.json.tmp.')) if od.is_dir() else []
+    tmp_ok = bool(tmp) and isinstance(json.loads(tmp[0].read_bytes().decode('utf-8')), dict)
+    out['c'] = [err is not None, (od / 'ladder_summary.json').exists(), tmp_ok]
+    out['d'] = su02_summary_writes(Path(RR.__file__).read_text(encoding='utf-8'))
+    want = {'a_ladder': ['NOT_REGISTERED', True, True, True, []], 'a_predict': ['NOT_REGISTERED', True, True, True, []],
+            'a_merge': [3, 'ATTEMPT_LEDGER_MISMATCH', True, True, True, []], 'b': {'ladder_P0': [True, True], 'predict': [True, True]},
+            'c': [True, False, True], 'd': []}
+    return out == want, {'got': out, 'want': want}
 
 
 # ═════════════════════════ 실행 ═════════════════════════

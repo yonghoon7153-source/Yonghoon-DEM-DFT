@@ -1,0 +1,104 @@
+[
+  {
+    "rc": 1,
+    "type": "int",
+    "runner_rc_failed": true,
+    "group_problem": null,
+    "orphan": [
+      "runner_rc",
+      true
+    ],
+    "fields": {
+      "status": "interrupted",
+      "stop": null,
+      "side": "post",
+      "cause": "runner_rc",
+      "resume_ok": false
+    }
+  },
+  {
+    "rc": false,
+    "type": "bool",
+    "runner_rc_failed": true,
+    "group_problem": null,
+    "orphan": [
+      "runner_rc",
+      true
+    ],
+    "fields": {
+      "status": "interrupted",
+      "stop": null,
+      "side": "post",
+      "cause": "runner_rc",
+      "resume_ok": false
+    }
+  },
+  {
+    "rc": 0.0,
+    "type": "float",
+    "runner_rc_failed": true,
+    "group_problem": null,
+    "orphan": [
+      "runner_rc",
+      true
+    ],
+    "fields": {
+      "status": "interrupted",
+      "stop": null,
+      "side": "post",
+      "cause": "runner_rc",
+      "resume_ok": false
+    }
+  },
+  {
+    "rc": "0",
+    "type": "str",
+    "runner_rc_failed": true,
+    "group_problem": null,
+    "orphan": [
+      "runner_rc",
+      true
+    ],
+    "fields": {
+      "status": "interrupted",
+      "stop": null,
+      "side": "post",
+      "cause": "runner_rc",
+      "resume_ok": false
+    }
+  },
+  {
+    "rc": null,
+    "type": "NoneType",
+    "runner_rc_failed": false,
+    "group_problem": null,
+    "orphan": [
+      "runner_rc",
+      true
+    ],
+    "fields": {
+      "status": "interrupted",
+      "stop": null,
+      "side": "post",
+      "cause": "runner_rc",
+      "resume_ok": false
+    }
+  },
+  {
+    "rc": 0,
+    "type": "int",
+    "runner_rc_failed": false,
+    "group_problem": null,
+    "orphan": [
+      "parent_dead",
+      true
+    ],
+    "fields": {
+      "status": "interrupted",
+      "stop": null,
+      "side": "post",
+      "cause": "parent_dead",
+      "resume_ok": true
+    }
+  }
+]

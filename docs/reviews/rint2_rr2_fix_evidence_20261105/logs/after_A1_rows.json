@@ -1,0 +1,214 @@
+{
+ "chain_sha256": "97adad9c0f4317d4145a907d99f2e9e1654ac749ecb51e936d2e63474fc18be3",
+ "checks": {
+  "RC01": {
+   "pass": true,
+   "why": {
+    "consumers_without_reader": [],
+    "missing_readers": [],
+    "n_raw": 0,
+    "raw_reads": [],
+    "scanner_flagged_good": [],
+    "scanner_missed_bad": []
+   }
+  },
+  "RC02": {
+   "pass": true,
+   "why": {
+    "bad": {},
+    "rows": {
+     "false": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "float0": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "int0": [
+      "parent_dead",
+      true,
+      0
+     ],
+     "int1": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "negzero": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "none": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "str0": [
+      "runner_rc",
+      false,
+      3
+     ],
+     "true": [
+      "runner_rc",
+      false,
+      3
+     ]
+    }
+   }
+  },
+  "RC03": {
+   "pass": true,
+   "why": {
+    "bad": {},
+    "predict": {
+     "confirm_false": [
+      3,
+      "LADDER_SET",
+      0,
+      true
+     ],
+     "confirm_float0": [
+      3,
+      "LADDER_SET",
+      0,
+      true
+     ],
+     "noop_false": [
+      3,
+      "LADDER_SET",
+      0,
+      true
+     ]
+    },
+    "unit": {
+     "rc03_merge": [
+      [
+       "read",
+       1
+      ],
+      [
+       "UNIT_PROVENANCE_MISMATCH",
+       0
+      ],
+      [
+       "UNIT_PROVENANCE_MISMATCH",
+       0
+      ],
+      [
+       "UNIT_PROVENANCE_MISMATCH",
+       0
+      ],
+      [
+       "UNIT_PROVENANCE_MISMATCH",
+       0
+      ],
+      [
+       "UNIT_PROVENANCE_MISMATCH",
+       0
+      ],
+      [
+       "UNIT_PROVENANCE_MISMATCH",
+       0
+      ],
+      [
+       "UNIT_PROVENANCE_MISMATCH",
+       0
+      ]
+     ],
+     "rc03_noop": [
+      [
+       "read",
+       1
+      ],
+      [
+       "LADDER_SET",
+       0
+      ],
+      [
+       "LADDER_SET",
+       0
+      ],
+      [
+       "LADDER_SET",
+       0
+      ],
+      [
+       "LADDER_SET",
+       0
+      ],
+      [
+       "LADDER_SET",
+       0
+      ],
+      [
+       "LADDER_SET",
+       0
+      ],
+      [
+       "LADDER_SET",
+       0
+      ]
+     ],
+     "rc03_replay": [
+      [
+       "read",
+       1
+      ],
+      [
+       "REPLAY_MISMATCH",
+       0
+      ],
+      [
+       "REPLAY_MISMATCH",
+       0
+      ],
+      [
+       "REPLAY_MISMATCH",
+       0
+      ],
+      [
+       "REPLAY_MISMATCH",
+       0
+      ],
+      [
+       "REPLAY_MISMATCH",
+       0
+      ],
+      [
+       "REPLAY_MISMATCH",
+       0
+      ],
+      [
+       "REPLAY_MISMATCH",
+       0
+      ]
+     ]
+    }
+   }
+  },
+  "RC04": {
+   "pass": true,
+   "why": {
+    "bad": {}
+   }
+  },
+  "RC05": {
+   "pass": true,
+   "why": {
+    "bad": {},
+    "loose_changes": [
+     "False",
+     "0.0",
+     "-0.0"
+    ]
+   }
+  }
+ },
+ "seconds": 7.6,
+ "test_sha256": "11656a4d24d1cedf24885e1d907e104dbe3836ff6a6fa62ea7ba74b6f6c09120",
+ "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a57dad061fd8750b0"
+}

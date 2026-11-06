@@ -1,0 +1,145 @@
+{
+ "chain_sha256": "d3775ca843654682f3c9a18327a15ccf682a309c071bac6fa542ef91556e46cb",
+ "checks": {
+  "LG01": {
+   "pass": true,
+   "why": {
+    "bad": {},
+    "n": 56,
+    "perm_uid": 65534
+   }
+  },
+  "LG03": {
+   "pass": true,
+   "why": {
+    "bad": {},
+    "got": {
+     "device": [
+      "",
+      "unreadable"
+     ],
+     "fifo_direct": [
+      "",
+      "unreadable"
+     ],
+     "fifo_orphan": [
+      "timeout",
+      false
+     ],
+     "fifo_summary": false,
+     "fifo_writer": [
+      "",
+      "unreadable"
+     ],
+     "read_error": [
+      "",
+      "unreadable"
+     ],
+     "swap_after_check": [
+      "runner_rc",
+      false
+     ],
+     "swap_after_open": [
+      "ok",
+      true
+     ]
+    }
+   }
+  },
+  "SU01": {
+   "pass": true,
+   "why": {
+    "bad": {},
+    "n": 18
+   }
+  },
+  "SU02": {
+   "pass": true,
+   "why": {
+    "got": {
+     "a_ladder": [
+      "NOT_REGISTERED",
+      true,
+      true,
+      true,
+      []
+     ],
+     "a_merge": [
+      3,
+      "ATTEMPT_LEDGER_MISMATCH",
+      true,
+      true,
+      true,
+      []
+     ],
+     "a_predict": [
+      "NOT_REGISTERED",
+      true,
+      true,
+      true,
+      []
+     ],
+     "b": {
+      "ladder_P0": [
+       true,
+       true
+      ],
+      "predict": [
+       true,
+       true
+      ]
+     },
+     "c": [
+      true,
+      false,
+      true
+     ],
+     "d": []
+    },
+    "want": {
+     "a_ladder": [
+      "NOT_REGISTERED",
+      true,
+      true,
+      true,
+      []
+     ],
+     "a_merge": [
+      3,
+      "ATTEMPT_LEDGER_MISMATCH",
+      true,
+      true,
+      true,
+      []
+     ],
+     "a_predict": [
+      "NOT_REGISTERED",
+      true,
+      true,
+      true,
+      []
+     ],
+     "b": {
+      "ladder_P0": [
+       true,
+       true
+      ],
+      "predict": [
+       true,
+       true
+      ]
+     },
+     "c": [
+      true,
+      false,
+      true
+     ],
+     "d": []
+    }
+   }
+  }
+ },
+ "seconds": 6.2,
+ "test_sha256": "583b7c3d0319c8ac99535c2681b549b39a190d70c108184b753b0169f8801222",
+ "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a57dad061fd8750b0"
+}

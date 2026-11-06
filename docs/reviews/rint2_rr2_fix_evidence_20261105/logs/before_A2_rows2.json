@@ -1,0 +1,743 @@
+{
+ "chain_sha256": "e6d66bf11eb6651825c8253cd0c1dfc144a6427ac0522ac9267a6d4763c01fb7",
+ "checks": {
+  "LG01": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "RUNNER_RC/clean": [
+      [
+       "(글만 · 상태 없음)",
+       "resource",
+       true
+      ],
+      [
+       "ok",
+       null,
+       true
+      ]
+     ],
+     "RUNNER_RC/folder": [
+      [
+       "(글만 · 상태 없음)",
+       "runner_rc",
+       false
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "RUNNER_RC/missing": [
+      [
+       "(글만 · 상태 없음)",
+       "runner_rc",
+       false
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "RUNNER_RC/no_run": [
+      [
+       "(글만 · 상태 없음)",
+       "runner_rc",
+       false
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "RUNNER_RC/pathlike": [
+      [
+       "(글만 · 상태 없음)",
+       "resource",
+       true
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "RUNNER_RC/perm": [
+      [
+       "(글만 · 상태 없음)",
+       "runner_rc",
+       false
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "TIME_LIMIT/clean": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "ok",
+       null,
+       true
+      ]
+     ],
+     "TIME_LIMIT/folder": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "TIME_LIMIT/missing": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "TIME_LIMIT/no_run": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "TIME_LIMIT/pathlike": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "TIME_LIMIT/perm": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "group_unconfirmed/clean": [
+      [
+       "(글만 · 상태 없음)",
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "ok",
+       null,
+       true
+      ]
+     ],
+     "group_unconfirmed/folder": [
+      [
+       "(글만 · 상태 없음)",
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "group_unconfirmed/missing": [
+      [
+       "(글만 · 상태 없음)",
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "group_unconfirmed/no_run": [
+      [
+       "(글만 · 상태 없음)",
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "group_unconfirmed/pathlike": [
+      [
+       "(글만 · 상태 없음)",
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "group_unconfirmed/perm": [
+      [
+       "(글만 · 상태 없음)",
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "norecord_GROUP_UNCONFIRMED/clean": [
+      [
+       "(글만 · 상태 없음)",
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "ok",
+       null,
+       true
+      ]
+     ],
+     "norecord_GROUP_UNCONFIRMED/folder": [
+      [
+       "(글만 · 상태 없음)",
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "norecord_GROUP_UNCONFIRMED/missing": [
+      [
+       "(글만 · 상태 없음)",
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "norecord_GROUP_UNCONFIRMED/no_run": [
+      [
+       "(글만 · 상태 없음)",
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "norecord_GROUP_UNCONFIRMED/pathlike": [
+      [
+       "(글만 · 상태 없음)",
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "norecord_GROUP_UNCONFIRMED/perm": [
+      [
+       "(글만 · 상태 없음)",
+       "group_unconfirmed",
+       true
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "orphan/odd_name": [
+      [
+       true,
+       true
+      ],
+      [
+       false,
+       false
+      ]
+     ],
+     "prestart_TIME_LIMIT/clean": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "ok",
+       null,
+       true
+      ]
+     ],
+     "prestart_TIME_LIMIT/folder": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "prestart_TIME_LIMIT/launch_dangling": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "prestart_TIME_LIMIT/launch_dir": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "prestart_TIME_LIMIT/launch_file": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "prestart_TIME_LIMIT/missing": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "missing",
+       null,
+       true
+      ]
+     ],
+     "prestart_TIME_LIMIT/no_run": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "prestart_TIME_LIMIT/pathlike": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "prestart_TIME_LIMIT/perm": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "signal/clean": [
+      [
+       "(글만 · 상태 없음)",
+       "signal",
+       true
+      ],
+      [
+       "ok",
+       null,
+       true
+      ]
+     ],
+     "signal/folder": [
+      [
+       "(글만 · 상태 없음)",
+       "signal",
+       true
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "signal/missing": [
+      [
+       "(글만 · 상태 없음)",
+       "signal",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "signal/no_run": [
+      [
+       "(글만 · 상태 없음)",
+       "runner_rc",
+       false
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "signal/pathlike": [
+      [
+       "(글만 · 상태 없음)",
+       "signal",
+       true
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "signal/perm": [
+      [
+       "(글만 · 상태 없음)",
+       "signal",
+       true
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "signal_after/clean": [
+      [
+       "(글만 · 상태 없음)",
+       "signal",
+       true
+      ],
+      [
+       "ok",
+       null,
+       true
+      ]
+     ],
+     "signal_after/folder": [
+      [
+       "(글만 · 상태 없음)",
+       "signal",
+       true
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "signal_after/missing": [
+      [
+       "(글만 · 상태 없음)",
+       "signal",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "signal_after/no_run": [
+      [
+       "(글만 · 상태 없음)",
+       "runner_rc",
+       false
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "signal_after/pathlike": [
+      [
+       "(글만 · 상태 없음)",
+       "signal",
+       true
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "signal_after/perm": [
+      [
+       "(글만 · 상태 없음)",
+       "signal",
+       true
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "timeout/clean": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "ok",
+       null,
+       true
+      ]
+     ],
+     "timeout/folder": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ],
+     "timeout/missing": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "missing",
+       null,
+       false
+      ]
+     ],
+     "timeout/no_run": [
+      [
+       "(글만 · 상태 없음)",
+       "runner_rc",
+       false
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "timeout/pathlike": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "no_run",
+       null,
+       false
+      ]
+     ],
+     "timeout/perm": [
+      [
+       "(글만 · 상태 없음)",
+       "timeout",
+       true
+      ],
+      [
+       "unreadable",
+       null,
+       false
+      ]
+     ]
+    },
+    "n": 56,
+    "perm_uid": 65534
+   }
+  },
+  "LG03": {
+   "pass": false,
+   "why": {
+    "bad": {
+     "device": [
+      [],
+      [
+       "",
+       "unreadable"
+      ]
+     ],
+     "fifo_direct": [
+      [],
+      [
+       "",
+       "unreadable"
+      ]
+     ],
+     "fifo_orphan": [
+      {
+       "timeout": true
+      },
+      [
+       "timeout",
+       false
+      ]
+     ],
+     "fifo_summary": [
+      true,
+      false
+     ],
+     "fifo_writer": [
+      [],
+      [
+       "",
+       "unreadable"
+      ]
+     ],
+     "read_error": [
+      [
+       "[",
+       "p",
+       "2",
+       "]",
+       " ",
+       "r",
+       "u",
+       "n",
+       "\n"
+      ],
+      [
+       "",
+       "unreadable"
+      ]
+     ],
+     "swap_after_check": [
+      {
+       "timeout": true
+      },
+      [
+       "runner_rc",
+       false
+      ]
+     ],
+     "swap_after_open": [
+      [
+       "(글만)",
+       true
+      ],
+      [
+       "ok",
+       true
+      ]
+     ]
+    },
+    "got": {
+     "device": [],
+     "fifo_direct": [],
+     "fifo_orphan": {
+      "timeout": true
+     },
+     "fifo_summary": true,
+     "fifo_writer": [],
+     "read_error": [
+      "[",
+      "p",
+      "2",
+      "]",
+      " ",
+      "r",
+      "u",
+      "n",
+      "\n"
+     ],
+     "swap_after_check": {
+      "timeout": true
+     },
+     "swap_after_open": [
+      "(글만)",
+      true
+     ]
+    }
+   }
+  }
+ },
+ "seconds": 31.1,
+ "test_sha256": "9404d2451a577ebe48f63e2996ec00ba8695932444f60308e64d8b9dfdb77d2d",
+ "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a57dad061fd8750b0"
+}

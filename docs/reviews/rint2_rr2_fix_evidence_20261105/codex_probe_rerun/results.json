@@ -1,0 +1,2355 @@
+{
+  "environment": {
+    "platform": "Linux-6.18.44-fc-v242-x86_64-with-glibc2.39",
+    "python": "3.11.18 (main, Oct 26 2026, 15:28:55) [GCC 13.3.0]",
+    "mode": "synthetic-only; Linux identity mocked; Git sequential lock shim; no production runs"
+  },
+  "source_sha256": {
+    "scripts/rint_r_chain.py": "d3775ca843654682f3c9a18327a15ccf682a309c071bac6fa542ef91556e46cb",
+    "scripts/rint_first_result.py": "36049f80c39cd8dc026d0c11447d2c3d18b7ac50159f6dc937471303d8de36fb"
+  },
+  "passed": 310,
+  "total": 311,
+  "checks": [
+    {
+      "name": "word_plain",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_plain_RUNNER_RC_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_plain_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_plain_TIME_LIMIT_None",
+      "pass": true,
+      "got": "timeout",
+      "expected": "timeout"
+    },
+    {
+      "name": "summary_plain_RUNNER_RC_None",
+      "pass": true,
+      "got": "signal",
+      "expected": "signal"
+    },
+    {
+      "name": "orphan_plain_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_plain_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_plain_timeout",
+      "pass": true,
+      "got": [
+        "timeout",
+        true
+      ],
+      "expected": [
+        "timeout",
+        true
+      ]
+    },
+    {
+      "name": "eligible_plain_timeout",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_plain_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_plain_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_plain_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_plain_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_python",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_python_RUNNER_RC_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_python_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_python_TIME_LIMIT_None",
+      "pass": true,
+      "got": "timeout",
+      "expected": "timeout"
+    },
+    {
+      "name": "summary_python_RUNNER_RC_None",
+      "pass": true,
+      "got": "signal",
+      "expected": "signal"
+    },
+    {
+      "name": "orphan_python_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_python_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_python_timeout",
+      "pass": true,
+      "got": [
+        "timeout",
+        true
+      ],
+      "expected": [
+        "timeout",
+        true
+      ]
+    },
+    {
+      "name": "eligible_python_timeout",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_python_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_python_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_python_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_python_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_oom",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_oom_RUNNER_RC_1",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_oom_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_oom_TIME_LIMIT_None",
+      "pass": true,
+      "got": "timeout",
+      "expected": "timeout"
+    },
+    {
+      "name": "summary_oom_RUNNER_RC_None",
+      "pass": true,
+      "got": "signal",
+      "expected": "signal"
+    },
+    {
+      "name": "orphan_oom_runner_rc",
+      "pass": true,
+      "got": [
+        "resource",
+        true
+      ],
+      "expected": [
+        "resource",
+        true
+      ]
+    },
+    {
+      "name": "eligible_oom_runner_rc",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_oom_timeout",
+      "pass": true,
+      "got": [
+        "timeout",
+        true
+      ],
+      "expected": [
+        "timeout",
+        true
+      ]
+    },
+    {
+      "name": "eligible_oom_timeout",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_oom_runner_rc",
+      "pass": true,
+      "got": [
+        "resource",
+        true
+      ],
+      "expected": [
+        "resource",
+        true
+      ]
+    },
+    {
+      "name": "eligible_oom_runner_rc",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_oom_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_oom_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_host",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_host_RUNNER_RC_1",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_host_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_host_TIME_LIMIT_None",
+      "pass": true,
+      "got": "timeout",
+      "expected": "timeout"
+    },
+    {
+      "name": "summary_host_RUNNER_RC_None",
+      "pass": true,
+      "got": "signal",
+      "expected": "signal"
+    },
+    {
+      "name": "orphan_host_runner_rc",
+      "pass": true,
+      "got": [
+        "resource",
+        true
+      ],
+      "expected": [
+        "resource",
+        true
+      ]
+    },
+    {
+      "name": "eligible_host_runner_rc",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_host_timeout",
+      "pass": true,
+      "got": [
+        "timeout",
+        true
+      ],
+      "expected": [
+        "timeout",
+        true
+      ]
+    },
+    {
+      "name": "eligible_host_timeout",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_host_runner_rc",
+      "pass": true,
+      "got": [
+        "resource",
+        true
+      ],
+      "expected": [
+        "resource",
+        true
+      ]
+    },
+    {
+      "name": "eligible_host_runner_rc",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_host_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_host_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_disk",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_disk_RUNNER_RC_1",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_disk_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_disk_TIME_LIMIT_None",
+      "pass": true,
+      "got": "timeout",
+      "expected": "timeout"
+    },
+    {
+      "name": "summary_disk_RUNNER_RC_None",
+      "pass": true,
+      "got": "signal",
+      "expected": "signal"
+    },
+    {
+      "name": "orphan_disk_runner_rc",
+      "pass": true,
+      "got": [
+        "resource",
+        true
+      ],
+      "expected": [
+        "resource",
+        true
+      ]
+    },
+    {
+      "name": "eligible_disk_runner_rc",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_disk_timeout",
+      "pass": true,
+      "got": [
+        "timeout",
+        true
+      ],
+      "expected": [
+        "timeout",
+        true
+      ]
+    },
+    {
+      "name": "eligible_disk_timeout",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_disk_runner_rc",
+      "pass": true,
+      "got": [
+        "resource",
+        true
+      ],
+      "expected": [
+        "resource",
+        true
+      ]
+    },
+    {
+      "name": "eligible_disk_runner_rc",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_disk_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_disk_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_gpu",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_gpu_RUNNER_RC_1",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_gpu_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_gpu_TIME_LIMIT_None",
+      "pass": true,
+      "got": "timeout",
+      "expected": "timeout"
+    },
+    {
+      "name": "summary_gpu_RUNNER_RC_None",
+      "pass": true,
+      "got": "signal",
+      "expected": "signal"
+    },
+    {
+      "name": "orphan_gpu_runner_rc",
+      "pass": true,
+      "got": [
+        "resource",
+        true
+      ],
+      "expected": [
+        "resource",
+        true
+      ]
+    },
+    {
+      "name": "eligible_gpu_runner_rc",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_gpu_timeout",
+      "pass": true,
+      "got": [
+        "timeout",
+        true
+      ],
+      "expected": [
+        "timeout",
+        true
+      ]
+    },
+    {
+      "name": "eligible_gpu_timeout",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_gpu_runner_rc",
+      "pass": true,
+      "got": [
+        "resource",
+        true
+      ],
+      "expected": [
+        "resource",
+        true
+      ]
+    },
+    {
+      "name": "eligible_gpu_runner_rc",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_gpu_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_gpu_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_cupy_oom",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_cupy_oom_RUNNER_RC_1",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_cupy_oom_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "resource",
+      "expected": "resource"
+    },
+    {
+      "name": "summary_cupy_oom_TIME_LIMIT_None",
+      "pass": true,
+      "got": "timeout",
+      "expected": "timeout"
+    },
+    {
+      "name": "summary_cupy_oom_RUNNER_RC_None",
+      "pass": true,
+      "got": "signal",
+      "expected": "signal"
+    },
+    {
+      "name": "orphan_cupy_oom_runner_rc",
+      "pass": true,
+      "got": [
+        "resource",
+        true
+      ],
+      "expected": [
+        "resource",
+        true
+      ]
+    },
+    {
+      "name": "eligible_cupy_oom_runner_rc",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_cupy_oom_timeout",
+      "pass": true,
+      "got": [
+        "timeout",
+        true
+      ],
+      "expected": [
+        "timeout",
+        true
+      ]
+    },
+    {
+      "name": "eligible_cupy_oom_timeout",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_cupy_oom_runner_rc",
+      "pass": true,
+      "got": [
+        "resource",
+        true
+      ],
+      "expected": [
+        "resource",
+        true
+      ]
+    },
+    {
+      "name": "eligible_cupy_oom_runner_rc",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_cupy_oom_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_cupy_oom_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_illegal_oom",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_illegal_oom_RUNNER_RC_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_illegal_oom_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_illegal_oom_TIME_LIMIT_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_illegal_oom_RUNNER_RC_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "orphan_illegal_oom_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_illegal_oom_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_illegal_oom_timeout",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_illegal_oom_timeout",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_illegal_oom_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_illegal_oom_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_illegal_oom_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_illegal_oom_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_illegal_runtime",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_illegal_runtime_RUNNER_RC_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_illegal_runtime_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_illegal_runtime_TIME_LIMIT_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_illegal_runtime_RUNNER_RC_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "orphan_illegal_runtime_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_illegal_runtime_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_illegal_runtime_timeout",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_illegal_runtime_timeout",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_illegal_runtime_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_illegal_runtime_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_illegal_runtime_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_illegal_runtime_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_assert",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_assert_RUNNER_RC_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_assert_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_assert_TIME_LIMIT_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_assert_RUNNER_RC_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "orphan_assert_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_assert_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_assert_timeout",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_assert_timeout",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_assert_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_assert_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_assert_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_assert_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_launch",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_launch_RUNNER_RC_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_launch_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_launch_TIME_LIMIT_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_launch_RUNNER_RC_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "orphan_launch_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_launch_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_launch_timeout",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_launch_timeout",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_launch_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_launch_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_launch_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_launch_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_driver",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_driver_RUNNER_RC_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_driver_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_driver_TIME_LIMIT_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_driver_RUNNER_RC_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "orphan_driver_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_driver_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_driver_timeout",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_driver_timeout",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_driver_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_driver_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_driver_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_driver_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_blas",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_blas_RUNNER_RC_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_blas_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_blas_TIME_LIMIT_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_blas_RUNNER_RC_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "orphan_blas_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_blas_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_blas_timeout",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_blas_timeout",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_blas_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_blas_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_blas_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_blas_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_solver",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_solver_RUNNER_RC_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_solver_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_solver_TIME_LIMIT_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_solver_RUNNER_RC_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "orphan_solver_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_solver_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_solver_timeout",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_solver_timeout",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_solver_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_solver_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_solver_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_solver_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_sparse",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_sparse_RUNNER_RC_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_sparse_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_sparse_TIME_LIMIT_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_sparse_RUNNER_RC_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "orphan_sparse_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_sparse_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_sparse_timeout",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_sparse_timeout",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_sparse_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_sparse_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_sparse_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_sparse_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_fft",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_fft_RUNNER_RC_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_fft_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_fft_TIME_LIMIT_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_fft_RUNNER_RC_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "orphan_fft_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_fft_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_fft_timeout",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_fft_timeout",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_fft_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_fft_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_fft_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_fft_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "word_bare_oom",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_bare_oom_RUNNER_RC_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_bare_oom_GROUP_UNCONFIRMED_1",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_bare_oom_TIME_LIMIT_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "summary_bare_oom_RUNNER_RC_None",
+      "pass": true,
+      "got": "runner_rc",
+      "expected": "runner_rc"
+    },
+    {
+      "name": "orphan_bare_oom_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_bare_oom_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_bare_oom_timeout",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_bare_oom_timeout",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_bare_oom_runner_rc",
+      "pass": true,
+      "got": [
+        "runner_rc",
+        true
+      ],
+      "expected": [
+        "runner_rc",
+        true
+      ]
+    },
+    {
+      "name": "eligible_bare_oom_runner_rc",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "orphan_bare_oom_chain_exception",
+      "pass": true,
+      "got": [
+        "chain_exception",
+        true
+      ],
+      "expected": [
+        "chain_exception",
+        true
+      ]
+    },
+    {
+      "name": "eligible_bare_oom_chain_exception",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "parent_alive",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "start_alive",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "parent_reused",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "start_reused",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "parent_dead",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "start_dead",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "parent_zombie",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "start_zombie",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "parent_unreadable",
+      "pass": true,
+      "got": null,
+      "expected": null
+    },
+    {
+      "name": "visible_unknown_no_override",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "unknown_start_live",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "host_changed_machine_id",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "unseen_requires_operator_machine_id",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "unseen_operator_machine_id",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "host_changed_boot_id",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "unseen_requires_operator_boot_id",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "unseen_operator_boot_id",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "host_changed_pidns",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "unseen_requires_operator_pidns",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "unseen_operator_pidns",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "legacy_requires_operator",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "legacy_operator",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "no_start_legacy",
+      "pass": true,
+      "got": [
+        null,
+        false
+      ],
+      "expected": [
+        null,
+        false
+      ]
+    },
+    {
+      "name": "proc_live_z_thread",
+      "pass": true,
+      "got": [
+        10,
+        30
+      ],
+      "expected": [
+        10,
+        30
+      ]
+    },
+    {
+      "name": "unrelated_eacces_ignored",
+      "pass": true,
+      "got": [
+        10,
+        30
+      ],
+      "expected": [
+        10,
+        30
+      ]
+    },
+    {
+      "name": "related_eacces_unconfirmed",
+      "pass": true,
+      "got": null,
+      "expected": null
+    },
+    {
+      "name": "visible_members_preserved",
+      "pass": true,
+      "got": [
+        10,
+        30
+      ],
+      "expected": [
+        10,
+        30
+      ]
+    },
+    {
+      "name": "unknown_never_confirmed",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "bound_honest",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "bound_honest_source_done",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "mismatched_token",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "groups_reject_token",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_reject_token",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "source_reject_token",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "recover_reject_token",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "mismatched_name",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "groups_reject_name",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "orphan_reject_name",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "source_reject_name",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "recover_reject_name",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "source_rc_type_False",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "source_rc_type_0.0",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "source_rc_type_'0'",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "ledger_valid_start",
+      "pass": true,
+      "got": 1,
+      "expected": 1
+    },
+    {
+      "name": "ledger_start_duplicate",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "ledger_start_after_result",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "ledger_start_before_entry",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "adopt_skip_pre_resume",
+      "pass": true,
+      "got": [
+        1,
+        3
+      ],
+      "expected": [
+        1,
+        3
+      ]
+    },
+    {
+      "name": "adopt_refuse_new_post",
+      "pass": true,
+      "got": "ATTEMPT_AFTER_ADOPTED",
+      "expected": "ATTEMPT_AFTER_ADOPTED"
+    },
+    {
+      "name": "al07_honest",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "al07_digest",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "al07_folder",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "al07_status",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "al07_stop",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "al07_empty",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "al07_wrong_n",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "al07_wrong_schema",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "al07_wrong_code",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "al07_trace_attempt.json",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "al07_trace_ladder_summary.json",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "al07_trace_groups/L01.end.json",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "al07_trace_x/p2_a.json.tmp",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "al07_trace_x/one.first_result.json",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "found_honest_foreign",
+      "pass": true,
+      "got": null,
+      "expected": null
+    },
+    {
+      "name": "found_reject_fake_exception",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "found_changed_target",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "second_out_rejected",
+      "pass": true,
+      "got": 3,
+      "expected": 3
+    },
+    {
+      "name": "second_out_not_created",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "second_out_ledger_unchanged",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "recover_live_before_runner",
+      "pass": true,
+      "got": [
+        1,
+        0
+      ],
+      "expected": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "recover_live_operator_blocked",
+      "pass": true,
+      "got": [
+        1,
+        0
+      ],
+      "expected": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "recover_live_no_result",
+      "pass": true,
+      "got": {},
+      "expected": {}
+    },
+    {
+      "name": "recover_dead_no_runner",
+      "pass": true,
+      "got": [
+        0,
+        0
+      ],
+      "expected": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "recover_dead_pre",
+      "pass": true,
+      "got": "pre",
+      "expected": "pre"
+    },
+    {
+      "name": "recover_digest_changed",
+      "pass": true,
+      "got": [
+        1,
+        0
+      ],
+      "expected": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "append_failure_rollback",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "append_failure_index_clean",
+      "pass": true,
+      "got": "",
+      "expected": ""
+    },
+    {
+      "name": "history_honest",
+      "pass": true,
+      "got": null,
+      "expected": null
+    },
+    {
+      "name": "history_ours_rejected",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "reverify_ignore_later_other_target",
+      "pass": true,
+      "got": 1,
+      "expected": 1
+    },
+    {
+      "name": "reverify_refuse_later_same_target",
+      "pass": true,
+      "got": "ATTEMPT_LEDGER_MISMATCH",
+      "expected": "ATTEMPT_LEDGER_MISMATCH"
+    },
+    {
+      "name": "report_c_source_manifest_count",
+      "pass": true,
+      "got": 93,
+      "expected": 93
+    },
+    {
+      "name": "report_c_source_hashes",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "known_PC6_05_summary_missing_log_resume",
+      "pass": false,
+      "got": false,
+      "expected": true
+    },
+    {
+      "name": "marker_success_rc",
+      "pass": true,
+      "got": 0,
+      "expected": 0
+    },
+    {
+      "name": "marker_before_return",
+      "pass": true,
+      "got": true,
+      "expected": true
+    },
+    {
+      "name": "marker_existing_aborts",
+      "pass": true,
+      "got": 5,
+      "expected": 5
+    },
+    {
+      "name": "marker_failure_no_return",
+      "pass": true,
+      "got": false,
+      "expected": false
+    },
+    {
+      "name": "budget_old_registration_82_R0_only_one_machine_h",
+      "pass": true,
+      "got": [
+        205.8,
+        248.9
+      ],
+      "expected": [
+        205.8,
+        248.9
+      ]
+    },
+    {
+      "name": "budget_all3_one_machine_h",
+      "pass": true,
+      "got": [
+        220.2,
+        318.8
+      ],
+      "expected": [
+        220.2,
+        318.8
+      ]
+    }
+  ]
+}
