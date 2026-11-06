@@ -5,3 +5,7 @@ copy_head: ff0e416ae18e7c8690ea0ff2c94085fc34c6f4d8
 repo_head: 68d1ffb7f9a151f74975e9b8d8f598157c609975
 copy_dirty: 0
 disk_free_start: 23818858496
+end_utc: 2026-11-06T06:01:22Z
+rc: 3
+elapsed_s: 329.99
+disk_free_end: 23817957376
