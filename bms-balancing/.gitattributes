@@ -282,3 +282,5 @@ reviews/review_reil_c4e_e1_1_3_resume_result_review_20261105/** -text
 reviews/review_reil_c4a_scope_review_20261106/** -text
 # 2026-11-06: REIL C4-A 범위안 v2 검토 회신 (SCOPE_V2_ACCEPTED_N1_N4_CLOSED_FOR_IMPLEMENTATION_REQUEST_BASELINE · 새 지적 0 · U1–U3 사용자 몫 · 고정 HEAD c97cd115 · 실행 승인 아님 · source/ · input/ · basis/ 의 *.py · *.py.txt = 실행하지 않음) — bytes 그대로
 reviews/review_reil_c4a_scope_v2_review_20261106/** -text
+# 2026-11-06: REIL C4-A 구현 요청서 v1 사전 검토 회신 (REVISION_REQUIRED_BEFORE_IMPLEMENTATION_AND_TEST_APPROVAL · C4A-IMPL-N1–N7 · 고정 HEAD 86cab053 · 실행 승인 아님 · source/ · input/ · basis/ 의 *.py · *.py.txt = 실행하지 않음) — bytes 그대로
+reviews/review_reil_c4a_impl_prereview_20261106/** -text
