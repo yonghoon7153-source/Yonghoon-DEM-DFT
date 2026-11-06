@@ -1,0 +1,25 @@
+{
+  "kind": "proposal_only",
+  "apply_now": false,
+  "closure_claimed": false,
+  "active_registration_change": false,
+  "whole_gate": "HOLD",
+  "new_findings": [],
+  "new_research_results": 0,
+  "proposed_progress_lines": [
+    "LHS N 수용 초안의 미결정 코호트/대응쌍/종점/N/불확실성/원 덱 신원 계약을 별도 비활성 정의 초안으로 구체화. 기존 수용본 보존, 새 독립 검토와 1저자 비준 대기.",
+    "P_Rend는 프로토콜 종점 기술 분석 제안이며 물리 평형 인증 아님. 선행 여섯/관련 결과 노출 확인 불가 시 독립 미열람 집합 주장 금지. 실제 입력 신원 null.",
+    "LHS 재고 GO·A/C·값 열람, 믹서 NP20·E0 단독 후 최대2·wave 순서·실행 GO 권고를 분리. 실행/제출/값 열람 없음; MLA01/P1 및02/03 외부 재확인, MXD2R 별도 대기."
+  ],
+  "preserve_open": [
+    "LPI-A01 historical cause",
+    "time risks",
+    "MLA-01/P1",
+    "MLA-02/P2",
+    "MLA-03/P2",
+    "MXD2R separate recheck"
+  ],
+  "shared_records_modified": false,
+  "author_controls_integration_timing": true,
+  "priority": "Rint②"
+}

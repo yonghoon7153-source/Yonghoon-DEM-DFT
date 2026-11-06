@@ -1,0 +1,143 @@
+{
+  "schema": "lhs_n_preaccess_source_bindings/v1",
+  "entries": [
+    {
+      "purpose": "prior N definition",
+      "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/prospective_definition.json",
+      "bytes": 6168,
+      "sha256": "f473bf4cd805a0c320584d4920815ac0991d88247b8c2b1b6ee652fdef835af2",
+      "git_blob": "ed956e2693e4e3a3673600588ec560253c877018",
+      "mode": "repository static text only; no source execution; no research output opened"
+    },
+    {
+      "purpose": "prior static analysis",
+      "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/static_analysis.md",
+      "bytes": 12726,
+      "sha256": "44f673ca3f66476db62d5a525c614afe045881b476190da7071a37c3761d6c8b",
+      "git_blob": "5c35b32b5680b5c543addf88edeec074fb7dac49",
+      "mode": "repository static text only; no source execution; no research output opened"
+    },
+    {
+      "purpose": "prior bounded source search record",
+      "pin": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "path": "docs/reviews/lhs_pressure_n_dependence_draft_20261106/source_inventory.json",
+      "bytes": 3378,
+      "sha256": "6a614ebb0417d3b85f45eb5f7825594649d5a7dbb64e14a5e626146accbf4eed",
+      "git_blob": "42fa2442628fac681f34008ce0ac979e920339cb",
+      "mode": "repository static text only; no source execution; no research output opened"
+    },
+    {
+      "purpose": "external acceptance boundary",
+      "pin": "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+      "path": "docs/reviews/lhs_n_draft_acceptance_20261106/disposition.json",
+      "bytes": 1930,
+      "sha256": "cb7008e7ef276ad1c2a027e7098e0e942b26588c97ef85a4f9a17d313c9156fe",
+      "git_blob": "41041604095c3e307db90cde799536f8125ca87b",
+      "mode": "repository static text only; no source execution; no research output opened"
+    },
+    {
+      "purpose": "accepted damping definition",
+      "pin": "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+      "path": "docs/reviews/lhs_pressure_damping_companion_draft_20261105/companion_draft.json",
+      "bytes": 2509,
+      "sha256": "fdb15d127e840423ccca90275a1d4e1fb80c855916b71aef12973a220bcb70b7",
+      "git_blob": "078b797d7f030d2e0d934faba07cf6fd8781e05f",
+      "mode": "repository static text only; no source execution; no research output opened"
+    },
+    {
+      "purpose": "inventory preparation scope",
+      "pin": "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+      "path": "docs/reviews/lhs_inventory_execution_preparation_20261106/README.md",
+      "bytes": 9991,
+      "sha256": "c4022ac64a0b167d4e50edf7473721fbeb8a845999abc9f5a9ddf1a5d4a9f57b",
+      "git_blob": "cddbdd728cf83b6f0554817de042e6612d537245",
+      "mode": "repository static text only; no source execution; no research output opened"
+    },
+    {
+      "purpose": "inventory acceptance boundary",
+      "pin": "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+      "path": "docs/reviews/lhs_inventory_preparation_acceptance_20261106/README.md",
+      "bytes": 3506,
+      "sha256": "ee723a0005fcb219d9333442ebc6f8be08a0658331f6521c2a43d7ba2e37709b",
+      "git_blob": "80231102af8ec72938236a52053388429aa45616",
+      "mode": "repository static text only; no source execution; no research output opened"
+    },
+    {
+      "purpose": "A/C options historical document",
+      "pin": "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+      "path": "docs/reviews/lhs_pressure_inventory_20261104/received/20261104-0233_lhs-pressure-refusal.md",
+      "bytes": 16104,
+      "sha256": "6afe50b420bbd4ff0b4a02086de166ab25b430c85810046686a8af16de08ef3a",
+      "git_blob": "6d8c50bc73dc90d30113f1109a19d4572a2b4c1c",
+      "mode": "repository static text only; no source execution; no research output opened"
+    },
+    {
+      "purpose": "source text only",
+      "pin": "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+      "path": "scripts/lhs_ext_materialize.py",
+      "bytes": 70481,
+      "sha256": "96d207ad7fb7bfa31f766ef3a77e5090e92278a119c7ebb951c809042162bbfc",
+      "git_blob": "dcb1eb6bb2432b0059304543f8e0661977263ce1",
+      "mode": "repository static text only; no source execution; no research output opened"
+    },
+    {
+      "purpose": "source text only",
+      "pin": "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+      "path": "scripts/press_units.py",
+      "bytes": 4987,
+      "sha256": "493fcc42f2ed4b880362c81766004cf96d0f3a3ed8514aeff9cfe6ed387842dd",
+      "git_blob": "a11fe7b082c11404493b727c4239ddc78106fbaf",
+      "mode": "repository static text only; no source execution; no research output opened"
+    },
+    {
+      "purpose": "source text only",
+      "pin": "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+      "path": "scripts/lhs_pressure_record.py",
+      "bytes": 12493,
+      "sha256": "34eb74142884489505590501840ccc6423a014a508989c82f135020146283ad3",
+      "git_blob": "b0a1c9884b45d1426aad15f6e72426583af2a1d1",
+      "mode": "repository static text only; no source execution; no research output opened"
+    },
+    {
+      "purpose": "downstream field source reference",
+      "pin": "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+      "path": "scripts/lhs_descriptor_harvest.py",
+      "bytes": 223454,
+      "sha256": "96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e",
+      "git_blob": "05686cf18da4b4da4f04d251bacd4c9f76a761c7",
+      "mode": "repository static text only; no source execution; no research output opened"
+    },
+    {
+      "purpose": "downstream field source reference",
+      "pin": "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+      "path": "scripts/lhs_release_build.py",
+      "bytes": 228690,
+      "sha256": "3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383",
+      "git_blob": "035585e86f3206289295b715d92e944e81348222",
+      "mode": "repository static text only; no source execution; no research output opened"
+    },
+    {
+      "purpose": "mixer current preparation scope",
+      "pin": "a4c78001f706c08de1dddcac09a31a921c4faca7",
+      "path": "docs/reviews/mixer_first8_launch_preparation_20261106/README.md",
+      "bytes": 12327,
+      "sha256": "13855f91329e420fe09fbfcd7e94659ad51869fa06ace483dab980ee8f7b6db7",
+      "git_blob": "2583d53a0dbfac9640d22448e0ff5881257727f2",
+      "mode": "repository static text only; no source execution; no research output opened"
+    },
+    {
+      "purpose": "mixer unclosed correction scope",
+      "pin": "a4c78001f706c08de1dddcac09a31a921c4faca7",
+      "path": "docs/reviews/mixer_mla_recheck_20261106/README.md",
+      "bytes": 5104,
+      "sha256": "bfaeff06494412569b90338b6b8161eb761cee300bdbbe21ada7dcbe24ddbdc0",
+      "git_blob": "1009d929f48fdf04d337276a10039a14ca35c6d6",
+      "mode": "repository static text only; no source execution; no research output opened"
+    }
+  ],
+  "actual_run_input_files_verified": 0,
+  "actual_run_input_hashes": null,
+  "scope_note": "Repository code/document identities are not executed input identities. Historical documents contain relayed observations; none is newly measured, used to fill LHS results, or certified here."
+}
