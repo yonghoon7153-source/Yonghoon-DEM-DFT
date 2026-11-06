@@ -1,0 +1,16 @@
+{"case": "PRECAL_R1_B1_U", "approval_sha256": "e2d260337a364749f6161d70c926abaa3257a3606acb58a6f47a0fc3bcc2fe5d", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_R1_B1_C", "approval_sha256": "2af0454b8893aadbb6583a2ccd462639f6adb8ba9c296eb4d463ba9ff6167d02", "returncode": 0, "stdout": "12347\n", "stderr": "", "state": "SUBMITTED", "job_id": "12347"}
+F
+======================================================================
+FAIL: test_shared_concurrency_one (__main__.MLATests.test_shared_concurrency_one)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-fdq9d96o/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 113, in test_shared_concurrency_one
+    self.assertEqual(sum(out),1);self.assertEqual(len(f.calls),1)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.026s
+
+FAILED (failures=1)

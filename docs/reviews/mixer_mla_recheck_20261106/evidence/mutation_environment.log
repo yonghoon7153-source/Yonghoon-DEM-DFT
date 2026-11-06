@@ -1,0 +1,115 @@
+{"case": "PRECAL_E0", "approval_sha256": "96859f2bcabffe743afe119ce4f74041ac155311680938dbe951e94a8e36da80", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "approval_sha256": "03f89b4467f52ea285f52da214d14466ba5408f1d9572a2853f4dab2302e2567", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "approval_sha256": "bd29bca3335dd0e4fd1211e9922ef2dd00241bcc64807e68a076d4a72e73f467", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "approval_sha256": "3e731338b5352030463d5cd870232aa24f4835ad8728e260c3f1ddc04609278c", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "approval_sha256": "dbd9e69a1cc230bf15ce4996352f4631749ec0e71a9b420e8047ca2d48c8acc2", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "approval_sha256": "955037da6138a0da649064645cb3246cdabeb0502d5618646bf52fd712158c0e", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "approval_sha256": "aa5e1f462540ee8f52b6e5bf501caea43d0d47abc6d14c4afb6be47731e95129", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "approval_sha256": "ab433a7a0bc8d6717ad45cd0d776d9fc8eddc33910777e702543ca73e46fb382", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "approval_sha256": "1367bdd9d5584f2198a0f2858745faeeee76672fcdedb4f4b577f899dfd5e5c5", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "approval_sha256": "67580839f592ad203cac0508b3e6d3f19924583cb3d73393bbe16c2f218e05ac", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "approval_sha256": "19d45bd36c99fad8deb688e0a28649f63b4dae464f62b41bdaa9533f19a1a82b", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+FFFFFFFFFFF
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SBATCH_ARRAY_INX')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-s4_nmgxk/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SBATCH_QOS')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-s4_nmgxk/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SBATCH_PARTITION')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-s4_nmgxk/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SBATCH_TIMELIMIT')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-s4_nmgxk/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SBATCH_OUTPUT')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-s4_nmgxk/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SBATCH_ERROR')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-s4_nmgxk/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SLURM_CLUSTERS')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-s4_nmgxk/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SLURM_HINT')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-s4_nmgxk/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SLURM_EXPORT_ENV')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-s4_nmgxk/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SALLOC_QOS')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-s4_nmgxk/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_submission_environment_injection (__main__.MLATests.test_submission_environment_injection) (key='SRUN_CPUS_PER_TASK')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/mla-mutation-s4_nmgxk/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py", line 89, in test_submission_environment_injection
+    with self.assertRaises(ValueError):f.submit(ap)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.130s
+
+FAILED (failures=11)

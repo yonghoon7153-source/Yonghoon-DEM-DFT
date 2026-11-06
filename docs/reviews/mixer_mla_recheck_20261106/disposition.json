@@ -1,0 +1,31 @@
+{
+  "reviewed_pin": "b57fe91503ba68cec6f41aec247851262788e48f",
+  "static_document_scope": "EXTERNALLY_ACCEPTED_LIMITED",
+  "submission_job_start_scope": "HOLD",
+  "findings": [
+    {
+      "id": "MLA-01",
+      "severity": "P1",
+      "status": "OPEN_EXTERNAL_RECHECK_PENDING",
+      "candidate_fix_implemented": true
+    },
+    {
+      "id": "MLA-02",
+      "severity": "P2",
+      "status": "OPEN_EXTERNAL_RECHECK_PENDING",
+      "candidate_fix_implemented": true
+    },
+    {
+      "id": "MLA-03",
+      "severity": "P2",
+      "status": "OPEN_EXTERNAL_RECHECK_PENDING",
+      "candidate_fix_implemented": true
+    }
+  ],
+  "new_research_results": 0,
+  "whole_gate": "HOLD",
+  "actual_execution": false,
+  "active_registration_changed": false,
+  "source_seal_and_assets_changed": false,
+  "external_recheck_completed": false
+}

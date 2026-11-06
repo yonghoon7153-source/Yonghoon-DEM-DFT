@@ -1,0 +1,10 @@
+..............
+----------------------------------------------------------------------
+Ran 14 tests in 0.441s
+
+OK
+{"case": "PRECAL_E0", "approval_sha256": "7e13b875a5fa6de1fff4d0bf16b4b7075dff868ecc4128f29fc73c42af4cac5f", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_E0", "approval_sha256": "fc8c7a3316cfdcc73e674ea52bc369eb6962b4a1583bdf4581b6d51561d3d9b4", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_R1_B1_C", "approval_sha256": "a236af579acec3bdf9a2ba0b912fe82d897f603d0a220a4b2fbcdf9207c4406d", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_R1_B1_U", "approval_sha256": "f950e6319131e6e1e6c7f696474ad4d3d582767e8806a0923425bb1ec0eb056e", "returncode": 0, "stdout": "12346\n", "stderr": "", "state": "SUBMITTED", "job_id": "12346"}
+{"case": "PRECAL_R1_B1_C", "approval_sha256": "52fafcb25b2a45db5040a928e03365f1078445d7d5b438e8423bb01e989bb213", "returncode": 0, "stdout": "12347\n", "stderr": "", "state": "SUBMITTED", "job_id": "12347"}

@@ -1,0 +1,211 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "source_sha256": "d4a37e703d35c89b5769f9199c08f7462b8d0928138a073c03714f95c1dc57b2",
+  "subprocess_policy": "mocked before run_path and through main, no real subprocess calls",
+  "statvfs_policy": "synthetic values; Windows has no statvfs",
+  "results": [
+    {
+      "case": "baseline",
+      "returncode": 0,
+      "error": null,
+      "mock_mpi_calls": 1,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "rank_19",
+      "returncode": null,
+      "error": "ValueError: allocated MPI ranks mismatch",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "non_slurm",
+      "returncode": null,
+      "error": "ValueError: not a Slurm job",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "claim_drift",
+      "returncode": null,
+      "error": "ValueError: claim differs",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "approval_drift",
+      "returncode": null,
+      "error": "ValueError: allocated MPI ranks mismatch",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "missing_floor",
+      "returncode": null,
+      "error": "ValueError: storage thresholds unknown",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "disk_low",
+      "returncode": null,
+      "error": "ValueError: storage headroom",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "inode_low",
+      "returncode": null,
+      "error": "ValueError: storage headroom",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "drift_binary",
+      "returncode": null,
+      "error": "ValueError: changed binary",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "drift_mpi_launcher",
+      "returncode": null,
+      "error": "ValueError: changed mpi_launcher",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "drift_policy",
+      "returncode": null,
+      "error": "ValueError: changed policy",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "drift_runner",
+      "returncode": null,
+      "error": "ValueError: changed runner",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "drift_in.mixer",
+      "returncode": null,
+      "error": "ValueError: input/source drift",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "drift_deck_meta.json",
+      "returncode": null,
+      "error": "ValueError: input/source drift",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "drift_Drum.stl",
+      "returncode": null,
+      "error": "ValueError: input/source drift",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "drift_Front.stl",
+      "returncode": null,
+      "error": "ValueError: input/source drift",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "drift_Back.stl",
+      "returncode": null,
+      "error": "ValueError: input/source drift",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "drift_synthetic_source.txt",
+      "returncode": null,
+      "error": "ValueError: input/source drift",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "fresh_post",
+      "returncode": null,
+      "error": "ValueError: not fresh post",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "fresh_restart",
+      "returncode": null,
+      "error": "ValueError: not fresh restart",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "fresh_log.liggghts",
+      "returncode": null,
+      "error": "ValueError: not fresh log.liggghts",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "fresh_job_start.json",
+      "returncode": null,
+      "error": "ValueError: not fresh job_start.json",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "fresh_simulator.stdout",
+      "returncode": null,
+      "error": "FileExistsError: [Errno 17] File exists: 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\outputs\\\\mixer_launch_review_20261106\\\\evidence\\\\jobstart\\\\tmpcmg0ndvh\\\\case\\\\simulator.stdout'",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "fresh_simulator.stderr",
+      "returncode": null,
+      "error": "FileExistsError: [Errno 17] File exists: 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\outputs\\\\mixer_launch_review_20261106\\\\evidence\\\\jobstart\\\\tmp_cuvctpu\\\\case\\\\simulator.stderr'",
+      "mock_mpi_calls": 0,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "wrong_qos",
+      "returncode": 0,
+      "error": null,
+      "mock_mpi_calls": 1,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "wrong_partition",
+      "returncode": 0,
+      "error": null,
+      "mock_mpi_calls": 1,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "cpus_per_task_4",
+      "returncode": 0,
+      "error": null,
+      "mock_mpi_calls": 1,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "array",
+      "returncode": 0,
+      "error": null,
+      "mock_mpi_calls": 1,
+      "job_end_prior_content_preserved": true
+    },
+    {
+      "case": "fresh_job_end.json",
+      "returncode": 0,
+      "error": null,
+      "mock_mpi_calls": 1,
+      "job_end_prior_content_preserved": false
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "mock_calls": 1,
+  "calls": [
+    {
+      "argv": [
+        "sbatch",
+        "--parsable",
+        "--no-requeue",
+        "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\mixer_launch_review_20261106\\evidence\\jobstart\\tmpou8ippvm\\runner"
+      ],
+      "env_argument_present": false,
+      "effective_scheduler_overrides": {
+        "SBATCH_ARRAY_INX": "0-7",
+        "SBATCH_QOS": "unapproved-qos",
+        "SBATCH_PARTITION": "unapproved-partition",
+        "SBATCH_TIMELIMIT": "00:01:00",
+        "SBATCH_OUTPUT": "/unapproved/out",
+        "SBATCH_ERROR": "/unapproved/err"
+      }
+    }
+  ],
+  "receipt_state": "SUBMITTED",
+  "approved_runner_directives": [
+    "#SBATCH --partition=cpu",
+    "#SBATCH --qos=cpu-60",
+    "#SBATCH --ntasks=20",
+    "#SBATCH --cpus-per-task=1",
+    "#SBATCH --no-requeue",
+    "#SBATCH --time=1-00:00:00",
+    "#SBATCH --output=C:\\Users\\Administrator\\Documents\\Codex\\outputs\\mixer_launch_review_20261106\\evidence\\jobstart\\tmpou8ippvm\\out",
+    "#SBATCH --error=C:\\Users\\Administrator\\Documents\\Codex\\outputs\\mixer_launch_review_20261106\\evidence\\jobstart\\tmpou8ippvm\\err"
+  ],
+  "platform_adapter": "Only canonical_runner spec[k].startswith(\"/\") removed for Windows temp files",
+  "source_files_changed": false,
+  "actual_scheduler_calls": 0,
+  "actual_mpi_calls": 0
+}

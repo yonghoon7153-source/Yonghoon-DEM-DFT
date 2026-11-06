@@ -1,0 +1,45 @@
+{
+  "pin": "b57fe91503ba68cec6f41aec247851262788e48f",
+  "branch": "codex/mixer-1104",
+  "scope": "new mixer-launch static preparation and local mock boundaries only",
+  "verdict": "HOLD_SUBMISSION_JOB_START_BOUNDARIES",
+  "static_assets": "ACCEPTED_WITHIN_STATIC_SCOPE",
+  "document_authorization_boundaries": "ACCEPTED_WITHIN_DOCUMENT_SCOPE",
+  "findings": [
+    {
+      "id": "MLA-01",
+      "severity": "P1",
+      "summary": "Ambient scheduler input variables can override sealed runner directives"
+    },
+    {
+      "id": "MLA-02",
+      "severity": "P2",
+      "summary": "Per-case claim lacks shared concurrency and uncertain-submission admission state"
+    },
+    {
+      "id": "MLA-03",
+      "severity": "P2",
+      "summary": "Existing job_end.json is omitted from freshness and overwritten"
+    }
+  ],
+  "independent_checks": {
+    "snapshot_files": 89,
+    "packaging_checksum_entries": 114,
+    "remote_blob_matches": 89,
+    "patch_reconstructed_files": 72,
+    "static_case_bindings": 8,
+    "static_pair_checks": 3,
+    "submission_scenarios": 7,
+    "job_start_observations": 29,
+    "ambient_environment_variables_in_one_probe": 6,
+    "counts_are_distinct_units_not_summed": true
+  },
+  "whole_gate": "HOLD",
+  "physical_execution_authorized": false,
+  "actual_scheduler_calls": 0,
+  "actual_mpi_calls": 0,
+  "actual_ibb_wsl_access": false,
+  "integration_performed": false,
+  "ledger_closure_performed": false,
+  "runtime": "Windows Python 3.12.14, locally mocked processes and capacities"
+}

@@ -1,0 +1,106 @@
+[
+  {
+    "python": "Python 3.12.14",
+    "test": "test_mla_boundaries.py",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-I",
+      "-B",
+      "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py"
+    ],
+    "rc": 0,
+    "log": "py312_test_mla_boundaries.py.log",
+    "scope": "local mock/temporary files only; no real scheduler or MPI"
+  },
+  {
+    "python": "Python 3.12.14",
+    "test": "test_submit_draft.py",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-I",
+      "-B",
+      "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_submit_draft.py"
+    ],
+    "rc": 0,
+    "log": "py312_test_submit_draft.py.log",
+    "scope": "local mock/temporary files only; no real scheduler or MPI"
+  },
+  {
+    "python": "Python 3.12.14",
+    "test": "test_job_start_draft.py",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-I",
+      "-B",
+      "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_job_start_draft.py"
+    ],
+    "rc": 0,
+    "log": "py312_test_job_start_draft.py.log",
+    "scope": "local mock/temporary files only; no real scheduler or MPI"
+  },
+  {
+    "python": "Python 3.12.14",
+    "test": "test_prepare_only.py",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-I",
+      "-B",
+      "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_prepare_only.py"
+    ],
+    "rc": 0,
+    "log": "py312_test_prepare_only.py.log",
+    "scope": "local mock/temporary files only; no real scheduler or MPI"
+  },
+  {
+    "python": "Python 3.8.20",
+    "test": "test_mla_boundaries.py",
+    "argv": [
+      "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin/python3.8",
+      "-I",
+      "-B",
+      "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_mla_boundaries.py"
+    ],
+    "rc": 0,
+    "log": "py38_test_mla_boundaries.py.log",
+    "scope": "local mock/temporary files only; no real scheduler or MPI"
+  },
+  {
+    "python": "Python 3.8.20",
+    "test": "test_submit_draft.py",
+    "argv": [
+      "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin/python3.8",
+      "-I",
+      "-B",
+      "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_submit_draft.py"
+    ],
+    "rc": 0,
+    "log": "py38_test_submit_draft.py.log",
+    "scope": "local mock/temporary files only; no real scheduler or MPI"
+  },
+  {
+    "python": "Python 3.8.20",
+    "test": "test_job_start_draft.py",
+    "argv": [
+      "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin/python3.8",
+      "-I",
+      "-B",
+      "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_job_start_draft.py"
+    ],
+    "rc": 0,
+    "log": "py38_test_job_start_draft.py.log",
+    "scope": "local mock/temporary files only; no real scheduler or MPI"
+  },
+  {
+    "python": "Python 3.8.20",
+    "test": "test_prepare_only.py",
+    "argv": [
+      "/workspace/.cloud-setup/python/cpython-3.8-linux-x86_64-gnu/bin/python3.8",
+      "-I",
+      "-B",
+      "/workspace/nonrint-1104/mixer/docs/reviews/mixer_first8_launch_preparation_20261106/test_prepare_only.py"
+    ],
+    "rc": 0,
+    "log": "py38_test_prepare_only.py.log",
+    "scope": "local mock/temporary files only; no real scheduler or MPI"
+  }
+]

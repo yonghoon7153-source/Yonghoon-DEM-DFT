@@ -10,11 +10,18 @@ _SOURCE_SHA=hashlib.sha256(_SOURCE_BYTES).hexdigest()
 def need(ok,why):
  if not ok:raise ValueError(why)
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def write_end(root,value):
+ # A late collision is a HOLD, never permission to overwrite prior bytes.
+ fd=os.open(str(root/'job_end.json'),os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
+ with os.fdopen(fd,'w') as f:json.dump(value,f);f.write('\n');f.flush();os.fsync(f.fileno())
 def main():
  need(len(sys.argv)==2,'approval path required')
  ap=pathlib.Path(sys.argv[1]);approval_raw=ap.read_bytes();approval_sha=hashlib.sha256(approval_raw).hexdigest();c=json.loads(approval_raw)
  need(c.get('execution_authorized') is True and c.get('gate') in ('QUALIFICATION_PILOT_GO','MAP_CASE_GO'),'approval absent')
  need(c.get('np')==20 and os.environ.get('SLURM_NTASKS')=='20','allocated MPI ranks mismatch')
+ for key,value in (('SLURM_JOB_PARTITION','cpu'),('SLURM_JOB_QOS','cpu-60'),('SLURM_CPUS_PER_TASK','1'),('SLURM_JOB_NUM_NODES','1')):
+  need(os.environ.get(key)==value,'allocation missing/mismatched '+key)
+ need(not any(k.startswith(('SLURM_ARRAY_','SLURM_HET_')) for k in os.environ),'array/heterogeneous allocation forbidden')
  jid=os.environ.get('SLURM_JOB_ID','');need(jid.isdigit(),'not a Slurm job')
  root=pathlib.Path(c['case_dir']);need(root.is_absolute() and root.is_dir() and not root.is_symlink(),'case root')
  claim=root/'submission.claim.json';need(claim.is_file(),'submission claim absent')
@@ -27,7 +34,8 @@ def main():
   p=pathlib.Path(a['path']);need(p.is_file() and not p.is_symlink() and sha(p)==a['sha256'],'input/source drift')
  pol=json.loads(pathlib.Path(c['policy']['path']).read_text());need(pol.get('execution_authorized') is True and pol.get('allowed_to_submit')==[c['case']],'policy scope')
  need(c.get('wave_release')==[c['case']] and c.get('author_choices_confirmed') is True,'case release')
- for n in ('post','restart','log.liggghts','job_start.json'):need(not (root/n).exists(),'not fresh '+n)
+ for n in ('post','restart','log.liggghts','job_start.json','job_end.json','simulator.stdout','simulator.stderr'):
+  need(not os.path.lexists(str(root/n)),'not fresh '+n)
  # Mandatory explicit bytes/inodes reserve, independently budgeted before approval.
  b=c.get('minimum_free_bytes');i=c.get('minimum_free_inodes')
  need(type(b) is int and b>0 and type(i) is int and i>0,'storage thresholds unknown')
@@ -37,9 +45,13 @@ def main():
  fd=os.open(str(root/'job_start.json'),os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
  with os.fdopen(fd,'w') as f:json.dump({'job_id':jid,'approval_sha256':approval_sha,'case':c['case'],'argv':argv,'start_unix':time.time()},f)
  env=dict(os.environ,OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1')
- with (root/'simulator.stdout').open('x') as out,(root/'simulator.stderr').open('x') as err:
-  r=subprocess.run(argv,cwd=root,env=env,stdout=out,stderr=err)
- (root/'job_end.json').write_text(json.dumps({'job_id':jid,'returncode':r.returncode,'end_unix':time.time(),'state':'EXITED_REQUIRES_QUALIFICATION' if r.returncode==0 else 'TECH_HOLD'})+'\n')
+ try:
+  with (root/'simulator.stdout').open('x') as out,(root/'simulator.stderr').open('x') as err:
+   r=subprocess.run(argv,cwd=root,env=env,stdout=out,stderr=err)
+ except Exception as exc:
+  write_end(root,{'job_id':jid,'returncode':None,'error':str(exc),'end_unix':time.time(),'state':'TECH_HOLD'})
+  raise
+ write_end(root,{'job_id':jid,'returncode':r.returncode,'end_unix':time.time(),'state':'EXITED_REQUIRES_QUALIFICATION' if r.returncode==0 else 'TECH_HOLD'})
  return r.returncode
 if __name__=='__main__':
  try:sys.exit(main())
