@@ -1,0 +1,287 @@
+{
+  "schema": "mixer_limited_independent_review_receipt/1",
+  "date": "2026-11-09",
+  "review_order": [
+    "MLAR-01",
+    "MGS-01"
+  ],
+  "track": "MGS-01",
+  "received_review_zip": {
+    "filename": "codex_mgs01_api_aab74e46baed_independent_20261109.zip",
+    "bytes": 1335173,
+    "sha256": "41030e4e613e3578d1cc0371a29f7c2ca003d5960605abaafb3fe361dbe772cc",
+    "files": 77
+  },
+  "received_report": {
+    "filename": "codex_review_mgs01_api_recheck_20261109.md",
+    "bytes": 7260,
+    "sha256": "1b5fe6b8c20ef489930af708846a29b2b1593d10a935305e24165db4728af144"
+  },
+  "received_artifact_identities": [
+    {
+      "member": "codex_review_mgs01_api_recheck_20261109.md",
+      "bytes": 7260,
+      "sha256": "1b5fe6b8c20ef489930af708846a29b2b1593d10a935305e24165db4728af144"
+    },
+    {
+      "member": "integrity.json",
+      "bytes": 272,
+      "sha256": "1cd81ee6a1477bb0d0835a65202a56333121af8c093c74df53a1ca1f0f80c9cb"
+    },
+    {
+      "member": "preservation.json",
+      "bytes": 942,
+      "sha256": "f269737d309368ff647260a340ee4d71062b1e860466eba7855401672de75d28"
+    },
+    {
+      "member": "remote_commit.json",
+      "bytes": 49737,
+      "sha256": "c9daa046c7a3f846a59af9139225db956a92052ae3755e53ea1326e23af238f5"
+    },
+    {
+      "member": "remote_git_evidence.json",
+      "bytes": 228096,
+      "sha256": "06ea016b30df0d7554157ca63db56ab39f3bdd008ebb24148967c37b152dd64f"
+    },
+    {
+      "member": "VERDICT.json",
+      "bytes": 529,
+      "sha256": "e66d67681eff9bca1b8c233f09bd3c18ac190da2253cc1df854a236be0b6b04e"
+    }
+  ],
+  "received_content_verdict": {
+    "pin": "aab74e46baed555e51033dd9ae54d2fd754e1d5e",
+    "MGS_01": "CLOSABLE_LIMITED",
+    "severity": "P3",
+    "new_findings": [],
+    "scope": "direct API str-subclass input rejection and preservation",
+    "whole_gate": "HOLD",
+    "production_reseal": false,
+    "actual_execution_authorized": false,
+    "ledger_modified": false,
+    "original_plain_input_cli_acceptance": "PRESERVED",
+    "regressions": {
+      "before_methods": 10,
+      "before_failures": 2,
+      "before_errors": 0,
+      "after_methods": 10,
+      "consumer_methods": 34
+    }
+  },
+  "receipt_integrity": "PASS",
+  "original_input_comparison": {
+    "filename": "codex_mgs01_api_recheck_aab74e46baed_20261109.zip",
+    "bytes": 1160456,
+    "sha256": "e6099721110b0ad45083f90187b19fa92415e7a0578fd75b22a2477bf8c29d2a",
+    "expected_files": 38,
+    "actual_package_files": 38,
+    "byte_identical_count": 38,
+    "missing_members": [],
+    "extra_members": [],
+    "changed_members": [],
+    "identical_nested_zip_members": []
+  },
+  "receipt_validation": {
+    "kind": "Metadata and preserved bytes only; not a new substantive independent review",
+    "archives": [
+      {
+        "archive": "codex_mgs01_api_aab74e46baed_independent_20261109.zip!package/external_evidence/codex_mixer_generator_seed_a836aa4c0e61_independent_20261109.zip",
+        "files": 60,
+        "members": 60,
+        "crc_error_member": null,
+        "duplicate_members": 0,
+        "case_collisions": 0
+      },
+      {
+        "archive": "codex_mgs01_api_aab74e46baed_independent_20261109.zip",
+        "files": 77,
+        "members": 77,
+        "crc_error_member": null,
+        "duplicate_members": 0,
+        "case_collisions": 0
+      }
+    ],
+    "sha256_manifests": [
+      {
+        "archive": "codex_mgs01_api_aab74e46baed_independent_20261109.zip!package/external_evidence/codex_mixer_generator_seed_a836aa4c0e61_independent_20261109.zip",
+        "member": "package/SHA256SUMS",
+        "declared_entries": 34,
+        "verified": 34,
+        "missing_members": [],
+        "hash_mismatches": [],
+        "duplicate_entries": 0,
+        "unlisted_in_scope": [],
+        "complete_scope_coverage": true
+      },
+      {
+        "archive": "codex_mgs01_api_aab74e46baed_independent_20261109.zip!package/external_evidence/codex_mixer_generator_seed_a836aa4c0e61_independent_20261109.zip",
+        "member": "SHA256SUMS",
+        "declared_entries": 59,
+        "verified": 59,
+        "missing_members": [],
+        "hash_mismatches": [],
+        "duplicate_entries": 0,
+        "unlisted_in_scope": [],
+        "complete_scope_coverage": true
+      },
+      {
+        "archive": "codex_mgs01_api_aab74e46baed_independent_20261109.zip",
+        "member": "package/SHA256SUMS",
+        "declared_entries": 37,
+        "verified": 37,
+        "missing_members": [],
+        "hash_mismatches": [],
+        "duplicate_entries": 0,
+        "unlisted_in_scope": [],
+        "complete_scope_coverage": true
+      },
+      {
+        "archive": "codex_mgs01_api_aab74e46baed_independent_20261109.zip",
+        "member": "SHA256SUMS",
+        "declared_entries": 76,
+        "verified": 76,
+        "missing_members": [],
+        "hash_mismatches": [],
+        "duplicate_entries": 0,
+        "unlisted_in_scope": [],
+        "complete_scope_coverage": true
+      }
+    ],
+    "safety_issues": [],
+    "standalone_report_byte_identical": true,
+    "attached_scripts_executed": false,
+    "project_code_or_tests_executed": false,
+    "actual_hosts_accessed": false,
+    "research_values_read": false,
+    "originals_modified": false,
+    "independent_remote_tree_review_repeated": false
+  },
+  "imported_candidate": {
+    "base_b": "1f9f3607eb2f0118d322eeff780bba6eb17b85a2",
+    "track": "MGS-01",
+    "source_pin": "aab74e46baed555e51033dd9ae54d2fd754e1d5e",
+    "imported_pin": "356dfefd1baea287f8115fef55a7a9ca4a2980c1",
+    "delta_file_count": 9,
+    "files": [
+      {
+        "path": "docs/collab/codex_to_claude/20261108-1527_mgs01-receipt-exact-string-candidate.md",
+        "change": "A",
+        "git_blob": "84e89c7e107f443ab48549ffcead4b5ccfafec4b",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_mgs01_api_recheck_20261109/README.md",
+        "change": "A",
+        "git_blob": "517957493349de0713939ace730c55aa27ece404",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_mgs01_api_recheck_20261109/evidence.json",
+        "change": "A",
+        "git_blob": "8caf73500f5e8a9cc6e56a1328f2ced16231b6a6",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_mgs01_api_recheck_20261109/ledger_proposal.json",
+        "change": "A",
+        "git_blob": "4afe821755d3412d6de199fe938a080002bb6d83",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_mgs01_api_recheck_20261109/receipt.json",
+        "change": "A",
+        "git_blob": "cc62c9ab0614ffd7d3a952930e4f1aed129d80c7",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_mgs01_api_recheck_20261109/review_request.md",
+        "change": "A",
+        "git_blob": "0c6ac1af4de40ba96fa52d835faa71ac37ba0f28",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_mgs01_api_recheck_20261109/source_inventory.json",
+        "change": "A",
+        "git_blob": "ac157b4c5d703e0bacf304b8ff25ed6b317babad",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "scripts/make_mixer_deck.py",
+        "change": "M",
+        "git_blob": "82439cf3523342e16645eb27b51acf51936405f6",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "scripts/test_mixer_generator_seeds.py",
+        "change": "M",
+        "git_blob": "8a97f86b52ac7e4fdf9a73944690f4e9248b43be",
+        "source_imported_and_current_equal": true
+      }
+    ],
+    "comparison": "Local Git blob OID equality for each candidate delta, B imported copy, and current B; not a repeated remote full-tree review",
+    "already_imported": true,
+    "candidate_cherry_pick_again_required": false,
+    "claude_mapping": "docs/collab/claude_to_codex/20261108-1650_nonrint-1109-sha-map.md"
+  },
+  "external_evidence": {
+    "original_zip_preserved": true,
+    "contains_external_location_or_address_text": true,
+    "original_zip_or_report_repository_import": false,
+    "repository_content": "Sanitized identity, receipt disposition, import identity and proposal only"
+  },
+  "shared_ledger_modified": false,
+  "operational_seal_modified": false,
+  "value_access_granted": false,
+  "execution_go_granted": false,
+  "actual_research_runs": 0,
+  "whole_gate": "HOLD",
+  "disposition": {
+    "content": "CLOSABLE_LIMITED",
+    "evidence_acceptance": "PASS",
+    "ledger_application": "PROPOSAL_ONLY_NOT_APPLIED",
+    "severity": "P3",
+    "scope": "Exact built-in string acceptance prevents direct API string-subclass seed conversion bypass",
+    "prior_builtin_int_str_and_cli_limited_acceptance_preserved": true,
+    "proposed_ledger_status": "claimed_fixed with original-defect closure note; do not infer verified from two Codex windows"
+  },
+  "reported_evidence": {
+    "environment": "Windows Python 3.12.14",
+    "new_test_before": {
+      "methods": 10,
+      "failures": 2,
+      "errors": 0,
+      "rc": 1
+    },
+    "new_test_after": {
+      "methods": 10,
+      "rc": 0
+    },
+    "consumer_methods": 34,
+    "independent_probes": {
+      "original_counterexamples": 2,
+      "subclass_observations": 100,
+      "subclass_hook_calls": 0,
+      "normal_configurations": 24,
+      "invalid_builtin_observations": 46,
+      "cli_before_after_pairs": 7
+    },
+    "old_seed_methods_preserved": 8,
+    "golden_hashes_preserved": 4,
+    "unchanged_context_sources": 10,
+    "full_gate_or_CI_executed": false,
+    "counts_are_additive_unique_tests": false
+  },
+  "generator_sha256": {
+    "before": "40fc6446524c63a47fa97316e7ee5bb117c605057679770dde19e43b12621db6",
+    "candidate": "dc253bc8319077bc1e41635ae30ec588eb4a14c899db075e064192c4ef9cf6f7",
+    "operational_seal_updated": false
+  },
+  "remaining_boundaries": [
+    "Direct API object-type contract only; not a generic external-string/CLI injection or operational submission bypass certification.",
+    "Module-global or built-in monkey-patching by executable Python callers is outside this claim.",
+    "The old D2 fixture hook count of two differs from the independent direct-call count of one; candidate hook count is zero.",
+    "Preserved physical deck text does not mean metadata identity containing source SHA is unchanged.",
+    "No entire generator selftest, full gate/CI, other Python/OS or actual research execution qualification is claimed.",
+    "Existing first8 seal, inactive reseal candidate, operational bundle, resource decisions, field qualification and execution GO remain separate."
+  ]
+}

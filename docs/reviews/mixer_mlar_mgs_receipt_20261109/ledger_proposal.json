@@ -1,0 +1,42 @@
+{
+  "schema": "codex-ledger-proposal-v1",
+  "date": "2026-11-09",
+  "apply_now": false,
+  "ledger_modified": false,
+  "scope": "Separate content dispositions from evidence package completeness for MLAR-01 and MGS-01",
+  "basis_b": "1f9f3607eb2f0118d322eeff780bba6eb17b85a2",
+  "claude_status_convention": "Two Codex windows: retain claimed_fixed plus bounded closure note rather than assigning verified from this evidence alone",
+  "items": [
+    {
+      "id": "MLA-01",
+      "residual_id": "MLAR-01",
+      "severity": "P1",
+      "duplicate_independent_P1": false,
+      "received_content": "CLOSABLE_LIMITED",
+      "evidence_receipt": "PENDING_REPACK",
+      "proposed_action": "Record the positive content verdict and one missing package manifest; defer closure application until the corrected archive is received and verified. Retain current open status for now."
+    },
+    {
+      "id": "MGS-01",
+      "severity": "P3",
+      "received_content": "CLOSABLE_LIMITED",
+      "evidence_receipt": "PASS",
+      "proposed_status": "claimed_fixed",
+      "proposed_action": "Claude may record original direct-API string-subclass defect closure with the imported candidate and independent review identities. Do not mark verified from this pair of Codex windows."
+    }
+  ],
+  "prior_MLA02_MLA03_claimed_fixed_and_original_scope_closure_notes": "PRESERVE_WITHOUT_EXPANSION",
+  "new_scientific_findings": {
+    "P1": 0,
+    "P2": 0,
+    "P3": 0
+  },
+  "packaging_issue_new_finding_severity": null,
+  "candidate_source_changes_already_imported": true,
+  "candidate_reimport_required": false,
+  "runtime_failure_auto_campaign_hold": false,
+  "automatic_reservation_release_or_retry": false,
+  "operational_reseal_approved": false,
+  "resource_or_execution_go_granted": false,
+  "whole_gate": "HOLD"
+}
