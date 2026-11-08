@@ -1,0 +1,167 @@
+{
+  "schema": "lhs12_clarification_acceptance_receipt/1",
+  "date": "2026-11-09",
+  "scope": "Receipt of the independent document-scope disposition for LHS12-01 and LHS12-02; not author ratification or execution approval",
+  "received_artifacts": {
+    "review_zip": {
+      "filename": "codex_lhs12_clarification_39b635a405f0_independent_20261109.zip",
+      "bytes": 901668,
+      "sha256": "67c4406f5a491c76add87237c0882880e219241ad52a90bd8aa7aa165f9031a5",
+      "members": 50,
+      "sha256sum_entries": 49
+    },
+    "reviewed_input_zip": {
+      "filename": "codex_lhs12_clarification_recheck_39b635a405f0_20261108.zip",
+      "bytes": 864540,
+      "sha256": "66e9fb98c2985cf7cb52f3fbcf7a6386668e4091612951b1f72ff87da5644b5f",
+      "files": 31,
+      "identical_nested_zip_members": [],
+      "identical_extracted_package_prefixes": [
+        "package/"
+      ],
+      "all_member_bytes_equal": true
+    },
+    "review_report": {
+      "filename": "codex_review_lhs12_clarification_20261109.md",
+      "bytes": 10605,
+      "sha256": "bbdfaf5e6d05e109db5ee493a0374e7de8858f6f02aeabf54da9d300f98443e1"
+    },
+    "verdict_json": {
+      "filename": "VERDICT.json",
+      "bytes": 1424,
+      "sha256": "9044343763d05c95ba2ce838f1bb483f4adbb3d99d9e7513342e33fc3212b2f6"
+    },
+    "integrity_json": {
+      "filename": "integrity.json",
+      "bytes": 7047,
+      "sha256": "33dd6781511bd9151b765ba8ab936909fd739a094194ab3e7c97471cb90bb9e4"
+    },
+    "remote_git_evidence_json": {
+      "filename": "remote_git_evidence.json",
+      "bytes": 7165,
+      "sha256": "7d48cacf58d4dbbb7055914af9ed0acd9d959d0981ef2153b6487d3a02b8326a"
+    }
+  },
+  "reviewed_pins": {
+    "candidate": "39b635a405f0d0141f1404de08acdb5461938f8e",
+    "candidate_branch": "codex/lhs12-clarify-1108",
+    "candidate_base": "40d9658c07eb578d03dff7905b301da7efacf582",
+    "previous_definition_b": "1b20ce0606f3b49ef1abc4dd2bc540ead773905a",
+    "receipt_base_b": "f44478535556dda84a4358e412cbba3b0baff42a"
+  },
+  "received_disposition": {
+    "verdict": "CLOSABLE_DOCUMENT_SCOPE",
+    "new_p1": 0,
+    "new_p2": 0,
+    "new_p3": 0,
+    "findings": [
+      {
+        "id": "LHS12-01",
+        "severity": "P2",
+        "status": "CLOSABLE_DOCUMENT_SCOPE",
+        "scope": "Inactive definition ambiguity in E/Z/D aggregation population, empty D, and tie precedence"
+      },
+      {
+        "id": "LHS12-02",
+        "severity": "P3",
+        "status": "CLOSABLE_DOCUMENT_SCOPE",
+        "scope": "Inactive definition ambiguity in exclusive primary cohort priority and denominator overlap"
+      }
+    ],
+    "whole_gate": "HOLD",
+    "shared_ledger_status_applied": false
+  },
+  "independent_report_claims": {
+    "candidate_snapshot_files": 19,
+    "candidate_delta_files": 11,
+    "before_files": 3,
+    "preserved_context_files": 5,
+    "remote_path_comparisons": 32,
+    "remote_path_comparisons_are_distinct_files_or_tests": false,
+    "independent_direction_synthetic_combinations": 11111,
+    "independent_direction_named_boundaries": 13,
+    "independent_cohort_combinations": 27,
+    "independent_cohort_partition": [
+      19,
+      7,
+      1
+    ],
+    "author_static_replay": {
+      "rc": 0,
+      "direction_combinations": 91,
+      "cohort_combinations": 27,
+      "stored_json_parsed_equal": true
+    },
+    "counts_are_research_samples": false,
+    "counts_are_additive_test_totals": false,
+    "q3_to_q12_recommendation_rows_preserved": true,
+    "q3_to_q6_substantive_review_repeated": false
+  },
+  "receipt_validation_performed": {
+    "kind": "Metadata and byte identity only; not a new independent substantive review",
+    "outer_crc": "PASS",
+    "member_safety": "PASS",
+    "duplicate_or_case_colliding_members": 0,
+    "symlink_members": 0,
+    "outer_manifest_verified": 49,
+    "extracted_input_manifest_verified": 30,
+    "nested_previous_evidence_manifest_verified": 54,
+    "previous_evidence_extracted_input_manifest_verified": 35,
+    "all_manifest_scopes_complete_excluding_self": true,
+    "extracted_input_files_compared": 31,
+    "extracted_input_all_member_bytes_equal": true,
+    "original_input_zip_embedded_as_one_byte_identical_zip": false,
+    "standalone_report_equals_outer_zip_member": true,
+    "attached_reproduction_scripts_executed": false,
+    "project_code_or_tests_executed": false,
+    "independent_review_remote_queries_repeated": false,
+    "research_values_read": false,
+    "originals_modified": false
+  },
+  "import_requirements": {
+    "receipt_base_has_clarified_canonical_blobs": false,
+    "candidate_canonical_git_blobs": {
+      "README.md": "78da9e45eb42c43c75f4f1342dceeaa4bb32a948",
+      "definition.json": "a4214ecdd527ed51cabf869f43e3c39e716974c3",
+      "author_decisions.md": "4bc36ed8d914e5babdca3e9e00b43f9d3d6ba91d"
+    },
+    "observed_receipt_base_canonical_git_blobs": {
+      "README.md": "a2440306f01e7156c2c1f02a1f9d5c37356f5bad",
+      "definition.json": "88ef52bc143311ce0d6acfabd30f835a99485827",
+      "author_decisions.md": "7a4f8d25b556beef6eb8cccc30157744217c74d8"
+    },
+    "order": [
+      "Import candidate 39b635a405f0 with cherry-pick -x, or identify its already imported equivalent and verify all candidate bytes",
+      "Import this receipt-only commit with cherry-pick -x",
+      "Claude applies only the bounded document disposition under the ledger convention and returns the source-to-B mapping"
+    ],
+    "not_authorized_to_close_an_unclarified_definition": true,
+    "previous_candidate_receipt_and_proposal_preserved_as_historical_records": true
+  },
+  "preservation": {
+    "raw_evidence_zip_preserved_externally": true,
+    "raw_evidence_has_external_location_or_address_text": true,
+    "raw_evidence_and_report_repository_import": false,
+    "repository_record": "Identity, sanitized bounded disposition and proposal only",
+    "canonical_definition_modified": false,
+    "shared_ledger_modified": false,
+    "operational_seal_modified": false
+  },
+  "separate_conditions": [
+    "Q1/Q2 author policy ratification",
+    "Actual cohort roster, frozen pairs and original input identity",
+    "Implementation and validation of an operational reader, denominator preservation and future harvester rules",
+    "Actual independence, equilibrium, N effect and sign uncertainty",
+    "Value access rules and research execution GO",
+    "Previously recorded repeated-key, block-role and multiple-damping-fix preparation conditions"
+  ],
+  "unchanged_boundaries": {
+    "author_ratification_granted": false,
+    "actual_roster_established": false,
+    "actual_input_identity_established": false,
+    "value_access_granted": false,
+    "execution_go_granted": false,
+    "research_runs_performed": 0,
+    "whole_gate": "HOLD"
+  }
+}
