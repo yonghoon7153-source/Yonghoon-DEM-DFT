@@ -13,7 +13,7 @@
   "by": "agent · 2026-11-03"
  },
  "리뷰": "Codex DF — NO-GO → 반영 (위) → 확인 리뷰 DG (고친 곳만) 뒤 활성 · 발사",
- "⏭": "1 단계 진행 (A11 fail · PS₄ 보존율 11/12 — A 는 탈락 하나 남음 · B11 녹음 통과 · 진행 중) → nvidia-smi 확인 (B11 뒤 6,000 문턱) · A11 판정 기록 회수 → B11 끝 ≈ 11-07 23:45 KST · 운영: kgy 한 기계 · 도는 동안 들여다보지 않음 · STOP 이면 확인 전에 시계 영역 대조 (카드 v14)",
+ "⏭": "1 단계 진행 (A11 fail · PS₄ 보존율 11/12 — A 는 탈락 하나 남음 · B11 녹음 통과) → 지금 도는 시드 · 프레임 확인 → 10 시드 끝 ≈ 11-12 · 운영: kgy 한 기계 · 도는 동안 들여다보지 않음 · STOP 이면 확인 전에 시계 영역 대조 (카드 v14)",
  "회신_DF_2026_11_03": {
   "판정": "NO-GO (ff795d669 그대로 실행 보류) · 고정 밀도 NVT 방향 조건부 찬성 · P0 1 · P1 5 · P2 4",
   "원문": "kb/reviews/codex_DF_reply_li2s2_dense_window_card_2026_11_03.md",
@@ -377,6 +377,13 @@
   "B11": "2026-11-07 10:34:30 시작 · 11:49:31 녹음 판정 통과 (D_P 5.18e-06 — 카드 녹음 창 값 · 수송값 아님) · 14:21:57 프레임 305 (≈ 80.5 프레임/h → 끝 ≈ 23:45 KST)",
   "속도": "A11 ≈ 13.2 h (카드 견적 시드당 kgy 단독 15–21 h 보다 빠름 · esp 앱 옆) → 10 시드 ≈ 132 GPU-h (상한 230 안 · 끝 ≈ 11-12)",
   "⚠_GPU": "8,487 MiB · 88 % (B11 이 돌 때) — A11 이 돌 때는 5,501 (발사 전 바닥 3,999) 였고 두 계는 120 원자로 같다 → 우리 밖의 사용이 ≈ 3 GB 늘었을 수 있다 · B11 이 끝난 뒤 합계가 6,000 을 넘으면 러너가 A12 를 띄우지 않고 기다린다 (start_max_mib) → nvidia-smi 표 확인 요청",
-  "by": "agent (위임 10-30) · 2026-11-07"
+  "by": "agent (위임 10-30) · 2026-11-07",
+  "⏩_정정_2026_11_08": "⚠_GPU 의 '우리 밖의 사용이 ≈ 3 GB 늘었을 수 있다' 는 틀렸다 — 11-08 nvidia-smi 표: 우리 MD (uma python · PID 377268) 가 4,484 MiB · esp 앱 + Xorg · gnome-shell · 다른 python (PID 1390 · 306 MiB) 합계 ≈ 4,025 MiB (발사 전 바닥 3,999 그대로). A11 첫 프레임 때의 ≈ 1.5 GB 는 시작 직후 값이었다 (PyTorch 가 돌며 메모리를 더 잡는다) → 시드가 끝나면 합계 ≈ 4 GB 로 돌아가 6,000 문턱이 다음 시드를 막지 않는다"
+ },
+ "확인_2026_11_08": {
+  "출처": "사용자 붙여넣기 2026-11-08 13:36 KST (kgy · nvidia-smi 표 · A/seed11 판정 파일 읽기 — --stage1_verdict 실행 아님)",
+  "GPU": "8,579 / 24,576 MiB · 93 % · 우리 MD 4,484 MiB · esp grape_twin 3,186 · kiwi_twin 350 · Xorg 104 · gnome-shell 79 · /home/kgy/miniconda3/bin/python (PID 1390) 306",
+  "A11_판정_파일": "stage1_verdict.json: status fail · closes_system False · reasons {invalid: [], incomplete: [], fail: ['PS₄ 보존율 0.9166666666666666 < 1.0']} · 폴더: final_relax.log · gr_partials.csv · md_init_raw.xyz · result.json · final.vasp · initial.xyz · plan.json · stage1_attempt.json · thermo.csv · final.xyz · md_done.json · prerelax.log · stage1_verdict_history.jsonl · traj.xyz (seed_gate.json 은 따로 없다 — 시드 게이트는 판정 안에 있다)",
+  "by": "agent (위임 10-30) · 2026-11-08"
  }
 }
