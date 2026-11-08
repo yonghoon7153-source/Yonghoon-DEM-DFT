@@ -1,0 +1,19 @@
+{
+  "schema": "codex-ledger-proposal-v1",
+  "date": "2026-11-08",
+  "apply_now": false,
+  "ledger_modified": false,
+  "scope": "LHS12 inactive definition review receipt and two clarification candidates",
+  "received_verdict": "PARTIAL_ACCEPTANCE",
+  "new_P1": 0,
+  "findings": [
+    {"id": "LHS12-01", "severity": "P2", "received_status": "OPEN", "candidate": "explicit E/Z/D partition and exclusive direction branches", "independent_recheck": "PENDING", "author_ratification": "PENDING"},
+    {"id": "LHS12-02", "severity": "P3", "received_status": "OPEN", "candidate": "exclusive primary cohort priority with evidence flags retained", "independent_recheck": "PENDING", "author_ratification": "PENDING"}
+  ],
+  "proposal": "Claude may record the received partial verdict and bounded candidate evidence. Do not mark either finding closed from the implementation or static check alone.",
+  "accepted_Q3_to_Q6_document_scope_preserved": true,
+  "execution_authorized": false,
+  "value_access_authorized": false,
+  "actual_results": 0,
+  "whole_gate": "HOLD"
+}

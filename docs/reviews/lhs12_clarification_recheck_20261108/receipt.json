@@ -1,0 +1,112 @@
+{
+  "schema": "lhs12_limited_review_receipt/1",
+  "date": "2026-11-08",
+  "scope": "Receipt of the fixed LHS12 document/static review; separate from candidate recheck or author ratification",
+  "received_artifacts": {
+    "review_zip": {
+      "filename": "codex_lhs12_B_independent_review_1b20ce0606f3_20261108.zip",
+      "bytes": 791732,
+      "sha256": "f5aaf479a55b24f43cce319f0456208438b647d6acb75681eb309984f08b2e1a",
+      "files": 55,
+      "sha256sum_entries": 54
+    },
+    "review_report": {
+      "filename": "codex_review_lhs12_B_20261108.md",
+      "bytes": 17545,
+      "sha256": "50b6ef8d8f148137b5c150aa48c18f6c43c6521b38397a9d577816ea5f792d7b"
+    },
+    "original_input_zip": {
+      "filename": "codex_lhs12_independent_review_B_1b20ce0606f3_20261108.zip",
+      "bytes": 243966,
+      "sha256": "62a8502742fbbfb6ecf5bf77c64edfe0e31b6644366a782076278877459d611b",
+      "files": 36,
+      "sha256sum_entries": 35
+    },
+    "verdict_json": {
+      "filename": "VERDICT.json",
+      "sha256": "95ba414010575114254b0a321e14631378337b95046963dff205846cfdac8f69"
+    },
+    "independent_recheck_json": {
+      "filename": "independent_recheck.json",
+      "sha256": "0f8e8962af7149abcfedd3416ff725f7c3c4c2b3e791912f6ab0ecd45833c30e"
+    }
+  },
+  "reviewed_pins": {
+    "definition_b": "1b20ce0606f3b49ef1abc4dd2bc540ead773905a",
+    "original_definition": "6fbd066832d3273d56037005ea26eb884b73646a",
+    "canonical_selection_b": "5dd1e7ec01362db7a7fd0db264e79bbbb87152da",
+    "original_canonical_selection": "349e946697b67768a5a1a209121fb90244aef485",
+    "request_package": "33d3cf0dd52ae3813804f06733d9bd281cb8a9a2",
+    "request_package_is_definition_pin": false
+  },
+  "received_review_claims": {
+    "verdict": "PARTIAL_ACCEPTANCE_REQUIRES_TWO_CLASSIFICATION_CLARIFICATIONS",
+    "new_p1": 0,
+    "new_p2": 1,
+    "new_p3": 1,
+    "q1": "BOUNDARY_ACCEPTED_CLASSIFICATION_CLARIFICATION",
+    "q2": "PARTIAL",
+    "q3_q6": "ACCEPTED_DOCUMENT_SCOPE",
+    "snapshot_files": 26,
+    "definition_files": 9,
+    "selection_context_files": 2,
+    "source_context_files_within_26": 15,
+    "original_and_b_path_membership_checks": 52,
+    "original_and_b_blob_equivalence": "PASS_REPORTED_BY_INDEPENDENT_REVIEW",
+    "request_blob": "535b42311ab08e7f9cf0019722381bfcfa8b8b4e",
+    "static_hypothetical_recheck": "PASS_REPORTED_BY_INDEPENDENT_REVIEW",
+    "counts_note": "52 compares original/B path membership for 26 files; the 15 context files are included in 26. None are research observations or additional test counts."
+  },
+  "receipt_validation_performed": {
+    "kind": "Metadata and preserved bytes only; not a new substantive independent review",
+    "review_zip_crc": "PASS",
+    "review_zip_member_safety": "PASS",
+    "duplicate_or_case_colliding_members": 0,
+    "symlink_members": 0,
+    "review_zip_sha256sum_entries_verified": 54,
+    "original_package_sha256sum_entries_verified": 35,
+    "sha256sum_coverage_complete_excluding_self": true,
+    "embedded_original_package_files_compared": 36,
+    "embedded_original_package_all_bytes_equal_to_original_input": true,
+    "standalone_report_bytes_equal_to_review_zip_member": true,
+    "reviewed_pins_and_input_zip_identity_consistent": true,
+    "independent_review_remote_queries_repeated": false,
+    "attached_reproduction_scripts_executed": false,
+    "hypothetical_review_cases_rerun_during_receipt": false,
+    "project_code_or_tests_executed": false,
+    "research_values_read": false,
+    "original_artifacts_modified": false
+  },
+  "open_findings": [
+    {
+      "id": "LHS12-01",
+      "severity": "P2",
+      "status": "OPEN_PENDING_LIMITED_CANDIDATE_RECHECK",
+      "subject": "Exclusive aggregation population, zero-N handling and tie/sign precedence",
+      "candidate_is_independent_closure": false
+    },
+    {
+      "id": "LHS12-02",
+      "severity": "P3",
+      "status": "OPEN_PENDING_LIMITED_CANDIDATE_RECHECK",
+      "subject": "Exclusive primary cohort precedence while retaining known and unknown facts",
+      "candidate_is_independent_closure": false
+    }
+  ],
+  "preservation_and_import": {
+    "original_review_zip_preserved_externally": true,
+    "original_review_zip_has_external_location_and_address_text": true,
+    "original_review_zip_repository_import": false,
+    "raw_report_and_evidence_repository_import": false,
+    "repository_record": "Artifact identity, fixed pins, limited disposition and open findings only",
+    "shared_ledger_modified_by_receipt": false
+  },
+  "unchanged_boundaries": {
+    "actual_rows_cohorts_pairs_and_run_identity_established": false,
+    "actual_endpoint_N_pressure_or_damping_membership_established": false,
+    "author_ratification_granted": false,
+    "value_access_granted": false,
+    "execution_go_granted": false,
+    "whole_gate": "HOLD"
+  }
+}
