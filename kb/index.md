@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-06 · managed-files: 583
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-08 · managed-files: 584
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 374건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 375건)
+- 2026-11-08 · `kb/projects/handoff_2026_11_08_evacuation.md` — 대피 인계 — 2026-11-08 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · li2s-2 1 단계 kgy 진행 중 · cascade 문헌 갭 다음 단계) · 진행
 - 2026-11-06 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-06 · `kb/reviews/codex_DR_prompt_li2s2_dq_fixes_2026_11_05.md` — DR 프롬프트 — li2s-2 DQ 고침 + DR 전 독립 리뷰 고침 (879cbc00): 판정이 읽는 것 전부를 지문에 · 앞 판정의 성격 (예외 · 입력 불일치) 으로만 자동 대체 · 정본 없는 미해결 기록 (현재 · 옮긴 폴더) · STOP 공통 검사 · 다른 판정 규칙의 기록 — 첫 담금질 GO 여부 · 발송 완료 · 회신 수령 2026-11-06 NO-GO (`codex…
 - 2026-11-06 · `kb/reviews/codex_DR_reply_li2s2_dq_fixes_2026_11_05.md` — DR 회신 — li2s-2 DQ 고침 + DR 전 리뷰 9 차 확인 (879cbc00): NO-GO · 새 P1 2 (장부 기준 앞의 완료된 입력 불일치 판정을 무시하고 자동 대체 / 경로가 있지만 파일이 아닌 md_init_raw.xyz 를 '없음' 으로 기록해 입력 복구를 최초 생성으로 승인) · P2 1 (Q5 요약문이 구현보다 좁음) · 수령 2026-11-06 (사용자 붙여넣기 · 원문 보존 · 마크다운…
@@ -26,7 +27,6 @@
 - 2026-11-04 · `kb/reviews/codex_DN_prompt_li2s2_dm_fixes_2026_11_04.md` — DN 프롬프트 — li2s-2 DM 고침 확인 (acc648b0): thermo 꼬리의 시각 · 판정 기록을 내용으로 (plan 전 끊김 · 도중 끊김 후보) — 첫 담금질 GO 여부 · 발송 · 회신 수령 2026-11-04 (NO-GO · P1 1 · …
 - 2026-11-04 · `kb/reviews/codex_DN_reply_li2s2_dm_fixes_2026_11_04.md` — DN 회신 — li2s-2 DM 고침 확인 (acc648b0): NO-GO · DM P0 두 건 해제 · P1 1 (판정 기록의 완료 필드 타입 오류를 '완료 흔적 없음' 으로 건너뜀 — n:\"130\" 으로 재실행 · stage1_pass) · P2 1 (NUL 만 남은 꼬리를 센다는 카드 문구가 구현과 다름) · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-11-04 · `kb/reviews/codex_DO_prompt_li2s2_dn_fixes_2026_11_04.md` — DO 프롬프트 — li2s-2 DN 고침 + DO 전 독립 리뷰 고침 확인 (802290db): 완료 필드 타입 · 첫 시드 녹음 fail 기록 순서 · 보존 폴더 판정 · MD 뒤 산출물 · 장부 꼴 — 첫 담금질 GO 여부 · 발송 · 회신 수령 2026-11-04 (NO-GO · P0 1 · …
-- 2026-11-04 · `kb/reviews/codex_DO_reply_li2s2_dn_fixes_2026_11_04.md` — DO 회신 — li2s-2 DN 고침 + DO 전 리뷰 고침 확인 (802290db): NO-GO · P0 1 (복구 때 본 녹음 fail 을 장부에 안 적어 뒤 손상으로 재시도 · stage1_pass) · P1 2 (판정 · 이력 · 장부의 같은 열쇠 둘 → 마지막 값 · 러너가 무효 장부를 정상 꼴로 덮어씀) · P2 2 (중첩 타입 오류로 요약이 죽어 이전 통과 파일이 남음 · 자식이 막힌 신호 마스크를 물려받음) · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -476,7 +476,7 @@
 - `kb/reports/weekly_2026_10_25.md` — 주간 정리 2026-10-19 ~ 10-25 (주간보고 초안)  (2026-10-26 · 초안 (2026-10-26 · 도는 계산은 마지막 실측 기준 — kg…)
 - `kb/reports/weekly_2026_11_01.md` — 주간 정리 2026-10-26 ~ 11-01 (주간보고 초안)  (2026-11-01 · 초안 (2026-11-01 · 도는 계산은 마지막 실측 기준 — kg…)
 
-## projects/ (55)
+## projects/ (56)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -500,6 +500,7 @@
 - `kb/projects/handoff_2026_10_20_return_to_origin.md` — 본 세션 복귀 카드 — 서브 세션 (10-15 → 10-20) 134 커밋을 본 세션으로 (2026-10-20)  (2026-10-20 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (…CTzs) 에 붙…)
 - `kb/projects/handoff_2026_10_22_evacuation.md` — 대피 인계 — 2026-10-22 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · W_ad 외주 2차 CZ 고침 설계 포함)  (2026-10-22 · 진행)
 - `kb/projects/handoff_2026_10_26_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-10-22 (82 커밋) 를 friendly 로 · fast-forward (2026-10-26)  (2026-10-26 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …)
+- `kb/projects/handoff_2026_11_08_evacuation.md` — 대피 인계 — 2026-11-08 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · li2s-2 1 단계 kgy 진행 중 · cascade 문헌 갭 다음 단계)  (2026-11-08 · 진행)
 - `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30)  (2026-09-30 · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …)
 - `kb/projects/handoff_ndo_methods_2026_10_28.md` — NdO-LPSCl₁.₆ 원고 계산 부분 인계 — Methods 두 판 · Fig. 3h · Fig. 5e,f · Fig. SX (2026-10-28)  (2026-10-28 · 발송 대기 — 사용자가 Word 둘 · CSV 둘과 같이 전달한다)
 - `kb/projects/li2s_glass_bmeas_650k_letter_DA_send_2026_10_19.md` — li2s_glass_bmeas_650k_letter_DA_send_2026_10_19
@@ -646,4 +647,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 473개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 477개 (정본 목록: litdb/INDEX.md)
