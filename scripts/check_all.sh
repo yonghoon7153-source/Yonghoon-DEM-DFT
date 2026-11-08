@@ -203,6 +203,7 @@ run 'webapp: security_phase_a'    python3 webapp/test_security_phase_a.py
 run 'webapp: seminar_page'        python3 webapp/test_seminar_page.py
 run 'webapp: worklog_page'        python3 webapp/test_worklog_page.py
 run 'webapp: worklog_weekly_20261101 (주간보고 10-26 ~ 11-01 · /worklog 목록 · 본문 숫자 · 사이드바 · 모르는 이름 · 경로 탈출 404 · 봉인 app.py 무변경 · 11-01)'   python3 webapp/test_worklog_weekly_20261101.py
+run 'webapp: worklog_weekly_20261109 (주간보고 11-02 ~ 11-09 · /worklog 목록 · 본문 숫자 · 용훈 포메이션 트랙 순서 · 인용 금지 · 모델 이름 · 주소 없음 · 경로 탈출 404 · 봉인 app.py 무변경 · 11-09)'   python3 webapp/test_worklog_weekly_20261109.py
 run 'webapp: mixer_devlog_page'   python3 webapp/test_mixer_devlog_page.py
 #  ★ 2026-09-30 (웹앱 ① · J20-l) — 닫힌 파라미터 라벨 · 툴팁 = 코드 정의 (Hertz 계열 = c_cpl[22] · ε_sphere / ε_union 쌍 렌즈 ·
 #    판 간격 · AM–AM CN std · 라벨 → 툴팁 역맵 전수 · 접촉 요약 탭이 파괴 툴팁을 빌려 쓰지 않음 · 그룹 열 · MD 보고서)
