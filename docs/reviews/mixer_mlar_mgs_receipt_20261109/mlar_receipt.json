@@ -348,7 +348,7 @@
     "Whitespace plus C0/DEL rejection is not rejection of every C1 character or qualification of actual Slurm path parsing.",
     "Post-SUBMITTED runtime failure does not automatically propagate campaign HOLD; approved operator monitoring and subsequent-wave STOP remain required.",
     "No automatic reservation release, same-arm retry, real job-start recovery, POSIX/Lustre or additional Python qualification.",
-    "The historical archive-asset mismatch first cause remains undetermined and its first stderr was not preserved; do not report it resolved.",
+    "The archive-fixture asset mismatch first cause remains undetermined. The initial worktree-preparation stderr was not preserved; the later archive-preparation console log was preserved as before-pinned-console.log.",
     "Intermediate CRLF replay and preparation stops are not additional unique passing tests.",
     "Operational seal, final bundle, resource decisions, field qualification and author execution GO remain separate."
   ]
