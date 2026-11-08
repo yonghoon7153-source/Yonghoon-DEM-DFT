@@ -1,0 +1,44 @@
+{
+  "schema": "codex-ledger-proposal-v1",
+  "received_date_local": "2026-11-09",
+  "timezone": "Asia/Seoul",
+  "review_date": "2026-11-08",
+  "apply_now": false,
+  "ledger_modified": false,
+  "reviewed_pin": "a2e0396241c4e4cddea3c8771872f9fdcc650ef7",
+  "scope": "MLA independent recheck receipt and MLAR-01 path-character candidate only",
+  "items": [
+    {
+      "id": "MLA-01",
+      "severity": "P1",
+      "received_status": "PARTIAL_OPEN",
+      "residual_id": "MLAR-01",
+      "residual_is_second_independent_P1": false,
+      "candidate_status": "LIMITED_PATH_CHARACTER_FIX_PENDING_INDEPENDENT_RECHECK",
+      "proposal": "Retain open status until independent recheck of MLAR-01; preserve acceptance of the original environment injection boundary."
+    },
+    {
+      "id": "MLA-02",
+      "severity": "P2",
+      "received_status": "CLOSABLE_LIMITED",
+      "scope": "Submission and shared reservation within one approved installation, using local mocks",
+      "proposal": "Claude may record closure of the original submission/reservation defect on intake. Do not extend closure to automatic post-submission runtime failure propagation, field atomicity or release procedures."
+    },
+    {
+      "id": "MLA-03",
+      "severity": "P2",
+      "received_status": "CLOSABLE_LIMITED",
+      "scope": "Local mocked preservation of preexisting outputs, late receipt collisions and normal/nonzero/ordinary spawn-error traces",
+      "proposal": "Claude may record closure of the original preservation defect on intake. Do not extend closure to native dangling symlink, Lustre, power-loss or general signal/crash recovery qualification."
+    }
+  ],
+  "post_submission_runtime_failure_auto_campaign_hold": false,
+  "runtime_stop_owner": "approved operator; monitoring and STOP remain separate obligations",
+  "automatic_reservation_release_or_retry": false,
+  "operational_source_seal_updated": false,
+  "author_resource_order_or_execution_decisions_granted": false,
+  "execution_authorized": false,
+  "value_access_authorized": false,
+  "research_results": 0,
+  "whole_gate": "HOLD"
+}

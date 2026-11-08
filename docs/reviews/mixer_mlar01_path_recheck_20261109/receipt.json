@@ -1,0 +1,132 @@
+{
+  "schema": "mixer_mlar01_limited_review_receipt/1",
+  "date": "2026-11-09",
+  "scope": "Receipt of the fixed MLA-01-03 independent review; separate from candidate recheck, ledger application or author approval",
+  "received_artifacts": {
+    "review_zip": {
+      "filename": "codex_mla_B_recheck_a2e0396241c4_independent_20261108.zip",
+      "bytes": 2336672,
+      "sha256": "821641152e45b1e95d461a73d93cba423385c1aa68ad18f4cacf43a35471b7e1",
+      "files": 439,
+      "sha256sum_entries": 438
+    },
+    "review_report": {
+      "filename": "codex_review_mla_B_recheck_20261108.md",
+      "bytes": 17810,
+      "sha256": "227ee8c2a643abd93fbe6db2b7ca085c02a414dbe478bbbfbf3f3fc9d9a1ed51"
+    },
+    "original_input_zip": {
+      "filename": "codex_mla_recheck_B_a2e0396241c4_20261108.zip",
+      "bytes": 1635566,
+      "sha256": "2e4058a4fcf0f38d216340b3b311feb05957573ede50a0cfd6c198ea1fb2004a",
+      "files": 130,
+      "sha256sum_entries": 129
+    },
+    "verdict_json": {
+      "filename": "VERDICT.json",
+      "sha256": "2eba931d08629e10df7c44e1d8a050d3af5f9d48864728bb063579071b15587e"
+    },
+    "static_verification_json": {
+      "filename": "static_verification.json",
+      "sha256": "063d2cf660b48b695d84c95ccdfb9bff4eefc325beaf4a4338eaa8154c133c82"
+    }
+  },
+  "reviewed_pins": {
+    "candidate_b": "a2e0396241c4e4cddea3c8771872f9fdcc650ef7",
+    "original_candidate": "a4c78001f706c08de1dddcac09a31a921c4faca7",
+    "prior_review": "b57fe91503ba68cec6f41aec247851262788e48f",
+    "prior_review_b_copy": "ae9a5ddc4f413c70406ea0ea4fb8dce4e8224722",
+    "historical_source_seal": "527e244e4ebd6f0cb04c6cfb2ff5f3a52fb01996",
+    "request_package": "33d3cf0dd52ae3813804f06733d9bd281cb8a9a2"
+  },
+  "received_review_disposition": {
+    "verdict": "PARTIAL_MLA01_REMAINS_OPEN",
+    "items": [
+      {
+        "id": "MLA-01",
+        "severity": "P1",
+        "status": "PARTIAL_OPEN",
+        "residual_id": "MLAR-01",
+        "residual_subject": "Whitespace or control characters in dynamic directive paths can construct an additional prohibited array option",
+        "count_rule": "MLAR-01 is one residual path of MLA-01, not a second independent P1",
+        "candidate_independently_closed": false
+      },
+      {
+        "id": "MLA-02",
+        "severity": "P2",
+        "status": "CLOSABLE_LIMITED",
+        "scope": "Failed, ambiguous or interrupted submission and shared admission within one approved installation in local mocks",
+        "ledger_application": "NOT_APPLIED"
+      },
+      {
+        "id": "MLA-03",
+        "severity": "P2",
+        "status": "CLOSABLE_LIMITED",
+        "scope": "Preexisting and late-colliding outputs or receipts, plus normal, nonzero and ordinary spawn-error traces in local mocks",
+        "ledger_application": "NOT_APPLIED"
+      }
+    ],
+    "q4": "STATIC_PRESERVATION_ACCEPTED_AT_REVIEWED_PIN",
+    "snapshot_files": 118,
+    "candidate_files_within_snapshot": 106,
+    "source_seal_files_within_snapshot": 12,
+    "original_and_b_path_membership_checks": 236,
+    "planned_assets_within_snapshot": 40,
+    "request_blob": "abcbeafb85f4fa4f82b8ca0e57b1ae62093524c1",
+    "remote_membership_and_preservation": "PASS_REPORTED_BY_INDEPENDENT_REVIEW",
+    "counts_note": "118 files are compared at original/B pins as 236 memberships. Source dependencies and assets are included, not additional independent files. File, method, scenario and observation counts are not added."
+  },
+  "submission_and_runtime_boundary": {
+    "submission_failure_ambiguity_or_interruption": "Shared admission blocks follow-up arms within the reviewed scope",
+    "run_failure_after_successful_submission": "Does not automatically propagate campaign HOLD to a second pre-released arm",
+    "started_without_end_after_successful_submission": "Does not automatically propagate campaign HOLD",
+    "operator_obligation": "Monitoring, STOP of follow-up waves, preservation of partial evidence, and separately authorized reconciliation",
+    "automatic_reservation_release": false,
+    "automatic_retry_resume_or_requeue": false,
+    "runtime_boundary_counted_as_new_finding": false
+  },
+  "receipt_validation_performed": {
+    "kind": "Metadata and preserved bytes only; not a new substantive independent review",
+    "zip_crc": "PASS",
+    "zip_member_safety": "PASS",
+    "duplicate_or_case_colliding_members": 0,
+    "symlink_members": 0,
+    "review_sha256sum_entries_verified": 438,
+    "original_package_sha256sum_entries_verified": 129,
+    "planned_asset_sha256sum_entries_verified": 40,
+    "manifest_coverage_complete_excluding_each_manifest_itself": true,
+    "embedded_original_input_files_compared": 130,
+    "embedded_original_input_all_bytes_equal": true,
+    "standalone_report_bytes_equal_to_zip_member": true,
+    "reviewed_pin_metadata_consistent": true,
+    "reviewer_remote_queries_repeated": false,
+    "attached_reproduction_scripts_executed": false,
+    "project_tests_executed": false,
+    "research_values_read": false,
+    "original_artifacts_modified": false
+  },
+  "unverified_external_boundaries": [
+    "Native POSIX, Lustre, symlink behavior and crash or power-loss durability",
+    "Installed scheduler version, plugins and allocation, walltime, output or environment authenticity",
+    "Actual binary, MPI ranks, STL, 100k qualification, time or disk qualification",
+    "Manual runtime STOP, scheduler reconciliation and authorized reservation release",
+    "Operational reseal, integrated CI, author NP, concurrency, ordering or execution GO"
+  ],
+  "preservation_and_import": {
+    "raw_review_zip_and_report_preserved_externally": true,
+    "raw_evidence_contains_external_locations_and_addresses": true,
+    "raw_review_zip_repository_import": false,
+    "raw_report_and_evidence_repository_import": false,
+    "repository_record": "Artifact identities, fixed pins, limited dispositions and remaining boundaries only",
+    "shared_ledger_modified_by_receipt": false
+  },
+  "candidate_state": {
+    "mlar01_fix_is_candidate_only": true,
+    "independent_candidate_recheck": "PENDING",
+    "mla01_closed": false,
+    "mla02_mla03_ledger_application": "NOT_APPLIED",
+    "physical_qualification_or_execution_go": false,
+    "value_access_granted": false,
+    "whole_gate": "HOLD"
+  }
+}

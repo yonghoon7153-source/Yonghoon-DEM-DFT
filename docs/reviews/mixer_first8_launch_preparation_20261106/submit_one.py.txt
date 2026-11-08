@@ -17,7 +17,8 @@ REVIEWED_JOB_START_SHA256='5e140635336be247ee3a776be58b2b3eb8679562c02bfc9cb593e
 def canonical_runner(c, approval_path):
     spec=c.get("runner_bindings",{})
     for k in ("python", "job_start", "stdout", "stderr"):
-        require(type(spec.get(k)) is str and spec[k].startswith("/") and "\n" not in spec[k] and " " not in spec[k], "runner binding "+k)
+        # Directive values forbid Unicode whitespace and C0/DEL control bytes.
+        require(type(spec.get(k)) is str and spec[k].startswith("/") and not any(ch.isspace() or ord(ch)<32 or ord(ch)==127 for ch in spec[k]), "runner binding "+k)
     require(re.fullmatch(r"[0-9]+-[0-9]{2}:[0-9]{2}:[0-9]{2}",spec.get("walltime","")) is not None,"walltime binding")
     return "\n".join(["#!/usr/bin/env bash","#SBATCH --partition=cpu","#SBATCH --qos=cpu-60","#SBATCH --nodes=1","#SBATCH --ntasks=20","#SBATCH --cpus-per-task=1","#SBATCH --no-requeue","#SBATCH --time="+spec["walltime"],"#SBATCH --output="+spec["stdout"],"#SBATCH --error="+spec["stderr"],"set -euo pipefail","exec "+" ".join(shlex.quote(x) for x in (spec["python"],spec["job_start"],str(Path(approval_path).resolve())))])+"\n"
 

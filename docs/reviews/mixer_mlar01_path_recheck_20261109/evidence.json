@@ -1,0 +1,950 @@
+{
+  "schema": "mlar01-path-boundary-derived-evidence-v1",
+  "date": "2026-11-09",
+  "evidence_role": "Path-free derived summary. Original raw logs/results stay in the external review ZIP.",
+  "scope": "MLAR-01 Unicode whitespace and C0/DEL path guard only; C1 is not a blanket-denied category.",
+  "base_commit": "40d9658c07eb578d03dff7905b301da7efacf582",
+  "review_base_pin": "a2e0396241c4e4cddea3c8771872f9fdcc650ef7",
+  "before_submit_sha256": "25e75d99bf66a3706ecab348adce3e6ef5d1e7121da06c154f40b0745dc561a4",
+  "candidate_submit_sha256": "d1232bff3576016e0235d0764dfdb029e582da400a2b4abbe53bf571039e16a8",
+  "same_test_and_harness_before_after": true,
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "win32"
+  },
+  "line_ending_history": "Intermediate CRLF candidate passed; only edited submit was normalized to LF and identical suites rerun once. Both original artifacts preserved; repetitions are not unique additional tests.",
+  "before": {
+    "process_rc": 1,
+    "suites": [
+      {
+        "suite": "test_runner_paths",
+        "methods": 4,
+        "failures": 38,
+        "errors": 0,
+        "skipped": 0,
+        "success": false
+      }
+    ],
+    "observations": [
+      {
+        "case": "normal_full_flow",
+        "fake_sbatch_calls": 1,
+        "receipt_state": "SUBMITTED"
+      },
+      {
+        "case": "normal_pristine_runner",
+        "exact_expected_bytes": true,
+        "sha256": "9e9b3baea7e28a9a0354c6eefc0a825f1d3d311c0dfc9a0727187bae19e8cc8b"
+      },
+      {
+        "case": "prestaged_injection",
+        "binding": "stdout",
+        "character": "TAB",
+        "rejected": false,
+        "reason": null,
+        "fake_sbatch_calls": 1
+      },
+      {
+        "case": "prestaged_injection",
+        "binding": "stdout",
+        "character": "VT",
+        "rejected": false,
+        "reason": null,
+        "fake_sbatch_calls": 1
+      },
+      {
+        "case": "prestaged_injection",
+        "binding": "stdout",
+        "character": "FF",
+        "rejected": false,
+        "reason": null,
+        "fake_sbatch_calls": 1
+      },
+      {
+        "case": "prestaged_injection",
+        "binding": "stderr",
+        "character": "TAB",
+        "rejected": false,
+        "reason": null,
+        "fake_sbatch_calls": 1
+      },
+      {
+        "case": "prestaged_injection",
+        "binding": "stderr",
+        "character": "VT",
+        "rejected": false,
+        "reason": null,
+        "fake_sbatch_calls": 1
+      },
+      {
+        "case": "prestaged_injection",
+        "binding": "stderr",
+        "character": "FF",
+        "rejected": false,
+        "reason": null,
+        "fake_sbatch_calls": 1
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "SPACE",
+        "rejected": true,
+        "reason": "runner binding python"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "LF",
+        "rejected": true,
+        "reason": "runner binding python"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "TAB",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "VT",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "FF",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "CR",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "NUL",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "DEL",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "NBSP",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "LINE_SEPARATOR",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "SPACE",
+        "rejected": true,
+        "reason": "runner binding job_start"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "LF",
+        "rejected": true,
+        "reason": "runner binding job_start"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "TAB",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "VT",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "FF",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "CR",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "NUL",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "DEL",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "NBSP",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "LINE_SEPARATOR",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "SPACE",
+        "rejected": true,
+        "reason": "runner binding stdout"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "LF",
+        "rejected": true,
+        "reason": "runner binding stdout"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "TAB",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "VT",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "FF",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "CR",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "NUL",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "DEL",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "NBSP",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "LINE_SEPARATOR",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "SPACE",
+        "rejected": true,
+        "reason": "runner binding stderr"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "LF",
+        "rejected": true,
+        "reason": "runner binding stderr"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "TAB",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "VT",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "FF",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "CR",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "NUL",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "DEL",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "NBSP",
+        "rejected": false,
+        "reason": null
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "LINE_SEPARATOR",
+        "rejected": false,
+        "reason": null
+      }
+    ]
+  },
+  "after": {
+    "process_rc": 0,
+    "suites": [
+      {
+        "suite": "test_runner_paths",
+        "methods": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "success": true
+      },
+      {
+        "suite": "test_submit_draft",
+        "methods": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "success": true
+      },
+      {
+        "suite": "test_job_start_draft",
+        "methods": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "success": true
+      },
+      {
+        "suite": "test_mla_boundaries",
+        "methods": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "success": true
+      }
+    ],
+    "observations": [
+      {
+        "case": "normal_full_flow",
+        "fake_sbatch_calls": 1,
+        "receipt_state": "SUBMITTED"
+      },
+      {
+        "case": "normal_pristine_runner",
+        "exact_expected_bytes": true,
+        "sha256": "9e9b3baea7e28a9a0354c6eefc0a825f1d3d311c0dfc9a0727187bae19e8cc8b"
+      },
+      {
+        "case": "prestaged_injection",
+        "binding": "stdout",
+        "character": "TAB",
+        "rejected": true,
+        "reason": "runner binding stdout",
+        "fake_sbatch_calls": 0
+      },
+      {
+        "case": "prestaged_injection",
+        "binding": "stdout",
+        "character": "VT",
+        "rejected": true,
+        "reason": "runner binding stdout",
+        "fake_sbatch_calls": 0
+      },
+      {
+        "case": "prestaged_injection",
+        "binding": "stdout",
+        "character": "FF",
+        "rejected": true,
+        "reason": "runner binding stdout",
+        "fake_sbatch_calls": 0
+      },
+      {
+        "case": "prestaged_injection",
+        "binding": "stderr",
+        "character": "TAB",
+        "rejected": true,
+        "reason": "runner binding stderr",
+        "fake_sbatch_calls": 0
+      },
+      {
+        "case": "prestaged_injection",
+        "binding": "stderr",
+        "character": "VT",
+        "rejected": true,
+        "reason": "runner binding stderr",
+        "fake_sbatch_calls": 0
+      },
+      {
+        "case": "prestaged_injection",
+        "binding": "stderr",
+        "character": "FF",
+        "rejected": true,
+        "reason": "runner binding stderr",
+        "fake_sbatch_calls": 0
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "SPACE",
+        "rejected": true,
+        "reason": "runner binding python"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "LF",
+        "rejected": true,
+        "reason": "runner binding python"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "TAB",
+        "rejected": true,
+        "reason": "runner binding python"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "VT",
+        "rejected": true,
+        "reason": "runner binding python"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "FF",
+        "rejected": true,
+        "reason": "runner binding python"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "CR",
+        "rejected": true,
+        "reason": "runner binding python"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "NUL",
+        "rejected": true,
+        "reason": "runner binding python"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "DEL",
+        "rejected": true,
+        "reason": "runner binding python"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "NBSP",
+        "rejected": true,
+        "reason": "runner binding python"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "python",
+        "character": "LINE_SEPARATOR",
+        "rejected": true,
+        "reason": "runner binding python"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "SPACE",
+        "rejected": true,
+        "reason": "runner binding job_start"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "LF",
+        "rejected": true,
+        "reason": "runner binding job_start"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "TAB",
+        "rejected": true,
+        "reason": "runner binding job_start"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "VT",
+        "rejected": true,
+        "reason": "runner binding job_start"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "FF",
+        "rejected": true,
+        "reason": "runner binding job_start"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "CR",
+        "rejected": true,
+        "reason": "runner binding job_start"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "NUL",
+        "rejected": true,
+        "reason": "runner binding job_start"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "DEL",
+        "rejected": true,
+        "reason": "runner binding job_start"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "NBSP",
+        "rejected": true,
+        "reason": "runner binding job_start"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "job_start",
+        "character": "LINE_SEPARATOR",
+        "rejected": true,
+        "reason": "runner binding job_start"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "SPACE",
+        "rejected": true,
+        "reason": "runner binding stdout"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "LF",
+        "rejected": true,
+        "reason": "runner binding stdout"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "TAB",
+        "rejected": true,
+        "reason": "runner binding stdout"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "VT",
+        "rejected": true,
+        "reason": "runner binding stdout"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "FF",
+        "rejected": true,
+        "reason": "runner binding stdout"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "CR",
+        "rejected": true,
+        "reason": "runner binding stdout"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "NUL",
+        "rejected": true,
+        "reason": "runner binding stdout"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "DEL",
+        "rejected": true,
+        "reason": "runner binding stdout"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "NBSP",
+        "rejected": true,
+        "reason": "runner binding stdout"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stdout",
+        "character": "LINE_SEPARATOR",
+        "rejected": true,
+        "reason": "runner binding stdout"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "SPACE",
+        "rejected": true,
+        "reason": "runner binding stderr"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "LF",
+        "rejected": true,
+        "reason": "runner binding stderr"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "TAB",
+        "rejected": true,
+        "reason": "runner binding stderr"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "VT",
+        "rejected": true,
+        "reason": "runner binding stderr"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "FF",
+        "rejected": true,
+        "reason": "runner binding stderr"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "CR",
+        "rejected": true,
+        "reason": "runner binding stderr"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "NUL",
+        "rejected": true,
+        "reason": "runner binding stderr"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "DEL",
+        "rejected": true,
+        "reason": "runner binding stderr"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "NBSP",
+        "rejected": true,
+        "reason": "runner binding stderr"
+      },
+      {
+        "case": "pristine_character_guard",
+        "binding": "stderr",
+        "character": "LINE_SEPARATOR",
+        "rejected": true,
+        "reason": "runner binding stderr"
+      }
+    ]
+  },
+  "counts_are_separate_units": "4 new methods contain 40 character/binding cases, 6 prestaged injections and 2 normal cases. Do not add observations to method counts or research results.",
+  "normal_pristine_runner_bytes_unchanged": true,
+  "normal_hash_context": "Synthetic approval path resolved in the same review cwd for before/after; no actual path recorded here.",
+  "adapters": {
+    "pristine_posix_guard": "Each before/after canonical function tested directly without the Windows path syntax adapter",
+    "full_flow": "Windows leading-slash syntax replaced with Path.is_absolute only in copied submit file",
+    "capacity": "fixed synthetic bytes/inodes only",
+    "existing_test_files_changed": false
+  },
+  "source_fixture": {
+    "base_launch_blobs_verified": 73,
+    "unchanged_after": 72,
+    "changed_after": 1,
+    "sealed_dependency_count": 12,
+    "dependency_pin": "527e244e4ebd6f0cb04c6cfb2ff5f3a52fb01996",
+    "static_asset_count": 40,
+    "latest_B_dependency_qualification": false
+  },
+  "preparation_attempts": [
+    {
+      "attempt": "worktree checkout",
+      "tests_run": 0,
+      "result": "asset SHA mismatch; refused before project-module load",
+      "original_stderr_saved": false,
+      "record": "preparation_attempts.md"
+    },
+    {
+      "attempt": "archive input",
+      "tests_run": 0,
+      "result": "separate asset SHA mismatch; root cause not established",
+      "original_stderr_saved": true,
+      "record": "before-pinned-console.log"
+    }
+  ],
+  "raw_evidence": [
+    {
+      "file": "before-exact/test_runner_paths.log",
+      "role": "authoritative pre-fix raw unittest log",
+      "bytes": 36432,
+      "sha256": "0ceb7c64feeeb23e87834ac0e38b48d350d453fc8b43edbf286f7d636ad872b9",
+      "git_blob_oid": "22b1c1078ed5ed03156a7b575ca4ff58fb12df3b",
+      "repository_import": false
+    },
+    {
+      "file": "after-final-lf/test_runner_paths.log",
+      "role": "final LF post-fix raw new unittest log",
+      "bytes": 652,
+      "sha256": "34982f5ef2b4112788398859da40c67eb48df9dcbce1adec813dabdc9761237c",
+      "git_blob_oid": "a36ceb72bdc6ffd4f56f35f03d3f2232987d03b4",
+      "repository_import": false
+    },
+    {
+      "file": "after-final-lf/test_submit_draft.log",
+      "role": "final LF raw unchanged 10-method suite",
+      "bytes": 829,
+      "sha256": "dd5a118460b0ac8dffa492da5d53363febc695a3895d35f28866dee540f26576",
+      "git_blob_oid": "a9c928b3b9b1d01263816ce03a955dbfb365772f",
+      "repository_import": false
+    },
+    {
+      "file": "after-final-lf/test_job_start_draft.log",
+      "role": "final LF raw unchanged 8-method suite",
+      "bytes": 984,
+      "sha256": "1b9a9529784f03201760e92af675131730d28532447febd71efcd1ed1a9dea13",
+      "git_blob_oid": "60831c973c4e207e4bf9747c328f7acbf283279d",
+      "repository_import": false
+    },
+    {
+      "file": "after-final-lf/test_mla_boundaries.log",
+      "role": "final LF raw unchanged 14-method suite",
+      "bytes": 2764,
+      "sha256": "b4959ced0bfb6683b4dfdc4cd5a9abf231edafe915a49b8669dde5070bf0e98c",
+      "git_blob_oid": "95cd9f7ec134bbb0666b5e7c410d7c2eb8aac82a",
+      "repository_import": false
+    },
+    {
+      "file": "before-exact/results.json",
+      "role": "original structured before observations",
+      "bytes": 11144,
+      "sha256": "d404c4a43fc1e64e26180920f1a411181b0a35a7b9e6772d85d484051b624dc2",
+      "git_blob_oid": "c69eb31839e68442ebcb916f0a415e6a4dff0ccf",
+      "repository_import": false
+    },
+    {
+      "file": "after-final-lf/results.json",
+      "role": "original structured final LF observations",
+      "bytes": 12308,
+      "sha256": "cbc578298ce311ab498551f7f390fb38ff9dd7898bf8815a5540fad9ef1e26fe",
+      "git_blob_oid": "152cbf0de508ac47c125fe05c4024ed6fa233d0c",
+      "repository_import": false
+    },
+    {
+      "file": "before-exact-console.log",
+      "role": "raw before console summary",
+      "bytes": 191,
+      "sha256": "1fac9775909df2d77b3e5a1cbd1bdb2e6706cfed1b35cdc3bf3b5328cd23cdea",
+      "git_blob_oid": "84b51b863714fd0772e3d7e1028543486f30298f",
+      "repository_import": false
+    },
+    {
+      "file": "after-final-lf-console.log",
+      "role": "raw final LF console summary",
+      "bytes": 509,
+      "sha256": "aed7643a4ec2a7ee6673c38165e7de62b88e80b9fb5240a20f3b17059f2a998b",
+      "git_blob_oid": "a616bc0a78678dba31a2cfcb427ee475557d763b",
+      "repository_import": false
+    },
+    {
+      "file": "before-pinned-console.log",
+      "role": "raw archive-fixture preparation error; zero tests",
+      "bytes": 670,
+      "sha256": "17bd790408a6337b75005a577062b117664aea2154ea8c0081a80cf90f3b86b6",
+      "git_blob_oid": "8f17a74cfc0e625183991cd6b1250045a539342b",
+      "repository_import": false
+    },
+    {
+      "file": "preparation_attempts.md",
+      "role": "derived preparation chronology; first stderr not saved verbatim",
+      "bytes": 2409,
+      "sha256": "22bcb948358d6b476f8d25a6d29bcd07e834e2e212d1bad790dd14b0ee6deab7",
+      "git_blob_oid": "af17e8dc47e7bfa3b23390672db65a1e642f49e3",
+      "repository_import": false
+    },
+    {
+      "file": "after-exact/test_runner_paths.log",
+      "role": "intermediate passing CRLF candidate; superseded by final LF run",
+      "bytes": 652,
+      "sha256": "bdd41c913b2735e114c6280963c5eb5ba7d76e14f9c0b91c695cf531e40f0f87",
+      "git_blob_oid": "5adf01aa6c7386060d219c84aedfde46fe857b67",
+      "repository_import": false
+    },
+    {
+      "file": "after-exact/test_submit_draft.log",
+      "role": "intermediate passing CRLF candidate; superseded by final LF run",
+      "bytes": 829,
+      "sha256": "39663a8bc76e8d8d60e02e0a15e90952489a85050038635830eb66ee4ad6fa0d",
+      "git_blob_oid": "6ee3912368ab7eb79a5ae971becbdfb732fe3f94",
+      "repository_import": false
+    },
+    {
+      "file": "after-exact/test_job_start_draft.log",
+      "role": "intermediate passing CRLF candidate; superseded by final LF run",
+      "bytes": 984,
+      "sha256": "824f32a6a9ac3f7019625e1c778df22d8e63a8cebdbccabbb674ca6408950f40",
+      "git_blob_oid": "51c763cef4d4ee8052ad3e3faa270531eadbed3b",
+      "repository_import": false
+    },
+    {
+      "file": "after-exact/test_mla_boundaries.log",
+      "role": "intermediate passing CRLF candidate; superseded by final LF run",
+      "bytes": 2764,
+      "sha256": "abca098fd9dcc173cf66d11e84b7257d10958e5782a522bc79afbd716a193ae4",
+      "git_blob_oid": "c9a3ec42a36bba210a09284c9365fb296b32d2b5",
+      "repository_import": false
+    },
+    {
+      "file": "after-exact/results.json",
+      "role": "intermediate passing CRLF candidate; superseded by final LF run",
+      "bytes": 12308,
+      "sha256": "c49c3c3326c6679f75da17dadd898de36a5f6df85363533502e50552c4824761",
+      "git_blob_oid": "bb0302dbe248ef50342c25bdbf4668fb63b26661",
+      "repository_import": false
+    },
+    {
+      "file": "after-exact-console.log",
+      "role": "intermediate passing CRLF console summary",
+      "bytes": 509,
+      "sha256": "aed7643a4ec2a7ee6673c38165e7de62b88e80b9fb5240a20f3b17059f2a998b",
+      "git_blob_oid": "a616bc0a78678dba31a2cfcb427ee475557d763b",
+      "repository_import": false
+    }
+  ],
+  "blocked_external_attempts_before": [],
+  "blocked_external_attempts_after": [],
+  "actual_scheduler_submissions": 0,
+  "actual_mpi_calls": 0,
+  "actual_research_results": 0,
+  "actual_value_access": false,
+  "full_gate_run": false,
+  "operational_seal_changed": false,
+  "campaign_runtime_failure_propagation_added": false,
+  "independent_recheck": "PENDING",
+  "execution_authorized": false,
+  "whole_gate": "HOLD",
+  "reproduction": {
+    "kind": "Equivalent commands using fixed review ZIP layout; not verbatim original command lines or permission for scheduler/research execution",
+    "working_directory": "Extracted review ZIP root",
+    "fresh_work_directories_required": [
+      "replay-before",
+      "replay-after"
+    ],
+    "before": {
+      "command": "python -I -B -X utf8 snapshot/docs/reviews/mixer_mlar01_path_recheck_20261109/run_mock_checks.py --repo snapshot --sealed-snapshot sealed_source --work replay-before --phase before --submit-source before/docs/reviews/mixer_first8_launch_preparation_20261106/submit_one.py.txt",
+      "expected_rc": 1,
+      "scope": "same four new mock methods against original submit bytes"
+    },
+    "after": {
+      "command": "python -I -B -X utf8 snapshot/docs/reviews/mixer_mlar01_path_recheck_20261109/run_mock_checks.py --repo snapshot --sealed-snapshot sealed_source --work replay-after --phase after --existing",
+      "expected_rc": 0,
+      "scope": "four new mock methods plus unchanged 10/8/14-method suites"
+    },
+    "direct_submission_tool_invocation": false,
+    "all_process_and_network_calls_blocked_inside_harness": true
+  }
+}
