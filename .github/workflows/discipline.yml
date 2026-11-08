@@ -166,6 +166,9 @@ jobs:
       - name: 믹서 D2 소비자 (합성 덱 · 결속 검증) (regression)
         run: python scripts/test_mixer_d2_consumers.py
 
+      - name: 믹서 생성기 seed (삽입 seed 범위 · 소수) (regression)
+        run: python scripts/test_mixer_generator_seeds.py
+
       - name: 믹서 D3 후보 판독기 (합성 계약) (regression)
         run: python scripts/test_mixer_d3_candidates.py
 

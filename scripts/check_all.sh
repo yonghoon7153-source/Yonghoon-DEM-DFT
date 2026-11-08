@@ -230,6 +230,7 @@ run 'mixer launcher (완주 판정 · 덮어쓰기 가드)' bash dem_scripts/mix
 #    (통합 때는 손으로만 돌림 · 13 · 28 unittest OK).  unittest 라 `--selftest` 플래그가 없어 등재 (`selftest_inventory.tsv`) 대상이 아니고
 #    드라이버 (`--run-fast`) 도 못 돈다 → 이름으로 건다 (CI 에도 같이).  실측 (10-27 · 컨테이너 · 두 번) D2 1.47 · 1.27 s · D3 0.42 · 0.40 s.
 run 'mixer D2 소비자 (합성 덱 · 결속 검증 · unittest)' python3 scripts/test_mixer_d2_consumers.py
+run 'mixer 생성기 seed (삽입 seed 범위 · 소수 · 텍스트 생성만 · unittest)' python3 scripts/test_mixer_generator_seeds.py
 run 'mixer D3 후보 판독기 (합성 계약 · unittest)'      python3 scripts/test_mixer_d3_candidates.py
 run 'mixer 보정 전 첫8 준비 (합성 덱 · unittest)'      python3 scripts/test_mixer_precal_prepare.py
 run 'mixer 보정 전 관측 연결 (합성 프레임 · unittest)' python3 scripts/test_mixer_precal_observe.py
