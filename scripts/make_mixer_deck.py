@@ -905,6 +905,39 @@ def _is_prime(n):
     return True
 
 
+INSERT_SEED_MAX = 2**31 - 1
+
+
+def _insert_seed(value, fix_id):
+    """Validate the actual printed seed, matching the D2 consumer contract.
+
+    Keep this producer-side check independent of the readback consumer. Check
+    ASCII positive spelling and the signed-int bound before doing prime work.
+    The CLI retains argparse's int normalization; direct API tokens must already
+    have the canonical spelling that the deck consumer accepts.
+    """
+    label = f'insert/pack {fix_id} seed'
+    if type(value) is int:
+        if value <= 0:
+            raise SystemExit(f'{label}: ASCII positive integer token required')
+        if value > INSERT_SEED_MAX:
+            raise SystemExit(f'{label}: outside 1..{INSERT_SEED_MAX}')
+        seed = value
+    elif isinstance(value, str):
+        if not (value and value.isascii() and value.isdecimal() and value[0] != '0'):
+            raise SystemExit(f'{label}: ASCII positive integer token required')
+        # Bound the spelling before int conversion as well (including long input).
+        limit = str(INSERT_SEED_MAX)
+        if len(value) > len(limit) or (len(value) == len(limit) and value > limit):
+            raise SystemExit(f'{label}: outside 1..{INSERT_SEED_MAX}')
+        seed = int(value)
+    else:
+        raise SystemExit(f'{label}: ASCII positive integer token required')
+    if not _is_prime(seed):
+        raise SystemExit(f'{label}: not prime')
+    return seed
+
+
 def run_steps(p, rpm, revolutions, settle_s=None, restitution=0.3, dt_factor=1.0):
     """덱의 시간 계획 — (정착 step · 회전 step · 덤프 간격 · 체크포인트 간격 · 덱에 찍히는 dt 문자열).
 
@@ -1161,10 +1194,11 @@ def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None, layered=No
     #    셋업 뒤라 덤프 디렉터리는 이미 만들어져 있고, 배치로 돌리면 "덤프 0 개" 로만
     #    보여 **조용한 실패처럼** 읽힌다 (2026-09-19 실측: 시드 57204983 으로 두 팔이
     #    그렇게 죽었다).  ⇒ 덱을 **쓰기 전에** 막는다.
-    if not _is_prime(int(seed)):
-        raise SystemExit(
-            f'⛔ 삽입 시드 {seed} 는 소수가 아니다 — LIGGGHTS 가 거부한다.\n'
-            f'   예: 15485863 · 32452843 · 32452867 · 49979687 · 91648301')
+    if layered is None:
+        layered = bool(ARMS[arm].get('layered', False))
+    seed = _insert_seed(seed, 'insA' if layered else 'ins')
+    if layered:
+        seedB = _insert_seed(_next_prime(seed + 2), 'insB')
     _require_dens_gen(arm, p)                          # ★ D2 덱 = 새 세대 덱 (세대 미지정이면 거부 · 옛 팔은 그대로)
     n, d = p['n'], p['d']
     #  ★ 강성 축 (2026-09-30) — 시간 계획 · CED 행렬 · 머리 블록.  옵션이 중립이면 셋 다 옛 식 그대로 (셀프테스트 ST① 가 바이트 동일 강제).
@@ -1193,8 +1227,6 @@ def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None, layered=No
     dump_every, restart_every = st['dump_every'], st['restart_every']
     #  ── 삽입 블록 (§24 층상 vs 기존 균일) ─────────────────────────────────
     #  ⚠ 비층상 문자열은 옛 원문과 **바이트 동일**해야 한다 — 셀프테스트 ㉟ 골든 해시.
-    if layered is None:
-        layered = bool(ARMS[arm].get('layered', False))
     mf = p['massfrac']
     if not layered:
         _frac = ' '.join(f'pt{i+1} {mf[t]:.6f}' for i, t in enumerate(TYPES))
@@ -1219,7 +1251,6 @@ fix ins all insert/pack seed {seed} distributiontemplate pdd &
         nB = sum(p['n_tpl'][t] for t in _B_T)
         _fracA = ' '.join(f'pt{TYPES.index(t)+1} {mf[t]/a_sum:.6f}' for t in _A_T)
         _fracB = ' '.join(f'pt{TYPES.index(t)+1} {mf[t]/b_sum:.6f}' for t in _B_T)
-        seedB = _next_prime(seed + 2)                 # insA 와 다른 소수
         pddB = _next_prime(32452867 + 2)              # pddA 와 다른 소수
         #  ★★ 순서가 물리다 (스모크 실측 2026-09-20): AM_P(Ø2.4 mm) 119 개를 작은 블록에
         #    `all_in` 으로 넣으면 중심 가용부피 대비 구 부피 59 % = RSA 잼 한계(~38 %) 초과 →
