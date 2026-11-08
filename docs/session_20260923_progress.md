@@ -1361,3 +1361,4 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
 ## 11-08 — 본 세션 → 서브 세션 인계
 
 - **서브 세션 인계 받음** (1저자 11-08 · `docs/handoff_to_subsession_20261108.md` = 프롬프트 원문) — fetch 다섯 가지 · origin stoic = `6a81f0c55` 확인 · B = `claude/sdcp-dem-manuscript-si-pqwtv8` (`67d7e2d96` = stoic 조상 · B 에만 있는 커밋 0) → `6a81f0c55` 로 fast-forward push · 패키지 (webapp requirements · kgy 판 3.8.20 · numpy 1.24.4 · scipy 1.10.1) · 이 컨테이너의 옛 작업 트리 15 정리 (stoic 에 없는 커밋 = `worktree-agent-a6426e7f566d956ee` 1 뿐 = 11-03 bundle 에 있음 · 가지 이름은 남김) · stoic 동결 · 복귀 전까지 stoic push 금지 · 다음 = 이 기록 커밋 게이트 → push → Codex 회차 ③ 요청서 (인계 §5-1).
+- **[DEM 우선 Ⓑ] /emod 정본 보탬 (논문 72 · 인계 §5-4 · 문서만 · app.py 그대로 · 대기 지문 불요)** — §1 사이클 응력 행 (변형 제어 → σ ∝ E · EM-01 반례) · EM-02 기록 칸 · EM-06 색 포화 몫 · 출처 litdb-canon · EMOD:UPDATED 11-08 · 시험 12/12.
