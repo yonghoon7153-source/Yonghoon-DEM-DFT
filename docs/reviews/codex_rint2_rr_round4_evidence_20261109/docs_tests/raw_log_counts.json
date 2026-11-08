@@ -1,0 +1,537 @@
+{
+  "rr3_fix\\logs\\after_chain_full_py311.log": {
+    "summaries": [
+      "test_rint_r_chain: 487/487 PASS (465.7 s)"
+    ],
+    "pass_rows": 487,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\after_e2e_py311.log": {
+    "summaries": [
+      "test_rint_r_chain_e2e: 51 PASS · 0 FAIL (881.3 s)"
+    ],
+    "pass_rows": 51,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\after_RR3.log": {
+    "summaries": [
+      "test_rint_r_chain: 8/8 PASS (6.2 s)"
+    ],
+    "pass_rows": 8,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\after_RR3_targeted.log": {
+    "summaries": [
+      "test_rint_r_chain: 15/15 PASS (11.0 s)"
+    ],
+    "pass_rows": 15,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\before_chain_full_py311.log": {
+    "summaries": [
+      "test_rint_r_chain: 481/481 PASS (364.3 s)"
+    ],
+    "pass_rows": 481,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\before_e2e_py311.log": {
+    "summaries": [
+      "test_rint_r_chain_e2e: 51 PASS · 0 FAIL (807.4 s)"
+    ],
+    "pass_rows": 51,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\before_RR3.log": {
+    "summaries": [
+      "test_rint_r_chain: 3/8 PASS (5.7 s)   FAILED: ['RR3A', 'RR3B', 'RR3C', 'RR3D', 'RR3E']"
+    ],
+    "pass_rows": 3,
+    "fail_rows": 5,
+    "fail_ids": [
+      "RR3A",
+      "RR3B",
+      "RR3C",
+      "RR3D",
+      "RR3E"
+    ]
+  },
+  "rr3_fix\\logs\\check_kgy_py38.out": {
+    "summaries": [
+      "  ✓ rint_r_chain :: test_rint_r_chain: 487/487 PASS (627.1 s)",
+      "  ✓ rint_r_chain_e2e :: test_rint_r_chain_e2e: 51 PASS · 0 FAIL (624.2 s)",
+      "  ✓ ca_s0_census :: 186 PASS · 0 FAIL",
+      "✓ kgy 판 R 경로 시험 11 묶음 통과"
+    ],
+    "pass_rows": 0,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\cross_oldtests_fixedchain.log": {
+    "summaries": [
+      "test_rint_r_chain: 479/481 PASS (512.4 s)   FAILED: ['CT06', 'PC12C']"
+    ],
+    "pass_rows": 479,
+    "fail_rows": 2,
+    "fail_ids": [
+      "CT06",
+      "PC12C"
+    ]
+  },
+  "rr3_fix\\logs\\mutation_rr3.out": {
+    "summaries": [
+      "M21_gen_failure_empty caught ['RR3A', 'RR3B', 'RR3D'] | test_rint_r_chain: 6/9 PASS (8.6 s)   FAILED: ['RR3A', 'RR3B', 'RR3D']",
+      "M22_execute_bypass caught ['RR3D'] | test_rint_r_chain: 8/9 PASS (10.3 s)   FAILED: ['RR3D']",
+      "M23_merge_failure_bypass caught ['RR3D'] | test_rint_r_chain: 8/9 PASS (8.4 s)   FAILED: ['RR3D']",
+      "잡힘 23/23 · 되돌림 sha 같음 True · 무변이 전부 통과 True"
+    ],
+    "pass_rows": 0,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\py38\\ca_ext_b6.log": {
+    "summaries": [
+      "    (--old-scripts 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)",
+      "502 PASS · 0 FAIL"
+    ],
+    "pass_rows": 502,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\py38\\ca_ext_runner.log": {
+    "summaries": [
+      "    (--old-runner 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)",
+      "151 PASS · 0 FAIL"
+    ],
+    "pass_rows": 151,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\py38\\ca_s0_census.log": {
+    "summaries": [
+      "186 PASS · 0 FAIL"
+    ],
+    "pass_rows": 186,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\py38\\ptfe_face_alpha.log": {
+    "summaries": [
+      "    (--old-scripts 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)",
+      "242 PASS · 0 FAIL"
+    ],
+    "pass_rows": 242,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\py38\\rint_r_chain.log": {
+    "summaries": [
+      "test_rint_r_chain: 487/487 PASS (627.1 s)"
+    ],
+    "pass_rows": 487,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\py38\\rint_r_chain_e2e.log": {
+    "summaries": [
+      "test_rint_r_chain_e2e: 51 PASS · 0 FAIL (624.2 s)"
+    ],
+    "pass_rows": 51,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\py38\\step3_conv_cert.log": {
+    "summaries": [
+      "  --  K4b 대조 건너뜀 (scipy 1.10.1 < 1.12 · 비교 대상 cg(rtol=) 없음 · 3.11 게이트가 본다 · 세지 않음)"
+    ],
+    "pass_rows": 29,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "rr3_fix\\logs\\py38\\step3_target_cert.log": {
+    "summaries": [
+      "── T5 건전성 — Codex 생성기 그대로 (seed 611 · 막다른 / 연결 각 N — 빠른 판 300 · 긴 판 1,500) · ⓓ 거짓 통과 0 · 구간 빗나감 0"
+    ],
+    "pass_rows": 264,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa13_fix\\logs\\check_kgy_py38.log": {
+    "summaries": [
+      "  ✓ rint_r_chain :: test_rint_r_chain: 491/491 PASS (537.2 s)",
+      "  ✓ rint_r_chain_e2e :: test_rint_r_chain_e2e: 51 PASS · 0 FAIL (605.4 s)",
+      "  ✓ ca_s0_census :: 186 PASS · 0 FAIL",
+      "✓ kgy 판 R 경로 시험 11 묶음 통과"
+    ],
+    "pass_rows": 0,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa13_fix\\logs\\e2e_py311.log": {
+    "summaries": [
+      "test_rint_r_chain_e2e: 51 PASS · 0 FAIL (781.1 s)"
+    ],
+    "pass_rows": 51,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa13_fix\\logs\\full_py311.log": {
+    "summaries": [
+      "test_rint_r_chain: 491/491 PASS (445.5 s)"
+    ],
+    "pass_rows": 491,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa13_fix\\logs\\mutation_run.log": {
+    "summaries": [
+      "S18_rerun_call_drop CAUGHT ['PA13A'] test_rint_r_chain: 3/4 PASS (9.9 s)   FAILED: ['PA13A']",
+      "P01_read_run_own_formula CAUGHT ['PA13C'] test_rint_r_chain: 3/4 PASS (9.8 s)   FAILED: ['PA13C']",
+      "P02_graph_own_formula CAUGHT ['PA13C'] test_rint_r_chain: 3/4 PASS (9.1 s)   FAILED: ['PA13C']",
+      "변이 49 · 잡힘 49 · 놓침 0 · 건너뜀 0 · 변이 없음 PASS_ALL"
+    ],
+    "pass_rows": 0,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa13_fix\\logs\\pa13_after.log": {
+    "summaries": [
+      "test_rint_r_chain: 4/4 PASS (7.0 s)"
+    ],
+    "pass_rows": 4,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa13_fix\\logs\\pa13_before.log": {
+    "summaries": [
+      "test_rint_r_chain: 0/4 PASS (7.6 s)   FAILED: ['PA13A', 'PA13B', 'PA13C', 'PA13D']"
+    ],
+    "pass_rows": 0,
+    "fail_rows": 4,
+    "fail_ids": [
+      "PA13A",
+      "PA13B",
+      "PA13C",
+      "PA13D"
+    ]
+  },
+  "pa13_fix\\logs\\py38\\ca_ext_b6.log": {
+    "summaries": [
+      "    (--old-scripts 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)",
+      "502 PASS · 0 FAIL"
+    ],
+    "pass_rows": 502,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa13_fix\\logs\\py38\\ca_ext_runner.log": {
+    "summaries": [
+      "    (--old-runner 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)",
+      "151 PASS · 0 FAIL"
+    ],
+    "pass_rows": 151,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa13_fix\\logs\\py38\\ca_s0_census.log": {
+    "summaries": [
+      "186 PASS · 0 FAIL"
+    ],
+    "pass_rows": 186,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa13_fix\\logs\\py38\\ptfe_face_alpha.log": {
+    "summaries": [
+      "    (--old-scripts 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)",
+      "242 PASS · 0 FAIL"
+    ],
+    "pass_rows": 242,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa13_fix\\logs\\py38\\rint_r_chain.log": {
+    "summaries": [
+      "test_rint_r_chain: 491/491 PASS (537.2 s)"
+    ],
+    "pass_rows": 491,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa13_fix\\logs\\py38\\rint_r_chain_e2e.log": {
+    "summaries": [
+      "test_rint_r_chain_e2e: 51 PASS · 0 FAIL (605.4 s)"
+    ],
+    "pass_rows": 51,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa13_fix\\logs\\py38\\step3_conv_cert.log": {
+    "summaries": [
+      "  --  K4b 대조 건너뜀 (scipy 1.10.1 < 1.12 · 비교 대상 cg(rtol=) 없음 · 3.11 게이트가 본다 · 세지 않음)"
+    ],
+    "pass_rows": 29,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa13_fix\\logs\\py38\\step3_target_cert.log": {
+    "summaries": [
+      "── T5 건전성 — Codex 생성기 그대로 (seed 611 · 막다른 / 연결 각 N — 빠른 판 300 · 긴 판 1,500) · ⓓ 거짓 통과 0 · 구간 빗나감 0"
+    ],
+    "pass_rows": 264,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\check_kgy_py38.log": {
+    "summaries": [
+      "  ✓ rint_r_chain :: test_rint_r_chain: 495/495 PASS (455.1 s)",
+      "  ✓ rint_r_chain_e2e :: test_rint_r_chain_e2e: 51 PASS · 0 FAIL (548.3 s)",
+      "  ✓ ca_s0_census :: 186 PASS · 0 FAIL",
+      "✓ kgy 판 R 경로 시험 11 묶음 통과"
+    ],
+    "pass_rows": 0,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\e2e_py311.log": {
+    "summaries": [
+      "test_rint_r_chain_e2e: 51 PASS · 0 FAIL (798.2 s)"
+    ],
+    "pass_rows": 51,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\full_py311.log": {
+    "summaries": [
+      "test_rint_r_chain: 495/495 PASS (372.9 s)"
+    ],
+    "pass_rows": 495,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\mutation_equiv_run.log": {
+    "summaries": [
+      "X01_show_resid_conv_repr MISSED (동치) test_rint_r_chain: 8/8 PASS (6.2 s) []"
+    ],
+    "pass_rows": 0,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\mutation_run.log": {
+    "summaries": [
+      "M18_rr_det_only CAUGHT ['PA14D'] test_rint_r_chain: 7/8 PASS (8.3 s)   FAILED: ['PA14D']",
+      "M47_mm_elem_type CAUGHT ['PA14D'] test_rint_r_chain: 7/8 PASS (9.6 s)   FAILED: ['PA14D']",
+      "M54_lo_one CAUGHT ['PA14D'] test_rint_r_chain: 7/8 PASS (8.9 s)   FAILED: ['PA14D']",
+      "변이 23 · 잡힘 23 · 놓침 0 · 건너뜀 0 · 변이 없음 PASS_ALL"
+    ],
+    "pass_rows": 0,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\pa14_after.log": {
+    "summaries": [
+      "test_rint_r_chain: 8/8 PASS (5.8 s)"
+    ],
+    "pass_rows": 8,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\pa14_before.log": {
+    "summaries": [
+      "test_rint_r_chain: 4/8 PASS (6.4 s)   FAILED: ['PA14A', 'PA14B', 'PA14C', 'PA14D']"
+    ],
+    "pass_rows": 4,
+    "fail_rows": 4,
+    "fail_ids": [
+      "PA14A",
+      "PA14B",
+      "PA14C",
+      "PA14D"
+    ]
+  },
+  "pa14_fix\\logs\\py38\\ca_ext_b6.log": {
+    "summaries": [
+      "    (--old-scripts 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)",
+      "502 PASS · 0 FAIL"
+    ],
+    "pass_rows": 502,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\py38\\ca_ext_runner.log": {
+    "summaries": [
+      "    (--old-runner 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)",
+      "151 PASS · 0 FAIL"
+    ],
+    "pass_rows": 151,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\py38\\ca_s0_census.log": {
+    "summaries": [
+      "186 PASS · 0 FAIL"
+    ],
+    "pass_rows": 186,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\py38\\ptfe_face_alpha.log": {
+    "summaries": [
+      "    (--old-scripts 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)",
+      "242 PASS · 0 FAIL"
+    ],
+    "pass_rows": 242,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\py38\\rint_r_chain.log": {
+    "summaries": [
+      "test_rint_r_chain: 495/495 PASS (455.1 s)"
+    ],
+    "pass_rows": 495,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\py38\\rint_r_chain_e2e.log": {
+    "summaries": [
+      "test_rint_r_chain_e2e: 51 PASS · 0 FAIL (548.3 s)"
+    ],
+    "pass_rows": 51,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\py38\\step3_conv_cert.log": {
+    "summaries": [
+      "  --  K4b 대조 건너뜀 (scipy 1.10.1 < 1.12 · 비교 대상 cg(rtol=) 없음 · 3.11 게이트가 본다 · 세지 않음)"
+    ],
+    "pass_rows": 29,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\py38\\step3_target_cert.log": {
+    "summaries": [
+      "── T5 건전성 — Codex 생성기 그대로 (seed 611 · 막다른 / 연결 각 N — 빠른 판 300 · 긴 판 1,500) · ⓓ 거짓 통과 0 · 구간 빗나감 0"
+    ],
+    "pass_rows": 264,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "pa14_fix\\logs\\tau_bound_check.log": {
+    "summaries": [
+      "τ = 0.0001 · 표본 G 200000 · ⓓ 통과 383670 (칼날 300378) · e > τ (또는 음수 · float 아님) 0 · 최대 e = 0.0001 · 최대 e == τ True"
+    ],
+    "pass_rows": 0,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "preattack13\\base_rr3_all.log": {
+    "summaries": [
+      "test_rint_r_chain: 13/13 PASS (6.6 s)"
+    ],
+    "pass_rows": 13,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "preattack13\\base_rr3abc.log": {
+    "summaries": [
+      "test_rint_r_chain: 3/3 PASS (1.0 s)"
+    ],
+    "pass_rows": 3,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "preattack13\\crf.log": {
+    "summaries": [
+      "        회귀: scripts/test_rint_r_chain.py PE05 · PE05b · PE05o · PE05p · PE01 (고치기 전 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_chain.log (PE05 · PE05b recover rc 0 · 다음 --add · --resume rc 0 · 산 사슬 rc 3 · PE05o · PE05p 새 판 시작 기록 · 규칙 없음 · PE01 시작 기록 칸) · 고친 뒤 넣은 PE05o 운영자 표지 범위 줄 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/before_PE05o_PE06_full.json → 뒤 = docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/after_chain_targeted.log · docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/after_PE05o_PE06_rows2.log) · PE01h · PE01r · PE01p · PE01s · PE01c · PE01f · PC06 · PC06b · AL14 · GR08 그대로, docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/mutation_pc8fix.json (N01 – N03 · N05 – N11 = 10/10 잡힘 · N04 = 번호만 빔), docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/probes/probe_p805_recover_live_nogroup.out (탐침 무변경 · recover rc 3 · 결과 줄 없음 · 원 사슬 CALIBRATED + 자기 결과 줄 · 다음 --add rc 3) · docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/probes/probe_p805b_recover_live_between_runs.out · docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/probes/probe_p805c_then_verdict.out · docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/probes/probe_p805d_pre_then_cut.out, docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/run_regression.sh — Python 3.11.15 (3b12fbe2d 판 · 사슬만 7b3e7ad36 판 다시) = 사슬 451/451 (다시 451/451) · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · kgy 판 3.8.20 (7b3e7ad36 판) = 사슬 451/451 · 끝-끝 51 PASS · 0 FAIL · 접합 500/500 · b6 502/0 · 러너 151/0 · z3 84/0 · 목표 증서 264/264 · 한정어 상수 소비자 = 웹앱 표지 93/0 · 영수증 105/0 (두 판) · S0 census 167/0 (두 판) · 로그 docs/reviews/rint2_rr_fix_evidence_20261023/pc8_fix/logs/ (py311 · py311_r2 · py38 · consumers_*) · 요약 regression_env.txt · consumers_env.txt   opened_in: docs/reviews/rint2_rr_fix_evidence_20261023/preattack8/PREATTACK_8.md",
+      "  [P3] RINT2-L01 open          분산판 v0 의 전달 길이 — (11-03 밤 Q3) 해석 시험 통과 (분산판 = 이산 전송선",
+      "        회귀: docs/reviews/fam_s127_runner/after.log — 747/747 (값 줄 새는지 검사 포함), docs/reviews/fam_s127_runner/mutation.log — 변이 18/18 (END 줄 로그 줄 출력 변이 잡힘)   opened_in: docs/reviews/fam_platen_prereg_20260812.md",
+      "        회귀: scripts/test_rint_r_chain.py PC12C (F3 · F3b · 17 행 = 정직 5 · 모순 8 · 실경로 4 · 고치기 전 실패 10 → 0 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/before_PC12.log → after_PC12.log), docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/after_p4_tl_none_after_fail.out (정직 RUNNER_RC L01 rc 1 = runner_rc · rc 3 그대로 · 위조 TIME_LIMIT run L02_ceiling · zzz = timeout · True · rc 0 → False · rc 3 RESUME_NOT_ALLOWED), docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/after_p5_misc_b_fixed.out ((a1) [L01 rc 1, L02 {timeout, null}] TIME_LIMIT · (a2) [L01 rc 1, L02 {None, 0}] GU = True → False), scripts/test_rint_r_chain.py (전체 476/476 → 481/481 · Python 3.11 · 시험한 판 = d346ca943 의 사슬 · 시험 blob · docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/after_chain_full_py311.log · code_sha256.txt), scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/after_e2e_py311.log), scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/check_kgy_py38.out), docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/mutation_pc12.json (변이 7/7 잡힘 · 가드 하나 ↔ 검사 하나 · 무변이 5/5 mut_sanity_rows.json), docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/p4_tl_none_after_fail.py (p4_tl_none_after_fail.out) [고치기 전 재현], docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/p5_misc_b.py (a1 · a2 · p5_misc_b.out) [고치기 전 재현]   opened_in: docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/REPORT.md"
+    ],
+    "pass_rows": 0,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "preattack13\\e2e_py311.log": {
+    "summaries": [
+      "test_rint_r_chain_e2e: 51 PASS · 0 FAIL (829.1 s)"
+    ],
+    "pass_rows": 51,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "preattack13\\full_py311.log": {
+    "summaries": [
+      "test_rint_r_chain: 487/487 PASS (363.7 s)"
+    ],
+    "pass_rows": 487,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "preattack13\\full_py38.log": {
+    "summaries": [
+      "test_rint_r_chain: 487/487 PASS (547.6 s)"
+    ],
+    "pass_rows": 487,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "preattack13\\mutation_run.log": {
+    "summaries": [
+      "M13a_exec_fail_writes_pub CAUGHT ['RR3A', 'RR3D'] test_rint_r_chain: 11/13 PASS (6.7 s)   FAILED: ['RR3A', 'RR3D']",
+      "M13b_copy_fail_writes_pub CAUGHT ['RR3B', 'RR3D'] test_rint_r_chain: 11/13 PASS (7.9 s)   FAILED: ['RR3B', 'RR3D']",
+      "M13c_merge_fail_writes_pub CAUGHT ['RR3B', 'RR3D'] test_rint_r_chain: 11/13 PASS (8.1 s)   FAILED: ['RR3B', 'RR3D']",
+      "M14_prefix_fn CAUGHT ['CT06', 'PC12C', 'RR3B', 'RR3C', 'RR3D', 'RR3E', 'RR3P'] test_rint_r_chain: 6/13 PASS (6.1 s)   FAILED: ['CT06', 'PC12C', 'RR3B', 'RR3C', 'RR3D', 'RR3E', 'RR3P']"
+    ],
+    "pass_rows": 0,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "preattack13\\mutation_run2.log": {
+    "summaries": [
+      "M00_identity (0, [], 'test_rint_r_chain: 13/13 PASS (6.6 s)')",
+      "M15_success_writes_ids CAUGHT ['RR3B', 'RR3D', 'RR3P'] test_rint_r_chain: 10/13 PASS (7.8 s)   FAILED: ['RR3B', 'RR3D', 'RR3P']",
+      "M16_idx_self_ref CAUGHT ['RR3C'] test_rint_r_chain: 12/13 PASS (11.7 s)   FAILED: ['RR3C']",
+      "M17_rec_ignored_kit CAUGHT ['RR3C'] test_rint_r_chain: 12/13 PASS (10.2 s)   FAILED: ['RR3C']"
+    ],
+    "pass_rows": 0,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "preattack13\\py38_rr3.log": {
+    "summaries": [
+      "test_rint_r_chain: 13/13 PASS (9.2 s)"
+    ],
+    "pass_rows": 13,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "preattack14\\out\\e2e_py311.log": {
+    "summaries": [
+      "test_rint_r_chain_e2e: 51 PASS · 0 FAIL (749.4 s)"
+    ],
+    "pass_rows": 51,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "preattack14\\out\\full_py311.log": {
+    "summaries": [
+      "test_rint_r_chain: 491/491 PASS (409.5 s)"
+    ],
+    "pass_rows": 491,
+    "fail_rows": 0,
+    "fail_ids": []
+  },
+  "preattack14\\out\\full_py38.log": {
+    "summaries": [
+      "test_rint_r_chain: 491/491 PASS (523.1 s)"
+    ],
+    "pass_rows": 491,
+    "fail_rows": 0,
+    "fail_ids": []
+  }
+}

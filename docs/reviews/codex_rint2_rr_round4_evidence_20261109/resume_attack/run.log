@@ -1,0 +1,112 @@
+{
+  "cases": {
+    "honest_mismatch": [
+      "check",
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+    ],
+    "honest_after_rerun": [
+      "timeout",
+      true,
+      null,
+      null
+    ],
+    "PC13_01_two_fields": [
+      "timeout",
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+    ],
+    "PC13_01_same_true": [
+      "timeout",
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+    ],
+    "PC14_05_extra": [
+      "timeout",
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+    ],
+    "PC14_05_missing_det": [
+      "timeout",
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+    ],
+    "PC14_06_M14": [
+      "timeout",
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+    ],
+    "PC14_06_M47": [
+      "timeout",
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+    ],
+    "honest_before_rerun": [
+      "timeout",
+      true,
+      null,
+      null
+    ],
+    "PC14_06_M18": [
+      "timeout",
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+    ],
+    "PC14_02_R1": [
+      "timeout",
+      true,
+      null,
+      null
+    ],
+    "PC14_02_R2": [
+      "timeout",
+      true,
+      null,
+      null
+    ],
+    "PC14_03_attempt_null": [
+      "timeout",
+      true,
+      null,
+      null
+    ],
+    "PC14_03_honest_chain3_mismatch": [
+      "check",
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+    ],
+    "PC14_03_from_rebind_forged": [
+      "timeout",
+      true,
+      null,
+      null
+    ]
+  },
+  "cli": {
+    "honest_mismatch": [
+      0,
+      false
+    ],
+    "PC13_two_fields": [
+      0,
+      false
+    ],
+    "PC14_02_R1": [
+      0,
+      true
+    ],
+    "PC14_03_attempt_null": [
+      0,
+      true
+    ]
+  }
+}

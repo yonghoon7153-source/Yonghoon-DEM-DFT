@@ -1,0 +1,758 @@
+{
+  "python": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+  "repo": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_pin_wt",
+  "source_sha256": {
+    "rint_r_chain.py": "47a520e8ad300101c6f8d2660d7368eead77f0f3b425bdcf1d37c379fe0c8720",
+    "test_rint_r_chain.py": "d5e1d9ea4001911b4a1878d1315e74e0188336e2ea66e021ac348ad0994612d0"
+  },
+  "platform_adapter": [],
+  "checks": {
+    "t_RR3A": {
+      "ok": true,
+      "detail": {
+        "n": 9,
+        "n_bad": 0,
+        "bad": {},
+        "rows": {
+          "producer": [
+            "ARM_JSON_COUNT",
+            1,
+            0,
+            null,
+            [
+              "file",
+              "index",
+              "sha256"
+            ]
+          ],
+          "producer_kind": "file_ids",
+          "orig": [
+            "check",
+            false,
+            null
+          ],
+          "edit_L02": [
+            "timeout",
+            false,
+            "멈춤 TIME_LIMIT · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read file_ids (파일 신원 1 = 판독 실패 때 남긴 꼴) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 "
+          ],
+          "edit_zzz": [
+            "timeout",
+            false,
+            "멈춤 TIME_LIMIT · 런 'zzz' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read file_ids (파일 신원 1 = 판독 실패 때 남긴 꼴) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 런 = arms"
+          ],
+          "edit_tl_append": [
+            "timeout",
+            false,
+            "멈춤 TIME_LIMIT · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read file_ids (파일 신원 1 = 판독 실패 때 남긴 꼴) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 "
+          ],
+          "edit_gu_append": [
+            "group_unconfirmed",
+            false,
+            "멈춤 GROUP_UNCONFIRMED · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read file_ids (파일 신원 1 = 판독 실패 때 남긴 꼴) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 "
+          ],
+          "ledger_orig": [
+            false,
+            "RESUME_NOT_ALLOWED",
+            null
+          ],
+          "ledger_edit_L02": [
+            false,
+            "RESUME_NOT_ALLOWED",
+            null
+          ]
+        }
+      }
+    },
+    "t_RR3B": {
+      "ok": true,
+      "detail": {
+        "n": 6,
+        "n_bad": 0,
+        "bad": {},
+        "rows": {
+          "copy_producer": [
+            true,
+            "ARM_JSON_COUNT",
+            1,
+            0,
+            null,
+            "file_ids"
+          ],
+          "merge_producer": [
+            "ARM_JSON_COUNT",
+            "file_ids",
+            null,
+            "verified",
+            true
+          ],
+          "copy_orig": [
+            "check",
+            false,
+            null
+          ],
+          "copy_edit_L02": [
+            "timeout",
+            false,
+            "멈춤 TIME_LIMIT · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read file_ids (파일 신원 1 = 판독 실패 때 남긴 꼴) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 "
+          ],
+          "merge_fail_prior": [
+            "timeout",
+            false,
+            "멈춤 TIME_LIMIT · 런 'P02_corner' 앞의 런 기록 runs[0] ('P01_corner') = 꼴 exit_ok · arms_read file_ids (파일 신원 1 = 판독 실패 때 남긴 꼴) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 "
+          ],
+          "merge_ok_prior": [
+            "timeout",
+            true,
+            null
+          ]
+        }
+      }
+    },
+    "t_RR3C": {
+      "ok": true,
+      "detail": {
+        "n": 48,
+        "n_bad": 0,
+        "bad": {},
+        "rows": {
+          "fixture_keys": [
+            true,
+            [
+              "file",
+              "index",
+              "sha256"
+            ]
+          ],
+          "h_arm1": [
+            "timeout",
+            true,
+            false,
+            [
+              "verified"
+            ]
+          ],
+          "h_arms2": [
+            "timeout",
+            true,
+            false,
+            [
+              "verified"
+            ]
+          ],
+          "h_arml": [
+            "timeout",
+            true,
+            false,
+            [
+              "verified"
+            ]
+          ],
+          "h_arms8": [
+            "timeout",
+            true,
+            false,
+            [
+              "verified"
+            ]
+          ],
+          "h_copied": [
+            "timeout",
+            true,
+            false,
+            [
+              "verified"
+            ]
+          ],
+          "h_dbe": [
+            "timeout",
+            true,
+            false,
+            [
+              "verified"
+            ]
+          ],
+          "h_two": [
+            "timeout",
+            true,
+            false,
+            [
+              "verified",
+              "verified"
+            ]
+          ],
+          "n_ids": [
+            "timeout",
+            false,
+            true,
+            [
+              "file_ids"
+            ]
+          ],
+          "n_ids_more_arms": [
+            "timeout",
+            false,
+            true,
+            [
+              "file_ids"
+            ]
+          ],
+          "n_ids_fewer_arms": [
+            "timeout",
+            false,
+            true,
+            [
+              "file_ids"
+            ]
+          ],
+          "n_two_second_ids": [
+            "timeout",
+            false,
+            true,
+            [
+              "verified",
+              "file_ids"
+            ]
+          ],
+          "n_ids_extra_key": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_ids_missing_key": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_mixed": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_pub_missing_key": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_pub_extra_key": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_pub_not_dict": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_pub_tuple": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_noreq": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_req_arms9": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_req_arml_dup": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_nokit": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_kit_nonstr": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_count_short": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_count_long": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_order": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_dup": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_arml_map": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_index_field": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_index_bool": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_index_str": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_index_float": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_file_suffix": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_file_path": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_file_wrong_kit": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_file_nonstr": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_sha_upper": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_sha_short": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_sha_none": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_sha_newline": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "n_sha_fullwidth": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "c_empty": [
+            "timeout",
+            false,
+            true,
+            [
+              "empty"
+            ]
+          ],
+          "c_none": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "c_dict": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "c_missing": [
+            "timeout",
+            false,
+            true,
+            [
+              "bad"
+            ]
+          ],
+          "c_rc1": [
+            "timeout",
+            false,
+            true,
+            [
+              "verified"
+            ]
+          ],
+          "c_killed": [
+            "timeout",
+            false,
+            true,
+            [
+              "verified"
+            ]
+          ]
+        }
+      }
+    },
+    "t_PA14A": {
+      "ok": true,
+      "detail": {
+        "n": 11,
+        "n_bad": 0,
+        "bad": {},
+        "rows": {
+          "h_pos": [
+            "verified",
+            "timeout",
+            true,
+            null
+          ],
+          "n_resid_big": [
+            "bad",
+            "timeout",
+            false,
+            104
+          ],
+          "n_resid_negbig": [
+            "bad",
+            "timeout",
+            false,
+            104
+          ],
+          "n_cginfo_big": [
+            "bad",
+            "timeout",
+            false,
+            98
+          ],
+          "n_cginfo_resid_big": [
+            "bad",
+            "timeout",
+            false,
+            104
+          ],
+          "n_cgit_negbig": [
+            "bad",
+            "timeout",
+            false,
+            74
+          ],
+          "n_rsit_negbig": [
+            "bad",
+            "timeout",
+            false,
+            79
+          ],
+          "n_resid_str": [
+            "bad",
+            "timeout",
+            false,
+            89
+          ],
+          "h_resid_int": [
+            "verified",
+            "timeout",
+            true,
+            null
+          ],
+          "l_cgit_big": [
+            "verified",
+            "timeout",
+            true,
+            null
+          ],
+          "l_zero_resid_big": [
+            "verified",
+            "timeout",
+            true,
+            null
+          ]
+        }
+      }
+    },
+    "PA14C_value_subpart_only": {
+      "ok": true,
+      "rows": {
+        "h_pos": [
+          "verified",
+          "timeout",
+          true,
+          null
+        ],
+        "n_pid_bare_dash": [
+          "bad",
+          "timeout",
+          false,
+          120
+        ],
+        "n_pid_zwsp": [
+          "bad",
+          "timeout",
+          false,
+          126
+        ],
+        "n_pid_space": [
+          "bad",
+          "timeout",
+          false,
+          121
+        ],
+        "n_pid_newline": [
+          "bad",
+          "timeout",
+          false,
+          138
+        ],
+        "n_pid_upper": [
+          "bad",
+          "timeout",
+          false,
+          136
+        ],
+        "n_pid_15": [
+          "bad",
+          "timeout",
+          false,
+          135
+        ],
+        "n_pid_17": [
+          "bad",
+          "timeout",
+          false,
+          137
+        ],
+        "n_pid_nonhex": [
+          "bad",
+          "timeout",
+          false,
+          136
+        ],
+        "n_pid_old_fixture": [
+          "bad",
+          "timeout",
+          false,
+          124
+        ],
+        "h_pid_f": [
+          "verified",
+          "timeout",
+          true,
+          null
+        ],
+        "n_sid_space": [
+          "bad",
+          "timeout",
+          false,
+          104
+        ],
+        "n_sid_nul": [
+          "bad",
+          "timeout",
+          false,
+          107
+        ],
+        "n_sid_16_old_fixture": [
+          "bad",
+          "timeout",
+          false,
+          119
+        ],
+        "n_sid_31": [
+          "bad",
+          "timeout",
+          false,
+          134
+        ],
+        "n_sid_33": [
+          "bad",
+          "timeout",
+          false,
+          136
+        ],
+        "n_sid_upper": [
+          "bad",
+          "timeout",
+          false,
+          135
+        ],
+        "n_sid_newline": [
+          "bad",
+          "timeout",
+          false,
+          137
+        ],
+        "n_sid_nonhex": [
+          "bad",
+          "timeout",
+          false,
+          135
+        ],
+        "h_sid_zero": [
+          "verified",
+          "timeout",
+          true,
+          null
+        ],
+        "n_err_half": [
+          "bad",
+          "timeout",
+          false,
+          88
+        ],
+        "n_err_1e300": [
+          "bad",
+          "timeout",
+          false,
+          91
+        ],
+        "n_err_up": [
+          "bad",
+          "timeout",
+          false,
+          107
+        ],
+        "h_err_tau": [
+          "verified",
+          "timeout",
+          true,
+          null
+        ],
+        "h_err_9e5": [
+          "verified",
+          "timeout",
+          true,
+          null
+        ],
+        "n_zero_err_tau": [
+          "bad",
+          "timeout",
+          false,
+          50
+        ]
+      },
+      "bad": {},
+      "tau": 0.0001,
+      "not_full_method": "s_main(P0/P1)/s_main_predict omitted: Linux fixture"
+    }
+  },
+  "blocked_events": [],
+  "not_run": [
+    "fixtures()",
+    "full 495 chain",
+    "bash/Linux process groups/flock",
+    "actual 12-unit e2e",
+    "research inputs"
+  ],
+  "pass": true
+}

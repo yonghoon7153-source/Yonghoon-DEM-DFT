@@ -1,0 +1,905 @@
+{
+  "rr3_fix": {
+    "tree": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/mut_tree",
+    "chain_sha256": "b37ef7c68e126acdfe7c9062c04e215438ee374b0c0ef7152ec6a485cb00def1",
+    "only": "RR3,CT06,PC12C,RS01",
+    "new_checks": [
+      "RR3A",
+      "RR3B",
+      "RR3C",
+      "RR3D",
+      "RR3E",
+      "RR3P"
+    ],
+    "mutants": [
+      {
+        "name": "M01_prior_old_rule",
+        "guard": "`prior_runs_problem` = 옛 규칙 (비지 않은 목록)",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3A",
+          "RR3B",
+          "RR3C",
+          "RR3E"
+        ],
+        "failed_new": [
+          "RR3A",
+          "RR3B",
+          "RR3C",
+          "RR3E"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 5/9 PASS (7.5 s)   FAILED: ['RR3A', 'RR3B', 'RR3C', 'RR3E']"
+      },
+      {
+        "name": "M02_file_ids_as_verified",
+        "guard": "분류: 파일 신원 꼴 = verified",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3A",
+          "RR3B",
+          "RR3C",
+          "RR3D",
+          "RR3E"
+        ],
+        "failed_new": [
+          "RR3A",
+          "RR3B",
+          "RR3C",
+          "RR3D",
+          "RR3E"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 4/9 PASS (7.9 s)   FAILED: ['RR3A', 'RR3B', 'RR3C', 'RR3D', 'RR3E']"
+      },
+      {
+        "name": "M03_keyset_off",
+        "guard": "분류: 칸 집합 = ARM_PUBLIC 검사 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (9.3 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M04_dict_off",
+        "guard": "분류: 원소 객체 검사 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (9.2 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M05_list_off",
+        "guard": "분류: 목록 검사 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (8.3 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M06_empty_off",
+        "guard": "분류: 빈 목록 갈래 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (7.8 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M07_request_off",
+        "guard": "분류: 요청 칸 검사 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (7.9 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M08_request_range_off",
+        "guard": "분류: 요청 칸 = 있음만 (생산자 범위 검사 끔)",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (6.7 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M09_kit_type_off",
+        "guard": "분류: kit 글 검사 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (8.1 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M10_count_off",
+        "guard": "분류: 팔 수 = 요청 팔 수 검사 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (7.0 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M11_index_type_off",
+        "guard": "분류: 번호 = 정수 (bool 아님) 검사 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (7.7 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M12_index_eq_off",
+        "guard": "분류: 번호 = 요청 팔 검사 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (8.1 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M13_file_type_off",
+        "guard": "분류: 파일 = 글 검사 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (7.2 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M14_file_basename_off",
+        "guard": "분류: 파일 = 이름만 검사 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (8.4 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M15_file_prefix_off",
+        "guard": "분류: 파일 킷 앞자리 검사 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (10.3 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M16_file_suffix_off",
+        "guard": "분류: 파일 끝 _a<번호>.json 검사 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (8.7 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M17_sha_off",
+        "guard": "분류: sha256 꼴 검사 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (8.3 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M18_sha_match_not_full",
+        "guard": "분류: sha256 fullmatch → match",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (8.0 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M19_sha_type_off",
+        "guard": "분류: sha256 = 글 검사 끔",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3C"
+        ],
+        "failed_new": [
+          "RR3C"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (9.0 s)   FAILED: ['RR3C']"
+      },
+      {
+        "name": "M20_gen_success_ids",
+        "guard": "생성: 성공 = 파일 신원 칸만 (ARM_PUBLIC 투영 아님)",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3B",
+          "RR3D",
+          "RR3P",
+          "RS01"
+        ],
+        "failed_new": [
+          "RR3B",
+          "RR3D",
+          "RR3P"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 5/9 PASS (5.8 s)   FAILED: ['RS01', 'RR3B', 'RR3D', 'RR3P']"
+      },
+      {
+        "name": "M21_gen_failure_empty",
+        "guard": "생성: 실패 = [] (파일 신원 안 남김)",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3A",
+          "RR3B",
+          "RR3D"
+        ],
+        "failed_new": [
+          "RR3A",
+          "RR3B",
+          "RR3D"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 6/9 PASS (8.6 s)   FAILED: ['RR3A', 'RR3B', 'RR3D']"
+      },
+      {
+        "name": "M22_execute_bypass",
+        "guard": "생산자: Runner._execute 성공 = 옛 안쪽 투영 (생성 함수 우회)",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3D"
+        ],
+        "failed_new": [
+          "RR3D"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (10.3 s)   FAILED: ['RR3D']"
+      },
+      {
+        "name": "M23_merge_failure_bypass",
+        "guard": "생산자: MergeFetch.run 실패 = arm_file_shas 직접 (생성 함수 우회)",
+        "sites": 1,
+        "rc": 1,
+        "failed": [
+          "RR3D"
+        ],
+        "failed_new": [
+          "RR3D"
+        ],
+        "caught": true,
+        "tail": "test_rint_r_chain: 8/9 PASS (8.4 s)   FAILED: ['RR3D']"
+      }
+    ],
+    "sanity": {
+      "rc": 0,
+      "checks": {
+        "RS01": "PASS",
+        "CT06": "PASS",
+        "PC12C": "PASS",
+        "RR3A": "PASS",
+        "RR3B": "PASS",
+        "RR3C": "PASS",
+        "RR3D": "PASS",
+        "RR3E": "PASS",
+        "RR3P": "PASS"
+      },
+      "tail": "test_rint_r_chain: 9/9 PASS (7.7 s)",
+      "all_pass": true
+    },
+    "restored_sha256": "b37ef7c68e126acdfe7c9062c04e215438ee374b0c0ef7152ec6a485cb00def1",
+    "restored_ok": true,
+    "caught": 23,
+    "total": 23
+  },
+  "pa13_fix": {
+    "M00_identity": [
+      "PASS_ALL",
+      "test_rint_r_chain: 4/4 PASS (8.0 s)",
+      []
+    ],
+    "V01_state_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.1 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V02_pid_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.3 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V02b_pid_prefix_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (9.2 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V03_sid_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.9 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V03b_sid_empty_ok": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.7 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V04_cp_len_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.9 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V04b_cp_type_widen": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (9.5 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V05_cp_pos_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (9.0 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V06_err_finite_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.4 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V06b_err_type_widen": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.5 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V07_err_nonneg_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (9.1 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V08_err_zero_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.9 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V09_iters_cg_only": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (9.0 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V09b_iters_resolve_only": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (9.0 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V10_iters_neg_ok": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.8 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V11_conv_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.7 s)   FAILED: ['PA13B']",
+      [
+        "PA13B"
+      ]
+    ],
+    "V12_kind_call_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 1/4 PASS (7.9 s)   FAILED: ['PA13B', 'PA13C', 'PA13D']",
+      [
+        "PA13B",
+        "PA13C",
+        "PA13D"
+      ]
+    ],
+    "V13_read_run_call_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (7.6 s)   FAILED: ['PA13C']",
+      [
+        "PA13C"
+      ]
+    ],
+    "V14_states_all": [
+      "CAUGHT",
+      "test_rint_r_chain: 2/4 PASS (8.5 s)   FAILED: ['PA13B', 'PA13C']",
+      [
+        "PA13B",
+        "PA13C"
+      ]
+    ],
+    "R01_rule1_call_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.6 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "R02_rule1_code_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (7.6 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "R03_rule1_run_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (7.6 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "R04_rule1_rerun_str_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.5 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "R05_rule1_same_truthy": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.4 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "R06_rule1_list_guard_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (7.2 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S01_nondict_ok": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (7.7 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S02_resume_null_ok": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.3 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S03_resume_of_type_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.3 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S04_from_range_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (7.8 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S04b_from_bool_ok": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.0 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S05_copied_names_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.5 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S05b_copied_from_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.2 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S06_copies_first_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.8 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S07_first_name_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.9 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S08_stop_in_rerun_ok": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.8 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S09_first_none_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.4 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S10_cmp_list_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.3 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S11_det_member_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.1 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S12_det_consistency_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.7 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S13_elem_keys_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.6 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S13b_elem_file_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (9.0 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S14_od_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (8.7 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S14b_od_exact_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (9.9 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S15_side_file_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (9.9 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S16_recompare_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (10.2 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S17_oserror_guard_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (10.1 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "S18_rerun_call_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (9.9 s)   FAILED: ['PA13A']",
+      [
+        "PA13A"
+      ]
+    ],
+    "P01_read_run_own_formula": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (9.8 s)   FAILED: ['PA13C']",
+      [
+        "PA13C"
+      ]
+    ],
+    "P02_graph_own_formula": [
+      "CAUGHT",
+      "test_rint_r_chain: 3/4 PASS (9.1 s)   FAILED: ['PA13C']",
+      [
+        "PA13C"
+      ]
+    ]
+  },
+  "pa14_fix": {
+    "M00_identity": [
+      "PASS_ALL",
+      "test_rint_r_chain: 8/8 PASS (6.4 s)",
+      []
+    ],
+    "A01_num_guard_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 6/8 PASS (7.0 s)   FAILED: ['PA14A', 'PA14B']",
+      [
+        "PA14A",
+        "PA14B"
+      ]
+    ],
+    "A02_show_iters_repr": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (6.9 s)   FAILED: ['PA14A']",
+      [
+        "PA14A"
+      ]
+    ],
+    "A03_show_cginfo_repr": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (8.1 s)   FAILED: ['PA14A']",
+      [
+        "PA14A"
+      ]
+    ],
+    "A04_show_guard_repr": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (8.4 s)   FAILED: ['PA14A']",
+      [
+        "PA14A"
+      ]
+    ],
+    "D01_pid_prefix_only": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (7.0 s)   FAILED: ['PA14C']",
+      [
+        "PA14C"
+      ]
+    ],
+    "D02_pid_match_not_full": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (7.0 s)   FAILED: ['PA14C']",
+      [
+        "PA14C"
+      ]
+    ],
+    "D03_pid_upper_ok": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (7.7 s)   FAILED: ['PA14C']",
+      [
+        "PA14C"
+      ]
+    ],
+    "D04_pid_len_loose": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (7.9 s)   FAILED: ['PA14C']",
+      [
+        "PA14C"
+      ]
+    ],
+    "D05_sid_nonempty_only": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (7.7 s)   FAILED: ['PA14C']",
+      [
+        "PA14C"
+      ]
+    ],
+    "D06_sid_match_not_full": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (7.5 s)   FAILED: ['PA14C']",
+      [
+        "PA14C"
+      ]
+    ],
+    "D07_sid_upper_ok": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (7.4 s)   FAILED: ['PA14C']",
+      [
+        "PA14C"
+      ]
+    ],
+    "D08_sid_len16_ok": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (8.6 s)   FAILED: ['PA14C']",
+      [
+        "PA14C"
+      ]
+    ],
+    "D09_err_tau_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (8.3 s)   FAILED: ['PA14C']",
+      [
+        "PA14C"
+      ]
+    ],
+    "D10_err_tau_ge": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (8.8 s)   FAILED: ['PA14C']",
+      [
+        "PA14C"
+      ]
+    ],
+    "D11_err_tau_x10": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (8.4 s)   FAILED: ['PA14C']",
+      [
+        "PA14C"
+      ]
+    ],
+    "E01_keyset_drop": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (9.5 s)   FAILED: ['PA14D']",
+      [
+        "PA14D"
+      ]
+    ],
+    "E02_keyset_allow_extra": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (8.9 s)   FAILED: ['PA14D']",
+      [
+        "PA14D"
+      ]
+    ],
+    "E03_keyset_allow_missing": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (8.8 s)   FAILED: ['PA14D']",
+      [
+        "PA14D"
+      ]
+    ],
+    "E04_keys_no_det": [
+      "CAUGHT",
+      "test_rint_r_chain: 6/8 PASS (8.4 s)   FAILED: ['PA13A', 'PA14D']",
+      [
+        "PA13A",
+        "PA14D"
+      ]
+    ],
+    "M14_copiedfrom_type": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (9.4 s)   FAILED: ['PA14D']",
+      [
+        "PA14D"
+      ]
+    ],
+    "M18_rr_det_only": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (8.3 s)   FAILED: ['PA14D']",
+      [
+        "PA14D"
+      ]
+    ],
+    "M47_mm_elem_type": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (9.6 s)   FAILED: ['PA14D']",
+      [
+        "PA14D"
+      ]
+    ],
+    "M54_lo_one": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (8.9 s)   FAILED: ['PA14D']",
+      [
+        "PA14D"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,105 @@
+{
+ "resume": {
+  "compared": [
+   {
+    "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+    "same": false
+   }
+  ],
+  "copied": [
+   "L01_floor"
+  ],
+  "determinism": "compared",
+  "from": 1,
+  "rerun": "L02_ceiling"
+ },
+ "runs": [
+  {
+   "arm_list": null,
+   "arms": 1,
+   "arms_read": [
+    {
+     "cert_pass": [
+      true,
+      true,
+      true,
+      true
+     ],
+     "cg_info": 0,
+     "cg_iters": 10,
+     "cg_resid": 1e-12,
+     "err_rel": 1e-06,
+     "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+     "imbalance": 1e-09,
+     "index": 0,
+     "protocol_id": "p3ca-0123456789abcdef",
+     "resolve_iters": 2,
+     "sha256": "b17effb4271344f6d481395eca4c304756b38dd168f7060a5cbca437797f5b81",
+     "sid_fp": "ffffffffffffffffffffffffffffffff",
+     "state": "positive",
+     "sv_cf_status": null
+    }
+   ],
+   "c": null,
+   "copied_from": 1,
+   "group_cause": null,
+   "kit": "kit_SBE_vgcf100",
+   "law": "P0",
+   "machine": "synthetic",
+   "name": "L01_floor",
+   "outdir": "L01_floor_arm1",
+   "rc": 0,
+   "rj": "inf",
+   "role": "floor",
+   "seconds": null,
+   "sv_cf": false,
+   "variant": null
+  },
+  {
+   "arm_list": null,
+   "arms": 1,
+   "arms_read": [
+    {
+     "cert_pass": [
+      true,
+      true,
+      true,
+      true
+     ],
+     "cg_info": 0,
+     "cg_iters": 10,
+     "cg_resid": 1e-12,
+     "err_rel": 1e-06,
+     "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+     "imbalance": 1e-09,
+     "index": 0,
+     "protocol_id": "p3ca-0123456789abcdef",
+     "resolve_iters": 2,
+     "sha256": "47c419cf1fdf3fb2908e018c2fb5a611dd83367855e7488d69e43d202f682548",
+     "sid_fp": "ffffffffffffffffffffffffffffffff",
+     "state": "positive",
+     "sv_cf_status": null
+    }
+   ],
+   "c": null,
+   "group_cause": null,
+   "kit": "kit_SBE_vgcf100",
+   "law": "P0",
+   "machine": "synthetic",
+   "name": "L02_ceiling",
+   "outdir": "L02_ceiling_arm1",
+   "rc": 0,
+   "rj": 0.0,
+   "role": "ceiling",
+   "seconds": 0.0,
+   "sv_cf": false,
+   "variant": null
+  }
+ ],
+ "status": "STOPPED",
+ "stop": {
+  "code": "TIME_LIMIT",
+  "reason": null,
+  "run": "L03_point"
+ }
+}

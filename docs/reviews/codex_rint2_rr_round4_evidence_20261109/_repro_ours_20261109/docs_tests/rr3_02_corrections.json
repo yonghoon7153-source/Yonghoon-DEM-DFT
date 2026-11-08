@@ -1,0 +1,32 @@
+[
+  {
+    "line": 83,
+    "has_correction": true,
+    "text": "| ~~런 기록 ↔ 그룹 끝 기록 교차 대조 없음 (원인 · rc · 확인 True · 남는 예 = 세 칸 손질 probe_rr S9 · 신호 경합 · 복사 런 · recover 끝 기록)~~ → 11-08 정정 (RR3-02 · 판정문 §2): 읽을 수 있는 사슬 쪽 끝 기록은 원인 · rc · 확인을 대조한다 (핀 `17d45fb9c` 의 `scripts/rint_r_chain.py` 4072–4077 · 4133–4153 · PC12-02) · 남는 것 = 없는 / 결합되지 않은 끝 기록 · chain_end 없는 옛 recover 끝 기록 (대조 유예) | REPORT_EXT §8 · N/REPORT.md §8 | 한정 (Q-D 부류) · ⚠ 한 칸 꼴 F2 = §5-2 |"
+  },
+  {
+    "line": 84,
+    "has_correction": true,
+    "text": "| 같은 이름 런 기록 둘 · 런 전 TIME_LIMIT 이름 차례 · 다른 칸 (copied_from · seconds · machine) 미검사 · ~~디스크 signal_after 받음~~ → 11-08 정정 (RR3-02 · 판정문 §2): 디스크 signal_after = 요약 있는 길은 거부 (PC12-02) · 요약 없는 길 (orphan) 은 종전대로 받음 — 길을 나눠 읽는다 | REPORT_EXT §8 | 새 원장 PC11-05 · 06 · 07 · 08 (P3 · open) |"
+  },
+  {
+    "line": 86,
+    "has_correction": true,
+    "text": "| 거부 기록 utc 꼴 · cause 내용 · ~~code 의 STOPS 소속 안 봄~~ → 11-08 정정 (RR3-02 · 판정문 §2): code 의 STOPS 소속은 본다 (핀 4410 · PC12-05) · 남는 것 = 그 발생 자리에서 생산 가능한 STOPS 부분집합까지는 좁히지 않음 · 흔적 다 지운 폴더 + 위조 기록 · 두 칸 이상 함께 바꾼 손 · .nfs* 부산물 = 흔적 (보수) | REPORT_EXT §8 | 한정 (Q-D) |"
+  },
+  {
+    "line": 94,
+    "has_correction": true,
+    "text": "| PC12 고침으로 범위가 바뀐 것 (모두 자격 없음 쪽 · 생산자 꼴 아님): ① TIME_LIMIT · RUNNER_RC 멈춤인데 그 런 끝 기록의 사슬 쪽 확인 False (또는 원인 · rc 어긋남) = 자격 없음 (옛 = GU 만) ② ~~앞 런 기록 exit_ok 인데 arms_read 빈 목록 · 꼴 틀림 · group_cause 칸 없음 = 모순~~ → 11-08 정정 (RR3-02 · RR3-01 · 판정문 §2): 앞 런 기록 = exit_ok + arms_read 판독 완료 꼴 (`arms_read_kind` verified = ARM_PUBLIC 칸 정확히 + 요청 팔 일대일) 일 때만 끝난 런 · 빈 목록 · 꼴 틀림 · group_cause 칸 없음 · 판독 실패 때 남긴 파일 신원 목록 = 모순 (핀 `17d45fb9c` = \"비지 않은 목록\" 이 충분조건이라 파일 신원 목록도 끝난 런으로 읽혔다 = RR3-01) (10-27 묶음 C1b 전 옛 요약 = 그 뒤 멈춤이 자격 없음으로 읽힘 · 그런 요약에 자격을 준 적 없음) ③ 요약 있는 길에서 디스크 끝 기록 원인 'signal_after' = 런 기록 killed:signal_after 와 모순 (생산자 디스크 원인 = None · 요약 없는 길 orphan_cause · A1b 는 안 바꿈) ④ 단계 요약 중복 칸 · NaN · ±Infinity = unreadable (옛 = 읽음 · 생산자 바이트에는 없음) | F12/REPORT.md §6 | Q3 (기대 변경으로 받는가) |"
+  },
+  {
+    "line": 135,
+    "has_correction": true,
+    "text": "- 한정과의 관계 — F1 · F3 = 두 칸 함께 고친 꼴이라 선언 한정 (일관 편집 Q-D · 런 기록 ↔ 끝 기록 교차 대조) 에 일부 걸린다 (F1 의 요청 칸 범위 · 흔적 범위 · F3 의 runs · 앞 기록 무시는 한정 글에 없음) · **F2 = 한 칸 손질이라 선언 한정에 안 걸린다** · F5 = REPORT_EXT §8 에 이미 한정 (\"code 의 STOPS 소속 안 봄\") (→ 11-08 정정 표지 · RR3-02 · 판정문 §2: 이 인용 = PC12 고치기 전 한정 글 그대로 · 지금 = 소속 검사 있음 (핀 4410 · PC12-05) · 남는 것 = 발생 자리별 부분집합 안 좁힘)."
+  },
+  {
+    "line": 154,
+    "has_correction": true,
+    "text": "| Q4 | 한정 (§4 · PC11-05–08 · ~~교차 대조 없음~~ → 11-08 정정 (RR3-02 · 판정문 §2): 읽을 수 있는 사슬 쪽 끝 기록은 대조 · 남는 것 = 없는 / 결합되지 않은 끝 기록 · chain_end 없는 옛 recover 끝 기록) 중 봉인 전에 막아야 할 것이 있는가. |"
+  }
+]

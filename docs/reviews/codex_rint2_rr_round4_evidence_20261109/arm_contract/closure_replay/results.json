@@ -1,0 +1,308 @@
+{
+  "pin": "17d45fb9cdfc7033bdfd41509527cea23ba1654c",
+  "source_sha256": "47a520e8ad300101c6f8d2660d7368eead77f0f3b425bdcf1d37c379fe0c8720",
+  "scope": "Windows regular-file helpers and mocked process-group return; no POSIX/process/CLI qualification",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "tests": {
+    "request_domain": {
+      "valid_total": 255,
+      "valid_rejected": 0,
+      "invalid_total": 21,
+      "invalid_accepted": 0
+    },
+    "chain_side_matrix": {
+      "rows": 175,
+      "honest": 25,
+      "mutants": 150,
+      "all_expected": true
+    },
+    "prior_read_failure_promoted": {
+      "producer_mock": "run_in_group return and files only; real Runner._execute/read_run/arm_file_shas",
+      "original_failure": {
+        "code": "ARM_JSON_COUNT",
+        "cause": "L01_floor_arm1: 팔 이름이 킷 kit_SBE_vgcf100 의 것이 아니다",
+        "run": "L01_floor"
+      },
+      "producer_records": [
+        {
+          "name": "L01_floor",
+          "role": "floor",
+          "kit": "kit_SBE_vgcf100",
+          "law": "P0",
+          "c": null,
+          "rj": 0.0,
+          "arms": 1,
+          "arm_list": null,
+          "variant": null,
+          "sv_cf": false,
+          "outdir": "L01_floor_arm1",
+          "rc": 0,
+          "seconds": 0.002,
+          "arms_read": [
+            {
+              "file": "p2_wrong_kit_a0.json",
+              "index": 0,
+              "sha256": "e3566b3a06430868d71e9287dfd6c6c520a3da027aabea01951d407ee131dc2f"
+            }
+          ],
+          "machine": null,
+          "group_cause": null
+        }
+      ],
+      "only_summary_edits": {
+        "stop.code": "TIME_LIMIT",
+        "stop.run": "L02_ceiling"
+      },
+      "original_result": {
+        "status": "stopped",
+        "stop": {
+          "code": "ARM_JSON_COUNT",
+          "run": "L01_floor",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "check",
+        "resume_ok": false
+      },
+      "edited_result": {
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L02_ceiling",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "timeout",
+        "resume_ok": false
+      },
+      "stop_record_problem": "멈춤 TIME_LIMIT · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read file_ids (파일 신원 1 = 판독 실패 때 남긴 꼴) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 런 = arms_read 판독 완료 꼴 (`arms_read_record` · ARM_PUBLIC · 요청 팔 일대일) · 판독 실패 때 남긴 파일 신원 목록 (file_ids) = 끝난 런 아님 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03 · RR3-01)",
+      "ledger_policy": [
+        {
+          "label": "original",
+          "result": {
+            "kind": "result",
+            "n": 1,
+            "status": "stopped",
+            "stop": {
+              "code": "ARM_JSON_COUNT",
+              "run": "L01_floor",
+              "reason": null
+            },
+            "side": "post",
+            "cause": "check",
+            "resume_ok": false,
+            "folder": "attempt_1",
+            "folder_sha256": "2a8b28180137588ce8855afed4ca8f9fd68e6310e752e44b545c93ab80f0afd6",
+            "by": "recover",
+            "utc": "2026-11-08T22:59:21Z"
+          },
+          "parsed_result_resume_ok": false,
+          "attempt_order_problem": [
+            "RESUME_NOT_ALLOWED",
+            "재실행 사슬 끝 attempt_1 = stopped · 원인 check · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+          ],
+          "result_line_problem": null
+        },
+        {
+          "label": "edited",
+          "result": {
+            "kind": "result",
+            "n": 1,
+            "status": "stopped",
+            "stop": {
+              "code": "TIME_LIMIT",
+              "run": "L02_ceiling",
+              "reason": null
+            },
+            "side": "post",
+            "cause": "timeout",
+            "resume_ok": false,
+            "folder": "attempt_1",
+            "folder_sha256": "1501b1ce6cc958711630c72b990132249342a3ffa1d8a1bc16be20dc7e41fbc7",
+            "by": "recover",
+            "utc": "2026-11-08T22:59:21Z"
+          },
+          "parsed_result_resume_ok": false,
+          "attempt_order_problem": [
+            "RESUME_NOT_ALLOWED",
+            "재실행 사슬 끝 attempt_1 = stopped · 원인 timeout · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+          ],
+          "result_line_problem": null
+        }
+      ],
+      "source_done": true,
+      "actual_copy_read_result": {
+        "code": "ARM_JSON_COUNT",
+        "cause": "L01_floor_arm1: 팔 이름이 킷 kit_SBE_vgcf100 의 것이 아니다"
+      },
+      "physical_run_count": 0
+    },
+    "strict_summary": [
+      {
+        "case": "duplicate",
+        "state": "unreadable",
+        "expectation": "unreadable"
+      },
+      {
+        "case": "nan",
+        "state": "unreadable",
+        "expectation": "unreadable"
+      },
+      {
+        "case": "positive_inf",
+        "state": "unreadable",
+        "expectation": "unreadable"
+      },
+      {
+        "case": "negative_inf",
+        "state": "unreadable",
+        "expectation": "unreadable"
+      },
+      {
+        "case": "good",
+        "state": "ok",
+        "expectation": "ok"
+      },
+      {
+        "case": "declared_numeric_overflow",
+        "state": "ok",
+        "expectation": "ok"
+      }
+    ],
+    "rejected_closed_names": [
+      {
+        "code": "XYZ",
+        "problem": "code 'XYZ' (멈춤 이름 아님 — `STOPS` 밖 · ★ 11-08 PC12-05 · 옛 = 글자 꼴만)"
+      },
+      {
+        "code": "CALIBRATED",
+        "problem": "code 'CALIBRATED' (멈춤 이름 아님 — `STOPS` 밖 · ★ 11-08 PC12-05 · 옛 = 글자 꼴만)"
+      },
+      {
+        "code": "PREDICTED",
+        "problem": "code 'PREDICTED' (멈춤 이름 아님 — `STOPS` 밖 · ★ 11-08 PC12-05 · 옛 = 글자 꼴만)"
+      },
+      {
+        "code": "STOPPED",
+        "problem": "code 'STOPPED' (멈춤 이름 아님 — `STOPS` 밖 · ★ 11-08 PC12-05 · 옛 = 글자 꼴만)"
+      },
+      {
+        "code": "MACHINE_NOT_ALLOWED",
+        "problem": null
+      },
+      {
+        "code": "GENERATION",
+        "problem": null
+      },
+      {
+        "code": "OUTDIR_NOT_EMPTY",
+        "problem": null
+      }
+    ],
+    "pc11_rejected_folder": {
+      "normal_accepted": true,
+      "extras_rejected": [
+        {
+          "extra": "ladder_summary.json",
+          "code": "ATTEMPT_LEDGER_MISMATCH"
+        },
+        {
+          "extra": "p2_wrong_a0.json",
+          "code": "ATTEMPT_LEDGER_MISMATCH"
+        },
+        {
+          "extra": "run.first_result.json",
+          "code": "ATTEMPT_LEDGER_MISMATCH"
+        },
+        {
+          "extra": "groups",
+          "code": "ATTEMPT_LEDGER_MISMATCH"
+        },
+        {
+          "extra": "logs",
+          "code": "ATTEMPT_LEDGER_MISMATCH"
+        },
+        {
+          "extra": "L01_floor_arm1",
+          "code": "ATTEMPT_LEDGER_MISMATCH"
+        }
+      ]
+    },
+    "pc11_summary_shapes": [
+      {
+        "input": {
+          "stop": "x"
+        },
+        "code": "ATTEMPT_LEDGER_MISMATCH"
+      },
+      {
+        "input": {
+          "stop": [
+            "x"
+          ]
+        },
+        "code": "ATTEMPT_LEDGER_MISMATCH"
+      },
+      {
+        "input": {
+          "runs": "x"
+        },
+        "code": "ATTEMPT_LEDGER_MISMATCH"
+      },
+      {
+        "input": {
+          "runs": {}
+        },
+        "code": "ATTEMPT_LEDGER_MISMATCH"
+      },
+      {
+        "input": {
+          "runs": 7
+        },
+        "code": "ATTEMPT_LEDGER_MISMATCH"
+      },
+      {
+        "input": {
+          "runs": [
+            1
+          ]
+        },
+        "code": "ATTEMPT_LEDGER_MISMATCH"
+      },
+      {
+        "input": {
+          "runs": [
+            {
+              "outdir": {}
+            }
+          ]
+        },
+        "code": "ATTEMPT_LEDGER_MISMATCH"
+      },
+      {
+        "input": {
+          "runs": [
+            {
+              "outdir": 1
+            }
+          ]
+        },
+        "code": "ATTEMPT_LEDGER_MISMATCH"
+      }
+    ],
+    "pc12_sibling_trace": {
+      "1": true,
+      "2": true,
+      "3": true,
+      "4": true,
+      "5": true,
+      "6": true,
+      "7": true,
+      "8": true
+    },
+    "pc11_header_reference": {
+      "end_record_known_callable": true,
+      "obsolete_identifier_only_as_explicit_old_name": true
+    }
+  }
+}

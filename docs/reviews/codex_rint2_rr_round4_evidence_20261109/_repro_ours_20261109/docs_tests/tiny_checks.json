@@ -1,0 +1,193 @@
+{
+  "environment": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+  "scope": "Tiny independent fixture/branch checks, not a research or full-gate run.\n\nThe four mutation checks call production functions on minimal memory records.\nread_attempt alone is replaced by an explicit synthetic attempt identity. Paths\nare nonexistent and early return happens before disk provenance checking.\n",
+  "count": 24,
+  "passed": 24,
+  "checks": {
+    "kit_SBE_vgcf100_success": {
+      "actual": "verified",
+      "expected": "verified",
+      "pass": true
+    },
+    "kit_SBE_vgcf100_failure_ids": {
+      "actual": "file_ids",
+      "expected": "file_ids",
+      "pass": true
+    },
+    "kit_SBE_vgcf100_prefix_value": {
+      "actual": "p2_SBE_vgcf100_",
+      "expected": "p2_SBE_vgcf100_",
+      "pass": true
+    },
+    "kit_SBE_vgcf100_public_keys": {
+      "actual": [
+        "cert_pass",
+        "cg_info",
+        "cg_iters",
+        "cg_resid",
+        "err_rel",
+        "file",
+        "imbalance",
+        "index",
+        "protocol_id",
+        "resolve_iters",
+        "sha256",
+        "sid_fp",
+        "state",
+        "sv_cf_status"
+      ],
+      "expected": [
+        "cert_pass",
+        "cg_info",
+        "cg_iters",
+        "cg_resid",
+        "err_rel",
+        "file",
+        "imbalance",
+        "index",
+        "protocol_id",
+        "resolve_iters",
+        "sha256",
+        "sid_fp",
+        "state",
+        "sv_cf_status"
+      ],
+      "pass": true
+    },
+    "kit_SBE_vgcf100_old_protocol_id": {
+      "actual": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    "kit_SBE_vgcf100_old_sid_fp": {
+      "actual": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    "kit_DBE_vgcf100_success": {
+      "actual": "verified",
+      "expected": "verified",
+      "pass": true
+    },
+    "kit_DBE_vgcf100_failure_ids": {
+      "actual": "file_ids",
+      "expected": "file_ids",
+      "pass": true
+    },
+    "kit_DBE_vgcf100_prefix_value": {
+      "actual": "p2_DBE_vgcf100_",
+      "expected": "p2_DBE_vgcf100_",
+      "pass": true
+    },
+    "kit_DBE_vgcf100_public_keys": {
+      "actual": [
+        "cert_pass",
+        "cg_info",
+        "cg_iters",
+        "cg_resid",
+        "err_rel",
+        "file",
+        "imbalance",
+        "index",
+        "protocol_id",
+        "resolve_iters",
+        "sha256",
+        "sid_fp",
+        "state",
+        "sv_cf_status"
+      ],
+      "expected": [
+        "cert_pass",
+        "cg_info",
+        "cg_iters",
+        "cg_resid",
+        "err_rel",
+        "file",
+        "imbalance",
+        "index",
+        "protocol_id",
+        "resolve_iters",
+        "sha256",
+        "sid_fp",
+        "state",
+        "sv_cf_status"
+      ],
+      "pass": true
+    },
+    "kit_DBE_vgcf100_old_protocol_id": {
+      "actual": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    "kit_DBE_vgcf100_old_sid_fp": {
+      "actual": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    "M14_current_rejects": {
+      "actual": "reason",
+      "expected": "reason",
+      "pass": true
+    },
+    "M14_mutation_changes_result": {
+      "actual": "None",
+      "expected": "None",
+      "pass": true
+    },
+    "M18_current_rejects": {
+      "actual": "reason",
+      "expected": "reason",
+      "pass": true
+    },
+    "M18_mutation_changes_result": {
+      "actual": "None",
+      "expected": "None",
+      "pass": true
+    },
+    "M54_current_rejects": {
+      "actual": "reason",
+      "expected": "reason",
+      "pass": true
+    },
+    "M54_mutation_changes_result": {
+      "actual": "None",
+      "expected": "None",
+      "pass": true
+    },
+    "M47_current_rejects": {
+      "actual": "reason",
+      "expected": "reason",
+      "pass": true
+    },
+    "M47_mutation_changes_result": {
+      "actual": "AttributeError",
+      "expected": "AttributeError",
+      "pass": true
+    },
+    "positive_copy_int": {
+      "actual": "None",
+      "expected": "None",
+      "pass": true
+    },
+    "positive_precompare_empty": {
+      "actual": "None",
+      "expected": "None",
+      "pass": true
+    },
+    "positive_from_equals_resumeof": {
+      "actual": "None",
+      "expected": "None",
+      "pass": true
+    },
+    "source_and_ledger_unchanged": {
+      "actual": true,
+      "expected": true,
+      "pass": true
+    }
+  },
+  "sha256": {
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_pin_wt/scripts/rint_r_chain.py": "47a520e8ad300101c6f8d2660d7368eead77f0f3b425bdcf1d37c379fe0c8720",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_pin_wt/scripts/test_rint_r_chain.py": "d5e1d9ea4001911b4a1878d1315e74e0188336e2ea66e021ac348ad0994612d0",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_pin_wt/docs/reviews/findings.json": "02f5cd5a9454d8642af923d4e3177ef2f4280838c4ef5c920c524649cf001128"
+  }
+}

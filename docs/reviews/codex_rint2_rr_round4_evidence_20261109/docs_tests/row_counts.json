@@ -1,0 +1,410 @@
+{
+  "rr3_fix/before_RR3_rows.json": {
+    "CT06": {
+      "ok": true,
+      "n": 61,
+      "n_bad": 0,
+      "row_count": null,
+      "bad_keys": []
+    },
+    "PC12C": {
+      "ok": true,
+      "n": 17,
+      "n_bad": 0,
+      "row_count": null,
+      "bad_keys": []
+    },
+    "RR3A": {
+      "ok": false,
+      "n": 9,
+      "n_bad": 6,
+      "row_count": 9,
+      "bad_keys": [
+        "edit_L02",
+        "edit_gu_append",
+        "edit_tl_append",
+        "edit_zzz",
+        "ledger_edit_L02",
+        "producer_kind"
+      ]
+    },
+    "RR3B": {
+      "ok": false,
+      "n": 6,
+      "n_bad": 4,
+      "row_count": 6,
+      "bad_keys": [
+        "copy_edit_L02",
+        "copy_producer",
+        "merge_fail_prior",
+        "merge_producer"
+      ]
+    },
+    "RR3C": {
+      "ok": false,
+      "n": 48,
+      "n_bad": 48,
+      "row_count": 48,
+      "bad_keys": [
+        "c_dict",
+        "c_empty",
+        "c_killed",
+        "c_missing",
+        "c_none",
+        "c_rc1",
+        "fixture_keys",
+        "h_arm1",
+        "h_arml",
+        "h_arms2",
+        "h_arms8",
+        "h_copied",
+        "h_dbe",
+        "h_two",
+        "n_arml_map",
+        "n_count_long",
+        "n_count_short",
+        "n_dup",
+        "n_file_nonstr",
+        "n_file_path"
+      ]
+    },
+    "RR3D": {
+      "ok": false,
+      "n": 6,
+      "n_bad": 6,
+      "row_count": 6,
+      "bad_keys": [
+        "fail_kind",
+        "kind_callers",
+        "producers",
+        "projection_sites",
+        "real_kinds",
+        "shas_callers"
+      ]
+    },
+    "RR3E": {
+      "ok": false,
+      "n": 2,
+      "n_bad": 1,
+      "row_count": null,
+      "bad_keys": [
+        "cli_ids"
+      ]
+    },
+    "RR3P": {
+      "ok": true,
+      "n": null,
+      "n_bad": null,
+      "row_count": null,
+      "bad_keys": []
+    },
+    "_chain_sha256": "48f0e7fff068eea752407ad56955c159e937f8a33801148786b0d5a3e650f95c",
+    "_test_sha256": "d83539a1a4b9a315d937f7d1429e5f9ec9b7222d1787e42691a52311b20672fa"
+  },
+  "rr3_fix/after_RR3_rows.json": {
+    "CT06": {
+      "ok": true,
+      "n": 61,
+      "n_bad": 0,
+      "row_count": null,
+      "bad_keys": []
+    },
+    "PC12C": {
+      "ok": true,
+      "n": 17,
+      "n_bad": 0,
+      "row_count": null,
+      "bad_keys": []
+    },
+    "RR3A": {
+      "ok": true,
+      "n": 9,
+      "n_bad": 0,
+      "row_count": 9,
+      "bad_keys": []
+    },
+    "RR3B": {
+      "ok": true,
+      "n": 6,
+      "n_bad": 0,
+      "row_count": 6,
+      "bad_keys": []
+    },
+    "RR3C": {
+      "ok": true,
+      "n": 48,
+      "n_bad": 0,
+      "row_count": 48,
+      "bad_keys": []
+    },
+    "RR3D": {
+      "ok": true,
+      "n": 6,
+      "n_bad": 0,
+      "row_count": 6,
+      "bad_keys": []
+    },
+    "RR3E": {
+      "ok": true,
+      "n": 2,
+      "n_bad": 0,
+      "row_count": null,
+      "bad_keys": []
+    },
+    "RR3P": {
+      "ok": true,
+      "n": null,
+      "n_bad": null,
+      "row_count": null,
+      "bad_keys": []
+    },
+    "_chain_sha256": "b37ef7c68e126acdfe7c9062c04e215438ee374b0c0ef7152ec6a485cb00def1",
+    "_test_sha256": "d83539a1a4b9a315d937f7d1429e5f9ec9b7222d1787e42691a52311b20672fa"
+  },
+  "rr3_fix/cross_oldtests_fixedchain_rows.json": {
+    "CT06": {
+      "ok": false,
+      "n": 61,
+      "n_bad": 1,
+      "row_count": null,
+      "bad_keys": [
+        "c_prev_record"
+      ]
+    },
+    "PC12C": {
+      "ok": false,
+      "n": 17,
+      "n_bad": 5,
+      "row_count": null,
+      "bad_keys": [
+        "cli_honest_tl_after_ok",
+        "gu_after_ok",
+        "rr_after_copied",
+        "rr_signal_after_ok",
+        "tl_none_after_ok"
+      ]
+    },
+    "_chain_sha256": "b37ef7c68e126acdfe7c9062c04e215438ee374b0c0ef7152ec6a485cb00def1",
+    "_test_sha256": "fedba635c5ea52e88d38341308637a025b44665c0c3e40cb49cdae50af5c7811"
+  },
+  "pa13_fix/pa13_rows_before.json": {
+    "PA13A": {
+      "ok": false,
+      "n": 48,
+      "n_bad": 38,
+      "row_count": 48,
+      "bad_keys": [
+        "e2",
+        "e2_code",
+        "e2_run",
+        "e2_run_null_rerun_null",
+        "e3",
+        "e3_resume_none",
+        "e3_same_one_nosrc",
+        "e4_assumed",
+        "e4_from_self",
+        "e4_none",
+        "e5_rerun_none",
+        "led_e2",
+        "led_e3",
+        "led_e4_assumed",
+        "x_att_resume_of_str",
+        "x_cmp_extra_nosrc",
+        "x_cmp_file",
+        "x_cmp_file_nonstr_nosrc",
+        "x_cmp_int_nosrc",
+        "x_copied_empty",
+        "x_copied_from_2",
+        "x_copy_after_new",
+        "x_det_assumed_nosrc",
+        "x_det_none"
+      ]
+    },
+    "PA13B": {
+      "ok": false,
+      "n": 59,
+      "n_bad": 48,
+      "row_count": 59,
+      "bad_keys": [
+        "fn",
+        "n_cginfo_bool",
+        "n_cginfo_float",
+        "n_cginfo_none",
+        "n_cginfo_one",
+        "n_cgit_bool",
+        "n_cgit_float",
+        "n_cgit_neg",
+        "n_cgit_str",
+        "n_cp_false",
+        "n_cp_none",
+        "n_cp_nullpos",
+        "n_cp_one",
+        "n_cp_three",
+        "n_cp_zero_dict",
+        "n_cp_zero_three",
+        "n_err_bool",
+        "n_err_inf",
+        "n_err_int",
+        "n_err_nan",
+        "n_err_neg",
+        "n_err_none",
+        "n_err_str",
+        "n_err_zero_nonzero"
+      ]
+    },
+    "PA13C": {
+      "ok": false,
+      "n": 7,
+      "n_bad": 5,
+      "row_count": 7,
+      "bad_keys": [
+        "arm_states",
+        "kit_slice_sites",
+        "prefix_callers",
+        "read_patched",
+        "value_callers"
+      ]
+    },
+    "PA13D": {
+      "ok": false,
+      "n": 3,
+      "n_bad": 2,
+      "row_count": null,
+      "bad_keys": [
+        "cli_pad_impossible",
+        "cli_pad_none"
+      ]
+    }
+  },
+  "pa13_fix/pa13_rows_after.json": {
+    "PA13A": {
+      "ok": true,
+      "n": 48,
+      "n_bad": 0,
+      "row_count": 48,
+      "bad_keys": []
+    },
+    "PA13B": {
+      "ok": true,
+      "n": 59,
+      "n_bad": 0,
+      "row_count": 59,
+      "bad_keys": []
+    },
+    "PA13C": {
+      "ok": true,
+      "n": 7,
+      "n_bad": 0,
+      "row_count": 7,
+      "bad_keys": []
+    },
+    "PA13D": {
+      "ok": true,
+      "n": 3,
+      "n_bad": 0,
+      "row_count": null,
+      "bad_keys": []
+    }
+  },
+  "pa14_fix/pa14_rows_before.json": {
+    "PA14A": {
+      "ok": false,
+      "n": 11,
+      "n_bad": 6,
+      "row_count": 11,
+      "bad_keys": [
+        "n_cginfo_big",
+        "n_cginfo_resid_big",
+        "n_cgit_negbig",
+        "n_resid_big",
+        "n_resid_negbig",
+        "n_rsit_negbig"
+      ]
+    },
+    "PA14B": {
+      "ok": false,
+      "n": 3,
+      "n_bad": 2,
+      "row_count": null,
+      "bad_keys": [
+        "cli_resid_big",
+        "cli_resid_negbig"
+      ]
+    },
+    "PA14C": {
+      "ok": false,
+      "n": 28,
+      "n_bad": 20,
+      "row_count": 28,
+      "bad_keys": [
+        "n_err_1e300",
+        "n_err_half",
+        "n_err_up",
+        "n_pid_15",
+        "n_pid_17",
+        "n_pid_bare_dash",
+        "n_pid_newline",
+        "n_pid_nonhex",
+        "n_pid_old_fixture",
+        "n_pid_space",
+        "n_pid_upper",
+        "n_pid_zwsp",
+        "n_sid_16_old_fixture",
+        "n_sid_31",
+        "n_sid_33",
+        "n_sid_newline",
+        "n_sid_nonhex",
+        "n_sid_nul",
+        "n_sid_space",
+        "n_sid_upper"
+      ]
+    },
+    "PA14D": {
+      "ok": false,
+      "n": 18,
+      "n_bad": 9,
+      "row_count": 18,
+      "bad_keys": [
+        "e_l3_del_det",
+        "e_l3_del_from",
+        "e_l3_extra",
+        "e_l3_extra_nosrc",
+        "e_l3_nonstr_key",
+        "e_rr_del_cmp",
+        "e_rr_del_det",
+        "e_rr_del_det_nosrc",
+        "e_rr_extra"
+      ]
+    }
+  },
+  "pa14_fix/pa14_rows_after.json": {
+    "PA14A": {
+      "ok": true,
+      "n": 11,
+      "n_bad": 0,
+      "row_count": 11,
+      "bad_keys": []
+    },
+    "PA14B": {
+      "ok": true,
+      "n": 3,
+      "n_bad": 0,
+      "row_count": null,
+      "bad_keys": []
+    },
+    "PA14C": {
+      "ok": true,
+      "n": 28,
+      "n_bad": 0,
+      "row_count": 28,
+      "bad_keys": []
+    },
+    "PA14D": {
+      "ok": true,
+      "n": 18,
+      "n_bad": 0,
+      "row_count": 18,
+      "bad_keys": []
+    }
+  }
+}

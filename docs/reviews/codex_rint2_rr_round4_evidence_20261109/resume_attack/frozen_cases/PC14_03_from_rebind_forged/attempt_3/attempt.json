@@ -1,0 +1,8 @@
+{
+ "ledger_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+ "machine": "synthetic",
+ "n": 3,
+ "resume_of": 1,
+ "schema": "rint-r-attempt-v1",
+ "target": "ladder:P0"
+}

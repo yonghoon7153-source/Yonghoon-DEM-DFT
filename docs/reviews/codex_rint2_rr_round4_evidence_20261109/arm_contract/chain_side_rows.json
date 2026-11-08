@@ -1,0 +1,1927 @@
+[
+  {
+    "kind": "honest",
+    "shape": "exit_ok",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 0,
+      "confirmed": false
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_ok",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 0,
+      "confirmed": true
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = True (생산자 = 확인 False 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_ok",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 0,
+      "confirmed": 0
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 0 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_ok",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "made_up",
+      "rc": 0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 꼴 exit_ok 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = None · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_ok",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": false,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc 0 (꼴 exit_ok) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 러너 스스로의 rc 그대로 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_ok",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 1.0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc 0 (꼴 exit_ok) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 러너 스스로의 rc 그대로 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_ok",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": "0",
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc 0 (꼴 exit_ok) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 러너 스스로의 rc 그대로 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "exit_fail",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 3,
+      "confirmed": false
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_fail",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 3,
+      "confirmed": true
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = True (생산자 = 확인 False 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_fail",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 3,
+      "confirmed": 0
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 0 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_fail",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "made_up",
+      "rc": 3,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 꼴 exit_fail 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = None · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_fail",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": false,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc 3 (꼴 exit_fail) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 러너 스스로의 rc 그대로 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_fail",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 1.0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc 3 (꼴 exit_fail) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 러너 스스로의 rc 그대로 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_fail",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": "0",
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc 3 (꼴 exit_fail) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 러너 스스로의 rc 그대로 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "exit_fail",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": 3,
+      "confirmed": true
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_fail",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": 3,
+      "confirmed": false
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = False (생산자 = 확인 True 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_fail",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": 3,
+      "confirmed": 1
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 1 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_fail",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "made_up",
+      "rc": 3,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 꼴 exit_fail 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = None · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_fail",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": false,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc 3 (꼴 exit_fail) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 러너 스스로의 rc 그대로 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_fail",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": 1.0,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc 3 (꼴 exit_fail) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 러너 스스로의 rc 그대로 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "exit_fail",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": "0",
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc 3 (꼴 exit_fail) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 러너 스스로의 rc 그대로 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": -9,
+      "confirmed": false
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": -9,
+      "confirmed": true
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = True (생산자 = 확인 False 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": -9,
+      "confirmed": 0
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 0 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "made_up",
+      "rc": -9,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 꼴 killed:timeout 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'timeout' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": false,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": 1.0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": "0",
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": 0,
+      "confirmed": false
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": 0,
+      "confirmed": true
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = True (생산자 = 확인 False 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": 0,
+      "confirmed": 0
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 0 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "made_up",
+      "rc": 0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 꼴 killed:timeout 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'timeout' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": false,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": 1.0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": "0",
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": 7,
+      "confirmed": false
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": 7,
+      "confirmed": true
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = True (생산자 = 확인 False 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": 7,
+      "confirmed": 0
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 0 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "made_up",
+      "rc": 7,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 꼴 killed:timeout 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'timeout' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": false,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": 1.0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": "0",
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": null,
+      "confirmed": false
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": null,
+      "confirmed": true
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = True (생산자 = 확인 False 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": null,
+      "confirmed": 0
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 0 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "made_up",
+      "rc": null,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 꼴 killed:timeout 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'timeout' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": false,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": 1.0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "timeout",
+      "rc": "0",
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": -9,
+      "confirmed": true
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": -9,
+      "confirmed": false
+    },
+    "problem": "멈춤 TIME_LIMIT 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = False (생산자 = 확인 True 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": -9,
+      "confirmed": 1
+    },
+    "problem": "멈춤 TIME_LIMIT 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 1 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "made_up",
+      "rc": -9,
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 꼴 killed:timeout 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'timeout' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": false,
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": 1.0,
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": "0",
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": 0,
+      "confirmed": true
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": 0,
+      "confirmed": false
+    },
+    "problem": "멈춤 TIME_LIMIT 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = False (생산자 = 확인 True 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": 0,
+      "confirmed": 1
+    },
+    "problem": "멈춤 TIME_LIMIT 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 1 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "made_up",
+      "rc": 0,
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 꼴 killed:timeout 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'timeout' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": false,
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": 1.0,
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": "0",
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": 7,
+      "confirmed": true
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": 7,
+      "confirmed": false
+    },
+    "problem": "멈춤 TIME_LIMIT 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = False (생산자 = 확인 True 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": 7,
+      "confirmed": 1
+    },
+    "problem": "멈춤 TIME_LIMIT 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 1 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "made_up",
+      "rc": 7,
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 꼴 killed:timeout 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'timeout' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": false,
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": 1.0,
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": "0",
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": null,
+      "confirmed": true
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": null,
+      "confirmed": false
+    },
+    "problem": "멈춤 TIME_LIMIT 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = False (생산자 = 확인 True 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": null,
+      "confirmed": 1
+    },
+    "problem": "멈춤 TIME_LIMIT 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 1 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "made_up",
+      "rc": null,
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 꼴 killed:timeout 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'timeout' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": false,
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": 1.0,
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:timeout",
+    "code": "TIME_LIMIT",
+    "disk": {
+      "cause": "timeout",
+      "rc": "0",
+      "confirmed": true
+    },
+    "problem": "멈춤 TIME_LIMIT 의 런 'L01_floor' 기록 rc None (꼴 killed:timeout) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": -9,
+      "confirmed": false
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": -9,
+      "confirmed": true
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = True (생산자 = 확인 False 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": -9,
+      "confirmed": 0
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 0 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "made_up",
+      "rc": -9,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 꼴 killed:signal 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'signal' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": false,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": 1.0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": "0",
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": 0,
+      "confirmed": false
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": 0,
+      "confirmed": true
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = True (생산자 = 확인 False 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": 0,
+      "confirmed": 0
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 0 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "made_up",
+      "rc": 0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 꼴 killed:signal 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'signal' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": false,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": 1.0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": "0",
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": 7,
+      "confirmed": false
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": 7,
+      "confirmed": true
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = True (생산자 = 확인 False 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": 7,
+      "confirmed": 0
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 0 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "made_up",
+      "rc": 7,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 꼴 killed:signal 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'signal' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": false,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": 1.0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": "0",
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": null,
+      "confirmed": false
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": null,
+      "confirmed": true
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = True (생산자 = 확인 False 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": null,
+      "confirmed": 0
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 0 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "made_up",
+      "rc": null,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 꼴 killed:signal 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'signal' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": false,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": 1.0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "signal",
+      "rc": "0",
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": -9,
+      "confirmed": true
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": -9,
+      "confirmed": false
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = False (생산자 = 확인 True 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": -9,
+      "confirmed": 1
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 1 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "made_up",
+      "rc": -9,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 꼴 killed:signal 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'signal' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": false,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": 1.0,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": "0",
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": 0,
+      "confirmed": true
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": 0,
+      "confirmed": false
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = False (생산자 = 확인 True 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": 0,
+      "confirmed": 1
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 1 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "made_up",
+      "rc": 0,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 꼴 killed:signal 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'signal' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": false,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": 1.0,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": "0",
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": 7,
+      "confirmed": true
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": 7,
+      "confirmed": false
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = False (생산자 = 확인 True 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": 7,
+      "confirmed": 1
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 1 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "made_up",
+      "rc": 7,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 꼴 killed:signal 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'signal' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": false,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": 1.0,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": "0",
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": null,
+      "confirmed": true
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": null,
+      "confirmed": false
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = False (생산자 = 확인 True 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": null,
+      "confirmed": 1
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 1 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "made_up",
+      "rc": null,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 꼴 killed:signal 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = 'signal' · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": false,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": 1.0,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "signal",
+      "rc": "0",
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 회수한 정수 | null · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": -9,
+      "confirmed": false
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": -9,
+      "confirmed": true
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = True (생산자 = 확인 False 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": -9,
+      "confirmed": 0
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 0 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "made_up",
+      "rc": -9,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 꼴 killed:signal_after 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = None · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": false,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 1.0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": "0",
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 0,
+      "confirmed": false
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 0,
+      "confirmed": true
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = True (생산자 = 확인 False 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 0,
+      "confirmed": 0
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 0 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "made_up",
+      "rc": 0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 꼴 killed:signal_after 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = None · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": false,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 1.0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": "0",
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 7,
+      "confirmed": false
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 7,
+      "confirmed": true
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = True (생산자 = 확인 False 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 7,
+      "confirmed": 0
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 0 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": "made_up",
+      "rc": 7,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 꼴 killed:signal_after 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = None · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": false,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": 1.0,
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "GROUP_UNCONFIRMED",
+    "disk": {
+      "cause": null,
+      "rc": "0",
+      "confirmed": false
+    },
+    "problem": "멈춤 GROUP_UNCONFIRMED 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": -9,
+      "confirmed": true
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": -9,
+      "confirmed": false
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = False (생산자 = 확인 True 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": -9,
+      "confirmed": 1
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 1 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "made_up",
+      "rc": -9,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 꼴 killed:signal_after 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = None · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": false,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": 1.0,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": "0",
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": 0,
+      "confirmed": true
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": 0,
+      "confirmed": false
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = False (생산자 = 확인 True 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": 0,
+      "confirmed": 1
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 1 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "made_up",
+      "rc": 0,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 꼴 killed:signal_after 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = None · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": false,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": 1.0,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": "0",
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "honest",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": 7,
+      "confirmed": true
+    },
+    "problem": null
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": 7,
+      "confirmed": false
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = False (생산자 = 확인 True 일 때만 이 멈춤 — 확인 False 면 GROUP_UNCONFIRMED 먼저 · ★ 11-06 PC10 P2-B · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": 7,
+      "confirmed": 1
+    },
+    "problem": "멈춤 RUNNER_RC 인데 런 'L01_floor' 끝 기록의 사슬 쪽 확인 = 1 (bool 아님 · ★ 11-06 PC10 P2-B)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": "made_up",
+      "rc": 7,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 꼴 killed:signal_after 인데 끝 기록의 사슬 쪽 원인 = 'made_up' (생산자 = None · signal_after 는 디스크 원인 None · `run_in_group` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": false,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc False (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": 1.0,
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc 1.0 (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  },
+  {
+    "kind": "mutant",
+    "shape": "killed:signal_after",
+    "code": "RUNNER_RC",
+    "disk": {
+      "cause": null,
+      "rc": "0",
+      "confirmed": true
+    },
+    "problem": "멈춤 RUNNER_RC 의 런 'L01_floor' 기록 rc None (꼴 killed:signal_after) ↔ 끝 기록의 사슬 쪽 rc '0' (생산자 = 러너 스스로의 정수 · `Runner._execute` · ★ 11-08 PC12-02)"
+  }
+]

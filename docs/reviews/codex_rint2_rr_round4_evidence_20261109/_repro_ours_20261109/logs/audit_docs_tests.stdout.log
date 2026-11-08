@@ -1,0 +1,40 @@
+{
+  "python": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+  "diff_existing_test_changes": [
+    "t_PC12C"
+  ],
+  "removed_test_functions": [],
+  "rr3_02_lines": [
+    [
+      83,
+      true
+    ],
+    [
+      84,
+      true
+    ],
+    [
+      86,
+      true
+    ],
+    [
+      94,
+      true
+    ],
+    [
+      135,
+      true
+    ],
+    [
+      154,
+      true
+    ]
+  ],
+  "survivor_same_mutation": {
+    "M14_copiedfrom_type": true,
+    "M18_rr_det_only": true,
+    "M47_mm_elem_type": true,
+    "M54_lo_one": true
+  },
+  "raw_logs_examined": 60
+}

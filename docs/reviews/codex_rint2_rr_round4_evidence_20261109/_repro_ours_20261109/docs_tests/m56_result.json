@@ -1,0 +1,25 @@
+{
+  "python": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+  "scope": "Refute a blanket M56 equivalence claim with reviewer-owned tiny path inputs.\n\nNo research and no original-file writes. Calls the actual function directly;\nthe sole mutant change is historical is_dir -> exists. No helper is mocked.\n",
+  "summary": {
+    "resume": {
+      "from": 1,
+      "copied": [],
+      "rerun": "R",
+      "compared": [],
+      "determinism": "assumed"
+    },
+    "runs": [
+      {
+        "name": "R",
+        "outdir": "R_arm1",
+        "arms": 1,
+        "arm_list": null
+      }
+    ]
+  },
+  "current": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+  "mutant": null,
+  "distinguishable": true,
+  "boundary": "This is a direct helper counterexample to the equivalence label, not a current-code resume eligibility failure or full CLI replay."
+}

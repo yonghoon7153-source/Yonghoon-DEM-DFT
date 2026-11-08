@@ -1,0 +1,4370 @@
+[
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "zero_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "file",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "zero_int",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "index",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "zero_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sha256",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "zero_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "protocol_id",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "zero_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "state",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "zero_int",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_info",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "zero_int",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "zero_float",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "neg_zero",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "small",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "subnormal",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_resid",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "null",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "false",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "true",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "zero_int",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "neg_int",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "one_int",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "zero_float",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "neg_zero",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "one_float",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "small",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "tau",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "above_tau",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "subnormal",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "inf",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "ninf",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "nan",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "big",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "negbig",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "maxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "negmaxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "emptystr",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "space",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "text",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "list",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "dict",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "imbalance",
+    "value": "nested",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "zero_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cert_pass",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "zero_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sid_fp",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "null",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "zero_int",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "one_int",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "big",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "maxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "cg_iters",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "null",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "zero_int",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "one_int",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "big",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "maxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "resolve_iters",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "null",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "false",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "true",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "zero_int",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "neg_int",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "one_int",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "zero_float",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "neg_zero",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "one_float",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "small",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "tau",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "above_tau",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "subnormal",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "inf",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "ninf",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "nan",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "big",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "negbig",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "maxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "negmaxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "emptystr",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "space",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "text",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "list",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "dict",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "sv_cf_status",
+    "value": "nested",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "zero_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "zero_float",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "neg_zero",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "small",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "tau",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "subnormal",
+    "kind": "verified"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "positive",
+    "key": "err_rel",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "zero_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "file",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "zero_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "index",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "zero_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sha256",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "zero_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "protocol_id",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "zero_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "state",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "null",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "false",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "true",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "zero_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "neg_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "one_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "zero_float",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "neg_zero",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "one_float",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "small",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "tau",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "above_tau",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "subnormal",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "inf",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "ninf",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "nan",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "big",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "negbig",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "maxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "negmaxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "emptystr",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "space",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "text",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "list",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "dict",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_info",
+    "value": "nested",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "null",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "false",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "true",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "zero_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "neg_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "one_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "zero_float",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "neg_zero",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "one_float",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "small",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "tau",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "above_tau",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "subnormal",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "inf",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "ninf",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "nan",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "big",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "negbig",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "maxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "negmaxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "emptystr",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "space",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "text",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "list",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "dict",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_resid",
+    "value": "nested",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "null",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "false",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "true",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "zero_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "neg_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "one_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "zero_float",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "neg_zero",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "one_float",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "small",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "tau",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "above_tau",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "subnormal",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "inf",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "ninf",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "nan",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "big",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "negbig",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "maxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "negmaxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "emptystr",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "space",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "text",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "list",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "dict",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "imbalance",
+    "value": "nested",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "zero_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cert_pass",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "zero_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sid_fp",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "null",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "zero_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "one_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "big",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "maxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "cg_iters",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "null",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "zero_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "one_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "zero_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "neg_zero",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "big",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "maxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "resolve_iters",
+    "value": "nested",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "null",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "false",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "true",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "zero_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "neg_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "one_int",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "zero_float",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "neg_zero",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "one_float",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "small",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "tau",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "above_tau",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "subnormal",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "inf",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "ninf",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "nan",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "big",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "negbig",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "maxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "negmaxjson",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "emptystr",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "space",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "text",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "list",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "dict",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "sv_cf_status",
+    "value": "nested",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "null",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "false",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "true",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "zero_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "neg_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "one_int",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "zero_float",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "neg_zero",
+    "kind": "verified"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "one_float",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "small",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "above_tau",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "subnormal",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "inf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "ninf",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "nan",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "big",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "negbig",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "maxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "negmaxjson",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "emptystr",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "space",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "text",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "list",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "dict",
+    "kind": "bad"
+  },
+  {
+    "state": "zero",
+    "key": "err_rel",
+    "value": "nested",
+    "kind": "bad"
+  }
+]

@@ -1,0 +1,42 @@
+{
+  "total": 51,
+  "killed": 45,
+  "survivors": {
+    "M14_copiedfrom_type": {
+      "killed": false,
+      "fails": [],
+      "summary": "test_rint_r_chain: 4/4 PASS (8.0 s)",
+      "s": 8.4
+    },
+    "M18_rr_det_only": {
+      "killed": false,
+      "fails": [],
+      "summary": "test_rint_r_chain: 4/4 PASS (8.1 s)",
+      "s": 8.6
+    },
+    "M46_pid_type": {
+      "killed": false,
+      "fails": [],
+      "summary": "test_rint_r_chain: 4/4 PASS (6.7 s)",
+      "s": 7.1
+    },
+    "M47_mm_elem_type": {
+      "killed": false,
+      "fails": [],
+      "summary": "test_rint_r_chain: 4/4 PASS (7.2 s)",
+      "s": 7.7
+    },
+    "M54_lo_one": {
+      "killed": false,
+      "fails": [],
+      "summary": "test_rint_r_chain: 4/4 PASS (7.7 s)",
+      "s": 8.1
+    },
+    "M56_side_rej_dir": {
+      "killed": false,
+      "fails": [],
+      "summary": "test_rint_r_chain: 4/4 PASS (8.2 s)",
+      "s": 8.7
+    }
+  }
+}

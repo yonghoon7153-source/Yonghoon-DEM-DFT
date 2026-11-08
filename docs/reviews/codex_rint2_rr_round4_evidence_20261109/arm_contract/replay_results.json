@@ -1,0 +1,17 @@
+{
+  "original_source_sha256": "7f335c758c036c6de5ab10ef5b9ab3d35d6eb10ab3f0182694bdea03914b74d7",
+  "target_pin": "1f9f3607eb2f0118d322eeff780bba6eb17b85a2",
+  "note": "The original result pin labels round3; source_sha256 is the actual round4 source.",
+  "runs": [
+    {
+      "name": "original_replay",
+      "rc": 1,
+      "sha256": "7f335c758c036c6de5ab10ef5b9ab3d35d6eb10ab3f0182694bdea03914b74d7"
+    },
+    {
+      "name": "closure_replay",
+      "rc": 0,
+      "sha256": "fef77a65331b0b08f57d791db28f69e0e8cb8eb2728305ede221c87a366398ab"
+    }
+  ]
+}

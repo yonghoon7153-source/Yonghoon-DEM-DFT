@@ -1,0 +1,476 @@
+{
+  "pin": "1f9f3607eb2f0118d322eeff780bba6eb17b85a2",
+  "python": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+  "source_sha256": "47a520e8ad300101c6f8d2660d7368eead77f0f3b425bdcf1d37c379fe0c8720",
+  "scope": "Bounded independent Q3/Q5 review at pinned source; Windows regular files only.\n\nAll payloads are tiny SYNTHETIC text, not scientific output. Request generation,\nresume comparison, result/recount, ledger parser and ordering are real functions.\nResumeRunner._execute is replaced by a tiny writer; no bash/WSL/runner/DEM/GPU.\nCLI recover uses a fresh scratch Git ledger, sequential lock and declared dead\nparent; this is not process/lock/host qualification. Product repo is read only.\n",
+  "scratch": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560",
+  "cases": {
+    "honest_mismatch": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "RESUME_MISMATCH",
+          "run": "L02_ceiling",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "check",
+        "resume_ok": false
+      },
+      "stop_record_problem": null,
+      "order": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_2 = stopped · 원인 check · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": null,
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/honest_mismatch/attempt_2"
+    },
+    "honest_after_rerun": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L03_point",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "timeout",
+        "resume_ok": true
+      },
+      "stop_record_problem": null,
+      "order": null,
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": null,
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/honest_after_rerun/attempt_2"
+    },
+    "PC13_01_two_fields": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L03_point",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "timeout",
+        "resume_ok": false
+      },
+      "stop_record_problem": "멈춤 TIME_LIMIT · 런 'L03_point' 인데 resume 칸 compared 에 같지 않은 대조 ['p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json'] (생산자 = 같지 않은 대조가 있으면 그 자리에서 RESUME_MISMATCH · run = resume.rerun 'L02_ceiling' · 결정적 재실행이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+      "order": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_2 = stopped · 원인 timeout · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": null,
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/PC13_01_two_fields/attempt_2"
+    },
+    "PC13_01_same_true": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L03_point",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "timeout",
+        "resume_ok": false
+      },
+      "stop_record_problem": "멈춤 TIME_LIMIT · resume 칸 compared [{'file': 'p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json', 'same': True}] · determinism 'compared' ≠ 원천 attempt_1/L02_ceiling_arm1 남은 payload ↔ 이 시도 그 런 폴더 다시 대조 [{'file': 'p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json', 'same': False}] (생산자 = 같은 식 · 결정적 재실행이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+      "order": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_2 = stopped · 원인 timeout · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": null,
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/PC13_01_same_true/attempt_2"
+    },
+    "PC14_05_extra": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L03_point",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "timeout",
+        "resume_ok": false
+      },
+      "stop_record_problem": "멈춤 TIME_LIMIT · resume 칸 집합 ['compared', 'copied', 'determinism', 'extra', 'from', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (생산자 = `ResumeRunner` 다섯 칸 정확히 · 덧붙인 칸 · 빠진 칸 = 모순 · 빠진 determinism ≠ null · ★ 11-09 사전 공격 14 P3-e)",
+      "order": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_2 = stopped · 원인 timeout · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": null,
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/PC14_05_extra/attempt_2"
+    },
+    "PC14_05_missing_det": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L03_point",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "timeout",
+        "resume_ok": false
+      },
+      "stop_record_problem": "멈춤 TIME_LIMIT · resume 칸 집합 ['compared', 'copied', 'from', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (생산자 = `ResumeRunner` 다섯 칸 정확히 · 덧붙인 칸 · 빠진 칸 = 모순 · 빠진 determinism ≠ null · ★ 11-09 사전 공격 14 P3-e)",
+      "order": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_2 = stopped · 원인 timeout · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": null,
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/PC14_05_missing_det/attempt_2"
+    },
+    "PC14_06_M14": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L03_point",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "timeout",
+        "resume_ok": false
+      },
+      "stop_record_problem": "멈춤 TIME_LIMIT · resume 칸 copied ['L01_floor'] ≠ 복사 기록 [('L01_floor', True)] (생산자 = 복사 런 이름 차례 · copied_from = from 1 · ★ 11-09 사전 공격 13 P2-1)",
+      "order": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_2 = stopped · 원인 timeout · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": null,
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/PC14_06_M14/attempt_2"
+    },
+    "PC14_06_M47": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L03_point",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "timeout",
+        "resume_ok": false
+      },
+      "stop_record_problem": "멈춤 TIME_LIMIT · 런 'L03_point' 인데 resume 칸 compared 에 같지 않은 대조 ['5'] (생산자 = 같지 않은 대조가 있으면 그 자리에서 RESUME_MISMATCH · run = resume.rerun 'L02_ceiling' · 결정적 재실행이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+      "order": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_2 = stopped · 원인 timeout · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": null,
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/PC14_06_M47/attempt_2"
+    },
+    "honest_before_rerun": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L02_ceiling",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "timeout",
+        "resume_ok": true
+      },
+      "stop_record_problem": null,
+      "order": null,
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": null,
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/honest_before_rerun/attempt_2"
+    },
+    "PC14_06_M18": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L02_ceiling",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "timeout",
+        "resume_ok": false
+      },
+      "stop_record_problem": "멈춤 TIME_LIMIT · 멈춘 런 = resume 칸 rerun 'L02_ceiling' (대조 전 멈춤) 인데 compared [{'file': 'p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json', 'same': True}] · determinism None (생산자 = [] · null · ★ 11-09 사전 공격 13 P2-1)",
+      "order": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_2 = stopped · 원인 timeout · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": null,
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/PC14_06_M18/attempt_2"
+    },
+    "PC14_02_R1": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L03_point",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "timeout",
+        "resume_ok": true
+      },
+      "stop_record_problem": null,
+      "order": null,
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": null,
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/PC14_02_R1/attempt_2",
+      "disk_launch_equal_to_source": {
+        "L01_floor": true,
+        "L02_ceiling": false
+      },
+      "actual_L02_bytes_equal_source": false,
+      "only_summary_changed": true,
+      "next_resume_src_done_L02": true
+    },
+    "PC14_02_R2": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L03_point",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "timeout",
+        "resume_ok": true
+      },
+      "stop_record_problem": null,
+      "order": null,
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": null,
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/PC14_02_R2/attempt_2",
+      "disk_launch_equal_to_source": {
+        "L01_floor": true,
+        "L02_ceiling": false
+      },
+      "actual_L02_bytes_equal_source": false,
+      "only_summary_changed": true,
+      "next_resume_src_done_L02": true
+    },
+    "PC14_03_attempt_null": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L03_point",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "timeout",
+        "resume_ok": true
+      },
+      "stop_record_problem": null,
+      "order": null,
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": "attempt_2: attempt.json (resume_of None) ≠ 원장 항목 2 (resume_of 1) — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 PC6-12)",
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/PC14_03_attempt_null/attempt_2"
+    },
+    "PC14_03_honest_chain3_mismatch": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "RESUME_MISMATCH",
+          "run": "L02_ceiling",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "check",
+        "resume_ok": false
+      },
+      "stop_record_problem": null,
+      "order": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_3 = stopped · 원인 check · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": null,
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/PC14_03_from_rebind/attempt_3"
+    },
+    "PC14_03_from_rebind_forged": {
+      "fields": {
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L03_point",
+          "reason": null
+        },
+        "side": "post",
+        "cause": "timeout",
+        "resume_ok": true
+      },
+      "stop_record_problem": null,
+      "order": null,
+      "recount": null,
+      "resume_chain_problem": null,
+      "found_attempts_problem": null,
+      "folder": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r4_run/resume_attack/scratch_1794180066419337560/PC14_03_from_rebind_forged/attempt_3"
+    }
+  },
+  "cli": {
+    "honest_mismatch": {
+      "recover_rc": 0,
+      "result": {
+        "by": "recover",
+        "cause": "check",
+        "folder": "attempt_2",
+        "folder_sha256": "24dd9f94269dddb179ea395349c69ceec61b6d5387fffe17e02b0c49efdcee2c",
+        "kind": "result",
+        "n": 2,
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "RESUME_MISMATCH",
+          "reason": null,
+          "run": "L02_ceiling"
+        },
+        "utc": "2026-11-08T23:21:06Z"
+      },
+      "next_order": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_2 = stopped · 원인 check · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "resume_chain_problem": null,
+      "stdout": "recover — 그룹 기록 0 개 정리 · 미확인 0\n  recover attempt_2: 결과 줄 stopped · 결과 post · 원인 check · 재실행 자격 False\n"
+    },
+    "PC13_two_fields": {
+      "recover_rc": 0,
+      "result": {
+        "by": "recover",
+        "cause": "timeout",
+        "folder": "attempt_2",
+        "folder_sha256": "c9341838edac0845957bd81d906903b61c11f51bcd983dc1f2df55e077b585e3",
+        "kind": "result",
+        "n": 2,
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "reason": null,
+          "run": "L03_point"
+        },
+        "utc": "2026-11-08T23:21:06Z"
+      },
+      "next_order": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_2 = stopped · 원인 timeout · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "resume_chain_problem": null,
+      "stdout": "recover — 그룹 기록 0 개 정리 · 미확인 0\n  recover attempt_2: 결과 줄 stopped · 결과 post · 원인 timeout · 재실행 자격 False\n"
+    },
+    "PC14_02_R1": {
+      "recover_rc": 0,
+      "result": {
+        "by": "recover",
+        "cause": "timeout",
+        "folder": "attempt_2",
+        "folder_sha256": "54acd384c8e73809cfcc1b55c04ba7ba9aba758f0f449fee39c8539119302dee",
+        "kind": "result",
+        "n": 2,
+        "resume_ok": true,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "reason": null,
+          "run": "L03_point"
+        },
+        "utc": "2026-11-08T23:21:06Z"
+      },
+      "next_order": null,
+      "resume_chain_problem": null,
+      "stdout": "recover — 그룹 기록 0 개 정리 · 미확인 0\n  recover attempt_2: 결과 줄 stopped · 결과 post · 원인 timeout · 재실행 자격 True\n"
+    },
+    "PC14_03_attempt_null": {
+      "recover_rc": 0,
+      "result": {
+        "by": "recover",
+        "cause": "timeout",
+        "folder": "attempt_2",
+        "folder_sha256": "3956ee0218c0311338d236e8ca121f8108dac8381ef5cd3674ac5a650fede533",
+        "kind": "result",
+        "n": 2,
+        "resume_ok": true,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "reason": null,
+          "run": "L03_point"
+        },
+        "utc": "2026-11-08T23:21:06Z"
+      },
+      "next_order": null,
+      "resume_chain_problem": null,
+      "stdout": "recover — 그룹 기록 0 개 정리 · 미확인 0\n  recover attempt_2: 결과 줄 stopped · 결과 post · 원인 timeout · 재실행 자격 True\n"
+    }
+  },
+  "PC14_06_M54": {
+    "fields": {
+      "status": "stopped",
+      "stop": {
+        "code": "TIME_LIMIT",
+        "run": "L03_point",
+        "reason": null
+      },
+      "side": "post",
+      "cause": "timeout",
+      "resume_ok": false
+    },
+    "problem": "멈춤 TIME_LIMIT · resume 칸 from 1 (생산자 = 원천 번호 정수 · 원 시도 2 ≤ from < 이 시도 3 · ★ 11-09 사전 공격 13 P2-1)"
+  },
+  "mutation_inputs": {
+    "M14": {
+      "current_resume_ok": false,
+      "mutated": {
+        "resume_ok": true
+      }
+    },
+    "M18": {
+      "current_resume_ok": false,
+      "mutated": {
+        "resume_ok": true
+      }
+    },
+    "M47": {
+      "current_resume_ok": false,
+      "mutated": {
+        "exception": "AttributeError",
+        "message": "'int' object has no attribute 'get'"
+      }
+    },
+    "M54": {
+      "current_resume_ok": false,
+      "mutated": {
+        "resume_ok": true
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "rr3_fix": {
+    "mutants": 23,
+    "caught": 23,
+    "without_failed_new": []
+  },
+  "pa13_fix": {
+    "mutants": 49,
+    "statuses": {
+      "CAUGHT": 49
+    },
+    "without_failed_checks": [],
+    "identity": [
+      "PASS_ALL",
+      "test_rint_r_chain: 4/4 PASS (8.0 s)",
+      []
+    ]
+  },
+  "pa14_fix": {
+    "mutants": 23,
+    "statuses": {
+      "CAUGHT": 23
+    },
+    "without_failed_checks": [],
+    "identity": [
+      "PASS_ALL",
+      "test_rint_r_chain: 8/8 PASS (6.4 s)",
+      []
+    ]
+  }
+}

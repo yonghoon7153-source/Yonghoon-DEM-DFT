@@ -1,0 +1,160 @@
+{
+ "pin": "1f9f3607eb2f0118d322eeff780bba6eb17b85a2",
+ "pin_tree": "cc6aefe7a9013885c8da0d700cff1cc981033f77",
+ "pin_checkout": "git worktree add --detach <리포 밖 임시 폴더> 1f9f3607e (탐침 실행 뒤 git worktree remove 로 지움) · 깨끗함 (git status --porcelain 0 줄)",
+ "pin_sources_sha256": {
+  "scripts/rint_r_chain.py": "47a520e8ad300101c6f8d2660d7368eead77f0f3b425bdcf1d37c379fe0c8720",
+  "scripts/test_rint_r_chain.py": "d5e1d9ea4001911b4a1878d1315e74e0188336e2ea66e021ac348ad0994612d0",
+  "docs/reviews/findings.json": "02f5cd5a9454d8642af923d4e3177ef2f4280838c4ef5c920c524649cf001128",
+  "docs/reviews/codex_rint2_rr_round3_evidence_20261108/pc12_attack/probe_pc12_independent.py": "7f335c758c036c6de5ab10ef5b9ab3d35d6eb10ab3f0182694bdea03914b74d7"
+ },
+ "probes_copied_sha256": {
+  "verify_bundle.py": {
+   "zip": "267cb641ec05df9b3475bc8bde56da37ab93c6942666b204cccab2d8a3c78b1b",
+   "run_copy": "267cb641ec05df9b3475bc8bde56da37ab93c6942666b204cccab2d8a3c78b1b"
+  },
+  "verify_remote_binding.py": {
+   "zip": "17cf2e7f968e1fc87c16c8df5a7a320c1071741b0ad69cfa8a39c450b6cf854b",
+   "run_copy": "17cf2e7f968e1fc87c16c8df5a7a320c1071741b0ad69cfa8a39c450b6cf854b"
+  },
+  "arm_contract/probe_arm_contract.py": {
+   "zip": "58bb5fbbaa658d01746cacfb288f29dc400280d1a6e19c3530f1b0e7cdffc51f",
+   "run_copy": "58bb5fbbaa658d01746cacfb288f29dc400280d1a6e19c3530f1b0e7cdffc51f"
+  },
+  "arm_contract/replay_original.py": {
+   "zip": "be657aa017841520e137c832488e781c91bb67526a8dd55c631d2870904ae258",
+   "run_copy": "be657aa017841520e137c832488e781c91bb67526a8dd55c631d2870904ae258"
+  },
+  "resume_attack/probe_resume_independent.py": {
+   "zip": "83622e5a83bd0de7c97d4a368c0b3fe66ce4fb08def54fabe0a0bd80d79fa014",
+   "run_copy": "83622e5a83bd0de7c97d4a368c0b3fe66ce4fb08def54fabe0a0bd80d79fa014"
+  },
+  "docs_tests/audit_docs_tests.py": {
+   "zip": "01b826c78fac146caed77a2dab1cbb6a07031ab20deca1e73ad004bfa6518d34",
+   "run_copy": "01b826c78fac146caed77a2dab1cbb6a07031ab20deca1e73ad004bfa6518d34"
+  },
+  "docs_tests/tiny_docs_tests.py": {
+   "zip": "bdba8adb5bb867841b937f588f30664d56302f0a2c309e859103f7986e5e0530",
+   "run_copy": "bdba8adb5bb867841b937f588f30664d56302f0a2c309e859103f7986e5e0530"
+  },
+  "docs_tests/probe_m56.py": {
+   "zip": "da066c2a3d2d18c64026fb5e1e34d69de072155dffb3b9bd2ff63c6b2589bd63",
+   "run_copy": "da066c2a3d2d18c64026fb5e1e34d69de072155dffb3b9bd2ff63c6b2589bd63"
+  },
+  "scoped_regression.py": {
+   "zip": "f9f089177815830da5e1867e6240548f3a485d096c6715b917098c49d6f10f4f",
+   "run_copy": "f9f089177815830da5e1867e6240548f3a485d096c6715b917098c49d6f10f4f"
+  }
+ },
+ "generated_probe_copies_sha256": {
+  "arm_contract/original_replay/probe.py": {
+   "ours": "7f335c758c036c6de5ab10ef5b9ab3d35d6eb10ab3f0182694bdea03914b74d7",
+   "codex": "7f335c758c036c6de5ab10ef5b9ab3d35d6eb10ab3f0182694bdea03914b74d7",
+   "note": "= 핀 docs/reviews/codex_rint2_rr_round3_evidence_20261108/pc12_attack/probe_pc12_independent.py (회차 ③ 탐침 원문 · replay_original.py 가 복사) · 리포에 이미 있음 → 우리 재현 폴더에 안 넣음"
+  },
+  "arm_contract/closure_replay/probe.py": {
+   "ours": "fef77a65331b0b08f57d791db28f69e0e8cb8eb2728305ede221c87a366398ab",
+   "codex": "fef77a65331b0b08f57d791db28f69e0e8cb8eb2728305ede221c87a366398ab",
+   "note": "두 assert 만 바꾼 사본 (replay_original.py 가 만듦) · Codex 판 = 이 폴더 위 arm_contract/closure_replay/probe.py · 같은 바이트 → 우리 재현 폴더에 안 넣음"
+  }
+ },
+ "old_reference_from_our_git": {
+  "scripts/rint_r_chain.py": {
+   "git": "17d45fb9c:scripts/rint_r_chain.py",
+   "sha256": "48f0e7fff068eea752407ad56955c159e937f8a33801148786b0d5a3e650f95c",
+   "zip_copy_sha256": "48f0e7fff068eea752407ad56955c159e937f8a33801148786b0d5a3e650f95c"
+  },
+  "scripts/test_rint_r_chain.py": {
+   "git": "17d45fb9c:scripts/test_rint_r_chain.py",
+   "sha256": "fedba635c5ea52e88d38341308637a025b44665c0c3e40cb49cdae50af5c7811",
+   "zip_copy_sha256": "fedba635c5ea52e88d38341308637a025b44665c0c3e40cb49cdae50af5c7811"
+  },
+  "docs/reviews/codex_rint2_rr_round3_request_20261108.md": {
+   "git": "17d45fb9c:docs/reviews/codex_rint2_rr_round3_request_20261108.md",
+   "sha256": "ab9ce6dff6df858c66f8776b8c893c5155bcc7121a48edebf075648efdb7f6e1",
+   "zip_copy_sha256": "ab9ce6dff6df858c66f8776b8c893c5155bcc7121a48edebf075648efdb7f6e1"
+  }
+ },
+ "how": "탐침 = ZIP 을 리포 밖 빈 폴더에 푼 원본을 다 읽은 뒤 스크래치 실행 폴더로 복사 (같은 상대 자리 · 산출물이 그 폴더에 쓰인다 · 탐침마다 그 산출물을 먼저 지우고 돌림) · cwd = 리포 밖 빈 폴더 · python3 -I -X utf8 -B · RINT_REVIEW_REPO = 핀 작업 트리 (scoped_regression 은 --repo) · RINT_REVIEW_OLD_REPO = 옛 기준 세 파일 (ZIP 사본이 아니라 우리 git 17d45fb9c 객체 · git show) · 환경 = 호스트 환경 변수에서 GIT_* · PYTHON* 를 빼고 GIT_CONFIG_GLOBAL=/dev/null · GIT_CONFIG_NOSYSTEM=1 (탐침의 scratch Git 이 호스트 전역 서명 설정을 읽지 않게) · 실행 순서 = rc 의 차례",
+ "commands": {
+  "probe_m56": "RINT_REVIEW_REPO=<핀> python3 -I -X utf8 -B <run>/docs_tests/probe_m56.py",
+  "tiny_docs_tests": "RINT_REVIEW_REPO=<핀> python3 -I -X utf8 -B <run>/docs_tests/tiny_docs_tests.py",
+  "audit_docs_tests": "RINT_REVIEW_REPO=<핀> RINT_REVIEW_OLD_REPO=<옛 기준> python3 -I -X utf8 -B <run>/docs_tests/audit_docs_tests.py",
+  "arm_contract": "RINT_REVIEW_REPO=<핀> python3 -I -X utf8 -B <run>/arm_contract/probe_arm_contract.py",
+  "replay_original": "RINT_REVIEW_REPO=<핀> python3 -I -X utf8 -B <run>/arm_contract/replay_original.py",
+  "resume_attack": "RINT_REVIEW_REPO=<핀> python3 -I -X utf8 -B <run>/resume_attack/probe_resume_independent.py",
+  "scoped_regression": "python3 -I -X utf8 -B <run>/scoped_regression.py --repo <핀>",
+  "verify_bundle": "python3 -I -X utf8 -B <run>/verify_bundle.py (묶음 안 input/ ZIP → package/ 다시 풂 · 우리 핀 안 씀)",
+  "verify_remote_binding": "python3 -I -X utf8 -B <run>/verify_remote_binding.py (묶음 안 저장 응답 대조 · 오프라인 · 우리 핀 안 씀)"
+ },
+ "rc": {
+  "probe_m56": {
+   "rc": 0,
+   "start_utc": "2026-11-08T23:19:58Z",
+   "end_utc": "2026-11-08T23:19:59Z",
+   "seconds": 0.3
+  },
+  "tiny_docs_tests": {
+   "rc": 0,
+   "start_utc": "2026-11-08T23:20:10Z",
+   "end_utc": "2026-11-08T23:20:12Z",
+   "seconds": 1.1
+  },
+  "audit_docs_tests": {
+   "rc": 0,
+   "start_utc": "2026-11-08T23:20:23Z",
+   "end_utc": "2026-11-08T23:20:24Z",
+   "seconds": 1.4
+  },
+  "arm_contract": {
+   "rc": 0,
+   "start_utc": "2026-11-08T23:20:35Z",
+   "end_utc": "2026-11-08T23:20:39Z",
+   "seconds": 3.7
+  },
+  "replay_original": {
+   "rc": 0,
+   "start_utc": "2026-11-08T23:20:52Z",
+   "end_utc": "2026-11-08T23:20:52Z",
+   "seconds": 0.3
+  },
+  "resume_attack": {
+   "rc": 0,
+   "start_utc": "2026-11-08T23:21:06Z",
+   "end_utc": "2026-11-08T23:21:06Z",
+   "seconds": 0.5
+  },
+  "scoped_regression": {
+   "rc": 0,
+   "start_utc": "2026-11-08T23:21:18Z",
+   "end_utc": "2026-11-08T23:21:18Z",
+   "seconds": 0.5
+  },
+  "verify_bundle": {
+   "rc": 0,
+   "start_utc": "2026-11-08T23:21:38Z",
+   "end_utc": "2026-11-08T23:21:38Z",
+   "seconds": 0.3
+  },
+  "verify_remote_binding": {
+   "rc": 0,
+   "start_utc": "2026-11-08T23:21:38Z",
+   "end_utc": "2026-11-08T23:21:38Z",
+   "seconds": 0.1
+  }
+ },
+ "environment": {
+  "platform": "Linux-6.18.44-fc-v310-x86_64-with-glibc2.39",
+  "python": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "git": "2.43.0",
+  "thread_env": "OPENBLAS / OMP / MKL / NUMEXPR 미설정"
+ },
+ "not_run": {
+  "arm_contract/original_pc12_probe.py (묶음 맨 위 arm_contract/ 의 chain_side_rows.json · counterexample_*_ledger.jsonl · original_pc12_probe.log 를 만든 Codex 단독 실행)": "REPRODUCE.md 명령 목록 밖 · 같은 원문 (sha256 7f335c75…) 을 replay_original.py 가 original_replay/ 로 다시 돌림 (rc 1 같음)",
+  "build_evidence.py": "Codex 묶음 만들기 도구 (ZIP 을 리포 밖 상위 폴더에 씀) · 재현 대상 아님",
+  "arm_contract 개발 중 실패 세 기록 (initial · second · third_harness_failure.json)": "Codex 리뷰 스크립트 오류 보존 (판정문 §7) · 다시 만들지 않음",
+  "field": "실제 SIGKILL · flock 경쟁 · /proc 권한 · FIFO · NFS · GPU · kgy 3.8.10 · 실침대 S0 · 등록 R · 전체 게이트 · 전체 사슬 495 · 전체 변이 캠페인 — 탐침이 모의로 대신하는 부분 (run_in_group · ledger_lock · start_chain_problem · 부모 생존) 은 Linux 에서 돌려도 시험되지 않는다"
+ }
+}

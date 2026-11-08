@@ -1,0 +1,1871 @@
+{
+  "pin": "1f9f3607eb2f0118d322eeff780bba6eb17b85a2",
+  "python": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+  "source_sha256": "47a520e8ad300101c6f8d2660d7368eead77f0f3b425bdcf1d37c379fe0c8720",
+  "scope": "Independent round-4 ARM_PUBLIC review; no research inputs or process groups.\n\nActual rint_r_chain functions are used. Synthetic payload generation alone reuses\nthe submitted FAKE_SRC/record_templates; no submitted test assertion or full\nfixture/gate is run. run_in_group is replaced by a plain Python invocation of\nthat deterministic tiny fake writer. O_NONBLOCK=0 applies only to our regular\nWindows files. No OS, GPU, physical-model, or host qualification is claimed.\n",
+  "checks": {
+    "canonical_requests_both_states": {
+      "ok": true,
+      "details": {
+        "rows": 510,
+        "rejected": []
+      }
+    },
+    "structural_rejects": {
+      "ok": true,
+      "details": [
+        {
+          "name": "none",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "dict",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "tuple",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "empty",
+          "kind": "empty",
+          "expected": "empty",
+          "prior_rejected": true
+        },
+        {
+          "name": "nonobject",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "ids",
+          "kind": "file_ids",
+          "expected": "file_ids",
+          "prior_rejected": true
+        },
+        {
+          "name": "mixed",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "duplicate",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "missing_file",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "missing_index",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "missing_sha256",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "missing_protocol_id",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "missing_state",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "missing_cg_info",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "missing_cg_resid",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "missing_imbalance",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "missing_cert_pass",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "missing_sid_fp",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "missing_cg_iters",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "missing_resolve_iters",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "missing_sv_cf_status",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "missing_err_rel",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "extra",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "wrong_index",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "bool_index",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "float_index",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "file0",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "file1",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "file2",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "file3",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "file4",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "sha2560",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "sha2561",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "sha2562",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "sha2563",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "sha2564",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "sha2565",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        },
+        {
+          "name": "sha2566",
+          "kind": "bad",
+          "expected": "bad",
+          "prior_rejected": true
+        }
+      ]
+    },
+    "json_value_matrix_no_exception": {
+      "ok": true,
+      "details": {
+        "rows": 728,
+        "exceptions": [],
+        "accepted": [
+          {
+            "state": "positive",
+            "key": "index",
+            "value": "zero_int",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "cg_info",
+            "value": "zero_int",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "cg_resid",
+            "value": "zero_int",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "cg_resid",
+            "value": "zero_float",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "cg_resid",
+            "value": "neg_zero",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "cg_resid",
+            "value": "small",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "cg_resid",
+            "value": "subnormal",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "null",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "false",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "true",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "zero_int",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "neg_int",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "one_int",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "zero_float",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "neg_zero",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "one_float",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "small",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "tau",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "above_tau",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "subnormal",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "inf",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "ninf",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "nan",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "big",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "negbig",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "maxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "negmaxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "emptystr",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "space",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "text",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "list",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "dict",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "imbalance",
+            "value": "nested",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "cg_iters",
+            "value": "null",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "cg_iters",
+            "value": "zero_int",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "cg_iters",
+            "value": "one_int",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "cg_iters",
+            "value": "big",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "cg_iters",
+            "value": "maxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "resolve_iters",
+            "value": "null",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "resolve_iters",
+            "value": "zero_int",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "resolve_iters",
+            "value": "one_int",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "resolve_iters",
+            "value": "big",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "resolve_iters",
+            "value": "maxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "null",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "false",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "true",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "zero_int",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "neg_int",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "one_int",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "zero_float",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "neg_zero",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "one_float",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "small",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "tau",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "above_tau",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "subnormal",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "inf",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "ninf",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "nan",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "big",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "negbig",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "maxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "negmaxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "emptystr",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "space",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "text",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "list",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "dict",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "sv_cf_status",
+            "value": "nested",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "err_rel",
+            "value": "zero_float",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "err_rel",
+            "value": "neg_zero",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "err_rel",
+            "value": "small",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "err_rel",
+            "value": "tau",
+            "kind": "verified"
+          },
+          {
+            "state": "positive",
+            "key": "err_rel",
+            "value": "subnormal",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "index",
+            "value": "zero_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "null",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "false",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "true",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "zero_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "neg_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "one_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "zero_float",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "neg_zero",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "one_float",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "small",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "tau",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "above_tau",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "subnormal",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "inf",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "ninf",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "nan",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "big",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "negbig",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "maxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "negmaxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "emptystr",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "space",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "text",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "list",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "dict",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_info",
+            "value": "nested",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "null",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "false",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "true",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "zero_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "neg_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "one_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "zero_float",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "neg_zero",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "one_float",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "small",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "tau",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "above_tau",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "subnormal",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "inf",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "ninf",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "nan",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "big",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "negbig",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "maxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "negmaxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "emptystr",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "space",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "text",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "list",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "dict",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_resid",
+            "value": "nested",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "null",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "false",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "true",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "zero_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "neg_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "one_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "zero_float",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "neg_zero",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "one_float",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "small",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "tau",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "above_tau",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "subnormal",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "inf",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "ninf",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "nan",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "big",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "negbig",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "maxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "negmaxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "emptystr",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "space",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "text",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "list",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "dict",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "imbalance",
+            "value": "nested",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_iters",
+            "value": "null",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_iters",
+            "value": "zero_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_iters",
+            "value": "one_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_iters",
+            "value": "big",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "cg_iters",
+            "value": "maxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "resolve_iters",
+            "value": "null",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "resolve_iters",
+            "value": "zero_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "resolve_iters",
+            "value": "one_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "resolve_iters",
+            "value": "big",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "resolve_iters",
+            "value": "maxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "null",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "false",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "true",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "zero_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "neg_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "one_int",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "zero_float",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "neg_zero",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "one_float",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "small",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "tau",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "above_tau",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "subnormal",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "inf",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "ninf",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "nan",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "big",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "negbig",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "maxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "negmaxjson",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "emptystr",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "space",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "text",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "list",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "dict",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "sv_cf_status",
+            "value": "nested",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "err_rel",
+            "value": "zero_float",
+            "kind": "verified"
+          },
+          {
+            "state": "zero",
+            "key": "err_rel",
+            "value": "neg_zero",
+            "kind": "verified"
+          }
+        ]
+      }
+    },
+    "targeted_summary_json_recount": {
+      "ok": true,
+      "details": [
+        {
+          "state": "positive",
+          "fields_changed": [],
+          "kind": "verified",
+          "expected": "verified",
+          "resume_ok": true,
+          "direct_recount_equal": true,
+          "why_length": 0
+        },
+        {
+          "state": "zero",
+          "fields_changed": [],
+          "kind": "verified",
+          "expected": "verified",
+          "resume_ok": true,
+          "direct_recount_equal": true,
+          "why_length": 0
+        },
+        {
+          "state": "positive",
+          "fields_changed": [
+            "protocol_id"
+          ],
+          "kind": "bad",
+          "expected": "bad",
+          "resume_ok": false,
+          "direct_recount_equal": true,
+          "why_length": 120
+        },
+        {
+          "state": "positive",
+          "fields_changed": [
+            "sid_fp"
+          ],
+          "kind": "bad",
+          "expected": "bad",
+          "resume_ok": false,
+          "direct_recount_equal": true,
+          "why_length": 104
+        },
+        {
+          "state": "positive",
+          "fields_changed": [
+            "err_rel"
+          ],
+          "kind": "bad",
+          "expected": "bad",
+          "resume_ok": false,
+          "direct_recount_equal": true,
+          "why_length": 107
+        },
+        {
+          "state": "positive",
+          "fields_changed": [
+            "err_rel"
+          ],
+          "kind": "verified",
+          "expected": "verified",
+          "resume_ok": true,
+          "direct_recount_equal": true,
+          "why_length": 0
+        },
+        {
+          "state": "positive",
+          "fields_changed": [
+            "err_rel"
+          ],
+          "kind": "bad",
+          "expected": "bad",
+          "resume_ok": false,
+          "direct_recount_equal": true,
+          "why_length": 45
+        },
+        {
+          "state": "positive",
+          "fields_changed": [
+            "cg_resid"
+          ],
+          "kind": "bad",
+          "expected": "bad",
+          "resume_ok": false,
+          "direct_recount_equal": true,
+          "why_length": 104
+        },
+        {
+          "state": "positive",
+          "fields_changed": [
+            "cg_resid"
+          ],
+          "kind": "bad",
+          "expected": "bad",
+          "resume_ok": false,
+          "direct_recount_equal": true,
+          "why_length": 104
+        },
+        {
+          "state": "positive",
+          "fields_changed": [
+            "cg_resid"
+          ],
+          "kind": "bad",
+          "expected": "bad",
+          "resume_ok": false,
+          "direct_recount_equal": true,
+          "why_length": 105
+        },
+        {
+          "state": "positive",
+          "fields_changed": [
+            "cg_info"
+          ],
+          "kind": "bad",
+          "expected": "bad",
+          "resume_ok": false,
+          "direct_recount_equal": true,
+          "why_length": 97
+        },
+        {
+          "state": "positive",
+          "fields_changed": [
+            "cg_iters"
+          ],
+          "kind": "verified",
+          "expected": "verified",
+          "resume_ok": true,
+          "direct_recount_equal": true,
+          "why_length": 0
+        },
+        {
+          "state": "zero",
+          "fields_changed": [
+            "cg_resid"
+          ],
+          "kind": "verified",
+          "expected": "verified",
+          "resume_ok": true,
+          "direct_recount_equal": true,
+          "why_length": 0
+        },
+        {
+          "state": "zero",
+          "fields_changed": [
+            "cert_pass"
+          ],
+          "kind": "verified",
+          "expected": "verified",
+          "resume_ok": true,
+          "direct_recount_equal": true,
+          "why_length": 0
+        }
+      ]
+    },
+    "json_4301_digits_rejected": {
+      "ok": true,
+      "details": {
+        "status": "unreadable"
+      }
+    },
+    "actual_producer_copy_merge_success": {
+      "ok": true,
+      "details": [
+        {
+          "name": "sbe_pos",
+          "producer": "Runner._execute",
+          "arms": 1,
+          "kind": "verified",
+          "state": [
+            "positive"
+          ]
+        },
+        {
+          "name": "sbe_pos",
+          "producer": "ResumeRunner._copy",
+          "kind": "verified",
+          "same_public": true,
+          "copied": [
+            "L01_floor"
+          ]
+        },
+        {
+          "name": "sbe_pos",
+          "producer": "MergeFetch.run",
+          "kind": "verified",
+          "same_public": true
+        },
+        {
+          "name": "sbe_zero",
+          "producer": "Runner._execute",
+          "arms": 1,
+          "kind": "verified",
+          "state": [
+            "zero"
+          ]
+        },
+        {
+          "name": "sbe_zero",
+          "producer": "ResumeRunner._copy",
+          "kind": "verified",
+          "same_public": true,
+          "copied": [
+            "L01_floor"
+          ]
+        },
+        {
+          "name": "sbe_zero",
+          "producer": "MergeFetch.run",
+          "kind": "verified",
+          "same_public": true
+        },
+        {
+          "name": "sbe_eight",
+          "producer": "Runner._execute",
+          "arms": 8,
+          "kind": "verified",
+          "state": [
+            "positive",
+            "positive",
+            "positive",
+            "positive",
+            "positive",
+            "positive",
+            "positive",
+            "positive"
+          ]
+        },
+        {
+          "name": "sbe_eight",
+          "producer": "ResumeRunner._copy",
+          "kind": "verified",
+          "same_public": true,
+          "copied": [
+            "L01_floor"
+          ]
+        },
+        {
+          "name": "sbe_eight",
+          "producer": "MergeFetch.run",
+          "kind": "verified",
+          "same_public": true
+        },
+        {
+          "name": "sbe_sel",
+          "producer": "Runner._execute",
+          "arms": 3,
+          "kind": "verified",
+          "state": [
+            "positive",
+            "positive",
+            "positive"
+          ]
+        },
+        {
+          "name": "sbe_sel",
+          "producer": "ResumeRunner._copy",
+          "kind": "verified",
+          "same_public": true,
+          "copied": [
+            "L01_floor"
+          ]
+        },
+        {
+          "name": "sbe_sel",
+          "producer": "MergeFetch.run",
+          "kind": "verified",
+          "same_public": true
+        },
+        {
+          "name": "dbe_sv",
+          "producer": "Runner._execute",
+          "arms": 3,
+          "kind": "verified",
+          "state": [
+            "positive",
+            "positive",
+            "positive"
+          ]
+        },
+        {
+          "name": "dbe_sv",
+          "producer": "ResumeRunner._copy",
+          "kind": "verified",
+          "same_public": true,
+          "copied": [
+            "L01_floor"
+          ]
+        },
+        {
+          "name": "dbe_sv",
+          "producer": "MergeFetch.run",
+          "kind": "verified",
+          "same_public": true
+        },
+        {
+          "name": "dbe_zero",
+          "producer": "Runner._execute",
+          "arms": 1,
+          "kind": "verified",
+          "state": [
+            "zero"
+          ]
+        },
+        {
+          "name": "dbe_zero",
+          "producer": "ResumeRunner._copy",
+          "kind": "verified",
+          "same_public": true,
+          "copied": [
+            "L01_floor"
+          ]
+        },
+        {
+          "name": "dbe_zero",
+          "producer": "MergeFetch.run",
+          "kind": "verified",
+          "same_public": true
+        },
+        {
+          "name": "variant_GRID",
+          "producer": "Runner._execute",
+          "arms": 1,
+          "kind": "verified",
+          "state": [
+            "positive"
+          ]
+        },
+        {
+          "name": "variant_GRID",
+          "producer": "ResumeRunner._copy",
+          "kind": "verified",
+          "same_public": true,
+          "copied": [
+            "L01_floor"
+          ]
+        },
+        {
+          "name": "variant_GRID",
+          "producer": "MergeFetch.run",
+          "kind": "verified",
+          "same_public": true
+        },
+        {
+          "name": "variant_FIBRE",
+          "producer": "Runner._execute",
+          "arms": 1,
+          "kind": "verified",
+          "state": [
+            "positive"
+          ]
+        },
+        {
+          "name": "variant_FIBRE",
+          "producer": "ResumeRunner._copy",
+          "kind": "verified",
+          "same_public": true,
+          "copied": [
+            "L01_floor"
+          ]
+        },
+        {
+          "name": "variant_FIBRE",
+          "producer": "MergeFetch.run",
+          "kind": "verified",
+          "same_public": true
+        },
+        {
+          "name": "variant_UNREG",
+          "producer": "Runner._execute",
+          "arms": 1,
+          "kind": "verified",
+          "state": [
+            "positive"
+          ]
+        },
+        {
+          "name": "variant_UNREG",
+          "producer": "ResumeRunner._copy",
+          "kind": "verified",
+          "same_public": true,
+          "copied": [
+            "L01_floor"
+          ]
+        },
+        {
+          "name": "variant_UNREG",
+          "producer": "MergeFetch.run",
+          "kind": "verified",
+          "same_public": true
+        },
+        {
+          "name": "variant_SVORDER",
+          "producer": "Runner._execute",
+          "arms": 1,
+          "kind": "verified",
+          "state": [
+            "positive"
+          ]
+        },
+        {
+          "name": "variant_SVORDER",
+          "producer": "ResumeRunner._copy",
+          "kind": "verified",
+          "same_public": true,
+          "copied": [
+            "L01_floor"
+          ]
+        },
+        {
+          "name": "variant_SVORDER",
+          "producer": "MergeFetch.run",
+          "kind": "verified",
+          "same_public": true
+        }
+      ]
+    },
+    "real_read_run_shared_selfcheck": {
+      "ok": true,
+      "details": {
+        "code": "ARM_UNREADABLE",
+        "sentinel": true
+      }
+    },
+    "actual_producer_copy_merge_failure": {
+      "ok": true,
+      "details": [
+        {
+          "producer": "Runner._execute",
+          "stop": "ARM_JSON_COUNT",
+          "kind": "file_ids",
+          "edited_resume_ok": false
+        },
+        {
+          "producer": "ResumeRunner._copy",
+          "stop": "ARM_JSON_COUNT",
+          "kind": "file_ids"
+        },
+        {
+          "producer": "MergeFetch.run",
+          "stop": "ARM_JSON_COUNT",
+          "kind": "file_ids"
+        }
+      ]
+    },
+    "shared_contract_call_sites": {
+      "ok": true,
+      "details": {
+        "arm_file_prefix": [
+          "RunnerGraphSource._run",
+          "arms_read_kind",
+          "read_run"
+        ],
+        "arm_public_value_problem": [
+          "arms_read_kind",
+          "read_run"
+        ],
+        "arms_read_record": [
+          "MergeFetch.run",
+          "ResumeRunner._copy",
+          "Runner._execute"
+        ],
+        "arms_read_kind": [
+          "prior_runs_problem"
+        ]
+      }
+    }
+  },
+  "unexpected": []
+}

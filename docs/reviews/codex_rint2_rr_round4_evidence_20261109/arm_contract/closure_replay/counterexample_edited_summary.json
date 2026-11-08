@@ -1,0 +1,34 @@
+{
+  "status": "STOPPED",
+  "stop": {
+    "code": "TIME_LIMIT",
+    "run": "L02_ceiling",
+    "reason": null
+  },
+  "runs": [
+    {
+      "name": "L01_floor",
+      "role": "floor",
+      "kit": "kit_SBE_vgcf100",
+      "law": "P0",
+      "c": null,
+      "rj": 0.0,
+      "arms": 1,
+      "arm_list": null,
+      "variant": null,
+      "sv_cf": false,
+      "outdir": "L01_floor_arm1",
+      "rc": 0,
+      "seconds": 0.002,
+      "arms_read": [
+        {
+          "file": "p2_wrong_kit_a0.json",
+          "index": 0,
+          "sha256": "e3566b3a06430868d71e9287dfd6c6c520a3da027aabea01951d407ee131dc2f"
+        }
+      ],
+      "machine": null,
+      "group_cause": null
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "M14_copiedfrom_type": {
+    "same_mutation": true,
+    "before": {
+      "killed": false,
+      "fails": [],
+      "summary": "test_rint_r_chain: 4/4 PASS (8.0 s)",
+      "s": 8.4
+    },
+    "after": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (9.4 s)   FAILED: ['PA14D']",
+      [
+        "PA14D"
+      ]
+    ]
+  },
+  "M18_rr_det_only": {
+    "same_mutation": true,
+    "before": {
+      "killed": false,
+      "fails": [],
+      "summary": "test_rint_r_chain: 4/4 PASS (8.1 s)",
+      "s": 8.6
+    },
+    "after": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (8.3 s)   FAILED: ['PA14D']",
+      [
+        "PA14D"
+      ]
+    ]
+  },
+  "M47_mm_elem_type": {
+    "same_mutation": true,
+    "before": {
+      "killed": false,
+      "fails": [],
+      "summary": "test_rint_r_chain: 4/4 PASS (7.2 s)",
+      "s": 7.7
+    },
+    "after": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (9.6 s)   FAILED: ['PA14D']",
+      [
+        "PA14D"
+      ]
+    ]
+  },
+  "M54_lo_one": {
+    "same_mutation": true,
+    "before": {
+      "killed": false,
+      "fails": [],
+      "summary": "test_rint_r_chain: 4/4 PASS (7.7 s)",
+      "s": 8.1
+    },
+    "after": [
+      "CAUGHT",
+      "test_rint_r_chain: 7/8 PASS (8.9 s)   FAILED: ['PA14D']",
+      [
+        "PA14D"
+      ]
+    ]
+  }
+}
