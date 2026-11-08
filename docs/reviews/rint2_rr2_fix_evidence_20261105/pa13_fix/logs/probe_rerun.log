@@ -1,0 +1,35 @@
+== before scripts=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/pa13fix/before_final_tree/scripts
+b37ef7c68e126acdfe7c9062c04e215438ee374b0c0ef7152ec6a485cb00def1  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/pa13fix/before_final_tree/scripts/rint_r_chain.py
+8ba91d45fb67b87840fa80ac126d43705aab51718d630dc136b07e6fcd62a1cd  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/pa13fix/before_final_tree/scripts/test_rint_r_chain.py
+p1_value_domain rc=0 0.1s
+p1b_value_domain_cli rc=0 1.1s
+p2_resume_mismatch rc=0 1.4s
+p2b_resume_mismatch_chain rc=0 1.7s
+p3_honest_shapes_main_pred rc=0 3.9s
+p3_honest_shapes_units_over rc=0 21.8s
+p4_all_arm_forms rc=0 0.1s
+p5_value_domain_honest_units rc=0 27.8s
+p6_struct_edges rc=0 0.1s
+p2c_resume_stronger rc=0 1.8s
+p4v_all_arm_forms_values rc=0 0.2s
+p5b_value_domain_real_units rc=0 24.1s
+== after scripts=/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a068e367fbc7fc5b1/scripts
+78d91ad02d1c749dbce281cc37c5a3d9e45b49204c89806a2a6b479f34d2eec6  /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a068e367fbc7fc5b1/scripts/rint_r_chain.py
+8ba91d45fb67b87840fa80ac126d43705aab51718d630dc136b07e6fcd62a1cd  /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a068e367fbc7fc5b1/scripts/test_rint_r_chain.py
+p1_value_domain rc=0 0.1s
+p1b_value_domain_cli rc=0 1.2s
+p2_resume_mismatch rc=0 1.5s
+p2b_resume_mismatch_chain rc=0 1.4s
+p3_honest_shapes_main_pred rc=0 3.6s
+p3_honest_shapes_units_over rc=0 21.9s
+p4_all_arm_forms rc=0 0.1s
+p5_value_domain_honest_units rc=0 24.8s
+p6_struct_edges rc=0 0.1s
+p2c_resume_stronger rc=0 2.1s
+p4v_all_arm_forms_values rc=0 0.2s
+p5b_value_domain_real_units rc=0 24.9s
+== after py3.8 (p1)
+Python 3.8.20
+p1_value_domain rc=0 0.3s
+done
+rc=0

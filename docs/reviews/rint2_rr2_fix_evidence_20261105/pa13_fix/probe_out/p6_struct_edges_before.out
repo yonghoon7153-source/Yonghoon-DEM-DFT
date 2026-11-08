@@ -1,0 +1,34 @@
+{
+ "honest": [
+  "verified",
+  true
+ ],
+ "file_newline_mid": [
+  "verified",
+  true
+ ],
+ "file_nul_mid": [
+  "verified",
+  true
+ ],
+ "file_dotdot_mid": [
+  "verified",
+  true
+ ],
+ "file_bare": [
+  "verified",
+  true
+ ],
+ "no_arm_list_key": [
+  "verified",
+  true
+ ],
+ "no_law_role_rj": [
+  "verified",
+  true
+ ],
+ "outdir_elsewhere": [
+  "verified",
+  true
+ ]
+}

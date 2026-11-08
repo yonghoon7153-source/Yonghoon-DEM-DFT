@@ -1,0 +1,18 @@
+{
+ "labels": [
+  "merge:PREDICTED",
+  "over:l0:CALIBRATED",
+  "over:l1:CALIBRATED",
+  "over:one:PREDICTED",
+  "over:m:None",
+  "over:mid:None",
+  "over:m2:PREDICTED"
+ ],
+ "forms": {
+  "(1, None)|exit_ok|verified": 94,
+  "(2, (1, 2))|exit_ok|verified": 78,
+  "(8, None)|exit_ok|verified": 36
+ },
+ "n_bad": 0,
+ "bad": []
+}

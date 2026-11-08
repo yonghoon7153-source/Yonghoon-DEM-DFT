@@ -135,7 +135,7 @@
 ## 9. 실행 기록 (11-08 · 작업 트리 에이전트 · 시험 먼저 · 증거 폴더 `docs/reviews/rint2_rr2_fix_evidence_20261105/rr3_fix/`)
 
 - 바탕 `40d9658c0` · 바뀐 코드 두 파일 sha256 (바탕 → 이 커밋 · `docs/reviews/rint2_rr2_fix_evidence_20261105/rr3_fix/logs/code_sha256.txt`) = `scripts/rint_r_chain.py` 48f0e7ff… → b37ef7c6… · `scripts/test_rint_r_chain.py` fedba635… → d83539a1… · 깨끗한 바탕 + `apply_chain.py` · `apply_tests.py` (같은 폴더) = 이 바이트 그대로 · 시험 · 변이 · 탐침 다시 = 이 바이트 · push · 게이트 (`scripts/check_all.sh`) · 원장 = 메인 세션 · **웹앱 화면 없음** (`webapp/` 에 resume_ok · RESUME_NOT_ALLOWED · arms_read · prior_runs_problem · rint_r_chain · "재실행 자격" = 0 건).
-- ⚠ 증거 폴더의 REPORT.md = 만들지 않았다 (작업 트리 에이전트의 보고 파일 쓰기가 막혔다 · 이 §9 + 폴더의 로그 · 스크립트 · SHA256SUMS 가 그 자리).
+- ⚠ 증거 폴더의 REPORT.md = 만들지 않았다 (작업 트리 에이전트의 보고 파일 쓰기가 막혔다 · 이 §9 + 폴더의 로그 · 스크립트 · SHA256SUMS 가 그 자리) → ✅ 11-09 소급 작성 `docs/reviews/rint2_rr2_fix_evidence_20261105/rr3_fix/REPORT.md` (숫자 = 이 §9 · 폴더 로그 그대로 · SHA256SUMS 갱신).
 - 환경 = Linux 6.18 · Python 3.11.17 · numpy 2.4.6 · scipy 1.17.1 · kgy 판 = uv CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 4 코어 · 합성 폴더 · 가짜 러너 · 모의 `run_in_group` (러너 반환 · 출력만) · 실제 git 원장 · 이 컨테이너 (kgy 3.8.10 · ibb · GPU · 실제 SIGKILL · flock · NFS 아님).
 
 ### 9-1. 바꾼 것 (줄 = 고친 판 `scripts/rint_r_chain.py`)
@@ -204,3 +204,52 @@
 - 파일 이름 = `_a<번호>.json` 글자 그대로 (read_run 은 `_a(\d+)\.json` + int 라 a00 · 유니코드 숫자도 받는다 · 실제 러너 = `_a${i}` ASCII) → 그런 이름의 정직 기록 · ARM_PUBLIC 칸 집합이 지금과 다른 옛 판 요약 · 요청 칸 (arms · kit) 없는 기록 = verified 아님 = 재실행 자격 없음 (보수 쪽).  ARM_PUBLIC 의 그 밖 칸 (state · cert_pass · cg_* …) 값 꼴은 안 본다.
 - RR3-02: §3 표의 74 줄 (요청서 §3 PC12-03 행 "exit_ok + arms_read 비지 않음") = `d346ca943` 이 한 일의 서술 (역사) · rg 에 안 걸림 · 계획 목록 밖 → 손대지 않음 · 135 줄 = rg 에 걸린 인용 (고치기 전 한정 글) → 취소선 없이 표지만.
 - 이 고침에 대한 독립 재공격 = 없음 (다음 = 짧은 사전 공격 → Codex 짧은 재확인 · Q7) · `rint_r_chain.py` sha 바뀜 → R 계획 code key (`CODE_FILES`) 바뀜 = §7 ④.
+
+## 10. 사전 공격 13 처분 (1저자 11-09 *"다 권고대로 해줘 물어보지말고"* = (가) Codex 전에 고침)
+
+- 사전 공격 13 (11-08 · 독립 · diff 만 `40d9658c0..742a3b83f` · 계획 안 읽음) = P1 0 · P2 2 · P3 2 · 반입 `docs/reviews/rint2_rr2_fix_evidence_20261105/preattack13/` (REPORT.md · 탐침 · 출력 · 로그 · SHA256SUMS).
+- 처분 = P2-1 · P2-2 · P3-2 고침 (작업 트리 에이전트 · 시험 먼저 · 한 커밋 · 증거 `docs/reviews/rint2_rr2_fix_evidence_20261105/pa13_fix/` · 보고 = 그 폴더 REPORT.md) · P3-1 = 선언된 한정 (§10-4) · push · 게이트 · 원장 = 메인 세션 · **웹앱 화면 없음** (`webapp/` 에 resume_ok · RESUME_NOT_ALLOWED · RESUME_MISMATCH · arms_read · arm_public_value_problem · rint_r_chain · "재실행 자격" = 0 건).
+- 바탕 `f44478535` (두 코드 파일 = 사전 공격 대상 `742a3b83f` 와 같은 blob) · 코드 sha256 (`docs/reviews/rint2_rr2_fix_evidence_20261105/pa13_fix/code_sha256.txt`) = `scripts/rint_r_chain.py` b37ef7c6… → 78d91ad0… · `scripts/test_rint_r_chain.py` d83539a1… → 8ba91d45… (시험 = 470 줄 더함 · 지운 줄 0 = 옛 검사 487 그대로) · 바탕 + `docs/reviews/rint2_rr2_fix_evidence_20261105/pa13_fix/code.diff` = 이 바이트 · `rint_r_chain.py` sha 바뀜 = R 계획 code key 바뀜 (§7 ④ · S0 코드 지문 묶음엔 없음 = §8 그대로).
+
+### 10-1. 고친 것 (줄 = 고친 판 `scripts/rint_r_chain.py`)
+
+| 결함 | 자리 | 무엇 |
+|---|---|---|
+| P2-1 ① | `resume_mismatch_problem` 4327–4340 · `stop_record_problem` 4153 (맨 앞 · 모든 멈춤) | 요약 resume 칸 compared 에 same 이 정확히 True 아닌 원소 → 멈춤 = RESUME_MISMATCH · run = resume.rerun 일 때만 받음 (옛 = 사슬에 요약 resume 칸을 읽는 곳 없음 → 정직 RESUME_MISMATCH 요약의 두 칸 편집 = 재실행 자격) |
+| P2-1 더 굳게 | `resume_rerun_problem` 4343–4420 · `stop_record_problem` 4171 (자격 원인 멈춤 · 앞 대조를 다 지난 뒤) · `RESUME_DETERMINISM` · `RESUME_COMPARED_KEYS` 4323–4324 | resume 칸 ↔ 런 기록 = 생산자 꼴 (재실행 시도면 객체 · from 정수 · resume_of ≤ from < 이 시도 · copied = 복사 기록 이름 차례 · copied_from = from · 복사 기록 먼저 · 첫 새 런 = rerun · 멈춘 런 = rerun ⇒ [] · null · 아니면 determinism · compared 꼴 · rerun outdir = 요청 칸) + 원천 시도 (같은 바탕 attempt_<from>) 남은 payload ↔ 이 시도 그 런 폴더 바이트 다시 대조 (same → true 세 칸 편집도 막음) · 원천 자리 = 옆 거부 기록 = 모순 · 못 읽음 = 사유 |
+| P2-2 | `ARM_STATES` 2180 · `arm_public_value_problem` 2183–2222 · `arms_read_kind` 2261 · `read_run` 2454–2460 | 판독 완료 팔 값 = read_run 성공 꼴 (state positive · zero · protocol_id p3ca- · sid_fp 비지 않은 글 · cert_pass 넷 (positive = 다 True) · err_rel 유한 float ≥ 0 (zero = 0.0) · cg_iters · resolve_iters = null · 0 이상 int · positive 수렴 계약) · 한 함수 = verified 조건 + read_run 자기 대조 (어긋남 = ARM_UNREADABLE) |
+| P3-2 | `read_run` 2321 · 같은 부류 `RunnerGraphSource._run` 5431 | 킷 앞자리 = `arm_file_prefix` (식 = 2175 하나) |
+
+### 10-2. 수 (고치기 전 → 뒤 · 로그 = `docs/reviews/rint2_rr2_fix_evidence_20261105/pa13_fix/logs/`)
+
+| 묶음 | 고치기 전 | 고친 뒤 |
+|---|---|---|
+| 새 검사 PA13A–D (`--only PA13`) | 0/4 PASS (7.6 s · 사슬 = 바탕 · 시험 = 고친 판) · 실패 행 A 38/48 · B 48/59 · C 5/7 · D 2/3 | **4/4 PASS** (7.0 s) · 실패 행 0 |
+| 사슬 전체 (3.11) | 487/487 PASS (363.7 s · 사전 공격 13 `full_py311.log`) | **491/491 PASS** (445.5 s) = 옛 487 + 새 4 |
+| 끝-끝 (3.11) | 51 PASS · 0 FAIL (829.1 s · 사전 공격 13) | **51 PASS · 0 FAIL** (781.1 s) |
+| kgy 판 3.8 (`scripts/check_kgy_py38.sh`) | 사슬 487/487 (547.6 s · 사전 공격 13 `full_py38.log`) | **11 묶음 통과** (rc 0 · rint_r_chain 491/491 (537.2 s) · 끝-끝 51 PASS · 0 FAIL (605.4 s) · 그 밖 9 = run_contract 124/124 · step3_rint PASS · ptfe_face_alpha 242/0 · carbon_junction 547/547 · ca_ext_b6 502/0 · ca_ext_runner 151/0 · step3_target_cert 264/264 · step3_conv_cert 29/29 · ca_s0_census 186/0) |
+| 변이 (`docs/reviews/rint2_rr2_fix_evidence_20261105/pa13_fix/tools/mutate_pa13.py`) | — | **49/49 잡힘** (값 꼴 19 · 규칙 ① 6 · resume 칸 22 · 앞자리 2) · 무변이 4/4 PASS (8.0 s) |
+| 탐침 다시 (`docs/reviews/rint2_rr2_fix_evidence_20261105/pa13_fix/tools/run_all_probes.sh`) | 원 탐침 9 출력 = 사전 공격 13 출력과 바이트 같음 9/9 (`docs/reviews/rint2_rr2_fix_evidence_20261105/pa13_fix/logs/before_vs_preattack.log`) | §10-3 |
+
+### 10-3. 탐침 (고치기 전 → 뒤 · `docs/reviews/rint2_rr2_fix_evidence_20261105/pa13_fix/logs/probe_table.txt`)
+
+| 탐침 | 고치기 전 | 고친 뒤 |
+|---|---|---|
+| p1 (P2-2 · 판독 실패 기록에 11 칸 덧붙임 셋: 전부 null · 불가능 값 · legacy state · 합성 원장) | verified · resume_ok True · 원장 허용 (셋) | bad · resume_ok False · 원장 RESUME_NOT_ALLOWED (셋) · 덧붙이지 않은 꼴 = file_ids 그대로 · py3.8 출력 = 3.11 과 바이트 같음 |
+| p1b (P2-2 · 실제 CLI · git 원장) | 덧붙임 = resume_ok True · --resume 1 rc 0 | resume_ok False · rc 3 RESUME_NOT_ALLOWED (덧붙이지 않은 파일 신원 = rc 3 그대로) |
+| p2 (P2-1 · 단일 시도 합성 원장) | 두 칸 편집 = resume_ok True · 원장 허용 | resume_ok False · 사유 · 원장 RESUME_NOT_ALLOWED (정직 결과 줄 = check · False 그대로 · 시도 2 런의 `_src_done` True 그대로 = 다음 재실행이 원장에서 막힘) |
+| p2b (P2-1 · 두 시도 합성 원장 사슬) | 편집 결과 줄 resume_ok True · 다음 --resume 1 허용 | False · 다음 = RESUME_NOT_ALLOWED · 다시 셈 None |
+| p2c (새 · 편집 7 + 정직 3 + 한정 2) | 편집 7 = resume_ok True | 편집 7 = False + 사유 · 정직 셋 그대로 (RESUME_MISMATCH = check False · 대조 같음 뒤 런 rc = resource True · 그 원천이 다른 곳 = True) · 한정 = §10-4 |
+| p3 (정직 출력 · 사다리 · 예측 · 12 단위 · 합치기 · 넘침) | 런 기록 260 verified · bad 0 | 같음 |
+| p4 (요청 꼴 510 · 팔 값 전부 null) | 510 verified | 0 verified (탐침 원판 팔 = p1 의 전부 null 꼴 → bad 가 옳다) |
+| p4v (새 · 같은 510 꼴 · read_run 성공 값) | 510 verified · null 판 510 verified | 510 verified 그대로 · null 판 510 bad · 판독 실패 꼴 = file_ids (어긋남 0) |
+| p5 (정직 팔 406 · 제안 값 꼴) | 거부 0 | 거부 0 |
+| p5b (새 · 정직 팔 406 · 사슬 함수) | 함수 없음 (N/A) | 거부 0 · 런 172 verified |
+| p6 (P3-1 구조 가장자리 8) | verified 8 | verified 8 그대로 (선언된 한정) |
+
+### 10-4. 한정 (닫지 않은 것)
+
+- P3-1 = 선언된 한정 (1저자 11-09): 앞 런 기록 완결성 대조 없음 — arm_list 칸 없음 · REQ_KEYS 결손 · outdir 아무 값 · 파일 이름 가운데 NUL · 줄바꿈 · `..` · 가운데 없는 이름 = verified (탐침 p6 · 고치기 전 · 뒤 같음) · 이것만으로 실패 런 자격 길 아님 (사전 공격 13 P3 ①) · MergeFetch 기록 outdir (units/…/attempt_n/<od> · source 칸) = `record_outdir` 꼴 아님 → 생산자별로 따로.
+- P2-2: read_run 이 값을 고정하지 않는 칸 (imbalance · sv_cf_status · zero 의 cg_info · cg_resid · cert_pass 원소) = 대조 안 함 · 그럴듯한 값으로 일관되게 고친 위조 · 다른 런 판독 완료 기록 옮겨 붙임 = 그대로 (값 계약 밖 · 판정문 §5 끝 · 실제 재개 복사는 원 팔을 다시 읽음).
+- P2-1: 원천 시도 폴더가 같은 바탕에 없으면 바이트 다시 대조 안 함 — 탐침 p2c = same → true 세 칸 편집 + 원천 치움 = recover 결과 줄 자격 True (한정 그대로) · 그 결과 줄을 같은 바탕 (원천 있음) 에서 다시 세면 대조 실패 (고치기 전 = None) · from = 원장 사슬 끝인지 못 봄 · attempt.json resume_of 까지 함께 고친 위조 = 원장 항목 대조 몫.
+- 이 고침의 독립 재공격 = 없음 (다음 = Codex 회차 ④ · 메인 세션) · 안 돌린 것 = `scripts/check_all.sh` 전체 (메인 세션) · 사전 공격 13 의 변이 도구 (`docs/reviews/rint2_rr2_fix_evidence_20261105/preattack13/probes/mutate.py` · `mutate2.py` = RR3 시험 변이 · 탐침 아님).

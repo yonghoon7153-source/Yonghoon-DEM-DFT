@@ -1,0 +1,61 @@
+{
+ "fn": false,
+ "n_runs": 172,
+ "n_arm_records": 406,
+ "kinds": {
+  "verified": 172
+ },
+ "n_rejected": 406,
+ "bad": [
+  [
+   "lad_P0",
+   "L01_floor",
+   "N/A (함수 없음)"
+  ],
+  [
+   "lad_P0",
+   "L02_ceiling",
+   "N/A (함수 없음)"
+  ],
+  [
+   "lad_P0",
+   "L03_point",
+   "N/A (함수 없음)"
+  ],
+  [
+   "lad_P0",
+   "L04_point",
+   "N/A (함수 없음)"
+  ],
+  [
+   "lad_P0",
+   "L05_point",
+   "N/A (함수 없음)"
+  ],
+  [
+   "lad_P0",
+   "L06_point",
+   "N/A (함수 없음)"
+  ],
+  [
+   "lad_P0",
+   "L07_point",
+   "N/A (함수 없음)"
+  ],
+  [
+   "lad_P0",
+   "L08_confirm",
+   "N/A (함수 없음)"
+  ],
+  [
+   "lad_P0",
+   "L09_end_confirm",
+   "N/A (함수 없음)"
+  ],
+  [
+   "lad_P0",
+   "L10_end_origin",
+   "N/A (함수 없음)"
+  ]
+ ]
+}

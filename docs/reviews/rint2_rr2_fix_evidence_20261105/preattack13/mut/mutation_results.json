@@ -1,0 +1,30 @@
+{
+ "M00_identity": [
+  0,
+  [],
+  "test_rint_r_chain: 13/13 PASS (6.6 s)"
+ ],
+ "M15_success_writes_ids": [
+  1,
+  [
+   "RR3B",
+   "RR3D",
+   "RR3P"
+  ],
+  "test_rint_r_chain: 10/13 PASS (7.8 s)   FAILED: ['RR3B', 'RR3D', 'RR3P']"
+ ],
+ "M16_idx_self_ref": [
+  1,
+  [
+   "RR3C"
+  ],
+  "test_rint_r_chain: 12/13 PASS (11.7 s)   FAILED: ['RR3C']"
+ ],
+ "M17_rec_ignored_kit": [
+  1,
+  [
+   "RR3C"
+  ],
+  "test_rint_r_chain: 12/13 PASS (10.2 s)   FAILED: ['RR3C']"
+ ]
+}

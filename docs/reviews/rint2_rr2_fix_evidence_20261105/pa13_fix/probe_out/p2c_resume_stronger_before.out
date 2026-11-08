@@ -1,0 +1,93 @@
+{
+ "scen": {
+  "mm_stop": "RESUME_MISMATCH",
+  "l3_stop": "RUNNER_RC",
+  "mm_resume": {
+   "compared": [
+    {
+     "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+     "same": false
+    }
+   ],
+   "copied": [
+    "L01_floor"
+   ],
+   "determinism": "compared",
+   "from": 1,
+   "rerun": "L02_ceiling"
+  },
+  "l3_resume": {
+   "compared": [
+    {
+     "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+     "same": true
+    }
+   ],
+   "copied": [
+    "L01_floor"
+   ],
+   "determinism": "compared",
+   "from": 1,
+   "rerun": "L02_ceiling"
+  }
+ },
+ "honest_mismatch": {
+  "cause": "check",
+  "resume_ok": false,
+  "reason": null
+ },
+ "e2_two_fields": {
+  "cause": "timeout",
+  "resume_ok": true,
+  "reason": null
+ },
+ "e3_same_true": {
+  "cause": "timeout",
+  "resume_ok": true,
+  "reason": null
+ },
+ "e4_compared_empty_assumed": {
+  "cause": "timeout",
+  "resume_ok": true,
+  "reason": null
+ },
+ "e4_compared_empty_null": {
+  "cause": "timeout",
+  "resume_ok": true,
+  "reason": null
+ },
+ "e4_from_self": {
+  "cause": "timeout",
+  "resume_ok": true,
+  "reason": null
+ },
+ "e5_rerun_null": {
+  "cause": "timeout",
+  "resume_ok": true,
+  "reason": null
+ },
+ "e3_resume_null": {
+  "cause": "timeout",
+  "resume_ok": true,
+  "reason": null
+ },
+ "honest_same_then_oom": {
+  "cause": "resource",
+  "resume_ok": true,
+  "reason": null
+ },
+ "honest_same_then_oom_src_elsewhere": {
+  "cause": "resource",
+  "resume_ok": true,
+  "reason": null
+ },
+ "LIMIT_e3_same_true_src_elsewhere": {
+  "cause": "timeout",
+  "resume_ok": true,
+  "reason": null
+ },
+ "LIMIT_resume_chain_recount": {
+  "result_line_resume_ok_src_elsewhere": true,
+  "recount_same_base_with_src": null
+ }
+}

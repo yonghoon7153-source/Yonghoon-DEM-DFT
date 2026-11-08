@@ -1,0 +1,35 @@
+{
+ "res1": {
+  "status": "stopped",
+  "cause": "group_unconfirmed",
+  "resume_ok": true
+ },
+ "res2_from_edited": {
+  "status": "stopped",
+  "cause": "timeout",
+  "resume_ok": true
+ },
+ "adoption": {
+  "attempts": [
+   1,
+   2
+  ],
+  "adopted": 1,
+  "chain": [
+   1,
+   2
+  ],
+  "effective": 2,
+  "problems": []
+ },
+ "next_resume_1_order_problem": null,
+ "recount_2": null,
+ "stop_record_problem_edited": null,
+ "src_done_attempt2": {
+  "L01_floor": true,
+  "L02_ceiling": true
+ },
+ "L02_payload_same_as_attempt1_leftover": {
+  "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json": false
+ }
+}

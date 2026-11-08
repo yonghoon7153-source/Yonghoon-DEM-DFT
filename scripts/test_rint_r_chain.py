@@ -16041,6 +16041,476 @@ def t_RR3P():
     return got == want, {'got': got, 'want': want}
 
 
+# ═════════════════════════ ★ 11-09 사전 공격 13 (PA13 · 시험 먼저 · 1저자 11-09 "다 권고대로 해줘 물어보지말고" = Codex 회차 ④ 전에 고침) ═════════════════════════
+#   보고 `docs/reviews/rint2_rr2_fix_evidence_20261105/preattack13/REPORT.md` (독립 · 대상 742a3b83f · diff 만) — P2-1 정직 RESUME_MISMATCH 요약 (재실행 시도 2 · 천장 런
+#   payload ≠ 원 시도 1 에 남은 payload) 의 두 칸 (stop.code → TIME_LIMIT · stop.run → 다음 이름 L03_point) = 재실행 자격 (앞 런 [L01 복사 · L02 재실행] = 둘 다 판독
+#   완료 · 사슬에 요약 resume 칸을 읽는 곳 없음 · 다음 재실행이 시도 1 과 바이트 다른 L02 를 대조 없이 복사) · P2-2 verified = 칸 이름 + file · index · sha256 만
+#   (나머지 ARM_PUBLIC 11 칸 = 생산자가 안 쓰는 값도 verified) · P3-2 read_run 이 arm_file_prefix 를 안 부르고 같은 식 사본.  행 기대 = 정직 (생산자 꼴) = 받음
+#   그대로 · 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 + 사유 (사슬 글 낱말).
+PA13_MM = dict(PW, faults=[{'do': 'sigma_scale', 'f': 1.0 + 1e-12, 'match': {'rj': '0'}}])   # = RS02x 세계 (천장 σ 만 1e-12 다름 = 정직 RESUME_MISMATCH)
+PA13_L3 = dict(PW, faults=[{'do': 'oom_after_mark', 'match': {'rj': '10000.0'}}])           # 재실행 = 천장 대조 같음 → L03 첫 풀이 끝 표지 뒤 메모리 부족
+PA13_RR = {'do': 'oom_after_mark', 'match': {'rj': '0'}}                                     # = RR3P 세계 (재실행 런 자체에서 멈춤 · compared [] · null)
+PA13_W1 = '같지 않은 대조'                                                                    # P2-1 ① 사유 낱말 (사슬 글)
+PA13_W2 = 'resume 칸'                                                                         # P2-1 (① · 더 굳게) 사유 낱말 (사슬 글)
+PA13_L3RUN = 'L03_point'
+
+
+def pa13_scen():
+    """정직 재실행 셋 (실제 사슬 · 가짜 러너 · 실제 git 원장) — mm (RESUME_MISMATCH · RS02x 와 같은 열쇠) · l3 (천장 대조 같음 → L03 resource) · rr (재실행 런 자체에서
+    멈춤 · RR3P 와 같은 열쇠)."""
+    return {'mm': s_resume_left('RS02x', PA13_MM), 'l3': s_resume_left('PA13_l3', PA13_L3),
+            'rr': s_resume_lad('RR3P', PA13_RR, w2=dict(PW, faults=[PA13_RR]))}
+
+
+def pa13_folder(res, tag, src='keep'):
+    """시나리오 res 의 바탕 (attempt_1 · attempt_2) 사본 → 재실행 시도 폴더 attempt_2 · src = 'keep' (원천 attempt_1 그대로) · 'drop' (원천 없음 = 다른 곳에 둔 시도 ·
+    판정 --attempt-dirs 꼴) · 'side' (원천 자리에 옆 거부 기록 파일 attempt_1.rejected.json 만)."""
+    dst = Path(TD) / 'pa13' / tag
+    shutil.copytree(Path(res['b']['out']).parent, dst, symlinks=True)
+    if src in ('drop', 'side'):
+        shutil.rmtree(dst / 'attempt_1')
+    if src == 'side':
+        (dst / 'attempt_1.rejected.json').write_text('{}\n', encoding='utf-8')
+    return dst / 'attempt_2'
+
+
+def pa13_ed(s0, *fns):
+    s = copy.deepcopy(s0)
+    for fn in fns:
+        fn(s)
+    return s
+
+
+def pa13_stop(code=None, run=None):
+    def f(s):
+        if code is not None:
+            s['stop']['code'] = code
+        if run is not None:
+            s['stop']['run'] = run
+        s['stop']['reason'] = None
+    return f
+
+
+def pa13_null_run(s):
+    s['stop']['run'] = None
+
+
+def pa13_rs(**kw):
+    def f(s):
+        s['resume'].update(kw)
+    return f
+
+
+def pa13_same(v):
+    def f(s):
+        s['resume']['compared'] = [dict(x, same=v) for x in s['resume']['compared']]
+    return f
+
+
+def pa13_cmp(fn):
+    def f(s):
+        s['resume']['compared'] = [fn(dict(x)) for x in s['resume']['compared']]
+    return f
+
+
+def pa13_set_resume(v):
+    def f(s):
+        s['resume'] = v
+    return f
+
+
+def pa13_run(name, **kw):
+    def f(s):
+        [r for r in s['runs'] if r.get('name') == name][0].update(kw)
+    return f
+
+
+PA13_TL = pa13_stop('TIME_LIMIT', PA13_L3RUN)
+
+
+def pa13_att(f, **kw):
+    """시도 폴더 f 의 attempt.json 칸 바꿈 (사본 폴더 · 바이트 = 그 꼴 그대로 JSON) → f."""
+    a = json.loads((Path(f) / 'attempt.json').read_text(encoding='utf-8'))
+    a.update(kw)
+    (Path(f) / 'attempt.json').write_text(json.dumps(a), encoding='utf-8')
+    return f
+
+
+def pa13_oserror(*_a, **_k):
+    raise OSError(5, '시험 — 원천 남은 payload 를 못 읽음 (PA13A)')
+
+
+def pa13_rows(sc):
+    """(이름, 폴더, 요약, 기대 [원인, 재실행 자격], 사유 낱말 (None = 사유 없음)[, 판정 동안 사슬 이름 바꿈 (rc_patch 를 내는 함수)])."""
+    mm, l3, rr = (sc[k]['b']['sum'] for k in ('mm', 'l3', 'rr'))
+    F = pa13_folder
+    E = pa13_ed
+    rs, run = pa13_rs, pa13_run
+    W1, W2 = PA13_W1, PA13_W2
+    other = 'p2_SBE_vgcf100_sph_fa_cj0_c0_a1.json'
+    return [
+        #  정직 (생산자 꼴 = 받음 · 고치기 전 · 뒤 같음)
+        ('h_mm', F(sc['mm'], 'h_mm'), mm, ['check', False], None),
+        ('h_l3', F(sc['l3'], 'h_l3'), l3, ['resource', True], None),
+        ('h_l3_nosrc', F(sc['l3'], 'h_l3_nosrc', 'drop'), l3, ['resource', True], None),
+        ('h_rr', F(sc['rr'], 'h_rr'), rr, ['resource', True], None),
+        ('h_rr_nosrc', F(sc['rr'], 'h_rr_nosrc', 'drop'), rr, ['resource', True], None),
+        #  ① RESUME_MISMATCH 요약 편집 (탐침 p2 · p2b = 두 칸 · 같은 부류 한 칸)
+        ('e2', F(sc['mm'], 'e2'), E(mm, PA13_TL), ['timeout', False], W1),
+        ('e2_code', F(sc['mm'], 'e2_code'), E(mm, pa13_stop('TIME_LIMIT')), ['timeout', False], W1),
+        ('e2_run', F(sc['mm'], 'e2_run'), E(mm, pa13_stop(run=PA13_L3RUN)), ['check', False], W1),
+        ('e2_run_null_rerun_null', F(sc['mm'], 'e2_run_null_rerun_null'), E(mm, pa13_null_run, rs(rerun=None)), ['check', False], W1),
+        #  더 굳게 — same → true (세 칸) · compared · determinism · from · rerun · resume 칸 지움
+        ('e3', F(sc['mm'], 'e3'), E(mm, PA13_TL, pa13_same(True)), ['timeout', False], W2),
+        ('e4_assumed', F(sc['mm'], 'e4_assumed'), E(mm, PA13_TL, rs(compared=[], determinism='assumed')), ['timeout', False], W2),
+        ('e4_none', F(sc['mm'], 'e4_none'), E(mm, PA13_TL, rs(compared=[], determinism=None)), ['timeout', False], W2),
+        ('e4_from_self', F(sc['mm'], 'e4_from_self'), E(mm, PA13_TL, pa13_same(True), rs(**{'from': 2}), run('L01_floor', copied_from=2)),
+         ['timeout', False], W2),
+        ('e5_rerun_none', F(sc['mm'], 'e5_rerun_none'), E(mm, PA13_TL, rs(rerun=None, compared=[], determinism=None)), ['timeout', False], W2),
+        ('e3_resume_none', F(sc['mm'], 'e3_resume_none'), E(mm, PA13_TL, pa13_set_resume(None)), ['timeout', False], W2),
+        ('e3_same_one_nosrc', F(sc['mm'], 'e3_same_one_nosrc', 'drop'), E(mm, PA13_TL, pa13_same(1)), ['timeout', False], W1),
+        #  재실행 아닌 시도 (l3 의 시도 1 = 그룹 미확인 · attempt.json resume_of null) — 정직 = 그대로 · resume 칸 객체 아닌 값 = 모순
+        ('h_l3_a1', F(sc['l3'], 'h_l3_a1').parent / 'attempt_1', sc['l3']['a']['sum'], ['group_unconfirmed', True], None),
+        ('x_resume_list_fresh', F(sc['l3'], 'x_resume_list_fresh').parent / 'attempt_1', E(sc['l3']['a']['sum'], pa13_set_resume(['x'])),
+         ['group_unconfirmed', False], W2),
+        #  정직 자격 요약 (l3 · rr) 한 칸씩 = 생산자가 쓰지 않는 조합
+        ('x_resume_list', F(sc['l3'], 'x_resume_list'), E(l3, pa13_set_resume(['x'])), ['resource', False], W2),
+        ('x_resume_none', F(sc['l3'], 'x_resume_none'), E(l3, pa13_set_resume(None)), ['resource', False], W2),
+        ('x_from_self', F(sc['l3'], 'x_from_self'), E(l3, rs(**{'from': 2}), run('L01_floor', copied_from=2)), ['resource', False], W2),
+        ('x_from_0', F(sc['l3'], 'x_from_0'), E(l3, rs(**{'from': 0}), run('L01_floor', copied_from=0)), ['resource', False], W2),
+        ('x_from_true', F(sc['l3'], 'x_from_true'), E(l3, rs(**{'from': True})), ['resource', False], W2),
+        ('x_copied_empty', F(sc['l3'], 'x_copied_empty', 'drop'), E(l3, rs(copied=[])), ['resource', False], W2),
+        ('x_copied_from_2', F(sc['l3'], 'x_copied_from_2', 'drop'), E(l3, run('L01_floor', copied_from=2)), ['resource', False], W2),
+        ('x_copy_after_new', F(sc['l3'], 'x_copy_after_new'), E(l3, run(PA13_L3RUN, copied_from=1), rs(copied=['L01_floor', PA13_L3RUN])),
+         ['resource', False], W2),
+        ('x_rerun_none', F(sc['l3'], 'x_rerun_none'), E(l3, rs(rerun=None)), ['resource', False], W2),
+        ('x_rerun_l01_nosrc', F(sc['l3'], 'x_rerun_l01_nosrc', 'drop'), E(l3, rs(rerun='L01_floor')), ['resource', False], W2),
+        ('x_no_new_run', F(sc['l3'], 'x_no_new_run', 'drop'),
+         E(l3, run('L02_ceiling', copied_from=1), run(PA13_L3RUN, copied_from=1), rs(copied=['L01_floor', 'L02_ceiling', PA13_L3RUN])),
+         ['resource', False], W2),
+        ('x_det_none', F(sc['l3'], 'x_det_none', 'drop'), E(l3, rs(determinism=None, compared=[])), ['resource', False], W2),
+        ('x_det_assumed_nosrc', F(sc['l3'], 'x_det_assumed_nosrc', 'drop'), E(l3, rs(determinism='assumed')), ['resource', False], W2),
+        ('x_cmp_extra_nosrc', F(sc['l3'], 'x_cmp_extra_nosrc', 'drop'), E(l3, pa13_cmp(lambda x: dict(x, x=1))), ['resource', False], W2),
+        ('x_cmp_file_nonstr_nosrc', F(sc['l3'], 'x_cmp_file_nonstr_nosrc', 'drop'), E(l3, pa13_cmp(lambda x: dict(x, file=5))), ['resource', False], W2),
+        ('x_cmp_file', F(sc['l3'], 'x_cmp_file'), E(l3, pa13_cmp(lambda x: dict(x, file=other))), ['resource', False], W2),
+        ('x_od_other_nosrc', F(sc['l3'], 'x_od_other_nosrc', 'drop'), E(l3, run('L02_ceiling', outdir='L02_ceiling_arm2')), ['resource', False], W2),
+        ('x_side_src', F(sc['l3'], 'x_side_src', 'side'), l3, ['resource', False], W2),
+        ('x_rr_cmp', F(sc['rr'], 'x_rr_cmp'), E(rr, rs(compared=[{'file': other, 'same': True}], determinism='compared')), ['resource', False], W2),
+        ('x_rr_det', F(sc['rr'], 'x_rr_det'), E(rr, rs(determinism='assumed')), ['resource', False], W2),
+        ('x_cmp_int_nosrc', F(sc['l3'], 'x_cmp_int_nosrc', 'drop'), E(l3, rs(compared=5)), ['resource', False], W2),
+        ('x_att_resume_of_str', pa13_att(F(sc['l3'], 'x_att_resume_of_str'), resume_of='1'), l3, ['resource', False], W2),
+        ('x_recompare_oserror', F(sc['l3'], 'x_recompare_oserror'), l3, ['resource', False], W2, lambda: rc_patch(resume_leftovers=pa13_oserror)),
+    ]
+
+
+def pa13_ledger(f2, s2):
+    """탐침 p2b 꼴 — 원천 attempt_1 (정직 요약) · 재실행 attempt_2 (요약 s2 를 그 폴더에 씀) → 결과 줄 둘 (recover · 같은 함수) → 원장 → 다음 --resume 1 차례 · 결과 줄
+    2 다시 셈 → [결과 줄 2 재실행 자격, attempt_order_problem 멈춤 | None, result_line_problem]."""
+    f1 = f2.parent / 'attempt_1'
+    s1 = json.loads((f1 / 'ladder_summary.json').read_text(encoding='utf-8'))
+    (f2 / 'ladder_summary.json').write_bytes(RR.canon_bytes(s2))
+    head = {'kind': 'header', 'schema': RR.LEDGER_SCHEMA, 'plan_sha256': 'b' * 64, 'utc': 'synthetic'}
+    ent1 = {'kind': 'entry', 'n': 1, 'target': 'ladder:P0', 'machine': 'synthetic', 'resume_of': None, 'plan_sha256': 'b' * 64, 'code_key_sha256': 'c' * 64,
+            'env': {}, 'bed': {}, 'utc': 'synthetic'}
+    ent2 = dict(ent1, n=2, resume_of=1)
+
+    def start(n, f):
+        return {'kind': 'start', 'n': n, 'base': str(f.parent.resolve()), 'folder': f.name, 'host': {'machine_id': None, 'boot_id': None, 'pidns': None},
+                'utc': 'synthetic', 'chain_pid': 1, 'chain_start': None}
+    res1 = RR.attempt_result_line(1, f1, s1, 'recover')
+    res2 = RR.attempt_result_line(2, f2, s2, 'recover')
+    st = RR.ledger_parse(''.join(RR.ledger_line(x) for x in (head, ent1, start(1, f1), res1, ent2, start(2, f2), res2)).encode('utf-8'))
+    order = RR.attempt_order_problem(st, dict(ent1, n=3, resume_of=1), {'exec_policy': {'max_attempts': 3}})
+    return [res2['resume_ok'], order[0] if order else None, RR.result_line_problem(2, f2, res2)]
+
+
+@check('PA13A', '★ 11-09 사전 공격 13 P2-1 (P2 · 탐침 p2 · p2b 그대로 · 수정 = stop_record_problem) — 정직 재실행 요약 셋 (실제 사슬 · 가짜 러너 · 실제 git 원장): '
+                'RESUME_MISMATCH (RS02x · 천장 payload ≠ 원 시도 남은 payload) = check · 자격 False · 사유 없음 · 천장 대조 같음 뒤 L03 메모리 부족 = resource · 자격 '
+                'True · 사유 없음 (원천 있음 · 다른 곳 둘 다) · 재실행 런 자체에서 멈춤 (RR3P · compared [] · null) = resource · 자격 True → RESUME_MISMATCH 요약 편집 '
+                '(두 칸 · 멈춤 이름만 · run 만) = ① compared 에 같지 않은 대조 = RESUME_MISMATCH · run = rerun 일 때만 · 더 굳게 (same → true 세 칸 · compared [] + '
+                'assumed · + null · from 자기 · rerun null · resume 칸 null) = 원천 시도 남은 payload ↔ 재실행 폴더 바이트 다시 대조 · resume 칸 ↔ 런 기록 (복사 기록 · '
+                '차례 · 원천 번호 범위 · attempt.json resume_of (꼴 포함) · 첫 새 런 = rerun · 대조 전 멈춤 = [] · null · compared 목록 · same 정확히 true · 출력 폴더 · 옆 거부 기록 원천 · 다시 대조 못 읽음) = 자격 False · 사유 · 재실행 아닌 시도 그대로 · 원장 '
+                '(p2b 꼴) 다음 --resume 1 = RESUME_NOT_ALLOWED · 결과 줄 다시 셈 = 대조 통과 · 사슬이 쓴 정직 결과 줄 다시 셈 = 그대로')
+def t_PA13A():
+    if not chain_c1b2():
+        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
+    sc = scen('PA13', pa13_scen)
+    rows, bad = {}, {}
+    pre = {k: [stop_code(sc[k]['b']), (led_result(sc[k]['d'], 2) or {}).get('resume_ok')] for k in sc}
+    want_pre = {'mm': ['RESUME_MISMATCH', False], 'l3': ['RUNNER_RC', True], 'rr': ['RUNNER_RC', True]}
+    rows['scen'] = pre
+    if pre != want_pre:
+        bad['scen'] = (pre, want_pre)
+    for k in ('l3', 'rr'):
+        r2 = led_result(sc[k]['d'], 2) or {}
+        rows[f'real_recount_{k}'] = RR.result_line_problem(2, sc[k]['b']['out'], r2)
+        if rows[f'real_recount_{k}'] is not None:
+            bad[f'real_recount_{k}'] = rows[f'real_recount_{k}']
+    for nm, f, s, want, word, *patch in pa13_rows(sc):
+        try:
+            with (patch[0]() if patch else contextlib.nullcontext()):
+                fl = RR.result_fields(f, s)
+                prob = RR.stop_record_problem(s, f)
+        except Exception as e:                            # noqa: BLE001 — 판정 함수 예외 = 그 행 실패
+            rows[nm] = f'exc {type(e).__name__}: {e}'[:200]
+            bad[nm] = rows[nm]
+            continue
+        rows[nm] = [fl['cause'], fl['resume_ok'], None if prob is None else prob[:200]]
+        code = (s.get('stop') or {}).get('code')
+        prob_ok = (prob is None) if word is None else (isinstance(prob, str) and word in prob and code in prob)
+        if [fl['cause'], fl['resume_ok']] != want or not prob_ok:
+            bad[nm] = {'got': rows[nm], 'want': want, 'word': word}
+    for nm, ed, want in (('led_e2', [PA13_TL], [False, 'RESUME_NOT_ALLOWED', None]),
+                         ('led_e3', [PA13_TL, pa13_same(True)], [False, 'RESUME_NOT_ALLOWED', None]),
+                         ('led_e4_assumed', [PA13_TL, pa13_rs(compared=[], determinism='assumed')], [False, 'RESUME_NOT_ALLOWED', None])):
+        try:
+            rows[nm] = pa13_ledger(pa13_folder(sc['mm'], nm), pa13_ed(sc['mm']['b']['sum'], *ed))
+        except Exception as e:                            # noqa: BLE001
+            rows[nm] = f'exc {type(e).__name__}: {e}'[:200]
+        if rows[nm] != want:
+            bad[nm] = (rows[nm], want)
+    try:
+        rows['led_h_l3'] = pa13_ledger(pa13_folder(sc['l3'], 'led_h_l3'), sc['l3']['b']['sum'])
+    except Exception as e:                                # noqa: BLE001
+        rows['led_h_l3'] = f'exc {type(e).__name__}: {e}'[:200]
+    if rows['led_h_l3'] != [True, None, None]:
+        bad['led_h_l3'] = (rows['led_h_l3'], [True, None, None])
+    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad_names': sorted(bad), 'bad': dict(sorted(bad.items())[:24]), 'rows': rows}
+
+
+#: P2-2 — 영값 위상 팔 (read_run 성공 꼴 · state zero · err_rel 0.0 · 증서 칸 = read_run 이 값을 고정하지 않는 칸)
+PA13_ZERO = dict(state='zero', err_rel=0.0, cert_pass=[None, None, None, None], cg_info=None, cg_resid=None, imbalance=None)
+
+
+def pa13_arm_rows():
+    """(이름, 정직 판독 완료 팔 (ct06_pub · positive) 칸 바꿈, 기대 꼴) — 정직 (read_run 성공 길이 낼 수 있는 값) = verified · 생산자가 쓰지 않는 값 = bad."""
+    Z = PA13_ZERO
+    return [
+        ('h_pos', {}, 'verified'),
+        ('h_zero', Z, 'verified'),
+        ('h_zero_pass_bools', dict(Z, cert_pass=[True, False, True, None]), 'verified'),
+        ('h_zero_cg', dict(Z, cg_info=0, cg_resid=1e-12), 'verified'),
+        ('h_iters_none', dict(cg_iters=None, resolve_iters=None), 'verified'),
+        ('h_iters_zero', dict(cg_iters=0, resolve_iters=0), 'verified'),
+        ('h_err_zero', dict(err_rel=0.0), 'verified'),
+        ('h_sv_computed', dict(sv_cf_status='computed'), 'verified'),
+        ('h_imb_int', dict(imbalance=0), 'verified'),
+        ('h_resid_int', dict(cg_resid=0), 'verified'),
+        ('n_state_short', dict(state='short'), 'bad'),
+        ('n_state_legacy', dict(state='legacy'), 'bad'),
+        ('n_state_none', dict(state=None), 'bad'),
+        ('n_state_upper', dict(state='POSITIVE'), 'bad'),
+        ('n_pid_unknown', dict(protocol_id='unknown:x'), 'bad'),
+        ('n_pid_p2', dict(protocol_id='p2-0123456789abcdef'), 'bad'),
+        ('n_pid_bare', dict(protocol_id='p3ca'), 'bad'),
+        ('n_pid_none', dict(protocol_id=None), 'bad'),
+        ('n_pid_int', dict(protocol_id=7), 'bad'),
+        ('n_sid_empty', dict(sid_fp=''), 'bad'),
+        ('n_sid_none', dict(sid_fp=None), 'bad'),
+        ('n_sid_int', dict(sid_fp=5), 'bad'),
+        ('n_cp_three', dict(cert_pass=[True, True, True]), 'bad'),
+        ('n_cp_false', dict(cert_pass=[True, True, True, False]), 'bad'),
+        ('n_cp_nullpos', dict(cert_pass=[True, True, True, None]), 'bad'),
+        ('n_cp_one', dict(cert_pass=[1, 1, 1, 1]), 'bad'),
+        ('n_cp_none', dict(cert_pass=None), 'bad'),
+        ('n_cp_zero_three', dict(Z, cert_pass=[None, None, None]), 'bad'),
+        ('n_cp_zero_dict', dict(Z, cert_pass={'a': 1, 'b': 2, 'c': 3, 'd': 4}), 'bad'),
+        ('n_err_neg', dict(err_rel=-1e-9), 'bad'),
+        ('n_err_inf', dict(err_rel=math.inf), 'bad'),
+        ('n_err_nan', dict(err_rel=math.nan), 'bad'),
+        ('n_err_none', dict(err_rel=None), 'bad'),
+        ('n_err_int', dict(err_rel=0), 'bad'),
+        ('n_err_str', dict(err_rel='1e-6'), 'bad'),
+        ('n_err_bool', dict(err_rel=True), 'bad'),
+        ('n_err_zero_nonzero', dict(Z, err_rel=1e-6), 'bad'),
+        ('n_cgit_bool', dict(cg_iters=True), 'bad'),
+        ('n_cgit_neg', dict(cg_iters=-1), 'bad'),
+        ('n_cgit_float', dict(cg_iters=10.0), 'bad'),
+        ('n_cgit_str', dict(cg_iters='10'), 'bad'),
+        ('n_rsit_bool', dict(resolve_iters=False), 'bad'),
+        ('n_rsit_neg', dict(resolve_iters=-2), 'bad'),
+        ('n_rsit_float', dict(resolve_iters=2.0), 'bad'),
+        ('n_cginfo_one', dict(cg_info=1), 'bad'),
+        ('n_cginfo_none', dict(cg_info=None), 'bad'),
+        ('n_cginfo_bool', dict(cg_info=False), 'bad'),
+        ('n_cginfo_float', dict(cg_info=0.0), 'bad'),
+        ('n_resid_none', dict(cg_resid=None), 'bad'),
+        ('n_resid_neg', dict(cg_resid=-1e-12), 'bad'),
+        ('n_resid_big', dict(cg_resid=1.0), 'bad'),
+        ('n_resid_nan', dict(cg_resid=math.nan), 'bad'),
+        ('n_resid_bool', dict(cg_resid=False), 'bad'),
+    ]
+
+
+#: 탐침 p1 의 덧붙임 셋 (판독 실패 기록 = 파일 신원 + 나머지 11 칸 = 생산자가 안 쓰는 값)
+PA13_PADS = {
+    'pad_none': {'protocol_id': None, 'state': None, 'cg_info': None, 'cg_resid': None, 'imbalance': None, 'cert_pass': None, 'sid_fp': None,
+                 'cg_iters': None, 'resolve_iters': None, 'sv_cf_status': None, 'err_rel': None},
+    'pad_impossible': {'protocol_id': 'unknown:x', 'state': 'short', 'cg_info': 'x', 'cg_resid': -1, 'imbalance': [], 'cert_pass': False, 'sid_fp': '',
+                       'cg_iters': True, 'resolve_iters': 'y', 'sv_cf_status': {'a': 1}, 'err_rel': -5.0},
+    'pad_legacy_state': {'protocol_id': 'p3ca-x', 'state': 'legacy', 'cg_info': 0, 'cg_resid': 0.0, 'imbalance': 0.0, 'cert_pass': [True] * 4,
+                         'sid_fp': 'f' * 16, 'cg_iters': 1, 'resolve_iters': 0, 'sv_cf_status': None, 'err_rel': 0.0},
+}
+
+
+def pa13_producer(tag):
+    """탐침 p1 그대로 — 실제 `Runner._execute` + 모의 `run_in_group` (출력 = 이름 맞는 팔 p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json · 내용 {}) → 실제 `read_run` 실패
+    (ARM_UNREADABLE) → (시도 폴더 · 생산자 런 기록 목록 · 멈춤 이름)."""
+    folder = Path(TD) / 'pa13b' / tag / 'attempt_1'
+    folder.mkdir(parents=True)
+    outdir = folder / 'L01_floor_arm1'
+    _nm, req, _key = RR.run_request('L', 1, SBE_KIT, 'floor', 'P0', None, 0.0, 1, False, None)
+    rn = RR.Runner('unused.sh', folder, folder, {}, None, time.time() + 60, {}, parent_env={})
+    code = None
+    with rc_patch(run_in_group=rr3_mock_group(outdir, {ct06_pub(0)['file']: RR3_PAYLOAD})), contextlib.redirect_stdout(io.StringIO()):
+        try:
+            rn._execute('L01_floor', req, outdir, {})
+        except RR.Stop as e:
+            code = e.code
+    return folder, rn.records, code
+
+
+@check('PA13B', '★ 11-09 사전 공격 13 P2-2 (P2 · 탐침 p1 그대로 · 수정 = arms_read_kind · read_run 한 함수 `arm_public_value_problem`) — 실제 `Runner._execute` + 모의 '
+                '`run_in_group` → 실제 `read_run` 실패 (이름 맞는 팔 · 내용 {} = ARM_UNREADABLE) → 생산자 기록 = 파일 신원 (file_ids) · 나머지 ARM_PUBLIC 11 칸을 생산자가 '
+                '안 쓰는 값 (전부 null · short · unknown · false · 빈 sid · bool 반복 수 · 음수 오차 · legacy) 으로 덧붙임 + 요약 두 칸 → 옛 = verified · 자격 True · 원장 '
+                '허용 → bad · 자격 False · RESUME_NOT_ALLOWED · 값 꼴 한 칸씩 (state · protocol_id · sid_fp · cert_pass 길이 · positive 넷 다 True · err_rel 유한 · ≥ 0 · '
+                'zero = 0.0 · cg_iters · resolve_iters = null · 0 이상 int · positive 수렴 계약 cg_info · cg_resid) = bad · 정직 (positive · zero · 반복 수 null · 0 · '
+                'imbalance · sv_cf_status 값 · zero 의 증서 칸) = verified · 실제 정직 사다리 · 예측 판독 완료 기록 전부 = verified · 값 꼴 사유 없음')
+def t_PA13B():
+    rows, bad = {}, {}
+    fn = getattr(RR, 'arm_public_value_problem', None)
+    rows['fn'] = callable(fn)
+    if not rows['fn']:
+        bad['fn'] = '사슬에 arm_public_value_problem 이 없다'
+    folder, recs, code = pa13_producer('PA13B')
+    last = recs[-1] if recs else {}
+    rows['producer'] = [code, rr3_kind(last.get('arms_read'), last)]
+    if rows['producer'] != ['ARM_UNREADABLE', 'file_ids']:
+        bad['producer'] = rows['producer']
+    for nm, pad in PA13_PADS.items():
+        rr = copy.deepcopy(recs)
+        rr[-1]['arms_read'] = [dict(a, **pad) for a in rr[-1]['arms_read']]
+        s = rr3_summ('TIME_LIMIT', RR3_L2, rr)
+        cause, ok, prob = rr3_row(folder, s)
+        f2 = rr3_clone(folder, f'PA13B_{nm}')
+        rows[nm] = [rr3_kind(rr[-1]['arms_read'], rr[-1]), cause, ok, prob is not None, rr3_ledger(f2, s)]
+        want = ['bad', 'timeout', False, True, [False, 'RESUME_NOT_ALLOWED', None]]
+        if rows[nm] != want:
+            bad[nm] = (rows[nm], want)
+    for nm, kw, kind in pa13_arm_rows():
+        a = dict(ct06_pub(0), **kw)
+        rec = rr3_prior([a])
+        f = rr3_folder(f'PA13B_{nm}')
+        s = rr3_summ('TIME_LIMIT', RR3_L2, [rec])
+        cause, ok, prob = rr3_row(f, s)
+        got_k = rr3_kind(rec['arms_read'], rec)
+        rows[nm] = [got_k, ok]
+        if got_k != kind or ok is not (kind == 'verified') or cause != 'timeout':
+            bad[nm] = {'got': [got_k, cause, ok], 'want': kind, 'prob': None if prob is None else prob[:160]}
+    real, n_arm, rej = 0, 0, []
+    for lab, s in (('lad_P0', s_main('P0').get('sum')), ('lad_P1', s_main('P1').get('sum')), ('pred', s_main_predict().get('sum'))):
+        for r in (s or {}).get('runs') or []:
+            if RR.run_record_shape(r) != 'exit_ok' or not r.get('arms_read'):
+                continue
+            real += 1
+            k = rr3_kind(r.get('arms_read'), r)
+            n_arm += len(r['arms_read'])
+            whys = [fn(a) for a in r['arms_read']] if callable(fn) else ['함수 없음']
+            if k != 'verified' or any(whys):
+                rej.append((lab, r.get('name'), k, [w for w in whys if w][:2]))
+    rows['real'] = {'runs': real, 'arms': n_arm, 'rejected': len(rej)}
+    if not real or rej:
+        bad['real'] = rej[:8] or '정직 기록 없음'
+    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad_names': sorted(bad), 'bad': dict(sorted(bad.items(), key=lambda x: str(x[0]))[:24]), 'rows': rows}
+
+
+def pa13_kit_slices(src):
+    """원천 → 킷 앞자리 식 (`<글>[len('kit_'):]`) 이 있는 함수 이름 목록 (P3-2 · 한 함수 `arm_file_prefix`)."""
+    out = set()
+
+    def is_kit_slice(node):
+        sl = node.slice
+        lo = sl.lower if isinstance(sl, ast.Slice) else None
+        return (isinstance(lo, ast.Call) and isinstance(lo.func, ast.Name) and lo.func.id == 'len' and len(lo.args) == 1
+                and isinstance(lo.args[0], ast.Constant) and lo.args[0].value == 'kit_')
+
+    def walk(node, prefix, cur):
+        for ch in ast.iter_child_nodes(node):
+            if isinstance(ch, ast.ClassDef):
+                walk(ch, prefix + ch.name + '.', cur)
+            elif isinstance(ch, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                walk(ch, prefix + ch.name + '.', prefix + ch.name)
+            else:
+                if isinstance(ch, ast.Subscript) and is_kit_slice(ch):
+                    out.add(cur)
+                walk(ch, prefix, cur)
+    walk(ast.parse(src), '', '<module>')
+    return sorted(out)
+
+
+@check('PA13C', '★ 11-09 사전 공격 13 구조 (P2-2 한 함수 · P3-2 앞자리 한 함수) — 원천: 값 꼴 함수 `arm_public_value_problem` 를 부르는 곳 = read_run · arms_read_kind '
+                '둘 (사본 없음) · 킷 앞자리 식 (`kit[len("kit_"):]`) = arm_file_prefix 하나 (옛 = read_run · 봉인 원천 출력 이름의 같은 식 사본) · arm_file_prefix 를 '
+                '부르는 곳 = read_run · arms_read_kind · RunnerGraphSource._run · ARM_STATES = REG_STATES 의 NOT_COMPUTED 아닌 상태 (positive · zero) · 동적 = 정직 주 '
+                '사다리 바닥 런을 실제 read_run (정본 계약) 으로 다시 읽음 = 팔 1 · verified · 값 꼴 함수를 사유를 내는 것으로 바꾸면 read_run = ARM_UNREADABLE (자기 출력에 '
+                '같은 함수를 부른다)')
+def t_PA13C():
+    rows, bad = {}, {}
+    src = Path(RR.__file__).read_text(encoding='utf-8')
+    calls, _proj = rr3_calls(src)
+    rows['value_callers'] = sorted(q for q, c in calls.items() if 'arm_public_value_problem' in c)
+    rows['prefix_callers'] = sorted(q for q, c in calls.items() if 'arm_file_prefix' in c)
+    rows['kit_slice_sites'] = pa13_kit_slices(src)
+    rows['arm_states'] = list(getattr(RR, 'ARM_STATES', ()))
+    rows['arm_states_from_table'] = sorted(k for k, (reg, _w) in RR.REG_STATES.items() if reg != 'NOT_COMPUTED')
+    want = {'value_callers': ['arms_read_kind', 'read_run'], 'prefix_callers': ['RunnerGraphSource._run', 'arms_read_kind', 'read_run'],
+            'kit_slice_sites': ['arm_file_prefix'], 'arm_states': ['positive', 'zero'], 'arm_states_from_table': ['positive', 'zero']}
+    for k, w in want.items():
+        if rows[k] != w:
+            bad[k] = (rows[k], w)
+    m = s_main('P0')
+    s = m.get('sum') or {}
+    x = (s.get('runs') or [{}])[0]
+    req = {k: x.get(k) for k in RR.REQ_KEYS}
+    plan = (s.get('plan') or {}).get('content')
+    od = Path(m['out']) / str(x.get('outdir'))
+    try:
+        arms = RR.read_run(od, req, plan, RR.RealContract(), {})
+        rows['read_ok'] = [len(arms), rr3_kind(RR.arms_read_record(arms), x)]
+    except Exception as e:                                # noqa: BLE001
+        rows['read_ok'] = f'exc {type(e).__name__}: {e}'[:200]
+    if rows['read_ok'] != [1, 'verified']:
+        bad['read_ok'] = rows['read_ok']
+    if hasattr(RR, 'arm_public_value_problem'):
+        try:
+            with rc_patch(arm_public_value_problem=lambda a: '시험 사유 (PA13C)'):
+                RR.read_run(od, req, plan, RR.RealContract(), {})
+            rows['read_patched'] = 'Stop 없음'
+        except RR.Stop as e:
+            rows['read_patched'] = [e.code, '시험 사유 (PA13C)' in e.cause, 'arm_public_value_problem' in e.cause]
+    else:
+        rows['read_patched'] = '함수 없음'
+    if rows['read_patched'] != ['ARM_UNREADABLE', True, True]:
+        bad['read_patched'] = rows['read_patched']
+    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad': bad, 'rows': rows}
+
+
+@check('PA13D', '★ 11-09 사전 공격 13 P2-2 실경로 (탐침 p1b · 실제 git 원장 · recover --ledger → 결과 줄 → --add --resume 1 · `rc_recover_resume`) — 앞 런 L01_floor '
+                '(rc 0 · group_cause None · 끝 기록 by chain 확인 · rc 0) + 런 전 TIME_LIMIT (L02_ceiling): 앞 런 arms_read = 판독 실패 파일 신원 + 나머지 11 칸 (생산자가 '
+                '안 쓰는 값 · 전부 null 둘) → 옛 = 자격 True · rc 0 → 자격 False · rc 3 RESUME_NOT_ALLOWED · 정직 판독 완료 꼴 (ct06_pub) = 자격 True · rc 0 (그대로)')
+def t_PA13D():
+    got, bad = {}, {}
+    name = ct06_pub(0)['file']
+    ids = {'file': name, 'index': 0, 'sha256': hashlib.sha256(RR3_PAYLOAD).hexdigest()}
+    pads = {nm: [dict(ids, **PA13_PADS[nm])] for nm in ('pad_none', 'pad_impossible')}
+
+    def go():
+        out = {f'cli_{nm}': rc_recover_resume(f'PA13D_{nm}', CHAIN_OK0, LG_PLAIN, prep=rr3_cli_prep(ar, {name: RR3_PAYLOAD})) for nm, ar in pads.items()}
+        out['cli_pub'] = rc_recover_resume('PA13D_pub', CHAIN_OK0, LG_PLAIN, prep=rr3_cli_prep([ct06_pub(0)], {name: RR3_PAYLOAD}))
+        return out
+    pc12_cli(bad, got, scen('PA13D', go), {'cli_pad_none': False, 'cli_pad_impossible': False, 'cli_pub': True})
+    return not bad, {'n': len(got), 'n_bad': len(bad), 'bad': bad, 'got': got}
+
+
 # ═════════════════════════ 실행 ═════════════════════════
 def main(argv=None):
     global RR, TD

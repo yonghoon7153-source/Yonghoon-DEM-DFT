@@ -1,0 +1,11 @@
+$ python3 -m pyflakes scripts/rint_r_chain.py scripts/test_rint_r_chain.py
+rc=0
+$ python3 scripts/check_undefined_names.py scripts/rint_r_chain.py scripts/test_rint_r_chain.py
+미정의 이름 검사 (pyflakes) — 파일 2
+
+✓ 없음   ⚠ 동적 이름(globals/exec)은 정적으로 못 본다 — 이 통과가 런 성공을 뜻하지 않는다
+rc=0
+$ python3.8 (kgy 판) -m py_compile scripts/rint_r_chain.py scripts/test_rint_r_chain.py
+rc=0
+78d91ad02d1c749dbce281cc37c5a3d9e45b49204c89806a2a6b479f34d2eec6  scripts/rint_r_chain.py
+8ba91d45fb67b87840fa80ac126d43705aab51718d630dc136b07e6fcd62a1cd  scripts/test_rint_r_chain.py

@@ -1,0 +1,9 @@
+  PASS  RR3A ★ 11-08 Codex 회차 ③ RR3-01 (P2 · 판정문 §2 반례 그대로 · 수정 계획 Q1 (가)) — 실제 `Runner._execute` + 모의 `run_in_group` (러너 반환 · 출력만) → 실제 `read_run` 실패 (ARM_JSON_COUNT · 킷 앞자리가 틀린 팔 p2_wrong_kit_a0.json) → 생산자 기록 rc 0 · group_cause null · arms_read = 파일 신원 목록 {file · index · sha256} 그대로 + 요약 두 칸 (stop.code ARM_JSON_COUNT → TIME_LIMIT · stop.run L01_floor → L02_ceiling) → 옛 = timeout · 재실행 자격 True · stop_record_problem None · 결과 줄 → 원장 읽기 resume_ok True · 다음 --resume 1 항목 허용 → 앞 런 = 판독 완료 꼴 (`arms_read_kind` verified) 일 때만 끝난 런: 편집 둘 (L02_ceiling · zzz) · 같은 부류 (뒤에 위조 L02 기록 {timeout · null} TIME_LIMIT · {None · 0} GROUP_UNCONFIRMED + 그 로그) = 자격 False · 사유 (분류 이름 file_ids) · 원장 = RESUME_NOT_ALLOWED · 원 기록 = check · False 그대로 · 결과 줄 다시 셈 = 둘 다 대조 통과 (None)
+  PASS  RR3B ★ 11-08 RR3-01 같은 부류 — 생산자 셋이 같은 생성 함수 (`arms_read_record` · 수정 계획 Q2 (가)): ⓐ 재개 복사 `ResumeRunner._copy` 의 판독 실패 기록 (원천 = RR3A 꼴 시도 폴더 · `_src_done` True · 복사 다시 읽기 = ARM_JSON_COUNT 그대로 · copied_from 1 · arms_read = 파일 신원) + 요약 두 칸 → 옛 = 자격 True → 자격 False · 사유 ⓑ 합치기 `MergeFetch.run` 의 판독 실패 기록 (가짜 read_run 이 Stop · 사본 폴더의 팔 파일 = 파일 신원) 을 앞 런으로 둔 런 전 TIME_LIMIT → 옛 = 자격 True → 자격 False · 사유 ⓒ 합치기 성공 기록 (가짜 read_run = 판독 완료 팔 · ARM_PUBLIC 투영) 을 앞 런으로 = 자격 True · 사유 없음 (양성 · 그대로) · 분류 = file_ids · file_ids · verified
+  PASS  RR3C ★ 11-08 RR3-01 같은 부류 변이 표 (수정 계획 Q1 (가) · 보장 = 앞 런 판독 완료 = ARM_PUBLIC 칸 정확히 + 요청 팔 일대일 (수 · 번호 · 파일) + sha256 꼴) — 런 전 TIME_LIMIT (L02_ceiling) 앞 런 기록 변이 47: 정직 7 (arms 1 · 2 · 팔 고르기 · 8 팔 · 복사 기록 · DBE · 앞 런 둘) = 자격 True · 사유 없음 · verified · 파일 신원 꼴 4 (팔 수 다름 · 둘째 앞 런) · 칸 집합 7 · 요청 칸 · kit 5 · 일대일 9 · 파일 4 · sha256 5 = 자격 False · 사유 · file_ids | bad · 대조 6 (빈 목록 · 없음 · 객체 · 칸 없음 · rc 1 · 사슬이 죽인 런 = 고치기 전에도 False) · 분류 함수 예외 0 · 시험 고정물 칸 = 사슬 ARM_PUBLIC 과 같음
+
+test_rint_r_chain: 3/3 PASS (1.0 s)
+
+real	0m1.507s
+user	0m2.122s
+sys	0m0.184s

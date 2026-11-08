@@ -1,0 +1,50 @@
+{
+ "n_arm_records": 406,
+ "n_rejected_by_proposal": 0,
+ "bad": [],
+ "observed_types": {
+  "file": {
+   "str": 406
+  },
+  "index": {
+   "int": 406
+  },
+  "sha256": {
+   "str": 406
+  },
+  "protocol_id": {
+   "str": 406
+  },
+  "state": {
+   "'positive'": 406
+  },
+  "cg_info": {
+   "int": 406
+  },
+  "cg_resid": {
+   "float": 406
+  },
+  "imbalance": {
+   "float": 406
+  },
+  "cert_pass": {
+   "list": 406
+  },
+  "sid_fp": {
+   "str": 406
+  },
+  "cg_iters": {
+   "int": 406
+  },
+  "resolve_iters": {
+   "int": 406
+  },
+  "sv_cf_status": {
+   "None": 386,
+   "'computed'": 20
+  },
+  "err_rel": {
+   "float": 406
+  }
+ }
+}

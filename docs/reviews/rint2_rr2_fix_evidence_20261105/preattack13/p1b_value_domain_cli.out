@@ -1,0 +1,22 @@
+{
+ "ids": {
+  "recover_rc": 0,
+  "result": {
+   "status": "stopped",
+   "cause": "timeout",
+   "resume_ok": false
+  },
+  "resume_rc": 3,
+  "not_allowed": true
+ },
+ "padded": {
+  "recover_rc": 0,
+  "result": {
+   "status": "stopped",
+   "cause": "timeout",
+   "resume_ok": true
+  },
+  "resume_rc": 0,
+  "not_allowed": false
+ }
+}

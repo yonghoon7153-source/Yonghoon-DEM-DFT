@@ -1,0 +1,74 @@
+{
+ "producer": {
+  "stop": "ARM_UNREADABLE",
+  "rc": 0,
+  "group_cause": null,
+  "arms_read": [
+   {
+    "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+    "index": 0,
+    "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+   }
+  ],
+  "kind": [
+   "file_ids",
+   "파일 신원 1 = 판독 실패 때 남긴 꼴"
+  ]
+ },
+ "as_is": {
+  "kind": [
+   "file_ids",
+   "파일 신원 1 = 판독 실패 때 남긴 꼴"
+  ],
+  "cause": "timeout",
+  "resume_ok": false,
+  "stop_record_problem": "멈춤 TIME_LIMIT · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read file_ids (파일 신원 1 = 판독 실패 때 남긴 꼴) ",
+  "ledger[resume_ok, order_stop, recount]": [
+   false,
+   "RESUME_NOT_ALLOWED",
+   null
+  ]
+ },
+ "pad_none": {
+  "kind": [
+   "verified",
+   null
+  ],
+  "cause": "timeout",
+  "resume_ok": true,
+  "stop_record_problem": null,
+  "ledger[resume_ok, order_stop, recount]": [
+   true,
+   null,
+   null
+  ]
+ },
+ "pad_impossible": {
+  "kind": [
+   "verified",
+   null
+  ],
+  "cause": "timeout",
+  "resume_ok": true,
+  "stop_record_problem": null,
+  "ledger[resume_ok, order_stop, recount]": [
+   true,
+   null,
+   null
+  ]
+ },
+ "pad_legacy_state": {
+  "kind": [
+   "verified",
+   null
+  ],
+  "cause": "timeout",
+  "resume_ok": true,
+  "stop_record_problem": null,
+  "ledger[resume_ok, order_stop, recount]": [
+   true,
+   null,
+   null
+  ]
+ }
+}

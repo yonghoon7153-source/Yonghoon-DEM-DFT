@@ -1,0 +1,1230 @@
+{
+ "PA13A": {
+  "pass": false,
+  "detail": {
+   "n": 48,
+   "n_bad": 38,
+   "bad_names": [
+    "e2",
+    "e2_code",
+    "e2_run",
+    "e2_run_null_rerun_null",
+    "e3",
+    "e3_resume_none",
+    "e3_same_one_nosrc",
+    "e4_assumed",
+    "e4_from_self",
+    "e4_none",
+    "e5_rerun_none",
+    "led_e2",
+    "led_e3",
+    "led_e4_assumed",
+    "x_att_resume_of_str",
+    "x_cmp_extra_nosrc",
+    "x_cmp_file",
+    "x_cmp_file_nonstr_nosrc",
+    "x_cmp_int_nosrc",
+    "x_copied_empty",
+    "x_copied_from_2",
+    "x_copy_after_new",
+    "x_det_assumed_nosrc",
+    "x_det_none",
+    "x_from_0",
+    "x_from_self",
+    "x_from_true",
+    "x_no_new_run",
+    "x_od_other_nosrc",
+    "x_recompare_oserror",
+    "x_rerun_l01_nosrc",
+    "x_rerun_none",
+    "x_resume_list",
+    "x_resume_list_fresh",
+    "x_resume_none",
+    "x_rr_cmp",
+    "x_rr_det",
+    "x_side_src"
+   ],
+   "bad": {
+    "e2": {
+     "got": [
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "timeout",
+      false
+     ],
+     "word": "같지 않은 대조"
+    },
+    "e2_code": {
+     "got": [
+      "timeout",
+      false,
+      "멈춤 TIME_LIMIT 의 런 'L02_ceiling' 기록 꼴 exit_ok = 생산자가 쓰지 않는 칸 조합 (생산자 꼴 ['killed:timeout', 'none'] · ★ 11-06 PC10)"
+     ],
+     "want": [
+      "timeout",
+      false
+     ],
+     "word": "같지 않은 대조"
+    },
+    "e2_run": {
+     "got": [
+      "check",
+      false,
+      null
+     ],
+     "want": [
+      "check",
+      false
+     ],
+     "word": "같지 않은 대조"
+    },
+    "e2_run_null_rerun_null": {
+     "got": [
+      "check",
+      false,
+      null
+     ],
+     "want": [
+      "check",
+      false
+     ],
+     "word": "같지 않은 대조"
+    },
+    "e3": {
+     "got": [
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "timeout",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "e3_resume_none": {
+     "got": [
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "timeout",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "e3_same_one_nosrc": {
+     "got": [
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "timeout",
+      false
+     ],
+     "word": "같지 않은 대조"
+    },
+    "e4_assumed": {
+     "got": [
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "timeout",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "e4_from_self": {
+     "got": [
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "timeout",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "e4_none": {
+     "got": [
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "timeout",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "e5_rerun_none": {
+     "got": [
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "timeout",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "led_e2": [
+     [
+      true,
+      null,
+      null
+     ],
+     [
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+     ]
+    ],
+    "led_e3": [
+     [
+      true,
+      null,
+      null
+     ],
+     [
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+     ]
+    ],
+    "led_e4_assumed": [
+     [
+      true,
+      null,
+      null
+     ],
+     [
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+     ]
+    ],
+    "x_att_resume_of_str": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "x_cmp_extra_nosrc": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "x_cmp_file": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "x_cmp_file_nonstr_nosrc": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "x_cmp_int_nosrc": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "x_copied_empty": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "x_copied_from_2": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "x_copy_after_new": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "x_det_assumed_nosrc": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "resume 칸"
+    },
+    "x_det_none": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "resume 칸"
+    }
+   },
+   "rows": {
+    "scen": {
+     "mm": [
+      "RESUME_MISMATCH",
+      false
+     ],
+     "l3": [
+      "RUNNER_RC",
+      true
+     ],
+     "rr": [
+      "RUNNER_RC",
+      true
+     ]
+    },
+    "real_recount_l3": null,
+    "real_recount_rr": null,
+    "h_mm": [
+     "check",
+     false,
+     null
+    ],
+    "h_l3": [
+     "resource",
+     true,
+     null
+    ],
+    "h_l3_nosrc": [
+     "resource",
+     true,
+     null
+    ],
+    "h_rr": [
+     "resource",
+     true,
+     null
+    ],
+    "h_rr_nosrc": [
+     "resource",
+     true,
+     null
+    ],
+    "e2": [
+     "timeout",
+     true,
+     null
+    ],
+    "e2_code": [
+     "timeout",
+     false,
+     "멈춤 TIME_LIMIT 의 런 'L02_ceiling' 기록 꼴 exit_ok = 생산자가 쓰지 않는 칸 조합 (생산자 꼴 ['killed:timeout', 'none'] · ★ 11-06 PC10)"
+    ],
+    "e2_run": [
+     "check",
+     false,
+     null
+    ],
+    "e2_run_null_rerun_null": [
+     "check",
+     false,
+     null
+    ],
+    "e3": [
+     "timeout",
+     true,
+     null
+    ],
+    "e4_assumed": [
+     "timeout",
+     true,
+     null
+    ],
+    "e4_none": [
+     "timeout",
+     true,
+     null
+    ],
+    "e4_from_self": [
+     "timeout",
+     true,
+     null
+    ],
+    "e5_rerun_none": [
+     "timeout",
+     true,
+     null
+    ],
+    "e3_resume_none": [
+     "timeout",
+     true,
+     null
+    ],
+    "e3_same_one_nosrc": [
+     "timeout",
+     true,
+     null
+    ],
+    "h_l3_a1": [
+     "group_unconfirmed",
+     true,
+     null
+    ],
+    "x_resume_list_fresh": [
+     "group_unconfirmed",
+     true,
+     null
+    ],
+    "x_resume_list": [
+     "resource",
+     true,
+     null
+    ],
+    "x_resume_none": [
+     "resource",
+     true,
+     null
+    ],
+    "x_from_self": [
+     "resource",
+     true,
+     null
+    ],
+    "x_from_0": [
+     "resource",
+     true,
+     null
+    ],
+    "x_from_true": [
+     "resource",
+     true,
+     null
+    ],
+    "x_copied_empty": [
+     "resource",
+     true,
+     null
+    ],
+    "x_copied_from_2": [
+     "resource",
+     true,
+     null
+    ],
+    "x_copy_after_new": [
+     "resource",
+     true,
+     null
+    ],
+    "x_rerun_none": [
+     "resource",
+     true,
+     null
+    ],
+    "x_rerun_l01_nosrc": [
+     "resource",
+     true,
+     null
+    ],
+    "x_no_new_run": [
+     "resource",
+     true,
+     null
+    ],
+    "x_det_none": [
+     "resource",
+     true,
+     null
+    ],
+    "x_det_assumed_nosrc": [
+     "resource",
+     true,
+     null
+    ],
+    "x_cmp_extra_nosrc": [
+     "resource",
+     true,
+     null
+    ],
+    "x_cmp_file_nonstr_nosrc": [
+     "resource",
+     true,
+     null
+    ],
+    "x_cmp_file": [
+     "resource",
+     true,
+     null
+    ],
+    "x_od_other_nosrc": [
+     "resource",
+     true,
+     null
+    ],
+    "x_side_src": [
+     "resource",
+     true,
+     null
+    ],
+    "x_rr_cmp": [
+     "resource",
+     true,
+     null
+    ],
+    "x_rr_det": [
+     "resource",
+     true,
+     null
+    ],
+    "x_cmp_int_nosrc": [
+     "resource",
+     true,
+     null
+    ],
+    "x_att_resume_of_str": [
+     "resource",
+     true,
+     null
+    ],
+    "x_recompare_oserror": [
+     "resource",
+     true,
+     null
+    ],
+    "led_e2": [
+     true,
+     null,
+     null
+    ],
+    "led_e3": [
+     true,
+     null,
+     null
+    ],
+    "led_e4_assumed": [
+     true,
+     null,
+     null
+    ],
+    "led_h_l3": [
+     true,
+     null,
+     null
+    ]
+   }
+  }
+ },
+ "PA13B": {
+  "pass": false,
+  "detail": {
+   "n": 59,
+   "n_bad": 48,
+   "bad_names": [
+    "fn",
+    "n_cginfo_bool",
+    "n_cginfo_float",
+    "n_cginfo_none",
+    "n_cginfo_one",
+    "n_cgit_bool",
+    "n_cgit_float",
+    "n_cgit_neg",
+    "n_cgit_str",
+    "n_cp_false",
+    "n_cp_none",
+    "n_cp_nullpos",
+    "n_cp_one",
+    "n_cp_three",
+    "n_cp_zero_dict",
+    "n_cp_zero_three",
+    "n_err_bool",
+    "n_err_inf",
+    "n_err_int",
+    "n_err_nan",
+    "n_err_neg",
+    "n_err_none",
+    "n_err_str",
+    "n_err_zero_nonzero",
+    "n_pid_bare",
+    "n_pid_int",
+    "n_pid_none",
+    "n_pid_p2",
+    "n_pid_unknown",
+    "n_resid_big",
+    "n_resid_bool",
+    "n_resid_nan",
+    "n_resid_neg",
+    "n_resid_none",
+    "n_rsit_bool",
+    "n_rsit_float",
+    "n_rsit_neg",
+    "n_sid_empty",
+    "n_sid_int",
+    "n_sid_none",
+    "n_state_legacy",
+    "n_state_none",
+    "n_state_short",
+    "n_state_upper",
+    "pad_impossible",
+    "pad_legacy_state",
+    "pad_none",
+    "real"
+   ],
+   "bad": {
+    "fn": "사슬에 arm_public_value_problem 이 없다",
+    "n_cginfo_bool": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_cginfo_float": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_cginfo_none": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_cginfo_one": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_cgit_bool": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_cgit_float": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_cgit_neg": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_cgit_str": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_cp_false": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_cp_none": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_cp_nullpos": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_cp_one": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_cp_three": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_cp_zero_dict": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_cp_zero_three": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_err_bool": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_err_inf": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_err_int": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_err_nan": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_err_neg": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_err_none": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_err_str": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    },
+    "n_err_zero_nonzero": {
+     "got": [
+      "verified",
+      "timeout",
+      true
+     ],
+     "want": "bad",
+     "prob": null
+    }
+   },
+   "rows": {
+    "fn": false,
+    "producer": [
+     "ARM_UNREADABLE",
+     "file_ids"
+    ],
+    "pad_none": [
+     "verified",
+     "timeout",
+     true,
+     false,
+     [
+      true,
+      null,
+      null
+     ]
+    ],
+    "pad_impossible": [
+     "verified",
+     "timeout",
+     true,
+     false,
+     [
+      true,
+      null,
+      null
+     ]
+    ],
+    "pad_legacy_state": [
+     "verified",
+     "timeout",
+     true,
+     false,
+     [
+      true,
+      null,
+      null
+     ]
+    ],
+    "h_pos": [
+     "verified",
+     true
+    ],
+    "h_zero": [
+     "verified",
+     true
+    ],
+    "h_zero_pass_bools": [
+     "verified",
+     true
+    ],
+    "h_zero_cg": [
+     "verified",
+     true
+    ],
+    "h_iters_none": [
+     "verified",
+     true
+    ],
+    "h_iters_zero": [
+     "verified",
+     true
+    ],
+    "h_err_zero": [
+     "verified",
+     true
+    ],
+    "h_sv_computed": [
+     "verified",
+     true
+    ],
+    "h_imb_int": [
+     "verified",
+     true
+    ],
+    "h_resid_int": [
+     "verified",
+     true
+    ],
+    "n_state_short": [
+     "verified",
+     true
+    ],
+    "n_state_legacy": [
+     "verified",
+     true
+    ],
+    "n_state_none": [
+     "verified",
+     true
+    ],
+    "n_state_upper": [
+     "verified",
+     true
+    ],
+    "n_pid_unknown": [
+     "verified",
+     true
+    ],
+    "n_pid_p2": [
+     "verified",
+     true
+    ],
+    "n_pid_bare": [
+     "verified",
+     true
+    ],
+    "n_pid_none": [
+     "verified",
+     true
+    ],
+    "n_pid_int": [
+     "verified",
+     true
+    ],
+    "n_sid_empty": [
+     "verified",
+     true
+    ],
+    "n_sid_none": [
+     "verified",
+     true
+    ],
+    "n_sid_int": [
+     "verified",
+     true
+    ],
+    "n_cp_three": [
+     "verified",
+     true
+    ],
+    "n_cp_false": [
+     "verified",
+     true
+    ],
+    "n_cp_nullpos": [
+     "verified",
+     true
+    ],
+    "n_cp_one": [
+     "verified",
+     true
+    ],
+    "n_cp_none": [
+     "verified",
+     true
+    ],
+    "n_cp_zero_three": [
+     "verified",
+     true
+    ],
+    "n_cp_zero_dict": [
+     "verified",
+     true
+    ],
+    "n_err_neg": [
+     "verified",
+     true
+    ],
+    "n_err_inf": [
+     "verified",
+     true
+    ],
+    "n_err_nan": [
+     "verified",
+     true
+    ],
+    "n_err_none": [
+     "verified",
+     true
+    ],
+    "n_err_int": [
+     "verified",
+     true
+    ],
+    "n_err_str": [
+     "verified",
+     true
+    ],
+    "n_err_bool": [
+     "verified",
+     true
+    ],
+    "n_err_zero_nonzero": [
+     "verified",
+     true
+    ],
+    "n_cgit_bool": [
+     "verified",
+     true
+    ],
+    "n_cgit_neg": [
+     "verified",
+     true
+    ],
+    "n_cgit_float": [
+     "verified",
+     true
+    ],
+    "n_cgit_str": [
+     "verified",
+     true
+    ],
+    "n_rsit_bool": [
+     "verified",
+     true
+    ],
+    "n_rsit_neg": [
+     "verified",
+     true
+    ],
+    "n_rsit_float": [
+     "verified",
+     true
+    ],
+    "n_cginfo_one": [
+     "verified",
+     true
+    ],
+    "n_cginfo_none": [
+     "verified",
+     true
+    ],
+    "n_cginfo_bool": [
+     "verified",
+     true
+    ],
+    "n_cginfo_float": [
+     "verified",
+     true
+    ],
+    "n_resid_none": [
+     "verified",
+     true
+    ],
+    "n_resid_neg": [
+     "verified",
+     true
+    ],
+    "n_resid_big": [
+     "verified",
+     true
+    ],
+    "n_resid_nan": [
+     "verified",
+     true
+    ],
+    "n_resid_bool": [
+     "verified",
+     true
+    ],
+    "real": {
+     "runs": 52,
+     "arms": 70,
+     "rejected": 52
+    }
+   }
+  }
+ },
+ "PA13C": {
+  "pass": false,
+  "detail": {
+   "n": 7,
+   "n_bad": 5,
+   "bad": {
+    "value_callers": [
+     [],
+     [
+      "arms_read_kind",
+      "read_run"
+     ]
+    ],
+    "prefix_callers": [
+     [
+      "arms_read_kind"
+     ],
+     [
+      "RunnerGraphSource._run",
+      "arms_read_kind",
+      "read_run"
+     ]
+    ],
+    "kit_slice_sites": [
+     [
+      "RunnerGraphSource._run",
+      "arm_file_prefix",
+      "read_run"
+     ],
+     [
+      "arm_file_prefix"
+     ]
+    ],
+    "arm_states": [
+     [],
+     [
+      "positive",
+      "zero"
+     ]
+    ],
+    "read_patched": "함수 없음"
+   },
+   "rows": {
+    "value_callers": [],
+    "prefix_callers": [
+     "arms_read_kind"
+    ],
+    "kit_slice_sites": [
+     "RunnerGraphSource._run",
+     "arm_file_prefix",
+     "read_run"
+    ],
+    "arm_states": [],
+    "arm_states_from_table": [
+     "positive",
+     "zero"
+    ],
+    "read_ok": [
+     1,
+     "verified"
+    ],
+    "read_patched": "함수 없음"
+   }
+  }
+ },
+ "PA13D": {
+  "pass": false,
+  "detail": {
+   "n": 3,
+   "n_bad": 2,
+   "bad": {
+    "cli_pad_none": [
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     "timeout"
+    ],
+    "cli_pad_impossible": [
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     "timeout"
+    ]
+   },
+   "got": {
+    "cli_pad_none": [
+     0,
+     true,
+     0,
+     false
+    ],
+    "cli_pad_impossible": [
+     0,
+     true,
+     0,
+     false
+    ],
+    "cli_pub": [
+     0,
+     true,
+     0,
+     false
+    ]
+   }
+  }
+ }
+}

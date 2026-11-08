@@ -178,6 +178,13 @@
   구조 계약 하나 (생성 `arms_read_record` = 세 생산자 공용 · 성공 = `ARM_PUBLIC` 투영 · 실패 = 파일 신원 `arm_file_shas` (`ARM_FILE_ID_KEYS`) · 분류
   `arms_read_kind` = verified (ARM_PUBLIC 칸 정확히 + 요청 팔 일대일 = 수 · 번호 · 파일 이름 (`arm_file_prefix` · _a<번호>.json) + sha256 꼴) · file_ids · empty ·
   bad · 자격 소비자 = `prior_runs_problem` 하나 · 옛 = 비지 않은 목록 → 판독 실패 때 남긴 파일 신원 목록 + 요약 두 칸 = 재실행 자격 · 다음 원장 항목).
+★ 11-09 사전 공격 13 (독립 · 대상 742a3b83f · 1저자 11-09 "다 권고대로 해줘 물어보지말고" = Codex 회차 ④ 전에 고침 · 보고
+  docs/reviews/rint2_rr2_fix_evidence_20261105/preattack13/REPORT.md · 증거 docs/reviews/rint2_rr2_fix_evidence_20261105/pa13_fix/ · 같은 규칙 = 생산자가 쓰지 않는
+  칸 조합 = 모순 = 재실행 자격 없음): P2-1 요약 resume 칸 = 생산자 꼴 (`resume_mismatch_problem` — compared 에 같지 않은 대조 = RESUME_MISMATCH · run = rerun 일
+  때만 · `resume_rerun_problem` — 자격 원인 멈춤의 resume 칸 ↔ 런 기록 (복사 기록 · 원천 번호 · 첫 새 런 · `RESUME_DETERMINISM` · `RESUME_COMPARED_KEYS`) · 원천 시도
+  남은 payload 바이트 다시 대조 · 옛 = 사슬에 요약 resume 칸을 읽는 곳 없음 → 정직 RESUME_MISMATCH 요약의 두 칸 = 재실행 자격) · P2-2 판독 완료 팔 값 = read_run
+  성공 꼴 (`arm_public_value_problem` · `ARM_STATES` · read_run 자기 대조 · arms_read_kind verified 조건 = 한 함수 · 옛 = 칸 이름 + file · index · sha256 만) ·
+  P3-2 킷 앞자리 = `arm_file_prefix` 한 함수 (read_run · 봉인 원천 출력 이름 · 옛 = 같은 식 사본 둘).
 """
 import argparse
 import contextlib
@@ -2163,8 +2170,56 @@ def arms_read_record(arms_=None, outdir=None):
 
 
 def arm_file_prefix(kit):
-    """팔 파일 이름 앞자리 — `read_run` 의 킷 대조와 같은 식 (킷 'kit_<줄기>' → 'p2_<줄기>_' · 성공 판독의 팔 파일 = 모두 이 앞자리 · read_run 자리 글은 그대로)."""
+    """팔 파일 이름 앞자리 (킷 'kit_<줄기>' → 'p2_<줄기>_' · 성공 판독의 팔 파일 = 모두 이 앞자리) — ★ 11-09 사전 공격 13 P3-2: 이 식은 여기 하나 (`read_run` 의
+    킷 대조 · `arms_read_kind` · 봉인 원천 출력 이름 `RunnerGraphSource._run` 이 이 함수를 부른다 · 옛 = read_run · 봉인 원천에 같은 식 사본)."""
     return f'p2_{kit[len("kit_"):]}_'
+
+
+#: ★ 11-09 사전 공격 13 P2-2 — 판독 완료 팔 상태 = `read_run` 성공 길의 상태 (등록 풀이 상태 표 `REG_STATES` 에서 NOT_COMPUTED 아닌 것 = positive · zero · short ·
+#:   legacy · 모름 = read_run NOT_COMPUTED 멈춤 · 표에서 고른다 = 사본 없음)
+ARM_STATES = tuple(k for k, (reg, _why) in REG_STATES.items() if reg != 'NOT_COMPUTED')
+
+
+def arm_public_value_problem(a):
+    """★ 11-09 사전 공격 13 P2-2 (1저자 11-09 "다 권고대로") — 판독 완료 팔 기록 a (`ARM_PUBLIC` 칸) 의 값 ↔ `read_run` 성공 길이 내는 값 → 사유 | None.  한 함수 =
+    `read_run` (팔 기록을 조립한 뒤 자기 대조 · 어긋나면 ARM_UNREADABLE) · `arms_read_kind` (verified 조건) 가 같이 부른다 (사본 없음 · 옛 = 칸 이름 + file · index ·
+    sha256 만 → 판독 실패 기록 (파일 신원) 에 나머지 11 칸을 생산자가 안 쓰는 값 (전부 null · state short · protocol_id unknown · cert_pass false …) 으로 덧붙이면
+    verified · 요약 두 칸 = 재실행 자격 · 원장 허용):
+      state = `ARM_STATES` (positive · zero) · protocol_id = 글 · `RC.CA_EXT_PREFIX`- 앞자리 (read_run GENERATION) · sid_fp = 비지 않은 글 (read_run SID_GRID) ·
+      cert_pass = 길이 4 목록 (positive = 넷 다 True — `RC.next_gen_state` 증서 ⓐ–ⓓ) · err_rel = 유한 float ≥ 0 (zero = 0.0 · read_run 이 다시 계산) ·
+      cg_iters · resolve_iters = `_int_or_none` 이 내는 값 (null · 0 이상 int) · positive 의 cg_info · cg_resid = 수렴 계약 `RC.conv_ok` (read_run 이 positive 에 부른다).
+    ⚠ 한정: imbalance · sv_cf_status · zero 의 cg_info · cg_resid · cert_pass 원소 = read_run 이 값을 고정하지 않는다 (대조 안 함) · 이 범위 안 그럴듯한 값으로 일관되게
+    고친 위조 (다른 런 · 다른 파일의 판독 완료 기록을 옮겨 붙임 포함) = 선언된 한정 (`arms_read_kind` 머리말 · 판정문 §5 끝 · 실제 재개 복사는 원 팔을 다시 읽는다)."""
+    st = a.get('state')
+    if not (type(st) is str and st in ARM_STATES):
+        return f'state {st!r} (= {list(ARM_STATES)})'
+    pid = a.get('protocol_id')
+    if not (type(pid) is str and pid.startswith(RC.CA_EXT_PREFIX + '-')):
+        return f'protocol_id {pid!r} (= 글 {RC.CA_EXT_PREFIX}-…)'
+    sid = a.get('sid_fp')
+    if not (type(sid) is str and sid):
+        return f'sid_fp {sid!r} (= 비지 않은 글)'
+    cp = a.get('cert_pass')
+    if not (type(cp) is list and len(cp) == 4):
+        return f'cert_pass {cp!r} (= 길이 4 목록)'
+    if st == 'positive' and not all(x is True for x in cp):
+        return f'cert_pass {cp!r} (positive = 넷 다 True)'
+    e = a.get('err_rel')
+    if not (isinstance(e, float) and math.isfinite(e)):
+        return f'err_rel {e!r} (= 유한 float)'
+    if e < 0.0:
+        return f'err_rel {e!r} (≥ 0)'
+    if st == 'zero' and e != 0.0:
+        return f'err_rel {e!r} (zero = 0.0)'
+    for k in ('cg_iters', 'resolve_iters'):
+        v = a.get(k)
+        if v is not None and _int_or_none(v) is None:
+            return f'{k} {v!r} (= null · 0 이상 int)'
+    if st == 'positive':
+        ok, why = RC.conv_ok(a.get('cg_info'), False, a.get('cg_resid'))
+        if not ok:
+            return f'cg_info {a.get("cg_info")!r} · cg_resid {a.get("cg_resid")!r} (positive = 수렴 계약 · {why})'
+    return None
 
 
 def arms_read_kind(ar, rec):
@@ -2172,7 +2227,8 @@ def arms_read_kind(ar, rec):
     집합 = `ARM_PUBLIC` 정확히 · 그 기록의 요청 팔 (`arm_indices` · 요청 칸 arms · arm_list = `request_fields_problem` 통과 · 칸 없음 = 요청 팔을 모름) 과 일대일 =
     수 · 차례대로 번호 (정수 · bool 아님) · 파일 = 이름만 (경로 아님) · `arm_file_prefix` (그 기록의 kit) 앞자리 · 끝 _a<번호>.json · sha256 = 64 자리 소문자 hex ·
     사유 None) · 'file_ids' (판독 실패 때 남긴 파일 신원 목록 = 원소마다 칸 `ARM_FILE_ID_KEYS` 정확히 · 생산자 = `read_run` 실패 뒤) · 'empty' ([] = 팔을 읽기 전) ·
-    'bad' (그 밖 — 목록 아님 · 섞인 칸 · 요청 팔 모름 · 대응 틀림).  옛 (`prior_runs_problem`) = "비지 않은 목록" → 판독 실패 기록의 파일 신원 목록도 끝난 런
+    'bad' (그 밖 — 목록 아님 · 섞인 칸 · 요청 팔 모름 · 대응 틀림 · ★ 11-09 사전 공격 13 P2-2 나머지 칸 값이 read_run 성공 꼴이 아님 = `arm_public_value_problem` ·
+    read_run 과 한 함수).  옛 (`prior_runs_problem`) = "비지 않은 목록" → 판독 실패 기록의 파일 신원 목록도 끝난 런
     (Codex 회차 ③ RR3-01 · 요약 두 칸 = 재실행 자격).  ⚠ 한정: 값 (sha256 ↔ 디스크 파일 · 다른 런에서 옮겨 붙인 판독 완료 기록) 은 대조하지 않는다 (실제 재개
     복사는 원 팔을 다시 읽는다 · 여러 칸을 일관되게 고친 위조 = 판정문 §5 끝 · 새 요구 아님)."""
     if type(ar) is not list:
@@ -2202,6 +2258,9 @@ def arms_read_kind(ar, rec):
             return 'bad', f'[{j}].file {f!r} ≠ 이름 {pref}…_a{i}.json'
         if not (type(h) is str and ARM_SHA256_RE.fullmatch(h)):
             return 'bad', f'[{j}].sha256 = 64 자리 소문자 hex 아님'
+        why = arm_public_value_problem(a)                # ★ 11-09 사전 공격 13 P2-2 — 나머지 ARM_PUBLIC 칸 값 = read_run 성공 꼴 (한 함수)
+        if why:
+            return 'bad', f'[{j}].{why} — read_run 성공 꼴 아님'
     return 'verified', None
 
 
@@ -2259,7 +2318,7 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None, 
     idx = arm_indices(req)
     if sorted(byi) != idx:
         raise Stop('ARM_JSON_COUNT', f'{outdir.name}: 팔 번호 {sorted(byi)} ≠ 요청 {idx}', name)
-    pref = f'p2_{req["kit"][len("kit_"):]}_'
+    pref = arm_file_prefix(req['kit'])                 # ★ 11-09 사전 공격 13 P3-2 — 앞자리 = 한 함수 (옛 = 같은 식 사본)
     if any(not os.path.basename(p).startswith(pref) for p in byi.values()):
         raise Stop('ARM_JSON_COUNT', f'{outdir.name}: 팔 이름이 킷 {req["kit"]} 의 것이 아니다', name)
     if want_sha is not None and len(want_sha) != len(idx):
@@ -2378,7 +2437,7 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None, 
         if sv_graph['state'] == 'mismatch':
             stop('CA_EXT_RECORD', f"{sv_graph['why']} (봉인 원천 대조)")
         cf = SVCF.chain_view(svr) if isinstance(svr, dict) else None
-        out.append({'file': os.path.basename(p), 'index': i, 'sha256': hashlib.sha256(raw).hexdigest(), 'protocol_id': pid,
+        arm = {'file': os.path.basename(p), 'index': i, 'sha256': hashlib.sha256(raw).hexdigest(), 'protocol_id': pid,
                     'state': state, 'cg_info': s3.get('cg_info'), 'cg_resid': s3.get('cg_resid'), 'imbalance': (cert or {}).get('imbalance'),
                     'cert_pass': [(cert or {}).get('pass_a'), (cert or {}).get('pass_b'), (cert or {}).get('pass_c'),
                                   (cert or {}).get('pass_d')],
@@ -2392,7 +2451,13 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None, 
                     'sv_cf': cf, 'sv_cf_status': (cf or {}).get('status'), 'sv_graph': sv_graph,
                     'sv_local': solve.get('sv_local_dissipation'), 'dissipation_share': solve.get('dissipation_share'),
                     'n_sdcp_near': (((ca.get('sdcp_mod') or {}).get('evidence') or {}).get('n_sdcp_near')
-                                    if isinstance(ca.get('sdcp_mod'), dict) else None)})
+                                    if isinstance(ca.get('sdcp_mod'), dict) else None)}
+        #  ★ 11-09 사전 공격 13 P2-2 — 성공 꼴 값 = arms_read_kind verified 조건과 한 함수 (`arm_public_value_problem` · 위 관문들이 이미 고정한 값 · 어긋남 = 사슬
+        #    결함 → 멈춤 · σ 없음)
+        why = arm_public_value_problem(arm)
+        if why:
+            stop('ARM_UNREADABLE', f'팔 기록 값 꼴 — {why} (read_run 성공 꼴 = `arm_public_value_problem` · ★ 11-09 사전 공격 13 P2-2)')
+        out.append(arm)
     return out
 
 
@@ -4080,13 +4145,17 @@ def stop_record_problem(s, folder):
     """★ 11-06 PC10-08 · 09 — 요약 있는 길: 멈춤 코드 ↔ 멈춘 런 기록 꼴이 생산자 꼴 (`STOP_RUN_SHAPES`) 인가 → None | 사유 글 (재실행 자격 False · 원인 글은
     `stop_cause` 그대로).  런 기록 없는 TIME_LIMIT = 런 전 시간 상한 관문 = 런 이름 (`RUN_DIR_RE`) · 그 런 흔적 없음 (`run_traces` — 로그가 읽혀도 · 옛 =
     읽히는 로그면 자격 True) 일 때만.  ★ 11-06 PB-01 의 GROUP_UNCONFIRMED 행 (런 기록 없음 · group_cause 칸 없음 · 모르는 값 = False) 을 품는다.  표에 없는
-    멈춤 = None (원인이 자격 원인이 아니다)."""
+    멈춤 = None (원인이 자격 원인이 아니다).  ★ 11-09 사전 공격 13 P2-1 — 재실행 요약 resume 칸 (`resume_mismatch_problem` = 모든 멈춤 · 맨 앞 ·
+    `resume_rerun_problem` = 자격 원인 멈춤 · 앞 대조를 다 지난 뒤 · 원천 시도 남은 payload 바이트 다시 대조)."""
     sr = s.get('stop') or {}
     code = sr.get('code') or s.get('status')
+    run = sr.get('run')
+    why = resume_mismatch_problem(s, code, run)              # ★ 11-09 사전 공격 13 P2-1 ① — 같지 않은 대조 = RESUME_MISMATCH · run = rerun 일 때만
+    if why:
+        return why
     allowed = STOP_RUN_SHAPES.get(code) if isinstance(code, str) else None
     if allowed is None:
         return None
-    run = sr.get('run')
     rr, _od = _stopped_run(s, folder)
     shape = run_record_shape(rr)
     if shape not in allowed:
@@ -4096,7 +4165,10 @@ def stop_record_problem(s, folder):
     why = stopped_record_problem(s, folder, code, run, rr)    # ★ 11-06 PC10 확장 P2-B — 기록 안 대조 (runs 마지막 · outdir · 요청 칸 · arms_read · 사슬 쪽 끝 기록)
     if why:
         return why
-    return prior_runs_problem(s, code, run, rr)              # ★ 11-08 PC12-03 — 멈춘 런 앞의 런 기록 전부 = 끝난 런 (런 기록 없는 TIME_LIMIT 도 runs 를 본다)
+    why = prior_runs_problem(s, code, run, rr)               # ★ 11-08 PC12-03 — 멈춘 런 앞의 런 기록 전부 = 끝난 런 (런 기록 없는 TIME_LIMIT 도 runs 를 본다)
+    if why:
+        return why
+    return resume_rerun_problem(s, folder, code, run)        # ★ 11-09 사전 공격 13 P2-1 더 굳게 — resume 칸 ↔ 런 기록 · 원천 시도 바이트 다시 대조
 
 
 def stopped_record_problem(s, folder, code, run, rr):
@@ -4243,6 +4315,108 @@ def prior_runs_problem(s, code, run, rr):
             return (f'멈춤 {code} · 런 {run!r} 앞의 런 기록 runs[{i}] ({nm!r}) = 꼴 {sh} · arms_read {kind}{" (" + why + ")" if why else ""} ≠ 끝난 런 '
                     f'(생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 런 = arms_read 판독 완료 꼴 (`arms_read_record` · ARM_PUBLIC · 요청 팔 일대일) · 판독 실패 '
                     f'때 남긴 파일 신원 목록 (file_ids) = 끝난 런 아님 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03 · RR3-01)')
+    return None
+
+
+#: ★ 11-09 사전 공격 13 P2-1 — 재실행 요약 resume 칸 (`ResumeRunner.resume`) 의 결정성 값: 재실행 런 (rerun) 을 다 푼 뒤 원 시도에 남은 payload 를 바이트 대조 =
+#:   'compared' · 남은 것이 없으면 'assumed' (Q-J 한정) · 그 전 멈춤 = None · compared 원소 칸 = `ResumeRunner.run` 이 쓰는 꼴
+RESUME_DETERMINISM = ('compared', 'assumed')
+RESUME_COMPARED_KEYS = ('file', 'same')
+
+
+def resume_mismatch_problem(s, code, run):
+    """★ 11-09 사전 공격 13 P2-1 ① (1저자 11-09 "다 권고대로") — 요약 resume 칸 (객체) 의 compared (목록) 에 same 이 정확히 True 가 아닌 원소가 하나라도 있으면 멈춤 =
+    RESUME_MISMATCH · 런 = resume.rerun 일 때만 받음 → 사유 | None.  생산자 (`ResumeRunner.run`) = 재실행 런을 다 푼 뒤 남은 payload 를 바이트 대조 → 같지 않은 것이
+    하나라도 있으면 그 자리에서 Stop RESUME_MISMATCH (run = 그 재실행 런 · 사이에 다른 멈춤 없음).  옛 = 사슬에 요약 resume 칸을 읽는 곳 없음 → 정직 RESUME_MISMATCH
+    요약의 두 칸 (stop.code → TIME_LIMIT · stop.run → 다음 이름) = 재실행 자격 · 다음 재실행이 원 시도와 바이트 다른 payload 를 대조 없이 복사 (`_src_done`).
+    compared 가 목록이 아님 · 그 밖 resume 칸 꼴 = `resume_rerun_problem` 몫 (자격 원인 멈춤)."""
+    R = s.get('resume')
+    if not isinstance(R, dict) or type(R.get('compared')) is not list:
+        return None
+    bad = [x.get('file') if type(x) is dict else repr(x)[:40] for x in R['compared'] if not (type(x) is dict and x.get('same') is True)]
+    if bad and not (code == 'RESUME_MISMATCH' and isinstance(R.get('rerun'), str) and run == R.get('rerun')):
+        return (f'멈춤 {code} · 런 {run!r} 인데 resume 칸 compared 에 같지 않은 대조 {bad[:3]} (생산자 = 같지 않은 대조가 있으면 그 자리에서 RESUME_MISMATCH · run = '
+                f'resume.rerun {R.get("rerun")!r} · 결정적 재실행이 아니다 · ★ 11-09 사전 공격 13 P2-1)')
+    return None
+
+
+def resume_rerun_problem(s, folder, code, run):
+    """★ 11-09 사전 공격 13 P2-1 더 굳게 (1저자 11-09 "다 권고대로") — 재실행 자격 원인 멈춤 (`STOP_RUN_SHAPES` 행 · 멈춘 런 · 앞 런 대조를 다 지난 뒤) 요약의 resume
+    칸 ↔ 런 기록 · 원천 시도 폴더 → 사유 | None.  생산자 (`ResumeRunner` · 재실행 시도 = attempt.json resume_of 있음 · 자격 원인 멈춤 = 러너를 만든 뒤 새로 돈 런의
+    `Runner._execute` 에서만 · 복사 런 (`_copy`) 의 멈춤 = 판독 · 복사 멈춤 = 자격 원인 아님):
+      ① resume 칸 = 객체 (재실행 시도 · 옛 = 칸을 null 로 지우면 대조 밖) · 재실행 시도 아님 (attempt.json resume_of null · 없음) 이고 칸 null = 대조 밖
+      ② from = 원천 번호 (정수 · bool 아님 · attempt.json resume_of (정수 · 없으면 1) ≤ from < 이 시도 번호 · 옛 = from = 자기 → 자기 폴더와 대조) · copied = 복사 기록
+         (copied_from 칸 있는 런 기록 · 값 = from) 이름 차례 그대로 · 복사 기록 = 런 기록 앞쪽 (첫 새 런 뒤에 복사 기록 없음)
+      ③ 첫 새 런 기록 이름 = rerun (자격 원인 멈춤 = 새로 돈 런 · 그 첫 런 이름이 먼저 rerun · 새 런 기록이 없으면 멈춘 런 = rerun · ④)
+      ④ 멈춘 런 = rerun → 대조 전 멈춤 (compared [] · determinism null) · 멈춘 런 ≠ rerun → rerun 을 다 풀고 대조함 (rerun 런 기록 있음 · determinism ∈
+         `RESUME_DETERMINISM` · compared = 목록 · 비지 않음 ⇔ compared · 원소 칸 = `RESUME_COMPARED_KEYS` · file 글) · 그 런 기록 outdir = 요청 칸이 정하는 출력 폴더
+         (`record_outdir` · RUN_DIR_RE)
+      ⑤ 원천 시도 폴더 (<바탕>/attempt_<from> = 같은 바탕 · `resume_source`) 가 있으면 그 런의 남은 payload (`resume_leftovers`) ↔ 이 시도 그 런 폴더 바이트를 다시
+         대조 (생산자와 같은 식) = 기록 compared · determinism 그대로 (옛 = same 을 true 로 고친 세 칸 편집 = 자격) · 원천 자리 = 옆 거부 기록 = 모순 · 못 읽음 = 사유
+    ⚠ 한정: 원천 시도 폴더가 같은 바탕에 없으면 (다른 곳에 둔 시도 · 판정 --attempt-dirs) ⑤ 바이트 대조 안 함 (①–④ 만 · 실제 재실행의 풀기 전 대조
+    `resume_chain_problem` = 원천을 같은 바탕에 요구 → 그 자리에서 다시 대조) · from = 원장 사슬 끝인지는 못 본다 (원장 없음 · 범위만) · attempt.json resume_of 까지
+    함께 고친 위조 = 원장 항목 대조 (`found_attempts_problem` · 판정 · 합치기) 몫 · 런 기록 완결성 (사전 공격 13 P3-1) = 그대로."""
+    folder = Path(folder)
+    R = s.get('resume')
+    att = read_attempt(folder)
+    if not isinstance(R, dict):
+        if R is not None:
+            return f'멈춤 {code} · resume 칸 = {type(R).__name__} (생산자 = null · 객체 · ★ 11-09 사전 공격 13 P2-1)'
+        if att is not None and att['resume_of'] is not None:
+            return (f'멈춤 {code} · 재실행 시도 (attempt.json resume_of {att["resume_of"]}) 인데 resume 칸 null (생산자 = 재실행 시도의 러너를 만든 뒤 멈춤 = resume 칸 '
+                    f'객체 · ★ 11-09 사전 공격 13 P2-1)')
+        return None
+    runs = [r for r in (s.get('runs') or []) if isinstance(r, dict)]
+    m = ATTEMPT_DIR_RE.fullmatch(folder.name)
+    n = int(m.group(1)) if m else None
+    ro = att['resume_of'] if att is not None else None
+    if not (ro is None or type(ro) is int):
+        return f'멈춤 {code} · resume 칸 · attempt.json resume_of {ro!r} (생산자 = 정수 · null · ★ 11-09 사전 공격 13 P2-1)'
+    lo = ro if ro is not None else 1
+    frm = R.get('from')
+    if not (type(frm) is int and n is not None and lo <= frm < n):
+        return f'멈춤 {code} · resume 칸 from {frm!r} (생산자 = 원천 번호 정수 · 원 시도 {lo} ≤ from < 이 시도 {n} · ★ 11-09 사전 공격 13 P2-1)'
+    copies = [r for r in runs if 'copied_from' in r]
+    cop = R.get('copied')
+    if not (type(cop) is list and cop == [r.get('name') for r in copies] and all(type(r['copied_from']) is int and r['copied_from'] == frm for r in copies)):
+        return (f'멈춤 {code} · resume 칸 copied {cop!r} ≠ 복사 기록 {[(r.get("name"), r.get("copied_from")) for r in copies][:4]} (생산자 = 복사 런 이름 차례 · '
+                f'copied_from = from {frm} · ★ 11-09 사전 공격 13 P2-1)')
+    new = [i for i, r in enumerate(runs) if 'copied_from' not in r]
+    if new and any('copied_from' in r for r in runs[new[0]:]):
+        return f'멈춤 {code} · resume 칸 ↔ 런 기록: 복사 기록이 새 런 뒤에 있다 (생산자 = 복사 런 먼저 · 첫 새 런부터 다 새로 · ★ 11-09 사전 공격 13 P2-1)'
+    rerun = R.get('rerun')
+    first = runs[new[0]] if new else None
+    if first is not None and first.get('name') != rerun:
+        return f'멈춤 {code} · 첫 새 런 기록 {first.get("name")!r} ≠ resume 칸 rerun {rerun!r} (★ 11-09 사전 공격 13 P2-1)'
+    cmp_, det = R.get('compared'), R.get('determinism')
+    if run == rerun:
+        if cmp_ != [] or det is not None:
+            return (f'멈춤 {code} · 멈춘 런 = resume 칸 rerun {rerun!r} (대조 전 멈춤) 인데 compared {repr(cmp_)[:80]} · determinism {det!r} (생산자 = [] · null · '
+                    f'★ 11-09 사전 공격 13 P2-1)')
+        return None
+    if first is None:
+        return f'멈춤 {code} · 런 {run!r} 인데 resume 칸 rerun {rerun!r} 의 런 기록이 없다 (생산자 = rerun 을 다 푼 뒤에만 다음 런 · ★ 11-09 사전 공격 13 P2-1)'
+    if (type(cmp_) is not list or det not in RESUME_DETERMINISM or (det == 'compared') != bool(cmp_)
+            or any(not (type(x) is dict and set(x) == set(RESUME_COMPARED_KEYS) and type(x['file']) is str) for x in cmp_)):
+        return (f'멈춤 {code} · rerun {rerun!r} 을 다 풀었는데 resume 칸 determinism {det!r} · compared {repr(cmp_)[:80]} (생산자 = 남은 payload 있으면 compared + '
+                f'원소 {{file · same}} · 없으면 assumed · [] · ★ 11-09 사전 공격 13 P2-1)')
+    od, want_od = first.get('outdir'), record_outdir(first)
+    if not (isinstance(od, str) and RUN_DIR_RE.fullmatch(od) and (want_od is None or od == want_od)):
+        return f'멈춤 {code} · resume 칸 rerun {rerun!r} 런 기록 outdir {od!r} ≠ {want_od!r} (요청 칸이 정하는 출력 폴더 · ★ 11-09 사전 공격 13 P2-1)'
+    src = folder.parent / f'attempt_{frm}'
+    if not src.is_dir():
+        if os.path.lexists(str(folder.parent / f'attempt_{frm}.rejected.json')):
+            return (f'멈춤 {code} · resume 칸 원천 attempt_{frm} = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 '
+                    f'사전 공격 13 P2-1)')
+        return None                                       # ⚠ 한정 — 원천이 같은 바탕에 없음 (다른 곳에 둔 시도) = 바이트 대조 안 함
+    try:
+        left = resume_leftovers(src / od)
+        want = [{'file': nm, 'same': (folder / od / nm).is_file() and (folder / od / nm).read_bytes() == raw} for nm, raw in left]
+    except OSError as e:
+        return f'멈춤 {code} · resume 칸 다시 대조를 못 한다 ({type(e).__name__} · 원천 attempt_{frm}/{od} · ★ 11-09 사전 공격 13 P2-1)'
+    if cmp_ != want:                                      # (determinism = ④ 의 compared ⇔ 비지 않음 + 이 같음 → 남은 payload 유무와 같다)
+        return (f'멈춤 {code} · resume 칸 compared {repr(cmp_)[:80]} · determinism {det!r} ≠ 원천 attempt_{frm}/{od} 남은 payload ↔ 이 시도 그 런 폴더 다시 대조 '
+                f'{repr(want)[:80]} (생산자 = 같은 식 · 결정적 재실행이 아니다 · ★ 11-09 사전 공격 13 P2-1)')
     return None
 
 
@@ -5254,7 +5428,7 @@ class RunnerGraphSource:
             raise GraphSourceError(f'러너 rc {rc} (로그 {logp.name})')
         files = sorted(glob.glob(str(outdir / f'{GRAPH_ONLY_PREFIX}*.json')))
         names = [os.path.basename(f) for f in files]
-        pref = f'{GRAPH_ONLY_PREFIX}p2_{str(req.get("kit"))[len("kit_"):]}_'
+        pref = GRAPH_ONLY_PREFIX + arm_file_prefix(str(req.get('kit')))   # ★ 11-09 사전 공격 13 P3-2 같은 부류 — 앞자리 = 한 함수 (값 그대로)
         if len(files) != 1 or not names[0].startswith(pref) or not names[0].endswith(f'_a{arm}.json'):
             raise GraphSourceError(f'원천 출력 {len(files)} 개 {names[:3]} (= {pref}…_a{arm}.json 하나)')
         raw = Path(files[0]).read_bytes()

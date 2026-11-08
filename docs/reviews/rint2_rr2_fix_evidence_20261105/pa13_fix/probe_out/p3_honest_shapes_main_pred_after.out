@@ -1,0 +1,13 @@
+{
+ "labels": [
+  "ladder_P0:CALIBRATED",
+  "ladder_P1:CALIBRATED",
+  "predict:PREDICTED"
+ ],
+ "forms": {
+  "(1, None)|exit_ok|verified": 34,
+  "(2, (1, 2))|exit_ok|verified": 18
+ },
+ "n_bad": 0,
+ "bad": []
+}

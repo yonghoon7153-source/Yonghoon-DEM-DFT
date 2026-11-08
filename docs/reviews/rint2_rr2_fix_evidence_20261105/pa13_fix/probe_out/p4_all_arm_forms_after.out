@@ -1,0 +1,125 @@
+{
+ "n": 510,
+ "verified": 0,
+ "bad": [
+  [
+   "kit_SBE_vgcf100",
+   1,
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   2,
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   3,
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   4,
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   5,
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   6,
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   7,
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   8,
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   [
+    1
+   ],
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   [
+    2
+   ],
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   [
+    3
+   ],
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   [
+    4
+   ],
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   [
+    5
+   ],
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   [
+    6
+   ],
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   [
+    7
+   ],
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   [
+    0,
+    2
+   ],
+   "bad",
+   "[0].state None (= ['positive', 'zero']) — read_run 성공 꼴 아님"
+  ],
+  [
+   "kit_SBE_vgcf100",
+   [
+    0,
+    3
+   ],
+   "bad",
+   "[0].state None (= ['positi

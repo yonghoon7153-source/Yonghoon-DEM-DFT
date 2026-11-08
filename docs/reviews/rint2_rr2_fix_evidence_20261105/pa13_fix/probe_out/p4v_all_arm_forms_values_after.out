@@ -1,0 +1,18 @@
+{
+ "p4_original_values_null": {
+  "n": 510,
+  "verified": 0,
+  "kinds": {
+   "bad": 510
+  },
+  "fail_kind_bad": 0
+ },
+ "p4v_read_run_success_values": {
+  "n": 510,
+  "verified": 510,
+  "kinds": {
+   "verified": 510
+  },
+  "fail_kind_bad": 0
+ }
+}

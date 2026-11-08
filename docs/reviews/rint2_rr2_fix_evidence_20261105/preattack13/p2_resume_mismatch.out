@@ -1,0 +1,61 @@
+{
+ "attempt2_stop": {
+  "cause": "L02_ceiling: 재실행 payload ≠ 원 시도 attempt_1 에 남은 payload (['p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json']) — 결정적 재실행이 아니다",
+  "code": "RESUME_MISMATCH",
+  "reason": null,
+  "run": "L02_ceiling",
+  "what": "재실행 payload ≠ 원 시도에 남은 payload (바이트 · 결정적 재실행이 아니다 · Q9 §3-5 · ★ 10-27 묶음 C1b-2)"
+ },
+ "resume_block": {
+  "compared": [
+   {
+    "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+    "same": false
+   }
+  ],
+  "copied": [
+   "L01_floor"
+  ],
+  "determinism": "compared",
+  "from": 1,
+  "rerun": "L02_ceiling"
+ },
+ "runs": [
+  [
+   "L01_floor",
+   0,
+   null,
+   1,
+   "verified"
+  ],
+  [
+   "L02_ceiling",
+   0,
+   null,
+   null,
+   "verified"
+  ]
+ ],
+ "ledger_line2_real": {},
+ "real_result_line_2": {
+  "status": "stopped",
+  "cause": "check",
+  "resume_ok": false
+ },
+ "edited": {
+  "cause": "timeout",
+  "resume_ok": true,
+  "stop_record_problem": null,
+  "run_traces_L03": false,
+  "side": "post"
+ },
+ "edited_ledger[resume_ok, order_stop, recount]": [
+  true,
+  null,
+  null
+ ],
+ "attempt3_src_done": {
+  "L01_floor": true,
+  "L02_ceiling": true
+ }
+}
