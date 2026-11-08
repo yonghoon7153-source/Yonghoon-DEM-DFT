@@ -1,0 +1,120 @@
+{
+  "schema": "mixer_mgs01_limited_review_receipt/1",
+  "date": "2026-11-09",
+  "scope": "Receipt of the fixed generator insertion-seed review; separate from candidate recheck, operational qualification or author approval",
+  "received_artifacts": {
+    "review_zip": {
+      "filename": "codex_mixer_generator_seed_a836aa4c0e61_independent_20261109.zip",
+      "bytes": 605615,
+      "sha256": "31aeeb9a521b44f7001a08089b7570267e426008799261f7bac2198ab28fa543",
+      "files": 60,
+      "sha256sum_entries": 59
+    },
+    "review_report": {
+      "filename": "codex_review_mixer_generator_seed_20261109.md",
+      "bytes": 12119,
+      "sha256": "82017e9969538cefe482aa831b7f762b9edd61b4d7c9ee252880c12f5b084adc"
+    },
+    "original_input_zip": {
+      "filename": "codex_mixer_generator_seed_recheck_a836aa4c0e61_20261108.zip",
+      "bytes": 486586,
+      "sha256": "4ec99d2572ebb9419733eeecf6e60e8ebc73449569dcb7b10bc7d8a7e388b3ca",
+      "files": 35,
+      "sha256sum_entries": 34
+    },
+    "verdict_json": {
+      "filename": "VERDICT.json",
+      "sha256": "aaf7b239d6955d33b689223b962e644b4c876838516caffd550ca5c58d85eb31"
+    }
+  },
+  "pin_roles": {
+    "independently_reviewed_candidate": "a836aa4c0e6127741fa8abeddac28a67d9623591",
+    "reviewed_candidate_base": "f5fb89792aa757975b41b046e0c5debaf56911e8",
+    "imported_b_copy": "dff4ceec9a419e1da14b7e289dfbf994ee36e17d",
+    "new_candidate_branch_base": "f44478535556dda84a4358e412cbba3b0baff42a",
+    "previous_consumer_b": "a6dfe970cbb4c54c0b93754c00d92174086333b6",
+    "imported_b_copy_is_new_independent_review": false
+  },
+  "received_review_disposition": {
+    "verdict": "SCOPED_ACCEPTANCE_WITH_P3_REMAINDER",
+    "accepted_scope": "Ordinary exact built-in integer and string inputs, CLI handling, positive deck preservation and the reviewed consumer-test boundaries",
+    "q1": "PARTIAL",
+    "q2_q3_q4": "ACCEPTED_WITH_REPORTED_SCOPE",
+    "new_p1": 0,
+    "new_p2": 0,
+    "new_p3": 1,
+    "finding": {
+      "id": "MGS-01",
+      "severity": "P3",
+      "status": "OPEN_PENDING_LIMITED_CANDIDATE_RECHECK",
+      "subject": "An executable str subclass can override integer conversion after lexical bounds checks",
+      "affected_scope": "Caller-supplied executable str subclass passed through the direct API",
+      "ordinary_builtin_or_cli_bypass_claimed": false,
+      "unconditional_direct_api_output_invariant_closed": false,
+      "candidate_fix_is_independent_closure": false
+    },
+    "review_reported_evidence": {
+      "snapshot_and_before_files": 20,
+      "candidate_files_within_20": 18,
+      "before_files_within_20": 2,
+      "fixed_source_path_and_blob_membership": "PASS_REPORTED_BY_INDEPENDENT_REVIEW",
+      "candidate_generator_methods": 8,
+      "consumer_methods": 34,
+      "old_source_red": {
+        "methods": 8,
+        "failures": 23,
+        "errors": 3,
+        "rc": 1
+      },
+      "counts_note": "Files, methods, positive pairs, prime comparisons and mutations have different or overlapping units. Receipt validation does not add new independent test executions or research observations."
+    }
+  },
+  "receipt_validation_performed": {
+    "kind": "Metadata and preserved bytes only; not substantive reexecution of the independent review",
+    "zip_crc": "PASS",
+    "zip_member_safety": "PASS",
+    "duplicate_or_case_colliding_members": 0,
+    "symlink_members": 0,
+    "review_sha256sum_entries_verified": 59,
+    "original_package_sha256sum_entries_verified": 34,
+    "manifest_coverage_complete_excluding_self": true,
+    "embedded_original_input_files_compared": 35,
+    "embedded_original_input_all_bytes_equal": true,
+    "standalone_report_bytes_equal_to_zip_member": true,
+    "reviewed_pin_metadata_consistent": true,
+    "source_pin_identity_checks": [
+      {
+        "path": "scripts/make_mixer_deck.py",
+        "original_imported_b_and_new_base_git_blob": "1cfe0f162827f458518cf8ce28b8e2a95314ebe0",
+        "all_three_tree_object_ids_equal": true
+      },
+      {
+        "path": "scripts/test_mixer_generator_seeds.py",
+        "original_imported_b_and_new_base_git_blob": "74bdd7d77f2ee68047ab57ffff32979e161393e6",
+        "all_three_tree_object_ids_equal": true
+      }
+    ],
+    "reviewer_remote_queries_repeated": false,
+    "attached_probe_scripts_executed": false,
+    "project_tests_executed": false,
+    "research_values_read": false,
+    "original_artifacts_modified": false
+  },
+  "preservation_and_import": {
+    "raw_review_zip_and_report_preserved_externally": true,
+    "raw_evidence_contains_external_locations_and_addresses": true,
+    "raw_review_zip_repository_import": false,
+    "raw_report_and_evidence_repository_import": false,
+    "repository_record": "Artifact identities, fixed pins, scoped acceptance and open P3 only",
+    "shared_ledger_modified_by_receipt": false
+  },
+  "unchanged_boundaries": {
+    "operational_source_seal_or_first8_reseal_updated": false,
+    "mla_or_field_qualification_granted": false,
+    "np_concurrency_order_or_author_go_granted": false,
+    "physical_results_added": 0,
+    "value_access_granted": false,
+    "execution_authorized": false,
+    "whole_gate": "HOLD"
+  }
+}

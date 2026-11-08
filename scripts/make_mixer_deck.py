@@ -923,7 +923,7 @@ def _insert_seed(value, fix_id):
         if value > INSERT_SEED_MAX:
             raise SystemExit(f'{label}: outside 1..{INSERT_SEED_MAX}')
         seed = value
-    elif isinstance(value, str):
+    elif type(value) is str:
         if not (value and value.isascii() and value.isdecimal() and value[0] != '0'):
             raise SystemExit(f'{label}: ASCII positive integer token required')
         # Bound the spelling before int conversion as well (including long input).
