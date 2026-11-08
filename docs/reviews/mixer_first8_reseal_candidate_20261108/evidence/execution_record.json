@@ -1,0 +1,17 @@
+{
+  "verifier_sha256": "cc31e6af5945265ae1bd67e4ba0aeb2d999cc489c9d03940d717b1dfcce78cfa",
+  "candidate_sha256": "c9a89649eaa3428ec53afa4d16e29bcfd4ace4b5e2f36a3a1d07c9d87d7dfd24",
+  "verifier_argv": [
+    "python3",
+    "-B",
+    "docs/reviews/mixer_first8_reseal_candidate_20261108/verify_candidate.py",
+    "--repo",
+    "/workspace/nonrint-1104/mixer",
+    "--output",
+    "/workspace/nonrint-1108/first8-reseal/verification"
+  ],
+  "rc": 0,
+  "pinned_source_hashes_after_preparer_tests": "all12 retained",
+  "actual_simulator_scheduler_mpi_calls": 0,
+  "full_gate_run": false
+}

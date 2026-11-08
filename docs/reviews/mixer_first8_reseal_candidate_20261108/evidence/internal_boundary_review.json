@@ -1,0 +1,8 @@
+{
+  "model_requested": "gpt-6-astra",
+  "scope": "two bounded read-only internal consultations; no tests, edits, host access or independent closure",
+  "conclusion": "no material issue found in candidate/verifier; preserve receipt-tracked scope wording",
+  "reviewer_note": "preservation check covers receipt-tracked launch files, not absence of untracked additions",
+  "external_review": "PENDING",
+  "root_model_fast_and_token_metrics": "NOT_AVAILABLE"
+}

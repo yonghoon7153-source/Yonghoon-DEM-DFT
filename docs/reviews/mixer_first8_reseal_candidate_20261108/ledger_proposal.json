@@ -1,0 +1,15 @@
+{
+  "schema": "nonrint_inactive_ledger_proposal/1",
+  "apply_now": false,
+  "closure_claimed": false,
+  "shared_files_modified": false,
+  "finding_changes": [],
+  "progress_proposal": "first8 accepted-consumer source reseal candidate prepared; static compatibility only; external review pending; original operational seal retained",
+  "whole_gate": "HOLD",
+  "execution_authorized": false,
+  "operational_activation": false,
+  "research_results": 0,
+  "priority": "Rint②",
+  "LHS_canonical_review_pin": "6fbd066832d3273d56037005ea26eb884b73646a",
+  "MLA_external_recheck": "PENDING_SEPARATE"
+}

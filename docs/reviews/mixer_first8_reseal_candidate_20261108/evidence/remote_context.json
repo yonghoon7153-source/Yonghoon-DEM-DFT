@@ -1,0 +1,69 @@
+{
+  "read_only_remote_tip": "6a81f0c55d1583fba63ffe665874525cc82d36ff",
+  "current_branch": "codex/mixer-1104",
+  "current_pin": "e6000405b7625acf8c2c0a393571b116479e0e97",
+  "new_claude_mail_since_766e1e80c": [],
+  "source_comparison": [
+    {
+      "path": "scripts/mixer_precal_prepare.py",
+      "main_has_path": false,
+      "same_bytes_as_current": null
+    },
+    {
+      "path": "scripts/mixer_precal_observe.py",
+      "main_has_path": false,
+      "same_bytes_as_current": null
+    },
+    {
+      "path": "scripts/mixer_contact_reader.py",
+      "main_has_path": true,
+      "same_bytes_as_current": true
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "main_has_path": true,
+      "same_bytes_as_current": true
+    },
+    {
+      "path": "scripts/measure_bed_aspect.py",
+      "main_has_path": true,
+      "same_bytes_as_current": true
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "main_has_path": true,
+      "same_bytes_as_current": true
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "main_has_path": true,
+      "same_bytes_as_current": false
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "main_has_path": true,
+      "same_bytes_as_current": true
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "main_has_path": true,
+      "same_bytes_as_current": true
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Drum.stl",
+      "main_has_path": true,
+      "same_bytes_as_current": true
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Front.stl",
+      "main_has_path": true,
+      "same_bytes_as_current": true
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Back.stl",
+      "main_has_path": true,
+      "same_bytes_as_current": true
+    }
+  ],
+  "action": "continue existing approved codex branch; no rebase/merge/integration; preserve review pins"
+}
