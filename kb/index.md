@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-08 · managed-files: 584
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-08 · managed-files: 585
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 375건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 376건)
+- 2026-11-09 · `kb/reports/weekly_2026_11_08.md` — 주간 정리 2026-11-02 ~ 11-08 (주간보고 초안) · 초안 (2026-11-09 · 도는 계산은 마지막 실측 기준 — kg…
 - 2026-11-08 · `kb/projects/handoff_2026_11_08_evacuation.md` — 대피 인계 — 2026-11-08 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · li2s-2 1 단계 kgy 진행 중 · cascade 문헌 갭 다음 단계) · 진행
 - 2026-11-06 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-06 · `kb/reviews/codex_DR_prompt_li2s2_dq_fixes_2026_11_05.md` — DR 프롬프트 — li2s-2 DQ 고침 + DR 전 독립 리뷰 고침 (879cbc00): 판정이 읽는 것 전부를 지문에 · 앞 판정의 성격 (예외 · 입력 불일치) 으로만 자동 대체 · 정본 없는 미해결 기록 (현재 · 옮긴 폴더) · STOP 공통 검사 · 다른 판정 규칙의 기록 — 첫 담금질 GO 여부 · 발송 완료 · 회신 수령 2026-11-06 NO-GO (`codex…
@@ -26,7 +27,6 @@
 - 2026-11-04 · `kb/reviews/codex_DM_reply_li2s2_dl_fixes_2026_11_04.md` — DM 회신 — li2s-2 DL 고침 확인 (04555774): NO-GO · DL 기존 재현은 막힘 · P0 2 (thermo 마지막 행의 시각 불일치를 '덜 쓴 꼬리' 로 받아 남은 완료 시각을 버림 · 판정 이력 · 임시 판정에 완료 증거가 있어도 파일명만 보고 '실행 전' 으로 분류) · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-11-04 · `kb/reviews/codex_DN_prompt_li2s2_dm_fixes_2026_11_04.md` — DN 프롬프트 — li2s-2 DM 고침 확인 (acc648b0): thermo 꼬리의 시각 · 판정 기록을 내용으로 (plan 전 끊김 · 도중 끊김 후보) — 첫 담금질 GO 여부 · 발송 · 회신 수령 2026-11-04 (NO-GO · P1 1 · …
 - 2026-11-04 · `kb/reviews/codex_DN_reply_li2s2_dm_fixes_2026_11_04.md` — DN 회신 — li2s-2 DM 고침 확인 (acc648b0): NO-GO · DM P0 두 건 해제 · P1 1 (판정 기록의 완료 필드 타입 오류를 '완료 흔적 없음' 으로 건너뜀 — n:\"130\" 으로 재실행 · stage1_pass) · P2 1 (NUL 만 남은 꼬리를 센다는 카드 문구가 구현과 다름) · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…
-- 2026-11-04 · `kb/reviews/codex_DO_prompt_li2s2_dn_fixes_2026_11_04.md` — DO 프롬프트 — li2s-2 DN 고침 + DO 전 독립 리뷰 고침 확인 (802290db): 완료 필드 타입 · 첫 시드 녹음 fail 기록 순서 · 보존 폴더 판정 · MD 뒤 산출물 · 장부 꼴 — 첫 담금질 GO 여부 · 발송 · 회신 수령 2026-11-04 (NO-GO · P0 1 · …
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -465,7 +465,7 @@
 - `kb/reviews/vasp_bundle_codex_request_2026_08_11.md` — Codex 검토 요청 — VASP 외주 원샷 번들 (자리 선호 + E_ads)  (2026-08-11 · 회신 대기)
 - `kb/reviews/vasp_bundle_v2_rereview_request_2026_08_11.md` — Codex 재검토 요청 — VASP 번들 v2 (HOLD 10항 반영 완료 · 발송 GO/NO-GO)  (2026-08-11 · 회신 대기 (GO/NO-GO))
 
-## reports/ (9)
+## reports/ (10)
 - `kb/reports/paper_first_author_requests_2026_08.md` — 논문 1저자 요청 — 답변 누적 (2026-08~)
 - `kb/reports/sdcp_preliminary_final_2026_08_03.md` — SDCP 예비 최종 보고서 (2026-08-03)
 - `kb/reports/sdcp_review_action_plan_2026_08_03.md` — SDCP 파이프라인 — 리뷰 2건 통합 실행계획 (2026-08-03)
@@ -475,6 +475,7 @@
 - `kb/reports/weekly_2026_10_04.md` — 주간 정리 2026-09-28 ~ 10-04 (주간보고 초안)  (2026-10-04 · 초안 (2026-10-04 · 도는 계산은 10-04 17:59 실측…)
 - `kb/reports/weekly_2026_10_25.md` — 주간 정리 2026-10-19 ~ 10-25 (주간보고 초안)  (2026-10-26 · 초안 (2026-10-26 · 도는 계산은 마지막 실측 기준 — kg…)
 - `kb/reports/weekly_2026_11_01.md` — 주간 정리 2026-10-26 ~ 11-01 (주간보고 초안)  (2026-11-01 · 초안 (2026-11-01 · 도는 계산은 마지막 실측 기준 — kg…)
+- `kb/reports/weekly_2026_11_08.md` — 주간 정리 2026-11-02 ~ 11-08 (주간보고 초안)  (2026-11-09 · 초안 (2026-11-09 · 도는 계산은 마지막 실측 기준 — kg…)
 
 ## projects/ (56)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)

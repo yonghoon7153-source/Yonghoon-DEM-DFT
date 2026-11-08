@@ -1,0 +1,12 @@
+row_type,parent,eligible,ln_ratio_P1_over_P2,ratio_P1_over_P2,ci95_low_ln,ci95_high_ln,ci95_low_ratio,ci95_high_ratio,equivalence_margin_ln,verdict
+parent,A,no (one seed not eligible),,,,,,,0.405465,
+parent,B,yes,-0.019536,0.980654,,,,,0.405465,
+parent,C,yes,0.090141,1.094329,,,,,0.405465,
+parent,D,yes,0.124453,1.132528,,,,,0.405465,
+parent,E,no (one seed not eligible),,,,,,,0.405465,
+parent,F,no (one seed not eligible),,,,,,,0.405465,
+parent,G,yes,0.094609,1.099229,,,,,0.405465,
+parent,H,no (one seed not eligible),,,,,,,0.405465,
+parent,I,yes,0.163156,1.177220,,,,,0.405465,
+parent,J,yes,0.108749,1.114882,,,,,0.405465,
+pooled_mean,6 eligible parents,,0.093595,1.098115,0.029180,0.158011,1.029610,1.171179,0.405465,실질_동등_지지
