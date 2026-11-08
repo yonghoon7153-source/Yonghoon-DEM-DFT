@@ -1,0 +1,82 @@
+{
+  "schema": "first8-inactive-reseal-review-intake-v1",
+  "intake_date": "2026-11-08",
+  "reviewed_candidate_pin": "4eb6c593ec5384ed8e51079f5ec7196b1eeae80f",
+  "provided_review_evidence_zip": {
+    "filename": "codex_first8_inactive_reseal_independent_review_4eb6c593ec53_20261108.zip",
+    "bytes": 2950611,
+    "sha256": "c2b115de64dff3a1943848d9a52f76e150ecef605c205c9752774133ce97bf88",
+    "zip_entries": 178,
+    "file_entries": 178,
+    "uncompressed_bytes": 6270876,
+    "duplicate_member_names": [],
+    "unsafe_member_names": [],
+    "symlink_entries": [],
+    "manifest_filename": "EVIDENCE_SHA256SUMS",
+    "manifest_entries_checked": 177,
+    "manifest_hash_matches": 177,
+    "manifest_hash_mismatches": [],
+    "all_file_entries_read_and_sha256_hashed": 178,
+    "crc_check": {
+      "status": "unchecked",
+      "note": "Every entry was read for SHA256 comparison. ZIP CRC values were not independently recomputed or compared."
+    }
+  },
+  "provided_verdict": {
+    "filename": "codex_review_first8_inactive_reseal_20261108.md",
+    "bytes": 10478,
+    "sha256": "e6ef6e9e0ddfa9ec531bf86ae9d7ee99c0f3574128792713f975c72f876c5e61",
+    "archive_member": "codex_review_first8_inactive_reseal_20261108.md",
+    "archive_member_sha256": "e6ef6e9e0ddfa9ec531bf86ae9d7ee99c0f3574128792713f975c72f876c5e61",
+    "external_file_equals_archive_member": true
+  },
+  "direct_intake_checks": [
+    "Outer evidence ZIP and supplied verdict byte length and SHA256",
+    "ZIP member inventory, duplicate names, traversal or absolute member names, and symlink metadata",
+    "EVIDENCE_SHA256SUMS against 177 member byte streams",
+    "Supplied verdict identity against its archive member",
+    "Text-member scan for external-path and address patterns without emitting matched strings"
+  ],
+  "repository_publication_boundary": {
+    "raw_evidence_zip_contains_external_paths_or_addresses": true,
+    "raw_evidence_zip_may_be_added_to_repository": false,
+    "original_archive_modified": false,
+    "provided_verdict_external_path_or_address_pattern_hits": 0,
+    "safe_verdict_copy_must_preserve_original_bytes": true,
+    "scan_is_not_a_generalized_secret_detector": true,
+    "nested_zip_contents_scanned": false
+  },
+  "intake_did_not_perform": [
+    "Archive script execution or imports",
+    "Preparation tests, candidate verifier, mutation probes, or full CLI positive execution",
+    "Independent remote Git object or source snapshot revalidation",
+    "Actual scientific value inspection or research computation",
+    "Host qualification, MPI, scheduling, submission, registration, operational reseal, or shared-ledger changes"
+  ],
+  "verdict_claims_recorded_as_received_not_rerun": {
+    "scope": "Candidate static binding and inactive boundary only",
+    "new_p1": 0,
+    "new_p2": 0,
+    "new_p3": 0,
+    "changed_dependency": "scripts/mixer_deck_readback.py",
+    "dependency_count": 12,
+    "preserved_launch_files": 73,
+    "preserved_planned_assets": 40,
+    "deck_metadata_binding_cases": 8,
+    "paired_comparisons": 3,
+    "preparation_test_methods": 14,
+    "negative_conditions_rejected": 26,
+    "existing_driver_auto_adoption": false,
+    "full_fixed_repository_verifier_positive_cli_run_in_independent_review": false,
+    "git_boundary_mock_is_separate_evidence": true,
+    "counts_must_not_be_summed": true
+  },
+  "disposition": {
+    "static_scope_accepted": true,
+    "operational_reseal_completed": false,
+    "operational_activation_authorized": false,
+    "execution_authorized": false,
+    "integration_authorized_by_this_intake": false,
+    "overall_status": "HOLD"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "schema": "mixer_first8_remaining_requirements_record/1",
+  "purpose": "descriptive_handoff_only_not_executable_policy",
+  "whole_gate": "HOLD",
+  "operational_activation": false,
+  "execution_authorized": false,
+  "items": [
+    {
+      "id": "CANDIDATE_STATIC_REVIEW",
+      "status": "ACCEPTED_LIMITED",
+      "evidence": "external_verdict.txt",
+      "limitation": "No operating seal replacement, MLA closure, physical qualification or execution GO"
+    },
+    {
+      "id": "MLA-01",
+      "severity": "P1",
+      "status": "EXTERNAL_RECHECK_PENDING",
+      "candidate_pin": "a4c78001f706c08de1dddcac09a31a921c4faca7"
+    },
+    {
+      "id": "MLA-02",
+      "severity": "P2",
+      "status": "EXTERNAL_RECHECK_PENDING",
+      "candidate_pin": "a4c78001f706c08de1dddcac09a31a921c4faca7"
+    },
+    {
+      "id": "MLA-03",
+      "severity": "P2",
+      "status": "EXTERNAL_RECHECK_PENDING",
+      "candidate_pin": "a4c78001f706c08de1dddcac09a31a921c4faca7"
+    },
+    {
+      "id": "OPERATING_SEAL_AND_FINAL_PACKAGE",
+      "status": "NOT_COMPLETED",
+      "scope": "operating source seal and final driver/runner/physical manifest binding and review"
+    },
+    {
+      "id": "RESERVATION_RELEASE_AND_POLICY_TRANSITION",
+      "status": "SEPARATE_PROCEDURE_REVIEW_REQUIRED",
+      "automatic_release_authorized": false
+    },
+    {
+      "id": "ACTUAL_ENVIRONMENT_AND_PHYSICAL_QUALIFICATION",
+      "status": "UNVERIFIED",
+      "scope": ["binary", "MPI", "host", "100k positive pipeline", "time", "disk"],
+      "historical_resource_report_is_live_observation": false
+    },
+    {
+      "id": "AUTHOR_CHOICES_AND_EXECUTION_GO",
+      "status": "NOT_RECEIVED_FOR_EXECUTION",
+      "choices": ["NP", "concurrent arms", "case order", "final package scope"],
+      "recommendations_are_approval": false
+    },
+    {
+      "id": "GENERATOR_ALONE_INVALID_DECK_OUTPUT",
+      "status": "RESIDUAL_LIMITATION_UNCHANGED",
+      "r01_consumer_scope_closed": true
+    }
+  ],
+  "existing_review_request": {
+    "pin": "a4c78001f706c08de1dddcac09a31a921c4faca7",
+    "path": "docs/reviews/mixer_mla_recheck_20261106/review_request.md",
+    "dispatch_owner": "first_author",
+    "dispatched_by_this_work": false
+  },
+  "shared_ledger_update_proposed": false,
+  "r01_ledger_proposal_modified": false
+}
