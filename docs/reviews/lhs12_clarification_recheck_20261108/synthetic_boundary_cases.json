@@ -1,0 +1,119 @@
+{
+  "schema": "lhs12_clarification_synthetic_cases/v1",
+  "scope": "INACTIVE_DOCUMENT_POLICY_CHECK_ONLY",
+  "all_cases_are_invented": true,
+  "research_observations": 0,
+  "units": "invented contrasts only; no physical measurement or threshold",
+  "actual_case_ids_used": false,
+  "author_ratification": "PENDING",
+  "whole_gate": "HOLD",
+  "historical_overlap_models": {
+    "baseline_definition_pin": "1b20ce0606f3b49ef1abc4dd2bc540ead773905a",
+    "interpretation_only": true,
+    "not_an_existing_classifier_execution": true,
+    "direction": {
+      "finding": "LHS12-01",
+      "case_id": "D04_ZERO_N_PLUS_NEGATIVE",
+      "sources": [
+        "docs/reviews/lhs_n_preaccess_definition_draft_20261106/README.md:52",
+        "docs/reviews/lhs_n_preaccess_definition_draft_20261106/README.md:54",
+        "docs/reviews/lhs_pressure_n_dependence_draft_20261106/prospective_definition.json:65",
+        "docs/reviews/lhs_pressure_n_dependence_draft_20261106/prospective_definition.json:75"
+      ],
+      "inherited_matched_excerpt": "zero differences remain ties.",
+      "consistent_scope_excerpt": "For eligible predeclared matched pairs with nonzero delta N, all delta N times delta P_relaxed are negative",
+      "mixed_scope_excerpt": "Eligible matched pairs include ties or mixed signs",
+      "modeled_interpretation": "consistent checks nonzero-N pairs; mixed/tied also includes zero-N ties among all evaluable pairs",
+      "expected_simultaneously_true": ["DIRECTION_CONSISTENT", "DIRECTION_MIXED_OR_TIED"],
+      "empty_all_is_not_claimed_to_be_authorized": true
+    },
+    "cohort": {
+      "finding": "LHS12-02",
+      "case_id": "C01_EXPOSURE_WITH_UNKNOWN_LINEAGE",
+      "source": "docs/reviews/lhs_n_preaccess_definition_draft_20261106/definition.json:48",
+      "exposed_original": "known overlapping/dependent lineage OR relevant prior outcome exposure",
+      "unresolved_original": "unknown overlap, lineage or exposure; no independent unread claim",
+      "expected_simultaneously_true": ["EXPOSED_CONTEXT", "UNRESOLVED_CONTEXT"],
+      "not_a_prospective_promotion_counterexample": true
+    }
+  },
+  "direction_cases": [
+    {
+      "case_id": "D01_NO_PLANNED_PAIR", "pairs": [],
+      "expected": {"arithmetic_direction": "NOT_IDENTIFIABLE", "reason": "NO_EVALUABLE_PAIRS", "evaluation_status": "NOT_ESTABLISHED", "counts": {"planned": 0, "evaluable": 0, "unevaluable": 0, "zero_N": 0, "direction": 0}}
+    },
+    {
+      "case_id": "D02_ZERO_N_ONLY",
+      "pairs": [{"pair_id": "SYN-D02-A", "evaluable": true, "delta_N": 0, "delta_P": 2}],
+      "expected": {"arithmetic_direction": "NOT_IDENTIFIABLE", "reason": "NO_NONZERO_N_CONTRAST", "evaluation_status": null, "counts": {"planned": 1, "evaluable": 1, "unevaluable": 0, "zero_N": 1, "direction": 0}}
+    },
+    {
+      "case_id": "D03_BOTH_ZERO",
+      "pairs": [{"pair_id": "SYN-D03-A", "evaluable": true, "delta_N": 0, "delta_P": 0}],
+      "expected": {"arithmetic_direction": "NOT_IDENTIFIABLE", "reason": "NO_NONZERO_N_CONTRAST", "evaluation_status": null, "counts": {"planned": 1, "evaluable": 1, "unevaluable": 0, "zero_N": 1, "direction": 0}}
+    },
+    {
+      "case_id": "D04_ZERO_N_PLUS_NEGATIVE",
+      "pairs": [{"pair_id": "SYN-D04-A", "evaluable": true, "delta_N": 0, "delta_P": 2}, {"pair_id": "SYN-D04-B", "evaluable": true, "delta_N": 1, "delta_P": -1}],
+      "expected": {"arithmetic_direction": "DIRECTION_CONSISTENT", "reason": null, "evaluation_status": null, "counts": {"planned": 2, "evaluable": 2, "unevaluable": 0, "zero_N": 1, "direction": 1}}
+    },
+    {
+      "case_id": "D05_ZERO_N_PLUS_POSITIVE",
+      "pairs": [{"pair_id": "SYN-D05-A", "evaluable": true, "delta_N": 0, "delta_P": 2}, {"pair_id": "SYN-D05-B", "evaluable": true, "delta_N": 1, "delta_P": 1}],
+      "expected": {"arithmetic_direction": "DIRECTION_OPPOSITE", "reason": null, "evaluation_status": null, "counts": {"planned": 2, "evaluable": 2, "unevaluable": 0, "zero_N": 1, "direction": 1}}
+    },
+    {
+      "case_id": "D06_NONZERO_N_PRESSURE_TIE",
+      "pairs": [{"pair_id": "SYN-D06-A", "evaluable": true, "delta_N": 1, "delta_P": 0}],
+      "expected": {"arithmetic_direction": "DIRECTION_MIXED_OR_TIED", "reason": null, "evaluation_status": null, "counts": {"planned": 1, "evaluable": 1, "unevaluable": 0, "zero_N": 0, "direction": 1}}
+    },
+    {
+      "case_id": "D07_MIXED_PRODUCTS",
+      "pairs": [{"pair_id": "SYN-D07-A", "evaluable": true, "delta_N": 1, "delta_P": -1}, {"pair_id": "SYN-D07-B", "evaluable": true, "delta_N": 1, "delta_P": 1}],
+      "expected": {"arithmetic_direction": "DIRECTION_MIXED_OR_TIED", "reason": null, "evaluation_status": null, "counts": {"planned": 2, "evaluable": 2, "unevaluable": 0, "zero_N": 0, "direction": 2}}
+    },
+    {
+      "case_id": "D08_NEGATIVE_PLUS_PRESSURE_TIE",
+      "pairs": [{"pair_id": "SYN-D08-A", "evaluable": true, "delta_N": 1, "delta_P": -1}, {"pair_id": "SYN-D08-B", "evaluable": true, "delta_N": 1, "delta_P": 0}],
+      "expected": {"arithmetic_direction": "DIRECTION_MIXED_OR_TIED", "reason": null, "evaluation_status": null, "counts": {"planned": 2, "evaluable": 2, "unevaluable": 0, "zero_N": 0, "direction": 2}}
+    },
+    {
+      "case_id": "D09_NEGATIVE_N_NO_REORIENTATION",
+      "pairs": [{"pair_id": "SYN-D09-A", "evaluable": true, "delta_N": -1, "delta_P": 1}],
+      "expected": {"arithmetic_direction": "DIRECTION_CONSISTENT", "reason": null, "evaluation_status": null, "counts": {"planned": 1, "evaluable": 1, "unevaluable": 0, "zero_N": 0, "direction": 1}}
+    },
+    {
+      "case_id": "D10_ONLY_UNEVALUABLE",
+      "pairs": [{"pair_id": "SYN-D10-A", "evaluable": false, "delta_N": null, "delta_P": null, "reason": "SYNTHETIC_MISSING_ENDPOINT"}],
+      "expected": {"arithmetic_direction": "NOT_IDENTIFIABLE", "reason": "NO_EVALUABLE_PAIRS", "evaluation_status": "NOT_ESTABLISHED", "counts": {"planned": 1, "evaluable": 0, "unevaluable": 1, "zero_N": 0, "direction": 0}}
+    },
+    {
+      "case_id": "D11_PARTIAL_NO_REMATCH",
+      "pairs": [{"pair_id": "SYN-D11-A", "evaluable": true, "delta_N": 0, "delta_P": 2}, {"pair_id": "SYN-D11-B", "evaluable": true, "delta_N": 1, "delta_P": -1}, {"pair_id": "SYN-D11-C", "evaluable": false, "delta_N": null, "delta_P": null, "reason": "SYNTHETIC_MISSING_ENDPOINT"}],
+      "expected": {"arithmetic_direction": "DIRECTION_CONSISTENT", "reason": null, "evaluation_status": null, "counts": {"planned": 3, "evaluable": 2, "unevaluable": 1, "zero_N": 1, "direction": 1}}
+    },
+    {
+      "case_id": "D12_SIGN_RESOLUTION_IS_SEPARATE",
+      "pairs": [{"pair_id": "SYN-D12-A", "evaluable": true, "delta_N": 1, "delta_P": -1, "sign_resolution": "SIGN_UNRESOLVED", "independent_N_effect_status": "NOT_IDENTIFIABLE"}],
+      "expected": {"arithmetic_direction": "DIRECTION_CONSISTENT", "reason": null, "evaluation_status": null, "counts": {"planned": 1, "evaluable": 1, "unevaluable": 0, "zero_N": 0, "direction": 1}}
+    }
+  ],
+  "cohort_cases": [
+    {"case_id": "C01_EXPOSURE_WITH_UNKNOWN_LINEAGE", "axes": {"prior_overlap": false, "dependent_lineage": null, "relevant_outcome_exposure": true}, "expected": "EXPOSED_CONTEXT"},
+    {"case_id": "C02_DEPENDENCE_WITH_UNKNOWN_EXPOSURE", "axes": {"prior_overlap": false, "dependent_lineage": true, "relevant_outcome_exposure": null}, "expected": "EXPOSED_CONTEXT"},
+    {"case_id": "C03_ALL_UNKNOWN", "axes": {"prior_overlap": null, "dependent_lineage": null, "relevant_outcome_exposure": null}, "expected": "UNRESOLVED_CONTEXT"},
+    {"case_id": "C04_ALL_VERIFIED_NEGATIVE", "axes": {"prior_overlap": false, "dependent_lineage": false, "relevant_outcome_exposure": false}, "expected": "PROSPECTIVE_CANDIDATE"},
+    {"case_id": "C05_MULTIPLE_CONFIRMED_FACTS", "axes": {"prior_overlap": false, "dependent_lineage": true, "relevant_outcome_exposure": true}, "expected": "EXPOSED_CONTEXT"},
+    {"case_id": "C06_ONE_UNKNOWN_NO_CONFIRMED_FACT", "axes": {"prior_overlap": null, "dependent_lineage": false, "relevant_outcome_exposure": false}, "expected": "UNRESOLVED_CONTEXT"}
+  ],
+  "enumeration": {
+    "cohort_axis_states": [true, false, null],
+    "cohort_axis_count": 3,
+    "expected_cohort_combinations": 27,
+    "delta_N_domain": [-1, 0, 1],
+    "delta_P_domain": [-1, 0, 1],
+    "ordered_pair_counts": [0, 1, 2],
+    "expected_direction_combinations": 91,
+    "counts_are_static_synthetic_cases_not_research_sample_sizes": true
+  }
+}

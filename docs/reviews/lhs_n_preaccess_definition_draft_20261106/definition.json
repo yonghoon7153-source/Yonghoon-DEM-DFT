@@ -2,7 +2,7 @@
   "schema": "lhs_n_preaccess_definition_draft/v1",
   "status": "DRAFT_NOT_REGISTERED",
   "author_ratification": "PENDING",
-  "external_review": "PENDING",
+  "external_review": "PARTIAL_ACCEPTED_CLARIFICATION_RECHECK_PENDING",
   "whole_gate": "HOLD",
   "measured_rows": 0,
   "rows": [],
@@ -46,9 +46,36 @@
     null
   ],
   "cohort_rule": {
-    "prospective": "verified nonoverlap AND documented relevant outcome unexposed; independent qualification still required",
-    "exposed": "known overlapping/dependent lineage OR relevant prior outcome exposure",
-    "unresolved": "unknown overlap, lineage or exposure; no independent unread claim"
+    "status": "INACTIVE_RECOMMENDATION_REQUIRES_Q1_RATIFICATION",
+    "axes": [
+      "prior_overlap",
+      "dependent_lineage",
+      "relevant_outcome_exposure"
+    ],
+    "axis_values": {
+      "true": "confirmed affirmative fact",
+      "false": "documented verified negative; not absence of a record",
+      "null": "unknown; never coerce to false"
+    },
+    "exclusive_priority": [
+      {
+        "when": "any_axis_true",
+        "primary_cohort": "EXPOSED_CONTEXT"
+      },
+      {
+        "when": "no_axis_true_and_any_axis_unknown",
+        "primary_cohort": "UNRESOLVED_CONTEXT"
+      },
+      {
+        "when": "all_axes_verified_false",
+        "primary_cohort": "PROSPECTIVE_CANDIDATE"
+      }
+    ],
+    "preserve_all_axis_evidence": true,
+    "preserve_unknown_axes_even_if_exposed": true,
+    "primary_cohort_counts_disjoint": true,
+    "secondary_flag_counts_are_not_primary_cohort_counts": true,
+    "prospective_is_independence_certification": false
   },
   "pairing": {
     "axis": "planned insertion height/volume scale only; not actual N",
@@ -58,6 +85,51 @@
     "orientation": "higher planned scale minus lower planned scale",
     "post_outcome_rematching": false,
     "observed_outcome_matching": false
+  },
+  "aggregate_direction_rule": {
+    "status": "INACTIVE_RECOMMENDATION_REQUIRES_Q2_RATIFICATION",
+    "scope": "predeclared same cohort, stratum and contrast type; not all candidates pooled",
+    "evaluated_set": "E: evaluable prespecified fixed pairs with finite established contrasts",
+    "zero_N_set": "Z: pairs in E with delta_N == 0",
+    "direction_set": "D: pairs in E with delta_N != 0",
+    "partition": "E is disjoint union of Z and D",
+    "empty_direction_set": {
+      "arithmetic_direction": "NOT_IDENTIFIABLE",
+      "reason_if_E_empty": "NO_EVALUABLE_PAIRS",
+      "evaluation_status_if_E_empty": "NOT_ESTABLISHED",
+      "reason_if_E_nonempty": "NO_NONZERO_N_CONTRAST"
+    },
+    "nonempty_direction_cases": [
+      {
+        "when": "all_products_negative",
+        "arithmetic_direction": "DIRECTION_CONSISTENT"
+      },
+      {
+        "when": "all_products_positive",
+        "arithmetic_direction": "DIRECTION_OPPOSITE"
+      },
+      {
+        "when": "otherwise_including_delta_P_zero",
+        "arithmetic_direction": "DIRECTION_MIXED_OR_TIED"
+      }
+    ],
+    "empty_set_checked_before_all": true,
+    "zero_N_is_aggregate_tie": false,
+    "preserve_all_evaluated_rows": true,
+    "report_counts_and_ids": [
+      "planned",
+      "evaluable",
+      "unevaluable",
+      "zero_N",
+      "direction"
+    ],
+    "count_identities": [
+      "planned = evaluable + unevaluable",
+      "evaluable = zero_N + direction"
+    ],
+    "independent_N_effect_status_separate": true,
+    "sign_resolution_separate": true,
+    "post_outcome_rematching": false
   },
   "endpoint": {
     "proposal": "P_Rend_MPa",
@@ -131,7 +203,12 @@
     "uncertainty_provenance": null,
     "sign_resolution": null,
     "descriptor_lineage": null,
-    "exclusion_reason": null
+    "exclusion_reason": null,
+    "cohort_evidence_flags": {
+      "prior_overlap": null,
+      "dependent_lineage": null,
+      "relevant_outcome_exposure": null
+    }
   },
   "actual_original_input_identity": "NOT_ESTABLISHED",
   "decision_question_ids": [
