@@ -1,0 +1,52 @@
+[
+ {
+  "leaf": "/source_sha256",
+  "before": "48f0e7fff068eea752407ad56955c159e937f8a33801148786b0d5a3e650f95c",
+  "after": "b37ef7c68e126acdfe7c9062c04e215438ee374b0c0ef7152ec6a485cb00def1"
+ },
+ {
+  "leaf": "/tests/prior_read_failure_promoted/edited_result/resume_ok",
+  "before": true,
+  "after": false
+ },
+ {
+  "leaf": "/tests/prior_read_failure_promoted/ledger_policy[0]/result/utc",
+  "before": "2026-11-08T11:07:11Z",
+  "after": "2026-11-08T12:35:57Z"
+ },
+ {
+  "leaf": "/tests/prior_read_failure_promoted/ledger_policy[1]/attempt_order_problem",
+  "before": null,
+  "after": "<없음>"
+ },
+ {
+  "leaf": "/tests/prior_read_failure_promoted/ledger_policy[1]/attempt_order_problem[0]",
+  "before": "<없음>",
+  "after": "RESUME_NOT_ALLOWED"
+ },
+ {
+  "leaf": "/tests/prior_read_failure_promoted/ledger_policy[1]/attempt_order_problem[1]",
+  "before": "<없음>",
+  "after": "재실행 사슬 끝 attempt_1 = stopped · 원인 timeout · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+ },
+ {
+  "leaf": "/tests/prior_read_failure_promoted/ledger_policy[1]/parsed_result_resume_ok",
+  "before": true,
+  "after": false
+ },
+ {
+  "leaf": "/tests/prior_read_failure_promoted/ledger_policy[1]/result/resume_ok",
+  "before": true,
+  "after": false
+ },
+ {
+  "leaf": "/tests/prior_read_failure_promoted/ledger_policy[1]/result/utc",
+  "before": "2026-11-08T11:07:11Z",
+  "after": "2026-11-08T12:35:57Z"
+ },
+ {
+  "leaf": "/tests/prior_read_failure_promoted/stop_record_problem",
+  "before": null,
+  "after": "멈춤 TIME_LIMIT · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read file_ids (파일 신원 1 = 판독 실패 때 남긴 꼴) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 런 = arms_read 판독 완료 꼴 (`arms_read_record` · ARM_PUBLIC · 요청 팔 일대일) · 판독 실패 때 남긴 파일 신원 목록 (file_ids) = 끝난 런 아님 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03 · RR3-01)"
+ }
+]

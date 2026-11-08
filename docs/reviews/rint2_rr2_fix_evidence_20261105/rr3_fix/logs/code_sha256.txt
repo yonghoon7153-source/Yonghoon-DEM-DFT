@@ -1,0 +1,6 @@
+# 바탕 = 40d9658c0 (git 객체 · rint_r_chain.py = 리뷰 핀 17d45fb9c 의 그 파일과 같음)
+48f0e7fff068eea752407ad56955c159e937f8a33801148786b0d5a3e650f95c  scripts/rint_r_chain.py  (바탕)
+fedba635c5ea52e88d38341308637a025b44665c0c3e40cb49cdae50af5c7811  scripts/test_rint_r_chain.py  (바탕)
+# 고친 판 = 이 커밋 (작업 트리 · 깨끗한 40d9658c0 + apply_chain.py · apply_tests.py 로 다시 만든 바이트와 같음 · 시험 · 변이 · 탐침 다시 = 이 바이트)
+b37ef7c68e126acdfe7c9062c04e215438ee374b0c0ef7152ec6a485cb00def1  scripts/rint_r_chain.py  (고친 판)
+d83539a1a4b9a315d937f7d1429e5f9ec9b7222d1787e42691a52311b20672fa  scripts/test_rint_r_chain.py  (고친 판)

@@ -1,0 +1,1165 @@
+{
+ "CT06": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 61,
+   "n_bad": 0
+  }
+ },
+ "PC12C": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 17,
+   "n_bad": 0
+  }
+ },
+ "RR3A": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "edit_L02": {
+     "got": [
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "timeout",
+      false
+     ],
+     "word": "file_ids"
+    },
+    "edit_gu_append": {
+     "got": [
+      "group_unconfirmed",
+      true,
+      null
+     ],
+     "want": [
+      "group_unconfirmed",
+      false
+     ],
+     "word": "file_ids"
+    },
+    "edit_tl_append": {
+     "got": [
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "timeout",
+      false
+     ],
+     "word": "file_ids"
+    },
+    "edit_zzz": {
+     "got": [
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "timeout",
+      false
+     ],
+     "word": "file_ids"
+    },
+    "ledger_edit_L02": [
+     [
+      true,
+      null,
+      null
+     ],
+     [
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+     ]
+    ],
+    "producer_kind": "absent"
+   },
+   "n": 9,
+   "n_bad": 6,
+   "rows": {
+    "edit_L02": [
+     "timeout",
+     true,
+     null
+    ],
+    "edit_gu_append": [
+     "group_unconfirmed",
+     true,
+     null
+    ],
+    "edit_tl_append": [
+     "timeout",
+     true,
+     null
+    ],
+    "edit_zzz": [
+     "timeout",
+     true,
+     null
+    ],
+    "ledger_edit_L02": [
+     true,
+     null,
+     null
+    ],
+    "ledger_orig": [
+     false,
+     "RESUME_NOT_ALLOWED",
+     null
+    ],
+    "orig": [
+     "check",
+     false,
+     null
+    ],
+    "producer": [
+     "ARM_JSON_COUNT",
+     1,
+     0,
+     null,
+     [
+      "file",
+      "index",
+      "sha256"
+     ]
+    ],
+    "producer_kind": "absent"
+   }
+  }
+ },
+ "RR3B": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "copy_edit_L02": {
+     "got": [
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "timeout",
+      false
+     ],
+     "word": "file_ids"
+    },
+    "copy_producer": [
+     [
+      true,
+      "ARM_JSON_COUNT",
+      1,
+      0,
+      null,
+      "absent"
+     ],
+     [
+      true,
+      "ARM_JSON_COUNT",
+      1,
+      0,
+      null,
+      "file_ids"
+     ]
+    ],
+    "merge_fail_prior": {
+     "got": [
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "timeout",
+      false
+     ],
+     "word": "file_ids"
+    },
+    "merge_producer": [
+     [
+      "ARM_JSON_COUNT",
+      "absent",
+      null,
+      "absent",
+      true
+     ],
+     [
+      "ARM_JSON_COUNT",
+      "file_ids",
+      null,
+      "verified",
+      true
+     ]
+    ]
+   },
+   "n": 6,
+   "n_bad": 4,
+   "rows": {
+    "copy_edit_L02": [
+     "timeout",
+     true,
+     null
+    ],
+    "copy_orig": [
+     "check",
+     false,
+     null
+    ],
+    "copy_producer": [
+     true,
+     "ARM_JSON_COUNT",
+     1,
+     0,
+     null,
+     "absent"
+    ],
+    "merge_fail_prior": [
+     "timeout",
+     true,
+     null
+    ],
+    "merge_ok_prior": [
+     "timeout",
+     true,
+     null
+    ],
+    "merge_producer": [
+     "ARM_JSON_COUNT",
+     "absent",
+     null,
+     "absent",
+     true
+    ]
+   }
+  }
+ },
+ "RR3C": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "c_dict": {
+     "got": [
+      "timeout",
+      false,
+      true,
+      [
+       "absent"
+      ]
+     ],
+     "prob": "멈춤 TIME_LIMIT · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read {} ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 읽은 뒤에만 다음 런 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03)",
+     "want": [
+      "timeout",
+      false,
+      true,
+      [
+       "bad"
+      ]
+     ]
+    },
+    "c_empty": {
+     "got": [
+      "timeout",
+      false,
+      true,
+      [
+       "absent"
+      ]
+     ],
+     "prob": "멈춤 TIME_LIMIT · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read [] ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 읽은 뒤에만 다음 런 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03)",
+     "want": [
+      "timeout",
+      false,
+      true,
+      [
+       "empty"
+      ]
+     ]
+    },
+    "c_killed": {
+     "got": [
+      "timeout",
+      false,
+      true,
+      [
+       "absent"
+      ]
+     ],
+     "prob": "멈춤 TIME_LIMIT · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 killed:timeout · arms_read 비지 않은 목록 ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 읽은 뒤에만 다음 런 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03)",
+     "want": [
+      "timeout",
+      false,
+      true,
+      [
+       "verified"
+      ]
+     ]
+    },
+    "c_missing": {
+     "got": [
+      "timeout",
+      false,
+      true,
+      [
+       "absent"
+      ]
+     ],
+     "prob": "멈춤 TIME_LIMIT · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read None ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 읽은 뒤에만 다음 런 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03)",
+     "want": [
+      "timeout",
+      false,
+      true,
+      [
+       "bad"
+      ]
+     ]
+    },
+    "c_none": {
+     "got": [
+      "timeout",
+      false,
+      true,
+      [
+       "absent"
+      ]
+     ],
+     "prob": "멈춤 TIME_LIMIT · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read None ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 읽은 뒤에만 다음 런 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03)",
+     "want": [
+      "timeout",
+      false,
+      true,
+      [
+       "bad"
+      ]
+     ]
+    },
+    "c_rc1": {
+     "got": [
+      "timeout",
+      false,
+      true,
+      [
+       "absent"
+      ]
+     ],
+     "prob": "멈춤 TIME_LIMIT · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_fail · arms_read 비지 않은 목록 ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 읽은 뒤에만 다음 런 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03)",
+     "want": [
+      "timeout",
+      false,
+      true,
+      [
+       "verified"
+      ]
+     ]
+    },
+    "fixture_keys": [
+     true,
+     []
+    ],
+    "h_arm1": {
+     "got": [
+      "timeout",
+      true,
+      false,
+      [
+       "absent"
+      ]
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      true,
+      false,
+      [
+       "verified"
+      ]
+     ]
+    },
+    "h_arml": {
+     "got": [
+      "timeout",
+      true,
+      false,
+      [
+       "absent"
+      ]
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      true,
+      false,
+      [
+       "verified"
+      ]
+     ]
+    },
+    "h_arms2": {
+     "got": [
+      "timeout",
+      true,
+      false,
+      [
+       "absent"
+      ]
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      true,
+      false,
+      [
+       "verified"
+      ]
+     ]
+    },
+    "h_arms8": {
+     "got": [
+      "timeout",
+      true,
+      false,
+      [
+       "absent"
+      ]
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      true,
+      false,
+      [
+       "verified"
+      ]
+     ]
+    },
+    "h_copied": {
+     "got": [
+      "timeout",
+      true,
+      false,
+      [
+       "absent"
+      ]
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      true,
+      false,
+      [
+       "verified"
+      ]
+     ]
+    },
+    "h_dbe": {
+     "got": [
+      "timeout",
+      true,
+      false,
+      [
+       "absent"
+      ]
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      true,
+      false,
+      [
+       "verified"
+      ]
+     ]
+    },
+    "h_two": {
+     "got": [
+      "timeout",
+      true,
+      false,
+      [
+       "absent",
+       "absent"
+      ]
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      true,
+      false,
+      [
+       "verified",
+       "verified"
+      ]
+     ]
+    },
+    "n_arml_map": {
+     "got": [
+      "timeout",
+      true,
+      false,
+      [
+       "absent"
+      ]
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      true,
+      [
+       "bad"
+      ]
+     ]
+    },
+    "n_count_long": {
+     "got": [
+      "timeout",
+      true,
+      false,
+      [
+       "absent"
+      ]
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      true,
+      [
+       "bad"
+      ]
+     ]
+    },
+    "n_count_short": {
+     "got": [
+      "timeout",
+      true,
+      false,
+      [
+       "absent"
+      ]
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      true,
+      [
+       "bad"
+      ]
+     ]
+    },
+    "n_dup": {
+     "got": [
+      "timeout",
+      true,
+      false,
+      [
+       "absent"
+      ]
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      true,
+      [
+       "bad"
+      ]
+     ]
+    },
+    "n_file_nonstr": {
+     "got": [
+      "timeout",
+      true,
+      false,
+      [
+       "absent"
+      ]
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      true,
+      [
+       "bad"
+      ]
+     ]
+    },
+    "n_file_path": {
+     "got": [
+      "timeout",
+      true,
+      false,
+      [
+       "absent"
+      ]
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      true,
+      [
+       "bad"
+      ]
+     ]
+    }
+   },
+   "n": 48,
+   "n_bad": 48,
+   "rows": {
+    "c_dict": [
+     "timeout",
+     false,
+     true,
+     [
+      "absent"
+     ]
+    ],
+    "c_empty": [
+     "timeout",
+     false,
+     true,
+     [
+      "absent"
+     ]
+    ],
+    "c_killed": [
+     "timeout",
+     false,
+     true,
+     [
+      "absent"
+     ]
+    ],
+    "c_missing": [
+     "timeout",
+     false,
+     true,
+     [
+      "absent"
+     ]
+    ],
+    "c_none": [
+     "timeout",
+     false,
+     true,
+     [
+      "absent"
+     ]
+    ],
+    "c_rc1": [
+     "timeout",
+     false,
+     true,
+     [
+      "absent"
+     ]
+    ],
+    "fixture_keys": [
+     true,
+     []
+    ],
+    "h_arm1": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "h_arml": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "h_arms2": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "h_arms8": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "h_copied": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "h_dbe": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "h_two": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent",
+      "absent"
+     ]
+    ],
+    "n_arml_map": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_count_long": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_count_short": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_dup": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_file_nonstr": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_file_path": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_file_suffix": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_file_wrong_kit": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_ids": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_ids_extra_key": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_ids_fewer_arms": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_ids_missing_key": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_ids_more_arms": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_index_bool": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_index_field": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_index_float": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_index_str": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_kit_nonstr": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_mixed": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_nokit": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_noreq": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_order": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_pub_extra_key": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_pub_missing_key": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_pub_not_dict": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_pub_tuple": [
+     "timeout",
+     false,
+     true,
+     [
+      "absent"
+     ]
+    ],
+    "n_req_arml_dup": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_req_arms9": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_sha_fullwidth": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_sha_newline": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_sha_none": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_sha_short": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_sha_upper": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent"
+     ]
+    ],
+    "n_two_second_ids": [
+     "timeout",
+     true,
+     false,
+     [
+      "absent",
+      "absent"
+     ]
+    ]
+   }
+  }
+ },
+ "RR3D": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "fail_kind": "absent",
+    "kind_callers": [
+     [],
+     [
+      "prior_runs_problem"
+     ]
+    ],
+    "producers": [
+     {
+      "MergeFetch.run": 0,
+      "ResumeRunner._copy": 0,
+      "Runner._execute": 0
+     },
+     {
+      "MergeFetch.run": 2,
+      "ResumeRunner._copy": 2,
+      "Runner._execute": 2
+     }
+    ],
+    "projection_sites": [
+     [
+      "MergeFetch.run",
+      "ResumeRunner._copy",
+      "Runner._execute"
+     ],
+     [
+      "arms_read_record"
+     ]
+    ],
+    "real_kinds": [
+     "absent",
+     "absent",
+     1
+    ],
+    "shas_callers": [
+     [
+      "MergeFetch.run",
+      "ResumeRunner._copy",
+      "Runner._execute"
+     ],
+     [
+      "arms_read_record"
+     ]
+    ]
+   },
+   "n": 6,
+   "n_bad": 6,
+   "rows": {
+    "fail_kind": "absent",
+    "kind_callers": [],
+    "producers": {
+     "MergeFetch.run": 0,
+     "ResumeRunner._copy": 0,
+     "Runner._execute": 0
+    },
+    "projection_sites": [
+     "MergeFetch.run",
+     "ResumeRunner._copy",
+     "Runner._execute"
+    ],
+    "real_kinds": [
+     "absent",
+     "absent",
+     1
+    ],
+    "shas_callers": [
+     "MergeFetch.run",
+     "ResumeRunner._copy",
+     "Runner._execute"
+    ]
+   }
+  }
+ },
+ "RR3E": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "cli_ids": [
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     "timeout"
+    ]
+   },
+   "got": {
+    "cli_ids": [
+     0,
+     true,
+     0,
+     false
+    ],
+    "cli_pub": [
+     0,
+     true,
+     0,
+     false
+    ]
+   },
+   "n": 2,
+   "n_bad": 1
+  }
+ },
+ "RR3P": {
+  "ok": true,
+  "why": {
+   "got": {
+    "a": [
+     "RUNNER_RC",
+     "resource",
+     true,
+     2,
+     true
+    ],
+    "add": 0,
+    "b": [
+     "RUNNER_RC",
+     "resource",
+     true,
+     2,
+     1,
+     true,
+     [
+      "L01_floor"
+     ]
+    ]
+   },
+   "want": {
+    "a": [
+     "RUNNER_RC",
+     "resource",
+     true,
+     2,
+     true
+    ],
+    "add": 0,
+    "b": [
+     "RUNNER_RC",
+     "resource",
+     true,
+     2,
+     1,
+     true,
+     [
+      "L01_floor"
+     ]
+    ]
+   }
+  }
+ },
+ "_chain_sha256": "48f0e7fff068eea752407ad56955c159e937f8a33801148786b0d5a3e650f95c",
+ "_test_sha256": "d83539a1a4b9a315d937f7d1429e5f9ec9b7222d1787e42691a52311b20672fa"
+}

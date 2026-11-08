@@ -1,0 +1,61 @@
+{
+ "probe_sha256": "7f335c758c036c6de5ab10ef5b9ab3d35d6eb10ab3f0182694bdea03914b74d7",
+ "repo": "<작업 트리>",
+ "chain_sha256": "b37ef7c68e126acdfe7c9062c04e215438ee374b0c0ef7152ec6a485cb00def1",
+ "orig": {
+  "rc": 1,
+  "stderr_tail": [
+   "    assert ledger_rows[1]['attempt_order_problem'] is None",
+   "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "AssertionError"
+  ],
+  "copy_sha256_same": true
+ },
+ "oracle": {
+  "rc": 0,
+  "stderr_tail": []
+ },
+ "leaves": {
+  "before": 159,
+  "after": 160,
+  "differ": 10
+ },
+ "chain_side_rows_same": true,
+ "chain_side_rows_n": [
+  175,
+  175
+ ],
+ "prior_read_failure_promoted": {
+  "original_failure_code": "ARM_JSON_COUNT",
+  "original_result": [
+   "check",
+   false
+  ],
+  "edited_result": [
+   "timeout",
+   false
+  ],
+  "stop_record_problem_set": true,
+  "ledger_attempt_order": [
+   [
+    "original",
+    false,
+    "RESUME_NOT_ALLOWED",
+    null
+   ],
+   [
+    "edited",
+    false,
+    "RESUME_NOT_ALLOWED",
+    null
+   ]
+  ],
+  "source_done": true,
+  "copy_read": "ARM_JSON_COUNT",
+  "producer_arms_read_keys": [
+   "file",
+   "index",
+   "sha256"
+  ]
+ }
+}

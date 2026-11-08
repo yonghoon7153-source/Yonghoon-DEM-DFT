@@ -1,0 +1,430 @@
+# ═════════════════════════ ★ 11-08 Codex 회차 ③ RR3-01 (P2 · 시험 먼저 · 1저자 11-08 "권고대로" = 수정 계획 Q1–Q7 (가)) ═════════════════════════
+#   판정문 `docs/reviews/codex_review_rint2_rr_round3_20261108.md` §2 · 수정 계획 `docs/reviews/rint2_rr3_fix_plan_20261108.md` §1 · §2 — 앞 런의 실제 판독 실패 (`read_run`
+#   ARM_JSON_COUNT) 때 생산자가 남긴 파일 신원 목록 ({file, index, sha256} = `arm_file_shas`) 도 "비지 않은 목록" 이라 `prior_runs_problem` 이 끝난 런으로 읽었다 →
+#   요약 두 칸 (stop.code ARM_JSON_COUNT → TIME_LIMIT · stop.run L01_floor → L02_ceiling) 만 바꾸면 재실행 자격 · 다음 --resume 원장 항목 허용 (실제 재개 복사
+#   `ResumeRunner._copy` 는 다시 읽어 거부 = 원장 자격의 거짓 양성).  고침 = 구조 계약 하나 — 생성 `arms_read_record` (세 생산자 공용 · 성공 = ARM_PUBLIC 투영 ·
+#   실패 = 파일 신원) · 분류 `arms_read_kind` (verified = ARM_PUBLIC 칸 정확히 + 요청 팔 일대일 (수 · 번호 · 파일) + sha256 꼴 · file_ids · empty · bad) · 앞 런 =
+#   exit_ok + verified 일 때만 끝난 런.  행 기대 = 정직 (생산자 성공 꼴 · 복사 성공 · 합치기 성공) = 받음 그대로 · 판독 실패 꼴 · 같은 부류 변이 = 자격 없음.
+RR3_L2 = 'L02_ceiling'
+RR3_PAYLOAD = b'{}\n'
+RR3_WRONG = 'p2_wrong_kit_a0.json'                      # 판정문 반례의 팔 이름 (킷 앞자리가 틀림 → 실제 read_run = ARM_JSON_COUNT)
+
+
+def rr3_kind(ar, rec):
+    """`arms_read_kind` 의 꼴 (고치기 전 판 = 함수 없음 → 'absent' · 예외 = 'exc <이름>')."""
+    f = getattr(RR, 'arms_read_kind', None)
+    if f is None:
+        return 'absent'
+    try:
+        return f(ar, rec)[0]
+    except Exception as e:                                # noqa: BLE001 — 분류 함수 예외 = 그 행 실패
+        return f'exc {type(e).__name__}'
+
+
+def rr3_ids(i=0, kit=SBE_KIT):
+    """판독 실패 때 생산자가 남기는 파일 신원 (`arm_file_shas` 꼴 · 칸 셋)."""
+    a = ct06_pub(i, kit=kit)
+    return {k: a[k] for k in ('file', 'index', 'sha256')}
+
+
+def rr3_mock_group(outdir, files):
+    """`run_in_group` 자리 (판정문 탐침과 같은 모의 · 러너 반환 · 출력만) — 러너가 출력을 만드는 순간 outdir + files {이름: 바이트} · 그룹 시작 · 끝 기록 (by chain ·
+    원인 None · rc 0 · 확인 True) · 로그 한 줄 → (0, None, 끝 기록)."""
+    def fake(argv, cwd, env, logf, left, gdir, name):
+        Path(outdir).mkdir(parents=True)
+        for nm, raw in files.items():
+            (Path(outdir) / nm).write_bytes(raw)
+        g = Path(gdir)
+        g.mkdir(parents=True, exist_ok=True)
+        tok = 'a' * 32
+        end = {'schema': RR.GROUP_SCHEMA, 'name': name, 'token': tok, 'by': 'chain', 'cause': None, 'rc': 0, 'confirmed': True}
+        (g / f'{name}.launch.json').write_text(json.dumps({'schema': RR.GROUP_SCHEMA, 'name': name, 'token': tok}), encoding='utf-8')
+        (g / f'{name}.end.json').write_text(json.dumps(end), encoding='utf-8')
+        logf.write('synthetic mock process-group return rc 0\n')
+        return 0, None, end
+    return fake
+
+
+def rr3_producer(tag):
+    """판정문 반례 (§2) 그대로 — 실제 `Runner._execute` + 모의 `run_in_group` (출력 = 킷 앞자리가 틀린 팔 p2_wrong_kit_a0.json) → 실제 `read_run` 실패 → (시도 폴더 ·
+    요청 · 생산자 런 기록 목록 · 멈춤 이름)."""
+    folder = Path(TD) / 'rr3' / tag / 'attempt_1'
+    folder.mkdir(parents=True)
+    outdir = folder / 'L01_floor_arm1'
+    _nm, req, _key = RR.run_request('L', 1, SBE_KIT, 'floor', 'P0', None, 0.0, 1, False, None)
+    rn = RR.Runner('unused.sh', folder, folder, {}, None, time.time() + 60, {}, parent_env={})
+    code = None
+    with rc_patch(run_in_group=rr3_mock_group(outdir, {RR3_WRONG: RR3_PAYLOAD})), contextlib.redirect_stdout(io.StringIO()):
+        try:
+            rn._execute('L01_floor', req, outdir, {})
+        except RR.Stop as e:
+            code = e.code
+    return folder, req, rn.records, code
+
+
+def rr3_clone(folder, tag, log_runs=()):
+    """시도 폴더 사본 (바이트 그대로) + log_runs = 로그를 더 쓸 런 이름 (위조 기록을 덧붙인 변이용)."""
+    dst = Path(TD) / 'rr3' / tag / 'attempt_1'
+    shutil.copytree(folder, dst, symlinks=True)
+    for nm in log_runs:
+        (dst / 'logs' / f'{nm}.log').write_text('[p2] run\n', encoding='utf-8')
+    return dst
+
+
+def rr3_folder(tag):
+    """합성 시도 폴더 (첫 결과 표지 LG_MARK = 결과 뒤 · logs/ 빈 폴더 · 런 전 TIME_LIMIT 의 멈춘 런 흔적 없음)."""
+    f = Path(TD) / 'rr3' / tag / 'attempt_1'
+    (f / LG_MARK).parent.mkdir(parents=True)
+    (f / LG_MARK).write_text('{}\n', encoding='utf-8')
+    (f / 'logs').mkdir()
+    return f
+
+
+def rr3_summ(code, run, runs):
+    return {'status': 'STOPPED', 'stop': {'code': code, 'run': run, 'reason': None}, 'runs': copy.deepcopy(list(runs))}
+
+
+def rr3_row(folder, s):
+    """요약 s · 시도 폴더 → [원인, 재실행 자격, stop_record_problem 사유 (None | 글)]."""
+    fl = RR.result_fields(folder, s)
+    return [fl['cause'], fl['resume_ok'], RR.stop_record_problem(s, folder)]
+
+
+def rr3_ledger(folder, s):
+    """실제 결과 줄 → 원장 읽기 → 다음 --resume 1 항목 차례 (판정문 탐침과 같은 합성 머리 · 항목 · 시작 기록 · git · 잠금 · recover 없음) → [원장 결과 줄 resume_ok ·
+    attempt_order_problem 멈춤 | None · result_line_problem (폴더 증거로 다시 셈 대조)]."""
+    folder = Path(folder)
+    (folder / 'ladder_summary.json').write_bytes(RR.canon_bytes(s))
+    head = {'kind': 'header', 'schema': RR.LEDGER_SCHEMA, 'plan_sha256': 'b' * 64, 'utc': 'synthetic'}
+    ent = {'kind': 'entry', 'n': 1, 'target': 'ladder:P0', 'machine': 'synthetic', 'resume_of': None, 'plan_sha256': 'b' * 64, 'code_key_sha256': 'c' * 64,
+           'env': {}, 'bed': {}, 'utc': 'synthetic'}
+    start = {'kind': 'start', 'n': 1, 'base': str(folder.parent.resolve()), 'folder': folder.name,
+             'host': {'machine_id': None, 'boot_id': None, 'pidns': None}, 'utc': 'synthetic', 'chain_pid': 1, 'chain_start': None}
+    res = RR.attempt_result_line(1, folder, s, 'recover')
+    st = RR.ledger_parse(''.join(RR.ledger_line(x) for x in (head, ent, start, res)).encode('utf-8'))
+    order = RR.attempt_order_problem(st, dict(ent, n=2, resume_of=1), {'exec_policy': {'max_attempts': 2}})
+    return [st['results'][1]['resume_ok'], order[0] if order else None, RR.result_line_problem(1, folder, res)]
+
+
+def rr3_check_rows(rows, bad, items):
+    """items (이름, 폴더, 요약, 기대 [원인, 자격], 사유에 있어야 할 낱말 (None = 사유 없음)) → rows · bad."""
+    for nm, f, s, want, word in items:
+        cause, ok, prob = rr3_row(f, s)
+        rows[nm] = [cause, ok, None if prob is None else prob[:160]]
+        code = s['stop']['code']
+        prob_ok = (prob is None) if word is None else (isinstance(prob, str) and code in prob and word in prob)
+        if [cause, ok] != want or not prob_ok:
+            bad[nm] = {'got': rows[nm], 'want': want, 'word': word}
+
+
+@check('RR3A', '★ 11-08 Codex 회차 ③ RR3-01 (P2 · 판정문 §2 반례 그대로 · 수정 계획 Q1 (가)) — 실제 `Runner._execute` + 모의 `run_in_group` (러너 반환 · 출력만) → 실제 '
+                '`read_run` 실패 (ARM_JSON_COUNT · 킷 앞자리가 틀린 팔 p2_wrong_kit_a0.json) → 생산자 기록 rc 0 · group_cause null · arms_read = 파일 신원 목록 {file · '
+                'index · sha256} 그대로 + 요약 두 칸 (stop.code ARM_JSON_COUNT → TIME_LIMIT · stop.run L01_floor → L02_ceiling) → 옛 = timeout · 재실행 자격 True · '
+                'stop_record_problem None · 결과 줄 → 원장 읽기 resume_ok True · 다음 --resume 1 항목 허용 → 앞 런 = 판독 완료 꼴 (`arms_read_kind` verified) 일 때만 '
+                '끝난 런: 편집 둘 (L02_ceiling · zzz) · 같은 부류 (뒤에 위조 L02 기록 {timeout · null} TIME_LIMIT · {None · 0} GROUP_UNCONFIRMED + 그 로그) = 자격 False · '
+                '사유 (분류 이름 file_ids) · 원장 = RESUME_NOT_ALLOWED · 원 기록 = check · False 그대로 · 결과 줄 다시 셈 = 둘 다 대조 통과 (None)')
+def t_RR3A():
+    rows, bad = {}, {}
+    folder, _req, recs, code = rr3_producer('A')
+    last = recs[-1] if recs else {}
+    ar = last.get('arms_read')
+    keys = sorted(set().union(*[set(a) for a in ar])) if type(ar) is list and ar and all(type(a) is dict for a in ar) else repr(ar)[:60]
+    rows['producer'] = [code, len(recs), last.get('rc'), last.get('group_cause'), keys]
+    want_p = ['ARM_JSON_COUNT', 1, 0, None, ['file', 'index', 'sha256']]
+    if rows['producer'] != want_p:
+        bad['producer'] = (rows['producer'], want_p)
+    rows['producer_kind'] = rr3_kind(ar, last)
+    if rows['producer_kind'] != 'file_ids':
+        bad['producer_kind'] = rows['producer_kind']
+    tl = rr3_clone(folder, 'A_tl_append', log_runs=(RR3_L2,))
+    gu = rr3_clone(folder, 'A_gu_append', log_runs=(RR3_L2,))
+    l2_tl = ct06_rec(RR3_L2, group_cause='timeout', rc=None, arms=1, arm_list=None, kit=SBE_KIT, arms_read=[])
+    l2_gu = ct06_rec(RR3_L2, group_cause=None, rc=0, arms=1, arm_list=None, kit=SBE_KIT, arms_read=[])
+    rr3_check_rows(rows, bad, [
+        ('orig', folder, rr3_summ(code, 'L01_floor', recs), ['check', False], None),
+        ('edit_L02', folder, rr3_summ('TIME_LIMIT', RR3_L2, recs), ['timeout', False], 'file_ids'),
+        ('edit_zzz', folder, rr3_summ('TIME_LIMIT', 'zzz', recs), ['timeout', False], 'file_ids'),
+        ('edit_tl_append', tl, rr3_summ('TIME_LIMIT', RR3_L2, list(recs) + [l2_tl]), ['timeout', False], 'file_ids'),
+        ('edit_gu_append', gu, rr3_summ('GROUP_UNCONFIRMED', RR3_L2, list(recs) + [l2_gu]), ['group_unconfirmed', False], 'file_ids'),
+    ])
+    for nm, s, want in (('ledger_orig', rr3_summ(code, 'L01_floor', recs), [False, 'RESUME_NOT_ALLOWED', None]),
+                        ('ledger_edit_L02', rr3_summ('TIME_LIMIT', RR3_L2, recs), [False, 'RESUME_NOT_ALLOWED', None])):
+        rows[nm] = rr3_ledger(folder, s)
+        if rows[nm] != want:
+            bad[nm] = (rows[nm], want)
+    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad': dict(sorted(bad.items())[:16]), 'rows': rows}
+
+
+def rr3_read_fail(*_a, **_k):
+    raise RR.Stop('ARM_JSON_COUNT', '합성 판독 실패 (시험 · 가짜 read_run)', 'P01_corner')
+
+
+def rr3_read_ok(outdir, req, *_a, **_k):
+    """가짜 read_run — 판독 완료 팔 (ARM_PUBLIC 칸 + 화면 칸 σ · read_run 의 팔 기록 꼴 · 값 = 시험 값)."""
+    return [dict(ct06_pub(i, kit=req['kit']), sigma=1.0, dsigma_rel=0.0) for i in RR.arm_indices(req)]
+
+
+def rr3_merge(tag, read):
+    """합치기 `MergeFetch.run` (RC03 rc03_merge 꼴 · 원 단위 기록 rc 0 · 사본 폴더 = 팔 파일 하나) · read = 가짜 read_run → (합치기 런 기록, 멈춤 이름 | None)."""
+    k0 = '1000000.0'
+    mf = RR.MergeFetch.__new__(RR.MergeFetch)
+    mf.n, mf.keys, mf.variant, mf.records = 0, set(), None, []
+    mf.lads = {'P0': {'R_j0': k0, 'R_j_lo': '500000.0', 'R_j_hi': '2000000.0'}}
+    mf.out = Path(TD) / 'rr3' / tag
+    mf.plan, mf.contract, mf.sid_reg, mf.s0_grid, mf.s0_census, mf.graph_src = {}, None, {}, None, None, None
+    iname = 'U01_corner'
+    target = RR.unit_target('unit', None, RR.unit_name('0', 'P0', 'R_j0'))
+    rel = f'{RR.UNITS_DIR}/{RR.target_dir(target)}/attempt_1'
+    rec0 = {'name': iname, 'role': 'corner', 'kit': DBE_KIT, 'law': 'P0', 'c': '0', 'rj': k0, 'arms': 1, 'arm_list': None, 'variant': None,
+            'sv_cf': False, 'rc': 0, 'outdir': 'U01_corner_arm1', 'arms_read': [], 'seconds': 1.0, 'group_cause': None}
+    mf.opened = {target: {'n': 1, 'sum': {'stop': None}, 'runs': {iname: rec0}, 'consumed': set(), 'machine': MACH, 'rel': rel}}
+    od = mf.out / rel / 'U01_corner_arm1'
+    od.mkdir(parents=True)
+    (od / ct06_pub(0, kit=DBE_KIT)['file']).write_bytes(RR3_PAYLOAD)
+    code = None
+    with rc_patch(read_run=read), contextlib.redirect_stdout(io.StringIO()):
+        try:
+            mf.run(DBE_KIT, 'corner', 'P0', '0', k0, 1)
+        except RR.Stop as e:
+            code = e.code
+    return (mf.records[-1] if mf.records else {}), code
+
+
+@check('RR3B', '★ 11-08 RR3-01 같은 부류 — 생산자 셋이 같은 생성 함수 (`arms_read_record` · 수정 계획 Q2 (가)): ⓐ 재개 복사 `ResumeRunner._copy` 의 판독 실패 기록 '
+                '(원천 = RR3A 꼴 시도 폴더 · `_src_done` True · 복사 다시 읽기 = ARM_JSON_COUNT 그대로 · copied_from 1 · arms_read = 파일 신원) + 요약 두 칸 → 옛 = 자격 '
+                'True → 자격 False · 사유 ⓑ 합치기 `MergeFetch.run` 의 판독 실패 기록 (가짜 read_run 이 Stop · 사본 폴더의 팔 파일 = 파일 신원) 을 앞 런으로 둔 런 전 '
+                'TIME_LIMIT → 옛 = 자격 True → 자격 False · 사유 ⓒ 합치기 성공 기록 (가짜 read_run = 판독 완료 팔 · ARM_PUBLIC 투영) 을 앞 런으로 = 자격 True · 사유 '
+                '없음 (양성 · 그대로) · 분류 = file_ids · file_ids · verified')
+def t_RR3B():
+    rows, bad = {}, {}
+    src, req, _recs, _code = rr3_producer('B_src')
+    dst = src.parent / 'attempt_2'
+    dst.mkdir()
+    rn = RR.ResumeRunner('unused.sh', src, dst, {}, None, time.time() + 60, {}, parent_env={}, src=src, src_n=1)
+    done = rn._src_done('L01_floor', 'L01_floor_arm1')
+    ccode = None
+    with contextlib.redirect_stdout(io.StringIO()):
+        try:
+            rn._copy('L01_floor', req, dst / 'L01_floor_arm1')
+        except RR.Stop as e:
+            ccode = e.code
+    crec = rn.records[-1] if rn.records else {}
+    rows['copy_producer'] = [done, ccode, crec.get('copied_from'), crec.get('rc'), crec.get('group_cause'), rr3_kind(crec.get('arms_read'), crec)]
+    want = [True, 'ARM_JSON_COUNT', 1, 0, None, 'file_ids']
+    if rows['copy_producer'] != want:
+        bad['copy_producer'] = (rows['copy_producer'], want)
+    mfail, mcode = rr3_merge('B_merge_fail', rr3_read_fail)
+    mok, okcode = rr3_merge('B_merge_ok', rr3_read_ok)
+    rows['merge_producer'] = [mcode, rr3_kind(mfail.get('arms_read'), mfail), okcode, rr3_kind(mok.get('arms_read'), mok),
+                              sorted(mok['arms_read'][0]) == sorted(RR.ARM_PUBLIC) if mok.get('arms_read') else None]
+    want = ['ARM_JSON_COUNT', 'file_ids', None, 'verified', True]
+    if rows['merge_producer'] != want:
+        bad['merge_producer'] = (rows['merge_producer'], want)
+    rr3_check_rows(rows, bad, [
+        ('copy_orig', dst, rr3_summ(ccode, 'L01_floor', rn.records), ['check', False], None),
+        ('copy_edit_L02', dst, rr3_summ('TIME_LIMIT', RR3_L2, rn.records), ['timeout', False], 'file_ids'),
+        ('merge_fail_prior', rr3_folder('B_merge_fail_s'), rr3_summ('TIME_LIMIT', 'P02_corner', [mfail]), ['timeout', False], 'file_ids'),
+        ('merge_ok_prior', rr3_folder('B_merge_ok_s'), rr3_summ('TIME_LIMIT', 'P02_corner', [mok]), ['timeout', True], None),
+    ])
+    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad': dict(sorted(bad.items())[:16]), 'rows': rows}
+
+
+def rr3_prior(arms_read, name=LG_RUN, **kw):
+    """앞 런 기록 (rc 0 · group_cause None · 요청 칸 arms 1 · arm_list None · kit SBE · kw = 칸 바꿈 · CT05_DROP = 지움)."""
+    base = dict(role='floor', kit=SBE_KIT, law='P0', c=None, rj='inf', arms=1, arm_list=None, variant=None, sv_cf=False, group_cause=None, rc=0)
+    base.update(kw)
+    return ct06_rec(name, arms_read=arms_read, **base)
+
+
+def rr3_drop(a, k):
+    return {x: v for x, v in a.items() if x != k}
+
+
+def rr3_variants():
+    """(이름, 앞 런 기록 목록, 기대 분류 (앞 런마다), 기대 재실행 자격) — 멈춤 = 런 전 TIME_LIMIT (L02_ceiling · 흔적 없음 · 결과 뒤) · 자격 = 앞 런 기록 판정만."""
+    P, I, R = ct06_pub, rr3_ids, rr3_prior
+    o2 = {'arms': 2, 'outdir': f'{LG_RUN}_arm2'}
+    return [
+        #  정직 (생산자 성공 꼴 = 받음 · 고치기 전 · 뒤 같음)
+        ('h_arm1', [R([P(0)])], ['verified'], True),
+        ('h_arms2', [R([P(0), P(1)], **o2)], ['verified'], True),
+        ('h_arml', [R([P(1), P(2)], arms=2, arm_list=[1, 2], outdir=f'{LG_RUN}_arm2_arml1-2')], ['verified'], True),
+        ('h_arms8', [R([P(i) for i in range(8)], arms=8, outdir=LG_RUN)], ['verified'], True),
+        ('h_copied', [R([P(0)], copied_from=1)], ['verified'], True),
+        ('h_dbe', [R([P(0, kit=DBE_KIT)], kit=DBE_KIT)], ['verified'], True),
+        ('h_two', [R([P(0)], name='L00_prev'), R([P(0)])], ['verified', 'verified'], True),
+        #  판독 실패 꼴 (파일 신원 목록 · RR3-01) · 팔 수가 다른 신원 목록 · 둘째 앞 런
+        ('n_ids', [R([I(0)])], ['file_ids'], False),
+        ('n_ids_more_arms', [R([I(0), I(1)])], ['file_ids'], False),
+        ('n_ids_fewer_arms', [R([I(0)], **o2)], ['file_ids'], False),
+        ('n_two_second_ids', [R([P(0)], name='L00_prev'), R([I(0)])], ['verified', 'file_ids'], False),
+        #  칸 집합 (신원 + 칸 · 신원 − 칸 · 섞임 · ARM_PUBLIC − 칸 · + 칸 · 원소 객체 아님 · 목록 아님)
+        ('n_ids_extra_key', [R([dict(I(0), state='positive')])], ['bad'], False),
+        ('n_ids_missing_key', [R([rr3_drop(I(0), 'sha256')])], ['bad'], False),
+        ('n_mixed', [R([P(0), I(1)], **o2)], ['bad'], False),
+        ('n_pub_missing_key', [R([rr3_drop(P(0), 'err_rel')])], ['bad'], False),
+        ('n_pub_extra_key', [R([dict(P(0), sigma=1.0)])], ['bad'], False),
+        ('n_pub_not_dict', [R([list(P(0))])], ['bad'], False),
+        ('n_pub_tuple', [R(tuple([P(0)]))], ['bad'], False),
+        #  요청 칸 (없음 · 생산자 범위 밖) · kit (없음 · 글 아님)
+        ('n_noreq', [ct06_rec(LG_RUN, group_cause=None, rc=0, kit=SBE_KIT, arms_read=[P(0)])], ['bad'], False),
+        ('n_req_arms9', [R([P(i) for i in range(9)], arms=9, outdir=f'{LG_RUN}_arm9')], ['bad'], False),
+        ('n_req_arml_dup', [R([P(3), P(3)], arms=2, arm_list=[3, 3])], ['bad'], False),
+        ('n_nokit', [R([P(0)], kit=CT05_DROP)], ['bad'], False),
+        ('n_kit_nonstr', [R([P(0)], kit=7)], ['bad'], False),
+        #  요청 팔 일대일 (수 · 차례 · 겹침 · 팔 고르기 · 번호 칸)
+        ('n_count_short', [R([P(0)], **o2)], ['bad'], False),
+        ('n_count_long', [R([P(0), P(1)])], ['bad'], False),
+        ('n_order', [R([P(1), P(0)], **o2)], ['bad'], False),
+        ('n_dup', [R([P(0), P(0)], **o2)], ['bad'], False),
+        ('n_arml_map', [R([P(0), P(1)], arms=2, arm_list=[1, 2], outdir=f'{LG_RUN}_arm2_arml1-2')], ['bad'], False),
+        ('n_index_field', [R([dict(P(0), index=1)])], ['bad'], False),
+        ('n_index_bool', [R([P(0), dict(P(1), index=True)], **o2)], ['bad'], False),
+        ('n_index_str', [R([dict(P(0), index='0')])], ['bad'], False),
+        ('n_index_float', [R([dict(P(0), index=0.0)])], ['bad'], False),
+        #  파일 (번호 끝 · 경로 (앞자리 · 끝은 맞춤 = 이름만 조건 하나로 가림) · 킷 앞자리 · 글 아님)
+        ('n_file_suffix', [R([dict(P(0), file=P(1)['file'])])], ['bad'], False),
+        ('n_file_path', [R([dict(P(0), file=f'p2_{SBE_KIT[len("kit_"):]}_x/' + P(0)['file'])])], ['bad'], False),
+        ('n_file_wrong_kit', [R([dict(P(0), file=RR3_WRONG)])], ['bad'], False),
+        ('n_file_nonstr', [R([dict(P(0), file=None)])], ['bad'], False),
+        #  sha256 (대문자 · 짧음 · 없음 · 끝 줄바꿈 · 전각 글자)
+        ('n_sha_upper', [R([dict(P(0), sha256=P(0)['sha256'].upper())])], ['bad'], False),
+        ('n_sha_short', [R([dict(P(0), sha256=P(0)['sha256'][:63])])], ['bad'], False),
+        ('n_sha_none', [R([dict(P(0), sha256=None)])], ['bad'], False),
+        ('n_sha_newline', [R([dict(P(0), sha256=P(0)['sha256'] + '\n')])], ['bad'], False),
+        ('n_sha_fullwidth', [R([dict(P(0), sha256='０' * 64)])], ['bad'], False),
+        #  대조 (고치기 전에도 자격 없음 — 빈 목록 · 없음 · 객체 · 칸 없음 · 러너 rc 1 · 사슬이 죽인 런)
+        ('c_empty', [R([])], ['empty'], False),
+        ('c_none', [R(None)], ['bad'], False),
+        ('c_dict', [R({})], ['bad'], False),
+        ('c_missing', [R(CT05_DROP)], ['bad'], False),
+        ('c_rc1', [R([P(0)], rc=1)], ['verified'], False),
+        ('c_killed', [R([P(0)], group_cause='timeout', rc=None)], ['verified'], False),
+    ]
+
+
+@check('RR3C', '★ 11-08 RR3-01 같은 부류 변이 표 (수정 계획 Q1 (가) · 보장 = 앞 런 판독 완료 = ARM_PUBLIC 칸 정확히 + 요청 팔 일대일 (수 · 번호 · 파일) + sha256 꼴) — '
+                '런 전 TIME_LIMIT (L02_ceiling) 앞 런 기록 변이 47: 정직 7 (arms 1 · 2 · 팔 고르기 · 8 팔 · 복사 기록 · DBE · 앞 런 둘) = 자격 True · 사유 없음 · '
+                'verified · 파일 신원 꼴 4 (팔 수 다름 · 둘째 앞 런) · 칸 집합 7 · 요청 칸 · kit 5 · 일대일 9 · 파일 4 · sha256 5 = 자격 False · 사유 · file_ids | bad · '
+                '대조 6 (빈 목록 · 없음 · 객체 · 칸 없음 · rc 1 · 사슬이 죽인 런 = 고치기 전에도 False) · 분류 함수 예외 0 · 시험 고정물 칸 = 사슬 ARM_PUBLIC 과 같음')
+def t_RR3C():
+    rows, bad = {}, {}
+    pub = sorted(ct06_pub(0))
+    rows['fixture_keys'] = [pub == sorted(RR.ARM_PUBLIC), list(getattr(RR, 'ARM_FILE_ID_KEYS', ()))]
+    if rows['fixture_keys'] != [True, ['file', 'index', 'sha256']]:
+        bad['fixture_keys'] = rows['fixture_keys']
+    for nm, prior, kinds, ok in rr3_variants():
+        f = rr3_folder(f'C_{nm}')
+        s = rr3_summ('TIME_LIMIT', RR3_L2, prior)
+        cause, rok, prob = rr3_row(f, s)
+        got_k = [rr3_kind(r.get('arms_read'), r) for r in prior]
+        rows[nm] = [cause, rok, prob is not None, got_k]
+        good = (cause == 'timeout' and rok is ok and (prob is None) is ok and got_k == kinds
+                and (ok or (isinstance(prob, str) and 'TIME_LIMIT' in prob)))
+        if not good:
+            bad[nm] = {'got': rows[nm], 'want': ['timeout', ok, not ok, kinds], 'prob': None if prob is None else prob[:200]}
+    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad': dict(sorted(bad.items())[:20]), 'rows': rows}
+
+
+def rr3_calls(src):
+    """함수 (클래스.메서드) 이름 → (그 몸 (안쪽 함수 포함) 에서 부른 이름 목록 · ARM_PUBLIC 위 내포 수)."""
+    calls, proj = {}, {}
+
+    def walk(node, prefix):
+        for ch in ast.iter_child_nodes(node):
+            if isinstance(ch, ast.ClassDef):
+                walk(ch, prefix + ch.name + '.')
+            elif isinstance(ch, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                q = prefix + ch.name
+                calls[q] = [x.func.id if isinstance(x.func, ast.Name) else x.func.attr for x in ast.walk(ch)
+                            if isinstance(x, ast.Call) and isinstance(x.func, (ast.Name, ast.Attribute))]
+                proj[q] = sum(1 for x in ast.walk(ch) if isinstance(x, ast.comprehension) and isinstance(x.iter, ast.Name) and x.iter.id == 'ARM_PUBLIC')
+                walk(ch, q + '.')
+            else:
+                walk(ch, prefix)
+    walk(ast.parse(src), '')
+    return calls, proj
+
+
+@check('RR3D', '★ 11-08 RR3-01 구조 (수정 계획 Q1 · Q2 (가) = 구조 계약 하나) — rint_r_chain.py 원천: 판독 실패 파일 신원 (`arm_file_shas`) 을 부르는 함수 = 생성 '
+                '함수 `arms_read_record` 하나 · ARM_PUBLIC 투영 (for … in ARM_PUBLIC) = 그 함수 하나 · 생산자 셋 (Runner._execute · ResumeRunner._copy · MergeFetch.run) = '
+                '그 함수를 두 번 (성공 · 실패) · 분류 함수 `arms_read_kind` 를 부르는 자격 소비자 = `prior_runs_problem` 하나 (`_src_done` · 복사 다시 읽기 · want_sha 소비자 = '
+                '그대로) · 실제 생산자 기록 분류 = RR3P 사다리 (시도 1 · 2 의 앞 런 = 판독 완료 · 복사 판독 완료) verified · RR3A 판독 실패 = file_ids')
+def t_RR3D():
+    rows, bad = {}, {}
+    calls, proj = rr3_calls(Path(RR.__file__).read_text(encoding='utf-8'))
+    rows['shas_callers'] = sorted(q for q, c in calls.items() if 'arm_file_shas' in c)
+    rows['projection_sites'] = sorted(q for q, n in proj.items() if n)
+    rows['producers'] = {q: calls.get(q, []).count('arms_read_record') for q in ('Runner._execute', 'ResumeRunner._copy', 'MergeFetch.run')}
+    rows['kind_callers'] = sorted(q for q, c in calls.items() if 'arms_read_kind' in c)
+    want = {'shas_callers': ['arms_read_record'], 'projection_sites': ['arms_read_record'],
+            'producers': {'Runner._execute': 2, 'ResumeRunner._copy': 2, 'MergeFetch.run': 2}, 'kind_callers': ['prior_runs_problem']}
+    for k, w in want.items():
+        if rows[k] != w:
+            bad[k] = (rows[k], w)
+    if chain_c1b2():
+        fault = {'do': 'oom_after_mark', 'match': {'rj': '0'}}
+        r = s_resume_lad('RR3P', fault, w2=dict(PW, faults=[fault]))
+        ra = ((r['a'].get('sum') or {}).get('runs') or [{}])[0]
+        rb = (((r['b'] or {}).get('sum') or {}).get('runs') or [{}])[0]
+        rows['real_kinds'] = [rr3_kind(ra.get('arms_read'), ra), rr3_kind(rb.get('arms_read'), rb), rb.get('copied_from')]
+        if rows['real_kinds'] != ['verified', 'verified', 1]:
+            bad['real_kinds'] = rows['real_kinds']
+    else:
+        bad['real_kinds'] = '사슬에 재실행 실행 (ResumeRunner) 이 없다'
+    _f, _q, recs, _c = rr3_producer('D_fail')
+    rows['fail_kind'] = rr3_kind(recs[-1].get('arms_read') if recs else None, recs[-1] if recs else None)
+    if rows['fail_kind'] != 'file_ids':
+        bad['fail_kind'] = rows['fail_kind']
+    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad': bad, 'rows': rows}
+
+
+def rr3_cli_prep(arms_read, files):
+    """앞 런 L01_floor (rc 0 · group_cause None · 요청 칸 · kit SBE) + 런 전 TIME_LIMIT (L02_ceiling) 요약 · 앞 런 폴더의 팔 파일 files {이름: 바이트}."""
+    def p(f):
+        for nm, raw in files.items():
+            (Path(f) / 'L01_floor_arm1' / nm).write_bytes(raw)
+        ct06_summ('TIME_LIMIT', [rr3_prior(arms_read)], run=RR3_L2)(f)
+    return p
+
+
+@check('RR3E', '★ 11-08 RR3-01 실경로 (실제 git 원장 · recover --ledger → 결과 줄 → --add --resume 1 · `rc_recover_resume`) — 앞 런 L01_floor (rc 0 · group_cause None · '
+                '끝 기록 by chain 확인 · rc 0) + 런 전 TIME_LIMIT (L02_ceiling): 앞 런 arms_read = 판독 실패 때 남긴 파일 신원 목록 (판정문 반례의 기록 · 팔 파일 '
+                'p2_wrong_kit_a0.json 그대로) → 옛 = 자격 True · rc 0 → 자격 False · rc 3 RESUME_NOT_ALLOWED · 앞 런 = 판독 완료 꼴 (ARM_PUBLIC · 요청 팔 일대일 · 팔 '
+                '파일 그대로) = 자격 True · rc 0 (양성 · 그대로)')
+def t_RR3E():
+    got, bad = {}, {}
+    ids = [{'file': RR3_WRONG, 'index': 0, 'sha256': hashlib.sha256(RR3_PAYLOAD).hexdigest()}]
+    pub = [ct06_pub(0)]
+
+    def go():
+        return {'cli_ids': rc_recover_resume('RR3E_ids', CHAIN_OK0, LG_PLAIN, prep=rr3_cli_prep(ids, {RR3_WRONG: RR3_PAYLOAD})),
+                'cli_pub': rc_recover_resume('RR3E_pub', CHAIN_OK0, LG_PLAIN, prep=rr3_cli_prep(pub, {pub[0]['file']: RR3_PAYLOAD}))}
+    pc12_cli(bad, got, scen('RR3E', go), {'cli_ids': False, 'cli_pub': True})
+    return not bad, {'n': len(got), 'n_bad': len(bad), 'bad': bad, 'got': got}
+
+
+@check('RR3P', '★ 11-08 RR3-01 양성 (실제 사슬 · 가짜 러너 · 실제 git 원장 · 고치기 전 · 뒤 같아야) — 사다리 시도 1 = 천장 런 첫 풀이 끝 표지 뒤 OOM (앞 런 L01_floor = '
+                '실제 판독 완료) · --add --resume 1 (rc 0) · 재실행 시도 2 = 바닥 런 복사 (`ResumeRunner._copy` 성공 · copied_from 1 · 러너 0 회) 뒤 천장 런 다시 OOM → '
+                '결과 줄 1 · 2 = RUNNER_RC · resource · 재실행 자격 True (앞 런 = 실제 판독 완료 꼴 · 복사된 판독 완료 꼴) · 두 시도 앞 런 기록 칸 = ARM_PUBLIC 정확히')
+def t_RR3P():
+    if not chain_c1b2():
+        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
+    fault = {'do': 'oom_after_mark', 'match': {'rj': '0'}}
+    r = s_resume_lad('RR3P', fault, w2=dict(PW, faults=[fault]))
+    a, b, d = r['a'], r['b'] or {}, r['d']
+    ra, rb = (a.get('sum') or {}).get('runs') or [], (b.get('sum') or {}).get('runs') or []
+    r1, r2 = led_result(d, 1) or {}, led_result(d, 2) or {}
+    pub = sorted(RR.ARM_PUBLIC)
+
+    def keys(run):
+        ar = run.get('arms_read') if isinstance(run, dict) else None
+        return all(type(x) is dict and sorted(x) == pub for x in ar) if type(ar) is list and ar else False
+    got = {'a': [stop_code(a), r1.get('cause'), r1.get('resume_ok'), len(ra), keys(ra[0]) if ra else None],
+           'add': r['add'][0],
+           'b': [stop_code(b), r2.get('cause'), r2.get('resume_ok'), len(rb), (rb[0] if rb else {}).get('copied_from'), keys(rb[0]) if rb else None,
+                 ((b.get('sum') or {}).get('resume') or {}).get('copied')]}
+    want = {'a': ['RUNNER_RC', 'resource', True, 2, True], 'add': 0, 'b': ['RUNNER_RC', 'resource', True, 2, 1, True, ['L01_floor']]}
+    return got == want, {'got': got, 'want': want}
+
+

@@ -1,0 +1,2 @@
+CT06 FAIL (61, 1, ['c_prev_record'])
+PC12C FAIL (17, 5, ['cli_honest_tl_after_ok', 'gu_after_ok', 'rr_after_copied', 'rr_signal_after_ok', 'tl_none_after_ok'])

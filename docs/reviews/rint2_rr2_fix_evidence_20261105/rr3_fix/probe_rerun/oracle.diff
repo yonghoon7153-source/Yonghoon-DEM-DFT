@@ -1,0 +1,20 @@
+--- probe_pc12_independent.py (원본)
++++ probe_rr3_oracle.py
+@@ -141,7 +141,7 @@
+                             'attempt_order_problem':order,'result_line_problem':recount})
+         (HERE/f'counterexample_{label}_ledger.jsonl').write_bytes(raw)
+     assert ledger_rows[0]['attempt_order_problem'][0]=='RESUME_NOT_ALLOWED'
+-    assert ledger_rows[1]['attempt_order_problem'] is None
++    assert ledger_rows[1]['attempt_order_problem'][0]=='RESUME_NOT_ALLOWED'   # RR3-01 고침 뒤 거부 oracle (원 = is None)
+     assert all(x['result_line_problem'] is None for x in ledger_rows)
+     # The actual resumed copy should still fail its read_run, delimiting impact.
+     resumed=Path(td)/'attempt_2';resumed.mkdir()
+@@ -160,7 +160,7 @@
+         'ledger_policy':ledger_rows,
+         'source_done':src_done,'actual_copy_read_result':copy_failure,
+         'physical_run_count':0}
+-    assert before['resume_ok'] is False and after['resume_ok'] is True and problem is None
++    assert before['resume_ok'] is False and after['resume_ok'] is False and problem is not None   # RR3-01 고침 뒤 거부 oracle (원 = True · None)
+     assert src_done and copy_failure['code']=='ARM_JSON_COUNT'
+     (HERE/'counterexample_original_summary.json').write_text(json.dumps(original,ensure_ascii=False,indent=2),encoding='utf-8')
+     (HERE/'counterexample_edited_summary.json').write_text(json.dumps(changed,ensure_ascii=False,indent=2),encoding='utf-8')

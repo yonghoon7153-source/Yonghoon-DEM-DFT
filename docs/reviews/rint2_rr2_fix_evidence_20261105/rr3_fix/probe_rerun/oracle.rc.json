@@ -1,0 +1,1 @@
+{"rc": 0, "python": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]", "cmd": "RINT_REVIEW_REPO=<작업 트리> /usr/local/bin/python3 -I -B -X utf8 <스크래치>/oracle/pc12_attack/probe_rr3_oracle.py"}

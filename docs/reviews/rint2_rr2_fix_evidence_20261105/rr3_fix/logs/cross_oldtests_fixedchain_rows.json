@@ -1,0 +1,100 @@
+{
+ "CT06": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "c_prev_record": {
+     "got": [
+      "timeout",
+      false
+     ],
+     "prob": "멈춤 TIME_LIMIT · 런 'L01_floor' 앞의 런 기록 runs[0] ('L00_prev') = 꼴 exit_ok · arms_read file_ids (파일 신원 1 = 판독 실패 때 남긴 꼴) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 런 = arms_read 판독 완료 꼴 (`arms_read_record` · ARM_PUBLIC · 요청 팔 일대일) · 판독 실패 때 남긴 파일 신원 목록 (file_ids) = 끝난 런 아님 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03 · RR3-01)",
+     "want": [
+      "timeout",
+      true
+     ]
+    }
+   },
+   "n": 61,
+   "n_bad": 1
+  }
+ },
+ "PC12C": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "cli_honest_tl_after_ok": [
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     "timeout"
+    ],
+    "gu_after_ok": {
+     "got": [
+      "group_unconfirmed",
+      false,
+      true
+     ],
+     "prob": "멈춤 GROUP_UNCONFIRMED · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read file_ids (파일 신원 1 = 판독 실패 때 남긴 꼴) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 런 = arms_read 판독 완료 꼴 (`arms_read_record` · ARM_PUBLIC · 요청 팔 일대일) · 판독 실패 때 남긴 파일 신원 목록 (file_ids) = 끝난 런 아님 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03 · RR3-01)",
+     "want": [
+      "group_unconfirmed",
+      true,
+      false
+     ]
+    },
+    "rr_after_copied": {
+     "got": [
+      "signal",
+      false,
+      true
+     ],
+     "prob": "멈춤 RUNNER_RC · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read file_ids (파일 신원 1 = 판독 실패 때 남긴 꼴) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 런 = arms_read 판독 완료 꼴 (`arms_read_record` · ARM_PUBLIC · 요청 팔 일대일) · 판독 실패 때 남긴 파일 신원 목록 (file_ids) = 끝난 런 아님 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03 · RR3-01)",
+     "want": [
+      "signal",
+      true,
+      false
+     ]
+    },
+    "rr_signal_after_ok": {
+     "got": [
+      "signal",
+      false,
+      true
+     ],
+     "prob": "멈춤 RUNNER_RC · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read file_ids (파일 신원 1 = 판독 실패 때 남긴 꼴) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 런 = arms_read 판독 완료 꼴 (`arms_read_record` · ARM_PUBLIC · 요청 팔 일대일) · 판독 실패 때 남긴 파일 신원 목록 (file_ids) = 끝난 런 아님 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03 · RR3-01)",
+     "want": [
+      "signal",
+      true,
+      false
+     ]
+    },
+    "tl_none_after_ok": {
+     "got": [
+      "timeout",
+      false,
+      true
+     ],
+     "prob": "멈춤 TIME_LIMIT · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read file_ids (파일 신원 1 = 판독 실패 때 남긴 꼴) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 런 = arms_read 판독 완료 꼴 (`arms_read_record` · ARM_PUBLIC · 요청 팔 일대일) · 판독 실패 때 남긴 파일 신원 목록 (file_ids) = 끝난 런 아님 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03 · RR3-01)",
+     "want": [
+      "timeout",
+      true,
+      false
+     ]
+    }
+   },
+   "n": 17,
+   "n_bad": 5
+  }
+ },
+ "_chain_sha256": "b37ef7c68e126acdfe7c9062c04e215438ee374b0c0ef7152ec6a485cb00def1",
+ "_test_sha256": "fedba635c5ea52e88d38341308637a025b44665c0c3e40cb49cdae50af5c7811"
+}
