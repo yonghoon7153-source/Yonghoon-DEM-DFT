@@ -1,0 +1,41 @@
+{
+  "schema": "codex-ledger-proposal-v1",
+  "date": "2026-11-09",
+  "apply_now": false,
+  "ledger_modified": false,
+  "receipt": "docs/reviews/nonrint_limited_acceptance_consolidation_20261109/receipt.json",
+  "proposal_owner": "Claude",
+  "automatic_verified": false,
+  "proposed_status": "claimed_fixed",
+  "items": [
+    {
+      "id": "LHS12-01",
+      "severity": "P2",
+      "limited_closure": "Inactive document direction ambiguity only"
+    },
+    {
+      "id": "LHS12-02",
+      "severity": "P3",
+      "limited_closure": "Inactive document primary cohort overlap ambiguity only"
+    },
+    {
+      "id": "MLA-01",
+      "residual_id": "MLAR-01",
+      "severity": "P1",
+      "limited_closure": "Original path-character residual only, under prior environment-boundary acceptance",
+      "second_independent_P1": false,
+      "evidence_repack_hold_resolved": true
+    },
+    {
+      "id": "MGS-01",
+      "severity": "P3",
+      "limited_closure": "Direct API string-subclass acceptance path only"
+    }
+  ],
+  "proposal": "Record claimed_fixed plus limited independent closure notes using source and B-copy pins. Keep prior history; the current receipt resolves only the former MLAR package completeness hold. Do not assign verified from these two Codex windows alone.",
+  "MLA02_MLA03": "Keep existing claimed_fixed and original-scope closure notes without expanding operational scope",
+  "whole_gate": "HOLD",
+  "execution_authorized": false,
+  "value_access_authorized": false,
+  "operational_reseal_authorized": false
+}

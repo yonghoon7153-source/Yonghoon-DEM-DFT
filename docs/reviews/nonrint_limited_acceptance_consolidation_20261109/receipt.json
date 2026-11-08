@@ -1,0 +1,162 @@
+{
+  "schema": "nonrint_limited_acceptance_consolidation/1",
+  "date": "2026-11-09",
+  "base_b": "1f9f3607eb2f0118d322eeff780bba6eb17b85a2",
+  "scope": "Consolidated limited dispositions and receipt of the independent reviewer MLAR corrected archive; no code or operational action",
+  "latest_evidence": {
+    "LHS12": {
+      "filename": "codex_lhs12_clarification_39b635a405f0_independent_20261109.zip",
+      "bytes": 901668,
+      "sha256": "67c4406f5a491c76add87237c0882880e219241ad52a90bd8aa7aa165f9031a5"
+    },
+    "MLAR01": {
+      "filename": "codex_mlar01_path_215e9cc007cc_independent_repacked_20261109.zip",
+      "bytes": 2579399,
+      "sha256": "85ed68c460383d2546a7f904074ca13e3c129b15f28012ba2376b2275eab670d"
+    },
+    "MGS01": {
+      "filename": "codex_mgs01_api_aab74e46baed_independent_20261109.zip",
+      "bytes": 1335173,
+      "sha256": "41030e4e613e3578d1cc0371a29f7c2ca003d5960605abaafb3fe361dbe772cc"
+    }
+  },
+  "mlar_correction_documents": [
+    {
+      "filename": "CORRECTION.md",
+      "bytes": 2202,
+      "sha256": "1279307aec4fe3ae2fa6d671dc485dd967072ccce09ea7afabfe5ba596c59af1"
+    },
+    {
+      "filename": "repack_verification.json",
+      "bytes": 2785,
+      "sha256": "c475726dbc733b57948bcc76dd71f68a78b7643e518bf13705037879aa2cd40f"
+    }
+  ],
+  "mlar_corrected_receipt": {
+    "status": "PASS",
+    "added_members": [
+      {
+        "member": "package/snapshot/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+        "bytes": 3606,
+        "sha256": "befb669cfc35af1f1c5936e2c1108111956fc16e746cbc8d9b0cdbeeb4601812"
+      }
+    ],
+    "changed_existing": [
+      "SHA256SUMS"
+    ],
+    "unchanged_existing_files": 189,
+    "corrected_files": 191,
+    "root_hash_entries": 190,
+    "package_hash_entries": 128,
+    "planned_asset_hash_entries": 40,
+    "original_request_files_identical": 129,
+    "crc_and_member_safety": "PASS",
+    "all_nested_hash_manifests": "PASS",
+    "original_verdict_report_sources_logs_preserved": true,
+    "resolves": "Evidence completeness hold recorded in mixer receipt 0d5a918e and correction 979b1c72",
+    "historical_incomplete_evidence_sha256": "412b5b9379b37970521966e42dc91f9ab83e06191669fa16b75bb97ab7a56e64",
+    "historical_incomplete_archive_modified": false,
+    "prior_receipts_edited": false,
+    "new_substantive_review_or_tests_performed": false
+  },
+  "distinct_prior_local_repack": {
+    "sha256": "2ddbb3b168f359be1bc7a908972405326ba573919251d4ae295e01b79fb37707",
+    "role": "Implementation-window container correction requested by user; not an independently reissued verdict",
+    "used_as_latest_reviewer_artifact": false,
+    "members_equal_to_reviewer_repack": 191,
+    "different_zip_containers": true,
+    "reported_container_difference": "Member ordering and metadata differ; do not infer a changed report or source from container SHA alone"
+  },
+  "received_dispositions": [
+    {
+      "id": "LHS12-01",
+      "severity": "P2",
+      "status": "CLOSABLE_DOCUMENT_SCOPE",
+      "scope": "Inactive E/Z/D direction population, empty set and tie ambiguity"
+    },
+    {
+      "id": "LHS12-02",
+      "severity": "P3",
+      "status": "CLOSABLE_DOCUMENT_SCOPE",
+      "scope": "Inactive primary cohort priority and denominator overlap ambiguity"
+    },
+    {
+      "id": "MLAR-01",
+      "ledger_id": "MLA-01",
+      "severity": "P1",
+      "status": "CLOSABLE_LIMITED",
+      "scope": "Original residual path-character option-injection boundary",
+      "additional_independent_P1": false
+    },
+    {
+      "id": "MGS-01",
+      "severity": "P3",
+      "status": "CLOSABLE_LIMITED",
+      "scope": "Direct API string-subclass conversion bypass"
+    }
+  ],
+  "new_findings": {
+    "P1": 0,
+    "P2": 0,
+    "P3": 0
+  },
+  "import_state": {
+    "candidate_changes_already_in_b": [
+      {
+        "track": "LHS12",
+        "source": "39b635a405f0d0141f1404de08acdb5461938f8e",
+        "b_copy": "455171e3dcbf1e86a2b843a34553f295a0052196",
+        "delta_files": 11
+      },
+      {
+        "track": "MLAR-01",
+        "source": "215e9cc007cc1307fc3bd3f31fa48cff1addc2a1",
+        "b_copy": "0b2c1a39bcc12130beaa59a78dd214f38efd3d3c",
+        "delta_files": 10
+      },
+      {
+        "track": "MGS-01",
+        "source": "aab74e46baed555e51033dd9ae54d2fd754e1d5e",
+        "b_copy": "356dfefd1baea287f8115fef55a7a9ca4a2980c1",
+        "delta_files": 9
+      }
+    ],
+    "candidate_reimport_required": false,
+    "prior_receipt_commits_in_order": [
+      "eba2e2baf4b6324f21972e9bb5a538f6562fc653",
+      "0d5a918eded0ba8c7c502560e0b8db0e8e8717b3",
+      "979b1c721ba3a2a7a4bdf5b11472be2e4de2f213"
+    ],
+    "prior_receipt_folders_absent_in_observed_base": true,
+    "final_step": "Import this consolidation commit after the prior receipt commits; verify any already imported equivalents and skip duplicates",
+    "raw_zip_or_external_report_repository_import": false,
+    "method": "cherry-pick -x; no synchronization merge, rebase, amend or force push"
+  },
+  "proposal": {
+    "ledger_modified": false,
+    "apply_now": false,
+    "owner": "Claude after receipt import",
+    "suggested_status": "claimed_fixed with original-defect limited closure note",
+    "automatic_verified": false,
+    "reason": "Preserve the current two-Codex-window ledger convention; disposition is not operational qualification"
+  },
+  "preserved_boundaries": {
+    "whole_gate": "HOLD",
+    "value_access_granted": false,
+    "research_execution_go": false,
+    "operational_reseal": false,
+    "actual_roster_or_input_identity_established": false,
+    "resource_concurrency_order_approved": false,
+    "runtime_failure_auto_campaign_hold": false,
+    "automatic_reservation_release_or_retry": false,
+    "prior_MLA02_MLA03_limited_acceptance": "preserved without expansion"
+  },
+  "receipt_work": {
+    "metadata_and_bytes_only": true,
+    "attached_scripts_executed": false,
+    "project_tests_executed": false,
+    "original_artifacts_modified": false,
+    "shared_ledger_modified": false,
+    "original_data_read": false
+  }
+}
