@@ -1,0 +1,21 @@
+{
+  "schema": "lhs_wsl30_inventory_receipt_record_proposal/1",
+  "apply_now": false,
+  "finding_changes": [],
+  "shared_files_modified": false,
+  "closure_claimed": false,
+  "progress_proposal": "First-author WSL30 inventory output received: process rc0, one complete JSON, exact thirty cases and sixty required logs COUNTED. Both logs in every case have equal B7 line counts but different byte sizes; same-run identity, canonical log and pressure qualification remain unestablished. Four document-only questions refine original canonical Q5/Q7/Q8 before input identity, A/C and value-access decisions.",
+  "inventory_execution_performed_by": "first_author",
+  "receipt_provenance": "user_provided_terminal_output_and_prepared_receipt_JSON",
+  "receipt_data_path": "docs/data/lhs_wsl30_inventory_20261108/",
+  "canonical_n_review_pin_on_B": "1b20ce0606f3b49ef1abc4dd2bc540ead773905a",
+  "canonical_selection_pin_on_B": "5dd1e7ec01362db7a7fd0db264e79bbbb87152da",
+  "same_inventory_GO_reapproval_requested": false,
+  "inventory_rerun_requested": false,
+  "ac_choice_made": false,
+  "actual_input_identity_established": false,
+  "value_access_authorized_by_this_record": false,
+  "new_research_computation": false,
+  "ibb184_or_whole214_inventory_completed": false,
+  "whole_gate": "HOLD"
+}
