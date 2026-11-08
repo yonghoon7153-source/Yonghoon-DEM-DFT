@@ -14164,7 +14164,7 @@
     {
       "id": "MXD2R-01",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-27 믹서 D2 개발 소비자 독립 재검토 (핀 045e0b309)",
       "opened_in": "docs/reviews/codex_mixer_d2_review_20261027/codex_review_mixer_d2_20261027.md",
@@ -14175,12 +14175,17 @@
         "scripts/test_mixer_d2_consumers.py::test_mxd2r01_codex_time_insert_rotation",
         "scripts/test_mixer_d2_consumers.py::test_mxd2r01_same_class_generator_grammar",
         "docs/reviews/mxd2r_fix_evidence_20261103/README.md"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/mxd2r_r01_acceptance_20261106/external/external_verdict.txt",
+      "verified_sha": "f5b00a838f08f125e7e0d909cd024dce989c3cea",
+      "verified_scope": "Codex MXD2R 재확인 (11-06 · 검토 핀 f5b00a838) = 소비자 하위 범위 한정 CLOSED — 생성기 단독 부적격 덱 출력 · first8 운영 봉인 · MLA · 실제 실행 GO 는 범위 밖",
+      "verification_note": "원 판정문 = 1저자 전달 (리포 원문 없음 · 8 질문판 쪽지 288929658dca 에 기록 = 반입 제외) · 리포 근거 = R01 판정문 (docs/reviews/mxd2r_r01_acceptance_20261106/external/external_verdict.txt 60 줄 \"MXD2R-01–03 기존 한정 CLOSED는 유지한다\") · 실무 쪽지 docs/collab/codex_to_claude/20261106-1203_mxd2r-r01-seed-recheck.md · 11-08 반입 (1저자 \"ㅇㅇ 지금해\" · 인계 §7 원장 제안)."
     },
     {
       "id": "MXD2R-02",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-27 믹서 D2 개발 소비자 독립 재검토 (핀 045e0b309)",
       "opened_in": "docs/reviews/codex_mixer_d2_review_20261027/codex_review_mixer_d2_20261027.md",
@@ -14192,12 +14197,17 @@
         "scripts/test_mixer_d2_consumers.py::test_mxd2r02_same_class_contact_and_materials",
         "scripts/test_mixer_d2_consumers.py::test_mxd2r02_material_copies_match_generator",
         "docs/reviews/mxd2r_fix_evidence_20261103/README.md"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/mxd2r_r01_acceptance_20261106/external/external_verdict.txt",
+      "verified_sha": "f5b00a838f08f125e7e0d909cd024dce989c3cea",
+      "verified_scope": "Codex MXD2R 재확인 (11-06 · 검토 핀 f5b00a838) = 소비자 하위 범위 한정 CLOSED — 생성기 단독 부적격 덱 출력 · first8 운영 봉인 · MLA · 실제 실행 GO 는 범위 밖",
+      "verification_note": "원 판정문 = 1저자 전달 (리포 원문 없음 · 8 질문판 쪽지 288929658dca 에 기록 = 반입 제외) · 리포 근거 = R01 판정문 (docs/reviews/mxd2r_r01_acceptance_20261106/external/external_verdict.txt 60 줄 \"MXD2R-01–03 기존 한정 CLOSED는 유지한다\") · 실무 쪽지 docs/collab/codex_to_claude/20261106-1203_mxd2r-r01-seed-recheck.md · 11-08 반입 (1저자 \"ㅇㅇ 지금해\" · 인계 §7 원장 제안)."
     },
     {
       "id": "MXD2R-03",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-27 믹서 D2 개발 소비자 독립 재검토 (핀 045e0b309)",
       "opened_in": "docs/reviews/codex_mixer_d2_review_20261027/codex_review_mixer_d2_20261027.md",
@@ -14208,7 +14218,12 @@
         "scripts/test_mixer_d2_consumers.py::test_mxd2r03_physical_bytes_api",
         "scripts/test_mixer_d2_consumers.py::test_mxd2r03_physical_bytes_cli_both_directions",
         "docs/reviews/mxd2r_fix_evidence_20261103/README.md"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/mxd2r_r01_acceptance_20261106/external/external_verdict.txt",
+      "verified_sha": "f5b00a838f08f125e7e0d909cd024dce989c3cea",
+      "verified_scope": "Codex MXD2R 재확인 (11-06 · 검토 핀 f5b00a838) = 소비자 하위 범위 한정 CLOSED — 생성기 단독 부적격 덱 출력 · first8 운영 봉인 · MLA · 실제 실행 GO 는 범위 밖",
+      "verification_note": "원 판정문 = 1저자 전달 (리포 원문 없음 · 8 질문판 쪽지 288929658dca 에 기록 = 반입 제외) · 리포 근거 = R01 판정문 (docs/reviews/mxd2r_r01_acceptance_20261106/external/external_verdict.txt 60 줄 \"MXD2R-01–03 기존 한정 CLOSED는 유지한다\") · 실무 쪽지 docs/collab/codex_to_claude/20261106-1203_mxd2r-r01-seed-recheck.md · 11-08 반입 (1저자 \"ㅇㅇ 지금해\" · 인계 §7 원장 제안)."
     },
     {
       "id": "MXD2R-04",
@@ -14231,7 +14246,8 @@
         "scripts/test_mixer_d2_consumers.py::test_mxd2r04_neighbor_skin_generator_form",
         "scripts/test_mixer_d2_consumers.py::test_actual_command_scope",
         "docs/reviews/mxd2r_fix_evidence_20261103/mxd2r04/README.md"
-      ]
+      ],
+      "verification_note": "Codex MXD2R 재확인 (11-06 · 검토 핀 f5b00a838) = PARTIAL — 남은 하위 결함 = 실제 insert/pack seed 범위 · 소수 → MXD2R-R01 로 분리 · R01 한정 CLOSED (11-06 독립 판정) · 04 전체에 대한 외부 종결 판정 없음 → verified 아님 · 생성기 단독 부적격 덱 출력 = 잔여 한계 (11-08 반입 기록)."
     },
     {
       "id": "PAI-01",
@@ -15423,7 +15439,7 @@
         "docs/reviews/lhs_pressure_inventory_closure_20261104/_repro_ours_20261104/probe_obs_audit.py"
       ],
       "supersedes": [],
-      "decision_note": "무관 sibling 생성·삭제를 stat/open 사이에 주입하면 CHANGED/rc2. 합성 기전 재현일 뿐 최초 실패 원인 확정 아님. 가드 유지, 추가 수정·실제 실행 미승인."
+      "decision_note": "무관 sibling 생성·삭제를 stat/open 사이에 주입하면 CHANGED/rc2. 합성 기전 재현일 뿐 최초 실패 원인 확정 아님. 가드 유지, 추가 수정·실제 실행 미승인. · (11-06 Codex 실무 제안 · 11-08 반입) 합성 조상 변경 거부는 재현되고 가드 제거 대조에서 검출됨. 214 압력 기록 거부와는 별도 사건. 최초 audit 역사 원인은 진단 부재로 미확정; 명령/가드 변경 없음."
     },
     {
       "id": "RR2-01",
@@ -16027,6 +16043,76 @@
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/p2_real_ledger.py (2b 한 칸 = resume rc 0 · p2_real_ledger.out)",
         "scripts/test_rint_r_chain.py CT06 S2_forged_GU_rc0 (끝 기록 CHAIN_OK1 = 확인 True 고정물)"
       ]
+    },
+    {
+      "id": "MLA-01",
+      "severity": "P1",
+      "status": "open",
+      "owner": "codex",
+      "found_by": "codex 11-06 믹서 first8 실행 준비 외부 판정 (검토 핀 b57fe91503ba)",
+      "opened_in": "docs/reviews/mixer_mla_recheck_20261106/README.md",
+      "title": "승인한 runner 바이트와 실제 sbatch 옵션이 결속되지 않는다",
+      "claimed_fixed_sha": null,
+      "verified_sha": null,
+      "evidence_tests": [
+        "docs/reviews/mixer_mla_recheck_20261106/evidence/mla_before.log",
+        "docs/reviews/mixer_mla_recheck_20261106/evidence/mla_after.log"
+      ],
+      "supersedes": [],
+      "decision_note": "수정 후보 = Codex 실무 창 a4c78001f (B 반입 a2e0396241c4) · 모의 · 변이 검사만 · 외부 재확인 대기 (요청서 docs/reviews/mixer_mla_recheck_20261106/review_request.md · 발송 = 1저자) · 실제 sbatch · MPI · 연구 계산 0 회 · 전체 HOLD (11-08 반입 · 원장 제안 OPEN_EXTERNAL_RECHECK_PENDING)"
+    },
+    {
+      "id": "MLA-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "codex",
+      "found_by": "codex 11-06 믹서 first8 실행 준비 외부 판정 (검토 핀 b57fe91503ba)",
+      "opened_in": "docs/reviews/mixer_mla_recheck_20261106/README.md",
+      "title": "case별 배타 claim은 팔 사이 동시성·불명확 제출 상태를 공유하지 않는다",
+      "claimed_fixed_sha": null,
+      "verified_sha": null,
+      "evidence_tests": [
+        "docs/reviews/mixer_mla_recheck_20261106/evidence/mla_before.log",
+        "docs/reviews/mixer_mla_recheck_20261106/evidence/mla_after.log"
+      ],
+      "supersedes": [],
+      "decision_note": "수정 후보 = Codex 실무 창 a4c78001f (B 반입 a2e0396241c4) · 모의 · 변이 검사만 · 외부 재확인 대기 (요청서 docs/reviews/mixer_mla_recheck_20261106/review_request.md · 발송 = 1저자) · 실제 sbatch · MPI · 연구 계산 0 회 · 전체 HOLD (11-08 반입 · 원장 제안 OPEN_EXTERNAL_RECHECK_PENDING)"
+    },
+    {
+      "id": "MLA-03",
+      "severity": "P2",
+      "status": "open",
+      "owner": "codex",
+      "found_by": "codex 11-06 믹서 first8 실행 준비 외부 판정 (검토 핀 b57fe91503ba)",
+      "opened_in": "docs/reviews/mixer_mla_recheck_20261106/README.md",
+      "title": "기존 종료 영수증을 fresh 검사에서 빠뜨려 덮어쓴다",
+      "claimed_fixed_sha": null,
+      "verified_sha": null,
+      "evidence_tests": [
+        "docs/reviews/mixer_mla_recheck_20261106/evidence/mla_before.log",
+        "docs/reviews/mixer_mla_recheck_20261106/evidence/mla_after.log"
+      ],
+      "supersedes": [],
+      "decision_note": "수정 후보 = Codex 실무 창 a4c78001f (B 반입 a2e0396241c4) · 모의 · 변이 검사만 · 외부 재확인 대기 (요청서 docs/reviews/mixer_mla_recheck_20261106/review_request.md · 발송 = 1저자) · 실제 sbatch · MPI · 연구 계산 0 회 · 전체 HOLD (11-08 반입 · 원장 제안 OPEN_EXTERNAL_RECHECK_PENDING)"
+    },
+    {
+      "id": "MXD2R-R01",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "codex",
+      "found_by": "codex 11-06 MXD2R 재확인 (검토 핀 f5b00a838 · 반박 창)",
+      "opened_in": "docs/collab/codex_to_claude/20261106-1203_mxd2r-r01-seed-recheck.md",
+      "title": "생성기가 만든 층상 둘째 seed 가 상한 2147483647 을 넘어도 (예: 2147483659) 세 D2 소비자 · CLI 가 통과 — 각 실제 insert/pack seed 의 범위 · 소수 검사 없음",
+      "claimed_fixed_sha": "a6dfe970cbb4c54c0b93754c00d92174086333b6",
+      "verified_sha": null,
+      "evidence_tests": [
+        "scripts/test_mixer_d2_consumers.py",
+        "docs/reviews/mxd2r_r01_recheck_20261106/README.md",
+        "docs/reviews/mxd2r_r01_acceptance_20261106/external/external_verdict.txt"
+      ],
+      "supersedes": [],
+      "decision_note": "Codex 실무 창 고침 69b6bec7a (B 반입 a6dfe970cbb4) · 독립 Codex 재확인 (11-06 · 검토 핀 69b6bec7a) = R01 한정 닫힘 · 새 P1/P2/P3 없음 · 전체 HOLD · 실제 실행 미승인 (11-08 반입)",
+      "verification_note": "독립 Codex 재검토가 \"각 실제 insert/pack seed 범위 · 소수 검사 (D2 소비자 셋)\" 범위 종결 판정 (docs/reviews/mxd2r_r01_acceptance_20261106/external/external_verdict.txt). verified 전환 안 함 — 고친 쪽 · 검토 쪽 모두 Codex 창이라 owner/verified_by 로 독립성을 표현할 수 없다 (LPI-01 · 02 와 같은 규칙 · 검증자를 지어 넣지 않는다)."
     }
   ]
 }
