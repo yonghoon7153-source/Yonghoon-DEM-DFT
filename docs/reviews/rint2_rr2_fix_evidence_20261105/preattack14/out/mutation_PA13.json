@@ -1,0 +1,367 @@
+{
+ "M01_same_truthy": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (5.8 s)   FAILED: ['PA13A']",
+  "s": 6.2
+ },
+ "M02_drop_code": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.0 s)   FAILED: ['PA13A']",
+  "s": 7.5
+ },
+ "M03_drop_run_eq": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (6.9 s)   FAILED: ['PA13A']",
+  "s": 7.4
+ },
+ "M04_drop_rerun_str": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.1 s)   FAILED: ['PA13A']",
+  "s": 7.5
+ },
+ "M05_no_mismatch_call": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (8.1 s)   FAILED: ['PA13A']",
+  "s": 8.6
+ },
+ "M06_no_rerun_call": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.3 s)   FAILED: ['PA13A']",
+  "s": 7.9
+ },
+ "M07_nondict_resume_ok": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (9.0 s)   FAILED: ['PA13A']",
+  "s": 9.5
+ },
+ "M08_null_resume_ok": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (8.3 s)   FAILED: ['PA13A']",
+  "s": 8.8
+ },
+ "M09_ro_type": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.6 s)   FAILED: ['PA13A']",
+  "s": 8.1
+ },
+ "M10_drop_lo": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (6.7 s)   FAILED: ['PA13A']",
+  "s": 7.1
+ },
+ "M11_drop_n": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.5 s)   FAILED: ['PA13A']",
+  "s": 8.0
+ },
+ "M12_frm_isinstance": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.0 s)   FAILED: ['PA13A']",
+  "s": 7.5
+ },
+ "M13_copied_names": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.1 s)   FAILED: ['PA13A']",
+  "s": 7.6
+ },
+ "M14_copiedfrom_type": {
+  "killed": false,
+  "fails": [],
+  "summary": "test_rint_r_chain: 4/4 PASS (8.0 s)",
+  "s": 8.4
+ },
+ "M15_copiedfrom_eq": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.1 s)   FAILED: ['PA13A']",
+  "s": 7.6
+ },
+ "M16_copy_after_new": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (8.7 s)   FAILED: ['PA13A']",
+  "s": 9.2
+ },
+ "M17_first_name": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (8.9 s)   FAILED: ['PA13A']",
+  "s": 9.3
+ },
+ "M18_rr_det_only": {
+  "killed": false,
+  "fails": [],
+  "summary": "test_rint_r_chain: 4/4 PASS (8.1 s)",
+  "s": 8.6
+ },
+ "M19_rr_cmp_only": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (8.3 s)   FAILED: ['PA13A']",
+  "s": 8.7
+ },
+ "M20_first_none": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (8.0 s)   FAILED: ['PA13A']",
+  "s": 8.4
+ },
+ "M21_det_domain": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (8.9 s)   FAILED: ['PA13A']",
+  "s": 9.4
+ },
+ "M22_det_iff": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.5 s)   FAILED: ['PA13A']",
+  "s": 8.0
+ },
+ "M23_cmp_keys": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.6 s)   FAILED: ['PA13A']",
+  "s": 8.0
+ },
+ "M24_cmp_file_str": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (8.8 s)   FAILED: ['PA13A']",
+  "s": 9.3
+ },
+ "M25_od_want": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.6 s)   FAILED: ['PA13A']",
+  "s": 8.1
+ },
+ "M26_side_rej": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.1 s)   FAILED: ['PA13A']",
+  "s": 7.6
+ },
+ "M27_recompare": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (6.8 s)   FAILED: ['PA13A']",
+  "s": 7.3
+ },
+ "M28_oserror_open": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (9.9 s)   FAILED: ['PA13A']",
+  "s": 10.4
+ },
+ "M29_state": {
+  "killed": true,
+  "fails": [
+   "PA13B"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (9.7 s)   FAILED: ['PA13B']",
+  "s": 10.3
+ },
+ "M30_pid": {
+  "killed": true,
+  "fails": [
+   "PA13B"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (9.4 s)   FAILED: ['PA13B']",
+  "s": 9.9
+ },
+ "M31_pid_nodash": {
+  "killed": true,
+  "fails": [
+   "PA13B"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (10.8 s)   FAILED: ['PA13B']",
+  "s": 11.4
+ },
+ "M32_sid": {
+  "killed": true,
+  "fails": [
+   "PA13B"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (9.2 s)   FAILED: ['PA13B']",
+  "s": 9.7
+ },
+ "M33_cp_len": {
+  "killed": true,
+  "fails": [
+   "PA13B"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (8.7 s)   FAILED: ['PA13B']",
+  "s": 9.2
+ },
+ "M34_cp_pos": {
+  "killed": true,
+  "fails": [
+   "PA13B"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.9 s)   FAILED: ['PA13B']",
+  "s": 8.3
+ },
+ "M35_err_float": {
+  "killed": true,
+  "fails": [
+   "PA13B"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (5.1 s)   FAILED: ['PA13B']",
+  "s": 5.5
+ },
+ "M36_err_neg": {
+  "killed": true,
+  "fails": [
+   "PA13B"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.2 s)   FAILED: ['PA13B']",
+  "s": 7.6
+ },
+ "M37_err_zero": {
+  "killed": true,
+  "fails": [
+   "PA13B"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.5 s)   FAILED: ['PA13B']",
+  "s": 7.9
+ },
+ "M38_iters": {
+  "killed": true,
+  "fails": [
+   "PA13B"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (8.2 s)   FAILED: ['PA13B']",
+  "s": 8.6
+ },
+ "M39_conv": {
+  "killed": true,
+  "fails": [
+   "PA13B"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.2 s)   FAILED: ['PA13B']",
+  "s": 7.6
+ },
+ "M40_kind_call": {
+  "killed": true,
+  "fails": [
+   "PA13B",
+   "PA13C",
+   "PA13D"
+  ],
+  "summary": "test_rint_r_chain: 1/4 PASS (6.9 s)   FAILED: ['PA13B', 'PA13C', 'PA13D']",
+  "s": 7.4
+ },
+ "M41_readrun_call": {
+  "killed": true,
+  "fails": [
+   "PA13C"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (6.6 s)   FAILED: ['PA13C']",
+  "s": 7.0
+ },
+ "M42_arm_states_all": {
+  "killed": true,
+  "fails": [
+   "PA13B",
+   "PA13C"
+  ],
+  "summary": "test_rint_r_chain: 2/4 PASS (6.7 s)   FAILED: ['PA13B', 'PA13C']",
+  "s": 7.1
+ },
+ "M43_readrun_pref": {
+  "killed": true,
+  "fails": [
+   "PA13C"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (6.6 s)   FAILED: ['PA13C']",
+  "s": 7.0
+ },
+ "M44_gsrc_pref": {
+  "killed": true,
+  "fails": [
+   "PA13C"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (6.7 s)   FAILED: ['PA13C']",
+  "s": 7.1
+ },
+ "M45_cp_type": {
+  "killed": true,
+  "fails": [
+   "PA13B"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (5.0 s)   FAILED: ['PA13B']",
+  "s": 5.4
+ },
+ "M46_pid_type": {
+  "killed": false,
+  "fails": [],
+  "summary": "test_rint_r_chain: 4/4 PASS (6.7 s)",
+  "s": 7.1
+ }
+}

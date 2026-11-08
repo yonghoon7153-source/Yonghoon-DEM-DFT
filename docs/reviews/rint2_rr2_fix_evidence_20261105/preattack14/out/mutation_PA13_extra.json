@@ -1,0 +1,36 @@
+{
+ "M47_mm_elem_type": {
+  "killed": false,
+  "fails": [],
+  "summary": "test_rint_r_chain: 4/4 PASS (7.2 s)",
+  "s": 7.7
+ },
+ "M51_det_allow_none": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (7.7 s)   FAILED: ['PA13A']",
+  "s": 8.1
+ },
+ "M52_cmp_keys_file_only": {
+  "killed": true,
+  "fails": [
+   "PA13A"
+  ],
+  "summary": "test_rint_r_chain: 3/4 PASS (6.6 s)   FAILED: ['PA13A']",
+  "s": 7.1
+ },
+ "M54_lo_one": {
+  "killed": false,
+  "fails": [],
+  "summary": "test_rint_r_chain: 4/4 PASS (7.7 s)",
+  "s": 8.1
+ },
+ "M56_side_rej_dir": {
+  "killed": false,
+  "fails": [],
+  "summary": "test_rint_r_chain: 4/4 PASS (8.2 s)",
+  "s": 8.7
+ }
+}

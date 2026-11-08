@@ -1,0 +1,15 @@
+honest_mm
+   res2: {'cause': 'check', 'resume_ok': False, 'stop': {'code': 'RESUME_MISMATCH', 'run': 'L02_ceiling', 'reason': None}}
+   order(--add --resume): ('RESUME_NOT_ALLOWED', '재실행 사슬 끝 attempt_2 = stopped · 원인 check · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)')
+   presolve chain recount: None
+   verdict found_attempts_problem: attempt_1: attempt.json (machine 'kgy') ≠ 원장 항목 1 (machine 'synthetic') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 
+forge_stop_resume_null
+   res2: {'cause': 'timeout', 'resume_ok': False, 'stop': {'code': 'TIME_LIMIT', 'run': 'L03_point', 'reason': None}}
+   order(--add --resume): ('RESUME_NOT_ALLOWED', '재실행 사슬 끝 attempt_2 = stopped · 원인 timeout · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)')
+   presolve chain recount: None
+   verdict found_attempts_problem: attempt_1: attempt.json (machine 'kgy') ≠ 원장 항목 1 (machine 'synthetic') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 
+forge_stop_resume_null_attjson_null
+   res2: {'cause': 'timeout', 'resume_ok': True, 'stop': {'code': 'TIME_LIMIT', 'run': 'L03_point', 'reason': None}}
+   order(--add --resume): None
+   presolve chain recount: None
+   verdict found_attempts_problem: attempt_1: attempt.json (machine 'kgy') ≠ 원장 항목 1 (machine 'synthetic') — 원장 항목 줄을 바꾼 역사 고침 · 다른 원장의 시도 폴더 (결과 본 시도를 다른 대상으로 숨긴 꼴 · ★ 11-02 

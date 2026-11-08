@@ -1,0 +1,6 @@
+# 바탕 = 379e85856 (rint_r_chain.py · test_rint_r_chain.py = 사전 공격 14 대상 7a582acf5 와 같은 blob f6ea60dbc · 098918e78 = 사전 공격 13 고친 판 바이트)
+78d91ad02d1c749dbce281cc37c5a3d9e45b49204c89806a2a6b479f34d2eec6  scripts/rint_r_chain.py  (바탕)
+8ba91d45fb67b87840fa80ac126d43705aab51718d630dc136b07e6fcd62a1cd  scripts/test_rint_r_chain.py  (바탕)
+# 고친 판 = 바탕 + code.diff = 이 커밋 · 시험 · 변이 · 탐침 다시 = 이 바이트
+47a520e8ad300101c6f8d2660d7368eead77f0f3b425bdcf1d37c379fe0c8720  scripts/rint_r_chain.py  (고친 판)
+d5e1d9ea4001911b4a1878d1315e74e0188336e2ea66e021ac348ad0994612d0  scripts/test_rint_r_chain.py  (고친 판)

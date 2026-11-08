@@ -1,0 +1,28 @@
+orig predict attempt: 3 RUNNER_RC P05_corner True
+resume world min_n 3:
+    3
+    RUNNER_RC
+    P07_corner
+    {'compared': [], 'copied': ['P01_corner', 'P02_corner', 'P03_corner', 'P04_corner'], 'determinism': 'assumed', 'from': 3, 'rerun': 'P05_corner'}
+    resource
+    True
+    ['resource', True, None]
+    None
+resume world min_n 6:
+    3
+    RUNNER_RC
+    P10_corner
+    {'compared': [], 'copied': ['P01_corner', 'P02_corner', 'P03_corner', 'P04_corner'], 'determinism': 'assumed', 'from': 3, 'rerun': 'P05_corner'}
+    resource
+    True
+    ['resource', True, None]
+    None
+resume world min_n 9:
+    3
+    RUNNER_RC
+    P13_origin
+    {'compared': [], 'copied': ['P01_corner', 'P02_corner', 'P03_corner', 'P04_corner'], 'determinism': 'assumed', 'from': 3, 'rerun': 'P05_corner'}
+    resource
+    True
+    ['resource', True, None]
+    None

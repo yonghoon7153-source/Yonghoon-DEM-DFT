@@ -1,0 +1,33 @@
+== elig (honest 3-chain · a3 stop after rerun) ==
+  el.a: rc 3 stop RUNNER_RC run L02_ceiling resume None runs [('L01_floor', None), ('L02_ceiling', None)]
+     ledger result 1: {'by': 'chain', 'cause': 'resource', 'folder': 'attempt_1', 'folder_sha256': 'a394f54b8b77c8ee6360fd139cc3bf7846bc6098059736edb45cf02ab3a7354e', 'kind': 'result', 'n': 1, 'resume_ok': True, 'side': 'post', 'status': 'stopped', 'stop': {'code': 'RUNNER_RC', 'reason': None, 'run': 'L02_ceiling'}, 'utc': '2026-11-08T17:04:59Z'}
+     row (result_fields · stop_record_problem): ['resource', True, None]
+     result_line_problem: None
+  el.b: rc 3 stop GROUP_UNCONFIRMED run L03_point resume {'compared': [], 'copied': ['L01_floor'], 'determinism': 'assumed', 'from': 1, 'rerun': 'L02_ceiling'} runs [('L01_floor', 1), ('L02_ceiling', None), ('L03_point', None)]
+     ledger result 2: {'by': 'recover', 'cause': 'group_unconfirmed', 'folder': 'attempt_2', 'folder_sha256': '41a0f9241eb6cdb41e13fb5bd92905eca279f9e55923dc01c8fda9b2952ebb4a', 'kind': 'result', 'n': 2, 'resume_ok': True, 'side': 'post', 'status': 'stopped', 'stop': {'code': 'GROUP_UNCONFIRMED', 'reason': None, 'run': 'L03_point'}, 'utc': '2026-11-08T17:05:00Z'}
+     row (result_fields · stop_record_problem): ['group_unconfirmed', True, None]
+     result_line_problem: None
+  el.c: rc 3 stop RUNNER_RC run L04_point resume {'compared': [{'file': 'p2_SBE_vgcf100_sph_fa_cj10000p0_c0_a0.json', 'same': True}], 'copied': ['L01_floor', 'L02_ceiling'], 'determinism': 'compared', 'from': 2, 'rerun': 'L03_point'} runs [('L01_floor', 2), ('L02_ceiling', 2), ('L03_point', None), ('L04_point', None)]
+     ledger result 3: {'by': 'chain', 'cause': 'resource', 'folder': 'attempt_3', 'folder_sha256': '2f4321f631c78e0cfe3d069c5a283b145cff3f3d6ad022b4b27ec39cf00ce7fd', 'kind': 'result', 'n': 3, 'resume_ok': True, 'side': 'post', 'status': 'stopped', 'stop': {'code': 'RUNNER_RC', 'reason': None, 'run': 'L04_point'}, 'utc': '2026-11-08T17:05:00Z'}
+     row (result_fields · stop_record_problem): ['resource', True, None]
+     result_line_problem: None
+== mm (honest 3-chain · a3 RESUME_MISMATCH) ==
+  mm.a: rc 3 stop RUNNER_RC run L02_ceiling resume None runs [('L01_floor', None), ('L02_ceiling', None)]
+     ledger result 1: {'by': 'chain', 'cause': 'resource', 'folder': 'attempt_1', 'folder_sha256': '8c1f74470c99fe794c36907132d9f4091221e9f0793d20e4f5a6f39dbe19916e', 'kind': 'result', 'n': 1, 'resume_ok': True, 'side': 'post', 'status': 'stopped', 'stop': {'code': 'RUNNER_RC', 'reason': None, 'run': 'L02_ceiling'}, 'utc': '2026-11-08T17:05:00Z'}
+     row (result_fields · stop_record_problem): ['resource', True, None]
+     result_line_problem: None
+  mm.b: rc 3 stop GROUP_UNCONFIRMED run L03_point resume {'compared': [], 'copied': ['L01_floor'], 'determinism': 'assumed', 'from': 1, 'rerun': 'L02_ceiling'} runs [('L01_floor', 1), ('L02_ceiling', None), ('L03_point', None)]
+     ledger result 2: {'by': 'recover', 'cause': 'group_unconfirmed', 'folder': 'attempt_2', 'folder_sha256': '720a612059adedc3375f2ec5f2bdcd4fb4a286f1cbd9aae5eb287aaef6625213', 'kind': 'result', 'n': 2, 'resume_ok': True, 'side': 'post', 'status': 'stopped', 'stop': {'code': 'GROUP_UNCONFIRMED', 'reason': None, 'run': 'L03_point'}, 'utc': '2026-11-08T17:05:01Z'}
+     row (result_fields · stop_record_problem): ['group_unconfirmed', True, None]
+     result_line_problem: None
+  mm.c: rc 3 stop RESUME_MISMATCH run L03_point resume {'compared': [{'file': 'p2_SBE_vgcf100_sph_fa_cj10000p0_c0_a0.json', 'same': False}], 'copied': ['L01_floor', 'L02_ceiling'], 'determinism': 'compared', 'from': 2, 'rerun': 'L03_point'} runs [('L01_floor', 2), ('L02_ceiling', 2), ('L03_point', None)]
+     ledger result 3: {'by': 'chain', 'cause': 'check', 'folder': 'attempt_3', 'folder_sha256': 'f3a4d93f03a4d9f1fbdeaaee1b046d50edab3dce2c4faf63415a6e7241bb0165', 'kind': 'result', 'n': 3, 'resume_ok': False, 'side': 'post', 'status': 'stopped', 'stop': {'code': 'RESUME_MISMATCH', 'reason': None, 'run': 'L03_point'}, 'utc': '2026-11-08T17:05:01Z'}
+     row (result_fields · stop_record_problem): ['check', False, None]
+     result_line_problem: None
+
+== forgeries of honest a3 RESUME_MISMATCH ==
+  f_from2_assumed (3+2 fields)                         ['timeout', False, "멈춤 TIME_LIMIT · resume 칸 compared [] · determinism 'assumed' ≠ 원천 attempt_2/L03_point_arm1 남은 payload ↔ 이 시도 그 런 폴더 다시 대조 [{'file': 'p2_SBE_vgcf100_sp"]
+  f_from2_sameTrue                                     ['timeout', False, "멈춤 TIME_LIMIT · resume 칸 compared [{'file': 'p2_SBE_vgcf100_sph_fa_cj10000p0_c0_a0.json', 'same': True}] · determinism 'compared' ≠ 원천 attempt_2/L03_p"]
+  f_from1_assumed_no_cf (from rebinding only)          ['timeout', False, "멈춤 TIME_LIMIT · resume 칸 copied ['L01_floor', 'L02_ceiling'] ≠ 복사 기록 [('L01_floor', 2), ('L02_ceiling', 2)] (생산자 = 복사 런 이름 차례 · copied_from = from 1 ·"]
+  f_from1_assumed_cf1 (from rebinding + copied_from)   ['timeout', True, None]
+  forged a3 result line (recover would write): {'status': 'stopped', 'cause': 'timeout', 'resume_ok': True, 'stop': {'code': 'TIME_LIMIT', 'run': 'L04_point', 'reason': None}}

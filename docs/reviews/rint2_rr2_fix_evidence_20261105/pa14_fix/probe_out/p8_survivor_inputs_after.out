@@ -1,0 +1,3 @@
+M14 l3 copied_from True                    ['resource', False, "멈춤 RUNNER_RC · resume 칸 copied ['L01_floor'] ≠ 복사 기록 [('L01_floor', True)] (생산자 = 복사 런 이름 차례 · copied_from = from 1 · ★ 11-09 사전 공격 13 P2-1)"]
+M18 rr compared [same True] + det None     ['resource', False, "멈춤 RUNNER_RC · 멈춘 런 = resume 칸 rerun 'L02_ceiling' (대조 전 멈춤) 인데 compared [{'file': 'p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json', 'same': True}] · determinis"]
+M47 mm TL L03 + compared [5]               ['timeout', False, "멈춤 TIME_LIMIT · 런 'L03_point' 인데 resume 칸 compared 에 같지 않은 대조 ['5'] (생산자 = 같지 않은 대조가 있으면 그 자리에서 RESUME_MISMATCH · run = resume.rerun 'L02_ceiling' · 결"]

@@ -1,0 +1,28 @@
+before rc=0
+after rc=0
+== 고치기 전
+PA14A pass=False rows=11 bad=6
+   통과 행: ['h_pos', 'n_resid_str', 'h_resid_int', 'l_cgit_big', 'l_zero_resid_big']
+   실패 행: ['n_cginfo_big', 'n_cginfo_resid_big', 'n_cgit_negbig', 'n_resid_big', 'n_resid_negbig', 'n_rsit_negbig']
+PA14B pass=False rows=3 bad=2
+   통과 행: ['cli_pub']
+   실패 행: ['cli_resid_big', 'cli_resid_negbig']
+PA14C pass=False rows=28 bad=20
+   통과 행: ['h_pos', 'h_pid_f', 'h_sid_zero', 'h_err_tau', 'h_err_9e5', 'n_zero_err_tau', 'tau', 'producer_arms']
+   실패 행: ['n_err_1e300', 'n_err_half', 'n_err_up', 'n_pid_15', 'n_pid_17', 'n_pid_bare_dash', 'n_pid_newline', 'n_pid_nonhex', 'n_pid_old_fixture', 'n_pid_space', 'n_pid_upper', 'n_pid_zwsp', 'n_sid_16_old_fixture', 'n_sid_31', 'n_sid_33', 'n_sid_newline', 'n_sid_nonhex', 'n_sid_nul', 'n_sid_space', 'n_sid_upper']
+PA14D pass=False rows=18 bad=9
+   통과 행: ['h_mm', 'h_l3', 'h_rr', 'h_ro2_from2', 'h_ro2_from2_nosrc', 'f_m14_copied_from_true', 'f_m18_rr_cmp_det_none', 'f_m47_cmp_elem_int', 'f_m54_from_below_resume_of']
+   실패 행: ['e_l3_del_det', 'e_l3_del_from', 'e_l3_extra', 'e_l3_extra_nosrc', 'e_l3_nonstr_key', 'e_rr_del_cmp', 'e_rr_del_det', 'e_rr_del_det_nosrc', 'e_rr_extra']
+== 고친 뒤
+PA14A pass=True rows=11 bad=0
+   통과 행: ['h_pos', 'n_resid_big', 'n_resid_negbig', 'n_cginfo_big', 'n_cginfo_resid_big', 'n_cgit_negbig', 'n_rsit_negbig', 'n_resid_str', 'h_resid_int', 'l_cgit_big', 'l_zero_resid_big']
+   실패 행: []
+PA14B pass=True rows=3 bad=0
+   통과 행: ['cli_resid_big', 'cli_resid_negbig', 'cli_pub']
+   실패 행: []
+PA14C pass=True rows=28 bad=0
+   통과 행: ['h_pos', 'n_pid_bare_dash', 'n_pid_zwsp', 'n_pid_space', 'n_pid_newline', 'n_pid_upper', 'n_pid_15', 'n_pid_17', 'n_pid_nonhex', 'n_pid_old_fixture', 'h_pid_f', 'n_sid_space', 'n_sid_nul', 'n_sid_16_old_fixture', 'n_sid_31', 'n_sid_33', 'n_sid_upper', 'n_sid_newline', 'n_sid_nonhex', 'h_sid_zero', 'n_err_half', 'n_err_1e300', 'n_err_up', 'h_err_tau', 'h_err_9e5', 'n_zero_err_tau', 'tau', 'producer_arms']
+   실패 행: []
+PA14D pass=True rows=18 bad=0
+   통과 행: ['h_mm', 'h_l3', 'h_rr', 'h_ro2_from2', 'h_ro2_from2_nosrc', 'e_l3_extra', 'e_l3_extra_nosrc', 'e_rr_extra', 'e_rr_del_det', 'e_rr_del_det_nosrc', 'e_l3_nonstr_key', 'e_l3_del_det', 'e_rr_del_cmp', 'e_l3_del_from', 'f_m14_copied_from_true', 'f_m18_rr_cmp_det_none', 'f_m47_cmp_elem_int', 'f_m54_from_below_resume_of']
+   실패 행: []

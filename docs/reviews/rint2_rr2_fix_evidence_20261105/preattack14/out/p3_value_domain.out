@@ -1,0 +1,24 @@
+honest base: ('verified', None)
+  pid_bare_dash          ('verified', None)                                                                                                         [producer = p3ca-<16 hex>]
+  pid_zwsp               ('verified', None)                                                                                                         [producer = p3ca-<16 hex>]
+  pid_space              ('verified', None)                                                                                                         [producer = p3ca-<16 hex>]
+  pid_newline            ('verified', None)                                                                                                         [producer = p3ca-<16 hex>]
+  sid_space              ('verified', None)                                                                                                         [producer = 32 hex (_grid_fp)]
+  sid_nul                ('verified', None)                                                                                                         [producer = 32 hex]
+  err_pos_half           ('verified', None)                                                                                                         [positive ⓓ pass ⇒ err ≤ 1e-4]
+  err_pos_1e300          ('verified', None)                                                                                                         [positive ⓓ pass ⇒ err ≤ 1e-4]
+  err_neg_zero           ('verified', None)                                                                                                         [trivial]
+  cgit_huge              ('verified', None)                                                                                                         [producer may write (payload int)]
+  zero_cp_all_true       ('verified', None)                                                                                                         [declared (zero cert_pass not fixed)]
+  zero_cginfo_7          ('verified', None)                                                                                                         [declared (zero cg_* not fixed)]
+  pos_resid_bigint       ('EXC', 'OverflowError: int too large to convert to float')                                                                [JSON int · conv_ok math.isfinite OverflowError?]
+  pos_resid_negbigint    ('EXC', 'OverflowError: int too large to convert to float')                                                                [JSON int]
+  pos_cginfo_bigint      ('bad', '[0].cg_info 100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000   [cg_info != 0 -> unconv]
+  index_true             ('bad', '[0].index True ≠ 요청 팔 0')                                                                                         [bool index]
+  state_ws               ('bad', "[0].state 'positive ' (= ['positive', 'zero']) — read_run 성공 꼴 아님")                                               [ws]
+
+_json_strict(1e400) -> {'x': inf}
+
+result_fields with cg_resid=10**400: EXC OverflowError: int too large to convert to float
+result_recount EXC OverflowError int too large to convert to float
+recover cli EXC OverflowError int too large to convert to float

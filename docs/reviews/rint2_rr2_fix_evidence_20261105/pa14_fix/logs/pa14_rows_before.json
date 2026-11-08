@@ -1,0 +1,923 @@
+{
+ "PA14A": {
+  "pass": false,
+  "detail": {
+   "n": 11,
+   "n_bad": 6,
+   "bad": {
+    "n_resid_big": {
+     "got": [
+      "exc OverflowError",
+      "exc OverflowError",
+      null,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": true,
+     "why": null
+    },
+    "n_resid_negbig": {
+     "got": [
+      "exc OverflowError",
+      "exc OverflowError",
+      null,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": true,
+     "why": null
+    },
+    "n_cginfo_big": {
+     "got": [
+      "bad",
+      "timeout",
+      false,
+      477
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": true,
+     "why": "[0].cg_info 1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "n_cginfo_resid_big": {
+     "got": [
+      "bad",
+      "timeout",
+      false,
+      873
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": true,
+     "why": "[0].cg_info 1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "n_cgit_negbig": {
+     "got": [
+      "bad",
+      "timeout",
+      false,
+      454
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": true,
+     "why": "[0].cg_iters -10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "n_rsit_negbig": {
+     "got": [
+      "bad",
+      "timeout",
+      false,
+      459
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": true,
+     "why": "[0].resolve_iters -100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    }
+   },
+   "rows": {
+    "h_pos": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_resid_big": [
+     "exc OverflowError",
+     "exc OverflowError",
+     null,
+     null
+    ],
+    "n_resid_negbig": [
+     "exc OverflowError",
+     "exc OverflowError",
+     null,
+     null
+    ],
+    "n_cginfo_big": [
+     "bad",
+     "timeout",
+     false,
+     477
+    ],
+    "n_cginfo_resid_big": [
+     "bad",
+     "timeout",
+     false,
+     873
+    ],
+    "n_cgit_negbig": [
+     "bad",
+     "timeout",
+     false,
+     454
+    ],
+    "n_rsit_negbig": [
+     "bad",
+     "timeout",
+     false,
+     459
+    ],
+    "n_resid_str": [
+     "bad",
+     "timeout",
+     false,
+     77
+    ],
+    "h_resid_int": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "l_cgit_big": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "l_zero_resid_big": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ]
+   }
+  }
+ },
+ "PA14B": {
+  "pass": false,
+  "detail": {
+   "n": 3,
+   "n_bad": 2,
+   "bad": {
+    "cli_resid_big": [
+     [
+      "exc OverflowError",
+      null,
+      null,
+      null
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     null
+    ],
+    "cli_resid_negbig": [
+     [
+      "exc OverflowError",
+      null,
+      null,
+      null
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     null
+    ]
+   },
+   "got": {
+    "cli_resid_big": [
+     "exc OverflowError",
+     null,
+     null,
+     null
+    ],
+    "cli_resid_negbig": [
+     "exc OverflowError",
+     null,
+     null,
+     null
+    ],
+    "cli_pub": [
+     0,
+     true,
+     0,
+     false
+    ]
+   }
+  }
+ },
+ "PA14C": {
+  "pass": false,
+  "detail": {
+   "n": 28,
+   "n_bad": 20,
+   "bad": {
+    "n_pid_bare_dash": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_pid_zwsp": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_pid_space": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_pid_newline": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_pid_upper": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_pid_15": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_pid_17": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_pid_nonhex": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_pid_old_fixture": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_sid_space": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_sid_nul": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_sid_16_old_fixture": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_sid_31": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_sid_33": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_sid_upper": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_sid_newline": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_sid_nonhex": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_err_half": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_err_1e300": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    },
+    "n_err_up": {
+     "got": [
+      "verified",
+      "timeout",
+      true,
+      null
+     ],
+     "want": [
+      "bad",
+      "timeout",
+      false
+     ],
+     "short": false,
+     "why": null
+    }
+   },
+   "rows": {
+    "h_pos": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_pid_bare_dash": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_pid_zwsp": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_pid_space": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_pid_newline": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_pid_upper": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_pid_15": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_pid_17": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_pid_nonhex": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_pid_old_fixture": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "h_pid_f": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_sid_space": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_sid_nul": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_sid_16_old_fixture": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_sid_31": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_sid_33": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_sid_upper": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_sid_newline": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_sid_nonhex": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "h_sid_zero": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_err_half": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_err_1e300": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_err_up": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "h_err_tau": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "h_err_9e5": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_zero_err_tau": [
+     "bad",
+     "timeout",
+     false,
+     50
+    ],
+    "tau": [
+     0.0001,
+     true
+    ],
+    "producer_arms": {
+     "arms": 70,
+     "off_form": 0
+    }
+   }
+  }
+ },
+ "PA14D": {
+  "pass": false,
+  "detail": {
+   "n": 18,
+   "n_bad": 9,
+   "bad_names": [
+    "e_l3_del_det",
+    "e_l3_del_from",
+    "e_l3_extra",
+    "e_l3_extra_nosrc",
+    "e_l3_nonstr_key",
+    "e_rr_del_cmp",
+    "e_rr_del_det",
+    "e_rr_del_det_nosrc",
+    "e_rr_extra"
+   ],
+   "bad": {
+    "e_l3_del_det": {
+     "got": [
+      "resource",
+      false,
+      "멈춤 RUNNER_RC · rerun 'L02_ceiling' 을 다 풀었는데 resume 칸 determinism None · compared [{'file': 'p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json', 'same': True}] (생산자 = 남은 payload 있으면 compared + 원소 {file · same} · 없으"
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "칸 집합"
+    },
+    "e_l3_del_from": {
+     "got": [
+      "resource",
+      false,
+      "멈춤 RUNNER_RC · resume 칸 from None (생산자 = 원천 번호 정수 · 원 시도 1 ≤ from < 이 시도 2 · ★ 11-09 사전 공격 13 P2-1)"
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "칸 집합"
+    },
+    "e_l3_extra": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "칸 집합"
+    },
+    "e_l3_extra_nosrc": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "칸 집합"
+    },
+    "e_l3_nonstr_key": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "칸 집합"
+    },
+    "e_rr_del_cmp": {
+     "got": [
+      "resource",
+      false,
+      "멈춤 RUNNER_RC · 멈춘 런 = resume 칸 rerun 'L02_ceiling' (대조 전 멈춤) 인데 compared None · determinism None (생산자 = [] · null · ★ 11-09 사전 공격 13 P2-1)"
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "칸 집합"
+    },
+    "e_rr_del_det": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "칸 집합"
+    },
+    "e_rr_del_det_nosrc": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "칸 집합"
+    },
+    "e_rr_extra": {
+     "got": [
+      "resource",
+      true,
+      null
+     ],
+     "want": [
+      "resource",
+      false
+     ],
+     "word": "칸 집합"
+    }
+   },
+   "rows": {
+    "h_mm": [
+     "check",
+     false,
+     null
+    ],
+    "h_l3": [
+     "resource",
+     true,
+     null
+    ],
+    "h_rr": [
+     "resource",
+     true,
+     null
+    ],
+    "h_ro2_from2": [
+     "resource",
+     true,
+     null
+    ],
+    "h_ro2_from2_nosrc": [
+     "resource",
+     true,
+     null
+    ],
+    "e_l3_extra": [
+     "resource",
+     true,
+     null
+    ],
+    "e_l3_extra_nosrc": [
+     "resource",
+     true,
+     null
+    ],
+    "e_rr_extra": [
+     "resource",
+     true,
+     null
+    ],
+    "e_rr_del_det": [
+     "resource",
+     true,
+     null
+    ],
+    "e_rr_del_det_nosrc": [
+     "resource",
+     true,
+     null
+    ],
+    "e_l3_nonstr_key": [
+     "resource",
+     true,
+     null
+    ],
+    "e_l3_del_det": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · rerun 'L02_ceiling' 을 다 풀었는데 resume 칸 determinism None · compared [{'file': 'p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json', 'same': True}] (생산자 = 남은 payload 있으면 compared + 원소 {file · same} · 없으"
+    ],
+    "e_rr_del_cmp": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · 멈춘 런 = resume 칸 rerun 'L02_ceiling' (대조 전 멈춤) 인데 compared None · determinism None (생산자 = [] · null · ★ 11-09 사전 공격 13 P2-1)"
+    ],
+    "e_l3_del_from": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · resume 칸 from None (생산자 = 원천 번호 정수 · 원 시도 1 ≤ from < 이 시도 2 · ★ 11-09 사전 공격 13 P2-1)"
+    ],
+    "f_m14_copied_from_true": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · resume 칸 copied ['L01_floor'] ≠ 복사 기록 [('L01_floor', True)] (생산자 = 복사 런 이름 차례 · copied_from = from 1 · ★ 11-09 사전 공격 13 P2-1)"
+    ],
+    "f_m18_rr_cmp_det_none": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · 멈춘 런 = resume 칸 rerun 'L02_ceiling' (대조 전 멈춤) 인데 compared [{'file': 'p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json', 'same': True}] · determinism None (생산자 = [] · null · ★ 11-09 사전 공격 13 P2-1)"
+    ],
+    "f_m47_cmp_elem_int": [
+     "timeout",
+     false,
+     "멈춤 TIME_LIMIT · 런 'L03_point' 인데 resume 칸 compared 에 같지 않은 대조 ['5'] (생산자 = 같지 않은 대조가 있으면 그 자리에서 RESUME_MISMATCH · run = resume.rerun 'L02_ceiling' · 결정적 재실행이 아니다 · ★ 11-09 사전 공격 13 P2-1)"
+    ],
+    "f_m54_from_below_resume_of": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · resume 칸 from 1 (생산자 = 원천 번호 정수 · 원 시도 2 ≤ from < 이 시도 3 · ★ 11-09 사전 공격 13 P2-1)"
+    ]
+   }
+  }
+ }
+}

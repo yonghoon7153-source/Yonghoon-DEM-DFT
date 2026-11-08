@@ -185,6 +185,11 @@
   남은 payload 바이트 다시 대조 · 옛 = 사슬에 요약 resume 칸을 읽는 곳 없음 → 정직 RESUME_MISMATCH 요약의 두 칸 = 재실행 자격) · P2-2 판독 완료 팔 값 = read_run
   성공 꼴 (`arm_public_value_problem` · `ARM_STATES` · read_run 자기 대조 · arms_read_kind verified 조건 = 한 함수 · 옛 = 칸 이름 + file · index · sha256 만) ·
   P3-2 킷 앞자리 = `arm_file_prefix` 한 함수 (read_run · 봉인 원천 출력 이름 · 옛 = 같은 식 사본 둘).
+★ 11-09 사전 공격 14 (독립 · 대상 7a582acf5 · P1 0 · P2 0 · P3 6 · 1저자 11-09 "다 권고대로 해줘 물어보지말고" · 보고
+  docs/reviews/rint2_rr2_fix_evidence_20261105/preattack14/REPORT.md · 증거 docs/reviews/rint2_rr2_fix_evidence_20261105/pa14_fix/ · 처분 = 수정 계획 §11): P3-a
+  positive 팔 cg_resid = float 로 못 바꾸는 큰 정수 → `arm_public_value_problem` 이 `RC.conv_ok` 앞에서 `_num` (옛 = math.isfinite OverflowError → recover --ledger
+  traceback) · 사유의 큰 정수 = `_show` · P3-d 생산자 값 꼴 (`ARM_PID_RE` · `ARM_SID_RE` 정확히 · err_rel ≤ τ `SVCF.CERT_TARGET_TOL`) · P3-e resume 칸 집합 =
+  `RESUME_KEYS` 정확히 (`resume_rerun_problem`) · P3-f 변이 생존 넷 = 시험 행 (PA14D) · P3-b · P3-c = 선언된 한정 (`resume_rerun_problem` 머리말).
 """
 import argparse
 import contextlib
@@ -2178,6 +2183,13 @@ def arm_file_prefix(kit):
 #: ★ 11-09 사전 공격 13 P2-2 — 판독 완료 팔 상태 = `read_run` 성공 길의 상태 (등록 풀이 상태 표 `REG_STATES` 에서 NOT_COMPUTED 아닌 것 = positive · zero · short ·
 #:   legacy · 모름 = read_run NOT_COMPUTED 멈춤 · 표에서 고른다 = 사본 없음)
 ARM_STATES = tuple(k for k, (reg, _why) in REG_STATES.items() if reg != 'NOT_COMPUTED')
+#: ★ 11-09 사전 공격 14 P3-d — 판독 완료 팔 값의 생산자 꼴 (read_run 이 싣는 값 = 생산자 함수 출력 · 옛 = 앞자리 · 비지 않은 글만 → 'p3ca-' · ' ' · '\x00' 도 verified):
+#:   protocol_id = `RC.physics_protocol_id` 다음 세대 꼴 = `RC.CA_EXT_PREFIX`- + sha256 16 자리 소문자 hex (`run_contract._ca_ext_protocol_id` 722 줄 · 유일한
+#:   'p3ca-' 생산자) · sid_fp = 격자 지문 `step3_sigma._grid_fp` (232–239 줄 · blake2b 16 바이트 hexdigest = 32 자리 소문자 hex · 접합 원장 fp.sid =
+#:   `carbon_junction` 1069 줄) · err_rel 위 한계 = 증서 ⓓ 보장 상대 오차 τ (`SVCF.CERT_TARGET_TOL` = `step3_conv_cert.CERT_TARGET_TOL` · 시험 S8o 대조 —
+#:   read_run 은 ⓓ 통과 (정확 분수 비교 |G − G*| ≤ τ·G) 일 때만 그 e 를 싣는다 · 분자 정확 · 나눗셈 한 번 반올림 = 단조 ⇒ float e ≤ τ)
+ARM_PID_RE = re.compile(re.escape(RC.CA_EXT_PREFIX) + r'-[0-9a-f]{16}')
+ARM_SID_RE = re.compile(r'[0-9a-f]{32}')
 
 
 def arm_public_value_problem(a):
@@ -2185,20 +2197,24 @@ def arm_public_value_problem(a):
     `read_run` (팔 기록을 조립한 뒤 자기 대조 · 어긋나면 ARM_UNREADABLE) · `arms_read_kind` (verified 조건) 가 같이 부른다 (사본 없음 · 옛 = 칸 이름 + file · index ·
     sha256 만 → 판독 실패 기록 (파일 신원) 에 나머지 11 칸을 생산자가 안 쓰는 값 (전부 null · state short · protocol_id unknown · cert_pass false …) 으로 덧붙이면
     verified · 요약 두 칸 = 재실행 자격 · 원장 허용):
-      state = `ARM_STATES` (positive · zero) · protocol_id = 글 · `RC.CA_EXT_PREFIX`- 앞자리 (read_run GENERATION) · sid_fp = 비지 않은 글 (read_run SID_GRID) ·
-      cert_pass = 길이 4 목록 (positive = 넷 다 True — `RC.next_gen_state` 증서 ⓐ–ⓓ) · err_rel = 유한 float ≥ 0 (zero = 0.0 · read_run 이 다시 계산) ·
-      cg_iters · resolve_iters = `_int_or_none` 이 내는 값 (null · 0 이상 int) · positive 의 cg_info · cg_resid = 수렴 계약 `RC.conv_ok` (read_run 이 positive 에 부른다).
-    ⚠ 한정: imbalance · sv_cf_status · zero 의 cg_info · cg_resid · cert_pass 원소 = read_run 이 값을 고정하지 않는다 (대조 안 함) · 이 범위 안 그럴듯한 값으로 일관되게
-    고친 위조 (다른 런 · 다른 파일의 판독 완료 기록을 옮겨 붙임 포함) = 선언된 한정 (`arms_read_kind` 머리말 · 판정문 §5 끝 · 실제 재개 복사는 원 팔을 다시 읽는다)."""
+      state = `ARM_STATES` (positive · zero) · protocol_id = `ARM_PID_RE` 정확히 (read_run GENERATION · 생산자 'p3ca-' + 16 자리 소문자 hex · ★ 11-09 사전 공격
+      14 P3-d · 옛 = 앞자리만) · sid_fp = `ARM_SID_RE` 정확히 (read_run SID_GRID · 생산자 32 자리 소문자 hex · 옛 = 비지 않은 글) · cert_pass = 길이 4 목록
+      (positive = 넷 다 True — `RC.next_gen_state` 증서 ⓐ–ⓓ) · err_rel = 유한 float · 0 ≤ e ≤ τ (`SVCF.CERT_TARGET_TOL` · positive = 증서 ⓓ 통과의 보장 오차 · 옛 =
+      위 한계 없음 · zero = 0.0 · read_run 이 다시 계산) · cg_iters · resolve_iters = `_int_or_none` 이 내는 값 (null · 0 이상 int) · positive 의 cg_info · cg_resid =
+      수렴 계약 `RC.conv_ok` (read_run 이 positive 에 부른다 · ★ 11-09 사전 공격 14 P3-a — cg_resid = 유한 수 (`_num`) 먼저: float 로 못 바꾸는 큰 정수 (JSON 10**400)
+      = 사유 · 옛 = conv_ok 의 math.isfinite OverflowError → arms_read_kind · 결과 줄 셈 · recover --ledger traceback) · 사유의 큰 정수 = 자리 수만 (`_show`).
+    ⚠ 한정: imbalance · sv_cf_status · zero 의 cg_info · cg_resid · cert_pass 원소 · 반복 수 위 한계 = read_run 이 값을 고정하지 않는다 (대조 안 함) · 이 범위 안
+    그럴듯한 값으로 일관되게 고친 위조 (다른 런 · 다른 파일의 판독 완료 기록을 옮겨 붙임 포함) = 선언된 한정 (`arms_read_kind` 머리말 · 판정문 §5 끝 · 실제 재개
+    복사는 원 팔을 다시 읽는다)."""
     st = a.get('state')
     if not (type(st) is str and st in ARM_STATES):
         return f'state {st!r} (= {list(ARM_STATES)})'
     pid = a.get('protocol_id')
-    if not (type(pid) is str and pid.startswith(RC.CA_EXT_PREFIX + '-')):
-        return f'protocol_id {pid!r} (= 글 {RC.CA_EXT_PREFIX}-…)'
+    if not (type(pid) is str and ARM_PID_RE.fullmatch(pid)):
+        return f'protocol_id {pid!r} (= {RC.CA_EXT_PREFIX}- + 16 자리 소문자 hex · 생산자 `_ca_ext_protocol_id` · ★ 11-09 사전 공격 14 P3-d)'
     sid = a.get('sid_fp')
-    if not (type(sid) is str and sid):
-        return f'sid_fp {sid!r} (= 비지 않은 글)'
+    if not (type(sid) is str and ARM_SID_RE.fullmatch(sid)):
+        return f'sid_fp {sid!r} (= 32 자리 소문자 hex · 생산자 `step3_sigma._grid_fp` · ★ 11-09 사전 공격 14 P3-d)'
     cp = a.get('cert_pass')
     if not (type(cp) is list and len(cp) == 4):
         return f'cert_pass {cp!r} (= 길이 4 목록)'
@@ -2209,16 +2225,21 @@ def arm_public_value_problem(a):
         return f'err_rel {e!r} (= 유한 float)'
     if e < 0.0:
         return f'err_rel {e!r} (≥ 0)'
+    if e > SVCF.CERT_TARGET_TOL:
+        return f'err_rel {e!r} (≤ τ {SVCF.CERT_TARGET_TOL!r} = 증서 ⓓ 통과의 보장 오차 · ★ 11-09 사전 공격 14 P3-d)'
     if st == 'zero' and e != 0.0:
         return f'err_rel {e!r} (zero = 0.0)'
     for k in ('cg_iters', 'resolve_iters'):
         v = a.get(k)
         if v is not None and _int_or_none(v) is None:
-            return f'{k} {v!r} (= null · 0 이상 int)'
+            return f'{k} {_show(v)} (= null · 0 이상 int)'
     if st == 'positive':
-        ok, why = RC.conv_ok(a.get('cg_info'), False, a.get('cg_resid'))
+        r = a.get('cg_resid')
+        if not _num(r):                                   # ★ 11-09 사전 공격 14 P3-a — conv_ok 의 math.isfinite 앞 (큰 정수 = OverflowError 였다)
+            return f'cg_resid {_show(r)} (positive = 유한 수 · 수렴 계약 · ★ 11-09 사전 공격 14 P3-a)'
+        ok, why = RC.conv_ok(a.get('cg_info'), False, r)
         if not ok:
-            return f'cg_info {a.get("cg_info")!r} · cg_resid {a.get("cg_resid")!r} (positive = 수렴 계약 · {why})'
+            return f'cg_info {_show(a.get("cg_info"))} · cg_resid {_show(r)} (positive = 수렴 계약 · {why})'
     return None
 
 
@@ -4322,6 +4343,9 @@ def prior_runs_problem(s, code, run, rr):
 #:   'compared' · 남은 것이 없으면 'assumed' (Q-J 한정) · 그 전 멈춤 = None · compared 원소 칸 = `ResumeRunner.run` 이 쓰는 꼴
 RESUME_DETERMINISM = ('compared', 'assumed')
 RESUME_COMPARED_KEYS = ('file', 'same')
+#: ★ 11-09 사전 공격 14 P3-e — 재실행 요약 resume 칸 집합 = 생산자 (`ResumeRunner.__init__` 의 다섯 칸 그대로 · 요약 = `getattr(rn, 'resume', None)` · 재실행 아닌
+#:   시도 = null · 덧붙인 칸 · 빠진 칸 = 모순 — 빠진 determinism 은 null 이 아니다)
+RESUME_KEYS = ('from', 'copied', 'rerun', 'compared', 'determinism')
 
 
 def resume_mismatch_problem(s, code, run):
@@ -4344,7 +4368,8 @@ def resume_rerun_problem(s, folder, code, run):
     """★ 11-09 사전 공격 13 P2-1 더 굳게 (1저자 11-09 "다 권고대로") — 재실행 자격 원인 멈춤 (`STOP_RUN_SHAPES` 행 · 멈춘 런 · 앞 런 대조를 다 지난 뒤) 요약의 resume
     칸 ↔ 런 기록 · 원천 시도 폴더 → 사유 | None.  생산자 (`ResumeRunner` · 재실행 시도 = attempt.json resume_of 있음 · 자격 원인 멈춤 = 러너를 만든 뒤 새로 돈 런의
     `Runner._execute` 에서만 · 복사 런 (`_copy`) 의 멈춤 = 판독 · 복사 멈춤 = 자격 원인 아님):
-      ① resume 칸 = 객체 (재실행 시도 · 옛 = 칸을 null 로 지우면 대조 밖) · 재실행 시도 아님 (attempt.json resume_of null · 없음) 이고 칸 null = 대조 밖
+      ① resume 칸 = 객체 (재실행 시도 · 옛 = 칸을 null 로 지우면 대조 밖) · 재실행 시도 아님 (attempt.json resume_of null · 없음) 이고 칸 null = 대조 밖 · 객체면 칸
+         집합 = `RESUME_KEYS` 정확히 (★ 11-09 사전 공격 14 P3-e · 옛 = 덧붙인 칸 · 빠진 determinism = 자격)
       ② from = 원천 번호 (정수 · bool 아님 · attempt.json resume_of (정수 · 없으면 1) ≤ from < 이 시도 번호 · 옛 = from = 자기 → 자기 폴더와 대조) · copied = 복사 기록
          (copied_from 칸 있는 런 기록 · 값 = from) 이름 차례 그대로 · 복사 기록 = 런 기록 앞쪽 (첫 새 런 뒤에 복사 기록 없음)
       ③ 첫 새 런 기록 이름 = rerun (자격 원인 멈춤 = 새로 돈 런 · 그 첫 런 이름이 먼저 rerun · 새 런 기록이 없으면 멈춘 런 = rerun · ④)
@@ -4355,7 +4380,10 @@ def resume_rerun_problem(s, folder, code, run):
          대조 (생산자와 같은 식) = 기록 compared · determinism 그대로 (옛 = same 을 true 로 고친 세 칸 편집 = 자격) · 원천 자리 = 옆 거부 기록 = 모순 · 못 읽음 = 사유
     ⚠ 한정: 원천 시도 폴더가 같은 바탕에 없으면 (다른 곳에 둔 시도 · 판정 --attempt-dirs) ⑤ 바이트 대조 안 함 (①–④ 만 · 실제 재실행의 풀기 전 대조
     `resume_chain_problem` = 원천을 같은 바탕에 요구 → 그 자리에서 다시 대조) · from = 원장 사슬 끝인지는 못 본다 (원장 없음 · 범위만) · attempt.json resume_of 까지
-    함께 고친 위조 = 원장 항목 대조 (`found_attempts_problem` · 판정 · 합치기) 몫 · 런 기록 완결성 (사전 공격 13 P3-1) = 그대로."""
+    함께 고친 위조 = 원장 항목 대조 (`found_attempts_problem` · 판정 · 합치기) 몫 · 런 기록 완결성 (사전 공격 13 P3-1) = 그대로.  ★ 11-09 사전 공격 14 선언된 한정
+    (처분 `docs/reviews/rint2_rr3_fix_plan_20261108.md` §11): P3-b 복사 · 새 경계 다시 적기 (정직 RESUME_MISMATCH 요약에서 copied_from · copied · rerun 을 함께
+    옮김 = ①–⑤ 통과 · 디스크로 가를 수 있는 groups/<런>.launch · end 기록 바이트 ↔ 원천 대조 없음) · P3-c from ↔ 원장 사슬 끝 (`adoption` effective) · attempt.json
+    resume_of ↔ 원장 항목 결합 없음 (풀기 전 `resume_chain_problem` = attempt.json 꼴만) = 그대로."""
     folder = Path(folder)
     R = s.get('resume')
     att = read_attempt(folder)
@@ -4366,6 +4394,9 @@ def resume_rerun_problem(s, folder, code, run):
             return (f'멈춤 {code} · 재실행 시도 (attempt.json resume_of {att["resume_of"]}) 인데 resume 칸 null (생산자 = 재실행 시도의 러너를 만든 뒤 멈춤 = resume 칸 '
                     f'객체 · ★ 11-09 사전 공격 13 P2-1)')
         return None
+    if set(R) != set(RESUME_KEYS):                        # ★ 11-09 사전 공격 14 P3-e — 옛 = 덧붙인 칸 · 빠진 determinism (get = None) 이 자격
+        return (f'멈춤 {code} · resume 칸 집합 {sorted(str(k) for k in R)[:8]} ≠ {list(RESUME_KEYS)} (생산자 = `ResumeRunner` 다섯 칸 정확히 · 덧붙인 칸 · 빠진 칸 = '
+                f'모순 · 빠진 determinism ≠ null · ★ 11-09 사전 공격 14 P3-e)')
     runs = [r for r in (s.get('runs') or []) if isinstance(r, dict)]
     m = ATTEMPT_DIR_RE.fullmatch(folder.name)
     n = int(m.group(1)) if m else None

@@ -1,0 +1,381 @@
+{
+ "PA14A": {
+  "pass": true,
+  "detail": {
+   "n": 11,
+   "n_bad": 0,
+   "bad": {},
+   "rows": {
+    "h_pos": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_resid_big": [
+     "bad",
+     "timeout",
+     false,
+     104
+    ],
+    "n_resid_negbig": [
+     "bad",
+     "timeout",
+     false,
+     104
+    ],
+    "n_cginfo_big": [
+     "bad",
+     "timeout",
+     false,
+     98
+    ],
+    "n_cginfo_resid_big": [
+     "bad",
+     "timeout",
+     false,
+     104
+    ],
+    "n_cgit_negbig": [
+     "bad",
+     "timeout",
+     false,
+     74
+    ],
+    "n_rsit_negbig": [
+     "bad",
+     "timeout",
+     false,
+     79
+    ],
+    "n_resid_str": [
+     "bad",
+     "timeout",
+     false,
+     89
+    ],
+    "h_resid_int": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "l_cgit_big": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "l_zero_resid_big": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ]
+   }
+  }
+ },
+ "PA14B": {
+  "pass": true,
+  "detail": {
+   "n": 3,
+   "n_bad": 0,
+   "bad": {},
+   "got": {
+    "cli_resid_big": [
+     0,
+     false,
+     3,
+     true
+    ],
+    "cli_resid_negbig": [
+     0,
+     false,
+     3,
+     true
+    ],
+    "cli_pub": [
+     0,
+     true,
+     0,
+     false
+    ]
+   }
+  }
+ },
+ "PA14C": {
+  "pass": true,
+  "detail": {
+   "n": 28,
+   "n_bad": 0,
+   "bad": {},
+   "rows": {
+    "h_pos": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_pid_bare_dash": [
+     "bad",
+     "timeout",
+     false,
+     120
+    ],
+    "n_pid_zwsp": [
+     "bad",
+     "timeout",
+     false,
+     126
+    ],
+    "n_pid_space": [
+     "bad",
+     "timeout",
+     false,
+     121
+    ],
+    "n_pid_newline": [
+     "bad",
+     "timeout",
+     false,
+     138
+    ],
+    "n_pid_upper": [
+     "bad",
+     "timeout",
+     false,
+     136
+    ],
+    "n_pid_15": [
+     "bad",
+     "timeout",
+     false,
+     135
+    ],
+    "n_pid_17": [
+     "bad",
+     "timeout",
+     false,
+     137
+    ],
+    "n_pid_nonhex": [
+     "bad",
+     "timeout",
+     false,
+     136
+    ],
+    "n_pid_old_fixture": [
+     "bad",
+     "timeout",
+     false,
+     124
+    ],
+    "h_pid_f": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_sid_space": [
+     "bad",
+     "timeout",
+     false,
+     104
+    ],
+    "n_sid_nul": [
+     "bad",
+     "timeout",
+     false,
+     107
+    ],
+    "n_sid_16_old_fixture": [
+     "bad",
+     "timeout",
+     false,
+     119
+    ],
+    "n_sid_31": [
+     "bad",
+     "timeout",
+     false,
+     134
+    ],
+    "n_sid_33": [
+     "bad",
+     "timeout",
+     false,
+     136
+    ],
+    "n_sid_upper": [
+     "bad",
+     "timeout",
+     false,
+     135
+    ],
+    "n_sid_newline": [
+     "bad",
+     "timeout",
+     false,
+     137
+    ],
+    "n_sid_nonhex": [
+     "bad",
+     "timeout",
+     false,
+     135
+    ],
+    "h_sid_zero": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_err_half": [
+     "bad",
+     "timeout",
+     false,
+     88
+    ],
+    "n_err_1e300": [
+     "bad",
+     "timeout",
+     false,
+     91
+    ],
+    "n_err_up": [
+     "bad",
+     "timeout",
+     false,
+     107
+    ],
+    "h_err_tau": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "h_err_9e5": [
+     "verified",
+     "timeout",
+     true,
+     null
+    ],
+    "n_zero_err_tau": [
+     "bad",
+     "timeout",
+     false,
+     50
+    ],
+    "tau": [
+     0.0001,
+     true
+    ],
+    "producer_arms": {
+     "arms": 70,
+     "off_form": 0
+    }
+   }
+  }
+ },
+ "PA14D": {
+  "pass": true,
+  "detail": {
+   "n": 18,
+   "n_bad": 0,
+   "bad_names": [],
+   "bad": {},
+   "rows": {
+    "h_mm": [
+     "check",
+     false,
+     null
+    ],
+    "h_l3": [
+     "resource",
+     true,
+     null
+    ],
+    "h_rr": [
+     "resource",
+     true,
+     null
+    ],
+    "h_ro2_from2": [
+     "resource",
+     true,
+     null
+    ],
+    "h_ro2_from2_nosrc": [
+     "resource",
+     true,
+     null
+    ],
+    "e_l3_extra": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · resume 칸 집합 ['compared', 'copied', 'determinism', 'extra', 'from', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (생산자 = `ResumeRunner` 다섯 칸 정확히 · 덧붙인 칸 · 빠진 칸 = 모순 ·"
+    ],
+    "e_l3_extra_nosrc": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · resume 칸 집합 ['compared', 'copied', 'determinism', 'extra', 'from', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (생산자 = `ResumeRunner` 다섯 칸 정확히 · 덧붙인 칸 · 빠진 칸 = 모순 ·"
+    ],
+    "e_rr_extra": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · resume 칸 집합 ['compared', 'copied', 'determinism', 'extra', 'from', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (생산자 = `ResumeRunner` 다섯 칸 정확히 · 덧붙인 칸 · 빠진 칸 = 모순 ·"
+    ],
+    "e_rr_del_det": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · resume 칸 집합 ['compared', 'copied', 'from', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (생산자 = `ResumeRunner` 다섯 칸 정확히 · 덧붙인 칸 · 빠진 칸 = 모순 · 빠진 determinism ≠ null ·"
+    ],
+    "e_rr_del_det_nosrc": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · resume 칸 집합 ['compared', 'copied', 'from', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (생산자 = `ResumeRunner` 다섯 칸 정확히 · 덧붙인 칸 · 빠진 칸 = 모순 · 빠진 determinism ≠ null ·"
+    ],
+    "e_l3_nonstr_key": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · resume 칸 집합 ['5', 'compared', 'copied', 'determinism', 'from', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (생산자 = `ResumeRunner` 다섯 칸 정확히 · 덧붙인 칸 · 빠진 칸 = 모순 · 빠진 "
+    ],
+    "e_l3_del_det": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · resume 칸 집합 ['compared', 'copied', 'from', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (생산자 = `ResumeRunner` 다섯 칸 정확히 · 덧붙인 칸 · 빠진 칸 = 모순 · 빠진 determinism ≠ null ·"
+    ],
+    "e_rr_del_cmp": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · resume 칸 집합 ['copied', 'determinism', 'from', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (생산자 = `ResumeRunner` 다섯 칸 정확히 · 덧붙인 칸 · 빠진 칸 = 모순 · 빠진 determinism ≠ nul"
+    ],
+    "e_l3_del_from": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · resume 칸 집합 ['compared', 'copied', 'determinism', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (생산자 = `ResumeRunner` 다섯 칸 정확히 · 덧붙인 칸 · 빠진 칸 = 모순 · 빠진 determinism ≠"
+    ],
+    "f_m14_copied_from_true": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · resume 칸 copied ['L01_floor'] ≠ 복사 기록 [('L01_floor', True)] (생산자 = 복사 런 이름 차례 · copied_from = from 1 · ★ 11-09 사전 공격 13 P2-1)"
+    ],
+    "f_m18_rr_cmp_det_none": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · 멈춘 런 = resume 칸 rerun 'L02_ceiling' (대조 전 멈춤) 인데 compared [{'file': 'p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json', 'same': True}] · determinism None (생산자 = [] · null · ★ 11-09 사전 공격 13 P2-1)"
+    ],
+    "f_m47_cmp_elem_int": [
+     "timeout",
+     false,
+     "멈춤 TIME_LIMIT · 런 'L03_point' 인데 resume 칸 compared 에 같지 않은 대조 ['5'] (생산자 = 같지 않은 대조가 있으면 그 자리에서 RESUME_MISMATCH · run = resume.rerun 'L02_ceiling' · 결정적 재실행이 아니다 · ★ 11-09 사전 공격 13 P2-1)"
+    ],
+    "f_m54_from_below_resume_of": [
+     "resource",
+     false,
+     "멈춤 RUNNER_RC · resume 칸 from 1 (생산자 = 원천 번호 정수 · 원 시도 2 ≤ from < 이 시도 3 · ★ 11-09 사전 공격 13 P2-1)"
+    ]
+   }
+  }
+ }
+}

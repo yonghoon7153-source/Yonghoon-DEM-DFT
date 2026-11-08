@@ -14939,10 +14939,12 @@ CT06_ARM = [{'file': 'p2_SBE_vgcf100_a0.json', 'index': 0, 'sha256': 'a' * 64}]
 #: ★ 11-08 RR3-01 (Codex 회차 ③ · 수정 계획 Q1 (가)) — 판독 완료 팔 기록 = 생산자 성공 꼴 (`arms_read_record` = `ARM_PUBLIC` 칸 정확히 · 요청 팔 차례) · 값 = 시험 값
 #:   (σ 아님) · 칸 이름 = 글자로 (RR3C 가 사슬 ARM_PUBLIC 과 대조 · 사본 금지의 짝).  정직한 앞 런 고정물 = 이 꼴 (옛 CT06_ARM = 칸 셋 {file · index · sha256} =
 #:   생산자의 판독 실패 꼴 `arm_file_shas` 라 이제 끝난 런이 아니다 — 멈춘 런 기록에 팔 읽음을 넣은 행 (f_*_arms · CT06_ARMS) 은 그대로 둔다).
+#:   ★ 11-09 사전 공격 14 P3-d — 값도 생산자 꼴: protocol_id = 'p3ca-' + 16 자리 소문자 hex (`run_contract._ca_ext_protocol_id`) · sid_fp = 32 자리 소문자 hex
+#:   (`step3_sigma._grid_fp` = blake2b 16 바이트) · 옛 = 'p3ca-test' · 'f' * 16 (생산자가 안 쓰는 값 · 옛 검사 = 앞자리 · 비지 않은 글만).
 def ct06_pub(i=0, kit=SBE_KIT):
     return {'file': f'p2_{kit[len("kit_"):]}_sph_fa_cj0_c0_a{i}.json', 'index': i, 'sha256': hashlib.sha256(f'{kit}|{i}'.encode()).hexdigest(),
-            'protocol_id': 'p3ca-test', 'state': 'positive', 'cg_info': 0, 'cg_resid': 1e-12, 'imbalance': 1e-9, 'cert_pass': [True, True, True, True],
-            'sid_fp': 'f' * 16, 'cg_iters': 10, 'resolve_iters': 2, 'sv_cf_status': None, 'err_rel': 1e-6}
+            'protocol_id': 'p3ca-0123456789abcdef', 'state': 'positive', 'cg_info': 0, 'cg_resid': 1e-12, 'imbalance': 1e-9,
+            'cert_pass': [True, True, True, True], 'sid_fp': 'f' * 32, 'cg_iters': 10, 'resolve_iters': 2, 'sv_cf_status': None, 'err_rel': 1e-6}
 
 
 CT06_PUB = [ct06_pub(0)]
@@ -16348,8 +16350,9 @@ PA13_PADS = {
                  'cg_iters': None, 'resolve_iters': None, 'sv_cf_status': None, 'err_rel': None},
     'pad_impossible': {'protocol_id': 'unknown:x', 'state': 'short', 'cg_info': 'x', 'cg_resid': -1, 'imbalance': [], 'cert_pass': False, 'sid_fp': '',
                        'cg_iters': True, 'resolve_iters': 'y', 'sv_cf_status': {'a': 1}, 'err_rel': -5.0},
-    'pad_legacy_state': {'protocol_id': 'p3ca-x', 'state': 'legacy', 'cg_info': 0, 'cg_resid': 0.0, 'imbalance': 0.0, 'cert_pass': [True] * 4,
-                         'sid_fp': 'f' * 16, 'cg_iters': 1, 'resolve_iters': 0, 'sv_cf_status': None, 'err_rel': 0.0},
+    'pad_legacy_state': {'protocol_id': 'p3ca-0123456789abcdef', 'state': 'legacy', 'cg_info': 0, 'cg_resid': 0.0, 'imbalance': 0.0,
+                         'cert_pass': [True] * 4, 'sid_fp': 'f' * 32, 'cg_iters': 1, 'resolve_iters': 0, 'sv_cf_status': None,
+                         'err_rel': 0.0},   # ★ 11-09 사전 공격 14 P3-d — state 하나만 생산자 밖 (옛 = 'p3ca-x' · 'f' * 16 도 생산자 밖이었다)
 }
 
 
@@ -16509,6 +16512,243 @@ def t_PA13D():
         return out
     pc12_cli(bad, got, scen('PA13D', go), {'cli_pad_none': False, 'cli_pad_impossible': False, 'cli_pub': True})
     return not bad, {'n': len(got), 'n_bad': len(bad), 'bad': bad, 'got': got}
+
+
+# ═════════════════════════ ★ 11-09 사전 공격 14 (PA14 · 시험 먼저 · 1저자 11-09 "다 권고대로 해줘 물어보지말고" = Codex 회차 ④ 전에 고침) ═════════════════════════
+#   보고 `docs/reviews/rint2_rr2_fix_evidence_20261105/preattack14/REPORT.md` (독립 · 대상 7a582acf5 · diff 만 · P1 0 · P2 0 · P3 6) — P3-a 회귀 크래시: positive 팔의
+#   cg_resid = float 로 못 바꾸는 JSON 정수 (10**400) → `arm_public_value_problem` 의 `RC.conv_ok` math.isfinite OverflowError → arms_read_kind → prior_runs_problem →
+#   결과 줄 셈 → recover --ledger traceback (옛 = 사전 공격 13 고침 전엔 없던 길) · P3-d 생산자가 안 쓰는 값이 verified (protocol_id 앞자리만 · sid_fp 비지 않은 글 ·
+#   positive err_rel 위 한계 없음 → 'p3ca-' · ' ' · '\x00' · 0.5 · 1e300) · P3-e 재실행 요약 resume 칸 집합 대조 없음 (덧붙인 칸 · 빠진 determinism = 자격) · P3-f
+#   변이 생존 넷 (M14 copied_from bool · M18 대조 전 멈춤 compared · M47 compared 원소 객체 · M54 from 아래 한계 = resume_of) = 시험 빈틈 (지금 코드 = 거부 → 행으로
+#   고정).  P3-b · P3-c = 선언된 한정 (고치지 않음 · 처분 `docs/reviews/rint2_rr3_fix_plan_20261108.md` §11).  행 기대 = 정직 (생산자 꼴) = 받음 그대로 · 생산자가
+#   쓰지 않는 값 · 칸 조합 = 모순 = 자격 없음 + 사유 (사슬 글 낱말).
+PA14_BIG = 10 ** 400                                   # float 로 못 바꾸는 정수 (JSON 정수 = `_json_strict` 가 int 로 읽는다 · 3.11 의 4300 자리 한도 안)
+PA14_PID = 'p3ca-0123456789abcdef'                     # 생산자 꼴 (`run_contract._ca_ext_protocol_id` = 'p3ca-' + sha256 16 자리 소문자 hex)
+PA14_WHY_MAX = 200                                     # 큰 정수 사유 = 자리 수만 (`_show`) — 옛 = 401 자리 글을 사유에 쏟았다
+PA14_W_SET = '칸 집합'                                  # P3-e 사유 낱말 (사슬 글)
+
+
+def pa14_tau():
+    """증서 ⓓ 보장 상대 오차 τ = 생산 정본 (`step3_conv_cert.CERT_TARGET_TOL` · `target_judge` 기본값 · 사슬 사본 = `ca_ext_svcf.CERT_TARGET_TOL` · 시험 S8o 대조)."""
+    import step3_conv_cert as CCm
+    return CCm.CERT_TARGET_TOL
+
+
+def pa14_arm_eval(rows, tag):
+    """판독 완료 팔 행 (이름, ct06_pub 칸 바꿈, 기대 꼴, 사유 짧음) → (행, 실패) — `arms_read_kind` (꼴 · 사유 · 예외 = 그 행 실패) + 런 전 TIME_LIMIT 요약의 결과 줄 셈
+    (`result_fields` · `stop_record_problem` · 예외 = 그 행 실패 — P3-a 옛 = OverflowError) → 자격 = verified 일 때만 · 짧음 = 사유 ≤ PA14_WHY_MAX · 자리 수 표시."""
+    out, bad = {}, {}
+    for nm, kw, kind, short in rows:
+        a = dict(ct06_pub(0), **kw)
+        rec = rr3_prior([a])
+        try:
+            k, why = RR.arms_read_kind(rec['arms_read'], rec)
+        except Exception as e:                            # noqa: BLE001 — 분류 함수 예외 = 그 행 실패
+            k, why = f'exc {type(e).__name__}', None
+        try:
+            cause, ok, prob = rr3_row(rr3_folder(f'{tag}_{nm}'), rr3_summ('TIME_LIMIT', RR3_L2, [rec]))
+        except Exception as e:                            # noqa: BLE001 — 결과 줄 셈 예외 = 그 행 실패 (옛 = recover --ledger traceback 의 뿌리)
+            cause, ok, prob = f'exc {type(e).__name__}', None, None
+        out[nm] = [k, cause, ok, None if why is None else len(why)]
+        good = k == kind and cause == 'timeout' and ok is (kind == 'verified') and ((prob is None) == (kind == 'verified'))
+        if short:
+            good = good and isinstance(why, str) and len(why) <= PA14_WHY_MAX and '자리' in why
+        if not good:
+            bad[nm] = {'got': out[nm], 'want': [kind, 'timeout', kind == 'verified'], 'short': short, 'why': None if why is None else why[:160]}
+    return out, bad
+
+
+def pa14_value_rows():
+    """P3-a — (이름, 정직 판독 완료 팔 (ct06_pub · positive) 칸 바꿈, 기대 꼴, 사유 짧음) — float 로 못 바꾸는 큰 정수 = 사유 (예외 아님 · 자리 수만)."""
+    B = PA14_BIG
+    return [
+        ('h_pos', {}, 'verified', False),
+        ('n_resid_big', dict(cg_resid=B), 'bad', True),
+        ('n_resid_negbig', dict(cg_resid=-B), 'bad', True),
+        ('n_cginfo_big', dict(cg_info=B), 'bad', True),
+        ('n_cginfo_resid_big', dict(cg_info=B, cg_resid=B), 'bad', True),
+        ('n_cgit_negbig', dict(cg_iters=-B), 'bad', True),
+        ('n_rsit_negbig', dict(resolve_iters=-B), 'bad', True),
+        ('n_resid_str', dict(cg_resid='1e-12'), 'bad', False),
+        ('h_resid_int', dict(cg_resid=0), 'verified', False),
+        #  선언 한정 (값 계약 밖 · 크래시 없음 = 그대로) — 반복 수 위 한계 없음 (`_int_or_none`) · zero 의 cg_* = read_run 이 고정하지 않는 칸
+        ('l_cgit_big', dict(cg_iters=B), 'verified', False),
+        ('l_zero_resid_big', dict(PA13_ZERO, cg_resid=B), 'verified', False),
+    ]
+
+
+@check('PA14A', '★ 11-09 사전 공격 14 P3-a (회귀 · 탐침 p3_value_domain 그대로 · 수정 = arm_public_value_problem) — 정직 판독 완료 팔 (positive) 의 cg_resid = '
+                'float 로 못 바꾸는 큰 정수 (±10**400) → 옛 = RC.conv_ok math.isfinite OverflowError (arms_read_kind · 결과 줄 셈 예외) → bad · 사유 (예외 없음 · 자리 '
+                '수만 = `_show`) · 결과 줄 셈 = timeout · 자격 False · 큰 정수 cg_info · 음수 큰 정수 반복 수 = bad 그대로 · 사유 = 자리 수만 (옛 = 401 자리 글) · 정직 '
+                '(positive · cg_resid 0) = verified · 선언 한정 (반복 수 큰 정수 · zero 의 cg_resid 큰 정수) = verified 그대로 (크래시 없음)')
+def t_PA14A():
+    rows, bad = pa14_arm_eval(pa14_value_rows(), 'PA14A')
+    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad': bad, 'rows': rows}
+
+
+@check('PA14B', '★ 11-09 사전 공격 14 P3-a 실경로 (탐침 p3_value_domain 의 recover cli 그대로 · 실제 git 원장 · `rc_recover_resume`) — 앞 런 L01_floor (rc 0 · '
+                'group_cause None · 끝 기록 by chain 확인 · rc 0) + 런 전 TIME_LIMIT (L02_ceiling): 앞 런 arms_read = 판독 완료 꼴 (ct06_pub) 인데 cg_resid 10**400 → '
+                '옛 = recover --ledger OverflowError (결과 줄 없음) → recover rc 0 · 결과 줄 자격 False · --add --resume 1 rc 3 RESUME_NOT_ALLOWED · 음수 큰 정수도 같음 · '
+                '정직 (ct06_pub) = 자격 True · rc 0 (그대로)')
+def t_PA14B():
+    got, bad = {}, {}
+    name = ct06_pub(0)['file']
+
+    def go():
+        out = {}
+        for nm, kw in (('cli_resid_big', dict(cg_resid=PA14_BIG)), ('cli_resid_negbig', dict(cg_resid=-PA14_BIG)), ('cli_pub', {})):
+            try:
+                out[nm] = rc_recover_resume(f'PA14B_{nm}', CHAIN_OK0, LG_PLAIN, prep=rr3_cli_prep([dict(ct06_pub(0), **kw)], {name: RR3_PAYLOAD}))
+            except Exception as e:                        # noqa: BLE001 — recover 예외 = 그 행 실패 (옛 = OverflowError)
+                out[nm] = {'recover_rc': f'exc {type(e).__name__}', 'result': None, 'resume_rc': None, 'not_allowed': None}
+        return out
+    pc12_cli(bad, got, scen('PA14B', go), {'cli_resid_big': False, 'cli_resid_negbig': False, 'cli_pub': True})
+    return not bad, {'n': len(got), 'n_bad': len(bad), 'bad': bad, 'got': got}
+
+
+def pa14_form_rows(tau):
+    """P3-d — (이름, 칸 바꿈, 기대 꼴, 사유 짧음) — protocol_id = 'p3ca-' + 16 자리 소문자 hex · sid_fp = 32 자리 소문자 hex · err_rel ≤ τ (positive = 증서 ⓓ 통과의
+    보장 오차 · zero = 0.0 그대로) · 정직 경계 (τ 정확히 · 다른 hex) = verified."""
+    up = _nextafter(tau, math.inf)
+    return [
+        ('h_pos', {}, 'verified', False),
+        ('n_pid_bare_dash', dict(protocol_id='p3ca-'), 'bad', False),
+        ('n_pid_zwsp', dict(protocol_id='p3ca-​'), 'bad', False),
+        ('n_pid_space', dict(protocol_id='p3ca- '), 'bad', False),
+        ('n_pid_newline', dict(protocol_id=PA14_PID + '\n'), 'bad', False),
+        ('n_pid_upper', dict(protocol_id='p3ca-0123456789ABCDEF'), 'bad', False),
+        ('n_pid_15', dict(protocol_id=PA14_PID[:-1]), 'bad', False),
+        ('n_pid_17', dict(protocol_id=PA14_PID + '0'), 'bad', False),
+        ('n_pid_nonhex', dict(protocol_id='p3ca-0123456789abcdeg'), 'bad', False),
+        ('n_pid_old_fixture', dict(protocol_id='p3ca-test'), 'bad', False),
+        ('h_pid_f', dict(protocol_id='p3ca-' + 'f' * 16), 'verified', False),
+        ('n_sid_space', dict(sid_fp=' '), 'bad', False),
+        ('n_sid_nul', dict(sid_fp='\x00'), 'bad', False),
+        ('n_sid_16_old_fixture', dict(sid_fp='f' * 16), 'bad', False),
+        ('n_sid_31', dict(sid_fp='f' * 31), 'bad', False),
+        ('n_sid_33', dict(sid_fp='f' * 33), 'bad', False),
+        ('n_sid_upper', dict(sid_fp='F' * 32), 'bad', False),
+        ('n_sid_newline', dict(sid_fp='f' * 32 + '\n'), 'bad', False),
+        ('n_sid_nonhex', dict(sid_fp='g' * 32), 'bad', False),
+        ('h_sid_zero', dict(sid_fp='0' * 32), 'verified', False),
+        ('n_err_half', dict(err_rel=0.5), 'bad', False),
+        ('n_err_1e300', dict(err_rel=1e300), 'bad', False),
+        ('n_err_up', dict(err_rel=up), 'bad', False),
+        ('h_err_tau', dict(err_rel=tau), 'verified', False),
+        ('h_err_9e5', dict(err_rel=9e-5), 'verified', False),
+        ('n_zero_err_tau', dict(PA13_ZERO, err_rel=tau), 'bad', False),
+    ]
+
+
+@check('PA14C', '★ 11-09 사전 공격 14 P3-d (탐침 p3_value_domain 그대로 · 수정 = arm_public_value_problem) — 판독 완료 팔 값 = 생산자 꼴: protocol_id = '
+                '\'p3ca-\' + 16 자리 소문자 hex (`run_contract._ca_ext_protocol_id` · 옛 = 앞자리만 → \'p3ca-\' · 폭 없는 공백 · 공백 · 줄바꿈 · 대문자 · 15 · 17 자리 · '
+                '\'p3ca-test\' = verified) · sid_fp = 32 자리 소문자 hex (`step3_sigma._grid_fp` · 옛 = 비지 않은 글 → \' \' · NUL · 16 자리 = verified) · err_rel ≤ '
+                'τ (증서 ⓓ 통과의 보장 오차 · 옛 = 0.5 · 1e300 · τ 다음 float = verified) → bad · 자격 False · 정직 경계 (τ 정확히 · 9e-5 · 다른 hex) = verified · '
+                '실제 정직 사다리 · 예측 판독 완료 팔 전부 = 이 꼴 (생산자 함수 출력 · 어긋남 0)')
+def t_PA14C():
+    tau = pa14_tau()
+    rows, bad = pa14_arm_eval(pa14_form_rows(tau), 'PA14C')
+    rows['tau'] = [tau, _nextafter(tau, math.inf) > tau]
+    pid_re, sid_re = re.compile(r'p3ca-[0-9a-f]{16}'), re.compile(r'[0-9a-f]{32}')
+    n, off = 0, []
+    for lab, s in (('lad_P0', s_main('P0').get('sum')), ('lad_P1', s_main('P1').get('sum')), ('pred', s_main_predict().get('sum'))):
+        for r in (s or {}).get('runs') or []:
+            if RR.run_record_shape(r) != 'exit_ok' or not r.get('arms_read'):
+                continue
+            for a in r['arms_read']:
+                n += 1
+                e = a.get('err_rel')
+                if not (isinstance(a.get('protocol_id'), str) and pid_re.fullmatch(a['protocol_id']) and isinstance(a.get('sid_fp'), str)
+                        and sid_re.fullmatch(a['sid_fp']) and isinstance(e, float) and 0.0 <= e <= tau):
+                    off.append((lab, r.get('name'), a.get('protocol_id'), a.get('sid_fp'), e))
+    rows['producer_arms'] = {'arms': n, 'off_form': len(off)}
+    if not n or off:
+        bad['producer_arms'] = off[:6] or '정직 기록 없음'
+    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad': bad, 'rows': rows}
+
+
+def pa14_rsdel(k):
+    def f(s):
+        s['resume'].pop(k)
+    return f
+
+
+def pa14_rsset(k, v):
+    def f(s):
+        s['resume'][k] = v
+    return f
+
+
+def pa14_renum(res, tag, n, ro, src_n=1, src='keep'):
+    """시나리오 res 의 바탕 사본 → 재실행 시도 attempt_2 를 attempt_<n> 로 (attempt.json n · resume_of = ro) · 원천 attempt_1 → attempt_<src_n> (attempt.json n) ·
+    src = 'drop' = 원천 지움 (다른 곳에 둔 시도).  M54 (from < resume_of) · 정직 꼴 (채택 = 시도 2 · from = resume_of = 2) 행용."""
+    dst = Path(TD) / 'pa14' / tag
+    shutil.copytree(Path(res['b']['out']).parent, dst, symlinks=True)
+    os.rename(dst / 'attempt_2', dst / f'attempt_{n}')
+    if src == 'drop':
+        shutil.rmtree(dst / 'attempt_1')
+    elif src_n != 1:
+        os.rename(dst / 'attempt_1', dst / f'attempt_{src_n}')
+        pa13_att(dst / f'attempt_{src_n}', n=src_n)
+    return pa13_att(dst / f'attempt_{n}', n=n, resume_of=ro)
+
+
+def pa14_resume_rows(sc):
+    """(이름, 폴더, 요약, 기대 [원인, 재실행 자격], 사유 낱말 (None = 사유 없음)) — P3-e 칸 집합 (사유 = PA14_W_SET · 집합 대조가 먼저) · P3-f 변이 생존 넷 고정."""
+    mm, l3, rr = (sc[k]['b']['sum'] for k in ('mm', 'l3', 'rr'))
+    F, E, rs, run = pa13_folder, pa13_ed, pa13_rs, pa13_run
+    X = 'p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json'
+    l3_ro2 = E(l3, rs(**{'from': 2}), run('L01_floor', copied_from=2))
+    return [
+        #  정직 (고치기 전 · 뒤 같음)
+        ('h_mm', F(sc['mm'], 'pa14_h_mm'), mm, ['check', False], None),
+        ('h_l3', F(sc['l3'], 'pa14_h_l3'), l3, ['resource', True], None),
+        ('h_rr', F(sc['rr'], 'pa14_h_rr'), rr, ['resource', True], None),
+        ('h_ro2_from2', pa14_renum(sc['l3'], 'h_ro2_from2', 3, 2, src_n=2), l3_ro2, ['resource', True], None),
+        ('h_ro2_from2_nosrc', pa14_renum(sc['l3'], 'h_ro2_from2_nosrc', 3, 2, src='drop'), l3_ro2, ['resource', True], None),
+        #  P3-e — resume 칸 집합 = 생산자 다섯 칸 정확히 (덧붙임 · 빠짐 · 글 아닌 열쇠 · 원천 있음 · 없음)
+        ('e_l3_extra', F(sc['l3'], 'pa14_e_l3_extra'), E(l3, rs(extra=1)), ['resource', False], PA14_W_SET),
+        ('e_l3_extra_nosrc', F(sc['l3'], 'pa14_e_l3_extra_nosrc', 'drop'), E(l3, rs(extra=None)), ['resource', False], PA14_W_SET),
+        ('e_rr_extra', F(sc['rr'], 'pa14_e_rr_extra'), E(rr, rs(extra=[1])), ['resource', False], PA14_W_SET),
+        ('e_rr_del_det', F(sc['rr'], 'pa14_e_rr_del_det'), E(rr, pa14_rsdel('determinism')), ['resource', False], PA14_W_SET),
+        ('e_rr_del_det_nosrc', F(sc['rr'], 'pa14_e_rr_del_det_nosrc', 'drop'), E(rr, pa14_rsdel('determinism')), ['resource', False], PA14_W_SET),
+        ('e_l3_nonstr_key', F(sc['l3'], 'pa14_e_l3_nonstr_key'), E(l3, pa14_rsset(5, 1)), ['resource', False], PA14_W_SET),
+        ('e_l3_del_det', F(sc['l3'], 'pa14_e_l3_del_det'), E(l3, pa14_rsdel('determinism')), ['resource', False], PA14_W_SET),
+        ('e_rr_del_cmp', F(sc['rr'], 'pa14_e_rr_del_cmp'), E(rr, pa14_rsdel('compared')), ['resource', False], PA14_W_SET),
+        ('e_l3_del_from', F(sc['l3'], 'pa14_e_l3_del_from'), E(l3, pa14_rsdel('from')), ['resource', False], PA14_W_SET),
+        #  P3-f — 변이 생존 넷 (탐침 p8 입력 · M54 = 시도 번호 바꿈) = 지금 코드 거부 → 고정 (M47 변이 = AttributeError → 예외 = 행 실패)
+        ('f_m14_copied_from_true', F(sc['l3'], 'pa14_f_m14'), E(l3, run('L01_floor', copied_from=True)), ['resource', False], PA13_W2),
+        ('f_m18_rr_cmp_det_none', F(sc['rr'], 'pa14_f_m18'), E(rr, rs(compared=[{'file': X, 'same': True}])), ['resource', False], PA13_W2),
+        ('f_m47_cmp_elem_int', F(sc['mm'], 'pa14_f_m47'), E(mm, PA13_TL, rs(compared=[5])), ['timeout', False], PA13_W1),
+        ('f_m54_from_below_resume_of', pa14_renum(sc['l3'], 'f_m54', 3, 2), l3, ['resource', False], PA13_W2),
+    ]
+
+
+@check('PA14D', '★ 11-09 사전 공격 14 P3-e · P3-f (탐침 p1_resume_bypass · p8_survivor_inputs 그대로 · 수정 = resume_rerun_problem) — 정직 재실행 요약 셋 (PA13 시나리오 · '
+                '실제 사슬 · 가짜 러너 · 실제 git 원장) + 시도 번호 바꿈 (채택 = 시도 2 · 재실행 시도 3 · resume_of 2 · from 2 · 원천 있음 · 없음 = 정직 꼴) = 그대로 → '
+                'P3-e resume 칸 집합 ≠ 생산자 다섯 칸 (from · copied · rerun · compared · determinism — 덧붙인 칸 · 빠진 determinism (≠ null) · 글 아닌 열쇠 · 원천 있음 · '
+                '없음 · 옛 = 자격 True) = 자격 False · 사유 "칸 집합" (집합 대조가 먼저) · P3-f 변이 생존 넷 고정 — copied_from = True (bool ≠ int · M14) · 대조 전 멈춤인데 '
+                'compared 비지 않음 + determinism null (M18) · compared 원소 = 정수 (M47 · 객체 검사 없으면 AttributeError) · from 1 < attempt.json resume_of 2 (M54) = '
+                '자격 False · 사유')
+def t_PA14D():
+    if not chain_c1b2():
+        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
+    sc = scen('PA13', pa13_scen)
+    rows, bad = {}, {}
+    for nm, f, s, want, word in pa14_resume_rows(sc):
+        try:
+            fl = RR.result_fields(f, s)
+            prob = RR.stop_record_problem(s, f)
+        except Exception as e:                            # noqa: BLE001 — 판정 함수 예외 = 그 행 실패
+            rows[nm] = f'exc {type(e).__name__}: {e}'[:200]
+            bad[nm] = rows[nm]
+            continue
+        rows[nm] = [fl['cause'], fl['resume_ok'], None if prob is None else prob[:200]]
+        code = (s.get('stop') or {}).get('code')
+        prob_ok = (prob is None) if word is None else (isinstance(prob, str) and word in prob and code in prob)
+        if [fl['cause'], fl['resume_ok']] != want or not prob_ok:
+            bad[nm] = {'got': rows[nm], 'want': want, 'word': word}
+    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad_names': sorted(bad), 'bad': dict(sorted(bad.items())[:24]), 'rows': rows}
 
 
 # ═════════════════════════ 실행 ═════════════════════════

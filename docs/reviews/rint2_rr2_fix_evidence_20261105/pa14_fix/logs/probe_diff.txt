@@ -1,0 +1,46 @@
+== p1_resume_bypass: 바뀐 줄 5 (고치기 전 5)
+  -A1_l3_resume_extra_key                           keep ['resource', True, None]   [never written (extra key)]
+  -A2_rr_del_determinism                            keep ['resource', True, None]   [never written (key missing)]
+  -A3_rr_del_compared                               keep ['resource', False, "멈춤 RUNNER_RC · 멈춘 런 = resume 칸 rerun 'L02_ceiling' (대조 전 멈춤) 인데 compared None · determinism None (생산자 = [] · null · ★ 11-09 사전 공격 13 P2-1)"]   [never written]
+  -A4_rr_resume_extra_key                           keep ['resource', True, None]   [never written (extra key)]
+  +A1_l3_resume_extra_key                           keep ['resource', False, "멈춤 RUNNER_RC · resume 칸 집합 ['compared', 'copied', 'determinism', 'extra', 'from', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (   [never written (extra key)]
+  +A2_rr_del_determinism                            keep ['resource', False, "멈춤 RUNNER_RC · resume 칸 집합 ['compared', 'copied', 'from', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (생산자 = `ResumeRunner` 다섯    [never written (key missing)]
+  +A3_rr_del_compared                               keep ['resource', False, "멈춤 RUNNER_RC · resume 칸 집합 ['copied', 'determinism', 'from', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (생산자 = `ResumeRunner`    [never written]
+  +A4_rr_resume_extra_key                           keep ['resource', False, "멈춤 RUNNER_RC · resume 칸 집합 ['compared', 'copied', 'determinism', 'extra', 'from', 'rerun'] ≠ ['from', 'copied', 'rerun', 'compared', 'determinism'] (   [never written (extra key)]
+  -ACCEPTED (resume_ok True) non-honest: [('A1_l3_resume_extra_key', 'never written (extra key)'), ('A2_rr_del_determinism', 'never written (key missing)'), ('A4_rr_resume_extra_key', 'never written (extra key)'), ('C1_mm_TL_sameTrue_nosrc', 'declared limitation
+  +ACCEPTED (resume_ok True) non-honest: [('C1_mm_TL_sameTrue_nosrc', 'declared limitation (src elsewhere)'), ('C2_mm_TL_assumed_nosrc', 'declared limitation (src elsewhere)'), ('G2_l3_cmp_file_traversal_nosrc', 'declared (nosrc)')]
+== p2_chain3: 바뀐 줄 0 (고치기 전 0)
+== p3_value_domain: 바뀐 줄 14 (고치기 전 14)
+  -  pid_bare_dash          ('verified', None)                                                                                                         [producer = p3ca-<16 hex>]
+  -  pid_zwsp               ('verified', None)                                                                                                         [producer = p3ca-<16 hex>]
+  -  pid_space              ('verified', None)                                                                                                         [producer = p3ca-<16 hex>]
+  -  pid_newline            ('verified', None)                                                                                                         [producer = p3ca-<16 hex>]
+  -  sid_space              ('verified', None)                                                                                                         [producer = 32 hex (_grid_fp)]
+  -  sid_nul                ('verified', None)                                                                                                         [producer = 32 hex]
+  -  err_pos_half           ('verified', None)                                                                                                         [positive ⓓ pass ⇒ err ≤ 1e-4]
+  -  err_pos_1e300          ('verified', None)                                                                                                         [positive ⓓ pass ⇒ err ≤ 1e-4]
+  +  pid_bare_dash          ('bad', "[0].protocol_id 'p3ca-' (= p3ca- + 16 자리 소문자 hex · 생산자 `_ca_ext_protocol_id` · ★ 11-09 사전 공격 14 P3-d) — read_ru   [producer = p3ca-<16 hex>]
+  +  pid_zwsp               ('bad', "[0].protocol_id 'p3ca-\\u200b' (= p3ca- + 16 자리 소문자 hex · 생산자 `_ca_ext_protocol_id` · ★ 11-09 사전 공격 14 P3-d) —    [producer = p3ca-<16 hex>]
+  +  pid_space              ('bad', "[0].protocol_id 'p3ca- ' (= p3ca- + 16 자리 소문자 hex · 생산자 `_ca_ext_protocol_id` · ★ 11-09 사전 공격 14 P3-d) — read_r   [producer = p3ca-<16 hex>]
+  +  pid_newline            ('bad', "[0].protocol_id 'p3ca-<hex>\\n' (= p3ca- + 16 자리 소문자 hex · 생산자 `_ca_ext_protocol_id` · ★ 11-09 사전 공격   [producer = p3ca-<16 hex>]
+  +  sid_space              ('bad', "[0].sid_fp ' ' (= 32 자리 소문자 hex · 생산자 `step3_sigma._grid_fp` · ★ 11-09 사전 공격 14 P3-d) — read_run 성공 꼴 아님")        [producer = 32 hex (_grid_fp)]
+  +  sid_nul                ('bad', "[0].sid_fp '\\x00' (= 32 자리 소문자 hex · 생산자 `step3_sigma._grid_fp` · ★ 11-09 사전 공격 14 P3-d) — read_run 성공 꼴 아님")    [producer = 32 hex]
+  +  err_pos_half           ('bad', '[0].err_rel 0.5 (≤ τ 0.0001 = 증서 ⓓ 통과의 보장 오차 · ★ 11-09 사전 공격 14 P3-d) — read_run 성공 꼴 아님')                        [positive ⓓ pass ⇒ err ≤ 1e-4]
+  +  err_pos_1e300          ('bad', '[0].err_rel 1e+300 (≤ τ 0.0001 = 증서 ⓓ 통과의 보장 오차 · ★ 11-09 사전 공격 14 P3-d) — read_run 성공 꼴 아님')                     [positive ⓓ pass ⇒ err ≤ 1e-4]
+  -  pos_resid_bigint       ('EXC', 'OverflowError: int too large to convert to float')                                                                [JSON int · conv_ok math.isfinite OverflowError?]
+  -  pos_resid_negbigint    ('EXC', 'OverflowError: int too large to convert to float')                                                                [JSON int]
+  -  pos_cginfo_bigint      ('bad', '[0].cg_info 100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000   [cg_info != 0 -> unconv]
+  +  pos_resid_bigint       ('bad', '[0].cg_resid <정수 401 자리 · float 넘침> (positive = 유한 수 · 수렴 계약 · ★ 11-09 사전 공격 14 P3-a) — read_run 성공 꼴 아님')        [JSON int · conv_ok math.isfinite OverflowError?]
+  +  pos_resid_negbigint    ('bad', '[0].cg_resid <정수 401 자리 · float 넘침> (positive = 유한 수 · 수렴 계약 · ★ 11-09 사전 공격 14 P3-a) — read_run 성공 꼴 아님')        [JSON int]
+  +  pos_cginfo_bigint      ('bad', '[0].cg_info <정수 401 자리 · float 넘침> · cg_resid 1e-12 (positive = 수렴 계약 · unconv) — read_run 성공 꼴 아님')              [cg_info != 0 -> unconv]
+  -result_fields with cg_resid=10**400: EXC OverflowError: int too large to convert to float
+  -result_recount EXC OverflowError int too large to convert to float
+  -recover cli EXC OverflowError int too large to convert to float
+  +result_fields with cg_resid=10**400: ['timeout', False, "멈춤 TIME_LIMIT · 런 'L02_ceiling' 앞의 런 기록 runs[0] ('L01_floor') = 꼴 exit_ok · arms_read bad ([0].cg_resid <정수 401 자리 · float 넘침> (positive = 유한 수 · 수렴 계"]
+  +result_recount: {'status': 'stopped', 'stop': {'code': 'TIME_LIMIT', 'run': 'L02_ceiling', 'reason': None}, 'side': 'post', 'cause': 'timeout', 'resume_ok': False}
+  +recover cli: {'orphan': ['parent_dead', True], 'recover_rc': 0, 'result': {'status': 'stopped', 'side': 'post', 'cause': 'timeout', 'resume_ok': False, 'by': 'recover'}, 'resume_rc': 3, 'not_allowed': True, 'ledger_same': True, 'tail': ['recover — 그룹 기록 0 개 정
+== p4_predict_resume: 바뀐 줄 0 (고치기 전 0)
+== p5_arm_forms: 바뀐 줄 0 (고치기 전 0)
+== p6_attempt_json: 바뀐 줄 0 (고치기 전 0)
+== p7_relabel: 바뀐 줄 0 (고치기 전 0)
+== p8_survivor_inputs: 바뀐 줄 0 (고치기 전 0)

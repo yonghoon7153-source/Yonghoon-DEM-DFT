@@ -1,0 +1,5 @@
+R1 (7 summary edits · src keep): ['timeout', True, None]
+attempt_1/L01 leftovers: ['p2_SBE_vgcf100_sph_fa_cjinf_c0_a0.json']
+R2 (6 summary edits · src keep): ['timeout', True, None]
+  groups/L01_floor.launch.json  attempt_2 fa209a8769d6  attempt_1 fa209a8769d6  (copy ⇒ equal · fresh run ⇒ different)
+  groups/L02_ceiling.launch.json  attempt_2 99b7ffb01256  attempt_1 0a41e5897e4e  (copy ⇒ equal · fresh run ⇒ different)

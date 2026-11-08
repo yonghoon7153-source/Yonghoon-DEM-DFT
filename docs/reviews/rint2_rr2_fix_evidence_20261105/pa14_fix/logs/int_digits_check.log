@@ -1,0 +1,10 @@
+python 3.11.17
+_json_strict 정수 401 자리: 읽음 (int)
+_show(10**400): <정수 401 자리 · float 넘침>
+_json_strict 정수 5001 자리: ValueError (Exceeds the limit (4300 digits) for integer stri)
+_show(10**5000): ValueError (Exceeds the limit (4300 digits) for integer stri)
+python 3.8.20
+_json_strict 정수 401 자리: 읽음 (int)
+_show(10**400): <정수 401 자리 · float 넘침>
+_json_strict 정수 5001 자리: ValueError (Exceeds the limit (4300) for integer string conv)
+_show(10**5000): ValueError (Exceeds the limit (4300) for integer string conv)

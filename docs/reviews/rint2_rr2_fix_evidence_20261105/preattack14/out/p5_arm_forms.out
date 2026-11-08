@@ -1,0 +1,4 @@
+synthetic forms: 255 not verified: []
+lad_P0 {'(1, None)': (11, ['verified'], []), '(2, (1, 2))': (3, ['verified'], [])}
+lad_P1 {'(1, None)': (11, ['verified'], []), '(2, (1, 2))': (3, ['verified'], [])}
+pred {'(1, None)': (12, ['verified'], []), '(2, (1, 2))': (12, ['verified'], [])}
