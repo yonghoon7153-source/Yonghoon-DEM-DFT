@@ -1,0 +1,355 @@
+{
+  "schema": "mixer_limited_independent_review_receipt/1",
+  "date": "2026-11-09",
+  "review_order": [
+    "MLAR-01",
+    "MGS-01"
+  ],
+  "track": "MLAR-01",
+  "received_review_zip": {
+    "filename": "codex_mlar01_path_215e9cc007cc_independent_20261109.zip",
+    "bytes": 2575650,
+    "sha256": "412b5b9379b37970521966e42dc91f9ab83e06191669fa16b75bb97ab7a56e64",
+    "files": 190
+  },
+  "received_report": {
+    "filename": "codex_review_mlar01_path_recheck_20261109.md",
+    "bytes": 7470,
+    "sha256": "2bcc5e2357c2c1ec25cf28f3dbdb95cd210be8ae4dec378b3a37c47c3c8c77ea"
+  },
+  "received_artifact_identities": [
+    {
+      "member": "codex_review_mlar01_path_recheck_20261109.md",
+      "bytes": 7470,
+      "sha256": "2bcc5e2357c2c1ec25cf28f3dbdb95cd210be8ae4dec378b3a37c47c3c8c77ea"
+    },
+    {
+      "member": "integrity.json",
+      "bytes": 1441,
+      "sha256": "2d728c7e3d8fa3c95c138f2ee8659589699900805526b8d32a729cfcf1b1c50d"
+    },
+    {
+      "member": "remote_commit.json",
+      "bytes": 135386,
+      "sha256": "3d9e337a451c9112bc277218ab90f9208a195887930c14b7d90963aff77ed684"
+    },
+    {
+      "member": "VERDICT.json",
+      "bytes": 409,
+      "sha256": "ea397c06be44436f350cfcd9e526e88f4de929953d266500f701ee321b6b591e"
+    }
+  ],
+  "received_content_verdict": {
+    "pin": "215e9cc007cc1307fc3bd3f31fa48cff1addc2a1",
+    "MLAR_01": "CLOSABLE_LIMITED",
+    "new_findings": [],
+    "MLA_02_03": "PRIOR_LIMITED_ACCEPTANCE_PRESERVED",
+    "whole_gate": "HOLD",
+    "actual_execution_authorized": false,
+    "production_reseal": false,
+    "ledger_modified": false,
+    "runtime_failure_auto_hold": false,
+    "python": "3.12.14",
+    "platform": "Windows",
+    "remote_full_tree_refetch": false
+  },
+  "receipt_integrity": "INCOMPLETE_DO_NOT_MARK_PASS",
+  "original_input_comparison": {
+    "filename": "codex_mlar01_path_recheck_215e9cc007cc_20261109.zip",
+    "bytes": 2476663,
+    "sha256": "e083b31e22a381ef892fad7ff39a3be5c1708af0ed1b0f5f7b253adbca04c14f",
+    "expected_files": 129,
+    "actual_package_files": 128,
+    "byte_identical_count": 128,
+    "missing_members": [
+      {
+        "member": "package/snapshot/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+        "original_member": "snapshot/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+        "bytes": 3606,
+        "sha256": "befb669cfc35af1f1c5936e2c1108111956fc16e746cbc8d9b0cdbeeb4601812"
+      }
+    ],
+    "extra_members": [],
+    "changed_members": [],
+    "identical_nested_zip_members": []
+  },
+  "receipt_validation": {
+    "kind": "Metadata and preserved bytes only; not a new substantive independent review",
+    "archives": [
+      {
+        "archive": "codex_mlar01_path_215e9cc007cc_independent_20261109.zip!package/external_evidence/codex_mla_B_recheck_a2e0396241c4_independent_20261108.zip!package/snapshot/docs/reviews/mixer_mla_recheck_20261106/external/codex_review_mixer_launch_b57fe91503ba_evidence_20261106.zip",
+        "files": 139,
+        "members": 139,
+        "crc_error_member": null,
+        "duplicate_members": 0,
+        "case_collisions": 0
+      },
+      {
+        "archive": "codex_mlar01_path_215e9cc007cc_independent_20261109.zip!package/external_evidence/codex_mla_B_recheck_a2e0396241c4_independent_20261108.zip",
+        "files": 439,
+        "members": 439,
+        "crc_error_member": null,
+        "duplicate_members": 0,
+        "case_collisions": 0
+      },
+      {
+        "archive": "codex_mlar01_path_215e9cc007cc_independent_20261109.zip",
+        "files": 190,
+        "members": 190,
+        "crc_error_member": null,
+        "duplicate_members": 0,
+        "case_collisions": 0
+      }
+    ],
+    "sha256_manifests": [
+      {
+        "archive": "codex_mlar01_path_215e9cc007cc_independent_20261109.zip!package/external_evidence/codex_mla_B_recheck_a2e0396241c4_independent_20261108.zip",
+        "member": "package/SHA256SUMS",
+        "declared_entries": 129,
+        "verified": 129,
+        "missing_members": [],
+        "hash_mismatches": [],
+        "duplicate_entries": 0,
+        "unlisted_in_scope": [],
+        "complete_scope_coverage": true
+      },
+      {
+        "archive": "codex_mlar01_path_215e9cc007cc_independent_20261109.zip!package/external_evidence/codex_mla_B_recheck_a2e0396241c4_independent_20261108.zip",
+        "member": "package/snapshot/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+        "declared_entries": 40,
+        "verified": 40,
+        "missing_members": [],
+        "hash_mismatches": [],
+        "duplicate_entries": 0,
+        "unlisted_in_scope": [],
+        "complete_scope_coverage": true
+      },
+      {
+        "archive": "codex_mlar01_path_215e9cc007cc_independent_20261109.zip!package/external_evidence/codex_mla_B_recheck_a2e0396241c4_independent_20261108.zip!package/snapshot/docs/reviews/mixer_mla_recheck_20261106/external/codex_review_mixer_launch_b57fe91503ba_evidence_20261106.zip",
+        "member": "package/SHA256SUMS",
+        "declared_entries": 114,
+        "verified": 114,
+        "missing_members": [],
+        "hash_mismatches": [],
+        "duplicate_entries": 0,
+        "unlisted_in_scope": [],
+        "complete_scope_coverage": true
+      },
+      {
+        "archive": "codex_mlar01_path_215e9cc007cc_independent_20261109.zip!package/external_evidence/codex_mla_B_recheck_a2e0396241c4_independent_20261108.zip!package/snapshot/docs/reviews/mixer_mla_recheck_20261106/external/codex_review_mixer_launch_b57fe91503ba_evidence_20261106.zip",
+        "member": "package/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+        "declared_entries": 40,
+        "verified": 40,
+        "missing_members": [],
+        "hash_mismatches": [],
+        "duplicate_entries": 0,
+        "unlisted_in_scope": [],
+        "complete_scope_coverage": true
+      },
+      {
+        "archive": "codex_mlar01_path_215e9cc007cc_independent_20261109.zip!package/external_evidence/codex_mla_B_recheck_a2e0396241c4_independent_20261108.zip",
+        "member": "SHA256SUMS",
+        "declared_entries": 438,
+        "verified": 438,
+        "missing_members": [],
+        "hash_mismatches": [],
+        "duplicate_entries": 0,
+        "unlisted_in_scope": [],
+        "complete_scope_coverage": true
+      },
+      {
+        "archive": "codex_mlar01_path_215e9cc007cc_independent_20261109.zip",
+        "member": "package/SHA256SUMS",
+        "declared_entries": 128,
+        "verified": 127,
+        "missing_members": [
+          {
+            "member": "package/snapshot/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+            "expected_sha256": "befb669cfc35af1f1c5936e2c1108111956fc16e746cbc8d9b0cdbeeb4601812"
+          }
+        ],
+        "hash_mismatches": [],
+        "duplicate_entries": 0,
+        "unlisted_in_scope": [],
+        "complete_scope_coverage": false
+      },
+      {
+        "archive": "codex_mlar01_path_215e9cc007cc_independent_20261109.zip",
+        "member": "SHA256SUMS",
+        "declared_entries": 189,
+        "verified": 189,
+        "missing_members": [],
+        "hash_mismatches": [],
+        "duplicate_entries": 0,
+        "unlisted_in_scope": [],
+        "complete_scope_coverage": true
+      }
+    ],
+    "safety_issues": [],
+    "standalone_report_byte_identical": true,
+    "attached_scripts_executed": false,
+    "project_code_or_tests_executed": false,
+    "actual_hosts_accessed": false,
+    "research_values_read": false,
+    "originals_modified": false,
+    "independent_remote_tree_review_repeated": false
+  },
+  "imported_candidate": {
+    "base_b": "1f9f3607eb2f0118d322eeff780bba6eb17b85a2",
+    "track": "MLAR-01",
+    "source_pin": "215e9cc007cc1307fc3bd3f31fa48cff1addc2a1",
+    "imported_pin": "0b2c1a39bcc12130beaa59a78dd214f38efd3d3c",
+    "delta_file_count": 10,
+    "files": [
+      {
+        "path": "docs/collab/codex_to_claude/20261108-1505_mla-receipt-path-character-candidate.md",
+        "change": "A",
+        "git_blob": "7ca8bfe913b724952eaa50ca9fad4b8fbd759f60",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_first8_launch_preparation_20261106/submit_one.py.txt",
+        "change": "M",
+        "git_blob": "ab830bba249532e4a88c197108d0769aa7b41d37",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_mlar01_path_recheck_20261109/README.md",
+        "change": "A",
+        "git_blob": "98e7c844f1edf40fd8e6804e73557cf057e563fc",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_mlar01_path_recheck_20261109/evidence.json",
+        "change": "A",
+        "git_blob": "236f4b09d708a021d56eb9ab03301f9f138084d9",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_mlar01_path_recheck_20261109/ledger_proposal.json",
+        "change": "A",
+        "git_blob": "954fbd5373e22fbc117be4566e1efc4dfa4a42d1",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_mlar01_path_recheck_20261109/receipt.json",
+        "change": "A",
+        "git_blob": "9f8b3e861654ad04eae6f246972b99e8972157aa",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_mlar01_path_recheck_20261109/review_request.md",
+        "change": "A",
+        "git_blob": "c56c914cc12e45fb58158ad8b203f35ee82fd803",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_mlar01_path_recheck_20261109/run_mock_checks.py",
+        "change": "A",
+        "git_blob": "14a3e810d099a163809eb305bde2cfb0fae30428",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_mlar01_path_recheck_20261109/source_inventory.json",
+        "change": "A",
+        "git_blob": "80f8b92f78c0e30e181eeb076db680bafc6612c6",
+        "source_imported_and_current_equal": true
+      },
+      {
+        "path": "docs/reviews/mixer_mlar01_path_recheck_20261109/test_runner_paths.py",
+        "change": "A",
+        "git_blob": "2d97818a704e7477952fb2afaa7b91c3d5e0c4ae",
+        "source_imported_and_current_equal": true
+      }
+    ],
+    "comparison": "Local Git blob OID equality for each candidate delta, B imported copy, and current B; not a repeated remote full-tree review",
+    "already_imported": true,
+    "candidate_cherry_pick_again_required": false,
+    "claude_mapping": "docs/collab/claude_to_codex/20261108-1650_nonrint-1109-sha-map.md"
+  },
+  "external_evidence": {
+    "original_zip_preserved": true,
+    "contains_external_location_or_address_text": true,
+    "original_zip_or_report_repository_import": false,
+    "repository_content": "Sanitized identity, receipt disposition, import identity and proposal only"
+  },
+  "shared_ledger_modified": false,
+  "operational_seal_modified": false,
+  "value_access_granted": false,
+  "execution_go_granted": false,
+  "actual_research_runs": 0,
+  "whole_gate": "HOLD",
+  "disposition": {
+    "content": "CLOSABLE_LIMITED",
+    "evidence_acceptance": "PENDING_REPACK",
+    "ledger_closure_application": "DEFER_UNTIL_EVIDENCE_COMPLETENESS_CORRECTED",
+    "no_content_verdict_withdrawal": true,
+    "packaging_issue_is_new_P1_P2_P3": false,
+    "related_ledger_id": "MLA-01",
+    "residual_id": "MLAR-01",
+    "residual_is_second_independent_P1": false,
+    "prior_MLA02_MLA03_limited_acceptance_preserved": true
+  },
+  "packaging_issue": {
+    "missing_member": {
+      "member": "package/snapshot/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+      "original_member": "snapshot/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+      "bytes": 3606,
+      "sha256": "befb669cfc35af1f1c5936e2c1108111956fc16e746cbc8d9b0cdbeeb4601812"
+    },
+    "outer_hash_list_pass_does_not_imply_nested_complete": true,
+    "outer_entries_verified": 189,
+    "inner_entries_declared": 128,
+    "inner_entries_verified": 127,
+    "original_package_expected_files": 129,
+    "original_package_present_files": 128,
+    "changed_present_files": 0,
+    "unexpected_package_files": 0,
+    "required_action": "Review author restores the exact missing member from the fixed original input and rebuilds the outer hash list under a new archive identity",
+    "local_original_zip_repaired": false,
+    "local_corrected_independent_zip_created": false,
+    "implementation_or_substantive_test_rerun_required_by_this_issue": false,
+    "request": "docs/reviews/mixer_mlar_mgs_receipt_20261109/mlar_repack_request.md"
+  },
+  "reported_evidence": {
+    "environment": "Windows Python 3.12.14",
+    "new_test_before": {
+      "methods": 4,
+      "failures": 38,
+      "errors": 0,
+      "rc": 1
+    },
+    "new_test_after": {
+      "methods": 4,
+      "rc": 0
+    },
+    "existing_submission_methods": 10,
+    "existing_job_start_methods": 8,
+    "existing_boundary_methods": 14,
+    "independent_probes": {
+      "forbidden_path_observations": 212,
+      "preserved_normal_or_symbol_observations": 80,
+      "type_or_prefix_negatives": 32,
+      "newline_observations": 16,
+      "scheduler_prefix_negatives": 15,
+      "reservation_runtime_scenarios": 6
+    },
+    "launch_files": 73,
+    "unchanged_launch_files": 72,
+    "planned_assets": 40,
+    "historical_dependencies": 12,
+    "historical_dependencies_executed": false,
+    "full_remote_tree_refetch_complete": false,
+    "changed_commit_files_checked": 10,
+    "counts_are_additive_unique_tests": false
+  },
+  "remaining_boundaries": [
+    "The reported closure concerns the original path-character option-injection counterexample only.",
+    "Whitespace plus C0/DEL rejection is not rejection of every C1 character or qualification of actual Slurm path parsing.",
+    "Post-SUBMITTED runtime failure does not automatically propagate campaign HOLD; approved operator monitoring and subsequent-wave STOP remain required.",
+    "No automatic reservation release, same-arm retry, real job-start recovery, POSIX/Lustre or additional Python qualification.",
+    "The historical archive-asset mismatch first cause remains undetermined and its first stderr was not preserved; do not report it resolved.",
+    "Intermediate CRLF replay and preparation stops are not additional unique passing tests.",
+    "Operational seal, final bundle, resource decisions, field qualification and author execution GO remain separate."
+  ]
+}
