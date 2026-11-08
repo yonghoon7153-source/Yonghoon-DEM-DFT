@@ -1,0 +1,84 @@
+# first8 비활성 재봉인 후보 한정 검토 — 2026-11-08
+
+**판정: 후보의 정적 결속·비활성 경계 범위 수용. 새 P1/P2/P3 없음. 전체 HOLD·실제 실행 미승인 유지.**
+
+대상: `4eb6c593ec5384ed8e51079f5ec7196b1eeae80f`, `codex/mixer-1104`. `REQUEST.md`의 다섯 질문만 검토했다. 이 판정은 기존 운영 봉인 교체·운영 재봉인 완료·실제 발사 자격을 뜻하지 않는다. R01 및 기존 PRE8의 수용 범위를 재심하지 않았고, 기존 파일·원장·등록·가지·운영 정책을 변경하지 않았다.
+
+## 1. 수령 신원과 대조 범위
+
+| 대상 | 독립 확인 |
+|---|---|
+| ZIP | `codex_first8_reseal_candidate_20261108_4eb6c593ec53.zip`, **2,420,488 B** |
+| ZIP SHA256 | `e7674eed7167a3538d3dadf610330a29309d02db7afc7d2247577ed2a6e70959` |
+| 포장 | 132항목, 중복·경로 이탈·symlink 없음, CRC 오류 없음. `SHA256SUMS` **131/131** 일치 |
+| 스냅샷 | **103/103**의 길이·SHA256·Git blob을 파일 바이트에서 재계산해 일치 |
+| 원격 고정 핀 | 해당 커밋의 tree=`e54dd78f8c3fdb38cdb8eb053101d5f6e838ccad`, parent=`e6000405b7625acf8c2c0a393571b116479e0e97`. 스냅샷 103경로를 원격 tree의 blob·크기와 대조해 모두 일치 |
+| 출처 구분 | 원 자산 생성 기록 핀 `527e244e4ebd6f0cb04c6cfb2ff5f3a52fb01996`; 수용 코드/새 검증 소스 핀 `69b6bec7ac20343dd884f8d5fa63e8bf45e7df97`; 이번 후보 핀은 위 `4eb6…` |
+
+`527e…`의 12개 기준 소스, `69b6…`의 12개 수용 소스, 수령 핀 `e600…`의 12개 소스와 launch 73경로도 원격 Git blob과 별도로 대조했다. 이 수들은 겹치므로 합산하지 않는다. 원격 Git 객체 대조는 바이트의 출처를 확인하며, 실제 어느 기계에서 자산을 생성했는지·현장 실행 환경까지 인증하지 않는다.
+
+근거: `integrity.json`, `remote_snapshot.json`, `remote_provenance.json`, `independent/static_results.json`. 검토 후에도 수령 포장 131개 파일이 그대로임을 `final_integrity.json`에 남겼다.
+
+## 2. REQUEST 다섯 질문
+
+| 질문 | 판정 | 근거·한계 |
+|---|---|---|
+| Q1 12의존 결속과 생성/검증 핀 분리 | **수용** | 후보 `candidate_seal.json:4–6,13–61`의 12경로·해시를 실제 바이트, 옛 봉인 및 고정 Git blob과 대조했다. 11파일 동일, **`scripts/mixer_deck_readback.py` 하나만 변경**. 원 자산 생성 기록을 새 검증 핀으로 소급 변경하지 않았다. 검증 코드 `verify_candidate.py:81–97`도 기대 해시를 고정 소스에서 계산한다. |
+| Q2 73파일·40자산·8덱/메타/바인딩·3짝 | **수용** | 수령 핀의 launch 추적 73파일과 계획 40자산의 크기·해시·blob을 직접 대조했다. 수용 소스 사본으로 덱8개를 메모리 재생성해 기존 덱과 byte 동일, 메타8개는 별도 재귀 타입 비교에서도 동일. `validate_case` 8개 및 U/C 3짝 PASS. N0/E0는 일반 양의-Bo D2에서 FAIL이고 별도 zero-control 규칙으로만 통과했다. 준비14메서드도 직접 통과했다. 모두 정적 텍스트/합성 검사이며 실제 입자·M·접촉 관측은 없다. |
+| Q3 운영 sibling seal로 오인될 가능성 | **수용** | 기존 `submit_one.py.txt:146–151`은 `Path(__file__).resolve().parent/'source_seal.json'`과 자기 옆 manifest를 읽고 승인 source_pin과 옛 seal source_pin을 대조한다. 이번 후보 경로 참조가 없다. 후보는 별도 schema/status·`validation_source_pin`이며 `source_pin` 없음, 실행/활성/등록 false. **드라이버를 import하거나 실행하지 않고** 경로와 조건식을 대조한 결과다. |
+| Q4 verifier의 음성 탐침·고정 소스 출력 | **한정 수용** | 실제 `validate_candidate`에 독립 음성 26조건을 주어 모두 거부 확인. 누락·추가·중복 의존, 해시/경로, 핀, 활성 true/정수0/키결손, 운영 키 등을 포함한다. 내보낸 소스와 실제 사용 모듈 경로를 검사하는 구조도 확인했다. 원 고정 Git 저장소의 전체 CLI 양성 실행은 수행하지 않았다. 아래 독립 재계산·Git 경계 모의·실제 로컬 Git 누락 실패를 서로 다른 증거로 기록한다. |
+| Q5 종결·실행·별건 경계 | **수용** | 후보 README `:31–35,39,43`, `ledger_proposal.json:3–14`가 R01 기존 범위, generator-alone 부적격 가능성, MLA·현장·100k·저자 선택/실행 GO·LHS12 별도 대기를 보존한다. 11-06의 자원 전달을 11-08 현재 자원 확인으로 쓰지 않는다. 운영/등록/공유원장 변경을 새 수용의 자동 후속으로 만들지 않는다. |
+
+위 상대 경로의 후보 문서·코드는 `docs/reviews/mixer_first8_reseal_candidate_20261108/` 아래다. driver는 `docs/reviews/mixer_first8_launch_preparation_20261106/` 아래다.
+
+## 3. 수용을 떠받치는 실제 결과
+
+### 3-1. 의존 변경은 한 파일
+
+`scripts/mixer_deck_readback.py`의 SHA256:
+
+- 기존: `bc0dbd477bf2323da20deaa9172085d7b46d1427e1ebd4d77c382f395e81079f`
+- 수용 코드/후보: `791f72e96bd72d1ad118d347e5dbfdc5fd67e8b30e2ee602c6fbf7109f37091a`
+
+그 밖 8스크립트·3 STL은 동일하다. 기존 운영 `source_seal.json`은 옛 source_pin과 readback 해시를 그대로 갖는다. 후보 JSON이 새 검증 해시를 갖는다는 사실로 **옛 운영 봉인이 갱신된 것은 아니다**.
+
+### 3-2. 텍스트 대조와 물리 자격의 구분
+
+독립 `independent_static.py`는 수용된 12소스 바이트를 검토 폴더로 내보내 실제 준비 함수를 호출했다. 같은 생성기로 만든 덱의 일치이므로 이는 **기존 계획 자산과 새 소비자 코드의 정적 호환성** 증거다. 물리 모델·입자 삽입 성공·LIGGGHTS 문법·실제 100,000입자 완주를 검증한 결과가 아니다.
+
+8바인딩의 `execution_authorized=false`, `registered=null`, 실제 관측 입자수는 `null`로 유지했다. N0/E0를 양의 응집 D2 통과 사례로 세지 않았다. 원 manifest 40자산에는 덱8·메타8·STL24가 들어 있으며, launch 73파일과도 중첩된다. **14메서드+8사례+3짝을 독립 시험 총수로 더하지 않는다.**
+
+### 3-3. verifier 검증의 세 층
+
+1. **독립 바이트·소스·계획 재계산:** 실제 원격 고정 blob과 로컬 바이트를 대조하고, 수용 소스로 8/3/14를 직접 수행했다. Python **3.12.14 / Windows** 사용. 이 회차에 전체 gate·관측28·MLA·R01 시험은 반복하지 않았다.
+2. **verifier 본체의 제한 모의:** `verifier_main_mock.py`는 원 verifier의 `git()` 경계만 명시적으로 대체했다. 모의 반환값은 위에서 원격 blob을 확인한 고정 바이트이며, 실제 import·덱/메타 대조·후보 음성 검사·출력은 원 코드대로 실행했다. 결과의 출처/의존/73파일/40자산/8사례/3짝/음성4/비활성 관련 **19개 정적 필드가 동봉 기록과 동일**했다. Python 실행 경로·환경은 대조 대상에서 제외했다. 이는 원 저장소의 전체 CLI 완주가 아니다.
+3. **실제 로컬 Git 실패 경로:** 새 빈 promisor object store와 실행 불가 로컬 sentinel URL, 전송 금지 설정으로 누락 객체를 읽었다. 실제 Git **2.55.0.windows.3**에서 rc128, Trace2의 child process **0**, fetch child **0**. 실제 서버/사용자 저장소/연구 경로를 사용하지 않았다. `--no-lazy-fetch` 및 `GIT_NO_LAZY_FETCH=1` 전달도 별도로 확인했다. 이 한 조건의 관측을 모든 Git 버전·설정에 대한 보증으로 확대하지 않는다.
+
+근거: `independent/static_results.json`, `independent/preparation.stderr`, `independent/verifier_mock_summary.json`, `independent/report_comparison.json`, `verifier_probe_evidence/results.json`, `verifier_probe_evidence/git_trace.jsonl`.
+
+## 4. 반박 결과와 남는 미검증
+
+**새 필수 반례·수정 요구 없음.** 누락 의존·해시 변조·활성화·운영 `source_pin`/`allowed_submissions` 추가는 거부됐다. 소스/자산의 같은 값 비교를 실제 관측으로 확대하거나, 새 후보 핀을 기존 수용 핀과 같은 역할로 표시한 부분도 발견하지 못했다.
+
+수용의 한계는 다음과 같다.
+
+- 후보 파일 수용은 **운영 sibling seal 교체 승인이나 operational activation이 아니다**. 임의로 이름/위치를 바꾸거나 driver를 실행하지 않았다.
+- 원 Git 저장소를 갖춘 `verify_candidate.py --repo ... --output ...`의 전체 양성 CLI 실행은 이번 독립 환경에서 하지 않았다. Git 객체 읽기 모의를 그 실행으로 표기하지 않는다.
+- Python/NumPy/SciPy·실행 바이너리·사이트 환경은 12소스 봉인 밖이다. 일반 악의적 파일시스템·동시 변경·ABA 방어, 미래 소비자, 임의 새 JSON 운영 키 전수 방어까지 인증하지 않는다. README의 한정과 일치한다.
+- STL은 바이트만 대조했다. 새로운 형상 검증·실제 접촉/혼합 지표·MPM 피복 인증은 없다.
+- 기존 launch의 **추적 73파일** 보존을 확인한 것이지 디렉터리의 임의 비추적 파일 부재까지 확인한 것은 아니다.
+- MLA 재확인, 최종 driver/runner/physical manifest 결속·검토, 저자 NP/동시 팔/순서/GO 결정, 실제 host/binary/MPI/100k 자격은 별도다. LHS 12질문 정의 검토도 별도이며 8질문판을 다시 반입 대상으로 만들지 않았다.
+
+**최종: first8 비활성 재봉인 후보의 문서·정적 호환성 범위 수용. 운영 재봉인·실제 실행·배포·통합 GO 아님. 전체 HOLD 유지.**
+
+## 5. 로컬 재현 안내
+
+증거 ZIP을 새 검토 폴더에 풀고 Python 환경에 NumPy/SciPy를 준비한다. 다음은 소스 사본·합성 텍스트·검토용 로컬 Git만 사용하며 운영 driver를 호출하지 않는다. 기존 결과를 보존하려면 별도 복사본에서 실행한다.
+
+```text
+python -I -B -X utf8 independent_static.py
+python -I -B -X utf8 verifier_main_mock.py
+python -I -B -X utf8 verifier_probe.py
+```
+
+첫 명령이 기존 준비14를 실제 수용 소스 사본으로 실행한다. 둘째는 **Git 경계 모의**이며 셋째는 후보 계약 변이와 **새 로컬 누락 객체** 시험이다. 실제 ibb/WSL·원자료·sbatch·MPI·DEM·제출·등록·배포·원장 수정은 포함하지 않는다. 상세 정적 근거는 `boundary_review.md`, `verifier_attack.md`를 함께 보존했다.
