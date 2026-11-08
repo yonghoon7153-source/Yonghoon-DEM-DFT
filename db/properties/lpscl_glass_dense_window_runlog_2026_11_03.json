@@ -385,5 +385,17 @@
   "GPU": "8,579 / 24,576 MiB · 93 % · 우리 MD 4,484 MiB · esp grape_twin 3,186 · kiwi_twin 350 · Xorg 104 · gnome-shell 79 · /home/kgy/miniconda3/bin/python (PID 1390) 306",
   "A11_판정_파일": "stage1_verdict.json: status fail · closes_system False · reasons {invalid: [], incomplete: [], fail: ['PS₄ 보존율 0.9166666666666666 < 1.0']} · 폴더: final_relax.log · gr_partials.csv · md_init_raw.xyz · result.json · final.vasp · initial.xyz · plan.json · stage1_attempt.json · thermo.csv · final.xyz · md_done.json · prerelax.log · stage1_verdict_history.jsonl · traj.xyz (seed_gate.json 은 따로 없다 — 시드 게이트는 판정 안에 있다)",
   "by": "agent (위임 10-30) · 2026-11-08"
+ },
+ "진행_2026_11_08": {
+  "출처": "사용자 붙여넣기 2026-11-08 14:05:14 KST (kgy · watch -n 30 · stage1.log 끝 5 줄 · 시드 프레임 수 · nvidia-smi)",
+  "A12": "2026-11-07 23:35:32 → 2026-11-08 12:40:33 KST (≈ 13.1 h) · 담금질 대표 끝 → 그룹 정리 → 시드 판정 **pass** (러너 줄 '[stage1] …/A/seed12 → pass') · 묶음 pending (판정 덜 끝남 — 정상)",
+  "A_계_셈": "A11 fail · A12 pass → 카드 stage1_need_pass 4 — A13–A15 셋 모두 통과해야 A 가 4/5 · 하나라도 fail 이면 A 가 닫히고 두 유리 비교 트랙이 멈춘다 (결과 전 규칙 그대로 · 재해석 안 함)",
+  "B11": "프레임 1051 (끝) · A12 가 23:35:32 에 시작했으니 B11 은 그 직전에 판정까지 끝났다 (10:34:30 시작 · ≈ 13.0 h) — 시드 판정 줄은 이 창 (끝 5 줄) 밖이라 아직 모른다 → 판정 파일 읽기 요청 (들여다봄 아님 · 카드 v14 ②)",
+  "B12": "12:41:34 시작 · 14:05:14 프레임 116 (≈ 83 프레임/h · B11 80.5 와 비슷) → MD 끝 ≈ 11-09 01:20 KST · FIRE · 판정 포함 ≈ 01:50",
+  "GPU": "8,509 MiB · 82 % — 우리 MD ≈ 4.5 GB + 우리 밖 ≈ 4.0 GB (13:36 표와 같은 꼴)",
+  "⏩_정정_확인_2026_11_08": "확인_2026_11_08 (13:36) 의 우리 MD 4,484 MiB 는 B12 였다 (A12 는 12:40 에 끝 · B12 12:41 시작) — 인계 카드 §1-1 의 'A12 가 떴을 것 · 미확인' 을 이것으로 닫는다",
+  "누적": "끝난 시드 셋 (A11 13.2 · B11 ≈ 13.0 · A12 13.1 h) + B12 진행 ≈ 1.4 h ≈ 40.7 GPU-h · 시드당 ≈ 13.1 h → 10 시드 ≈ 131 GPU-h (상한 230 안) · 끝 ≈ 11-12 아침",
+  "운영": "들여다봄 없음 (--stage1_verdict 안 침 · 로그 · 판정 파일 읽기만) · 같은 기계 kgy",
+  "by": "agent (위임 10-30) · 2026-11-08 · 대피 세션 claude/evac-2026-11-08"
  }
 }
