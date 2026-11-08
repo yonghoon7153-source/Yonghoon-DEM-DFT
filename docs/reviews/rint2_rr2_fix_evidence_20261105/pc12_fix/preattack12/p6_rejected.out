@@ -1,0 +1,19 @@
+producer                           → ['rejected', 'pre', 'MACHINE_NOT_ALLOWED']
+code XYZ (STOPS 밖)                 → ['rejected', 'pre', 'XYZ']
+code CALIBRATED (상태 이름)            → ['rejected', 'pre', 'CALIBRATED']
+code GENERATION (결과 뒤 멈춤)          → ['rejected', 'pre', 'GENERATION']
+code OUTDIR_NOT_EMPTY (옆 기록 전용)    → ['rejected', 'pre', 'OUTDIR_NOT_EMPTY']
+utc ""                             → ['rejected', 'pre', 'MACHINE_NOT_ALLOWED']
+cause ""                           → ['rejected', 'pre', 'MACHINE_NOT_ALLOWED']
+n 1.0                              → Stop ATTEMPT_LEDGER_MISMATCH
+n true                             → Stop ATTEMPT_LEDGER_MISMATCH
+n "1"                              → Stop ATTEMPT_LEDGER_MISMATCH
+code trailing NL                   → Stop ATTEMPT_LEDGER_MISMATCH
+code fullwidth                     → Stop ATTEMPT_LEDGER_MISMATCH
+commit upper                       → Stop ATTEMPT_LEDGER_MISMATCH
+dup key n (raw)                    → Stop ATTEMPT_LEDGER_MISMATCH
+NaN cause (raw)                    → Stop ATTEMPT_LEDGER_MISMATCH
+n 1e400 (raw → inf)                → Stop ATTEMPT_LEDGER_MISMATCH
+BOM (raw)                          → Stop ATTEMPT_LEDGER_MISMATCH
+hidden dir .x       → Stop ATTEMPT_LEDGER_MISMATCH
+rejected.json = dir (no file) → ['interrupted', 'pre', 'parent_dead', False]

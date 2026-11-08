@@ -1,0 +1,8 @@
+# 바탕 2b3c42c6c (= 6a81f0c55 의 rint_r_chain.py) · 사본 base_chain/
+0d72d11bb043a4bb2559aa402feec46261d9229a0109418aa7688054dc78ee3d  base rint_r_chain.py (git show 2b3c42c6c)
+4982c064c39272bae549d8c4741a054409ceb7b5bcc3a7c45b5b8e7ac4da262c  base test_rint_r_chain.py (git show 2b3c42c6c)
+# 첫 고침 판 (apply_chain.py 뒤 · 끝-끝 · first_result · ca_ext 돌림 · 첫 전체 사슬 479/481)
+9df275fc89ce2a674f1cb722c558140f75832ce7d04b0e1a485b9ab58f7f62d1  first rint_r_chain.py
+# 끝 판 (rc_equal · AL12c 고정물 · RC_READERS · 변이 · 탐침 · 전체 사슬 · py38)
+48f0e7fff068eea752407ad56955c159e937f8a33801148786b0d5a3e650f95c  scripts/rint_r_chain.py
+fedba635c5ea52e88d38341308637a025b44665c0c3e40cb49cdae50af5c7811  scripts/test_rint_r_chain.py

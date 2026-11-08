@@ -1,0 +1,167 @@
+{
+ "chain_sha256_original": "48f0e7fff068eea752407ad56955c159e937f8a33801148786b0d5a3e650f95c",
+ "mutants": [
+  {
+   "name": "M1_range_off",
+   "guard": "F1 요청 칸 범위 (request_fields_problem)",
+   "expect_fail": "PC12A",
+   "failed": [
+    "PC12A"
+   ],
+   "caught": true,
+   "bad_rows": {
+    "PC12A": [
+     "coedit_arml_dup",
+     "coedit_arml_len",
+     "coedit_arml_out",
+     "coedit_arml_prefix",
+     "coedit_arml_unsorted",
+     "coedit_arms0",
+     "coedit_arms9",
+     "coedit_arms_huge",
+     "coedit_arms_neg",
+     "coedit_tl_arms9"
+    ]
+   },
+   "rc": 0,
+   "stderr_tail": ""
+  },
+  {
+   "name": "M1b_trace_od_only",
+   "guard": "F1 흔적 = od 하나 (stop_trace 옛 꼴)",
+   "expect_fail": "PC12A",
+   "failed": [
+    "PC12A"
+   ],
+   "caught": true,
+   "bad_rows": {
+    "PC12A": [
+     "cli_coedit_arms2_trace",
+     "coedit_arms2",
+     "coedit_tl_arms2",
+     "noreq_sibling_trace"
+    ]
+   },
+   "rc": 0,
+   "stderr_tail": ""
+  },
+  {
+   "name": "M2a_side_shapes_off",
+   "guard": "F2 (원인 · rc) 대응표 (CHAIN_SIDE_SHAPES)",
+   "expect_fail": "PC12B",
+   "failed": [
+    "PC12B"
+   ],
+   "caught": true,
+   "bad_rows": {
+    "PC12B": [
+     "cli_gu_forged_rc0",
+     "cli_gu_forged_timeout_null",
+     "gu_cause_mismatch",
+     "gu_forged_rc0_tb",
+     "gu_forged_recover_rc0",
+     "gu_forged_timeout_null_tb",
+     "gu_signal_after_disk_cause",
+     "gu_signal_after_rc_null",
+     "rr_rc1_end_rc0",
+     "rr_rc1_end_rc_bool",
+     "rr_signal_after_end_rc_null",
+     "rr_signal_end_cause_none",
+     "tl_cause_mismatch"
+    ]
+   },
+   "rc": 0,
+   "stderr_tail": ""
+  },
+  {
+   "name": "M2b_confirmed_gu_only",
+   "guard": "F2 멈춤 코드 ↔ 확인 (STOP_CONFIRMED 옛 = GU 만)",
+   "expect_fail": "PC12B",
+   "failed": [
+    "PC12B"
+   ],
+   "caught": true,
+   "bad_rows": {
+    "PC12B": [
+     "rr_rc1_end_unconfirmed",
+     "tl_unconfirmed"
+    ]
+   },
+   "rc": 0,
+   "stderr_tail": ""
+  },
+  {
+   "name": "M3_prior_off",
+   "guard": "F3 앞 런 기록 (prior_runs_problem)",
+   "expect_fail": "PC12C",
+   "failed": [
+    "PC12C"
+   ],
+   "caught": true,
+   "bad_rows": {
+    "PC12C": [
+     "cli_forged_tl_L02",
+     "cli_forged_tl_zzz",
+     "gu_after_fail_a2",
+     "rr_after_prior_arms_dict",
+     "rr_after_prior_no_gc",
+     "tl_after_fail_a1",
+     "tl_none_after_fail_L02",
+     "tl_none_after_fail_zzz",
+     "tl_none_after_killed",
+     "tl_none_after_ok_noarms"
+    ]
+   },
+   "rc": 0,
+   "stderr_tail": ""
+  },
+  {
+   "name": "M4_lenient_json",
+   "guard": "F4 요약 읽기 = json.loads (read_summary_state 옛 꼴)",
+   "expect_fail": "PC12D",
+   "failed": [
+    "PC12D"
+   ],
+   "caught": true,
+   "bad_rows": {
+    "PC12D": [
+     "cli_dup",
+     "dup_run_fields",
+     "dup_top",
+     "inf",
+     "nan",
+     "neg_inf",
+     "probe_b_recount"
+    ]
+   },
+   "rc": 0,
+   "stderr_tail": ""
+  },
+  {
+   "name": "M5_code_shape_only",
+   "guard": "F5 거부 기록 code = 글자 꼴만 (rejected_form_problem 옛 꼴)",
+   "expect_fail": "PC12E",
+   "failed": [
+    "PC12E"
+   ],
+   "caught": true,
+   "bad_rows": {
+    "PC12E": [
+     "calibrated",
+     "cli_calibrated",
+     "cli_xyz",
+     "ok_word",
+     "outside_refused",
+     "predicted",
+     "rejected_word",
+     "stopped",
+     "xyz"
+    ]
+   },
+   "rc": 0,
+   "stderr_tail": ""
+  }
+ ],
+ "chain_sha256_restored": "48f0e7fff068eea752407ad56955c159e937f8a33801148786b0d5a3e650f95c",
+ "all_caught": true
+}

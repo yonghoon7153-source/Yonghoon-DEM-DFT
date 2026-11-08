@@ -1,0 +1,98 @@
+{
+ "PC12A": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "cli_coedit_arms2_trace": [
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     "resource"
+    ],
+    "coedit_arms2": {
+     "got": [
+      "resource",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "resource",
+      false,
+      false
+     ]
+    },
+    "coedit_tl_arms2": {
+     "got": [
+      "timeout",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      false
+     ]
+    },
+    "noreq_sibling_trace": {
+     "got": [
+      "resource",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "resource",
+      false,
+      false
+     ]
+    }
+   },
+   "n": 27,
+   "n_bad": 4
+  }
+ },
+ "PC12B": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 33,
+   "n_bad": 0
+  }
+ },
+ "PC12C": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 17,
+   "n_bad": 0
+  }
+ },
+ "PC12D": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 10,
+   "n_bad": 0
+  }
+ },
+ "PC12E": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 14,
+   "n_bad": 0
+  }
+ },
+ "_chain_sha256": "efb055b7c2fc0488f1539a2c3fe63b93c68a46896de08bc85a425ff25b7d0a9b"
+}

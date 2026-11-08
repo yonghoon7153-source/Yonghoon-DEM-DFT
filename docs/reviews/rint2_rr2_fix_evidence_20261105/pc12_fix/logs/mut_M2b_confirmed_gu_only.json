@@ -1,0 +1,70 @@
+{
+ "PC12A": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 27,
+   "n_bad": 0
+  }
+ },
+ "PC12B": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "rr_rc1_end_unconfirmed": {
+     "got": [
+      "resource",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "resource",
+      false,
+      true
+     ]
+    },
+    "tl_unconfirmed": {
+     "got": [
+      "timeout",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      true
+     ]
+    }
+   },
+   "n": 33,
+   "n_bad": 2
+  }
+ },
+ "PC12C": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 17,
+   "n_bad": 0
+  }
+ },
+ "PC12D": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 10,
+   "n_bad": 0
+  }
+ },
+ "PC12E": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 14,
+   "n_bad": 0
+  }
+ },
+ "_chain_sha256": "6f19943fa199305c3708d64e67808a5b7189a2c490c1ba48d5bd3cf4662cdd2f"
+}

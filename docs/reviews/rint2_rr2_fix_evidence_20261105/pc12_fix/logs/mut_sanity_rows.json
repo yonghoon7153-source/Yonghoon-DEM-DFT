@@ -1,0 +1,43 @@
+{
+ "PC12A": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 27,
+   "n_bad": 0
+  }
+ },
+ "PC12B": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 33,
+   "n_bad": 0
+  }
+ },
+ "PC12C": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 17,
+   "n_bad": 0
+  }
+ },
+ "PC12D": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 10,
+   "n_bad": 0
+  }
+ },
+ "PC12E": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 14,
+   "n_bad": 0
+  }
+ },
+ "_chain_sha256": "48f0e7fff068eea752407ad56955c159e937f8a33801148786b0d5a3e650f95c"
+}

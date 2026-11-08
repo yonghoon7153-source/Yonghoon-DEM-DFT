@@ -1,0 +1,176 @@
+{
+ "PC12A": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 27,
+   "n_bad": 0
+  }
+ },
+ "PC12B": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 33,
+   "n_bad": 0
+  }
+ },
+ "PC12C": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 17,
+   "n_bad": 0
+  }
+ },
+ "PC12D": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 10,
+   "n_bad": 0
+  }
+ },
+ "PC12E": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "calibrated": [
+     [
+      "rejected",
+      "pre",
+      "CALIBRATED"
+     ],
+     "Stop ATTEMPT_LEDGER_MISMATCH"
+    ],
+    "cli_calibrated": {
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "CALIBRATED"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "cli_xyz": {
+     "ledger_same": [
+      false,
+      true
+     ],
+     "recount": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false
+      ],
+      "Stop ATTEMPT_LEDGER_MISMATCH"
+     ],
+     "recover": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "result": [
+      [
+       "rejected",
+       "pre",
+       "presolve",
+       false,
+       "XYZ"
+      ],
+      null
+     ],
+     "said": [
+      false,
+      true
+     ]
+    },
+    "ok_word": [
+     [
+      "rejected",
+      "pre",
+      "OK"
+     ],
+     "Stop ATTEMPT_LEDGER_MISMATCH"
+    ],
+    "outside_refused": [
+     "XYZ",
+     "CALIBRATED",
+     "PREDICTED",
+     "STOPPED"
+    ],
+    "predicted": [
+     [
+      "rejected",
+      "pre",
+      "PREDICTED"
+     ],
+     "Stop ATTEMPT_LEDGER_MISMATCH"
+    ],
+    "rejected_word": [
+     [
+      "rejected",
+      "pre",
+      "REJECTED"
+     ],
+     "Stop ATTEMPT_LEDGER_MISMATCH"
+    ],
+    "stopped": [
+     [
+      "rejected",
+      "pre",
+      "STOPPED"
+     ],
+     "Stop ATTEMPT_LEDGER_MISMATCH"
+    ],
+    "xyz": [
+     [
+      "rejected",
+      "pre",
+      "XYZ"
+     ],
+     "Stop ATTEMPT_LEDGER_MISMATCH"
+    ]
+   },
+   "n": 14,
+   "n_bad": 9
+  }
+ },
+ "_chain_sha256": "cb23731c95ff90e2544e9d21d2155bd07fe64bc07291a151a2c0dcd0dce2342e"
+}

@@ -1,0 +1,6 @@
+(1a) CT06 대조 — 옆 이름 _arm9 · arms 1 (거부 기대): {'recover_rc': 0, 'result': {'status': 'stopped', 'side': 'post', 'cause': 'resource', 'resume_ok': False, 'by': 'recover'}, 'resume_rc': 3, 'RESUME_NOT_ALLOWED': True}
+(1b) 같은 + arms 9 로 함께 고침: {'recover_rc': 0, 'result': {'status': 'stopped', 'side': 'post', 'cause': 'resource', 'resume_ok': False, 'by': 'recover'}, 'resume_rc': 3, 'RESUME_NOT_ALLOWED': True}
+(1c) 정직 (outdir _arm1 · arms 1): {'recover_rc': 0, 'result': {'status': 'stopped', 'side': 'post', 'cause': 'resource', 'resume_ok': False, 'by': 'recover'}, 'resume_rc': 3, 'RESUME_NOT_ALLOWED': True}
+(2a) 정직 GU · 런 기록 rc 1 · 끝 기록 rc 1 확인 False: {'recover_rc': 0, 'result': {'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'recover'}, 'resume_rc': 3, 'RESUME_NOT_ALLOWED': True}
+(2b) 한 칸 — 런 기록 rc 1 → 0: {'recover_rc': 0, 'result': {'status': 'stopped', 'side': 'post', 'cause': 'group_unconfirmed', 'resume_ok': False, 'by': 'recover'}, 'resume_rc': 3, 'RESUME_NOT_ALLOWED': True}
+(2c) 두 칸 — 런 기록 {timeout · rc null}: {'recover_rc': 0, 'result': {'status': 'stopped', 'side': 'post', 'cause': 'group_unconfirmed', 'resume_ok': False, 'by': 'recover'}, 'resume_rc': 3, 'RESUME_NOT_ALLOWED': True}

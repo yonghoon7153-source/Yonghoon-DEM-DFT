@@ -7718,17 +7718,18 @@ def t_AL12c():
                                                      'resume_of': None, 'ledger_commit': c0}), encoding='utf-8')
         for rel, body in files.items():
             if rel == 'rejected.json':
-                #  ★ 11-06 PC10 확장 P2-A (기대 고침 = 고정물만) — 거부 기록 = 생산자 꼴 (`attempt_reject` 칸 · n = 이 번호 · 시작 커밋 = attempt.json · 멈춤 이름
-                #    X 그대로 · 옛 고정물 {"code": "X"} = 생산자가 쓰지 않는 칸 조합 → 이제 다시 셈 Stop · 이 팔의 뜻 = "거부 기록만 있는 폴더 = 대조 통과" 그대로)
-                body = json.dumps({'schema': 'rint-r-rejected-v1', 'n': e['n'], 'code': 'X', 'cause': '시험 (손 거부 기록)', 'ledger_commit': c0,
-                                   'utc': '2026-10-27T00:00:00Z'})
+                #  ★ 11-06 PC10 확장 P2-A (기대 고침 = 고정물만) — 거부 기록 = 생산자 꼴 (`attempt_reject` 칸 · n = 이 번호 · 시작 커밋 = attempt.json · 옛 고정물
+                #    {"code": "X"} = 생산자가 쓰지 않는 칸 조합 → 이제 다시 셈 Stop · 이 팔의 뜻 = "거부 기록만 있는 폴더 = 대조 통과" 그대로) · ★ 11-08 PC12-05 (고정물만) —
+                #    멈춤 이름 = `STOPS` 의 이름 (옛 'X' = STOPS 밖 = 생산자가 쓰지 않는 값 → 이제 Stop · 결과 줄의 멈춤 이름도 같게)
+                body = json.dumps({'schema': 'rint-r-rejected-v1', 'n': e['n'], 'code': 'MACHINE_NOT_ALLOWED', 'cause': '시험 (손 거부 기록)',
+                                   'ledger_commit': c0, 'utc': '2026-10-27T00:00:00Z'})
             (fd / rel).parent.mkdir(parents=True, exist_ok=True)
             (fd / rel).write_text(body, encoding='utf-8')
         if nm == 'trace':                                       # ★ 10-28 밤 PC5-01 — 손 결과 줄 (완주) = 폴더 증거와 같게 (완주 단계 요약 · 다시 센 결과 줄이 같아야 원장 대조를 지난다)
             shutil.copy2(r['l0']['out'] / 'ladder_summary.json', fd / 'ladder_summary.json')
         res = dict(led_result(d, 1), n=e['n'], folder=fd.name, folder_sha256=tree_digest(fd),
                    status=('completed' if nm == 'trace' else 'rejected'), side=('post' if nm == 'trace' else 'pre'),
-                   stop=(None if nm == 'trace' else {'code': 'X', 'run': None, 'reason': None}), cause=(None if nm == 'trace' else 'presolve'))
+                   stop=(None if nm == 'trace' else {'code': 'MACHINE_NOT_ALLOWED', 'run': None, 'reason': None}), cause=(None if nm == 'trace' else 'presolve'))
         led_hand(d, res)
         out[nm] = stop_code(ver_led(f'AL12c_{nm}_v', [base / 'attempt_1'], d))
     return out['trace'] == 'ATTEMPT_AFTER_ADOPTED' and out['rej'] not in LEDGER_STOPS, out
@@ -12739,7 +12740,8 @@ def t_RV09():
 #    자리마다 다르게 읽던 결함 (판정문 반례 = 요약 없는 by chain 끝 기록 rc false · 0.0 → orphan_cause 가 "정수 0 = 끝난 런" 으로 건너뜀 → parent_dead →
 #    traceback 런의 재실행 자격) · 판독 = 한 함수 `rc_kind` (ok 정확한 정수 0 · fail 그 밖 정확한 정수 · none None · bad bool · 실수 (0.0 · −0.0 포함) ·
 #    글 · 목록 · 객체 …) · `rc_success` = ok · `runner_rc_failed` = fail | bad (옛 식과 같은 값) — 이 칸의 소비자 전부가 셋 중 하나를 부른다
-RC_READERS = ('rc_kind', 'rc_success', 'runner_rc_failed')
+#    ★ 11-08 PC12-02 — `rc_equal` (두 rc 칸 = 둘 다 정확한 정수이고 같은 값 · 런 기록 rc ↔ 끝 기록의 사슬 쪽 rc 대조) 도 판독 함수 (rc 값 비교는 이 함수로만)
+RC_READERS = ('rc_kind', 'rc_success', 'runner_rc_failed', 'rc_equal')
 #: 이 칸의 소비자 (함수 · 클래스.메서드 이름) — 각자 판독 함수를 부른다 (RC01 구조 대조)
 RC_CONSUMERS = ('orphan_cause', 'Replay.run', 'noop_check', 'MergeFetch.run', 'Runner._execute', 'RunnerGraphSource._run', 'ResumeRunner._src_done',
                 'stop_cause', 'chain_end_failed', 'load_ladders')
@@ -15234,6 +15236,364 @@ def t_CT08():
     names = sorted(set(re.findall(r'`([A-Za-z_][A-Za-z0-9_]*)`', doc[i:])))
     missing = [nm for nm in names if not hasattr(RR, nm)]
     return bool(names) and not missing, {'names': names, 'missing': missing}
+
+
+# ═════════════════════════ ★ 11-08 사전 공격 12 회차 (PC12-01 – 05 · 시험 먼저 · 1저자 11-06 규칙) ═════════════════════════
+#   독립 사전 공격 12 (11-08 · 대상 2b3c42c6c = 6a81f0c55 의 rint_r_chain.py) 의 발견 다섯 — F1 정확 출력 폴더 이름 대조가 같은 기록의 요청 칸에만 묶임 (arms · outdir
+#   함께 고침 = 통과 · 범위 검사 없음 · 흔적 검사 = od 하나) · F2 GU 대조 ④ = chain_end.confirmed 만 (런 기록 rc 1 → 0 한 칸 = 재실행 자격) · F3 런 기록 없는
+#   TIME_LIMIT 이 runs 를 안 봄 (정직 RUNNER_RC rc 1 요약의 stop 두 칸만 바꿈 = 자격) · F4 요약 읽기 = 느슨한 json.loads (중복 칸 = 뒤 값 · NaN) · F5 거부 기록
+#   code = 글자 꼴만.  행마다 기대 = [원인, 재실행 자격, stop_record_problem 사유 있음] · 정직 (생산자 꼴) 행 = 고치기 전 값 그대로 (받아들임 대조) · 실경로 = 실제 git
+#   원장 (recover --ledger → 결과 줄 → --add --resume 1 · `rc_recover_resume`).
+PC12_TRACE = f'{LG_RUN}_arm1/.unchecked/p2_SBE_vgcf100_a0.json'
+PC12_GU_END = {'by': 'chain', 'left': [999989], 'confirmed': False, 'cause': None, 'rc': 1}      # 정직 GU — 러너 스스로 rc 1 (Traceback) · 그룹 미확인
+PC12_L2 = 'L02_ceiling'
+
+
+def pc12_end(cause, rc, confirmed):
+    return {'by': 'chain', 'cause': cause, 'rc': rc, 'confirmed': confirmed}
+
+
+def pc12_folder(tag, trace=PC12_TRACE, log='oom', logs=(LG_RUN,), groups=(), dirs=()):
+    """합성 시도 폴더 (첫 결과 표지 = 앞 런 폴더 LG_MARK · logs/<런>.log (LG_RUN 만 글 · 그 밖 빈 로그) · trace = 검사 실패 흔적 자리 (None = 없음) · groups = (런,
+    끝 기록 칸) · dirs = 빈 폴더)."""
+    f = Path(TD) / 'pc12' / tag / 'attempt_1'
+    (f / LG_MARK).parent.mkdir(parents=True)
+    (f / LG_MARK).write_text('{}\n', encoding='utf-8')
+    (f / 'logs').mkdir()
+    txt = {'plain': LG_PLAIN, 'oom': '[p2] run\n' + LG_OOM, 'tb': RC02_LOG}[log]
+    for nm in logs:
+        (f / 'logs' / f'{nm}.log').write_text(txt if nm == LG_RUN else '', encoding='utf-8')
+    if trace:
+        (f / trace).parent.mkdir(parents=True, exist_ok=True)
+        (f / trace).write_text('{}\n', encoding='utf-8')
+    for nm, end in groups:
+        pc_group(f, nm, end)
+    for d in dirs:
+        (f / d).mkdir(parents=True, exist_ok=True)
+    return f
+
+
+def pc12_summ(code, runs, run=LG_RUN):
+    return {'status': 'STOPPED', 'stop': {'code': code, 'run': run, 'reason': None}, 'runs': runs}
+
+
+def pc12_table(rows):
+    """행 (이름, 폴더, 요약, 기대 [원인, 자격, 사유 있음]) → (bad, got) — 기대 ≠ 값 · 사유에 멈춤 이름이 없음 = bad."""
+    got, bad = {}, {}
+    for nm, f, s, want in rows:
+        fl = RR.result_fields(f, s)
+        prob = RR.stop_record_problem(s, f)
+        g = [fl['cause'], fl['resume_ok'], prob is not None]
+        got[nm] = g
+        if g != want or (prob is not None and not (isinstance(prob, str) and s['stop']['code'] in prob)):
+            bad[nm] = {'got': g, 'want': want, 'prob': prob}
+    return bad, got
+
+
+def pc12_cli(bad, got, cli, want):
+    for nm, ok in want.items():
+        r = cli[nm]
+        g = [r['recover_rc'], (r['result'] or {}).get('resume_ok'), r['resume_rc'], r['not_allowed']]
+        w = [0, ok, 0 if ok else 3, not ok]
+        got[nm] = g
+        if g != w:
+            bad[nm] = (g, w, (r['result'] or {}).get('cause'))
+
+
+PC12_RR1 = dict(group_cause=None, rc=1, arms_read=[])           # 러너 스스로 rc 1 (RUNNER_RC · 메모리 부족 로그 = resource)
+PC12_TL1 = dict(group_cause='timeout', rc=None, arms_read=[])   # 사슬이 죽인 런 (TIME_LIMIT)
+
+
+@check('PC12A', '★ 11-08 사전 공격 12 회차 F1 (PC12-01 · P2) — 멈춘 런 기록의 outdir 와 요청 칸 (arms · arm_list) 을 함께 고치면 정확 이름 대조를 지나고 진짜 런 폴더 '
+                'L01_floor_arm1/.unchecked/ 의 검사 실패 흔적을 비켰다 (범위 밖 arms 9 · 0 · −1 · 10**30 · arm_list [] · [0] · [9] · [3,3] · [3,1] · 길이 ≠ arms 도 받음) '
+                '→ 요청 칸 = 생산자 범위 (`run_request` · 러너 ARMS 1–8 · ARM_LIST 0–7 · 정렬 · 중복 없음 · 접두 아님 · arms = 길이) 아니면 사유 · 흔적 = 그 런의 출력 '
+                '폴더 꼴 (<런> · <런>_arm…) 전부 (범위 안 arms 2 함께 고침 · 요청 칸 없는 옆 이름도 흔적이면 자격 False) · 정직 (arm1 · arms 2 · 8 팔 · arml · TIME_LIMIT · '
+                '흔적 없음 = 자격 그대로) · 실경로 (실제 git 원장) 함께 고침 arms 9 · arms 2 = RESUME_NOT_ALLOWED')
+def t_PC12A():
+    R = ct06_rec
+    rows = []
+
+    def add(nm, code, rec, want, trace=PC12_TRACE, log='oom'):
+        rows.append((nm, pc12_folder(f'A_{nm}', trace=trace, log=log), pc12_summ(code, [rec]), want))
+    own2 = f'{LG_RUN}_arm2/.unchecked/p2_SBE_vgcf100_a0.json'
+    own8 = f'{LG_RUN}/.unchecked/p2_SBE_vgcf100_a0.json'
+    #  정직 (받아들임 대조 — 고치기 전 값 그대로)
+    add('honest_arm1_trace', 'RUNNER_RC', R(arms=1, arm_list=None, **PC12_RR1), ['resource', False, False])
+    add('honest_arm1_notrace', 'RUNNER_RC', R(arms=1, arm_list=None, **PC12_RR1), ['resource', True, False], trace=None)
+    add('honest_arms2_notrace', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm2', arms=2, arm_list=None, **PC12_RR1), ['resource', True, False], trace=None)
+    add('honest_arms2_own_trace', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm2', arms=2, arm_list=None, **PC12_RR1), ['resource', False, False], trace=own2)
+    add('honest_8arms_notrace', 'RUNNER_RC', R(outdir=LG_RUN, arms=8, arm_list=None, **PC12_RR1), ['resource', True, False], trace=None)
+    add('honest_8arms_own_trace', 'RUNNER_RC', R(outdir=LG_RUN, arms=8, arm_list=None, **PC12_RR1), ['resource', False, False], trace=own8)
+    add('honest_arml_notrace', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm2_arml1-2', arms=2, arm_list=[1, 2], **PC12_RR1), ['resource', True, False], trace=None)
+    add('honest_tl_trace', 'TIME_LIMIT', R(arms=1, arm_list=None, **PC12_TL1), ['timeout', False, False], log='plain')
+    add('honest_tl_notrace', 'TIME_LIMIT', R(arms=1, arm_list=None, **PC12_TL1), ['timeout', True, False], trace=None, log='plain')
+    #  F1 — 요청 칸 + outdir 함께 고침 · 진짜 폴더 L01_floor_arm1/.unchecked/ 의 흔적 (탐침 p1)
+    add('coedit_arms2', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm2', arms=2, arm_list=None, **PC12_RR1), ['resource', False, False])   # 범위 안 = 사유 없음 · 흔적 = 그 런 폴더 전부
+    add('coedit_arms9', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm9', arms=9, arm_list=None, **PC12_RR1), ['resource', False, True])
+    add('coedit_arms0', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm0', arms=0, arm_list=None, **PC12_RR1), ['resource', False, True])
+    add('coedit_arms_neg', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm-1', arms=-1, arm_list=None, **PC12_RR1), ['resource', False, True])
+    add('coedit_arms_huge', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm{10 ** 30}', arms=10 ** 30, arm_list=None, **PC12_RR1), ['resource', False, True])
+    add('coedit_arml_empty', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm1_arml', arms=1, arm_list=[], **PC12_RR1), ['resource', False, True])
+    add('coedit_arml_prefix', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm1_arml0', arms=1, arm_list=[0], **PC12_RR1), ['resource', False, True])
+    add('coedit_arml_out', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm1_arml9', arms=1, arm_list=[9], **PC12_RR1), ['resource', False, True])
+    add('coedit_arml_dup', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm2_arml3-3', arms=2, arm_list=[3, 3], **PC12_RR1), ['resource', False, True])
+    add('coedit_arml_unsorted', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm2_arml3-1', arms=2, arm_list=[3, 1], **PC12_RR1), ['resource', False, True])
+    add('coedit_arml_len', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm3_arml1-2', arms=3, arm_list=[1, 2], **PC12_RR1), ['resource', False, True])
+    add('coedit_tl_arms2', 'TIME_LIMIT', R(outdir=f'{LG_RUN}_arm2', arms=2, arm_list=None, **PC12_TL1), ['timeout', False, False], log='plain')
+    add('coedit_tl_arms9', 'TIME_LIMIT', R(outdir=f'{LG_RUN}_arm9', arms=9, arm_list=None, **PC12_TL1), ['timeout', False, True], log='plain')
+    add('noreq_sibling_trace', 'RUNNER_RC', R(outdir=f'{LG_RUN}_arm9', **PC12_RR1), ['resource', False, False])   # 요청 칸 없음 (한정 행 c1) — 흔적 = 그 런 폴더 전부
+    bad, got = pc12_table(rows)
+
+    def go():
+        out = {}
+        for nm, prep in (
+            ('cli_honest_arm1_trace', ct06_trace(ct06_summ('RUNNER_RC', [R(group_cause=None, rc=1, arms=1, arm_list=None, arms_read=[])]))),
+            ('cli_honest_arm1_notrace', ct06_summ('RUNNER_RC', [R(group_cause=None, rc=1, arms=1, arm_list=None, arms_read=[])])),
+            ('cli_coedit_arms9_trace', ct06_trace(ct06_summ('RUNNER_RC', [R(outdir=f'{LG_RUN}_arm9', group_cause=None, rc=1, arms=9, arm_list=None,
+                                                                             arms_read=[])]))),
+            ('cli_coedit_arms2_trace', ct06_trace(ct06_summ('RUNNER_RC', [R(outdir=f'{LG_RUN}_arm2', group_cause=None, rc=1, arms=2, arm_list=None,
+                                                                             arms_read=[])]))),
+        ):
+            out[nm] = rc_recover_resume(f'PC12A_{nm}', CHAIN_OK1, '[p2] run\n' + LG_OOM, prep=prep)
+        return out
+    pc12_cli(bad, got, scen('PC12A', go), {'cli_honest_arm1_trace': False, 'cli_honest_arm1_notrace': True, 'cli_coedit_arms9_trace': False,
+                                            'cli_coedit_arms2_trace': False})
+    return not bad, {'n': len(got), 'n_bad': len(bad), 'bad': dict(sorted(bad.items())[:16])}
+
+
+@check('PC12B', '★ 11-08 사전 공격 12 회차 F2 (PC12-02 · P2) — GU 대조 ④ 가 chain_end.confirmed 만 보아 정직 GU (러너 스스로 rc 1 · 끝 기록 rc 1 · 확인 False) 의 런 '
+                '기록 rc 1 → 0 한 칸 · {timeout · null} 두 칸이 재실행 자격을 얻었다 → 멈춘 런 기록 꼴 ↔ 사슬 쪽 끝 기록 (by chain 끝 기록 · recover 끝 기록의 '
+                'chain_end) 의 (원인 · rc · 확인) 생산자 대응표 (`CHAIN_SIDE_SHAPES` · `STOP_CONFIRMED` — 원인 None ⇒ 디스크 원인 None · rc 정확히 같음 · timeout · '
+                'signal ⇒ 같은 원인 · rc 정수 | null · signal_after ⇒ 디스크 원인 None · rc 정수 · GROUP_UNCONFIRMED ⇒ 확인 False · TIME_LIMIT · RUNNER_RC ⇒ 확인 True) '
+                '어긋남 = 모순 (사유 · 자격 False) · 정직 (rc 0 · timeout · signal · signal_after · recover chain_end · 옛 recover 끝 기록 = 대조 안 함) = 그대로 · 실경로 '
+                '(실제 git 원장 · 탐침 2a 정직 rc 1 = runner_rc rc 3 · 2b 한 칸 · 2c 두 칸 = RESUME_NOT_ALLOWED · 정직 GU rc 0 = 자격)')
+def t_PC12B():
+    R = ct06_rec
+    rows = []
+
+    def add(nm, code, rec, end, want, log='plain'):
+        rows.append((nm, pc12_folder(f'B_{nm}', trace=None, log=log, groups=((LG_RUN, end),)), pc12_summ(code, [rec]), want))
+    GU0 = dict(group_cause=None, rc=0, arms=1, arm_list=None, arms_read=[])
+    GU1 = dict(group_cause=None, rc=1, arms=1, arm_list=None, arms_read=[])
+    TL = dict(group_cause='timeout', rc=None, arms=1, arm_list=None, arms_read=[])
+    SG = dict(group_cause='signal', rc=None, arms=1, arm_list=None, arms_read=[])
+    SA = dict(group_cause='signal_after', rc=None, arms=1, arm_list=None, arms_read=[])
+    #  정직 (받아들임 대조)
+    add('gu_honest_rc1_tb', 'GROUP_UNCONFIRMED', R(**GU1), PC12_GU_END, ['runner_rc', False, False], log='tb')
+    add('gu_honest_rc0', 'GROUP_UNCONFIRMED', R(**GU0), pc12_end(None, 0, False), ['group_unconfirmed', True, False])
+    add('gu_honest_timeout', 'GROUP_UNCONFIRMED', R(**TL), pc12_end('timeout', -9, False), ['group_unconfirmed', True, False])
+    add('gu_honest_timeout_rc_null', 'GROUP_UNCONFIRMED', R(**TL), pc12_end('timeout', None, False), ['group_unconfirmed', True, False])
+    add('gu_honest_signal', 'GROUP_UNCONFIRMED', R(**SG), pc12_end('signal', -9, False), ['group_unconfirmed', True, False])
+    add('gu_honest_signal_after', 'GROUP_UNCONFIRMED', R(**SA), pc12_end(None, 0, False), ['group_unconfirmed', True, False])
+    add('gu_honest_recover_rc0', 'GROUP_UNCONFIRMED', R(**GU0), ce_chain_end(None, rc=0), ['group_unconfirmed', True, False])
+    add('gu_honest_recover_rc1_tb', 'GROUP_UNCONFIRMED', R(**GU1), ce_chain_end(None, rc=1), ['runner_rc', False, False], log='tb')
+    add('gu_recover_old', 'GROUP_UNCONFIRMED', R(**GU0), CE_OLD, ['group_unconfirmed', True, False])         # chain_end 없는 옛 recover 끝 기록 = 대조 안 함 (한정 그대로)
+    add('tl_honest_confirmed', 'TIME_LIMIT', R(**TL), pc12_end('timeout', -9, True), ['timeout', True, False])
+    add('tl_honest_rc_null', 'TIME_LIMIT', R(**TL), pc12_end('timeout', None, True), ['timeout', True, False])
+    add('rr_honest_rc1_oom', 'RUNNER_RC', R(**GU1), CHAIN_OK1, ['resource', True, False], log='oom')
+    add('rr_honest_signal', 'RUNNER_RC', R(**SG), pc12_end('signal', -15, True), ['signal', True, False])
+    add('rr_honest_signal_after', 'RUNNER_RC', R(**SA), pc12_end(None, 0, True), ['signal', True, False])
+    add('rr_honest_signal_after_rc1', 'RUNNER_RC', R(**SA), pc12_end(None, 1, True), ['signal', True, False])
+    #  F2 — 런 기록 ↔ 사슬 쪽 (원인 · rc · 확인) 어긋남 = 모순 (탐침 p2 2b · 2c + 같은 부류)
+    add('gu_forged_rc0_tb', 'GROUP_UNCONFIRMED', R(**GU0), PC12_GU_END, ['group_unconfirmed', False, True], log='tb')
+    add('gu_forged_timeout_null_tb', 'GROUP_UNCONFIRMED', R(**TL), PC12_GU_END, ['group_unconfirmed', False, True], log='tb')
+    add('gu_forged_recover_rc0', 'GROUP_UNCONFIRMED', R(**GU0), ce_chain_end(None, rc=1), ['group_unconfirmed', False, True])
+    add('gu_cause_mismatch', 'GROUP_UNCONFIRMED', R(**TL), pc12_end('signal', -9, False), ['group_unconfirmed', False, True])
+    add('gu_signal_after_disk_cause', 'GROUP_UNCONFIRMED', R(**SA), pc12_end('signal_after', 0, False), ['group_unconfirmed', False, True])
+    add('gu_signal_after_rc_null', 'GROUP_UNCONFIRMED', R(**SA), pc12_end(None, None, False), ['group_unconfirmed', False, True])
+    add('tl_unconfirmed', 'TIME_LIMIT', R(**TL), pc12_end('timeout', -9, False), ['timeout', False, True])
+    add('tl_cause_mismatch', 'TIME_LIMIT', R(**TL), pc12_end(None, 0, True), ['timeout', False, True])
+    add('rr_rc1_end_rc0', 'RUNNER_RC', R(**GU1), pc12_end(None, 0, True), ['resource', False, True], log='oom')
+    add('rr_rc1_end_unconfirmed', 'RUNNER_RC', R(**GU1), pc12_end(None, 1, False), ['resource', False, True], log='oom')
+    add('rr_rc1_end_rc_bool', 'RUNNER_RC', R(**GU1), pc12_end(None, True, True), ['resource', False, True], log='oom')
+    add('rr_signal_end_cause_none', 'RUNNER_RC', R(**SG), pc12_end(None, 0, True), ['signal', False, True])
+    add('rr_signal_after_end_rc_null', 'RUNNER_RC', R(**SA), pc12_end(None, None, True), ['signal', False, True])
+    add('rr_end_by_weird', 'RUNNER_RC', R(**GU1), {'by': 'weird', 'cause': None, 'rc': 1, 'confirmed': True}, ['resource', False, True], log='oom')
+    bad, got = pc12_table(rows)
+
+    def go():
+        out = {}
+        for nm, end, log, rec in (
+            ('cli_gu_honest_rc1', PC12_GU_END, RC02_LOG, R(group_cause=None, rc=1, arms=1, arm_list=None, arms_read=[])),
+            ('cli_gu_forged_rc0', PC12_GU_END, RC02_LOG, R(group_cause=None, rc=0, arms=1, arm_list=None, arms_read=[])),
+            ('cli_gu_forged_timeout_null', PC12_GU_END, RC02_LOG, R(group_cause='timeout', rc=None, arms=1, arm_list=None, arms_read=[])),
+            ('cli_gu_honest_rc0', dict(PC12_GU_END, rc=0), LG_PLAIN, R(group_cause=None, rc=0, arms=1, arm_list=None, arms_read=[])),
+        ):
+            out[nm] = rc_recover_resume(f'PC12B_{nm}', end, log, prep=ct06_summ('GROUP_UNCONFIRMED', [rec]))
+        return out
+    pc12_cli(bad, got, scen('PC12B', go), {'cli_gu_honest_rc1': False, 'cli_gu_forged_rc0': False, 'cli_gu_forged_timeout_null': False,
+                                            'cli_gu_honest_rc0': True})
+    return not bad, {'n': len(got), 'n_bad': len(bad), 'bad': dict(sorted(bad.items())[:16])}
+
+
+@check('PC12C', '★ 11-08 사전 공격 12 회차 F3 · F3b (PC12-03 · P2) — 런 기록 없는 TIME_LIMIT (런 전 시간 상한) 이 그 이름 꼴 · 흔적만 보고 runs 를 안 봐 정직 RUNNER_RC '
+                '(L01 rc 1 Traceback) 요약의 stop 두 칸 (TIME_LIMIT · run = 다음 이름 L02_ceiling 또는 zzz) 만 바꾸면 timeout · 자격 (재실행이 rc 1 런을 다시 돈다) · '
+                '[L01 rc 1, 위조 L02 {timeout · null}] · [L01 rc 1, L02 {None · 0}] + GU 도 같다 → 멈춘 런 앞의 런 기록 전부 (런 기록 없음 = runs 전부) = 끝난 런 '
+                '(`run_record_shape` exit_ok + arms_read 비지 않은 목록 = `prior_runs_problem` · 생산자 = 앞 런이 rc 0 · 팔을 읽은 뒤에만 다음 런) 아니면 사유 · 정직 '
+                '(앞 런 끝남 · 첫 런 전 · 재실행 복사 기록 · GU · signal 뒤 런) = 그대로 · 실경로 (실제 git 원장 · 탐침 p4 둘 = RESUME_NOT_ALLOWED · 정직 런 전 TIME_LIMIT = 자격)')
+def t_PC12C():
+    R = ct06_rec
+    L2 = PC12_L2
+    OK0 = R(group_cause=None, rc=0, arms=1, arm_list=None, arms_read=CT06_ARM)          # 끝난 런 (팔 읽음)
+    FAIL1 = R(group_cause=None, rc=1, arms=1, arm_list=None, arms_read=[])
+    rows = []
+
+    def add(nm, code, runs, run, want, logs=(LG_RUN,), groups=((LG_RUN, CHAIN_OK1),), log='tb'):
+        rows.append((nm, pc12_folder(f'C_{nm}', trace=None, log=log, logs=logs, groups=groups), pc12_summ(code, runs, run=run), want))
+    #  정직 (받아들임 대조)
+    add('tl_none_after_ok', 'TIME_LIMIT', [OK0], L2, ['timeout', True, False], groups=((LG_RUN, CHAIN_OK0),), log='plain')
+    add('tl_none_first_run', 'TIME_LIMIT', [], LG_RUN, ['timeout', True, False], logs=(), groups=())
+    add('gu_after_ok', 'GROUP_UNCONFIRMED', [OK0, R(L2, group_cause=None, rc=0, arms=1, arm_list=None, arms_read=[])], L2, ['group_unconfirmed', True, False],
+        logs=(LG_RUN, L2), groups=((LG_RUN, CHAIN_OK0), (L2, pc12_end(None, 0, False))), log='plain')
+    add('rr_signal_after_ok', 'RUNNER_RC', [OK0, R(L2, group_cause='signal', rc=None, arms=1, arm_list=None, arms_read=[])], L2, ['signal', True, False],
+        logs=(LG_RUN, L2), groups=((LG_RUN, CHAIN_OK0),), log='plain')
+    add('rr_after_copied', 'RUNNER_RC', [R(group_cause=None, rc=0, arms=1, arm_list=None, arms_read=CT06_ARM, copied_from=1),
+                                          R(L2, group_cause='signal', rc=None, arms=1, arm_list=None, arms_read=[])], L2, ['signal', True, False],
+        logs=(LG_RUN, L2), groups=(), log='plain')
+    #  F3 — 앞 런 기록이 끝난 런이 아님 (탐침 p4 · p5 a1 · a2 + 같은 부류)
+    add('tl_none_after_fail_L02', 'TIME_LIMIT', [FAIL1], L2, ['timeout', False, True])
+    add('tl_none_after_fail_zzz', 'TIME_LIMIT', [FAIL1], 'zzz', ['timeout', False, True])
+    add('tl_none_after_ok_noarms', 'TIME_LIMIT', [R(group_cause=None, rc=0, arms=1, arm_list=None, arms_read=[])], L2, ['timeout', False, True],
+        groups=((LG_RUN, CHAIN_OK0),), log='plain')
+    add('tl_none_after_killed', 'TIME_LIMIT', [R(group_cause='timeout', rc=None, arms=1, arm_list=None, arms_read=[])], L2, ['timeout', False, True],
+        groups=((LG_RUN, pc12_end('timeout', -9, True)),), log='plain')
+    add('tl_after_fail_a1', 'TIME_LIMIT', [FAIL1, R(L2, group_cause='timeout', rc=None, arms=1, arm_list=None, arms_read=[])], L2, ['timeout', False, True],
+        logs=(LG_RUN, L2))
+    add('gu_after_fail_a2', 'GROUP_UNCONFIRMED', [FAIL1, R(L2, group_cause=None, rc=0, arms=1, arm_list=None, arms_read=[])], L2,
+        ['group_unconfirmed', False, True], logs=(LG_RUN, L2))
+    add('rr_after_prior_arms_dict', 'RUNNER_RC', [R(group_cause=None, rc=0, arms=1, arm_list=None, arms_read={}),
+                                                   R(L2, group_cause='signal', rc=None, arms=1, arm_list=None, arms_read=[])], L2, ['signal', False, True],
+        logs=(LG_RUN, L2), groups=((LG_RUN, CHAIN_OK0),), log='plain')
+    add('rr_after_prior_no_gc', 'RUNNER_RC', [R(rc=0, arms=1, arm_list=None, arms_read=CT06_ARM),
+                                               R(L2, group_cause='signal', rc=None, arms=1, arm_list=None, arms_read=[])], L2, ['signal', False, True],
+        logs=(LG_RUN, L2), groups=((LG_RUN, CHAIN_OK0),), log='plain')
+    bad, got = pc12_table(rows)
+
+    def go():
+        out = {}
+        for nm, end, log, code, run, runs in (
+            ('cli_honest_rr_rc1', CHAIN_OK1, RC02_LOG, 'RUNNER_RC', LG_RUN, [FAIL1]),
+            ('cli_forged_tl_L02', CHAIN_OK1, RC02_LOG, 'TIME_LIMIT', L2, [FAIL1]),
+            ('cli_forged_tl_zzz', CHAIN_OK1, RC02_LOG, 'TIME_LIMIT', 'zzz', [FAIL1]),
+            ('cli_honest_tl_after_ok', CHAIN_OK0, LG_PLAIN, 'TIME_LIMIT', L2, [OK0]),
+        ):
+            out[nm] = rc_recover_resume(f'PC12C_{nm}', end, log, prep=ct06_summ(code, runs, run=run))
+        return out
+    pc12_cli(bad, got, scen('PC12C', go), {'cli_honest_rr_rc1': False, 'cli_forged_tl_L02': False, 'cli_forged_tl_zzz': False, 'cli_honest_tl_after_ok': True})
+    return not bad, {'n': len(got), 'n_bad': len(bad), 'bad': dict(sorted(bad.items())[:16])}
+
+
+#: 탐침 p5 (b) — 중복 칸 요약 (사람 = 앞 값 arms 1 · _arm1 / 느슨한 json.loads = 뒤 값 9 · _arm9)
+PC12D_DUP = ('{"tool": "%s", "schema": "%s", "stage": "ladder", "status": "STOPPED", "stop": {"code": "RUNNER_RC", "run": "L01_floor", "reason": null}, '
+             '"runs": [{"name": "L01_floor", "arms": 1, "arm_list": null, "outdir": "L01_floor_arm1", "group_cause": null, "rc": 1, "arms_read": [], '
+             '"arms": 9, "outdir": "L01_floor_arm9"}]}')
+PC12D_TL = '"stage": "ladder", "status": "STOPPED", "stop": {"code": "TIME_LIMIT", "run": "L02_ceiling", "reason": null}, "runs": []'
+
+
+@check('PC12D', '★ 11-08 사전 공격 12 회차 F4 (PC12-04 · P3) — 결과 줄 길의 단계 요약 읽기 (`read_summary_state` · `stage_summary_read` · 다시 셈 · recover) 가 느슨한 '
+                'json.loads (중복 칸 = 뒤 값 · NaN · Infinity 받음) 이라 새 가드가 읽는 arms · outdir · rc 가 사람이 보는 앞 값과 다를 수 있었다 → `_json_strict` (거부 '
+                '기록 · 계획 · 원장과 같은 읽기 · 중복 칸 · NaN · ±Infinity = unreadable = summary_unreadable · 자격 False) · 생산자 바이트 (`write_summary` = '
+                'canon_bytes · sort_keys · allow_nan False) 와 다른 객체의 같은 이름 칸 = ok 그대로 · 실경로 (실제 git 원장 · 탐침 b 요약 = interrupted · summary_unreadable · '
+                'RESUME_NOT_ALLOWED)')
+def t_PC12D():
+    rows, bad = {}, {}
+    dup = (PC12D_DUP % (RR.TOOL, RR.SCHEMA)).encode('utf-8')
+    cases = (('dup_run_fields', dup, 'unreadable'),
+             ('dup_top', ('{"status": "STOPPED", "status": "CALIBRATED", %s}' % PC12D_TL).encode('utf-8'), 'unreadable'),
+             ('nan', ('{"x": NaN, %s}' % PC12D_TL).encode('utf-8'), 'unreadable'),
+             ('inf', ('{"x": Infinity, %s}' % PC12D_TL).encode('utf-8'), 'unreadable'),
+             ('neg_inf', ('{"x": -Infinity, %s}' % PC12D_TL).encode('utf-8'), 'unreadable'),
+             ('canonical', RR.canon_bytes({'tool': RR.TOOL, 'schema': RR.SCHEMA, 'stage': 'ladder', 'status': 'STOPPED',
+                                           'stop': {'code': 'TIME_LIMIT', 'run': PC12_L2, 'reason': None}, 'runs': []}), 'ok'),
+             ('same_key_other_object', ('{"stop": {"code": "TIME_LIMIT", "run": "L02_ceiling", "reason": null}, "status": "STOPPED", '
+                                        '"runs": [{"name": "a", "outdir": "a"}, {"name": "b", "outdir": "b"}]}').encode('utf-8'), 'ok'))
+    for nm, raw, want in cases:
+        d = Path(TD) / 'pc12' / 'D' / nm
+        d.mkdir(parents=True)
+        (d / 'ladder_summary.json').write_bytes(raw)
+        v, sha, st = RR.read_summary_state(d, 'ladder_summary.json')
+        _s2, st2 = RR.stage_summary_read(d)
+        rows[nm] = [st, v is not None, sha is not None, st2]
+        if rows[nm] != [want, want == 'ok', want == 'ok', want]:
+            bad[nm] = (rows[nm], want)
+    #  탐침 p5 (b) — 흔적 · 그룹 · 메모리 부족 로그 + 중복 칸 요약 → 다시 셈 (옛 = 뒤 값 arms 9 · _arm9 → 흔적 비킴 · 자격 True)
+    f = pc12_folder('D_probe_b', log='oom', groups=((LG_RUN, CHAIN_OK1),))
+    (f / 'ladder_summary.json').write_bytes(dup)
+    g = RR.result_recount(f)
+    rows['probe_b_recount'] = [g['status'], g['cause'], g['resume_ok']]
+    if rows['probe_b_recount'] != ['interrupted', 'summary_unreadable', False]:
+        bad['probe_b_recount'] = rows['probe_b_recount']
+    #  정직 — 생산자 바이트 (write_summary) 는 그대로 읽힌다 (같은 기록 · 중복 없음)
+    f2 = pc12_folder('D_canonical', trace=None, log='oom', groups=((LG_RUN, CHAIN_OK1),))
+    RR.write_summary(f2 / 'ladder_summary.json', dict(pc12_summ('RUNNER_RC', [ct06_rec(group_cause=None, rc=1, arms=1, arm_list=None, arms_read=[])]),
+                                                       tool=RR.TOOL, schema=RR.SCHEMA, stage='ladder'))
+    g2 = RR.result_recount(f2)
+    rows['canonical_recount'] = [g2['status'], g2['cause'], g2['resume_ok']]
+    if rows['canonical_recount'] != ['stopped', 'resource', True]:
+        bad['canonical_recount'] = rows['canonical_recount']
+
+    def go():
+        def prep(f):
+            (Path(f) / 'ladder_summary.json').write_bytes(dup)
+        return {'cli_dup': rc_recover_resume('PC12D_cli_dup', CHAIN_OK1, '[p2] run\n' + LG_OOM, prep=ct06_trace(prep))}
+    r = scen('PC12D', go)['cli_dup']
+    got = [r['recover_rc'], (r['result'] or {}).get('status'), (r['result'] or {}).get('cause'), (r['result'] or {}).get('resume_ok'), r['resume_rc'],
+           r['not_allowed']]
+    rows['cli_dup'] = got
+    if got != [0, 'interrupted', 'summary_unreadable', False, 3, True]:
+        bad['cli_dup'] = got
+    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad': dict(sorted(bad.items())[:16])}
+
+
+@check('PC12E', '★ 11-08 사전 공격 12 회차 F5 (PC12-05 · P3) — 시도 폴더 안 거부 기록의 code 가 글자 꼴 (`STOP_CODE_RE`) 만 — XYZ · CALIBRATED · PREDICTED · STOPPED '
+                '(상태 이름) 도 rejected · 결과 줄 멈춤 이름 그대로 → code ∈ `STOPS` (멈춤 이름 전부 = 받음 · 그 밖 = Stop ATTEMPT_LEDGER_MISMATCH · 결과 줄 없음) · '
+                '실경로 (실제 git 원장 · 생산자 풀기 전 자리 · code XYZ · CALIBRATED = recover 못 쓴 수 1 · 다시 셈 Stop · 생산자 code = rejected 그대로)')
+def t_PC12E():
+    rows, bad = {}, {}
+    C = 'a' * 40
+    att = {'schema': 'rint-r-attempt-v1', 'n': 1, 'target': 'ladder:P0', 'machine': MACH, 'resume_of': None, 'ledger_commit': C}
+
+    def unit(nm, code):
+        f = Path(TD) / 'pc12' / 'E' / nm / 'attempt_1'
+        f.mkdir(parents=True)
+        (f / 'attempt.json').write_bytes(RR.canon_bytes(att))
+        (f / RR.REJECTED_FILE).write_bytes(RR.canon_bytes(ct05_rec(1, C, code=code)))
+        try:
+            g = RR.result_recount(f)
+            return [g['status'], g['side'], g['stop']['code']]
+        except RR.Stop as e:
+            return f'Stop {e.code}'
+    stop = 'Stop ATTEMPT_LEDGER_MISMATCH'
+    for nm, code, want in (('producer', 'MACHINE_NOT_ALLOWED', ['rejected', 'pre', 'MACHINE_NOT_ALLOWED']), ('runner_rc', 'RUNNER_RC', ['rejected', 'pre', 'RUNNER_RC']),
+                           ('xyz', 'XYZ', stop), ('calibrated', 'CALIBRATED', stop), ('predicted', 'PREDICTED', stop), ('stopped', 'STOPPED', stop),
+                           ('rejected_word', 'REJECTED', stop), ('ok_word', 'OK', stop), ('lower', 'runner_rc', stop)):
+        rows[nm] = unit(nm, code)
+        if rows[nm] != want:
+            bad[nm] = (rows[nm], want)
+    a = RR.read_attempt(Path(TD) / 'pc12' / 'E' / 'producer' / 'attempt_1')
+    miss = [c for c in sorted(RR.STOPS) if RR.rejected_form_problem(ct05_rec(1, C, code=c), a) is not None]
+    rows['stops_all_accepted'] = [len(RR.STOPS), len(miss)]
+    if a is None or not RR.STOPS or miss:
+        bad['stops_all_accepted'] = miss[:8] if a is not None else 'attempt.json 을 못 읽음'
+    out = [c for c in ('XYZ', 'CALIBRATED', 'PREDICTED', 'STOPPED', 'MACHINE_NOT_ALLOWED\n', 'ＭACHINE', '')
+           if RR.rejected_form_problem(ct05_rec(1, C, code=c), a) is None]
+    rows['outside_refused'] = len(out)
+    if out:
+        bad['outside_refused'] = out
+
+    def go():
+        return {'cli_xyz': ct05_row('PC12E_cli_xyz', False, lambda n, c0: ct05_rec(n, c0, code='XYZ')),
+                'cli_calibrated': ct05_row('PC12E_cli_calibrated', False, lambda n, c0: ct05_rec(n, c0, code='CALIBRATED')),
+                'cli_producer': ct05_row('PC12E_cli_producer', False, lambda n, c0: ct05_rec(n, c0))}
+    cli = scen('PC12E', go)
+    stop_fn = {'recover': [1, 0], 'result': None, 'ledger_same': True, 'said': True, 'recount': stop}
+    prod = {'recover': [0, 0], 'result': ['rejected', 'pre', 'presolve', False, 'MACHINE_NOT_ALLOWED'], 'ledger_same': False, 'said': False,
+            'recount': ['rejected', 'pre', 'presolve', False]}
+    for nm, w in (('cli_xyz', stop_fn), ('cli_calibrated', stop_fn), ('cli_producer', prod)):
+        rows[nm] = {k: cli[nm].get(k) for k in w}
+        if rows[nm] != w:
+            bad[nm] = {k: (cli[nm].get(k), w[k]) for k in w if cli[nm].get(k) != w[k]}
+    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad': dict(sorted(bad.items())[:16])}
 
 
 # ═════════════════════════ 실행 ═════════════════════════

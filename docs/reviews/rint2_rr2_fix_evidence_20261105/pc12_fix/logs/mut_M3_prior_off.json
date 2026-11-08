@@ -1,0 +1,178 @@
+{
+ "PC12A": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 27,
+   "n_bad": 0
+  }
+ },
+ "PC12B": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 33,
+   "n_bad": 0
+  }
+ },
+ "PC12C": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "cli_forged_tl_L02": [
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     "timeout"
+    ],
+    "cli_forged_tl_zzz": [
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     "timeout"
+    ],
+    "gu_after_fail_a2": {
+     "got": [
+      "group_unconfirmed",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "group_unconfirmed",
+      false,
+      true
+     ]
+    },
+    "rr_after_prior_arms_dict": {
+     "got": [
+      "signal",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "signal",
+      false,
+      true
+     ]
+    },
+    "rr_after_prior_no_gc": {
+     "got": [
+      "signal",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "signal",
+      false,
+      true
+     ]
+    },
+    "tl_after_fail_a1": {
+     "got": [
+      "timeout",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      true
+     ]
+    },
+    "tl_none_after_fail_L02": {
+     "got": [
+      "timeout",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      true
+     ]
+    },
+    "tl_none_after_fail_zzz": {
+     "got": [
+      "timeout",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      true
+     ]
+    },
+    "tl_none_after_killed": {
+     "got": [
+      "timeout",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      true
+     ]
+    },
+    "tl_none_after_ok_noarms": {
+     "got": [
+      "timeout",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      true
+     ]
+    }
+   },
+   "n": 17,
+   "n_bad": 10
+  }
+ },
+ "PC12D": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 10,
+   "n_bad": 0
+  }
+ },
+ "PC12E": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 14,
+   "n_bad": 0
+  }
+ },
+ "_chain_sha256": "0ac6c2e577e8a9a959c2711bdc1f1e9969024990428ff96c799acb925a4994d7"
+}

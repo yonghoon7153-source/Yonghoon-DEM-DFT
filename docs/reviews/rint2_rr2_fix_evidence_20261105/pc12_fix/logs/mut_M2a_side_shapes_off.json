@@ -1,0 +1,217 @@
+{
+ "PC12A": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 27,
+   "n_bad": 0
+  }
+ },
+ "PC12B": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "cli_gu_forged_rc0": [
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     "group_unconfirmed"
+    ],
+    "cli_gu_forged_timeout_null": [
+     [
+      0,
+      true,
+      0,
+      false
+     ],
+     [
+      0,
+      false,
+      3,
+      true
+     ],
+     "group_unconfirmed"
+    ],
+    "gu_cause_mismatch": {
+     "got": [
+      "group_unconfirmed",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "group_unconfirmed",
+      false,
+      true
+     ]
+    },
+    "gu_forged_rc0_tb": {
+     "got": [
+      "group_unconfirmed",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "group_unconfirmed",
+      false,
+      true
+     ]
+    },
+    "gu_forged_recover_rc0": {
+     "got": [
+      "group_unconfirmed",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "group_unconfirmed",
+      false,
+      true
+     ]
+    },
+    "gu_forged_timeout_null_tb": {
+     "got": [
+      "group_unconfirmed",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "group_unconfirmed",
+      false,
+      true
+     ]
+    },
+    "gu_signal_after_disk_cause": {
+     "got": [
+      "group_unconfirmed",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "group_unconfirmed",
+      false,
+      true
+     ]
+    },
+    "gu_signal_after_rc_null": {
+     "got": [
+      "group_unconfirmed",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "group_unconfirmed",
+      false,
+      true
+     ]
+    },
+    "rr_rc1_end_rc0": {
+     "got": [
+      "resource",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "resource",
+      false,
+      true
+     ]
+    },
+    "rr_rc1_end_rc_bool": {
+     "got": [
+      "resource",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "resource",
+      false,
+      true
+     ]
+    },
+    "rr_signal_after_end_rc_null": {
+     "got": [
+      "signal",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "signal",
+      false,
+      true
+     ]
+    },
+    "rr_signal_end_cause_none": {
+     "got": [
+      "signal",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "signal",
+      false,
+      true
+     ]
+    },
+    "tl_cause_mismatch": {
+     "got": [
+      "timeout",
+      true,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      true
+     ]
+    }
+   },
+   "n": 33,
+   "n_bad": 13
+  }
+ },
+ "PC12C": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 17,
+   "n_bad": 0
+  }
+ },
+ "PC12D": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 10,
+   "n_bad": 0
+  }
+ },
+ "PC12E": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 14,
+   "n_bad": 0
+  }
+ },
+ "_chain_sha256": "83ed9eb71e39cf707e6f2724f8a0b80a7b6acae24708d625abb3012ac5aded41"
+}

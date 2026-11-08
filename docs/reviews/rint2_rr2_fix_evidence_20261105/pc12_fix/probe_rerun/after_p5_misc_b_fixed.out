@@ -1,0 +1,7 @@
+(a1) runs [L01 rc1 실패, L02 {timeout,null}] · TIME_LIMIT L02 · 빈 로그 L02: ['stopped', 'post', 'timeout', False]
+(a2) runs [L01 rc1 실패, L02 {None,0}] · GU L02 · L02 그룹 기록 없음 · 빈 로그 L02: ['stopped', 'post', 'group_unconfirmed', False]
+(b) 중복 칸 요약 읽기 상태 unreadable · 코드가 읽은 arms/outdir = None · 다시 셈 = ['interrupted', 'post', 'summary_unreadable', False]
+(c1 선언) arms 칸 없음 + outdir _arm9: ['stopped', 'post', 'resource', False]
+(c2 선언) GU · {None,0} · L01 그룹 기록 없음: ['stopped', 'post', 'group_unconfirmed', True]
+(c3 대조) 같은 + L01 끝 기록 by chain 확인 True: ['stopped', 'post', 'group_unconfirmed', False]
+(c4 선언) RUNNER_RC 정직 rc1 끝 기록 → 런 기록 {signal,null} 두 칸: ['stopped', 'post', 'signal', False]

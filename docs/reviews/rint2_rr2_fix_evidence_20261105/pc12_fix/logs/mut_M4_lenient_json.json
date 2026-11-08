@@ -1,0 +1,102 @@
+{
+ "PC12A": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 27,
+   "n_bad": 0
+  }
+ },
+ "PC12B": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 33,
+   "n_bad": 0
+  }
+ },
+ "PC12C": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 17,
+   "n_bad": 0
+  }
+ },
+ "PC12D": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "cli_dup": [
+     0,
+     "stopped",
+     "resource",
+     false,
+     3,
+     true
+    ],
+    "dup_run_fields": [
+     [
+      "ok",
+      true,
+      true,
+      "ok"
+     ],
+     "unreadable"
+    ],
+    "dup_top": [
+     [
+      "ok",
+      true,
+      true,
+      "ok"
+     ],
+     "unreadable"
+    ],
+    "inf": [
+     [
+      "ok",
+      true,
+      true,
+      "ok"
+     ],
+     "unreadable"
+    ],
+    "nan": [
+     [
+      "ok",
+      true,
+      true,
+      "ok"
+     ],
+     "unreadable"
+    ],
+    "neg_inf": [
+     [
+      "ok",
+      true,
+      true,
+      "ok"
+     ],
+     "unreadable"
+    ],
+    "probe_b_recount": [
+     "stopped",
+     "resource",
+     false
+    ]
+   },
+   "n": 10,
+   "n_bad": 7
+  }
+ },
+ "PC12E": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 14,
+   "n_bad": 0
+  }
+ },
+ "_chain_sha256": "2c067bd059c3ccf66ead16f70cdb08c0f0d698d1a47368dfdbfa4378add31798"
+}

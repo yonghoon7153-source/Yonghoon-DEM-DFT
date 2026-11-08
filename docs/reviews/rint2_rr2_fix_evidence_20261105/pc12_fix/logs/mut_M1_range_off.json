@@ -1,0 +1,174 @@
+{
+ "PC12A": {
+  "ok": false,
+  "why": {
+   "bad": {
+    "coedit_arml_dup": {
+     "got": [
+      "resource",
+      false,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "resource",
+      false,
+      true
+     ]
+    },
+    "coedit_arml_len": {
+     "got": [
+      "resource",
+      false,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "resource",
+      false,
+      true
+     ]
+    },
+    "coedit_arml_out": {
+     "got": [
+      "resource",
+      false,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "resource",
+      false,
+      true
+     ]
+    },
+    "coedit_arml_prefix": {
+     "got": [
+      "resource",
+      false,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "resource",
+      false,
+      true
+     ]
+    },
+    "coedit_arml_unsorted": {
+     "got": [
+      "resource",
+      false,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "resource",
+      false,
+      true
+     ]
+    },
+    "coedit_arms0": {
+     "got": [
+      "resource",
+      false,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "resource",
+      false,
+      true
+     ]
+    },
+    "coedit_arms9": {
+     "got": [
+      "resource",
+      false,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "resource",
+      false,
+      true
+     ]
+    },
+    "coedit_arms_huge": {
+     "got": [
+      "resource",
+      false,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "resource",
+      false,
+      true
+     ]
+    },
+    "coedit_arms_neg": {
+     "got": [
+      "resource",
+      false,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "resource",
+      false,
+      true
+     ]
+    },
+    "coedit_tl_arms9": {
+     "got": [
+      "timeout",
+      false,
+      false
+     ],
+     "prob": null,
+     "want": [
+      "timeout",
+      false,
+      true
+     ]
+    }
+   },
+   "n": 27,
+   "n_bad": 10
+  }
+ },
+ "PC12B": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 33,
+   "n_bad": 0
+  }
+ },
+ "PC12C": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 17,
+   "n_bad": 0
+  }
+ },
+ "PC12D": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 10,
+   "n_bad": 0
+  }
+ },
+ "PC12E": {
+  "ok": true,
+  "why": {
+   "bad": {},
+   "n": 14,
+   "n_bad": 0
+  }
+ },
+ "_chain_sha256": "cfb4a6bf7af48b672a4d4d861fce790bac9bc3721fcd9bc2edb66b96ca43dd3b"
+}

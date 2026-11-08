@@ -1,0 +1,7 @@
+(a1) runs [L01 rc1 실패, L02 {timeout,null}] · TIME_LIMIT L02 · 빈 로그 L02: ['stopped', 'post', 'timeout', False]
+(a2) runs [L01 rc1 실패, L02 {None,0}] · GU L02 · L02 그룹 기록 없음 · 빈 로그 L02: ['stopped', 'post', 'group_unconfirmed', False]
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/pc12_fix_work/probes/p5_misc_b.py", line 35, in <module>
+    print('(b) 중복 칸 요약 읽기 상태', st, '· 코드가 읽은 arms/outdir =', s['runs'][0]['arms'], s['runs'][0]['outdir'], '· 다시 셈 =',
+                                                                           ~^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable

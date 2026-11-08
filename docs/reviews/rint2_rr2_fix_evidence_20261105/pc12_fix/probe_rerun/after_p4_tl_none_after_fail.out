@@ -1,0 +1,4 @@
+honest RUNNER_RC L01 rc 1                          recover_rc=0 result={'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'recover'} resume_rc=3 RESUME_NOT_ALLOWED=True
+forged TIME_LIMIT run L02_ceiling                  recover_rc=0 result={'status': 'stopped', 'side': 'post', 'cause': 'timeout', 'resume_ok': False, 'by': 'recover'} resume_rc=3 RESUME_NOT_ALLOWED=True
+forged TIME_LIMIT run zzz (생산자 이름 꼴도 아님)           recover_rc=0 result={'status': 'stopped', 'side': 'post', 'cause': 'timeout', 'resume_ok': False, 'by': 'recover'} resume_rc=3 RESUME_NOT_ALLOWED=True
+ResumeRunner._src_done(L01_floor) on source = False → 재실행은 L01 (rc 1 Traceback 런) 을 다시 돈다

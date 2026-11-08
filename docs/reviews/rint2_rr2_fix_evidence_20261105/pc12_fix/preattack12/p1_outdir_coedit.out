@@ -1,0 +1,17 @@
+honest arms1 outdir _arm1                     RUNNER_RC  result_fields=['stopped', 'post', 'resource', False]  stop_record_problem=None
+CT06-style sibling _arm9, arms 1              RUNNER_RC  result_fields=['stopped', 'post', 'resource', False]  stop_record_problem=사유
+co-edit arms 9 + _arm9                        RUNNER_RC  result_fields=['stopped', 'post', 'resource', True]  stop_record_problem=None
+co-edit arms 2 + _arm2 (in domain)            RUNNER_RC  result_fields=['stopped', 'post', 'resource', True]  stop_record_problem=None
+co-edit arms 0 + _arm0                        RUNNER_RC  result_fields=['stopped', 'post', 'resource', True]  stop_record_problem=None
+co-edit arms -1 + _arm-1                      RUNNER_RC  result_fields=['stopped', 'post', 'resource', True]  stop_record_problem=None
+co-edit arms 1, arm_list [] + _arm1_arml      RUNNER_RC  result_fields=['stopped', 'post', 'resource', True]  stop_record_problem=None
+co-edit arms 1, arm_list [0] (prefix list)    RUNNER_RC  result_fields=['stopped', 'post', 'resource', True]  stop_record_problem=None
+co-edit arms 5, arm_list [9]                  RUNNER_RC  result_fields=['stopped', 'post', 'resource', True]  stop_record_problem=None
+co-edit arms 2, arm_list [3,3] dup            RUNNER_RC  result_fields=['stopped', 'post', 'resource', True]  stop_record_problem=None
+co-edit arms 2, arm_list [3,1] unsorted       RUNNER_RC  result_fields=['stopped', 'post', 'resource', True]  stop_record_problem=None
+co-edit arms 10**30                           RUNNER_RC  result_fields=['stopped', 'post', 'resource', True]  stop_record_problem=None
+arm_list key dropped (arms 1) + _arm1         RUNNER_RC  result_fields=['stopped', 'post', 'resource', False]  stop_record_problem=사유
+--- TIME_LIMIT killed:timeout (trace in _arm1) ---
+honest                                        TIME_LIMIT result_fields=['stopped', 'post', 'timeout', False]  stop_record_problem=None
+co-edit arms 9                                TIME_LIMIT result_fields=['stopped', 'post', 'timeout', True]  stop_record_problem=None
+co-edit arms 2                                TIME_LIMIT result_fields=['stopped', 'post', 'timeout', True]  stop_record_problem=None
