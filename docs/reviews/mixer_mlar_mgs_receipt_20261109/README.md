@@ -17,7 +17,7 @@
 | MGS `aab74e46baed` | `356dfefd1bae` | 9/9 |
 | LHS 명료화 `39b635a405f0` | `455171e3dcbf` | 11/11 |
 
-후보들을 다시 cherry-pick할 필요가 없다. 새 수령 커밋만 반입하고 원장 제안은 Claude가 적용한다. 두 Codex 창의 검토라는 기존 원장 규약에 따라 `verified`를 자동 부여하지 않는다. LHS의 이전 수령 커밋 `eba2e2baf4b6324f21972e9bb5a538f6562fc653`은 별도 인계됐으며, 이 문서는 그 기록을 대체하지 않는다.
+후보들을 다시 cherry-pick할 필요가 없다. 새 수령 기록과 준비 로그 귀속 정정의 두 커밋을 `<<sha:Record mixer limited review receipts and MLAR package gap>>` → `<<sha:Clarify MLAR preparation stderr provenance>>` 순서로 반입하고 원장 제안은 Claude가 적용한다. 두 Codex 창의 검토라는 기존 원장 규약에 따라 `verified`를 자동 부여하지 않는다. LHS의 이전 수령 커밋 `eba2e2baf4b6324f21972e9bb5a538f6562fc653`은 별도 인계됐으며, 이 문서는 그 기록을 대체하지 않는다.
 
 ## MLAR 포장 정정
 
@@ -27,7 +27,7 @@
 
 ## 한정과 다음 단계
 
-MLAR는 MLA-01 잔여 경로이므로 독립 P1 두 건으로 중복 계상하지 않는다. MLA-02/03의 기존 한정 수용은 유지한다. 제출 후 런 실패의 자동 캠페인 HOLD 전파는 없으며 승인 운영자의 감시·후속 파동 중단이 필요하다. 예약 자동 해제·재시도 권한은 생기지 않는다. 문자 차단을 현장 Slurm 파서·POSIX/Lustre·실패 복구 자격으로 확대하지 않는다. 역사 archive 자산 불일치의 최초 원인 미확정과 최초 stderr 미보존도 그대로 남는다.
+MLAR는 MLA-01 잔여 경로이므로 독립 P1 두 건으로 중복 계상하지 않는다. MLA-02/03의 기존 한정 수용은 유지한다. 제출 후 런 실패의 자동 캠페인 HOLD 전파는 없으며 승인 운영자의 감시·후속 파동 중단이 필요하다. 예약 자동 해제·재시도 권한은 생기지 않는다. 문자 차단을 현장 Slurm 파서·POSIX/Lustre·실패 복구 자격으로 확대하지 않는다. 최초 worktree 준비 오류의 stderr 원본은 미보존이며, 후속 archive 준비 오류의 콘솔은 `before-pinned-console.log`로 보존됐다. archive 자산 불일치의 최초 원인은 여전히 미확정이다.
 
 MGS의 100 하위형 관측 거부·hook 0회, 10/10·34/34는 독립 보고서의 결과다. 이번 수령 창은 재실행하지 않았다. 관측 수·메서드·전후 반복을 합산하지 않는다. 정상 덱 텍스트 보존은 생성기 SHA를 포함하는 메타 신원이나 운영 봉인 갱신이 아니다.
 
