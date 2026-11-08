@@ -1,0 +1,13 @@
+{
+  "scope": "existing preparer tests against exported accepted source, text decks only",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "-B",
+    "/workspace/nonrint-1108/first8-reseal/verification/pinned_source/scripts/test_mixer_precal_prepare.py"
+  ],
+  "rc": 0,
+  "elapsed_seconds": 0.822,
+  "test_source_sha256": "01cf375954201bf1a916b40f13359b564ff0ba7ed7758671e52fb218fd5e291c",
+  "no_simulator_or_scheduler": true,
+  "common_gate_wiring": "existing scripts/check_all.sh entries retained; direct run only, no full gate"
+}
