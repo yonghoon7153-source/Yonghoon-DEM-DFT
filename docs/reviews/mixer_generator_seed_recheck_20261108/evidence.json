@@ -1,0 +1,120 @@
+{
+  "schema": "mixer-generator-seed-derived-evidence-v1",
+  "date": "2026-11-08",
+  "evidence_kind": "Derived summary, not verbatim execution output. Raw log hashes preserve all attempts.",
+  "base_commit": "f5fb89792aa757975b41b046e0c5debaf56911e8",
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "Windows",
+    "flags": [
+      "-I",
+      "-B",
+      "-X",
+      "utf8"
+    ],
+    "numpy_required": true
+  },
+  "baseline_generator_sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+  "final_generator_sha256": "40fc6446524c63a47fa97316e7ee5bb117c605057679770dde19e43b12621db6",
+  "authoritative_before_and_after_test_sha256": "863622899922957de71692624e04bef9296189a0632763a9fd2bc762824c1e8b",
+  "raw_logs": [
+    {
+      "file": "before-generator.log",
+      "bytes": 76084,
+      "sha256": "ad66c6f4dfa47fd33b91e8dfd14ac641ddb6101bed247af114cad1dc8d2d7adb",
+      "interpretation": "preliminary only: superseded CLI lexical policy and inaccessible default temporary directory",
+      "process_rc": 1,
+      "test_methods": 8,
+      "subtest_failures": 18,
+      "subtest_errors": 16,
+      "repository_import": false
+    },
+    {
+      "file": "before-scoped-generator.log",
+      "bytes": 29399,
+      "sha256": "0e7c88c2aed803f60145d9465dab68c5ae587f0dcd8330b4e6be8fa392700d6a",
+      "interpretation": "authoritative pre-fix: final scoped new test file, writable temporary directory",
+      "process_rc": 1,
+      "test_methods": 8,
+      "subtest_failures": 23,
+      "subtest_errors": 3,
+      "repository_import": false
+    },
+    {
+      "file": "after-generator.log",
+      "bytes": 1808,
+      "sha256": "df6d91d57275eab50db48546733dac86f758f155e8c9fd98693a5137de3cdd52",
+      "interpretation": "post-fix generator: same scoped test file as authoritative pre-fix",
+      "process_rc": 0,
+      "test_methods": 8,
+      "subtest_failures": 0,
+      "subtest_errors": 0,
+      "repository_import": false
+    },
+    {
+      "file": "after-consumers.log",
+      "bytes": 10613,
+      "sha256": "67226b3981a9ca5225ee85b22c0fe65415ef7b82b712a34bc023f893598948eb",
+      "interpretation": "consumer first attempt: two Windows child/parent encoding errors",
+      "process_rc": 1,
+      "test_methods": 34,
+      "subtest_failures": 0,
+      "subtest_errors": 2,
+      "repository_import": false
+    },
+    {
+      "file": "after-consumers-utf8.log",
+      "bytes": 6958,
+      "sha256": "e1aeedfa933680b32b5f500bd9f9d3d27139b318e92d71b6cadc3835d502ab46",
+      "interpretation": "consumer final: explicit UTF-8 on three existing subprocess calls",
+      "process_rc": 0,
+      "test_methods": 34,
+      "subtest_failures": 0,
+      "subtest_errors": 0,
+      "repository_import": false
+    }
+  ],
+  "unchanged_positive_deck_hashes": [
+    {
+      "phases": 2,
+      "first_seed": 2147483629,
+      "layered": true,
+      "sha256": "7343af40cc1787f4f5f897211dcd00c3621260aca59308718dbb2b3a32f0d56b"
+    },
+    {
+      "phases": 2,
+      "first_seed": 2147483647,
+      "layered": false,
+      "sha256": "cc0a6a58c55bae69f3d59abdf48aa9b2a6f7419968284227ab1fa20cf76188fd"
+    },
+    {
+      "phases": 3,
+      "first_seed": 2147483629,
+      "layered": true,
+      "sha256": "8d9e963a2b13735a8aeb87484c690b4702ad327e4686709538ea19faeab47f3d"
+    },
+    {
+      "phases": 3,
+      "first_seed": 2147483647,
+      "layered": false,
+      "sha256": "636680f04264ccf471ad753ccc30eb75e1be93a937f0c15f38d937b81c396ba4"
+    }
+  ],
+  "pre_fix_fixture_equivalence_observation": {
+    "method": "Compared historical max-seed generator pair to explicitly mutated near-max pair before the source edit.",
+    "two_phase_pair_with_metadata_equal": true,
+    "three_phase_pair_with_metadata_equal": true,
+    "note": "Recorded observation; separate raw stdout was not saved. Final 34-test suite rechecks consumer refusals."
+  },
+  "consumer_production_files_changed": false,
+  "operational_or_inactive_first8_seal_changed": false,
+  "public_gate_changed": false,
+  "full_176_gate_run": false,
+  "scientific_results": 0,
+  "research_execution": false,
+  "submission": false,
+  "mpi": false,
+  "actual_values_read": false,
+  "execution_authorized": false,
+  "overall_state": "HOLD"
+}

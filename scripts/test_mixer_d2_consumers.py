@@ -557,7 +557,7 @@ class D2Consumers(unittest.TestCase):
             for name,stiff in [('soft',1.),('ref',20.)]:
                 text=dd.expected_deck('LC',32452843,stiffen_se=stiff,hold_bo_pairwise=True)
                 (p/name).write_text(text)
-            proc=subprocess.run([sys.executable,'-I',str(Path(dd.__file__)),str(p/'soft'),str(p/'ref'),'--allow','E'],capture_output=True,text=True)
+            proc=subprocess.run([sys.executable,'-I','-X','utf8','-B',str(Path(dd.__file__)),str(p/'soft'),str(p/'ref'),'--allow','E'],capture_output=True,text=True,encoding='utf-8')
             self.assertEqual(proc.returncode,0,proc.stdout+proc.stderr)
             self.assertNotIn('Traceback',proc.stderr)
 
@@ -572,12 +572,12 @@ class D2Consumers(unittest.TestCase):
                       ['mixer_deck_diff.py',str(b/'a.in'),str(b/'b.in'),'--allow','D2','--meta-ref',str(b/'a.json'),'--meta-new',str(b/'b.json')],
                       ['mixer_smoke_blind.py','--d2-plan',str(b/'a.in'),'--d2-meta',str(b/'a.json')]]
             for cmd in commands:
-                p=subprocess.run([sys.executable,'-I',str(scripts/cmd[0]),*cmd[1:]],capture_output=True,text=True)
+                p=subprocess.run([sys.executable,'-I','-X','utf8','-B',str(scripts/cmd[0]),*cmd[1:]],capture_output=True,text=True,encoding='utf-8')
                 self.assertEqual(p.returncode,0,p.stdout+p.stderr)
                 self.assertIn('개발',p.stdout)
             raw=(b/'a.json').read_text();(b/'a.json').write_text(raw.replace('"dens_gen":', '"dens_gen":"gen1", "dens_gen":'))
             for cmd in commands:
-                p=subprocess.run([sys.executable,'-I',str(scripts/cmd[0]),*cmd[1:]],capture_output=True,text=True)
+                p=subprocess.run([sys.executable,'-I','-X','utf8','-B',str(scripts/cmd[0]),*cmd[1:]],capture_output=True,text=True,encoding='utf-8')
                 self.assertNotEqual(p.returncode,0)
                 self.assertNotIn('Traceback',p.stderr)
 
@@ -826,6 +826,26 @@ class D2InsertionSeedBounds(unittest.TestCase):
         b, bm, _ = fixture(coated=True, **kw)
         return a, b, am, bm
 
+    @classmethod
+    def overflow_pair(cls, phases):
+        """Keep the historical invalid deck as an explicit consumer-side mutation.
+
+        The generator now refuses this input. Start with the accepted near-max
+        boundary and reproduce the old first/derived seeds without disabling a
+        generator guard or making consumer coverage depend on invalid generation.
+        """
+        a, b, am, bm = cls.pair(seed=2147483629, phases=phases)
+        bad = []
+        for text, meta in ((a, am), (b, bm)):
+            text = re.sub(r'(fix insA all insert/pack seed )\d+',
+                          lambda m: m[1] + '2147483647', text)
+            text = re.sub(r'(fix insB all insert/pack seed )\d+',
+                          lambda m: m[1] + '2147483659', text)
+            meta = rebound(text, meta)
+            meta['seed'] = 2147483647
+            bad.append((text, meta))
+        return bad[0][0], bad[1][0], bad[0][1], bad[1][1]
+
     @staticmethod
     def reports(a, b, am, bm):
         return {'readback': rb.read_d2(a, am), 'pair': dd.diff_d2_decks(a, b, am, bm),
@@ -838,7 +858,7 @@ class D2InsertionSeedBounds(unittest.TestCase):
 
     def test_layered_max_seed_api_refuses_derived_overflow(self):
         for phases in (('AM_P', 'AM_S', 'SE'), ('AM_P', 'SE')):
-            a, b, am, bm = self.pair(seed=2147483647, phases=phases)
+            a, b, am, bm = self.overflow_pair(phases)
             self.assertIn('fix insB all insert/pack seed 2147483659 ', a)
             self.assertEqual(am['deck_sha256'], hashlib.sha256(a.encode()).hexdigest())
             self.assertEqual(bm['deck_bytes'], len(b.encode()))
@@ -849,7 +869,7 @@ class D2InsertionSeedBounds(unittest.TestCase):
     def test_layered_max_seed_three_cli_rc_one(self):
         for phases in (('AM_P', 'AM_S', 'SE'), ('AM_P', 'SE')):
             with tempfile.TemporaryDirectory() as temp:
-                _write_case(temp, *self.pair(seed=2147483647, phases=phases))
+                _write_case(temp, *self.overflow_pair(phases))
                 for consumer, (rc, out, err) in _run_three_cli(temp).items():
                     with self.subTest(phases=phases, consumer=consumer):
                         self.assertEqual(rc, 1, out + err)

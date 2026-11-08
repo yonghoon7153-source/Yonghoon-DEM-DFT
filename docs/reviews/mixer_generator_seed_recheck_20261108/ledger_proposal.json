@@ -1,0 +1,18 @@
+{
+  "schema": "codex-ledger-proposal-v1",
+  "date": "2026-11-08",
+  "apply_now": false,
+  "ledger_modified": false,
+  "scope": "generator-side insertion-seed residual after MXD2R-R01",
+  "proposal": "After independent review, Claude may append the generator-only candidate evidence as a bounded residual-fix note. Do not change R01 or MLA states from this proposal alone.",
+  "candidate_status": "implemented; synthetic tests passed; independent confirmation pending",
+  "evidence": [
+    "docs/reviews/mixer_generator_seed_recheck_20261108/README.md",
+    "docs/reviews/mixer_generator_seed_recheck_20261108/evidence.json",
+    "docs/reviews/mixer_generator_seed_recheck_20261108/source_inventory.json"
+  ],
+  "execution_authorized": false,
+  "operational_reseal_authorized": false,
+  "actual_results": 0,
+  "overall_state": "HOLD"
+}
