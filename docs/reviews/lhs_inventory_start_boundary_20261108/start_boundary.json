@@ -1,0 +1,61 @@
+{
+  "schema": "lhs_inventory_start_boundary_note/v1",
+  "document_role": "INACTIVE_STATUS_RECORD_NOT_AN_EXECUTION_GATE",
+  "as_of": "2026-11-08",
+  "whole_gate": "HOLD",
+  "this_document_authorizes_execution": false,
+  "new_command_or_reader_provided": false,
+  "historical_status": {
+    "source_pin": "6fbd066832d3273d56037005ea26eb884b73646a",
+    "source_path": "docs/reviews/lhs_n_preaccess_definition_draft_20261106/author_decisions.md",
+    "question": "LHS-Q6",
+    "inventory_go": "HOLD_AT_DOCUMENT_TIME",
+    "recommendation": "WSL30 only after POSIX and timing/interruption review; other scope separately authorized",
+    "source_bytes_changed": false
+  },
+  "latest_reported_decision": {
+    "source": "first_author_restart_handoff_20261108",
+    "reported_decision_date": "2026-11-06",
+    "inventory_author_go_reported": true,
+    "same_go_reapproval_requested": false,
+    "start_condition": "AFTER_RINT2_ROUND3_DISPATCH",
+    "dispatch_completion_evidence": null,
+    "exact_authorized_scope_confirmation": null,
+    "operator_and_start_time_confirmation": null,
+    "recommendation_treated_as_scope_authorization": false
+  },
+  "start_boundary": {
+    "start_allowed": false,
+    "meaning": "Start timing and scope are not confirmed here; the reported author inventory GO is not revoked",
+    "actual_deployed_command_identity": null,
+    "actual_posix_qualification": null,
+    "timing_interrupt_recovery_review_receipt": null,
+    "actual_identity_and_required_input_conditions": null
+  },
+  "inventory_status": {
+    "execution_performed": false,
+    "result_received": false,
+    "process_return_code": null,
+    "single_json_complete": null,
+    "scope_contract_confirmed": null,
+    "current_observed_case_count": null
+  },
+  "separate_decisions": {
+    "canonical_n_definition": "TWELVE_QUESTIONS",
+    "canonical_definition_pin": "6fbd066832d3273d56037005ea26eb884b73646a",
+    "canonical_selection_pin": "349e946697b67768a5a1a209121fb90244aef485",
+    "excluded_eight_question_pin": "288929658dca6f7b23473bc42c911113f308ed82",
+    "eight_question_draft_imported": false,
+    "n_definition_independent_review": "PENDING_SEPARATE_REVIEW_WINDOW",
+    "n_definition_author_ratification": "PENDING",
+    "ac_choice_ratification": "PENDING",
+    "value_access_rules_ratification": "PENDING",
+    "value_access_author_go_received": false
+  },
+  "actual_input_identity": "NOT_ESTABLISHED",
+  "actual_results": [],
+  "active_registration_changed": false,
+  "shared_ledger_changed": false,
+  "existing_command_changed": false,
+  "canonical_definition_changed": false
+}
