@@ -16272,36 +16272,44 @@
     {
       "id": "LHS12-01",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "codex",
       "found_by": "codex 반박 창 11-08 독립 검토 (1저자 전달 · Codex 실무 창 수령 기록)",
       "opened_in": "docs/reviews/lhs12_clarification_recheck_20261108/README.md",
       "title": "LHS 12 질문 정본 — E/Z/D 구획과 방향 가지가 배타적으로 정의되지 않음 (독립 검토 PARTIAL_ACCEPTANCE)",
-      "claimed_fixed_sha": null,
+      "claimed_fixed_sha": "455171e3dcbf1e86a2b843a34553f295a0052196",
       "verified_sha": null,
       "evidence_tests": [
         "docs/reviews/lhs12_clarification_recheck_20261108/README.md",
-        "docs/collab/codex_to_claude/20261108-1447_lhs12-partial-receipt-clarification.md"
+        "docs/collab/codex_to_claude/20261108-1447_lhs12-partial-receipt-clarification.md",
+        "docs/reviews/lhs12_clarification_acceptance_20261109/README.md (독립 재확인 수령 · CLOSABLE_DOCUMENT_SCOPE · 새 P1/P2/P3 0 · 반입 e33cbafec)",
+        "docs/reviews/lhs12_clarification_acceptance_20261109/receipt.json (원 ZIP · 보고서 · 판정 JSON 의 신원 · 해시)"
       ],
       "supersedes": [],
-      "decision_note": "수정 후보 = Codex 실무 39b635a405f0 (B 반입 455171e3d · 명시 E/Z/D 구획 · 배타 방향 가지 · 문서만) · 독립 재확인 · 1저자 비준 대기 · Q3–Q6 문서 범위 수용 보존 · 실행 · 값 열람 없음 · 전체 HOLD (11-09 반입)"
+      "decision_note": "수정 후보 = Codex 실무 39b635a405f0 (B 반입 455171e3d · 명시 E/Z/D 구획 · 배타 방향 가지 · 문서만) · 독립 재확인 · 1저자 비준 대기 · Q3–Q6 문서 범위 수용 보존 · 실행 · 값 열람 없음 · 전체 HOLD (11-09 반입) · (11-09 독립 재확인 CLOSABLE_DOCUMENT_SCOPE 수령 · 수령 커밋 eba2e2baf4b6 = B e33cbafec · claimed_fixed = 455171e3d · 1저자 비준 대기 그대로)",
+      "verification_note": "독립 Codex 반박 창 재확인 (11-09 · 후보 39b635a405f0 = B 455171e3d · patch-id 같음 · 후보 11 파일 blob = B 그대로) = 비활성 문서의 분류 모호성 범위에서 종결 가능 (CLOSABLE_DOCUMENT_SCOPE · E/Z/D 적용집합 · D 공집합과 압력 동률 우선순위 배타 · zero-N 행 · ID · 분모 보존) · 새 P1/P2/P3 0 · 근거 = docs/reviews/lhs12_clarification_acceptance_20261109/README.md · receipt.json (원 판정문 · 독립 증거 ZIP = 외부 위치 · 주소 문구가 있어 리포 밖 보존) · verified 전환 = 원장의 독립 검증자 조건 별도 (두 Codex 창의 독립성을 owner/verified_by 로 표현할 수 없다 — 검증자를 지어 넣지 않는다 · LPI-01 · 02 규칙) · Q1/Q2 정책 1저자 비준 · 실제 고정쌍 · 코호트 · 노출 · 계보 명부 · 정확 종점 · 값 · 운영 판독기 구현 = 별도 · 독립성 · 평형 · N 효과 · 값 열람 · 실행 GO 아님 · 전체 HOLD.",
+      "verified_in": "docs/reviews/lhs12_clarification_acceptance_20261109/README.md"
     },
     {
       "id": "LHS12-02",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "codex",
       "found_by": "codex 반박 창 11-08 독립 검토 (1저자 전달 · Codex 실무 창 수령 기록)",
       "opened_in": "docs/reviews/lhs12_clarification_recheck_20261108/README.md",
       "title": "LHS 12 질문 정본 — 주 코호트 우선 순위가 배타적이지 않음 (증거 표지는 유지)",
-      "claimed_fixed_sha": null,
+      "claimed_fixed_sha": "455171e3dcbf1e86a2b843a34553f295a0052196",
       "verified_sha": null,
       "evidence_tests": [
         "docs/reviews/lhs12_clarification_recheck_20261108/README.md",
-        "docs/collab/codex_to_claude/20261108-1447_lhs12-partial-receipt-clarification.md"
+        "docs/collab/codex_to_claude/20261108-1447_lhs12-partial-receipt-clarification.md",
+        "docs/reviews/lhs12_clarification_acceptance_20261109/README.md (독립 재확인 수령 · CLOSABLE_DOCUMENT_SCOPE · 새 P1/P2/P3 0 · 반입 e33cbafec)",
+        "docs/reviews/lhs12_clarification_acceptance_20261109/receipt.json (원 ZIP · 보고서 · 판정 JSON 의 신원 · 해시)"
       ],
       "supersedes": [],
-      "decision_note": "수정 후보 = Codex 실무 39b635a405f0 (B 반입 455171e3d · 배타 주 코호트 우선 · 증거 표지 유지) · 독립 재확인 · 1저자 비준 대기 · 전체 HOLD (11-09 반입)"
+      "decision_note": "수정 후보 = Codex 실무 39b635a405f0 (B 반입 455171e3d · 배타 주 코호트 우선 · 증거 표지 유지) · 독립 재확인 · 1저자 비준 대기 · 전체 HOLD (11-09 반입) · (11-09 독립 재확인 CLOSABLE_DOCUMENT_SCOPE 수령 · 수령 커밋 eba2e2baf4b6 = B e33cbafec · claimed_fixed = 455171e3d · 1저자 비준 대기 그대로)",
+      "verification_note": "독립 Codex 반박 창 재확인 (11-09 · 후보 39b635a405f0 = B 455171e3d · patch-id 같음 · 후보 11 파일 blob = B 그대로) = 비활성 문서의 분류 모호성 범위에서 종결 가능 (CLOSABLE_DOCUMENT_SCOPE · 주 코호트 우선순위 · 분모 중복 정리 · 확인 / 미확인 사실 함께 보존) · 새 P1/P2/P3 0 · 근거 = docs/reviews/lhs12_clarification_acceptance_20261109/README.md · receipt.json (원 판정문 · 독립 증거 ZIP = 외부 위치 · 주소 문구가 있어 리포 밖 보존) · verified 전환 = 원장의 독립 검증자 조건 별도 (두 Codex 창의 독립성을 owner/verified_by 로 표현할 수 없다 — 검증자를 지어 넣지 않는다 · LPI-01 · 02 규칙) · Q1/Q2 정책 1저자 비준 · 실제 고정쌍 · 코호트 · 노출 · 계보 명부 · 정확 종점 · 값 · 운영 판독기 구현 = 별도 · 독립성 · 평형 · N 효과 · 값 열람 · 실행 GO 아님 · 전체 HOLD.",
+      "verified_in": "docs/reviews/lhs12_clarification_acceptance_20261109/README.md"
     },
     {
       "id": "MGS-01",
