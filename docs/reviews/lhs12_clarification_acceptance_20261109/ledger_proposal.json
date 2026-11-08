@@ -1,0 +1,35 @@
+{
+  "schema": "codex-ledger-proposal-v1",
+  "date": "2026-11-09",
+  "apply_now": false,
+  "ledger_modified": false,
+  "scope": "LHS12-01/02 inactive-document ambiguity only",
+  "received_verdict": "CLOSABLE_DOCUMENT_SCOPE",
+  "evidence_receipt": "docs/reviews/lhs12_clarification_acceptance_20261109/receipt.json",
+  "candidate_pin": "39b635a405f0d0141f1404de08acdb5461938f8e",
+  "required_before_application": "Import and verify the clarified candidate bytes, or verify their already imported equivalent",
+  "findings": [
+    {
+      "id": "LHS12-01",
+      "severity": "P2",
+      "independent_document_recheck": "ACCEPTED",
+      "proposed_disposition": "Document ambiguity closable after candidate import; ledger state chosen and applied by Claude"
+    },
+    {
+      "id": "LHS12-02",
+      "severity": "P3",
+      "independent_document_recheck": "ACCEPTED",
+      "proposed_disposition": "Document ambiguity closable after candidate import; ledger state chosen and applied by Claude"
+    }
+  ],
+  "no_new_findings": {
+    "P1": 0,
+    "P2": 0,
+    "P3": 0
+  },
+  "proposal": "Record the received limited independent disposition. Do not infer author ratification, real cohorts or values, operational-reader completion, execution GO, or closure of other tracks. Preserve historical partial-acceptance records.",
+  "author_ratification": "PENDING",
+  "value_access_authorized": false,
+  "execution_authorized": false,
+  "whole_gate": "HOLD"
+}
