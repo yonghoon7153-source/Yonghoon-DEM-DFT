@@ -1,0 +1,226 @@
+{
+  "review_pin": "17d45fb9cdfc7033bdfd41509527cea23ba1654c",
+  "baseline_pin": "6917c3c9fa397936d3381ba1c1785562c5232e46",
+  "verdict": "HOLD",
+  "resume_policy_go": false,
+  "production_go": false,
+  "new_findings": [
+    {
+      "id": "RR3-01",
+      "severity": "P2",
+      "title": "Prior read failure retained nonempty file identity list is treated as completed run",
+      "counterexample": "stop.code ARM_JSON_COUNT -> TIME_LIMIT; stop.run L01_floor -> L02_ceiling; run record and output unchanged; resume_ok false -> true; actual resumed copy still refuses",
+      "minimum_fix": "Common completed-read contract distinguishing validated arm records from file-hash-only failure records"
+    },
+    {
+      "id": "RR3-02",
+      "severity": "P3",
+      "title": "Request limitation table keeps superseded PC12-predecessor assertions as current",
+      "minimum_fix": "Label historical state or replace with current path-specific residual limits"
+    }
+  ],
+  "findings": [
+    {
+      "id": "RR2-01",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "RR2-02",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "RR2-03",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC9-01",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC9-02",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC9-03",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC9-04",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC9-05",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC9-06",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC9-07",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC10-01",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC10-02",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC10-03",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC10-04",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC10-05",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC10-06",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC10-07",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC10-08",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC10-09",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC10-10",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC11-01",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC11-02",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC11-03",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC11-04",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC12-01",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC12-02",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC12-03",
+      "status": "partial",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC12-04",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC12-05",
+      "status": "closed",
+      "scope": "specified finding and bounded synthetic/static evidence only"
+    },
+    {
+      "id": "PC6-05",
+      "status": "closed",
+      "scope": "log readability code path; field filesystem qualification excluded"
+    },
+    {
+      "id": "PC6-13",
+      "status": "closed",
+      "scope": "round2 remaining by-chain rc branch with RR2-01"
+    },
+    {
+      "id": "SELF-155",
+      "status": "partial",
+      "scope": "code/synthetic behavior accepted; actual bed RSS/time/completion pending"
+    }
+  ],
+  "scope": {
+    "remote_host_access": false,
+    "research_runs": 0,
+    "simulator_runs": 0,
+    "registration_changes": false,
+    "shared_gate_rerun": false,
+    "source_mutations": false,
+    "ledger_closed": false
+  },
+  "evidence_counts": {
+    "zip_hash_entries": 661,
+    "remote_repo_blobs": 660,
+    "dependency_same": 22,
+    "dependency_changed": 6,
+    "round2_replay": {
+      "same": 301,
+      "changed_as_expected": 8,
+      "executed": 309,
+      "skipped_historical_checks": 2
+    },
+    "contracts": {
+      "pass": 105,
+      "total": 105
+    },
+    "p2p4_git": {
+      "pass": 12,
+      "total": 12,
+      "process_and_lock_mocked": true
+    },
+    "pc12": {
+      "valid_requests": 255,
+      "invalid_requests_refused": 21,
+      "honest_end_shapes": 25,
+      "end_mutants_refused": 150
+    },
+    "s0": {
+      "independent": 575,
+      "carbon_selected": 55,
+      "s0_selected": 19
+    }
+  },
+  "counts_are_nonadditive": true
+}

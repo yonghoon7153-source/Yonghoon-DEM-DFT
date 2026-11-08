@@ -1,0 +1,45 @@
+{
+  "pin": "17d45fb9cdfc7033bdfd41509527cea23ba1654c",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "rows": [
+    {
+      "probe": "p1_outdir_coedit.py",
+      "source_sha256": "89372c428d0170ddd0d44e249f5b79f75faee5440c9c1e9ecbc55b2b034741a8",
+      "error": null
+    },
+    {
+      "probe": "p2_real_ledger.py",
+      "source_sha256": "a5ad4979e7573deba3fff6bf012f54e27f9bbf0e32281ddb32228e3dcefa707a",
+      "error": "OSError(22, '클라이언트가 필요한 권한을 가지고 있지 않습니다')"
+    },
+    {
+      "probe": "p4_tl_none_after_fail.py",
+      "source_sha256": "d7331d2cd357b73f92a401d1b13e6e5d390a1ca19afd5c6a04159daad30ae315",
+      "error": "OSError(22, '클라이언트가 필요한 권한을 가지고 있지 않습니다')"
+    },
+    {
+      "probe": "p5_misc_b.py",
+      "source_sha256": "6a4d5259d328049f753c74aa27534a138e16db31d6aeb94164564a52fa9d03c3",
+      "error": "TypeError(\"'NoneType' object is not subscriptable\")"
+    },
+    {
+      "probe": "p5_none_safe",
+      "change": "print only: guard two None subscripts; eligibility unchanged",
+      "error": null
+    },
+    {
+      "probe": "p6_rejected.py",
+      "source_sha256": "393d8e1641dffc76421a913ecdc92a2d339dd59b083c629d21e4aed604e6f07f",
+      "error": null
+    }
+  ],
+  "adaptations": [
+    "paths and Windows filename sanitization only",
+    "O_NONBLOCK=0 regular files",
+    "synthetic host/proc/groups",
+    "sequential ledger lock",
+    "per scratch Git safe.directory"
+  ],
+  "research_runs": 0,
+  "linux_qualification": false
+}

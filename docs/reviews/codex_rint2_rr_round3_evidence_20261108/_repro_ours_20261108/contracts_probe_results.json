@@ -1,0 +1,880 @@
+{
+  "environment": {
+    "python": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+    "platform": "Linux-6.18.44-fc-v310-x86_64-with-glibc2.39",
+    "limitation": "Windows regular-file synthetic checks; O_NONBLOCK=0 shim only; no FIFO/process/lock/host execution"
+  },
+  "source_sha256": "48f0e7fff068eea752407ad56955c159e937f8a33801148786b0d5a3e650f95c",
+  "passed": 105,
+  "total": 105,
+  "rows": [
+    {
+      "name": "rc_kind_0",
+      "got": "ok",
+      "expected": "ok",
+      "pass": true
+    },
+    {
+      "name": "rc_success_0",
+      "got": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "rc_kind_1",
+      "got": "fail",
+      "expected": "fail",
+      "pass": true
+    },
+    {
+      "name": "rc_success_1",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "rc_kind_-9",
+      "got": "fail",
+      "expected": "fail",
+      "pass": true
+    },
+    {
+      "name": "rc_success_-9",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "rc_kind_False",
+      "got": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    {
+      "name": "rc_success_False",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "rc_kind_True",
+      "got": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    {
+      "name": "rc_success_True",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "rc_kind_0.0",
+      "got": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    {
+      "name": "rc_success_0.0",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "rc_kind_-0.0",
+      "got": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    {
+      "name": "rc_success_-0.0",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "rc_kind_'0'",
+      "got": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    {
+      "name": "rc_success_'0'",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "rc_kind_None",
+      "got": "none",
+      "expected": "none",
+      "pass": true
+    },
+    {
+      "name": "rc_success_None",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "rc_kind_[]",
+      "got": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    {
+      "name": "rc_success_[]",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "rc_kind_{}",
+      "got": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    {
+      "name": "rc_success_{}",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "orphan_0",
+      "got": [
+        "parent_dead",
+        true
+      ],
+      "expected": [
+        "parent_dead",
+        true
+      ],
+      "pass": true
+    },
+    {
+      "name": "orphan_1",
+      "got": [
+        "runner_rc",
+        false
+      ],
+      "expected": [
+        "runner_rc",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "orphan_False",
+      "got": [
+        "runner_rc",
+        false
+      ],
+      "expected": [
+        "runner_rc",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "orphan_0.0",
+      "got": [
+        "runner_rc",
+        false
+      ],
+      "expected": [
+        "runner_rc",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "orphan_-0.0",
+      "got": [
+        "runner_rc",
+        false
+      ],
+      "expected": [
+        "runner_rc",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "orphan_'0'",
+      "got": [
+        "runner_rc",
+        false
+      ],
+      "expected": [
+        "runner_rc",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "orphan_None",
+      "got": [
+        "runner_rc",
+        false
+      ],
+      "expected": [
+        "runner_rc",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "orphan_True",
+      "got": [
+        "runner_rc",
+        false
+      ],
+      "expected": [
+        "runner_rc",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "recover_1",
+      "got": [
+        "runner_rc",
+        false
+      ],
+      "expected": [
+        "runner_rc",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "recover_False",
+      "got": [
+        "runner_rc",
+        false
+      ],
+      "expected": [
+        "runner_rc",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "recover_0.0",
+      "got": [
+        "runner_rc",
+        false
+      ],
+      "expected": [
+        "runner_rc",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "recover_'0'",
+      "got": [
+        "runner_rc",
+        false
+      ],
+      "expected": [
+        "runner_rc",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "recover_None",
+      "got": [
+        "runner_rc",
+        false
+      ],
+      "expected": [
+        "runner_rc",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "unknown_cause_resume_0_chain",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "unknown_cause_resume_0_recover",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "unknown_cause_resume_1_chain",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "unknown_cause_resume_1_recover",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "unknown_cause_resume_2_chain",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "unknown_cause_resume_2_recover",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "unknown_cause_resume_3_chain",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "unknown_cause_resume_3_recover",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "unknown_cause_resume_4_chain",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "unknown_cause_resume_4_recover",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "unknown_cause_resume_5_chain",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "unknown_cause_resume_5_recover",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "shape_(None, 0)",
+      "got": "exit_ok",
+      "expected": "exit_ok",
+      "pass": true
+    },
+    {
+      "name": "shape_(None, 1)",
+      "got": "exit_fail",
+      "expected": "exit_fail",
+      "pass": true
+    },
+    {
+      "name": "shape_('timeout', None)",
+      "got": "killed:timeout",
+      "expected": "killed:timeout",
+      "pass": true
+    },
+    {
+      "name": "shape_('signal', None)",
+      "got": "killed:signal",
+      "expected": "killed:signal",
+      "pass": true
+    },
+    {
+      "name": "shape_('signal_after', None)",
+      "got": "killed:signal_after",
+      "expected": "killed:signal_after",
+      "pass": true
+    },
+    {
+      "name": "shape_reject_(None, None)",
+      "got": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    {
+      "name": "shape_reject_(None, False)",
+      "got": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    {
+      "name": "shape_reject_(None, 0.0)",
+      "got": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    {
+      "name": "shape_reject_('timeout', 1)",
+      "got": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    {
+      "name": "shape_reject_('signal', 0)",
+      "got": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    {
+      "name": "shape_reject_('signal_after', False)",
+      "got": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    {
+      "name": "shape_reject_('unknown', None)",
+      "got": "bad",
+      "expected": "bad",
+      "pass": true
+    },
+    {
+      "name": "old_TIME_LIMIT_None_plain",
+      "got": [
+        "runner_rc",
+        false
+      ],
+      "expected": [
+        "runner_rc",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "old_TIME_LIMIT_None_python",
+      "got": [
+        "runner_rc",
+        false
+      ],
+      "expected": [
+        "runner_rc",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "old_TIME_LIMIT_None_oom",
+      "got": [
+        "resource",
+        false
+      ],
+      "expected": [
+        "resource",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "old_TIME_LIMIT_None_host",
+      "got": [
+        "resource",
+        false
+      ],
+      "expected": [
+        "resource",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "old_TIME_LIMIT_None_disk",
+      "got": [
+        "resource",
+        false
+      ],
+      "expected": [
+        "resource",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "old_TIME_LIMIT_None_gpu",
+      "got": [
+        "resource",
+        false
+      ],
+      "expected": [
+        "resource",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "old_TIME_LIMIT_None_cupy_oom",
+      "got": [
+        "resource",
+        false
+      ],
+      "expected": [
+        "resource",
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "missing_log_resume",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "readable_log_producer_timeout",
+      "got": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "directory_log_resume",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "prerun_exception_none",
+      "got": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "prerun_exception_end",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "prerun_exception_log",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "prerun_exception_output",
+      "got": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "summary_state_truncated",
+      "got": "unreadable",
+      "expected": "unreadable",
+      "pass": true
+    },
+    {
+      "name": "verdict_reject_truncated",
+      "got": "INPUT_NOT_STAGE",
+      "expected": "INPUT_NOT_STAGE",
+      "pass": true
+    },
+    {
+      "name": "summary_state_list",
+      "got": "unreadable",
+      "expected": "unreadable",
+      "pass": true
+    },
+    {
+      "name": "verdict_reject_list",
+      "got": "INPUT_NOT_STAGE",
+      "expected": "INPUT_NOT_STAGE",
+      "pass": true
+    },
+    {
+      "name": "summary_state_boolean",
+      "got": "unreadable",
+      "expected": "unreadable",
+      "pass": true
+    },
+    {
+      "name": "verdict_reject_boolean",
+      "got": "INPUT_NOT_STAGE",
+      "expected": "INPUT_NOT_STAGE",
+      "pass": true
+    },
+    {
+      "name": "summary_state_duplicate",
+      "got": "unreadable",
+      "expected": "unreadable",
+      "pass": true
+    },
+    {
+      "name": "verdict_reject_duplicate",
+      "got": "INPUT_NOT_STAGE",
+      "expected": "INPUT_NOT_STAGE",
+      "pass": true
+    },
+    {
+      "name": "summary_state_nan",
+      "got": "unreadable",
+      "expected": "unreadable",
+      "pass": true
+    },
+    {
+      "name": "verdict_reject_nan",
+      "got": "INPUT_NOT_STAGE",
+      "expected": "INPUT_NOT_STAGE",
+      "pass": true
+    },
+    {
+      "name": "summary_absent",
+      "got": [
+        null,
+        "absent"
+      ],
+      "expected": [
+        null,
+        "absent"
+      ],
+      "pass": true
+    },
+    {
+      "name": "rejected_0",
+      "got": "ATTEMPT_LEDGER_MISMATCH",
+      "expected": "ATTEMPT_LEDGER_MISMATCH",
+      "pass": true
+    },
+    {
+      "name": "rejected_1",
+      "got": "ATTEMPT_LEDGER_MISMATCH",
+      "expected": "ATTEMPT_LEDGER_MISMATCH",
+      "pass": true
+    },
+    {
+      "name": "rejected_2",
+      "got": "ATTEMPT_LEDGER_MISMATCH",
+      "expected": "ATTEMPT_LEDGER_MISMATCH",
+      "pass": true
+    },
+    {
+      "name": "rejected_3",
+      "got": "ATTEMPT_LEDGER_MISMATCH",
+      "expected": "ATTEMPT_LEDGER_MISMATCH",
+      "pass": true
+    },
+    {
+      "name": "rejected_4",
+      "got": "ATTEMPT_LEDGER_MISMATCH",
+      "expected": "ATTEMPT_LEDGER_MISMATCH",
+      "pass": true
+    },
+    {
+      "name": "rejected_5",
+      "got": "ATTEMPT_LEDGER_MISMATCH",
+      "expected": "ATTEMPT_LEDGER_MISMATCH",
+      "pass": true
+    },
+    {
+      "name": "scanner_independent_bad_false_eq",
+      "got": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "scanner_independent_bad_bool_alias",
+      "got": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "scanner_independent_bad_dict_get",
+      "got": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "scanner_independent_bad_pop",
+      "got": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "scanner_independent_bad_closure",
+      "got": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "scanner_independent_bad_formatted_compare",
+      "got": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "scanner_reader_positive",
+      "got": [],
+      "expected": [],
+      "pass": true
+    },
+    {
+      "name": "scanner_pinned_source",
+      "got": [],
+      "expected": [],
+      "pass": true
+    },
+    {
+      "name": "q9_budget_stdout_normalized_bytes",
+      "got": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "q9_budget_stored_json",
+      "got": {
+        "inputs": {
+          "sbe_arm_s": 879.0,
+          "dbe_arm_s": 2578.0,
+          "solve_fraction": 0.800910125142207,
+          "iter_ratio": [
+            6.05,
+            7.37
+          ],
+          "multiplier": {
+            "lo": 5.0446,
+            "hi": 6.1018
+          },
+          "ladder_per_law": 18,
+          "noop": 2,
+          "units": 12,
+          "unit_dbe_solves": {
+            "lo": 4,
+            "hi": 5
+          },
+          "source": "docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md §10-4 (값 그대로)"
+        },
+        "label": "추정 · 합성 침대 반복 비 · 기계 속도 같음 · origin 넘침 없음 · 위끝 = 0 (lo) / 12 (hi)",
+        "old_registration_82_R0_only_one_machine_h": [
+          205.8,
+          248.9
+        ],
+        "all3_one_machine_h": [
+          220.2,
+          318.8
+        ],
+        "all3_no_split_h": {
+          "2": [
+            196.8,
+            290.5
+          ],
+          "3": [
+            196.8,
+            290.5
+          ]
+        },
+        "all3_split_units_h": {
+          "2": [
+            110.1,
+            159.4
+          ],
+          "3": [
+            81.2,
+            115.7
+          ]
+        },
+        "overflow_h": [
+          86.7,
+          104.9
+        ],
+        "overflow_note": "모서리 하나 origin 넘침 = +24 DBE 팔 = 24 × 2,578 s × 배수 (multiplier lo · hi) · 한 기계 — 위 표에 넣지 않았다 (옛 문구 '≈ +87 h (×6.05)' = 아래 배수만 · 설계 개정 3 · 4)"
+      },
+      "expected": {
+        "inputs": {
+          "sbe_arm_s": 879.0,
+          "dbe_arm_s": 2578.0,
+          "solve_fraction": 0.800910125142207,
+          "iter_ratio": [
+            6.05,
+            7.37
+          ],
+          "multiplier": {
+            "lo": 5.0446,
+            "hi": 6.1018
+          },
+          "ladder_per_law": 18,
+          "noop": 2,
+          "units": 12,
+          "unit_dbe_solves": {
+            "lo": 4,
+            "hi": 5
+          },
+          "source": "docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md §10-4 (값 그대로)"
+        },
+        "label": "추정 · 합성 침대 반복 비 · 기계 속도 같음 · origin 넘침 없음 · 위끝 = 0 (lo) / 12 (hi)",
+        "old_registration_82_R0_only_one_machine_h": [
+          205.8,
+          248.9
+        ],
+        "all3_one_machine_h": [
+          220.2,
+          318.8
+        ],
+        "all3_no_split_h": {
+          "2": [
+            196.8,
+            290.5
+          ],
+          "3": [
+            196.8,
+            290.5
+          ]
+        },
+        "all3_split_units_h": {
+          "2": [
+            110.1,
+            159.4
+          ],
+          "3": [
+            81.2,
+            115.7
+          ]
+        },
+        "overflow_h": [
+          86.7,
+          104.9
+        ],
+        "overflow_note": "모서리 하나 origin 넘침 = +24 DBE 팔 = 24 × 2,578 s × 배수 (multiplier lo · hi) · 한 기계 — 위 표에 넣지 않았다 (옛 문구 '≈ +87 h (×6.05)' = 아래 배수만 · 설계 개정 3 · 4)"
+      },
+      "pass": true
+    },
+    {
+      "name": "ban8_quote_exact_source_constant",
+      "got": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "ban8_document_Δ/λ 0.02 – 0.63",
+      "got": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "ban8_document_q 0.4 – 19",
+      "got": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "ban8_document_긴 접촉 포화 = 축저항 몫을 뺀 접합 기여분",
+      "got": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "ban8_document_임의 교차 · 비스듬한 접합은 식 검증되지 않았다",
+      "got": true,
+      "expected": true,
+      "pass": true
+    }
+  ]
+}

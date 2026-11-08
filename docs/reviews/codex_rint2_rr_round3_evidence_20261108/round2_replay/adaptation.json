@@ -1,0 +1,16 @@
+{
+  "source": "docs\\reviews\\codex_rint2_rr_round2_evidence_20261105\\runtime_review\\probe_runtime.py",
+  "source_sha256": "12f3b4c9d3b37d18888ea4c5b9e89c2ce710f19dee943a436efedf9ebf98c9ee",
+  "adapted_sha256": "422c875144dc0854e0fa314a26a9db5110ece65861dd6c4bf4d7aba0f25a4448",
+  "changes": [
+    "REPO path only",
+    "Windows missing O_NONBLOCK is 0 for regular synthetic files"
+  ],
+  "skipped": [
+    "report_c_source_manifest_count",
+    "report_c_source_hashes"
+  ],
+  "skip_reason": "historical report_c_raw is outside this 660-file package",
+  "oracles_changed": false,
+  "field_qualification": false
+}

@@ -1,0 +1,19 @@
+  PASS  M0 기준 모듈 (커밋 39104710a 의 ca_s0_census.py) 을 읽었다
+  PASS  M1 fiber_sphere_instances AM 꼴 · tol 0 — 모든 칸 비트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · instance 133 · 쌍 127
+  PASS  M1 fiber_sphere_instances AM 꼴 · tol 0.05 — 모든 칸 비트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · instance 137 · 쌍 130
+  PASS  M1 fiber_sphere_instances SDCP 꼴 (점 300 · 반지름 0.15) — 모든 칸 비트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · instance 36 · 쌍 35
+  PASS  M1 fiber_sphere_instances 경계 (거리 정확히 R + r_f + tol · 바로 밖) · 이웃 없음 · 중점 위 (거리 0) · 꼭짓점 위 — 모든 칸 비트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · instance 3 · 쌍 3
+  PASS  M1 fiber_sphere_instances 구 없음 — 모든 칸 비트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · instance 0 · 쌍 0
+  PASS  M1 fiber_sphere_instances 경로 없음 — 모든 칸 비트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · instance 0 · 쌍 0
+  PASS  M2 _min_dist_to_segments 긴 선분 섞인 경로 · 점 300 · cutoff 2.0 — 바이트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · 유한 300 / 300
+  PASS  M2 _min_dist_to_segments 같은 · cutoff 0.5 — 바이트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · 유한 93 / 300
+  PASS  M2 _min_dist_to_segments 경계 (거리 정확히 cutoff · 바로 밖) · 빈 결과 · 선분 위 — 바이트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · 유한 2 / 4
+  PASS  M2 _min_dist_to_segments 경로 없음 — 바이트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · 유한 0 / 5
+  PASS  M2 _min_dist_to_segments 점 없음 — 바이트 = 기준 × 질의 덩어리 (기본 · 1 · 7 · 50) · 유한 0 / 0
+  PASS  M3 후보 수 — 선분 3124 (가장 긴 6.000 µm) · SDCP 꼴 구 2000: 옛 반지름 후보 1294323 (return_length 합 · 저장 없음) ≥ 10 × 새 후보 1720
+  PASS  M5 옛 반지름 경계의 반올림 칼날 (선언된 예외 · carbon_junction PEDGE 와 같은 꼴) — 가장 긴 선분의 끝 연장선 위 구 (거리 0.375 ≤ R + r_f + tol 0.375) · 점 (거리 정확히 cutoff 0.5): 기준 (고치기 전) 판 = 놓침 (쌍 0 · 거리 inf)
+  PASS  M5 새 판 — 같은 두 꼴을 찾는다 (쌍 1 · 거리 0.5 · 계약 그대로 · 반올림 여유)
+  PASS  M4 변이 전 (지금 판) — 판별 탐침 통과 (M1 · M2 꼴 대조 · M5 칼날) · 예외 없음
+  PASS  M4 변이 반지름에서 조각 반 길이 항 뺌 — 값 대조에 걸린다 (변이 안 예외 = 하네스 실패)
+  PASS  M4 변이 반지름 반 — 값 대조에 걸린다 (변이 안 예외 = 하네스 실패)
+  PASS  M4 변이 반올림 여유 0 (옛 반지름과 같은 칼날) — 값 대조에 걸린다 (변이 안 예외 = 하네스 실패)

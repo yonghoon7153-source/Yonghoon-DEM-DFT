@@ -1,0 +1,26 @@
+{
+  "passed": 55,
+  "failed": 0,
+  "failures": [],
+  "tags": [
+    "CP-ORD",
+    "PEDGE",
+    "PEQ",
+    "PMEM",
+    "PMUT",
+    "PREG",
+    "PS0",
+    "PSRCH",
+    "PTIE"
+  ],
+  "baseline_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r3_run/old/remote_old_carbon_3b12fbe2d.py",
+  "baseline_sha256": "5460dad164839b115eea07f5df21087af1ff214c221e4838d940f7de9f9ca221",
+  "basis": "supplied resident synthetic tests, independently executed; explicit raw pinned old module injected to avoid absent git object store",
+  "s0": {
+    "passed": 19,
+    "failed": 0,
+    "failures": [],
+    "baseline_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r3_run/old/remote_old_census_39104710a.py",
+    "baseline_sha256": "6e527e6c7a16251c585443abb922325170975f63d953204d209065c2dc951937"
+  }
+}

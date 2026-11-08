@@ -1,0 +1,122 @@
+{
+ "pin": "17d45fb9cdfc7033bdfd41509527cea23ba1654c",
+ "pin_tree": "6989fd20dca6fba46fcf5eb6955dc8e9f12f2586",
+ "pin_checkout": "git worktree add --detach <리포 밖 임시 폴더> 17d45fb9c (탐침 실행 뒤 git worktree remove 로 지움) · 깨끗함 (git status --porcelain 0 줄)",
+ "pin_sources_sha256": {
+  "scripts/rint_r_chain.py": "48f0e7fff068eea752407ad56955c159e937f8a33801148786b0d5a3e650f95c",
+  "scripts/carbon_junction.py": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+  "scripts/ca_s0_census.py": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4",
+  "scripts/test_carbon_junction.py": "e03038021659004757169df6f8a2e7af4d660fd4d91788331f1bc72d340398f0",
+  "scripts/test_ca_s0_census.py": "72c8a1612fc25bf5b4031b2494b1063b192acdd83f413654b35384783d5b03be",
+  "scripts/test_rint_r_chain.py": "fedba635c5ea52e88d38341308637a025b44665c0c3e40cb49cdae50af5c7811"
+ },
+ "probes_copied_sha256": {
+  "pc12_attack/probe_pc12_independent.py": {
+   "zip": "7f335c758c036c6de5ab10ef5b9ab3d35d6eb10ab3f0182694bdea03914b74d7",
+   "run_copy": "7f335c758c036c6de5ab10ef5b9ab3d35d6eb10ab3f0182694bdea03914b74d7"
+  },
+  "contracts_probe.py": {
+   "zip": "c6ca404e92ee35b6d23be6ef884029b441ac0bfe47aab163f6d6ad2a140723c6",
+   "run_copy": "c6ca404e92ee35b6d23be6ef884029b441ac0bfe47aab163f6d6ad2a140723c6"
+  },
+  "contracts_p2p4_git.py": {
+   "zip": "04401e10fab6c5223c8db10c2e4d11604235f5580df588189b54f474c5aac70b",
+   "run_copy": "04401e10fab6c5223c8db10c2e4d11604235f5580df588189b54f474c5aac70b"
+  },
+  "s0_memory/probe_s0_memory.py": {
+   "zip": "841f3fc1c0683e5bac128e342bd88426e5f0ea89d8859c9be2dc9e30000490ae",
+   "run_copy": "841f3fc1c0683e5bac128e342bd88426e5f0ea89d8859c9be2dc9e30000490ae"
+  },
+  "s0_memory/probe_plan_binding.py": {
+   "zip": "914028c9262110caf7be101efde4c6e31fe6a6a156ec325bccee05aa75234197",
+   "run_copy": "914028c9262110caf7be101efde4c6e31fe6a6a156ec325bccee05aa75234197"
+  },
+  "s0_memory/run_targeted_memory.py": {
+   "zip": "81de5e23cf6fef0c18eff4ab07f6213dcadd3ae74e4f981fe5cee63ceebbd7fd",
+   "run_copy": "81de5e23cf6fef0c18eff4ab07f6213dcadd3ae74e4f981fe5cee63ceebbd7fd"
+  },
+  "run_old_probe.py": {
+   "zip": "bd2ff652e15b4845f14727468f2a28234bd3b3c4cceb096870f361f5d946bc53",
+   "run_copy": "bd2ff652e15b4845f14727468f2a28234bd3b3c4cceb096870f361f5d946bc53"
+  }
+ },
+ "old_modules_from_our_git": {
+  "remote_old_carbon_3b12fbe2d.py": {
+   "git": "3b12fbe2d:scripts/carbon_junction.py",
+   "sha256": "5460dad164839b115eea07f5df21087af1ff214c221e4838d940f7de9f9ca221",
+   "zip_copy_sha256": "5460dad164839b115eea07f5df21087af1ff214c221e4838d940f7de9f9ca221"
+  },
+  "remote_old_census_39104710a.py": {
+   "git": "39104710a:scripts/ca_s0_census.py",
+   "sha256": "6e527e6c7a16251c585443abb922325170975f63d953204d209065c2dc951937",
+   "zip_copy_sha256": "6e527e6c7a16251c585443abb922325170975f63d953204d209065c2dc951937"
+  }
+ },
+ "how": "탐침 = ZIP 을 리포 밖 빈 폴더에 푼 원본을 다 읽은 뒤 스크래치 실행 폴더로 복사 (같은 상대 자리 · 산출물이 그 폴더에 쓰인다) · cwd = 리포 밖 빈 폴더 · python3 -I -B -X utf8 · RINT_REVIEW_REPO = 핀 작업 트리 (s0_memory 셋은 그 경로를 인자로) · 옛 모듈 = ZIP 사본이 아니라 우리 git 객체 (git show)",
+ "commands": {
+  "pc12_attack": "RINT_REVIEW_REPO=<핀> python3 -I -B -X utf8 <run>/pc12_attack/probe_pc12_independent.py",
+  "contracts_probe": "RINT_REVIEW_REPO=<핀> python3 -I -B -X utf8 <run>/contracts_probe.py",
+  "contracts_p2p4_git": "RINT_REVIEW_REPO=<핀> python3 -I -B -X utf8 <run>/contracts_p2p4_git.py",
+  "s0_probe_s0_memory": "python3 -I -B -X utf8 <run>/s0_memory/probe_s0_memory.py <핀> <run>/s0_memory/independent_results.json",
+  "s0_probe_plan_binding": "python3 -I -B -X utf8 <run>/s0_memory/probe_plan_binding.py <핀> <run>/s0_memory/plan_binding.json",
+  "s0_run_targeted_memory": "python3 -I -B -X utf8 <run>/s0_memory/run_targeted_memory.py <핀> <run>/old/remote_old_carbon_3b12fbe2d.py <run>/old/remote_old_census_39104710a.py",
+  "run_old_probe": "RINT_REVIEW_REPO=<핀> python3 -I -B -X utf8 <run>/run_old_probe.py"
+ },
+ "rc": {
+  "contracts_p2p4_git": {
+   "rc": 0,
+   "start_utc": "2026-11-08T11:09:33Z",
+   "end_utc": "2026-11-08T11:09:34Z",
+   "seconds": 0.9
+  },
+  "contracts_probe": {
+   "rc": 0,
+   "start_utc": "2026-11-08T11:09:21Z",
+   "end_utc": "2026-11-08T11:09:22Z",
+   "seconds": 1.8
+  },
+  "pc12_attack": {
+   "rc": 0,
+   "start_utc": "2026-11-08T11:07:11Z",
+   "end_utc": "2026-11-08T11:07:11Z",
+   "seconds": 0.2
+  },
+  "run_old_probe": {
+   "rc": 1,
+   "start_utc": "2026-11-08T11:12:24Z",
+   "end_utc": "2026-11-08T11:12:26Z",
+   "seconds": 1.3
+  },
+  "s0_probe_plan_binding": {
+   "rc": 0,
+   "start_utc": "2026-11-08T11:10:08Z",
+   "end_utc": "2026-11-08T11:10:08Z",
+   "seconds": 0.8
+  },
+  "s0_probe_s0_memory": {
+   "rc": 0,
+   "start_utc": "2026-11-08T11:10:07Z",
+   "end_utc": "2026-11-08T11:10:09Z",
+   "seconds": 1.2
+  },
+  "s0_run_targeted_memory": {
+   "rc": 0,
+   "start_utc": "2026-11-08T11:10:27Z",
+   "end_utc": "2026-11-08T11:11:17Z",
+   "seconds": 50.2
+  }
+ },
+ "environment": {
+  "platform": "Linux-6.18.44-fc-v310-x86_64-with-glibc2.39",
+  "python": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "git": "2.43.0",
+  "thread_env": "OPENBLAS / OMP / MKL / NUMEXPR 미설정"
+ },
+ "not_run": {
+  "replay_preattack12.py": "요청 범위 밖 (이번 반입 = pc12_attack · contracts 둘 · s0_memory 셋 + 옛 탐침 하나) · 같은 사전 공격 12 탐침의 우리 쪽 재실행 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/",
+  "verify_evidence.py · package_evidence.py": "ZIP 안 도구 = 실행 안 함 (매니페스트 735 줄 대조 · package/ blob 대조는 우리 스크립트)",
+  "field": "실제 SIGKILL · flock 경쟁 · /proc 권한 · FIFO · NFS · GPU · kgy 3.8.10 · 실침대 S0 · 등록 R · 전체 게이트 — 탐침이 모의로 대신하는 부분은 Linux 에서 돌려도 시험되지 않는다"
+ }
+}

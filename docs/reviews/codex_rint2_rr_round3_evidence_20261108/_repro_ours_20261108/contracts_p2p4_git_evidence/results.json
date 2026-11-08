@@ -1,0 +1,990 @@
+{
+  "python": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+  "platform": "Linux-6.18.44-fc-v310-x86_64-with-glibc2.39",
+  "source_sha256": "48f0e7fff068eea752407ad56955c159e937f8a33801148786b0d5a3e650f95c",
+  "scope": "actual synthetic local Git recover_group/recover_ledger/attempt_order_problem; POSIX lock, host/death, group cleanup mocked; no CLI launcher or solver",
+  "scratch": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r3_run/contracts_p2p4_git_evidence/scratch_1794136173934963430",
+  "passed": 12,
+  "total": 12,
+  "rows": [
+    {
+      "tag": "p2_1a",
+      "input_summary": {
+        "tool": "rint_r_chain",
+        "schema": "rint-r-chain-v2",
+        "stage": "ladder",
+        "status": "STOPPED",
+        "stop": {
+          "code": "RUNNER_RC",
+          "run": "L01_floor",
+          "reason": null
+        },
+        "runs": [
+          {
+            "name": "L01_floor",
+            "outdir": "L01_floor_arm9",
+            "group_cause": null,
+            "rc": 1,
+            "arms": 1,
+            "arm_list": null,
+            "arms_read": []
+          }
+        ]
+      },
+      "input_end": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": 1,
+        "cause": null,
+        "signal": null,
+        "confirmed": true,
+        "left": [],
+        "left_after_exit": null,
+        "killed": 0,
+        "by": "chain",
+        "ended_utc": "2026-10-28T00:00:00Z"
+      },
+      "input_log": "[p2] run\ncupy.cuda.memory.OutOfMemoryError: out of memory allocating 1024 bytes\n",
+      "trace": true,
+      "recovered_group": null,
+      "recover_counts": [
+        0,
+        0
+      ],
+      "result": {
+        "by": "recover",
+        "cause": "resource",
+        "folder": "attempt_1",
+        "folder_sha256": "dcac9a3b191cc25759f110f3f0d832f1f4bae7d63bea17bcfbf2bd68833435df",
+        "kind": "result",
+        "n": 1,
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "RUNNER_RC",
+          "reason": null,
+          "run": "L01_floor"
+        },
+        "utc": "2026-11-08T11:09:34Z"
+      },
+      "resume_gate": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_1 = stopped · 원인 resource · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "expected_resume_allowed": false,
+      "ledger_result_committed": true,
+      "ledger_unchanged_by_gate": true,
+      "git_head": "bd309a4ddb17cb8aec0d33ae5e86e968b703ae6f",
+      "git_clean": true,
+      "pass": true
+    },
+    {
+      "tag": "p2_1b",
+      "input_summary": {
+        "tool": "rint_r_chain",
+        "schema": "rint-r-chain-v2",
+        "stage": "ladder",
+        "status": "STOPPED",
+        "stop": {
+          "code": "RUNNER_RC",
+          "run": "L01_floor",
+          "reason": null
+        },
+        "runs": [
+          {
+            "name": "L01_floor",
+            "outdir": "L01_floor_arm9",
+            "group_cause": null,
+            "rc": 1,
+            "arms": 9,
+            "arm_list": null,
+            "arms_read": []
+          }
+        ]
+      },
+      "input_end": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": 1,
+        "cause": null,
+        "signal": null,
+        "confirmed": true,
+        "left": [],
+        "left_after_exit": null,
+        "killed": 0,
+        "by": "chain",
+        "ended_utc": "2026-10-28T00:00:00Z"
+      },
+      "input_log": "[p2] run\ncupy.cuda.memory.OutOfMemoryError: out of memory allocating 1024 bytes\n",
+      "trace": true,
+      "recovered_group": null,
+      "recover_counts": [
+        0,
+        0
+      ],
+      "result": {
+        "by": "recover",
+        "cause": "resource",
+        "folder": "attempt_1",
+        "folder_sha256": "b0bad15046184a3bcaa3dcef2419507a9c9767f6bdfdd415b1131ec5e05a1cb1",
+        "kind": "result",
+        "n": 1,
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "RUNNER_RC",
+          "reason": null,
+          "run": "L01_floor"
+        },
+        "utc": "2026-11-08T11:09:34Z"
+      },
+      "resume_gate": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_1 = stopped · 원인 resource · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "expected_resume_allowed": false,
+      "ledger_result_committed": true,
+      "ledger_unchanged_by_gate": true,
+      "git_head": "e702c44eaafe89871b389b377fd071079243fb16",
+      "git_clean": true,
+      "pass": true
+    },
+    {
+      "tag": "p2_1c",
+      "input_summary": {
+        "tool": "rint_r_chain",
+        "schema": "rint-r-chain-v2",
+        "stage": "ladder",
+        "status": "STOPPED",
+        "stop": {
+          "code": "RUNNER_RC",
+          "run": "L01_floor",
+          "reason": null
+        },
+        "runs": [
+          {
+            "name": "L01_floor",
+            "outdir": "L01_floor_arm1",
+            "group_cause": null,
+            "rc": 1,
+            "arms": 1,
+            "arm_list": null,
+            "arms_read": []
+          }
+        ]
+      },
+      "input_end": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": 1,
+        "cause": null,
+        "signal": null,
+        "confirmed": true,
+        "left": [],
+        "left_after_exit": null,
+        "killed": 0,
+        "by": "chain",
+        "ended_utc": "2026-10-28T00:00:00Z"
+      },
+      "input_log": "[p2] run\ncupy.cuda.memory.OutOfMemoryError: out of memory allocating 1024 bytes\n",
+      "trace": true,
+      "recovered_group": null,
+      "recover_counts": [
+        0,
+        0
+      ],
+      "result": {
+        "by": "recover",
+        "cause": "resource",
+        "folder": "attempt_1",
+        "folder_sha256": "b9f967528aa8ba13ef708b6fe1dd0e4c2342b22635cc87ae893f2452ff7084d0",
+        "kind": "result",
+        "n": 1,
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "RUNNER_RC",
+          "reason": null,
+          "run": "L01_floor"
+        },
+        "utc": "2026-11-08T11:09:34Z"
+      },
+      "resume_gate": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_1 = stopped · 원인 resource · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "expected_resume_allowed": false,
+      "ledger_result_committed": true,
+      "ledger_unchanged_by_gate": true,
+      "git_head": "1d1fec9883ee91b37c494ccdfc6e29f9962b80e2",
+      "git_clean": true,
+      "pass": true
+    },
+    {
+      "tag": "p2_2a",
+      "input_summary": {
+        "tool": "rint_r_chain",
+        "schema": "rint-r-chain-v2",
+        "stage": "ladder",
+        "status": "STOPPED",
+        "stop": {
+          "code": "GROUP_UNCONFIRMED",
+          "run": "L01_floor",
+          "reason": null
+        },
+        "runs": [
+          {
+            "name": "L01_floor",
+            "outdir": "L01_floor_arm1",
+            "group_cause": null,
+            "rc": 1,
+            "arms": 1,
+            "arm_list": null,
+            "arms_read": []
+          }
+        ]
+      },
+      "input_end": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": 1,
+        "cause": null,
+        "signal": null,
+        "confirmed": false,
+        "left": [
+          999989
+        ],
+        "left_after_exit": null,
+        "killed": 0,
+        "by": "chain",
+        "ended_utc": "2026-10-28T00:00:00Z"
+      },
+      "input_log": "[p2] run\nTraceback (most recent call last):\nKeyError: 'sigma'\n",
+      "trace": false,
+      "recovered_group": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": null,
+        "cause": "parent_dead",
+        "signal": null,
+        "confirmed": true,
+        "left": [],
+        "left_after_exit": null,
+        "killed": 0,
+        "unsure": null,
+        "by": "recover",
+        "why": null,
+        "host": {
+          "machine_id": "review-machine",
+          "boot_id": "review-boot",
+          "pidns": "pid:[review]"
+        },
+        "ended_utc": "2026-11-08T11:09:34Z",
+        "chain_end": {
+          "rc": 1,
+          "cause": null,
+          "confirmed": false,
+          "ended_utc": "2026-10-28T00:00:00Z"
+        }
+      },
+      "recover_counts": [
+        0,
+        0
+      ],
+      "result": {
+        "by": "recover",
+        "cause": "runner_rc",
+        "folder": "attempt_1",
+        "folder_sha256": "9c73f50f33d53d4fd62430758f16d0284b1d4df6ac63de6b6a4444c8f534413f",
+        "kind": "result",
+        "n": 1,
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "GROUP_UNCONFIRMED",
+          "reason": null,
+          "run": "L01_floor"
+        },
+        "utc": "2026-11-08T11:09:34Z"
+      },
+      "resume_gate": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_1 = stopped · 원인 runner_rc · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "expected_resume_allowed": false,
+      "ledger_result_committed": true,
+      "ledger_unchanged_by_gate": true,
+      "git_head": "006ee6bfc93a6888b0a04ac5b407bf8bfc442e5c",
+      "git_clean": true,
+      "pass": true
+    },
+    {
+      "tag": "p2_2b",
+      "input_summary": {
+        "tool": "rint_r_chain",
+        "schema": "rint-r-chain-v2",
+        "stage": "ladder",
+        "status": "STOPPED",
+        "stop": {
+          "code": "GROUP_UNCONFIRMED",
+          "run": "L01_floor",
+          "reason": null
+        },
+        "runs": [
+          {
+            "name": "L01_floor",
+            "outdir": "L01_floor_arm1",
+            "group_cause": null,
+            "rc": 0,
+            "arms": 1,
+            "arm_list": null,
+            "arms_read": []
+          }
+        ]
+      },
+      "input_end": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": 1,
+        "cause": null,
+        "signal": null,
+        "confirmed": false,
+        "left": [
+          999989
+        ],
+        "left_after_exit": null,
+        "killed": 0,
+        "by": "chain",
+        "ended_utc": "2026-10-28T00:00:00Z"
+      },
+      "input_log": "[p2] run\nTraceback (most recent call last):\nKeyError: 'sigma'\n",
+      "trace": false,
+      "recovered_group": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": null,
+        "cause": "parent_dead",
+        "signal": null,
+        "confirmed": true,
+        "left": [],
+        "left_after_exit": null,
+        "killed": 0,
+        "unsure": null,
+        "by": "recover",
+        "why": null,
+        "host": {
+          "machine_id": "review-machine",
+          "boot_id": "review-boot",
+          "pidns": "pid:[review]"
+        },
+        "ended_utc": "2026-11-08T11:09:34Z",
+        "chain_end": {
+          "rc": 1,
+          "cause": null,
+          "confirmed": false,
+          "ended_utc": "2026-10-28T00:00:00Z"
+        }
+      },
+      "recover_counts": [
+        0,
+        0
+      ],
+      "result": {
+        "by": "recover",
+        "cause": "group_unconfirmed",
+        "folder": "attempt_1",
+        "folder_sha256": "9ca546ebea6c909da9636f4ee11b5512a13fda98148c487da33166e44e14883e",
+        "kind": "result",
+        "n": 1,
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "GROUP_UNCONFIRMED",
+          "reason": null,
+          "run": "L01_floor"
+        },
+        "utc": "2026-11-08T11:09:34Z"
+      },
+      "resume_gate": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_1 = stopped · 원인 group_unconfirmed · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "expected_resume_allowed": false,
+      "ledger_result_committed": true,
+      "ledger_unchanged_by_gate": true,
+      "git_head": "aa9a9c2f54fc28b0da32185fef0912d792384758",
+      "git_clean": true,
+      "pass": true
+    },
+    {
+      "tag": "p2_2c",
+      "input_summary": {
+        "tool": "rint_r_chain",
+        "schema": "rint-r-chain-v2",
+        "stage": "ladder",
+        "status": "STOPPED",
+        "stop": {
+          "code": "GROUP_UNCONFIRMED",
+          "run": "L01_floor",
+          "reason": null
+        },
+        "runs": [
+          {
+            "name": "L01_floor",
+            "outdir": "L01_floor_arm1",
+            "group_cause": "timeout",
+            "rc": null,
+            "arms": 1,
+            "arm_list": null,
+            "arms_read": []
+          }
+        ]
+      },
+      "input_end": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": 1,
+        "cause": null,
+        "signal": null,
+        "confirmed": false,
+        "left": [
+          999989
+        ],
+        "left_after_exit": null,
+        "killed": 0,
+        "by": "chain",
+        "ended_utc": "2026-10-28T00:00:00Z"
+      },
+      "input_log": "[p2] run\nTraceback (most recent call last):\nKeyError: 'sigma'\n",
+      "trace": false,
+      "recovered_group": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": null,
+        "cause": "parent_dead",
+        "signal": null,
+        "confirmed": true,
+        "left": [],
+        "left_after_exit": null,
+        "killed": 0,
+        "unsure": null,
+        "by": "recover",
+        "why": null,
+        "host": {
+          "machine_id": "review-machine",
+          "boot_id": "review-boot",
+          "pidns": "pid:[review]"
+        },
+        "ended_utc": "2026-11-08T11:09:34Z",
+        "chain_end": {
+          "rc": 1,
+          "cause": null,
+          "confirmed": false,
+          "ended_utc": "2026-10-28T00:00:00Z"
+        }
+      },
+      "recover_counts": [
+        0,
+        0
+      ],
+      "result": {
+        "by": "recover",
+        "cause": "group_unconfirmed",
+        "folder": "attempt_1",
+        "folder_sha256": "49eca5faf25c44c977107091e213da16a1f2d328fc74b43e88f585ef98b448d3",
+        "kind": "result",
+        "n": 1,
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "GROUP_UNCONFIRMED",
+          "reason": null,
+          "run": "L01_floor"
+        },
+        "utc": "2026-11-08T11:09:34Z"
+      },
+      "resume_gate": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_1 = stopped · 원인 group_unconfirmed · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "expected_resume_allowed": false,
+      "ledger_result_committed": true,
+      "ledger_unchanged_by_gate": true,
+      "git_head": "67d9129ef1e348e39c0b3ca83015ee4d564618a4",
+      "git_clean": true,
+      "pass": true
+    },
+    {
+      "tag": "p4_honest",
+      "input_summary": {
+        "tool": "rint_r_chain",
+        "schema": "rint-r-chain-v2",
+        "stage": "ladder",
+        "status": "STOPPED",
+        "stop": {
+          "code": "RUNNER_RC",
+          "run": "L01_floor",
+          "reason": null
+        },
+        "runs": [
+          {
+            "name": "L01_floor",
+            "outdir": "L01_floor_arm1",
+            "group_cause": null,
+            "rc": 1,
+            "arms": 1,
+            "arm_list": null,
+            "arms_read": []
+          }
+        ]
+      },
+      "input_end": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": 1,
+        "cause": null,
+        "signal": null,
+        "confirmed": true,
+        "left": [],
+        "left_after_exit": null,
+        "killed": 0,
+        "by": "chain",
+        "ended_utc": "2026-10-28T00:00:00Z"
+      },
+      "input_log": "[p2] run\nTraceback (most recent call last):\nKeyError: 'sigma'\n",
+      "trace": false,
+      "recovered_group": null,
+      "recover_counts": [
+        0,
+        0
+      ],
+      "result": {
+        "by": "recover",
+        "cause": "runner_rc",
+        "folder": "attempt_1",
+        "folder_sha256": "34f9888556978382c49528e77d1e1976502afb86c0bb356cb09d6bf4677a39df",
+        "kind": "result",
+        "n": 1,
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "RUNNER_RC",
+          "reason": null,
+          "run": "L01_floor"
+        },
+        "utc": "2026-11-08T11:09:34Z"
+      },
+      "resume_gate": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_1 = stopped · 원인 runner_rc · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "expected_resume_allowed": false,
+      "ledger_result_committed": true,
+      "ledger_unchanged_by_gate": true,
+      "git_head": "7e7328507e9319b4e401c4b8282d673dd9f766c8",
+      "git_clean": true,
+      "pass": true
+    },
+    {
+      "tag": "p4_L02",
+      "input_summary": {
+        "tool": "rint_r_chain",
+        "schema": "rint-r-chain-v2",
+        "stage": "ladder",
+        "status": "STOPPED",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L02_ceiling",
+          "reason": null
+        },
+        "runs": [
+          {
+            "name": "L01_floor",
+            "outdir": "L01_floor_arm1",
+            "group_cause": null,
+            "rc": 1,
+            "arms": 1,
+            "arm_list": null,
+            "arms_read": []
+          }
+        ]
+      },
+      "input_end": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": 1,
+        "cause": null,
+        "signal": null,
+        "confirmed": true,
+        "left": [],
+        "left_after_exit": null,
+        "killed": 0,
+        "by": "chain",
+        "ended_utc": "2026-10-28T00:00:00Z"
+      },
+      "input_log": "[p2] run\nTraceback (most recent call last):\nKeyError: 'sigma'\n",
+      "trace": false,
+      "recovered_group": null,
+      "recover_counts": [
+        0,
+        0
+      ],
+      "result": {
+        "by": "recover",
+        "cause": "timeout",
+        "folder": "attempt_1",
+        "folder_sha256": "2ee8370e2a3a1280efd0fa6c2fc6c8bbe6217ebf83cb3a370f351c965d3e2edd",
+        "kind": "result",
+        "n": 1,
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "reason": null,
+          "run": "L02_ceiling"
+        },
+        "utc": "2026-11-08T11:09:34Z"
+      },
+      "resume_gate": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_1 = stopped · 원인 timeout · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "expected_resume_allowed": false,
+      "ledger_result_committed": true,
+      "ledger_unchanged_by_gate": true,
+      "git_head": "0f69d0fbf4ea22ab0eb1c1d899f269b3b580f466",
+      "git_clean": true,
+      "pass": true
+    },
+    {
+      "tag": "p4_zzz",
+      "input_summary": {
+        "tool": "rint_r_chain",
+        "schema": "rint-r-chain-v2",
+        "stage": "ladder",
+        "status": "STOPPED",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "zzz",
+          "reason": null
+        },
+        "runs": [
+          {
+            "name": "L01_floor",
+            "outdir": "L01_floor_arm1",
+            "group_cause": null,
+            "rc": 1,
+            "arms": 1,
+            "arm_list": null,
+            "arms_read": []
+          }
+        ]
+      },
+      "input_end": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": 1,
+        "cause": null,
+        "signal": null,
+        "confirmed": true,
+        "left": [],
+        "left_after_exit": null,
+        "killed": 0,
+        "by": "chain",
+        "ended_utc": "2026-10-28T00:00:00Z"
+      },
+      "input_log": "[p2] run\nTraceback (most recent call last):\nKeyError: 'sigma'\n",
+      "trace": false,
+      "recovered_group": null,
+      "recover_counts": [
+        0,
+        0
+      ],
+      "result": {
+        "by": "recover",
+        "cause": "timeout",
+        "folder": "attempt_1",
+        "folder_sha256": "c77dacf5f96108d6c54a4458c0a25c42a97a5e47f2fbbff3b21a6112976c996e",
+        "kind": "result",
+        "n": 1,
+        "resume_ok": false,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "reason": null,
+          "run": "zzz"
+        },
+        "utc": "2026-11-08T11:09:34Z"
+      },
+      "resume_gate": [
+        "RESUME_NOT_ALLOWED",
+        "재실행 사슬 끝 attempt_1 = stopped · 원인 timeout · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+      ],
+      "expected_resume_allowed": false,
+      "ledger_result_committed": true,
+      "ledger_unchanged_by_gate": true,
+      "git_head": "2494aa7b98e2bf2d25118a00f92d4977bdaea7aa",
+      "git_clean": true,
+      "pass": true
+    },
+    {
+      "tag": "positive_timeout",
+      "input_summary": {
+        "tool": "rint_r_chain",
+        "schema": "rint-r-chain-v2",
+        "stage": "ladder",
+        "status": "STOPPED",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "run": "L01_floor",
+          "reason": null
+        },
+        "runs": [
+          {
+            "name": "L01_floor",
+            "outdir": "L01_floor_arm1",
+            "group_cause": "timeout",
+            "rc": null,
+            "arms": 1,
+            "arm_list": null,
+            "arms_read": []
+          }
+        ]
+      },
+      "input_end": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": -9,
+        "cause": "timeout",
+        "signal": null,
+        "confirmed": true,
+        "left": [],
+        "left_after_exit": null,
+        "killed": 0,
+        "by": "chain",
+        "ended_utc": "2026-10-28T00:00:00Z"
+      },
+      "input_log": "",
+      "trace": false,
+      "recovered_group": null,
+      "recover_counts": [
+        0,
+        0
+      ],
+      "result": {
+        "by": "recover",
+        "cause": "timeout",
+        "folder": "attempt_1",
+        "folder_sha256": "f5cb5c89533d610aebaa476e17dbb8b56121aa270c5ec984aacc92f5cbb43e8b",
+        "kind": "result",
+        "n": 1,
+        "resume_ok": true,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "TIME_LIMIT",
+          "reason": null,
+          "run": "L01_floor"
+        },
+        "utc": "2026-11-08T11:09:34Z"
+      },
+      "resume_gate": null,
+      "expected_resume_allowed": true,
+      "ledger_result_committed": true,
+      "ledger_unchanged_by_gate": true,
+      "git_head": "77eefa75d6d4109bd24f40c0c7c296bfa3d7ea4b",
+      "git_clean": true,
+      "pass": true
+    },
+    {
+      "tag": "positive_signal",
+      "input_summary": {
+        "tool": "rint_r_chain",
+        "schema": "rint-r-chain-v2",
+        "stage": "ladder",
+        "status": "STOPPED",
+        "stop": {
+          "code": "RUNNER_RC",
+          "run": "L01_floor",
+          "reason": null
+        },
+        "runs": [
+          {
+            "name": "L01_floor",
+            "outdir": "L01_floor_arm1",
+            "group_cause": "signal",
+            "rc": null,
+            "arms": 1,
+            "arm_list": null,
+            "arms_read": []
+          }
+        ]
+      },
+      "input_end": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": -9,
+        "cause": "signal",
+        "signal": null,
+        "confirmed": true,
+        "left": [],
+        "left_after_exit": null,
+        "killed": 0,
+        "by": "chain",
+        "ended_utc": "2026-10-28T00:00:00Z"
+      },
+      "input_log": "",
+      "trace": false,
+      "recovered_group": null,
+      "recover_counts": [
+        0,
+        0
+      ],
+      "result": {
+        "by": "recover",
+        "cause": "signal",
+        "folder": "attempt_1",
+        "folder_sha256": "fc3e0fa35af65b4fff9f8778de95c1cc142e9e05cf3d83eaa5bf5b876a6760ee",
+        "kind": "result",
+        "n": 1,
+        "resume_ok": true,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "RUNNER_RC",
+          "reason": null,
+          "run": "L01_floor"
+        },
+        "utc": "2026-11-08T11:09:34Z"
+      },
+      "resume_gate": null,
+      "expected_resume_allowed": true,
+      "ledger_result_committed": true,
+      "ledger_unchanged_by_gate": true,
+      "git_head": "40316805c14f2c27a2d2cfa50203e2a7e8b5971c",
+      "git_clean": true,
+      "pass": true
+    },
+    {
+      "tag": "positive_GU_rc0",
+      "input_summary": {
+        "tool": "rint_r_chain",
+        "schema": "rint-r-chain-v2",
+        "stage": "ladder",
+        "status": "STOPPED",
+        "stop": {
+          "code": "GROUP_UNCONFIRMED",
+          "run": "L01_floor",
+          "reason": null
+        },
+        "runs": [
+          {
+            "name": "L01_floor",
+            "outdir": "L01_floor_arm1",
+            "group_cause": null,
+            "rc": 0,
+            "arms": 1,
+            "arm_list": null,
+            "arms_read": []
+          }
+        ]
+      },
+      "input_end": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": 0,
+        "cause": null,
+        "signal": null,
+        "confirmed": false,
+        "left": [
+          999989
+        ],
+        "left_after_exit": null,
+        "killed": 0,
+        "by": "chain",
+        "ended_utc": "2026-10-28T00:00:00Z"
+      },
+      "input_log": "",
+      "trace": false,
+      "recovered_group": {
+        "schema": "rint-r-group-v1",
+        "name": "L01_floor",
+        "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "rc": null,
+        "cause": "parent_dead",
+        "signal": null,
+        "confirmed": true,
+        "left": [],
+        "left_after_exit": null,
+        "killed": 0,
+        "unsure": null,
+        "by": "recover",
+        "why": null,
+        "host": {
+          "machine_id": "review-machine",
+          "boot_id": "review-boot",
+          "pidns": "pid:[review]"
+        },
+        "ended_utc": "2026-11-08T11:09:34Z",
+        "chain_end": {
+          "rc": 0,
+          "cause": null,
+          "confirmed": false,
+          "ended_utc": "2026-10-28T00:00:00Z"
+        }
+      },
+      "recover_counts": [
+        0,
+        0
+      ],
+      "result": {
+        "by": "recover",
+        "cause": "group_unconfirmed",
+        "folder": "attempt_1",
+        "folder_sha256": "e3a486651bfc70bdc805dee73e69298481662e11418f1dd7e4a31384e6d3b6eb",
+        "kind": "result",
+        "n": 1,
+        "resume_ok": true,
+        "side": "post",
+        "status": "stopped",
+        "stop": {
+          "code": "GROUP_UNCONFIRMED",
+          "reason": null,
+          "run": "L01_floor"
+        },
+        "utc": "2026-11-08T11:09:34Z"
+      },
+      "resume_gate": null,
+      "expected_resume_allowed": true,
+      "ledger_result_committed": true,
+      "ledger_unchanged_by_gate": true,
+      "git_head": "7c0cce1bc57be9a85f127a1862e6a976b42e4a59",
+      "git_clean": true,
+      "pass": true
+    }
+  ]
+}

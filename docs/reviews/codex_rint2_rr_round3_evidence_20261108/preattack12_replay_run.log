@@ -1,0 +1,6 @@
+p1_outdir_coedit.py completed
+p2_real_ledger.py OSError(22, '클라이언트가 필요한 권한을 가지고 있지 않습니다')
+p4_tl_none_after_fail.py OSError(22, '클라이언트가 필요한 권한을 가지고 있지 않습니다')
+p5_misc_b.py TypeError("'NoneType' object is not subscriptable")
+p5_none_safe completed
+p6_rejected.py completed

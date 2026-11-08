@@ -1,0 +1,6 @@
+p1_outdir_coedit.py completed
+p2_real_ledger.py FileNotFoundError(2, '지정된 파일을 찾을 수 없습니다', None, 2, None)
+p4_tl_none_after_fail.py FileNotFoundError(2, '지정된 파일을 찾을 수 없습니다', None, 2, None)
+p5_misc_b.py TypeError("'NoneType' object is not subscriptable")
+p5_none_safe completed
+p6_rejected.py completed

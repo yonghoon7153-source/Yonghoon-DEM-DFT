@@ -14760,12 +14760,12 @@
     {
       "id": "PC6-05",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "title": "요약 있는 길 · 멈춘 런 로그 없음 · 못 읽음 + 시간 초과 · 신호 = 재실행 자격 (요약 없는 길은 같은 꼴 = 불가)",
       "owner": "claude",
       "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
-      "note": "사전 공격 6 회차 §2 · 이번 고침 범위 밖 (P3) · 빈도 낮음 (사슬이 로그를 스스로 만든다). ★ 11-05 Codex 회차 ② (리뷰 핀 `6917c3c9f` · docs/reviews/codex_review_rint2_rr_round2_20261105.md) §5 Q5 = 봉인 전 해소 필수 (새 finding 으로 중복 세지 않음) — 요약 있는 길에서 런 로그가 없거나 못 읽으면 run_log_text (scripts/rint_r_chain.py:3800) 가 빈 글을 돌려준다 · TIME_LIMIT + 첫 결과 표지 + 로그 없음 = resume_ok=true 를 독립 재현 · 최소 해결 = \"오류 낱말 없음\" 과 \"읽지 못함\" 을 가르고 후자 = 재개 미확인으로 막음 · 이 경우를 자원 · 인프라만 재개한다는 선언과 양립하는 종결로 보지 않음.  우리 트리 재현 (docs/reviews/codex_rint2_rr_round2_evidence_20261105/_repro_ours_20261105/README.md) = probe_runtime.py 의 known_PC6_05_summary_missing_log_resume = True (같음).  수정 계획 docs/reviews/rint2_rr2_fix_plan_20261105.md Q2 (1저자 비준 대기).  ★ 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md) · 런 로그 = (글, 상태) · read_regular_file (O_NONBLOCK fd · fstat 일반 파일) · ok 아니면 재실행 자격 False (런 전 TIME_LIMIT 만 예외).",
+      "note": "사전 공격 6 회차 §2 · 이번 고침 범위 밖 (P3) · 빈도 낮음 (사슬이 로그를 스스로 만든다). ★ 11-05 Codex 회차 ② (리뷰 핀 `6917c3c9f` · docs/reviews/codex_review_rint2_rr_round2_20261105.md) §5 Q5 = 봉인 전 해소 필수 (새 finding 으로 중복 세지 않음) — 요약 있는 길에서 런 로그가 없거나 못 읽으면 run_log_text (scripts/rint_r_chain.py:3800) 가 빈 글을 돌려준다 · TIME_LIMIT + 첫 결과 표지 + 로그 없음 = resume_ok=true 를 독립 재현 · 최소 해결 = \"오류 낱말 없음\" 과 \"읽지 못함\" 을 가르고 후자 = 재개 미확인으로 막음 · 이 경우를 자원 · 인프라만 재개한다는 선언과 양립하는 종결로 보지 않음.  우리 트리 재현 (docs/reviews/codex_rint2_rr_round2_evidence_20261105/_repro_ours_20261105/README.md) = probe_runtime.py 의 known_PC6_05_summary_missing_log_resume = True (같음).  수정 계획 docs/reviews/rint2_rr2_fix_plan_20261105.md Q2 (1저자 비준 대기).  ★ 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md) · 런 로그 = (글, 상태) · read_regular_file (O_NONBLOCK fd · fstat 일반 파일) · ok 아니면 재실행 자격 False (런 전 TIME_LIMIT 만 예외). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (missing_log · readable_log · directory_log 행) · run_old_probe.py 의 known_PC6_05 행 = False (판정문 §4 기대 변경) 같음.",
       "claimed_fixed_sha": "f5b00a838",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py LG01–LG03 (고치기 전 0/3 → 3/3 · LG01 56 행 · LG02 실경로 · LG03 포크 자식 8 행)",
@@ -14773,7 +14773,11 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · 한 번)",
         "scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md §3 (변이 40/40) · §4 (Codex 탐침 무변경 310/311 · 다른 1 행 = 고친 결과)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC6-05 = 닫힘 — `:3935–3942, :3955–3964, :4352–4356`. 없는/못 읽는 로그가 자격 True로 되지 않음. 정직 timeout+읽힌 빈 일반 로그 양성 보존. FIFO/실권한 현장 자격 별도. S/E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC6-06",
@@ -14818,19 +14822,23 @@
     {
       "id": "PC6-13",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "title": "그룹 미확인 (GROUP_UNCONFIRMED) 이면 러너의 0 아닌 종료 코드를 무시 — 파이썬 traceback (KeyError 등) 도 자동 재실행 자격 (U4 · PC6-02 넓힘에서 나눔)",
       "owner": "claude",
       "found_by": "사전 공격 6 회차 마무리 (11-02 · d6e8d1b44 = 사슬 4c69070ad 와 같음 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack6/PREATTACK_C2_final.md",
-      "note": "사전 공격 6 회차 §4 U4 · PC6-01 고침으로 그룹 미확인이 크게 줄어 드묾 · ⬜ 1저자 선택: A (권고) = 그룹 미확인 + 러너 rc ≠ 0/None 이면 같은 낱말 규칙 · 기본 runner_rc (재실행 없음) / B = 지금대로 두고 등록 R 에 한정.  ✅ 11-02 고침 (시험 먼저 c738a6826 → 고침 4499f3ffd · 요약 있는 길 stop_cause + 요약 없는 길 recover_group chain_end) · 한정 = 사슬이 끝 기록 전에 죽은 런은 러너 rc 없음 = 옛 그대로 · ⬜ Codex 회차 ②. ★ 11-05 Codex 회차 ② (리뷰 핀 `6917c3c9f` · docs/reviews/codex_review_rint2_rr_round2_20261105.md §2) = 부분 — 원래 summary/chain_end 반례는 닫혔으나 RR2-01의 by-chain 잘못된 rc는 남음. — 남은 분기 = RR2-01.  상태 그대로 (claimed_fixed · 1저자 결정 대기 · 수정 계획 docs/reviews/rint2_rr2_fix_plan_20261105.md Q5 · Q1) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round2_evidence_20261105/_repro_ours_20261105/README.md) = runtime_review/probe_runtime.py 311/311 같음 (판정값 차이 0).  ★ 11-05 1저자 Q5 (가) = PC6-13 은 RR2-01 고침 · 재확인과 함께 닫음 · RR2-01 고침 = f5b00a838 (11-06 다시 만든 판).",
+      "note": "사전 공격 6 회차 §4 U4 · PC6-01 고침으로 그룹 미확인이 크게 줄어 드묾 · ⬜ 1저자 선택: A (권고) = 그룹 미확인 + 러너 rc ≠ 0/None 이면 같은 낱말 규칙 · 기본 runner_rc (재실행 없음) / B = 지금대로 두고 등록 R 에 한정.  ✅ 11-02 고침 (시험 먼저 c738a6826 → 고침 4499f3ffd · 요약 있는 길 stop_cause + 요약 없는 길 recover_group chain_end) · 한정 = 사슬이 끝 기록 전에 죽은 런은 러너 rc 없음 = 옛 그대로 · ⬜ Codex 회차 ②. ★ 11-05 Codex 회차 ② (리뷰 핀 `6917c3c9f` · docs/reviews/codex_review_rint2_rr_round2_20261105.md §2) = 부분 — 원래 summary/chain_end 반례는 닫혔으나 RR2-01의 by-chain 잘못된 rc는 남음. — 남은 분기 = RR2-01.  상태 그대로 (claimed_fixed · 1저자 결정 대기 · 수정 계획 docs/reviews/rint2_rr2_fix_plan_20261105.md Q5 · Q1) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round2_evidence_20261105/_repro_ours_20261105/README.md) = runtime_review/probe_runtime.py 311/311 같음 (판정값 차이 0).  ★ 11-05 1저자 Q5 (가) = PC6-13 은 RR2-01 고침 · 재확인과 함께 닫음 · RR2-01 고침 = f5b00a838 (11-06 다시 만든 판). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (orphan · recover rc 행).",
       "decision_note": "1저자 11-02 *\"권고대로해요\"* = A — 그룹 미확인이어도 러너 rc 가 0 · None 이 아니면 같은 낱말 규칙 (words_cause) 으로 원인을 나누고 해당 없으면 기본 runner_rc (자동 재실행 없음).  ⬜ 고침 = 시험 먼저 (작업 트리 에이전트) → 등록 R §10-5 문구 → Codex 회차 ②.",
       "claimed_fixed_sha": "4499f3ffd",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py PD13 · PD13o · PD13g · PD13r · PD13d (고치기 전 0/7 · docs/reviews/rint2_rr_fix_evidence_20261023/pc6_13_fix/logs/before_PD13_PD02c.log) · 전체 428/428",
         "scripts/test_rint_r_chain_e2e.py (40/40)",
         "docs/reviews/rint2_rr_fix_evidence_20261023/pc6_13_fix/REPORT_PC6_13_FIX.md (변이 19/19 · 옳은 이유)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC6-13 = 닫힘 — 이번 남은 by-chain rc 분기는 RR2-01과 함께 닫힘. `:3866, :4189, :4233, :4285–4287`의 공용 의미와 실제 음성 대조. 앞 회차에서 닫힌 분기를 전수 재심한 것은 아님. S/E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "L214P-03",
@@ -15368,7 +15376,7 @@
       "found_by": "kgy S0 단계 1 (11-04 · 출력 없이 끝남 → 진단 = 메모리 52.1 GB 에서 신호 kill)",
       "opened_in": "docs/reviews/rint2_kgy_commands_20261020.md",
       "title": "kgy 명령 문서에 S0 단계 1 의 메모리를 '침대당 RAM 수 GB (se_dump 1.6 GB 의 몇 배)' 로 어림했다 — 실측은 52.1 GB 에서 신호로 끝났다 (도구는 파이썬 예외면 '거부' 를 찍으므로 빈 출력 = 신호)",
-      "note": "그 줄에 철회 표지 (FAM 묶음 커밋).  고침 = 메모리 재기 → 도구 고침 (시험 먼저 · 출력 바이트 같게) → 게이트 → push → kgy 새 폴더에서 다시 (1저자 11-04 Q2 권고대로) — 그 전까지 open · 시간 어림 (침대당 15–30 분) 도 실측 전. ★ 11-05 Codex 회차 ② (리뷰 핀 `6917c3c9f` · docs/reviews/codex_review_rint2_rr_round2_20261105.md) §8 Q8 = 52.1 GB 신호 종료는 출력 없는 실패로 남음 · 다음 코드는 이 핀 밖 변경 · 메모리 개선 뒤 짧은 확인 = 같은 고정 합성 입력의 래스터 · instance/포트와 순서 · 동률 · 중복 처리 · L_c · s · 분위수 · 정준 지문 · 문턱 선택 대조 (chunk 경계 · 마지막 조각 · 빈 부류 · 겹친 경계 포함) · 생산 래스터와 S0 래스터가 갈라지지 않게 · 실패한 부분 census 채택 금지 · SBE 전용 · σ 비열람 · 입력 무쓰기 · 새 출력 폴더 · 실패 보존 · 새 핀의 peak RSS · 시간 · 종료 코드/신호 · 완성 산출물로 실제 개선 확인 · 리뷰 핀 → 봉인 핀 diff · S0/R 계획 해시 · 숫자 · 실행 정책 함께 확인 · \"출력 바이트 동일\" = 과학 값 · 정준 배열 정확 보존 + 바뀐 코드 출처 · 시간 = 진실한 새 값 (옛 fingerprint 를 붙여 바이트만 맞추기 금지 · ca_s0_census.py:1399–1401 · 1473–1476 · 1678–1685 · 1710).  상태 그대로 (open).  ★ 11-06 메모리 재기 (kgy · 핀 766e1e80c · 도구 그대로 · 증거 docs/reviews/rint2_s0_mem_probe_20261106/README.md): 1,562 s 까지 2–3 GB → scripts/carbon_junction.py _distinct_instances 의 cKDTree(mid).query_pairs(rad) 에서 30 s 에 43 GB (상한 · rc 137) · 원인 (관찰 · 코드 읽기) = rad = 2·max(선분 반 길이) + D 가 가장 긴 선분 하나로 전체 후보 반지름을 정함 → 고침 = 시험 먼저 · 과학 값 그대로 (다음 커밋) · 상태 그대로 (open).  ★ 11-06 고침 반입 (작업 트리 에이전트 커밋 → main cherry-pick -x · 증거 docs/reviews/rint2_s0_mem_fix_20261106/REPORT.md): 근접 후보 = 조각 나눠 찾기 · 덩어리 계산 · _self_pairs · S0 fiber_sphere_instances · _min_dist_to_segments 같은 꼴 · 합성 후보 17,701,828 → 61,131 · 과학 값 · 정준 배열 비트 같음 (예외 둘 = 정준 동률 순서 · 옛 판이 놓친 경계 참 쌍) · carbon_junction 547/547 · S0 186/0 · 3.8 11 묶음 · 상태 그대로 (open) — claimed_fixed = 이 커밋 push 뒤 다음 원장 커밋 · 닫는 확인 = kgy 실침대 재실행 (peak RSS · 시간 · rc · 완성 산출물).  ★ 11-06 claimed_fixed = f47bde0f6 (push · 게이트 174 ✓) · 닫는 확인 = kgy 실침대 재실행 (1저자 명령 줌 · 새 핀 · 새 폴더).",
+      "note": "그 줄에 철회 표지 (FAM 묶음 커밋).  고침 = 메모리 재기 → 도구 고침 (시험 먼저 · 출력 바이트 같게) → 게이트 → push → kgy 새 폴더에서 다시 (1저자 11-04 Q2 권고대로) — 그 전까지 open · 시간 어림 (침대당 15–30 분) 도 실측 전. ★ 11-05 Codex 회차 ② (리뷰 핀 `6917c3c9f` · docs/reviews/codex_review_rint2_rr_round2_20261105.md) §8 Q8 = 52.1 GB 신호 종료는 출력 없는 실패로 남음 · 다음 코드는 이 핀 밖 변경 · 메모리 개선 뒤 짧은 확인 = 같은 고정 합성 입력의 래스터 · instance/포트와 순서 · 동률 · 중복 처리 · L_c · s · 분위수 · 정준 지문 · 문턱 선택 대조 (chunk 경계 · 마지막 조각 · 빈 부류 · 겹친 경계 포함) · 생산 래스터와 S0 래스터가 갈라지지 않게 · 실패한 부분 census 채택 금지 · SBE 전용 · σ 비열람 · 입력 무쓰기 · 새 출력 폴더 · 실패 보존 · 새 핀의 peak RSS · 시간 · 종료 코드/신호 · 완성 산출물로 실제 개선 확인 · 리뷰 핀 → 봉인 핀 diff · S0/R 계획 해시 · 숫자 · 실행 정책 함께 확인 · \"출력 바이트 동일\" = 과학 값 · 정준 배열 정확 보존 + 바뀐 코드 출처 · 시간 = 진실한 새 값 (옛 fingerprint 를 붙여 바이트만 맞추기 금지 · ca_s0_census.py:1399–1401 · 1473–1476 · 1678–1685 · 1710).  상태 그대로 (open).  ★ 11-06 메모리 재기 (kgy · 핀 766e1e80c · 도구 그대로 · 증거 docs/reviews/rint2_s0_mem_probe_20261106/README.md): 1,562 s 까지 2–3 GB → scripts/carbon_junction.py _distinct_instances 의 cKDTree(mid).query_pairs(rad) 에서 30 s 에 43 GB (상한 · rc 137) · 원인 (관찰 · 코드 읽기) = rad = 2·max(선분 반 길이) + D 가 가장 긴 선분 하나로 전체 후보 반지름을 정함 → 고침 = 시험 먼저 · 과학 값 그대로 (다음 커밋) · 상태 그대로 (open).  ★ 11-06 고침 반입 (작업 트리 에이전트 커밋 → main cherry-pick -x · 증거 docs/reviews/rint2_s0_mem_fix_20261106/REPORT.md): 근접 후보 = 조각 나눠 찾기 · 덩어리 계산 · _self_pairs · S0 fiber_sphere_instances · _min_dist_to_segments 같은 꼴 · 합성 후보 17,701,828 → 61,131 · 과학 값 · 정준 배열 비트 같음 (예외 둘 = 정준 동률 순서 · 옛 판이 놓친 경계 참 쌍) · carbon_junction 547/547 · S0 186/0 · 3.8 11 묶음 · 상태 그대로 (open) — claimed_fixed = 이 커밋 push 뒤 다음 원장 커밋 · 닫는 확인 = kgy 실침대 재실행 (peak RSS · 시간 · rc · 완성 산출물).  ★ 11-06 claimed_fixed = f47bde0f6 (push · 게이트 174 ✓) · 닫는 확인 = kgy 실침대 재실행 (1저자 명령 줌 · 새 핀 · 새 폴더). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3 · §6 Q5) = 부분 — 후보 검색·CP-ORD·두 예외·새 계획 SHA는 합성 범위 수용. 실제 침대의 메모리·시간·종료·완성 산출물 미확인. S/E.  두 예외 · CP-ORD 이동 · 새 계획 SHA 수용 · kgy \"rc 0 + 여섯 파일\" = 필요한 완료 점검이지 채택 충분조건 아님 (자식 rc = docs/reviews/rint2_s0_mem_fix_20261106/tools/run2.sh 15 줄의 rss.log 값 · 여섯 산출물 실제 읽기 + 같은 실행 결속 · 새 빈 폴더 · SBE 한 침대 · σ 비열람 · 무쓰기 · 실패 보존 · 환경 · 종료 · 시간 · \"표본 최대 RSS\" · 순서 그대로 · kgy 실행 승인 아님).  상태 그대로 (claimed_fixed · 회차 ② 반입 관례 · 남은 것 = kgy S0 단계 1 실침대 재실행 · 채택 조건 = 수정 계획 docs/reviews/rint2_rr3_fix_plan_20261108.md §5 · Q6) · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = s0_memory 셋 같음 (probe_s0_memory 575/575 · run_targeted_memory carbon 55/55 · S0 19/19 · probe_plan_binding 18/18 잎).",
       "claimed_fixed_sha": "f47bde0f631f94340f745e5ae5fa20f902c58333",
       "evidence_tests": [
         "docs/reviews/rint2_s0_mem_fix_20261106/REPORT.md (carbon_junction 500 → 547/547 · S0 167 → 186/0 · 3.8 11 묶음 · 변이 7/7 · 합성 후보 17,701,828 → 61,131)"
@@ -15444,12 +15452,12 @@
     {
       "id": "RR2-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 11-05 Rint ② 재검토 회차 ② (검토 핀 6917c3c9f · 비교 기준 9bec6b764 · Windows CPython 3.12.14 / NumPy 2.5.3 / SciPy 1.16.3 · 작은 합성 입력 · Linux /proc · 프로세스 그룹 = 모의)",
       "opened_in": "docs/reviews/codex_review_rint2_rr_round2_20261105.md",
       "title": "잘못된 꼴의 rc (JSON false · 0.0) 가 성공 런으로 건너뛰어져 결과 뒤 재개가 허용된다 — orphan_cause 의 성공 분기가 rc == 0 (파이썬에서 false · 0.0 == 0) · 요약 없는 by chain 끝 기록 (첫 결과 표지 · Traceback 로그) 이 recover 결과 줄 interrupted · post · parent_dead · resume_ok=true → 다음 --resume 통과 (정수 1 = runner_rc · RESUME_NOT_ALLOWED)",
-      "note": "판정문 §1 RR2-01 · 자리 (핀 6917c3c9f) = scripts/rint_r_chain.py:3869 (orphan_cause 성공 건너뛰기 `by == 'chain' and gc is None and rc == 0`) · 관련 :3771–3775 (runner_rc_failed = 정수형 검사 · bool · 실수 · 글 = 실패) · :3893–3911 (result_fields) · :4460–4485 (ResumeRunner._src_done = 정수 0 요구) — 같은 칸을 소비자마다 다르게 읽는다.  재현 조건 = 같은 토큰 · 이름에 결속된 confirmed 끝 기록 · 첫 결과 표지 있음 · 단계 요약 없음 · 로그에 Traceback / KeyError · payload 산출물 없음 · 끝 기록의 rc 한 칸만 바꿈 · 호스트 신원 = 고정 모의값 · 부모 = 종료로 제공.  결과 (실제 임시 Git recover = 결과 줄 커밋 · 다음 attempt_order_problem 실제 함수): 정수 1 = runner_rc · interrupted / post / resume_ok=false · RESUME_NOT_ALLOWED / false · 0.0 = parent_dead · interrupted / post / resume_ok=true · 다음 --resume 통과 / 글 \"0\" · null = runner_rc · resume_ok=false · 정수 0 = 끝난 런 (건너뜀 · 그 시도 = parent_dead) (residual_rc.json) · 그 런은 _src_done 에서 미완료로 읽혀 재실행 대상 · 비교할 payload 가 없으면 determinism=assumed 경로.  무너지는 결론 = 결과 뒤 코드 실패를 자원 · 인프라 중단으로 잘못 승격하지 않는다는 재시도 정책의 완전성 (PC6-13 전체 경로 종결 = 부분 · PC8-02 의 토큰 · 이름 결속 수정 자체는 유효 · 그 뒤 rc 의미 검사가 덜 닫힘).  한계 = 정상 내부 생산자가 false / 0.0 을 내는 경로는 못 찾음 (사슬이 쓰는 값 = int | None) · 첫 recover 전 잘못 기록됐거나 한 칸이 편집된 끝 기록이 전제 · 모든 원장 · 해시를 같이 고친 위조 아님 · 실제 물리 런의 잘못된 재실행 · 최종 숫자 false-green 까지 돌린 것 아님 · 재개 자격에 직접 닿아 통합 등급 P2 (Codex 하위 보고의 제안 등급 = P3 · 정본 = 판정문).  최소 수정 = 성공 건너뛰기에 type(rc) is int and rc == 0 · 또는 공통 성공 / 실패 판독 함수를 모든 소비자에 · 시험 = 숫자 0 · false · 0.0 · 글 \"0\" · null 로 요약 없는 by-chain → recover → 결과 줄 → 다음 resume 까지 (Codex 메모리 안 한 줄 대조 = false / 0.0 → runner_rc / resume_ok=false · 정수 0 유지 · 제출 코드 안 고침).  재현 = docs/reviews/codex_rint2_rr_round2_evidence_20261105/runtime_review/probe_runtime.py · 증거 residual_rc.json · residual_rc_integration.json · candidate_fix_results.json (같은 폴더) · Linux 신원 · 잠금 대체 범위 = 그 폴더 REVIEW.md · 스크립트 머리말.  우리 트리 재현 (docs/reviews/codex_rint2_rr_round2_evidence_20261105/_repro_ours_20261105/README.md · Linux · Python 3.11.15 · numpy 2.4.6 · scipy 1.17.1) = 311/311 · residual_rc 66/66 잎 · candidate_fix 42/42 잎 같음 · integration 판정 칸 (recover · 결과 status / side / cause / resume_ok · 다음 resume 자격) 같음 · 다른 칸 = scratch 경로 · 시각 · 폴더 지문뿐 = 판정값 차이 0.  수정 계획 = docs/reviews/rint2_rr2_fix_plan_20261105.md Q1 (1저자 비준 대기).  ★ 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md) · rc 판독 한 함수 rc_kind · rc_success · runner_rc_failed · 소비자 전부 · load_ladders 가 R_j,0 확인 런 rc 를 읽음.",
+      "note": "판정문 §1 RR2-01 · 자리 (핀 6917c3c9f) = scripts/rint_r_chain.py:3869 (orphan_cause 성공 건너뛰기 `by == 'chain' and gc is None and rc == 0`) · 관련 :3771–3775 (runner_rc_failed = 정수형 검사 · bool · 실수 · 글 = 실패) · :3893–3911 (result_fields) · :4460–4485 (ResumeRunner._src_done = 정수 0 요구) — 같은 칸을 소비자마다 다르게 읽는다.  재현 조건 = 같은 토큰 · 이름에 결속된 confirmed 끝 기록 · 첫 결과 표지 있음 · 단계 요약 없음 · 로그에 Traceback / KeyError · payload 산출물 없음 · 끝 기록의 rc 한 칸만 바꿈 · 호스트 신원 = 고정 모의값 · 부모 = 종료로 제공.  결과 (실제 임시 Git recover = 결과 줄 커밋 · 다음 attempt_order_problem 실제 함수): 정수 1 = runner_rc · interrupted / post / resume_ok=false · RESUME_NOT_ALLOWED / false · 0.0 = parent_dead · interrupted / post / resume_ok=true · 다음 --resume 통과 / 글 \"0\" · null = runner_rc · resume_ok=false · 정수 0 = 끝난 런 (건너뜀 · 그 시도 = parent_dead) (residual_rc.json) · 그 런은 _src_done 에서 미완료로 읽혀 재실행 대상 · 비교할 payload 가 없으면 determinism=assumed 경로.  무너지는 결론 = 결과 뒤 코드 실패를 자원 · 인프라 중단으로 잘못 승격하지 않는다는 재시도 정책의 완전성 (PC6-13 전체 경로 종결 = 부분 · PC8-02 의 토큰 · 이름 결속 수정 자체는 유효 · 그 뒤 rc 의미 검사가 덜 닫힘).  한계 = 정상 내부 생산자가 false / 0.0 을 내는 경로는 못 찾음 (사슬이 쓰는 값 = int | None) · 첫 recover 전 잘못 기록됐거나 한 칸이 편집된 끝 기록이 전제 · 모든 원장 · 해시를 같이 고친 위조 아님 · 실제 물리 런의 잘못된 재실행 · 최종 숫자 false-green 까지 돌린 것 아님 · 재개 자격에 직접 닿아 통합 등급 P2 (Codex 하위 보고의 제안 등급 = P3 · 정본 = 판정문).  최소 수정 = 성공 건너뛰기에 type(rc) is int and rc == 0 · 또는 공통 성공 / 실패 판독 함수를 모든 소비자에 · 시험 = 숫자 0 · false · 0.0 · 글 \"0\" · null 로 요약 없는 by-chain → recover → 결과 줄 → 다음 resume 까지 (Codex 메모리 안 한 줄 대조 = false / 0.0 → runner_rc / resume_ok=false · 정수 0 유지 · 제출 코드 안 고침).  재현 = docs/reviews/codex_rint2_rr_round2_evidence_20261105/runtime_review/probe_runtime.py · 증거 residual_rc.json · residual_rc_integration.json · candidate_fix_results.json (같은 폴더) · Linux 신원 · 잠금 대체 범위 = 그 폴더 REVIEW.md · 스크립트 머리말.  우리 트리 재현 (docs/reviews/codex_rint2_rr_round2_evidence_20261105/_repro_ours_20261105/README.md · Linux · Python 3.11.15 · numpy 2.4.6 · scipy 1.17.1) = 311/311 · residual_rc 66/66 잎 · candidate_fix 42/42 잎 같음 · integration 판정 칸 (recover · 결과 status / side / cause / resume_ok · 다음 resume 자격) 같음 · 다른 칸 = scratch 경로 · 시각 · 폴더 지문뿐 = 판정값 차이 0.  수정 계획 = docs/reviews/rint2_rr2_fix_plan_20261105.md Q1 (1저자 비준 대기).  ★ 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md) · rc 판독 한 함수 rc_kind · rc_success · runner_rc_failed · 소비자 전부 · load_ladders 가 R_j,0 확인 런 rc 를 읽음. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (rc_kind · rc_success · orphan · recover rc 행) · run_old_probe.py 301/309 같음 (residual_rc 66/66 · candidate_fix 42/42 잎 · 다른 8 행 = 판정문 §4 기대 변경 8 그대로).",
       "claimed_fixed_sha": "f5b00a838",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py RC01–RC05 (고치기 전 0/5 → 5/5 · false · 0.0 · −0.0 = runner_rc · RESUME_NOT_ALLOWED)",
@@ -15457,47 +15465,59 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · 한 번)",
         "scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md §3 (변이 40/40) · §4 (Codex 탐침 무변경 310/311 · 다른 1 행 = 고친 결과)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 RR2-01 = 닫힘 — `:3832–3841, :4276`. 정확한 정수 rc만 성공. 원 false/0.0 반례를 실제 scratch Git recover→결과 줄→다음 자격까지 재생, 둘 다 runner_rc/False/RESUME_NOT_ALLOWED. E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "RR2-02",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 11-05 Rint ② 재검토 회차 ② (검토 핀 6917c3c9f · 비교 기준 9bec6b764 · Windows CPython 3.12.14 / NumPy 2.5.3 / SciPy 1.16.3 · 작은 합성 입력 · Linux /proc · 프로세스 그룹 = 모의)",
       "opened_in": "docs/reviews/codex_review_rint2_rr_round2_20261105.md",
       "title": "\"float 같음 대조는 한 프로세스 안에서만 뜻이 있다\" · \"그대로 유효\" · no-op \"같은 프로세스\" 활성 문장이 남음 — 실제 계약 = 같은 사슬 부모의 동결 환경 · 런마다 새 러너 자식 · 재개 = 새 프로세스 + 전체 환경 지문 · 남은 payload 대조 (q9 설계 :69 · 회차 ② 요청서 :374 · q9_time_budget.py :6)",
-      "note": "판정문 §1 RR2-02 · 자리 (핀 6917c3c9f) = docs/reviews/rint2_rr_fix_evidence_20261023/q9_predict_units_design.md:69 (\"그 전 이유 (사전 공격 D2 · 실측 · 그대로 유효) … float 같음 대조는 한 프로세스 안에서만 뜻이 있다\") · docs/reviews/codex_rint2_rr_round2_request_20261103.md:374 (\"float 같음 대조 = 한 프로세스 · 한 동결 환경 안에서만\") · docs/reviews/rint2_rr_fix_evidence_20261023/q9_time_budget.py:6 (docstring \"no-op 2 … 사다리 단계 끝 · 같은 프로세스\" · Codex 하위 보고는 :7 로 적었으나 과학 보고 · 판정문 = :6).  반대 증거 = scripts/rint_r_chain.py:2717 (런마다 자식 생성) · :4900 (no-op 호출) · 같은 Q9 문서 :44 · :67 · :286 · 회차 ① 판정 :181–183 (이 구별을 요구).  BLAS 경로 변경으로 생긴 차이는 환경 고정의 필요성을 보일 뿐 같은 PID 의 필요조건을 보이지 않는다.  무너지는 결론 = Q2 의 문서 잔존 전수 정정 완료 (회차 ① 조건 ① 의 문서 전수 종결 = 부분) · 숫자 · 시간 산식 · 현재 실행 경로가 틀렸다는 지적 아님.  최소 수정 = 세 곳을 \"동결 환경 아래 런별 새 자식 · 재개 시 전체 환경 지문 및 남은 payload 대조\" 로 통일 · 과거 표현은 현행 규칙이 아님을 붙여 보존 가능 · :69 의 \"그대로 유효\" 를 남기면 현행 계약과 모순.  재현 = 판정문 §1 의 rg 한 줄 (세 파일 읽기 대조).  우리 트리 재현 = 세 줄을 리포에서 읽어 같은 문구 확인 (핀 → HEAD 504d84e52 사이 세 파일 변경 없음 · 탐침 없음).  수정 계획 = docs/reviews/rint2_rr2_fix_plan_20261105.md Q3 (1저자 비준 대기).  ★ 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md) · 문서 = 현행 계약 문장 (같은 사슬 부모의 동결 환경 · 런마다 새 러너 자식 · 재개 = 새 프로세스 + 전체 환경 지문 + 남은 payload 바이트 대조) · 발송 요청서 = 본문 그대로 + 표지.",
+      "note": "판정문 §1 RR2-02 · 자리 (핀 6917c3c9f) = docs/reviews/rint2_rr_fix_evidence_20261023/q9_predict_units_design.md:69 (\"그 전 이유 (사전 공격 D2 · 실측 · 그대로 유효) … float 같음 대조는 한 프로세스 안에서만 뜻이 있다\") · docs/reviews/codex_rint2_rr_round2_request_20261103.md:374 (\"float 같음 대조 = 한 프로세스 · 한 동결 환경 안에서만\") · docs/reviews/rint2_rr_fix_evidence_20261023/q9_time_budget.py:6 (docstring \"no-op 2 … 사다리 단계 끝 · 같은 프로세스\" · Codex 하위 보고는 :7 로 적었으나 과학 보고 · 판정문 = :6).  반대 증거 = scripts/rint_r_chain.py:2717 (런마다 자식 생성) · :4900 (no-op 호출) · 같은 Q9 문서 :44 · :67 · :286 · 회차 ① 판정 :181–183 (이 구별을 요구).  BLAS 경로 변경으로 생긴 차이는 환경 고정의 필요성을 보일 뿐 같은 PID 의 필요조건을 보이지 않는다.  무너지는 결론 = Q2 의 문서 잔존 전수 정정 완료 (회차 ① 조건 ① 의 문서 전수 종결 = 부분) · 숫자 · 시간 산식 · 현재 실행 경로가 틀렸다는 지적 아님.  최소 수정 = 세 곳을 \"동결 환경 아래 런별 새 자식 · 재개 시 전체 환경 지문 및 남은 payload 대조\" 로 통일 · 과거 표현은 현행 규칙이 아님을 붙여 보존 가능 · :69 의 \"그대로 유효\" 를 남기면 현행 계약과 모순.  재현 = 판정문 §1 의 rg 한 줄 (세 파일 읽기 대조).  우리 트리 재현 = 세 줄을 리포에서 읽어 같은 문구 확인 (핀 → HEAD 504d84e52 사이 세 파일 변경 없음 · 탐침 없음).  수정 계획 = docs/reviews/rint2_rr2_fix_plan_20261105.md Q3 (1저자 비준 대기).  ★ 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md) · 문서 = 현행 계약 문장 (같은 사슬 부모의 동결 환경 · 런마다 새 러너 자식 · 재개 = 새 프로세스 + 전체 환경 지문 + 남은 payload 바이트 대조) · 발송 요청서 = 본문 그대로 + 표지. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (q9 산식 stdout 바이트 · 저장 JSON 행).",
       "claimed_fixed_sha": "f5b00a838",
       "evidence_tests": [
         "docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md §1 A3 (q9_time_budget.py 출력 = 고치기 전과 바이트 같음 = q9_time_budget.json)",
         "scripts/test_rint_r_chain.py (전체 463/463)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 RR2-02 = 닫힘 — `q9_predict_units_design.md:69`, `q9_time_budget.py:6–7`, 이전 요청서 정정. 같은 PID가 아니라 같은 봉인 환경·런별 자식이라는 현재 계약 명시. 비용 산식 결과 보존. S/E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "RR2-03",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 11-05 Rint ② 재검토 회차 ② (검토 핀 6917c3c9f · 비교 기준 9bec6b764 · Windows CPython 3.12.14 / NumPy 2.5.3 / SciPy 1.16.3 · 작은 합성 입력 · Linux /proc · 프로세스 그룹 = 모의)",
       "opened_in": "docs/reviews/codex_review_rint2_rr_round2_20261105.md",
       "title": "PC8-07 로 좁힌 BAN8 한정어 (같은 두 곧은 나란한 레일 · 축 정렬 · 이웃 셀 · R̄sh2 = 1 · L_c = L_par 정수배 · 시험 Δ/λ 범위) 가 등록 R 필수 한정어 ⑫ (:283) · 설계 v1 (:339) 에 덜 전파됨 — 넓은 \"분산판 = 전송선 · 식 검증\" 과 \"코드 한정어 같은 문구\" 가 남음 (그 동일성은 이제 사실이 아님)",
-      "note": "판정문 §1 RR2-03 · 자리 (핀 6917c3c9f) = docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md:283 (필수 한정어 ⑫ \"전달 길이 = 해석 시험 통과 (분산판 = 전송선 · 식 검증 — … · 코드 한정어 같은 문구)\") · docs/reviews/rint_carbon_additive_design_v1_20261020.md:339 (\"전달 길이 = 해석 시험 통과 (분산판 = 전송선 · 식 검증 · 시험 BAN8)\") ↔ 코드 scripts/carbon_junction.py:147–148 (CJUNC_QUALIFIERS · PC8-07 고침 = 같은 두 곧은 나란한 레일 (축 정렬 · 이웃 셀 · R̄sh2 = 1 · L_c = L_par 정수배 · 시험 BAN8) 에서만 — 계단 · 기운 섬유 · R̄sh2 ≠ 1 = 생산 경로 미시험).  요청서 :216 · :310 은 이미 좁혀져 있다 (Codex 과학 보고).  무너지는 결론 = 코드에서 통과한 특정 기하 시험의 범위가 결과 문장에 그대로 전달된다는 주장 · BAN8 계산 자체의 실패 아님 (BAN8 34/34 · 해석 회로 대조 · 변이 검출 = 판정문 §7).  최소 수정 = 두 정본에도 PC8-07 의 시험 기하와 Δ/λ 범위를 적음 · 긴 접촉 포화는 축저항 기여를 뺀 접합 몫임을 유지 · 임의 교차 · 비스듬한 접합까지 식 검증됐다고 쓰지 않음.  재현 = 위 두 파일의 해당 줄과 scripts/carbon_junction.py:147–148 읽기 대조 · docs/reviews/codex_rint2_rr_round2_evidence_20261105/science_review/SCIENCE_REVIEW.md (원문 위치 · 독립 시험).  우리 트리 재현 = 세 자리를 리포에서 읽어 같은 문구 확인 (핀 → HEAD 504d84e52 사이 세 파일 변경 없음) · 상주 BAN8 34/34 (docs/reviews/codex_rint2_rr_round2_evidence_20261105/_repro_ours_20261105/README.md).  수정 계획 = docs/reviews/rint2_rr2_fix_plan_20261105.md Q4 (1저자 비준 대기).  ★ 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md) · 등록 R ⑫ = 넓은 괄호 취소선 + 코드 한정어 바이트 그대로 + 시험 범위 (Δ/λ 0.02–0.63 · q 0.4–19) · 임의 교차 · 비스듬한 접합 = 식 검증 아님.",
+      "note": "판정문 §1 RR2-03 · 자리 (핀 6917c3c9f) = docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md:283 (필수 한정어 ⑫ \"전달 길이 = 해석 시험 통과 (분산판 = 전송선 · 식 검증 — … · 코드 한정어 같은 문구)\") · docs/reviews/rint_carbon_additive_design_v1_20261020.md:339 (\"전달 길이 = 해석 시험 통과 (분산판 = 전송선 · 식 검증 · 시험 BAN8)\") ↔ 코드 scripts/carbon_junction.py:147–148 (CJUNC_QUALIFIERS · PC8-07 고침 = 같은 두 곧은 나란한 레일 (축 정렬 · 이웃 셀 · R̄sh2 = 1 · L_c = L_par 정수배 · 시험 BAN8) 에서만 — 계단 · 기운 섬유 · R̄sh2 ≠ 1 = 생산 경로 미시험).  요청서 :216 · :310 은 이미 좁혀져 있다 (Codex 과학 보고).  무너지는 결론 = 코드에서 통과한 특정 기하 시험의 범위가 결과 문장에 그대로 전달된다는 주장 · BAN8 계산 자체의 실패 아님 (BAN8 34/34 · 해석 회로 대조 · 변이 검출 = 판정문 §7).  최소 수정 = 두 정본에도 PC8-07 의 시험 기하와 Δ/λ 범위를 적음 · 긴 접촉 포화는 축저항 기여를 뺀 접합 몫임을 유지 · 임의 교차 · 비스듬한 접합까지 식 검증됐다고 쓰지 않음.  재현 = 위 두 파일의 해당 줄과 scripts/carbon_junction.py:147–148 읽기 대조 · docs/reviews/codex_rint2_rr_round2_evidence_20261105/science_review/SCIENCE_REVIEW.md (원문 위치 · 독립 시험).  우리 트리 재현 = 세 자리를 리포에서 읽어 같은 문구 확인 (핀 → HEAD 504d84e52 사이 세 파일 변경 없음) · 상주 BAN8 34/34 (docs/reviews/codex_rint2_rr_round2_evidence_20261105/_repro_ours_20261105/README.md).  수정 계획 = docs/reviews/rint2_rr2_fix_plan_20261105.md Q4 (1저자 비준 대기).  ★ 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md) · 등록 R ⑫ = 넓은 괄호 취소선 + 코드 한정어 바이트 그대로 + 시험 범위 (Δ/λ 0.02–0.63 · q 0.4–19) · 임의 교차 · 비스듬한 접합 = 식 검증 아님. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (BAN8 인용 · 문서 행).",
       "claimed_fixed_sha": "f5b00a838",
       "evidence_tests": [
         "docs/reviews/rint2_rr2_fix_evidence_20261105/verify_rr2_03_quote.py (CJUNC_QUALIFIERS 바이트 같은 부분 · 한 번)",
         "scripts/test_rint_r_chain.py K01 · PC18 · PC20 · EP06 (등록 문서를 읽는 시험 4/4)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 RR2-03 = 닫힘 — 등록 R `:283`, 설계 v1 `:339`. BAN8 두 평행 레일·축정렬·인접 셀·R̄sh2=1·정수 Lc·Δ/λ와 q 한정. 임의 교차 물리 인증 아님. S/E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC9-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 9 회차 (11-05 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 = 회차 ② 고침 첫 판 = 11-06 유실)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack9/PREATTACK_RR2_report.md",
       "title": "끝 기록 cause 칸을 두 길이 다르게 읽음 — by chain 길 = 모르는 · 꼴 틀린 cause 는 읽음 False (재개 없음) · recover 가 같은 값을 chain_end 로 옮기면 읽음 True (재개 허용 · rc 1 + traceback 로그여도) · RR2-01 과 같은 부류",
-      "note": "사전 공격 9 회차 §1 PA-01 · 1저자 11-05 \"권고대로\" (회차 ② 수정 계획 Q1–Q7 (가) · 사전 공격 9 회차 Q1 = PA-01–07 고침 · PA-08 한정만) → 고침 (A1b) = CHAIN_END_CAUSES (run_in_group 이 디스크에 쓰는 None · timeout · signal · exception + signal_after) · chain_cause_known · recover 가지 = chain_end 가 dict 아님 · 원인 모름 → 읽음 False · 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md).",
+      "note": "사전 공격 9 회차 §1 PA-01 · 1저자 11-05 \"권고대로\" (회차 ② 수정 계획 Q1–Q7 (가) · 사전 공격 9 회차 Q1 = PA-01–07 고침 · PA-08 한정만) → 고침 (A1b) = CHAIN_END_CAUSES (run_in_group 이 디스크에 쓰는 None · timeout · signal · exception + signal_after) · chain_cause_known · recover 가지 = chain_end 가 dict 아님 · 원인 모름 → 읽음 False · 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (unknown_cause 두 경로 행).",
       "claimed_fixed_sha": "f5b00a838",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py CE01 · CE02 (고치기 전 0/3 → 3/3 · PE03u weird 행 포함)",
@@ -15505,17 +15525,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · 한 번)",
         "scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md §3 (변이 40/40) · §4 (Codex 탐침 무변경 310/311 · 다른 1 행 = 고친 결과)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC9-01 = 닫힘 — `:3886–3888, :4285, :4290–4291`. unknown cause와 잘못된 형의 원인을 두 경로 모두 자격 불가로 판독. 원인 글의 완전 동일성 주장은 아님. E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC9-02",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 9 회차 (11-05 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 = 회차 ② 고침 첫 판 = 11-06 유실)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack9/PREATTACK_RR2_report.md",
       "title": "load_ladders 가 R_j,0 확인 런 기록의 rc 를 안 읽음 (noop_check 는 읽음) — 헛 예측 런 · 판정은 뒤에서 REPLAY_MISMATCH",
-      "note": "사전 공격 9 회차 §1 PA-02 · 1저자 11-05 \"권고대로\" (회차 ② 수정 계획 Q1–Q7 (가) · 사전 공격 9 회차 Q1 = PA-01–07 고침 · PA-08 한정만) → 고침 (A1) = R_j,0 확인 런 기록 rc 를 rc_success 로 읽음 · 성공 아니면 LADDER_SET · 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md).",
+      "note": "사전 공격 9 회차 §1 PA-02 · 1저자 11-05 \"권고대로\" (회차 ② 수정 계획 Q1–Q7 (가) · 사전 공격 9 회차 Q1 = PA-01–07 고침 · PA-08 한정만) → 고침 (A1) = R_j,0 확인 런 기록 rc 를 rc_success 로 읽음 · 성공 아니면 LADDER_SET · 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = 다시 돌린 탐침 없음 (판정 근거 = 고정 소스 대조 S).",
       "claimed_fixed_sha": "f5b00a838",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py RC03 (런 기록 소비자 · 예측 실경로)",
@@ -15523,17 +15547,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · 한 번)",
         "scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md §3 (변이 40/40) · §4 (Codex 탐침 무변경 310/311 · 다른 1 행 = 고친 결과)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC9-02 = 닫힘 — `load_ladders :6017–6018`. Rj0 확인 런 rc를 팔 판독 전에 공용 성공 규약으로 검사. S. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC9-03",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 9 회차 (11-05 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 = 회차 ② 고침 첫 판 = 11-06 유실)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack9/PREATTACK_RR2_report.md",
       "title": "있는데 못 읽는 단계 요약 (잘림 · 0xff · 폴더 · FIFO) = 없음으로 처리 → interrupted · parent_dead · 재개 True · 단계 요약 쓰기가 원자적이 아님",
-      "note": "사전 공격 9 회차 §1 PA-03 · 1저자 11-05 \"권고대로\" (회차 ② 수정 계획 Q1–Q7 (가) · 사전 공격 9 회차 Q1 = PA-01–07 고침 · PA-08 한정만) → 고침 (A2b) = read_summary_state · stage_summary_read (못 읽음 = summary_unreadable · 재개 False) · write_summary = write_json_atomic (정상 런 바이트 같음) · 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md).",
+      "note": "사전 공격 9 회차 §1 PA-03 · 1저자 11-05 \"권고대로\" (회차 ② 수정 계획 Q1–Q7 (가) · 사전 공격 9 회차 Q1 = PA-01–07 고침 · PA-08 한정만) → 고침 (A2b) = read_summary_state · stage_summary_read (못 읽음 = summary_unreadable · 재개 False) · write_summary = write_json_atomic (정상 런 바이트 같음) · 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (summary_state · verdict_reject · summary_absent 행).",
       "claimed_fixed_sha": "f5b00a838",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py SU01 · SU02 (고치기 전 0/2 → 2/2)",
@@ -15541,17 +15569,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · 한 번)",
         "scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md §3 (변이 40/40) · §4 (Codex 탐침 무변경 310/311 · 다른 1 행 = 고친 결과)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC9-03 = 닫힘 — `:5749–5786, :5789–5792`. absent/unreadable 분리와 원자적 summary 쓰기. 실제 파일·JSON 음성 대조. 파일시스템 내구성 인증은 아님. S/E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC9-04",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 9 회차 (11-05 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 = 회차 ② 고침 첫 판 = 11-06 유실)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack9/PREATTACK_RR2_report.md",
       "title": "run_log_text 의 검사 ↔ 읽기 경합 — is_file() 뒤 FIFO 로 바뀌면 영구 대기",
-      "note": "사전 공격 9 회차 §1 PA-04 · 1저자 11-05 \"권고대로\" (회차 ② 수정 계획 Q1–Q7 (가) · 사전 공격 9 회차 Q1 = PA-01–07 고침 · PA-08 한정만) → 고침 (A2) = read_regular_file (O_RDONLY | O_NONBLOCK | O_NOCTTY 로 열고 그 fd 의 fstat 이 일반 파일일 때만 그 fd 에서 읽음) · 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md).",
+      "note": "사전 공격 9 회차 §1 PA-04 · 1저자 11-05 \"권고대로\" (회차 ② 수정 계획 Q1–Q7 (가) · 사전 공격 9 회차 Q1 = PA-01–07 고침 · PA-08 한정만) → 고침 (A2) = read_regular_file (O_RDONLY | O_NONBLOCK | O_NOCTTY 로 열고 그 fd 의 fstat 이 일반 파일일 때만 그 fd 에서 읽음) · 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (로그 행 · 일반 파일만 · FIFO / O_NONBLOCK 현장 의미 미시험).",
       "claimed_fixed_sha": "f5b00a838",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py LG03 (포크 자식 8 행 · FIFO · 연 뒤 바꿔치기 · 읽기 중 EIO)",
@@ -15559,17 +15591,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · 한 번)",
         "scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md §3 (변이 40/40) · §4 (Codex 탐침 무변경 310/311 · 다른 1 행 = 고친 결과)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC9-04 = 닫힘 — `:3914, :3920, :3924, :3932`. 한 fd의 open/fstat/read/close로 경로 재열기 제거. 일반 파일 E, FIFO/O_NONBLOCK 현장 의미는 S만. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC9-05",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 9 회차 (11-05 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 = 회차 ② 고침 첫 판 = 11-06 유실)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack9/PREATTACK_RR2_report.md",
       "title": "RC01 소스 훑기가 좁음 — 글자 그대로 rc · X.get('rc') · X['rc'] 만 · 별칭 · int(rc) · 참거짓 읽기를 못 봄",
-      "note": "사전 공격 9 회차 §1 PA-05 · 1저자 11-05 \"권고대로\" (회차 ② 수정 계획 Q1–Q7 (가) · 사전 공격 9 회차 Q1 = PA-01–07 고침 · PA-08 한정만) → 고침 (A1) = 판독 함수 밖 rc 값 읽기를 원천 AST 전수로 표시 · 허용 = 지시 목록 + 조건식 두 갈래를 지난 기록 칸 대입 · run_in_group 의 return · 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md).",
+      "note": "사전 공격 9 회차 §1 PA-05 · 1저자 11-05 \"권고대로\" (회차 ② 수정 계획 Q1–Q7 (가) · 사전 공격 9 회차 Q1 = PA-01–07 고침 · PA-08 한정만) → 고침 (A1) = 판독 함수 밖 rc 값 읽기를 원천 AST 전수로 표시 · 허용 = 지시 목록 + 조건식 두 갈래를 지난 기록 칸 대입 · run_in_group 의 return · 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (scanner 행).",
       "claimed_fixed_sha": "f5b00a838",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py RC01 (원천 AST 전수 · 스캐너 자기 시험 나쁜 꼴 12 · 좋은 꼴 7)",
@@ -15577,35 +15613,47 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · 한 번)",
         "scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md §3 (변이 40/40) · §4 (Codex 탐침 무변경 310/311 · 다른 1 행 = 고친 결과)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC9-05 = 닫힘 — 시험 스캐너 `test_rint_r_chain.py:12834–13027`의 정해진 표현 범위. 새 alias/closure/dict.get/pop/f-string 등 음성 대조 검출. 범용 동적 데이터흐름 인증 아님. S/E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC9-06",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 9 회차 (11-05 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 = 회차 ② 고침 첫 판 = 11-06 유실)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack9/PREATTACK_RR2_report.md",
       "title": "docs/reviews/codex_rint2_rr_round1_request_20261024.md 의 RR2-02 문장 표지 없는 사본",
-      "note": "사전 공격 9 회차 §1 PA-06 · 1저자 11-05 \"권고대로\" (회차 ② 수정 계획 Q1–Q7 (가) · 사전 공격 9 회차 Q1 = PA-01–07 고침 · PA-08 한정만) → 고침 (A3) = 회차 ② 요청서와 같은 11-05 정정 표지 · 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md).",
+      "note": "사전 공격 9 회차 §1 PA-06 · 1저자 11-05 \"권고대로\" (회차 ② 수정 계획 Q1–Q7 (가) · 사전 공격 9 회차 Q1 = PA-01–07 고침 · PA-08 한정만) → 고침 (A3) = 회차 ② 요청서와 같은 11-05 정정 표지 · 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = 다시 돌린 탐침 없음 (판정 근거 = 문서 대조 S).",
       "claimed_fixed_sha": "f5b00a838",
       "evidence_tests": [
         "docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md §1 · §7 (글자 대조 (보낸 본문 그대로 + 11-05 정정 표지))"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC9-06 = 닫힘 — 회차① 요청서 `:130` 과거 문구 보존+현재 계약 정정. S. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC9-07",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 9 회차 (11-05 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 = 회차 ② 고침 첫 판 = 11-06 유실)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack9/PREATTACK_RR2_report.md",
       "title": "원장 RINT2-L01 · docs/reviews/codex_rint2_rr_round2_request_20261103.md 의 \"해석 시험 통과 (… 시험 BAN8)\" 에 좁힌 한정어 (같은 두 곧은 나란한 레일에서만) 없음",
-      "note": "사전 공격 9 회차 §1 PA-07 · 1저자 11-05 \"권고대로\" (회차 ② 수정 계획 Q1–Q7 (가) · 사전 공격 9 회차 Q1 = PA-01–07 고침 · PA-08 한정만) → 고침 (A4) = 요청서 RINT2-L01 행 표지 · RINT2-L01 메모에 좁힌 한정어 · 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md).",
+      "note": "사전 공격 9 회차 §1 PA-07 · 1저자 11-05 \"권고대로\" (회차 ② 수정 계획 Q1–Q7 (가) · 사전 공격 9 회차 Q1 = PA-01–07 고침 · PA-08 한정만) → 고침 (A4) = 요청서 RINT2-L01 행 표지 · RINT2-L01 메모에 좁힌 한정어 · 11-06 claimed_fixed = f5b00a838 (11-05 첫 판은 기계 교체로 push 전 유실 → 작업 트리 에이전트가 시험 먼저 다시 만듦 · 여덟 커밋 = 한 커밋 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = 다시 돌린 탐침 없음 (판정 근거 = 문서 대조 S).",
       "claimed_fixed_sha": "f5b00a838",
       "evidence_tests": [
         "docs/reviews/rint2_rr2_fix_evidence_20261105/REPORT.md §1 · §7 (글자 대조 (보낸 본문 그대로 + 좁힌 한정어 표지) · 원장 RINT2-L01 메모 = 이 원장 커밋)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC9-07 = 닫힘 — 회차② 요청서 `:347`, RINT2-L01 note에 BAN8 좁은 범위 및 L01 open 보존. S. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC9-08",
@@ -15621,12 +15669,12 @@
     {
       "id": "PC10-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 10 회차 (11-06 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 f5b00a838)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md",
       "title": "러너 rc null 을 소비자마다 반대로 읽음 — 끝 기록 원인 None · 런 기록 group_cause None 자리에서 rc null = by chain 길 runner_rc ↔ recover 가 chain_end 로 옮긴 뒤 · GROUP_UNCONFIRMED = 재실행 자격 (실제 git 원장 경로 --add --resume rc 0) · RR2-01 · PA-01 과 같은 부류 · 고침 전부터",
-      "note": "사전 공격 10 회차 §1 PB-01 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전).",
+      "note": "사전 공격 10 회차 §1 PB-01 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (rc_kind null · bool · float 행).",
       "claimed_fixed_sha": "766e1e80cf0a26ec3368a732922a4f35b9ba74de",
       "evidence_tests": [
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §PB-01 (PB-01 시험 3/10 → 10/10 (실경로 --add --resume rc 0 → rc 3))",
@@ -15634,17 +15682,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL)",
         "scripts/check_kgy_py38.sh (11 묶음 통과)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md (변이 28/28 · Codex 탐침 무변경 310/311 = 앞 판과 같은 한 행)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC10-01 = 닫힘 — `:3866, :4005–4012, :4189`. null/bool/float 종료코드의 읽기 규약 통일. E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC10-02",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 10 회차 (11-06 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 f5b00a838)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md",
       "title": "판정 입력 (_verdict_compute) · 합치기 남은 런 목록이 있는데 못 읽는 단계 요약을 없음으로 읽음 — REPORT §5 \"모두 보수 쪽\" 거짓",
-      "note": "사전 공격 10 회차 §1 PB-02 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전).",
+      "note": "사전 공격 10 회차 §1 PB-02 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (verdict_reject 행 · 합치기 분기 = S).",
       "claimed_fixed_sha": "766e1e80cf0a26ec3368a732922a4f35b9ba74de",
       "evidence_tests": [
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §PB-02 (PB-02 시험 0/2 → 2/2)",
@@ -15652,17 +15704,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL)",
         "scripts/check_kgy_py38.sh (11 묶음 통과)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md (변이 28/28 · Codex 탐침 무변경 310/311 = 앞 판과 같은 한 행)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC10-02 = 닫힘 — `_verdict_compute :6912–6919`, `MergeFetch.unused_runs :6492–6495`. unreadable 요약을 조용히 제외하지 않음. 실제 판정 입구 음성 E, 합치기 분기 S. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC10-03",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 10 회차 (11-06 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 f5b00a838)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md",
       "title": "그룹 끝 기록 · 시작 기록 · attempt.json FIFO = 읽기 막힘 · rejected.json is_file 뒤 바꿔치기 창 (PA-04 와 같은 부류)",
-      "note": "사전 공격 10 회차 §1 PB-03 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전).",
+      "note": "사전 공격 10 회차 §1 PB-03 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = 다시 돌린 탐침 없음 (판정 근거 = 고정 소스 대조 S).",
       "claimed_fixed_sha": "766e1e80cf0a26ec3368a732922a4f35b9ba74de",
       "evidence_tests": [
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §PB-03 (PB-03 시험 0/1 → 1/1)",
@@ -15670,17 +15726,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL)",
         "scripts/check_kgy_py38.sh (11 묶음 통과)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md (변이 28/28 · Codex 탐침 무변경 310/311 = 앞 판과 같은 한 행)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC10-03 = 닫힘 — `:3734, :3328, :4378`. 그룹/시도/거부 기록이 공용 일반 파일 fd 판독 사용. Linux FIFO 실동작은 미인증. S. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC10-04",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 10 회차 (11-06 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 f5b00a838)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md",
       "title": "RC01 스캐너가 반례 17 꼴 중 16 을 놓침 (지금 원천엔 그런 꼴 없음)",
-      "note": "사전 공격 10 회차 §1 PB-04 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전).",
+      "note": "사전 공격 10 회차 §1 PB-04 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (scanner 행).",
       "claimed_fixed_sha": "766e1e80cf0a26ec3368a732922a4f35b9ba74de",
       "evidence_tests": [
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §PB-04 (PB-04 RC01 스캐너 놓친 꼴 21 → 0)",
@@ -15688,17 +15748,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL)",
         "scripts/check_kgy_py38.sh (11 묶음 통과)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md (변이 28/28 · Codex 탐침 무변경 310/311 = 앞 판과 같은 한 행)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC10-04 = 닫힘 — rc 스캐너 현재 소스 허용/미검출 경계와 새 표현 반례. 동적 우회 전체 차단으로 확대하지 않음. S/E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC10-05",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 10 회차 (11-06 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 f5b00a838)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md",
       "title": "A1b \"두 길 같은 답\" = 재실행 자격만 같음 (원인 글은 로그 낱말에 따라 다름) — 문구",
-      "note": "사전 공격 10 회차 §1 PB-05 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전).",
+      "note": "사전 공격 10 회차 §1 PB-05 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (unknown_cause · MemoryError 로그 행).",
       "claimed_fixed_sha": "766e1e80cf0a26ec3368a732922a4f35b9ba74de",
       "evidence_tests": [
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §PB-05 (PB-05 문구 (보고서 · 요청서 한정))",
@@ -15706,17 +15770,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL)",
         "scripts/check_kgy_py38.sh (11 묶음 통과)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md (변이 28/28 · Codex 탐침 무변경 310/311 = 앞 판과 같은 한 행)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC10-05 = 닫힘 — `:3879–3882, :4254–4256`. ‘같은 원인 글’이 아니라 ‘같은 자격’으로 문구 정정. unknown+MemoryError 양쪽 False 확인. S/E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC10-06",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 10 회차 (11-06 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 f5b00a838)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md",
       "title": "런 전 TIME_LIMIT 예외가 시작 기록 자리만 봄 (끝 기록 · 런 폴더 흔적 안 봄)",
-      "note": "사전 공격 10 회차 §1 PB-06 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전).",
+      "note": "사전 공격 10 회차 §1 PB-06 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (prerun_exception 행).",
       "claimed_fixed_sha": "766e1e80cf0a26ec3368a732922a4f35b9ba74de",
       "evidence_tests": [
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §PB-06 (PB-06 시험 3/4 → 4/4)",
@@ -15724,17 +15792,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL)",
         "scripts/check_kgy_py38.sh (11 묶음 통과)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md (변이 28/28 · Codex 탐침 무변경 310/311 = 앞 판과 같은 한 행)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC10-06 = 닫힘 — `:3972–3979, :4030–4031`. pre-run TIME_LIMIT의 무흔적 예외와 로그/그룹/출력 흔적 거부. E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC10-07",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 10 회차 (11-06 · 독립 · 고친 사람 설명 없이 diff 만 · 대상 f5b00a838)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10/PREATTACK10_report.md",
       "title": "f5b00a838 커밋 메시지 A1b 줄 \"CE01 · CE02 0/3 → 3/3\" 의 셋째 = PE03u — 문구 (push 된 커밋이라 보고서에 적음)",
-      "note": "사전 공격 10 회차 §1 PB-07 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전).",
+      "note": "사전 공격 10 회차 §1 PB-07 · 고침 = 반입 커밋 (이 원장 줄과 같은 커밋 · 시험 먼저 · 보고 docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md) · claimed_fixed = 다음 원장 커밋에서 이 반입 커밋 번호로 · 1저자 11-06 \"권고대로\".  ★ 11-06 claimed_fixed = 766e1e80cf0a26ec3368a732922a4f35b9ba74de (1저자 11-06 Q1 \"권고대로\" · 시험 먼저 · 작업 트리 에이전트 · 한 커밋 · 외부 재확인 = Codex 회차 ③ 전). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = 다시 돌린 탐침 없음 (판정 근거 = 보존 실패 로그 대조 S).",
       "claimed_fixed_sha": "766e1e80cf0a26ec3368a732922a4f35b9ba74de",
       "evidence_tests": [
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §PB-07 (PB-07 문구 (push 된 커밋 메시지 = 보고서에 정정))",
@@ -15742,17 +15814,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL)",
         "scripts/check_kgy_py38.sh (11 묶음 통과)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md (변이 28/28 · Codex 탐침 무변경 310/311 = 앞 판과 같은 한 행)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC10-07 = 닫힘 — 보존 실패 로그의 PE03u/CE01/CE02와 보고 정정이 일치. 역사 기록을 후속 PASS로 지우지 않음. S. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC10-08",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "PB 고침 작업 트리 에이전트 (11-06 · 범위 밖 새 발견 · 단위 탐침만 · 바탕 판에도 같음)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md",
       "title": "(N1) 런 기록 {group_cause None · rc 1} + Traceback 에서 멈춤 코드 한 칸 RUNNER_RC → TIME_LIMIT = timeout · 재실행 자격 True (생산자가 만들지 않는 꼴)",
-      "note": "REPORT §7 · 실경로 미확인 · 권고 = group_cause None ⇒ 정확한 정수 0 만 성공 (멈춤 코드와 무관) · 사슬이 죽인 원인 + rc 있음 = 모순 = 읽음 False · ⬜ 1저자 (고칠지 · 한정만).  ★ 11-08 claimed_fixed = 6a81f0c55d1583fba63ffe665874525cc82d36ff (1저자 11-06 \"권고대로\" · 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 (읽음 False) · 시험 먼저 · 작업 트리 커밋 → cherry-pick -x · 한 커밋 · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md) · ⚠ 회귀 수 = 반입 전 작업 트리 (바탕 766e1e80c · S0 메모리 고침 전 carbon_junction) 에서 잰 것 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §5) · 합친 판 (6a81f0c55) 의 게이트 기록 = 리포에 없음.  고친 자리 = STOP_RUN_SHAPES · run_record_shape · stop_record_problem · run_exit_failed (scripts/rint_r_chain.py · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §2) · 같은 부류 = 요약 없는 길 end_record_known (CT02) · 한정 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §8 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §8.",
+      "note": "REPORT §7 · 실경로 미확인 · 권고 = group_cause None ⇒ 정확한 정수 0 만 성공 (멈춤 코드와 무관) · 사슬이 죽인 원인 + rc 있음 = 모순 = 읽음 False · ⬜ 1저자 (고칠지 · 한정만).  ★ 11-08 claimed_fixed = 6a81f0c55d1583fba63ffe665874525cc82d36ff (1저자 11-06 \"권고대로\" · 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 (읽음 False) · 시험 먼저 · 작업 트리 커밋 → cherry-pick -x · 한 커밋 · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md) · ⚠ 회귀 수 = 반입 전 작업 트리 (바탕 766e1e80c · S0 메모리 고침 전 carbon_junction) 에서 잰 것 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §5) · 합친 판 (6a81f0c55) 의 게이트 기록 = 리포에 없음.  고친 자리 = STOP_RUN_SHAPES · run_record_shape · stop_record_problem · run_exit_failed (scripts/rint_r_chain.py · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §2) · 같은 부류 = 요약 없는 길 end_record_known (CT02) · 한정 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §8 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §8. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (old_TIME_LIMIT_None 7 행) · run_old_probe.py 의 summary_*_TIME_LIMIT_None 7 행 (판정문 §4 기대 변경) 같음.",
       "claimed_fixed_sha": "6a81f0c55d1583fba63ffe665874525cc82d36ff",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py CT01 · CT04 (N1 · 고치기 전 CT01 91/150 행 · CT04 4 → 0 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/logs/count_bad_before.json → count_bad_after.json)",
@@ -15761,17 +15837,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/final_e2e_py311.log)",
         "scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/check_kgy_py38.out)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §3 · §6 (기대 고친 기존 시험 합 73 · 변이 26 중 25 · 생존 1 = K1 동등)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC10-08 = 닫힘 — `:3993–3995, :4027–4029, :4223–4224`. TIME_LIMIT/nullcause/nullrc 옛 7행은 자격 False. 앞 런의 판독 실패와는 다른 지정 반례. E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC10-09",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "PB 고침 작업 트리 에이전트 (11-06 · 범위 밖 새 발견 · 단위 탐침만 · 바탕 판에도 같음)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md",
       "title": "(N2) 같은 꼴에서 group_cause 한 칸 None → timeout · signal (rc 1 그대로) = 재실행 자격 True (생산자 = group_cause 있으면 rc null)",
-      "note": "REPORT §7 · 실경로 미확인 · 권고 = group_cause None ⇒ 정확한 정수 0 만 성공 (멈춤 코드와 무관) · 사슬이 죽인 원인 + rc 있음 = 모순 = 읽음 False · ⬜ 1저자 (고칠지 · 한정만).  ★ 11-08 claimed_fixed = 6a81f0c55d1583fba63ffe665874525cc82d36ff (1저자 11-06 \"권고대로\" · 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 (읽음 False) · 시험 먼저 · 작업 트리 커밋 → cherry-pick -x · 한 커밋 · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md) · ⚠ 회귀 수 = 반입 전 작업 트리 (바탕 766e1e80c · S0 메모리 고침 전 carbon_junction) 에서 잰 것 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §5) · 합친 판 (6a81f0c55) 의 게이트 기록 = 리포에 없음.  고친 자리 = STOP_RUN_SHAPES · run_record_shape · stop_record_problem · run_exit_failed (scripts/rint_r_chain.py · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §2) · 같은 부류 = 요약 없는 길 end_record_known (CT02) · 한정 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §8 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §8.",
+      "note": "REPORT §7 · 실경로 미확인 · 권고 = group_cause None ⇒ 정확한 정수 0 만 성공 (멈춤 코드와 무관) · 사슬이 죽인 원인 + rc 있음 = 모순 = 읽음 False · ⬜ 1저자 (고칠지 · 한정만).  ★ 11-08 claimed_fixed = 6a81f0c55d1583fba63ffe665874525cc82d36ff (1저자 11-06 \"권고대로\" · 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 (읽음 False) · 시험 먼저 · 작업 트리 커밋 → cherry-pick -x · 한 커밋 · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md) · ⚠ 회귀 수 = 반입 전 작업 트리 (바탕 766e1e80c · S0 메모리 고침 전 carbon_junction) 에서 잰 것 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §5) · 합친 판 (6a81f0c55) 의 게이트 기록 = 리포에 없음.  고친 자리 = STOP_RUN_SHAPES · run_record_shape · stop_record_problem · run_exit_failed (scripts/rint_r_chain.py · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §2) · 같은 부류 = 요약 없는 길 end_record_known (CT02) · 한정 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §8 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §8. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (shape · shape_reject 행).",
       "claimed_fixed_sha": "6a81f0c55d1583fba63ffe665874525cc82d36ff",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py CT01 · CT04 (N2 · 고치기 전 CT01 91/150 행 · CT04 4 → 0 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/logs/count_bad_before.json → count_bad_after.json)",
@@ -15780,17 +15860,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/final_e2e_py311.log)",
         "scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/check_kgy_py38.out)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §3 · §6 (기대 고친 기존 시험 합 73 · 변이 26 중 25 · 생존 1 = K1 동등)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC10-09 = 닫힘 — `:4007–4012`. killed 원인+정수 rc 요약 거부. orphan의 실제 wait 경합 정수 rc와 구별. E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC10-10",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "PB 고침 작업 트리 에이전트 (11-06 · 범위 밖 새 발견 · 단위 탐침만 · 바탕 판에도 같음)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md",
       "title": "(N4) recover_ledger 가 객체 아닌 rejected.json 에서 잡지 않는 AttributeError",
-      "note": "REPORT §7 · 실경로 미확인 · 권고 = group_cause None ⇒ 정확한 정수 0 만 성공 (멈춤 코드와 무관) · 사슬이 죽인 원인 + rc 있음 = 모순 = 읽음 False · ⬜ 1저자 (고칠지 · 한정만).  ★ 11-08 정정 — 위 \"권고\" 글은 N1 · N2 의 것을 옮겨 적은 것 · N4 의 권고 = result_recount 와 같은 isinstance 검사 (docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §7 표 N4 행).  ★ 11-08 claimed_fixed = 6a81f0c55d1583fba63ffe665874525cc82d36ff (1저자 11-06 \"권고대로\" · 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 (읽음 False) · 시험 먼저 · 작업 트리 커밋 → cherry-pick -x · 한 커밋 · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md) · ⚠ 회귀 수 = 반입 전 작업 트리 (바탕 766e1e80c · S0 메모리 고침 전 carbon_junction) 에서 잰 것 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §5) · 합친 판 (6a81f0c55) 의 게이트 기록 = 리포에 없음.  고친 자리 = rejected_record → result_recount · recover_ledger (객체 아님 · 깊은 중첩 = Stop ATTEMPT_LEDGER_MISMATCH · 결과 줄 없음 · rc 3).",
+      "note": "REPORT §7 · 실경로 미확인 · 권고 = group_cause None ⇒ 정확한 정수 0 만 성공 (멈춤 코드와 무관) · 사슬이 죽인 원인 + rc 있음 = 모순 = 읽음 False · ⬜ 1저자 (고칠지 · 한정만).  ★ 11-08 정정 — 위 \"권고\" 글은 N1 · N2 의 것을 옮겨 적은 것 · N4 의 권고 = result_recount 와 같은 isinstance 검사 (docs/reviews/rint2_rr2_fix_evidence_20261105/preattack10_fix/REPORT.md §7 표 N4 행).  ★ 11-08 claimed_fixed = 6a81f0c55d1583fba63ffe665874525cc82d36ff (1저자 11-06 \"권고대로\" · 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 (읽음 False) · 시험 먼저 · 작업 트리 커밋 → cherry-pick -x · 한 커밋 · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md) · ⚠ 회귀 수 = 반입 전 작업 트리 (바탕 766e1e80c · S0 메모리 고침 전 carbon_junction) 에서 잰 것 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §5) · 합친 판 (6a81f0c55) 의 게이트 기록 = 리포에 없음.  고친 자리 = rejected_record → result_recount · recover_ledger (객체 아님 · 깊은 중첩 = Stop ATTEMPT_LEDGER_MISMATCH · 결과 줄 없음 · rc 3). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = contracts_probe.py 105/105 같음 (rejected 0–5 행).",
       "claimed_fixed_sha": "6a81f0c55d1583fba63ffe665874525cc82d36ff",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py CT03 · CT04 (N4 · 고치기 전 CT03 6/10 행 · CT04 4 → 0 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/logs/count_bad_before.json → count_bad_after.json · 확장 판 CT03 21 행 1 → 0 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/count_bad_before.json → count_bad_after.json)",
@@ -15798,17 +15882,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/final_e2e_py311.log)",
         "scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/check_kgy_py38.out)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §3 · §6 (변이 J1–J3 잡힘)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC10-10 = 닫힘 — `:4373–4387, :4465`와 recover 연결. 공용 rejected parser가 비객체/손상/중복 등을 구조적 Stop으로 바꿈. S/E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC11-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 11 회차 (11-06 · loop · 대상 = N1 · N2 · N4 고침 첫 판 · P1 0 · 새 결함 0 · P2 둘 · P3 여섯 · 보고 원문 = 본 세션 scratch (인계 docs/handoff_to_subsession_20261108.md §4 \"안 넘어간 것\") · 리포 기록 = REPORT_EXT §0 · §8 · 진행 기록 11-06 줄 · 탐침 사본 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/pa11_probes/)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md",
       "title": "(사전 공격 11 P2-A) 결과 본 시도 폴더에 rejected.json 하나 ({} 도) → recover 결과 줄 rejected · 결과 전 → 채택에서 빠짐 · 새 --add rc 0 (바탕 766e1e80c 에도 있던 꼴)",
-      "note": "REPORT_EXT §0 · §2 P2-A · 고침 = 시도 폴더 안 거부 기록은 생산자 꼴일 때만 읽음 (폴더 = attempt.json + rejected.json 뿐 · 칸 = REJECTED_KEYS · n = 번호 · 시작 커밋 = attempt.json) · 그 밖 = Stop ATTEMPT_LEDGER_MISMATCH · 결과 줄 없음 · 새 --add rc 3 ATTEMPT_ORDER_MISMATCH · 한 함수 rejected_in_folder (rejected_form_problem · rejected_folder_problem) = result_recount · recover_ledger · 옆 거부 기록 = 그대로 · 한정 = REPORT_EXT §8 거부 기록 행 (utc 꼴 · cause 내용 · code 의 STOPS 소속 안 봄 · 흔적 다 지운 폴더 + 위조 기록 = Q-D).  ★ 11-08 claimed_fixed = 6a81f0c55d1583fba63ffe665874525cc82d36ff (1저자 11-06 \"권고대로\" · 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 (읽음 False) · 시험 먼저 · 작업 트리 커밋 → cherry-pick -x · 한 커밋 · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md) · ⚠ 회귀 수 = 반입 전 작업 트리 (바탕 766e1e80c · S0 메모리 고침 전 carbon_junction) 에서 잰 것 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §5) · 합친 판 (6a81f0c55) 의 게이트 기록 = 리포에 없음.",
+      "note": "REPORT_EXT §0 · §2 P2-A · 고침 = 시도 폴더 안 거부 기록은 생산자 꼴일 때만 읽음 (폴더 = attempt.json + rejected.json 뿐 · 칸 = REJECTED_KEYS · n = 번호 · 시작 커밋 = attempt.json) · 그 밖 = Stop ATTEMPT_LEDGER_MISMATCH · 결과 줄 없음 · 새 --add rc 3 ATTEMPT_ORDER_MISMATCH · 한 함수 rejected_in_folder (rejected_form_problem · rejected_folder_problem) = result_recount · recover_ledger · 옆 거부 기록 = 그대로 · 한정 = REPORT_EXT §8 거부 기록 행 (utc 꼴 · cause 내용 · code 의 STOPS 소속 안 봄 · 흔적 다 지운 폴더 + 위조 기록 = Q-D).  ★ 11-08 claimed_fixed = 6a81f0c55d1583fba63ffe665874525cc82d36ff (1저자 11-06 \"권고대로\" · 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 (읽음 False) · 시험 먼저 · 작업 트리 커밋 → cherry-pick -x · 한 커밋 · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md) · ⚠ 회귀 수 = 반입 전 작업 트리 (바탕 766e1e80c · S0 메모리 고침 전 carbon_junction) 에서 잰 것 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §5) · 합친 판 (6a81f0c55) 의 게이트 기록 = 리포에 없음. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = pc12_attack/probe_pc12_independent.py rc 0 같음 (pc11_rejected_folder = 정상 수용 · 추가 6 거부 ATTEMPT_LEDGER_MISMATCH).",
       "claimed_fixed_sha": "6a81f0c55d1583fba63ffe665874525cc82d36ff",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py CT05 (P2-A · 31 행 · 고치기 전 28/31 → 0 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/count_bad_before.json → count_bad_after.json)",
@@ -15817,17 +15905,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/final_e2e_py311.log)",
         "scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/check_kgy_py38.out)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §3 · §6 (새 가드 변이 36/36 · 사전 공격 11 변이 14/14)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC11-01 = 닫힘 — 정상 거부 2파일 꼴 수용, summary/payload/첫결과/groups/logs/런 경로 추가 6종 거부. S/E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC11-02",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 11 회차 (11-06 · loop · 대상 = N1 · N2 · N4 고침 첫 판 · P1 0 · 새 결함 0 · P2 둘 · P3 여섯 · 보고 원문 = 본 세션 scratch (인계 docs/handoff_to_subsession_20261108.md §4 \"안 넘어간 것\") · 리포 기록 = REPORT_EXT §0 · §8 · 진행 기록 11-06 줄 · 탐침 사본 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/pa11_probes/)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md",
       "title": "(사전 공격 11 P2-B) 요약 있는 길 멈춘 런 기록의 한 칸 손질 넷 (멈춤 이름만 GROUP_UNCONFIRMED · GU 기록 rc 1→0 · GU 멈춘 런 = 앞의 끝난 런 · TIME_LIMIT 기록에 팔 읽음 + outdir 다른 곳) 이 재실행 자격을 얻음 (바탕 766e1e80c 에도 있던 꼴)",
-      "note": "REPORT_EXT §0 · §2 P2-B · 고침 = stopped_record_problem (런 기록 있는 TIME_LIMIT · RUNNER_RC · GU 만: ① runs[-1] 이 멈춘 기록 ② outdir = RUN_DIR_RE · 접두 + 요청 칸 있으면 정확히 record_outdir (run_outdir_suffix = Runner._prepare 와 한 함수) ③ arms_read = [] ④ GU 는 chain_confirmed 가 False 이거나 못 읽음일 때만) · 같은 부류 = outdir 옆 이름 <런>_arm9 (지시서 밖 보탬) · 한정 = REPORT_EXT §8 (런 기록 ↔ 그룹 끝 기록 교차 대조 없음 · 남는 예 probe_rr S9 = 세 칸 손질 · GU 확인 대조는 읽힐 때만).  ★ 11-08 claimed_fixed = 6a81f0c55d1583fba63ffe665874525cc82d36ff (1저자 11-06 \"권고대로\" · 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 (읽음 False) · 시험 먼저 · 작업 트리 커밋 → cherry-pick -x · 한 커밋 · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md) · ⚠ 회귀 수 = 반입 전 작업 트리 (바탕 766e1e80c · S0 메모리 고침 전 carbon_junction) 에서 잰 것 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §5) · 합친 판 (6a81f0c55) 의 게이트 기록 = 리포에 없음.  ★ 11-08 범위 좁힘 (사전 공격 12 F2 = PC12-02) — \"한 칸 손질 넷 … 닫음\" 중 GU 기록 rc 꼴은 끝 기록 확인 True 고정물 (CT06 S2_forged_GU_rc0 · CHAIN_OK1) 에서만 닫힘 · 생산자 GU 꼴 (확인 False → recover chain_end) 위의 같은 한 칸 손질 = 재실행 자격 (docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/p2_real_ledger.py 2b · resume rc 0) · 상태 = claimed_fixed 그대로 (원 반례 = 확인 True 꼴) · 과장 = SELF-158 · 같은 함수의 남은 꼴 = PC12-01 (F1) · PC12-03 (F3) · ⬜ 1저자 처분 = (가) Codex 전에 고침 (시험 먼저) / (나) 한정으로 보냄 (Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5 ② ③).",
+      "note": "REPORT_EXT §0 · §2 P2-B · 고침 = stopped_record_problem (런 기록 있는 TIME_LIMIT · RUNNER_RC · GU 만: ① runs[-1] 이 멈춘 기록 ② outdir = RUN_DIR_RE · 접두 + 요청 칸 있으면 정확히 record_outdir (run_outdir_suffix = Runner._prepare 와 한 함수) ③ arms_read = [] ④ GU 는 chain_confirmed 가 False 이거나 못 읽음일 때만) · 같은 부류 = outdir 옆 이름 <런>_arm9 (지시서 밖 보탬) · 한정 = REPORT_EXT §8 (런 기록 ↔ 그룹 끝 기록 교차 대조 없음 · 남는 예 probe_rr S9 = 세 칸 손질 · GU 확인 대조는 읽힐 때만).  ★ 11-08 claimed_fixed = 6a81f0c55d1583fba63ffe665874525cc82d36ff (1저자 11-06 \"권고대로\" · 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 (읽음 False) · 시험 먼저 · 작업 트리 커밋 → cherry-pick -x · 한 커밋 · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md) · ⚠ 회귀 수 = 반입 전 작업 트리 (바탕 766e1e80c · S0 메모리 고침 전 carbon_junction) 에서 잰 것 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §5) · 합친 판 (6a81f0c55) 의 게이트 기록 = 리포에 없음.  ★ 11-08 범위 좁힘 (사전 공격 12 F2 = PC12-02) — \"한 칸 손질 넷 … 닫음\" 중 GU 기록 rc 꼴은 끝 기록 확인 True 고정물 (CT06 S2_forged_GU_rc0 · CHAIN_OK1) 에서만 닫힘 · 생산자 GU 꼴 (확인 False → recover chain_end) 위의 같은 한 칸 손질 = 재실행 자격 (docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/p2_real_ledger.py 2b · resume rc 0) · 상태 = claimed_fixed 그대로 (원 반례 = 확인 True 꼴) · 과장 = SELF-158 · 같은 함수의 남은 꼴 = PC12-01 (F1) · PC12-03 (F3) · ⬜ 1저자 처분 = (가) Codex 전에 고침 (시험 먼저) / (나) 한정으로 보냄 (Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5 ② ③). ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = pc12_attack/probe_pc12_independent.py rc 0 같음 (chain_side 175 행) · contracts_p2p4_git.py 12/12 같음.",
       "claimed_fixed_sha": "6a81f0c55d1583fba63ffe665874525cc82d36ff",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py CT06 (P2-B · 61 행 · 고치기 전 35/61 → 0 · 중간 판 (outdir 접두만) 7/61 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/count_bad_prefix_only.json · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/count_bad_before.json → count_bad_after.json)",
@@ -15835,17 +15927,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/final_e2e_py311.log)",
         "scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/check_kgy_py38.out)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §3 · §6 (새 가드 변이 36/36 · 사전 공격 11 변이 14/14)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC11-02 = 닫힘 — `:4055–4078`의 지정 마지막 기록·outdir·팔 판독 전·끝 기록 대조. GU rc 확장은 PC12-02로 함께 확인. 앞 런의 새 실패는 PC12-03에 귀속. S/E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC11-03",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 11 회차 (11-06 · loop · 대상 = N1 · N2 · N4 고침 첫 판 · P1 0 · 새 결함 0 · P2 둘 · P3 여섯 · 보고 원문 = 본 세션 scratch (인계 docs/handoff_to_subsession_20261108.md §4 \"안 넘어간 것\") · 리포 기록 = REPORT_EXT §0 · §8 · 진행 기록 11-06 줄 · 탐침 사본 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/pa11_probes/)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md",
       "title": "(사전 공격 11 P3-5) 단계 요약 칸 꼴 틀림 일곱 (+ runs 정수) 이 recover 에서 traceback · 뒤 폴더를 못 셈",
-      "note": "REPORT_EXT §0 · §2 P3-5 · 고침 = summary_shape_problem (result_fields 요약 길 첫머리 · stop = null · 객체 · runs = 목록 · 원소 = 객체 · outdir = 글) = 그 폴더 Stop · 사유 · 뒤 폴더 결과 줄.  ★ 11-08 claimed_fixed = 6a81f0c55d1583fba63ffe665874525cc82d36ff (1저자 11-06 \"권고대로\" · 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 (읽음 False) · 시험 먼저 · 작업 트리 커밋 → cherry-pick -x · 한 커밋 · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md) · ⚠ 회귀 수 = 반입 전 작업 트리 (바탕 766e1e80c · S0 메모리 고침 전 carbon_junction) 에서 잰 것 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §5) · 합친 판 (6a81f0c55) 의 게이트 기록 = 리포에 없음.",
+      "note": "REPORT_EXT §0 · §2 P3-5 · 고침 = summary_shape_problem (result_fields 요약 길 첫머리 · stop = null · 객체 · runs = 목록 · 원소 = 객체 · outdir = 글) = 그 폴더 Stop · 사유 · 뒤 폴더 결과 줄.  ★ 11-08 claimed_fixed = 6a81f0c55d1583fba63ffe665874525cc82d36ff (1저자 11-06 \"권고대로\" · 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 (읽음 False) · 시험 먼저 · 작업 트리 커밋 → cherry-pick -x · 한 커밋 · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md) · ⚠ 회귀 수 = 반입 전 작업 트리 (바탕 766e1e80c · S0 메모리 고침 전 carbon_junction) 에서 잰 것 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §5) · 합친 판 (6a81f0c55) 의 게이트 기록 = 리포에 없음. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = pc12_attack/probe_pc12_independent.py rc 0 같음 (pc11_summary_shapes 8 행).",
       "claimed_fixed_sha": "6a81f0c55d1583fba63ffe665874525cc82d36ff",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py CT07 (P3-5 · 9 행 · 고치기 전 8/9 → 0 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/count_bad_before.json → count_bad_after.json)",
@@ -15853,17 +15949,21 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/final_e2e_py311.log)",
         "scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/check_kgy_py38.out)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §3 · §6 (새 가드 변이 36/36 · 사전 공격 11 변이 14/14)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC11-03 = 닫힘 — stop/runs/outdir 잘못된 형 8종이 AttributeError 대신 구조적 Stop. 실제 여러 폴더 현장 순회 인증은 아님. S/E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC11-04",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 11 회차 (11-06 · loop · 대상 = N1 · N2 · N4 고침 첫 판 · P1 0 · 새 결함 0 · P2 둘 · P3 여섯 · 보고 원문 = 본 세션 scratch (인계 docs/handoff_to_subsession_20261108.md §4 \"안 넘어간 것\") · 리포 기록 = REPORT_EXT §0 · §8 · 진행 기록 11-06 줄 · 탐침 사본 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/pa11_probes/)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md",
       "title": "(사전 공격 11 P3-6) 사슬 머리말이 없는 이름 end_rc_known 을 가리킴 (있는 이름 = end_record_known)",
-      "note": "REPORT_EXT §0 · §2 P3-6 · 고침 = 머리말 정정 + 확장 문단 · 시험 CT08 = 머리말 ★ 11-06 PC10 문단이 이름 붙인 함수 · 상수가 모두 모듈에 있다.  ★ 11-08 claimed_fixed = 6a81f0c55d1583fba63ffe665874525cc82d36ff (1저자 11-06 \"권고대로\" · 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 (읽음 False) · 시험 먼저 · 작업 트리 커밋 → cherry-pick -x · 한 커밋 · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md) · ⚠ 회귀 수 = 반입 전 작업 트리 (바탕 766e1e80c · S0 메모리 고침 전 carbon_junction) 에서 잰 것 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §5) · 합친 판 (6a81f0c55) 의 게이트 기록 = 리포에 없음.",
+      "note": "REPORT_EXT §0 · §2 P3-6 · 고침 = 머리말 정정 + 확장 문단 · 시험 CT08 = 머리말 ★ 11-06 PC10 문단이 이름 붙인 함수 · 상수가 모두 모듈에 있다.  ★ 11-08 claimed_fixed = 6a81f0c55d1583fba63ffe665874525cc82d36ff (1저자 11-06 \"권고대로\" · 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 (읽음 False) · 시험 먼저 · 작업 트리 커밋 → cherry-pick -x · 한 커밋 · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md) · ⚠ 회귀 수 = 반입 전 작업 트리 (바탕 766e1e80c · S0 메모리 고침 전 carbon_junction) 에서 잰 것 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §5) · 합친 판 (6a81f0c55) 의 게이트 기록 = 리포에 없음. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = pc12_attack/probe_pc12_independent.py rc 0 같음 (pc11_header_reference).",
       "claimed_fixed_sha": "6a81f0c55d1583fba63ffe665874525cc82d36ff",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py CT08 (P3-6 · 고치기 전 실패 → 통과 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/count_bad_before.json → count_bad_after.json)",
@@ -15871,7 +15971,11 @@
         "scripts/test_rint_r_chain_e2e.py (51 PASS · 0 FAIL · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/final_e2e_py311.log)",
         "scripts/check_kgy_py38.sh (CPython 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/logs/check_kgy_py38.out)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §3 · §6 (새 가드 변이 36/36 · 사전 공격 11 변이 14/14)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC11-04 = 닫힘 — 머리말 `:163–164`의 실제 함수명 `end_record_known` 정정. S. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC11-05",
@@ -15881,7 +15985,7 @@
       "found_by": "사전 공격 11 회차 (11-06 · loop · 대상 = N1 · N2 · N4 고침 첫 판 · P1 0 · 새 결함 0 · P2 둘 · P3 여섯 · 보고 원문 = 본 세션 scratch (인계 docs/handoff_to_subsession_20261108.md §4 \"안 넘어간 것\") · 리포 기록 = REPORT_EXT §0 · §8 · 진행 기록 11-06 줄 · 탐침 사본 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/pa11_probes/)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md",
       "title": "(사전 공격 11 P3 · 한정) 같은 이름 멈춘 런 기록 둘 = 마지막 것을 읽음 (탐침 probe_rr S3) — 생산자는 런 이름을 겹쳐 쓰지 않는다",
-      "note": "REPORT_EXT §8 \"같은 이름 런 기록 둘 (S3)\" · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §8 \"같은 이름 런 기록 둘 = 마지막 (생산자 이름 안 겹침)\" · 탐침 다시 = 그대로 (REPORT_EXT §7 한정 행).  1저자 11-06 규칙 안의 확장 고침 범위 밖 = 한정 (고치지 않음 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §8) · Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §4 에 한정으로 적는다 · 상태 open."
+      "note": "REPORT_EXT §8 \"같은 이름 런 기록 둘 (S3)\" · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §8 \"같은 이름 런 기록 둘 = 마지막 (생산자 이름 안 겹침)\" · 탐침 다시 = 그대로 (REPORT_EXT §7 한정 행).  1저자 11-06 규칙 안의 확장 고침 범위 밖 = 한정 (고치지 않음 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §8) · Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §4 에 한정으로 적는다 · 상태 open. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3 끝 · §5 ③) = 이번 답으로 닫지 않음 · 자동으로 새 차단 결함으로 격상하지 않음 — 단 봉인할 실제 계획 · 시도 기록이 이 미검증 영역을 쓰지 않는지 (요청 칸 · 유일 런 이름 · 실제 순서 · launch/end 결합 · 필요한 chain_end · 복사 출처) 봉인 전 확인에 넣음 (수정 계획 docs/reviews/rint2_rr3_fix_plan_20261108.md §4 · Q5) · 상태 그대로 (open)."
     },
     {
       "id": "PC11-06",
@@ -15891,7 +15995,7 @@
       "found_by": "사전 공격 11 회차 (11-06 · loop · 대상 = N1 · N2 · N4 고침 첫 판 · P1 0 · 새 결함 0 · P2 둘 · P3 여섯 · 보고 원문 = 본 세션 scratch (인계 docs/handoff_to_subsession_20261108.md §4 \"안 넘어간 것\") · 리포 기록 = REPORT_EXT §0 · §8 · 진행 기록 11-06 줄 · 탐침 사본 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/pa11_probes/)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md",
       "title": "(사전 공격 11 P3 · 한정) 런 전 TIME_LIMIT (그 이름의 런 기록 없음) 의 멈춘 런 이름 차례를 안 봄 — 이름 꼴 (RUN_DIR_RE) · 흔적 없음 (run_traces) 만 본다",
-      "note": "REPORT_EXT §8 \"런 전 TIME_LIMIT 이름 차례\" · 풀이 = 코드 읽기 (scripts/rint_r_chain.py stop_record_problem 의 런 기록 없음 줄 = 이름 꼴 · 흔적만 · 계획 차례 대조 없음 · 11-08 이 원장 줄을 쓰며 읽음 · 시험으로 확인 전).  1저자 11-06 규칙 안의 확장 고침 범위 밖 = 한정 (고치지 않음 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §8) · Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §4 에 한정으로 적는다 · 상태 open."
+      "note": "REPORT_EXT §8 \"런 전 TIME_LIMIT 이름 차례\" · 풀이 = 코드 읽기 (scripts/rint_r_chain.py stop_record_problem 의 런 기록 없음 줄 = 이름 꼴 · 흔적만 · 계획 차례 대조 없음 · 11-08 이 원장 줄을 쓰며 읽음 · 시험으로 확인 전).  1저자 11-06 규칙 안의 확장 고침 범위 밖 = 한정 (고치지 않음 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §8) · Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §4 에 한정으로 적는다 · 상태 open. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3 끝 · §5 ③) = 이번 답으로 닫지 않음 · 자동으로 새 차단 결함으로 격상하지 않음 — 단 봉인할 실제 계획 · 시도 기록이 이 미검증 영역을 쓰지 않는지 (요청 칸 · 유일 런 이름 · 실제 순서 · launch/end 결합 · 필요한 chain_end · 복사 출처) 봉인 전 확인에 넣음 (수정 계획 docs/reviews/rint2_rr3_fix_plan_20261108.md §4 · Q5) · 상태 그대로 (open)."
     },
     {
       "id": "PC11-07",
@@ -15901,7 +16005,7 @@
       "found_by": "사전 공격 11 회차 (11-06 · loop · 대상 = N1 · N2 · N4 고침 첫 판 · P1 0 · 새 결함 0 · P2 둘 · P3 여섯 · 보고 원문 = 본 세션 scratch (인계 docs/handoff_to_subsession_20261108.md §4 \"안 넘어간 것\") · 리포 기록 = REPORT_EXT §0 · §8 · 진행 기록 11-06 줄 · 탐침 사본 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/pa11_probes/)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md",
       "title": "(사전 공격 11 P3 · 한정) 멈춘 런 기록의 다른 칸 (copied_from · seconds · machine) 미검사 — arms 칸이 없으면 지남 (탐침 probe_rr S5 꼴)",
-      "note": "REPORT_EXT §8 \"다른 칸 미검사 (copied_from · seconds · machine · S5 = arms 없으면 지남)\" · 팔 읽음이 있는 S5 행 자체는 확장 ③ arms_read = [] 가 막음 (REPORT_EXT §7 probe_rr S5 → 자격 False).  1저자 11-06 규칙 안의 확장 고침 범위 밖 = 한정 (고치지 않음 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §8) · Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §4 에 한정으로 적는다 · 상태 open."
+      "note": "REPORT_EXT §8 \"다른 칸 미검사 (copied_from · seconds · machine · S5 = arms 없으면 지남)\" · 팔 읽음이 있는 S5 행 자체는 확장 ③ arms_read = [] 가 막음 (REPORT_EXT §7 probe_rr S5 → 자격 False).  1저자 11-06 규칙 안의 확장 고침 범위 밖 = 한정 (고치지 않음 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §8) · Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §4 에 한정으로 적는다 · 상태 open. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3 끝 · §5 ③) = 이번 답으로 닫지 않음 · 자동으로 새 차단 결함으로 격상하지 않음 — 단 봉인할 실제 계획 · 시도 기록이 이 미검증 영역을 쓰지 않는지 (요청 칸 · 유일 런 이름 · 실제 순서 · launch/end 결합 · 필요한 chain_end · 복사 출처) 봉인 전 확인에 넣음 (수정 계획 docs/reviews/rint2_rr3_fix_plan_20261108.md §4 · Q5) · 상태 그대로 (open)."
     },
     {
       "id": "PC11-08",
@@ -15911,17 +16015,17 @@
       "found_by": "사전 공격 11 회차 (11-06 · loop · 대상 = N1 · N2 · N4 고침 첫 판 · P1 0 · 새 결함 0 · P2 둘 · P3 여섯 · 보고 원문 = 본 세션 scratch (인계 docs/handoff_to_subsession_20261108.md §4 \"안 넘어간 것\") · 리포 기록 = REPORT_EXT §0 · §8 · 진행 기록 11-06 줄 · 탐침 사본 = docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/pa11_probes/)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md",
       "title": "(사전 공격 11 P3 · 한정) 디스크 그룹 끝 기록 원인 signal_after 를 받음 (탐침 probe_rr S7) — C2b 4ed966b5d 부터 어느 판의 생산자도 디스크에 쓰지 않는다",
-      "note": "REPORT_EXT §0 문구 정정 · §8 \"디스크 signal_after 받음 (S7)\" · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §1-2 (run_in_group 의 디스크 원인 = None · signal_after = 돌려주는 dict 칸뿐 · 받는 근거 = 시험 고정물 꼴뿐 · 받는 결정 = A1b (PC9-01) 그대로) · 옛 글 \"옛 기록\" = 판 근거 없음 (정정됨).  1저자 11-06 규칙 안의 확장 고침 범위 밖 = 한정 (고치지 않음 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §8) · Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §4 에 한정으로 적는다 · 상태 open."
+      "note": "REPORT_EXT §0 문구 정정 · §8 \"디스크 signal_after 받음 (S7)\" · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/REPORT.md §1-2 (run_in_group 의 디스크 원인 = None · signal_after = 돌려주는 dict 칸뿐 · 받는 근거 = 시험 고정물 꼴뿐 · 받는 결정 = A1b (PC9-01) 그대로) · 옛 글 \"옛 기록\" = 판 근거 없음 (정정됨).  1저자 11-06 규칙 안의 확장 고침 범위 밖 = 한정 (고치지 않음 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc10_n_fix/ext/REPORT_EXT.md §8) · Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §4 에 한정으로 적는다 · 상태 open. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3 끝 · §5 ③) = 이번 답으로 닫지 않음 · 자동으로 새 차단 결함으로 격상하지 않음 — 단 봉인할 실제 계획 · 시도 기록이 이 미검증 영역을 쓰지 않는지 (요청 칸 · 유일 런 이름 · 실제 순서 · launch/end 결합 · 필요한 chain_end · 복사 출처) 봉인 전 확인에 넣음 (수정 계획 docs/reviews/rint2_rr3_fix_plan_20261108.md §4 · Q5) · 상태 그대로 (open)."
     },
     {
       "id": "PC12-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 12 회차 (11-08 · 독립 · diff 만 · 대상 = 6a81f0c55 의 scripts/rint_r_chain.py 새 가드 (P2-A · P2-B · P3-5 · 같은 자리) · 그 파일 = 핀 2b3c42c6c 와 같음 · P1 0 · P2 3 · P3 2 · 거짓 fail-closed 못 찾음)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/REPORT.md",
       "title": "(사전 공격 12 F1) 멈춘 런 기록의 정확 출력 폴더 이름 대조가 같은 기록의 요청 칸 (arms · arm_list) 에만 묶임 — outdir 와 요청 칸을 함께 고치면 지남 · 요청 칸 범위 검사 없음 (arms 9 · 0 · −1 · 10**30 · arm_list [] · [0] · [9] · [3,3] · [3,1] 받음)",
-      "note": "REPORT F1 · 자리 = scripts/rint_r_chain.py stopped_record_problem ② (4027–4033) · record_outdir (4773) · 재현 p1_outdir_coedit (함께 고침 11 가지 resume_ok True · TIME_LIMIT 도) · p2_real_ledger (1b) 실제 원장 = 결과 줄 resume_ok True · --add --resume 1 rc 0 (1a 대조 = rc 3) · 생산자 범위 안 (arms 2 + _arm2) 도 지남 → 범위 검사만으로 안 닫힘 · check_trace 는 od 만 봄 (진짜 L01_floor_arm1/.unchecked 흔적 못 봄) · 두 칸 함께 고친 꼴 = 선언 한정 (두 칸 이상 함께 바꾼 손 · Q-D) 에 일부 걸림 · 요청 칸 범위 · 흔적 검사 범위는 한정 글에 없음 · 리뷰어 권고 ① = arms 1–8 · arm_list (정렬 · 중복 없음 · 0–7 · 길이 = arms · 접두 아님) + 흔적 검사를 그 런의 모든 출력 폴더로.  ⬜ 1저자 처분 = (가) Codex 전에 고침 (시험 먼저) / (나) 한정으로 보냄 (Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5 ② ③).  ★ 11-08 정정 — 위 \"함께 고침 11 가지\" = preattack12/REPORT.md 의 수를 옮겨 적은 것 · p1_outdir_coedit.out 실측 = RUNNER_RC 함께 고침 10 가지 전부 True + TIME_LIMIT 2 가지 True = True 12 줄 (독립 대조 docs/reviews/rint2_rr2_fix_evidence_20261105/req3_verify/REPORT.md 행 75 · 다름 1).  고침 = request_fields_problem + ARMS_RANGE · ARM_INDEX_RANGE (요청 칸 = 생산자 범위 arms 1–8 · arm_list 정렬 · 중복 없음 · 0–7 · 접두 아님 · 길이 = arms · 아니면 사유) · record_outdir 범위 밖 = '' · stop_trace = 기록의 outdir + 디스크의 <런> · <런>_arm* 폴더 전부 (폴더 못 읽음 = 흔적 있음 · 옛 = od 하나) · result_fields 가 stop_trace 를 부름 (scripts/rint_r_chain.py 4883–4915 · 4061–4063 · 3786–3800 · 4358).  ★ 11-08 claimed_fixed = d346ca94308a2111c08a11b5e12f036307a47fea (1저자 11-08 \"권고대로\" = 처분 (가) Codex 전에 고침 · 1저자 11-06 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 · 정직 (생산자 꼴) 기록의 판정 그대로 · 시험 먼저 (PC12A–E 바탕 0/5 → 5/5) · 작업 트리 에이전트 커밋 → cherry-pick -x · 한 커밋 · 증거 docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md · 회귀 = 사슬 476/476 → 481/481 (첫 전체 479/481 = 고정물 AL12c code 'X' → MACHINE_NOT_ALLOWED · RC01 RC_READERS 에 rc_equal 등재 뒤 481/481) · 끝-끝 51 PASS · 0 FAIL · first_result 9/9 · ca_ext_runner 151 PASS · 0 FAIL · kgy 판 3.8.20 11 묶음 · 변이 7/7 (가드 하나 ↔ 검사 하나) · 사전 공격 12 탐침 원본 재실행 = 위조 행 전부 자격 없음 · 정직 행 그대로 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/) · 시험한 판 = 커밋 blob (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/code_sha256.txt 끝 판) · 웹앱 화면 없음 (재실행 자격 · 원장 · 멈춤 사유 화면 = grep 0) · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5-3 · §6 Q3).  한정 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md §6): 요청 칸 없는 기록 = outdir 접두 규칙만 (흔적 있는 옆 이름은 막힘 · 흔적 없는 옆 이름 자체는 받음) · 옆 이름 폴더가 있다는 사실 자체 = 모순 아님 · 사슬 쪽 끝 기록 없음 (그룹 기록 없는 GU · c2) · 시작 기록에 결합 안 됨 · chain_end 없는 옛 recover 끝 기록 = 대조 안 함 · 런 전 TIME_LIMIT 의 run 이름 차례 안 봄 · 1e400 같은 큰 수 = inf 로 읽힘 (칸 꼴 검사가 따로) · STOPS 안이지만 풀기 전 자리에서 생산자가 쓰지 않는 이름 (GENERATION · ARM_* · OUTDIR_NOT_EMPTY) 받음 · 같은 이름 런 기록 둘 · 다른 칸 (copied_from · seconds · machine …) · utc 글 꼴 = 그대로 · 범위가 바뀐 것 (모두 자격 없음 쪽 · 생산자 꼴 아님) ① TIME_LIMIT · RUNNER_RC 멈춤인데 사슬 쪽 확인 False (또는 원인 · rc 어긋남) = 자격 없음 ② 앞 런 기록 exit_ok 인데 arms_read 빈 목록 · 꼴 틀림 · group_cause 칸 없음 = 모순 ③ 요약 있는 길의 디스크 끝 기록 원인 signal_after = 런 기록 killed:signal_after 와 모순 (요약 없는 길 orphan_cause · A1b 는 안 바꿈) ④ 단계 요약 중복 칸 · NaN · ±Infinity = unreadable · 시험 = 합성 · 가짜 러너 · 실제 git 원장 · 이 컨테이너 (실제 kgy 3.8.10 · ibb · GPU 아님) · 고친 가드에 대한 독립 재공격 = 없음.",
+      "note": "REPORT F1 · 자리 = scripts/rint_r_chain.py stopped_record_problem ② (4027–4033) · record_outdir (4773) · 재현 p1_outdir_coedit (함께 고침 11 가지 resume_ok True · TIME_LIMIT 도) · p2_real_ledger (1b) 실제 원장 = 결과 줄 resume_ok True · --add --resume 1 rc 0 (1a 대조 = rc 3) · 생산자 범위 안 (arms 2 + _arm2) 도 지남 → 범위 검사만으로 안 닫힘 · check_trace 는 od 만 봄 (진짜 L01_floor_arm1/.unchecked 흔적 못 봄) · 두 칸 함께 고친 꼴 = 선언 한정 (두 칸 이상 함께 바꾼 손 · Q-D) 에 일부 걸림 · 요청 칸 범위 · 흔적 검사 범위는 한정 글에 없음 · 리뷰어 권고 ① = arms 1–8 · arm_list (정렬 · 중복 없음 · 0–7 · 길이 = arms · 접두 아님) + 흔적 검사를 그 런의 모든 출력 폴더로.  ⬜ 1저자 처분 = (가) Codex 전에 고침 (시험 먼저) / (나) 한정으로 보냄 (Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5 ② ③).  ★ 11-08 정정 — 위 \"함께 고침 11 가지\" = preattack12/REPORT.md 의 수를 옮겨 적은 것 · p1_outdir_coedit.out 실측 = RUNNER_RC 함께 고침 10 가지 전부 True + TIME_LIMIT 2 가지 True = True 12 줄 (독립 대조 docs/reviews/rint2_rr2_fix_evidence_20261105/req3_verify/REPORT.md 행 75 · 다름 1).  고침 = request_fields_problem + ARMS_RANGE · ARM_INDEX_RANGE (요청 칸 = 생산자 범위 arms 1–8 · arm_list 정렬 · 중복 없음 · 0–7 · 접두 아님 · 길이 = arms · 아니면 사유) · record_outdir 범위 밖 = '' · stop_trace = 기록의 outdir + 디스크의 <런> · <런>_arm* 폴더 전부 (폴더 못 읽음 = 흔적 있음 · 옛 = od 하나) · result_fields 가 stop_trace 를 부름 (scripts/rint_r_chain.py 4883–4915 · 4061–4063 · 3786–3800 · 4358).  ★ 11-08 claimed_fixed = d346ca94308a2111c08a11b5e12f036307a47fea (1저자 11-08 \"권고대로\" = 처분 (가) Codex 전에 고침 · 1저자 11-06 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 · 정직 (생산자 꼴) 기록의 판정 그대로 · 시험 먼저 (PC12A–E 바탕 0/5 → 5/5) · 작업 트리 에이전트 커밋 → cherry-pick -x · 한 커밋 · 증거 docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md · 회귀 = 사슬 476/476 → 481/481 (첫 전체 479/481 = 고정물 AL12c code 'X' → MACHINE_NOT_ALLOWED · RC01 RC_READERS 에 rc_equal 등재 뒤 481/481) · 끝-끝 51 PASS · 0 FAIL · first_result 9/9 · ca_ext_runner 151 PASS · 0 FAIL · kgy 판 3.8.20 11 묶음 · 변이 7/7 (가드 하나 ↔ 검사 하나) · 사전 공격 12 탐침 원본 재실행 = 위조 행 전부 자격 없음 · 정직 행 그대로 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/) · 시험한 판 = 커밋 blob (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/code_sha256.txt 끝 판) · 웹앱 화면 없음 (재실행 자격 · 원장 · 멈춤 사유 화면 = grep 0) · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5-3 · §6 Q3).  한정 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md §6): 요청 칸 없는 기록 = outdir 접두 규칙만 (흔적 있는 옆 이름은 막힘 · 흔적 없는 옆 이름 자체는 받음) · 옆 이름 폴더가 있다는 사실 자체 = 모순 아님 · 사슬 쪽 끝 기록 없음 (그룹 기록 없는 GU · c2) · 시작 기록에 결합 안 됨 · chain_end 없는 옛 recover 끝 기록 = 대조 안 함 · 런 전 TIME_LIMIT 의 run 이름 차례 안 봄 · 1e400 같은 큰 수 = inf 로 읽힘 (칸 꼴 검사가 따로) · STOPS 안이지만 풀기 전 자리에서 생산자가 쓰지 않는 이름 (GENERATION · ARM_* · OUTDIR_NOT_EMPTY) 받음 · 같은 이름 런 기록 둘 · 다른 칸 (copied_from · seconds · machine …) · utc 글 꼴 = 그대로 · 범위가 바뀐 것 (모두 자격 없음 쪽 · 생산자 꼴 아님) ① TIME_LIMIT · RUNNER_RC 멈춤인데 사슬 쪽 확인 False (또는 원인 · rc 어긋남) = 자격 없음 ② 앞 런 기록 exit_ok 인데 arms_read 빈 목록 · 꼴 틀림 · group_cause 칸 없음 = 모순 ③ 요약 있는 길의 디스크 끝 기록 원인 signal_after = 런 기록 killed:signal_after 와 모순 (요약 없는 길 orphan_cause · A1b 는 안 바꿈) ④ 단계 요약 중복 칸 · NaN · ±Infinity = unreadable · 시험 = 합성 · 가짜 러너 · 실제 git 원장 · 이 컨테이너 (실제 kgy 3.8.10 · ibb · GPU 아님) · 고친 가드에 대한 독립 재공격 = 없음. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = pc12_attack/probe_pc12_independent.py rc 0 같음 (request_domain 255 수용 · 21 거부 · pc12_sibling_trace 8).",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py PC12A (F1 · 27 행 = 정직 9 · 함께 고침 13 · 요청 칸 없는 옆 이름 + 흔적 1 · 실경로 4 · 고치기 전 실패 16 → 0 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/before_PC12.log → after_PC12.log · before/after_PC12_rows.json)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/after_p1_outdir_coedit.out (사전 공격 12 탐침 원본 재실행 · 함께 고침 RUNNER_RC 10 가지 + TIME_LIMIT 2 가지 = True 12 줄 → 전부 False · 정직 arms 1 · _arm1 = False 그대로)",
@@ -15934,17 +16038,21 @@
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/p1_outdir_coedit.py (함께 고침 RUNNER_RC 10 + TIME_LIMIT 2 = True 12 줄 · p1_outdir_coedit.out · 옛 글 \"11 가지\" 정정) [고치기 전 재현]",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/p2_real_ledger.py (1a · 1b · 1c · p2_real_ledger.out) [고치기 전 재현]"
       ],
-      "claimed_fixed_sha": "d346ca94308a2111c08a11b5e12f036307a47fea"
+      "claimed_fixed_sha": "d346ca94308a2111c08a11b5e12f036307a47fea",
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC12-01 = 닫힘 — `:4883–4915, :3786–3800`. 정규 요청 255종 수용·비정규 21종 거부, arm1 실패 흔적을 남긴 채 arms1–8 옆 폴더로 바꿔도 흔적 검출. 원 p1 재생. S/E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC12-02",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 12 회차 (11-08 · 독립 · diff 만 · 대상 = 6a81f0c55 의 scripts/rint_r_chain.py 새 가드 (P2-A · P2-B · P3-5 · 같은 자리) · 그 파일 = 핀 2b3c42c6c 와 같음 · P1 0 · P2 3 · P3 2 · 거짓 fail-closed 못 찾음)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/REPORT.md",
       "title": "(사전 공격 12 F2) GROUP_UNCONFIRMED 대조 ④ 가 chain_end.confirmed 만 봄 — 정직 GU (러너 rc 1 · Traceback · 끝 기록 확인 False → recover chain_end rc 1) 의 요약 런 기록 rc 1 → 0 한 칸이 재실행 자격 (실제 원장 --add --resume rc 0)",
-      "note": "REPORT F2 · 자리 = chain_confirmed (4044–4069) · stopped_record_problem 4037 · 재현 p2_real_ledger (2a 정직 = runner_rc · rc 3 · 2b 한 칸 = group_unconfirmed · resume_ok True · rc 0 · 2c 두 칸 {timeout · null} 도 지남) · 같은 폴더 chain_end.rc = 1 (chain_confirmed 가 이미 읽는 dict) · 한 칸 손질이라 선언 한정 (두 칸 이상 함께 · 세 칸 손질 S9) 에 안 걸림 · 6a81f0c55 커밋 글 · pc10_n_fix/REPORT.md §8 의 \"한 칸 손질 넷 … 닫음\" 중 GU 기록 rc 꼴 = 과장 (SELF-158) — CT06 S2_forged_GU_rc0 는 끝 기록 CHAIN_OK1 (by chain · 확인 True = GU 생산자가 남기지 않는 꼴) 위에서만 시험 · PC11-02 의 \"닫음\" 범위를 좁힘 · 리뷰어 권고 ② = 멈춘 런 기록 (group_cause, rc) ↔ 사슬 쪽 (by chain 끝 기록 · recover chain_end) 생산자 대응표 대조 (signal_after = 디스크 원인 None).  ⬜ 1저자 처분 = (가) Codex 전에 고침 (시험 먼저) / (나) 한정으로 보냄 (Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5 ② ③).  고침 = chain_side (by chain 끝 기록 · recover 의 chain_end → {원인 · rc · 확인} · None = 못 읽음 · bad) · CHAIN_SIDE_SHAPES · STOP_CONFIRMED · chain_side_problem · rc_equal (판독 함수 · RC01 RC_READERS 등재) · stopped_record_problem ④ = 세 멈춤 코드 모두 (옛 = GU 의 확인 칸만) · chain_confirmed = 확인 칸 wrapper (이름 유지) · 생산자 대응표 = pc12_fix/REPORT.md §5 (Runner._execute 4974–4988 · run_in_group 2778–2800 · recover_group 7530 · 7582 · killed:signal_after 의 디스크 원인 = None) (scripts/rint_r_chain.py 4082–4155 · 3852–3856 · 4072–4078).  SELF-158 (과장) 의 정정 문장 = 회차 ③ 요청서 §5-2 · PC11-02 메모.  ★ 11-08 claimed_fixed = d346ca94308a2111c08a11b5e12f036307a47fea (1저자 11-08 \"권고대로\" = 처분 (가) Codex 전에 고침 · 1저자 11-06 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 · 정직 (생산자 꼴) 기록의 판정 그대로 · 시험 먼저 (PC12A–E 바탕 0/5 → 5/5) · 작업 트리 에이전트 커밋 → cherry-pick -x · 한 커밋 · 증거 docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md · 회귀 = 사슬 476/476 → 481/481 (첫 전체 479/481 = 고정물 AL12c code 'X' → MACHINE_NOT_ALLOWED · RC01 RC_READERS 에 rc_equal 등재 뒤 481/481) · 끝-끝 51 PASS · 0 FAIL · first_result 9/9 · ca_ext_runner 151 PASS · 0 FAIL · kgy 판 3.8.20 11 묶음 · 변이 7/7 (가드 하나 ↔ 검사 하나) · 사전 공격 12 탐침 원본 재실행 = 위조 행 전부 자격 없음 · 정직 행 그대로 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/) · 시험한 판 = 커밋 blob (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/code_sha256.txt 끝 판) · 웹앱 화면 없음 (재실행 자격 · 원장 · 멈춤 사유 화면 = grep 0) · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5-3 · §6 Q3).  한정 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md §6): 요청 칸 없는 기록 = outdir 접두 규칙만 (흔적 있는 옆 이름은 막힘 · 흔적 없는 옆 이름 자체는 받음) · 옆 이름 폴더가 있다는 사실 자체 = 모순 아님 · 사슬 쪽 끝 기록 없음 (그룹 기록 없는 GU · c2) · 시작 기록에 결합 안 됨 · chain_end 없는 옛 recover 끝 기록 = 대조 안 함 · 런 전 TIME_LIMIT 의 run 이름 차례 안 봄 · 1e400 같은 큰 수 = inf 로 읽힘 (칸 꼴 검사가 따로) · STOPS 안이지만 풀기 전 자리에서 생산자가 쓰지 않는 이름 (GENERATION · ARM_* · OUTDIR_NOT_EMPTY) 받음 · 같은 이름 런 기록 둘 · 다른 칸 (copied_from · seconds · machine …) · utc 글 꼴 = 그대로 · 범위가 바뀐 것 (모두 자격 없음 쪽 · 생산자 꼴 아님) ① TIME_LIMIT · RUNNER_RC 멈춤인데 사슬 쪽 확인 False (또는 원인 · rc 어긋남) = 자격 없음 ② 앞 런 기록 exit_ok 인데 arms_read 빈 목록 · 꼴 틀림 · group_cause 칸 없음 = 모순 ③ 요약 있는 길의 디스크 끝 기록 원인 signal_after = 런 기록 killed:signal_after 와 모순 (요약 없는 길 orphan_cause · A1b 는 안 바꿈) ④ 단계 요약 중복 칸 · NaN · ±Infinity = unreadable · 시험 = 합성 · 가짜 러너 · 실제 git 원장 · 이 컨테이너 (실제 kgy 3.8.10 · ibb · GPU 아님) · 고친 가드에 대한 독립 재공격 = 없음.",
+      "note": "REPORT F2 · 자리 = chain_confirmed (4044–4069) · stopped_record_problem 4037 · 재현 p2_real_ledger (2a 정직 = runner_rc · rc 3 · 2b 한 칸 = group_unconfirmed · resume_ok True · rc 0 · 2c 두 칸 {timeout · null} 도 지남) · 같은 폴더 chain_end.rc = 1 (chain_confirmed 가 이미 읽는 dict) · 한 칸 손질이라 선언 한정 (두 칸 이상 함께 · 세 칸 손질 S9) 에 안 걸림 · 6a81f0c55 커밋 글 · pc10_n_fix/REPORT.md §8 의 \"한 칸 손질 넷 … 닫음\" 중 GU 기록 rc 꼴 = 과장 (SELF-158) — CT06 S2_forged_GU_rc0 는 끝 기록 CHAIN_OK1 (by chain · 확인 True = GU 생산자가 남기지 않는 꼴) 위에서만 시험 · PC11-02 의 \"닫음\" 범위를 좁힘 · 리뷰어 권고 ② = 멈춘 런 기록 (group_cause, rc) ↔ 사슬 쪽 (by chain 끝 기록 · recover chain_end) 생산자 대응표 대조 (signal_after = 디스크 원인 None).  ⬜ 1저자 처분 = (가) Codex 전에 고침 (시험 먼저) / (나) 한정으로 보냄 (Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5 ② ③).  고침 = chain_side (by chain 끝 기록 · recover 의 chain_end → {원인 · rc · 확인} · None = 못 읽음 · bad) · CHAIN_SIDE_SHAPES · STOP_CONFIRMED · chain_side_problem · rc_equal (판독 함수 · RC01 RC_READERS 등재) · stopped_record_problem ④ = 세 멈춤 코드 모두 (옛 = GU 의 확인 칸만) · chain_confirmed = 확인 칸 wrapper (이름 유지) · 생산자 대응표 = pc12_fix/REPORT.md §5 (Runner._execute 4974–4988 · run_in_group 2778–2800 · recover_group 7530 · 7582 · killed:signal_after 의 디스크 원인 = None) (scripts/rint_r_chain.py 4082–4155 · 3852–3856 · 4072–4078).  SELF-158 (과장) 의 정정 문장 = 회차 ③ 요청서 §5-2 · PC11-02 메모.  ★ 11-08 claimed_fixed = d346ca94308a2111c08a11b5e12f036307a47fea (1저자 11-08 \"권고대로\" = 처분 (가) Codex 전에 고침 · 1저자 11-06 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 · 정직 (생산자 꼴) 기록의 판정 그대로 · 시험 먼저 (PC12A–E 바탕 0/5 → 5/5) · 작업 트리 에이전트 커밋 → cherry-pick -x · 한 커밋 · 증거 docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md · 회귀 = 사슬 476/476 → 481/481 (첫 전체 479/481 = 고정물 AL12c code 'X' → MACHINE_NOT_ALLOWED · RC01 RC_READERS 에 rc_equal 등재 뒤 481/481) · 끝-끝 51 PASS · 0 FAIL · first_result 9/9 · ca_ext_runner 151 PASS · 0 FAIL · kgy 판 3.8.20 11 묶음 · 변이 7/7 (가드 하나 ↔ 검사 하나) · 사전 공격 12 탐침 원본 재실행 = 위조 행 전부 자격 없음 · 정직 행 그대로 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/) · 시험한 판 = 커밋 blob (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/code_sha256.txt 끝 판) · 웹앱 화면 없음 (재실행 자격 · 원장 · 멈춤 사유 화면 = grep 0) · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5-3 · §6 Q3).  한정 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md §6): 요청 칸 없는 기록 = outdir 접두 규칙만 (흔적 있는 옆 이름은 막힘 · 흔적 없는 옆 이름 자체는 받음) · 옆 이름 폴더가 있다는 사실 자체 = 모순 아님 · 사슬 쪽 끝 기록 없음 (그룹 기록 없는 GU · c2) · 시작 기록에 결합 안 됨 · chain_end 없는 옛 recover 끝 기록 = 대조 안 함 · 런 전 TIME_LIMIT 의 run 이름 차례 안 봄 · 1e400 같은 큰 수 = inf 로 읽힘 (칸 꼴 검사가 따로) · STOPS 안이지만 풀기 전 자리에서 생산자가 쓰지 않는 이름 (GENERATION · ARM_* · OUTDIR_NOT_EMPTY) 받음 · 같은 이름 런 기록 둘 · 다른 칸 (copied_from · seconds · machine …) · utc 글 꼴 = 그대로 · 범위가 바뀐 것 (모두 자격 없음 쪽 · 생산자 꼴 아님) ① TIME_LIMIT · RUNNER_RC 멈춤인데 사슬 쪽 확인 False (또는 원인 · rc 어긋남) = 자격 없음 ② 앞 런 기록 exit_ok 인데 arms_read 빈 목록 · 꼴 틀림 · group_cause 칸 없음 = 모순 ③ 요약 있는 길의 디스크 끝 기록 원인 signal_after = 런 기록 killed:signal_after 와 모순 (요약 없는 길 orphan_cause · A1b 는 안 바꿈) ④ 단계 요약 중복 칸 · NaN · ±Infinity = unreadable · 시험 = 합성 · 가짜 러너 · 실제 git 원장 · 이 컨테이너 (실제 kgy 3.8.10 · ibb · GPU 아님) · 고친 가드에 대한 독립 재공격 = 없음. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = pc12_attack/probe_pc12_independent.py rc 0 같음 (chain_side 175 행 = 정직 25 · 변이 150 · 1,225/1,225 잎) · contracts_p2p4_git.py p2_2a–2c · positive_GU_rc0 같음.",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py PC12B (F2 · 33 행 = 정직 15 · 모순 14 · 실경로 4 · 고치기 전 실패 16 → 0 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/before_PC12.log → after_PC12.log)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/after_p2_real_ledger.out ((2a) 정직 GU rc 1 = runner_rc · rc 3 그대로 · (2b) 런 기록 rc 1 → 0 한 칸 · (2c) {timeout · null} 두 칸 = group_unconfirmed · True · rc 0 → False · rc 3 RESUME_NOT_ALLOWED)",
@@ -15955,7 +16063,11 @@
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/mutation_pc12.json (변이 7/7 잡힘 · 가드 하나 ↔ 검사 하나 · 무변이 5/5 mut_sanity_rows.json)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/p2_real_ledger.py (2a · 2b · 2c · p2_real_ledger.out) [고치기 전 재현]"
       ],
-      "claimed_fixed_sha": "d346ca94308a2111c08a11b5e12f036307a47fea"
+      "claimed_fixed_sha": "d346ca94308a2111c08a11b5e12f036307a47fea",
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC12-02 = 닫힘 — `:4082–4155`. 실제 생산자 대응 25행 수용·150변이 거부. signal_after 디스크 원인 None 및 확인 우선순위 일치. 신호 경합 실OS 자격은 아님. S/E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC12-03",
@@ -15965,7 +16077,7 @@
       "found_by": "사전 공격 12 회차 (11-08 · 독립 · diff 만 · 대상 = 6a81f0c55 의 scripts/rint_r_chain.py 새 가드 (P2-A · P2-B · P3-5 · 같은 자리) · 그 파일 = 핀 2b3c42c6c 와 같음 · P1 0 · P2 3 · P3 2 · 거짓 fail-closed 못 찾음)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/REPORT.md",
       "title": "(사전 공격 12 F3) 런 기록 없는 TIME_LIMIT (꼴 none) = 런 이름 꼴 · 그 이름 흔적만 봄 · runs 안 봄 — 정직 RUNNER_RC L01 rc 1 (Traceback) 의 stop 두 칸 (code TIME_LIMIT · run = 다음 이름 L02_ceiling 또는 zzz) 손질 → timeout · 재실행 자격 · resume rc 0 · 재실행이 rc 1 런 L01 을 다시 돈다",
-      "note": "REPORT F3 · 자리 = stop_record_problem 4000 · stopped_record_problem 4021 (if rr is None: return None) · 재현 p4_tl_none_after_fail (ResumeRunner._src_done(L01) = False) · 같은 부류 F3b (P2–P3) = 멈춘 기록 앞 기록이 exit_ok 인지 안 봄 (p5_misc_b a1 · a2) · 선언 한정 \"런 전 TIME_LIMIT 이름 차례\" (PC11-06) 로 안 덮임 (이름은 맞는 다음 이름) · 두 칸 (stop.code · stop.run) 손질 = 선언 한정 (두 칸 이상 함께 바꾼 손 · Q-D) 에 일부 걸림 · runs 무시 · 앞 기록 exit_ok 미확인은 한정 글에 없음 · 리뷰어 권고 ③ = 멈춘 기록 앞 기록 전부 exit_ok · none 이면 runs 마지막도 exit_ok + arms_read 비지 않음.  ⬜ 1저자 처분 = (가) Codex 전에 고침 (시험 먼저) / (나) 한정으로 보냄 (Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5 ② ③).  고침 = prior_runs_problem (멈춘 런 앞의 런 기록 전부 = run_record_shape exit_ok + arms_read 비지 않은 목록 · 런 기록 없는 멈춤 = runs 전부) · stop_record_problem 끝에서 부름 (scripts/rint_r_chain.py 4157–4175 · 4035) · 근거 = Runner._execute 4988–4997 (rc 성공 아니면 Stop · read_run 실패 = Stop) · ResumeRunner._copy 5071 · 5079 · MergeFetch 6397 · 6415.  한정 = 런 전 TIME_LIMIT 의 run 이름 차례 (다음 이름인지) 는 보지 않음 (zzz 는 앞 런 실패 규칙으로만 막힘 · PC11-06 그대로).  ★ 11-08 claimed_fixed = d346ca94308a2111c08a11b5e12f036307a47fea (1저자 11-08 \"권고대로\" = 처분 (가) Codex 전에 고침 · 1저자 11-06 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 · 정직 (생산자 꼴) 기록의 판정 그대로 · 시험 먼저 (PC12A–E 바탕 0/5 → 5/5) · 작업 트리 에이전트 커밋 → cherry-pick -x · 한 커밋 · 증거 docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md · 회귀 = 사슬 476/476 → 481/481 (첫 전체 479/481 = 고정물 AL12c code 'X' → MACHINE_NOT_ALLOWED · RC01 RC_READERS 에 rc_equal 등재 뒤 481/481) · 끝-끝 51 PASS · 0 FAIL · first_result 9/9 · ca_ext_runner 151 PASS · 0 FAIL · kgy 판 3.8.20 11 묶음 · 변이 7/7 (가드 하나 ↔ 검사 하나) · 사전 공격 12 탐침 원본 재실행 = 위조 행 전부 자격 없음 · 정직 행 그대로 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/) · 시험한 판 = 커밋 blob (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/code_sha256.txt 끝 판) · 웹앱 화면 없음 (재실행 자격 · 원장 · 멈춤 사유 화면 = grep 0) · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5-3 · §6 Q3).  한정 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md §6): 요청 칸 없는 기록 = outdir 접두 규칙만 (흔적 있는 옆 이름은 막힘 · 흔적 없는 옆 이름 자체는 받음) · 옆 이름 폴더가 있다는 사실 자체 = 모순 아님 · 사슬 쪽 끝 기록 없음 (그룹 기록 없는 GU · c2) · 시작 기록에 결합 안 됨 · chain_end 없는 옛 recover 끝 기록 = 대조 안 함 · 런 전 TIME_LIMIT 의 run 이름 차례 안 봄 · 1e400 같은 큰 수 = inf 로 읽힘 (칸 꼴 검사가 따로) · STOPS 안이지만 풀기 전 자리에서 생산자가 쓰지 않는 이름 (GENERATION · ARM_* · OUTDIR_NOT_EMPTY) 받음 · 같은 이름 런 기록 둘 · 다른 칸 (copied_from · seconds · machine …) · utc 글 꼴 = 그대로 · 범위가 바뀐 것 (모두 자격 없음 쪽 · 생산자 꼴 아님) ① TIME_LIMIT · RUNNER_RC 멈춤인데 사슬 쪽 확인 False (또는 원인 · rc 어긋남) = 자격 없음 ② 앞 런 기록 exit_ok 인데 arms_read 빈 목록 · 꼴 틀림 · group_cause 칸 없음 = 모순 ③ 요약 있는 길의 디스크 끝 기록 원인 signal_after = 런 기록 killed:signal_after 와 모순 (요약 없는 길 orphan_cause · A1b 는 안 바꿈) ④ 단계 요약 중복 칸 · NaN · ±Infinity = unreadable · 시험 = 합성 · 가짜 러너 · 실제 git 원장 · 이 컨테이너 (실제 kgy 3.8.10 · ibb · GPU 아님) · 고친 가드에 대한 독립 재공격 = 없음.",
+      "note": "REPORT F3 · 자리 = stop_record_problem 4000 · stopped_record_problem 4021 (if rr is None: return None) · 재현 p4_tl_none_after_fail (ResumeRunner._src_done(L01) = False) · 같은 부류 F3b (P2–P3) = 멈춘 기록 앞 기록이 exit_ok 인지 안 봄 (p5_misc_b a1 · a2) · 선언 한정 \"런 전 TIME_LIMIT 이름 차례\" (PC11-06) 로 안 덮임 (이름은 맞는 다음 이름) · 두 칸 (stop.code · stop.run) 손질 = 선언 한정 (두 칸 이상 함께 바꾼 손 · Q-D) 에 일부 걸림 · runs 무시 · 앞 기록 exit_ok 미확인은 한정 글에 없음 · 리뷰어 권고 ③ = 멈춘 기록 앞 기록 전부 exit_ok · none 이면 runs 마지막도 exit_ok + arms_read 비지 않음.  ⬜ 1저자 처분 = (가) Codex 전에 고침 (시험 먼저) / (나) 한정으로 보냄 (Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5 ② ③).  고침 = prior_runs_problem (멈춘 런 앞의 런 기록 전부 = run_record_shape exit_ok + arms_read 비지 않은 목록 · 런 기록 없는 멈춤 = runs 전부) · stop_record_problem 끝에서 부름 (scripts/rint_r_chain.py 4157–4175 · 4035) · 근거 = Runner._execute 4988–4997 (rc 성공 아니면 Stop · read_run 실패 = Stop) · ResumeRunner._copy 5071 · 5079 · MergeFetch 6397 · 6415.  한정 = 런 전 TIME_LIMIT 의 run 이름 차례 (다음 이름인지) 는 보지 않음 (zzz 는 앞 런 실패 규칙으로만 막힘 · PC11-06 그대로).  ★ 11-08 claimed_fixed = d346ca94308a2111c08a11b5e12f036307a47fea (1저자 11-08 \"권고대로\" = 처분 (가) Codex 전에 고침 · 1저자 11-06 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 · 정직 (생산자 꼴) 기록의 판정 그대로 · 시험 먼저 (PC12A–E 바탕 0/5 → 5/5) · 작업 트리 에이전트 커밋 → cherry-pick -x · 한 커밋 · 증거 docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md · 회귀 = 사슬 476/476 → 481/481 (첫 전체 479/481 = 고정물 AL12c code 'X' → MACHINE_NOT_ALLOWED · RC01 RC_READERS 에 rc_equal 등재 뒤 481/481) · 끝-끝 51 PASS · 0 FAIL · first_result 9/9 · ca_ext_runner 151 PASS · 0 FAIL · kgy 판 3.8.20 11 묶음 · 변이 7/7 (가드 하나 ↔ 검사 하나) · 사전 공격 12 탐침 원본 재실행 = 위조 행 전부 자격 없음 · 정직 행 그대로 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/) · 시험한 판 = 커밋 blob (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/code_sha256.txt 끝 판) · 웹앱 화면 없음 (재실행 자격 · 원장 · 멈춤 사유 화면 = grep 0) · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5-3 · §6 Q3).  한정 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md §6): 요청 칸 없는 기록 = outdir 접두 규칙만 (흔적 있는 옆 이름은 막힘 · 흔적 없는 옆 이름 자체는 받음) · 옆 이름 폴더가 있다는 사실 자체 = 모순 아님 · 사슬 쪽 끝 기록 없음 (그룹 기록 없는 GU · c2) · 시작 기록에 결합 안 됨 · chain_end 없는 옛 recover 끝 기록 = 대조 안 함 · 런 전 TIME_LIMIT 의 run 이름 차례 안 봄 · 1e400 같은 큰 수 = inf 로 읽힘 (칸 꼴 검사가 따로) · STOPS 안이지만 풀기 전 자리에서 생산자가 쓰지 않는 이름 (GENERATION · ARM_* · OUTDIR_NOT_EMPTY) 받음 · 같은 이름 런 기록 둘 · 다른 칸 (copied_from · seconds · machine …) · utc 글 꼴 = 그대로 · 범위가 바뀐 것 (모두 자격 없음 쪽 · 생산자 꼴 아님) ① TIME_LIMIT · RUNNER_RC 멈춤인데 사슬 쪽 확인 False (또는 원인 · rc 어긋남) = 자격 없음 ② 앞 런 기록 exit_ok 인데 arms_read 빈 목록 · 꼴 틀림 · group_cause 칸 없음 = 모순 ③ 요약 있는 길의 디스크 끝 기록 원인 signal_after = 런 기록 killed:signal_after 와 모순 (요약 없는 길 orphan_cause · A1b 는 안 바꿈) ④ 단계 요약 중복 칸 · NaN · ±Infinity = unreadable · 시험 = 합성 · 가짜 러너 · 실제 git 원장 · 이 컨테이너 (실제 kgy 3.8.10 · ibb · GPU 아님) · 고친 가드에 대한 독립 재공격 = 없음. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 부분 — 옛 rc 실패/빈 목록 반례는 차단. 그러나 실제 판독 실패가 남긴 nonempty 파일 신원 목록을 앞 런 완료로 인정. **RR3-01**을 봉인 전에 보완해야 함. S/E. — 남은 부류 = RR3-01.  상태 그대로 (claimed_fixed · 회차 ② 반입 관례 = 부분은 상태 그대로 · 남은 분기는 새 항목 (PC6-13 ↔ RR2-01) · 1저자 결정 대기 = 수정 계획 docs/reviews/rint2_rr3_fix_plan_20261108.md Q3) · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = pc12_attack/probe_pc12_independent.py rc 0 같음 (RR3-01 반례 재현 · 판정값 차이 0) · contracts_p2p4_git.py 12/12 같음 (원 F3 p4_L02 · p4_zzz = RESUME_NOT_ALLOWED = 옛 반례 차단 같음).",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py PC12C (F3 · F3b · 17 행 = 정직 5 · 모순 8 · 실경로 4 · 고치기 전 실패 10 → 0 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/before_PC12.log → after_PC12.log)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/after_p4_tl_none_after_fail.out (정직 RUNNER_RC L01 rc 1 = runner_rc · rc 3 그대로 · 위조 TIME_LIMIT run L02_ceiling · zzz = timeout · True · rc 0 → False · rc 3 RESUME_NOT_ALLOWED)",
@@ -15982,12 +16094,12 @@
     {
       "id": "PC12-04",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 12 회차 (11-08 · 독립 · diff 만 · 대상 = 6a81f0c55 의 scripts/rint_r_chain.py 새 가드 (P2-A · P2-B · P3-5 · 같은 자리) · 그 파일 = 핀 2b3c42c6c 와 같음 · P1 0 · P2 3 · P3 2 · 거짓 fail-closed 못 찾음)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/REPORT.md",
       "title": "(사전 공격 12 F4) 단계 요약 읽기 = 느슨한 json.loads (중복 칸 = 뒤 값 · NaN 받음) — 새 가드가 읽는 arms · outdir · rc 가 중복 칸이면 사람 = 앞 값 · 코드 = 뒤 값",
-      "note": "REPORT F4 · 자리 = read_summary_state (5625) · 재현 p5_misc_b (b) = 읽기 상태 ok · 코드가 읽은 arms/outdir = 9 L01_floor_arm9 · 다시 셈 resume_ok True (F1 이 겉보기 정직한 기록으로) · 거부 기록 · 계획 · 원장은 이미 _json_strict · 리뷰어 권고 ④ = 결과 줄 길의 요약 읽기 = _json_strict 꼴 (중복 · NaN = unreadable).  ⬜ 1저자 처분 = (가) Codex 전에 고침 (시험 먼저) / (나) 한정으로 보냄 (Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5 ② ③).  고침 = read_summary_state = _json_strict (거부 기록 · 계획 · 원장과 같은 읽기 · 중복 칸 · NaN · ±Infinity = unreadable · 자격 False · 옛 = json.loads) (scripts/rint_r_chain.py 5759) · 생산자 바이트 (write_summary → canon_bytes sort_keys · allow_nan False + _clean) 에는 중복 칸 · NaN 없음 ⇒ 정직 요약을 막지 않음 (PC12D canonical 행 · 사슬 · 끝-끝 전체).  한정 = 1e400 같은 큰 수 리터럴은 inf 로 읽힘 (읽는 칸의 꼴 검사가 따로 막음).  ★ 11-08 claimed_fixed = d346ca94308a2111c08a11b5e12f036307a47fea (1저자 11-08 \"권고대로\" = 처분 (가) Codex 전에 고침 · 1저자 11-06 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 · 정직 (생산자 꼴) 기록의 판정 그대로 · 시험 먼저 (PC12A–E 바탕 0/5 → 5/5) · 작업 트리 에이전트 커밋 → cherry-pick -x · 한 커밋 · 증거 docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md · 회귀 = 사슬 476/476 → 481/481 (첫 전체 479/481 = 고정물 AL12c code 'X' → MACHINE_NOT_ALLOWED · RC01 RC_READERS 에 rc_equal 등재 뒤 481/481) · 끝-끝 51 PASS · 0 FAIL · first_result 9/9 · ca_ext_runner 151 PASS · 0 FAIL · kgy 판 3.8.20 11 묶음 · 변이 7/7 (가드 하나 ↔ 검사 하나) · 사전 공격 12 탐침 원본 재실행 = 위조 행 전부 자격 없음 · 정직 행 그대로 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/) · 시험한 판 = 커밋 blob (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/code_sha256.txt 끝 판) · 웹앱 화면 없음 (재실행 자격 · 원장 · 멈춤 사유 화면 = grep 0) · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5-3 · §6 Q3).  한정 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md §6): 요청 칸 없는 기록 = outdir 접두 규칙만 (흔적 있는 옆 이름은 막힘 · 흔적 없는 옆 이름 자체는 받음) · 옆 이름 폴더가 있다는 사실 자체 = 모순 아님 · 사슬 쪽 끝 기록 없음 (그룹 기록 없는 GU · c2) · 시작 기록에 결합 안 됨 · chain_end 없는 옛 recover 끝 기록 = 대조 안 함 · 런 전 TIME_LIMIT 의 run 이름 차례 안 봄 · 1e400 같은 큰 수 = inf 로 읽힘 (칸 꼴 검사가 따로) · STOPS 안이지만 풀기 전 자리에서 생산자가 쓰지 않는 이름 (GENERATION · ARM_* · OUTDIR_NOT_EMPTY) 받음 · 같은 이름 런 기록 둘 · 다른 칸 (copied_from · seconds · machine …) · utc 글 꼴 = 그대로 · 범위가 바뀐 것 (모두 자격 없음 쪽 · 생산자 꼴 아님) ① TIME_LIMIT · RUNNER_RC 멈춤인데 사슬 쪽 확인 False (또는 원인 · rc 어긋남) = 자격 없음 ② 앞 런 기록 exit_ok 인데 arms_read 빈 목록 · 꼴 틀림 · group_cause 칸 없음 = 모순 ③ 요약 있는 길의 디스크 끝 기록 원인 signal_after = 런 기록 killed:signal_after 와 모순 (요약 없는 길 orphan_cause · A1b 는 안 바꿈) ④ 단계 요약 중복 칸 · NaN · ±Infinity = unreadable · 시험 = 합성 · 가짜 러너 · 실제 git 원장 · 이 컨테이너 (실제 kgy 3.8.10 · ibb · GPU 아님) · 고친 가드에 대한 독립 재공격 = 없음.",
+      "note": "REPORT F4 · 자리 = read_summary_state (5625) · 재현 p5_misc_b (b) = 읽기 상태 ok · 코드가 읽은 arms/outdir = 9 L01_floor_arm9 · 다시 셈 resume_ok True (F1 이 겉보기 정직한 기록으로) · 거부 기록 · 계획 · 원장은 이미 _json_strict · 리뷰어 권고 ④ = 결과 줄 길의 요약 읽기 = _json_strict 꼴 (중복 · NaN = unreadable).  ⬜ 1저자 처분 = (가) Codex 전에 고침 (시험 먼저) / (나) 한정으로 보냄 (Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5 ② ③).  고침 = read_summary_state = _json_strict (거부 기록 · 계획 · 원장과 같은 읽기 · 중복 칸 · NaN · ±Infinity = unreadable · 자격 False · 옛 = json.loads) (scripts/rint_r_chain.py 5759) · 생산자 바이트 (write_summary → canon_bytes sort_keys · allow_nan False + _clean) 에는 중복 칸 · NaN 없음 ⇒ 정직 요약을 막지 않음 (PC12D canonical 행 · 사슬 · 끝-끝 전체).  한정 = 1e400 같은 큰 수 리터럴은 inf 로 읽힘 (읽는 칸의 꼴 검사가 따로 막음).  ★ 11-08 claimed_fixed = d346ca94308a2111c08a11b5e12f036307a47fea (1저자 11-08 \"권고대로\" = 처분 (가) Codex 전에 고침 · 1저자 11-06 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 · 정직 (생산자 꼴) 기록의 판정 그대로 · 시험 먼저 (PC12A–E 바탕 0/5 → 5/5) · 작업 트리 에이전트 커밋 → cherry-pick -x · 한 커밋 · 증거 docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md · 회귀 = 사슬 476/476 → 481/481 (첫 전체 479/481 = 고정물 AL12c code 'X' → MACHINE_NOT_ALLOWED · RC01 RC_READERS 에 rc_equal 등재 뒤 481/481) · 끝-끝 51 PASS · 0 FAIL · first_result 9/9 · ca_ext_runner 151 PASS · 0 FAIL · kgy 판 3.8.20 11 묶음 · 변이 7/7 (가드 하나 ↔ 검사 하나) · 사전 공격 12 탐침 원본 재실행 = 위조 행 전부 자격 없음 · 정직 행 그대로 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/) · 시험한 판 = 커밋 blob (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/code_sha256.txt 끝 판) · 웹앱 화면 없음 (재실행 자격 · 원장 · 멈춤 사유 화면 = grep 0) · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5-3 · §6 Q3).  한정 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md §6): 요청 칸 없는 기록 = outdir 접두 규칙만 (흔적 있는 옆 이름은 막힘 · 흔적 없는 옆 이름 자체는 받음) · 옆 이름 폴더가 있다는 사실 자체 = 모순 아님 · 사슬 쪽 끝 기록 없음 (그룹 기록 없는 GU · c2) · 시작 기록에 결합 안 됨 · chain_end 없는 옛 recover 끝 기록 = 대조 안 함 · 런 전 TIME_LIMIT 의 run 이름 차례 안 봄 · 1e400 같은 큰 수 = inf 로 읽힘 (칸 꼴 검사가 따로) · STOPS 안이지만 풀기 전 자리에서 생산자가 쓰지 않는 이름 (GENERATION · ARM_* · OUTDIR_NOT_EMPTY) 받음 · 같은 이름 런 기록 둘 · 다른 칸 (copied_from · seconds · machine …) · utc 글 꼴 = 그대로 · 범위가 바뀐 것 (모두 자격 없음 쪽 · 생산자 꼴 아님) ① TIME_LIMIT · RUNNER_RC 멈춤인데 사슬 쪽 확인 False (또는 원인 · rc 어긋남) = 자격 없음 ② 앞 런 기록 exit_ok 인데 arms_read 빈 목록 · 꼴 틀림 · group_cause 칸 없음 = 모순 ③ 요약 있는 길의 디스크 끝 기록 원인 signal_after = 런 기록 killed:signal_after 와 모순 (요약 없는 길 orphan_cause · A1b 는 안 바꿈) ④ 단계 요약 중복 칸 · NaN · ±Infinity = unreadable · 시험 = 합성 · 가짜 러너 · 실제 git 원장 · 이 컨테이너 (실제 kgy 3.8.10 · ibb · GPU 아님) · 고친 가드에 대한 독립 재공격 = 없음. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = pc12_attack/probe_pc12_independent.py rc 0 같음 (strict_summary 6 행).",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py PC12D (F4 · 10 행 = 중복 칸 (런 기록 안 · 최상위) · NaN · Infinity · −Infinity = unreadable · 정준 바이트 · 다른 객체의 같은 이름 칸 = ok · 탐침 b 다시 셈 · 생산자 바이트 다시 셈 · 실경로 1 · 고치기 전 실패 7 → 0 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/before_PC12.log → after_PC12.log)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/after_p5_misc_b_fixed.out ((b) 중복 칸 요약 = 읽기 ok · 뒤 값 arms 9 · 다시 셈 resource · True → unreadable · 다시 셈 interrupted · summary_unreadable · False · 원 탐침 p5_misc_b.py 는 None 첨자 Traceback = 고침의 효과 · None 안전 사본 p5_misc_b_fixed.py)",
@@ -15997,17 +16109,21 @@
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/mutation_pc12.json (변이 7/7 잡힘 · 가드 하나 ↔ 검사 하나 · 무변이 5/5 mut_sanity_rows.json)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/p5_misc_b.py (b · p5_misc_b.out) [고치기 전 재현]"
       ],
-      "claimed_fixed_sha": "d346ca94308a2111c08a11b5e12f036307a47fea"
+      "claimed_fixed_sha": "d346ca94308a2111c08a11b5e12f036307a47fea",
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC12-04 = 닫힘 — `:5759`. 중복 키·NaN·±Infinity 단계 요약 거부. p5 원 탐침은 None 첨자에서 중단하므로 출력문만 None-safe로 바꿔 후속 관측 보존. 1e400와 모든 JSON 인증은 별도. E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "PC12-05",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "사전 공격 12 회차 (11-08 · 독립 · diff 만 · 대상 = 6a81f0c55 의 scripts/rint_r_chain.py 새 가드 (P2-A · P2-B · P3-5 · 같은 자리) · 그 파일 = 핀 2b3c42c6c 와 같음 · P1 0 · P2 3 · P3 2 · 거짓 fail-closed 못 찾음)",
       "opened_in": "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/REPORT.md",
       "title": "(사전 공격 12 F5) 시도 폴더 안 거부 기록 code = 글자 꼴 (STOP_CODE_RE) 만 — XYZ (STOPS 밖) · CALIBRATED · GENERATION · OUTDIR_NOT_EMPTY (옆 기록 전용) 를 rejected 로 받음 (채택 영향 없음 · 결과 줄 멈춤 이름 표시만)",
-      "note": "REPORT F5 · 자리 = rejected_form_problem 4303 · 재현 p6_rejected · REPORT_EXT §8 거부 기록 한정 (\"code 의 STOPS 소속 = 안 봄\") 에 이미 적힌 꼴 · PC11-01 (P2-A) 같은 함수 · 리뷰어 권고 ⑤ = code ∈ STOPS (폴더 안이면 OUTDIR_NOT_EMPTY 제외).  ⬜ 1저자 처분 = (가) Codex 전에 고침 (시험 먼저) / (나) 한정으로 보냄 (Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5 ② ③).  고침 = rejected_form_problem code ∈ STOPS (옛 = 글자 꼴 STOP_CODE_RE 만) (scripts/rint_r_chain.py 4410).  한정 = STOPS 안이지만 풀기 전 자리에서 생산자가 쓰지 않는 이름 (GENERATION · ARM_* 등 결과 뒤 멈춤 · OUTDIR_NOT_EMPTY 옆 기록 전용) 은 받음 — 풀기 전 코드 집합은 열거하지 않음 (attempt_open 의 Stop 전부).  ★ 11-08 claimed_fixed = d346ca94308a2111c08a11b5e12f036307a47fea (1저자 11-08 \"권고대로\" = 처분 (가) Codex 전에 고침 · 1저자 11-06 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 · 정직 (생산자 꼴) 기록의 판정 그대로 · 시험 먼저 (PC12A–E 바탕 0/5 → 5/5) · 작업 트리 에이전트 커밋 → cherry-pick -x · 한 커밋 · 증거 docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md · 회귀 = 사슬 476/476 → 481/481 (첫 전체 479/481 = 고정물 AL12c code 'X' → MACHINE_NOT_ALLOWED · RC01 RC_READERS 에 rc_equal 등재 뒤 481/481) · 끝-끝 51 PASS · 0 FAIL · first_result 9/9 · ca_ext_runner 151 PASS · 0 FAIL · kgy 판 3.8.20 11 묶음 · 변이 7/7 (가드 하나 ↔ 검사 하나) · 사전 공격 12 탐침 원본 재실행 = 위조 행 전부 자격 없음 · 정직 행 그대로 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/) · 시험한 판 = 커밋 blob (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/code_sha256.txt 끝 판) · 웹앱 화면 없음 (재실행 자격 · 원장 · 멈춤 사유 화면 = grep 0) · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5-3 · §6 Q3).  한정 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md §6): 요청 칸 없는 기록 = outdir 접두 규칙만 (흔적 있는 옆 이름은 막힘 · 흔적 없는 옆 이름 자체는 받음) · 옆 이름 폴더가 있다는 사실 자체 = 모순 아님 · 사슬 쪽 끝 기록 없음 (그룹 기록 없는 GU · c2) · 시작 기록에 결합 안 됨 · chain_end 없는 옛 recover 끝 기록 = 대조 안 함 · 런 전 TIME_LIMIT 의 run 이름 차례 안 봄 · 1e400 같은 큰 수 = inf 로 읽힘 (칸 꼴 검사가 따로) · STOPS 안이지만 풀기 전 자리에서 생산자가 쓰지 않는 이름 (GENERATION · ARM_* · OUTDIR_NOT_EMPTY) 받음 · 같은 이름 런 기록 둘 · 다른 칸 (copied_from · seconds · machine …) · utc 글 꼴 = 그대로 · 범위가 바뀐 것 (모두 자격 없음 쪽 · 생산자 꼴 아님) ① TIME_LIMIT · RUNNER_RC 멈춤인데 사슬 쪽 확인 False (또는 원인 · rc 어긋남) = 자격 없음 ② 앞 런 기록 exit_ok 인데 arms_read 빈 목록 · 꼴 틀림 · group_cause 칸 없음 = 모순 ③ 요약 있는 길의 디스크 끝 기록 원인 signal_after = 런 기록 killed:signal_after 와 모순 (요약 없는 길 orphan_cause · A1b 는 안 바꿈) ④ 단계 요약 중복 칸 · NaN · ±Infinity = unreadable · 시험 = 합성 · 가짜 러너 · 실제 git 원장 · 이 컨테이너 (실제 kgy 3.8.10 · ibb · GPU 아님) · 고친 가드에 대한 독립 재공격 = 없음.",
+      "note": "REPORT F5 · 자리 = rejected_form_problem 4303 · 재현 p6_rejected · REPORT_EXT §8 거부 기록 한정 (\"code 의 STOPS 소속 = 안 봄\") 에 이미 적힌 꼴 · PC11-01 (P2-A) 같은 함수 · 리뷰어 권고 ⑤ = code ∈ STOPS (폴더 안이면 OUTDIR_NOT_EMPTY 제외).  ⬜ 1저자 처분 = (가) Codex 전에 고침 (시험 먼저) / (나) 한정으로 보냄 (Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5 ② ③).  고침 = rejected_form_problem code ∈ STOPS (옛 = 글자 꼴 STOP_CODE_RE 만) (scripts/rint_r_chain.py 4410).  한정 = STOPS 안이지만 풀기 전 자리에서 생산자가 쓰지 않는 이름 (GENERATION · ARM_* 등 결과 뒤 멈춤 · OUTDIR_NOT_EMPTY 옆 기록 전용) 은 받음 — 풀기 전 코드 집합은 열거하지 않음 (attempt_open 의 Stop 전부).  ★ 11-08 claimed_fixed = d346ca94308a2111c08a11b5e12f036307a47fea (1저자 11-08 \"권고대로\" = 처분 (가) Codex 전에 고침 · 1저자 11-06 규칙 = 생산자가 쓰지 않는 칸 조합 = 모순 = 재실행 자격 없음 · 정직 (생산자 꼴) 기록의 판정 그대로 · 시험 먼저 (PC12A–E 바탕 0/5 → 5/5) · 작업 트리 에이전트 커밋 → cherry-pick -x · 한 커밋 · 증거 docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md · 회귀 = 사슬 476/476 → 481/481 (첫 전체 479/481 = 고정물 AL12c code 'X' → MACHINE_NOT_ALLOWED · RC01 RC_READERS 에 rc_equal 등재 뒤 481/481) · 끝-끝 51 PASS · 0 FAIL · first_result 9/9 · ca_ext_runner 151 PASS · 0 FAIL · kgy 판 3.8.20 11 묶음 · 변이 7/7 (가드 하나 ↔ 검사 하나) · 사전 공격 12 탐침 원본 재실행 = 위조 행 전부 자격 없음 · 정직 행 그대로 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/) · 시험한 판 = 커밋 blob (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/code_sha256.txt 끝 판) · 웹앱 화면 없음 (재실행 자격 · 원장 · 멈춤 사유 화면 = grep 0) · 외부 재확인 = Codex 회차 ③ 요청서 docs/reviews/codex_rint2_rr_round3_request_20261108.md §5-3 · §6 Q3).  한정 (docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/REPORT.md §6): 요청 칸 없는 기록 = outdir 접두 규칙만 (흔적 있는 옆 이름은 막힘 · 흔적 없는 옆 이름 자체는 받음) · 옆 이름 폴더가 있다는 사실 자체 = 모순 아님 · 사슬 쪽 끝 기록 없음 (그룹 기록 없는 GU · c2) · 시작 기록에 결합 안 됨 · chain_end 없는 옛 recover 끝 기록 = 대조 안 함 · 런 전 TIME_LIMIT 의 run 이름 차례 안 봄 · 1e400 같은 큰 수 = inf 로 읽힘 (칸 꼴 검사가 따로) · STOPS 안이지만 풀기 전 자리에서 생산자가 쓰지 않는 이름 (GENERATION · ARM_* · OUTDIR_NOT_EMPTY) 받음 · 같은 이름 런 기록 둘 · 다른 칸 (copied_from · seconds · machine …) · utc 글 꼴 = 그대로 · 범위가 바뀐 것 (모두 자격 없음 쪽 · 생산자 꼴 아님) ① TIME_LIMIT · RUNNER_RC 멈춤인데 사슬 쪽 확인 False (또는 원인 · rc 어긋남) = 자격 없음 ② 앞 런 기록 exit_ok 인데 arms_read 빈 목록 · 꼴 틀림 · group_cause 칸 없음 = 모순 ③ 요약 있는 길의 디스크 끝 기록 원인 signal_after = 런 기록 killed:signal_after 와 모순 (요약 없는 길 orphan_cause · A1b 는 안 바꿈) ④ 단계 요약 중복 칸 · NaN · ±Infinity = unreadable · 시험 = 합성 · 가짜 러너 · 실제 git 원장 · 이 컨테이너 (실제 kgy 3.8.10 · ibb · GPU 아님) · 고친 가드에 대한 독립 재공격 = 없음. ★ 11-08 Codex 회차 ③ (리뷰 핀 `17d45fb9c` · docs/reviews/codex_review_rint2_rr_round3_20261108.md §3) = 닫힘 → verified (범위 = verified_scope · 반입 기록 docs/reviews/codex_rint2_rr_round3_evidence_20261108/README_import.md) · 우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md) = pc12_attack/probe_pc12_independent.py rc 0 같음 (rejected_closed_names 7 행).",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py PC12E (F5 · 14 행 = XYZ · CALIBRATED · PREDICTED · STOPPED · REJECTED · OK · 소문자 = Stop · 생산자 · RUNNER_RC = rejected · STOPS 전부 받음 · 밖 7 거부 · 실경로 3 · 고치기 전 실패 9 → 0 · docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/before_PC12.log → after_PC12.log)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/probe_rerun/after_p6_rejected.out (code XYZ · CALIBRATED = rejected → Stop ATTEMPT_LEDGER_MISMATCH · GENERATION · OUTDIR_NOT_EMPTY (STOPS 안) = rejected 그대로 (한정) · 그 밖 = 바탕 값 그대로)",
@@ -16018,7 +16134,11 @@
         "docs/reviews/rint2_rr2_fix_evidence_20261105/pc12_fix/logs/mutation_pc12.json (변이 7/7 잡힘 · 가드 하나 ↔ 검사 하나 · 무변이 5/5 mut_sanity_rows.json)",
         "docs/reviews/rint2_rr2_fix_evidence_20261105/preattack12/p6_rejected.py (p6_rejected.out) [고치기 전 재현]"
       ],
-      "claimed_fixed_sha": "d346ca94308a2111c08a11b5e12f036307a47fea"
+      "claimed_fixed_sha": "d346ca94308a2111c08a11b5e12f036307a47fea",
+      "verified_by": "codex",
+      "verified_sha": "17d45fb9c",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "verified_scope": "codex 11-08 Rint ② 재검토 회차 ③ (리뷰 핀 17d45fb9c) · 판정문 §3 PC12-05 = 닫힘 — `:4410`. XYZ/CALIBRATED 등 거부·STOPS 안 이름 수용. p6 재생. 실제 발생 위치별 부분집합 인증은 아님. E. · 범위 = 지정 반례 · 최소 해결 (판정문 머리 · 실제 환경 자격 · 생산 GO 아님) · 줄 = 핀 17d45fb9c 의 scripts/rint_r_chain.py (따로 적은 파일 빼고)"
     },
     {
       "id": "SELF-157",
@@ -16113,6 +16233,26 @@
       "supersedes": [],
       "decision_note": "Codex 실무 창 고침 69b6bec7a (B 반입 a6dfe970cbb4) · 독립 Codex 재확인 (11-06 · 검토 핀 69b6bec7a) = R01 한정 닫힘 · 새 P1/P2/P3 없음 · 전체 HOLD · 실제 실행 미승인 (11-08 반입)",
       "verification_note": "독립 Codex 재검토가 \"각 실제 insert/pack seed 범위 · 소수 검사 (D2 소비자 셋)\" 범위 종결 판정 (docs/reviews/mxd2r_r01_acceptance_20261106/external/external_verdict.txt). verified 전환 안 함 — 고친 쪽 · 검토 쪽 모두 Codex 창이라 owner/verified_by 로 독립성을 표현할 수 없다 (LPI-01 · 02 와 같은 규칙 · 검증자를 지어 넣지 않는다)."
+    },
+    {
+      "id": "RR3-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 11-08 Rint ② 재검토 회차 ③ (검토 핀 17d45fb9c · 비교 기준 6917c3c9f · Windows Python 3.12.14 / NumPy 2.5.3 / SciPy 1.16.3 · 고정 소스 + 작은 합성 입력 · run_in_group 반환 · 산출만 모의 · 실제 생산 · 판독 · 결과 줄 · 자격 함수 · 실제 호스트 · S0 실침대 · R 런 · 전체 게이트 실행 없음)",
+      "opened_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "title": "검사 실패 때 보존한 파일 해시 목록 (arms_read = [{file, index, sha256}]) 을 \"앞 런 판독 완료\" 로 오인 — prior_runs_problem 이 exit_ok + 비지 않은 arms_read 만 보므로, 실제 read_run 실패 (ARM_JSON_COUNT) 런의 요약 두 칸 (stop.code → TIME_LIMIT · stop.run → L02_ceiling) 만 바꾸면 resume_ok false → true · 다음 --resume 원장 항목 허용 (실제 ResumeRunner._copy 재판독은 같은 ARM_JSON_COUNT 로 거부)",
+      "note": "판정문 §2 RR3-01 · 자리 (핀 17d45fb9c · scripts/rint_r_chain.py) = 4168–4175 (prior_runs_problem = exit_ok + 비지 않은 arms_read 를 완료의 충분조건) · 4993–4995 (Runner._execute = 실제 read_run 실패에도 arms_read = arm_file_shas(outdir)) · 2131–2141 (arm_file_shas = {file, index, sha256} · 계약 판정 아님) · 4356–4359 · 3418–3424 (그 완료 판정으로 재개 자격 · 다음 원장 항목 허용) · 5076–5079 (복사 경로도 실패 때 파일 신원만 보존).  반례 = 현재 생산자 함수 호출 · 프로세스 실행만 가짜 rc 0 · 종료 확인 True · 합성 p2_wrong_kit_a0.json → 실제 Runner._execute → read_run = ARM_JSON_COUNT · 생산 기록 rc=0 · group_cause=null · arms_read=[{file, index, sha256}] (기록 · payload · 로그 · 그룹 끝 기록 그대로) · 요약 두 칸만 편집 (stop.code ARM_JSON_COUNT → TIME_LIMIT · stop.run L01_floor → L02_ceiling) → result_fields cause check → timeout · resume_ok false → true · stop_record_problem None · attempt_result_line → ledger_parse resume_ok true · attempt_order_problem(resume_of=1) RESUME_NOT_ALLOWED → None · result_line_problem 재계산 대조 None / None · 실제 ResumeRunner._copy = ARM_JSON_COUNT 거부 (원장 머리 · entry · start = 합성 · recover CLI · OS 그룹 정리 · 연구 계산 미실행).  영향 = PC12-03 의 같은 부류가 남음 · 재개 자격 거짓 참 · 다음 원장 항목 허용 · 잘못된 연구 값 생성까지 보인 반례 아님 (원장 재개 자격의 거짓 양성).  무너지는 결론 = \"앞 런이 모두 검증을 끝낸 경우만 다음 TIME_LIMIT 기록을 재개 대상으로 받는다\" 는 PC12-03 의 충분성 · 회차 ③ 요청서 §5-3 \"앞 런 전부 = 끝난 런\" 설명 · 재개 자격 전체 GO.  최소 해결 = 앞 런의 \"검증을 마친 팔 기록\" 과 \"실패 때 보존한 파일 신원 목록\" 을 생산 · 복사 · 합치기 · 자격 소비자가 공유하는 계약으로 구분 (성공 경로의 완성 ARM_PUBLIC 구조 + 요청 팔 대응 검사 또는 명시적 판독 완료 상태 생산 · 검증 · 비지 않은 목록 조건만으로는 부족) · 위 실제 판독 실패 = 음성 · 성공 앞 런 · 복사된 성공 앞 런 = 양성 · 수치 모형 · 등록 문턱 변경 불필요.  재현 = docs/reviews/codex_rint2_rr_round3_evidence_20261108/pc12_attack/probe_pc12_independent.py (rc 0 = 반례 존재 assert 통과 · 이 핀의 기록) · results.json prior_read_failure_promoted · 전후 요약 둘 (같은 폴더).  우리 트리 재현 (docs/reviews/codex_rint2_rr_round3_evidence_20261108/_repro_ours_20261108/README.md · Linux · Python 3.11.17 · 핀 작업 트리) = rc 0 · results.json 161 잎 중 154 같음 · 다른 7 = 환경 판 · 시각 · 폴더 지문 · Windows CRLF 합성 팔 파일 sha256 = 판정값 차이 0.  수정 계획 = docs/reviews/rint2_rr3_fix_plan_20261108.md Q1 · Q2 (1저자 비준 대기) · 고친 뒤 그 탐침 무변경 재실행 = RR3-01 assert 에서 멈춤이 기대 (거부 oracle = 상주 시험으로)."
+    },
+    {
+      "id": "RR3-02",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 11-08 Rint ② 재검토 회차 ③ (검토 핀 17d45fb9c · 비교 기준 6917c3c9f · Windows Python 3.12.14 / NumPy 2.5.3 / SciPy 1.16.3 · 고정 소스 + 작은 합성 입력 · run_in_group 반환 · 산출만 모의 · 실제 생산 · 판독 · 결과 줄 · 자격 함수 · 실제 호스트 · S0 실침대 · R 런 · 전체 게이트 실행 없음)",
+      "opened_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
+      "title": "회차 ③ 요청서 한정표 (docs/reviews/codex_rint2_rr_round3_request_20261108.md 83–86 줄 · 대조 93–94 줄) · §5-3 에 PC12 이전 설명이 현재형으로 남음 — \"런 기록 ↔ 그룹 끝 기록 교차 대조 없음\" · \"디스크 signal_after 받음\" · \"code 의 STOPS 소속 안 봄\" (PC12-02 · 05 뒤 범위가 바뀜) · Q4 의 \"교차 대조 없음\"",
+      "note": "판정문 §2 RR3-02 · 연구 수치 · 코드의 새 실패가 아니라 현재 남은 검증 범위를 잘못 읽게 하는 문서 결함.  현재 범위 = 읽을 수 있는 사슬 쪽 끝 기록은 scripts/rint_r_chain.py 4072–4077 · 4133–4153 에서 원인 · rc · 확인 대조 (없는 / 결합되지 않은 기록 · 구형 recover 등 유예 남음) · signal_after = 요약 경로 거부 · orphan 경로 종전 허용 (경로 분리해 적을 것) · STOPS 소속 = 4410 에서 검사 (남는 것 = 발생 위치에서 생산 가능한 STOPS 부분집합까지 안 좁힘).  최소 해결 = 역사 보고는 보존 · 현재 요청서의 세 문장을 PC12 이후 잔여로 바꾸거나 \"이전 상태\" 표지 · Q4 의 \"교차 대조 없음\" 도 같은 범위로 좁힘 · 이 P3 만으로 별도 실행 차단 추가 안 함 · 문서 전체 종결 주장 전 정정 필요 · 확인 = 판정문 §2 의 rg 한 줄.  자리 (이 반입 바탕 f5fb89792 = 핀과 같은 파일) = 83 · 84 · 86 · 94 (§4 ②) · 140 (§5-3 F3 · RR3-01 로 축소) · 154 (Q4) 줄.  우리 트리 재현 = 줄을 리포에서 읽어 같은 문구 확인 (탐침 없음).  수정 계획 = docs/reviews/rint2_rr3_fix_plan_20261108.md §3 · Q4 (1저자 비준 대기)."
     }
   ]
 }

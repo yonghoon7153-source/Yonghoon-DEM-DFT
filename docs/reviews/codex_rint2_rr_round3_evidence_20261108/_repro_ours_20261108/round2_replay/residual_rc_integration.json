@@ -1,0 +1,83 @@
+[
+  {
+    "label": "int_failure",
+    "rc": 1,
+    "recovery": [
+      0,
+      0
+    ],
+    "result": {
+      "by": "recover",
+      "cause": "runner_rc",
+      "folder": "attempt_1",
+      "folder_sha256": "3206e2ed3d233deb14dbaf853647804d5682ff49e40924cf4c5e7bc5e54711b8",
+      "kind": "result",
+      "n": 1,
+      "resume_ok": false,
+      "side": "post",
+      "status": "interrupted",
+      "stop": null,
+      "utc": "2026-11-08T11:12:25Z"
+    },
+    "next_resume_problem": [
+      "RESUME_NOT_ALLOWED",
+      "재실행 사슬 끝 attempt_1 = interrupted · 원인 runner_rc · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+    ],
+    "ledger": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r3_run/round2_replay/scratch_1794136344996352740/rc_ledger_int_failure",
+    "attempt": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r3_run/round2_replay/scratch_1794136344996352740/rc_attempts_int_failure/attempt_1"
+  },
+  {
+    "label": "boolean_false",
+    "rc": false,
+    "recovery": [
+      0,
+      0
+    ],
+    "result": {
+      "by": "recover",
+      "cause": "runner_rc",
+      "folder": "attempt_1",
+      "folder_sha256": "8c4450b3fc737da69dc714e78647b91423601bfdead96080eea7103b4bc349ff",
+      "kind": "result",
+      "n": 1,
+      "resume_ok": false,
+      "side": "post",
+      "status": "interrupted",
+      "stop": null,
+      "utc": "2026-11-08T11:12:25Z"
+    },
+    "next_resume_problem": [
+      "RESUME_NOT_ALLOWED",
+      "재실행 사슬 끝 attempt_1 = interrupted · 원인 runner_rc · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+    ],
+    "ledger": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r3_run/round2_replay/scratch_1794136344996352740/rc_ledger_boolean_false",
+    "attempt": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r3_run/round2_replay/scratch_1794136344996352740/rc_attempts_boolean_false/attempt_1"
+  },
+  {
+    "label": "float_zero",
+    "rc": 0.0,
+    "recovery": [
+      0,
+      0
+    ],
+    "result": {
+      "by": "recover",
+      "cause": "runner_rc",
+      "folder": "attempt_1",
+      "folder_sha256": "087697d38f23cbc5bd3fe2b01573bd79f5a4f7a6c77b1a93b09a35e350abfc9e",
+      "kind": "result",
+      "n": 1,
+      "resume_ok": false,
+      "side": "post",
+      "status": "interrupted",
+      "stop": null,
+      "utc": "2026-11-08T11:12:25Z"
+    },
+    "next_resume_problem": [
+      "RESUME_NOT_ALLOWED",
+      "재실행 사슬 끝 attempt_1 = interrupted · 원인 runner_rc · 재실행 자격 False (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)"
+    ],
+    "ledger": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r3_run/round2_replay/scratch_1794136344996352740/rc_ledger_float_zero",
+    "attempt": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/r3_run/round2_replay/scratch_1794136344996352740/rc_attempts_float_zero/attempt_1"
+  }
+]

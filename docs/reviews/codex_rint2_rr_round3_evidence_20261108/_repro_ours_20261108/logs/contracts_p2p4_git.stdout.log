@@ -1,0 +1,13 @@
+p2_1a PASS resource False RESUME_NOT_ALLOWED
+p2_1b PASS resource False RESUME_NOT_ALLOWED
+p2_1c PASS resource False RESUME_NOT_ALLOWED
+p2_2a PASS runner_rc False RESUME_NOT_ALLOWED
+p2_2b PASS group_unconfirmed False RESUME_NOT_ALLOWED
+p2_2c PASS group_unconfirmed False RESUME_NOT_ALLOWED
+p4_honest PASS runner_rc False RESUME_NOT_ALLOWED
+p4_L02 PASS timeout False RESUME_NOT_ALLOWED
+p4_zzz PASS timeout False RESUME_NOT_ALLOWED
+positive_timeout PASS timeout True None
+positive_signal PASS signal True None
+positive_GU_rc0 PASS group_unconfirmed True None
+{"passed": 12, "total": 12}
