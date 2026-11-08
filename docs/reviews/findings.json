@@ -16179,41 +16179,43 @@
         "docs/reviews/mixer_mla_recheck_20261106/evidence/mla_after.log"
       ],
       "supersedes": [],
-      "decision_note": "수정 후보 = Codex 실무 창 a4c78001f (B 반입 a2e0396241c4) · 모의 · 변이 검사만 · 외부 재확인 대기 (요청서 docs/reviews/mixer_mla_recheck_20261106/review_request.md · 발송 = 1저자) · 실제 sbatch · MPI · 연구 계산 0 회 · 전체 HOLD (11-08 반입 · 원장 제안 OPEN_EXTERNAL_RECHECK_PENDING)"
+      "decision_note": "수정 후보 = Codex 실무 창 a4c78001f (B 반입 a2e0396241c4) · 모의 · 변이 검사만 · 외부 재확인 대기 (요청서 docs/reviews/mixer_mla_recheck_20261106/review_request.md · 발송 = 1저자) · 실제 sbatch · MPI · 연구 계산 0 회 · 전체 HOLD (11-08 반입 · 원장 제안 OPEN_EXTERNAL_RECHECK_PENDING) · (11-08 독립 재확인 · 11-09 반입) PARTIAL_OPEN — 원 환경 주입 경계 수용 · 잔여 = MLAR-01 (경로 문자 · 둘째 독립 P1 아님) · 수정 후보 = Codex 실무 215e9cc007cc (B 반입 0b2c1a39b · 공백 · 제어 문자 경로 결속 거부) · 독립 재확인 대기 · open 유지."
     },
     {
       "id": "MLA-02",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "codex",
       "found_by": "codex 11-06 믹서 first8 실행 준비 외부 판정 (검토 핀 b57fe91503ba)",
       "opened_in": "docs/reviews/mixer_mla_recheck_20261106/README.md",
       "title": "case별 배타 claim은 팔 사이 동시성·불명확 제출 상태를 공유하지 않는다",
-      "claimed_fixed_sha": null,
+      "claimed_fixed_sha": "a2e0396241c4e4cddea3c8771872f9fdcc650ef7",
       "verified_sha": null,
       "evidence_tests": [
         "docs/reviews/mixer_mla_recheck_20261106/evidence/mla_before.log",
         "docs/reviews/mixer_mla_recheck_20261106/evidence/mla_after.log"
       ],
       "supersedes": [],
-      "decision_note": "수정 후보 = Codex 실무 창 a4c78001f (B 반입 a2e0396241c4) · 모의 · 변이 검사만 · 외부 재확인 대기 (요청서 docs/reviews/mixer_mla_recheck_20261106/review_request.md · 발송 = 1저자) · 실제 sbatch · MPI · 연구 계산 0 회 · 전체 HOLD (11-08 반입 · 원장 제안 OPEN_EXTERNAL_RECHECK_PENDING)"
+      "decision_note": "수정 후보 = Codex 실무 창 a4c78001f (B 반입 a2e0396241c4) · 모의 · 변이 검사만 · 외부 재확인 대기 (요청서 docs/reviews/mixer_mla_recheck_20261106/review_request.md · 발송 = 1저자) · 실제 sbatch · MPI · 연구 계산 0 회 · 전체 HOLD (11-08 반입 · 원장 제안 OPEN_EXTERNAL_RECHECK_PENDING)",
+      "verification_note": "독립 Codex 재확인 (11-08 · 검토 핀 a2e0396241c4) = 원 결함 범위 종결 가능 (CLOSABLE_LIMITED · 한 승인 설치 안 제출 · 공유 예약 · 로컬 모의) · 범위 밖 = 제출 뒤 자동 실행 실패 전파 · 칸 원자성 · 해제 절차 · verified 전환 안 함 — 고친 쪽 · 검토 쪽 모두 Codex 창 (LPI-01 · 02 규칙 · 검증자를 지어 넣지 않는다) · 근거 docs/reviews/mixer_mlar01_path_recheck_20261109/README.md (11-09 반입)."
     },
     {
       "id": "MLA-03",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "codex",
       "found_by": "codex 11-06 믹서 first8 실행 준비 외부 판정 (검토 핀 b57fe91503ba)",
       "opened_in": "docs/reviews/mixer_mla_recheck_20261106/README.md",
       "title": "기존 종료 영수증을 fresh 검사에서 빠뜨려 덮어쓴다",
-      "claimed_fixed_sha": null,
+      "claimed_fixed_sha": "a2e0396241c4e4cddea3c8771872f9fdcc650ef7",
       "verified_sha": null,
       "evidence_tests": [
         "docs/reviews/mixer_mla_recheck_20261106/evidence/mla_before.log",
         "docs/reviews/mixer_mla_recheck_20261106/evidence/mla_after.log"
       ],
       "supersedes": [],
-      "decision_note": "수정 후보 = Codex 실무 창 a4c78001f (B 반입 a2e0396241c4) · 모의 · 변이 검사만 · 외부 재확인 대기 (요청서 docs/reviews/mixer_mla_recheck_20261106/review_request.md · 발송 = 1저자) · 실제 sbatch · MPI · 연구 계산 0 회 · 전체 HOLD (11-08 반입 · 원장 제안 OPEN_EXTERNAL_RECHECK_PENDING)"
+      "decision_note": "수정 후보 = Codex 실무 창 a4c78001f (B 반입 a2e0396241c4) · 모의 · 변이 검사만 · 외부 재확인 대기 (요청서 docs/reviews/mixer_mla_recheck_20261106/review_request.md · 발송 = 1저자) · 실제 sbatch · MPI · 연구 계산 0 회 · 전체 HOLD (11-08 반입 · 원장 제안 OPEN_EXTERNAL_RECHECK_PENDING)",
+      "verification_note": "독립 Codex 재확인 (11-08 · 검토 핀 a2e0396241c4) = 원 결함 범위 종결 가능 (CLOSABLE_LIMITED · 기존 출력 보존 · 늦은 영수증 충돌 · 정상/비영/일반 spawn 오류 흔적 · 로컬 모의) · 범위 밖 = 실제 dangling symlink · Lustre · 전원 끊김 · 일반 신호/충돌 복구 자격 · verified 전환 안 함 — 고친 쪽 · 검토 쪽 모두 Codex 창 (LPI-01 · 02 규칙 · 검증자를 지어 넣지 않는다) · 근거 docs/reviews/mixer_mlar01_path_recheck_20261109/README.md (11-09 반입)."
     },
     {
       "id": "MXD2R-R01",
@@ -16253,6 +16255,57 @@
       "opened_in": "docs/reviews/codex_review_rint2_rr_round3_20261108.md",
       "title": "회차 ③ 요청서 한정표 (docs/reviews/codex_rint2_rr_round3_request_20261108.md 83–86 줄 · 대조 93–94 줄) · §5-3 에 PC12 이전 설명이 현재형으로 남음 — \"런 기록 ↔ 그룹 끝 기록 교차 대조 없음\" · \"디스크 signal_after 받음\" · \"code 의 STOPS 소속 안 봄\" (PC12-02 · 05 뒤 범위가 바뀜) · Q4 의 \"교차 대조 없음\"",
       "note": "판정문 §2 RR3-02 · 연구 수치 · 코드의 새 실패가 아니라 현재 남은 검증 범위를 잘못 읽게 하는 문서 결함.  현재 범위 = 읽을 수 있는 사슬 쪽 끝 기록은 scripts/rint_r_chain.py 4072–4077 · 4133–4153 에서 원인 · rc · 확인 대조 (없는 / 결합되지 않은 기록 · 구형 recover 등 유예 남음) · signal_after = 요약 경로 거부 · orphan 경로 종전 허용 (경로 분리해 적을 것) · STOPS 소속 = 4410 에서 검사 (남는 것 = 발생 위치에서 생산 가능한 STOPS 부분집합까지 안 좁힘).  최소 해결 = 역사 보고는 보존 · 현재 요청서의 세 문장을 PC12 이후 잔여로 바꾸거나 \"이전 상태\" 표지 · Q4 의 \"교차 대조 없음\" 도 같은 범위로 좁힘 · 이 P3 만으로 별도 실행 차단 추가 안 함 · 문서 전체 종결 주장 전 정정 필요 · 확인 = 판정문 §2 의 rg 한 줄.  자리 (이 반입 바탕 f5fb89792 = 핀과 같은 파일) = 83 · 84 · 86 · 94 (§4 ②) · 140 (§5-3 F3 · RR3-01 로 축소) · 154 (Q4) 줄.  우리 트리 재현 = 줄을 리포에서 읽어 같은 문구 확인 (탐침 없음).  수정 계획 = docs/reviews/rint2_rr3_fix_plan_20261108.md §3 · Q4 (1저자 비준 대기)."
+    },
+    {
+      "id": "LHS12-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "codex",
+      "found_by": "codex 반박 창 11-08 독립 검토 (1저자 전달 · Codex 실무 창 수령 기록)",
+      "opened_in": "docs/reviews/lhs12_clarification_recheck_20261108/README.md",
+      "title": "LHS 12 질문 정본 — E/Z/D 구획과 방향 가지가 배타적으로 정의되지 않음 (독립 검토 PARTIAL_ACCEPTANCE)",
+      "claimed_fixed_sha": null,
+      "verified_sha": null,
+      "evidence_tests": [
+        "docs/reviews/lhs12_clarification_recheck_20261108/README.md",
+        "docs/collab/codex_to_claude/20261108-1447_lhs12-partial-receipt-clarification.md"
+      ],
+      "supersedes": [],
+      "decision_note": "수정 후보 = Codex 실무 39b635a405f0 (B 반입 455171e3d · 명시 E/Z/D 구획 · 배타 방향 가지 · 문서만) · 독립 재확인 · 1저자 비준 대기 · Q3–Q6 문서 범위 수용 보존 · 실행 · 값 열람 없음 · 전체 HOLD (11-09 반입)"
+    },
+    {
+      "id": "LHS12-02",
+      "severity": "P3",
+      "status": "open",
+      "owner": "codex",
+      "found_by": "codex 반박 창 11-08 독립 검토 (1저자 전달 · Codex 실무 창 수령 기록)",
+      "opened_in": "docs/reviews/lhs12_clarification_recheck_20261108/README.md",
+      "title": "LHS 12 질문 정본 — 주 코호트 우선 순위가 배타적이지 않음 (증거 표지는 유지)",
+      "claimed_fixed_sha": null,
+      "verified_sha": null,
+      "evidence_tests": [
+        "docs/reviews/lhs12_clarification_recheck_20261108/README.md",
+        "docs/collab/codex_to_claude/20261108-1447_lhs12-partial-receipt-clarification.md"
+      ],
+      "supersedes": [],
+      "decision_note": "수정 후보 = Codex 실무 39b635a405f0 (B 반입 455171e3d · 배타 주 코호트 우선 · 증거 표지 유지) · 독립 재확인 · 1저자 비준 대기 · 전체 HOLD (11-09 반입)"
+    },
+    {
+      "id": "MGS-01",
+      "severity": "P3",
+      "status": "open",
+      "owner": "codex",
+      "found_by": "codex 반박 창 11-08 독립 검토 (1저자 전달 · Codex 실무 창 수령 기록)",
+      "opened_in": "docs/reviews/mixer_mgs01_api_recheck_20261109/README.md",
+      "title": "믹서 생성기 직접 API — int 변환을 덮어쓴 str 하위 클래스 seed 를 받음 (일반 내장 int/str · CLI 는 반례 밖)",
+      "claimed_fixed_sha": null,
+      "verified_sha": null,
+      "evidence_tests": [
+        "docs/reviews/mixer_mgs01_api_recheck_20261109/README.md",
+        "scripts/test_mixer_generator_seeds.py"
+      ],
+      "supersedes": [],
+      "decision_note": "독립 검토 (검토 핀 a836aa4c0 · B 사본 dff4ceec9) = 일반 내장 입력 · CLI 한정 수용 · MGS-01 P3 open · 수정 후보 = Codex 실무 aab74e46baed (B 반입 356dfefd1 · 정확한 내장 str 만 · 기존 정확한 int 정책과 같음) · 독립 재확인 대기 · 운영 재봉인 · 실행 승인 아님 (11-09 반입)"
     }
   ]
 }
