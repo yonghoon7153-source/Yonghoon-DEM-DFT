@@ -1,0 +1,31 @@
+{
+  "schema": "nonrint_review_b_pin_handoff/1",
+  "branch_creation_base": "f5fb89792aa757975b41b046e0c5debaf56911e8",
+  "base_branch": "claude/sdcp-dem-manuscript-si-pqwtv8",
+  "lhs12": {
+    "review_pin": "1b20ce0606f3b49ef1abc4dd2bc540ead773905a",
+    "original_review_pin": "6fbd066832d3273d56037005ea26eb884b73646a",
+    "canonical_selection_pin": "5dd1e7ec01362db7a7fd0db264e79bbbb87152da",
+    "original_selection_pin": "349e946697b67768a5a1a209121fb90244aef485",
+    "existing_request": "docs/reviews/lhs_n_preaccess_definition_draft_20261106/review_request.md",
+    "existing_request_found": true,
+    "canonical_source_modified": false,
+    "excluded_eight_question_pin": "288929658dca6f7b23473bc42c911113f308ed82"
+  },
+  "mla": {
+    "review_pin": "a2e0396241c4e4cddea3c8771872f9fdcc650ef7",
+    "original_fix_pin": "a4c78001f706c08de1dddcac09a31a921c4faca7",
+    "original_reviewed_pin": "b57fe91503ba68cec6f41aec247851262788e48f",
+    "original_reviewed_b_copy_prefix": "ae9a5ddc4f41",
+    "existing_request": "docs/reviews/mixer_mla_recheck_20261106/review_request.md",
+    "candidate_source_modified": false,
+    "external_recheck": "PENDING"
+  },
+  "dispatch_owner": "first_author",
+  "dispatched_by_this_work": false,
+  "new_review_verdict_claimed": false,
+  "shared_ledger_modified": false,
+  "operational_activation": false,
+  "execution_authorized": false,
+  "whole_gate": "HOLD"
+}
