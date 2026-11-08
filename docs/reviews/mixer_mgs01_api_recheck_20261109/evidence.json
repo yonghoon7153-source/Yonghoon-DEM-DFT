@@ -1,0 +1,130 @@
+{
+  "schema": "mgs01-exact-str-derived-evidence-v1",
+  "date": "2026-11-09",
+  "evidence_kind": "Derived path-free summary; original process logs preserved externally with hashes.",
+  "finding": "MGS-01",
+  "severity": "P3",
+  "base_commit": "f44478535556dda84a4358e412cbba3b0baff42a",
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "Windows",
+    "flags": [
+      "-I",
+      "-B",
+      "-X",
+      "utf8"
+    ],
+    "temporary_files": "isolated writable review workspace"
+  },
+  "before_generator_sha256": "40fc6446524c63a47fa97316e7ee5bb117c605057679770dde19e43b12621db6",
+  "candidate_generator_sha256": "dc253bc8319077bc1e41635ae30ec588eb4a14c899db075e064192c4ef9cf6f7",
+  "same_test_file_before_and_after_sha256": "7413f369e157b017a882b64c4d05e7f8ec280c80df7dcb7d90532d91446ee810",
+  "production_change": "One condition: isinstance(value, str) -> type(value) is str.",
+  "direct_API_repro": [
+    {
+      "arm": "E1",
+      "mode": "uniform",
+      "input": "OverflowString(3), a user-defined str subclass",
+      "custom_int_return": 2147483659,
+      "before_output_seed": 2147483659,
+      "before_hook_calls": 1,
+      "after": "SystemExit: insert/pack ins seed: ASCII positive integer token required",
+      "after_hook_calls": 0
+    },
+    {
+      "arm": "D2",
+      "mode": "uniform",
+      "input": "OverflowString(3), a user-defined str subclass",
+      "custom_int_return": 2147483659,
+      "before_output_seed": 2147483659,
+      "before_hook_calls": 2,
+      "before_hook_calls_note": "Fixture also converts seed while constructing metadata; not two generator emissions.",
+      "after": "SystemExit: insert/pack ins seed: ASCII positive integer token required",
+      "after_hook_calls": 0
+    }
+  ],
+  "built_in_positive_pairs": {
+    "arms": [
+      "E1",
+      "D2"
+    ],
+    "pairs_per_arm": 3,
+    "cases": [
+      {
+        "first_seed": 32452843,
+        "layered": false,
+        "emitted_seeds": [
+          32452843
+        ]
+      },
+      {
+        "first_seed": 2147483647,
+        "layered": false,
+        "emitted_seeds": [
+          2147483647
+        ]
+      },
+      {
+        "first_seed": 2147483629,
+        "layered": true,
+        "emitted_seeds": [
+          2147483629,
+          2147483647
+        ]
+      }
+    ],
+    "assertion": "Within each before and after run, each exact builtin int and its exact builtin str produce identical UTF-8 deck bytes.",
+    "note": "Six pairs are subcases of one new method, not six additional test methods."
+  },
+  "existing_boundary_golden_hashes_preserved": 4,
+  "existing_generator_methods_preserved_exactly": 8,
+  "added_generator_methods": 2,
+  "generator_methods_after": 10,
+  "consumer_methods_after": 34,
+  "raw_evidence": [
+    {
+      "file": "before-generator.log",
+      "bytes": 3996,
+      "sha256": "a471b4a61e0e928e4cdf54a9dfaca73a7c8da59d3b8584be1d0cc8b89c93e5ea",
+      "process_rc": 1,
+      "methods_run": 10,
+      "subtest_failures": 2,
+      "errors": 0,
+      "repository_import": false
+    },
+    {
+      "file": "after-generator.log",
+      "bytes": 2131,
+      "sha256": "bba56dbbdbabd51825b1068cded080c7d59dc90ed6c46fd1692916df2a090caa",
+      "process_rc": 0,
+      "methods_run": 10,
+      "subtest_failures": 0,
+      "errors": 0,
+      "repository_import": false
+    },
+    {
+      "file": "after-consumers.log",
+      "bytes": 6960,
+      "sha256": "1ef4bc213715e628d121c493f4acfadde1f25a0f135195242e01357069364743",
+      "process_rc": 0,
+      "methods_run": 34,
+      "subtest_failures": 0,
+      "errors": 0,
+      "repository_import": false
+    }
+  ],
+  "scope_limit": "Custom executable Python objects passed directly to the API. Not a normal CLI/text-input submission bypass.",
+  "consumer_production_changed": false,
+  "consumer_tests_changed": false,
+  "gate_CI_registration_changed": false,
+  "gate_note": "Latest B already connects the generator test file; this delta adds methods without editing gate or CI registration. Full gate/CI not executed here.",
+  "actual_research_results": 0,
+  "actual_value_access": false,
+  "actual_dem_or_MPI": false,
+  "actual_submission": false,
+  "operational_seal_changed": false,
+  "first8_activation": false,
+  "independent_recheck": "PENDING",
+  "execution_authorized": false,
+  "whole_gate": "HOLD"
+}

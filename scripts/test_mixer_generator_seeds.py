@@ -37,6 +37,20 @@ def cli(out, seed, options):
                           capture_output=True, text=True, encoding='utf-8', timeout=30)
 
 
+def api_deck(arm, seed, layered=False):
+    """Static E1/D2 deck text only; preserve the caller's phase configuration."""
+    if arm == 'D2':
+        return fixture(seed=seed, layered=layered)[0]
+    old = gen.TYPES
+    try:
+        gen.set_phases(('AM_P', 'AM_S', 'SE'))
+        plan = gen.plan(100000, cgf=151.4)
+        return gen.deck(plan, gen.resolve_rpm(plan['R']), 2, seed=seed,
+                        arm='E1', layered=layered)
+    finally:
+        gen.set_phases(old)
+
+
 class GeneratorInsertionSeedBounds(unittest.TestCase):
     def test_api_rejects_noncanonical_seed_before_emitting_text(self):
         for value in (True, False, 3.0, 32452843.5, '+32452843', '032452843',
@@ -119,6 +133,40 @@ class GeneratorInsertionSeedBounds(unittest.TestCase):
                 actual = [line.split()[5] for line in text.splitlines()
                           if line.startswith('fix ') and ' insert/pack seed ' in line]
                 self.assertEqual(actual, expected)
+
+    def test_str_subclass_rejected_before_custom_int_conversion(self):
+        calls = []
+
+        class OverflowString(str):
+            def __int__(self):
+                calls.append('custom_int')
+                return 2147483659
+
+        for arm in ('E1', 'D2'):
+            with self.subTest(arm=arm):
+                calls.clear()
+                try:
+                    text = api_deck(arm, OverflowString('3'))
+                except SystemExit as exc:
+                    self.assertEqual(str(exc), 'insert/pack ins seed: ASCII positive integer token required')
+                else:
+                    seeds = [line.split()[5] for line in text.splitlines()
+                             if line.startswith('fix ') and ' insert/pack seed ' in line]
+                    self.fail(f'{arm} returned insert seeds {seeds}; custom __int__ calls={len(calls)}')
+                self.assertEqual(calls, [], 'reject the subclass without invoking its conversion hook')
+
+    def test_builtin_int_and_str_keep_equal_boundary_deck_bytes(self):
+        for arm in ('E1', 'D2'):
+            for seed, layered, expected in ((32452843, False, ['32452843']),
+                                            (2147483647, False, ['2147483647']),
+                                            (2147483629, True, ['2147483629', '2147483647'])):
+                with self.subTest(arm=arm, seed=seed, layered=layered):
+                    integer_text = api_deck(arm, seed, layered)
+                    string_text = api_deck(arm, str(seed), layered)
+                    self.assertEqual(integer_text.encode('utf-8'), string_text.encode('utf-8'))
+                    seeds = [line.split()[5] for line in integer_text.splitlines()
+                             if line.startswith('fix ') and ' insert/pack seed ' in line]
+                    self.assertEqual(seeds, expected)
 
 
 if __name__ == '__main__':

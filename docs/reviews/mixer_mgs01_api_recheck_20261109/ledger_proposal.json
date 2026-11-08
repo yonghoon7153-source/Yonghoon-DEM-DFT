@@ -1,0 +1,29 @@
+{
+  "schema": "codex-ledger-proposal-v1",
+  "date": "2026-11-09",
+  "apply_now": false,
+  "ledger_modified": false,
+  "scope": "Generator ordinary built-in input/CLI acceptance and direct API string-subclass residual only",
+  "received_review_pin": "a836aa4c0e6127741fa8abeddac28a67d9623591",
+  "accepted_B_copy": "dff4ceec9a419e1da14b7e289dfbf994ee36e17d",
+  "received_verdict": "LIMITED_ACCEPTANCE_WITH_MGS01_P3_OPEN",
+  "new_P1": 0,
+  "new_P2": 0,
+  "findings": [
+    {
+      "id": "MGS-01",
+      "severity": "P3",
+      "received_status": "OPEN",
+      "scope": "Direct API str subclass overriding integer conversion; ordinary built-in int/str and CLI are outside the counterexample",
+      "candidate": "Require exact built-in str, matching the existing exact built-in int policy",
+      "independent_recheck": "PENDING"
+    }
+  ],
+  "proposal": "Claude may record the ordinary-input/CLI limited acceptance and the bounded P3 candidate evidence. Retain MGS-01 open until independent recheck; do not infer operating reseal or execution permission.",
+  "prior_positive_decks_and_consumer_boundaries_preserved": true,
+  "operational_seal_modified": false,
+  "execution_authorized": false,
+  "value_access_authorized": false,
+  "research_results": 0,
+  "whole_gate": "HOLD"
+}
