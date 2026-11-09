@@ -1,0 +1,27 @@
+# 반입 도구 합성 시험 (11-09 · 생산자 꼴 = run2.sh 가 rc 를 rss.log 끝에 적는 꼴) · 여섯 출력 = 11-08 합성 고정물 그대로 (그 payload 로그 안에 "rc=0" 글이 있다)
+# 사례 (기록 폴더 L/rss.log 내용):
+#   good_real  = pid 줄 · 표본 둘 · rc=0
+#   rc1        = pid 줄 · 표본 하나 · rc=1
+#   cap_term   = pid 줄 · 표본 · "300 CAP_TERM 41" · rc=143
+#   two_rc     = pid 줄 · rc=0 · rc=1
+#   no_rss_rc  = pid 줄 · 표본 (rc 줄 없음)
+# 옛 판 = 11-08 준비판 (rc 후보 = rc 파일 · run/s0/stage1/nohup 로그 · payload 로그 끝 20 kB 의 rc= 글 · rss.log 안 봄)
+old good_real: ADOPT_CANDIDATE  rc=0
+old rc1: ADOPT_CANDIDATE  rc=0          <- 틀림 (실패 런을 채택)
+old cap_term: ADOPT_CANDIDATE  rc=0     <- 틀림
+old two_rc: ADOPT_CANDIDATE  rc=0       <- 틀림
+old no_rss_rc: ADOPT_CANDIDATE  rc=0    <- 틀림 (rc 근거 없음)
+# 고친 판 = 이 폴더 import_s0_tgz.py (rc 근거 = rss.log 의 rc= 줄 하나 · CAP_TERM = 채택 안 함 · 그 밖 rc= 글 = 참고)
+new good_real: ADOPT_CANDIDATE  rc=0
+new rc1: FAILED_PRESERVED  rc=1
+new cap_term: FAILED_PRESERVED  rc=None
+new two_rc: FAILED_PRESERVED  rc=None
+new no_rss_rc: FAILED_PRESERVED  rc=None
+# 실제 tgz (s0fix_1106_done.tgz · sha256 d48f55c1…0a13): 옛 판 = FAILED_PRESERVED (rc 미확인) · 고친 판 = ADOPT_CANDIDATE (rss.log rc=0)
+# 11-09 둘째 고침 (이 폴더 판) = README 표 · rc 근거 줄의 경로를 이 폴더 사본 자리 (`files/<묶음 안 경로>`) 로 · npz = 사본 없음 표지 (check_doc_refs 가 묶음 안 경로를 리포 경로로 읽어 실패한 것) · 판정 식 그대로 · 같은 다섯 사례 다시 = 같은 판정:
+new2 good_real: ADOPT_CANDIDATE  rc=0
+new2 rc1: FAILED_PRESERVED  rc=1
+new2 cap_term: FAILED_PRESERVED  rc=None
+new2 two_rc: FAILED_PRESERVED  rc=None
+new2 no_rss_rc: FAILED_PRESERVED  rc=None
+# 실제 tgz (둘째 고침 판) = ADOPT_CANDIDATE · rc=0 · 빠진 출력 0 · 계획 sha 같음 · 안 파일 18 · 사본 8 · sha 만 2

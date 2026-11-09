@@ -1,0 +1,60 @@
+{
+ "s0_min_dist": {
+  "tag": "s0_min_dist",
+  "n_points": 117070,
+  "n_segments": 225131,
+  "n_candidates": 7082266,
+  "n_subpieces": 300084,
+  "L0_um": 0.14462645220720333,
+  "max_sub_half_um": 0.07231322477728024,
+  "old_radius_extra_um": 1.5261006340358556,
+  "max_seg_len_um": 3.052201268071711,
+  "n_entries": 9422265,
+  "n_chunks": 3,
+  "max_chunk_entries": 3999966,
+  "max_point_entries": 791
+ },
+ "s0_fiber_sphere": {
+  "tag": "s0_fiber_sphere",
+  "n_points": 1271,
+  "n_segments": 1553655,
+  "n_candidates": 219387,
+  "n_subpieces": 2013504,
+  "L0_um": 0.1492969004574178,
+  "max_sub_half_um": 0.07464844893478322,
+  "old_radius_extra_um": 2.6572025615750574,
+  "max_seg_len_um": 5.314405123150115,
+  "n_entries": 276524,
+  "n_chunks": 1,
+  "max_chunk_entries": 276524,
+  "max_point_entries": 518
+ },
+ "distinct": {
+  "tag": "distinct",
+  "n_segments": 1553655,
+  "n_candidates": 8186383,
+  "n_subpieces": 1562022,
+  "L0_um": 0.22381254285530133,
+  "radius_um": 0.44762291467576515,
+  "old_radius_um": 5.5382176660054165,
+  "max_seg_len_um": 5.314405123150115,
+  "n_entries": 18018172,
+  "n_chunks": 5,
+  "max_chunk_entries": 3999996,
+  "max_point_entries": 49
+ },
+ "self": {
+  "tag": "self",
+  "n_segments": 1553655,
+  "n_candidates": 8186383,
+  "n_subpieces": 1562022,
+  "L0_um": 0.22381254285530133,
+  "radius_um": 0.44762291467576515,
+  "old_radius_um": 5.5382176660054165,
+  "max_seg_len_um": 5.314405123150115,
+  "n_entries": 18018172,
+  "n_chunks": 5,
+  "max_chunk_entries": 3999996,
+  "max_point_entries": 49
+ }
+}
