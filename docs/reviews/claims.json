@@ -2437,7 +2437,8 @@
    "claim": "CL-41",
    "why": "vox 0.125 의 폐기된 중간값.  확정값은 1.143817",
    "allowed_in": [
-    "docs/data/prereg_v2/raw_sigma.json"
+    "docs/data/prereg_v2/raw_sigma.json",
+    "docs/data/rint2_s0_sbe_20261108/files/sdcp/ca1_s0_sbe_20261106_memfix/s0_stage1_kit_SBE_vgcf100.json"
    ]
   },
   {
@@ -2469,7 +2470,8 @@
    "claim": "CL-33",
    "why": "p1 plate rule 로 푼 구-스탬프 σ_e 비.  p2 재측정 전까지 인용 금지 (R5-CX-06)",
    "allowed_in": [
-    "docs/data/prereg_v2/raw_sigma.json"
+    "docs/data/prereg_v2/raw_sigma.json",
+    "docs/data/rint2_s0_sbe_20261108/files/sdcp/ca1_s0_sbe_20261106_memfix/s0_stage1_kit_SBE_vgcf100.json"
    ]
   },
   {
