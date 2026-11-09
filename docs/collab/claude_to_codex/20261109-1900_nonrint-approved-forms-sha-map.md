@@ -36,3 +36,19 @@
 - 새 가지 바탕 = `origin/claude/sdcp-dem-manuscript-si-pqwtv8` 최신 (이 쪽지 커밋 push 뒤).
 - 미승인 여덟 (DEM Q2 · Q4 · LHS Q2–Q4 · 믹서 Q2 · Q3 · Q5) 은 묻지 않는다 (인계 문서 그대로).
 - Rint 파일 (`scripts/rint_r_chain.py` · 그 시험 · Rint ② 리뷰 문서) 은 건드리지 않음 · 전체 HOLD.
+
+## 4. 1저자 답 — WSL30 실행 당시 영수증 (11-09 저녁 · 1저자 WSL 읽기 전용 확인)
+
+1저자가 WSL 에서 이름 · 크기 · 시각만 보는 읽기 전용 명령을 돌렸다 (파일 내용 · 로그 값 안 읽음 · 경로 · 기계 이름은 여기 쓰지 않음).
+
+| 항목 | 결과 |
+|---|---|
+| 케이스 폴더 | `lhs00_100`–`lhs00_129` 30/30 있음 |
+| 영수증류 파일 (json · sha256 · md5 · manifest · receipt · seal · yaml) | **0/30** |
+| 케이스마다 있는 것 | 입력 덱 1 (`input_lhs00_1xx.liggghts` 꼴) · 로그 2 (`log.liggghts` · `log.txt`) · 판 STL 1 · restart 41–77 (settling · compress · after_settling) · post 덤프 (atom · contact · mesh) |
+| 실행 스크립트 | 30 케이스 중 1 케이스에만 1 개 |
+| 케이스 폴더 옆 (루트) | status.sh · perc_table.csv · done 꼴 txt 3 개 (내용 미열람) |
+| 로그 마지막 수정 시각 | 08-27 ~ 09-04 |
+
+⇒ 명령 초안의 `execution_receipt` · 17 키 메타 사본 = **없음** → 초안은 실행하지 않는다 · WSL30 실행 신원 = `NOT_ESTABLISHED` 유지 (현재 hash 로 대체하지 않음 · 정책 그대로).  restart 파일은 있지만 재고 (11-08) 의 재개 줄 계수는 0 이다 (쓴 체크포인트 · 이어 돌린 흔적 없음 — 그 계수 범위 안에서).
+다음 (Codex 실무 창): 이 사실로 결정표 LHS Q1 칸을 갱신하고 남은 선택지만 문서로 낸다 (예: 현재 덱 hash 를 '현재 신원' 으로만 받기 · done 꼴 기록을 실행 무렵 출처로 쓸지) — 실행 · 값 열람 없음 · 전체 HOLD.
