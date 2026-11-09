@@ -3,6 +3,7 @@
 > slug `liu2022_cl_crystallization_interface_argyrodite` · DOI `10.1002/adfm.202207978` · type `exp + DFT/AIMD 보조` · PDF `82ea256b/0b781b71-14._Revealodites.pdf` · digested `2026-06-26` · status ✅
 > **저자**: Yu Liu, Han Su, **Yu Zhong** (교신), **Xiuli Wang** (교신), Xinhui Xia, Changdong Gu, **Jiangping Tu** (교신) — State Key Lab of Silicon Materials, School of Materials Science & Engineering, **Zhejiang University** (Hangzhou, China). Adv. Funct. Mater. 2022, 32, 2207978. Received 2022-07-13, published 2022-09-16.
 > **태그**: **[외부]** (Zhejiang Univ. — Hanyang/Jong-Won Lee/Y.M.Lee/Cho/Kang/Cha 아님). National NSF China U20A20126·51971201 지원.
+> 🔗 **Kang 2026 (site-specific customized SE · `kang2026_site_specific_customized_se_dendrite_tolerant_li_metal`) 의 참고문헌 [39–41] 묶음으로 인용됨 (사용자 지정 2026-11-09 · 이 편의 정확한 번호는 확인 못 함)** — 인용 문장 8: *"Cl⁻ 4d 치환 → 국소 음이온 전하밀도↓ → Li⁺ cage 연결↑ → 전도도↑"*. 세 편 중 **① (4d Cl 점유 실측 · lab XRD Rietveld 13.3 → 61.7 %) · ③ (AIMD inter-cage · MSD ≈3×) · ④ (실험 σ 2.62 → 8.0 mS cm⁻¹) 를 한 논문에서 다 보인 유일한 편** — 단 **② (전하밀도) 는 없다** · 점유율에 오차가 없고 두 시료의 어닐 온도가 다르다. 판정 **대부분 뒷받침 (② 제외)** · 근거 · 정정 7건: **§⏩ 2026-11-09 재검토** (맨 끝).
 
 > ⚠ **혼동 주의 — 이 논문 ≠ Zuo 2022 Angew**. 둘 다 "LPSCl vs Li₅.₅PS₄.₅Cl₁.₅ Cl 치환" 주제이고 둘 다 2022년이라 INDEX의 Excel exp#10·calc#10 행이 Zuo의 DOI(`10.1002/anie.202213228`)와 *섞여* 기록돼 있었으나, **이 PDF의 실제 정체는 Zhejiang Univ. Tu 그룹의 AdvFunctMater 논문**(DOI `10.1002/adfm.202207978`, Excel exp#2·계산#? / DFT시트 #4와 동일). Zuo는 Giessen(Janek)·NCM85 양극 계면·ToF-SIMS/DEMS 실험 중심; **Liu(본 논문)는 *결정화(annealing)* + *Li 금속 음극* 계면 + AIMD/RDF**가 핵심으로 **다른 논문·다른 그룹·다른 초점**.
 
@@ -232,3 +233,79 @@ Cl↑ → (as-milled σ 2×) → annealing 시리즈 XRD/Rietveld(LPSCl 결정�
 - **RDF g(r)**: radial distribution function; 특정 원자쌍 거리 분포. P–S 2.02 Å=PS₄³⁻, Li–P 2.5 Å=환원 LiₓPᵧ. **시간(0–50 ps) heatmap으로 분해 속도 추적**.
 - **CCD (critical current density)**: dendrite로 short 나기 직전 최대 전류밀도. step-increased로 측정.
 - **lowest-electrostatic(Ewald) config**: 부분점유·무질서 구조를 enumerate 후 Madelung(Ewald) 에너지 최저 배열 선택(SQS 대안, AIMD 비용 절감).
+
+---
+
+## ⏩ 2026-11-09 재검토 — SI PDF 확보 · Kang 2026 [39–41] 근거 대조
+
+> 입력: 본문 `11236cff-115._Revealing…pdf` (10 pp) + **SI `48635b7f-115._Sup_Revealing…pdf` (15 pp · 06-26 digest 땐 SI 미확보)**. 그림 폴더를 본문 + SI 로 다시 잘랐다 (본문 6 + SI 11 + 표 4 = 21 · 본문 6장은 옛 크롭과 같은 그림 — 평균 화소차 ≤ 1.3/255).
+> **이번에 실제로 본 그림**: `Fig. 1` · `Fig. 2` · `Fig. S5`. **안 본 그림**: `Fig. 3`–`Fig. 6` · `Fig. S1`–`Fig. S4` · `Fig. S6`–`Fig. S11` (이번 질문에 안 걸림). `Table S1` · `Table S2` · `Table S3` · `Table S4` 는 PDF 텍스트로 읽었다.
+> 이 절은 위의 기존 줄을 고치지 않는다 — 틀린 줄은 아래 ③ 에 정정으로 적는다.
+
+### ① Kang 8번 문장 네 고리 대조 — 이 논문이 *실제로* 보인 것
+
+Kang 문장: *"In halogen-rich argyrodites such as LPSC1.6, Cl⁻ substitution for S²⁻ at the 4d sites lowers the local anionic charge density, which in turn enhances the connectivity of the Li⁺ cages and ultimately improves the ionic conductivity [39–41]."*
+
+| 고리 | 원문 (쪽 · 그림/표) | 방법 | 숫자 | 판정 |
+|---|---|---|---|---|
+| ① Cl 이 4d 에 | p.3: *"LPSCl-550 has a lattice parameter of 9.85 Å and a S²⁻/Cl⁻ disorder of 13.3%, while LPSCl1.5-450 has a lattice parameter of 9.81 Å and a S²⁻/Cl⁻ disorder of 61.7%."* · p.2–3: *"Excess LiCl dissolving into the lattice can cause more S²⁻/Cl⁻ disorder at 4d sites as well as the crystal cell shrinkage."* | **실험** — lab XRD (Rigaku SmartLab · Cu Kα) Rietveld (FullProf) | `Table S1` Li₆PS₅Cl: 4a Cl **0.867** / S 0.133 · 4d Cl **0.133** / S 0.867 · a = 9.85301(14) Å · R_wp 3.78 % · χ² 5.68 — `Table S2` Li₅.₅PS₄.₅Cl₁.₅: 4a Cl **0.883** / S 0.117 · 4d Cl **0.617** / S 0.383 · a = 9.81326(11) Å · R_wp 3.04 % · χ² 3.46 | **직접 (실험) — 단 약하다**: (i) 'disorder %' 는 **4d 의 Cl 점유율** 이다 (Kang ① 과 같은 양) (ii) 표 캡션은 *"Refined parameters are shown with errors in brackets"* 인데 **점유율 · Uiso · Li 좌표에 괄호가 없다** → 정련 여부 · 불확도를 표에서 알 수 없다 (iii) S²⁻ · Cl⁻ 는 X-선 산란능이 거의 같다 (중성 원자 16 vs 17 전자 · 이온이면 둘 다 18) — 점유 판정은 보통 중성자 (산란길이 S 2.85 · Cl 9.58 fm) 로 한다 (iv) 두 시료의 **어닐 온도가 다르다** (550 vs 450 °C) (v) 두 정련 모두 차이곡선의 최대 잔차가 최저각 반사 (2θ `figure-read ≈`15.5°) 에 있다 (`Fig. 1d,e`) |
+| ② 국소 음이온 전하밀도↓ | **없음** — 본문 · SI 에 전하밀도 · 정전기 · Bader 서술 0 (정전기 에너지는 AIMD 배치 고르기에만 쓴다, p.9) | — | — | **안 보임** |
+| ③ Li⁺ cage 연결↑ | p.4: *"Li ions are confined in the Li₆S octahedron cages in the LPSCl lattice, while inter-cage pathways are activated and Li ions are well delocalized in LPSCl1.5"* · *"The overall MSD of the LPSCl1.5 is nearly three times of that of LPSCl"* | AIMD (VASP · PBE · PAW) — Rietveld 점유를 바탕으로 대칭 구별 배치 열거 → **정전기 에너지 최저 1 개** · 확률밀도 900 K (`Fig. 2f,g`) · MSD (`Fig. S5`) | `Fig. S5` `figure-read`: 100 ps 에서 LPSCl ≈70 Å² · LPSCl1.5 ≈210 Å² (≈3×) · 세 방향이 고르게 커진다 | **직접 (계산 · 정성 + MSD 비)** — 단 모형 셀 크기 · 4d Cl 개수 · 벌크 궤적 길이 (그림상 100 ps · 방법 절은 계면 50 ps 만) · 온도 (S5 캡션에 없음 · 900 K 는 `Fig. 2` 캡션) 미기재. LPSCl 의 MSD 도 ≈70 Å² (RMS ≈8 Å) 까지 거의 직선으로 자라므로 *"confined in cages"* 는 확률밀도 그림의 과장 — 차이는 질이 아니라 ≈3 배 |
+| ④ 전도도↑ | p.3: σ(25 °C) LPSCl-550 **2.62** vs LPSCl1.5-450 **8.00 mS cm⁻¹** · p.4: *"LPSCl-450 and LPSCl1.5-450 have similar crystallinities but differ in ionic conductivities"* · p.8 (`Fig. 6d`): *"Benefited from the increased S²⁻/Cl⁻ disorder in the structure, the inter-cage Li ion pathways are largely activated, resulting in a boosted ionic conductivity of 8 mS cm⁻¹."* | **실험** EIS (25 °C · 360 MPa 펠릿 · 25–65 °C Arrhenius) | `Fig. 2a` 막대 숫자: LPSCl 1.1 (as-milled) · 1.4 · 1.6 · 1.9 · **2.0 (450 °C)** · 2.2 · **2.6 (550 °C)** / LPSCl1.5 2.1 · **0.5 (300)** · **0.7 (350)** · 4.1 · **8.0 (450)** · 5.2 · **2.6 (550)** · Ea LPSCl1.5-450 **0.28 eV** | **직접 (실험)** — 단 'Cl-rich 우위' 가 **어닐 온도에 따라 4× (450 °C) · 1.0× (550 °C) · 역전 (300 · 350 °C)** 이다. 무질서를 잰 두 시료는 온도가 다르고, 저자가 무질서 효과의 근거로 쓴 **LPSCl-450 의 점유율은 재지 않았다** → 무질서 ↔ σ 는 '조성 + 공정' 과 분리되지 않은 2 점 상관 |
+
+**메커니즘이 Kang 문장과 같은가** — 사슬 ① → ③ → ④ 는 **이 논문 결론 문장 (p.8 · `Fig. 6d`) 과 거의 같다**. 빠진 것은 **② (전하밀도) 하나**다. 이 논문의 '왜' 는 *"S²⁻/Cl⁻ disorder → inter-cage 경로 활성화"* 까지고 그 사이의 물리 (전하 · 정전기) 는 말하지 않는다 — 서론에서 de Klerk 2016 의 계산 (4d 무질서 ↔ σ) 을 빌려 온다 (p.1, ref 20 · 그 재인용의 정확도는 위 §14 마지막 줄). 덧: 이 논문의 표제 기전은 **결정화 (어닐) + Li 금속 계면** 이고, σ 는 그 한 갈래다.
+
+**판정 — Kang 8번 문장을 이 논문이**: **대부분 뒷받침 (② 제외)** — 세 편 중 가장 가깝다.
+- "In halogen-rich argyrodites such as LPSC1.6" → **x = 1.6 없음** (x = 1.5 까지) · SI `Table S4` 의 문헌 Li₅.₄PS₄.₄Cl₁.₆ 두 줄은 6.1 (300 + 500 °C) · 10.8 mS cm⁻¹ (510 °C 2 h)
+- "Cl⁻ substitution for S²⁻ at the 4d sites" → **나옴 (실험 Rietveld 13.3 → 61.7 %)** — 단 lab XRD · 점유율 오차 없음 · 두 시료 (공정 다름)
+- "lowers the local anionic charge density" → **안 나옴**
+- "enhances the connectivity of the Li⁺ cages" → **나옴** (AIMD 정성 · MSD ≈3× · 단일 배치)
+- "ultimately improves the ionic conductivity" → **나옴 (실험 2.62 → 8.0 mS cm⁻¹)** — 단 공정 의존 (550 °C 에선 같다)
+
+### ② Kang 참고문헌 번호 — **확인 못 함**
+사유는 `gilgonzalez2022_synergistic_cl_constricted_esw.md` §⏩ ② 와 같다 (Kang PDF 원본 없음 · digest 에 [39–41] 서지 미기록 · Crossref 차단). 이 논문은 SI `Table S4` [6] 에서 Gil-González 2022 를 인용한다 (LPSCl1.5 · 550 °C 8 h · 8.0 mS cm⁻¹).
+
+### ③ 정정 (기존 줄 — 근거 쪽 · 그림/표)
+1. §3 *"사이트 점유(도식) | LPSCl 열: Cl 90%/S @4a, Cl 60%/S @4d"* 와 §5.1 · §9 `1a` 행 → `Fig. 1a` 도식의 제목은 **"Optimized Cl-riched Argyrodite Phase"** 이고 범례 Cl 90 % @4a · 60 % @4d 는 **LPSCl1.5 의 반올림** (`Table S2` 88.3 · 61.7 %) 이다. **LPSCl 은 `Table S1`: 4a Cl 86.7 % · 4d Cl 13.3 %.**
+2. §4.2 · §8 *"Li(110) 표면 + argyrodite(100)"* → 방법 절 (p.9): *"matching **(100) surface of Li** and (100) surface of Li₆PS₅Cl or Li₅.₅PS₄.₅Cl₁.₅ with a lattice mismatch less than 5%"*.
+3. §4.2 · §8 *"lower ecut"* → **280 eV** (p.9: *"a lower but sufficient energy cutoff of 280 eV"*). §4.2 *"AIMD … total 50 ps"* 는 **계면** AIMD 의 값이고, 벌크 확률밀도 · MSD 궤적은 `Fig. S5` 가로축으로 **100 ps** 다 (방법 절에 벌크 AIMD 의 길이 · 셀 · 온도가 따로 없다 · 900 K 는 `Fig. 2` 캡션).
+4. §3 *"Ea | LPSCl ~0.30–0.36 (annealing 의존, 비단조)"* → `Fig. 2b` `figure-read`: LPSCl ≈0.38 (as-milled) · ≈0.39 (300 °C) → ≈0.31 (550 °C) 로 **300 °C 이후 단조 감소**, 범위 ≈0.31–0.39 eV.
+5. §3 표에 없던 값: **LPSCl1.5-550 σ = 2.6 mS cm⁻¹ = LPSCl-550 (2.62)** (`Fig. 2a` 막대 숫자) — "Cl-rich 우위" 는 공정 조건부다 (위 ① 표 ④ 행).
+6. §4.2 · §8 · §12-6 · §14 의 *"Excel 계산시트 AIMD 0.43 / 14.55 mS/cm — 본문 근거 없음"* → **원출처 확인: Gil-González 2022 *ESM* 45, p.487 (x = 1.0 / 1.5 AIMD 300 K 외삽)** (`gilgonzalez2022_synergistic_cl_constricted_esw.md` §⏩ ③-6). 이 논문 것이 아니다 — 기존 판정 ("이 논문 값으로 인용 금지") 은 그대로 옳다.
+7. §11 *"D(600K) 3.09→7.90×10⁻⁶(2.6×), Ea 0.253→0.224 · … 우리 AIMD 외삽"* · §9 `2a` · `2b` 행의 *"comp1→modelc D비(2.6×)"* · *"우리 Ea 0.224 modelc"* · §12-1 · §13 첫 문장의 *"our comp1→modelc D increase"* → 우리 수송은 **UMA MLIP-MD** 이고 (AIMD 아님), 원장상 comp1 MD Ea 는 **provisional** · comp1 · modelc 단일시드 항목 모두 **`cross_composition_ranking` 금지** (`db/properties/canonical_registry.json` `md-ea-singleseed-anchor-v1`) — 이 비교들은 **지금 인용 불가**다. 남는 우리 쪽 사실은 **모델 구성** 뿐: modelc 셀의 4d 자리 = S²⁻ 2 + Cl⁻ 3 · comp1 = 4d 전부 S²⁻ (`kb/results/lpscl_vs_lpscl16_v3_comparison.md` §II.2.5).
+
+### ④ SI 로 새로 보탠 것
+- `Table S1` · `Table S2` 전문 (위 ① 표) — Li 48h 좌표 (0.32030, 0.01820, 0.67980) 가 두 조성에서 **같고 오차 없음** → Li 는 고정 · 점유 0.500 / 0.460 은 조성으로 맞춘 값 (6/12 · 5.5/12). 16e S 의 x 만 오차가 붙었다 (0.12449(3) · 0.12321(1)). 4a + 4d Cl 합은 1.000 · 1.500 = 명목 조성으로 묶였다.
+- 4d 좌표 (0.25, 0.25, 0.75) ≡ (¾, ¾, ¾) (F-중심 이동) · P 4b (0, 0, ½) ≡ (½, ½, ½) — Kraft 계 '4d' 표기 · Li cage 중심의 '자유 S²⁻' 자리다 (Gil-González 의 '4c' 와 같은 자리).
+- `Table S4` — Cl-rich argyrodite 합성 비교 12 줄: Li₅.₅PS₄.₅Cl₁.₅ 3.9–10.2 mS cm⁻¹ (공정별) · **Li₅.₄PS₄.₄Cl₁.₆ 6.1 (300 + 500 °C, 1 + 4 h, Wu 2021) · 10.8 (510 °C 2 h, Zhang 2021)** · Li₅.₃PS₄.₃Cl₁.₇ 17 (Feng 2020) · 이 논문 8.0 (450 °C 5 h).
+- `Table S3` — 양극 EIS 적합 (R_cathode/SE 276 vs 142.8 Ω) — 기존 §3 확인 ✓.
+- `Fig. S5` — 두 조성 MSD (위 ① 표 ③ 행).
+
+### ⑤ Figure set 보강 (SI · 2026-11-09)
+| Fig | 내용 | 우리 활용 |
+|---|---|---|
+| S1 | LPSCl1.5 펠릿 사진 (어닐 온도별) | 안 봄 |
+| S2 | DSC (LPSCl1.5 ≈425 °C 흡열 = LiCl 용해) | 안 봄 (본문 서술은 기존 §5.2) |
+| S3 | SEM (두 시료 ≈5 µm) | 안 봄 |
+| S4 | LPSCl Nyquist · Arrhenius | 안 봄 |
+| S5 | AIMD MSD — LPSCl ≈70 vs LPSCl1.5 ≈210 Å² @100 ps (`figure-read`) | Kang ③ 의 정량 쪽 근거 · 실독 |
+| S6 | 결정도 (봉우리/배경 비) vs 어닐 온도 | 안 봄 |
+| S7 | 대칭셀 Nyquist (사이클 전후) | 안 봄 |
+| S8 | Li-LPSCl1.5 계면 모형 | 안 봄 |
+| S9 | Li–S · Li–Cl RDF 시간 지도 | 안 봄 |
+| S10 | Li 계면 XPS (S 2p · P 2p · Cl 2p) | 안 봄 |
+| S11 | 풀셀 등가회로 | 안 봄 |
+| Table S1 | Li₆PS₅Cl Rietveld (4d Cl 0.133) | Kang ① 의 실험 근거 (오차 없음) |
+| Table S2 | Li₅.₅PS₄.₅Cl₁.₅ Rietveld (4d Cl 0.617) | Kang ① 의 실험 근거 (오차 없음) |
+| Table S3 | 양극 EIS 적합 | 기존 §3 확인 |
+| Table S4 | Cl-rich 합성 · σ 비교 (Li₅.₄PS₄.₄Cl₁.₆ 6.1 · 10.8 포함) | modelc 명목 조성의 문헌 σ 폭 |
+
+### ⑥ 인용 규율 (이 질문 기준)
+- ✅ "Rietveld refinement of laboratory XRD data gave a 4d-site Cl occupancy of 13.3 % for Li₆PS₅Cl (annealed at 550 °C) and 61.7 % for Li₅.₅PS₄.₅Cl₁.₅ (annealed at 450 °C), without reported uncertainties (*Adv. Funct. Mater.*, 32, 2207978 (2022))."
+- ✅ "In the same study, AIMD Li probability densities at 900 K showed activated inter-cage pathways in Li₅.₅PS₄.₅Cl₁.₅, with an overall MSD about three times that of Li₆PS₅Cl."
+- ⛔ "Cl substitution lowers the local anionic charge density (Liu 2022)" — 이 논문에 없다 · ⛔ "Cl-rich argyrodite is about 3× more conductive" 를 공정 조건 없이 (550 °C 에선 같다) · ⛔ 13.3 / 61.7 % 를 중성자 정련값처럼.
+
+### ⑦ 교차 확인 — litdb 안의 중성자 점유값 (같은 조성 · 다른 시료)
+- Li₆PS₅Cl 4d(=4c)-Cl: **≈62 %** (Kraft 2017 중성자 — `adeli2019_halide_substitution_boosting_argyrodite.md` §5.2 · `feng2020_li_deficient_argyrodite_cl_disorder.md` 머리) vs 이 논문 lab XRD **13.3 %**.
+- Li₅.₅PS₄.₅Cl₁.₅ 4d(=4c)-Cl: **83.4 %** (Adeli 2019 중성자 · `Table 1`) vs 이 논문 **61.7 %**.
+- ⇒ 두 조성 모두 이 논문 값이 낮다. 시료 · 공정 (어닐 온도 · 시간 · 냉각) 이 달라 직접 비교는 못 하지만, S/Cl X-선 대비가 약한 lab XRD 정련의 한계와 같은 방향이다. **"x 1.0 → 1.5 에서 4d-Cl 이 는다" 는 방향은 중성자 쪽과도 같다** (62 → 83 %). Kang 8번 문장의 ① 을 인용할 땐 이 논문보다 Adeli 2019 (중성자) 가 더 강한 원전이다.

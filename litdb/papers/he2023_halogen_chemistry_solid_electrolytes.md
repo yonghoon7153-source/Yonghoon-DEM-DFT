@@ -614,3 +614,11 @@ bbox 는 **캡션 x 범위가 아니라 페이지 본문폭**을 기본값으로
    **Li(24g/48h) · P(4b) · S(16e)/free-anion(4a·4d)**. 우리 cascade 의 자리 열거가 이 셋을 덮는지 점검할 것.
 4. **⛔ cascade 에 넣으면 안 되는 것**: 이 리뷰의 σ·Ea 값. 전부 조건 미상의 2차 인용이라
    **ML 학습 라벨로도 쓰면 안 된다** (압력 미기재 44행).
+
+---
+
+## ⏩ 2026-11-09 원전 확보 — 본문-ref 185 (Zeng 2022 *Nat. Commun.* 13, 1909)
+- digest: `zeng2022_cl_rich_licl_nanoshell_li_interface.md` (본문 + SI + Source Data). §11b 가 옮긴 리뷰 문장은 원문 p.11 (*"a majority exists on the grain surfaces to form LiCl nanoshells while a minority on the argyrodite lattice to substitute the S atoms"*) 과 같다.
+- 단 원전을 보니 그 '다수' 는 cryo-STEM-EDS 지도 (정성 · 투영) 에서 나왔고, 자기 Rietveld LiCl 분율 (x = 1.6 · 4.4(5) vol% ≈ 0.3 LiCl/f.u. = 명목 Cl 의 ≈1/5 · *우리 산수*) 과 차수가 안 맞는다. EDS 선 스캔 판독으로는 x = 1.3 의 입자 안쪽 Cl 부족이 안 보이고 x = 1.6 만 ≈절반 안팎이다 (`figure-read`). 그리고 LiCl 껍질은 **소성 뒤 서냉에서만** 생긴다 (원전 `Fig. S13`, 바로 급랭하면 없음).
+- ⇒ §11b · §13 의 결론 (modelc 는 *"격자 고용 상한 모델"* 로 서술) 은 그대로 유효하고, 근거는 원전으로 바꿔 단다. '다수' 는 단정하지 말고 *"일부 — 공정 (냉각) 의존"* 으로 쓴다.
+- 같은 날 이 리뷰 §8a 의 사슬 (4d-X↑ → 4d 평균 음전하↓ → 케이지 공공 · 24g↑ → inter-cage↑) 이 Kang 2026 8번 문장과 같은 꼴임을 확인했다 → `kang2026_site_specific_customized_se_dendrite_tolerant_li_metal.md` §⏩ 2026-11-09.

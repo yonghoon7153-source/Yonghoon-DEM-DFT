@@ -417,3 +417,46 @@
 - **void ratio (SEM 이진화)**: 표면 SEM 을 회색조 문턱으로 공극/고체 이진 지도로 바꿔 얻은 면적 분율 — 문턱 · 사진 수가 값을 좌우한다.
 - **M-SE**: 이 논문의 혼합 SE 중간층 (LPSC₁.₆ 3 µm : LPSOC 1 µm = 4 : 1 질량비).
 - **옴 하한 (ohmic floor)**: 대칭셀 분극의 최솟값 = 전류 × 벌크 저항 (계면이 0 이라 해도 남는 몫). 관측 분극이 이보다 낮으면 셀 두께가 다르거나 전자 누설이 있다는 뜻이다.
+
+---
+
+## ⏩ 2026-11-09 [39–41] 근거 대조 — 8번 문장 (사용자 요청 · 114 · 115 · 116)
+
+> 사용자가 이 문장 (§0-1 ② · §4e) 의 근거 논문을 차례로 먹였다 — 114 Gil-González 2022 · 115 Liu 2022 · 116 Zeng 2022. 각 편의 원문 대조는 그 digest 의 `⏩ 2026-11-09` 절 (114 · 115) 과 §12 (116, 새 digest) 에 있다. 이 절은 위의 기존 줄을 고치지 않는다.
+> 문장: *"In halogen-rich argyrodites such as LPSC1.6, Cl⁻ substitution for S²⁻ at the 4d sites lowers the local anionic charge density, which in turn enhances the connectivity of the Li⁺ cages and ultimately improves the ionic conductivity [39–41]."*
+
+### 참고문헌 번호 — **확인 못 함**
+- 이 digest 의 PDF 원본 (업로드 `78401219-12._Dendrite-tolerant…`) 이 2026-11-09 세션 기계에 없다. 이 digest 는 [24] · [36] · [38] · [43] · [44] · [45] · [59] 서지는 적었지만 **[39] · [40] · [41] 서지는 적지 않았다**. Crossref 조회는 그 세션 프록시 정책상 차단 (403) — 우회하지 않았다.
+- 사용자 파일 번호 114 → 115 → 116 이 [39] → [40] → [41] 일 수 있으나 **근거가 아니다** — 번호 대응은 이 논문 참고문헌 쪽을 다시 받아야 정해진다.
+- 237 줄 *"O 치환 · S/Cl 무질서로 강성↑ [36,40]"*: 세 편 어디에도 S/Cl 무질서와 강성을 잇는 내용이 없다 (114 는 황화물 세라믹 체적탄성률 20–40 GPa 를 K_eff 범위 근거로 한 번 · 116 은 LiCl 의 B/G 31/20 GPa 인용뿐 · 115 는 기계 물성 없음) → [40] 이 이 셋 중 하나라면 그 인용도 내용을 직접 받치지 않는다.
+- 세 편 사이 인용: 115 (SI `Table S4` [6]) · 116 (ref 23, 저자명 "Gil, G." 오기) 가 114 를 인용한다.
+
+### 세 편 × 네 고리 (+ 'LPSC1.6' 전제)
+
+| 고리 (문장 조각) | 114 Gil-González 2022 *ESM* (`gilgonzalez2022_synergistic_cl_constricted_esw`) | 115 Liu 2022 *AFM* (`liu2022_cl_crystallization_interface_argyrodite`) | 116 Zeng 2022 *Nat. Commun.* (`zeng2022_cl_rich_licl_nanoshell_li_interface`) |
+|---|---|---|---|
+| 전제 "halogen-rich such as LPSC1.6" | x = 1.0 / 1.5 / 2.0 계산 · **1.6 없음** · 계산 σ 는 x = 1.5 최대 · 2.0 (C2mm) 에서 ↓ | x = 1.0 vs 1.5 · **1.6 없음** | **x = 1.6 실측** (Li₅.₄PS₄.₄Cl₁.₆) — 단 LiCl 4.4(5) vol% (≈0.3 LiCl/f.u. · *우리 산수*) + ≈50 nm Cl 껍질 → 격자 Cl < 1.6 |
+| ① Cl⁻ 가 4d 의 S²⁻ 치환 | ✗ **가정** — *"The main reason may be that … chlorine anions occupies the 4c sites"* (p.487 · 표기 '4c' = 같은 cage 중심 자리) · 측정 0 · AIMD 배치 미기재 | ✓ **실험 (약함)** — lab XRD Rietveld 4d Cl 13.3 % (x = 1.0 · 550 °C) → **61.7 %** (x = 1.5 · 450 °C) (`Table S1` · `Table S2`) · 점유율 오차 없음 · S/Cl X-선 대비 약함 · 두 시료 공정 다름 | ✗ 서론 인용 [20–22] 뿐 (Patel 2021 · Gautam 2021 · de Klerk 2016) · 오히려 *"Only a part of Cl atoms locates inside the argyrodite lattice"* (p.9) |
+| ② 국소 음이온 전하밀도↓ | △ **대리 지표** — 셀 평균 Li–음이온 정전기 에너지 (`Fig. 1e` 합 −23.54 → −23.04 eV/Li · *우리 산수*) · 논리는 인용 [35] (할라이드 전해질) · 저자도 "However" 로 한계 인정 | ✗ 없음 | ✗ 없음 |
+| ③ Li⁺ cage 연결↑ | ✓ **계산 · 정성** — AIMD 900 K 확률밀도 (`Fig. 1f`) + MSD (`Fig. S4` — x = 1 계단형 vs x = 1.5 직선 · 60 ps 에서 ≈2.7×) · 조성당 궤적 1 개 | ✓ **계산 · 정성** — AIMD 900 K 확률밀도 (`Fig. 2f,g`) + MSD ≈3× @100 ps (`Fig. S5`) · 정전기 최저 배치 1 개 | ✗ 없음 |
+| ④ σ↑ | ✓ **계산** — AIMD 외삽 0.43 → 14.55 mS cm⁻¹ · Ea 0.325 → 0.230 eV (p.487 · `Fig. S3`) · 실험은 x = 1.5 한 점 8.0 mS cm⁻¹ (`Fig. S6`) | ✓ **실험** — 2.62 (x = 1.0 · 550 °C) → 8.0 mS cm⁻¹ (x = 1.5 · 450 °C) · 단 550 °C 끼리는 2.62 vs 2.6 로 같다 · 300–350 °C 는 역전 (`Fig. 2a`) | ✓ **실험** — 1.6 → 3.6 → 5.3 → 6.1 → **8.8 mS cm⁻¹** (x = 0.6 → 1.6 · 24 °C 총 σ · `Table S1`) · 원인 ("무질서 + Li 공공") 은 주장만 |
+| 그 논문의 표제 기전 | 기계 구속 (K_eff) 아래 ESW 확대 · LPSCl1.0 의 '적당한 불안정' | 결정화 (어닐) · Li 계면 RDF · LiCl-rich SEI | LiCl 나노껍질 → Cl 이동 → LiCl 지배 계면층 · CCD x = 1.3 최대 · x = 1.6 최저 |
+| **판정** | **일부만** (③ · ④ 계산 · ② 대리 · ① 가정) | **대부분 (② 제외)** | **안 함** (σ 값만) · ① 의 x = 1.6 전제를 흔듦 |
+
+### 문장 조각별 결론 (세 편 합산)
+- **"In halogen-rich argyrodites such as LPSC1.6"** → x = 1.6 을 잰 것은 116 뿐이고, 그 시료의 Cl 일부는 격자 밖이다 (Rietveld LiCl + cryo-STEM 껍질 · 냉각 속도 의존 `Fig. S13`). 이 논문의 LPSC₁.₆ 는 열처리 · 냉각 미기재 · 점유 정련 없음 (§4a · §10-⑦) → **'LPSC₁.₆ 에서 4d 치환' 은 세 편으로 확인되지 않는다.**
+- **"Cl⁻ substitution for S²⁻ at the 4d sites"** → **115 만 실험으로** (x = 1.5 까지 · lab XRD · 오차 없음). 이 고리의 더 강한 원전은 세 편 밖에 있다 — litdb 안에선 **`adeli2019_halide_substitution_boosting_argyrodite.md` (중성자 Rietveld: 4c(=4d)-Cl 0.615 (Li₆PS₅Cl, Kraft) → 0.834 (Li₅.₅PS₄.₅Cl₁.₅))** · `kraft2017_lattice_polarizability_argyrodite_Li6PS5X.md` · `feng2020_li_deficient_argyrodite_cl_disorder.md` (단 측정법 사이 4d-Cl 이 크게 갈린다) · `deklerk2016_diffusion_site_disorder_argyrodite.md` (계산), 그리고 116 이 같은 내용에 단 [20–22] 중 **Gautam 2021 *ACS Appl. Energy Mater.*** (중성자 · Li₇₋ₓPS₆₋ₓClₓ — litdb 미digest). ⚠ 같은 조성의 중성자 값 (≈62 · ≈83 %) 보다 115 의 lab XRD 값 (13.3 · 61.7 %) 이 둘 다 낮다 — 시료 · 공정이 달라 직접 비교는 못 하지만 lab XRD S/Cl 정련의 약점과 같은 방향이다.
+- **"lowers the local anionic charge density"** → **세 편 어디에도 직접 근거가 없다** (114 의 셀 평균 정전기 에너지가 가장 가까운 대리). 이 고리의 언어 (*"4d 음이온 중심의 평균 음전하↓"*) 는 He 2023 리뷰의 사슬과 같다 (`he2023_halogen_chemistry_solid_electrolytes.md` §8a — 리뷰 refs 138 Wang P. 2020 · 162 Feng 2020 · 132 Kraft 2017 사이를 리뷰가 이은 단계). 실험 근거가 있는 litdb 원전은 **Adeli 2019** — ⁷Li NMR 공명이 Cl 과 함께 'LiCl-like' 로 이동 = 1가 Cl⁻ 가 Li⁺ 에 대한 정전 인력을 줄인다 (그 digest §5.6 · §6-1 · 중성자 점유는 §5.2 `Table 1`). `morgan2021_anion_disorder_superionic_mechanism_li6ps5x.md` 는 '정전기 좌절' 이라는 다른 언어다. ⚠ 이 논문이 이들을 인용했는지는 모른다.
+- **"enhances the connectivity of the Li⁺ cages"** → 114 · 115 의 **AIMD 정성 그림 + MSD 비 (900 K · ≈3×)** — 두 그룹이 독립으로 비슷한 대비를 얻었다. 단 둘 다 조성당 궤적 · 배치 1 개이고, Li₆PS₅Cl 쪽 MSD 도 70–80 Å² 까지 자라므로 "cage 에 갇힘" 은 과장이다.
+- **"ultimately improves the ionic conductivity"** → 실험 σ 상승은 115 (x 1.0 → 1.5) · 116 (x 0.6 → 1.6) 가 직접 보인다. 그 상승의 **원인이 ① → ② → ③ 이라는 인과**는 115 가 상관 (2 점 · 공정 교락) 으로, 114 가 계산 (가정 배치) 으로 보일 뿐이다.
+- ⇒ **8번 문장 전체 판정: 일부만 뒷받침.** ① · ③ · ④ 는 세 편을 합치면 '상관 + 계산' 수준으로 서고, **② 는 근거가 없다**. 'LPSC₁.₆' 로의 일반화는 116 의 LiCl 분리 관측과 부딪힌다.
+
+### 이 digest 의 다른 절에 대한 함의
+- §4e 의 *"Cl 4d 치환 → Li cage 연결 [39–41]"* 은 위 판정대로 **'일부만'** 으로 읽는다 — 특히 '전하밀도' 고리는 인용 근거가 없다.
+- §6 *"가장 단단한 LPSC₁.₆ 의 CCD 가 LPSC 와 같다"* 는 116 의 *"Cl-16 이 σ 최고인데 CCD 최저 (0.56 ± 0.028 mA cm⁻², 3 배치)"* 와 같은 방향이다 (높은 σ ≠ 덴드라이트 내성) — 기전 설명은 다르다 (116: 두꺼운 LiCl 껍질이 argyrodite 핵을 고립).
+- 우리 쪽: modelc 는 Cl 1.6 을 전부 격자에 넣은 셀 (4d = S²⁻ 2 + Cl⁻ 3 · `kb/results/lpscl_vs_lpscl16_v3_comparison.md` §II.2.5) 이라 이 문장의 ① 을 **구성으로 품은 '격자 고용 상한' 모델**이다 — 그러나 ② · ③ · ④ 를 우리가 보였다고 인용할 수 있는 결과는 없다 (comp1 ↔ modelc 수송 순위는 원장상 인용 불가 · 우리 BVSE 는 softBV 가 아닌 Brown 형식 BV 합이라 이 문장의 정량 근거로 쓰지 않는다).
+
+### 인용 규율 (이 문장 기준)
+- ✅ "Chlorine enrichment of the cage-centre (4d) site has been reported from laboratory XRD Rietveld refinement for Li₅.₅PS₄.₅Cl₁.₅ (*Adv. Funct. Mater.*, 32, 2207978 (2022)), and AIMD studies associated it with more frequent inter-cage Li jumps (*Energy Storage Mater.*, 45, 484 (2022); *Adv. Funct. Mater.*, 32, 2207978 (2022))."
+- ⛔ 114 · 115 · 116 을 "local anionic charge density" 의 근거로 인용하지 않는다.
+- ⛔ 116 을 "4d substitution" 의 근거로 인용하지 않는다 (재지 않았고, Cl 일부가 격자 밖이라고 보고한다).
