@@ -1,0 +1,514 @@
+{
+  "schema": "first8_inactive_case_bindings/1",
+  "validation_source_pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+  "execution_authorized": false,
+  "operational_activation": false,
+  "research_results": 0,
+  "whole_gate": "HOLD",
+  "cases": [
+    {
+      "case_id": "PRECAL_R1_B1_U",
+      "role": "U",
+      "phases": {
+        "AM_P": {
+          "type": 1,
+          "radius_m": 0.0006813
+        },
+        "AM_S": {
+          "type": 2,
+          "radius_m": 0.0003028
+        },
+        "SE": {
+          "type": 3,
+          "radius_m": 7.57e-05
+        }
+      },
+      "n_planned": 100000,
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "revolutions": 2,
+      "seed": 32452843,
+      "r_container": 0.01258325,
+      "axis": "x",
+      "np_proposed": 20,
+      "frame_pm": {
+        "phases": {
+          "AM_P": {
+            "type": 1,
+            "radius_m": 0.0006813
+          },
+          "AM_S": {
+            "type": 2,
+            "radius_m": 0.0003028
+          },
+          "SE": {
+            "type": 3,
+            "radius_m": 7.57e-05
+          }
+        },
+        "n_planned": 100000,
+        "revolutions": 2,
+        "meta_steps": {
+          "t0_planned": 1121184,
+          "dump_every": 32976
+        },
+        "arm": "PRECAL_PREP_GM",
+        "seed": 32452843,
+        "n_expected_file": null
+      },
+      "density_generation": "lab20261014",
+      "geometry": {
+        "axis": "x",
+        "r_container": 0.01258325,
+        "length": 0.005033300000000001,
+        "cgf": 151.4
+      },
+      "registered": null,
+      "execution_authorized": false
+    },
+    {
+      "case_id": "PRECAL_R1_B1_C",
+      "role": "C",
+      "phases": {
+        "AM_P": {
+          "type": 1,
+          "radius_m": 0.0006813
+        },
+        "AM_S": {
+          "type": 2,
+          "radius_m": 0.0003028
+        },
+        "SE": {
+          "type": 3,
+          "radius_m": 7.57e-05
+        }
+      },
+      "n_planned": 100000,
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "revolutions": 2,
+      "seed": 32452843,
+      "r_container": 0.01258325,
+      "axis": "x",
+      "np_proposed": 20,
+      "frame_pm": {
+        "phases": {
+          "AM_P": {
+            "type": 1,
+            "radius_m": 0.0006813
+          },
+          "AM_S": {
+            "type": 2,
+            "radius_m": 0.0003028
+          },
+          "SE": {
+            "type": 3,
+            "radius_m": 7.57e-05
+          }
+        },
+        "n_planned": 100000,
+        "revolutions": 2,
+        "meta_steps": {
+          "t0_planned": 1121184,
+          "dump_every": 32976
+        },
+        "arm": "PRECAL_PREP_GM",
+        "seed": 32452843,
+        "n_expected_file": null
+      },
+      "density_generation": "lab20261014",
+      "geometry": {
+        "axis": "x",
+        "r_container": 0.01258325,
+        "length": 0.005033300000000001,
+        "cgf": 151.4
+      },
+      "registered": null,
+      "execution_authorized": false
+    },
+    {
+      "case_id": "PRECAL_R1_B2_U",
+      "role": "U",
+      "phases": {
+        "AM_P": {
+          "type": 1,
+          "radius_m": 0.0006813
+        },
+        "AM_S": {
+          "type": 2,
+          "radius_m": 0.0003028
+        },
+        "SE": {
+          "type": 3,
+          "radius_m": 7.57e-05
+        }
+      },
+      "n_planned": 100000,
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "revolutions": 2,
+      "seed": 32452843,
+      "r_container": 0.01258325,
+      "axis": "x",
+      "np_proposed": 20,
+      "frame_pm": {
+        "phases": {
+          "AM_P": {
+            "type": 1,
+            "radius_m": 0.0006813
+          },
+          "AM_S": {
+            "type": 2,
+            "radius_m": 0.0003028
+          },
+          "SE": {
+            "type": 3,
+            "radius_m": 7.57e-05
+          }
+        },
+        "n_planned": 100000,
+        "revolutions": 2,
+        "meta_steps": {
+          "t0_planned": 1121184,
+          "dump_every": 32976
+        },
+        "arm": "PRECAL_PREP_GM",
+        "seed": 32452843,
+        "n_expected_file": null
+      },
+      "density_generation": "lab20261014",
+      "geometry": {
+        "axis": "x",
+        "r_container": 0.01258325,
+        "length": 0.005033300000000001,
+        "cgf": 151.4
+      },
+      "registered": null,
+      "execution_authorized": false
+    },
+    {
+      "case_id": "PRECAL_R1_B2_C",
+      "role": "C",
+      "phases": {
+        "AM_P": {
+          "type": 1,
+          "radius_m": 0.0006813
+        },
+        "AM_S": {
+          "type": 2,
+          "radius_m": 0.0003028
+        },
+        "SE": {
+          "type": 3,
+          "radius_m": 7.57e-05
+        }
+      },
+      "n_planned": 100000,
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "revolutions": 2,
+      "seed": 32452843,
+      "r_container": 0.01258325,
+      "axis": "x",
+      "np_proposed": 20,
+      "frame_pm": {
+        "phases": {
+          "AM_P": {
+            "type": 1,
+            "radius_m": 0.0006813
+          },
+          "AM_S": {
+            "type": 2,
+            "radius_m": 0.0003028
+          },
+          "SE": {
+            "type": 3,
+            "radius_m": 7.57e-05
+          }
+        },
+        "n_planned": 100000,
+        "revolutions": 2,
+        "meta_steps": {
+          "t0_planned": 1121184,
+          "dump_every": 32976
+        },
+        "arm": "PRECAL_PREP_GM",
+        "seed": 32452843,
+        "n_expected_file": null
+      },
+      "density_generation": "lab20261014",
+      "geometry": {
+        "axis": "x",
+        "r_container": 0.01258325,
+        "length": 0.005033300000000001,
+        "cgf": 151.4
+      },
+      "registered": null,
+      "execution_authorized": false
+    },
+    {
+      "case_id": "PRECAL_R1_B3_U",
+      "role": "U",
+      "phases": {
+        "AM_P": {
+          "type": 1,
+          "radius_m": 0.0006813
+        },
+        "AM_S": {
+          "type": 2,
+          "radius_m": 0.0003028
+        },
+        "SE": {
+          "type": 3,
+          "radius_m": 7.57e-05
+        }
+      },
+      "n_planned": 100000,
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "revolutions": 2,
+      "seed": 32452843,
+      "r_container": 0.01258325,
+      "axis": "x",
+      "np_proposed": 20,
+      "frame_pm": {
+        "phases": {
+          "AM_P": {
+            "type": 1,
+            "radius_m": 0.0006813
+          },
+          "AM_S": {
+            "type": 2,
+            "radius_m": 0.0003028
+          },
+          "SE": {
+            "type": 3,
+            "radius_m": 7.57e-05
+          }
+        },
+        "n_planned": 100000,
+        "revolutions": 2,
+        "meta_steps": {
+          "t0_planned": 1121184,
+          "dump_every": 32976
+        },
+        "arm": "PRECAL_PREP_GM",
+        "seed": 32452843,
+        "n_expected_file": null
+      },
+      "density_generation": "lab20261014",
+      "geometry": {
+        "axis": "x",
+        "r_container": 0.01258325,
+        "length": 0.005033300000000001,
+        "cgf": 151.4
+      },
+      "registered": null,
+      "execution_authorized": false
+    },
+    {
+      "case_id": "PRECAL_R1_B3_C",
+      "role": "C",
+      "phases": {
+        "AM_P": {
+          "type": 1,
+          "radius_m": 0.0006813
+        },
+        "AM_S": {
+          "type": 2,
+          "radius_m": 0.0003028
+        },
+        "SE": {
+          "type": 3,
+          "radius_m": 7.57e-05
+        }
+      },
+      "n_planned": 100000,
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "revolutions": 2,
+      "seed": 32452843,
+      "r_container": 0.01258325,
+      "axis": "x",
+      "np_proposed": 20,
+      "frame_pm": {
+        "phases": {
+          "AM_P": {
+            "type": 1,
+            "radius_m": 0.0006813
+          },
+          "AM_S": {
+            "type": 2,
+            "radius_m": 0.0003028
+          },
+          "SE": {
+            "type": 3,
+            "radius_m": 7.57e-05
+          }
+        },
+        "n_planned": 100000,
+        "revolutions": 2,
+        "meta_steps": {
+          "t0_planned": 1121184,
+          "dump_every": 32976
+        },
+        "arm": "PRECAL_PREP_GM",
+        "seed": 32452843,
+        "n_expected_file": null
+      },
+      "density_generation": "lab20261014",
+      "geometry": {
+        "axis": "x",
+        "r_container": 0.01258325,
+        "length": 0.005033300000000001,
+        "cgf": 151.4
+      },
+      "registered": null,
+      "execution_authorized": false
+    },
+    {
+      "case_id": "PRECAL_N0",
+      "role": "N0",
+      "phases": {
+        "AM_P": {
+          "type": 1,
+          "radius_m": 0.0006813
+        },
+        "AM_S": {
+          "type": 2,
+          "radius_m": 0.0003028
+        },
+        "SE": {
+          "type": 3,
+          "radius_m": 7.57e-05
+        }
+      },
+      "n_planned": 100000,
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "revolutions": 2,
+      "seed": 32452843,
+      "r_container": 0.01258325,
+      "axis": "x",
+      "np_proposed": 20,
+      "frame_pm": {
+        "phases": {
+          "AM_P": {
+            "type": 1,
+            "radius_m": 0.0006813
+          },
+          "AM_S": {
+            "type": 2,
+            "radius_m": 0.0003028
+          },
+          "SE": {
+            "type": 3,
+            "radius_m": 7.57e-05
+          }
+        },
+        "n_planned": 100000,
+        "revolutions": 2,
+        "meta_steps": {
+          "t0_planned": 1121184,
+          "dump_every": 32976
+        },
+        "arm": "L0",
+        "seed": 32452843,
+        "n_expected_file": null
+      },
+      "density_generation": "lab20261014",
+      "geometry": {
+        "axis": "x",
+        "r_container": 0.01258325,
+        "length": 0.005033300000000001,
+        "cgf": 151.4
+      },
+      "registered": null,
+      "execution_authorized": false
+    },
+    {
+      "case_id": "PRECAL_E0",
+      "role": "E0",
+      "phases": {
+        "AM_P": {
+          "type": 1,
+          "radius_m": 0.0006813
+        },
+        "AM_S": {
+          "type": 2,
+          "radius_m": 0.0003028
+        },
+        "SE": {
+          "type": 3,
+          "radius_m": 7.57e-05
+        }
+      },
+      "n_planned": 100000,
+      "expected_counts": {
+        "1": 143,
+        "2": 699,
+        "3": 99158
+      },
+      "revolutions": 0,
+      "seed": 32452843,
+      "r_container": 0.01258325,
+      "axis": "x",
+      "np_proposed": 20,
+      "frame_pm": {
+        "phases": {
+          "AM_P": {
+            "type": 1,
+            "radius_m": 0.0006813
+          },
+          "AM_S": {
+            "type": 2,
+            "radius_m": 0.0003028
+          },
+          "SE": {
+            "type": 3,
+            "radius_m": 7.57e-05
+          }
+        },
+        "n_planned": 100000,
+        "revolutions": 0,
+        "meta_steps": {
+          "t0_planned": 1121000,
+          "dump_every": 1000
+        },
+        "arm": "E0",
+        "seed": 32452843,
+        "n_expected_file": null
+      },
+      "density_generation": "lab20261014",
+      "geometry": {
+        "axis": "x",
+        "r_container": 0.01258325,
+        "length": 0.005033300000000001,
+        "cgf": 151.4
+      },
+      "registered": null,
+      "execution_authorized": false
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "mode": "preparation-tests",
+  "base_b": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+  "python": "3.12.14",
+  "python_executable_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+  "source_dependencies_verified": 12,
+  "launch_files_verified": 73,
+  "original_assets_verified": 40,
+  "actual_child_process_calls": 0,
+  "actual_socket_calls": 0,
+  "scheduler_calls": 0,
+  "mpi_calls": 0,
+  "execution_authorized": false,
+  "operational_activation": false,
+  "research_results": 0,
+  "whole_gate": "HOLD",
+  "methods": 14,
+  "failures": 0,
+  "errors": 0,
+  "audit_synthetic_denial_probes": [
+    "subprocess.Popen",
+    "socket.connect"
+  ],
+  "real_process_or_socket_attempts": 0,
+  "source_import_method": "Compile verified in-memory source only; no pyc loading",
+  "loaded_source_sha256": {
+    "make_mixer_deck": "dc253bc8319077bc1e41635ae30ec588eb4a14c899db075e064192c4ef9cf6f7",
+    "make_mixer_resume": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e",
+    "mixer_deck_diff": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+    "mixer_deck_readback": "791f72e96bd72d1ad118d347e5dbfdc5fd67e8b30e2ee602c6fbf7109f37091a",
+    "mixer_precal_prepare": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6",
+    "test_mixer_precal_prepare": "01cf375954201bf1a916b40f13359b564ff0ba7ed7758671e52fb218fd5e291c"
+  },
+  "exact_snapshot_file_graph_verified": true,
+  "snapshot_links_rejected": true,
+  "driver_boundary_method": "Static source inspection only; driver not imported or invoked",
+  "driver_still_reads_original_sibling_seal": true,
+  "old_source_seal_unchanged": true,
+  "rc": 0
+}
