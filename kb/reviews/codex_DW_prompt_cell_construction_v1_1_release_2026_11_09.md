@@ -7,7 +7,7 @@ letter: DW
 track: b2o3
 channel: codex
 kind: prompt
-status: 발송 전 · 기준 커밋은 이 프롬프트를 담은 커밋 (아래 '보내는 글' 의 범위 줄) · 앞 편지 DV (NO-GO)
+status: 발송 전 · 기준 커밋 837cc6e8 (브랜치 claude/evac-2026-11-08 · 그 뒤 커밋은 litdb · 운영 기록 · 웹앱 개념 카드뿐 — b2o3 도구 · 카드 변경 없음) · 앞 편지 DV (NO-GO)
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -28,7 +28,7 @@ evidenceScope: multi-source-primary
 
 DV 회신 (`kb/reviews/codex_DV_reply_cell_construction_v1_1_2026_11_09.md` · 기준 ad4f41b8) 은 NO-GO 와 함께 1 단계 해제조건 네 묶음을 줬다 — ① 큐 실패 전파 ② 실물 결속 (완료 구조 · 대기 뒤 입력) ③ 생성 짝 검증 ④ 판독기 + 음성시험 → 유효 개정 비준. 포논 빈 캐시 · B 결합 분류는 각 후속 단계 전 조건.
 
-범위 `ad4f41b8..<이 편지의 커밋>` — 커밋 다섯 (DV 원문 보존 · 큐/결속 · 생성 짝 · 판독기 · 후속 단계 조건). 생산 UMA · DFT · MD 는 안 돌았다.
+브랜치 `claude/evac-2026-11-08` · 범위 `ad4f41b8..837cc6e8` (그 뒤 커밋은 b2o3 와 무관 — litdb · 운영 기록 · 웹앱 개념 카드) — 커밋 다섯 (DV 원문 보존 · 큐/결속 · 생성 짝 · 판독기 · 후속 단계 조건). 생산 UMA · DFT · MD 는 안 돌았다.
 
 **묻는 것**: 네 묶음이 닫혔나 → 1 단계 (생성 → UMA 이완 거름 → 연속 파일럿 → 어닐 → 판독) 를 사용자 비준 뒤 시작해도 되나 (GO / 조건부 GO / NO-GO). 포논 · 골격 MD 전 조건 둘도 닫혔나.
 
