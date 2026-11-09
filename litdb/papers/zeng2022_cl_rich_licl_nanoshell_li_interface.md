@@ -39,7 +39,7 @@ Li₇₋ₓPS₆₋ₓClₓ (x = 0.6–1.6) 다섯 조성을 같은 공정 (볼�
 | 항목 | 내용 |
 |---|---|
 | 조성 | Li₇₋ₓPS₆₋ₓClₓ x = 0.6 · 1.0 · 1.3 · 1.45 · 1.6 (Cl-06 … Cl-16) |
-| 던지는 질문 | Cl 함량 (chlorinity) 이 **Li|argyrodite 계면** — 계면상 조성 · 미세구조 · 덴드라이트 억제 — 을 어떻게 바꾸나. 서론: "Cl-rich (a = 1.5) 는 Li 에 전기화학적으로 안정하지만 덴드라이트 침투는 못 막는다 [23 = Gil-González 2022]" 를 출발점으로 삼는다 |
+| 던지는 질문 | Cl 함량 (chlorinity) 이 **Li\|argyrodite 계면** — 계면상 조성 · 미세구조 · 덴드라이트 억제 — 을 어떻게 바꾸나. 서론: "Cl-rich (a = 1.5) 는 Li 에 전기화학적으로 안정하지만 덴드라이트 침투는 못 막는다 [23 = Gil-González 2022]" 를 출발점으로 삼는다 |
 | 서론의 구조 서술 (인용) | *"a higher chlorinity leads to stronger Cl⁻/S²⁻ site disorders, and moreover, a higher occupancy of Cl atoms at the 4d site … thereby achieving a faster ion transport with an ionic conductivity ~10 mS/cm [20–22]"* (p.2) — [20] Patel 2021 *Chem. Mater.* (Li₆₋ₓPS₅₋ₓClBrₓ) · [21] **Gautam 2021 *ACS Appl. Energy Mater.*** (Li₇₋ₓPS₆₋ₓClₓ 의 Li 분포) · [22] **de Klerk 2016 *Chem. Mater.*** (참고문헌 쪽에 번호가 일부 안 박혀 거꾸로 세어 정했다) |
 | 핵심 장비 | cryo-STEM-HAADF/EDS (−170 °C · Themis Z 300 kV) · SEM-EDS 단면 · time-resolved / in situ EIS · XPS 반정량 · in situ Raman |
 | 셀 | In\|SE\|In (σ) · Pt\|SE\|Pt (σ_e) · Li\|SE\|Li (CCD · 사이클 · 시간분해 EIS) · Li\|SE\|LNO@NCM622 · Li-In\|SE\|LNO@NCM811 (양극 촉매질은 **상용 LSPSC = Li₉.₅₄Si₁.₇₄P₁.₄₄S₁₁.₇Cl₀.₃** — argyrodite 는 분리막에만) |
