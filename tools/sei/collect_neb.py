@@ -74,12 +74,15 @@ def hop_check(ea_eV, T_K=300.0, nu0=NU0_ASSUMED, t_s=None):
 
 
 def observation_window(T_K, t_s, nu0=NU0_ASSUMED, n_sites=1):
-    """짧은 MD '무반응' 의 **관측창 한 줄** (사용자 2026-10-05 · D-2026-10-05-md-observation-window).
+    """짧은 MD '무반응' 의 **관측창 한 줄** (사용자 2026-10-05 · D-2026-10-05-md-observation-window ·
+    개정 1 D-2026-11-09-md-observation-window-amend1 — 사용자 비준 2026-11-09).
 
-    궤적 총 시간 t 동안 한 번이라도 볼 수 있었던 장벽의 상한 Ea_max ≈ kT·ln(ν₀·t·n) —
-    hop_check 의 N = Γ·t = 1 을 Ea 에 대해 푼 거울상이다 (독립 반응 자리가 n 개면 + kT·ln n).
-    용도: 'MD 에서 반응·분해·이탈이 안 보였다' 를 'Ea ≳ Ea_max 인 반응은 이 창에서 못 본다' 로 읽는다
-    (예: 5 ps · 298 K ≈ 0.10 eV · 20 ns · 350 K ≈ 0.37 eV · 3 h · 298 K ≈ 1.0 eV).
+    Ea₁ = kT·ln(ν₀·t·n) 은 **기대 사건 수가 1 인 장벽** 이다 (hop_check 의 N = Γ·t = 1 을 Ea 에 대해 푼 거울상 ·
+    독립 반응 자리가 n 개면 + kT·ln n) — 그 장벽의 반응을 한 번 이상 볼 확률은 63.2 % 이고 더 높은 장벽도 볼 수 있다
+    (절대 경계 아님). 95 % 검출 장벽은 Ea₉₅ = kT·ln(ν₀·t·n / (−ln 0.05)) (정상 포아송 · 일정 사건률 가정).
+    ⛔ 개정 1 (2026-11-09): 옛 줄 'Ea ≳ Ea_max 인 반응은 이 궤적에서 못 본다' 꼴은 쓰지 않는다 — 기대 사건 1 지점을
+      딱 잘리는 관측 한계로 읽게 만들었다 (Codex DV Q7). 키 Ea_max_eV 는 Ea₁ 그대로 (옛 호출부 호환).
+    (예 Ea₁: 5 ps · 298 K ≈ 0.10 eV · 20 ns · 350 K ≈ 0.37 eV · 3 h · 298 K ≈ 1.0 eV · 1000 K · 0.8 ns: Ea₁ 0.77446 · Ea₉₅ 0.67991 eV)
     ⛔ 못 하는 것: 장벽 값이 아니다 · 열역학적 안정 판정이 아니다 · ν₀ 는 가정(10¹³ s⁻¹) · 경로 수·상관·
       자유에너지 장벽의 엔트로피 항을 안 본다. ν₀·t·n ≤ 1 이면 장벽 0 인 반응도 한 번 기대되지 않으므로 0.
     T·t·ν₀ 가 양수 유한이 아니거나 n < 1 이면 None (없는 값을 0 으로 그리지 않는다).
@@ -92,12 +95,14 @@ def observation_window(T_K, t_s, nu0=NU0_ASSUMED, n_sites=1):
         return None
     x = nu * t * n
     ea = KB_EV * T * math.log(x) if x > 1 else 0.0
-    site = f" · 반응 자리 {n:g}" if n > 1 else ""
-    return {"T_K": T, "t_s": t, "nu0_s-1_assumed": nu, "n_sites": n, "Ea_max_eV": ea,
-            "rule": "D-2026-10-05-md-observation-window",
-            "⚠": "관측창 — 장벽 값도 열역학적 안정 판정도 아니다 (ν₀ 가정)",
-            "line": f"관측창 (ν₀ {nu:.0e} s⁻¹ 가정 · {T:.0f} K · 궤적 {t:.3g} s{site}): "
-                    f"Ea ≳ {ea:.2f} eV 인 반응은 이 궤적에서 못 본다"}
+    x95 = x / (-math.log(0.05))                       # 95 % 검출 = 기대 사건 −ln 0.05 ≈ 3.00
+    ea95 = KB_EV * T * math.log(x95) if x95 > 1 else 0.0
+    site = f" · 반응 기회 {n:g}" if n > 1 else ""
+    return {"T_K": T, "t_s": t, "nu0_s-1_assumed": nu, "n_sites": n, "Ea_max_eV": ea, "Ea_95_eV": ea95,
+            "rule": "D-2026-10-05-md-observation-window + D-2026-11-09-md-observation-window-amend1",
+            "⚠": "관측창 — 장벽 값도 열역학적 안정 판정도 아니다 (ν₀ 가정 · 정상 포아송 · 기대 사건 1 은 절대 경계가 아니다)",
+            "line": f"관측창 (ν₀ {nu:.0e} s⁻¹ 가정{site} · 정상성 가정 · {T:.0f} K · 궤적 {t:.3g} s): "
+                    f"기대 사건 1 ≈ {ea:.2f} eV (검출 63 %) · 95 % 검출 ≈ {ea95:.2f} eV"}
 
 
 def _bni():
@@ -502,14 +507,21 @@ def selftest():
     chk(_hb is not None and abs(_hb["N_hop"] - 1.0) < 1e-6,
         "[관측창] 거울상 — Ea_max 를 hop_check 에 넣으면 같은 창에서 N = 1 이다")
     wn = observation_window(298.0, 5e-12, n_sites=100)
-    chk(abs(wn["Ea_max_eV"] - w1["Ea_max_eV"] - KB_EV * 298.0 * math.log(100)) < 1e-12 and "반응 자리 100" in wn["line"],
+    chk(abs(wn["Ea_max_eV"] - w1["Ea_max_eV"] - KB_EV * 298.0 * math.log(100)) < 1e-12 and "반응 기회 100" in wn["line"],
         "[관측창] 반응 자리 n 개면 + kT·ln n")
     chk(observation_window(298.0, 1e-14)["Ea_max_eV"] == 0.0,
         "[관측창] ν₀·t ≤ 1 이면 0 (음수 장벽을 쓰지 않는다)")
     chk(all(observation_window(*a) is None for a in ((0, 1e-12), (-5, 1e-12), (300, 0), (300, -1), (300, float("nan")), ("x", 1), (300, 1e-12, 0), (300, 1e-12, 1e13, 0.5))),
         "[관측창 음성] T·t·ν₀ 가 양수 유한이 아니거나 n < 1 이면 None")
-    chk(w1["rule"] == "D-2026-10-05-md-observation-window" and "장벽 값" in w1["⚠"] and "못 본다" in w1["line"],
-        "[관측창] 결정 ID · '장벽 값 아님' 경고 · 읽는 법이 결과에 붙는다")
+    chk("D-2026-10-05-md-observation-window" in w1["rule"] and "amend1" in w1["rule"] and "장벽 값" in w1["⚠"]
+        and "기대 사건 1" in w1["line"] and "95 % 검출" in w1["line"] and "못 본다" not in w1["line"],
+        "[관측창] 결정 ID (개정 1 포함) · '장벽 값 아님' 경고 · 새 읽는 법 (기대 사건 1 · 95 %) · 옛 '못 본다' 꼴 없음")
+    w8 = observation_window(1000.0, 0.8e-9)
+    chk(abs(w8["Ea_max_eV"] - 0.7744567) < 5e-7 and abs(w8["Ea_95_eV"] - 0.6799083) < 5e-7,
+        f"[관측창 개정 1 외부 값] 1000 K · 0.8 ns → Ea₁ 0.7744567 · Ea₉₅ 0.6799083 eV (Codex DX · DY 재계산) — "
+        f"{w8['Ea_max_eV']:.7f} · {w8['Ea_95_eV']:.7f}")
+    chk(abs(w8["Ea_95_eV"] - KB_EV * 1000.0 * math.log(1e13 * 0.8e-9 / 3)) > 1e-4,
+        "[관측창 개정 1 음성] 95 % 는 정확식 (−ln 0.05) — /3 근사 (0.67979) 와 갈라진다")
     # CLI 경로 — 함수만 시험하면 main 의 인자 배선이 틀려도 초록이었다 (2026-10-13 · 셋째 값이 ν₀ 로 들어감)
     def _cli(*xs):
         r = subprocess.run([sys.executable, os.path.abspath(__file__), "--obs_window", *map(str, xs)],

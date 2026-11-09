@@ -127,7 +127,7 @@
  },
  "⏩_개정_1": "§1b 셀 근거 (철회된 관찰 인용) · §8 2 단계 온도 (600/650/700 K · 표준 이탈 미표기) 를 포함해 1 · 2 단계 설계를 '개정_1_셀구축_v1_2026_11_09' 가 대체한다 (proposed · Codex DU 리뷰 + 사용자 비준 뒤 효력). 위 원문은 기록으로 둔다.",
  "개정_1_셀구축_v1_2026_11_09": {
-  "status": "proposed (v1.3 · DU · DW · DX 고침 · Codex DY GO 12b8bdef) — 결과 0 건 (1 · 2 단계 아무것도 안 돌았다) · 사용자 새 비준 뒤 효력 (DY: 'GO 는 비준이 아니다 · v1.3 카드를 새로 비준하면 1 단계 시작')",
+  "status": "active (v1.3 · 사용자 비준 2026-11-09 · Codex DY GO 12b8bdef 뒤 · 결과 전) — 결과 0 건 · 1 단계 발사 전 확인 넷 = 1단계_시작_전_확인_DY · 2 단계는 1 단계 판독 + 사용자 '2 단계 발사' 뒤",
   "결정": "D-2026-11-09-b2o3-bo-placement-amend1 (proposed · D-2026-11-09-b2o3-bo-placement-uma 를 개정)",
   "절차": "db/properties/cell_construction_protocol_v1_2026_11_09.json (셀구축 v1 · D-2026-11-09-cell-construction-protocol-v1 proposed) 의 첫 적용",
   "왜_고치나": [
@@ -248,6 +248,11 @@
    "3": "파일럿 · 8 단계는 판독기가 쓴 계획 manifest (purpose 포함) 와 각자 새 출력 폴더 · 8 단계 TIME_PS = 영수증의 t_a",
    "4": "EOS 의 (E, P, V) 결과 파일 결속은 DFT 진입 전까지 (이번 GO 는 1 단계 UMA 절차에 대한 것)",
    "출처": "kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md (GO · 기준 12b8bdef)"
+  },
+  "✅_비준_2026_11_09_v1_3": {
+   "결정": "D-2026-11-09-b2o3-bo-placement-amend1 (active)",
+   "근거_발화": "사용자 2026-11-09 (대피 세션): AskUserQuestion 'Codex DY 가 b2o3 1 단계(UMA 거름 → 파일럿 → 어닐)에 GO 를 줬어요. 다만 GO 는 비준이 아니라서 v1.3 을 새로 비준해 주셔야 효력이 생겨요. 비준할 것: 셀구축 절차 v1.3 + b2o3 B·O 배치 카드 개정 1 v1.3. 판독 계약과 [제안] 셋이 같이 들어가요 — 한 가족 성공이 6 개 미만이면 보류 · 8 단계 기록은 기준 seed 하나 · SEED 는 발사 전에 정하고 재시도에서도 유지. 비준할까요?' 에 '비준 + 발사 준비 (Recommended)'",
+   "기준": "Codex DY GO (12b8bdef) · 원장 커밋 0bd2a2ec"
   }
  }
 }

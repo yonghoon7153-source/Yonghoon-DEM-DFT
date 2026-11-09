@@ -3,7 +3,7 @@
  "kind": "method",
  "id": "cell_construction_v1",
  "이름": "셀구축 (cell construction) v1.1",
- "status": "proposed — v1.3 (Codex DU · DW · DX 고침 · DY GO 12b8bdef) · 사용자 새 비준 전 · 이 정의로 아무것도 돌리지 않았다",
+ "status": "active — v1.3 (사용자 비준 2026-11-09 · Codex DU · DW · DX 고침 · DY GO 12b8bdef 뒤) · 첫 적용 = b2o3 B·O 배치 카드 개정 1 · 아직 아무것도 돌리지 않았다",
  "written_on": "2026-11-09",
  "정의": "도핑 argyrodite 의 계산 셀을 **만들고 · 고르고 · 안정한지 확인하고 · 표준 후처리까지** 하는 절차. (A) 셀 만들기 · 고르기 (0–10 단계) → (B) 안정성 확인 (11: 포논 · 유한 온도 골격 · hull) → (C) 표준 후처리 (12: 띠틈 · DOS · Bader · ELF · ICOHP · BVSE · 탄성 · 수송 MD) → (D) 기록 · 계보 (13). 구조는 **계보로** 기록한다 — 10 단계의 선택 부모 → DFT 이온 이완본 (전자구조 후처리 12a · 12b) · UMA fmax 0.01 재이완본 (포논 11a) · MD 시작 구조 (11b) 는 서로 다른 파일이다 (각 해시 + 부모 해시를 manifest 에 · DU P1-6). 적용 카드가 단계마다 값과 '돌릴 모듈' 을 결과 전에 선언한다.",
  "출처": {
@@ -309,5 +309,9 @@
   "Q3": "목적은 파일럿 · 8 단계만 · manifest 에서만 — 현재 경로에서 수용 (6 단계 · 스냅숏 이완은 시작 해시 · 이름 · relax_only · 시간 0 검사)",
   "검증_범위": "Windows 에서 LF 어댑터로 러너 dry-run — Windows ↔ Linux 경로 이식성 · 실제 Linux 서버 실행은 검증 범위 밖 · 변이 22 종은 Codex 가 따로 재실행하지 않음",
   "출처": "kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md"
+ },
+ "✅_비준_2026_11_09_v1_3": {
+  "결정": "D-2026-11-09-cell-construction-protocol-v1 (active)",
+  "근거_발화": "사용자 2026-11-09 (대피 세션): AskUserQuestion 'Codex DY 가 b2o3 1 단계(UMA 거름 → 파일럿 → 어닐)에 GO 를 줬어요. 다만 GO 는 비준이 아니라서 v1.3 을 새로 비준해 주셔야 효력이 생겨요. 비준할 것: 셀구축 절차 v1.3 + b2o3 B·O 배치 카드 개정 1 v1.3. 판독 계약과 [제안] 셋이 같이 들어가요 — 한 가족 성공이 6 개 미만이면 보류 · 8 단계 기록은 기준 seed 하나 · SEED 는 발사 전에 정하고 재시도에서도 유지. 비준할까요?' 에 '비준 + 발사 준비 (Recommended)'"
  }
 }

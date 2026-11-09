@@ -7057,7 +7057,7 @@
    "title": "짧은 MD 에서 '반응·분해·이탈 없음 · 안정' 을 쓸 때 관측창 한 줄을 같이 싣는다 — Ea_max ≈ kT·ln(ν₀·t·n)",
    "statement": "MD(AIMD · MLIP-MD · 고전 MD · 반응 MD)에서 '반응·분해·이탈이 일어나지 않았다' · '안정하다' 를 쓸 때마다 — 우리 계산이든 문헌이든 — 관측창 한 줄을 붙인다: 그 궤적이 한 번이라도 볼 수 있었던 장벽의 상한 Ea_max ≈ kT·ln(ν₀·t) (ν₀ = 10¹³ s⁻¹ **가정** · T · t = 궤적 총 시간 명시 · 독립 반응 자리가 n 개면 + kT·ln n). '무반응' 은 'Ea ≳ Ea_max 인 반응은 이 창에서 못 본다' 이상의 뜻으로 쓰지 않는다 — 열역학적 안정이나 실제 셀 시간척(시간~일)의 무반응으로 읽지 않는다. 이 한 줄은 차수 검산이지 장벽 값이 아니다.",
    "rationale": "Kim 2026 (Adv. Energy Mater. e71596 · Na‖Bi 합금 음극) 이 5 ps · 298 K AIMD 에서 TEGDME 분해가 안 보인 것을 '안정' 근거로 썼다 — 그 창은 Ea ≲ 0.10 eV 반응만 본다 (셀 시간척 3–30 h 는 ≈ 1.0–1.07 eV). 우리 T3 계획(UMA 반응 MD · 350 K · ≥ 20 ns)도 ≈ 0.37 eV 까지만 본다. D-2026-09-27-barrier-hop-count (장벽 → 홉 수) 의 거울상 (홉 수 = 1 → 볼 수 있는 장벽). litdb §J-58 · §H 관측창 행. 사용자 2026-10-05 — '권고대로 진행' (litdb kim2026 · yuan2026 브리핑의 결정 후보 1·2 에 대한 답). 트랙 = 우리 DFT 기준선 → 1저자 = 사용자 (통지할 제3자 없음).",
-   "decision_state": "active",
+   "decision_state": "superseded",
    "record_kind": "policy",
    "results_seen": false,
    "results_seen_note": "보고 형식 규칙 — 특정 결과를 보고 고르지 않았다 (문헌 사례가 계기)",
@@ -7078,12 +7078,18 @@
    ],
    "enforcement": "① MD 결과 기록·원고·리뷰 프롬프트·litdb digest 에서 '무반응/안정' 문장 옆에 Ea_max 한 줄 ② observation_window() 또는 --obs_window 로 낸다 ③ Ea_max 를 장벽 값·안정성 판정으로 인용하지 않는다",
    "proposed_by": "claude-session-2026-10-05",
-   "status": "active",
+   "status": "superseded",
    "status_history": [
     {
      "at": "2026-10-05",
      "state": "active",
      "note": "사용자 2026-10-05 — '권고대로 진행' (litdb kim2026 · yuan2026 브리핑의 결정 후보 1·2 에 대한 답). 트랙 = 우리 DFT 기준선 → 1저자 = 사용자 (통지할 제3자 없음)."
+    },
+    {
+     "at": "2026-11-09",
+     "state": "superseded",
+     "by": "사용자 (규칙 소유 — 2026-10-05 사용자 제정)",
+     "note": "개정 1 (D-2026-11-09-md-observation-window-amend1 · 사용자 비준 2026-11-09) 이 관측창 줄 문구 (slot md_no_event_observation_window_line) 를 명시적으로 대체한다 — Ea₁ = kT·ln(ν₀·t·n) 은 기대 사건 1 (검출 63 %) · 95 % = kT·ln(ν₀·t·n / (−ln 0.05)) · '그보다 높으면 못 본다' 꼴 금지. 원 문구는 봉인 그대로 (statement 안 고침) · 지문만 다시 냄 · 결속 커밋 그대로 (cascade cap 선례 10-28)."
     }
    ],
    "ratification": {
@@ -7092,10 +7098,11 @@
     "actor_id": "yonghoon7153@gmail.com",
     "timestamp": "2026-10-05T00:46:36Z",
     "commit": "e3d72a1f1f73cf91d5bbab1539fb17e4a0e52f8f",
-    "decision_digest": "sha256:e70696422c478e83902db2b669f358314cf6d7d3d74a22a792ff69e9d9c12cb8",
+    "decision_digest": "sha256:712c4c5b7e257943309cb6204e94ce478f666c6426ce86c03a58872437ae5e78",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "비준_근거": "사용자 2026-10-05 '권고대로 진행' (결정 후보 1·2 · 트랙 = 우리 DFT 기준선 · 사용자 1저자)."
-   }
+   },
+   "superseded_by": "D-2026-11-09-md-observation-window-amend1"
   },
   {
    "id": "D-2026-10-05-adsorption-site-coordination",
@@ -11606,7 +11613,7 @@
    "title": "B₂O₃-LPSCl1.6 B·O 배치 선호 UMA 재탐색 (O 가 B 에 · P 에 · 자유 S 자리에) → 에너지로만 고른 배치의 골격 게이트 (2 단계) — 트랙 b2o3 UMA-MD · 1저자 = 사용자",
    "statement": "카드 db/properties/b2o3_bo_placement_estimand_2026_11_09.json. 1 단계: 정본 LPSCl1.6 (modelc V0) × (2,2,1) · 할로겐 고정 · B₂O₃ 2 단위 (Li116P16B4S82O6Cl32 · B/(B+P) 0.2 = 옛 챔피언 농도) · Ewald 서로 다른 바탕 배치 12 × O 꼴 세 가족 (F_B B–O · F_P P–O · F_free 자유 S) = 36 구조 · UMA 500 K × 20 ps 어닐 + 셀 포함 이완 · ΔE_fam = [E_min(F) − E_min(F_P)]/2 (eV/B₂O₃ · UMA 내부) · 짝 δ_k · |ΔE| < 0.20 이면 'UMA 로는 못 가른다' · 가족마다 UMA 최저 둘 DFT 단일점 (PBE · 52/520 · Γ) · |ΔE^DFT| < 0.10 이면 '단일점으로도 못 가른다' · k 탐침 2×2×1. 2 단계 (1 단계 판독 + 사용자 발사 뒤): 에너지만으로 고른 3 배치 × 600/650/700 K × 시드 2 × 400 ps + 같은 셀 modelc 대조 6 런 · 배치마다 골격 사건 합 ≤ 2 단단 · ≥ 12 움직임 · 대조 > 2 면 무효.",
    "rationale": "모든 b2o3 MD 가 6 월 챔피언 한 배치였고, 사건이 그 배치의 도펀트 자리 둘에 몰렸다 (b2o3_eventrate_site_localization_2026_11_09.json · 사후 탐색). 6 월 UMA 는 bo4 와 distributed 가 근접 축퇴였고 꼴 DFT 비교는 없었다. 사용자 11-09 '한번 UMA로 다시 b랑 O 위치 관련해서 선호하는 site preference를 발전된 코드로 탐색해볼까'.",
-   "decision_state": "active",
+   "decision_state": "superseded",
    "record_kind": "estimand",
    "results_seen": false,
    "exploratory": true,
@@ -11636,7 +11643,7 @@
      "session": "대피 세션 claude/evac-2026-11-08"
     }
    ],
-   "status": "active",
+   "status": "superseded",
    "status_history": [
     {
      "at": "2026-11-09",
@@ -11649,6 +11656,12 @@
      "state": "active",
      "by": "사용자 (b2o3 UMA-MD · 1저자 = 사용자)",
      "note": "비준 (결과 전) — 사용자 2026-11-09 (대피 세션): AskUserQuestion 'b2o3 B·O 배치 UMA 재탐색 카드 (옛 챔피언과 같은 농도 0.2 · 20 f.u. · O 꼴 세 가족 × 바탕 배치 12 = 36 구조 · 가족 최저은 DFT 단일점 확인 · 2 단계 골격 게이트는 판독 뒤 발사) 를 어떻게 할까요?' 에 '비준 — 선행 작업부터 (Recommended)'"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "superseded",
+     "by": "사용자 (b2o3 UMA-MD · 1저자 = 사용자)",
+     "note": "개정 1 v1.3 (D-2026-11-09-b2o3-bo-placement-amend1 · 사용자 비준 2026-11-09 · Codex DY GO 12b8bdef 뒤) 이 같은 자리 (slot b2o3_bo_placement_family) 를 명시적으로 대체한다 — 유효한 설계는 카드의 '개정_1_셀구축_v1_2026_11_09' (본 셀 1×2×5 · 135 구조 · 판독 계약 v1.3). 원 카드의 질문 · 가족 · 2 단계 골격 게이트 · 재개 조건은 개정 1 이 그대로 이어받는다. 승인 내용 (statement · 게이트) 은 그대로 · 지문만 다시 냄 · 결속 커밋 그대로 (cascade cap 선례 10-28)."
     }
    ],
    "_note": "active — 사용자 비준 2026-11-09 (결과 전 · results_seen false) · 선행 작업 P1–P4 를 selftest 음성 경로와 함께 끝낸 뒤 1 단계 · 2 단계는 1 단계 판독 + 사용자 '2 단계 발사' 뒤",
@@ -11660,8 +11673,9 @@
     "commit": "3d266d50fcbfb76e2cf17c1bd8451e5124950885",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "근거_발화": "사용자 2026-11-09 (대피 세션): AskUserQuestion 'b2o3 B·O 배치 UMA 재탐색 카드 (옛 챔피언과 같은 농도 0.2 · 20 f.u. · O 꼴 세 가족 × 바탕 배치 12 = 36 구조 · 가족 최저은 DFT 단일점 확인 · 2 단계 골격 게이트는 판독 뒤 발사) 를 어떻게 할까요?' 에 '비준 — 선행 작업부터 (Recommended)'",
-    "decision_digest": "sha256:65c749944c508defe649b14e6534dd745783d2810f67bb4151ef8889430ccb20"
-   }
+    "decision_digest": "sha256:dc8220c11ffed0239500c6f91ae0204657f48d4c66b968fc4f00f2820ca79031"
+   },
+   "superseded_by": "D-2026-11-09-b2o3-bo-placement-amend1"
   },
   {
    "id": "D-2026-11-09-cell-construction-protocol-v1",
@@ -11691,7 +11705,7 @@
    "title": "셀구축 v1.1 — 도핑 argyrodite 셀 만들기 · 고르기 (에너지만) · 안정성 (포논 · 유한 온도 골격 · hull) · 표준 후처리 (띠틈 · DOS · Bader · ELF · ICOHP · BVSE · 탄성 · 수송 MD) 를 한 절차로",
    "statement": "db/properties/cell_construction_protocol_v1_2026_11_09.json. 0 앞선 기록 대조 → 1 바탕 셀 (수직폭 ≥ 11 Å 가 바람직 · 작게 가면 최소 폭 선언 + 같은 셀 대조 필수) → 2 조성 (검사) → 3 할로겐 (기본 고정) → 4 도펀트 + 보상 Li (형식전하 Ewald · Li 후보 void 탐색 + host 거리 검증 · 쌍 제약 전수 채우기 · 바탕 배치 전부 — 반올림 중복 제거 없음) → 5 음이온 꼴 가족 (모든 바탕 배치에 짝 · 자리 모자라면 멈춤) → 6 UMA 이완 거름 → 7 어닐 (20 대 100 ps 탐침 · 세 시점 기록 · 운영 규칙) → 8 UMA 순위 · 승자–차저 여유 → 9 DFT 확인 (단일점 → 가족 최저 고정셀 이온 이완 + 압력 어림 · EOS 조건부) → 10 고르기 (에너지만 · 안정성 대상과 전자구조 대상 (DFT 이완 가족 대표) 을 나눔) → 11 안정성 (UMA 포논 Γ · 유한 온도 골격 게이트 300/600/800/1000 K + 같은 셀 대조 · hull 꼬리표) → 12 후처리 모듈 (기존 규칙 내장) → 13 기록 · 계보 (선택 부모 → 파생 구조 해시). v1.1 = Codex DU NO-GO 고침 반영 (DU_대응표). 규칙마다 [기존] (출처) / [제안] (리뷰 대상) 꼬리표. b2o3 MD 시행착오 15 줄을 단계 규칙으로 옮겼다.",
    "rationale": "b2o3 MD 가 배치 하나 · 바늘 셀 · 골격 게이트 없이 달려 닫혔고, 그 뒤의 진단 · 정정이 여러 문서에 흩어져 있다. 셀을 만드는 순간부터 후처리까지 그 교훈을 한 절차에 묶어 다음 적용이 같은 함정을 밟지 않게 한다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "policy",
    "results_seen": false,
    "exploratory": true,
@@ -11722,7 +11736,7 @@
      "session": "대피 세션 claude/evac-2026-11-08"
     }
    ],
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-09",
@@ -11789,9 +11803,25 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex DY 회신 GO (kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md · 기준 12b8bdef) — DX 세 지적 닫힘 · 추가 차단 결함 없음 · '사용자가 v1.3 카드를 새로 비준하면 1 단계 시작'. GO 는 비준이 아니다 — 11-09 조건부 비준 ('go면 비준') 은 DW 에 걸렸던 것이라 쓰지 않고 사용자에게 새로 묻는다. DY Q2 운영 규칙 (SEED 는 발사 전에 정하고 재시도에서도 유지) 을 적용 카드에 넣음"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "active",
+     "by": "사용자 (b2o3 UMA-MD / 우리 DFT 기준선 (B₂O₃ 계산 쪽) · 1저자 = 사용자)",
+     "note": "비준 (결과 전) — 사용자 2026-11-09 (대피 세션): AskUserQuestion 'Codex DY 가 b2o3 1 단계(UMA 거름 → 파일럿 → 어닐)에 GO 를 줬어요. 다만 GO 는 비준이 아니라서 v1.3 을 새로 비준해 주셔야 효력이 생겨요. 비준할 것: 셀구축 절차 v1.3 + b2o3 B·O 배치 카드 개정 1 v1.3. 판독 계약과 [제안] 셋이 같이 들어가요 — 한 가족 성공이 6 개 미만이면 보류 · 8 단계 기록은 기준 seed 하나 · SEED 는 발사 전에 정하고 재시도에서도 유지. 비준할까요?' 에 '비준 + 발사 준비 (Recommended)'"
     }
    ],
-   "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
+   "_note": "active — 사용자 비준 2026-11-09 (v1.3 · Codex DY GO 12b8bdef 뒤 · 결과 전) · 1 단계부터 이 절차로 · 2 단계 (안정성 MD) 는 1 단계 판독 + 사용자 '2 단계 발사' 뒤",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-09T10:50:58Z",
+    "commit": "0bd2a2ec1c2a4a6f26d6bbbf4e555f9e62e65666",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-09 (대피 세션): AskUserQuestion 'Codex DY 가 b2o3 1 단계(UMA 거름 → 파일럿 → 어닐)에 GO 를 줬어요. 다만 GO 는 비준이 아니라서 v1.3 을 새로 비준해 주셔야 효력이 생겨요. 비준할 것: 셀구축 절차 v1.3 + b2o3 B·O 배치 카드 개정 1 v1.3. 판독 계약과 [제안] 셋이 같이 들어가요 — 한 가족 성공이 6 개 미만이면 보류 · 8 단계 기록은 기준 seed 하나 · SEED 는 발사 전에 정하고 재시도에서도 유지. 비준할까요?' 에 '비준 + 발사 준비 (Recommended)'",
+    "decision_digest": "sha256:c88f87559ecb877e13f6424bf896b2046366cdc6d0a4dd724d064644e48abd22"
+   }
   },
   {
    "id": "D-2026-11-09-b2o3-bo-placement-amend1",
@@ -11821,7 +11851,7 @@
    "title": "b2o3 B·O 배치 카드 개정 1 — 셀구축 v1 적용 · 본 셀 1×2×5 (128 원자 · 사용자 결정) · 셀 근거 정정 (철회된 관찰 인용 제거) · 2 단계 온도 600/650/700 → 300/600/800/1000 K · 거름 → 어닐 · DFT 가족 최저 이온 이완 · 포논 · 띠틈/DOS",
    "statement": "카드 db/properties/b2o3_bo_placement_estimand_2026_11_09.json 의 '개정_1_셀구축_v1_2026_11_09' — 본 셀 1×2×5 (modelc × (1,2,1) · Li58P8B2S41O3Cl16 · 최소 폭 5.72 Å 선언 · 같은 셀 대조) · B 배치 45 전수 (전부) × 세 O 꼴 = 135 (생성 시험 통과) · 단계별 값 · 유효_설정 (한 곳) · 봉인 문장 (DU Q1 — '옛 배치의 성질' 삭제) · 비용 상한 (합계 어림 130–200 GPU-h · 1 단계와 2 단계 따로 승인). 결과 0 건.",
    "rationale": "§1b 셀 근거가 철회된 관찰이었고 (자체 발견) · §8 온도가 표준을 이유 없이 벗어났다 (사용자 지적) · 사용자가 셀구축을 정의하고 후처리 · 포논 · 열적 안정을 넣으라 했다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "amendment",
    "results_seen": false,
    "results_seen_note": "1 · 2 단계 결과 0 건",
@@ -11848,7 +11878,7 @@
      "session": "대피 세션 claude/evac-2026-11-08"
     }
    ],
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-09",
@@ -11921,9 +11951,25 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex DY 회신 GO (kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md · 기준 12b8bdef) — DX 세 지적 닫힘 · 추가 차단 결함 없음 · '사용자가 v1.3 카드를 새로 비준하면 1 단계 시작'. GO 는 비준이 아니다 — 11-09 조건부 비준 ('go면 비준') 은 DW 에 걸렸던 것이라 쓰지 않고 사용자에게 새로 묻는다. DY Q2 운영 규칙 (SEED 는 발사 전에 정하고 재시도에서도 유지) 을 적용 카드에 넣음"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "active",
+     "by": "사용자 (b2o3 UMA-MD (B₂O₃ 계산 쪽) · 1저자 = 사용자)",
+     "note": "비준 (결과 전) — 사용자 2026-11-09 (대피 세션): AskUserQuestion 'Codex DY 가 b2o3 1 단계(UMA 거름 → 파일럿 → 어닐)에 GO 를 줬어요. 다만 GO 는 비준이 아니라서 v1.3 을 새로 비준해 주셔야 효력이 생겨요. 비준할 것: 셀구축 절차 v1.3 + b2o3 B·O 배치 카드 개정 1 v1.3. 판독 계약과 [제안] 셋이 같이 들어가요 — 한 가족 성공이 6 개 미만이면 보류 · 8 단계 기록은 기준 seed 하나 · SEED 는 발사 전에 정하고 재시도에서도 유지. 비준할까요?' 에 '비준 + 발사 준비 (Recommended)'"
     }
    ],
-   "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
+   "_note": "active — 사용자 비준 2026-11-09 (개정 1 v1.3 · Codex DY GO 12b8bdef 뒤 · 결과 전) · 1 단계 발사 전 확인 넷 = 카드 1단계_시작_전_확인_DY · 2 단계는 1 단계 판독 + 사용자 '2 단계 발사' 뒤",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-09T10:50:58Z",
+    "commit": "0bd2a2ec1c2a4a6f26d6bbbf4e555f9e62e65666",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-09 (대피 세션): AskUserQuestion 'Codex DY 가 b2o3 1 단계(UMA 거름 → 파일럿 → 어닐)에 GO 를 줬어요. 다만 GO 는 비준이 아니라서 v1.3 을 새로 비준해 주셔야 효력이 생겨요. 비준할 것: 셀구축 절차 v1.3 + b2o3 B·O 배치 카드 개정 1 v1.3. 판독 계약과 [제안] 셋이 같이 들어가요 — 한 가족 성공이 6 개 미만이면 보류 · 8 단계 기록은 기준 seed 하나 · SEED 는 발사 전에 정하고 재시도에서도 유지. 비준할까요?' 에 '비준 + 발사 준비 (Recommended)'",
+    "decision_digest": "sha256:caf53df1b6246660b9ea01e7230269fd217519bd67709d36085a3890310b8c04"
+   }
   },
   {
    "id": "D-2026-11-09-md-observation-window-amend1",
@@ -11948,7 +11994,7 @@
    "title": "관측창 한 줄 개정 1 — Ea_max ≈ kT·ln(ν₀·t·n) 는 '기대 사건 1' 인 장벽이지 '그보다 높으면 원래 못 본다' 는 경계가 아니다 (63.2 % · 95 % 는 kT·ln(ν₀·t·n / (−ln 0.05)) ≈ kT·ln(ν₀·t·n/3))",
    "statement": "원 결정 D-2026-10-05-md-observation-window 의 한 줄을 이렇게 바꿔 쓴다 (원문은 봉인 그대로): 단일 반응 기회 · 일정 사건률 (정상 포아송) · ν₀ 10¹³ s⁻¹ 가정에서 Ea₁ = kT·ln(ν₀·t·n) 은 **기대 사건 수가 1 인 장벽** 이다 — 그 장벽의 반응을 한 번 이상 볼 확률은 63.2 % 이고, 더 높은 장벽도 볼 수 있다 (절대 경계 아님). 95 % 검출에 해당하는 장벽은 Ea₉₅ = kT·ln(ν₀·t·n / (−ln 0.05)) 이다 (−ln 0.05 = 2.9957 · ≈ kT·ln(ν₀·t·n/3) 은 근사 — 1000 K · 0.8 ns 에서 0.00012 eV 낮게 준다). 문장 꼴: '관측창 (ν₀ 10¹³ s⁻¹ · 반응 기회 n · 정상성 가정 · T · t): 기대 사건 1 ≈ Ea₁ eV (검출 63 %) · 95 % 검출 ≈ Ea₉₅ eV' — 'Ea ≳ Ea_max 인 반응은 못 본다' 꼴은 쓰지 않는다. 예 (1000 K · 0.8 ns · n 1): Ea₁ 0.77446 · Ea₉₅ 0.67991 eV · Ea₁ + 0.10 eV 장벽도 검출 확률 ≈ 26.9 %. 여전히 차수 검산이지 장벽 값 · 열역학 안정 판정이 아니다.",
    "rationale": "Codex DV Q7 (kb/reviews/codex_DV_reply_cell_construction_v1_1_2026_11_09.md) — 원 문구 '그보다 높은 장벽의 반응은 원래 못 본다' 는 기대 사건 1 (63.2 %) 지점을 딱 잘리는 관측 한계로 읽게 만든다. 봉인 원문은 보존하고 새 개정으로 대체하라고 권고. 숫자는 이 세션에서 다시 계산해 일치 (0.77446 · 0.67991 eV · 26.9 %).",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "amendment",
    "results_seen": false,
    "results_seen_note": "규칙 문구 개정 — 결과와 무관",
@@ -11970,7 +12016,7 @@
    "proposed_by": [
     "agent (Codex DV Q7 권고를 옮김)"
    ],
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-09",
@@ -11995,9 +12041,25 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex DX Q4 · DY 가 고친 문구 확인 (기대 사건 1 0.7744567 · 95 % 정확식 0.6799083 · /3 근사 0.6797856 eV · +0.10 eV 검출 26.9002 %) — 사용자 비준 대기"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "active",
+     "by": "사용자 (전역 서술 규칙 (MD 관측창) · 1저자 = 사용자 (규칙 소유 — 2026-10-05 사용자 제정))",
+     "note": "비준 (결과 전) — 사용자 2026-11-09 (대피 세션): AskUserQuestion '관측창 문구 개정 1 도 같이 비준할까요? 짧은 MD 에서 '반응 없음'을 쓸 때 붙이는 한 줄을 고치는 거예요 — kT·ln(ν₀·t·n) 은 '기대 사건 1 개 (검출 63 %)' 지점이고, 95 % 검출은 정확식 kT·ln(ν₀·t·n/(−ln 0.05)) 로 쓴다. Codex DX · DY 가 문구와 숫자를 확인했어요. 비준하면 collect_neb.py 의 관측창 출력 줄과 CLAUDE.md 문구를 같이 고쳐요.' 에 '비준 (Recommended)'"
     }
    ],
-   "_note": "proposed — 사용자 비준 대기 (비준 시 도구 줄 · CLAUDE.md 문구 갱신)"
+   "_note": "active — 사용자 비준 2026-11-09 · 도구 줄 (tools/sei/collect_neb.py::observation_window · 기대 사건 1 + 95 % 정확식) · CLAUDE.md 문구 갱신 · 원 결정 D-2026-10-05-md-observation-window 문구는 봉인 그대로",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-09T10:50:58Z",
+    "commit": "0bd2a2ec1c2a4a6f26d6bbbf4e555f9e62e65666",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-09 (대피 세션): AskUserQuestion '관측창 문구 개정 1 도 같이 비준할까요? 짧은 MD 에서 '반응 없음'을 쓸 때 붙이는 한 줄을 고치는 거예요 — kT·ln(ν₀·t·n) 은 '기대 사건 1 개 (검출 63 %)' 지점이고, 95 % 검출은 정확식 kT·ln(ν₀·t·n/(−ln 0.05)) 로 쓴다. Codex DX · DY 가 문구와 숫자를 확인했어요. 비준하면 collect_neb.py 의 관측창 출력 줄과 CLAUDE.md 문구를 같이 고쳐요.' 에 '비준 (Recommended)'",
+    "decision_digest": "sha256:e8a85d32d00a88b85595fb2175c909c5dbbdb01c3a2bf05709298567db967e29"
+   }
   }
  ]
 }
