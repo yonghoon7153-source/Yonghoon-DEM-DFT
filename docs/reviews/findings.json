@@ -16577,10 +16577,12 @@
       "evidence_tests": [
         "scripts/test_make_dem_gen2_decks.py",
         "docs/reviews/dem_gen2_preparation_fixes_20261109/verification_summary.json (생성기 18/18 · 고치기 전 실패 11)",
-        "docs/reviews/dem_gen2_preparation_fixes_20261109/intake_receipt.json (독립 판정 ZIP 신원 · 수령 바이트 감사 PASS · 원 ZIP = 외부 위치 문구 → 리포 밖 보존)"
+        "docs/reviews/dem_gen2_preparation_fixes_20261109/intake_receipt.json (독립 판정 ZIP 신원 · 수령 바이트 감사 PASS · 원 ZIP = 외부 위치 문구 → 리포 밖 보존)",
+        "docs/reviews/dem_gen2_limited_acceptance_20261109/intake_receipt.json (독립 재확인 수령 · CLOSABLE_IN_ORIGINAL_OFFLINE_FIX_SCOPE · 새 P1 / P2 / P3 0 · 반입 2be18e9ec)"
       ],
       "supersedes": [],
-      "decision_note": "고침 계약 = raw signed 반력을 한 번 얼리고 같은 raw × 명시적 정수 극성 (±1) 으로 정규화 · raw / 극성 / 압축 힘 기록 뒤 반대 부호면 제어 · gate · restart 전에 정지 · 합성 ±1 은 실제 T0 극성 비준 아님 (실제 극성 = null). 수정 후보 = Codex 실무 6adf932499cd (B 반입 160b9ee10 · 앞선 바탕 사본 08fb8b178 = 이미 B 27ed57b96 와 blob 14/14 같음 → 건너뜀) · 시험 먼저 = 고치기 전 생성기 18 메서드 실패 11 · 자격 22 메서드 실패 21 (subtest 관측 포함 · 오류 0) → 18/18 · 22/22 (우리 기계 재실행 같음) · 독립 재확인 대기 (요청서 docs/reviews/dem_gen2_preparation_fixes_20261109/review_request.md · 재검토 ZIP sha256 7504b3d9… · 발송 = 1저자 11-09) · 합성 · 비활성 범위만 · 실제 T0 극성 · T5 / T11 / T12 = NOT_RUN · physical_ready = false · 전체 HOLD (11-09 반입 · 원장 제안 = claimed_fixed 조건부 · verified 아님 = 고친 쪽 · 검토 쪽 모두 Codex 창)"
+      "decision_note": "고침 계약 = raw signed 반력을 한 번 얼리고 같은 raw × 명시적 정수 극성 (±1) 으로 정규화 · raw / 극성 / 압축 힘 기록 뒤 반대 부호면 제어 · gate · restart 전에 정지 · 합성 ±1 은 실제 T0 극성 비준 아님 (실제 극성 = null). 수정 후보 = Codex 실무 6adf932499cd (B 반입 160b9ee10 · 앞선 바탕 사본 08fb8b178 = 이미 B 27ed57b96 와 blob 14/14 같음 → 건너뜀) · 시험 먼저 = 고치기 전 생성기 18 메서드 실패 11 · 자격 22 메서드 실패 21 (subtest 관측 포함 · 오류 0) → 18/18 · 22/22 (우리 기계 재실행 같음) · 독립 재확인 대기 (요청서 docs/reviews/dem_gen2_preparation_fixes_20261109/review_request.md · 재검토 ZIP sha256 7504b3d9… · 발송 = 1저자 11-09) · 합성 · 비활성 범위만 · 실제 T0 극성 · T5 / T11 / T12 = NOT_RUN · physical_ready = false · 전체 HOLD (11-09 반입 · 원장 제안 = claimed_fixed 조건부 · verified 아님 = 고친 쪽 · 검토 쪽 모두 Codex 창)",
+      "verification_note": "독립 Codex 반박 창 재확인 (11-09 · 검토 핀 6adf932499cd = B 160b9ee10 · 판정 ZIP sha256 ab75d708…) = 원 오프라인 고침 범위에서 종결 가능 (같은 고정 raw 표본의 명시 극성 정규화 · 제어 전 반대 부호 거부 (실제 T0 극성 · 엔진 문법 · 실행 자격 제외)) · 새 P1 / P2 / P3 0 · 수령 = Codex 실무 33d05e23274d (B 2be18e9ec · 수령 문서 4 · 원 ZIP = 외부 위치 문구 → 리포 밖 보존) · verified 전환 안 함 (고친 쪽 · 검토 쪽 모두 Codex 창 · 검증자를 지어 넣지 않는다) · 전체 HOLD."
     },
     {
       "id": "G2PR-02",
@@ -16595,10 +16597,12 @@
       "evidence_tests": [
         "scripts/test_dem_gen2_qualification.py",
         "docs/reviews/dem_gen2_preparation_fixes_20261109/verification_summary.json (자격 22/22 · 고치기 전 실패 21)",
-        "docs/reviews/dem_gen2_preparation_fixes_20261109/intake_receipt.json (독립 판정 ZIP 신원 · 수령 바이트 감사 PASS · 원 ZIP = 외부 위치 문구 → 리포 밖 보존)"
+        "docs/reviews/dem_gen2_preparation_fixes_20261109/intake_receipt.json (독립 판정 ZIP 신원 · 수령 바이트 감사 PASS · 원 ZIP = 외부 위치 문구 → 리포 밖 보존)",
+        "docs/reviews/dem_gen2_limited_acceptance_20261109/intake_receipt.json (독립 재확인 수령 · CLOSABLE_IN_ORIGINAL_OFFLINE_FIX_SCOPE · 새 P1 / P2 / P3 0 · 반입 2be18e9ec)"
       ],
       "supersedes": [],
-      "decision_note": "고침 계약 = 첫 창 진입 = 진단 사건 · 발산은 조기 거부 · 그 밖엔 사전 지정 예산 끝까지 관찰 · 끝 연속 창과 대기 지연 큐가 모두 허용폭 안일 때만 예산 한정 수렴 (반례 = 첫 진입 257 뒤 6440 에서 UNSTABLE · 17 뒤 402 에서 UNSTABLE) · 무한 시간 안정성 · 실제 침대 제어 자격 아님. 수정 후보 = Codex 실무 6adf932499cd (B 반입 160b9ee10 · 앞선 바탕 사본 08fb8b178 = 이미 B 27ed57b96 와 blob 14/14 같음 → 건너뜀) · 시험 먼저 = 고치기 전 생성기 18 메서드 실패 11 · 자격 22 메서드 실패 21 (subtest 관측 포함 · 오류 0) → 18/18 · 22/22 (우리 기계 재실행 같음) · 독립 재확인 대기 (요청서 docs/reviews/dem_gen2_preparation_fixes_20261109/review_request.md · 재검토 ZIP sha256 7504b3d9… · 발송 = 1저자 11-09) · 합성 · 비활성 범위만 · 실제 T0 극성 · T5 / T11 / T12 = NOT_RUN · physical_ready = false · 전체 HOLD (11-09 반입 · 원장 제안 = claimed_fixed 조건부 · verified 아님 = 고친 쪽 · 검토 쪽 모두 Codex 창)"
+      "decision_note": "고침 계약 = 첫 창 진입 = 진단 사건 · 발산은 조기 거부 · 그 밖엔 사전 지정 예산 끝까지 관찰 · 끝 연속 창과 대기 지연 큐가 모두 허용폭 안일 때만 예산 한정 수렴 (반례 = 첫 진입 257 뒤 6440 에서 UNSTABLE · 17 뒤 402 에서 UNSTABLE) · 무한 시간 안정성 · 실제 침대 제어 자격 아님. 수정 후보 = Codex 실무 6adf932499cd (B 반입 160b9ee10 · 앞선 바탕 사본 08fb8b178 = 이미 B 27ed57b96 와 blob 14/14 같음 → 건너뜀) · 시험 먼저 = 고치기 전 생성기 18 메서드 실패 11 · 자격 22 메서드 실패 21 (subtest 관측 포함 · 오류 0) → 18/18 · 22/22 (우리 기계 재실행 같음) · 독립 재확인 대기 (요청서 docs/reviews/dem_gen2_preparation_fixes_20261109/review_request.md · 재검토 ZIP sha256 7504b3d9… · 발송 = 1저자 11-09) · 합성 · 비활성 범위만 · 실제 T0 극성 · T5 / T11 / T12 = NOT_RUN · physical_ready = false · 전체 HOLD (11-09 반입 · 원장 제안 = claimed_fixed 조건부 · verified 아님 = 고친 쪽 · 검토 쪽 모두 Codex 창)",
+      "verification_note": "독립 Codex 반박 창 재확인 (11-09 · 검토 핀 6adf932499cd = B 160b9ee10 · 판정 ZIP sha256 ab75d708…) = 원 오프라인 고침 범위에서 종결 가능 (첫 창 진입 ↔ 예산 완료 분리 · 끝 창 + 대기 지연 큐 검사 (무한 시간 · 예산 뒤 · 실제 침대 안정성 제외)) · 새 P1 / P2 / P3 0 · 수령 = Codex 실무 33d05e23274d (B 2be18e9ec · 수령 문서 4 · 원 ZIP = 외부 위치 문구 → 리포 밖 보존) · verified 전환 안 함 (고친 쪽 · 검토 쪽 모두 Codex 창 · 검증자를 지어 넣지 않는다) · 전체 HOLD."
     },
     {
       "id": "G2PR-03",
@@ -16613,10 +16617,12 @@
       "evidence_tests": [
         "scripts/test_dem_gen2_qualification.py",
         "docs/reviews/dem_gen2_preparation_fixes_20261109/verification_summary.json",
-        "docs/reviews/dem_gen2_preparation_fixes_20261109/intake_receipt.json (독립 판정 ZIP 신원 · 수령 바이트 감사 PASS · 원 ZIP = 외부 위치 문구 → 리포 밖 보존)"
+        "docs/reviews/dem_gen2_preparation_fixes_20261109/intake_receipt.json (독립 판정 ZIP 신원 · 수령 바이트 감사 PASS · 원 ZIP = 외부 위치 문구 → 리포 밖 보존)",
+        "docs/reviews/dem_gen2_limited_acceptance_20261109/intake_receipt.json (독립 재확인 수령 · CLOSABLE_IN_ORIGINAL_OFFLINE_FIX_SCOPE · 새 P1 / P2 / P3 0 · 반입 2be18e9ec)"
       ],
       "supersedes": [],
-      "decision_note": "고침 계약 = 받은 int / float 를 정확한 유리수로 읽은 대칭 교차원판 식 + 접선 / 포함 분기 · 최종 float overflow · 양성 underflow = 명시 거부 · 반경 교환 · 스케일 · 접선 근처 대조 · 기하 원판 면적 (힘 · 전기 면적 아님). 수정 후보 = Codex 실무 6adf932499cd (B 반입 160b9ee10 · 앞선 바탕 사본 08fb8b178 = 이미 B 27ed57b96 와 blob 14/14 같음 → 건너뜀) · 시험 먼저 = 고치기 전 생성기 18 메서드 실패 11 · 자격 22 메서드 실패 21 (subtest 관측 포함 · 오류 0) → 18/18 · 22/22 (우리 기계 재실행 같음) · 독립 재확인 대기 (요청서 docs/reviews/dem_gen2_preparation_fixes_20261109/review_request.md · 재검토 ZIP sha256 7504b3d9… · 발송 = 1저자 11-09) · 합성 · 비활성 범위만 · 실제 T0 극성 · T5 / T11 / T12 = NOT_RUN · physical_ready = false · 전체 HOLD (11-09 반입 · 원장 제안 = claimed_fixed 조건부 · verified 아님 = 고친 쪽 · 검토 쪽 모두 Codex 창)"
+      "decision_note": "고침 계약 = 받은 int / float 를 정확한 유리수로 읽은 대칭 교차원판 식 + 접선 / 포함 분기 · 최종 float overflow · 양성 underflow = 명시 거부 · 반경 교환 · 스케일 · 접선 근처 대조 · 기하 원판 면적 (힘 · 전기 면적 아님). 수정 후보 = Codex 실무 6adf932499cd (B 반입 160b9ee10 · 앞선 바탕 사본 08fb8b178 = 이미 B 27ed57b96 와 blob 14/14 같음 → 건너뜀) · 시험 먼저 = 고치기 전 생성기 18 메서드 실패 11 · 자격 22 메서드 실패 21 (subtest 관측 포함 · 오류 0) → 18/18 · 22/22 (우리 기계 재실행 같음) · 독립 재확인 대기 (요청서 docs/reviews/dem_gen2_preparation_fixes_20261109/review_request.md · 재검토 ZIP sha256 7504b3d9… · 발송 = 1저자 11-09) · 합성 · 비활성 범위만 · 실제 T0 극성 · T5 / T11 / T12 = NOT_RUN · physical_ready = false · 전체 HOLD (11-09 반입 · 원장 제안 = claimed_fixed 조건부 · verified 아님 = 고친 쪽 · 검토 쪽 모두 Codex 창)",
+      "verification_note": "독립 Codex 반박 창 재확인 (11-09 · 검토 핀 6adf932499cd = B 160b9ee10 · 판정 ZIP sha256 ab75d708…) = 원 오프라인 고침 범위에서 종결 가능 (받은 입력의 정확 산술 대칭 교차원판 · 표현 못 하는 출력 거부 (물리 접촉 · 전기 면적 모형 · 허용폭 선택 제외)) · 새 P1 / P2 / P3 0 · 수령 = Codex 실무 33d05e23274d (B 2be18e9ec · 수령 문서 4 · 원 ZIP = 외부 위치 문구 → 리포 밖 보존) · verified 전환 안 함 (고친 쪽 · 검토 쪽 모두 Codex 창 · 검증자를 지어 넣지 않는다) · 전체 HOLD."
     },
     {
       "id": "G2PR-04",
@@ -16631,10 +16637,12 @@
       "evidence_tests": [
         "scripts/test_dem_gen2_qualification.py",
         "docs/reviews/dem_gen2_preparation_fixes_20261109/verification_summary.json",
-        "docs/reviews/dem_gen2_preparation_fixes_20261109/intake_receipt.json (독립 판정 ZIP 신원 · 수령 바이트 감사 PASS · 원 ZIP = 외부 위치 문구 → 리포 밖 보존)"
+        "docs/reviews/dem_gen2_preparation_fixes_20261109/intake_receipt.json (독립 판정 ZIP 신원 · 수령 바이트 감사 PASS · 원 ZIP = 외부 위치 문구 → 리포 밖 보존)",
+        "docs/reviews/dem_gen2_limited_acceptance_20261109/intake_receipt.json (독립 재확인 수령 · CLOSABLE_IN_ORIGINAL_OFFLINE_FIX_SCOPE · 새 P1 / P2 / P3 0 · 반입 2be18e9ec)"
       ],
       "supersedes": [],
-      "decision_note": "고침 계약 = 판과의 상대 거리를 먼저 구한 정확 입력 산술로 관통량을 기존 허용폭과 비교 · 큰 양 / 음 원점 이동 · 상 / 하판에서 같은 판정 · 허용폭 늘리지 않음 · 수평면 합성 검사 (실제 STL / PBC / 이동 궤적 자격 아님). 수정 후보 = Codex 실무 6adf932499cd (B 반입 160b9ee10 · 앞선 바탕 사본 08fb8b178 = 이미 B 27ed57b96 와 blob 14/14 같음 → 건너뜀) · 시험 먼저 = 고치기 전 생성기 18 메서드 실패 11 · 자격 22 메서드 실패 21 (subtest 관측 포함 · 오류 0) → 18/18 · 22/22 (우리 기계 재실행 같음) · 독립 재확인 대기 (요청서 docs/reviews/dem_gen2_preparation_fixes_20261109/review_request.md · 재검토 ZIP sha256 7504b3d9… · 발송 = 1저자 11-09) · 합성 · 비활성 범위만 · 실제 T0 극성 · T5 / T11 / T12 = NOT_RUN · physical_ready = false · 전체 HOLD (11-09 반입 · 원장 제안 = claimed_fixed 조건부 · verified 아님 = 고친 쪽 · 검토 쪽 모두 Codex 창)"
+      "decision_note": "고침 계약 = 판과의 상대 거리를 먼저 구한 정확 입력 산술로 관통량을 기존 허용폭과 비교 · 큰 양 / 음 원점 이동 · 상 / 하판에서 같은 판정 · 허용폭 늘리지 않음 · 수평면 합성 검사 (실제 STL / PBC / 이동 궤적 자격 아님). 수정 후보 = Codex 실무 6adf932499cd (B 반입 160b9ee10 · 앞선 바탕 사본 08fb8b178 = 이미 B 27ed57b96 와 blob 14/14 같음 → 건너뜀) · 시험 먼저 = 고치기 전 생성기 18 메서드 실패 11 · 자격 22 메서드 실패 21 (subtest 관측 포함 · 오류 0) → 18/18 · 22/22 (우리 기계 재실행 같음) · 독립 재확인 대기 (요청서 docs/reviews/dem_gen2_preparation_fixes_20261109/review_request.md · 재검토 ZIP sha256 7504b3d9… · 발송 = 1저자 11-09) · 합성 · 비활성 범위만 · 실제 T0 극성 · T5 / T11 / T12 = NOT_RUN · physical_ready = false · 전체 HOLD (11-09 반입 · 원장 제안 = claimed_fixed 조건부 · verified 아님 = 고친 쪽 · 검토 쪽 모두 Codex 창)",
+      "verification_note": "독립 Codex 반박 창 재확인 (11-09 · 검토 핀 6adf932499cd = B 160b9ee10 · 판정 ZIP sha256 ab75d708…) = 원 오프라인 고침 범위에서 종결 가능 (판 상대 간격 정확 산술 관통량 · 허용폭 · 이동 대조 보존 (실제 STL / PBC / 이동 궤적 자격 제외)) · 새 P1 / P2 / P3 0 · 수령 = Codex 실무 33d05e23274d (B 2be18e9ec · 수령 문서 4 · 원 ZIP = 외부 위치 문구 → 리포 밖 보존) · verified 전환 안 함 (고친 쪽 · 검토 쪽 모두 Codex 창 · 검증자를 지어 넣지 않는다) · 전체 HOLD."
     },
     {
       "id": "MIP-01",
