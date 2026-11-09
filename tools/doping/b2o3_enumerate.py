@@ -860,12 +860,35 @@ def build_struct(base, fw_idx, li_occ_idx, licand, pos, cell,
     return new
 
 
+def _parent_child_problems(parent, child, o_sites, label, tol=1e-3):
+    """자식 = 부모 + 기록한 S→O 치환만인가 → 문제 목록. 원소 수 · 셀 · 좌표 (최소상 · tol Å) · 다른 자리 = o_sites 정확히."""
+    pr = []
+    if len(parent) != len(child):
+        return [f"{label}: 원자 수 {len(child)} ≠ 부모 {len(parent)} (부모와 다른 자식)"]
+    if not np.allclose(parent.cell.array, child.cell.array, atol=tol):
+        pr.append(f"{label}: 셀이 부모와 다르다")
+    df = child.get_scaled_positions(wrap=False) - parent.get_scaled_positions(wrap=False)
+    df -= np.round(df)
+    dmax = float(np.linalg.norm(df @ parent.cell.array, axis=1).max()) if len(df) else 0.0
+    if dmax > tol:
+        pr.append(f"{label}: 좌표가 부모와 다르다 (최대 {dmax:.3f} Å — 부모와 다른 자식)")
+    sp, sc = parent.get_chemical_symbols(), child.get_chemical_symbols()
+    diff = sorted(i for i in range(len(sp)) if sp[i] != sc[i])
+    if diff != sorted(int(i) for i in o_sites):
+        pr.append(f"{label}: 부모와 다른 원소 자리 {diff[:6]} ≠ 기록한 O 자리 {sorted(o_sites)} (부모와 다른 자식)")
+    elif any(sp[i] != "S" or sc[i] != "O" for i in diff):
+        pr.append(f"{label}: 바뀐 자리가 S→O 가 아니다")
+    return pr
+
+
 def verify_manifest(out):
     """manifest 검증 → 문제 목록 (빈 목록이면 통과).
 
     본다: 바탕 수 · (바탕 × 가족) 조합이 정확히 다 있는가 · 파일 존재 · sha256 · 조성 · 형식전하 0 ·
     O 자리 번호가 실제 O 인가 · 가족 정의 (기하로 다시 봄: F_B 의 O 는 도펀트에 2.4 Å 안 · F_P 는 P 에 붙고
-    도펀트에 안 붙음 · F_free 는 P · 도펀트에서 2.4 Å 밖) · 같은 구조 중복 · manifest 밖 CIF.
+    도펀트에 안 붙음 · F_free 는 P · 도펀트에서 2.4 Å 밖) · 같은 구조 중복 · manifest 밖 CIF ·
+    **부모–자식 짝** (2026-11-09 Codex DV P2: 자식 = 부모 + 기록한 S→O 자리만 · 원소 · 좌표 · 셀 · B/Li 배치 같음) ·
+    **Li 후보 보고서** (li_candidates.json 존재 · sha256 · 후보 수).
     ⛔ 못 하는 것: 배치가 '좋은지' · Ewald 값이 맞는지 (다시 계산 안 함).
     """
     out = Path(out)
@@ -880,6 +903,21 @@ def verify_manifest(out):
     exp = m["expect"]
     if len(m["bases"]) != exp["n_bases"]:
         prob.append(f"바탕 {len(m['bases'])} 개 ≠ 기대 {exp['n_bases']}")
+    lc = m.get("li_candidates") or {}
+    lf = out / lc.get("file", "li_candidates.json")
+    if not lc.get("sha256"):
+        prob.append("li_candidates: manifest 에 해시 기록 없음")
+    elif not lf.is_file():
+        prob.append(f"li_candidates: 파일 없음 {lf.name}")
+    elif _sha_file(lf) != lc["sha256"]:
+        prob.append("li_candidates: sha256 불일치 (보고서가 바뀌었다)")
+    else:
+        try:
+            nrep = json.loads(lf.read_text())["counts"]["after_dedup"]
+            if int(nrep) != int(lc.get("n", -1)):
+                prob.append(f"li_candidates: 보고서 후보 {nrep} ≠ manifest {lc.get('n')}")
+        except Exception as ex:
+            prob.append(f"li_candidates: 보고서를 못 읽는다 ({type(ex).__name__})")
     listed, fps = set(), {}
     n_mot = 0
 
@@ -904,7 +942,7 @@ def verify_manifest(out):
         return st
 
     for b in m["bases"]:
-        _one(b["file"], b["sha256"], tb, b["name"])
+        pst = _one(b["file"], b["sha256"], tb, b["name"])
         want_fams = set(fams) if b["rank"] < exp["n_motif_bases"] else set()
         if set(b["motifs"]) != want_fams:
             prob.append(f"{b['name']}: O 꼴 {sorted(b['motifs'])} ≠ 기대 {sorted(want_fams)}")
@@ -916,6 +954,8 @@ def verify_manifest(out):
             sy = np.array(st.get_chemical_symbols())
             if any(sy[i] != "O" for i in e["O_sites_orig"]):
                 prob.append(f"{b['name']}_O-{fam}: 기록된 O 자리에 O 가 아닌 원자")
+            if pst is not None:
+                prob.extend(_parent_child_problems(pst, st, e["O_sites_orig"], f"{b['name']}_O-{fam}"))
             if e.get("legacy_fallback"):
                 continue      # --legacy_o_fallback 재현 — 가족 기하는 원래 안 맞는다 (manifest 에 표시됨)
             iO = np.nonzero(sy == "O")[0]
@@ -1217,6 +1257,23 @@ s5b S  0.0 0.0 0.0 0.25
                 (o / "manifest.json").write_text(json.dumps(mm, ensure_ascii=False))
             p_ = _tamper(_drop, "drop")
             chk(any("바탕 4 개 ≠ 기대 5" in x for x in p_), "⛔음성: 바탕 항목이 빠지면 개수로 잡는다")
+
+            # 2026-11-09 (Codex DV P2) — 다른 부모의 자식 · Li 후보 보고서
+            def _foreign(o):
+                mm = json.loads((o / "manifest.json").read_text())
+                e0 = mm["bases"][0]["motifs"]["distributed"]
+                e1 = mm["bases"][1]["motifs"]["distributed"]
+                shutil.copy(o / e1["file"], o / e0["file"])
+                e0["sha256"] = _sha_file(o / e0["file"])
+                e0["O_sites_orig"] = e1["O_sites_orig"]
+                (o / "manifest.json").write_text(json.dumps(mm, ensure_ascii=False))
+            p_ = _tamper(_foreign, "foreign")
+            chk(any("부모와 다른 자식" in x for x in p_),
+                "⛔음성: 다른 부모의 자식을 해시 · O 자리까지 맞춰 넣어도 부모–자식 짝으로 잡는다 (Codex 재현: verify=[])")
+            p_ = _tamper(lambda o: (o / "li_candidates.json").unlink(), "lc_del")
+            p2_ = _tamper(lambda o: (o / "li_candidates.json").write_text("{}"), "lc_bad")
+            chk(any("li_candidates: 파일 없음" in x for x in p_) and any("li_candidates: sha256" in x for x in p2_),
+                "⛔음성: Li 후보 보고서를 지우거나 바꾸면 잡는다 (Codex 재현: verify=[])")
 
             try:
                 main(["--base", str(mpath), "--supercell", "1", "1", "1", "--n_B", "1", "--n_O", "3",
