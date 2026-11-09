@@ -155,3 +155,4 @@ watch -n 30 'tail -n 5 $HOME/work/runs/li2s2_dense_1103/stage1.log | cut -c1-140
 - [ ] 생성 파일 다시 만들기 (kb_wiki index · reviews --write) · lint 0 errors · validate_canonical ✅ · convention_check 0
 - [ ] 원격 마지막 실측 (kgy li2s-2 · 시각) · 이 세션에서 바뀐 원장 목록 (카드 · runlog · decisions · open_items · litdb)
 - [ ] CLAUDE.md 를 고쳤으면 그 줄을 복귀 카드에 적는다
+- [ ] ⏩ (11-09 추가 · 사용자 *'관련해서 기록만 해줘'*) **사용자 로컬 체크아웃 되돌리기 안내** — 로컬 웹앱 127.0.0.1:5001 은 로컬 체크아웃을 읽는다. 대피 중 주간 정리 11-08 (`964bea9f`) 을 보려면 로컬을 대피 브랜치로 옮겨야 해서 (`git fetch origin claude/evac-2026-11-08 && git switch claude/evac-2026-11-08`) 사용자가 옮겼을 수 있다 (옮겼는지 미확인). 복귀 카드 §0 에 두 경우를 다 적는다: 로컬이 evac 에 있으면 `git switch claude/friendly-meitner-lldvar && git pull --ff-only` · friendly 에 있으면 `git pull --ff-only` (09-28 선례 · open_items ⏭-NOW-z29).
