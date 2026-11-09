@@ -1,0 +1,1106 @@
+{
+ "slug": "park2026_oxygen_induced_li_intercage_conduction",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-09",
+ "sources": [
+  "6a52c417-117._Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+  "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Overall crystal structure of argyrodite. (b) Distribution of lithium sites forming cage-like clusters. (c) Lithium conduction pathways formed by PS 4 units and S/Cl atoms at 4a and 4d Wyckoff sites. The conduction pathway is indicated by dotted triangular planes formed by two S 16e sites from the PS 4 unit and either an S/Cl 4a or an S/Cl 4d site. (d) Distribution of Li T2 sites contributing to inter-cage conduction. Li T2 is the key site responsible for lithium transport between adjacent cages [29]. (For clarity, only Li T2 sites are displayed in ball-and-stick format.) Results of neutron diffraction-based Rietveld refinement of (e) LiPSCl and (f) LSO-LiPSCl at room temperature. Red crosses, black lines, and blue lines represent the observed patterns, calculated patterns, and residuals, respectively. Green, red, blue, and black vertical ticks indicate the Bragg reflection po",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    567.6,
+    609.5
+   ],
+   "w": 2235,
+   "h": 2334,
+   "dpi": 300,
+   "src": "6a52c417-117._Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.711,
+   "viewed": true,
+   "caption_note": "⚠ legend labels the yellow spheres (S16e corners of PS4) as 'Li16e' — the purple spheres are the real Li16e (2026-11-09 curator)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) XRD patterns of LiPSCl and LSO-LiPSCl. (b) Lattice parameters of LiPSCl and LSO-LiPSCl series. Peak positions were calibrated using added Si as a reference. (c) Ionic conductivities and their Nyquist plots (inset) of LiPSCl and LSO-LiPSCl series. (d) Arrhenius plots of LiPSCl and LSO-LiPSCl with different activation energies. (e) Raman spectra showing the changes in PS 4 units of LiPSCl and LSO-LiPSCl. (f) P 2p XPS profiles of LiPSCl and LSO-LiPSCl. (g) Schematic illustration of selective oxygen substitution at the Wyckoff 16e site of PS 4 units in argyrodite. [39]. As shown in Figs. 3c and d, the 4d site is located at the center of the lithium cage, allowing for strong interactions with the surrounding mobile lithium sites. This site not only corresponds to a region with relatively high chlorine content but also influences the local electron density of lithium, as the high e",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    46.7,
+    567.7,
+    620.7
+   ],
+   "w": 2235,
+   "h": 2393,
+   "dpi": 300,
+   "src": "6a52c417-117._Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.883,
+   "viewed": true,
+   "caption_note": "⚠ legend labels the yellow spheres (S16e corners of PS4) as 'Li16e' — the purple spheres are the real Li16e (2026-11-09 curator)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a, b) 31 P and 7 Li MAS-NMR spectra of LiPSCl and LSO-LiPSCl, indicating local structural changes upon oxygen incorporation. (c) Schematic of Li site distribution within the cage-like framework formed by PS 4 units, and their spatial relationship with S/Cl 4d sites. (d) Bond lengths between Li and S/Cl 4d sites. (e, f) Site occupancy of individual Li sites in LiPSCl and LSO-LiPSCl, obtained via neutron diffraction-based Rietveld refinement, showing increased occupancy at Li T5 and decreased occupancy at Li T2 after oxygen substitution. comparing the peak intensities in Figs. 3b, e, and 3f with site occu- pancies and considering the bond lengths in Fig. 3d, the peaks can be assigned as follows: the strongest peak, corresponding to Li T5 , is assigned to peak F, while Li T2 is assigned to peak G. The observed in- crease in Li T5 intensity and decrease in Li T2 intensity after oxyg",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    66.5,
+    578.1,
+    614.5
+   ],
+   "w": 2278,
+   "h": 2285,
+   "dpi": 300,
+   "src": "6a52c417-117._Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.855,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a, b) Schematic illustration of conduction planes A (formed by S/Cl 4a ) and B (formed by S/Cl 4d ) in the argyrodite framework. (c) Comparison of the projected areas of A and B planes in LiPSCl and LSO-LiPSCl, indicating structural contraction upon oxygen incorporation. (d) Crystallographic positions of Li sites (48h T5 , 48h T2 , 16e, 24g) within the unit cell. (e, f) Lithium distribution in LiPSCl and LSO-LiPSCl, derived from maximum entropy method (MEM) maps at room temperature. (g) Arrangement of Li sites forming interconnected cages, and the role of T2 sites in inter-cage conduction. (h) Shortened Li T2 –Li T2 distance in LSO-LiPSCl, suggesting enhanced Li-ion percolation pathways. 7",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    135.4,
+    567.3,
+    692.6
+   ],
+   "w": 2233,
+   "h": 2322,
+   "dpi": 300,
+   "src": "6a52c417-117._Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.707,
+   "viewed": true,
+   "caption_note": "⚠ legend labels the yellow spheres (S16e corners of PS4) as 'Li16e' — the purple spheres are the real Li16e (2026-11-09 curator)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) Lithium trajectory comparison between LiPSCl and (b) LSO-LiPSCl. Compared to LiPSCl, LSO-LiPSCl exhibits enhanced lithium distribution across the cage-connecting regions. Tender XAS spectra at (c) S, (d) P, and (e) Cl K-edges of LiPSCl and LSO-LiPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    55,
+    562,
+    660
+   ],
+   "w": 2192,
+   "h": 2521,
+   "dpi": 300,
+   "src": "6a52c417-117._Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.77,
+   "manual_crop": "tool excluded p9 as 'no graphics (img0/draw0)' although the page holds 4 rasters (MD trajectory panels) + 242 vector paths (XAS panels); clip = ink extent of all panels + caption (300 dpi render) (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "300 dpi 크롭 + XAS 패널 600 dpi 렌더 · XAS 곡선은 PDF 벡터 경로 좌표를 직접 읽어 수치화 (digest §5.4)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) Cyclic voltammetry profiles of LiPSCl and LSO-LiPSCl over 1–50 cycles (Li/SE/stainless steel, 1 mV s − 1 , 0–5 V vs. Li/Li + ). (b) Comparison of CV current responses of LiPSCl and LSO-LiPSCl in the high-voltage region (2.5–5.0 V vs. Li/Li + ). (c) Initial charge–discharge profiles at 0.1 C in the voltage range of 2.5–4.25 V (vs. Li/Li + ) using NCM811 and LSO-LiPSCl/SE/In–Li configurations. (d) Discharge capacities under various current densities ranging from 90 to 9000 mA g − 1 (0.5–50 C), followed by continuous cycling at 900 mA g − 1 . (e, f) Discharge profiles from rate capability tests. (g) Long-term cycling performance of LiPSCl and LSO- LiPSCl at a current density of 360 mA g − 1 over 300 cycles. (h, i) Charge–discharge profiles and cycling stability of LSO-LiPSCl over 1000 cycles at a current density of 360 mA g − 1 . LiPSCl configuration and exhibiting a high energy",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    567.7,
+    611.7
+   ],
+   "w": 2235,
+   "h": 2344,
+   "dpi": 300,
+   "src": "6a52c417-117._Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.872,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) LED-powered operation of a pouch-type cell (30 × 40 mm) based on the NCM811-LSO-LiPSCl/LiPSCl/graphite-LiPSCl configuration (N/P ratio = 1.2). (b) Cross-sectional SEM image of the pouch cell. (c) Initial charge–discharge profile at 0.1 C within a voltage range of 2.5–4.25 V (vs. Li/Li + ). (d) Cycling retention test at 0.33C.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    46.3,
+    567.2,
+    338.3
+   ],
+   "w": 2233,
+   "h": 1218,
+   "dpi": 300,
+   "src": "6a52c417-117._Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.711,
+   "viewed": false
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Ex situ cross-sectional cryo-TEM analysis of ASSBs with In-Li/LiPSCl/NCM811-SE configuration after cycling, using (a–c) LSO-LiPSCl and (d–f) LiPSCl. (a, d) HAADF-STEM and high-resolution TEM (HR-TEM) images (inset) of the solid electrolyte side, showing crystalline LSO-LiPSCl and amorphous LiPSCl, respectively. (b, e) Corresponding EDS elemental mapping images. (c, f) HR-TEM images and fast Fourier transform patterns of the cathode region adjacent to the solid electrolyte for LSO-LiPSCl and LiPSCl, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    567.3,
+    669.7
+   ],
+   "w": 2233,
+   "h": 2586,
+   "dpi": 300,
+   "src": "6a52c417-117._Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.286,
+   "viewed": true,
+   "caption_note": "figure-read: S1 inset label '0.236 nm (331) plane' vs d(331) = a/sqrt(19) = 0.226 nm from the paper's own a = 9.857 A (4 % off) (2026-11-09 curator)"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 10,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Results of neutron diffraction-based Rietveld refinement of Li6.00PS4.95O0.04Cl0.98 257 (1LSO-LiPSCl) at 300K. Green, red, blue, and black vertical ticks indicate the Bragg reflection 258 positions of argyrodite, Li2S, LiCl, and Li3PO4, respectively. 259 260",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    151.4,
+    549.2,
+    614.0
+   ],
+   "w": 2152,
+   "h": 1929,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.98,
+   "viewed": false
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 12,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Results of neutron diffraction-based Rietveld refinement of Li6.10PS4.84O0.18Cl0.99 287 (5LSO-LiPSCl) at 300K. Green, red, blue, and black vertical ticks indicate the Bragg reflection 288 positions of argyrodite, Li2S, LiCl, and Li3PO4, respectively. 289 290",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    196.1,
+    549.2,
+    638.5
+   ],
+   "w": 2152,
+   "h": 1844,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.978,
+   "viewed": false
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 14,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. XRD patterns of the LSO–LiPSCl series. Si powder was added for peak position 301 calibration. 302 303 304 305 306 307 308 309 310 311 312 313 314",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    68.3,
+    548.8,
+    395.0
+   ],
+   "w": 2150,
+   "h": 1362,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.968,
+   "viewed": false
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 15,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Comparison of XRD patterns of LSO-LiPSCl to identify the presence of (a) Li2S, (b) LiCl and (c) Li2SO4 impurities.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    70,
+    546,
+    449
+   ],
+   "w": 2125,
+   "h": 1580,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.976,
+   "manual_crop": "tool excluded: p15 'no graphics (img0/draw5)' — 131 vector paths are there (thin-line XRD); clip = drawings/text extent above the caption + caption (300 dpi render) (2026-11-09, litdb-curator)",
+   "viewed": false,
+   "viewed_how": "썸네일 몽타주로 크롭이 그림을 담았는지만 확인 — 내용 판독은 안 함"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 16,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Lattice parameters of LiPSCl and LSO-LiPSCl series in the XRD. Peak positions were calibrated using Si powder as a reference.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    100,
+    546,
+    326
+   ],
+   "w": 2125,
+   "h": 943,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.973,
+   "manual_crop": "tool excluded: p16 'almost blank (0.987)' — sparse vector plot (4 markers); clip = drawings/text extent above the caption + caption (300 dpi render) (2026-11-09, litdb-curator)",
+   "viewed": false,
+   "viewed_how": "썸네일 몽타주로 크롭이 그림을 담았는지만 확인 — 내용 판독은 안 함"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 17,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Deconvoluted Raman spectra of the LSO-LiPSCl series showing the PS43- symmetric 353 stretching modes. The spectra were fitted to analyze changes in the local structure of PS4 units 354 with varying oxygen content. 355 356 357 358 359 360 361",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    66.8,
+    549.2,
+    534.0
+   ],
+   "w": 2152,
+   "h": 1948,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.965,
+   "viewed": true,
+   "caption_note": "⚠ caption says 'Deconvoluted Raman spectra' but the panel is P 2p XPS (x = binding energy 134-130 eV, samples LiPSCl / LiPSOCl1 / 3 / 5); main text cites Fig. S6 as the Raman O-series — the Raman series is not shown anywhere (2026-11-09 curator)"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 18,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Schematic illustration of S/Cl mixing at the 4a/4d sites and its coupling configurations with the P atom in the PS4 unit. The diagrams depict how the local environment around phosphorus changes depending on the S/Cl distribution.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    88,
+    546,
+    582
+   ],
+   "w": 2125,
+   "h": 2059,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.946,
+   "manual_crop": "tool excluded: p18 'almost blank (0.988)' — 38 small rasters + 15 paths (schematic); clip = drawings/text extent above the caption + caption (300 dpi render) (2026-11-09, litdb-curator)",
+   "viewed": false,
+   "viewed_how": "썸네일 몽타주로 크롭이 그림을 담았는지만 확인 — 내용 판독은 안 함"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 21,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Simulated ionic conductivity as a function of oxygen content, obtained by MTP-MD 419 analysis. 420 421 422 423 424 425 426 427 428 429 430 431 432 433 434 435",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    66.8,
+    549.2,
+    339.2
+   ],
+   "w": 2152,
+   "h": 1136,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.916,
+   "viewed": true
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 22,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. (a) Comparison of lithium trajectories between LiPSCl and LSO-LiPSCl. (b) Local 438 lithium distribution highlighting the bridge region connecting the cages. 439 440 441 442 443 444 445",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    70.6,
+    549.1,
+    537.8
+   ],
+   "w": 2152,
+   "h": 1947,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.744,
+   "viewed": false
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 23,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Comparison of lithium trajectories as a function of oxygen content. 450 451 452 453",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    66.8,
+    499.2,
+    619.5
+   ],
+   "w": 1943,
+   "h": 2304,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.745,
+   "viewed": false
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 24,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Comparison of lithium localization effects induced by oxygen incorporation in (a) 455 LiPSCl and (b) LiPSCl-O (5%). The magnified figure (c) illustrates the influence of oxygen doping 456 on the local lithium distribution within the structure. 457 458 459 460 461 462 463 464 465 466 467 468 469 470 471",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    70.6,
+    548.8,
+    350.2
+   ],
+   "w": 2150,
+   "h": 1167,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.771,
+   "viewed": true
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 26,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. XRD pattern of Li2ZrO3-coated LiNi0.8Co0.1Mn0.1O2",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    120,
+    546,
+    416
+   ],
+   "w": 2125,
+   "h": 1234,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.98,
+   "manual_crop": "tool excluded: p26 'no graphics (img0/draw5)' — single thin-line XRD pattern; clip = drawings/text extent above the caption + caption (300 dpi render) (2026-11-09, litdb-curator)",
+   "viewed": false,
+   "viewed_how": "썸네일 몽타주로 크롭이 그림을 담았는지만 확인 — 내용 판독은 안 함"
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 27,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. SEM and EDS images of Li2ZrO3-coated LiNi0.8Co0.1Mn0.1O2 513 514 515 516 517 518 519 520 521 522 523 524 525 526 527 528 529",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    66.8,
+    540.2,
+    338.4
+   ],
+   "w": 2114,
+   "h": 1133,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.269,
+   "viewed": false
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 28,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. SEM images comparing particle sizes of (a) LiPSCl and (b) LSO–LiPSCl. 533 534 535 536 537 538 539 540 541 542 543 544 545 546 547 548 549 550 551",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    66.8,
+    549.2,
+    269.7
+   ],
+   "w": 2152,
+   "h": 846,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.469,
+   "viewed": false
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 29,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. (a) Initial formation cycles of the LiPSCl and LSO-LiPSCl series at 0.1C and 45 ℃ 555 within a voltage range of 2.5-4.25 V (vs. Li/Li+) (Cell configuration: NCM811, LSO- 556 LiPSCl/SE/In-Li). (b) Initial coulombic efficiencies of the LiPSCl and LSO-LiPSCl series. (c) 557 Discharge capacities during the initial cycles at 0.1C. 558 559 560 561 562 563 564 565 566 567",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    66.8,
+    549.2,
+    446.2
+   ],
+   "w": 2152,
+   "h": 1582,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.974,
+   "viewed": false
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 30,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Rate capability of LiPSCl and LSO-LiPSCl composite cathodes evaluated at 45 ℃ 570 over a wide range of current densities from 90 to 9000 mA g-1, corresponding to 0.5C to 50C, 571 respectively. 572 573 574 575 576 577 578 579 580 581 582 583 584 585 586 587",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    66.8,
+    549.1,
+    322.7
+   ],
+   "w": 2151,
+   "h": 1067,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.95,
+   "viewed": false
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 31,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. (a) Equivalent circuit used for fitting the In-Li/LiPSCl/NCM811-LSO-LiPSCl cell 591 configuration. Nyquist plots and corresponding fitting results obtained from the equivalent circuit 592 for the all-solid-state battery employing LiPSCl and LSO-LiPSCl after (b) the first cycle and (c) 593 the 100th cycle. 594 595 596 597 598 599 600 601 602 603 604 605 606",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    66.8,
+    549.2,
+    378.2
+   ],
+   "w": 2152,
+   "h": 1298,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.969,
+   "viewed": false
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 33,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. (a) Comparison of the initial formation cycles of LSO-LiPSCl at 30 and 45 °C in the voltage range of 2.5-4.25 V (vs. Li/Li+). Cell configuration: NCM811 | LSO-LiPSCl/SE/Graphite | LSO-LiPSCl. (b) Cycling retention test of two cells per sample at 30 °C and 45 °C. One of the cells at 30 °C experienced a short circuit during cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    95,
+    546,
+    442
+   ],
+   "w": 2125,
+   "h": 1447,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.893,
+   "manual_crop": "tool excluded: p33 'no graphics (img0/draw2)' — 294 vector paths; caption block also carries a discussion paragraph; clip = drawings/text extent above the caption + caption (300 dpi render) (2026-11-09, litdb-curator)",
+   "viewed": false,
+   "viewed_how": "썸네일 몽타주로 크롭이 그림을 담았는지만 확인 — 내용 판독은 안 함"
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 34,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. XPS spectra of S 2p orbitals for (a) LiPSCl and (b) LSO-LiPSCl before and after 659 cycling. 660 661 662 663 664 665 666 667",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    66.8,
+    549.0,
+    505.7
+   ],
+   "w": 2151,
+   "h": 1830,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.942,
+   "viewed": true
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 35,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Energy dispersive X-ray spectroscopy (EDS) elemental maps of (a) LSO-LiPSCl and 671 (b) LiPSCl 672 673 674 675",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    66.8,
+    549.2,
+    610.5
+   ],
+   "w": 2152,
+   "h": 2266,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.449,
+   "viewed": false
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 36,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. XRD patterns comparing the impurity precipitation behavior upon the addition of 10 679 mol% Li2SO4 and Li2O to LiPSCl. The addition of Li2SO4 leads to the formation of Li3PO4 as an 680 impurity, while the addition of Li2O results in the precipitation of Li2S and LiCl impurities. (b) 681 Comparison of ionic conductivities for samples with 10 mol% Li2SO4 and 10 mol% Li2O added 682 to LiPSCl. 683 684 685 686 687 688 689 690 691 692 693 694 695",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    66.8,
+    549.2,
+    368.2
+   ],
+   "w": 2152,
+   "h": 1257,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.969,
+   "viewed": false
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 37,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. (a) Equivalent circuit used for fitting the stainless steel/SE/stainless steel symmetric 701 cell configuration. Nyquist plots of (b) LiPSCl and (c) LSO-LiPSCl at -10 °C. 702 703 704 705 706 707 708",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    212.0,
+    548.6,
+    546.7
+   ],
+   "w": 2149,
+   "h": 1396,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.972,
+   "viewed": true
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 38,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. (a) HAADF-STEM image of interface of NCM cathode and LSO-LiPSCl. (b) 711 Magnified EDS elemental map showing strong oxygen intensity, along with elemental maps of 712 other relevant elements. (c) EDS spectrum corresponding to the red square region. 713 714 715 716 717 718",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    66.8,
+    549.2,
+    538.0
+   ],
+   "w": 2152,
+   "h": 1964,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.728,
+   "viewed": false
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 39,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. (a) HAADF-STEM image of interface of NCM cathode and LiPSCl. (b) Magnified 721 EDS elemental map showing weak oxygen intensity, along with elemental maps of other relevant 722 elements. (c) EDS spectrum corresponding to the red square region. 723 724 725 726 727 728",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    66.8,
+    548.8,
+    548.2
+   ],
+   "w": 2150,
+   "h": 2007,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.717,
+   "viewed": false
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 40,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. (a) HAADF-STEM image of LiPSCl mixed with Li2SO4 and its (b) EDS spectrum 733 734 735 736 737 738 739 740 741 742 743 744 745 746 747 748 749 750",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    66.8,
+    538.7,
+    308.9
+   ],
+   "w": 2108,
+   "h": 1010,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.629,
+   "viewed": false
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 8,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Constraints applied for neutron diffraction-based Rietveld refinement. 223 Atom Wyckoff Occ. x/a y/b z/c Biso (Å2) Li1 48h (T5) - =1-Li1(y) Li1(y) Li1(z) - Li2 16e - =Li2(z) =Li2(z) Li2(z) - Li3 24g - Li3(x) 0.25 0.75 - Li4 48h (T2) - Li4(x) = Li4(x)-0.5 Li4(z) - P 4b - 0 0 0.5 - S1 4a - 0 0 1 - S2 4d - 0.25 0.25 0.75 - S3 16e - = S3(z)-0.5 = -S3(z)+0.5 S3(z) - O 16e =1-S3(Occ.) =S3(x) =S3(y) =S3(z) -",
+   "rotated_deg": 0,
+   "bbox": [
+    34,
+    466.7,
+    548,
+    715.6
+   ],
+   "w": 2143,
+   "h": 1218,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.964,
+   "auto_bbox": [
+    34.0,
+    466.7,
+    513.0,
+    715.6
+   ],
+   "recrop": "table continues on SI p9 (Cl1 4a / Cl2 4d constraint rows) — auto crop stopped at the page foot; stitched p8 + p9 top (2026-11-09, litdb-curator)",
+   "stitched_parts": [
+    {
+     "page": 8,
+     "bbox": [
+      34,
+      466.7,
+      548,
+      715.6
+     ]
+    },
+    {
+     "page": 9,
+     "bbox": [
+      34,
+      70,
+      548,
+      110
+     ]
+    }
+   ],
+   "viewed": false
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 9,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Rietveld refinement of the neutron diffraction for Li6PS5Cl (LiPSCl) at 300K. A small 239 fraction of impurity phases (Li2S: 0.46 wt%, LiCl: 0.07 wt%, Li3PO4: 0.35 wt%) are detected. 240 Atom Wyckoff Occ. x/a y/b z/c Uiso (Å2) Li1 48h (T5) 0.301(3) 0.3138(2) 0.6862(2) 0.0286(2) 0.052(1) Li2 16e 0.024(1) 0.0949(1) 0.0949(1) 0.0949(1) 0.023(1) Li3 24g 0.021(2) 0.0091(1) 0.25 0.75 0.021(3) Li4 48h (T2) 0.181(2) 0.5635(1) 0.0635(1) 0.2655(1) 0.065(1) P 4b 1 0 0 0.5 0.033(6) S1 4a 0.569(2) 0 0 1 0.033(3) S2 4d 0.431(4) 0.25 0.25 0.75 0.022(2) S3 16e 1 0.1181(2) -0.1181(2) 0.6181(2) 0.043(1)",
+   "rotated_deg": 0,
+   "bbox": [
+    34,
+    456.2,
+    548.1,
+    697.1
+   ],
+   "w": 2143,
+   "h": 1351,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.94,
+   "auto_bbox": [
+    34.0,
+    456.2,
+    548.1,
+    697.1
+   ],
+   "recrop": "table continues on SI p10 (Cl1 / Cl2 rows + footer with a, chi2, Rwp, Rp, impurities) — auto crop stopped at the page foot; stitched p9 + p10 top (2026-11-09, litdb-curator)",
+   "stitched_parts": [
+    {
+     "page": 9,
+     "bbox": [
+      34,
+      456.2,
+      548.1,
+      697.1
+     ]
+    },
+    {
+     "page": 10,
+     "bbox": [
+      34,
+      70,
+      548,
+      150
+     ]
+    }
+   ],
+   "viewed": false
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 10,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Rietveld refinement of the neutron diffraction for Li6.00PS4.95O0.04Cl0.98 (1LSO-LiPSCl) at 300K. A small fraction of impurity phases (Li2S: 0.19 wt%, LiCl: 0.46 wt%, Li3PO4: 0.19 wt%) are detected.",
+   "rotated_deg": 0,
+   "bbox": [
+    34,
+    688,
+    548,
+    722
+   ],
+   "w": 2143,
+   "h": 1523,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.942,
+   "manual_crop": "caption sits at the foot of SI p10 and the whole table body is on p11 — tool saw an empty region under the caption ('almost blank 1.000'); stitched: p10 caption strip + p11 body incl. footer line (2026-11-09, litdb-curator)",
+   "viewed": false,
+   "stitched_parts": [
+    {
+     "page": 10,
+     "bbox": [
+      34,
+      688,
+      548,
+      722
+     ]
+    },
+    {
+     "page": 11,
+     "bbox": [
+      34,
+      70,
+      548,
+      398
+     ]
+    }
+   ]
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 11,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Rietveld refinement of the neutron diffraction for 3LSO-LiPSCl (Li5.99PS4.92O0.10Cl0.98) 269 at 300K. A small fraction of impurity phases (Li2S: 0.46 wt%, LiCl: 0.47 wt%, Li3PO4: 0.27 wt%) 270 are detected. 271 Atom Wyckoff Occ. x/a y/b z/c Uiso (Å2) Li1 48h (T5) 0.380(1) 0.3179(2) 0.6821(3) 0.0245(2) 0.075(1) Li2 16e 0.024(2) 0.1366(2) 0.1366(2) 0.1366(2) 0.023(1) Li3 24g 0.021(1) 0.0060(1) 0.25 0.75 0.021(1) Li4 48h (T2) 0.101(3) 0.5590(2) 0.5590(2) 0.2610(2) 0.037(2) P 4b 1 0 0 0.5 0.035(1) S1 4a 0.590(2) 0 0 1 0.036(4) S2 4d 0.431(1) 0.25 0.25 0.75 0.040(3)",
+   "rotated_deg": 0,
+   "bbox": [
+    34,
+    470,
+    548.2,
+    703.4
+   ],
+   "w": 2144,
+   "h": 1507,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.942,
+   "auto_bbox": [
+    34.0,
+    470.0,
+    548.2,
+    703.4
+   ],
+   "recrop": "table continues on SI p12 (S3 16e, O 16e, Cl1, Cl2 rows + footer) — the O-occupancy row was missing from the auto crop; stitched p11 + p12 top (2026-11-09, litdb-curator)",
+   "stitched_parts": [
+    {
+     "page": 11,
+     "bbox": [
+      34,
+      470,
+      548.2,
+      703.4
+     ]
+    },
+    {
+     "page": 12,
+     "bbox": [
+      34,
+      70,
+      548,
+      195
+     ]
+    }
+   ],
+   "viewed": false
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 13,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Rietveld refinement of the neutron diffraction for Li6.10PS4.84O0.18Cl0.99 (5LSO-LiPSCl) 291 at 300K. A small fraction of impurity phases (Li2S: 0.08 wt%, LiCl: 0.25 wt%, Li3PO4: 0.38 wt%) 292 are detected. 293 Atom Wyckoff Occ. x/a y/b z/c Uiso (Å2) Li1 48h (T5) 0.408(3) 0.3156(1) 0.6844(1) 0.0268(1) 0.075(1) Li2 16e 0.023(5) 0.1231(1) 0.1231(1) 0.1231(1) 0.022(5) Li3 24g 0.022(3) -0.0003(1) 0.25 0.75 0.021(6) Li4 48h (T2) 0.082(1) 0.5641(1) 0.0641(1) 0.2661(1) 0.039(1) P 4b 1 0 0 0.5 0.035(3) S1 4a 0.608(2) 0 0 1 0.036(2) S2 4d 0.409(3) 0.25 0.25 0.75 0.040(3) S3 16e 0.955(3) 0.1181(1) -0.1181(1) 0.6181(1) 0.046(2) O 16e 0.045(1) 0.1181(1) -0.1181(1) 0.6181(1) 0.040(1) Cl1 4a 0.402(3) 0 0 1 0.032(3) F4̅3m, a = 9.8532 (1) Å, 2 = 2.54%, Rwp = 4.85%, Rp = 3.83%, Impurity: 0.08 wt% (Li2S), 0.25 294 wt% (LiCl), 0.38 wt% (Li3PO4) 295 Cl2 4d 0.591(1) 0.25 0.25 0.75 0.037(1) 296 297",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    67.8,
+    548.2,
+    477.2
+   ],
+   "w": 2144,
+   "h": 1707,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.945,
+   "viewed": false
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 19,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Bond lengths between S/Cl in 4d sites and Li sites in LiPSCl and LSO–LiPSCl. 375",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    90.8,
+    521.7,
+    337.1
+   ],
+   "w": 2033,
+   "h": 1027,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.962,
+   "viewed": false
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 20,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Area of conduction planes A and B in LiPSCl and LSO-LiPSCl. 394",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    90.8,
+    439.4,
+    235.6
+   ],
+   "w": 1690,
+   "h": 604,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.945,
+   "viewed": false
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 25,
+   "file": "tab_S8.png",
+   "caption": "Table S8. Variation in the S/Cl4d-S16e bond distance upon Li2SO4 incorporation 473 474",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    90.8,
+    459.5,
+    242.4
+   ],
+   "w": 1774,
+   "h": 632,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.964,
+   "viewed": false
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 32,
+   "file": "tab_S9.png",
+   "caption": "Table S9. Fitted EIS results of In-Li/LiPSCl/NCM811-SE ASSB cells. 608",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    90.8,
+    528.5,
+    266.0
+   ],
+   "w": 2061,
+   "h": 731,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.944,
+   "viewed": false
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 37,
+   "file": "tab_S10.png",
+   "caption": "Table S10. Fitted EIS results of LiPSCl and LSO-LiPSCl measured at -10 °C 697",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    93,
+    548,
+    214
+   ],
+   "w": 2134,
+   "h": 505,
+   "dpi": 300,
+   "src": "94a6e1d1-117._Sup_Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",
+   "blank": 0.958,
+   "auto_bbox": [
+    39.0,
+    111.1,
+    445.9,
+    158.8
+   ],
+   "recrop": "auto bbox [39.0,111.1,445.9,158.8] held only the caption + header; data rows (LiPSCl / LSO-LiPSCl) sit at y 160-210 — re-cropped (2026-11-09, litdb-curator)",
+   "viewed": false
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f5",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p9 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop fig_5.png (2026-11-09, litdb-curator) - see figures[f5].manual_crop"
+  },
+  {
+   "key": "fS4",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p15 그래픽 없음(img0/draw5)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop fig_S4.png (2026-11-09, litdb-curator) - see figures[fS4].manual_crop"
+  },
+  {
+   "key": "fS5",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p16 거의 백지(0.987)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop fig_S5.png (2026-11-09, litdb-curator) - see figures[fS5].manual_crop"
+  },
+  {
+   "key": "fS7",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p18 거의 백지(0.988)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop fig_S7.png (2026-11-09, litdb-curator) - see figures[fS7].manual_crop"
+  },
+  {
+   "key": "fS12",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p26 그래픽 없음(img0/draw5)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop fig_S12.png (2026-11-09, litdb-curator) - see figures[fS12].manual_crop"
+  },
+  {
+   "key": "fS18",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p33 그래픽 없음(img0/draw2)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop fig_S18.png (2026-11-09, litdb-curator) - see figures[fS18].manual_crop"
+  },
+  {
+   "key": "tS3",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p10 거의 백지(1.000)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop tab_S3.png (2026-11-09, litdb-curator) - see figures[tS3].manual_crop"
+  }
+ ]
+}
