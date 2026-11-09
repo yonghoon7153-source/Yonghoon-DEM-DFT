@@ -43,12 +43,37 @@ def read_thresholds(card):
     return {k: float(m[k]) for k in DEFAULTS}
 
 
+_SHIFTS27 = np.array([(i, j, k) for i in (-1, 0, 1) for j in (-1, 0, 1) for k in (-1, 0, 1)], float)
+
+
+def perp_widths(cell):
+    cell = np.asarray(cell, float)
+    V = abs(np.linalg.det(cell))
+    return np.array([V / np.linalg.norm(np.cross(cell[(i + 1) % 3], cell[(i + 2) % 3])) for i in range(3)])
+
+
 def mic_series(d, cells):
-    """(T,3) 또는 (T,n,3) 차분에 프레임별 최소상 규약."""
+    """(T,3) 또는 (T,n,3) 차분에 프레임별 최소상 규약 — **일반 격자** (2026-11-09 · Codex DU P1-9).
+
+    분율 성분마다 반올림 (옛 판) 은 비직교 셀에서 최단 이미지를 보장하지 않는다 — Codex 재현: modelc_V0_k663 ×
+    (1,2,1) 셀 (수직폭 5.72 Å) 에 합성 P–S 운동 · 진짜 2.900 Å 를 4.932 Å 로 재서 거짓 이탈. 이제 감싼 뒤
+    이웃 27 이미지 중 가장 짧은 것 — 최소상 거리가 1.5 × 최소 수직폭보다 짧으면 정확하다 (census 가 문턱으로 확인).
+    과거 판정 (512 원자 · ½ 최소폭 5.70 Å · 558 원자 8.58 Å) 은 이탈 문턱 ≤ 3.0 Å 이 ½ 최소폭 아래라 옛 방식도 정확했다.
+    """
     cinv = np.linalg.inv(cells)                                   # (T,3,3)
     f = np.einsum("t...i,tij->t...j", d, cinv)
     f -= np.round(f)
-    return np.einsum("t...j,tji->t...i", f, cells)
+    best = bestn = None
+    for s in _SHIFTS27:
+        v = np.einsum("t...j,tji->t...i", f + s, cells)
+        n = np.linalg.norm(v, axis=-1)
+        if best is None:
+            best, bestn = v, n
+        else:
+            m = n < bestn
+            best = np.where(m[..., None], v, best)
+            bestn = np.where(m, n, bestn)
+    return best
 
 
 def sustained_runs(mask, min_frames):
@@ -67,12 +92,40 @@ def sustained_runs(mask, min_frames):
     return runs
 
 
+def _invalid(reasons, T, dt_ps):
+    """읽을 수 없는 · 판정할 수 없는 궤적 → verdict 'invalid' (사건 0 · rigid 가 **아니다** · 집계에 안 넣는다)."""
+    return {"n_frames": int(T), "dt_ps": dt_ps, "total_ps": (T * dt_ps if isinstance(dt_ps, (int, float)) else None),
+            "verdict": "invalid", "invalid_reasons": list(reasons), "n_events": None, "by_elem": {}, "events": [],
+            "margin_max_by_elem_kind": {},
+            "⛔": "invalid 는 '사건 0' 이 아니다 — 판정 불가다. 집계 (--aggregate) 는 invalid 런이 있으면 멈춘다."}
+
+
 def census(sym, pos, cells, dt_ps, th=DEFAULTS):
     sym = np.asarray(sym); pos = np.asarray(pos, float); cells = np.asarray(cells, float)
+    if pos.ndim != 3 or pos.shape[-1] != 3 or pos.shape[1] != len(sym) or cells.shape != (len(pos), 3, 3):
+        return _invalid([f"배열 모양이 안 맞는다 (pos {pos.shape} · 원자 {len(sym)} · cells {cells.shape})"], len(pos), dt_ps)
     T, N, _ = pos.shape
+    # ⛔ 2026-11-09 (Codex DU P1-9): NaN 좌표가 들어오면 거리 비교가 전부 False 라 사건 0 · rigid 가 됐다.
+    bad = []
+    if not np.isfinite(pos).all():
+        fr = sorted(set(np.where(~np.isfinite(pos))[0].tolist()))
+        bad.append(f"좌표에 NaN/inf — 프레임 {fr[:5]}{' …' if len(fr) > 5 else ''} ({len(fr)} 개)")
+    if not np.isfinite(cells).all():
+        bad.append("셀에 NaN/inf")
+    if not (isinstance(dt_ps, (int, float)) and math.isfinite(dt_ps) and dt_ps > 0):
+        bad.append(f"프레임 간격 {dt_ps!r} — 양의 유한값이어야 한다")
+    if bad:
+        return _invalid(bad, T, dt_ps)
     if np.abs(cells - cells[0]).max() > 1e-6:
         raise SystemExit("⛔ 셀이 프레임마다 다르다 — 이 도구는 NVT(고정 셀) 전용이다. 멈춘다.")
     min_frames = max(1, int(round(th["min_ps"] / dt_ps)))
+    if T < min_frames:
+        return _invalid([f"궤적 {T * dt_ps:.2f} ps < 지속 문턱 {th['min_ps']} ps — 사건을 원리상 못 잡는다"], T, dt_ps)
+    rmax = max(th["o_escape_A"], th["s_escape_A"], th["o_bond_A"], th["s_bond_A"])
+    wmin = float(perp_widths(cells[0]).min())
+    if rmax >= 1.5 * wmin:
+        raise SystemExit(f"⛔ 셀 최소 수직폭 {wmin:.2f} Å 의 1.5 배가 문턱 {rmax} Å 보다 작다 — 27 이미지 최소상이 "
+                         f"정확하지 않다 (슈퍼셀로)")
     fw = np.where(sym != "Li")[0]
     P = np.where(sym == "P")[0]
     events, peak = [], {}
@@ -94,7 +147,7 @@ def census(sym, pos, cells, dt_ps, th=DEFAULTS):
             events.append({"kind": "P-bonded", "elem": str(sym[a]), "atom": a, "P": p,
                            "start_ps": s * dt_ps, "length_ps": L * dt_ps, "peak_dP_A": float(d[s:s + L].max())})
     # ── (2) 자유 음이온·P: 골격 평균 병진 제거 후 변위 ──────────────────────
-    free = [int(i) for i in fw if int(i) not in bonded and sym[i] in ("S", "Cl", "P", "O")]
+    free = [int(i) for i in fw if int(i) not in bonded and sym[i] in ("S", "Cl", "P", "O", "B")]   # B 중심 (2026-11-09)
     uw = unwrap(pos[:, fw], cells[0])                             # (T, n_fw, 3)
     disp = uw - uw[0]
     disp = disp - disp.mean(axis=1, keepdims=True)                # 골격 전체 평균 병진 제거
@@ -122,14 +175,57 @@ def census(sym, pos, cells, dt_ps, th=DEFAULTS):
         "thresholds": dict(th),
         "n_framework": int(len(fw)), "n_P_bonded_anions": len(bonded), "n_free": len(free),
         "verdict": "framework_mobile" if events else "framework_rigid",
+        "free_elems_tracked": ["B", "Cl", "O", "P", "S"],     # 2026-11-09 — 옛 파일에는 이 칸이 없다 (B 미측정)
         "n_events": len(events), "by_elem": by_elem, "events": events,
         "margin_max_by_elem_kind": margin,
         "⛔": "이 판정은 '자리를 떠났나' 만 본다. β 경보는 지우지 않는다 — 결과 파일에 병기한다.",
     }
 
 
+def _frame_identity(path, max_report=3):
+    """extxyz 프레임마다 원자 수 · 원소 순서가 첫 프레임과 같은가 → 문제 목록.
+
+    aimd_jump_stats.read_traj 는 **첫 프레임의 원소만** 쓴다 — 뒤 프레임 순서가 바뀌면 조용히 다른 원자를 같은 번호로
+    읽는다 (2026-11-09 · Codex DU P1-9 '프레임 원자 식별'). 공용 리더는 건드리지 않고 여기서 먼저 훑는다.
+    """
+    probs, first, k = [], None, 0
+    with open(path) as f:
+        while len(probs) < max_report:
+            line = f.readline()
+            if not line:
+                break
+            if not line.strip():
+                continue
+            try:
+                n = int(line.split()[0])
+            except ValueError:
+                probs.append(f"프레임 {k}: 원자 수 줄을 못 읽음 ({line.strip()[:30]})")
+                break
+            f.readline()
+            sp = []
+            for _ in range(n):
+                l2 = f.readline()
+                if not l2:
+                    probs.append(f"프레임 {k}: 원자 {n} 개 전에 파일이 끝남 (잘림)")
+                    break
+                w = l2.split()
+                sp.append(w[0] if w else "")
+            if first is None:
+                first = sp
+            elif sp != first:
+                probs.append(f"프레임 {k}: 원자 수 · 원소 순서가 첫 프레임과 다르다")
+            k += 1
+    return probs
+
+
 def census_file(traj, dt_ps=None, th=DEFAULTS):
-    sym, pos, cells = read_traj(traj)
+    probs = _frame_identity(traj)
+    if probs:
+        return _invalid(probs, 0, dt_ps)
+    try:
+        sym, pos, cells = read_traj(traj)
+    except Exception as e:                       # 잘린 줄 · 숫자 아님 · 모양 다름
+        return _invalid([f"궤적 읽기 실패: {type(e).__name__}: {e}"], 0, dt_ps)
     if dt_ps is None:
         side = pathlib.Path(traj).parent / "aimd_results.json"
         if side.is_file():
@@ -230,6 +326,66 @@ def _selftest():
     card = pathlib.Path(__file__).resolve().parents[2] / "db/properties/lpsocl_box331_closure_amendment_2026_09_11.json"
     if card.is_file():
         chk(read_thresholds(card) == DEFAULTS, "카드 §2 문턱_기계값 == 도구 기본값 (갈라지면 개정이 필요하다)")
+
+    # ── 2026-11-09 (Codex DU P1-9) — 일반 격자 최소상 · NaN · 시간 · 프레임 정체 · B 중심 ──────────────
+    # (xi) modelc_V0_k663 × (1,2,1) 셀 (60° · 수직폭 5.72 Å): 진짜 2.90 Å 인데 성분별 반올림이 3.0 Å 넘게 재는 방향
+    mc = np.array([[6.0683, 0.0, 3.5035], [2.0228, 5.7213, 3.5035], [0.0, 0.0, 35.0355]]) @ np.diag([1, 1, 1])
+    mc = np.array([mc[0], 2 * mc[1], mc[2] / 5.0 * 5.0])
+    rng = np.random.default_rng(5)
+    vec = None
+    for _ in range(20000):
+        u = rng.normal(size=3); u *= 2.90 / np.linalg.norm(u)
+        f1 = u @ np.linalg.inv(mc); f1 -= np.round(f1)
+        if np.linalg.norm(f1 @ mc) > 3.2:
+            vec = u
+            break
+    if vec is None:
+        chk(False, "(xi) 반올림이 틀리는 방향을 못 찾았다 (시험 구성 실패)")
+    else:
+        old_d = np.linalg.norm((lambda f: (f - np.round(f)) @ mc)(vec @ np.linalg.inv(mc)))
+        Tn = 400
+        sx = np.array(["P", "S"])
+        px = np.zeros((Tn, 2, 3))
+        px[:, 0] = [10.0, 8.0, 15.0]
+        px[:, 1] = px[:, 0] + 2.05 * vec / np.linalg.norm(vec)
+        px[100:, 1] = px[100:, 0] + vec                              # 2.90 Å 로 늘어나 유지 (문턱 3.0 아래)
+        cx = np.repeat(mc[None], Tn, axis=0)
+        rx = census(sx, px, cx, dt)
+        chk(rx["verdict"] == "framework_rigid" and rx["n_events"] == 0,
+            f"⛔음성: 비직교 셀에서 진짜 2.90 Å (옛 반올림 {old_d:.2f} Å) 는 이탈이 아니다 — 거짓 사건 0 (Codex 재현 꼴)")
+    # (xii) NaN — 사건이 잡히는 궤적 뒤를 NaN 으로 → invalid (옛 판: 사건 0 · rigid)
+    p = pos.copy(); p[200:, 1, 0] = 6 + 3.5
+    p[350:, 3, :] = np.nan
+    rn = census(sym, p, cells, dt)
+    chk(rn["verdict"] == "invalid" and rn["n_events"] is None and "NaN" in " ".join(rn["invalid_reasons"]),
+        "⛔음성: 좌표에 NaN 이 섞이면 **invalid** (사건 0 · rigid 로 읽지 않는다)")
+    chk(census(sym, pos, cells, 0.0)["verdict"] == "invalid" and census(sym, pos, cells, float("nan"))["verdict"] == "invalid",
+        "⛔음성: 프레임 간격 0 · NaN → invalid")
+    chk(census(sym, pos[:50], cells[:50], dt)["verdict"] == "invalid",
+        "⛔음성: 궤적 5 ps < 지속 문턱 10 ps → invalid (원리상 사건을 못 잡는다)")
+    # (xiii) 프레임 정체 — 뒤 프레임에서 원소 순서가 바뀐 extxyz · 잘린 파일 → invalid · CLI 종료코드 2
+    with tempfile.TemporaryDirectory() as td:
+        f = os.path.join(td, "traj.xyz"); _write_extxyz(f, sym, pos, cells)
+        L_ = open(f).read().splitlines()
+        nl = len(sym) + 2
+        k0 = 300 * nl + 2
+        L_[k0], L_[k0 + 1] = L_[k0 + 1], L_[k0]                    # 프레임 300 의 첫 두 원자 (P · O) 자리 바꿈
+        g = os.path.join(td, "swap.xyz"); open(g, "w").write("\n".join(L_) + "\n")
+        chk(census_file(g, 0.1)["verdict"] == "invalid",
+            "⛔음성: 뒤 프레임의 원소 순서가 바뀌면 invalid (공용 리더는 첫 프레임 원소만 쓴다)")
+        h = os.path.join(td, "cut.xyz"); open(h, "w").write("\n".join(open(f).read().splitlines()[:-3]) + "\n")
+        chk(census_file(h, 0.1)["verdict"] == "invalid", "⛔음성: 마지막 프레임이 잘린 파일 → invalid")
+        import subprocess
+        rr = subprocess.run([sys.executable, os.path.abspath(__file__), "--traj", g, "--dt_ps", "0.1"],
+                            capture_output=True, text=True)
+        chk(rr.returncode == 2, f"⛔음성: CLI 는 invalid 에 종료코드 2 (실제 {rr.returncode})")
+    # (xiv) B 중심 — B 가 3 Å 옮겨 유지 → free 이벤트 elem B (옛 판: B 를 안 봤다)
+    sb = np.array(list(sym) + ["B"])
+    pb = np.concatenate([pos, np.repeat(np.array([[9.0, 3.0, 9.0]])[None], len(pos), axis=0)], axis=1)
+    pb[150:, -1, 1] += 3.0
+    rb = census(sb, pb, cells, dt)
+    chk(rb["by_elem"].get("B", {}).get("events") == 1 and "B" in rb["free_elems_tracked"],
+        "⭕양성: B 중심이 3 Å 옮겨 유지 → B 이벤트 1 (B 를 센다고 기록)")
     print(f"selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
 
@@ -241,7 +397,8 @@ def _selftest():
 #: ⛔ 못 하는 것: 원소군 원자수를 스스로 정하지 않는다 (--group_n 필수 · 카드 값) · 판정어를 만들지 않는다 (봉인 문장 틀에 수만 넣는다) ·
 #:   겉보기 활성화는 카드 조건(10 사건 이상 온도 2 개 이상)이 아니면 **맞추지 않는다** · 이온 이동 장벽이라 부르지 않는다.
 CARD_GROUPS = (("P_center", "free", "P"), ("S_free", "free", "S"), ("Cl", "free", "Cl"))
-EXTRA_GROUPS = (("P-bonded_S", "P-bonded", "S"), ("P-bonded_O", "P-bonded", "O"), ("free_O", "free", "O"))
+EXTRA_GROUPS = (("P-bonded_S", "P-bonded", "S"), ("P-bonded_O", "P-bonded", "O"), ("free_O", "free", "O"),
+                ("B_center", "free", "B"))     # 2026-11-09 — B 중심 이동 (옛 census 는 B 를 안 봤다 → 옛 파일에서는 0)
 KB_EV = 8.617333262e-5
 
 
@@ -271,16 +428,25 @@ def aggregate(files, group_n):
     missing = [g for g, _, _ in CARD_GROUPS if g not in group_n]
     if missing:
         raise SystemExit(f"⛔ --group_n 에 카드 원소군 원자수가 없다: {missing} (카드 §보고량 값을 준다 — 도구가 정하지 않는다)")
-    runs = []
-    for seed, T, p in files:
-        r = json.loads(pathlib.Path(p).read_text())
+    runs, invalid = [], []
+    loaded = [(seed, T, p, json.loads(pathlib.Path(p).read_text())) for seed, T, p in files]
+    # ⛔ 2026-11-09: 옛 census 파일은 B 를 안 봤다 — 거기서 B_center 0 은 '사건 0' 이 아니라 '미측정' 이다.
+    track_B = all("B" in r.get("free_elems_tracked", []) for *_, r in loaded)
+    XG = EXTRA_GROUPS if track_B else tuple(g for g in EXTRA_GROUPS if g[0] != "B_center")
+    for seed, T, p, r in loaded:
+        if r.get("verdict") == "invalid":
+            invalid.append(f"{p}: {r.get('invalid_reasons')}")
+            continue
         row = {"seed": seed, "T_K": T, "path": str(p), "n_frames": r["n_frames"], "dt_ps": r["dt_ps"], "total_ps": r["total_ps"],
                "n_free": r.get("n_free"), "n_P_bonded_anions": r.get("n_P_bonded_anions"), "verdict": r.get("verdict"), "groups": {}}
-        for g, kind, el in CARD_GROUPS + EXTRA_GROUPS:
+        for g, kind, el in CARD_GROUPS + XG:
             ev = [e for e in r["events"] if e["kind"] == kind and e["elem"] == el]
             row["groups"][g] = {"N_ev": len(ev), "N_at": len({e["atom"] for e in ev}),
                                 "t1_ps": (min(e["start_ps"] for e in ev) if ev else None)}
         runs.append(row)
+    if invalid:
+        raise SystemExit("⛔ invalid 런이 있다 — 사건 0 으로 세지 않는다 (궤적을 고치거나 카드 규칙대로 뺀다): "
+                         + " | ".join(invalid[:5]))
     temps = sorted({r["T_K"] for r in runs})
     by_T = {}
     for T in temps:
@@ -288,7 +454,7 @@ def aggregate(files, group_n):
         expo = sum(r["total_ps"] for r in rs) / 1000.0
         cap = max(r["total_ps"] for r in rs)
         tab = {"n_runs": len(rs), "seeds": sorted(r["seed"] for r in rs), "exposure_ns": expo, "groups": {}}
-        for g, _, _ in CARD_GROUPS + EXTRA_GROUPS:
+        for g, _, _ in CARD_GROUPS + XG:
             N = sum(r["groups"][g]["N_ev"] for r in rs); A = sum(r["groups"][g]["N_at"] for r in rs)
             k = sum(1 for r in rs if r["groups"][g]["N_ev"] > 0)
             ci = _poisson_ci(N, expo)
@@ -321,7 +487,7 @@ def aggregate(files, group_n):
     sent = []
     for T in temps:
         tab = by_T[T]
-        if all(tab["groups"][g]["sum_N_ev"] == 0 for g, _, _ in CARD_GROUPS + EXTRA_GROUPS):
+        if all(tab["groups"][g]["sum_N_ev"] == 0 for g, _, _ in CARD_GROUPS + XG):
             sent.append(f"이 셀·이 프로토콜에서 {T:g} K 의 골격은 {tab['n_runs']} × {cap:g} ps 동안 자리를 떠나지 않았다 "
                         f"(사건 빈도 단측 95 % 상한 ≈ {tab['groups']['P_center']['ci95']['hi']:.1f} /ns/셀).")
             continue
@@ -335,16 +501,19 @@ def aggregate(files, group_n):
     for g, a in act.items():
         if a["fitted"]:
             sent.append(f"{g}: 사건 빈도의 겉보기 활성화 에너지 {a['Ea_apparent_eV']:.2f} ± {a['sigma_eV']:.2f} eV ({'/'.join(f'{t:g}' for t in a['temps_K'])} K · 포아송 가중) — 이온 이동 장벽이 아니다.")
-    return {"schema": "framework_event_rate_aggregate/v1", "group_definition": {g: f"census kind={k} · elem={e}" for g, k, e in CARD_GROUPS + EXTRA_GROUPS},
+    return {"schema": "framework_event_rate_aggregate/v1", "group_definition": {g: f"census kind={k} · elem={e}" for g, k, e in CARD_GROUPS + XG},
             "group_n_card": group_n, "runs": runs, "by_T": {f"{T:g}": v for T, v in by_T.items()}, "apparent_activation": act, "sealed_sentences": sent,
-            "⚠": "census 는 P 중심 규칙 — B 를 안 세고 BS₃ 의 S 는 '자유 S' 로 분류된다 (카드 결과와 같이 적는다)"}
+            "⚠": "census 는 P 중심 규칙 — BS₃ 의 S 는 '자유 S' 로 분류된다 (카드 결과와 같이 적는다) · B 중심은 "
+                 "2026-11-09 부터 센다 (B_center)",
+            "B_center": ("센다 (모든 census 파일이 B 를 봤다)" if track_B else
+                         "미측정 — B 를 안 본 옛 census 파일이 섞였다 (0 으로 적지 않는다 · 2026-11-09)")}
 
 
 def _files_from_root(root):
     import re
     out = []
     for p in sorted(pathlib.Path(root).rglob("site_census.json")):
-        m = re.search(r"/s(\d+)/(?:d[\d.]+_cfg\d+/)?T(\d+)/site_census\.json$", str(p))
+        m = re.search(r"/s(\d+)/(?:d[\d.]+_cfg\d+/)?T(\d+)/site_census\.json$", p.as_posix())   # Windows 경로 (Codex DU 실측)
         if m:
             out.append((int(m.group(1)), float(m.group(2)), p))
     return out
@@ -397,6 +566,17 @@ def _selftest_aggregate():
         except SystemExit:
             badg = True
         ck(badg, "⛔음성: --group_n 에 카드 원소군이 빠지면 멈춘다 (도구가 원자수를 정하지 않는다)")
+        # 2026-11-09 — B 를 안 본 옛 파일이면 B_center 는 '미측정' (0 으로 안 적는다) · invalid 런은 멈춘다
+        ck("B_center" not in r["by_T"]["600"]["groups"] and r["B_center"].startswith("미측정"),
+           "⛔음성: B 를 안 본 옛 census 파일이면 B_center 를 0 으로 적지 않는다 ('미측정')")
+        bad_d = pathlib.Path(td, "s9", "T600"); bad_d.mkdir(parents=True, exist_ok=True)
+        (bad_d / "site_census.json").write_text(json.dumps({"n_frames": 0, "dt_ps": 0.1, "total_ps": 0.0, "verdict": "invalid",
+                                                            "invalid_reasons": ["NaN"], "n_events": None, "events": []}))
+        try:
+            aggregate(_files_from_root(td), {"P_center": 32, "S_free": 48, "Cl": 64}); badi = False
+        except SystemExit:
+            badi = True
+        ck(badi, "⛔음성: invalid 런이 섞이면 집계가 멈춘다 (사건 0 으로 세지 않는다)")
     print(f"{'✅' if not bad else '⛔'} aggregate selftest {ok}/{ok + bad}")
     return bad
 
@@ -444,6 +624,12 @@ def main():
         th = dict(DEFAULTS); print(f"⚠ 문턱을 카드가 아니라 기본값에서 썼다: {th} — 판정 기록에는 --card 로 다시.")
     r = census_file(a.traj, a.dt_ps, th)
     r["traj"] = str(a.traj); r["card"] = a.card
+    if r["verdict"] == "invalid":
+        print(f"[{a.traj}] ★ 판정: **invalid** — {r['invalid_reasons']}")
+        if a.out:
+            pathlib.Path(a.out).write_text(json.dumps(r, ensure_ascii=False, indent=1) + "\n")
+            print(f"-> {a.out}")
+        return 2
     print(f"[{a.traj}] frames={r['n_frames']} dt={r['dt_ps']} ps total={r['total_ps']:.1f} ps · 골격 {r['n_framework']} "
           f"(P결합 음이온 {r['n_P_bonded_anions']} · 자유 {r['n_free']})")
     print(f"  ★ 판정: **{r['verdict']}** · 이벤트 {r['n_events']}")
@@ -457,4 +643,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())      # 2026-11-09: invalid 판정은 종료코드 2 (옛 판은 main() 반환값을 버렸다)

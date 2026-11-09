@@ -2866,8 +2866,8 @@ def selftest():
         "[음성] block=1 도 돈다 (낱개 추출 — 상관을 무시하므로 σ 가 작게 나온다)")
     _same = _np.array([2.0 * _t for _ in range(12)])          # 원점이 전부 동일
     _bs = block_bootstrap_D(_same, _t, 2.0, 50.0, block=3, n_boot=60, seed=2)
-    chk(_bs and _bs["sigma_D"] == 0.0,
-        "[음성] 원점이 전부 같으면 σ_D = **정확히 0** (산포는 원점 간에서만 온다)")
+    chk(_bs and abs(_bs["sigma_D"]) < 1e-15,          # 2026-11-09: 정확히 0 비교는 플랫폼 부동소수에 깨진다 (Codex DU · Windows)
+        "[음성] 원점이 전부 같으면 σ_D = 0 (부동소수 잡음 1e-15 안 · 산포는 원점 간에서만 온다)")
 
     # ── 회신 BU ①: 블록 길이 plateau 규칙 ─────────────────────────────
     _cur = [(1, 1.0), (2, 1.6), (3, 2.2), (4, 2.50), (5, 2.52), (6, 2.53), (8, 2.54)]
@@ -2957,7 +2957,7 @@ def selftest():
              "msd_per_origin": _np.array([6e4 * _D0 * math.exp(-_Ea / (KB_EV * T)) * _t
                                           for _ in range(10)])} for T in _Ts]
     _jd = joint_ea_bootstrap(_det, 2.0, 50.0, block=2, n_boot=40, seed=4)
-    chk(_jd and _jd["Ea_sigma_eV"] == 0.0 and _jd["red_chi2_point"] is None,
+    chk(_jd and abs(_jd["Ea_sigma_eV"]) < 1e-12 and _jd["red_chi2_point"] is None,
         "[음성] 원점이 전부 같으면 σ_Ea = 0 이고 **χ² 는 None** (0 으로 나누지 않는다)")
     _ov = [dict(r) for r in _runs]
     _ov[0]["mean_curve"] = _runs[0]["msd_per_origin"].mean(axis=0) * 2.0
@@ -2975,7 +2975,8 @@ def selftest():
         "β 블록 부트스트랩: 진값 0.9 를 되찾고 σ > 0 · block·창을 기록한다")
     _Adet = _np.array([3.0 * _tb ** 0.9 for _ in range(10)])
     _bd = block_bootstrap_beta(_Adet, _tb, 2.0, 50.0, block=2, n_boot=40, seed=1)
-    chk(_bd and _bd["sigma_beta"] == 0.0, "[음성] 원점이 전부 같으면 σ(β) = 0")
+    chk(_bd and abs(_bd["sigma_beta"]) < 1e-12,       # Codex DU 실측 Windows σβ ≈ 1.12e-16 → 정확히 0 비교 실패
+        "[음성] 원점이 전부 같으면 σ(β) = 0 (부동소수 잡음 1e-12 안)")
     chk(block_bootstrap_beta(_Ab, _tb, 200.0, 300.0, block=3) is None
         and block_bootstrap_beta(_Ab[:1], _tb, 2.0, 50.0, block=3) is None,
         "[음성] 창에 점이 3 개 미만이거나 원점이 1 개면 None (숫자를 지어내지 않는다)")

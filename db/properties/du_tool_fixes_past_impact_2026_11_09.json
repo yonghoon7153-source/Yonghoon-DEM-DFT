@@ -1,0 +1,32 @@
+{
+ "schema": "audit/v1",
+ "record_kind": "audit",
+ "date": "2026-11-09",
+ "track": "도구 (b2o3 UMA-MD · 셀구축 v1 선행 고침) — 1저자 = 사용자",
+ "citable": false,
+ "results_seen": true,
+ "제목": "Codex DU P1-4 · P1-7 · P1-8 · P1-9 · P2 도구 고침 — 과거 기록에 미친 영향 (재현 · 판정 아님)",
+ "⚠_이_문서의_지위": "고친 도구로 과거 기록을 다시 보거나, 다시 볼 수 없으면 그 사실과 방향을 적는다. 봉인 기록은 고치지 않는다. 생성기 (b2o3_enumerate) 영향은 ewald_recip_half_impact_2026_11_09.json 에 있다.",
+ "고친_도구": {
+  "tools/doping/run_anneal.py": "재개 정체성 · 상태 분리 (failed 재시도) · 실패 종료코드 1 · 최종 힘 수렴 판정 · --check_results · selftest 종료코드 전달",
+  "db/inputs/ndo_site_2026_10_14/run_uma_kgy.sh": "TIME_PS · TEMP · SEED · 실행 뒤 --check_results · b2o3_enumerate manifest",
+  "tools/ionic/framework_site_census.py": "27-이미지 최소상 · NaN/시간/길이/프레임 정체 → invalid (종료코드 2 · 집계 멈춤) · B 중심 · 옛 파일 B_center '미측정' · Windows 경로",
+  "tools/electronic/uma_phonon.py": "캐시 정체성 결박 · 병진 고유벡터 판별 · STABLE / SOFT (보류) / UNSTABLE",
+  "tools/ionic/msd_diffusive_check.py": "selftest 의 정확히-0 비교 셋을 허용오차로 (Windows σβ 1.12e-16 — 도구 동작은 그대로)"
+ },
+ "과거_영향": {
+  "골격_판정기_최소상": "영향 없음 — 과거 census 는 512 원자 (½ 최소 수직폭 5.70 Å) · 558 원자 (8.58 Å) 셀이라 이탈 문턱 ≤ 3.0 Å 가 ½ 최소폭 아래 → 옛 성분별 반올림도 정확했다. 문제는 새 1×2×5 (½ 최소폭 2.86 Å < 3.0) 에서 생긴다.",
+  "골격_판정기_09_26_재현": "고친 도구의 집계로 db/raw/b2o3_eventrate_400ps_2026_09_26 의 census 15 개를 다시 모으면 by_T · runs · 봉인 문장 · 겉보기 활성화가 aggregate_2026_09_26.json 과 **완전히 같다** (새 B_center 는 '미측정' 으로 따로 표시)",
+  "골격_판정기_NaN": "09-26 census 15 개 — 자유 원자 여유 지표가 전부 유한. 골격 평균 병진 제거가 한 원자의 NaN 을 모든 자유 원자로 번지게 하므로, 골격 좌표에 NaN 이 있었으면 자유 지표가 전부 NaN 이었을 것 ⇒ NaN 없음. 558 원자 box331 census 기록은 여유 지표 꼴이 달라 이 방법으로 확인 안 함 (NaN 토큰은 없다).",
+  "골격_판정기_B": "09-26 census 는 B 를 안 봤다 — B 중심 이동은 그 기록에 없다 (0 이 아니라 미측정). BS₃ 의 S 는 '자유 S' 로 세졌다 (기존 ⚠ 그대로).",
+  "포논_6월_기록": "db/properties/b2o3_phonon_stability.json — 비병진 허수 0 (병진 −0.13 · −0.08 · 0.11 · 가장 낮은 실수 13.7 cm⁻¹) → 새 판정으로도 STABLE (Γ · 이 셀). 09-12 단서 (Γ 점만 · 수직폭 5.72 Å · '이 셀 · Γ 에서 허수 모드 없음' 까지) 는 그대로. 캐시 재사용 여부는 확인 불가 (그 --out 이 처음 쓰인 것인지 기록이 없다) — 주파수 꼴은 이 구조와 맞는다.",
+  "어닐_거짓_미수렴": "옛 기록의 converged False 중 n_relax_steps == relax_steps 인 것은 실제로는 마지막 걸음에서 수렴했을 수 있다 (fmax 를 안 남겨 가를 수 없음) — 방향은 보수적 (수렴을 미수렴으로) · 거짓 '수렴' 주장은 없다.",
+  "어닐_이름만_재개": "옛 결과 폴더에서 같은 이름 · 다른 입력으로 다시 돌린 적이 있는지는 기록이 없어 확인 불가 — 있었다면 옛 결과가 새 입력의 결과처럼 남았다. 새 도구는 정체성 없는 옛 기록을 받지 않는다 (--accept_legacy_records 로만).",
+  "어닐_selftest_종료코드": "옛 run_anneal.py 는 selftest 가 실패해도 종료코드 0 — 실행기 run_uma_kgy.sh ③ '자가시험 실패면 멈춤' 이 실제로는 못 멈췄다. 10-14 · 10-16 런의 로그에 selftest 실패가 있었는지는 원격 로그를 봐야 한다 (확인 안 함)."
+ },
+ "⛔_못_하는_것": [
+  "원격 궤적 · 로그를 다시 읽지 않았다 (위 '확인 불가' 셋)",
+  "과거 결론을 다시 열지 않는다 — 기록만"
+ ],
+ "by": "agent · 2026-11-09 · 대피 세션 claude/evac-2026-11-08"
+}
