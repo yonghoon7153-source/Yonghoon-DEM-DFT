@@ -217,7 +217,11 @@ def static_guard(rows, target, rules):
 Scalar force/residual/KE fields must eventually be supplied by a qualified
 observer; inventory label is a synthetic fixture token, NOT identity evidence.
 This does not assess torque, epsilon/height drift, cut-plane balance or S1-S4.
+Only exact built-in dict rules are supported; other mappings are refused so
+explicit observation context cannot silently fall back to this scalar API.
 """
+    if type(rules) is not dict or 'observation_contract' in rules:
+        return observation_bridge(rows, target, rules)
     number(target, positive=True)
     n = integer(rules['samples_per_window'], 2)
     stride = integer(rules['sample_stride'], 1)
@@ -253,6 +257,122 @@ This does not assess torque, epsilon/height drift, cut-plane balance or S1-S4.
     if any(abs(m/target-1) > .005 for m in means) or abs(means[1]-means[0])/target > drift:
         return dict(status='NOT_CONVERGED', physical_ready=False)
     return dict(status='SYNTHETIC_STATIC', physical_ready=False)
+
+
+def observation_bridge(rows, target, rules):
+    """One offline servo -> relaxation diagnostic, never an operating gate.
+
+The caller supplies an explicit synthetic sampling plan and every observed row.
+Identity labels are compared, not authenticated. Integer ticks bind sampling
+order; they are not a qualified physical-time conversion or a wall-clock test.
+The full declared budget must be present. An early hit is only diagnostic, and
+the pending delay suffix is reconstructed from those same rows, never a bool.
+The scalar guard's existing numeric bounds remain synthetic fixture bounds.
+No files, live reader, engine, boundary serializer, ULPR or actual S0 are used.
+"""
+    def report(status, reason, first_hit=None, complete=False):
+        return dict(status=status, reason=reason,
+                    candidate_stage='relaxation' if status == 'SYNTHETIC_STAGE_CANDIDATE' else None,
+                    first_window_hit_sample=first_hit, complete_budget=complete,
+                    physical_ready=False, execution_go=False, transition_authorized=False,
+                    gate_write=False, research_results=0,
+                    scope='SYNTHETIC_SERVO_TO_RELAXATION_ONLY')
+
+    def token(value):
+        if (type(value) is not str or not 0 < len(value) <= 128
+                or not all(32 < ord(c) < 127 for c in value)):
+            raise ValueError('bounded ASCII synthetic identity token required')
+        return value
+
+    scalar_keys = {'samples_per_window', 'sample_stride', 'max_ke',
+                   'max_drift_fraction', 'expected_inventory'}
+    identity_keys = ('run_id', 'bed_id', 'arm_id', 'attempt_id', 'definition_id', 'unit_system_id')
+    contract_keys = set(identity_keys) | {
+        'schema', 'purpose', 'source_stage', 'requested_boundary', 'first_step',
+        'first_sample_id', 'first_tick', 'tick_stride', 'planned_samples',
+        'expected_end_step', 'expected_end_tick', 'delay_samples'}
+    row_keys = set(identity_keys) | {
+        'step', 'force', 'ke', 'residual', 'damping', 'inertia', 'escaped',
+        'inventory', 'contacts_complete', 'stage', 'boundary_id', 'sample_id',
+        'time_tick', 'window_index'}
+    try:
+        if type(rules) is not dict or set(rules) != scalar_keys | {'observation_contract'}:
+            raise ValueError('explicit complete observation rules required')
+        contract = rules['observation_contract']
+        if type(contract) is not dict or set(contract) != contract_keys:
+            raise ValueError('complete synthetic observation contract required')
+        for key in identity_keys + ('schema', 'purpose', 'source_stage', 'requested_boundary'):
+            token(contract[key])
+        if (contract['schema'] != 'SYNTHETIC_OBSERVATION_BRIDGE_V1'
+                or contract['purpose'] != 'SYNTHETIC_PREPARATION'
+                or contract['source_stage'] != 'servo'
+                or contract['requested_boundary'] != 'SERVO_TO_RELAXATION'):
+            raise ValueError('only the declared synthetic servo boundary is supported')
+        number(target, positive=True)
+        n = integer(rules['samples_per_window'], 2)
+        stride = integer(rules['sample_stride'], 1)
+        max_ke = number(rules['max_ke'], positive=True)
+        number(rules['max_drift_fraction'], nonnegative=True)
+        inventory = token(rules['expected_inventory'])
+        planned = integer(contract['planned_samples'], 2*n)
+        first_step = integer(contract['first_step'], 1)
+        first_sample = integer(contract['first_sample_id'], 1)
+        first_tick = integer(contract['first_tick'])
+        tick_stride = integer(contract['tick_stride'], 1)
+        end_step = integer(contract['expected_end_step'], 1)
+        end_tick = integer(contract['expected_end_tick'])
+        delay = integer(contract['delay_samples'])
+        if (planned % n or delay >= planned
+                or end_step != first_step+(planned-1)*stride
+                or end_tick != first_tick+(planned-1)*tick_stride):
+            raise ValueError('inconsistent window/budget/anchor or unavailable delay history')
+        if type(rows) is not list or len(rows) > planned:
+            raise ValueError('bounded complete-list trace required')
+    except (KeyError, TypeError, ValueError):
+        return report('REJECTED', 'INVALID_OBSERVATION_CONTRACT')
+
+    try:
+        for index, row in enumerate(rows):
+            if type(row) is not dict or set(row) != row_keys:
+                raise ValueError('complete observation fields required')
+            for key in identity_keys:
+                if token(row[key]) != contract[key]:
+                    raise ValueError('observation identity mismatch')
+            if (token(row['stage']) != 'servo'
+                    or token(row['boundary_id']) != 'SERVO_TO_RELAXATION'
+                    or integer(row['step'], 1) != first_step+index*stride
+                    or integer(row['sample_id'], 1) != first_sample+index
+                    or integer(row['time_tick']) != first_tick+index*tick_stride
+                    or integer(row['window_index']) != index//n):
+                raise ValueError('observation stage/sample/time/window mismatch')
+            for key in ('force', 'ke'):
+                number(row[key], nonnegative=True)
+            for key in ('residual', 'damping', 'inertia'):
+                number(row[key])
+            if (token(row['inventory']) != inventory or integer(row['escaped']) != 0
+                    or row['contacts_complete'] is not True):
+                raise ValueError('incomplete or changed synthetic inventory/contact trace')
+    except (KeyError, TypeError, ValueError):
+        return report('REJECTED', 'INVALID_OBSERVATION_TRACE')
+
+    scalar_rules = {key: rules[key] for key in scalar_keys}
+    width = 2*n
+    first_hit = None
+    for end in range(width, len(rows)+1):
+        if static_guard(rows[end-width:end], target, scalar_rules)['status'] == 'SYNTHETIC_STATIC':
+            first_hit = rows[end-1]['sample_id']
+            break
+    if len(rows) != planned:
+        return report('INCOMPLETE', 'DECLARED_BUDGET_NOT_OBSERVED', first_hit)
+    if static_guard(rows[-width:], target, scalar_rules)['status'] != 'SYNTHETIC_STATIC':
+        return report('NOT_CONVERGED', 'TERMINAL_WINDOWS_UNSTABLE', first_hit, True)
+    pending = rows[len(rows)-1-delay:]
+    if any(abs(row['force']/target-1) > .01 or row['ke'] > max_ke
+           or abs(row['residual'])/target > .01
+           or abs(row['damping'])/target > .001 or abs(row['inertia'])/target > .001
+           for row in pending):
+        return report('NOT_CONVERGED', 'PENDING_SAMPLES_UNSTABLE', first_hit, True)
+    return report('SYNTHETIC_STAGE_CANDIDATE', 'DIAGNOSTIC_ONLY', first_hit, True)
 
 
 def inventory_guard(particles, expected, bottom, top, max_surface_penetration):
