@@ -1,0 +1,85 @@
+{
+  "schema": "dem_gen2_limited_acceptance_ledger_proposal/1",
+  "proposal_only": true,
+  "apply_now": false,
+  "application_owner": "Claude",
+  "shared_ledger_modified": false,
+  "reviewed_candidate": "6adf932499cd9a7e21685e249700bde81be44c9f",
+  "independent_review_archive": {
+    "filename": "codex_dem_gen2_four_fixes_6adf932499cd_independent_20261109.zip",
+    "bytes": 3595173,
+    "sha256": "ab75d708fe8afebc9205944954a783d1541e08852060147d5c26540ed9b278fa"
+  },
+  "received_disposition": "CLOSABLE_IN_ORIGINAL_OFFLINE_FIX_SCOPE",
+  "new_findings": {"P1": 0, "P2": 0, "P3": 0},
+  "codex_two_window_policy": "Add the received limited closure evidence to claimed_fixed; do not automatically promote to verified",
+  "application_condition": "Claude confirms candidate import identity and receipt completeness, then records the scoped disposition and returns a mapping note",
+  "items": [
+    {
+      "id": "G2PREP-01",
+      "priority": "P2",
+      "proposed_status": "claimed_fixed",
+      "independent_disposition": "CLOSABLE_IN_ORIGINAL_OFFLINE_FIX_SCOPE",
+      "scope": "Raw signed reaction, normalization of the same frozen sample with explicit polarity, wrong-sign rejection before control",
+      "excluded": "Actual T0 polarity and engine syntax or runtime qualification",
+      "limited_scope_closure_note": true,
+      "verified": false,
+      "formal_ledger_closure_applied": false
+    },
+    {
+      "id": "G2PREP-02",
+      "priority": "P2",
+      "proposed_status": "claimed_fixed",
+      "independent_disposition": "CLOSABLE_IN_ORIGINAL_OFFLINE_FIX_SCOPE",
+      "scope": "First-window hit separated from completed budget, final window and pending delay queue checks",
+      "excluded": "Infinite-horizon, later-than-budget or actual physical-bed stability",
+      "limited_scope_closure_note": true,
+      "verified": false,
+      "formal_ledger_closure_applied": false
+    },
+    {
+      "id": "G2PREP-03",
+      "priority": "P3",
+      "proposed_status": "claimed_fixed",
+      "independent_disposition": "CLOSABLE_IN_ORIGINAL_OFFLINE_FIX_SCOPE",
+      "scope": "Symmetric geometric intersection-circle arithmetic on exact received inputs, explicit unrepresentable output rejection",
+      "excluded": "Physical contact/electrical area model or tolerance choice",
+      "limited_scope_closure_note": true,
+      "verified": false,
+      "formal_ledger_closure_applied": false
+    },
+    {
+      "id": "G2PREP-04",
+      "priority": "P3",
+      "proposed_status": "claimed_fixed",
+      "independent_disposition": "CLOSABLE_IN_ORIGINAL_OFFLINE_FIX_SCOPE",
+      "scope": "Translation-invariant penetration decision when geometry supplied to the function is preserved",
+      "excluded": "Input information already lost to float rounding, STL/PBC or continuous trajectory qualification",
+      "limited_scope_closure_note": true,
+      "verified": false,
+      "formal_ledger_closure_applied": false
+    }
+  ],
+  "earlier_proposals": "Preserved as historical pending records; this receipt supplies later scoped independent evidence without editing them",
+  "additional_code_fix_required_by_received_verdict": false,
+  "same_scope_recheck_request_needed": false,
+  "prior_document_null_and_inactive_acceptance_preserved": true,
+  "physical_DEMP_or_other_findings_closed": false,
+  "other_tracks_disposition_changed": false,
+  "scientific_registration": {
+    "actual_T0_compression_sign": null,
+    "T0": "NOT_RUN",
+    "T5": "NOT_RUN",
+    "T11": "NOT_RUN",
+    "T12": "NOT_RUN",
+    "physical_ready": false,
+    "meaning": "Complete registered qualifications not performed; not a claim of zero unit tests"
+  },
+  "actual_values_read": false,
+  "substantive_tests_reexecuted_during_receipt": false,
+  "rint_files_modified": false,
+  "operational_reseal": false,
+  "execution_go": false,
+  "research_results": 0,
+  "whole_gate": "HOLD"
+}
