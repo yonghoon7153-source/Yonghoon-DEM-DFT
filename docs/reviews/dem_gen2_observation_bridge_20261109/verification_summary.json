@@ -1,0 +1,530 @@
+{
+  "schema": "dem_observation_bridge_author_verification/1",
+  "base_B": "e91bd1c948362712def3f16b5b995027cc10011f",
+  "before_implementation_parent": "b492a206205958a7f5ab2a53d2e14e5403690f2e",
+  "candidate_pin": "Provided in review ZIP SOURCE_PIN.txt; no self-referential commit hash",
+  "review_status": "PENDING_INDEPENDENT_REVIEW",
+  "platform": "Windows / Python 3.12.14",
+  "reports": {
+    "baseline": {
+      "report_sha256": "040c0910daa2648f1757026c79da0f681bf6085909347c9a57530a511d59ce7f",
+      "receipt": {
+        "actual_process_network_calls": 0,
+        "actual_values_read": false,
+        "denied_process_network_events": [],
+        "engine_calls": 0,
+        "errors": 0,
+        "execution_go": false,
+        "failures": 0,
+        "finished_utc": "2026-11-09T12:55:29.187020+00:00",
+        "methods": 22,
+        "operational_activation": false,
+        "original_source_unchanged": true,
+        "physical_ready": false,
+        "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+        "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "rc": 0,
+        "research_results": 0,
+        "schema": "dem_observation_bridge_synthetic_receipt/1",
+        "source_loading": "exact bytes via compile/exec; no project pyc imports",
+        "started_utc": "2026-11-09T12:55:29.145020+00:00",
+        "suite": "legacy",
+        "tested_source_sha256": {
+          "dem_gen2_qualification.py": "582e60c058f9108900f340d34d356acf8126da5fe702090c1cdcf1ecf10997e9",
+          "test_dem_gen2_observation_bridge.py": "1e88c50ef1af397503f75466115b6362d9f816188dfb69672563de769bfc9a90",
+          "test_dem_gen2_qualification.py": "5be255b439890832a6d765b9c4f732985376b07da65d9b4401c00f8947fe26f0"
+        },
+        "whole_gate": "HOLD"
+      }
+    },
+    "red": {
+      "report_sha256": "9fc5873a58127b5a73c01624df14f35bbb034efe6763b856ed3ce94c9c982daa",
+      "receipt": {
+        "actual_process_network_calls": 0,
+        "actual_values_read": false,
+        "denied_process_network_events": [],
+        "engine_calls": 0,
+        "errors": 0,
+        "execution_go": false,
+        "failures": 58,
+        "finished_utc": "2026-11-09T12:55:29.329301+00:00",
+        "methods": 30,
+        "operational_activation": false,
+        "original_source_unchanged": true,
+        "physical_ready": false,
+        "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+        "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "rc": 1,
+        "research_results": 0,
+        "schema": "dem_observation_bridge_synthetic_receipt/1",
+        "source_loading": "exact bytes via compile/exec; no project pyc imports",
+        "started_utc": "2026-11-09T12:55:29.295300+00:00",
+        "suite": "bridge",
+        "tested_source_sha256": {
+          "dem_gen2_qualification.py": "582e60c058f9108900f340d34d356acf8126da5fe702090c1cdcf1ecf10997e9",
+          "test_dem_gen2_observation_bridge.py": "1e88c50ef1af397503f75466115b6362d9f816188dfb69672563de769bfc9a90",
+          "test_dem_gen2_qualification.py": "5be255b439890832a6d765b9c4f732985376b07da65d9b4401c00f8947fe26f0"
+        },
+        "whole_gate": "HOLD"
+      }
+    },
+    "green": {
+      "report_sha256": "c8250422ced9ab7ae2afe393d11b457c9aac3a04c54f80d0e58aaf1fa844c9e9",
+      "receipt": {
+        "actual_process_network_calls": 0,
+        "actual_values_read": false,
+        "denied_process_network_events": [],
+        "engine_calls": 0,
+        "errors": 0,
+        "execution_go": false,
+        "failures": 0,
+        "finished_utc": "2026-11-09T12:56:53.224230+00:00",
+        "methods": 30,
+        "operational_activation": false,
+        "original_source_unchanged": true,
+        "physical_ready": false,
+        "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+        "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "rc": 0,
+        "research_results": 0,
+        "schema": "dem_observation_bridge_synthetic_receipt/1",
+        "source_loading": "exact bytes via compile/exec; no project pyc imports",
+        "started_utc": "2026-11-09T12:56:53.198140+00:00",
+        "suite": "bridge",
+        "tested_source_sha256": {
+          "dem_gen2_qualification.py": "9675fbdb2ac4247ec28bca72d81e8c5374a7a7cab0351868ee997fafeab798a8",
+          "test_dem_gen2_observation_bridge.py": "1e88c50ef1af397503f75466115b6362d9f816188dfb69672563de769bfc9a90",
+          "test_dem_gen2_qualification.py": "5be255b439890832a6d765b9c4f732985376b07da65d9b4401c00f8947fe26f0"
+        },
+        "whole_gate": "HOLD"
+      }
+    },
+    "regression": {
+      "report_sha256": "7a951b1dfd9eb82c2e92c1705c89c35e8a7e9d2241a671a7ddc996928844fb5a",
+      "receipt": {
+        "actual_process_network_calls": 0,
+        "actual_values_read": false,
+        "denied_process_network_events": [],
+        "engine_calls": 0,
+        "errors": 0,
+        "execution_go": false,
+        "failures": 0,
+        "finished_utc": "2026-11-09T12:56:53.378742+00:00",
+        "methods": 22,
+        "operational_activation": false,
+        "original_source_unchanged": true,
+        "physical_ready": false,
+        "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+        "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "rc": 0,
+        "research_results": 0,
+        "schema": "dem_observation_bridge_synthetic_receipt/1",
+        "source_loading": "exact bytes via compile/exec; no project pyc imports",
+        "started_utc": "2026-11-09T12:56:53.336742+00:00",
+        "suite": "legacy",
+        "tested_source_sha256": {
+          "dem_gen2_qualification.py": "9675fbdb2ac4247ec28bca72d81e8c5374a7a7cab0351868ee997fafeab798a8",
+          "test_dem_gen2_observation_bridge.py": "1e88c50ef1af397503f75466115b6362d9f816188dfb69672563de769bfc9a90",
+          "test_dem_gen2_qualification.py": "5be255b439890832a6d765b9c4f732985376b07da65d9b4401c00f8947fe26f0"
+        },
+        "whole_gate": "HOLD"
+      }
+    },
+    "dispatch-red": {
+      "report_sha256": "10a180f6480d6886c61b5b2b52184459674db9aeb0ee1ab1c036635827f43c74",
+      "receipt": {
+        "actual_process_network_calls": 0,
+        "actual_values_read": false,
+        "denied_process_network_events": [],
+        "engine_calls": 0,
+        "errors": 0,
+        "execution_go": false,
+        "failures": 2,
+        "finished_utc": "2026-11-09T13:00:17.890959+00:00",
+        "methods": 31,
+        "operational_activation": false,
+        "original_source_unchanged": true,
+        "physical_ready": false,
+        "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+        "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "rc": 1,
+        "research_results": 0,
+        "schema": "dem_observation_bridge_synthetic_receipt/1",
+        "source_loading": "exact bytes via compile/exec; no project pyc imports",
+        "started_utc": "2026-11-09T13:00:17.861455+00:00",
+        "suite": "bridge",
+        "tested_source_sha256": {
+          "dem_gen2_qualification.py": "9675fbdb2ac4247ec28bca72d81e8c5374a7a7cab0351868ee997fafeab798a8",
+          "test_dem_gen2_observation_bridge.py": "3328e4057521fd81c4e1ba541d6c1ca11f04e524f2ff71498bf2122eb5911f1e",
+          "test_dem_gen2_qualification.py": "5be255b439890832a6d765b9c4f732985376b07da65d9b4401c00f8947fe26f0"
+        },
+        "whole_gate": "HOLD"
+      }
+    },
+    "mapping-red": {
+      "report_sha256": "210be394979efa763a89c60e92f98e0a2f5c737b86f974aef774feac1f7d0a11",
+      "receipt": {
+        "actual_process_network_calls": 0,
+        "actual_values_read": false,
+        "denied_process_network_events": [],
+        "engine_calls": 0,
+        "errors": 0,
+        "execution_go": false,
+        "failures": 3,
+        "finished_utc": "2026-11-09T13:03:37.448576+00:00",
+        "methods": 32,
+        "operational_activation": false,
+        "original_source_unchanged": true,
+        "physical_ready": false,
+        "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+        "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "rc": 1,
+        "research_results": 0,
+        "schema": "dem_observation_bridge_synthetic_receipt/1",
+        "source_loading": "exact bytes via compile/exec; no project pyc imports",
+        "started_utc": "2026-11-09T13:03:37.420549+00:00",
+        "suite": "bridge",
+        "tested_source_sha256": {
+          "dem_gen2_qualification.py": "fd71f69b39e41501e815d4ded7cdef7c696d8fdb7ad086bfc272345973f87c3f",
+          "test_dem_gen2_observation_bridge.py": "dbac34ceeeeff9c3593c6186a5dbdada435e02f0c71b08c9cb2b2d6264c7cb52",
+          "test_dem_gen2_qualification.py": "5be255b439890832a6d765b9c4f732985376b07da65d9b4401c00f8947fe26f0"
+        },
+        "whole_gate": "HOLD"
+      }
+    },
+    "final-red": {
+      "report_sha256": "f3c6e552ca383e914844cdba18b10d4b4bd099a4287d7fbe900da25fbd337213",
+      "receipt": {
+        "actual_process_network_calls": 0,
+        "actual_values_read": false,
+        "denied_process_network_events": [],
+        "engine_calls": 0,
+        "errors": 0,
+        "execution_go": false,
+        "failures": 63,
+        "finished_utc": "2026-11-09T13:04:01.371380+00:00",
+        "methods": 32,
+        "operational_activation": false,
+        "original_source_unchanged": true,
+        "physical_ready": false,
+        "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+        "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "rc": 1,
+        "research_results": 0,
+        "schema": "dem_observation_bridge_synthetic_receipt/1",
+        "source_loading": "exact bytes via compile/exec; no project pyc imports",
+        "started_utc": "2026-11-09T13:04:01.337107+00:00",
+        "suite": "bridge",
+        "tested_source_sha256": {
+          "dem_gen2_qualification.py": "582e60c058f9108900f340d34d356acf8126da5fe702090c1cdcf1ecf10997e9",
+          "test_dem_gen2_observation_bridge.py": "dbac34ceeeeff9c3593c6186a5dbdada435e02f0c71b08c9cb2b2d6264c7cb52",
+          "test_dem_gen2_qualification.py": "5be255b439890832a6d765b9c4f732985376b07da65d9b4401c00f8947fe26f0"
+        },
+        "whole_gate": "HOLD"
+      }
+    },
+    "final-green": {
+      "report_sha256": "ecb2b36ad199f1eca59a7d21e261ff16d17bfbe611210335c98f3682266f9a14",
+      "receipt": {
+        "actual_process_network_calls": 0,
+        "actual_values_read": false,
+        "denied_process_network_events": [],
+        "engine_calls": 0,
+        "errors": 0,
+        "execution_go": false,
+        "failures": 0,
+        "finished_utc": "2026-11-09T13:04:01.523405+00:00",
+        "methods": 32,
+        "operational_activation": false,
+        "original_source_unchanged": true,
+        "physical_ready": false,
+        "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+        "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "rc": 0,
+        "research_results": 0,
+        "schema": "dem_observation_bridge_synthetic_receipt/1",
+        "source_loading": "exact bytes via compile/exec; no project pyc imports",
+        "started_utc": "2026-11-09T13:04:01.497406+00:00",
+        "suite": "bridge",
+        "tested_source_sha256": {
+          "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+          "test_dem_gen2_observation_bridge.py": "dbac34ceeeeff9c3593c6186a5dbdada435e02f0c71b08c9cb2b2d6264c7cb52",
+          "test_dem_gen2_qualification.py": "5be255b439890832a6d765b9c4f732985376b07da65d9b4401c00f8947fe26f0"
+        },
+        "whole_gate": "HOLD"
+      }
+    },
+    "final-regression": {
+      "report_sha256": "3d0804974796349f4ecd657ceeb91129619ad9ae0c95ad9ffa96586ed7d3c8c7",
+      "receipt": {
+        "actual_process_network_calls": 0,
+        "actual_values_read": false,
+        "denied_process_network_events": [],
+        "engine_calls": 0,
+        "errors": 0,
+        "execution_go": false,
+        "failures": 0,
+        "finished_utc": "2026-11-09T13:04:01.677828+00:00",
+        "methods": 22,
+        "operational_activation": false,
+        "original_source_unchanged": true,
+        "physical_ready": false,
+        "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+        "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "rc": 0,
+        "research_results": 0,
+        "schema": "dem_observation_bridge_synthetic_receipt/1",
+        "source_loading": "exact bytes via compile/exec; no project pyc imports",
+        "started_utc": "2026-11-09T13:04:01.633623+00:00",
+        "suite": "legacy",
+        "tested_source_sha256": {
+          "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+          "test_dem_gen2_observation_bridge.py": "dbac34ceeeeff9c3593c6186a5dbdada435e02f0c71b08c9cb2b2d6264c7cb52",
+          "test_dem_gen2_qualification.py": "5be255b439890832a6d765b9c4f732985376b07da65d9b4401c00f8947fe26f0"
+        },
+        "whole_gate": "HOLD"
+      }
+    },
+    "final-mutations": {
+      "report_sha256": "0a6c727ea8cd28e5d071bd5f9061e6f88d0d60aa63a9441b345176e9732182c4",
+      "receipt": {
+        "actual_process_network_calls": 0,
+        "actual_values_read": false,
+        "contrasts": [
+          {
+            "before": {
+              "candidate_stage": null,
+              "complete_budget": false,
+              "execution_go": false,
+              "first_window_hit_sample": null,
+              "gate_write": false,
+              "physical_ready": false,
+              "reason": "INVALID_OBSERVATION_TRACE",
+              "research_results": 0,
+              "scope": "SYNTHETIC_SERVO_TO_RELAXATION_ONLY",
+              "status": "REJECTED",
+              "transition_authorized": false
+            },
+            "detected": true,
+            "guard_removed": {
+              "candidate_stage": "relaxation",
+              "complete_budget": true,
+              "execution_go": false,
+              "first_window_hit_sample": 103,
+              "gate_write": false,
+              "physical_ready": false,
+              "reason": "DIAGNOSTIC_ONLY",
+              "research_results": 0,
+              "scope": "SYNTHETIC_SERVO_TO_RELAXATION_ONLY",
+              "status": "SYNTHETIC_STAGE_CANDIDATE",
+              "transition_authorized": false
+            },
+            "mutation_sha256": "2213d6c81d2c50230b7ff4259de126ae3a92c2effaafa8d5cc68f6fe755b09bd",
+            "name": "identity"
+          },
+          {
+            "before": {
+              "candidate_stage": null,
+              "complete_budget": false,
+              "execution_go": false,
+              "first_window_hit_sample": null,
+              "gate_write": false,
+              "physical_ready": false,
+              "reason": "INVALID_OBSERVATION_TRACE",
+              "research_results": 0,
+              "scope": "SYNTHETIC_SERVO_TO_RELAXATION_ONLY",
+              "status": "REJECTED",
+              "transition_authorized": false
+            },
+            "detected": true,
+            "guard_removed": {
+              "candidate_stage": "relaxation",
+              "complete_budget": true,
+              "execution_go": false,
+              "first_window_hit_sample": 103,
+              "gate_write": false,
+              "physical_ready": false,
+              "reason": "DIAGNOSTIC_ONLY",
+              "research_results": 0,
+              "scope": "SYNTHETIC_SERVO_TO_RELAXATION_ONLY",
+              "status": "SYNTHETIC_STAGE_CANDIDATE",
+              "transition_authorized": false
+            },
+            "mutation_sha256": "efdec16eaffe561f9279803d5f76cd461d6a6d316736d5f2f852d4aa39e344fe",
+            "name": "tick"
+          },
+          {
+            "before": {
+              "candidate_stage": null,
+              "complete_budget": false,
+              "execution_go": false,
+              "first_window_hit_sample": null,
+              "gate_write": false,
+              "physical_ready": false,
+              "reason": "INVALID_OBSERVATION_TRACE",
+              "research_results": 0,
+              "scope": "SYNTHETIC_SERVO_TO_RELAXATION_ONLY",
+              "status": "REJECTED",
+              "transition_authorized": false
+            },
+            "detected": true,
+            "guard_removed": {
+              "candidate_stage": "relaxation",
+              "complete_budget": true,
+              "execution_go": false,
+              "first_window_hit_sample": 102,
+              "gate_write": false,
+              "physical_ready": false,
+              "reason": "DIAGNOSTIC_ONLY",
+              "research_results": 0,
+              "scope": "SYNTHETIC_SERVO_TO_RELAXATION_ONLY",
+              "status": "SYNTHETIC_STAGE_CANDIDATE",
+              "transition_authorized": false
+            },
+            "mutation_sha256": "cd05ddf8a5456b7b7cbc2a4946ec751cad7e28daf15dac9acfa3221e7a5686c9",
+            "name": "sample"
+          },
+          {
+            "before": {
+              "candidate_stage": null,
+              "complete_budget": false,
+              "execution_go": false,
+              "first_window_hit_sample": 103,
+              "gate_write": false,
+              "physical_ready": false,
+              "reason": "DECLARED_BUDGET_NOT_OBSERVED",
+              "research_results": 0,
+              "scope": "SYNTHETIC_SERVO_TO_RELAXATION_ONLY",
+              "status": "INCOMPLETE",
+              "transition_authorized": false
+            },
+            "detected": true,
+            "guard_removed": {
+              "candidate_stage": "relaxation",
+              "complete_budget": true,
+              "execution_go": false,
+              "first_window_hit_sample": 103,
+              "gate_write": false,
+              "physical_ready": false,
+              "reason": "DIAGNOSTIC_ONLY",
+              "research_results": 0,
+              "scope": "SYNTHETIC_SERVO_TO_RELAXATION_ONLY",
+              "status": "SYNTHETIC_STAGE_CANDIDATE",
+              "transition_authorized": false
+            },
+            "mutation_sha256": "ce3b947e15813e1513890023f2df99f7c1bd0556c5392e114b8ab7d3996e0e21",
+            "name": "budget"
+          },
+          {
+            "before": {
+              "candidate_stage": null,
+              "complete_budget": true,
+              "execution_go": false,
+              "first_window_hit_sample": null,
+              "gate_write": false,
+              "physical_ready": false,
+              "reason": "TERMINAL_WINDOWS_UNSTABLE",
+              "research_results": 0,
+              "scope": "SYNTHETIC_SERVO_TO_RELAXATION_ONLY",
+              "status": "NOT_CONVERGED",
+              "transition_authorized": false
+            },
+            "detected": true,
+            "guard_removed": {
+              "candidate_stage": "relaxation",
+              "complete_budget": true,
+              "execution_go": false,
+              "first_window_hit_sample": null,
+              "gate_write": false,
+              "physical_ready": false,
+              "reason": "DIAGNOSTIC_ONLY",
+              "research_results": 0,
+              "scope": "SYNTHETIC_SERVO_TO_RELAXATION_ONLY",
+              "status": "SYNTHETIC_STAGE_CANDIDATE",
+              "transition_authorized": false
+            },
+            "mutation_sha256": "ce4fdf6c65236b77072b0e8fe31261a20521ff3ae66ee73db4a66110735801bb",
+            "name": "terminal"
+          },
+          {
+            "before": {
+              "candidate_stage": null,
+              "complete_budget": true,
+              "execution_go": false,
+              "first_window_hit_sample": 105,
+              "gate_write": false,
+              "physical_ready": false,
+              "reason": "PENDING_SAMPLES_UNSTABLE",
+              "research_results": 0,
+              "scope": "SYNTHETIC_SERVO_TO_RELAXATION_ONLY",
+              "status": "NOT_CONVERGED",
+              "transition_authorized": false
+            },
+            "detected": true,
+            "guard_removed": {
+              "candidate_stage": "relaxation",
+              "complete_budget": true,
+              "execution_go": false,
+              "first_window_hit_sample": 105,
+              "gate_write": false,
+              "physical_ready": false,
+              "reason": "DIAGNOSTIC_ONLY",
+              "research_results": 0,
+              "scope": "SYNTHETIC_SERVO_TO_RELAXATION_ONLY",
+              "status": "SYNTHETIC_STAGE_CANDIDATE",
+              "transition_authorized": false
+            },
+            "mutation_sha256": "9be0e713a7c171ee621ba3f4313c5d4ce3b62295edcc9aa04914f575ec9db770",
+            "name": "pending"
+          }
+        ],
+        "denied_process_network_events": [],
+        "detected": 6,
+        "engine_calls": 0,
+        "execution_go": false,
+        "finished_utc": "2026-11-09T13:04:19.453920+00:00",
+        "physical_ready": false,
+        "planned": 6,
+        "research_results": 0,
+        "schema": "dem_observation_bridge_guard_contrasts/1",
+        "source_sha256": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "test_sha256": "dbac34ceeeeff9c3593c6186a5dbdada435e02f0c71b08c9cb2b2d6264c7cb52",
+        "whole_gate": "HOLD"
+      }
+    }
+  },
+  "raw_manifest_sha256": "25c40a5c3e61ac0a49d1fdd66592e851bcd5a734127a3d6f5a7d8bf6c0118350",
+  "raw_manifest_file_count": 78,
+  "preservation": {
+    "scope": "Static byte identity only; producer was not executed",
+    "head": "b492a206205958a7f5ab2a53d2e14e5403690f2e",
+    "producer_git_blob": "7a24b8070c33e6c924773ea18fc49a855b651b54",
+    "producer_working_blob": "7a24b8070c33e6c924773ea18fc49a855b651b54",
+    "producer_unchanged": true,
+    "producer_sha256": "f778a145e693111c3d95f6c6469ac7acbac7bd16192b400b1bbd5bdd700ae5d9",
+    "legacy_test_git_blob": "1cb91245fad531f91cd127a87725cc968fee9bc1",
+    "legacy_test_working_blob": "1cb91245fad531f91cd127a87725cc968fee9bc1",
+    "legacy_test_unchanged": true,
+    "entry_and_seven_gate_definitions": "Preserved as bytes in unchanged producer source; no generated production decks or gates were written",
+    "actual_engine_calls": 0
+  },
+  "counting": "Methods, subtest assertions, repeated runs, mutation observations and internal probe calls are distinct non-additive units.",
+  "internal_review": "Three synthetic calls on intermediate 9675fbdb source found explicit-context fallback via dict subclass. Final strict built-in dict support excludes other mappings. Not an external independent verdict.",
+  "not_performed": [
+    "engine",
+    "live observer",
+    "actual T0/T5/T11/T12",
+    "whole gate or CI",
+    "producer rerun",
+    "LHS command or syntax check",
+    "mixer command or syntax check",
+    "host access",
+    "actual values or raw logs",
+    "operational seal or ledger edits"
+  ],
+  "physical_ready": false,
+  "execution_go": false,
+  "gate_write": false,
+  "research_results": 0,
+  "whole_status": "HOLD"
+}
