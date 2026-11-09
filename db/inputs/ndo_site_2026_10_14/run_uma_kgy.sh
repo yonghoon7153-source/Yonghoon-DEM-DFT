@@ -38,6 +38,8 @@
 # ⛔ 이 스크립트가 못 하는 것: 순위를 매기지 않는다 (anneal_results.json 만) · ΔG_site 를 내지 않는다 (--refs 는 저장소 항까지) ·
 #    DFT 를 돌리지 않는다 · kgy 옆 런 (cascade v7 · li2s) 의 속도를 지키지 않는다 — 같은 GPU 를 나눠 쓴다 (사용자 선택) ·
 #    --refs 의 기준상은 MP (PBE) 바닥 다형 하나씩이다 — UMA 에서 다른 다형이 더 낮은지는 보지 않는다.
+# 줄 선 스크립트 종료 코드 (2026-11-09): 0 성공 · run_anneal 의 rc (실행 실패) · 12 입력 · 소스가 제출 뒤 바뀜 · 13 결과 검사만 실패
+#   --selftest = 모의 python · 가짜 nvidia-smi 로 큐를 돌려 실패 전파 네 경우 + 입력 바뀜을 본다 (GPU · python 필요 없음)
 # 종료 코드: 2 python 없음 · 3 VRAM 부족 · 4 이미 도는 중 · 5 해시 불일치 · 6 자가시험 실패 · 7 후보 수 ≠ N_EXPECT (--refs: 기준상 파일 없음) ·
 #            8 run_anneal.py 가 후보 쪽 소스와 다름 · 9 모르는 인자 · 10 기준상 이완 실패 · 미수렴 · 조성 이상
 set -euo pipefail
@@ -47,7 +49,8 @@ case "${1:-}" in
   --dry-run) MODE=dry ;;
   --watch-only) MODE=watch ;;
   --refs) MODE=refs ;;
-  *) echo "⛔ 모르는 인자: $1 (--dry-run · --watch-only · --refs)"; exit 9 ;;
+  --selftest) MODE=selftest ;;
+  *) echo "⛔ 모르는 인자: $1 (--dry-run · --watch-only · --refs · --selftest)"; exit 9 ;;
 esac
 DRY=0; [ "$MODE" = dry ] && DRY=1
 R=${R:-$HOME/work/runs/ndo_site_2026_10_14}
@@ -110,6 +113,61 @@ W
   mv "$1.tmp" "$1"
 }
 
+write_queue() {   # 줄 선 스크립트를 stdout 으로 — $1 = 제출 때 해시 목록 (SUMS) · 전역: SESSION LOG WAIT_FOR SRC PY XYZ OUT TEMP TIME_PS SEED RELAX_FMAX N_EXPECT
+  # ⛔ 2026-11-09 (Codex DV P1 · P2): 옛 큐는 ① 실행 · 검사가 실패해도 마지막 echo 의 성공으로 종료 0 이었고
+  #   ② `echo "$(date …) rc=$?"` 가 **date 의 종료코드**를 찍었다 (bash 5.2 재현 — 10-14 · 10-16 로그의 '끝 rc=' 는 못 믿는다)
+  #   ③ 대기 뒤 입력을 제출 때와 다시 대조하지 않았다. 이제 rc 를 명령 바로 뒤에 저장 · 찍고 · nonzero 로 끝내며
+  #   (실행 실패 → 그 rc · 검사만 실패 → 13 · 입력 · 소스 바뀜 → 12), 발사 직전 sha256sum -c 로 재대조한다.
+  echo '#!/bin/bash'
+  echo "# $SESSION — run_uma_kgy.sh 가 $(date '+%F %T') 에 썼다"
+  printf 'LOG=%q; WAIT_FOR=%q; SUMS=%q\n' "$LOG" "$WAIT_FOR" "$1"
+  echo 'if [ -n "$WAIT_FOR" ]; then while tmux has-session -t "$WAIT_FOR" 2>/dev/null; do sleep 60; done; fi'
+  echo 'while :; do read -r U T < <(nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits | head -1 | tr -d ","); F=$((T-U)); [ "$F" -ge 4000 ] && break; echo "$(date "+%F %T") VRAM 여유 $F < 4000 — 대기" >> "$LOG"; sleep 120; done'
+  echo 'if ! sha256sum -c --quiet "$SUMS" >> "$LOG" 2>&1; then echo "$(date "+%F %T") ⛔ 입력 · 소스가 제출 뒤 바뀌었다 — 발사 안 함 (종료 12)" >> "$LOG"; exit 12; fi'
+  echo 'echo "$(date "+%F %T") 시작 (입력 · 소스 해시 재대조 통과)" >> "$LOG"'
+  printf 'cd %q && PYTHONUNBUFFERED=1 %q tools/doping/run_anneal.py --xyz' "$SRC" "$PY"; printf ' %q' "${XYZ[@]}"
+  printf ' --out %q --temperature %q --time_ps %q --seed %q --relax_fmax %q --device cuda >> "$LOG" 2>&1\n' "$OUT" "$TEMP" "$TIME_PS" "$SEED" "$RELAX_FMAX"
+  echo 'run_rc=$?'
+  echo 'echo "$(date "+%F %T") 끝 run_rc=$run_rc" >> "$LOG"'
+  printf 'cd %q && %q tools/doping/run_anneal.py --check_results %q --expect_n %q --expect_time_ps %q --expect_temperature %q >> "$LOG" 2>&1\n' \
+    "$SRC" "$PY" "$OUT/anneal_results.json" "$N_EXPECT" "$TIME_PS" "$TEMP"
+  echo 'check_rc=$?'
+  echo 'echo "$(date "+%F %T") 결과 검사 check_rc=$check_rc (0 = 요청한 시간 · 온도 · 개수 · 결과 파일 해시가 기록과 같다)" >> "$LOG"'
+  echo 'if [ "$run_rc" -ne 0 ]; then exit "$run_rc"; fi'
+  echo 'if [ "$check_rc" -ne 0 ]; then exit 13; fi'
+  echo 'exit 0'
+}
+
+queue_selftest() {   # 모의 python · 가짜 nvidia-smi 로 같은 write_queue 를 돌려 본다 (실행 · 검사 실패 네 경우 + 입력 바뀜)
+  local T; T=$(mktemp -d)
+  mkdir -p "$T/bin" "$T/src/tools/doping" "$T/in"
+  printf '#!/bin/bash\necho "1000, 48000"\n' > "$T/bin/nvidia-smi"
+  printf '#!/bin/bash\ncase " $* " in *" --check_results "*) exit "${MOCK_CHECK_RC:-0}";; *) echo ran >> "$MOCK_MARK"; exit "${MOCK_RUN_RC:-0}";; esac\n' > "$T/bin/mockpy"
+  chmod +x "$T/bin/nvidia-smi" "$T/bin/mockpy"
+  echo a > "$T/src/tools/doping/run_anneal.py"; echo b > "$T/src/tools/doping/_provenance.py"
+  echo x1 > "$T/in/c1.cif"; echo x2 > "$T/in/c2.cif"
+  SESSION=st; LOG=$T/log; WAIT_FOR=; SRC=$T/src; PY=$T/bin/mockpy; XYZ=("$T/in/c1.cif" "$T/in/c2.cif")
+  OUT=$T/out; TEMP=500; TIME_PS=0; SEED=1; RELAX_FMAX=0.05; N_EXPECT=2
+  local SUMS=$T/sums bad=0 rr cr want rc
+  sha256sum "${XYZ[@]}" "$SRC/tools/doping/run_anneal.py" "$SRC/tools/doping/_provenance.py" > "$SUMS"
+  write_queue "$SUMS" > "$T/q.sh"
+  for rr in 0 7; do for cr in 0 1; do
+    : > "$LOG"; rm -f "$T/mark"
+    rc=0; PATH="$T/bin:$PATH" MOCK_RUN_RC=$rr MOCK_CHECK_RC=$cr MOCK_MARK=$T/mark bash "$T/q.sh" || rc=$?   # set -e 아래라 || 로 받는다
+    if [ "$rr" -ne 0 ]; then want=$rr; elif [ "$cr" -ne 0 ]; then want=13; else want=0; fi
+    if [ "$rc" -eq "$want" ] && grep -q "run_rc=$rr\b" "$LOG" && grep -q "check_rc=$cr\b" "$LOG"; then
+      echo "  ✓ 실행 rc $rr · 검사 rc $cr → 큐 종료 $rc (기대 $want) · 로그에 두 rc 그대로"
+    else echo "  ✗ 실행 rc $rr · 검사 rc $cr → 큐 종료 $rc (기대 $want) · 로그: $(tr '\n' ' ' < "$LOG")"; bad=1; fi
+  done; done
+  : > "$LOG"; rm -f "$T/mark"; echo changed > "$T/in/c2.cif"
+  rc=0; PATH="$T/bin:$PATH" MOCK_RUN_RC=0 MOCK_CHECK_RC=0 MOCK_MARK=$T/mark bash "$T/q.sh" || rc=$?
+  if [ "$rc" -eq 12 ] && [ ! -e "$T/mark" ]; then echo "  ✓ 제출 뒤 입력이 바뀌면 발사 안 함 (종료 12 · 실행 0 회)"
+  else echo "  ✗ 제출 뒤 입력이 바뀌었는데 종료 $rc · 실행 $( [ -e "$T/mark" ] && echo 됨 || echo 안 됨)"; bad=1; fi
+  rm -rf "$T"
+  if [ "$bad" = 0 ]; then echo "queue selftest PASS (5/5)"; return 0; fi
+  echo "queue selftest FAIL"; return 1
+}
+
 vram_free() {   # 여유 MiB 를 찍는다 (프로세스별 표는 kgy 에서 막혀 있다 — 'Process-level GPU information is restricted')
   local used total
   read -r used total < <(nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits | head -1 | tr -d ',')
@@ -123,6 +181,7 @@ if [ "$MODE" = watch ]; then
   exit 0
 fi
 
+if [ "$MODE" = selftest ]; then queue_selftest; exit $?; fi
 [ -x "$PY" ] || { echo "⛔ python 없음: $PY"; exit 2; }
 
 if [ "$MODE" = refs ]; then
@@ -234,6 +293,7 @@ echo "   중복 제거 뒤 ${#XYZ[@]} 개"
 
 echo "== ③ 자가시험"
 "$PY" "$SRC/tools/doping/run_anneal.py" --selftest | tail -1 || { echo "⛔ run_anneal 자가시험 실패"; exit 6; }
+queue_selftest | tail -1 || { echo "⛔ 큐 자가시험 실패 (실패 전파 · 입력 재대조)"; exit 6; }
 
 echo "== ④ 문턱"
 if tmux has-session -t "$SESSION" 2>/dev/null; then echo "⛔ tmux $SESSION 이미 있음"; exit 4; fi
@@ -247,22 +307,11 @@ if [ "$QUEUED" = 1 ]; then echo "   줄 섬: tmux $WAIT_FOR 가 끝나면 시작
 else [ "$FREE" -ge 4000 ] || { echo "⛔ VRAM 여유 $FREE MiB < 4000 — 시작 안 함"; exit 3; }; fi
 
 Q=$R/queue_$SESSION.sh
-if [ "$DRY" = 1 ]; then QT=$(mktemp); else mkdir -p "$R"; QT=$Q.tmp; fi
-{
-  echo '#!/bin/bash'
-  echo "# $SESSION — run_uma_kgy.sh 가 $(date '+%F %T') 에 썼다"
-  printf 'LOG=%q; WAIT_FOR=%q\n' "$LOG" "$WAIT_FOR"
-  echo 'if [ -n "$WAIT_FOR" ]; then while tmux has-session -t "$WAIT_FOR" 2>/dev/null; do sleep 60; done; fi'
-  echo 'while :; do read -r U T < <(nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits | head -1 | tr -d ","); F=$((T-U)); [ "$F" -ge 4000 ] && break; echo "$(date "+%F %T") VRAM 여유 $F < 4000 — 대기" >> "$LOG"; sleep 120; done'
-  echo 'echo "$(date "+%F %T") 시작" >> "$LOG"'
-  printf 'cd %q && PYTHONUNBUFFERED=1 %q tools/doping/run_anneal.py --xyz' "$SRC" "$PY"; printf ' %q' "${XYZ[@]}"
-  printf ' --out %q --temperature %q --time_ps %q --seed %q --relax_fmax %q --device cuda >> "$LOG" 2>&1\n' "$OUT" "$TEMP" "$TIME_PS" "$SEED" "$RELAX_FMAX"
-  echo 'echo "$(date "+%F %T") 끝 rc=$?" >> "$LOG"'
-  printf 'cd %q && %q tools/doping/run_anneal.py --check_results %q --expect_n %q --expect_time_ps %q --expect_temperature %q >> "$LOG" 2>&1\n' \
-    "$SRC" "$PY" "$OUT/anneal_results.json" "$N_EXPECT" "$TIME_PS" "$TEMP"
-  echo 'echo "$(date "+%F %T") 결과 검사 rc=$? (0 = 요청한 시간 · 온도 · 개수와 기록이 같다)" >> "$LOG"'
-} > "$QT"
-if [ "$DRY" = 1 ]; then echo "== (dry-run) 줄 선 스크립트:"; sed 's/^/   /' "$QT" | cut -c1-220 || true; rm -f "$QT"; exit 0; fi
+if [ "$DRY" = 1 ]; then QT=$(mktemp); SUMS=$(mktemp); else mkdir -p "$R"; QT=$Q.tmp; SUMS=$R/queue_$SESSION.sha256; fi
+sha256sum "${XYZ[@]}" "$SRC/tools/doping/run_anneal.py" "$SRC/tools/doping/_provenance.py" > "$SUMS" \
+  || { echo "⛔ 제출 해시 목록을 못 만든다"; exit 5; }
+write_queue "$SUMS" > "$QT"
+if [ "$DRY" = 1 ]; then echo "== (dry-run) 줄 선 스크립트:"; sed 's/^/   /' "$QT" | cut -c1-220 || true; rm -f "$QT" "$SUMS"; exit 0; fi
 mv "$QT" "$Q"
 
 echo "== ⑤ 발사 $(date '+%F %T')"

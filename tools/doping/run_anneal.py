@@ -140,7 +140,11 @@ def anneal_one(xyz_path: Path, calc, out_dir: Path,
                    loginterval=log_every)
 
     t0 = time.time()
-    dyn.run(n_steps)
+    try:
+        dyn.run(n_steps)
+    finally:                      # 2026-11-09 (Codex DV P2): 예외 경로에서도 md.log · md.traj 를 닫는다 (Windows 임시폴더 정리 실패)
+        if hasattr(dyn, 'close'):
+            dyn.close()
     t_md = time.time() - t0
     E_md_final = float(atoms.get_potential_energy())
     print(f"  [{name}] MD done ({t_md:.1f}s) "
@@ -153,7 +157,11 @@ def anneal_one(xyz_path: Path, calc, out_dir: Path,
     target = CellFilter(atoms) if cell_relax else atoms
     opt = FIRE(target, logfile=str(work / 'relax.log'))
     t0 = time.time()
-    opt_ret = opt.run(fmax=relax_fmax, steps=relax_steps)
+    try:
+        opt_ret = opt.run(fmax=relax_fmax, steps=relax_steps)
+    finally:
+        if hasattr(opt, 'close'):
+            opt.close()
     t_relax = time.time() - t0
     n_relax_steps = opt.get_number_of_steps()
     # ⛔ 2026-11-09 (Codex DU P2): 옛 판정 `n_relax_steps < relax_steps` 는 **마지막 허용 걸음에서 수렴**하면
@@ -210,6 +218,11 @@ def anneal_one(xyz_path: Path, calc, out_dir: Path,
         'converged': converged,
         'post_md_xyz': str(work / 'post_md.xyz'),
         'post_relax_xyz': str(work / 'post_relax.xyz'),
+        # ⛔ 2026-11-09 (Codex DV P1-2): 실제로 저장한 결과 파일의 해시 · 조성 — 재개 생략과 결과 검사가
+        #   verify_outputs() 한 함수로 존재 · 판독 · 해시 · 조성을 확인한다 (옛 판: 지우거나 바꿔도 통과)
+        'outputs': {k: {'rel': f'{name}/{k}.xyz', 'sha256': _file_sha256(work / f'{k}.xyz')}
+                    for k in ('post_md', 'post_relax')},
+        'composition': _composition(atoms),
     }
 
 
@@ -230,6 +243,49 @@ def anneal_one(xyz_path: Path, calc, out_dir: Path,
 def _file_sha256(p) -> str:
     import hashlib
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+
+def _composition(atoms) -> dict:
+    c = {}
+    for s in atoms.get_chemical_symbols():
+        c[s] = c.get(s, 0) + 1
+    return dict(sorted(c.items()))
+
+
+def verify_outputs(rec: dict, out_dir) -> list:
+    """완료 기록의 결과 파일 결속 검사 → 문제 목록 (빈 목록이면 통과). 재개 생략 · check_results 가 같이 쓴다.
+
+    본다: 'outputs' 기록 유무 · 파일 존재 · sha256 일치 · ASE 로 읽힘 · 원자 수 · 조성 (기록 = 입력 정체성의 원자 수).
+    ⛔ 못 하는 것: 에너지가 그 구조의 것인지 다시 계산하지 않는다 (해시 결속까지).
+    """
+    out_dir = Path(out_dir)
+    probs = []
+    outs = rec.get('outputs')
+    if not outs:
+        return [f"{rec.get('name')}: 결과 파일 해시 기록이 없다 (2026-11-09 이전 판 기록)"]
+    for k in ('post_md', 'post_relax'):
+        e = outs.get(k)
+        if not e:
+            probs.append(f"{rec.get('name')}: {k} 기록 없음")
+            continue
+        f = out_dir / e['rel']
+        if not f.is_file():
+            probs.append(f"{rec.get('name')}: {k} 파일 없음 ({e['rel']})")
+            continue
+        if _file_sha256(f) != e['sha256']:
+            probs.append(f"{rec.get('name')}: {k} 파일이 기록 뒤 바뀌었다 (sha256 불일치)")
+            continue
+        try:
+            a = read(str(f))
+        except Exception as ex:
+            probs.append(f"{rec.get('name')}: {k} 를 못 읽는다 ({type(ex).__name__})")
+            continue
+        n_id = (rec.get('identity') or {}).get('n_atoms')
+        if n_id is not None and len(a) != int(n_id):
+            probs.append(f"{rec.get('name')}: {k} 원자 수 {len(a)} ≠ 입력 {n_id}")
+        if rec.get('composition') and _composition(a) != rec['composition']:
+            probs.append(f"{rec.get('name')}: {k} 조성 {_composition(a)} ≠ 기록 {rec['composition']}")
+    return probs
 
 
 def run_identity(xyz_path, *, temperature_K, time_ps, dt_fs, friction, relax_steps,
@@ -259,7 +315,7 @@ def derive_seed(base_seed: int, name: str) -> int:
 
 
 def run_batch(xyz_paths, out, P: dict, calc, model: str, accept_legacy: bool = False,
-              anneal_fn=None):
+              anneal_fn=None, rerun_mismatched: bool = False):
     """구조 묶음을 어닐 · 이완한다 → (종료코드, 이번에 돈 수). P = anneal_one 설정 + 'seed'.
 
     재개: 같은 이름 · 같은 정체성 · 상태 converged/unconverged 인 기록만 건너뛴다.
@@ -312,6 +368,14 @@ def run_batch(xyz_paths, out, P: dict, calc, model: str, accept_legacy: bool = F
             diff = sorted(k for k in set(idn) | set(ro) if idn.get(k) != ro.get(k))
             raise SystemExit(f"⛔ {n}: 같은 이름의 기존 기록과 입력 · 설정이 다르다 (다른 칸 {diff}) — "
                              f"새 --out 을 쓰라 (같은 폴더에 섞지 않는다)")
+        vo = verify_outputs(r, out)                 # 정체성이 같아도 결과 파일이 그 기록의 것이어야 건너뛴다
+        if vo:
+            if not rerun_mismatched:
+                raise SystemExit(f"⛔ {n}: 완료 기록의 결과 파일이 결속을 못 넘는다 ({vo[0]}) — 새 --out 을 쓰거나 "
+                                 f"--rerun_mismatched 로 명시해 다시 돌린다")
+            n_retry += 1
+            todo.append((p, n, seed, idn, isha, None))
+            continue
     print(f"To process: {len(todo)}/{len(xyz_paths)} (실패 재시도 {n_retry} · 옛 기록 받음 {len(legacy)})")
 
     def _save():
@@ -362,12 +426,14 @@ def check_results(path, expect_n=None, expect_time_ps=None, expect_temperature=N
     """anneal_results.json 검사 → 문제 목록. 실행기가 '요청한 단계가 실제로 전달됐나' 를 여기서 본다.
 
     본다: 상태 (failed · 상태 없음 = 문제) · 정체성 유무 · time_ps · 온도가 요청과 같은가 · 끝난 기록 수 ·
-    (require_converged 면) 미수렴. ⛔ 못 하는 것: 에너지 · 구조가 맞는지.
+    (require_converged 면) 미수렴 · 결과 파일 결속 (verify_outputs — 존재 · sha256 · 판독 · 조성).
+    ⛔ 못 하는 것: 에너지가 그 구조의 것인지 다시 계산하지 않는다.
     """
     p = Path(path)
     if not p.exists():
         return [f"결과 없음: {p}"]
     res = json.loads(p.read_text()).get('results', [])
+    out_dir = p.parent
     prob = []
     ok = 0
     for r in res:
@@ -386,6 +452,10 @@ def check_results(path, expect_n=None, expect_time_ps=None, expect_temperature=N
             prob.append(f"{n}: 온도 {idn['temperature_K']} ≠ 요청 {expect_temperature}")
         if require_converged and st != 'converged':
             prob.append(f"{n}: 미수렴 (fmax_final {r.get('fmax_final')})")
+        vo = verify_outputs(r, out_dir)             # 2026-11-09 (Codex DV P1-2) — 재개와 같은 함수
+        if vo:
+            prob.extend(vo)
+            continue
         ok += 1
     if expect_n is not None and ok != int(expect_n):
         prob.append(f"끝난 기록 {ok} ≠ 기대 {expect_n}")
@@ -553,6 +623,28 @@ def _selftest() -> int:
             "⑦ ⛔음성: 끝난 기록 수가 기대와 다르면 잡는다")
         chk(any("failed" in p_ for p_ in check_results(om / "anneal_results.json")),
             "⑦ ⛔음성: failed 기록이 있으면 잡는다")
+        # ⑧ 2026-11-09 (Codex DV P1-2) — 완료 구조를 바꾸거나 지우면 결과 검사 · 재개가 잡는다
+        rp = ob / "ar4" / "post_relax.xyz"
+        keep_bytes = rp.read_bytes()
+        write(rp, Atoms("He", positions=[[0, 0, 0]], cell=[5, 5, 5], pbc=True))
+        pr = check_results(ob / "anneal_results.json", expect_n=1, require_converged=True)
+        try:
+            run_batch([x], ob, P0, lj(), model="fake-lj"); ok_ = False
+        except SystemExit:
+            ok_ = True
+        chk(any("sha256" in q for q in pr) and ok_,
+            "⑧ ⛔음성: post_relax.xyz 를 다른 조성으로 바꾸면 결과 검사 문제 · 재개는 멈춘다 (Codex 재현: [] · 실행 0 · 종료 0)")
+        rp.unlink()
+        pr2 = check_results(ob / "anneal_results.json", expect_n=1)
+        try:
+            run_batch([x], ob, P0, lj(), model="fake-lj"); ok2 = False
+        except SystemExit:
+            ok2 = True
+        rc_r, n_r = run_batch([x], ob, P0, lj(), model="fake-lj", rerun_mismatched=True)
+        chk(any("파일 없음" in q for q in pr2) and ok2 and rc_r == 0 and n_r == 1
+            and not check_results(ob / "anneal_results.json", expect_n=1),
+            "⑧ ⛔음성: 지우면 잡고 멈춘다 · --rerun_mismatched 로만 다시 돌아 결속이 회복된다")
+        del keep_bytes
         try:
             run_batch([x, td / "sub" / "ar4.xyz"], td / "dup", P0, lj(), model="fake-lj")
             ok_ = False
@@ -639,6 +731,8 @@ def main():
                        help='Langevin·초기속도 RNG seed. **필수** — 이게 없으면 '
                             'anneal 이 비결정적이라 같은 입력이 다른 endpoint 로 간다 '
                             '(2026-08-30 회신 AL P0-3). 결과 json 에 기록된다.')
+    parser.add_argument('--rerun_mismatched', action='store_true',
+                       help='완료 기록의 결과 파일이 없거나 바뀌었으면 다시 돌린다 (기본은 멈춤 · 2026-11-09)')
     parser.add_argument('--accept_legacy_records', action='store_true',
                        help='정체성 없는 옛 결과 기록을 끝난 것으로 받는다 (표시됨 · 기본은 멈춤 · 2026-11-09)')
     parser.add_argument('--selftest', action='store_true')
@@ -735,7 +829,7 @@ def main():
              cell_relax=not args.no_cell_relax, log_every=args.log_every, seed=args.seed)
     t_start = time.time()
     rc, n_ran = run_batch(xyz_paths, out, P, calc, model=f'uma-s-1p1/{args.task}',
-                          accept_legacy=args.accept_legacy_records)
+                          accept_legacy=args.accept_legacy_records, rerun_mismatched=args.rerun_mismatched)
     results_path = out / 'anneal_results.json'
     results = json.loads(results_path.read_text()).get('results', [])
 
