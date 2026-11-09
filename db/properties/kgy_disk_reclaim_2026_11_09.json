@@ -1,0 +1,105 @@
+{
+ "schema": "ops_runlog_v1",
+ "record_kind": "ops_runlog",
+ "id": "kgy_disk_reclaim_2026_11_09",
+ "date": "2026-11-09",
+ "machine": "kgy (RTX 3090 · 공유 기계)",
+ "track": "운영 (계산 결과 · 값 변화 없음)",
+ "citable": false,
+ "status": "블록 발송 전 → 사용자 kgy 실행 대기 (결과는 아래 '결과' 에 채운다)",
+ "절차": "kb/methodology/qe_disk_reclaim_2026_09_12.md — 파동함수만 지운다 · .out · charge-density · data-file-schema.xml · NEB .dat/.path 는 정본이라 남긴다 (nscf 를 전하밀도에서 다시 돌릴 수 있다)",
+ "앞_기록": "kb/open_items.md 의 '🧹 kgy 정리 (10-31)' 줄 — 그때 '🔔 ~/work/bml 155 GB (기록에 없음) · li3n_dft · vgcf_hbn · runs/y_dft 정리 여부' 를 사용자에게 물었다 → 아래 소유_범위 가 그 답이다",
+ "요청_사용자_원문": [
+  "kgy 관련해서 98 GB (89 % 사용) 이렇다는데 지우거나 ibb로 rsync 하고 기록하면 좋을거 같은데",
+  "내꺼에 대한것만 지워야돼",
+  "bml에 있는건 손대도돼 · bml이 내 랩실이라서 ㅇㅇ · 이게 공유다보니까 bml 폴더는 내꺼야",
+  "work에 있는것도 다시 봐봐 ㅇㅇ 내 simulation 관련일 수 있으니까 · DEM 도 있을 수 있고 · 근데 그게 용량이 그리 크진 않을거야"
+ ],
+ "소유_범위": {
+  "사용자_것 (지울 수 있는 범위)": "~/work 전체 (bml = 사용자 랩 폴더 · DFT · DEM 시뮬레이션) + 저장소 사본 (~/Yonghoon-DEM-DFT · ~/lldvar)",
+  "이번에_안_건드림": "~ 바로 아래 나머지 — sdcp 93 G · apps 45 G · pa100 24 G · pa 15 G · pa010 14 G · .cache 11 G · mpm_fig_wt 7.4 G · kits_vgcfE_20260925 7.0 G · kg50_mpm 6.7 G (주인 확인 안 함 · .cache 는 MLIP MD 가 도는 중이라 09-12 규칙대로 손대지 않는다)",
+  "⚠": "kgy 는 공유 기계다 — 홈 아래 폴더를 이름만 보고 우리 것으로 읽지 않는다 (사용자 11-09)"
+ },
+ "조사_1_사용자_붙여넣기_2026_11_09": {
+  "도는_잡": "li2s2 1 단계 UMA (tmux li2s2s1 · li2s2_stage1_runner.py · run_root ~/work/runs/li2s2_de…) + melt_quench_uma.py --system B --n_fu 15 --seed 13 · QE (pw.x · neb.x) 0",
+  "GPU": "8,491 / 24,576 MiB",
+  "디스크": "사용자 보고 여유 98 GB · 89 % (df 줄은 붙여넣기에 없음) · 10-31 기록 전체 916 G",
+  "du_상위": "홈 693 G · work 380 G (runs 188 G — cei_gap_1027 96 G · nd_q2_kprobe_2026_10_26 8.5 · ndo_site_eos_2026_10_16 7.5 · nd_scf_2026_09_08 5.9 · nd_q2_decomp_2026_10_23 5.9 · y_dft 5.5 · nd_q3p_1027 5.5 / bml/manuscript_support 154 G / li3n_dft 12 G / vgcf_hbn 9.1 G) · Yonghoon-DEM-DFT 33 G (tmp 23 G · .git 5.2 G) · lldvar 9.5 G (runs/sei_neb 7.3 G)",
+  "파동함수_상위_20 (GB · 1e9)": {
+   "work/bml/manuscript_support": 162.4,
+   "work/runs/cei_gap_1027": 97.4,
+   "work/runs/nd_q2_kprobe_2026_10_26": 8.9,
+   "lldvar/runs/sei_neb": 7.5,
+   "work/runs/ndo_site_eos_2026_10_16": 7.4,
+   "work/runs/nd_q2_decomp_2026_10_23": 6.1,
+   "work/runs/nd_scf_2026_09_08": 5.9,
+   "work/li3n_dft/tmp_p0_saddle": 5.8,
+   "work/li3n_dft/tmp_p0_min": 5.8,
+   "work/runs/y_dft": 5.6,
+   "work/runs/nd_q3p_1027": 5.3,
+   "work/runs/li2s_model_check_sp_2026_10_21": 4.2,
+   "work/runs/ndo_site_dft_2026_10_15": 4.0,
+   "work/runs/li2s_neb_cellconv_1009": 3.9,
+   "work/runs/force_check_700K_v2": 3.7,
+   "work/runs/smallcell_gb3": 3.6,
+   "work/li3n_eads/tmp_p0_min": 2.9,
+   "Yonghoon-DEM-DFT/tmp/d2Li_in_galler.save": 2.4,
+   "Yonghoon-DEM-DFT/tmp/d1Li_in_galler.save": 2.4,
+   "Yonghoon-DEM-DFT/tmp/d0Li_in_galler.save": 2.0
+  },
+  "파동함수_상위_20_합": "347.2 GB (꼬리 미포함 — 내 블록의 '합계' 줄이 sort -rn 에서 맨 아래로 가 head 에 잘렸다)",
+  "궤적_charge_density": "궤적 상위: vgcf_hbn/neb 5.4 · cascade_v7_main_1007 4.1 · lpsocl_box331_400ps 3.6 · modelc_box331_400ps 3.5 · cascade_v6_40run_0921 2.0 … (합계 줄은 같은 이유로 잘림) — 파동함수에 비해 작다",
+  "ibb_탐침": "ssh -p 43612 -o BatchMode=yes -o ConnectTimeout=10 yonghoon@166.104.39.171 → 'Connection timed out during banner exchange' (TCP 는 붙고 서버 인사말이 10 초 안에 안 왔다)"
+ },
+ "분류": {
+  "지움 (파동함수만)": {
+   "원장에서_닫힌_런 (미완 출력이 있어도 그 아래 파동함수 전부)": {
+    "Nd (사용자 11-09 'Nd는 끝났어' · 카드 닫힘 11-03)": [
+     "work/runs/nd_scf_2026_09_08 (09-12 절차 §4 에 이미 '지울 수 있음')",
+     "work/runs/ndo_site_dft_2026_10_15",
+     "work/runs/ndo_site_dft_kprobe_2026_10_16",
+     "work/runs/ndo_site_eos_2026_10_16",
+     "work/runs/ndo_site_eos_v0_2026_10_23 (ndo_site_dft_runlog ✅_카드_비준_닫힘_2026_11_03)",
+     "work/runs/nd_q2_decomp_2026_10_23 (nd_q2_decomp_runlog ✅_닫힘_2026_11_03)",
+     "work/runs/nd_q2_kprobe_2026_10_26 (경로는 원장에 안 적혔다 — 이름 · 날짜가 nd_q2_decomp_runlog ✅_k_탐침_판정_Y_2026_10_26 과 맞는다)",
+     "work/runs/nd_q3p_1027 (nd_q3p_runlog ✅_닫음_2026_11_03)"
+    ],
+    "li2s (트랙 닫힘 10-30)": [
+     "work/runs/li2s_model_check_sp_2026_10_21",
+     "work/runs/li2s_neb_cellconv_1009 (2×2×2 대조 · 판정 셀 4×4×4 는 gabia · 승격 비준 11-03)",
+     "work/runs/smallcell_gb3 (lpscl_smallcell_gb3_result_2026_09_18)"
+    ],
+    "b2o3 힘 대조 (09-11 끝 · b2o3_force_control_modelc_2026_09_11)": [
+     "work/runs/force_check_700K",
+     "work/runs/force_check_700K_v2",
+     "work/runs/fc_control_smear"
+    ]
+   },
+   "그_밖_~/work · ~/lldvar/runs/sei_neb · ~/Yonghoon-DEM-DFT/tmp": "단위 (.save 또는 *.wfcN 이 든 폴더) 마다 짝 QE 출력 (3 단계 위까지 · NEB 영상 PW.out 은 건너뜀) 이 모두 'JOB DONE' 이고 'convergence not achieved' · 'maximum number of steps has been reached' 가 없을 때만 (NEB 는 'convergence achieved' 도) — bml · y_dft · li3n_dft · li3n_eads · vgcf_hbn 이 여기로 간다"
+  },
+  "남김": {
+   "work/runs/cei_gap_1027 (97.4 GB)": "CEI 생성물 띠틈 — 판독 R1–R6 전 (cei_product_gap_runlog 관측 11-02: 11/12 끝 · CoS2 02 nosym 재시도) · projwfc 를 다시 돌릴 일이 생기면 파동함수가 필요 → 판독 · 회수 뒤 지울 후보",
+   "work/runs/li2s2*": "li2s-2 1 단계 도는 중",
+   ".out · charge-density · data-file-schema.xml · NEB .dat/.path": "정본 · 재생성 경로",
+   "짝 출력 없는 .save": "예 Yonghoon-DEM-DFT/tmp/d*Li_in_galler.save (09-12 에도 '정본 위치 불확실' 로 남김) — 블록이 '짝 QE 출력 없음' 으로 건너뛴다"
+  },
+  "ibb_이동": "이번엔 안 한다 — 지우는 것이 전하밀도에서 다시 만들 수 있는 파동함수라 옮길 이유가 없고, kgy → ibb ssh 가 banner 교환에서 시간초과였다. 사용자 말대로 DEM 은 크지 않다"
+ },
+ "블록": {
+  "스크립트": "db/inputs/kgy_disk_reclaim_2026_11_09/reclaim_wfc.py (붙여넣기 블록의 heredoc 과 같은 내용)",
+  "sha256": "e3d9e36c7807176d801b680d516a8cd522239554c5fe380ffbdbf2060c06822c",
+  "가드": [
+   "도는 잡 — 모든 프로세스의 cwd · 열린 파일 · 명령줄 경로가 그 폴더 안이면 건너뜀 (자기 자신 · 부모 셸 제외)",
+   "24 h 안에 수정된 파일이 짝 폴더 (닫힌 런은 그 루트) 에 있으면 건너뜀",
+   "제외 접두어 work/runs/cei_gap_1027 · work/runs/li2s2",
+   "심볼릭 링크는 따라가지도 지우지도 않음 · 같은 파일시스템만",
+   "지운 뒤 남겨야 할 .out · charge-density · xml 이 그대로 있는지 다시 확인 (없어진 것 0 이어야 ✓)",
+   "지운 파일 목록 = kgy ~/reclaim_wfc_2026_11_09.log",
+   "DRY=1 이면 지우지 않고 목록만"
+  ],
+  "시험_가짜_홈_2026_11_09": "18 경우 — 닫힌 런 (실패 출력 있어도 지움) ✓ · 닫힌 런 최근 수정 → 루트 통째 건너뜀 ✓ · 닫힌 런을 도는 잡이 씀 → 건너뜀 ✓ · CEI · li2s2 제외 ✓ · 끝난 런 (slurm 로그는 QE 출력으로 안 셈) ✓ · 최대 스텝 · JOB DONE 없음 · SCF 미수렴 · projwfc 실패 → 건너뜀 ✓ · NEB 수렴 (영상 PW.out 넘어 위로) 지움 ✓ · NEB 미수렴 건너뜀 ✓ · 짝 없음 건너뜀 ✓ · 도는 잡 cwd 건너뜀 ✓ · 스핀 hdf5 wfcup/wfcdw 지움 ✓ · 링크 wfc9.dat 안 지움 · 대상 /etc/hostname 그대로 ✓ · 남겨야 할 파일 없어진 것 0 ✓",
+  "기대_회수": "전부 지워질 때 상한 ≈ 250 GB (bml 162 · Nd ≈ 38 · li3n 14.5 · li2s 11.7 · lldvar 7.5 · y_dft 5.6 · 힘 대조 3.7) — 실제는 단위별 판정으로 줄 수 있다 · 여유 98 → ≈ 330 GB (≈ 64 %) 예상"
+ },
+ "결과": null,
+ "by": "agent · 2026-11-09"
+}
