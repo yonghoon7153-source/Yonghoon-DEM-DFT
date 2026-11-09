@@ -129,7 +129,11 @@ def phonon_report(atoms, calc, out, delta=0.02, model="uma-s-1p1/omat", nfree=2,
                 raise SystemExit(f"⛔ {cache} 는 다른 계산의 캐시다 (다른 칸 {diff}) — 새 --out 을 쓰라 "
                                  f"(ASE 가 옛 힘을 그대로 쓴다)")
     else:
+        # ⛔ 2026-11-09 (Codex DV P1-3): 빈 캐시로 **새로 시작할 때는 정체성도 새로 쓴다** — 옛 판은 정체성 파일이
+        #   있으면 안 건드려서, 캐시만 비우고 다른 구조 (B) 를 돌리면 'A 정체성 + B 힘' 이 되어 A 를 다시 돌릴 때
+        #   B 의 힘을 썼다 (거짓 STABLE · Codex 재현).
         cache.parent.mkdir(parents=True, exist_ok=True)
+        idf.unlink(missing_ok=True)
     if not idf.exists():
         rec = dict(idn)
         if accepted_unbound:
@@ -268,6 +272,31 @@ def _selftest():
         r_off = phonon_report(off, Pair(5.0, k_of(74.0)), td / "off0", model="pair", require_fmax=0)
         chk(ok_ and r_off["input_fmax_eV_A"] > 0.4,
             "⛔음성: 입력 힘이 fmax 0.01 보다 크면 멈춘다 (정지점이 아닌 구조의 포논 · Codex DU Q9) · 0 이면 명시적으로 끈다")
+
+        # Codex DV P1-3 재현: 이중 우물 (옆 방향 dy = 0 안장점 A · dy = ±0.5 최소점 B — 둘 다 힘 0)
+        class DW(Calculator):
+            implemented_properties = ["energy", "forces"]
+
+            def calculate(self, atoms=None, properties=("energy",), system_changes=all_changes):
+                super().calculate(atoms, properties, system_changes)
+                p = self.atoms.get_positions(); d = p[1] - p[0]
+                a, y0 = 0.5, 0.5
+                e = 0.5 * 5.0 * (d[0] - 2.0) ** 2 + a * (d[1] ** 2 - y0 ** 2) ** 2 + 0.5 * 0.5 * d[2] ** 2
+                g = np.array([5.0 * (d[0] - 2.0), 4 * a * d[1] * (d[1] ** 2 - y0 ** 2), 0.5 * d[2]])
+                self.results = {"energy": e, "forces": np.array([g, -g])}
+
+        sA = dimer()
+        sB = dimer(); sB.positions[1, 1] += 0.5
+        rA = phonon_report(sA, DW(), td / "dw", model="dw")
+        for f in (td / "dw_cache").iterdir():
+            f.unlink()                                                     # 힘 캐시만 비움 · 정체성 파일은 남김
+        rB = phonon_report(sB, DW(), td / "dw", model="dw")
+        try:
+            phonon_report(sA, DW(), td / "dw", model="dw"); ok_ = False
+        except SystemExit:
+            ok_ = True
+        chk(rA["verdict_code"] == "UNSTABLE" and rB["verdict_code"] == "STABLE" and ok_,
+            "⛔음성: 안장점 A → 캐시만 비움 → 최소점 B → 다시 A 는 **멈춘다** (B 의 힘으로 거짓 STABLE 이 나오지 않는다 · Codex DV P1-3)")
     print("  " + ("✅ selftest 통과" if ok[0] == ok[1] else f"⛔ selftest 실패 {ok[0] - ok[1]}/{ok[0]}"))
     return 0 if ok[0] == ok[1] else 1
 

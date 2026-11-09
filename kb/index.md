@@ -1,17 +1,18 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-09 · managed-files: 589
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-09 · managed-files: 590
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 380건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 381건)
 - 2026-11-09 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-09 · `kb/reviews/codex_DU_prompt_cell_construction_v1_2026_11_09.md` — DU 프롬프트 — 셀구축 v1 (도핑 argyrodite 셀 만들기 · 고르기 · 안정성 · 후처리) + b2o3 B·O 배치 카드 개정 1 설계 리뷰 (결과 0 건 · 계산 전) · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…
 - 2026-11-09 · `kb/reviews/codex_DU_reply_cell_construction_v1_2026_11_09.md` — DU 회신 — 셀구축 v1 + b2o3 B·O 배치 카드 개정 1: NO-GO (1 단계 실행 보류 · 선행 도구 고침은 진행 가능) · P1 9 (Ewald 역격자 ½ · Li 공공 대칭 경로 · 반올림 중복 제거 · 어닐 재개 정체성 · k 탐침 가족 대비 · 최종 셋 DFT 이완본 부재 · 포논 캐시 · 허수 판정 · 골격 판정기 거리/NaN) · P2 · Q1–Q10 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
 - 2026-11-09 · `kb/reviews/codex_DV_prompt_cell_construction_v1_1_2026_11_09.md` — DV 프롬프트 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1 재리뷰 (DU NO-GO 고침 · 도구 6 · 설계 · 과거 영향 · 계산 0 건) · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…
 - 2026-11-09 · `kb/reviews/codex_DV_reply_cell_construction_v1_1_2026_11_09.md` — DV 회신 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1: NO-GO (1 단계 생산 보류) · P1 4 (큐 실패 전파 · 완료 구조 결속 · 포논 빈 캐시 정체성 · B 결합 음이온 분류) · P2 6 · P3 2 · Q1–Q7 · 1 단계 해제조건 네 묶음 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
+- 2026-11-09 · `kb/reviews/codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md` — DW 프롬프트 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1: DV 1 단계 해제조건 네 묶음 + 후속 단계 조건 확인 (계산 0 건) · 발송 전 · 기준 커밋은 이 프롬프트를 담은 커밋 (아래 '보내는 글…
 - 2026-11-09 · `kb/reports/weekly_2026_11_08.md` — 주간 정리 2026-11-02 ~ 11-08 (주간보고 초안) · 초안 (2026-11-09 · 도는 계산은 마지막 실측 기준 — kg…
 - 2026-11-08 · `kb/projects/handoff_2026_11_08_evacuation.md` — 대피 인계 — 2026-11-08 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · li2s-2 1 단계 kgy 진행 중 · cascade 문헌 갭 다음 단계) · 진행
 - 2026-11-06 · `kb/reviews/codex_DR_prompt_li2s2_dq_fixes_2026_11_05.md` — DR 프롬프트 — li2s-2 DQ 고침 + DR 전 독립 리뷰 고침 (879cbc00): 판정이 읽는 것 전부를 지문에 · 앞 판정의 성격 (예외 · 입력 불일치) 으로만 자동 대체 · 정본 없는 미해결 기록 (현재 · 옮긴 폴더) · STOP 공통 검사 · 다른 판정 규칙의 기록 — 첫 담금질 GO 여부 · 발송 완료 · 회신 수령 2026-11-06 NO-GO (`codex…
@@ -26,7 +27,6 @@
 - 2026-11-05 · `kb/reviews/codex_DQ_reply_li2s2_dp_fixes_2026_11_05.md` — DQ 회신 — li2s-2 DP 고침 + DQ 전 리뷰 6 차 확인 (a4a29216): NO-GO · P1 2 (판정이 읽는 md_init_raw.xyz 가 지문 밖이라 입력 복구를 '같은 입력의 일시 오류' 로 자동 대체 / 첫 정본 판정 저장 실패로 이력 · 임시 파일만 남은 폴더를 놓치고 다른 시드 실행) · P2 1 (모순된 STOP 을 요약 · 러너가 다르게 읽음) · 수령 2026-11-05 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-11-04 · `kb/reviews/codex_DK_reply_li2s2_dj_fixes_2026_11_03.md` — DK 회신 — li2s-2 DJ 고침 확인 (7ac0be8e): NO-GO · DJ 기존 반례는 차단 · P0 2 (손상된 완료 궤적이 md_incomplete 로 읽혀 재담금질 · 정전 예산 · 재시도 분류와 예산 집계가 다른 판정을 읽음) · P1 2 (프레임 수가 MD 완료를 증명하지 않음 · 소비자가 0 h 증언 상한을 받음) · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-11-04 · `kb/reviews/codex_DL_prompt_li2s2_dk_fixes_2026_11_04.md` — DL 프롬프트 — li2s-2 DK 고침 확인 (390441c4): MD 완료 기록 (프레임 셈 대신) · 실행 상태 한 곳 · 정전 추가 예산 없앰 · 증언 양수 — 첫 담금질 GO 여부 · 발송 · 회신 수령 2026-11-04 (NO-GO · P0 1 · …
-- 2026-11-04 · `kb/reviews/codex_DL_reply_li2s2_dk_fixes_2026_11_04.md` — DL 회신 — li2s-2 DK 고침 확인 (390441c4): NO-GO · DK 기존 반례는 차단 · P0 1 (plan.json 이나 정식 완료 파일명이 없으면 남은 완료 증거를 무시하고 재담금질) · P1 2 (정전 보존 근거 없음 — 동기화 없음 · FIRE 전 기록 순서를 지키는 회귀시험 없음) · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -213,7 +213,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (254)
+## reviews/ (255)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-09 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -376,6 +376,7 @@
 - `kb/reviews/codex_DU_reply_cell_construction_v1_2026_11_09.md` — DU 회신 — 셀구축 v1 + b2o3 B·O 배치 카드 개정 1: NO-GO (1 단계 실행 보류 · 선행 도구 고침은 진행 가능) · P1 9 (Ewald 역격자 ½ · Li 공공 대칭 경로 · 반올림 중복 제거 · 어닐 재개 정체성 · k 탐침 가족 대비 · 최종 셋 DFT 이완본 부재 · 포논 캐시 · 허수 판정 · 골격 판정기 거리/NaN) · P2 · Q1–Q10  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …)
 - `kb/reviews/codex_DV_prompt_cell_construction_v1_1_2026_11_09.md` — DV 프롬프트 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1 재리뷰 (DU NO-GO 고침 · 도구 6 · 설계 · 과거 영향 · 계산 0 건)  (2026-11-09 · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…)
 - `kb/reviews/codex_DV_reply_cell_construction_v1_1_2026_11_09.md` — DV 회신 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1: NO-GO (1 단계 생산 보류) · P1 4 (큐 실패 전파 · 완료 구조 결속 · 포논 빈 캐시 정체성 · B 결합 음이온 분류) · P2 6 · P3 2 · Q1–Q7 · 1 단계 해제조건 네 묶음  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …)
+- `kb/reviews/codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md` — DW 프롬프트 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1: DV 1 단계 해제조건 네 묶음 + 후속 단계 조건 확인 (계산 0 건)  (2026-11-09 · 발송 전 · 기준 커밋은 이 프롬프트를 담은 커밋 (아래 '보내는 글…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
 - `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)

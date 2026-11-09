@@ -129,22 +129,28 @@ def census(sym, pos, cells, dt_ps, th=DEFAULTS):
     fw = np.where(sym != "Li")[0]
     P = np.where(sym == "P")[0]
     events, peak = [], {}
-    # ── (1) P 결합 음이온: 자기 P 와의 거리 ───────────────────────────────
-    bonded = {}
+    # ── (1) 결합 음이온 (P 또는 B 중심): 자기 중심과의 거리 ───────────────────
+    #   ⛔ 2026-11-09 (Codex DV P1-4): 옛 판은 P 만 중심으로 봐서 B 에 붙은 S · O 가 '자유' 로 세졌다 — BS₃ 강체 회전
+    #     (B–S 2.0 Å 유지) 이 사건 3, 같은 좌표의 PS₃ 는 0. 이제 frame 0 에서 가장 가까운 중심 (P ∪ B) 에 결합 문턱
+    #     안이면 그 중심의 결합 음이온이다 (B–S · B–O 문턱 = P 와 같은 결합 2.6 · 2.0 / 이탈 3.0 · 2.5 Å [제안 · 카드]).
+    bonded, bkind = {}, {}
+    centers = np.where((sym == "P") | (sym == "B"))[0]
     for a in np.where((sym == "O") | (sym == "S"))[0]:
-        if len(P) == 0:
+        if len(centers) == 0:
             break
-        d0 = np.linalg.norm(mic_series((pos[0, P] - pos[0, a])[None], cells[:1])[0], axis=1)
+        d0 = np.linalg.norm(mic_series((pos[0, centers] - pos[0, a])[None], cells[:1])[0], axis=1)
         k = int(np.argmin(d0))
         bond = th["o_bond_A"] if sym[a] == "O" else th["s_bond_A"]
         if d0[k] <= bond:
-            bonded[int(a)] = int(P[k])
+            bonded[int(a)] = int(centers[k])
+            bkind[int(a)] = f"{sym[centers[k]]}-bonded"
     for a, p in bonded.items():
         d = np.linalg.norm(mic_series(pos[:, p] - pos[:, a], cells), axis=1)
         esc = th["o_escape_A"] if sym[a] == "O" else th["s_escape_A"]
-        peak[a] = {"elem": str(sym[a]), "kind": "P-bonded", "P": p, "max_dP_A": float(d.max()), "escape_A": esc}
+        kd = bkind[a]
+        peak[a] = {"elem": str(sym[a]), "kind": kd, "P": p, "max_dP_A": float(d.max()), "escape_A": esc}
         for s, L in sustained_runs(d > esc, min_frames):
-            events.append({"kind": "P-bonded", "elem": str(sym[a]), "atom": a, "P": p,
+            events.append({"kind": kd, "elem": str(sym[a]), "atom": a, "P": p,
                            "start_ps": s * dt_ps, "length_ps": L * dt_ps, "peak_dP_A": float(d[s:s + L].max())})
     # ── (2) 자유 음이온·P: 골격 평균 병진 제거 후 변위 ──────────────────────
     free = [int(i) for i in fw if int(i) not in bonded and sym[i] in ("S", "Cl", "P", "O", "B")]   # B 중심 (2026-11-09)
@@ -173,7 +179,9 @@ def census(sym, pos, cells, dt_ps, th=DEFAULTS):
     return {
         "n_frames": int(T), "dt_ps": dt_ps, "total_ps": T * dt_ps, "min_frames": min_frames,
         "thresholds": dict(th),
-        "n_framework": int(len(fw)), "n_P_bonded_anions": len(bonded), "n_free": len(free),
+        "n_framework": int(len(fw)), "n_P_bonded_anions": sum(1 for k in bkind.values() if k == "P-bonded"),
+        "n_B_bonded_anions": sum(1 for k in bkind.values() if k == "B-bonded"), "n_free": len(free),
+        "census_rules": CENSUS_RULES,
         "verdict": "framework_mobile" if events else "framework_rigid",
         "free_elems_tracked": ["B", "Cl", "O", "P", "S"],     # 2026-11-09 — 옛 파일에는 이 칸이 없다 (B 미측정)
         "n_events": len(events), "by_elem": by_elem, "events": events,
@@ -386,6 +394,26 @@ def _selftest():
     rb = census(sb, pb, cells, dt)
     chk(rb["by_elem"].get("B", {}).get("events") == 1 and "B" in rb["free_elems_tracked"],
         "⭕양성: B 중심이 3 Å 옮겨 유지 → B 이벤트 1 (B 를 센다고 기록)")
+    # (xv) Codex DV P1-4 — BS₃ 강체 회전 (B–S 2.0 Å 유지 · S 변위 4 Å) 은 사건 0 · 같은 좌표 PS₃ 도 0 · B–S 결합 이탈은 B-bonded 1
+    def _tri(center):
+        Tn = 250
+        sy_ = np.array([center, "S", "S", "S"])
+        ps = np.zeros((Tn, 4, 3)); ps[:, 0] = [6.0, 6.0, 6.0]
+        for t_ in range(Tn):
+            ang = min(t_, 17) / 17 * np.pi                                  # 1.7 ps 안에 180° 돌고 유지
+            for j in range(3):
+                ph = ang + 2 * np.pi * j / 3
+                ps[t_, j + 1] = ps[t_, 0] + 2.0 * np.array([np.cos(ph), np.sin(ph), 0.0])
+        return sy_, ps, np.repeat((np.eye(3) * 12.0)[None], Tn, axis=0)
+    sB3, pB3, cB3 = _tri("B")
+    sP3, pP3, cP3 = _tri("P")
+    rB3, rP3 = census(sB3, pB3, cB3, dt), census(sP3, pP3, cP3, dt)
+    chk(rB3["n_events"] == 0 and rB3["n_B_bonded_anions"] == 3 and rP3["n_events"] == 0,
+        f"⛔음성: BS₃ 강체 회전 (B–S 2.0 Å 유지) 은 사건 0 — 같은 좌표의 PS₃ 와 같게 센다 (옛 판: BS₃ 3 · PS₃ 0 · 실제 {rB3['n_events']}/{rP3['n_events']})")
+    pE = pB3.copy(); pE[100:, 1] = pE[100:, 0] + np.array([3.5, 0.0, 0.0])
+    rE = census(sB3, pE, cB3, dt)
+    chk(any(e["kind"] == "B-bonded" and e["elem"] == "S" for e in rE["events"]) and rE["census_rules"].startswith("v2"),
+        "⭕양성: B–S 결합이 3.5 Å 로 끊겨 유지 → B-bonded S 사건 (census v2 로 기록)")
     print(f"selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
 
@@ -398,7 +426,11 @@ def _selftest():
 #:   겉보기 활성화는 카드 조건(10 사건 이상 온도 2 개 이상)이 아니면 **맞추지 않는다** · 이온 이동 장벽이라 부르지 않는다.
 CARD_GROUPS = (("P_center", "free", "P"), ("S_free", "free", "S"), ("Cl", "free", "Cl"))
 EXTRA_GROUPS = (("P-bonded_S", "P-bonded", "S"), ("P-bonded_O", "P-bonded", "O"), ("free_O", "free", "O"),
-                ("B_center", "free", "B"))     # 2026-11-09 — B 중심 이동 (옛 census 는 B 를 안 봤다 → 옛 파일에서는 0)
+                ("B_center", "free", "B"), ("B-bonded_S", "B-bonded", "S"), ("B-bonded_O", "B-bonded", "O"))
+#: census 규칙 판 — v1 (옛 · 표기 없음): P 중심만 · B 안 봄 · BS₃ 의 S 는 자유 S. v2 (2026-11-09): B 중심 · B 결합 음이온.
+#:   ⛔ 판이 다른 census 를 한 집계에 섞지 않는다 (Codex DV P2 — 섞으면 이미 관측한 B 사건이 집계에서 사라졌다).
+CENSUS_RULES = "v2 (2026-11-09 · P · B 중심 결합 음이온 · B 중심 이동)"
+B_GROUPS = ("B_center", "B-bonded_S", "B-bonded_O")
 KB_EV = 8.617333262e-5
 
 
@@ -430,9 +462,13 @@ def aggregate(files, group_n):
         raise SystemExit(f"⛔ --group_n 에 카드 원소군 원자수가 없다: {missing} (카드 §보고량 값을 준다 — 도구가 정하지 않는다)")
     runs, invalid = [], []
     loaded = [(seed, T, p, json.loads(pathlib.Path(p).read_text())) for seed, T, p in files]
-    # ⛔ 2026-11-09: 옛 census 파일은 B 를 안 봤다 — 거기서 B_center 0 은 '사건 0' 이 아니라 '미측정' 이다.
-    track_B = all("B" in r.get("free_elems_tracked", []) for *_, r in loaded)
-    XG = EXTRA_GROUPS if track_B else tuple(g for g in EXTRA_GROUPS if g[0] != "B_center")
+    # ⛔ 2026-11-09 (Codex DV P2): census 규칙 판이 섞이면 멈춘다 — 옛 판 (v1) 은 B 를 안 봤고 BS₃ 의 S 를 자유 S 로
+    #   셌다. 섞으면 이미 관측한 B 사건이 사라지거나 S_free 정의가 런마다 달라진다. 옛 판만이면 B 묶음은 '미측정'.
+    rules = {r.get("census_rules", "v1 (옛 · 표기 없음)") for *_, r in loaded}
+    if len(rules) > 1:
+        raise SystemExit(f"⛔ census 규칙 판이 섞였다 {sorted(rules)} — 판마다 따로 집계하라 (섞으면 B 사건 · S_free 정의가 갈린다)")
+    track_B = all(r.get("census_rules", "").startswith("v2") for *_, r in loaded)
+    XG = EXTRA_GROUPS if track_B else tuple(g for g in EXTRA_GROUPS if g[0] not in B_GROUPS)
     for seed, T, p, r in loaded:
         if r.get("verdict") == "invalid":
             invalid.append(f"{p}: {r.get('invalid_reasons')}")
@@ -503,10 +539,11 @@ def aggregate(files, group_n):
             sent.append(f"{g}: 사건 빈도의 겉보기 활성화 에너지 {a['Ea_apparent_eV']:.2f} ± {a['sigma_eV']:.2f} eV ({'/'.join(f'{t:g}' for t in a['temps_K'])} K · 포아송 가중) — 이온 이동 장벽이 아니다.")
     return {"schema": "framework_event_rate_aggregate/v1", "group_definition": {g: f"census kind={k} · elem={e}" for g, k, e in CARD_GROUPS + XG},
             "group_n_card": group_n, "runs": runs, "by_T": {f"{T:g}": v for T, v in by_T.items()}, "apparent_activation": act, "sealed_sentences": sent,
-            "⚠": "census 는 P 중심 규칙 — BS₃ 의 S 는 '자유 S' 로 분류된다 (카드 결과와 같이 적는다) · B 중심은 "
-                 "2026-11-09 부터 센다 (B_center)",
-            "B_center": ("센다 (모든 census 파일이 B 를 봤다)" if track_B else
-                         "미측정 — B 를 안 본 옛 census 파일이 섞였다 (0 으로 적지 않는다 · 2026-11-09)")}
+            "census_rules": sorted(rules)[0],
+            "⚠": ("census v2 — P · B 중심 결합 음이온 (B 에 붙은 S · O 는 B-bonded · 자유 S 아님) · B 중심 이동 (B_center)" if track_B else
+                  "census v1 (옛) — P 중심 규칙만: BS₃ 의 S 는 '자유 S' 로 분류된다 (카드 결과와 같이 적는다)"),
+            "B_center": ("센다 (모든 census 파일이 v2)" if track_B else
+                         "미측정 — 옛 판 (v1) census 만 있다 (0 으로 적지 않는다 · 2026-11-09)")}
 
 
 def _files_from_root(root):
@@ -577,6 +614,14 @@ def _selftest_aggregate():
         except SystemExit:
             badi = True
         ck(badi, "⛔음성: invalid 런이 섞이면 집계가 멈춘다 (사건 0 으로 세지 않는다)")
+        (bad_d / "site_census.json").write_text(json.dumps({"n_frames": 4000, "dt_ps": 0.1, "total_ps": 400.0, "verdict": "framework_mobile",
+                                                            "census_rules": CENSUS_RULES, "n_events": 1,
+                                                            "events": [{"kind": "free", "elem": "B", "atom": 1, "start_ps": 10.0}]}))
+        try:
+            aggregate(_files_from_root(td), {"P_center": 32, "S_free": 48, "Cl": 64}); badm = False
+        except SystemExit:
+            badm = True
+        ck(badm, "⛔음성: v1 (옛) census 와 v2 를 섞으면 멈춘다 — 이미 관측한 B 사건이 사라지지 않게 (Codex DV P2)")
     print(f"{'✅' if not bad else '⛔'} aggregate selftest {ok}/{ok + bad}")
     return bad
 

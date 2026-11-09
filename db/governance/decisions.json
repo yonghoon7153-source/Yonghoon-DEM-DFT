@@ -11852,6 +11852,62 @@
     }
    ],
    "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
+  },
+  {
+   "id": "D-2026-11-09-md-observation-window-amend1",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "reporting.md.no_event_claim",
+   "slot": "md_no_event_observation_window_line",
+   "applies_to": {
+    "methods": [
+     "aimd",
+     "mlip_md",
+     "classical_md",
+     "reaction_md"
+    ],
+    "use_cases": [
+     "internal",
+     "manuscript",
+     "review_prompt",
+     "literature_citation"
+    ]
+   },
+   "title": "관측창 한 줄 개정 1 — Ea_max ≈ kT·ln(ν₀·t·n) 는 '기대 사건 1' 인 장벽이지 '그보다 높으면 원래 못 본다' 는 경계가 아니다 (63.2 % · 95 % 는 kT·ln(ν₀·t·n/3))",
+   "statement": "원 결정 D-2026-10-05-md-observation-window 의 한 줄을 이렇게 바꿔 쓴다 (원문은 봉인 그대로): 단일 반응 기회 · 일정 사건률 (정상 포아송) · ν₀ 10¹³ s⁻¹ 가정에서 Ea₁ = kT·ln(ν₀·t·n) 은 **기대 사건 수가 1 인 장벽** 이다 — 그 장벽의 반응을 한 번 이상 볼 확률은 63.2 % 이고, 더 높은 장벽도 볼 수 있다 (절대 경계 아님). 95 % 검출에 해당하는 장벽은 Ea₉₅ = kT·ln(ν₀·t·n/3) 이다. 문장 꼴: '관측창 (ν₀ 10¹³ s⁻¹ · 반응 기회 n · 정상성 가정 · T · t): 기대 사건 1 ≈ Ea₁ eV (검출 63 %) · 95 % 검출 ≈ Ea₉₅ eV' — 'Ea ≳ Ea_max 인 반응은 못 본다' 꼴은 쓰지 않는다. 예 (1000 K · 0.8 ns · n 1): Ea₁ 0.77446 · Ea₉₅ 0.67991 eV · Ea₁ + 0.10 eV 장벽도 검출 확률 ≈ 26.9 %. 여전히 차수 검산이지 장벽 값 · 열역학 안정 판정이 아니다.",
+   "rationale": "Codex DV Q7 (kb/reviews/codex_DV_reply_cell_construction_v1_1_2026_11_09.md) — 원 문구 '그보다 높은 장벽의 반응은 원래 못 본다' 는 기대 사건 1 (63.2 %) 지점을 딱 잘리는 관측 한계로 읽게 만든다. 봉인 원문은 보존하고 새 개정으로 대체하라고 권고. 숫자는 이 세션에서 다시 계산해 일치 (0.77446 · 0.67991 eV · 26.9 %).",
+   "decision_state": "proposed",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "results_seen_note": "규칙 문구 개정 — 결과와 무관",
+   "card": "kb/reviews/codex_DV_reply_cell_construction_v1_1_2026_11_09.md",
+   "amends": [
+    "D-2026-10-05-md-observation-window"
+   ],
+   "depends_on": [
+    "D-2026-10-05-md-observation-window"
+   ],
+   "reopen_criteria": [
+    "관측창 줄의 가정 (단일 반응 기회 · 일정 사건률) 이 맞지 않는 계 (여러 상관된 경로 · 비정상 과정) 를 다룰 때 새 개정"
+   ],
+   "enforcement": "비준되면: tools/sei/collect_neb.py::observation_window 의 line 을 '기대 사건 1 ≈ … (63 %) · 95 % ≈ …' 꼴로 · CLAUDE.md 의 관측창 줄 문구를 같이 고친다 (비준 전에는 도구 · CLAUDE.md 를 바꾸지 않는다 · 셀구축 v1.1 · b2o3 카드는 이미 이 해석으로 썼다)",
+   "track": {
+    "name": "전역 서술 규칙 (MD 관측창)",
+    "first_author": "사용자 (규칙 소유 — 2026-10-05 사용자 제정)"
+   },
+   "proposed_by": [
+    "agent (Codex DV Q7 권고를 옮김)"
+   ],
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DV Q7 권고 — 봉인 원문 보존 · 새 개정으로 문구 대체 · 사용자 비준 대기"
+    }
+   ],
+   "_note": "proposed — 사용자 비준 대기 (비준 시 도구 줄 · CLAUDE.md 문구 갱신)"
   }
  ]
 }
