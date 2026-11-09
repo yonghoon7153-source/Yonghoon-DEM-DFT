@@ -192,19 +192,41 @@ def base_from_rietveld(cif_path, supercell, n_dop, n_O, primitive=False):
 # Ewald (neutral cell) — geometric kernel M s.t. E = q^T M q  (eV)
 # ----------------------------------------------------------------------
 def ewald_matrix(pos, cell, alpha=None, rcut=None, kcut=None):
-    """Return N×N matrix M with E_ewald = sum_ij q_i q_j M_ij (neutral cell)."""
+    """Return N×N matrix M with E_ewald = sum_ij q_i q_j M_ij (neutral cell).
+
+    E = ½ Σ_ij Σ_L' q_i q_j erfc(α|r_ij+L|)/|r_ij+L|                       (real)
+      + (2π/V) Σ_{G≠0} e^{−G²/4α²}/G² |S(G)|² ,  S(G) = Σ_i q_i e^{iG·r_i}  (reciprocal)
+      − (α/√π) Σ_i q_i²                                                     (self)
+
+    ⛔ 2026-11-09 고침 (Codex DU P1-1 · 재현: α 만 바꿔도 −3.51 → −5.53 → −7.56 eV · 독립 합 −2.931):
+      ① 역격자 항에 ½ 을 **두 번** 곱했다 — (2π/V) 가 이미 ½ · (4π/V) 다. 그래서 역격자 몫이 절반이었고
+        에너지가 α 에 따라 움직였다 (수렴한 Ewald 합은 α 와 무관해야 한다).
+      ② (예방) 이미지 범위를 격자 벡터 길이 대신 수직폭으로 · 차 벡터를 분율 [−½, ½) 로 감싼다 · 역격자 범위를
+        2π/|a_i| 로 — 기운 셀에서 이론상 컷오프 안 이미지를 빠뜨릴 수 있었다. ⚠ 깨기로 재 보니 정밀도 계수 3.6 에서
+        옛 범위의 차이는 10⁻⁶ 상대 이하라 시험이 못 잡는다 (M2–M4 초록) — 실제로 값이 틀렸던 것은 ① 하나다.
+      ③ 정밀도 계수 3.2 → 3.6 (3.2 의 역격자 절단 ≈ 3.6e-5 상대 · 기운 원시셀 Madelung 3.0e-5 어긋남).
+      selftest: Madelung 상수 (NaCl · CsCl · 외부 기준) · 기운 원시셀 · 길쭉 기운 셀 · α 불변 (modelc 꼴 포함) ·
+      전하 0 자리 불변 · 슈퍼셀 가산 — 깨기 M1 (½ 이중 되살림) → 8 빨강.
+    ⛔ 이 함수가 못 하는 것: 전하가 0 이 아닌 셀의 배경 보정 (호출부가 중성을 보장해야 한다 — 검사 안 함).
+    """
     pos = np.asarray(pos, float); cell = np.asarray(cell, float)
     N = len(pos); V = abs(np.linalg.det(cell))
     if alpha is None:
         alpha = (N * np.pi**3 / V**2) ** (1.0 / 6.0)  # standard heuristic
+    ACC = 3.6   # erfc(3.6) ≈ 3.6e-7 · exp(−3.6²) ≈ 2.4e-6 — 2026-11-09 3.2 → 3.6 (3.2 는 역격자 절단 ≈ 3.6e-5 상대오차)
     if rcut is None:
-        rcut = 3.2 / alpha
+        rcut = ACC / alpha
     if kcut is None:
-        kcut = 2.0 * alpha * 3.2
-    recip = 2 * np.pi * np.linalg.inv(cell).T
+        kcut = 2.0 * alpha * ACC
+    inv = np.linalg.inv(cell)
+    recip = 2 * np.pi * inv.T
+    lens = np.linalg.norm(cell, axis=1)
+    widths = np.array([V / np.linalg.norm(np.cross(cell[(i + 1) % 3], cell[(i + 2) % 3]))
+                       for i in range(3)])
 
-    # --- real space ---
-    nmax = np.ceil(rcut / np.array([np.linalg.norm(cell[i]) for i in range(3)])).astype(int)
+    # --- real space (differences wrapped to fractional [-1/2, 1/2) → every image within rcut
+    #     has |n_i| <= rcut/w_i + 1/2 along each lattice direction) ---
+    nmax = np.ceil(rcut / widths + 0.5).astype(int)
     shifts = np.array(list(itertools.product(
         range(-nmax[0], nmax[0] + 1), range(-nmax[1], nmax[1] + 1),
         range(-nmax[2], nmax[2] + 1))))
@@ -212,6 +234,9 @@ def ewald_matrix(pos, cell, alpha=None, rcut=None, kcut=None):
     M = np.zeros((N, N))
     from scipy.special import erfc
     dij = pos[:, None, :] - pos[None, :, :]              # N,N,3
+    f = dij @ inv
+    f -= np.round(f)
+    dij = f @ cell
     for L in Lvecs:
         r = np.linalg.norm(dij + L, axis=2)              # N,N
         zero = r < 1e-8
@@ -219,8 +244,8 @@ def ewald_matrix(pos, cell, alpha=None, rcut=None, kcut=None):
         contrib = erfc(alpha * r) / r
         contrib[zero] = 0.0
         M += 0.5 * contrib                                # 0.5: each pair counted twice over i,j
-    # --- reciprocal ---
-    kmax = np.ceil(kcut / np.array([np.linalg.norm(recip[i]) for i in range(3)])).astype(int)
+    # --- reciprocal (reciprocal-cell plane spacing along b_i is 2π/|a_i|) ---
+    kmax = np.ceil(kcut * lens / (2 * np.pi)).astype(int)
     ks = np.array(list(itertools.product(
         range(-kmax[0], kmax[0] + 1), range(-kmax[1], kmax[1] + 1),
         range(-kmax[2], kmax[2] + 1))))
@@ -229,9 +254,10 @@ def ewald_matrix(pos, cell, alpha=None, rcut=None, kcut=None):
     G2 = np.einsum("ij,ij->i", G, G)
     keep = G2 < kcut**2
     G, G2 = G[keep], G2[keep]
-    pref = (2 * np.pi / V) * np.exp(-G2 / (4 * alpha**2)) / G2
-    phase = np.cos(dij @ G.T)                             # N,N,K
-    M += 0.5 * np.einsum("k,ijk->ij", pref, phase)
+    pref = (2 * np.pi / V) * np.exp(-G2 / (4 * alpha**2)) / G2   # = ½·(4π/V): the ½ is already here
+    arg = pos @ G.T                                       # N,K
+    C, S = np.cos(arg), np.sin(arg)
+    M += (C * pref) @ C.T + (S * pref) @ S.T              # Σ_G pref cos(G·(r_i − r_j))
     # --- self term (diagonal) ---
     M[np.diag_indices(N)] -= alpha / np.sqrt(np.pi)
     return KE * M
@@ -579,8 +605,10 @@ def _selftest():
     import tempfile
     from ase import Atoms
     bad = []
+    _checks = []
 
     def chk(cond, msg):
+        _checks.append(msg)
         print(("  ✓ " if cond else "  ✗ ") + msg)
         if not cond:
             bad.append(msg)
@@ -662,7 +690,65 @@ s5b S  0.0 0.0 0.0 0.25
             ok = True
         chk(ok, "⛔음성: 부분점유가 없는 CIF 를 Rietveld 로 받아주지 않는다")
 
-    print(f"selftest {'PASS' if not bad else 'FAIL'} — {9 - len(bad)}/9 ok")
+    # ------------------------------------------------------------------
+    # Ewald (2026-11-09 · Codex DU P1-1) — 외부 기준 (Madelung 상수) · α 불변 · 전하 0 자리 · 슈퍼셀
+    # ⛔ 이 시험들은 역격자 ½ 이중 · 기운 셀 이미지 누락을 되살리면 빨개져야 한다 (깨기로 확인).
+    # ------------------------------------------------------------------
+    M_NACL, M_CSCL = 1.74756459463, 1.76267477307
+    a = 5.64
+    nacl_c = np.array([[0, 0, 0], [0, .5, .5], [.5, 0, .5], [.5, .5, 0],
+                       [.5, 0, 0], [0, .5, 0], [0, 0, .5], [.5, .5, .5]]) * a
+    q_c = np.array([1, 1, 1, 1, -1, -1, -1, -1], float)
+    E = ewald_energy(ewald_matrix(nacl_c, np.eye(3) * a), q_c)
+    ref = -4 * KE * M_NACL / (a / 2)
+    chk(abs(E / ref - 1) < 2e-5, f"[외부 기준] NaCl 관용셀 Madelung (상대오차 {abs(E / ref - 1):.1e})")
+    prim = np.array([[0, a / 2, a / 2], [a / 2, 0, a / 2], [a / 2, a / 2, 0]])
+    nacl_p = np.array([[0, 0, 0], [a / 2, a / 2, a / 2]])
+    q_p = np.array([1.0, -1.0])
+    Ep = ewald_energy(ewald_matrix(nacl_p, prim), q_p)
+    refp = -KE * M_NACL / (a / 2)
+    chk(abs(Ep / refp - 1) < 2e-5,
+        f"⛔음성: **기운 원시셀 (60°)** NaCl 도 같은 Madelung (상대오차 {abs(Ep / refp - 1):.1e})")
+    acs = 4.12
+    Ecs = ewald_energy(ewald_matrix(np.array([[0, 0, 0], [acs / 2] * 3]), np.eye(3) * acs), q_p)
+    refcs = -KE * M_CSCL / (acs * np.sqrt(3) / 2)
+    chk(abs(Ecs / refcs - 1) < 2e-5, f"[외부 기준] CsCl Madelung (상대오차 {abs(Ecs / refcs - 1):.1e})")
+    N = len(nacl_p); V = abs(np.linalg.det(prim))
+    a0 = (N * np.pi**3 / V**2) ** (1.0 / 6.0)
+    Es = [ewald_energy(ewald_matrix(nacl_p, prim, alpha=a0 * s), q_p) for s in (0.6, 1.0, 1.6)]
+    spread = (max(Es) - min(Es)) / abs(np.mean(Es))
+    chk(spread < 1e-5, f"⛔음성: **α 를 0.6–1.6 배로 바꿔도 같은 에너지** (상대 퍼짐 {spread:.1e}) — 역격자 ½ 이중이면 α 따라 움직인다")
+    rng0 = np.random.default_rng(7)
+    ghost = rng0.random((3, 3)) @ prim
+    Eg = ewald_energy(ewald_matrix(np.vstack([nacl_p, ghost]), prim), np.concatenate([q_p, np.zeros(3)]))
+    chk(abs(Eg / Ep - 1) < 1e-5, f"⛔음성: 전하 0 자리 (Li 후보) 를 더해도 에너지 그대로 (상대 {abs(Eg / Ep - 1):.1e})")
+    sc = (2, 1, 3)
+    shifts = np.array(list(itertools.product(*[range(n) for n in sc]))) @ prim
+    pos_sc = np.vstack([nacl_p + s for s in shifts])
+    q_sc = np.tile(q_p, len(shifts))
+    E_sc = ewald_energy(ewald_matrix(pos_sc, np.diag(sc) @ prim), q_sc)
+    chk(abs(E_sc / (len(shifts) * Ep) - 1) < 2e-5,
+        f"[양성] 슈퍼셀 2×1×3 = 원시 × 6 (상대 {abs(E_sc / (len(shifts) * Ep) - 1):.1e})")
+
+    # 길쭉하고 기운 셀 (우리 셀 꼴 — modelc 원시 1×1×5 는 7.0 × 7.0 × 35.0 Å · 60°) — 작은 원시셀은
+    #   이미지 범위 · 감싸기 · 역격자 범위 구멍을 못 건드린다 (깨기 M2–M4 가 첫 판 시험에서 초록이었다).
+    long = np.diag([1, 1, 5]) @ prim
+    pos_l = np.vstack([nacl_p + k * prim[2] for k in range(5)])
+    E_l = ewald_energy(ewald_matrix(pos_l, long), np.tile(q_p, 5))
+    chk(abs(E_l / (5 * Ep) - 1) < 1e-5,
+        f"⛔음성: **길쭉 · 기운 셀** (원시 × (1,1,5)) = 원시 × 5 (상대 {abs(E_l / (5 * Ep) - 1):.1e})")
+    mc = np.array([[7.01, 0, 0], [3.505, 6.0709, 0], [3.505, 2.0236, 28.6122 * 35.04 / 35.04]])
+    mc[2] = mc[2] / np.linalg.norm(mc[2]) * 35.04
+    rng1 = np.random.default_rng(11)
+    pos_r = rng1.random((24, 3)) @ mc
+    q_r = np.array([1.0, -1.0] * 12)
+    N_r = len(pos_r); V_r = abs(np.linalg.det(mc)); a_r = (N_r * np.pi**3 / V_r**2) ** (1.0 / 6.0)
+    Er = [ewald_energy(ewald_matrix(pos_r, mc, alpha=a_r * s), q_r) for s in (0.6, 1.0, 1.6)]
+    sp_r = (max(Er) - min(Er)) / abs(np.mean(Er))
+    chk(sp_r < 1e-5, f"⛔음성: modelc 꼴 (7 × 7 × 35 Å · 60°) 무작위 중성 전하에서 α 불변 (상대 퍼짐 {sp_r:.1e})")
+
+    n_all = len(_checks)
+    print(f"selftest {'PASS' if not bad else 'FAIL'} — {n_all - len(bad)}/{n_all} ok")
     return 1 if bad else 0
 
 
