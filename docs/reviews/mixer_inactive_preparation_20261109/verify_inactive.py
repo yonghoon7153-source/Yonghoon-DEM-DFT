@@ -119,6 +119,12 @@ def reject_link_ancestors(path):
              'snapshot/output reparse link ancestor')
 
 
+def reject_unsupported_namespace(path):
+    """Reject namespace spellings, without stripping prefixes or querying them."""
+    spelling = os.fspath(path).replace('/', '\\')
+    need(not spelling.startswith(('\\\\', '\\??\\')), 'unsupported Windows namespace path')
+
+
 def snapshot_bytes(root, rows):
     reject_link_ancestors(root)
     need(root.is_dir(), 'regular snapshot directory')
@@ -338,19 +344,24 @@ def negative_checks(prep, bundle, expected_assets, originals, bindings, inventor
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--mode', choices=('old', 'build', 'verify', 'preparation-tests'), required=True)
-    parser.add_argument('--snapshot', type=Path, required=True)
-    parser.add_argument('--candidate', type=Path, required=True)
-    parser.add_argument('--evidence', type=Path, required=True, help='new directory only')
+    parser.add_argument('--snapshot', required=True)
+    parser.add_argument('--candidate', required=True)
+    parser.add_argument('--evidence', required=True, help='new directory only')
     args = parser.parse_args()
-    reject_link_ancestors(args.snapshot.absolute())
-    snapshot_root = args.snapshot.resolve(strict=True)
-    candidate_root = args.candidate.absolute()
-    output = args.evidence.absolute()
-    reject_link_ancestors(candidate_root)
-    reject_link_ancestors(output)
+    supplied = (args.snapshot, args.candidate, args.evidence)
+    # Reject all raw tokens before Path can normalize them or any path is queried.
+    for path in supplied:
+        reject_unsupported_namespace(path)
+    snapshot_path, candidate_root, output = (Path(path).absolute() for path in supplied)
+    for path in (snapshot_path, candidate_root, output):
+        reject_unsupported_namespace(path)
+        reject_link_ancestors(path)
     # Check lexical links first, then compare canonical paths before any writes.
+    snapshot_root = snapshot_path.resolve(strict=True)
     candidate_root = candidate_root.resolve(strict=False)
     output = output.resolve(strict=False)
+    for path in (snapshot_root, candidate_root, output):
+        reject_unsupported_namespace(path)
     need(candidate_root != output and candidate_root not in output.parents
          and output not in candidate_root.parents, 'candidate and evidence directories disjoint')
     need(not output.exists(), 'preserve earlier evidence directory')
