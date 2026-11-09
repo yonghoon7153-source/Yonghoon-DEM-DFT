@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-09",
+  "authority": "First author, direct user message in implementation chat",
+  "base_b_at_start": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+  "ratified_policy_reference": "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md section 12",
+  "authorized_scope": [
+    "Gen2 seven-stage inactive deck producer code and tests before actual execution",
+    "T5 volume/contact analytic comparisons, convergence and coverage preregistration draft",
+    "T11 servo qualification, nonconvergence/instability negatives and guards preregistration draft",
+    "DEMP-01 and DEMP-02 handling proposal without physical closure claim",
+    "Merge 50 kg 0.7/1 micrometre re-compression request into gen2 same-static-pressure comparison requirements"
+  ],
+  "instruction_excerpt": "세대 2 생산기: 삽입 → 안정화 → 압축 → 서보 (300 MPa 유지) → 이완 → 언로딩 → 판 분리 덱 생성 · 코드 + 시험 먼저 · 실제 실행 없음",
+  "outcome_boundary": {
+    "actual_results": 0,
+    "actual_values_read": false,
+    "actual_host_execution": false,
+    "operational_reseal": false,
+    "Rint_changes": false,
+    "whole_gate": "HOLD"
+  },
+  "receipt_is_not": "Scientific numeric registration, actual experiment/servo qualification, or execution GO"
+}
