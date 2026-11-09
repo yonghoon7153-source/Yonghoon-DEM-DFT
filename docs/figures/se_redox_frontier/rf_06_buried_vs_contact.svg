@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="547.12517pt" height="374.302172pt" viewBox="0 0 547.12517 374.302172" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 374.302172 
+L 547.12517 374.302172 
+L 547.12517 -0 
+L 0 -0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 124.456091 233.632676 
+Q 124.456091 223.67809 124.456091 215.288752 
+" clip-path="url(#p0ab312ad4f)" style="fill: none; stroke: #be123c; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 121.856091 220.488752 
+L 124.456091 215.288752 
+L 127.056091 220.488752 
+z
+" clip-path="url(#p0ab312ad4f)" style="fill: #be123c; stroke: #be123c; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 134.956636 213.724855 
+Q 134.956636 223.679441 134.956636 232.068779 
+" clip-path="url(#p0ab312ad4f)" style="fill: none; stroke: #be123c; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 137.556636 226.868779 
+L 134.956636 232.068779 
+L 132.356636 226.868779 
+z
+" clip-path="url(#p0ab312ad4f)" style="fill: #be123c; stroke: #be123c; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 44.2009 223.678766 
+Q 69.91178 223.678766 93.6102 223.678766 
+" clip-path="url(#p0ab312ad4f)" style="fill: none; stroke: #0d9488; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 88.4102 221.078766 
+L 93.6102 223.678766 
+L 88.4102 226.278766 
+z
+" clip-path="url(#p0ab312ad4f)" style="fill: #0d9488; stroke: #0d9488; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 100.538182 223.678766 
+L 158.874545 223.678766 
+" clip-path="url(#p0ab312ad4f)" style="fill: none; stroke: #7c3aed; stroke-width: 3"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 100.538182 169.347566 
+L 158.874545 169.347566 
+" clip-path="url(#p0ab312ad4f)" style="fill: none; stroke: #0284c7; stroke-width: 3"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 100.538182 109.583246 
+L 158.874545 109.583246 
+" clip-path="url(#p0ab312ad4f)" style="fill: none; stroke: #be123c; stroke-width: 3"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #7c3aed" x="167.625" y="226.795953" transform="rotate(-0 167.625 226.795953)">P–S σ* (= CBM)</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #0284c7" x="167.625" y="172.464753" transform="rotate(-0 167.625 172.464753)">B–S σ*</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #be123c" x="167.625" y="112.700433" transform="rotate(-0 167.625 112.700433)">P–O σ*</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #0d9488" x="10.116818" y="210.095966" transform="rotate(-0 10.116818 210.095966)">e⁻ one by one</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #1f2937" x="123.872727" y="302.459006" transform="rotate(-0 123.872727 302.459006)">P–S cut · B–S kept · P–O kept</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 12.5px; font-family: 'DejaVu Sans'; fill: #1f2937" transform="translate(54.09929 17.949268)">Inside the SE (buried):</text>
+    <text style="font-size: 12.5px; font-family: 'DejaVu Sans'; fill: #1f2937" transform="translate(53.609055 32.952686)">electrons arrive slowly</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_5">
+    <path d="M 404.470636 233.632676 
+Q 404.470636 223.67809 404.470636 215.288752 
+" clip-path="url(#p0b97731075)" style="fill: none; stroke: #be123c; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 401.870636 220.488752 
+L 404.470636 215.288752 
+L 407.070636 220.488752 
+z
+" clip-path="url(#p0b97731075)" style="fill: #be123c; stroke: #be123c; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 414.971182 213.724855 
+Q 414.971182 223.679441 414.971182 232.068779 
+" clip-path="url(#p0b97731075)" style="fill: none; stroke: #be123c; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 417.571182 226.868779 
+L 414.971182 232.068779 
+L 412.371182 226.868779 
+z
+" clip-path="url(#p0b97731075)" style="fill: #be123c; stroke: #be123c; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 404.470636 179.301476 
+Q 404.470636 169.34689 404.470636 160.957552 
+" clip-path="url(#p0b97731075)" style="fill: none; stroke: #be123c; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 401.870636 166.157552 
+L 404.470636 160.957552 
+L 407.070636 166.157552 
+z
+" clip-path="url(#p0b97731075)" style="fill: #be123c; stroke: #be123c; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 414.971182 159.393655 
+Q 414.971182 169.348241 414.971182 177.737579 
+" clip-path="url(#p0b97731075)" style="fill: none; stroke: #be123c; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 417.571182 172.537579 
+L 414.971182 177.737579 
+L 412.371182 172.537579 
+z
+" clip-path="url(#p0b97731075)" style="fill: #be123c; stroke: #be123c; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 404.470636 119.537156 
+Q 404.470636 109.58257 404.470636 101.193232 
+" clip-path="url(#p0b97731075)" style="fill: none; stroke: #6b7280; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 401.870636 106.393232 
+L 404.470636 101.193232 
+L 407.070636 106.393232 
+z
+" clip-path="url(#p0b97731075)" style="fill: #6b7280; stroke: #6b7280; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 290.131364 261.710606 
+L 333.883636 261.710606 
+L 333.883636 87.850766 
+L 290.131364 87.850766 
+z
+" clip-path="url(#p0b97731075)" style="fill: #d1d5db; stroke: #6b7280; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 338.799358 223.678766 
+Q 357.219697 223.678766 373.627575 223.678766 
+" clip-path="url(#p0b97731075)" style="fill: none; stroke: #0d9488; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 368.427575 221.078766 
+L 373.627575 223.678766 
+L 368.427575 226.278766 
+z
+" clip-path="url(#p0b97731075)" style="fill: #0d9488; stroke: #0d9488; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 338.799358 169.347566 
+Q 357.219697 169.347566 373.627575 169.347566 
+" clip-path="url(#p0b97731075)" style="fill: none; stroke: #0d9488; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 368.427575 166.747566 
+L 373.627575 169.347566 
+L 368.427575 171.947566 
+z
+" clip-path="url(#p0b97731075)" style="fill: #0d9488; stroke: #0d9488; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 338.799358 109.583246 
+Q 357.219697 109.583246 373.627575 109.583246 
+" clip-path="url(#p0b97731075)" style="fill: none; stroke: #0d9488; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 368.427575 106.983246 
+L 373.627575 109.583246 
+L 368.427575 112.183246 
+z
+" clip-path="url(#p0b97731075)" style="fill: #0d9488; stroke: #0d9488; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_4">
+    <path d="M 380.552727 223.678766 
+L 438.889091 223.678766 
+" clip-path="url(#p0b97731075)" style="fill: none; stroke: #7c3aed; stroke-width: 3"/>
+   </g>
+   <g id="line2d_5">
+    <path d="M 380.552727 169.347566 
+L 438.889091 169.347566 
+" clip-path="url(#p0b97731075)" style="fill: none; stroke: #0284c7; stroke-width: 3"/>
+   </g>
+   <g id="line2d_6">
+    <path d="M 380.552727 109.583246 
+L 438.889091 109.583246 
+" clip-path="url(#p0b97731075)" style="fill: none; stroke: #be123c; stroke-width: 3"/>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #7c3aed" x="447.639545" y="226.795953" transform="rotate(-0 447.639545 226.795953)">P–S σ* (= CBM)</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #0284c7" x="447.639545" y="172.464753" transform="rotate(-0 447.639545 172.464753)">B–S σ*</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #be123c" x="447.639545" y="112.700433" transform="rotate(-0 447.639545 112.700433)">P–O σ*</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #1f2937" transform="translate(306.705818 170.696701)">Li</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #1f2937" transform="translate(294.483631 185.099982)">metal</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #1f2937" x="403.887273" y="302.459006" transform="rotate(-0 403.887273 302.459006)">P–S cut · B–S cut · P–O cut in 1 of 2 seeds</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 12.5px; font-family: 'DejaVu Sans'; fill: #1f2937" transform="translate(315.307195 17.949268)">Direct contact with Li metal:</text>
+    <text style="font-size: 12.5px; font-family: 'DejaVu Sans'; fill: #1f2937" transform="translate(360.81696 32.952686)">electron flood</text>
+   </g>
+  </g>
+  <g id="text_13">
+   <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #6b7280" transform="translate(113.275781 350.925814)">Interface MD (MLIP/UMA, B₂O₃-doped model, 2 seeds).</text>
+   <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #6b7280" transform="translate(34.530703 363.528686)">At contact, what decides is whether the products block electrons and stay as a wall.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p0ab312ad4f">
+   <rect x="7.2" y="38.952686" width="233.345455" height="271.656"/>
+  </clipPath>
+  <clipPath id="p0b97731075">
+   <rect x="287.214545" y="38.952686" width="233.345455" height="271.656"/>
+  </clipPath>
+ </defs>
+</svg>

@@ -1,0 +1,17 @@
+# O-only control Li5.4PS4.1O0.3Cl1.6, grand potential (Li open), source db/properties/cei_esw_Li_controls_2026_09_16.json results.o_only_03; V = lower edge of the interval where the reaction holds (HZ-esw-reduction-limit-label)
+V_vs_Li,evolution_Li_per_fu,Li_exchange,O_host_phase,P_phase,S_phase,reaction
+0.000,8.0,uptake,Li2O,Li3P,Li2S,Li5.4P1S4.1Cl1.6O0.3 + 8 Li -> 0.3 Li2O + Li3P + 4.1 Li2S + 1.6 LiCl
+0.687,7.4,uptake,Li3PO4,Li3P,Li2S,Li5.4P1S4.1Cl1.6O0.3 + 7.4 Li -> 0.925 Li3P + 4.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl
+0.870,5.55,uptake,Li3PO4,LiP,Li2S,Li5.4P1S4.1Cl1.6O0.3 + 5.55 Li -> 0.925 LiP + 4.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl
+0.932,5.0214,uptake,Li3PO4,Li3P7,Li2S,Li5.4P1S4.1Cl1.6O0.3 + 5.021 Li -> 0.1321 Li3P7 + 4.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl
+1.177,4.7571,uptake,Li3PO4,LiP7,Li2S,Li5.4P1S4.1Cl1.6O0.3 + 4.757 Li -> 0.1321 LiP7 + 4.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl
+1.242,4.625,uptake,Li3PO4,P,Li2S,Li5.4P1S4.1Cl1.6O0.3 + 4.625 Li -> 4.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.925 P
+1.717,0.0,none,Li3PO4,Li3PS4,Li2S,Li5.4P1S4.1Cl1.6O0.3 -> 0.925 Li3PS4 + 0.4 Li2S + 0.075 Li3PO4 + 1.6 LiCl
+2.140,-0.7,release,Li3PO4,Li3PS4,LiS4,Li5.4P1S4.1Cl1.6O0.3 -> 0.925 Li3PS4 + 0.1 LiS4 + 0.075 Li3PO4 + 1.6 LiCl + 0.7 Li
+2.356,-3.3594,release,Li3PO4,P2S7,LiS4,Li5.4P1S4.1Cl1.6O0.3 -> 0.4625 P2S7 + 0.2156 LiS4 + 0.075 Li3PO4 + 1.6 LiCl + 3.359 Li
+2.700,-3.4036,release,Li4P2O7,P2S7,LiS4,Li5.4P1S4.1Cl1.6O0.3 -> 0.04286 Li4P2O7 + 0.4571 P2S7 + 0.225 LiS4 + 1.6 LiCl + 3.404 Li
+2.914,-3.4625,release,LiPO3,P2S7,LiS4,Li5.4P1S4.1Cl1.6O0.3 -> 0.1 LiPO3 + 0.45 P2S7 + 0.2375 LiS4 + 1.6 LiCl + 3.462 Li
+3.065,-3.7,release,LiPO3,P2S7,S,Li5.4P1S4.1Cl1.6O0.3 -> 0.1 LiPO3 + 0.45 P2S7 + 1.6 LiCl + 0.95 S + 3.7 Li
+3.326,-4.65,release,LiPO3,P2S7,SCl,Li5.4P1S4.1Cl1.6O0.3 -> 0.95 SCl + 0.1 LiPO3 + 0.45 P2S7 + 0.65 LiCl + 4.65 Li
+3.388,-5.3,release,LiPO3,P2S7,SCl,Li5.4P1S4.1Cl1.6O0.3 -> 1.218 SCl + 0.07647 PCl5 + 0.1 LiPO3 + 0.4118 P2S7 + 5.3 Li
+3.690,-5.4,release,P2O5,P2S7,SCl,Li5.4P1S4.1Cl1.6O0.3 -> 0.06 P2O5 + 1.259 SCl + 0.06824 PCl5 + 0.4059 P2S7 + 5.4 Li

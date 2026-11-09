@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-09 · managed-files: 590
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-09 · managed-files: 591
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 381건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 382건)
+- 2026-11-09 · `kb/concepts/se_redox_frontier.md` — 산화 · 환원은 어디서 먼저 일어나나 — free S²⁻ (VBM) · P–S σ* (CBM) · Li₃PO₄ 두 경로 · 확정 (개념 카드)
 - 2026-11-09 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-09 · `kb/reviews/codex_DU_prompt_cell_construction_v1_2026_11_09.md` — DU 프롬프트 — 셀구축 v1 (도핑 argyrodite 셀 만들기 · 고르기 · 안정성 · 후처리) + b2o3 B·O 배치 카드 개정 1 설계 리뷰 (결과 0 건 · 계산 전) · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…
 - 2026-11-09 · `kb/reviews/codex_DU_reply_cell_construction_v1_2026_11_09.md` — DU 회신 — 셀구축 v1 + b2o3 B·O 배치 카드 개정 1: NO-GO (1 단계 실행 보류 · 선행 도구 고침은 진행 가능) · P1 9 (Ewald 역격자 ½ · Li 공공 대칭 경로 · 반올림 중복 제거 · 어닐 재개 정체성 · k 탐침 가족 대비 · 최종 셋 DFT 이완본 부재 · 포논 캐시 · 허수 판정 · 골격 판정기 거리/NaN) · P2 · Q1–Q10 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
@@ -26,11 +27,10 @@
 - 2026-11-05 · `kb/reviews/codex_DQ_prompt_li2s2_dp_fixes_2026_11_05.md` — DQ 프롬프트 — li2s-2 DP 고침 + DQ 전 독립 리뷰 고침 (a4a29216): 저장 경계의 신호 (바깥 구간 · 교체 뒤 실패) · 현재 폴더 미해결 기록 · 독립 요약 = 러너와 같은 규칙 (같은 실행 충돌 공통 함수 · STOP · 장부 지문 · 이력 꼴) · 판정 쓰기 구간 · 낡은 요약 — 첫 담금질 GO 여부 · 발송 완료 2026-11-05 · 회신 수령 2026-11-05 NO…
 - 2026-11-05 · `kb/reviews/codex_DQ_reply_li2s2_dp_fixes_2026_11_05.md` — DQ 회신 — li2s-2 DP 고침 + DQ 전 리뷰 6 차 확인 (a4a29216): NO-GO · P1 2 (판정이 읽는 md_init_raw.xyz 가 지문 밖이라 입력 복구를 '같은 입력의 일시 오류' 로 자동 대체 / 첫 정본 판정 저장 실패로 이력 · 임시 파일만 남은 폴더를 놓치고 다른 시드 실행) · P2 1 (모순된 STOP 을 요약 · 러너가 다르게 읽음) · 수령 2026-11-05 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-11-04 · `kb/reviews/codex_DK_reply_li2s2_dj_fixes_2026_11_03.md` — DK 회신 — li2s-2 DJ 고침 확인 (7ac0be8e): NO-GO · DJ 기존 반례는 차단 · P0 2 (손상된 완료 궤적이 md_incomplete 로 읽혀 재담금질 · 정전 예산 · 재시도 분류와 예산 집계가 다른 판정을 읽음) · P1 2 (프레임 수가 MD 완료를 증명하지 않음 · 소비자가 0 h 증언 상한을 받음) · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…
-- 2026-11-04 · `kb/reviews/codex_DL_prompt_li2s2_dk_fixes_2026_11_04.md` — DL 프롬프트 — li2s-2 DK 고침 확인 (390441c4): MD 완료 기록 (프레임 셈 대신) · 실행 상태 한 곳 · 정전 추가 예산 없앰 · 증언 양수 — 첫 담금질 GO 여부 · 발송 · 회신 수령 2026-11-04 (NO-GO · P0 1 · …
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
-## concepts/ (15)
+## concepts/ (16)
 - `kb/concepts/bandgap.md` — Band gap — 밴드 갭 (전자 밴드 간극)
 - `kb/concepts/beta-gate.md` — β 게이트 — 확산영역 판정 (diffusive-regime gate)
 - `kb/concepts/bvse.md` — BVSE — Bond Valence Site Energy (결합가 자리 에너지)
@@ -46,6 +46,7 @@
 - `kb/concepts/ordered_vs_disordered.md` — Ordered vs Disordered — 어떤 LPSCl 구조로 계산할 것인가
 - `kb/concepts/oxidation_vs_mechanical.md` — 산화안정성과 기계적물성 — 정의부터 DFT 계산까지  (2026-08-13 · 확정)
 - `kb/concepts/sdcp_self_doping_explainer_2026_08_26.md` — 자기도핑(self-doping)이란 무엇인가 — 프로톤이 아니라 수소 원자를 뗀다  (2026-08-26 · 정리완료)
+- `kb/concepts/se_redox_frontier.md` — 산화 · 환원은 어디서 먼저 일어나나 — free S²⁻ (VBM) · P–S σ* (CBM) · Li₃PO₄ 두 경로  (2026-11-09 · 확정 (개념 카드))
 
 ## physics/ (6)
 - `kb/physics/260617_Nd2O3_doping_bandgap_narrowing_mechanism.md` — Nd₂O₃ 도핑 LPSCl 밴드갭: 왜 O 도핑인데 갭이 좁아지나
@@ -653,4 +654,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 477개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 478개 (정본 목록: litdb/INDEX.md)
