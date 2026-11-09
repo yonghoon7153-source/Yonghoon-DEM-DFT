@@ -16635,6 +16635,24 @@
       ],
       "supersedes": [],
       "decision_note": "고침 계약 = 판과의 상대 거리를 먼저 구한 정확 입력 산술로 관통량을 기존 허용폭과 비교 · 큰 양 / 음 원점 이동 · 상 / 하판에서 같은 판정 · 허용폭 늘리지 않음 · 수평면 합성 검사 (실제 STL / PBC / 이동 궤적 자격 아님). 수정 후보 = Codex 실무 6adf932499cd (B 반입 160b9ee10 · 앞선 바탕 사본 08fb8b178 = 이미 B 27ed57b96 와 blob 14/14 같음 → 건너뜀) · 시험 먼저 = 고치기 전 생성기 18 메서드 실패 11 · 자격 22 메서드 실패 21 (subtest 관측 포함 · 오류 0) → 18/18 · 22/22 (우리 기계 재실행 같음) · 독립 재확인 대기 (요청서 docs/reviews/dem_gen2_preparation_fixes_20261109/review_request.md · 재검토 ZIP sha256 7504b3d9… · 발송 = 1저자 11-09) · 합성 · 비활성 범위만 · 실제 T0 극성 · T5 / T11 / T12 = NOT_RUN · physical_ready = false · 전체 HOLD (11-09 반입 · 원장 제안 = claimed_fixed 조건부 · verified 아님 = 고친 쪽 · 검토 쪽 모두 Codex 창)"
+    },
+    {
+      "id": "MIP-01",
+      "severity": "P2",
+      "title": "믹서 first8 비활성 검증기 — candidate / evidence 경로 겹침 금지가 build 모드에만 있어, verify 에서 evidence 를 candidate 안 새 폴더로 주면 정상 인자로 후보 폴더에 report.json 을 더한다 (43 → 44 파일 · 다음 검증 rc 1 · 입력 보존 계약 위반)",
+      "status": "claimed_fixed",
+      "owner": "codex",
+      "found_by": "codex 반박 창 11-09 독립 검토 (리뷰 핀 73e659273fd2 · 판정 ZIP sha256 18d6945b… · 1저자 전달 · Codex 실무 창 수령 기록 = 자산 · 메타 · 정책 경계 한정 수용 · 검증기 입력 보존 결함 1 · 새 P1 / P3 0)",
+      "opened_in": "docs/reviews/mixer_inactive_path_fix_20261109/README.md",
+      "claimed_fixed_sha": "f46c73f4c2098e60650b420d02ef7a0f5fc7e556",
+      "verified_sha": null,
+      "evidence_tests": [
+        "docs/reviews/mixer_inactive_path_fix_20261109/test_evidence_boundary.py (5 메서드 · 고치기 전 assertion 실패 33 · rc 1 → 5/5 rc 0 · 중첩 36 조건 = 4 모드 × 3 관계 × 3 경로 표기 + 정상 형제 4 + 원 반례 재검사 1)",
+        "docs/reviews/mixer_inactive_path_fix_20261109/verification_summary.json",
+        "docs/reviews/mixer_inactive_path_fix_20261109/intake_receipt.json (독립 판정 ZIP 신원 · 원 ZIP = 외부 위치 문구 → 리포 밖 보존)"
+      ],
+      "supersedes": [],
+      "decision_note": "고침 계약 = old · build · verify · preparation-tests 네 모드 공통 경로 검사 (정규화 뒤 같은 경로 · 양방향 포함 = 쓰기 · 폴더 생성 전 거부 · 조상 링크 검사 유지) · 입력 파일 · 디렉터리 집합 보존 · 정상 형제 evidence 동작 유지 · 수정 후보 = Codex 실무 3ca47af5b0ac (B 반입 f46c73f4c · 앞선 바탕 사본 2ac1a2482f02 = 이미 B 1df1ba5a7 와 blob 61/61 같음 → 건너뜀) · 우리 기계 재실행 = 경계 시험 5/5 · old rc 1 (옛 메타 8 실패 = 기대) · verify · 준비 14 · 출처 5 = rc 0 · 후보 43 파일 그대로 · 독립 재확인 대기 (요청서 docs/reviews/mixer_inactive_path_fix_20261109/review_request.md · 재검토 ZIP sha256 12435e02… · 발송 = 1저자 11-09) · 운영 봉인 · 실행 승인 아님 · 전체 HOLD (11-09 반입 · 원장 제안 = claimed_fixed · verified 아님 = 고친 쪽 · 검토 쪽 모두 Codex 창)"
     }
   ]
 }
