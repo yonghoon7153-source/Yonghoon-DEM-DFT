@@ -11606,7 +11606,7 @@
    "title": "B₂O₃-LPSCl1.6 B·O 배치 선호 UMA 재탐색 (O 가 B 에 · P 에 · 자유 S 자리에) → 에너지로만 고른 배치의 골격 게이트 (2 단계) — 트랙 b2o3 UMA-MD · 1저자 = 사용자",
    "statement": "카드 db/properties/b2o3_bo_placement_estimand_2026_11_09.json. 1 단계: 정본 LPSCl1.6 (modelc V0) × (2,2,1) · 할로겐 고정 · B₂O₃ 2 단위 (Li116P16B4S82O6Cl32 · B/(B+P) 0.2 = 옛 챔피언 농도) · Ewald 서로 다른 바탕 배치 12 × O 꼴 세 가족 (F_B B–O · F_P P–O · F_free 자유 S) = 36 구조 · UMA 500 K × 20 ps 어닐 + 셀 포함 이완 · ΔE_fam = [E_min(F) − E_min(F_P)]/2 (eV/B₂O₃ · UMA 내부) · 짝 δ_k · |ΔE| < 0.20 이면 'UMA 로는 못 가른다' · 가족마다 UMA 최저 둘 DFT 단일점 (PBE · 52/520 · Γ) · |ΔE^DFT| < 0.10 이면 '단일점으로도 못 가른다' · k 탐침 2×2×1. 2 단계 (1 단계 판독 + 사용자 발사 뒤): 에너지만으로 고른 3 배치 × 600/650/700 K × 시드 2 × 400 ps + 같은 셀 modelc 대조 6 런 · 배치마다 골격 사건 합 ≤ 2 단단 · ≥ 12 움직임 · 대조 > 2 면 무효.",
    "rationale": "모든 b2o3 MD 가 6 월 챔피언 한 배치였고, 사건이 그 배치의 도펀트 자리 둘에 몰렸다 (b2o3_eventrate_site_localization_2026_11_09.json · 사후 탐색). 6 월 UMA 는 bo4 와 distributed 가 근접 축퇴였고 꼴 DFT 비교는 없었다. 사용자 11-09 '한번 UMA로 다시 b랑 O 위치 관련해서 선호하는 site preference를 발전된 코드로 탐색해볼까'.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "exploratory": true,
@@ -11636,16 +11636,32 @@
      "session": "대피 세션 claude/evac-2026-11-08"
     }
    ],
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-09",
      "state": "proposed",
      "by": "agent",
      "note": "사용자 '카드 쓰기 (Recommended)' + 'UMA로 다시 b랑 O 위치 … site preference 를 발전된 코드로 탐색해볼까' — 카드 작성 (결과 전) · 비준 대기"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "active",
+     "by": "사용자 (b2o3 UMA-MD · 1저자 = 사용자)",
+     "note": "비준 (결과 전) — 사용자 2026-11-09 (대피 세션): AskUserQuestion 'b2o3 B·O 배치 UMA 재탐색 카드 (옛 챔피언과 같은 농도 0.2 · 20 f.u. · O 꼴 세 가족 × 바탕 배치 12 = 36 구조 · 가족 최저은 DFT 단일점 확인 · 2 단계 골격 게이트는 판독 뒤 발사) 를 어떻게 할까요?' 에 '비준 — 선행 작업부터 (Recommended)'"
     }
    ],
-   "_note": "proposed — 사용자 (1저자) 비준 대기"
+   "_note": "active — 사용자 비준 2026-11-09 (결과 전 · results_seen false) · 선행 작업 P1–P4 를 selftest 음성 경로와 함께 끝낸 뒤 1 단계 · 2 단계는 1 단계 판독 + 사용자 '2 단계 발사' 뒤",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-09T04:07:51Z",
+    "commit": "3d266d50fcbfb76e2cf17c1bd8451e5124950885",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-09 (대피 세션): AskUserQuestion 'b2o3 B·O 배치 UMA 재탐색 카드 (옛 챔피언과 같은 농도 0.2 · 20 f.u. · O 꼴 세 가족 × 바탕 배치 12 = 36 구조 · 가족 최저은 DFT 단일점 확인 · 2 단계 골격 게이트는 판독 뒤 발사) 를 어떻게 할까요?' 에 '비준 — 선행 작업부터 (Recommended)'",
+    "decision_digest": "sha256:65c749944c508defe649b14e6534dd745783d2810f67bb4151ef8889430ccb20"
+   }
   }
  ]
 }
