@@ -1,0 +1,18 @@
+{
+  "classification": "LOCAL_SYNTHETIC_DEVELOPMENT_NOT_RESEARCH_RESULTS",
+  "initial_tests_first": {
+    "producer": "Test file written before new implementation; import failed because implementation file absent, zero executed tests",
+    "qualification": "Test file written before new implementation; import failed because implementation file absent, zero executed tests",
+    "not_a_behavioral_regression_red": true
+  },
+  "interim_checks": [
+    {"scope": "new inventory guard absent", "methods": 13, "failures": 0, "errors": 2, "after_methods_passed": 13},
+    {"scope": "composite recipe and scalar capture extension", "methods": 11, "failures": 1, "errors": 6},
+    {"scope": "test parsed explanatory pdd comment as command", "test_correction": "Filter actual fix command lines", "not_a_production_failure": true},
+    {"scope": "large-scale lens intermediate overflow and zero-error servo overflow", "methods": 15, "failures": 2, "errors": 0, "after_methods_passed": 15},
+    {"scope": "fresh zmax thermo and frozen force before restart", "methods": 15, "failures": 2, "errors": 0, "after_methods_passed": 15}
+  ],
+  "counting_rule": "Use final verification_summary.json only for final suite counts; earlier repeats, subtests, generated deck variants and inner observations are not additional unique tests",
+  "qualification_limit": "Pure functions and inactive text generation; not live observation adapter, complete S1-S4, P2 ULPR integration, syntax qualification or physical T5/T11/T12",
+  "whole_gate": "HOLD"
+}
