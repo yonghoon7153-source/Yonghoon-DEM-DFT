@@ -147,6 +147,7 @@ evidenceScope: multi-source-primary
 | DS | 2026-11-06 | `codex_DS_prompt_li2s2_dr_fixes_2026_11_06.md` | `codex_DS_reply_li2s2_dr_fixes_2026_11_06.md` | 발송 완료 · 회신 수령 2026-11-06 NO-GO (`codex_DS_reply_li2s2_dr_fixes_2026_11_06.md` · P1 1 · P2 1) → 고침 · DT 전 독립 리뷰 3 차 → DT (`codex_DT_prompt_li2s2_ds_fixes_2026_11_06.md`) · 기준 커밋 6b124717 | 같은 라벨 · 주제 토큰 일치 ['dr', 'fixes', 'li2s2']; 판정 인용 4회 |
 | DT | 2026-11-06 | `codex_DT_prompt_li2s2_ds_fixes_2026_11_06.md` | `codex_DT_reply_li2s2_ds_fixes_2026_11_06.md` | 발송 완료 · 회신 수령 2026-11-06 조건부 GO (`codex_DT_reply_li2s2_ds_fixes_2026_11_06.md` · 새 P0 · P1 없음 · P2 1 시계 설명) → 카드 v14 · 결정 활성 · kgy 1 단계 발사 · 기준 커밋 63331be6 | 같은 라벨 · 주제 토큰 일치 ['ds', 'fixes', 'li2s2'] |
 | DU | 2026-11-09 | `codex_DU_prompt_cell_construction_v1_2026_11_09.md` | `codex_DU_reply_cell_construction_v1_2026_11_09.md` | 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`codex_DU_reply_cell_construction_v1_2026_11_09.md` · P1 9 · P2 4 · 1 단계 실행 보류 · 선행 도구 고침은 진행 가능) · 기준 커밋 af6b9464 | 같은 라벨 · 주제 토큰 일치 ['cell', 'construction', 'v1'] |
+| DV | 2026-11-09 | `codex_DV_prompt_cell_construction_v1_1_2026_11_09.md` | — | 발송 전 · 기준 커밋 ad4f41b8 (브랜치 claude/evac-2026-11-08) · 앞 편지 DU (NO-GO) | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
