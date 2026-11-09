@@ -1,0 +1,228 @@
+{
+  "schema": "nonrint_next_preparation_descriptive_draft/1",
+  "date": "2026-11-09",
+  "base_b": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+  "purpose": "Decision and evidence preparation table reusing existing questions; not a policy, executable gate, registration or access token",
+  "current_user_direction": "Begin next preparation under continuing HOLD; protect Rint paths",
+  "reference_sources": [
+    {
+      "path": "docs/collab/claude_to_codex/20261109-0003_nonrint-consolidation-sha-map.md",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "14bc935ef4d92a6be7a0d3c9880c6431bc6e9d5e"
+    },
+    {
+      "path": "docs/reviews/lhs_post_inventory_author_questions_20261108/README.md",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "a007f476f3fa4b01519ef4fe708a114f45092b55"
+    },
+    {
+      "path": "docs/reviews/lhs_n_preaccess_definition_draft_20261106/author_decisions.md",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "4bc36ed8d914e5babdca3e9e00b43f9d3d6ba91d"
+    },
+    {
+      "path": "docs/reviews/lhs_n_preaccess_definition_draft_20261106/definition.json",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "a4214ecdd527ed51cabf869f43e3c39e716974c3"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_first8_preparation_20261104/author_decisions.json",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "6f98daa85696fd2d17da2e10b0667e77f3714297"
+    },
+    {
+      "path": "docs/reviews/mixer_first8_launch_preparation_20261106/blockers.json",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "b811bbc2e5518fae00643964c25b97cddb6e989a"
+    },
+    {
+      "path": "docs/reviews/mixer_first8_launch_preparation_20261106/source_seal.json",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "730fc4133089a831576303467ebf6848f93abd70"
+    },
+    {
+      "path": "docs/reviews/mixer_first8_reseal_candidate_20261108/candidate_seal.json",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "08c1f4236d659631531bc67eab65a6da80d79ba4"
+    },
+    {
+      "path": "scripts/mixer_precal_prepare.py",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "e514a2f285157a2458db98aa75bb785ff0be9a28"
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "82439cf3523342e16645eb27b51acf51936405f6"
+    }
+  ],
+  "completed_not_reopened": [
+    "WSL30 inventory receipt and its earlier GO",
+    "LHS12-01/02 document ambiguity limited disposition",
+    "MLA-01/MLAR-01 residual and MLA-02/03 original-defect limited disposition",
+    "MGS-01 direct API limited disposition",
+    "Independent reviewer MLAR evidence repack receipt"
+  ],
+  "lhs": {
+    "scope": "WSL30 only; no live files or actual values accessed",
+    "existing_questions": "docs/reviews/lhs_post_inventory_author_questions_20261108/README.md",
+    "canonical_policy_questions": "docs/reviews/lhs_n_preaccess_definition_draft_20261106/author_decisions.md",
+    "policy_ratification": {
+      "question_ids": [
+        "LHS-N Q1",
+        "LHS-N Q2",
+        "LHS-N Q3",
+        "LHS-N Q4",
+        "LHS-N Q5"
+      ],
+      "recommendation": "Reuse the accepted inactive draft: exclusive exposure/evidence cohorts and E/Z/D direction; P_Rend protocol endpoint; actual damping-group integer N and descriptive lineage-block contrasts; establish effective input identity without inventing missing facts",
+      "author_decision": null,
+      "approval_reference": null
+    },
+    "decisions": [
+      {
+        "id": "W30-Q1",
+        "recommendation": "Author provides or assigns bounded non-outcome identity evidence for WSL30; distinguish execution-time seal/receipt from current static bytes",
+        "author_decision": null,
+        "approval_reference": null,
+        "evidence_owner": null,
+        "permitted_read_or_transfer_scope": null,
+        "evidence_needed": [
+          "run/segment identifiers",
+          "execution-time input seal or receipt",
+          "current input kind, byte length and SHA256",
+          "ordered include/variable/input dependency and resume relations",
+          "non-outcome binding of both logs to execution and segment"
+        ],
+        "completion_rule": "Missing execution-time identity remains NOT_ESTABLISHED; no deck eval or outcome access"
+      },
+      {
+        "id": "W30-Q2",
+        "recommendation": "Only after same execution/segment is supported, choose log.liggghts as canonical candidate and preserve log.txt for comparison; justified distinct segments require prior boundary/overlap/refusal rules",
+        "author_decision": null,
+        "approval_reference": null,
+        "actual_canonical_log": null,
+        "run_segment_binding_evidence": null
+      },
+      {
+        "id": "W30-Q3",
+        "recommendation": "Conditional A first; prepare C change-tests and independent review only for justified duplicates or resume segments that A cannot handle",
+        "author_decision": null,
+        "approval_reference": null,
+        "actual_selected_A_or_C": null,
+        "missing_identity_automatically_selects_C": false,
+        "existing_B7_REFUSED_preserved": true
+      },
+      {
+        "id": "W30-Q4",
+        "recommendation": "Freeze actual roster, canonical segments, approved endpoint/frame, operator, permitted fields, purpose and exposure/retention rules before a separate value-access GO",
+        "author_decision": null,
+        "approval_reference": null,
+        "actual_roster": null,
+        "actual_endpoint_and_frames": null,
+        "access_operator": null,
+        "approved_fields": null,
+        "exposure_and_retention_record": null,
+        "value_access_go_reference": null
+      }
+    ],
+    "actual_evidence_template": {
+      "run_id": null,
+      "segment_id": null,
+      "execution_input_seal_or_receipt": null,
+      "current_input_identity": null,
+      "ordered_dependencies_and_resume_links": null,
+      "log_execution_segment_binding": null
+    },
+    "actual_rows_created": 0,
+    "actual_inputs_or_values_read": false,
+    "inventory_rerun_requested": false,
+    "automatic_scope_expansion": [
+      "none: ibb184 and whole214 require separate GO",
+      "none: porosity/tau, pressure rewriting and stage A remain outside this preparation"
+    ]
+  },
+  "mixer": {
+    "existing_resource_questions": "docs/reviews/lhs_n_preaccess_definition_draft_20261106/author_decisions.md Q9-Q12",
+    "resource_choices": {
+      "np_per_arm": {
+        "recommended": 20,
+        "author_decision": null
+      },
+      "concurrent_arms": {
+        "initial_recommended": 1,
+        "later_max_recommended": 2,
+        "later_conditions": "Initial qualification passes, separately approved wave and reviewed policy transition; historical aggregate cpu-60 is not current field qualification",
+        "author_decision": null
+      },
+      "order": {
+        "recommended": [
+          "E0 alone",
+          "review",
+          "N0 alone",
+          "review",
+          "B1 U/C",
+          "B2 U/C",
+          "B3 U/C"
+        ],
+        "author_decision": null
+      },
+      "approval_reference": null
+    },
+    "next_static_candidate_preparation": {
+      "recommended": "After explicit preparation-scope choice, use a fresh copy to plan the current-source inactive candidate, metadata/source provenance and fixed negative/mock checks; preserve existing assets and seals",
+      "author_decision": null,
+      "approval_reference": null,
+      "candidate_created": false,
+      "tests_executed": false,
+      "operating_seal_replaced": false
+    },
+    "source_identity_gap": {
+      "original_asset_generation_pin": "527e244e4ebd6f0cb04c6cfb2ff5f3a52fb01996",
+      "accepted_inactive_candidate_pin": "4eb6c593ec5384ed8e51079f5ec7196b1eeae80f",
+      "accepted_inactive_validation_source_pin": "69b6bec7ac20343dd884f8d5fa63e8bf45e7df97",
+      "original_launch_reference_pin": "e6000405b7625acf8c2c0a393571b116479e0e97",
+      "bounded_dependency_count": 12,
+      "dependency_definition": "Nine bounded mixer scripts plus three STLs, not the separate MGS twelve-script context package",
+      "current_changes_from_original_seal": [
+        "scripts/make_mixer_deck.py",
+        "scripts/mixer_deck_readback.py"
+      ],
+      "current_changes_from_accepted_inactive_source": [
+        "scripts/make_mixer_deck.py"
+      ],
+      "changed_launch_file": "docs/reviews/mixer_first8_launch_preparation_20261106/submit_one.py.txt",
+      "metadata_inference": "deck_meta records generator SHA and validate_case compares metadata type-strictly with the current generated recipe; keeping all old eight metadata files while changing only the generator seal is expected to fail binding",
+      "inference_method": "Static source inspection, not an executed failure or new scientific finding",
+      "required_provenance_separation": "Preserve original asset generation identity; separately identify any future candidate generator, metadata, bindings and validation source",
+      "prior_candidate_verifier_is_current_B_qualification": false
+    },
+    "field_evidence": {
+      "binary_identity": null,
+      "mpi_and_np20_qualification": null,
+      "host_and_shared_filesystem": null,
+      "current_resources": null,
+      "walltime_and_stall_limits": null,
+      "disk_quota_inode_limits": null,
+      "physical_100k_positive_pipeline": null,
+      "reviewed_reservation_release_and_policy_transition": null,
+      "operator_and_retrieval_scope": null
+    },
+    "execution_go": null,
+    "post_SUBMITTED_runtime_failure_auto_HOLD": false,
+    "automatic_reservation_release_or_retry": false
+  },
+  "current_work_boundaries": {
+    "document_preparation_only": true,
+    "whole_gate": "HOLD",
+    "research_execution_authorized": false,
+    "value_access_authorized": false,
+    "operational_activation": false,
+    "shared_ledger_modified": false,
+    "canonical_definitions_modified": false,
+    "Rint_files_changed": false,
+    "Rint_tests_executed": false,
+    "source_or_project_tests_executed": false
+  },
+  "next_step": "Obtain specific author policy/resource/preparation-scope choices; evidence access and actual value/execution GO remain separately scoped"
+}
