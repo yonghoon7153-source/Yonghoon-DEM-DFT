@@ -16563,6 +16563,78 @@
         "docs/data/rint2_s0_sbe_20261108/tools/selftest.log (옛 판 5/5 채택 · 고친 판 1 채택 · 4 거부)",
         "docs/data/rint2_s0_sbe_20261108/tools/import_s0_tgz.py (고친 판)"
       ]
+    },
+    {
+      "id": "G2PR-01",
+      "severity": "P2",
+      "title": "DEM 세대 2 생성기 (비활성 덱 후보) — raw 판 반력에 abs 를 적용해 ±target (또는 ±0.8 target) 이 같은 관측 · 제어값이 됨 (반대 극성 힘을 압축으로 읽음) (Codex 표기 G2PREP-01)",
+      "status": "claimed_fixed",
+      "owner": "codex",
+      "found_by": "codex 반박 창 11-09 독립 검토 (리뷰 핀 9241933b9836 · 판정 ZIP sha256 30eac8f7… · 1저자 전달 · Codex 실무 창 수령 기록 = 문서 · 미정값 · 비활성 경계 한정 수용 · 코드 보완 필요 · 새 P1 0)",
+      "opened_in": "docs/reviews/dem_gen2_preparation_fixes_20261109/README.md",
+      "claimed_fixed_sha": "160b9ee104fbe0bee9dcf87cd80976000eec2c37",
+      "verified_sha": null,
+      "evidence_tests": [
+        "scripts/test_make_dem_gen2_decks.py",
+        "docs/reviews/dem_gen2_preparation_fixes_20261109/verification_summary.json (생성기 18/18 · 고치기 전 실패 11)",
+        "docs/reviews/dem_gen2_preparation_fixes_20261109/intake_receipt.json (독립 판정 ZIP 신원 · 수령 바이트 감사 PASS · 원 ZIP = 외부 위치 문구 → 리포 밖 보존)"
+      ],
+      "supersedes": [],
+      "decision_note": "고침 계약 = raw signed 반력을 한 번 얼리고 같은 raw × 명시적 정수 극성 (±1) 으로 정규화 · raw / 극성 / 압축 힘 기록 뒤 반대 부호면 제어 · gate · restart 전에 정지 · 합성 ±1 은 실제 T0 극성 비준 아님 (실제 극성 = null). 수정 후보 = Codex 실무 6adf932499cd (B 반입 160b9ee10 · 앞선 바탕 사본 08fb8b178 = 이미 B 27ed57b96 와 blob 14/14 같음 → 건너뜀) · 시험 먼저 = 고치기 전 생성기 18 메서드 실패 11 · 자격 22 메서드 실패 21 (subtest 관측 포함 · 오류 0) → 18/18 · 22/22 (우리 기계 재실행 같음) · 독립 재확인 대기 (요청서 docs/reviews/dem_gen2_preparation_fixes_20261109/review_request.md · 재검토 ZIP sha256 7504b3d9… · 발송 = 1저자 11-09) · 합성 · 비활성 범위만 · 실제 T0 극성 · T5 / T11 / T12 = NOT_RUN · physical_ready = false · 전체 HOLD (11-09 반입 · 원장 제안 = claimed_fixed 조건부 · verified 아님 = 고친 쪽 · 검토 쪽 모두 Codex 창)"
+    },
+    {
+      "id": "G2PR-02",
+      "severity": "P2",
+      "title": "DEM 세대 2 자격 함수 (합성 제어 guard) — 지연 큐가 아직 초기 오차를 쓰는 동안의 첫 목표 창 진입을 수렴으로 반환 (Codex 표기 G2PREP-02)",
+      "status": "claimed_fixed",
+      "owner": "codex",
+      "found_by": "codex 반박 창 11-09 독립 검토 (리뷰 핀 9241933b9836 · 판정 ZIP sha256 30eac8f7… · 1저자 전달 · Codex 실무 창 수령 기록 = 문서 · 미정값 · 비활성 경계 한정 수용 · 코드 보완 필요 · 새 P1 0)",
+      "opened_in": "docs/reviews/dem_gen2_preparation_fixes_20261109/README.md",
+      "claimed_fixed_sha": "160b9ee104fbe0bee9dcf87cd80976000eec2c37",
+      "verified_sha": null,
+      "evidence_tests": [
+        "scripts/test_dem_gen2_qualification.py",
+        "docs/reviews/dem_gen2_preparation_fixes_20261109/verification_summary.json (자격 22/22 · 고치기 전 실패 21)",
+        "docs/reviews/dem_gen2_preparation_fixes_20261109/intake_receipt.json (독립 판정 ZIP 신원 · 수령 바이트 감사 PASS · 원 ZIP = 외부 위치 문구 → 리포 밖 보존)"
+      ],
+      "supersedes": [],
+      "decision_note": "고침 계약 = 첫 창 진입 = 진단 사건 · 발산은 조기 거부 · 그 밖엔 사전 지정 예산 끝까지 관찰 · 끝 연속 창과 대기 지연 큐가 모두 허용폭 안일 때만 예산 한정 수렴 (반례 = 첫 진입 257 뒤 6440 에서 UNSTABLE · 17 뒤 402 에서 UNSTABLE) · 무한 시간 안정성 · 실제 침대 제어 자격 아님. 수정 후보 = Codex 실무 6adf932499cd (B 반입 160b9ee10 · 앞선 바탕 사본 08fb8b178 = 이미 B 27ed57b96 와 blob 14/14 같음 → 건너뜀) · 시험 먼저 = 고치기 전 생성기 18 메서드 실패 11 · 자격 22 메서드 실패 21 (subtest 관측 포함 · 오류 0) → 18/18 · 22/22 (우리 기계 재실행 같음) · 독립 재확인 대기 (요청서 docs/reviews/dem_gen2_preparation_fixes_20261109/review_request.md · 재검토 ZIP sha256 7504b3d9… · 발송 = 1저자 11-09) · 합성 · 비활성 범위만 · 실제 T0 극성 · T5 / T11 / T12 = NOT_RUN · physical_ready = false · 전체 HOLD (11-09 반입 · 원장 제안 = claimed_fixed 조건부 · verified 아님 = 고친 쪽 · 검토 쪽 모두 Codex 창)"
+    },
+    {
+      "id": "G2PR-03",
+      "severity": "P3",
+      "title": "DEM 세대 2 기하 (교차 원판 면적) — 큰 반경비에서 r*r − x*x 상쇄가 교차 원판을 0 으로 숨기고 반경 순서 대칭을 깨뜨림 (Codex 표기 G2PREP-03)",
+      "status": "claimed_fixed",
+      "owner": "codex",
+      "found_by": "codex 반박 창 11-09 독립 검토 (리뷰 핀 9241933b9836 · 판정 ZIP sha256 30eac8f7… · 1저자 전달 · Codex 실무 창 수령 기록 = 문서 · 미정값 · 비활성 경계 한정 수용 · 코드 보완 필요 · 새 P1 0)",
+      "opened_in": "docs/reviews/dem_gen2_preparation_fixes_20261109/README.md",
+      "claimed_fixed_sha": "160b9ee104fbe0bee9dcf87cd80976000eec2c37",
+      "verified_sha": null,
+      "evidence_tests": [
+        "scripts/test_dem_gen2_qualification.py",
+        "docs/reviews/dem_gen2_preparation_fixes_20261109/verification_summary.json",
+        "docs/reviews/dem_gen2_preparation_fixes_20261109/intake_receipt.json (독립 판정 ZIP 신원 · 수령 바이트 감사 PASS · 원 ZIP = 외부 위치 문구 → 리포 밖 보존)"
+      ],
+      "supersedes": [],
+      "decision_note": "고침 계약 = 받은 int / float 를 정확한 유리수로 읽은 대칭 교차원판 식 + 접선 / 포함 분기 · 최종 float overflow · 양성 underflow = 명시 거부 · 반경 교환 · 스케일 · 접선 근처 대조 · 기하 원판 면적 (힘 · 전기 면적 아님). 수정 후보 = Codex 실무 6adf932499cd (B 반입 160b9ee10 · 앞선 바탕 사본 08fb8b178 = 이미 B 27ed57b96 와 blob 14/14 같음 → 건너뜀) · 시험 먼저 = 고치기 전 생성기 18 메서드 실패 11 · 자격 22 메서드 실패 21 (subtest 관측 포함 · 오류 0) → 18/18 · 22/22 (우리 기계 재실행 같음) · 독립 재확인 대기 (요청서 docs/reviews/dem_gen2_preparation_fixes_20261109/review_request.md · 재검토 ZIP sha256 7504b3d9… · 발송 = 1저자 11-09) · 합성 · 비활성 범위만 · 실제 T0 극성 · T5 / T11 / T12 = NOT_RUN · physical_ready = false · 전체 HOLD (11-09 반입 · 원장 제안 = claimed_fixed 조건부 · verified 아님 = 고친 쪽 · 검토 쪽 모두 Codex 창)"
+    },
+    {
+      "id": "G2PR-04",
+      "severity": "P3",
+      "title": "DEM 세대 2 판 관통 검사 — 큰 절대좌표에서 z + radius − top 이 0 으로 반올림돼 명시한 0 관통 허용폭을 통과 (Codex 표기 G2PREP-04)",
+      "status": "claimed_fixed",
+      "owner": "codex",
+      "found_by": "codex 반박 창 11-09 독립 검토 (리뷰 핀 9241933b9836 · 판정 ZIP sha256 30eac8f7… · 1저자 전달 · Codex 실무 창 수령 기록 = 문서 · 미정값 · 비활성 경계 한정 수용 · 코드 보완 필요 · 새 P1 0)",
+      "opened_in": "docs/reviews/dem_gen2_preparation_fixes_20261109/README.md",
+      "claimed_fixed_sha": "160b9ee104fbe0bee9dcf87cd80976000eec2c37",
+      "verified_sha": null,
+      "evidence_tests": [
+        "scripts/test_dem_gen2_qualification.py",
+        "docs/reviews/dem_gen2_preparation_fixes_20261109/verification_summary.json",
+        "docs/reviews/dem_gen2_preparation_fixes_20261109/intake_receipt.json (독립 판정 ZIP 신원 · 수령 바이트 감사 PASS · 원 ZIP = 외부 위치 문구 → 리포 밖 보존)"
+      ],
+      "supersedes": [],
+      "decision_note": "고침 계약 = 판과의 상대 거리를 먼저 구한 정확 입력 산술로 관통량을 기존 허용폭과 비교 · 큰 양 / 음 원점 이동 · 상 / 하판에서 같은 판정 · 허용폭 늘리지 않음 · 수평면 합성 검사 (실제 STL / PBC / 이동 궤적 자격 아님). 수정 후보 = Codex 실무 6adf932499cd (B 반입 160b9ee10 · 앞선 바탕 사본 08fb8b178 = 이미 B 27ed57b96 와 blob 14/14 같음 → 건너뜀) · 시험 먼저 = 고치기 전 생성기 18 메서드 실패 11 · 자격 22 메서드 실패 21 (subtest 관측 포함 · 오류 0) → 18/18 · 22/22 (우리 기계 재실행 같음) · 독립 재확인 대기 (요청서 docs/reviews/dem_gen2_preparation_fixes_20261109/review_request.md · 재검토 ZIP sha256 7504b3d9… · 발송 = 1저자 11-09) · 합성 · 비활성 범위만 · 실제 T0 극성 · T5 / T11 / T12 = NOT_RUN · physical_ready = false · 전체 HOLD (11-09 반입 · 원장 제안 = claimed_fixed 조건부 · verified 아님 = 고친 쪽 · 검토 쪽 모두 Codex 창)"
     }
   ]
 }
