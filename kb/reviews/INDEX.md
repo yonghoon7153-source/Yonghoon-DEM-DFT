@@ -148,7 +148,7 @@ evidenceScope: multi-source-primary
 | DT | 2026-11-06 | `codex_DT_prompt_li2s2_ds_fixes_2026_11_06.md` | `codex_DT_reply_li2s2_ds_fixes_2026_11_06.md` | 발송 완료 · 회신 수령 2026-11-06 조건부 GO (`codex_DT_reply_li2s2_ds_fixes_2026_11_06.md` · 새 P0 · P1 없음 · P2 1 시계 설명) → 카드 v14 · 결정 활성 · kgy 1 단계 발사 · 기준 커밋 63331be6 | 같은 라벨 · 주제 토큰 일치 ['ds', 'fixes', 'li2s2'] |
 | DU | 2026-11-09 | `codex_DU_prompt_cell_construction_v1_2026_11_09.md` | `codex_DU_reply_cell_construction_v1_2026_11_09.md` | 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`codex_DU_reply_cell_construction_v1_2026_11_09.md` · P1 9 · P2 4 · 1 단계 실행 보류 · 선행 도구 고침은 진행 가능) · 기준 커밋 af6b9464 | 같은 라벨 · 주제 토큰 일치 ['cell', 'construction', 'v1'] |
 | DV | 2026-11-09 | `codex_DV_prompt_cell_construction_v1_1_2026_11_09.md` | `codex_DV_reply_cell_construction_v1_1_2026_11_09.md` | 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`codex_DV_reply_cell_construction_v1_1_2026_11_09.md` · P1 4 · P2 6 · P3 2 · 1 단계 해제조건 네 묶음 — 큐 실패 전파 · 실물 결속 · 생성 짝 검증 · 판독기) · 기준 커밋 ad4f41b8 | 같은 라벨 · 주제 토큰 일치 ['1', 'cell', 'construction', 'v1'] |
-| DW | 2026-11-09 | `codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md` | — | 발송 2026-11-09 (사용자) · 회신 대기 · 범위 ad4f41b8..837cc6e8 (evac 브랜치) · 앞 편지 DV (NO-GO) · GO 면 조건부 비준 충족 | — |
+| DW | 2026-11-09 | `codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md` | `codex_DW_reply_cell_construction_v1_1_release_2026_11_09.md` | **NO-GO** (11-09) · DV 묶음 1–3 닫힘 · 묶음 4 판독기 단계 연결 미해제 · P1 3 (단계 결속 · 파일럿 시간축 · EOS 기준 순서 = DFT 전) · P2 비유한 기하 · P3 관측창 근사 · 조건부 비준 미충족 | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 

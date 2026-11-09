@@ -11759,6 +11759,12 @@
      "state": "proposed",
      "by": "사용자",
      "note": "조건부 비준 — 사용자 2026-11-09 *'go면 비준이야'*: Codex DW 회신 (kb/reviews/codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md · 범위 ad4f41b8..837cc6e8) 이 GO 면 비준으로 본다. DW 발송 전이라 아직 proposed. GO 가 오면 agent 가 decision_state 를 active 로 바꾸고 ratified_by 에 '사용자 (조건부 비준 11-09 · DW GO 충족)' 를 적은 뒤 1 단계 블록을 낸다. 조건부 GO 나 NO-GO 면 비준으로 보지 않는다 — 조건 · 지적을 사용자에게 보이고 다시 묻는다."
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DW 회신 NO-GO (kb/reviews/codex_DW_reply_cell_construction_v1_1_release_2026_11_09.md · 기준 837cc6e8) — 조건부 비준 ('go면 비준') 미충족 · proposed 그대로. DV 묶음 ①–③ 닫힘 · ④ 판독기 부분 이행: P1-1 단계 결속 (생성 manifest ↔ 거름 입력 · 완결 거름 ↔ 합집합 · 파일럿 · t_a ↔ 어닐 시간 · 온도 · 조건 · 계획 전체 ↔ G1 분모 · 시작 파일 선언 · identity 부재 · 남의 기록 거부) · P1-2 파일럿 시간축 (저장 간격 · 길이를 결속된 실행 기록에서 · 궤적 → 프레임 → 스냅숏 → 이완 대조) · P1-3 EOS 생략 = 기준 전체 순서 · 0.10 판정 유지 (DFT 진입 조건) · P2 비유한 기하 invalid · P3 관측창 /3 근사 표기 · Q2 누락 ≠ 실패 · 가족 성공 < k_f 정책 결과 전에 (Codex 권고: 보류)"
     }
    ],
    "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
@@ -11861,6 +11867,12 @@
      "state": "proposed",
      "by": "사용자",
      "note": "조건부 비준 — 사용자 2026-11-09 *'go면 비준이야'*: Codex DW 회신 (kb/reviews/codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md · 범위 ad4f41b8..837cc6e8) 이 GO 면 비준으로 본다. DW 발송 전이라 아직 proposed. GO 가 오면 agent 가 decision_state 를 active 로 바꾸고 ratified_by 에 '사용자 (조건부 비준 11-09 · DW GO 충족)' 를 적은 뒤 1 단계 블록을 낸다. 조건부 GO 나 NO-GO 면 비준으로 보지 않는다 — 조건 · 지적을 사용자에게 보이고 다시 묻는다."
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DW 회신 NO-GO (kb/reviews/codex_DW_reply_cell_construction_v1_1_release_2026_11_09.md · 기준 837cc6e8) — 조건부 비준 ('go면 비준') 미충족 · proposed 그대로. DV 묶음 ①–③ 닫힘 · ④ 판독기 부분 이행: P1-1 단계 결속 (생성 manifest ↔ 거름 입력 · 완결 거름 ↔ 합집합 · 파일럿 · t_a ↔ 어닐 시간 · 온도 · 조건 · 계획 전체 ↔ G1 분모 · 시작 파일 선언 · identity 부재 · 남의 기록 거부) · P1-2 파일럿 시간축 (저장 간격 · 길이를 결속된 실행 기록에서 · 궤적 → 프레임 → 스냅숏 → 이완 대조) · P1-3 EOS 생략 = 기준 전체 순서 · 0.10 판정 유지 (DFT 진입 조건) · P2 비유한 기하 invalid · P3 관측창 /3 근사 표기 · Q2 누락 ≠ 실패 · 가족 성공 < k_f 정책 결과 전에 (Codex 권고: 보류)"
     }
    ],
    "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
@@ -11917,6 +11929,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex DV Q7 권고 — 봉인 원문 보존 · 새 개정으로 문구 대체 · 사용자 비준 대기"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DW Q4: 개정 방향 맞음 · P3 — 95 % 식의 /3 은 근사 (정확식 분모 −ln(0.05)) · 0.67991 eV 는 정확식 값 · 비준 전 문구 정리 (원문 보존)"
     }
    ],
    "_note": "proposed — 사용자 비준 대기 (비준 시 도구 줄 · CLAUDE.md 문구 갱신)"
