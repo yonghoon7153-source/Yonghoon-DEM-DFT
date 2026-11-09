@@ -1,0 +1,357 @@
+{
+ "what": "s_min 개발 단계 준비 숫자 (11-09 · 읽기 전용 · σ 없음 · 결정 아님)",
+ "identity": {
+  "kit_json_repo_path": "docs/data/rint2_s0_sbe_20261108/files/sdcp/ca1_s0_sbe_20261106_memfix/s0_stage1_kit_SBE_vgcf100.json",
+  "kit_json_sha256": "665650b442a3373f54eef6a39926f278787a53603a5522a92ca8d09f1f7e8b5e",
+  "kit_json_bytes": 6286674,
+  "kit_json_sha256_in_SHA256SUMS": "665650b442a3373f54eef6a39926f278787a53603a5522a92ca8d09f1f7e8b5e",
+  "kit_json_kgy_path": "/home/kgy/sdcp/ca1_s0_sbe_20261106_memfix/s0_stage1_kit_SBE_vgcf100.json (run.log 의 출력 폴더)",
+  "npz": {
+   "s0_junctions_kit_SBE_vgcf100.npz": {
+    "sha256": "a1d435792c60e75919cf69836b09121dec7187158b277ec85826f9104191ec6e",
+    "bytes": 18901514,
+    "expected_sha256": "a1d435792c60e75919cf69836b09121dec7187158b277ec85826f9104191ec6e",
+    "expected_bytes": 18901514,
+    "match": true
+   },
+   "s0_instances_kit_SBE_vgcf100.npz": {
+    "sha256": "7fc40335a233c159da36df8bb9acc790dcfdb47ed035cb7771877234894e97bb",
+    "bytes": 29876172,
+    "expected_sha256": "7fc40335a233c159da36df8bb9acc790dcfdb47ed035cb7771877234894e97bb",
+    "expected_bytes": 29876172,
+    "match": true
+   }
+  },
+  "kit_json_sha_match": true,
+  "schema": "ca-s0-census-v4",
+  "stage": 1,
+  "tool": "s0-b3-registry-v1",
+  "kit_name": "kit_SBE_vgcf100",
+  "plan_sha256": "4da9886367799c46b5426177fcba5d6e120f718b6cf7a0a9037032a36e0197bd",
+  "plan_source": "stage1_computed",
+  "code_git_head": "f47bde0f631f94340f745e5ae5fa20f902c58333",
+  "code_git_dirty": false,
+  "python": "3.8.10",
+  "numpy": "1.24.4",
+  "scipy": "1.10.1",
+  "elapsed_s": 5382.8,
+  "source_tgz_sha256": "d48f55c1b6884a75f011e9517d3f592c25aecf8a73d7a02ebbbee86eaede0a13 (README.md · ADOPTION_CHECK.md)",
+  "repo_import_commit": "4d76378b9"
+ },
+ "thresholds": {
+  "r_f_um": 0.075,
+  "tol_ff_um": 0.07381254285530132,
+  "u_um": 0.07381254285530132,
+  "L_par_um": 0.3,
+  "r_port_um": 0.3,
+  "gap_tol": 2.0,
+  "s_min_um_in_stage1": null,
+  "vox_um": 0.15,
+  "spacing_median_um": 0.14762508571060265,
+  "spacing_p10_um": 0.14588816857395423,
+  "spacing_p90_um": 0.15549922189211965,
+  "spacing_max_um": 5.314405123150115,
+  "n_spacings": 1544424,
+  "D_um (= 2 r_f + tol_ff · 탐지 거리 · 바닥의 s > D)": 0.22381254285530133,
+  "halfpi_D_um (= (π/2)·D · B0 미리보기 자기 접촉 호 하한)": 0.3515639202077327,
+  "halfpi_2rf_um (= (π/2)·2r_f · 닿는 두 다리 반원 호)": 0.23561944901923448,
+  "floor_vertex_angle_deg (= 2·asin(2/π) · `_self_floor` docstring 의 79°)": 79.08044749562039,
+  "fibre_diameter_um": 0.15
+ },
+ "self_candidates": {
+  "json.census.n_self_candidates": 0,
+  "json.census.n_self_kept": 0,
+  "json.census.n_self_filtered": 0,
+  "json.census.self_s_um": null,
+  "json.census.self_filter": "off_s_min_missing",
+  "json.census.n_instances_self": 0,
+  "json.census.n_cut_self_faces": 0,
+  "json.census.self_dk_min": null,
+  "json.self_candidates_len": 0,
+  "json.self_s_um": {
+   "n": 0
+  },
+  "json.n_long_self": 0,
+  "json.Lc_self_um": {
+   "n": 0
+  },
+  "json.rejection_codes": [
+   "self_s_min_missing"
+  ],
+  "json.s_min_status": "not_applied — S0 계획 (cjunc_plan.json) 에 s_min 칸이 없어 원장을 s_min None 으로 부른다 (거르지 않음 · 자기 후보 전부 + 후보마다 s = s_min 근거 · s_min 숫자 = 등록 R §2-1 · 이 도구는 고르지 않는다)",
+  "npz_junctions.rows": 117583,
+  "npz_junctions.is_self_true": 0,
+  "npz_junctions.s_finite": 0,
+  "npz_junctions.self_dk_min_ne_-1": 0,
+  "npz_junctions.self_n_revisit_sum": 0,
+  "npz_instances(B0 미리보기).rows": 117070,
+  "npz_instances(B0 미리보기).is_self_true": 0,
+  "json.census_preview.vv.n_self": 0,
+  "json.long_contacts_kind_counts": {
+   "distinct": 30270
+  },
+  "json.long_contacts_s_um_non_null": 0,
+  "n_used_for_quantiles": 0,
+  "quantiles_um": {
+   "p1": null,
+   "p5": null,
+   "p10": null,
+   "p25": null,
+   "p50": null,
+   "p75": null,
+   "p90": null,
+   "p95": null,
+   "p99": null
+  },
+  "min_um": null,
+  "max_um": null
+ },
+ "self_s_hist_um": [
+  {
+   "lo": 0.0,
+   "hi": 0.01,
+   "n": 0
+  },
+  {
+   "lo": 0.01,
+   "hi": 0.01778279410038923,
+   "n": 0
+  },
+  {
+   "lo": 0.01778279410038923,
+   "hi": 0.03162277660168379,
+   "n": 0
+  },
+  {
+   "lo": 0.03162277660168379,
+   "hi": 0.05623413251903491,
+   "n": 0
+  },
+  {
+   "lo": 0.05623413251903491,
+   "hi": 0.1,
+   "n": 0
+  },
+  {
+   "lo": 0.1,
+   "hi": 0.1778279410038923,
+   "n": 0
+  },
+  {
+   "lo": 0.1778279410038923,
+   "hi": 0.31622776601683794,
+   "n": 0
+  },
+  {
+   "lo": 0.31622776601683794,
+   "hi": 0.5623413251903491,
+   "n": 0
+  },
+  {
+   "lo": 0.5623413251903491,
+   "hi": 1.0,
+   "n": 0
+  },
+  {
+   "lo": 1.0,
+   "hi": 1.7782794100389228,
+   "n": 0
+  },
+  {
+   "lo": 1.7782794100389228,
+   "hi": 3.1622776601683795,
+   "n": 0
+  },
+  {
+   "lo": 3.1622776601683795,
+   "hi": 5.623413251903491,
+   "n": 0
+  },
+  {
+   "lo": 5.623413251903491,
+   "hi": 10.0,
+   "n": 0
+  },
+  {
+   "lo": 10.0,
+   "hi": "inf",
+   "n": 0
+  }
+ ],
+ "threshold_table": [
+  {
+   "s_min_um": 0.0,
+   "label": "0",
+   "SBE_self_junctions": 0,
+   "SBE_self_candidates_total": 0,
+   "equivalent_to_floor_only": true
+  },
+  {
+   "s_min_um": 0.1902049918520179,
+   "label": "재방문 s 최대 (쌍별 호 간격 · 정의 다름)",
+   "SBE_self_junctions": 0,
+   "SBE_self_candidates_total": 0,
+   "equivalent_to_floor_only": true
+  },
+  {
+   "s_min_um": 0.22381254285530133,
+   "label": "D",
+   "SBE_self_junctions": 0,
+   "SBE_self_candidates_total": 0,
+   "equivalent_to_floor_only": true
+  },
+  {
+   "s_min_um": 0.23561944901923448,
+   "label": "(π/2)·2r_f",
+   "SBE_self_junctions": 0,
+   "SBE_self_candidates_total": 0,
+   "equivalent_to_floor_only": false
+  },
+  {
+   "s_min_um": 0.3,
+   "label": "L_par",
+   "SBE_self_junctions": 0,
+   "SBE_self_candidates_total": 0,
+   "equivalent_to_floor_only": false
+  },
+  {
+   "s_min_um": 0.3515639202077327,
+   "label": "(π/2)·D",
+   "SBE_self_junctions": 0,
+   "SBE_self_candidates_total": 0,
+   "equivalent_to_floor_only": false
+  },
+  {
+   "s_min_um": 0.5,
+   "label": "0.5",
+   "SBE_self_junctions": 0,
+   "SBE_self_candidates_total": 0,
+   "equivalent_to_floor_only": false
+  },
+  {
+   "s_min_um": 1.0,
+   "label": "1.0",
+   "SBE_self_junctions": 0,
+   "SBE_self_candidates_total": 0,
+   "equivalent_to_floor_only": false
+  }
+ ],
+ "revisit": {
+  "n_pairs": 874,
+  "n_cells": 874,
+  "n_fibres": 823,
+  "n_path_only": 874,
+  "n_path_broken": 0,
+  "s_um_summary": {
+   "n": 874,
+   "min": 2.2453491233420664e-05,
+   "median": 0.043800501190032426,
+   "max": 0.1902049918520179
+  },
+  "quantiles_available": {
+   "p0": 2.2453491233420664e-05,
+   "p50": 0.043800501190032426,
+   "p100": 0.1902049918520179
+  },
+  "quantiles_not_in_report": [
+   "p1",
+   "p5",
+   "p10",
+   "p25",
+   "p75",
+   "p90",
+   "p95",
+   "p99"
+  ],
+  "max_lt_D": true,
+  "max_over_D": 0.8498406274530766,
+  "partial_hist": {
+   "n_le_median (짝수 n → 중앙값 = 437 · 438 번째 평균 → 437 개 이하 쪽 · 437 개 이상 쪽)": 437,
+   "n_ge_median": 437,
+   "all_in_um": [
+    2.2453491233420664e-05,
+    0.1902049918520179
+   ],
+   "n_ge_D": 0,
+   "fibre_share": 0.01712620955155551
+  },
+  "rule": "membership_cell_fid_traversal_branch_v1",
+  "s_definition": "`_pos_pair_sd` (carbon_junction.py:1420–1433) — 두 위치의 셀 조각 사이 최소 호 간격 (≠ 자기 쌍 s = 최근접점 사이 호 · `CJUNC_SELF_S_RULE`)"
+ },
+ "faces": {
+  "n_self_fused_faces (같은 조각 · 축방향 아님 · 바닥 밖 = 연속 · s_min 무관)": 1484,
+  "n_cut_self_faces": 0,
+  "n_unreg_faces (다른 조각 미등록 + 같은 조각 바닥 통과 면 · 보고가 가르지 않음)": 23447,
+  "n_cut_site_faces": 213252
+ },
+ "bed": {
+  "n_vgcf_fibres": 48055,
+  "n_pieces": 99059,
+  "n_segments": 1553655,
+  "n_positions": 2385461,
+  "n_instances": 117583,
+  "n_instances_distinct": 117583,
+  "n_instances_self": 0,
+  "n_piece_cell_meets": 0,
+  "n_instances_same_fid_pieces": 0,
+  "n_ring_pieces": 0,
+  "n_closed_paths_joined": 0,
+  "n_seam_alias": 0,
+  "n_long_distinct": 30270,
+  "n_long_self": 0,
+  "n_long": 30270
+ },
+ "candidates": [
+  {
+   "id": "A0",
+   "rule": "바닥만 (추가 거르기 없음) — 0",
+   "s_min_um": 0.0,
+   "effective_class": "floor_only (s_min ≤ D ≡ 0)",
+   "SBE_self_junctions_admitted": 0,
+   "SBE_self_candidates_excluded": 0,
+   "r_prime_times_s_ohm": 0.0
+  },
+  {
+   "id": "A1",
+   "rule": "바닥만 — 표기를 D 로 (동작 = A0)",
+   "s_min_um": 0.22381254285530133,
+   "effective_class": "floor_only (s_min ≤ D ≡ 0)",
+   "SBE_self_junctions_admitted": 0,
+   "SBE_self_candidates_excluded": 0,
+   "r_prime_times_s_ohm": 12.665199118614597
+  },
+  {
+   "id": "A2",
+   "rule": "재방문 s 최대 위 (동작 = A0 · 최대 0.190 < D)",
+   "s_min_um": 0.1902049918520179,
+   "effective_class": "floor_only (s_min ≤ D ≡ 0)",
+   "SBE_self_junctions_admitted": 0,
+   "SBE_self_candidates_excluded": 0,
+   "r_prime_times_s_ohm": 10.763400765781581
+  },
+  {
+   "id": "B",
+   "rule": "L_par (= 2(r_fi + r_fj) · 등록 고정 0.30)",
+   "s_min_um": 0.3,
+   "effective_class": "extra_filter (D < s < s_min 인 바닥 쌍 = 연속)",
+   "SBE_self_junctions_admitted": 0,
+   "SBE_self_candidates_excluded": 0,
+   "r_prime_times_s_ohm": 16.976527262999998
+  },
+  {
+   "id": "C",
+   "rule": "(π/2)·D (검출 거리 반원 · B0 미리보기 정의)",
+   "s_min_um": 0.3515639202077327,
+   "effective_class": "extra_filter (D < s < s_min 인 바닥 쌍 = 연속)",
+   "SBE_self_junctions_admitted": 0,
+   "SBE_self_candidates_excluded": 0,
+   "r_prime_times_s_ohm": 19.89444825364577
+  }
+ ],
+ "r_prime_ohm_per_um (설계 §4-1 · 추정 해석용)": 56.58842421,
+ "notes": [
+  "자기 후보 0 건 → 어느 s_min 에서도 SBE 자기 접합 0 (받아들임 0 · 거름 0)",
+  "s_min ≤ D 는 모두 같은 동작 (바닥이 s > D 를 이미 요구 · carbon_junction.py:200–207 · 1387–1393 · 1460–1465)",
+  "재방문 쌍별 s 값 · 같은 조각 바닥 통과 면 수 = S0 보고에 없음 (원 킷 입력으로 다시 세어야 · σ 없음)"
+ ]
+}

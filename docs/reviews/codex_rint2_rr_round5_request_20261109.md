@@ -1,6 +1,6 @@
-# Codex 회차 ⑤ 짧은 재확인 요청 — Rint ② 회차 ④ (11-09) PC14-02 · PC14-03 · RR4-01 고침 + 사전 공격 15 처분 (PC15-01–06) + kgy S0 단계 1 채택 (SELF-155 · SELF-159) (2026-11-09 · 사전 공격 ① 반영 · 발송 = 1저자)
+# Codex 회차 ⑤ 짧은 재확인 요청 — Rint ② 회차 ④ (11-09) PC14-02 · PC14-03 · RR4-01 고침 + 사전 공격 15 처분 (PC15-01–06) + kgy S0 단계 1 채택 (SELF-155 · SELF-159) + s_min 선택 묻기 (RCA-11) (2026-11-09 · 사전 공격 ① 반영 · 발송 = 1저자)
 
-> **한 줄**: Codex 회차 ④ (`docs/reviews/codex_review_rint2_rr_round4_20261109.md` · 리뷰 핀 `1f9f3607e` · 지정 11 한정 닫힘 · 재개 정책 전체 HOLD · 새 P1/P2 없음 · 새 P3 RR4-01) 에서 열림으로 남은 PC14-02 · PC14-03 (재개 출처 · 복사 경계) 을 판정문 §3 의 최소 처리 선택지 1 (권고 · 공통 검증) 로 고쳤고 (`e94f09905`), RR4-01 회계를 제자리 정정 + 상주 음성 행으로 닫으려 한다.  그 고침을 사전 공격 15 회차 (독립 · diff 만) 로 다시 깼고 (P1 0 · P2 3 · P3 3), 여섯 다 고침 C (`db8322e70`) 로 고쳤다 (§3 · §5).  재개 규칙에 대한 우리 쪽 사전 공격은 15 회차로 끝낸다 (1저자 11-09 처분 기준 · §4 · Q6).  kgy S0 단계 1 (SBE) 실침대 재실행 채택 (SELF-155 · SELF-159) 도 이 회차에 함께 묻는다 (Q5).
+> **한 줄**: Codex 회차 ④ (`docs/reviews/codex_review_rint2_rr_round4_20261109.md` · 리뷰 핀 `1f9f3607e` · 지정 11 한정 닫힘 · 재개 정책 전체 HOLD · 새 P1/P2 없음 · 새 P3 RR4-01) 에서 열림으로 남은 PC14-02 · PC14-03 (재개 출처 · 복사 경계) 을 판정문 §3 의 최소 처리 선택지 1 (권고 · 공통 검증) 로 고쳤고 (`e94f09905`), RR4-01 회계를 제자리 정정 + 상주 음성 행으로 닫으려 한다.  그 고침을 사전 공격 15 회차 (독립 · diff 만) 로 다시 깼고 (P1 0 · P2 3 · P3 3), 여섯 다 고침 C (`db8322e70`) 로 고쳤다 (§3 · §5).  재개 규칙에 대한 우리 쪽 사전 공격은 15 회차로 끝낸다 (1저자 11-09 처분 기준 · §4 · Q6).  kgy S0 단계 1 (SBE) 실침대 재실행 채택 (SELF-155 · SELF-159) 도 이 회차에 함께 묻는다 (Q5).  그 단계 1 실측에서 같은 가닥 (자기) 후보가 0 건이라 등록 R §2-1b 의 "분포를 보고 s_min 을 고른다" 가 서지 않아 1저자가 규칙으로 s_min = 0 µm (바닥만) 을 골랐다 — RCA-11 을 이것으로 닫을 수 있는지 묻는다 (Q7 · 닫기 요청이 아니라 물음).
 > **리뷰 핀** = 이 요청서가 든 커밋 (작업 가지 B `claude/sdcp-dem-manuscript-si-pqwtv8` · push · stoic `claude/stoic-knuth-NObVQ` = 복귀 전까지 `6a81f0c55` 에서 동결) · 번호 = ZIP 의 PIN.txt (이 파일은 그 커밋 안이라 제 번호를 못 적는다).
 > **1저자** — 11-09 *"권고대로"* (수정 계획 `docs/reviews/rint2_rr4_fix_plan_20261109.md` §5 Q1–Q3 = (가)) · 발송 = 1저자.
 
@@ -8,11 +8,12 @@
 
 | 이번에 닫으려는 것 (판정 요청) | 닫지 않는 것 (이 회차 범위 밖) |
 |---|---|
-| ① PC14-02 (P3) — 복사 / 새 런 경계 ↔ 원천 디스크 (공통 검증 ⓒ · ⓓ) — `e94f09905` | S0 단계 2 와 그 앞 순서 (s_min → ⑥ → 기하 · 반복 수 → 숫자 · 실행 정책 → 새 계획 / 핀 봉인) — 단계 1 채택은 단계 2 · 등록 R 진입 승인이 아니다 |
+| ① PC14-02 (P3) — 복사 / 새 런 경계 ↔ 원천 디스크 (공통 검증 ⓒ · ⓓ) — `e94f09905` | S0 단계 2 와 그 앞 순서 (⑥ → 기하 · 반복 수 → 숫자 · 실행 정책 → 새 계획 / 핀 봉인 · s_min 은 ⑥ 줄 = 묻기만 · 봉인 = §2-1 개정 커밋) — 단계 1 채택은 단계 2 · 등록 R 진입 승인이 아니다 |
 | ② PC14-03 (P3) — attempt.json ↔ 원장 항목 (ⓐ) · resume.from ↔ 그 시점 유효 사슬 끝 (ⓑ) · 원천 확인 못 함 = 거부 — `e94f09905` | PC13-03 · PC11-05–08 (한정 그대로) |
 | ③ RR4-01 (P3) — 회차 ④ 요청서 103 줄 · 사전 공격 14 보고 9 줄 제자리 정정 + 상주 음성 행 RR4C (M56 검출) — `e94f09905` | 현장 자격 (프로세스 · 잠금 · 권한 · 파일 시스템 · FIFO · NFS) · 12 단위 끝-끝 · 봉인 (숫자 칸 · 실행 정책 · S0 / R 계획 해시) · S0 단계 2 · 등록 R · 정량 판정 · 생산 GO |
 | ④ PC15-01 – 06 (사전 공격 15 · P2 셋 · P3 셋) — 디스크상 첫 미완료 런 다시 대조 (요약의 멈춤 · 요약 유무와 무관) · 새 런 기록 ↔ 이 시도 디스크 · 원천을 못 찾으면 결과 줄 안 씀 (ATTEMPT_OPEN) · ⓐ 형까지 · 꼴 틀린 요약 = [꼴] 사유 · 가르는 행 — `db8322e70` | 재개 정책 전체 GO 의 최종 문안 = Q4 · Q6 으로 묻는다 (판정문 §6 문장의 갱신 · GO 조건 두 문장) |
 | ⑤ SELF-155 (P2) — kgy S0 단계 1 (SBE) 실침대 재실행 채택 (핀 `f47bde0f6` · 1저자 11-08 kgy · 반입 `4d76378b9` · 채택 대조 `docs/data/rint2_s0_sbe_20261108/ADOPTION_CHECK.md` = 수정 계획 `docs/reviews/rint2_rr3_fix_plan_20261108.md` §5 조건 1–5) + SELF-159 (P2) — 그 반입 도구의 rc 근거 (고친 판 = `docs/data/rint2_s0_sbe_20261108/tools/import_s0_tgz.py`) | σ 값 (단계 1 = 접합 census · 계획 · σ 안 봄) · 실제 peak RSS (5 초 표본 최대만) · 원 입력 무쓰기의 묶음 밖 증명 |
+| ⑥ (묻기 · 닫기 요청 아님) RCA-11 (P2 · 열림) — SBE 단계 1 같은 가닥 (자기) 후보 0 건 실측 + 1저자 11-09 s_min = 0 µm (바닥만 · 규칙으로 고름 · 한정어 ⑪ · 감도 없음 · DBE 단계 2 뒤 기술 보고) — 등록 R §2-1b 11-09 줄 · 준비 자료 `docs/reviews/rint2_smin_prep_20261109/SMIN_PREP.md` | s_min 봉인 (R 계획 `s_min_um` · §2-1 개정 커밋) · DBE 단계 2 · s_min 의 σ 영향 (추정 · 미측정) |
 
 ## 1. 보내는 것 (ZIP · repo/ = 리뷰 핀 blob 그대로 + PIN.txt)
 
@@ -26,8 +27,9 @@
 | 원장 | `docs/reviews/findings.json` · `docs/reviews/claims.json` (S0 kit JSON 숫자 글자 = 철회 패턴 우연 겹침 → allowed_in 한 파일) | 2 |
 | 바뀐 Rint ② 코드 · 시험 (`1f9f3607e` → 핀) | `scripts/rint_r_chain.py` · `scripts/test_rint_r_chain.py` (그 밖 scripts 변경 = `scripts/check_all.sh` 주간보고 시험 한 줄 · DEM 세대 2 준비 넷 (`scripts/make_dem_gen2_decks.py` · `scripts/dem_gen2_qualification.py` · 그 시험 둘) = Rint ② 밖) | 2 |
 | 실행 의존 (`1f9f3607e` 와 diff 0) | 사슬 CODE_FILES 나머지 18 · 간접 import 다섯 · 끝-끝 · 시험 둘 (회차 ④ 와 같은 목록) | 26 |
+| s_min 선택 (Q7 · RCA-11) | 등록 R `docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md` (§2-1b 11-09 줄 · 한정어 ⑪) · 설계 v1 `docs/reviews/rint_carbon_additive_design_v1_20261020.md` (RCA-11 이 열린 자리) · 준비 자료 `docs/reviews/rint2_smin_prep_20261109/` (SMIN_PREP.md · smin_numbers.json · tools 둘 · SHA256SUMS) | 7 |
 
-- repo/ 합 = 799 파일 (위 표의 합) · ZIP 맨 위 PIN.txt (핀 40 자리 + 가지 이름) · SHA256SUMS (repo/ 799 + PIN.txt = 800 줄) · 빌더가 핀의 ls-tree blob 과 푼 바이트를 대조한다.
+- repo/ 합 = 806 파일 (위 표의 합) · ZIP 맨 위 PIN.txt (핀 40 자리 + 가지 이름) · SHA256SUMS (repo/ 806 + PIN.txt = 807 줄) · 빌더가 핀의 ls-tree blob 과 푼 바이트를 대조한다.
 
 ## 2. 무엇이 바뀌었나 (`1f9f3607e` 뒤 · Rint ② 몫만)
 
@@ -40,9 +42,10 @@
 | `8842ed2bd` | 원장 SELF-155 메모 (실침대 채택 · claimed_fixed 그대로) · 새 SELF-159 (반입 도구 rc 근거 · P2 · claimed_fixed `4d76378b9`) | 원장 |
 | `7cdc78111` | 원장 claims.json — S0 kit JSON 의 접합 census 긴 접촉 배수 `mult` 4 개 숫자 글자가 철회 패턴 "1.14508" · "1.1232" 와 겹침 (인용 아님) → 두 패턴 allowed_in 에 그 파일 하나 | 진행 기록 |
 | `db8322e70` | 사전 공격 15 반입 (`preattack15/` · 보고 · 탐침 18 · 출력 23 · SHA256SUMS 42 줄) · 처분 = 고침 C (시험 먼저 · 작업 트리 커밋 하나 (로컬 f8cc7732e · push 안 함) → `cherry-pick -x` · 진행 기록 끝줄 충돌 = 둘 다 살림 · 나머지 141 파일 blob 같음) — PC15-01 – 06 | `docs/reviews/rint2_rr4_fix_evidence_20261109/pa15_fix/` · 수정 계획 §7 |
-| (이 커밋) | 이 요청서 · 고침 C 보고 `docs/reviews/rint2_rr4_fix_evidence_20261109/pa15_fix/REPORT.md` (작업 트리 에이전트 보고를 그대로 옮김) · 원장 PC15-01 – 06 claimed_fixed (`db8322e70`) · PC14-03 회귀 글 메모 (RR4D F1 바뀜) · CLAUDE.md 처분 기준 한 줄 · 진행 기록 | — |
+| `d69d96422` | 이 요청서 첫 판 · 고침 C 보고 `docs/reviews/rint2_rr4_fix_evidence_20261109/pa15_fix/REPORT.md` (작업 트리 에이전트 보고를 그대로 옮김) · 원장 PC15-01 – 06 claimed_fixed (`db8322e70`) · PC14-03 회귀 글 메모 (RR4D F1 바뀜) · CLAUDE.md 처분 기준 한 줄 · 진행 기록 | — |
+| (이 커밋) | s_min 선택 기록 (1저자 11-09 Q1–Q3 · 등록 R §2-1b 11-09 줄 · 한정어 ⑪ · 감도 없음 · DBE 기술 보고) · 준비 자료 반입 `docs/reviews/rint2_smin_prep_20261109/` · 원장 RCA-11 메모 (열림 그대로) · 이 요청서 Q7 · 진행 기록 | 등록 R §2-1b |
 
-- Rint ② 밖 (ZIP 에 안 넣음) = `e33cbafec` · `dc85907c8` (LHS12 수령) · `3e32488bf` · `29ffda1ca` · `e814b73c3` (믹서 수령) · `9b1fec84a` (주간보고) · `8a67b7eae` · `e48e5fa04` (비 Rint 종합 수령) · `a0eac62b3` (비 Rint 다음 준비표) · `27ed57b96` (DEM 세대 2 준비) · `5a9b73d1f` · `095bf43f2` (LHS 정책 비준 수령 · 동결안 초안) · `1df1ba5a7` (믹서 비활성 사본) · `160b9ee10` · `ce1b9fa51` · `2be18e9ec` (DEM 세대 2 G2PREP-01–04 수정 · 반입 · 한정 수용) · `f46c73f4c` · `ef9a94c90` (믹서 MIP-01) · `a0c2c0cbf` (DEM G2PREP 재확인 수령 · 이종기술 과제 2차년도 연차보고서 요지 기록).
+- Rint ② 밖 (ZIP 에 안 넣음) = `e33cbafec` · `dc85907c8` (LHS12 수령) · `3e32488bf` · `29ffda1ca` · `e814b73c3` (믹서 수령) · `9b1fec84a` (주간보고) · `8a67b7eae` · `e48e5fa04` (비 Rint 종합 수령) · `a0eac62b3` (비 Rint 다음 준비표) · `27ed57b96` (DEM 세대 2 준비) · `5a9b73d1f` · `095bf43f2` (LHS 정책 비준 수령 · 동결안 초안) · `1df1ba5a7` (믹서 비활성 사본) · `160b9ee10` · `ce1b9fa51` · `2be18e9ec` (DEM 세대 2 G2PREP-01–04 수정 · 반입 · 한정 수용) · `f46c73f4c` · `ef9a94c90` (믹서 MIP-01) · `a0c2c0cbf` (DEM G2PREP 재확인 수령 · 이종기술 과제 2차년도 연차보고서 요지 기록) · `86bceb195` · `fa9a006f4` (믹서 MIP-01 잔여 MIPR-01 Windows namespace 수정 후보 · 반입 기록).
 
 ## 3. finding → 고친 자리 → 시험 (F = `docs/reviews/rint2_rr4_fix_evidence_20261109` · G = `docs/reviews/rint2_rr4_fix_evidence_20261109/pa15_fix` · 줄 번호 = 고친 판 `scripts/rint_r_chain.py`)
 
@@ -80,6 +83,7 @@
 | 런 기록과 시작 기록 사이 예외 = CHAIN_EXCEPTION (원래 자격 없음 · 공통 검증까지 가지 않는다) | G/REPORT.md §6 6 | 한정 |
 | 처분 기준 (1저자 11-09 *"권고대로"*) — 재개 규칙 지적은 정직한 흐름 (끊김 · 재부팅 · 메모리 · 디스크 부족 · 다른 기계 재실행 · 비결정적 재계산 · 폴더 옮김) 에서 틀린 결과를 받아들이는 것만 고친다 · 손으로 고친 · 서로 어긋난 기록은 멈춤 (fail-closed) 확인 + 한정 (등급 무관) · 재개 규칙에 대한 자체 사전 공격 = 15 회차로 끝 | 진행 기록 11-09 | Q6 |
 | 시험 = 합성 · 가짜 _execute · 실제 git 원장 · 이 컨테이너 (Linux · Python 3.11 · kgy 판 3.8.20 — 실제 kgy 3.8.10 · ibb · GPU · 실제 SIGKILL · flock · NFS 아님) · 웹앱 화면 없음 (grep 0) | F/logs/webapp_grep.log · G/logs/webapp_grep.log | 현장 자격 · 웹앱 = "없음" 기록 |
+| s_min = 0 µm 의 DBE 영향 = 추정 (자기 접합 s ∈ (D, 0.35] µm 는 ≤ 19.9 Ω 섬유와 나란한 R_j ≥ 10⁴ Ω 우회로 · 미측정) · SBE 쪽 유일한 변동 자리 (같은 조각 · 바닥 통과 미등록 면) = 필수 감도 `UNREG` 가 묶음 · DBE 단계 2 뒤 s ≤ (π/2)·D 자기 후보 수 기술 보고 (값 안 바꿈) | 등록 R §2-1b 11-09 줄 · 준비 자료 §c | Q7 |
 | `scripts/rint_r_chain.py` sha 바뀜 = R 계획 code key (CODE_FILES) 바뀜 → 봉인 = 새 핀 | 수정 계획 §4 | 봉인 때 |
 
 ## 5. 사전 공격 리뷰 (CLAUDE.md ①–④)
@@ -102,6 +106,7 @@
 | Codex 회차 ④ 재개 탐침 무변경 = 181 줄 AssertionError | G/logs/codex_probe_rerun.log | 같음 |
 | 고침 C 증거 SHA256SUMS 95 줄 | G/SHA256SUMS · `sha256sum -c` | 95/95 OK |
 | SELF-155 = rc 0 · 5,384 s · 표본 최대 RSS 5,694,360 kB · 접합 117,583 · 접촉 117,070 · 계획 sha `4da98863…` | `docs/data/rint2_s0_sbe_20261108/ADOPTION_CHECK.md` | 같음 |
+| s_min 실측 = 자기 후보 0 · `self_candidates` 0 행 · npz `is_self` 0 / 117,583 · 긴 접촉 30,270 전부 distinct · 재방문 874 쌍 (s 최소 2.25 × 10⁻⁵ · 중앙 0.0438 · 최대 0.1902 µm) · 같은 조각 융합 면 1,484 · D = 0.2238125 µm | S0 단계 1 보고 kit JSON (sha256 665650b4… = `docs/data/rint2_s0_sbe_20261108/SHA256SUMS`) · 준비 자료 `docs/reviews/rint2_smin_prep_20261109/SMIN_PREP.md` §0 · §a-2 · §b · `smin_numbers.json` | 같음 (메인 세션이 kit JSON 칸 `junction_census.census.*` 를 직접 다시 읽음 · npz = 리포 밖 · sha 만 대조) |
 | 전칭 "실행 의존 26 = `1f9f3607e` 와 diff 0" | `git diff --stat 1f9f3607e <핀> -- (26 파일)` = 빈 출력 | 같음 (ZIP 만들 때 빌더가 다시 확인) |
 | 전칭 "여섯 다 고쳤다" | 원장 PC15-01 – 06 = claimed_fixed (`db8322e70`) · §3 | 우리 쪽 주장 = Codex 판정 전 (verified 아님) |
 | 전칭 "STOP 없음 (정직 흐름을 깨야만 고칠 수 있는 항목 없음)" | G/REPORT.md 머리 | 고친 쪽 진술 (탐침 p4 · p10 · p11 정직 = 그대로 받음 · RR5 정직 행 통과가 뒷받침) |
@@ -131,6 +136,7 @@
 | Q4 | 이 회차 뒤 판정문 §6 사용 가능 문장을 "재개 출처 · 복사 경계의 PC14-02/03 은 지정한 코드 · 합성 범위에서 닫힌다 · 코드 재개 정책 = 한정 목록 (§4) 안에서 수용" 으로 갱신할 수 있는가 (PC15-01 – 06 포함) — 남는 것 = 현장 자격 · 12 단위 끝-끝 · 봉인 → S0 단계 2 → 등록 R 진입 판단 (판정문 §6 순서 그대로 · kgy S0 단계 1 재실행 = Q5). |
 | Q5 | SELF-155 — kgy S0 단계 1 실침대 채택 (`docs/data/rint2_s0_sbe_20261108/ADOPTION_CHECK.md`) 이 수정 계획 `docs/reviews/rint2_rr3_fix_plan_20261108.md` §5 조건 1–5 와 회차 ② 판정 §8 Q8 의 짧은 확인 항목 (종료 코드 / 신호 · 완성 산출물 · 새 핀 RSS · 시간 · 계획 해시 · 코드 출처) 을 충족해 닫히는가 · SELF-159 — 고친 반입 도구의 rc 근거 (rss.log `rc=` 한 줄 · CAP_TERM 거부) 가 생산자 꼴 (`docs/reviews/rint2_s0_mem_fix_20261106/tools/run2.sh`) 을 따르는가. |
 | Q6 | 재개 규칙의 GO 조건을 문장으로 확정할 수 있는가 — "정직한 흐름 (끊김 · 재부팅 · 메모리 · 디스크 부족 · 다른 기계 재실행 · 비결정적 재계산 · 폴더 옮김) 에서 틀린 결과를 받아들이지 않는다 + 서로 어긋난 기록이면 결과 줄을 쓰기 전 · 다음 재개 전에 멈춘다 (fail-closed)" · 그 밖 (모든 사본의 일관된 위조 = 회차 ④ §3 의 계약 밖 · 손으로 고친 기록의 세부 진단 · 오류 메시지 꼴) 은 §4 한정 목록.  기준을 낮추자는 질문이 아니라, 판정문이 보장 범위를 이 두 문장으로 고정해 주면 이 회차 뒤 재개 규칙의 새 지적은 두 문장을 깨는 것만 막는 결함으로 다루겠다는 것 (1저자 11-09 처분 기준 · §4). 이 문장이 부족하면 무엇을 더해야 하는지 함께 적어 달라. |
+| Q7 | (RCA-11 · 묻기) SBE S0 단계 1 의 같은 가닥 (자기) 후보 0 건 (kit JSON `n_self_candidates` 0 · 재방문 874 쌍 전부 s < D · 같은 조각 융합 면 1,484 = 바닥 밖) 에서, 1저자가 s_min = 0 µm (바닥만 · 규칙으로 고름 · s_min ∈ [0, D] = 같은 동작 · D 는 표본화에 묶여 0 으로 적음) 을 고르고 감도 팔을 두지 않으며 DBE 단계 2 뒤 s ≤ (π/2)·D 자기 후보 수를 기술 보고하기로 한 것 (등록 R §2-1b 11-09 줄 · 한정어 ⑪) 으로 RCA-11 을 닫을 수 있는가 — 아니면 무엇이 더 필요한가 (예: 같은 조각 · 바닥 통과 미등록 면 수를 σ 없이 다시 세기 · 두 s 정의 (자기 쌍 최근접점 호 ↔ 위치 쌍 최소 호 간격) 를 등록 문장에서 가르기).  값을 DBE 열람 전에 고정했다는 순서 · "자료가 아니라 규칙" 한정어가 RCA-11 의 "두 사람이 같은 값을 낸다" 요구를 채우는지 함께 봐 달라. |
 
 ## 7. 묻지 않는 것
 
