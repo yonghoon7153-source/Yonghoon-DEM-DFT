@@ -1,0 +1,188 @@
+{
+  "schema": "dem_protocol_gen2_preregistration_draft/1",
+  "date": "2026-11-09",
+  "base_b": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+  "status": "DRAFT_UNREGISTERED",
+  "whole_gate": "HOLD",
+  "physical_ready": false,
+  "existing_Q1_Q16_and_A1_A5_ratification_preserved": true,
+  "current_work_authorized": "Offline producer implementation, synthetic tests and preregistration drafting only",
+  "source_priority": [
+    {
+      "path": "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "00ff77272383106b52cb94dd5147e8aa64c3f5ff",
+      "priority_sections": ["12", "2", "5"]
+    },
+    {
+      "path": "docs/reviews/dem_gen2_t12_readiness_20261024.md",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "39f0e103e0e016a679b4283e2af7ecc9c09c11af",
+      "priority_sections": ["2", "3", "4"]
+    },
+    {
+      "path": "docs/reviews/codex_dem_protocol_gen2_ratified_update_20261024.md",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "8ac66f573cdcc1d361f6be2fe805d8b3ec6b86fb"
+    }
+  ],
+  "ratified_policy_context": {
+    "dem_protocol_gen": "P2",
+    "contact_law_family": "hooke/hysteresis with calibrated effective E_SE",
+    "nominal_static_target_pressure_MPa": 300,
+    "relaxation_definition": "R-a fixed-plate static reconfirmation",
+    "S0_stage": "end of successful R-a, not end of servo",
+    "ra_target_pressure_window_fraction": 0.01,
+    "ra_max_pressure_drop_fraction": 0.01,
+    "ra_additional_conditions": ["S1 pressure drift", "S2 translational and rotational KE", "S3 force residual", "inventory conservation"],
+    "ra_actual_window_and_all_other_missing_qualification_values_remain_unregistered": true,
+    "production_density_kg_m3": {"SE": 1640, "NCM_PC_SC": 4850},
+    "density_status": "Author-reported assumptions; measurement method and actual true-density validation unprovided",
+    "E_SE_ladder_GPa": [1.35, 2.0, 3.0, 4.5, 6.75],
+    "E_SE_selected_GPa": null,
+    "E_ladder_description": "Approximately 1.5-fold; first ratio is 2/1.35, not exactly 1.5",
+    "actual_evidence_created_by_repeating_policy": false
+  },
+  "inactive_producer_candidate": {
+    "generator_path": "scripts/make_dem_gen2_decks.py",
+    "synthetic_guard_path": "scripts/dem_gen2_qualification.py",
+    "kind": "Inactive seven-stage deck-bundle candidate, not a runnable production pipeline",
+    "entry_hold_removable_by_runtime_flag": false,
+    "mandatory_per_stage_include_stubs_stop": true,
+    "stages": ["insertion", "stabilization", "compression", "servo", "relaxation_Ra", "unloading", "separation_free_surface"],
+    "plate_contract": "Create mesh and wall once in stabilization; preserve both through unloading; remove only after valid separation",
+    "run_record_order": "Capture permitted post-run observations before restart; no run-0 or setup-force substitution",
+    "observer_to_live_deck_adapter": "UNIMPLEMENTED",
+    "P2_ULPR_serializer": "UNIMPLEMENTED",
+    "actual_binary_syntax_qualification": "NOT_RUN",
+    "actual_history_restore_and_resume_qualification": "NOT_RUN",
+    "generic_PASS_token_activates_bundle": false,
+    "runtime_or_submission_wrapper_in_scope": false
+  },
+  "scientific_registration": {
+    "T5": {
+      "qualification_status": "NOT_RUN",
+      "registration_status": "DRAFT_UNREGISTERED",
+      "estimands": ["Exact geometric union", "Sphere-volume operator on fixed IDs", "Inside and whole regions recorded separately"],
+      "required_oracle_cases": ["Two spheres with disjoint, tangent and intersecting cases", "Three spheres with nonzero triple intersection", "Wall-cut sphere", "Pair-lens-only counterexample"],
+      "forbidden_acceptance_rule": "One Monte Carlo estimate within one standard error as a deterministic pass condition",
+      "actual_values": {
+        "geometry_case_parameters": null,
+        "physical_box_pbc_and_boundary_contract": null,
+        "inside_region_bounds": null,
+        "sample_count_ladder": null,
+        "seed_list": null,
+        "independent_repetitions": null,
+        "error_estimator_definition": null,
+        "bias_and_convergence_acceptance": null,
+        "coverage_target": null,
+        "coverage_evaluation_rule": null,
+        "allowed_failure_probability": null,
+        "multiple_case_decision_rule": null,
+        "numerical_tolerance": null,
+        "missing_or_failed_repetition_rule": null,
+        "independent_oracle_pin": null,
+        "frozen_registration_identity": null
+      },
+      "actual_result": null,
+      "actual_qualification_receipt": null
+    },
+    "T11": {
+      "qualification_status": "NOT_RUN",
+      "registration_status": "DRAFT_UNREGISTERED",
+      "synthetic_linear_oracle": "e[n+1]=(1-a)*e[n], a=K*k_p*v_max*DeltaT/F_target only for linear, zero-delay, unsaturated response",
+      "required_axes": ["stiffness", "response delay", "saturation", "control sign", "control period", "oscillation and divergence", "nonfinite or stale observation", "time budget"],
+      "forbidden_inference": "Universal convergence or transfer of k_p=30 to all beds, E values and periods",
+      "actual_values": {
+        "bed_and_material_scope": null,
+        "stiffness_range": null,
+        "delay_range": null,
+        "control_period_range": null,
+        "dt_and_integer_step_rule": null,
+        "gain": null,
+        "velocity_limit": null,
+        "saturation_and_anti_stall_policy": null,
+        "convergence_window_duration": null,
+        "additional_hold_duration": null,
+        "pressure_error_budgets": null,
+        "translational_and_rotational_ke_limits": null,
+        "force_torque_and_inertia_budgets": null,
+        "oscillation_divergence_guards": null,
+        "physical_time_budget": null,
+        "missing_or_stale_observation_rule": null,
+        "frozen_registration_identity": null
+      },
+      "actual_result": null,
+      "actual_qualification_receipt": null
+    },
+    "DEMP01": {
+      "phase_damping_independently_identified": true,
+      "prep_gamma_implicitly_inherited_by_compression": false,
+      "global_drag_account": "-gamma*sum(v_z), with unit, sign, ID set and window recorded separately from contact dissipation",
+      "actual_compression_gamma": null,
+      "actual_registered_drag_fraction_limit": null,
+      "historical_two_percent_rule_status": "Estimate to be registered, not a new actual pass threshold",
+      "actual_static_300MPa_and_Ra_evidence": null,
+      "physical_defect_closed": false
+    },
+    "DEMP02": {
+      "inventory_identity_fields": ["id", "type", "radius", "mass"],
+      "required_observations": ["per-type counts and masses", "fixed-ID equality", "plate and bottom geometry", "center-crossing counts", "sphere clipping reported distinctly"],
+      "unexplained_loss_or_replacement": "FAIL_CLOSED",
+      "duplicate_missing_nonfinite_or_invalid_identity": "FAIL_CLOSED",
+      "invalid_or_incomplete_contact_observation_as_zero": false,
+      "actual_geometry_tolerance": null,
+      "actual_sampling_or_continuous_crossing_detection_contract": null,
+      "actual_conservation_evidence": null,
+      "physical_defect_closed": false
+    }
+  },
+  "synthetic_test_contract": {
+    "classification": "synthetic_only",
+    "constants_source": "Fixed test source and its separate test receipt in the delivered commit",
+    "scientific_numeric_nulls_filled_from_test_constants": false,
+    "fixture_results_are_material_measurements": false,
+    "required_positive_examples": ["Hand-checkable geometric volume", "Stable discrete response within a declared synthetic range", "Complete unchanged inventory", "Complete synthetic static window"],
+    "required_negative_examples": ["Incorrect union oracle or single-sigma rule", "Unstable or delayed/saturated response outside declared behavior", "Wrong sign or nonfinite control observation", "Inventory loss, substitution or duplicate ID", "Plate crossing or invalid geometry", "Missing static-window condition or exhausted budget"],
+    "test_result_counts_source": "Implementation test receipt; this preregistration draft asserts no run count",
+    "production_qualification_from_synthetic_pass": false
+  },
+  "same_static_pressure_size_comparison": {
+    "requested_particle_size_labels_um": [0.7, 1.0],
+    "actual_size_radius_diameter_convention": null,
+    "requested_load_text": "50 kg",
+    "load_text_is_pressure": false,
+    "actual_load_convention": null,
+    "actual_loaded_area": null,
+    "actual_force_conversion": null,
+    "actual_equivalent_pressure_MPa": null,
+    "actual_observation_stage_and_measurement_state": null,
+    "actual_paired_seed_plan": null,
+    "actual_mass_area_material_controls": null,
+    "actual_uncertainty_and_repetition_plan": null,
+    "comparison_rule": "Same validated static pressure, compatible stage and observation operator; account for changed N, surface area and wall influence",
+    "historical_author_quotes": ["93.4%", "65%"],
+    "historical_quote_status": "Author-reported mapping retained; raw data, denominator and state not independently read or verified",
+    "historical_quote_mapping_to_size_arms": {"0.7_um": "93.4%", "1_um": "65%"},
+    "historical_quotes_used_as_calibration_or_acceptance_targets": false,
+    "actual_rows": []
+  },
+  "T12": {
+    "status": "NOT_RUN",
+    "physical_ready": false,
+    "actual_Ra_S0_identity": null,
+    "actual_producer_consumer_mapping": null,
+    "actual_binary_history_restore_dt_half_and_resume_evidence": null,
+    "actual_external_recheck_receipt": null,
+    "P1_names_r8_header_or_gravity_reused_as_P2_qualification": false
+  },
+  "boundaries": {
+    "raw_scientific_values_read": false,
+    "new_scientific_result_rows": 0,
+    "actual_liggghts_mpi_or_scheduler_execution": false,
+    "research_execution_go": false,
+    "operating_reseal": false,
+    "shared_ledger_modified": false,
+    "Rint_files_or_tests_modified_or_executed": false
+  }
+}

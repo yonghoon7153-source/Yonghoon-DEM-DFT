@@ -1,0 +1,49 @@
+{
+  "scope": "SYNTHETIC_PREPARATION_ONLY",
+  "research_results": 0,
+  "T5": "NOT_RUN",
+  "T11": "NOT_RUN",
+  "T12": "NOT_RUN",
+  "physical_ready": false,
+  "source_sha256": {
+    "make_dem_gen2_decks.py": "41a59b338f44a746a08c87444f3334c31455f4a49b325e8dddd0f4ad228dac1c",
+    "dem_gen2_qualification.py": "5929c1cb1d6b45d267073b91d73dc2df27ae1c99f9504adac35d26b84c0a8e38",
+    "test_make_dem_gen2_decks.py": "6658f2e00636d7ad843fc11d40e544cbef6529d531e960a485a2a0f41d43236b",
+    "test_dem_gen2_qualification.py": "73f6b84ee0503ae51c79fcef3fcd0bc92b70a6d1b0efe2c8067bc947f39b10de"
+  },
+  "suites": [
+    {
+      "name": "test_make_dem_gen2_decks.py",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": true
+    },
+    {
+      "name": "test_dem_gen2_qualification.py",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": true
+    }
+  ],
+  "synthetic_candidates": [
+    {
+      "materials": 1,
+      "files": 16
+    },
+    {
+      "materials": 2,
+      "files": 16
+    },
+    {
+      "materials": 3,
+      "files": 16
+    }
+  ],
+  "external_process_or_network_attempts": [],
+  "original_sources_unchanged": true,
+  "passed": true
+}
