@@ -16175,19 +16175,23 @@
     {
       "id": "MLA-01",
       "severity": "P1",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "codex",
       "found_by": "codex 11-06 믹서 first8 실행 준비 외부 판정 (검토 핀 b57fe91503ba)",
       "opened_in": "docs/reviews/mixer_mla_recheck_20261106/README.md",
       "title": "승인한 runner 바이트와 실제 sbatch 옵션이 결속되지 않는다",
-      "claimed_fixed_sha": null,
+      "claimed_fixed_sha": "0b2c1a39bcc12130beaa59a78dd214f38efd3d3c",
       "verified_sha": null,
       "evidence_tests": [
         "docs/reviews/mixer_mla_recheck_20261106/evidence/mla_before.log",
-        "docs/reviews/mixer_mla_recheck_20261106/evidence/mla_after.log"
+        "docs/reviews/mixer_mla_recheck_20261106/evidence/mla_after.log",
+        "docs/reviews/mixer_mlar_mgs_receipt_20261109/mlar_receipt.json (MLAR-01 독립 재확인 수령 · CLOSABLE_LIMITED)",
+        "docs/reviews/nonrint_limited_acceptance_consolidation_20261109/receipt.json (종합 수령 · MLAR 재포장 증거 완전성 통과)"
       ],
       "supersedes": [],
-      "decision_note": "수정 후보 = Codex 실무 창 a4c78001f (B 반입 a2e0396241c4) · 모의 · 변이 검사만 · 외부 재확인 대기 (요청서 docs/reviews/mixer_mla_recheck_20261106/review_request.md · 발송 = 1저자) · 실제 sbatch · MPI · 연구 계산 0 회 · 전체 HOLD (11-08 반입 · 원장 제안 OPEN_EXTERNAL_RECHECK_PENDING) · (11-08 독립 재확인 · 11-09 반입) PARTIAL_OPEN — 원 환경 주입 경계 수용 · 잔여 = MLAR-01 (경로 문자 · 둘째 독립 P1 아님) · 수정 후보 = Codex 실무 215e9cc007cc (B 반입 0b2c1a39b · 공백 · 제어 문자 경로 결속 거부) · 독립 재확인 대기 · open 유지. · (11-09 MLAR-01 독립 재확인 수령) 내용 판정 = CLOSABLE_LIMITED (후보 215e9cc007cc = B 0b2c1a39b · 변경 10 파일 blob 같음) · 그러나 수령 증거 = 불완전 (원 요청 129 파일 중 planned_assets/SHA256SUMS 한 파일 누락 · 3,606 B · sha256 befb669c… · 내부 목록 127/128) → 종결 반영 보류 (재포장 증거 수령 · 검증 뒤) · 재포장 요청 = docs/reviews/mixer_mlar_mgs_receipt_20261109/mlar_repack_request.md (반박 창 발송 = 1저자) · open 유지 · MLA-02 · 03 한정 수용 그대로."
+      "decision_note": "수정 후보 = Codex 실무 창 a4c78001f (B 반입 a2e0396241c4) · 모의 · 변이 검사만 · 외부 재확인 대기 (요청서 docs/reviews/mixer_mla_recheck_20261106/review_request.md · 발송 = 1저자) · 실제 sbatch · MPI · 연구 계산 0 회 · 전체 HOLD (11-08 반입 · 원장 제안 OPEN_EXTERNAL_RECHECK_PENDING) · (11-08 독립 재확인 · 11-09 반입) PARTIAL_OPEN — 원 환경 주입 경계 수용 · 잔여 = MLAR-01 (경로 문자 · 둘째 독립 P1 아님) · 수정 후보 = Codex 실무 215e9cc007cc (B 반입 0b2c1a39b · 공백 · 제어 문자 경로 결속 거부) · 독립 재확인 대기 · open 유지. · (11-09 MLAR-01 독립 재확인 수령) 내용 판정 = CLOSABLE_LIMITED (후보 215e9cc007cc = B 0b2c1a39b · 변경 10 파일 blob 같음) · 그러나 수령 증거 = 불완전 (원 요청 129 파일 중 planned_assets/SHA256SUMS 한 파일 누락 · 3,606 B · sha256 befb669c… · 내부 목록 127/128) → 종결 반영 보류 (재포장 증거 수령 · 검증 뒤) · 재포장 요청 = docs/reviews/mixer_mlar_mgs_receipt_20261109/mlar_repack_request.md (반박 창 발송 = 1저자) · open 유지 · MLA-02 · 03 한정 수용 그대로. · (11-09 종합 수령 · MLAR 재포장 완전성 통과 → claimed_fixed = 0b2c1a39b · 반입 8a67b7eae)",
+      "verification_note": "독립 Codex 반박 창 재확인 (11-09 · MLAR-01 = 원 경로 문자 잔여 · 후보 215e9cc007cc = B 0b2c1a39b · 변경 10 파일 blob 같음) = 한정 종결 가능 (CLOSABLE_LIMITED · 앞선 환경 경계 수용 위의 경로 문자 잔여만 · 둘째 독립 P1 아님) · 증거 묶음 누락 (planned_assets/SHA256SUMS) = 재포장 정정본 완전성 검증 통과로 보류 해소 (종합 수령 docs/reviews/nonrint_limited_acceptance_consolidation_20261109/README.md · receipt.json · 반입 8a67b7eae) · verified 전환 = 원장의 독립 검증자 조건 별도 (두 Codex 창 · 검증자를 지어 넣지 않는다 · LPI-01 · 02 규칙) · MLA-02 · 03 한정 수용 그대로 · 운영 재봉인 · NP · 동시성 · 순서 · 현장 자격 · 실제 실행 GO 아님 · 전체 HOLD.",
+      "verified_in": "docs/reviews/nonrint_limited_acceptance_consolidation_20261109/README.md"
     },
     {
       "id": "MLA-02",
@@ -16299,11 +16303,12 @@
         "docs/reviews/lhs12_clarification_recheck_20261108/README.md",
         "docs/collab/codex_to_claude/20261108-1447_lhs12-partial-receipt-clarification.md",
         "docs/reviews/lhs12_clarification_acceptance_20261109/README.md (독립 재확인 수령 · CLOSABLE_DOCUMENT_SCOPE · 새 P1/P2/P3 0 · 반입 e33cbafec)",
-        "docs/reviews/lhs12_clarification_acceptance_20261109/receipt.json (원 ZIP · 보고서 · 판정 JSON 의 신원 · 해시)"
+        "docs/reviews/lhs12_clarification_acceptance_20261109/receipt.json (원 ZIP · 보고서 · 판정 JSON 의 신원 · 해시)",
+        "docs/reviews/nonrint_limited_acceptance_consolidation_20261109/receipt.json (종합 수령 · 한정 종결 근거 묶음)"
       ],
       "supersedes": [],
       "decision_note": "수정 후보 = Codex 실무 39b635a405f0 (B 반입 455171e3d · 명시 E/Z/D 구획 · 배타 방향 가지 · 문서만) · 독립 재확인 · 1저자 비준 대기 · Q3–Q6 문서 범위 수용 보존 · 실행 · 값 열람 없음 · 전체 HOLD (11-09 반입) · (11-09 독립 재확인 CLOSABLE_DOCUMENT_SCOPE 수령 · 수령 커밋 eba2e2baf4b6 = B e33cbafec · claimed_fixed = 455171e3d · 1저자 비준 대기 그대로)",
-      "verification_note": "독립 Codex 반박 창 재확인 (11-09 · 후보 39b635a405f0 = B 455171e3d · patch-id 같음 · 후보 11 파일 blob = B 그대로) = 비활성 문서의 분류 모호성 범위에서 종결 가능 (CLOSABLE_DOCUMENT_SCOPE · E/Z/D 적용집합 · D 공집합과 압력 동률 우선순위 배타 · zero-N 행 · ID · 분모 보존) · 새 P1/P2/P3 0 · 근거 = docs/reviews/lhs12_clarification_acceptance_20261109/README.md · receipt.json (원 판정문 · 독립 증거 ZIP = 외부 위치 · 주소 문구가 있어 리포 밖 보존) · verified 전환 = 원장의 독립 검증자 조건 별도 (두 Codex 창의 독립성을 owner/verified_by 로 표현할 수 없다 — 검증자를 지어 넣지 않는다 · LPI-01 · 02 규칙) · Q1/Q2 정책 1저자 비준 · 실제 고정쌍 · 코호트 · 노출 · 계보 명부 · 정확 종점 · 값 · 운영 판독기 구현 = 별도 · 독립성 · 평형 · N 효과 · 값 열람 · 실행 GO 아님 · 전체 HOLD.",
+      "verification_note": "독립 Codex 반박 창 재확인 (11-09 · 후보 39b635a405f0 = B 455171e3d · patch-id 같음 · 후보 11 파일 blob = B 그대로) = 비활성 문서의 분류 모호성 범위에서 종결 가능 (CLOSABLE_DOCUMENT_SCOPE · E/Z/D 적용집합 · D 공집합과 압력 동률 우선순위 배타 · zero-N 행 · ID · 분모 보존) · 새 P1/P2/P3 0 · 근거 = docs/reviews/lhs12_clarification_acceptance_20261109/README.md · receipt.json (원 판정문 · 독립 증거 ZIP = 외부 위치 · 주소 문구가 있어 리포 밖 보존) · verified 전환 = 원장의 독립 검증자 조건 별도 (두 Codex 창의 독립성을 owner/verified_by 로 표현할 수 없다 — 검증자를 지어 넣지 않는다 · LPI-01 · 02 규칙) · Q1/Q2 정책 1저자 비준 · 실제 고정쌍 · 코호트 · 노출 · 계보 명부 · 정확 종점 · 값 · 운영 판독기 구현 = 별도 · 독립성 · 평형 · N 효과 · 값 열람 · 실행 GO 아님 · 전체 HOLD. · (11-09 종합 수령 docs/reviews/nonrint_limited_acceptance_consolidation_20261109/README.md · 반입 8a67b7eae = 같은 한정 판정 재확인 · 범위 바뀜 없음)",
       "verified_in": "docs/reviews/lhs12_clarification_acceptance_20261109/README.md"
     },
     {
@@ -16320,11 +16325,12 @@
         "docs/reviews/lhs12_clarification_recheck_20261108/README.md",
         "docs/collab/codex_to_claude/20261108-1447_lhs12-partial-receipt-clarification.md",
         "docs/reviews/lhs12_clarification_acceptance_20261109/README.md (독립 재확인 수령 · CLOSABLE_DOCUMENT_SCOPE · 새 P1/P2/P3 0 · 반입 e33cbafec)",
-        "docs/reviews/lhs12_clarification_acceptance_20261109/receipt.json (원 ZIP · 보고서 · 판정 JSON 의 신원 · 해시)"
+        "docs/reviews/lhs12_clarification_acceptance_20261109/receipt.json (원 ZIP · 보고서 · 판정 JSON 의 신원 · 해시)",
+        "docs/reviews/nonrint_limited_acceptance_consolidation_20261109/receipt.json (종합 수령 · 한정 종결 근거 묶음)"
       ],
       "supersedes": [],
       "decision_note": "수정 후보 = Codex 실무 39b635a405f0 (B 반입 455171e3d · 배타 주 코호트 우선 · 증거 표지 유지) · 독립 재확인 · 1저자 비준 대기 · 전체 HOLD (11-09 반입) · (11-09 독립 재확인 CLOSABLE_DOCUMENT_SCOPE 수령 · 수령 커밋 eba2e2baf4b6 = B e33cbafec · claimed_fixed = 455171e3d · 1저자 비준 대기 그대로)",
-      "verification_note": "독립 Codex 반박 창 재확인 (11-09 · 후보 39b635a405f0 = B 455171e3d · patch-id 같음 · 후보 11 파일 blob = B 그대로) = 비활성 문서의 분류 모호성 범위에서 종결 가능 (CLOSABLE_DOCUMENT_SCOPE · 주 코호트 우선순위 · 분모 중복 정리 · 확인 / 미확인 사실 함께 보존) · 새 P1/P2/P3 0 · 근거 = docs/reviews/lhs12_clarification_acceptance_20261109/README.md · receipt.json (원 판정문 · 독립 증거 ZIP = 외부 위치 · 주소 문구가 있어 리포 밖 보존) · verified 전환 = 원장의 독립 검증자 조건 별도 (두 Codex 창의 독립성을 owner/verified_by 로 표현할 수 없다 — 검증자를 지어 넣지 않는다 · LPI-01 · 02 규칙) · Q1/Q2 정책 1저자 비준 · 실제 고정쌍 · 코호트 · 노출 · 계보 명부 · 정확 종점 · 값 · 운영 판독기 구현 = 별도 · 독립성 · 평형 · N 효과 · 값 열람 · 실행 GO 아님 · 전체 HOLD.",
+      "verification_note": "독립 Codex 반박 창 재확인 (11-09 · 후보 39b635a405f0 = B 455171e3d · patch-id 같음 · 후보 11 파일 blob = B 그대로) = 비활성 문서의 분류 모호성 범위에서 종결 가능 (CLOSABLE_DOCUMENT_SCOPE · 주 코호트 우선순위 · 분모 중복 정리 · 확인 / 미확인 사실 함께 보존) · 새 P1/P2/P3 0 · 근거 = docs/reviews/lhs12_clarification_acceptance_20261109/README.md · receipt.json (원 판정문 · 독립 증거 ZIP = 외부 위치 · 주소 문구가 있어 리포 밖 보존) · verified 전환 = 원장의 독립 검증자 조건 별도 (두 Codex 창의 독립성을 owner/verified_by 로 표현할 수 없다 — 검증자를 지어 넣지 않는다 · LPI-01 · 02 규칙) · Q1/Q2 정책 1저자 비준 · 실제 고정쌍 · 코호트 · 노출 · 계보 명부 · 정확 종점 · 값 · 운영 판독기 구현 = 별도 · 독립성 · 평형 · N 효과 · 값 열람 · 실행 GO 아님 · 전체 HOLD. · (11-09 종합 수령 docs/reviews/nonrint_limited_acceptance_consolidation_20261109/README.md · 반입 8a67b7eae = 같은 한정 판정 재확인 · 범위 바뀜 없음)",
       "verified_in": "docs/reviews/lhs12_clarification_acceptance_20261109/README.md"
     },
     {
@@ -16341,11 +16347,12 @@
         "docs/reviews/mixer_mgs01_api_recheck_20261109/README.md",
         "scripts/test_mixer_generator_seeds.py",
         "docs/reviews/mixer_mlar_mgs_receipt_20261109/mgs_receipt.json (독립 재확인 수령 · CLOSABLE_LIMITED · 원 요청 38 파일 해시 검증 통과)",
-        "docs/reviews/mixer_mlar_mgs_receipt_20261109/README.md (수령 기록)"
+        "docs/reviews/mixer_mlar_mgs_receipt_20261109/README.md (수령 기록)",
+        "docs/reviews/nonrint_limited_acceptance_consolidation_20261109/receipt.json (종합 수령 · 한정 종결 근거 묶음)"
       ],
       "supersedes": [],
       "decision_note": "독립 검토 (검토 핀 a836aa4c0 · B 사본 dff4ceec9) = 일반 내장 입력 · CLI 한정 수용 · MGS-01 P3 open · 수정 후보 = Codex 실무 aab74e46baed (B 반입 356dfefd1 · 정확한 내장 str 만 · 기존 정확한 int 정책과 같음) · 독립 재확인 대기 · 운영 재봉인 · 실행 승인 아님 (11-09 반입) · (11-09 독립 재확인 CLOSABLE_LIMITED · 수령 증거 PASS · claimed_fixed = 356dfefd1)",
-      "verification_note": "독립 Codex 반박 창 재확인 (11-09 · 후보 aab74e46baed = B 356dfefd1 · 변경 9 파일 blob = 원 커밋 = B 반입 = 지금 B) = 직접 API 의 str 하위 클래스 seed 원 결함 한정 종결 가능 (CLOSABLE_LIMITED) · 수령 증거 PASS · 새 P1/P2/P3 0 · 근거 = docs/reviews/mixer_mlar_mgs_receipt_20261109/mgs_receipt.json · README.md (원 판정문 · 독립 증거 ZIP = 외부 위치 · 주소 문구 → 리포 밖 보존) · verified 전환 = 원장의 독립 검증자 조건 별도 (두 Codex 창 · 검증자를 지어 넣지 않는다 · LPI-01 · 02 규칙) · 운영 재봉인 · NP · 동시성 · 순서 · 현장 자격 · 실제 실행 GO 아님 · 전체 HOLD.",
+      "verification_note": "독립 Codex 반박 창 재확인 (11-09 · 후보 aab74e46baed = B 356dfefd1 · 변경 9 파일 blob = 원 커밋 = B 반입 = 지금 B) = 직접 API 의 str 하위 클래스 seed 원 결함 한정 종결 가능 (CLOSABLE_LIMITED) · 수령 증거 PASS · 새 P1/P2/P3 0 · 근거 = docs/reviews/mixer_mlar_mgs_receipt_20261109/mgs_receipt.json · README.md (원 판정문 · 독립 증거 ZIP = 외부 위치 · 주소 문구 → 리포 밖 보존) · verified 전환 = 원장의 독립 검증자 조건 별도 (두 Codex 창 · 검증자를 지어 넣지 않는다 · LPI-01 · 02 규칙) · 운영 재봉인 · NP · 동시성 · 순서 · 현장 자격 · 실제 실행 GO 아님 · 전체 HOLD. · (11-09 종합 수령 docs/reviews/nonrint_limited_acceptance_consolidation_20261109/README.md · 반입 8a67b7eae = 같은 한정 판정 재확인 · 범위 바뀜 없음)",
       "verified_in": "docs/reviews/mixer_mlar_mgs_receipt_20261109/README.md"
     },
     {
