@@ -1,0 +1,405 @@
+{
+  "schema": "mip01_residual_mipr01_limited_acceptance_receipt/1",
+  "reviewed_candidate_pin": "dcfd62262f101598e4301862e2b3065c44514bb0",
+  "reviewed_candidate_parent": "d310f741a636954b600c9e4f000bfccba2fee3ce",
+  "prior_path_fix_pin": "3ca47af5b0acd1b39c1d437949413ef3ac31b831",
+  "preparation_copy": "be4388d0c1d3836bc44df0eada6793fbffdcd6e7",
+  "original_preparation_pin": "73e659273fd2ed6406a4c90011fc6079c7adf95f",
+  "receipt_branch_base_b": "69d714d094c4d210e5bf931d5c520e64ca0a751d",
+  "artifact_roles": {
+    "incoming_independent_review_zip": {
+      "member": "codex_mipr01_windows_path_dcfd62262f10_independent_20261109.zip",
+      "bytes": 31021893,
+      "sha256": "17c4067801b47720635cddf99732487ef691028594976473d6e43d5ae75cecd9"
+    },
+    "original_request_reviewed_by_independent_window": {
+      "member": "codex_mipr01_windows_path_fix_dcfd62262f10_review_20261109.zip",
+      "bytes": 10050142,
+      "sha256": "c8e7dab42414e0ca1e1186840db2a75598e5c61ac7b42e295d4b708777d92717"
+    },
+    "prior_partial_review_preserved_inside_request": {
+      "member": "codex_mip01_path_fix_3ca47af5b0ac_independent_20261109.zip",
+      "bytes": 11681951,
+      "sha256": "6bcff75f0c1b95040a7f03482ccf00682949534b822ca19906449813571efe1d"
+    },
+    "identity_rule": "The request SHAc8e7, new independent result SHA17c4 and prior partial result SHA6bcf identify three different artifacts"
+  },
+  "key_review_members": [
+    {
+      "member": "codex_review_mipr01_windows_namespace_20261109.md",
+      "bytes": 12093,
+      "sha256": "1d755c00953d719e8ef7404cc3f4a471a7be98aac1cce206f04b51d88c6d35dd"
+    },
+    {
+      "member": "verdict.json",
+      "bytes": 947,
+      "sha256": "f75337e80d4b3015499cf9d5156da38f4c0a2e599e5284ceb5fd11a1f28d8d7b"
+    },
+    {
+      "member": "package_verification.json",
+      "bytes": 347,
+      "sha256": "5fb1147e6f80eff57521b71654463164fa9207bd08cfcb3d8d87f57be58fa37a"
+    },
+    {
+      "member": "preservation_audit.json",
+      "bytes": 1670,
+      "sha256": "35bc0df1a6bc3ad03061b407cd5aecd2504422efdab65d2537ddd2bba2a75324"
+    },
+    {
+      "member": "remote_git_evidence.json",
+      "bytes": 21813,
+      "sha256": "445d6ccbf1f74a044a1f0d186354f0e06ee914314065010fa3a82e4f2f827649"
+    },
+    {
+      "member": "evidence_summary.json",
+      "bytes": 4948,
+      "sha256": "496ee26548b8dbd725f691045280f09174c3729d3455e2b84b05d9214805b556"
+    },
+    {
+      "member": "independent_alias/results.json",
+      "bytes": 55508,
+      "sha256": "ecaaa94a12f818607a71b33ebdca7ac265d6738f3b2ce3e4d37a5d47d56c3d36"
+    },
+    {
+      "member": "independent_order/results.json",
+      "bytes": 110938,
+      "sha256": "f73985d00d5935092baa763cfc6e66671466452a2c53304394db1a09a9932db1"
+    },
+    {
+      "member": "regression/receipts.json",
+      "bytes": 4498,
+      "sha256": "aa2ce2d8f0733bf786b47a173f1f278fc5f06fc7ba9dbd953cbca0dadcb39e91"
+    },
+    {
+      "member": "audit_preservation_initial_failure.txt",
+      "bytes": 618,
+      "sha256": "5aa8b087a0d780b2ab34a413b06d78ae478872b14dc4ae9901342ed0c52593aa"
+    }
+  ],
+  "byte_only_intake_validation": {
+    "status": "PASS",
+    "method": "ZIP bytes and complete member sets, CRC, all nested SHA256SUMS scopes, SHA256 and local Git object identities; no attached or project execution",
+    "incoming_member_and_file_count": 5048,
+    "archive_occurrences_audited": 10,
+    "sha256sum_manifest_occurrences_audited": 34,
+    "unique_archives_and_hash_scopes": [
+      {
+        "filename": "codex_mixer_inactive_preparation_73e659273fd2_independent_20261109.zip",
+        "bytes": 1109698,
+        "sha256": "18d6945be87b88c044fd934d8254658f02ff8855109bb6bdf8f60aa39ea78b0c",
+        "files": 339,
+        "archive_occurrences_audited": 4,
+        "crc_path_duplicate_link_encryption": "PASS",
+        "sha256sum_scopes": [
+          {
+            "member": "package/SHA256SUMS",
+            "entries": 184,
+            "occurrences_checked": 4,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          },
+          {
+            "member": "package/snapshot_dependencies/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+            "entries": 40,
+            "occurrences_checked": 4,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          },
+          {
+            "member": "SHA256SUMS",
+            "entries": 338,
+            "occurrences_checked": 4,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          }
+        ]
+      },
+      {
+        "filename": "original_input.zip",
+        "bytes": 1740544,
+        "sha256": "12435e020cccec00a56db7e6340c7b65808d30eaf311662b021d59a6afc39a53",
+        "files": 358,
+        "archive_occurrences_audited": 2,
+        "crc_path_duplicate_link_encryption": "PASS",
+        "sha256sum_scopes": [
+          {
+            "member": "SHA256SUMS",
+            "entries": 357,
+            "occurrences_checked": 2,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          },
+          {
+            "member": "snapshot_dependencies/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+            "entries": 40,
+            "occurrences_checked": 2,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          }
+        ]
+      },
+      {
+        "filename": "codex_mip01_path_fix_3ca47af5b0ac_independent_20261109.zip",
+        "bytes": 11681951,
+        "sha256": "6bcff75f0c1b95040a7f03482ccf00682949534b822ca19906449813571efe1d",
+        "files": 3925,
+        "archive_occurrences_audited": 2,
+        "crc_path_duplicate_link_encryption": "PASS",
+        "sha256sum_scopes": [
+          {
+            "member": "package/SHA256SUMS",
+            "entries": 357,
+            "occurrences_checked": 2,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          },
+          {
+            "member": "package/snapshot_dependencies/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+            "entries": 40,
+            "occurrences_checked": 2,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          },
+          {
+            "member": "regression/after/snapshot/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+            "entries": 40,
+            "occurrences_checked": 2,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          },
+          {
+            "member": "regression/before/snapshot/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+            "entries": 40,
+            "occurrences_checked": 2,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          },
+          {
+            "member": "SHA256SUMS",
+            "entries": 3924,
+            "occurrences_checked": 2,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          }
+        ]
+      },
+      {
+        "filename": "original_input.zip",
+        "bytes": 10050142,
+        "sha256": "c8e7dab42414e0ca1e1186840db2a75598e5c61ac7b42e295d4b708777d92717",
+        "files": 427,
+        "archive_occurrences_audited": 1,
+        "crc_path_duplicate_link_encryption": "PASS",
+        "sha256sum_scopes": [
+          {
+            "member": "SHA256SUMS",
+            "entries": 426,
+            "occurrences_checked": 1,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          },
+          {
+            "member": "snapshot_dependencies/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+            "entries": 40,
+            "occurrences_checked": 1,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          }
+        ]
+      },
+      {
+        "filename": "codex_mipr01_windows_path_dcfd62262f10_independent_20261109.zip",
+        "bytes": 31021893,
+        "sha256": "17c4067801b47720635cddf99732487ef691028594976473d6e43d5ae75cecd9",
+        "files": 5048,
+        "archive_occurrences_audited": 1,
+        "crc_path_duplicate_link_encryption": "PASS",
+        "sha256sum_scopes": [
+          {
+            "member": "package/SHA256SUMS",
+            "entries": 426,
+            "occurrences_checked": 1,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          },
+          {
+            "member": "package/snapshot_dependencies/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+            "entries": 40,
+            "occurrences_checked": 1,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          },
+          {
+            "member": "regression/after/snapshot/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+            "entries": 40,
+            "occurrences_checked": 1,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          },
+          {
+            "member": "regression/before/snapshot/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+            "entries": 40,
+            "occurrences_checked": 1,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          },
+          {
+            "member": "regression/normal_paths/snapshot/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+            "entries": 40,
+            "occurrences_checked": 1,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          },
+          {
+            "member": "SHA256SUMS",
+            "entries": 5047,
+            "occurrences_checked": 1,
+            "full_scope_coverage": true,
+            "all_hashes_match": true
+          }
+        ]
+      }
+    ],
+    "original_request_zip_bytes_equal": true,
+    "expanded_original_request_members_equal": 427,
+    "nested_prior_independent_zip_bytes_equal": true,
+    "fixed_git_files": 76,
+    "fixed_git_file_roles": {
+      "current_snapshot": 75,
+      "before_verifier": 1
+    },
+    "dependency_snapshot_files": 86,
+    "fixed_and_dependency_bytes_sha256_git_blob_checks": 162,
+    "raw_evidence_manifest_entries_verified": 257,
+    "diff_and_prior_archive_manifest_entries_verified": 2,
+    "pasted_report_exact_bytes_equal": true,
+    "old_snapshot_files": 68,
+    "old_nonverifier_files_preserved": 67,
+    "candidate_files_preserved": 43,
+    "dependency_bytes_preserved": 86,
+    "prior_fix_3ca_to_d310_entire_git_tree_equal": true,
+    "original_preparation73e_to_be438_equal_blobs": 61,
+    "original_preparation73e_to_be438_entire_tree_equal": false,
+    "candidate_parent_verified_locally": true,
+    "reviewer_order_metadata_source_sha_matches_packaged_verifier": true,
+    "new_remote_queries_by_intake_agent": false,
+    "remote_evidence_boundary": "Stored reviewer remote metadata was received as evidence; this byte audit used local Git objects and did not requery GitHub",
+    "attached_programs_executed": false,
+    "project_modules_imported": false,
+    "substantive_tests_reexecuted": false,
+    "original_artifacts_modified": false
+  },
+  "received_independent_disposition": {
+    "source": "verdict.json and codex_review_mipr01_windows_namespace_20261109.md in the identified incoming ZIP",
+    "original_finding": "MIP-01",
+    "residual_reproduction_id": "MIPR-01",
+    "priority": "P2",
+    "duplicate_finding_created": false,
+    "verbatim_verdict_label": "LIMITED_FIX_VERIFIED_CLOSURE_ELIGIBLE",
+    "interpretation": "The requested residual path fix is accepted; together with the previously accepted ordinary-path guard, the scoped MIP-01 release criteria are satisfied",
+    "new_findings": {
+      "P1": 0,
+      "P2": 0,
+      "P3": 0
+    },
+    "Q1": "ACCEPT",
+    "Q2": "ACCEPT",
+    "Q3": "ACCEPT",
+    "Q4": "PRESERVED_LIMITED",
+    "prior_candidate_dependency_asset_metadata_policy_acceptance": "PRESERVED_LIMITED",
+    "prior_partial_status": "Historical partial review retained unchanged; this later receipt supplies the scoped accepted result",
+    "scope": "Unsupported Windows namespace rejection before raw path lookup and before writes after conversion; input file and directory graph preservation",
+    "receipt_agent_issued_new_independent_verdict": false
+  },
+  "independent_runs_reported_not_rerun_at_intake": {
+    "environment": {
+      "platform": "Windows",
+      "python": "3.12.14"
+    },
+    "namespace_regression_before": {
+      "methods": 5,
+      "subtest_failures": 148,
+      "errors": 0,
+      "rc": 1,
+      "local_cli_calls": 37,
+      "raw_sentinels": 120
+    },
+    "namespace_regression_after": {
+      "methods": 5,
+      "failures": 0,
+      "errors": 0,
+      "rc": 0,
+      "local_cli_calls": 37,
+      "raw_sentinels": 120
+    },
+    "namespace_test_sha256": "60ec56cb0464df3b71b758d1d9adc0da8f0db9c8716f3f3a3bc1101ffaf21666",
+    "ordinary_path_regression": {
+      "methods": 5,
+      "failures": 0,
+      "errors": 0,
+      "rc": 0,
+      "local_cli_calls": 41
+    },
+    "original_aliases": {
+      "additional_separately_authored_local_cli_calls": 4,
+      "before_both_directions": "rc0; candidate43 becomes44; fixed regression recheck rc1",
+      "after_both_directions": "rc1 with unsupported namespace reason before mutation; candidate43 remains43; fixed regression recheck rc0"
+    },
+    "independent_order_probes": {
+      "raw_before_Path_creation_conditions": 192,
+      "absolute_or_resolved_recheck_conditions": 24,
+      "lexical_link_signal_conditions": 12,
+      "memory_mutation_sensitivity_cases": 3,
+      "actual_filesystem_namespace_access": 0,
+      "scientific_imports": 0,
+      "actual_process_calls": 0,
+      "scope": "Instrumented ordering and mocked lexical-link signals only"
+    },
+    "normal_old_rc": 1,
+    "normal_old_expected_metadata_failures": 8,
+    "preparation_methods_inside_normal_mode": 14,
+    "loader5_reexecuted_in_this_independent_review": false,
+    "loader_preservation_basis": "Unchanged loader/function AST and bound source loading in normal CLI receipts; do not count earlier loader5 runs as this review execution",
+    "counting_rule": "Methods, subtests, actual CLI calls, instrumented conditions, variants, preparation14 and earlier runs are distinct overlapping units; never add them as unique tests",
+    "reviewer_initial_audit_failure": "First helper assumed whole-tree equality for the preparation cherry-pick; corrected to the actual 61-blob equality. Initial source and failure preserved; candidate, logs and test expectations unchanged. Not a product finding or successful test.",
+    "intake_agent_reproduced_substantive_tests": false
+  },
+  "ledger_application_boundary": {
+    "application_owner": "Claude",
+    "application_status": "NOT_APPLIED",
+    "proposed_status": "claimed_fixed with received limited closure evidence",
+    "automatically_assign_verified": false,
+    "verbatim_verdict_label_is_not_ledger_status": true,
+    "two_codex_window_rule_preserved": true,
+    "shared_ledger_modified": false,
+    "same_finding_not_double_counted": true
+  },
+  "remaining_limits": {
+    "supported_set": "Ordinary native local paths; unsupported extended/device/UNC and NT namespace forms are rejected rather than stripped",
+    "ordering": "All raw arguments before path lookup; absolute/resolved rechecks before writes; existing lexical-link checks before resolve",
+    "actual_OS_link_qualification": false,
+    "hostile_concurrent_filesystem_qualification": false,
+    "universal_namespace_or_all_OS_certification": false,
+    "generic_security_sandbox_certification": false,
+    "operating_reseal_host_wave_physical_execution_or_deployment_authorized": false,
+    "other_findings_closed_by_this_receipt": false,
+    "whole_gate": "HOLD"
+  },
+  "storage_boundary": {
+    "original_review_artifacts_contain_external_locations": true,
+    "matched_archive_member_pairs": 915,
+    "original_zip_and_full_member_hashes_kept_outside_repository": true,
+    "raw_review_sources_logs_or_external_location_metadata_imported": false,
+    "repository_content": "Artifact identities and scoped summary only"
+  },
+  "research_values_read": false,
+  "actual_engine_calls": 0,
+  "actual_scheduler_calls": 0,
+  "actual_mpi_calls": 0,
+  "operational_reseal": false,
+  "shared_ledger_modified": false,
+  "research_results": 0,
+  "execution_authorized": false,
+  "execution_go": false,
+  "whole_gate": "HOLD"
+}
