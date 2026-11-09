@@ -6,7 +6,7 @@
  "machine": "kgy (RTX 3090 · 공유 기계)",
  "track": "운영 (계산 결과 · 값 변화 없음)",
  "citable": false,
- "status": "블록 발송 전 → 사용자 kgy 실행 대기 (결과는 아래 '결과' 에 채운다)",
+ "status": "✅ 끝 — 사용자 kgy 실행 2026-11-09 · 236.7 GB 회수 · 89 → 64 % · 남길 파일 없어진 것 0",
  "절차": "kb/methodology/qe_disk_reclaim_2026_09_12.md — 파동함수만 지운다 · .out · charge-density · data-file-schema.xml · NEB .dat/.path 는 정본이라 남긴다 (nscf 를 전하밀도에서 다시 돌릴 수 있다)",
  "앞_기록": "kb/open_items.md 의 '🧹 kgy 정리 (10-31)' 줄 — 그때 '🔔 ~/work/bml 155 GB (기록에 없음) · li3n_dft · vgcf_hbn · runs/y_dft 정리 여부' 를 사용자에게 물었다 → 아래 소유_범위 가 그 답이다",
  "요청_사용자_원문": [
@@ -100,6 +100,140 @@
   "시험_가짜_홈_2026_11_09": "18 경우 — 닫힌 런 (실패 출력 있어도 지움) ✓ · 닫힌 런 최근 수정 → 루트 통째 건너뜀 ✓ · 닫힌 런을 도는 잡이 씀 → 건너뜀 ✓ · CEI · li2s2 제외 ✓ · 끝난 런 (slurm 로그는 QE 출력으로 안 셈) ✓ · 최대 스텝 · JOB DONE 없음 · SCF 미수렴 · projwfc 실패 → 건너뜀 ✓ · NEB 수렴 (영상 PW.out 넘어 위로) 지움 ✓ · NEB 미수렴 건너뜀 ✓ · 짝 없음 건너뜀 ✓ · 도는 잡 cwd 건너뜀 ✓ · 스핀 hdf5 wfcup/wfcdw 지움 ✓ · 링크 wfc9.dat 안 지움 · 대상 /etc/hostname 그대로 ✓ · 남겨야 할 파일 없어진 것 0 ✓",
   "기대_회수": "전부 지워질 때 상한 ≈ 250 GB (bml 162 · Nd ≈ 38 · li3n 14.5 · li2s 11.7 · lldvar 7.5 · y_dft 5.6 · 힘 대조 3.7) — 실제는 단위별 판정으로 줄 수 있다 · 여유 98 → ≈ 330 GB (≈ 64 %) 예상"
  },
- "결과": null,
+ "결과": {
+  "출처": "사용자 붙여넣기 2026-11-09 (kgy · 위 블록 그대로 · DRY 아님)",
+  "합계": "지움 236.7 GB (3,243 파일) · 건너뜀 135.4 GB (44 단위) · 남겨야 할 출력·전하밀도 378 개 중 없어진 것 0 ✓",
+  "df_뒤": "/dev/nvme0n1p2 916G · 사용 551G · 여유 318G · 64 % (전: 여유 98 GB · 89 %)",
+  "지운_목록_kgy": "/home/kgy/reclaim_wfc_2026_11_09.log (파일마다 크기 · 경로 — 저장소로 회수 안 함)",
+  "지움_GB": {
+   "work/bml/manuscript_support/comp2v2_dft_0K": [
+    162.37,
+    1344,
+    "끝남 — bml 파동함수는 전부 이 한 폴더 (comp2 v2 0 K DFT · db/compositions/comp2.json 이 gabia 의 같은 이름 폴더를 적는다 · kgy 사본) · .out · 전하밀도 남음"
+   ],
+   "work/runs/nd_q2_kprobe_2026_10_26": [
+    8.9,
+    374,
+    "닫힘"
+   ],
+   "lldvar/runs/sei_neb": [
+    7.49,
+    53,
+    "끝남"
+   ],
+   "work/runs/ndo_site_eos_2026_10_16": [
+    7.38,
+    48,
+    "닫힘"
+   ],
+   "work/runs/nd_q2_decomp_2026_10_23": [
+    6.11,
+    530,
+    "닫힘"
+   ],
+   "work/runs/nd_scf_2026_09_08": [
+    5.95,
+    28,
+    "닫힘"
+   ],
+   "work/runs/y_dft": [
+    5.64,
+    123,
+    "끝남"
+   ],
+   "work/runs/nd_q3p_1027": [
+    5.32,
+    20,
+    "닫힘"
+   ],
+   "work/runs/li2s_model_check_sp_2026_10_21": [
+    4.24,
+    12,
+    "닫힘"
+   ],
+   "work/runs/ndo_site_dft_2026_10_15": [
+    4.01,
+    68,
+    "닫힘"
+   ],
+   "work/runs/li2s_neb_cellconv_1009": [
+    3.86,
+    216,
+    "닫힘"
+   ],
+   "work/runs/force_check_700K_v2": [
+    3.72,
+    20,
+    "닫힘"
+   ],
+   "work/runs/smallcell_gb3": [
+    3.59,
+    10,
+    "닫힘"
+   ],
+   "work/runs/ndo_site_dft_kprobe_2026_10_16": [
+    1.54,
+    10,
+    "닫힘"
+   ],
+   "work/runs/nd_q3p_rerun_1030": [
+    1.26,
+    5,
+    "끝남"
+   ],
+   "work/runs/ndo_site_eos_v0_2026_10_23": [
+    1.23,
+    8,
+    "닫힘"
+   ],
+   "work/comp2_saddle_check/tmp_followmin": [
+    1.02,
+    8,
+    "끝남"
+   ],
+   "work/comp2_saddle_check/tmp_V0": [
+    1.02,
+    8,
+    "끝남"
+   ],
+   "work/runs/force_check_700K": [
+    0.86,
+    11,
+    "닫힘"
+   ],
+   "work/runs/smallcell_gb3_probe": [
+    0.4,
+    1,
+    "끝남"
+   ],
+   "work/runs/sei_dft": [
+    0.39,
+    344,
+    "끝남"
+   ],
+   "work/runs/fc_gapchk": [
+    0.3,
+    1,
+    "끝남"
+   ],
+   "work/runs/fc_control_smear": [
+    0.07,
+    1,
+    "닫힘"
+   ]
+  },
+  "건너뜀_요약": {
+   "CEI cei_gap_1027 (제외 · 판독 전)": "목록에 보인 것만 ≈ 94.9 GB — .save (MnP2O6 22.72 · NiP2O6 11.36 · Ni3S4 6.60 · CoS2 3.92 · Li2SO4 3.33 · P2O5 3.31 · SCl 2.91 · MnS2 2.81 · NiS2 2.25) + outdir 임시 *.wfcN (MnP2O6 20.15 · Ni3S4 6.58 · CoS2 3.90 · MnS2 2.79 · NiS2 2.25 = 35.67 GB) · 나머지는 '그 밖 19 단위' 안",
+   "li3n_dft · li3n_eads (미완 출력)": "tmp_p0_saddle · tmp_p0_min 의 .save + 임시 (각 2.90 GB × 4 = 11.6 GB) — 짝 폴더 ~/work/li3n_dft 에 미완 출력 p0_min2.out 외 3 · li3n_eads/slab_bare.save 2.89 GB — slab_bare.out 미완. 원장 값 위치도 09-12 부터 미확인 → 사용자 판단 전엔 그대로",
+   "Yonghoon-DEM-DFT/tmp (짝 출력 없음)": "d0–d2 Li_in_galler 2.44 · 2.44 · 1.95 · d5/d6 Li_on_hbn · Li_on_graphe 1.12 × 3 … (09-12 에도 '정본 위치 불확실' 로 남김)",
+   "그 밖": "19 단위 15.86 GB (목록 25 줄 밖)"
+  },
+  "다음_후보 (지금은 안 함 — 64 % 라 필요 없음 · 09-12 '필요 없을 때 지우지 않는다')": [
+   "CEI outdir 임시 *.wfcN 35.67 GB — 순수 임시 (projwfc 는 .save 를 읽는다) · 10-31 선례대로 상마다 06 JOB DONE 확인 뒤 지울 수 있다",
+   "CEI .save ≈ 59 GB — 판독 R1–R6 · 회수 뒤 (projwfc 를 다시 돌릴 일이 없어진 뒤)",
+   "li3n · galler — 사용자가 원장 값 위치를 정하면"
+  ],
+  "by": "agent · 2026-11-09"
+ },
  "by": "agent · 2026-11-09"
 }
