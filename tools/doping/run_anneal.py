@@ -146,6 +146,13 @@ def anneal_one(xyz_path: Path, calc, out_dir: Path,
         if hasattr(dyn, 'close'):
             dyn.close()
     t_md = time.time() - t0
+    # ⛔ 2026-11-09 (Codex DW P1-2): 궤적 파일 · 저장 간격을 결과 기록에 남긴다 — 옛 판은 md.traj 를 쓰고도 기록에
+    #   없어서 파일럿 판독이 저장 간격을 명령줄에서 받았다 (틀린 간격을 주면 2 · 5 · 10 ps 프레임을 20 · 50 · 100 ps 로 읽었다).
+    from ase.io.trajectory import Trajectory as _Traj
+    with _Traj(str(md_traj)) as _T:
+        n_frames = len(_T)
+    md_traj_rec = {'rel': f'{name}/md.traj', 'sha256': _file_sha256(md_traj), 'n_frames': int(n_frames),
+                   'log_every_steps': int(log_every), 'dt_fs': float(dt_fs), 'n_steps': int(n_steps)}
     E_md_final = float(atoms.get_potential_energy())
     print(f"  [{name}] MD done ({t_md:.1f}s) "
           f"E_pre={E_pre/n_atoms:.4f} → E_md={E_md_final/n_atoms:.4f} eV/atom")
@@ -220,8 +227,10 @@ def anneal_one(xyz_path: Path, calc, out_dir: Path,
         'post_relax_xyz': str(work / 'post_relax.xyz'),
         # ⛔ 2026-11-09 (Codex DV P1-2): 실제로 저장한 결과 파일의 해시 · 조성 — 재개 생략과 결과 검사가
         #   verify_outputs() 한 함수로 존재 · 판독 · 해시 · 조성을 확인한다 (옛 판: 지우거나 바꿔도 통과)
-        'outputs': {k: {'rel': f'{name}/{k}.xyz', 'sha256': _file_sha256(work / f'{k}.xyz')}
-                    for k in ('post_md', 'post_relax')},
+        'outputs': {**{k: {'rel': f'{name}/{k}.xyz', 'sha256': _file_sha256(work / f'{k}.xyz')}
+                       for k in ('post_md', 'post_relax')},
+                    'md_traj': md_traj_rec},
+        'log_every_steps': int(log_every),
         'composition': _composition(atoms),
     }
 
@@ -252,17 +261,40 @@ def _composition(atoms) -> dict:
     return dict(sorted(c.items()))
 
 
+def geometry_problems(atoms) -> list:
+    """기하 유효성 → 문제 목록. 좌표 · 셀이 유한하고 (NaN · inf 없음) 세 방향 주기 셀이면 부피가 0 이 아니어야 한다.
+
+    2026-11-09 (Codex DW P2): 옛 판은 NaN 좌표가 든 결과도 sha256 만 맞으면 통과했고, 판독기 끝 꼴 분류가 그 구조를
+    F_free 로 셌다 (NaN 거리는 모든 비교가 거짓 → 결합 0 · 최소 거리 inf). 이제 결과 검사에서 막는다.
+    ⛔ 못 하는 것: 원자가 겹쳤는지 · 셀이 물리적으로 말이 되는지는 보지 않는다 (유한성 · 특이성까지).
+    """
+    p = []
+    pos = np.asarray(atoms.get_positions(), dtype=float)
+    cell = np.asarray(atoms.cell.array, dtype=float)
+    if not np.isfinite(pos).all():
+        p.append('좌표에 NaN · inf')
+    if not np.isfinite(cell).all():
+        p.append('셀에 NaN · inf')
+    elif all(atoms.pbc) and abs(float(np.linalg.det(cell))) < 1e-6:
+        p.append('주기 셀 부피 0 (특이 셀)')
+    return p
+
+
 def verify_outputs(rec: dict, out_dir) -> list:
     """완료 기록의 결과 파일 결속 검사 → 문제 목록 (빈 목록이면 통과). 재개 생략 · check_results 가 같이 쓴다.
 
-    본다: 'outputs' 기록 유무 · 파일 존재 · sha256 일치 · ASE 로 읽힘 · 원자 수 · 조성 (기록 = 입력 정체성의 원자 수).
-    ⛔ 못 하는 것: 에너지가 그 구조의 것인지 다시 계산하지 않는다 (해시 결속까지).
+    본다: 'outputs' 기록 유무 · 파일 존재 · sha256 일치 · ASE 로 읽힘 · 원자 수 · 조성 (기록 = 입력 정체성의 원자 수) ·
+    기하 유효성 (유한 좌표 · 셀 · 특이 셀 아님 — DW P2) · md_traj 기록이 있으면 궤적도 (존재 · sha256 · 프레임 수 =
+    걸음 수 // 저장 간격 + 1 · 프레임마다 원자 수 · 조성 · 기하 — DW P1-2).
+    ⛔ 못 하는 것: 에너지가 그 구조의 것인지 다시 계산하지 않는다 (해시 결속까지) · md_traj 가 없는 옛 기록은
+       궤적을 안 본다 (궤적이 필요한 판독 — 파일럿 — 은 판독기가 md_traj 기록을 따로 요구한다).
     """
     out_dir = Path(out_dir)
     probs = []
     outs = rec.get('outputs')
     if not outs:
         return [f"{rec.get('name')}: 결과 파일 해시 기록이 없다 (2026-11-09 이전 판 기록)"]
+    n_id = (rec.get('identity') or {}).get('n_atoms')
     for k in ('post_md', 'post_relax'):
         e = outs.get(k)
         if not e:
@@ -280,12 +312,53 @@ def verify_outputs(rec: dict, out_dir) -> list:
         except Exception as ex:
             probs.append(f"{rec.get('name')}: {k} 를 못 읽는다 ({type(ex).__name__})")
             continue
-        n_id = (rec.get('identity') or {}).get('n_atoms')
         if n_id is not None and len(a) != int(n_id):
             probs.append(f"{rec.get('name')}: {k} 원자 수 {len(a)} ≠ 입력 {n_id}")
         if rec.get('composition') and _composition(a) != rec['composition']:
             probs.append(f"{rec.get('name')}: {k} 조성 {_composition(a)} ≠ 기록 {rec['composition']}")
+        probs += [f"{rec.get('name')}: {k} {g}" for g in geometry_problems(a)]
+    e = outs.get('md_traj')
+    if e is not None:
+        probs += _verify_md_traj(rec, e, out_dir, n_id)
     return probs
+
+
+def _verify_md_traj(rec, e, out_dir, n_id) -> list:
+    nm = rec.get('name')
+    f = Path(out_dir) / e.get('rel', '')
+    if not f.is_file():
+        return [f"{nm}: md_traj 파일 없음 ({e.get('rel')})"]
+    if _file_sha256(f) != e.get('sha256'):
+        return [f"{nm}: md_traj 가 기록 뒤 바뀌었다 (sha256 불일치)"]
+    try:
+        le, ns, nf = int(e['log_every_steps']), int(e['n_steps']), int(e['n_frames'])
+    except (KeyError, TypeError, ValueError):
+        return [f"{nm}: md_traj 기록에 저장 간격 · 걸음 수 · 프레임 수가 없다"]
+    p = []
+    if le <= 0 or nf != ns // le + 1:
+        p.append(f"{nm}: md_traj 프레임 수 {nf} ≠ 걸음 {ns} // 간격 {le} + 1")
+    idn = rec.get('identity') or {}
+    if idn.get('dt_fs') is not None and abs(float(idn['dt_fs']) - float(e.get('dt_fs', -1))) > 1e-12:
+        p.append(f"{nm}: md_traj dt {e.get('dt_fs')} ≠ 정체성 dt {idn['dt_fs']}")
+    if idn.get('time_ps') is not None and float(e.get('dt_fs', 0)) > 0 \
+            and ns != int(round(float(idn['time_ps']) * 1000 / float(e['dt_fs']))):
+        p.append(f"{nm}: md_traj 걸음 {ns} ≠ 정체성 시간 {idn['time_ps']} ps / dt")
+    from ase.io.trajectory import Trajectory as _Traj
+    try:
+        with _Traj(str(f)) as T:
+            if len(T) != nf:
+                p.append(f"{nm}: md_traj 실제 프레임 {len(T)} ≠ 기록 {nf}")
+            for i, a in enumerate(T):
+                if n_id is not None and len(a) != int(n_id):
+                    p.append(f"{nm}: md_traj 프레임 {i} 원자 수 {len(a)} ≠ 입력 {n_id}"); break
+                if rec.get('composition') and _composition(a) != rec['composition']:
+                    p.append(f"{nm}: md_traj 프레임 {i} 조성이 기록과 다르다"); break
+                g = geometry_problems(a)
+                if g:
+                    p.append(f"{nm}: md_traj 프레임 {i} {g[0]}"); break
+    except Exception as ex:
+        p.append(f"{nm}: md_traj 를 못 읽는다 ({type(ex).__name__})")
+    return p
 
 
 def run_identity(xyz_path, *, temperature_K, time_ps, dt_fs, friction, relax_steps,
@@ -645,6 +718,33 @@ def _selftest() -> int:
             and not check_results(ob / "anneal_results.json", expect_n=1),
             "⑧ ⛔음성: 지우면 잡고 멈춘다 · --rerun_mismatched 로만 다시 돌아 결속이 회복된다")
         del keep_bytes
+        # ⑨ 2026-11-09 (Codex DW P1-2 · P2) — 궤적 기록 · 기하 유효성
+        ot = td / "traj"
+        rc_t, _ = run_batch([x], ot, dict(P0, time_ps=0.004, log_every=1), lj(), model="fake-lj")
+        rt = json.loads((ot / "anneal_results.json").read_text())["results"][0]
+        mt = rt["outputs"].get("md_traj") or {}
+        chk(rc_t == 0 and mt.get("n_frames") == 3 and mt.get("log_every_steps") == 1 and mt.get("n_steps") == 2
+            and not verify_outputs(rt, ot),
+            "⑨ [양성] 0.004 ps · dt 2 fs · 매 걸음 저장 → md_traj 기록 (프레임 3 = 2 // 1 + 1 · sha256) · 결과 검사 통과")
+        bad_le = json.loads(json.dumps(rt)); bad_le["outputs"]["md_traj"]["log_every_steps"] = 2
+        chk(any("프레임 수" in q for q in verify_outputs(bad_le, ot)),
+            "⑨ ⛔음성: 기록의 저장 간격을 바꾸면 (1 → 2) 프레임 수가 안 맞아 잡는다 (간격을 명령줄로 받던 판독의 거울)")
+        trp = ot / "ar4" / "md.traj"
+        tb = trp.read_bytes()
+        trp.write_bytes(tb + b"\0")
+        chk(any("md_traj" in q and "sha256" in q for q in verify_outputs(rt, ot)),
+            "⑨ ⛔음성: md.traj 를 바꾸면 sha256 으로 잡는다")
+        trp.write_bytes(tb)
+        rpx = ot / "ar4" / "post_relax.xyz"
+        a_nan = read(str(rpx)); a_nan.positions[0, 0] = np.nan
+        write(str(rpx), a_nan)
+        rn = json.loads(json.dumps(rt)); rn["outputs"]["post_relax"]["sha256"] = _file_sha256(rpx)
+        chk(any("NaN" in q for q in verify_outputs(rn, ot)),
+            "⑨ ⛔음성: NaN 좌표 결과는 sha256 을 맞춰 줘도 잡는다 (Codex DW P2 — 옛 판독은 F_free 로 셌다)")
+        a_sg = read(str(rpx)); a_sg.positions[0, 0] = 0.0; a_sg.cell[2] = [0.0, 0.0, 0.0]
+        write(str(rpx), a_sg)
+        rs_ = json.loads(json.dumps(rt)); rs_["outputs"]["post_relax"]["sha256"] = _file_sha256(rpx)
+        chk(any("특이" in q for q in verify_outputs(rs_, ot)), "⑨ ⛔음성: 주기 셀 부피 0 (특이 셀) 결과도 잡는다")
         try:
             run_batch([x, td / "sub" / "ar4.xyz"], td / "dup", P0, lj(), model="fake-lj")
             ok_ = False
