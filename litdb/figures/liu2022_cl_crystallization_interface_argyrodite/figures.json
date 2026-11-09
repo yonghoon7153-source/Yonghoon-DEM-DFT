@@ -2,9 +2,10 @@
  "slug": "liu2022_cl_crystallization_interface_argyrodite",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-05",
+ "generated": "2026-11-09",
  "sources": [
-  "DFT 먹인 논문/14. Revealing the Impact of Cl Substitution on the Crystallization Behavior and Interfacial Stability of Superionic Lithium Argyrodites.pdf"
+  "11236cff-115._Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+  "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf"
  ],
  "figures": [
   {
@@ -14,6 +15,7 @@
    "page": 3,
    "file": "fig_1.png",
    "caption": "Figure 1. a) Schematic diagram of the synthesis process of Li argyrodite electrolytes in this work. XRD patterns of b) LPSCl and c) LPSCl1.5 annealed at different temperatures (300–550 °C). XRD patterns of the as-milled LPSCl and LPSCl1.5 are displayed for comparison. XRD pattern and the corre- sponding Rietveld refinement result of d) LPSCl-550 and e) LPSCl1.5-450. the lattice of the electrolyte, inducing the S2−/Cl− disorder and lattice shrinkage as implied by the XRD peak shift shown in Figure 1b, and then making the σ of LPSCl1.5 rise. LPSCl1.5-450 has the highest σ of 8.00 mS cm−1. Further increasing the annealing temperature causes the σ to drop again, which is resulted from the precipitation of LiCl impurity. The Li-ion conduction activation energy of the electrolytes plotted against the annealing temperature is shown in Figure 2b, of which the trend is reverse to that of Figure 2",
+   "rotated_deg": 0,
    "bbox": [
     45.0,
     64.9,
@@ -23,7 +25,7 @@
    "w": 2127,
    "h": 2166,
    "dpi": 300,
-   "src": "14. Revealing the Impact of Cl Substitution on the Crystallization Behavior and Interfacial Stability of Superionic Lithium Argyrodites.pdf",
+   "src": "11236cff-115._Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
    "blank": 0.735
   },
   {
@@ -33,6 +35,7 @@
    "page": 4,
    "file": "fig_2.png",
    "caption": "Figure 2. a) Room temperature conductivity and b) activation energy for LPSCl and LPSCl1.5 electrolytes annealed at different temperatures (300–550 °C). c) Nyquist plots and d) Arrhenius plots of LPSCl1.5 electrolyte annealed at different temperatures (300 –550 °C). Data for the as-milled electrolytes are also shown for comparison. e) Illustration of the Li-ion pathways in argyrodite lattice. The black dotted lines and red arrows indicate intra-cage and inter-cage pathways, respectively. Li-ion probability densities for f) LPSCl and g) LPSCl1.5 obtained from AIMD simulations at 900 K.",
+   "rotated_deg": 0,
    "bbox": [
     42.2,
     64.9,
@@ -42,7 +45,7 @@
    "w": 2127,
    "h": 1425,
    "dpi": 300,
-   "src": "14. Revealing the Impact of Cl Substitution on the Crystallization Behavior and Interfacial Stability of Superionic Lithium Argyrodites.pdf",
+   "src": "11236cff-115._Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
    "blank": 0.679
   },
   {
@@ -52,6 +55,7 @@
    "page": 5,
    "file": "fig_3.png",
    "caption": "Figure 3. Galvanostatic cycling of Li-Li symmetric cells with a) LPSCl-550, b) LPSCl1.5-450, and c) LPSCl1.5-450 electrolytes at step-increased current densities with a step size of 0.064 mA cm−2 at room temperature. The time for each plating and stripping is 1 h. Voltage-time profiles of LiLi sym- metric cells using LPSCl and LPSCl1.5 electrolytes cycled at a constant current density and cut-off capacity of d) 0.2 mA cm−2 / 0.2 mAh cm−2 and e) 0.5 mA cm−2 / 0.5 mAh cm−2 at room temperature.",
+   "rotated_deg": 0,
    "bbox": [
     45.0,
     64.9,
@@ -61,7 +65,7 @@
    "w": 2126,
    "h": 1071,
    "dpi": 300,
-   "src": "14. Revealing the Impact of Cl Substitution on the Crystallization Behavior and Interfacial Stability of Superionic Lithium Argyrodites.pdf",
+   "src": "11236cff-115._Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
    "blank": 0.746
   },
   {
@@ -71,6 +75,7 @@
    "page": 6,
    "file": "fig_4.png",
    "caption": "Figure 4. a) Structure of the Li-LPSCl interface before MD simulation. Structure snapshot of the b) Li-LPSCl interface and c) Li-LPSCl1.5 interface at 20 ps of MD simulation. Colors: yellow for sulfur, purple for phosphorus, light green for chloride, dark green for lithium. Radial distribution function of d–f) P-S pair and g–i) Li-P pair of reference materials (top), Li-LPSCl interface (middle), and Li-LPSCl1.5 interface (bottom). Heat maps plotted the g(r) of the interface models against AIMD simulation time at 300 K, with a redder color indicating higher value of g(r). at the Li/LPSCl1.5 interface, indicating a more severe decom- position of LPSCl when contacting lithium. S 2p and Cl 2p spectra in Figure S10b,c (Supporting Information) also indi- cate more LiCl and less Li2S as decompositions products at the Li/LPSCl1.5 interface. other hand, the Li-LPSCl1.5 model has only one fully re",
+   "rotated_deg": 0,
    "bbox": [
     42.2,
     64.9,
@@ -80,7 +85,7 @@
    "w": 2128,
    "h": 1740,
    "dpi": 300,
-   "src": "14. Revealing the Impact of Cl Substitution on the Crystallization Behavior and Interfacial Stability of Superionic Lithium Argyrodites.pdf",
+   "src": "11236cff-115._Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
    "blank": 0.504
   },
   {
@@ -90,6 +95,7 @@
    "page": 7,
    "file": "fig_5.png",
    "caption": "Figure 5. a) Cycling performance of the NCM/LPSCl/Li-In and NCM/LPSCl1.5/Li-In batteries tested at 0.2 C at room temperature. b) Charge/discharge profiles of the 1st, 10th, 50th, and 100th cycle of the NCM/LPSCl/Li-In and NCM/LPSCl1.5/Li-In batteries tested at 0.2 C at room temperature. Imped- ance spectra of the NCM/LPSCl/Li-In and NCM/LPSCl1.5/Li-In batteries c) as prepared and d) at the 100th cycle. The color bar indicates frequencies of the data. e) S 2p and f) P2p XPS spectra of the NCM/LPSCl (or LPSCl1.5) composite cathode after cycling. discharge capacity of 130.2 mAh g−1. The discharge capacity of NCM/LPSCl/Li-In cell, however, drastically decreased to only 43.1 mAh g−1, meaning a capacity retention of only 30.6%. The average Coulombic efficiencies between the 6th and the 100th cycle of NCM/LPSCl1.5/Li-In and NCM/LPSCl/Li-In cell are 99.5% and 97.9%, respectively. The charge/disc",
+   "rotated_deg": 0,
    "bbox": [
     45.0,
     64.9,
@@ -99,7 +105,7 @@
    "w": 2127,
    "h": 1959,
    "dpi": 300,
-   "src": "14. Revealing the Impact of Cl Substitution on the Crystallization Behavior and Interfacial Stability of Superionic Lithium Argyrodites.pdf",
+   "src": "11236cff-115._Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
    "blank": 0.87
   },
   {
@@ -109,6 +115,7 @@
    "page": 8,
    "file": "fig_6.png",
    "caption": "Figure 6. a) Configuration of the Li metal full cell. b) Cycling performance of the NCM/LPSCl/Li and NCM/LPSCl1.5/Li batteries tested at 0.2 C at room temperature. c) Charge/discharge profiles of the NCM/LPSCl/Li and NCM/LPSCl1.5/Li batteries. d) Schematic illustration of the multiple advantages of the Cl-rich Li argyrodite electrolyte.",
+   "rotated_deg": 0,
    "bbox": [
     42.2,
     371.7,
@@ -118,8 +125,309 @@
    "w": 2127,
    "h": 1316,
    "dpi": 300,
-   "src": "14. Revealing the Impact of Cl Substitution on the Crystallization Behavior and Interfacial Stability of Superionic Lithium Argyrodites.pdf",
+   "src": "11236cff-115._Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
    "blank": 0.373
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Optical photographs of LPSCl1.5 electrolyte pellets annealed at different temperatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    78.7,
+    530.4,
+    367.3
+   ],
+   "w": 1940,
+   "h": 1204,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.076
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Differential scanning calorimetry (DSC) curves of LPSCl and LPSCl1.5 in N2 flow.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    64.9,
+    533.0,
+    351.4
+   ],
+   "w": 1949,
+   "h": 1195,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. SEM images of the LPSCl electrolyte annealed at 550 °C and the LPSCl1.5 electrolyte annealed at 450 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    401.5,
+    517.4,
+    709.3
+   ],
+   "w": 1886,
+   "h": 1284,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.175
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. (a) Nyquist plots and (b) Arrhenius plots of LPSCl electrolytes annealed at different temperatures (300–550 °C). Data for the as-milled sulfite electrolytes are also shown for comparison.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    533.5,
+    228.3
+   ],
+   "w": 1953,
+   "h": 682,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 8,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Mean square displacement (MSD) of Li-ions for (a) LPSCl and (b) LPSCl1.5 as a function of simulation time.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    533.5,
+    558.6
+   ],
+   "w": 1953,
+   "h": 2058,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Crystallinity of LPSCl and LPSCl1.5 electrolytes with respect to annealing temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    490.3,
+    339.0
+   ],
+   "w": 1774,
+   "h": 1143,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Nyquist plots of Li-Li symmetric cells using LPSCl and LPSCl1.5 electrolytes (a) before cycling and after cycling at (b) 0.2 mA cm−2 for 500 h and (c) 0.5 mA cm−2 for 200 h. Insets show the close-up regions near zero.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    533.5,
+    518.0
+   ],
+   "w": 1953,
+   "h": 1889,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 11,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Structure of the Li-LPSCl1.5 interface before MD simulation. Colors: yellow for sulfur, purple for phosphorus, light green for chloride, dark green for lithium.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    518.2,
+    376.8
+   ],
+   "w": 1890,
+   "h": 1300,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.722
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 12,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Radial distribution function of (a-c) Li-S pair and (d-f) Li-Cl pair of reference materials (top), Li-LPSCl interface (middle), and Li-LPSCl1.5 interface (bottom). Heat maps plotted the g(r) of the interface models against AIMD simulation time at 300 K, with a redder color indicating higher value of g(r).",
+   "rotated_deg": 0,
+   "bbox": [
+    59.2,
+    64.9,
+    542.5,
+    615.6
+   ],
+   "w": 2015,
+   "h": 2295,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.551
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 13,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. (a) S 2p, (b) P 2p and (c) Cl 2p XPS spectra of the Li/LPSCl (or LPSCl1.5) interface after cycling in a Li symmetric cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    533.5,
+    292.8
+   ],
+   "w": 1953,
+   "h": 951,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.841
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 14,
+   "file": "fig_S11.png",
+   "caption": "Figure S11 The equivalent circuit diagram of NCM||LPSCl||Li-In and NCM||LPSCl1.5||Li-In batteries after cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    75.3,
+    533.5,
+    144.8
+   ],
+   "w": 1953,
+   "h": 291,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Crystallographic data of Li6PS5Cl obtained from Rietveld refinement. Refined parameters are shown with errors in brackets.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    66.4,
+    523.7,
+    421.0
+   ],
+   "w": 1909,
+   "h": 1479,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.659
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 5,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Crystallographic data of Li5.5PS4.5Cl1.5 obtained from Rietveld refinement. Refined parameters are shown with errors in brackets.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    66.4,
+    526.4,
+    421.0
+   ],
+   "w": 1920,
+   "h": 1479,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.658
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 14,
+   "file": "tab_S3.png",
+   "caption": "Table S3 The fitting results of EIS spectra after cycling in Figure 5d Rbulk RGB RCathode/SE",
+   "rotated_deg": 0,
+   "bbox": [
+    89.9,
+    235.8,
+    505.5,
+    347.0
+   ],
+   "w": 1733,
+   "h": 465,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 15,
+   "file": "tab_S4.png",
+   "caption": "Table S4. A comparison of the synthesis process of Cl-rich Li argyrodites in recent works. Annealing temperature Annealing Ionic conductivity SE composition time (hour) Reference (mS cm–1) (°C) Li5.5PS4.5Cl1.5 550 6 3.9 [1] Li5.5PS4.5Cl1.5 550 5~7 9.4 [2] Li5.7PS4.7Cl1.3 350 15 6.4 [3] Li5.5PS4.5Cl1.5 550 0.33 10.2 [4] Li5.5PS4.5Cl1.5 550 N/A 6.2 [5] Li5.5PS4.5Cl1.5 550 8 8.0 [6] Li5.4PS4.4Cl1.6 300+500 1+4 6.1 [7] Li5.4PS4.4Cl1.6 510 2 10.8 [8] Li5.3PS4.3Cl1.7 550 12 17 [9] Li5.5PS4.5Cl1.5 500 15 7.0 [10] Li5.5PS4.5Cl1.5 500 5 7.9 [11] Li5.5PS4.5Cl1.5 450 5 8.0 This work Reference [1] L. Zhou, K.-H. Park, X. Sun, F. Lalère, T. Adermann, P. Hartmann, L. F. Nazar, ACS Energy Lett. 2018, 4, 265. [2] P. Adeli, J. D. Bazak, K. H. Park, I. Kochetkov, A. Huq, G. R. Goward, L. F. Nazar, Angew. Chem. Int. Ed. 2019, 58, 8681. [3] C. Yu, Y. Li, M. Willans, Y. Zhao, K. R. Adair, F. Zhao, W. Li, S. ",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    66.4,
+    538.5,
+    755.6
+   ],
+   "w": 1970,
+   "h": 2873,
+   "dpi": 300,
+   "src": "48635b7f-115._Sup_Revealing_the_Impact_of_Cl_Substitution_on_the_Crystallization_Behavior_and_Interfacial_Stability_of_Superionic_Lithium_Argyrodites.pdf",
+   "blank": 0.931
   }
- ]
+ ],
+ "missing_labels": []
 }
