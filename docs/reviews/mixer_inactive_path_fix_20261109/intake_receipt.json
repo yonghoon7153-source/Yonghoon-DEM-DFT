@@ -1,0 +1,230 @@
+{
+  "schema": "mixer_inactive_path_fix_intake_receipt/1",
+  "reviewed_pin": "73e659273fd2ed6406a4c90011fc6079c7adf95f",
+  "reviewed_parent_b": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+  "current_prior_copy": "2ac1a2482f0290566ac1d67d972f7c9544a9d291",
+  "current_prior_copy_parent_b": "69d714d094c4d210e5bf931d5c520e64ca0a751d",
+  "independent_review_zip": {
+    "member": "codex_mixer_inactive_preparation_73e659273fd2_independent_20261109.zip",
+    "bytes": 1109698,
+    "sha256": "18d6945be87b88c044fd934d8254658f02ff8855109bb6bdf8f60aa39ea78b0c"
+  },
+  "original_request_zip": {
+    "member": "codex_mixer_inactive_preparation_73e659273fd2_review_20261109.zip",
+    "bytes": 699081,
+    "sha256": "6e525d36f5d71dd05bdbe5d698c9b4649842e2565ee206cfc2a15bbc4d88f1e2"
+  },
+  "key_members": [
+    {
+      "member": "codex_review_mixer_inactive_preparation_20261109.md",
+      "bytes": 13133,
+      "sha256": "fd3c41117c3b0eae4aa70d0046b1f54dd7888e16d2769255564fb6022652e055"
+    },
+    {
+      "member": "review_result.json",
+      "bytes": 550,
+      "sha256": "856650a6df6a95b39572d622aceb62cfdc6d2cff1301b6ce67c78f602af8ac4b"
+    },
+    {
+      "member": "input_receipt.json",
+      "bytes": 318,
+      "sha256": "d6baafebd348b0b9375d486a940565cdb7344bf3231e411825c194dd2d323d85"
+    },
+    {
+      "member": "package_verification.json",
+      "bytes": 78898,
+      "sha256": "865a29ae0627bd2f6891c3308cc57e9afc573cd4483b99f0dd85dc3430c1d427"
+    },
+    {
+      "member": "remote_git_evidence.json",
+      "bytes": 260585,
+      "sha256": "6014d811bac555de429c876e371329f6c6379f359e1c0b8489d52a1c46e68807"
+    },
+    {
+      "member": "remote_history_evidence.json",
+      "bytes": 765564,
+      "sha256": "67e00c5a0ae7c3d7275b9d5dc5f2ce3db54416ee8eca566c26ea0f3dae7d5c6d"
+    },
+    {
+      "member": "independent/RESULT.json",
+      "bytes": 6427,
+      "sha256": "be0a42b1c13951098519372d40ecfd8bb44def92366e77e564ab2ef73f05a1ca"
+    },
+    {
+      "member": "independent/static_result.json",
+      "bytes": 2533,
+      "sha256": "d069f09e5718c2b6647b6c0ae7deba5164a6c4f2f286b5de781b6ab9e821ec9b"
+    },
+    {
+      "member": "independent/portable_probe/result.json",
+      "bytes": 3797,
+      "sha256": "6f3ba7eb21aebcf3706a5595c6491c8ba4d2f4baf5e1c71c716fca8f2f9b7988"
+    },
+    {
+      "member": "independent/overlap_result.json",
+      "bytes": 315,
+      "sha256": "394c72ea06900344427829ce0975b2b0c8e438693be1c6a0b2ea8458507bf209"
+    },
+    {
+      "member": "independent/baseline_old/report.json",
+      "bytes": 1553,
+      "sha256": "8597a5c22e13e6480f0b7e6dbde9f1fb6556872997513d6ed43b6ef06f161e78"
+    },
+    {
+      "member": "independent/baseline_verify/report.json",
+      "bytes": 6244,
+      "sha256": "5535561b059395fe4e95680f9e99800553b1863a4fac63cc9f0e44c34a52da8a"
+    },
+    {
+      "member": "independent/baseline_preparation14/report.json",
+      "bytes": 1669,
+      "sha256": "0c0fa9f8bc05fea8e2e2955f13f0c0262a21a822bf8234f8c8351fc42614e256"
+    },
+    {
+      "member": "independent/baseline_loader5/report.json",
+      "bytes": 735,
+      "sha256": "0ea5d87e8d250d34a25456f5a57aebf170182d35c2b1c00805788ca90de84961"
+    }
+  ],
+  "byte_receipt_validation": {
+    "status": "PASS",
+    "method": "ZIP bytes, CRC, complete SHA256SUMS scopes, member-set equality, SHA256 and Git blob identities only",
+    "archives": [
+      {
+        "archive": "codex_mixer_inactive_preparation_73e659273fd2_independent_20261109.zip",
+        "members": 339,
+        "files": 339,
+        "crc": "PASS",
+        "path_and_duplicate_safety": "PASS"
+      },
+      {
+        "archive": "codex_mixer_inactive_preparation_73e659273fd2_review_20261109.zip",
+        "members": 185,
+        "files": 185,
+        "crc": "PASS",
+        "path_and_duplicate_safety": "PASS"
+      }
+    ],
+    "sha256sum_scopes": [
+      {
+        "archive": "codex_mixer_inactive_preparation_73e659273fd2_independent_20261109.zip",
+        "member": "package/SHA256SUMS",
+        "checked": 184,
+        "full_scope_coverage": true
+      },
+      {
+        "archive": "codex_mixer_inactive_preparation_73e659273fd2_independent_20261109.zip",
+        "member": "package/snapshot_dependencies/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+        "checked": 40,
+        "full_scope_coverage": true
+      },
+      {
+        "archive": "codex_mixer_inactive_preparation_73e659273fd2_independent_20261109.zip",
+        "member": "SHA256SUMS",
+        "checked": 338,
+        "full_scope_coverage": true
+      },
+      {
+        "archive": "codex_mixer_inactive_preparation_73e659273fd2_review_20261109.zip",
+        "member": "SHA256SUMS",
+        "checked": 184,
+        "full_scope_coverage": true
+      },
+      {
+        "archive": "codex_mixer_inactive_preparation_73e659273fd2_review_20261109.zip",
+        "member": "snapshot_dependencies/docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/SHA256SUMS",
+        "checked": 40,
+        "full_scope_coverage": true
+      }
+    ],
+    "expanded_original_package_members_equal": 185,
+    "original_request_zip_embedded": false,
+    "embedded_zip_byte_comparison": "NOT_APPLICABLE_NO_EMBEDDED_ZIP",
+    "fixed_source_snapshot_files": 61,
+    "dependency_snapshot_files": 86,
+    "reviewed_candidate_files": 43,
+    "fixed_source_original_to_prior_copy_equal_git_blobs": 61,
+    "fixed_source_and_dependency_byte_sha_and_git_blob_checks": "PASS",
+    "other_manifest_members_verified": 33,
+    "pasted_report_equals_zip_report_bytes": true,
+    "candidate_preservation_scope": "Received reviewed candidate43 and prior copy; final fix preservation is separately checked in candidate verification evidence",
+    "attached_code_executed": false,
+    "project_modules_imported": false,
+    "substantive_tests_reexecuted_by_intake_agent": false,
+    "original_artifacts_modified": false
+  },
+  "received_independent_verdict": {
+    "status": "PARTIAL_ACCEPTANCE_VERIFIER_FIX_REQUIRED",
+    "source": "review_result.json and codex_review_mixer_inactive_preparation_20261109.md in the identified independent ZIP",
+    "findings": [
+      {
+        "id": "MIP-01",
+        "severity": "P2",
+        "status": "OPEN",
+        "scope": "verify can place evidence within candidate, return rc0, then add report.json to the validated input file set"
+      }
+    ],
+    "new_findings": {
+      "P1": 0,
+      "P2": 1,
+      "P3": 0
+    },
+    "counterexample_reported_by_reviewer": {
+      "mode": "verify",
+      "evidence_within_candidate": true,
+      "first_return_code": 0,
+      "candidate_file_count_before": 43,
+      "candidate_file_count_after": 44,
+      "changed_existing_files": 0,
+      "added_relative_file": "new_evidence/report.json",
+      "next_verify_return_code": 1
+    },
+    "normal_sibling_reported_by_reviewer": {
+      "return_code": 0,
+      "candidate_file_count_before": 43,
+      "candidate_file_count_after": 43,
+      "input_unchanged": true
+    },
+    "limited_accepted_scope": [
+      "Deck8 and STL24 retain original bytes; metadata8 changes only generator_sha256",
+      "Source, manifest, bindings and inactive candidate boundary within reported limitations",
+      "Normal cases8, bindings8, pairs3 and preparation14, without summing overlapping coverage",
+      "Author-adopted NP20 and initial1/conditional maximum2 sequence policy remains distinct from qualification and GO"
+    ],
+    "earlier_findings_reopened": [],
+    "not_accepted": [
+      "Verifier preservation of the candidate file set for overlapping evidence paths",
+      "Operating reseal, actual host qualification, actual execution or integration authorization"
+    ],
+    "whole_gate": "HOLD"
+  },
+  "followup_candidate": {
+    "finding": "MIP-01",
+    "implementation_scope": "Common normalized candidate/evidence disjointness guard in all modes before mkdir/write, retaining link and snapshot boundaries",
+    "candidate_pin_location": "SOURCE_PIN.txt in the followup review ZIP",
+    "local_regression_source": "test_evidence_boundary.py",
+    "local_results_source": [
+      "verification_summary.json",
+      "evidence_extra/before/red/report.json in the followup review ZIP",
+      "evidence_extra/after/report.json in the followup review ZIP"
+    ],
+    "external_recheck": "PENDING",
+    "closed": false,
+    "verified": false
+  },
+  "storage_boundary": {
+    "original_review_zip_preserved_outside_repository": true,
+    "external_location_strings_present": true,
+    "matched_archive_member_pairs_in_both_audited_archives": 38,
+    "repository_content": "Artifact identities and limited summary only; no raw external location-bearing review metadata or logs",
+    "historical_request_pin_filename_typo": "PIN.txt",
+    "new_request_pin_filename": "SOURCE_PIN.txt"
+  },
+  "shared_ledger_modified": false,
+  "research_values_read": false,
+  "operational_reseal": false,
+  "operational_activation": false,
+  "execution_authorized": false,
+  "research_results": 0,
+  "whole_gate": "HOLD"
+}

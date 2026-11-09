@@ -348,14 +348,17 @@ def main():
     output = args.evidence.absolute()
     reject_link_ancestors(candidate_root)
     reject_link_ancestors(output)
+    # Check lexical links first, then compare canonical paths before any writes.
+    candidate_root = candidate_root.resolve(strict=False)
+    output = output.resolve(strict=False)
+    need(candidate_root != output and candidate_root not in output.parents
+         and output not in candidate_root.parents, 'candidate and evidence directories disjoint')
     need(not output.exists(), 'preserve earlier evidence directory')
     need(output != snapshot_root and snapshot_root not in output.parents, 'evidence outside fixed snapshot')
     if args.mode == 'build':
         need(not candidate_root.exists(), 'preserve earlier candidate')
         need(candidate_root != snapshot_root and snapshot_root not in candidate_root.parents
              and candidate_root not in snapshot_root.parents, 'candidate outside fixed snapshot')
-        need(candidate_root != output and candidate_root not in output.parents
-             and output not in candidate_root.parents, 'candidate and evidence directories disjoint')
     inventory_raw = (Path(__file__).resolve().parent / 'source_inventory.json').read_bytes()
     inventory = json.loads(inventory_raw)
     rows = inventory_rows(inventory)

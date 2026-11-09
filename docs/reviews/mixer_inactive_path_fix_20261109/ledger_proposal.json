@@ -1,0 +1,34 @@
+{
+  "schema": "mixer_inactive_path_fix_ledger_proposal/1",
+  "apply_now": false,
+  "owner_of_application": "Claude after receipt and scoped review",
+  "scope": "MIP-01 only: candidate/evidence path separation before any writes in every verifier mode",
+  "finding": {
+    "id": "MIP-01",
+    "severity": "P2",
+    "received_status": "OPEN",
+    "proposed_status": "claimed_fixed",
+    "proposal_basis": "Candidate common normalized path guard and source-bound local before/after evidence; not an independent closure decision",
+    "external_recheck": "PENDING",
+    "closed": false,
+    "verified": false
+  },
+  "new_findings_in_received_review": {
+    "P1": 0,
+    "P2": 1,
+    "P3": 0
+  },
+  "existing_findings_reopened": [],
+  "existing_limited_acceptance_preserved": [
+    "Original deck/STL bytes and metadata-only generator SHA update",
+    "Inactive candidate source/manifest/bindings boundary",
+    "Author-adopted policy remains separate from operating qualification and GO"
+  ],
+  "proposed_note": "MIP-01 path-overlap candidate submitted for limited independent recheck. Reject equal and either nested candidate/evidence path in all modes before mkdir/write, preserve input file and directory graphs, and retain normal sibling evidence behavior. Original limited asset/metadata/policy acceptance remains. No closed or verified status is proposed before external recheck.",
+  "shared_ledger_modified": false,
+  "operational_reseal": false,
+  "operational_activation": false,
+  "execution_authorized": false,
+  "research_results": 0,
+  "whole_gate": "HOLD"
+}

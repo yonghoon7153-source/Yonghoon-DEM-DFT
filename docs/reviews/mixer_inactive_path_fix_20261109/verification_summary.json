@@ -1,0 +1,239 @@
+{
+  "schema": "mip01_path_fix_verification_summary/1",
+  "test_sha256": "a6f57d19a92e7c91975feac67cd8e76f07b0deff7568b8e8a9e5c62b0b27d9b3",
+  "before_verifier_sha256": "7209819faf466e14689a695f6ab75587c4885995b0c43bd693bdfb66ea96a453",
+  "candidate_verifier_sha256": "4bbdadcd0c80d6c48078c46641632cd123f3b1d882c3c9f85e8e9d5e631dab16",
+  "inventory_sha256": "e0edbae3bb1421a617a642a049e4c3f18f2b3d0037a7343f89a241a7a241bfac",
+  "python_executable_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+  "environment": "Windows; local Python 3.12; source-bound synthetic CLI only",
+  "same_test_bytes_before_after": true,
+  "before": {
+    "methods": 5,
+    "assertion_failures": 33,
+    "errors": 0,
+    "rc": 1,
+    "overlap_conditions": 36,
+    "changed_copy_graphs": 15,
+    "unchanged_graphs_with_wrong_early_rejection_reason": 18,
+    "already_guarded_build_conditions": 3,
+    "original_counterexample": {
+      "rc": 0,
+      "candidate_files_before": 43,
+      "candidate_files_after": 44,
+      "fixture_graph_unchanged": false,
+      "recheck_rc": 1,
+      "candidate_files_after_recheck": 44
+    },
+    "sibling_modes": [
+      {
+        "mode": "verify",
+        "rc": 0,
+        "candidate_files_before": 43,
+        "candidate_files_after": 43,
+        "inputs_preserved": true
+      },
+      {
+        "mode": "build",
+        "rc": 0,
+        "candidate_files_before": 0,
+        "candidate_files_after": 43,
+        "inputs_preserved": true
+      },
+      {
+        "mode": "old",
+        "rc": 1,
+        "candidate_files_before": 43,
+        "candidate_files_after": 43,
+        "inputs_preserved": true
+      },
+      {
+        "mode": "preparation-tests",
+        "rc": 0,
+        "candidate_files_before": 43,
+        "candidate_files_after": 43,
+        "inputs_preserved": true
+      }
+    ]
+  },
+  "after": {
+    "methods": 5,
+    "failures": 0,
+    "errors": 0,
+    "rc": 0,
+    "overlap_conditions": 36,
+    "all_overlap_conditions_refused_before_graph_mutation": true,
+    "original_counterexample": {
+      "rc": 1,
+      "candidate_files_before": 43,
+      "candidate_files_after": 43,
+      "fixture_graph_unchanged": true,
+      "recheck_rc": 0,
+      "candidate_files_after_recheck": 43
+    },
+    "sibling_modes": [
+      {
+        "mode": "verify",
+        "rc": 0,
+        "candidate_files_before": 43,
+        "candidate_files_after": 43,
+        "inputs_preserved": true
+      },
+      {
+        "mode": "build",
+        "rc": 0,
+        "candidate_files_before": 0,
+        "candidate_files_after": 43,
+        "inputs_preserved": true
+      },
+      {
+        "mode": "old",
+        "rc": 1,
+        "candidate_files_before": 43,
+        "candidate_files_after": 43,
+        "inputs_preserved": true
+      },
+      {
+        "mode": "preparation-tests",
+        "rc": 0,
+        "candidate_files_before": 43,
+        "candidate_files_after": 43,
+        "inputs_preserved": true
+      }
+    ]
+  },
+  "counting": {
+    "local_python_cli_calls_per_phase": 41,
+    "overlap_conditions": 36,
+    "sibling_modes": 4,
+    "candidate_recheck": 1,
+    "rule": "Methods, conditions, CLI repeats, preparation14, normal verify inner checks and loader5 are overlapping units; do not sum as unique tests"
+  },
+  "normal_mode_expectations": {
+    "verify_rc": 0,
+    "build_rc": 0,
+    "preparation_rc": 0,
+    "preparation_methods": 14,
+    "old_rc": 1,
+    "old_methods": 1,
+    "old_expected_metadata_failures": 8
+  },
+  "existing_loader_regression": {
+    "schema": "inactive_snapshot_provenance_fixture/1",
+    "methods": 5,
+    "failures": 0,
+    "errors": 0,
+    "rc": 0,
+    "verifier_sha256": "4bbdadcd0c80d6c48078c46641632cd123f3b1d882c3c9f85e8e9d5e631dab16",
+    "test_sha256": "96373840cb81495b16e5b40eb9eabd18f5cdd0264ecceaeb87f580221166530a",
+    "unchecked_cache_marker_executed": [],
+    "audit_synthetic_denial_probes": [
+      "subprocess.Popen",
+      "socket.connect"
+    ],
+    "actual_process_or_socket_calls": 0,
+    "scientific_modules_imported": false,
+    "actual_symlinks_created": false,
+    "link_fixture_scope": "Mocked ancestor link signal; not real OS junction qualification",
+    "actual_values_read": false,
+    "operational_activation": false,
+    "whole_gate": "HOLD"
+  },
+  "preservation": {
+    "original_candidate_files": 43,
+    "fixed_snapshot_files": 86,
+    "original_inputs_preserved_before_and_after": true,
+    "final_file_and_directory_graphs_equal_original_receipts": true,
+    "original_inputs_separate_from_intentionally_mutated_before_case_copies": true
+  },
+  "harness_preparation": {
+    "status": "Separate initial Windows serialized-argv boundary mismatch; not target red",
+    "actual_child_calls": 0,
+    "before_preparation_report": "evidence_extra/before/report.json",
+    "source_adjusted_before_official_red": true,
+    "official_red_green_test_bytes_identical": true
+  },
+  "evidence_receipts": [
+    {
+      "member": "evidence_extra/before/report.json",
+      "bytes": 31206,
+      "sha256": "22436c71cf48f05330cbe9a3d7204663fdee11b1fe3341dd6ef92aea23f1584b"
+    },
+    {
+      "member": "evidence_extra/before/tested_test_source.py",
+      "bytes": 15143,
+      "sha256": "1d9c371c8bec4189de11eeddeddde27140e30d94e1364476da84024b17b7ed2a"
+    },
+    {
+      "member": "evidence_extra/before-console.log",
+      "bytes": 100169,
+      "sha256": "f0e5fb9efdd5e126d98a28523a47adc493d6791d571f7efbf1f7f04cd4bb76be"
+    },
+    {
+      "member": "evidence_extra/before/red/report.json",
+      "bytes": 84796,
+      "sha256": "7a6c27a2c83c394ff12db34a990dba49c04ce9b5d7bfaac2ce30ee105ead864a"
+    },
+    {
+      "member": "evidence_extra/before/red/tested_test_source.py",
+      "bytes": 15370,
+      "sha256": "a6f57d19a92e7c91975feac67cd8e76f07b0deff7568b8e8a9e5c62b0b27d9b3"
+    },
+    {
+      "member": "evidence_extra/before/red-console.log",
+      "bytes": 61919,
+      "sha256": "15ea6a6299cfe85b9c69ce0d4b626abd5d0a2c0da781518940495f4b75eb0c91"
+    },
+    {
+      "member": "evidence_extra/after/report.json",
+      "bytes": 76431,
+      "sha256": "58104c6d2e269df5b50ed1bcb2ff61bb119b42ad7ca62e0cc490e738d66e2308"
+    },
+    {
+      "member": "evidence_extra/after/tested_test_source.py",
+      "bytes": 15370,
+      "sha256": "a6f57d19a92e7c91975feac67cd8e76f07b0deff7568b8e8a9e5c62b0b27d9b3"
+    },
+    {
+      "member": "evidence_extra/after-console.log",
+      "bytes": 1816,
+      "sha256": "778c7f90a2fae98f11735487a73873bc67da6fc7beafef37e9e4d583d89011a0"
+    },
+    {
+      "member": "evidence_extra/after/loader5/report.json",
+      "bytes": 735,
+      "sha256": "6685ee3582b8d98ac74863c7d9ee35d96443d4646d1fc2413f5df6b8e5e803c9"
+    },
+    {
+      "member": "evidence_extra/after/loader5/test.log",
+      "bytes": 744,
+      "sha256": "aec2b2368684432bdb00f88ad8e15148f2b28a832cf9590acb41fe4b36a203dc"
+    },
+    {
+      "member": "evidence_extra/after/loader5-console.log",
+      "bytes": 1413,
+      "sha256": "285565c079851cded67e681b238c4b4e2fe76644214155044d51f751b7995bf3"
+    },
+    {
+      "member": "evidence_extra/after/loader-test-source.py",
+      "bytes": 6369,
+      "sha256": "96373840cb81495b16e5b40eb9eabd18f5cdd0264ecceaeb87f580221166530a"
+    }
+  ],
+  "limits": [
+    "No actual symlink/junction creation or OS/filesystem qualification",
+    "No hostile concurrent filesystem mutation qualification",
+    "No independent closure decision or whole gate execution"
+  ],
+  "unexpected_process_or_network_attempts_in_formal_runs": 0,
+  "actual_values_read": false,
+  "actual_engine_calls": 0,
+  "actual_scheduler_calls": 0,
+  "actual_mpi_calls": 0,
+  "rint_files_modified": false,
+  "shared_ledger_modified": false,
+  "operational_reseal": false,
+  "independent_recheck": "PENDING",
+  "research_results": 0,
+  "execution_authorized": false,
+  "whole_gate": "HOLD"
+}
