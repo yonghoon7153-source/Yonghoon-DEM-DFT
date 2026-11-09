@@ -1,0 +1,45 @@
+attempt_order_problem 3556 3588
+resume_chain_problem 3793 3822
+resume_rerun_problem 4389 4476
+RESUME_PROV 4484 4484
+resume_recompare 4487 4491
+resume_from_problem 4494 4509
+resume_source_locate 4512 4533
+_src_run_done 4536 4540
+resume_boundary_problem 4543 4590
+resume_first_new_problem 4593 4614
+resume_provenance_problem 4617 4655
+resume_chain_provenance_problem 4658 4678
+result_fields 4827 4862
+result_fields_ledger 4865 4877
+_result_line 4880 4885
+attempt_result_line 4888 4892
+attempt_result 4895 4900
+_result_recount 4987 5005
+result_recount 5008 5014
+result_line_problem 5017 5028
+attempt_close 5031 5046
+ATTEMPT_ENTRY_FIELDS 5088 5088
+attempt_entry_diff 5091 5098
+found_attempts_problem 5101 5132
+ledger_inputs_check 5135 5167
+target_ledger_problem 5196 5244
+ResumeRunner._src_done 5595 5601
+ResumeRunner.run 5603 5618
+ResumeRunner._copy 5620 5644
+recover_ledger 8210 8292
+header [181, 193]
+'# ⓐ 지킴' [4635]
+'# ⓑ 지킴' [4641]
+'# 원천 지킴' [4647]
+'# ⓒ 지킴' [4650]
+'# ⓓ 지킴' [4653]
+'if not src.is_dir():' [4464]
+'resume_chain_provenance_problem(st, ad[' [3585]
+"if r['resume_ok'] is True and cand[0].is_dir():" [3811]
+'result_line_problem(k, cand[0], r, st=st, found=found)' [3817]
+'attempt_result(att.n, att.folder' [5039]
+"attempt_result(n, f, s, 'recover', st" [8278]
+'result_line_problem(n, d, r, st=st, found=found)' [5155]
+'result_line_problem(k, p, r, st=st, found=found)' [5224]
+'d = attempt_entry_diff(a, k, e)' [5128]

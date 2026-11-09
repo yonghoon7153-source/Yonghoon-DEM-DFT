@@ -1,0 +1,64 @@
+== 고치기 전 (사슬 = 바탕 47a520e8… · 시험 = 고친 판 92998cbc… · rr4_rows_before.json)
+RR4A pass=False rows=9 bad=9
+   N1_R1: state=accepted behaviour_ok=False recount_ok=False cli=[0, True, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[True, None, None]
+   N2_R2: state=accepted behaviour_ok=False recount_ok=False cli=[0, True, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[True, None, None]
+   N3_attempt_null: state=accepted behaviour_ok=False recount_ok=False cli=[0, True, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[True, None, None]
+   N3a_attempt_only: state=accepted behaviour_ok=False recount_ok=False cli=[0, True, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[True, None, None]
+   N4_from_rebind: state=accepted behaviour_ok=False recount_ok=False cli=[0, True, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[True, None, None]
+   Z1_frozen_R1: state=accepted behaviour_ok=False recount_ok=False cli=[0, True, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[True, None, None]
+   Z2_frozen_R2: state=accepted behaviour_ok=False recount_ok=False cli=[0, True, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[True, None, None]
+   Z3_frozen_attempt_null: state=accepted behaviour_ok=False recount_ok=False cli=[0, True, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[True, None, None]
+   Z4_frozen_from_rebind: state=accepted behaviour_ok=False recount_ok=False cli=[0, True, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[True, None, None]
+   실패 행: ['N1_R1', 'N2_R2', 'N3_attempt_null', 'N3a_attempt_only', 'N4_from_rebind', 'Z1_frozen_R1', 'Z2_frozen_R2', 'Z3_frozen_attempt_null', 'Z4_frozen_from_rebind']
+RR4B pass=False rows=12 bad=9
+   P1_new_attempt: state=- behaviour_ok=True recount_ok=False cli=[0, True, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[True, None, None]
+   P2_honest_mismatch: state=- behaviour_ok=True recount_ok=False cli=[0, False, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[False, ['RESUME_NOT_ALLOWED', []], None]
+   P3_after_compare: state=- behaviour_ok=True recount_ok=False cli=[0, True, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[True, None, None]
+   P4_before_first_rerun: state=- behaviour_ok=True recount_ok=False cli=[0, True, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[True, None, None]
+   P5_partial_rerun_stop: state=- behaviour_ok=True recount_ok=False cli=[0, True, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[True, None, None]
+   P6_chain3: state=- behaviour_ok=True recount_ok=False cli=[0, True, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[True, None, None]
+   P7_chain3_mismatch: state=- behaviour_ok=True recount_ok=False cli=[0, False, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[False, ['RESUME_NOT_ALLOWED', []], None]
+   P8_frozen_honest_mismatch: state=- behaviour_ok=True recount_ok=False cli=[0, False, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[False, ['RESUME_NOT_ALLOWED', []], None]
+   P9_frozen_PC13_01_two_fields: state=- behaviour_ok=True recount_ok=False cli=[0, False, [], "api_absent result_line_problem() got an unexpected keyword argument 'st'"] places=[False, ['RESUME_NOT_ALLOWED', []], None]
+   disk: {'copy_launch_same': True, 'copy_end_same': True, 'new_launch_differs': True}
+   real_l3: [None, None, 0]
+   real_rr: [None, None, 0]
+   실패 행: ['P1_new_attempt', 'P2_honest_mismatch', 'P3_after_compare', 'P4_before_first_rerun', 'P5_partial_rerun_stop', 'P6_chain3', 'P7_chain3_mismatch', 'P8_frozen_honest_mismatch', 'P9_frozen_PC13_01_two_fields']
+RR4C pass=True rows=0 bad=0
+RR4D pass=False rows=3 bad=3
+   F1_nosrc_writing: [0, True, []]
+   F2_nosrc_recount: api_absent result_line_problem() got an unexpected keyword argument 'st'
+   F3_other_base_same_true: api_absent resume_provenance_problem
+   실패 행: ['F1_nosrc_writing', 'F2_nosrc_recount', 'F3_other_base_same_true']
+RR4E pass=False rows=0 bad=0
+
+== 고친 뒤 (사슬 d0e04017… · 시험 92998cbc… · rr4_rows_after_final.json)
+RR4A pass=True rows=9 bad=0
+   N1_R1: state=rejected[ⓒ] behaviour_ok=True recount_ok=True cli=[0, False, ['[ⓒ]'], None] places=[True, ['RESUME_NOT_ALLOWED', ['[ⓒ]']], ['RESUME_NOT_ALLOWED', ['[ⓒ]']]]
+   N2_R2: state=rejected[ⓒ] behaviour_ok=True recount_ok=True cli=[0, False, ['[ⓒ]'], None] places=[True, ['RESUME_NOT_ALLOWED', ['[ⓒ]']], ['RESUME_NOT_ALLOWED', ['[ⓒ]']]]
+   N3_attempt_null: state=rejected[ⓐ] behaviour_ok=True recount_ok=True cli=[0, False, ['[ⓐ]'], None] places=[True, ['RESUME_NOT_ALLOWED', ['[ⓐ]']], ['RESUME_NOT_ALLOWED', ['[ⓐ]']]]
+   N3a_attempt_only: state=rejected[ⓐ] behaviour_ok=True recount_ok=True cli=[0, False, ['[ⓐ]'], None] places=[True, ['RESUME_NOT_ALLOWED', ['[ⓐ]']], ['RESUME_NOT_ALLOWED', ['[ⓐ]']]]
+   N4_from_rebind: state=rejected[ⓑ] behaviour_ok=True recount_ok=True cli=[0, False, ['[ⓑ]'], None] places=[True, ['RESUME_NOT_ALLOWED', ['[ⓑ]']], ['RESUME_NOT_ALLOWED', ['[ⓑ]']]]
+   Z1_frozen_R1: state=rejected[ⓒ] behaviour_ok=True recount_ok=True cli=[0, False, ['[ⓒ]'], None] places=[True, ['RESUME_NOT_ALLOWED', ['[ⓒ]']], ['RESUME_NOT_ALLOWED', ['[ⓒ]']]]
+   Z2_frozen_R2: state=rejected[ⓒ] behaviour_ok=True recount_ok=True cli=[0, False, ['[ⓒ]'], None] places=[True, ['RESUME_NOT_ALLOWED', ['[ⓒ]']], ['RESUME_NOT_ALLOWED', ['[ⓒ]']]]
+   Z3_frozen_attempt_null: state=rejected[ⓐ] behaviour_ok=True recount_ok=True cli=[0, False, ['[ⓐ]'], None] places=[True, ['RESUME_NOT_ALLOWED', ['[ⓐ]']], ['RESUME_NOT_ALLOWED', ['[ⓐ]']]]
+   Z4_frozen_from_rebind: state=rejected[ⓑ] behaviour_ok=True recount_ok=True cli=[0, False, ['[ⓑ]'], None] places=[True, ['RESUME_NOT_ALLOWED', ['[ⓑ]']], ['RESUME_NOT_ALLOWED', ['[ⓑ]']]]
+RR4B pass=True rows=12 bad=0
+   P1_new_attempt: state=- behaviour_ok=True recount_ok=True cli=[0, True, [], None] places=[True, None, None]
+   P2_honest_mismatch: state=- behaviour_ok=True recount_ok=True cli=[0, False, [], None] places=[False, ['RESUME_NOT_ALLOWED', []], None]
+   P3_after_compare: state=- behaviour_ok=True recount_ok=True cli=[0, True, [], None] places=[True, None, None]
+   P4_before_first_rerun: state=- behaviour_ok=True recount_ok=True cli=[0, True, [], None] places=[True, None, None]
+   P5_partial_rerun_stop: state=- behaviour_ok=True recount_ok=True cli=[0, True, [], None] places=[True, None, None]
+   P6_chain3: state=- behaviour_ok=True recount_ok=True cli=[0, True, [], None] places=[True, None, None]
+   P7_chain3_mismatch: state=- behaviour_ok=True recount_ok=True cli=[0, False, [], None] places=[False, ['RESUME_NOT_ALLOWED', []], None]
+   P8_frozen_honest_mismatch: state=- behaviour_ok=True recount_ok=True cli=[0, False, [], None] places=[False, ['RESUME_NOT_ALLOWED', []], None]
+   P9_frozen_PC13_01_two_fields: state=- behaviour_ok=True recount_ok=True cli=[0, False, [], None] places=[False, ['RESUME_NOT_ALLOWED', []], None]
+   disk: {'copy_launch_same': True, 'copy_end_same': True, 'new_launch_differs': True}
+   real_l3: [None, None, 0]
+   real_rr: [None, None, 0]
+RR4C pass=True rows=0 bad=0
+RR4D pass=True rows=3 bad=0
+   F1_nosrc_writing: [0, False, ['[원천]']]
+   F2_nosrc_recount: [True, ['[원천]']]
+   F3_other_base_same_true: [True, ['[ⓓ]'], ['[ⓓ]']]
+RR4E pass=True rows=0 bad=0

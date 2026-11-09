@@ -1,0 +1,6 @@
+# 바탕 = e48e5fa04 (rint_r_chain.py · test_rint_r_chain.py = 회차 ④ 리뷰 핀 1f9f3607e 와 같은 바이트 = 사전 공격 14 고친 판 · blob 84b47379c · 5f88fd5ea)
+47a520e8ad300101c6f8d2660d7368eead77f0f3b425bdcf1d37c379fe0c8720  scripts/rint_r_chain.py  (바탕)
+d5e1d9ea4001911b4a1878d1315e74e0188336e2ea66e021ac348ad0994612d0  scripts/test_rint_r_chain.py  (바탕)
+# 고친 판 = 바탕 + code.diff = 이 커밋 · 시험 먼저 = 고친 시험 (92998cbc…) 을 바탕 사슬에 먼저 돌림 → 고침 → 같은 시험 · 변이 · 탐침 다시 = 이 바이트
+d0e040173632d4a0ab4258cb507d694d7839f26aa00d6ee690c1f0b8800774d0  scripts/rint_r_chain.py  (고친 판)
+92998cbc15e8da9b57833e1a26f3ce11e7ff985e9aafdd07d62aea33ba3f9dab  scripts/test_rint_r_chain.py  (고친 판)

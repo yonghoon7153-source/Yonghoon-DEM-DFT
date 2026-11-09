@@ -100,7 +100,7 @@
 
 ### 5-3. ② ③ 사전 공격 14 (11-09 · 독립 · diff 만 `f44478535..7a582acf5` · 보고 `docs/reviews/rint2_rr2_fix_evidence_20261105/preattack14/REPORT.md`)
 
-- 결과 = **P1 0 · P2 0 · P3 6** · 버틴 것 = 원천이 같은 바탕일 때 1–4 칸 편집 21 행 전부 거부 · 정직 꼴 거부 0 (새 시도 · 정직 RESUME_MISMATCH · 재실행 런 멈춤 · 대조 같은 뒤 자원 멈춤 · 3 시도 사슬 · 예측 재실행 뒤 멈춤 3) · arms 1–8 · arm_list 255 + 실제 사다리 · 예측 기록 verified · `read_run` 자기 대조 = 정직 출력에서 안 걸림 · 변이 51 (동치 2) 중 45/49 를 PA13A–D 가 잡음 · 사슬 491/491 (3.11 · 3.8.20) · 끝-끝 51/51 (3.11).
+- 결과 = **P1 0 · P2 0 · P3 6** · 버틴 것 = 원천이 같은 바탕일 때 1–4 칸 편집 21 행 전부 거부 · 정직 꼴 거부 0 (새 시도 · 정직 RESUME_MISMATCH · 재실행 런 멈춤 · 대조 같은 뒤 자원 멈춤 · 3 시도 사슬 · 예측 재실행 뒤 멈춤 3) · arms 1–8 · arm_list 255 + 실제 사다리 · 예측 기록 verified · `read_run` 자기 대조 = 정직 출력에서 안 걸림 · ~~변이 51 (동치 2) 중 45/49 를 PA13A–D 가 잡음~~ → 11-09 정정 (RR4-01 · 판정문 §4): 동치 1 (M46 · JSON 영역) · 45/50 · 비동치 생존 5 (M14 · M18 · M47 · M54 · M56) · M56 = 구별 가능한 미검출 (일반 파일 attempt_1 + 옆 거부 기록 · 그 입력 = 상주 음성 행 `RR4C` · 변이 M56 검출 = `docs/reviews/rint2_rr4_fix_evidence_20261109/logs/mutation_results.json`) · 원로그 그대로 · 사슬 491/491 (3.11 · 3.8.20) · 끝-끝 51/51 (3.11).
 - P3-a (= PC14-01 · `7a582acf5` 회귀) — positive 팔의 cg_resid = JSON 큰 정수 (10**400) → `RC.conv_ok` 의 math.isfinite OverflowError → `recover --ledger` traceback (같은 바탕 뒤 폴더 못 셈 · PC11-03 부류 = 사전 공격 11 P3-5 · 원 보고의 "PC10 P3-5" 이름표 = 이 항목).
 - P3-d (= PC14-04) — protocol_id 앞자리만 · sid_fp 비지 않은 글 · positive err_rel 위 한계 없음 → 생산자가 안 쓰는 값이 verified.
 - P3-e (= PC14-05) — resume 칸 집합 대조 없음 (여분 칸 · run == rerun 때 determinism 칸 지움 = 자격 True).

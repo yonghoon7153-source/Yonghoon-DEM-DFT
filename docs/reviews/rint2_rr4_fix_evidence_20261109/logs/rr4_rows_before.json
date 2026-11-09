@@ -1,0 +1,815 @@
+{
+ "RR4A": {
+  "pass": false,
+  "detail": {
+   "n": 9,
+   "n_bad": 9,
+   "bad_names": [
+    "N1_R1",
+    "N2_R2",
+    "N3_attempt_null",
+    "N3a_attempt_only",
+    "N4_from_rebind",
+    "Z1_frozen_R1",
+    "Z2_frozen_R2",
+    "Z3_frozen_attempt_null",
+    "Z4_frozen_from_rebind"
+   ],
+   "states": {
+    "N1_R1": "accepted",
+    "N2_R2": "accepted",
+    "N3_attempt_null": "accepted",
+    "N3a_attempt_only": "accepted",
+    "N4_from_rebind": "accepted",
+    "Z1_frozen_R1": "accepted",
+    "Z2_frozen_R2": "accepted",
+    "Z3_frozen_attempt_null": "accepted",
+    "Z4_frozen_from_rebind": "accepted"
+   },
+   "bad": {
+    "N1_R1": {
+     "got": {
+      "cli": [
+       0,
+       true,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       true,
+       null,
+       null
+      ],
+      "state": "accepted",
+      "behaviour_ok": false,
+      "recount_ok": false
+     },
+     "want_tag": "[ⓒ]"
+    },
+    "N2_R2": {
+     "got": {
+      "cli": [
+       0,
+       true,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       true,
+       null,
+       null
+      ],
+      "state": "accepted",
+      "behaviour_ok": false,
+      "recount_ok": false
+     },
+     "want_tag": "[ⓒ]"
+    },
+    "N3_attempt_null": {
+     "got": {
+      "cli": [
+       0,
+       true,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       true,
+       null,
+       null
+      ],
+      "state": "accepted",
+      "behaviour_ok": false,
+      "recount_ok": false
+     },
+     "want_tag": "[ⓐ]"
+    },
+    "N3a_attempt_only": {
+     "got": {
+      "cli": [
+       0,
+       true,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       true,
+       null,
+       null
+      ],
+      "state": "accepted",
+      "behaviour_ok": false,
+      "recount_ok": false
+     },
+     "want_tag": "[ⓐ]"
+    },
+    "N4_from_rebind": {
+     "got": {
+      "cli": [
+       0,
+       true,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       true,
+       null,
+       null
+      ],
+      "state": "accepted",
+      "behaviour_ok": false,
+      "recount_ok": false
+     },
+     "want_tag": "[ⓑ]"
+    },
+    "Z1_frozen_R1": {
+     "got": {
+      "cli": [
+       0,
+       true,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       true,
+       null,
+       null
+      ],
+      "state": "accepted",
+      "behaviour_ok": false,
+      "recount_ok": false
+     },
+     "want_tag": "[ⓒ]"
+    },
+    "Z2_frozen_R2": {
+     "got": {
+      "cli": [
+       0,
+       true,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       true,
+       null,
+       null
+      ],
+      "state": "accepted",
+      "behaviour_ok": false,
+      "recount_ok": false
+     },
+     "want_tag": "[ⓒ]"
+    },
+    "Z3_frozen_attempt_null": {
+     "got": {
+      "cli": [
+       0,
+       true,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       true,
+       null,
+       null
+      ],
+      "state": "accepted",
+      "behaviour_ok": false,
+      "recount_ok": false
+     },
+     "want_tag": "[ⓐ]"
+    },
+    "Z4_frozen_from_rebind": {
+     "got": {
+      "cli": [
+       0,
+       true,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       true,
+       null,
+       null
+      ],
+      "state": "accepted",
+      "behaviour_ok": false,
+      "recount_ok": false
+     },
+     "want_tag": "[ⓑ]"
+    }
+   },
+   "rows": {
+    "N1_R1": {
+     "cli": [
+      0,
+      true,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "state": "accepted",
+     "behaviour_ok": false,
+     "recount_ok": false
+    },
+    "N2_R2": {
+     "cli": [
+      0,
+      true,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "state": "accepted",
+     "behaviour_ok": false,
+     "recount_ok": false
+    },
+    "N3_attempt_null": {
+     "cli": [
+      0,
+      true,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "state": "accepted",
+     "behaviour_ok": false,
+     "recount_ok": false
+    },
+    "N3a_attempt_only": {
+     "cli": [
+      0,
+      true,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "state": "accepted",
+     "behaviour_ok": false,
+     "recount_ok": false
+    },
+    "N4_from_rebind": {
+     "cli": [
+      0,
+      true,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "state": "accepted",
+     "behaviour_ok": false,
+     "recount_ok": false
+    },
+    "Z1_frozen_R1": {
+     "cli": [
+      0,
+      true,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "state": "accepted",
+     "behaviour_ok": false,
+     "recount_ok": false
+    },
+    "Z2_frozen_R2": {
+     "cli": [
+      0,
+      true,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "state": "accepted",
+     "behaviour_ok": false,
+     "recount_ok": false
+    },
+    "Z3_frozen_attempt_null": {
+     "cli": [
+      0,
+      true,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "state": "accepted",
+     "behaviour_ok": false,
+     "recount_ok": false
+    },
+    "Z4_frozen_from_rebind": {
+     "cli": [
+      0,
+      true,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "state": "accepted",
+     "behaviour_ok": false,
+     "recount_ok": false
+    }
+   }
+  }
+ },
+ "RR4B": {
+  "pass": false,
+  "detail": {
+   "n": 12,
+   "n_bad": 9,
+   "bad_names": [
+    "P1_new_attempt",
+    "P2_honest_mismatch",
+    "P3_after_compare",
+    "P4_before_first_rerun",
+    "P5_partial_rerun_stop",
+    "P6_chain3",
+    "P7_chain3_mismatch",
+    "P8_frozen_honest_mismatch",
+    "P9_frozen_PC13_01_two_fields"
+   ],
+   "bad": {
+    "P1_new_attempt": {
+     "got": {
+      "cli": [
+       0,
+       true,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       true,
+       null,
+       null
+      ],
+      "behaviour_ok": true,
+      "recount_ok": false
+     },
+     "want": [
+      true,
+      null,
+      null
+     ]
+    },
+    "P2_honest_mismatch": {
+     "got": {
+      "cli": [
+       0,
+       false,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       false,
+       [
+        "RESUME_NOT_ALLOWED",
+        []
+       ],
+       null
+      ],
+      "behaviour_ok": true,
+      "recount_ok": false
+     },
+     "want": [
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+     ]
+    },
+    "P3_after_compare": {
+     "got": {
+      "cli": [
+       0,
+       true,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       true,
+       null,
+       null
+      ],
+      "behaviour_ok": true,
+      "recount_ok": false
+     },
+     "want": [
+      true,
+      null,
+      null
+     ]
+    },
+    "P4_before_first_rerun": {
+     "got": {
+      "cli": [
+       0,
+       true,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       true,
+       null,
+       null
+      ],
+      "behaviour_ok": true,
+      "recount_ok": false
+     },
+     "want": [
+      true,
+      null,
+      null
+     ]
+    },
+    "P5_partial_rerun_stop": {
+     "got": {
+      "cli": [
+       0,
+       true,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       true,
+       null,
+       null
+      ],
+      "behaviour_ok": true,
+      "recount_ok": false
+     },
+     "want": [
+      true,
+      null,
+      null
+     ]
+    },
+    "P6_chain3": {
+     "got": {
+      "cli": [
+       0,
+       true,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       true,
+       null,
+       null
+      ],
+      "behaviour_ok": true,
+      "recount_ok": false
+     },
+     "want": [
+      true,
+      null,
+      null
+     ]
+    },
+    "P7_chain3_mismatch": {
+     "got": {
+      "cli": [
+       0,
+       false,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       false,
+       [
+        "RESUME_NOT_ALLOWED",
+        []
+       ],
+       null
+      ],
+      "behaviour_ok": true,
+      "recount_ok": false
+     },
+     "want": [
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+     ]
+    },
+    "P8_frozen_honest_mismatch": {
+     "got": {
+      "cli": [
+       0,
+       false,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       false,
+       [
+        "RESUME_NOT_ALLOWED",
+        []
+       ],
+       null
+      ],
+      "behaviour_ok": true,
+      "recount_ok": false
+     },
+     "want": [
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+     ]
+    },
+    "P9_frozen_PC13_01_two_fields": {
+     "got": {
+      "cli": [
+       0,
+       false,
+       [],
+       "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+      ],
+      "places": [
+       false,
+       [
+        "RESUME_NOT_ALLOWED",
+        []
+       ],
+       null
+      ],
+      "behaviour_ok": true,
+      "recount_ok": false
+     },
+     "want": [
+      false,
+      "RESUME_NOT_ALLOWED",
+      null
+     ]
+    }
+   },
+   "rows": {
+    "P1_new_attempt": {
+     "cli": [
+      0,
+      true,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": false
+    },
+    "P2_honest_mismatch": {
+     "cli": [
+      0,
+      false,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      false,
+      [
+       "RESUME_NOT_ALLOWED",
+       []
+      ],
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": false
+    },
+    "P3_after_compare": {
+     "cli": [
+      0,
+      true,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": false
+    },
+    "P4_before_first_rerun": {
+     "cli": [
+      0,
+      true,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": false
+    },
+    "P5_partial_rerun_stop": {
+     "cli": [
+      0,
+      true,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": false
+    },
+    "P6_chain3": {
+     "cli": [
+      0,
+      true,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": false
+    },
+    "P7_chain3_mismatch": {
+     "cli": [
+      0,
+      false,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      false,
+      [
+       "RESUME_NOT_ALLOWED",
+       []
+      ],
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": false
+    },
+    "P8_frozen_honest_mismatch": {
+     "cli": [
+      0,
+      false,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      false,
+      [
+       "RESUME_NOT_ALLOWED",
+       []
+      ],
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": false
+    },
+    "P9_frozen_PC13_01_two_fields": {
+     "cli": [
+      0,
+      false,
+      [],
+      "api_absent result_line_problem() got an unexpected keyword argument 'st'"
+     ],
+     "places": [
+      false,
+      [
+       "RESUME_NOT_ALLOWED",
+       []
+      ],
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": false
+    },
+    "disk": {
+     "copy_launch_same": true,
+     "copy_end_same": true,
+     "new_launch_differs": true
+    },
+    "real_l3": [
+     null,
+     null,
+     0
+    ],
+    "real_rr": [
+     null,
+     null,
+     0
+    ]
+   }
+  }
+ },
+ "RR4C": {
+  "pass": true,
+  "detail": {
+   "file_and_side": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+   "dir": null
+  }
+ },
+ "RR4D": {
+  "pass": false,
+  "detail": {
+   "n": 3,
+   "n_bad": 3,
+   "bad": {
+    "F1_nosrc_writing": {
+     "got": [
+      0,
+      true,
+      []
+     ],
+     "want": [
+      0,
+      false,
+      [
+       "[원천]"
+      ]
+     ]
+    },
+    "F2_nosrc_recount": {
+     "got": "api_absent result_line_problem() got an unexpected keyword argument 'st'",
+     "want": [
+      true,
+      [
+       "[원천]"
+      ]
+     ]
+    },
+    "F3_other_base_same_true": {
+     "got": "api_absent resume_provenance_problem",
+     "want": [
+      true,
+      [
+       "[ⓓ]"
+      ],
+      [
+       "[ⓓ]"
+      ]
+     ]
+    }
+   },
+   "rows": {
+    "F1_nosrc_writing": [
+     0,
+     true,
+     []
+    ],
+    "F2_nosrc_recount": "api_absent result_line_problem() got an unexpected keyword argument 'st'",
+    "F3_other_base_same_true": "api_absent resume_provenance_problem"
+   }
+  }
+ },
+ "RR4E": {
+  "pass": false,
+  "detail": {
+   "have": false,
+   "prov_callers": [],
+   "fields_ledger_callers": [],
+   "write_callers": [],
+   "entry_diff_callers": [],
+   "src_done_sha": "b530c2ad9afe9c0a45181627396d4b4da3d329702d9d537b699b1373c0059beb"
+  }
+ }
+}

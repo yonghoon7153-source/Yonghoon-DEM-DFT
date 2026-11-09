@@ -1,0 +1,12 @@
+# Codex 회차 ④ 재개 탐침 무변경 재실행 — 고친 판 (11-09 · 탐침 파일은 리포에 넣지 않음 = 합성 사용자@기계 신원 꼴 · 이름 · sha256 · 결과만)
+탐침 = resume_attack/probe_resume_independent.py (받은 ZIP 안 이름 · ZIP sha256 8233c6e830228bf3c5d94d58e22093957fe36ec8993ede613bf44dae84cb77fe · 반입에서 뺀 파일)
+탐침 sha256 = 83622e5a83bd0de7c97d4a368c0b3fe66ce4fb08def54fabe0a0bd80d79fa014 (바꾸지 않음)
+명령 = python3 -I -X utf8 -B resume_attack/probe_resume_independent.py (Python 3.11.17 · 리포 밖 빈 폴더에 푼 자리에서 · RINT_REVIEW_REPO = 이 작업 트리 · TMPDIR = 세션 scratch)
+대상 scripts/rint_r_chain.py sha256 = d0e040173632d4a0ab4258cb507d694d7839f26aa00d6ee690c1f0b8800774d0 (고친 판)
+rc = 1
+결과 (화면 원문 · 경로만 <탐침 풂 자리> 로 바꿈):
+Traceback (most recent call last):
+  File "<탐침 풂 자리>/resume_attack/probe_resume_independent.py", line 181, in <module>
+    assert v['fields']['resume_ok'] and v['order'] is None and v['resume_chain_problem'] is None and v['found_attempts_problem']
+AssertionError
+읽기 = 탐침 181 줄 = PC14_03_attempt_null 단언 (폴더 증거만 자격 True ∧ 다음 순서 None ∧ 풀기 전 사슬 None ∧ 판정 쪽 found_attempts_problem 사유) — 고친 판 = 다음 순서 · 풀기 전 사슬이 RESUME_NOT_ALLOWED (공통 검증 ⓐ) = 기대한 뒤집힘 · 그 앞 단언 (130 · 131 정직 둘 · 158 대조 전 멈춤 정직 · changed 아홉 = PC13_01 둘 · PC14_05 둘 · PC14_06 셋 · PC14_02 R1 · R2 (…, True)) = 통과 = 탐침의 fields 가 폴더 증거만의 `result_fields` (값 그대로 · 원장 의존 검사는 `result_fields_ledger` 따로) 라서 · 탐침의 R1 · R2 다음 순서 · 풀기 전 값은 단언이 아님 (같은 바이트 = 시험 RR4A Z1 · Z2 = RESUME_NOT_ALLOWED [ⓒ]) · 탐침을 고쳐 PASS 로 세지 않음 · 거부 oracle = 상주 RR4A–D

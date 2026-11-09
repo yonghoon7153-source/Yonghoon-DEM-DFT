@@ -1,0 +1,512 @@
+{
+ "RR4A": {
+  "pass": true,
+  "detail": {
+   "n": 9,
+   "n_bad": 0,
+   "bad_names": [],
+   "states": {
+    "N1_R1": "rejected[ⓒ]",
+    "N2_R2": "rejected[ⓒ]",
+    "N3_attempt_null": "rejected[ⓐ]",
+    "N3a_attempt_only": "rejected[ⓐ]",
+    "N4_from_rebind": "rejected[ⓑ]",
+    "Z1_frozen_R1": "rejected[ⓒ]",
+    "Z2_frozen_R2": "rejected[ⓒ]",
+    "Z3_frozen_attempt_null": "rejected[ⓐ]",
+    "Z4_frozen_from_rebind": "rejected[ⓑ]"
+   },
+   "bad": {},
+   "rows": {
+    "N1_R1": {
+     "cli": [
+      0,
+      false,
+      [
+       "[ⓒ]"
+      ],
+      null
+     ],
+     "places": [
+      true,
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ],
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ]
+     ],
+     "state": "rejected[ⓒ]",
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "N2_R2": {
+     "cli": [
+      0,
+      false,
+      [
+       "[ⓒ]"
+      ],
+      null
+     ],
+     "places": [
+      true,
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ],
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ]
+     ],
+     "state": "rejected[ⓒ]",
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "N3_attempt_null": {
+     "cli": [
+      0,
+      false,
+      [
+       "[ⓐ]"
+      ],
+      null
+     ],
+     "places": [
+      true,
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓐ]"
+       ]
+      ],
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓐ]"
+       ]
+      ]
+     ],
+     "state": "rejected[ⓐ]",
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "N3a_attempt_only": {
+     "cli": [
+      0,
+      false,
+      [
+       "[ⓐ]"
+      ],
+      null
+     ],
+     "places": [
+      true,
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓐ]"
+       ]
+      ],
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓐ]"
+       ]
+      ]
+     ],
+     "state": "rejected[ⓐ]",
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "N4_from_rebind": {
+     "cli": [
+      0,
+      false,
+      [
+       "[ⓑ]"
+      ],
+      null
+     ],
+     "places": [
+      true,
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓑ]"
+       ]
+      ],
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓑ]"
+       ]
+      ]
+     ],
+     "state": "rejected[ⓑ]",
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "Z1_frozen_R1": {
+     "cli": [
+      0,
+      false,
+      [
+       "[ⓒ]"
+      ],
+      null
+     ],
+     "places": [
+      true,
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ],
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ]
+     ],
+     "state": "rejected[ⓒ]",
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "Z2_frozen_R2": {
+     "cli": [
+      0,
+      false,
+      [
+       "[ⓒ]"
+      ],
+      null
+     ],
+     "places": [
+      true,
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ],
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ]
+     ],
+     "state": "rejected[ⓒ]",
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "Z3_frozen_attempt_null": {
+     "cli": [
+      0,
+      false,
+      [
+       "[ⓐ]"
+      ],
+      null
+     ],
+     "places": [
+      true,
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓐ]"
+       ]
+      ],
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓐ]"
+       ]
+      ]
+     ],
+     "state": "rejected[ⓐ]",
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "Z4_frozen_from_rebind": {
+     "cli": [
+      0,
+      false,
+      [
+       "[ⓑ]"
+      ],
+      null
+     ],
+     "places": [
+      true,
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓑ]"
+       ]
+      ],
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓑ]"
+       ]
+      ]
+     ],
+     "state": "rejected[ⓑ]",
+     "behaviour_ok": true,
+     "recount_ok": true
+    }
+   }
+  }
+ },
+ "RR4B": {
+  "pass": true,
+  "detail": {
+   "n": 12,
+   "n_bad": 0,
+   "bad_names": [],
+   "bad": {},
+   "rows": {
+    "P1_new_attempt": {
+     "cli": [
+      0,
+      true,
+      [],
+      null
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "P2_honest_mismatch": {
+     "cli": [
+      0,
+      false,
+      [],
+      null
+     ],
+     "places": [
+      false,
+      [
+       "RESUME_NOT_ALLOWED",
+       []
+      ],
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "P3_after_compare": {
+     "cli": [
+      0,
+      true,
+      [],
+      null
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "P4_before_first_rerun": {
+     "cli": [
+      0,
+      true,
+      [],
+      null
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "P5_partial_rerun_stop": {
+     "cli": [
+      0,
+      true,
+      [],
+      null
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "P6_chain3": {
+     "cli": [
+      0,
+      true,
+      [],
+      null
+     ],
+     "places": [
+      true,
+      null,
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "P7_chain3_mismatch": {
+     "cli": [
+      0,
+      false,
+      [],
+      null
+     ],
+     "places": [
+      false,
+      [
+       "RESUME_NOT_ALLOWED",
+       []
+      ],
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "P8_frozen_honest_mismatch": {
+     "cli": [
+      0,
+      false,
+      [],
+      null
+     ],
+     "places": [
+      false,
+      [
+       "RESUME_NOT_ALLOWED",
+       []
+      ],
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "P9_frozen_PC13_01_two_fields": {
+     "cli": [
+      0,
+      false,
+      [],
+      null
+     ],
+     "places": [
+      false,
+      [
+       "RESUME_NOT_ALLOWED",
+       []
+      ],
+      null
+     ],
+     "behaviour_ok": true,
+     "recount_ok": true
+    },
+    "disk": {
+     "copy_launch_same": true,
+     "copy_end_same": true,
+     "new_launch_differs": true
+    },
+    "real_l3": [
+     null,
+     null,
+     0
+    ],
+    "real_rr": [
+     null,
+     null,
+     0
+    ]
+   }
+  }
+ },
+ "RR4C": {
+  "pass": true,
+  "detail": {
+   "file_and_side": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+   "dir": null
+  }
+ },
+ "RR4D": {
+  "pass": true,
+  "detail": {
+   "n": 3,
+   "n_bad": 0,
+   "bad": {},
+   "rows": {
+    "F1_nosrc_writing": [
+     0,
+     false,
+     [
+      "[원천]"
+     ]
+    ],
+    "F2_nosrc_recount": [
+     true,
+     [
+      "[원천]"
+     ]
+    ],
+    "F3_other_base_same_true": [
+     true,
+     [
+      "[ⓓ]"
+     ],
+     [
+      "[ⓓ]"
+     ]
+    ]
+   }
+  }
+ },
+ "RR4E": {
+  "pass": true,
+  "detail": {
+   "have": true,
+   "prov_callers": [
+    "result_fields_ledger",
+    "resume_chain_problem",
+    "resume_chain_provenance_problem"
+   ],
+   "fields_ledger_callers": [
+    "_result_recount",
+    "attempt_result"
+   ],
+   "write_callers": [
+    "attempt_close",
+    "recover_ledger"
+   ],
+   "entry_diff_callers": [
+    "found_attempts_problem",
+    "resume_provenance_problem"
+   ],
+   "src_done_sha": "b530c2ad9afe9c0a45181627396d4b4da3d329702d9d537b699b1373c0059beb"
+  }
+ }
+}

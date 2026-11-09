@@ -1,7 +1,7 @@
 # Rint ② 회차 ④ (11-09) 뒤 수정 계획 — PC14-02 · PC14-03 (재개 출처 공통 검증) · RR4-01 (변이 회계)
 
 - 근거 = Codex 판정문 `docs/reviews/codex_review_rint2_rr_round4_20261109.md` (리뷰 핀 `1f9f3607e` · 판정 = **지정 11 항목 한정 닫힘 · 재개 정책 전체 HOLD** · 새 P1 · P2 0 · 새 P3 1 = RR4-01) · 반입 `docs/reviews/codex_rint2_rr_round4_evidence_20261109/README_import.md` · 우리 트리 재현 = 판정값 차이 0 (`docs/reviews/codex_rint2_rr_round4_evidence_20261109/_repro_ours_20261109/README.md` — PC14-02 R1 · R2 · PC14-03 attempt-null · from-rebind 가 우리 핀 · 우리 Linux 에서도 자격 True · 실제 recover 결과 줄 resume_ok True).
-- 상태 = ⬜ **1저자 비준 대기** · 결과 0 건 (이 계획은 코드 · 시험 · 문서를 아직 하나도 바꾸지 않는다 · 반입 커밋 = 판정문 · 증거 · 원장 · 이 계획 · 진행 기록 한 줄).
+- 상태 = ~~⬜ **1저자 비준 대기** · 결과 0 건 (이 계획은 코드 · 시험 · 문서를 아직 하나도 바꾸지 않는다 · 반입 커밋 = 판정문 · 증거 · 원장 · 이 계획 · 진행 기록 한 줄)~~ → ✅ 1저자 11-09 *"권고대로"* = Q1–Q3 (가) · 고침 = §6 실행 기록 (작업 트리 커밋 하나 · 원장 · 게이트 · push = 메인 세션 · 다음 = 사전 공격 15 → Codex 회차 ⑤).
 - 줄 번호 = 핀 `1f9f3607e` 의 `scripts/rint_r_chain.py` (sha256 47a520e8… = 판정문 §2 의 실제 로드 소스) · 핀 → 반입 바탕 `e814b73c3` 사이 `scripts/` 변경 없음.
 
 ## 0. 쉽게 말하면
@@ -84,7 +84,7 @@
 - PC13-03 · PC11-05–08 (한정) · SELF-155 실침대 (kgy S0 단계 1 재실행 · 채택 조건 = `docs/reviews/rint2_rr3_fix_plan_20261108.md` §5) · 현장 자격 · 12 단위 끝-끝 · 숫자 / 실행 정책 · 새 계획 / 핀 봉인 · S0 단계 2 · 등록 R · 정량 판정 · 생산 GO — 판정문 §6 순서 · 바깥 범위 그대로.
 - 이번 회차로 쓸 수 있는 문장 = 판정문 §6 인용 그대로: "RR3-01·02, PC12-03, PC13-01·02·04, PC14-01·04·05·06 및 SELF-158 문장 정정은 지정한 코드·합성·문서 범위에서 닫힌다. 재개 출처·복사 경계의 PC14-02/03은 열림이며 재개 정책 전체는 HOLD다. 실제 환경 자격·S0 단계1 채택·12단위 통합·새 계획/핀 봉인 및 연구 실행 승인은 별도다. 변이 M56의 비동치 생존을 RR4-01로 기록하고 검출률을 정정한다."
 
-## 5. 결정 질문 (⬜ 1저자)
+## 5. 결정 질문 (✅ 1저자 11-09 *"권고대로"* = Q1–Q3 (가))
 
 **Q1 — PC14-02 · 03 처리 방식** (§2)
 - (가) 코드 공통 검증 (ⓐ attempt 신원 ↔ 원장 entry · ⓑ resume.from ↔ 그 시점 effective · ⓒ 복사 / 새 경계 ↔ 원천 launch / end · 파일 신원 · ⓓ 실제 첫 새 런 payload 다시 대조 · 결과 줄 쓰기 · 다음 재개 허용 · 다시 셈이 같은 함수) / (나) 매 recover · 재개 외부 관문 (절차 문서 · 코드 정책 GO 아님).
@@ -98,3 +98,13 @@
 - (가) 시험 먼저 (N1–N4 · RR4-01 행 · 고치기 전 실패 확인) → 고침 (커밋 하나 → 게이트 → push) → 사전 공격 15 (독립 · diff 만 · 보장마다 작은 해석 반례 · 같은 부류 = 다른 런 정직 기록 차용 · 원천이 다른 바탕 · 다시 셈 일치) → Codex 회차 ⑤ 짧은 재확인 (PC14-02 · 03 · RR4-01 만 · 회차 ④ 재개 탐침 무변경 재실행 = 기대한 뒤집힘).
 - (나) Codex 에 설계 (§2) 먼저 확인받은 뒤 고침.
 - 권고 = **(가)** — 판정문 §3 이 최소 처리를 이미 구체로 적었고 (공통 검증 셋 · 양성 보존 목록), 회차 ③ → ④ 와 같은 흐름이다.
+
+## 6. 실행 기록 (11-09 · 작업 트리 에이전트 · 바탕 `e48e5fa04` · 커밋 하나 · 원장 · 게이트 · push = 메인 세션)
+
+- 증거 = `docs/reviews/rint2_rr4_fix_evidence_20261109/` (code.diff · code_sha256.txt · logs · tools · SHA256SUMS) · 코드 sha256 `scripts/rint_r_chain.py` 47a520e8… → d0e04017… · `scripts/test_rint_r_chain.py` d5e1d9ea… → 92998cbc… · 웹앱 = 없음 (재개 자격 · 원장 화면 0 건).
+- Q1 (가) = 공통 함수 `resume_provenance_problem` (ⓐ attempt.json ↔ 원장 항목 = `found_attempts_problem` 과 같은 `attempt_entry_diff` · ⓑ resume.from ↔ `adoption(...)['effective']` · 원천 attempt_<from> 찾기 · ⓒ 복사 / 새 경계 ↔ 원천 launch / end 바이트 · 남은 payload · 새 런 launch 다름 · ⓓ 실제 첫 새 런 payload 다시 대조 · 멈춘 런 = rerun 이어도 ⓐ–ⓒ) · 부르는 자리 = 결과 줄 쓰기 (`attempt_close` · `recover_ledger` → 자격 False · 사유 = 원장 커밋 글 · 화면) · 다시 셈 (`result_recount` · `result_line_problem` = 같은 원장 상태 · 같은 셈 함수 `result_fields_ledger` = §2-3 설계 위험 해소) · 다음 재개 허용 (`attempt_order_problem` · `resume_chain_problem` → RESUME_NOT_ALLOWED) · `ResumeRunner._src_done` 그대로 (한정).
+- §2 한정 "원천이 같은 바탕에 없는 시도" = 메인 결정 fail-closed 로 구현 (못 찾음 · 확인 못 함 = 사유 [원천]) · 구현 전 확인 = 정직 흐름 깨짐 없음 (아래 수) → STOP 없음.
+- Q2 (가) = 요청서 103 줄 · 사전 공격 14 보고 9 줄 제자리 정정 (취소선 + "11-09 정정 (RR4-01 · 판정문 §4)" · 원로그 셋 바이트 그대로 · 사전 공격 14 SHA256SUMS 의 REPORT.md 줄만 갱신) + 상주 음성 행 RR4C · 변이 M56 = 잡힘.
+- Q3 (가) 수 = 고친 시험을 바탕 사슬에 먼저 `--only RR3,PA13,PA14,RR4` 15/19 (음성 9 행 전부 받음 · RR4C 만 통과) → 고친 뒤 19/19 · 사슬 495 → 500/500 (3.11 · kgy 판 3.8.20) · 끝-끝 51 PASS (3.11 · 3.8.20) · kgy 판 11 묶음 통과 · 변이 12/12 (ⓐ · ⓑ · ⓒ · ⓓ · 원천 · 부르는 자리 다섯 · M56) · Codex 재개 탐침 무변경 = AssertionError 181 줄 (PC14_03 attempt-null 단언 · 기대한 뒤집힘).
+- 벗어남 = 고정물 하나 (`pa13_ledger` 합성 원장 항목 기계 'synthetic' → attempt.json 과 같은 MACH · 기대값 그대로 · 옛 값이면 PA13A 의 한 행만 다음 재개 [ⓐ] = 생산자 밖 고정물 모순) · 결과 줄 칸 · 원인 칸 그대로 (사유 = 커밋 글 · 화면 · 폴더 증거 모순과 같은 처리).
+- 다음 = 사전 공격 15 (독립 · diff 만) → Codex 회차 ⑤ 짧은 재확인 (PC14-02 · 03 · RR4-01 만) · 원장 claimed_fixed = 메인 세션.

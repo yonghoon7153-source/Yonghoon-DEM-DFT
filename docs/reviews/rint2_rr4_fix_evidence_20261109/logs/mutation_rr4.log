@@ -1,0 +1,14 @@
+M00_identity PASS_ALL test_rint_r_chain: 5/5 PASS (6.8 s)
+MA_entry_off CAUGHT test_rint_r_chain: 4/5 PASS (7.2 s)   FAILED: ['RR4A'] ['RR4A']
+MB_from_off CAUGHT test_rint_r_chain: 4/5 PASS (7.3 s)   FAILED: ['RR4A'] ['RR4A']
+MC_boundary_off CAUGHT test_rint_r_chain: 4/5 PASS (7.5 s)   FAILED: ['RR4A'] ['RR4A']
+MD_recompare_off CAUGHT test_rint_r_chain: 4/5 PASS (7.3 s)   FAILED: ['RR4D'] ['RR4D']
+MS_source_failclosed_off CAUGHT test_rint_r_chain: 4/5 PASS (7.1 s)   FAILED: ['RR4D'] ['RR4D']
+MAB_entry_from_off CAUGHT test_rint_r_chain: 4/5 PASS (6.9 s)   FAILED: ['RR4A'] ['RR4A']
+W1_order_call_off CAUGHT test_rint_r_chain: 3/5 PASS (6.3 s)   FAILED: ['RR4A', 'RR4E'] ['RR4A', 'RR4E']
+W2_presolve_call_off CAUGHT test_rint_r_chain: 4/5 PASS (6.8 s)   FAILED: ['RR4A'] ['RR4A']
+W3_fields_ledger_off CAUGHT test_rint_r_chain: 2/5 PASS (7.2 s)   FAILED: ['RR4A', 'RR4D', 'RR4E'] ['RR4A', 'RR4D', 'RR4E']
+W4_write_folder_only CAUGHT test_rint_r_chain: 2/5 PASS (6.8 s)   FAILED: ['RR4A', 'RR4D', 'RR4E'] ['RR4A', 'RR4D', 'RR4E']
+W5_recount_folder_only CAUGHT test_rint_r_chain: 2/5 PASS (6.9 s)   FAILED: ['RR4A', 'RR4D', 'RR4E'] ['RR4A', 'RR4D', 'RR4E']
+M56_isdir_to_exists CAUGHT test_rint_r_chain: 4/5 PASS (7.6 s)   FAILED: ['RR4C'] ['RR4C']
+잡힘 12/12 · 놓침 [] · 무변이 PASS_ALL

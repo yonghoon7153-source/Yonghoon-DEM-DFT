@@ -1,0 +1,1621 @@
+{
+ "M00_identity": {
+  "verdict": "PASS_ALL",
+  "summary": "test_rint_r_chain: 5/5 PASS (6.8 s)",
+  "fails": [],
+  "rr4a_states": {
+   "N1_R1": "rejected[ⓒ]",
+   "N2_R2": "rejected[ⓒ]",
+   "N3_attempt_null": "rejected[ⓐ]",
+   "N3a_attempt_only": "rejected[ⓐ]",
+   "N4_from_rebind": "rejected[ⓑ]",
+   "Z1_frozen_R1": "rejected[ⓒ]",
+   "Z2_frozen_R2": "rejected[ⓒ]",
+   "Z3_frozen_attempt_null": "rejected[ⓐ]",
+   "Z4_frozen_from_rebind": "rejected[ⓑ]"
+  },
+  "rr4a_places": {
+   "N1_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N2_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3a_attempt_only": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N4_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z1_frozen_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z2_frozen_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z3_frozen_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z4_frozen_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   }
+  },
+  "rr4c_detail": {
+   "file_and_side": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+   "dir": null
+  },
+  "rr4d_rows": {
+   "F1_nosrc_writing": [
+    0,
+    false,
+    [
+     "[원천]"
+    ]
+   ],
+   "F2_nosrc_recount": [
+    true,
+    [
+     "[원천]"
+    ]
+   ],
+   "F3_other_base_same_true": [
+    true,
+    [
+     "[ⓓ]"
+    ],
+    [
+     "[ⓓ]"
+    ]
+   ]
+  },
+  "rr4b_bad": []
+ },
+ "MA_entry_off": {
+  "verdict": "CAUGHT",
+  "summary": "test_rint_r_chain: 4/5 PASS (7.2 s)   FAILED: ['RR4A']",
+  "fails": [
+   "RR4A"
+  ],
+  "rr4a_states": {
+   "N1_R1": "rejected[ⓒ]",
+   "N2_R2": "rejected[ⓒ]",
+   "N3_attempt_null": "rejected[ⓑ]",
+   "N3a_attempt_only": "accepted",
+   "N4_from_rebind": "rejected[ⓑ]",
+   "Z1_frozen_R1": "rejected[ⓒ]",
+   "Z2_frozen_R2": "rejected[ⓒ]",
+   "Z3_frozen_attempt_null": "rejected[ⓑ]",
+   "Z4_frozen_from_rebind": "rejected[ⓑ]"
+  },
+  "rr4a_places": {
+   "N1_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N2_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3a_attempt_only": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": null,
+    "chain": null,
+    "recount_reason": false
+   },
+   "N4_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z1_frozen_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z2_frozen_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z3_frozen_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z4_frozen_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   }
+  },
+  "rr4c_detail": {
+   "file_and_side": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+   "dir": null
+  },
+  "rr4d_rows": {
+   "F1_nosrc_writing": [
+    0,
+    false,
+    [
+     "[원천]"
+    ]
+   ],
+   "F2_nosrc_recount": [
+    true,
+    [
+     "[원천]"
+    ]
+   ],
+   "F3_other_base_same_true": [
+    true,
+    [
+     "[ⓓ]"
+    ],
+    [
+     "[ⓓ]"
+    ]
+   ]
+  },
+  "rr4b_bad": []
+ },
+ "MB_from_off": {
+  "verdict": "CAUGHT",
+  "summary": "test_rint_r_chain: 4/5 PASS (7.3 s)   FAILED: ['RR4A']",
+  "fails": [
+   "RR4A"
+  ],
+  "rr4a_states": {
+   "N1_R1": "rejected[ⓒ]",
+   "N2_R2": "rejected[ⓒ]",
+   "N3_attempt_null": "rejected[ⓐ]",
+   "N3a_attempt_only": "rejected[ⓐ]",
+   "N4_from_rebind": "accepted",
+   "Z1_frozen_R1": "rejected[ⓒ]",
+   "Z2_frozen_R2": "rejected[ⓒ]",
+   "Z3_frozen_attempt_null": "rejected[ⓐ]",
+   "Z4_frozen_from_rebind": "accepted"
+  },
+  "rr4a_places": {
+   "N1_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N2_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3a_attempt_only": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N4_from_rebind": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": null,
+    "chain": null,
+    "recount_reason": false
+   },
+   "Z1_frozen_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z2_frozen_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z3_frozen_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z4_frozen_from_rebind": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": null,
+    "chain": null,
+    "recount_reason": false
+   }
+  },
+  "rr4c_detail": {
+   "file_and_side": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+   "dir": null
+  },
+  "rr4d_rows": {
+   "F1_nosrc_writing": [
+    0,
+    false,
+    [
+     "[원천]"
+    ]
+   ],
+   "F2_nosrc_recount": [
+    true,
+    [
+     "[원천]"
+    ]
+   ],
+   "F3_other_base_same_true": [
+    true,
+    [
+     "[ⓓ]"
+    ],
+    [
+     "[ⓓ]"
+    ]
+   ]
+  },
+  "rr4b_bad": []
+ },
+ "MC_boundary_off": {
+  "verdict": "CAUGHT",
+  "summary": "test_rint_r_chain: 4/5 PASS (7.5 s)   FAILED: ['RR4A']",
+  "fails": [
+   "RR4A"
+  ],
+  "rr4a_states": {
+   "N1_R1": "accepted",
+   "N2_R2": "accepted",
+   "N3_attempt_null": "rejected[ⓐ]",
+   "N3a_attempt_only": "rejected[ⓐ]",
+   "N4_from_rebind": "rejected[ⓑ]",
+   "Z1_frozen_R1": "accepted",
+   "Z2_frozen_R2": "accepted",
+   "Z3_frozen_attempt_null": "rejected[ⓐ]",
+   "Z4_frozen_from_rebind": "rejected[ⓑ]"
+  },
+  "rr4a_places": {
+   "N1_R1": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": null,
+    "chain": null,
+    "recount_reason": false
+   },
+   "N2_R2": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": null,
+    "chain": null,
+    "recount_reason": false
+   },
+   "N3_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3a_attempt_only": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N4_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z1_frozen_R1": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": null,
+    "chain": null,
+    "recount_reason": false
+   },
+   "Z2_frozen_R2": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": null,
+    "chain": null,
+    "recount_reason": false
+   },
+   "Z3_frozen_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z4_frozen_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   }
+  },
+  "rr4c_detail": {
+   "file_and_side": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+   "dir": null
+  },
+  "rr4d_rows": {
+   "F1_nosrc_writing": [
+    0,
+    false,
+    [
+     "[원천]"
+    ]
+   ],
+   "F2_nosrc_recount": [
+    true,
+    [
+     "[원천]"
+    ]
+   ],
+   "F3_other_base_same_true": [
+    true,
+    [
+     "[ⓓ]"
+    ],
+    [
+     "[ⓓ]"
+    ]
+   ]
+  },
+  "rr4b_bad": []
+ },
+ "MD_recompare_off": {
+  "verdict": "CAUGHT",
+  "summary": "test_rint_r_chain: 4/5 PASS (7.3 s)   FAILED: ['RR4D']",
+  "fails": [
+   "RR4D"
+  ],
+  "rr4a_states": {
+   "N1_R1": "rejected[ⓒ]",
+   "N2_R2": "rejected[ⓒ]",
+   "N3_attempt_null": "rejected[ⓐ]",
+   "N3a_attempt_only": "rejected[ⓐ]",
+   "N4_from_rebind": "rejected[ⓑ]",
+   "Z1_frozen_R1": "rejected[ⓒ]",
+   "Z2_frozen_R2": "rejected[ⓒ]",
+   "Z3_frozen_attempt_null": "rejected[ⓐ]",
+   "Z4_frozen_from_rebind": "rejected[ⓑ]"
+  },
+  "rr4a_places": {
+   "N1_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N2_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3a_attempt_only": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N4_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z1_frozen_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z2_frozen_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z3_frozen_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z4_frozen_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   }
+  },
+  "rr4c_detail": {
+   "file_and_side": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+   "dir": null
+  },
+  "rr4d_rows": {
+   "F1_nosrc_writing": [
+    0,
+    false,
+    [
+     "[원천]"
+    ]
+   ],
+   "F2_nosrc_recount": [
+    true,
+    [
+     "[원천]"
+    ]
+   ],
+   "F3_other_base_same_true": [
+    true,
+    [],
+    []
+   ]
+  },
+  "rr4b_bad": []
+ },
+ "MS_source_failclosed_off": {
+  "verdict": "CAUGHT",
+  "summary": "test_rint_r_chain: 4/5 PASS (7.1 s)   FAILED: ['RR4D']",
+  "fails": [
+   "RR4D"
+  ],
+  "rr4a_states": {
+   "N1_R1": "rejected[ⓒ]",
+   "N2_R2": "rejected[ⓒ]",
+   "N3_attempt_null": "rejected[ⓐ]",
+   "N3a_attempt_only": "rejected[ⓐ]",
+   "N4_from_rebind": "rejected[ⓑ]",
+   "Z1_frozen_R1": "rejected[ⓒ]",
+   "Z2_frozen_R2": "rejected[ⓒ]",
+   "Z3_frozen_attempt_null": "rejected[ⓐ]",
+   "Z4_frozen_from_rebind": "rejected[ⓑ]"
+  },
+  "rr4a_places": {
+   "N1_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N2_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3a_attempt_only": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N4_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z1_frozen_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z2_frozen_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z3_frozen_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z4_frozen_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   }
+  },
+  "rr4c_detail": {
+   "file_and_side": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+   "dir": null
+  },
+  "rr4d_rows": {
+   "F1_nosrc_writing": [
+    0,
+    true,
+    []
+   ],
+   "F2_nosrc_recount": [
+    false,
+    []
+   ],
+   "F3_other_base_same_true": [
+    true,
+    [
+     "[ⓓ]"
+    ],
+    [
+     "[ⓓ]"
+    ]
+   ]
+  },
+  "rr4b_bad": []
+ },
+ "MAB_entry_from_off": {
+  "verdict": "CAUGHT",
+  "summary": "test_rint_r_chain: 4/5 PASS (6.9 s)   FAILED: ['RR4A']",
+  "fails": [
+   "RR4A"
+  ],
+  "rr4a_states": {
+   "N1_R1": "rejected[ⓒ]",
+   "N2_R2": "rejected[ⓒ]",
+   "N3_attempt_null": "rejected[원천]",
+   "N3a_attempt_only": "accepted",
+   "N4_from_rebind": "accepted",
+   "Z1_frozen_R1": "rejected[ⓒ]",
+   "Z2_frozen_R2": "rejected[ⓒ]",
+   "Z3_frozen_attempt_null": "rejected[원천]",
+   "Z4_frozen_from_rebind": "accepted"
+  },
+  "rr4a_places": {
+   "N1_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N2_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[원천]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3a_attempt_only": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": null,
+    "chain": null,
+    "recount_reason": false
+   },
+   "N4_from_rebind": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": null,
+    "chain": null,
+    "recount_reason": false
+   },
+   "Z1_frozen_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z2_frozen_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z3_frozen_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[원천]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z4_frozen_from_rebind": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": null,
+    "chain": null,
+    "recount_reason": false
+   }
+  },
+  "rr4c_detail": {
+   "file_and_side": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+   "dir": null
+  },
+  "rr4d_rows": {
+   "F1_nosrc_writing": [
+    0,
+    false,
+    [
+     "[원천]"
+    ]
+   ],
+   "F2_nosrc_recount": [
+    true,
+    [
+     "[원천]"
+    ]
+   ],
+   "F3_other_base_same_true": [
+    true,
+    [
+     "[ⓓ]"
+    ],
+    [
+     "[ⓓ]"
+    ]
+   ]
+  },
+  "rr4b_bad": []
+ },
+ "W1_order_call_off": {
+  "verdict": "CAUGHT",
+  "summary": "test_rint_r_chain: 3/5 PASS (6.3 s)   FAILED: ['RR4A', 'RR4E']",
+  "fails": [
+   "RR4A",
+   "RR4E"
+  ],
+  "rr4a_states": {
+   "N1_R1": "rejected[ⓒ]",
+   "N2_R2": "rejected[ⓒ]",
+   "N3_attempt_null": "rejected[ⓐ]",
+   "N3a_attempt_only": "rejected[ⓐ]",
+   "N4_from_rebind": "rejected[ⓑ]",
+   "Z1_frozen_R1": "rejected[ⓒ]",
+   "Z2_frozen_R2": "rejected[ⓒ]",
+   "Z3_frozen_attempt_null": "rejected[ⓐ]",
+   "Z4_frozen_from_rebind": "rejected[ⓑ]"
+  },
+  "rr4a_places": {
+   "N1_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": null,
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N2_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": null,
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": null,
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3a_attempt_only": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": null,
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N4_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": null,
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z1_frozen_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": null,
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z2_frozen_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": null,
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z3_frozen_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": null,
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z4_frozen_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": null,
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   }
+  },
+  "rr4c_detail": {
+   "file_and_side": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+   "dir": null
+  },
+  "rr4d_rows": {
+   "F1_nosrc_writing": [
+    0,
+    false,
+    [
+     "[원천]"
+    ]
+   ],
+   "F2_nosrc_recount": [
+    true,
+    [
+     "[원천]"
+    ]
+   ],
+   "F3_other_base_same_true": [
+    true,
+    [
+     "[ⓓ]"
+    ],
+    [
+     "[ⓓ]"
+    ]
+   ]
+  },
+  "rr4b_bad": []
+ },
+ "W2_presolve_call_off": {
+  "verdict": "CAUGHT",
+  "summary": "test_rint_r_chain: 4/5 PASS (6.8 s)   FAILED: ['RR4A']",
+  "fails": [
+   "RR4A"
+  ],
+  "rr4a_states": {
+   "N1_R1": "rejected[ⓒ]",
+   "N2_R2": "rejected[ⓒ]",
+   "N3_attempt_null": "rejected[ⓐ]",
+   "N3a_attempt_only": "rejected[ⓐ]",
+   "N4_from_rebind": "rejected[ⓑ]",
+   "Z1_frozen_R1": "rejected[ⓒ]",
+   "Z2_frozen_R2": "rejected[ⓒ]",
+   "Z3_frozen_attempt_null": "rejected[ⓐ]",
+   "Z4_frozen_from_rebind": "rejected[ⓑ]"
+  },
+  "rr4a_places": {
+   "N1_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "ATTEMPT_LEDGER_MISMATCH",
+    "recount_reason": false
+   },
+   "N2_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "ATTEMPT_LEDGER_MISMATCH",
+    "recount_reason": false
+   },
+   "N3_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "ATTEMPT_LEDGER_MISMATCH",
+    "recount_reason": false
+   },
+   "N3a_attempt_only": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "ATTEMPT_LEDGER_MISMATCH",
+    "recount_reason": false
+   },
+   "N4_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "ATTEMPT_LEDGER_MISMATCH",
+    "recount_reason": false
+   },
+   "Z1_frozen_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "ATTEMPT_LEDGER_MISMATCH",
+    "recount_reason": false
+   },
+   "Z2_frozen_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "ATTEMPT_LEDGER_MISMATCH",
+    "recount_reason": false
+   },
+   "Z3_frozen_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "ATTEMPT_LEDGER_MISMATCH",
+    "recount_reason": false
+   },
+   "Z4_frozen_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "ATTEMPT_LEDGER_MISMATCH",
+    "recount_reason": false
+   }
+  },
+  "rr4c_detail": {
+   "file_and_side": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+   "dir": null
+  },
+  "rr4d_rows": {
+   "F1_nosrc_writing": [
+    0,
+    false,
+    [
+     "[원천]"
+    ]
+   ],
+   "F2_nosrc_recount": [
+    true,
+    [
+     "[원천]"
+    ]
+   ],
+   "F3_other_base_same_true": [
+    true,
+    [
+     "[ⓓ]"
+    ],
+    [
+     "[ⓓ]"
+    ]
+   ]
+  },
+  "rr4b_bad": []
+ },
+ "W3_fields_ledger_off": {
+  "verdict": "CAUGHT",
+  "summary": "test_rint_r_chain: 2/5 PASS (7.2 s)   FAILED: ['RR4A', 'RR4D', 'RR4E']",
+  "fails": [
+   "RR4A",
+   "RR4D",
+   "RR4E"
+  ],
+  "rr4a_states": {
+   "N1_R1": "rejected[ⓒ]",
+   "N2_R2": "rejected[ⓒ]",
+   "N3_attempt_null": "rejected[ⓐ]",
+   "N3a_attempt_only": "rejected[ⓐ]",
+   "N4_from_rebind": "rejected[ⓑ]",
+   "Z1_frozen_R1": "rejected[ⓒ]",
+   "Z2_frozen_R2": "rejected[ⓒ]",
+   "Z3_frozen_attempt_null": "rejected[ⓐ]",
+   "Z4_frozen_from_rebind": "rejected[ⓑ]"
+  },
+  "rr4a_places": {
+   "N1_R1": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N2_R2": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3_attempt_null": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3a_attempt_only": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N4_from_rebind": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z1_frozen_R1": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z2_frozen_R2": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z3_frozen_attempt_null": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z4_frozen_from_rebind": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   }
+  },
+  "rr4c_detail": {
+   "file_and_side": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+   "dir": null
+  },
+  "rr4d_rows": {
+   "F1_nosrc_writing": [
+    0,
+    true,
+    []
+   ],
+   "F2_nosrc_recount": [
+    false,
+    []
+   ],
+   "F3_other_base_same_true": [
+    true,
+    [
+     "[ⓓ]"
+    ],
+    []
+   ]
+  },
+  "rr4b_bad": []
+ },
+ "W4_write_folder_only": {
+  "verdict": "CAUGHT",
+  "summary": "test_rint_r_chain: 2/5 PASS (6.8 s)   FAILED: ['RR4A', 'RR4D', 'RR4E']",
+  "fails": [
+   "RR4A",
+   "RR4D",
+   "RR4E"
+  ],
+  "rr4a_states": {
+   "N1_R1": "rejected[ⓒ]",
+   "N2_R2": "rejected[ⓒ]",
+   "N3_attempt_null": "rejected[ⓐ]",
+   "N3a_attempt_only": "rejected[ⓐ]",
+   "N4_from_rebind": "rejected[ⓑ]",
+   "Z1_frozen_R1": "rejected[ⓒ]",
+   "Z2_frozen_R2": "rejected[ⓒ]",
+   "Z3_frozen_attempt_null": "rejected[ⓐ]",
+   "Z4_frozen_from_rebind": "rejected[ⓑ]"
+  },
+  "rr4a_places": {
+   "N1_R1": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "N2_R2": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "N3_attempt_null": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "N3a_attempt_only": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "N4_from_rebind": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "Z1_frozen_R1": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "Z2_frozen_R2": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "Z3_frozen_attempt_null": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "Z4_frozen_from_rebind": {
+    "write_resume_ok": true,
+    "write_tags": [],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   }
+  },
+  "rr4c_detail": {
+   "file_and_side": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+   "dir": null
+  },
+  "rr4d_rows": {
+   "F1_nosrc_writing": [
+    0,
+    true,
+    []
+   ],
+   "F2_nosrc_recount": [
+    true,
+    [
+     "[원천]"
+    ]
+   ],
+   "F3_other_base_same_true": [
+    true,
+    [
+     "[ⓓ]"
+    ],
+    [
+     "[ⓓ]"
+    ]
+   ]
+  },
+  "rr4b_bad": []
+ },
+ "W5_recount_folder_only": {
+  "verdict": "CAUGHT",
+  "summary": "test_rint_r_chain: 2/5 PASS (6.9 s)   FAILED: ['RR4A', 'RR4D', 'RR4E']",
+  "fails": [
+   "RR4A",
+   "RR4D",
+   "RR4E"
+  ],
+  "rr4a_states": {
+   "N1_R1": "rejected[ⓒ]",
+   "N2_R2": "rejected[ⓒ]",
+   "N3_attempt_null": "rejected[ⓐ]",
+   "N3a_attempt_only": "rejected[ⓐ]",
+   "N4_from_rebind": "rejected[ⓑ]",
+   "Z1_frozen_R1": "rejected[ⓒ]",
+   "Z2_frozen_R2": "rejected[ⓒ]",
+   "Z3_frozen_attempt_null": "rejected[ⓐ]",
+   "Z4_frozen_from_rebind": "rejected[ⓑ]"
+  },
+  "rr4a_places": {
+   "N1_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "N2_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "N3_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "N3a_attempt_only": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "N4_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "Z1_frozen_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "Z2_frozen_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "Z3_frozen_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   },
+   "Z4_frozen_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": true
+   }
+  },
+  "rr4c_detail": {
+   "file_and_side": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+   "dir": null
+  },
+  "rr4d_rows": {
+   "F1_nosrc_writing": [
+    0,
+    false,
+    [
+     "[원천]"
+    ]
+   ],
+   "F2_nosrc_recount": [
+    false,
+    []
+   ],
+   "F3_other_base_same_true": [
+    true,
+    [
+     "[ⓓ]"
+    ],
+    []
+   ]
+  },
+  "rr4b_bad": []
+ },
+ "M56_isdir_to_exists": {
+  "verdict": "CAUGHT",
+  "summary": "test_rint_r_chain: 4/5 PASS (7.6 s)   FAILED: ['RR4C']",
+  "fails": [
+   "RR4C"
+  ],
+  "rr4a_states": {
+   "N1_R1": "rejected[ⓒ]",
+   "N2_R2": "rejected[ⓒ]",
+   "N3_attempt_null": "rejected[ⓐ]",
+   "N3a_attempt_only": "rejected[ⓐ]",
+   "N4_from_rebind": "rejected[ⓑ]",
+   "Z1_frozen_R1": "rejected[ⓒ]",
+   "Z2_frozen_R2": "rejected[ⓒ]",
+   "Z3_frozen_attempt_null": "rejected[ⓐ]",
+   "Z4_frozen_from_rebind": "rejected[ⓑ]"
+  },
+  "rr4a_places": {
+   "N1_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N2_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N3a_attempt_only": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "N4_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z1_frozen_R1": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z2_frozen_R2": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓒ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z3_frozen_attempt_null": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓐ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   },
+   "Z4_frozen_from_rebind": {
+    "write_resume_ok": false,
+    "write_tags": [
+     "[ⓑ]"
+    ],
+    "order": "RESUME_NOT_ALLOWED",
+    "chain": "RESUME_NOT_ALLOWED",
+    "recount_reason": false
+   }
+  },
+  "rr4c_detail": {
+   "file_and_side": null,
+   "dir": null
+  },
+  "rr4d_rows": {
+   "F1_nosrc_writing": [
+    0,
+    false,
+    [
+     "[원천]"
+    ]
+   ],
+   "F2_nosrc_recount": [
+    true,
+    [
+     "[원천]"
+    ]
+   ],
+   "F3_other_base_same_true": [
+    true,
+    [
+     "[ⓓ]"
+    ],
+    [
+     "[ⓓ]"
+    ]
+   ]
+  },
+  "rr4b_bad": []
+ }
+}
