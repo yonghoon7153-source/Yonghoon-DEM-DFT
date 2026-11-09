@@ -3,7 +3,7 @@
   "kind": "estimand",
   "id": "b2o3_site_screen_2026_10_14",
   "제목": "B₂O₃-LPSCl1.6 — B 자리 (P 4b 대 Li) UMA 빠른 탐색 · 정본 LPSCl1.6 10 f.u. · 보상까지 맞춘 조성 균형",
-  "status": "proposed",
+  "status": "active — 사용자 비준 2026-11-09 (결정 D-2026-10-14-b2o3-site-screen · 결과 뒤 비준 · 글자 그대로) · G4 안 하고 닫음 (D-2026-11-09-b2o3-site-screen-g4-close) · 남는 문장은 'UMA 로는 경계선이다' (숫자 X 안 씀)",
   "written_on": "2026-10-14",
   "트랙": {
     "이름": "우리 DFT 기준선 (B₂O₃)",
@@ -62,5 +62,6 @@
     "선례": ["db/properties/site_preference_raw_78.csv (cascade 교환 · 부호만)", "db/properties/y_site_preference_dft_2026_09_07.json (조성 균형 · 회신 BG 조건부)", "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json (같은 실행기 · 같은 어닐)"],
     "실행": "kgy · db/inputs/ndo_site_2026_10_14/run_uma_kgy.sh (CAND = B · Nd modelc10 · N_EXPECT 25 · SESSION site10_uma · WAIT_FOR ndsite_uma) · 기준상은 같은 실행기 --refs (전경 · 출력 uma_ref_relax · Nd 와 공용)"
   },
-  "8_아직_안_된_것": ["UMA 어닐 (kgy · Nd Rietveld 런 뒤 줄 섬)", "✅ Li₃PS₄ 구조 (2026-10-14 · db/structures/li3ps4_mp-985583.cif)", "✅ 기준상 UMA 이완 (2026-10-14 14:01 kgy · --refs · 둘 다 수렴 · 기록 db/properties/site_refs_uma_li2s_li3ps4_2026_10_14.json)"]
+  "8_아직_안_된_것": ["UMA 어닐 (kgy · Nd Rietveld 런 뒤 줄 섬)", "✅ Li₃PS₄ 구조 (2026-10-14 · db/structures/li3ps4_mp-985583.cif)", "✅ 기준상 UMA 이완 (2026-10-14 14:01 kgy · --refs · 둘 다 수렴 · 기록 db/properties/site_refs_uma_li2s_li3ps4_2026_10_14.json)"],
+  "✅_비준_G4_닫음_2026_11_09": {"결정": ["D-2026-10-14-b2o3-site-screen (active · 결과 뒤 비준)", "D-2026-11-09-b2o3-site-screen-g4-close (G4 안 함)"], "판독": "db/properties/site_uma_modelc10_readout_2026_10_16.json (ΔG_site(UMA) +0.171 eV/B · 경계선)", "남는_문장": ["'UMA 로는 경계선이다.'", "'cascade 같은 조성 교환과 달리 보상까지 맞춘 비교다.'"], "by": "agent · 2026-11-09 · 대피 세션 claude/evac-2026-11-08"}
 }

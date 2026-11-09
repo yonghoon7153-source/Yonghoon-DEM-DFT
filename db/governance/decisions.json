@@ -8278,7 +8278,7 @@
    "title": "B₂O₃-LPSCl1.6 B 자리 (P 4b 대 Li) UMA 빠른 탐색 — 정본 10 f.u. · 보상까지 맞춘 조성 균형 (트랙 우리 DFT · 1저자 = 사용자)",
    "statement": "카드 db/properties/b2o3_site_screen_estimand_2026_10_14.json. ΔG_site(UMA) = {[E(B@P) − E(B@Li)] − n_B·[4E(Li₂S) − E(Li₃PS₄)]}/n_B · 모델별 최저 (6 개 · 500 K × 20 ps 어닐 + 이완) · |ΔG| < 0.20 eV/B 면 경계선. UMA 내부 값 — DFT 자리선호가 아니다. 기준상 Li₃PS₄ = MP 바닥 다형 mp-985583 (어닐 없이 이완만) · |ΔG| 가 0.20 에서 0.11 eV/B 안이면 다른 다형 둘도 이완해 최저를 쓴다 (카드 G4 · 결과 전 추가 2026-10-14).",
    "rationale": "사용자 10-14 '만약에 없으면 빠르게 uma로 screening 해봐도 돼 nd 때처럼' — cascade 밖 B 자리 계산이 없었다 (06-19 카드 2026-10-14 줄).",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "exploratory": true,
@@ -8303,7 +8303,32 @@
      "date": "2026-10-14"
     }
    ],
-   "_note": "proposed — 사용자 (1저자) 비준 대기."
+   "_note": "active — 사용자 비준 2026-11-09 (결과 뒤 · 10-16 판독 뒤 · 규칙 변경 없이 글자 그대로 — '결과 전 고정' 의 뜻은 없다) · G4 (Li₃PS₄ 다형 재확인) 는 D-2026-11-09-b2o3-site-screen-g4-close 로 하지 않고 닫음",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-14",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 10-14 '만약에 없으면 빠르게 uma로 screening 해봐도 돼 nd 때처럼' — 카드 작성 (UMA 어닐 0 건 · 결과 전)"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "active",
+     "by": "사용자 (우리 DFT 기준선 B₂O₃ · 1저자 = 사용자)",
+     "note": "비준 — 결과 뒤 (10-16 판독 · ΔG_site(UMA) +0.171 eV/B · 'UMA 로는 경계선') · 글자 그대로. G4 는 같은 날 D-2026-11-09-b2o3-site-screen-g4-close 로 닫음. 사용자 2026-11-09 (대피 세션): AskUserQuestion 'B₂O₃ B 자리 UMA 비교 (10-16 판독 · 결과 경계선) 에 남은 결정 — G4 와 카드 비준' 에 '안 하고 닫기 + 비준 (Recommended)' → 주제 확인 ('ㄴㄴ b2o3 md 관련한거 얘기한거였어') 뒤 다시 물음 '그대로 기록할까요?' 에 '그대로 기록 (Recommended)'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-09T01:51:20Z",
+    "commit": "1de271f302b549a29b86ac8285d907b0b3606a38",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-09 (대피 세션): AskUserQuestion 'B₂O₃ B 자리 UMA 비교 (10-16 판독 · 결과 경계선) 에 남은 결정 — G4 와 카드 비준' 에 '안 하고 닫기 + 비준 (Recommended)' → 주제 확인 ('ㄴㄴ b2o3 md 관련한거 얘기한거였어') 뒤 다시 물음 '그대로 기록할까요?' 에 '그대로 기록 (Recommended)'",
+    "decision_digest": "sha256:c5cd1ecb8ad529a9862297257d1f88166b7afe10487bca194d40350cfd84a5ab"
+   }
   },
   {
    "id": "D-2026-10-14-cascade-dissolution-energy",
@@ -11495,6 +11520,132 @@
     "근거_발화": "사용자 2026-11-05 (이 세션): 'cascade 권고대로' — 권고 ① (V 산물 확인 카드는 회수 파일에 V 산물 MP 갭이 이미 있어 맹검이 안 되므로) +U 산물 사후 민감도를 같이 봉인하고 축 ①②③ 첫 묶음을 닫는다",
     "decision_digest": "sha256:71643f6968d27e743b455e35f0b66dea314f4f7d84d4f99817e57493753dfe85"
    }
+  },
+  {
+   "id": "D-2026-11-09-b2o3-site-screen-g4-close",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": "b2o3.site_screen.uma_balanced.g4_closure_2026_11_09",
+   "slot": "b2o3_b_site_uma_g4_closure",
+   "applies_to": {
+    "systems": [
+     "lpscl16_b2o3_modelc10"
+    ],
+    "methods": [
+     "uma-s-1p1-omat"
+    ]
+   },
+   "title": "B₂O₃ B 자리 UMA 비교 — G4 (기준상 Li₃PS₄ 다형 재확인) 를 하지 않고 닫는다 · 'UMA 로는 경계선' 만 남긴다",
+   "statement": "10-16 판독 (site_uma_modelc10_readout_2026_10_16.json) 의 ΔG_site(UMA) = +0.171 eV/B 가 카드 G4 범위 (0.09–0.31 이면 Li₃PS₄ 다른 다형 둘 mp-2646995 · mp-1097036 을 --refs 로 이완) 에 들어 G4 가 발동했다. **하지 않는다** — 사용자 명시 결정. 이유: 다형이 UMA 에서 더 낮으면 e(Li₃PS₄) 가 δ 만큼 내려가 ΔG_site 는 δ 만큼 내려가기만 하고 (B 하나당 Li₃PS₄ 1 f.u.), 더 높으면 지금 값 그대로다 ⇒ ΔG_site ∈ [0.171 − δ, 0.171]. '경계선' (|ΔG| < 0.20) 범주는 δ > 0.371 eV/f.u. (0.046 eV/atom · MP 다형 차 최대 0.0138 eV/atom 의 3 배 넘음) 가 아니면 안 바뀐다. 남는 문장은 카드 §5 의 'UMA 로는 경계선이다' · 'cascade 같은 조성 교환과 달리 보상까지 맞춘 비교다' 둘이고, 숫자 X 를 쓰는 문장은 쓰지 않는다.",
+   "rationale": "G4 가 바꿀 수 있는 것은 숫자 X 뿐이고 판정 범주가 아니다 (판독 G4_방향_검산 · 10-16 · 결과 뒤 산술). 권고 ② (닫기) 를 사용자가 골랐다.",
+   "decision_state": "active",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/b2o3_site_screen_estimand_2026_10_14.json",
+   "record": "db/properties/site_uma_modelc10_readout_2026_10_16.json",
+   "amends": [
+    "D-2026-10-14-b2o3-site-screen"
+   ],
+   "evidence": [
+    "db/properties/site_uma_modelc10_readout_2026_10_16.json",
+    "db/properties/site_refs_uma_li2s_li3ps4_2026_10_14.json"
+   ],
+   "reopen_criteria": [
+    "B 자리 UMA 숫자 X 를 문장에 써야 하는 주장이 생기면 — 그때 G4 (다형 둘 --refs 이완) 부터",
+    "⛔ 그 밖의 이유로 열지 않는다 · '배치를 하나 더 봤다' 는 재개 사유가 아니다"
+   ],
+   "enforcement": "① 'UMA 로는 경계선이다' 밖으로 쓰지 않는다 — 'B@P 가 B@Li 보다 X eV/B …' 숫자 문장 금지 ② DFT 자리선호라고 부르지 않는다 ③ 'B 는 P 를 선호한다' 를 UMA 표지 없이 쓰지 않는다 (카드 §5)",
+   "track": {
+    "name": "우리 DFT 기준선 (B₂O₃)",
+    "first_author": "사용자"
+   },
+   "proposed_by": "claude-session-2026-11-09 (대피 세션 claude/evac-2026-11-08)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-11-09",
+     "state": "active",
+     "by": "사용자 (우리 DFT 기준선 B₂O₃ · 1저자 = 사용자)",
+     "note": "사용자 결정 — 사용자 2026-11-09 (대피 세션): AskUserQuestion 'B₂O₃ B 자리 UMA 비교 (10-16 판독 · 결과 경계선) 에 남은 결정 — G4 와 카드 비준' 에 '안 하고 닫기 + 비준 (Recommended)' → 주제 확인 ('ㄴㄴ b2o3 md 관련한거 얘기한거였어') 뒤 다시 물음 '그대로 기록할까요?' 에 '그대로 기록 (Recommended)'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-09T01:51:20Z",
+    "commit": "1de271f302b549a29b86ac8285d907b0b3606a38",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-09 (대피 세션): AskUserQuestion 'B₂O₃ B 자리 UMA 비교 (10-16 판독 · 결과 경계선) 에 남은 결정 — G4 와 카드 비준' 에 '안 하고 닫기 + 비준 (Recommended)' → 주제 확인 ('ㄴㄴ b2o3 md 관련한거 얘기한거였어') 뒤 다시 물음 '그대로 기록할까요?' 에 '그대로 기록 (Recommended)'",
+    "decision_digest": "sha256:8926076271602087c31885d2052df6d35749b994edcd086a414dbebe1afbe516"
+   }
+  },
+  {
+   "id": "D-2026-11-09-b2o3-bo-placement-uma",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "b2o3.bo_placement.uma_family_screen",
+   "slot": "b2o3_bo_placement_family",
+   "applies_to": {
+    "systems": [
+     "lpscl16_b2o3_modelc20"
+    ],
+    "tasks": [
+     "dopant_o_placement_family",
+     "framework_site_census"
+    ],
+    "methods": [
+     "uma-s-1p1-omat",
+     "qe-pbe-single-point",
+     "uma-s-1p1-omat__langevin-nvt"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "B₂O₃-LPSCl1.6 B·O 배치 선호 UMA 재탐색 (O 가 B 에 · P 에 · 자유 S 자리에) → 에너지로만 고른 배치의 골격 게이트 (2 단계) — 트랙 b2o3 UMA-MD · 1저자 = 사용자",
+   "statement": "카드 db/properties/b2o3_bo_placement_estimand_2026_11_09.json. 1 단계: 정본 LPSCl1.6 (modelc V0) × (2,2,1) · 할로겐 고정 · B₂O₃ 2 단위 (Li116P16B4S82O6Cl32 · B/(B+P) 0.2 = 옛 챔피언 농도) · Ewald 서로 다른 바탕 배치 12 × O 꼴 세 가족 (F_B B–O · F_P P–O · F_free 자유 S) = 36 구조 · UMA 500 K × 20 ps 어닐 + 셀 포함 이완 · ΔE_fam = [E_min(F) − E_min(F_P)]/2 (eV/B₂O₃ · UMA 내부) · 짝 δ_k · |ΔE| < 0.20 이면 'UMA 로는 못 가른다' · 가족마다 UMA 최저 둘 DFT 단일점 (PBE · 52/520 · Γ) · |ΔE^DFT| < 0.10 이면 '단일점으로도 못 가른다' · k 탐침 2×2×1. 2 단계 (1 단계 판독 + 사용자 발사 뒤): 에너지만으로 고른 3 배치 × 600/650/700 K × 시드 2 × 400 ps + 같은 셀 modelc 대조 6 런 · 배치마다 골격 사건 합 ≤ 2 단단 · ≥ 12 움직임 · 대조 > 2 면 무효.",
+   "rationale": "모든 b2o3 MD 가 6 월 챔피언 한 배치였고, 사건이 그 배치의 도펀트 자리 둘에 몰렸다 (b2o3_eventrate_site_localization_2026_11_09.json · 사후 탐색). 6 월 UMA 는 bo4 와 distributed 가 근접 축퇴였고 꼴 DFT 비교는 없었다. 사용자 11-09 '한번 UMA로 다시 b랑 O 위치 관련해서 선호하는 site preference를 발전된 코드로 탐색해볼까'.",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "results_seen_note": "새 배치 UMA 0 건 · 이미 본 것: 6 월 UMA 꼴 비교 (128 원자) · 옛 챔피언 사건 위치 · 10-16 B 자리 UMA 경계선",
+   "card": "db/properties/b2o3_bo_placement_estimand_2026_11_09.json",
+   "evidence": [
+    "db/properties/b2o3_eventrate_site_localization_2026_11_09.json",
+    "kb/results/b2o3_champion_coordination_2026_06_29.md",
+    "db/properties/b2o3_mechanism_correction_2026_09_12.json",
+    "kb/methodology/b2o3_doping_chemistry.md"
+   ],
+   "reopen_criteria": [
+    "host · 조성 · 어닐 설정 · UMA 판이 바뀌면 새 카드",
+    "'바탕 배치를 더 뽑았다 · O 자리를 하나 더 봤다' 는 재개 사유가 아니다",
+    "이 카드의 어떤 결과도 D-2026-09-07-b2o3-md-closure-retrospective (전도도 인용 불가) 를 바꾸지 않는다 — 전도도는 따로 새 카드"
+   ],
+   "enforcement": "⛔ 비준 (active) 전에는 아무것도 돌리지 않는다 · 선행 작업 P1–P4 (생성기 조용한 넘어감 막기 · 할로겐 고정 · gabia 실행기 · 판독기 · DFT 입력) 를 selftest 음성 경로와 함께 끝낸 뒤 1 단계 · 2 단계는 1 단계 판독 + 사용자 '2 단계 발사' 뒤 · gabia 에서 UMA 와 GPU pw.x 동시 금지",
+   "track": {
+    "name": "b2o3 UMA-MD (B₂O₃ 계산 쪽)",
+    "first_author": "사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-09",
+     "session": "대피 세션 claude/evac-2026-11-08"
+    }
+   ],
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 '카드 쓰기 (Recommended)' + 'UMA로 다시 b랑 O 위치 … site preference 를 발전된 코드로 탐색해볼까' — 카드 작성 (결과 전) · 비준 대기"
+    }
+   ],
+   "_note": "proposed — 사용자 (1저자) 비준 대기"
   }
  ]
 }
