@@ -153,10 +153,17 @@ def anneal_one(xyz_path: Path, calc, out_dir: Path,
     target = CellFilter(atoms) if cell_relax else atoms
     opt = FIRE(target, logfile=str(work / 'relax.log'))
     t0 = time.time()
-    opt.run(fmax=relax_fmax, steps=relax_steps)
+    opt_ret = opt.run(fmax=relax_fmax, steps=relax_steps)
     t_relax = time.time() - t0
     n_relax_steps = opt.get_number_of_steps()
-    converged = n_relax_steps < relax_steps
+    # ⛔ 2026-11-09 (Codex DU P2): 옛 판정 `n_relax_steps < relax_steps` 는 **마지막 허용 걸음에서 수렴**하면
+    #   미수렴으로 적었다 (ASE 3.29 LJ 재현: 17 걸음 상한 · 17 걸음째 fmax 0.0093 < 0.01 · 옛 판정 False).
+    #   이제 실제 최종 힘으로 판정한다 (ASE 와 같은 기준: max_i |F_i| < fmax · 셀 필터면 셀 자유도 포함) ·
+    #   opt.run() 반환값은 대조로 기록한다.
+    fvec = np.asarray(target.get_forces())
+    fmax_final = float(np.sqrt((fvec ** 2).sum(axis=1).max())) if len(fvec) else 0.0
+    converged = bool(fmax_final < relax_fmax)
+    opt_returned = opt_ret if isinstance(opt_ret, bool) else None
     E_post = float(atoms.get_potential_energy())
     write(work / 'post_relax.xyz', atoms)
 
@@ -194,10 +201,215 @@ def anneal_one(xyz_path: Path, calc, out_dir: Path,
         't_md_s': t_md,
         't_relax_s': t_relax,
         'n_relax_steps': n_relax_steps,
+        'relax_steps_max': int(relax_steps),
+        'relax_fmax': float(relax_fmax),
+        'fmax_final': fmax_final,
+        'opt_run_returned': opt_returned,
+        **({'⚠_수렴_판정_불일치': f'opt.run() {opt_returned} · 최종 힘 판정 {converged}'}
+           if opt_returned is not None and opt_returned != converged else {}),
         'converged': converged,
         'post_md_xyz': str(work / 'post_md.xyz'),
         'post_relax_xyz': str(work / 'post_relax.xyz'),
     }
+
+
+# ----------------------------------------------------------------------
+# 재개 정체성 · 상태 · 결과 검사                       (2026-11-09 · Codex DU P1-4)
+# ----------------------------------------------------------------------
+#   ⛔ 옛 재개는 **이름만** 봤다 — 0 ps 이완 기록을 만든 뒤 좌표 · seed 를 바꾸고 20 ps 를 요청해도
+#     'To process: 0/1' 로 건너뛰었고, 파일이 없어 실패한 기록도 끝난 것으로 셌다 (복구해도 다시 안 돌림 ·
+#     첫 실패 때도 종료코드 0). 이제:
+#     · 기록마다 정체성 (입력 파일 sha256 · 구조 해시 · 단계 · 온도 · 시간 · dt · 마찰 · 이완 걸음 · fmax ·
+#       셀 이완 · seed · 모델) 과 그 sha256 을 남긴다.
+#     · 같은 이름의 기존 기록이 **정체성이 다르면 멈춘다** (같은 폴더에 섞지 않는다 — 새 --out 을 쓴다).
+#     · 상태를 나눈다: converged · unconverged · failed. **failed 는 끝난 것이 아니다** — 다음 실행에서 다시 돈다.
+#     · 실패가 하나라도 있으면 종료코드 1.
+#     · 정체성이 없는 옛 기록은 받지 않는다 (--accept_legacy_records 로만 · 표시해 둔다).
+#   ⛔ 못 하는 것: 결과가 물리적으로 맞는지 · GPU 비결정성 (seed 는 필요조건) · 다른 묶음 기록의 정체성 검사
+#     (이번에 넘긴 구조만 본다).
+def _file_sha256(p) -> str:
+    import hashlib
+    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+
+def run_identity(xyz_path, *, temperature_K, time_ps, dt_fs, friction, relax_steps,
+                 relax_fmax, cell_relax, seed, model) -> dict:
+    a = read(str(xyz_path))
+    return {'input_file_sha256': _file_sha256(xyz_path), 'input_struct': _struct_hash(a),
+            'n_atoms': len(a), 'stage': 'relax_only' if float(time_ps) == 0.0 else 'anneal_relax',
+            'temperature_K': float(temperature_K), 'time_ps': float(time_ps), 'dt_fs': float(dt_fs),
+            'friction': float(friction), 'relax_steps': int(relax_steps), 'relax_fmax': float(relax_fmax),
+            'cell_relax': bool(cell_relax), 'seed': int(seed), 'model': str(model)}
+
+
+def identity_sha(idn: dict) -> str:
+    import hashlib
+    return hashlib.sha256(json.dumps(idn, sort_keys=True).encode()).hexdigest()
+
+
+def _write_atomic(path: Path, text: str):
+    tmp = path.with_suffix(path.suffix + '.tmp')
+    tmp.write_text(text)
+    tmp.replace(path)
+
+
+def derive_seed(base_seed: int, name: str) -> int:
+    # 구조마다 **다른** seed — 이름에서 결정론적으로 (같은 구조를 다시 돌리면 같은 seed)
+    return int(base_seed) + (zlib.crc32(name.encode()) & 0xFFFF)
+
+
+def run_batch(xyz_paths, out, P: dict, calc, model: str, accept_legacy: bool = False,
+              anneal_fn=None):
+    """구조 묶음을 어닐 · 이완한다 → (종료코드, 이번에 돈 수). P = anneal_one 설정 + 'seed'.
+
+    재개: 같은 이름 · 같은 정체성 · 상태 converged/unconverged 인 기록만 건너뛴다.
+    """
+    anneal_fn = anneal_fn or anneal_one
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    results_path = out / 'anneal_results.json'
+    names = [winner_name(p) for p in xyz_paths]
+    dup = sorted({n for n in names if names.count(n) > 1})
+    if dup:
+        raise SystemExit(f"⛔ 같은 이름의 입력이 둘 이상 {dup} — 출력 폴더가 겹친다")
+    old = {}
+    if results_path.exists():
+        for r in json.loads(results_path.read_text()).get('results', []):
+            old[r['name']] = r
+    keep, todo, n_retry, legacy = dict(old), [], 0, []
+    for p in xyz_paths:
+        n = winner_name(p)
+        seed = derive_seed(P['seed'], n)
+        try:
+            idn = run_identity(p, temperature_K=P['temperature_K'], time_ps=P['time_ps'],
+                               dt_fs=P['dt_fs'], friction=P['friction'], relax_steps=P['relax_steps'],
+                               relax_fmax=P['relax_fmax'], cell_relax=P['cell_relax'], seed=seed,
+                               model=model)
+            isha = identity_sha(idn)
+        except Exception as e:                       # 입력을 못 읽음 → 실패 기록 (끝난 것 아님)
+            idn, isha = None, None
+            todo.append((p, n, seed, idn, isha, f'입력을 못 읽음: {e}'))
+            continue
+        r = old.get(n)
+        if r is None:
+            todo.append((p, n, seed, idn, isha, None))
+            continue
+        if r.get('status') == 'failed' or 'error' in r:      # 옛 판 실패 기록 ('error' 만 있음) 도 실패다
+            n_retry += 1
+            todo.append((p, n, seed, idn, isha, None))
+            continue
+        if 'identity_sha' not in r:
+            if not accept_legacy:
+                raise SystemExit(f"⛔ {n}: 기존 기록에 정체성이 없다 (옛 판 결과) — 새 --out 을 쓰거나 "
+                                 f"--accept_legacy_records 로 명시하라 (그대로 끝난 것으로 셀 수 없다)")
+            r = dict(r)
+            r['⚠_legacy_accepted'] = '정체성 없는 옛 기록을 --accept_legacy_records 로 받았다'
+            keep[n] = r
+            legacy.append(n)
+            continue
+        if r['identity_sha'] != isha:
+            ro = r.get('identity') or {}
+            diff = sorted(k for k in set(idn) | set(ro) if idn.get(k) != ro.get(k))
+            raise SystemExit(f"⛔ {n}: 같은 이름의 기존 기록과 입력 · 설정이 다르다 (다른 칸 {diff}) — "
+                             f"새 --out 을 쓰라 (같은 폴더에 섞지 않는다)")
+    print(f"To process: {len(todo)}/{len(xyz_paths)} (실패 재시도 {n_retry} · 옛 기록 받음 {len(legacy)})")
+
+    def _save():
+        res = list(keep.values())
+        st = [r.get('status') for r in res]
+        _write_atomic(results_path, json.dumps({
+            'provenance': get_provenance(),
+            'temperature_K': P['temperature_K'], 'time_ps': P['time_ps'], 'model': model,
+            'n_done': sum(s in ('converged', 'unconverged') for s in st),
+            'n_converged': st.count('converged'), 'n_unconverged': st.count('unconverged'),
+            'n_failed': st.count('failed'),
+            'results': res,
+        }, indent=2, default=str))
+
+    n_ran = 0
+    for i, (p, n, seed, idn, isha, pre_err) in enumerate(todo):
+        print(f"\n[{i+1}/{len(todo)}] {n}")
+        if pre_err is not None:
+            rec = {'name': n, 'xyz_input': str(p), 'error': pre_err, 'status': 'failed',
+                   'identity': idn, 'identity_sha': isha}
+            print(f"  ❌ FAILED: {pre_err}")
+        else:
+            try:
+                rec = anneal_fn(p, calc, out, temperature_K=P['temperature_K'], time_ps=P['time_ps'],
+                                dt_fs=P['dt_fs'], friction=P['friction'], relax_steps=P['relax_steps'],
+                                relax_fmax=P['relax_fmax'], cell_relax=P['cell_relax'],
+                                log_every=P.get('log_every', 500), seed=seed)
+                rec['status'] = 'converged' if rec['converged'] else 'unconverged'
+            except Exception as e:
+                print(f"  ❌ FAILED: {e}")
+                rec = {'name': n, 'xyz_input': str(p), 'error': str(e), 'status': 'failed'}
+            rec['identity'] = idn
+            rec['identity_sha'] = isha
+            n_ran += 1
+        keep[n] = rec
+        _save()
+    if not todo and not results_path.exists():
+        _save()
+    batch = [keep[n] for n in names if n in keep]
+    n_fail = sum(r.get('status') == 'failed' for r in batch)
+    n_unc = sum(r.get('status') == 'unconverged' for r in batch)
+    print(f"이번 묶음: {len(batch)} 기록 · 실패 {n_fail} · 미수렴 {n_unc}")
+    return (1 if n_fail else 0), n_ran
+
+
+def check_results(path, expect_n=None, expect_time_ps=None, expect_temperature=None,
+                  require_converged=False) -> list:
+    """anneal_results.json 검사 → 문제 목록. 실행기가 '요청한 단계가 실제로 전달됐나' 를 여기서 본다.
+
+    본다: 상태 (failed · 상태 없음 = 문제) · 정체성 유무 · time_ps · 온도가 요청과 같은가 · 끝난 기록 수 ·
+    (require_converged 면) 미수렴. ⛔ 못 하는 것: 에너지 · 구조가 맞는지.
+    """
+    p = Path(path)
+    if not p.exists():
+        return [f"결과 없음: {p}"]
+    res = json.loads(p.read_text()).get('results', [])
+    prob = []
+    ok = 0
+    for r in res:
+        n = r.get('name', '?')
+        st = r.get('status')
+        if st not in ('converged', 'unconverged'):
+            prob.append(f"{n}: 상태 {st!r} (failed 또는 옛 판 기록)")
+            continue
+        idn = r.get('identity')
+        if not idn:
+            prob.append(f"{n}: 정체성 없음")
+            continue
+        if expect_time_ps is not None and abs(float(idn['time_ps']) - float(expect_time_ps)) > 1e-9:
+            prob.append(f"{n}: time_ps {idn['time_ps']} ≠ 요청 {expect_time_ps}")
+        if expect_temperature is not None and abs(float(idn['temperature_K']) - float(expect_temperature)) > 1e-9:
+            prob.append(f"{n}: 온도 {idn['temperature_K']} ≠ 요청 {expect_temperature}")
+        if require_converged and st != 'converged':
+            prob.append(f"{n}: 미수렴 (fmax_final {r.get('fmax_final')})")
+        ok += 1
+    if expect_n is not None and ok != int(expect_n):
+        prob.append(f"끝난 기록 {ok} ≠ 기대 {expect_n}")
+    return prob
+
+
+def _check_results_cli(argv) -> int:
+    ap = argparse.ArgumentParser(prog='run_anneal.py --check_results')
+    # ⚠ required=True 를 쓰지 않는다 — tools/convention_check.py 가 이 파일의 required 플래그를
+    #   '모든 셸 호출이 넘겨야 하는 인자' 로 읽는다 (2026-11-09 tier_cascade.sh 오탐).
+    ap.add_argument('--check_results')
+    ap.add_argument('--expect_n', type=int)
+    ap.add_argument('--expect_time_ps', type=float)
+    ap.add_argument('--expect_temperature', type=float)
+    ap.add_argument('--require_converged', action='store_true')
+    a = ap.parse_args(argv)
+    if not a.check_results:
+        ap.error("--check_results <anneal_results.json> 가 필요하다")
+    prob = check_results(a.check_results, a.expect_n, a.expect_time_ps, a.expect_temperature,
+                         a.require_converged)
+    for x in prob:
+        print("  ✗", x)
+    print(f"check_results {'OK' if not prob else 'FAIL'} — 문제 {len(prob)} 건 ({a.check_results})")
+    return 1 if prob else 0
 
 
 
@@ -245,6 +457,111 @@ def _selftest() -> int:
         "③ [음성] 0.001 Å 차이는 다른 구조다")
     chk(_struct_hash(a) != _struct_hash(d),
         "③ [음성] **종 순서가 다르면 다른 구조다** (좌표만 보면 놓친다)")
+
+    # ④–⑦ 2026-11-09 (Codex DU P1-4 · P2) — 수렴 판정 · 재개 정체성 · 실패 · 결과 검사.
+    #   UMA 없이 LJ (ASE 내장) 로 실제 anneal_one · run_batch 경로를 돈다.
+    import tempfile
+    from ase import Atoms
+    from ase.calculators.lj import LennardJones
+    from ase.calculators.calculator import Calculator, all_changes
+
+    def lj():
+        return LennardJones(sigma=3.4, epsilon=0.0104, rc=6.0)
+
+    def ar4(shift=0.0):
+        return Atoms("Ar4", positions=[[0, 0, 0], [3.9 + shift, 0.2, 0], [0.1, 3.7, 0.3], [3.6, 3.8, 0.1]],
+                     cell=[12, 12, 12], pbc=True)
+
+    class _Boom(Calculator):
+        implemented_properties = ['energy', 'forces']
+
+        def calculate(self, atoms=None, properties=('energy',), system_changes=all_changes):
+            raise RuntimeError("일부러 실패")
+
+    with tempfile.TemporaryDirectory() as td:
+        td = Path(td)
+        x = td / "ar4.xyz"
+        write(x, ar4())
+        r_full = anneal_one(x, lj(), td / "o0", time_ps=0, relax_steps=2000, relax_fmax=0.01,
+                            cell_relax=False, seed=1)
+        k = r_full['n_relax_steps']
+        r_k = anneal_one(x, lj(), td / "o1", time_ps=0, relax_steps=k, relax_fmax=0.01, cell_relax=False, seed=1)
+        chk(r_k['converged'] and r_k['n_relax_steps'] == k and r_k['fmax_final'] < 0.01,
+            f"④ ⛔음성: **마지막 허용 걸음 ({k}) 에서 수렴**하면 수렴이다 (옛 판정 n < 상한 이면 False · Codex DU P2)")
+        r_k1 = anneal_one(x, lj(), td / "o2", time_ps=0, relax_steps=k - 1, relax_fmax=0.01,
+                          cell_relax=False, seed=1)
+        chk(not r_k1['converged'] and r_k1['fmax_final'] >= 0.01,
+            "④ [음성] 한 걸음 모자라면 미수렴이다 (위 시험이 늘 True 를 내는 게 아니다)")
+
+        P0 = dict(temperature_K=500, time_ps=0, dt_fs=2.0, friction=0.01, relax_steps=500,
+                  relax_fmax=0.01, cell_relax=False, seed=7)
+        ob = td / "batch"
+        rc1, n1 = run_batch([x], ob, P0, lj(), model="fake-lj")
+        rc2, n2 = run_batch([x], ob, P0, lj(), model="fake-lj")
+        chk(rc1 == 0 and n1 == 1 and rc2 == 0 and n2 == 0,
+            "⑤ [양성] 같은 정체성이면 재개가 건너뛴다 (첫 실행 1 · 둘째 0)")
+        for label, P_, xx in (("시간 0 → 20 ps", dict(P0, time_ps=0.004), x),
+                              ("seed", dict(P0, seed=8), x),
+                              ("이완 fmax", dict(P0, relax_fmax=0.02), x)):
+            try:
+                run_batch([xx], ob, P_, lj(), model="fake-lj")
+                ok_ = False
+            except SystemExit:
+                ok_ = True
+            chk(ok_, f"⑤ ⛔음성: 같은 이름 · **{label}** 이 다르면 건너뛰지 않고 멈춘다 (옛 판: 'To process 0/1')")
+        write(x, ar4(shift=0.05))
+        try:
+            run_batch([x], ob, P0, lj(), model="fake-lj")
+            ok_ = False
+        except SystemExit:
+            ok_ = True
+        chk(ok_, "⑤ ⛔음성: 같은 이름 · **입력 좌표가 바뀌면** 멈춘다")
+        write(x, ar4())
+
+        of = td / "fail"
+        rcf, _ = run_batch([x], of, P0, _Boom(), model="fake-lj")
+        st = json.loads((of / "anneal_results.json").read_text())["results"][0]["status"]
+        rcg, ng = run_batch([x], of, P0, lj(), model="fake-lj")
+        st2 = json.loads((of / "anneal_results.json").read_text())["results"][0]["status"]
+        chk(rcf == 1 and st == "failed" and rcg == 0 and ng == 1 and st2 == "converged",
+            "⑥ ⛔음성: 실패는 종료코드 1 · 'failed' 로 남고 **다음 실행에서 다시 돈다** (옛 판: 끝난 것으로 셈 · 종료 0)")
+        om = td / "missing"
+        rcm, _ = run_batch([td / "nope.xyz"], om, P0, lj(), model="fake-lj")
+        chk(rcm == 1, "⑥ ⛔음성: 입력 파일이 없으면 실패로 기록하고 종료코드 1")
+        ol = td / "legacy"
+        ol.mkdir()
+        (ol / "anneal_results.json").write_text(json.dumps({"results": [
+            {"name": "ar4", "E_post_relax": -1.0, "n_atoms": 4, "converged": True}]}))
+        try:
+            run_batch([x], ol, P0, lj(), model="fake-lj")
+            ok_ = False
+        except SystemExit:
+            ok_ = True
+        rcl, nl = run_batch([x], ol, P0, lj(), model="fake-lj", accept_legacy=True)
+        chk(ok_ and rcl == 0 and nl == 0,
+            "⑥ ⛔음성: 정체성 없는 옛 기록은 멈춘다 · --accept_legacy_records 로만 받는다 (표시)")
+        (ol / "anneal_results.json").write_text(json.dumps({"results": [
+            {"name": "ar4", "xyz_input": str(x), "error": "옛 실패"}]}))
+        rce, ne = run_batch([x], ol, P0, lj(), model="fake-lj", accept_legacy=True)
+        chk(rce == 0 and ne == 1, "⑥ ⛔음성: 옛 판 실패 기록 ('error' 만) 은 --accept_legacy_records 여도 다시 돈다")
+
+        chk(not check_results(ob / "anneal_results.json", expect_n=1, expect_time_ps=0, expect_temperature=500),
+            "⑦ [양성] 결과 검사: 요청 (n 1 · 0 ps · 500 K) 과 같으면 문제 0")
+        chk(any("time_ps" in p_ for p_ in check_results(ob / "anneal_results.json", expect_time_ps=20)),
+            "⑦ ⛔음성: 요청 20 ps 인데 기록이 0 ps 면 잡는다 (실행기 시간 전달 검사 · Codex DU P1-4)")
+        chk(any("기대" in p_ for p_ in check_results(ob / "anneal_results.json", expect_n=2)),
+            "⑦ ⛔음성: 끝난 기록 수가 기대와 다르면 잡는다")
+        chk(any("failed" in p_ for p_ in check_results(om / "anneal_results.json")),
+            "⑦ ⛔음성: failed 기록이 있으면 잡는다")
+        try:
+            run_batch([x, td / "sub" / "ar4.xyz"], td / "dup", P0, lj(), model="fake-lj")
+            ok_ = False
+        except SystemExit:
+            ok_ = True
+        chk(ok_, "⑦ ⛔음성: 같은 이름 입력 둘은 출력 폴더가 겹쳐 멈춘다")
+    r = subprocess.run([sys.executable, __file__, "--check_results", str(Path("/nonexistent/x.json"))],
+                       capture_output=True, text=True)
+    chk(r.returncode == 1, "⑦ ⛔음성: --check_results 실패는 종료코드 1 (실행기가 rc 로 본다)")
     print("  " + ("✅ selftest 통과" if ok[1] == ok[0] else
                   f"⛔ selftest 실패 {ok[0]-ok[1]}/{ok[0]}"))
     return 0 if ok[1] == ok[0] else 1
@@ -255,6 +572,8 @@ def main():
     #   그대로 두면 selftest 를 돌릴 수 없다 (watch_all.py 가 `-h` 로 똑같이 걸렸다).
     if "--selftest" in sys.argv[1:]:
         return _selftest()
+    if "--check_results" in sys.argv[1:]:
+        return _check_results_cli(sys.argv[1:])
 
     parser = argparse.ArgumentParser(description=__doc__,
                                     formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -320,7 +639,11 @@ def main():
                        help='Langevin·초기속도 RNG seed. **필수** — 이게 없으면 '
                             'anneal 이 비결정적이라 같은 입력이 다른 endpoint 로 간다 '
                             '(2026-08-30 회신 AL P0-3). 결과 json 에 기록된다.')
+    parser.add_argument('--accept_legacy_records', action='store_true',
+                       help='정체성 없는 옛 결과 기록을 끝난 것으로 받는다 (표시됨 · 기본은 멈춤 · 2026-11-09)')
     parser.add_argument('--selftest', action='store_true')
+    parser.add_argument('--check_results', help='결과 json 검사만 (--expect_n · --expect_time_ps · '
+                                               '--expect_temperature · --require_converged) — 먼저 가로챈다')
     args = parser.parse_args()
 
     if not args.xyz and not args.top_candidates and not args.summary_json and not args.xyz_dir:
@@ -407,67 +730,34 @@ def main():
     print(f"Loading UMA-s-1p1 ({args.device})...")
     calc = load_uma_calc(args.device, args.task)
 
-    # Existing results (resume support)
-    results_path = out / 'anneal_results.json'
-    done = {}
-    if results_path.exists():
-        existing = json.loads(results_path.read_text())
-        done = {r['name']: r for r in existing.get('results', [])}
-        print(f"Resume: {len(done)} already annealed")
-
-    todo = [p for p in xyz_paths if winner_name(p) not in done]
-    print(f"To process: {len(todo)}/{len(xyz_paths)}")
-
-    results = list(done.values())
+    P = dict(temperature_K=args.temperature, time_ps=args.time_ps, dt_fs=args.dt_fs,
+             friction=args.friction, relax_steps=args.relax_steps, relax_fmax=args.relax_fmax,
+             cell_relax=not args.no_cell_relax, log_every=args.log_every, seed=args.seed)
     t_start = time.time()
-    for i, p in enumerate(todo):
-        print(f"\n[{i+1}/{len(todo)}] {winner_name(p)}")
-        try:
-            rec = anneal_one(
-                p, calc, out,
-                temperature_K=args.temperature,
-                time_ps=args.time_ps,
-                dt_fs=args.dt_fs,
-                friction=args.friction,
-                relax_steps=args.relax_steps,
-                relax_fmax=args.relax_fmax,
-                cell_relax=not args.no_cell_relax,
-                log_every=args.log_every,
-                # ⛔ 구조마다 **다른** seed 를 쓰되 이름에서 결정론적으로 유도한다
-                #   (같은 구조를 다시 돌리면 같은 seed → 같은 궤적).
-                #   전부 같은 seed 를 쓰면 서로 다른 계가 같은 잡음을 공유한다.
-                seed=args.seed + (zlib.crc32(winner_name(p).encode()) & 0xFFFF),
-            )
-            results.append(rec)
-        except Exception as e:
-            print(f"  ❌ FAILED: {e}")
-            results.append({'name': winner_name(p), 'xyz_input': str(p),
-                           'error': str(e)})
-        # Periodic save
-        if (i + 1) % 2 == 0 or (i + 1) == len(todo):
-            results_path.write_text(json.dumps({
-                'provenance': get_provenance(),
-                'temperature_K': args.temperature,
-                'time_ps': args.time_ps,
-                'n_done': len(results),
-                'results': results,
-            }, indent=2, default=str))
+    rc, n_ran = run_batch(xyz_paths, out, P, calc, model=f'uma-s-1p1/{args.task}',
+                          accept_legacy=args.accept_legacy_records)
+    results_path = out / 'anneal_results.json'
+    results = json.loads(results_path.read_text()).get('results', [])
 
     # Final summary
-    print(f"\n{'='*68}")
-    print(f"{'Champion':<35}{'E_pre':>10}{'E_post':>10}{'ΔE meV/at':>12}")
-    print('-' * 68)
-    for r in sorted([x for x in results if 'error' not in x],
+    print(f"\n{'='*78}")
+    print(f"{'Champion':<35}{'E_pre':>10}{'E_post':>10}{'ΔE meV/at':>12}{'status':>11}")
+    print('-' * 78)
+    for r in sorted([x for x in results if x.get('status') in ('converged', 'unconverged')],
                    key=lambda x: x.get('delta_E_anneal_meV_per_atom', 0)):
         nat = r.get('n_atoms', 1)
         ep = r.get('E_pre_anneal', 0) / nat
         epo = r.get('E_post_relax', 0) / nat
         de = r.get('delta_E_anneal_meV_per_atom', 0)
-        print(f"{r['name']:<35}{ep:>+10.4f}{epo:>+10.4f}{de:>+10.1f}")
-    print('=' * 68)
-    print(f"Total: {time.time() - t_start:.1f}s")
+        print(f"{r['name']:<35}{ep:>+10.4f}{epo:>+10.4f}{de:>+10.1f}{r['status']:>13}")
+    for r in results:
+        if r.get('status') == 'failed' or 'error' in r:
+            print(f"{r['name']:<35}  ❌ failed — {str(r.get('error'))[:60]}")
+    print('=' * 78)
+    print(f"Total: {time.time() - t_start:.1f}s · 이번에 돈 구조 {n_ran} · 종료코드 {rc}")
     print(f"Results: {results_path}")
+    return rc
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())

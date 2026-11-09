@@ -6,6 +6,12 @@
 #
 # 기본값 = Nd Rietveld 5 f.u. 23 개 (세션 ndsite_uma · 출력 uma_anneal) — 옛 붙여넣기 블록 그대로 돈다.
 # 환경변수: CAND (후보 폴더 여러 개 · 공백) · N_EXPECT (중복 제거 뒤 개수) · SESSION · OUTNAME · WAIT_FOR (앞 tmux 세션)
+#           TIME_PS (기본 20 · 0 = 이완만) · TEMP (기본 500 K) · SEED (기본 20261014) — 2026-11-09 (Codex DU P1-4):
+#           옛 판은 20 ps · 500 K 를 박아 둬서 탐침이 고른 0/20/100 ps 를 전달할 길이 없었다.
+#           끝나면 run_anneal.py --check_results 로 **요청한 시간 · 온도 · 개수가 실제 기록과 같은지** 보고 로그에 rc 를 남긴다.
+#           후보 폴더 manifest 는 두 꼴: make_candidates (files{}) · b2o3_enumerate (bases[] — 먼저 --verify · O 꼴 파일만 넘긴다).
+#           ⚠ 2026-11-09 발견: 옛 run_anneal.py 는 selftest 가 실패해도 종료코드 0 이라 ③ '자가시험 실패면 멈춤' 이 실제로는
+#             못 멈췄다 (main() 반환값을 버렸다) — 지금은 sys.exit(main()).
 #
 # 모드 (첫 인자)
 #   (없음)        아래 ①–⑤ 로 어닐을 줄 세우고 발사한다
@@ -51,6 +57,9 @@ N_EXPECT=${N_EXPECT:-23}
 SESSION=${SESSION:-ndsite_uma}
 OUTNAME=${OUTNAME:-uma_anneal}
 WAIT_FOR=${WAIT_FOR:-}
+TIME_PS=${TIME_PS:-20}
+TEMP=${TEMP:-500}
+SEED=${SEED:-20261014}
 OUT=$R/$OUTNAME; LOG=$R/$OUTNAME.log
 
 write_watch() {   # $1 = 감시 스크립트 경로 · 임시 파일에 쓰고 mv (watch 가 읽는 도중에 반쯤 쓴 파일을 안 보게)
@@ -189,20 +198,30 @@ if [ "$N_SCF" -gt 0 ]; then
 fi
 
 echo "== ② 후보 해시 · 중복 제거"
+for d in $CAND; do
+  if grep -q '"schema": "b2o3_enumerate_manifest/v1"' "$d/manifest.json" 2>/dev/null; then
+    "$PY" "$SRC/tools/doping/b2o3_enumerate.py" --verify "$d" | tail -1 || { echo "⛔ $d manifest 검증 실패"; exit 5; }
+  fi
+done
 LIST=$(mktemp)
 "$PY" - $CAND > "$LIST" <<'PY' || { rc=$?; rm -f "$LIST"; echo "⛔ 해시 단계 실패 (rc $rc)"; exit 5; }
 import hashlib, json, pathlib, sys
 seen, out, bad = set(), [], []
 for d in map(pathlib.Path, sys.argv[1:]):
     m = json.load(open(d / "manifest.json"))
-    for k, v in m["files"].items():
+    if "bases" in m:      # b2o3_enumerate manifest (2026-11-09) — 쉘이 먼저 --verify 했다 · O 꼴 파일만 (없으면 바탕)
+        files = {e["file"]: e for b in m["bases"] for e in b["motifs"].values()} \
+            or {b["file"]: b for b in m["bases"]}
+    else:
+        files = m["files"]
+    for k, v in files.items():
         h = hashlib.sha256((d / k).read_bytes()).hexdigest()
         if h != v["sha256"]:
             bad.append(str(d / k)); continue
         if h in seen:
             continue
         seen.add(h); out.append(str((d / k).resolve()))
-    print(f"   {d.name}: 해시 {len(m['files'])} 개 확인", file=sys.stderr)
+    print(f"   {d.name}: 해시 {len(files)} 개 확인", file=sys.stderr)
 if bad:
     print("⛔ 해시 불일치: " + " ".join(bad), file=sys.stderr); sys.exit(5)
 print("\n".join(sorted(out)))
@@ -235,8 +254,11 @@ if [ "$DRY" = 1 ]; then QT=$(mktemp); else mkdir -p "$R"; QT=$Q.tmp; fi
   echo 'while :; do read -r U T < <(nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits | head -1 | tr -d ","); F=$((T-U)); [ "$F" -ge 4000 ] && break; echo "$(date "+%F %T") VRAM 여유 $F < 4000 — 대기" >> "$LOG"; sleep 120; done'
   echo 'echo "$(date "+%F %T") 시작" >> "$LOG"'
   printf 'cd %q && PYTHONUNBUFFERED=1 %q tools/doping/run_anneal.py --xyz' "$SRC" "$PY"; printf ' %q' "${XYZ[@]}"
-  printf ' --out %q --temperature 500 --time_ps 20 --seed 20261014 --device cuda >> "$LOG" 2>&1\n' "$OUT"
+  printf ' --out %q --temperature %q --time_ps %q --seed %q --device cuda >> "$LOG" 2>&1\n' "$OUT" "$TEMP" "$TIME_PS" "$SEED"
   echo 'echo "$(date "+%F %T") 끝 rc=$?" >> "$LOG"'
+  printf 'cd %q && %q tools/doping/run_anneal.py --check_results %q --expect_n %q --expect_time_ps %q --expect_temperature %q >> "$LOG" 2>&1\n' \
+    "$SRC" "$PY" "$OUT/anneal_results.json" "$N_EXPECT" "$TIME_PS" "$TEMP"
+  echo 'echo "$(date "+%F %T") 결과 검사 rc=$? (0 = 요청한 시간 · 온도 · 개수와 기록이 같다)" >> "$LOG"'
 } > "$QT"
 if [ "$DRY" = 1 ]; then echo "== (dry-run) 줄 선 스크립트:"; sed 's/^/   /' "$QT" | cut -c1-220 || true; rm -f "$QT"; exit 0; fi
 mv "$QT" "$Q"
