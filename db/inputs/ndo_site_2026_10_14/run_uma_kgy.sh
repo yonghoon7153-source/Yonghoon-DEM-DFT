@@ -11,6 +11,9 @@
 #           옛 판은 20 ps · 500 K 를 박아 둬서 탐침이 고른 0/20/100 ps 를 전달할 길이 없었다.
 #           끝나면 run_anneal.py --check_results 로 **요청한 시간 · 온도 · 개수가 실제 기록과 같은지** 보고 로그에 rc 를 남긴다.
 #           후보 폴더 manifest 는 두 꼴: make_candidates (files{}) · b2o3_enumerate (bases[] — 먼저 --verify · O 꼴 파일만 넘긴다).
+#           + 판독기 계획 manifest (b2o3_bo_plan/v1 · files{} · b2o3_bo_readout.py screen --plan_dir · extract 가 쓴다) — 2026-11-09 Codex DX:
+#           항목은 시작 바이트가 같아도 따로 (경로 기준 중복 제거 · P2-1) · manifest 의 purpose 를 run_anneal --purpose ·
+#           --check_results --expect_purpose 로 넘긴다 (P1-1 · 파일럿 런 b2o3_bo/pilot_run · 8 단계 b2o3_bo/stage8_anneal) · 목적이 섞이면 멈춘다 (5).
 #           ⚠ 2026-11-09 발견: 옛 run_anneal.py 는 selftest 가 실패해도 종료코드 0 이라 ③ '자가시험 실패면 멈춤' 이 실제로는
 #             못 멈췄다 (main() 반환값을 버렸다) — 지금은 sys.exit(main()).
 #
@@ -113,7 +116,8 @@ W
   mv "$1.tmp" "$1"
 }
 
-write_queue() {   # 줄 선 스크립트를 stdout 으로 — $1 = 제출 때 해시 목록 (SUMS) · 전역: SESSION LOG WAIT_FOR SRC PY XYZ OUT TEMP TIME_PS SEED RELAX_FMAX N_EXPECT
+write_queue() {   # 줄 선 스크립트를 stdout 으로 — $1 = 제출 때 해시 목록 (SUMS) · 전역: SESSION LOG WAIT_FOR SRC PY XYZ OUT TEMP TIME_PS SEED RELAX_FMAX N_EXPECT PURPOSE
+  # 2026-11-09 (Codex DX P1-1): PURPOSE (계획 manifest 의 실행 목적) 가 있으면 --purpose 로 넘기고 결과 검사에서 --expect_purpose 로 대조한다.
   # ⛔ 2026-11-09 (Codex DV P1 · P2): 옛 큐는 ① 실행 · 검사가 실패해도 마지막 echo 의 성공으로 종료 0 이었고
   #   ② `echo "$(date …) rc=$?"` 가 **date 의 종료코드**를 찍었다 (bash 5.2 재현 — 10-14 · 10-16 로그의 '끝 rc=' 는 못 믿는다)
   #   ③ 대기 뒤 입력을 제출 때와 다시 대조하지 않았다. 이제 rc 를 명령 바로 뒤에 저장 · 찍고 · nonzero 로 끝내며
@@ -126,11 +130,15 @@ write_queue() {   # 줄 선 스크립트를 stdout 으로 — $1 = 제출 때 �
   echo 'if ! sha256sum -c --quiet "$SUMS" >> "$LOG" 2>&1; then echo "$(date "+%F %T") ⛔ 입력 · 소스가 제출 뒤 바뀌었다 — 발사 안 함 (종료 12)" >> "$LOG"; exit 12; fi'
   echo 'echo "$(date "+%F %T") 시작 (입력 · 소스 해시 재대조 통과)" >> "$LOG"'
   printf 'cd %q && PYTHONUNBUFFERED=1 %q tools/doping/run_anneal.py --xyz' "$SRC" "$PY"; printf ' %q' "${XYZ[@]}"
-  printf ' --out %q --temperature %q --time_ps %q --seed %q --relax_fmax %q --device cuda >> "$LOG" 2>&1\n' "$OUT" "$TEMP" "$TIME_PS" "$SEED" "$RELAX_FMAX"
+  printf ' --out %q --temperature %q --time_ps %q --seed %q --relax_fmax %q' "$OUT" "$TEMP" "$TIME_PS" "$SEED" "$RELAX_FMAX"
+  if [ -n "${PURPOSE:-}" ]; then printf ' --purpose %q' "$PURPOSE"; fi
+  printf ' --device cuda >> "$LOG" 2>&1\n'
   echo 'run_rc=$?'
   echo 'echo "$(date "+%F %T") 끝 run_rc=$run_rc" >> "$LOG"'
-  printf 'cd %q && %q tools/doping/run_anneal.py --check_results %q --expect_n %q --expect_time_ps %q --expect_temperature %q >> "$LOG" 2>&1\n' \
+  printf 'cd %q && %q tools/doping/run_anneal.py --check_results %q --expect_n %q --expect_time_ps %q --expect_temperature %q' \
     "$SRC" "$PY" "$OUT/anneal_results.json" "$N_EXPECT" "$TIME_PS" "$TEMP"
+  if [ -n "${PURPOSE:-}" ]; then printf ' --expect_purpose %q' "$PURPOSE"; fi
+  printf ' >> "$LOG" 2>&1\n'
   echo 'check_rc=$?'
   echo 'echo "$(date "+%F %T") 결과 검사 check_rc=$check_rc (0 = 요청한 시간 · 온도 · 개수 · 결과 파일 해시가 기록과 같다)" >> "$LOG"'
   echo 'if [ "$run_rc" -ne 0 ]; then exit "$run_rc"; fi'
@@ -142,12 +150,12 @@ queue_selftest() {   # 모의 python · 가짜 nvidia-smi 로 같은 write_queue
   local T; T=$(mktemp -d)
   mkdir -p "$T/bin" "$T/src/tools/doping" "$T/in"
   printf '#!/bin/bash\necho "1000, 48000"\n' > "$T/bin/nvidia-smi"
-  printf '#!/bin/bash\ncase " $* " in *" --check_results "*) exit "${MOCK_CHECK_RC:-0}";; *) echo ran >> "$MOCK_MARK"; exit "${MOCK_RUN_RC:-0}";; esac\n' > "$T/bin/mockpy"
+  printf '#!/bin/bash\n[ -n "$MOCK_ARGS" ] && echo "$*" >> "$MOCK_ARGS"\ncase " $* " in *" --check_results "*) exit "${MOCK_CHECK_RC:-0}";; *) echo ran >> "$MOCK_MARK"; exit "${MOCK_RUN_RC:-0}";; esac\n' > "$T/bin/mockpy"
   chmod +x "$T/bin/nvidia-smi" "$T/bin/mockpy"
   echo a > "$T/src/tools/doping/run_anneal.py"; echo b > "$T/src/tools/doping/_provenance.py"
   echo x1 > "$T/in/c1.cif"; echo x2 > "$T/in/c2.cif"
   SESSION=st; LOG=$T/log; WAIT_FOR=; SRC=$T/src; PY=$T/bin/mockpy; XYZ=("$T/in/c1.cif" "$T/in/c2.cif")
-  OUT=$T/out; TEMP=500; TIME_PS=0; SEED=1; RELAX_FMAX=0.05; N_EXPECT=2
+  OUT=$T/out; TEMP=500; TIME_PS=0; SEED=1; RELAX_FMAX=0.05; N_EXPECT=2; PURPOSE=
   local SUMS=$T/sums bad=0 rr cr want rc
   sha256sum "${XYZ[@]}" "$SRC/tools/doping/run_anneal.py" "$SRC/tools/doping/_provenance.py" > "$SUMS"
   write_queue "$SUMS" > "$T/q.sh"
@@ -163,9 +171,80 @@ queue_selftest() {   # 모의 python · 가짜 nvidia-smi 로 같은 write_queue
   rc=0; PATH="$T/bin:$PATH" MOCK_RUN_RC=0 MOCK_CHECK_RC=0 MOCK_MARK=$T/mark bash "$T/q.sh" || rc=$?
   if [ "$rc" -eq 12 ] && [ ! -e "$T/mark" ]; then echo "  ✓ 제출 뒤 입력이 바뀌면 발사 안 함 (종료 12 · 실행 0 회)"
   else echo "  ✗ 제출 뒤 입력이 바뀌었는데 종료 $rc · 실행 $( [ -e "$T/mark" ] && echo 됨 || echo 안 됨)"; bad=1; fi
+  echo x2 > "$T/in/c2.cif"; PURPOSE=b2o3_bo/stage8_anneal
+  sha256sum "${XYZ[@]}" "$SRC/tools/doping/run_anneal.py" "$SRC/tools/doping/_provenance.py" > "$SUMS"
+  write_queue "$SUMS" > "$T/q2.sh"; : > "$LOG"; : > "$T/args"
+  rc=0; PATH="$T/bin:$PATH" MOCK_RUN_RC=0 MOCK_CHECK_RC=0 MOCK_MARK=$T/mark MOCK_ARGS=$T/args bash "$T/q2.sh" || rc=$?
+  if [ "$rc" -eq 0 ] && grep -q -- "--purpose b2o3_bo/stage8_anneal" "$T/args" \
+      && grep -q -- "--check_results .* --expect_purpose b2o3_bo/stage8_anneal" "$T/args"; then
+    echo "  ✓ 실행 목적이 실행 (--purpose) 과 결과 검사 (--expect_purpose) 둘 다로 간다 (DX P1-1)"
+  else echo "  ✗ 실행 목적 전달 — 종료 $rc · 인자: $(tr '\n' ' ' < "$T/args")"; bad=1; fi
+  PURPOSE=
   rm -rf "$T"
-  if [ "$bad" = 0 ]; then echo "queue selftest PASS (5/5)"; return 0; fi
+  if [ "$bad" = 0 ]; then echo "queue selftest PASS (6/6)"; return 0; fi
   echo "queue selftest FAIL"; return 1
+}
+
+list_inputs() {   # $1 = 실행 목적을 쓸 파일 · 나머지 = 후보 폴더 → stdout 에 입력 파일 목록 (해시 대조 · 중복 제거)
+  # ⛔ 2026-11-09 (Codex DX P2-1): 옛 판은 모든 manifest 를 **내용** 기준으로 중복 제거해서, 판독기 계획 manifest
+  #   (b2o3_bo_plan/v1) 의 서로 다른 계획 항목이 우연히 같은 시작 바이트를 가지면 하나를 지웠다 (18 → 17 · N_EXPECT 에서 멈춤).
+  #   이제 계획 manifest 는 **경로** 기준으로만 하나 (항목마다 따로 돈다) · 옛 후보 manifest (같은 host 공통 파일) 는 내용 기준 그대로.
+  #   (DX P1-1) manifest 의 purpose (실행 목적) 를 $1 에 쓴다 — 후보 폴더끼리 목적이 다르면 멈춘다 (5).
+  local pf=$1; shift
+  PURPOSE_OUT=$pf "$PY" - "$@" <<'PY'
+import hashlib, json, os, pathlib, sys
+seen_h, seen_p, out, bad, purposes = set(), set(), [], [], set()
+for d in map(pathlib.Path, sys.argv[1:]):
+    m = json.load(open(d / "manifest.json"))
+    plan = m.get("schema") == "b2o3_bo_plan/v1"
+    purposes.add(m.get("purpose") or "")
+    if "bases" in m:      # b2o3_enumerate manifest (2026-11-09) — 쉘이 먼저 --verify 했다 · O 꼴 파일만 (없으면 바탕)
+        files = {e["file"]: e for b in m["bases"] for e in b["motifs"].values()} \
+            or {b["file"]: b for b in m["bases"]}
+    else:
+        files = m["files"]
+    for k, v in files.items():
+        h = hashlib.sha256((d / k).read_bytes()).hexdigest()
+        if h != v["sha256"]:
+            bad.append(str(d / k)); continue
+        rp = str((d / k).resolve())
+        if (rp in seen_p) if plan else (h in seen_h):
+            continue
+        seen_h.add(h); seen_p.add(rp); out.append(rp)
+    print(f"   {d.name}: 해시 {len(files)} 개 확인", file=sys.stderr)
+if bad:
+    print("⛔ 해시 불일치: " + " ".join(bad), file=sys.stderr); sys.exit(5)
+if len(purposes) > 1:
+    print(f"⛔ 후보 폴더의 실행 목적이 섞였다 {sorted(purposes)} — 한 번에 한 목적만", file=sys.stderr); sys.exit(5)
+open(os.environ["PURPOSE_OUT"], "w").write(purposes.pop() if purposes else "")
+print("\n".join(sorted(out)))
+PY
+}
+
+inputs_selftest() {   # list_inputs — 계획 manifest 는 같은 바이트도 따로 · 옛 manifest 는 내용 기준 하나 · 목적 섞임 멈춤 (python3 필요)
+  local PY=${PY_SELFTEST:-python3} T n=0 bad=0 rc
+  T=$(mktemp -d)
+  mkdir -p "$T/res/a" "$T/res/b" "$T/plan" "$T/plan2" "$T/old/x" "$T/old/y"
+  echo same > "$T/res/a/post_relax.xyz"; echo same > "$T/res/b/post_relax.xyz"
+  local h; h=$(sha256sum "$T/res/a/post_relax.xyz" | cut -d' ' -f1)
+  printf '{"schema": "b2o3_bo_plan/v1", "purpose": "b2o3_bo/stage8_anneal", "files": {"../res/a/post_relax.xyz": {"sha256": "%s"}, "../res/b/post_relax.xyz": {"sha256": "%s"}}}\n' "$h" "$h" > "$T/plan/manifest.json"
+  printf '{"schema": "b2o3_bo_plan/v1", "purpose": "b2o3_bo/pilot_run", "files": {"../res/a/post_relax.xyz": {"sha256": "%s"}}}\n' "$h" > "$T/plan2/manifest.json"
+  echo same > "$T/old/x/c.cif"; echo same > "$T/old/y/c.cif"
+  printf '{"files": {"x/c.cif": {"sha256": "%s"}, "y/c.cif": {"sha256": "%s"}}}\n' "$h" "$h" > "$T/old/manifest.json"
+  rc=0; list_inputs "$T/pf" "$T/plan" > "$T/out" 2>/dev/null || rc=$?
+  if [ "$rc" = 0 ] && [ "$(wc -l < "$T/out")" = 2 ] && [ "$(cat "$T/pf")" = "b2o3_bo/stage8_anneal" ]; then
+    echo "  ✓ 계획 manifest: 내용이 같은 서로 다른 항목 둘 → 입력 둘 · 실행 목적 전달"; n=$((n + 1))
+  else echo "  ✗ 계획 manifest 같은 바이트 둘 → rc $rc · $(wc -l < "$T/out") 줄 · 목적 '$(cat "$T/pf" 2>/dev/null)'"; bad=1; fi
+  rc=0; list_inputs "$T/pf" "$T/old" > "$T/out" 2>/dev/null || rc=$?
+  if [ "$rc" = 0 ] && [ "$(wc -l < "$T/out")" = 1 ] && [ -z "$(cat "$T/pf")" ]; then
+    echo "  ✓ 옛 후보 manifest: 같은 host 공통 파일은 내용 기준 한 번 (그대로) · 목적 없음"; n=$((n + 1))
+  else echo "  ✗ 옛 manifest 내용 중복 → rc $rc · $(wc -l < "$T/out") 줄"; bad=1; fi
+  rc=0; list_inputs "$T/pf" "$T/plan" "$T/plan2" > "$T/out" 2>/dev/null || rc=$?
+  if [ "$rc" = 5 ]; then echo "  ✓ 실행 목적이 다른 후보 폴더를 섞으면 멈춘다 (5)"; n=$((n + 1))
+  else echo "  ✗ 목적 섞임 → rc $rc (5 여야)"; bad=1; fi
+  rm -rf "$T"
+  if [ "$bad" = 0 ]; then echo "inputs selftest PASS ($n/3)"; return 0; fi
+  echo "inputs selftest FAIL"; return 1
 }
 
 vram_free() {   # 여유 MiB 를 찍는다 (프로세스별 표는 kgy 에서 막혀 있다 — 'Process-level GPU information is restricted')
@@ -181,7 +260,7 @@ if [ "$MODE" = watch ]; then
   exit 0
 fi
 
-if [ "$MODE" = selftest ]; then queue_selftest; exit $?; fi
+if [ "$MODE" = selftest ]; then queue_selftest && inputs_selftest; exit $?; fi
 [ -x "$PY" ] || { echo "⛔ python 없음: $PY"; exit 2; }
 
 if [ "$MODE" = refs ]; then
@@ -264,36 +343,16 @@ for d in $CAND; do
     "$PY" "$SRC/tools/doping/b2o3_enumerate.py" --verify "$d" | tail -1 || { echo "⛔ $d manifest 검증 실패"; exit 5; }
   fi
 done
-LIST=$(mktemp)
-"$PY" - $CAND > "$LIST" <<'PY' || { rc=$?; rm -f "$LIST"; echo "⛔ 해시 단계 실패 (rc $rc)"; exit 5; }
-import hashlib, json, pathlib, sys
-seen, out, bad = set(), [], []
-for d in map(pathlib.Path, sys.argv[1:]):
-    m = json.load(open(d / "manifest.json"))
-    if "bases" in m:      # b2o3_enumerate manifest (2026-11-09) — 쉘이 먼저 --verify 했다 · O 꼴 파일만 (없으면 바탕)
-        files = {e["file"]: e for b in m["bases"] for e in b["motifs"].values()} \
-            or {b["file"]: b for b in m["bases"]}
-    else:
-        files = m["files"]
-    for k, v in files.items():
-        h = hashlib.sha256((d / k).read_bytes()).hexdigest()
-        if h != v["sha256"]:
-            bad.append(str(d / k)); continue
-        if h in seen:
-            continue
-        seen.add(h); out.append(str((d / k).resolve()))
-    print(f"   {d.name}: 해시 {len(files)} 개 확인", file=sys.stderr)
-if bad:
-    print("⛔ 해시 불일치: " + " ".join(bad), file=sys.stderr); sys.exit(5)
-print("\n".join(sorted(out)))
-PY
-mapfile -t XYZ < "$LIST"; rm -f "$LIST"
-echo "   중복 제거 뒤 ${#XYZ[@]} 개"
+LIST=$(mktemp); PF=$(mktemp)
+list_inputs "$PF" $CAND > "$LIST" || { rc=$?; rm -f "$LIST" "$PF"; echo "⛔ 해시 단계 실패 (rc $rc)"; exit 5; }
+mapfile -t XYZ < "$LIST"; PURPOSE=$(cat "$PF"); rm -f "$LIST" "$PF"
+echo "   중복 제거 뒤 ${#XYZ[@]} 개${PURPOSE:+ · 실행 목적 (manifest) $PURPOSE}"
 [ "${#XYZ[@]}" -eq "$N_EXPECT" ] || { echo "⛔ 후보 ${#XYZ[@]} 개 (N_EXPECT $N_EXPECT 이어야 한다)"; exit 7; }
 
 echo "== ③ 자가시험"
 "$PY" "$SRC/tools/doping/run_anneal.py" --selftest | tail -1 || { echo "⛔ run_anneal 자가시험 실패"; exit 6; }
 queue_selftest | tail -1 || { echo "⛔ 큐 자가시험 실패 (실패 전파 · 입력 재대조)"; exit 6; }
+inputs_selftest | tail -1 || { echo "⛔ 입력 목록 자가시험 실패 (계획 항목 보존 · 목적 섞임)"; exit 6; }
 
 echo "== ④ 문턱"
 if tmux has-session -t "$SESSION" 2>/dev/null; then echo "⛔ tmux $SESSION 이미 있음"; exit 4; fi

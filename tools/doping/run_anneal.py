@@ -362,13 +362,22 @@ def _verify_md_traj(rec, e, out_dir, n_id) -> list:
 
 
 def run_identity(xyz_path, *, temperature_K, time_ps, dt_fs, friction, relax_steps,
-                 relax_fmax, cell_relax, seed, model) -> dict:
+                 relax_fmax, cell_relax, seed, model, purpose=None) -> dict:
+    """재개 정체성. purpose (실행 목적) 는 **줄 때만** 넣는다 — 안 주면 옛 정체성 · identity_sha 가 그대로다.
+
+    2026-11-09 (Codex DX P1-1): 같은 시작 파일 · 시간 · 온도로 도는 두 실행 (b2o3 파일럿 런 · 8 단계 어닐) 을
+    단계 · 설정만으로는 가를 수 없었다 — 파일럿 런 기록을 8 단계 결과로 끼워 넣어도 판독이 통과했다.
+    실행기가 계획 manifest 의 purpose 를 --purpose 로 넘기고, 판독기가 단계마다 요구하는 목적과 대조한다.
+    """
     a = read(str(xyz_path))
-    return {'input_file_sha256': _file_sha256(xyz_path), 'input_struct': _struct_hash(a),
-            'n_atoms': len(a), 'stage': 'relax_only' if float(time_ps) == 0.0 else 'anneal_relax',
-            'temperature_K': float(temperature_K), 'time_ps': float(time_ps), 'dt_fs': float(dt_fs),
-            'friction': float(friction), 'relax_steps': int(relax_steps), 'relax_fmax': float(relax_fmax),
-            'cell_relax': bool(cell_relax), 'seed': int(seed), 'model': str(model)}
+    idn = {'input_file_sha256': _file_sha256(xyz_path), 'input_struct': _struct_hash(a),
+           'n_atoms': len(a), 'stage': 'relax_only' if float(time_ps) == 0.0 else 'anneal_relax',
+           'temperature_K': float(temperature_K), 'time_ps': float(time_ps), 'dt_fs': float(dt_fs),
+           'friction': float(friction), 'relax_steps': int(relax_steps), 'relax_fmax': float(relax_fmax),
+           'cell_relax': bool(cell_relax), 'seed': int(seed), 'model': str(model)}
+    if purpose is not None:
+        idn['purpose'] = str(purpose)
+    return idn
 
 
 def identity_sha(idn: dict) -> str:
@@ -413,7 +422,7 @@ def run_batch(xyz_paths, out, P: dict, calc, model: str, accept_legacy: bool = F
             idn = run_identity(p, temperature_K=P['temperature_K'], time_ps=P['time_ps'],
                                dt_fs=P['dt_fs'], friction=P['friction'], relax_steps=P['relax_steps'],
                                relax_fmax=P['relax_fmax'], cell_relax=P['cell_relax'], seed=seed,
-                               model=model)
+                               model=model, purpose=P.get('purpose'))
             isha = identity_sha(idn)
         except Exception as e:                       # 입력을 못 읽음 → 실패 기록 (끝난 것 아님)
             idn, isha = None, None
@@ -495,7 +504,7 @@ def run_batch(xyz_paths, out, P: dict, calc, model: str, accept_legacy: bool = F
 
 
 def check_results(path, expect_n=None, expect_time_ps=None, expect_temperature=None,
-                  require_converged=False) -> list:
+                  require_converged=False, expect_purpose=None) -> list:
     """anneal_results.json 검사 → 문제 목록. 실행기가 '요청한 단계가 실제로 전달됐나' 를 여기서 본다.
 
     본다: 상태 (failed · 상태 없음 = 문제) · 정체성 유무 · time_ps · 온도가 요청과 같은가 · 끝난 기록 수 ·
@@ -523,6 +532,8 @@ def check_results(path, expect_n=None, expect_time_ps=None, expect_temperature=N
             prob.append(f"{n}: time_ps {idn['time_ps']} ≠ 요청 {expect_time_ps}")
         if expect_temperature is not None and abs(float(idn['temperature_K']) - float(expect_temperature)) > 1e-9:
             prob.append(f"{n}: 온도 {idn['temperature_K']} ≠ 요청 {expect_temperature}")
+        if expect_purpose is not None and idn.get('purpose') != expect_purpose:
+            prob.append(f"{n}: 실행 목적 {idn.get('purpose')} ≠ 요청 {expect_purpose}")
         if require_converged and st != 'converged':
             prob.append(f"{n}: 미수렴 (fmax_final {r.get('fmax_final')})")
         vo = verify_outputs(r, out_dir)             # 2026-11-09 (Codex DV P1-2) — 재개와 같은 함수
@@ -544,11 +555,12 @@ def _check_results_cli(argv) -> int:
     ap.add_argument('--expect_time_ps', type=float)
     ap.add_argument('--expect_temperature', type=float)
     ap.add_argument('--require_converged', action='store_true')
+    ap.add_argument('--expect_purpose')
     a = ap.parse_args(argv)
     if not a.check_results:
         ap.error("--check_results <anneal_results.json> 가 필요하다")
     prob = check_results(a.check_results, a.expect_n, a.expect_time_ps, a.expect_temperature,
-                         a.require_converged)
+                         a.require_converged, a.expect_purpose)
     for x in prob:
         print("  ✗", x)
     print(f"check_results {'OK' if not prob else 'FAIL'} — 문제 {len(prob)} 건 ({a.check_results})")
@@ -745,6 +757,24 @@ def _selftest() -> int:
         write(str(rpx), a_sg)
         rs_ = json.loads(json.dumps(rt)); rs_["outputs"]["post_relax"]["sha256"] = _file_sha256(rpx)
         chk(any("특이" in q for q in verify_outputs(rs_, ot)), "⑨ ⛔음성: 주기 셀 부피 0 (특이 셀) 결과도 잡는다")
+        # ⑩ 2026-11-09 (Codex DX P1-1) — 실행 목적 (purpose): 줄 때만 정체성에 · 다르면 재개가 멈춤 · 결과 검사 대조
+        kw = dict(temperature_K=500, time_ps=0, dt_fs=2.0, friction=0.01, relax_steps=500, relax_fmax=0.01,
+                  cell_relax=False, seed=7, model="fake-lj")
+        i0, i1 = run_identity(x, **kw), run_identity(x, purpose="b2o3_bo/stage8_anneal", **kw)
+        chk("purpose" not in i0 and i1.get("purpose") == "b2o3_bo/stage8_anneal"
+            and identity_sha(i0) == identity_sha({k: v for k, v in i1.items() if k != "purpose"}),
+            "⑩ [양성] purpose 는 줄 때만 정체성에 들어간다 (안 주면 옛 정체성 · identity_sha 그대로)")
+        op = td / "purp"
+        rc_p, _ = run_batch([x], op, dict(P0, purpose="b2o3_bo/pilot_run"), lj(), model="fake-lj")
+        try:
+            run_batch([x], op, dict(P0, purpose="b2o3_bo/stage8_anneal"), lj(), model="fake-lj"); ok_ = False
+        except SystemExit:
+            ok_ = True
+        chk(rc_p == 0 and ok_, "⑩ ⛔음성: 같은 이름 · 같은 입력이라도 실행 목적이 다르면 재개가 건너뛰지 않고 멈춘다")
+        cp_ = op / "anneal_results.json"
+        chk(not check_results(cp_, expect_n=1, expect_purpose="b2o3_bo/pilot_run")
+            and any("실행 목적" in q for q in check_results(cp_, expect_purpose="b2o3_bo/stage8_anneal")),
+            "⑩ ⛔음성: 결과 검사가 요청한 실행 목적과 기록을 대조한다 (같으면 문제 0 · 다르면 잡는다)")
         try:
             run_batch([x, td / "sub" / "ar4.xyz"], td / "dup", P0, lj(), model="fake-lj")
             ok_ = False
@@ -835,9 +865,12 @@ def main():
                        help='완료 기록의 결과 파일이 없거나 바뀌었으면 다시 돌린다 (기본은 멈춤 · 2026-11-09)')
     parser.add_argument('--accept_legacy_records', action='store_true',
                        help='정체성 없는 옛 결과 기록을 끝난 것으로 받는다 (표시됨 · 기본은 멈춤 · 2026-11-09)')
+    parser.add_argument('--purpose', default=None,
+                        help='실행 목적 (예 b2o3_bo/pilot_run · b2o3_bo/stage8_anneal) — 정체성에 기록하고 판독기가 '
+                             '단계마다 대조한다 (2026-11-09 Codex DX P1-1 · 안 주면 정체성에 넣지 않는다)')
     parser.add_argument('--selftest', action='store_true')
     parser.add_argument('--check_results', help='결과 json 검사만 (--expect_n · --expect_time_ps · '
-                                               '--expect_temperature · --require_converged) — 먼저 가로챈다')
+                                               '--expect_temperature · --require_converged · --expect_purpose) — 먼저 가로챈다')
     args = parser.parse_args()
 
     if not args.xyz and not args.top_candidates and not args.summary_json and not args.xyz_dir:
@@ -926,7 +959,8 @@ def main():
 
     P = dict(temperature_K=args.temperature, time_ps=args.time_ps, dt_fs=args.dt_fs,
              friction=args.friction, relax_steps=args.relax_steps, relax_fmax=args.relax_fmax,
-             cell_relax=not args.no_cell_relax, log_every=args.log_every, seed=args.seed)
+             cell_relax=not args.no_cell_relax, log_every=args.log_every, seed=args.seed,
+             purpose=args.purpose)
     t_start = time.time()
     rc, n_ran = run_batch(xyz_paths, out, P, calc, model=f'uma-s-1p1/{args.task}',
                           accept_legacy=args.accept_legacy_records, rerun_mismatched=args.rerun_mismatched)

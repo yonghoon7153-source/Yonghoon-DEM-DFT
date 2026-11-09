@@ -21,6 +21,8 @@
   anneal   8 단계 — 거름 판정 + 파일럿 영수증 (같은 판정에서 나온 것) + 어닐 결과
            · 계획 전체가 있어야 판독 (누락이면 거부) · 계획 밖 기록 = 거부 · 시간 = t_a · 500 K · 설정 · 시작 파일 대조
            · G1 분모 = 계획 수 (시작 없는 항목 · 실패 포함) → G1 · G2 · G3 · 가족 최저 · 공통 성공 짝 · 승자–차저 (또는 보류)
+           · 실행 목적 (DX P1-1): 파일럿 런 = b2o3_bo/pilot_run · 8 단계 = b2o3_bo/stage8_anneal — 계획 manifest 의 purpose 를
+             실행기가 run_anneal --purpose 로 정체성에 넣는다 · 파일럿 런 기록을 8 단계 결과로 끼워 넣으면 거부
   eos      9 단계 ③ — 기준 (보정 전) 의 **전체 순서와 0.10 판정**이 가족별 B 독립 2³ 조합 모두에서 그대로인가 (DW P1-3)
 
 성공 (판독에 쓰는 구조) = run_anneal 상태 converged **이고** verify_outputs (결과 파일 존재 · sha256 · 판독 · 조성 ·
@@ -34,8 +36,10 @@
   · 끝 꼴 분류는 거리 문턱 (O–B · O–P < 1.8 Å 결합 · 1.8–2.3 Å 미분류) 의 기하 분류다 — 결합 차수 · 전하를 보지 않는다.
   · 어닐이 Li 초기점 의존성을 없앴다고 말하지 않는다.
   · 실행기를 돌리지 않는다 — 실행기가 받을 시작 파일 manifest 를 쓰고, 결과가 그 파일 · 설정에서 나왔는지만 본다.
-  · seed 는 대조하지 않는다 (실행기 기본 seed 에서 이름으로 유도 — 재현의 필요조건일 뿐).
-  · eos 의 가족별 (E, P, V) 입력은 아직 결과 파일에 묶지 않는다 — DFT 단계 앞에 붙인다 (DW P1-3 '9 단계 전 조건').
+  · seed 값 자체는 대조하지 않는다 (실행기 기본 seed 에서 이름으로 유도 — 재현의 필요조건일 뿐) — 8 단계는 기록마다
+    seed − crc(이름) 이 하나 (한 단계 = 한 base seed) 인지만 본다 (DX Q3 운영 조건 · 기록을 다른 이름으로 옮기면 걸린다).
+  · eos 의 가족별 (E, P, V) 입력은 아직 결과 파일에 묶지 않는다 — DFT 단계 앞에 붙인다 (DW P1-3 '9 단계 전 조건') ·
+    입력 유효성 (가족 셋 · 유한 · V > 0) 만 계산 전에 본다 (DX P2-2).
 
   python3 tools/doping/b2o3_bo_readout.py --selftest
 """
@@ -85,6 +89,9 @@ CONTRACT = {
     "dt_fs": 2.0,
     "friction": 0.01,
     "anneal_T_K": 500.0,
+    # ── DX P1-1: 실행 목적 — 같은 시작 · 시간 · 온도의 두 실행 (파일럿 런 · 8 단계) 을 가른다
+    "purpose_pilot": "b2o3_bo/pilot_run",
+    "purpose_stage8": "b2o3_bo/stage8_anneal",
 }
 FAM_ORDER = ["F_B", "F_P", "F_free"]
 SNAP_TOL_A = 1e-6                        # 스냅숏 파일 ↔ 궤적 프레임 좌표 · 셀 허용 차 (xyz 는 1e-8 Å 자리까지 쓴다)
@@ -246,8 +253,8 @@ def load_records(results_json):
     return {"path": str(p.resolve()), "sha256": hashlib.sha256(raw).hexdigest(), "records": out}
 
 
-def identity_problems(n, r, *, stage, input_sha, time_ps=None, T=None):
-    """기록 하나가 계획한 시작 파일 · 단계 · 설정의 결과인가 → 문제 목록 (DW P1-1)."""
+def identity_problems(n, r, *, stage, input_sha, time_ps=None, T=None, purpose=None):
+    """기록 하나가 계획한 시작 파일 · 단계 · 설정 (· 실행 목적) 의 결과인가 → 문제 목록 (DW P1-1 · DX P1-1)."""
     idn = r.get("identity")
     if not idn:
         return [f"{n}: 정체성 (identity) 없음 — 어느 입력 · 설정의 결과인지 묶을 수 없다"]
@@ -268,8 +275,12 @@ def identity_problems(n, r, *, stage, input_sha, time_ps=None, T=None):
                         ("friction", CONTRACT["friction"])):
             if not _feq(idn.get(k), want):
                 p.append(f"{n}: {k} {idn.get(k)} ≠ {want}")
+        if not isinstance(idn.get("seed"), int):
+            p.append(f"{n}: seed 기록 없음")
     elif not _feq(idn.get("time_ps"), 0.0):
         p.append(f"{n}: 이완만인데 time_ps {idn.get('time_ps')}")
+    if purpose is not None and idn.get("purpose") != purpose:
+        p.append(f"{n}: 실행 목적 {idn.get('purpose')} ≠ {purpose} (파일럿 런 · 8 단계 결과를 서로 바꿔 쓰지 않는다)")
     return p
 
 
@@ -365,10 +376,10 @@ def write_plan_manifests(v, plan_dir):
         raise SystemExit("⛔ 완결 판정에서만 시작 파일 manifest 를 쓴다")
     res_dir = Path(v["inputs"]["screen_results"]["path"]).resolve().parent
     out = {}
-    for stage, label, entries, note in (
-            ("pilot", "7_pilot_continuous", [v["pilot"]],
+    for stage, label, purpose, entries, note in (
+            ("pilot", "7_pilot_continuous", CONTRACT["purpose_pilot"], [v["pilot"]],
              "TIME_PS = 파일럿 길이 (100) · TEMP 500 · N_EXPECT 1 — 결과는 extract 로"),
-            ("anneal", "8_anneal_t_a", [e for e in v["plan_anneal"] if e["start"]],
+            ("anneal", "8_anneal_t_a", CONTRACT["purpose_stage8"], [e for e in v["plan_anneal"] if e["start"]],
              "TIME_PS = 파일럿 영수증의 t_a · TEMP 500 · N_EXPECT = n — 새 출력 폴더 (파일럿 런과 섞지 않는다)")):
         d = Path(plan_dir) / stage
         d.mkdir(parents=True, exist_ok=True)
@@ -378,7 +389,7 @@ def write_plan_manifests(v, plan_dir):
             files[os.path.relpath(f, d.resolve())] = {"sha256": e["start"]["sha256"], "name": e["name"],
                                                       "family": e["family"], "rank": e["rank"]}
         (d / "manifest.json").write_text(json.dumps(
-            {"schema": "b2o3_bo_plan/v1", "stage": label, "n": len(files), "실행기": note,
+            {"schema": "b2o3_bo_plan/v1", "stage": label, "purpose": purpose, "n": len(files), "실행기": note,
              "screen_results_sha256": v["inputs"]["screen_results"]["sha256"], "files": files},
             ensure_ascii=False, indent=1) + "\n")
         out[stage] = len(files)
@@ -393,7 +404,7 @@ def _pilot_run_record(pv, R, t_len):
         raise SystemExit(f"⛔ 파일럿 런 결과는 파일럿 구조 {pv['name']} 하나여야 한다 — {sorted(recs)[:3]}")
     r = recs[pv["name"]]
     prob = identity_problems(pv["name"], r, stage="anneal_relax", input_sha=pv["start"]["sha256"],
-                             time_ps=float(t_len), T=CONTRACT["anneal_T_K"])
+                             time_ps=float(t_len), T=CONTRACT["anneal_T_K"], purpose=CONTRACT["purpose_pilot"])
     if r["status"] not in ("converged", "unconverged"):
         prob.append(f"파일럿 런 상태 {r['status']}")
     prob += r["vo"]
@@ -655,9 +666,13 @@ def anneal_readout(vpath, rpath, results_json, margin=None, k_f=None):
         raise SystemExit(f"⛔ 어닐 결과 누락 {len(missing)} 건 (예 {missing[:2]}) — 누락은 실패가 아니다 · 다 돌린 뒤 판독한다")
     bad = [q for n in sorted(recs)
            for q in identity_problems(n, recs[n], stage="anneal_relax", input_sha=runnable[n]["start"]["sha256"],
-                                      time_ps=t_a, T=CONTRACT["anneal_T_K"])]
+                                      time_ps=t_a, T=CONTRACT["anneal_T_K"], purpose=CONTRACT["purpose_stage8"])]
     if bad:
         raise SystemExit(f"⛔ 어닐 기록 결속 실패 {len(bad)} 건 (예 {bad[0]}) — 판독하지 않는다")
+    bases = {recs[n]["identity"]["seed"] - _RA.derive_seed(0, n) for n in recs}
+    if len(bases) > 1:
+        raise SystemExit(f"⛔ 8 단계 기록의 base seed 가 {len(bases)} 개 — 한 단계는 한 base seed (seed = base + crc(이름)) · "
+                         f"기록을 다른 이름으로 옮겼거나 seed 를 따로 골랐다 — 판독하지 않는다")
     out = anneal_judge(plan, recs, margin)
     return {"kind": "b2o3_bo_anneal_readout/v1",
             "inputs": {"screen_verdict": {"path": str(Path(vpath).resolve()), "sha256": _sha(vpath)},
@@ -686,6 +701,21 @@ def eos_robust(fam, margin=None, B_range=None, P_max=None):
     margin = CONTRACT["margin_dft_eV"] if margin is None else margin
     B_range = CONTRACT["B_range_GPa"] if B_range is None else B_range
     P_max = CONTRACT["eos_P_max_GPa"] if P_max is None else P_max
+    # DX P2-2 — 계산 전에 입력을 본다 (옛 판: NaN 에너지 · 음수 부피 · 가족 누락에도 '생략 가능')
+    if set(fam) != set(FAM_ORDER):
+        raise SystemExit(f"⛔ EOS 입력 가족 {sorted(fam)} ≠ {FAM_ORDER} — 셋 다 정확히 있어야 한다")
+    for F in FAM_ORDER:
+        try:
+            E_, P_, V_ = (float(x) for x in fam[F])
+        except (TypeError, ValueError):
+            raise SystemExit(f"⛔ EOS 입력 {F}: (E, P, V) 세 수가 아니다 — {fam[F]!r}")
+        if not all(math.isfinite(x) for x in (E_, P_, V_)):
+            raise SystemExit(f"⛔ EOS 입력 {F}: E · P · V 가 유한하지 않다 ({E_}, {P_}, {V_})")
+        if V_ <= 0:
+            raise SystemExit(f"⛔ EOS 입력 {F}: 부피 {V_} ≤ 0")
+    if not all(math.isfinite(float(B)) and float(B) > 0 for B in B_range) or not math.isfinite(float(margin)):
+        raise SystemExit(f"⛔ EOS 설정: B 범위 {B_range} · 여유 {margin} 가 유한 · 양수가 아니다")
+    fam = {F: tuple(float(x) for x in fam[F]) for F in FAM_ORDER}
     names = sorted(fam)
 
     def verdict(Ec):
@@ -764,10 +794,14 @@ def _selftest():
     nanb = toy("F_B"); nanb.positions[2, 0] = np.nan
     chk(end_motif(nanb) == "invalid", "⛔음성: NaN 좌표 구조는 분류하지 않는다 ('invalid' — DW P2 · 옛 판은 F_free)")
 
-    def idn(input_sha, stage, time_ps=0.0, T=500.0, **over):
+    BASE = 20261014                                    # 실행기 기본 base seed — seed = base + crc(이름)
+
+    def idn(input_sha, stage, time_ps=0.0, T=500.0, purpose=None, seed=1, **over):
         d = {"input_file_sha256": input_sha, "input_struct": "x", "n_atoms": 6, "stage": stage,
              "temperature_K": float(T), "time_ps": float(time_ps), "dt_fs": 2.0, "friction": 0.01,
-             "relax_steps": 1500, "relax_fmax": 0.05, "cell_relax": True, "seed": 1, "model": "uma-s-1p1/omat"}
+             "relax_steps": 1500, "relax_fmax": 0.05, "cell_relax": True, "seed": seed, "model": "uma-s-1p1/omat"}
+        if purpose is not None:
+            d["purpose"] = purpose
         d.update(over)
         return d
 
@@ -921,8 +955,10 @@ def _selftest():
             vp = _dump(V, td / "verdict.json")
             nplan = write_plan_manifests(V, td / "plan")
             pm = json.loads((td / "plan" / "anneal" / "manifest.json").read_text())
+            pp_ = json.loads((td / "plan" / "pilot" / "manifest.json").read_text())
             chk(nplan == {"pilot": 1, "anneal": 15}
-                and all(_sha((td / "plan" / "anneal" / k).resolve()) == e["sha256"] for k, e in pm["files"].items()),
+                and all(_sha((td / "plan" / "anneal" / k).resolve()) == e["sha256"] for k, e in pm["files"].items())
+                and pm["purpose"] == CONTRACT["purpose_stage8"] and pp_["purpose"] == CONTRACT["purpose_pilot"],
                 "[양성] 실행기용 시작 파일 manifest (파일럿 1 · 어닐 15) — 경로가 6 단계 post_relax 를 가리키고 sha256 이 맞다")
             chk(refuses("정체성", screen_verdict, gen, screen_res("s_noid", noid={"cfg0003_O-bo4"}), k_f=K),
                 "⛔음성: 정체성 없는 기록이 있으면 거름 판독 거부 (Codex DW missing_identity — 옛 판: 승자 F_B)")
@@ -957,9 +993,12 @@ def _selftest():
             pv = V["pilot"]
             pstart = pv["start"]["sha256"]
 
-            def pilot_run(sub, time_ps=100.0, T=500.0, start=None, traj=(101, 2.0, 500, 50000), name=None):
-                return save(td / sub, [put(td / sub, name or pv["name"], "F_B", -0.6, "converged",
-                                           idn(start or pstart, "anneal_relax", time_ps, T), traj=traj)])
+            def pilot_run(sub, time_ps=100.0, T=500.0, start=None, traj=(101, 2.0, 500, 50000), name=None,
+                          purpose=CONTRACT["purpose_pilot"]):
+                n_ = name or pv["name"]
+                return save(td / sub, [put(td / sub, n_, "F_B", -0.6, "converged",
+                                           idn(start or pstart, "anneal_relax", time_ps, T, purpose=purpose,
+                                               seed=_RA.derive_seed(BASE, n_)), traj=traj)])
 
             pr = pilot_run("p_ok")
             xp, X = extract_pilot(vp, pr, td / "snap", k_f=K)
@@ -973,7 +1012,9 @@ def _selftest():
                                     "time_ps"),
                                    ("1000 K", {"T": 1000.0}, "temperature_K"),
                                    ("다른 시작 파일", {"start": "2" * 64}, "시작 파일"),
-                                   ("md_traj 기록 없음", {"traj": None}, "md_traj 가 없다")):
+                                   ("md_traj 기록 없음", {"traj": None}, "md_traj 가 없다"),
+                                   ("실행 목적 없음", {"purpose": None}, "실행 목적"),
+                                   ("8 단계 목적 기록 (파일럿 런 아님)", {"purpose": CONTRACT["purpose_stage8"]}, "실행 목적")):
                 chk(refuses(why, extract_pilot, vp, pilot_run("p_" + str(abs(hash(label)) % 10**6), **kw),
                             td / "snap_x", k_f=K),
                     f"⛔음성: 파일럿 런이 {label} 이면 스냅숏을 꺼내지 않는다")
@@ -1034,7 +1075,8 @@ def _selftest():
             chk(refuses("다시 낸 영수증과 다르다", verify_pilot_receipt, rtp, K), "⛔음성: 영수증의 t_a 를 손으로 100 → 20 바꾸면 거부")
 
             # 8 단계 어닐 (t_a = 100)
-            def ann(sub, t=100.0, T=500.0, drop=(), extra=(), start_from=None, fail=(), eshift=None):
+            def ann(sub, t=100.0, T=500.0, drop=(), extra=(), start_from=None, fail=(), eshift=None,
+                    purpose=CONTRACT["purpose_stage8"], seed_base=None):
                 rr = []
                 for e in V["plan_anneal"]:
                     if e["name"] in drop:
@@ -1042,10 +1084,12 @@ def _selftest():
                     F = e["family"]
                     sha = e["start"]["sha256"] if start_from is None else S[e["name"]]["sha256"]
                     E = (eshift or base_E)[F] + 0.01 * e["rank"]
+                    sd = _RA.derive_seed((seed_base or {}).get(e["name"], BASE), e["name"])
                     rr.append(put(td / sub, e["name"], F, E, "failed" if e["name"] in fail else "converged",
-                                  idn(sha, "anneal_relax", t, T)))
+                                  idn(sha, "anneal_relax", t, T, purpose=purpose, seed=sd)))
                 for n in extra:
-                    rr.append(put(td / sub, n, "F_B", -9.0, "converged", idn(S[n]["sha256"], "anneal_relax", t, T)))
+                    rr.append(put(td / sub, n, "F_B", -9.0, "converged",
+                                  idn(S[n]["sha256"], "anneal_relax", t, T, purpose=purpose, seed=_RA.derive_seed(BASE, n))))
                 return save(td / sub, rr)
 
             A = anneal_readout(vp, rp, ann("a_ok"), k_f=K)
@@ -1056,7 +1100,10 @@ def _selftest():
                                    ("1000 K", {"T": 1000.0}, "temperature_K"),
                                    ("계획 하나 누락", {"drop": {"cfg0004_O-free_s"}}, "누락"),
                                    ("계획 밖 기록", {"extra": ["cfg0007_O-bo4"]}, "밖 기록"),
-                                   ("시작 = 생성 CIF (6 단계 post_relax 아님)", {"start_from": "cif"}, "시작 파일이 계획과 다르다")):
+                                   ("시작 = 생성 CIF (6 단계 post_relax 아님)", {"start_from": "cif"}, "시작 파일이 계획과 다르다"),
+                                   ("실행 목적 없음", {"purpose": None}, "실행 목적"),
+                                   ("파일럿 목적 기록 전체", {"purpose": CONTRACT["purpose_pilot"]}, "실행 목적"),
+                                   ("한 기록만 다른 base seed", {"seed_base": {"cfg0002_O-free_s": BASE + 1}}, "base seed")):
                 chk(refuses(why, anneal_readout, vp, rp, ann("a_" + str(abs(hash(label)) % 10**6), **kw), k_f=K),
                     f"⛔음성: 어닐 결과가 {label} 이면 판독하지 않는다 (Codex DW — 옛 판: 승자 F_B)")
             Af = anneal_readout(vp, rp, ann("a_fail", fail={"cfg0001_O-distributed"}), k_f=K)
@@ -1070,6 +1117,32 @@ def _selftest():
                 "⛔음성: 다른 거름 판정 (다른 결과 묶음) 에 이 파일럿 영수증을 붙이면 거부")
             chk(refuses("다시 낸 판정과 다르다", anneal_readout, vtp, rp, ann("a_vt"), k_f=K),
                 "⛔음성: 손으로 바뀐 거름 판정으로는 어닐 판독을 하지 않는다")
+            # DX P1-1 — 파일럿 런 기록을 8 단계 결과로 끼워 넣기 (t_a 100 · 같은 시작 · 100 ps · 500 K · 같은 base seed)
+            pil = json.loads(pr.read_text())["results"][0]
+
+            def swap_pilot(sub, as_record):
+                pth_ = ann(sub)
+                dd = json.loads(pth_.read_text())
+                shutil.rmtree(td / sub / pv["name"])
+                shutil.copytree(td / "p_ok" / pv["name"], td / sub / pv["name"])
+                dd["results"] = [as_record(r_) if r_["name"] == pv["name"] else r_ for r_ in dd["results"]]
+                pth_.write_text(json.dumps(dd))
+                return pth_
+
+            reuse = swap_pilot("a_reuse", lambda r_: pil)
+            chk(refuses("실행 목적", anneal_readout, vp, rp, reuse, k_f=K),
+                "⛔음성: 파일럿 런 기록 · 산출물을 8 단계 결과로 끼워 넣으면 거부 (Codex DX P1-1 — 옛 판: 승자 · 간격 0.300 → 0.500)")
+
+            def fresh(r_):                                 # 같은 입력 · 100 ps · 산출물 바이트까지 파일럿과 같지만 8 단계로 새로 돈 기록
+                q_ = json.loads(json.dumps(pil))
+                q_["identity"] = dict(q_["identity"], purpose=CONTRACT["purpose_stage8"])
+                q_["identity_sha"] = _RA.identity_sha(q_["identity"])
+                return q_
+
+            Afr = anneal_readout(vp, rp, swap_pilot("a_fresh", fresh), k_f=K)
+            chk(Afr["winner"] == "F_B" and Afr["families"]["F_B"]["min"]["E"] == -0.6,
+                "[양성] 같은 입력 · 100 ps · 산출물 바이트가 파일럿과 같아도 8 단계 목적으로 돈 기록은 통과 "
+                "(산출물 해시 차이로 가르지 않는다 — DX)")
         finally:
             _EN.verify_manifest = _vm
 
@@ -1090,6 +1163,13 @@ def _selftest():
     e5 = eos_robust({"F_B": (-5.0, 0.0, 2436.33), "F_P": (0.0, 2.0, 2436.33), "F_free": (0.15, 2.0, 2436.33)})
     chk(not e5["skip_eos"] and all(c["order"][0] == "F_B" for c in e5["corners"]),
         "⛔음성: 승자 · 0.10 판정은 그대로여도 아래 순위가 바뀌는 조합이 있으면 생략 불가 (Codex DW lower_ranks — 옛 판: 생략)")
+    good = {"F_B": (-1.0, 0.1, 2436.33), "F_P": (0.0, 0.1, 2436.33), "F_free": (1.0, 0.1, 2436.33)}
+    for label, f_, why in (("F_B 에너지 NaN", dict(good, F_B=(float("nan"), 0.1, 2436.33)), "유한"),
+                           ("세 가족 부피 음수", {k: (v[0], v[1], -2436.33) for k, v in good.items()}, "부피"),
+                           ("F_free 빠짐 (두 가족)", {k: v for k, v in good.items() if k != "F_free"}, "가족"),
+                           ("압력 inf", dict(good, F_P=(0.0, float("inf"), 2436.33)), "유한")):
+        chk(refuses(why, eos_robust, f_), f"⛔음성: EOS 입력이 {label} 이면 계산 전에 멈춘다 (Codex DX P2-2 — 옛 판: 생략 가능)")
+    chk(eos_robust(good)["skip_eos"], "[양성] 유효한 세 가족 입력은 그대로 판정")
 
     # (5) 계약 = 카드 값 (갈라지면 개정이 필요하다)
     card = HERE.parents[1] / "db/properties/b2o3_bo_placement_estimand_2026_11_09.json"
@@ -1098,7 +1178,8 @@ def _selftest():
         mach = c.get("기계_판독_값", {})
         keys = ["k_f", "k_f_shortfall", "r_bond_A", "r_grey_A", "margin_uma_eV", "pair_min", "pilot_spread_eV",
                 "margin_dft_eV", "B_range_GPa", "eos_P_max_GPa", "pilot_times_ps", "unit_B2O3",
-                "model", "relax_fmax", "cell_relax", "relax_steps", "dt_fs", "friction", "anneal_T_K"]
+                "model", "relax_fmax", "cell_relax", "relax_steps", "dt_fs", "friction", "anneal_T_K",
+                "purpose_pilot", "purpose_stage8"]
         diff = [k for k in keys if mach.get(k) != CONTRACT[k]]
         chk(bool(mach) and not diff, f"카드 판독_계약 기계_판독_값 == 도구 CONTRACT (갈라지면 개정 · 다른 키 {diff})")
     print(f"selftest {'PASS' if ok[0] == ok[1] else 'FAIL'} — {ok[1]}/{ok[0]}")

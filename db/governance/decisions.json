@@ -11771,6 +11771,18 @@
      "state": "proposed",
      "by": "agent",
      "note": "DW 고침 반영 v1.2 (2026-11-09 · 대피 세션) — P1-1 단계 결속 (screen 판정 · 시작 파일 sha256 · 정체성 · 설정 · 누락 ≠ 실패 · k_f 미달 보류 [제안] · 판정/영수증 다시 내기 대조) · P1-2 파일럿 시간축 (run_anneal md_traj 기록 · 간격은 런 기록에서 · 궤적 → 프레임 → 스냅숏 → 이완 대조) · P1-3 EOS 기준 순서 · 0.10 판정 보존 · P2 비유한 기하 거부 — 판독기 selftest 57/57 · run_anneal selftest ⑨ · 검사를 하나씩 꺼서 빨간불 확인 (13 변이 전부). Codex 편지 DX 재리뷰 대기 · 조건부 비준 ('go면 비준') 은 DW 에 걸렸던 것이라 DX 뒤 사용자에게 다시 묻는다"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DX 회신 NO-GO (kb/reviews/codex_DX_reply_cell_construction_v1_2_release_2026_11_09.md · 기준 93937466) — DW P1-1 · P1-2 · P2 · P1-3 · P3 닫힘 · 새 P1-1 파일럿 런 기록을 8 단계 결과로 끼워 넣어도 통과 (pilot · 8 단계 모두 stage anneal_relax · 같은 시작 · 시간 · 온도 가능 — 실행 목적 구분 없음) · P2-1 실행기가 내용이 같은 시작 파일의 서로 다른 계획 항목을 하나로 합침 (18 → 17 · N_EXPECT 에서 멈춤) · P2-2 EOS 입력 (NaN · 음수 부피 · 가족 누락) 검사 없음 (DFT 전). Q3 (k_f 미달 보류 · 시작 없음 = 실패 · seed · 저장 간격 · EOS 결속 연기) 찬성 · 고친 판 카드는 사용자가 새로 비준해야 한다 — proposed 그대로"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "DX 고침 반영 v1.3 (2026-11-09 · 대피 세션) — P1-1 실행 목적 (run_anneal --purpose · 계획 manifest purpose → 실행기 → 정체성 · 판독기 대조 · 파일럿 런 기록의 8 단계 재사용 거부 · 같은 바이트 새 8 단계 런 통과) · P2-1 실행기가 계획 항목을 경로 기준으로 보존 · P2-2 EOS 입력 유효성 · [제안] 8 단계 base seed 하나 (DX Q3 운영 조건). Codex 편지 DY 재리뷰 대기 · 고친 판 카드는 사용자가 새로 비준해야 한다"
     }
    ],
    "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
@@ -11885,6 +11897,18 @@
      "state": "proposed",
      "by": "agent",
      "note": "DW 고침 반영 v1.2 (2026-11-09 · 대피 세션) — P1-1 단계 결속 (screen 판정 · 시작 파일 sha256 · 정체성 · 설정 · 누락 ≠ 실패 · k_f 미달 보류 [제안] · 판정/영수증 다시 내기 대조) · P1-2 파일럿 시간축 (run_anneal md_traj 기록 · 간격은 런 기록에서 · 궤적 → 프레임 → 스냅숏 → 이완 대조) · P1-3 EOS 기준 순서 · 0.10 판정 보존 · P2 비유한 기하 거부 — 판독기 selftest 57/57 · run_anneal selftest ⑨ · 검사를 하나씩 꺼서 빨간불 확인 (13 변이 전부). Codex 편지 DX 재리뷰 대기 · 조건부 비준 ('go면 비준') 은 DW 에 걸렸던 것이라 DX 뒤 사용자에게 다시 묻는다"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DX 회신 NO-GO (kb/reviews/codex_DX_reply_cell_construction_v1_2_release_2026_11_09.md · 기준 93937466) — DW P1-1 · P1-2 · P2 · P1-3 · P3 닫힘 · 새 P1-1 파일럿 런 기록을 8 단계 결과로 끼워 넣어도 통과 (pilot · 8 단계 모두 stage anneal_relax · 같은 시작 · 시간 · 온도 가능 — 실행 목적 구분 없음) · P2-1 실행기가 내용이 같은 시작 파일의 서로 다른 계획 항목을 하나로 합침 (18 → 17 · N_EXPECT 에서 멈춤) · P2-2 EOS 입력 (NaN · 음수 부피 · 가족 누락) 검사 없음 (DFT 전). Q3 (k_f 미달 보류 · 시작 없음 = 실패 · seed · 저장 간격 · EOS 결속 연기) 찬성 · 고친 판 카드는 사용자가 새로 비준해야 한다 — proposed 그대로"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "DX 고침 반영 v1.3 (2026-11-09 · 대피 세션) — P1-1 실행 목적 (run_anneal --purpose · 계획 manifest purpose → 실행기 → 정체성 · 판독기 대조 · 파일럿 런 기록의 8 단계 재사용 거부 · 같은 바이트 새 8 단계 런 통과) · P2-1 실행기가 계획 항목을 경로 기준으로 보존 · P2-2 EOS 입력 유효성 · [제안] 8 단계 base seed 하나 (DX Q3 운영 조건). Codex 편지 DY 재리뷰 대기 · 고친 판 카드는 사용자가 새로 비준해야 한다"
     }
    ],
    "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
