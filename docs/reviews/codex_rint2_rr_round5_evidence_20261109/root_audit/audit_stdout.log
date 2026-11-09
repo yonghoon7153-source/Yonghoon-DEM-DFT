@@ -1,0 +1,92 @@
+mutation row keys ['id', 'status', 'fails', 'summary', 's', 'adapted']
+{
+  "remote": {
+    "checked": 806,
+    "match": 806
+  },
+  "source_28_unchanged": 26,
+  "source_28_changed": [
+    "rint_r_chain.py",
+    "test_rint_r_chain.py"
+  ],
+  "producer": [
+    {
+      "name": "_src_done",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "run",
+      "old_count": 6,
+      "new_count": 6,
+      "all_same": true
+    },
+    {
+      "name": "_copy",
+      "old_count": 2,
+      "new_count": 2,
+      "all_same": true
+    },
+    {
+      "name": "_execute",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "_prepare",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "run_in_group",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "stop_trace",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "run_traces",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "record_outdir",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "resume_leftovers",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "group_pair",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    }
+  ],
+  "M56": {
+    "current": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+    "historical_mutant": null,
+    "distinguished": true,
+    "scope": "Direct helper. No filesystem mock. Not a full-CLI exploit."
+  },
+  "mutants": 71,
+  "statuses": {
+    "KILLED": 68,
+    "SURVIVED": 2,
+    "NOT_APPLICABLE (가드를 지웠다 · 고친 판)": 1
+  }
+}

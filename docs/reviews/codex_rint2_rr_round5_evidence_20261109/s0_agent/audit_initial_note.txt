@@ -1,0 +1,7 @@
+The first reviewer audit incorrectly required every NPZ array to share the main
+contact row count. Actual schema contains sub_* arrays for subdivided edges and
+lj_* arrays for per-fibre aggregation. Original script retained as
+audit_s0_raw_initial.py. It failed at line58 with counts{151587,117583}.
+Corrected reviewer assertion checks only primary row arrays and records auxiliary
+shapes separately. Fixed input bytes and claimed primary counts were unchanged.
+This harness assumption failure is not a product defect or a passed test.

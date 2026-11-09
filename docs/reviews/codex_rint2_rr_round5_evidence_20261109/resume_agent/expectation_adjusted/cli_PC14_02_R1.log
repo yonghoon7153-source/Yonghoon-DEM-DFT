@@ -1,0 +1,2 @@
+recover — 그룹 기록 0 개 정리 · 미확인 0
+  recover attempt_2: 결과 줄 stopped · 결과 post · 원인 timeout · 재실행 자격 False — 재개 출처 [ⓒ] attempt_2: resume.rerun 'L03_point' ≠ 디스크상 첫 미완료 런 L02_ceiling (원천 attempt_1 에서 처음 끝나지 않은 런 · `ResumeRunner._src_done` 같은 규칙 · ★ 11-09 사전 공격 15 PC15-02) (★ 11-09 Codex 회차 ④ PC14-02)

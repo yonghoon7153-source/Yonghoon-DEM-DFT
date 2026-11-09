@@ -1,0 +1,756 @@
+{
+  "pin": "abf0911ebc994167ac50132c78207c6c8d4421f1",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "source_sha256": {
+    "carbon_junction.py": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+    "fibre_segment_raster.py": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0"
+  },
+  "raw_json": {
+    "sha256": "665650b442a3373f54eef6a39926f278787a53603a5522a92ca8d09f1f7e8b5e",
+    "bytes": 6286674,
+    "stage": 1,
+    "code": {
+      "tool": "s0-b3-registry-v1",
+      "tool_sha256": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4",
+      "file_digests": [
+        {
+          "file": "ca_s0_census.py",
+          "sha256": "1a775575855c46d5057d3fea28fa92361c23460d0069fe5e4f0cc739116f1ff4"
+        },
+        {
+          "file": "step3_sigma.py",
+          "sha256": "8d428ff5c6c214ea3479faae662341b88fa255982d69b180eaff660cda95f2ec"
+        },
+        {
+          "file": "mpm_webapp_payload.py",
+          "sha256": "9e911be481285f8ab927f11ffb2c36b7d070d5ccf4ea6894c936de7f730b5609"
+        },
+        {
+          "file": "fibre_segment_raster.py",
+          "sha256": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0"
+        },
+        {
+          "file": "sr01_stamp_compare.py",
+          "sha256": "d66e2f1680a69b5b7882b4a5d32e21d15609fc2cecec58924a4af61093661b66"
+        },
+        {
+          "file": "carbon_junction.py",
+          "sha256": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb"
+        },
+        {
+          "file": "ptfe_face_alpha.py",
+          "sha256": "c052dbfe772de497b4f63a85b1cc9182c24c324c23464e69498b4e2246b8046e"
+        }
+      ],
+      "git_head": "f47bde0f631f94340f745e5ae5fa20f902c58333",
+      "git_dirty": false,
+      "python": "3.8.10",
+      "numpy": "1.24.4",
+      "scipy": "1.10.1"
+    },
+    "thresholds_used": {
+      "tol_ff_um": 0.07381254285530132,
+      "L_par_um": 0.3,
+      "r_port_um": 0.3,
+      "tol_P_um": 0.07381254285530132,
+      "tol_sj_um": 0.07381254285530132,
+      "tol_fs_um": 0.0,
+      "r_f_um": 0.075
+    },
+    "threshold_inputs": {
+      "u_um": 0.07381254285530132,
+      "spacing_median_um": 0.14762508571060265,
+      "n_spacings": 1544424,
+      "spacing_p10_um": 0.14588816857395423,
+      "spacing_p90_um": 0.15549922189211965,
+      "spacing_max_um": 5.314405123150115,
+      "rule": "median of within-piece consecutive VGCF path point spacings of the stage-1 (SBE) bed, divided by 2 (pieces = the gap rule of step3_sigma._fibre_segment_ijk with gap_tol; the gap jumps are excluded)",
+      "used_for_plan": true
+    },
+    "census_relevant": {
+      "n_instances_self": 0,
+      "n_unreg_faces": 23447,
+      "n_cut_self_faces": 0,
+      "n_long_self": 0,
+      "self_dk_min": null,
+      "self_filter": "off_s_min_missing",
+      "n_self_candidates": 0,
+      "n_self_kept": 0,
+      "n_self_filtered": 0,
+      "n_self_s_undefined": 0,
+      "n_self_fused_faces": 1484,
+      "n_self_revisits_path_only": 874,
+      "n_self_revisits_path_broken": 0,
+      "self_s_um": null,
+      "n_revisit_pairs": 874,
+      "n_revisit_cells": 874,
+      "n_revisit_fibres": 823,
+      "revisit_s_um": {
+        "n": 874,
+        "min": 2.2453491233420664e-05,
+        "median": 0.043800501190032426,
+        "max": 0.1902049918520179
+      },
+      "n_sv_faces_kept_self": 0
+    },
+    "self_candidates_len": 0,
+    "long_contacts_len": 30270,
+    "long_first": [
+      {
+        "kind": "distinct",
+        "fi": 36899,
+        "fj": 28527,
+        "Lc_um": 4.5772168701115525,
+        "mult": 15.257389567038508,
+        "d0_um": 0.016058801986860737,
+        "s_um": null,
+        "realized": true
+      }
+    ],
+    "revisit": {
+      "n_pairs": 874,
+      "n_cells": 874,
+      "n_fibres": 823,
+      "s_um": {
+        "n": 874,
+        "min": 2.2453491233420664e-05,
+        "median": 0.043800501190032426,
+        "max": 0.1902049918520179
+      },
+      "n_path_only": 874,
+      "rule": "membership_cell_fid_traversal_branch_v1",
+      "meaning": "같은 조각이 같은 셀을 비연속으로 다시 지난 가지 쌍 (가지마다 따로 · 합치지 않음 · RCA-03 · 고리 이음매 별칭 제외) — s = 그 쌍의 경로 호 간격 (쌍마다 · ★ 10-21)"
+    },
+    "declared_n_instances": 117583,
+    "declared_n_long_self": 0,
+    "long_field_keys": [
+      "kind",
+      "fi",
+      "fj",
+      "Lc_um",
+      "mult",
+      "d0_um",
+      "s_um",
+      "realized"
+    ],
+    "long_kind_counts": {
+      "distinct": 30270
+    },
+    "long_above_Lpar_count": 30270
+  },
+  "arithmetic": {
+    "D_um": 0.22381254285530133,
+    "half_pi_D_um": 0.3515639202077327,
+    "rprime_Ohm_per_um": 56.588424210451684,
+    "rprime_s_Ohm": {
+      "0.22381254285530133": 12.66519911871569,
+      "0.3": 16.976527263135505,
+      "0.3515639202077327": 19.894448253804565
+    }
+  },
+  "floor_equivalence": [
+    {
+      "s_min": 0,
+      "same_as_None": true
+    },
+    {
+      "s_min": 0.11190627142765067,
+      "same_as_None": true
+    },
+    {
+      "s_min": 0.22381254285530133,
+      "same_as_None": true
+    }
+  ],
+  "predicate_example": [
+    {
+      "s_min": 0,
+      "s_um": 0.25,
+      "d_um": 0.15,
+      "floor": true,
+      "continuous": false
+    },
+    {
+      "s_min": 0.3,
+      "s_um": 0.25,
+      "d_um": 0.15,
+      "floor": true,
+      "continuous": true
+    },
+    {
+      "s_min": 0.3515639202077327,
+      "s_um": 0.25,
+      "d_um": 0.15,
+      "floor": true,
+      "continuous": true
+    }
+  ],
+  "geometry_search": {
+    "tried": 6,
+    "found": {
+      "points": [
+        [
+          0.9729629131445341,
+          0.5844095225512604,
+          0.225
+        ],
+        [
+          0.49,
+          0.455,
+          0.225
+        ],
+        [
+          0.9729629131445341,
+          0.32559047744873965,
+          0.225
+        ]
+      ],
+      "sid3": [
+        [
+          3,
+          2,
+          1
+        ],
+        [
+          3,
+          3,
+          1
+        ],
+        [
+          4,
+          2,
+          1
+        ],
+        [
+          4,
+          3,
+          1
+        ],
+        [
+          5,
+          2,
+          1
+        ],
+        [
+          5,
+          3,
+          1
+        ],
+        [
+          6,
+          2,
+          1
+        ],
+        [
+          6,
+          3,
+          1
+        ]
+      ],
+      "thresholds": [
+        0,
+        0.3
+      ],
+      "census0": {
+        "n_vgcf_fibres": 1,
+        "n_pieces": 1,
+        "n_segments": 2,
+        "n_positions": 8,
+        "n_live_positions": 8,
+        "n_cross_cells": 0,
+        "n_kway_cells_ge3": 0,
+        "n_instances": 0,
+        "n_instances_distinct": 0,
+        "n_instances_self": 0,
+        "n_realized": 0,
+        "n_unrealized_by_reason": {},
+        "n_port_ties": 0,
+        "n_port_displaced": 0,
+        "port_relation": {
+          "same_cell": 0,
+          "face": 0,
+          "edge": 0,
+          "corner": 0,
+          "apart": 0
+        },
+        "n_cut_site_faces": 0,
+        "n_unreg_faces": 3,
+        "n_cut_self_faces": 0,
+        "n_vx_faces_by_sid": {
+          "void": 28
+        },
+        "owner_tie_noncanonical": 0,
+        "n_faces_multi_site": 0,
+        "surface_gap_um": null,
+        "Lc_um": null,
+        "len_mult": null,
+        "n_long_distinct": 0,
+        "n_long_self": 0,
+        "self_dk_min": null,
+        "n_sdcp_bridging_components": 0,
+        "n_sdcp_bridged_fid_pairs": 0,
+        "self_filter": "applied",
+        "n_self_candidates": 0,
+        "n_self_kept": 0,
+        "n_self_filtered": 0,
+        "n_self_s_undefined": 0,
+        "n_self_fused_faces": 0,
+        "n_self_revisits_path_only": 0,
+        "n_self_revisits_path_broken": 0,
+        "self_s_um": null,
+        "n_revisit_pairs": 0,
+        "n_revisit_cells": 0,
+        "n_revisit_fibres": 0,
+        "revisit_s_um": null,
+        "n_subedges": 0,
+        "n_subedges_long": 0,
+        "n_subedges_ptfe_cov": 0,
+        "n_instances_ptfe_partial": 0,
+        "n_subedges_sdcp_near": 0,
+        "n_subedges_unrealized": 0,
+        "subedge_rule": "ceil_Lc_over_Lpar_equal_split_midpoints_nearest_port_v0",
+        "n_sdcp_components_touching": 0,
+        "n_bridging_components": 0,
+        "n_sv_faces_cut_rows": 0,
+        "n_sv_faces_kept_self": 0,
+        "n_unsplit_bridging_components": 0,
+        "sv_cf_rule": "sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1",
+        "n_instances_same_fid_pieces": 0,
+        "n_piece_cell_meets": 0,
+        "n_ring_pieces": 0,
+        "n_closed_paths_joined": 0,
+        "n_seam_alias": 0,
+        "piece_rule": "piece_is_fibre_closed_path_seam_continuous_v1"
+      },
+      "census03": {
+        "n_vgcf_fibres": 1,
+        "n_pieces": 1,
+        "n_segments": 2,
+        "n_positions": 8,
+        "n_live_positions": 8,
+        "n_cross_cells": 0,
+        "n_kway_cells_ge3": 0,
+        "n_instances": 0,
+        "n_instances_distinct": 0,
+        "n_instances_self": 0,
+        "n_realized": 0,
+        "n_unrealized_by_reason": {},
+        "n_port_ties": 0,
+        "n_port_displaced": 0,
+        "port_relation": {
+          "same_cell": 0,
+          "face": 0,
+          "edge": 0,
+          "corner": 0,
+          "apart": 0
+        },
+        "n_cut_site_faces": 0,
+        "n_unreg_faces": 2,
+        "n_cut_self_faces": 0,
+        "n_vx_faces_by_sid": {
+          "void": 28
+        },
+        "owner_tie_noncanonical": 0,
+        "n_faces_multi_site": 0,
+        "surface_gap_um": null,
+        "Lc_um": null,
+        "len_mult": null,
+        "n_long_distinct": 0,
+        "n_long_self": 0,
+        "self_dk_min": null,
+        "n_sdcp_bridging_components": 0,
+        "n_sdcp_bridged_fid_pairs": 0,
+        "self_filter": "applied",
+        "n_self_candidates": 0,
+        "n_self_kept": 0,
+        "n_self_filtered": 0,
+        "n_self_s_undefined": 0,
+        "n_self_fused_faces": 1,
+        "n_self_revisits_path_only": 0,
+        "n_self_revisits_path_broken": 0,
+        "self_s_um": null,
+        "n_revisit_pairs": 0,
+        "n_revisit_cells": 0,
+        "n_revisit_fibres": 0,
+        "revisit_s_um": null,
+        "n_subedges": 0,
+        "n_subedges_long": 0,
+        "n_subedges_ptfe_cov": 0,
+        "n_instances_ptfe_partial": 0,
+        "n_subedges_sdcp_near": 0,
+        "n_subedges_unrealized": 0,
+        "subedge_rule": "ceil_Lc_over_Lpar_equal_split_midpoints_nearest_port_v0",
+        "n_sdcp_components_touching": 0,
+        "n_bridging_components": 0,
+        "n_sv_faces_cut_rows": 0,
+        "n_sv_faces_kept_self": 0,
+        "n_unsplit_bridging_components": 0,
+        "sv_cf_rule": "sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1",
+        "n_instances_same_fid_pieces": 0,
+        "n_piece_cell_meets": 0,
+        "n_ring_pieces": 0,
+        "n_closed_paths_joined": 0,
+        "n_seam_alias": 0,
+        "piece_rule": "piece_is_fibre_closed_path_seam_continuous_v1"
+      },
+      "registry_keys": [
+        "kind",
+        "version",
+        "schema",
+        "vox",
+        "lo",
+        "shape",
+        "thresholds",
+        "rules",
+        "positions",
+        "segments",
+        "instances",
+        "subedges",
+        "faces",
+        "cell_lin",
+        "cell_ptr",
+        "cell_pos",
+        "n_extra_dofs",
+        "self_revisit_pairs",
+        "rejections",
+        "census",
+        "fp"
+      ]
+    },
+    "face_changes": [
+      {
+        "row": 14,
+        "linear": 169,
+        "axis": 1,
+        "owners": [
+          2,
+          5
+        ],
+        "kind0": 5,
+        "kind03": 6,
+        "s_d_um": [
+          0.2277607596902182,
+          0.058948822334846995
+        ]
+      }
+    ],
+    "rejections": [
+      [],
+      []
+    ],
+    "equivalence_0_D": [
+      {
+        "s_min": 0.11190627142765067,
+        "face_kind_same": true
+      },
+      {
+        "s_min": 0.22381254285530133,
+        "face_kind_same": true
+      }
+    ]
+  },
+  "sv_geometry_search": {
+    "tried": 25,
+    "found": {
+      "points": [
+        [
+          0.9729629131445341,
+          0.5844095225512604,
+          0.225
+        ],
+        [
+          0.49,
+          0.455,
+          0.225
+        ],
+        [
+          0.9729629131445341,
+          0.32559047744873965,
+          0.225
+        ]
+      ],
+      "sid3": [
+        [
+          3,
+          2,
+          1
+        ],
+        [
+          3,
+          3,
+          1
+        ],
+        [
+          4,
+          2,
+          1
+        ],
+        [
+          4,
+          3,
+          1
+        ],
+        [
+          5,
+          2,
+          1
+        ],
+        [
+          5,
+          3,
+          1
+        ],
+        [
+          6,
+          2,
+          1
+        ],
+        [
+          6,
+          3,
+          1
+        ]
+      ],
+      "sid5": [
+        [
+          4,
+          2,
+          2
+        ],
+        [
+          4,
+          3,
+          2
+        ]
+      ],
+      "rejections": [
+        [],
+        []
+      ],
+      "census0": {
+        "n_vgcf_fibres": 1,
+        "n_pieces": 1,
+        "n_segments": 2,
+        "n_positions": 8,
+        "n_live_positions": 8,
+        "n_cross_cells": 0,
+        "n_kway_cells_ge3": 0,
+        "n_instances": 0,
+        "n_instances_distinct": 0,
+        "n_instances_self": 0,
+        "n_realized": 0,
+        "n_unrealized_by_reason": {},
+        "n_port_ties": 0,
+        "n_port_displaced": 0,
+        "port_relation": {
+          "same_cell": 0,
+          "face": 0,
+          "edge": 0,
+          "corner": 0,
+          "apart": 0
+        },
+        "n_cut_site_faces": 0,
+        "n_unreg_faces": 3,
+        "n_cut_self_faces": 0,
+        "n_vx_faces_by_sid": {
+          "void": 26,
+          "SDCP": 2
+        },
+        "owner_tie_noncanonical": 0,
+        "n_faces_multi_site": 0,
+        "surface_gap_um": null,
+        "Lc_um": null,
+        "len_mult": null,
+        "n_long_distinct": 0,
+        "n_long_self": 0,
+        "self_dk_min": null,
+        "n_sdcp_bridging_components": 0,
+        "n_sdcp_bridged_fid_pairs": 0,
+        "self_filter": "applied",
+        "n_self_candidates": 0,
+        "n_self_kept": 0,
+        "n_self_filtered": 0,
+        "n_self_s_undefined": 0,
+        "n_self_fused_faces": 0,
+        "n_self_revisits_path_only": 0,
+        "n_self_revisits_path_broken": 0,
+        "self_s_um": null,
+        "n_revisit_pairs": 0,
+        "n_revisit_cells": 0,
+        "n_revisit_fibres": 0,
+        "revisit_s_um": null,
+        "n_subedges": 0,
+        "n_subedges_long": 0,
+        "n_subedges_ptfe_cov": 0,
+        "n_instances_ptfe_partial": 0,
+        "n_subedges_sdcp_near": 0,
+        "n_subedges_unrealized": 0,
+        "subedge_rule": "ceil_Lc_over_Lpar_equal_split_midpoints_nearest_port_v0",
+        "n_sdcp_components_touching": 1,
+        "n_bridging_components": 1,
+        "n_sv_faces_cut_rows": 2,
+        "n_sv_faces_kept_self": 0,
+        "n_unsplit_bridging_components": 0,
+        "sv_cf_rule": "sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1",
+        "n_instances_same_fid_pieces": 0,
+        "n_piece_cell_meets": 0,
+        "n_ring_pieces": 0,
+        "n_closed_paths_joined": 0,
+        "n_seam_alias": 0,
+        "piece_rule": "piece_is_fibre_closed_path_seam_continuous_v1"
+      },
+      "census03": {
+        "n_vgcf_fibres": 1,
+        "n_pieces": 1,
+        "n_segments": 2,
+        "n_positions": 8,
+        "n_live_positions": 8,
+        "n_cross_cells": 0,
+        "n_kway_cells_ge3": 0,
+        "n_instances": 0,
+        "n_instances_distinct": 0,
+        "n_instances_self": 0,
+        "n_realized": 0,
+        "n_unrealized_by_reason": {},
+        "n_port_ties": 0,
+        "n_port_displaced": 0,
+        "port_relation": {
+          "same_cell": 0,
+          "face": 0,
+          "edge": 0,
+          "corner": 0,
+          "apart": 0
+        },
+        "n_cut_site_faces": 0,
+        "n_unreg_faces": 2,
+        "n_cut_self_faces": 0,
+        "n_vx_faces_by_sid": {
+          "void": 26,
+          "SDCP": 2
+        },
+        "owner_tie_noncanonical": 0,
+        "n_faces_multi_site": 0,
+        "surface_gap_um": null,
+        "Lc_um": null,
+        "len_mult": null,
+        "n_long_distinct": 0,
+        "n_long_self": 0,
+        "self_dk_min": null,
+        "n_sdcp_bridging_components": 0,
+        "n_sdcp_bridged_fid_pairs": 0,
+        "self_filter": "applied",
+        "n_self_candidates": 0,
+        "n_self_kept": 0,
+        "n_self_filtered": 0,
+        "n_self_s_undefined": 0,
+        "n_self_fused_faces": 1,
+        "n_self_revisits_path_only": 0,
+        "n_self_revisits_path_broken": 0,
+        "self_s_um": null,
+        "n_revisit_pairs": 0,
+        "n_revisit_cells": 0,
+        "n_revisit_fibres": 0,
+        "revisit_s_um": null,
+        "n_subedges": 0,
+        "n_subedges_long": 0,
+        "n_subedges_ptfe_cov": 0,
+        "n_instances_ptfe_partial": 0,
+        "n_subedges_sdcp_near": 0,
+        "n_subedges_unrealized": 0,
+        "subedge_rule": "ceil_Lc_over_Lpar_equal_split_midpoints_nearest_port_v0",
+        "n_sdcp_components_touching": 1,
+        "n_bridging_components": 0,
+        "n_sv_faces_cut_rows": 0,
+        "n_sv_faces_kept_self": 0,
+        "n_unsplit_bridging_components": 0,
+        "sv_cf_rule": "sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1",
+        "n_instances_same_fid_pieces": 0,
+        "n_piece_cell_meets": 0,
+        "n_ring_pieces": 0,
+        "n_closed_paths_joined": 0,
+        "n_seam_alias": 0,
+        "piece_rule": "piece_is_fibre_closed_path_seam_continuous_v1"
+      },
+      "sv_cut0": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "sv_cut03": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  }
+}

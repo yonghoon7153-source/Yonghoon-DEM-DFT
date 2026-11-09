@@ -1,0 +1,7 @@
+{
+  "original_sha256": "83622e5a83bd0de7c97d4a368c0b3fe66ce4fb08def54fabe0a0bd80d79fa014",
+  "adjusted_sha256": "8ded24077c8aed31042008ec201e154b35df1e536f5ef15c2893170c6e875b81",
+  "reviewed_pin": "abf0911ebc994167ac50132c78207c6c8d4421f1",
+  "embedded_pin_in_original": "1f9f3607eb2f0118d322eeff780bba6eb17b85a2",
+  "note": "Original embedded pin deliberately preserved; actual target chosen by RINT_REVIEW_REPO and reported source SHA. Only assertions/expected CLI eligibility changed, no fixture edits. Lock/dead-parent/safe-directory compatibility inherited from original; no POSIX qualification."
+}

@@ -1,0 +1,6 @@
+{
+  "current": "멈춤 TIME_LIMIT · resume 칸 원천 attempt_1 = 옆 거부 기록 (생산자 = 원천 = 재실행 사슬 끝 시도 폴더 · 거부된 시도는 원천이 아니다 · ★ 11-09 사전 공격 13 P2-1)",
+  "historical_mutant": null,
+  "distinguished": true,
+  "scope": "Direct helper. No filesystem mock. Not a full-CLI exploit."
+}

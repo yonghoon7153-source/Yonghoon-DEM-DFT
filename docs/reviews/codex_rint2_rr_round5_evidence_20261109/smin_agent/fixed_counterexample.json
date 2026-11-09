@@ -1,0 +1,275 @@
+{
+  "review_pin": "abf0911ebc994167ac50132c78207c6c8d4421f1",
+  "scope": "two small synthetic geometries; no mock, no conductivity solver, no real S0 run",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "source_sha256": {
+    "carbon_junction.py": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+    "fibre_segment_raster.py": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0"
+  },
+  "D_um": 0.22381254285530133,
+  "records": [
+    {
+      "fixture": "V_only",
+      "vgcf_points_um": [
+        [
+          0.9729629131445341,
+          0.5844095225512604,
+          0.225
+        ],
+        [
+          0.49,
+          0.455,
+          0.225
+        ],
+        [
+          0.9729629131445341,
+          0.32559047744873965,
+          0.225
+        ]
+      ],
+      "sid3": [
+        [
+          3,
+          2,
+          1
+        ],
+        [
+          3,
+          3,
+          1
+        ],
+        [
+          4,
+          2,
+          1
+        ],
+        [
+          4,
+          3,
+          1
+        ],
+        [
+          5,
+          2,
+          1
+        ],
+        [
+          5,
+          3,
+          1
+        ],
+        [
+          6,
+          2,
+          1
+        ],
+        [
+          6,
+          3,
+          1
+        ]
+      ],
+      "sid5": [],
+      "results": [
+        {
+          "s_min_um": 0.0,
+          "n_self_candidates": 0,
+          "n_self_kept": 0,
+          "n_unreg_faces": 3,
+          "n_self_fused_faces": 0,
+          "n_bridging_components": 0,
+          "n_sv_faces_cut_rows": 0,
+          "rejections": []
+        },
+        {
+          "s_min_um": 0.11190627142765067,
+          "n_self_candidates": 0,
+          "n_self_kept": 0,
+          "n_unreg_faces": 3,
+          "n_self_fused_faces": 0,
+          "n_bridging_components": 0,
+          "n_sv_faces_cut_rows": 0,
+          "rejections": []
+        },
+        {
+          "s_min_um": 0.22381254285530133,
+          "n_self_candidates": 0,
+          "n_self_kept": 0,
+          "n_unreg_faces": 3,
+          "n_self_fused_faces": 0,
+          "n_bridging_components": 0,
+          "n_sv_faces_cut_rows": 0,
+          "rejections": []
+        },
+        {
+          "s_min_um": 0.3,
+          "n_self_candidates": 0,
+          "n_self_kept": 0,
+          "n_unreg_faces": 2,
+          "n_self_fused_faces": 1,
+          "n_bridging_components": 0,
+          "n_sv_faces_cut_rows": 0,
+          "rejections": []
+        },
+        {
+          "s_min_um": 0.3515639202077327,
+          "n_self_candidates": 0,
+          "n_self_kept": 0,
+          "n_unreg_faces": 2,
+          "n_self_fused_faces": 1,
+          "n_bridging_components": 0,
+          "n_sv_faces_cut_rows": 0,
+          "rejections": []
+        }
+      ],
+      "face_changes": [
+        {
+          "row": 14,
+          "lin": 169,
+          "axis": 1,
+          "kind0": 5,
+          "kind03": 6,
+          "s_face_um": 0.2277607596902182,
+          "d_face_um": 0.058948822334846995
+        }
+      ]
+    },
+    {
+      "fixture": "V_plus_SDCP",
+      "vgcf_points_um": [
+        [
+          0.9729629131445341,
+          0.5844095225512604,
+          0.225
+        ],
+        [
+          0.49,
+          0.455,
+          0.225
+        ],
+        [
+          0.9729629131445341,
+          0.32559047744873965,
+          0.225
+        ]
+      ],
+      "sid3": [
+        [
+          3,
+          2,
+          1
+        ],
+        [
+          3,
+          3,
+          1
+        ],
+        [
+          4,
+          2,
+          1
+        ],
+        [
+          4,
+          3,
+          1
+        ],
+        [
+          5,
+          2,
+          1
+        ],
+        [
+          5,
+          3,
+          1
+        ],
+        [
+          6,
+          2,
+          1
+        ],
+        [
+          6,
+          3,
+          1
+        ]
+      ],
+      "sid5": [
+        [
+          4,
+          2,
+          2
+        ],
+        [
+          4,
+          3,
+          2
+        ]
+      ],
+      "results": [
+        {
+          "s_min_um": 0.0,
+          "n_self_candidates": 0,
+          "n_self_kept": 0,
+          "n_unreg_faces": 3,
+          "n_self_fused_faces": 0,
+          "n_bridging_components": 1,
+          "n_sv_faces_cut_rows": 2,
+          "rejections": []
+        },
+        {
+          "s_min_um": 0.11190627142765067,
+          "n_self_candidates": 0,
+          "n_self_kept": 0,
+          "n_unreg_faces": 3,
+          "n_self_fused_faces": 0,
+          "n_bridging_components": 1,
+          "n_sv_faces_cut_rows": 2,
+          "rejections": []
+        },
+        {
+          "s_min_um": 0.22381254285530133,
+          "n_self_candidates": 0,
+          "n_self_kept": 0,
+          "n_unreg_faces": 3,
+          "n_self_fused_faces": 0,
+          "n_bridging_components": 1,
+          "n_sv_faces_cut_rows": 2,
+          "rejections": []
+        },
+        {
+          "s_min_um": 0.3,
+          "n_self_candidates": 0,
+          "n_self_kept": 0,
+          "n_unreg_faces": 2,
+          "n_self_fused_faces": 1,
+          "n_bridging_components": 0,
+          "n_sv_faces_cut_rows": 0,
+          "rejections": []
+        },
+        {
+          "s_min_um": 0.3515639202077327,
+          "n_self_candidates": 0,
+          "n_self_kept": 0,
+          "n_unreg_faces": 2,
+          "n_self_fused_faces": 1,
+          "n_bridging_components": 0,
+          "n_sv_faces_cut_rows": 0,
+          "rejections": []
+        }
+      ],
+      "face_changes": [
+        {
+          "row": 14,
+          "lin": 169,
+          "axis": 1,
+          "kind0": 5,
+          "kind03": 6,
+          "s_face_um": 0.2277607596902182,
+          "d_face_um": 0.058948822334846995
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1005 @@
+{
+  "source_28": [
+    {
+      "file": "additives.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "ca_ext_cjunc.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "ca_ext_svcf.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "ca_s0_census.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "cam_kinetics.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "carbon_junction.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "check_method_discipline.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "fibre_segment_raster.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "lens_geometry.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "mpm_webapp_payload.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "ptfe_face_alpha.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "rint_cycle_traj.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "rint_first_result.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "rint_r_chain.py",
+      "old_present": true,
+      "byte_equal": false
+    },
+    {
+      "file": "run_contract.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "sdcp_gain_verdict.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "sdcp_gain_vox015_8arm.sh",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "se_material.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "sr01_stamp_compare.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "step3_conv_cert.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "step3_sigma.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "step4_dyn.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "test_ca_ext_b6.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "test_ca_ext_runner.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "test_ca_s0_census.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "test_carbon_junction.py",
+      "old_present": true,
+      "byte_equal": true
+    },
+    {
+      "file": "test_rint_r_chain.py",
+      "old_present": true,
+      "byte_equal": false
+    },
+    {
+      "file": "test_rint_r_chain_e2e.py",
+      "old_present": true,
+      "byte_equal": true
+    }
+  ],
+  "producer11": [
+    {
+      "name": "_src_done",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "run",
+      "old_count": 6,
+      "new_count": 6,
+      "all_same": true
+    },
+    {
+      "name": "_copy",
+      "old_count": 2,
+      "new_count": 2,
+      "all_same": true
+    },
+    {
+      "name": "_execute",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "_prepare",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "run_in_group",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "stop_trace",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "run_traces",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "record_outdir",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "resume_leftovers",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    },
+    {
+      "name": "group_pair",
+      "old_count": 1,
+      "new_count": 1,
+      "all_same": true
+    }
+  ],
+  "mutation_counts": {
+    "KILLED": 68,
+    "SURVIVED": 2,
+    "NOT_APPLICABLE (가드를 지웠다 · 고친 판)": 1
+  },
+  "mutation_records": [
+    {
+      "id": "m15:a_drop",
+      "status": "KILLED",
+      "fails": [
+        "RR4A",
+        "RR5E",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 22/25 PASS (15.3 s)   FAILED: ['RR4A', 'RR5E', 'RR5F']",
+      "s": 15.6,
+      "adapted": false
+    },
+    {
+      "id": "m15:a_missing_ok",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (15.5 s)   FAILED: ['RR5F']",
+      "s": 15.8,
+      "adapted": false
+    },
+    {
+      "id": "m15:a_noentry_ok",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (16.0 s)   FAILED: ['RR5F']",
+      "s": 16.3,
+      "adapted": false
+    },
+    {
+      "id": "m15:entry_no_resume_of",
+      "status": "KILLED",
+      "fails": [
+        "RR4A",
+        "RR5E"
+      ],
+      "summary": "test_rint_r_chain: 23/25 PASS (17.2 s)   FAILED: ['RR4A', 'RR5E']",
+      "s": 17.5,
+      "adapted": false
+    },
+    {
+      "id": "m15:entry_no_machine",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (14.5 s)   FAILED: ['RR5F']",
+      "s": 14.8,
+      "adapted": false
+    },
+    {
+      "id": "m15:b_drop",
+      "status": "KILLED",
+      "fails": [
+        "RR4A",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 23/25 PASS (15.0 s)   FAILED: ['RR4A', 'RR5F']",
+      "s": 15.3,
+      "adapted": true
+    },
+    {
+      "id": "m15:b_eq_only_type",
+      "status": "KILLED",
+      "fails": [
+        "RR4A"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (14.2 s)   FAILED: ['RR4A']",
+      "s": 14.6,
+      "adapted": false
+    },
+    {
+      "id": "m15:b_newattempt_R_ok",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (15.7 s)   FAILED: ['RR5F']",
+      "s": 16.0,
+      "adapted": false
+    },
+    {
+      "id": "m15:b_nondict_ok",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (15.5 s)   FAILED: ['RR5F']",
+      "s": 15.8,
+      "adapted": false
+    },
+    {
+      "id": "m15:src_failopen",
+      "status": "KILLED",
+      "fails": [
+        "RR4D",
+        "RR5C",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 22/25 PASS (35.1 s)   FAILED: ['RR4D', 'RR5C', 'RR5F']",
+      "s": 35.4,
+      "adapted": false
+    },
+    {
+      "id": "m15:loc_count_ge1",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (46.0 s)   FAILED: ['RR5F']",
+      "s": 46.5,
+      "adapted": false
+    },
+    {
+      "id": "m15:loc_symlink",
+      "status": "SURVIVED",
+      "fails": [],
+      "summary": "test_rint_r_chain: 25/25 PASS (34.4 s)",
+      "s": 34.8,
+      "adapted": false
+    },
+    {
+      "id": "m15:loc_attempt",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (20.6 s)   FAILED: ['RR5F']",
+      "s": 20.9,
+      "adapted": false
+    },
+    {
+      "id": "m15:loc_digest",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (17.6 s)   FAILED: ['RR5F']",
+      "s": 17.9,
+      "adapted": false
+    },
+    {
+      "id": "m15:c_drop",
+      "status": "KILLED",
+      "fails": [
+        "RR4A",
+        "RR5B",
+        "RR5C",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 21/25 PASS (18.8 s)   FAILED: ['RR4A', 'RR5B', 'RR5C', 'RR5F']",
+      "s": 19.2,
+      "adapted": false
+    },
+    {
+      "id": "m15:c_after_new",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (18.7 s)   FAILED: ['RR5F']",
+      "s": 19.1,
+      "adapted": false
+    },
+    {
+      "id": "m15:c_cf_eq",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (17.9 s)   FAILED: ['RR5F']",
+      "s": 18.3,
+      "adapted": false
+    },
+    {
+      "id": "m15:c_cf_type",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (15.6 s)   FAILED: ['RR5F']",
+      "s": 15.9,
+      "adapted": false
+    },
+    {
+      "id": "m15:c_copy_srcdone",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (16.4 s)   FAILED: ['RR5F']",
+      "s": 16.7,
+      "adapted": false
+    },
+    {
+      "id": "m15:c_bytes",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (15.8 s)   FAILED: ['RR5F']",
+      "s": 16.2,
+      "adapted": false
+    },
+    {
+      "id": "m15:c_launch_only",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (21.6 s)   FAILED: ['RR5F']",
+      "s": 22.0,
+      "adapted": false
+    },
+    {
+      "id": "m15:c_end_only",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (22.1 s)   FAILED: ['RR5F']",
+      "s": 22.5,
+      "adapted": false
+    },
+    {
+      "id": "m15:c_payload",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (22.3 s)   FAILED: ['RR5F']",
+      "s": 22.6,
+      "adapted": false
+    },
+    {
+      "id": "m15:c_first_new_done",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (20.4 s)   FAILED: ['RR5B']",
+      "s": 20.7,
+      "adapted": true
+    },
+    {
+      "id": "m15:c_new_launch_same",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (20.9 s)   FAILED: ['RR5F']",
+      "s": 21.2,
+      "adapted": false
+    },
+    {
+      "id": "m15:c_new_launch_missing_ok",
+      "status": "SURVIVED",
+      "fails": [],
+      "summary": "test_rint_r_chain: 25/25 PASS (20.6 s)",
+      "s": 20.9,
+      "adapted": false
+    },
+    {
+      "id": "m15:srd_no_dir",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (20.2 s)   FAILED: ['RR5F']",
+      "s": 20.5,
+      "adapted": false
+    },
+    {
+      "id": "m15:srd_no_rc",
+      "status": "KILLED",
+      "fails": [
+        "RR3P",
+        "PA13A",
+        "RR4A",
+        "RR4B",
+        "RR4D",
+        "RR5A",
+        "RR5B",
+        "RR5C",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 16/25 PASS (20.2 s)   FAILED: ['RR3P', 'PA13A', 'RR4A', 'RR4B', 'RR4D', 'RR5A', 'RR5B', 'RR5C', 'RR5F']",
+      "s": 20.6,
+      "adapted": false
+    },
+    {
+      "id": "m15:d_drop",
+      "status": "KILLED",
+      "fails": [
+        "RR4D",
+        "RR5A",
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 22/25 PASS (18.4 s)   FAILED: ['RR4D', 'RR5A', 'RR5B']",
+      "s": 18.8,
+      "adapted": false
+    },
+    {
+      "id": "m15:d_cmp",
+      "status": "KILLED",
+      "fails": [
+        "RR4D",
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 23/25 PASS (17.7 s)   FAILED: ['RR4D', 'RR5B']",
+      "s": 18.1,
+      "adapted": false
+    },
+    {
+      "id": "m15:d_name",
+      "status": "NOT_APPLICABLE (가드를 지웠다 · 고친 판)",
+      "adapted": true
+    },
+    {
+      "id": "m15:new_attempt_no_early_return",
+      "status": "KILLED",
+      "fails": [
+        "RR3D",
+        "RR3E",
+        "RR3P",
+        "PA13A",
+        "PA13D",
+        "PA14B",
+        "PA14D",
+        "RR4A",
+        "RR4B",
+        "RR5A",
+        "RR5B",
+        "RR5C",
+        "RR5D",
+        "RR5E",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 10/25 PASS (16.5 s)   FAILED: ['RR3D', 'RR3E', 'RR3P', 'PA13A', 'PA13D', 'PA14B', 'PA14D', 'RR4A', 'RR4B', 'RR5A', 'RR5B', 'RR5C', 'RR5D', 'RR5E', 'RR5F']",
+      "s": 16.9,
+      "adapted": true
+    },
+    {
+      "id": "m15:fields_keep_true",
+      "status": "KILLED",
+      "fails": [
+        "RR4A",
+        "RR4D",
+        "RR5A",
+        "RR5B",
+        "RR5C",
+        "RR5E",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 18/25 PASS (18.0 s)   FAILED: ['RR4A', 'RR4D', 'RR5A', 'RR5B', 'RR5C', 'RR5E', 'RR5F']",
+      "s": 18.3,
+      "adapted": false
+    },
+    {
+      "id": "m15:recount_ignore_st",
+      "status": "KILLED",
+      "fails": [
+        "RR4A",
+        "RR4D",
+        "RR5A",
+        "RR5B",
+        "RR5E",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 19/25 PASS (17.4 s)   FAILED: ['RR4A', 'RR4D', 'RR5A', 'RR5B', 'RR5E', 'RR5F']",
+      "s": 17.7,
+      "adapted": false
+    },
+    {
+      "id": "m15:write_old",
+      "status": "KILLED",
+      "fails": [
+        "RR4A",
+        "RR4D",
+        "RR4E",
+        "RR5A",
+        "RR5B",
+        "RR5C",
+        "RR5E",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 17/25 PASS (18.5 s)   FAILED: ['RR4A', 'RR4D', 'RR4E', 'RR5A', 'RR5B', 'RR5C', 'RR5E', 'RR5F']",
+      "s": 18.8,
+      "adapted": true
+    },
+    {
+      "id": "m15:recover_old",
+      "status": "KILLED",
+      "fails": [
+        "RR4A",
+        "RR4D",
+        "RR4E",
+        "RR5A",
+        "RR5B",
+        "RR5C",
+        "RR5E",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 17/25 PASS (19.6 s)   FAILED: ['RR4A', 'RR4D', 'RR4E', 'RR5A', 'RR5B', 'RR5C', 'RR5E', 'RR5F']",
+      "s": 19.9,
+      "adapted": false
+    },
+    {
+      "id": "m15:close_old",
+      "status": "KILLED",
+      "fails": [
+        "RR4E",
+        "RR5C"
+      ],
+      "summary": "test_rint_r_chain: 23/25 PASS (20.3 s)   FAILED: ['RR4E', 'RR5C']",
+      "s": 20.7,
+      "adapted": false
+    },
+    {
+      "id": "m15:order_no_prov",
+      "status": "KILLED",
+      "fails": [
+        "RR4A",
+        "RR4E",
+        "RR5A",
+        "RR5B",
+        "RR5D",
+        "RR5E",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 18/25 PASS (20.6 s)   FAILED: ['RR4A', 'RR4E', 'RR5A', 'RR5B', 'RR5D', 'RR5E', 'RR5F']",
+      "s": 21.0,
+      "adapted": false
+    },
+    {
+      "id": "m15:chainprov_noprov",
+      "status": "KILLED",
+      "fails": [
+        "RR4A",
+        "RR4E",
+        "RR5A",
+        "RR5B",
+        "RR5D",
+        "RR5E",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 18/25 PASS (17.0 s)   FAILED: ['RR4A', 'RR4E', 'RR5A', 'RR5B', 'RR5D', 'RR5E', 'RR5F']",
+      "s": 17.3,
+      "adapted": false
+    },
+    {
+      "id": "m15:chainprov_nodigest",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (18.9 s)   FAILED: ['RR5F']",
+      "s": 19.3,
+      "adapted": false
+    },
+    {
+      "id": "m15:chainprov_nostart_skip",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (20.9 s)   FAILED: ['RR5F']",
+      "s": 21.3,
+      "adapted": false
+    },
+    {
+      "id": "m15:chain_noprov",
+      "status": "KILLED",
+      "fails": [
+        "RR4A",
+        "RR4E",
+        "RR5A",
+        "RR5B",
+        "RR5D",
+        "RR5E",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 18/25 PASS (20.2 s)   FAILED: ['RR4A', 'RR4E', 'RR5A', 'RR5B', 'RR5D', 'RR5E', 'RR5F']",
+      "s": 20.6,
+      "adapted": false
+    },
+    {
+      "id": "m15:chain_recount_nost",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (21.4 s)   FAILED: ['RR5F']",
+      "s": 21.8,
+      "adapted": false
+    },
+    {
+      "id": "m15:tlp_recount_nost",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (20.5 s)   FAILED: ['RR5F']",
+      "s": 20.8,
+      "adapted": false
+    },
+    {
+      "id": "m15:lic_recount_nost",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (20.1 s)   FAILED: ['RR5F']",
+      "s": 20.5,
+      "adapted": false
+    },
+    {
+      "id": "m15:M56_exists",
+      "status": "KILLED",
+      "fails": [
+        "RR4C"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (19.7 s)   FAILED: ['RR4C']",
+      "s": 20.0,
+      "adapted": false
+    },
+    {
+      "id": "new:N_rerun_eq",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (20.1 s)   FAILED: ['RR5B']",
+      "s": 20.4,
+      "adapted": false
+    },
+    {
+      "id": "new:N_first_new",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (20.4 s)   FAILED: ['RR5B']",
+      "s": 20.8,
+      "adapted": false
+    },
+    {
+      "id": "new:N_bind",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (21.7 s)   FAILED: ['RR5B']",
+      "s": 22.1,
+      "adapted": false
+    },
+    {
+      "id": "new:N_dirs_subset",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (22.0 s)   FAILED: ['RR5B']",
+      "s": 22.3,
+      "adapted": false
+    },
+    {
+      "id": "new:N_prior_done",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (22.4 s)   FAILED: ['RR5B']",
+      "s": 22.8,
+      "adapted": false
+    },
+    {
+      "id": "new:N_prior_od",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (22.1 s)   FAILED: ['RR5B']",
+      "s": 22.5,
+      "adapted": false
+    },
+    {
+      "id": "new:N_prior_end",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (21.4 s)   FAILED: ['RR5B']",
+      "s": 21.8,
+      "adapted": false
+    },
+    {
+      "id": "new:N_last_def",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (21.6 s)   FAILED: ['RR5B']",
+      "s": 22.0,
+      "adapted": false
+    },
+    {
+      "id": "new:N_name_form",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (20.4 s)   FAILED: ['RR5B']",
+      "s": 20.7,
+      "adapted": false
+    },
+    {
+      "id": "new:N_order_rev",
+      "status": "KILLED",
+      "fails": [
+        "PA13A",
+        "RR4B",
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 22/25 PASS (21.1 s)   FAILED: ['PA13A', 'RR4B', 'RR5B']",
+      "s": 21.4,
+      "adapted": false
+    },
+    {
+      "id": "new:N_order_str",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (18.9 s)   FAILED: ['RR5B']",
+      "s": 19.2,
+      "adapted": false
+    },
+    {
+      "id": "new:N_src_names_only",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (19.0 s)   FAILED: ['RR5B']",
+      "s": 19.3,
+      "adapted": false
+    },
+    {
+      "id": "new:N_d_all_same",
+      "status": "KILLED",
+      "fails": [
+        "RR5A"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (18.7 s)   FAILED: ['RR5A']",
+      "s": 19.0,
+      "adapted": false
+    },
+    {
+      "id": "new:N_d_post_not_done",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (18.6 s)   FAILED: ['RR5B']",
+      "s": 18.9,
+      "adapted": false
+    },
+    {
+      "id": "new:N_d_post_def",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (16.4 s)   FAILED: ['RR5B']",
+      "s": 16.7,
+      "adapted": false
+    },
+    {
+      "id": "new:N_d_done_end",
+      "status": "KILLED",
+      "fails": [
+        "RR4A",
+        "RR4B",
+        "RR5A"
+      ],
+      "summary": "test_rint_r_chain: 22/25 PASS (16.7 s)   FAILED: ['RR4A', 'RR4B', 'RR5A']",
+      "s": 17.1,
+      "adapted": false
+    },
+    {
+      "id": "new:N_d_done_dirs",
+      "status": "KILLED",
+      "fails": [
+        "RR5A"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (16.3 s)   FAILED: ['RR5A']",
+      "s": 16.7,
+      "adapted": false
+    },
+    {
+      "id": "new:N_end_ok_confirmed",
+      "status": "KILLED",
+      "fails": [
+        "RR5A"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (17.0 s)   FAILED: ['RR5A']",
+      "s": 17.4,
+      "adapted": false
+    },
+    {
+      "id": "new:N_5_old_outdir",
+      "status": "KILLED",
+      "fails": [
+        "RR5B"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (18.8 s)   FAILED: ['RR5B']",
+      "s": 19.1,
+      "adapted": false
+    },
+    {
+      "id": "new:N_summaryless_skip",
+      "status": "KILLED",
+      "fails": [
+        "RR5A",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 23/25 PASS (16.8 s)   FAILED: ['RR5A', 'RR5F']",
+      "s": 17.1,
+      "adapted": false
+    },
+    {
+      "id": "new:N_summaryless_effnone",
+      "status": "KILLED",
+      "fails": [
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (15.9 s)   FAILED: ['RR5F']",
+      "s": 16.3,
+      "adapted": false
+    },
+    {
+      "id": "new:N_held",
+      "status": "KILLED",
+      "fails": [
+        "RR4D",
+        "RR5C",
+        "RR5F"
+      ],
+      "summary": "test_rint_r_chain: 22/25 PASS (16.8 s)   FAILED: ['RR4D', 'RR5C', 'RR5F']",
+      "s": 17.1,
+      "adapted": false
+    },
+    {
+      "id": "new:N_held_close",
+      "status": "KILLED",
+      "fails": [
+        "RR5C"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (15.4 s)   FAILED: ['RR5C']",
+      "s": 15.7,
+      "adapted": false
+    },
+    {
+      "id": "new:N_entry_type",
+      "status": "KILLED",
+      "fails": [
+        "RR5E"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (16.7 s)   FAILED: ['RR5E']",
+      "s": 17.1,
+      "adapted": false
+    },
+    {
+      "id": "new:N_shape",
+      "status": "KILLED",
+      "fails": [
+        "RR5D"
+      ],
+      "summary": "test_rint_r_chain: 24/25 PASS (16.8 s)   FAILED: ['RR5D']",
+      "s": 17.2,
+      "adapted": false
+    }
+  ]
+}

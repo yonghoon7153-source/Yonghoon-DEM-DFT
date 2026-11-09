@@ -1,0 +1,29 @@
+--- original
++++ expectation_adjusted
+@@ -178,7 +178,7 @@
+ snull=copy.deepcopy(mm);tl(snull);snull['resume']=None
+ fnull=clone('PC14_03_attempt_null',fmm,snull);att(fnull,2,None)
+ v=measure('PC14_03_attempt_null',fnull,snull)
+-assert v['fields']['resume_ok'] and v['order'] is None and v['resume_chain_problem'] is None and v['found_attempts_problem']
++assert v['fields']['resume_ok'] and v['order'] is not None and v['resume_chain_problem'] is not None and v['found_attempts_problem']
+ 
+ # Three-attempt chain: source 2 differs at L02, historical attempt 1 matches 3.
+ f3=SCR/'PC14_03_from_rebind'/'attempt_3';shutil.copytree(fok.parent,f3.parent)
+@@ -208,7 +208,7 @@
+ f3edit=SCR/'PC14_03_from_rebind_forged'/'attempt_3';shutil.copytree(f3.parent,f3edit.parent)
+ fs3=copy.deepcopy(s3);tl(fs3);fs3['resume']['from']=1;fs3['runs'][0]['copied_from']=1;fs3['resume']['compared'][0]['same']=True
+ v=measure('PC14_03_from_rebind_forged',f3edit,fs3,3)
+-assert v['fields']['resume_ok'] and v['resume_chain_problem'] is None and v['found_attempts_problem'] is None
++assert v['fields']['resume_ok'] and v['resume_chain_problem'] is not None and v['found_attempts_problem'] is None
+ 
+ # Pin the four historical survivor inputs, then evaluate the exact four mutations
+ # in function memory only. This does not modify source files or run the test harness.
+@@ -279,7 +279,7 @@
+     return val
+ 
+ for label,f,s,want in [('honest_mismatch',fmm,mm,False),('PC13_two_fields',SCR/'PC13_01_two_fields'/'attempt_2',json.loads((SCR/'PC13_01_two_fields'/'attempt_2'/'ladder_summary.json').read_bytes()),False),
+-                      ('PC14_02_R1',fr1,sr1,True),('PC14_03_attempt_null',fnull,snull,True)]:
++                      ('PC14_02_R1',fr1,sr1,False),('PC14_03_attempt_null',fnull,snull,False)]:
+     v=cli_recover(label,f,s)
+     assert v['recover_rc']==0 and v['result']['resume_ok'] is want,(label,v)
+ 
